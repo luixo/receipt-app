@@ -3,11 +3,10 @@ import * as ReactNative from "react-native";
 import { createParam } from "solito";
 import { TextLink } from "solito/link";
 import { styled } from "app/styles";
+import { fetch } from "app/fetch";
 
-const Wrapper = styled(ReactNative.View)({
+const Wrapper = styled(ReactNative.ScrollView)({
 	flex: 1,
-	justifyContent: "center",
-	alignItems: "center",
 });
 
 const Text = styled(ReactNative.Text)({
@@ -16,14 +15,32 @@ const Text = styled(ReactNative.Text)({
 	fontWeight: "bold",
 });
 
+const styles = ReactNative.StyleSheet.create({
+	scrollContainer: {
+		justifyContent: "center",
+		alignItems: "center",
+		flexGrow: 1,
+	},
+});
+
 const { useParam } = createParam<{ id: string }>();
 
 export const ReceiptScreen: React.FC = () => {
 	const [id] = useParam("id");
+	const [pingText, setPingText] = React.useState("Waiting..");
+	React.useEffect(() => {
+		const runAsyncAction = async () => {
+			const response = await fetch(`/api/ping`);
+			const responseText = await response.text();
+			setPingText(responseText);
+		};
+		runAsyncAction();
+	}, []);
 
 	return (
-		<Wrapper>
+		<Wrapper contentContainerStyle={styles.scrollContainer}>
 			<Text>{`Receipt ID: ${id}`}</Text>
+			<Text>{`Ping text: ${pingText}`}</Text>
 
 			<TextLink href="/">👈 Go Home</TextLink>
 		</Wrapper>
