@@ -5,15 +5,37 @@
 		"apps/*",
 		"packages/*"
 	],
+	"type": "module",
 	"devDependencies": {
-		"@types/react": "^17.0.39",
-		"@types/react-native": "^0.67.2",
-		"eslint": "^8.11.0",
-		"turbo": "^1.1.6",
-		"typescript": "^4.6.2"
+		"@babel/core": "^7.12.9",
+		"@types/react": "^18.0.1",
+		"@types/react-native": "^0.67.4",
+		"concurrently": "^7.1.0",
+		"dotenv": "^16.0.0",
+		"dotenv-cli": "^5.1.0",
+		"eslint": "^8.13.0",
+		"get-port": "^6.1.2",
+		"ts-node": "^10.7.0",
+		"turbo": "^1.2.2",
+		"typescript": "^4.6.3"
 	},
 	"scripts": {
-		"native": "cd apps/expo && expo start",
-		"web": "cd apps/next && yarn next"
-	}
+		"dev": "dotenv -c -- ts-node dev.ts",
+		"native:dev": "yarn workspace expo-app dev",
+		"web:dev": "yarn workspace next-app dev",
+		"ios:build": "yarn workspace expo-app ios:update-version && yarn workspace expo-app ios:build",
+		"ios:publish": "yarn workspace expo-app ios:publish"
+	},
+	"dependencies": {
+		"expo": "~44.0.2",
+		"expo-cli": "^5.3.1",
+		"expo-splash-screen": "~0.14.1",
+		"expo-status-bar": "~1.2.0",
+		"ngrok": "^4.3.1",
+		"react": "17.0.1",
+		"react-dom": "17.0.1",
+		"react-native": "0.64.3",
+		"react-native-web": "0.17.1"
+	},
+	"version": "1.0.0"
 }

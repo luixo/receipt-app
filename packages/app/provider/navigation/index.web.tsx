@@ -4,4 +4,6 @@
 
 import React from "react";
 
-export const NavigationProvider: React.FC = ({ children }) => <>{children}</>;
+export const NavigationProvider: React.FC<React.PropsWithChildren<{}>> = ({
+	children,
+}) => <>{children}</>;

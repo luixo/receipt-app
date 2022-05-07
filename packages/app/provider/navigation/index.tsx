@@ -3,7 +3,9 @@ import { LinkingOptions, NavigationContainer } from "@react-navigation/native";
 import * as Linking from "expo-linking";
 import { AppParamList } from "../../../../apps/expo/navigation";
 
-export const NavigationProvider: React.FC = ({ children }) => {
+export const NavigationProvider: React.FC<React.PropsWithChildren<{}>> = ({
+	children,
+}) => {
 	const linking = React.useMemo<LinkingOptions<AppParamList>>(
 		() => ({
 			prefixes: [Linking.createURL("/")],

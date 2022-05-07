@@ -6,11 +6,16 @@ export default {
 		sdkVersion: "44.0.0",
 		scheme: "receipt-app",
 		platforms: ["ios", "android"],
+		icon: "app-icon.png",
 		ios: {
 			bundleIdentifier: "ru.luixo.receipt",
+			buildNumber: "4",
+		},
+		android: {
+			package: "ru.luixo.receipt",
 		},
 		extra: {
-			host: process.env.HOST || "http://unknown.host",
+			host: process.env.BACKEND_HOST,
 		},
 	},
 };

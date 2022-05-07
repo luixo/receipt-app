@@ -4,9 +4,6 @@ Based on [Solito](https://solito.dev)
 
 ## 🏁 Start the app
 
-- Install dependencies: `yarn`
+- Install dependencies: `yarn install`
 
-- Next.js local dev: `yarn web`
-  - Runs `yarn next`
-- Expo local dev: `yarn native`
-  - Runs `expo start`
+- Next.js & expo local dev: `yarn dev`

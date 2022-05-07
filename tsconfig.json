@@ -1,4 +1,10 @@
 {
+	"ts-node": {
+		"esm": true,
+		"compilerOptions": {
+			"module": "esnext"
+		}
+	},
 	"compilerOptions": {
 		"strict": true,
 		"noUncheckedIndexedAccess": true,

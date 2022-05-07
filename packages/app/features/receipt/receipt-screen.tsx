@@ -34,7 +34,7 @@ export const ReceiptScreen: React.FC = () => {
 			const responseText = await response.text();
 			setPingText(responseText);
 		};
-		runAsyncAction();
+		void runAsyncAction();
 	}, []);
 
 	return (
