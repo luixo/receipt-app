@@ -15,7 +15,7 @@ const main = async () => {
 		region: "eu",
 		authtoken: ngrokAuthToken,
 	});
-	concurrently([
+	const result = concurrently([
 		{
 			name: "expo",
 			command: "yarn native:dev",
@@ -33,6 +33,15 @@ const main = async () => {
 			prefixColor: "green",
 		},
 	]);
+	process.on("SIGINT", () => {
+		console.log("Shutting down..");
+		result.commands.forEach((command) => {
+			command.kill();
+			console.log(`${command.name} shut down`);
+		});
+		console.log("All processes shut down");
+		process.exit();
+	});
 };
 
 void main();
