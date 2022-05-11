@@ -6,7 +6,8 @@
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",
-		"lint": "next lint"
+		"lint": "next lint",
+		"db:generate-types": "dotenv -c -- ts-node db/generate-types.ts"
 	},
 	"workspaces": {
 		"nohoist": [
@@ -17,12 +18,15 @@
 		"@expo/next-adapter": "^4.0.0",
 		"@types/react": "^18.0.1",
 		"app": "*",
+		"kysely": "^0.18.1",
 		"next": "^12.1.5",
 		"raf": "^3.4.1"
 	},
 	"devDependencies": {
+		"@kristiandupont/recase": "^1.1.2",
 		"@types/node": "17.0.21",
 		"eslint-config-next": "^12.1.0",
+		"kanel": "^2.4.4",
 		"next-compose-plugins": "^2.2.1",
 		"next-transpile-modules": "^9.0.0"
 	}
