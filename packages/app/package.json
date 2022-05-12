@@ -5,8 +5,11 @@
 	"dependencies": {
 		"@react-navigation/native": "^6.0.8",
 		"@react-navigation/native-stack": "^6.5.0",
+		"@trpc/client": "^9.23.2",
+		"@trpc/react": "^9.23.2",
 		"dripsy": "^3.6.0",
 		"expo-linking": "^3.0.0",
+		"react-query": "^3.39.0",
 		"solito": "latest"
 	},
 	"sideEffects": false

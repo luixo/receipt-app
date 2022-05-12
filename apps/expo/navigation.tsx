@@ -2,10 +2,12 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
 
 import { HomeScreen } from "app/features/home/screen";
-import { ReceiptScreen } from "app/features/receipt/receipt-screen";
+import { ReceiptsScreen } from "app/features/receipts/receipts-screen";
+import { ReceiptScreen } from "app/features/receipts/receipt-screen";
 
 export type AppParamList = {
 	home: undefined;
+	receipts: undefined;
 	receipt: {
 		id: string;
 	};
@@ -21,6 +23,13 @@ export const NativeNavigation: React.FC = () => {
 				component={HomeScreen}
 				options={{
 					title: "Home",
+				}}
+			/>
+			<Stack.Screen
+				name="receipts"
+				component={ReceiptsScreen}
+				options={{
+					title: "Receipts",
 				}}
 			/>
 			<Stack.Screen

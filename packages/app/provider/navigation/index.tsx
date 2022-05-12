@@ -13,7 +13,8 @@ export const NavigationProvider: React.FC<React.PropsWithChildren<{}>> = ({
 				initialRouteName: "home",
 				screens: {
 					home: "",
-					receipt: "receipt/:id",
+					receipts: "receipts/",
+					receipt: "receipts/:id",
 				},
 			},
 		}),

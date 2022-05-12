@@ -2,6 +2,9 @@
 const nextConfig = {
 	reactStrictMode: true,
 	webpack5: true,
+	serverRuntimeConfig: {
+		port: process.env.PORT,
+	},
 };
 
 const { withExpo } = require("@expo/next-adapter");

@@ -53,8 +53,8 @@ export const HomeScreen: React.FC = () => {
 				</Paragraph>
 			</Container>
 			<Spacer />
-			<TextLink href="/receipt/1" textProps={{ style: styles.link }}>
-				Link to test receipt page
+			<TextLink href="/receipts/" textProps={{ style: styles.link }}>
+				Link to receipts page
 			</TextLink>
 		</Wrapper>
 	);

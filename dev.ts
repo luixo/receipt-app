@@ -15,6 +15,7 @@ const main = async () => {
 		region: "eu",
 		authtoken: ngrokAuthToken,
 	});
+	console.log(`Ngrok host started: ${host} at port ${port}`);
 	const result = concurrently([
 		{
 			name: "expo",
@@ -40,7 +41,7 @@ const main = async () => {
 			console.log(`${command.name} shut down`);
 		});
 		console.log("All processes shut down");
-		process.exit();
+		process.exit(0);
 	});
 };
 
