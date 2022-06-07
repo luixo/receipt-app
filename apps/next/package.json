@@ -21,6 +21,7 @@
 		"@trpc/server": "^9.23.2",
 		"@types/react": "^18.0.1",
 		"app": "*",
+		"cookies-next": "^2.0.4",
 		"kysely": "^0.18.1",
 		"next": "^12.1.7-canary.31",
 		"raf": "^3.4.1",

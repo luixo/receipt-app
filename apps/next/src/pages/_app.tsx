@@ -3,8 +3,9 @@ import { Provider } from "app/provider";
 import { ReactQueryDevtools } from "react-query/devtools";
 import getConfig from "next/config";
 import Head from "next/head";
+import { getCookies } from "cookies-next";
 import React from "react";
-import type { SolitoAppProps } from "solito";
+import { useDripsyTheme } from "dripsy";
 import "raf/polyfill";
 import type { AppRouter } from "./api/trpc/[trpc]";
 import { NextConfig } from "next";
@@ -13,8 +14,30 @@ import {
 	getSsrHost,
 	TRPC_ENDPOINT,
 } from "app/utils/queries";
+import { AppType } from "next/dist/shared/lib/utils";
+import {
+	ColorModeConfig,
+	LAST_COLOR_MODE_COOKIE_NAME,
+	SELECTED_COLOR_MODE_COOKIE_NAME,
+} from "app/contexts/color-mode-context";
+import { useColorModeCookies } from "../hooks/use-color-mode-cookies";
 
-const MyApp: React.FC<SolitoAppProps> = ({ Component, pageProps, ...rest }) => {
+const GlobalHooksComponent: React.FC = () => {
+	useColorModeCookies();
+	return null;
+};
+
+declare module "next/app" {
+	type ExtraAppInitialProps = {
+		colorModeConfig: ColorModeConfig;
+	};
+
+	interface AppInitialProps {
+		pageProps: ExtraAppInitialProps;
+	}
+}
+
+const MyApp: AppType = ({ Component, pageProps, ...rest }) => {
 	return (
 		<>
 			<Head>
@@ -22,12 +45,25 @@ const MyApp: React.FC<SolitoAppProps> = ({ Component, pageProps, ...rest }) => {
 				<meta name="description" content="Receipt App built on Solito" />
 				<link rel="icon" href="/favicon.svg" />
 			</Head>
-			<Provider>
+			<Provider initialColorModeConfig={pageProps.colorModeConfig}>
 				<ReactQueryDevtools />
-				<Component {...pageProps} />
+				<Component />
+				<GlobalHooksComponent />
 			</Provider>
 		</>
 	);
+};
+
+MyApp.getInitialProps = async ({ ctx }) => {
+	const cookies = getCookies(ctx);
+	return {
+		pageProps: {
+			colorModeConfig: {
+				last: cookies[LAST_COLOR_MODE_COOKIE_NAME],
+				selected: cookies[SELECTED_COLOR_MODE_COOKIE_NAME],
+			} as ColorModeConfig,
+		},
+	};
 };
 
 export default withTRPC<AppRouter>({
