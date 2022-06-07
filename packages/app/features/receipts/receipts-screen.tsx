@@ -1,6 +1,6 @@
 import React from "react";
 import * as ReactNative from "react-native";
-import { styled } from "app/styles";
+import { styled, Text as BaseText } from "app/styles";
 import { trpc, TRPCQueryResult } from "../../trpc";
 import { Receipt } from "../../components/receipt";
 import { useSx } from "dripsy";
@@ -14,10 +14,10 @@ const BlockWrapper = styled(ReactNative.View)({
 	alignItems: "center",
 });
 
-const Text = styled(ReactNative.Text)({
+const Text = styled(BaseText)({
 	textAlign: "center",
-	mb: 16,
-	fontWeight: "bold",
+	marginBottom: "$m",
+	fontWeight: "$bold",
 });
 
 type InnerProps = {
@@ -63,7 +63,7 @@ export const ReceiptsScreen: React.FC = () => {
 			contentContainerStyle={sx({
 				justifyContent: "center",
 				alignItems: "center",
-				width: "100%",
+				width: "$full",
 			})}
 		>
 			<ReceiptsScreenInner query={receiptsQuery} />

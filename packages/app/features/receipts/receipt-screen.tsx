@@ -1,10 +1,9 @@
 import React from "react";
 import * as ReactNative from "react-native";
 import { createParam } from "solito";
-import { styled } from "app/styles";
+import { styled, Text as BaseText, TextLink } from "app/styles";
 import { trpc, TRPCQueryResult } from "../../trpc";
 import { ReceiptItem } from "../../components/receipt-item";
-import { TextLink } from "solito/link";
 import { useSx } from "dripsy";
 
 const Wrapper = styled(ReactNative.ScrollView)({
@@ -15,10 +14,10 @@ const BlockWrapper = styled(ReactNative.View)({
 	flex: 1,
 });
 
-const Text = styled(ReactNative.Text)({
+const Text = styled(BaseText)({
 	textAlign: "center",
-	mb: 16,
-	fontWeight: "bold",
+	marginBottom: "$m",
+	fontWeight: "$bold",
 });
 
 type InnerProps = {
@@ -26,6 +25,7 @@ type InnerProps = {
 };
 
 const ReceiptsScreenInner: React.FC<InnerProps> = ({ query }) => {
+	const sx = useSx();
 	switch (query.status) {
 		case "error":
 			return (

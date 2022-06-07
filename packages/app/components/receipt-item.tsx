@@ -1,17 +1,17 @@
 import React from "react";
 import * as ReactNative from "react-native";
-import { styled } from "../styles";
+import { styled, Text } from "../styles";
 import { TRPCQueryOutput } from "../trpc";
 
 const Wrapper = styled(ReactNative.ScrollView)({
-	borderWidth: 1,
-	borderStyle: "solid",
-	borderColor: "black",
-	padding: 16,
+	borderWidth: "$hairline",
+	borderStyle: "$solid",
+	borderColor: "$muted",
+	padding: "$m",
 	flex: 1,
 });
 
-const Name = styled(ReactNative.Text)({});
+const Name = styled(Text)({});
 
 type Props = {
 	receiptItem: TRPCQueryOutput<"receipts.items">[number];

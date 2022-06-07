@@ -1,19 +1,17 @@
 import React from "react";
 import * as ReactNative from "react-native";
-import { TextLink } from "solito/link";
-import { styled } from "../styles";
+import { styled, TextLink } from "../styles";
 import { TRPCQueryOutput } from "../trpc";
 
 const Wrapper = styled(ReactNative.ScrollView)({
-	borderWidth: 1,
-	borderStyle: "solid",
-	borderColor: "black",
-	padding: 16,
+	borderWidth: "$hairline",
+	borderStyle: "$solid",
+	borderColor: "$muted",
+	padding: "$m",
 	flex: 1,
 	cursor: "pointer",
+	width: "$full",
 });
-
-const Name = styled(TextLink)();
 
 type Props = {
 	receipt: TRPCQueryOutput<"receipts.previews">[number];
@@ -22,7 +20,7 @@ type Props = {
 export const Receipt: React.FC<Props> = ({ receipt }) => {
 	return (
 		<Wrapper>
-			<Name href={`/receipts/${receipt.id}/`}>{receipt.name}</Name>
+			<TextLink href={`/receipts/${receipt.id}/`}>{receipt.name}</TextLink>
 		</Wrapper>
 	);
 };

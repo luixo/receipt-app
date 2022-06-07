@@ -22,6 +22,17 @@ import {
 } from "app/contexts/color-mode-context";
 import { useColorModeCookies } from "../hooks/use-color-mode-cookies";
 
+const GlobalStyles: React.FC = () => {
+	const { theme } = useDripsyTheme();
+	return (
+		<style>{`
+			body {
+				background-color: ${theme.colors.$background};
+			}
+		`}</style>
+	);
+};
+
 const GlobalHooksComponent: React.FC = () => {
 	useColorModeCookies();
 	return null;
@@ -46,6 +57,7 @@ const MyApp: AppType = ({ Component, pageProps, ...rest }) => {
 				<link rel="icon" href="/favicon.svg" />
 			</Head>
 			<Provider initialColorModeConfig={pageProps.colorModeConfig}>
+				<GlobalStyles />
 				<ReactQueryDevtools />
 				<Component />
 				<GlobalHooksComponent />

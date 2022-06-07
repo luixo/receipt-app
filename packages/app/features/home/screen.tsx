@@ -1,29 +1,27 @@
 import React from "react";
 import * as ReactNative from "react-native";
-import * as HTMLElements from "@expo/html-elements";
-import { TextLink } from "solito/link";
-import { styled } from "app/styles";
+import { styled, H1, P, A, TextLink } from "app/styles";
 import { useSx } from "dripsy";
 
 const Wrapper = styled(ReactNative.View)({
 	flex: 1,
 	justifyContent: "center",
 	alignItems: "center",
-	p: 16,
+	padding: "$m",
 });
 
-const Header = styled(HTMLElements.H1)({
-	fontWeight: "800",
+const Header = styled(H1)({
+	fontWeight: "$bold",
 	textAlign: "center",
 });
 
-const Container = styled(ReactNative.View)({ maxWidth: 600 });
+const Container = styled(ReactNative.View)({ maxWidth: "$container" });
 
-const Spacer = styled(ReactNative.View)({ height: 32 });
+const Spacer = styled(ReactNative.View)({ marginTop: "$l" });
 
-const Paragraph = styled(HTMLElements.P)({ textAlign: "center" });
+const Paragraph = styled(P)({ textAlign: "center" });
 
-const Link = styled(HTMLElements.A)({ color: "blue" });
+const Link = styled(A)({ color: "$primary" });
 
 export const HomeScreen: React.FC = () => {
 	const sx = useSx();
@@ -50,7 +48,7 @@ export const HomeScreen: React.FC = () => {
 			<TextLink
 				href="/receipts/"
 				textProps={{
-					style: sx({ color: "blue" }),
+					style: sx({ color: "$primary" }),
 				}}
 			>
 				Link to receipts page

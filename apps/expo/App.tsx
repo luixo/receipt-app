@@ -4,7 +4,7 @@ import { NativeNavigation } from "./navigation";
 
 const App: React.FC = () => {
 	return (
-		<Provider>
+		<Provider initialColorModeConfig={{}}>
 			<NativeNavigation />
 		</Provider>
 	);
