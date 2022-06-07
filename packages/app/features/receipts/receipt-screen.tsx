@@ -5,6 +5,7 @@ import { styled } from "app/styles";
 import { trpc, TRPCQueryResult } from "../../trpc";
 import { ReceiptItem } from "../../components/receipt-item";
 import { TextLink } from "solito/link";
+import { useSx } from "dripsy";
 
 const Wrapper = styled(ReactNative.ScrollView)({
 	flex: 1,
@@ -18,14 +19,6 @@ const Text = styled(ReactNative.Text)({
 	textAlign: "center",
 	mb: 16,
 	fontWeight: "bold",
-});
-
-const styles = ReactNative.StyleSheet.create({
-	scrollContainer: {
-		justifyContent: "center",
-		alignItems: "center",
-		flexGrow: 1,
-	},
 });
 
 type InnerProps = {
@@ -44,7 +37,7 @@ const ReceiptsScreenInner: React.FC<InnerProps> = ({ query }) => {
 		case "idle":
 			return (
 				<BlockWrapper>
-					<Text>loading</Text>
+					<Text>{query.status}</Text>
 				</BlockWrapper>
 			);
 		case "success":
@@ -62,6 +55,7 @@ const ReceiptsScreenInner: React.FC<InnerProps> = ({ query }) => {
 const { useParam } = createParam<{ id: string }>();
 
 export const ReceiptScreen: React.FC = () => {
+	const sx = useSx();
 	const [id] = useParam("id");
 	if (!id) {
 		throw new Error("No id in param");
@@ -73,7 +67,13 @@ export const ReceiptScreen: React.FC = () => {
 	]);
 
 	return (
-		<Wrapper contentContainerStyle={styles.scrollContainer}>
+		<Wrapper
+			contentContainerStyle={sx({
+				justifyContent: "center",
+				alignItems: "center",
+				flexGrow: 1,
+			})}
+		>
 			<Text>{`Receipt ID: ${id}`}</Text>
 			<TextLink href="/receipts/">Back</TextLink>
 			<ReceiptsScreenInner query={itemsQuery} />

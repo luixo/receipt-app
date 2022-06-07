@@ -3,6 +3,7 @@ import * as ReactNative from "react-native";
 import * as HTMLElements from "@expo/html-elements";
 import { TextLink } from "solito/link";
 import { styled } from "app/styles";
+import { useSx } from "dripsy";
 
 const Wrapper = styled(ReactNative.View)({
 	flex: 1,
@@ -24,15 +25,8 @@ const Paragraph = styled(HTMLElements.P)({ textAlign: "center" });
 
 const Link = styled(HTMLElements.A)({ color: "blue" });
 
-const styles = ReactNative.StyleSheet.create({
-	link: {
-		fontSize: 16,
-		fontWeight: "bold",
-		color: "blue",
-	},
-});
-
 export const HomeScreen: React.FC = () => {
+	const sx = useSx();
 	return (
 		<Wrapper>
 			<Header>Welcome to Receipt App.</Header>
@@ -53,7 +47,12 @@ export const HomeScreen: React.FC = () => {
 				</Paragraph>
 			</Container>
 			<Spacer />
-			<TextLink href="/receipts/" textProps={{ style: styles.link }}>
+			<TextLink
+				href="/receipts/"
+				textProps={{
+					style: sx({ color: "blue" }),
+				}}
+			>
 				Link to receipts page
 			</TextLink>
 		</Wrapper>

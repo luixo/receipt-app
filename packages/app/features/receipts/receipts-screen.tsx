@@ -3,6 +3,7 @@ import * as ReactNative from "react-native";
 import { styled } from "app/styles";
 import { trpc, TRPCQueryResult } from "../../trpc";
 import { Receipt } from "../../components/receipt";
+import { useSx } from "dripsy";
 
 const Wrapper = styled(ReactNative.ScrollView)({
 	flex: 1,
@@ -10,20 +11,13 @@ const Wrapper = styled(ReactNative.ScrollView)({
 
 const BlockWrapper = styled(ReactNative.View)({
 	flex: 1,
+	alignItems: "center",
 });
 
 const Text = styled(ReactNative.Text)({
 	textAlign: "center",
 	mb: 16,
 	fontWeight: "bold",
-});
-
-const styles = ReactNative.StyleSheet.create({
-	scrollContainer: {
-		justifyContent: "center",
-		alignItems: "center",
-		width: "100%",
-	},
 });
 
 type InnerProps = {
@@ -42,7 +36,7 @@ const ReceiptsScreenInner: React.FC<InnerProps> = ({ query }) => {
 		case "idle":
 			return (
 				<BlockWrapper>
-					<Text>loading</Text>
+					<Text>{query.status}</Text>
 				</BlockWrapper>
 			);
 		case "success":
@@ -58,13 +52,20 @@ const ReceiptsScreenInner: React.FC<InnerProps> = ({ query }) => {
 };
 
 export const ReceiptsScreen: React.FC = () => {
+	const sx = useSx();
 	const receiptsQuery = trpc.useQuery([
 		"receipts.previews",
 		{ offset: 0, limit: 10 },
 	]);
 
 	return (
-		<Wrapper contentContainerStyle={styles.scrollContainer}>
+		<Wrapper
+			contentContainerStyle={sx({
+				justifyContent: "center",
+				alignItems: "center",
+				width: "100%",
+			})}
+		>
 			<ReceiptsScreenInner query={receiptsQuery} />
 		</Wrapper>
 	);
