@@ -5,7 +5,7 @@ import {
 	Router,
 	ProcedureRecord,
 } from "@trpc/server/dist/declarations/src/router";
-import type { AppRouter } from "../../apps/next/pages/api/trpc/[trpc]";
+import type { AppRouter } from "../../apps/next/src/pages/api/trpc/[trpc]";
 
 type AnyRouter<TContext = any> = Router<any, TContext, any, any, any, any, any>;
 type AnyProcedure = Procedure<any, any, any, any, any, any, any>;
