@@ -79,18 +79,25 @@ MyApp.getInitialProps = async ({ ctx }) => {
 };
 
 export default withTRPC<AppRouter>({
-	config: () => {
+	config: ({ ctx }) => {
 		const queryClientConfig = getQueryClientConfig();
+		const debugHeader = Boolean(ctx?.query.debug) ? "true" : undefined;
 		if (typeof window !== "undefined") {
 			return {
 				url: TRPC_ENDPOINT,
 				queryClientConfig,
+				headers: {
+					debug: debugHeader,
+				},
 			};
 		}
 		const nextConfig: NextConfig = getConfig();
 		return {
 			url: getSsrHost(nextConfig.serverRuntimeConfig?.port ?? 0),
 			queryClientConfig,
+			headers: {
+				debug: debugHeader,
+			},
 		};
 	},
 	ssr: true,
