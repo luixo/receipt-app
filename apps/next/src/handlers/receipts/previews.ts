@@ -2,11 +2,9 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { getDatabase } from "../../db";
-import { Context } from "../context";
+import { AuthorizedContext } from "../context";
 
-const ACCOUNT_ID = "fake";
-
-export const router = trpc.router<Context>().query("previews", {
+export const router = trpc.router<AuthorizedContext>().query("previews", {
 	input: z.strictObject({
 		offset: z.number(),
 		limit: z.number(),
@@ -24,8 +22,8 @@ export const router = trpc.router<Context>().query("previews", {
 			.innerJoin("receipts", (jb) =>
 				jb.onRef("receipts.id", "=", "receipt_participants.receiptId")
 			)
-			.where("accounts.id", "=", ACCOUNT_ID)
-			.where("receipts.ownerAccountId", "<>", ACCOUNT_ID)
+			.where("accounts.id", "=", ctx.auth.accountId)
+			.where("receipts.ownerAccountId", "<>", ctx.auth.accountId)
 			.select([
 				"receipt_participants.role",
 				"receipts.id",

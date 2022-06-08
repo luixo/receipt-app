@@ -1,9 +1,9 @@
 import { MiddlewareFunction } from "@trpc/server/dist/declarations/src/internals/middlewares";
-import { Context } from "../context";
+import { UnauthorizedContext } from "../context";
 
 export const middleware: MiddlewareFunction<
-	Context,
-	Context,
+	UnauthorizedContext,
+	UnauthorizedContext,
 	unknown
 > = async ({ path, type, next }) => {
 	const start = Date.now();

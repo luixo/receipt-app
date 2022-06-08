@@ -6,7 +6,7 @@ import {
 	SelectExpression,
 } from "kysely";
 import { TableExpressionDatabase } from "kysely/dist/cjs/parser/table-parser";
-import { Context } from "../handlers/context";
+import { UnauthorizedContext } from "../handlers/context";
 import { getDatabaseConfig } from "./config";
 import { InitializerTypeMap, ModelTypeMap } from "./models";
 import { Logger } from "../utils/logger";
@@ -55,7 +55,7 @@ const getLogger = (logger: Logger, url: string) => {
 
 const databaseConfig = getDatabaseConfig();
 export type Database = Kysely<ReceiptsDatabase>;
-export const getDatabase = (ctx?: Context) => {
+export const getDatabase = (ctx?: UnauthorizedContext) => {
 	return new Kysely<ReceiptsDatabase>({
 		dialect: new PostgresDialect(databaseConfig),
 		log:

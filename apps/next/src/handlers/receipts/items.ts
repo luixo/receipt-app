@@ -2,9 +2,9 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { getDatabase } from "../../db";
-import { Context } from "../context";
+import { AuthorizedContext } from "../context";
 
-export const router = trpc.router<Context>().query("items", {
+export const router = trpc.router<AuthorizedContext>().query("items", {
 	input: z.object({
 		id: z.string(),
 		offset: z.number(),
