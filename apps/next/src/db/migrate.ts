@@ -1,8 +1,9 @@
 import { Migrator, FileMigrationProvider } from "kysely";
 import * as path from "path";
-import { database } from ".";
+import { getDatabase } from ".";
 
 async function main() {
+	const database = getDatabase();
 	const migrator = new Migrator({
 		db: database,
 		provider: new FileMigrationProvider(path.join(__dirname, "./migrations")),

@@ -1,16 +1,18 @@
 import * as trpc from "@trpc/server";
 import { z } from "zod";
 
-import { database } from "../../db";
+import { getDatabase } from "../../db";
+import { Context } from "../context";
 
 const ACCOUNT_ID = "fake";
 
-export const router = trpc.router().query("previews", {
+export const router = trpc.router<Context>().query("previews", {
 	input: z.strictObject({
 		offset: z.number(),
 		limit: z.number(),
 	}),
-	resolve: async ({ input }) => {
+	resolve: async ({ input, ctx }) => {
+		const database = getDatabase(ctx);
 		const receipts = await database
 			.selectFrom("accounts")
 			.innerJoin("users", (jb) =>

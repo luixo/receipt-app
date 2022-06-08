@@ -1,7 +1,6 @@
-import { sql } from "kysely";
-import { database } from "..";
+import { Database } from "..";
 
-const createAccountsTable = async (db: typeof database) => {
+const createAccountsTable = async (db: Database) => {
 	await db.schema
 		.createTable("accounts")
 		.ifNotExists()
@@ -17,12 +16,12 @@ const createAccountsTable = async (db: typeof database) => {
 		.execute();
 };
 
-const removeAccountsTable = async (db: typeof database) => {
+const removeAccountsTable = async (db: Database) => {
 	await db.schema.dropIndex("accounts_email_index").execute();
 	await db.schema.dropTable("accounts").ifExists().execute();
 };
 
-const createAccountConnectionsTable = async (db: typeof database) => {
+const createAccountConnectionsTable = async (db: Database) => {
 	await db.schema
 		.createTable("account_connections")
 		.ifNotExists()
@@ -63,13 +62,13 @@ const createAccountConnectionsTable = async (db: typeof database) => {
 		.execute();
 };
 
-const removeAccountConnectionsTable = async (db: typeof database) => {
+const removeAccountConnectionsTable = async (db: Database) => {
 	await db.schema.dropIndex("accountLinks_secondAccountId_index").execute();
 	await db.schema.dropIndex("accountLinks_firstAccountId_index").execute();
 	await db.schema.dropTable("account_connections").ifExists().execute();
 };
 
-const createReceiptsTable = async (db: typeof database) => {
+const createReceiptsTable = async (db: Database) => {
 	await db.schema
 		.createTable("receipts")
 		.ifNotExists()
@@ -94,12 +93,12 @@ const createReceiptsTable = async (db: typeof database) => {
 		.execute();
 };
 
-const removeReceiptsTable = async (db: typeof database) => {
+const removeReceiptsTable = async (db: Database) => {
 	await db.schema.dropIndex("receipts_ownerAccountId_index").execute();
 	await db.schema.dropTable("receipts").ifExists().execute();
 };
 
-const createReceiptItemsTable = async (db: typeof database) => {
+const createReceiptItemsTable = async (db: Database) => {
 	await db.schema
 		.createTable("receipt_items")
 		.ifNotExists()
@@ -125,12 +124,12 @@ const createReceiptItemsTable = async (db: typeof database) => {
 		.execute();
 };
 
-const removeReceiptItemsTable = async (db: typeof database) => {
+const removeReceiptItemsTable = async (db: Database) => {
 	await db.schema.dropIndex("receiptItems_receiptId_index").execute();
 	await db.schema.dropTable("receipt_items").ifExists().execute();
 };
 
-const createSessionsTable = async (db: typeof database) => {
+const createSessionsTable = async (db: Database) => {
 	await db.schema
 		.createTable("sessions")
 		.ifNotExists()
@@ -151,12 +150,12 @@ const createSessionsTable = async (db: typeof database) => {
 		.execute();
 };
 
-const removeSessionsTable = async (db: typeof database) => {
+const removeSessionsTable = async (db: Database) => {
 	await db.schema.dropIndex("sessions_sessionId_index").execute();
 	await db.schema.dropTable("sessions").ifExists().execute();
 };
 
-const createUsersTable = async (db: typeof database) => {
+const createUsersTable = async (db: Database) => {
 	await db.schema
 		.createTable("users")
 		.ifNotExists()
@@ -182,11 +181,11 @@ const createUsersTable = async (db: typeof database) => {
 		.execute();
 };
 
-const removeUsersTable = async (db: typeof database) => {
+const removeUsersTable = async (db: Database) => {
 	await db.schema.dropTable("users").ifExists().execute();
 };
 
-const createItemParticipantsTable = async (db: typeof database) => {
+const createItemParticipantsTable = async (db: Database) => {
 	await db.schema
 		.createTable("item_participants")
 		.ifNotExists()
@@ -214,12 +213,12 @@ const createItemParticipantsTable = async (db: typeof database) => {
 		.execute();
 };
 
-const removeItemParticipantsTable = async (db: typeof database) => {
+const removeItemParticipantsTable = async (db: Database) => {
 	await db.schema.dropIndex("itemParticipants_itemId_index").execute();
 	await db.schema.dropTable("item_participants").ifExists().execute();
 };
 
-const createReceiptParticipantsTable = async (db: typeof database) => {
+const createReceiptParticipantsTable = async (db: Database) => {
 	await db.schema
 		.createTable("receipt_participants")
 		.ifNotExists()
@@ -252,13 +251,13 @@ const createReceiptParticipantsTable = async (db: typeof database) => {
 		.execute();
 };
 
-const removeReceiptParticipantsTable = async (db: typeof database) => {
+const removeReceiptParticipantsTable = async (db: Database) => {
 	await db.schema.dropIndex("receiptParticipants_userId_index").execute();
 	await db.schema.dropIndex("receiptParticipants_receiptId_index").execute();
 	await db.schema.dropTable("receipt_participants").ifExists().execute();
 };
 
-export const up = async (db: typeof database) => {
+export const up = async (db: Database) => {
 	await createAccountsTable(db);
 	await createAccountConnectionsTable(db);
 	await createReceiptsTable(db);
@@ -269,7 +268,7 @@ export const up = async (db: typeof database) => {
 	await createReceiptParticipantsTable(db);
 };
 
-export const down = async (db: typeof database) => {
+export const down = async (db: Database) => {
 	await removeReceiptParticipantsTable(db);
 	await removeItemParticipantsTable(db);
 	await removeUsersTable(db);

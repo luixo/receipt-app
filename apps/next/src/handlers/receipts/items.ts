@@ -1,15 +1,17 @@
 import * as trpc from "@trpc/server";
 import { z } from "zod";
 
-import { database } from "../../db";
+import { getDatabase } from "../../db";
+import { Context } from "../context";
 
-export const router = trpc.router().query("items", {
+export const router = trpc.router<Context>().query("items", {
 	input: z.object({
 		id: z.string(),
 		offset: z.number(),
 		limit: z.number(),
 	}),
-	resolve: async ({ input }) => {
+	resolve: async ({ input, ctx }) => {
+		const database = getDatabase(ctx);
 		const receiptItems = await database
 			.selectFrom("receipts")
 			.innerJoin("receipt_items", (jb) =>
