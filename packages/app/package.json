@@ -10,7 +10,8 @@
 		"dripsy": "^3.6.0",
 		"expo-linking": "^3.0.0",
 		"react-query": "^3.39.0",
-		"solito": "latest"
+		"solito": "latest",
+		"superjson": "^1.9.1"
 	},
 	"sideEffects": false
 }

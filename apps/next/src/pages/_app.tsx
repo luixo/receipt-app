@@ -21,6 +21,7 @@ import {
 	SELECTED_COLOR_MODE_COOKIE_NAME,
 } from "app/contexts/color-mode-context";
 import { useColorModeCookies } from "../hooks/use-color-mode-cookies";
+import superjson from "superjson";
 
 const GlobalStyles: React.FC = () => {
 	const { theme } = useDripsyTheme();
@@ -89,6 +90,7 @@ export default withTRPC<AppRouter>({
 				headers: {
 					debug: debugHeader,
 				},
+				transformer: superjson,
 			};
 		}
 		const nextConfig: NextConfig = getConfig();
@@ -98,6 +100,7 @@ export default withTRPC<AppRouter>({
 			headers: {
 				debug: debugHeader,
 			},
+			transformer: superjson,
 		};
 	},
 	ssr: true,

@@ -1,5 +1,6 @@
 import React from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
+import superjson from "superjson";
 import { trpc } from "../../trpc";
 import {
 	getNativeBaseUrl,
@@ -16,6 +17,7 @@ export const QueriesProvider: React.FC<React.PropsWithChildren<{}>> = ({
 	const [trpcClient] = React.useState(() =>
 		trpc.createClient({
 			url: `${getNativeBaseUrl()}${TRPC_ENDPOINT}`,
+			transformer: superjson,
 		})
 	);
 	return (
