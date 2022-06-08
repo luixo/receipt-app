@@ -1,6 +1,6 @@
 import React from "react";
 import * as ReactNative from "react-native";
-import { styled, Text as BaseText } from "app/utils/styles";
+import { styled, Text as BaseText } from "../../utils/styles";
 import { trpc, TRPCQueryResult } from "../../trpc";
 import { Receipt } from "../../components/receipt";
 import { useSx } from "dripsy";

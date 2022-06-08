@@ -1,7 +1,7 @@
 import React from "react";
 import * as ReactNative from "react-native";
 import { createParam } from "solito";
-import { styled, Text as BaseText, TextLink } from "app/utils/styles";
+import { styled, Text as BaseText, TextLink } from "../../utils/styles";
 import { trpc, TRPCQueryResult } from "../../trpc";
 import { ReceiptItem } from "../../components/receipt-item";
 import { useSx } from "dripsy";

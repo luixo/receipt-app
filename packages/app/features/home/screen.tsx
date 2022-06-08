@@ -1,6 +1,6 @@
 import React from "react";
 import * as ReactNative from "react-native";
-import { styled, H1, P, A, TextLink } from "app/utils/styles";
+import { styled, H1, P, A, TextLink } from "../../utils/styles";
 import { useSx } from "dripsy";
 
 const Wrapper = styled(ReactNative.View)({
