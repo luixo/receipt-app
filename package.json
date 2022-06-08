@@ -15,6 +15,7 @@
 		"dotenv-cli": "^5.1.0",
 		"eslint": "^8.13.0",
 		"get-port": "^6.1.2",
+		"pre-commit": "^1.2.2",
 		"ts-node": "^10.7.0",
 		"turbo": "^1.2.2",
 		"typescript": "^4.6.3"
@@ -24,7 +25,8 @@
 		"native:dev": "yarn workspace expo-app dev",
 		"web:dev": "yarn workspace next-app dev",
 		"ios:build": "yarn workspace expo-app ios:update-version && yarn workspace expo-app ios:build",
-		"ios:publish": "yarn workspace expo-app ios:publish"
+		"ios:publish": "yarn workspace expo-app ios:publish",
+		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {
 		"expo": "~44.0.2",
@@ -37,5 +39,6 @@
 		"react-native": "0.64.3",
 		"react-native-web": "0.17.1"
 	},
-	"version": "1.0.0"
+	"version": "1.0.0",
+	"pre-commit": "typecheck"
 }
