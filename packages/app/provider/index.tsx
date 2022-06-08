@@ -5,7 +5,7 @@ import {
 	ColorModeConfig,
 	ColorModeContext,
 } from "../contexts/color-mode-context";
-import { ThemeProvider } from "../styles";
+import { ThemeProvider } from "../utils/styles";
 
 type Props = {
 	initialColorModeConfig: ColorModeConfig;

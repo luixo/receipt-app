@@ -1,6 +1,6 @@
 import React from "react";
 import * as ReactNative from "react-native";
-import { styled, TextLink } from "../styles";
+import { styled, TextLink } from "../utils/styles";
 import { TRPCQueryOutput } from "../trpc";
 
 const Wrapper = styled(ReactNative.ScrollView)({

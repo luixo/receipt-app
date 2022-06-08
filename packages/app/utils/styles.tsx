@@ -3,7 +3,7 @@ import * as ReactNative from "react-native";
 import * as HTMLElements from "@expo/html-elements";
 import { makeTheme, styled, DripsyProvider, DripsyBaseTheme } from "dripsy";
 import { TextLink as BaseTextLink } from "solito/link";
-import { ColorModeContext } from "./contexts/color-mode-context";
+import { ColorModeContext } from "../contexts/color-mode-context";
 
 const base = {
 	borderWidths: {
