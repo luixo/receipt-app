@@ -6,6 +6,7 @@ import { getDatabase } from "../../db";
 import { ReceiptsId } from "../../db/models";
 import { AuthorizedContext } from "../context";
 import { flavored } from "../zod";
+import { getAccessRole } from "./utils";
 
 export const router = trpc.router<AuthorizedContext>().query("get", {
 	input: z.strictObject({
@@ -36,6 +37,17 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 				message: `No receipt ${input.id} found`,
 			});
 		}
-		return receipt;
+		const accessRole = await getAccessRole(
+			database,
+			receipt,
+			ctx.auth.accountId
+		);
+		if (accessRole) {
+			return { ...receipt, role: accessRole };
+		}
+		throw new trpc.TRPCError({
+			code: "FORBIDDEN",
+			message: `Account id ${ctx.auth.accountId} has no access to receipt ${receipt.id}`,
+		});
 	},
 });

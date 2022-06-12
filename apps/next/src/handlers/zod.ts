@@ -11,3 +11,9 @@ export const name = z
 	.max(VALIDATIONS_CONSTANTS.name.min);
 
 export const flavored = <T extends string>(x: string): x is T => true;
+
+export const role = z.union([
+	z.literal("viewer"),
+	z.literal("editor"),
+	z.literal("owner"),
+]);

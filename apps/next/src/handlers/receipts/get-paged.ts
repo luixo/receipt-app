@@ -31,6 +31,7 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 					.where("receipts.ownerAccountId", "<>", ctx.auth.accountId)
 					.select([
 						"receipts.id as receiptId",
+						"receipt_participants.role",
 						"receipts.name",
 						"receipts.issued",
 						"receipts.currency",
@@ -44,6 +45,7 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 							.where("ownerAccountId", "=", ctx.auth.accountId)
 							.select([
 								"receipts.id as receiptId",
+								sql<string>`'owner'`.as("role"),
 								"receipts.name",
 								"receipts.issued",
 								"receipts.currency",
@@ -68,6 +70,7 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 			)
 			.select([
 				"mergedReceipts.receiptId as id",
+				"mergedReceipts.role",
 				"name",
 				"issued",
 				"currency",

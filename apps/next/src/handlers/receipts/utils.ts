@@ -1,0 +1,36 @@
+import { z } from "zod";
+import { Database } from "../../db";
+import { role } from "../zod";
+
+type Role = z.infer<typeof role>;
+
+export const getAccessRole = async (
+	database: Database,
+	receipt: { ownerAccountId: string; id: string },
+	accountId: string
+): Promise<Role | undefined> => {
+	if (receipt.ownerAccountId === accountId) {
+		return "owner";
+	}
+	const participant = await database
+		.selectFrom("receipt_participants")
+		.innerJoin("users", (jb) =>
+			jb.onRef("users.id", "=", "receipt_participants.userId")
+		)
+		.innerJoin("accounts", (jb) =>
+			jb.onRef("accounts.id", "=", "users.connectedAccountId")
+		)
+		.where("accounts.id", "=", accountId)
+		.where("receipt_participants.receiptId", "=", receipt.id)
+		.select("role")
+		.executeTakeFirst();
+	if (!participant) {
+		return;
+	}
+	const parsed = role.safeParse(participant.role);
+	if (!parsed.success) {
+		// TODO: add database-level validation
+		return;
+	}
+	return parsed.data;
+};

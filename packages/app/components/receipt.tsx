@@ -20,6 +20,7 @@ export const Receipt: React.FC<Props> = ({ data: receipt }) => {
 			<TextLink href={`/receipts/${receipt.id}/`}>{receipt.name}</TextLink>
 			<ReactNative.Text>Currency: {receipt.currency}</ReactNative.Text>
 			<ReactNative.Text>Sum: {receipt.sum}</ReactNative.Text>
+			<ReactNative.Text>Role: {receipt.role}</ReactNative.Text>
 			<QueryWrapper query={ownerQuery}>{ReceiptOwner}</QueryWrapper>
 		</Block>
 	);
