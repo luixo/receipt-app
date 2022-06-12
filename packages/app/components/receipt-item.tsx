@@ -1,14 +1,21 @@
 import React from "react";
 import { TRPCQueryOutput } from "../trpc";
 import { Block } from "./utils/block";
+import { ReceiptItemPart } from "./receipt-item-part";
 
-type ReceiptItem = TRPCQueryOutput<"receipt-items.get">[number];
+type ReceiptItem = TRPCQueryOutput<"receipt-items.get">["items"][number];
+type ReceiptParticipant =
+	TRPCQueryOutput<"receipt-items.get">["participants"][number];
 
 type Props = {
 	receiptItem: ReceiptItem;
+	receiptParticipants: ReceiptParticipant[];
 };
 
-export const ReceiptItem: React.FC<Props> = ({ receiptItem }) => {
+export const ReceiptItem: React.FC<Props> = ({
+	receiptItem,
+	receiptParticipants,
+}) => {
 	return (
 		<Block name={receiptItem.name}>
 			<Text>
@@ -17,6 +24,13 @@ export const ReceiptItem: React.FC<Props> = ({ receiptItem }) => {
 				<Text>{receiptItem.quantity}</Text>
 			</Text>
 			<Text>{receiptItem.locked ? "locked" : "not locked"}</Text>
+			{receiptItem.parts.map((part) => (
+				<ReceiptItemPart
+					key={part.userId}
+					receiptItemPart={part}
+					receiptParticipants={receiptParticipants}
+				/>
+			))}
 		</Block>
 	);
 };
