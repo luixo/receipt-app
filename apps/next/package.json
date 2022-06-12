@@ -23,6 +23,7 @@
 		"app": "*",
 		"cookie": "^0.5.0",
 		"cookies-next": "^2.0.4",
+		"currency-list": "^1.0.8",
 		"kysely": "^0.18.1",
 		"next": "^12.1.7-canary.31",
 		"pino": "^8.0.0",

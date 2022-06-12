@@ -1,7 +1,7 @@
 import React from "react";
 import { v4 } from "uuid";
 
-import { useForm, Controller } from "react-hook-form";
+import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { AddButton } from "./utils/add-button";
 import { trpc } from "../trpc";
 import { Block } from "./utils/block";
@@ -17,6 +17,9 @@ import {
 } from "../utils/queries/receipts";
 import { TextInput, Text } from "../utils/styles";
 import { VALIDATIONS_CONSTANTS } from "../utils/validation";
+import { CurrenciesPicker } from "./currencies-picker";
+import { Currency } from "../utils/currency";
+import { QueryWrapper } from "./utils/query-wrapper";
 
 const putMutationOptions: UseContextedMutationOptions<
 	"receipts.put",
@@ -33,7 +36,7 @@ const putMutationOptions: UseContextedMutationOptions<
 						role: "owner",
 						name: form.name,
 						issued: new Date(),
-						currency: "USD",
+						currency: form.currency,
 						receiptResolved: false,
 						participantResolved: false,
 					},
@@ -66,6 +69,7 @@ const putMutationOptions: UseContextedMutationOptions<
 
 type Form = {
 	name: string;
+	currency: Currency;
 };
 
 type Props = {
@@ -77,19 +81,31 @@ export const AddReceiptForm: React.FC<Props> = ({ input }) => {
 		"receipts.put",
 		useTrpcMutationOptions(putMutationOptions, input)
 	);
+
 	const {
 		control,
 		handleSubmit,
 		formState: { isValid, isSubmitting, errors },
 		reset,
-	} = useForm<Form>();
-	const onSubmit = React.useCallback(
-		async (values: Form) => {
-			await addReceiptMutation.mutateAsync(values);
+		setValue,
+	} = useForm<Form>({ mode: "onChange" });
+	const onSubmit: SubmitHandler<Form> = React.useCallback(
+		async (values) => {
+			await addReceiptMutation.mutateAsync(values as Form);
 			reset();
 		},
 		[addReceiptMutation, reset]
 	);
+
+	const currenciesListQuery = trpc.useQuery([
+		"currency.get-list",
+		{ locale: "en" },
+	]);
+	React.useEffect(() => {
+		if (currenciesListQuery.data && currenciesListQuery.data[0]) {
+			setValue("currency", currenciesListQuery.data[0].code);
+		}
+	}, [currenciesListQuery.data]);
 
 	return (
 		<Block name="Add receipt">
@@ -117,6 +133,16 @@ export const AddReceiptForm: React.FC<Props> = ({ input }) => {
 			<AddButton onPress={handleSubmit(onSubmit)} disabled={!isValid}>
 				Add
 			</AddButton>
+			<Controller
+				control={control}
+				name="currency"
+				rules={{ required: true }}
+				render={({ field }) => (
+					<QueryWrapper query={currenciesListQuery} controllerProps={field}>
+						{CurrenciesPicker}
+					</QueryWrapper>
+				)}
+			/>
 			<MutationWrapper<"receipts.put"> mutation={addReceiptMutation}>
 				{() => <Text>Add success!</Text>}
 			</MutationWrapper>

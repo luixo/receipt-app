@@ -11,6 +11,7 @@ import { router as receiptsRouter } from "./receipts/index";
 import { router as receiptItemsRouter } from "./receipt-items/index";
 import { router as usersRouter } from "./users/index";
 import { router as receiptParticipantsRouter } from "./receipt-participants/index";
+import { router as currencyRouter } from "./currency/index";
 
 export const router = trpc
 	.router<UnauthorizedContext>()
@@ -22,4 +23,5 @@ export const router = trpc
 	.merge("receipts.", receiptsRouter)
 	.merge("receipt-items.", receiptItemsRouter)
 	.merge("users.", usersRouter)
-	.merge("receipt-participants.", receiptParticipantsRouter);
+	.merge("receipt-participants.", receiptParticipantsRouter)
+	.merge("currency.", currencyRouter);

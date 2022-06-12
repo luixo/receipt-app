@@ -1,5 +1,6 @@
 import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
 import { z } from "zod";
+import { isCurrency } from "../utils/currency";
 
 export const password = z
 	.string()
@@ -17,3 +18,5 @@ export const role = z.union([
 	z.literal("editor"),
 	z.literal("owner"),
 ]);
+
+export const currency = z.string().refine(isCurrency);

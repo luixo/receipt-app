@@ -4,10 +4,12 @@ import { z } from "zod";
 
 import { getDatabase } from "../../db";
 import { AuthorizedContext } from "../context";
+import { currency } from "../zod";
 
 export const router = trpc.router<AuthorizedContext>().mutation("put", {
 	input: z.strictObject({
 		name: z.string().min(2).max(255),
+		currency: currency,
 	}),
 	resolve: async ({ input, ctx }) => {
 		const id = v4();
@@ -17,7 +19,7 @@ export const router = trpc.router<AuthorizedContext>().mutation("put", {
 			.values({
 				id,
 				name: input.name,
-				currency: "USD",
+				currency: input.currency,
 				created: new Date(),
 				issued: new Date(),
 				ownerAccountId: ctx.auth.accountId,

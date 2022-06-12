@@ -1,5 +1,5 @@
 import React from "react";
-import { TRPCQueryOutput } from "../trpc";
+import { trpc, TRPCQueryOutput } from "../trpc";
 import { Block } from "./utils/block";
 import { Text, TextLink } from "../utils/styles";
 
@@ -8,9 +8,19 @@ type Props = {
 };
 
 export const ReceiptPreview: React.FC<Props> = ({ data: receipt }) => {
+	const currenciesListQuery = trpc.useQuery([
+		"currency.get-list",
+		{ locale: "en" },
+	]);
+	const currency = currenciesListQuery.data
+		? currenciesListQuery.data.find(
+				(element) => element.code === receipt.currency
+		  )?.symbol
+		: receipt.currency;
 	return (
 		<Block>
 			<TextLink href={`/receipts/${receipt.id}/`}>{receipt.name}</TextLink>
+			<Text>Currency: {currency}</Text>
 			<Text>Role: {receipt.role}</Text>
 			<Text>Issued: {receipt.issued.toLocaleDateString()}</Text>
 			<Text>Resolved: {receipt.receiptResolved.toString()}</Text>
