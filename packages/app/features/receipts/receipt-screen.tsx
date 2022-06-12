@@ -5,6 +5,7 @@ import { styled, Text as BaseText, TextLink } from "../../utils/styles";
 import { trpc, TRPCQueryResult } from "../../trpc";
 import { ReceiptItem } from "../../components/receipt-item";
 import { useSx } from "dripsy";
+import { BackButton } from "../../components/utils/back-button";
 
 const Wrapper = styled(ReactNative.ScrollView)({
 	flex: 1,
@@ -75,7 +76,7 @@ export const ReceiptScreen: React.FC = () => {
 			})}
 		>
 			<Text>{`Receipt ID: ${id}`}</Text>
-			<TextLink href="/receipts/">Back</TextLink>
+			<BackButton href="/receipts/" />
 			<ReceiptsScreenInner query={itemsQuery} />
 		</Wrapper>
 	);

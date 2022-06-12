@@ -4,6 +4,7 @@ import { styled, Text as BaseText } from "../../utils/styles";
 import { trpc, TRPCQueryResult } from "../../trpc";
 import { Receipt } from "../../components/receipt";
 import { useSx } from "dripsy";
+import { BackButton } from "../../components/utils/back-button";
 
 const Wrapper = styled(ReactNative.ScrollView)({
 	flex: 1,
@@ -42,6 +43,7 @@ const ReceiptsScreenInner: React.FC<InnerProps> = ({ query }) => {
 		case "success":
 			return (
 				<BlockWrapper>
+					<BackButton href="/" />
 					<Text>Total: {query.data.length} receipts</Text>
 					{query.data.map((receipt) => (
 						<Receipt key={receipt.id} receipt={receipt} />
