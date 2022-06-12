@@ -1,7 +1,14 @@
 import React from "react";
 import * as ReactNative from "react-native";
 import * as HTMLElements from "@expo/html-elements";
-import { makeTheme, styled, DripsyProvider, DripsyBaseTheme } from "dripsy";
+import {
+	makeTheme,
+	styled,
+	DripsyProvider,
+	DripsyBaseTheme,
+	useSx,
+	useDripsyTheme,
+} from "dripsy";
 import { TextLink as BaseTextLink } from "solito/link";
 import { ColorModeContext } from "../contexts/color-mode-context";
 
@@ -28,6 +35,9 @@ const base = {
 	},
 	fontSizes: {
 		$regular: 16,
+	},
+	radii: {
+		$medium: 8,
 	},
 } as const;
 
@@ -94,6 +104,41 @@ export const Text = styled(ReactNative.Text)({ color: "$text" });
 export const H1 = styled(HTMLElements.H1)({ color: "$text" });
 export const P = styled(HTMLElements.P)({ color: "$text" });
 export const A = styled(HTMLElements.A)({ color: "$text" });
-export const TextLink = styled(BaseTextLink)({ color: "$highlight" });
+export const TextLink = (props: React.ComponentProps<typeof BaseTextLink>) => {
+	const sx = useSx();
+	const linkStyle = sx({
+		fontSize: "$regular",
+		fontWeight: "$bold",
+		color: "$primary",
+	});
+	return (
+		<BaseTextLink
+			{...props}
+			textProps={{
+				...props.textProps,
+				style: [linkStyle, props.textProps?.style],
+			}}
+		/>
+	);
+};
+const StyledTextInput = styled(ReactNative.TextInput)({
+	color: "$text",
+	borderColor: "$muted",
+	width: "$full",
+	borderWidth: "$hairline",
+	borderRadius: "$medium",
+	padding: "$s",
+});
+export const TextInput = (
+	props: React.ComponentProps<typeof StyledTextInput>
+) => {
+	const { theme } = useDripsyTheme();
+	return (
+		<StyledTextInput
+			placeholderTextColor={theme.colors.$secondary}
+			{...props}
+		/>
+	);
+};
 
 export { styled };
