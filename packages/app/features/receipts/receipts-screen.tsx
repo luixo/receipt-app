@@ -10,7 +10,7 @@ const RECEIPTS_PER_PAGE = 10;
 export const ReceiptsScreen: React.FC = () => {
 	const receiptsQuery = trpc.useInfiniteQuery([
 		"receipts.get-paged",
-		{ limit: RECEIPTS_PER_PAGE },
+		{ limit: RECEIPTS_PER_PAGE, orderBy: "date-desc" },
 	]);
 
 	return (

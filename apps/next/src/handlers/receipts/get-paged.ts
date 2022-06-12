@@ -10,6 +10,7 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 	input: z.strictObject({
 		cursor: z.number().nullish(),
 		limit: z.number(),
+		orderBy: z.union([z.literal("date-asc"), z.literal("date-desc")]),
 	}),
 	resolve: async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
@@ -81,6 +82,7 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 			])
 			.offset(input.cursor || 0)
 			.limit(input.limit)
+			.orderBy("issued", input.orderBy === "date-asc" ? "asc" : "desc")
 			.execute();
 		return receipts;
 	},
