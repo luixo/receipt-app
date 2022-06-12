@@ -29,6 +29,9 @@ export const NavigationProvider: React.FC<React.PropsWithChildren<{}>> = ({
 				initialRouteName: "home",
 				screens: {
 					home: "",
+					login: "login/",
+					register: "register/",
+					account: "account/",
 					receipts: "receipts/",
 					receipt: "receipts/:id",
 				},

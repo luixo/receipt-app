@@ -22,6 +22,8 @@ import {
 } from "app/contexts/color-mode-context";
 import { useColorModeCookies } from "../hooks/use-color-mode-cookies";
 import superjson from "superjson";
+import { getCookie, serialize } from "../utils/cookie";
+import { AUTH_COOKIE } from "../utils/auth-cookie";
 
 const GlobalStyles: React.FC = () => {
 	const { theme } = useDripsyTheme();
@@ -94,11 +96,13 @@ export default withTRPC<AppRouter>({
 			};
 		}
 		const nextConfig: NextConfig = getConfig();
+		const authToken = ctx?.req ? getCookie(ctx.req, AUTH_COOKIE) : undefined;
 		return {
 			url: getSsrHost(nextConfig.serverRuntimeConfig?.port ?? 0),
 			queryClientConfig,
 			headers: {
 				debug: debugHeader,
+				cookie: authToken ? serialize(AUTH_COOKIE, authToken) : undefined,
 			},
 			transformer: superjson,
 		};

@@ -2,12 +2,18 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
 
 import { HomeScreen } from "app/features/home/screen";
+import { LoginScreen } from "app/features/auth/login";
+import { RegisterScreen } from "app/features/auth/register";
+import { AccountScreen } from "app/features/account/screen";
 import { ReceiptsScreen } from "app/features/receipts/receipts-screen";
 import { ReceiptScreen } from "app/features/receipts/receipt-screen";
 
 export type AppParamList = {
 	home: undefined;
+	account: undefined;
 	receipts: undefined;
+	login: undefined;
+	register: undefined;
 	receipt: {
 		id: string;
 	};
@@ -23,6 +29,27 @@ export const NativeNavigation: React.FC = () => {
 				component={HomeScreen}
 				options={{
 					title: "Home",
+				}}
+			/>
+			<Stack.Screen
+				name="register"
+				component={RegisterScreen}
+				options={{
+					title: "Register",
+				}}
+			/>
+			<Stack.Screen
+				name="login"
+				component={LoginScreen}
+				options={{
+					title: "Login",
+				}}
+			/>
+			<Stack.Screen
+				name="account"
+				component={AccountScreen}
+				options={{
+					title: "Account",
 				}}
 			/>
 			<Stack.Screen

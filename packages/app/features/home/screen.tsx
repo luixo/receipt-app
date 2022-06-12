@@ -1,6 +1,7 @@
 import React from "react";
 import * as ReactNative from "react-native";
-import { styled, H1, TextLink } from "../../utils/styles";
+import { trpc } from "../../trpc";
+import { styled, H1, TextLink, Text } from "../../utils/styles";
 
 const Wrapper = styled(ReactNative.View)({
 	flex: 1,
@@ -17,11 +18,41 @@ const Header = styled(H1)({
 const Spacer = styled(ReactNative.View)({ marginTop: "$l" });
 
 export const HomeScreen: React.FC = () => {
+	const accountQuery = trpc.useQuery(["account.get"]);
+
+	let authBaseElement = null;
+	if (accountQuery.status === "success") {
+		authBaseElement = (
+			<>
+				<Spacer />
+				<TextLink href="/account">Account</TextLink>
+				<Spacer />
+				<TextLink href="/receipts">Receipts</TextLink>
+			</>
+		);
+	} else if (accountQuery.status === "error") {
+		if (accountQuery.error.data?.code === "UNAUTHORIZED") {
+			authBaseElement = (
+				<>
+					<Spacer />
+					<TextLink href="/register">Register</TextLink>
+					<Spacer />
+					<TextLink href="/login">Login</TextLink>
+				</>
+			);
+		} else {
+			authBaseElement = (
+				<Text>Error on getting account: {accountQuery.error.message}</Text>
+			);
+		}
+	} else {
+		authBaseElement = <Text>Loading your account status..</Text>;
+	}
+
 	return (
 		<Wrapper>
 			<Header>Welcome to Receipt App</Header>
-			<Spacer />
-			<TextLink href="/receipts">Receipts</TextLink>
+			{authBaseElement}
 		</Wrapper>
 	);
 };

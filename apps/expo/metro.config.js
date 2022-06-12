@@ -15,5 +15,12 @@ config.resolver.nodeModulesPaths = [
 	path.resolve(projectRoot, "node_modules"),
 	path.resolve(workspaceRoot, "node_modules"),
 ];
+// see https://github.com/facebook/metro/issues/535
+config.resolver.sourceExts = process.env.RN_SRC_EXT
+	? [
+			...process.env.RN_SRC_EXT.split(",").concat(config.resolver.sourceExts),
+			"cjs",
+	  ]
+	: [...config.resolver.sourceExts, "cjs"];
 
 module.exports = config;
