@@ -9,3 +9,5 @@ export const name = z
 	.string()
 	.min(VALIDATIONS_CONSTANTS.name.min)
 	.max(VALIDATIONS_CONSTANTS.name.min);
+
+export const flavored = <T extends string>(x: string): x is T => true;

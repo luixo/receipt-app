@@ -1,5 +1,5 @@
 import { createReactQueryHooks, TRPCClientErrorLike } from "@trpc/react";
-import { UseQueryResult } from "react-query";
+import { UseInfiniteQueryResult, UseQueryResult } from "react-query";
 import { Procedure } from "@trpc/server/dist/declarations/src/internals/procedure";
 import {
 	Router,
@@ -36,25 +36,55 @@ type InferProcedures<Obj extends AnyProcedureRecord> = {
 	};
 };
 
-type QueryValues<Router extends AnyRouter> = InferProcedures<
-	Router["_def"]["queries"]
->;
+type TypeKey = "queries" | "mutations";
 
-type QueryKey<Router extends AnyRouter> = keyof Router["_def"]["queries"];
+type DefValues<
+	Router extends AnyRouter,
+	Type extends TypeKey
+> = InferProcedures<Router["_def"][Type]>;
+
+type DefKey<
+	Router extends AnyRouter,
+	Type extends TypeKey
+> = keyof Router["_def"][Type];
+
+type InferInfiniteQueryNames<
+	TObj extends ProcedureRecord<any, any, any, any, any, any>
+> = {
+	[TPath in keyof TObj]: InferProcedureInput<TObj[TPath]> extends {
+		cursor?: any;
+	}
+		? TPath
+		: never;
+}[keyof TObj];
+
+type InfiniteQueryNames<
+	Router extends AnyRouter,
+	Type extends TypeKey
+> = InferInfiniteQueryNames<Router["_def"][Type]>;
 
 // anything router-specific goes below
 
 export const trpc = createReactQueryHooks<AppRouter>();
 
-export type TRPCQueryOutput<Path extends QueryKey<AppRouter>> =
-	QueryValues<AppRouter>[Path]["output"];
-
-export type TRPCQueryInput<Path extends QueryKey<AppRouter>> =
-	QueryValues<AppRouter>[Path]["input"];
-
 export type TRPCError = TRPCClientErrorLike<AppRouter>;
 
-export type TRPCQueryResult<Path extends QueryKey<AppRouter>> = UseQueryResult<
+export type TRPCQueryKey = DefKey<AppRouter, "queries">;
+
+type TRPCQueryValues = DefValues<AppRouter, "queries">;
+
+export type TRPCQueryInput<Path extends TRPCQueryKey> =
+	TRPCQueryValues[Path]["input"];
+
+export type TRPCQueryOutput<Path extends TRPCQueryKey> =
+	TRPCQueryValues[Path]["output"];
+
+export type TRPCQueryResult<Path extends TRPCQueryKey> = UseQueryResult<
 	TRPCQueryOutput<Path>,
 	TRPCError
 >;
+
+export type TRPCInfiniteQueryKey = InfiniteQueryNames<AppRouter, "queries">;
+
+export type TRPCInfiniteQueryResult<Path extends TRPCQueryKey> =
+	UseInfiniteQueryResult<TRPCQueryOutput<Path>, TRPCError>;

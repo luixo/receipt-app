@@ -1,26 +1,19 @@
 import React from "react";
 import * as ReactNative from "react-native";
-import { styled, TextLink } from "../utils/styles";
+import { TextLink } from "../utils/styles";
 import { TRPCQueryOutput } from "../trpc";
-
-const Wrapper = styled(ReactNative.ScrollView)({
-	borderWidth: "$hairline",
-	borderStyle: "$solid",
-	borderColor: "$muted",
-	padding: "$m",
-	flex: 1,
-	cursor: "pointer",
-	width: "$full",
-});
+import { Block } from "./utils/block";
 
 type Props = {
-	receipt: TRPCQueryOutput<"receipts.previews">[number];
+	data: TRPCQueryOutput<"receipts.get">;
 };
 
-export const Receipt: React.FC<Props> = ({ receipt }) => {
+export const Receipt: React.FC<Props> = ({ data: receipt }) => {
 	return (
-		<Wrapper>
+		<Block>
 			<TextLink href={`/receipts/${receipt.id}/`}>{receipt.name}</TextLink>
-		</Wrapper>
+			<ReactNative.Text>Currency: {receipt.currency}</ReactNative.Text>
+			<ReactNative.Text>Sum: {receipt.sum}</ReactNative.Text>
+		</Block>
 	);
 };

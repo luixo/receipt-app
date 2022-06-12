@@ -1,74 +1,24 @@
 import React from "react";
-import * as ReactNative from "react-native";
-import { styled, Text as BaseText } from "../../utils/styles";
-import { trpc, TRPCQueryResult } from "../../trpc";
-import { Receipt } from "../../components/receipt";
-import { useSx } from "dripsy";
+import { trpc } from "../../trpc";
+import { InfiniteQueryWrapper } from "../../components/utils/infinite-query-wrapper";
+import { Receipts } from "../../components/receipts";
 import { BackButton } from "../../components/utils/back-button";
+import { ScrollView } from "../../utils/styles";
 
-const Wrapper = styled(ReactNative.ScrollView)({
-	flex: 1,
-});
-
-const BlockWrapper = styled(ReactNative.View)({
-	flex: 1,
-	alignItems: "center",
-});
-
-const Text = styled(BaseText)({
-	textAlign: "center",
-	marginBottom: "$m",
-	fontWeight: "$bold",
-});
-
-type InnerProps = {
-	query: TRPCQueryResult<"receipts.previews">;
-};
-
-const ReceiptsScreenInner: React.FC<InnerProps> = ({ query }) => {
-	switch (query.status) {
-		case "error":
-			return (
-				<BlockWrapper>
-					<Text>error: {String(query.error)}</Text>
-				</BlockWrapper>
-			);
-		case "loading":
-		case "idle":
-			return (
-				<BlockWrapper>
-					<Text>{query.status}</Text>
-				</BlockWrapper>
-			);
-		case "success":
-			return (
-				<BlockWrapper>
-					<BackButton href="/" />
-					<Text>Total: {query.data.length} receipts</Text>
-					{query.data.map((receipt) => (
-						<Receipt key={receipt.id} receipt={receipt} />
-					))}
-				</BlockWrapper>
-			);
-	}
-};
+const RECEIPTS_PER_PAGE = 10;
 
 export const ReceiptsScreen: React.FC = () => {
-	const sx = useSx();
-	const receiptsQuery = trpc.useQuery([
-		"receipts.previews",
-		{ offset: 0, limit: 10 },
+	const receiptsQuery = trpc.useInfiniteQuery([
+		"receipts.get-paged",
+		{ limit: RECEIPTS_PER_PAGE },
 	]);
 
 	return (
-		<Wrapper
-			contentContainerStyle={sx({
-				justifyContent: "center",
-				alignItems: "center",
-				width: "$full",
-			})}
-		>
-			<ReceiptsScreenInner query={receiptsQuery} />
-		</Wrapper>
+		<ScrollView>
+			<BackButton href="/" />
+			<InfiniteQueryWrapper query={receiptsQuery}>
+				{Receipts}
+			</InfiniteQueryWrapper>
+		</ScrollView>
 	);
 };

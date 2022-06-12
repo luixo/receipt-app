@@ -35,6 +35,7 @@ const base = {
 	},
 	fontSizes: {
 		$regular: 16,
+		$large: 20,
 	},
 	radii: {
 		$medium: 8,
@@ -137,6 +138,18 @@ export const TextInput = (
 		<StyledTextInput
 			placeholderTextColor={theme.colors.$secondary}
 			{...props}
+		/>
+	);
+};
+export const ScrollView = (props: ReactNative.ScrollViewProps) => {
+	const sx = useSx();
+	return (
+		<ReactNative.ScrollView
+			{...props}
+			contentContainerStyle={[
+				sx({ justifyContent: "center", alignItems: "stretch", width: "$full" }),
+				props.contentContainerStyle,
+			]}
 		/>
 	);
 };

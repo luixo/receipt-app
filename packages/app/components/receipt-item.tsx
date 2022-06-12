@@ -1,26 +1,22 @@
 import React from "react";
-import * as ReactNative from "react-native";
-import { styled, Text } from "../utils/styles";
 import { TRPCQueryOutput } from "../trpc";
+import { Block } from "./utils/block";
 
-const Wrapper = styled(ReactNative.ScrollView)({
-	borderWidth: "$hairline",
-	borderStyle: "$solid",
-	borderColor: "$muted",
-	padding: "$m",
-	flex: 1,
-});
-
-const Name = styled(Text)({});
+type ReceiptItem = TRPCQueryOutput<"receipt-items.get">[number];
 
 type Props = {
-	receiptItem: TRPCQueryOutput<"receipts.items">[number];
+	receiptItem: ReceiptItem;
 };
 
 export const ReceiptItem: React.FC<Props> = ({ receiptItem }) => {
 	return (
-		<Wrapper>
-			<Name>{receiptItem.name}</Name>
-		</Wrapper>
+		<Block name={receiptItem.name}>
+			<Text>
+				<Text>{receiptItem.price}</Text>
+				{" x "}
+				<Text>{receiptItem.quantity}</Text>
+			</Text>
+			<Text>{receiptItem.locked ? "locked" : "not locked"}</Text>
+		</Block>
 	);
 };

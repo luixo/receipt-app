@@ -8,6 +8,7 @@ import { middleware as loggerMiddleware } from "./middlewares/logger";
 import { router as authRouter } from "./auth";
 import { router as accountRouter } from "./account/index";
 import { router as receiptsRouter } from "./receipts/index";
+import { router as receiptItemsRouter } from "./receipt-items/index";
 
 export const router = trpc
 	.router<UnauthorizedContext>()
@@ -16,4 +17,5 @@ export const router = trpc
 	.merge("auth.", authRouter)
 	.middleware(verifyAuthorizedMiddleware)
 	.merge("account.", accountRouter)
-	.merge("receipts.", receiptsRouter);
+	.merge("receipts.", receiptsRouter)
+	.merge("receipt-items.", receiptItemsRouter);
