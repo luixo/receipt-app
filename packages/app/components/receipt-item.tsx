@@ -2,6 +2,7 @@ import React from "react";
 import { TRPCQueryOutput } from "../trpc";
 import { Block } from "./utils/block";
 import { ReceiptItemPart } from "./receipt-item-part";
+import { Text } from "../utils/styles";
 
 type ReceiptItem = TRPCQueryOutput<"receipt-items.get">["items"][number];
 type ReceiptParticipant =

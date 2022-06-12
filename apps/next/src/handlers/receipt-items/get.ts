@@ -59,6 +59,8 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 					sql<string>`case when "usersTheir"."ownerAccountId" = ${ctx.auth.accountId} then "usersTheir".name when "usersMine".name is not null then "usersMine".name else "usersTheir"."publicName" end`.as(
 						"name"
 					),
+					"role",
+					"receipt_participants.resolved",
 				])
 				.where("receiptId", "=", input.receiptId)
 				.orderBy("userId")
