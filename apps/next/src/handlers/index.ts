@@ -9,6 +9,7 @@ import { router as authRouter } from "./auth";
 import { router as accountRouter } from "./account/index";
 import { router as receiptsRouter } from "./receipts/index";
 import { router as receiptItemsRouter } from "./receipt-items/index";
+import { router as usersRouter } from "./users/index";
 
 export const router = trpc
 	.router<UnauthorizedContext>()
@@ -18,4 +19,5 @@ export const router = trpc
 	.middleware(verifyAuthorizedMiddleware)
 	.merge("account.", accountRouter)
 	.merge("receipts.", receiptsRouter)
-	.merge("receipt-items.", receiptItemsRouter);
+	.merge("receipt-items.", receiptItemsRouter)
+	.merge("users.", usersRouter);
