@@ -4,6 +4,7 @@ import { useForm, Controller } from "react-hook-form";
 import { trpc } from "../../trpc";
 import { BackButton } from "../../components/utils/back-button";
 import { TextInput, Text } from "../../utils/styles";
+import { MutationWrapper } from "../../components/utils/mutation-wrapper";
 
 type LoginForm = {
 	email: string;
@@ -76,11 +77,9 @@ export const LoginScreen: React.FC = () => {
 				disabled={!isValid || loginMutation.status === "success"}
 				onPress={handleSubmit(onSubmit)}
 			/>
-			{loginMutation.status === "success" ? (
-				<Text>Auth success!</Text>
-			) : loginMutation.status === "error" ? (
-				<Text>Error: {loginMutation.error.message}</Text>
-			) : null}
+			<MutationWrapper<"auth.login"> mutation={loginMutation}>
+				{() => <Text>Auth success!</Text>}
+			</MutationWrapper>
 		</>
 	);
 };

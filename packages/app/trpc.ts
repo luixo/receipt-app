@@ -1,5 +1,9 @@
 import { createReactQueryHooks, TRPCClientErrorLike } from "@trpc/react";
-import { UseInfiniteQueryResult, UseQueryResult } from "react-query";
+import {
+	UseInfiniteQueryResult,
+	UseMutationResult,
+	UseQueryResult,
+} from "react-query";
 import { Procedure } from "@trpc/server/dist/declarations/src/internals/procedure";
 import {
 	Router,
@@ -88,3 +92,20 @@ export type TRPCInfiniteQueryKey = InfiniteQueryNames<AppRouter, "queries">;
 
 export type TRPCInfiniteQueryResult<Path extends TRPCQueryKey> =
 	UseInfiniteQueryResult<TRPCQueryOutput<Path>, TRPCError>;
+
+export type TRPCMutationKey = DefKey<AppRouter, "mutations">;
+
+type TRPCMutationValues = DefValues<AppRouter, "mutations">;
+
+export type TRPCMutationInput<Path extends TRPCMutationKey> =
+	TRPCMutationValues[Path]["input"];
+
+export type TRPCMutationOutput<Path extends TRPCMutationKey> =
+	TRPCMutationValues[Path]["output"];
+
+export type TRPCMutationResult<Path extends TRPCMutationKey> =
+	UseMutationResult<
+		TRPCMutationOutput<Path>,
+		TRPCError,
+		TRPCMutationInput<Path>
+	>;

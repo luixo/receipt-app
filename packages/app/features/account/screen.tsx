@@ -1,8 +1,10 @@
 import React from "react";
 import * as ReactNative from "react-native";
-import { styled, H1, Text } from "../../utils/styles";
+import { styled, H1 } from "../../utils/styles";
 import { BackButton } from "../../components/utils/back-button";
 import { trpc } from "../../trpc";
+import { MutationWrapper } from "../../components/utils/mutation-wrapper";
+import { Text } from "../../utils/styles";
 
 const Wrapper = styled(ReactNative.View)({
 	flex: 1,
@@ -49,11 +51,9 @@ export const AccountScreen: React.FC = () => {
 				disabled={logoutMutation.status === "success"}
 				onPress={logout}
 			/>
-			{logoutMutation.status === "success" ? (
-				<Text>Logout success!</Text>
-			) : logoutMutation.status === "error" ? (
-				<Text>Error: {logoutMutation.error.message}</Text>
-			) : null}
+			<MutationWrapper<"account.logout"> mutation={logoutMutation}>
+				{() => <Text>Logout success!</Text>}
+			</MutationWrapper>
 		</Wrapper>
 	);
 };

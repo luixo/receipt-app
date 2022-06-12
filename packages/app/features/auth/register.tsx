@@ -5,6 +5,7 @@ import { trpc } from "../../trpc";
 import { BackButton } from "../../components/utils/back-button";
 import { TextInput, Text } from "../../utils/styles";
 import { VALIDATIONS_CONSTANTS } from "../../utils/validation";
+import { MutationWrapper } from "../../components/utils/mutation-wrapper";
 
 type RegistrationForm = {
 	email: string;
@@ -140,11 +141,9 @@ export const RegisterScreen: React.FC = () => {
 				disabled={!isValid || registerMutation.status === "success"}
 				onPress={handleSubmit(onSubmit)}
 			/>
-			{registerMutation.status === "success" ? (
-				<Text>Register success!</Text>
-			) : registerMutation.status === "error" ? (
-				<Text>Error: {registerMutation.error.message}</Text>
-			) : null}
+			<MutationWrapper<"auth.register"> mutation={registerMutation}>
+				{() => <Text>Register success!</Text>}
+			</MutationWrapper>
 		</>
 	);
 };
