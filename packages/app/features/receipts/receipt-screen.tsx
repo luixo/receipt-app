@@ -8,7 +8,7 @@ import { Block } from "../../components/utils/block";
 import { BackButton } from "../../components/utils/back-button";
 import { ScrollView } from "../../utils/styles";
 import { DEFAULT_INPUT } from "../../utils/queries/receipts";
-import { ReceiptItemsGetItemsInput } from "../../utils/queries/receipt-items";
+import { ReceiptItemsGetInput } from "../../utils/queries/receipt-items";
 
 const { useParam } = createParam<{ id: string }>();
 
@@ -18,7 +18,7 @@ export const ReceiptScreen: React.FC = () => {
 		throw new Error("No id in param");
 	}
 
-	const receiptItemsInput: ReceiptItemsGetItemsInput = { receiptId: id };
+	const receiptItemsInput: ReceiptItemsGetInput = { receiptId: id };
 	const receiptQuery = trpc.useQuery(["receipts.get", { id }]);
 	const receiptItemsQuery = trpc.useQuery([
 		"receipt-items.get",

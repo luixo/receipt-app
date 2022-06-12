@@ -2,11 +2,11 @@ import { ReceiptItemsId } from "next-app/src/db/models";
 import { TRPCQueryInput, TRPCQueryOutput, TRPCReactContext } from "../../trpc";
 
 type ReceiptItem = TRPCQueryOutput<"receipt-items.get">["items"][number];
-export type ReceiptItemsGetItemsInput = TRPCQueryInput<"receipt-items.get">;
+export type ReceiptItemsGetInput = TRPCQueryInput<"receipt-items.get">;
 
 export const getReceiptItemWithIndexById = (
 	trpc: TRPCReactContext,
-	input: ReceiptItemsGetItemsInput,
+	input: ReceiptItemsGetInput,
 	itemId: ReceiptItemsId
 ) => {
 	const prevData = trpc.getQueryData(["receipt-items.get", input]);
@@ -25,7 +25,7 @@ export const getReceiptItemWithIndexById = (
 
 export const updateReceiptItems = (
 	trpc: TRPCReactContext,
-	input: ReceiptItemsGetItemsInput,
+	input: ReceiptItemsGetInput,
 	updater: (items: ReceiptItem[]) => ReceiptItem[]
 ) => {
 	const prevData = trpc.getQueryData(["receipt-items.get", input]);

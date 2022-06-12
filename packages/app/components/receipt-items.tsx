@@ -3,11 +3,11 @@ import { TRPCQueryOutput } from "../trpc";
 import { Block } from "./utils/block";
 import { ReceiptParticipantsScreen } from "../features/receipts/receipt-participants-screen";
 import { AddReceiptItemForm } from "./add-receipt-item-form";
-import { ReceiptItemsGetItemsInput } from "../utils/queries/receipt-items";
+import { ReceiptItemsGetInput } from "../utils/queries/receipt-items";
 
 type InnerItemsProps = {
 	data: TRPCQueryOutput<"receipt-items.get">;
-	receiptItemsInput: ReceiptItemsGetItemsInput;
+	receiptItemsInput: ReceiptItemsGetInput;
 	role?: TRPCQueryOutput<"receipts.get">["role"];
 };
 
@@ -18,7 +18,11 @@ export const ReceiptItems: React.FC<InnerItemsProps> = ({
 }) => {
 	return (
 		<Block name={`Total: ${data.items.length} items`}>
-			<ReceiptParticipantsScreen participants={data.participants} />
+			<ReceiptParticipantsScreen
+				participants={data.participants}
+				receiptItemsInput={receiptItemsInput}
+				role={role}
+			/>
 			<AddReceiptItemForm receiptItemsInput={receiptItemsInput} />
 			{data.items.map((receiptItem) => (
 				<ReceiptItem

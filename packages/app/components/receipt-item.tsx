@@ -8,7 +8,7 @@ import {
 } from "../hooks/use-trpc-mutation-options";
 import {
 	getReceiptItemWithIndexById,
-	ReceiptItemsGetItemsInput,
+	ReceiptItemsGetInput,
 	updateReceiptItems,
 } from "../utils/queries/receipt-items";
 import { RemoveButton } from "./utils/remove-button";
@@ -22,7 +22,7 @@ type ReceiptParticipant =
 const deleteMutationOptions: UseContextedMutationOptions<
 	"receipt-items.delete",
 	ReturnType<typeof getReceiptItemWithIndexById>,
-	ReceiptItemsGetItemsInput
+	ReceiptItemsGetInput
 > = {
 	onMutate:
 		(trpc, input) =>
@@ -48,7 +48,7 @@ const deleteMutationOptions: UseContextedMutationOptions<
 type Props = {
 	receiptItem: ReceiptItem;
 	receiptParticipants: ReceiptParticipant[];
-	receiptItemsInput: ReceiptItemsGetItemsInput;
+	receiptItemsInput: ReceiptItemsGetInput;
 	role?: TRPCQueryOutput<"receipts.get">["role"];
 };
 

@@ -11,7 +11,7 @@ import {
 	useTrpcMutationOptions,
 } from "../hooks/use-trpc-mutation-options";
 import {
-	ReceiptItemsGetItemsInput,
+	ReceiptItemsGetInput,
 	updateReceiptItems,
 } from "../utils/queries/receipt-items";
 import { VALIDATIONS_CONSTANTS } from "../utils/validation";
@@ -20,7 +20,7 @@ import { Text, TextInput } from "../utils/styles";
 const mutationOptions: UseContextedMutationOptions<
 	"receipt-items.put",
 	ReceiptsId,
-	ReceiptItemsGetItemsInput
+	ReceiptItemsGetInput
 > = {
 	onMutate: (trpc, input) => (nextItemForm) => {
 		const temporaryId = v4();
@@ -56,7 +56,7 @@ type Form = {
 };
 
 type Props = {
-	receiptItemsInput: ReceiptItemsGetItemsInput;
+	receiptItemsInput: ReceiptItemsGetInput;
 };
 
 export const AddReceiptItemForm: React.FC<Props> = ({ receiptItemsInput }) => {
