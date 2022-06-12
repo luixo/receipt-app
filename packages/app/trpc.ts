@@ -10,6 +10,7 @@ import {
 	ProcedureRecord,
 } from "@trpc/server/dist/declarations/src/router";
 import type { AppRouter } from "next-app/pages/api/trpc/[trpc]";
+import { TRPCContextState } from "@trpc/react/dist/declarations/src/internals/context";
 
 type AnyRouter<TContext = any> = Router<any, TContext, any, any, any, any, any>;
 type AnyProcedure = Procedure<any, any, any, any, any, any, any>;
@@ -73,6 +74,8 @@ export const trpc = createReactQueryHooks<AppRouter>();
 
 export type TRPCError = TRPCClientErrorLike<AppRouter>;
 
+export type TRPCReactContext = TRPCContextState<AppRouter, unknown>;
+
 export type TRPCQueryKey = DefKey<AppRouter, "queries">;
 
 type TRPCQueryValues = DefValues<AppRouter, "queries">;
@@ -89,6 +92,11 @@ export type TRPCQueryResult<Path extends TRPCQueryKey> = UseQueryResult<
 >;
 
 export type TRPCInfiniteQueryKey = InfiniteQueryNames<AppRouter, "queries">;
+
+export type TRPCInfiniteQueryInput<Path extends TRPCInfiniteQueryKey> = Omit<
+	TRPCQueryValues[Path]["input"],
+	"cursor"
+>;
 
 export type TRPCInfiniteQueryResult<Path extends TRPCQueryKey> =
 	UseInfiniteQueryResult<TRPCQueryOutput<Path>, TRPCError>;

@@ -77,10 +77,11 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 				"mergedReceipts.resolved as receiptResolved",
 				"receipt_participants.resolved as participantResolved",
 			])
+			.orderBy("issued", input.orderBy === "date-asc" ? "asc" : "desc")
 			.offset(input.cursor || 0)
 			.limit(input.limit)
-			.orderBy("issued", input.orderBy === "date-asc" ? "asc" : "desc")
 			.execute();
+
 		return receipts;
 	},
 });

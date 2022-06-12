@@ -7,6 +7,7 @@ import { ReceiptItems } from "../../components/receipt-items";
 import { Block } from "../../components/utils/block";
 import { BackButton } from "../../components/utils/back-button";
 import { ScrollView } from "../../utils/styles";
+import { DEFAULT_INPUT } from "../../utils/queries/receipts";
 
 const { useParam } = createParam<{ id: string }>();
 
@@ -28,7 +29,9 @@ export const ReceiptScreen: React.FC = () => {
 				name={`Receipt: ${receiptQuery.data ? receiptQuery.data.name : id}`}
 			>
 				<BackButton href="/receipts/" />
-				<QueryWrapper query={receiptQuery}>{Receipt}</QueryWrapper>
+				<QueryWrapper query={receiptQuery} input={DEFAULT_INPUT}>
+					{Receipt}
+				</QueryWrapper>
 				<QueryWrapper query={receiptItemsQuery}>{ReceiptItems}</QueryWrapper>
 			</Block>
 		</ScrollView>

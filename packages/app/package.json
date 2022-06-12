@@ -5,14 +5,18 @@
 	"dependencies": {
 		"@react-navigation/native": "^6.0.8",
 		"@react-navigation/native-stack": "^6.5.0",
-		"@trpc/client": "^9.23.2",
-		"@trpc/react": "^9.23.2",
+		"@trpc/client": "^9.24.0",
+		"@trpc/react": "^9.24.0",
 		"dripsy": "^3.6.0",
 		"expo-linking": "^3.0.0",
 		"react-hook-form": "^7.31.3",
 		"react-query": "^3.39.0",
 		"solito": "latest",
-		"superjson": "^1.9.1"
+		"superjson": "^1.9.1",
+		"uuid": "^8.3.2"
+	},
+	"devDependencies": {
+		"@types/uuid": "^8.3.4"
 	},
 	"sideEffects": false
 }

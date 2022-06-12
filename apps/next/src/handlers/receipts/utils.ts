@@ -1,6 +1,8 @@
+import { Selection } from "kysely";
 import { z } from "zod";
-import { Database } from "../../db";
+import { ReceiptsSelectExpression, ReceiptsDatabase, Database } from "../../db";
 import { role } from "../zod";
+import { ReceiptsId } from "../../db/models";
 
 type Role = z.infer<typeof role>;
 
@@ -33,4 +35,16 @@ export const getAccessRole = async (
 		return;
 	}
 	return parsed.data;
+};
+
+export const getReceiptById = <SE extends ReceiptsSelectExpression<"receipts">>(
+	database: Database,
+	id: ReceiptsId,
+	selectExpression: SE[]
+): Promise<Selection<ReceiptsDatabase, "receipts", SE> | undefined> => {
+	return database
+		.selectFrom("receipts")
+		.select(selectExpression)
+		.where("id", "=", id)
+		.executeTakeFirst();
 };
