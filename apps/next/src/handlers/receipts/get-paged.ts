@@ -27,9 +27,6 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 					.innerJoin("receipts", (jb) =>
 						jb.onRef("receipts.id", "=", "receipt_participants.receiptId")
 					)
-					.innerJoin("receipt_items", (jb) =>
-						jb.onRef("receipts.id", "=", "receipt_items.receiptId")
-					)
 					.where("accounts.id", "=", ctx.auth.accountId)
 					.where("receipts.ownerAccountId", "<>", ctx.auth.accountId)
 					.select([
@@ -44,9 +41,6 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 					.union(
 						db
 							.selectFrom("receipts")
-							.innerJoin("receipt_items", (jb) =>
-								jb.onRef("receipts.id", "=", "receipt_items.receiptId")
-							)
 							.where("ownerAccountId", "=", ctx.auth.accountId)
 							.select([
 								"receipts.id as receiptId",

@@ -15,14 +15,14 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 		const database = getDatabase(ctx);
 		const receipt = await database
 			.selectFrom("receipts")
-			.innerJoin("receipt_items", (jb) =>
+			.leftJoin("receipt_items", (jb) =>
 				jb.onRef("receipt_items.receiptId", "=", "receipts.id")
 			)
 			.select([
 				"receipts.id",
 				"receipts.name",
 				"currency",
-				sql<string>`sum(receipt_items.price * receipt_items.quantity)`.as(
+				sql<string>`coalesce(sum(receipt_items.price * receipt_items.quantity), 0)`.as(
 					"sum"
 				),
 				"ownerAccountId",
