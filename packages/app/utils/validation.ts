@@ -11,4 +11,8 @@ export const VALIDATIONS_CONSTANTS = {
 		min: 2,
 		max: 255,
 	},
+	receiptItemName: {
+		min: 2,
+		max: 255,
+	},
 };

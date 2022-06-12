@@ -8,6 +8,7 @@ import { Block } from "../../components/utils/block";
 import { BackButton } from "../../components/utils/back-button";
 import { ScrollView } from "../../utils/styles";
 import { DEFAULT_INPUT } from "../../utils/queries/receipts";
+import { ReceiptItemsGetItemsInput } from "../../utils/queries/receipt-items";
 
 const { useParam } = createParam<{ id: string }>();
 
@@ -17,10 +18,11 @@ export const ReceiptScreen: React.FC = () => {
 		throw new Error("No id in param");
 	}
 
+	const receiptItemsInput: ReceiptItemsGetItemsInput = { receiptId: id };
 	const receiptQuery = trpc.useQuery(["receipts.get", { id }]);
 	const receiptItemsQuery = trpc.useQuery([
 		"receipt-items.get",
-		{ receiptId: id },
+		receiptItemsInput,
 	]);
 
 	return (
@@ -32,7 +34,13 @@ export const ReceiptScreen: React.FC = () => {
 				<QueryWrapper query={receiptQuery} input={DEFAULT_INPUT}>
 					{Receipt}
 				</QueryWrapper>
-				<QueryWrapper query={receiptItemsQuery}>{ReceiptItems}</QueryWrapper>
+				<QueryWrapper
+					query={receiptItemsQuery}
+					receiptItemsInput={receiptItemsInput}
+					role={receiptQuery.data?.role}
+				>
+					{ReceiptItems}
+				</QueryWrapper>
 			</Block>
 		</ScrollView>
 	);

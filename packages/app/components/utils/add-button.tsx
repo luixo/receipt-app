@@ -5,6 +5,7 @@ import { styled } from "../../utils/styles";
 type Props = {
 	children: string;
 	onPress?: (event: ReactNative.GestureResponderEvent) => void;
+	disabled?: boolean;
 };
 
 const Button = styled(ReactNative.Button)({
@@ -13,6 +14,6 @@ const Button = styled(ReactNative.Button)({
 	borderColor: "$muted",
 });
 
-export const AddButton: React.FC<Props> = ({ onPress, children }) => {
-	return <Button title={children} onPress={onPress} />;
+export const AddButton: React.FC<Props> = ({ onPress, children, disabled }) => {
+	return <Button title={children} onPress={onPress} disabled={disabled} />;
 };
