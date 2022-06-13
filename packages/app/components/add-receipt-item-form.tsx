@@ -16,6 +16,7 @@ import {
 } from "../utils/queries/receipt-items";
 import { VALIDATIONS_CONSTANTS } from "../utils/validation";
 import { Text, TextInput } from "../utils/styles";
+import { useSubmitHandler } from "../hooks/use-submit-handler";
 
 const mutationOptions: UseContextedMutationOptions<
 	"receipt-items.put",
@@ -70,15 +71,14 @@ export const AddReceiptItemForm: React.FC<Props> = ({ receiptItemsInput }) => {
 		formState: { isValid, isSubmitting, errors },
 		reset,
 	} = useForm<Form>({ mode: "onChange" });
-	const onSubmit = React.useCallback(
-		async (values: Form) => {
-			await addReceiptItemMutation.mutateAsync({
+	const onSubmit = useSubmitHandler<Form>(
+		(values) =>
+			addReceiptItemMutation.mutateAsync({
 				...values,
 				receiptId: receiptItemsInput.receiptId,
-			});
-			reset();
-		},
-		[addReceiptItemMutation, receiptItemsInput.receiptId, reset]
+			}),
+		[addReceiptItemMutation, receiptItemsInput.receiptId, reset],
+		reset
 	);
 
 	return (

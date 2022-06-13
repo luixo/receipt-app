@@ -13,6 +13,7 @@ import {
 	getReceiptParticipantWithIndexById,
 	updateReceiptParticipants,
 } from "../utils/queries/receipt-participants";
+import { useAsyncCallback } from "../hooks/use-async-callback";
 
 type ReceiptParticipant =
 	TRPCQueryOutput<"receipt-items.get">["participants"][number];
@@ -62,16 +63,18 @@ export const ReceiptParticipant: React.FC<Props> = ({
 		"receipt-participants.delete",
 		useTrpcMutationOptions(deleteMutationOptions, receiptItemsInput)
 	);
-	const deleteReceiptParticipant = React.useCallback(async () => {
-		await deleteReceiptParticipantMutation.mutateAsync({
-			receiptId: receiptItemsInput.receiptId,
-			userId: receiptParticipant.userId,
-		});
-	}, [
-		deleteReceiptParticipantMutation,
-		receiptItemsInput.receiptId,
-		receiptParticipant.userId,
-	]);
+	const deleteReceiptParticipant = useAsyncCallback(
+		() =>
+			deleteReceiptParticipantMutation.mutateAsync({
+				receiptId: receiptItemsInput.receiptId,
+				userId: receiptParticipant.userId,
+			}),
+		[
+			deleteReceiptParticipantMutation,
+			receiptItemsInput.receiptId,
+			receiptParticipant.userId,
+		]
+	);
 	return (
 		<Block name={`User ${receiptParticipant.name}`}>
 			<Text>Role: {receiptParticipant.role}</Text>

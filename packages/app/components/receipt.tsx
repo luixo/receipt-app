@@ -17,6 +17,7 @@ import {
 } from "../utils/queries/receipts";
 import { useRouter } from "solito/router";
 import { Text } from "../utils/styles";
+import { useAsyncCallback } from "../hooks/use-async-callback";
 
 type Receipt = TRPCQueryOutput<"receipts.get-paged">[number];
 
@@ -66,10 +67,16 @@ export const Receipt: React.FC<Props> = ({ data: receipt, input }) => {
 		"users.get",
 		{ accountId: receipt.ownerAccountId },
 	]);
-	const deleteReceipt = React.useCallback(async () => {
-		await deleteReceiptMutation.mutateAsync({ id: receipt.id });
-		router.replace("/receipts");
-	}, [deleteReceiptMutation, receipt.id]);
+	const deleteReceipt = useAsyncCallback(
+		async (isMount) => {
+			await deleteReceiptMutation.mutateAsync({ id: receipt.id });
+			if (!isMount()) {
+				return;
+			}
+			router.replace("/receipts");
+		},
+		[deleteReceiptMutation, receipt.id]
+	);
 	return (
 		<Block>
 			<TextLink href={`/receipts/${receipt.id}/`}>{receipt.name}</TextLink>

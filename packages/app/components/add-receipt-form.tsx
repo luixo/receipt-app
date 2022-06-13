@@ -20,6 +20,7 @@ import { VALIDATIONS_CONSTANTS } from "../utils/validation";
 import { CurrenciesPicker } from "./currencies-picker";
 import { Currency } from "../utils/currency";
 import { QueryWrapper } from "./utils/query-wrapper";
+import { useSubmitHandler } from "../hooks/use-submit-handler";
 
 const putMutationOptions: UseContextedMutationOptions<
 	"receipts.put",
@@ -89,12 +90,10 @@ export const AddReceiptForm: React.FC<Props> = ({ input }) => {
 		reset,
 		setValue,
 	} = useForm<Form>({ mode: "onChange" });
-	const onSubmit: SubmitHandler<Form> = React.useCallback(
-		async (values) => {
-			await addReceiptMutation.mutateAsync(values as Form);
-			reset();
-		},
-		[addReceiptMutation, reset]
+	const onSubmit = useSubmitHandler<Form>(
+		(values) => addReceiptMutation.mutateAsync(values),
+		[addReceiptMutation, reset],
+		reset
 	);
 
 	const currenciesListQuery = trpc.useQuery([

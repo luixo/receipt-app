@@ -5,6 +5,7 @@ import { trpc } from "../../trpc";
 import { BackButton } from "../../components/utils/back-button";
 import { TextInput, Text } from "../../utils/styles";
 import { MutationWrapper } from "../../components/utils/mutation-wrapper";
+import { useSubmitHandler } from "../../hooks/use-submit-handler";
 
 type LoginForm = {
 	email: string;
@@ -20,14 +21,14 @@ export const LoginScreen: React.FC = () => {
 
 	const trpcContext = trpc.useContext();
 	const loginMutation = trpc.useMutation("auth.login");
-	const onSubmit = async (data: LoginForm) => {
-		await loginMutation.mutateAsync({
-			email: data.email,
-			password: data.password,
-		});
-		trpcContext.invalidateQueries(["account.get"]);
-		trpcContext.refetchQueries(["account.get"]);
-	};
+	const onSubmit = useSubmitHandler<LoginForm>(
+		(data) => loginMutation.mutateAsync(data),
+		[loginMutation, trpcContext],
+		() => {
+			trpcContext.invalidateQueries(["account.get"]);
+			trpcContext.refetchQueries(["account.get"]);
+		}
+	);
 
 	return (
 		<>

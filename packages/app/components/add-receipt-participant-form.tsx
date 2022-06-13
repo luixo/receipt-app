@@ -20,6 +20,7 @@ import {
 	useTrpcMutationOptions,
 } from "../hooks/use-trpc-mutation-options";
 import { updateReceiptParticipants } from "../utils/queries/receipt-participants";
+import { useSubmitHandler } from "../hooks/use-submit-handler";
 
 const mutationOptions: UseContextedMutationOptions<
 	"receipt-participants.put",
@@ -118,17 +119,15 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 		})
 	);
 
-	const onSubmit = React.useCallback<SubmitHandler<Form>>(
-		async (values) => {
-			const forcedValues = values as Form;
-			await addReceiptParticipantMutation.mutateAsync({
+	const onSubmit = useSubmitHandler<Form>(
+		(values) =>
+			addReceiptParticipantMutation.mutateAsync({
 				receiptId: receiptItemsInput.receiptId,
-				userId: forcedValues.user.id,
+				userId: values.user.id,
 				role: "editor",
-			});
-			reset();
-		},
-		[addReceiptParticipantMutation, receiptItemsInput.receiptId, reset]
+			}),
+		[addReceiptParticipantMutation, receiptItemsInput.receiptId, reset],
+		reset
 	);
 
 	return (

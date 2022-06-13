@@ -14,6 +14,7 @@ import {
 import { RemoveButton } from "./utils/remove-button";
 import { MutationWrapper } from "./utils/mutation-wrapper";
 import { Text } from "../utils/styles";
+import { useAsyncCallback } from "../hooks/use-async-callback";
 
 type ReceiptItem = TRPCQueryOutput<"receipt-items.get">["items"][number];
 type ReceiptParticipant =
@@ -62,9 +63,13 @@ export const ReceiptItem: React.FC<Props> = ({
 		"receipt-items.delete",
 		useTrpcMutationOptions(deleteMutationOptions, receiptItemsInput)
 	);
-	const removeReceiptItem = React.useCallback(() => {
-		removeReceiptItemMutation.mutate({ id: receiptItem.id });
-	}, [removeReceiptItemMutation.mutate, receiptItem.id]);
+	const removeReceiptItem = useAsyncCallback(
+		() =>
+			removeReceiptItemMutation.mutateAsync({
+				id: receiptItem.id,
+			}),
+		[removeReceiptItemMutation.mutate, receiptItem.id]
+	);
 
 	return (
 		<Block name={receiptItem.name}>

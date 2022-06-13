@@ -6,6 +6,7 @@ import { BackButton } from "../../components/utils/back-button";
 import { TextInput, Text } from "../../utils/styles";
 import { VALIDATIONS_CONSTANTS } from "../../utils/validation";
 import { MutationWrapper } from "../../components/utils/mutation-wrapper";
+import { useSubmitHandler } from "../../hooks/use-submit-handler";
 
 type RegistrationForm = {
 	email: string;
@@ -23,13 +24,15 @@ export const RegisterScreen: React.FC = () => {
 	} = useForm<RegistrationForm>({ mode: "onChange" });
 
 	const registerMutation = trpc.useMutation("auth.register");
-	const onSubmit = (data: RegistrationForm) => {
-		registerMutation.mutate({
-			email: data.email,
-			name: data.name,
-			password: data.password,
-		});
-	};
+	const onSubmit = useSubmitHandler<RegistrationForm>(
+		(data) =>
+			registerMutation.mutateAsync({
+				email: data.email,
+				name: data.name,
+				password: data.password,
+			}),
+		[registerMutation]
+	);
 
 	return (
 		<>
