@@ -27,6 +27,8 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 					"sum"
 				),
 				"ownerAccountId",
+				"resolved",
+				"issued",
 			])
 			.where("receipts.id", "=", input.id)
 			.groupBy("receipts.id")

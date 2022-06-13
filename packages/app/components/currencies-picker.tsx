@@ -5,22 +5,19 @@ import { Currency } from "../utils/currency";
 
 type Props = {
 	data: TRPCQueryOutput<"currency.get-list">;
-	controllerProps: ControllerRenderProps<
-		{ currency: Currency; name: string },
-		"currency"
-	>;
+	value: Currency;
+	onChange: (nextCurrency: Currency) => void;
+	onBlur?: () => void;
 };
 
 export const CurrenciesPicker: React.FC<Props> = ({
 	data,
-	controllerProps,
+	value,
+	onChange,
+	onBlur,
 }) => {
 	return (
-		<Picker
-			selectedValue={controllerProps.value}
-			onValueChange={controllerProps.onChange}
-			onBlur={controllerProps.onBlur}
-		>
+		<Picker selectedValue={value} onValueChange={onChange} onBlur={onBlur}>
 			{data.map((currency) => {
 				return (
 					<Picker.Item

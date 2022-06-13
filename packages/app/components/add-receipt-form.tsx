@@ -137,7 +137,12 @@ export const AddReceiptForm: React.FC<Props> = ({ input }) => {
 				name="currency"
 				rules={{ required: true }}
 				render={({ field }) => (
-					<QueryWrapper query={currenciesListQuery} controllerProps={field}>
+					<QueryWrapper
+						query={currenciesListQuery}
+						value={field.value as Currency}
+						onChange={field.onChange}
+						onBlur={field.onBlur}
+					>
 						{CurrenciesPicker}
 					</QueryWrapper>
 				)}
