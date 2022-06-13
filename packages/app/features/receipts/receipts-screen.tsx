@@ -5,7 +5,7 @@ import { Receipts } from "../../components/receipts";
 import { AddReceiptForm } from "../../components/add-receipt-form";
 import { BackButton } from "../../components/utils/back-button";
 import { ScrollView } from "../../utils/styles";
-import { DEFAULT_INPUT } from "../../utils/queries/receipts";
+import { DEFAULT_INPUT } from "../../utils/queries/receipts-get-paged";
 
 export const ReceiptsScreen: React.FC = () => {
 	const receiptsQuery = trpc.useInfiniteQuery([

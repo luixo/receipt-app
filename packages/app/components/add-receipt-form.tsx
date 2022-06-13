@@ -12,9 +12,9 @@ import {
 } from "../hooks/use-trpc-mutation-options";
 import { ReceiptsId } from "next-app/src/db/models";
 import {
-	updateReceipts,
+	updatePagedReceipts,
 	ReceiptsGetPagedInput,
-} from "../utils/queries/receipts";
+} from "../utils/queries/receipts-get-paged";
 import { TextInput, Text } from "../utils/styles";
 import { VALIDATIONS_CONSTANTS } from "../utils/validation";
 import { CurrenciesPicker } from "./currencies-picker";
@@ -29,7 +29,7 @@ const putMutationOptions: UseContextedMutationOptions<
 > = {
 	onMutate: (trpc, input) => (form) => {
 		const temporaryId = v4();
-		updateReceipts(trpc, input, (page, index) => {
+		updatePagedReceipts(trpc, input, (page, index) => {
 			if (index === 0) {
 				return [
 					{
@@ -52,7 +52,7 @@ const putMutationOptions: UseContextedMutationOptions<
 		if (!temporaryId) {
 			return;
 		}
-		updateReceipts(trpc, input, (page) =>
+		updatePagedReceipts(trpc, input, (page) =>
 			page.filter((receipt) => receipt.id !== temporaryId)
 		);
 	},
@@ -60,7 +60,7 @@ const putMutationOptions: UseContextedMutationOptions<
 		if (!temporaryId) {
 			return;
 		}
-		updateReceipts(trpc, input, (page) =>
+		updatePagedReceipts(trpc, input, (page) =>
 			page.map((receipt) =>
 				receipt.id === temporaryId ? { ...receipt, id: actualId } : receipt
 			)

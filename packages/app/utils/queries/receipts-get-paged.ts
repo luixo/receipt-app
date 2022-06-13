@@ -14,7 +14,7 @@ export const DEFAULT_INPUT: ReceiptsGetPagedInput = {
 	orderBy: "date-desc",
 };
 
-export const getReceiptById = (
+export const getPagedReceiptById = (
 	trpc: TRPCReactContext,
 	input: ReceiptsGetPagedInput,
 	receiptId: ReceiptsId
@@ -39,7 +39,7 @@ export const getReceiptById = (
 	};
 };
 
-export const updateReceipts = (
+export const updatePagedReceipts = (
 	trpc: TRPCReactContext,
 	input: ReceiptsGetPagedInput,
 	updater: (page: Receipt[], pageIndex: number, pages: Receipt[][]) => Receipt[]

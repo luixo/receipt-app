@@ -11,57 +11,84 @@ import {
 	useTrpcMutationOptions,
 } from "../hooks/use-trpc-mutation-options";
 import {
-	getReceiptById,
+	getPagedReceiptById,
 	ReceiptsGetPagedInput,
-	updateReceipts,
-} from "../utils/queries/receipts";
+	updatePagedReceipts,
+} from "../utils/queries/receipts-get-paged";
 import { useRouter } from "solito/router";
 import { Text } from "../utils/styles";
 import { useAsyncCallback } from "../hooks/use-async-callback";
+import {
+	getReceiptById,
+	ReceiptsGetInput,
+	updateReceipt,
+} from "../utils/queries/receipts-get";
 
-type Receipt = TRPCQueryOutput<"receipts.get-paged">[number];
+type PagedReceiptSnapshot = TRPCQueryOutput<"receipts.get-paged">[number];
+type ReceiptSnapshot = TRPCQueryOutput<"receipts.get">;
 
 const deleteMutationOptions: UseContextedMutationOptions<
 	"receipts.delete",
-	{ pageIndex: number; receiptIndex: number; receipt: Receipt },
-	ReceiptsGetPagedInput
+	{
+		pagedSnapshot?: {
+			pageIndex: number;
+			receiptIndex: number;
+			receipt: PagedReceiptSnapshot;
+		};
+		snapshot?: ReceiptSnapshot;
+	},
+	{
+		pagedInput: ReceiptsGetPagedInput;
+		input: ReceiptsGetInput;
+	}
 > = {
 	onMutate:
-		(trpc, input) =>
+		(trpc, { pagedInput, input }) =>
 		({ id }) => {
-			const removedReceiptInfo = getReceiptById(trpc, input, id);
-			updateReceipts(trpc, input, (receiptPage) =>
+			const pagedSnapshot = getPagedReceiptById(trpc, pagedInput, id);
+			const snapshot = getReceiptById(trpc, input);
+			updatePagedReceipts(trpc, pagedInput, (receiptPage) =>
 				receiptPage.filter((receipt) => receipt.id !== id)
 			);
-			return removedReceiptInfo;
+			updateReceipt(trpc, input, () => undefined);
+			return { pagedSnapshot, snapshot };
 		},
-	onError: (trpc, input) => (_error, _variables, removedReceiptInfo) => {
-		if (!removedReceiptInfo) {
-			return;
-		}
-		updateReceipts(trpc, input, (receiptPage, pageIndex) => {
-			if (pageIndex !== removedReceiptInfo.pageIndex) {
-				return receiptPage;
+	onError:
+		(trpc, { pagedInput, input }) =>
+		(_error, _variables, { pagedSnapshot, snapshot } = {}) => {
+			if (pagedSnapshot) {
+				updatePagedReceipts(trpc, pagedInput, (receiptPage, pageIndex) => {
+					if (pageIndex !== pagedSnapshot.pageIndex) {
+						return receiptPage;
+					}
+					return [
+						...receiptPage.slice(0, pagedSnapshot.receiptIndex),
+						pagedSnapshot.receipt,
+						...receiptPage.slice(pagedSnapshot.receiptIndex),
+					];
+				});
 			}
-			return [
-				...receiptPage.slice(0, removedReceiptInfo.receiptIndex),
-				removedReceiptInfo.receipt,
-				...receiptPage.slice(removedReceiptInfo.receiptIndex),
-			];
-		});
-	},
+			if (snapshot) {
+				updateReceipt(trpc, input, () => snapshot);
+			}
+		},
 };
 
 type Props = {
 	data: TRPCQueryOutput<"receipts.get">;
-	input: ReceiptsGetPagedInput;
+	pagedInput: ReceiptsGetPagedInput;
+	input: ReceiptsGetInput;
 };
 
-export const Receipt: React.FC<Props> = ({ data: receipt, input }) => {
+export const Receipt: React.FC<Props> = ({
+	data: receipt,
+	pagedInput,
+	input,
+}) => {
 	const router = useRouter();
 	const deleteReceiptMutation = trpc.useMutation(
 		"receipts.delete",
-		useTrpcMutationOptions(deleteMutationOptions, input)
+		useTrpcMutationOptions(deleteMutationOptions, { pagedInput, input })
 	);
 	const ownerQuery = trpc.useQuery([
 		"users.get",
