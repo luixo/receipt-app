@@ -17,6 +17,7 @@ const Name = styled(Text)({
 type Props = {
 	name?: string;
 	onPress?: () => void;
+	onNamePress?: () => void;
 	disabled?: boolean;
 	children: React.ReactNode;
 };
@@ -26,10 +27,11 @@ export const Block: React.FC<Props> = ({
 	children,
 	disabled,
 	onPress,
+	onNamePress,
 }) => {
 	const content = (
 		<Wrapper>
-			{name ? <Name>{name}</Name> : null}
+			{name ? <Name onPress={onNamePress}>{name}</Name> : null}
 			{children}
 		</Wrapper>
 	);

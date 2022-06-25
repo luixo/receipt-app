@@ -195,7 +195,7 @@ export const ReceiptItem: React.FC<Props> = ({
 		<Block
 			name={receiptItem.name}
 			disabled={role === "viewer"}
-			onPress={promptName}
+			onNamePress={promptName}
 		>
 			<Text>
 				<ReactNative.TouchableOpacity
@@ -226,6 +226,9 @@ export const ReceiptItem: React.FC<Props> = ({
 					key={part.userId}
 					receiptItemPart={part}
 					receiptParticipants={receiptParticipants}
+					itemId={receiptItem.id}
+					receiptItemsInput={receiptItemsInput}
+					role={role}
 				/>
 			))}
 			<MutationWrapper<"receipt-items.delete">
