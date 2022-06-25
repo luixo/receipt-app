@@ -13,10 +13,11 @@ export const name = z
 
 export const flavored = <T extends string>(x: string): x is T => true;
 
-export const role = z.union([
+export const assignableRole = z.union([
 	z.literal("viewer"),
 	z.literal("editor"),
-	z.literal("owner"),
 ]);
+
+export const role = assignableRole.or(z.literal("owner"));
 
 export const currency = z.string().refine(isCurrency);

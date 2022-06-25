@@ -39,6 +39,7 @@ const mutationOptions: UseContextedMutationOptions<
 				{
 					name: name || "unknown",
 					userId: form.userId,
+					localUserId: form.userId,
 					role: form.role,
 					resolved: false,
 				},
@@ -85,6 +86,8 @@ type Props = {
 export const AddReceiptParticipantForm: React.FC<Props> = ({
 	receiptItemsInput,
 }) => {
+	const accountQuery = trpc.useQuery(["account.get"]);
+
 	const usersInput = {
 		...DEFAULT_PARTIAL_INPUT,
 		receiptId: receiptItemsInput.receiptId,
@@ -124,7 +127,7 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 			addReceiptParticipantMutation.mutateAsync({
 				receiptId: receiptItemsInput.receiptId,
 				userId: values.user.id,
-				role: "editor",
+				role: values.user.id === accountQuery.data!.id ? "owner" : "editor",
 			}),
 		[addReceiptParticipantMutation, receiptItemsInput.receiptId, reset],
 		reset
@@ -147,7 +150,7 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 			</InfiniteQueryWrapper>
 			<AddButton
 				onPress={handleSubmit(onSubmit)}
-				disabled={!isValid || isSubmitting}
+				disabled={!isValid || isSubmitting || accountQuery.status !== "success"}
 			>
 				Add
 			</AddButton>

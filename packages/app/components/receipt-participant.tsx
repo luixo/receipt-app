@@ -1,5 +1,6 @@
 import React from "react";
-import { trpc, TRPCQueryOutput } from "../trpc";
+import * as ReactNative from "react-native";
+import { trpc, TRPCMutationInput, TRPCQueryOutput } from "../trpc";
 import { Block } from "./utils/block";
 import { Text } from "../utils/styles";
 import { RemoveButton } from "./utils/remove-button";
@@ -14,6 +15,10 @@ import {
 	updateReceiptParticipants,
 } from "../utils/queries/receipt-participants";
 import { useAsyncCallback } from "../hooks/use-async-callback";
+import {
+	AssignableRole,
+	ReceiptParticipantRoleChange,
+} from "./receipt-participant-role-change";
 
 type ReceiptParticipant =
 	TRPCQueryOutput<"receipt-items.get">["participants"][number];
@@ -48,6 +53,49 @@ const deleteMutationOptions: UseContextedMutationOptions<
 	},
 };
 
+const applyUpdate = (
+	item: ReceiptParticipant,
+	update: TRPCMutationInput<"receipt-participants.update">["update"]
+): ReceiptParticipant => {
+	switch (update.type) {
+		case "role":
+			return { ...item, role: update.role };
+		case "resolved":
+			return { ...item, resolved: update.resolved };
+	}
+};
+
+const updateMutationOptions: UseContextedMutationOptions<
+	"receipt-participants.update",
+	| NonNullable<ReturnType<typeof getReceiptParticipantWithIndexById>>["item"]
+	| undefined,
+	ReceiptItemsGetInput
+> = {
+	onMutate: (trpc, input) => (updateObject) => {
+		const snapshot = getReceiptParticipantWithIndexById(
+			trpc,
+			input,
+			updateObject.userId
+		);
+		updateReceiptParticipants(trpc, input, (items) =>
+			items.map((item) =>
+				item.userId === updateObject.userId
+					? applyUpdate(item, updateObject.update)
+					: item
+			)
+		);
+		return snapshot?.item;
+	},
+	onError: (trpc, input) => (_error, _variables, snapshot) => {
+		if (!snapshot) {
+			return;
+		}
+		updateReceiptParticipants(trpc, input, (items) =>
+			items.map((item) => (item.userId === snapshot.userId ? snapshot : item))
+		);
+	},
+};
+
 type Props = {
 	receiptParticipant: TRPCQueryOutput<"receipt-items.get">["participants"][number];
 	receiptItemsInput: ReceiptItemsGetInput;
@@ -59,6 +107,8 @@ export const ReceiptParticipant: React.FC<Props> = ({
 	receiptItemsInput,
 	role,
 }) => {
+	const accountQuery = trpc.useQuery(["account.get"]);
+
 	const deleteReceiptParticipantMutation = trpc.useMutation(
 		"receipt-participants.delete",
 		useTrpcMutationOptions(deleteMutationOptions, receiptItemsInput)
@@ -75,10 +125,72 @@ export const ReceiptParticipant: React.FC<Props> = ({
 			receiptParticipant.userId,
 		]
 	);
+
+	const [rolePickerShown, setRolePickerShown] = React.useState(false);
+	const showRolePicker = React.useCallback(
+		() => setRolePickerShown(true),
+		[setRolePickerShown]
+	);
+	const hideRolePicker = React.useCallback(
+		() => setRolePickerShown(false),
+		[setRolePickerShown]
+	);
+
+	const updateReceiptMutation = trpc.useMutation(
+		"receipt-participants.update",
+		useTrpcMutationOptions(updateMutationOptions, receiptItemsInput)
+	);
+	const changeRole = React.useCallback(
+		(role: AssignableRole) => {
+			updateReceiptMutation.mutate({
+				receiptId: receiptItemsInput.receiptId,
+				userId: receiptParticipant.userId,
+				update: { type: "role", role },
+			});
+		},
+		[
+			updateReceiptMutation,
+			receiptItemsInput.receiptId,
+			receiptParticipant.userId,
+		]
+	);
+	const switchResolved = React.useCallback(() => {
+		updateReceiptMutation.mutate({
+			receiptId: receiptItemsInput.receiptId,
+			userId: receiptParticipant.userId,
+			update: { type: "resolved", resolved: !receiptParticipant.resolved },
+		});
+	}, [
+		updateReceiptMutation,
+		receiptItemsInput.receiptId,
+		receiptParticipant.userId,
+		receiptParticipant.resolved,
+	]);
+
 	return (
 		<Block name={`User ${receiptParticipant.name}`}>
-			<Text>Role: {receiptParticipant.role}</Text>
-			<Text>{receiptParticipant.resolved ? "resolved" : "not resolved"}</Text>
+			<ReactNative.TouchableOpacity
+				disabled={role !== "owner" || receiptParticipant.role === "owner"}
+				onPress={showRolePicker}
+			>
+				<Text>Role: {receiptParticipant.role}</Text>
+			</ReactNative.TouchableOpacity>
+			{rolePickerShown && receiptParticipant.role !== "owner" ? (
+				<ReceiptParticipantRoleChange
+					close={hideRolePicker}
+					changeRole={changeRole}
+					initialRole={receiptParticipant.role}
+				/>
+			) : null}
+			<ReactNative.TouchableOpacity
+				disabled={
+					accountQuery.status !== "success" ||
+					receiptParticipant.localUserId !== accountQuery.data.id
+				}
+				onPress={switchResolved}
+			>
+				<Text>{receiptParticipant.resolved ? "resolved" : "not resolved"}</Text>
+			</ReactNative.TouchableOpacity>
 			{role && role === "owner" ? (
 				<>
 					<RemoveButton onPress={deleteReceiptParticipant}>
