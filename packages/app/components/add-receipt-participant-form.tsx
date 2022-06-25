@@ -42,6 +42,7 @@ const mutationOptions: UseContextedMutationOptions<
 					localUserId: form.userId,
 					role: form.role,
 					resolved: false,
+					dirty: undefined,
 				},
 			]);
 			const addedUser = getAvailableUserById(trpc, usersInput, form.userId);

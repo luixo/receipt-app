@@ -80,11 +80,18 @@ const updateMutationOptions: UseContextedMutationOptions<
 		updateReceiptParticipants(trpc, input, (items) =>
 			items.map((item) =>
 				item.userId === updateObject.userId
-					? applyUpdate(item, updateObject.update)
+					? applyUpdate({ ...item, dirty: true }, updateObject.update)
 					: item
 			)
 		);
 		return snapshot?.item;
+	},
+	onSuccess: (trpc, input) => (_result, updateObject) => {
+		updateReceiptParticipants(trpc, input, (items) =>
+			items.map((item) =>
+				item.userId === updateObject.userId ? { ...item, dirty: false } : item
+			)
+		);
 	},
 	onError: (trpc, input) => (_error, _variables, snapshot) => {
 		if (!snapshot) {
@@ -180,12 +187,14 @@ export const ReceiptParticipant: React.FC<Props> = ({
 					close={hideRolePicker}
 					changeRole={changeRole}
 					initialRole={receiptParticipant.role}
+					disabled={receiptParticipant.dirty}
 				/>
 			) : null}
 			<ReactNative.TouchableOpacity
 				disabled={
 					accountQuery.status !== "success" ||
-					receiptParticipant.localUserId !== accountQuery.data.id
+					receiptParticipant.localUserId !== accountQuery.data.id ||
+					receiptParticipant.dirty
 				}
 				onPress={switchResolved}
 			>
@@ -193,7 +202,10 @@ export const ReceiptParticipant: React.FC<Props> = ({
 			</ReactNative.TouchableOpacity>
 			{role && role === "owner" ? (
 				<>
-					<RemoveButton onPress={deleteReceiptParticipant}>
+					<RemoveButton
+						onPress={deleteReceiptParticipant}
+						disabled={receiptParticipant.dirty}
+					>
 						Delete receipt participant
 					</RemoveButton>
 					<MutationWrapper<"receipt-participants.delete">

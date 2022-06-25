@@ -13,6 +13,7 @@ type Props = {
 	initialRole: AssignableRole;
 	close: () => void;
 	changeRole: (nextRole: AssignableRole) => void;
+	disabled?: boolean;
 };
 
 const ROLES: AssignableRole[] = ["editor", "viewer"];
@@ -21,6 +22,7 @@ export const ReceiptParticipantRoleChange: React.FC<Props> = ({
 	initialRole,
 	close,
 	changeRole,
+	disabled,
 }) => {
 	const [selectedRole, setSelectedRole] = React.useState(initialRole);
 	return (
@@ -33,7 +35,7 @@ export const ReceiptParticipantRoleChange: React.FC<Props> = ({
 			<ReactNative.Button
 				title={`Change to ${selectedRole}`}
 				onPress={() => changeRole(selectedRole)}
-				disabled={initialRole === selectedRole}
+				disabled={initialRole === selectedRole || disabled}
 			/>
 			<ReactNative.Button title="Close" onPress={close} />
 		</>

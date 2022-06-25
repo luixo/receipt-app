@@ -96,6 +96,7 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 			participants: receiptParticipants.map((participant) => ({
 				...participant,
 				role: participant.role as "owner" | "editor" | "viewer",
+				dirty: undefined as boolean | undefined,
 			})),
 		};
 	},
