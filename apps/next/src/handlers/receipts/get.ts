@@ -45,7 +45,11 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 			ctx.auth.accountId
 		);
 		if (accessRole) {
-			return { ...receipt, role: accessRole };
+			return {
+				...receipt,
+				role: accessRole,
+				dirty: undefined as boolean | undefined,
+			};
 		}
 		throw new trpc.TRPCError({
 			code: "FORBIDDEN",

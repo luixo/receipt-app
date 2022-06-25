@@ -132,13 +132,17 @@ const updateMutationOptions: UseContextedMutationOptions<
 			);
 			const snapshot = getReceiptById(trpc, input);
 			updateReceipt(trpc, input, (receipt) =>
-				applyUpdate(receipt, updateObject.update)
+				applyUpdate({ ...receipt, dirty: true }, updateObject.update)
 			);
 			return {
 				pagedSnapshot: pagedSnapshot?.receipt,
 				snapshot,
 			};
 		},
+	onSuccess:
+		(trpc, { input }) =>
+		() =>
+			updateReceipt(trpc, input, (receipt) => ({ ...receipt, dirty: false })),
 	onError:
 		(trpc, { pagedInput, input }) =>
 		(_error, _variables, { pagedSnapshot, snapshot } = {}) => {
@@ -254,7 +258,7 @@ export const Receipt: React.FC<Props> = ({
 		<Block>
 			<TextLink href={`/receipts/${receipt.id}/`}>{receipt.name}</TextLink>
 			<ReactNative.TouchableOpacity
-				disabled={receipt.role !== "owner"}
+				disabled={receipt.role !== "owner" || receipt.dirty}
 				onPress={promptName}
 			>
 				<Text>Change name</Text>
@@ -270,18 +274,19 @@ export const Receipt: React.FC<Props> = ({
 					close={hideCurrencyPicker}
 					changeCurrency={changeCurrency}
 					initialCurrency={receipt.currency}
+					disabled={receipt.dirty}
 				/>
 			) : null}
 			<Text>Sum: {receipt.sum}</Text>
 			<Text>Role: {receipt.role}</Text>
 			<ReactNative.TouchableOpacity
-				disabled={receipt.role !== "owner"}
+				disabled={receipt.role !== "owner" || receipt.dirty}
 				onPress={promptIssued}
 			>
 				<Text>Issued: {receipt.issued.toLocaleDateString()}</Text>
 			</ReactNative.TouchableOpacity>
 			<ReactNative.TouchableOpacity
-				disabled={receipt.role === "viewer"}
+				disabled={receipt.role === "viewer" || receipt.dirty}
 				onPress={switchResolved}
 			>
 				<Text>Resolved: {receipt.resolved.toString()}</Text>
@@ -289,7 +294,9 @@ export const Receipt: React.FC<Props> = ({
 			<QueryWrapper query={ownerQuery}>{ReceiptOwner}</QueryWrapper>
 			{receipt.role === "owner" ? (
 				<>
-					<RemoveButton onPress={deleteReceipt}>Remove receipt</RemoveButton>
+					<RemoveButton onPress={deleteReceipt} disabled={receipt.dirty}>
+						Remove receipt
+					</RemoveButton>
 					<MutationWrapper<"receipts.delete"> mutation={deleteReceiptMutation}>
 						{() => <Text>Remove success!</Text>}
 					</MutationWrapper>

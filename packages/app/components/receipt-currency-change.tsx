@@ -9,12 +9,14 @@ type Props = {
 	initialCurrency: Currency;
 	close: () => void;
 	changeCurrency: (nextCurrency: Currency) => void;
+	disabled?: boolean;
 };
 
 export const ReceiptCurrencyChange: React.FC<Props> = ({
 	initialCurrency,
 	close,
 	changeCurrency,
+	disabled,
 }) => {
 	const [selectedCurrency, setSelectedCurrency] =
 		React.useState(initialCurrency);
@@ -34,6 +36,7 @@ export const ReceiptCurrencyChange: React.FC<Props> = ({
 			<ReactNative.Button
 				title={`Change to ${selectedCurrency}`}
 				onPress={() => changeCurrency(selectedCurrency)}
+				disabled={disabled}
 			/>
 			<ReactNative.Button title="Close" onPress={close} />
 		</>

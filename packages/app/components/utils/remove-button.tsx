@@ -4,8 +4,7 @@ import { styled } from "../../utils/styles";
 
 type Props = {
 	children: string;
-	onPress?: (event: ReactNative.GestureResponderEvent) => void;
-};
+} & ReactNative.TouchableOpacityProps;
 
 const Button = styled(ReactNative.Button)({
 	padding: "$m",
@@ -13,6 +12,10 @@ const Button = styled(ReactNative.Button)({
 	borderColor: "$highlight",
 });
 
-export const RemoveButton: React.FC<Props> = ({ onPress, children }) => {
-	return <Button title={children} onPress={onPress} />;
+export const RemoveButton: React.FC<Props> = ({ children, ...props }) => {
+	return (
+		<ReactNative.TouchableOpacity {...props}>
+			<Button title={children} disabled={props.disabled} />
+		</ReactNative.TouchableOpacity>
+	);
 };
