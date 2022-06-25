@@ -75,11 +75,18 @@ const updateMutationOptions: UseContextedMutationOptions<
 		updateReceiptItems(trpc, input, (items) =>
 			items.map((item) =>
 				item.id === updateObject.id
-					? applyUpdate(item, updateObject.update)
+					? applyUpdate({ ...item, dirty: true }, updateObject.update)
 					: item
 			)
 		);
 		return snapshot?.item;
+	},
+	onSuccess: (trpc, input) => (_value, updateObject) => {
+		updateReceiptItems(trpc, input, (items) =>
+			items.map((item) =>
+				item.id === updateObject.id ? { ...item, dirty: false } : item
+			)
+		);
 	},
 	onError: (trpc, input) => (_error, _variables, snapshotItem) => {
 		if (!snapshotItem) {
@@ -194,32 +201,34 @@ export const ReceiptItem: React.FC<Props> = ({
 	return (
 		<Block
 			name={receiptItem.name}
-			disabled={role === "viewer"}
+			disabled={role === "viewer" || receiptItem.dirty}
 			onNamePress={promptName}
 		>
 			<Text>
 				<ReactNative.TouchableOpacity
-					disabled={role === "viewer"}
+					disabled={role === "viewer" || receiptItem.dirty}
 					onPress={promptPrice}
 				>
 					<Text>{receiptItem.price}</Text>
 				</ReactNative.TouchableOpacity>
 				{" x "}
 				<ReactNative.TouchableOpacity
-					disabled={role === "viewer"}
+					disabled={role === "viewer" || receiptItem.dirty}
 					onPress={promptQuantity}
 				>
 					<Text>{receiptItem.quantity}</Text>
 				</ReactNative.TouchableOpacity>
 			</Text>
 			<ReactNative.TouchableOpacity
-				disabled={role === "viewer"}
+				disabled={role === "viewer" || receiptItem.dirty}
 				onPress={switchLocked}
 			>
 				<Text>{receiptItem.locked ? "locked" : "not locked"}</Text>
 			</ReactNative.TouchableOpacity>
 			{!role || role === "viewer" ? null : (
-				<RemoveButton onPress={removeReceiptItem}>Remove item</RemoveButton>
+				<RemoveButton onPress={removeReceiptItem} disabled={receiptItem.dirty}>
+					Remove item
+				</RemoveButton>
 			)}
 			{receiptItem.parts.map((part) => (
 				<ReceiptItemPart

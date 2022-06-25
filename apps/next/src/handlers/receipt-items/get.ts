@@ -14,6 +14,7 @@ type ReceiptItem = {
 	quantity: number;
 	locked: boolean;
 	parts: { userId: UsersId; part: number }[];
+	dirty?: boolean;
 };
 
 export const router = trpc.router<AuthorizedContext>().query("get", {

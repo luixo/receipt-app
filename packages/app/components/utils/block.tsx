@@ -31,7 +31,9 @@ export const Block: React.FC<Props> = ({
 }) => {
 	const content = (
 		<Wrapper>
-			{name ? <Name onPress={onNamePress}>{name}</Name> : null}
+			{name ? (
+				<Name onPress={disabled ? undefined : onNamePress}>{name}</Name>
+			) : null}
 			{children}
 		</Wrapper>
 	);
