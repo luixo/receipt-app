@@ -42,7 +42,7 @@ const mutationOptions: UseContextedMutationOptions<
 					localUserId: form.userId,
 					role: form.role,
 					resolved: false,
-					dirty: undefined,
+					dirty: true,
 				},
 			]);
 			const addedUser = getAvailableUserById(trpc, usersInput, form.userId);
@@ -50,6 +50,17 @@ const mutationOptions: UseContextedMutationOptions<
 				page.filter((user) => user.id !== form.userId)
 			);
 			return addedUser;
+		},
+	onSuccess:
+		(trpc, { itemsInput }) =>
+		(_result, form) => {
+			updateReceiptParticipants(trpc, itemsInput, (participants) =>
+				participants.map((participant) =>
+					participant.userId === form.userId
+						? { ...participant, dirty: false }
+						: participant
+				)
+			);
 		},
 	onError:
 		(trpc, { itemsInput, usersInput }) =>

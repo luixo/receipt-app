@@ -32,6 +32,7 @@ const mutationOptions: UseContextedMutationOptions<
 				...nextItemForm,
 				locked: false,
 				parts: [],
+				dirty: true,
 			},
 		]);
 		return temporaryId;
@@ -44,7 +45,7 @@ const mutationOptions: UseContextedMutationOptions<
 	onSuccess: (trpc, input) => (remoteId, _variables, temporaryId) => {
 		updateReceiptItems(trpc, input, (items) =>
 			items.map((item) =>
-				item.id === temporaryId ? { ...item, id: remoteId } : item
+				item.id === temporaryId ? { ...item, id: remoteId, dirty: false } : item
 			)
 		);
 	},

@@ -1,7 +1,7 @@
 import React from "react";
 import { v4 } from "uuid";
 
-import { useForm, Controller, SubmitHandler } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { AddButton } from "./utils/add-button";
 import { trpc } from "../trpc";
 import { Block } from "./utils/block";
@@ -40,6 +40,7 @@ const putMutationOptions: UseContextedMutationOptions<
 						currency: form.currency,
 						receiptResolved: false,
 						participantResolved: false,
+						dirty: true,
 					},
 					...page,
 				];
@@ -62,7 +63,9 @@ const putMutationOptions: UseContextedMutationOptions<
 		}
 		updatePagedReceipts(trpc, input, (page) =>
 			page.map((receipt) =>
-				receipt.id === temporaryId ? { ...receipt, id: actualId } : receipt
+				receipt.id === temporaryId
+					? { ...receipt, id: actualId, dirty: false }
+					: receipt
 			)
 		);
 	},
