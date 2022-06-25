@@ -18,6 +18,25 @@ type ReceiptParticipant =
 	TRPCQueryOutput<"receipt-items.get">["participants"][number];
 type ReceiptItemPart = ReceiptItem["parts"][number];
 
+const applyUpdateToUserPart = (
+	item: ReceiptItem,
+	userId: UsersId,
+	updater: (part: ReceiptItemPart) => ReceiptItemPart
+): ReceiptItem => {
+	const userPartIndex = item.parts.findIndex((part) => part.userId === userId);
+	if (userPartIndex === -1) {
+		return item;
+	}
+	return {
+		...item,
+		parts: [
+			...item.parts.slice(0, userPartIndex),
+			updater(item.parts[userPartIndex]!),
+			...item.parts.slice(userPartIndex + 1),
+		],
+	};
+};
+
 const applyUpdate = (
 	item: ReceiptItem,
 	update: TRPCMutationInput<"item-participants.update">["update"],
@@ -25,20 +44,11 @@ const applyUpdate = (
 ): ReceiptItem => {
 	switch (update.type) {
 		case "part":
-			const userPartIndex = item.parts.findIndex(
-				(part) => part.userId === userId
-			);
-			if (userPartIndex !== -1) {
-				return {
-					...item,
-					parts: [
-						...item.parts.slice(0, userPartIndex),
-						{ ...item.parts[userPartIndex]!, part: update.part },
-						...item.parts.slice(userPartIndex + 1),
-					],
-				};
-			}
-			return { ...item, parts: [...item.parts, { userId, part: update.part }] };
+			return applyUpdateToUserPart(item, userId, (part) => ({
+				...part,
+				part: update.part,
+				dirty: true,
+			}));
 	}
 };
 
@@ -62,6 +72,18 @@ const updateMutationOptions: UseContextedMutationOptions<
 			)
 		);
 		return snapshot?.item;
+	},
+	onSuccess: (trpc, input) => (_error, updateObject) => {
+		updateReceiptItems(trpc, input, (items) =>
+			items.map((item) =>
+				item.id === updateObject.itemId
+					? applyUpdateToUserPart(item, updateObject.userId, (part) => ({
+							...part,
+							dirty: false,
+					  }))
+					: item
+			)
+		);
 	},
 	onError: (trpc, input) => (_error, _variables, snapshotItem) => {
 		if (!snapshotItem) {
@@ -158,20 +180,25 @@ export const ReceiptItemPart: React.FC<Props> = ({
 	return (
 		<Block name={matchedParticipant.name}>
 			<ReactNative.TouchableOpacity
-				disabled={receiptItemPart.part <= 1 || !role || role === "viewer"}
+				disabled={
+					receiptItemPart.part <= 1 ||
+					!role ||
+					role === "viewer" ||
+					receiptItemPart.dirty
+				}
 				onPress={decrementPart}
 			>
 				<Text>-</Text>
 			</ReactNative.TouchableOpacity>
 			<ReactNative.TouchableOpacity
 				onPress={promptPart}
-				disabled={!role || role === "viewer"}
+				disabled={!role || role === "viewer" || receiptItemPart.dirty}
 			>
 				<Text>{receiptItemPart.part} part(s)</Text>
 			</ReactNative.TouchableOpacity>
 			<ReactNative.TouchableOpacity
 				onPress={incrementPart}
-				disabled={!role || role === "viewer"}
+				disabled={!role || role === "viewer" || receiptItemPart.dirty}
 			>
 				<Text>+</Text>
 			</ReactNative.TouchableOpacity>

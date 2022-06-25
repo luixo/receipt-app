@@ -13,7 +13,7 @@ type ReceiptItem = {
 	price: number;
 	quantity: number;
 	locked: boolean;
-	parts: { userId: UsersId; part: number }[];
+	parts: { userId: UsersId; part: number; dirty?: boolean }[];
 	dirty?: boolean;
 };
 
