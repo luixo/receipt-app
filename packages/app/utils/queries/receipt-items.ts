@@ -41,3 +41,22 @@ export const updateReceiptItems = (
 		items: nextItems,
 	});
 };
+
+export const updateReceiptItemById = (
+	trpc: TRPCReactContext,
+	input: ReceiptItemsGetInput,
+	itemId: ReceiptItemsId,
+	updater: (item: ReceiptItem) => ReceiptItem
+) => {
+	return updateReceiptItems(trpc, input, (items) => {
+		const itemIndex = items.findIndex((item) => item.id === itemId);
+		if (itemIndex === -1) {
+			return items;
+		}
+		return [
+			...items.slice(0, itemIndex),
+			updater(items[itemIndex]!),
+			...items.slice(itemIndex + 1),
+		];
+	});
+};

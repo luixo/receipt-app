@@ -17,6 +17,7 @@ import { MutationWrapper } from "./utils/mutation-wrapper";
 import { Text } from "../utils/styles";
 import { useAsyncCallback } from "../hooks/use-async-callback";
 import { VALIDATIONS_CONSTANTS } from "../utils/validation";
+import { AddReceiptItemPartForm } from "./add-receipt-item-participant-form";
 
 type ReceiptItem = TRPCQueryOutput<"receipt-items.get">["items"][number];
 type ReceiptParticipant =
@@ -198,6 +199,11 @@ export const ReceiptItem: React.FC<Props> = ({
 		});
 	}, [updateReceiptItemMutation, receiptItem.id, receiptItem.locked]);
 
+	const addedParticipants = receiptItem.parts.map((part) => part.userId);
+	const notAddedParticipants = receiptParticipants.filter(
+		(participant) => !addedParticipants.includes(participant.userId)
+	);
+
 	return (
 		<Block
 			name={receiptItem.name}
@@ -237,6 +243,15 @@ export const ReceiptItem: React.FC<Props> = ({
 					receiptParticipants={receiptParticipants}
 					itemId={receiptItem.id}
 					receiptItemsInput={receiptItemsInput}
+					role={role}
+				/>
+			))}
+			{notAddedParticipants.map((participant) => (
+				<AddReceiptItemPartForm
+					key={participant.userId}
+					participant={participant}
+					receiptItemsInput={receiptItemsInput}
+					itemId={receiptItem.id}
 					role={role}
 				/>
 			))}

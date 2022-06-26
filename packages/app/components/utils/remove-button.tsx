@@ -12,10 +12,14 @@ const Button = styled(ReactNative.Button)({
 	borderColor: "$highlight",
 });
 
-export const RemoveButton: React.FC<Props> = ({ children, ...props }) => {
+export const RemoveButton: React.FC<Props> = ({
+	children,
+	onPress,
+	...props
+}) => {
 	return (
 		<ReactNative.TouchableOpacity {...props}>
-			<Button title={children} disabled={props.disabled} />
+			<Button title={children} disabled={props.disabled} onPress={onPress} />
 		</ReactNative.TouchableOpacity>
 	);
 };

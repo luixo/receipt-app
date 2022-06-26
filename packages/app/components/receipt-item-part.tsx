@@ -6,91 +6,105 @@ import { Block } from "./utils/block";
 import { Text } from "../utils/styles";
 import { MutationWrapper } from "./utils/mutation-wrapper";
 import { useTrpcMutationOptions } from "../hooks/use-trpc-mutation-options";
-import { ReceiptItemsId, UsersId } from "next-app/db/models";
+import { ReceiptItemsId } from "next-app/db/models";
+import { ReceiptItemsGetInput } from "../utils/queries/receipt-items";
+import { useAsyncCallback } from "../hooks/use-async-callback";
+import { RemoveButton } from "./utils/remove-button";
 import {
-	getReceiptItemWithIndexById,
-	ReceiptItemsGetInput,
-	updateReceiptItems,
-} from "../utils/queries/receipt-items";
+	getReceiptItemPartWithIndex,
+	updateItemPart,
+	updateItemParts,
+} from "../utils/queries/item-participants";
 
 type ReceiptItem = TRPCQueryOutput<"receipt-items.get">["items"][number];
 type ReceiptParticipant =
 	TRPCQueryOutput<"receipt-items.get">["participants"][number];
 type ReceiptItemPart = ReceiptItem["parts"][number];
 
-const applyUpdateToUserPart = (
-	item: ReceiptItem,
-	userId: UsersId,
-	updater: (part: ReceiptItemPart) => ReceiptItemPart
-): ReceiptItem => {
-	const userPartIndex = item.parts.findIndex((part) => part.userId === userId);
-	if (userPartIndex === -1) {
-		return item;
-	}
-	return {
-		...item,
-		parts: [
-			...item.parts.slice(0, userPartIndex),
-			updater(item.parts[userPartIndex]!),
-			...item.parts.slice(userPartIndex + 1),
-		],
-	};
+const deleteMutationOptions: UseContextedMutationOptions<
+	"item-participants.delete",
+	ReturnType<typeof getReceiptItemPartWithIndex>,
+	ReceiptItemsGetInput
+> = {
+	onMutate: (trpc, input) => (variables) => {
+		const snapshot = getReceiptItemPartWithIndex(
+			trpc,
+			input,
+			variables.itemId,
+			variables.userId
+		);
+		updateItemParts(trpc, input, variables.itemId, (participants) =>
+			participants.filter((part) => part.userId !== variables.userId)
+		);
+		return snapshot;
+	},
+	onError: (trpc, input) => (_error, variables, snapshot) => {
+		if (!snapshot) {
+			return;
+		}
+		updateItemParts(trpc, input, variables.itemId, (participants) => [
+			...participants.slice(0, snapshot.index),
+			snapshot.item,
+			...participants.slice(snapshot.index),
+		]);
+	},
 };
 
 const applyUpdate = (
-	item: ReceiptItem,
-	update: TRPCMutationInput<"item-participants.update">["update"],
-	userId: UsersId
-): ReceiptItem => {
+	part: ReceiptItemPart,
+	update: TRPCMutationInput<"item-participants.update">["update"]
+): ReceiptItemPart => {
 	switch (update.type) {
 		case "part":
-			return applyUpdateToUserPart(item, userId, (part) => ({
+			return {
 				...part,
 				part: update.part,
 				dirty: true,
-			}));
+			};
 	}
 };
 
 const updateMutationOptions: UseContextedMutationOptions<
 	"item-participants.update",
-	| NonNullable<ReturnType<typeof getReceiptItemWithIndexById>>["item"]
+	| NonNullable<ReturnType<typeof getReceiptItemPartWithIndex>>["item"]
 	| undefined,
 	ReceiptItemsGetInput
 > = {
-	onMutate: (trpc, input) => (updateObject) => {
-		const snapshot = getReceiptItemWithIndexById(
+	onMutate: (trpc, input) => (variables) => {
+		const snapshot = getReceiptItemPartWithIndex(
 			trpc,
 			input,
-			updateObject.itemId
+			variables.itemId,
+			variables.userId
 		);
-		updateReceiptItems(trpc, input, (items) =>
-			items.map((item) =>
-				item === snapshot?.item
-					? applyUpdate(item, updateObject.update, updateObject.userId)
-					: item
-			)
+		updateItemPart(
+			trpc,
+			input,
+			variables.itemId,
+			variables.userId,
+			(participant) => applyUpdate(participant, variables.update)
 		);
 		return snapshot?.item;
 	},
-	onSuccess: (trpc, input) => (_error, updateObject) => {
-		updateReceiptItems(trpc, input, (items) =>
-			items.map((item) =>
-				item.id === updateObject.itemId
-					? applyUpdateToUserPart(item, updateObject.userId, (part) => ({
-							...part,
-							dirty: false,
-					  }))
-					: item
-			)
+	onSuccess: (trpc, input) => (_error, variables) => {
+		updateItemPart(
+			trpc,
+			input,
+			variables.itemId,
+			variables.userId,
+			(participant) => ({ ...participant, dirty: false })
 		);
 	},
-	onError: (trpc, input) => (_error, _variables, snapshotItem) => {
+	onError: (trpc, input) => (_error, variables, snapshotItem) => {
 		if (!snapshotItem) {
 			return;
 		}
-		updateReceiptItems(trpc, input, (items) =>
-			items.map((item) => (item.id === snapshotItem.id ? snapshotItem : item))
+		updateItemPart(
+			trpc,
+			input,
+			variables.itemId,
+			variables.userId,
+			() => snapshotItem
 		);
 	},
 };
@@ -110,7 +124,7 @@ export const ReceiptItemPart: React.FC<Props> = ({
 	receiptItemsInput,
 	role,
 }) => {
-	const updateItemParticipantMutation = trpc.useMutation(
+	const updateItemPartMutation = trpc.useMutation(
 		"item-participants.update",
 		useTrpcMutationOptions(updateMutationOptions, receiptItemsInput)
 	);
@@ -125,13 +139,13 @@ export const ReceiptItemPart: React.FC<Props> = ({
 		if (nextPart === receiptItemPart.part) {
 			return;
 		}
-		updateItemParticipantMutation.mutate({
+		updateItemPartMutation.mutate({
 			itemId,
 			userId: receiptItemPart.userId,
 			update: { type: "part", part: nextPart },
 		});
 	}, [
-		updateItemParticipantMutation,
+		updateItemPartMutation,
 		receiptItemPart.part,
 		receiptItemPart.userId,
 		itemId,
@@ -139,13 +153,13 @@ export const ReceiptItemPart: React.FC<Props> = ({
 
 	const incrementPart = React.useCallback(() => {
 		const nextPart = receiptItemPart.part + 1;
-		updateItemParticipantMutation.mutate({
+		updateItemPartMutation.mutate({
 			itemId,
 			userId: receiptItemPart.userId,
 			update: { type: "part", part: nextPart },
 		});
 	}, [
-		updateItemParticipantMutation,
+		updateItemPartMutation,
 		receiptItemPart.part,
 		receiptItemPart.userId,
 		itemId,
@@ -155,17 +169,30 @@ export const ReceiptItemPart: React.FC<Props> = ({
 		if (nextPart <= 0) {
 			return;
 		}
-		updateItemParticipantMutation.mutate({
+		updateItemPartMutation.mutate({
 			itemId,
 			userId: receiptItemPart.userId,
 			update: { type: "part", part: nextPart },
 		});
 	}, [
-		updateItemParticipantMutation,
+		updateItemPartMutation,
 		receiptItemPart.part,
 		receiptItemPart.userId,
 		itemId,
 	]);
+
+	const removeItemPartMutation = trpc.useMutation(
+		"item-participants.delete",
+		useTrpcMutationOptions(deleteMutationOptions, receiptItemsInput)
+	);
+	const removeItemPart = useAsyncCallback(
+		() =>
+			removeItemPartMutation.mutateAsync({
+				itemId,
+				userId: receiptItemPart.userId,
+			}),
+		[removeItemPartMutation.mutate, itemId, receiptItemPart.userId]
+	);
 
 	const matchedParticipant = receiptParticipants.find(
 		(participant) => participant.userId === receiptItemPart.userId
@@ -202,10 +229,20 @@ export const ReceiptItemPart: React.FC<Props> = ({
 			>
 				<Text>+</Text>
 			</ReactNative.TouchableOpacity>
+			{!role || role === "viewer" ? null : (
+				<RemoveButton onPress={removeItemPart} disabled={receiptItemPart.dirty}>
+					Remove participant
+				</RemoveButton>
+			)}
 			<MutationWrapper<"item-participants.update">
-				mutation={updateItemParticipantMutation}
+				mutation={updateItemPartMutation}
 			>
 				{() => <Text>Update success!</Text>}
+			</MutationWrapper>
+			<MutationWrapper<"item-participants.delete">
+				mutation={removeItemPartMutation}
+			>
+				{() => <Text>Remove success!</Text>}
 			</MutationWrapper>
 		</Block>
 	);
