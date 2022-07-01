@@ -9,19 +9,19 @@ export const useAsyncCallback = <
 	callback: (isMount: () => boolean, ...args: Args) => ValueOrPromise<any>,
 	deps: unknown[]
 ) => {
-	const [mount, setMount] = React.useState(false);
+	const isMountedRef = React.useRef(false);
 	React.useEffect(() => {
-		setMount(true);
-		return () => setMount(false);
-	}, [setMount]);
-	const isMountRef = React.useRef(() => mount);
+		isMountedRef.current = true;
+		return () => void (isMountedRef.current = false);
+	}, [isMountedRef]);
+
 	return React.useCallback<(...args: Args) => ValueOrPromise<any>>(
 		async (...args) => {
 			try {
-				const result = await callback(isMountRef.current, ...args);
+				const result = await callback(() => isMountedRef.current, ...args);
 				return result;
 			} catch (e) {}
 		},
-		[isMountRef, ...deps]
+		[isMountedRef, ...deps]
 	);
 };
