@@ -15,4 +15,8 @@ export const VALIDATIONS_CONSTANTS = {
 		min: 2,
 		max: 255,
 	},
+	userName: {
+		min: 2,
+		max: 255,
+	},
 };

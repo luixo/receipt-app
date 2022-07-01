@@ -23,6 +23,9 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 			.limit(input.limit)
 			.execute();
 
-		return users;
+		return users.map((user) => ({
+			...user,
+			dirty: undefined as boolean | undefined,
+		}));
 	},
 });

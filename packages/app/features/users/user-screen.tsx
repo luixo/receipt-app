@@ -7,6 +7,7 @@ import { Block } from "../../components/utils/block";
 import { BackButton } from "../../components/utils/back-button";
 import { ScrollView } from "../../utils/styles";
 import { UsersGetInput } from "../../utils/queries/users-get";
+import { DEFAULT_INPUT } from "../../utils/queries/users-get-paged";
 
 const { useParam } = createParam<{ id: string }>();
 
@@ -23,7 +24,13 @@ export const UserScreen: React.FC = () => {
 		<ScrollView>
 			<Block name={`User: ${userQuery.data ? userQuery.data.name : id}`}>
 				<BackButton href="/users/" />
-				<QueryWrapper query={userQuery}>{User}</QueryWrapper>
+				<QueryWrapper
+					query={userQuery}
+					input={usersGetInput}
+					pagedInput={DEFAULT_INPUT}
+				>
+					{User}
+				</QueryWrapper>
 			</Block>
 		</ScrollView>
 	);
