@@ -5,6 +5,7 @@ import { router as getAvailableRouter } from "./get-available";
 import { router as getPagedRouter } from "./get-paged";
 import { router as putRouter } from "./put";
 import { router as deleteRouter } from "./delete";
+import { router as updateRouter } from "./update";
 
 export const router = trpc
 	.router<AuthorizedContext>()
@@ -12,4 +13,5 @@ export const router = trpc
 	.merge(getAvailableRouter)
 	.merge(getPagedRouter)
 	.merge(putRouter)
-	.merge(deleteRouter);
+	.merge(deleteRouter)
+	.merge(updateRouter);
