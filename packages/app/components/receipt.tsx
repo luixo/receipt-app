@@ -27,6 +27,7 @@ import {
 } from "../utils/queries/receipts-get";
 import { ReceiptCurrencyChange } from "./receipt-currency-change";
 import { Currency } from "../utils/currency";
+import { UsersId } from "next-app/src/db/models";
 
 type PagedReceiptSnapshot = TRPCQueryOutput<"receipts.get-paged">[number];
 type ReceiptSnapshot = TRPCQueryOutput<"receipts.get">;
@@ -179,7 +180,8 @@ export const Receipt: React.FC<Props> = ({
 	);
 	const ownerQuery = trpc.useQuery([
 		"users.get",
-		{ accountId: receipt.ownerAccountId },
+		// Typesystem doesn't know that we use account id as self user id
+		{ id: receipt.ownerAccountId as UsersId },
 	]);
 	const deleteReceipt = useAsyncCallback(
 		async (isMount) => {

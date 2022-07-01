@@ -28,6 +28,8 @@ export const HomeScreen: React.FC = () => {
 				<TextLink href="/account">Account</TextLink>
 				<Spacer />
 				<TextLink href="/receipts">Receipts</TextLink>
+				<Spacer />
+				<TextLink href="/users">Users</TextLink>
 			</>
 		);
 	} else if (accountQuery.status === "error") {

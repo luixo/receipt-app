@@ -7,6 +7,8 @@ import { RegisterScreen } from "app/features/auth/register";
 import { AccountScreen } from "app/features/account/screen";
 import { ReceiptsScreen } from "app/features/receipts/receipts-screen";
 import { ReceiptScreen } from "app/features/receipts/receipt-screen";
+import { UsersScreen } from "app/features/users/users-screen";
+import { UserScreen } from "app/features/users/user-screen";
 
 export type AppParamList = {
 	home: undefined;
@@ -15,6 +17,10 @@ export type AppParamList = {
 	login: undefined;
 	register: undefined;
 	receipt: {
+		id: string;
+	};
+	users: undefined;
+	user: {
 		id: string;
 	};
 };
@@ -64,6 +70,20 @@ export const NativeNavigation: React.FC = () => {
 				component={ReceiptScreen}
 				options={{
 					title: "Receipt",
+				}}
+			/>
+			<Stack.Screen
+				name="users"
+				component={UsersScreen}
+				options={{
+					title: "Users",
+				}}
+			/>
+			<Stack.Screen
+				name="user"
+				component={UserScreen}
+				options={{
+					title: "User",
 				}}
 			/>
 		</Stack.Navigator>
