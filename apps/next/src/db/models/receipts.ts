@@ -15,7 +15,7 @@ export default interface Receipts {
 
 	created: Date;
 
-	/** Index: receipts_owner_index */
+	/** Index: receipts_ownerAccountId_index */
 	ownerAccountId: AccountsId;
 
 	issued: Date;
@@ -33,7 +33,7 @@ export interface ReceiptsInitializer {
 
 	created: Date;
 
-	/** Index: receipts_owner_index */
+	/** Index: receipts_ownerAccountId_index */
 	ownerAccountId: AccountsId;
 
 	issued: Date;

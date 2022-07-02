@@ -7,8 +7,8 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
-		"db:generate-types": "dotenv -c -- ts-node db/generate-types.ts",
-		"db:migrate": "dotenv -c -- ts-node db/migrate.ts"
+		"db:generate-types": "dotenv -c -- ts-node src/db/generate-types.ts",
+		"db:migrate": "dotenv -c -- ts-node src/db/migrate.ts"
 	},
 	"workspaces": {
 		"nohoist": [

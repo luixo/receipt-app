@@ -15,10 +15,10 @@ export default interface ReceiptItems {
 
 	quantity: string;
 
-	/** Index: receipt_items_receiptid_index */
+	/** Index: receiptItems_receiptId_index */
 	receiptId: ReceiptsId;
 
-	locked: boolean | null;
+	locked: boolean;
 }
 
 export interface ReceiptItemsInitializer {
@@ -31,9 +31,9 @@ export interface ReceiptItemsInitializer {
 
 	quantity: string;
 
-	/** Index: receipt_items_receiptid_index */
+	/** Index: receiptItems_receiptId_index */
 	receiptId: ReceiptsId;
 
 	/** Default value: false */
-	locked?: boolean | null;
+	locked?: boolean;
 }

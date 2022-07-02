@@ -11,9 +11,9 @@ export default interface Users {
 
 	name: string;
 
-	ownerAccountId: AccountsId;
-
 	publicName: string;
+
+	ownerAccountId: AccountsId;
 
 	exposeReceipts: boolean;
 
@@ -28,9 +28,9 @@ export interface UsersInitializer {
 
 	name: string;
 
-	ownerAccountId: AccountsId;
-
 	publicName: string;
+
+	ownerAccountId: AccountsId;
 
 	/** Default value: false */
 	exposeReceipts?: boolean;

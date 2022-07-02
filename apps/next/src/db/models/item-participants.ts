@@ -6,26 +6,26 @@ import { UsersId } from "./users";
 
 export default interface ItemParticipants {
 	/**
-	 * Index: item_participants_itemid_index
-	 * Primary key. Index: item_participants_pk
+	 * Index: itemParticipants_itemId_index
+	 * Primary key. Index: itemParticipants_pk
 	 */
 	itemId: ReceiptItemsId;
 
 	part: string;
 
-	/** Primary key. Index: item_participants_pk */
+	/** Primary key. Index: itemParticipants_pk */
 	userId: UsersId;
 }
 
 export interface ItemParticipantsInitializer {
 	/**
-	 * Index: item_participants_itemid_index
-	 * Primary key. Index: item_participants_pk
+	 * Index: itemParticipants_itemId_index
+	 * Primary key. Index: itemParticipants_pk
 	 */
 	itemId: ReceiptItemsId;
 
 	part: string;
 
-	/** Primary key. Index: item_participants_pk */
+	/** Primary key. Index: itemParticipants_pk */
 	userId: UsersId;
 }

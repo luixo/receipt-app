@@ -8,8 +8,8 @@ export default interface Accounts {
 	id: AccountsId;
 
 	/**
-	 * Index: accounts_email_uindex
-	 * Index: accounts_pk
+	 * Index: accounts_email_index
+	 * Index: accounts_email_key
 	 */
 	email: string;
 
@@ -23,8 +23,8 @@ export interface AccountsInitializer {
 	id: AccountsId;
 
 	/**
-	 * Index: accounts_email_uindex
-	 * Index: accounts_pk
+	 * Index: accounts_email_index
+	 * Index: accounts_email_key
 	 */
 	email: string;
 

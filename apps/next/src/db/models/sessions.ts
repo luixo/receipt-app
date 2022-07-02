@@ -7,8 +7,8 @@ export type SessionsId = string & { " __flavor"?: "sessions" };
 
 export default interface Sessions {
 	/**
-	 * Primary key. Index: authorization_pk
-	 * Index: authorization_sessionid_uindex
+	 * Primary key. Index: sessions_pkey
+	 * Index: sessions_sessionId_index
 	 */
 	sessionId: SessionsId;
 
@@ -19,8 +19,8 @@ export default interface Sessions {
 
 export interface SessionsInitializer {
 	/**
-	 * Primary key. Index: authorization_pk
-	 * Index: authorization_sessionid_uindex
+	 * Primary key. Index: sessions_pkey
+	 * Index: sessions_sessionId_index
 	 */
 	sessionId: SessionsId;
 

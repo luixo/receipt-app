@@ -5,13 +5,17 @@ import AccountConnections, {
 	AccountConnectionsInitializer,
 } from "./account-connections";
 import Accounts, { AccountsInitializer, AccountsId } from "./accounts";
-import AwaitedReceipts, {
-	AwaitedReceiptsInitializer,
-	AwaitedReceiptsId,
-} from "./awaited-receipts";
 import ItemParticipants, {
 	ItemParticipantsInitializer,
 } from "./item-participants";
+import KyselyMigration, {
+	KyselyMigrationInitializer,
+	KyselyMigrationId,
+} from "./kysely-migration";
+import KyselyMigrationLock, {
+	KyselyMigrationLockInitializer,
+	KyselyMigrationLockId,
+} from "./kysely-migration-lock";
 import ReceiptItems, {
 	ReceiptItemsInitializer,
 	ReceiptItemsId,
@@ -26,8 +30,9 @@ import Users, { UsersInitializer, UsersId } from "./users";
 type Model =
 	| AccountConnections
 	| Accounts
-	| AwaitedReceipts
 	| ItemParticipants
+	| KyselyMigration
+	| KyselyMigrationLock
 	| ReceiptItems
 	| ReceiptParticipants
 	| Receipts
@@ -35,10 +40,11 @@ type Model =
 	| Users;
 
 interface ModelTypeMap {
-	account_connections: AccountConnections;
+	accountConnections: AccountConnections;
 	accounts: Accounts;
-	awaited_receipts: AwaitedReceipts;
 	item_participants: ItemParticipants;
+	kysely_migration: KyselyMigration;
+	kysely_migration_lock: KyselyMigrationLock;
 	receipt_items: ReceiptItems;
 	receipt_participants: ReceiptParticipants;
 	receipts: Receipts;
@@ -48,7 +54,8 @@ interface ModelTypeMap {
 
 type ModelId =
 	| AccountsId
-	| AwaitedReceiptsId
+	| KyselyMigrationId
+	| KyselyMigrationLockId
 	| ReceiptItemsId
 	| ReceiptsId
 	| SessionsId
@@ -56,7 +63,8 @@ type ModelId =
 
 interface ModelIdTypeMap {
 	accounts: AccountsId;
-	awaited_receipts: AwaitedReceiptsId;
+	kysely_migration: KyselyMigrationId;
+	kysely_migration_lock: KyselyMigrationLockId;
 	receipt_items: ReceiptItemsId;
 	receipts: ReceiptsId;
 	sessions: SessionsId;
@@ -66,8 +74,9 @@ interface ModelIdTypeMap {
 type Initializer =
 	| AccountConnectionsInitializer
 	| AccountsInitializer
-	| AwaitedReceiptsInitializer
 	| ItemParticipantsInitializer
+	| KyselyMigrationInitializer
+	| KyselyMigrationLockInitializer
 	| ReceiptItemsInitializer
 	| ReceiptParticipantsInitializer
 	| ReceiptsInitializer
@@ -75,10 +84,11 @@ type Initializer =
 	| UsersInitializer;
 
 interface InitializerTypeMap {
-	account_connections: AccountConnectionsInitializer;
+	accountConnections: AccountConnectionsInitializer;
 	accounts: AccountsInitializer;
-	awaited_receipts: AwaitedReceiptsInitializer;
 	item_participants: ItemParticipantsInitializer;
+	kysely_migration: KyselyMigrationInitializer;
+	kysely_migration_lock: KyselyMigrationLockInitializer;
 	receipt_items: ReceiptItemsInitializer;
 	receipt_participants: ReceiptParticipantsInitializer;
 	receipts: ReceiptsInitializer;
@@ -92,11 +102,14 @@ export type {
 	Accounts,
 	AccountsInitializer,
 	AccountsId,
-	AwaitedReceipts,
-	AwaitedReceiptsInitializer,
-	AwaitedReceiptsId,
 	ItemParticipants,
 	ItemParticipantsInitializer,
+	KyselyMigration,
+	KyselyMigrationInitializer,
+	KyselyMigrationId,
+	KyselyMigrationLock,
+	KyselyMigrationLockInitializer,
+	KyselyMigrationLockId,
 	ReceiptItems,
 	ReceiptItemsInitializer,
 	ReceiptItemsId,

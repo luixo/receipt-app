@@ -5,14 +5,14 @@ import { AccountsId } from "./accounts";
 
 export default interface AccountConnections {
 	/**
-	 * Primary key. Index: account_connections_pk
-	 * Index: account_links_firstaccountid_index
+	 * Primary key. Index: account_connections_pair
+	 * Index: accountLinks_firstAccountId_index
 	 */
 	firstAccountId: AccountsId;
 
 	/**
-	 * Primary key. Index: account_connections_pk
-	 * Index: account_links_secondaccountid_index
+	 * Primary key. Index: account_connections_pair
+	 * Index: accountLinks_secondAccountId_index
 	 */
 	secondAccountId: AccountsId;
 
@@ -23,14 +23,14 @@ export default interface AccountConnections {
 
 export interface AccountConnectionsInitializer {
 	/**
-	 * Primary key. Index: account_connections_pk
-	 * Index: account_links_firstaccountid_index
+	 * Primary key. Index: account_connections_pair
+	 * Index: accountLinks_firstAccountId_index
 	 */
 	firstAccountId: AccountsId;
 
 	/**
-	 * Primary key. Index: account_connections_pk
-	 * Index: account_links_secondaccountid_index
+	 * Primary key. Index: account_connections_pair
+	 * Index: accountLinks_secondAccountId_index
 	 */
 	secondAccountId: AccountsId;
 
