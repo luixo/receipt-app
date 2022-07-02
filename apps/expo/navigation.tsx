@@ -4,11 +4,12 @@ import React from "react";
 import { HomeScreen } from "app/features/home/screen";
 import { LoginScreen } from "app/features/auth/login";
 import { RegisterScreen } from "app/features/auth/register";
-import { AccountScreen } from "app/features/account/screen";
+import { AccountScreen } from "app/features/account/account-screen";
 import { ReceiptsScreen } from "app/features/receipts/receipts-screen";
 import { ReceiptScreen } from "app/features/receipts/receipt-screen";
 import { UsersScreen } from "app/features/users/users-screen";
 import { UserScreen } from "app/features/users/user-screen";
+import { ChangePasswordScreen } from "app/features/account/change-password-screen";
 
 export type AppParamList = {
 	home: undefined;
@@ -23,6 +24,7 @@ export type AppParamList = {
 	user: {
 		id: string;
 	};
+	changePassword: undefined;
 };
 
 const Stack = createNativeStackNavigator<AppParamList>();
@@ -84,6 +86,13 @@ export const NativeNavigation: React.FC = () => {
 				component={UserScreen}
 				options={{
 					title: "User",
+				}}
+			/>
+			<Stack.Screen
+				name="changePassword"
+				component={ChangePasswordScreen}
+				options={{
+					title: "Change password",
 				}}
 			/>
 		</Stack.Navigator>

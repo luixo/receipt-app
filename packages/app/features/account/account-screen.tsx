@@ -1,11 +1,11 @@
 import React from "react";
 import * as ReactNative from "react-native";
-import { styled, H1 } from "../../utils/styles";
+import { styled, H1, TextLink } from "../../utils/styles";
 import { BackButton } from "../../components/utils/back-button";
 import { trpc } from "../../trpc";
 import { MutationWrapper } from "../../components/utils/mutation-wrapper";
 import { Text } from "../../utils/styles";
-import {useAsyncCallback} from "../../hooks/use-async-callback";
+import { useAsyncCallback } from "../../hooks/use-async-callback";
 
 const Wrapper = styled(ReactNative.View)({
 	flex: 1,
@@ -26,14 +26,17 @@ export const AccountScreen: React.FC = () => {
 
 	const trpcContext = trpc.useContext();
 	const logoutMutation = trpc.useMutation("account.logout");
-	const logout = useAsyncCallback(async (isMount) => {
-		await logoutMutation.mutateAsync();
-		if (!isMount()) {
-			return;
-		}
-		trpcContext.invalidateQueries(["account.get"]);
-		trpcContext.refetchQueries(["account.get"]);
-	}, [logoutMutation, trpcContext]);
+	const logout = useAsyncCallback(
+		async (isMount) => {
+			await logoutMutation.mutateAsync();
+			if (!isMount()) {
+				return;
+			}
+			trpcContext.invalidateQueries(["account.get"]);
+			trpcContext.refetchQueries(["account.get"]);
+		},
+		[logoutMutation, trpcContext]
+	);
 
 	return (
 		<Wrapper>
@@ -55,6 +58,8 @@ export const AccountScreen: React.FC = () => {
 				disabled={logoutMutation.status === "success"}
 				onPress={logout}
 			/>
+			<Spacer />
+			<TextLink href="/account/change-password">Change password</TextLink>
 			<MutationWrapper<"account.logout"> mutation={logoutMutation}>
 				{() => <Text>Logout success!</Text>}
 			</MutationWrapper>

@@ -7,6 +7,7 @@ import { TextInput, Text } from "../../utils/styles";
 import { VALIDATIONS_CONSTANTS } from "../../utils/validation";
 import { MutationWrapper } from "../../components/utils/mutation-wrapper";
 import { useSubmitHandler } from "../../hooks/use-submit-handler";
+import { PasswordFields } from "../../components/password-fields";
 
 type RegistrationForm = {
 	email: string;
@@ -16,12 +17,12 @@ type RegistrationForm = {
 };
 
 export const RegisterScreen: React.FC = () => {
+	const form = useForm<RegistrationForm>({ mode: "onChange" });
 	const {
 		control,
 		handleSubmit,
 		formState: { isValid, errors },
-		watch,
-	} = useForm<RegistrationForm>({ mode: "onChange" });
+	} = form;
 
 	const registerMutation = trpc.useMutation("auth.register");
 	const onSubmit = useSubmitHandler<RegistrationForm>(
@@ -87,58 +88,7 @@ export const RegisterScreen: React.FC = () => {
 					</>
 				)}
 			/>
-			<Controller
-				control={control}
-				name="password"
-				rules={{
-					required: true,
-					minLength: VALIDATIONS_CONSTANTS.password.min,
-					maxLength: VALIDATIONS_CONSTANTS.password.max,
-				}}
-				render={({ field: { onChange, value = "", onBlur } }) => (
-					<>
-						<TextInput
-							placeholder="Enter your password"
-							textContentType="newPassword"
-							value={value}
-							onBlur={onBlur}
-							onChangeText={onChange}
-							secureTextEntry
-						/>
-						{errors.password ? (
-							<Text>
-								{errors.password.type === "minLength"
-									? `Password should be at least ${VALIDATIONS_CONSTANTS.password.min} chars`
-									: `Password should be at maximum ${VALIDATIONS_CONSTANTS.password.max} chars`}
-							</Text>
-						) : null}
-					</>
-				)}
-			/>
-			<Controller
-				control={control}
-				name="passwordRetype"
-				rules={{
-					required: true,
-					validate: (input) =>
-						input !== watch("password") ? "Password should match" : undefined,
-				}}
-				render={({ field: { onChange, value = "", onBlur } }) => (
-					<>
-						<TextInput
-							placeholder="Enter password again"
-							textContentType="newPassword"
-							value={value}
-							onBlur={onBlur}
-							onChangeText={onChange}
-							secureTextEntry
-						/>
-						{errors.passwordRetype ? (
-							<Text>{errors.passwordRetype.message}</Text>
-						) : null}
-					</>
-				)}
-			/>
+			<PasswordFields form={form} />
 			<ReactNative.Button
 				title="Submit"
 				disabled={!isValid || registerMutation.status === "success"}
