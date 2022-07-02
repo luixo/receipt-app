@@ -1,43 +1,43 @@
 // @generated
 // Automatically generated. Don't change this file manually.
 
-import { AccountsId } from './accounts';
+import { AccountsId } from "./accounts";
 
-export type ReceiptsId = string & { " __flavor"?: 'receipts' };
+export type ReceiptsId = string & { " __flavor"?: "receipts" };
 
 export default interface Receipts {
-  /** Primary key. Index: receipts_pkey */
-  id: ReceiptsId;
+	/** Primary key. Index: receipts_pkey */
+	id: ReceiptsId;
 
-  name: string;
+	name: string;
 
-  currency: string;
+	currency: string;
 
-  created: Date;
+	created: Date;
 
-  /** Index: receipts_owner_index */
-  ownerAccountId: AccountsId;
+	/** Index: receipts_owner_index */
+	ownerAccountId: AccountsId;
 
-  issued: Date;
+	issued: Date;
 
-  resolved: boolean;
+	resolved: boolean;
 }
 
 export interface ReceiptsInitializer {
-  /** Primary key. Index: receipts_pkey */
-  id: ReceiptsId;
+	/** Primary key. Index: receipts_pkey */
+	id: ReceiptsId;
 
-  name: string;
+	name: string;
 
-  currency: string;
+	currency: string;
 
-  created: Date;
+	created: Date;
 
-  /** Index: receipts_owner_index */
-  ownerAccountId: AccountsId;
+	/** Index: receipts_owner_index */
+	ownerAccountId: AccountsId;
 
-  issued: Date;
+	issued: Date;
 
-  /** Default value: false */
-  resolved?: boolean;
+	/** Default value: false */
+	resolved?: boolean;
 }

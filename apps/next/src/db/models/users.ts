@@ -1,42 +1,42 @@
 // @generated
 // Automatically generated. Don't change this file manually.
 
-import { AccountsId } from './accounts';
+import { AccountsId } from "./accounts";
 
-export type UsersId = string & { " __flavor"?: 'users' };
+export type UsersId = string & { " __flavor"?: "users" };
 
 export default interface Users {
-  /** Primary key. Index: users_pkey */
-  id: UsersId;
+	/** Primary key. Index: users_pkey */
+	id: UsersId;
 
-  name: string;
+	name: string;
 
-  ownerAccountId: AccountsId;
+	ownerAccountId: AccountsId;
 
-  publicName: string;
+	publicName: string;
 
-  exposeReceipts: boolean;
+	exposeReceipts: boolean;
 
-  acceptReceipts: boolean;
+	acceptReceipts: boolean;
 
-  connectedAccountId: AccountsId | null;
+	connectedAccountId: AccountsId | null;
 }
 
 export interface UsersInitializer {
-  /** Primary key. Index: users_pkey */
-  id: UsersId;
+	/** Primary key. Index: users_pkey */
+	id: UsersId;
 
-  name: string;
+	name: string;
 
-  ownerAccountId: AccountsId;
+	ownerAccountId: AccountsId;
 
-  publicName: string;
+	publicName: string;
 
-  /** Default value: false */
-  exposeReceipts?: boolean;
+	/** Default value: false */
+	exposeReceipts?: boolean;
 
-  /** Default value: false */
-  acceptReceipts?: boolean;
+	/** Default value: false */
+	acceptReceipts?: boolean;
 
-  connectedAccountId?: AccountsId | null;
+	connectedAccountId?: AccountsId | null;
 }

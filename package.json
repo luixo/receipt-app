@@ -16,6 +16,7 @@
 		"eslint": "^8.13.0",
 		"get-port": "^6.1.2",
 		"pre-commit": "^1.2.2",
+		"prettier": "^2.7.1",
 		"ts-node": "^10.7.0",
 		"turbo": "^1.2.2",
 		"typescript": "^4.6.3"
@@ -26,7 +27,9 @@
 		"web:dev": "yarn workspace next-app dev",
 		"ios:build": "yarn workspace expo-app ios:update-version && yarn workspace expo-app ios:build",
 		"ios:publish": "yarn workspace expo-app ios:publish",
-		"typecheck": "tsc --noEmit"
+		"typecheck": "tsc --noEmit",
+		"format": "prettier --write '**/*.{js,jsx,ts,tsx,json}'",
+		"format:verify": "prettier --check '**/*.{js,jsx,ts,tsx,json}'"
 	},
 	"dependencies": {
 		"expo": "~44.0.2",
@@ -40,5 +43,8 @@
 		"react-native-web": "0.17.1"
 	},
 	"version": "1.0.0",
-	"pre-commit": "typecheck"
+	"pre-commit": [
+		"typecheck",
+		"format:verify"
+	]
 }
