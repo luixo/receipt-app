@@ -21,7 +21,7 @@ const removeAccountsTable = async (db: Database) => {
 	await db.schema.dropTable("accounts").ifExists().execute();
 };
 
-const createAccountConnectionsTable = async (db: Database) => {
+export const createAccountConnectionsTable = async (db: Database) => {
 	await db.schema
 		.createTable("account_connections")
 		.ifNotExists()
@@ -62,7 +62,7 @@ const createAccountConnectionsTable = async (db: Database) => {
 		.execute();
 };
 
-const removeAccountConnectionsTable = async (db: Database) => {
+export const removeAccountConnectionsTable = async (db: Database) => {
 	await db.schema.dropIndex("accountLinks_secondAccountId_index").execute();
 	await db.schema.dropIndex("accountLinks_firstAccountId_index").execute();
 	await db.schema.dropTable("account_connections").ifExists().execute();

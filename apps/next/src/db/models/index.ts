@@ -1,9 +1,9 @@
 // @generated
 // Automatically generated. Don't change this file manually.
 
-import AccountConnections, {
-	AccountConnectionsInitializer,
-} from "./account-connections";
+import AccountConnectionsIntentions, {
+	AccountConnectionsIntentionsInitializer,
+} from "./account-connections-intentions";
 import Accounts, { AccountsInitializer, AccountsId } from "./accounts";
 import ItemParticipants, {
 	ItemParticipantsInitializer,
@@ -28,7 +28,7 @@ import Sessions, { SessionsInitializer, SessionsId } from "./sessions";
 import Users, { UsersInitializer, UsersId } from "./users";
 
 type Model =
-	| AccountConnections
+	| AccountConnectionsIntentions
 	| Accounts
 	| ItemParticipants
 	| KyselyMigration
@@ -40,7 +40,7 @@ type Model =
 	| Users;
 
 interface ModelTypeMap {
-	accountConnections: AccountConnections;
+	accountConnectionsIntentions: AccountConnectionsIntentions;
 	accounts: Accounts;
 	item_participants: ItemParticipants;
 	kysely_migration: KyselyMigration;
@@ -72,7 +72,7 @@ interface ModelIdTypeMap {
 }
 
 type Initializer =
-	| AccountConnectionsInitializer
+	| AccountConnectionsIntentionsInitializer
 	| AccountsInitializer
 	| ItemParticipantsInitializer
 	| KyselyMigrationInitializer
@@ -84,7 +84,7 @@ type Initializer =
 	| UsersInitializer;
 
 interface InitializerTypeMap {
-	accountConnections: AccountConnectionsInitializer;
+	accountConnectionsIntentions: AccountConnectionsIntentionsInitializer;
 	accounts: AccountsInitializer;
 	item_participants: ItemParticipantsInitializer;
 	kysely_migration: KyselyMigrationInitializer;
@@ -97,8 +97,8 @@ interface InitializerTypeMap {
 }
 
 export type {
-	AccountConnections,
-	AccountConnectionsInitializer,
+	AccountConnectionsIntentions,
+	AccountConnectionsIntentionsInitializer,
 	Accounts,
 	AccountsInitializer,
 	AccountsId,

@@ -10,7 +10,7 @@ export const getUserById = (trpc: TRPCReactContext, input: UsersGetInput) => {
 export const updateUser = (
 	trpc: TRPCReactContext,
 	input: UsersGetInput,
-	updater: (receipt: User) => User | undefined
+	updater: (user: User) => User | undefined
 ) => {
 	const prevUser = trpc.getQueryData(["users.get", input]);
 	if (!prevUser) {

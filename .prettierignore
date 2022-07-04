@@ -1,5 +1,6 @@
 .history
 apps/next/.next
 apps/next/.expo
+apps/expo/.expo
 ios/
 android/
