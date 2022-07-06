@@ -69,13 +69,17 @@ export const router = trpc.router<AuthorizedContext>().mutation("put", {
 				message: `User ${input.userId} already participates in receipt ${input.receiptId}.`,
 			});
 		}
-		await database
+		const result = await database
 			.insertInto("receiptParticipants")
 			.values({
 				receiptId: input.receiptId,
 				userId: input.userId,
 				role: input.role,
 			})
+			.returning("added")
 			.executeTakeFirstOrThrow();
+		return {
+			added: result.added,
+		};
 	},
 });

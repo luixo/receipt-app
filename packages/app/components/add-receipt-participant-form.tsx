@@ -43,6 +43,7 @@ const mutationOptions: UseContextedMutationOptions<
 					role: form.role,
 					resolved: false,
 					dirty: true,
+					added: new Date(),
 				},
 			]);
 			const addedUser = getAvailableUserById(trpc, usersInput, form.userId);
@@ -53,11 +54,11 @@ const mutationOptions: UseContextedMutationOptions<
 		},
 	onSuccess:
 		(trpc, { itemsInput }) =>
-		(_result, form) => {
+		({ added }, form) => {
 			updateReceiptParticipants(trpc, itemsInput, (participants) =>
 				participants.map((participant) =>
 					participant.userId === form.userId
-						? { ...participant, dirty: false }
+						? { ...participant, added, dirty: false }
 						: participant
 				)
 			);

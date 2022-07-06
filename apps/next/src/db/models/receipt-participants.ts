@@ -14,6 +14,8 @@ export default interface ReceiptParticipants {
 	role: string;
 
 	resolved: boolean;
+
+	added: Date;
 }
 
 export interface ReceiptParticipantsInitializer {
@@ -27,4 +29,7 @@ export interface ReceiptParticipantsInitializer {
 
 	/** Default value: false */
 	resolved?: boolean;
+
+	/** Default value: now() */
+	added?: Date;
 }

@@ -16,9 +16,12 @@ export const ReceiptParticipantsScreen: React.FC<Props> = ({
 	role,
 	receiptItemsInput,
 }) => {
+	const sortedParticipants = [...participants].sort(
+		(a, b) => a.added.valueOf() - b.added.valueOf()
+	);
 	return (
 		<Block name={`Total: ${participants.length} participants`}>
-			{participants.map((receiptParticipant) => (
+			{sortedParticipants.map((receiptParticipant) => (
 				<ReceiptParticipant
 					key={receiptParticipant.userId}
 					receiptParticipant={receiptParticipant}

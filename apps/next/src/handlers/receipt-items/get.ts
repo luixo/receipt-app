@@ -65,6 +65,7 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 					"usersMine.id as localUserId",
 					"role",
 					"receiptParticipants.resolved",
+					"added",
 				])
 				.where("receiptId", "=", input.receiptId)
 				.orderBy("userId")
