@@ -21,8 +21,8 @@ export const PasswordFields = <T extends MinimalPasswordForm>({
 			name={"password" as Path<T>}
 			rules={{
 				required: true,
-				minLength: VALIDATIONS_CONSTANTS.password.min,
-				maxLength: VALIDATIONS_CONSTANTS.password.max,
+				minLength: VALIDATIONS_CONSTANTS.accountPassword.min,
+				maxLength: VALIDATIONS_CONSTANTS.accountPassword.max,
 			}}
 			render={({ field: { onChange, value = "", onBlur } }) => (
 				<>
@@ -37,8 +37,8 @@ export const PasswordFields = <T extends MinimalPasswordForm>({
 					{form.formState.errors.password ? (
 						<Text>
 							{form.formState.errors.password.type === "minLength"
-								? `Password should be at least ${VALIDATIONS_CONSTANTS.password.min} chars`
-								: `Password should be at maximum ${VALIDATIONS_CONSTANTS.password.max} chars`}
+								? `Password should be at least ${VALIDATIONS_CONSTANTS.accountPassword.min} chars`
+								: `Password should be at maximum ${VALIDATIONS_CONSTANTS.accountPassword.max} chars`}
 						</Text>
 					) : null}
 				</>

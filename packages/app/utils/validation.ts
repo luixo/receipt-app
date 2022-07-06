@@ -1,9 +1,9 @@
 export const VALIDATIONS_CONSTANTS = {
-	password: {
+	accountPassword: {
 		min: 6,
 		max: 255,
 	},
-	name: {
+	accountName: {
 		min: 2,
 		max: 255,
 	},

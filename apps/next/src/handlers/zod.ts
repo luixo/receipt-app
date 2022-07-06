@@ -4,12 +4,12 @@ import { isCurrency } from "../utils/currency";
 
 export const password = z
 	.string()
-	.min(VALIDATIONS_CONSTANTS.password.min)
-	.max(VALIDATIONS_CONSTANTS.password.max);
+	.min(VALIDATIONS_CONSTANTS.accountPassword.min)
+	.max(VALIDATIONS_CONSTANTS.accountPassword.max);
 export const name = z
 	.string()
-	.min(VALIDATIONS_CONSTANTS.name.min)
-	.max(VALIDATIONS_CONSTANTS.name.min);
+	.min(VALIDATIONS_CONSTANTS.accountName.min)
+	.max(VALIDATIONS_CONSTANTS.accountName.min);
 
 export const flavored = <T extends string>(x: string): x is T => true;
 

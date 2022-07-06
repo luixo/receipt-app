@@ -8,6 +8,7 @@ import { getReceiptById, getAccessRole } from "../receipts/utils";
 import { getReceiptItemById } from "./utils";
 import { flavored } from "../zod";
 import { ReceiptItemsId } from "../../db/models";
+import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
 
 export const router = trpc.router<AuthorizedContext>().mutation("update", {
 	input: z.strictObject({
@@ -15,7 +16,10 @@ export const router = trpc.router<AuthorizedContext>().mutation("update", {
 		update: z.discriminatedUnion("type", [
 			z.strictObject({
 				type: z.literal("name"),
-				name: z.string().min(2).max(255),
+				name: z
+					.string()
+					.min(VALIDATIONS_CONSTANTS.receiptItemName.min)
+					.max(VALIDATIONS_CONSTANTS.receiptItemName.max),
 			}),
 			z.strictObject({ type: z.literal("price"), price: z.number().gt(0) }),
 			z.strictObject({

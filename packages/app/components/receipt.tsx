@@ -210,7 +210,11 @@ export const Receipt: React.FC<Props> = ({
 	);
 	const promptName = React.useCallback(() => {
 		const name = window.prompt("Please enter new name", receipt.name);
-		if (!name || name.length < 2 || name.length > 255) {
+		if (
+			!name ||
+			name.length < VALIDATIONS_CONSTANTS.receiptName.min ||
+			name.length > VALIDATIONS_CONSTANTS.receiptName.max
+		) {
 			return window.alert(
 				`Name length should be between ${VALIDATIONS_CONSTANTS.receiptName.min} and ${VALIDATIONS_CONSTANTS.receiptName.max}!`
 			);

@@ -1,4 +1,5 @@
 import * as trpc from "@trpc/server";
+import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
 import { MutationObject } from "kysely";
 import { z } from "zod";
 
@@ -14,11 +15,17 @@ export const router = trpc.router<AuthorizedContext>().mutation("update", {
 		update: z.discriminatedUnion("type", [
 			z.strictObject({
 				type: z.literal("name"),
-				name: z.string().min(2).max(255),
+				name: z
+					.string()
+					.min(VALIDATIONS_CONSTANTS.userName.min)
+					.max(VALIDATIONS_CONSTANTS.userName.max),
 			}),
 			z.strictObject({
 				type: z.literal("publicName"),
-				publicName: z.string().min(2).max(255),
+				publicName: z
+					.string()
+					.min(VALIDATIONS_CONSTANTS.userName.min)
+					.max(VALIDATIONS_CONSTANTS.userName.max),
 			}),
 		]),
 	}),

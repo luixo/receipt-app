@@ -1,4 +1,5 @@
 import * as trpc from "@trpc/server";
+import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
 import { v4 } from "uuid";
 import { z } from "zod";
 
@@ -8,8 +9,11 @@ import { currency } from "../zod";
 
 export const router = trpc.router<AuthorizedContext>().mutation("put", {
 	input: z.strictObject({
-		name: z.string().min(2).max(255),
-		currency: currency,
+		name: z
+			.string()
+			.min(VALIDATIONS_CONSTANTS.receiptName.min)
+			.max(VALIDATIONS_CONSTANTS.receiptName.max),
+		currency,
 	}),
 	resolve: async ({ input, ctx }) => {
 		const id = v4();

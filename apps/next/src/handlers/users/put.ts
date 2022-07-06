@@ -1,4 +1,5 @@
 import * as trpc from "@trpc/server";
+import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
 import { v4 } from "uuid";
 import { z } from "zod";
 
@@ -7,8 +8,14 @@ import { AuthorizedContext } from "../context";
 
 export const router = trpc.router<AuthorizedContext>().mutation("put", {
 	input: z.strictObject({
-		name: z.string().min(2).max(255),
-		publicName: z.string().min(2).max(255),
+		name: z
+			.string()
+			.min(VALIDATIONS_CONSTANTS.userName.min)
+			.max(VALIDATIONS_CONSTANTS.userName.max),
+		publicName: z
+			.string()
+			.min(VALIDATIONS_CONSTANTS.userName.min)
+			.max(VALIDATIONS_CONSTANTS.userName.max),
 	}),
 	resolve: async ({ input, ctx }) => {
 		const id = v4();

@@ -66,8 +66,8 @@ export const RegisterScreen: React.FC = () => {
 				name="name"
 				rules={{
 					required: true,
-					minLength: VALIDATIONS_CONSTANTS.name.min,
-					maxLength: VALIDATIONS_CONSTANTS.name.max,
+					minLength: VALIDATIONS_CONSTANTS.accountName.min,
+					maxLength: VALIDATIONS_CONSTANTS.accountName.max,
 				}}
 				render={({ field: { onChange, value = "", onBlur } }) => (
 					<>
@@ -81,8 +81,8 @@ export const RegisterScreen: React.FC = () => {
 						{errors.name ? (
 							<Text>
 								{errors.name.type === "minLength"
-									? `Name should be at least ${VALIDATIONS_CONSTANTS.name.max} chars`
-									: `Name should be at maximum ${VALIDATIONS_CONSTANTS.name.max} chars`}
+									? `Name should be at least ${VALIDATIONS_CONSTANTS.accountName.max} chars`
+									: `Name should be at maximum ${VALIDATIONS_CONSTANTS.accountName.max} chars`}
 							</Text>
 						) : null}
 					</>
