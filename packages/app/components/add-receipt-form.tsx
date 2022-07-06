@@ -10,7 +10,7 @@ import {
 	UseContextedMutationOptions,
 	useTrpcMutationOptions,
 } from "../hooks/use-trpc-mutation-options";
-import { ReceiptsId } from "next-app/src/db/models";
+import { AccountsId, ReceiptsId } from "next-app/src/db/models";
 import {
 	updatePagedReceipts,
 	ReceiptsGetPagedInput,
@@ -21,54 +21,75 @@ import { CurrenciesPicker } from "./currencies-picker";
 import { Currency } from "../utils/currency";
 import { QueryWrapper } from "./utils/query-wrapper";
 import { useSubmitHandler } from "../hooks/use-submit-handler";
+import { addReceipt } from "../utils/queries/receipts-get";
 
 const putMutationOptions: UseContextedMutationOptions<
 	"receipts.put",
 	ReceiptsId,
-	ReceiptsGetPagedInput
+	{ input: ReceiptsGetPagedInput; ownerAccountId?: AccountsId }
 > = {
-	onMutate: (trpc, input) => (form) => {
-		const temporaryId = v4();
-		updatePagedReceipts(trpc, input, (page, index) => {
-			if (index === 0) {
-				return [
-					{
-						id: temporaryId,
-						role: "owner",
-						name: form.name,
-						issued: new Date(),
-						currency: form.currency,
-						receiptResolved: false,
-						participantResolved: false,
-						dirty: true,
-					},
-					...page,
-				];
+	onMutate:
+		(trpc, { input }) =>
+		(form) => {
+			const temporaryId = v4();
+			updatePagedReceipts(trpc, input, (page, index) => {
+				if (index === 0) {
+					return [
+						{
+							id: temporaryId,
+							role: "owner",
+							name: form.name,
+							issued: new Date(),
+							currency: form.currency,
+							receiptResolved: false,
+							participantResolved: false,
+							dirty: true,
+						},
+						...page,
+					];
+				}
+				return page;
+			});
+			return temporaryId;
+		},
+	onError:
+		(trpc, { input }) =>
+		(_error, _variables, temporaryId) => {
+			if (!temporaryId) {
+				return;
 			}
-			return page;
-		});
-		return temporaryId;
-	},
-	onError: (trpc, input) => (_error, _variables, temporaryId) => {
-		if (!temporaryId) {
-			return;
-		}
-		updatePagedReceipts(trpc, input, (page) =>
-			page.filter((receipt) => receipt.id !== temporaryId)
-		);
-	},
-	onSuccess: (trpc, input) => (actualId, _variables, temporaryId) => {
-		if (!temporaryId) {
-			return;
-		}
-		updatePagedReceipts(trpc, input, (page) =>
-			page.map((receipt) =>
-				receipt.id === temporaryId
-					? { ...receipt, id: actualId, dirty: false }
-					: receipt
-			)
-		);
-	},
+			updatePagedReceipts(trpc, input, (page) =>
+				page.filter((receipt) => receipt.id !== temporaryId)
+			);
+		},
+	onSuccess:
+		(trpc, { input, ownerAccountId }) =>
+		(actualId, variables, temporaryId) => {
+			if (ownerAccountId) {
+				addReceipt(
+					trpc,
+					{ id: actualId },
+					{
+						id: actualId,
+						role: "owner",
+						name: variables.name,
+						issued: new Date(),
+						currency: variables.currency,
+						resolved: false,
+						sum: "0",
+						ownerAccountId,
+						dirty: false,
+					}
+				);
+			}
+			updatePagedReceipts(trpc, input, (page) =>
+				page.map((receipt) =>
+					receipt.id === temporaryId
+						? { ...receipt, id: actualId, dirty: false }
+						: receipt
+				)
+			);
+		},
 };
 
 type Form = {
@@ -81,9 +102,13 @@ type Props = {
 };
 
 export const AddReceiptForm: React.FC<Props> = ({ input }) => {
+	const accountQuery = trpc.useQuery(["account.get"]);
 	const addReceiptMutation = trpc.useMutation(
 		"receipts.put",
-		useTrpcMutationOptions(putMutationOptions, input)
+		useTrpcMutationOptions(putMutationOptions, {
+			input,
+			ownerAccountId: accountQuery.data?.id,
+		})
 	);
 
 	const {

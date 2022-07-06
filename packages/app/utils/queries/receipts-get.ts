@@ -10,6 +10,14 @@ export const getReceiptById = (
 	return trpc.getQueryData(["receipts.get", input]);
 };
 
+export const addReceipt = (
+	trpc: TRPCReactContext,
+	input: ReceiptsGetInput,
+	receipt: Receipt
+) => {
+	trpc.setQueryData(["receipts.get", input], receipt);
+};
+
 export const updateReceipt = (
 	trpc: TRPCReactContext,
 	input: ReceiptsGetInput,
