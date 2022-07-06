@@ -14,11 +14,13 @@ import { router as receiptParticipantsRouter } from "./receipt-participants/inde
 import { router as currencyRouter } from "./currency/index";
 import { router as itemParticipantsRouter } from "./item-participants/index";
 import { router as accountConnectionIntentionsRouter } from "./account-connection-intentions/index";
+import { router as sessionsRouter } from "./sessions/index";
 
 export const router = trpc
 	.router<UnauthorizedContext>()
 	.transformer(superjson)
 	.middleware(loggerMiddleware)
+	.merge("sessions.", sessionsRouter)
 	.merge("auth.", authRouter)
 	.middleware(verifyAuthorizedMiddleware)
 	.merge("account.", accountRouter)
