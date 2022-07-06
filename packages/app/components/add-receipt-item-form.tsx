@@ -17,6 +17,7 @@ import {
 import { VALIDATIONS_CONSTANTS } from "../utils/validation";
 import { Text, TextInput } from "../utils/styles";
 import { useSubmitHandler } from "../hooks/use-submit-handler";
+import { updateReceiptSum } from "../utils/receipt";
 
 const mutationOptions: UseContextedMutationOptions<
 	"receipt-items.put",
@@ -48,6 +49,7 @@ const mutationOptions: UseContextedMutationOptions<
 				item.id === temporaryId ? { ...item, id: remoteId, dirty: false } : item
 			)
 		);
+		updateReceiptSum(trpc, input);
 	},
 };
 

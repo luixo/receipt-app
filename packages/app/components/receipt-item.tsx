@@ -18,6 +18,7 @@ import { Text } from "../utils/styles";
 import { useAsyncCallback } from "../hooks/use-async-callback";
 import { VALIDATIONS_CONSTANTS } from "../utils/validation";
 import { AddReceiptItemPartForm } from "./add-receipt-item-participant-form";
+import { updateReceiptSum } from "../utils/receipt";
 
 type ReceiptItem = TRPCQueryOutput<"receipt-items.get">["items"][number];
 type ReceiptParticipant =
@@ -46,6 +47,9 @@ const deleteMutationOptions: UseContextedMutationOptions<
 			removedItem.item,
 			...items.slice(removedItem.index),
 		]);
+	},
+	onSuccess: (trpc, input) => () => {
+		updateReceiptSum(trpc, input);
 	},
 };
 
@@ -88,6 +92,12 @@ const updateMutationOptions: UseContextedMutationOptions<
 				item.id === updateObject.id ? { ...item, dirty: false } : item
 			)
 		);
+		if (
+			updateObject.update.type === "price" ||
+			updateObject.update.type === "quantity"
+		) {
+			updateReceiptSum(trpc, input);
+		}
 	},
 	onError: (trpc, input) => (_error, _variables, snapshotItem) => {
 		if (!snapshotItem) {
