@@ -3,17 +3,17 @@ import { ReceiptsSelectExpression, ReceiptsDatabase, Database } from "../../db";
 import { ReceiptsId, UsersId } from "../../db/models";
 
 export const getReceiptParticipant = <
-	SE extends ReceiptsSelectExpression<"receipt_participants">
+	SE extends ReceiptsSelectExpression<"receiptParticipants">
 >(
 	database: Database,
 	userId: UsersId,
 	receiptId: ReceiptsId,
 	selectExpression: SE[]
 ): Promise<
-	Selection<ReceiptsDatabase, "receipt_participants", SE> | undefined
+	Selection<ReceiptsDatabase, "receiptParticipants", SE> | undefined
 > => {
 	return database
-		.selectFrom("receipt_participants")
+		.selectFrom("receiptParticipants")
 		.where("receiptId", "=", receiptId)
 		.where("userId", "=", userId)
 		.select(selectExpression)

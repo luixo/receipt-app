@@ -42,11 +42,11 @@ type Model =
 interface ModelTypeMap {
 	accountConnectionsIntentions: AccountConnectionsIntentions;
 	accounts: Accounts;
-	item_participants: ItemParticipants;
+	itemParticipants: ItemParticipants;
 	kysely_migration: KyselyMigration;
 	kysely_migration_lock: KyselyMigrationLock;
-	receipt_items: ReceiptItems;
-	receipt_participants: ReceiptParticipants;
+	receiptItems: ReceiptItems;
+	receiptParticipants: ReceiptParticipants;
 	receipts: Receipts;
 	sessions: Sessions;
 	users: Users;
@@ -65,7 +65,7 @@ interface ModelIdTypeMap {
 	accounts: AccountsId;
 	kysely_migration: KyselyMigrationId;
 	kysely_migration_lock: KyselyMigrationLockId;
-	receipt_items: ReceiptItemsId;
+	receiptItems: ReceiptItemsId;
 	receipts: ReceiptsId;
 	sessions: SessionsId;
 	users: UsersId;
@@ -86,11 +86,11 @@ type Initializer =
 interface InitializerTypeMap {
 	accountConnectionsIntentions: AccountConnectionsIntentionsInitializer;
 	accounts: AccountsInitializer;
-	item_participants: ItemParticipantsInitializer;
+	itemParticipants: ItemParticipantsInitializer;
 	kysely_migration: KyselyMigrationInitializer;
 	kysely_migration_lock: KyselyMigrationLockInitializer;
-	receipt_items: ReceiptItemsInitializer;
-	receipt_participants: ReceiptParticipantsInitializer;
+	receiptItems: ReceiptItemsInitializer;
+	receiptParticipants: ReceiptParticipantsInitializer;
 	receipts: ReceiptsInitializer;
 	sessions: SessionsInitializer;
 	users: UsersInitializer;

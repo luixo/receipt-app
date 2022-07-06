@@ -21,17 +21,17 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 					.innerJoin("users", (jb) =>
 						jb.onRef("users.connectedAccountId", "=", "accounts.id")
 					)
-					.innerJoin("receipt_participants", (jb) =>
-						jb.onRef("receipt_participants.userId", "=", "users.id")
+					.innerJoin("receiptParticipants", (jb) =>
+						jb.onRef("receiptParticipants.userId", "=", "users.id")
 					)
 					.innerJoin("receipts", (jb) =>
-						jb.onRef("receipts.id", "=", "receipt_participants.receiptId")
+						jb.onRef("receipts.id", "=", "receiptParticipants.receiptId")
 					)
 					.where("accounts.id", "=", ctx.auth.accountId)
 					.where("receipts.ownerAccountId", "<>", ctx.auth.accountId)
 					.select([
 						"receipts.id as receiptId",
-						"receipt_participants.role",
+						"receiptParticipants.role",
 						"receipts.name",
 						"receipts.issued",
 						"receipts.currency",
@@ -59,14 +59,14 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 					);
 			})
 			.selectFrom("mergedReceipts")
-			.leftJoin("receipt_participants", (jb) =>
+			.leftJoin("receiptParticipants", (jb) =>
 				jb
 					.onRef(
-						"receipt_participants.receiptId",
+						"receiptParticipants.receiptId",
 						"=",
 						"mergedReceipts.receiptId"
 					)
-					.onRef("receipt_participants.userId", "=", "mergedReceipts.userId")
+					.onRef("receiptParticipants.userId", "=", "mergedReceipts.userId")
 			)
 			.select([
 				"mergedReceipts.receiptId as id",
@@ -75,7 +75,7 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 				"issued",
 				"currency",
 				"mergedReceipts.resolved as receiptResolved",
-				"receipt_participants.resolved as participantResolved",
+				"receiptParticipants.resolved as participantResolved",
 			])
 			.orderBy("issued", input.orderBy === "date-asc" ? "asc" : "desc")
 			.offset(input.cursor || 0)

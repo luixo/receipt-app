@@ -46,7 +46,7 @@ export const router = trpc.router<AuthorizedContext>().mutation("put", {
 		}
 		const id = v4();
 		await database
-			.insertInto("receipt_items")
+			.insertInto("receiptItems")
 			.values({
 				id,
 				name: input.name,

@@ -41,11 +41,11 @@ export const router = trpc.router<AuthorizedContext>().query("get-available", {
 			.where("users.ownerAccountId", "=", ctx.auth.accountId)
 			.where("users.id", "not in", (eb) =>
 				eb
-					.selectFrom("receipt_participants")
+					.selectFrom("receiptParticipants")
 					.innerJoin("users", (jb) =>
-						jb.onRef("users.id", "=", "receipt_participants.userId")
+						jb.onRef("users.id", "=", "receiptParticipants.userId")
 					)
-					.where("receipt_participants.receiptId", "=", input.receiptId)
+					.where("receiptParticipants.receiptId", "=", input.receiptId)
 					.select("users.id")
 			)
 			.select(["id", "name", "publicName", "connectedAccountId"])

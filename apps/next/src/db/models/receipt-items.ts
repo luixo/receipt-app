@@ -3,7 +3,7 @@
 
 import { ReceiptsId } from "./receipts";
 
-export type ReceiptItemsId = string & { " __flavor"?: "receipt_items" };
+export type ReceiptItemsId = string & { " __flavor"?: "receiptItems" };
 
 export default interface ReceiptItems {
 	/** Primary key. Index: receipt_items_pkey */
@@ -15,7 +15,7 @@ export default interface ReceiptItems {
 
 	quantity: string;
 
-	/** Index: receiptItems_receiptId_index */
+	/** Index: receiptItems:receiptId:index */
 	receiptId: ReceiptsId;
 
 	locked: boolean;
@@ -31,7 +31,7 @@ export interface ReceiptItemsInitializer {
 
 	quantity: string;
 
-	/** Index: receiptItems_receiptId_index */
+	/** Index: receiptItems:receiptId:index */
 	receiptId: ReceiptsId;
 
 	/** Default value: false */

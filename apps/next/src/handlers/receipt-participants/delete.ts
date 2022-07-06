@@ -59,17 +59,17 @@ export const router = trpc.router<AuthorizedContext>().mutation("delete", {
 
 		await database.transaction().execute(async (tx) => {
 			await tx
-				.deleteFrom("item_participants")
+				.deleteFrom("itemParticipants")
 				.where("userId", "=", input.userId)
 				.where("itemId", "in", (eb) =>
 					eb
-						.selectFrom("receipt_items")
+						.selectFrom("receiptItems")
 						.where("receiptId", "=", input.receiptId)
 						.select("id")
 				)
 				.executeTakeFirst();
 			await tx
-				.deleteFrom("receipt_participants")
+				.deleteFrom("receiptParticipants")
 				.where("userId", "=", input.userId)
 				.where("receiptId", "=", input.receiptId)
 				.executeTakeFirst();

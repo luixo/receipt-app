@@ -13,6 +13,7 @@ export default interface Users {
 
 	publicName: string;
 
+	/** Index: users:ownerAccountId:index */
 	ownerAccountId: AccountsId;
 
 	exposeReceipts: boolean;
@@ -30,6 +31,7 @@ export interface UsersInitializer {
 
 	publicName: string;
 
+	/** Index: users:ownerAccountId:index */
 	ownerAccountId: AccountsId;
 
 	/** Default value: false */

@@ -70,7 +70,7 @@ export const router = trpc.router<AuthorizedContext>().mutation("put", {
 			});
 		}
 		await database
-			.insertInto("receipt_participants")
+			.insertInto("receiptParticipants")
 			.values({
 				receiptId: input.receiptId,
 				userId: input.userId,

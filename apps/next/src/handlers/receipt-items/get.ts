@@ -25,26 +25,26 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 		const database = getDatabase(ctx);
 		const [rows, receiptParticipants] = await Promise.all([
 			database
-				.selectFrom("receipt_items")
-				.leftJoin("item_participants", (jb) =>
-					jb.onRef("receipt_items.id", "=", "item_participants.itemId")
+				.selectFrom("receiptItems")
+				.leftJoin("itemParticipants", (jb) =>
+					jb.onRef("receiptItems.id", "=", "itemParticipants.itemId")
 				)
 				.select([
-					"receipt_items.id as itemId",
-					"receipt_items.name",
-					"receipt_items.price",
-					"receipt_items.locked",
-					"receipt_items.quantity",
-					"item_participants.userId",
-					"item_participants.part",
+					"receiptItems.id as itemId",
+					"receiptItems.name",
+					"receiptItems.price",
+					"receiptItems.locked",
+					"receiptItems.quantity",
+					"itemParticipants.userId",
+					"itemParticipants.part",
 				])
-				.where("receipt_items.receiptId", "=", input.receiptId)
-				.orderBy("receipt_items.id")
+				.where("receiptItems.receiptId", "=", input.receiptId)
+				.orderBy("receiptItems.id")
 				.execute(),
 			database
-				.selectFrom("receipt_participants")
+				.selectFrom("receiptParticipants")
 				.innerJoin("users as usersTheir", (jb) =>
-					jb.onRef("usersTheir.id", "=", "receipt_participants.userId")
+					jb.onRef("usersTheir.id", "=", "receiptParticipants.userId")
 				)
 				.leftJoin("users as usersMine", (jb) =>
 					jb
@@ -64,7 +64,7 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 					// that local account owner also have
 					"usersMine.id as localUserId",
 					"role",
-					"receipt_participants.resolved",
+					"receiptParticipants.resolved",
 				])
 				.where("receiptId", "=", input.receiptId)
 				.orderBy("userId")

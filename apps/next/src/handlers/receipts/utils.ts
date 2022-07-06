@@ -15,15 +15,15 @@ export const getAccessRole = async (
 		return "owner";
 	}
 	const participant = await database
-		.selectFrom("receipt_participants")
+		.selectFrom("receiptParticipants")
 		.innerJoin("users", (jb) =>
-			jb.onRef("users.id", "=", "receipt_participants.userId")
+			jb.onRef("users.id", "=", "receiptParticipants.userId")
 		)
 		.innerJoin("accounts", (jb) =>
 			jb.onRef("accounts.id", "=", "users.connectedAccountId")
 		)
 		.where("accounts.id", "=", accountId)
-		.where("receipt_participants.receiptId", "=", receipt.id)
+		.where("receiptParticipants.receiptId", "=", receipt.id)
 		.select("role")
 		.executeTakeFirst();
 	if (!participant) {

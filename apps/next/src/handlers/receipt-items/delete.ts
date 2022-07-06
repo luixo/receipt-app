@@ -47,7 +47,7 @@ export const router = trpc.router<AuthorizedContext>().mutation("delete", {
 			});
 		}
 		await database
-			.deleteFrom("receipt_items")
+			.deleteFrom("receiptItems")
 			.where("id", "=", input.id)
 			.executeTakeFirst();
 	},

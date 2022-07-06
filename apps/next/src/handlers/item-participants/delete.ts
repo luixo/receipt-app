@@ -46,10 +46,10 @@ export const router = trpc.router<AuthorizedContext>().mutation("delete", {
 			});
 		}
 		const deleteResult = await database
-			.deleteFrom("item_participants")
+			.deleteFrom("itemParticipants")
 			.where("itemId", "=", input.itemId)
 			.where("userId", "=", input.userId)
-			.returning("item_participants.userId")
+			.returning("itemParticipants.userId")
 			.executeTakeFirst();
 		if (!deleteResult) {
 			throw new trpc.TRPCError({

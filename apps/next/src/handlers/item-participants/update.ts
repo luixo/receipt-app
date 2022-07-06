@@ -73,8 +73,8 @@ export const router = trpc.router<AuthorizedContext>().mutation("update", {
 		}
 		let setObject: MutationObject<
 			ReceiptsDatabase,
-			"item_participants",
-			"item_participants"
+			"itemParticipants",
+			"itemParticipants"
 		> = {};
 		switch (input.update.type) {
 			case "part":
@@ -82,7 +82,7 @@ export const router = trpc.router<AuthorizedContext>().mutation("update", {
 				break;
 		}
 		await getDatabase(ctx)
-			.updateTable("item_participants")
+			.updateTable("itemParticipants")
 			.set(setObject)
 			.where("userId", "=", input.userId)
 			.where("itemId", "=", input.itemId)

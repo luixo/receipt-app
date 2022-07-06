@@ -5,10 +5,10 @@ import { ReceiptsId } from "./receipts";
 import { UsersId } from "./users";
 
 export default interface ReceiptParticipants {
-	/** Index: receiptParticipants_receiptId_index */
+	/** Index: receiptParticipants:receiptId:index */
 	receiptId: ReceiptsId;
 
-	/** Index: receiptParticipants_userId_index */
+	/** Index: receiptParticipants:userId:index */
 	userId: UsersId;
 
 	role: string;
@@ -17,10 +17,10 @@ export default interface ReceiptParticipants {
 }
 
 export interface ReceiptParticipantsInitializer {
-	/** Index: receiptParticipants_receiptId_index */
+	/** Index: receiptParticipants:receiptId:index */
 	receiptId: ReceiptsId;
 
-	/** Index: receiptParticipants_userId_index */
+	/** Index: receiptParticipants:userId:index */
 	userId: UsersId;
 
 	role: string;

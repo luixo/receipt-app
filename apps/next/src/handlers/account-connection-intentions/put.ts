@@ -7,6 +7,10 @@ import { getAccountByEmail } from "../account/utils";
 import { AuthorizedContext } from "../context";
 import { flavored } from "../zod";
 import { getUserById } from "../users/utils";
+import {
+	ACCOUNT_CONNECTIONS_INTENTIONS__ACCOUNT_PAIR__CONSTRAINT,
+	ACCOUNT_CONNECTIONS_INTENTIONS__USER_PAIR__CONSTRAINT,
+} from "../../db/migrations/0002-account-connections-intentions";
 
 export const router = trpc.router<AuthorizedContext>().mutation("put", {
 	input: z.strictObject({
@@ -97,14 +101,18 @@ export const router = trpc.router<AuthorizedContext>().mutation("put", {
 			// Could be like `duplicate key value violates unique constraint "..."`
 			const message = String(e);
 			if (
-				message.includes("accountConnectionsIntentions:accounts:accountPair")
+				message.includes(
+					ACCOUNT_CONNECTIONS_INTENTIONS__ACCOUNT_PAIR__CONSTRAINT
+				)
 			) {
 				throw new trpc.TRPCError({
 					code: "CONFLICT",
 					message: `Account with email ${input.email} already has intention to connect with ${ctx.auth.accountId}.`,
 				});
 			}
-			if (message.includes("accountConnectionsIntentions:accounts:userPair")) {
+			if (
+				message.includes(ACCOUNT_CONNECTIONS_INTENTIONS__USER_PAIR__CONSTRAINT)
+			) {
 				throw new trpc.TRPCError({
 					code: "CONFLICT",
 					message: `User id ${input.userId} already has intention to connect with ${ctx.auth.accountId}.`,
