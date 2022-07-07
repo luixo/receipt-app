@@ -44,6 +44,8 @@ export const ReceiptScreen: React.FC = () => {
 					query={receiptItemsQuery}
 					receiptItemsInput={receiptItemsInput}
 					role={receiptQuery.data?.role}
+					currency={receiptQuery.data?.currency}
+					receiptId={id}
 				>
 					{ReceiptItems}
 				</QueryWrapper>

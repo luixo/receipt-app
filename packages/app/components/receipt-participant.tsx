@@ -19,6 +19,7 @@ import {
 	AssignableRole,
 	ReceiptParticipantRoleChange,
 } from "./receipt-participant-role-change";
+import { Currency } from "../utils/currency";
 
 type ReceiptParticipant =
 	TRPCQueryOutput<"receipt-items.get">["participants"][number];
@@ -104,15 +105,19 @@ const updateMutationOptions: UseContextedMutationOptions<
 };
 
 type Props = {
-	receiptParticipant: TRPCQueryOutput<"receipt-items.get">["participants"][number];
+	receiptParticipant: TRPCQueryOutput<"receipt-items.get">["participants"][number] & {
+		sum: number;
+	};
 	receiptItemsInput: ReceiptItemsGetInput;
 	role?: TRPCQueryOutput<"receipts.get">["role"];
+	currency?: Currency;
 };
 
 export const ReceiptParticipant: React.FC<Props> = ({
 	receiptParticipant,
 	receiptItemsInput,
 	role,
+	currency,
 }) => {
 	const accountQuery = trpc.useQuery(["account.get"]);
 
@@ -200,6 +205,10 @@ export const ReceiptParticipant: React.FC<Props> = ({
 			>
 				<Text>{receiptParticipant.resolved ? "resolved" : "not resolved"}</Text>
 			</ReactNative.TouchableOpacity>
+			<Text>
+				Sum: {Math.round(receiptParticipant.sum * 100) / 100}
+				{currency ? ` ${currency}` : ""}
+			</Text>
 			{role && role === "owner" ? (
 				<>
 					<RemoveButton
