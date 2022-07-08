@@ -9,6 +9,7 @@
 		"lint": "next lint",
 		"db:generate-types": "dotenv -c -- ts-node src/db/generate-types.ts",
 		"db:migrate": "dotenv -c -- ts-node src/db/migrate.ts",
+		"db:migrate:production": "dotenv -c production -- ts-node src/db/migrate.ts",
 		"typecheck": "tsc --noEmit"
 	},
 	"workspaces": {
