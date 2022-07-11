@@ -1,8 +1,10 @@
 import React from "react";
+
 import { Picker } from "@react-native-picker/picker";
-import { TRPCQueryOutput } from "../trpc";
-import { InfiniteData } from "react-query";
 import { UsersId } from "next-app/src/db/models";
+import { InfiniteData } from "react-query";
+
+import { TRPCQueryOutput } from "../trpc";
 
 const LOAD_MORE_OPTION = "__load-more" as const;
 

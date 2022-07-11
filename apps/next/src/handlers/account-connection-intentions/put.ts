@@ -2,12 +2,12 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { getDatabase } from "../../db";
+import { ACCOUNT_CONNECTIONS_INTENTIONS } from "../../db/consts";
 import { UsersId } from "../../db/models";
 import { getAccountByEmail } from "../account/utils";
 import { AuthorizedContext } from "../context";
-import { flavored } from "../zod";
 import { getUserById } from "../users/utils";
-import { ACCOUNT_CONNECTIONS_INTENTIONS } from "../../db/consts";
+import { flavored } from "../zod";
 
 export const router = trpc.router<AuthorizedContext>().mutation("put", {
 	input: z.strictObject({

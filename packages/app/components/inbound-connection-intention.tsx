@@ -1,26 +1,29 @@
-import { UsersId } from "next-app/src/db/models";
 import React from "react";
 import * as ReactNative from "react-native";
+
+import { UsersId } from "next-app/src/db/models";
+
+import {
+	UseContextedMutationOptions,
+	useTrpcMutationOptions,
+} from "../hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "../trpc";
+import {
+	getInboundIntention,
+	updateInboundIntentions,
+} from "../utils/queries/account-connection-intentions-get-all";
+import { updateUser, UsersGetInput } from "../utils/queries/users-get";
 import {
 	DEFAULT_INPUT,
 	updatePagedUsers,
 	UsersGetPagedInput,
 } from "../utils/queries/users-get-paged";
 import { styled, Text } from "../utils/styles";
+
 import { UsersPicker } from "./users-picker";
-import { InfiniteQueryWrapper } from "./utils/infinite-query-wrapper";
-import {
-	UseContextedMutationOptions,
-	useTrpcMutationOptions,
-} from "../hooks/use-trpc-mutation-options";
-import { MutationWrapper } from "./utils/mutation-wrapper";
-import { updateUser, UsersGetInput } from "../utils/queries/users-get";
-import {
-	getInboundIntention,
-	updateInboundIntentions,
-} from "../utils/queries/account-connection-intentions-get-all";
 import { Block } from "./utils/block";
+import { InfiniteQueryWrapper } from "./utils/infinite-query-wrapper";
+import { MutationWrapper } from "./utils/mutation-wrapper";
 
 const ActionButton = styled(ReactNative.Button)({
 	padding: "$m",

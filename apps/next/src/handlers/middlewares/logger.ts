@@ -1,4 +1,5 @@
 import { MiddlewareFunction } from "@trpc/server/dist/declarations/src/internals/middlewares";
+
 import { UnauthorizedContext } from "../context";
 
 export const middleware: MiddlewareFunction<

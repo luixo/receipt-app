@@ -5,6 +5,7 @@ import { getDatabase } from "../../db";
 import { ReceiptsId } from "../../db/models";
 import { AuthorizedContext } from "../context";
 import { flavored } from "../zod";
+
 import { getReceiptById } from "./utils";
 
 export const router = trpc.router<AuthorizedContext>().mutation("delete", {

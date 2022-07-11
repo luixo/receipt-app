@@ -1,4 +1,5 @@
 import { ReceiptItemsId } from "next-app/src/db/models";
+
 import { TRPCQueryInput, TRPCQueryOutput, TRPCReactContext } from "../../trpc";
 
 type ReceiptItem = TRPCQueryOutput<"receipt-items.get">["items"][number];

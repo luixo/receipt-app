@@ -1,17 +1,19 @@
 import React from "react";
-import { trpc, TRPCQueryOutput } from "../trpc";
-import { Text } from "../utils/styles";
+
 import {
 	UseContextedMutationOptions,
 	useTrpcMutationOptions,
 } from "../hooks/use-trpc-mutation-options";
-import { MutationWrapper } from "./utils/mutation-wrapper";
+import { trpc, TRPCQueryOutput } from "../trpc";
 import {
 	getOutboundIntention,
 	updateOutboundIntentions,
 } from "../utils/queries/account-connection-intentions-get-all";
-import { RemoveButton } from "./utils/remove-button";
+import { Text } from "../utils/styles";
+
 import { Block } from "./utils/block";
+import { MutationWrapper } from "./utils/mutation-wrapper";
+import { RemoveButton } from "./utils/remove-button";
 
 const deleteMutationOptions: UseContextedMutationOptions<
 	"account-connection-intentions.delete",

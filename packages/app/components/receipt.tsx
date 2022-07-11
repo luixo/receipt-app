@@ -1,32 +1,35 @@
 import React from "react";
 import * as ReactNative from "react-native";
-import { TextLink, Text } from "../utils/styles";
-import { trpc, TRPCMutationInput, TRPCQueryOutput } from "../trpc";
-import { Block } from "./utils/block";
-import { QueryWrapper } from "./utils/query-wrapper";
-import { ReceiptOwner } from "./receipt-owner";
-import { MutationWrapper } from "./utils/mutation-wrapper";
-import { RemoveButton } from "./utils/remove-button";
+
+import { UsersId } from "next-app/src/db/models";
+import { useRouter } from "solito/router";
+
+import { useAsyncCallback } from "../hooks/use-async-callback";
 import {
 	UseContextedMutationOptions,
 	useTrpcMutationOptions,
 } from "../hooks/use-trpc-mutation-options";
-import {
-	getPagedReceiptById,
-	ReceiptsGetPagedInput,
-	updatePagedReceipts,
-} from "../utils/queries/receipts-get-paged";
-import { useRouter } from "solito/router";
-import { useAsyncCallback } from "../hooks/use-async-callback";
-import { VALIDATIONS_CONSTANTS } from "../utils/validation";
+import { trpc, TRPCMutationInput, TRPCQueryOutput } from "../trpc";
+import { Currency } from "../utils/currency";
 import {
 	getReceiptById,
 	ReceiptsGetInput,
 	updateReceipt,
 } from "../utils/queries/receipts-get";
+import {
+	getPagedReceiptById,
+	ReceiptsGetPagedInput,
+	updatePagedReceipts,
+} from "../utils/queries/receipts-get-paged";
+import { TextLink, Text } from "../utils/styles";
+import { VALIDATIONS_CONSTANTS } from "../utils/validation";
+
 import { ReceiptCurrencyChange } from "./receipt-currency-change";
-import { Currency } from "../utils/currency";
-import { UsersId } from "next-app/src/db/models";
+import { ReceiptOwner } from "./receipt-owner";
+import { Block } from "./utils/block";
+import { MutationWrapper } from "./utils/mutation-wrapper";
+import { QueryWrapper } from "./utils/query-wrapper";
+import { RemoveButton } from "./utils/remove-button";
 
 type PagedReceiptSnapshot = TRPCQueryOutput<"receipts.get-paged">[number];
 type ReceiptSnapshot = TRPCQueryOutput<"receipts.get">;

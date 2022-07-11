@@ -1,12 +1,13 @@
-import { MiddlewareFunction } from "@trpc/server/dist/declarations/src/internals/middlewares";
 import * as trpc from "@trpc/server";
+import { MiddlewareFunction } from "@trpc/server/dist/declarations/src/internals/middlewares";
+import { DAY } from "app/utils/time";
 import { sql } from "kysely";
 import { z } from "zod";
+
+import { getDatabase } from "../../db";
+import { AUTH_COOKIE, resetAuthCookie } from "../../utils/auth-cookie";
 import { getCookie } from "../../utils/cookie";
 import { UnauthorizedContext, AuthorizedContext } from "../context";
-import { getDatabase } from "../../db";
-import { DAY } from "app/utils/time";
-import { AUTH_COOKIE, resetAuthCookie } from "../../utils/auth-cookie";
 
 export const middleware: MiddlewareFunction<
 	UnauthorizedContext,

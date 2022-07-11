@@ -1,26 +1,29 @@
 import React from "react";
-import { useForm } from "react-hook-form";
+
 import { UsersId } from "next-app/db/models";
-import { AddButton } from "./utils/add-button";
-import { AvailableReceiptParticipantUsers } from "./available-receipt-participants-users";
+import { useForm } from "react-hook-form";
+
+import { useSubmitHandler } from "../hooks/use-submit-handler";
+import {
+	UseContextedMutationOptions,
+	useTrpcMutationOptions,
+} from "../hooks/use-trpc-mutation-options";
 import { trpc } from "../trpc";
-import { InfiniteQueryWrapper } from "./utils/infinite-query-wrapper";
-import { Block } from "./utils/block";
-import { MutationWrapper } from "./utils/mutation-wrapper";
-import { Text } from "../utils/styles";
 import { ReceiptItemsGetInput } from "../utils/queries/receipt-items";
+import { updateReceiptParticipants } from "../utils/queries/receipt-participants";
 import {
 	DEFAULT_PARTIAL_INPUT,
 	getAvailableUserById,
 	GetAvailableUsersInput,
 	updateAvailableUsers,
 } from "../utils/queries/receipt-users";
-import {
-	UseContextedMutationOptions,
-	useTrpcMutationOptions,
-} from "../hooks/use-trpc-mutation-options";
-import { updateReceiptParticipants } from "../utils/queries/receipt-participants";
-import { useSubmitHandler } from "../hooks/use-submit-handler";
+import { Text } from "../utils/styles";
+
+import { AvailableReceiptParticipantUsers } from "./available-receipt-participants-users";
+import { AddButton } from "./utils/add-button";
+import { Block } from "./utils/block";
+import { InfiniteQueryWrapper } from "./utils/infinite-query-wrapper";
+import { MutationWrapper } from "./utils/mutation-wrapper";
 
 const mutationOptions: UseContextedMutationOptions<
 	"receipt-participants.put",

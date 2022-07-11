@@ -6,10 +6,12 @@ import {
 	SelectExpression,
 } from "kysely";
 import { TableExpressionDatabase } from "kysely/dist/cjs/parser/table-parser";
+
 import { UnauthorizedContext } from "../handlers/context";
+import { Logger } from "../utils/logger";
+
 import { getDatabaseConfig } from "./config";
 import { InitializerTypeMap, ModelTypeMap } from "./models";
-import { Logger } from "../utils/logger";
 
 type TableColumnType<WriteTable, ReadTable extends WriteTable> = Required<{
 	[C in keyof WriteTable]: ColumnType<

@@ -1,11 +1,12 @@
 import * as trpc from "@trpc/server";
 import { sql } from "kysely";
 import { z } from "zod";
-import { getDatabase } from "../../db";
 
+import { getDatabase } from "../../db";
 import { ReceiptsId } from "../../db/models";
 import { AuthorizedContext } from "../context";
 import { flavored } from "../zod";
+
 import { getAccessRole } from "./utils";
 
 export const router = trpc.router<AuthorizedContext>().query("get", {

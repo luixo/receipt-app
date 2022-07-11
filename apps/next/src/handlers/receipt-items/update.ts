@@ -1,14 +1,15 @@
 import * as trpc from "@trpc/server";
+import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
 import { MutationObject } from "kysely";
 import { z } from "zod";
 
 import { ReceiptsDatabase, getDatabase } from "../../db";
+import { ReceiptItemsId } from "../../db/models";
 import { AuthorizedContext } from "../context";
 import { getReceiptById, getAccessRole } from "../receipts/utils";
-import { getReceiptItemById } from "./utils";
 import { flavored } from "../zod";
-import { ReceiptItemsId } from "../../db/models";
-import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
+
+import { getReceiptItemById } from "./utils";
 
 export const router = trpc.router<AuthorizedContext>().mutation("update", {
 	input: z.strictObject({

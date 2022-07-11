@@ -1,11 +1,13 @@
 import React from "react";
-import { QueriesProvider } from "./queries";
-import { NavigationProvider } from "./navigation";
+
 import {
 	ColorModeConfig,
 	ColorModeContext,
 } from "../contexts/color-mode-context";
 import { ThemeProvider } from "../utils/styles";
+
+import { NavigationProvider } from "./navigation";
+import { QueriesProvider } from "./queries";
 
 type Props = {
 	initialColorModeConfig: ColorModeConfig;

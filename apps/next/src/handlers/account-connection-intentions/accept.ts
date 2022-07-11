@@ -5,8 +5,8 @@ import { getDatabase } from "../../db";
 import { AccountsId, UsersId } from "../../db/models";
 import { getAccountById } from "../account/utils";
 import { AuthorizedContext } from "../context";
-import { flavored } from "../zod";
 import { getUserById } from "../users/utils";
+import { flavored } from "../zod";
 
 export const router = trpc.router<AuthorizedContext>().mutation("accept", {
 	input: z.strictObject({

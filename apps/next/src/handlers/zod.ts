@@ -1,5 +1,6 @@
 import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
 import { z } from "zod";
+
 import { isCurrency } from "../utils/currency";
 
 export const password = z

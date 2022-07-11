@@ -1,24 +1,26 @@
 import React from "react";
 import * as ReactNative from "react-native";
-import { trpc, TRPCMutationInput, TRPCQueryOutput } from "../trpc";
-import { Block } from "./utils/block";
-import { ReceiptItemPart } from "./receipt-item-part";
+
+import { useAsyncCallback } from "../hooks/use-async-callback";
 import {
 	UseContextedMutationOptions,
 	useTrpcMutationOptions,
 } from "../hooks/use-trpc-mutation-options";
+import { trpc, TRPCMutationInput, TRPCQueryOutput } from "../trpc";
 import {
 	getReceiptItemWithIndexById,
 	ReceiptItemsGetInput,
 	updateReceiptItems,
 } from "../utils/queries/receipt-items";
-import { RemoveButton } from "./utils/remove-button";
-import { MutationWrapper } from "./utils/mutation-wrapper";
-import { Text } from "../utils/styles";
-import { useAsyncCallback } from "../hooks/use-async-callback";
-import { VALIDATIONS_CONSTANTS } from "../utils/validation";
-import { AddReceiptItemPartForm } from "./add-receipt-item-participant-form";
 import { updateReceiptSum } from "../utils/receipt";
+import { Text } from "../utils/styles";
+import { VALIDATIONS_CONSTANTS } from "../utils/validation";
+
+import { AddReceiptItemPartForm } from "./add-receipt-item-participant-form";
+import { ReceiptItemPart } from "./receipt-item-part";
+import { Block } from "./utils/block";
+import { MutationWrapper } from "./utils/mutation-wrapper";
+import { RemoveButton } from "./utils/remove-button";
 
 type ReceiptItems = TRPCQueryOutput<"receipt-items.get">["items"];
 type ReceiptParticipant =

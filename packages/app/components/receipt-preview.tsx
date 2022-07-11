@@ -1,7 +1,9 @@
 import React from "react";
+
 import { trpc, TRPCQueryOutput } from "../trpc";
-import { Block } from "./utils/block";
 import { Text, TextLink } from "../utils/styles";
+
+import { Block } from "./utils/block";
 
 type Props = {
 	data: TRPCQueryOutput<"receipts.get-paged">[number];

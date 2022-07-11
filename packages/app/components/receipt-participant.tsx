@@ -1,25 +1,27 @@
 import React from "react";
 import * as ReactNative from "react-native";
-import { trpc, TRPCMutationInput, TRPCQueryOutput } from "../trpc";
-import { Block } from "./utils/block";
-import { Text } from "../utils/styles";
-import { RemoveButton } from "./utils/remove-button";
-import { MutationWrapper } from "./utils/mutation-wrapper";
+
+import { useAsyncCallback } from "../hooks/use-async-callback";
 import {
 	UseContextedMutationOptions,
 	useTrpcMutationOptions,
 } from "../hooks/use-trpc-mutation-options";
+import { trpc, TRPCMutationInput, TRPCQueryOutput } from "../trpc";
+import { Currency } from "../utils/currency";
 import { ReceiptItemsGetInput } from "../utils/queries/receipt-items";
 import {
 	getReceiptParticipantWithIndexById,
 	updateReceiptParticipants,
 } from "../utils/queries/receipt-participants";
-import { useAsyncCallback } from "../hooks/use-async-callback";
+import { Text } from "../utils/styles";
+
 import {
 	AssignableRole,
 	ReceiptParticipantRoleChange,
 } from "./receipt-participant-role-change";
-import { Currency } from "../utils/currency";
+import { Block } from "./utils/block";
+import { MutationWrapper } from "./utils/mutation-wrapper";
+import { RemoveButton } from "./utils/remove-button";
 
 type ReceiptParticipants = TRPCQueryOutput<"receipt-items.get">["participants"];
 

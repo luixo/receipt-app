@@ -3,12 +3,13 @@ import { z } from "zod";
 
 import { getDatabase } from "../../db";
 import { ReceiptItemsId, UsersId } from "../../db/models";
-import { getAccessRole, getReceiptById } from "../receipts/utils";
 import { AuthorizedContext } from "../context";
 import { getReceiptItemById } from "../receipt-items/utils";
-import { flavored } from "../zod";
-import { getUserById } from "../users/utils";
 import { getReceiptParticipant } from "../receipt-participants/utils";
+import { getAccessRole, getReceiptById } from "../receipts/utils";
+import { getUserById } from "../users/utils";
+import { flavored } from "../zod";
+
 import { getItemParticipant } from "./utils";
 
 export const router = trpc.router<AuthorizedContext>().mutation("put", {

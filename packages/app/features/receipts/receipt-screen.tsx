@@ -1,15 +1,17 @@
 import React from "react";
+
 import { createParam } from "solito";
-import { trpc } from "../../trpc";
+
 import { Receipt } from "../../components/receipt";
-import { QueryWrapper } from "../../components/utils/query-wrapper";
 import { ReceiptItems } from "../../components/receipt-items";
-import { Block } from "../../components/utils/block";
 import { BackButton } from "../../components/utils/back-button";
-import { ScrollView } from "../../utils/styles";
-import { DEFAULT_INPUT } from "../../utils/queries/receipts-get-paged";
+import { Block } from "../../components/utils/block";
+import { QueryWrapper } from "../../components/utils/query-wrapper";
+import { trpc } from "../../trpc";
 import { ReceiptItemsGetInput } from "../../utils/queries/receipt-items";
 import { ReceiptsGetInput } from "../../utils/queries/receipts-get";
+import { DEFAULT_INPUT } from "../../utils/queries/receipts-get-paged";
+import { ScrollView } from "../../utils/styles";
 
 const { useParam } = createParam<{ id: string }>();
 

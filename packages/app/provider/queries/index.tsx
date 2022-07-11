@@ -1,6 +1,8 @@
 import React from "react";
+
 import { QueryClient, QueryClientProvider } from "react-query";
 import superjson from "superjson";
+
 import { trpc } from "../../trpc";
 import {
 	getNativeBaseUrl,

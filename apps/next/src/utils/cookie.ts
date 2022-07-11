@@ -1,5 +1,5 @@
-import { IncomingMessage, ServerResponse } from "http";
 import * as cookie from "cookie";
+import { IncomingMessage, ServerResponse } from "http";
 
 const getParsedCookies = (cookieHeader?: string | string[] | number) => {
 	let stringCookie: string;

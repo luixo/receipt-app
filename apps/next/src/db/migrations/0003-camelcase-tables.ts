@@ -1,4 +1,5 @@
 import { sql } from "kysely";
+
 import { Database } from "..";
 import {
 	ACCOUNTS,

@@ -3,12 +3,13 @@ import { MutationObject } from "kysely";
 import { z } from "zod";
 
 import { ReceiptsDatabase, getDatabase } from "../../db";
+import { ReceiptsId, UsersId } from "../../db/models";
 import { AuthorizedContext } from "../context";
 import { getReceiptById } from "../receipts/utils";
-import { getReceiptParticipant } from "./utils";
-import { flavored, assignableRole } from "../zod";
-import { ReceiptsId, UsersId } from "../../db/models";
 import { getUserById } from "../users/utils";
+import { flavored, assignableRole } from "../zod";
+
+import { getReceiptParticipant } from "./utils";
 
 export const router = trpc.router<AuthorizedContext>().mutation("update", {
 	input: z.strictObject({

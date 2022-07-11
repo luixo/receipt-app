@@ -1,29 +1,32 @@
-import { withTRPC } from "@trpc/next";
-import { Provider } from "app/provider";
-import { ReactQueryDevtools } from "react-query/devtools";
-import getConfig from "next/config";
-import Head from "next/head";
-import { getCookies } from "cookies-next";
 import React from "react";
-import { useDripsyTheme } from "dripsy";
-import "raf/polyfill";
-import type { AppRouter } from "./api/trpc/[trpc]";
-import { NextConfig } from "next";
-import {
-	getQueryClientConfig,
-	getSsrHost,
-	TRPC_ENDPOINT,
-} from "app/utils/queries";
-import { AppType } from "next/dist/shared/lib/utils";
+
+import { withTRPC } from "@trpc/next";
 import {
 	ColorModeConfig,
 	LAST_COLOR_MODE_COOKIE_NAME,
 	SELECTED_COLOR_MODE_COOKIE_NAME,
 } from "app/contexts/color-mode-context";
-import { useColorModeCookies } from "../hooks/use-color-mode-cookies";
+import { Provider } from "app/provider";
+import {
+	getQueryClientConfig,
+	getSsrHost,
+	TRPC_ENDPOINT,
+} from "app/utils/queries";
+import { getCookies } from "cookies-next";
+import { useDripsyTheme } from "dripsy";
+import { NextConfig } from "next";
+import getConfig from "next/config";
+import { AppType } from "next/dist/shared/lib/utils";
+import Head from "next/head";
+import { ReactQueryDevtools } from "react-query/devtools";
+import "raf/polyfill";
 import superjson from "superjson";
-import { getCookie, serialize } from "../utils/cookie";
+
+import { useColorModeCookies } from "../hooks/use-color-mode-cookies";
 import { AUTH_COOKIE } from "../utils/auth-cookie";
+import { getCookie, serialize } from "../utils/cookie";
+
+import type { AppRouter } from "./api/trpc/[trpc]";
 
 const GlobalStyles: React.FC = () => {
 	const { theme } = useDripsyTheme();

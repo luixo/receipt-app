@@ -1,4 +1,5 @@
 import { Selection, SelectQueryBuilder } from "kysely";
+
 import { Database, ReceiptsSelectExpression, ReceiptsDatabase } from "../../db";
 import { UsersId } from "../../db/models";
 

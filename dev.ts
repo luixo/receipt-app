@@ -1,6 +1,6 @@
 import concurrently from "concurrently";
-import ngrok from "ngrok";
 import getPort, { portNumbers } from "get-port";
+import ngrok from "ngrok";
 
 const main = async () => {
 	const ngrokAuthToken = process.env.NGROK_AUTH_TOKEN;

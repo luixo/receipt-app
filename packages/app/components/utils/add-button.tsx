@@ -1,5 +1,6 @@
 import React from "react";
 import * as ReactNative from "react-native";
+
 import { styled } from "../../utils/styles";
 
 type Props = {

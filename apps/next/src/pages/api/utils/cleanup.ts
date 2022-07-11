@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+
 import { getTrpcClient } from "../../../utils/api";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<string>) => {

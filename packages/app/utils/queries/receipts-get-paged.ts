@@ -1,4 +1,5 @@
 import { ReceiptsId } from "next-app/src/db/models";
+
 import {
 	TRPCInfiniteQueryInput,
 	TRPCQueryOutput,

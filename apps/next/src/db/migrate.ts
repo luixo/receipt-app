@@ -1,5 +1,6 @@
 import { Migrator, FileMigrationProvider } from "kysely";
 import * as path from "path";
+
 import { getDatabase } from ".";
 
 async function main() {

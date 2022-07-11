@@ -1,6 +1,8 @@
 import React from "react";
 import * as ReactNative from "react-native";
+
 import { useLink } from "solito/link";
+
 import { styled } from "../../utils/styles";
 
 type Props = {

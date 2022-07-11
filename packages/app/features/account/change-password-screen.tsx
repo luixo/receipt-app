@@ -1,12 +1,14 @@
 import React from "react";
 import * as ReactNative from "react-native";
+
 import { Controller, useForm } from "react-hook-form";
-import { styled, H1, TextInput, Text } from "../../utils/styles";
-import { trpc } from "../../trpc";
-import { MutationWrapper } from "../../components/utils/mutation-wrapper";
-import { useSubmitHandler } from "../../hooks/use-submit-handler";
+
 import { PasswordFields } from "../../components/password-fields";
 import { BackButton } from "../../components/utils/back-button";
+import { MutationWrapper } from "../../components/utils/mutation-wrapper";
+import { useSubmitHandler } from "../../hooks/use-submit-handler";
+import { trpc } from "../../trpc";
+import { styled, H1, TextInput, Text } from "../../utils/styles";
 
 const Wrapper = styled(ReactNative.View)({
 	flex: 1,

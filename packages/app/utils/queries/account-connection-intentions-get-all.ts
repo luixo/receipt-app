@@ -1,4 +1,5 @@
 import { AccountsId } from "next-app/src/db/models";
+
 import { TRPCQueryOutput, TRPCReactContext } from "../../trpc";
 
 type Intentions = TRPCQueryOutput<"account-connection-intentions.get-all">;

@@ -1,5 +1,6 @@
 import React from "react";
 import * as ReactNative from "react-native";
+
 import * as HTMLElements from "@expo/html-elements";
 import {
 	makeTheme,
@@ -10,6 +11,7 @@ import {
 	useDripsyTheme,
 } from "dripsy";
 import { TextLink as BaseTextLink } from "solito/link";
+
 import { ColorModeContext } from "../contexts/color-mode-context";
 
 const base = {

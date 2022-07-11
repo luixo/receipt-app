@@ -1,9 +1,9 @@
 import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { AuthorizedContext } from "../context";
 import { getDatabase } from "../../db";
-import { TRPCError } from "@trpc/server";
+import { AuthorizedContext } from "../context";
 
 export const router = trpc.router<AuthorizedContext>().query("get", {
 	input: z.undefined(),

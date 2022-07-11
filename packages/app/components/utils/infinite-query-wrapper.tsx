@@ -1,11 +1,13 @@
 import React from "react";
+
 import { InfiniteData } from "react-query";
-import { styled, Text } from "../../utils/styles";
+
 import {
 	TRPCInfiniteQueryKey,
 	TRPCQueryOutput,
 	TRPCInfiniteQueryResult,
 } from "../../trpc";
+import { styled, Text } from "../../utils/styles";
 
 const ErrorText = styled(Text)({
 	margin: "$m",

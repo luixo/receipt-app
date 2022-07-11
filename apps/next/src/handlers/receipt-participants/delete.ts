@@ -2,12 +2,13 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { getDatabase } from "../../db";
+import { ReceiptsId, UsersId } from "../../db/models";
 import { AuthorizedContext } from "../context";
 import { getReceiptById } from "../receipts/utils";
-import { getReceiptParticipant } from "./utils";
-import { flavored } from "../zod";
-import { ReceiptsId, UsersId } from "../../db/models";
 import { getUserById } from "../users/utils";
+import { flavored } from "../zod";
+
+import { getReceiptParticipant } from "./utils";
 
 export const router = trpc.router<AuthorizedContext>().mutation("delete", {
 	input: z.strictObject({

@@ -7,6 +7,7 @@ import { ReceiptsDatabase, getDatabase } from "../../db";
 import { ReceiptsId } from "../../db/models";
 import { AuthorizedContext } from "../context";
 import { currency, flavored } from "../zod";
+
 import { getReceiptById } from "./utils";
 
 export const router = trpc.router<AuthorizedContext>().mutation("update", {

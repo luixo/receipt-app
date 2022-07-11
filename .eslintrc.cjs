@@ -46,8 +46,26 @@ module.exports = {
 		"react/prop-types": "off",
 		"react/jsx-props-no-spreading": "off",
 		"consistent-return": "off",
+		"import/order": [
+			"error",
+			{
+				groups: [["builtin", "external"], "internal", "parent", "sibling"],
+				warnOnUnassignedImports: false,
+				"newlines-between": "always",
+				alphabetize: {
+					order: "asc",
+				},
+				pathGroups: [
+					{
+						pattern: "{react,react-native}",
+						group: "builtin",
+						position: "before",
+					},
+				],
+				pathGroupsExcludedImportTypes: ["react", "react-native"],
+			},
+		],
 		// TODO: turn on
-		"import/order": "off",
 		"import/no-extraneous-dependencies": "off",
 	},
 	overrides: [

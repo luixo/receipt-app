@@ -1,13 +1,15 @@
 import React from "react";
 import * as ReactNative from "react-native";
+
 import { useForm, Controller } from "react-hook-form";
-import { trpc } from "../../trpc";
+
+import { PasswordFields } from "../../components/password-fields";
 import { BackButton } from "../../components/utils/back-button";
-import { TextInput, Text } from "../../utils/styles";
-import { VALIDATIONS_CONSTANTS } from "../../utils/validation";
 import { MutationWrapper } from "../../components/utils/mutation-wrapper";
 import { useSubmitHandler } from "../../hooks/use-submit-handler";
-import { PasswordFields } from "../../components/password-fields";
+import { trpc } from "../../trpc";
+import { TextInput, Text } from "../../utils/styles";
+import { VALIDATIONS_CONSTANTS } from "../../utils/validation";
 
 type RegistrationForm = {
 	email: string;

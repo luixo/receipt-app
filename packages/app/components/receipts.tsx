@@ -1,6 +1,9 @@
 import React from "react";
+
 import { InfiniteData } from "react-query";
+
 import { TRPCQueryOutput } from "../trpc";
+
 import { ReceiptPreview } from "./receipt-preview";
 import { Block } from "./utils/block";
 

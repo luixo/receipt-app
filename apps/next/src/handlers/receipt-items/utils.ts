@@ -1,4 +1,5 @@
 import { Selection } from "kysely";
+
 import { Database, ReceiptsSelectExpression, ReceiptsDatabase } from "../../db";
 import { ReceiptItemsId } from "../../db/models";
 

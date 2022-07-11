@@ -1,18 +1,21 @@
 import React from "react";
+
 import { ReceiptItemsId } from "next-app/db/models";
-import { AddButton } from "./utils/add-button";
-import { Text } from "../utils/styles";
-import { trpc, TRPCQueryOutput } from "../trpc";
-import { ReceiptItemsGetInput } from "../utils/queries/receipt-items";
+
 import {
 	UseContextedMutationOptions,
 	useTrpcMutationOptions,
 } from "../hooks/use-trpc-mutation-options";
-import { MutationWrapper } from "./utils/mutation-wrapper";
+import { trpc, TRPCQueryOutput } from "../trpc";
 import {
 	updateItemPart,
 	updateItemParts,
 } from "../utils/queries/item-participants";
+import { ReceiptItemsGetInput } from "../utils/queries/receipt-items";
+import { Text } from "../utils/styles";
+
+import { AddButton } from "./utils/add-button";
+import { MutationWrapper } from "./utils/mutation-wrapper";
 
 type ReceiptParticipant =
 	TRPCQueryOutput<"receipt-items.get">["participants"][number];

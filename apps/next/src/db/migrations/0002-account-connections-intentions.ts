@@ -1,5 +1,6 @@
 import { Database } from "..";
 import { ACCOUNT_CONNECTIONS_INTENTIONS } from "../consts";
+
 import {
 	createAccountConnectionsTable,
 	removeAccountConnectionsTable,
