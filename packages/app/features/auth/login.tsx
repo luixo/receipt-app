@@ -61,16 +61,14 @@ export const LoginScreen: React.FC = () => {
 				name="password"
 				rules={{ required: true }}
 				render={({ field: { onChange, value = "", onBlur } }) => (
-					<>
-						<TextInput
-							placeholder="Enter your password"
-							textContentType="password"
-							value={value}
-							onBlur={onBlur}
-							onChangeText={onChange}
-							secureTextEntry
-						/>
-					</>
+					<TextInput
+						placeholder="Enter your password"
+						textContentType="password"
+						value={value}
+						onBlur={onBlur}
+						onChangeText={onChange}
+						secureTextEntry
+					/>
 				)}
 			/>
 			<ReactNative.Button

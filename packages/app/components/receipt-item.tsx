@@ -20,7 +20,7 @@ import { VALIDATIONS_CONSTANTS } from "../utils/validation";
 import { AddReceiptItemPartForm } from "./add-receipt-item-participant-form";
 import { updateReceiptSum } from "../utils/receipt";
 
-type ReceiptItem = TRPCQueryOutput<"receipt-items.get">["items"][number];
+type ReceiptItems = TRPCQueryOutput<"receipt-items.get">["items"];
 type ReceiptParticipant =
 	TRPCQueryOutput<"receipt-items.get">["participants"][number];
 
@@ -54,9 +54,9 @@ const deleteMutationOptions: UseContextedMutationOptions<
 };
 
 const applyUpdate = (
-	item: ReceiptItem,
+	item: ReceiptItems[number],
 	update: TRPCMutationInput<"receipt-items.update">["update"]
-): ReceiptItem => {
+): ReceiptItems[number] => {
 	switch (update.type) {
 		case "name":
 			return { ...item, name: update.name };
@@ -110,7 +110,7 @@ const updateMutationOptions: UseContextedMutationOptions<
 };
 
 type Props = {
-	receiptItem: ReceiptItem;
+	receiptItem: ReceiptItems[number];
 	receiptParticipants: ReceiptParticipant[];
 	receiptItemsInput: ReceiptItemsGetInput;
 	role?: TRPCQueryOutput<"receipts.get">["role"];
@@ -165,7 +165,7 @@ export const ReceiptItem: React.FC<Props> = ({
 			receiptItem.price.toString()
 		);
 		const price = Number(rawPrice);
-		if (isNaN(price)) {
+		if (Number.isNaN(price)) {
 			return window.alert("Price should be a number!");
 		}
 		if (price <= 0) {
@@ -188,7 +188,7 @@ export const ReceiptItem: React.FC<Props> = ({
 			return;
 		}
 		const quantity = Number(rawQuantity);
-		if (isNaN(quantity)) {
+		if (Number.isNaN(quantity)) {
 			return window.alert("Quantity should be a number!");
 		}
 		if (quantity <= 0) {

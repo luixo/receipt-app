@@ -84,7 +84,7 @@ declare module "dripsy" {
 	interface DripsyCustomTheme extends Theme {}
 }
 
-export const ThemeProvider: React.FC<React.PropsWithChildren<{}>> = ({
+export const ThemeProvider: React.FC<React.PropsWithChildren<object>> = ({
 	children,
 }) => {
 	const [colorModeConfig, setColorModeConfig] =
@@ -95,7 +95,7 @@ export const ThemeProvider: React.FC<React.PropsWithChildren<{}>> = ({
 			return;
 		}
 		setColorModeConfig((prev) => ({ ...prev, last: colorScheme }));
-	}, [colorScheme]);
+	}, [colorScheme, setColorModeConfig]);
 	const selectedMode = colorModeConfig.selected || colorModeConfig.last;
 	const theme = selectedMode === "dark" ? darkTheme : lightTheme;
 	return <DripsyProvider theme={theme}>{children}</DripsyProvider>;
@@ -105,7 +105,10 @@ export const Text = styled(ReactNative.Text)({ color: "$text" });
 export const H1 = styled(HTMLElements.H1)({ color: "$text" });
 export const P = styled(HTMLElements.P)({ color: "$text" });
 export const A = styled(HTMLElements.A)({ color: "$text" });
-export const TextLink = (props: React.ComponentProps<typeof BaseTextLink>) => {
+export const TextLink = ({
+	textProps,
+	...props
+}: React.ComponentProps<typeof BaseTextLink>) => {
 	const sx = useSx();
 	const linkStyle = sx({
 		fontSize: "$regular",
@@ -116,8 +119,8 @@ export const TextLink = (props: React.ComponentProps<typeof BaseTextLink>) => {
 		<BaseTextLink
 			{...props}
 			textProps={{
-				...props.textProps,
-				style: [linkStyle, props.textProps?.style],
+				...textProps,
+				style: [linkStyle, textProps?.style],
 			}}
 		/>
 	);
@@ -141,14 +144,17 @@ export const TextInput = (
 		/>
 	);
 };
-export const ScrollView = (props: ReactNative.ScrollViewProps) => {
+export const ScrollView = ({
+	contentContainerStyle,
+	...props
+}: ReactNative.ScrollViewProps) => {
 	const sx = useSx();
 	return (
 		<ReactNative.ScrollView
 			{...props}
 			contentContainerStyle={[
 				sx({ justifyContent: "center", alignItems: "stretch", width: "$full" }),
-				props.contentContainerStyle,
+				contentContainerStyle,
 			]}
 		/>
 	);

@@ -8,7 +8,7 @@ import {
 	TRPC_ENDPOINT,
 } from "../../utils/queries";
 
-export const QueriesProvider: React.FC<React.PropsWithChildren<{}>> = ({
+export const QueriesProvider: React.FC<React.PropsWithChildren<object>> = ({
 	children,
 }) => {
 	const [queryClient] = React.useState(

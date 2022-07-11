@@ -1,19 +1,25 @@
 import { sql } from "kysely";
 import { Database } from "..";
-
-export const ACCOUNTS__EMAIL__INDEX = "accounts:email:index" as const;
+import {
+	ACCOUNTS,
+	ITEM_PARTICIPANTS,
+	RECEIPTS,
+	RECEIPT_ITEMS,
+	RECEIPT_PARTICIPANTS,
+	SESSIONS,
+} from "../consts";
 
 const camelcaseAccountsTable = async (db: Database) => {
 	await db.schema.dropIndex("accounts_email_index").execute();
 	await db.schema
-		.createIndex(ACCOUNTS__EMAIL__INDEX)
+		.createIndex(ACCOUNTS.INDEXES.EMAIL)
 		.on("accounts")
 		.column("email")
 		.execute();
 };
 
 const uncamelcaseAccountsTable = async (db: Database) => {
-	await db.schema.dropIndex(ACCOUNTS__EMAIL__INDEX).execute();
+	await db.schema.dropIndex(ACCOUNTS.INDEXES.EMAIL).execute();
 	await db.schema
 		.createIndex("accounts_email_index")
 		.on("accounts")
@@ -21,13 +27,10 @@ const uncamelcaseAccountsTable = async (db: Database) => {
 		.execute();
 };
 
-export const RECEIPTS__OWNER_ACCOUNT_ID__INDEX =
-	"receipts:ownerAccountId:index" as const;
-
 const camelcaseReceiptsTable = async (db: Database) => {
 	await db.schema.dropIndex("receipts_ownerAccountId_index").execute();
 	await db.schema
-		.createIndex(RECEIPTS__OWNER_ACCOUNT_ID__INDEX)
+		.createIndex(RECEIPTS.INDEXES.OWNER_ACCOUNT_ID)
 		.on("receipts")
 		.column("ownerAccountId")
 		.execute();
@@ -36,7 +39,7 @@ const camelcaseReceiptsTable = async (db: Database) => {
 const uncamelcaseReceiptsTable = async (db: Database) => {
 	await db.schema
 		.withSchema("public")
-		.dropIndex(RECEIPTS__OWNER_ACCOUNT_ID__INDEX)
+		.dropIndex(RECEIPTS.INDEXES.OWNER_ACCOUNT_ID)
 		.execute();
 	await db.schema
 		.createIndex("receipts_ownerAccountId_index")
@@ -45,9 +48,6 @@ const uncamelcaseReceiptsTable = async (db: Database) => {
 		.execute();
 };
 
-export const RECEIPT_ITEMS__RECEIPT_ID__INDEX =
-	"receiptItems:receiptId:index" as const;
-
 const camelcaseReceiptItemsTable = async (db: Database) => {
 	await db.schema.dropIndex("receiptItems_receiptId_index").execute();
 	await db.schema
@@ -55,14 +55,14 @@ const camelcaseReceiptItemsTable = async (db: Database) => {
 		.renameTo("receiptItems")
 		.execute();
 	await db.schema
-		.createIndex(RECEIPT_ITEMS__RECEIPT_ID__INDEX)
+		.createIndex(RECEIPT_ITEMS.INDEXES.RECEIPT_ID)
 		.on("receiptItems")
 		.column("receiptId")
 		.execute();
 };
 
 const uncamelcaseReceiptItemsTable = async (db: Database) => {
-	await db.schema.dropIndex(RECEIPT_ITEMS__RECEIPT_ID__INDEX).execute();
+	await db.schema.dropIndex(RECEIPT_ITEMS.INDEXES.RECEIPT_ID).execute();
 	await db.schema
 		.alterTable("receiptItems")
 		.renameTo("receipt_items")
@@ -74,30 +74,23 @@ const uncamelcaseReceiptItemsTable = async (db: Database) => {
 		.execute();
 };
 
-export const SESSIONS__SESSION_ID__INDEX = "sessions:sessionId:index" as const;
-
 const camelcaseSessionsTable = async (db: Database) => {
 	await db.schema.dropIndex("sessions_sessionId_index").execute();
 	await db.schema
-		.createIndex(SESSIONS__SESSION_ID__INDEX)
+		.createIndex(SESSIONS.INDEXES.SESSION_ID)
 		.on("sessions")
 		.column("accountId")
 		.execute();
 };
 
 const uncamelcaseSessionsTable = async (db: Database) => {
-	await db.schema.dropIndex(SESSIONS__SESSION_ID__INDEX).execute();
+	await db.schema.dropIndex(SESSIONS.INDEXES.SESSION_ID).execute();
 	await db.schema
 		.createIndex("sessions_sessionId_index")
 		.on("sessions")
 		.column("sessionId")
 		.execute();
 };
-
-export const ITEM_PARTICIPANTS__ITEM_ID__INDEX =
-	"itemParticipants:itemId:index" as const;
-export const ITEM_PARTICIPANTS__PRIMARY_KEY =
-	"itemParticipants:itemId-userId:primaryKey" as const;
 
 const camelcaseItemParticipantsTable = async (db: Database) => {
 	await db.schema.dropIndex("itemParticipants_itemId_index").execute();
@@ -107,25 +100,25 @@ const camelcaseItemParticipantsTable = async (db: Database) => {
 		.execute();
 	await sql
 		.raw(
-			`ALTER TABLE "itemParticipants" RENAME CONSTRAINT "itemParticipants_pk" TO "${ITEM_PARTICIPANTS__PRIMARY_KEY}"`
+			`ALTER TABLE "itemParticipants" RENAME CONSTRAINT "itemParticipants_pk" TO "${ITEM_PARTICIPANTS.CONSTRAINTS.ITEM_ID_USER_ID_PAIR}"`
 		)
 		.execute(db);
 	await db.schema
-		.createIndex(ITEM_PARTICIPANTS__ITEM_ID__INDEX)
+		.createIndex(ITEM_PARTICIPANTS.INDEXES.ITEM_ID)
 		.on("itemParticipants")
 		.column("itemId")
 		.execute();
 };
 
 const uncamelcaseItemParticipantsTable = async (db: Database) => {
-	await db.schema.dropIndex(ITEM_PARTICIPANTS__ITEM_ID__INDEX).execute();
+	await db.schema.dropIndex(ITEM_PARTICIPANTS.INDEXES.ITEM_ID).execute();
 	await db.schema
 		.alterTable("itemParticipants")
 		.renameTo("item_participants")
 		.execute();
 	await sql
 		.raw(
-			`ALTER TABLE "item_participants" RENAME CONSTRAINT "${ITEM_PARTICIPANTS__PRIMARY_KEY}" TO "itemParticipants_pk"`
+			`ALTER TABLE "item_participants" RENAME CONSTRAINT "${ITEM_PARTICIPANTS.CONSTRAINTS.ITEM_ID_USER_ID_PAIR}" TO "itemParticipants_pk"`
 		)
 		.execute(db);
 	await db.schema
@@ -135,11 +128,6 @@ const uncamelcaseItemParticipantsTable = async (db: Database) => {
 		.execute();
 };
 
-export const RECEIPT_PARTICIPANTS__RECEIPT_ID__INDEX =
-	"receiptParticipants:receiptId:index" as const;
-export const RECEIPT_PARTICIPANTS__USER_ID__INDEX =
-	"receiptParticipants:userId:index" as const;
-
 const camelcaseReceiptParticipantsTable = async (db: Database) => {
 	await db.schema.dropIndex("receiptParticipants_receiptId_index").execute();
 	await db.schema.dropIndex("receiptParticipants_userId_index").execute();
@@ -148,20 +136,20 @@ const camelcaseReceiptParticipantsTable = async (db: Database) => {
 		.renameTo("receiptParticipants")
 		.execute();
 	await db.schema
-		.createIndex(RECEIPT_PARTICIPANTS__RECEIPT_ID__INDEX)
+		.createIndex(RECEIPT_PARTICIPANTS.INDEXES.RECEIPT_ID)
 		.on("receiptParticipants")
 		.column("receiptId")
 		.execute();
 	await db.schema
-		.createIndex(RECEIPT_PARTICIPANTS__USER_ID__INDEX)
+		.createIndex(RECEIPT_PARTICIPANTS.INDEXES.USER_ID)
 		.on("receiptParticipants")
 		.column("userId")
 		.execute();
 };
 
 const uncamelcaseReceiptParticipantsTable = async (db: Database) => {
-	await db.schema.dropIndex(RECEIPT_PARTICIPANTS__RECEIPT_ID__INDEX).execute();
-	await db.schema.dropIndex(RECEIPT_PARTICIPANTS__USER_ID__INDEX).execute();
+	await db.schema.dropIndex(RECEIPT_PARTICIPANTS.INDEXES.RECEIPT_ID).execute();
+	await db.schema.dropIndex(RECEIPT_PARTICIPANTS.INDEXES.USER_ID).execute();
 	await db.schema
 		.alterTable("receiptParticipants")
 		.renameTo("receipt_participants")

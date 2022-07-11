@@ -48,7 +48,10 @@ export const useTrpcMutationOptions = <
 	LifecycleContext,
 	Context = undefined
 >(
-	...[options, context]: WithContextIfExists<
+	...[
+		{ onError, onMutate, onSettled, onSuccess },
+		context,
+	]: WithContextIfExists<
 		UseContextedMutationOptions<Path, LifecycleContext, Context>,
 		Context
 	>
@@ -61,17 +64,11 @@ export const useTrpcMutationOptions = <
 	);
 	return React.useMemo(
 		() => ({
-			onMutate: options.onMutate?.(...args),
-			onError: options.onError?.(...args),
-			onSettled: options.onSettled?.(...args),
-			onSuccess: options.onSuccess?.(...args),
+			onMutate: onMutate?.(...args),
+			onError: onError?.(...args),
+			onSettled: onSettled?.(...args),
+			onSuccess: onSuccess?.(...args),
 		}),
-		[
-			args,
-			options.onMutate,
-			options.onError,
-			options.onSettled,
-			options.onSuccess,
-		]
+		[args, onMutate, onError, onSettled, onSuccess]
 	);
 };

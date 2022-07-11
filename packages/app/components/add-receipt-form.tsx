@@ -132,7 +132,7 @@ export const AddReceiptForm: React.FC<Props> = ({ input }) => {
 		if (currenciesListQuery.data && currenciesListQuery.data[0]) {
 			setValue("currency", currenciesListQuery.data[0].code);
 		}
-	}, [currenciesListQuery.data]);
+	}, [currenciesListQuery.data, setValue]);
 
 	return (
 		<Block name="Add receipt">

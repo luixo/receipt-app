@@ -1,10 +1,10 @@
 import React from "react";
 import { LinkingOptions, NavigationContainer } from "@react-navigation/native";
 import * as Linking from "expo-linking";
-import { AppParamList } from "../../../../apps/expo/navigation";
+import { AppParamList } from "expo-app/navigation";
 import { useDripsyTheme } from "dripsy";
 
-export const NavigationProvider: React.FC<React.PropsWithChildren<{}>> = ({
+export const NavigationProvider: React.FC<React.PropsWithChildren<object>> = ({
 	children,
 }) => {
 	const { theme } = useDripsyTheme();

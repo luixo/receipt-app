@@ -1,9 +1,6 @@
 import { sql } from "kysely";
 import { Database } from "..";
 
-export const USERS__OWNER_ACCOUNT_ID__INDEX =
-	"users:ownerAccountId:index" as const;
-
 const addReceiptParticipantsAddedTimestampColumn = async (db: Database) => {
 	await db.schema
 		.alterTable("receiptParticipants")

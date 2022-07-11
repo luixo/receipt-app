@@ -51,7 +51,7 @@ declare module "next/app" {
 	}
 }
 
-const MyApp: AppType = ({ Component, pageProps, ...rest }) => {
+const MyApp: AppType = ({ Component, pageProps }) => {
 	return (
 		<>
 			<Head>
@@ -84,7 +84,7 @@ MyApp.getInitialProps = async ({ ctx }) => {
 export default withTRPC<AppRouter>({
 	config: ({ ctx }) => {
 		const queryClientConfig = getQueryClientConfig();
-		const debugHeader = Boolean(ctx?.query.debug) ? "true" : undefined;
+		const debugHeader = ctx?.query.debug ? "true" : undefined;
 		if (typeof window !== "undefined") {
 			return {
 				url: TRPC_ENDPOINT,

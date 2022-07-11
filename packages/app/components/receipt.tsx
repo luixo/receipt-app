@@ -1,6 +1,6 @@
 import React from "react";
 import * as ReactNative from "react-native";
-import { TextLink } from "../utils/styles";
+import { TextLink, Text } from "../utils/styles";
 import { trpc, TRPCMutationInput, TRPCQueryOutput } from "../trpc";
 import { Block } from "./utils/block";
 import { QueryWrapper } from "./utils/query-wrapper";
@@ -17,7 +17,6 @@ import {
 	updatePagedReceipts,
 } from "../utils/queries/receipts-get-paged";
 import { useRouter } from "solito/router";
-import { Text } from "../utils/styles";
 import { useAsyncCallback } from "../hooks/use-async-callback";
 import { VALIDATIONS_CONSTANTS } from "../utils/validation";
 import {
@@ -233,7 +232,7 @@ export const Receipt: React.FC<Props> = ({
 			receipt.issued.toISOString().slice(0, 10)
 		);
 		const maybeIssuedDate = new Date(issued || "");
-		if (isNaN(maybeIssuedDate.valueOf())) {
+		if (Number.isNaN(maybeIssuedDate.valueOf())) {
 			return window.alert(`Improper date!`);
 		}
 		if (maybeIssuedDate.toDateString() === receipt.issued.toDateString()) {

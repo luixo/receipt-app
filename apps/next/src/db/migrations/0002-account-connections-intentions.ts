@@ -1,18 +1,9 @@
 import { Database } from "..";
+import { ACCOUNT_CONNECTIONS_INTENTIONS } from "../consts";
 import {
 	createAccountConnectionsTable,
 	removeAccountConnectionsTable,
 } from "./0001-initial";
-
-export const ACCOUNT_CONNECTIONS_INTENTIONS__ACCOUNT_ID__INDEX =
-	"accountConnectionsIntentions:accountId:index" as const;
-export const ACCOUNT_CONNECTIONS_INTENTIONS__TARGET_ACCOUNT_ID__INDEX =
-	"accountConnectionsIntentions:targetAccountId:index" as const;
-
-export const ACCOUNT_CONNECTIONS_INTENTIONS__ACCOUNT_PAIR__CONSTRAINT =
-	"accountConnectionsIntentions:accounts:accountPair" as const;
-export const ACCOUNT_CONNECTIONS_INTENTIONS__USER_PAIR__CONSTRAINT =
-	"accountConnectionsIntentions:accountUser:userPair" as const;
 
 const createAccountConnectionsIntentionsTable = async (db: Database) => {
 	await db.schema
@@ -41,21 +32,21 @@ const createAccountConnectionsIntentionsTable = async (db: Database) => {
 		)
 		.addColumn("created", "timestamp", (cb) => cb.notNull())
 		.addPrimaryKeyConstraint(
-			ACCOUNT_CONNECTIONS_INTENTIONS__ACCOUNT_PAIR__CONSTRAINT,
+			ACCOUNT_CONNECTIONS_INTENTIONS.CONSTRAINTS.ACCOUNT_PAIR,
 			["accountId", "targetAccountId"]
 		)
-		.addUniqueConstraint(
-			ACCOUNT_CONNECTIONS_INTENTIONS__USER_PAIR__CONSTRAINT,
-			["accountId", "userId"]
-		)
+		.addUniqueConstraint(ACCOUNT_CONNECTIONS_INTENTIONS.CONSTRAINTS.USER_PAIR, [
+			"accountId",
+			"userId",
+		])
 		.execute();
 	await db.schema
-		.createIndex(ACCOUNT_CONNECTIONS_INTENTIONS__ACCOUNT_ID__INDEX)
+		.createIndex(ACCOUNT_CONNECTIONS_INTENTIONS.INDEXES.ACCOUNT_ID)
 		.on("accountConnectionsIntentions")
 		.column("accountId")
 		.execute();
 	await db.schema
-		.createIndex(ACCOUNT_CONNECTIONS_INTENTIONS__TARGET_ACCOUNT_ID__INDEX)
+		.createIndex(ACCOUNT_CONNECTIONS_INTENTIONS.INDEXES.TARGET_ACCOUNT_ID)
 		.on("accountConnectionsIntentions")
 		.column("targetAccountId")
 		.execute();
@@ -63,10 +54,10 @@ const createAccountConnectionsIntentionsTable = async (db: Database) => {
 
 const removeAccountConnectionsIntentionsTable = async (db: Database) => {
 	await db.schema
-		.dropIndex(ACCOUNT_CONNECTIONS_INTENTIONS__ACCOUNT_ID__INDEX)
+		.dropIndex(ACCOUNT_CONNECTIONS_INTENTIONS.INDEXES.ACCOUNT_ID)
 		.execute();
 	await db.schema
-		.dropIndex(ACCOUNT_CONNECTIONS_INTENTIONS__TARGET_ACCOUNT_ID__INDEX)
+		.dropIndex(ACCOUNT_CONNECTIONS_INTENTIONS.INDEXES.TARGET_ACCOUNT_ID)
 		.execute();
 	await db.schema
 		.dropTable("accountConnectionsIntentions")

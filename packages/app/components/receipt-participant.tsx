@@ -21,8 +21,7 @@ import {
 } from "./receipt-participant-role-change";
 import { Currency } from "../utils/currency";
 
-type ReceiptParticipant =
-	TRPCQueryOutput<"receipt-items.get">["participants"][number];
+type ReceiptParticipants = TRPCQueryOutput<"receipt-items.get">["participants"];
 
 const deleteMutationOptions: UseContextedMutationOptions<
 	"receipt-participants.delete",
@@ -55,9 +54,9 @@ const deleteMutationOptions: UseContextedMutationOptions<
 };
 
 const applyUpdate = (
-	item: ReceiptParticipant,
+	item: ReceiptParticipants[number],
 	update: TRPCMutationInput<"receipt-participants.update">["update"]
-): ReceiptParticipant => {
+): ReceiptParticipants[number] => {
 	switch (update.type) {
 		case "role":
 			return { ...item, role: update.role };

@@ -1,5 +1,5 @@
 import React from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { UsersId } from "next-app/db/models";
 import { AddButton } from "./utils/add-button";
 import { AvailableReceiptParticipantUsers } from "./available-receipt-participants-users";

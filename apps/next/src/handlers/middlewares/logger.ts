@@ -14,9 +14,11 @@ export const middleware: MiddlewareFunction<
 		type,
 		durationMs: duration,
 	};
-	result.ok
-		? result.ctx.logger.trace(options, "OK request timing:")
-		: result.ctx.logger.trace(options, "Non-OK request timing");
+	if (result.ok) {
+		result.ctx.logger.trace(options, "OK request timing:");
+	} else {
+		result.ctx.logger.trace(options, "Non-OK request timing");
+	}
 
 	return result;
 };

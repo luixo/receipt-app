@@ -3,7 +3,6 @@ import * as ReactNative from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { TRPCQueryOutput } from "../trpc";
 
-type Role = TRPCQueryOutput<"receipts.get">["role"];
 export type AssignableRole = Exclude<
 	TRPCQueryOutput<"receipts.get">["role"],
 	"owner"

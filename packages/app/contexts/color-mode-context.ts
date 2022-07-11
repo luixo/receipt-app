@@ -9,12 +9,12 @@ export type ColorModeConfig = {
 	selected?: ColorMode;
 };
 
-export type ColorModeContext = [
+type ColorModeContextType = [
 	ColorModeConfig,
 	React.Dispatch<React.SetStateAction<ColorModeConfig>>
 ];
 
-export const ColorModeContext = React.createContext<ColorModeContext>([
+export const ColorModeContext = React.createContext<ColorModeContextType>([
 	{},
 	() => {},
 ]);

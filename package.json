@@ -10,10 +10,20 @@
 		"@babel/core": "^7.12.9",
 		"@types/react": "^18.0.1",
 		"@types/react-native": "^0.67.4",
+		"@typescript-eslint/eslint-plugin": "^5.30.5",
+		"@typescript-eslint/parser": "^5.30.5",
 		"concurrently": "^7.1.0",
 		"dotenv": "^16.0.0",
 		"dotenv-cli": "^5.1.0",
-		"eslint": "^8.13.0",
+		"eslint": "^8.19.0",
+		"eslint-config-airbnb": "^19.0.4",
+		"eslint-config-airbnb-typescript": "^17.0.0",
+		"eslint-config-prettier": "^8.5.0",
+		"eslint-plugin-import": "^2.26.0",
+		"eslint-plugin-jsx-a11y": "^6.6.0",
+		"eslint-plugin-react": "^7.30.1",
+		"eslint-plugin-react-hooks": "^4.6.0",
+		"expo-module-scripts": "^2.0.0",
 		"get-port": "^6.1.2",
 		"pre-commit": "^1.2.2",
 		"prettier": "^2.7.1",
@@ -29,7 +39,8 @@
 		"ios:publish": "yarn workspace expo-app ios:publish",
 		"typecheck": "tsc --noEmit",
 		"format": "prettier --write '**/*.{js,jsx,ts,tsx,json}'",
-		"format:verify": "prettier --check '**/*.{js,jsx,ts,tsx,json}'"
+		"format:verify": "prettier --check '**/*.{js,jsx,ts,tsx,json}'",
+		"lint": "eslint . --ext .js,.jsx,.ts,.tsx"
 	},
 	"dependencies": {
 		"expo": "~44.0.2",
@@ -45,6 +56,7 @@
 	"version": "1.0.0",
 	"pre-commit": [
 		"typecheck",
-		"format:verify"
+		"format:verify",
+		"lint"
 	]
 }

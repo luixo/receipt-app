@@ -3,10 +3,7 @@ import { ReceiptItemsId } from "next-app/db/models";
 import { AddButton } from "./utils/add-button";
 import { Text } from "../utils/styles";
 import { trpc, TRPCQueryOutput } from "../trpc";
-import {
-	ReceiptItemsGetInput,
-	updateReceiptItemById,
-} from "../utils/queries/receipt-items";
+import { ReceiptItemsGetInput } from "../utils/queries/receipt-items";
 import {
 	UseContextedMutationOptions,
 	useTrpcMutationOptions,

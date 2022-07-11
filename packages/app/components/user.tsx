@@ -277,11 +277,11 @@ export const User: React.FC<Props> = ({ data: user, pagedInput, input }) => {
 
 	const promptPublicName = React.useCallback(
 		() => promptNameParam(true),
-		[promptNameParam, user.publicName]
+		[promptNameParam]
 	);
 	const promptName = React.useCallback(
 		() => promptNameParam(false),
-		[promptNameParam, user.name]
+		[promptNameParam]
 	);
 
 	const connectionIntentionsQuery = trpc.useQuery([
@@ -306,7 +306,7 @@ export const User: React.FC<Props> = ({ data: user, pagedInput, input }) => {
 			userId: user.id,
 			email,
 		});
-	}, [promptNameParam, user.id]);
+	}, [connectUserMutation, user.id]);
 
 	return (
 		<Block>

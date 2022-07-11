@@ -7,10 +7,7 @@ import { getAccountByEmail } from "../account/utils";
 import { AuthorizedContext } from "../context";
 import { flavored } from "../zod";
 import { getUserById } from "../users/utils";
-import {
-	ACCOUNT_CONNECTIONS_INTENTIONS__ACCOUNT_PAIR__CONSTRAINT,
-	ACCOUNT_CONNECTIONS_INTENTIONS__USER_PAIR__CONSTRAINT,
-} from "../../db/migrations/0002-account-connections-intentions";
+import { ACCOUNT_CONNECTIONS_INTENTIONS } from "../../db/consts";
 
 export const router = trpc.router<AuthorizedContext>().mutation("put", {
 	input: z.strictObject({
@@ -102,7 +99,7 @@ export const router = trpc.router<AuthorizedContext>().mutation("put", {
 			const message = String(e);
 			if (
 				message.includes(
-					ACCOUNT_CONNECTIONS_INTENTIONS__ACCOUNT_PAIR__CONSTRAINT
+					ACCOUNT_CONNECTIONS_INTENTIONS.CONSTRAINTS.ACCOUNT_PAIR
 				)
 			) {
 				throw new trpc.TRPCError({
@@ -111,7 +108,7 @@ export const router = trpc.router<AuthorizedContext>().mutation("put", {
 				});
 			}
 			if (
-				message.includes(ACCOUNT_CONNECTIONS_INTENTIONS__USER_PAIR__CONSTRAINT)
+				message.includes(ACCOUNT_CONNECTIONS_INTENTIONS.CONSTRAINTS.USER_PAIR)
 			) {
 				throw new trpc.TRPCError({
 					code: "CONFLICT",

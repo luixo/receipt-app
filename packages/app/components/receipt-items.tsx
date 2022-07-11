@@ -1,3 +1,4 @@
+import React from "react";
 import { ReceiptItem } from "./receipt-item";
 import { TRPCQueryOutput } from "../trpc";
 import { Block } from "./utils/block";
@@ -6,7 +7,7 @@ import { AddReceiptItemForm } from "./add-receipt-item-form";
 import { ReceiptItemsGetInput } from "../utils/queries/receipt-items";
 import { Currency } from "../utils/currency";
 
-type InnerItemsProps = {
+type Props = {
 	data: TRPCQueryOutput<"receipt-items.get">;
 	receiptItemsInput: ReceiptItemsGetInput;
 	role?: TRPCQueryOutput<"receipts.get">["role"];
@@ -14,7 +15,7 @@ type InnerItemsProps = {
 	receiptId: TRPCQueryOutput<"receipts.get">["id"];
 };
 
-export const ReceiptItems: React.FC<InnerItemsProps> = ({
+export const ReceiptItems: React.FC<Props> = ({
 	data,
 	receiptItemsInput,
 	role,

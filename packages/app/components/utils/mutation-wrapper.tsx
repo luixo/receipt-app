@@ -28,7 +28,7 @@ type Props<
 
 export const MutationWrapper = <
 	Path extends TRPCMutationKey,
-	ExtraProps = {},
+	ExtraProps = object,
 	P extends InjectedProps<Path> = InjectedProps<Path> & ExtraProps
 >({
 	mutation,

@@ -1,5 +1,6 @@
 {
 	"dependencies": {
+		"@react-navigation/native-stack": "^6.5.0",
 		"app": "*",
 		"dotenv": "^16.0.0",
 		"eas-cli": "^0.50.0",

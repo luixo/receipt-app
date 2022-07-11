@@ -1,12 +1,11 @@
 import React from "react";
 import { InfiniteData } from "react-query";
-import { styled } from "../../utils/styles";
+import { styled, Text } from "../../utils/styles";
 import {
 	TRPCInfiniteQueryKey,
 	TRPCQueryOutput,
 	TRPCInfiniteQueryResult,
 } from "../../trpc";
-import { Text } from "../../utils/styles";
 
 const ErrorText = styled(Text)({
 	margin: "$m",
@@ -30,7 +29,7 @@ type Props<
 
 export const InfiniteQueryWrapper = <
 	Path extends TRPCInfiniteQueryKey,
-	ExtraProps = {},
+	ExtraProps = object,
 	P extends InjectedProps<Path> = InjectedProps<Path> & ExtraProps
 >({
 	query,

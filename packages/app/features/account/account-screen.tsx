@@ -1,10 +1,9 @@
 import React from "react";
 import * as ReactNative from "react-native";
-import { styled, H1, TextLink } from "../../utils/styles";
+import { styled, H1, TextLink, Text } from "../../utils/styles";
 import { BackButton } from "../../components/utils/back-button";
 import { trpc } from "../../trpc";
 import { MutationWrapper } from "../../components/utils/mutation-wrapper";
-import { Text } from "../../utils/styles";
 import { useAsyncCallback } from "../../hooks/use-async-callback";
 
 const Wrapper = styled(ReactNative.View)({

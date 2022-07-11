@@ -11,7 +11,7 @@ const updateVersionNumbers = (input: string): string => {
 				return part;
 			}
 			const numPart = Number(part);
-			if (isNaN(numPart)) {
+			if (Number.isNaN(numPart)) {
 				throw new Error("buildNumber property last part is not a number!");
 			}
 			return String(numPart + 1);
@@ -29,7 +29,7 @@ const main = async () => {
 			const node = control.visitChildren();
 			if (ts.isPropertyAssignment(node)) {
 				if (node.name.getText() === "buildNumber") {
-					const initializer = node.initializer;
+					const { initializer } = node;
 					if (ts.isStringLiteral(initializer)) {
 						const nextVersion = updateVersionNumbers(initializer.text);
 						console.log(`Updated dynamic app buildNumber to ${nextVersion}`);

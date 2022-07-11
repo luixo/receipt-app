@@ -121,8 +121,8 @@ export const AddReceiptItemForm: React.FC<Props> = ({ receiptItemsInput }) => {
 							value={value.toString()}
 							onBlur={onBlur}
 							keyboardType="numeric"
-							onChangeText={(value) =>
-								onChange(Number(value.replace(/[^0-9]/g, "")))
+							onChangeText={(nextValue) =>
+								onChange(Number(nextValue.replace(/[^0-9]/g, "")))
 							}
 							editable={!isSubmitting}
 						/>
@@ -144,8 +144,8 @@ export const AddReceiptItemForm: React.FC<Props> = ({ receiptItemsInput }) => {
 							value={value.toString()}
 							onBlur={onBlur}
 							keyboardType="numeric"
-							onChangeText={(value) =>
-								onChange(Number(value.replace(/[^0-9]/g, "")))
+							onChangeText={(nextValue) =>
+								onChange(Number(nextValue.replace(/[^0-9]/g, "")))
 							}
 							editable={!isSubmitting}
 						/>

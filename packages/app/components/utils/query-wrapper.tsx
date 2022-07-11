@@ -1,7 +1,6 @@
 import React from "react";
-import { styled } from "../../utils/styles";
+import { styled, Text } from "../../utils/styles";
 import { TRPCQueryKey, TRPCQueryOutput, TRPCQueryResult } from "../../trpc";
-import { Text } from "../../utils/styles";
 
 const ErrorText = styled(Text)({
 	margin: "$m",
@@ -25,7 +24,7 @@ type Props<Path extends TRPCQueryKey, P extends InjectedProps<Path>> = Omit<
 
 export const QueryWrapper = <
 	Path extends TRPCQueryKey,
-	ExtraProps = {},
+	ExtraProps = object,
 	P extends InjectedProps<Path> = InjectedProps<Path> & ExtraProps
 >({
 	query,

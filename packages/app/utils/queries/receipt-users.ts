@@ -1,4 +1,4 @@
-import { ReceiptsId, UsersId } from "next-app/src/db/models";
+import { UsersId } from "next-app/src/db/models";
 import {
 	TRPCInfiniteQueryInput,
 	TRPCQueryOutput,

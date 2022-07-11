@@ -1,11 +1,13 @@
 import React from "react";
 import * as ReactNative from "react-native";
-import { UseContextedMutationOptions } from "../hooks/use-trpc-mutation-options";
+import {
+	UseContextedMutationOptions,
+	useTrpcMutationOptions,
+} from "../hooks/use-trpc-mutation-options";
 import { trpc, TRPCMutationInput, TRPCQueryOutput } from "../trpc";
 import { Block } from "./utils/block";
 import { Text } from "../utils/styles";
 import { MutationWrapper } from "./utils/mutation-wrapper";
-import { useTrpcMutationOptions } from "../hooks/use-trpc-mutation-options";
 import { ReceiptItemsId } from "next-app/db/models";
 import { ReceiptItemsGetInput } from "../utils/queries/receipt-items";
 import { useAsyncCallback } from "../hooks/use-async-callback";
@@ -19,7 +21,7 @@ import {
 type ReceiptItem = TRPCQueryOutput<"receipt-items.get">["items"][number];
 type ReceiptParticipant =
 	TRPCQueryOutput<"receipt-items.get">["participants"][number];
-type ReceiptItemPart = ReceiptItem["parts"][number];
+type ReceiptItemParts = ReceiptItem["parts"];
 
 const deleteMutationOptions: UseContextedMutationOptions<
 	"item-participants.delete",
@@ -51,9 +53,9 @@ const deleteMutationOptions: UseContextedMutationOptions<
 };
 
 const applyUpdate = (
-	part: ReceiptItemPart,
+	part: ReceiptItemParts[number],
 	update: TRPCMutationInput<"item-participants.update">["update"]
-): ReceiptItemPart => {
+): ReceiptItemParts[number] => {
 	switch (update.type) {
 		case "part":
 			return {
@@ -112,7 +114,7 @@ const updateMutationOptions: UseContextedMutationOptions<
 type Props = {
 	itemId: ReceiptItemsId;
 	receiptParticipants: ReceiptParticipant[];
-	receiptItemPart: ReceiptItemPart;
+	receiptItemPart: ReceiptItemParts[number];
 	receiptItemsInput: ReceiptItemsGetInput;
 	role?: TRPCQueryOutput<"receipts.get">["role"];
 };
@@ -133,7 +135,7 @@ export const ReceiptItemPart: React.FC<Props> = ({
 		const nextPart = Number(
 			window.prompt("Please enter part", receiptItemPart.part.toString())
 		);
-		if (isNaN(nextPart)) {
+		if (Number.isNaN(nextPart)) {
 			return window.alert("Part should be a number!");
 		}
 		if (nextPart === receiptItemPart.part) {

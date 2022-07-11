@@ -2,11 +2,10 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { getDatabase } from "../../db";
-import { generatePasswordData } from "../../utils/crypto";
+import { generatePasswordData, getHash } from "../../utils/crypto";
 import { getAccountById } from "./utils";
 import { AuthorizedContext } from "../context";
 import { password } from "../zod";
-import { getHash } from "../../utils/crypto";
 
 export const router = trpc
 	.router<AuthorizedContext>()
