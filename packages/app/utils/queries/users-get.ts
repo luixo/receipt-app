@@ -3,9 +3,8 @@ import { TRPCQueryInput, TRPCQueryOutput, TRPCReactContext } from "../../trpc";
 type User = TRPCQueryOutput<"users.get">;
 export type UsersGetInput = TRPCQueryInput<"users.get">;
 
-export const getUserById = (trpc: TRPCReactContext, input: UsersGetInput) => {
-	return trpc.getQueryData(["users.get", input]);
-};
+export const getUserById = (trpc: TRPCReactContext, input: UsersGetInput) =>
+	trpc.getQueryData(["users.get", input]);
 
 export const updateUser = (
 	trpc: TRPCReactContext,

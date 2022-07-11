@@ -6,9 +6,7 @@ export type ReceiptsGetInput = TRPCQueryInput<"receipts.get">;
 export const getReceiptById = (
 	trpc: TRPCReactContext,
 	input: ReceiptsGetInput
-) => {
-	return trpc.getQueryData(["receipts.get", input]);
-};
+) => trpc.getQueryData(["receipts.get", input]);
 
 export const addReceipt = (
 	trpc: TRPCReactContext,

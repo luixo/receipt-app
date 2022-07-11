@@ -14,6 +14,6 @@ const Button = styled(ReactNative.Button)({
 	borderColor: "$muted",
 });
 
-export const AddButton: React.FC<Props> = ({ onPress, children, disabled }) => {
-	return <Button title={children} onPress={onPress} disabled={disabled} />;
-};
+export const AddButton: React.FC<Props> = ({ onPress, children, disabled }) => (
+	<Button title={children} onPress={onPress} disabled={disabled} />
+);

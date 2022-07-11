@@ -6,13 +6,12 @@ export const getAccountById = <SE extends ReceiptsSelectExpression<"accounts">>(
 	database: Database,
 	id: AccountsId,
 	selectExpression: SE[]
-): Promise<Selection<ReceiptsDatabase, "accounts", SE> | undefined> => {
-	return database
+): Promise<Selection<ReceiptsDatabase, "accounts", SE> | undefined> =>
+	database
 		.selectFrom("accounts")
 		.select(selectExpression)
 		.where("id", "=", id)
 		.executeTakeFirst();
-};
 
 export const getAccountByEmail = <
 	SE extends ReceiptsSelectExpression<"accounts">
@@ -20,10 +19,9 @@ export const getAccountByEmail = <
 	database: Database,
 	email: string,
 	selectExpression: SE[]
-): Promise<Selection<ReceiptsDatabase, "accounts", SE> | undefined> => {
-	return database
+): Promise<Selection<ReceiptsDatabase, "accounts", SE> | undefined> =>
+	database
 		.selectFrom("accounts")
 		.select(selectExpression)
 		.where("email", "=", email)
 		.executeTakeFirst();
-};

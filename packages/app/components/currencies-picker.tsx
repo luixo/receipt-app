@@ -15,18 +15,14 @@ export const CurrenciesPicker: React.FC<Props> = ({
 	value,
 	onChange,
 	onBlur,
-}) => {
-	return (
-		<Picker selectedValue={value} onValueChange={onChange} onBlur={onBlur}>
-			{data.map((currency) => {
-				return (
-					<Picker.Item
-						key={currency.code}
-						label={currency.name}
-						value={currency.code}
-					/>
-				);
-			})}
-		</Picker>
-	);
-};
+}) => (
+	<Picker selectedValue={value} onValueChange={onChange} onBlur={onBlur}>
+		{data.map((currency) => (
+			<Picker.Item
+				key={currency.code}
+				label={currency.name}
+				value={currency.code}
+			/>
+		))}
+	</Picker>
+);

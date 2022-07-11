@@ -6,6 +6,6 @@ type Props = {
 	data: TRPCQueryOutput<"users.get">;
 };
 
-export const ReceiptOwner: React.FC<Props> = ({ data }) => {
-	return <Text>Owner: {data.name}</Text>;
-};
+export const ReceiptOwner: React.FC<Props> = ({ data }) => (
+	<Text>Owner: {data.name}</Text>
+);

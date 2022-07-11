@@ -5,9 +5,8 @@ type Intentions = TRPCQueryOutput<"account-connection-intentions.get-all">;
 type InboundIntention = Intentions["inbound"][number];
 type OutboundIntention = Intentions["outbound"][number];
 
-export const getIntentions = (trpc: TRPCReactContext) => {
-	return trpc.getQueryData(["account-connection-intentions.get-all"]);
-};
+export const getIntentions = (trpc: TRPCReactContext) =>
+	trpc.getQueryData(["account-connection-intentions.get-all"]);
 
 export const updateIntentions = (
 	trpc: TRPCReactContext,
@@ -27,24 +26,20 @@ export const updateInboundIntentions = (
 	trpc: TRPCReactContext,
 	updater: (intentions: InboundIntention[]) => InboundIntention[]
 ) => {
-	updateIntentions(trpc, (intentions) => {
-		return {
-			...intentions,
-			inbound: updater(intentions.inbound),
-		};
-	});
+	updateIntentions(trpc, (intentions) => ({
+		...intentions,
+		inbound: updater(intentions.inbound),
+	}));
 };
 
 export const updateOutboundIntentions = (
 	trpc: TRPCReactContext,
 	updater: (intentions: OutboundIntention[]) => OutboundIntention[]
 ) => {
-	updateIntentions(trpc, (intentions) => {
-		return {
-			...intentions,
-			outbound: updater(intentions.outbound),
-		};
-	});
+	updateIntentions(trpc, (intentions) => ({
+		...intentions,
+		outbound: updater(intentions.outbound),
+	}));
 };
 
 export const getInboundIntention = (

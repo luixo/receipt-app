@@ -15,8 +15,8 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 	resolve: async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
 		const receipts = await database
-			.with("mergedReceipts", (db) => {
-				return db
+			.with("mergedReceipts", (db) =>
+				db
 					.selectFrom("accounts")
 					.innerJoin("users", (jb) =>
 						jb.onRef("users.connectedAccountId", "=", "accounts.id")
@@ -56,8 +56,8 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 								sql<UsersId>`receipts."ownerAccountId"`.as("userId"),
 							])
 							.groupBy("receipts.id")
-					);
-			})
+					)
+			)
 			.selectFrom("mergedReceipts")
 			.leftJoin("receiptParticipants", (jb) =>
 				jb

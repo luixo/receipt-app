@@ -51,23 +51,21 @@ declare module "next/app" {
 	}
 }
 
-const MyApp: AppType = ({ Component, pageProps }) => {
-	return (
-		<>
-			<Head>
-				<title>Receipt App</title>
-				<meta name="description" content="Receipt App built on Solito" />
-				<link rel="icon" href="/favicon.svg" />
-			</Head>
-			<Provider initialColorModeConfig={pageProps.colorModeConfig}>
-				<GlobalStyles />
-				<ReactQueryDevtools />
-				<Component />
-				<GlobalHooksComponent />
-			</Provider>
-		</>
-	);
-};
+const MyApp: AppType = ({ Component, pageProps }) => (
+	<>
+		<Head>
+			<title>Receipt App</title>
+			<meta name="description" content="Receipt App built on Solito" />
+			<link rel="icon" href="/favicon.svg" />
+		</Head>
+		<Provider initialColorModeConfig={pageProps.colorModeConfig}>
+			<GlobalStyles />
+			<ReactQueryDevtools />
+			<Component />
+			<GlobalHooksComponent />
+		</Provider>
+	</>
+);
 
 MyApp.getInitialProps = async ({ ctx }) => {
 	const cookies = getCookies(ctx);

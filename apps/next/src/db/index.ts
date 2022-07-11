@@ -34,33 +34,30 @@ export type ReceiptsDatabase = DatabaseColumnType<
 export type ReceiptsSelectExpression<TB extends keyof ReceiptsDatabase> =
 	SelectExpression<TableExpressionDatabase<ReceiptsDatabase, TB>, TB>;
 
-const getLogger = (logger: Logger, url: string) => {
-	return (logEvent: LogEvent) => {
-		if (logEvent.level === "query") {
-			logger.debug({
-				sql: logEvent.query.sql.replaceAll(/\$\d+/g, (input) =>
-					String(logEvent.query.parameters[Number(input.slice(1))])
-				),
-				url,
-				duration: logEvent.queryDurationMillis,
-			});
-		} else {
-			logger.error({
-				url,
-				error: logEvent.error,
-			});
-		}
-	};
+const getLogger = (logger: Logger, url: string) => (logEvent: LogEvent) => {
+	if (logEvent.level === "query") {
+		logger.debug({
+			sql: logEvent.query.sql.replaceAll(/\$\d+/g, (input) =>
+				String(logEvent.query.parameters[Number(input.slice(1))])
+			),
+			url,
+			duration: logEvent.queryDurationMillis,
+		});
+	} else {
+		logger.error({
+			url,
+			error: logEvent.error,
+		});
+	}
 };
 
 const databaseConfig = getDatabaseConfig();
 export type Database = Kysely<ReceiptsDatabase>;
-export const getDatabase = (ctx?: UnauthorizedContext) => {
-	return new Kysely<ReceiptsDatabase>({
+export const getDatabase = (ctx?: UnauthorizedContext) =>
+	new Kysely<ReceiptsDatabase>({
 		dialect: new PostgresDialect(databaseConfig),
 		log:
 			ctx && ctx.debug
 				? getLogger(ctx.logger, ctx.req.url || "unknown")
 				: undefined,
 	});
-};

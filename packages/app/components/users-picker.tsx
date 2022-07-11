@@ -34,9 +34,9 @@ export const UsersPicker: React.FC<Props> = ({
 	);
 	return (
 		<Picker selectedValue={value} onValueChange={onChange}>
-			{availableUsers.map((user) => {
-				return <Picker.Item key={user.id} label={user.name} value={user.id} />;
-			})}
+			{availableUsers.map((user) => (
+				<Picker.Item key={user.id} label={user.name} value={user.id} />
+			))}
 			<Picker.Item label="load more" value={LOAD_MORE_OPTION} />
 		</Picker>
 	);

@@ -36,12 +36,11 @@ export const updateItemParts = (
 	input: ReceiptItemsGetInput,
 	itemId: ReceiptItemsId,
 	updater: (parts: ReceiptItemPart[]) => ReceiptItemPart[]
-) => {
-	return updateReceiptItemById(trpc, input, itemId, (item) => ({
+) =>
+	updateReceiptItemById(trpc, input, itemId, (item) => ({
 		...item,
 		parts: updater(item.parts),
 	}));
-};
 
 export const updateItemPart = (
 	trpc: TRPCReactContext,
@@ -49,8 +48,7 @@ export const updateItemPart = (
 	itemId: ReceiptItemsId,
 	userId: UsersId,
 	updater: (part: ReceiptItemPart) => ReceiptItemPart
-) => {
-	return updateItemParts(trpc, input, itemId, (parts) =>
+) =>
+	updateItemParts(trpc, input, itemId, (parts) =>
 		parts.map((part) => (part.userId === userId ? updater(part) : part))
 	);
-};

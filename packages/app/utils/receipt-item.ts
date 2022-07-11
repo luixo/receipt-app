@@ -14,8 +14,8 @@ export const calculateReceiptItemsWithSums = (
 	items: ReceiptItem[],
 	userIds: UsersId[],
 	decimalsDigits = 2
-): ReceiptItemWithSums[] => {
-	return items.map((item) => {
+): ReceiptItemWithSums[] =>
+	items.map((item) => {
 		const decimalsPower = 10 ** decimalsDigits;
 		const itemPriceDecimal = item.quantity * item.price * decimalsPower;
 		const totalParts = item.parts.reduce(
@@ -47,4 +47,3 @@ export const calculateReceiptItemsWithSums = (
 				})),
 		};
 	});
-};

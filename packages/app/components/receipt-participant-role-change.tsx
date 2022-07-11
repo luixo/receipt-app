@@ -27,9 +27,9 @@ export const ReceiptParticipantRoleChange: React.FC<Props> = ({
 	return (
 		<>
 			<Picker selectedValue={selectedRole} onValueChange={setSelectedRole}>
-				{ROLES.map((role) => {
-					return <Picker.Item key={role} label={role} value={role} />;
-				})}
+				{ROLES.map((role) => (
+					<Picker.Item key={role} label={role} value={role} />
+				))}
 			</Picker>
 			<ReactNative.Button
 				title={`Change to ${selectedRole}`}

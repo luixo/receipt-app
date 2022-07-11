@@ -29,72 +29,70 @@ export type AppParamList = {
 
 const Stack = createNativeStackNavigator<AppParamList>();
 
-export const NativeNavigation: React.FC = () => {
-	return (
-		<Stack.Navigator>
-			<Stack.Screen
-				name="home"
-				component={HomeScreen}
-				options={{
-					title: "Home",
-				}}
-			/>
-			<Stack.Screen
-				name="register"
-				component={RegisterScreen}
-				options={{
-					title: "Register",
-				}}
-			/>
-			<Stack.Screen
-				name="login"
-				component={LoginScreen}
-				options={{
-					title: "Login",
-				}}
-			/>
-			<Stack.Screen
-				name="account"
-				component={AccountScreen}
-				options={{
-					title: "Account",
-				}}
-			/>
-			<Stack.Screen
-				name="receipts"
-				component={ReceiptsScreen}
-				options={{
-					title: "Receipts",
-				}}
-			/>
-			<Stack.Screen
-				name="receipt"
-				component={ReceiptScreen}
-				options={{
-					title: "Receipt",
-				}}
-			/>
-			<Stack.Screen
-				name="users"
-				component={UsersScreen}
-				options={{
-					title: "Users",
-				}}
-			/>
-			<Stack.Screen
-				name="user"
-				component={UserScreen}
-				options={{
-					title: "User",
-				}}
-			/>
-			<Stack.Screen
-				name="changePassword"
-				component={ChangePasswordScreen}
-				options={{
-					title: "Change password",
-				}}
-			/>
-		</Stack.Navigator>
-	);
-};
+export const NativeNavigation: React.FC = () => (
+	<Stack.Navigator>
+		<Stack.Screen
+			name="home"
+			component={HomeScreen}
+			options={{
+				title: "Home",
+			}}
+		/>
+		<Stack.Screen
+			name="register"
+			component={RegisterScreen}
+			options={{
+				title: "Register",
+			}}
+		/>
+		<Stack.Screen
+			name="login"
+			component={LoginScreen}
+			options={{
+				title: "Login",
+			}}
+		/>
+		<Stack.Screen
+			name="account"
+			component={AccountScreen}
+			options={{
+				title: "Account",
+			}}
+		/>
+		<Stack.Screen
+			name="receipts"
+			component={ReceiptsScreen}
+			options={{
+				title: "Receipts",
+			}}
+		/>
+		<Stack.Screen
+			name="receipt"
+			component={ReceiptScreen}
+			options={{
+				title: "Receipt",
+			}}
+		/>
+		<Stack.Screen
+			name="users"
+			component={UsersScreen}
+			options={{
+				title: "Users",
+			}}
+		/>
+		<Stack.Screen
+			name="user"
+			component={UserScreen}
+			options={{
+				title: "User",
+			}}
+		/>
+		<Stack.Screen
+			name="changePassword"
+			component={ChangePasswordScreen}
+			options={{
+				title: "Change password",
+			}}
+		/>
+	</Stack.Navigator>
+);

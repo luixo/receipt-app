@@ -48,7 +48,6 @@ module.exports = {
 		"consistent-return": "off",
 		// TODO: turn on
 		"import/order": "off",
-		"arrow-body-style": "off",
 		"import/no-extraneous-dependencies": "off",
 	},
 	overrides: [

@@ -8,10 +8,9 @@ export const getReceiptItemById = <
 	database: Database,
 	id: ReceiptItemsId,
 	selectExpression: SE[]
-): Promise<Selection<ReceiptsDatabase, "receiptItems", SE> | undefined> => {
-	return database
+): Promise<Selection<ReceiptsDatabase, "receiptItems", SE> | undefined> =>
+	database
 		.selectFrom("receiptItems")
 		.select(selectExpression)
 		.where("id", "=", id)
 		.executeTakeFirst();
-};

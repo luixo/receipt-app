@@ -21,26 +21,24 @@ export const ReceiptItems: React.FC<Props> = ({
 	role,
 	currency,
 	receiptId,
-}) => {
-	return (
-		<Block name={`Total: ${data.items.length} items`}>
-			<ReceiptParticipantsScreen
-				data={data}
+}) => (
+	<Block name={`Total: ${data.items.length} items`}>
+		<ReceiptParticipantsScreen
+			data={data}
+			receiptItemsInput={receiptItemsInput}
+			role={role}
+			currency={currency}
+			receiptId={receiptId}
+		/>
+		<AddReceiptItemForm receiptItemsInput={receiptItemsInput} />
+		{data.items.map((receiptItem) => (
+			<ReceiptItem
+				key={receiptItem.id}
+				receiptItem={receiptItem}
+				receiptParticipants={data.participants}
 				receiptItemsInput={receiptItemsInput}
 				role={role}
-				currency={currency}
-				receiptId={receiptId}
 			/>
-			<AddReceiptItemForm receiptItemsInput={receiptItemsInput} />
-			{data.items.map((receiptItem) => (
-				<ReceiptItem
-					key={receiptItem.id}
-					receiptItem={receiptItem}
-					receiptParticipants={data.participants}
-					receiptItemsInput={receiptItemsInput}
-					role={role}
-				/>
-			))}
-		</Block>
-	);
-};
+		))}
+	</Block>
+);

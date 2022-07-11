@@ -15,6 +15,5 @@ export const setAuthCookie = (
 	});
 };
 
-export const resetAuthCookie = (res: ServerResponse) => {
-	return setAuthCookie(res, "", new Date());
-};
+export const resetAuthCookie = (res: ServerResponse) =>
+	setAuthCookie(res, "", new Date());

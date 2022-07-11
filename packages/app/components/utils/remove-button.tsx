@@ -16,10 +16,8 @@ export const RemoveButton: React.FC<Props> = ({
 	children,
 	onPress,
 	...props
-}) => {
-	return (
-		<ReactNative.TouchableOpacity {...props}>
-			<Button title={children} disabled={props.disabled} onPress={onPress} />
-		</ReactNative.TouchableOpacity>
-	);
-};
+}) => (
+	<ReactNative.TouchableOpacity {...props}>
+		<Button title={children} disabled={props.disabled} onPress={onPress} />
+	</ReactNative.TouchableOpacity>
+);

@@ -9,11 +9,10 @@ export const getItemParticipant = <
 	userId: UsersId,
 	itemId: ReceiptItemsId,
 	selectExpression: SE[]
-): Promise<Selection<ReceiptsDatabase, "itemParticipants", SE> | undefined> => {
-	return database
+): Promise<Selection<ReceiptsDatabase, "itemParticipants", SE> | undefined> =>
+	database
 		.selectFrom("itemParticipants")
 		.where("itemId", "=", itemId)
 		.where("userId", "=", userId)
 		.select(selectExpression)
 		.executeTakeFirst();
-};

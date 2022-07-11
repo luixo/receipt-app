@@ -41,10 +41,9 @@ export const getReceiptById = <SE extends ReceiptsSelectExpression<"receipts">>(
 	database: Database,
 	id: ReceiptsId,
 	selectExpression: SE[]
-): Promise<Selection<ReceiptsDatabase, "receipts", SE> | undefined> => {
-	return database
+): Promise<Selection<ReceiptsDatabase, "receipts", SE> | undefined> =>
+	database
 		.selectFrom("receipts")
 		.select(selectExpression)
 		.where("id", "=", id)
 		.executeTakeFirst();
-};

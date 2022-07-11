@@ -47,8 +47,8 @@ export const updateReceiptItemById = (
 	input: ReceiptItemsGetInput,
 	itemId: ReceiptItemsId,
 	updater: (item: ReceiptItem) => ReceiptItem
-) => {
-	return updateReceiptItems(trpc, input, (items) => {
+) =>
+	updateReceiptItems(trpc, input, (items) => {
 		const itemIndex = items.findIndex((item) => item.id === itemId);
 		if (itemIndex === -1) {
 			return items;
@@ -59,4 +59,3 @@ export const updateReceiptItemById = (
 			...items.slice(itemIndex + 1),
 		];
 	});
-};

@@ -5,12 +5,11 @@ export const useSubmitHandler = <F, T = unknown>(
 	fn: (values: F) => Promise<T>,
 	deps: unknown[],
 	onDone?: () => void
-) => {
-	return useAsyncCallback(async (isMount, values) => {
+) =>
+	useAsyncCallback(async (isMount, values) => {
 		await fn(values as F);
 		if (!isMount()) {
 			return;
 		}
 		onDone?.();
 	}, deps) as SubmitHandler<F>;
-};
