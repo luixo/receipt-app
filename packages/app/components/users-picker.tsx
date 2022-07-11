@@ -2,7 +2,7 @@ import React from "react";
 
 import { Picker } from "@react-native-picker/picker";
 import { UsersId } from "next-app/src/db/models";
-import { InfiniteData } from "react-query";
+import type { InfiniteData } from "react-query";
 
 import { TRPCQueryOutput } from "../trpc";
 

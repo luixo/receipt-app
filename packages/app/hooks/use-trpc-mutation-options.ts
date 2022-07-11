@@ -1,6 +1,6 @@
 import React from "react";
 
-import { MutationOptions } from "react-query";
+import type { MutationOptions } from "react-query";
 
 import {
 	trpc,

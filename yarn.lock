@@ -8924,6 +8924,14 @@ expo-cli@^5.3.1:
     wrap-ansi "^7.0.0"
     xdl "59.2.31"
 
+expo-constants@^13.0.2:
+  version "13.1.1"
+  resolved "https://registry.yarnpkg.com/expo-constants/-/expo-constants-13.1.1.tgz#78c26c760cc63cd5608bc4b51bd159d7339d8054"
+  integrity sha512-QRVHrrMCLenBzWZ8M+EvCXM+jjdQzFMW27YQHRac3SGGoND1hWr81scOmGwlFo2wLZrYXm8HcYt1E6ry3IIwrA==
+  dependencies:
+    "@expo/config" "^6.0.14"
+    uuid "^3.3.2"
+
 expo-constants@~13.0.0, expo-constants@~13.0.2:
   version "13.0.2"
   resolved "https://registry.yarnpkg.com/expo-constants/-/expo-constants-13.0.2.tgz#b489ecd575cc82a9a0b3dfbf2385d45a44300eb1"

@@ -1,18 +1,26 @@
 import { createReactQueryHooks, TRPCClientErrorLike } from "@trpc/react";
 import { TRPCContextState } from "@trpc/react/dist/declarations/src/internals/context";
-import { Procedure } from "@trpc/server/dist/declarations/src/internals/procedure";
-import {
-	Router,
+import type { Procedure } from "@trpc/server/dist/declarations/src/internals/procedure";
+import type {
+	Router as GenericRouter,
 	ProcedureRecord,
 } from "@trpc/server/dist/declarations/src/router";
 import type { AppRouter } from "next-app/pages/api/trpc/[trpc]";
-import {
+import type {
 	UseInfiniteQueryResult,
 	UseMutationResult,
 	UseQueryResult,
 } from "react-query";
 
-type AnyRouter<TContext = any> = Router<any, TContext, any, any, any, any, any>;
+type AnyRouter<TContext = any> = GenericRouter<
+	any,
+	TContext,
+	any,
+	any,
+	any,
+	any,
+	any
+>;
 type AnyProcedure = Procedure<any, any, any, any, any, any, any>;
 type AnyProcedureRecord = ProcedureRecord<any, any, any, any, any, any>;
 

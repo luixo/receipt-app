@@ -43,6 +43,7 @@
 		"lint": "eslint . --ext .js,.jsx,.ts,.tsx"
 	},
 	"dependencies": {
+		"dripsy": "^3.6.0",
 		"expo": "~44.0.2",
 		"expo-cli": "^5.3.1",
 		"expo-splash-screen": "~0.14.1",
@@ -51,7 +52,8 @@
 		"react": "17.0.1",
 		"react-dom": "17.0.1",
 		"react-native": "0.64.3",
-		"react-native-web": "0.17.1"
+		"react-native-web": "0.17.1",
+		"react-query": "^3.39.0"
 	},
 	"version": "1.0.0",
 	"pre-commit": [

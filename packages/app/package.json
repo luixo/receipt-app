@@ -3,15 +3,15 @@
 	"name": "app",
 	"main": "index.ts",
 	"dependencies": {
+		"@expo/html-elements": "^0.0.1",
 		"@react-native-picker/picker": "^2.4.1",
 		"@react-navigation/native": "^6.0.8",
-		"@trpc/client": "^9.24.0",
 		"@trpc/react": "^9.24.0",
-		"dripsy": "^3.6.0",
+		"expo-app": "*",
+		"expo-constants": "^13.0.2",
 		"expo-linking": "^3.0.0",
 		"next-app": "*",
 		"react-hook-form": "^7.31.3",
-		"react-query": "^3.39.0",
 		"solito": "latest",
 		"superjson": "^1.9.1",
 		"uuid": "^8.3.2"

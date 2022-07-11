@@ -1,5 +1,5 @@
 import Constants from "expo-constants";
-import { QueryClientConfig } from "react-query";
+import type { QueryClientConfig } from "react-query";
 
 import { MINUTE } from "./time";
 

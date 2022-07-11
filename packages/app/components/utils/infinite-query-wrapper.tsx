@@ -1,6 +1,6 @@
 import React from "react";
 
-import { InfiniteData } from "react-query";
+import type { InfiniteData } from "react-query";
 
 import {
 	TRPCInfiniteQueryKey,
