@@ -54,21 +54,21 @@ const deleteMutationOptions: UseContextedMutationOptions<
 	}
 > = {
 	onMutate:
-		(trpc, { pagedInput, input }) =>
+		(trpcContext, { pagedInput, input }) =>
 		({ id }) => {
-			const pagedSnapshot = getPagedUserById(trpc, pagedInput, id);
-			const snapshot = getUserById(trpc, input);
-			updatePagedUsers(trpc, pagedInput, (userPage) =>
+			const pagedSnapshot = getPagedUserById(trpcContext, pagedInput, id);
+			const snapshot = getUserById(trpcContext, input);
+			updatePagedUsers(trpcContext, pagedInput, (userPage) =>
 				userPage.filter((user) => user.id !== id)
 			);
-			updateUser(trpc, input, () => undefined);
+			updateUser(trpcContext, input, () => undefined);
 			return { pagedSnapshot, snapshot };
 		},
 	onError:
-		(trpc, { pagedInput, input }) =>
+		(trpcContext, { pagedInput, input }) =>
 		(_error, _variables, { pagedSnapshot, snapshot } = {}) => {
 			if (pagedSnapshot) {
-				updatePagedUsers(trpc, pagedInput, (userPage, pageIndex) => {
+				updatePagedUsers(trpcContext, pagedInput, (userPage, pageIndex) => {
 					if (pageIndex !== pagedSnapshot.pageIndex) {
 						return userPage;
 					}
@@ -80,7 +80,7 @@ const deleteMutationOptions: UseContextedMutationOptions<
 				});
 			}
 			if (snapshot) {
-				updateUser(trpc, input, () => snapshot);
+				updateUser(trpcContext, input, () => snapshot);
 			}
 		},
 };
@@ -114,18 +114,22 @@ const updateMutationOptions: UseContextedMutationOptions<
 	{ pagedInput: UsersGetPagedInput; input: UsersGetInput }
 > = {
 	onMutate:
-		(trpc, { pagedInput, input }) =>
+		(trpcContext, { pagedInput, input }) =>
 		(updateObject) => {
-			const pagedSnapshot = getPagedUserById(trpc, pagedInput, updateObject.id);
-			updatePagedUsers(trpc, pagedInput, (items) =>
+			const pagedSnapshot = getPagedUserById(
+				trpcContext,
+				pagedInput,
+				updateObject.id
+			);
+			updatePagedUsers(trpcContext, pagedInput, (items) =>
 				items.map((item) =>
 					item.id === updateObject.id
 						? applyPagedUpdate(item, updateObject.update)
 						: item
 				)
 			);
-			const snapshot = getUserById(trpc, input);
-			updateUser(trpc, input, (user) =>
+			const snapshot = getUserById(trpcContext, input);
+			updateUser(trpcContext, input, (user) =>
 				applyUpdate({ ...user, dirty: true }, updateObject.update)
 			);
 			return {
@@ -134,22 +138,22 @@ const updateMutationOptions: UseContextedMutationOptions<
 			};
 		},
 	onSuccess:
-		(trpc, { input }) =>
+		(trpcContext, { input }) =>
 		() => {
-			updateUser(trpc, input, (user) => ({ ...user, dirty: false }));
+			updateUser(trpcContext, input, (user) => ({ ...user, dirty: false }));
 		},
 	onError:
-		(trpc, { pagedInput, input }) =>
+		(trpcContext, { pagedInput, input }) =>
 		(_error, _variables, { pagedSnapshot, snapshot } = {}) => {
 			if (pagedSnapshot) {
-				updatePagedUsers(trpc, pagedInput, (page) =>
+				updatePagedUsers(trpcContext, pagedInput, (page) =>
 					page.map((lookupUser) =>
 						lookupUser.id === pagedSnapshot.id ? pagedSnapshot : lookupUser
 					)
 				);
 			}
 			if (snapshot) {
-				updateUser(trpc, input, () => snapshot);
+				updateUser(trpcContext, input, () => snapshot);
 			}
 		},
 };
@@ -159,9 +163,9 @@ const connectMutationOptions: UseContextedMutationOptions<
 	AccountsId,
 	{ pagedInput: UsersGetPagedInput; input: UsersGetInput }
 > = {
-	onMutate: (trpc) => (variables) => {
+	onMutate: (trpcContext) => (variables) => {
 		const temporaryAccountId = v4();
-		updateOutboundIntentions(trpc, (intentions) => [
+		updateOutboundIntentions(trpcContext, (intentions) => [
 			...intentions,
 			{
 				accountId: temporaryAccountId,
@@ -173,42 +177,46 @@ const connectMutationOptions: UseContextedMutationOptions<
 		return temporaryAccountId;
 	},
 	onSuccess:
-		(trpc, { input, pagedInput }) =>
+		(trpcContext, { input, pagedInput }) =>
 		(
 			{ id: actualAccountId, userName, connected },
 			variables,
 			temporaryAccountId
 		) => {
 			if (connected) {
-				updateUser(trpc, input, (user) => ({
+				updateUser(trpcContext, input, (user) => ({
 					...user,
 					email: variables.email,
 				}));
-				updatePagedUsers(trpc, pagedInput, (page) =>
+				updatePagedUsers(trpcContext, pagedInput, (page) =>
 					page.map((user) =>
 						variables.userId === user.id
 							? { ...user, email: variables.email }
 							: user
 					)
 				);
-				updateOutboundIntentions(trpc, (intentions) =>
+				updateOutboundIntentions(trpcContext, (intentions) =>
 					intentions.filter(
 						(intention) => intention.accountId !== temporaryAccountId
 					)
 				);
 			} else {
-				updateOutboundIntention(trpc, temporaryAccountId, (intention) => ({
-					...intention,
-					accountId: actualAccountId,
-					userName,
-				}));
+				updateOutboundIntention(
+					trpcContext,
+					temporaryAccountId,
+					(intention) => ({
+						...intention,
+						accountId: actualAccountId,
+						userName,
+					})
+				);
 			}
 		},
-	onError: (trpc) => (_error, _variables, temporaryAccountId) => {
+	onError: (trpcContext) => (_error, _variables, temporaryAccountId) => {
 		if (!temporaryAccountId) {
 			return;
 		}
-		updateOutboundIntentions(trpc, (intentions) =>
+		updateOutboundIntentions(trpcContext, (intentions) =>
 			intentions.filter(
 				(intention) => intention.accountId !== temporaryAccountId
 			)

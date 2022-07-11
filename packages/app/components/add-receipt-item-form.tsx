@@ -24,9 +24,9 @@ const mutationOptions: UseContextedMutationOptions<
 	ReceiptsId,
 	ReceiptItemsGetInput
 > = {
-	onMutate: (trpc, input) => (nextItemForm) => {
+	onMutate: (trpcContext, input) => (nextItemForm) => {
 		const temporaryId = v4();
-		updateReceiptItems(trpc, input, (items) => [
+		updateReceiptItems(trpcContext, input, (items) => [
 			...items,
 			{
 				id: temporaryId,
@@ -38,18 +38,18 @@ const mutationOptions: UseContextedMutationOptions<
 		]);
 		return temporaryId;
 	},
-	onError: (trpc, input) => (_error, _variables, temporaryId) => {
-		updateReceiptItems(trpc, input, (items) =>
+	onError: (trpcContext, input) => (_error, _variables, temporaryId) => {
+		updateReceiptItems(trpcContext, input, (items) =>
 			items.filter((item) => item.id !== temporaryId)
 		);
 	},
-	onSuccess: (trpc, input) => (remoteId, _variables, temporaryId) => {
-		updateReceiptItems(trpc, input, (items) =>
+	onSuccess: (trpcContext, input) => (remoteId, _variables, temporaryId) => {
+		updateReceiptItems(trpcContext, input, (items) =>
 			items.map((item) =>
 				item.id === temporaryId ? { ...item, id: remoteId, dirty: false } : item
 			)
 		);
-		updateReceiptSum(trpc, input);
+		updateReceiptSum(trpcContext, input);
 	},
 };
 

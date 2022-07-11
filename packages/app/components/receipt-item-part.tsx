@@ -28,23 +28,23 @@ const deleteMutationOptions: UseContextedMutationOptions<
 	ReturnType<typeof getReceiptItemPartWithIndex>,
 	ReceiptItemsGetInput
 > = {
-	onMutate: (trpc, input) => (variables) => {
+	onMutate: (trpcContext, input) => (variables) => {
 		const snapshot = getReceiptItemPartWithIndex(
-			trpc,
+			trpcContext,
 			input,
 			variables.itemId,
 			variables.userId
 		);
-		updateItemParts(trpc, input, variables.itemId, (participants) =>
+		updateItemParts(trpcContext, input, variables.itemId, (participants) =>
 			participants.filter((part) => part.userId !== variables.userId)
 		);
 		return snapshot;
 	},
-	onError: (trpc, input) => (_error, variables, snapshot) => {
+	onError: (trpcContext, input) => (_error, variables, snapshot) => {
 		if (!snapshot) {
 			return;
 		}
-		updateItemParts(trpc, input, variables.itemId, (participants) => [
+		updateItemParts(trpcContext, input, variables.itemId, (participants) => [
 			...participants.slice(0, snapshot.index),
 			snapshot.item,
 			...participants.slice(snapshot.index),
@@ -72,15 +72,15 @@ const updateMutationOptions: UseContextedMutationOptions<
 	| undefined,
 	ReceiptItemsGetInput
 > = {
-	onMutate: (trpc, input) => (variables) => {
+	onMutate: (trpcContext, input) => (variables) => {
 		const snapshot = getReceiptItemPartWithIndex(
-			trpc,
+			trpcContext,
 			input,
 			variables.itemId,
 			variables.userId
 		);
 		updateItemPart(
-			trpc,
+			trpcContext,
 			input,
 			variables.itemId,
 			variables.userId,
@@ -88,21 +88,21 @@ const updateMutationOptions: UseContextedMutationOptions<
 		);
 		return snapshot?.item;
 	},
-	onSuccess: (trpc, input) => (_error, variables) => {
+	onSuccess: (trpcContext, input) => (_error, variables) => {
 		updateItemPart(
-			trpc,
+			trpcContext,
 			input,
 			variables.itemId,
 			variables.userId,
 			(participant) => ({ ...participant, dirty: false })
 		);
 	},
-	onError: (trpc, input) => (_error, variables, snapshotItem) => {
+	onError: (trpcContext, input) => (_error, variables, snapshotItem) => {
 		if (!snapshotItem) {
 			return;
 		}
 		updateItemPart(
-			trpc,
+			trpcContext,
 			input,
 			variables.itemId,
 			variables.userId,

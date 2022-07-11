@@ -35,34 +35,37 @@ const acceptMutationOptions: UseContextedMutationOptions<
 	ReturnType<typeof getInboundIntention>,
 	{ pagedInput: UsersGetPagedInput; input: UsersGetInput }
 > = {
-	onMutate: (trpc) => (variables) => {
-		const intentionSnapshot = getInboundIntention(trpc, variables.accountId);
-		updateInboundIntentions(trpc, (intentions) =>
+	onMutate: (trpcContext) => (variables) => {
+		const intentionSnapshot = getInboundIntention(
+			trpcContext,
+			variables.accountId
+		);
+		updateInboundIntentions(trpcContext, (intentions) =>
 			intentions.filter(
 				(intention) => intention.accountId !== variables.accountId
 			)
 		);
 		return intentionSnapshot;
 	},
-	onError: (trpc) => (_error, _variables, intentionSnapshot) => {
+	onError: (trpcContext) => (_error, _variables, intentionSnapshot) => {
 		if (!intentionSnapshot) {
 			return;
 		}
-		updateInboundIntentions(trpc, (intentions) => [
+		updateInboundIntentions(trpcContext, (intentions) => [
 			...intentions.slice(0, intentionSnapshot.index),
 			intentionSnapshot.intention,
 			...intentions.slice(intentionSnapshot.index),
 		]);
 	},
 	onSuccess:
-		(trpc, { input, pagedInput }) =>
+		(trpcContext, { input, pagedInput }) =>
 		(email, variables) => {
-			updateUser(trpc, input, (user) => ({
+			updateUser(trpcContext, input, (user) => ({
 				...user,
 				email,
 				dirty: false,
 			}));
-			updatePagedUsers(trpc, pagedInput, (page) =>
+			updatePagedUsers(trpcContext, pagedInput, (page) =>
 				page.map((user) =>
 					variables.userId === user.id ? { ...user, email, dirty: false } : user
 				)
@@ -74,23 +77,23 @@ const rejectMutationOptions: UseContextedMutationOptions<
 	"account-connection-intentions.reject",
 	ReturnType<typeof getInboundIntention>
 > = {
-	onMutate: (trpc) => (variables) => {
+	onMutate: (trpcContext) => (variables) => {
 		const intentionSnapshot = getInboundIntention(
-			trpc,
+			trpcContext,
 			variables.sourceAccountId
 		);
-		updateInboundIntentions(trpc, (intentions) =>
+		updateInboundIntentions(trpcContext, (intentions) =>
 			intentions.filter(
 				(intention) => intention.accountId !== variables.sourceAccountId
 			)
 		);
 		return intentionSnapshot;
 	},
-	onError: (trpc) => (_error, _variables, intentionSnapshot) => {
+	onError: (trpcContext) => (_error, _variables, intentionSnapshot) => {
 		if (!intentionSnapshot) {
 			return;
 		}
-		updateInboundIntentions(trpc, (intentions) => [
+		updateInboundIntentions(trpcContext, (intentions) => [
 			...intentions.slice(0, intentionSnapshot.index),
 			intentionSnapshot.intention,
 			...intentions.slice(intentionSnapshot.index),

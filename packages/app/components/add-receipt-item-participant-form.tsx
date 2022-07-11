@@ -22,8 +22,8 @@ const putMutationOptions: UseContextedMutationOptions<
 	void,
 	ReceiptItemsGetInput
 > = {
-	onMutate: (trpc, input) => (variables) => {
-		updateItemParts(trpc, input, variables.itemId, (parts) => [
+	onMutate: (trpcContext, input) => (variables) => {
+		updateItemParts(trpcContext, input, variables.itemId, (parts) => [
 			...parts,
 			{
 				userId: variables.userId,
@@ -32,14 +32,20 @@ const putMutationOptions: UseContextedMutationOptions<
 			},
 		]);
 	},
-	onSuccess: (trpc, input) => (_value, variables) => {
-		updateItemPart(trpc, input, variables.itemId, variables.userId, (part) => ({
-			...part,
-			dirty: false,
-		}));
+	onSuccess: (trpcContext, input) => (_value, variables) => {
+		updateItemPart(
+			trpcContext,
+			input,
+			variables.itemId,
+			variables.userId,
+			(part) => ({
+				...part,
+				dirty: false,
+			})
+		);
 	},
-	onError: (trpc, input) => (_error, variables) => {
-		updateItemParts(trpc, input, variables.itemId, (parts) =>
+	onError: (trpcContext, input) => (_error, variables) => {
+		updateItemParts(trpcContext, input, variables.itemId, (parts) =>
 			parts.filter((part) => variables.userId !== part.userId)
 		);
 	},

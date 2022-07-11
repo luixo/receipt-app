@@ -29,28 +29,29 @@ const deleteMutationOptions: UseContextedMutationOptions<
 	ReceiptItemsGetInput
 > = {
 	onMutate:
-		(trpc, input) =>
+		(trpcContext, input) =>
 		({ userId }) => {
 			const removedReceiptParticipant = getReceiptParticipantWithIndexById(
-				trpc,
+				trpcContext,
 				input,
 				userId
 			);
-			updateReceiptParticipants(trpc, input, (participants) =>
+			updateReceiptParticipants(trpcContext, input, (participants) =>
 				participants.filter((participant) => participant.userId !== userId)
 			);
 			return removedReceiptParticipant;
 		},
-	onError: (trpc, input) => (_error, _variables, removedReceiptParticipant) => {
-		if (!removedReceiptParticipant) {
-			return;
-		}
-		updateReceiptParticipants(trpc, input, (participants) => [
-			...participants.slice(0, removedReceiptParticipant.index),
-			removedReceiptParticipant.item,
-			...participants.slice(removedReceiptParticipant.index),
-		]);
-	},
+	onError:
+		(trpcContext, input) => (_error, _variables, removedReceiptParticipant) => {
+			if (!removedReceiptParticipant) {
+				return;
+			}
+			updateReceiptParticipants(trpcContext, input, (participants) => [
+				...participants.slice(0, removedReceiptParticipant.index),
+				removedReceiptParticipant.item,
+				...participants.slice(removedReceiptParticipant.index),
+			]);
+		},
 };
 
 const applyUpdate = (
@@ -71,13 +72,13 @@ const updateMutationOptions: UseContextedMutationOptions<
 	| undefined,
 	ReceiptItemsGetInput
 > = {
-	onMutate: (trpc, input) => (updateObject) => {
+	onMutate: (trpcContext, input) => (updateObject) => {
 		const snapshot = getReceiptParticipantWithIndexById(
-			trpc,
+			trpcContext,
 			input,
 			updateObject.userId
 		);
-		updateReceiptParticipants(trpc, input, (items) =>
+		updateReceiptParticipants(trpcContext, input, (items) =>
 			items.map((item) =>
 				item.userId === updateObject.userId
 					? applyUpdate({ ...item, dirty: true }, updateObject.update)
@@ -86,18 +87,18 @@ const updateMutationOptions: UseContextedMutationOptions<
 		);
 		return snapshot?.item;
 	},
-	onSuccess: (trpc, input) => (_result, updateObject) => {
-		updateReceiptParticipants(trpc, input, (items) =>
+	onSuccess: (trpcContext, input) => (_result, updateObject) => {
+		updateReceiptParticipants(trpcContext, input, (items) =>
 			items.map((item) =>
 				item.userId === updateObject.userId ? { ...item, dirty: false } : item
 			)
 		);
 	},
-	onError: (trpc, input) => (_error, _variables, snapshot) => {
+	onError: (trpcContext, input) => (_error, _variables, snapshot) => {
 		if (!snapshot) {
 			return;
 		}
-		updateReceiptParticipants(trpc, input, (items) =>
+		updateReceiptParticipants(trpcContext, input, (items) =>
 			items.map((item) => (item.userId === snapshot.userId ? snapshot : item))
 		);
 	},
@@ -152,11 +153,11 @@ export const ReceiptParticipant: React.FC<Props> = ({
 		useTrpcMutationOptions(updateMutationOptions, receiptItemsInput)
 	);
 	const changeRole = React.useCallback(
-		(role: AssignableRole) => {
+		(assignableRole: AssignableRole) => {
 			updateReceiptMutation.mutate({
 				receiptId: receiptItemsInput.receiptId,
 				userId: receiptParticipant.userId,
-				update: { type: "role", role },
+				update: { type: "role", role: assignableRole },
 			});
 		},
 		[

@@ -30,26 +30,30 @@ const deleteMutationOptions: UseContextedMutationOptions<
 	ReceiptItemsGetInput
 > = {
 	onMutate:
-		(trpc, input) =>
+		(trpcContext, input) =>
 		({ id: removedId }) => {
-			const removedItem = getReceiptItemWithIndexById(trpc, input, removedId);
-			updateReceiptItems(trpc, input, (items) =>
+			const removedItem = getReceiptItemWithIndexById(
+				trpcContext,
+				input,
+				removedId
+			);
+			updateReceiptItems(trpcContext, input, (items) =>
 				items.filter((item) => item.id !== removedId)
 			);
 			return removedItem;
 		},
-	onError: (trpc, input) => (_error, _variables, removedItem) => {
+	onError: (trpcContext, input) => (_error, _variables, removedItem) => {
 		if (!removedItem) {
 			return;
 		}
-		updateReceiptItems(trpc, input, (items) => [
+		updateReceiptItems(trpcContext, input, (items) => [
 			...items.slice(0, removedItem.index),
 			removedItem.item,
 			...items.slice(removedItem.index),
 		]);
 	},
-	onSuccess: (trpc, input) => () => {
-		updateReceiptSum(trpc, input);
+	onSuccess: (trpcContext, input) => () => {
+		updateReceiptSum(trpcContext, input);
 	},
 };
 
@@ -75,9 +79,13 @@ const updateMutationOptions: UseContextedMutationOptions<
 	| undefined,
 	ReceiptItemsGetInput
 > = {
-	onMutate: (trpc, input) => (updateObject) => {
-		const snapshot = getReceiptItemWithIndexById(trpc, input, updateObject.id);
-		updateReceiptItems(trpc, input, (items) =>
+	onMutate: (trpcContext, input) => (updateObject) => {
+		const snapshot = getReceiptItemWithIndexById(
+			trpcContext,
+			input,
+			updateObject.id
+		);
+		updateReceiptItems(trpcContext, input, (items) =>
 			items.map((item) =>
 				item.id === updateObject.id
 					? applyUpdate({ ...item, dirty: true }, updateObject.update)
@@ -86,8 +94,8 @@ const updateMutationOptions: UseContextedMutationOptions<
 		);
 		return snapshot?.item;
 	},
-	onSuccess: (trpc, input) => (_value, updateObject) => {
-		updateReceiptItems(trpc, input, (items) =>
+	onSuccess: (trpcContext, input) => (_value, updateObject) => {
+		updateReceiptItems(trpcContext, input, (items) =>
 			items.map((item) =>
 				item.id === updateObject.id ? { ...item, dirty: false } : item
 			)
@@ -96,14 +104,14 @@ const updateMutationOptions: UseContextedMutationOptions<
 			updateObject.update.type === "price" ||
 			updateObject.update.type === "quantity"
 		) {
-			updateReceiptSum(trpc, input);
+			updateReceiptSum(trpcContext, input);
 		}
 	},
-	onError: (trpc, input) => (_error, _variables, snapshotItem) => {
+	onError: (trpcContext, input) => (_error, _variables, snapshotItem) => {
 		if (!snapshotItem) {
 			return;
 		}
-		updateReceiptItems(trpc, input, (items) =>
+		updateReceiptItems(trpcContext, input, (items) =>
 			items.map((item) => (item.id === snapshotItem.id ? snapshotItem : item))
 		);
 	},

@@ -47,7 +47,6 @@ module.exports = {
 		"react/jsx-props-no-spreading": "off",
 		"consistent-return": "off",
 		// TODO: turn on
-		"@typescript-eslint/no-shadow": "off",
 		"import/order": "off",
 		"arrow-body-style": "off",
 		"import/no-extraneous-dependencies": "off",

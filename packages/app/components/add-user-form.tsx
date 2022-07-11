@@ -24,9 +24,9 @@ const putMutationOptions: UseContextedMutationOptions<
 	UsersId,
 	UsersGetPagedInput
 > = {
-	onMutate: (trpc, input) => (form) => {
+	onMutate: (trpcContext, input) => (form) => {
 		const temporaryId = v4();
-		updatePagedUsers(trpc, input, (page, index) => {
+		updatePagedUsers(trpcContext, input, (page, index) => {
 			if (index === 0) {
 				return [
 					{
@@ -43,19 +43,19 @@ const putMutationOptions: UseContextedMutationOptions<
 		});
 		return temporaryId;
 	},
-	onError: (trpc, input) => (_error, _variables, temporaryId) => {
+	onError: (trpcContext, input) => (_error, _variables, temporaryId) => {
 		if (!temporaryId) {
 			return;
 		}
-		updatePagedUsers(trpc, input, (page) =>
+		updatePagedUsers(trpcContext, input, (page) =>
 			page.filter((user) => user.id !== temporaryId)
 		);
 	},
-	onSuccess: (trpc, input) => (actualId, _variables, temporaryId) => {
+	onSuccess: (trpcContext, input) => (actualId, _variables, temporaryId) => {
 		if (!temporaryId) {
 			return;
 		}
-		updatePagedUsers(trpc, input, (page) =>
+		updatePagedUsers(trpcContext, input, (page) =>
 			page.map((user) =>
 				user.id === temporaryId ? { ...user, id: actualId, dirty: false } : user
 			)

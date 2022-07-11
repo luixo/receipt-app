@@ -17,23 +17,23 @@ const deleteMutationOptions: UseContextedMutationOptions<
 	"account-connection-intentions.delete",
 	ReturnType<typeof getOutboundIntention>
 > = {
-	onMutate: (trpc) => (variables) => {
+	onMutate: (trpcContext) => (variables) => {
 		const intentionSnapshot = getOutboundIntention(
-			trpc,
+			trpcContext,
 			variables.targetAccountId
 		);
-		updateOutboundIntentions(trpc, (intentions) =>
+		updateOutboundIntentions(trpcContext, (intentions) =>
 			intentions.filter(
 				(intention) => intention.accountId !== variables.targetAccountId
 			)
 		);
 		return intentionSnapshot;
 	},
-	onError: (trpc) => (_error, _variables, intentionSnapshot) => {
+	onError: (trpcContext) => (_error, _variables, intentionSnapshot) => {
 		if (!intentionSnapshot) {
 			return;
 		}
-		updateOutboundIntentions(trpc, (intentions) => [
+		updateOutboundIntentions(trpcContext, (intentions) => [
 			...intentions.slice(0, intentionSnapshot.index),
 			intentionSnapshot.intention,
 			...intentions.slice(intentionSnapshot.index),

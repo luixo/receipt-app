@@ -32,9 +32,9 @@ const mutationOptions: UseContextedMutationOptions<
 	}
 > = {
 	onMutate:
-		(trpc, { itemsInput, usersInput, name }) =>
+		(trpcContext, { itemsInput, usersInput, name }) =>
 		(form) => {
-			updateReceiptParticipants(trpc, itemsInput, (items) => [
+			updateReceiptParticipants(trpcContext, itemsInput, (items) => [
 				...items,
 				{
 					name: name || "unknown",
@@ -46,16 +46,20 @@ const mutationOptions: UseContextedMutationOptions<
 					added: new Date(),
 				},
 			]);
-			const addedUser = getAvailableUserById(trpc, usersInput, form.userId);
-			updateAvailableUsers(trpc, usersInput, (page) =>
+			const addedUser = getAvailableUserById(
+				trpcContext,
+				usersInput,
+				form.userId
+			);
+			updateAvailableUsers(trpcContext, usersInput, (page) =>
 				page.filter((user) => user.id !== form.userId)
 			);
 			return addedUser;
 		},
 	onSuccess:
-		(trpc, { itemsInput }) =>
+		(trpcContext, { itemsInput }) =>
 		({ added }, form) => {
-			updateReceiptParticipants(trpc, itemsInput, (participants) =>
+			updateReceiptParticipants(trpcContext, itemsInput, (participants) =>
 				participants.map((participant) =>
 					participant.userId === form.userId
 						? { ...participant, added, dirty: false }
@@ -64,15 +68,15 @@ const mutationOptions: UseContextedMutationOptions<
 			);
 		},
 	onError:
-		(trpc, { itemsInput, usersInput }) =>
+		(trpcContext, { itemsInput, usersInput }) =>
 		(_error, _variables, addedUserInfo) => {
 			if (!addedUserInfo) {
 				return;
 			}
-			updateReceiptParticipants(trpc, itemsInput, (items) =>
+			updateReceiptParticipants(trpcContext, itemsInput, (items) =>
 				items.filter((item) => item.userId !== addedUserInfo.user.id)
 			);
-			updateAvailableUsers(trpc, usersInput, (page, pageIndex) => {
+			updateAvailableUsers(trpcContext, usersInput, (page, pageIndex) => {
 				if (pageIndex !== addedUserInfo.pageIndex) {
 					return page;
 				}

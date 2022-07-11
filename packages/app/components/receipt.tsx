@@ -47,33 +47,37 @@ const deleteMutationOptions: UseContextedMutationOptions<
 	}
 > = {
 	onMutate:
-		(trpc, { pagedInput, input }) =>
+		(trpcContext, { pagedInput, input }) =>
 		({ id }) => {
-			const pagedSnapshot = getPagedReceiptById(trpc, pagedInput, id);
-			const snapshot = getReceiptById(trpc, input);
-			updatePagedReceipts(trpc, pagedInput, (receiptPage) =>
+			const pagedSnapshot = getPagedReceiptById(trpcContext, pagedInput, id);
+			const snapshot = getReceiptById(trpcContext, input);
+			updatePagedReceipts(trpcContext, pagedInput, (receiptPage) =>
 				receiptPage.filter((receipt) => receipt.id !== id)
 			);
-			updateReceipt(trpc, input, () => undefined);
+			updateReceipt(trpcContext, input, () => undefined);
 			return { pagedSnapshot, snapshot };
 		},
 	onError:
-		(trpc, { pagedInput, input }) =>
+		(trpcContext, { pagedInput, input }) =>
 		(_error, _variables, { pagedSnapshot, snapshot } = {}) => {
 			if (pagedSnapshot) {
-				updatePagedReceipts(trpc, pagedInput, (receiptPage, pageIndex) => {
-					if (pageIndex !== pagedSnapshot.pageIndex) {
-						return receiptPage;
+				updatePagedReceipts(
+					trpcContext,
+					pagedInput,
+					(receiptPage, pageIndex) => {
+						if (pageIndex !== pagedSnapshot.pageIndex) {
+							return receiptPage;
+						}
+						return [
+							...receiptPage.slice(0, pagedSnapshot.receiptIndex),
+							pagedSnapshot.receipt,
+							...receiptPage.slice(pagedSnapshot.receiptIndex),
+						];
 					}
-					return [
-						...receiptPage.slice(0, pagedSnapshot.receiptIndex),
-						pagedSnapshot.receipt,
-						...receiptPage.slice(pagedSnapshot.receiptIndex),
-					];
-				});
+				);
 			}
 			if (snapshot) {
-				updateReceipt(trpc, input, () => snapshot);
+				updateReceipt(trpcContext, input, () => snapshot);
 			}
 		},
 };
@@ -116,22 +120,22 @@ const updateMutationOptions: UseContextedMutationOptions<
 	{ pagedInput: ReceiptsGetPagedInput; input: ReceiptsGetInput }
 > = {
 	onMutate:
-		(trpc, { pagedInput, input }) =>
+		(trpcContext, { pagedInput, input }) =>
 		(updateObject) => {
 			const pagedSnapshot = getPagedReceiptById(
-				trpc,
+				trpcContext,
 				pagedInput,
 				updateObject.id
 			);
-			updatePagedReceipts(trpc, pagedInput, (items) =>
+			updatePagedReceipts(trpcContext, pagedInput, (items) =>
 				items.map((item) =>
 					item.id === updateObject.id
 						? applyPagedUpdate(item, updateObject.update)
 						: item
 				)
 			);
-			const snapshot = getReceiptById(trpc, input);
-			updateReceipt(trpc, input, (receipt) =>
+			const snapshot = getReceiptById(trpcContext, input);
+			updateReceipt(trpcContext, input, (receipt) =>
 				applyUpdate({ ...receipt, dirty: true }, updateObject.update)
 			);
 			return {
@@ -140,14 +144,17 @@ const updateMutationOptions: UseContextedMutationOptions<
 			};
 		},
 	onSuccess:
-		(trpc, { input }) =>
+		(trpcContext, { input }) =>
 		() =>
-			updateReceipt(trpc, input, (receipt) => ({ ...receipt, dirty: false })),
+			updateReceipt(trpcContext, input, (receipt) => ({
+				...receipt,
+				dirty: false,
+			})),
 	onError:
-		(trpc, { pagedInput, input }) =>
+		(trpcContext, { pagedInput, input }) =>
 		(_error, _variables, { pagedSnapshot, snapshot } = {}) => {
 			if (pagedSnapshot) {
-				updatePagedReceipts(trpc, pagedInput, (page) =>
+				updatePagedReceipts(trpcContext, pagedInput, (page) =>
 					page.map((lookupReceipt) =>
 						lookupReceipt.id === pagedSnapshot.id
 							? pagedSnapshot
@@ -156,7 +163,7 @@ const updateMutationOptions: UseContextedMutationOptions<
 				);
 			}
 			if (snapshot) {
-				updateReceipt(trpc, input, () => snapshot);
+				updateReceipt(trpcContext, input, () => snapshot);
 			}
 		},
 };
