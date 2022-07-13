@@ -5,6 +5,9 @@ const nextConfig = {
 	serverRuntimeConfig: {
 		port: process.env.PORT,
 	},
+	eslint: {
+		ignoreDuringBuilds: true,
+	},
 };
 
 const { withExpo } = require("@expo/next-adapter");
