@@ -9,7 +9,7 @@ import {
 	TRPCMutationKey,
 	TRPCMutationOutput,
 	TRPCReactContext,
-} from "../trpc";
+} from "app/trpc";
 
 export type TRPCMutationOptions<
 	Path extends TRPCMutationKey,

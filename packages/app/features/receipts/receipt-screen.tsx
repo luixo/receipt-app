@@ -2,16 +2,16 @@ import React from "react";
 
 import { createParam } from "solito";
 
-import { Receipt } from "../../components/receipt";
-import { ReceiptItems } from "../../components/receipt-items";
-import { BackButton } from "../../components/utils/back-button";
-import { Block } from "../../components/utils/block";
-import { QueryWrapper } from "../../components/utils/query-wrapper";
-import { trpc } from "../../trpc";
-import { ReceiptItemsGetInput } from "../../utils/queries/receipt-items";
-import { ReceiptsGetInput } from "../../utils/queries/receipts-get";
-import { DEFAULT_INPUT } from "../../utils/queries/receipts-get-paged";
-import { ScrollView } from "../../utils/styles";
+import { Receipt } from "app/components/receipt";
+import { ReceiptItems } from "app/components/receipt-items";
+import { BackButton } from "app/components/utils/back-button";
+import { Block } from "app/components/utils/block";
+import { QueryWrapper } from "app/components/utils/query-wrapper";
+import { trpc } from "app/trpc";
+import { ReceiptItemsGetInput } from "app/utils/queries/receipt-items";
+import { ReceiptsGetInput } from "app/utils/queries/receipts-get";
+import { DEFAULT_INPUT } from "app/utils/queries/receipts-get-paged";
+import { ScrollView } from "app/utils/styles";
 
 const { useParam } = createParam<{ id: string }>();
 

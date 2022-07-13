@@ -1,9 +1,13 @@
 import { Selection } from "kysely";
 import { z } from "zod";
 
-import { ReceiptsSelectExpression, ReceiptsDatabase, Database } from "../../db";
-import { ReceiptsId } from "../../db/models";
-import { role } from "../zod";
+import {
+	ReceiptsSelectExpression,
+	ReceiptsDatabase,
+	Database,
+} from "next-app/db";
+import { ReceiptsId } from "next-app/db/models";
+import { role } from "next-app/handlers/zod";
 
 type Role = z.infer<typeof role>;
 

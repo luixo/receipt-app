@@ -1,10 +1,9 @@
-import { UsersId } from "next-app/src/db/models";
-
 import {
 	TRPCInfiniteQueryInput,
 	TRPCQueryOutput,
 	TRPCReactContext,
-} from "../../trpc";
+} from "app/trpc";
+import { UsersId } from "next-app/src/db/models";
 
 type User = TRPCQueryOutput<"users.get-paged">[number];
 export type UsersGetPagedInput = TRPCInfiniteQueryInput<"users.get-paged">;

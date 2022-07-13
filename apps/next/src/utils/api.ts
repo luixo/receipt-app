@@ -3,8 +3,7 @@ import getConfig from "next/config";
 import superjson from "superjson";
 
 import { getSsrHost } from "app/utils/queries";
-
-import { AppRouter } from "../pages/api/trpc/[trpc]";
+import { AppRouter } from "next-app/pages/api/trpc/[trpc]";
 
 const nextConfig = getConfig();
 const client = createTRPCClient<AppRouter>({

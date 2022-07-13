@@ -1,11 +1,11 @@
 import React from "react";
 import * as ReactNative from "react-native";
 
-import { trpc } from "../trpc";
-import { Currency } from "../utils/currency";
+import { QueryWrapper } from "app/components/utils/query-wrapper";
+import { trpc } from "app/trpc";
+import { Currency } from "app/utils/currency";
 
 import { CurrenciesPicker } from "./currencies-picker";
-import { QueryWrapper } from "./utils/query-wrapper";
 
 type Props = {
 	initialCurrency: Currency;

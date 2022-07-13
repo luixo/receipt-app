@@ -6,8 +6,8 @@ import {
 	TRPCInfiniteQueryKey,
 	TRPCQueryOutput,
 	TRPCInfiniteQueryResult,
-} from "../../trpc";
-import { styled, Text } from "../../utils/styles";
+} from "app/trpc";
+import { styled, Text } from "app/utils/styles";
 
 const ErrorText = styled(Text)({
 	margin: "$m",

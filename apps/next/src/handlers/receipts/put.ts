@@ -3,10 +3,9 @@ import { v4 } from "uuid";
 import { z } from "zod";
 
 import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
-
-import { getDatabase } from "../../db";
-import { AuthorizedContext } from "../context";
-import { currency } from "../zod";
+import { getDatabase } from "next-app/db";
+import { AuthorizedContext } from "next-app/handlers/context";
+import { currency } from "next-app/handlers/zod";
 
 export const router = trpc.router<AuthorizedContext>().mutation("put", {
 	input: z.strictObject({

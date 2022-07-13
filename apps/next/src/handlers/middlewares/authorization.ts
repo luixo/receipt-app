@@ -4,11 +4,13 @@ import { sql } from "kysely";
 import { z } from "zod";
 
 import { DAY } from "app/utils/time";
-
-import { getDatabase } from "../../db";
-import { AUTH_COOKIE, resetAuthCookie } from "../../utils/auth-cookie";
-import { getCookie } from "../../utils/cookie";
-import { UnauthorizedContext, AuthorizedContext } from "../context";
+import { getDatabase } from "next-app/db";
+import {
+	UnauthorizedContext,
+	AuthorizedContext,
+} from "next-app/handlers/context";
+import { AUTH_COOKIE, resetAuthCookie } from "next-app/utils/auth-cookie";
+import { getCookie } from "next-app/utils/cookie";
 
 export const middleware: MiddlewareFunction<
 	UnauthorizedContext,

@@ -1,8 +1,8 @@
 import * as trpc from "@trpc/server";
 import { z } from "zod";
 
-import { getCurrencies } from "../../utils/currency";
-import { AuthorizedContext } from "../context";
+import { AuthorizedContext } from "next-app/handlers/context";
+import { getCurrencies } from "next-app/utils/currency";
 
 export const router = trpc.router<AuthorizedContext>().query("get-list", {
 	input: z.strictObject({

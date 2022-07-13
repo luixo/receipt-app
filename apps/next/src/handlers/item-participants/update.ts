@@ -2,15 +2,17 @@ import * as trpc from "@trpc/server";
 import { MutationObject } from "kysely";
 import { z } from "zod";
 
-import { ReceiptsDatabase, getDatabase } from "../../db";
-import { ReceiptItemsId, UsersId } from "../../db/models";
-import { AuthorizedContext } from "../context";
-import { getReceiptItemById } from "../receipt-items/utils";
-import { getReceiptById, getAccessRole } from "../receipts/utils";
-import { getUserById } from "../users/utils";
-import { flavored } from "../zod";
-
-import { getItemParticipant } from "./utils";
+import { ReceiptsDatabase, getDatabase } from "next-app/db";
+import { ReceiptItemsId, UsersId } from "next-app/db/models";
+import { AuthorizedContext } from "next-app/handlers/context";
+import { getItemParticipant } from "next-app/handlers/item-participants/utils";
+import { getReceiptItemById } from "next-app/handlers/receipt-items/utils";
+import {
+	getReceiptById,
+	getAccessRole,
+} from "next-app/handlers/receipts/utils";
+import { getUserById } from "next-app/handlers/users/utils";
+import { flavored } from "next-app/handlers/zod";
 
 export const router = trpc.router<AuthorizedContext>().mutation("update", {
 	input: z.strictObject({

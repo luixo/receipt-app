@@ -1,8 +1,7 @@
 import { v4 } from "uuid";
 
 import { DAY } from "app/utils/time";
-
-import { Database } from "../../db";
+import { Database } from "next-app/db";
 
 export const createAuthorizationSession = async (
 	database: Database,

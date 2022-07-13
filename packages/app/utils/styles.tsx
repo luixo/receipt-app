@@ -12,7 +12,7 @@ import {
 } from "dripsy";
 import { TextLink as BaseTextLink } from "solito/link";
 
-import { ColorModeContext } from "../contexts/color-mode-context";
+import { ColorModeContext } from "app/contexts/color-mode-context";
 
 const base = {
 	borderWidths: {

@@ -1,7 +1,11 @@
 import { Selection } from "kysely";
 
-import { ReceiptsSelectExpression, ReceiptsDatabase, Database } from "../../db";
-import { ReceiptItemsId, UsersId } from "../../db/models";
+import {
+	ReceiptsSelectExpression,
+	ReceiptsDatabase,
+	Database,
+} from "next-app/db";
+import { ReceiptItemsId, UsersId } from "next-app/db/models";
 
 export const getItemParticipant = <
 	SE extends ReceiptsSelectExpression<"itemParticipants">

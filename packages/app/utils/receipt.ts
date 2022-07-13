@@ -1,7 +1,9 @@
-import { TRPCReactContext } from "../trpc";
-
-import { ReceiptItemsGetInput } from "./queries/receipt-items";
-import { ReceiptsGetInput, updateReceipt } from "./queries/receipts-get";
+import { TRPCReactContext } from "app/trpc";
+import { ReceiptItemsGetInput } from "app/utils/queries/receipt-items";
+import {
+	ReceiptsGetInput,
+	updateReceipt,
+} from "app/utils/queries/receipts-get";
 
 const calculateReceiptSum = (
 	trpc: TRPCReactContext,

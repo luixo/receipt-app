@@ -1,13 +1,12 @@
 import * as trpc from "@trpc/server";
 import { z } from "zod";
 
-import { getDatabase } from "../../db";
-import { setAuthCookie } from "../../utils/auth-cookie";
-import { getHash } from "../../utils/crypto";
-import { UnauthorizedContext } from "../context";
-import { password } from "../zod";
-
-import { createAuthorizationSession } from "./utils";
+import { getDatabase } from "next-app/db";
+import { createAuthorizationSession } from "next-app/handlers/auth/utils";
+import { UnauthorizedContext } from "next-app/handlers/context";
+import { password } from "next-app/handlers/zod";
+import { setAuthCookie } from "next-app/utils/auth-cookie";
+import { getHash } from "next-app/utils/crypto";
 
 export const router = trpc.router<UnauthorizedContext>().mutation("login", {
 	input: z.strictObject({

@@ -1,10 +1,9 @@
-import { ReceiptsId } from "next-app/src/db/models";
-
 import {
 	TRPCInfiniteQueryInput,
 	TRPCQueryOutput,
 	TRPCReactContext,
-} from "../../trpc";
+} from "app/trpc";
+import { ReceiptsId } from "next-app/src/db/models";
 
 type Receipt = TRPCQueryOutput<"receipts.get-paged">[number];
 export type ReceiptsGetPagedInput =

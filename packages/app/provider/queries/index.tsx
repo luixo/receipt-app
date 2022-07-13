@@ -3,12 +3,12 @@ import React from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import superjson from "superjson";
 
-import { trpc } from "../../trpc";
+import { trpc } from "app/trpc";
 import {
 	getNativeBaseUrl,
 	getQueryClientConfig,
 	TRPC_ENDPOINT,
-} from "../../utils/queries";
+} from "app/utils/queries";
 
 export const QueriesProvider: React.FC<React.PropsWithChildren<object>> = ({
 	children,

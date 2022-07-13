@@ -1,11 +1,11 @@
 import React from "react";
 
-import { TRPCQueryOutput } from "../trpc";
-import { UsersGetPagedInput } from "../utils/queries/users-get-paged";
+import { Block } from "app/components/utils/block";
+import { TRPCQueryOutput } from "app/trpc";
+import { UsersGetPagedInput } from "app/utils/queries/users-get-paged";
 
 import { InboundConnectionIntention } from "./inbound-connection-intention";
 import { OutboundConnectionIntention } from "./outbound-connection-intention";
-import { Block } from "./utils/block";
 
 type InnerProps = {
 	data: TRPCQueryOutput<"account-connection-intentions.get-all">;

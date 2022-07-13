@@ -1,7 +1,11 @@
 import { Selection, SelectQueryBuilder } from "kysely";
 
-import { Database, ReceiptsSelectExpression, ReceiptsDatabase } from "../../db";
-import { UsersId } from "../../db/models";
+import {
+	Database,
+	ReceiptsSelectExpression,
+	ReceiptsDatabase,
+} from "next-app/db";
+import { UsersId } from "next-app/db/models";
 
 export const getUserById = <SE extends ReceiptsSelectExpression<"users">>(
 	database: Database,

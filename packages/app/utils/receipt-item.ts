@@ -1,6 +1,5 @@
+import { TRPCQueryOutput } from "app/trpc";
 import { ReceiptItemsId, UsersId } from "next-app/src/db/models";
-
-import { TRPCQueryOutput } from "../trpc";
 
 type ReceiptItemsResult = TRPCQueryOutput<"receipt-items.get">;
 type ReceiptItem = ReceiptItemsResult["items"][number];

@@ -22,12 +22,10 @@ import {
 	getSsrHost,
 	TRPC_ENDPOINT,
 } from "app/utils/queries";
-
-import { useColorModeCookies } from "../hooks/use-color-mode-cookies";
-import { AUTH_COOKIE } from "../utils/auth-cookie";
-import { getCookie, serialize } from "../utils/cookie";
-
-import type { AppRouter } from "./api/trpc/[trpc]";
+import { useColorModeCookies } from "next-app/hooks/use-color-mode-cookies";
+import type { AppRouter } from "next-app/pages/api/trpc/[trpc]";
+import { AUTH_COOKIE } from "next-app/utils/auth-cookie";
+import { getCookie, serialize } from "next-app/utils/cookie";
 
 const GlobalStyles: React.FC = () => {
 	const { theme } = useDripsyTheme();

@@ -3,14 +3,15 @@ import { MutationObject } from "kysely";
 import { z } from "zod";
 
 import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
-
-import { ReceiptsDatabase, getDatabase } from "../../db";
-import { ReceiptItemsId } from "../../db/models";
-import { AuthorizedContext } from "../context";
-import { getReceiptById, getAccessRole } from "../receipts/utils";
-import { flavored } from "../zod";
-
-import { getReceiptItemById } from "./utils";
+import { ReceiptsDatabase, getDatabase } from "next-app/db";
+import { ReceiptItemsId } from "next-app/db/models";
+import { AuthorizedContext } from "next-app/handlers/context";
+import { getReceiptItemById } from "next-app/handlers/receipt-items/utils";
+import {
+	getReceiptById,
+	getAccessRole,
+} from "next-app/handlers/receipts/utils";
+import { flavored } from "next-app/handlers/zod";
 
 export const router = trpc.router<AuthorizedContext>().mutation("update", {
 	input: z.strictObject({

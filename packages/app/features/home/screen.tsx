@@ -1,8 +1,8 @@
 import React from "react";
 import * as ReactNative from "react-native";
 
-import { trpc } from "../../trpc";
-import { styled, H1, TextLink, Text } from "../../utils/styles";
+import { trpc } from "app/trpc";
+import { styled, H1, TextLink, Text } from "app/utils/styles";
 
 const Wrapper = styled(ReactNative.View)({
 	flex: 1,

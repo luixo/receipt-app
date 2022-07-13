@@ -3,7 +3,7 @@ import * as ReactNative from "react-native";
 
 import { useLink } from "solito/link";
 
-import { styled } from "../../utils/styles";
+import { styled } from "app/utils/styles";
 
 type Props = {
 	href: string;

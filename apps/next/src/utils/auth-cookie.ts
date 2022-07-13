@@ -1,6 +1,6 @@
 import { ServerResponse } from "http";
 
-import { setCookie } from "./cookie";
+import { setCookie } from "next-app/utils/cookie";
 
 export const AUTH_COOKIE = "authToken";
 

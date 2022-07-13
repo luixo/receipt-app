@@ -1,7 +1,7 @@
 import React from "react";
 
-import { TRPCQueryKey, TRPCQueryOutput, TRPCQueryResult } from "../../trpc";
-import { styled, Text } from "../../utils/styles";
+import { TRPCQueryKey, TRPCQueryOutput, TRPCQueryResult } from "app/trpc";
+import { styled, Text } from "app/utils/styles";
 
 const ErrorText = styled(Text)({
 	margin: "$m",

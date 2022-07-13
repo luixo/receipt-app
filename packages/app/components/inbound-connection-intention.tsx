@@ -1,29 +1,28 @@
 import React from "react";
 import * as ReactNative from "react-native";
 
-import { UsersId } from "next-app/src/db/models";
-
+import { Block } from "app/components/utils/block";
+import { InfiniteQueryWrapper } from "app/components/utils/infinite-query-wrapper";
+import { MutationWrapper } from "app/components/utils/mutation-wrapper";
 import {
 	UseContextedMutationOptions,
 	useTrpcMutationOptions,
-} from "../hooks/use-trpc-mutation-options";
-import { trpc, TRPCQueryOutput } from "../trpc";
+} from "app/hooks/use-trpc-mutation-options";
+import { trpc, TRPCQueryOutput } from "app/trpc";
 import {
 	getInboundIntention,
 	updateInboundIntentions,
-} from "../utils/queries/account-connection-intentions-get-all";
-import { updateUser, UsersGetInput } from "../utils/queries/users-get";
+} from "app/utils/queries/account-connection-intentions-get-all";
+import { updateUser, UsersGetInput } from "app/utils/queries/users-get";
 import {
 	DEFAULT_INPUT,
 	updatePagedUsers,
 	UsersGetPagedInput,
-} from "../utils/queries/users-get-paged";
-import { styled, Text } from "../utils/styles";
+} from "app/utils/queries/users-get-paged";
+import { styled, Text } from "app/utils/styles";
+import { UsersId } from "next-app/src/db/models";
 
 import { UsersPicker } from "./users-picker";
-import { Block } from "./utils/block";
-import { InfiniteQueryWrapper } from "./utils/infinite-query-wrapper";
-import { MutationWrapper } from "./utils/mutation-wrapper";
 
 const ActionButton = styled(ReactNative.Button)({
 	padding: "$m",

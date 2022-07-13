@@ -3,28 +3,27 @@ import React from "react";
 import { useForm, Controller } from "react-hook-form";
 import { v4 } from "uuid";
 
-import { AccountsId, ReceiptsId } from "next-app/src/db/models";
-
-import { useSubmitHandler } from "../hooks/use-submit-handler";
+import { AddButton } from "app/components/utils/add-button";
+import { Block } from "app/components/utils/block";
+import { MutationWrapper } from "app/components/utils/mutation-wrapper";
+import { QueryWrapper } from "app/components/utils/query-wrapper";
+import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import {
 	UseContextedMutationOptions,
 	useTrpcMutationOptions,
-} from "../hooks/use-trpc-mutation-options";
-import { trpc } from "../trpc";
-import { Currency } from "../utils/currency";
-import { addReceipt } from "../utils/queries/receipts-get";
+} from "app/hooks/use-trpc-mutation-options";
+import { trpc } from "app/trpc";
+import { Currency } from "app/utils/currency";
+import { addReceipt } from "app/utils/queries/receipts-get";
 import {
 	updatePagedReceipts,
 	ReceiptsGetPagedInput,
-} from "../utils/queries/receipts-get-paged";
-import { TextInput, Text } from "../utils/styles";
-import { VALIDATIONS_CONSTANTS } from "../utils/validation";
+} from "app/utils/queries/receipts-get-paged";
+import { TextInput, Text } from "app/utils/styles";
+import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
+import { AccountsId, ReceiptsId } from "next-app/src/db/models";
 
 import { CurrenciesPicker } from "./currencies-picker";
-import { AddButton } from "./utils/add-button";
-import { Block } from "./utils/block";
-import { MutationWrapper } from "./utils/mutation-wrapper";
-import { QueryWrapper } from "./utils/query-wrapper";
 
 const putMutationOptions: UseContextedMutationOptions<
 	"receipts.put",

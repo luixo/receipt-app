@@ -3,11 +3,9 @@ import * as ReactNative from "react-native";
 
 import type { InfiniteData } from "react-query";
 
+import { Block } from "app/components/utils/block";
+import { TRPCQueryOutput } from "app/trpc";
 import { UsersId } from "next-app/db/models";
-
-import { TRPCQueryOutput } from "../trpc";
-
-import { Block } from "./utils/block";
 
 type Props = {
 	data: InfiniteData<TRPCQueryOutput<"users.get-available">>;

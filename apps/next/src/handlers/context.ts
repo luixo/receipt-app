@@ -1,8 +1,8 @@
 import * as trpcNext from "@trpc/server/adapters/next";
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { AccountsId } from "../db/models";
-import { Logger, logger } from "../utils/logger";
+import { AccountsId } from "next-app/db/models";
+import { Logger, logger } from "next-app/utils/logger";
 
 export type UnauthorizedContext = {
 	req: NextApiRequest;

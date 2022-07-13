@@ -1,13 +1,13 @@
 import React from "react";
 
-import { ReceiptParticipantsScreen } from "../features/receipts/receipt-participants-screen";
-import { TRPCQueryOutput } from "../trpc";
-import { Currency } from "../utils/currency";
-import { ReceiptItemsGetInput } from "../utils/queries/receipt-items";
+import { Block } from "app/components/utils/block";
+import { ReceiptParticipantsScreen } from "app/features/receipts/receipt-participants-screen";
+import { TRPCQueryOutput } from "app/trpc";
+import { Currency } from "app/utils/currency";
+import { ReceiptItemsGetInput } from "app/utils/queries/receipt-items";
 
 import { AddReceiptItemForm } from "./add-receipt-item-form";
 import { ReceiptItem } from "./receipt-item";
-import { Block } from "./utils/block";
 
 type Props = {
 	data: TRPCQueryOutput<"receipt-items.get">;

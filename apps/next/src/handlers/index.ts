@@ -1,10 +1,11 @@
 import * as trpc from "@trpc/server";
 import superjson from "superjson";
 
+import { UnauthorizedContext } from "next-app/handlers/context";
+
 import { router as accountConnectionIntentionsRouter } from "./account-connection-intentions/index";
 import { router as accountRouter } from "./account/index";
 import { router as authRouter } from "./auth";
-import { UnauthorizedContext } from "./context";
 import { router as currencyRouter } from "./currency/index";
 import { router as itemParticipantsRouter } from "./item-participants/index";
 import { middleware as verifyAuthorizedMiddleware } from "./middlewares/authorization";

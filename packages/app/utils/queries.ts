@@ -1,7 +1,7 @@
 import Constants from "expo-constants";
 import type { QueryClientConfig } from "react-query";
 
-import { MINUTE } from "./time";
+import { MINUTE } from "app/utils/time";
 
 export const getNativeBaseUrl = () => {
 	const host = Constants.manifest?.extra?.host;

@@ -2,9 +2,9 @@ import * as trpc from "@trpc/server";
 import { sql } from "kysely";
 import { z } from "zod";
 
-import { getDatabase } from "../../db";
-import { UsersId } from "../../db/models";
-import { AuthorizedContext } from "../context";
+import { getDatabase } from "next-app/db";
+import { UsersId } from "next-app/db/models";
+import { AuthorizedContext } from "next-app/handlers/context";
 
 export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 	input: z.strictObject({

@@ -1,10 +1,10 @@
 import * as trpc from "@trpc/server";
 import { z } from "zod";
 
-import { getDatabase } from "../../db";
-import { resetAuthCookie } from "../../utils/auth-cookie";
-import { removeAuthorizationSession } from "../auth/utils";
-import { AuthorizedContext } from "../context";
+import { getDatabase } from "next-app/db";
+import { removeAuthorizationSession } from "next-app/handlers/auth/utils";
+import { AuthorizedContext } from "next-app/handlers/context";
+import { resetAuthCookie } from "next-app/utils/auth-cookie";
 
 export const router = trpc.router<AuthorizedContext>().mutation("logout", {
 	input: z.undefined(),

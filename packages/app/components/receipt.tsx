@@ -3,34 +3,33 @@ import * as ReactNative from "react-native";
 
 import { useRouter } from "solito/router";
 
-import { UsersId } from "next-app/src/db/models";
-
-import { useAsyncCallback } from "../hooks/use-async-callback";
+import { Block } from "app/components/utils/block";
+import { MutationWrapper } from "app/components/utils/mutation-wrapper";
+import { QueryWrapper } from "app/components/utils/query-wrapper";
+import { RemoveButton } from "app/components/utils/remove-button";
+import { useAsyncCallback } from "app/hooks/use-async-callback";
 import {
 	UseContextedMutationOptions,
 	useTrpcMutationOptions,
-} from "../hooks/use-trpc-mutation-options";
-import { trpc, TRPCMutationInput, TRPCQueryOutput } from "../trpc";
-import { Currency } from "../utils/currency";
+} from "app/hooks/use-trpc-mutation-options";
+import { trpc, TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
+import { Currency } from "app/utils/currency";
 import {
 	getReceiptById,
 	ReceiptsGetInput,
 	updateReceipt,
-} from "../utils/queries/receipts-get";
+} from "app/utils/queries/receipts-get";
 import {
 	getPagedReceiptById,
 	ReceiptsGetPagedInput,
 	updatePagedReceipts,
-} from "../utils/queries/receipts-get-paged";
-import { TextLink, Text } from "../utils/styles";
-import { VALIDATIONS_CONSTANTS } from "../utils/validation";
+} from "app/utils/queries/receipts-get-paged";
+import { TextLink, Text } from "app/utils/styles";
+import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
+import { UsersId } from "next-app/src/db/models";
 
 import { ReceiptCurrencyChange } from "./receipt-currency-change";
 import { ReceiptOwner } from "./receipt-owner";
-import { Block } from "./utils/block";
-import { MutationWrapper } from "./utils/mutation-wrapper";
-import { QueryWrapper } from "./utils/query-wrapper";
-import { RemoveButton } from "./utils/remove-button";
 
 type PagedReceiptSnapshot = TRPCQueryOutput<"receipts.get-paged">[number];
 type ReceiptSnapshot = TRPCQueryOutput<"receipts.get">;

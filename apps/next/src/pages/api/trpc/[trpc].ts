@@ -1,7 +1,7 @@
 import * as trpcNext from "@trpc/server/adapters/next";
 
-import { router } from "../../../handlers";
-import { createContext } from "../../../handlers/context";
+import { router } from "next-app/handlers";
+import { createContext } from "next-app/handlers/context";
 
 export type AppRouter = typeof router;
 

@@ -1,7 +1,7 @@
 import React from "react";
 
-import { TRPCQueryOutput } from "../trpc";
-import { Text } from "../utils/styles";
+import { TRPCQueryOutput } from "app/trpc";
+import { Text } from "app/utils/styles";
 
 type Props = {
 	data: TRPCQueryOutput<"users.get">;

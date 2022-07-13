@@ -1,25 +1,23 @@
 import React from "react";
 import * as ReactNative from "react-native";
 
-import { ReceiptItemsId } from "next-app/db/models";
-
-import { useAsyncCallback } from "../hooks/use-async-callback";
+import { Block } from "app/components/utils/block";
+import { MutationWrapper } from "app/components/utils/mutation-wrapper";
+import { RemoveButton } from "app/components/utils/remove-button";
+import { useAsyncCallback } from "app/hooks/use-async-callback";
 import {
 	UseContextedMutationOptions,
 	useTrpcMutationOptions,
-} from "../hooks/use-trpc-mutation-options";
-import { trpc, TRPCMutationInput, TRPCQueryOutput } from "../trpc";
+} from "app/hooks/use-trpc-mutation-options";
+import { trpc, TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
 import {
 	getReceiptItemPartWithIndex,
 	updateItemPart,
 	updateItemParts,
-} from "../utils/queries/item-participants";
-import { ReceiptItemsGetInput } from "../utils/queries/receipt-items";
-import { Text } from "../utils/styles";
-
-import { Block } from "./utils/block";
-import { MutationWrapper } from "./utils/mutation-wrapper";
-import { RemoveButton } from "./utils/remove-button";
+} from "app/utils/queries/item-participants";
+import { ReceiptItemsGetInput } from "app/utils/queries/receipt-items";
+import { Text } from "app/utils/styles";
+import { ReceiptItemsId } from "next-app/db/models";
 
 type ReceiptItem = TRPCQueryOutput<"receipt-items.get">["items"][number];
 type ReceiptParticipant =

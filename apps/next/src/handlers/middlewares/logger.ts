@@ -1,6 +1,6 @@
 import { MiddlewareFunction } from "@trpc/server/dist/declarations/src/internals/middlewares";
 
-import { UnauthorizedContext } from "../context";
+import { UnauthorizedContext } from "next-app/handlers/context";
 
 export const middleware: MiddlewareFunction<
 	UnauthorizedContext,

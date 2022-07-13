@@ -3,11 +3,11 @@ import * as ReactNative from "react-native";
 
 import { useForm, Controller } from "react-hook-form";
 
-import { BackButton } from "../../components/utils/back-button";
-import { MutationWrapper } from "../../components/utils/mutation-wrapper";
-import { useSubmitHandler } from "../../hooks/use-submit-handler";
-import { trpc } from "../../trpc";
-import { TextInput, Text } from "../../utils/styles";
+import { BackButton } from "app/components/utils/back-button";
+import { MutationWrapper } from "app/components/utils/mutation-wrapper";
+import { useSubmitHandler } from "app/hooks/use-submit-handler";
+import { trpc } from "app/trpc";
+import { TextInput, Text } from "app/utils/styles";
 
 type LoginForm = {
 	email: string;

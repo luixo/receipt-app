@@ -1,6 +1,6 @@
 import * as trpc from "@trpc/server";
 
-import { AuthorizedContext } from "../context";
+import { AuthorizedContext } from "next-app/handlers/context";
 
 import { router as acceptRouter } from "./accept";
 import { router as deleteRouter } from "./delete";

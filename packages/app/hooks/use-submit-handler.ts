@@ -1,6 +1,6 @@
 import { SubmitHandler } from "react-hook-form";
 
-import { useAsyncCallback } from "./use-async-callback";
+import { useAsyncCallback } from "app/hooks/use-async-callback";
 
 export const useSubmitHandler = <F, T = unknown>(
 	fn: (values: F) => Promise<T>,

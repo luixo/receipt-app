@@ -1,27 +1,27 @@
 import React from "react";
 import * as ReactNative from "react-native";
 
-import { useAsyncCallback } from "../hooks/use-async-callback";
+import { Block } from "app/components/utils/block";
+import { MutationWrapper } from "app/components/utils/mutation-wrapper";
+import { RemoveButton } from "app/components/utils/remove-button";
+import { useAsyncCallback } from "app/hooks/use-async-callback";
 import {
 	UseContextedMutationOptions,
 	useTrpcMutationOptions,
-} from "../hooks/use-trpc-mutation-options";
-import { trpc, TRPCMutationInput, TRPCQueryOutput } from "../trpc";
-import { Currency } from "../utils/currency";
-import { ReceiptItemsGetInput } from "../utils/queries/receipt-items";
+} from "app/hooks/use-trpc-mutation-options";
+import { trpc, TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
+import { Currency } from "app/utils/currency";
+import { ReceiptItemsGetInput } from "app/utils/queries/receipt-items";
 import {
 	getReceiptParticipantWithIndexById,
 	updateReceiptParticipants,
-} from "../utils/queries/receipt-participants";
-import { Text } from "../utils/styles";
+} from "app/utils/queries/receipt-participants";
+import { Text } from "app/utils/styles";
 
 import {
 	AssignableRole,
 	ReceiptParticipantRoleChange,
 } from "./receipt-participant-role-change";
-import { Block } from "./utils/block";
-import { MutationWrapper } from "./utils/mutation-wrapper";
-import { RemoveButton } from "./utils/remove-button";
 
 type ReceiptParticipants = TRPCQueryOutput<"receipt-items.get">["participants"];
 

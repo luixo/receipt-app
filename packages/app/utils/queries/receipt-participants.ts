@@ -1,8 +1,6 @@
+import { TRPCQueryOutput, TRPCReactContext } from "app/trpc";
+import { ReceiptItemsGetInput } from "app/utils/queries/receipt-items";
 import { UsersId } from "next-app/src/db/models";
-
-import { TRPCQueryOutput, TRPCReactContext } from "../../trpc";
-
-import { ReceiptItemsGetInput } from "./receipt-items";
 
 type ReceiptParticipant =
 	TRPCQueryOutput<"receipt-items.get">["participants"][number];

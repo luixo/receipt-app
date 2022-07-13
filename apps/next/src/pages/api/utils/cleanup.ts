@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import { getTrpcClient } from "../../../utils/api";
+import { getTrpcClient } from "next-app/utils/api";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<string>) => {
 	if (req.method !== "POST") {

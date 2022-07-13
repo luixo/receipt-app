@@ -2,10 +2,10 @@ import React from "react";
 
 import type { InfiniteData } from "react-query";
 
-import { TRPCQueryOutput } from "../trpc";
+import { Block } from "app/components/utils/block";
+import { TRPCQueryOutput } from "app/trpc";
 
 import { ReceiptPreview } from "./receipt-preview";
-import { Block } from "./utils/block";
 
 type InnerProps = {
 	data: InfiniteData<TRPCQueryOutput<"receipts.get-paged">>;

@@ -4,34 +4,32 @@ import * as ReactNative from "react-native";
 import { useRouter } from "solito/router";
 import { v4 } from "uuid";
 
-import { AccountsId } from "next-app/src/db/models";
-
-import { useAsyncCallback } from "../hooks/use-async-callback";
+import { Block } from "app/components/utils/block";
+import { MutationWrapper } from "app/components/utils/mutation-wrapper";
+import { RemoveButton } from "app/components/utils/remove-button";
+import { useAsyncCallback } from "app/hooks/use-async-callback";
 import {
 	useTrpcMutationOptions,
 	UseContextedMutationOptions,
-} from "../hooks/use-trpc-mutation-options";
-import { trpc, TRPCMutationInput, TRPCQueryOutput } from "../trpc";
+} from "app/hooks/use-trpc-mutation-options";
+import { trpc, TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
 import {
 	updateOutboundIntention,
 	updateOutboundIntentions,
-} from "../utils/queries/account-connection-intentions-get-all";
+} from "app/utils/queries/account-connection-intentions-get-all";
 import {
 	getUserById,
 	updateUser,
 	UsersGetInput,
-} from "../utils/queries/users-get";
+} from "app/utils/queries/users-get";
 import {
 	getPagedUserById,
 	updatePagedUsers,
 	UsersGetPagedInput,
-} from "../utils/queries/users-get-paged";
-import { styled, Text } from "../utils/styles";
-import { VALIDATIONS_CONSTANTS } from "../utils/validation";
-
-import { Block } from "./utils/block";
-import { MutationWrapper } from "./utils/mutation-wrapper";
-import { RemoveButton } from "./utils/remove-button";
+} from "app/utils/queries/users-get-paged";
+import { styled, Text } from "app/utils/styles";
+import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
+import { AccountsId } from "next-app/src/db/models";
 
 const ConnectButton = styled(ReactNative.Button)({
 	padding: "$m",

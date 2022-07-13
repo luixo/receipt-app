@@ -3,8 +3,8 @@ import React from "react";
 import {
 	ColorModeConfig,
 	ColorModeContext,
-} from "../contexts/color-mode-context";
-import { ThemeProvider } from "../utils/styles";
+} from "app/contexts/color-mode-context";
+import { ThemeProvider } from "app/utils/styles";
 
 import { NavigationProvider } from "./navigation";
 import { QueriesProvider } from "./queries";

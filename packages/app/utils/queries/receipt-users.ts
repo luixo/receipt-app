@@ -1,10 +1,9 @@
-import { UsersId } from "next-app/src/db/models";
-
 import {
 	TRPCInfiniteQueryInput,
 	TRPCQueryOutput,
 	TRPCReactContext,
-} from "../../trpc";
+} from "app/trpc";
+import { UsersId } from "next-app/src/db/models";
 
 type AvailableUser = TRPCQueryOutput<"users.get-available">[number];
 export type GetAvailableUsersInput =

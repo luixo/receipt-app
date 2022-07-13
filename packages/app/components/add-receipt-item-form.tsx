@@ -3,25 +3,23 @@ import React from "react";
 import { useForm, Controller } from "react-hook-form";
 import { v4 } from "uuid";
 
-import { ReceiptsId } from "next-app/db/models";
-
-import { useSubmitHandler } from "../hooks/use-submit-handler";
+import { AddButton } from "app/components/utils/add-button";
+import { Block } from "app/components/utils/block";
+import { MutationWrapper } from "app/components/utils/mutation-wrapper";
+import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import {
 	UseContextedMutationOptions,
 	useTrpcMutationOptions,
-} from "../hooks/use-trpc-mutation-options";
-import { trpc } from "../trpc";
+} from "app/hooks/use-trpc-mutation-options";
+import { trpc } from "app/trpc";
 import {
 	ReceiptItemsGetInput,
 	updateReceiptItems,
-} from "../utils/queries/receipt-items";
-import { updateReceiptSum } from "../utils/receipt";
-import { Text, TextInput } from "../utils/styles";
-import { VALIDATIONS_CONSTANTS } from "../utils/validation";
-
-import { AddButton } from "./utils/add-button";
-import { Block } from "./utils/block";
-import { MutationWrapper } from "./utils/mutation-wrapper";
+} from "app/utils/queries/receipt-items";
+import { updateReceiptSum } from "app/utils/receipt";
+import { Text, TextInput } from "app/utils/styles";
+import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
+import { ReceiptsId } from "next-app/db/models";
 
 const mutationOptions: UseContextedMutationOptions<
 	"receipt-items.put",

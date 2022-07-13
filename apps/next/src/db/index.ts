@@ -7,8 +7,8 @@ import {
 } from "kysely";
 import { TableExpressionDatabase } from "kysely/dist/cjs/parser/table-parser";
 
-import { UnauthorizedContext } from "../handlers/context";
-import { Logger } from "../utils/logger";
+import { UnauthorizedContext } from "next-app/handlers/context";
+import { Logger } from "next-app/utils/logger";
 
 import { getDatabaseConfig } from "./config";
 import { InitializerTypeMap, ModelTypeMap } from "./models";

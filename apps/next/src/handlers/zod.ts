@@ -1,8 +1,7 @@
 import { z } from "zod";
 
 import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
-
-import { isCurrency } from "../utils/currency";
+import { isCurrency } from "next-app/utils/currency";
 
 export const password = z
 	.string()

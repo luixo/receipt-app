@@ -2,8 +2,8 @@ import React from "react";
 
 import { Picker } from "@react-native-picker/picker";
 
-import { TRPCQueryOutput } from "../trpc";
-import { Currency } from "../utils/currency";
+import { TRPCQueryOutput } from "app/trpc";
+import { Currency } from "app/utils/currency";
 
 type Props = {
 	data: TRPCQueryOutput<"currency.get-list">;

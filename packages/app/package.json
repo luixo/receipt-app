@@ -3,6 +3,7 @@
 	"name": "app",
 	"main": "index.ts",
 	"dependencies": {
+		"app": "*",
 		"@expo/html-elements": "^0.0.1",
 		"@react-native-picker/picker": "^2.4.1",
 		"@react-navigation/native": "^6.0.8",

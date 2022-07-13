@@ -1,7 +1,7 @@
 import React from "react";
 import * as ReactNative from "react-native";
 
-import { styled, Text } from "../../utils/styles";
+import { styled, Text } from "app/utils/styles";
 
 const Wrapper = styled(ReactNative.View)({
 	padding: "$m",

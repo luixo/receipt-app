@@ -1,4 +1,4 @@
-import { TRPCQueryInput, TRPCQueryOutput, TRPCReactContext } from "../../trpc";
+import { TRPCQueryInput, TRPCQueryOutput, TRPCReactContext } from "app/trpc";
 
 type User = TRPCQueryOutput<"users.get">;
 export type UsersGetInput = TRPCQueryInput<"users.get">;
