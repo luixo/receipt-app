@@ -5,12 +5,13 @@ import type {
 	Router as GenericRouter,
 	ProcedureRecord,
 } from "@trpc/server/dist/declarations/src/router";
-import type { AppRouter } from "next-app/pages/api/trpc/[trpc]";
 import type {
 	UseInfiniteQueryResult,
 	UseMutationResult,
 	UseQueryResult,
 } from "react-query";
+
+import type { AppRouter } from "next-app/pages/api/trpc/[trpc]";
 
 type AnyRouter<TContext = any> = GenericRouter<
 	any,

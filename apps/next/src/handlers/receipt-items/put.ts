@@ -1,7 +1,8 @@
 import * as trpc from "@trpc/server";
-import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
 import { v4 } from "uuid";
 import { z } from "zod";
+
+import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
 
 import { getDatabase } from "../../db";
 import { ReceiptsId } from "../../db/models";

@@ -1,8 +1,9 @@
 import * as trpc from "@trpc/server";
 import { MiddlewareFunction } from "@trpc/server/dist/declarations/src/internals/middlewares";
-import { DAY } from "app/utils/time";
 import { sql } from "kysely";
 import { z } from "zod";
+
+import { DAY } from "app/utils/time";
 
 import { getDatabase } from "../../db";
 import { AUTH_COOKIE, resetAuthCookie } from "../../utils/auth-cookie";

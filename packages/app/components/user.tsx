@@ -1,9 +1,10 @@
 import React from "react";
 import * as ReactNative from "react-native";
 
-import { AccountsId } from "next-app/src/db/models";
 import { useRouter } from "solito/router";
 import { v4 } from "uuid";
+
+import { AccountsId } from "next-app/src/db/models";
 
 import { useAsyncCallback } from "../hooks/use-async-callback";
 import {

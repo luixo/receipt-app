@@ -1,6 +1,16 @@
 import React from "react";
 
 import { withTRPC } from "@trpc/next";
+import { getCookies } from "cookies-next";
+import { useDripsyTheme } from "dripsy";
+import { NextConfig } from "next";
+import getConfig from "next/config";
+import { AppType } from "next/dist/shared/lib/utils";
+import Head from "next/head";
+import { ReactQueryDevtools } from "react-query/devtools";
+import "raf/polyfill";
+import superjson from "superjson";
+
 import {
 	ColorModeConfig,
 	LAST_COLOR_MODE_COOKIE_NAME,
@@ -12,15 +22,6 @@ import {
 	getSsrHost,
 	TRPC_ENDPOINT,
 } from "app/utils/queries";
-import { getCookies } from "cookies-next";
-import { useDripsyTheme } from "dripsy";
-import { NextConfig } from "next";
-import getConfig from "next/config";
-import { AppType } from "next/dist/shared/lib/utils";
-import Head from "next/head";
-import { ReactQueryDevtools } from "react-query/devtools";
-import "raf/polyfill";
-import superjson from "superjson";
 
 import { useColorModeCookies } from "../hooks/use-color-mode-cookies";
 import { AUTH_COOKIE } from "../utils/auth-cookie";

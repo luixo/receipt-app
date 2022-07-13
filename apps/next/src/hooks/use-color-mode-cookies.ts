@@ -1,12 +1,13 @@
 import React from "react";
 
+import { setCookies, removeCookies } from "cookies-next";
+
 import {
 	ColorModeContext,
 	LAST_COLOR_MODE_COOKIE_NAME,
 	SELECTED_COLOR_MODE_COOKIE_NAME,
 } from "app/contexts/color-mode-context";
 import { MONTH } from "app/utils/time";
-import { setCookies, removeCookies } from "cookies-next";
 
 export const useColorModeCookies = () => {
 	const [colorModeConfig] = React.useContext(ColorModeContext);

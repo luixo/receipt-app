@@ -1,8 +1,9 @@
 import React from "react";
 import * as ReactNative from "react-native";
 
-import { UsersId } from "next-app/db/models";
 import type { InfiniteData } from "react-query";
+
+import { UsersId } from "next-app/db/models";
 
 import { TRPCQueryOutput } from "../trpc";
 
