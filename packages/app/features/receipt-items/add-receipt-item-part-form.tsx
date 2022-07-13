@@ -1,7 +1,7 @@
 import React from "react";
 
-import { AddButton } from "app/components/utils/add-button";
-import { MutationWrapper } from "app/components/utils/mutation-wrapper";
+import { AddButton } from "app/components/add-button";
+import { MutationWrapper } from "app/components/mutation-wrapper";
 import {
 	UseContextedMutationOptions,
 	useTrpcMutationOptions,

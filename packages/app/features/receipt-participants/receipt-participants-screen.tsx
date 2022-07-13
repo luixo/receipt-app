@@ -1,14 +1,15 @@
 import React from "react";
 
-import { AddReceiptParticipantForm } from "app/components/add-receipt-participant-form";
-import { ReceiptParticipant } from "app/components/receipt-participant";
-import { Block } from "app/components/utils/block";
+import { Block } from "app/components/block";
 import { TRPCQueryOutput } from "app/trpc";
 import { rotate } from "app/utils/array";
 import { Currency } from "app/utils/currency";
 import { getIndexByString } from "app/utils/hash";
 import { ReceiptItemsGetInput } from "app/utils/queries/receipt-items";
 import { calculateReceiptItemsWithSums } from "app/utils/receipt-item";
+
+import { AddReceiptParticipantForm } from "./add-receipt-participant-form";
+import { ReceiptParticipant } from "./receipt-participant";
 
 type Props = {
 	data: TRPCQueryOutput<"receipt-items.get">;

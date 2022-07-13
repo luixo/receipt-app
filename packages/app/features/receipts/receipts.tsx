@@ -2,7 +2,7 @@ import React from "react";
 
 import type { InfiniteData } from "react-query";
 
-import { Block } from "app/components/utils/block";
+import { Block } from "app/components/block";
 import { TRPCQueryOutput } from "app/trpc";
 
 import { ReceiptPreview } from "./receipt-preview";

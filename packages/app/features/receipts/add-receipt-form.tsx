@@ -3,10 +3,11 @@ import React from "react";
 import { useForm, Controller } from "react-hook-form";
 import { v4 } from "uuid";
 
-import { AddButton } from "app/components/utils/add-button";
-import { Block } from "app/components/utils/block";
-import { MutationWrapper } from "app/components/utils/mutation-wrapper";
-import { QueryWrapper } from "app/components/utils/query-wrapper";
+import { AddButton } from "app/components/add-button";
+import { Block } from "app/components/block";
+import { CurrenciesPicker } from "app/components/currencies-picker";
+import { MutationWrapper } from "app/components/mutation-wrapper";
+import { QueryWrapper } from "app/components/query-wrapper";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import {
 	UseContextedMutationOptions,
@@ -22,8 +23,6 @@ import {
 import { TextInput, Text } from "app/utils/styles";
 import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
 import { AccountsId, ReceiptsId } from "next-app/src/db/models";
-
-import { CurrenciesPicker } from "./currencies-picker";
 
 const putMutationOptions: UseContextedMutationOptions<
 	"receipts.put",

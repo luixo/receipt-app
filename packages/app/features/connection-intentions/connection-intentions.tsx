@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Block } from "app/components/utils/block";
+import { Block } from "app/components/block";
 import { TRPCQueryOutput } from "app/trpc";
 import { UsersGetPagedInput } from "app/utils/queries/users-get-paged";
 

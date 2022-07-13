@@ -1,9 +1,9 @@
 import React from "react";
 import * as ReactNative from "react-native";
 
-import { Block } from "app/components/utils/block";
-import { MutationWrapper } from "app/components/utils/mutation-wrapper";
-import { RemoveButton } from "app/components/utils/remove-button";
+import { Block } from "app/components/block";
+import { MutationWrapper } from "app/components/mutation-wrapper";
+import { RemoveButton } from "app/components/remove-button";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import {
 	UseContextedMutationOptions,

@@ -1,3 +1,3 @@
-import { ChangePasswordScreen } from "app/features/account/change-password-screen";
+import { ChangePasswordScreen } from "app/features/change-password/change-password-screen";
 
 export default ChangePasswordScreen;

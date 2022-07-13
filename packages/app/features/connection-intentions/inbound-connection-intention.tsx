@@ -1,9 +1,10 @@
 import React from "react";
 import * as ReactNative from "react-native";
 
-import { Block } from "app/components/utils/block";
-import { InfiniteQueryWrapper } from "app/components/utils/infinite-query-wrapper";
-import { MutationWrapper } from "app/components/utils/mutation-wrapper";
+import { Block } from "app/components/block";
+import { InfiniteQueryWrapper } from "app/components/infinite-query-wrapper";
+import { MutationWrapper } from "app/components/mutation-wrapper";
+import { UsersPicker } from "app/components/users-picker";
 import {
 	UseContextedMutationOptions,
 	useTrpcMutationOptions,
@@ -21,8 +22,6 @@ import {
 } from "app/utils/queries/users-get-paged";
 import { styled, Text } from "app/utils/styles";
 import { UsersId } from "next-app/src/db/models";
-
-import { UsersPicker } from "./users-picker";
 
 const ActionButton = styled(ReactNative.Button)({
 	padding: "$m",

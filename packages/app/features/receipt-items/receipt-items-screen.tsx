@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Block } from "app/components/utils/block";
-import { ReceiptParticipantsScreen } from "app/features/receipts/receipt-participants-screen";
+import { Block } from "app/components/block";
+import { ReceiptParticipantsScreen } from "app/features/receipt-participants/receipt-participants-screen";
 import { TRPCQueryOutput } from "app/trpc";
 import { Currency } from "app/utils/currency";
 import { ReceiptItemsGetInput } from "app/utils/queries/receipt-items";

@@ -3,9 +3,9 @@ import React from "react";
 import { useForm, Controller } from "react-hook-form";
 import { v4 } from "uuid";
 
-import { AddButton } from "app/components/utils/add-button";
-import { Block } from "app/components/utils/block";
-import { MutationWrapper } from "app/components/utils/mutation-wrapper";
+import { AddButton } from "app/components/add-button";
+import { Block } from "app/components/block";
+import { MutationWrapper } from "app/components/mutation-wrapper";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import {
 	UseContextedMutationOptions,

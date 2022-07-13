@@ -3,7 +3,7 @@ import * as ReactNative from "react-native";
 
 import type { InfiniteData } from "react-query";
 
-import { Block } from "app/components/utils/block";
+import { Block } from "app/components/block";
 import { TRPCQueryOutput } from "app/trpc";
 import { UsersId } from "next-app/db/models";
 

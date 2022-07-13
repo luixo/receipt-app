@@ -1,14 +1,15 @@
 import React from "react";
 
-import { AddUserForm } from "app/components/add-user-form";
-import { ConnectionIntentions } from "app/components/connection-intentions";
-import { Users } from "app/components/users";
-import { BackButton } from "app/components/utils/back-button";
-import { InfiniteQueryWrapper } from "app/components/utils/infinite-query-wrapper";
-import { QueryWrapper } from "app/components/utils/query-wrapper";
+import { BackButton } from "app/components/back-button";
+import { InfiniteQueryWrapper } from "app/components/infinite-query-wrapper";
+import { QueryWrapper } from "app/components/query-wrapper";
+import { ConnectionIntentions } from "app/features/connection-intentions/connection-intentions";
 import { trpc } from "app/trpc";
 import { DEFAULT_INPUT } from "app/utils/queries/users-get-paged";
 import { ScrollView } from "app/utils/styles";
+
+import { AddUserForm } from "./add-user-form";
+import { Users } from "./users";
 
 export const UsersScreen: React.FC = () => {
 	const usersInput = DEFAULT_INPUT;

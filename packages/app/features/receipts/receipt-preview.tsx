@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Block } from "app/components/utils/block";
+import { Block } from "app/components/block";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { Text, TextLink } from "app/utils/styles";
 

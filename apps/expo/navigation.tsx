@@ -3,13 +3,13 @@ import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import { AccountScreen } from "app/features/account/account-screen";
-import { ChangePasswordScreen } from "app/features/account/change-password-screen";
-import { LoginScreen } from "app/features/auth/login";
-import { RegisterScreen } from "app/features/auth/register";
-import { HomeScreen } from "app/features/home/screen";
-import { ReceiptScreen } from "app/features/receipts/receipt-screen";
+import { ChangePasswordScreen } from "app/features/change-password/change-password-screen";
+import { HomeScreen } from "app/features/home/home-screen";
+import { LoginScreen } from "app/features/login/login-screen";
+import { ReceiptScreen } from "app/features/receipt/receipt-screen";
 import { ReceiptsScreen } from "app/features/receipts/receipts-screen";
-import { UserScreen } from "app/features/users/user-screen";
+import { RegisterScreen } from "app/features/register/register-screen";
+import { UserScreen } from "app/features/user/user-screen";
 import { UsersScreen } from "app/features/users/users-screen";
 
 export type AppParamList = {

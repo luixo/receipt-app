@@ -1,9 +1,9 @@
 import React from "react";
 import * as ReactNative from "react-native";
 
-import { Block } from "app/components/utils/block";
-import { MutationWrapper } from "app/components/utils/mutation-wrapper";
-import { RemoveButton } from "app/components/utils/remove-button";
+import { Block } from "app/components/block";
+import { MutationWrapper } from "app/components/mutation-wrapper";
+import { RemoveButton } from "app/components/remove-button";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import {
 	UseContextedMutationOptions,
@@ -19,7 +19,7 @@ import { updateReceiptSum } from "app/utils/receipt";
 import { Text } from "app/utils/styles";
 import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
 
-import { AddReceiptItemPartForm } from "./add-receipt-item-participant-form";
+import { AddReceiptItemPartForm } from "./add-receipt-item-part-form";
 import { ReceiptItemPart } from "./receipt-item-part";
 
 type ReceiptItems = TRPCQueryOutput<"receipt-items.get">["items"];

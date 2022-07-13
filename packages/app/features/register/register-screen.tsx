@@ -3,9 +3,9 @@ import * as ReactNative from "react-native";
 
 import { useForm, Controller } from "react-hook-form";
 
+import { BackButton } from "app/components/back-button";
+import { MutationWrapper } from "app/components/mutation-wrapper";
 import { PasswordFields } from "app/components/password-fields";
-import { BackButton } from "app/components/utils/back-button";
-import { MutationWrapper } from "app/components/utils/mutation-wrapper";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { trpc } from "app/trpc";
 import { TextInput, Text } from "app/utils/styles";

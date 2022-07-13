@@ -2,10 +2,10 @@ import React from "react";
 
 import { useForm } from "react-hook-form";
 
-import { AddButton } from "app/components/utils/add-button";
-import { Block } from "app/components/utils/block";
-import { InfiniteQueryWrapper } from "app/components/utils/infinite-query-wrapper";
-import { MutationWrapper } from "app/components/utils/mutation-wrapper";
+import { AddButton } from "app/components/add-button";
+import { Block } from "app/components/block";
+import { InfiniteQueryWrapper } from "app/components/infinite-query-wrapper";
+import { MutationWrapper } from "app/components/mutation-wrapper";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import {
 	UseContextedMutationOptions,

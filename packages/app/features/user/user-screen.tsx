@@ -2,14 +2,15 @@ import React from "react";
 
 import { createParam } from "solito";
 
-import { User } from "app/components/user";
-import { BackButton } from "app/components/utils/back-button";
-import { Block } from "app/components/utils/block";
-import { QueryWrapper } from "app/components/utils/query-wrapper";
+import { BackButton } from "app/components/back-button";
+import { Block } from "app/components/block";
+import { QueryWrapper } from "app/components/query-wrapper";
 import { trpc } from "app/trpc";
 import { UsersGetInput } from "app/utils/queries/users-get";
 import { DEFAULT_INPUT } from "app/utils/queries/users-get-paged";
 import { ScrollView } from "app/utils/styles";
+
+import { User } from "./user";
 
 const { useParam } = createParam<{ id: string }>();
 
