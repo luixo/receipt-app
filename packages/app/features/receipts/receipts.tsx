@@ -7,14 +7,19 @@ import { TRPCQueryOutput } from "app/trpc";
 
 import { ReceiptPreview } from "./receipt-preview";
 
+type ReceiptsResult = TRPCQueryOutput<"receipts.get-paged">;
+
 type InnerProps = {
-	data: InfiniteData<TRPCQueryOutput<"receipts.get-paged">>;
+	data: InfiniteData<ReceiptsResult>;
 };
 
 export const Receipts: React.FC<InnerProps> = ({ data }) => {
-	const allReceipts = data.pages.reduce((acc, page) => [...acc, ...page], []);
+	const allReceipts = data.pages.reduce<ReceiptsResult["items"]>(
+		(acc, page) => [...acc, ...page.items],
+		[]
+	);
 	return (
-		<Block name={`Total: ${allReceipts.length} receipts`}>
+		<Block name={`Total: ${data.pages[0]?.count} receipts`}>
 			{allReceipts.map((receipt) => (
 				<ReceiptPreview key={receipt.id} data={receipt} />
 			))}

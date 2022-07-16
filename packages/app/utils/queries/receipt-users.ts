@@ -1,13 +1,22 @@
 import {
+	TRPCInfiniteQueryCursor,
 	TRPCInfiniteQueryInput,
 	TRPCQueryOutput,
 	TRPCReactContext,
 } from "app/trpc";
 import { UsersId } from "next-app/src/db/models";
 
-type AvailableUser = TRPCQueryOutput<"users.get-available">[number];
+import { InfiniteDataController, updatePagedResult } from "./utils";
+
+type AvailableUsersResult = TRPCQueryOutput<"users.get-available">;
+type AvailableUser = AvailableUsersResult["items"][number];
 export type GetAvailableUsersInput =
 	TRPCInfiniteQueryInput<"users.get-available">;
+
+export const availableUsersGetPagedNextPage = (
+	result: AvailableUsersResult
+): TRPCInfiniteQueryCursor<"users.get-available"> =>
+	result.hasMore ? result.items[result.items.length - 1]?.id : undefined;
 
 export const DEFAULT_PARTIAL_INPUT: Omit<GetAvailableUsersInput, "receiptId"> =
 	{
@@ -25,10 +34,10 @@ export const getAvailableUserById = (
 	}
 	let userIndex = -1;
 	const pageIndex = prevData.pages.findIndex((page) => {
-		userIndex = page.findIndex((user) => user.id === userId);
+		userIndex = page.items.findIndex((user) => user.id === userId);
 		return userIndex !== -1;
 	});
-	const user = prevData.pages[pageIndex]?.[userIndex];
+	const user = prevData.pages[pageIndex]?.items[userIndex];
 	if (!user) {
 		return;
 	}
@@ -39,6 +48,25 @@ export const getAvailableUserById = (
 	};
 };
 
+const getUsersGetPagedController = (
+	trpc: TRPCReactContext,
+	input: GetAvailableUsersInput
+): InfiniteDataController<AvailableUsersResult> => ({
+	getData: () => trpc.getInfiniteQueryData(["users.get-available", input]),
+	setData: (data) =>
+		trpc.setInfiniteQueryData(["users.get-available", input], data),
+});
+
+export const updateAvailableUsersResult = (
+	trpc: TRPCReactContext,
+	input: GetAvailableUsersInput,
+	updater: (
+		result: AvailableUsersResult,
+		resultIndex: number,
+		results: AvailableUsersResult[]
+	) => AvailableUsersResult
+) => updatePagedResult(getUsersGetPagedController(trpc, input), updater);
+
 export const updateAvailableUsers = (
 	trpc: TRPCReactContext,
 	input: GetAvailableUsersInput,
@@ -48,16 +76,18 @@ export const updateAvailableUsers = (
 		pages: AvailableUser[][]
 	) => AvailableUser[]
 ) => {
-	const prevData = trpc.getInfiniteQueryData(["users.get-available", input]);
-	if (!prevData) {
-		return;
-	}
-	const nextPages = prevData.pages.map(updater);
-	if (nextPages === prevData.pages) {
-		return;
-	}
-	trpc.setInfiniteQueryData(["users.get-available", input], {
-		...prevData,
-		pages: nextPages,
+	updateAvailableUsersResult(trpc, input, (result, index, results) => {
+		const nextItems = updater(
+			result.items,
+			index,
+			results.map(({ items }) => items)
+		);
+		if (nextItems === result.items) {
+			return result;
+		}
+		return {
+			...result,
+			items: nextItems,
+		};
 	});
 };

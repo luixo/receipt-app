@@ -7,14 +7,19 @@ import { TRPCQueryOutput } from "app/trpc";
 
 import { UserPreview } from "./user-preview";
 
+type UsersResult = TRPCQueryOutput<"users.get-paged">;
+
 type InnerProps = {
-	data: InfiniteData<TRPCQueryOutput<"users.get-paged">>;
+	data: InfiniteData<UsersResult>;
 };
 
 export const Users: React.FC<InnerProps> = ({ data }) => {
-	const allUsers = data.pages.reduce((acc, page) => [...acc, ...page], []);
+	const allUsers = data.pages.reduce<UsersResult["items"]>(
+		(acc, page) => [...acc, ...page.items],
+		[]
+	);
 	return (
-		<Block name={`Total: ${allUsers.length} users`}>
+		<Block name={`Total: ${data.pages[0]?.count} users`}>
 			{allUsers.map((user) => (
 				<UserPreview key={user.id} data={user} />
 			))}

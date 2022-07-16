@@ -7,8 +7,10 @@ import { Block } from "app/components/block";
 import { TRPCQueryOutput } from "app/trpc";
 import { UsersId } from "next-app/db/models";
 
+type AvailableUsersResult = TRPCQueryOutput<"users.get-available">;
+
 type Props = {
-	data: InfiniteData<TRPCQueryOutput<"users.get-available">>;
+	data: InfiniteData<AvailableUsersResult>;
 	setValue: (userId: UsersId, userName: string) => void;
 	disabled: boolean;
 };
@@ -18,12 +20,12 @@ export const AvailableReceiptParticipantUsers: React.FC<Props> = ({
 	setValue,
 	disabled,
 }) => {
-	const allUsers = data.pages.reduce<TRPCQueryOutput<"users.get-available">>(
-		(acc, page) => [...acc, ...page],
+	const allUsers = data.pages.reduce<AvailableUsersResult["items"]>(
+		(acc, page) => [...acc, ...page.items],
 		[]
 	);
 	return (
-		<Block name="Available users">
+		<Block name={`Total: ${data.pages[0]?.count} available users`}>
 			{allUsers.map((user) => (
 				<ReactNative.Button
 					key={user.id}

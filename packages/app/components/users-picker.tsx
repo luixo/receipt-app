@@ -8,8 +8,10 @@ import { UsersId } from "next-app/src/db/models";
 
 const LOAD_MORE_OPTION = "__load-more" as const;
 
+type UsersResult = TRPCQueryOutput<"users.get-paged">;
+
 type Props = {
-	data: InfiniteData<TRPCQueryOutput<"users.get-paged">>;
+	data: InfiniteData<UsersResult>;
 	value?: UsersId;
 	onChange: (nextUserId: UsersId) => void;
 	loadMore: () => void;
@@ -22,7 +24,7 @@ export const UsersPicker: React.FC<Props> = ({
 	loadMore,
 }) => {
 	const availableUsers = data.pages
-		.reduce((acc, page) => [...acc, ...page], [])
+		.reduce<UsersResult["items"]>((acc, page) => [...acc, ...page.items], [])
 		.filter((user) => !user.email && !user.dirty);
 	const onChange = React.useCallback(
 		(userId: UsersId | typeof LOAD_MORE_OPTION) => {

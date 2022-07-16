@@ -37,7 +37,7 @@ const ConnectButton = styled(ReactNative.Button)({
 	borderColor: "$muted",
 });
 
-type PagedUserSnapshot = TRPCQueryOutput<"users.get-paged">[number];
+type PagedUserSnapshot = TRPCQueryOutput<"users.get-paged">["items"][number];
 type UserSnapshot = TRPCQueryOutput<"users.get">;
 
 const deleteMutationOptions: UseContextedMutationOptions<

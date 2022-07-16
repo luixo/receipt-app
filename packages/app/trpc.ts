@@ -107,6 +107,9 @@ export type TRPCInfiniteQueryInput<Path extends TRPCInfiniteQueryKey> = Omit<
 	"cursor"
 >;
 
+export type TRPCInfiniteQueryCursor<Path extends TRPCInfiniteQueryKey> =
+	TRPCQueryValues[Path]["input"]["cursor"];
+
 export type TRPCInfiniteQueryResult<Path extends TRPCQueryKey> =
 	UseInfiniteQueryResult<TRPCQueryOutput<Path>, TRPCError>;
 

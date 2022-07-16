@@ -5,7 +5,7 @@ import { TRPCQueryOutput } from "app/trpc";
 import { Text, TextLink } from "app/utils/styles";
 
 type Props = {
-	data: TRPCQueryOutput<"users.get-paged">[number];
+	data: TRPCQueryOutput<"users.get-paged">["items"][number];
 };
 
 export const UserPreview: React.FC<Props> = ({ data: user }) => {

@@ -19,6 +19,7 @@ import {
 	DEFAULT_INPUT,
 	updatePagedUsers,
 	UsersGetPagedInput,
+	usersGetPagedNextPage,
 } from "app/utils/queries/users-get-paged";
 import { styled, Text } from "app/utils/styles";
 import { UsersId } from "next-app/src/db/models";
@@ -111,7 +112,9 @@ export const InboundConnectionIntention: React.FC<InnerProps> = ({
 	intention,
 	pagedInput,
 }) => {
-	const usersQuery = trpc.useInfiniteQuery(["users.get-paged", DEFAULT_INPUT]);
+	const usersQuery = trpc.useInfiniteQuery(["users.get-paged", DEFAULT_INPUT], {
+		getNextPageParam: usersGetPagedNextPage,
+	});
 	const [userId, setUserId] = React.useState<UsersId>();
 
 	const acceptConnectionMutation = trpc.useMutation(

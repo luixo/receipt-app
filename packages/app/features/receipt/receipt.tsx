@@ -31,7 +31,8 @@ import { UsersId } from "next-app/src/db/models";
 import { ReceiptCurrencyChange } from "./receipt-currency-change";
 import { ReceiptOwner } from "./receipt-owner";
 
-type PagedReceiptSnapshot = TRPCQueryOutput<"receipts.get-paged">[number];
+type PagedReceiptSnapshot =
+	TRPCQueryOutput<"receipts.get-paged">["items"][number];
 type ReceiptSnapshot = TRPCQueryOutput<"receipts.get">;
 
 const deleteMutationOptions: UseContextedMutationOptions<

@@ -2,7 +2,7 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
-import { ReceiptsId } from "next-app/db/models";
+import { ReceiptsId, UsersId } from "next-app/db/models";
 import { AuthorizedContext } from "next-app/handlers/context";
 import {
 	getReceiptById,
@@ -12,7 +12,7 @@ import { flavored } from "next-app/handlers/zod";
 
 export const router = trpc.router<AuthorizedContext>().query("get-available", {
 	input: z.strictObject({
-		cursor: z.number().nullish(),
+		cursor: z.string().uuid().refine<UsersId>(flavored).nullish(),
 		limit: z.number(),
 		receiptId: z.string().uuid().refine<ReceiptsId>(flavored),
 	}),
@@ -39,7 +39,7 @@ export const router = trpc.router<AuthorizedContext>().query("get-available", {
 				message: `Not enough rights to modify receipt ${input.receiptId}.`,
 			});
 		}
-		const users = await database
+		const availableUsers = database
 			.selectFrom("users")
 			.where("users.ownerAccountId", "=", ctx.auth.accountId)
 			.where("users.id", "not in", (eb) =>
@@ -50,13 +50,23 @@ export const router = trpc.router<AuthorizedContext>().query("get-available", {
 					)
 					.where("receiptParticipants.receiptId", "=", input.receiptId)
 					.select("users.id")
-			)
-			.select(["id", "name", "publicName", "connectedAccountId"])
-			.orderBy("id")
-			.offset(input.cursor || 0)
-			.limit(input.limit)
-			.execute();
+			);
+		const [users, usersCount] = await Promise.all([
+			availableUsers
+				.select(["id", "name", "publicName", "connectedAccountId"])
+				.orderBy("id")
+				.if(Boolean(input.cursor), (qb) => qb.where("id", ">", input.cursor!))
+				.limit(input.limit + 1)
+				.execute(),
+			availableUsers
+				.select(database.fn.count<string>("id").as("amount"))
+				.executeTakeFirstOrThrow(),
+		]);
 
-		return users;
+		return {
+			count: parseInt(usersCount.amount, 10),
+			hasMore: users.length === input.limit + 1,
+			items: users.slice(0, -1),
+		};
 	},
 });

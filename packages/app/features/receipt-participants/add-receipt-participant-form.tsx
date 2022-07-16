@@ -15,6 +15,7 @@ import { trpc } from "app/trpc";
 import { ReceiptItemsGetInput } from "app/utils/queries/receipt-items";
 import { updateReceiptParticipants } from "app/utils/queries/receipt-participants";
 import {
+	availableUsersGetPagedNextPage,
 	DEFAULT_PARTIAL_INPUT,
 	getAvailableUserById,
 	GetAvailableUsersInput,
@@ -112,10 +113,10 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 		...DEFAULT_PARTIAL_INPUT,
 		receiptId: receiptItemsInput.receiptId,
 	};
-	const availableUsersQuery = trpc.useInfiniteQuery([
-		"users.get-available",
-		usersInput,
-	]);
+	const availableUsersQuery = trpc.useInfiniteQuery(
+		["users.get-available", usersInput],
+		{ getNextPageParam: availableUsersGetPagedNextPage }
+	);
 
 	const {
 		handleSubmit,
