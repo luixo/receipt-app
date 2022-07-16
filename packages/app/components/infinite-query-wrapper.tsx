@@ -1,4 +1,5 @@
 import React from "react";
+import * as ReactNative from "react-native";
 
 import type { InfiniteData } from "react-query";
 
@@ -45,6 +46,18 @@ export const InfiniteQueryWrapper = <
 		case "idle":
 			return <LoadingText>Loading..</LoadingText>;
 		case "success":
-			return <Children {...(rest as unknown as P)} data={query.data} />;
+			return (
+				<>
+					<Children {...(rest as unknown as P)} data={query.data} />
+					{query.isFetching ? (
+						<Text>Loading..</Text>
+					) : query.hasNextPage ? (
+						<ReactNative.Button
+							title="Fetch next page"
+							onPress={() => query.fetchNextPage()}
+						/>
+					) : null}
+				</>
+			);
 	}
 };
