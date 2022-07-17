@@ -25,7 +25,8 @@ export const router = trpc.router<AuthorizedContext>().mutation("update", {
 				publicName: z
 					.string()
 					.min(VALIDATIONS_CONSTANTS.userName.min)
-					.max(VALIDATIONS_CONSTANTS.userName.max),
+					.max(VALIDATIONS_CONSTANTS.userName.max)
+					.nullable(),
 			}),
 		]),
 	}),

@@ -11,7 +11,7 @@ export default interface Users {
 
 	name: string;
 
-	publicName: string;
+	publicName: string | null;
 
 	/** Index: users:ownerAccountId:index */
 	ownerAccountId: AccountsId;
@@ -29,7 +29,7 @@ export interface UsersInitializer {
 
 	name: string;
 
-	publicName: string;
+	publicName?: string | null;
 
 	/** Index: users:ownerAccountId:index */
 	ownerAccountId: AccountsId;

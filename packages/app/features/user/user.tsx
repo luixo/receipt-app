@@ -262,7 +262,7 @@ export const User: React.FC<Props> = ({ data: user, input }) => {
 	);
 	const promptNameParam = React.useCallback(
 		(isPublic: boolean) => {
-			const prevName = isPublic ? user.publicName : user.name;
+			const prevName = isPublic ? user.publicName ?? "" : user.name;
 			const nextName = window.prompt("Please enter new name", prevName);
 			if (
 				!nextName ||
@@ -282,12 +282,6 @@ export const User: React.FC<Props> = ({ data: user, input }) => {
 					? { type: "publicName", publicName: nextName }
 					: { type: "name", name: nextName },
 			});
-			if (!isPublic && user.name === user.publicName) {
-				updateUserMutation.mutate({
-					id: user.id,
-					update: { type: "publicName", publicName: nextName },
-				});
-			}
 		},
 		[updateUserMutation, user.id, user.name, user.publicName]
 	);
@@ -338,7 +332,7 @@ export const User: React.FC<Props> = ({ data: user, input }) => {
 				disabled={user.dirty}
 				onPress={promptPublicName}
 			>
-				{user.publicName !== user.name ? (
+				{user.publicName ? (
 					<Text>Public name: {user.publicName}</Text>
 				) : (
 					<Text>Add public name</Text>

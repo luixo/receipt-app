@@ -48,7 +48,6 @@ export const router = trpc.router<UnauthorizedContext>().mutation("register", {
 				.values({
 					id,
 					name: input.name,
-					publicName: input.name,
 					ownerAccountId: id,
 					connectedAccountId: id,
 					exposeReceipts: true,

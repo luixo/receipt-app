@@ -9,10 +9,9 @@ type Props = {
 };
 
 export const UserPreview: React.FC<Props> = ({ data: user }) => {
-	const innerContent =
-		user.name === user.publicName
-			? user.name
-			: `${user.name} (public: ${user.publicName})`;
+	const innerContent = !user.publicName
+		? user.name
+		: `${user.name} (public: ${user.publicName})`;
 	return (
 		<Block>
 			{user.dirty ? (

@@ -34,7 +34,7 @@ const putMutationOptions: UseContextedMutationOptions<
 					{
 						id: temporaryId,
 						name: form.name,
-						publicName: form.name,
+						publicName: null,
 						dirty: true,
 						email: null,
 					},
@@ -83,11 +83,7 @@ export const AddUserScreen: React.FC = () => {
 		reset,
 	} = useForm<Form>({ mode: "onChange" });
 	const onSubmit = useSubmitHandler<Form>(
-		(values) =>
-			addUserMutation.mutateAsync({
-				name: values.name,
-				publicName: values.name,
-			}),
+		(values) => addUserMutation.mutateAsync({ name: values.name }),
 		[addUserMutation, reset],
 		reset
 	);

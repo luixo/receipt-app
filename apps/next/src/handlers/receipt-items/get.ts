@@ -57,9 +57,14 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 				)
 				.select([
 					"userId",
-					sql<string>`case when "usersTheir"."ownerAccountId" = ${ctx.auth.accountId} then "usersTheir".name when "usersMine".name is not null then "usersMine".name else "usersTheir"."publicName" end`.as(
-						"name"
-					),
+					sql<string>`case
+						when "usersTheir"."ownerAccountId" = ${ctx.auth.accountId}
+							then "usersTheir".name
+						when "usersTheir"."publicName" is not null
+							then "usersTheir"."publicName"
+						else
+							"usersTheir".name
+						end`.as("name"),
 					// only exists if foreign user is connected to an account
 					// that local account owner also have
 					"usersMine.id as localUserId",
