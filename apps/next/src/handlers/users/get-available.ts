@@ -66,7 +66,7 @@ export const router = trpc.router<AuthorizedContext>().query("get-available", {
 		return {
 			count: parseInt(usersCount.amount, 10),
 			hasMore: users.length === input.limit + 1,
-			items: users.slice(0, -1),
+			items: users.slice(0, input.limit),
 		};
 	},
 });

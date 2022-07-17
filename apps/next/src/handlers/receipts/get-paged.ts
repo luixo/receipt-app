@@ -108,7 +108,7 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 		return {
 			count: parseInt(receiptsCount.amount, 10),
 			hasMore: receipts.length === input.limit + 1,
-			items: receipts.slice(0, -1),
+			items: receipts.slice(0, input.limit),
 		};
 	},
 });
