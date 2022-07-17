@@ -6,7 +6,7 @@ import { QueryWrapper } from "app/components/query-wrapper";
 import { ConnectionIntentions } from "app/features/connection-intentions/connection-intentions";
 import { trpc } from "app/trpc";
 import {
-	DEFAULT_INPUT,
+	usersGetPagedInputStore,
 	usersGetPagedNextPage,
 } from "app/utils/queries/users-get-paged";
 import { ScrollView } from "app/utils/styles";
@@ -15,10 +15,13 @@ import { AddUserForm } from "./add-user-form";
 import { Users } from "./users";
 
 export const UsersScreen: React.FC = () => {
-	const usersInput = DEFAULT_INPUT;
-	const usersQuery = trpc.useInfiniteQuery(["users.get-paged", usersInput], {
-		getNextPageParam: usersGetPagedNextPage,
-	});
+	const usersGetPagedInput = usersGetPagedInputStore();
+	const usersQuery = trpc.useInfiniteQuery(
+		["users.get-paged", usersGetPagedInput],
+		{
+			getNextPageParam: usersGetPagedNextPage,
+		}
+	);
 	const connectionIntentionsQuery = trpc.useQuery([
 		"account-connection-intentions.get-all",
 	]);
@@ -26,8 +29,8 @@ export const UsersScreen: React.FC = () => {
 	return (
 		<ScrollView>
 			<BackButton href="/" />
-			<AddUserForm input={DEFAULT_INPUT} />
-			<QueryWrapper query={connectionIntentionsQuery} pagedInput={usersInput}>
+			<AddUserForm />
+			<QueryWrapper query={connectionIntentionsQuery}>
 				{ConnectionIntentions}
 			</QueryWrapper>
 			<InfiniteQueryWrapper query={usersQuery}>{Users}</InfiniteQueryWrapper>

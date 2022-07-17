@@ -15,6 +15,7 @@ import { trpc } from "app/trpc";
 import {
 	updatePagedUsers,
 	UsersGetPagedInput,
+	usersGetPagedInputStore,
 } from "app/utils/queries/users-get-paged";
 import { TextInput, Text } from "app/utils/styles";
 import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
@@ -68,14 +69,11 @@ type Form = {
 	name: string;
 };
 
-type Props = {
-	input: UsersGetPagedInput;
-};
-
-export const AddUserForm: React.FC<Props> = ({ input }) => {
+export const AddUserForm: React.FC = () => {
+	const usersGetPagedInput = usersGetPagedInputStore();
 	const addUserMutation = trpc.useMutation(
 		"users.put",
-		useTrpcMutationOptions(putMutationOptions, input)
+		useTrpcMutationOptions(putMutationOptions, usersGetPagedInput)
 	);
 
 	const {

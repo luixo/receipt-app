@@ -9,7 +9,6 @@ import { ReceiptItems } from "app/features/receipt-items/receipt-items-screen";
 import { trpc } from "app/trpc";
 import { ReceiptItemsGetInput } from "app/utils/queries/receipt-items";
 import { ReceiptsGetInput } from "app/utils/queries/receipts-get";
-import { DEFAULT_INPUT } from "app/utils/queries/receipts-get-paged";
 import { ScrollView } from "app/utils/styles";
 
 import { Receipt } from "./receipt";
@@ -36,11 +35,7 @@ export const ReceiptScreen: React.FC = () => {
 				name={`Receipt: ${receiptQuery.data ? receiptQuery.data.name : id}`}
 			>
 				<BackButton href="/receipts/" />
-				<QueryWrapper
-					query={receiptQuery}
-					pagedInput={DEFAULT_INPUT}
-					input={receiptInput}
-				>
+				<QueryWrapper query={receiptQuery} input={receiptInput}>
 					{Receipt}
 				</QueryWrapper>
 				<QueryWrapper

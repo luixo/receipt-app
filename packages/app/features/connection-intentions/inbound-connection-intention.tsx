@@ -15,7 +15,7 @@ import {
 } from "app/utils/queries/account-connection-intentions-get-all";
 import { updateUser, UsersGetInput } from "app/utils/queries/users-get";
 import {
-	DEFAULT_INPUT,
+	usersGetPagedInputStore,
 	updatePagedUsers,
 	UsersGetPagedInput,
 	usersGetPagedNextPage,
@@ -104,16 +104,16 @@ const rejectMutationOptions: UseContextedMutationOptions<
 
 type InnerProps = {
 	intention: TRPCQueryOutput<"account-connection-intentions.get-all">["inbound"][number];
-	pagedInput: UsersGetPagedInput;
 };
 
 export const InboundConnectionIntention: React.FC<InnerProps> = ({
 	intention,
-	pagedInput,
 }) => {
-	const usersQuery = trpc.useInfiniteQuery(["users.get-paged", DEFAULT_INPUT], {
-		getNextPageParam: usersGetPagedNextPage,
-	});
+	const usersGetPagedInput = usersGetPagedInputStore();
+	const usersQuery = trpc.useInfiniteQuery(
+		["users.get-paged", usersGetPagedInput],
+		{ getNextPageParam: usersGetPagedNextPage }
+	);
 	const loadMore = React.useCallback(() => {
 		usersQuery.fetchNextPage();
 	}, [usersQuery]);
@@ -136,7 +136,7 @@ export const InboundConnectionIntention: React.FC<InnerProps> = ({
 	const acceptConnectionMutation = trpc.useMutation(
 		"account-connection-intentions.accept",
 		useTrpcMutationOptions(acceptMutationOptions, {
-			pagedInput,
+			pagedInput: usersGetPagedInput,
 			// We can only call that if userId is not null
 			input: { id: userId! },
 		})

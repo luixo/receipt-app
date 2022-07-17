@@ -26,6 +26,7 @@ import {
 	getPagedUserById,
 	updatePagedUsers,
 	UsersGetPagedInput,
+	usersGetPagedInputStore,
 } from "app/utils/queries/users-get-paged";
 import { styled, Text } from "app/utils/styles";
 import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
@@ -228,15 +229,18 @@ const connectMutationOptions: UseContextedMutationOptions<
 
 type Props = {
 	data: TRPCQueryOutput<"users.get">;
-	pagedInput: UsersGetPagedInput;
 	input: UsersGetInput;
 };
 
-export const User: React.FC<Props> = ({ data: user, pagedInput, input }) => {
+export const User: React.FC<Props> = ({ data: user, input }) => {
 	const router = useRouter();
+	const usersGetPagedInput = usersGetPagedInputStore();
 	const deleteUserMutation = trpc.useMutation(
 		"users.delete",
-		useTrpcMutationOptions(deleteMutationOptions, { pagedInput, input })
+		useTrpcMutationOptions(deleteMutationOptions, {
+			pagedInput: usersGetPagedInput,
+			input,
+		})
 	);
 	const deleteUser = useAsyncCallback(
 		async (isMount) => {
@@ -251,7 +255,10 @@ export const User: React.FC<Props> = ({ data: user, pagedInput, input }) => {
 
 	const updateUserMutation = trpc.useMutation(
 		"users.update",
-		useTrpcMutationOptions(updateMutationOptions, { pagedInput, input })
+		useTrpcMutationOptions(updateMutationOptions, {
+			pagedInput: usersGetPagedInput,
+			input,
+		})
 	);
 	const promptNameParam = React.useCallback(
 		(isPublic: boolean) => {
@@ -305,7 +312,10 @@ export const User: React.FC<Props> = ({ data: user, pagedInput, input }) => {
 			: undefined;
 	const connectUserMutation = trpc.useMutation(
 		"account-connection-intentions.put",
-		useTrpcMutationOptions(connectMutationOptions, { pagedInput, input })
+		useTrpcMutationOptions(connectMutationOptions, {
+			pagedInput: usersGetPagedInput,
+			input,
+		})
 	);
 	const promptConnect = React.useCallback(() => {
 		const email = window.prompt("Please enter email to connect to");

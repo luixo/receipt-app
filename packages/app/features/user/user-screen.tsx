@@ -7,7 +7,6 @@ import { Block } from "app/components/block";
 import { QueryWrapper } from "app/components/query-wrapper";
 import { trpc } from "app/trpc";
 import { UsersGetInput } from "app/utils/queries/users-get";
-import { DEFAULT_INPUT } from "app/utils/queries/users-get-paged";
 import { ScrollView } from "app/utils/styles";
 
 import { User } from "./user";
@@ -27,11 +26,7 @@ export const UserScreen: React.FC = () => {
 		<ScrollView>
 			<Block name={`User: ${userQuery.data ? userQuery.data.name : id}`}>
 				<BackButton href="/users/" />
-				<QueryWrapper
-					query={userQuery}
-					input={usersGetInput}
-					pagedInput={DEFAULT_INPUT}
-				>
+				<QueryWrapper query={userQuery} input={usersGetInput}>
 					{User}
 				</QueryWrapper>
 			</Block>

@@ -1,3 +1,5 @@
+import zustand from "zustand";
+
 import {
 	TRPCInfiniteQueryCursor,
 	TRPCInfiniteQueryInput,
@@ -18,10 +20,16 @@ export const receiptsGetPagedNextPage = (
 ): TRPCInfiniteQueryCursor<"receipts.get-paged"> =>
 	result.hasMore ? result.items[result.items.length - 1]?.issued : undefined;
 
-export const DEFAULT_INPUT: ReceiptsGetPagedInput = {
-	limit: 10,
-	orderBy: "date-desc",
-};
+export const receiptsGetPagedInputStore = zustand<ReceiptsGetPagedInput>(
+	(set) => ({
+		limit: 10,
+		orderBy: "date-desc",
+		changeLimit: (nextLimit: ReceiptsGetPagedInput["limit"]) =>
+			set(() => ({ limit: nextLimit })),
+		changeOrderBy: (nextOrderBy: ReceiptsGetPagedInput["orderBy"]) =>
+			set(() => ({ orderBy: nextOrderBy })),
+	})
+);
 
 export const getPagedReceiptById = (
 	trpc: TRPCReactContext,

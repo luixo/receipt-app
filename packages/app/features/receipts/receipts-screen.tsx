@@ -4,7 +4,7 @@ import { BackButton } from "app/components/back-button";
 import { InfiniteQueryWrapper } from "app/components/infinite-query-wrapper";
 import { trpc } from "app/trpc";
 import {
-	DEFAULT_INPUT,
+	receiptsGetPagedInputStore,
 	receiptsGetPagedNextPage,
 } from "app/utils/queries/receipts-get-paged";
 import { ScrollView } from "app/utils/styles";
@@ -14,7 +14,7 @@ import { Receipts } from "./receipts";
 
 export const ReceiptsScreen: React.FC = () => {
 	const receiptsQuery = trpc.useInfiniteQuery(
-		["receipts.get-paged", DEFAULT_INPUT],
+		["receipts.get-paged", receiptsGetPagedInputStore()],
 		{
 			getNextPageParam: receiptsGetPagedNextPage,
 		}
@@ -23,7 +23,7 @@ export const ReceiptsScreen: React.FC = () => {
 	return (
 		<ScrollView>
 			<BackButton href="/" />
-			<AddReceiptForm input={DEFAULT_INPUT} />
+			<AddReceiptForm />
 			<InfiniteQueryWrapper query={receiptsQuery}>
 				{Receipts}
 			</InfiniteQueryWrapper>

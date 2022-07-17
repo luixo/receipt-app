@@ -19,6 +19,7 @@ import { addReceipt } from "app/utils/queries/receipts-get";
 import {
 	updatePagedReceipts,
 	ReceiptsGetPagedInput,
+	receiptsGetPagedInputStore,
 } from "app/utils/queries/receipts-get-paged";
 import { TextInput, Text } from "app/utils/styles";
 import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
@@ -98,16 +99,14 @@ type Form = {
 	currency: Currency;
 };
 
-type Props = {
-	input: ReceiptsGetPagedInput;
-};
-
-export const AddReceiptForm: React.FC<Props> = ({ input }) => {
+export const AddReceiptForm: React.FC = () => {
 	const accountQuery = trpc.useQuery(["account.get"]);
+
+	const receiptsGetPagedInput = receiptsGetPagedInputStore();
 	const addReceiptMutation = trpc.useMutation(
 		"receipts.put",
 		useTrpcMutationOptions(putMutationOptions, {
-			input,
+			input: receiptsGetPagedInput,
 			ownerAccountId: accountQuery.data?.id,
 		})
 	);

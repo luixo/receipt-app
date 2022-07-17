@@ -2,20 +2,15 @@ import React from "react";
 
 import { Block } from "app/components/block";
 import { TRPCQueryOutput } from "app/trpc";
-import { UsersGetPagedInput } from "app/utils/queries/users-get-paged";
 
 import { InboundConnectionIntention } from "./inbound-connection-intention";
 import { OutboundConnectionIntention } from "./outbound-connection-intention";
 
 type InnerProps = {
 	data: TRPCQueryOutput<"account-connection-intentions.get-all">;
-	pagedInput: UsersGetPagedInput;
 };
 
-export const ConnectionIntentions: React.FC<InnerProps> = ({
-	data,
-	pagedInput,
-}) => {
+export const ConnectionIntentions: React.FC<InnerProps> = ({ data }) => {
 	if (data.inbound.length === 0 && data.outbound.length === 0) {
 		return null;
 	}
@@ -25,7 +20,6 @@ export const ConnectionIntentions: React.FC<InnerProps> = ({
 				<InboundConnectionIntention
 					key={intention.accountId}
 					intention={intention}
-					pagedInput={pagedInput}
 				/>
 			))}
 			{data.outbound.map((intention) => (

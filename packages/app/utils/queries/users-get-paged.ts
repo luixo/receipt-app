@@ -1,3 +1,5 @@
+import zustand from "zustand";
+
 import {
 	TRPCInfiniteQueryCursor,
 	TRPCInfiniteQueryInput,
@@ -17,9 +19,11 @@ export const usersGetPagedNextPage = (
 ): TRPCInfiniteQueryCursor<"users.get-paged"> =>
 	result.hasMore ? result.items[result.items.length - 1]?.name : undefined;
 
-export const DEFAULT_INPUT: UsersGetPagedInput = {
+export const usersGetPagedInputStore = zustand<UsersGetPagedInput>((set) => ({
 	limit: 10,
-};
+	changeLimit: (nextLimit: UsersGetPagedInput["limit"]) =>
+		set(() => ({ limit: nextLimit })),
+}));
 
 export const getPagedUserById = (
 	trpc: TRPCReactContext,

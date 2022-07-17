@@ -23,6 +23,7 @@ import {
 	getPagedReceiptById,
 	ReceiptsGetPagedInput,
 	updatePagedReceipts,
+	receiptsGetPagedInputStore,
 } from "app/utils/queries/receipts-get-paged";
 import { TextLink, Text } from "app/utils/styles";
 import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
@@ -174,19 +175,18 @@ const updateMutationOptions: UseContextedMutationOptions<
 
 type Props = {
 	data: TRPCQueryOutput<"receipts.get">;
-	pagedInput: ReceiptsGetPagedInput;
 	input: ReceiptsGetInput;
 };
 
-export const Receipt: React.FC<Props> = ({
-	data: receipt,
-	pagedInput,
-	input,
-}) => {
+export const Receipt: React.FC<Props> = ({ data: receipt, input }) => {
 	const router = useRouter();
+	const receiptsGetPagedInput = receiptsGetPagedInputStore();
 	const deleteReceiptMutation = trpc.useMutation(
 		"receipts.delete",
-		useTrpcMutationOptions(deleteMutationOptions, { pagedInput, input })
+		useTrpcMutationOptions(deleteMutationOptions, {
+			pagedInput: receiptsGetPagedInput,
+			input,
+		})
 	);
 	const ownerQuery = trpc.useQuery([
 		"users.get",
@@ -216,7 +216,10 @@ export const Receipt: React.FC<Props> = ({
 
 	const updateReceiptMutation = trpc.useMutation(
 		"receipts.update",
-		useTrpcMutationOptions(updateMutationOptions, { pagedInput, input })
+		useTrpcMutationOptions(updateMutationOptions, {
+			pagedInput: receiptsGetPagedInput,
+			input,
+		})
 	);
 	const promptName = React.useCallback(() => {
 		const name = window.prompt("Please enter new name", receipt.name);
