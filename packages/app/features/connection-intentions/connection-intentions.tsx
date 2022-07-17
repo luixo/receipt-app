@@ -1,6 +1,5 @@
 import React from "react";
 
-import { Block } from "app/components/block";
 import { TRPCQueryOutput } from "app/trpc";
 
 import { InboundConnectionIntention } from "./inbound-connection-intention";
@@ -15,7 +14,7 @@ export const ConnectionIntentions: React.FC<InnerProps> = ({ data }) => {
 		return null;
 	}
 	return (
-		<Block name="Connection intentions">
+		<>
 			{data.inbound.map((intention) => (
 				<InboundConnectionIntention
 					key={intention.accountId}
@@ -28,6 +27,6 @@ export const ConnectionIntentions: React.FC<InnerProps> = ({ data }) => {
 					intention={intention}
 				/>
 			))}
-		</Block>
+		</>
 	);
 };

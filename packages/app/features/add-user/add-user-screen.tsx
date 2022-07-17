@@ -69,7 +69,7 @@ type Form = {
 	name: string;
 };
 
-export const AddUserForm: React.FC = () => {
+export const AddUserScreen: React.FC = () => {
 	const usersGetPagedInput = usersGetPagedInputStore();
 	const addUserMutation = trpc.useMutation(
 		"users.put",

@@ -3,7 +3,9 @@ import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import { AccountScreen } from "app/features/account/account-screen";
+import { AddUserScreen } from "app/features/add-user/add-user-screen";
 import { ChangePasswordScreen } from "app/features/change-password/change-password-screen";
+import { ConnectionIntentionsScreen } from "app/features/connection-intentions/connection-intentions-screen";
 import { HomeScreen } from "app/features/home/home-screen";
 import { LoginScreen } from "app/features/login/login-screen";
 import { ReceiptScreen } from "app/features/receipt/receipt-screen";
@@ -25,6 +27,8 @@ export type AppParamList = {
 	user: {
 		id: string;
 	};
+	addUser: undefined;
+	userConnectionIntentions: undefined;
 	changePassword: undefined;
 };
 
@@ -86,6 +90,20 @@ export const NativeNavigation: React.FC = () => (
 			component={UserScreen}
 			options={{
 				title: "User",
+			}}
+		/>
+		<Stack.Screen
+			name="addUser"
+			component={AddUserScreen}
+			options={{
+				title: "Add user",
+			}}
+		/>
+		<Stack.Screen
+			name="userConnectionIntentions"
+			component={ConnectionIntentionsScreen}
+			options={{
+				title: "Connection intentions",
 			}}
 		/>
 		<Stack.Screen

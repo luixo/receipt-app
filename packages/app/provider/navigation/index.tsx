@@ -37,6 +37,8 @@ export const NavigationProvider: React.FC<React.PropsWithChildren<object>> = ({
 					receipt: "receipts/:id",
 					users: "users/",
 					user: "users/:id",
+					addUser: "users/add",
+					userConnectionIntentions: "users/connections",
 					changePassword: "account/change-password",
 				},
 			},

@@ -16,7 +16,7 @@ const Name = styled(Text)({
 });
 
 type Props = {
-	name?: string;
+	name?: React.ReactNode;
 	onPress?: () => void;
 	onNamePress?: () => void;
 	disabled?: boolean;

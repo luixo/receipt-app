@@ -29,6 +29,7 @@ const base = {
 	sizes: {
 		$container: 600,
 		$full: "100%",
+		$icon: 40,
 	},
 	fontWeights: {
 		$thin: "400",
