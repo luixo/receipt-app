@@ -2,7 +2,6 @@ import React from "react";
 import * as ReactNative from "react-native";
 
 import { Block } from "app/components/block";
-import { InfiniteQueryWrapper } from "app/components/infinite-query-wrapper";
 import { MutationWrapper } from "app/components/mutation-wrapper";
 import { UsersPicker } from "app/components/users-picker";
 import {
@@ -30,7 +29,7 @@ const ActionButton = styled(ReactNative.Button)({
 	borderColor: "$muted",
 });
 
-const noop = () => {};
+type UsersResult = TRPCQueryOutput<"users.get-paged">;
 
 const acceptMutationOptions: UseContextedMutationOptions<
 	"account-connection-intentions.accept",
@@ -115,7 +114,24 @@ export const InboundConnectionIntention: React.FC<InnerProps> = ({
 	const usersQuery = trpc.useInfiniteQuery(["users.get-paged", DEFAULT_INPUT], {
 		getNextPageParam: usersGetPagedNextPage,
 	});
+	const loadMore = React.useCallback(() => {
+		usersQuery.fetchNextPage();
+	}, [usersQuery]);
 	const [userId, setUserId] = React.useState<UsersId>();
+	const availableUsers = usersQuery.data?.pages
+		.reduce<UsersResult["items"]>((acc, page) => [...acc, ...page.items], [])
+		.filter((user) => !user.email && !user.dirty);
+	const selectedUserName =
+		availableUsers?.find((user) => user.id === userId)?.name ?? userId;
+	React.useEffect(() => {
+		if (userId || !availableUsers) {
+			return;
+		}
+		const firstUser = availableUsers[0];
+		if (firstUser) {
+			setUserId(firstUser.id);
+		}
+	}, [userId, setUserId, availableUsers]);
 
 	const acceptConnectionMutation = trpc.useMutation(
 		"account-connection-intentions.accept",
@@ -144,21 +160,25 @@ export const InboundConnectionIntention: React.FC<InnerProps> = ({
 
 	return (
 		<Block name={`Inbound connection from ${intention.email}`}>
-			<InfiniteQueryWrapper
-				query={usersQuery}
-				value={userId}
-				onChange={setUserId}
-				loadMore={noop}
-			>
-				{UsersPicker}
-			</InfiniteQueryWrapper>
-			<ReactNative.TouchableOpacity>
-				<ActionButton
-					title={userId ? `Accept ${userId}` : "Please select user"}
-					disabled={!userId}
-					onPress={acceptConnection}
-				/>
-			</ReactNative.TouchableOpacity>
+			{availableUsers ? (
+				<>
+					<UsersPicker
+						users={availableUsers}
+						userId={userId}
+						onChange={setUserId}
+						loadMore={loadMore}
+					/>
+					<ReactNative.TouchableOpacity>
+						<ActionButton
+							title={
+								userId ? `Accept ${selectedUserName}` : "Please select user"
+							}
+							disabled={!userId}
+							onPress={acceptConnection}
+						/>
+					</ReactNative.TouchableOpacity>
+				</>
+			) : null}
 			<ReactNative.TouchableOpacity>
 				<ActionButton title="Reject connection" onPress={rejectConnection} />
 			</ReactNative.TouchableOpacity>
