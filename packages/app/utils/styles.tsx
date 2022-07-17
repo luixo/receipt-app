@@ -122,7 +122,7 @@ export const TextLink = ({
 			{...props}
 			textProps={{
 				...textProps,
-				style: [linkStyle, textProps?.style],
+				style: ReactNative.StyleSheet.compose(linkStyle, props?.style),
 			}}
 		/>
 	);
