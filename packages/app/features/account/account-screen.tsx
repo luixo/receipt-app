@@ -3,6 +3,7 @@ import * as ReactNative from "react-native";
 
 import { BackButton } from "app/components/back-button";
 import { MutationWrapper } from "app/components/mutation-wrapper";
+import { Spacer } from "app/components/spacer";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { trpc } from "app/trpc";
 import { styled, H1, TextLink, Text } from "app/utils/styles";
@@ -18,8 +19,6 @@ const Header = styled(H1)({
 	fontWeight: "$bold",
 	textAlign: "center",
 });
-
-const Spacer = styled(ReactNative.View)({ marginTop: "$l" });
 
 export const AccountScreen: React.FC = () => {
 	const accountQuery = trpc.useQuery(["account.get"]);

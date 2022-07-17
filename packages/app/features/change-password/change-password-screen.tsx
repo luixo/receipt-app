@@ -6,6 +6,7 @@ import { Controller, useForm } from "react-hook-form";
 import { BackButton } from "app/components/back-button";
 import { MutationWrapper } from "app/components/mutation-wrapper";
 import { PasswordFields } from "app/components/password-fields";
+import { Spacer } from "app/components/spacer";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { trpc } from "app/trpc";
 import { styled, H1, TextInput, Text } from "app/utils/styles";
@@ -21,8 +22,6 @@ const Header = styled(H1)({
 	fontWeight: "$bold",
 	textAlign: "center",
 });
-
-const Spacer = styled(ReactNative.View)({ marginTop: "$l" });
 
 type ChangePasswordForm = {
 	prevPassword: string;

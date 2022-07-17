@@ -1,6 +1,7 @@
 import React from "react";
 import * as ReactNative from "react-native";
 
+import { Spacer } from "app/components/spacer";
 import { trpc } from "app/trpc";
 import { styled, H1, TextLink, Text } from "app/utils/styles";
 
@@ -15,8 +16,6 @@ const Header = styled(H1)({
 	fontWeight: "$bold",
 	textAlign: "center",
 });
-
-const Spacer = styled(ReactNative.View)({ marginTop: "$l" });
 
 export const HomeScreen: React.FC = () => {
 	const accountQuery = trpc.useQuery(["account.get"]);
