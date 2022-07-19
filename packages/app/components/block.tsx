@@ -4,15 +4,15 @@ import * as ReactNative from "react-native";
 import { styled, Text } from "app/utils/styles";
 
 const Wrapper = styled(ReactNative.View)({
-	padding: "$m",
-	borderWidth: "$hairline",
-	borderColor: "$muted",
-	borderRadius: "$medium",
+	padding: "md",
+	borderWidth: "light",
+	borderColor: "border",
+	borderRadius: "md",
 });
 
 const Name = styled(Text)({
-	marginBottom: "$s",
-	fontSize: "$large",
+	marginBottom: "sm",
+	fontSize: "lg",
 });
 
 type Props = {

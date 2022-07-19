@@ -41,15 +41,18 @@
 		"format": "prettier --write '**/*.{js,jsx,ts,tsx,json}'",
 		"format:verify": "prettier --check '**/*.{js,jsx,ts,tsx,json}'",
 		"lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-		"lint:fix": "eslint --fix . --ext .js,.jsx,.ts,.tsx"
+		"lint:fix": "eslint --fix . --ext .js,.jsx,.ts,.tsx",
+		"postinstall": "patch-package"
 	},
 	"dependencies": {
+		"@nextui-org/react": "^1.0.0-beta.9",
 		"dripsy": "^3.6.0",
 		"expo": "~44.0.2",
 		"expo-cli": "^5.3.1",
 		"expo-splash-screen": "~0.14.1",
 		"expo-status-bar": "~1.2.0",
 		"ngrok": "^4.3.1",
+		"patch-package": "^6.4.7",
 		"react": "17.0.1",
 		"react-dom": "17.0.1",
 		"react-native": "0.64.3",

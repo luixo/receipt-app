@@ -10,9 +10,9 @@ type Props = {
 };
 
 const Button = styled(ReactNative.Button)({
-	padding: "$m",
-	borderWidth: "$hairline",
-	borderColor: "$muted",
+	padding: "md",
+	borderWidth: "light",
+	borderColor: "border",
 });
 
 export const AddButton: React.FC<Props> = ({ onPress, children, disabled }) => (

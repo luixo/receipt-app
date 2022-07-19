@@ -24,9 +24,9 @@ import { styled, Text } from "app/utils/styles";
 import { UsersId } from "next-app/src/db/models";
 
 const ActionButton = styled(ReactNative.Button)({
-	padding: "$m",
-	borderWidth: "$hairline",
-	borderColor: "$muted",
+	padding: "md",
+	borderWidth: "light",
+	borderColor: "border",
 });
 
 type UsersResult = TRPCQueryOutput<"users.get-paged">;

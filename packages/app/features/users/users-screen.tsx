@@ -18,8 +18,8 @@ const Header = styled(ReactNative.View)({
 const Title = styled(Text)({
 	flex: 1,
 	alignSelf: "center",
-	padding: "$m",
-	fontSize: "$large",
+	padding: "md",
+	fontSize: "lg",
 });
 const Buttons = styled(ReactNative.View)({
 	flexDirection: "row",

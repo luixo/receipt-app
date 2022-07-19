@@ -3,88 +3,88 @@ import * as ReactNative from "react-native";
 
 import * as HTMLElements from "@expo/html-elements";
 import {
-	makeTheme,
-	styled,
-	DripsyProvider,
-	DripsyBaseTheme,
-	useSx,
-	useDripsyTheme,
-} from "dripsy";
+	NextUIProvider,
+	lightThemeStitches,
+	darkThemeStitches,
+	createTheme,
+} from "@nextui-org/react";
+import { styled, DripsyProvider, useSx, useDripsyTheme } from "dripsy";
 import { TextLink as BaseTextLink } from "solito/link";
 
 import { ColorModeContext } from "app/contexts/color-mode-context";
 
-const base = {
-	borderWidths: {
-		$hairline: 1,
-	},
-	borderStyles: {
-		$solid: "solid",
-	},
-	space: {
-		$s: 8,
-		$m: 16,
-		$l: 32,
-	},
-	sizes: {
-		$container: 600,
-		$full: "100%",
-		$icon: 40,
-	},
-	fontWeights: {
-		$thin: "400",
-		$normal: "500",
-		$bold: "600",
-	},
-	fontSizes: {
-		$regular: 16,
-		$large: 20,
-	},
-	radii: {
-		$medium: 8,
-	},
+const themes = {
+	light: lightThemeStitches.theme,
+	dark: darkThemeStitches.theme,
+};
+
+const nextThemes = {
+	light: createTheme({ type: "light", theme: themes.light }),
+	dark: createTheme({ type: "dark", theme: themes.dark }),
+};
+
+const borderStyles = {
+	solid: "solid",
 } as const;
 
-// This is weird but we need to keep it to make 'onlyAllowThemeValues' work
-const baseTheme: Partial<DripsyBaseTheme> = {};
+const types = {
+	onlyAllowThemeValues: "always",
+	reactNativeTypesOnly: true,
+} as const;
 
-const lightTheme = makeTheme({
-	...baseTheme,
-	...base,
-	colors: {
-		$background: "#c9d1d9" as string,
-		$text: "#0d1117" as string,
-		$primary: "#61C21B" as string,
-		$secondary: "#718F5B" as string,
-		$accent: "#F5F03C" as string,
-		$highlight: "#F5C348" as string,
-		$muted: "#F2E4DC" as string,
+const evaluateColors = <T extends Record<string, string>>(colors: T): T => {
+	const retrieveValueRecursive = <K extends keyof T>(key: K): T[K] => {
+		const value = colors[key]!;
+		if (value.startsWith("$")) {
+			return retrieveValueRecursive(value.slice(1) as K);
+		}
+		return value;
+	};
+	return Object.keys(colors).reduce<T>((acc, key: keyof T) => {
+		acc[key] = retrieveValueRecursive(key);
+		return acc;
+	}, {} as T);
+};
+
+const commonTheme = {
+	breakpoints: Object.values(themes.light.breakpoints),
+	borderWidths: themes.light.borderWeights,
+	borderStyles,
+	space: themes.light.space,
+	sizes: {
+		...themes.light.space,
+		full: "100%",
 	},
-	types: {
-		onlyAllowThemeValues: "always",
-		reactNativeTypesOnly: true,
+	fonts: themes.light.fonts,
+	fontSizes: themes.light.fontSizes,
+	fontWeights: themes.light.fontWeights,
+	lineHeights: themes.light.lineHeights,
+	letterSpacings: themes.light.letterSpacings,
+	radii: themes.light.radii,
+	zIndices: themes.light.zIndices,
+	transitions: themes.light.transitions,
+	types,
+};
+
+const dripsyThemes = {
+	light: {
+		...commonTheme,
+		colors: evaluateColors(themes.light.colors),
+		shadows: themes.light.shadows,
+		dropShadows: themes.light.dropShadows,
 	},
-});
-type Theme = typeof lightTheme;
-const darkTheme: Theme = makeTheme({
-	...base,
-	colors: {
-		$background: "#0d1117",
-		$text: "#c9d1d9",
-		$primary: "#1B32C2",
-		$secondary: "#8979F6",
-		$accent: "#F5F03C",
-		$highlight: "#F5C348",
-		$muted: "#F2E4DC",
+	dark: {
+		...commonTheme,
+		colors: evaluateColors(themes.dark.colors),
+		shadows: themes.dark.shadows,
+		dropShadows: themes.dark.dropShadows,
 	},
-	types: {
-		onlyAllowThemeValues: "always",
-		reactNativeTypesOnly: true,
-	},
-});
+};
+
+type DripsyTheme = typeof dripsyThemes["light"];
 
 declare module "dripsy" {
-	interface DripsyCustomTheme extends Theme {}
+	interface DripsyCustomTheme extends DripsyTheme {}
 }
 
 export const ThemeProvider: React.FC<React.PropsWithChildren<object>> = ({
@@ -100,23 +100,27 @@ export const ThemeProvider: React.FC<React.PropsWithChildren<object>> = ({
 		setColorModeConfig((prev) => ({ ...prev, last: colorScheme }));
 	}, [colorScheme, setColorModeConfig]);
 	const selectedMode = colorModeConfig.selected || colorModeConfig.last;
-	const theme = selectedMode === "dark" ? darkTheme : lightTheme;
-	return <DripsyProvider theme={theme}>{children}</DripsyProvider>;
+	const sureMode = selectedMode ?? "light";
+	return (
+		<DripsyProvider theme={dripsyThemes[sureMode]}>
+			<NextUIProvider theme={nextThemes[sureMode]}>{children}</NextUIProvider>
+		</DripsyProvider>
+	);
 };
 
-export const Text = styled(ReactNative.Text)({ color: "$text" });
-export const H1 = styled(HTMLElements.H1)({ color: "$text" });
-export const P = styled(HTMLElements.P)({ color: "$text" });
-export const A = styled(HTMLElements.A)({ color: "$text" });
+export const Text = styled(ReactNative.Text)({ color: "text" });
+export const H1 = styled(HTMLElements.H1)({ color: "text" });
+export const P = styled(HTMLElements.P)({ color: "text" });
+export const A = styled(HTMLElements.A)({ color: "text" });
 export const TextLink = ({
 	textProps,
 	...props
 }: React.ComponentProps<typeof BaseTextLink>) => {
 	const sx = useSx();
 	const linkStyle = sx({
-		fontSize: "$regular",
-		fontWeight: "$bold",
-		color: "$primary",
+		fontSize: "base",
+		fontWeight: "bold",
+		color: "primary",
 	});
 	return (
 		<BaseTextLink
@@ -129,22 +133,19 @@ export const TextLink = ({
 	);
 };
 const StyledTextInput = styled(ReactNative.TextInput)({
-	color: "$text",
-	borderColor: "$muted",
-	width: "$full",
-	borderWidth: "$hairline",
-	borderRadius: "$medium",
-	padding: "$s",
+	color: "text",
+	borderColor: "border",
+	width: 96,
+	borderWidth: "light",
+	borderRadius: "md",
+	padding: "sm",
 });
 export const TextInput = (
 	props: React.ComponentProps<typeof StyledTextInput>
 ) => {
 	const { theme } = useDripsyTheme();
 	return (
-		<StyledTextInput
-			placeholderTextColor={theme.colors.$secondary}
-			{...props}
-		/>
+		<StyledTextInput placeholderTextColor={theme.colors.secondary} {...props} />
 	);
 };
 export const ScrollView = ({
@@ -156,7 +157,7 @@ export const ScrollView = ({
 		<ReactNative.ScrollView
 			{...props}
 			contentContainerStyle={[
-				sx({ justifyContent: "center", alignItems: "stretch", width: "$full" }),
+				sx({ justifyContent: "center", alignItems: "stretch", width: "full" }),
 				contentContainerStyle,
 			]}
 		/>

@@ -13,12 +13,12 @@ export const NavigationProvider: React.FC<React.PropsWithChildren<object>> = ({
 		() => ({
 			dark: false,
 			colors: {
-				primary: theme.colors.$primary,
-				background: theme.colors.$background,
-				card: theme.colors.$background,
-				text: theme.colors.$text,
-				border: theme.colors.$muted,
-				notification: theme.colors.$accent,
+				primary: theme.colors.primary,
+				background: theme.colors.background,
+				card: theme.colors.background,
+				text: theme.colors.text,
+				border: theme.colors.border,
+				notification: theme.colors.accents0,
 			},
 		}),
 		[theme]

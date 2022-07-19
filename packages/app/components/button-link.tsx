@@ -1,14 +1,14 @@
 import { styled, TextLink } from "app/utils/styles";
 
 export const ButtonLink = styled(TextLink)({
-	padding: "$s",
-	margin: "$s",
-	borderRadius: "$medium",
-	borderColor: "$primary",
-	borderWidth: "$hairline",
+	padding: "sm",
+	margin: "sm",
+	borderRadius: "md",
+	borderColor: "primary",
+	borderWidth: "light",
 	display: "flex",
 	alignItems: "center",
 	justifyContent: "center",
-	minWidth: "$icon",
-	minHeight: "$icon",
+	minWidth: "xl",
+	minHeight: "xl",
 });

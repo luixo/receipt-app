@@ -10,9 +10,9 @@ type Props = {
 };
 
 const Button = styled(ReactNative.Button)({
-	padding: "$m",
-	borderWidth: "$hairline",
-	borderColor: "$primary",
+	padding: "md",
+	borderWidth: "light",
+	borderColor: "primary",
 });
 
 export const BackButton: React.FC<Props> = ({ href }) => {

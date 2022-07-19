@@ -33,9 +33,9 @@ import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
 import { AccountsId } from "next-app/src/db/models";
 
 const ConnectButton = styled(ReactNative.Button)({
-	padding: "$m",
-	borderWidth: "$hairline",
-	borderColor: "$muted",
+	padding: "md",
+	borderWidth: "light",
+	borderColor: "border",
 });
 
 type PagedUserSnapshot = TRPCQueryOutput<"users.get-paged">["items"][number];

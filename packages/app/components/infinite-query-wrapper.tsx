@@ -11,11 +11,11 @@ import {
 import { styled, Text } from "app/utils/styles";
 
 const ErrorText = styled(Text)({
-	margin: "$m",
+	margin: "md",
 });
 
 const LoadingText = styled(Text)({
-	margin: "$m",
+	margin: "md",
 });
 
 type InjectedProps<Path extends TRPCInfiniteQueryKey> = {

@@ -12,11 +12,11 @@ const Wrapper = styled(ReactNative.View)({
 	flex: 1,
 	justifyContent: "center",
 	alignItems: "center",
-	padding: "$m",
+	padding: "md",
 });
 
 const Header = styled(H1)({
-	fontWeight: "$bold",
+	fontWeight: "bold",
 	textAlign: "center",
 });
 

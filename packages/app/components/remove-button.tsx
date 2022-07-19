@@ -8,9 +8,9 @@ type Props = {
 } & ReactNative.TouchableOpacityProps;
 
 const Button = styled(ReactNative.Button)({
-	padding: "$m",
-	borderWidth: "$hairline",
-	borderColor: "$highlight",
+	padding: "md",
+	borderWidth: "light",
+	borderColor: "accents0",
 });
 
 export const RemoveButton: React.FC<Props> = ({
