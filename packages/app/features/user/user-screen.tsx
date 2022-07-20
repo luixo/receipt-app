@@ -20,11 +20,12 @@ export const UserScreen: React.FC = () => {
 	}
 
 	const usersGetInput: UsersGetInput = { id };
+	const userNameQuery = trpc.useQuery(["users.get-name", usersGetInput]);
 	const userQuery = trpc.useQuery(["users.get", usersGetInput]);
 
 	return (
 		<ScrollView>
-			<Block name={`User: ${userQuery.data ? userQuery.data.name : id}`}>
+			<Block name={`User: ${userNameQuery.data || id}`}>
 				<BackButton href="/users/" />
 				<QueryWrapper query={userQuery} input={usersGetInput}>
 					{User}

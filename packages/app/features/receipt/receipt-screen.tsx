@@ -23,6 +23,7 @@ export const ReceiptScreen: React.FC = () => {
 
 	const receiptItemsInput: ReceiptItemsGetInput = { receiptId: id };
 	const receiptInput: ReceiptsGetInput = { id };
+	const receiptNameQuery = trpc.useQuery(["receipts.get-name", receiptInput]);
 	const receiptQuery = trpc.useQuery(["receipts.get", receiptInput]);
 	const receiptItemsQuery = trpc.useQuery([
 		"receipt-items.get",
@@ -31,9 +32,7 @@ export const ReceiptScreen: React.FC = () => {
 
 	return (
 		<ScrollView>
-			<Block
-				name={`Receipt: ${receiptQuery.data ? receiptQuery.data.name : id}`}
-			>
+			<Block name={`Receipt: ${receiptNameQuery.data || id}`}>
 				<BackButton href="/receipts/" />
 				<QueryWrapper query={receiptQuery} input={receiptInput}>
 					{Receipt}
