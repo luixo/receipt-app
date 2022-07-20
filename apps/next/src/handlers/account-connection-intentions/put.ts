@@ -102,9 +102,22 @@ export const router = trpc.router<AuthorizedContext>().mutation("put", {
 					ACCOUNT_CONNECTIONS_INTENTIONS.CONSTRAINTS.ACCOUNT_PAIR
 				)
 			) {
+				const existingIntention = await database
+					.selectFrom("accountConnectionsIntentions")
+					.where("accountId", "=", ctx.auth.accountId)
+					.where("targetAccountId", "=", account.id)
+					.select(["userId"])
+					.executeTakeFirstOrThrow();
+				const existingUser = await getUserById(
+					database,
+					existingIntention.userId,
+					["name"]
+				);
 				throw new trpc.TRPCError({
 					code: "CONFLICT",
-					message: `Account with email ${input.email} already has intention to connect with ${ctx.auth.accountId}.`,
+					message: `You already has intention to connect to ${
+						input.email
+					} as user ${existingUser!.name}.`,
 				});
 			}
 			if (
@@ -112,7 +125,7 @@ export const router = trpc.router<AuthorizedContext>().mutation("put", {
 			) {
 				throw new trpc.TRPCError({
 					code: "CONFLICT",
-					message: `User id ${input.userId} already has intention to connect with ${ctx.auth.accountId}.`,
+					message: `You already has intention to connect to user ${user.name}.`,
 				});
 			}
 			throw e;
