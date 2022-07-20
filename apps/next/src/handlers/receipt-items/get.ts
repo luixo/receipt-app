@@ -5,6 +5,7 @@ import { z } from "zod";
 import { getDatabase } from "next-app/db";
 import { ReceiptItemsId, ReceiptsId, UsersId } from "next-app/db/models";
 import { AuthorizedContext } from "next-app/handlers/context";
+import { Role } from "next-app/handlers/receipts/utils";
 import { flavored } from "next-app/handlers/zod";
 
 type ReceiptItem = {
@@ -77,6 +78,12 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 				.execute(),
 		]);
 
+		type OriginalReceiptParticipant = typeof receiptParticipants[number];
+		type ReceiptParticipant = Omit<OriginalReceiptParticipant, "role"> & {
+			role: Role;
+			dirty?: boolean;
+		};
+
 		return {
 			items: Object.values(
 				rows.reduce<Record<string, ReceiptItem>>((acc, row) => {
@@ -99,11 +106,7 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 					return acc;
 				}, {})
 			),
-			participants: receiptParticipants.map((participant) => ({
-				...participant,
-				role: participant.role as "owner" | "editor" | "viewer",
-				dirty: undefined as boolean | undefined,
-			})),
+			participants: receiptParticipants as ReceiptParticipant[],
 		};
 	},
 });

@@ -5,7 +5,7 @@ import { z } from "zod";
 import { getDatabase } from "next-app/db";
 import { ReceiptsId } from "next-app/db/models";
 import { AuthorizedContext } from "next-app/handlers/context";
-import { getAccessRole } from "next-app/handlers/receipts/utils";
+import { getAccessRole, Role } from "next-app/handlers/receipts/utils";
 import { flavored } from "next-app/handlers/zod";
 
 export const router = trpc.router<AuthorizedContext>().query("get", {
@@ -48,8 +48,7 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 			return {
 				...receipt,
 				role: accessRole,
-				dirty: undefined as boolean | undefined,
-			};
+			} as typeof receipt & { role: Role; dirty?: boolean };
 		}
 		throw new trpc.TRPCError({
 			code: "FORBIDDEN",

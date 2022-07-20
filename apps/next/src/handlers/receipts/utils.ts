@@ -9,7 +9,7 @@ import {
 import { ReceiptsId } from "next-app/db/models";
 import { role } from "next-app/handlers/zod";
 
-type Role = z.infer<typeof role>;
+export type Role = z.infer<typeof role>;
 
 export const getAccessRole = async (
 	database: Database,
