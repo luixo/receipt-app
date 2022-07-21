@@ -112,6 +112,7 @@ export const UserPublicNameInput: React.FC<Props> = ({
 					<ButtonsContainer>
 						<IconButton
 							title="Save user public name"
+							light
 							isLoading={updateUserMutation.isLoading}
 							disabled={
 								!inputValue ||
@@ -122,8 +123,9 @@ export const UserPublicNameInput: React.FC<Props> = ({
 							icon={<CheckMark size={24} />}
 						/>
 						<IconButton
-							isLoading={updateUserMutation.isLoading}
 							title="Remove user public name"
+							light
+							isLoading={updateUserMutation.isLoading}
 							onClick={
 								user.publicName ? () => savePublicName(null) : switchShowInput
 							}

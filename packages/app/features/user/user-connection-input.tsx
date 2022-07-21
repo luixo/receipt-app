@@ -124,6 +124,7 @@ export const UserConnectionInput: React.FC<Props> = ({
 					contentRight={
 						<IconButton
 							title="Cancel request"
+							light
 							isLoading={cancelRequestMutation.isLoading}
 							color="error"
 							icon={<TrashBinIcon size={24} />}
@@ -166,6 +167,7 @@ export const UserConnectionInput: React.FC<Props> = ({
 						{user.email ? (
 							<IconButton
 								title="Unlink user from email"
+								light
 								isLoading={unlinkMutation.isLoading}
 								icon={<UnlinkIcon size={24} />}
 								onClick={unlinkUser}
@@ -173,6 +175,7 @@ export const UserConnectionInput: React.FC<Props> = ({
 						) : (
 							<IconButton
 								title="Link user to email"
+								light
 								isLoading={connectUserMutation.isLoading}
 								disabled={!inputValue || Boolean(inputState.error)}
 								onClick={() => connectUser(inputValue)}

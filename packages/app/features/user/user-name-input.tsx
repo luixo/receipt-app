@@ -76,6 +76,7 @@ export const UserNameInput: React.FC<Props> = ({ user, isLoading, input }) => {
 			contentRight={
 				<IconButton
 					title="Save user name"
+					light
 					isLoading={updateUserMutation.isLoading}
 					disabled={
 						!inputValue || user.name === inputValue || Boolean(inputState.error)

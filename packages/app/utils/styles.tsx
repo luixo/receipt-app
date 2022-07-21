@@ -9,7 +9,7 @@ import {
 	createTheme,
 } from "@nextui-org/react";
 import { styled, DripsyProvider, useSx, useDripsyTheme } from "dripsy";
-import { TextLink as BaseTextLink } from "solito/link";
+import { TextLink as BaseTextLink, Link as BaseLink } from "solito/link";
 
 import { ColorModeContext } from "app/contexts/color-mode-context";
 
@@ -66,16 +66,26 @@ const commonTheme = {
 	types,
 };
 
+const commonColors = {
+	overlay: "rgba(255, 255, 255, 0.5)",
+};
+
 const dripsyThemes = {
 	light: {
 		...commonTheme,
-		colors: evaluateColors(themes.light.colors),
+		colors: {
+			...evaluateColors(themes.light.colors),
+			...commonColors,
+		},
 		shadows: themes.light.shadows,
 		dropShadows: themes.light.dropShadows,
 	},
 	dark: {
 		...commonTheme,
-		colors: evaluateColors(themes.dark.colors),
+		colors: {
+			...evaluateColors(themes.dark.colors),
+			...commonColors,
+		},
 		shadows: themes.dark.shadows,
 		dropShadows: themes.dark.dropShadows,
 	},
@@ -112,6 +122,21 @@ export const Text = styled(ReactNative.Text)({ color: "text" });
 export const H1 = styled(HTMLElements.H1)({ color: "text" });
 export const P = styled(HTMLElements.P)({ color: "text" });
 export const A = styled(HTMLElements.A)({ color: "text" });
+export const Link = ({
+	viewProps,
+	style,
+	...props
+}: Omit<React.ComponentProps<typeof BaseLink>, "style"> & {
+	style?: ReactNative.StyleProp<ReactNative.ViewProps>;
+}) => (
+	<BaseLink
+		{...props}
+		viewProps={{
+			...viewProps,
+			style,
+		}}
+	/>
+);
 export const TextLink = ({
 	textProps,
 	...props

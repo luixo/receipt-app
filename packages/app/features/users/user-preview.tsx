@@ -1,9 +1,25 @@
 import React from "react";
+import * as ReactNative from "react-native";
 
-import { Block } from "app/components/block";
+import { styled as nextStyled, Text } from "@nextui-org/react";
+
+import { Identicon } from "app/components/identicon";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { updateUserName } from "app/utils/queries/users-get-name";
-import { Text, TextLink } from "app/utils/styles";
+import { styled, Link } from "app/utils/styles";
+
+const WrapperLink = styled(Link)({
+	flexDirection: "row",
+});
+
+const Information = styled(ReactNative.View)({
+	marginLeft: "sm",
+	justifyContent: "center",
+});
+
+const UserName = nextStyled(Text, {
+	fontWeight: "$medium",
+});
 
 type Props = {
 	data: TRPCQueryOutput<"users.get-paged">["items"][number];
@@ -15,23 +31,23 @@ export const UserPreview: React.FC<Props> = ({ data: user }) => {
 		() => updateUserName(trpcContext, { id: user.id }, user.name),
 		[trpcContext, user.id, user.name]
 	);
-	const innerContent = !user.publicName
-		? user.name
-		: `${user.name} (public: ${user.publicName})`;
 	return (
-		<Block>
-			{user.dirty ? (
-				<Text>{innerContent}</Text>
-			) : (
-				<TextLink
-					href={`/users/${user.id}/`}
-					onClick={setUserName}
-					legacyBehavior={false}
-				>
-					{innerContent}
-				</TextLink>
-			)}
-			{user.email ? <Text>Connected with {user.email}</Text> : null}
-		</Block>
+		<WrapperLink
+			href={`/users/${user.id}/`}
+			onClick={setUserName}
+			legacyBehavior={false}
+		>
+			<Identicon hash={user.id} size={40} altText={user.name} />
+			<Information>
+				{/* zero margin because of inherited margin from ChildText */}
+				<UserName css={{ margin: 0 }}>
+					{user.name + (user.publicName ? ` (${user.publicName})` : "")}
+				</UserName>
+				{/* color set in css because of inherited margin from Text */}
+				<Text small css={{ color: "$accents7", margin: 0 }}>
+					{user.email ?? undefined}
+				</Text>
+			</Information>
+		</WrapperLink>
 	);
 };
