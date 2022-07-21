@@ -2,6 +2,7 @@ import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
+import { useRouter } from "solito/router";
 import { v4 } from "uuid";
 import { z } from "zod";
 
@@ -101,6 +102,7 @@ type Form = {
 };
 
 export const AddReceiptForm: React.FC = () => {
+	const router = useRouter();
 	const accountQuery = trpc.useQuery(["account.get"]);
 
 	const receiptsGetPagedInput = receiptsGetPagedInputStore();
@@ -116,16 +118,15 @@ export const AddReceiptForm: React.FC = () => {
 		control,
 		handleSubmit,
 		formState: { isValid, isSubmitting, errors },
-		reset,
 		setValue,
 	} = useForm<Form>({
 		mode: "onChange",
 		resolver: zodResolver(z.object({ name: receiptNameSchema })),
 	});
-	const onSubmit = useSubmitHandler<Form>(
-		(values) => addReceiptMutation.mutateAsync(values),
-		[addReceiptMutation, reset],
-		reset
+	const onSubmit = useSubmitHandler<Form, ReceiptsId>(
+		async (values) => addReceiptMutation.mutateAsync(values),
+		[addReceiptMutation, router],
+		(id) => router.replace(`/receipts/${id}`)
 	);
 
 	const currenciesListQuery = trpc.useQuery([

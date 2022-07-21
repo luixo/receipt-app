@@ -2,6 +2,7 @@ import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
+import { useRouter } from "solito/router";
 import { v4 } from "uuid";
 import { z } from "zod";
 
@@ -72,6 +73,7 @@ type Form = {
 };
 
 export const AddUserScreen: React.FC = () => {
+	const router = useRouter();
 	const usersGetPagedInput = usersGetPagedInputStore();
 	const addUserMutation = trpc.useMutation(
 		"users.put",
@@ -82,15 +84,17 @@ export const AddUserScreen: React.FC = () => {
 		control,
 		handleSubmit,
 		formState: { isValid, isSubmitting, errors },
-		reset,
 	} = useForm<Form>({
 		mode: "onChange",
 		resolver: zodResolver(z.object({ name: userNameSchema })),
 	});
-	const onSubmit = useSubmitHandler<Form>(
-		(values) => addUserMutation.mutateAsync({ name: values.name }),
-		[addUserMutation, reset],
-		reset
+	const onSubmit = useSubmitHandler<Form, UsersId>(
+		async (values) =>
+			addUserMutation.mutateAsync({
+				name: values.name,
+			}),
+		[addUserMutation, router],
+		(id) => router.replace(`/users/${id}`)
 	);
 
 	return (
