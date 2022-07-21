@@ -8,6 +8,7 @@ import { router as getAvailableRouter } from "./get-available";
 import { router as getNameRouter } from "./get-name";
 import { router as getPagedRouter } from "./get-paged";
 import { router as putRouter } from "./put";
+import { router as unlinkRouter } from "./unlink";
 import { router as updateRouter } from "./update";
 
 export const router = trpc
@@ -18,4 +19,5 @@ export const router = trpc
 	.merge(putRouter)
 	.merge(deleteRouter)
 	.merge(updateRouter)
-	.merge(getNameRouter);
+	.merge(getNameRouter)
+	.merge(unlinkRouter);

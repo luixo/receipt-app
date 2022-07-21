@@ -32,7 +32,7 @@ import { styled, Text } from "app/utils/styles";
 import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
 import { AccountsId } from "next-app/src/db/models";
 
-const ConnectButton = styled(ReactNative.Button)({
+const Button = styled(ReactNative.Button)({
 	padding: "md",
 	borderWidth: "light",
 	borderColor: "border",
@@ -51,6 +51,55 @@ const cancelRequestMutationOptions: UseContextedMutationOptions<"account-connect
 				);
 			},
 	};
+
+const unlinkMutationOptions: UseContextedMutationOptions<
+	"users.unlink",
+	{
+		pagedSnapshot?: {
+			pageIndex: number;
+			userIndex: number;
+			user: PagedUserSnapshot;
+		};
+		snapshot?: UserSnapshot;
+	},
+	{
+		pagedInput: UsersGetPagedInput;
+		input: UsersGetInput;
+	}
+> = {
+	onMutate:
+		(trpcContext, { input, pagedInput }) =>
+		({ id }) => {
+			const pagedSnapshot = getPagedUserById(trpcContext, pagedInput, id);
+			const snapshot = getUserById(trpcContext, input);
+			updatePagedUsers(trpcContext, pagedInput, (userPage) =>
+				userPage.map((user) =>
+					user.id === id ? { ...user, email: null } : user
+				)
+			);
+			updateUser(trpcContext, input, (user) => ({ ...user, email: null }));
+			return { pagedSnapshot, snapshot };
+		},
+	onError:
+		(trpcContext, { pagedInput, input }) =>
+		(_error, _variables, { pagedSnapshot, snapshot } = {}) => {
+			if (pagedSnapshot) {
+				updatePagedUsers(trpcContext, pagedInput, (userPage, pageIndex) => {
+					if (pageIndex !== pagedSnapshot.pageIndex) {
+						return userPage;
+					}
+					return [
+						...userPage.slice(0, pagedSnapshot.userIndex),
+						pagedSnapshot.user,
+						...userPage.slice(pagedSnapshot.userIndex),
+					];
+				});
+			}
+			if (snapshot) {
+				updateUser(trpcContext, input, () => snapshot);
+			}
+		},
+};
 
 const deleteMutationOptions: UseContextedMutationOptions<
 	"users.delete",
@@ -342,6 +391,18 @@ export const User: React.FC<Props> = ({ data: user, input }) => {
 		[cancelRequestMutation, user.id]
 	);
 
+	const unlinkMutation = trpc.useMutation(
+		"users.unlink",
+		useTrpcMutationOptions(unlinkMutationOptions, {
+			pagedInput: usersGetPagedInput,
+			input,
+		})
+	);
+	const unlinkUser = React.useCallback(
+		() => unlinkMutation.mutate({ id: user.id }),
+		[unlinkMutation, user.id]
+	);
+
 	return (
 		<Block>
 			<ReactNative.TouchableOpacity disabled={user.dirty} onPress={promptName}>
@@ -360,15 +421,18 @@ export const User: React.FC<Props> = ({ data: user, input }) => {
 			</ReactNative.TouchableOpacity>
 
 			{user.email ? (
-				<Text>Connected with email: {user.email}</Text>
+				<>
+					<Text>Connected with email: {user.email}</Text>
+					<Button title="Unlink email" onPress={unlinkUser} />
+				</>
 			) : hasOutboundConnectionIntention === false ? (
 				<ReactNative.TouchableOpacity>
-					<ConnectButton title="Connect" onPress={promptConnect} />
+					<Button title="Connect" onPress={promptConnect} />
 				</ReactNative.TouchableOpacity>
 			) : hasOutboundConnectionIntention === undefined ? (
 				<Text>Loading connection intentions..</Text>
 			) : (
-				<ConnectButton title="Cancel request" onPress={cancelRequest} />
+				<Button title="Cancel request" onPress={cancelRequest} />
 			)}
 			<RemoveButton onPress={deleteUser} disabled={user.dirty}>
 				Remove user
