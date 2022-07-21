@@ -10,9 +10,9 @@ import {
 } from "@nextui-org/react";
 import { MdAdd as AddIcon } from "react-icons/md";
 
-import { ErrorMessage } from "app/components/error-message";
 import { IconButton } from "app/components/icon-button";
 import { Overlay } from "app/components/overlay";
+import { QueryErrorMessage } from "app/components/query-error-message";
 import { useCursorPaging } from "app/hooks/use-cursor-paging";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import {
@@ -68,7 +68,7 @@ export const Users: React.FC = () => {
 		return <Loading size="xl" />;
 	}
 	if (usersQuery.status === "error") {
-		return <ErrorMessage query={usersQuery} />;
+		return <QueryErrorMessage query={usersQuery} />;
 	}
 	if (usersQuery.status === "idle") {
 		return null;
