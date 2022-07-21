@@ -5,6 +5,7 @@ import { IoTrashBin as TrashBinIcon } from "react-icons/io5";
 import { MdLink as LinkIcon, MdLinkOff as UnlinkIcon } from "react-icons/md";
 
 import { IconButton } from "app/components/icon-button";
+import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useInput } from "app/hooks/use-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
@@ -55,13 +56,31 @@ export const UserConnectionInput: React.FC<Props> = ({
 		[connectUserMutation, user.id]
 	);
 
+	const {
+		bindings,
+		state: inputState,
+		value: inputValue,
+		setValue,
+	} = useInput({
+		initialValue: user.email ?? undefined,
+		schema: emailSchema,
+	});
+	const [inputShown, setInputShown] = React.useState(Boolean(user.email));
+
 	const cancelRequestMutation = trpc.useMutation(
 		"account-connection-intentions.cancel-request",
 		useTrpcMutationOptions(cancelRequestMutationOptions)
 	);
-	const cancelRequest = React.useCallback(
-		() => cancelRequestMutation.mutate({ userId: user.id }),
-		[cancelRequestMutation, user.id]
+	const cancelRequest = useAsyncCallback(
+		async (isMount) => {
+			await cancelRequestMutation.mutateAsync({ userId: user.id });
+			if (!isMount()) {
+				return;
+			}
+			setValue("");
+			setInputShown(false);
+		},
+		[cancelRequestMutation, user.id, setValue]
 	);
 
 	const unlinkMutation = trpc.useMutation(
@@ -75,17 +94,6 @@ export const UserConnectionInput: React.FC<Props> = ({
 		() => unlinkMutation.mutate({ id: user.id }),
 		[unlinkMutation, user.id]
 	);
-
-	const {
-		bindings,
-		state: inputState,
-		value: inputValue,
-	} = useInput({
-		initialValue: user.email ?? undefined,
-		schema: emailSchema,
-	});
-
-	const [inputShown, setInputShown] = React.useState(Boolean(user.email));
 
 	if (outboundConnectionIntention === undefined) {
 		return (
@@ -116,7 +124,6 @@ export const UserConnectionInput: React.FC<Props> = ({
 					disabled
 					helperColor="error"
 					helperText={mutationError}
-					contentRightStyling={false}
 					contentRight={
 						<IconButton
 							title="Cancel request"
@@ -136,7 +143,7 @@ export const UserConnectionInput: React.FC<Props> = ({
 		return (
 			<>
 				<Spacer y={1} />
-				<Button onClick={() => setInputShown(true)}>
+				<Button onClick={() => setInputShown(true)} disabled={isLoading}>
 					Connect to an account
 				</Button>
 			</>
