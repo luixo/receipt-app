@@ -6,7 +6,7 @@ import { MdLink as LinkIcon, MdLinkOff as UnlinkIcon } from "react-icons/md";
 
 import { IconButton } from "app/components/icon-button";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
-import { useInput } from "app/hooks/use-input";
+import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { UsersGetInput } from "app/utils/queries/users-get";
@@ -59,10 +59,10 @@ export const UserConnectionInput: React.FC<Props> = ({
 	const {
 		bindings,
 		state: inputState,
-		value: inputValue,
+		getValue,
 		setValue,
-	} = useInput({
-		initialValue: user.email ?? undefined,
+	} = useSingleInput({
+		initialValue: user.email ?? "",
 		schema: emailSchema,
 	});
 	const [inputShown, setInputShown] = React.useState(Boolean(user.email));
@@ -180,8 +180,8 @@ export const UserConnectionInput: React.FC<Props> = ({
 								title="Link user to email"
 								light
 								isLoading={connectUserMutation.isLoading}
-								disabled={!inputValue || Boolean(inputState.error)}
-								onClick={() => connectUser(inputValue)}
+								disabled={Boolean(inputState.error)}
+								onClick={() => connectUser(getValue())}
 								icon={<LinkIcon size={24} />}
 							/>
 						)}

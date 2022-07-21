@@ -9,7 +9,7 @@ import {
 
 import { IconButton } from "app/components/icon-button";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
-import { useInput } from "app/hooks/use-input";
+import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { UsersGetInput } from "app/utils/queries/users-get";
@@ -43,9 +43,9 @@ export const UserPublicNameInput: React.FC<Props> = ({
 	const {
 		bindings,
 		state: inputState,
-		value: inputValue,
+		getValue,
 		setValue,
-	} = useInput({
+	} = useSingleInput({
 		initialValue: user.publicName ?? "",
 		schema: userNameSchema,
 	});
@@ -106,11 +106,9 @@ export const UserPublicNameInput: React.FC<Props> = ({
 							light
 							isLoading={updateUserMutation.isLoading}
 							disabled={
-								!inputValue ||
-								user.publicName === inputValue ||
-								Boolean(inputState.error)
+								user.publicName === getValue() || Boolean(inputState.error)
 							}
-							onClick={() => savePublicName(inputValue)}
+							onClick={() => savePublicName(getValue())}
 							icon={<CheckMark size={24} />}
 						/>
 						<IconButton

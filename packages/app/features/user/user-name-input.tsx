@@ -5,7 +5,7 @@ import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 
 import { IconButton } from "app/components/icon-button";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
-import { useInput } from "app/hooks/use-input";
+import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { UsersGetInput } from "app/utils/queries/users-get";
@@ -24,9 +24,9 @@ export const UserNameInput: React.FC<Props> = ({ user, isLoading, input }) => {
 	const {
 		bindings,
 		state: inputState,
-		value: inputValue,
+		getValue,
 		setValue,
-	} = useInput({
+	} = useSingleInput({
 		initialValue: user.name,
 		schema: userNameSchema,
 	});
@@ -69,10 +69,8 @@ export const UserNameInput: React.FC<Props> = ({ user, isLoading, input }) => {
 					title="Save user name"
 					light
 					isLoading={updateUserMutation.isLoading}
-					disabled={
-						!inputValue || user.name === inputValue || Boolean(inputState.error)
-					}
-					onClick={() => saveName(inputValue)}
+					disabled={user.name === getValue() || Boolean(inputState.error)}
+					onClick={() => saveName(getValue())}
 					icon={<CheckMark size={24} />}
 				/>
 			}
