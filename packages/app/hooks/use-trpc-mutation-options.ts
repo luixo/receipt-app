@@ -28,7 +28,7 @@ export type WithContextIfExists<
 
 export type UseContextedMutationOptions<
 	Path extends TRPCMutationKey,
-	LifecycleContext,
+	LifecycleContext = unknown,
 	Context = undefined
 > = {
 	onMutate?: (
@@ -47,7 +47,7 @@ export type UseContextedMutationOptions<
 
 export const useTrpcMutationOptions = <
 	Path extends TRPCMutationKey,
-	LifecycleContext,
+	LifecycleContext = unknown,
 	Context = undefined
 >(
 	...[

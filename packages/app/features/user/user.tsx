@@ -41,6 +41,17 @@ const ConnectButton = styled(ReactNative.Button)({
 type PagedUserSnapshot = TRPCQueryOutput<"users.get-paged">["items"][number];
 type UserSnapshot = TRPCQueryOutput<"users.get">;
 
+const cancelRequestMutationOptions: UseContextedMutationOptions<"account-connection-intentions.cancel-request"> =
+	{
+		onSuccess:
+			(trpcContext) =>
+			(_result, { userId }) => {
+				updateOutboundIntentions(trpcContext, (intentions) =>
+					intentions.filter((intention) => intention.userId !== userId)
+				);
+			},
+	};
+
 const deleteMutationOptions: UseContextedMutationOptions<
 	"users.delete",
 	{
@@ -322,6 +333,15 @@ export const User: React.FC<Props> = ({ data: user, input }) => {
 		});
 	}, [connectUserMutation, user.id]);
 
+	const cancelRequestMutation = trpc.useMutation(
+		"account-connection-intentions.cancel-request",
+		useTrpcMutationOptions(cancelRequestMutationOptions)
+	);
+	const cancelRequest = React.useCallback(
+		() => cancelRequestMutation.mutate({ userId: user.id }),
+		[cancelRequestMutation, user.id]
+	);
+
 	return (
 		<Block>
 			<ReactNative.TouchableOpacity disabled={user.dirty} onPress={promptName}>
@@ -347,7 +367,9 @@ export const User: React.FC<Props> = ({ data: user, input }) => {
 				</ReactNative.TouchableOpacity>
 			) : hasOutboundConnectionIntention === undefined ? (
 				<Text>Loading connection intentions..</Text>
-			) : null}
+			) : (
+				<ConnectButton title="Cancel request" onPress={cancelRequest} />
+			)}
 			<RemoveButton onPress={deleteUser} disabled={user.dirty}>
 				Remove user
 			</RemoveButton>
@@ -361,6 +383,11 @@ export const User: React.FC<Props> = ({ data: user, input }) => {
 				mutation={connectUserMutation}
 			>
 				{() => <Text>Connect intention sent successfully!</Text>}
+			</MutationWrapper>
+			<MutationWrapper<"account-connection-intentions.cancel-request">
+				mutation={cancelRequestMutation}
+			>
+				{() => <Text>Connect intention canceled successfully!</Text>}
 			</MutationWrapper>
 		</Block>
 	);

@@ -3,6 +3,7 @@ import * as trpc from "@trpc/server";
 import { AuthorizedContext } from "next-app/handlers/context";
 
 import { router as acceptRouter } from "./accept";
+import { router as cancelRequestRouter } from "./cancel-request";
 import { router as deleteRouter } from "./delete";
 import { router as getAllRouter } from "./get-all";
 import { router as putRouter } from "./put";
@@ -14,4 +15,5 @@ export const router = trpc
 	.merge(putRouter)
 	.merge(acceptRouter)
 	.merge(deleteRouter)
-	.merge(rejectRouter);
+	.merge(rejectRouter)
+	.merge(cancelRequestRouter);
