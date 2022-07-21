@@ -39,6 +39,6 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 				message: `User ${input.id} is not owned by ${ctx.auth.accountId}.`,
 			});
 		}
-		return user as typeof user & { dirty?: boolean };
+		return user;
 	},
 });
