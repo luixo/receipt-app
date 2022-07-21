@@ -1,12 +1,10 @@
 import * as trpc from "@trpc/server";
 import { sql } from "kysely";
-import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
 import { UnauthorizedContext } from "next-app/handlers/context";
 
 export const router = trpc.router<UnauthorizedContext>().mutation("cleanup", {
-	input: z.undefined(),
 	resolve: async ({ ctx }) => {
 		const database = getDatabase(ctx);
 		const result = await database

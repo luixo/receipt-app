@@ -4,6 +4,7 @@
 	"main": "index.ts",
 	"dependencies": {
 		"@expo/html-elements": "^0.0.1",
+		"@hookform/resolvers": "^2.9.6",
 		"@react-native-picker/picker": "^2.4.1",
 		"@react-navigation/native": "^6.0.8",
 		"@trpc/react": "^9.24.0",

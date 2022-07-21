@@ -2,32 +2,32 @@ import * as trpc from "@trpc/server";
 import { MutationObject } from "kysely";
 import { z } from "zod";
 
-import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
+import {
+	priceSchema,
+	quantitySchema,
+	receiptItemNameSchema,
+} from "app/utils/validation";
 import { ReceiptsDatabase, getDatabase } from "next-app/db";
-import { ReceiptItemsId } from "next-app/db/models";
 import { AuthorizedContext } from "next-app/handlers/context";
 import { getReceiptItemById } from "next-app/handlers/receipt-items/utils";
 import {
 	getReceiptById,
 	getAccessRole,
 } from "next-app/handlers/receipts/utils";
-import { flavored } from "next-app/handlers/zod";
+import { receiptItemIdSchema } from "next-app/handlers/validation";
 
 export const router = trpc.router<AuthorizedContext>().mutation("update", {
 	input: z.strictObject({
-		id: z.string().uuid().refine<ReceiptItemsId>(flavored),
+		id: receiptItemIdSchema,
 		update: z.discriminatedUnion("type", [
 			z.strictObject({
 				type: z.literal("name"),
-				name: z
-					.string()
-					.min(VALIDATIONS_CONSTANTS.receiptItemName.min)
-					.max(VALIDATIONS_CONSTANTS.receiptItemName.max),
+				name: receiptItemNameSchema,
 			}),
-			z.strictObject({ type: z.literal("price"), price: z.number().gt(0) }),
+			z.strictObject({ type: z.literal("price"), price: priceSchema }),
 			z.strictObject({
 				type: z.literal("quantity"),
-				quantity: z.number().gt(0),
+				quantity: quantitySchema,
 			}),
 			z.strictObject({ type: z.literal("locked"), locked: z.boolean() }),
 		]),

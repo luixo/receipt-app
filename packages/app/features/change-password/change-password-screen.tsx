@@ -1,7 +1,9 @@
 import React from "react";
 import * as ReactNative from "react-native";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
+import { z } from "zod";
 
 import { BackButton } from "app/components/back-button";
 import { MutationWrapper } from "app/components/mutation-wrapper";
@@ -10,6 +12,7 @@ import { Spacer } from "app/components/spacer";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { trpc } from "app/trpc";
 import { styled, H1, TextInput, Text } from "app/utils/styles";
+import { passwordSchema } from "app/utils/validation";
 
 const Wrapper = styled(ReactNative.View)({
 	flex: 1,
@@ -30,7 +33,24 @@ type ChangePasswordForm = {
 };
 
 export const ChangePasswordScreen: React.FC = () => {
-	const form = useForm<ChangePasswordForm>({ mode: "onChange" });
+	const form = useForm<ChangePasswordForm>({
+		mode: "onChange",
+		// TODO: open a PR in react-hook-form
+		// After "password" change the "passwordRetype" doesn't get error
+		// probably because the field "passwordRetype" didn't change
+		resolver: zodResolver(
+			z
+				.object({
+					prevPassword: passwordSchema,
+					password: passwordSchema,
+					passwordRetype: passwordSchema,
+				})
+				.refine((obj) => obj.password === obj.passwordRetype, {
+					path: ["passwordRetype"],
+					message: "Passwords don't match",
+				})
+		),
+	});
 
 	const changePasswordMutation = trpc.useMutation(["account.change-password"]);
 	const onSubmit = useSubmitHandler<ChangePasswordForm>(
@@ -48,7 +68,6 @@ export const ChangePasswordScreen: React.FC = () => {
 			<Controller
 				control={form.control}
 				name="prevPassword"
-				rules={{ required: true }}
 				render={({ field: { onChange, value = "", onBlur } }) => (
 					<TextInput
 						placeholder="Enter your current password"

@@ -1,7 +1,9 @@
 import React from "react";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { v4 } from "uuid";
+import { z } from "zod";
 
 import { AddButton } from "app/components/add-button";
 import { Block } from "app/components/block";
@@ -18,7 +20,7 @@ import {
 	usersGetPagedInputStore,
 } from "app/utils/queries/users-get-paged";
 import { TextInput, Text } from "app/utils/styles";
-import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
+import { userNameSchema } from "app/utils/validation";
 import { UsersId } from "next-app/src/db/models";
 
 const putMutationOptions: UseContextedMutationOptions<
@@ -81,7 +83,10 @@ export const AddUserScreen: React.FC = () => {
 		handleSubmit,
 		formState: { isValid, isSubmitting, errors },
 		reset,
-	} = useForm<Form>({ mode: "onChange" });
+	} = useForm<Form>({
+		mode: "onChange",
+		resolver: zodResolver(z.object({ name: userNameSchema })),
+	});
 	const onSubmit = useSubmitHandler<Form>(
 		(values) => addUserMutation.mutateAsync({ name: values.name }),
 		[addUserMutation, reset],
@@ -93,11 +98,6 @@ export const AddUserScreen: React.FC = () => {
 			<Controller
 				control={control}
 				name="name"
-				rules={{
-					required: true,
-					minLength: VALIDATIONS_CONSTANTS.userName.min,
-					maxLength: VALIDATIONS_CONSTANTS.userName.max,
-				}}
 				render={({ field: { onChange, value = "", onBlur } }) => (
 					<>
 						<TextInput

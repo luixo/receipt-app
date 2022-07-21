@@ -26,7 +26,6 @@ import {
 	receiptsGetPagedInputStore,
 } from "app/utils/queries/receipts-get-paged";
 import { TextLink, Text } from "app/utils/styles";
-import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
 import { UsersId } from "next-app/src/db/models";
 
 import { ReceiptCurrencyChange } from "./receipt-currency-change";
@@ -223,14 +222,8 @@ export const Receipt: React.FC<Props> = ({ data: receipt, input }) => {
 	);
 	const promptName = React.useCallback(() => {
 		const name = window.prompt("Please enter new name", receipt.name);
-		if (
-			!name ||
-			name.length < VALIDATIONS_CONSTANTS.receiptName.min ||
-			name.length > VALIDATIONS_CONSTANTS.receiptName.max
-		) {
-			return window.alert(
-				`Name length should be between ${VALIDATIONS_CONSTANTS.receiptName.min} and ${VALIDATIONS_CONSTANTS.receiptName.max}!`
-			);
+		if (!name) {
+			return;
 		}
 		if (name === receipt.name) {
 			return;

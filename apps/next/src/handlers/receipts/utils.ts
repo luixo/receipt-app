@@ -7,9 +7,9 @@ import {
 	Database,
 } from "next-app/db";
 import { ReceiptsId } from "next-app/db/models";
-import { role } from "next-app/handlers/zod";
+import { roleSchema } from "next-app/handlers/validation";
 
-export type Role = z.infer<typeof role>;
+export type Role = z.infer<typeof roleSchema>;
 
 export const getAccessRole = async (
 	database: Database,
@@ -34,7 +34,7 @@ export const getAccessRole = async (
 	if (!participant) {
 		return;
 	}
-	const parsed = role.safeParse(participant.role);
+	const parsed = roleSchema.safeParse(participant.role);
 	if (!parsed.success) {
 		// TODO: add database-level validation
 		return;

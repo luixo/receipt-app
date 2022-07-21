@@ -2,25 +2,25 @@ import * as trpc from "@trpc/server";
 import { v4 } from "uuid";
 import { z } from "zod";
 
-import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
+import {
+	priceSchema,
+	quantitySchema,
+	receiptItemNameSchema,
+} from "app/utils/validation";
 import { getDatabase } from "next-app/db";
-import { ReceiptsId } from "next-app/db/models";
 import { AuthorizedContext } from "next-app/handlers/context";
 import {
 	getAccessRole,
 	getReceiptById,
 } from "next-app/handlers/receipts/utils";
-import { flavored } from "next-app/handlers/zod";
+import { receiptIdSchema } from "next-app/handlers/validation";
 
 export const router = trpc.router<AuthorizedContext>().mutation("put", {
 	input: z.strictObject({
-		receiptId: z.string().uuid().refine<ReceiptsId>(flavored),
-		name: z
-			.string()
-			.min(VALIDATIONS_CONSTANTS.receiptItemName.min)
-			.max(VALIDATIONS_CONSTANTS.receiptItemName.max),
-		price: z.number().gt(0),
-		quantity: z.number().gt(0),
+		receiptId: receiptIdSchema,
+		name: receiptItemNameSchema,
+		price: priceSchema,
+		quantity: quantitySchema,
 	}),
 	resolve: async ({ input, ctx }) => {
 		const database = getDatabase(ctx);

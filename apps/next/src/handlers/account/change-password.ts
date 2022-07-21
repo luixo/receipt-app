@@ -1,18 +1,18 @@
 import * as trpc from "@trpc/server";
 import { z } from "zod";
 
+import { passwordSchema } from "app/utils/validation";
 import { getDatabase } from "next-app/db";
 import { getAccountById } from "next-app/handlers/account/utils";
 import { AuthorizedContext } from "next-app/handlers/context";
-import { password } from "next-app/handlers/zod";
 import { generatePasswordData, getHash } from "next-app/utils/crypto";
 
 export const router = trpc
 	.router<AuthorizedContext>()
 	.mutation("change-password", {
 		input: z.strictObject({
-			prevPassword: password,
-			password,
+			prevPassword: passwordSchema,
+			password: passwordSchema,
 		}),
 		resolve: async ({ input, ctx }) => {
 			const database = getDatabase(ctx);

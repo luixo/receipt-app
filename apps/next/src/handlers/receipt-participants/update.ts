@@ -3,21 +3,24 @@ import { MutationObject } from "kysely";
 import { z } from "zod";
 
 import { ReceiptsDatabase, getDatabase } from "next-app/db";
-import { ReceiptsId, UsersId } from "next-app/db/models";
 import { AuthorizedContext } from "next-app/handlers/context";
 import { getReceiptParticipant } from "next-app/handlers/receipt-participants/utils";
 import { getReceiptById } from "next-app/handlers/receipts/utils";
 import { getUserById } from "next-app/handlers/users/utils";
-import { flavored, assignableRole } from "next-app/handlers/zod";
+import {
+	assignableRoleSchema,
+	receiptIdSchema,
+	userIdSchema,
+} from "next-app/handlers/validation";
 
 export const router = trpc.router<AuthorizedContext>().mutation("update", {
 	input: z.strictObject({
-		receiptId: z.string().uuid().refine<ReceiptsId>(flavored),
-		userId: z.string().uuid().refine<UsersId>(flavored),
+		receiptId: receiptIdSchema,
+		userId: userIdSchema,
 		update: z.discriminatedUnion("type", [
 			z.strictObject({
 				type: z.literal("role"),
-				role: assignableRole,
+				role: assignableRoleSchema,
 			}),
 			z.strictObject({ type: z.literal("resolved"), resolved: z.boolean() }),
 		]),

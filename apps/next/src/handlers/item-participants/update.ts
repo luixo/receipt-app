@@ -3,7 +3,6 @@ import { MutationObject } from "kysely";
 import { z } from "zod";
 
 import { ReceiptsDatabase, getDatabase } from "next-app/db";
-import { ReceiptItemsId, UsersId } from "next-app/db/models";
 import { AuthorizedContext } from "next-app/handlers/context";
 import { getItemParticipant } from "next-app/handlers/item-participants/utils";
 import { getReceiptItemById } from "next-app/handlers/receipt-items/utils";
@@ -12,15 +11,19 @@ import {
 	getAccessRole,
 } from "next-app/handlers/receipts/utils";
 import { getUserById } from "next-app/handlers/users/utils";
-import { flavored } from "next-app/handlers/zod";
+import {
+	partSchema,
+	receiptItemIdSchema,
+	userIdSchema,
+} from "next-app/handlers/validation";
 
 export const router = trpc.router<AuthorizedContext>().mutation("update", {
 	input: z.strictObject({
-		itemId: z.string().uuid().refine<ReceiptItemsId>(flavored),
-		userId: z.string().uuid().refine<UsersId>(flavored),
+		itemId: receiptItemIdSchema,
+		userId: userIdSchema,
 		update: z.strictObject({
 			type: z.literal("part"),
-			part: z.number().gt(0),
+			part: partSchema,
 		}),
 	}),
 	resolve: async ({ input, ctx }) => {

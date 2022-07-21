@@ -1,7 +1,9 @@
 import React from "react";
 import * as ReactNative from "react-native";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
+import { z } from "zod";
 
 import { BackButton } from "app/components/back-button";
 import { MutationWrapper } from "app/components/mutation-wrapper";
@@ -9,7 +11,11 @@ import { PasswordFields } from "app/components/password-fields";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { trpc } from "app/trpc";
 import { TextInput, Text } from "app/utils/styles";
-import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
+import {
+	accountNameSchema,
+	passwordSchema,
+	emailSchema,
+} from "app/utils/validation";
 
 type RegistrationForm = {
 	email: string;
@@ -19,7 +25,17 @@ type RegistrationForm = {
 };
 
 export const RegisterScreen: React.FC = () => {
-	const form = useForm<RegistrationForm>({ mode: "onChange" });
+	const form = useForm<RegistrationForm>({
+		mode: "onChange",
+		resolver: zodResolver(
+			z.object({
+				email: emailSchema,
+				name: accountNameSchema,
+				password: passwordSchema,
+				passwordRetype: passwordSchema,
+			})
+		),
+	});
 	const {
 		control,
 		handleSubmit,
@@ -43,13 +59,6 @@ export const RegisterScreen: React.FC = () => {
 			<Controller
 				control={control}
 				name="email"
-				rules={{
-					required: true,
-					pattern: {
-						value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-						message: "invalid email address",
-					},
-				}}
 				render={({ field: { onChange, value = "", onBlur } }) => (
 					<>
 						<TextInput
@@ -66,11 +75,6 @@ export const RegisterScreen: React.FC = () => {
 			<Controller
 				control={control}
 				name="name"
-				rules={{
-					required: true,
-					minLength: VALIDATIONS_CONSTANTS.accountName.min,
-					maxLength: VALIDATIONS_CONSTANTS.accountName.max,
-				}}
 				render={({ field: { onChange, value = "", onBlur } }) => (
 					<>
 						<TextInput
@@ -80,13 +84,7 @@ export const RegisterScreen: React.FC = () => {
 							onBlur={onBlur}
 							onChangeText={onChange}
 						/>
-						{errors.name ? (
-							<Text>
-								{errors.name.type === "minLength"
-									? `Name should be at least ${VALIDATIONS_CONSTANTS.accountName.max} chars`
-									: `Name should be at maximum ${VALIDATIONS_CONSTANTS.accountName.max} chars`}
-							</Text>
-						) : null}
+						{errors.name ? <Text>{errors.name.message}</Text> : null}
 					</>
 				)}
 			/>

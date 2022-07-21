@@ -1,19 +1,16 @@
 import * as trpc from "@trpc/server";
 import { z } from "zod";
 
-import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
+import { userNameSchema } from "app/utils/validation";
 import { getDatabase } from "next-app/db";
 import { UsersId } from "next-app/db/models";
 import { AuthorizedContext } from "next-app/handlers/context";
+import { limitSchema } from "next-app/handlers/validation";
 
 export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 	input: z.strictObject({
-		cursor: z
-			.string()
-			.min(VALIDATIONS_CONSTANTS.userName.min)
-			.max(VALIDATIONS_CONSTANTS.userName.max)
-			.nullish(),
-		limit: z.number(),
+		cursor: userNameSchema.optional(),
+		limit: limitSchema,
 	}),
 	resolve: async ({ input, ctx }) => {
 		const database = getDatabase(ctx);

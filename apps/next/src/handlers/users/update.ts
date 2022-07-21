@@ -2,31 +2,23 @@ import * as trpc from "@trpc/server";
 import { MutationObject } from "kysely";
 import { z } from "zod";
 
-import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
+import { userNameSchema } from "app/utils/validation";
 import { ReceiptsDatabase, getDatabase } from "next-app/db";
-import { UsersId } from "next-app/db/models";
 import { AuthorizedContext } from "next-app/handlers/context";
 import { getUserById } from "next-app/handlers/users/utils";
-import { flavored } from "next-app/handlers/zod";
+import { userIdSchema } from "next-app/handlers/validation";
 
 export const router = trpc.router<AuthorizedContext>().mutation("update", {
 	input: z.strictObject({
-		id: z.string().uuid().refine<UsersId>(flavored),
+		id: userIdSchema,
 		update: z.discriminatedUnion("type", [
 			z.strictObject({
 				type: z.literal("name"),
-				name: z
-					.string()
-					.min(VALIDATIONS_CONSTANTS.userName.min)
-					.max(VALIDATIONS_CONSTANTS.userName.max),
+				name: userNameSchema,
 			}),
 			z.strictObject({
 				type: z.literal("publicName"),
-				publicName: z
-					.string()
-					.min(VALIDATIONS_CONSTANTS.userName.min)
-					.max(VALIDATIONS_CONSTANTS.userName.max)
-					.nullable(),
+				publicName: userNameSchema.nullable(),
 			}),
 		]),
 	}),

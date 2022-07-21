@@ -1,18 +1,18 @@
 import * as trpc from "@trpc/server";
 import { z } from "zod";
 
+import { emailSchema } from "app/utils/validation";
 import { getDatabase } from "next-app/db";
 import { ACCOUNT_CONNECTIONS_INTENTIONS } from "next-app/db/consts";
-import { UsersId } from "next-app/db/models";
 import { getAccountByEmail } from "next-app/handlers/account/utils";
 import { AuthorizedContext } from "next-app/handlers/context";
 import { getUserById } from "next-app/handlers/users/utils";
-import { flavored } from "next-app/handlers/zod";
+import { userIdSchema } from "next-app/handlers/validation";
 
 export const router = trpc.router<AuthorizedContext>().mutation("put", {
 	input: z.strictObject({
-		userId: z.string().uuid().refine<UsersId>(flavored),
-		email: z.string().email(),
+		userId: userIdSchema,
+		email: emailSchema,
 	}),
 	resolve: async ({ input, ctx }) => {
 		const database = getDatabase(ctx);

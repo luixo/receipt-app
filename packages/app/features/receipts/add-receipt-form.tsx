@@ -1,7 +1,9 @@
 import React from "react";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { v4 } from "uuid";
+import { z } from "zod";
 
 import { AddButton } from "app/components/add-button";
 import { Block } from "app/components/block";
@@ -14,7 +16,6 @@ import {
 	useTrpcMutationOptions,
 } from "app/hooks/use-trpc-mutation-options";
 import { trpc } from "app/trpc";
-import { Currency } from "app/utils/currency";
 import { addReceipt } from "app/utils/queries/receipts-get";
 import {
 	updatePagedReceipts,
@@ -22,7 +23,7 @@ import {
 	receiptsGetPagedInputStore,
 } from "app/utils/queries/receipts-get-paged";
 import { TextInput, Text } from "app/utils/styles";
-import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
+import { receiptNameSchema } from "app/utils/validation";
 import { AccountsId, ReceiptsId } from "next-app/src/db/models";
 
 const putMutationOptions: UseContextedMutationOptions<
@@ -96,7 +97,7 @@ const putMutationOptions: UseContextedMutationOptions<
 
 type Form = {
 	name: string;
-	currency: Currency;
+	currency: string;
 };
 
 export const AddReceiptForm: React.FC = () => {
@@ -117,7 +118,10 @@ export const AddReceiptForm: React.FC = () => {
 		formState: { isValid, isSubmitting, errors },
 		reset,
 		setValue,
-	} = useForm<Form>({ mode: "onChange" });
+	} = useForm<Form>({
+		mode: "onChange",
+		resolver: zodResolver(z.object({ name: receiptNameSchema })),
+	});
 	const onSubmit = useSubmitHandler<Form>(
 		(values) => addReceiptMutation.mutateAsync(values),
 		[addReceiptMutation, reset],
@@ -139,11 +143,6 @@ export const AddReceiptForm: React.FC = () => {
 			<Controller
 				control={control}
 				name="name"
-				rules={{
-					required: true,
-					minLength: VALIDATIONS_CONSTANTS.receiptName.min,
-					maxLength: VALIDATIONS_CONSTANTS.receiptName.max,
-				}}
 				render={({ field: { onChange, value = "", onBlur } }) => (
 					<>
 						<TextInput
@@ -163,11 +162,10 @@ export const AddReceiptForm: React.FC = () => {
 			<Controller
 				control={control}
 				name="currency"
-				rules={{ required: true }}
 				render={({ field }) => (
 					<QueryWrapper
 						query={currenciesListQuery}
-						value={field.value as Currency}
+						value={field.value}
 						onChange={field.onChange}
 						onBlur={field.onBlur}
 					>

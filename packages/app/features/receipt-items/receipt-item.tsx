@@ -17,7 +17,6 @@ import {
 } from "app/utils/queries/receipt-items";
 import { updateReceiptSum } from "app/utils/receipt";
 import { Text } from "app/utils/styles";
-import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
 
 import { AddReceiptItemPartForm } from "./add-receipt-item-part-form";
 import { ReceiptItemPart } from "./receipt-item-part";
@@ -152,14 +151,6 @@ export const ReceiptItem: React.FC<Props> = ({
 		const name = window.prompt("Please enter new name", receiptItem.name);
 		if (!name) {
 			return;
-		}
-		if (
-			name.length < VALIDATIONS_CONSTANTS.receiptItemName.min ||
-			name.length > VALIDATIONS_CONSTANTS.receiptItemName.max
-		) {
-			return window.alert(
-				`Name length should be between ${VALIDATIONS_CONSTANTS.receiptItemName.min} and ${VALIDATIONS_CONSTANTS.receiptItemName.max}!`
-			);
 		}
 		if (name === receiptItem.name) {
 			return;

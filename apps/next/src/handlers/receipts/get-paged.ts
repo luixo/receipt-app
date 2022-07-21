@@ -5,11 +5,12 @@ import { z } from "zod";
 import { getDatabase } from "next-app/db";
 import { UsersId } from "next-app/db/models";
 import { AuthorizedContext } from "next-app/handlers/context";
+import { limitSchema } from "next-app/handlers/validation";
 
 export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 	input: z.strictObject({
-		cursor: z.date().nullish(),
-		limit: z.number(),
+		cursor: z.date().optional(),
+		limit: limitSchema,
 		orderBy: z.union([z.literal("date-asc"), z.literal("date-desc")]),
 	}),
 	resolve: async ({ input, ctx }) => {

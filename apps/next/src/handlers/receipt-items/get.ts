@@ -3,10 +3,10 @@ import { sql } from "kysely";
 import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
-import { ReceiptItemsId, ReceiptsId, UsersId } from "next-app/db/models";
+import { ReceiptItemsId, UsersId } from "next-app/db/models";
 import { AuthorizedContext } from "next-app/handlers/context";
 import { Role } from "next-app/handlers/receipts/utils";
-import { flavored } from "next-app/handlers/zod";
+import { receiptIdSchema } from "next-app/handlers/validation";
 
 type ReceiptItem = {
 	id: ReceiptItemsId;
@@ -20,7 +20,7 @@ type ReceiptItem = {
 
 export const router = trpc.router<AuthorizedContext>().query("get", {
 	input: z.strictObject({
-		receiptId: z.string().uuid().refine<ReceiptsId>(flavored),
+		receiptId: receiptIdSchema,
 	}),
 	resolve: async ({ input, ctx }) => {
 		const database = getDatabase(ctx);

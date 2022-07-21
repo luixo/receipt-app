@@ -1,3 +1,3 @@
 export type Currency = string & {
-	" __flavor"?: "currency";
+	__flavor?: "currency";
 };

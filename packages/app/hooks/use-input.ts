@@ -1,6 +1,8 @@
 import React from "react";
 
-import { useForm, useController, UseControllerProps } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, useController } from "react-hook-form";
+import { z } from "zod";
 
 type Form = {
 	value: string;
@@ -8,20 +10,20 @@ type Form = {
 
 type Options = {
 	initialValue?: string;
-	rules?: UseControllerProps<Form, "value">["rules"];
+	schema: z.ZodString;
 };
 
-export const useInput = ({ initialValue, rules }: Options) => {
+export const useInput = ({ initialValue, schema }: Options) => {
 	const { control, watch, setValue } = useForm<Form>({
 		mode: "onChange",
 		defaultValues: {
 			value: initialValue,
 		},
+		resolver: zodResolver(schema),
 	});
 	const { field, fieldState } = useController({
 		name: "value",
 		control,
-		rules,
 	});
 	const setInputValue = React.useCallback(
 		(nextValue: string) => setValue("value", nextValue),

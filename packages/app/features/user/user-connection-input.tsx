@@ -10,6 +10,7 @@ import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { UsersGetInput } from "app/utils/queries/users-get";
 import { usersGetPagedInputStore } from "app/utils/queries/users-get-paged";
+import { emailSchema } from "app/utils/validation";
 
 import { cancelRequestMutationOptions } from "./cancel-request-mutation-options";
 import { connectMutationOptions } from "./connect-mutation-options";
@@ -81,12 +82,7 @@ export const UserConnectionInput: React.FC<Props> = ({
 		value: inputValue,
 	} = useInput({
 		initialValue: user.email ?? undefined,
-		rules: {
-			pattern: {
-				message: "Please enter valid email",
-				value: /^\S+@\S+\.\S+$/,
-			},
-		},
+		schema: emailSchema,
 	});
 
 	const [inputShown, setInputShown] = React.useState(Boolean(user.email));

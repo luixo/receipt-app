@@ -2,19 +2,21 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
-import { ReceiptItemsId, UsersId } from "next-app/db/models";
 import { AuthorizedContext } from "next-app/handlers/context";
 import { getReceiptItemById } from "next-app/handlers/receipt-items/utils";
 import {
 	getReceiptById,
 	getAccessRole,
 } from "next-app/handlers/receipts/utils";
-import { flavored } from "next-app/handlers/zod";
+import {
+	receiptItemIdSchema,
+	userIdSchema,
+} from "next-app/handlers/validation";
 
 export const router = trpc.router<AuthorizedContext>().mutation("delete", {
 	input: z.strictObject({
-		itemId: z.string().uuid().refine<ReceiptItemsId>(flavored),
-		userId: z.string().uuid().refine<UsersId>(flavored),
+		itemId: receiptItemIdSchema,
+		userId: userIdSchema,
 	}),
 	resolve: async ({ input, ctx }) => {
 		const database = getDatabase(ctx);

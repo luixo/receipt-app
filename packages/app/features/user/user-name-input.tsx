@@ -10,7 +10,7 @@ import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { UsersGetInput } from "app/utils/queries/users-get";
 import { usersGetPagedInputStore } from "app/utils/queries/users-get-paged";
-import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
+import { userNameSchema } from "app/utils/validation";
 
 import { updateMutationOptions } from "./update-mutation-options";
 
@@ -28,16 +28,7 @@ export const UserNameInput: React.FC<Props> = ({ user, isLoading, input }) => {
 		setValue,
 	} = useInput({
 		initialValue: user.name,
-		rules: {
-			minLength: {
-				value: VALIDATIONS_CONSTANTS.userName.min,
-				message: `User name should be at least ${VALIDATIONS_CONSTANTS.userName.min} symbols`,
-			},
-			maxLength: {
-				value: VALIDATIONS_CONSTANTS.userName.max,
-				message: `User name should be at max ${VALIDATIONS_CONSTANTS.userName.max} symbols`,
-			},
-		},
+		schema: userNameSchema,
 	});
 
 	const usersGetPagedInput = usersGetPagedInputStore();

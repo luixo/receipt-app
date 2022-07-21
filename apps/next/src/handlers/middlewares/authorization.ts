@@ -1,7 +1,6 @@
 import * as trpc from "@trpc/server";
 import { MiddlewareFunction } from "@trpc/server/dist/declarations/src/internals/middlewares";
 import { sql } from "kysely";
-import { z } from "zod";
 
 import { DAY } from "app/utils/time";
 import { getDatabase } from "next-app/db";
@@ -9,6 +8,7 @@ import {
 	UnauthorizedContext,
 	AuthorizedContext,
 } from "next-app/handlers/context";
+import { sessionIdSchema } from "next-app/handlers/validation";
 import { AUTH_COOKIE, resetAuthCookie } from "next-app/utils/auth-cookie";
 import { getCookie } from "next-app/utils/cookie";
 
@@ -24,7 +24,7 @@ export const middleware: MiddlewareFunction<
 			message: "No token provided",
 		});
 	}
-	const uuidVerification = z.string().uuid().safeParse(authToken);
+	const uuidVerification = sessionIdSchema.safeParse(authToken);
 	if (!uuidVerification.success) {
 		throw new trpc.TRPCError({
 			code: "UNAUTHORIZED",

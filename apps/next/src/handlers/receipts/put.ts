@@ -2,18 +2,15 @@ import * as trpc from "@trpc/server";
 import { v4 } from "uuid";
 import { z } from "zod";
 
-import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
+import { receiptNameSchema } from "app/utils/validation";
 import { getDatabase } from "next-app/db";
 import { AuthorizedContext } from "next-app/handlers/context";
-import { currency } from "next-app/handlers/zod";
+import { currencySchema } from "next-app/handlers/validation";
 
 export const router = trpc.router<AuthorizedContext>().mutation("put", {
 	input: z.strictObject({
-		name: z
-			.string()
-			.min(VALIDATIONS_CONSTANTS.receiptName.min)
-			.max(VALIDATIONS_CONSTANTS.receiptName.max),
-		currency,
+		name: receiptNameSchema,
+		currency: currencySchema,
 	}),
 	resolve: async ({ input, ctx }) => {
 		const id = v4();

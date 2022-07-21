@@ -1,13 +1,16 @@
 import React from "react";
 import * as ReactNative from "react-native";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
+import { z } from "zod";
 
 import { BackButton } from "app/components/back-button";
 import { MutationWrapper } from "app/components/mutation-wrapper";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { trpc } from "app/trpc";
 import { TextInput, Text } from "app/utils/styles";
+import { passwordSchema, emailSchema } from "app/utils/validation";
 
 type LoginForm = {
 	email: string;
@@ -19,7 +22,12 @@ export const LoginScreen: React.FC = () => {
 		control,
 		handleSubmit,
 		formState: { isValid, errors },
-	} = useForm<LoginForm>({ mode: "onChange" });
+	} = useForm<LoginForm>({
+		mode: "onChange",
+		resolver: zodResolver(
+			z.object({ email: emailSchema, password: passwordSchema })
+		),
+	});
 
 	const trpcContext = trpc.useContext();
 	const loginMutation = trpc.useMutation("auth.login");
@@ -38,13 +46,6 @@ export const LoginScreen: React.FC = () => {
 			<Controller
 				control={control}
 				name="email"
-				rules={{
-					required: true,
-					pattern: {
-						value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-						message: "invalid email address",
-					},
-				}}
 				render={({ field: { onChange, value = "", onBlur } }) => (
 					<>
 						<TextInput
@@ -61,7 +62,6 @@ export const LoginScreen: React.FC = () => {
 			<Controller
 				control={control}
 				name="password"
-				rules={{ required: true }}
 				render={({ field: { onChange, value = "", onBlur } }) => (
 					<TextInput
 						placeholder="Enter your password"

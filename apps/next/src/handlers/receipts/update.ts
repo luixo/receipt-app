@@ -2,27 +2,23 @@ import * as trpc from "@trpc/server";
 import { MutationObject } from "kysely";
 import { z } from "zod";
 
-import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
+import { receiptNameSchema } from "app/utils/validation";
 import { ReceiptsDatabase, getDatabase } from "next-app/db";
-import { ReceiptsId } from "next-app/db/models";
 import { AuthorizedContext } from "next-app/handlers/context";
 import { getReceiptById } from "next-app/handlers/receipts/utils";
-import { currency, flavored } from "next-app/handlers/zod";
+import { currencySchema, receiptIdSchema } from "next-app/handlers/validation";
 
 export const router = trpc.router<AuthorizedContext>().mutation("update", {
 	input: z.strictObject({
-		id: z.string().uuid().refine<ReceiptsId>(flavored),
+		id: receiptIdSchema,
 		update: z.discriminatedUnion("type", [
 			z.strictObject({
 				type: z.literal("name"),
-				name: z
-					.string()
-					.min(VALIDATIONS_CONSTANTS.receiptName.min)
-					.max(VALIDATIONS_CONSTANTS.receiptName.max),
+				name: receiptNameSchema,
 			}),
-			z.strictObject({ type: z.literal("issued"), issued: z.instanceof(Date) }),
+			z.strictObject({ type: z.literal("issued"), issued: z.date() }),
 			z.strictObject({ type: z.literal("resolved"), resolved: z.boolean() }),
-			z.strictObject({ type: z.literal("currency"), currency }),
+			z.strictObject({ type: z.literal("currency"), currency: currencySchema }),
 		]),
 	}),
 	resolve: async ({ input, ctx }) => {

@@ -1,7 +1,9 @@
 import React from "react";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { v4 } from "uuid";
+import { z } from "zod";
 
 import { AddButton } from "app/components/add-button";
 import { Block } from "app/components/block";
@@ -18,7 +20,11 @@ import {
 } from "app/utils/queries/receipt-items";
 import { updateReceiptSum } from "app/utils/receipt";
 import { Text, TextInput } from "app/utils/styles";
-import { VALIDATIONS_CONSTANTS } from "app/utils/validation";
+import {
+	priceSchema,
+	quantitySchema,
+	receiptItemNameSchema,
+} from "app/utils/validation";
 import { ReceiptsId } from "next-app/db/models";
 
 const mutationOptions: UseContextedMutationOptions<
@@ -75,7 +81,16 @@ export const AddReceiptItemForm: React.FC<Props> = ({ receiptItemsInput }) => {
 		handleSubmit,
 		formState: { isValid, isSubmitting, errors },
 		reset,
-	} = useForm<Form>({ mode: "onChange" });
+	} = useForm<Form>({
+		mode: "onChange",
+		resolver: zodResolver(
+			z.object({
+				name: receiptItemNameSchema,
+				price: priceSchema,
+				quantity: quantitySchema,
+			})
+		),
+	});
 	const onSubmit = useSubmitHandler<Form>(
 		(values) =>
 			addReceiptItemMutation.mutateAsync({
@@ -91,11 +106,6 @@ export const AddReceiptItemForm: React.FC<Props> = ({ receiptItemsInput }) => {
 			<Controller
 				control={control}
 				name="name"
-				rules={{
-					required: true,
-					minLength: VALIDATIONS_CONSTANTS.receiptItemName.min,
-					maxLength: VALIDATIONS_CONSTANTS.receiptItemName.max,
-				}}
 				render={({ field: { onChange, value = "", onBlur } }) => (
 					<>
 						<TextInput
@@ -112,10 +122,6 @@ export const AddReceiptItemForm: React.FC<Props> = ({ receiptItemsInput }) => {
 			<Controller
 				control={control}
 				name="price"
-				rules={{
-					required: true,
-					validate: (input) => input > 0,
-				}}
 				render={({ field: { onChange, value = "", onBlur } }) => (
 					<>
 						<TextInput
@@ -135,10 +141,6 @@ export const AddReceiptItemForm: React.FC<Props> = ({ receiptItemsInput }) => {
 			<Controller
 				control={control}
 				name="quantity"
-				rules={{
-					required: true,
-					validate: (input) => input > 0,
-				}}
 				render={({ field: { onChange, value = "", onBlur } }) => (
 					<>
 						<TextInput

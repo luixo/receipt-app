@@ -2,18 +2,22 @@ import * as trpc from "@trpc/server";
 import { v4 } from "uuid";
 import { z } from "zod";
 
+import {
+	accountNameSchema,
+	emailSchema,
+	passwordSchema,
+} from "app/utils/validation";
 import { getDatabase } from "next-app/db";
 import { createAuthorizationSession } from "next-app/handlers/auth/utils";
 import { UnauthorizedContext } from "next-app/handlers/context";
-import { password, name } from "next-app/handlers/zod";
 import { setAuthCookie } from "next-app/utils/auth-cookie";
 import { generatePasswordData } from "next-app/utils/crypto";
 
 export const router = trpc.router<UnauthorizedContext>().mutation("register", {
 	input: z.strictObject({
-		email: z.string().email(),
-		password,
-		name,
+		email: emailSchema,
+		password: passwordSchema,
+		name: accountNameSchema,
 	}),
 	resolve: async ({ input, ctx }) => {
 		const email = input.email.toLowerCase();
