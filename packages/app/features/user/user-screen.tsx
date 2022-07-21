@@ -4,6 +4,7 @@ import { Text, Spacer } from "@nextui-org/react";
 import { useSx } from "dripsy";
 import { createParam } from "solito";
 
+import { Identicon } from "app/components/identicon";
 import { QueryWrapper } from "app/components/query-wrapper";
 import { trpc } from "app/trpc";
 import { UsersGetInput } from "app/utils/queries/users-get";
@@ -26,7 +27,11 @@ export const UserScreen: React.FC = () => {
 
 	return (
 		<ScrollView contentContainerStyle={sx({ padding: "md" })}>
-			<Text h2>{`🧑 ${userNameQuery.data || id}`}</Text>
+			<Text h2 css={{ display: "flex", alignItems: "center" }}>
+				<Identicon size={40} hash={id} />
+				<Spacer x={0.5} />
+				{userNameQuery.data || id}
+			</Text>
 			<Spacer y={1} />
 			<QueryWrapper query={userQuery} input={usersGetInput}>
 				{User}
