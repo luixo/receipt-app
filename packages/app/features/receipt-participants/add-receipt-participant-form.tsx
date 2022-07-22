@@ -15,12 +15,12 @@ import { trpc } from "app/trpc";
 import { ReceiptItemsGetInput } from "app/utils/queries/receipt-items";
 import { updateReceiptParticipants } from "app/utils/queries/receipt-participants";
 import {
+	addAvailableUser,
 	availableUsersGetPagedNextPage,
 	DEFAULT_PARTIAL_INPUT,
-	getAvailableUserById,
 	GetAvailableUsersInput,
-	updateAvailableUsers,
-} from "app/utils/queries/receipt-users";
+	removeAvailableUser,
+} from "app/utils/queries/users-get-available";
 import { Text } from "app/utils/styles";
 import { UsersId } from "next-app/db/models";
 
@@ -28,7 +28,7 @@ import { AvailableReceiptParticipantUsers } from "./available-receipt-participan
 
 const mutationOptions: UseContextedMutationOptions<
 	"receipt-participants.put",
-	ReturnType<typeof getAvailableUserById>,
+	ReturnType<typeof removeAvailableUser>,
 	{
 		itemsInput: ReceiptItemsGetInput;
 		usersInput: GetAvailableUsersInput;
@@ -50,15 +50,11 @@ const mutationOptions: UseContextedMutationOptions<
 					added: new Date(),
 				},
 			]);
-			const addedUser = getAvailableUserById(
+			return removeAvailableUser(
 				trpcContext,
 				usersInput,
-				form.userId
+				(user) => user.id === form.userId
 			);
-			updateAvailableUsers(trpcContext, usersInput, (page) =>
-				page.filter((user) => user.id !== form.userId)
-			);
-			return addedUser;
 		},
 	onSuccess:
 		(trpcContext, { itemsInput }) =>
@@ -73,23 +69,14 @@ const mutationOptions: UseContextedMutationOptions<
 		},
 	onError:
 		(trpcContext, { itemsInput, usersInput }) =>
-		(_error, _variables, addedUserInfo) => {
-			if (!addedUserInfo) {
+		(_error, _variables, snapshot) => {
+			if (!snapshot) {
 				return;
 			}
 			updateReceiptParticipants(trpcContext, itemsInput, (items) =>
-				items.filter((item) => item.userId !== addedUserInfo.user.id)
+				items.filter((item) => item.userId !== snapshot.id)
 			);
-			updateAvailableUsers(trpcContext, usersInput, (page, pageIndex) => {
-				if (pageIndex !== addedUserInfo.pageIndex) {
-					return page;
-				}
-				return [
-					...page.slice(0, addedUserInfo.userIndex),
-					addedUserInfo.user,
-					...page.slice(addedUserInfo.userIndex),
-				];
-			});
+			addAvailableUser(trpcContext, usersInput, snapshot);
 		},
 };
 
