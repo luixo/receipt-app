@@ -1,28 +1,26 @@
 import { TRPCQueryOutput, TRPCReactContext } from "app/trpc";
-import { AccountsId } from "next-app/src/db/models";
 
 type Intentions = TRPCQueryOutput<"account-connection-intentions.get-all">;
 type InboundIntention = Intentions["inbound"][number];
 type OutboundIntention = Intentions["outbound"][number];
 
-export const getIntentions = (trpc: TRPCReactContext) =>
+const getIntentions = (trpc: TRPCReactContext) =>
 	trpc.getQueryData(["account-connection-intentions.get-all"]);
+const setIntentions = (trpc: TRPCReactContext, data: Intentions) =>
+	trpc.setQueryData(["account-connection-intentions.get-all"], data);
 
-export const updateIntentions = (
+const updateIntentions = (
 	trpc: TRPCReactContext,
 	updater: (intentions: Intentions) => Intentions
 ) => {
-	const prevIntentions = trpc.getQueryData([
-		"account-connection-intentions.get-all",
-	]);
+	const prevIntentions = getIntentions(trpc);
 	if (!prevIntentions) {
 		return;
 	}
-	const nextIntentions = updater(prevIntentions);
-	trpc.setQueryData(["account-connection-intentions.get-all"], nextIntentions);
+	setIntentions(trpc, updater(prevIntentions));
 };
 
-export const updateInboundIntentions = (
+const updateInboundIntentions = (
 	trpc: TRPCReactContext,
 	updater: (intentions: InboundIntention[]) => InboundIntention[]
 ) => {
@@ -32,7 +30,43 @@ export const updateInboundIntentions = (
 	}));
 };
 
-export const updateOutboundIntentions = (
+export const removeInboundIntention = (
+	trpc: TRPCReactContext,
+	shouldRemove: (intention: InboundIntention) => boolean
+) => {
+	let removedIntention:
+		| { index: number; intention: InboundIntention }
+		| undefined;
+	updateInboundIntentions(trpc, (intentions) => {
+		const matchedIndex = intentions.findIndex(shouldRemove);
+		if (matchedIndex === -1) {
+			return intentions;
+		}
+		removedIntention = {
+			index: matchedIndex,
+			intention: intentions[matchedIndex]!,
+		};
+		return [
+			...intentions.slice(0, matchedIndex),
+			...intentions.slice(matchedIndex + 1),
+		];
+	});
+	return removedIntention;
+};
+
+export const addInboundIntention = (
+	trpc: TRPCReactContext,
+	intention: InboundIntention,
+	index = 0
+) => {
+	updateInboundIntentions(trpc, (intentions) => [
+		...intentions.slice(0, index),
+		intention,
+		...intentions.slice(index),
+	]);
+};
+
+const updateOutboundIntentions = (
 	trpc: TRPCReactContext,
 	updater: (intentions: OutboundIntention[]) => OutboundIntention[]
 ) => {
@@ -42,65 +76,38 @@ export const updateOutboundIntentions = (
 	}));
 };
 
-export const getInboundIntention = (
+export const removeOutboundIntention = (
 	trpc: TRPCReactContext,
-	accountId: AccountsId
+	shouldRemove: (intention: OutboundIntention) => boolean
 ) => {
-	const intentions = getIntentions(trpc);
-	if (!intentions) {
-		return;
-	}
-	const matchedIntentionIndex = intentions.inbound.findIndex(
-		(intention) => intention.accountId === accountId
-	);
-	if (matchedIntentionIndex === -1) {
-		return;
-	}
-	return {
-		index: matchedIntentionIndex,
-		intention: intentions.inbound[matchedIntentionIndex]!,
-	};
-};
-
-export const getOutboundIntention = (
-	trpc: TRPCReactContext,
-	accountId: AccountsId
-) => {
-	const intentions = getIntentions(trpc);
-	if (!intentions) {
-		return;
-	}
-	const matchedIntentionIndex = intentions.outbound.findIndex(
-		(intention) => intention.accountId === accountId
-	);
-	if (matchedIntentionIndex === -1) {
-		return;
-	}
-	return {
-		index: matchedIntentionIndex,
-		intention: intentions.outbound[matchedIntentionIndex]!,
-	};
-};
-
-export const updateOutboundIntention = (
-	trpc: TRPCReactContext,
-	accountId: AccountsId,
-	updater: (intention: OutboundIntention) => OutboundIntention
-) => {
-	updateIntentions(trpc, (intentions) => {
-		const matchedIntentionIndex = intentions.outbound.findIndex(
-			(intention) => intention.accountId === accountId
-		);
-		if (matchedIntentionIndex === -1) {
+	let removedIntention:
+		| { index: number; intention: OutboundIntention }
+		| undefined;
+	updateOutboundIntentions(trpc, (intentions) => {
+		const matchedIndex = intentions.findIndex(shouldRemove);
+		if (matchedIndex === -1) {
 			return intentions;
 		}
-		return {
-			...intentions,
-			outbound: [
-				...intentions.outbound.slice(0, matchedIntentionIndex),
-				updater(intentions.outbound[matchedIntentionIndex]!),
-				...intentions.outbound.slice(matchedIntentionIndex + 1),
-			],
+		removedIntention = {
+			index: matchedIndex,
+			intention: intentions[matchedIndex]!,
 		};
+		return [
+			...intentions.slice(0, matchedIndex),
+			...intentions.slice(matchedIndex + 1),
+		];
 	});
+	return removedIntention;
+};
+
+export const addOutboundIntention = (
+	trpc: TRPCReactContext,
+	intention: OutboundIntention,
+	index = 0
+) => {
+	updateOutboundIntentions(trpc, (intentions) => [
+		...intentions.slice(0, index),
+		intention,
+		...intentions.slice(index),
+	]);
 };

@@ -9,36 +9,25 @@ import {
 } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import {
-	getOutboundIntention,
-	updateOutboundIntentions,
+	addOutboundIntention,
+	removeOutboundIntention,
 } from "app/utils/queries/account-connection-intentions-get-all";
 import { Text } from "app/utils/styles";
 
 const deleteMutationOptions: UseContextedMutationOptions<
 	"account-connection-intentions.delete",
-	ReturnType<typeof getOutboundIntention>
+	ReturnType<typeof removeOutboundIntention>
 > = {
-	onMutate: (trpcContext) => (variables) => {
-		const intentionSnapshot = getOutboundIntention(
+	onMutate: (trpcContext) => (variables) =>
+		removeOutboundIntention(
 			trpcContext,
-			variables.targetAccountId
-		);
-		updateOutboundIntentions(trpcContext, (intentions) =>
-			intentions.filter(
-				(intention) => intention.accountId !== variables.targetAccountId
-			)
-		);
-		return intentionSnapshot;
-	},
-	onError: (trpcContext) => (_error, _variables, intentionSnapshot) => {
-		if (!intentionSnapshot) {
+			(intention) => intention.accountId === variables.targetAccountId
+		),
+	onError: (trpcContext) => (_error, _variables, snapshot) => {
+		if (!snapshot) {
 			return;
 		}
-		updateOutboundIntentions(trpcContext, (intentions) => [
-			...intentions.slice(0, intentionSnapshot.index),
-			intentionSnapshot.intention,
-			...intentions.slice(intentionSnapshot.index),
-		]);
+		addOutboundIntention(trpcContext, snapshot.intention, snapshot.index);
 	},
 };
 

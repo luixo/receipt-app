@@ -1,5 +1,5 @@
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { updateOutboundIntentions } from "app/utils/queries/account-connection-intentions-get-all";
+import { addOutboundIntention } from "app/utils/queries/account-connection-intentions-get-all";
 import { updateUser, UsersGetInput } from "app/utils/queries/users-get";
 import {
 	updatePagedUser,
@@ -25,15 +25,12 @@ export const connectMutationOptions: UseContextedMutationOptions<
 					email: variables.email,
 				}));
 			} else {
-				updateOutboundIntentions(trpcContext, (intentions) => [
-					...intentions,
-					{
-						accountId,
-						email: variables.email,
-						userId: variables.userId,
-						userName,
-					},
-				]);
+				addOutboundIntention(trpcContext, {
+					accountId,
+					email: variables.email,
+					userId: variables.userId,
+					userName,
+				});
 			}
 		},
 };
