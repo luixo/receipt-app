@@ -16,7 +16,7 @@ import {
 import { updateUser, UsersGetInput } from "app/utils/queries/users-get";
 import {
 	usersGetPagedInputStore,
-	updatePagedUsers,
+	updatePagedUser,
 	UsersGetPagedInput,
 	usersGetPagedNextPage,
 } from "app/utils/queries/users-get-paged";
@@ -61,16 +61,11 @@ const acceptMutationOptions: UseContextedMutationOptions<
 	onSuccess:
 		(trpcContext, { input, pagedInput }) =>
 		(email, variables) => {
-			updateUser(trpcContext, input, (user) => ({
+			updateUser(trpcContext, input, (user) => ({ ...user, email }));
+			updatePagedUser(trpcContext, pagedInput, variables.userId, (user) => ({
 				...user,
 				email,
-				dirty: false,
 			}));
-			updatePagedUsers(trpcContext, pagedInput, (page) =>
-				page.map((user) =>
-					variables.userId === user.id ? { ...user, email, dirty: false } : user
-				)
-			);
 		},
 };
 

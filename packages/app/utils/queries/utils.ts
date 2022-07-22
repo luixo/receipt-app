@@ -1,5 +1,7 @@
 import { InfiniteData } from "react-query";
 
+export type Revert<T> = (input: T) => T;
+
 export type InfiniteDataController<T> = {
 	getData: () => InfiniteData<T> | undefined;
 	setData: (data: InfiniteData<T>) => void;

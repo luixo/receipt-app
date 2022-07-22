@@ -14,58 +14,96 @@ import {
 	UseContextedMutationOptions,
 	useTrpcMutationOptions,
 } from "app/hooks/use-trpc-mutation-options";
-import { trpc } from "app/trpc";
+import { trpc, TRPCQueryOutput } from "app/trpc";
+import { addUser } from "app/utils/queries/users-get";
+import { addUserName } from "app/utils/queries/users-get-name";
 import {
-	updatePagedUsers,
+	addPagedUser,
+	removePagedUser,
+	updatePagedUser,
 	UsersGetPagedInput,
 	usersGetPagedInputStore,
 } from "app/utils/queries/users-get-paged";
 import { TextInput, Text } from "app/utils/styles";
 import { userNameSchema } from "app/utils/validation";
-import { UsersId } from "next-app/src/db/models";
+import { AccountsId, UsersId } from "next-app/src/db/models";
+
+type User = TRPCQueryOutput<"users.get">;
+type UserPreview = TRPCQueryOutput<"users.get-paged">["items"][number];
+
+const createUserPreview = (
+	id: UsersId,
+	name: string,
+	publicName?: string
+): UserPreview => ({
+	id,
+	name,
+	publicName: publicName ?? null,
+	email: null,
+	dirty: false,
+});
+
+const createUser = (
+	id: UsersId,
+	name: string,
+	publicName: string | undefined,
+	selfAccountId: AccountsId
+): User => ({
+	id,
+	name,
+	publicName: publicName ?? null,
+	ownerAccountId: selfAccountId,
+	email: null,
+});
 
 const putMutationOptions: UseContextedMutationOptions<
 	"users.put",
 	UsersId,
-	UsersGetPagedInput
+	{ pagedInput: UsersGetPagedInput; selfAccountId: AccountsId }
 > = {
-	onMutate: (trpcContext, input) => (form) => {
-		const temporaryId = v4();
-		updatePagedUsers(trpcContext, input, (page, index) => {
-			if (index === 0) {
-				return [
-					{
-						id: temporaryId,
-						name: form.name,
-						publicName: null,
-						dirty: true,
-						email: null,
-					},
-					...page,
-				];
+	onMutate:
+		(trpcContext, { pagedInput }) =>
+		(form) => {
+			const temporaryId = v4();
+			addPagedUser(
+				trpcContext,
+				pagedInput,
+				createUserPreview(temporaryId, form.name, form.publicName)
+			);
+			return temporaryId;
+		},
+	onError:
+		(trpcContext, { pagedInput }) =>
+		(_error, _variables, temporaryId) => {
+			if (!temporaryId) {
+				return;
 			}
-			return page;
-		});
-		return temporaryId;
-	},
-	onError: (trpcContext, input) => (_error, _variables, temporaryId) => {
-		if (!temporaryId) {
-			return;
-		}
-		updatePagedUsers(trpcContext, input, (page) =>
-			page.filter((user) => user.id !== temporaryId)
-		);
-	},
-	onSuccess: (trpcContext, input) => (actualId, _variables, temporaryId) => {
-		if (!temporaryId) {
-			return;
-		}
-		updatePagedUsers(trpcContext, input, (page) =>
-			page.map((user) =>
-				user.id === temporaryId ? { ...user, id: actualId, dirty: false } : user
-			)
-		);
-	},
+			removePagedUser(
+				trpcContext,
+				pagedInput,
+				(user) => user.id === temporaryId
+			);
+		},
+	onSuccess:
+		(trpcContext, { pagedInput, selfAccountId }) =>
+		(actualId, variables, temporaryId) => {
+			updatePagedUser(trpcContext, pagedInput, temporaryId, (user) => ({
+				...user,
+				id: actualId,
+				dirty: false,
+			}));
+			addUser(
+				trpcContext,
+				{ id: actualId },
+				createUser(
+					actualId,
+					variables.name,
+					variables.publicName,
+					selfAccountId
+				)
+			);
+			addUserName(trpcContext, { id: actualId }, variables.name);
+		},
 };
 
 type Form = {
@@ -74,10 +112,14 @@ type Form = {
 
 export const AddUserScreen: React.FC = () => {
 	const router = useRouter();
+	const accountQuery = trpc.useQuery(["account.get"]);
 	const usersGetPagedInput = usersGetPagedInputStore();
 	const addUserMutation = trpc.useMutation(
 		"users.put",
-		useTrpcMutationOptions(putMutationOptions, usersGetPagedInput)
+		useTrpcMutationOptions(putMutationOptions, {
+			pagedInput: usersGetPagedInput,
+			selfAccountId: accountQuery.data?.id ?? "unknown",
+		})
 	);
 
 	const {
@@ -115,7 +157,10 @@ export const AddUserScreen: React.FC = () => {
 					</>
 				)}
 			/>
-			<AddButton onPress={handleSubmit(onSubmit)} disabled={!isValid}>
+			<AddButton
+				onPress={handleSubmit(onSubmit)}
+				disabled={!isValid || accountQuery.status !== "success"}
+			>
 				Add
 			</AddButton>
 			<MutationWrapper<"users.put"> mutation={addUserMutation}>

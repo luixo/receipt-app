@@ -1,15 +1,11 @@
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
+import { UsersGetInput, updateUser } from "app/utils/queries/users-get";
 import {
-	UsersGetInput,
-	updateUser,
-	getUserById,
-} from "app/utils/queries/users-get";
-import {
-	getPagedUserById,
-	updatePagedUsers,
+	updatePagedUser,
 	UsersGetPagedInput,
 } from "app/utils/queries/users-get-paged";
+import { Revert } from "app/utils/queries/utils";
 
 type PagedUserSnapshot = TRPCQueryOutput<"users.get-paged">["items"][number];
 type UserSnapshot = TRPCQueryOutput<"users.get">;
@@ -38,47 +34,65 @@ const applyUpdate = (
 	}
 };
 
+const getRevert =
+	(
+		snapshot: UserSnapshot,
+		update: TRPCMutationInput<"users.update">["update"]
+	): Revert<UserSnapshot> =>
+	(user) => {
+		switch (update.type) {
+			case "name":
+				return { ...user, name: snapshot.name };
+			case "publicName":
+				return { ...user, publicName: snapshot.publicName };
+		}
+	};
+
+const getPagedRevert =
+	(
+		snapshot: PagedUserSnapshot,
+		update: TRPCMutationInput<"users.update">["update"]
+	): Revert<PagedUserSnapshot> =>
+	(user) => {
+		switch (update.type) {
+			case "name":
+				return { ...user, name: snapshot.name };
+			case "publicName":
+				return { ...user, publicName: snapshot.publicName };
+		}
+	};
+
 export const updateMutationOptions: UseContextedMutationOptions<
 	"users.update",
-	{ pagedSnapshot?: PagedUserSnapshot; snapshot?: UserSnapshot },
+	{ pagedRevert?: Revert<PagedUserSnapshot>; revert?: Revert<UserSnapshot> },
 	{ pagedInput: UsersGetPagedInput; input: UsersGetInput }
 > = {
 	onMutate:
 		(trpcContext, { pagedInput, input }) =>
 		(updateObject) => {
-			const pagedSnapshot = getPagedUserById(
+			const pagedSnapshot = updatePagedUser(
 				trpcContext,
 				pagedInput,
-				updateObject.id
+				updateObject.id,
+				(user) => applyPagedUpdate(user, updateObject.update)
 			);
-			updatePagedUsers(trpcContext, pagedInput, (items) =>
-				items.map((item) =>
-					item.id === updateObject.id
-						? applyPagedUpdate(item, updateObject.update)
-						: item
-				)
-			);
-			const snapshot = getUserById(trpcContext, input);
-			updateUser(trpcContext, input, (user) =>
+			const snapshot = updateUser(trpcContext, input, (user) =>
 				applyUpdate(user, updateObject.update)
 			);
 			return {
-				pagedSnapshot: pagedSnapshot?.user,
-				snapshot,
+				pagedSnapshot:
+					pagedSnapshot && getPagedRevert(pagedSnapshot, updateObject.update),
+				revert: snapshot && getRevert(snapshot, updateObject.update),
 			};
 		},
 	onError:
 		(trpcContext, { pagedInput, input }) =>
-		(_error, _variables, { pagedSnapshot, snapshot } = {}) => {
-			if (pagedSnapshot) {
-				updatePagedUsers(trpcContext, pagedInput, (page) =>
-					page.map((lookupUser) =>
-						lookupUser.id === pagedSnapshot.id ? pagedSnapshot : lookupUser
-					)
-				);
+		(_error, _variables, { pagedRevert, revert } = {}) => {
+			if (pagedRevert) {
+				updatePagedUser(trpcContext, pagedInput, input.id, pagedRevert);
 			}
-			if (snapshot) {
-				updateUser(trpcContext, input, () => snapshot);
+			if (revert) {
+				updateUser(trpcContext, input, revert);
 			}
 		},
 };

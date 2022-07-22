@@ -1,3 +1,4 @@
+import { InfiniteData } from "react-query";
 import zustand from "zustand";
 
 import {
@@ -6,9 +7,8 @@ import {
 	TRPCQueryOutput,
 	TRPCReactContext,
 } from "app/trpc";
+import { nonNullishGuard } from "app/utils/utils";
 import { UsersId } from "next-app/src/db/models";
-
-import { InfiniteDataController, updatePagedResult } from "./utils";
 
 type UsersResult = TRPCQueryOutput<"users.get-paged">;
 type User = UsersResult["items"][number];
@@ -25,41 +25,31 @@ export const usersGetPagedInputStore = zustand<UsersGetPagedInput>((set) => ({
 		set(() => ({ limit: nextLimit })),
 }));
 
-export const getPagedUserById = (
+const sortByName = (a: User, b: User) => a.name.localeCompare(b.name);
+
+const getUsersGetPagedData = (
+	trpc: TRPCReactContext,
+	input: UsersGetPagedInput
+) => trpc.getInfiniteQueryData(["users.get-paged", input]);
+const setUsersGetPagedData = (
 	trpc: TRPCReactContext,
 	input: UsersGetPagedInput,
-	userId: UsersId
+	data: InfiniteData<UsersResult>
+) => trpc.setInfiniteQueryData(["users.get-paged", input], data);
+
+const updatePagedUsersResult = (
+	trpc: TRPCReactContext,
+	input: UsersGetPagedInput,
+	updater: (prevData: InfiniteData<UsersResult>) => InfiniteData<UsersResult>
 ) => {
-	const prevData = trpc.getInfiniteQueryData(["users.get-paged", input]);
+	const prevData = getUsersGetPagedData(trpc, input);
 	if (!prevData) {
 		return;
 	}
-	let userIndex = -1;
-	const pageIndex = prevData.pages.findIndex((page) => {
-		userIndex = page.items.findIndex((user) => user.id === userId);
-		return userIndex !== -1;
-	});
-	const user = prevData.pages[pageIndex]?.items[userIndex];
-	if (!user) {
-		return;
-	}
-	return {
-		pageIndex,
-		userIndex,
-		user,
-	};
+	setUsersGetPagedData(trpc, input, updater(prevData));
 };
 
-const getUsersGetPagedController = (
-	trpc: TRPCReactContext,
-	input: UsersGetPagedInput
-): InfiniteDataController<UsersResult> => ({
-	getData: () => trpc.getInfiniteQueryData(["users.get-paged", input]),
-	setData: (data) =>
-		trpc.setInfiniteQueryData(["users.get-paged", input], data),
-});
-
-export const updatePagedUsersResult = (
+const updatePagedUsersPages = (
 	trpc: TRPCReactContext,
 	input: UsersGetPagedInput,
 	updater: (
@@ -67,14 +57,22 @@ export const updatePagedUsersResult = (
 		resultIndex: number,
 		results: UsersResult[]
 	) => UsersResult
-) => updatePagedResult(getUsersGetPagedController(trpc, input), updater);
+) => {
+	updatePagedUsersResult(trpc, input, (prevData) => {
+		const nextPages = prevData.pages.map(updater);
+		if (nextPages === prevData.pages) {
+			return prevData;
+		}
+		return { ...prevData, pages: nextPages };
+	});
+};
 
-export const updatePagedUsers = (
+const updatePagedUsers = (
 	trpc: TRPCReactContext,
 	input: UsersGetPagedInput,
 	updater: (page: User[], pageIndex: number, pages: User[][]) => User[]
 ) => {
-	updatePagedUsersResult(trpc, input, (result, index, results) => {
+	updatePagedUsersPages(trpc, input, (result, index, results) => {
 		const nextItems = updater(
 			result.items,
 			index,
@@ -88,4 +86,75 @@ export const updatePagedUsers = (
 			items: nextItems,
 		};
 	});
+};
+
+export const updatePagedUser = (
+	trpc: TRPCReactContext,
+	input: UsersGetPagedInput,
+	userId: UsersId,
+	updater: (user: User) => User
+) => {
+	let modifiedUser: User | undefined;
+	updatePagedUsers(trpc, input, (page) => {
+		const matchedUserIndex = page.findIndex((user) => user.id === userId);
+		if (matchedUserIndex === -1) {
+			return page;
+		}
+		modifiedUser = page[matchedUserIndex]!;
+		return [
+			...page.slice(0, matchedUserIndex),
+			updater(modifiedUser),
+			...page.slice(matchedUserIndex + 1),
+		];
+	});
+	return modifiedUser;
+};
+
+export const addPagedUser = (
+	trpc: TRPCReactContext,
+	input: UsersGetPagedInput,
+	nextUser: User
+) => {
+	let shouldShift = false;
+	updatePagedUsers(trpc, input, (page, pageIndex, pages) => {
+		if (shouldShift) {
+			return [pages[pageIndex - 1]!.at(-1)!, ...page.slice(0, input.limit)];
+		}
+		const sortedPage = [...page, nextUser].sort(sortByName);
+		if (sortedPage.indexOf(nextUser) === page.length - 1) {
+			if (page.length !== input.limit) {
+				shouldShift = true;
+				return sortedPage;
+			}
+			return page;
+		}
+		shouldShift = true;
+		return sortedPage.slice(0, input.limit);
+	});
+};
+
+export const removePagedUser = (
+	trpc: TRPCReactContext,
+	input: UsersGetPagedInput,
+	shouldRemove: (user: User) => boolean
+) => {
+	let removedUser: User | undefined;
+	updatePagedUsers(trpc, input, (page, pageIndex, pages) => {
+		if (removedUser) {
+			return [...page.slice(1), pages[pageIndex - 1]![0]].filter(
+				nonNullishGuard
+			);
+		}
+		const matchedUserIndex = page.findIndex(shouldRemove);
+		if (matchedUserIndex === -1) {
+			return page;
+		}
+		removedUser = page[matchedUserIndex]!;
+		return [
+			...page.slice(0, matchedUserIndex),
+			...page.slice(matchedUserIndex + 1),
+			pages[pageIndex - 1]![0],
+		].filter(nonNullishGuard);
+	});
+	return removedUser;
 };

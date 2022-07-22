@@ -3,22 +3,30 @@ import { TRPCQueryInput, TRPCQueryOutput, TRPCReactContext } from "app/trpc";
 type User = TRPCQueryOutput<"users.get">;
 export type UsersGetInput = TRPCQueryInput<"users.get">;
 
-export const getUserById = (trpc: TRPCReactContext, input: UsersGetInput) =>
+const getUserById = (trpc: TRPCReactContext, input: UsersGetInput) =>
 	trpc.getQueryData(["users.get", input]);
+
+export const addUser = (
+	trpc: TRPCReactContext,
+	input: UsersGetInput,
+	nextUser: User
+) => {
+	trpc.setQueryData(["users.get", input], nextUser);
+};
+
+export const removeUser = (trpc: TRPCReactContext, input: UsersGetInput) => {
+	trpc.invalidateQueries(["users.get", input]);
+};
 
 export const updateUser = (
 	trpc: TRPCReactContext,
 	input: UsersGetInput,
-	updater: (user: User) => User | undefined
+	updater: (user: User) => User
 ) => {
-	const prevUser = trpc.getQueryData(["users.get", input]);
-	if (!prevUser) {
+	const user = getUserById(trpc, input);
+	if (!user) {
 		return;
 	}
-	const nextUser = updater(prevUser);
-	if (!nextUser) {
-		trpc.invalidateQueries(["users.get", input]);
-		return;
-	}
-	trpc.setQueryData(["users.get", input], nextUser);
+	addUser(trpc, input, updater(user));
+	return user;
 };
