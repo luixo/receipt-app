@@ -5,6 +5,7 @@ import { IoTrashBin as TrashBinIcon } from "react-icons/io5";
 import { MdLink as LinkIcon, MdLinkOff as UnlinkIcon } from "react-icons/md";
 
 import { IconButton } from "app/components/icon-button";
+import { deleteMutationOptions as cancelRequestMutationOptions } from "app/features/connection-intentions/delete-mutation-options";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -13,7 +14,6 @@ import { UsersGetInput } from "app/utils/queries/users-get";
 import { usersGetPagedInputStore } from "app/utils/queries/users-get-paged";
 import { emailSchema } from "app/utils/validation";
 
-import { cancelRequestMutationOptions } from "./cancel-request-mutation-options";
 import { connectMutationOptions } from "./connect-mutation-options";
 import { unlinkMutationOptions } from "./unlink-mutation-options";
 
@@ -68,12 +68,15 @@ export const UserConnectionInput: React.FC<Props> = ({
 	const [inputShown, setInputShown] = React.useState(Boolean(user.email));
 
 	const cancelRequestMutation = trpc.useMutation(
-		"account-connection-intentions.cancel-request",
+		"account-connection-intentions.delete",
 		useTrpcMutationOptions(cancelRequestMutationOptions)
 	);
 	const cancelRequest = useAsyncCallback(
 		async (isMount) => {
-			await cancelRequestMutation.mutateAsync({ userId: user.id });
+			await cancelRequestMutation.mutateAsync({
+				type: "userId",
+				userId: user.id,
+			});
 			if (!isMount()) {
 				return;
 			}
