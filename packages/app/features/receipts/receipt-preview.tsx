@@ -2,7 +2,7 @@ import React from "react";
 
 import { Block } from "app/components/block";
 import { trpc, TRPCQueryOutput } from "app/trpc";
-import { updateReceiptName } from "app/utils/queries/receipts-get-name";
+import { addReceiptName } from "app/utils/queries/receipts-get-name";
 import { Text, TextLink } from "app/utils/styles";
 
 type Props = {
@@ -12,7 +12,7 @@ type Props = {
 export const ReceiptPreview: React.FC<Props> = ({ data: receipt }) => {
 	const trpcContext = trpc.useContext();
 	const setReceiptName = React.useCallback(
-		() => updateReceiptName(trpcContext, { id: receipt.id }, receipt.name),
+		() => addReceiptName(trpcContext, { id: receipt.id }, receipt.name),
 		[trpcContext, receipt.id, receipt.name]
 	);
 	const currenciesListQuery = trpc.useQuery([

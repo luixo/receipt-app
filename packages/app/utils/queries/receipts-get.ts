@@ -3,32 +3,36 @@ import { TRPCQueryInput, TRPCQueryOutput, TRPCReactContext } from "app/trpc";
 type Receipt = TRPCQueryOutput<"receipts.get">;
 export type ReceiptsGetInput = TRPCQueryInput<"receipts.get">;
 
-export const getReceiptById = (
+const getReceipt = (trpc: TRPCReactContext, input: ReceiptsGetInput) =>
+	trpc.getQueryData(["receipts.get", input]);
+const setReceipt = (
+	trpc: TRPCReactContext,
+	input: ReceiptsGetInput,
+	data: Receipt
+) => trpc.setQueryData(["receipts.get", input], data);
+
+export const removeReceipt = (
 	trpc: TRPCReactContext,
 	input: ReceiptsGetInput
-) => trpc.getQueryData(["receipts.get", input]);
+) => trpc.invalidateQueries(["receipts.get", input]);
 
 export const addReceipt = (
 	trpc: TRPCReactContext,
 	input: ReceiptsGetInput,
-	receipt: Receipt
+	nextReceipt: Receipt
 ) => {
-	trpc.setQueryData(["receipts.get", input], receipt);
+	setReceipt(trpc, input, nextReceipt);
 };
 
 export const updateReceipt = (
 	trpc: TRPCReactContext,
 	input: ReceiptsGetInput,
-	updater: (receipt: Receipt) => Receipt | undefined
+	updater: (user: Receipt) => Receipt
 ) => {
-	const prevReceipt = trpc.getQueryData(["receipts.get", input]);
-	if (!prevReceipt) {
+	const receipt = getReceipt(trpc, input);
+	if (!receipt) {
 		return;
 	}
-	const nextReceipt = updater(prevReceipt);
-	if (!nextReceipt) {
-		trpc.invalidateQueries(["receipts.get", input]);
-		return;
-	}
-	trpc.setQueryData(["receipts.get", input], nextReceipt);
+	setReceipt(trpc, input, updater(receipt));
+	return receipt;
 };

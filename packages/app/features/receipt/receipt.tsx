@@ -15,16 +15,18 @@ import {
 import { trpc, TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
 import { Currency } from "app/utils/currency";
 import {
-	getReceiptById,
 	ReceiptsGetInput,
+	removeReceipt,
 	updateReceipt,
 } from "app/utils/queries/receipts-get";
 import {
-	getPagedReceiptById,
 	ReceiptsGetPagedInput,
-	updatePagedReceipts,
 	receiptsGetPagedInputStore,
+	removePagedReceipt,
+	updatePagedReceipt,
+	addPagedReceipt,
 } from "app/utils/queries/receipts-get-paged";
+import { Revert } from "app/utils/queries/utils";
 import { TextLink, Text } from "app/utils/styles";
 import { UsersId } from "next-app/src/db/models";
 
@@ -38,12 +40,7 @@ type ReceiptSnapshot = TRPCQueryOutput<"receipts.get">;
 const deleteMutationOptions: UseContextedMutationOptions<
 	"receipts.delete",
 	{
-		pagedSnapshot?: {
-			pageIndex: number;
-			receiptIndex: number;
-			receipt: PagedReceiptSnapshot;
-		};
-		snapshot?: ReceiptSnapshot;
+		receiptSnapshot?: ReturnType<typeof removePagedReceipt>;
 	},
 	{
 		pagedInput: ReceiptsGetPagedInput;
@@ -51,39 +48,25 @@ const deleteMutationOptions: UseContextedMutationOptions<
 	}
 > = {
 	onMutate:
-		(trpcContext, { pagedInput, input }) =>
-		({ id }) => {
-			const pagedSnapshot = getPagedReceiptById(trpcContext, pagedInput, id);
-			const snapshot = getReceiptById(trpcContext, input);
-			updatePagedReceipts(trpcContext, pagedInput, (receiptPage) =>
-				receiptPage.filter((receipt) => receipt.id !== id)
-			);
-			updateReceipt(trpcContext, input, () => undefined);
-			return { pagedSnapshot, snapshot };
-		},
+		(trpcContext, { pagedInput }) =>
+		({ id }) => ({
+			receiptSnapshot: removePagedReceipt(
+				trpcContext,
+				pagedInput,
+				(receipt) => receipt.id === id
+			),
+		}),
 	onError:
-		(trpcContext, { pagedInput, input }) =>
-		(_error, _variables, { pagedSnapshot, snapshot } = {}) => {
-			if (pagedSnapshot) {
-				updatePagedReceipts(
-					trpcContext,
-					pagedInput,
-					(receiptPage, pageIndex) => {
-						if (pageIndex !== pagedSnapshot.pageIndex) {
-							return receiptPage;
-						}
-						return [
-							...receiptPage.slice(0, pagedSnapshot.receiptIndex),
-							pagedSnapshot.receipt,
-							...receiptPage.slice(pagedSnapshot.receiptIndex),
-						];
-					}
-				);
-			}
-			if (snapshot) {
-				updateReceipt(trpcContext, input, () => snapshot);
+		(trpcContext, { pagedInput }) =>
+		(_error, _variables, { receiptSnapshot } = {}) => {
+			if (receiptSnapshot) {
+				addPagedReceipt(trpcContext, pagedInput, receiptSnapshot);
 			}
 		},
+	onSuccess:
+		(trpcContext, { input }) =>
+		() =>
+			removeReceipt(trpcContext, input),
 };
 
 const applyPagedUpdate = (
@@ -118,56 +101,76 @@ const applyUpdate = (
 	}
 };
 
+const getRevert =
+	(
+		snapshot: ReceiptSnapshot,
+		update: TRPCMutationInput<"receipts.update">["update"]
+	): Revert<ReceiptSnapshot> =>
+	(receipt) => {
+		switch (update.type) {
+			case "name":
+				return { ...receipt, name: snapshot.name };
+			case "issued":
+				return { ...receipt, issued: snapshot.issued };
+			case "resolved":
+				return { ...receipt, resolved: snapshot.resolved };
+			case "currency":
+				return { ...receipt, currency: snapshot.currency };
+		}
+	};
+
+const getPagedRevert =
+	(
+		snapshot: PagedReceiptSnapshot,
+		update: TRPCMutationInput<"receipts.update">["update"]
+	): Revert<PagedReceiptSnapshot> =>
+	(receipt) => {
+		switch (update.type) {
+			case "name":
+				return { ...receipt, name: snapshot.name };
+			case "issued":
+				return { ...receipt, issued: snapshot.issued };
+			case "resolved":
+				return { ...receipt, resolved: snapshot.receiptResolved };
+			case "currency":
+				return { ...receipt, currency: snapshot.currency };
+		}
+	};
+
 const updateMutationOptions: UseContextedMutationOptions<
 	"receipts.update",
-	{ pagedSnapshot?: PagedReceiptSnapshot; snapshot?: ReceiptSnapshot },
+	{
+		pagedRevert?: Revert<PagedReceiptSnapshot>;
+		revert?: Revert<ReceiptSnapshot>;
+	},
 	{ pagedInput: ReceiptsGetPagedInput; input: ReceiptsGetInput }
 > = {
 	onMutate:
 		(trpcContext, { pagedInput, input }) =>
 		(updateObject) => {
-			const pagedSnapshot = getPagedReceiptById(
+			const pagedSnapshot = updatePagedReceipt(
 				trpcContext,
 				pagedInput,
-				updateObject.id
+				updateObject.id,
+				(receipt) => applyPagedUpdate(receipt, updateObject.update)
 			);
-			updatePagedReceipts(trpcContext, pagedInput, (items) =>
-				items.map((item) =>
-					item.id === updateObject.id
-						? applyPagedUpdate(item, updateObject.update)
-						: item
-				)
-			);
-			const snapshot = getReceiptById(trpcContext, input);
-			updateReceipt(trpcContext, input, (receipt) =>
-				applyUpdate({ ...receipt, dirty: true }, updateObject.update)
+			const snapshot = updateReceipt(trpcContext, input, (receipt) =>
+				applyUpdate(receipt, updateObject.update)
 			);
 			return {
-				pagedSnapshot: pagedSnapshot?.receipt,
-				snapshot,
+				pagedSnapshot:
+					pagedSnapshot && getPagedRevert(pagedSnapshot, updateObject.update),
+				revert: snapshot && getRevert(snapshot, updateObject.update),
 			};
 		},
-	onSuccess:
-		(trpcContext, { input }) =>
-		() =>
-			updateReceipt(trpcContext, input, (receipt) => ({
-				...receipt,
-				dirty: false,
-			})),
 	onError:
 		(trpcContext, { pagedInput, input }) =>
-		(_error, _variables, { pagedSnapshot, snapshot } = {}) => {
-			if (pagedSnapshot) {
-				updatePagedReceipts(trpcContext, pagedInput, (page) =>
-					page.map((lookupReceipt) =>
-						lookupReceipt.id === pagedSnapshot.id
-							? pagedSnapshot
-							: lookupReceipt
-					)
-				);
+		(_error, _variables, { pagedRevert, revert } = {}) => {
+			if (pagedRevert) {
+				updatePagedReceipt(trpcContext, pagedInput, input.id, pagedRevert);
 			}
-			if (snapshot) {
-				updateReceipt(trpcContext, input, () => snapshot);
+			if (revert) {
+				updateReceipt(trpcContext, input, revert);
 			}
 		},
 };

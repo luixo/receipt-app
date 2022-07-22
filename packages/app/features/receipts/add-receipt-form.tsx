@@ -17,9 +17,13 @@ import {
 	useTrpcMutationOptions,
 } from "app/hooks/use-trpc-mutation-options";
 import { trpc } from "app/trpc";
+import { Currency } from "app/utils/currency";
 import { addReceipt } from "app/utils/queries/receipts-get";
+import { addReceiptName } from "app/utils/queries/receipts-get-name";
 import {
-	updatePagedReceipts,
+	addPagedReceipt,
+	removePagedReceipt,
+	updatePagedReceipt,
 	ReceiptsGetPagedInput,
 	receiptsGetPagedInputStore,
 } from "app/utils/queries/receipts-get-paged";
@@ -27,33 +31,51 @@ import { TextInput, Text } from "app/utils/styles";
 import { receiptNameSchema } from "app/utils/validation";
 import { AccountsId, ReceiptsId } from "next-app/src/db/models";
 
+const createReceipt = (
+	id: ReceiptsId,
+	name: string,
+	currency: Currency,
+	ownerAccountId: AccountsId
+): Parameters<typeof addReceipt>[2] => ({
+	id,
+	role: "owner",
+	name,
+	issued: new Date(),
+	currency,
+	resolved: false,
+	sum: "0",
+	ownerAccountId,
+	dirty: false,
+});
+
+const createPagedReceipt = (
+	id: ReceiptsId,
+	name: string,
+	currency: Currency
+): Parameters<typeof addPagedReceipt>[2] => ({
+	id,
+	role: "owner",
+	name,
+	issued: new Date(),
+	currency,
+	receiptResolved: false,
+	participantResolved: false,
+});
+
 const putMutationOptions: UseContextedMutationOptions<
 	"receipts.put",
 	ReceiptsId,
-	{ input: ReceiptsGetPagedInput; ownerAccountId?: AccountsId }
+	{ input: ReceiptsGetPagedInput; selfAccountId: AccountsId }
 > = {
 	onMutate:
 		(trpcContext, { input }) =>
-		(form) => {
+		(variables) => {
 			const temporaryId = v4();
-			updatePagedReceipts(trpcContext, input, (page, index) => {
-				if (index === 0) {
-					return [
-						{
-							id: temporaryId,
-							role: "owner",
-							name: form.name,
-							issued: new Date(),
-							currency: form.currency,
-							receiptResolved: false,
-							participantResolved: false,
-							dirty: true,
-						},
-						...page,
-					];
-				}
-				return page;
-			});
+			addPagedReceipt(
+				trpcContext,
+				input,
+				createPagedReceipt(temporaryId, variables.name, variables.currency)
+			);
 			return temporaryId;
 		},
 	onError:
@@ -62,37 +84,31 @@ const putMutationOptions: UseContextedMutationOptions<
 			if (!temporaryId) {
 				return;
 			}
-			updatePagedReceipts(trpcContext, input, (page) =>
-				page.filter((receipt) => receipt.id !== temporaryId)
+			removePagedReceipt(
+				trpcContext,
+				input,
+				(receipt) => receipt.id === temporaryId
 			);
 		},
 	onSuccess:
-		(trpcContext, { input, ownerAccountId }) =>
+		(trpcContext, { input, selfAccountId }) =>
 		(actualId, variables, temporaryId) => {
-			if (ownerAccountId) {
-				addReceipt(
-					trpcContext,
-					{ id: actualId },
-					{
-						id: actualId,
-						role: "owner",
-						name: variables.name,
-						issued: new Date(),
-						currency: variables.currency,
-						resolved: false,
-						sum: "0",
-						ownerAccountId,
-						dirty: false,
-					}
-				);
-			}
-			updatePagedReceipts(trpcContext, input, (page) =>
-				page.map((receipt) =>
-					receipt.id === temporaryId
-						? { ...receipt, id: actualId, dirty: false }
-						: receipt
+			updatePagedReceipt(trpcContext, input, temporaryId, (receipt) => ({
+				...receipt,
+				id: actualId,
+				dirty: false,
+			}));
+			addReceipt(
+				trpcContext,
+				{ id: actualId },
+				createReceipt(
+					actualId,
+					variables.name,
+					variables.currency,
+					selfAccountId
 				)
 			);
+			addReceiptName(trpcContext, { id: actualId }, variables.name);
 		},
 };
 
@@ -110,7 +126,7 @@ export const AddReceiptForm: React.FC = () => {
 		"receipts.put",
 		useTrpcMutationOptions(putMutationOptions, {
 			input: receiptsGetPagedInput,
-			ownerAccountId: accountQuery.data?.id,
+			selfAccountId: accountQuery.data?.id ?? "unknown",
 		})
 	);
 
@@ -157,7 +173,10 @@ export const AddReceiptForm: React.FC = () => {
 					</>
 				)}
 			/>
-			<AddButton onPress={handleSubmit(onSubmit)} disabled={!isValid}>
+			<AddButton
+				onPress={handleSubmit(onSubmit)}
+				disabled={!isValid || accountQuery.status !== "success"}
+			>
 				Add
 			</AddButton>
 			<Controller
