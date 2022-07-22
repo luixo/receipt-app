@@ -11,11 +11,18 @@ import {
 } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
 import { Currency } from "app/utils/currency";
-import { ReceiptItemsGetInput } from "app/utils/queries/receipt-items";
 import {
-	getReceiptParticipantWithIndexById,
-	updateReceiptParticipants,
-} from "app/utils/queries/receipt-participants";
+	addReceiptParticipant,
+	ReceiptItemsGetInput,
+	removeReceiptParticipant,
+	updateReceiptParticipant,
+} from "app/utils/queries/receipt-items-get";
+import {
+	addAvailableUser,
+	DEFAULT_PARTIAL_INPUT,
+	GetAvailableUsersInput,
+} from "app/utils/queries/users-get-available";
+import { Revert } from "app/utils/queries/utils";
 import { Text } from "app/utils/styles";
 
 import {
@@ -27,32 +34,34 @@ type ReceiptParticipants = TRPCQueryOutput<"receipt-items.get">["participants"];
 
 const deleteMutationOptions: UseContextedMutationOptions<
 	"receipt-participants.delete",
-	ReturnType<typeof getReceiptParticipantWithIndexById>,
-	ReceiptItemsGetInput
+	ReturnType<typeof removeReceiptParticipant>,
+	{
+		itemsInput: ReceiptItemsGetInput;
+		usersInput: GetAvailableUsersInput;
+		user: Parameters<typeof addAvailableUser>[2];
+	}
 > = {
 	onMutate:
-		(trpcContext, input) =>
-		({ userId }) => {
-			const removedReceiptParticipant = getReceiptParticipantWithIndexById(
+		(trpcContext, { itemsInput }) =>
+		({ userId }) =>
+			removeReceiptParticipant(
 				trpcContext,
-				input,
-				userId
-			);
-			updateReceiptParticipants(trpcContext, input, (participants) =>
-				participants.filter((participant) => participant.userId !== userId)
-			);
-			return removedReceiptParticipant;
-		},
+				itemsInput,
+				(participant) => participant.userId === userId
+			),
 	onError:
-		(trpcContext, input) => (_error, _variables, removedReceiptParticipant) => {
-			if (!removedReceiptParticipant) {
+		(trpcContext, { itemsInput, usersInput, user }) =>
+		(_error, _variables, snapshot) => {
+			if (!snapshot) {
 				return;
 			}
-			updateReceiptParticipants(trpcContext, input, (participants) => [
-				...participants.slice(0, removedReceiptParticipant.index),
-				removedReceiptParticipant.item,
-				...participants.slice(removedReceiptParticipant.index),
-			]);
+			addReceiptParticipant(
+				trpcContext,
+				itemsInput,
+				snapshot.receiptParticipant,
+				snapshot.index
+			);
+			addAvailableUser(trpcContext, usersInput, user);
 		},
 };
 
@@ -68,41 +77,51 @@ const applyUpdate = (
 	}
 };
 
+const getRevert =
+	(
+		snapshot: ReceiptParticipants[number],
+		update: TRPCMutationInput<"receipt-participants.update">["update"]
+	): Revert<ReceiptParticipants[number]> =>
+	(item) => {
+		switch (update.type) {
+			case "role":
+				return { ...item, role: snapshot.role };
+			case "resolved":
+				return { ...item, resolved: snapshot.resolved };
+		}
+	};
+
 const updateMutationOptions: UseContextedMutationOptions<
 	"receipt-participants.update",
-	| NonNullable<ReturnType<typeof getReceiptParticipantWithIndexById>>["item"]
-	| undefined,
+	Revert<ReceiptParticipants[number]> | undefined,
 	ReceiptItemsGetInput
 > = {
-	onMutate: (trpcContext, input) => (updateObject) => {
-		const snapshot = getReceiptParticipantWithIndexById(
+	onMutate: (trpcContext, input) => (variables) => {
+		const snapshot = updateReceiptParticipant(
 			trpcContext,
 			input,
-			updateObject.userId
+			variables.userId,
+			(participant) =>
+				applyUpdate({ ...participant, dirty: true }, variables.update)
 		);
-		updateReceiptParticipants(trpcContext, input, (items) =>
-			items.map((item) =>
-				item.userId === updateObject.userId
-					? applyUpdate({ ...item, dirty: true }, updateObject.update)
-					: item
-			)
-		);
-		return snapshot?.item;
+		return snapshot && getRevert(snapshot, variables.update);
 	},
-	onSuccess: (trpcContext, input) => (_result, updateObject) => {
-		updateReceiptParticipants(trpcContext, input, (items) =>
-			items.map((item) =>
-				item.userId === updateObject.userId ? { ...item, dirty: false } : item
-			)
+	onSuccess: (trpcContext, input) => (_result, variables) => {
+		updateReceiptParticipant(
+			trpcContext,
+			input,
+			variables.userId,
+			(participant) => ({
+				...participant,
+				dirty: false,
+			})
 		);
 	},
-	onError: (trpcContext, input) => (_error, _variables, snapshot) => {
-		if (!snapshot) {
+	onError: (trpcContext, input) => (_error, variables, revert) => {
+		if (!revert) {
 			return;
 		}
-		updateReceiptParticipants(trpcContext, input, (items) =>
-			items.map((item) => (item.userId === snapshot.userId ? snapshot : item))
-		);
+		updateReceiptParticipant(trpcContext, input, variables.userId, revert);
 	},
 };
 
@@ -123,9 +142,31 @@ export const ReceiptParticipant: React.FC<Props> = ({
 }) => {
 	const accountQuery = trpc.useQuery(["account.get"]);
 
+	const usersInput = {
+		...DEFAULT_PARTIAL_INPUT,
+		receiptId: receiptItemsInput.receiptId,
+	};
+	const user = React.useMemo(
+		() => ({
+			id: receiptParticipant.userId,
+			name: receiptParticipant.name,
+			publicName: receiptParticipant.publicName,
+			connectedAccountId: receiptParticipant.connectedAccountId,
+		}),
+		[
+			receiptParticipant.userId,
+			receiptParticipant.name,
+			receiptParticipant.publicName,
+			receiptParticipant.connectedAccountId,
+		]
+	);
 	const deleteReceiptParticipantMutation = trpc.useMutation(
 		"receipt-participants.delete",
-		useTrpcMutationOptions(deleteMutationOptions, receiptItemsInput)
+		useTrpcMutationOptions(deleteMutationOptions, {
+			itemsInput: receiptItemsInput,
+			usersInput,
+			user,
+		})
 	);
 	const deleteReceiptParticipant = useAsyncCallback(
 		() =>

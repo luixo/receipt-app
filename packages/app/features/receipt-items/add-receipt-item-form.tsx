@@ -16,8 +16,10 @@ import {
 import { trpc } from "app/trpc";
 import {
 	ReceiptItemsGetInput,
-	updateReceiptItems,
-} from "app/utils/queries/receipt-items";
+	addReceiptItem,
+	removeReceiptItem,
+	updateReceiptItem,
+} from "app/utils/queries/receipt-items-get";
 import { updateReceiptSum } from "app/utils/receipt";
 import { Text, TextInput } from "app/utils/styles";
 import {
@@ -25,38 +27,51 @@ import {
 	quantitySchema,
 	receiptItemNameSchema,
 } from "app/utils/validation";
-import { ReceiptsId } from "next-app/db/models";
+import { ReceiptItemsId } from "next-app/db/models";
+
+const createReceiptItem = (
+	id: string,
+	name: string,
+	price: number,
+	quantity: number
+): Parameters<typeof addReceiptItem>[2] => ({
+	id,
+	name,
+	price,
+	quantity,
+	locked: false,
+	parts: [],
+	dirty: true,
+});
 
 const mutationOptions: UseContextedMutationOptions<
 	"receipt-items.put",
-	ReceiptsId,
+	ReceiptItemsId,
 	ReceiptItemsGetInput
 > = {
-	onMutate: (trpcContext, input) => (nextItemForm) => {
+	onMutate: (trpcContext, input) => (variables) => {
 		const temporaryId = v4();
-		updateReceiptItems(trpcContext, input, (items) => [
-			...items,
-			{
-				id: temporaryId,
-				...nextItemForm,
-				locked: false,
-				parts: [],
-				dirty: true,
-			},
-		]);
+		addReceiptItem(
+			trpcContext,
+			input,
+			createReceiptItem(
+				temporaryId,
+				variables.name,
+				variables.price,
+				variables.quantity
+			)
+		);
 		return temporaryId;
 	},
 	onError: (trpcContext, input) => (_error, _variables, temporaryId) => {
-		updateReceiptItems(trpcContext, input, (items) =>
-			items.filter((item) => item.id !== temporaryId)
-		);
+		removeReceiptItem(trpcContext, input, (item) => item.id === temporaryId);
 	},
-	onSuccess: (trpcContext, input) => (remoteId, _variables, temporaryId) => {
-		updateReceiptItems(trpcContext, input, (items) =>
-			items.map((item) =>
-				item.id === temporaryId ? { ...item, id: remoteId, dirty: false } : item
-			)
-		);
+	onSuccess: (trpcContext, input) => (actualId, _variables, temporaryId) => {
+		updateReceiptItem(trpcContext, input, temporaryId, (item) => ({
+			...item,
+			id: actualId,
+			dirty: false,
+		}));
 		updateReceiptSum(trpcContext, input);
 	},
 };

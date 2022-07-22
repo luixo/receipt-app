@@ -8,15 +8,24 @@ import {
 } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import {
-	updateItemPart,
-	updateItemParts,
-} from "app/utils/queries/item-participants";
-import { ReceiptItemsGetInput } from "app/utils/queries/receipt-items";
+	ReceiptItemsGetInput,
+	updateReceiptItemPart,
+	addReceiptItemPart,
+	removeReceiptItemPart,
+} from "app/utils/queries/receipt-items-get";
 import { Text } from "app/utils/styles";
-import { ReceiptItemsId } from "next-app/db/models";
+import { ReceiptItemsId, UsersId } from "next-app/db/models";
 
 type ReceiptParticipant =
 	TRPCQueryOutput<"receipt-items.get">["participants"][number];
+
+const createItemPart = (
+	userId: UsersId
+): Parameters<typeof addReceiptItemPart>[3] => ({
+	userId,
+	dirty: true,
+	part: 1,
+});
 
 const putMutationOptions: UseContextedMutationOptions<
 	"item-participants.put",
@@ -24,30 +33,28 @@ const putMutationOptions: UseContextedMutationOptions<
 	ReceiptItemsGetInput
 > = {
 	onMutate: (trpcContext, input) => (variables) => {
-		updateItemParts(trpcContext, input, variables.itemId, (parts) => [
-			...parts,
-			{
-				userId: variables.userId,
-				dirty: true,
-				part: 1,
-			},
-		]);
+		addReceiptItemPart(
+			trpcContext,
+			input,
+			variables.itemId,
+			createItemPart(variables.userId)
+		);
 	},
 	onSuccess: (trpcContext, input) => (_value, variables) => {
-		updateItemPart(
+		updateReceiptItemPart(
 			trpcContext,
 			input,
 			variables.itemId,
 			variables.userId,
-			(part) => ({
-				...part,
-				dirty: false,
-			})
+			(part) => ({ ...part, dirty: false })
 		);
 	},
 	onError: (trpcContext, input) => (_error, variables) => {
-		updateItemParts(trpcContext, input, variables.itemId, (parts) =>
-			parts.filter((part) => variables.userId !== part.userId)
+		removeReceiptItemPart(
+			trpcContext,
+			input,
+			variables.itemId,
+			(part) => variables.userId === part.userId
 		);
 	},
 };

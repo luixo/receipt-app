@@ -3,20 +3,10 @@ import { sql } from "kysely";
 import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
-import { ReceiptItemsId, UsersId } from "next-app/db/models";
+import { AccountsId } from "next-app/db/models";
 import { AuthorizedContext } from "next-app/handlers/context";
 import { Role } from "next-app/handlers/receipts/utils";
 import { receiptIdSchema } from "next-app/handlers/validation";
-
-type ReceiptItem = {
-	id: ReceiptItemsId;
-	name: string;
-	price: number;
-	quantity: number;
-	locked: boolean;
-	parts: { userId: UsersId; part: number; dirty?: boolean }[];
-	dirty?: boolean;
-};
 
 export const router = trpc.router<AuthorizedContext>().query("get", {
 	input: z.strictObject({
@@ -24,7 +14,7 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 	}),
 	resolve: async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
-		const [rows, receiptParticipants] = await Promise.all([
+		const [receiptItems, receiptParticipants] = await Promise.all([
 			database
 				.selectFrom("receiptItems")
 				.leftJoin("itemParticipants", (jb) =>
@@ -56,6 +46,9 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 						)
 						.on("usersMine.ownerAccountId", "=", ctx.auth.accountId)
 				)
+				.leftJoin("accounts", (jb) =>
+					jb.onRef("usersTheir.connectedAccountId", "=", "accounts.id")
+				)
 				.select([
 					"userId",
 					sql<string>`case
@@ -66,6 +59,18 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 						else
 							"usersTheir".name
 						end`.as("name"),
+					sql<string | null>`case
+						when "usersTheir"."ownerAccountId" = ${ctx.auth.accountId}
+							then "usersTheir"."publicName"
+						else
+							null
+						end`.as("publicName"),
+					sql<AccountsId | null>`case
+						when "usersTheir"."ownerAccountId" = ${ctx.auth.accountId}
+							then "usersTheir"."connectedAccountId"
+						else
+							null
+						end`.as("connectedAccountId"),
 					// only exists if foreign user is connected to an account
 					// that local account owner also have
 					"usersMine.id as localUserId",
@@ -78,6 +83,22 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 				.execute(),
 		]);
 
+		type OriginalReceiptItem = typeof receiptItems[number];
+		type ReceiptItem = Omit<
+			OriginalReceiptItem,
+			"price" | "quantity" | "itemId" | "userId" | "part"
+		> & {
+			id: OriginalReceiptItem["itemId"];
+			price: number;
+			quantity: number;
+			parts: {
+				userId: NonNullable<OriginalReceiptItem["userId"]>;
+				part: number;
+				dirty?: boolean;
+			}[];
+			dirty?: boolean;
+		};
+
 		type OriginalReceiptParticipant = typeof receiptParticipants[number];
 		type ReceiptParticipant = Omit<OriginalReceiptParticipant, "role"> & {
 			role: Role;
@@ -86,25 +107,27 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 
 		return {
 			items: Object.values(
-				rows.reduce<Record<string, ReceiptItem>>((acc, row) => {
-					if (!acc[row.itemId]) {
-						acc[row.itemId] = {
-							id: row.itemId,
-							name: row.name,
-							price: Number(row.price),
-							quantity: Number(row.quantity),
-							locked: Boolean(row.locked),
-							parts: [],
-						};
-					}
-					if (row.userId) {
-						acc[row.itemId]!.parts.push({
-							userId: row.userId,
-							part: Number(row.part),
-						});
-					}
-					return acc;
-				}, {})
+				receiptItems.reduce<Record<string, ReceiptItem>>(
+					(acc, { price, quantity, itemId, userId, part, ...rest }) => {
+						if (!acc[itemId]) {
+							acc[itemId] = {
+								id: itemId,
+								price: Number(price),
+								quantity: Number(quantity),
+								parts: [],
+								...rest,
+							};
+						}
+						if (userId) {
+							acc[itemId]!.parts.push({
+								userId,
+								part: Number(part),
+							});
+						}
+						return acc;
+					},
+					{}
+				)
 			),
 			participants: receiptParticipants as ReceiptParticipant[],
 		};

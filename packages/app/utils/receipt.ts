@@ -1,5 +1,5 @@
 import { TRPCReactContext } from "app/trpc";
-import { ReceiptItemsGetInput } from "app/utils/queries/receipt-items";
+import { ReceiptItemsGetInput } from "app/utils/queries/receipt-items-get";
 import {
 	ReceiptsGetInput,
 	updateReceipt,

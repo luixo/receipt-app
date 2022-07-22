@@ -11,10 +11,12 @@ import {
 } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
 import {
-	getReceiptItemWithIndexById,
 	ReceiptItemsGetInput,
-	updateReceiptItems,
-} from "app/utils/queries/receipt-items";
+	removeReceiptItem,
+	addReceiptItem,
+	updateReceiptItem,
+} from "app/utils/queries/receipt-items-get";
+import { Revert } from "app/utils/queries/utils";
 import { updateReceiptSum } from "app/utils/receipt";
 import { Text } from "app/utils/styles";
 
@@ -27,31 +29,18 @@ type ReceiptParticipant =
 
 const deleteMutationOptions: UseContextedMutationOptions<
 	"receipt-items.delete",
-	ReturnType<typeof getReceiptItemWithIndexById>,
+	ReturnType<typeof removeReceiptItem>,
 	ReceiptItemsGetInput
 > = {
 	onMutate:
 		(trpcContext, input) =>
-		({ id: removedId }) => {
-			const removedItem = getReceiptItemWithIndexById(
-				trpcContext,
-				input,
-				removedId
-			);
-			updateReceiptItems(trpcContext, input, (items) =>
-				items.filter((item) => item.id !== removedId)
-			);
-			return removedItem;
-		},
-	onError: (trpcContext, input) => (_error, _variables, removedItem) => {
-		if (!removedItem) {
+		({ id: removedId }) =>
+			removeReceiptItem(trpcContext, input, (item) => item.id === removedId),
+	onError: (trpcContext, input) => (_error, _variables, snapshot) => {
+		if (!snapshot) {
 			return;
 		}
-		updateReceiptItems(trpcContext, input, (items) => [
-			...items.slice(0, removedItem.index),
-			removedItem.item,
-			...items.slice(removedItem.index),
-		]);
+		addReceiptItem(trpcContext, input, snapshot.receiptItem, snapshot.index);
 	},
 	onSuccess: (trpcContext, input) => () => {
 		updateReceiptSum(trpcContext, input);
@@ -74,33 +63,43 @@ const applyUpdate = (
 	}
 };
 
+const getRevert =
+	(
+		snapshot: ReceiptItems[number],
+		update: TRPCMutationInput<"receipt-items.update">["update"]
+	): Revert<ReceiptItems[number]> =>
+	(item) => {
+		switch (update.type) {
+			case "name":
+				return { ...item, name: snapshot.name };
+			case "price":
+				return { ...item, price: snapshot.price };
+			case "quantity":
+				return { ...item, quantity: snapshot.quantity };
+			case "locked":
+				return { ...item, locked: snapshot.locked };
+		}
+	};
+
 const updateMutationOptions: UseContextedMutationOptions<
 	"receipt-items.update",
-	| NonNullable<ReturnType<typeof getReceiptItemWithIndexById>>["item"]
-	| undefined,
+	Revert<ReceiptItems[number]> | undefined,
 	ReceiptItemsGetInput
 > = {
 	onMutate: (trpcContext, input) => (updateObject) => {
-		const snapshot = getReceiptItemWithIndexById(
+		const snapshot = updateReceiptItem(
 			trpcContext,
 			input,
-			updateObject.id
+			updateObject.id,
+			(item) => applyUpdate({ ...item, dirty: true }, updateObject.update)
 		);
-		updateReceiptItems(trpcContext, input, (items) =>
-			items.map((item) =>
-				item.id === updateObject.id
-					? applyUpdate({ ...item, dirty: true }, updateObject.update)
-					: item
-			)
-		);
-		return snapshot?.item;
+		return snapshot && getRevert(snapshot, updateObject.update);
 	},
 	onSuccess: (trpcContext, input) => (_value, updateObject) => {
-		updateReceiptItems(trpcContext, input, (items) =>
-			items.map((item) =>
-				item.id === updateObject.id ? { ...item, dirty: false } : item
-			)
-		);
+		updateReceiptItem(trpcContext, input, updateObject.id, (item) => ({
+			...item,
+			dirty: false,
+		}));
 		if (
 			updateObject.update.type === "price" ||
 			updateObject.update.type === "quantity"
@@ -108,13 +107,11 @@ const updateMutationOptions: UseContextedMutationOptions<
 			updateReceiptSum(trpcContext, input);
 		}
 	},
-	onError: (trpcContext, input) => (_error, _variables, snapshotItem) => {
-		if (!snapshotItem) {
+	onError: (trpcContext, input) => (_error, variables, revert) => {
+		if (!revert) {
 			return;
 		}
-		updateReceiptItems(trpcContext, input, (items) =>
-			items.map((item) => (item.id === snapshotItem.id ? snapshotItem : item))
-		);
+		updateReceiptItem(trpcContext, input, variables.id, revert);
 	},
 };
 
@@ -135,7 +132,7 @@ export const ReceiptItem: React.FC<Props> = ({
 		"receipt-items.delete",
 		useTrpcMutationOptions(deleteMutationOptions, receiptItemsInput)
 	);
-	const removeReceiptItem = useAsyncCallback(
+	const removeItem = useAsyncCallback(
 		() =>
 			removeReceiptItemMutation.mutateAsync({
 				id: receiptItem.id,
@@ -243,7 +240,7 @@ export const ReceiptItem: React.FC<Props> = ({
 				<Text>{receiptItem.locked ? "locked" : "not locked"}</Text>
 			</ReactNative.TouchableOpacity>
 			{!role || role === "viewer" ? null : (
-				<RemoveButton onPress={removeReceiptItem} disabled={receiptItem.dirty}>
+				<RemoveButton onPress={removeItem} disabled={receiptItem.dirty}>
 					Remove item
 				</RemoveButton>
 			)}

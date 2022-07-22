@@ -11,11 +11,12 @@ import {
 } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
 import {
-	getReceiptItemPartWithIndex,
-	updateItemPart,
-	updateItemParts,
-} from "app/utils/queries/item-participants";
-import { ReceiptItemsGetInput } from "app/utils/queries/receipt-items";
+	addReceiptItemPart,
+	ReceiptItemsGetInput,
+	removeReceiptItemPart,
+	updateReceiptItemPart,
+} from "app/utils/queries/receipt-items-get";
+import { Revert } from "app/utils/queries/utils";
 import { Text } from "app/utils/styles";
 import { ReceiptItemsId } from "next-app/db/models";
 
@@ -26,30 +27,27 @@ type ReceiptItemParts = ReceiptItem["parts"];
 
 const deleteMutationOptions: UseContextedMutationOptions<
 	"item-participants.delete",
-	ReturnType<typeof getReceiptItemPartWithIndex>,
+	ReturnType<typeof removeReceiptItemPart>,
 	ReceiptItemsGetInput
 > = {
-	onMutate: (trpcContext, input) => (variables) => {
-		const snapshot = getReceiptItemPartWithIndex(
+	onMutate: (trpcContext, input) => (variables) =>
+		removeReceiptItemPart(
 			trpcContext,
 			input,
 			variables.itemId,
-			variables.userId
-		);
-		updateItemParts(trpcContext, input, variables.itemId, (participants) =>
-			participants.filter((part) => part.userId !== variables.userId)
-		);
-		return snapshot;
-	},
+			(part) => part.userId !== variables.userId
+		),
 	onError: (trpcContext, input) => (_error, variables, snapshot) => {
 		if (!snapshot) {
 			return;
 		}
-		updateItemParts(trpcContext, input, variables.itemId, (participants) => [
-			...participants.slice(0, snapshot.index),
-			snapshot.item,
-			...participants.slice(snapshot.index),
-		]);
+		addReceiptItemPart(
+			trpcContext,
+			input,
+			variables.itemId,
+			snapshot.receiptItemPart,
+			snapshot.index
+		);
 	},
 };
 
@@ -59,55 +57,56 @@ const applyUpdate = (
 ): ReceiptItemParts[number] => {
 	switch (update.type) {
 		case "part":
-			return {
-				...part,
-				part: update.part,
-				dirty: true,
-			};
+			return { ...part, part: update.part };
 	}
 };
 
+const getRevert =
+	(
+		snapshot: ReceiptItemParts[number],
+		update: TRPCMutationInput<"item-participants.update">["update"]
+	): Revert<ReceiptItemParts[number]> =>
+	(item) => {
+		switch (update.type) {
+			case "part":
+				return { ...item, part: snapshot.part };
+		}
+	};
+
 const updateMutationOptions: UseContextedMutationOptions<
 	"item-participants.update",
-	| NonNullable<ReturnType<typeof getReceiptItemPartWithIndex>>["item"]
-	| undefined,
+	Revert<ReceiptItemParts[number]> | undefined,
 	ReceiptItemsGetInput
 > = {
 	onMutate: (trpcContext, input) => (variables) => {
-		const snapshot = getReceiptItemPartWithIndex(
-			trpcContext,
-			input,
-			variables.itemId,
-			variables.userId
-		);
-		updateItemPart(
+		const snapshot = updateReceiptItemPart(
 			trpcContext,
 			input,
 			variables.itemId,
 			variables.userId,
-			(participant) => applyUpdate(participant, variables.update)
+			(part) => applyUpdate({ ...part, dirty: true }, variables.update)
 		);
-		return snapshot?.item;
+		return snapshot && getRevert(snapshot, variables.update);
 	},
 	onSuccess: (trpcContext, input) => (_error, variables) => {
-		updateItemPart(
+		updateReceiptItemPart(
 			trpcContext,
 			input,
 			variables.itemId,
 			variables.userId,
-			(participant) => ({ ...participant, dirty: false })
+			(part) => ({ ...part, dirty: false })
 		);
 	},
-	onError: (trpcContext, input) => (_error, variables, snapshotItem) => {
-		if (!snapshotItem) {
+	onError: (trpcContext, input) => (_error, variables, revert) => {
+		if (!revert) {
 			return;
 		}
-		updateItemPart(
+		updateReceiptItemPart(
 			trpcContext,
 			input,
 			variables.itemId,
 			variables.userId,
-			() => snapshotItem
+			revert
 		);
 	},
 };

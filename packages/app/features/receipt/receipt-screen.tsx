@@ -7,7 +7,7 @@ import { Block } from "app/components/block";
 import { QueryWrapper } from "app/components/query-wrapper";
 import { ReceiptItems } from "app/features/receipt-items/receipt-items-screen";
 import { trpc } from "app/trpc";
-import { ReceiptItemsGetInput } from "app/utils/queries/receipt-items";
+import { ReceiptItemsGetInput } from "app/utils/queries/receipt-items-get";
 import { ReceiptsGetInput } from "app/utils/queries/receipts-get";
 import { ScrollView } from "app/utils/styles";
 

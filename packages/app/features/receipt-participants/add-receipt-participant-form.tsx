@@ -11,9 +11,11 @@ import {
 	UseContextedMutationOptions,
 	useTrpcMutationOptions,
 } from "app/hooks/use-trpc-mutation-options";
-import { trpc } from "app/trpc";
-import { ReceiptItemsGetInput } from "app/utils/queries/receipt-items";
-import { updateReceiptParticipants } from "app/utils/queries/receipt-participants";
+import { trpc, TRPCInfiniteQueryResult } from "app/trpc";
+import {
+	addReceiptParticipant,
+	ReceiptItemsGetInput,
+} from "app/utils/queries/receipt-items-get";
 import {
 	addAvailableUser,
 	availableUsersGetPagedNextPage,
@@ -22,9 +24,32 @@ import {
 	removeAvailableUser,
 } from "app/utils/queries/users-get-available";
 import { Text } from "app/utils/styles";
-import { UsersId } from "next-app/db/models";
+import { AccountsId, UsersId } from "next-app/db/models";
+import { Role } from "next-app/src/handlers/receipts/utils";
 
 import { AvailableReceiptParticipantUsers } from "./available-receipt-participants-users";
+
+type SelectedUser = {
+	name: string;
+	publicName: string | null;
+	connectedAccountId: AccountsId | null;
+};
+
+const createReceiptParticipant = (
+	userId: UsersId,
+	selectedUser: SelectedUser,
+	role: Role,
+	added: Date
+): Parameters<typeof addReceiptParticipant>[2] => ({
+	name: selectedUser.name,
+	publicName: selectedUser.publicName,
+	connectedAccountId: selectedUser.connectedAccountId,
+	userId,
+	localUserId: userId,
+	role,
+	resolved: false,
+	added,
+});
 
 const mutationOptions: UseContextedMutationOptions<
 	"receipt-participants.put",
@@ -32,52 +57,49 @@ const mutationOptions: UseContextedMutationOptions<
 	{
 		itemsInput: ReceiptItemsGetInput;
 		usersInput: GetAvailableUsersInput;
-		name?: string;
+		user: SelectedUser;
 	}
 > = {
 	onMutate:
-		(trpcContext, { itemsInput, usersInput, name }) =>
-		(form) => {
-			updateReceiptParticipants(trpcContext, itemsInput, (items) => [
-				...items,
-				{
-					name: name || "unknown",
-					userId: form.userId,
-					localUserId: form.userId,
-					role: form.role,
-					resolved: false,
-					dirty: true,
-					added: new Date(),
-				},
-			]);
-			return removeAvailableUser(
+		(trpcContext, { usersInput }) =>
+		(variables) =>
+			removeAvailableUser(
 				trpcContext,
 				usersInput,
-				(user) => user.id === form.userId
-			);
-		},
+				(user) => user.id === variables.userId
+			),
 	onSuccess:
-		(trpcContext, { itemsInput }) =>
-		({ added }, form) => {
-			updateReceiptParticipants(trpcContext, itemsInput, (participants) =>
-				participants.map((participant) =>
-					participant.userId === form.userId
-						? { ...participant, added, dirty: false }
-						: participant
-				)
+		(trpcContext, { itemsInput, user }) =>
+		({ added }, variables) => {
+			addReceiptParticipant(
+				trpcContext,
+				itemsInput,
+				createReceiptParticipant(variables.userId, user, variables.role, added)
 			);
 		},
 	onError:
-		(trpcContext, { itemsInput, usersInput }) =>
+		(trpcContext, { usersInput }) =>
 		(_error, _variables, snapshot) => {
 			if (!snapshot) {
 				return;
 			}
-			updateReceiptParticipants(trpcContext, itemsInput, (items) =>
-				items.filter((item) => item.userId !== snapshot.id)
-			);
 			addAvailableUser(trpcContext, usersInput, snapshot);
 		},
+};
+
+type AvailableUsersResult = TRPCInfiniteQueryResult<"users.get-available">;
+
+const getSelectedUser = (
+	query: AvailableUsersResult,
+	selectedId: UsersId
+): SelectedUser | undefined => {
+	if (query.status !== "success") {
+		return;
+	}
+	const allUsers = query.data.pages.reduce<
+		typeof query.data["pages"][number]["items"]
+	>((acc, page) => [...acc, ...page.items], []);
+	return allUsers.find((user) => user.id === selectedId);
 };
 
 type Form = {
@@ -113,6 +135,7 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 		setValue,
 	} = useForm<Form>({ mode: "onChange" });
 	const selectedUserName = watch("user.name");
+	const selectedUser = getSelectedUser(availableUsersQuery, watch("user.id"));
 	const setUserValue = React.useCallback(
 		(id: UsersId, name: string) => {
 			setValue("user.id", id);
@@ -126,7 +149,7 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 		useTrpcMutationOptions(mutationOptions, {
 			itemsInput: receiptItemsInput,
 			usersInput,
-			name: selectedUserName,
+			user: selectedUser!,
 		})
 	);
 
@@ -158,7 +181,12 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 			</InfiniteQueryWrapper>
 			<AddButton
 				onPress={handleSubmit(onSubmit)}
-				disabled={!isValid || isSubmitting || accountQuery.status !== "success"}
+				disabled={
+					!isValid ||
+					isSubmitting ||
+					accountQuery.status !== "success" ||
+					!selectedUser
+				}
 			>
 				Add
 			</AddButton>
