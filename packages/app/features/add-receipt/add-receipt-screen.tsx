@@ -95,7 +95,7 @@ type Form = {
 	currency: string;
 };
 
-export const AddReceiptForm: React.FC = () => {
+export const AddReceiptScreen: React.FC = () => {
 	const router = useRouter();
 	const accountQuery = trpc.useQuery(["account.get"]);
 

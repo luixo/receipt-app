@@ -3,6 +3,7 @@ import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import { AccountScreen } from "app/features/account/account-screen";
+import { AddReceiptScreen } from "app/features/add-receipt/add-receipt-screen";
 import { AddUserScreen } from "app/features/add-user/add-user-screen";
 import { ChangePasswordScreen } from "app/features/change-password/change-password-screen";
 import { ConnectionIntentionsScreen } from "app/features/connection-intentions/connection-intentions-screen";
@@ -23,6 +24,7 @@ export type AppParamList = {
 	receipt: {
 		id: string;
 	};
+	addReceipt: undefined;
 	users: undefined;
 	user: {
 		id: string;
@@ -111,6 +113,13 @@ export const NativeNavigation: React.FC = () => (
 			component={ChangePasswordScreen}
 			options={{
 				title: "Change password",
+			}}
+		/>
+		<Stack.Screen
+			name="addReceipt"
+			component={AddReceiptScreen}
+			options={{
+				title: "Add receipt",
 			}}
 		/>
 	</Stack.Navigator>
