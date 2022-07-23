@@ -1,6 +1,7 @@
 import React from "react";
 import * as ReactNative from "react-native";
 
+import { cache, Cache, Revert } from "app/cache";
 import { Block } from "app/components/block";
 import { MutationWrapper } from "app/components/mutation-wrapper";
 import { RemoveButton } from "app/components/remove-button";
@@ -10,13 +11,6 @@ import {
 	useTrpcMutationOptions,
 } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
-import {
-	ReceiptItemsGetInput,
-	removeReceiptItem,
-	addReceiptItem,
-	updateReceiptItem,
-} from "app/utils/queries/receipt-items-get";
-import { Revert } from "app/utils/queries/utils";
 import { updateReceiptSum } from "app/utils/receipt";
 import { Text } from "app/utils/styles";
 
@@ -29,18 +23,27 @@ type ReceiptParticipant =
 
 const deleteMutationOptions: UseContextedMutationOptions<
 	"receipt-items.delete",
-	ReturnType<typeof removeReceiptItem>,
-	ReceiptItemsGetInput
+	ReturnType<typeof cache["receiptItems"]["get"]["receiptItem"]["remove"]>,
+	Cache.ReceiptItems.Get.Input
 > = {
 	onMutate:
 		(trpcContext, input) =>
 		({ id: removedId }) =>
-			removeReceiptItem(trpcContext, input, (item) => item.id === removedId),
+			cache.receiptItems.get.receiptItem.remove(
+				trpcContext,
+				input,
+				(item) => item.id === removedId
+			),
 	onError: (trpcContext, input) => (_error, _variables, snapshot) => {
 		if (!snapshot) {
 			return;
 		}
-		addReceiptItem(trpcContext, input, snapshot.receiptItem, snapshot.index);
+		cache.receiptItems.get.receiptItem.add(
+			trpcContext,
+			input,
+			snapshot.receiptItem,
+			snapshot.index
+		);
 	},
 	onSuccess: (trpcContext, input) => () => {
 		updateReceiptSum(trpcContext, input);
@@ -84,10 +87,10 @@ const getRevert =
 const updateMutationOptions: UseContextedMutationOptions<
 	"receipt-items.update",
 	Revert<ReceiptItems[number]> | undefined,
-	ReceiptItemsGetInput
+	Cache.ReceiptItems.Get.Input
 > = {
 	onMutate: (trpcContext, input) => (updateObject) => {
-		const snapshot = updateReceiptItem(
+		const snapshot = cache.receiptItems.get.receiptItem.update(
 			trpcContext,
 			input,
 			updateObject.id,
@@ -96,10 +99,15 @@ const updateMutationOptions: UseContextedMutationOptions<
 		return snapshot && getRevert(snapshot, updateObject.update);
 	},
 	onSuccess: (trpcContext, input) => (_value, updateObject) => {
-		updateReceiptItem(trpcContext, input, updateObject.id, (item) => ({
-			...item,
-			dirty: false,
-		}));
+		cache.receiptItems.get.receiptItem.update(
+			trpcContext,
+			input,
+			updateObject.id,
+			(item) => ({
+				...item,
+				dirty: false,
+			})
+		);
 		if (
 			updateObject.update.type === "price" ||
 			updateObject.update.type === "quantity"
@@ -111,14 +119,19 @@ const updateMutationOptions: UseContextedMutationOptions<
 		if (!revert) {
 			return;
 		}
-		updateReceiptItem(trpcContext, input, variables.id, revert);
+		cache.receiptItems.get.receiptItem.update(
+			trpcContext,
+			input,
+			variables.id,
+			revert
+		);
 	},
 };
 
 type Props = {
 	receiptItem: ReceiptItems[number];
 	receiptParticipants: ReceiptParticipant[];
-	receiptItemsInput: ReceiptItemsGetInput;
+	receiptItemsInput: Cache.ReceiptItems.Get.Input;
 	role?: TRPCQueryOutput<"receipts.get">["role"];
 };
 

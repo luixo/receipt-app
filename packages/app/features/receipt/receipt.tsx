@@ -3,6 +3,7 @@ import * as ReactNative from "react-native";
 
 import { useRouter } from "solito/router";
 
+import { cache, Cache, Revert } from "app/cache";
 import { Block } from "app/components/block";
 import { MutationWrapper } from "app/components/mutation-wrapper";
 import { QueryWrapper } from "app/components/query-wrapper";
@@ -14,19 +15,6 @@ import {
 } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
 import { Currency } from "app/utils/currency";
-import {
-	ReceiptsGetInput,
-	removeReceipt,
-	updateReceipt,
-} from "app/utils/queries/receipts-get";
-import {
-	ReceiptsGetPagedInput,
-	receiptsGetPagedInputStore,
-	removePagedReceipt,
-	updatePagedReceipt,
-	addPagedReceipt,
-} from "app/utils/queries/receipts-get-paged";
-import { Revert } from "app/utils/queries/utils";
 import { TextLink, Text } from "app/utils/styles";
 import { UsersId } from "next-app/src/db/models";
 
@@ -40,17 +28,19 @@ type ReceiptSnapshot = TRPCQueryOutput<"receipts.get">;
 const deleteMutationOptions: UseContextedMutationOptions<
 	"receipts.delete",
 	{
-		receiptSnapshot?: ReturnType<typeof removePagedReceipt>;
+		receiptSnapshot?: ReturnType<
+			typeof cache["receipts"]["getPaged"]["remove"]
+		>;
 	},
 	{
-		pagedInput: ReceiptsGetPagedInput;
-		input: ReceiptsGetInput;
+		pagedInput: Cache.Receipts.GetPaged.Input;
+		input: Cache.Receipts.Get.Input;
 	}
 > = {
 	onMutate:
 		(trpcContext, { pagedInput }) =>
 		({ id }) => ({
-			receiptSnapshot: removePagedReceipt(
+			receiptSnapshot: cache.receipts.getPaged.remove(
 				trpcContext,
 				pagedInput,
 				(receipt) => receipt.id === id
@@ -60,13 +50,13 @@ const deleteMutationOptions: UseContextedMutationOptions<
 		(trpcContext, { pagedInput }) =>
 		(_error, _variables, { receiptSnapshot } = {}) => {
 			if (receiptSnapshot) {
-				addPagedReceipt(trpcContext, pagedInput, receiptSnapshot);
+				cache.receipts.getPaged.add(trpcContext, pagedInput, receiptSnapshot);
 			}
 		},
 	onSuccess:
 		(trpcContext, { input }) =>
 		() =>
-			removeReceipt(trpcContext, input),
+			cache.receipts.get.remove(trpcContext, input),
 };
 
 const applyPagedUpdate = (
@@ -143,19 +133,24 @@ const updateMutationOptions: UseContextedMutationOptions<
 		pagedRevert?: Revert<PagedReceiptSnapshot>;
 		revert?: Revert<ReceiptSnapshot>;
 	},
-	{ pagedInput: ReceiptsGetPagedInput; input: ReceiptsGetInput }
+	{
+		pagedInput: Cache.Receipts.GetPaged.Input;
+		input: Cache.Receipts.Get.Input;
+	}
 > = {
 	onMutate:
 		(trpcContext, { pagedInput, input }) =>
 		(updateObject) => {
-			const pagedSnapshot = updatePagedReceipt(
+			const pagedSnapshot = cache.receipts.getPaged.update(
 				trpcContext,
 				pagedInput,
 				updateObject.id,
 				(receipt) => applyPagedUpdate(receipt, updateObject.update)
 			);
-			const snapshot = updateReceipt(trpcContext, input, (receipt) =>
-				applyUpdate(receipt, updateObject.update)
+			const snapshot = cache.receipts.get.update(
+				trpcContext,
+				input,
+				(receipt) => applyUpdate(receipt, updateObject.update)
 			);
 			return {
 				pagedSnapshot:
@@ -167,22 +162,27 @@ const updateMutationOptions: UseContextedMutationOptions<
 		(trpcContext, { pagedInput, input }) =>
 		(_error, _variables, { pagedRevert, revert } = {}) => {
 			if (pagedRevert) {
-				updatePagedReceipt(trpcContext, pagedInput, input.id, pagedRevert);
+				cache.receipts.getPaged.update(
+					trpcContext,
+					pagedInput,
+					input.id,
+					pagedRevert
+				);
 			}
 			if (revert) {
-				updateReceipt(trpcContext, input, revert);
+				cache.receipts.get.update(trpcContext, input, revert);
 			}
 		},
 };
 
 type Props = {
 	data: TRPCQueryOutput<"receipts.get">;
-	input: ReceiptsGetInput;
+	input: Cache.Receipts.Get.Input;
 };
 
 export const Receipt: React.FC<Props> = ({ data: receipt, input }) => {
 	const router = useRouter();
-	const receiptsGetPagedInput = receiptsGetPagedInputStore();
+	const receiptsGetPagedInput = cache.receipts.getPaged.useStore();
 	const deleteReceiptMutation = trpc.useMutation(
 		"receipts.delete",
 		useTrpcMutationOptions(deleteMutationOptions, {

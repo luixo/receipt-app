@@ -6,6 +6,7 @@ import { useRouter } from "solito/router";
 import { v4 } from "uuid";
 import { z } from "zod";
 
+import { cache, Cache } from "app/cache";
 import { AddButton } from "app/components/add-button";
 import { Block } from "app/components/block";
 import { MutationWrapper } from "app/components/mutation-wrapper";
@@ -14,62 +15,30 @@ import {
 	UseContextedMutationOptions,
 	useTrpcMutationOptions,
 } from "app/hooks/use-trpc-mutation-options";
-import { trpc, TRPCQueryOutput } from "app/trpc";
-import { addUser } from "app/utils/queries/users-get";
-import { addUserName } from "app/utils/queries/users-get-name";
-import {
-	addPagedUser,
-	removePagedUser,
-	updatePagedUser,
-	UsersGetPagedInput,
-	usersGetPagedInputStore,
-} from "app/utils/queries/users-get-paged";
+import { trpc } from "app/trpc";
 import { TextInput, Text } from "app/utils/styles";
 import { userNameSchema } from "app/utils/validation";
 import { AccountsId, UsersId } from "next-app/src/db/models";
 
-type User = TRPCQueryOutput<"users.get">;
-type UserPreview = TRPCQueryOutput<"users.get-paged">["items"][number];
-
-const createUserPreview = (
-	id: UsersId,
-	name: string,
-	publicName?: string
-): UserPreview => ({
-	id,
-	name,
-	publicName: publicName ?? null,
-	email: null,
-	dirty: false,
-});
-
-const createUser = (
-	id: UsersId,
-	name: string,
-	publicName: string | undefined,
-	selfAccountId: AccountsId
-): User => ({
-	id,
-	name,
-	publicName: publicName ?? null,
-	ownerAccountId: selfAccountId,
-	email: null,
-});
-
 const putMutationOptions: UseContextedMutationOptions<
 	"users.put",
 	UsersId,
-	{ pagedInput: UsersGetPagedInput; selfAccountId: AccountsId }
+	{
+		pagedInput: Cache.Users.GetPaged.Input;
+		selfAccountId: AccountsId;
+	}
 > = {
 	onMutate:
 		(trpcContext, { pagedInput }) =>
 		(form) => {
 			const temporaryId = v4();
-			addPagedUser(
-				trpcContext,
-				pagedInput,
-				createUserPreview(temporaryId, form.name, form.publicName)
-			);
+			cache.users.getPaged.add(trpcContext, pagedInput, {
+				id: temporaryId,
+				name: form.name,
+				publicName: form.publicName ?? null,
+				email: null,
+				dirty: false,
+			});
 			return temporaryId;
 		},
 	onError:
@@ -78,7 +47,7 @@ const putMutationOptions: UseContextedMutationOptions<
 			if (!temporaryId) {
 				return;
 			}
-			removePagedUser(
+			cache.users.getPaged.remove(
 				trpcContext,
 				pagedInput,
 				(user) => user.id === temporaryId
@@ -87,22 +56,28 @@ const putMutationOptions: UseContextedMutationOptions<
 	onSuccess:
 		(trpcContext, { pagedInput, selfAccountId }) =>
 		(actualId, variables, temporaryId) => {
-			updatePagedUser(trpcContext, pagedInput, temporaryId, (user) => ({
-				...user,
-				id: actualId,
-				dirty: false,
-			}));
-			addUser(
+			cache.users.getPaged.update(
+				trpcContext,
+				pagedInput,
+				temporaryId,
+				(user) => ({
+					...user,
+					id: actualId,
+					dirty: false,
+				})
+			);
+			cache.users.get.add(
 				trpcContext,
 				{ id: actualId },
-				createUser(
-					actualId,
-					variables.name,
-					variables.publicName,
-					selfAccountId
-				)
+				{
+					id: actualId,
+					name: variables.name,
+					publicName: variables.publicName ?? null,
+					ownerAccountId: selfAccountId,
+					email: null,
+				}
 			);
-			addUserName(trpcContext, { id: actualId }, variables.name);
+			cache.users.getName.add(trpcContext, { id: actualId }, variables.name);
 		},
 };
 
@@ -113,7 +88,7 @@ type Form = {
 export const AddUserScreen: React.FC = () => {
 	const router = useRouter();
 	const accountQuery = trpc.useQuery(["account.get"]);
-	const usersGetPagedInput = usersGetPagedInputStore();
+	const usersGetPagedInput = cache.users.getPaged.useStore();
 	const addUserMutation = trpc.useMutation(
 		"users.put",
 		useTrpcMutationOptions(putMutationOptions, {

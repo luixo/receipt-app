@@ -2,6 +2,7 @@ import React from "react";
 
 import { useForm } from "react-hook-form";
 
+import { cache, Cache } from "app/cache";
 import { AddButton } from "app/components/add-button";
 import { Block } from "app/components/block";
 import { InfiniteQueryWrapper } from "app/components/infinite-query-wrapper";
@@ -12,20 +13,8 @@ import {
 	useTrpcMutationOptions,
 } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCInfiniteQueryResult } from "app/trpc";
-import {
-	addReceiptParticipant,
-	ReceiptItemsGetInput,
-} from "app/utils/queries/receipt-items-get";
-import {
-	addAvailableUser,
-	availableUsersGetPagedNextPage,
-	DEFAULT_PARTIAL_INPUT,
-	GetAvailableUsersInput,
-	removeAvailableUser,
-} from "app/utils/queries/users-get-available";
 import { Text } from "app/utils/styles";
 import { AccountsId, UsersId } from "next-app/db/models";
-import { Role } from "next-app/src/handlers/receipts/utils";
 
 import { AvailableReceiptParticipantUsers } from "./available-receipt-participants-users";
 
@@ -35,35 +24,19 @@ type SelectedUser = {
 	connectedAccountId: AccountsId | null;
 };
 
-const createReceiptParticipant = (
-	userId: UsersId,
-	selectedUser: SelectedUser,
-	role: Role,
-	added: Date
-): Parameters<typeof addReceiptParticipant>[2] => ({
-	name: selectedUser.name,
-	publicName: selectedUser.publicName,
-	connectedAccountId: selectedUser.connectedAccountId,
-	userId,
-	localUserId: userId,
-	role,
-	resolved: false,
-	added,
-});
-
 const mutationOptions: UseContextedMutationOptions<
 	"receipt-participants.put",
-	ReturnType<typeof removeAvailableUser>,
+	ReturnType<typeof cache["users"]["getAvailable"]["remove"]>,
 	{
-		itemsInput: ReceiptItemsGetInput;
-		usersInput: GetAvailableUsersInput;
+		itemsInput: Cache.ReceiptItems.Get.Input;
+		usersInput: Cache.Users.GetAvailable.Input;
 		user: SelectedUser;
 	}
 > = {
 	onMutate:
 		(trpcContext, { usersInput }) =>
 		(variables) =>
-			removeAvailableUser(
+			cache.users.getAvailable.remove(
 				trpcContext,
 				usersInput,
 				(user) => user.id === variables.userId
@@ -71,11 +44,16 @@ const mutationOptions: UseContextedMutationOptions<
 	onSuccess:
 		(trpcContext, { itemsInput, user }) =>
 		({ added }, variables) => {
-			addReceiptParticipant(
-				trpcContext,
-				itemsInput,
-				createReceiptParticipant(variables.userId, user, variables.role, added)
-			);
+			cache.receiptItems.get.receiptParticipant.add(trpcContext, itemsInput, {
+				name: user.name,
+				publicName: user.publicName,
+				connectedAccountId: user.connectedAccountId,
+				userId: variables.userId,
+				localUserId: variables.userId,
+				role: variables.role,
+				resolved: false,
+				added,
+			});
 		},
 	onError:
 		(trpcContext, { usersInput }) =>
@@ -83,7 +61,7 @@ const mutationOptions: UseContextedMutationOptions<
 			if (!snapshot) {
 				return;
 			}
-			addAvailableUser(trpcContext, usersInput, snapshot);
+			cache.users.getAvailable.add(trpcContext, usersInput, snapshot);
 		},
 };
 
@@ -110,7 +88,7 @@ type Form = {
 };
 
 type Props = {
-	receiptItemsInput: ReceiptItemsGetInput;
+	receiptItemsInput: Cache.ReceiptItems.Get.Input;
 };
 
 export const AddReceiptParticipantForm: React.FC<Props> = ({
@@ -119,12 +97,12 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 	const accountQuery = trpc.useQuery(["account.get"]);
 
 	const usersInput = {
-		...DEFAULT_PARTIAL_INPUT,
+		...cache.users.getAvailable.DEFAULT_PARTIAL_INPUT,
 		receiptId: receiptItemsInput.receiptId,
 	};
 	const availableUsersQuery = trpc.useInfiniteQuery(
 		["users.get-available", usersInput],
-		{ getNextPageParam: availableUsersGetPagedNextPage }
+		{ getNextPageParam: cache.users.getAvailable.getNextPage }
 	);
 
 	const {

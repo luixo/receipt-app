@@ -3,13 +3,12 @@ import React from "react";
 import { Input } from "@nextui-org/react";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 
+import { cache, Cache } from "app/cache";
 import { IconButton } from "app/components/icon-button";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
-import { UsersGetInput } from "app/utils/queries/users-get";
-import { usersGetPagedInputStore } from "app/utils/queries/users-get-paged";
 import { userNameSchema } from "app/utils/validation";
 
 import { updateMutationOptions } from "./update-mutation-options";
@@ -17,7 +16,7 @@ import { updateMutationOptions } from "./update-mutation-options";
 type Props = {
 	user: TRPCQueryOutput<"users.get">;
 	isLoading: boolean;
-	input: UsersGetInput;
+	input: Cache.Users.Get.Input;
 };
 
 export const UserNameInput: React.FC<Props> = ({ user, isLoading, input }) => {
@@ -31,7 +30,7 @@ export const UserNameInput: React.FC<Props> = ({ user, isLoading, input }) => {
 		schema: userNameSchema,
 	});
 
-	const usersGetPagedInput = usersGetPagedInputStore();
+	const usersGetPagedInput = cache.users.getPaged.useStore();
 	const updateUserMutation = trpc.useMutation(
 		"users.update",
 		useTrpcMutationOptions(updateMutationOptions, {

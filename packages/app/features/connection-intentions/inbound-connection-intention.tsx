@@ -1,6 +1,7 @@
 import React from "react";
 import * as ReactNative from "react-native";
 
+import { cache, Cache } from "app/cache";
 import { Block } from "app/components/block";
 import { MutationWrapper } from "app/components/mutation-wrapper";
 import { UsersPicker } from "app/components/users-picker";
@@ -9,17 +10,6 @@ import {
 	useTrpcMutationOptions,
 } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
-import {
-	addInboundIntention,
-	removeInboundIntention,
-} from "app/utils/queries/account-connection-intentions-get-all";
-import { updateUser, UsersGetInput } from "app/utils/queries/users-get";
-import {
-	usersGetPagedInputStore,
-	updatePagedUser,
-	UsersGetPagedInput,
-	usersGetPagedNextPage,
-} from "app/utils/queries/users-get-paged";
 import { styled, Text } from "app/utils/styles";
 import { UsersId } from "next-app/src/db/models";
 
@@ -33,11 +23,14 @@ type UsersResult = TRPCQueryOutput<"users.get-paged">;
 
 const acceptMutationOptions: UseContextedMutationOptions<
 	"account-connection-intentions.accept",
-	ReturnType<typeof removeInboundIntention>,
-	{ pagedInput: UsersGetPagedInput; input: UsersGetInput }
+	ReturnType<typeof cache["accountConnections"]["getAll"]["inbound"]["remove"]>,
+	{
+		pagedInput: Cache.Users.GetPaged.Input;
+		input: Cache.Users.Get.Input;
+	}
 > = {
 	onMutate: (trpcContext) => (variables) =>
-		removeInboundIntention(
+		cache.accountConnections.getAll.inbound.remove(
 			trpcContext,
 			(intention) => intention.accountId === variables.accountId
 		),
@@ -45,25 +38,37 @@ const acceptMutationOptions: UseContextedMutationOptions<
 		if (!snapshot) {
 			return;
 		}
-		addInboundIntention(trpcContext, snapshot.intention, snapshot.index);
+		cache.accountConnections.getAll.inbound.add(
+			trpcContext,
+			snapshot.intention,
+			snapshot.index
+		);
 	},
 	onSuccess:
 		(trpcContext, { input, pagedInput }) =>
 		(email, variables) => {
-			updateUser(trpcContext, input, (user) => ({ ...user, email }));
-			updatePagedUser(trpcContext, pagedInput, variables.userId, (user) => ({
+			cache.users.get.update(trpcContext, input, (user) => ({
 				...user,
 				email,
 			}));
+			cache.users.getPaged.update(
+				trpcContext,
+				pagedInput,
+				variables.userId,
+				(user) => ({
+					...user,
+					email,
+				})
+			);
 		},
 };
 
 const rejectMutationOptions: UseContextedMutationOptions<
 	"account-connection-intentions.reject",
-	ReturnType<typeof removeInboundIntention>
+	ReturnType<typeof cache["accountConnections"]["getAll"]["inbound"]["remove"]>
 > = {
 	onMutate: (trpcContext) => (variables) =>
-		removeInboundIntention(
+		cache.accountConnections.getAll.inbound.remove(
 			trpcContext,
 			(intention) => intention.accountId === variables.sourceAccountId
 		),
@@ -71,7 +76,11 @@ const rejectMutationOptions: UseContextedMutationOptions<
 		if (!snapshot) {
 			return;
 		}
-		addInboundIntention(trpcContext, snapshot.intention, snapshot.index);
+		cache.accountConnections.getAll.inbound.add(
+			trpcContext,
+			snapshot.intention,
+			snapshot.index
+		);
 	},
 };
 
@@ -82,10 +91,10 @@ type InnerProps = {
 export const InboundConnectionIntention: React.FC<InnerProps> = ({
 	intention,
 }) => {
-	const usersGetPagedInput = usersGetPagedInputStore();
+	const usersGetPagedInput = cache.users.getPaged.useStore();
 	const usersQuery = trpc.useInfiniteQuery(
 		["users.get-paged", usersGetPagedInput],
-		{ getNextPageParam: usersGetPagedNextPage }
+		{ getNextPageParam: cache.users.getPaged.getNextPage }
 	);
 	const loadMore = React.useCallback(() => {
 		usersQuery.fetchNextPage();

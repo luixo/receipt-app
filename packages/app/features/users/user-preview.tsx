@@ -3,9 +3,9 @@ import * as ReactNative from "react-native";
 
 import { styled as nextStyled, Text } from "@nextui-org/react";
 
+import { cache } from "app/cache";
 import { Identicon } from "app/components/identicon";
 import { trpc, TRPCQueryOutput } from "app/trpc";
-import { addUserName } from "app/utils/queries/users-get-name";
 import { styled, Link } from "app/utils/styles";
 
 const WrapperLink = styled(Link)({
@@ -28,7 +28,7 @@ type Props = {
 export const UserPreview: React.FC<Props> = ({ data: user }) => {
 	const trpcContext = trpc.useContext();
 	const setUserName = React.useCallback(
-		() => addUserName(trpcContext, { id: user.id }, user.name),
+		() => cache.users.getName.add(trpcContext, { id: user.id }, user.name),
 		[trpcContext, user.id, user.name]
 	);
 	return (

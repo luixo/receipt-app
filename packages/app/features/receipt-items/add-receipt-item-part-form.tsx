@@ -1,5 +1,6 @@
 import React from "react";
 
+import { cache, Cache } from "app/cache";
 import { AddButton } from "app/components/add-button";
 import { MutationWrapper } from "app/components/mutation-wrapper";
 import {
@@ -7,41 +8,27 @@ import {
 	useTrpcMutationOptions,
 } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
-import {
-	ReceiptItemsGetInput,
-	updateReceiptItemPart,
-	addReceiptItemPart,
-	removeReceiptItemPart,
-} from "app/utils/queries/receipt-items-get";
 import { Text } from "app/utils/styles";
-import { ReceiptItemsId, UsersId } from "next-app/db/models";
+import { ReceiptItemsId } from "next-app/db/models";
 
 type ReceiptParticipant =
 	TRPCQueryOutput<"receipt-items.get">["participants"][number];
 
-const createItemPart = (
-	userId: UsersId
-): Parameters<typeof addReceiptItemPart>[3] => ({
-	userId,
-	dirty: true,
-	part: 1,
-});
-
 const putMutationOptions: UseContextedMutationOptions<
 	"item-participants.put",
 	void,
-	ReceiptItemsGetInput
+	Cache.ReceiptItems.Get.Input
 > = {
 	onMutate: (trpcContext, input) => (variables) => {
-		addReceiptItemPart(
+		cache.receiptItems.get.receiptItemPart.add(
 			trpcContext,
 			input,
 			variables.itemId,
-			createItemPart(variables.userId)
+			{ userId: variables.userId, dirty: true, part: 1 }
 		);
 	},
 	onSuccess: (trpcContext, input) => (_value, variables) => {
-		updateReceiptItemPart(
+		cache.receiptItems.get.receiptItemPart.update(
 			trpcContext,
 			input,
 			variables.itemId,
@@ -50,7 +37,7 @@ const putMutationOptions: UseContextedMutationOptions<
 		);
 	},
 	onError: (trpcContext, input) => (_error, variables) => {
-		removeReceiptItemPart(
+		cache.receiptItems.get.receiptItemPart.remove(
 			trpcContext,
 			input,
 			variables.itemId,
@@ -62,7 +49,7 @@ const putMutationOptions: UseContextedMutationOptions<
 type Props = {
 	itemId: ReceiptItemsId;
 	participant: ReceiptParticipant;
-	receiptItemsInput: ReceiptItemsGetInput;
+	receiptItemsInput: Cache.ReceiptItems.Get.Input;
 	role?: TRPCQueryOutput<"receipts.get">["role"];
 };
 

@@ -1,8 +1,8 @@
 import React from "react";
 import * as ReactNative from "react-native";
 
+import { Cache } from "app/cache";
 import { TRPCQueryOutput } from "app/trpc";
-import { UsersGetInput } from "app/utils/queries/users-get";
 import { styled } from "app/utils/styles";
 
 import { UserConnectionInput } from "./user-connection-input";
@@ -16,7 +16,7 @@ const AlignEndView = styled(ReactNative.View)({
 
 type Props = {
 	data: TRPCQueryOutput<"users.get">;
-	input: UsersGetInput;
+	input: Cache.Users.Get.Input;
 };
 
 export const User: React.FC<Props> = ({ data: user, input }) => {

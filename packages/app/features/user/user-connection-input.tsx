@@ -4,14 +4,13 @@ import { Button, Input, Loading, Spacer } from "@nextui-org/react";
 import { IoTrashBin as TrashBinIcon } from "react-icons/io5";
 import { MdLink as LinkIcon, MdLinkOff as UnlinkIcon } from "react-icons/md";
 
+import { cache, Cache } from "app/cache";
 import { IconButton } from "app/components/icon-button";
 import { deleteMutationOptions as cancelRequestMutationOptions } from "app/features/connection-intentions/delete-mutation-options";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
-import { UsersGetInput } from "app/utils/queries/users-get";
-import { usersGetPagedInputStore } from "app/utils/queries/users-get-paged";
 import { emailSchema } from "app/utils/validation";
 
 import { connectMutationOptions } from "./connect-mutation-options";
@@ -19,7 +18,7 @@ import { unlinkMutationOptions } from "./unlink-mutation-options";
 
 type Props = {
 	user: TRPCQueryOutput<"users.get">;
-	input: UsersGetInput;
+	input: Cache.Users.Get.Input;
 	isLoading: boolean;
 };
 
@@ -28,7 +27,7 @@ export const UserConnectionInput: React.FC<Props> = ({
 	input,
 	isLoading,
 }) => {
-	const usersGetPagedInput = usersGetPagedInputStore();
+	const usersGetPagedInput = cache.users.getPaged.useStore();
 
 	const connectionIntentionsQuery = trpc.useQuery([
 		"account-connection-intentions.get-all",

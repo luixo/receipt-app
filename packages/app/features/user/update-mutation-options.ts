@@ -1,11 +1,6 @@
+import { cache, Cache, Revert } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
-import { UsersGetInput, updateUser } from "app/utils/queries/users-get";
-import {
-	updatePagedUser,
-	UsersGetPagedInput,
-} from "app/utils/queries/users-get-paged";
-import { Revert } from "app/utils/queries/utils";
 
 type PagedUserSnapshot = TRPCQueryOutput<"users.get-paged">["items"][number];
 type UserSnapshot = TRPCQueryOutput<"users.get">;
@@ -65,18 +60,18 @@ const getPagedRevert =
 export const updateMutationOptions: UseContextedMutationOptions<
 	"users.update",
 	{ pagedRevert?: Revert<PagedUserSnapshot>; revert?: Revert<UserSnapshot> },
-	{ pagedInput: UsersGetPagedInput; input: UsersGetInput }
+	{ pagedInput: Cache.Users.GetPaged.Input; input: Cache.Users.Get.Input }
 > = {
 	onMutate:
 		(trpcContext, { pagedInput, input }) =>
 		(updateObject) => {
-			const pagedSnapshot = updatePagedUser(
+			const pagedSnapshot = cache.users.getPaged.update(
 				trpcContext,
 				pagedInput,
 				updateObject.id,
 				(user) => applyPagedUpdate(user, updateObject.update)
 			);
-			const snapshot = updateUser(trpcContext, input, (user) =>
+			const snapshot = cache.users.get.update(trpcContext, input, (user) =>
 				applyUpdate(user, updateObject.update)
 			);
 			return {
@@ -89,10 +84,15 @@ export const updateMutationOptions: UseContextedMutationOptions<
 		(trpcContext, { pagedInput, input }) =>
 		(_error, _variables, { pagedRevert, revert } = {}) => {
 			if (pagedRevert) {
-				updatePagedUser(trpcContext, pagedInput, input.id, pagedRevert);
+				cache.users.getPaged.update(
+					trpcContext,
+					pagedInput,
+					input.id,
+					pagedRevert
+				);
 			}
 			if (revert) {
-				updateUser(trpcContext, input, revert);
+				cache.users.get.update(trpcContext, input, revert);
 			}
 		},
 };

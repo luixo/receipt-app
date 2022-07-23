@@ -10,15 +10,12 @@ import {
 } from "@nextui-org/react";
 import { MdAdd as AddIcon } from "react-icons/md";
 
+import { cache } from "app/cache";
 import { IconButton } from "app/components/icon-button";
 import { Overlay } from "app/components/overlay";
 import { QueryErrorMessage } from "app/components/query-error-message";
 import { useCursorPaging } from "app/hooks/use-cursor-paging";
 import { trpc, TRPCQueryOutput } from "app/trpc";
-import {
-	usersGetPagedInputStore,
-	usersGetPagedNextPage,
-} from "app/utils/queries/users-get-paged";
 
 import { UserPreview } from "./user-preview";
 
@@ -45,10 +42,10 @@ const UserPreviewsList: React.FC<PreviewsProps> = ({ users }) => (
 );
 
 export const Users: React.FC = () => {
-	const usersGetPagedInput = usersGetPagedInputStore();
+	const usersGetPagedInput = cache.users.getPaged.useStore();
 	const usersQuery = trpc.useInfiniteQuery(
 		["users.get-paged", usersGetPagedInput],
-		{ getNextPageParam: usersGetPagedNextPage }
+		{ getNextPageParam: cache.users.getPaged.getNextPage }
 	);
 	const {
 		onNextPage,

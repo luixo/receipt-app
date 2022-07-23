@@ -1,6 +1,7 @@
 import React from "react";
 import * as ReactNative from "react-native";
 
+import { cache, Cache, Revert } from "app/cache";
 import { Block } from "app/components/block";
 import { MutationWrapper } from "app/components/mutation-wrapper";
 import { RemoveButton } from "app/components/remove-button";
@@ -11,18 +12,6 @@ import {
 } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
 import { Currency } from "app/utils/currency";
-import {
-	addReceiptParticipant,
-	ReceiptItemsGetInput,
-	removeReceiptParticipant,
-	updateReceiptParticipant,
-} from "app/utils/queries/receipt-items-get";
-import {
-	addAvailableUser,
-	DEFAULT_PARTIAL_INPUT,
-	GetAvailableUsersInput,
-} from "app/utils/queries/users-get-available";
-import { Revert } from "app/utils/queries/utils";
 import { Text } from "app/utils/styles";
 
 import {
@@ -34,17 +23,19 @@ type ReceiptParticipants = TRPCQueryOutput<"receipt-items.get">["participants"];
 
 const deleteMutationOptions: UseContextedMutationOptions<
 	"receipt-participants.delete",
-	ReturnType<typeof removeReceiptParticipant>,
+	ReturnType<
+		typeof cache["receiptItems"]["get"]["receiptParticipant"]["remove"]
+	>,
 	{
-		itemsInput: ReceiptItemsGetInput;
-		usersInput: GetAvailableUsersInput;
-		user: Parameters<typeof addAvailableUser>[2];
+		itemsInput: Cache.ReceiptItems.Get.Input;
+		usersInput: Cache.Users.GetAvailable.Input;
+		user: Cache.Users.GetAvailable.User;
 	}
 > = {
 	onMutate:
 		(trpcContext, { itemsInput }) =>
 		({ userId }) =>
-			removeReceiptParticipant(
+			cache.receiptItems.get.receiptParticipant.remove(
 				trpcContext,
 				itemsInput,
 				(participant) => participant.userId === userId
@@ -55,13 +46,13 @@ const deleteMutationOptions: UseContextedMutationOptions<
 			if (!snapshot) {
 				return;
 			}
-			addReceiptParticipant(
+			cache.receiptItems.get.receiptParticipant.add(
 				trpcContext,
 				itemsInput,
 				snapshot.receiptParticipant,
 				snapshot.index
 			);
-			addAvailableUser(trpcContext, usersInput, user);
+			cache.users.getAvailable.add(trpcContext, usersInput, user);
 		},
 };
 
@@ -94,10 +85,10 @@ const getRevert =
 const updateMutationOptions: UseContextedMutationOptions<
 	"receipt-participants.update",
 	Revert<ReceiptParticipants[number]> | undefined,
-	ReceiptItemsGetInput
+	Cache.ReceiptItems.Get.Input
 > = {
 	onMutate: (trpcContext, input) => (variables) => {
-		const snapshot = updateReceiptParticipant(
+		const snapshot = cache.receiptItems.get.receiptParticipant.update(
 			trpcContext,
 			input,
 			variables.userId,
@@ -107,7 +98,7 @@ const updateMutationOptions: UseContextedMutationOptions<
 		return snapshot && getRevert(snapshot, variables.update);
 	},
 	onSuccess: (trpcContext, input) => (_result, variables) => {
-		updateReceiptParticipant(
+		cache.receiptItems.get.receiptParticipant.update(
 			trpcContext,
 			input,
 			variables.userId,
@@ -121,7 +112,12 @@ const updateMutationOptions: UseContextedMutationOptions<
 		if (!revert) {
 			return;
 		}
-		updateReceiptParticipant(trpcContext, input, variables.userId, revert);
+		cache.receiptItems.get.receiptParticipant.update(
+			trpcContext,
+			input,
+			variables.userId,
+			revert
+		);
 	},
 };
 
@@ -129,7 +125,7 @@ type Props = {
 	receiptParticipant: TRPCQueryOutput<"receipt-items.get">["participants"][number] & {
 		sum: number;
 	};
-	receiptItemsInput: ReceiptItemsGetInput;
+	receiptItemsInput: Cache.ReceiptItems.Get.Input;
 	role?: TRPCQueryOutput<"receipts.get">["role"];
 	currency?: Currency;
 };
@@ -143,7 +139,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 	const accountQuery = trpc.useQuery(["account.get"]);
 
 	const usersInput = {
-		...DEFAULT_PARTIAL_INPUT,
+		...cache.users.getAvailable.DEFAULT_PARTIAL_INPUT,
 		receiptId: receiptItemsInput.receiptId,
 	};
 	const user = React.useMemo(

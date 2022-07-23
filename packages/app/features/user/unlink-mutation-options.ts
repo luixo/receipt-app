@@ -1,26 +1,27 @@
+import { cache, Cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { UsersGetInput, updateUser } from "app/utils/queries/users-get";
-import {
-	updatePagedUser,
-	UsersGetPagedInput,
-} from "app/utils/queries/users-get-paged";
 
 export const unlinkMutationOptions: UseContextedMutationOptions<
 	"users.unlink",
 	string | undefined,
 	{
-		pagedInput: UsersGetPagedInput;
-		input: UsersGetInput;
+		pagedInput: Cache.Users.GetPaged.Input;
+		input: Cache.Users.Get.Input;
 	}
 > = {
 	onMutate:
 		(trpcContext, { input, pagedInput }) =>
 		() => {
-			updatePagedUser(trpcContext, pagedInput, input.id, (user) => ({
-				...user,
-				email: null,
-			}));
-			const snapshot = updateUser(trpcContext, input, (user) => ({
+			cache.users.getPaged.update(
+				trpcContext,
+				pagedInput,
+				input.id,
+				(user) => ({
+					...user,
+					email: null,
+				})
+			);
+			const snapshot = cache.users.get.update(trpcContext, input, (user) => ({
 				...user,
 				email: null,
 			}));
@@ -32,10 +33,18 @@ export const unlinkMutationOptions: UseContextedMutationOptions<
 			if (!email) {
 				return;
 			}
-			updatePagedUser(trpcContext, pagedInput, input.id, (user) => ({
+			cache.users.getPaged.update(
+				trpcContext,
+				pagedInput,
+				input.id,
+				(user) => ({
+					...user,
+					email,
+				})
+			);
+			cache.users.get.update(trpcContext, input, (user) => ({
 				...user,
 				email,
 			}));
-			updateUser(trpcContext, input, (user) => ({ ...user, email }));
 		},
 };

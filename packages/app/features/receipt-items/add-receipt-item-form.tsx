@@ -5,6 +5,7 @@ import { useForm, Controller } from "react-hook-form";
 import { v4 } from "uuid";
 import { z } from "zod";
 
+import { cache, Cache } from "app/cache";
 import { AddButton } from "app/components/add-button";
 import { Block } from "app/components/block";
 import { MutationWrapper } from "app/components/mutation-wrapper";
@@ -14,12 +15,6 @@ import {
 	useTrpcMutationOptions,
 } from "app/hooks/use-trpc-mutation-options";
 import { trpc } from "app/trpc";
-import {
-	ReceiptItemsGetInput,
-	addReceiptItem,
-	removeReceiptItem,
-	updateReceiptItem,
-} from "app/utils/queries/receipt-items-get";
 import { updateReceiptSum } from "app/utils/receipt";
 import { Text, TextInput } from "app/utils/styles";
 import {
@@ -29,49 +24,42 @@ import {
 } from "app/utils/validation";
 import { ReceiptItemsId } from "next-app/db/models";
 
-const createReceiptItem = (
-	id: string,
-	name: string,
-	price: number,
-	quantity: number
-): Parameters<typeof addReceiptItem>[2] => ({
-	id,
-	name,
-	price,
-	quantity,
-	locked: false,
-	parts: [],
-	dirty: true,
-});
-
 const mutationOptions: UseContextedMutationOptions<
 	"receipt-items.put",
 	ReceiptItemsId,
-	ReceiptItemsGetInput
+	Cache.ReceiptItems.Get.Input
 > = {
 	onMutate: (trpcContext, input) => (variables) => {
 		const temporaryId = v4();
-		addReceiptItem(
-			trpcContext,
-			input,
-			createReceiptItem(
-				temporaryId,
-				variables.name,
-				variables.price,
-				variables.quantity
-			)
-		);
+		cache.receiptItems.get.receiptItem.add(trpcContext, input, {
+			id: temporaryId,
+			name: variables.name,
+			price: variables.price,
+			quantity: variables.quantity,
+			locked: false,
+			parts: [],
+			dirty: true,
+		});
 		return temporaryId;
 	},
 	onError: (trpcContext, input) => (_error, _variables, temporaryId) => {
-		removeReceiptItem(trpcContext, input, (item) => item.id === temporaryId);
+		cache.receiptItems.get.receiptItem.remove(
+			trpcContext,
+			input,
+			(item) => item.id === temporaryId
+		);
 	},
 	onSuccess: (trpcContext, input) => (actualId, _variables, temporaryId) => {
-		updateReceiptItem(trpcContext, input, temporaryId, (item) => ({
-			...item,
-			id: actualId,
-			dirty: false,
-		}));
+		cache.receiptItems.get.receiptItem.update(
+			trpcContext,
+			input,
+			temporaryId,
+			(item) => ({
+				...item,
+				id: actualId,
+				dirty: false,
+			})
+		);
 		updateReceiptSum(trpcContext, input);
 	},
 };
@@ -83,7 +71,7 @@ type Form = {
 };
 
 type Props = {
-	receiptItemsInput: ReceiptItemsGetInput;
+	receiptItemsInput: Cache.ReceiptItems.Get.Input;
 };
 
 export const AddReceiptItemForm: React.FC<Props> = ({ receiptItemsInput }) => {

@@ -1,13 +1,9 @@
+import { cache, Cache } from "app/cache";
 import { TRPCReactContext } from "app/trpc";
-import { ReceiptItemsGetInput } from "app/utils/queries/receipt-items-get";
-import {
-	ReceiptsGetInput,
-	updateReceipt,
-} from "app/utils/queries/receipts-get";
 
 const calculateReceiptSum = (
 	trpc: TRPCReactContext,
-	input: ReceiptItemsGetInput
+	input: Cache.ReceiptItems.Get.Input
 ) => {
 	const receiptItems = trpc.getQueryData(["receipt-items.get", input]);
 	if (!receiptItems) {
@@ -20,12 +16,12 @@ const calculateReceiptSum = (
 
 export const updateReceiptSum = (
 	trpc: TRPCReactContext,
-	input: ReceiptItemsGetInput
+	input: Cache.ReceiptItems.Get.Input
 ) => {
 	const nextSum = calculateReceiptSum(trpc, input);
 	if (nextSum) {
-		const receiptInput: ReceiptsGetInput = { id: input.receiptId };
-		updateReceipt(trpc, receiptInput, (receipt) => ({
+		const receiptInput: Cache.Receipts.Get.Input = { id: input.receiptId };
+		cache.receipts.get.update(trpc, receiptInput, (receipt) => ({
 			...receipt,
 			sum: nextSum,
 		}));

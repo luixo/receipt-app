@@ -1,11 +1,11 @@
 import React from "react";
 
+import { Cache } from "app/cache";
 import { Block } from "app/components/block";
 import { TRPCQueryOutput } from "app/trpc";
 import { rotate } from "app/utils/array";
 import { Currency } from "app/utils/currency";
 import { getIndexByString } from "app/utils/hash";
-import { ReceiptItemsGetInput } from "app/utils/queries/receipt-items-get";
 import { calculateReceiptItemsWithSums } from "app/utils/receipt-item";
 
 import { AddReceiptParticipantForm } from "./add-receipt-participant-form";
@@ -15,7 +15,7 @@ type Props = {
 	data: TRPCQueryOutput<"receipt-items.get">;
 	role?: TRPCQueryOutput<"receipts.get">["role"];
 	receiptId: TRPCQueryOutput<"receipts.get">["id"];
-	receiptItemsInput: ReceiptItemsGetInput;
+	receiptItemsInput: Cache.ReceiptItems.Get.Input;
 	currency?: Currency;
 };
 

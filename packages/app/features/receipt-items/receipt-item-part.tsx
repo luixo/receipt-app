@@ -1,6 +1,7 @@
 import React from "react";
 import * as ReactNative from "react-native";
 
+import { cache, Cache, Revert } from "app/cache";
 import { Block } from "app/components/block";
 import { MutationWrapper } from "app/components/mutation-wrapper";
 import { RemoveButton } from "app/components/remove-button";
@@ -10,13 +11,6 @@ import {
 	useTrpcMutationOptions,
 } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
-import {
-	addReceiptItemPart,
-	ReceiptItemsGetInput,
-	removeReceiptItemPart,
-	updateReceiptItemPart,
-} from "app/utils/queries/receipt-items-get";
-import { Revert } from "app/utils/queries/utils";
 import { Text } from "app/utils/styles";
 import { ReceiptItemsId } from "next-app/db/models";
 
@@ -27,11 +21,11 @@ type ReceiptItemParts = ReceiptItem["parts"];
 
 const deleteMutationOptions: UseContextedMutationOptions<
 	"item-participants.delete",
-	ReturnType<typeof removeReceiptItemPart>,
-	ReceiptItemsGetInput
+	ReturnType<typeof cache["receiptItems"]["get"]["receiptItemPart"]["remove"]>,
+	Cache.ReceiptItems.Get.Input
 > = {
 	onMutate: (trpcContext, input) => (variables) =>
-		removeReceiptItemPart(
+		cache.receiptItems.get.receiptItemPart.remove(
 			trpcContext,
 			input,
 			variables.itemId,
@@ -41,7 +35,7 @@ const deleteMutationOptions: UseContextedMutationOptions<
 		if (!snapshot) {
 			return;
 		}
-		addReceiptItemPart(
+		cache.receiptItems.get.receiptItemPart.add(
 			trpcContext,
 			input,
 			variables.itemId,
@@ -76,10 +70,10 @@ const getRevert =
 const updateMutationOptions: UseContextedMutationOptions<
 	"item-participants.update",
 	Revert<ReceiptItemParts[number]> | undefined,
-	ReceiptItemsGetInput
+	Cache.ReceiptItems.Get.Input
 > = {
 	onMutate: (trpcContext, input) => (variables) => {
-		const snapshot = updateReceiptItemPart(
+		const snapshot = cache.receiptItems.get.receiptItemPart.update(
 			trpcContext,
 			input,
 			variables.itemId,
@@ -89,7 +83,7 @@ const updateMutationOptions: UseContextedMutationOptions<
 		return snapshot && getRevert(snapshot, variables.update);
 	},
 	onSuccess: (trpcContext, input) => (_error, variables) => {
-		updateReceiptItemPart(
+		cache.receiptItems.get.receiptItemPart.update(
 			trpcContext,
 			input,
 			variables.itemId,
@@ -101,7 +95,7 @@ const updateMutationOptions: UseContextedMutationOptions<
 		if (!revert) {
 			return;
 		}
-		updateReceiptItemPart(
+		cache.receiptItems.get.receiptItemPart.update(
 			trpcContext,
 			input,
 			variables.itemId,
@@ -115,7 +109,7 @@ type Props = {
 	itemId: ReceiptItemsId;
 	receiptParticipants: ReceiptParticipant[];
 	receiptItemPart: ReceiptItemParts[number];
-	receiptItemsInput: ReceiptItemsGetInput;
+	receiptItemsInput: Cache.ReceiptItems.Get.Input;
 	role?: TRPCQueryOutput<"receipts.get">["role"];
 };
 

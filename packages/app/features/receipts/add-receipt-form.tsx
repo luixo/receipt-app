@@ -6,6 +6,7 @@ import { useRouter } from "solito/router";
 import { v4 } from "uuid";
 import { z } from "zod";
 
+import { cache, Cache } from "app/cache";
 import { AddButton } from "app/components/add-button";
 import { Block } from "app/components/block";
 import { CurrenciesPicker } from "app/components/currencies-picker";
@@ -17,65 +18,28 @@ import {
 	useTrpcMutationOptions,
 } from "app/hooks/use-trpc-mutation-options";
 import { trpc } from "app/trpc";
-import { Currency } from "app/utils/currency";
-import { addReceipt } from "app/utils/queries/receipts-get";
-import { addReceiptName } from "app/utils/queries/receipts-get-name";
-import {
-	addPagedReceipt,
-	removePagedReceipt,
-	updatePagedReceipt,
-	ReceiptsGetPagedInput,
-	receiptsGetPagedInputStore,
-} from "app/utils/queries/receipts-get-paged";
 import { TextInput, Text } from "app/utils/styles";
 import { receiptNameSchema } from "app/utils/validation";
 import { AccountsId, ReceiptsId } from "next-app/src/db/models";
 
-const createReceipt = (
-	id: ReceiptsId,
-	name: string,
-	currency: Currency,
-	ownerAccountId: AccountsId
-): Parameters<typeof addReceipt>[2] => ({
-	id,
-	role: "owner",
-	name,
-	issued: new Date(),
-	currency,
-	resolved: false,
-	sum: "0",
-	ownerAccountId,
-	dirty: false,
-});
-
-const createPagedReceipt = (
-	id: ReceiptsId,
-	name: string,
-	currency: Currency
-): Parameters<typeof addPagedReceipt>[2] => ({
-	id,
-	role: "owner",
-	name,
-	issued: new Date(),
-	currency,
-	receiptResolved: false,
-	participantResolved: false,
-});
-
 const putMutationOptions: UseContextedMutationOptions<
 	"receipts.put",
 	ReceiptsId,
-	{ input: ReceiptsGetPagedInput; selfAccountId: AccountsId }
+	{ input: Cache.Receipts.GetPaged.Input; selfAccountId: AccountsId }
 > = {
 	onMutate:
 		(trpcContext, { input }) =>
 		(variables) => {
 			const temporaryId = v4();
-			addPagedReceipt(
-				trpcContext,
-				input,
-				createPagedReceipt(temporaryId, variables.name, variables.currency)
-			);
+			cache.receipts.getPaged.add(trpcContext, input, {
+				id: temporaryId,
+				role: "owner",
+				name: variables.name,
+				issued: new Date(),
+				currency: variables.currency,
+				receiptResolved: false,
+				participantResolved: false,
+			});
 			return temporaryId;
 		},
 	onError:
@@ -84,7 +48,7 @@ const putMutationOptions: UseContextedMutationOptions<
 			if (!temporaryId) {
 				return;
 			}
-			removePagedReceipt(
+			cache.receipts.getPaged.remove(
 				trpcContext,
 				input,
 				(receipt) => receipt.id === temporaryId
@@ -93,22 +57,36 @@ const putMutationOptions: UseContextedMutationOptions<
 	onSuccess:
 		(trpcContext, { input, selfAccountId }) =>
 		(actualId, variables, temporaryId) => {
-			updatePagedReceipt(trpcContext, input, temporaryId, (receipt) => ({
-				...receipt,
-				id: actualId,
-				dirty: false,
-			}));
-			addReceipt(
+			cache.receipts.getPaged.update(
+				trpcContext,
+				input,
+				temporaryId,
+				(receipt) => ({
+					...receipt,
+					id: actualId,
+					dirty: false,
+				})
+			);
+			cache.receipts.get.add(
 				trpcContext,
 				{ id: actualId },
-				createReceipt(
-					actualId,
-					variables.name,
-					variables.currency,
-					selfAccountId
-				)
+				{
+					id: actualId,
+					role: "owner",
+					name: variables.name,
+					issued: new Date(),
+					currency: variables.currency,
+					resolved: false,
+					sum: "0",
+					ownerAccountId: selfAccountId,
+					dirty: false,
+				}
 			);
-			addReceiptName(trpcContext, { id: actualId }, variables.name);
+			cache.receipts.getName.update(
+				trpcContext,
+				{ id: actualId },
+				variables.name
+			);
 		},
 };
 
@@ -121,7 +99,7 @@ export const AddReceiptForm: React.FC = () => {
 	const router = useRouter();
 	const accountQuery = trpc.useQuery(["account.get"]);
 
-	const receiptsGetPagedInput = receiptsGetPagedInputStore();
+	const receiptsGetPagedInput = cache.receipts.getPaged.useStore();
 	const addReceiptMutation = trpc.useMutation(
 		"receipts.put",
 		useTrpcMutationOptions(putMutationOptions, {
