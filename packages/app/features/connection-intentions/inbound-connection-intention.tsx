@@ -102,7 +102,7 @@ export const InboundConnectionIntention: React.FC<InnerProps> = ({
 	const [userId, setUserId] = React.useState<UsersId>();
 	const availableUsers = usersQuery.data?.pages
 		.reduce<UsersResult["items"]>((acc, page) => [...acc, ...page.items], [])
-		.filter((user) => !user.email && !user.dirty);
+		.filter((user) => !user.email);
 	const selectedUserName =
 		availableUsers?.find((user) => user.id === userId)?.name ?? userId;
 	React.useEffect(() => {

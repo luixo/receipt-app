@@ -37,9 +37,7 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 		return {
 			count: parseInt(usersCount.amount, 10),
 			hasMore: users.length === input.limit + 1,
-			items: (
-				users as (typeof users[number] & { dirty: boolean | undefined })[]
-			).slice(0, input.limit),
+			items: users.slice(0, input.limit),
 		};
 	},
 });

@@ -1,89 +1,30 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, Controller } from "react-hook-form";
+import { Button, Loading, Text, styled, Spacer } from "@nextui-org/react";
+import { useForm } from "react-hook-form";
 import { useRouter } from "solito/router";
-import { v4 } from "uuid";
 import { z } from "zod";
 
-import { cache, Cache } from "app/cache";
-import { AddButton } from "app/components/add-button";
-import { Block } from "app/components/block";
-import { MutationWrapper } from "app/components/mutation-wrapper";
+import { cache } from "app/cache";
+import { MutationErrorMessage } from "app/components/mutation-error-message";
+import { Page } from "app/components/page";
+import { QueryErrorMessage } from "app/components/query-error-message";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
-import {
-	UseContextedMutationOptions,
-	useTrpcMutationOptions,
-} from "app/hooks/use-trpc-mutation-options";
+import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc } from "app/trpc";
-import { TextInput, Text } from "app/utils/styles";
-import { userNameSchema } from "app/utils/validation";
-import { AccountsId, UsersId } from "next-app/src/db/models";
+import { emailSchema, userNameSchema } from "app/utils/validation";
+import { UsersId } from "next-app/src/db/models";
 
-const putMutationOptions: UseContextedMutationOptions<
-	"users.put",
-	UsersId,
-	{
-		pagedInput: Cache.Users.GetPaged.Input;
-		selfAccountId: AccountsId;
-	}
-> = {
-	onMutate:
-		(trpcContext, { pagedInput }) =>
-		(form) => {
-			const temporaryId = v4();
-			cache.users.getPaged.add(trpcContext, pagedInput, {
-				id: temporaryId,
-				name: form.name,
-				publicName: form.publicName ?? null,
-				email: null,
-				dirty: false,
-			});
-			return temporaryId;
-		},
-	onError:
-		(trpcContext, { pagedInput }) =>
-		(_error, _variables, temporaryId) => {
-			if (!temporaryId) {
-				return;
-			}
-			cache.users.getPaged.remove(
-				trpcContext,
-				pagedInput,
-				(user) => user.id === temporaryId
-			);
-		},
-	onSuccess:
-		(trpcContext, { pagedInput, selfAccountId }) =>
-		(actualId, variables, temporaryId) => {
-			cache.users.getPaged.update(
-				trpcContext,
-				pagedInput,
-				temporaryId,
-				(user) => ({
-					...user,
-					id: actualId,
-					dirty: false,
-				})
-			);
-			cache.users.get.add(
-				trpcContext,
-				{ id: actualId },
-				{
-					id: actualId,
-					name: variables.name,
-					publicName: variables.publicName ?? null,
-					ownerAccountId: selfAccountId,
-					email: null,
-				}
-			);
-			cache.users.getName.add(trpcContext, { id: actualId }, variables.name);
-		},
-};
+import { EmailInput } from "./email-input";
+import { putMutationOptions } from "./put-mutation-options";
+import { Form } from "./types";
+import { UserNameInput } from "./user-name-input";
 
-type Form = {
-	name: string;
-};
+const Header = styled(Text, {
+	display: "flex",
+	alignItems: "center",
+});
 
 export const AddUserScreen: React.FC = () => {
 	const router = useRouter();
@@ -100,47 +41,67 @@ export const AddUserScreen: React.FC = () => {
 	const {
 		control,
 		handleSubmit,
-		formState: { isValid, isSubmitting, errors },
+		formState: { isValid },
+		watch,
+		setValue,
 	} = useForm<Form>({
 		mode: "onChange",
-		resolver: zodResolver(z.object({ name: userNameSchema })),
+		resolver: zodResolver(
+			z.object({
+				name: userNameSchema,
+				email: emailSchema.optional().or(z.literal("")),
+			})
+		),
 	});
 	const onSubmit = useSubmitHandler<Form, UsersId>(
-		async (values) =>
-			addUserMutation.mutateAsync({
-				name: values.name,
-			}),
+		async (values) => {
+			const { id } = await addUserMutation.mutateAsync(values);
+			return id;
+		},
 		[addUserMutation, router],
 		(id) => router.replace(`/users/${id}`)
 	);
 
 	return (
-		<Block name="Add user">
-			<Controller
+		<Page>
+			<Header h2>Add user</Header>
+			<Spacer y={1} />
+			<UserNameInput
 				control={control}
-				name="name"
-				render={({ field: { onChange, value = "", onBlur } }) => (
-					<>
-						<TextInput
-							placeholder="Enter user name"
-							value={value}
-							onBlur={onBlur}
-							onChangeText={onChange}
-							editable={!isSubmitting}
-						/>
-						{errors.name ? <Text>{errors.name.message}</Text> : null}
-					</>
-				)}
+				setValue={setValue}
+				watch={watch}
+				query={addUserMutation}
 			/>
-			<AddButton
-				onPress={handleSubmit(onSubmit)}
-				disabled={!isValid || accountQuery.status !== "success"}
+			<Spacer y={1} />
+			<EmailInput
+				control={control}
+				setValue={setValue}
+				watch={watch}
+				query={addUserMutation}
+			/>
+			<Spacer y={1} />
+			<Button
+				onClick={handleSubmit(onSubmit)}
+				disabled={
+					!isValid ||
+					addUserMutation.isLoading ||
+					accountQuery.status !== "success"
+				}
 			>
-				Add
-			</AddButton>
-			<MutationWrapper<"users.put"> mutation={addUserMutation}>
-				{() => <Text>Add success!</Text>}
-			</MutationWrapper>
-		</Block>
+				{addUserMutation.isLoading ? <Loading size="sm" /> : "Add user"}
+			</Button>
+			{addUserMutation.status === "error" ? (
+				<>
+					<Spacer y={1} />
+					<MutationErrorMessage mutation={addUserMutation} />
+				</>
+			) : null}
+			{accountQuery.status === "error" ? (
+				<>
+					<Spacer y={1} />
+					<QueryErrorMessage query={accountQuery} />
+				</>
+			) : null}
+		</Page>
 	);
 };
