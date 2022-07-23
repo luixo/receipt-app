@@ -2,8 +2,7 @@ import React from "react";
 import * as ReactNative from "react-native";
 
 import { CurrenciesPicker } from "app/components/currencies-picker";
-import { QueryWrapper } from "app/components/query-wrapper";
-import { trpc } from "app/trpc";
+import { TRPCQueryOutput } from "app/trpc";
 import { Currency } from "app/utils/currency";
 
 type Props = {
@@ -19,24 +18,30 @@ export const ReceiptCurrencyChange: React.FC<Props> = ({
 	changeCurrency,
 	disabled,
 }) => {
-	const [selectedCurrency, setSelectedCurrency] =
-		React.useState(initialCurrency);
-	const currenciesListQuery = trpc.useQuery([
-		"currency.get-list",
-		{ locale: "en" },
-	]);
+	const [selectedCurrency, setSelectedCurrency] = React.useState<
+		TRPCQueryOutput<"currency.get-list">[number] | undefined
+	>();
+	const [currencyModalOpen, setCurrencyModalOpen] = React.useState(false);
+	const switchCurrencyModal = React.useCallback(
+		() => setCurrencyModalOpen((prev) => !prev),
+		[setCurrencyModalOpen]
+	);
 	return (
 		<>
-			<QueryWrapper
-				query={currenciesListQuery}
-				value={selectedCurrency}
+			<CurrenciesPicker
+				initialCurrencyCode={initialCurrency}
+				selectedCurrency={selectedCurrency}
 				onChange={setSelectedCurrency}
-			>
-				{CurrenciesPicker}
-			</QueryWrapper>
+				modalOpen={currencyModalOpen}
+				onModalClose={switchCurrencyModal}
+			/>
 			<ReactNative.Button
 				title={`Change to ${selectedCurrency}`}
-				onPress={() => changeCurrency(selectedCurrency)}
+				onPress={
+					selectedCurrency
+						? () => changeCurrency(selectedCurrency.code)
+						: undefined
+				}
 				disabled={disabled}
 			/>
 			<ReactNative.Button title="Close" onPress={close} />
