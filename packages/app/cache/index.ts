@@ -52,6 +52,11 @@ export namespace Cache {
 
 			export type Input = Parameters<GetPagedIndex["add"]>[1];
 		}
+		export namespace GetNotConnected {
+			type GetNotConnectedIndex = UsersIndex["getNotConnected"];
+
+			export type Input = Parameters<GetNotConnectedIndex["add"]>[1];
+		}
 		export namespace GetAvailable {
 			type GetAvailableIndex = UsersIndex["getAvailable"];
 

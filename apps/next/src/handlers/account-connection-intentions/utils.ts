@@ -102,3 +102,26 @@ export const putConnectionIntention = async (
 		throw e;
 	}
 };
+
+export const removeIntention = async (
+	database: Database,
+	intention:
+		| {
+				targetAccountId: AccountsId;
+				accountId: AccountsId;
+		  }
+		| undefined,
+	intentionType: string
+) => {
+	if (!intention) {
+		throw new trpc.TRPCError({
+			code: "NOT_FOUND",
+			message: `Intention ${intentionType} does not exist.`,
+		});
+	}
+	await database
+		.deleteFrom("accountConnectionsIntentions")
+		.where("accountId", "=", intention.accountId)
+		.where("targetAccountId", "=", intention.targetAccountId)
+		.execute();
+};

@@ -66,16 +66,12 @@ const commonTheme = {
 	types,
 };
 
-const commonColors = {
-	overlay: "rgba(255, 255, 255, 0.5)",
-};
-
 const dripsyThemes = {
 	light: {
 		...commonTheme,
 		colors: {
 			...evaluateColors(themes.light.colors),
-			...commonColors,
+			overlay: "rgba(255, 255, 255, 0.5)",
 		},
 		shadows: themes.light.shadows,
 		dropShadows: themes.light.dropShadows,
@@ -84,7 +80,7 @@ const dripsyThemes = {
 		...commonTheme,
 		colors: {
 			...evaluateColors(themes.dark.colors),
-			...commonColors,
+			overlay: "rgba(0, 0, 0, 0.5)",
 		},
 		shadows: themes.dark.shadows,
 		dropShadows: themes.dark.dropShadows,

@@ -1,11 +1,11 @@
 import React from "react";
 
-import { Block } from "app/components/block";
-import { MutationWrapper } from "app/components/mutation-wrapper";
-import { RemoveButton } from "app/components/remove-button";
+import { Input } from "@nextui-org/react";
+import { MdLinkOff as UnlinkIcon } from "react-icons/md";
+
+import { IconButton } from "app/components/icon-button";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
-import { Text } from "app/utils/styles";
 
 import { deleteMutationOptions } from "./delete-mutation-options";
 
@@ -28,15 +28,22 @@ export const OutboundConnectionIntention: React.FC<InnerProps> = ({
 	}, [deleteConnectionMutation, intention.accountId]);
 
 	return (
-		<Block
-			name={`Outbound connection to ${intention.email} as ${intention.userName}`}
-		>
-			<RemoveButton onPress={deleteConnection}>Remove intention</RemoveButton>
-			<MutationWrapper<"account-connection-intentions.delete">
-				mutation={deleteConnectionMutation}
-			>
-				{() => <Text>Delete success!</Text>}
-			</MutationWrapper>
-		</Block>
+		<Input
+			value={intention.email}
+			label={intention.userName}
+			readOnly
+			helperColor="error"
+			helperText={deleteConnectionMutation.error?.message}
+			contentRightStyling={false}
+			contentRight={
+				<IconButton
+					title="Unlink user from email"
+					light
+					isLoading={deleteConnectionMutation.isLoading}
+					icon={<UnlinkIcon size={24} />}
+					onClick={deleteConnection}
+				/>
+			}
+		/>
 	);
 };

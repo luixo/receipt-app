@@ -2,6 +2,7 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
+import { removeIntention } from "next-app/handlers/account-connection-intentions/utils";
 import { AuthorizedContext } from "next-app/handlers/context";
 import { accountIdSchema } from "next-app/handlers/validation";
 
@@ -11,21 +12,16 @@ export const router = trpc.router<AuthorizedContext>().mutation("reject", {
 	}),
 	resolve: async ({ ctx, input }) => {
 		const database = getDatabase(ctx);
-		const intention = database
+		const intention = await database
 			.selectFrom("accountConnectionsIntentions")
+			.select(["accountId", "targetAccountId"])
 			.where("accountId", "=", input.sourceAccountId)
 			.where("targetAccountId", "=", ctx.auth.accountId)
 			.executeTakeFirst();
-		if (!intention) {
-			throw new trpc.TRPCError({
-				code: "NOT_FOUND",
-				message: `Intention from ${input.sourceAccountId} to ${ctx.auth.accountId} does not exist.`,
-			});
-		}
-		await database
-			.deleteFrom("accountConnectionsIntentions")
-			.where("accountId", "=", input.sourceAccountId)
-			.where("targetAccountId", "=", ctx.auth.accountId)
-			.execute();
+		return removeIntention(
+			database,
+			intention,
+			`from account id ${input.sourceAccountId}`
+		);
 	},
 });

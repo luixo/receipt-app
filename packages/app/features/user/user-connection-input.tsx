@@ -123,7 +123,7 @@ export const UserConnectionInput: React.FC<Props> = ({
 				<Input
 					label="Outbound request"
 					value={outboundConnectionIntention.email}
-					disabled
+					readOnly
 					helperColor="error"
 					helperText={mutationError}
 					contentRight={
@@ -160,9 +160,8 @@ export const UserConnectionInput: React.FC<Props> = ({
 			<Input
 				{...bindings}
 				label="Email"
-				disabled={
-					connectUserMutation.isLoading || isLoading || Boolean(user.email)
-				}
+				disabled={connectUserMutation.isLoading || isLoading}
+				readOnly={Boolean(user.email)}
 				status={inputState.error ? "warning" : undefined}
 				helperColor={inputState.error ? "warning" : "error"}
 				helperText={inputState.error?.message || mutationError}
