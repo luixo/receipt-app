@@ -1,7 +1,7 @@
 import React from "react";
 import * as ReactNative from "react-native";
 
-import { cache, Cache, Revert } from "app/cache";
+import { cache, Cache } from "app/cache";
 import { Block } from "app/components/block";
 import { MutationWrapper } from "app/components/mutation-wrapper";
 import { RemoveButton } from "app/components/remove-button";
@@ -10,7 +10,7 @@ import {
 	UseContextedMutationOptions,
 	useTrpcMutationOptions,
 } from "app/hooks/use-trpc-mutation-options";
-import { trpc, TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
+import { trpc, TRPCQueryOutput } from "app/trpc";
 import { Currency } from "app/utils/currency";
 import { Text } from "app/utils/styles";
 
@@ -18,8 +18,7 @@ import {
 	AssignableRole,
 	ReceiptParticipantRoleChange,
 } from "./receipt-participant-role-change";
-
-type ReceiptParticipants = TRPCQueryOutput<"receipt-items.get">["participants"];
+import { updateMutationOptions } from "./update-mutation-options";
 
 const deleteMutationOptions: UseContextedMutationOptions<
 	"receipt-participants.delete",
@@ -54,71 +53,6 @@ const deleteMutationOptions: UseContextedMutationOptions<
 			);
 			cache.users.getAvailable.add(trpcContext, usersInput, user);
 		},
-};
-
-const applyUpdate = (
-	item: ReceiptParticipants[number],
-	update: TRPCMutationInput<"receipt-participants.update">["update"]
-): ReceiptParticipants[number] => {
-	switch (update.type) {
-		case "role":
-			return { ...item, role: update.role };
-		case "resolved":
-			return { ...item, resolved: update.resolved };
-	}
-};
-
-const getRevert =
-	(
-		snapshot: ReceiptParticipants[number],
-		update: TRPCMutationInput<"receipt-participants.update">["update"]
-	): Revert<ReceiptParticipants[number]> =>
-	(item) => {
-		switch (update.type) {
-			case "role":
-				return { ...item, role: snapshot.role };
-			case "resolved":
-				return { ...item, resolved: snapshot.resolved };
-		}
-	};
-
-const updateMutationOptions: UseContextedMutationOptions<
-	"receipt-participants.update",
-	Revert<ReceiptParticipants[number]> | undefined,
-	Cache.ReceiptItems.Get.Input
-> = {
-	onMutate: (trpcContext, input) => (variables) => {
-		const snapshot = cache.receiptItems.get.receiptParticipant.update(
-			trpcContext,
-			input,
-			variables.userId,
-			(participant) =>
-				applyUpdate({ ...participant, dirty: true }, variables.update)
-		);
-		return snapshot && getRevert(snapshot, variables.update);
-	},
-	onSuccess: (trpcContext, input) => (_result, variables) => {
-		cache.receiptItems.get.receiptParticipant.update(
-			trpcContext,
-			input,
-			variables.userId,
-			(participant) => ({
-				...participant,
-				dirty: false,
-			})
-		);
-	},
-	onError: (trpcContext, input) => (_error, variables, revert) => {
-		if (!revert) {
-			return;
-		}
-		cache.receiptItems.get.receiptParticipant.update(
-			trpcContext,
-			input,
-			variables.userId,
-			revert
-		);
-	},
 };
 
 type Props = {
@@ -189,7 +123,11 @@ export const ReceiptParticipant: React.FC<Props> = ({
 
 	const updateReceiptMutation = trpc.useMutation(
 		"receipt-participants.update",
-		useTrpcMutationOptions(updateMutationOptions, receiptItemsInput)
+		useTrpcMutationOptions(updateMutationOptions, {
+			receiptItemsInput,
+			receiptsPagedInput: cache.receipts.getPaged.useStore(),
+			isSelfAccount: receiptParticipant.localUserId === accountQuery.data?.id,
+		})
 	);
 	const changeRole = React.useCallback(
 		(assignableRole: AssignableRole) => {

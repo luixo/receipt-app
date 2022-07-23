@@ -1,29 +1,43 @@
 import React from "react";
 
-import { cache } from "app/cache";
-import { BackButton } from "app/components/back-button";
-import { ButtonLink } from "app/components/button-link";
-import { InfiniteQueryWrapper } from "app/components/infinite-query-wrapper";
-import { trpc } from "app/trpc";
-import { ScrollView } from "app/utils/styles";
+import { Spacer, styled, Text } from "@nextui-org/react";
+import { MdAdd as AddIcon } from "react-icons/md";
+
+import { IconButton } from "app/components/icon-button";
+import { Page } from "app/components/page";
 
 import { Receipts } from "./receipts";
 
-export const ReceiptsScreen: React.FC = () => {
-	const receiptsQuery = trpc.useInfiniteQuery(
-		["receipts.get-paged", cache.receipts.getPaged.useStore()],
-		{
-			getNextPageParam: cache.receipts.getPaged.getNextPage,
-		}
-	);
+const Header = styled("div", {
+	display: "flex",
+	flexDirection: "row",
+	justifyContent: "space-between",
+});
 
-	return (
-		<ScrollView>
-			<BackButton href="/" />
-			<ButtonLink href="/receipts/add">+</ButtonLink>
-			<InfiniteQueryWrapper query={receiptsQuery}>
-				{Receipts}
-			</InfiniteQueryWrapper>
-		</ScrollView>
-	);
-};
+const Title = styled(Text, {
+	display: "flex",
+	alignItems: "center",
+});
+
+const Buttons = styled("div", {
+	flexDirection: "row",
+	flexShrink: 0,
+});
+
+export const ReceiptsScreen: React.FC = () => (
+	<Page>
+		<Header>
+			<Title h2>🧾 Receipts</Title>
+			<Buttons>
+				<IconButton
+					href="/users/add"
+					title="Add receipt"
+					bordered
+					icon={<AddIcon size={24} />}
+				/>
+			</Buttons>
+		</Header>
+		<Spacer y={1} />
+		<Receipts />
+	</Page>
+);

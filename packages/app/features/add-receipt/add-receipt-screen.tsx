@@ -20,7 +20,7 @@ import {
 import { trpc } from "app/trpc";
 import { TextInput, Text } from "app/utils/styles";
 import { receiptNameSchema } from "app/utils/validation";
-import { AccountsId, ReceiptsId } from "next-app/src/db/models";
+import { AccountsId, ReceiptsId, UsersId } from "next-app/src/db/models";
 
 const putMutationOptions: UseContextedMutationOptions<
 	"receipts.put",
@@ -28,7 +28,7 @@ const putMutationOptions: UseContextedMutationOptions<
 	{ input: Cache.Receipts.GetPaged.Input; selfAccountId: AccountsId }
 > = {
 	onMutate:
-		(trpcContext, { input }) =>
+		(trpcContext, { input, selfAccountId }) =>
 		(variables) => {
 			const temporaryId = v4();
 			cache.receipts.getPaged.add(trpcContext, input, {
@@ -39,6 +39,8 @@ const putMutationOptions: UseContextedMutationOptions<
 				currency: variables.currency,
 				receiptResolved: false,
 				participantResolved: false,
+				// Typesystem doesn't know that we use account id as self user id
+				userId: selfAccountId as UsersId,
 			});
 			return temporaryId;
 		},

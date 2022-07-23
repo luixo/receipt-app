@@ -16,18 +16,15 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 	resolve: async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
 		const foreignReceipts = database
-			.selectFrom("accounts")
-			.innerJoin("users", (jb) =>
-				jb.onRef("users.connectedAccountId", "=", "accounts.id")
-			)
+			.selectFrom("users")
+			.where("users.connectedAccountId", "=", ctx.auth.accountId)
+			.where("users.ownerAccountId", "<>", ctx.auth.accountId)
 			.innerJoin("receiptParticipants", (jb) =>
 				jb.onRef("receiptParticipants.userId", "=", "users.id")
 			)
 			.innerJoin("receipts", (jb) =>
 				jb.onRef("receipts.id", "=", "receiptParticipants.receiptId")
-			)
-			.where("accounts.id", "=", ctx.auth.accountId)
-			.where("receipts.ownerAccountId", "<>", ctx.auth.accountId);
+			);
 
 		const ownReceipts = database
 			.selectFrom("receipts")
@@ -44,7 +41,6 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 							"receipts.issued",
 							"receipts.currency",
 							"receipts.resolved",
-							"users.connectedAccountId as accountId",
 							"users.id as userId",
 						])
 						.union(
@@ -55,7 +51,6 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 								"receipts.issued",
 								"receipts.currency",
 								"receipts.resolved",
-								"receipts.ownerAccountId as accountId",
 								// We use `userId` = `ownerAccountId` contract
 								// But type system doesn't know about that
 								sql<UsersId>`receipts."ownerAccountId"`.as("userId"),
@@ -80,6 +75,7 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 					"currency",
 					"mergedReceipts.resolved as receiptResolved",
 					"receiptParticipants.resolved as participantResolved",
+					"mergedReceipts.userId",
 				])
 				.orderBy("issued", input.orderBy === "date-asc" ? "asc" : "desc")
 				.if(Boolean(input.cursor), (qb) =>

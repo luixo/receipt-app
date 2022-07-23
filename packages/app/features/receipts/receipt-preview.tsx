@@ -1,15 +1,24 @@
 import React from "react";
 
+import { Link, Text, Grid, styled } from "@nextui-org/react";
+
 import { cache } from "app/cache";
-import { Block } from "app/components/block";
 import { trpc, TRPCQueryOutput } from "app/trpc";
-import { Text, TextLink } from "app/utils/styles";
+
+import { ReceiptParticipantResolvedButton } from "./receipt-participant-resolved-button";
+import { ReceiptResolvedButton } from "./receipt-resolved-button";
+
+const TitleLink = styled(Link, {
+	display: "flex",
+	flexDirection: "column",
+	width: "100%",
+});
 
 type Props = {
-	data: TRPCQueryOutput<"receipts.get-paged">["items"][number];
+	receipt: TRPCQueryOutput<"receipts.get-paged">["items"][number];
 };
 
-export const ReceiptPreview: React.FC<Props> = ({ data: receipt }) => {
+export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 	const trpcContext = trpc.useContext();
 	const setReceiptName = React.useCallback(
 		() =>
@@ -30,22 +39,23 @@ export const ReceiptPreview: React.FC<Props> = ({ data: receipt }) => {
 		  )?.symbol
 		: receipt.currency;
 	return (
-		<Block>
-			<TextLink
-				href={`/receipts/${receipt.id}/`}
-				onClick={setReceiptName}
-				legacyBehavior={false}
-			>
-				{receipt.name}
-			</TextLink>
-			<Text>Currency: {currency}</Text>
-			<Text>Role: {receipt.role}</Text>
-			<Text>Issued: {receipt.issued.toLocaleDateString()}</Text>
-			<Text>Resolved: {receipt.receiptResolved.toString()}</Text>
-			<Text>
-				Resolved participant:{" "}
-				{receipt.participantResolved?.toString() ?? "unknown"}
-			</Text>
-		</Block>
+		<>
+			<Grid css={{ whiteSpace: "normal" }} xs={8}>
+				<TitleLink href={`/receipts/${receipt.id}/`} onClick={setReceiptName}>
+					<Text>
+						{receipt.name} ({currency})
+					</Text>
+					<Text small css={{ color: "$accents7" }}>
+						{receipt.issued.toLocaleDateString()}
+					</Text>
+				</TitleLink>
+			</Grid>
+			<Grid xs={2}>
+				<ReceiptParticipantResolvedButton receipt={receipt} />
+			</Grid>
+			<Grid xs={2}>
+				<ReceiptResolvedButton receipt={receipt} />
+			</Grid>
+		</>
 	);
 };

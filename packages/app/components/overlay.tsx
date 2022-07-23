@@ -13,6 +13,7 @@ const OverlayElement = styled(ReactNative.View)({
 	display: "flex",
 	alignItems: "center",
 	justifyContent: "center",
+	zIndex: "max",
 });
 
 type Props = {
