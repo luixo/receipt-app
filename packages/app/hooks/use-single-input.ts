@@ -12,27 +12,28 @@ type Form<T> = {
 
 export type SingleInputOptions<T> = {
 	initialValue?: T;
-	schema: z.ZodType<T>;
+	schema?: z.ZodType<T>;
 };
 
 export const useSingleInput = <T>({
 	initialValue,
 	schema,
 }: SingleInputOptions<T>) => {
-	const { control, watch, setValue } = useForm<Form<T>>({
+	const form = useForm<Form<T>>({
 		mode: "onChange",
 		defaultValues: {
 			value: initialValue,
 		} as DefaultValues<Form<T>>,
 		resolver: React.useMemo(
-			() => zodResolver(z.object({ value: schema })) as Resolver<Form<T>>,
+			() =>
+				schema
+					? (zodResolver(z.object({ value: schema })) as Resolver<Form<T>>)
+					: undefined,
 			[schema]
 		),
 	});
 	return useInputController({
-		control,
+		form,
 		name: "value" as Path<Form<T>>,
-		setValue,
-		watch,
 	});
 };

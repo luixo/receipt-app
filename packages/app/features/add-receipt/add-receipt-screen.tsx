@@ -39,14 +39,7 @@ export const AddReceiptScreen: React.FC = () => {
 		})
 	);
 
-	const {
-		control,
-		handleSubmit,
-		formState: { isValid },
-		watch,
-		setValue,
-		resetField,
-	} = useForm<Form>({
+	const form = useForm<Form>({
 		mode: "onChange",
 		resolver: zodResolver(
 			z.object({ name: receiptNameSchema, currency: z.string().nonempty() })
@@ -65,23 +58,14 @@ export const AddReceiptScreen: React.FC = () => {
 		<Page>
 			<Header h2>Add receipt</Header>
 			<Spacer y={1} />
-			<ReceiptNameInput
-				control={control}
-				setValue={setValue}
-				watch={watch}
-				query={addReceiptMutation}
-			/>
+			<ReceiptNameInput form={form} query={addReceiptMutation} />
 			<Spacer y={1} />
-			<CurrencyInput
-				setValue={setValue}
-				resetField={resetField}
-				query={addReceiptMutation}
-			/>
+			<CurrencyInput form={form} query={addReceiptMutation} />
 			<Spacer y={1} />
 			<Button
-				onClick={handleSubmit(onSubmit)}
+				onClick={form.handleSubmit(onSubmit)}
 				disabled={
-					!isValid ||
+					!form.formState.isValid ||
 					addReceiptMutation.isLoading ||
 					accountQuery.status !== "success"
 				}

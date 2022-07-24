@@ -38,13 +38,7 @@ export const AddUserScreen: React.FC = () => {
 		})
 	);
 
-	const {
-		control,
-		handleSubmit,
-		formState: { isValid },
-		watch,
-		setValue,
-	} = useForm<Form>({
+	const form = useForm<Form>({
 		mode: "onChange",
 		resolver: zodResolver(
 			z.object({
@@ -66,24 +60,14 @@ export const AddUserScreen: React.FC = () => {
 		<Page>
 			<Header h2>Add user</Header>
 			<Spacer y={1} />
-			<UserNameInput
-				control={control}
-				setValue={setValue}
-				watch={watch}
-				query={addUserMutation}
-			/>
+			<UserNameInput form={form} query={addUserMutation} />
 			<Spacer y={1} />
-			<EmailInput
-				control={control}
-				setValue={setValue}
-				watch={watch}
-				query={addUserMutation}
-			/>
+			<EmailInput form={form} query={addUserMutation} />
 			<Spacer y={1} />
 			<Button
-				onClick={handleSubmit(onSubmit)}
+				onClick={form.handleSubmit(onSubmit)}
 				disabled={
-					!isValid ||
+					!form.formState.isValid ||
 					addUserMutation.isLoading ||
 					accountQuery.status !== "success"
 				}

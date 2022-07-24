@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Button, Input, Spacer } from "@nextui-org/react";
-import { UseFormResetField, UseFormSetValue } from "react-hook-form";
+import { UseFormReturn } from "react-hook-form";
 import { MdEdit as EditIcon } from "react-icons/md";
 
 import { CurrenciesPicker } from "app/components/currencies-picker";
@@ -11,28 +11,23 @@ import { TRPCMutationResult, TRPCQueryOutput } from "app/trpc";
 import { Form } from "./types";
 
 type Props = {
-	setValue: UseFormSetValue<Form>;
-	resetField: UseFormResetField<Form>;
+	form: UseFormReturn<Form>;
 	query: TRPCMutationResult<"receipts.put">;
 };
 
-export const CurrencyInput: React.FC<Props> = ({
-	setValue,
-	resetField,
-	query,
-}) => {
+export const CurrencyInput: React.FC<Props> = ({ form, query }) => {
 	const [selectedCurrency, setSelectedCurrency] = React.useState<
 		TRPCQueryOutput<"currency.get-list">[number] | undefined
 	>();
 	React.useEffect(() => {
 		if (!selectedCurrency) {
-			resetField("currency");
+			form.resetField("currency");
 		} else {
-			setValue("currency", selectedCurrency?.code, {
+			form.setValue("currency", selectedCurrency?.code, {
 				shouldValidate: true,
 			});
 		}
-	}, [selectedCurrency, setValue, resetField]);
+	}, [selectedCurrency, form]);
 
 	const [currencyModalOpen, setCurrencyModalOpen] = React.useState(false);
 	const switchCurrencyModal = React.useCallback(

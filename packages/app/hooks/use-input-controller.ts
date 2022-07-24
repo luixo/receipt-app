@@ -2,47 +2,42 @@ import React from "react";
 
 import {
 	useController,
-	Control,
 	FieldValues,
 	FieldPath,
-	UseFormSetValue,
 	UnpackNestedValue,
 	FieldPathValue,
-	UseFormWatch,
+	UseFormReturn,
 } from "react-hook-form";
 
 export type InputControllerOptions<
 	Form extends FieldValues = FieldValues,
 	FieldName extends FieldPath<Form> = FieldPath<Form>
 > = {
-	control: Control<Form>;
+	form: UseFormReturn<Form>;
 	name: FieldName;
-	setValue: UseFormSetValue<Form>;
-	watch: UseFormWatch<Form>;
 };
 
 export const useInputController = <
 	Form extends FieldValues = FieldValues,
 	FieldName extends FieldPath<Form> = FieldPath<Form>
 >({
-	control,
+	form,
 	name,
-	setValue: setFormValue,
-	watch,
 }: InputControllerOptions<Form, FieldName>) => {
 	const { field, fieldState } = useController({
 		name,
-		control,
+		control: form.control,
 	});
 	const setValue = React.useCallback(
 		(nextValue: UnpackNestedValue<FieldPathValue<Form, FieldName>>) =>
-			setFormValue(name, nextValue),
-		[setFormValue, name]
+			form.setValue(name, nextValue),
+		[form, name]
 	);
 	return {
 		bindings: field,
 		state: fieldState,
-		getValue: React.useCallback(() => watch(name), [watch, name]),
+		getValue: React.useCallback(() => form.watch(name), [form, name]),
 		setValue,
+		form,
 	};
 };
