@@ -1,12 +1,6 @@
 import React from "react";
 
-import { Button, Loading, Link, styled } from "@nextui-org/react";
-
-const ButtonLikeLoading = styled(Loading, {
-	px: "$9",
-	display: "flex",
-	justifyContent: "center",
-});
+import { Button, Loading, Link } from "@nextui-org/react";
 
 type Props = React.ComponentProps<typeof Button> & {
 	isLoading?: boolean;
@@ -20,10 +14,11 @@ export const IconButton: React.FC<Props> = ({
 	linkStyle,
 	...props
 }) => {
-	if (isLoading) {
-		return <ButtonLikeLoading size="xs" />;
-	}
-	const button = <Button auto {...props} />;
+	const button = (
+		<Button auto {...props}>
+			{isLoading ? <Loading size="xs" /> : props.children}
+		</Button>
+	);
 	if (href) {
 		return (
 			<Link href={href} style={linkStyle}>
