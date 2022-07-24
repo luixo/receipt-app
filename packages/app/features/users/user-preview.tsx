@@ -1,24 +1,12 @@
 import React from "react";
-import * as ReactNative from "react-native";
-
-import { styled as nextStyled, Text } from "@nextui-org/react";
 
 import { cache } from "app/cache";
-import { Identicon } from "app/components/identicon";
+import { User } from "app/components/user";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { styled, Link } from "app/utils/styles";
 
 const WrapperLink = styled(Link)({
 	flexDirection: "row",
-});
-
-const Information = styled(ReactNative.View)({
-	marginLeft: "sm",
-	justifyContent: "center",
-});
-
-const UserName = nextStyled(Text, {
-	fontWeight: "$medium",
 });
 
 type Props = {
@@ -37,17 +25,7 @@ export const UserPreview: React.FC<Props> = ({ data: user }) => {
 			onClick={setUserName}
 			legacyBehavior={false}
 		>
-			<Identicon hash={user.id} size={40} altText={user.name} />
-			<Information>
-				{/* zero margin because of inherited margin from ChildText */}
-				<UserName css={{ margin: 0 }}>
-					{user.name + (user.publicName ? ` (${user.publicName})` : "")}
-				</UserName>
-				{/* color set in css because of inherited margin from Text */}
-				<Text small css={{ color: "$accents7", margin: 0 }}>
-					{user.email ?? undefined}
-				</Text>
-			</Information>
+			<User user={user} />
 		</WrapperLink>
 	);
 };
