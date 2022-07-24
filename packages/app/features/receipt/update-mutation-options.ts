@@ -16,7 +16,7 @@ const applyPagedUpdate = (
 		case "issued":
 			return { ...item, issued: update.issued };
 		case "resolved":
-			return { ...item, receiptResolved: update.resolved };
+			return { ...item, resolved: update.resolved };
 		case "currency":
 			return { ...item, currency: update.currency };
 	}
@@ -68,7 +68,7 @@ const getPagedRevert =
 			case "issued":
 				return { ...receipt, issued: snapshot.issued };
 			case "resolved":
-				return { ...receipt, resolved: snapshot.receiptResolved };
+				return { ...receipt, resolved: snapshot.resolved };
 			case "currency":
 				return { ...receipt, currency: snapshot.currency };
 		}

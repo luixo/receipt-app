@@ -73,7 +73,7 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 					"name",
 					"issued",
 					"currency",
-					"mergedReceipts.resolved as receiptResolved",
+					"mergedReceipts.resolved",
 					"receiptParticipants.resolved as participantResolved",
 					"mergedReceipts.userId",
 				])

@@ -25,14 +25,14 @@ export const ReceiptResolvedButton: React.FC<Props> = ({ receipt }) => {
 	const switchResolved = React.useCallback(() => {
 		updateReceiptMutation.mutate({
 			id: receipt.id,
-			update: { type: "resolved", resolved: !receipt.receiptResolved },
+			update: { type: "resolved", resolved: !receipt.resolved },
 		});
-	}, [updateReceiptMutation, receipt.id, receipt.receiptResolved]);
+	}, [updateReceiptMutation, receipt.id, receipt.resolved]);
 	return (
 		<IconButton
 			light
 			isLoading={updateReceiptMutation.isLoading}
-			color={receipt.receiptResolved ? "success" : "warning"}
+			color={receipt.resolved ? "success" : "warning"}
 			onClick={switchResolved}
 		>
 			<CalcIcon size={24} />

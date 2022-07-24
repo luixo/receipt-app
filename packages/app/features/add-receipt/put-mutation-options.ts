@@ -19,7 +19,7 @@ export const putMutationOptions: UseContextedMutationOptions<
 				name: variables.name,
 				issued: new Date(),
 				currency: variables.currency,
-				receiptResolved: false,
+				resolved: false,
 				participantResolved: false,
 				// Typesystem doesn't know that we use account id as self user id
 				userId: selfAccountId as UsersId,
