@@ -16,7 +16,6 @@ import {
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { Currency } from "app/utils/currency";
 import { TextLink, Text } from "app/utils/styles";
-import { UsersId } from "next-app/src/db/models";
 
 import { ReceiptCurrencyChange } from "./receipt-currency-change";
 import { ReceiptOwner } from "./receipt-owner";
@@ -71,11 +70,7 @@ export const Receipt: React.FC<Props> = ({ data: receipt, input }) => {
 			input,
 		})
 	);
-	const ownerQuery = trpc.useQuery([
-		"users.get",
-		// Typesystem doesn't know that we use account id as self user id
-		{ id: receipt.ownerAccountId as UsersId },
-	]);
+	const ownerQuery = trpc.useQuery(["users.get", { id: receipt.ownerUserId }]);
 	const deleteReceipt = useAsyncCallback(
 		async (isMount) => {
 			await deleteReceiptMutation.mutateAsync({ id: receipt.id });

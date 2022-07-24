@@ -9,9 +9,10 @@ const calculateReceiptSum = (
 	if (!receiptItems) {
 		return;
 	}
-	return receiptItems.items
-		.reduce((acc, item) => acc + item.price * item.quantity, 0)
-		.toString();
+	return receiptItems.items.reduce(
+		(acc, item) => acc + item.price * item.quantity,
+		0
+	);
 };
 
 export const updateReceiptSum = (

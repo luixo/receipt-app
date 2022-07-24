@@ -61,9 +61,11 @@ export const putMutationOptions: UseContextedMutationOptions<
 					issued: new Date(),
 					currency: variables.currency,
 					resolved: false,
-					sum: "0",
-					ownerAccountId: selfAccountId,
+					sum: 0,
 					dirty: false,
+					participantResolved: false,
+					// Typesystem doesn't know that we use account id as self user id
+					ownerUserId: selfAccountId as UsersId,
 				}
 			);
 			cache.receipts.getName.update(

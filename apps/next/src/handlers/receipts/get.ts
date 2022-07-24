@@ -13,10 +13,23 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 	}),
 	resolve: async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
-		const receipt = await database
+		const maybeReceipt = await database
 			.selectFrom("receipts")
 			.leftJoin("receiptItems", (jb) =>
 				jb.onRef("receiptItems.receiptId", "=", "receipts.id")
+			)
+			.innerJoin("users as usersTheir", (jb) =>
+				jb.on("usersTheir.connectedAccountId", "=", ctx.auth.accountId)
+			)
+			.leftJoin("receiptParticipants", (jb) =>
+				jb
+					.onRef("receiptParticipants.receiptId", "=", "receipts.id")
+					.onRef("receiptParticipants.userId", "=", "usersTheir.id")
+			)
+			.innerJoin("users as usersMine", (jb) =>
+				jb
+					.on("usersMine.ownerAccountId", "=", ctx.auth.accountId)
+					.onRef("usersMine.connectedAccountId", "=", "receipts.ownerAccountId")
 			)
 			.select([
 				"receipts.id",
@@ -25,29 +38,36 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 				sql<string>`coalesce(sum("receiptItems".price * "receiptItems".quantity), 0)`.as(
 					"sum"
 				),
-				"ownerAccountId",
-				"resolved",
+				"receipts.ownerAccountId",
+				"receipts.resolved",
 				"issued",
+				"receiptParticipants.resolved as participantResolved",
+				"usersMine.id as ownerUserId",
 			])
 			.where("receipts.id", "=", input.id)
-			.groupBy("receipts.id")
+			.groupBy(["receipts.id", "receiptParticipants.resolved", "usersMine.id"])
 			.executeTakeFirst();
-		if (!receipt) {
+		if (!maybeReceipt) {
 			throw new trpc.TRPCError({
 				code: "NOT_FOUND",
 				message: `No receipt ${input.id} found`,
 			});
 		}
+		const { ownerAccountId, ...receipt } = maybeReceipt;
 		const accessRole = await getAccessRole(
 			database,
-			receipt,
+			{ ownerAccountId, id: input.id },
 			ctx.auth.accountId
 		);
 		if (accessRole) {
-			return {
-				...receipt,
-				role: accessRole,
-			} as typeof receipt & { role: Role; dirty?: boolean };
+			return { ...receipt, sum: Number(receipt.sum), role: accessRole } as Omit<
+				typeof receipt,
+				"sum"
+			> & {
+				role: Role;
+				dirty?: boolean;
+				sum: number;
+			};
 		}
 		throw new trpc.TRPCError({
 			code: "FORBIDDEN",
