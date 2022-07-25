@@ -15,7 +15,11 @@ import { IconButton } from "app/components/icon-button";
 import { Overlay } from "app/components/overlay";
 import { QueryErrorMessage } from "app/components/query-error-message";
 import { useCursorPaging } from "app/hooks/use-cursor-paging";
-import { trpc, TRPCQueryOutput } from "app/trpc";
+import {
+	trpc,
+	TRPCInfiniteQuerySuccessResult,
+	TRPCQueryOutput,
+} from "app/trpc";
 
 import { UserPreview } from "./user-preview";
 
@@ -41,12 +45,12 @@ const UserPreviewsList: React.FC<PreviewsProps> = ({ users }) => (
 	</>
 );
 
-export const Users: React.FC = () => {
+type InnerProps = {
+	query: TRPCInfiniteQuerySuccessResult<"users.get-paged">;
+};
+
+const UsersInner: React.FC<InnerProps> = ({ query }) => {
 	const usersGetPagedInput = cache.users.getPaged.useStore();
-	const usersQuery = trpc.useInfiniteQuery(
-		["users.get-paged", usersGetPagedInput],
-		{ getNextPageParam: cache.users.getPaged.getNextPage }
-	);
 	const {
 		onNextPage,
 		onPrevPage,
@@ -59,17 +63,7 @@ export const Users: React.FC = () => {
 		nextDisabled,
 		nextLoading,
 		totalCount,
-	} = useCursorPaging(usersQuery);
-
-	if (usersQuery.status === "loading") {
-		return <Loading size="xl" />;
-	}
-	if (usersQuery.status === "error") {
-		return <QueryErrorMessage query={usersQuery} />;
-	}
-	if (usersQuery.status === "idle") {
-		return null;
-	}
+	} = useCursorPaging(query);
 
 	if (totalCount === 0) {
 		return (
@@ -138,4 +132,21 @@ export const Users: React.FC = () => {
 			{pagination}
 		</>
 	);
+};
+
+export const Users: React.FC = () => {
+	const query = trpc.useInfiniteQuery(
+		["users.get-paged", cache.users.getPaged.useStore()],
+		{ getNextPageParam: cache.users.getPaged.getNextPage }
+	);
+	if (query.status === "loading") {
+		return <Loading size="xl" />;
+	}
+	if (query.status === "error") {
+		return <QueryErrorMessage query={query} />;
+	}
+	if (query.status === "idle") {
+		return null;
+	}
+	return <UsersInner query={query} />;
 };

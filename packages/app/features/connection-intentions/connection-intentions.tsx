@@ -3,7 +3,7 @@ import React from "react";
 import { Container, Loading, Spacer, styled, Text } from "@nextui-org/react";
 
 import { QueryErrorMessage } from "app/components/query-error-message";
-import { trpc } from "app/trpc";
+import { trpc, TRPCQuerySuccessResult } from "app/trpc";
 
 import { InboundConnectionIntention } from "./inbound-connection-intention";
 import { OutboundConnectionIntention } from "./outbound-connection-intention";
@@ -13,22 +13,11 @@ const CenteredText = styled(Text, {
 	alignItems: "center",
 });
 
-export const ConnectionIntentions: React.FC = () => {
-	const connectionIntentionsQuery = trpc.useQuery([
-		"account-connection-intentions.get-all",
-	]);
+type Props = {
+	query: TRPCQuerySuccessResult<"account-connection-intentions.get-all">;
+};
 
-	if (connectionIntentionsQuery.status === "loading") {
-		return <Loading size="xl" />;
-	}
-	if (connectionIntentionsQuery.status === "error") {
-		return <QueryErrorMessage query={connectionIntentionsQuery} />;
-	}
-	if (connectionIntentionsQuery.status === "idle") {
-		return null;
-	}
-
-	const { data } = connectionIntentionsQuery;
+const ConnectionIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 	if (data.inbound.length === 0 && data.outbound.length === 0) {
 		return (
 			<Container
@@ -76,4 +65,18 @@ export const ConnectionIntentions: React.FC = () => {
 			)}
 		</>
 	);
+};
+
+export const ConnectionIntentions: React.FC = () => {
+	const query = trpc.useQuery(["account-connection-intentions.get-all"]);
+	if (query.status === "loading") {
+		return <Loading size="xl" />;
+	}
+	if (query.status === "error") {
+		return <QueryErrorMessage query={query} />;
+	}
+	if (query.status === "idle") {
+		return null;
+	}
+	return <ConnectionIntentionsInner query={query} />;
 };

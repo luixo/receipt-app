@@ -10,14 +10,17 @@ import {
 	Grid,
 } from "@nextui-org/react";
 import { MdAdd as AddIcon } from "react-icons/md";
-import { InfiniteQueryObserverSuccessResult } from "react-query";
 
 import { cache } from "app/cache";
 import { IconButton } from "app/components/icon-button";
 import { Overlay } from "app/components/overlay";
 import { QueryErrorMessage } from "app/components/query-error-message";
 import { useCursorPaging } from "app/hooks/use-cursor-paging";
-import { trpc, TRPCQueryOutput } from "app/trpc";
+import {
+	trpc,
+	TRPCInfiniteQuerySuccessResult,
+	TRPCQueryOutput,
+} from "app/trpc";
 
 import { ReceiptPreview } from "./receipt-preview";
 
@@ -59,10 +62,7 @@ const ReceiptPreviewsList: React.FC<PreviewsProps> = ({ receipts }) => (
 );
 
 type InnerProps = {
-	query: InfiniteQueryObserverSuccessResult<
-		TRPCQueryOutput<"receipts.get-paged">,
-		unknown
-	>;
+	query: TRPCInfiniteQuerySuccessResult<"receipts.get-paged">;
 };
 
 const ReceiptsInner: React.FC<InnerProps> = ({ query }) => {

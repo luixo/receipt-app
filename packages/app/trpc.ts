@@ -118,6 +118,11 @@ export type TRPCInfiniteQueryCursor<Path extends TRPCInfiniteQueryKey> =
 export type TRPCInfiniteQueryResult<Path extends TRPCQueryKey> =
 	UseInfiniteQueryResult<TRPCQueryOutput<Path>, TRPCError>;
 
+export type TRPCInfiniteQuerySuccessResult<
+	Path extends TRPCInfiniteQueryKey,
+	Result extends TRPCInfiniteQueryResult<Path> = TRPCInfiniteQueryResult<Path>
+> = Result extends { status: "success" } ? Result : never;
+
 export type TRPCMutationKey = DefKey<AppRouter, "mutations">;
 
 type TRPCMutationValues = DefValues<AppRouter, "mutations">;
