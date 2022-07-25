@@ -1,18 +1,15 @@
 import React from "react";
 
-import { useSx } from "dripsy";
+import { styled } from "@nextui-org/react";
 
-import { ScrollView } from "app/utils/styles";
+const Wrapper = styled("div", {
+	padding: "$md",
+});
 
 type Props = {
 	children: React.ReactNode;
 };
 
-export const Page: React.FC<Props> = ({ children }) => {
-	const sx = useSx();
-	return (
-		<ScrollView contentContainerStyle={sx({ padding: "md" })}>
-			{children}
-		</ScrollView>
-	);
-};
+export const Page: React.FC<Props> = ({ children }) => (
+	<Wrapper>{children}</Wrapper>
+);
