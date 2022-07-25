@@ -6,7 +6,7 @@ export const mutationOptions: UseContextedMutationOptions<"account-connection-in
 		onSuccess: (trpcContext) => (_result, variables) => {
 			cache.accountConnections.getAll.inbound.remove(
 				trpcContext,
-				(intention) => intention.accountId === variables.sourceAccountId
+				variables.sourceAccountId
 			);
 		},
 	};

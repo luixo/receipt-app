@@ -1,7 +1,6 @@
 import React from "react";
 import * as ReactNative from "react-native";
 
-import { Cache } from "app/cache";
 import { TRPCQueryOutput } from "app/trpc";
 import { styled } from "app/utils/styles";
 
@@ -16,30 +15,17 @@ const AlignEndView = styled(ReactNative.View)({
 
 type Props = {
 	data: TRPCQueryOutput<"users.get">;
-	input: Cache.Users.Get.Input;
 };
 
-export const User: React.FC<Props> = ({ data: user, input }) => {
+export const User: React.FC<Props> = ({ data: user }) => {
 	const [deleteLoading, setDeleteLoading] = React.useState(false);
 	return (
 		<>
-			<UserNameInput user={user} isLoading={deleteLoading} input={input} />
-			<UserPublicNameInput
-				user={user}
-				isLoading={deleteLoading}
-				input={input}
-			/>
-			<UserConnectionInput
-				user={user}
-				input={input}
-				isLoading={deleteLoading}
-			/>
+			<UserNameInput user={user} isLoading={deleteLoading} />
+			<UserPublicNameInput user={user} isLoading={deleteLoading} />
+			<UserConnectionInput user={user} isLoading={deleteLoading} />
 			<AlignEndView>
-				<UserRemoveButton
-					user={user}
-					input={input}
-					setLoading={setDeleteLoading}
-				/>
+				<UserRemoveButton user={user} setLoading={setDeleteLoading} />
 			</AlignEndView>
 		</>
 	);

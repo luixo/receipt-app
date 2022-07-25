@@ -1,13 +1,13 @@
 import { TRPCReactContext } from "app/trpc";
+import { UsersId } from "next-app/db/models";
 
 import { createController } from "./controller";
-import { UsersGetNameInput } from "./types";
 
-export const remove = (trpc: TRPCReactContext, input: UsersGetNameInput) =>
-	createController(trpc, input).invalidate();
+export const remove = (trpc: TRPCReactContext, userId: UsersId) =>
+	createController(trpc, userId).invalidate();
 
 export const add = (
 	trpc: TRPCReactContext,
-	input: UsersGetNameInput,
+	userId: UsersId,
 	nextName: string
-) => createController(trpc, input).set(nextName);
+) => createController(trpc, userId).set(nextName);

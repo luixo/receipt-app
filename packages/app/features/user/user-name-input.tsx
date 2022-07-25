@@ -3,7 +3,7 @@ import React from "react";
 import { Input } from "@nextui-org/react";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 
-import { cache, Cache } from "app/cache";
+import { cache } from "app/cache";
 import { IconButton } from "app/components/icon-button";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useSingleInput } from "app/hooks/use-single-input";
@@ -14,10 +14,9 @@ import { userNameSchema } from "app/utils/validation";
 type Props = {
 	user: TRPCQueryOutput<"users.get">;
 	isLoading: boolean;
-	input: Cache.Users.Get.Input;
 };
 
-export const UserNameInput: React.FC<Props> = ({ user, isLoading, input }) => {
+export const UserNameInput: React.FC<Props> = ({ user, isLoading }) => {
 	const {
 		bindings,
 		state: inputState,
@@ -28,13 +27,9 @@ export const UserNameInput: React.FC<Props> = ({ user, isLoading, input }) => {
 		schema: userNameSchema,
 	});
 
-	const usersGetPagedInput = cache.users.getPaged.useStore();
 	const updateUserMutation = trpc.useMutation(
 		"users.update",
-		useTrpcMutationOptions(cache.users.update.mutationOptions, {
-			pagedInput: usersGetPagedInput,
-			input,
-		})
+		useTrpcMutationOptions(cache.users.update.mutationOptions)
 	);
 	const saveName = useAsyncCallback(
 		async (isMount, nextName: string) => {

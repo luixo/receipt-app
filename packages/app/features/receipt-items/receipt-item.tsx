@@ -1,7 +1,7 @@
 import React from "react";
 import * as ReactNative from "react-native";
 
-import { cache, Cache } from "app/cache";
+import { cache } from "app/cache";
 import { Block } from "app/components/block";
 import { MutationWrapper } from "app/components/mutation-wrapper";
 import { RemoveButton } from "app/components/remove-button";
@@ -9,6 +9,7 @@ import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { Text } from "app/utils/styles";
+import { ReceiptsId } from "next-app/db/models";
 
 import { AddReceiptItemPartForm } from "./add-receipt-item-part-form";
 import { ReceiptItemPart } from "./receipt-item-part";
@@ -18,24 +19,21 @@ type ReceiptParticipant =
 	TRPCQueryOutput<"receipt-items.get">["participants"][number];
 
 type Props = {
+	receiptId: ReceiptsId;
 	receiptItem: ReceiptItems[number];
 	receiptParticipants: ReceiptParticipant[];
-	receiptItemsInput: Cache.ReceiptItems.Get.Input;
 	role?: TRPCQueryOutput<"receipts.get">["role"];
 };
 
 export const ReceiptItem: React.FC<Props> = ({
 	receiptItem,
 	receiptParticipants,
-	receiptItemsInput,
+	receiptId,
 	role,
 }) => {
 	const removeReceiptItemMutation = trpc.useMutation(
 		"receipt-items.delete",
-		useTrpcMutationOptions(
-			cache.receiptItems.delete.mutationOptions,
-			receiptItemsInput
-		)
+		useTrpcMutationOptions(cache.receiptItems.delete.mutationOptions, receiptId)
 	);
 	const removeItem = useAsyncCallback(
 		() =>
@@ -47,10 +45,7 @@ export const ReceiptItem: React.FC<Props> = ({
 
 	const updateReceiptItemMutation = trpc.useMutation(
 		"receipt-items.update",
-		useTrpcMutationOptions(
-			cache.receiptItems.update.mutationOptions,
-			receiptItemsInput
-		)
+		useTrpcMutationOptions(cache.receiptItems.update.mutationOptions, receiptId)
 	);
 	const promptName = React.useCallback(() => {
 		const name = window.prompt("Please enter new name", receiptItem.name);
@@ -155,18 +150,18 @@ export const ReceiptItem: React.FC<Props> = ({
 			{receiptItem.parts.map((part) => (
 				<ReceiptItemPart
 					key={part.userId}
+					receiptId={receiptId}
 					receiptItemPart={part}
 					receiptParticipants={receiptParticipants}
 					itemId={receiptItem.id}
-					receiptItemsInput={receiptItemsInput}
 					role={role}
 				/>
 			))}
 			{notAddedParticipants.map((participant) => (
 				<AddReceiptItemPartForm
 					key={participant.userId}
+					receiptId={receiptId}
 					participant={participant}
-					receiptItemsInput={receiptItemsInput}
 					itemId={receiptItem.id}
 					role={role}
 				/>

@@ -28,11 +28,10 @@ const Header = styled(Text, {
 export const AddUserScreen: React.FC = () => {
 	const router = useRouter();
 	const accountQuery = trpc.useQuery(["account.get"]);
-	const usersGetPagedInput = cache.users.getPaged.useStore();
+
 	const addUserMutation = trpc.useMutation(
 		"users.put",
 		useTrpcMutationOptions(cache.users.put.mutationOptions, {
-			pagedInput: usersGetPagedInput,
 			selfAccountId: accountQuery.data?.id ?? "unknown",
 		})
 	);

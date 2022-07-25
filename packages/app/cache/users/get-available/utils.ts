@@ -1,18 +1,19 @@
 import { TRPCReactContext } from "app/trpc";
+import { ReceiptsId } from "next-app/db/models";
 
 import { createController } from "./controller";
-import { AvailableUser, GetAvailableUsersInput } from "./types";
+import { AvailableUser } from "./types";
 
 export const updateAvailableUsers = (
 	trpc: TRPCReactContext,
-	input: GetAvailableUsersInput,
+	receiptId: ReceiptsId,
 	updater: (
 		page: AvailableUser[],
 		pageIndex: number,
 		pages: AvailableUser[][]
 	) => AvailableUser[]
 ) =>
-	createController(trpc, input).update((prevData) => {
+	createController(trpc, receiptId).update((prevData) => {
 		const nextPages = prevData.pages.map((result, index, results) => {
 			const nextItems = updater(
 				result.items,

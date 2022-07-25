@@ -1,50 +1,33 @@
-import { cache, Cache } from "app/cache";
+import { cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 
 export const mutationOptions: UseContextedMutationOptions<
 	"users.unlink",
-	string | undefined,
-	{
-		pagedInput: Cache.Users.GetPaged.Input;
-		input: Cache.Users.Get.Input;
-	}
+	string | undefined
 > = {
-	onMutate:
-		(trpcContext, { input, pagedInput }) =>
-		() => {
-			cache.users.getPaged.update(
-				trpcContext,
-				pagedInput,
-				input.id,
-				(user) => ({
-					...user,
-					email: null,
-				})
-			);
-			const snapshot = cache.users.get.update(trpcContext, input, (user) => ({
-				...user,
-				email: null,
-			}));
-			return snapshot?.email ?? undefined;
-		},
-	onError:
-		(trpcContext, { pagedInput, input }) =>
-		(_error, _variables, email) => {
-			if (!email) {
-				return;
-			}
-			cache.users.getPaged.update(
-				trpcContext,
-				pagedInput,
-				input.id,
-				(user) => ({
-					...user,
-					email,
-				})
-			);
-			cache.users.get.update(trpcContext, input, (user) => ({
-				...user,
-				email,
-			}));
-		},
+	onMutate: (trpcContext) => (variables) => {
+		cache.users.getPaged.update(trpcContext, variables.id, (user) => ({
+			...user,
+			email: null,
+		}));
+		const snapshot = cache.users.get.update(
+			trpcContext,
+			variables.id,
+			(user) => ({ ...user, email: null })
+		);
+		return snapshot?.email ?? undefined;
+	},
+	onError: (trpcContext) => (_error, variables, email) => {
+		if (!email) {
+			return;
+		}
+		cache.users.getPaged.update(trpcContext, variables.id, (user) => ({
+			...user,
+			email,
+		}));
+		cache.users.get.update(trpcContext, variables.id, (user) => ({
+			...user,
+			email,
+		}));
+	},
 };

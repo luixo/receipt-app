@@ -19,8 +19,6 @@ export const ReceiptParticipantResolvedButton: React.FC<Props> = ({
 	const updateReceiptMutation = trpc.useMutation(
 		"receipt-participants.update",
 		useTrpcMutationOptions(cache.receiptParticipants.update.mutationOptions, {
-			receiptItemsInput: { receiptId: receipt.id },
-			receiptsPagedInput: cache.receipts.getPaged.useStore(),
 			isSelfAccount: true,
 		})
 	);

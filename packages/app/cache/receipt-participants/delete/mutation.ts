@@ -1,5 +1,6 @@
-import { cache, Cache } from "app/cache";
+import { cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { ReceiptsId } from "next-app/db/models";
 
 export const mutationOptions: UseContextedMutationOptions<
 	"receipt-participants.delete",
@@ -7,31 +8,30 @@ export const mutationOptions: UseContextedMutationOptions<
 		typeof cache["receiptItems"]["get"]["receiptParticipant"]["remove"]
 	>,
 	{
-		itemsInput: Cache.ReceiptItems.Get.Input;
-		usersInput: Cache.Users.GetAvailable.Input;
-		user: Cache.Users.GetAvailable.User;
+		receiptId: ReceiptsId;
+		user: Parameters<typeof cache["users"]["getAvailable"]["add"]>[2];
 	}
 > = {
 	onMutate:
-		(trpcContext, { itemsInput }) =>
+		(trpcContext, { receiptId }) =>
 		({ userId }) =>
 			cache.receiptItems.get.receiptParticipant.remove(
 				trpcContext,
-				itemsInput,
-				(participant) => participant.userId === userId
+				receiptId,
+				userId
 			),
 	onError:
-		(trpcContext, { itemsInput, usersInput, user }) =>
+		(trpcContext, { receiptId, user }) =>
 		(_error, _variables, snapshot) => {
 			if (!snapshot) {
 				return;
 			}
 			cache.receiptItems.get.receiptParticipant.add(
 				trpcContext,
-				itemsInput,
+				receiptId,
 				snapshot.receiptParticipant,
 				snapshot.index
 			);
-			cache.users.getAvailable.add(trpcContext, usersInput, user);
+			cache.users.getAvailable.add(trpcContext, receiptId, user);
 		},
 };

@@ -1,16 +1,16 @@
 import { createRef } from "app/cache/utils";
 import { TRPCReactContext } from "app/trpc";
-import { UsersId } from "next-app/src/db/models";
+import { ReceiptsId, UsersId } from "next-app/src/db/models";
 
 import { createController } from "../controller";
-import { ReceiptItemsGetInput, ReceiptParticipant } from "../types";
+import { ReceiptParticipant } from "../types";
 
 const updateReceiptParticipants = (
 	trpc: TRPCReactContext,
-	input: ReceiptItemsGetInput,
+	receiptId: ReceiptsId,
 	updater: (participants: ReceiptParticipant[]) => ReceiptParticipant[]
 ) =>
-	createController(trpc, input).update((prevData) => {
+	createController(trpc, receiptId).update((prevData) => {
 		const nextParticipants = updater(prevData.participants);
 		if (nextParticipants === prevData.participants) {
 			return prevData;
@@ -20,11 +20,11 @@ const updateReceiptParticipants = (
 
 export const add = (
 	trpc: TRPCReactContext,
-	input: ReceiptItemsGetInput,
+	receiptId: ReceiptsId,
 	nextReceiptParticipant: ReceiptParticipant,
 	index = 0
 ) =>
-	updateReceiptParticipants(trpc, input, (items) => [
+	updateReceiptParticipants(trpc, receiptId, (items) => [
 		...items.slice(0, index),
 		nextReceiptParticipant,
 		...items.slice(index),
@@ -32,14 +32,16 @@ export const add = (
 
 export const remove = (
 	trpc: TRPCReactContext,
-	input: ReceiptItemsGetInput,
-	shouldRemove: (participant: ReceiptParticipant) => boolean
+	receiptId: ReceiptsId,
+	userId: UsersId
 ) => {
 	const removedReceiptParticipantRef = createRef<
 		{ index: number; receiptParticipant: ReceiptParticipant } | undefined
 	>();
-	updateReceiptParticipants(trpc, input, (participants) => {
-		const matchedIndex = participants.findIndex(shouldRemove);
+	updateReceiptParticipants(trpc, receiptId, (participants) => {
+		const matchedIndex = participants.findIndex(
+			(participant) => participant.userId === userId
+		);
 		if (matchedIndex === -1) {
 			return participants;
 		}
@@ -57,14 +59,14 @@ export const remove = (
 
 export const update = (
 	trpc: TRPCReactContext,
-	input: ReceiptItemsGetInput,
+	receiptId: ReceiptsId,
 	userId: UsersId,
 	updater: (participant: ReceiptParticipant) => ReceiptParticipant
 ) => {
 	const modifiedReceiptParticipant = createRef<
 		ReceiptParticipant | undefined
 	>();
-	updateReceiptParticipants(trpc, input, (items) => {
+	updateReceiptParticipants(trpc, receiptId, (items) => {
 		const matchedIndex = items.findIndex(
 			(participant) => participant.userId === userId
 		);

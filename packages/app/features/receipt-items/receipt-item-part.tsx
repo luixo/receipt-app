@@ -1,7 +1,7 @@
 import React from "react";
 import * as ReactNative from "react-native";
 
-import { cache, Cache } from "app/cache";
+import { cache } from "app/cache";
 import { Block } from "app/components/block";
 import { MutationWrapper } from "app/components/mutation-wrapper";
 import { RemoveButton } from "app/components/remove-button";
@@ -9,7 +9,7 @@ import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { Text } from "app/utils/styles";
-import { ReceiptItemsId } from "next-app/db/models";
+import { ReceiptItemsId, ReceiptsId } from "next-app/db/models";
 
 type ReceiptItem = TRPCQueryOutput<"receipt-items.get">["items"][number];
 type ReceiptParticipant =
@@ -17,10 +17,10 @@ type ReceiptParticipant =
 type ReceiptItemParts = ReceiptItem["parts"];
 
 type Props = {
+	receiptId: ReceiptsId;
 	itemId: ReceiptItemsId;
 	receiptParticipants: ReceiptParticipant[];
 	receiptItemPart: ReceiptItemParts[number];
-	receiptItemsInput: Cache.ReceiptItems.Get.Input;
 	role?: TRPCQueryOutput<"receipts.get">["role"];
 };
 
@@ -28,14 +28,14 @@ export const ReceiptItemPart: React.FC<Props> = ({
 	itemId,
 	receiptItemPart,
 	receiptParticipants,
-	receiptItemsInput,
+	receiptId,
 	role,
 }) => {
 	const updateItemPartMutation = trpc.useMutation(
 		"item-participants.update",
 		useTrpcMutationOptions(
 			cache.itemParticipants.update.mutationOptions,
-			receiptItemsInput
+			receiptId
 		)
 	);
 
@@ -95,7 +95,7 @@ export const ReceiptItemPart: React.FC<Props> = ({
 		"item-participants.delete",
 		useTrpcMutationOptions(
 			cache.itemParticipants.delete.mutationOptions,
-			receiptItemsInput
+			receiptId
 		)
 	);
 	const removeItemPart = useAsyncCallback(

@@ -1,9 +1,10 @@
 import { createGenericInfiniteController } from "app/cache/utils";
 import { TRPCReactContext } from "app/trpc";
 
-import { UsersGetPagedInput } from "./types";
+import { getState } from "./input";
 
-export const createController = (
-	trpc: TRPCReactContext,
-	input: UsersGetPagedInput
-) => createGenericInfiniteController(trpc, ["users.get-not-connected", input]);
+export const createController = (trpc: TRPCReactContext) =>
+	createGenericInfiniteController(trpc, [
+		"users.get-not-connected",
+		getState(),
+	]);

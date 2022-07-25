@@ -3,7 +3,8 @@ import { TRPCReactContext } from "app/trpc";
 import { nonNullishGuard } from "app/utils/utils";
 import { UsersId } from "next-app/src/db/models";
 
-import { User, UsersGetPagedInput } from "./types";
+import { getState } from "./input";
+import { User } from "./types";
 import { updatePagedUsers } from "./utils";
 
 export * from "./input";
@@ -12,12 +13,11 @@ const sortByName = (a: User, b: User) => a.name.localeCompare(b.name);
 
 export const update = (
 	trpc: TRPCReactContext,
-	input: UsersGetPagedInput,
 	userId: UsersId,
 	updater: (user: User) => User
 ) => {
 	const modifiedUserRef = createRef<User | undefined>();
-	updatePagedUsers(trpc, input, (page) => {
+	updatePagedUsers(trpc, (page) => {
 		const matchedUserIndex = page.findIndex((user) => user.id === userId);
 		if (matchedUserIndex === -1) {
 			return page;
@@ -32,13 +32,10 @@ export const update = (
 	return modifiedUserRef.current;
 };
 
-export const add = (
-	trpc: TRPCReactContext,
-	input: UsersGetPagedInput,
-	nextUser: User
-) => {
+export const add = (trpc: TRPCReactContext, nextUser: User) => {
 	const shouldShiftRef = createRef(false);
-	updatePagedUsers(trpc, input, (page, pageIndex, pages) => {
+	updatePagedUsers(trpc, (page, pageIndex, pages) => {
+		const input = getState();
 		if (shouldShiftRef.current) {
 			return [pages[pageIndex - 1]!.at(-1)!, ...page.slice(0, input.limit)];
 		}
@@ -55,19 +52,15 @@ export const add = (
 	});
 };
 
-export const remove = (
-	trpc: TRPCReactContext,
-	input: UsersGetPagedInput,
-	shouldRemove: (user: User) => boolean
-) => {
+export const remove = (trpc: TRPCReactContext, userId: UsersId) => {
 	const removedUserRef = createRef<User | undefined>();
-	updatePagedUsers(trpc, input, (page, pageIndex, pages) => {
+	updatePagedUsers(trpc, (page, pageIndex, pages) => {
 		if (removedUserRef.current) {
 			return [...page.slice(1), pages[pageIndex + 1]?.[0]].filter(
 				nonNullishGuard
 			);
 		}
-		const matchedUserIndex = page.findIndex(shouldRemove);
+		const matchedUserIndex = page.findIndex((user) => user.id === userId);
 		if (matchedUserIndex === -1) {
 			return page;
 		}

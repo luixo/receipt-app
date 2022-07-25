@@ -1,21 +1,22 @@
 import { createRef } from "app/cache/utils";
 import { TRPCReactContext } from "app/trpc";
+import { UsersId } from "next-app/db/models";
 
 import { createController } from "./controller";
-import { User, UsersGetInput } from "./types";
+import { User } from "./types";
 
-export const add = (trpc: TRPCReactContext, input: UsersGetInput, user: User) =>
-	createController(trpc, input).set(user);
-export const remove = (trpc: TRPCReactContext, input: UsersGetInput) =>
-	createController(trpc, input).invalidate();
+export const add = (trpc: TRPCReactContext, user: User) =>
+	createController(trpc, user.id).set(user);
+export const remove = (trpc: TRPCReactContext, userId: UsersId) =>
+	createController(trpc, userId).invalidate();
 
 export const update = (
 	trpc: TRPCReactContext,
-	input: UsersGetInput,
+	userId: UsersId,
 	updater: (user: User) => User
 ) => {
 	const modifiedUserRef = createRef<User | undefined>();
-	createController(trpc, input).update((user) => {
+	createController(trpc, userId).update((user) => {
 		modifiedUserRef.current = user;
 		return updater(user);
 	});

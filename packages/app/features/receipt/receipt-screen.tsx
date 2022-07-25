@@ -2,7 +2,6 @@ import React from "react";
 
 import { createParam } from "solito";
 
-import { Cache } from "app/cache";
 import { BackButton } from "app/components/back-button";
 import { Block } from "app/components/block";
 import { QueryWrapper } from "app/components/query-wrapper";
@@ -20,25 +19,20 @@ export const ReceiptScreen: React.FC = () => {
 		throw new Error("No id in param");
 	}
 
-	const receiptItemsInput: Cache.ReceiptItems.Get.Input = { receiptId: id };
-	const receiptInput: Cache.Receipts.Get.Input = { id };
-	const receiptNameQuery = trpc.useQuery(["receipts.get-name", receiptInput]);
-	const receiptQuery = trpc.useQuery(["receipts.get", receiptInput]);
+	const receiptNameQuery = trpc.useQuery(["receipts.get-name", { id }]);
+	const receiptQuery = trpc.useQuery(["receipts.get", { id }]);
 	const receiptItemsQuery = trpc.useQuery([
 		"receipt-items.get",
-		receiptItemsInput,
+		{ receiptId: id },
 	]);
 
 	return (
 		<ScrollView>
 			<Block name={`Receipt: ${receiptNameQuery.data || id}`}>
 				<BackButton href="/receipts/" />
-				<QueryWrapper query={receiptQuery} input={receiptInput}>
-					{Receipt}
-				</QueryWrapper>
+				<QueryWrapper query={receiptQuery}>{Receipt}</QueryWrapper>
 				<QueryWrapper
 					query={receiptItemsQuery}
-					receiptItemsInput={receiptItemsInput}
 					role={receiptQuery.data?.role}
 					currency={receiptQuery.data?.currency}
 					receiptId={id}

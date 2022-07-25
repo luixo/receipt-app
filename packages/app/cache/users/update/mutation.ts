@@ -1,4 +1,4 @@
-import { cache, Cache, Revert } from "app/cache";
+import { cache, Revert } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
 
@@ -59,40 +59,33 @@ const getPagedRevert =
 
 export const mutationOptions: UseContextedMutationOptions<
 	"users.update",
-	{ pagedRevert?: Revert<PagedUserSnapshot>; revert?: Revert<UserSnapshot> },
-	{ pagedInput: Cache.Users.GetPaged.Input; input: Cache.Users.Get.Input }
+	{ pagedRevert?: Revert<PagedUserSnapshot>; revert?: Revert<UserSnapshot> }
 > = {
-	onMutate:
-		(trpcContext, { pagedInput, input }) =>
-		(updateObject) => {
-			const pagedSnapshot = cache.users.getPaged.update(
-				trpcContext,
-				pagedInput,
-				updateObject.id,
-				(user) => applyPagedUpdate(user, updateObject.update)
-			);
-			const snapshot = cache.users.get.update(trpcContext, input, (user) =>
-				applyUpdate(user, updateObject.update)
-			);
-			return {
-				pagedSnapshot:
-					pagedSnapshot && getPagedRevert(pagedSnapshot, updateObject.update),
-				revert: snapshot && getRevert(snapshot, updateObject.update),
-			};
-		},
+	onMutate: (trpcContext) => (updateObject) => {
+		const pagedSnapshot = cache.users.getPaged.update(
+			trpcContext,
+			updateObject.id,
+			(user) => applyPagedUpdate(user, updateObject.update)
+		);
+		const snapshot = cache.users.get.update(
+			trpcContext,
+			updateObject.id,
+			(user) => applyUpdate(user, updateObject.update)
+		);
+		return {
+			pagedSnapshot:
+				pagedSnapshot && getPagedRevert(pagedSnapshot, updateObject.update),
+			revert: snapshot && getRevert(snapshot, updateObject.update),
+		};
+	},
 	onError:
-		(trpcContext, { pagedInput, input }) =>
-		(_error, _variables, { pagedRevert, revert } = {}) => {
+		(trpcContext) =>
+		(_error, variables, { pagedRevert, revert } = {}) => {
 			if (pagedRevert) {
-				cache.users.getPaged.update(
-					trpcContext,
-					pagedInput,
-					input.id,
-					pagedRevert
-				);
+				cache.users.getPaged.update(trpcContext, variables.id, pagedRevert);
 			}
 			if (revert) {
-				cache.users.get.update(trpcContext, input, revert);
+				cache.users.get.update(trpcContext, variables.id, revert);
 			}
 		},
 };

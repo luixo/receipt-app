@@ -1,5 +1,6 @@
 import { createRef } from "app/cache/utils";
 import { TRPCReactContext } from "app/trpc";
+import { AccountsId } from "next-app/db/models";
 
 import { createController } from "../controller";
 import { InboundIntention } from "../types";
@@ -13,15 +14,14 @@ const updateInboundIntentions = (
 		inbound: updater(intentions.inbound),
 	}));
 
-export const remove = (
-	trpc: TRPCReactContext,
-	shouldRemove: (intention: InboundIntention) => boolean
-) => {
+export const remove = (trpc: TRPCReactContext, sourceAccountId: AccountsId) => {
 	const removedIntentionRef = createRef<
 		{ index: number; intention: InboundIntention } | undefined
 	>();
 	updateInboundIntentions(trpc, (intentions) => {
-		const matchedIndex = intentions.findIndex(shouldRemove);
+		const matchedIndex = intentions.findIndex(
+			(intention) => intention.accountId === sourceAccountId
+		);
 		if (matchedIndex === -1) {
 			return intentions;
 		}

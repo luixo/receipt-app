@@ -2,7 +2,7 @@ import React from "react";
 
 import { useForm } from "react-hook-form";
 
-import { cache, Cache } from "app/cache";
+import { cache } from "app/cache";
 import { AddButton } from "app/components/add-button";
 import { Block } from "app/components/block";
 import { InfiniteQueryWrapper } from "app/components/infinite-query-wrapper";
@@ -11,7 +11,7 @@ import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCInfiniteQueryResult } from "app/trpc";
 import { Text } from "app/utils/styles";
-import { UsersId } from "next-app/db/models";
+import { ReceiptsId, UsersId } from "next-app/db/models";
 
 import { AvailableReceiptParticipantUsers } from "./available-receipt-participants-users";
 
@@ -44,20 +44,14 @@ type Form = {
 };
 
 type Props = {
-	receiptItemsInput: Cache.ReceiptItems.Get.Input;
+	receiptId: ReceiptsId;
 };
 
-export const AddReceiptParticipantForm: React.FC<Props> = ({
-	receiptItemsInput,
-}) => {
+export const AddReceiptParticipantForm: React.FC<Props> = ({ receiptId }) => {
 	const accountQuery = trpc.useQuery(["account.get"]);
 
-	const usersInput = {
-		...cache.users.getAvailable.DEFAULT_PARTIAL_INPUT,
-		receiptId: receiptItemsInput.receiptId,
-	};
 	const availableUsersQuery = trpc.useInfiniteQuery(
-		["users.get-available", usersInput],
+		["users.get-available", cache.users.getAvailable.useStore(receiptId)],
 		{ getNextPageParam: cache.users.getAvailable.getNextPage }
 	);
 
@@ -81,8 +75,7 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 	const addReceiptParticipantMutation = trpc.useMutation(
 		"receipt-participants.put",
 		useTrpcMutationOptions(cache.receiptParticipants.put.mutationOptions, {
-			itemsInput: receiptItemsInput,
-			usersInput,
+			receiptId,
 			user: selectedUser!,
 		})
 	);
@@ -90,11 +83,11 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 	const onSubmit = useSubmitHandler<Form>(
 		(values) =>
 			addReceiptParticipantMutation.mutateAsync({
-				receiptId: receiptItemsInput.receiptId,
+				receiptId,
 				userId: values.user.id,
 				role: values.user.id === accountQuery.data!.id ? "owner" : "editor",
 			}),
-		[addReceiptParticipantMutation, receiptItemsInput.receiptId, reset],
+		[addReceiptParticipantMutation, receiptId, reset],
 		reset
 	);
 

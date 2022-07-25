@@ -1,25 +1,25 @@
 import React from "react";
 
-import { cache, Cache } from "app/cache";
+import { cache } from "app/cache";
 import { AddButton } from "app/components/add-button";
 import { MutationWrapper } from "app/components/mutation-wrapper";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { Text } from "app/utils/styles";
-import { ReceiptItemsId } from "next-app/db/models";
+import { ReceiptItemsId, ReceiptsId } from "next-app/db/models";
 
 type ReceiptParticipant =
 	TRPCQueryOutput<"receipt-items.get">["participants"][number];
 
 type Props = {
+	receiptId: ReceiptsId;
 	itemId: ReceiptItemsId;
 	participant: ReceiptParticipant;
-	receiptItemsInput: Cache.ReceiptItems.Get.Input;
 	role?: TRPCQueryOutput<"receipts.get">["role"];
 };
 
 export const AddReceiptItemPartForm: React.FC<Props> = ({
-	receiptItemsInput,
+	receiptId,
 	participant,
 	itemId,
 	role,
@@ -28,7 +28,7 @@ export const AddReceiptItemPartForm: React.FC<Props> = ({
 		"item-participants.put",
 		useTrpcMutationOptions(
 			cache.itemParticipants.put.mutationOptions,
-			receiptItemsInput
+			receiptId
 		)
 	);
 	const addParticipant = React.useCallback(() => {

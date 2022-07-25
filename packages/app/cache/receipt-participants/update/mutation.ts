@@ -1,4 +1,4 @@
-import { cache, Cache, Revert } from "app/cache";
+import { cache, Revert } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
 
@@ -33,30 +33,24 @@ const getRevert =
 export const mutationOptions: UseContextedMutationOptions<
 	"receipt-participants.update",
 	Revert<ReceiptParticipants[number]> | undefined,
-	{
-		receiptItemsInput: Cache.ReceiptItems.Get.Input;
-		receiptsPagedInput: Cache.Receipts.GetPaged.Input;
-		isSelfAccount: boolean;
-	}
+	{ isSelfAccount: boolean }
 > = {
-	onMutate:
-		(trpcContext, { receiptItemsInput }) =>
-		(variables) => {
-			const snapshot = cache.receiptItems.get.receiptParticipant.update(
-				trpcContext,
-				receiptItemsInput,
-				variables.userId,
-				(participant) =>
-					applyUpdate({ ...participant, dirty: true }, variables.update)
-			);
-			return snapshot && getRevert(snapshot, variables.update);
-		},
+	onMutate: (trpcContext) => (variables) => {
+		const snapshot = cache.receiptItems.get.receiptParticipant.update(
+			trpcContext,
+			variables.receiptId,
+			variables.userId,
+			(participant) =>
+				applyUpdate({ ...participant, dirty: true }, variables.update)
+		);
+		return snapshot && getRevert(snapshot, variables.update);
+	},
 	onSuccess:
-		(trpcContext, { receiptItemsInput, receiptsPagedInput, isSelfAccount }) =>
+		(trpcContext, { isSelfAccount }) =>
 		(_result, variables) => {
 			cache.receiptItems.get.receiptParticipant.update(
 				trpcContext,
-				receiptItemsInput,
+				variables.receiptId,
 				variables.userId,
 				(participant) => ({
 					...participant,
@@ -66,7 +60,6 @@ export const mutationOptions: UseContextedMutationOptions<
 			if (isSelfAccount) {
 				cache.receipts.getPaged.update(
 					trpcContext,
-					receiptsPagedInput,
 					variables.receiptId,
 					(receipt) => {
 						switch (variables.update.type) {
@@ -82,17 +75,15 @@ export const mutationOptions: UseContextedMutationOptions<
 				);
 			}
 		},
-	onError:
-		(trpcContext, { receiptItemsInput }) =>
-		(_error, variables, revert) => {
-			if (!revert) {
-				return;
-			}
-			cache.receiptItems.get.receiptParticipant.update(
-				trpcContext,
-				receiptItemsInput,
-				variables.userId,
-				revert
-			);
-		},
+	onError: (trpcContext) => (_error, variables, revert) => {
+		if (!revert) {
+			return;
+		}
+		cache.receiptItems.get.receiptParticipant.update(
+			trpcContext,
+			variables.receiptId,
+			variables.userId,
+			revert
+		);
+	},
 };

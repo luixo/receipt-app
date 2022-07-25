@@ -12,13 +12,9 @@ type Props = {
 };
 
 export const ReceiptResolvedButton: React.FC<Props> = ({ receipt }) => {
-	const receiptsGetPagedInput = cache.receipts.getPaged.useStore();
 	const updateReceiptMutation = trpc.useMutation(
 		"receipts.update",
-		useTrpcMutationOptions(cache.receipts.update.mutationOptions, {
-			pagedInput: receiptsGetPagedInput,
-			input: { id: receipt.id },
-		})
+		useTrpcMutationOptions(cache.receipts.update.mutationOptions)
 	);
 	const switchResolved = React.useCallback(() => {
 		updateReceiptMutation.mutate({

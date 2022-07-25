@@ -1,18 +1,17 @@
 import { TRPCReactContext } from "app/trpc";
 
 import { createController } from "./controller";
-import { Receipt, ReceiptsGetPagedInput, ReceiptsResult } from "./types";
+import { Receipt, ReceiptsResult } from "./types";
 
 const updatePagedReceiptsPages = (
 	trpc: TRPCReactContext,
-	input: ReceiptsGetPagedInput,
 	updater: (
 		result: ReceiptsResult,
 		resultIndex: number,
 		results: ReceiptsResult[]
 	) => ReceiptsResult
 ) =>
-	createController(trpc, input).update((prevData) => {
+	createController(trpc).update((prevData) => {
 		const nextPages = prevData.pages.map(updater);
 		if (nextPages === prevData.pages) {
 			return prevData;
@@ -22,10 +21,9 @@ const updatePagedReceiptsPages = (
 
 export const updatePagedReceipts = (
 	trpc: TRPCReactContext,
-	input: ReceiptsGetPagedInput,
 	updater: (page: Receipt[], pageIndex: number, pages: Receipt[][]) => Receipt[]
 ) =>
-	updatePagedReceiptsPages(trpc, input, (result, index, results) => {
+	updatePagedReceiptsPages(trpc, (result, index, results) => {
 		const nextItems = updater(
 			result.items,
 			index,

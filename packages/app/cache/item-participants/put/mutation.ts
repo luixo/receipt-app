@@ -1,34 +1,35 @@
-import { cache, Cache } from "app/cache";
+import { cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { ReceiptsId } from "next-app/db/models";
 
 export const mutationOptions: UseContextedMutationOptions<
 	"item-participants.put",
 	void,
-	Cache.ReceiptItems.Get.Input
+	ReceiptsId
 > = {
-	onMutate: (trpcContext, input) => (variables) => {
+	onMutate: (trpcContext, receiptId) => (variables) => {
 		cache.receiptItems.get.receiptItemPart.add(
 			trpcContext,
-			input,
+			receiptId,
 			variables.itemId,
 			{ userId: variables.userId, dirty: true, part: 1 }
 		);
 	},
-	onSuccess: (trpcContext, input) => (_value, variables) => {
+	onSuccess: (trpcContext, receiptId) => (_value, variables) => {
 		cache.receiptItems.get.receiptItemPart.update(
 			trpcContext,
-			input,
+			receiptId,
 			variables.itemId,
 			variables.userId,
 			(part) => ({ ...part, dirty: false })
 		);
 	},
-	onError: (trpcContext, input) => (_error, variables) => {
+	onError: (trpcContext, receiptId) => (_error, variables) => {
 		cache.receiptItems.get.receiptItemPart.remove(
 			trpcContext,
-			input,
+			receiptId,
 			variables.itemId,
-			(part) => variables.userId === part.userId
+			variables.userId
 		);
 	},
 };

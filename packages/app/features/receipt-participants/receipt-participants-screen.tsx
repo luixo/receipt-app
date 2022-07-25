@@ -1,6 +1,5 @@
 import React from "react";
 
-import { Cache } from "app/cache";
 import { Block } from "app/components/block";
 import { TRPCQueryOutput } from "app/trpc";
 import { rotate } from "app/utils/array";
@@ -15,14 +14,12 @@ type Props = {
 	data: TRPCQueryOutput<"receipt-items.get">;
 	role?: TRPCQueryOutput<"receipts.get">["role"];
 	receiptId: TRPCQueryOutput<"receipts.get">["id"];
-	receiptItemsInput: Cache.ReceiptItems.Get.Input;
 	currency?: Currency;
 };
 
 export const ReceiptParticipantsScreen: React.FC<Props> = ({
 	data,
 	role,
-	receiptItemsInput,
 	currency,
 	receiptId,
 }) => {
@@ -55,14 +52,14 @@ export const ReceiptParticipantsScreen: React.FC<Props> = ({
 			{participants.map((receiptParticipant) => (
 				<ReceiptParticipant
 					key={receiptParticipant.userId}
+					receiptId={receiptId}
 					receiptParticipant={receiptParticipant}
-					receiptItemsInput={receiptItemsInput}
 					role={role}
 					currency={currency}
 				/>
 			))}
 			{!role || role !== "owner" ? null : (
-				<AddReceiptParticipantForm receiptItemsInput={receiptItemsInput} />
+				<AddReceiptParticipantForm receiptId={receiptId} />
 			)}
 		</Block>
 	);

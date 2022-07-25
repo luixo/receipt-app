@@ -1,16 +1,16 @@
 import { createRef } from "app/cache/utils";
 import { TRPCReactContext } from "app/trpc";
-import { ReceiptItemsId } from "next-app/src/db/models";
+import { ReceiptItemsId, ReceiptsId } from "next-app/src/db/models";
 
 import { createController } from "../controller";
-import { ReceiptItem, ReceiptItemsGetInput } from "../types";
+import { ReceiptItem } from "../types";
 
 const updateReceiptItems = (
 	trpc: TRPCReactContext,
-	input: ReceiptItemsGetInput,
+	receiptId: ReceiptsId,
 	updater: (items: ReceiptItem[]) => ReceiptItem[]
 ) =>
-	createController(trpc, input).update((prevData) => {
+	createController(trpc, receiptId).update((prevData) => {
 		const nextItems = updater(prevData.items);
 		if (nextItems === prevData.items) {
 			return prevData;
@@ -20,11 +20,11 @@ const updateReceiptItems = (
 
 export const add = (
 	trpc: TRPCReactContext,
-	input: ReceiptItemsGetInput,
+	receiptId: ReceiptsId,
 	nextReceiptItem: ReceiptItem,
 	index = 0
 ) =>
-	updateReceiptItems(trpc, input, (items) => [
+	updateReceiptItems(trpc, receiptId, (items) => [
 		...items.slice(0, index),
 		nextReceiptItem,
 		...items.slice(index),
@@ -32,14 +32,14 @@ export const add = (
 
 export const remove = (
 	trpc: TRPCReactContext,
-	input: ReceiptItemsGetInput,
-	shouldRemove: (item: ReceiptItem) => boolean
+	receiptId: ReceiptsId,
+	receiptItemId: ReceiptItemsId
 ) => {
 	const removedReceiptItemRef = createRef<
 		{ index: number; receiptItem: ReceiptItem } | undefined
 	>();
-	updateReceiptItems(trpc, input, (items) => {
-		const matchedIndex = items.findIndex(shouldRemove);
+	updateReceiptItems(trpc, receiptId, (items) => {
+		const matchedIndex = items.findIndex((item) => item.id === receiptItemId);
 		if (matchedIndex === -1) {
 			return items;
 		}
@@ -54,12 +54,12 @@ export const remove = (
 
 export const update = (
 	trpc: TRPCReactContext,
-	input: ReceiptItemsGetInput,
+	receiptId: ReceiptsId,
 	id: ReceiptItemsId,
 	updater: (item: ReceiptItem) => ReceiptItem
 ) => {
 	const modifiedReceiptItemRef = createRef<ReceiptItem | undefined>();
-	updateReceiptItems(trpc, input, (items) => {
+	updateReceiptItems(trpc, receiptId, (items) => {
 		const matchedIndex = items.findIndex(
 			(receiptItem) => receiptItem.id === id
 		);

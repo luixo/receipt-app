@@ -1,4 +1,4 @@
-import { cache, Cache, Revert } from "app/cache";
+import { cache, Revert } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
 
@@ -79,45 +79,33 @@ export const mutationOptions: UseContextedMutationOptions<
 	{
 		pagedRevert?: Revert<PagedReceiptSnapshot>;
 		revert?: Revert<ReceiptSnapshot>;
-	},
-	{
-		pagedInput: Cache.Receipts.GetPaged.Input;
-		input: Cache.Receipts.Get.Input;
 	}
 > = {
-	onMutate:
-		(trpcContext, { pagedInput, input }) =>
-		(updateObject) => {
-			const pagedSnapshot = cache.receipts.getPaged.update(
-				trpcContext,
-				pagedInput,
-				updateObject.id,
-				(receipt) => applyPagedUpdate(receipt, updateObject.update)
-			);
-			const snapshot = cache.receipts.get.update(
-				trpcContext,
-				input,
-				(receipt) => applyUpdate(receipt, updateObject.update)
-			);
-			return {
-				pagedSnapshot:
-					pagedSnapshot && getPagedRevert(pagedSnapshot, updateObject.update),
-				revert: snapshot && getRevert(snapshot, updateObject.update),
-			};
-		},
+	onMutate: (trpcContext) => (updateObject) => {
+		const pagedSnapshot = cache.receipts.getPaged.update(
+			trpcContext,
+			updateObject.id,
+			(receipt) => applyPagedUpdate(receipt, updateObject.update)
+		);
+		const snapshot = cache.receipts.get.update(
+			trpcContext,
+			updateObject.id,
+			(receipt) => applyUpdate(receipt, updateObject.update)
+		);
+		return {
+			pagedSnapshot:
+				pagedSnapshot && getPagedRevert(pagedSnapshot, updateObject.update),
+			revert: snapshot && getRevert(snapshot, updateObject.update),
+		};
+	},
 	onError:
-		(trpcContext, { pagedInput, input }) =>
-		(_error, _variables, { pagedRevert, revert } = {}) => {
+		(trpcContext) =>
+		(_error, variables, { pagedRevert, revert } = {}) => {
 			if (pagedRevert) {
-				cache.receipts.getPaged.update(
-					trpcContext,
-					pagedInput,
-					input.id,
-					pagedRevert
-				);
+				cache.receipts.getPaged.update(trpcContext, variables.id, pagedRevert);
 			}
 			if (revert) {
-				cache.receipts.get.update(trpcContext, input, revert);
+				cache.receipts.get.update(trpcContext, variables.id, revert);
 			}
 		},
 };

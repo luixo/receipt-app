@@ -3,7 +3,7 @@ import * as ReactNative from "react-native";
 
 import { useRouter } from "solito/router";
 
-import { cache, Cache } from "app/cache";
+import { cache } from "app/cache";
 import { Block } from "app/components/block";
 import { MutationWrapper } from "app/components/mutation-wrapper";
 import { QueryWrapper } from "app/components/query-wrapper";
@@ -19,18 +19,14 @@ import { ReceiptOwner } from "./receipt-owner";
 
 type Props = {
 	data: TRPCQueryOutput<"receipts.get">;
-	input: Cache.Receipts.Get.Input;
 };
 
-export const Receipt: React.FC<Props> = ({ data: receipt, input }) => {
+export const Receipt: React.FC<Props> = ({ data: receipt }) => {
 	const router = useRouter();
-	const receiptsGetPagedInput = cache.receipts.getPaged.useStore();
+
 	const deleteReceiptMutation = trpc.useMutation(
 		"receipts.delete",
-		useTrpcMutationOptions(cache.receipts.delete.mutationOptions, {
-			pagedInput: receiptsGetPagedInput,
-			input,
-		})
+		useTrpcMutationOptions(cache.receipts.delete.mutationOptions)
 	);
 	const ownerQuery = trpc.useQuery(["users.get", { id: receipt.ownerUserId }]);
 	const deleteReceipt = useAsyncCallback(
@@ -56,10 +52,7 @@ export const Receipt: React.FC<Props> = ({ data: receipt, input }) => {
 
 	const updateReceiptMutation = trpc.useMutation(
 		"receipts.update",
-		useTrpcMutationOptions(cache.receipts.update.mutationOptions, {
-			pagedInput: receiptsGetPagedInput,
-			input,
-		})
+		useTrpcMutationOptions(cache.receipts.update.mutationOptions)
 	);
 	const promptName = React.useCallback(() => {
 		const name = window.prompt("Please enter new name", receipt.name);

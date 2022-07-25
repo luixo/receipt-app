@@ -1,18 +1,17 @@
 import { v4 } from "uuid";
 
-import { cache, Cache } from "app/cache";
+import { cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { updateReceiptSum } from "app/utils/receipt";
-import { ReceiptItemsId } from "next-app/db/models";
+import { ReceiptItemsId, ReceiptsId } from "next-app/db/models";
 
 export const mutationOptions: UseContextedMutationOptions<
 	"receipt-items.put",
 	ReceiptItemsId,
-	Cache.ReceiptItems.Get.Input
+	ReceiptsId
 > = {
-	onMutate: (trpcContext, input) => (variables) => {
+	onMutate: (trpcContext, receiptId) => (variables) => {
 		const temporaryId = v4();
-		cache.receiptItems.get.receiptItem.add(trpcContext, input, {
+		cache.receiptItems.get.receiptItem.add(trpcContext, receiptId, {
 			id: temporaryId,
 			name: variables.name,
 			price: variables.price,
@@ -23,24 +22,24 @@ export const mutationOptions: UseContextedMutationOptions<
 		});
 		return temporaryId;
 	},
-	onError: (trpcContext, input) => (_error, _variables, temporaryId) => {
+	onError: (trpcContext, receiptId) => (_error, _variables, temporaryId) => {
+		if (!temporaryId) {
+			return;
+		}
 		cache.receiptItems.get.receiptItem.remove(
 			trpcContext,
-			input,
-			(item) => item.id === temporaryId
+			receiptId,
+			temporaryId
 		);
 	},
-	onSuccess: (trpcContext, input) => (actualId, _variables, temporaryId) => {
-		cache.receiptItems.get.receiptItem.update(
-			trpcContext,
-			input,
-			temporaryId,
-			(item) => ({
-				...item,
-				id: actualId,
-				dirty: false,
-			})
-		);
-		updateReceiptSum(trpcContext, input);
-	},
+	onSuccess:
+		(trpcContext, receiptId) => (actualId, _variables, temporaryId) => {
+			cache.receiptItems.get.receiptItem.update(
+				trpcContext,
+				receiptId,
+				temporaryId,
+				(item) => ({ ...item, id: actualId, dirty: false })
+			);
+			cache.receipts.utils.updateReceiptSum(trpcContext, receiptId);
+		},
 };

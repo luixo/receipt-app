@@ -3,7 +3,6 @@ import React from "react";
 import { Text, Spacer, styled } from "@nextui-org/react";
 import { createParam } from "solito";
 
-import { Cache } from "app/cache";
 import { Identicon } from "app/components/identicon";
 import { Page } from "app/components/page";
 import { QueryWrapper } from "app/components/query-wrapper";
@@ -24,9 +23,8 @@ export const UserScreen: React.FC = () => {
 		throw new Error("No id in param");
 	}
 
-	const usersGetInput: Cache.Users.Get.Input = { id };
-	const userNameQuery = trpc.useQuery(["users.get-name", usersGetInput]);
-	const userQuery = trpc.useQuery(["users.get", usersGetInput]);
+	const userNameQuery = trpc.useQuery(["users.get-name", { id }]);
+	const userQuery = trpc.useQuery(["users.get", { id }]);
 
 	return (
 		<Page>
@@ -36,9 +34,7 @@ export const UserScreen: React.FC = () => {
 				{userNameQuery.data || id}
 			</Header>
 			<Spacer y={1} />
-			<QueryWrapper query={userQuery} input={usersGetInput}>
-				{User}
-			</QueryWrapper>
+			<QueryWrapper query={userQuery}>{User}</QueryWrapper>
 		</Page>
 	);
 };

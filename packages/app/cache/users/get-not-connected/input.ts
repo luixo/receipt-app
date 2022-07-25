@@ -1,17 +1,24 @@
 import zustand from "zustand";
 
-import { UsersGetPagedCursor, UsersGetPagedInput, UsersResult } from "./types";
+import { TRPCInfiniteQueryCursor, TRPCInfiniteQueryInput } from "app/trpc";
 
-export const getNextPage = (result: UsersResult): UsersGetPagedCursor =>
+import { UsersResult } from "./types";
+
+type Input = TRPCInfiniteQueryInput<"users.get-not-connected">;
+
+export const getNextPage = (
+	result: UsersResult
+): TRPCInfiniteQueryCursor<"users.get-not-connected"> =>
 	result.hasMore ? result.items[result.items.length - 1]?.name : undefined;
 
-const inputStore = zustand<UsersGetPagedInput>((set) => ({
+const inputStore = zustand<Input>((set) => ({
 	limit: 10,
-	changeLimit: (nextLimit: UsersGetPagedInput["limit"]) =>
-		set(() => ({ limit: nextLimit })),
+	changeLimit: (nextLimit: Input["limit"]) => set(() => ({ limit: nextLimit })),
 }));
 
-export const useStore = () =>
-	inputStore((state) => ({
-		limit: state.limit,
-	}));
+export const getState = () => {
+	const { limit } = inputStore.getState();
+	return { limit };
+};
+
+export const useStore = () => inputStore(({ limit }) => ({ limit }));

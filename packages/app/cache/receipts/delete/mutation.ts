@@ -1,4 +1,4 @@
-import { cache, Cache } from "app/cache";
+import { cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 
 export const mutationOptions: UseContextedMutationOptions<
@@ -7,30 +7,20 @@ export const mutationOptions: UseContextedMutationOptions<
 		receiptSnapshot?: ReturnType<
 			typeof cache["receipts"]["getPaged"]["remove"]
 		>;
-	},
-	{
-		pagedInput: Cache.Receipts.GetPaged.Input;
-		input: Cache.Receipts.Get.Input;
 	}
 > = {
 	onMutate:
-		(trpcContext, { pagedInput }) =>
+		(trpcContext) =>
 		({ id }) => ({
-			receiptSnapshot: cache.receipts.getPaged.remove(
-				trpcContext,
-				pagedInput,
-				(receipt) => receipt.id === id
-			),
+			receiptSnapshot: cache.receipts.getPaged.remove(trpcContext, id),
 		}),
 	onError:
-		(trpcContext, { pagedInput }) =>
+		(trpcContext) =>
 		(_error, _variables, { receiptSnapshot } = {}) => {
 			if (receiptSnapshot) {
-				cache.receipts.getPaged.add(trpcContext, pagedInput, receiptSnapshot);
+				cache.receipts.getPaged.add(trpcContext, receiptSnapshot);
 			}
 		},
-	onSuccess:
-		(trpcContext, { input }) =>
-		() =>
-			cache.receipts.get.remove(trpcContext, input),
+	onSuccess: (trpcContext) => (_result, variables) =>
+		cache.receipts.get.remove(trpcContext, variables.id),
 };

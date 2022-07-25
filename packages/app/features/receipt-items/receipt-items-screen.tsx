@@ -1,25 +1,23 @@
 import React from "react";
 
-import { Cache } from "app/cache";
 import { Block } from "app/components/block";
 import { ReceiptParticipantsScreen } from "app/features/receipt-participants/receipt-participants-screen";
 import { TRPCQueryOutput } from "app/trpc";
 import { Currency } from "app/utils/currency";
+import { ReceiptsId } from "next-app/db/models";
 
 import { AddReceiptItemForm } from "./add-receipt-item-form";
 import { ReceiptItem } from "./receipt-item";
 
 type Props = {
+	receiptId: ReceiptsId;
 	data: TRPCQueryOutput<"receipt-items.get">;
-	receiptItemsInput: Cache.ReceiptItems.Get.Input;
 	role?: TRPCQueryOutput<"receipts.get">["role"];
 	currency?: Currency;
-	receiptId: TRPCQueryOutput<"receipts.get">["id"];
 };
 
 export const ReceiptItems: React.FC<Props> = ({
 	data,
-	receiptItemsInput,
 	role,
 	currency,
 	receiptId,
@@ -27,18 +25,17 @@ export const ReceiptItems: React.FC<Props> = ({
 	<Block name={`Total: ${data.items.length} items`}>
 		<ReceiptParticipantsScreen
 			data={data}
-			receiptItemsInput={receiptItemsInput}
+			receiptId={receiptId}
 			role={role}
 			currency={currency}
-			receiptId={receiptId}
 		/>
-		<AddReceiptItemForm receiptItemsInput={receiptItemsInput} />
+		<AddReceiptItemForm receiptId={receiptId} />
 		{data.items.map((receiptItem) => (
 			<ReceiptItem
 				key={receiptItem.id}
+				receiptId={receiptId}
 				receiptItem={receiptItem}
 				receiptParticipants={data.participants}
-				receiptItemsInput={receiptItemsInput}
 				role={role}
 			/>
 		))}

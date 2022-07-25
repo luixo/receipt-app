@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 
-import { cache, Cache } from "app/cache";
+import { cache } from "app/cache";
 import { AddButton } from "app/components/add-button";
 import { Block } from "app/components/block";
 import { MutationWrapper } from "app/components/mutation-wrapper";
@@ -17,6 +17,7 @@ import {
 	quantitySchema,
 	receiptItemNameSchema,
 } from "app/utils/validation";
+import { ReceiptsId } from "next-app/db/models";
 
 type Form = {
 	name: string;
@@ -25,16 +26,13 @@ type Form = {
 };
 
 type Props = {
-	receiptItemsInput: Cache.ReceiptItems.Get.Input;
+	receiptId: ReceiptsId;
 };
 
-export const AddReceiptItemForm: React.FC<Props> = ({ receiptItemsInput }) => {
+export const AddReceiptItemForm: React.FC<Props> = ({ receiptId }) => {
 	const addReceiptItemMutation = trpc.useMutation(
 		"receipt-items.put",
-		useTrpcMutationOptions(
-			cache.receiptItems.put.mutationOptions,
-			receiptItemsInput
-		)
+		useTrpcMutationOptions(cache.receiptItems.put.mutationOptions, receiptId)
 	);
 	const {
 		control,
@@ -52,12 +50,8 @@ export const AddReceiptItemForm: React.FC<Props> = ({ receiptItemsInput }) => {
 		),
 	});
 	const onSubmit = useSubmitHandler<Form>(
-		(values) =>
-			addReceiptItemMutation.mutateAsync({
-				...values,
-				receiptId: receiptItemsInput.receiptId,
-			}),
-		[addReceiptItemMutation, receiptItemsInput.receiptId, reset],
+		(values) => addReceiptItemMutation.mutateAsync({ ...values, receiptId }),
+		[addReceiptItemMutation, receiptId, reset],
 		reset
 	);
 

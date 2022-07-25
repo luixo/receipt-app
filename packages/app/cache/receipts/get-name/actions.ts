@@ -1,13 +1,13 @@
 import { TRPCReactContext } from "app/trpc";
+import { ReceiptsId } from "next-app/db/models";
 
 import { createController } from "./controller";
-import { ReceiptsGetNameInput } from "./types";
 
 export const update = (
 	trpc: TRPCReactContext,
-	input: ReceiptsGetNameInput,
+	receiptId: ReceiptsId,
 	nextName: string
-) => createController(trpc, input).set(nextName);
+) => createController(trpc, receiptId).set(nextName);
 
-export const remove = (trpc: TRPCReactContext, input: ReceiptsGetNameInput) =>
-	createController(trpc, input).invalidate();
+export const remove = (trpc: TRPCReactContext, receiptId: ReceiptsId) =>
+	createController(trpc, receiptId).invalidate();

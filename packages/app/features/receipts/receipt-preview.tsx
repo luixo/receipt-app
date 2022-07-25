@@ -21,12 +21,7 @@ type Props = {
 export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 	const trpcContext = trpc.useContext();
 	const setReceiptName = React.useCallback(
-		() =>
-			cache.receipts.getName.update(
-				trpcContext,
-				{ id: receipt.id },
-				receipt.name
-			),
+		() => cache.receipts.getName.update(trpcContext, receipt.id, receipt.name),
 		[trpcContext, receipt.id, receipt.name]
 	);
 	const currenciesListQuery = trpc.useQuery([

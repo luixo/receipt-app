@@ -1,9 +1,6 @@
 import { createGenericController } from "app/cache/utils";
 import { TRPCReactContext } from "app/trpc";
+import { ReceiptsId } from "next-app/db/models";
 
-import { ReceiptsGetInput } from "./types";
-
-export const createController = (
-	trpc: TRPCReactContext,
-	input: ReceiptsGetInput
-) => createGenericController(trpc, ["receipts.get", input]);
+export const createController = (trpc: TRPCReactContext, id: ReceiptsId) =>
+	createGenericController(trpc, ["receipts.get", { id }]);

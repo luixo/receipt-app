@@ -1,18 +1,18 @@
 import { createRef } from "app/cache/utils";
 import { TRPCReactContext } from "app/trpc";
-import { ReceiptItemsId, UsersId } from "next-app/src/db/models";
+import { ReceiptItemsId, ReceiptsId, UsersId } from "next-app/src/db/models";
 
-import { ReceiptItemPart, ReceiptItemsGetInput } from "../types";
+import { ReceiptItemPart } from "../types";
 
 import { update as updateItem } from "./receipt-item";
 
 const updateReceiptItemParts = (
 	trpc: TRPCReactContext,
-	input: ReceiptItemsGetInput,
+	receiptId: ReceiptsId,
 	itemId: ReceiptItemsId,
 	updater: (itemParts: ReceiptItemPart[]) => ReceiptItemPart[]
 ) =>
-	updateItem(trpc, input, itemId, (receiptItem) => {
+	updateItem(trpc, receiptId, itemId, (receiptItem) => {
 		const nextParts = updater(receiptItem.parts);
 		if (nextParts === receiptItem.parts) {
 			return receiptItem;
@@ -22,12 +22,12 @@ const updateReceiptItemParts = (
 
 export const add = (
 	trpc: TRPCReactContext,
-	input: ReceiptItemsGetInput,
+	receiptId: ReceiptsId,
 	itemId: ReceiptItemsId,
 	itemPart: ReceiptItemPart,
 	index = 0
 ) =>
-	updateReceiptItemParts(trpc, input, itemId, (parts) => [
+	updateReceiptItemParts(trpc, receiptId, itemId, (parts) => [
 		...parts.slice(0, index),
 		itemPart,
 		...parts.slice(index),
@@ -35,15 +35,15 @@ export const add = (
 
 export const remove = (
 	trpc: TRPCReactContext,
-	input: ReceiptItemsGetInput,
+	receiptId: ReceiptsId,
 	itemId: ReceiptItemsId,
-	shouldRemove: (part: ReceiptItemPart) => boolean
+	userId: UsersId
 ) => {
 	const removedReceiptItemPartRef = createRef<
 		{ index: number; receiptItemPart: ReceiptItemPart } | undefined
 	>();
-	updateReceiptItemParts(trpc, input, itemId, (parts) => {
-		const matchedIndex = parts.findIndex(shouldRemove);
+	updateReceiptItemParts(trpc, receiptId, itemId, (parts) => {
+		const matchedIndex = parts.findIndex((part) => part.userId === userId);
 		if (matchedIndex === -1) {
 			return parts;
 		}
@@ -58,13 +58,13 @@ export const remove = (
 
 export const update = (
 	trpc: TRPCReactContext,
-	input: ReceiptItemsGetInput,
+	receiptId: ReceiptsId,
 	itemId: ReceiptItemsId,
 	userId: UsersId,
 	updater: (itemPart: ReceiptItemPart) => ReceiptItemPart
 ) => {
 	const modifiedReceiptItemPartRef = createRef<ReceiptItemPart | undefined>();
-	updateReceiptItemParts(trpc, input, itemId, (parts) => {
+	updateReceiptItemParts(trpc, receiptId, itemId, (parts) => {
 		const matchedIndex = parts.findIndex((part) => part.userId === userId);
 		if (matchedIndex === -1) {
 			return parts;

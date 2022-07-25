@@ -22,9 +22,8 @@ type Props = {
 };
 
 export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
-	const usersNotConnectedInput = cache.users.getNotConnected.useStore();
 	const usersQuery = trpc.useInfiniteQuery(
-		["users.get-not-connected", usersNotConnectedInput],
+		["users.get-not-connected", cache.users.getNotConnected.useStore()],
 		{ getNextPageParam: cache.users.getNotConnected.getNextPage }
 	);
 	const loadMore = React.useCallback(() => {
@@ -34,12 +33,7 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 
 	const acceptConnectionMutation = trpc.useMutation(
 		"account-connection-intentions.accept",
-		useTrpcMutationOptions(cache.accountConnections.accept.mutationOptions, {
-			usersInput: cache.users.getPaged.useStore(),
-			usersNotConnectedInput,
-			// We can only call that if userId is not null
-			userInput: { id: user?.id ?? "unknown" },
-		})
+		useTrpcMutationOptions(cache.accountConnections.accept.mutationOptions)
 	);
 	const acceptConnection = React.useCallback(() => {
 		acceptConnectionMutation.mutate({

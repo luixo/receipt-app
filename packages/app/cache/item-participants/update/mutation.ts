@@ -1,6 +1,7 @@
-import { cache, Cache, Revert } from "app/cache";
+import { cache, Revert } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
+import { ReceiptsId } from "next-app/db/models";
 
 type ReceiptItem = TRPCQueryOutput<"receipt-items.get">["items"][number];
 type ReceiptItemPart = ReceiptItem["parts"][number];
@@ -30,34 +31,34 @@ const getRevert =
 export const mutationOptions: UseContextedMutationOptions<
 	"item-participants.update",
 	Revert<ReceiptItemPart> | undefined,
-	Cache.ReceiptItems.Get.Input
+	ReceiptsId
 > = {
-	onMutate: (trpcContext, input) => (variables) => {
+	onMutate: (trpcContext, receiptId) => (variables) => {
 		const snapshot = cache.receiptItems.get.receiptItemPart.update(
 			trpcContext,
-			input,
+			receiptId,
 			variables.itemId,
 			variables.userId,
 			(part) => applyUpdate({ ...part, dirty: true }, variables.update)
 		);
 		return snapshot && getRevert(snapshot, variables.update);
 	},
-	onSuccess: (trpcContext, input) => (_error, variables) => {
+	onSuccess: (trpcContext, receiptId) => (_error, variables) => {
 		cache.receiptItems.get.receiptItemPart.update(
 			trpcContext,
-			input,
+			receiptId,
 			variables.itemId,
 			variables.userId,
 			(part) => ({ ...part, dirty: false })
 		);
 	},
-	onError: (trpcContext, input) => (_error, variables, revert) => {
+	onError: (trpcContext, receiptId) => (_error, variables, revert) => {
 		if (!revert) {
 			return;
 		}
 		cache.receiptItems.get.receiptItemPart.update(
 			trpcContext,
-			input,
+			receiptId,
 			variables.itemId,
 			variables.userId,
 			revert

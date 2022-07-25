@@ -1,7 +1,7 @@
-import { cache, Cache, Revert } from "app/cache";
+import { cache, Revert } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
-import { updateReceiptSum } from "app/utils/receipt";
+import { ReceiptsId } from "next-app/db/models";
 
 type ReceiptItem = TRPCQueryOutput<"receipt-items.get">["items"][number];
 
@@ -42,21 +42,21 @@ const getRevert =
 export const mutationOptions: UseContextedMutationOptions<
 	"receipt-items.update",
 	Revert<ReceiptItem> | undefined,
-	Cache.ReceiptItems.Get.Input
+	ReceiptsId
 > = {
-	onMutate: (trpcContext, input) => (updateObject) => {
+	onMutate: (trpcContext, receiptId) => (updateObject) => {
 		const snapshot = cache.receiptItems.get.receiptItem.update(
 			trpcContext,
-			input,
+			receiptId,
 			updateObject.id,
 			(item) => applyUpdate({ ...item, dirty: true }, updateObject.update)
 		);
 		return snapshot && getRevert(snapshot, updateObject.update);
 	},
-	onSuccess: (trpcContext, input) => (_value, updateObject) => {
+	onSuccess: (trpcContext, receiptId) => (_value, updateObject) => {
 		cache.receiptItems.get.receiptItem.update(
 			trpcContext,
-			input,
+			receiptId,
 			updateObject.id,
 			(item) => ({
 				...item,
@@ -67,16 +67,16 @@ export const mutationOptions: UseContextedMutationOptions<
 			updateObject.update.type === "price" ||
 			updateObject.update.type === "quantity"
 		) {
-			updateReceiptSum(trpcContext, input);
+			cache.receipts.utils.updateReceiptSum(trpcContext, receiptId);
 		}
 	},
-	onError: (trpcContext, input) => (_error, variables, revert) => {
+	onError: (trpcContext, receiptId) => (_error, variables, revert) => {
 		if (!revert) {
 			return;
 		}
 		cache.receiptItems.get.receiptItem.update(
 			trpcContext,
-			input,
+			receiptId,
 			variables.id,
 			revert
 		);

@@ -29,11 +29,9 @@ export const AddReceiptScreen: React.FC = () => {
 	const router = useRouter();
 	const accountQuery = trpc.useQuery(["account.get"]);
 
-	const receiptsGetPagedInput = cache.receipts.getPaged.useStore();
 	const addReceiptMutation = trpc.useMutation(
 		"receipts.put",
 		useTrpcMutationOptions(cache.receipts.put.mutationOptions, {
-			input: receiptsGetPagedInput,
 			selfAccountId: accountQuery.data?.id ?? "unknown",
 		})
 	);

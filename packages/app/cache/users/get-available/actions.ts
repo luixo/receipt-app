@@ -1,8 +1,10 @@
 import { createRef } from "app/cache/utils";
 import { TRPCReactContext } from "app/trpc";
 import { nonNullishGuard } from "app/utils/utils";
+import { ReceiptsId, UsersId } from "next-app/db/models";
 
-import { AvailableUser, GetAvailableUsersInput } from "./types";
+import { getState } from "./input";
+import { AvailableUser } from "./types";
 import { updateAvailableUsers } from "./utils";
 
 export * from "./input";
@@ -12,11 +14,12 @@ const sortById = (a: AvailableUser, b: AvailableUser) =>
 
 export const add = (
 	trpc: TRPCReactContext,
-	input: GetAvailableUsersInput,
+	receiptId: ReceiptsId,
 	nextUser: AvailableUser
 ) => {
 	const shouldShiftRef = createRef(false);
-	updateAvailableUsers(trpc, input, (page, pageIndex, pages) => {
+	updateAvailableUsers(trpc, receiptId, (page, pageIndex, pages) => {
+		const input = getState(receiptId);
 		if (shouldShiftRef.current) {
 			return [pages[pageIndex - 1]!.at(-1)!, ...page.slice(0, input.limit)];
 		}
@@ -35,17 +38,17 @@ export const add = (
 
 export const remove = (
 	trpc: TRPCReactContext,
-	input: GetAvailableUsersInput,
-	shouldRemove: (user: AvailableUser) => boolean
+	receiptId: ReceiptsId,
+	userId: UsersId
 ) => {
 	const removedUserRef = createRef<AvailableUser | undefined>();
-	updateAvailableUsers(trpc, input, (page, pageIndex, pages) => {
+	updateAvailableUsers(trpc, receiptId, (page, pageIndex, pages) => {
 		if (removedUserRef.current) {
 			return [...page.slice(1), pages[pageIndex + 1]?.[0]].filter(
 				nonNullishGuard
 			);
 		}
-		const matchedUserIndex = page.findIndex(shouldRemove);
+		const matchedUserIndex = page.findIndex((user) => user.id === userId);
 		if (matchedUserIndex === -1) {
 			return page;
 		}

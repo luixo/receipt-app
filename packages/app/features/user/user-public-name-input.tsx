@@ -7,7 +7,7 @@ import {
 	IoTrashBin as TrashBin,
 } from "react-icons/io5";
 
-import { cache, Cache } from "app/cache";
+import { cache } from "app/cache";
 import { IconButton } from "app/components/icon-button";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useSingleInput } from "app/hooks/use-single-input";
@@ -24,14 +24,9 @@ const ButtonsContainer = styled(ReactNative.View)({
 type Props = {
 	user: TRPCQueryOutput<"users.get">;
 	isLoading: boolean;
-	input: Cache.Users.Get.Input;
 };
 
-export const UserPublicNameInput: React.FC<Props> = ({
-	user,
-	isLoading,
-	input,
-}) => {
+export const UserPublicNameInput: React.FC<Props> = ({ user, isLoading }) => {
 	const [showInput, setShowInput] = React.useState(user.publicName !== null);
 	const switchShowInput = React.useCallback(
 		() => setShowInput((prev) => !prev),
@@ -47,13 +42,9 @@ export const UserPublicNameInput: React.FC<Props> = ({
 		schema: userNameSchema,
 	});
 
-	const usersGetPagedInput = cache.users.getPaged.useStore();
 	const updateUserMutation = trpc.useMutation(
 		"users.update",
-		useTrpcMutationOptions(cache.users.update.mutationOptions, {
-			pagedInput: usersGetPagedInput,
-			input,
-		})
+		useTrpcMutationOptions(cache.users.update.mutationOptions)
 	);
 	const savePublicName = useAsyncCallback(
 		async (isMount, nextName: string | null) => {

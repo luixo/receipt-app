@@ -1,31 +1,22 @@
-import { cache, Cache } from "app/cache";
+import { cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
-
-const removePagedUser = cache.users.getPaged.remove;
 
 export const mutationOptions: UseContextedMutationOptions<
 	"users.delete",
-	{ userSnapshot?: ReturnType<typeof removePagedUser> },
-	{ pagedInput: Cache.Users.GetPaged.Input; input: Cache.Users.Get.Input }
+	{ userSnapshot?: ReturnType<typeof cache["users"]["getPaged"]["remove"]> }
 > = {
 	onMutate:
-		(trpcContext, { pagedInput }) =>
+		(trpcContext) =>
 		({ id }) => ({
-			userSnapshot: removePagedUser(
-				trpcContext,
-				pagedInput,
-				(user) => user.id === id
-			),
+			userSnapshot: cache.users.getPaged.remove(trpcContext, id),
 		}),
 	onError:
-		(trpcContext, { pagedInput }) =>
+		(trpcContext) =>
 		(_error, _variables, { userSnapshot } = {}) => {
 			if (userSnapshot) {
-				cache.users.getPaged.add(trpcContext, pagedInput, userSnapshot);
+				cache.users.getPaged.add(trpcContext, userSnapshot);
 			}
 		},
-	onSuccess:
-		(trpcContext, { input }) =>
-		() =>
-			cache.users.get.remove(trpcContext, input),
+	onSuccess: (trpcContext) => (_result, variables) =>
+		cache.users.get.remove(trpcContext, variables.id),
 };

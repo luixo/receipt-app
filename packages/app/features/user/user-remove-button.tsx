@@ -5,7 +5,7 @@ import { Button, Loading, Spacer } from "@nextui-org/react";
 import { IoTrashBin as TrashBin } from "react-icons/io5";
 import { useRouter } from "solito/router";
 
-import { cache, Cache } from "app/cache";
+import { cache } from "app/cache";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
@@ -18,23 +18,14 @@ const RemoveButtons = styled(ReactNative.View)({
 
 type Props = {
 	user: TRPCQueryOutput<"users.get">;
-	input: Cache.Users.Get.Input;
 	setLoading: (nextLoading: boolean) => void;
 };
 
-export const UserRemoveButton: React.FC<Props> = ({
-	user,
-	input,
-	setLoading,
-}) => {
-	const usersGetPagedInput = cache.users.getPaged.useStore();
+export const UserRemoveButton: React.FC<Props> = ({ user, setLoading }) => {
 	const router = useRouter();
 	const deleteUserMutation = trpc.useMutation(
 		"users.delete",
-		useTrpcMutationOptions(cache.users.delete.mutationOptions, {
-			pagedInput: usersGetPagedInput,
-			input,
-		})
+		useTrpcMutationOptions(cache.users.delete.mutationOptions)
 	);
 	React.useEffect(
 		() => setLoading(deleteUserMutation.isLoading),

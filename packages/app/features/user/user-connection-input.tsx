@@ -4,7 +4,7 @@ import { Button, Input, Loading, Spacer } from "@nextui-org/react";
 import { IoTrashBin as TrashBinIcon } from "react-icons/io5";
 import { MdLink as LinkIcon, MdLinkOff as UnlinkIcon } from "react-icons/md";
 
-import { cache, Cache } from "app/cache";
+import { cache } from "app/cache";
 import { IconButton } from "app/components/icon-button";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useSingleInput } from "app/hooks/use-single-input";
@@ -14,17 +14,10 @@ import { emailSchema } from "app/utils/validation";
 
 type Props = {
 	user: TRPCQueryOutput<"users.get">;
-	input: Cache.Users.Get.Input;
 	isLoading: boolean;
 };
 
-export const UserConnectionInput: React.FC<Props> = ({
-	user,
-	input,
-	isLoading,
-}) => {
-	const usersGetPagedInput = cache.users.getPaged.useStore();
-
+export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 	const connectionIntentionsQuery = trpc.useQuery([
 		"account-connection-intentions.get-all",
 	]);
@@ -37,10 +30,7 @@ export const UserConnectionInput: React.FC<Props> = ({
 
 	const connectUserMutation = trpc.useMutation(
 		"account-connection-intentions.put",
-		useTrpcMutationOptions(cache.users.connect.mutationOptions, {
-			pagedInput: usersGetPagedInput,
-			input,
-		})
+		useTrpcMutationOptions(cache.users.connect.mutationOptions)
 	);
 	const connectUser = React.useCallback(
 		(email: string) =>
@@ -83,10 +73,7 @@ export const UserConnectionInput: React.FC<Props> = ({
 
 	const unlinkMutation = trpc.useMutation(
 		"users.unlink",
-		useTrpcMutationOptions(cache.users.unlink.mutationOptions, {
-			pagedInput: usersGetPagedInput,
-			input,
-		})
+		useTrpcMutationOptions(cache.users.unlink.mutationOptions)
 	);
 	const unlinkUser = React.useCallback(
 		() => unlinkMutation.mutate({ id: user.id }),

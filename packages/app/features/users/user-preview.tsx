@@ -16,7 +16,7 @@ type Props = {
 export const UserPreview: React.FC<Props> = ({ data: user }) => {
 	const trpcContext = trpc.useContext();
 	const setUserName = React.useCallback(
-		() => cache.users.getName.add(trpcContext, { id: user.id }, user.name),
+		() => cache.users.getName.add(trpcContext, user.id, user.name),
 		[trpcContext, user.id, user.name]
 	);
 	return (
