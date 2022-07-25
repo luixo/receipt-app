@@ -3,7 +3,7 @@ import * as receiptItems from "./receipt-items";
 import * as receipts from "./receipts";
 import * as users from "./users";
 
-export { Revert } from "./utils";
+export type { Revert } from "./utils";
 
 export const cache = {
 	users,
