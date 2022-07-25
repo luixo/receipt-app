@@ -10,6 +10,7 @@ import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { Text } from "app/utils/styles";
 import { ReceiptsId } from "next-app/db/models";
+import { Role } from "next-app/handlers/receipts/utils";
 
 import { AddReceiptItemPartForm } from "./add-receipt-item-part-form";
 import { ReceiptItemPart } from "./receipt-item-part";
@@ -22,7 +23,7 @@ type Props = {
 	receiptId: ReceiptsId;
 	receiptItem: ReceiptItems[number];
 	receiptParticipants: ReceiptParticipant[];
-	role?: TRPCQueryOutput<"receipts.get">["role"];
+	role: Role;
 };
 
 export const ReceiptItem: React.FC<Props> = ({
@@ -142,7 +143,7 @@ export const ReceiptItem: React.FC<Props> = ({
 			>
 				<Text>{receiptItem.locked ? "locked" : "not locked"}</Text>
 			</ReactNative.TouchableOpacity>
-			{!role || role === "viewer" ? null : (
+			{role === "viewer" ? null : (
 				<RemoveButton onPress={removeItem} disabled={receiptItem.dirty}>
 					Remove item
 				</RemoveButton>

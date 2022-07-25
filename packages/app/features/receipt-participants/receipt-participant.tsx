@@ -11,6 +11,7 @@ import { trpc, TRPCQueryOutput } from "app/trpc";
 import { Currency } from "app/utils/currency";
 import { Text } from "app/utils/styles";
 import { ReceiptsId } from "next-app/db/models";
+import { Role } from "next-app/handlers/receipts/utils";
 
 import {
 	AssignableRole,
@@ -22,7 +23,7 @@ type Props = {
 	receiptParticipant: TRPCQueryOutput<"receipt-items.get">["participants"][number] & {
 		sum: number;
 	};
-	role?: TRPCQueryOutput<"receipts.get">["role"];
+	role: Role;
 	currency?: Currency;
 };
 
@@ -133,7 +134,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 				Sum: {Math.round(receiptParticipant.sum * 100) / 100}
 				{currency ? ` ${currency}` : ""}
 			</Text>
-			{role && role === "owner" ? (
+			{role === "owner" ? (
 				<>
 					<RemoveButton
 						onPress={deleteReceiptParticipant}

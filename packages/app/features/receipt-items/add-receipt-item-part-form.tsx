@@ -7,6 +7,7 @@ import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { Text } from "app/utils/styles";
 import { ReceiptItemsId, ReceiptsId } from "next-app/db/models";
+import { Role } from "next-app/handlers/receipts/utils";
 
 type ReceiptParticipant =
 	TRPCQueryOutput<"receipt-items.get">["participants"][number];
@@ -15,7 +16,7 @@ type Props = {
 	receiptId: ReceiptsId;
 	itemId: ReceiptItemsId;
 	participant: ReceiptParticipant;
-	role?: TRPCQueryOutput<"receipts.get">["role"];
+	role: Role;
 };
 
 export const AddReceiptItemPartForm: React.FC<Props> = ({
@@ -43,7 +44,7 @@ export const AddReceiptItemPartForm: React.FC<Props> = ({
 			<AddButton
 				key={participant.userId}
 				onPress={addParticipant}
-				disabled={!role || role === "viewer"}
+				disabled={role === "viewer"}
 			>
 				{participant.name}
 			</AddButton>

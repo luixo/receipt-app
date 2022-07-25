@@ -20,14 +20,12 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 	receiptId,
 }) => {
 	const { data } = query;
-	const role = "viewer";
 	const currency = "USD";
 	return (
 		<>
 			<ReceiptParticipantsScreen
 				data={data}
 				receiptId={receiptId}
-				role={role}
 				currency={currency}
 			/>
 			<AddReceiptItemForm receiptId={receiptId} />
@@ -37,7 +35,7 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 					receiptId={receiptId}
 					receiptItem={receiptItem}
 					receiptParticipants={data.participants}
-					role={role}
+					role={data.role}
 				/>
 			))}
 		</>

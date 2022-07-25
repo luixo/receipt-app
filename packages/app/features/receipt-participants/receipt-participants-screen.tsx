@@ -12,14 +12,12 @@ import { ReceiptParticipant } from "./receipt-participant";
 
 type Props = {
 	data: TRPCQueryOutput<"receipt-items.get">;
-	role?: TRPCQueryOutput<"receipts.get">["role"];
 	receiptId: TRPCQueryOutput<"receipts.get">["id"];
 	currency?: Currency;
 };
 
 export const ReceiptParticipantsScreen: React.FC<Props> = ({
 	data,
-	role,
 	currency,
 	receiptId,
 }) => {
@@ -54,11 +52,11 @@ export const ReceiptParticipantsScreen: React.FC<Props> = ({
 					key={receiptParticipant.userId}
 					receiptId={receiptId}
 					receiptParticipant={receiptParticipant}
-					role={role}
+					role={data.role}
 					currency={currency}
 				/>
 			))}
-			{!role || role !== "owner" ? null : (
+			{data.role !== "owner" ? null : (
 				<AddReceiptParticipantForm receiptId={receiptId} />
 			)}
 		</Block>

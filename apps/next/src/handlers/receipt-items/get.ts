@@ -3,7 +3,6 @@ import { sql } from "kysely";
 import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
-import { AccountsId } from "next-app/db/models";
 import { AuthorizedContext } from "next-app/handlers/context";
 import { Role } from "next-app/handlers/receipts/utils";
 import { receiptIdSchema } from "next-app/handlers/validation";
@@ -34,6 +33,7 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 				.execute(),
 			database
 				.selectFrom("receiptParticipants")
+				.where("receiptId", "=", input.receiptId)
 				.innerJoin("users as usersTheir", (jb) =>
 					jb.onRef("usersTheir.id", "=", "receiptParticipants.userId")
 				)
@@ -45,9 +45,6 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 							"usersTheir.connectedAccountId"
 						)
 						.on("usersMine.ownerAccountId", "=", ctx.auth.accountId)
-				)
-				.leftJoin("accounts", (jb) =>
-					jb.onRef("usersTheir.connectedAccountId", "=", "accounts.id")
 				)
 				.select([
 					"userId",
@@ -65,12 +62,7 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 						else
 							null
 						end`.as("publicName"),
-					sql<AccountsId | null>`case
-						when "usersTheir"."ownerAccountId" = ${ctx.auth.accountId}
-							then "usersTheir"."connectedAccountId"
-						else
-							null
-						end`.as("connectedAccountId"),
+					"usersMine.connectedAccountId",
 					// only exists if foreign user is connected to an account
 					// that local account owner also have
 					"usersMine.id as localUserId",
@@ -78,7 +70,6 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 					"receiptParticipants.resolved",
 					"added",
 				])
-				.where("receiptId", "=", input.receiptId)
 				.orderBy("userId")
 				.execute(),
 		]);
@@ -106,6 +97,10 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 		};
 
 		return {
+			role:
+				(receiptParticipants.find(
+					(participant) => participant.connectedAccountId === ctx.auth.accountId
+				)?.role as Role) ?? "owner",
 			items: Object.values(
 				receiptItems.reduce<Record<string, ReceiptItem>>(
 					(acc, { price, quantity, itemId, userId, part, ...rest }) => {

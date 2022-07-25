@@ -10,6 +10,7 @@ import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { Text } from "app/utils/styles";
 import { ReceiptItemsId, ReceiptsId } from "next-app/db/models";
+import { Role } from "next-app/handlers/receipts/utils";
 
 type ReceiptItem = TRPCQueryOutput<"receipt-items.get">["items"][number];
 type ReceiptParticipant =
@@ -21,7 +22,7 @@ type Props = {
 	itemId: ReceiptItemsId;
 	receiptParticipants: ReceiptParticipant[];
 	receiptItemPart: ReceiptItemParts[number];
-	role?: TRPCQueryOutput<"receipts.get">["role"];
+	role: Role;
 };
 
 export const ReceiptItemPart: React.FC<Props> = ({
@@ -122,7 +123,6 @@ export const ReceiptItemPart: React.FC<Props> = ({
 			<ReactNative.TouchableOpacity
 				disabled={
 					receiptItemPart.part <= 1 ||
-					!role ||
 					role === "viewer" ||
 					receiptItemPart.dirty
 				}
@@ -132,17 +132,17 @@ export const ReceiptItemPart: React.FC<Props> = ({
 			</ReactNative.TouchableOpacity>
 			<ReactNative.TouchableOpacity
 				onPress={promptPart}
-				disabled={!role || role === "viewer" || receiptItemPart.dirty}
+				disabled={role === "viewer" || receiptItemPart.dirty}
 			>
 				<Text>{receiptItemPart.part} part(s)</Text>
 			</ReactNative.TouchableOpacity>
 			<ReactNative.TouchableOpacity
 				onPress={incrementPart}
-				disabled={!role || role === "viewer" || receiptItemPart.dirty}
+				disabled={role === "viewer" || receiptItemPart.dirty}
 			>
 				<Text>+</Text>
 			</ReactNative.TouchableOpacity>
-			{!role || role === "viewer" ? null : (
+			{role === "viewer" ? null : (
 				<RemoveButton onPress={removeItemPart} disabled={receiptItemPart.dirty}>
 					Remove participant
 				</RemoveButton>
