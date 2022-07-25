@@ -6,21 +6,23 @@ import { QueryErrorMessage } from "app/components/query-error-message";
 import { AddReceiptItemForm } from "app/features/receipt-items/add-receipt-item-form";
 import { ReceiptParticipantsScreen } from "app/features/receipt-participants/receipt-participants-screen";
 import { trpc, TRPCQuerySuccessResult } from "app/trpc";
+import { Currency } from "app/utils/currency";
 import { ReceiptsId } from "next-app/db/models";
 
 import { ReceiptItem } from "./receipt-item";
 
 type InnerProps = {
 	receiptId: ReceiptsId;
+	currency?: Currency;
 	query: TRPCQuerySuccessResult<"receipt-items.get">;
 };
 
 export const ReceiptItemsInner: React.FC<InnerProps> = ({
 	query,
 	receiptId,
+	currency,
 }) => {
 	const { data } = query;
-	const currency = "USD";
 	return (
 		<>
 			<ReceiptParticipantsScreen

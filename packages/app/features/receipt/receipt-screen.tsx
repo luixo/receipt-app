@@ -5,6 +5,7 @@ import { createParam } from "solito";
 
 import { Page } from "app/components/page";
 import { ReceiptItems } from "app/features/receipt-items/receipt-items-screen";
+import { Currency } from "app/utils/currency";
 
 import { Receipt } from "./receipt";
 
@@ -17,12 +18,17 @@ export const ReceiptScreen: React.FC = () => {
 	}
 
 	const deleteLoadingState = React.useState(false);
+	const [currency, setCurrency] = React.useState<Currency | undefined>();
 
 	return (
 		<Page>
-			<Receipt deleteLoadingState={deleteLoadingState} id={id} />
+			<Receipt
+				deleteLoadingState={deleteLoadingState}
+				setCurrency={setCurrency}
+				id={id}
+			/>
 			<Spacer y={1} />
-			<ReceiptItems receiptId={id} />
+			<ReceiptItems receiptId={id} currency={currency} />
 		</Page>
 	);
 };

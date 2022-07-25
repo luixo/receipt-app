@@ -9,6 +9,7 @@ import { ReceiptAccountedButton } from "app/components/receipt-accounted-button"
 import { ReceiptParticipantResolvedButton } from "app/components/receipt-participant-resolved-button";
 import { ShrinkText } from "app/components/shrink-text";
 import { trpc, TRPCQuerySuccessResult } from "app/trpc";
+import { Currency } from "app/utils/currency";
 import { ReceiptsId } from "next-app/src/db/models";
 
 import { ReceiptCurrencyInput } from "./receipt-currency-input";
@@ -49,13 +50,19 @@ const AlignEndView = styled("div", {
 type InnerProps = {
 	query: TRPCQuerySuccessResult<"receipts.get">;
 	deleteLoadingState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
+	setCurrency: React.Dispatch<React.SetStateAction<Currency | undefined>>;
 };
 
 export const ReceiptInner: React.FC<InnerProps> = ({
 	query,
 	deleteLoadingState: [deleteLoading, setDeleteLoading],
+	setCurrency,
 }) => {
 	const receipt = query.data;
+	React.useEffect(
+		() => setCurrency(receipt.currency),
+		[setCurrency, receipt.currency]
+	);
 
 	const [isEditing, setEditing] = React.useState(false);
 
