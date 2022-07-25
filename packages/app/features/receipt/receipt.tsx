@@ -9,51 +9,13 @@ import { MutationWrapper } from "app/components/mutation-wrapper";
 import { QueryWrapper } from "app/components/query-wrapper";
 import { RemoveButton } from "app/components/remove-button";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
-import {
-	UseContextedMutationOptions,
-	useTrpcMutationOptions,
-} from "app/hooks/use-trpc-mutation-options";
+import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { Currency } from "app/utils/currency";
 import { TextLink, Text } from "app/utils/styles";
 
 import { ReceiptCurrencyChange } from "./receipt-currency-change";
 import { ReceiptOwner } from "./receipt-owner";
-import { updateMutationOptions } from "./update-mutation-options";
-
-const deleteMutationOptions: UseContextedMutationOptions<
-	"receipts.delete",
-	{
-		receiptSnapshot?: ReturnType<
-			typeof cache["receipts"]["getPaged"]["remove"]
-		>;
-	},
-	{
-		pagedInput: Cache.Receipts.GetPaged.Input;
-		input: Cache.Receipts.Get.Input;
-	}
-> = {
-	onMutate:
-		(trpcContext, { pagedInput }) =>
-		({ id }) => ({
-			receiptSnapshot: cache.receipts.getPaged.remove(
-				trpcContext,
-				pagedInput,
-				(receipt) => receipt.id === id
-			),
-		}),
-	onError:
-		(trpcContext, { pagedInput }) =>
-		(_error, _variables, { receiptSnapshot } = {}) => {
-			if (receiptSnapshot) {
-				cache.receipts.getPaged.add(trpcContext, pagedInput, receiptSnapshot);
-			}
-		},
-	onSuccess:
-		(trpcContext, { input }) =>
-		() =>
-			cache.receipts.get.remove(trpcContext, input),
-};
 
 type Props = {
 	data: TRPCQueryOutput<"receipts.get">;
@@ -65,7 +27,7 @@ export const Receipt: React.FC<Props> = ({ data: receipt, input }) => {
 	const receiptsGetPagedInput = cache.receipts.getPaged.useStore();
 	const deleteReceiptMutation = trpc.useMutation(
 		"receipts.delete",
-		useTrpcMutationOptions(deleteMutationOptions, {
+		useTrpcMutationOptions(cache.receipts.delete.mutationOptions, {
 			pagedInput: receiptsGetPagedInput,
 			input,
 		})
@@ -94,7 +56,7 @@ export const Receipt: React.FC<Props> = ({ data: receipt, input }) => {
 
 	const updateReceiptMutation = trpc.useMutation(
 		"receipts.update",
-		useTrpcMutationOptions(updateMutationOptions, {
+		useTrpcMutationOptions(cache.receipts.update.mutationOptions, {
 			pagedInput: receiptsGetPagedInput,
 			input,
 		})

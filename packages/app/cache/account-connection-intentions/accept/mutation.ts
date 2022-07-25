@@ -1,7 +1,7 @@
 import { cache, Cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 
-export const acceptMutationOptions: UseContextedMutationOptions<
+export const mutationOptions: UseContextedMutationOptions<
 	"account-connection-intentions.accept",
 	ReturnType<typeof cache["users"]["getNotConnected"]["remove"]> | undefined,
 	{

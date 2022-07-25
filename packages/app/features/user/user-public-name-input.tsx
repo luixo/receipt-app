@@ -16,8 +16,6 @@ import { trpc, TRPCQueryOutput } from "app/trpc";
 import { styled } from "app/utils/styles";
 import { userNameSchema } from "app/utils/validation";
 
-import { updateMutationOptions } from "./update-mutation-options";
-
 const ButtonsContainer = styled(ReactNative.View)({
 	display: "flex",
 	flexDirection: "row",
@@ -52,7 +50,7 @@ export const UserPublicNameInput: React.FC<Props> = ({
 	const usersGetPagedInput = cache.users.getPaged.useStore();
 	const updateUserMutation = trpc.useMutation(
 		"users.update",
-		useTrpcMutationOptions(updateMutationOptions, {
+		useTrpcMutationOptions(cache.users.update.mutationOptions, {
 			pagedInput: usersGetPagedInput,
 			input,
 		})

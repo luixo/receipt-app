@@ -6,15 +6,11 @@ import { MdLink as LinkIcon, MdLinkOff as UnlinkIcon } from "react-icons/md";
 
 import { cache, Cache } from "app/cache";
 import { IconButton } from "app/components/icon-button";
-import { deleteMutationOptions as cancelRequestMutationOptions } from "app/features/connection-intentions/delete-mutation-options";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { emailSchema } from "app/utils/validation";
-
-import { connectMutationOptions } from "./connect-mutation-options";
-import { unlinkMutationOptions } from "./unlink-mutation-options";
 
 type Props = {
 	user: TRPCQueryOutput<"users.get">;
@@ -41,7 +37,7 @@ export const UserConnectionInput: React.FC<Props> = ({
 
 	const connectUserMutation = trpc.useMutation(
 		"account-connection-intentions.put",
-		useTrpcMutationOptions(connectMutationOptions, {
+		useTrpcMutationOptions(cache.users.connect.mutationOptions, {
 			pagedInput: usersGetPagedInput,
 			input,
 		})
@@ -68,7 +64,7 @@ export const UserConnectionInput: React.FC<Props> = ({
 
 	const cancelRequestMutation = trpc.useMutation(
 		"account-connection-intentions.delete",
-		useTrpcMutationOptions(cancelRequestMutationOptions)
+		useTrpcMutationOptions(cache.accountConnections.delete.mutationOptions)
 	);
 	const cancelRequest = useAsyncCallback(
 		async (isMount) => {
@@ -87,7 +83,7 @@ export const UserConnectionInput: React.FC<Props> = ({
 
 	const unlinkMutation = trpc.useMutation(
 		"users.unlink",
-		useTrpcMutationOptions(unlinkMutationOptions, {
+		useTrpcMutationOptions(cache.users.unlink.mutationOptions, {
 			pagedInput: usersGetPagedInput,
 			input,
 		})

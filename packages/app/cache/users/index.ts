@@ -3,3 +3,8 @@ export * as getPaged from "./get-paged/actions";
 export * as getAvailable from "./get-available/actions";
 export * as getName from "./get-name/actions";
 export * as getNotConnected from "./get-not-connected/actions";
+export * as put from "./put/mutation";
+export * as connect from "./connect/mutation";
+export * as unlink from "./unlink/mutation";
+export * as delete from "./delete/mutation";
+export * as update from "./update/mutation";

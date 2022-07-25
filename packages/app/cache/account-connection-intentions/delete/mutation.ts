@@ -1,7 +1,7 @@
 import { cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 
-export const deleteMutationOptions: UseContextedMutationOptions<
+export const mutationOptions: UseContextedMutationOptions<
 	"account-connection-intentions.delete",
 	ReturnType<typeof cache["accountConnections"]["getAll"]["outbound"]["remove"]>
 > = {

@@ -9,9 +9,6 @@ import { UsersPicker } from "app/components/users-picker";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 
-import { acceptMutationOptions } from "./accept-mutation-options";
-import { rejectMutationOptions } from "./reject-mutation-options";
-
 type UsersResult = TRPCQueryOutput<"users.get-not-connected">;
 
 const extractUsers = (data: InfiniteData<UsersResult>) =>
@@ -37,7 +34,7 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 
 	const acceptConnectionMutation = trpc.useMutation(
 		"account-connection-intentions.accept",
-		useTrpcMutationOptions(acceptMutationOptions, {
+		useTrpcMutationOptions(cache.accountConnections.accept.mutationOptions, {
 			usersInput: cache.users.getPaged.useStore(),
 			usersNotConnectedInput,
 			// We can only call that if userId is not null
@@ -53,7 +50,7 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 
 	const rejectConnectionMutation = trpc.useMutation(
 		"account-connection-intentions.reject",
-		useTrpcMutationOptions(rejectMutationOptions)
+		useTrpcMutationOptions(cache.accountConnections.reject.mutationOptions)
 	);
 	const rejectConnection = React.useCallback(() => {
 		rejectConnectionMutation.mutate({

@@ -7,8 +7,6 @@ import { IconButton } from "app/components/icon-button";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 
-import { updateMutationOptions } from "../receipt/update-mutation-options";
-
 type Props = {
 	receipt: TRPCQueryOutput<"receipts.get-paged">["items"][number];
 };
@@ -17,7 +15,7 @@ export const ReceiptResolvedButton: React.FC<Props> = ({ receipt }) => {
 	const receiptsGetPagedInput = cache.receipts.getPaged.useStore();
 	const updateReceiptMutation = trpc.useMutation(
 		"receipts.update",
-		useTrpcMutationOptions(updateMutationOptions, {
+		useTrpcMutationOptions(cache.receipts.update.mutationOptions, {
 			pagedInput: receiptsGetPagedInput,
 			input: { id: receipt.id },
 		})

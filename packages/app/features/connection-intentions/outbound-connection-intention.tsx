@@ -3,11 +3,10 @@ import React from "react";
 import { Input } from "@nextui-org/react";
 import { MdLinkOff as UnlinkIcon } from "react-icons/md";
 
+import { cache } from "app/cache";
 import { IconButton } from "app/components/icon-button";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
-
-import { deleteMutationOptions } from "./delete-mutation-options";
 
 type InnerProps = {
 	intention: TRPCQueryOutput<"account-connection-intentions.get-all">["outbound"][number];
@@ -18,7 +17,7 @@ export const OutboundConnectionIntention: React.FC<InnerProps> = ({
 }) => {
 	const deleteConnectionMutation = trpc.useMutation(
 		"account-connection-intentions.delete",
-		useTrpcMutationOptions(deleteMutationOptions)
+		useTrpcMutationOptions(cache.accountConnections.delete.mutationOptions)
 	);
 	const deleteConnection = React.useCallback(() => {
 		deleteConnectionMutation.mutate({

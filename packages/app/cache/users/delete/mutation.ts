@@ -3,7 +3,7 @@ import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options
 
 const removePagedUser = cache.users.getPaged.remove;
 
-export const deleteMutationOptions: UseContextedMutationOptions<
+export const mutationOptions: UseContextedMutationOptions<
 	"users.delete",
 	{ userSnapshot?: ReturnType<typeof removePagedUser> },
 	{ pagedInput: Cache.Users.GetPaged.Input; input: Cache.Users.Get.Input }

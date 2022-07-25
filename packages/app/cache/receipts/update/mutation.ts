@@ -74,7 +74,7 @@ const getPagedRevert =
 		}
 	};
 
-export const updateMutationOptions: UseContextedMutationOptions<
+export const mutationOptions: UseContextedMutationOptions<
 	"receipts.update",
 	{
 		pagedRevert?: Revert<PagedReceiptSnapshot>;

@@ -8,62 +8,18 @@ import { Block } from "app/components/block";
 import { InfiniteQueryWrapper } from "app/components/infinite-query-wrapper";
 import { MutationWrapper } from "app/components/mutation-wrapper";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
-import {
-	UseContextedMutationOptions,
-	useTrpcMutationOptions,
-} from "app/hooks/use-trpc-mutation-options";
+import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCInfiniteQueryResult } from "app/trpc";
 import { Text } from "app/utils/styles";
-import { AccountsId, UsersId } from "next-app/db/models";
+import { UsersId } from "next-app/db/models";
 
 import { AvailableReceiptParticipantUsers } from "./available-receipt-participants-users";
 
-type SelectedUser = {
-	name: string;
-	publicName: string | null;
-	connectedAccountId: AccountsId | null;
-};
-
-const mutationOptions: UseContextedMutationOptions<
-	"receipt-participants.put",
-	ReturnType<typeof cache["users"]["getAvailable"]["remove"]>,
-	{
-		itemsInput: Cache.ReceiptItems.Get.Input;
-		usersInput: Cache.Users.GetAvailable.Input;
-		user: SelectedUser;
-	}
-> = {
-	onMutate:
-		(trpcContext, { usersInput }) =>
-		(variables) =>
-			cache.users.getAvailable.remove(
-				trpcContext,
-				usersInput,
-				(user) => user.id === variables.userId
-			),
-	onSuccess:
-		(trpcContext, { itemsInput, user }) =>
-		({ added }, variables) => {
-			cache.receiptItems.get.receiptParticipant.add(trpcContext, itemsInput, {
-				name: user.name,
-				publicName: user.publicName,
-				connectedAccountId: user.connectedAccountId,
-				userId: variables.userId,
-				localUserId: variables.userId,
-				role: variables.role,
-				resolved: false,
-				added,
-			});
-		},
-	onError:
-		(trpcContext, { usersInput }) =>
-		(_error, _variables, snapshot) => {
-			if (!snapshot) {
-				return;
-			}
-			cache.users.getAvailable.add(trpcContext, usersInput, snapshot);
-		},
-};
+type SelectedUser = Parameters<
+	NonNullable<
+		typeof cache["receiptParticipants"]["put"]["mutationOptions"]["onSuccess"]
+	>
+>[1]["user"];
 
 type AvailableUsersResult = TRPCInfiniteQueryResult<"users.get-available">;
 
@@ -124,7 +80,7 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 
 	const addReceiptParticipantMutation = trpc.useMutation(
 		"receipt-participants.put",
-		useTrpcMutationOptions(mutationOptions, {
+		useTrpcMutationOptions(cache.receiptParticipants.put.mutationOptions, {
 			itemsInput: receiptItemsInput,
 			usersInput,
 			user: selectedUser!,

@@ -4,7 +4,7 @@ import { cache, Cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { AccountsId, UsersId } from "next-app/src/db/models";
 
-export const putMutationOptions: UseContextedMutationOptions<
+export const mutationOptions: UseContextedMutationOptions<
 	"users.put",
 	UsersId,
 	{

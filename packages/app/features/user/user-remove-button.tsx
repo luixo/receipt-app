@@ -11,8 +11,6 @@ import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { styled, Text } from "app/utils/styles";
 
-import { deleteMutationOptions } from "./delete-mutation-options";
-
 const RemoveButtons = styled(ReactNative.View)({
 	marginTop: "sm",
 	flexDirection: "row",
@@ -33,7 +31,7 @@ export const UserRemoveButton: React.FC<Props> = ({
 	const router = useRouter();
 	const deleteUserMutation = trpc.useMutation(
 		"users.delete",
-		useTrpcMutationOptions(deleteMutationOptions, {
+		useTrpcMutationOptions(cache.users.delete.mutationOptions, {
 			pagedInput: usersGetPagedInput,
 			input,
 		})

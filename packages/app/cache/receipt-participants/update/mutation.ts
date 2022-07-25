@@ -30,7 +30,7 @@ const getRevert =
 		}
 	};
 
-export const updateMutationOptions: UseContextedMutationOptions<
+export const mutationOptions: UseContextedMutationOptions<
 	"receipt-participants.update",
 	Revert<ReceiptParticipants[number]> | undefined,
 	{

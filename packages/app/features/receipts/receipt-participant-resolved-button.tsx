@@ -4,7 +4,6 @@ import { MdDoneAll as DoneIcon } from "react-icons/md";
 
 import { cache } from "app/cache";
 import { IconButton } from "app/components/icon-button";
-import { updateMutationOptions } from "app/features/receipt-participants/update-mutation-options";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 
@@ -19,7 +18,7 @@ export const ReceiptParticipantResolvedButton: React.FC<Props> = ({
 
 	const updateReceiptMutation = trpc.useMutation(
 		"receipt-participants.update",
-		useTrpcMutationOptions(updateMutationOptions, {
+		useTrpcMutationOptions(cache.receiptParticipants.update.mutationOptions, {
 			receiptItemsInput: { receiptId: receipt.id },
 			receiptsPagedInput: cache.receipts.getPaged.useStore(),
 			isSelfAccount: true,

@@ -6,10 +6,7 @@ import { Block } from "app/components/block";
 import { MutationWrapper } from "app/components/mutation-wrapper";
 import { RemoveButton } from "app/components/remove-button";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
-import {
-	UseContextedMutationOptions,
-	useTrpcMutationOptions,
-} from "app/hooks/use-trpc-mutation-options";
+import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { Currency } from "app/utils/currency";
 import { Text } from "app/utils/styles";
@@ -18,42 +15,6 @@ import {
 	AssignableRole,
 	ReceiptParticipantRoleChange,
 } from "./receipt-participant-role-change";
-import { updateMutationOptions } from "./update-mutation-options";
-
-const deleteMutationOptions: UseContextedMutationOptions<
-	"receipt-participants.delete",
-	ReturnType<
-		typeof cache["receiptItems"]["get"]["receiptParticipant"]["remove"]
-	>,
-	{
-		itemsInput: Cache.ReceiptItems.Get.Input;
-		usersInput: Cache.Users.GetAvailable.Input;
-		user: Cache.Users.GetAvailable.User;
-	}
-> = {
-	onMutate:
-		(trpcContext, { itemsInput }) =>
-		({ userId }) =>
-			cache.receiptItems.get.receiptParticipant.remove(
-				trpcContext,
-				itemsInput,
-				(participant) => participant.userId === userId
-			),
-	onError:
-		(trpcContext, { itemsInput, usersInput, user }) =>
-		(_error, _variables, snapshot) => {
-			if (!snapshot) {
-				return;
-			}
-			cache.receiptItems.get.receiptParticipant.add(
-				trpcContext,
-				itemsInput,
-				snapshot.receiptParticipant,
-				snapshot.index
-			);
-			cache.users.getAvailable.add(trpcContext, usersInput, user);
-		},
-};
 
 type Props = {
 	receiptParticipant: TRPCQueryOutput<"receipt-items.get">["participants"][number] & {
@@ -92,7 +53,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 	);
 	const deleteReceiptParticipantMutation = trpc.useMutation(
 		"receipt-participants.delete",
-		useTrpcMutationOptions(deleteMutationOptions, {
+		useTrpcMutationOptions(cache.receiptParticipants.delete.mutationOptions, {
 			itemsInput: receiptItemsInput,
 			usersInput,
 			user,
@@ -123,7 +84,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 
 	const updateReceiptMutation = trpc.useMutation(
 		"receipt-participants.update",
-		useTrpcMutationOptions(updateMutationOptions, {
+		useTrpcMutationOptions(cache.receiptParticipants.update.mutationOptions, {
 			receiptItemsInput,
 			receiptsPagedInput: cache.receipts.getPaged.useStore(),
 			isSelfAccount: receiptParticipant.localUserId === accountQuery.data?.id,

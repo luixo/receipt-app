@@ -1,16 +1,13 @@
 import React from "react";
 import * as ReactNative from "react-native";
 
-import { cache, Cache, Revert } from "app/cache";
+import { cache, Cache } from "app/cache";
 import { Block } from "app/components/block";
 import { MutationWrapper } from "app/components/mutation-wrapper";
 import { RemoveButton } from "app/components/remove-button";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
-import {
-	UseContextedMutationOptions,
-	useTrpcMutationOptions,
-} from "app/hooks/use-trpc-mutation-options";
-import { trpc, TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
+import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { trpc, TRPCQueryOutput } from "app/trpc";
 import { Text } from "app/utils/styles";
 import { ReceiptItemsId } from "next-app/db/models";
 
@@ -18,92 +15,6 @@ type ReceiptItem = TRPCQueryOutput<"receipt-items.get">["items"][number];
 type ReceiptParticipant =
 	TRPCQueryOutput<"receipt-items.get">["participants"][number];
 type ReceiptItemParts = ReceiptItem["parts"];
-
-const deleteMutationOptions: UseContextedMutationOptions<
-	"item-participants.delete",
-	ReturnType<typeof cache["receiptItems"]["get"]["receiptItemPart"]["remove"]>,
-	Cache.ReceiptItems.Get.Input
-> = {
-	onMutate: (trpcContext, input) => (variables) =>
-		cache.receiptItems.get.receiptItemPart.remove(
-			trpcContext,
-			input,
-			variables.itemId,
-			(part) => part.userId !== variables.userId
-		),
-	onError: (trpcContext, input) => (_error, variables, snapshot) => {
-		if (!snapshot) {
-			return;
-		}
-		cache.receiptItems.get.receiptItemPart.add(
-			trpcContext,
-			input,
-			variables.itemId,
-			snapshot.receiptItemPart,
-			snapshot.index
-		);
-	},
-};
-
-const applyUpdate = (
-	part: ReceiptItemParts[number],
-	update: TRPCMutationInput<"item-participants.update">["update"]
-): ReceiptItemParts[number] => {
-	switch (update.type) {
-		case "part":
-			return { ...part, part: update.part };
-	}
-};
-
-const getRevert =
-	(
-		snapshot: ReceiptItemParts[number],
-		update: TRPCMutationInput<"item-participants.update">["update"]
-	): Revert<ReceiptItemParts[number]> =>
-	(item) => {
-		switch (update.type) {
-			case "part":
-				return { ...item, part: snapshot.part };
-		}
-	};
-
-const updateMutationOptions: UseContextedMutationOptions<
-	"item-participants.update",
-	Revert<ReceiptItemParts[number]> | undefined,
-	Cache.ReceiptItems.Get.Input
-> = {
-	onMutate: (trpcContext, input) => (variables) => {
-		const snapshot = cache.receiptItems.get.receiptItemPart.update(
-			trpcContext,
-			input,
-			variables.itemId,
-			variables.userId,
-			(part) => applyUpdate({ ...part, dirty: true }, variables.update)
-		);
-		return snapshot && getRevert(snapshot, variables.update);
-	},
-	onSuccess: (trpcContext, input) => (_error, variables) => {
-		cache.receiptItems.get.receiptItemPart.update(
-			trpcContext,
-			input,
-			variables.itemId,
-			variables.userId,
-			(part) => ({ ...part, dirty: false })
-		);
-	},
-	onError: (trpcContext, input) => (_error, variables, revert) => {
-		if (!revert) {
-			return;
-		}
-		cache.receiptItems.get.receiptItemPart.update(
-			trpcContext,
-			input,
-			variables.itemId,
-			variables.userId,
-			revert
-		);
-	},
-};
 
 type Props = {
 	itemId: ReceiptItemsId;
@@ -122,7 +33,10 @@ export const ReceiptItemPart: React.FC<Props> = ({
 }) => {
 	const updateItemPartMutation = trpc.useMutation(
 		"item-participants.update",
-		useTrpcMutationOptions(updateMutationOptions, receiptItemsInput)
+		useTrpcMutationOptions(
+			cache.itemParticipants.update.mutationOptions,
+			receiptItemsInput
+		)
 	);
 
 	const promptPart = React.useCallback(() => {
@@ -179,7 +93,10 @@ export const ReceiptItemPart: React.FC<Props> = ({
 
 	const removeItemPartMutation = trpc.useMutation(
 		"item-participants.delete",
-		useTrpcMutationOptions(deleteMutationOptions, receiptItemsInput)
+		useTrpcMutationOptions(
+			cache.itemParticipants.delete.mutationOptions,
+			receiptItemsInput
+		)
 	);
 	const removeItemPart = useAsyncCallback(
 		() =>

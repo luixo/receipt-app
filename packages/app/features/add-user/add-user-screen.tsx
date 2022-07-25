@@ -17,7 +17,6 @@ import { emailSchema, userNameSchema } from "app/utils/validation";
 import { UsersId } from "next-app/src/db/models";
 
 import { EmailInput } from "./email-input";
-import { putMutationOptions } from "./put-mutation-options";
 import { Form } from "./types";
 import { UserNameInput } from "./user-name-input";
 
@@ -32,7 +31,7 @@ export const AddUserScreen: React.FC = () => {
 	const usersGetPagedInput = cache.users.getPaged.useStore();
 	const addUserMutation = trpc.useMutation(
 		"users.put",
-		useTrpcMutationOptions(putMutationOptions, {
+		useTrpcMutationOptions(cache.users.put.mutationOptions, {
 			pagedInput: usersGetPagedInput,
 			selfAccountId: accountQuery.data?.id ?? "unknown",
 		})

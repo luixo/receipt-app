@@ -57,7 +57,7 @@ const getPagedRevert =
 		}
 	};
 
-export const updateMutationOptions: UseContextedMutationOptions<
+export const mutationOptions: UseContextedMutationOptions<
 	"users.update",
 	{ pagedRevert?: Revert<PagedUserSnapshot>; revert?: Revert<UserSnapshot> },
 	{ pagedInput: Cache.Users.GetPaged.Input; input: Cache.Users.Get.Input }

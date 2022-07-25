@@ -1,7 +1,7 @@
 import { cache, Cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 
-export const unlinkMutationOptions: UseContextedMutationOptions<
+export const mutationOptions: UseContextedMutationOptions<
 	"users.unlink",
 	string | undefined,
 	{

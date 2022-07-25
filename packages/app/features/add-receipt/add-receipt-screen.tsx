@@ -17,7 +17,6 @@ import { receiptNameSchema } from "app/utils/validation";
 import { ReceiptsId } from "next-app/src/db/models";
 
 import { CurrencyInput } from "./currency-input";
-import { putMutationOptions } from "./put-mutation-options";
 import { ReceiptNameInput } from "./receipt-name-input";
 import { Form } from "./types";
 
@@ -33,7 +32,7 @@ export const AddReceiptScreen: React.FC = () => {
 	const receiptsGetPagedInput = cache.receipts.getPaged.useStore();
 	const addReceiptMutation = trpc.useMutation(
 		"receipts.put",
-		useTrpcMutationOptions(putMutationOptions, {
+		useTrpcMutationOptions(cache.receipts.put.mutationOptions, {
 			input: receiptsGetPagedInput,
 			selfAccountId: accountQuery.data?.id ?? "unknown",
 		})

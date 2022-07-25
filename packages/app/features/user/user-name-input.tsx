@@ -11,8 +11,6 @@ import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { userNameSchema } from "app/utils/validation";
 
-import { updateMutationOptions } from "./update-mutation-options";
-
 type Props = {
 	user: TRPCQueryOutput<"users.get">;
 	isLoading: boolean;
@@ -33,7 +31,7 @@ export const UserNameInput: React.FC<Props> = ({ user, isLoading, input }) => {
 	const usersGetPagedInput = cache.users.getPaged.useStore();
 	const updateUserMutation = trpc.useMutation(
 		"users.update",
-		useTrpcMutationOptions(updateMutationOptions, {
+		useTrpcMutationOptions(cache.users.update.mutationOptions, {
 			pagedInput: usersGetPagedInput,
 			input,
 		})
