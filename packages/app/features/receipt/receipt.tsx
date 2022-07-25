@@ -134,8 +134,7 @@ type Props = Omit<InnerProps, "query"> & {
 };
 
 export const Receipt: React.FC<Props> = ({ id, ...props }) => {
-	const receiptInput = { id };
-	const query = trpc.useQuery(["receipts.get", receiptInput]);
+	const query = trpc.useQuery(["receipts.get", { id }]);
 	const receiptNameQuery = trpc.useQuery(["receipts.get-name", { id }]);
 	if (query.status === "loading") {
 		return (
