@@ -5,28 +5,34 @@ import { MdCalculate as CalcIcon } from "react-icons/md";
 import { cache } from "app/cache";
 import { IconButton } from "app/components/icon-button";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { trpc, TRPCQueryOutput } from "app/trpc";
+import { trpc } from "app/trpc";
+import { ReceiptsId } from "next-app/db/models";
 
 type Props = {
-	receipt: TRPCQueryOutput<"receipts.get-paged">["items"][number];
-};
+	receiptId: ReceiptsId;
+	resolved: boolean;
+} & Omit<React.ComponentProps<typeof IconButton>, "onClick" | "color">;
 
-export const ReceiptResolvedButton: React.FC<Props> = ({ receipt }) => {
+export const ReceiptAccountedButton: React.FC<Props> = ({
+	receiptId,
+	resolved,
+	...props
+}) => {
 	const updateReceiptMutation = trpc.useMutation(
 		"receipts.update",
 		useTrpcMutationOptions(cache.receipts.update.mutationOptions)
 	);
 	const switchResolved = React.useCallback(() => {
 		updateReceiptMutation.mutate({
-			id: receipt.id,
-			update: { type: "resolved", resolved: !receipt.resolved },
+			id: receiptId,
+			update: { type: "resolved", resolved: !resolved },
 		});
-	}, [updateReceiptMutation, receipt.id, receipt.resolved]);
+	}, [updateReceiptMutation, receiptId, resolved]);
 	return (
 		<IconButton
-			light
-			isLoading={updateReceiptMutation.isLoading}
-			color={receipt.resolved ? "success" : "warning"}
+			{...props}
+			isLoading={updateReceiptMutation.isLoading || props.isLoading}
+			color={resolved ? "success" : "warning"}
 			onClick={switchResolved}
 		>
 			<CalcIcon size={24} />

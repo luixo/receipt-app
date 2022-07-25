@@ -1,43 +1,61 @@
 import React from "react";
 
-import { Block } from "app/components/block";
+import { Loading } from "@nextui-org/react";
+
+import { QueryErrorMessage } from "app/components/query-error-message";
+import { AddReceiptItemForm } from "app/features/receipt-items/add-receipt-item-form";
 import { ReceiptParticipantsScreen } from "app/features/receipt-participants/receipt-participants-screen";
-import { TRPCQueryOutput } from "app/trpc";
-import { Currency } from "app/utils/currency";
+import { trpc, TRPCQuerySuccessResult } from "app/trpc";
 import { ReceiptsId } from "next-app/db/models";
 
-import { AddReceiptItemForm } from "./add-receipt-item-form";
 import { ReceiptItem } from "./receipt-item";
 
-type Props = {
+type InnerProps = {
 	receiptId: ReceiptsId;
-	data: TRPCQueryOutput<"receipt-items.get">;
-	role?: TRPCQueryOutput<"receipts.get">["role"];
-	currency?: Currency;
+	query: TRPCQuerySuccessResult<"receipt-items.get">;
 };
 
-export const ReceiptItems: React.FC<Props> = ({
-	data,
-	role,
-	currency,
+export const ReceiptItemsInner: React.FC<InnerProps> = ({
+	query,
 	receiptId,
-}) => (
-	<Block name={`Total: ${data.items.length} items`}>
-		<ReceiptParticipantsScreen
-			data={data}
-			receiptId={receiptId}
-			role={role}
-			currency={currency}
-		/>
-		<AddReceiptItemForm receiptId={receiptId} />
-		{data.items.map((receiptItem) => (
-			<ReceiptItem
-				key={receiptItem.id}
+}) => {
+	const { data } = query;
+	const role = "viewer";
+	const currency = "USD";
+	return (
+		<>
+			<ReceiptParticipantsScreen
+				data={data}
 				receiptId={receiptId}
-				receiptItem={receiptItem}
-				receiptParticipants={data.participants}
 				role={role}
+				currency={currency}
 			/>
-		))}
-	</Block>
-);
+			<AddReceiptItemForm receiptId={receiptId} />
+			{data.items.map((receiptItem) => (
+				<ReceiptItem
+					key={receiptItem.id}
+					receiptId={receiptId}
+					receiptItem={receiptItem}
+					receiptParticipants={data.participants}
+					role={role}
+				/>
+			))}
+		</>
+	);
+};
+
+type Props = Omit<InnerProps, "query">;
+
+export const ReceiptItems: React.FC<Props> = ({ receiptId }) => {
+	const query = trpc.useQuery(["receipt-items.get", { receiptId }]);
+	if (query.status === "loading") {
+		return <Loading />;
+	}
+	if (query.status === "error") {
+		return <QueryErrorMessage query={query} />;
+	}
+	if (query.status === "idle") {
+		return null;
+	}
+	return <ReceiptItemsInner receiptId={receiptId} query={query} />;
+};

@@ -3,6 +3,8 @@ import React from "react";
 import { styled } from "@nextui-org/react";
 
 const Wrapper = styled("div", {
+	display: "flex",
+	flexDirection: "column",
 	padding: "$md",
 });
 

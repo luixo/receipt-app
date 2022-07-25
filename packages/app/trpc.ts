@@ -100,6 +100,11 @@ export type TRPCQueryResult<Path extends TRPCQueryKey> = UseQueryResult<
 	TRPCError
 >;
 
+export type TRPCQuerySuccessResult<
+	Path extends TRPCQueryKey,
+	Result extends TRPCQueryResult<Path> = TRPCQueryResult<Path>
+> = Result extends { status: "success" } ? Result : never;
+
 export type TRPCInfiniteQueryKey = InfiniteQueryNames<AppRouter, "queries">;
 
 export type TRPCInfiniteQueryInput<Path extends TRPCInfiniteQueryKey> = Omit<
@@ -129,3 +134,5 @@ export type TRPCMutationResult<Path extends TRPCMutationKey> =
 		TRPCError,
 		TRPCMutationInput<Path>
 	>;
+
+export type AnyTRPCMutationResult = UseMutationResult<any, TRPCError, any>;

@@ -2,12 +2,13 @@ import { cache, Revert } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
 
-type ReceiptParticipants = TRPCQueryOutput<"receipt-items.get">["participants"];
+type ReceiptParticipant =
+	TRPCQueryOutput<"receipt-items.get">["participants"][number];
 
 const applyUpdate = (
-	item: ReceiptParticipants[number],
+	item: ReceiptParticipant,
 	update: TRPCMutationInput<"receipt-participants.update">["update"]
-): ReceiptParticipants[number] => {
+): ReceiptParticipant => {
 	switch (update.type) {
 		case "role":
 			return { ...item, role: update.role };
@@ -18,9 +19,9 @@ const applyUpdate = (
 
 const getRevert =
 	(
-		snapshot: ReceiptParticipants[number],
+		snapshot: ReceiptParticipant,
 		update: TRPCMutationInput<"receipt-participants.update">["update"]
-	): Revert<ReceiptParticipants[number]> =>
+	): Revert<ReceiptParticipant> =>
 	(item) => {
 		switch (update.type) {
 			case "role":
@@ -30,9 +31,37 @@ const getRevert =
 		}
 	};
 
+type PagedReceipt = TRPCQueryOutput<"receipts.get-paged">["items"][number];
+
+const applyUpdateUserPaged = (
+	item: PagedReceipt,
+	update: TRPCMutationInput<"receipt-participants.update">["update"]
+): PagedReceipt => {
+	switch (update.type) {
+		case "resolved":
+			return { ...item, participantResolved: update.resolved };
+		case "role":
+			return { ...item, role: update.role };
+	}
+};
+
+type Receipt = TRPCQueryOutput<"receipts.get">;
+
+const applyUpdateUser = (
+	item: Receipt,
+	update: TRPCMutationInput<"receipt-participants.update">["update"]
+): Receipt => {
+	switch (update.type) {
+		case "resolved":
+			return { ...item, participantResolved: update.resolved };
+		case "role":
+			return { ...item, role: update.role };
+	}
+};
+
 export const mutationOptions: UseContextedMutationOptions<
 	"receipt-participants.update",
-	Revert<ReceiptParticipants[number]> | undefined,
+	Revert<ReceiptParticipant> | undefined,
 	{ isSelfAccount: boolean }
 > = {
 	onMutate: (trpcContext) => (variables) => {
@@ -61,17 +90,10 @@ export const mutationOptions: UseContextedMutationOptions<
 				cache.receipts.getPaged.update(
 					trpcContext,
 					variables.receiptId,
-					(receipt) => {
-						switch (variables.update.type) {
-							case "resolved":
-								return {
-									...receipt,
-									participantResolved: variables.update.resolved,
-								};
-							case "role":
-								return { ...receipt, role: variables.update.role };
-						}
-					}
+					(receipt) => applyUpdateUserPaged(receipt, variables.update)
+				);
+				cache.receipts.get.update(trpcContext, variables.receiptId, (receipt) =>
+					applyUpdateUser(receipt, variables.update)
 				);
 			}
 		},

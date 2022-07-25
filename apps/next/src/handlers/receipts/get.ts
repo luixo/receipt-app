@@ -15,11 +15,14 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 		const database = getDatabase(ctx);
 		const maybeReceipt = await database
 			.selectFrom("receipts")
+			.where("receipts.id", "=", input.id)
+			.innerJoin("users as usersTheir", (jb) =>
+				jb
+					.on("usersTheir.connectedAccountId", "=", ctx.auth.accountId)
+					.onRef("usersTheir.ownerAccountId", "=", "receipts.ownerAccountId")
+			)
 			.leftJoin("receiptItems", (jb) =>
 				jb.onRef("receiptItems.receiptId", "=", "receipts.id")
-			)
-			.innerJoin("users as usersTheir", (jb) =>
-				jb.on("usersTheir.connectedAccountId", "=", ctx.auth.accountId)
 			)
 			.leftJoin("receiptParticipants", (jb) =>
 				jb
@@ -43,9 +46,14 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 				"issued",
 				"receiptParticipants.resolved as participantResolved",
 				"usersMine.id as ownerUserId",
+				"usersTheir.id as selfUserId",
 			])
-			.where("receipts.id", "=", input.id)
-			.groupBy(["receipts.id", "receiptParticipants.resolved", "usersMine.id"])
+			.groupBy([
+				"receipts.id",
+				"receiptParticipants.resolved",
+				"usersMine.id",
+				"usersTheir.id",
+			])
 			.executeTakeFirst();
 		if (!maybeReceipt) {
 			throw new trpc.TRPCError({

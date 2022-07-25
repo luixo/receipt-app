@@ -3,10 +3,9 @@ import React from "react";
 import { Link, Text, Grid, styled } from "@nextui-org/react";
 
 import { cache } from "app/cache";
+import { ReceiptAccountedButton } from "app/components/receipt-accounted-button";
+import { ReceiptParticipantResolvedButton } from "app/components/receipt-participant-resolved-button";
 import { trpc, TRPCQueryOutput } from "app/trpc";
-
-import { ReceiptParticipantResolvedButton } from "./receipt-participant-resolved-button";
-import { ReceiptResolvedButton } from "./receipt-resolved-button";
 
 const TitleLink = styled(Link, {
 	display: "flex",
@@ -46,10 +45,19 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 				</TitleLink>
 			</Grid>
 			<Grid xs={2}>
-				<ReceiptParticipantResolvedButton receipt={receipt} />
+				<ReceiptParticipantResolvedButton
+					light
+					receiptId={receipt.id}
+					userId={receipt.userId}
+					resolved={receipt.participantResolved}
+				/>
 			</Grid>
 			<Grid xs={2}>
-				<ReceiptResolvedButton receipt={receipt} />
+				<ReceiptAccountedButton
+					light
+					receiptId={receipt.id}
+					resolved={receipt.resolved}
+				/>
 			</Grid>
 		</>
 	);

@@ -52,6 +52,7 @@ export const mutationOptions: UseContextedMutationOptions<
 				participantResolved: false,
 				// Typesystem doesn't know that we use account id as self user id
 				ownerUserId: selfAccountId as UsersId,
+				selfUserId: selfAccountId as UsersId,
 			});
 			cache.receipts.getName.update(trpcContext, actualId, variables.name);
 		},

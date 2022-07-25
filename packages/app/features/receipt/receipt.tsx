@@ -1,156 +1,155 @@
 import React from "react";
-import * as ReactNative from "react-native";
 
-import { useRouter } from "solito/router";
+import { Loading, Spacer, styled, Text } from "@nextui-org/react";
+import { MdEdit as EditIcon } from "react-icons/md";
 
-import { cache } from "app/cache";
-import { Block } from "app/components/block";
-import { MutationWrapper } from "app/components/mutation-wrapper";
-import { QueryWrapper } from "app/components/query-wrapper";
-import { RemoveButton } from "app/components/remove-button";
-import { useAsyncCallback } from "app/hooks/use-async-callback";
-import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { trpc, TRPCQueryOutput } from "app/trpc";
-import { Currency } from "app/utils/currency";
-import { TextLink, Text } from "app/utils/styles";
+import { IconButton } from "app/components/icon-button";
+import { QueryErrorMessage } from "app/components/query-error-message";
+import { ReceiptAccountedButton } from "app/components/receipt-accounted-button";
+import { ReceiptParticipantResolvedButton } from "app/components/receipt-participant-resolved-button";
+import { ShrinkText } from "app/components/shrink-text";
+import { trpc, TRPCQuerySuccessResult } from "app/trpc";
+import { ReceiptsId } from "next-app/src/db/models";
 
-import { ReceiptCurrencyChange } from "./receipt-currency-change";
+import { ReceiptCurrencyInput } from "./receipt-currency-input";
+import { ReceiptDateInput } from "./receipt-date-input";
+import { ReceiptNameInput } from "./receipt-name-input";
 import { ReceiptOwner } from "./receipt-owner";
+import { ReceiptRemoveButton } from "./receipt-remove-button";
 
-type Props = {
-	data: TRPCQueryOutput<"receipts.get">;
+const Header = styled(Text, {
+	display: "flex",
+	justifyContent: "space-between",
+});
+
+const Title = styled(Text, {
+	display: "flex",
+	alignItems: "center",
+});
+
+const TitleInner = styled(ShrinkText, {
+	ml: "$4",
+});
+
+const Buttons = styled("div", {
+	display: "flex",
+	alignItems: "center",
+	flexShrink: 0,
+});
+
+const Body = styled("div", {
+	display: "flex",
+	justifyContent: "space-between",
+});
+
+const AlignEndView = styled("div", {
+	alignSelf: "flex-end",
+});
+
+type InnerProps = {
+	query: TRPCQuerySuccessResult<"receipts.get">;
+	deleteLoadingState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
 };
 
-export const Receipt: React.FC<Props> = ({ data: receipt }) => {
-	const router = useRouter();
+export const ReceiptInner: React.FC<InnerProps> = ({
+	query,
+	deleteLoadingState: [deleteLoading, setDeleteLoading],
+}) => {
+	const receipt = query.data;
 
-	const deleteReceiptMutation = trpc.useMutation(
-		"receipts.delete",
-		useTrpcMutationOptions(cache.receipts.delete.mutationOptions)
-	);
-	const ownerQuery = trpc.useQuery(["users.get", { id: receipt.ownerUserId }]);
-	const deleteReceipt = useAsyncCallback(
-		async (isMount) => {
-			await deleteReceiptMutation.mutateAsync({ id: receipt.id });
-			if (!isMount()) {
-				return;
-			}
-			router.replace("/receipts");
-		},
-		[deleteReceiptMutation, receipt.id]
-	);
-	const [currenciesPickerShown, setCurrenciesPickerShown] =
-		React.useState(false);
-	const showCurrencyPicker = React.useCallback(
-		() => setCurrenciesPickerShown(true),
-		[setCurrenciesPickerShown]
-	);
-	const hideCurrencyPicker = React.useCallback(
-		() => setCurrenciesPickerShown(false),
-		[setCurrenciesPickerShown]
-	);
+	const [isEditing, setEditing] = React.useState(false);
 
-	const updateReceiptMutation = trpc.useMutation(
-		"receipts.update",
-		useTrpcMutationOptions(cache.receipts.update.mutationOptions)
-	);
-	const promptName = React.useCallback(() => {
-		const name = window.prompt("Please enter new name", receipt.name);
-		if (!name) {
-			return;
-		}
-		if (name === receipt.name) {
-			return;
-		}
-		updateReceiptMutation.mutate({
-			id: receipt.id,
-			update: { type: "name", name },
-		});
-	}, [updateReceiptMutation, receipt.id, receipt.name]);
-	const promptIssued = React.useCallback(() => {
-		const issued = window.prompt(
-			"Please enter new issued date",
-			receipt.issued.toISOString().slice(0, 10)
-		);
-		const maybeIssuedDate = new Date(issued || "");
-		if (Number.isNaN(maybeIssuedDate.valueOf())) {
-			return window.alert(`Improper date!`);
-		}
-		if (maybeIssuedDate.toDateString() === receipt.issued.toDateString()) {
-			return;
-		}
-		updateReceiptMutation.mutate({
-			id: receipt.id,
-			update: { type: "issued", issued: maybeIssuedDate },
-		});
-	}, [updateReceiptMutation, receipt.id, receipt.issued]);
-	const switchResolved = React.useCallback(() => {
-		updateReceiptMutation.mutate({
-			id: receipt.id,
-			update: { type: "resolved", resolved: !receipt.resolved },
-		});
-	}, [updateReceiptMutation, receipt.id, receipt.resolved]);
-	const changeCurrency = React.useCallback(
-		(currency: Currency) => {
-			updateReceiptMutation.mutate({
-				id: receipt.id,
-				update: { type: "currency", currency },
-			});
-		},
-		[updateReceiptMutation, receipt.id]
+	const switchEditing = React.useCallback(
+		() => setEditing((prev) => !prev),
+		[setEditing]
 	);
 
 	return (
-		<Block>
-			<TextLink href={`/receipts/${receipt.id}/`}>{receipt.name}</TextLink>
-			<ReactNative.TouchableOpacity
-				disabled={receipt.role !== "owner" || receipt.dirty}
-				onPress={promptName}
-			>
-				<Text>Change name</Text>
-			</ReactNative.TouchableOpacity>
-			<ReactNative.TouchableOpacity
-				disabled={receipt.role === "viewer"}
-				onPress={showCurrencyPicker}
-			>
-				<Text>Currency: {receipt.currency}</Text>
-			</ReactNative.TouchableOpacity>
-			{currenciesPickerShown ? (
-				<ReceiptCurrencyChange
-					close={hideCurrencyPicker}
-					changeCurrency={changeCurrency}
-					initialCurrency={receipt.currency}
-					disabled={receipt.dirty}
-				/>
-			) : null}
-			<Text>Sum: {receipt.sum}</Text>
-			<Text>Role: {receipt.role}</Text>
-			<ReactNative.TouchableOpacity
-				disabled={receipt.role !== "owner" || receipt.dirty}
-				onPress={promptIssued}
-			>
-				<Text>Issued: {receipt.issued.toLocaleDateString()}</Text>
-			</ReactNative.TouchableOpacity>
-			<ReactNative.TouchableOpacity
-				disabled={receipt.role === "viewer" || receipt.dirty}
-				onPress={switchResolved}
-			>
-				<Text>Resolved: {receipt.resolved.toString()}</Text>
-			</ReactNative.TouchableOpacity>
-			<QueryWrapper query={ownerQuery}>{ReceiptOwner}</QueryWrapper>
+		<>
+			<Header>
+				<Title h2>
+					🧾
+					{isEditing && query.data.role === "owner" ? (
+						<ReceiptNameInput receipt={query.data} isLoading={deleteLoading} />
+					) : (
+						<TitleInner min={16} step={2}>
+							{query.data.name}
+						</TitleInner>
+					)}
+					{query.data.role === "viewer" ? null : (
+						<IconButton
+							auto
+							light
+							onClick={switchEditing}
+							disabled={deleteLoading}
+							css={{ ml: "$4" }}
+						>
+							<EditIcon size={24} />
+						</IconButton>
+					)}
+				</Title>
+				<Buttons>
+					<ReceiptParticipantResolvedButton
+						bordered
+						receiptId={receipt.id}
+						userId={receipt.selfUserId}
+						resolved={receipt.participantResolved}
+						disabled={deleteLoading}
+					/>
+					<Spacer x={0.5} />
+					<ReceiptAccountedButton
+						bordered
+						receiptId={receipt.id}
+						resolved={receipt.resolved}
+						disabled={deleteLoading}
+					/>
+				</Buttons>
+			</Header>
+			<Spacer y={1} />
+			<Body>
+				<div>
+					<ReceiptDateInput receipt={receipt} isLoading={deleteLoading} />
+					<Text css={{ display: "inline-flex", fontSize: "$xl" }}>
+						{receipt.sum}
+						<ReceiptCurrencyInput receipt={receipt} isLoading={deleteLoading} />
+					</Text>
+				</div>
+				<ReceiptOwner receipt={receipt} />
+			</Body>
 			{receipt.role === "owner" ? (
-				<>
-					<RemoveButton onPress={deleteReceipt} disabled={receipt.dirty}>
-						Remove receipt
-					</RemoveButton>
-					<MutationWrapper<"receipts.delete"> mutation={deleteReceiptMutation}>
-						{() => <Text>Remove success!</Text>}
-					</MutationWrapper>
-				</>
+				<AlignEndView>
+					<Spacer y={1} />
+					<ReceiptRemoveButton
+						receipt={receipt}
+						setLoading={setDeleteLoading}
+					/>
+				</AlignEndView>
 			) : null}
-			<MutationWrapper<"receipts.update"> mutation={updateReceiptMutation}>
-				{() => <Text>Update success!</Text>}
-			</MutationWrapper>
-		</Block>
+		</>
 	);
+};
+
+type Props = Omit<InnerProps, "query"> & {
+	id: ReceiptsId;
+};
+
+export const Receipt: React.FC<Props> = ({ id, ...props }) => {
+	const receiptInput = { id };
+	const query = trpc.useQuery(["receipts.get", receiptInput]);
+	const receiptNameQuery = trpc.useQuery(["receipts.get-name", { id }]);
+	if (query.status === "loading") {
+		return (
+			<>
+				<Header h2>{receiptNameQuery.data || id}</Header>
+				<Loading />
+			</>
+		);
+	}
+	if (query.status === "error") {
+		return <QueryErrorMessage query={query} />;
+	}
+	if (query.status === "idle") {
+		return null;
+	}
+	return <ReceiptInner {...props} query={query} />;
 };

@@ -14,6 +14,7 @@
 		"expo-linking": "^3.0.0",
 		"identicon.js": "^2.3.3",
 		"next-app": "*",
+		"react-calendar": "^3.7.0",
 		"react-hook-form": "^7.31.3",
 		"solito": "latest",
 		"superjson": "^1.9.1",
@@ -22,6 +23,7 @@
 	},
 	"devDependencies": {
 		"@types/identicon.js": "^2.3.1",
+		"@types/react-calendar": "^3.5.1",
 		"@types/uuid": "^8.3.4"
 	},
 	"sideEffects": false

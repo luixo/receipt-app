@@ -5,17 +5,21 @@ import { MdDoneAll as DoneIcon } from "react-icons/md";
 import { cache } from "app/cache";
 import { IconButton } from "app/components/icon-button";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { trpc, TRPCQueryOutput } from "app/trpc";
+import { trpc } from "app/trpc";
+import { ReceiptsId, UsersId } from "next-app/db/models";
 
 type Props = {
-	receipt: TRPCQueryOutput<"receipts.get-paged">["items"][number];
-};
+	receiptId: ReceiptsId;
+	userId: UsersId;
+	resolved: boolean | null;
+} & Omit<React.ComponentProps<typeof IconButton>, "onClick" | "color">;
 
 export const ReceiptParticipantResolvedButton: React.FC<Props> = ({
-	receipt,
+	receiptId,
+	userId,
+	resolved,
+	...props
 }) => {
-	const accountQuery = trpc.useQuery(["account.get"]);
-
 	const updateReceiptMutation = trpc.useMutation(
 		"receipt-participants.update",
 		useTrpcMutationOptions(cache.receiptParticipants.update.mutationOptions, {
@@ -24,25 +28,17 @@ export const ReceiptParticipantResolvedButton: React.FC<Props> = ({
 	);
 	const switchResolved = React.useCallback(() => {
 		updateReceiptMutation.mutate({
-			receiptId: receipt.id,
-			userId: receipt.userId,
-			update: { type: "resolved", resolved: !receipt.participantResolved },
+			receiptId,
+			userId,
+			update: { type: "resolved", resolved: !resolved },
 		});
-	}, [
-		updateReceiptMutation,
-		receipt.id,
-		receipt.userId,
-		receipt.participantResolved,
-	]);
+	}, [updateReceiptMutation, receiptId, userId, resolved]);
 	return (
 		<IconButton
-			light
-			isLoading={updateReceiptMutation.isLoading}
-			disabled={
-				receipt.participantResolved === null ||
-				accountQuery.status !== "success"
-			}
-			color={receipt.participantResolved ? "success" : "warning"}
+			{...props}
+			isLoading={updateReceiptMutation.isLoading || props.isLoading}
+			disabled={resolved === null || props.disabled}
+			color={resolved ? "success" : "warning"}
 			onClick={switchResolved}
 		>
 			<DoneIcon size={24} />
