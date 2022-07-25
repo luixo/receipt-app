@@ -8,13 +8,11 @@ import { IconButton } from "app/components/icon-button";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 
-type InnerProps = {
+type Props = {
 	intention: TRPCQueryOutput<"account-connection-intentions.get-all">["outbound"][number];
 };
 
-export const OutboundConnectionIntention: React.FC<InnerProps> = ({
-	intention,
-}) => {
+export const OutboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 	const deleteConnectionMutation = trpc.useMutation(
 		"account-connection-intentions.delete",
 		useTrpcMutationOptions(cache.accountConnections.delete.mutationOptions)
