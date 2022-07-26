@@ -18,6 +18,9 @@ const updateReceiptParticipants = (
 		return { ...prevData, participants: nextParticipants };
 	});
 
+export const get = (trpc: TRPCReactContext, receiptId: ReceiptsId) =>
+	createController(trpc, receiptId).get();
+
 export const add = (
 	trpc: TRPCReactContext,
 	receiptId: ReceiptsId,

@@ -5,34 +5,29 @@ import { ReceiptsId } from "next-app/db/models";
 export const mutationOptions: UseContextedMutationOptions<
 	"receipt-participants.put",
 	ReturnType<typeof cache["users"]["getAvailable"]["remove"]>,
-	{
-		receiptId: ReceiptsId;
-		user: Parameters<typeof cache["users"]["getAvailable"]["add"]>[2];
-	}
+	ReceiptsId
 > = {
-	onMutate:
-		(trpcContext, { receiptId }) =>
-		(variables) =>
-			cache.users.getAvailable.remove(trpcContext, receiptId, variables.userId),
+	onMutate: (trpcContext, receiptId) => (variables) =>
+		cache.users.getAvailable.remove(trpcContext, receiptId, variables.userId),
 	onSuccess:
-		(trpcContext, { receiptId, user }) =>
-		({ added }, variables) => {
-			cache.receiptItems.get.receiptParticipant.add(trpcContext, receiptId, {
-				name: user.name,
-				connectedAccountId: user.connectedAccountId,
-				userId: variables.userId,
-				localUserId: variables.userId,
-				role: variables.role,
-				resolved: false,
-				added,
-			});
-		},
-	onError:
-		(trpcContext, { receiptId }) =>
-		(_error, _variables, snapshot) => {
-			if (!snapshot) {
-				return;
+		(trpcContext, receiptId) =>
+		({ added }, variables, snapshot) => {
+			if (snapshot) {
+				cache.receiptItems.get.receiptParticipant.add(trpcContext, receiptId, {
+					name: snapshot.name,
+					connectedAccountId: snapshot.connectedAccountId,
+					userId: variables.userId,
+					localUserId: variables.userId,
+					role: variables.role,
+					resolved: false,
+					added,
+				});
 			}
-			cache.users.getAvailable.add(trpcContext, receiptId, snapshot);
 		},
+	onError: (trpcContext, receiptId) => (_error, _variables, snapshot) => {
+		if (!snapshot) {
+			return;
+		}
+		cache.users.getAvailable.add(trpcContext, receiptId, snapshot);
+	},
 };

@@ -59,6 +59,7 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 			<Text>{intention.email}</Text>
 			<Spacer y={0.5} />
 			<UsersPicker
+				type="line"
 				query={usersQuery}
 				extractUsers={extractUsers}
 				extractDetails={({ id, name }) => ({ id, name })}

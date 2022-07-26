@@ -8,7 +8,7 @@ import { getReceiptById } from "next-app/handlers/receipts/utils";
 import { getUserById } from "next-app/handlers/users/utils";
 import {
 	receiptIdSchema,
-	roleSchema,
+	assignableRoleSchema,
 	userIdSchema,
 } from "next-app/handlers/validation";
 
@@ -16,7 +16,7 @@ export const router = trpc.router<AuthorizedContext>().mutation("put", {
 	input: z.strictObject({
 		receiptId: receiptIdSchema,
 		userId: userIdSchema,
-		role: roleSchema,
+		role: assignableRoleSchema,
 	}),
 	resolve: async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
@@ -33,18 +33,6 @@ export const router = trpc.router<AuthorizedContext>().mutation("put", {
 			throw new trpc.TRPCError({
 				code: "FORBIDDEN",
 				message: `Not enough rights to add participants to receipt ${input.receiptId}.`,
-			});
-		}
-		if (input.userId === ctx.auth.accountId && input.role !== "owner") {
-			throw new trpc.TRPCError({
-				code: "BAD_REQUEST",
-				message: `Cannot add yourself as not an owner.`,
-			});
-		}
-		if (input.userId !== ctx.auth.accountId && input.role === "owner") {
-			throw new trpc.TRPCError({
-				code: "BAD_REQUEST",
-				message: `Cannot add ${input.userId} as an owner.`,
 			});
 		}
 		const user = await getUserById(database, input.userId, ["ownerAccountId"]);
@@ -77,7 +65,7 @@ export const router = trpc.router<AuthorizedContext>().mutation("put", {
 			.values({
 				receiptId: input.receiptId,
 				userId: input.userId,
-				role: input.role,
+				role: ctx.auth.accountId === input.userId ? "owner" : input.role,
 			})
 			.returning("added")
 			.executeTakeFirstOrThrow();

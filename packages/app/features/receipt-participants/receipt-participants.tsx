@@ -82,7 +82,7 @@ export const ReceiptParticipants: React.FC<Props> = ({
 				<>
 					<Spacer y={1} />
 					<AddReceiptParticipantForm
-						isLoading={isLoading}
+						disabled={isLoading}
 						receiptId={receiptId}
 					/>
 				</>

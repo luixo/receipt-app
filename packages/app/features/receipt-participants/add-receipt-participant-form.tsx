@@ -1,56 +1,24 @@
 import React from "react";
 
-import { Button, Modal, Text } from "@nextui-org/react";
-import { useForm } from "react-hook-form";
+import { Button, Loading, Modal, Spacer, Text } from "@nextui-org/react";
 import { MdAdd as AddIcon } from "react-icons/md";
 
 import { cache } from "app/cache";
-import { AddButton } from "app/components/add-button";
-import { InfiniteQueryWrapper } from "app/components/infinite-query-wrapper";
-import { MutationWrapper } from "app/components/mutation-wrapper";
-import { useSubmitHandler } from "app/hooks/use-submit-handler";
+import { MutationErrorMessage } from "app/components/mutation-error-message";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { trpc, TRPCInfiniteQueryResult } from "app/trpc";
-import { ReceiptsId, UsersId } from "next-app/db/models";
+import { trpc, TRPCInfiniteQueryOutput } from "app/trpc";
+import { ReceiptsId } from "next-app/db/models";
 
-import { AvailableReceiptParticipantUsers } from "./available-receipt-participants-users";
-
-type SelectedUser = Parameters<
-	NonNullable<
-		typeof cache["receiptParticipants"]["put"]["mutationOptions"]["onSuccess"]
-	>
->[1]["user"];
-
-type AvailableUsersResult = TRPCInfiniteQueryResult<"users.get-available">;
-
-const getSelectedUser = (
-	query: AvailableUsersResult,
-	selectedId: UsersId
-): SelectedUser | undefined => {
-	if (query.status !== "success") {
-		return;
-	}
-	const allUsers = query.data.pages.reduce<
-		typeof query.data["pages"][number]["items"]
-	>((acc, page) => [...acc, ...page.items], []);
-	return allUsers.find((user) => user.id === selectedId);
-};
-
-type Form = {
-	user: {
-		id: UsersId;
-		name: string;
-	};
-};
+import { ParticipantPicker } from "./participant-picker";
 
 type Props = {
 	receiptId: ReceiptsId;
-	isLoading: boolean;
+	disabled: boolean;
 };
 
 export const AddReceiptParticipantForm: React.FC<Props> = ({
 	receiptId,
-	isLoading,
+	disabled,
 }) => {
 	const [modalOpen, setModalOpen] = React.useState(false);
 	const openModal = React.useCallback(() => setModalOpen(true), [setModalOpen]);
@@ -59,55 +27,34 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 		[setModalOpen]
 	);
 
-	const accountQuery = trpc.useQuery(["account.get"]);
-
-	const availableUsersQuery = trpc.useInfiniteQuery(
-		["users.get-available", cache.users.getAvailable.useStore(receiptId)],
-		{ getNextPageParam: cache.users.getAvailable.getNextPage }
-	);
-
-	const {
-		handleSubmit,
-		formState: { isValid, isSubmitting },
-		reset,
-		watch,
-		setValue,
-	} = useForm<Form>({ mode: "onChange" });
-	const selectedUserName = watch("user.name");
-	const selectedUser = getSelectedUser(availableUsersQuery, watch("user.id"));
-	const setUserValue = React.useCallback(
-		(id: UsersId, name: string) => {
-			setValue("user.id", id);
-			setValue("user.name", name);
-		},
-		[setValue]
-	);
-
-	const addReceiptParticipantMutation = trpc.useMutation(
+	const addMutation = trpc.useMutation(
 		"receipt-participants.put",
-		useTrpcMutationOptions(cache.receiptParticipants.put.mutationOptions, {
-			receiptId,
-			user: selectedUser!,
-		})
+		useTrpcMutationOptions(
+			cache.receiptParticipants.put.mutationOptions,
+			receiptId
+		)
 	);
 
-	const onSubmit = useSubmitHandler<Form>(
-		(values) =>
-			addReceiptParticipantMutation.mutateAsync({
+	const addParticipant = React.useCallback(
+		(user: TRPCInfiniteQueryOutput<"users.get-available">["items"][number]) => {
+			closeModal();
+			addMutation.mutate({
 				receiptId,
-				userId: values.user.id,
-				role: values.user.id === accountQuery.data!.id ? "owner" : "editor",
-			}),
-		[addReceiptParticipantMutation, receiptId, reset],
-		reset
+				userId: user.id,
+				role: "editor",
+			});
+		},
+		[addMutation, receiptId, closeModal]
 	);
 
 	return (
 		<>
 			<Button
 				bordered
-				icon={<AddIcon size={24} />}
-				disabled={isLoading}
+				icon={
+					addMutation.isLoading ? <Loading size="xs" /> : <AddIcon size={24} />
+				}
+				disabled={disabled || addMutation.isLoading}
 				onClick={openModal}
 				css={{ margin: "0 auto" }}
 			/>
@@ -119,37 +66,18 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 				width="90%"
 			>
 				<Modal.Header>
-					<Text h3>
-						{selectedUserName
-							? `Add receipt participant ${selectedUserName}`
-							: "Select someone please"}
-					</Text>
+					<Text h3>Click user to add to the receipt</Text>
 				</Modal.Header>
 				<Modal.Body>
-					<InfiniteQueryWrapper
-						query={availableUsersQuery}
-						setValue={setUserValue}
-						disabled={isSubmitting}
-					>
-						{AvailableReceiptParticipantUsers}
-					</InfiniteQueryWrapper>
-					<AddButton
-						onPress={handleSubmit(onSubmit)}
-						disabled={
-							!isValid ||
-							isSubmitting ||
-							accountQuery.status !== "success" ||
-							!selectedUser ||
-							isLoading
-						}
-					>
-						Add
-					</AddButton>
-					<MutationWrapper<"receipt-participants.put">
-						mutation={addReceiptParticipantMutation}
-					>
-						{() => <Text>Add success!</Text>}
-					</MutationWrapper>
+					<ParticipantPicker
+						receiptId={receiptId}
+						disabled={disabled}
+						onUserClick={addParticipant}
+					/>
+					{addMutation.status === "error" ? (
+						<MutationErrorMessage mutation={addMutation} />
+					) : null}
+					<Spacer y={1} />
 				</Modal.Body>
 			</Modal>
 		</>
