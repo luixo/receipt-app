@@ -71,11 +71,7 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 			return { ...receipt, sum: Number(receipt.sum), role: accessRole } as Omit<
 				typeof receipt,
 				"sum"
-			> & {
-				role: Role;
-				dirty?: boolean;
-				sum: number;
-			};
+			> & { role: Role; sum: number };
 		}
 		throw new trpc.TRPCError({
 			code: "FORBIDDEN",

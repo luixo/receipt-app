@@ -38,7 +38,6 @@ export const mutationOptions: UseContextedMutationOptions<
 			cache.receipts.getPaged.update(trpcContext, temporaryId, (receipt) => ({
 				...receipt,
 				id: actualId,
-				dirty: false,
 			}));
 			cache.receipts.get.add(trpcContext, {
 				id: actualId,
@@ -48,7 +47,6 @@ export const mutationOptions: UseContextedMutationOptions<
 				currency: variables.currency,
 				resolved: false,
 				sum: 0,
-				dirty: false,
 				participantResolved: false,
 				// Typesystem doesn't know that we use account id as self user id
 				ownerUserId: selfAccountId as UsersId,
