@@ -83,7 +83,7 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 							{query.data.name}
 						</TitleInner>
 					)}
-					{query.data.role === "viewer" ? null : (
+					{query.data.role === "owner" ? (
 						<IconButton
 							auto
 							light
@@ -93,7 +93,7 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 						>
 							<EditIcon size={24} />
 						</IconButton>
-					)}
+					) : null}
 				</Title>
 				<Buttons>
 					<ReceiptParticipantResolvedButton
