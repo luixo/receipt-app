@@ -13,5 +13,5 @@ type Props = {
 };
 
 export const Page: React.FC<Props> = ({ children }) => (
-	<Wrapper>{children}</Wrapper>
+	<Wrapper css={{ maxWidth: 768, margin: "0 auto" }}>{children}</Wrapper>
 );
