@@ -39,18 +39,9 @@ export const mutationOptions: UseContextedMutationOptions<
 			receiptId,
 			variables.itemId,
 			variables.userId,
-			(part) => applyUpdate({ ...part, dirty: true }, variables.update)
+			(part) => applyUpdate(part, variables.update)
 		);
 		return snapshot && getRevert(snapshot, variables.update);
-	},
-	onSuccess: (trpcContext, receiptId) => (_error, variables) => {
-		cache.receiptItems.get.receiptItemPart.update(
-			trpcContext,
-			receiptId,
-			variables.itemId,
-			variables.userId,
-			(part) => ({ ...part, dirty: false })
-		);
 	},
 	onError: (trpcContext, receiptId) => (_error, variables, revert) => {
 		if (!revert) {

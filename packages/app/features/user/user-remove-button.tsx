@@ -35,7 +35,11 @@ export const UserRemoveButton: React.FC<Props> = ({ user, setLoading }) => {
 	);
 
 	return (
-		<RemoveButton mutation={deleteUserMutation} onRemove={deleteUser}>
+		<RemoveButton
+			mutation={deleteUserMutation}
+			onRemove={deleteUser}
+			subtitle="This will remove user and all his participations"
+		>
 			Remove receipt
 		</RemoveButton>
 	);

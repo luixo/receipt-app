@@ -18,7 +18,6 @@ export const mutationOptions: UseContextedMutationOptions<
 			quantity: variables.quantity,
 			locked: false,
 			parts: [],
-			dirty: true,
 		});
 		return temporaryId;
 	},
@@ -38,7 +37,7 @@ export const mutationOptions: UseContextedMutationOptions<
 				trpcContext,
 				receiptId,
 				temporaryId,
-				(item) => ({ ...item, id: actualId, dirty: false })
+				(item) => ({ ...item, id: actualId })
 			);
 			cache.receipts.utils.updateReceiptSum(trpcContext, receiptId);
 		},

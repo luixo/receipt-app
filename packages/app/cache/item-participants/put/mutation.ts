@@ -12,16 +12,7 @@ export const mutationOptions: UseContextedMutationOptions<
 			trpcContext,
 			receiptId,
 			variables.itemId,
-			{ userId: variables.userId, dirty: true, part: 1 }
-		);
-	},
-	onSuccess: (trpcContext, receiptId) => (_value, variables) => {
-		cache.receiptItems.get.receiptItemPart.update(
-			trpcContext,
-			receiptId,
-			variables.itemId,
-			variables.userId,
-			(part) => ({ ...part, dirty: false })
+			{ userId: variables.userId, part: 1 }
 		);
 	},
 	onError: (trpcContext, receiptId) => (_error, variables) => {

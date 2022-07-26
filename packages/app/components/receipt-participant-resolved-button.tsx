@@ -12,12 +12,15 @@ type Props = {
 	receiptId: ReceiptsId;
 	userId: UsersId;
 	resolved: boolean | null;
+	readOnly?: boolean;
 } & Omit<React.ComponentProps<typeof IconButton>, "onClick" | "color">;
 
 export const ReceiptParticipantResolvedButton: React.FC<Props> = ({
 	receiptId,
 	userId,
 	resolved,
+	readOnly,
+	css,
 	...props
 }) => {
 	const updateReceiptMutation = trpc.useMutation(
@@ -39,7 +42,9 @@ export const ReceiptParticipantResolvedButton: React.FC<Props> = ({
 			isLoading={updateReceiptMutation.isLoading || props.isLoading}
 			disabled={resolved === null || props.disabled}
 			color={resolved ? "success" : "warning"}
-			onClick={switchResolved}
+			onClick={readOnly ? undefined : switchResolved}
+			animated={readOnly ? false : props.animated}
+			css={{ ...css, cursor: readOnly ? "default" : css?.cursor }}
 		>
 			<DoneIcon size={24} />
 		</IconButton>

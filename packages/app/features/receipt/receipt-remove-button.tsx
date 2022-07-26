@@ -38,7 +38,11 @@ export const ReceiptRemoveButton: React.FC<Props> = ({
 	);
 
 	return (
-		<RemoveButton mutation={deleteReceiptMutation} onRemove={deleteReceipt}>
+		<RemoveButton
+			mutation={deleteReceiptMutation}
+			onRemove={deleteReceipt}
+			subtitle="This will remove receipt forever"
+		>
 			Remove receipt
 		</RemoveButton>
 	);

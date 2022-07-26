@@ -18,7 +18,7 @@ import { ReceiptNameInput } from "./receipt-name-input";
 import { ReceiptOwner } from "./receipt-owner";
 import { ReceiptRemoveButton } from "./receipt-remove-button";
 
-const Header = styled(Text, {
+const Header = styled("div", {
 	display: "flex",
 	justifyContent: "space-between",
 });
@@ -146,7 +146,9 @@ export const Receipt: React.FC<Props> = ({ id, ...props }) => {
 	if (query.status === "loading") {
 		return (
 			<>
-				<Header h2>{receiptNameQuery.data || id}</Header>
+				<Header>
+					<Title h2>{receiptNameQuery.data || id}</Title>
+				</Header>
 				<Loading />
 			</>
 		);

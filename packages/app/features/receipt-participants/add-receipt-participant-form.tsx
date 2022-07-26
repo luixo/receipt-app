@@ -1,16 +1,16 @@
 import React from "react";
 
+import { Button, Modal, Text } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
+import { MdAdd as AddIcon } from "react-icons/md";
 
 import { cache } from "app/cache";
 import { AddButton } from "app/components/add-button";
-import { Block } from "app/components/block";
 import { InfiniteQueryWrapper } from "app/components/infinite-query-wrapper";
 import { MutationWrapper } from "app/components/mutation-wrapper";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCInfiniteQueryResult } from "app/trpc";
-import { Text } from "app/utils/styles";
 import { ReceiptsId, UsersId } from "next-app/db/models";
 
 import { AvailableReceiptParticipantUsers } from "./available-receipt-participants-users";
@@ -45,9 +45,20 @@ type Form = {
 
 type Props = {
 	receiptId: ReceiptsId;
+	isLoading: boolean;
 };
 
-export const AddReceiptParticipantForm: React.FC<Props> = ({ receiptId }) => {
+export const AddReceiptParticipantForm: React.FC<Props> = ({
+	receiptId,
+	isLoading,
+}) => {
+	const [modalOpen, setModalOpen] = React.useState(false);
+	const openModal = React.useCallback(() => setModalOpen(true), [setModalOpen]);
+	const closeModal = React.useCallback(
+		() => setModalOpen(false),
+		[setModalOpen]
+	);
+
 	const accountQuery = trpc.useQuery(["account.get"]);
 
 	const availableUsersQuery = trpc.useInfiniteQuery(
@@ -92,36 +103,55 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({ receiptId }) => {
 	);
 
 	return (
-		<Block
-			name={
-				selectedUserName
-					? `Add receipt participant ${selectedUserName}`
-					: "Select someone please"
-			}
-		>
-			<InfiniteQueryWrapper
-				query={availableUsersQuery}
-				setValue={setUserValue}
-				disabled={isSubmitting}
+		<>
+			<Button
+				bordered
+				icon={<AddIcon size={24} />}
+				disabled={isLoading}
+				onClick={openModal}
+				css={{ margin: "0 auto" }}
+			/>
+			<Modal
+				closeButton
+				aria-label="Receipt participant picker"
+				open={modalOpen}
+				onClose={closeModal}
+				width="90%"
 			>
-				{AvailableReceiptParticipantUsers}
-			</InfiniteQueryWrapper>
-			<AddButton
-				onPress={handleSubmit(onSubmit)}
-				disabled={
-					!isValid ||
-					isSubmitting ||
-					accountQuery.status !== "success" ||
-					!selectedUser
-				}
-			>
-				Add
-			</AddButton>
-			<MutationWrapper<"receipt-participants.put">
-				mutation={addReceiptParticipantMutation}
-			>
-				{() => <Text>Add success!</Text>}
-			</MutationWrapper>
-		</Block>
+				<Modal.Header>
+					<Text h3>
+						{selectedUserName
+							? `Add receipt participant ${selectedUserName}`
+							: "Select someone please"}
+					</Text>
+				</Modal.Header>
+				<Modal.Body>
+					<InfiniteQueryWrapper
+						query={availableUsersQuery}
+						setValue={setUserValue}
+						disabled={isSubmitting}
+					>
+						{AvailableReceiptParticipantUsers}
+					</InfiniteQueryWrapper>
+					<AddButton
+						onPress={handleSubmit(onSubmit)}
+						disabled={
+							!isValid ||
+							isSubmitting ||
+							accountQuery.status !== "success" ||
+							!selectedUser ||
+							isLoading
+						}
+					>
+						Add
+					</AddButton>
+					<MutationWrapper<"receipt-participants.put">
+						mutation={addReceiptParticipantMutation}
+					>
+						{() => <Text>Add success!</Text>}
+					</MutationWrapper>
+				</Modal.Body>
+			</Modal>
+		</>
 	);
 };

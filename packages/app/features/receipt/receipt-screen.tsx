@@ -28,7 +28,11 @@ export const ReceiptScreen: React.FC = () => {
 				id={id}
 			/>
 			<Spacer y={1} />
-			<ReceiptItems receiptId={id} currency={currency} />
+			<ReceiptItems
+				receiptId={id}
+				currency={currency}
+				isLoading={deleteLoadingState[0]}
+			/>
 		</Page>
 	);
 };

@@ -19,7 +19,6 @@ export const mutationOptions: UseContextedMutationOptions<
 		({ added }, variables) => {
 			cache.receiptItems.get.receiptParticipant.add(trpcContext, receiptId, {
 				name: user.name,
-				publicName: user.publicName,
 				connectedAccountId: user.connectedAccountId,
 				userId: variables.userId,
 				localUserId: variables.userId,

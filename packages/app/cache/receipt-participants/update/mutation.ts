@@ -69,23 +69,13 @@ export const mutationOptions: UseContextedMutationOptions<
 			trpcContext,
 			variables.receiptId,
 			variables.userId,
-			(participant) =>
-				applyUpdate({ ...participant, dirty: true }, variables.update)
+			(participant) => applyUpdate(participant, variables.update)
 		);
 		return snapshot && getRevert(snapshot, variables.update);
 	},
 	onSuccess:
 		(trpcContext, { isSelfAccount }) =>
 		(_result, variables) => {
-			cache.receiptItems.get.receiptParticipant.update(
-				trpcContext,
-				variables.receiptId,
-				variables.userId,
-				(participant) => ({
-					...participant,
-					dirty: false,
-				})
-			);
 			if (isSelfAccount) {
 				cache.receipts.getPaged.update(
 					trpcContext,

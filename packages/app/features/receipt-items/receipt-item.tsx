@@ -24,6 +24,7 @@ type Props = {
 	receiptItem: ReceiptItems[number];
 	receiptParticipants: ReceiptParticipant[];
 	role: Role;
+	isLoading: boolean;
 };
 
 export const ReceiptItem: React.FC<Props> = ({
@@ -31,6 +32,7 @@ export const ReceiptItem: React.FC<Props> = ({
 	receiptParticipants,
 	receiptId,
 	role,
+	isLoading,
 }) => {
 	const removeReceiptItemMutation = trpc.useMutation(
 		"receipt-items.delete",
@@ -119,26 +121,26 @@ export const ReceiptItem: React.FC<Props> = ({
 	return (
 		<Block
 			name={receiptItem.name}
-			disabled={role === "viewer" || receiptItem.dirty}
+			disabled={role === "viewer" || isLoading}
 			onNamePress={promptName}
 		>
 			<Text>
 				<ReactNative.TouchableOpacity
-					disabled={role === "viewer" || receiptItem.dirty}
+					disabled={role === "viewer" || isLoading}
 					onPress={promptPrice}
 				>
 					<Text>{receiptItem.price}</Text>
 				</ReactNative.TouchableOpacity>
 				{" x "}
 				<ReactNative.TouchableOpacity
-					disabled={role === "viewer" || receiptItem.dirty}
+					disabled={role === "viewer" || isLoading}
 					onPress={promptQuantity}
 				>
 					<Text>{receiptItem.quantity}</Text>
 				</ReactNative.TouchableOpacity>
 			</Text>
 			<ReactNative.TouchableOpacity
-				disabled={role === "viewer" || receiptItem.dirty}
+				disabled={role === "viewer" || isLoading}
 				onPress={switchLocked}
 			>
 				<Text>{receiptItem.locked ? "locked" : "not locked"}</Text>
@@ -159,6 +161,7 @@ export const ReceiptItem: React.FC<Props> = ({
 					receiptParticipants={receiptParticipants}
 					itemId={receiptItem.id}
 					role={role}
+					isLoading={isLoading}
 				/>
 			))}
 			{notAddedParticipants.map((participant) => (

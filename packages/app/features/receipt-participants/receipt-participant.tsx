@@ -1,146 +1,127 @@
 import React from "react";
-import * as ReactNative from "react-native";
+
+import { Spacer, styled, Text } from "@nextui-org/react";
 
 import { cache } from "app/cache";
-import { Block } from "app/components/block";
+import { ReceiptParticipantResolvedButton } from "app/components/receipt-participant-resolved-button";
 import { RemoveButton } from "app/components/remove-button";
+import { User } from "app/components/user";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { Currency } from "app/utils/currency";
-import { Text } from "app/utils/styles";
 import { ReceiptsId } from "next-app/db/models";
 import { Role } from "next-app/handlers/receipts/utils";
 
-import {
-	AssignableRole,
-	ReceiptParticipantRoleChange,
-} from "./receipt-participant-role-change";
+import { ReceiptParticipantRoleInput } from "./receipt-participant-role-input";
+
+const Wrapper = styled("div", {
+	display: "flex",
+	alignItems: "center",
+	justifyContent: "space-between",
+});
+
+const Body = styled("div", {
+	display: "flex",
+	alignItems: "center",
+	justifyContent: "space-between",
+
+	"@xsMax": {
+		flexDirection: "column",
+		alignItems: "flex-end",
+	},
+});
+
+const BodyElement = styled("div", {
+	display: "flex",
+	alignItems: "center",
+});
 
 type Props = {
 	receiptId: ReceiptsId;
-	receiptParticipant: TRPCQueryOutput<"receipt-items.get">["participants"][number] & {
+	participant: TRPCQueryOutput<"receipt-items.get">["participants"][number] & {
 		sum: number;
 	};
 	role: Role;
 	currency?: Currency;
+	isLoading: boolean;
 };
 
 export const ReceiptParticipant: React.FC<Props> = ({
-	receiptParticipant,
+	participant,
 	receiptId,
 	role,
 	currency,
+	isLoading,
 }) => {
-	const accountQuery = trpc.useQuery(["account.get"]);
-
-	const user = React.useMemo(
-		() => ({
-			id: receiptParticipant.userId,
-			name: receiptParticipant.name,
-			publicName: receiptParticipant.publicName,
-			connectedAccountId: receiptParticipant.connectedAccountId,
-		}),
-		[
-			receiptParticipant.userId,
-			receiptParticipant.name,
-			receiptParticipant.publicName,
-			receiptParticipant.connectedAccountId,
-		]
-	);
 	const deleteReceiptParticipantMutation = trpc.useMutation(
 		"receipt-participants.delete",
 		useTrpcMutationOptions(cache.receiptParticipants.delete.mutationOptions, {
 			receiptId,
-			user,
+			user: {
+				id: participant.userId,
+				name: participant.name,
+				// TODO: probably the only problem with this null
+				// is that users that you can from available list
+				// will not have their public names displayed
+				// maybe we don't care about that enough to add logic on backend
+				publicName: null,
+				connectedAccountId: participant.connectedAccountId,
+			},
 		})
 	);
 	const deleteReceiptParticipant = useAsyncCallback(
 		() =>
 			deleteReceiptParticipantMutation.mutateAsync({
 				receiptId,
-				userId: receiptParticipant.userId,
+				userId: participant.userId,
 			}),
-		[deleteReceiptParticipantMutation, receiptId, receiptParticipant.userId]
+		[deleteReceiptParticipantMutation, receiptId, participant.userId]
 	);
-
-	const [rolePickerShown, setRolePickerShown] = React.useState(false);
-	const showRolePicker = React.useCallback(
-		() => setRolePickerShown(true),
-		[setRolePickerShown]
-	);
-	const hideRolePicker = React.useCallback(
-		() => setRolePickerShown(false),
-		[setRolePickerShown]
-	);
-
-	const updateReceiptMutation = trpc.useMutation(
-		"receipt-participants.update",
-		useTrpcMutationOptions(cache.receiptParticipants.update.mutationOptions, {
-			isSelfAccount: receiptParticipant.localUserId === accountQuery.data?.id,
-		})
-	);
-	const changeRole = React.useCallback(
-		(assignableRole: AssignableRole) => {
-			updateReceiptMutation.mutate({
-				receiptId,
-				userId: receiptParticipant.userId,
-				update: { type: "role", role: assignableRole },
-			});
-		},
-		[updateReceiptMutation, receiptId, receiptParticipant.userId]
-	);
-	const switchResolved = React.useCallback(() => {
-		updateReceiptMutation.mutate({
-			receiptId,
-			userId: receiptParticipant.userId,
-			update: { type: "resolved", resolved: !receiptParticipant.resolved },
-		});
-	}, [
-		updateReceiptMutation,
-		receiptId,
-		receiptParticipant.userId,
-		receiptParticipant.resolved,
-	]);
 
 	return (
-		<Block name={`User ${receiptParticipant.name}`}>
-			<ReactNative.TouchableOpacity
-				disabled={role !== "owner" || receiptParticipant.role === "owner"}
-				onPress={showRolePicker}
-			>
-				<Text>Role: {receiptParticipant.role}</Text>
-			</ReactNative.TouchableOpacity>
-			{rolePickerShown && receiptParticipant.role !== "owner" ? (
-				<ReceiptParticipantRoleChange
-					close={hideRolePicker}
-					changeRole={changeRole}
-					initialRole={receiptParticipant.role}
-					disabled={receiptParticipant.dirty}
-				/>
-			) : null}
-			<ReactNative.TouchableOpacity
-				disabled={
-					accountQuery.status !== "success" ||
-					receiptParticipant.localUserId !== accountQuery.data.id ||
-					receiptParticipant.dirty
-				}
-				onPress={switchResolved}
-			>
-				<Text>{receiptParticipant.resolved ? "resolved" : "not resolved"}</Text>
-			</ReactNative.TouchableOpacity>
-			<Text>
-				Sum: {Math.round(receiptParticipant.sum * 100) / 100}
-				{currency ? ` ${currency}` : ""}
-			</Text>
-			{role === "owner" ? (
-				<RemoveButton
-					onRemove={deleteReceiptParticipant}
-					mutation={deleteReceiptParticipantMutation}
-				>
-					Delete receipt participant
-				</RemoveButton>
-			) : null}
-		</Block>
+		<Wrapper>
+			<User
+				user={{
+					id: participant.localUserId || participant.userId,
+					name: participant.name,
+				}}
+			/>
+			<Body>
+				<BodyElement>
+					<Text>
+						{`${Math.round(participant.sum * 100) / 100} ${
+							currency || "unknown"
+						}`}
+					</Text>
+					<Spacer x={1} />
+					<ReceiptParticipantRoleInput
+						receiptId={receiptId}
+						participant={participant}
+						isLoading={isLoading}
+						role={role}
+					/>
+				</BodyElement>
+				<Spacer x={1} />
+				<BodyElement>
+					<ReceiptParticipantResolvedButton
+						readOnly
+						receiptId={receiptId}
+						userId={participant.userId}
+						resolved={participant.resolved}
+					/>
+					{role === "owner" ? (
+						<>
+							<Spacer x={1} />
+							<RemoveButton
+								onRemove={deleteReceiptParticipant}
+								mutation={deleteReceiptParticipantMutation}
+								subtitle="This will remove participant with all his parts"
+							/>
+						</>
+					) : null}
+				</BodyElement>
+			</Body>
+		</Wrapper>
 	);
 };

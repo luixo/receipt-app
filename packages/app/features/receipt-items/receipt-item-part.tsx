@@ -23,6 +23,7 @@ type Props = {
 	receiptParticipants: ReceiptParticipant[];
 	receiptItemPart: ReceiptItemParts[number];
 	role: Role;
+	isLoading: boolean;
 };
 
 export const ReceiptItemPart: React.FC<Props> = ({
@@ -31,6 +32,7 @@ export const ReceiptItemPart: React.FC<Props> = ({
 	receiptParticipants,
 	receiptId,
 	role,
+	isLoading,
 }) => {
 	const updateItemPartMutation = trpc.useMutation(
 		"item-participants.update",
@@ -121,24 +123,20 @@ export const ReceiptItemPart: React.FC<Props> = ({
 	return (
 		<Block name={matchedParticipant.name}>
 			<ReactNative.TouchableOpacity
-				disabled={
-					receiptItemPart.part <= 1 ||
-					role === "viewer" ||
-					receiptItemPart.dirty
-				}
+				disabled={receiptItemPart.part <= 1 || role === "viewer" || isLoading}
 				onPress={decrementPart}
 			>
 				<Text>-</Text>
 			</ReactNative.TouchableOpacity>
 			<ReactNative.TouchableOpacity
 				onPress={promptPart}
-				disabled={role === "viewer" || receiptItemPart.dirty}
+				disabled={role === "viewer" || isLoading}
 			>
 				<Text>{receiptItemPart.part} part(s)</Text>
 			</ReactNative.TouchableOpacity>
 			<ReactNative.TouchableOpacity
 				onPress={incrementPart}
-				disabled={role === "viewer" || receiptItemPart.dirty}
+				disabled={role === "viewer" || isLoading}
 			>
 				<Text>+</Text>
 			</ReactNative.TouchableOpacity>

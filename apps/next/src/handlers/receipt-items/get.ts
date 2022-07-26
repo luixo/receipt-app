@@ -49,19 +49,13 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 				.select([
 					"userId",
 					sql<string>`case
-						when "usersTheir"."ownerAccountId" = ${ctx.auth.accountId}
-							then "usersTheir".name
+						when "usersMine"."name" is not null
+							then "usersMine".name
 						when "usersTheir"."publicName" is not null
 							then "usersTheir"."publicName"
 						else
 							"usersTheir".name
 						end`.as("name"),
-					sql<string | null>`case
-						when "usersTheir"."ownerAccountId" = ${ctx.auth.accountId}
-							then "usersTheir"."publicName"
-						else
-							null
-						end`.as("publicName"),
 					"usersMine.connectedAccountId",
 					// only exists if foreign user is connected to an account
 					// that local account owner also have
@@ -85,15 +79,12 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 			parts: {
 				userId: NonNullable<OriginalReceiptItem["userId"]>;
 				part: number;
-				dirty?: boolean;
 			}[];
-			dirty?: boolean;
 		};
 
 		type OriginalReceiptParticipant = typeof receiptParticipants[number];
 		type ReceiptParticipant = Omit<OriginalReceiptParticipant, "role"> & {
 			role: Role;
-			dirty?: boolean;
 		};
 
 		return {

@@ -1,10 +1,10 @@
 import React from "react";
 
-import { Loading } from "@nextui-org/react";
+import { Collapse, Loading } from "@nextui-org/react";
 
 import { QueryErrorMessage } from "app/components/query-error-message";
 import { AddReceiptItemForm } from "app/features/receipt-items/add-receipt-item-form";
-import { ReceiptParticipantsScreen } from "app/features/receipt-participants/receipt-participants-screen";
+import { ReceiptParticipants } from "app/features/receipt-participants/receipt-participants";
 import { trpc, TRPCQuerySuccessResult } from "app/trpc";
 import { Currency } from "app/utils/currency";
 import { ReceiptsId } from "next-app/db/models";
@@ -15,21 +15,25 @@ type InnerProps = {
 	receiptId: ReceiptsId;
 	currency?: Currency;
 	query: TRPCQuerySuccessResult<"receipt-items.get">;
+	isLoading: boolean;
 };
 
 export const ReceiptItemsInner: React.FC<InnerProps> = ({
-	query,
+	query: { data },
 	receiptId,
 	currency,
-}) => {
-	const { data } = query;
-	return (
-		<>
-			<ReceiptParticipantsScreen
+	isLoading,
+}) => (
+	<Collapse.Group accordion={false}>
+		<Collapse title="🥸 Participants">
+			<ReceiptParticipants
 				data={data}
 				receiptId={receiptId}
 				currency={currency}
+				isLoading={isLoading}
 			/>
+		</Collapse>
+		<Collapse title="🍔 Items" expanded>
 			<AddReceiptItemForm receiptId={receiptId} />
 			{data.items.map((receiptItem) => (
 				<ReceiptItem
@@ -38,15 +42,16 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 					receiptItem={receiptItem}
 					receiptParticipants={data.participants}
 					role={data.role}
+					isLoading={isLoading}
 				/>
 			))}
-		</>
-	);
-};
+		</Collapse>
+	</Collapse.Group>
+);
 
 type Props = Omit<InnerProps, "query">;
 
-export const ReceiptItems: React.FC<Props> = ({ receiptId }) => {
+export const ReceiptItems: React.FC<Props> = ({ receiptId, ...props }) => {
 	const query = trpc.useQuery(["receipt-items.get", { receiptId }]);
 	if (query.status === "loading") {
 		return <Loading />;
@@ -57,5 +62,5 @@ export const ReceiptItems: React.FC<Props> = ({ receiptId }) => {
 	if (query.status === "idle") {
 		return null;
 	}
-	return <ReceiptItemsInner receiptId={receiptId} query={query} />;
+	return <ReceiptItemsInner {...props} receiptId={receiptId} query={query} />;
 };

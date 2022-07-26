@@ -49,20 +49,11 @@ export const mutationOptions: UseContextedMutationOptions<
 			trpcContext,
 			receiptId,
 			updateObject.id,
-			(item) => applyUpdate({ ...item, dirty: true }, updateObject.update)
+			(item) => applyUpdate(item, updateObject.update)
 		);
 		return snapshot && getRevert(snapshot, updateObject.update);
 	},
 	onSuccess: (trpcContext, receiptId) => (_value, updateObject) => {
-		cache.receiptItems.get.receiptItem.update(
-			trpcContext,
-			receiptId,
-			updateObject.id,
-			(item) => ({
-				...item,
-				dirty: false,
-			})
-		);
 		if (
 			updateObject.update.type === "price" ||
 			updateObject.update.type === "quantity"
