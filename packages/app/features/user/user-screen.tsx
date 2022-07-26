@@ -5,7 +5,6 @@ import { createParam } from "solito";
 
 import { Identicon } from "app/components/identicon";
 import { Page } from "app/components/page";
-import { QueryWrapper } from "app/components/query-wrapper";
 import { trpc } from "app/trpc";
 
 import { User } from "./user";
@@ -24,7 +23,6 @@ export const UserScreen: React.FC = () => {
 	}
 
 	const userNameQuery = trpc.useQuery(["users.get-name", { id }]);
-	const userQuery = trpc.useQuery(["users.get", { id }]);
 
 	return (
 		<Page>
@@ -34,7 +32,7 @@ export const UserScreen: React.FC = () => {
 				{userNameQuery.data || id}
 			</Header>
 			<Spacer y={1} />
-			<QueryWrapper query={userQuery}>{User}</QueryWrapper>
+			<User id={id} />
 		</Page>
 	);
 };

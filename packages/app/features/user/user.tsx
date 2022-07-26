@@ -1,8 +1,12 @@
 import React from "react";
 import * as ReactNative from "react-native";
 
-import { TRPCQueryOutput } from "app/trpc";
+import { Loading } from "@nextui-org/react";
+
+import { QueryErrorMessage } from "app/components/query-error-message";
+import { trpc, TRPCQuerySuccessResult } from "app/trpc";
 import { styled } from "app/utils/styles";
+import { UsersId } from "next-app/db/models";
 
 import { UserConnectionInput } from "./user-connection-input";
 import { UserNameInput } from "./user-name-input";
@@ -13,11 +17,12 @@ const AlignEndView = styled(ReactNative.View)({
 	alignSelf: "flex-end",
 });
 
-type Props = {
-	data: TRPCQueryOutput<"users.get">;
+type InnerProps = {
+	query: TRPCQuerySuccessResult<"users.get">;
 };
 
-export const User: React.FC<Props> = ({ data: user }) => {
+const UserInner: React.FC<InnerProps> = ({ query }) => {
+	const user = query.data;
 	const [deleteLoading, setDeleteLoading] = React.useState(false);
 	return (
 		<>
@@ -29,4 +34,22 @@ export const User: React.FC<Props> = ({ data: user }) => {
 			</AlignEndView>
 		</>
 	);
+};
+
+type Props = Omit<InnerProps, "query"> & {
+	id: UsersId;
+};
+
+export const User: React.FC<Props> = ({ id, ...props }) => {
+	const query = trpc.useQuery(["users.get", { id }]);
+	if (query.status === "loading") {
+		return <Loading />;
+	}
+	if (query.status === "error") {
+		return <QueryErrorMessage query={query} />;
+	}
+	if (query.status === "idle") {
+		return null;
+	}
+	return <UserInner {...props} query={query} />;
 };
