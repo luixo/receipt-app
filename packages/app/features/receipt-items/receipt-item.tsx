@@ -144,7 +144,10 @@ export const ReceiptItem: React.FC<Props> = ({
 				<Text>{receiptItem.locked ? "locked" : "not locked"}</Text>
 			</ReactNative.TouchableOpacity>
 			{role === "viewer" ? null : (
-				<RemoveButton onPress={removeItem} disabled={receiptItem.dirty}>
+				<RemoveButton
+					onRemove={removeItem}
+					mutation={removeReceiptItemMutation}
+				>
 					Remove item
 				</RemoveButton>
 			)}
@@ -167,11 +170,6 @@ export const ReceiptItem: React.FC<Props> = ({
 					role={role}
 				/>
 			))}
-			<MutationWrapper<"receipt-items.delete">
-				mutation={removeReceiptItemMutation}
-			>
-				{() => <Text>Delete success!</Text>}
-			</MutationWrapper>
 			<MutationWrapper<"receipt-items.update">
 				mutation={updateReceiptItemMutation}
 			>

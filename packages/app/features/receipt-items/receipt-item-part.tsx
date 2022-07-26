@@ -143,7 +143,10 @@ export const ReceiptItemPart: React.FC<Props> = ({
 				<Text>+</Text>
 			</ReactNative.TouchableOpacity>
 			{role === "viewer" ? null : (
-				<RemoveButton onPress={removeItemPart} disabled={receiptItemPart.dirty}>
+				<RemoveButton
+					onRemove={removeItemPart}
+					mutation={removeItemPartMutation}
+				>
 					Remove participant
 				</RemoveButton>
 			)}
@@ -151,11 +154,6 @@ export const ReceiptItemPart: React.FC<Props> = ({
 				mutation={updateItemPartMutation}
 			>
 				{() => <Text>Update success!</Text>}
-			</MutationWrapper>
-			<MutationWrapper<"item-participants.delete">
-				mutation={removeItemPartMutation}
-			>
-				{() => <Text>Remove success!</Text>}
 			</MutationWrapper>
 		</Block>
 	);

@@ -3,7 +3,6 @@ import * as ReactNative from "react-native";
 
 import { cache } from "app/cache";
 import { Block } from "app/components/block";
-import { MutationWrapper } from "app/components/mutation-wrapper";
 import { RemoveButton } from "app/components/remove-button";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -135,19 +134,12 @@ export const ReceiptParticipant: React.FC<Props> = ({
 				{currency ? ` ${currency}` : ""}
 			</Text>
 			{role === "owner" ? (
-				<>
-					<RemoveButton
-						onPress={deleteReceiptParticipant}
-						disabled={receiptParticipant.dirty}
-					>
-						Delete receipt participant
-					</RemoveButton>
-					<MutationWrapper<"receipt-participants.delete">
-						mutation={deleteReceiptParticipantMutation}
-					>
-						{() => <Text>Delete success!</Text>}
-					</MutationWrapper>
-				</>
+				<RemoveButton
+					onRemove={deleteReceiptParticipant}
+					mutation={deleteReceiptParticipantMutation}
+				>
+					Delete receipt participant
+				</RemoveButton>
 			) : null}
 		</Block>
 	);

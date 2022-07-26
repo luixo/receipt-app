@@ -1,20 +1,12 @@
 import React from "react";
-import * as ReactNative from "react-native";
 
-import { Button, Loading, Spacer } from "@nextui-org/react";
-import { IoTrashBin as TrashBin } from "react-icons/io5";
 import { useRouter } from "solito/router";
 
 import { cache } from "app/cache";
+import { RemoveButton } from "app/components/remove-button";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
-import { styled, Text } from "app/utils/styles";
-
-const RemoveButtons = styled(ReactNative.View)({
-	marginTop: "sm",
-	flexDirection: "row",
-});
 
 type Props = {
 	user: TRPCQueryOutput<"users.get">;
@@ -31,8 +23,6 @@ export const UserRemoveButton: React.FC<Props> = ({ user, setLoading }) => {
 		() => setLoading(deleteUserMutation.isLoading),
 		[deleteUserMutation.isLoading, setLoading]
 	);
-	const [showDeleteConfirmation, setShowDeleteConfimation] =
-		React.useState(false);
 	const deleteUser = useAsyncCallback(
 		async (isMount) => {
 			await deleteUserMutation.mutateAsync({ id: user.id });
@@ -44,54 +34,9 @@ export const UserRemoveButton: React.FC<Props> = ({ user, setLoading }) => {
 		[deleteUserMutation, user.id]
 	);
 
-	if (!showDeleteConfirmation) {
-		return (
-			<>
-				<Spacer y={1} />
-				<Button
-					auto
-					onClick={() => setShowDeleteConfimation(true)}
-					color="error"
-				>
-					<TrashBin size={24} />
-					<Spacer x={0.5} />
-					Remove user
-				</Button>
-			</>
-		);
-	}
-
 	return (
-		<>
-			<Spacer y={1} />
-			<Text>Are you sure?</Text>
-			<RemoveButtons>
-				<Button
-					auto
-					onClick={deleteUser}
-					disabled={deleteUserMutation.isLoading}
-					color="error"
-				>
-					{deleteUserMutation.isLoading ? (
-						<Loading color="currentColor" size="sm" />
-					) : (
-						"Yes"
-					)}
-				</Button>
-				<Spacer x={0.5} />
-				<Button
-					auto
-					onClick={() => setShowDeleteConfimation(false)}
-					disabled={deleteUserMutation.isLoading}
-				>
-					No
-				</Button>
-			</RemoveButtons>
-			{deleteUserMutation.error ? (
-				<Button color="error" onClick={() => deleteUserMutation.reset()}>
-					{deleteUserMutation.error.message}
-				</Button>
-			) : null}
-		</>
+		<RemoveButton mutation={deleteUserMutation} onRemove={deleteUser}>
+			Remove receipt
+		</RemoveButton>
 	);
 };
