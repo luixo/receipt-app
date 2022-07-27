@@ -74,12 +74,12 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 						disabled={disabled}
 						onUserClick={addParticipant}
 					/>
-					{addMutation.status === "error" ? (
-						<MutationErrorMessage mutation={addMutation} />
-					) : null}
 					<Spacer y={1} />
 				</Modal.Body>
 			</Modal>
+			{addMutation.status === "error" ? (
+				<MutationErrorMessage mutation={addMutation} />
+			) : null}
 		</>
 	);
 };
