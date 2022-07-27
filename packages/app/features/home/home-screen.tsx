@@ -58,11 +58,6 @@ export const HomeScreen: React.FC = () => {
 	if (accountQuery.status === "success") {
 		authBaseElement = (
 			<>
-				<Spacer y={1} />
-				<CardButton href="/account" gradient={GRADIENTS.account}>
-					Manage account
-				</CardButton>
-				<Spacer y={1} />
 				<CardButton href="/receipts" gradient={GRADIENTS.receipts}>
 					My receipts
 				</CardButton>
@@ -70,13 +65,16 @@ export const HomeScreen: React.FC = () => {
 				<CardButton href="/users" gradient={GRADIENTS.users}>
 					My users
 				</CardButton>
+				<Spacer y={1} />
+				<CardButton href="/account" gradient={GRADIENTS.account}>
+					Manage account
+				</CardButton>
 			</>
 		);
 	} else if (accountQuery.status === "error") {
 		if (accountQuery.error.data?.code === "UNAUTHORIZED") {
 			authBaseElement = (
 				<>
-					<Spacer y={1} />
 					<CardButton href="/register" gradient={GRADIENTS.register}>
 						Register
 					</CardButton>
@@ -99,6 +97,7 @@ export const HomeScreen: React.FC = () => {
 				<Text h1 css={{ textAlign: "center", fontSize: "$xl7" }}>
 					Receipt App
 				</Text>
+				<Spacer y={1} />
 				{authBaseElement}
 			</Wrapper>
 		</Page>
