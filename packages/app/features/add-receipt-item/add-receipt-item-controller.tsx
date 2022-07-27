@@ -4,8 +4,9 @@ import { Button, Spacer } from "@nextui-org/react";
 import { MdAdd as AddIcon } from "react-icons/md";
 import { v4 } from "uuid";
 
-import { AddReceiptItemForm } from "app/features/receipt-items/add-receipt-item-form";
 import { ReceiptsId } from "next-app/db/models";
+
+import { AddReceiptItemForm } from "./add-receipt-item-form";
 
 type Props = {
 	receiptId: ReceiptsId;

@@ -3,12 +3,12 @@ import React from "react";
 import { Collapse, Loading, Spacer } from "@nextui-org/react";
 
 import { QueryErrorMessage } from "app/components/query-error-message";
+import { AddReceiptItemController } from "app/features/add-receipt-item/add-receipt-item-controller";
 import { ReceiptParticipants } from "app/features/receipt-participants/receipt-participants";
 import { trpc, TRPCQuerySuccessResult } from "app/trpc";
 import { Currency } from "app/utils/currency";
 import { ReceiptsId } from "next-app/db/models";
 
-import { AddReceiptItemController } from "./add-receipt-item-controller";
 import { ReceiptItem } from "./receipt-item";
 
 type InnerProps = {
