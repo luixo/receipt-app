@@ -1,21 +1,55 @@
 import React from "react";
-import * as ReactNative from "react-native";
 
-import { Spacer } from "app/components/spacer";
+import { styled, Text, Spacer, Loading } from "@nextui-org/react";
+
+import { Page } from "app/components/page";
+import { QueryErrorMessage } from "app/components/query-error-message";
 import { trpc } from "app/trpc";
-import { styled, H1, TextLink, Text } from "app/utils/styles";
 
-const Wrapper = styled(ReactNative.View)({
-	flex: 1,
-	justifyContent: "center",
-	alignItems: "center",
-	padding: "md",
+import { CardButton, Gradient } from "./card-button";
+
+const Wrapper = styled("div", {
+	maxWidth: "$96",
+	alignSelf: "center",
 });
 
-const Header = styled(H1)({
-	fontWeight: "bold",
-	textAlign: "center",
-});
+const GRADIENTS = {
+	account: {
+		colorStops: [
+			[30, "blue400"],
+			[140, "blue900"],
+		],
+		degree: 30,
+	} as Gradient,
+	receipts: {
+		colorStops: [
+			[20, "yellow600"],
+			[100, "cyan700"],
+		],
+		degree: 40,
+	} as Gradient,
+	users: {
+		colorStops: [
+			[-20, "blue800"],
+			[100, "red800"],
+		],
+		degree: 45,
+	} as Gradient,
+	register: {
+		colorStops: [
+			[-20, "green200"],
+			[100, "blue400"],
+		],
+		degree: 30,
+	} as Gradient,
+	login: {
+		colorStops: [
+			[-20, "purple300"],
+			[100, "pink100"],
+		],
+		degree: 0,
+	} as Gradient,
+};
 
 export const HomeScreen: React.FC = () => {
 	const accountQuery = trpc.useQuery(["account.get"]);
@@ -24,37 +58,49 @@ export const HomeScreen: React.FC = () => {
 	if (accountQuery.status === "success") {
 		authBaseElement = (
 			<>
-				<Spacer />
-				<TextLink href="/account">Account</TextLink>
-				<Spacer />
-				<TextLink href="/receipts">Receipts</TextLink>
-				<Spacer />
-				<TextLink href="/users">Users</TextLink>
+				<Spacer y={1} />
+				<CardButton href="/account" gradient={GRADIENTS.account}>
+					Manage account
+				</CardButton>
+				<Spacer y={1} />
+				<CardButton href="/receipts" gradient={GRADIENTS.receipts}>
+					My receipts
+				</CardButton>
+				<Spacer y={1} />
+				<CardButton href="/users" gradient={GRADIENTS.users}>
+					My users
+				</CardButton>
 			</>
 		);
 	} else if (accountQuery.status === "error") {
 		if (accountQuery.error.data?.code === "UNAUTHORIZED") {
 			authBaseElement = (
 				<>
-					<Spacer />
-					<TextLink href="/register">Register</TextLink>
-					<Spacer />
-					<TextLink href="/login">Login</TextLink>
+					<Spacer y={1} />
+					<CardButton href="/register" gradient={GRADIENTS.register}>
+						Register
+					</CardButton>
+					<Spacer y={1} />
+					<CardButton href="/login" gradient={GRADIENTS.login}>
+						Login
+					</CardButton>
 				</>
 			);
 		} else {
-			authBaseElement = (
-				<Text>Error on getting account: {accountQuery.error.message}</Text>
-			);
+			authBaseElement = <QueryErrorMessage query={accountQuery} />;
 		}
 	} else {
-		authBaseElement = <Text>Loading your account status..</Text>;
+		authBaseElement = <Loading size="xl" />;
 	}
 
 	return (
-		<Wrapper>
-			<Header>Welcome to Receipt App</Header>
-			{authBaseElement}
-		</Wrapper>
+		<Page>
+			<Wrapper>
+				<Text h1 css={{ textAlign: "center", fontSize: "$xl7" }}>
+					Receipt App
+				</Text>
+				{authBaseElement}
+			</Wrapper>
+		</Page>
 	);
 };

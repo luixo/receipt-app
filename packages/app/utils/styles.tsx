@@ -13,7 +13,7 @@ import { TextLink as BaseTextLink, Link as BaseLink } from "solito/link";
 
 import { ColorModeContext } from "app/contexts/color-mode-context";
 
-const themes = {
+export const themes = {
 	light: lightThemeStitches.theme,
 	dark: darkThemeStitches.theme,
 };
