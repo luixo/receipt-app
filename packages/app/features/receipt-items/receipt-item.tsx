@@ -1,19 +1,25 @@
 import React from "react";
-import * as ReactNative from "react-native";
+
+import { Card, Spacer, styled, Text } from "@nextui-org/react";
 
 import { cache } from "app/cache";
-import { Block } from "app/components/block";
-import { MutationWrapper } from "app/components/mutation-wrapper";
+import { ButtonsGroup } from "app/components/buttons-group";
+import { ErrorMessage } from "app/components/error-message";
+import { ReceiptItemLockedButton } from "app/components/receipt-item-locked-button";
 import { RemoveButton } from "app/components/remove-button";
+import { ReceiptItemPart } from "app/features/receipt-item-parts/receipt-item-part";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
-import { Text } from "app/utils/styles";
+import { Currency } from "app/utils/currency";
 import { ReceiptsId } from "next-app/db/models";
 import { Role } from "next-app/handlers/receipts/utils";
 
-import { AddReceiptItemPartForm } from "./add-receipt-item-part-form";
-import { ReceiptItemPart } from "./receipt-item-part";
+import { ReceiptItemNameInput } from "./receipt-item-name-input";
+import { ReceiptItemPriceInput } from "./receipt-item-price-input";
+import { ReceiptItemQuantityInput } from "./receipt-item-quantity-input";
+
+const Sum = styled("div", { display: "flex" });
 
 type ReceiptItems = TRPCQueryOutput<"receipt-items.get">["items"];
 type ReceiptParticipant =
@@ -23,6 +29,7 @@ type Props = {
 	receiptId: ReceiptsId;
 	receiptItem: ReceiptItems[number];
 	receiptParticipants: ReceiptParticipant[];
+	currency?: Currency;
 	role: Role;
 	isLoading: boolean;
 };
@@ -31,8 +38,9 @@ export const ReceiptItem: React.FC<Props> = ({
 	receiptItem,
 	receiptParticipants,
 	receiptId,
+	currency,
 	role,
-	isLoading,
+	isLoading: isReceiptDeleteLoading,
 }) => {
 	const removeReceiptItemMutation = trpc.useMutation(
 		"receipt-items.delete",
@@ -46,138 +54,135 @@ export const ReceiptItem: React.FC<Props> = ({
 		[removeReceiptItemMutation.mutate, receiptItem.id]
 	);
 
-	const updateReceiptItemMutation = trpc.useMutation(
-		"receipt-items.update",
-		useTrpcMutationOptions(cache.receiptItems.update.mutationOptions, receiptId)
-	);
-	const promptName = React.useCallback(() => {
-		const name = window.prompt("Please enter new name", receiptItem.name);
-		if (!name) {
-			return;
-		}
-		if (name === receiptItem.name) {
-			return;
-		}
-		updateReceiptItemMutation.mutate({
-			id: receiptItem.id,
-			update: { type: "name", name },
-		});
-	}, [updateReceiptItemMutation, receiptItem.id, receiptItem.name]);
-	const promptPrice = React.useCallback(() => {
-		const rawPrice = window.prompt(
-			"Please enter price",
-			receiptItem.price.toString()
-		);
-		const price = Number(rawPrice);
-		if (Number.isNaN(price)) {
-			return window.alert("Price should be a number!");
-		}
-		if (price <= 0) {
-			return window.alert("Price should be a positive number!");
-		}
-		if (price === receiptItem.price) {
-			return;
-		}
-		updateReceiptItemMutation.mutate({
-			id: receiptItem.id,
-			update: { type: "price", price },
-		});
-	}, [updateReceiptItemMutation, receiptItem.id, receiptItem.price]);
-	const promptQuantity = React.useCallback(() => {
-		const rawQuantity = window.prompt(
-			"Please enter quantity",
-			receiptItem.quantity.toString()
-		);
-		if (!rawQuantity) {
-			return;
-		}
-		const quantity = Number(rawQuantity);
-		if (Number.isNaN(quantity)) {
-			return window.alert("Quantity should be a number!");
-		}
-		if (quantity <= 0) {
-			return window.alert("Quantity should be a positive number!");
-		}
-		if (quantity === receiptItem.quantity) {
-			return;
-		}
-		updateReceiptItemMutation.mutate({
-			id: receiptItem.id,
-			update: { type: "quantity", quantity },
-		});
-	}, [updateReceiptItemMutation, receiptItem.id, receiptItem.quantity]);
-	const switchLocked = React.useCallback(() => {
-		updateReceiptItemMutation.mutate({
-			id: receiptItem.id,
-			update: { type: "locked", locked: !receiptItem.locked },
-		});
-	}, [updateReceiptItemMutation, receiptItem.id, receiptItem.locked]);
-
 	const addedParticipants = receiptItem.parts.map((part) => part.userId);
 	const notAddedParticipants = receiptParticipants.filter(
 		(participant) => !addedParticipants.includes(participant.userId)
 	);
 
+	const addItemPartMutation = trpc.useMutation(
+		"item-participants.put",
+		useTrpcMutationOptions(
+			cache.itemParticipants.put.mutationOptions,
+			receiptId
+		)
+	);
+	const addParticipant = React.useCallback(
+		(participant: ReceiptParticipant) => {
+			addItemPartMutation.mutate({
+				itemId: receiptItem.id,
+				userId: participant.userId,
+			});
+		},
+		[addItemPartMutation, receiptItem.id]
+	);
+
+	const isDeleteLoading =
+		isReceiptDeleteLoading || removeReceiptItemMutation.isLoading;
+
 	return (
-		<Block
-			name={receiptItem.name}
-			disabled={role === "viewer" || isLoading}
-			onNamePress={promptName}
-		>
-			<Text>
-				<ReactNative.TouchableOpacity
-					disabled={role === "viewer" || isLoading}
-					onPress={promptPrice}
-				>
-					<Text>{receiptItem.price}</Text>
-				</ReactNative.TouchableOpacity>
-				{" x "}
-				<ReactNative.TouchableOpacity
-					disabled={role === "viewer" || isLoading}
-					onPress={promptQuantity}
-				>
-					<Text>{receiptItem.quantity}</Text>
-				</ReactNative.TouchableOpacity>
-			</Text>
-			<ReactNative.TouchableOpacity
-				disabled={role === "viewer" || isLoading}
-				onPress={switchLocked}
-			>
-				<Text>{receiptItem.locked ? "locked" : "not locked"}</Text>
-			</ReactNative.TouchableOpacity>
+		<Card>
+			<Card.Header css={{ justifyContent: "space-between" }}>
+				<ReceiptItemNameInput
+					receiptId={receiptId}
+					receiptItem={receiptItem}
+					role={role}
+					isLoading={isDeleteLoading}
+				/>
+				<ReceiptItemLockedButton
+					ghost
+					receiptId={receiptId}
+					receiptItemId={receiptItem.id}
+					locked={receiptItem.locked}
+					disabled={role === "viewer"}
+				/>
+			</Card.Header>
+			<Card.Divider />
+			<Card.Body>
+				<Sum>
+					<ReceiptItemPriceInput
+						receiptId={receiptId}
+						receiptItem={receiptItem}
+						currency={currency}
+						role={role}
+						isLoading={isDeleteLoading}
+					/>
+					<ReceiptItemQuantityInput
+						receiptId={receiptId}
+						receiptItem={receiptItem}
+						role={role}
+						isLoading={isDeleteLoading}
+					/>
+				</Sum>
+				{role === "viewer" ? null : (
+					<>
+						<Spacer y={1} />
+						<ButtonsGroup
+							type="linear"
+							buttons={notAddedParticipants}
+							buttonProps={{ auto: true }}
+							extractDetails={(participant) => ({
+								id: participant.userId,
+								name: participant.name,
+							})}
+							onClick={addParticipant}
+						/>
+					</>
+				)}
+				{receiptItem.parts.length === 0 ? (
+					<>
+						<Spacer y={0.5} />
+						<Text h4>Add a user from a list above</Text>
+					</>
+				) : (
+					<>
+						<Spacer y={1} />
+						<Card.Divider />
+						<Spacer y={1} />
+						{receiptItem.parts.map((part, index) => {
+							const matchedParticipant = receiptParticipants.find(
+								(participant) => participant.userId === part.userId
+							);
+							if (!matchedParticipant) {
+								return (
+									<React.Fragment key={part.userId}>
+										{index === 0 ? null : <Spacer y={0.5} />}
+										<ErrorMessage
+											message={`Part for user id ${part.userId} is orphaned. Please report this to support, include receipt id, receipt item name and mentioned user id`}
+										/>
+									</React.Fragment>
+								);
+							}
+							return (
+								<React.Fragment key={part.userId}>
+									{index === 0 ? null : <Spacer y={0.5} />}
+									<ReceiptItemPart
+										receiptId={receiptId}
+										itemPart={part}
+										participant={matchedParticipant}
+										receiptItemId={receiptItem.id}
+										role={role}
+										isLoading={isDeleteLoading}
+									/>
+								</React.Fragment>
+							);
+						})}
+					</>
+				)}
+			</Card.Body>
 			{role === "viewer" ? null : (
-				<RemoveButton
-					onRemove={removeItem}
-					mutation={removeReceiptItemMutation}
-				>
-					Remove item
-				</RemoveButton>
+				<>
+					<Card.Divider />
+					<Card.Footer css={{ justifyContent: "flex-end" }}>
+						<RemoveButton
+							onRemove={removeItem}
+							mutation={removeReceiptItemMutation}
+							subtitle="This will remove item with all participant's parts"
+						>
+							Remove item
+						</RemoveButton>
+					</Card.Footer>
+				</>
 			)}
-			{receiptItem.parts.map((part) => (
-				<ReceiptItemPart
-					key={part.userId}
-					receiptId={receiptId}
-					receiptItemPart={part}
-					receiptParticipants={receiptParticipants}
-					itemId={receiptItem.id}
-					role={role}
-					isLoading={isLoading}
-				/>
-			))}
-			{notAddedParticipants.map((participant) => (
-				<AddReceiptItemPartForm
-					key={participant.userId}
-					receiptId={receiptId}
-					participant={participant}
-					itemId={receiptItem.id}
-					role={role}
-				/>
-			))}
-			<MutationWrapper<"receipt-items.update">
-				mutation={updateReceiptItemMutation}
-			>
-				{() => <Text>Update success!</Text>}
-			</MutationWrapper>
-		</Block>
+		</Card>
 	);
 };

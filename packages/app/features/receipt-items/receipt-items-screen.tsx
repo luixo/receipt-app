@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Collapse, Loading, Spacer } from "@nextui-org/react";
+import { Collapse, Loading, Spacer, styled, Text } from "@nextui-org/react";
 
 import { QueryErrorMessage } from "app/components/query-error-message";
 import { AddReceiptItemController } from "app/features/add-receipt-item/add-receipt-item-controller";
@@ -10,6 +10,10 @@ import { Currency } from "app/utils/currency";
 import { ReceiptsId } from "next-app/db/models";
 
 import { ReceiptItem } from "./receipt-item";
+
+const NoReceiptItems = styled("div", {
+	textAlign: "center",
+});
 
 type InnerProps = {
 	receiptId: ReceiptsId;
@@ -35,17 +39,26 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 		</Collapse>
 		<AddReceiptItemController receiptId={receiptId} isLoading={isLoading} />
 		<Spacer y={1} />
-		{data.items.map((receiptItem) => (
-			<ReceiptItem
-				key={receiptItem.id}
-				receiptId={receiptId}
-				receiptItem={receiptItem}
-				receiptParticipants={data.participants}
-				role={data.role}
-				isLoading={isLoading}
-			/>
+		{data.items.map((receiptItem, index) => (
+			<React.Fragment key={receiptItem.id}>
+				{index === 0 ? null : <Spacer y={1} />}
+				<ReceiptItem
+					receiptId={receiptId}
+					receiptItem={receiptItem}
+					receiptParticipants={data.participants}
+					currency={currency}
+					role={data.role}
+					isLoading={isLoading}
+				/>
+			</React.Fragment>
 		))}
-		{data.items.length === 0 ? null : (
+		{data.items.length === 0 ? (
+			<NoReceiptItems>
+				<Text h3>You have no receipt items yet</Text>
+				<Spacer y={1} />
+				<Text h4>Press a button above to add a receipt item</Text>
+			</NoReceiptItems>
+		) : (
 			<>
 				<Spacer y={1} />
 				<AddReceiptItemController receiptId={receiptId} isLoading={isLoading} />

@@ -2,6 +2,7 @@ import * as trpc from "@trpc/server";
 import { MutationObject } from "kysely";
 import { z } from "zod";
 
+import { partSchema } from "app/utils/validation";
 import { ReceiptsDatabase, getDatabase } from "next-app/db";
 import { AuthorizedContext } from "next-app/handlers/context";
 import { getItemParticipant } from "next-app/handlers/item-participants/utils";
@@ -12,7 +13,6 @@ import {
 } from "next-app/handlers/receipts/utils";
 import { getUserById } from "next-app/handlers/users/utils";
 import {
-	partSchema,
 	receiptItemIdSchema,
 	userIdSchema,
 } from "next-app/handlers/validation";

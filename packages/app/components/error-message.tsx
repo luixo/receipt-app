@@ -10,7 +10,7 @@ const Title = styled(Text, {
 
 type Props = {
 	message: string;
-	button: {
+	button?: {
 		text: string;
 		onClick: () => void;
 	};
@@ -29,11 +29,15 @@ export const ErrorMessage: React.FC<Props> = ({ message, button }) => (
 		<Card.Body>
 			<Text>{message}</Text>
 		</Card.Body>
-		<Card.Divider />
-		<Card.Footer>
-			<Row justify="flex-end">
-				<Button onClick={button.onClick}>{button.text}</Button>
-			</Row>
-		</Card.Footer>
+		{button ? (
+			<>
+				<Card.Divider />
+				<Card.Footer>
+					<Row justify="flex-end">
+						<Button onClick={button.onClick}>{button.text}</Button>
+					</Row>
+				</Card.Footer>
+			</>
+		) : null}
 	</Card>
 );

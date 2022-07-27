@@ -14,13 +14,11 @@ import { ReceiptsId } from "next-app/db/models";
 type Props = {
 	receiptId: ReceiptsId;
 	resolved: boolean;
-	readOnly?: boolean;
 } & Omit<React.ComponentProps<typeof IconButton>, "onClick" | "color">;
 
 export const ReceiptAccountedButton: React.FC<Props> = ({
 	receiptId,
 	resolved,
-	readOnly,
 	css,
 	...props
 }) => {

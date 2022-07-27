@@ -40,7 +40,7 @@ const ParticipantPickerInner: React.FC<InnerProps> = ({
 	const loadMore = React.useCallback(() => query.fetchNextPage(), [query]);
 	return (
 		<UsersPicker
-			type="wrap"
+			type="block"
 			query={query}
 			extractUsers={extractUsers}
 			extractDetails={extractDetails}

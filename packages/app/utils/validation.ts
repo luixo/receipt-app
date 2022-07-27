@@ -61,6 +61,10 @@ export const quantitySchema = z
 	.number()
 	.gt(0, { message: "Quantity should be greater than 0" });
 
+export const partSchema = z
+	.number()
+	.gt(0, { message: "Part should be greater than 0" });
+
 export const parseNumberWithDecimals = (
 	value: string,
 	decimals = 2

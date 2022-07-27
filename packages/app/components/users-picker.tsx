@@ -1,18 +1,19 @@
 import React from "react";
 
-import { Button, Container, Loading, Spacer } from "@nextui-org/react";
+import { Button, Loading } from "@nextui-org/react";
 import {
 	InfiniteData,
 	UseInfiniteQueryResult,
 	InfiniteQueryObserverSuccessResult,
 } from "react-query";
 
+import { ButtonsGroup } from "app/components/buttons-group";
 import { QueryErrorMessage } from "app/components/query-error-message";
 import { TRPCError } from "app/trpc";
 import { UsersId } from "next-app/src/db/models";
 
 type InnerProps<Data, User> = {
-	type: "line" | "wrap";
+	type: "linear" | "block";
 	query: InfiniteQueryObserverSuccessResult<Data, TRPCError>;
 	extractUsers: (data: InfiniteData<Data>) => User[];
 	extractDetails: (user: User) => { id: UsersId; name: string };
@@ -34,32 +35,19 @@ const UsersPickerInner = <Data, User>({
 }: InnerProps<Data, User>) => {
 	const users = extractUsers(query.data);
 	const selectedId = selectedUser ? extractDetails(selectedUser).id : undefined;
-	const isLine = type === "line";
 	return (
-		<Container
-			display="flex"
-			wrap={isLine ? "nowrap" : "wrap"}
-			css={isLine ? { p: 0, overflowX: "scroll" } : { p: 0 }}
-		>
-			{users.map((user, index) => {
-				const { id, name } = extractDetails(user);
-				return (
-					<React.Fragment key={id}>
-						{index === 0 || !isLine ? null : <Spacer x={0.5} />}
-						<Button
-							auto
-							flat
-							disabled={disabled}
-							onClick={() => onChange(user)}
-							color={id === selectedId ? "success" : undefined}
-							css={isLine ? undefined : { m: "$2" }}
-						>
-							{name}
-						</Button>
-					</React.Fragment>
-				);
+		<ButtonsGroup
+			type={type}
+			buttons={users}
+			extractDetails={extractDetails}
+			buttonProps={(user) => ({
+				auto: true,
+				flat: true,
+				disabled,
+				color: extractDetails(user).id === selectedId ? "success" : undefined,
 			})}
-			{isLine ? <Spacer x={0.5} /> : null}
+			onClick={onChange}
+		>
 			{query.hasNextPage ? (
 				<Button
 					auto
@@ -67,7 +55,6 @@ const UsersPickerInner = <Data, User>({
 					disabled={query.isLoading || query.isFetchingNextPage}
 					color="secondary"
 					onClick={loadMore}
-					css={isLine ? undefined : { m: "$2" }}
 				>
 					{query.isLoading || query.isFetchingNextPage ? (
 						<Loading size="sm" />
@@ -76,7 +63,7 @@ const UsersPickerInner = <Data, User>({
 					)}
 				</Button>
 			) : null}
-		</Container>
+		</ButtonsGroup>
 	);
 };
 

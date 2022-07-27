@@ -25,8 +25,6 @@ export const currencySchema = z.string().refine(isCurrency);
 // TODO: make narrower
 export const localeSchema = z.string();
 
-export const partSchema = z.number().gt(0);
-
 export const userIdSchema = z.string().uuid().refine<UsersId>(flavored);
 export const accountIdSchema = z.string().uuid().refine<AccountsId>(flavored);
 export const receiptIdSchema = z.string().uuid().refine<ReceiptsId>(flavored);

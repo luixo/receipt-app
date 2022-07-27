@@ -24,6 +24,7 @@ type Props = {
 	onRemove: () => void;
 	children?: string;
 	subtitle?: string;
+	noConfirm?: boolean;
 };
 
 export const RemoveButton: React.FC<Props> = ({
@@ -31,6 +32,7 @@ export const RemoveButton: React.FC<Props> = ({
 	onRemove,
 	children,
 	subtitle,
+	noConfirm,
 }) => {
 	const [isModalOpen, setModalOpen] = React.useState(false);
 	const openModal = React.useCallback(() => setModalOpen(true), [setModalOpen]);
@@ -45,7 +47,7 @@ export const RemoveButton: React.FC<Props> = ({
 
 	return (
 		<>
-			<Button auto onClick={openModal} color="error">
+			<Button auto onClick={noConfirm ? onRemove : openModal} color="error">
 				<TrashBin size={24} />
 				{children ? (
 					<>
