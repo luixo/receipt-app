@@ -1,7 +1,7 @@
 import React from "react";
 import * as ReactNative from "react-native";
 
-import { Button, Input, Spacer } from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react";
 import {
 	IoCheckmarkCircleOutline as CheckMark,
 	IoTrashBin as TrashBin,
@@ -62,56 +62,50 @@ export const UserPublicNameInput: React.FC<Props> = ({ user, isLoading }) => {
 
 	if (!showInput) {
 		return (
-			<>
-				<Spacer y={1} />
-				<Button
-					disabled={updateUserMutation.isLoading || isLoading}
-					onClick={switchShowInput}
-				>
-					Add public name
-				</Button>
-			</>
+			<Button
+				disabled={updateUserMutation.isLoading || isLoading}
+				onClick={switchShowInput}
+			>
+				Add public name
+			</Button>
 		);
 	}
 
 	return (
-		<>
-			<Spacer y={1} />
-			<Input
-				{...bindings}
-				label="Public user name"
-				disabled={updateUserMutation.isLoading || isLoading}
-				status={inputState.error ? "warning" : undefined}
-				helperColor={inputState.error ? "warning" : "error"}
-				helperText={
-					inputState.error?.message || updateUserMutation.error?.message
-				}
-				contentRightStyling={updateUserMutation.isLoading}
-				contentRight={
-					<ButtonsContainer>
-						<IconButton
-							title="Save user public name"
-							light
-							isLoading={updateUserMutation.isLoading}
-							disabled={
-								user.publicName === getValue() || Boolean(inputState.error)
-							}
-							onClick={() => savePublicName(getValue())}
-							icon={<CheckMark size={24} />}
-						/>
-						<IconButton
-							title="Remove user public name"
-							light
-							isLoading={updateUserMutation.isLoading}
-							onClick={
-								user.publicName ? () => savePublicName(null) : switchShowInput
-							}
-							color="error"
-							icon={<TrashBin size={24} />}
-						/>
-					</ButtonsContainer>
-				}
-			/>
-		</>
+		<Input
+			{...bindings}
+			label="Public user name"
+			disabled={updateUserMutation.isLoading || isLoading}
+			status={inputState.error ? "warning" : undefined}
+			helperColor={inputState.error ? "warning" : "error"}
+			helperText={
+				inputState.error?.message || updateUserMutation.error?.message
+			}
+			contentRightStyling={updateUserMutation.isLoading}
+			contentRight={
+				<ButtonsContainer>
+					<IconButton
+						title="Save user public name"
+						light
+						isLoading={updateUserMutation.isLoading}
+						disabled={
+							user.publicName === getValue() || Boolean(inputState.error)
+						}
+						onClick={() => savePublicName(getValue())}
+						icon={<CheckMark size={24} />}
+					/>
+					<IconButton
+						title="Remove user public name"
+						light
+						isLoading={updateUserMutation.isLoading}
+						onClick={
+							user.publicName ? () => savePublicName(null) : switchShowInput
+						}
+						color="error"
+						icon={<TrashBin size={24} />}
+					/>
+				</ButtonsContainer>
+			}
+		/>
 	);
 };

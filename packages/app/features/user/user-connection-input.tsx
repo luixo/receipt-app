@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, Input, Loading, Spacer } from "@nextui-org/react";
+import { Button, Input, Loading } from "@nextui-org/react";
 import { IoTrashBin as TrashBinIcon } from "react-icons/io5";
 import { MdLink as LinkIcon, MdLinkOff as UnlinkIcon } from "react-icons/md";
 
@@ -81,97 +81,81 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 	);
 
 	if (outboundConnectionIntention === undefined) {
+		if (connectionIntentionsQuery.status === "loading") {
+			return <Loading />;
+		}
 		return (
-			<>
-				<Spacer y={1} />
-				{connectionIntentionsQuery.status === "loading" ? (
-					<Loading />
-				) : (
-					<Button
-						color="error"
-						onClick={() => connectionIntentionsQuery.refetch()}
-					>
-						{connectionIntentionsQuery.error?.message}
-					</Button>
-				)}
-			</>
+			<Button color="error" onClick={() => connectionIntentionsQuery.refetch()}>
+				{connectionIntentionsQuery.error?.message}
+			</Button>
 		);
 	}
 
 	if (outboundConnectionIntention) {
 		const mutationError = cancelRequestMutation.error?.message;
 		return (
-			<>
-				<Spacer y={1} />
-				<Input
-					label="Outbound request"
-					value={outboundConnectionIntention.email}
-					readOnly
-					helperColor="error"
-					helperText={mutationError}
-					contentRight={
-						<IconButton
-							title="Cancel request"
-							light
-							isLoading={cancelRequestMutation.isLoading}
-							color="error"
-							icon={<TrashBinIcon size={24} />}
-							onClick={cancelRequest}
-						/>
-					}
-				/>
-			</>
+			<Input
+				label="Outbound request"
+				value={outboundConnectionIntention.email}
+				readOnly
+				helperColor="error"
+				helperText={mutationError}
+				contentRight={
+					<IconButton
+						title="Cancel request"
+						light
+						isLoading={cancelRequestMutation.isLoading}
+						color="error"
+						icon={<TrashBinIcon size={24} />}
+						onClick={cancelRequest}
+					/>
+				}
+			/>
 		);
 	}
 
 	if (!inputShown) {
 		return (
-			<>
-				<Spacer y={1} />
-				<Button onClick={() => setInputShown(true)} disabled={isLoading}>
-					Connect to an account
-				</Button>
-			</>
+			<Button onClick={() => setInputShown(true)} disabled={isLoading}>
+				Connect to an account
+			</Button>
 		);
 	}
 
 	const mutationError =
 		connectUserMutation.error?.message || unlinkMutation.error?.message;
 	return (
-		<>
-			<Spacer y={1} />
-			<Input
-				{...bindings}
-				label="Email"
-				disabled={connectUserMutation.isLoading || isLoading}
-				readOnly={Boolean(user.email)}
-				status={inputState.error ? "warning" : undefined}
-				helperColor={inputState.error ? "warning" : "error"}
-				helperText={inputState.error?.message || mutationError}
-				contentRightStyling={connectUserMutation.isLoading}
-				contentRight={
-					<>
-						{user.email ? (
-							<IconButton
-								title="Unlink user from email"
-								light
-								isLoading={unlinkMutation.isLoading}
-								icon={<UnlinkIcon size={24} />}
-								onClick={unlinkUser}
-							/>
-						) : (
-							<IconButton
-								title="Link user to email"
-								light
-								isLoading={connectUserMutation.isLoading}
-								disabled={Boolean(inputState.error)}
-								onClick={() => connectUser(getValue())}
-								icon={<LinkIcon size={24} />}
-							/>
-						)}
-					</>
-				}
-			/>
-		</>
+		<Input
+			{...bindings}
+			label="Email"
+			disabled={connectUserMutation.isLoading || isLoading}
+			readOnly={Boolean(user.email)}
+			status={inputState.error ? "warning" : undefined}
+			helperColor={inputState.error ? "warning" : "error"}
+			helperText={inputState.error?.message || mutationError}
+			contentRightStyling={connectUserMutation.isLoading}
+			contentRight={
+				<>
+					{user.email ? (
+						<IconButton
+							title="Unlink user from email"
+							light
+							isLoading={unlinkMutation.isLoading}
+							icon={<UnlinkIcon size={24} />}
+							onClick={unlinkUser}
+						/>
+					) : (
+						<IconButton
+							title="Link user to email"
+							light
+							isLoading={connectUserMutation.isLoading}
+							disabled={Boolean(inputState.error)}
+							onClick={() => connectUser(getValue())}
+							icon={<LinkIcon size={24} />}
+						/>
+					)}
+				</>
+			}
+		/>
 	);
 };

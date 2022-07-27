@@ -25,7 +25,7 @@ type Props = {
 	children?: string;
 	subtitle?: string;
 	noConfirm?: boolean;
-};
+} & React.ComponentProps<typeof Button>;
 
 export const RemoveButton: React.FC<Props> = ({
 	mutation,
@@ -33,6 +33,7 @@ export const RemoveButton: React.FC<Props> = ({
 	children,
 	subtitle,
 	noConfirm,
+	...props
 }) => {
 	const [isModalOpen, setModalOpen] = React.useState(false);
 	const openModal = React.useCallback(() => setModalOpen(true), [setModalOpen]);
@@ -47,7 +48,12 @@ export const RemoveButton: React.FC<Props> = ({
 
 	return (
 		<>
-			<Button auto onClick={noConfirm ? onRemove : openModal} color="error">
+			<Button
+				auto
+				onClick={noConfirm ? onRemove : openModal}
+				color="error"
+				{...props}
+			>
 				<TrashBin size={24} />
 				{children ? (
 					<>

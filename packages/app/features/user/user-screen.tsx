@@ -26,7 +26,8 @@ export const UserScreen: React.FC = () => {
 
 	return (
 		<Page>
-			<Header h2>
+			{/* zero margin because of inherited margin from ChildText */}
+			<Header h2 css={{ margin: 0 }}>
 				<Identicon size={40} hash={id} />
 				<Spacer x={0.5} />
 				{userNameQuery.data || id}

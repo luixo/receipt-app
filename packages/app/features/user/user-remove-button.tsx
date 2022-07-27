@@ -11,9 +11,16 @@ import { trpc, TRPCQueryOutput } from "app/trpc";
 type Props = {
 	user: TRPCQueryOutput<"users.get">;
 	setLoading: (nextLoading: boolean) => void;
-};
+} & Omit<
+	React.ComponentProps<typeof RemoveButton>,
+	"mutation" | "onRemove" | "subtitle"
+>;
 
-export const UserRemoveButton: React.FC<Props> = ({ user, setLoading }) => {
+export const UserRemoveButton: React.FC<Props> = ({
+	user,
+	setLoading,
+	...props
+}) => {
 	const router = useRouter();
 	const deleteUserMutation = trpc.useMutation(
 		"users.delete",
@@ -39,6 +46,7 @@ export const UserRemoveButton: React.FC<Props> = ({ user, setLoading }) => {
 			mutation={deleteUserMutation}
 			onRemove={deleteUser}
 			subtitle="This will remove user and all his participations"
+			{...props}
 		>
 			Remove receipt
 		</RemoveButton>
