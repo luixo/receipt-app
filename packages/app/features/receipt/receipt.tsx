@@ -41,6 +41,7 @@ const Buttons = styled("div", {
 const Body = styled("div", {
 	display: "flex",
 	justifyContent: "space-between",
+	alignItems: "start",
 });
 
 const AlignEndView = styled("div", {

@@ -9,6 +9,7 @@ import { UsersId } from "next-app/db/models";
 
 const Wrapper = nextStyled("div", {
 	display: "flex",
+	alignItems: "center",
 });
 
 const Information = styled(ReactNative.View)({
