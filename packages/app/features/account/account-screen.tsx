@@ -10,6 +10,9 @@ import { ChangePasswordScreen } from "app/features/change-password/change-passwo
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { trpc } from "app/trpc";
 
+import { AccountNameInput } from "./account-name-input";
+import { AccountPublicNameInput } from "./account-public-name-input";
+
 export const AccountScreen: React.FC = () => {
 	const router = useRouter();
 	const accountQuery = trpc.useQuery(["account.get"]);
@@ -40,6 +43,14 @@ export const AccountScreen: React.FC = () => {
 					"Please read below"
 				)}
 			</Text>
+			{accountQuery.status === "success" ? (
+				<>
+					<Spacer y={1} />
+					<AccountNameInput account={accountQuery.data} />
+					<Spacer y={1} />
+					<AccountPublicNameInput account={accountQuery.data} />
+				</>
+			) : null}
 			<Spacer y={1} />
 			<ChangePasswordScreen />
 			<Spacer y={2} />

@@ -57,7 +57,7 @@ export const RegisterScreen: React.FC = () => {
 		[registerMutation],
 		React.useCallback(
 			(account: { id: AccountsId; name: string }) => {
-				cache.account.get.set(trpcContext, account);
+				cache.account.get.set(trpcContext, { ...account, publicName: null });
 				router.replace("/");
 			},
 			[router, trpcContext]

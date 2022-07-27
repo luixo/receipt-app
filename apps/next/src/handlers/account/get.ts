@@ -12,7 +12,7 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 			.innerJoin("users", (jb) =>
 				jb.onRef("users.ownerAccountId", "=", "accounts.id")
 			)
-			.select(["accounts.id", "users.name"])
+			.select(["accounts.id", "users.name", "users.publicName"])
 			.where("accounts.id", "=", ctx.auth.accountId)
 			.executeTakeFirst();
 		if (!account) {

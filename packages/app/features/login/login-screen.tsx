@@ -10,9 +10,8 @@ import { cache } from "app/cache";
 import { MutationErrorMessage } from "app/components/mutation-error-message";
 import { Page } from "app/components/page";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
-import { trpc } from "app/trpc";
+import { trpc, TRPCMutationOutput } from "app/trpc";
 import { passwordSchema, emailSchema } from "app/utils/validation";
-import { AccountsId } from "next-app/db/models";
 
 type LoginForm = {
 	email: string;
@@ -31,17 +30,11 @@ export const LoginScreen: React.FC = () => {
 	const trpcContext = trpc.useContext();
 	const loginMutation = trpc.useMutation("auth.login");
 	const onSubmit = useSubmitHandler(
-		async (data: LoginForm) => {
-			const result = await loginMutation.mutateAsync(data);
-			return {
-				id: result.accountId,
-				name: result.name,
-			};
-		},
+		(data: LoginForm) => loginMutation.mutateAsync(data),
 		[loginMutation, trpcContext],
 		React.useCallback(
-			(account: { id: AccountsId; name: string }) => {
-				cache.account.get.set(trpcContext, account);
+			({ accountId, ...account }: TRPCMutationOutput<"auth.login">) => {
+				cache.account.get.set(trpcContext, { id: accountId, ...account });
 				router.replace("/");
 			},
 			[router, trpcContext]
