@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, Input, Spacer } from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react";
 import { UseFormReturn } from "react-hook-form";
 import { MdEdit as EditIcon } from "react-icons/md";
 
@@ -16,46 +16,40 @@ type Props = {
 };
 
 export const CurrencyInput: React.FC<Props> = ({ form, query }) => {
-	const [selectedCurrency, setSelectedCurrency] = React.useState<
-		TRPCQueryOutput<"currency.get-list">[number] | undefined
-	>();
-	React.useEffect(() => {
-		if (!selectedCurrency) {
-			form.resetField("currency");
-		} else {
-			form.setValue("currency", selectedCurrency?.code, {
-				shouldValidate: true,
-			});
-		}
-	}, [selectedCurrency, form]);
-
-	const [currencyModalOpen, setCurrencyModalOpen] = React.useState(false);
-	const switchCurrencyModal = React.useCallback(
-		() => setCurrencyModalOpen((prev) => !prev),
-		[setCurrencyModalOpen]
+	const [modalOpen, setModalOpen] = React.useState(false);
+	const openModal = React.useCallback(() => setModalOpen(true), [setModalOpen]);
+	const closeModal = React.useCallback(
+		() => setModalOpen(false),
+		[setModalOpen]
 	);
 
+	const onCurrencyChange = React.useCallback(
+		(nextCurrency: TRPCQueryOutput<"currency.get-list">[number]) => {
+			closeModal();
+			form.setValue("currency", nextCurrency, { shouldValidate: true });
+		},
+		[form, closeModal]
+	);
+
+	const selectedCurrency = form.watch("currency");
 	return (
 		<>
 			{selectedCurrency ? (
-				<>
-					<Input
-						value={`${selectedCurrency.name} (${selectedCurrency.code})`}
-						label="Currency"
-						disabled={query.isLoading}
-						contentRightStyling={false}
-						readOnly
-						contentRight={
-							<IconButton light auto onClick={switchCurrencyModal}>
-								<EditIcon size={24} />
-							</IconButton>
-						}
-					/>
-					<Spacer y={0.5} />
-				</>
+				<Input
+					value={`${selectedCurrency.name} (${selectedCurrency.code})`}
+					label="Currency"
+					disabled={query.isLoading}
+					contentRightStyling={false}
+					readOnly
+					contentRight={
+						<IconButton light auto onClick={openModal}>
+							<EditIcon size={24} />
+						</IconButton>
+					}
+				/>
 			) : (
 				<Button
-					onClick={switchCurrencyModal}
+					onClick={openModal}
 					disabled={query.isLoading}
 					css={{ alignSelf: "flex-end" }}
 				>
@@ -64,9 +58,9 @@ export const CurrencyInput: React.FC<Props> = ({ form, query }) => {
 			)}
 			<CurrenciesPicker
 				selectedCurrency={selectedCurrency}
-				onChange={setSelectedCurrency}
-				modalOpen={currencyModalOpen}
-				onModalClose={switchCurrencyModal}
+				onChange={onCurrencyChange}
+				modalOpen={modalOpen}
+				onModalClose={closeModal}
 			/>
 		</>
 	);

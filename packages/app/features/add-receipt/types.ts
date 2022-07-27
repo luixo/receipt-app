@@ -1,4 +1,6 @@
+import { TRPCQueryOutput } from "app/trpc";
+
 export type Form = {
 	name: string;
-	currency: string;
+	currency: TRPCQueryOutput<"currency.get-list">[number];
 };

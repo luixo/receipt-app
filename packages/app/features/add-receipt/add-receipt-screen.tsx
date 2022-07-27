@@ -39,21 +39,31 @@ export const AddReceiptScreen: React.FC = () => {
 	const form = useForm<Form>({
 		mode: "onChange",
 		resolver: zodResolver(
-			z.object({ name: receiptNameSchema, currency: z.string().nonempty() })
+			z.object({
+				name: receiptNameSchema,
+				currency: z.object({ code: z.string().nonempty() }),
+			})
 		),
 		defaultValues: {
 			name: "",
 		},
 	});
 	const onSubmit = useSubmitHandler<Form, ReceiptsId>(
-		async (values) => addReceiptMutation.mutateAsync(values),
+		async (values) =>
+			addReceiptMutation.mutateAsync({
+				name: values.name,
+				currency: values.currency.code,
+			}),
 		[addReceiptMutation, router],
 		(id) => router.replace(`/receipts/${id}`)
 	);
 
 	return (
 		<Page>
-			<Header h2>Add receipt</Header>
+			{/* zero margin because of inherited margin from ChildText */}
+			<Header h2 css={{ m: 0 }}>
+				Add receipt
+			</Header>
 			<Spacer y={1} />
 			<ReceiptNameInput form={form} query={addReceiptMutation} />
 			<Spacer y={1} />
