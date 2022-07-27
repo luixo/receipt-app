@@ -16,13 +16,22 @@ export const router = trpc.router<UnauthorizedContext>().mutation("login", {
 	resolve: async ({ input, ctx }) => {
 		const email = input.email.toLowerCase();
 		const database = getDatabase(ctx);
-		const account = await database
+		const result = await database
 			.selectFrom("accounts")
-			.select(["id", "email", "passwordSalt", "passwordHash"])
 			.where("email", "=", input.email)
+			.innerJoin("users", (qb) =>
+				qb.onRef("users.connectedAccountId", "=", "accounts.id")
+			)
+			.select([
+				"accounts.id as accountId",
+				"email",
+				"passwordSalt",
+				"passwordHash",
+				"users.name",
+			])
 			.executeTakeFirst();
 
-		if (!account) {
+		if (!result) {
 			ctx.logger.debug(
 				`Authorization of account "${email}" failed: account not found.`
 			);
@@ -32,7 +41,7 @@ export const router = trpc.router<UnauthorizedContext>().mutation("login", {
 			});
 		} else {
 			const isPasswordValid =
-				getHash(input.password, account.passwordSalt) === account.passwordHash;
+				getHash(input.password, result.passwordSalt) === result.passwordHash;
 			if (!isPasswordValid) {
 				ctx.logger.debug(
 					`Authorization of account "${email}" failed: wrong password.`
@@ -44,14 +53,13 @@ export const router = trpc.router<UnauthorizedContext>().mutation("login", {
 			} else {
 				const { authToken, expirationDate } = await createAuthorizationSession(
 					database,
-					account.id
+					result.accountId
 				);
 				ctx.logger.debug(`Authorization of account "${email}" succeed.`);
 				setAuthCookie(ctx.res, authToken, expirationDate);
 				return {
-					expirationTimestamp: expirationDate.valueOf(),
-					accountId: account.id,
-					email: account.email,
+					accountId: result.accountId,
+					name: result.name,
 				};
 			}
 		}

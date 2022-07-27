@@ -1,17 +1,18 @@
 import React from "react";
-import * as ReactNative from "react-native";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, Controller } from "react-hook-form";
+import { Button, Input, Loading, Spacer, Text } from "@nextui-org/react";
+import { useForm } from "react-hook-form";
+import { useRouter } from "solito/router";
 import { z } from "zod";
 
 import { cache } from "app/cache";
-import { BackButton } from "app/components/back-button";
-import { MutationWrapper } from "app/components/mutation-wrapper";
+import { MutationErrorMessage } from "app/components/mutation-error-message";
+import { Page } from "app/components/page";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { trpc } from "app/trpc";
-import { TextInput, Text } from "app/utils/styles";
 import { passwordSchema, emailSchema } from "app/utils/validation";
+import { AccountsId } from "next-app/db/models";
 
 type LoginForm = {
 	email: string;
@@ -19,11 +20,8 @@ type LoginForm = {
 };
 
 export const LoginScreen: React.FC = () => {
-	const {
-		control,
-		handleSubmit,
-		formState: { isValid, errors },
-	} = useForm<LoginForm>({
+	const router = useRouter();
+	const form = useForm<LoginForm>({
 		mode: "onChange",
 		resolver: zodResolver(
 			z.object({ email: emailSchema, password: passwordSchema })
@@ -32,53 +30,53 @@ export const LoginScreen: React.FC = () => {
 
 	const trpcContext = trpc.useContext();
 	const loginMutation = trpc.useMutation("auth.login");
-	const onSubmit = useSubmitHandler<LoginForm>(
-		(data) => loginMutation.mutateAsync(data),
+	const onSubmit = useSubmitHandler(
+		async (data: LoginForm) => {
+			const result = await loginMutation.mutateAsync(data);
+			return {
+				id: result.accountId,
+				name: result.name,
+			};
+		},
 		[loginMutation, trpcContext],
-		() => cache.account.get.invalidate(trpcContext, { refetchInactive: true })
+		React.useCallback(
+			(account: { id: AccountsId; name: string }) => {
+				cache.account.get.set(trpcContext, account);
+				router.replace("/");
+			},
+			[router, trpcContext]
+		)
 	);
 
 	return (
-		<>
-			<BackButton href="/" />
-			<Controller
-				control={control}
-				name="email"
-				render={({ field: { onChange, value = "", onBlur } }) => (
-					<>
-						<TextInput
-							placeholder="Enter your email"
-							textContentType="emailAddress"
-							value={value}
-							onBlur={onBlur}
-							onChangeText={onChange}
-						/>
-						{errors.email ? <Text>{errors.email.message}</Text> : null}
-					</>
-				)}
+		<Page>
+			<Text h2>Login</Text>
+			<Input
+				{...form.register("email")}
+				label="Email"
+				helperColor="warning"
+				helperText={form.formState.errors.email?.message}
 			/>
-			<Controller
-				control={control}
-				name="password"
-				render={({ field: { onChange, value = "", onBlur } }) => (
-					<TextInput
-						placeholder="Enter your password"
-						textContentType="password"
-						value={value}
-						onBlur={onBlur}
-						onChangeText={onChange}
-						secureTextEntry
-					/>
-				)}
+			<Spacer y={1} />
+			<Input.Password
+				{...form.register("password")}
+				label="Password"
+				helperColor="warning"
+				helperText={form.formState.errors.password?.message}
 			/>
-			<ReactNative.Button
-				title="Login"
-				disabled={!isValid || loginMutation.status === "success"}
-				onPress={handleSubmit(onSubmit)}
-			/>
-			<MutationWrapper<"auth.login"> mutation={loginMutation}>
-				{() => <Text>Auth success!</Text>}
-			</MutationWrapper>
-		</>
+			<Spacer y={1} />
+			<Button
+				disabled={!form.formState.isValid}
+				onClick={form.handleSubmit(onSubmit)}
+			>
+				{loginMutation.isLoading ? <Loading /> : "Login"}
+			</Button>
+			{loginMutation.status === "error" ? (
+				<>
+					<Spacer y={1} />
+					<MutationErrorMessage mutation={loginMutation} />
+				</>
+			) : null}
+		</Page>
 	);
 };

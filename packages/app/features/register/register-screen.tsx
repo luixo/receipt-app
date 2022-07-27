@@ -1,21 +1,22 @@
 import React from "react";
-import * as ReactNative from "react-native";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, Controller } from "react-hook-form";
+import { Button, Input, Loading, Spacer, Text } from "@nextui-org/react";
+import { useForm } from "react-hook-form";
+import { useRouter } from "solito/router";
 import { z } from "zod";
 
-import { BackButton } from "app/components/back-button";
-import { MutationWrapper } from "app/components/mutation-wrapper";
-import { PasswordFields } from "app/components/password-fields";
+import { cache } from "app/cache";
+import { MutationErrorMessage } from "app/components/mutation-error-message";
+import { Page } from "app/components/page";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { trpc } from "app/trpc";
-import { TextInput, Text } from "app/utils/styles";
 import {
 	accountNameSchema,
 	passwordSchema,
 	emailSchema,
 } from "app/utils/validation";
+import { AccountsId } from "next-app/db/models";
 
 type RegistrationForm = {
 	email: string;
@@ -25,6 +26,7 @@ type RegistrationForm = {
 };
 
 export const RegisterScreen: React.FC = () => {
+	const router = useRouter();
 	const form = useForm<RegistrationForm>({
 		mode: "onChange",
 		resolver: zodResolver(
@@ -36,67 +38,76 @@ export const RegisterScreen: React.FC = () => {
 			})
 		),
 	});
-	const {
-		control,
-		handleSubmit,
-		formState: { isValid, errors },
-	} = form;
+
+	const trpcContext = trpc.useContext();
 
 	const registerMutation = trpc.useMutation("auth.register");
-	const onSubmit = useSubmitHandler<RegistrationForm>(
-		(data) =>
-			registerMutation.mutateAsync({
+	const onSubmit = useSubmitHandler(
+		async (data: RegistrationForm) => {
+			const result = await registerMutation.mutateAsync({
 				email: data.email,
 				name: data.name,
 				password: data.password,
-			}),
-		[registerMutation]
+			});
+			return {
+				id: result.accountId,
+				name: data.name,
+			};
+		},
+		[registerMutation],
+		React.useCallback(
+			(account: { id: AccountsId; name: string }) => {
+				cache.account.get.set(trpcContext, account);
+				router.replace("/");
+			},
+			[router, trpcContext]
+		)
 	);
 
 	return (
-		<>
-			<BackButton href="/" />
-			<Controller
-				control={control}
-				name="email"
-				render={({ field: { onChange, value = "", onBlur } }) => (
-					<>
-						<TextInput
-							placeholder="Enter your email"
-							textContentType="emailAddress"
-							value={value}
-							onBlur={onBlur}
-							onChangeText={onChange}
-						/>
-						{errors.email ? <Text>{errors.email.message}</Text> : null}
-					</>
-				)}
+		<Page>
+			<Text h2>Register</Text>
+			<Input
+				{...form.register("email")}
+				label="Email"
+				helperColor="warning"
+				helperText={form.formState.errors.email?.message}
 			/>
-			<Controller
-				control={control}
-				name="name"
-				render={({ field: { onChange, value = "", onBlur } }) => (
-					<>
-						<TextInput
-							placeholder="Enter your name"
-							textContentType="name"
-							value={value}
-							onBlur={onBlur}
-							onChangeText={onChange}
-						/>
-						{errors.name ? <Text>{errors.name.message}</Text> : null}
-					</>
-				)}
+			<Spacer y={1} />
+			<Input
+				{...form.register("name")}
+				label="Name"
+				placeholder="You can change it later"
+				helperColor="warning"
+				helperText={form.formState.errors.name?.message}
 			/>
-			<PasswordFields form={form} />
-			<ReactNative.Button
-				title="Submit"
-				disabled={!isValid || registerMutation.status === "success"}
-				onPress={handleSubmit(onSubmit)}
+			<Spacer y={1} />
+			<Input.Password
+				{...form.register("password")}
+				label="New password"
+				helperColor="warning"
+				helperText={form.formState.errors.password?.message}
 			/>
-			<MutationWrapper<"auth.register"> mutation={registerMutation}>
-				{() => <Text>Register success!</Text>}
-			</MutationWrapper>
-		</>
+			<Spacer y={1} />
+			<Input.Password
+				{...form.register("passwordRetype")}
+				label="Retype new password"
+				helperColor="warning"
+				helperText={form.formState.errors.passwordRetype?.message}
+			/>
+			<Spacer y={1} />
+			<Button
+				disabled={!form.formState.isValid}
+				onClick={form.handleSubmit(onSubmit)}
+			>
+				{registerMutation.isLoading ? <Loading /> : "Register"}
+			</Button>
+			{registerMutation.status === "error" ? (
+				<>
+					<Spacer y={1} />
+					<MutationErrorMessage mutation={registerMutation} />
+				</>
+			) : null}
+		</Page>
 	);
 };

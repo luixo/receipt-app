@@ -8,6 +8,7 @@ import {
 	passwordSchema,
 } from "app/utils/validation";
 import { getDatabase } from "next-app/db";
+import { AccountsId, UsersId } from "next-app/db/models";
 import { createAuthorizationSession } from "next-app/handlers/auth/utils";
 import { UnauthorizedContext } from "next-app/handlers/context";
 import { setAuthCookie } from "next-app/utils/auth-cookie";
@@ -36,7 +37,7 @@ export const router = trpc.router<UnauthorizedContext>().mutation("register", {
 				message: "Email already exist",
 			});
 		} else {
-			const id = v4();
+			const id: AccountsId = v4();
 			const passwordData = generatePasswordData(input.password);
 			await database
 				.insertInto("accounts")
@@ -50,7 +51,8 @@ export const router = trpc.router<UnauthorizedContext>().mutation("register", {
 			await database
 				.insertInto("users")
 				.values({
-					id,
+					// Typesystem doesn't know that we use account id as self user id
+					id: id as UsersId,
 					name: input.name,
 					ownerAccountId: id,
 					connectedAccountId: id,
@@ -65,9 +67,7 @@ export const router = trpc.router<UnauthorizedContext>().mutation("register", {
 			ctx.logger.debug(`Registration of account "${email}" succeed.`);
 			setAuthCookie(ctx.res, authToken, expirationDate);
 			return {
-				expirationTimestamp: expirationDate.valueOf(),
 				accountId: id,
-				email,
 			};
 		}
 	},
