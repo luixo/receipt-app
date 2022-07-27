@@ -1,14 +1,14 @@
 import React from "react";
 
-import { Collapse, Loading } from "@nextui-org/react";
+import { Collapse, Loading, Spacer } from "@nextui-org/react";
 
 import { QueryErrorMessage } from "app/components/query-error-message";
-import { AddReceiptItemForm } from "app/features/receipt-items/add-receipt-item-form";
 import { ReceiptParticipants } from "app/features/receipt-participants/receipt-participants";
 import { trpc, TRPCQuerySuccessResult } from "app/trpc";
 import { Currency } from "app/utils/currency";
 import { ReceiptsId } from "next-app/db/models";
 
+import { AddReceiptItemController } from "./add-receipt-item-controller";
 import { ReceiptItem } from "./receipt-item";
 
 type InnerProps = {
@@ -24,7 +24,7 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 	currency,
 	isLoading,
 }) => (
-	<Collapse.Group accordion={false}>
+	<Collapse.Group accordion={false} divider={false}>
 		<Collapse title="🥸 Participants">
 			<ReceiptParticipants
 				data={data}
@@ -33,19 +33,24 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 				isLoading={isLoading}
 			/>
 		</Collapse>
-		<Collapse title="🍔 Items" expanded>
-			<AddReceiptItemForm receiptId={receiptId} />
-			{data.items.map((receiptItem) => (
-				<ReceiptItem
-					key={receiptItem.id}
-					receiptId={receiptId}
-					receiptItem={receiptItem}
-					receiptParticipants={data.participants}
-					role={data.role}
-					isLoading={isLoading}
-				/>
-			))}
-		</Collapse>
+		<AddReceiptItemController receiptId={receiptId} isLoading={isLoading} />
+		<Spacer y={1} />
+		{data.items.map((receiptItem) => (
+			<ReceiptItem
+				key={receiptItem.id}
+				receiptId={receiptId}
+				receiptItem={receiptItem}
+				receiptParticipants={data.participants}
+				role={data.role}
+				isLoading={isLoading}
+			/>
+		))}
+		{data.items.length === 0 ? null : (
+			<>
+				<Spacer y={1} />
+				<AddReceiptItemController receiptId={receiptId} isLoading={isLoading} />
+			</>
+		)}
 	</Collapse.Group>
 );
 

@@ -60,3 +60,15 @@ export const priceSchema = z
 export const quantitySchema = z
 	.number()
 	.gt(0, { message: "Quantity should be greater than 0" });
+
+export const parseNumberWithDecimals = (
+	value: string,
+	decimals = 2
+): number | string | undefined => {
+	const output = Number(value);
+	const stringifiedOutput = output.toString().split(".");
+	if (Number.isNaN(output) || (stringifiedOutput[1]?.length ?? 0) > decimals) {
+		return;
+	}
+	return value === "" ? value : output;
+};

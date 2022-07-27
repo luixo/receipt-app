@@ -1,17 +1,15 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, Controller } from "react-hook-form";
+import { Button, Loading, Spacer, styled } from "@nextui-org/react";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { cache } from "app/cache";
-import { AddButton } from "app/components/add-button";
-import { Block } from "app/components/block";
-import { MutationWrapper } from "app/components/mutation-wrapper";
+import { MutationErrorMessage } from "app/components/mutation-error-message";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc } from "app/trpc";
-import { Text, TextInput } from "app/utils/styles";
 import {
 	priceSchema,
 	quantitySchema,
@@ -19,27 +17,44 @@ import {
 } from "app/utils/validation";
 import { ReceiptsId } from "next-app/db/models";
 
-type Form = {
-	name: string;
-	price: number;
-	quantity: number;
-};
+import { ReceiptItemNameInput } from "./receipt-item-name-input";
+import { ReceiptItemPriceInput } from "./receipt-item-price-input";
+import { ReceiptItemQuantityInput } from "./receipt-item-quantity-input";
+import { Form } from "./types";
+
+const Inputs = styled("div", {
+	display: "flex",
+
+	"@xsMax": {
+		flexDirection: "column",
+	},
+});
+
+const Buttons = styled("div", {
+	display: "flex",
+	justifyContent: "space-between",
+});
+
+const CancelButton = styled("div", {
+	display: "flex",
+});
 
 type Props = {
 	receiptId: ReceiptsId;
+	isLoading: boolean;
+	onDone: () => void;
 };
 
-export const AddReceiptItemForm: React.FC<Props> = ({ receiptId }) => {
-	const addReceiptItemMutation = trpc.useMutation(
+export const AddReceiptItemForm: React.FC<Props> = ({
+	receiptId,
+	isLoading: isDeleteLoading,
+	onDone,
+}) => {
+	const addMutation = trpc.useMutation(
 		"receipt-items.put",
 		useTrpcMutationOptions(cache.receiptItems.put.mutationOptions, receiptId)
 	);
-	const {
-		control,
-		handleSubmit,
-		formState: { isValid, isSubmitting, errors },
-		reset,
-	} = useForm<Form>({
+	const form = useForm<Form>({
 		mode: "onChange",
 		resolver: zodResolver(
 			z.object({
@@ -48,75 +63,47 @@ export const AddReceiptItemForm: React.FC<Props> = ({ receiptId }) => {
 				quantity: quantitySchema,
 			})
 		),
+		defaultValues: {
+			name: "",
+			quantity: 1,
+		},
 	});
 	const onSubmit = useSubmitHandler<Form>(
-		(values) => addReceiptItemMutation.mutateAsync({ ...values, receiptId }),
-		[addReceiptItemMutation, receiptId, reset],
-		reset
+		(values) => addMutation.mutateAsync({ ...values, receiptId }),
+		[addMutation, receiptId],
+		onDone
 	);
 
+	const isLoading = isDeleteLoading || addMutation.isLoading;
+
 	return (
-		<Block name="Add receipt item">
-			<Controller
-				control={control}
-				name="name"
-				render={({ field: { onChange, value = "", onBlur } }) => (
-					<>
-						<TextInput
-							placeholder="Enter item name"
-							value={value}
-							onBlur={onBlur}
-							onChangeText={onChange}
-							editable={!isSubmitting}
-						/>
-						{errors.name ? <Text>{errors.name.message}</Text> : null}
-					</>
-				)}
-			/>
-			<Controller
-				control={control}
-				name="price"
-				render={({ field: { onChange, value = "", onBlur } }) => (
-					<>
-						<TextInput
-							placeholder="Price"
-							value={value.toString()}
-							onBlur={onBlur}
-							keyboardType="numeric"
-							onChangeText={(nextValue) =>
-								onChange(Number(nextValue.replace(/[^0-9]/g, "")))
-							}
-							editable={!isSubmitting}
-						/>
-						{errors.price ? <Text>{errors.price.message}</Text> : null}
-					</>
-				)}
-			/>
-			<Controller
-				control={control}
-				name="quantity"
-				render={({ field: { onChange, value = "", onBlur } }) => (
-					<>
-						<TextInput
-							placeholder="Quantity"
-							value={value.toString()}
-							onBlur={onBlur}
-							keyboardType="numeric"
-							onChangeText={(nextValue) =>
-								onChange(Number(nextValue.replace(/[^0-9]/g, "")))
-							}
-							editable={!isSubmitting}
-						/>
-						{errors.quantity ? <Text>{errors.quantity.message}</Text> : null}
-					</>
-				)}
-			/>
-			<AddButton onPress={handleSubmit(onSubmit)} disabled={!isValid}>
-				Add
-			</AddButton>
-			<MutationWrapper<"receipt-items.put"> mutation={addReceiptItemMutation}>
-				{() => <Text>Add success!</Text>}
-			</MutationWrapper>
-		</Block>
+		<>
+			<Inputs>
+				<ReceiptItemNameInput form={form} isLoading={isLoading} />
+				<Spacer x={1} />
+				<ReceiptItemPriceInput form={form} isLoading={isLoading} />
+				<Spacer x={1} />
+				<ReceiptItemQuantityInput form={form} isLoading={isLoading} />
+			</Inputs>
+			<Spacer y={1} />
+			<Buttons>
+				<Button
+					onClick={form.handleSubmit(onSubmit)}
+					disabled={!form.formState.isValid || isLoading}
+				>
+					{addMutation.isLoading ? <Loading size="xs" /> : "Add item"}
+				</Button>
+				<CancelButton>
+					<Spacer x={1} />
+					<Button onClick={onDone}>Cancel</Button>
+				</CancelButton>
+			</Buttons>
+			{addMutation.status === "error" ? (
+				<>
+					<Spacer y={1} />
+					<MutationErrorMessage mutation={addMutation} />
+				</>
+			) : null}
+		</>
 	);
 };

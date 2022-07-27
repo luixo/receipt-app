@@ -7,10 +7,13 @@ export const useSubmitHandler = <F, T = unknown>(
 	deps: unknown[],
 	onDone?: unknown extends T ? () => void : (result: T) => void
 ) =>
-	useAsyncCallback(async (isMount, values) => {
-		const result = await fn(values as F);
-		if (!isMount()) {
-			return;
-		}
-		onDone?.(result);
-	}, deps) as SubmitHandler<F>;
+	useAsyncCallback(
+		async (isMount, values) => {
+			const result = await fn(values as F);
+			if (!isMount()) {
+				return;
+			}
+			onDone?.(result);
+		},
+		[...deps, onDone]
+	) as SubmitHandler<F>;
