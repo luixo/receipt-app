@@ -38,6 +38,10 @@ export const RemoveButton: React.FC<Props> = ({
 		() => setModalOpen(false),
 		[setModalOpen]
 	);
+	const onYesClick = React.useCallback(() => {
+		onRemove();
+		closeModal();
+	}, [onRemove, closeModal]);
 
 	return (
 		<>
@@ -65,7 +69,7 @@ export const RemoveButton: React.FC<Props> = ({
 					<RemoveButtons>
 						<Button
 							auto
-							onClick={onRemove}
+							onClick={onYesClick}
 							disabled={mutation.isLoading}
 							color="error"
 						>
