@@ -1,26 +1,16 @@
 import React from "react";
-import * as ReactNative from "react-native";
 
-import { BackButton } from "app/components/back-button";
-import { MutationWrapper } from "app/components/mutation-wrapper";
-import { Spacer } from "app/components/spacer";
+import { Button, Loading, Spacer, Text } from "@nextui-org/react";
+import { useRouter } from "solito/router";
+
+import { MutationErrorMessage } from "app/components/mutation-error-message";
+import { Page } from "app/components/page";
+import { ChangePasswordScreen } from "app/features/change-password/change-password-screen";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { trpc } from "app/trpc";
-import { styled, H1, TextLink, Text } from "app/utils/styles";
-
-const Wrapper = styled(ReactNative.View)({
-	flex: 1,
-	justifyContent: "center",
-	alignItems: "center",
-	padding: "md",
-});
-
-const Header = styled(H1)({
-	fontWeight: "bold",
-	textAlign: "center",
-});
 
 export const AccountScreen: React.FC = () => {
+	const router = useRouter();
 	const accountQuery = trpc.useQuery(["account.get"]);
 
 	const trpcContext = trpc.useContext();
@@ -33,35 +23,41 @@ export const AccountScreen: React.FC = () => {
 			}
 			trpcContext.invalidateQueries(["account.get"]);
 			trpcContext.refetchQueries(["account.get"]);
+			router.replace("/");
 		},
-		[logoutMutation, trpcContext]
+		[logoutMutation, trpcContext, router]
 	);
 
 	return (
-		<Wrapper>
-			<Header>
-				{logoutMutation.status === "success"
-					? "You are logged out"
-					: `Your account is 
-				${
-					accountQuery.status === "success"
-						? accountQuery.data.name
-						: accountQuery.status
-				}`}
-			</Header>
-			<Spacer />
-			<BackButton href="/" />
-			<Spacer />
-			<ReactNative.Button
-				title="Logout"
-				disabled={logoutMutation.status === "success"}
-				onPress={logout}
-			/>
-			<Spacer />
-			<TextLink href="/account/change-password">Change password</TextLink>
-			<MutationWrapper<"account.logout"> mutation={logoutMutation}>
-				{() => <Text>Logout success!</Text>}
-			</MutationWrapper>
-		</Wrapper>
+		<Page>
+			{/* zero margin because of inherited margin from ChildText */}
+			<Text h2 css={{ m: 0 }}>
+				{accountQuery.status === "success" ? (
+					`👨👩 ${accountQuery.data.name}`
+				) : accountQuery.status === "loading" ? (
+					<Loading />
+				) : (
+					"Please read below"
+				)}
+			</Text>
+			<Spacer y={1} />
+			<ChangePasswordScreen />
+			<Spacer y={2} />
+			<Button
+				auto
+				disabled={logoutMutation.isLoading}
+				onClick={logout}
+				color="warning"
+				css={{ alignSelf: "flex-end" }}
+			>
+				{logoutMutation.isLoading ? <Loading /> : "Logout"}
+			</Button>
+			{logoutMutation.status === "error" ? (
+				<>
+					<Spacer y={1} />
+					<MutationErrorMessage mutation={logoutMutation} />
+				</>
+			) : null}
+		</Page>
 	);
 };
