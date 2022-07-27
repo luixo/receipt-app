@@ -6,6 +6,8 @@ import type {
 	ProcedureRecord,
 } from "@trpc/server/dist/declarations/src/router";
 import type {
+	InvalidateOptions,
+	InvalidateQueryFilters,
 	UseInfiniteQueryResult,
 	UseMutationResult,
 	UseQueryResult,
@@ -143,3 +145,5 @@ export type TRPCMutationResult<Path extends TRPCMutationKey> =
 	>;
 
 export type AnyTRPCMutationResult = UseMutationResult<any, TRPCError, any>;
+
+export type InvalidateArgs = [InvalidateQueryFilters?, InvalidateOptions?];

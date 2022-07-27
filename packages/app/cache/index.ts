@@ -1,3 +1,4 @@
+import * as account from "./account";
 import * as accountConnections from "./account-connection-intentions";
 import * as itemParticipants from "./item-participants";
 import * as receiptItems from "./receipt-items";
@@ -14,4 +15,5 @@ export const cache = {
 	accountConnections,
 	receiptParticipants,
 	itemParticipants,
+	account,
 };

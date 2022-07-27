@@ -3,6 +3,7 @@ import React from "react";
 import { Button, Loading, Spacer, Text } from "@nextui-org/react";
 import { useRouter } from "solito/router";
 
+import { cache } from "app/cache";
 import { MutationErrorMessage } from "app/components/mutation-error-message";
 import { Page } from "app/components/page";
 import { ChangePasswordScreen } from "app/features/change-password/change-password-screen";
@@ -21,8 +22,7 @@ export const AccountScreen: React.FC = () => {
 			if (!isMount()) {
 				return;
 			}
-			trpcContext.invalidateQueries(["account.get"]);
-			trpcContext.refetchQueries(["account.get"]);
+			cache.account.get.invalidate(trpcContext, { refetchInactive: true });
 			router.replace("/");
 		},
 		[logoutMutation, trpcContext, router]

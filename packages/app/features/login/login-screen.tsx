@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 
+import { cache } from "app/cache";
 import { BackButton } from "app/components/back-button";
 import { MutationWrapper } from "app/components/mutation-wrapper";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
@@ -34,10 +35,7 @@ export const LoginScreen: React.FC = () => {
 	const onSubmit = useSubmitHandler<LoginForm>(
 		(data) => loginMutation.mutateAsync(data),
 		[loginMutation, trpcContext],
-		() => {
-			trpcContext.invalidateQueries(["account.get"]);
-			trpcContext.refetchQueries(["account.get"]);
-		}
+		() => cache.account.get.invalidate(trpcContext, { refetchInactive: true })
 	);
 
 	return (

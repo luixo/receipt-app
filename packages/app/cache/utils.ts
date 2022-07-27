@@ -3,6 +3,7 @@ import React from "react";
 import { InfiniteData } from "react-query";
 
 import {
+	InvalidateArgs,
 	TRPCInfiniteQueryKey,
 	TRPCQueryInput,
 	TRPCQueryKey,
@@ -16,7 +17,7 @@ type Controller<Data> = {
 	get: () => Data | undefined;
 	set: (nextData: Data) => void;
 	update: (updater: (prevData: Data) => Data) => void;
-	invalidate: () => void;
+	invalidate: (...args: InvalidateArgs) => void;
 };
 
 // TODO: fix anys
@@ -33,7 +34,8 @@ export const createGenericController = <Path extends TRPCQueryKey>(
 		trpc.setQueryData(pathAndInput, (prev: any) =>
 			prev === undefined ? prev : updater(prev)
 		),
-	invalidate: () => trpc.invalidateQueries(pathAndInput),
+	invalidate: (filters, options) =>
+		trpc.invalidateQueries(pathAndInput, filters, options),
 });
 
 export const createGenericInfiniteController = <
