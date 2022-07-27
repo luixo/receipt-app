@@ -15,7 +15,7 @@ export const IconButton: React.FC<Props> = ({
 	...props
 }) => {
 	const button = (
-		<Button auto {...props}>
+		<Button auto {...props} css={{ $$buttonPadding: 0 }}>
 			{isLoading ? <Loading size="xs" /> : props.children}
 		</Button>
 	);

@@ -1,6 +1,9 @@
 import React from "react";
 
-import { MdDoneAll as DoneIcon } from "react-icons/md";
+import {
+	MdDoneAll as DoneIcon,
+	MdRemoveDone as UndoneIcon,
+} from "react-icons/md";
 
 import { cache } from "app/cache";
 import { IconButton } from "app/components/icon-button";
@@ -12,14 +15,12 @@ type Props = {
 	receiptId: ReceiptsId;
 	userId: UsersId;
 	resolved: boolean | null;
-	readOnly?: boolean;
 } & Omit<React.ComponentProps<typeof IconButton>, "onClick" | "color">;
 
 export const ReceiptParticipantResolvedButton: React.FC<Props> = ({
 	receiptId,
 	userId,
 	resolved,
-	readOnly,
 	css,
 	...props
 }) => {
@@ -42,11 +43,9 @@ export const ReceiptParticipantResolvedButton: React.FC<Props> = ({
 			isLoading={updateReceiptMutation.isLoading || props.isLoading}
 			disabled={resolved === null || props.disabled}
 			color={resolved ? "success" : "warning"}
-			onClick={readOnly ? undefined : switchResolved}
-			animated={readOnly ? false : props.animated}
-			css={{ ...css, cursor: readOnly ? "default" : css?.cursor }}
+			onClick={switchResolved}
 		>
-			<DoneIcon size={24} />
+			{resolved ? <DoneIcon size={24} /> : <UndoneIcon size={24} />}
 		</IconButton>
 	);
 };

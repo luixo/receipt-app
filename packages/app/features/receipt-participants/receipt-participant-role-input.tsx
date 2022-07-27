@@ -66,7 +66,7 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 		<>
 			<IconButton
 				auto
-				bordered
+				ghost
 				onClick={openModal}
 				disabled={isLoading || role !== "owner" || participant.role === "owner"}
 				isLoading={updateParticipantMutation.isLoading}
@@ -91,11 +91,7 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 				</Modal.Header>
 				<Modal.Body>
 					{ROLES.map((pickRole) => (
-						<Button
-							key={pickRole}
-							bordered
-							onClick={() => changeRole(pickRole)}
-						>
+						<Button key={pickRole} ghost onClick={() => changeRole(pickRole)}>
 							{pickRole}
 						</Button>
 					))}

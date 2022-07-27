@@ -1,6 +1,9 @@
 import React from "react";
 
-import { MdCalculate as CalcIcon } from "react-icons/md";
+import {
+	MdEventAvailable as AccountedIcon,
+	MdEventBusy as NotAccountedIcon,
+} from "react-icons/md";
 
 import { cache } from "app/cache";
 import { IconButton } from "app/components/icon-button";
@@ -11,11 +14,14 @@ import { ReceiptsId } from "next-app/db/models";
 type Props = {
 	receiptId: ReceiptsId;
 	resolved: boolean;
+	readOnly?: boolean;
 } & Omit<React.ComponentProps<typeof IconButton>, "onClick" | "color">;
 
 export const ReceiptAccountedButton: React.FC<Props> = ({
 	receiptId,
 	resolved,
+	readOnly,
+	css,
 	...props
 }) => {
 	const updateReceiptMutation = trpc.useMutation(
@@ -35,7 +41,7 @@ export const ReceiptAccountedButton: React.FC<Props> = ({
 			color={resolved ? "success" : "warning"}
 			onClick={switchResolved}
 		>
-			<CalcIcon size={24} />
+			{resolved ? <AccountedIcon size={24} /> : <NotAccountedIcon size={24} />}
 		</IconButton>
 	);
 };

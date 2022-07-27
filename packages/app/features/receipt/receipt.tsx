@@ -98,7 +98,7 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 				</Title>
 				<Buttons>
 					<ReceiptParticipantResolvedButton
-						bordered
+						ghost
 						receiptId={receipt.id}
 						userId={receipt.selfUserId}
 						resolved={receipt.participantResolved}
@@ -106,7 +106,7 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 					/>
 					<Spacer x={0.5} />
 					<ReceiptAccountedButton
-						bordered
+						ghost
 						receiptId={receipt.id}
 						resolved={receipt.resolved}
 						disabled={deleteLoading}

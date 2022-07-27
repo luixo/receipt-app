@@ -54,6 +54,8 @@ export const ReceiptParticipant: React.FC<Props> = ({
 	currency,
 	isLoading,
 }) => {
+	const accountQuery = trpc.useQuery(["account.get"]);
+
 	const deleteReceiptParticipantMutation = trpc.useMutation(
 		"receipt-participants.delete",
 		useTrpcMutationOptions(cache.receiptParticipants.delete.mutationOptions, {
@@ -105,7 +107,11 @@ export const ReceiptParticipant: React.FC<Props> = ({
 				<Spacer x={1} />
 				<BodyElement>
 					<ReceiptParticipantResolvedButton
-						readOnly
+						disabled={
+							accountQuery.status !== "success" ||
+							participant.connectedAccountId !== accountQuery.data.id
+						}
+						ghost
 						receiptId={receiptId}
 						userId={participant.userId}
 						resolved={participant.resolved}
