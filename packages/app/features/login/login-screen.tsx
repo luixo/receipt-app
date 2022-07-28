@@ -49,6 +49,7 @@ export const LoginScreen: React.FC = () => {
 				label="Email"
 				helperColor="warning"
 				helperText={form.formState.errors.email?.message}
+				disabled={loginMutation.isLoading}
 			/>
 			<Spacer y={1} />
 			<Input.Password
@@ -56,10 +57,11 @@ export const LoginScreen: React.FC = () => {
 				label="Password"
 				helperColor="warning"
 				helperText={form.formState.errors.password?.message}
+				disabled={loginMutation.isLoading}
 			/>
 			<Spacer y={1} />
 			<Button
-				disabled={!form.formState.isValid}
+				disabled={!form.formState.isValid || loginMutation.isLoading}
 				onClick={form.handleSubmit(onSubmit)}
 			>
 				{loginMutation.isLoading ? <Loading /> : "Login"}

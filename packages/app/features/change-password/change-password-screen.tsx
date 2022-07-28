@@ -60,6 +60,7 @@ export const ChangePasswordScreen: React.FC = () => {
 				label="Current password"
 				helperColor="warning"
 				helperText={form.formState.errors.prevPassword?.message}
+				disabled={changePasswordMutation.isLoading}
 			/>
 			<Spacer y={1} />
 			<Input.Password
@@ -67,6 +68,7 @@ export const ChangePasswordScreen: React.FC = () => {
 				label="New password"
 				helperColor="warning"
 				helperText={form.formState.errors.password?.message}
+				disabled={changePasswordMutation.isLoading}
 			/>
 			<Spacer y={1} />
 			<Input.Password
@@ -74,10 +76,11 @@ export const ChangePasswordScreen: React.FC = () => {
 				label="Retype new password"
 				helperColor="warning"
 				helperText={form.formState.errors.passwordRetype?.message}
+				disabled={changePasswordMutation.isLoading}
 			/>
 			<Spacer />
 			<Button
-				disabled={!form.formState.isValid}
+				disabled={!form.formState.isValid || changePasswordMutation.isLoading}
 				onClick={form.handleSubmit(onSubmit)}
 			>
 				{changePasswordMutation.isLoading ? <Loading /> : "Change password"}

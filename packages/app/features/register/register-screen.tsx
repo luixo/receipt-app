@@ -72,6 +72,7 @@ export const RegisterScreen: React.FC = () => {
 				label="Email"
 				helperColor="warning"
 				helperText={form.formState.errors.email?.message}
+				disabled={registerMutation.isLoading}
 			/>
 			<Spacer y={1} />
 			<Input
@@ -80,6 +81,7 @@ export const RegisterScreen: React.FC = () => {
 				placeholder="You can change it later"
 				helperColor="warning"
 				helperText={form.formState.errors.name?.message}
+				disabled={registerMutation.isLoading}
 			/>
 			<Spacer y={1} />
 			<Input.Password
@@ -87,6 +89,7 @@ export const RegisterScreen: React.FC = () => {
 				label="New password"
 				helperColor="warning"
 				helperText={form.formState.errors.password?.message}
+				disabled={registerMutation.isLoading}
 			/>
 			<Spacer y={1} />
 			<Input.Password
@@ -94,10 +97,11 @@ export const RegisterScreen: React.FC = () => {
 				label="Retype new password"
 				helperColor="warning"
 				helperText={form.formState.errors.passwordRetype?.message}
+				disabled={registerMutation.isLoading}
 			/>
 			<Spacer y={1} />
 			<Button
-				disabled={!form.formState.isValid}
+				disabled={!form.formState.isValid || registerMutation.isLoading}
 				onClick={form.handleSubmit(onSubmit)}
 			>
 				{registerMutation.isLoading ? <Loading /> : "Register"}
