@@ -8,6 +8,7 @@ import {
 	Button,
 	styled,
 	Grid,
+	Checkbox,
 } from "@nextui-org/react";
 import { MdAdd as AddIcon, MdArrowDropUp as ArrowUpIcon } from "react-icons/md";
 
@@ -81,7 +82,8 @@ type InnerProps = {
 };
 
 const ReceiptsInner: React.FC<InnerProps> = ({ query }) => {
-	const [input, { changeOrderBy }] = cache.receipts.getPaged.useStore();
+	const [input, { changeOrderBy, changeOnlyNonResolved }] =
+		cache.receipts.getPaged.useStore();
 	const {
 		onNextPage,
 		onPrevPage,
@@ -170,6 +172,15 @@ const ReceiptsInner: React.FC<InnerProps> = ({ query }) => {
 							{nextLoading ? <Loading color="currentColor" size="xs" /> : ">"}
 						</Button>
 					</Button.Group>
+				</PaginationGridElement>
+				<PaginationGridElement xs={4} justify="flex-end">
+					<Text>Show only non-resolved</Text>
+					<Spacer x={0.5} />
+					<Checkbox
+						aria-label="Switch show only non-resolved receipts"
+						isSelected={input.onlyNonResolved}
+						onChange={changeOnlyNonResolved}
+					/>
 				</PaginationGridElement>
 			</Grid.Container>
 		</PaginationWrapper>

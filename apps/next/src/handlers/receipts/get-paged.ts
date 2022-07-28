@@ -12,6 +12,7 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 		cursor: z.date().optional(),
 		limit: limitSchema,
 		orderBy: z.union([z.literal("date-asc"), z.literal("date-desc")]),
+		onlyNonResolved: z.boolean(),
 	}),
 	resolve: async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
@@ -90,20 +91,46 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 						input.cursor!
 					)
 				)
+				.if(Boolean(input.onlyNonResolved), (qb) =>
+					qb.where("receiptParticipants.resolved", "=", false)
+				)
 				.limit(input.limit + 1)
 				.execute(),
 			database
 				.with("mergedReceipts", () =>
 					foreignReceipts
-						.select(database.fn.count<string>("receipts.id").as("amount"))
+						.select([
+							database.fn.count<string>("receipts.id").as("amount"),
+							sql<boolean | null>`"receiptParticipants"."resolved"`.as(
+								"resolved"
+							),
+						])
+						.groupBy("receiptParticipants.resolved")
 						.union(
-							ownReceipts.select(
-								database.fn.count<string>("receipts.id").as("amount")
-							)
+							ownReceipts
+								.leftJoin("receiptParticipants", (jb) =>
+									jb
+										.onRef("receiptParticipants.receiptId", "=", "receipts.id")
+										.onRef(
+											"receiptParticipants.userId",
+											"=",
+											// We use `userId` = `ownerAccountId` contract
+											// But type system doesn't know about that
+											sql<UsersId>`receipts."ownerAccountId"`
+										)
+								)
+								.select([
+									database.fn.count<string>("receipts.id").as("amount"),
+									"receiptParticipants.resolved",
+								])
+								.groupBy("receiptParticipants.resolved")
 						)
 				)
 				.selectFrom("mergedReceipts")
 				.select("amount")
+				.if(Boolean(input.onlyNonResolved), (qb) =>
+					qb.where("resolved", "=", false)
+				)
 				.executeTakeFirstOrThrow(),
 		]);
 

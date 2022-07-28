@@ -13,16 +13,26 @@ export const getNextPage = (
 const inputStore = zustand<Input & Setters<Input>>((set) => ({
 	limit: 10,
 	orderBy: "date-desc",
+	onlyNonResolved: false,
 	changeLimit: (nextLimit: Input["limit"]) => set(() => ({ limit: nextLimit })),
 	changeOrderBy: (nextOrderBy: Input["orderBy"]) =>
 		set(() => ({ orderBy: nextOrderBy })),
+	changeOnlyNonResolved: (nextOnlyNonResolved) =>
+		set(() => ({
+			onlyNonResolved: nextOnlyNonResolved,
+		})),
 }));
 
 export const useStore = () =>
 	[
-		inputStore(({ limit, orderBy }) => ({ limit, orderBy })),
-		inputStore(({ changeLimit, changeOrderBy }) => ({
+		inputStore(({ limit, orderBy, onlyNonResolved }) => ({
+			limit,
+			orderBy,
+			onlyNonResolved,
+		})),
+		inputStore(({ changeLimit, changeOrderBy, changeOnlyNonResolved }) => ({
 			changeLimit,
 			changeOrderBy,
+			changeOnlyNonResolved,
 		})),
 	] as const;
