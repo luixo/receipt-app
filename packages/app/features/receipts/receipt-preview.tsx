@@ -44,7 +44,7 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 					</Text>
 				</TitleLink>
 			</Grid>
-			<Grid xs={2}>
+			<Grid xs={2} justify="center">
 				<ReceiptParticipantResolvedButton
 					light
 					receiptId={receipt.id}
@@ -52,7 +52,7 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 					resolved={receipt.participantResolved}
 				/>
 			</Grid>
-			<Grid xs={2}>
+			<Grid xs={2} justify="center">
 				<ReceiptAccountedButton
 					light
 					receiptId={receipt.id}
