@@ -114,6 +114,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 						ghost
 						receiptId={receiptId}
 						userId={participant.userId}
+						localUserId={participant.localUserId!}
 						resolved={participant.resolved}
 					/>
 					{role === "owner" ? (

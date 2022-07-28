@@ -14,12 +14,14 @@ import { ReceiptsId, UsersId } from "next-app/db/models";
 type Props = {
 	receiptId: ReceiptsId;
 	userId: UsersId;
+	localUserId: UsersId;
 	resolved: boolean | null;
 } & Omit<React.ComponentProps<typeof IconButton>, "onClick" | "color">;
 
 export const ReceiptParticipantResolvedButton: React.FC<Props> = ({
 	receiptId,
 	userId,
+	localUserId,
 	resolved,
 	css,
 	...props
@@ -27,16 +29,21 @@ export const ReceiptParticipantResolvedButton: React.FC<Props> = ({
 	const updateReceiptMutation = trpc.useMutation(
 		"receipt-participants.update",
 		useTrpcMutationOptions(cache.receiptParticipants.update.mutationOptions, {
-			isSelfAccount: true,
+			userId: localUserId,
 		})
 	);
 	const switchResolved = React.useCallback(() => {
+		if (!localUserId) {
+			throw new Error(
+				"No localUserId in ReceiptParticipantResolvedButton component, cannot mutate"
+			);
+		}
 		updateReceiptMutation.mutate({
 			receiptId,
 			userId,
 			update: { type: "resolved", resolved: !resolved },
 		});
-	}, [updateReceiptMutation, receiptId, userId, resolved]);
+	}, [updateReceiptMutation, receiptId, userId, localUserId, resolved]);
 	return (
 		<IconButton
 			{...props}

@@ -1,6 +1,7 @@
 import { cache, Revert } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
+import { UsersId } from "next-app/db/models";
 
 type ReceiptParticipant =
 	TRPCQueryOutput<"receipt-items.get">["participants"][number];
@@ -33,7 +34,7 @@ const getRevert =
 
 type PagedReceipt = TRPCQueryOutput<"receipts.get-paged">["items"][number];
 
-const applyUpdateUserPaged = (
+const applyUpdateReceiptPaged = (
 	item: PagedReceipt,
 	update: TRPCMutationInput<"receipt-participants.update">["update"]
 ): PagedReceipt => {
@@ -47,7 +48,7 @@ const applyUpdateUserPaged = (
 
 type Receipt = TRPCQueryOutput<"receipts.get">;
 
-const applyUpdateUser = (
+const applyUpdateReceipt = (
 	item: Receipt,
 	update: TRPCMutationInput<"receipt-participants.update">["update"]
 ): Receipt => {
@@ -59,10 +60,30 @@ const applyUpdateUser = (
 	}
 };
 
+type ReceiptParticipants =
+	TRPCQueryOutput<"receipts.get-resolved-participants">;
+
+const applyUpdateResolvedParticipants = (
+	participants: ReceiptParticipants,
+	selfUserId: UsersId,
+	update: TRPCMutationInput<"receipt-participants.update">["update"]
+): ReceiptParticipants => {
+	switch (update.type) {
+		case "resolved":
+			return participants.map((participant) =>
+				participant.localUserId === selfUserId
+					? { ...participant, resolved: update.resolved }
+					: participant
+			);
+		case "role":
+			return participants;
+	}
+};
+
 export const mutationOptions: UseContextedMutationOptions<
 	"receipt-participants.update",
 	Revert<ReceiptParticipant> | undefined,
-	{ isSelfAccount: boolean }
+	{ userId?: UsersId }
 > = {
 	onMutate: (trpcContext) => (variables) => {
 		const snapshot = cache.receiptItems.get.receiptParticipant.update(
@@ -74,16 +95,22 @@ export const mutationOptions: UseContextedMutationOptions<
 		return snapshot && getRevert(snapshot, variables.update);
 	},
 	onSuccess:
-		(trpcContext, { isSelfAccount }) =>
+		(trpcContext, { userId }) =>
 		(_result, variables) => {
-			if (isSelfAccount) {
+			if (userId) {
 				cache.receipts.getPaged.update(
 					trpcContext,
 					variables.receiptId,
-					(receipt) => applyUpdateUserPaged(receipt, variables.update)
+					(receipt) => applyUpdateReceiptPaged(receipt, variables.update)
 				);
 				cache.receipts.get.update(trpcContext, variables.receiptId, (receipt) =>
-					applyUpdateUser(receipt, variables.update)
+					applyUpdateReceipt(receipt, variables.update)
+				);
+				cache.receipts.getResolvedParticipants.update(
+					trpcContext,
+					variables.receiptId,
+					(receipt) =>
+						applyUpdateResolvedParticipants(receipt, userId, variables.update)
 				);
 			}
 		},

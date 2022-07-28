@@ -35,7 +35,10 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 	const updateParticipantMutation = trpc.useMutation(
 		"receipt-participants.update",
 		useTrpcMutationOptions(cache.receiptParticipants.update.mutationOptions, {
-			isSelfAccount: participant.localUserId === accountQuery.data?.id,
+			userId:
+				participant.localUserId === accountQuery.data?.id
+					? participant.localUserId
+					: undefined,
 		})
 	);
 	const changeRole = React.useCallback(

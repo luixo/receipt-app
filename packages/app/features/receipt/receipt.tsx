@@ -97,6 +97,7 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 						ghost
 						receiptId={receipt.id}
 						userId={receipt.selfUserId}
+						localUserId={receipt.selfUserId}
 						resolved={receipt.participantResolved}
 						disabled={deleteLoading}
 					/>

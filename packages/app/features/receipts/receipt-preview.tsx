@@ -5,6 +5,7 @@ import { Link, Text, Grid, styled } from "@nextui-org/react";
 import { cache } from "app/cache";
 import { ReceiptAccountedButton } from "app/components/receipt-accounted-button";
 import { ReceiptParticipantResolvedButton } from "app/components/receipt-participant-resolved-button";
+import { ReceiptResolvedParticipantsButton } from "app/components/receipt-resolved-participants-button";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 
 const TitleLink = styled(Link, {
@@ -34,7 +35,7 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 		: receipt.currency;
 	return (
 		<>
-			<Grid css={{ whiteSpace: "normal" }} xs={8}>
+			<Grid css={{ whiteSpace: "normal" }} xs={7.5}>
 				<TitleLink href={`/receipts/${receipt.id}/`} onClick={setReceiptName}>
 					<Text>
 						{receipt.name} ({currency})
@@ -44,19 +45,26 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 					</Text>
 				</TitleLink>
 			</Grid>
-			<Grid xs={2} justify="center">
+			<Grid xs={1.5} justify="center">
 				<ReceiptParticipantResolvedButton
 					light
 					receiptId={receipt.id}
+					localUserId={receipt.localUserId}
 					userId={receipt.userId}
 					resolved={receipt.participantResolved}
 				/>
 			</Grid>
-			<Grid xs={2} justify="center">
+			<Grid xs={1.5} justify="center">
 				<ReceiptAccountedButton
 					light
 					receiptId={receipt.id}
 					resolved={receipt.resolved}
+				/>
+			</Grid>
+			<Grid xs={1.5} justify="center">
+				<ReceiptResolvedParticipantsButton
+					receiptId={receipt.id}
+					selfOwnedReceipt={receipt.role === "owner"}
 				/>
 			</Grid>
 		</>

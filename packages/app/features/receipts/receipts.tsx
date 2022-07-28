@@ -48,12 +48,15 @@ type PreviewsProps = {
 
 const ReceiptPreviewsList: React.FC<PreviewsProps> = ({ receipts }) => (
 	<Grid.Container gap={2}>
-		<GridHeaderColumn xs={8}>Receipt</GridHeaderColumn>
-		<GridHeaderColumn xs={2} centered>
+		<GridHeaderColumn xs={7.5}>Receipt</GridHeaderColumn>
+		<GridHeaderColumn xs={1.5} centered>
 			Res.
 		</GridHeaderColumn>
-		<GridHeaderColumn xs={2} centered>
+		<GridHeaderColumn xs={1.5} centered>
 			Acc.
+		</GridHeaderColumn>
+		<GridHeaderColumn xs={1.5} centered>
+			Wait.
 		</GridHeaderColumn>
 		{receipts.map((receipt) => (
 			<ReceiptPreview key={receipt.id} receipt={receipt} />

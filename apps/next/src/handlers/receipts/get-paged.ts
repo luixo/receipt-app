@@ -42,6 +42,9 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 							"receipts.currency",
 							"receipts.resolved",
 							"users.id as userId",
+							// We use `userId` = `ownerAccountId` contract
+							// But type system doesn't know about that
+							sql<UsersId>`users."connectedAccountId"`.as("localUserId"),
 						])
 						.union(
 							ownReceipts.select([
@@ -54,6 +57,7 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 								// We use `userId` = `ownerAccountId` contract
 								// But type system doesn't know about that
 								sql<UsersId>`receipts."ownerAccountId"`.as("userId"),
+								sql<UsersId>`receipts."ownerAccountId"`.as("localUserId"),
 							])
 						)
 				)
@@ -76,6 +80,7 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 					"mergedReceipts.resolved",
 					"receiptParticipants.resolved as participantResolved",
 					"mergedReceipts.userId",
+					"mergedReceipts.localUserId",
 				])
 				.orderBy("issued", input.orderBy === "date-asc" ? "asc" : "desc")
 				.if(Boolean(input.cursor), (qb) =>

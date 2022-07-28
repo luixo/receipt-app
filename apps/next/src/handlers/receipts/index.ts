@@ -6,6 +6,7 @@ import { router as deleteRouter } from "./delete";
 import { router as getRouter } from "./get";
 import { router as getNameRouter } from "./get-name";
 import { router as getPagedRouter } from "./get-paged";
+import { router as getResolvedParticipantsRouter } from "./get-resolved-participants";
 import { router as putRouter } from "./put";
 import { router as updateRouter } from "./update";
 
@@ -16,4 +17,5 @@ export const router = trpc
 	.merge(deleteRouter)
 	.merge(putRouter)
 	.merge(updateRouter)
-	.merge(getNameRouter);
+	.merge(getNameRouter)
+	.merge(getResolvedParticipantsRouter);
