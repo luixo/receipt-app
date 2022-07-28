@@ -23,10 +23,10 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 		() => cache.receipts.getName.update(trpcContext, receipt.id, receipt.name),
 		[trpcContext, receipt.id, receipt.name]
 	);
-	const currenciesListQuery = trpc.useQuery([
-		"currency.get-list",
-		{ locale: "en" },
-	]);
+	const currenciesListQuery = trpc.useQuery(
+		["currency.get-list", { locale: "en" }],
+		{ ssr: false }
+	);
 	const currency = currenciesListQuery.data
 		? currenciesListQuery.data.find(
 				(element) => element.code === receipt.currency

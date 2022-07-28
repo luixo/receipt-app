@@ -76,7 +76,9 @@ const CurrenciesPickerInner: React.FC<InnerProps> = ({
 type Props = Omit<InnerProps, "query">;
 
 export const CurrenciesPicker: React.FC<Props> = (props) => {
-	const query = trpc.useQuery(["currency.get-list", { locale: "en" }]);
+	const query = trpc.useQuery(["currency.get-list", { locale: "en" }], {
+		ssr: false,
+	});
 	if (query.status === "loading") {
 		return <Loading />;
 	}
