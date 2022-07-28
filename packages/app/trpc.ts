@@ -8,6 +8,7 @@ import type {
 import type {
 	InvalidateOptions,
 	InvalidateQueryFilters,
+	SetDataOptions,
 	UseInfiniteQueryResult,
 	UseMutationResult,
 	UseQueryResult,
@@ -147,3 +148,4 @@ export type TRPCMutationResult<Path extends TRPCMutationKey> =
 export type AnyTRPCMutationResult = UseMutationResult<any, TRPCError, any>;
 
 export type InvalidateArgs = [InvalidateQueryFilters?, InvalidateOptions?];
+export type UpdateArgs = [SetDataOptions?];

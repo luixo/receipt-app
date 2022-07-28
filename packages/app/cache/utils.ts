@@ -4,6 +4,7 @@ import { InfiniteData } from "react-query";
 
 import {
 	InvalidateArgs,
+	UpdateArgs,
 	TRPCInfiniteQueryKey,
 	TRPCQueryInput,
 	TRPCQueryKey,
@@ -15,8 +16,11 @@ export type Revert<T> = (input: T) => T;
 
 type Controller<Data, UpdaterInput = Data, UpdaterOutput = UpdaterInput> = {
 	get: () => Data | undefined;
-	set: (nextData: Data) => void;
-	update: (updater: (prevData: UpdaterInput) => UpdaterOutput) => void;
+	set: (nextData: Data, ...args: UpdateArgs) => void;
+	update: (
+		updater: (prevData: UpdaterInput) => UpdaterOutput,
+		...args: UpdateArgs
+	) => void;
 	invalidate: (...args: InvalidateArgs) => void;
 };
 
@@ -29,10 +33,12 @@ export const createGenericController = <Path extends TRPCQueryKey>(
 		: [Path, TRPCQueryInput<Path>]
 ): Controller<TRPCQueryOutput<Path>> => ({
 	get: () => trpc.getQueryData(pathAndInput) as any,
-	set: (data) => trpc.setQueryData(pathAndInput, data as any),
-	update: (updater) =>
-		trpc.setQueryData(pathAndInput, (prev: any) =>
-			prev === undefined ? prev : updater(prev)
+	set: (data, options) => trpc.setQueryData(pathAndInput, data as any, options),
+	update: (updater, options) =>
+		trpc.setQueryData(
+			pathAndInput,
+			(prev: any) => (prev === undefined ? prev : updater(prev)),
+			options
 		),
 	invalidate: (filters, options) =>
 		trpc.invalidateQueries(pathAndInput, filters, options),
@@ -51,12 +57,12 @@ export const createGenericBroadController = <Path extends TRPCQueryKey>(
 			[Path, TRPCQueryInput<Path>],
 			TRPCQueryOutput<Path>
 		][],
-	set: (data) => {
+	set: (data, options) => {
 		data.forEach(([queryKey, datum]) => {
 			trpc.queryClient.setQueryData(queryKey, datum);
-		});
+		}, options);
 	},
-	update: (updater) => {
+	update: (updater, options) => {
 		const queries = trpc.queryClient.getQueriesData(path) as [
 			[Path, TRPCQueryInput<Path>],
 			TRPCQueryOutput<Path>
@@ -67,7 +73,8 @@ export const createGenericBroadController = <Path extends TRPCQueryKey>(
 			}
 			trpc.queryClient.setQueryData(
 				[actualPath, input],
-				updater([input, prevData])
+				updater([input, prevData]),
+				options
 			);
 		});
 	},
@@ -84,12 +91,16 @@ export const createGenericInfiniteController = <
 		: [Path, TRPCQueryInput<Path>]
 ): Controller<InfiniteData<TRPCQueryOutput<Path>>> => ({
 	get: () => trpc.getInfiniteQueryData(pathAndInput as any),
-	set: (data) => trpc.setInfiniteQueryData(pathAndInput, data as any),
-	update: (updater) =>
-		trpc.setInfiniteQueryData(pathAndInput, (prev: any) =>
-			prev === undefined ? prev : updater(prev)
+	set: (data, options) =>
+		trpc.setInfiniteQueryData(pathAndInput, data as any, options),
+	update: (updater, options) =>
+		trpc.setInfiniteQueryData(
+			pathAndInput,
+			(prev: any) => (prev === undefined ? prev : updater(prev)),
+			options
 		),
-	invalidate: () => trpc.invalidateQueries(pathAndInput),
+	invalidate: (filters, options) =>
+		trpc.invalidateQueries(pathAndInput, filters, options),
 });
 
 export const createGenericInfiniteBroadController = <
@@ -107,12 +118,12 @@ export const createGenericInfiniteBroadController = <
 			[Path, TRPCQueryInput<Path>],
 			InfiniteData<TRPCQueryOutput<Path>>
 		][],
-	set: (data) => {
+	set: (data, options) => {
 		data.forEach(([queryKey, datum]) => {
-			trpc.queryClient.setQueryData(queryKey, datum);
+			trpc.queryClient.setQueryData(queryKey, datum, options);
 		});
 	},
-	update: (updater) => {
+	update: (updater, options) => {
 		const queries = trpc.queryClient.getQueriesData(path) as [
 			[Path, TRPCQueryInput<Path>],
 			InfiniteData<TRPCQueryOutput<Path>>
@@ -123,7 +134,8 @@ export const createGenericInfiniteBroadController = <
 			}
 			trpc.queryClient.setQueryData(
 				[actualPath, input],
-				updater([input, prevData])
+				updater([input, prevData]),
+				options
 			);
 		});
 	},
