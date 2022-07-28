@@ -9,7 +9,7 @@ import {
 	styled,
 	Grid,
 } from "@nextui-org/react";
-import { MdAdd as AddIcon } from "react-icons/md";
+import { MdAdd as AddIcon, MdArrowDropUp as ArrowUpIcon } from "react-icons/md";
 
 import { cache } from "app/cache";
 import { IconButton } from "app/components/icon-button";
@@ -23,6 +23,18 @@ import {
 } from "app/trpc";
 
 import { ReceiptPreview } from "./receipt-preview";
+
+const PaginationWrapper = styled("div", {
+	display: "flex",
+	alignItems: "center",
+	justifyContent: "center",
+});
+
+const PaginationGridElement = styled(Grid, {
+	p: 0,
+	alignItems: "center",
+	justifyContent: "center",
+});
 
 const NoReceiptsHint = styled(Text, {
 	display: "flex",
@@ -69,7 +81,7 @@ type InnerProps = {
 };
 
 const ReceiptsInner: React.FC<InnerProps> = ({ query }) => {
-	const [input] = cache.receipts.getPaged.useStore();
+	const [input, { changeOrderBy }] = cache.receipts.getPaged.useStore();
 	const {
 		onNextPage,
 		onPrevPage,
@@ -112,26 +124,55 @@ const ReceiptsInner: React.FC<InnerProps> = ({ query }) => {
 	}
 
 	const pagination = (
-		<Container display="flex" justify="center">
-			<Button.Group size="sm">
-				<Button
-					onClick={prevLoading ? undefined : onPrevPage}
-					disabled={prevDisabled}
-				>
-					{"<"}
-				</Button>
-				<Button>
-					Page {selectedPageIndex + 1} of{" "}
-					{totalCount ? Math.ceil(totalCount / input.limit) : "unknown"}
-				</Button>
-				<Button
-					onClick={nextLoading ? undefined : onNextPage}
-					disabled={nextDisabled}
-				>
-					{nextLoading ? <Loading color="currentColor" size="xs" /> : ">"}
-				</Button>
-			</Button.Group>
-		</Container>
+		<PaginationWrapper>
+			<Grid.Container gap={2}>
+				<PaginationGridElement xs={4} justify="flex-start">
+					<IconButton
+						light
+						auto
+						icon={
+							<ArrowUpIcon
+								size={24}
+								style={
+									input.orderBy === "date-desc"
+										? { transform: "rotate(180deg)" }
+										: undefined
+								}
+							/>
+						}
+						onClick={() =>
+							changeOrderBy(
+								input.orderBy === "date-desc" ? "date-asc" : "date-desc"
+							)
+						}
+					/>
+					<Spacer x={0.5} />
+					<Text>
+						{input.orderBy === "date-desc" ? "Newest first" : "Oldest first"}
+					</Text>
+				</PaginationGridElement>
+				<PaginationGridElement xs={4}>
+					<Button.Group size="sm">
+						<Button
+							onClick={prevLoading ? undefined : onPrevPage}
+							disabled={prevDisabled}
+						>
+							{"<"}
+						</Button>
+						<Button>
+							Page {selectedPageIndex + 1} of{" "}
+							{totalCount ? Math.ceil(totalCount / input.limit) : "unknown"}
+						</Button>
+						<Button
+							onClick={nextLoading ? undefined : onNextPage}
+							disabled={nextDisabled}
+						>
+							{nextLoading ? <Loading color="currentColor" size="xs" /> : ">"}
+						</Button>
+					</Button.Group>
+				</PaginationGridElement>
+			</Grid.Container>
+		</PaginationWrapper>
 	);
 
 	return (
@@ -155,6 +196,7 @@ export const Receipts: React.FC = () => {
 	const [input] = cache.receipts.getPaged.useStore();
 	const query = trpc.useInfiniteQuery(["receipts.get-paged", input], {
 		getNextPageParam: cache.receipts.getPaged.getNextPage,
+		keepPreviousData: true,
 	});
 	if (query.status === "loading") {
 		return <Loading size="xl" />;

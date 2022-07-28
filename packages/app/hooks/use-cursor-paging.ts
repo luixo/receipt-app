@@ -36,7 +36,9 @@ export const useCursorPaging = <T extends { count: number }>(
 		selectedPage,
 		prevSelectedPage,
 		isLoading:
-			query.isLoading || (!isNextPageFetched && query.isFetchingNextPage),
+			query.isLoading ||
+			query.isFetching ||
+			(!isNextPageFetched && query.isFetchingNextPage),
 		prevDisabled: selectedPageIndex === 0,
 		prevLoading: false,
 		nextDisabled: isNextPageFetched ? false : !query.hasNextPage,
