@@ -55,3 +55,9 @@ export const ACCOUNT_CONNECTIONS_INTENTIONS = {
 		USER_PAIR: "accountConnectionsIntentions:accountUser:userPair",
 	},
 } as const;
+
+export const RESET_PASSWORD_INTENTIONS = {
+	INDEXES: {
+		ACCOUNT_ID: "resetPasswordIntentions:accountId:index",
+	},
+} as const;

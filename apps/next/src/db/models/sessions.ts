@@ -9,7 +9,7 @@ export default interface Sessions {
 	/** Primary key. Index: sessions_pkey */
 	sessionId: SessionsId;
 
-	/** Index: sessions:sessionId:index */
+	/** Index: sessions:accountId:index */
 	accountId: AccountsId;
 
 	expirationTimestamp: Date;
@@ -19,7 +19,7 @@ export interface SessionsInitializer {
 	/** Primary key. Index: sessions_pkey */
 	sessionId: SessionsId;
 
-	/** Index: sessions:sessionId:index */
+	/** Index: sessions:accountId:index */
 	accountId: AccountsId;
 
 	expirationTimestamp: Date;

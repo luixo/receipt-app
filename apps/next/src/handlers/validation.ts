@@ -33,3 +33,4 @@ export const receiptItemIdSchema = z
 	.uuid()
 	.refine<ReceiptItemsId>(flavored);
 export const sessionIdSchema = z.string().uuid().refine<SessionsId>(flavored);
+export const resetPasswordTokenSchema = z.string().uuid();

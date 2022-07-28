@@ -13,6 +13,7 @@ import { middleware as loggerMiddleware } from "./middlewares/logger";
 import { router as receiptItemsRouter } from "./receipt-items/index";
 import { router as receiptParticipantsRouter } from "./receipt-participants/index";
 import { router as receiptsRouter } from "./receipts/index";
+import { router as resetPasswordIntentionsRouter } from "./reset-password-intentions";
 import { router as sessionsRouter } from "./sessions/index";
 import { router as usersRouter } from "./users/index";
 
@@ -22,6 +23,7 @@ export const router = trpc
 	.middleware(loggerMiddleware)
 	.merge("sessions.", sessionsRouter)
 	.merge("auth.", authRouter)
+	.merge("reset-password-intentions.", resetPasswordIntentionsRouter)
 	.middleware(verifyAuthorizedMiddleware)
 	.merge("account.", accountRouter)
 	.merge("receipts.", receiptsRouter)

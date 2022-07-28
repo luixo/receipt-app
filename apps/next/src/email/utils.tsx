@@ -1,0 +1,81 @@
+import React from "react";
+
+import * as ReactDOMServer from "react-dom/server";
+
+import { getBaseUrl } from "next-app/utils/url";
+
+import { BaseUrlContext } from "./base-url-context";
+import { ResetPasswordEmail } from "./reset-password-email";
+import { AugmentedProperies, StylingContext } from "./styling-context";
+
+const STYLE_REPLACER = "__style_replacer__";
+
+type NestedStyles = { [key: string]: NestedStylesOrString };
+type NestedStylesOrString = string | NestedStyles;
+
+const convertStylesToString = (styles: AugmentedProperies): string =>
+	Object.entries(styles)
+		.map(
+			([key, value]) =>
+				`${key.replace(
+					/[A-Z]/g,
+					(match) => `-${match.toLowerCase()}`
+				)}:${value};`
+		)
+		.join("");
+
+const reduceStyles = (styles: NestedStyles): string =>
+	Object.entries(styles).reduce((acc, [selector, style]) => {
+		if (typeof style === "string") {
+			return `${acc} ${selector} {${style}}`;
+		}
+		return `${acc} ${selector} {${reduceStyles(style)}}`;
+	}, "");
+
+const generateEmail = (element: React.ReactElement) => {
+	// That's one-time render, we don't care about rerenders
+	// eslint-disable-next-line react/jsx-no-constructed-context-values
+	const stylesMapping: React.ContextType<typeof StylingContext> = {};
+	const markup = `
+	<!doctype html lang="en">
+	<html lang="en">
+		<head>
+			<meta name="viewport" content="width=device-width" />
+			<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+			<title>Receipt App</title>
+			${STYLE_REPLACER}
+		</head>
+		<body>${ReactDOMServer.renderToStaticMarkup(
+			<StylingContext.Provider value={stylesMapping}>
+				<BaseUrlContext.Provider value={getBaseUrl()}>
+					{element}
+				</BaseUrlContext.Provider>
+			</StylingContext.Provider>
+		)}
+		</body>
+	</html>`;
+	const nestedStyles = Object.entries(stylesMapping).reduce<NestedStyles>(
+		(acc: NestedStyles, [selector, { default: styles, ...mediaObject }]) => {
+			if (styles) {
+				acc[selector] = convertStylesToString(styles);
+			}
+			Object.entries(mediaObject).forEach(([mediaKey, mediaStyles]) => {
+				if (!acc[mediaKey]) {
+					acc[mediaKey] = {};
+				}
+				(acc[mediaKey] as NestedStyles)[selector] = convertStylesToString(
+					mediaStyles!
+				);
+			});
+			return acc;
+		},
+		{} as NestedStyles
+	);
+	return markup.replace(
+		STYLE_REPLACER,
+		`<style>${reduceStyles(nestedStyles)}</style>`
+	);
+};
+
+export const generateResetPasswordEmail = (token: string) =>
+	generateEmail(<ResetPasswordEmail token={token} />);

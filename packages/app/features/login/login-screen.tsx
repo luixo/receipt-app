@@ -13,6 +13,8 @@ import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { trpc, TRPCMutationOutput } from "app/trpc";
 import { passwordSchema, emailSchema } from "app/utils/validation";
 
+import { ResetPasswordModal } from "./reset-password-modal";
+
 type LoginForm = {
 	email: string;
 	password: string;
@@ -26,6 +28,17 @@ export const LoginScreen: React.FC = () => {
 			z.object({ email: emailSchema, password: passwordSchema })
 		),
 	});
+
+	const [resetPasswordModalOpen, setResetPasswordModalOpen] =
+		React.useState(false);
+	const openResetPasswordModal = React.useCallback(
+		() => setResetPasswordModalOpen(true),
+		[setResetPasswordModalOpen]
+	);
+	const closeResetPasswordModal = React.useCallback(
+		() => setResetPasswordModalOpen(false),
+		[setResetPasswordModalOpen]
+	);
 
 	const trpcContext = trpc.useContext();
 	const loginMutation = trpc.useMutation("auth.login");
@@ -72,6 +85,17 @@ export const LoginScreen: React.FC = () => {
 					<MutationErrorMessage mutation={loginMutation} />
 				</>
 			) : null}
+			<Spacer y={2} />
+			<Button
+				disabled={loginMutation.isLoading}
+				onClick={openResetPasswordModal}
+			>
+				Forgot password?
+			</Button>
+			<ResetPasswordModal
+				isModalOpen={resetPasswordModalOpen}
+				closeModal={closeResetPasswordModal}
+			/>
 		</Page>
 	);
 };

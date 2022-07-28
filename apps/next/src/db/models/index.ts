@@ -24,6 +24,9 @@ import ReceiptParticipants, {
 	ReceiptParticipantsInitializer,
 } from "./receipt-participants";
 import Receipts, { ReceiptsInitializer, ReceiptsId } from "./receipts";
+import ResetPasswordIntentions, {
+	ResetPasswordIntentionsInitializer,
+} from "./reset-password-intentions";
 import Sessions, { SessionsInitializer, SessionsId } from "./sessions";
 import Users, { UsersInitializer, UsersId } from "./users";
 
@@ -36,6 +39,7 @@ type Model =
 	| ReceiptItems
 	| ReceiptParticipants
 	| Receipts
+	| ResetPasswordIntentions
 	| Sessions
 	| Users;
 
@@ -48,6 +52,7 @@ interface ModelTypeMap {
 	receiptItems: ReceiptItems;
 	receiptParticipants: ReceiptParticipants;
 	receipts: Receipts;
+	resetPasswordIntentions: ResetPasswordIntentions;
 	sessions: Sessions;
 	users: Users;
 }
@@ -80,6 +85,7 @@ type Initializer =
 	| ReceiptItemsInitializer
 	| ReceiptParticipantsInitializer
 	| ReceiptsInitializer
+	| ResetPasswordIntentionsInitializer
 	| SessionsInitializer
 	| UsersInitializer;
 
@@ -92,6 +98,7 @@ interface InitializerTypeMap {
 	receiptItems: ReceiptItemsInitializer;
 	receiptParticipants: ReceiptParticipantsInitializer;
 	receipts: ReceiptsInitializer;
+	resetPasswordIntentions: ResetPasswordIntentionsInitializer;
 	sessions: SessionsInitializer;
 	users: UsersInitializer;
 }
@@ -118,6 +125,8 @@ export type {
 	Receipts,
 	ReceiptsInitializer,
 	ReceiptsId,
+	ResetPasswordIntentions,
+	ResetPasswordIntentionsInitializer,
 	Sessions,
 	SessionsInitializer,
 	SessionsId,
