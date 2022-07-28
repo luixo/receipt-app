@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { MutationErrorMessage } from "app/components/mutation-error-message";
+import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { trpc } from "app/trpc";
 import { passwordSchema } from "app/utils/validation";
@@ -17,8 +18,8 @@ type Form = {
 };
 
 export const ChangePasswordScreen: React.FC = () => {
-	const [isShown, setShown] = React.useState(false);
-	const show = React.useCallback(() => setShown(true), [setShown]);
+	const [changePasswordShown, { setTrue: showChangePassword }] =
+		useBooleanState();
 
 	const form = useForm<Form>({
 		mode: "onChange",
@@ -49,8 +50,8 @@ export const ChangePasswordScreen: React.FC = () => {
 		[changePasswordMutation]
 	);
 
-	if (!isShown) {
-		return <Button onClick={show}>Change password</Button>;
+	if (!changePasswordShown) {
+		return <Button onClick={showChangePassword}>Change password</Button>;
 	}
 
 	return (

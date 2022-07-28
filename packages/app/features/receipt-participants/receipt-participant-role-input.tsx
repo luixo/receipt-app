@@ -4,6 +4,7 @@ import { Button, Modal, Text } from "@nextui-org/react";
 
 import { cache } from "app/cache";
 import { IconButton } from "app/components/icon-button";
+import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { ReceiptsId } from "next-app/db/models";
@@ -28,12 +29,8 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 }) => {
 	const accountQuery = trpc.useQuery(["account.get"]);
 
-	const [isModalOpen, setModalOpen] = React.useState(false);
-	const openModal = React.useCallback(() => setModalOpen(true), [setModalOpen]);
-	const closeModal = React.useCallback(
-		() => setModalOpen(false),
-		[setModalOpen]
-	);
+	const [isModalOpen, { setTrue: openModal, setFalse: closeModal }] =
+		useBooleanState();
 
 	const updateParticipantMutation = trpc.useMutation(
 		"receipt-participants.update",

@@ -5,6 +5,7 @@ import { MdAdd as AddIcon } from "react-icons/md";
 
 import { cache } from "app/cache";
 import { MutationErrorMessage } from "app/components/mutation-error-message";
+import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCInfiniteQueryOutput } from "app/trpc";
 import { ReceiptsId } from "next-app/db/models";
@@ -20,12 +21,8 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 	receiptId,
 	disabled,
 }) => {
-	const [modalOpen, setModalOpen] = React.useState(false);
-	const openModal = React.useCallback(() => setModalOpen(true), [setModalOpen]);
-	const closeModal = React.useCallback(
-		() => setModalOpen(false),
-		[setModalOpen]
-	);
+	const [modalOpen, { setTrue: openModal, setFalse: closeModal }] =
+		useBooleanState();
 
 	const addMutation = trpc.useMutation(
 		"receipt-participants.put",

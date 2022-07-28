@@ -8,6 +8,7 @@ import { QueryErrorMessage } from "app/components/query-error-message";
 import { ReceiptAccountedButton } from "app/components/receipt-accounted-button";
 import { ReceiptParticipantResolvedButton } from "app/components/receipt-participant-resolved-button";
 import { ShrinkText } from "app/components/shrink-text";
+import { useBooleanState } from "app/hooks/use-boolean-state";
 import { trpc, TRPCQuerySuccessResult } from "app/trpc";
 import { Currency } from "app/utils/currency";
 import { ReceiptsId } from "next-app/src/db/models";
@@ -65,12 +66,7 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 		[setCurrency, receipt.currency]
 	);
 
-	const [isEditing, setEditing] = React.useState(false);
-
-	const switchEditing = React.useCallback(
-		() => setEditing((prev) => !prev),
-		[setEditing]
-	);
+	const [isEditing, { switchValue: switchEditing }] = useBooleanState();
 
 	return (
 		<>

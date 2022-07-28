@@ -12,6 +12,7 @@ import { IoTrashBin as TrashBin } from "react-icons/io5";
 import { UseMutationResult } from "react-query";
 
 import { MutationErrorMessage } from "app/components/mutation-error-message";
+import { useBooleanState } from "app/hooks/use-boolean-state";
 import { TRPCError } from "app/trpc";
 
 const RemoveButtons = styled("div", {
@@ -35,12 +36,8 @@ export const RemoveButton: React.FC<Props> = ({
 	noConfirm,
 	...props
 }) => {
-	const [isModalOpen, setModalOpen] = React.useState(false);
-	const openModal = React.useCallback(() => setModalOpen(true), [setModalOpen]);
-	const closeModal = React.useCallback(
-		() => setModalOpen(false),
-		[setModalOpen]
-	);
+	const [isModalOpen, { setFalse: closeModal, setTrue: openModal }] =
+		useBooleanState();
 	const onYesClick = React.useCallback(() => {
 		onRemove();
 		closeModal();

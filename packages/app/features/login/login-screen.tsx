@@ -9,6 +9,7 @@ import { z } from "zod";
 import { cache } from "app/cache";
 import { MutationErrorMessage } from "app/components/mutation-error-message";
 import { Page } from "app/components/page";
+import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { trpc, TRPCMutationOutput } from "app/trpc";
 import { passwordSchema, emailSchema } from "app/utils/validation";
@@ -29,16 +30,8 @@ export const LoginScreen: React.FC = () => {
 		),
 	});
 
-	const [resetPasswordModalOpen, setResetPasswordModalOpen] =
-		React.useState(false);
-	const openResetPasswordModal = React.useCallback(
-		() => setResetPasswordModalOpen(true),
-		[setResetPasswordModalOpen]
-	);
-	const closeResetPasswordModal = React.useCallback(
-		() => setResetPasswordModalOpen(false),
-		[setResetPasswordModalOpen]
-	);
+	const [modalOpen, { setTrue: openModal, setFalse: closeModal }] =
+		useBooleanState();
 
 	const trpcContext = trpc.useContext();
 	const loginMutation = trpc.useMutation("auth.login");
@@ -86,16 +79,10 @@ export const LoginScreen: React.FC = () => {
 				</>
 			) : null}
 			<Spacer y={2} />
-			<Button
-				disabled={loginMutation.isLoading}
-				onClick={openResetPasswordModal}
-			>
+			<Button disabled={loginMutation.isLoading} onClick={openModal}>
 				Forgot password?
 			</Button>
-			<ResetPasswordModal
-				isModalOpen={resetPasswordModalOpen}
-				closeModal={closeResetPasswordModal}
-			/>
+			<ResetPasswordModal isModalOpen={modalOpen} closeModal={closeModal} />
 		</Page>
 	);
 };

@@ -6,6 +6,7 @@ import { MdEdit as EditIcon } from "react-icons/md";
 
 import { cache } from "app/cache";
 import { IconButton } from "app/components/icon-button";
+import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
@@ -33,11 +34,7 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 	currency,
 	role,
 }) => {
-	const [isEditing, setEditing] = React.useState(false);
-	const switchEditing = React.useCallback(
-		() => setEditing((prev) => !prev),
-		[setEditing]
-	);
+	const [isEditing, { switchValue: switchEditing }] = useBooleanState();
 
 	const {
 		bindings,

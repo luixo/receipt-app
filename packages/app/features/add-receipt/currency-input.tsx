@@ -6,6 +6,7 @@ import { MdEdit as EditIcon } from "react-icons/md";
 
 import { CurrenciesPicker } from "app/components/currencies-picker";
 import { IconButton } from "app/components/icon-button";
+import { useBooleanState } from "app/hooks/use-boolean-state";
 import { TRPCMutationResult, TRPCQueryOutput } from "app/trpc";
 
 import { Form } from "./types";
@@ -16,12 +17,8 @@ type Props = {
 };
 
 export const CurrencyInput: React.FC<Props> = ({ form, query }) => {
-	const [modalOpen, setModalOpen] = React.useState(false);
-	const openModal = React.useCallback(() => setModalOpen(true), [setModalOpen]);
-	const closeModal = React.useCallback(
-		() => setModalOpen(false),
-		[setModalOpen]
-	);
+	const [modalOpen, { setFalse: closeModal, setTrue: openModal }] =
+		useBooleanState();
 
 	const onCurrencyChange = React.useCallback(
 		(nextCurrency: TRPCQueryOutput<"currency.get-list">[number]) => {
