@@ -11,7 +11,7 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 	}),
 	resolve: async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
-		const user = await database
+		const maybeUser = await database
 			.selectFrom("users")
 			.leftJoin("accounts", (qb) =>
 				qb.onRef("connectedAccountId", "=", "accounts.id")
@@ -26,13 +26,14 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 			])
 			.limit(1)
 			.executeTakeFirst();
-		if (!user) {
+		if (!maybeUser) {
 			throw new trpc.TRPCError({
 				code: "NOT_FOUND",
 				message: `User ${input.id} does not exist.`,
 			});
 		}
-		if (user.ownerAccountId !== ctx.auth.accountId) {
+		const { ownerAccountId, ...user } = maybeUser;
+		if (ownerAccountId !== ctx.auth.accountId) {
 			throw new trpc.TRPCError({
 				code: "FORBIDDEN",
 				message: `User ${input.id} is not owned by ${ctx.auth.accountId}.`,

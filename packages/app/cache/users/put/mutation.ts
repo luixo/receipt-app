@@ -2,12 +2,11 @@ import { v4 } from "uuid";
 
 import { cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { AccountsId, UsersId } from "next-app/src/db/models";
+import { UsersId } from "next-app/src/db/models";
 
 export const mutationOptions: UseContextedMutationOptions<
 	"users.put",
-	UsersId,
-	{ selfAccountId: AccountsId }
+	UsersId
 > = {
 	onMutate: (trpcContext) => (form) => {
 		const temporaryId = v4();
@@ -26,7 +25,7 @@ export const mutationOptions: UseContextedMutationOptions<
 		cache.users.getPaged.remove(trpcContext, temporaryId);
 	},
 	onSuccess:
-		(trpcContext, { selfAccountId }) =>
+		(trpcContext) =>
 		({ id: actualId, connection }, variables, temporaryId) => {
 			cache.users.getPaged.update(trpcContext, temporaryId, (user) => ({
 				...user,
@@ -36,7 +35,6 @@ export const mutationOptions: UseContextedMutationOptions<
 				id: actualId,
 				name: variables.name,
 				publicName: null,
-				ownerAccountId: selfAccountId,
 				email: null,
 			});
 			cache.users.getName.add(trpcContext, actualId, variables.name);

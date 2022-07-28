@@ -9,7 +9,6 @@ import { z } from "zod";
 import { cache } from "app/cache";
 import { MutationErrorMessage } from "app/components/mutation-error-message";
 import { Page } from "app/components/page";
-import { QueryErrorMessage } from "app/components/query-error-message";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -28,13 +27,10 @@ const Header = styled(Text, {
 
 export const AddUserScreen: React.FC = () => {
 	const router = useRouter();
-	const accountQuery = trpc.useQuery(["account.get"]);
 
 	const addUserMutation = trpc.useMutation(
 		"users.put",
-		useTrpcMutationOptions(cache.users.put.mutationOptions, {
-			selfAccountId: accountQuery.data?.id ?? "unknown",
-		})
+		useTrpcMutationOptions(cache.users.put.mutationOptions)
 	);
 
 	const form = useForm<Form>({
@@ -66,11 +62,7 @@ export const AddUserScreen: React.FC = () => {
 			<Spacer y={1} />
 			<Button
 				onClick={form.handleSubmit(onSubmit)}
-				disabled={
-					!form.formState.isValid ||
-					addUserMutation.isLoading ||
-					accountQuery.status !== "success"
-				}
+				disabled={!form.formState.isValid || addUserMutation.isLoading}
 			>
 				{addUserMutation.isLoading ? <Loading size="sm" /> : "Add user"}
 			</Button>
@@ -78,12 +70,6 @@ export const AddUserScreen: React.FC = () => {
 				<>
 					<Spacer y={1} />
 					<MutationErrorMessage mutation={addUserMutation} />
-				</>
-			) : null}
-			{accountQuery.status === "error" ? (
-				<>
-					<Spacer y={1} />
-					<QueryErrorMessage query={accountQuery} />
 				</>
 			) : null}
 		</Page>
