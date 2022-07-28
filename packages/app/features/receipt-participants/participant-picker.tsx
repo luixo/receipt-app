@@ -56,10 +56,10 @@ type Props = Omit<InnerProps, "query"> & {
 };
 
 export const ParticipantPicker: React.FC<Props> = ({ receiptId, ...props }) => {
-	const query = trpc.useInfiniteQuery(
-		["users.get-available", cache.users.getAvailable.useStore(receiptId)],
-		{ getNextPageParam: cache.users.getAvailable.getNextPage }
-	);
+	const [input] = cache.users.getAvailable.useStore(receiptId);
+	const query = trpc.useInfiniteQuery(["users.get-available", input], {
+		getNextPageParam: cache.users.getAvailable.getNextPage,
+	});
 	if (query.status === "loading") {
 		return <Loading size="xl" />;
 	}

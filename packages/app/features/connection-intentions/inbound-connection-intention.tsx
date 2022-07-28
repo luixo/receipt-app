@@ -22,10 +22,10 @@ type Props = {
 };
 
 export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
-	const usersQuery = trpc.useInfiniteQuery(
-		["users.get-not-connected", cache.users.getNotConnected.useStore()],
-		{ getNextPageParam: cache.users.getNotConnected.getNextPage }
-	);
+	const [input] = cache.users.getNotConnected.useStore();
+	const usersQuery = trpc.useInfiniteQuery(["users.get-not-connected", input], {
+		getNextPageParam: cache.users.getNotConnected.getNextPage,
+	});
 	const loadMore = React.useCallback(() => {
 		usersQuery.fetchNextPage();
 	}, [usersQuery]);

@@ -1,6 +1,7 @@
 import zustand from "zustand";
 
 import { TRPCInfiniteQueryCursor } from "app/trpc";
+import { Setters } from "app/utils/types";
 import { ReceiptsId } from "next-app/db/models";
 
 import {
@@ -15,7 +16,7 @@ export const getNextPage = (
 ): TRPCInfiniteQueryCursor<"users.get-available"> =>
 	result.hasMore ? result.items[result.items.length - 1]?.id : undefined;
 
-const inputStore = zustand<OmittedInput>((set) => ({
+const inputStore = zustand<OmittedInput & Setters<OmittedInput>>((set) => ({
 	limit: 10,
 	changeLimit: (nextLimit: Input["limit"]) => set(() => ({ limit: nextLimit })),
 }));
@@ -30,7 +31,10 @@ export const getRequiredState = (receiptId: ReceiptsId): RequiredInput => ({
 });
 
 export const useStore = (receiptId: ReceiptsId) =>
-	mergeState(
-		inputStore(({ limit }) => ({ limit })),
-		receiptId
-	);
+	[
+		mergeState(
+			inputStore(({ limit }) => ({ limit })),
+			receiptId
+		),
+		inputStore(({ changeLimit }) => ({ changeLimit })),
+	] as const;

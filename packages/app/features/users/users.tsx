@@ -50,7 +50,7 @@ type InnerProps = {
 };
 
 const UsersInner: React.FC<InnerProps> = ({ query }) => {
-	const usersGetPagedInput = cache.users.getPaged.useStore();
+	const [input] = cache.users.getPaged.useStore();
 	const {
 		onNextPage,
 		onPrevPage,
@@ -103,9 +103,7 @@ const UsersInner: React.FC<InnerProps> = ({ query }) => {
 				</Button>
 				<Button>
 					Page {selectedPageIndex + 1} of{" "}
-					{totalCount
-						? Math.ceil(totalCount / usersGetPagedInput.limit)
-						: "unknown"}
+					{totalCount ? Math.ceil(totalCount / input.limit) : "unknown"}
 				</Button>
 				<Button
 					onClick={nextLoading ? undefined : onNextPage}
@@ -135,10 +133,10 @@ const UsersInner: React.FC<InnerProps> = ({ query }) => {
 };
 
 export const Users: React.FC = () => {
-	const query = trpc.useInfiniteQuery(
-		["users.get-paged", cache.users.getPaged.useStore()],
-		{ getNextPageParam: cache.users.getPaged.getNextPage }
-	);
+	const [input] = cache.users.getPaged.useStore();
+	const query = trpc.useInfiniteQuery(["users.get-paged", input], {
+		getNextPageParam: cache.users.getPaged.getNextPage,
+	});
 	if (query.status === "loading") {
 		return <Loading size="xl" />;
 	}
