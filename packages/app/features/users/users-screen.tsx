@@ -6,6 +6,7 @@ import { MdAdd as AddIcon, MdLink as LinkIcon } from "react-icons/md";
 
 import { IconButton } from "app/components/icon-button";
 import { Page } from "app/components/page";
+import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { styled } from "app/utils/styles";
 
 import { Users } from "./users";
@@ -29,6 +30,7 @@ export const UsersScreen: React.FC = () => (
 	<Page>
 		<Header>
 			<Title h2>👨👩 Users</Title>
+			<EmailVerificationCard />
 			<Buttons>
 				<IconButton
 					href="/users/add"

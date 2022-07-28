@@ -9,7 +9,10 @@ import {
 } from "app/utils/validation";
 import { getDatabase } from "next-app/db";
 import { AccountsId, UsersId } from "next-app/db/models";
-import { createAuthorizationSession } from "next-app/handlers/auth/utils";
+import {
+	createAuthorizationSession,
+	sendVerificationEmail,
+} from "next-app/handlers/auth/utils";
 import { UnauthorizedContext } from "next-app/handlers/context";
 import { setAuthCookie } from "next-app/utils/auth-cookie";
 import { generatePasswordData } from "next-app/utils/crypto";
@@ -38,7 +41,9 @@ export const router = trpc.router<UnauthorizedContext>().mutation("register", {
 			});
 		} else {
 			const id: AccountsId = v4();
+			const confirmationToken = v4();
 			const passwordData = generatePasswordData(input.password);
+			await sendVerificationEmail(input.email, confirmationToken);
 			await database
 				.insertInto("accounts")
 				.values({
@@ -46,6 +51,8 @@ export const router = trpc.router<UnauthorizedContext>().mutation("register", {
 					email,
 					passwordHash: passwordData.hash,
 					passwordSalt: passwordData.salt,
+					confirmationToken,
+					confirmationTokenTimestamp: new Date(),
 				})
 				.execute();
 			await database

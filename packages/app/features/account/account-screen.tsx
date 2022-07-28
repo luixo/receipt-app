@@ -7,6 +7,7 @@ import { cache } from "app/cache";
 import { MutationErrorMessage } from "app/components/mutation-error-message";
 import { Page } from "app/components/page";
 import { ChangePasswordScreen } from "app/features/change-password/change-password-screen";
+import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { trpc } from "app/trpc";
 
@@ -43,6 +44,7 @@ export const AccountScreen: React.FC = () => {
 					"Please read below"
 				)}
 			</Text>
+			<EmailVerificationCard />
 			{accountQuery.status === "success" ? (
 				<>
 					<Spacer y={1} />

@@ -5,6 +5,7 @@ import * as ReactDOMServer from "react-dom/server";
 import { getBaseUrl } from "next-app/utils/url";
 
 import { BaseUrlContext } from "./base-url-context";
+import { ConfirmEmailEmail } from "./confirm-email-email";
 import { ResetPasswordEmail } from "./reset-password-email";
 import { AugmentedProperies, StylingContext } from "./styling-context";
 
@@ -79,3 +80,6 @@ const generateEmail = (element: React.ReactElement) => {
 
 export const generateResetPasswordEmail = (token: string) =>
 	generateEmail(<ResetPasswordEmail token={token} />);
+
+export const generateConfirmEmailEmail = (token: string) =>
+	generateEmail(<ConfirmEmailEmail token={token} />);

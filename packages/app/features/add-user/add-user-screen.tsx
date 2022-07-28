@@ -10,6 +10,7 @@ import { cache } from "app/cache";
 import { MutationErrorMessage } from "app/components/mutation-error-message";
 import { Page } from "app/components/page";
 import { QueryErrorMessage } from "app/components/query-error-message";
+import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc } from "app/trpc";
@@ -57,6 +58,7 @@ export const AddUserScreen: React.FC = () => {
 	return (
 		<Page>
 			<Header h2>Add user</Header>
+			<EmailVerificationCard />
 			<Spacer y={1} />
 			<UserNameInput form={form} query={addUserMutation} />
 			<Spacer y={1} />

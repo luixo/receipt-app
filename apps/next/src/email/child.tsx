@@ -5,7 +5,7 @@ import { Style } from "./style";
 
 type TextChild = {
 	type: "text";
-	size?: "h1" | "h2" | "h3";
+	size?: "h1" | "h3";
 	text: string;
 };
 
@@ -35,6 +35,21 @@ export const Child: React.FC<Props> = (props) => {
 								}}
 							/>
 							<h1>{props.text}</h1>
+						</>
+					);
+				case "h3":
+					return (
+						<>
+							<Style
+								selector="table[class=body] h3"
+								media={{
+									"@media only screen and (max-width: 620px)": {
+										fontSize: "22px !important",
+										marginBottom: "10px !important",
+									},
+								}}
+							/>
+							<h3>{props.text}</h3>
 						</>
 					);
 				default:

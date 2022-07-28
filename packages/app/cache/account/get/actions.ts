@@ -8,3 +8,8 @@ export const set = (trpc: TRPCReactContext, account: Account) =>
 
 export const invalidate = (trpc: TRPCReactContext, ...args: InvalidateArgs) =>
 	createController(trpc).invalidate(...args);
+
+export const update = (
+	trpc: TRPCReactContext,
+	updater: (account: Account) => Account
+) => createController(trpc).update(updater);

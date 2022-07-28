@@ -29,6 +29,7 @@ export const router = trpc.router<UnauthorizedContext>().mutation("login", {
 				"passwordHash",
 				"users.name",
 				"users.publicName",
+				"confirmationToken",
 			])
 			.executeTakeFirst();
 
@@ -62,6 +63,7 @@ export const router = trpc.router<UnauthorizedContext>().mutation("login", {
 					accountId: result.accountId,
 					name: result.name,
 					publicName: result.publicName,
+					verified: !result.confirmationToken,
 				};
 			}
 		}

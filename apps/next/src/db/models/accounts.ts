@@ -16,6 +16,10 @@ export default interface Accounts {
 	passwordHash: string;
 
 	passwordSalt: string;
+
+	confirmationToken: string | null;
+
+	confirmationTokenTimestamp: Date | null;
 }
 
 export interface AccountsInitializer {
@@ -31,4 +35,8 @@ export interface AccountsInitializer {
 	passwordHash: string;
 
 	passwordSalt: string;
+
+	confirmationToken?: string | null;
+
+	confirmationTokenTimestamp?: Date | null;
 }

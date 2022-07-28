@@ -14,7 +14,7 @@ export const ResetPasswordEmail: React.FC<Props> = ({ token }) => (
 		]}
 	>
 		{[
-			{ type: "text", text: "Forgot your password?" },
+			{ type: "text", text: "Forgot your password?", size: "h3" },
 			{
 				type: "text",
 				text: "We received a request to reset your password.",

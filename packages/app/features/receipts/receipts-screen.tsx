@@ -5,6 +5,7 @@ import { MdAdd as AddIcon } from "react-icons/md";
 
 import { IconButton } from "app/components/icon-button";
 import { Page } from "app/components/page";
+import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 
 import { Receipts } from "./receipts";
 
@@ -37,6 +38,7 @@ export const ReceiptsScreen: React.FC = () => (
 				/>
 			</Buttons>
 		</Header>
+		<EmailVerificationCard />
 		<Spacer y={1} />
 		<Receipts />
 	</Page>

@@ -10,6 +10,7 @@ import { cache } from "app/cache";
 import { MutationErrorMessage } from "app/components/mutation-error-message";
 import { Page } from "app/components/page";
 import { QueryErrorMessage } from "app/components/query-error-message";
+import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc } from "app/trpc";
@@ -64,6 +65,7 @@ export const AddReceiptScreen: React.FC = () => {
 			<Header h2 css={{ m: 0 }}>
 				Add receipt
 			</Header>
+			<EmailVerificationCard />
 			<Spacer y={1} />
 			<ReceiptNameInput form={form} query={addReceiptMutation} />
 			<Spacer y={1} />
