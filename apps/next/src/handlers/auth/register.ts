@@ -3,9 +3,9 @@ import { v4 } from "uuid";
 import { z } from "zod";
 
 import {
-	accountNameSchema,
 	emailSchema,
 	passwordSchema,
+	userNameSchema,
 } from "app/utils/validation";
 import { getDatabase } from "next-app/db";
 import { AccountsId, UsersId } from "next-app/db/models";
@@ -18,7 +18,7 @@ export const router = trpc.router<UnauthorizedContext>().mutation("register", {
 	input: z.strictObject({
 		email: emailSchema,
 		password: passwordSchema,
-		name: accountNameSchema,
+		name: userNameSchema,
 	}),
 	resolve: async ({ input, ctx }) => {
 		const email = input.email.toLowerCase();

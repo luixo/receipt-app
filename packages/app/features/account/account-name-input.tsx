@@ -9,7 +9,7 @@ import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
-import { accountNameSchema } from "app/utils/validation";
+import { userNameSchema } from "app/utils/validation";
 import { UsersId } from "next-app/db/models";
 
 type Props = {
@@ -24,7 +24,7 @@ export const AccountNameInput: React.FC<Props> = ({ account }) => {
 		setValue,
 	} = useSingleInput({
 		initialValue: account.name,
-		schema: accountNameSchema,
+		schema: userNameSchema,
 	});
 
 	const updateUserMutation = trpc.useMutation(

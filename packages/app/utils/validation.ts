@@ -19,12 +19,6 @@ const constrainLength = (
 		.min(min, { message: getMinimalLengthMessage(min, target) })
 		.max(max, { message: getMaximumLengthMessage(max, target) });
 
-export const accountNameSchema = constrainLength(z.string(), {
-	min: 2,
-	max: 255,
-	target: "account name",
-});
-
 export const passwordSchema = constrainLength(z.string(), {
 	min: 6,
 	max: 255,

@@ -12,9 +12,9 @@ import { Page } from "app/components/page";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { trpc } from "app/trpc";
 import {
-	accountNameSchema,
 	passwordSchema,
 	emailSchema,
+	userNameSchema,
 } from "app/utils/validation";
 import { AccountsId } from "next-app/db/models";
 
@@ -32,7 +32,7 @@ export const RegisterScreen: React.FC = () => {
 		resolver: zodResolver(
 			z.object({
 				email: emailSchema,
-				name: accountNameSchema,
+				name: userNameSchema,
 				password: passwordSchema,
 				passwordRetype: passwordSchema,
 			})
