@@ -3,7 +3,6 @@ import { TRPCReactContext } from "app/trpc";
 import { nonNullishGuard } from "app/utils/utils";
 import { ReceiptsId, UsersId } from "next-app/db/models";
 
-import { getState } from "./input";
 import { AvailableUser } from "./types";
 import { updateAvailableUsers } from "./utils";
 
@@ -18,8 +17,7 @@ export const add = (
 	nextUser: AvailableUser
 ) => {
 	const shouldShiftRef = createRef(false);
-	updateAvailableUsers(trpc, receiptId, (page, pageIndex, pages) => {
-		const input = getState(receiptId);
+	updateAvailableUsers(trpc, receiptId, (page, pageIndex, pages, input) => {
 		if (shouldShiftRef.current) {
 			return [pages[pageIndex - 1]!.at(-1)!, ...page.slice(0, input.limit)];
 		}

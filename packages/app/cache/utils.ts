@@ -46,14 +46,16 @@ export const createGenericController = <Path extends TRPCQueryKey>(
 
 export const createGenericBroadController = <Path extends TRPCQueryKey>(
 	trpc: TRPCReactContext,
-	path: [Path]
+	pathAndInput: undefined extends TRPCQueryInput<Path>
+		? [Path]
+		: [Path, TRPCQueryInput<Path>?]
 ): Controller<
 	[[Path, TRPCQueryInput<Path>], TRPCQueryOutput<Path>][],
 	[TRPCQueryInput<Path>, TRPCQueryOutput<Path>],
 	TRPCQueryOutput<Path>
 > => ({
 	get: () =>
-		trpc.queryClient.getQueriesData(path) as [
+		trpc.queryClient.getQueriesData(pathAndInput) as [
 			[Path, TRPCQueryInput<Path>],
 			TRPCQueryOutput<Path>
 		][],
@@ -63,7 +65,7 @@ export const createGenericBroadController = <Path extends TRPCQueryKey>(
 		}, options);
 	},
 	update: (updater, options) => {
-		const queries = trpc.queryClient.getQueriesData(path) as [
+		const queries = trpc.queryClient.getQueriesData(pathAndInput) as [
 			[Path, TRPCQueryInput<Path>],
 			TRPCQueryOutput<Path>
 		][];
@@ -79,42 +81,23 @@ export const createGenericBroadController = <Path extends TRPCQueryKey>(
 		});
 	},
 	invalidate: (filters, options) =>
-		trpc.queryClient.invalidateQueries(path, filters, options),
-});
-
-export const createGenericInfiniteController = <
-	Path extends TRPCInfiniteQueryKey
->(
-	trpc: TRPCReactContext,
-	pathAndInput: undefined extends TRPCQueryInput<Path>
-		? [Path]
-		: [Path, TRPCQueryInput<Path>]
-): Controller<InfiniteData<TRPCQueryOutput<Path>>> => ({
-	get: () => trpc.getInfiniteQueryData(pathAndInput as any),
-	set: (data, options) =>
-		trpc.setInfiniteQueryData(pathAndInput, data as any, options),
-	update: (updater, options) =>
-		trpc.setInfiniteQueryData(
-			pathAndInput,
-			(prev: any) => (prev === undefined ? prev : updater(prev)),
-			options
-		),
-	invalidate: (filters, options) =>
-		trpc.invalidateQueries(pathAndInput, filters, options),
+		trpc.queryClient.invalidateQueries(pathAndInput, filters, options),
 });
 
 export const createGenericInfiniteBroadController = <
 	Path extends TRPCInfiniteQueryKey
 >(
 	trpc: TRPCReactContext,
-	path: [Path]
+	pathAndInput: undefined extends TRPCQueryInput<Path>
+		? [Path]
+		: [Path, Partial<TRPCQueryInput<Path>>?]
 ): Controller<
 	[[Path, TRPCQueryInput<Path>], InfiniteData<TRPCQueryOutput<Path>>][],
 	[TRPCQueryInput<Path>, InfiniteData<TRPCQueryOutput<Path>>],
 	InfiniteData<TRPCQueryOutput<Path>>
 > => ({
 	get: () =>
-		trpc.queryClient.getQueriesData(path) as [
+		trpc.queryClient.getQueriesData(pathAndInput) as [
 			[Path, TRPCQueryInput<Path>],
 			InfiniteData<TRPCQueryOutput<Path>>
 		][],
@@ -124,7 +107,7 @@ export const createGenericInfiniteBroadController = <
 		});
 	},
 	update: (updater, options) => {
-		const queries = trpc.queryClient.getQueriesData(path) as [
+		const queries = trpc.queryClient.getQueriesData(pathAndInput) as [
 			[Path, TRPCQueryInput<Path>],
 			InfiniteData<TRPCQueryOutput<Path>>
 		][];
@@ -140,7 +123,7 @@ export const createGenericInfiniteBroadController = <
 		});
 	},
 	invalidate: (filters, options) =>
-		trpc.queryClient.invalidateQueries(path, filters, options),
+		trpc.queryClient.invalidateQueries(pathAndInput, filters, options),
 });
 
 export const createRef = <T>(
