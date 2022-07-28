@@ -84,6 +84,8 @@ module.exports = {
 				],
 			},
 		],
+		"no-console": "error",
+		"no-alert": "error",
 	},
 	overrides: [
 		{
