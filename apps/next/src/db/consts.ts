@@ -7,6 +7,7 @@ export const ACCOUNTS = {
 export const SESSIONS = {
 	INDEXES: {
 		SESSION_ID: "sessions:sessionId:index",
+		ACCOUNT_ID: "sessions:accountId:index",
 	},
 } as const;
 
