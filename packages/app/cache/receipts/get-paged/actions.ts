@@ -3,8 +3,7 @@ import { TRPCReactContext } from "app/trpc";
 import { nonNullishGuard } from "app/utils/utils";
 import { ReceiptsId } from "next-app/src/db/models";
 
-import { getState, Input } from "./input";
-import { Receipt } from "./types";
+import { Receipt, Input } from "./types";
 import { updatePagedReceipts } from "./utils";
 
 export * from "./input";
@@ -43,21 +42,20 @@ export const update = (
 
 export const add = (trpc: TRPCReactContext, nextReceipt: Receipt) => {
 	const shouldShiftRef = createRef(false);
-	updatePagedReceipts(trpc, (page, pageIndex, pages) => {
-		const state = getState();
+	updatePagedReceipts(trpc, (page, pageIndex, pages, input) => {
 		if (shouldShiftRef.current) {
-			return [pages[pageIndex - 1]!.at(-1)!, ...page.slice(0, state.limit)];
+			return [pages[pageIndex - 1]!.at(-1)!, ...page.slice(0, input.limit)];
 		}
-		const sortedPage = [...page, nextReceipt].sort(getSortByDate(state));
+		const sortedPage = [...page, nextReceipt].sort(getSortByDate(input));
 		if (sortedPage.indexOf(nextReceipt) === page.length - 1) {
-			if (page.length !== state.limit) {
+			if (page.length !== input.limit) {
 				shouldShiftRef.current = true;
 				return sortedPage;
 			}
 			return page;
 		}
 		shouldShiftRef.current = true;
-		return sortedPage.slice(0, state.limit);
+		return sortedPage.slice(0, input.limit);
 	});
 };
 

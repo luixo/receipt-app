@@ -1,10 +1,8 @@
 import zustand from "zustand";
 
-import { TRPCInfiniteQueryCursor, TRPCInfiniteQueryInput } from "app/trpc";
+import { TRPCInfiniteQueryCursor } from "app/trpc";
 
-import { ReceiptsResult } from "./types";
-
-export type Input = TRPCInfiniteQueryInput<"receipts.get-paged">;
+import { ReceiptsResult, Input } from "./types";
 
 export const getNextPage = (
 	result: ReceiptsResult
@@ -18,11 +16,6 @@ const inputStore = zustand<Input>((set) => ({
 	changeOrderBy: (nextOrderBy: Input["orderBy"]) =>
 		set(() => ({ orderBy: nextOrderBy })),
 }));
-
-export const getState = () => {
-	const { limit, orderBy } = inputStore.getState();
-	return { limit, orderBy };
-};
 
 export const useStore = () =>
 	inputStore(({ limit, orderBy }) => ({ limit, orderBy }));

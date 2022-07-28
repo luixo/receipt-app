@@ -1,10 +1,8 @@
 import zustand from "zustand";
 
-import { TRPCInfiniteQueryCursor, TRPCInfiniteQueryInput } from "app/trpc";
+import { TRPCInfiniteQueryCursor } from "app/trpc";
 
-import { UsersResult } from "./types";
-
-type Input = TRPCInfiniteQueryInput<"users.get-paged">;
+import { UsersResult, Input } from "./types";
 
 export const getNextPage = (
 	result: UsersResult
@@ -15,10 +13,5 @@ const inputStore = zustand<Input>((set) => ({
 	limit: 10,
 	changeLimit: (nextLimit: Input["limit"]) => set(() => ({ limit: nextLimit })),
 }));
-
-export const getState = () => {
-	const { limit } = inputStore.getState();
-	return { limit };
-};
 
 export const useStore = () => inputStore(({ limit }) => ({ limit }));

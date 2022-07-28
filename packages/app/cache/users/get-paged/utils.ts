@@ -1,18 +1,21 @@
 import { TRPCReactContext } from "app/trpc";
 
 import { createController } from "./controller";
-import { User, UsersResult } from "./types";
+import { User, UsersResult, Input } from "./types";
 
 const updatePagedUsersPages = (
 	trpc: TRPCReactContext,
 	updater: (
 		result: UsersResult,
 		resultIndex: number,
-		results: UsersResult[]
+		results: UsersResult[],
+		input: Input
 	) => UsersResult
 ) =>
-	createController(trpc).update((prevData) => {
-		const nextPages = prevData.pages.map(updater);
+	createController(trpc).update(([input, prevData]) => {
+		const nextPages = prevData.pages.map((result, index, results) =>
+			updater(result, index, results, input)
+		);
 		if (nextPages === prevData.pages) {
 			return prevData;
 		}
@@ -21,13 +24,19 @@ const updatePagedUsersPages = (
 
 export const updatePagedUsers = (
 	trpc: TRPCReactContext,
-	updater: (page: User[], pageIndex: number, pages: User[][]) => User[]
+	updater: (
+		page: User[],
+		pageIndex: number,
+		pages: User[][],
+		input: Input
+	) => User[]
 ) =>
-	updatePagedUsersPages(trpc, (result, index, results) => {
+	updatePagedUsersPages(trpc, (result, index, results, input) => {
 		const nextItems = updater(
 			result.items,
 			index,
-			results.map(({ items }) => items)
+			results.map(({ items }) => items),
+			input
 		);
 		if (nextItems === result.items) {
 			return result;

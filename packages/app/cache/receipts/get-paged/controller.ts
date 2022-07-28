@@ -1,7 +1,5 @@
-import { createGenericInfiniteController } from "app/cache/utils";
+import { createGenericInfiniteBroadController } from "app/cache/utils";
 import { TRPCReactContext } from "app/trpc";
 
-import { getState } from "./input";
-
 export const createController = (trpc: TRPCReactContext) =>
-	createGenericInfiniteController(trpc, ["receipts.get-paged", getState()]);
+	createGenericInfiniteBroadController(trpc, ["receipts.get-paged"]);
