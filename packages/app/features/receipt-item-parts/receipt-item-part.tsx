@@ -72,7 +72,7 @@ export const ReceiptItemPart: React.FC<Props> = ({
 		<Wrapper>
 			<User
 				user={{
-					id: participant.localUserId || participant.userId,
+					id: participant.localUserId || participant.remoteUserId,
 					name: participant.name,
 				}}
 			/>

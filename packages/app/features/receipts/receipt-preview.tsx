@@ -50,7 +50,7 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 					light
 					receiptId={receipt.id}
 					localUserId={receipt.localUserId}
-					userId={receipt.userId}
+					remoteUserId={receipt.remoteUserId}
 					resolved={receipt.participantResolved}
 				/>
 			</Grid>

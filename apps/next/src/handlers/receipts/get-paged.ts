@@ -42,7 +42,7 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 							"receipts.issued",
 							"receipts.currency",
 							"receipts.resolved",
-							"users.id as userId",
+							"users.id as remoteUserId",
 							// We use `userId` = `ownerAccountId` contract
 							// But type system doesn't know about that
 							sql<UsersId>`users."connectedAccountId"`.as("localUserId"),
@@ -57,7 +57,7 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 								"receipts.resolved",
 								// We use `userId` = `ownerAccountId` contract
 								// But type system doesn't know about that
-								sql<UsersId>`receipts."ownerAccountId"`.as("userId"),
+								sql<UsersId>`receipts."ownerAccountId"`.as("remoteUserId"),
 								sql<UsersId>`receipts."ownerAccountId"`.as("localUserId"),
 							])
 						)
@@ -70,7 +70,11 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 							"=",
 							"mergedReceipts.receiptId"
 						)
-						.onRef("receiptParticipants.userId", "=", "mergedReceipts.userId")
+						.onRef(
+							"receiptParticipants.userId",
+							"=",
+							"mergedReceipts.remoteUserId"
+						)
 				)
 				.select([
 					"mergedReceipts.receiptId as id",
@@ -80,7 +84,7 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 					"currency",
 					"mergedReceipts.resolved",
 					"receiptParticipants.resolved as participantResolved",
-					"mergedReceipts.userId",
+					"mergedReceipts.remoteUserId",
 					"mergedReceipts.localUserId",
 				])
 				.orderBy("issued", input.orderBy === "date-asc" ? "asc" : "desc")

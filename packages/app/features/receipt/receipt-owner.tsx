@@ -21,5 +21,9 @@ export const ReceiptOwner: React.FC<Props> = ({ receipt }) => {
 	if (query.status === "idle") {
 		return null;
 	}
-	return <User user={query.data} />;
+	return (
+		<User
+			user={{ ...query.data, id: query.data.localId || query.data.remoteId }}
+		/>
+	);
 };

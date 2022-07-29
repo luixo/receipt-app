@@ -61,7 +61,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 		useTrpcMutationOptions(cache.receiptParticipants.delete.mutationOptions, {
 			receiptId,
 			user: {
-				id: participant.userId,
+				id: participant.remoteUserId,
 				name: participant.name,
 				// TODO: probably the only problem with this null
 				// is that users that you can from available list
@@ -76,16 +76,16 @@ export const ReceiptParticipant: React.FC<Props> = ({
 		() =>
 			deleteReceiptParticipantMutation.mutateAsync({
 				receiptId,
-				userId: participant.userId,
+				userId: participant.remoteUserId,
 			}),
-		[deleteReceiptParticipantMutation, receiptId, participant.userId]
+		[deleteReceiptParticipantMutation, receiptId, participant.remoteUserId]
 	);
 
 	return (
 		<Wrapper>
 			<User
 				user={{
-					id: participant.localUserId || participant.userId,
+					id: participant.localUserId || participant.remoteUserId,
 					name: participant.name,
 				}}
 			/>
@@ -113,7 +113,8 @@ export const ReceiptParticipant: React.FC<Props> = ({
 						}
 						ghost
 						receiptId={receiptId}
-						userId={participant.userId}
+						remoteUserId={participant.remoteUserId}
+						/* Button is enabled only is that's our button, so we have localUserId */
 						localUserId={participant.localUserId!}
 						resolved={participant.resolved}
 					/>

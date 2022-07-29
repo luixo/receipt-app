@@ -49,7 +49,7 @@ export const UserPublicNameInput: React.FC<Props> = ({ user, isLoading }) => {
 	const savePublicName = useAsyncCallback(
 		async (isMount, nextName: string | null) => {
 			await updateUserMutation.mutateAsync({
-				id: user.id,
+				id: user.remoteId,
 				update: { type: "publicName", publicName: nextName },
 			});
 			if (!isMount()) {
@@ -57,7 +57,7 @@ export const UserPublicNameInput: React.FC<Props> = ({ user, isLoading }) => {
 			}
 			setValue(nextName ?? "");
 		},
-		[updateUserMutation, user.id]
+		[updateUserMutation, user.remoteId]
 	);
 
 	if (!showInput) {

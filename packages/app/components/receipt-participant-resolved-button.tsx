@@ -13,14 +13,14 @@ import { ReceiptsId, UsersId } from "next-app/db/models";
 
 type Props = {
 	receiptId: ReceiptsId;
-	userId: UsersId;
+	remoteUserId: UsersId;
 	localUserId: UsersId;
 	resolved: boolean | null;
 } & Omit<React.ComponentProps<typeof IconButton>, "onClick" | "color">;
 
 export const ReceiptParticipantResolvedButton: React.FC<Props> = ({
 	receiptId,
-	userId,
+	remoteUserId,
 	localUserId,
 	resolved,
 	css,
@@ -40,10 +40,10 @@ export const ReceiptParticipantResolvedButton: React.FC<Props> = ({
 		}
 		updateReceiptMutation.mutate({
 			receiptId,
-			userId,
+			userId: remoteUserId,
 			update: { type: "resolved", resolved: !resolved },
 		});
-	}, [updateReceiptMutation, receiptId, userId, localUserId, resolved]);
+	}, [updateReceiptMutation, receiptId, remoteUserId, localUserId, resolved]);
 	return (
 		<IconButton
 			{...props}

@@ -32,7 +32,7 @@ export const mutationOptions: UseContextedMutationOptions<
 				id: actualId,
 			}));
 			cache.users.get.add(trpcContext, {
-				id: actualId,
+				remoteId: actualId,
 				localId: actualId,
 				name: variables.name,
 				publicName: null,

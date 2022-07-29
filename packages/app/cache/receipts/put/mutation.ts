@@ -22,7 +22,7 @@ export const mutationOptions: UseContextedMutationOptions<
 				resolved: false,
 				participantResolved: false,
 				// Typesystem doesn't know that we use account id as self user id
-				userId: selfAccountId as UsersId,
+				remoteUserId: selfAccountId as UsersId,
 				localUserId: selfAccountId as UsersId,
 			});
 			return temporaryId;

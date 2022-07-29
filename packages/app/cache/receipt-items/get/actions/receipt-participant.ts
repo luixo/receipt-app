@@ -43,7 +43,7 @@ export const remove = (
 	>();
 	updateReceiptParticipants(trpc, receiptId, (participants) => {
 		const matchedIndex = participants.findIndex(
-			(participant) => participant.userId === userId
+			(participant) => participant.remoteUserId === userId
 		);
 		if (matchedIndex === -1) {
 			return participants;
@@ -71,7 +71,7 @@ export const update = (
 	>();
 	updateReceiptParticipants(trpc, receiptId, (items) => {
 		const matchedIndex = items.findIndex(
-			(participant) => participant.userId === userId
+			(participant) => participant.remoteUserId === userId
 		);
 		if (matchedIndex === -1) {
 			return items;

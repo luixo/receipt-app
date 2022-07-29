@@ -21,7 +21,7 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 			)
 			.where("users.id", "=", input.id)
 			.select([
-				"users.id",
+				"users.id as remoteId",
 				"name",
 				"publicName",
 				"ownerAccountId",
@@ -78,7 +78,7 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 						)
 						.where("usersTheir.id", "=", input.id)
 						.select([
-							"usersTheir.id",
+							"usersTheir.id as remoteId",
 							"usersMine.id as localId",
 							sql<string>`case
 								when "usersMine".name is not null
@@ -117,7 +117,7 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 		}
 		return {
 			...user,
-			localId: user.id as UsersId | null,
+			localId: user.remoteId as UsersId | null,
 		};
 	},
 });

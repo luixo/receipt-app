@@ -54,7 +54,7 @@ export const router = trpc
 						.on("usersMine.ownerAccountId", "=", ctx.auth.accountId)
 				)
 				.select([
-					"receiptParticipants.userId",
+					"receiptParticipants.userId as remoteUserId",
 					"receiptParticipants.resolved",
 					"usersMine.id as localUserId",
 				])

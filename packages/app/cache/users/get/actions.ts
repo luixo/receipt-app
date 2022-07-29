@@ -6,7 +6,7 @@ import { createController } from "./controller";
 import { User } from "./types";
 
 export const add = (trpc: TRPCReactContext, user: User) =>
-	createController(trpc, user.id).set(user);
+	createController(trpc, user.remoteId).set(user);
 export const remove = (trpc: TRPCReactContext, userId: UsersId) =>
 	createController(trpc, userId).invalidate();
 

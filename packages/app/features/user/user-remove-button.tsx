@@ -32,13 +32,13 @@ export const UserRemoveButton: React.FC<Props> = ({
 	);
 	const deleteUser = useAsyncCallback(
 		async (isMount) => {
-			await deleteUserMutation.mutateAsync({ id: user.id });
+			await deleteUserMutation.mutateAsync({ id: user.remoteId });
 			if (!isMount()) {
 				return;
 			}
 			router.replace("/users");
 		},
-		[deleteUserMutation, user.id]
+		[deleteUserMutation, user.remoteId]
 	);
 
 	return (

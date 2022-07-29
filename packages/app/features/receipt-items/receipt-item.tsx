@@ -56,7 +56,7 @@ export const ReceiptItem: React.FC<Props> = ({
 
 	const addedParticipants = receiptItem.parts.map((part) => part.userId);
 	const notAddedParticipants = receiptParticipants.filter(
-		(participant) => !addedParticipants.includes(participant.userId)
+		(participant) => !addedParticipants.includes(participant.remoteUserId)
 	);
 
 	const addItemPartMutation = trpc.useMutation(
@@ -70,7 +70,7 @@ export const ReceiptItem: React.FC<Props> = ({
 		(participant: ReceiptParticipant) => {
 			addItemPartMutation.mutate({
 				itemId: receiptItem.id,
-				userId: participant.userId,
+				userId: participant.remoteUserId,
 			});
 		},
 		[addItemPartMutation, receiptItem.id]
@@ -121,7 +121,7 @@ export const ReceiptItem: React.FC<Props> = ({
 							buttons={notAddedParticipants}
 							buttonProps={{ auto: true }}
 							extractDetails={(participant) => ({
-								id: participant.userId,
+								id: participant.remoteUserId,
 								name: participant.name,
 							})}
 							onClick={addParticipant}
@@ -140,7 +140,7 @@ export const ReceiptItem: React.FC<Props> = ({
 						<Spacer y={1} />
 						{receiptItem.parts.map((part, index) => {
 							const matchedParticipant = receiptParticipants.find(
-								(participant) => participant.userId === part.userId
+								(participant) => participant.remoteUserId === part.userId
 							);
 							if (!matchedParticipant) {
 								return (

@@ -35,14 +35,14 @@ export const AddReceiptItemPartForm: React.FC<Props> = ({
 	const addParticipant = React.useCallback(() => {
 		addItemPartMutation.mutate({
 			itemId,
-			userId: participant.userId,
+			userId: participant.remoteUserId,
 		});
-	}, [addItemPartMutation, itemId, participant.userId]);
+	}, [addItemPartMutation, itemId, participant.remoteUserId]);
 
 	return (
 		<>
 			<AddButton
-				key={participant.userId}
+				key={participant.remoteUserId}
 				onPress={addParticipant}
 				disabled={role === "viewer"}
 			>

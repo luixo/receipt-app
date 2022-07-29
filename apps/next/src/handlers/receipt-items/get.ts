@@ -47,7 +47,7 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 						.on("usersMine.ownerAccountId", "=", ctx.auth.accountId)
 				)
 				.select([
-					"userId",
+					"userId as remoteUserId",
 					sql<string>`case
 						when "usersMine"."name" is not null
 							then "usersMine".name

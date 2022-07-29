@@ -16,7 +16,7 @@ export const mutationOptions: UseContextedMutationOptions<
 				cache.receiptItems.get.receiptParticipant.add(trpcContext, receiptId, {
 					name: snapshot.name,
 					connectedAccountId: snapshot.connectedAccountId,
-					userId: variables.userId,
+					remoteUserId: variables.userId,
 					localUserId: variables.userId,
 					role: variables.role,
 					resolved: false,

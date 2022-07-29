@@ -34,7 +34,7 @@ export const UserNameInput: React.FC<Props> = ({ user, isLoading }) => {
 	const saveName = useAsyncCallback(
 		async (isMount, nextName: string) => {
 			await updateUserMutation.mutateAsync({
-				id: user.id,
+				id: user.remoteId,
 				update: { type: "name", name: nextName },
 			});
 			if (!isMount()) {
@@ -42,7 +42,7 @@ export const UserNameInput: React.FC<Props> = ({ user, isLoading }) => {
 			}
 			setValue(nextName);
 		},
-		[updateUserMutation, user.id]
+		[updateUserMutation, user.remoteId]
 	);
 
 	return (

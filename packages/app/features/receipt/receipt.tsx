@@ -11,7 +11,7 @@ import { ShrinkText } from "app/components/shrink-text";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { trpc, TRPCQuerySuccessResult } from "app/trpc";
 import { Currency } from "app/utils/currency";
-import { ReceiptsId } from "next-app/src/db/models";
+import { ReceiptsId, UsersId } from "next-app/src/db/models";
 
 import { ReceiptCurrencyInput } from "./receipt-currency-input";
 import { ReceiptDateInput } from "./receipt-date-input";
@@ -60,6 +60,7 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 	deleteLoadingState: [deleteLoading, setDeleteLoading],
 	setCurrency,
 }) => {
+	const accountQuery = trpc.useQuery(["account.get"]);
 	const receipt = query.data;
 	React.useEffect(
 		() => setCurrency(receipt.currency),
@@ -96,10 +97,11 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 					<ReceiptParticipantResolvedButton
 						ghost
 						receiptId={receipt.id}
-						userId={receipt.selfUserId}
-						localUserId={receipt.selfUserId}
+						remoteUserId={receipt.selfUserId}
+						// Typesystem doesn't know that we use account id as self user id
+						localUserId={accountQuery.data?.id! as UsersId}
 						resolved={receipt.participantResolved}
-						disabled={deleteLoading}
+						disabled={deleteLoading || accountQuery.status !== "success"}
 					/>
 					<Spacer x={0.5} />
 					<ReceiptAccountedButton
@@ -129,6 +131,12 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 						setLoading={setDeleteLoading}
 					/>
 				</AlignEndView>
+			) : null}
+			{accountQuery.status === "error" ? (
+				<>
+					<Spacer y={1} />
+					<QueryErrorMessage query={accountQuery} />
+				</>
 			) : null}
 		</>
 	);

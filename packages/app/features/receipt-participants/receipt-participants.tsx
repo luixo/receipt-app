@@ -42,7 +42,7 @@ export const ReceiptParticipants: React.FC<Props> = ({
 		const receiptItemsWithSums = calculateReceiptItemsWithSums(
 			data.items,
 			rotate(
-				sortedParticipants.map((participant) => participant.userId),
+				sortedParticipants.map((participant) => participant.remoteUserId),
 				getIndexByString(receiptId)
 			)
 		);
@@ -53,8 +53,9 @@ export const ReceiptParticipants: React.FC<Props> = ({
 					acc +
 					(receiptItemsWithSums
 						.find((itemWithSum) => itemWithSum.id === item.id)!
-						.partsSums.find((partSum) => partSum.userId === participant.userId)
-						?.sum ?? 0),
+						.partsSums.find(
+							(partSum) => partSum.userId === participant.remoteUserId
+						)?.sum ?? 0),
 				0
 			),
 		}));
@@ -63,7 +64,7 @@ export const ReceiptParticipants: React.FC<Props> = ({
 		<>
 			<div>
 				{participants.map((participant, index) => (
-					<React.Fragment key={participant.userId}>
+					<React.Fragment key={participant.remoteUserId}>
 						{index === 0 ? null : <Spacer y={0.5} />}
 						<ReceiptParticipant
 							receiptId={receiptId}

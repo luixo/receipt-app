@@ -49,14 +49,14 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 			}
 			updateParticipantMutation.mutate({
 				receiptId,
-				userId: participant.userId,
+				userId: participant.remoteUserId,
 				update: { type: "role", role: nextRole },
 			});
 		},
 		[
 			updateParticipantMutation,
 			receiptId,
-			participant.userId,
+			participant.remoteUserId,
 			participant.role,
 			closeModal,
 		]

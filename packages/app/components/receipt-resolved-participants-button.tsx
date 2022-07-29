@@ -74,11 +74,11 @@ export const ReceiptResolvedParticipantsButton: React.FC<Props> = ({
 							<Participants>
 								{notResolvedParticipants.map((participant, index) => (
 									<React.Fragment
-										key={participant.localUserId || participant.userId}
+										key={participant.localUserId || participant.remoteUserId}
 									>
 										{index === 0 ? null : <Spacer y={0.5} />}
 										<LoadableUser
-											id={participant.localUserId || participant.userId}
+											id={participant.localUserId || participant.remoteUserId}
 											viaReceiptId={selfOwnedReceipt ? undefined : receiptId}
 										/>
 									</React.Fragment>
@@ -99,11 +99,11 @@ export const ReceiptResolvedParticipantsButton: React.FC<Props> = ({
 							<Participants>
 								{resolvedParticipants?.map((participant, index) => (
 									<React.Fragment
-										key={participant.localUserId || participant.userId}
+										key={participant.localUserId || participant.remoteUserId}
 									>
 										{index === 0 ? null : <Spacer y={0.5} />}
 										<LoadableUser
-											id={participant.localUserId || participant.userId}
+											id={participant.localUserId || participant.remoteUserId}
 											viaReceiptId={selfOwnedReceipt ? undefined : receiptId}
 										/>
 									</React.Fragment>
