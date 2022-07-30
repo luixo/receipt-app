@@ -31,7 +31,7 @@ export const ReceiptsScreen: React.FC = () => (
 			<Title h2>🧾 Receipts</Title>
 			<Buttons>
 				<IconButton
-					href="/users/add"
+					href="/receipts/add"
 					title="Add receipt"
 					bordered
 					icon={<AddIcon size={24} />}

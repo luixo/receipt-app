@@ -112,8 +112,8 @@ const ReceiptsInner: React.FC<InnerProps> = ({ query }) => {
 					Press
 					<Spacer x={0.5} />
 					<IconButton
-						href="/users/add"
-						title="Add user"
+						href="/receipts/add"
+						title="Add receipt"
 						bordered
 						icon={<AddIcon size={24} />}
 						linkStyle={{ display: "inline-flex" }}
