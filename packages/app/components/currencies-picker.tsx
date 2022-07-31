@@ -63,7 +63,11 @@ const CurrenciesPickerInner: React.FC<InnerProps> = ({
 										: undefined
 								}
 							>
-								{currency.name}
+								{currency.name} ({currency.code}
+								{currency.code === currency.symbol
+									? ""
+									: ` / ${currency.symbol}`}
+								)
 							</Button>
 						</Grid>
 					))}
