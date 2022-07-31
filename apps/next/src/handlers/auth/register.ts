@@ -16,6 +16,7 @@ import {
 import { UnauthorizedContext } from "next-app/handlers/context";
 import { setAuthCookie } from "next-app/utils/auth-cookie";
 import { generatePasswordData } from "next-app/utils/crypto";
+import { isEmailServiceActive } from "next-app/utils/email";
 
 export const router = trpc.router<UnauthorizedContext>().mutation("register", {
 	input: z.strictObject({
@@ -42,8 +43,11 @@ export const router = trpc.router<UnauthorizedContext>().mutation("register", {
 		} else {
 			const id: AccountsId = v4();
 			const confirmationToken = v4();
+			const emailServiceActive = isEmailServiceActive();
 			const passwordData = generatePasswordData(input.password);
-			await sendVerificationEmail(input.email, confirmationToken);
+			if (emailServiceActive) {
+				await sendVerificationEmail(input.email, confirmationToken);
+			}
 			await database
 				.insertInto("accounts")
 				.values({
@@ -51,8 +55,8 @@ export const router = trpc.router<UnauthorizedContext>().mutation("register", {
 					email,
 					passwordHash: passwordData.hash,
 					passwordSalt: passwordData.salt,
-					confirmationToken,
-					confirmationTokenTimestamp: new Date(),
+					confirmationToken: emailServiceActive ? confirmationToken : null,
+					confirmationTokenTimestamp: emailServiceActive ? new Date() : null,
 				})
 				.execute();
 			await database

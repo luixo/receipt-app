@@ -8,7 +8,7 @@ import { getDatabase } from "next-app/db";
 import { generateResetPasswordEmail } from "next-app/email/utils";
 import { getAccountByEmail } from "next-app/handlers/account/utils";
 import { UnauthorizedContext } from "next-app/handlers/context";
-import { getEmailClient } from "next-app/utils/email";
+import { getEmailClient, isEmailServiceActive } from "next-app/utils/email";
 
 export const router = trpc.router<UnauthorizedContext>().mutation("put", {
 	input: z.strictObject({
@@ -25,6 +25,12 @@ export const router = trpc.router<UnauthorizedContext>().mutation("put", {
 		}
 		const uuid = v4();
 		const expirationDate = new Date(Date.now() + DAY);
+		if (!isEmailServiceActive()) {
+			throw new trpc.TRPCError({
+				code: "FORBIDDEN",
+				message: `Currently password reset is not supported`,
+			});
+		}
 		await database
 			.insertInto("resetPasswordIntentions")
 			.values({

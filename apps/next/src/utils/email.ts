@@ -38,3 +38,5 @@ export const getEmailClient = (): EmailClient => {
 	};
 	return emailClient;
 };
+
+export const isEmailServiceActive = () => !process.env.NO_EMAIL_SERVICE;
