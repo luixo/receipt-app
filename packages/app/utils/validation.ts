@@ -47,26 +47,14 @@ export const emailSchema = z
 	.string()
 	.email({ message: "Invalid email address" });
 
-export const priceSchema = z
-	.number()
-	.gt(0, { message: "Price should be greater than 0" });
+const createNumberSchema = (name: string, decimals = 2) =>
+	z
+		.number()
+		.gt(0, { message: `${name} should be greater than 0` })
+		.multipleOf(Number((0.1 ** decimals).toFixed(decimals)), {
+			message: `Part should have at maximum ${decimals} decimals`,
+		});
 
-export const quantitySchema = z
-	.number()
-	.gt(0, { message: "Quantity should be greater than 0" });
-
-export const partSchema = z
-	.number()
-	.gt(0, { message: "Part should be greater than 0" });
-
-export const parseNumberWithDecimals = (
-	value: string,
-	decimals = 2
-): number | string | undefined => {
-	const output = Number(value);
-	const stringifiedOutput = output.toString().split(".");
-	if (Number.isNaN(output) || (stringifiedOutput[1]?.length ?? 0) > decimals) {
-		return;
-	}
-	return value === "" ? value : output;
-};
+export const priceSchema = createNumberSchema("Price");
+export const quantitySchema = createNumberSchema("Quantity");
+export const partSchema = createNumberSchema("Part", 5);

@@ -3,6 +3,7 @@ import React from "react";
 import { Input, Text, styled, Spacer } from "@nextui-org/react";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 import { MdEdit as EditIcon } from "react-icons/md";
+import { z } from "zod";
 
 import { cache } from "app/cache";
 import { IconButton } from "app/components/icon-button";
@@ -10,7 +11,7 @@ import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
-import { parseNumberWithDecimals, quantitySchema } from "app/utils/validation";
+import { quantitySchema } from "app/utils/validation";
 import { ReceiptsId } from "next-app/db/models";
 
 const Wrapper = styled("div", { display: "flex", alignItems: "center" });
@@ -38,7 +39,8 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 		getValue,
 	} = useSingleInput({
 		initialValue: receiptItem.quantity,
-		schema: quantitySchema,
+		schema: z.preprocess(Number, quantitySchema),
+		type: "number",
 	});
 
 	const updateMutation = trpc.useMutation(
@@ -57,17 +59,6 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 			});
 		},
 		[updateMutation, receiptItem.id, receiptItem.quantity, switchEditing]
-	);
-
-	const onChange = React.useCallback(
-		(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-			const parsedNumber = parseNumberWithDecimals(e.currentTarget.value);
-			if (parsedNumber === undefined) {
-				return;
-			}
-			bindings.onChange(parsedNumber);
-		},
-		[bindings]
 	);
 
 	if (!isEditing) {
@@ -95,7 +86,6 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 	return (
 		<Input
 			{...bindings}
-			onChange={onChange}
 			disabled={updateMutation.isLoading || isLoading}
 			status={inputState.error ? "warning" : undefined}
 			helperColor={inputState.error ? "warning" : "error"}

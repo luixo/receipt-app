@@ -4,7 +4,6 @@ import { Input } from "@nextui-org/react";
 import { UseFormReturn } from "react-hook-form";
 
 import { useInputController } from "app/hooks/use-input-controller";
-import { parseNumberWithDecimals } from "app/utils/validation";
 
 import { Form } from "./types";
 
@@ -20,23 +19,12 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 	const { bindings, state: inputState } = useInputController({
 		form,
 		name: "quantity",
+		type: "number",
 	});
-
-	const onChange = React.useCallback(
-		(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-			const parsedNumber = parseNumberWithDecimals(e.currentTarget.value, 5);
-			if (parsedNumber === undefined) {
-				return;
-			}
-			bindings.onChange(parsedNumber);
-		},
-		[bindings]
-	);
 
 	return (
 		<Input
 			{...bindings}
-			onChange={onChange}
 			fullWidth
 			required
 			type="number"

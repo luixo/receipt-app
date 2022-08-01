@@ -1,5 +1,6 @@
 import React from "react";
 
+import { FormElement } from "@nextui-org/react";
 import {
 	useController,
 	FieldValues,
@@ -15,6 +16,7 @@ export type InputControllerOptions<
 > = {
 	form: UseFormReturn<Form>;
 	name: FieldName;
+	type?: React.HTMLInputTypeAttribute;
 };
 
 export const useInputController = <
@@ -23,6 +25,7 @@ export const useInputController = <
 >({
 	form,
 	name,
+	type,
 }: InputControllerOptions<Form, FieldName>) => {
 	const { field, fieldState } = useController({
 		name,
@@ -33,8 +36,20 @@ export const useInputController = <
 			form.setValue(name, nextValue),
 		[form, name]
 	);
+	const onChange = React.useMemo<React.ChangeEventHandler<FormElement>>(
+		() =>
+			type === "number"
+				? (e) => {
+						const { value } = e.currentTarget;
+						if (/^\d*[.,]?\d*$/.test(value)) {
+							field.onChange(value);
+						}
+				  }
+				: field.onChange,
+		[field, type]
+	);
 	return {
-		bindings: field,
+		bindings: type === "number" ? { ...field, onChange } : field,
 		state: fieldState,
 		getValue: React.useCallback(() => form.watch(name), [form, name]),
 		setValue,

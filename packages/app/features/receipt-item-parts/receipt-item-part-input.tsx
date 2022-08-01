@@ -4,6 +4,7 @@ import { Input, Spacer, Text } from "@nextui-org/react";
 import { FiMinus as MinusIcon, FiPlus as PlusIcon } from "react-icons/fi";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 import { MdEdit as EditIcon } from "react-icons/md";
+import { z } from "zod";
 
 import { cache } from "app/cache";
 import { IconButton } from "app/components/icon-button";
@@ -11,7 +12,7 @@ import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
-import { parseNumberWithDecimals, partSchema } from "app/utils/validation";
+import { partSchema } from "app/utils/validation";
 import { ReceiptItemsId, ReceiptsId } from "next-app/db/models";
 
 type ReceiptItemPart =
@@ -42,7 +43,8 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 		getValue,
 	} = useSingleInput({
 		initialValue: itemPart.part,
-		schema: partSchema,
+		schema: z.preprocess(Number, partSchema),
+		type: "number",
 	});
 
 	const updateMutation = trpc.useMutation(
@@ -108,17 +110,6 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 		</Text>
 	);
 
-	const onChange = React.useCallback(
-		(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-			const parsedNumber = parseNumberWithDecimals(e.currentTarget.value);
-			if (parsedNumber === undefined) {
-				return;
-			}
-			bindings.onChange(parsedNumber);
-		},
-		[bindings]
-	);
-
 	if (readOnly) {
 		return readOnlyComponent;
 	}
@@ -129,7 +120,6 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 				<Input
 					{...bindings}
 					aria-label="Item part"
-					onChange={onChange}
 					disabled={updateMutation.isLoading || isLoading}
 					status={inputState.error ? "warning" : undefined}
 					helperColor={inputState.error ? "warning" : "error"}

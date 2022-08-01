@@ -13,11 +13,13 @@ type Form<T> = {
 export type SingleInputOptions<T> = {
 	initialValue?: T;
 	schema?: z.ZodType<T>;
+	type?: React.HTMLInputTypeAttribute;
 };
 
 export const useSingleInput = <T>({
 	initialValue,
 	schema,
+	type,
 }: SingleInputOptions<T>) => {
 	const form = useForm<Form<T>>({
 		mode: "onChange",
@@ -35,5 +37,6 @@ export const useSingleInput = <T>({
 	return useInputController({
 		form,
 		name: "value" as Path<Form<T>>,
+		type,
 	});
 };
