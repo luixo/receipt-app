@@ -3,7 +3,7 @@ import React from "react";
 import { Text, Spacer, styled } from "@nextui-org/react";
 import { createParam } from "solito";
 
-import { Identicon } from "app/components/identicon";
+import { User as UserTitle } from "app/components/app/user";
 import { Page } from "app/components/page";
 import { trpc } from "app/trpc";
 
@@ -28,9 +28,12 @@ export const UserScreen: React.FC = () => {
 		<Page>
 			{/* zero margin because of inherited margin from ChildText */}
 			<Header h2 css={{ m: 0 }}>
-				<Identicon size={40} hash={id} />
-				<Spacer x={0.5} />
-				{userNameQuery.data || id}
+				<UserTitle
+					user={React.useMemo(
+						() => ({ id, name: userNameQuery.data || id }),
+						[id, userNameQuery.data]
+					)}
+				/>
 			</Header>
 			<Spacer y={1} />
 			<User id={id} />

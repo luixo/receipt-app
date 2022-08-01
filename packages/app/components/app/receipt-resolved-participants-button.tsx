@@ -6,8 +6,8 @@ import {
 	MdHourglassDisabled as CrossWaitIcon,
 } from "react-icons/md";
 
+import { LoadableUser } from "app/components/app/loadable-user";
 import { IconButton } from "app/components/icon-button";
-import { LoadableUser } from "app/components/loadable-user";
 import { trpc } from "app/trpc";
 import { ReceiptsId } from "next-app/db/models";
 

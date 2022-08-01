@@ -3,9 +3,9 @@ import React from "react";
 import { Link, Text, Grid, styled } from "@nextui-org/react";
 
 import { cache } from "app/cache";
-import { ReceiptAccountedButton } from "app/components/receipt-accounted-button";
-import { ReceiptParticipantResolvedButton } from "app/components/receipt-participant-resolved-button";
-import { ReceiptResolvedParticipantsButton } from "app/components/receipt-resolved-participants-button";
+import { ReceiptAccountedButton } from "app/components/app/receipt-accounted-button";
+import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
+import { ReceiptResolvedParticipantsButton } from "app/components/app/receipt-resolved-participants-button";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 
 const TitleLink = styled(Link, {

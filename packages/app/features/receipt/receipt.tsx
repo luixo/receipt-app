@@ -3,10 +3,10 @@ import React from "react";
 import { Loading, Spacer, styled, Text } from "@nextui-org/react";
 import { MdEdit as EditIcon } from "react-icons/md";
 
+import { ReceiptAccountedButton } from "app/components/app/receipt-accounted-button";
+import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
 import { IconButton } from "app/components/icon-button";
 import { QueryErrorMessage } from "app/components/query-error-message";
-import { ReceiptAccountedButton } from "app/components/receipt-accounted-button";
-import { ReceiptParticipantResolvedButton } from "app/components/receipt-participant-resolved-button";
 import { ShrinkText } from "app/components/shrink-text";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { trpc, TRPCQuerySuccessResult } from "app/trpc";

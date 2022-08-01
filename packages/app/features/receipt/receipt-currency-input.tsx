@@ -1,7 +1,7 @@
 import React from "react";
 
 import { cache } from "app/cache";
-import { CurrenciesPicker } from "app/components/currencies-picker";
+import { CurrenciesPicker } from "app/components/app/currencies-picker";
 import { IconButton } from "app/components/icon-button";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";

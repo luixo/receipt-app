@@ -3,8 +3,8 @@ import React from "react";
 import { Spacer, styled } from "@nextui-org/react";
 
 import { cache } from "app/cache";
+import { User } from "app/components/app/user";
 import { RemoveButton } from "app/components/remove-button";
-import { User } from "app/components/user";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";

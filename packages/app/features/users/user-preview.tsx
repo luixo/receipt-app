@@ -3,7 +3,7 @@ import React from "react";
 import { styled, Link } from "@nextui-org/react";
 
 import { cache } from "app/cache";
-import { User } from "app/components/user";
+import { User } from "app/components/app/user";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 
 const WrapperLink = styled(Link, {

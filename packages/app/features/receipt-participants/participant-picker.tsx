@@ -4,8 +4,8 @@ import { Loading } from "@nextui-org/react";
 import { InfiniteData } from "react-query";
 
 import { cache } from "app/cache";
+import { UsersPicker } from "app/components/app/users-picker";
 import { QueryErrorMessage } from "app/components/query-error-message";
-import { UsersPicker } from "app/components/users-picker";
 import {
 	trpc,
 	TRPCInfiniteQueryOutput,

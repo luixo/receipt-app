@@ -4,7 +4,7 @@ import { Button, Input } from "@nextui-org/react";
 import { UseFormReturn } from "react-hook-form";
 import { MdEdit as EditIcon } from "react-icons/md";
 
-import { CurrenciesPicker } from "app/components/currencies-picker";
+import { CurrenciesPicker } from "app/components/app/currencies-picker";
 import { IconButton } from "app/components/icon-button";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { TRPCMutationResult, TRPCQueryOutput } from "app/trpc";

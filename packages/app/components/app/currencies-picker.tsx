@@ -3,10 +3,9 @@ import React from "react";
 import { Button, Grid, Loading, Modal, Text } from "@nextui-org/react";
 import { QueryObserverSuccessResult } from "react-query";
 
+import { QueryErrorMessage } from "app/components/query-error-message";
 import { trpc, TRPCError, TRPCQueryOutput } from "app/trpc";
 import { Currency } from "app/utils/currency";
-
-import { QueryErrorMessage } from "./query-error-message";
 
 type CurrencyList = TRPCQueryOutput<"currency.get-list">;
 type CurrencyListItem = CurrencyList[number];

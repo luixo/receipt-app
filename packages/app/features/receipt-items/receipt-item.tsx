@@ -3,9 +3,9 @@ import React from "react";
 import { Card, Spacer, styled, Text } from "@nextui-org/react";
 
 import { cache } from "app/cache";
+import { ReceiptItemLockedButton } from "app/components/app/receipt-item-locked-button";
 import { ButtonsGroup } from "app/components/buttons-group";
 import { ErrorMessage } from "app/components/error-message";
-import { ReceiptItemLockedButton } from "app/components/receipt-item-locked-button";
 import { RemoveButton } from "app/components/remove-button";
 import { ReceiptItemPart } from "app/features/receipt-item-parts/receipt-item-part";
 import { useAsyncCallback } from "app/hooks/use-async-callback";

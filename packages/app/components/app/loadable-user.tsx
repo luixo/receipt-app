@@ -2,8 +2,8 @@ import React from "react";
 
 import { Loading } from "@nextui-org/react";
 
+import { User } from "app/components/app/user";
 import { QueryErrorMessage } from "app/components/query-error-message";
-import { User } from "app/components/user";
 import { trpc, TRPCQuerySuccessResult } from "app/trpc";
 import { ReceiptsId, UsersId } from "next-app/db/models";
 
