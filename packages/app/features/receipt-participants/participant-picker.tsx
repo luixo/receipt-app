@@ -21,6 +21,17 @@ const extractUsers = (data: InfiniteData<AvailableUsersResult>) =>
 		[]
 	);
 
+const getBreakIndex = (data: InfiniteData<AvailableUsersResult>) => {
+	const breakIndex = data.pages.reduce<number>(
+		(acc, page) => acc + page.topAmount,
+		0
+	);
+	if (!breakIndex) {
+		return;
+	}
+	return breakIndex;
+};
+
 const extractDetails = ({
 	id,
 	name,
@@ -44,6 +55,7 @@ const ParticipantPickerInner: React.FC<InnerProps> = ({
 			query={query}
 			extractUsers={extractUsers}
 			extractDetails={extractDetails}
+			getBreakIndex={getBreakIndex}
 			onChange={onUserClick}
 			loadMore={loadMore}
 			disabled={disabled}

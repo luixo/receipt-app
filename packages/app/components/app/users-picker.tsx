@@ -18,6 +18,7 @@ type InnerProps<Data, User> = {
 	extractUsers: (data: InfiniteData<Data>) => User[];
 	extractDetails: (user: User) => { id: UsersId; name: string };
 	selectedUser?: User;
+	getBreakIndex?: (data: InfiniteData<Data>) => number | undefined;
 	onChange: (nextUser: User) => void;
 	loadMore: () => void;
 	disabled?: boolean;
@@ -29,6 +30,7 @@ const UsersPickerInner = <Data, User>({
 	extractUsers,
 	extractDetails,
 	selectedUser,
+	getBreakIndex,
 	onChange,
 	loadMore,
 	disabled,
@@ -46,6 +48,7 @@ const UsersPickerInner = <Data, User>({
 				disabled,
 				color: extractDetails(user).id === selectedId ? "success" : undefined,
 			})}
+			breakIndex={getBreakIndex?.(query.data)}
 			onClick={onChange}
 		>
 			{query.hasNextPage ? (

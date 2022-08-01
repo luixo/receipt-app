@@ -12,9 +12,10 @@ import {
 } from "./types";
 
 export const getNextPage = (
-	result: AvailableUsersResult
+	result: AvailableUsersResult,
+	results: AvailableUsersResult[]
 ): TRPCInfiniteQueryCursor<"users.get-available"> =>
-	result.hasMore ? result.items[result.items.length - 1]?.id : undefined;
+	result.hasMore ? results.length * result.items.length : undefined;
 
 const inputStore = zustand<OmittedInput & Setters<OmittedInput>>((set) => ({
 	limit: 10,

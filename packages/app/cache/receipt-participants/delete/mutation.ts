@@ -7,10 +7,7 @@ export const mutationOptions: UseContextedMutationOptions<
 	ReturnType<
 		typeof cache["receiptItems"]["get"]["receiptParticipant"]["remove"]
 	>,
-	{
-		receiptId: ReceiptsId;
-		user: Parameters<typeof cache["users"]["getAvailable"]["add"]>[2];
-	}
+	{ receiptId: ReceiptsId }
 > = {
 	onMutate:
 		(trpcContext, { receiptId }) =>
@@ -21,7 +18,7 @@ export const mutationOptions: UseContextedMutationOptions<
 				userId
 			),
 	onError:
-		(trpcContext, { receiptId, user }) =>
+		(trpcContext, { receiptId }) =>
 		(_error, _variables, snapshot) => {
 			if (!snapshot) {
 				return;
@@ -32,6 +29,8 @@ export const mutationOptions: UseContextedMutationOptions<
 				snapshot.receiptParticipant,
 				snapshot.index
 			);
-			cache.users.getAvailable.add(trpcContext, receiptId, user);
+			// It's too complicated to pass all the data needed
+			// to properly place a "users.get-available" user inside the list
+			cache.users.getAvailable.invalidate(trpcContext, receiptId);
 		},
 };

@@ -1,21 +1,18 @@
 import * as trpc from "@trpc/server";
 import { z } from "zod";
 
+import { MONTH } from "app/utils/time";
 import { getDatabase } from "next-app/db";
 import { AuthorizedContext } from "next-app/handlers/context";
 import {
 	getReceiptById,
 	getAccessRole,
 } from "next-app/handlers/receipts/utils";
-import {
-	limitSchema,
-	receiptIdSchema,
-	userIdSchema,
-} from "next-app/handlers/validation";
+import { limitSchema, receiptIdSchema } from "next-app/handlers/validation";
 
 export const router = trpc.router<AuthorizedContext>().query("get-available", {
 	input: z.strictObject({
-		cursor: userIdSchema.optional(),
+		cursor: z.number().optional(),
 		limit: limitSchema,
 		receiptId: receiptIdSchema,
 	}),
@@ -55,10 +52,43 @@ export const router = trpc.router<AuthorizedContext>().query("get-available", {
 					.select("users.id")
 			);
 		const [users, usersCount] = await Promise.all([
-			availableUsers
-				.select(["id", "name", "publicName", "connectedAccountId"])
-				.orderBy("id")
-				.if(Boolean(input.cursor), (qb) => qb.where("id", ">", input.cursor!))
+			database
+				.with("orderedUsers", () =>
+					availableUsers
+						.leftJoin("receiptParticipants", (qb) =>
+							qb.onRef("receiptParticipants.userId", "=", "users.id")
+						)
+						.leftJoin("receipts", (qb) =>
+							qb
+								.onRef("receiptParticipants.receiptId", "=", "receipts.id")
+								.on("receipts.issued", ">", new Date(Date.now() - MONTH))
+						)
+						.distinctOn(["users.id"])
+						.select([
+							"users.id",
+							database.fn
+								.count<string>("receiptParticipants.userId")
+								.as("count"),
+							database.fn.count<string>("receipts.id").as("latestCount"),
+							"users.name",
+							"users.publicName",
+							"users.connectedAccountId",
+						])
+						.groupBy("users.id")
+						.orderBy("users.id")
+				)
+				.selectFrom("orderedUsers")
+				.select([
+					"id",
+					"name",
+					"publicName",
+					"connectedAccountId",
+					"count",
+					"latestCount",
+				])
+				.orderBy("latestCount", "desc")
+				.orderBy("count", "desc")
+				.if(Boolean(input.cursor), (qb) => qb.offset(input.cursor!))
 				.limit(input.limit + 1)
 				.execute(),
 			availableUsers
@@ -69,7 +99,13 @@ export const router = trpc.router<AuthorizedContext>().query("get-available", {
 		return {
 			count: parseInt(usersCount.amount, 10),
 			hasMore: users.length === input.limit + 1,
-			items: users.slice(0, input.limit),
+			topAmount: users.filter((user) => user.latestCount !== "0").length,
+			items: users
+				.slice(0, input.limit)
+				.map(({ latestCount, count, ...user }) => ({
+					...user,
+					participatedInReceipts: Number(count),
+				})),
 		};
 	},
 });

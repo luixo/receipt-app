@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, Spacer, styled } from "@nextui-org/react";
+import { Button, Card, Spacer, styled } from "@nextui-org/react";
 
 const Wrapper = styled("div", {
 	display: "flex",
@@ -27,6 +27,7 @@ type Props<T> = {
 	buttonProps?: ButtonProps | ((value: T) => ButtonProps);
 	onClick?: (value: T) => void;
 	noSpacer?: boolean;
+	breakIndex?: number;
 	children?: React.ReactElement | null;
 } & Omit<React.ComponentProps<typeof Wrapper>, "children" | "onClick">;
 
@@ -36,6 +37,7 @@ export const ButtonsGroup = <T,>({
 	buttonProps,
 	onClick,
 	noSpacer,
+	breakIndex,
 	children,
 	type,
 	...props
@@ -47,7 +49,11 @@ export const ButtonsGroup = <T,>({
 				typeof buttonProps === "function" ? buttonProps(button) : buttonProps;
 			return (
 				<React.Fragment key={id}>
-					{index === 0 || noSpacer ? null : <Spacer x={0.25} />}
+					{breakIndex === index ? (
+						<Card.Divider css={{ mb: "$8", mt: "$4" }} />
+					) : index === 0 || noSpacer ? null : (
+						<Spacer x={0.25} />
+					)}
 					<Button
 						{...evaluatedButtonProps}
 						onClick={() => onClick?.(button)}

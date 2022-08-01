@@ -3,6 +3,7 @@ import { TRPCReactContext } from "app/trpc";
 import { nonNullishGuard } from "app/utils/utils";
 import { ReceiptsId, UsersId } from "next-app/db/models";
 
+import { createController } from "./controller";
 import { AvailableUser } from "./types";
 import { updateAvailableUsers } from "./utils";
 
@@ -58,4 +59,8 @@ export const remove = (
 		].filter(nonNullishGuard);
 	});
 	return removedUserRef.current;
+};
+
+export const invalidate = (trpc: TRPCReactContext, receiptId: ReceiptsId) => {
+	createController(trpc, receiptId).invalidate();
 };

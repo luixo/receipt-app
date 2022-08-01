@@ -60,16 +60,6 @@ export const ReceiptParticipant: React.FC<Props> = ({
 		"receipt-participants.delete",
 		useTrpcMutationOptions(cache.receiptParticipants.delete.mutationOptions, {
 			receiptId,
-			user: {
-				id: participant.remoteUserId,
-				name: participant.name,
-				// TODO: probably the only problem with this null
-				// is that users that you can from available list
-				// will not have their public names displayed
-				// maybe we don't care about that enough to add logic on backend
-				publicName: null,
-				connectedAccountId: participant.connectedAccountId,
-			},
 		})
 	);
 	const deleteReceiptParticipant = useAsyncCallback(
