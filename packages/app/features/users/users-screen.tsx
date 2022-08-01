@@ -1,28 +1,26 @@
 import React from "react";
-import * as ReactNative from "react-native";
 
-import { Spacer, Text, styled as nextStyled } from "@nextui-org/react";
+import { Spacer, Text, styled } from "@nextui-org/react";
 import { MdAdd as AddIcon, MdLink as LinkIcon } from "react-icons/md";
 
 import { IconButton } from "app/components/icon-button";
 import { Page } from "app/components/page";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
-import { styled } from "app/utils/styles";
 
 import { Users } from "./users";
 
-const Header = styled(ReactNative.View)({
-	flexDirection: "row",
+const Header = styled("div", {
+	display: "flex",
 	justifyContent: "space-between",
 });
 
-const Title = nextStyled(Text, {
+const Title = styled(Text, {
 	display: "flex",
 	alignItems: "center",
 });
 
-const Buttons = styled(ReactNative.View)({
-	flexDirection: "row",
+const Buttons = styled("div", {
+	display: "flex",
 	flexShrink: 0,
 });
 

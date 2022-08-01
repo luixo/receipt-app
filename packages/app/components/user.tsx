@@ -1,23 +1,23 @@
 import React from "react";
-import * as ReactNative from "react-native";
 
-import { styled as nextStyled, Text } from "@nextui-org/react";
+import { styled, Text } from "@nextui-org/react";
 
 import { Identicon } from "app/components/identicon";
-import { styled } from "app/utils/styles";
 import { UsersId } from "next-app/db/models";
 
-const Wrapper = nextStyled("div", {
+const Wrapper = styled("div", {
 	display: "flex",
 	alignItems: "center",
 });
 
-const Information = styled(ReactNative.View)({
-	marginLeft: "sm",
+const Information = styled("div", {
+	display: "flex",
+	flexDirection: "column",
 	justifyContent: "center",
+	marginLeft: "$sm",
 });
 
-const UserName = nextStyled(Text, {
+const UserName = styled(Text, {
 	fontWeight: "$medium",
 });
 

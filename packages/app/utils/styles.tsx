@@ -1,19 +1,17 @@
 import React from "react";
 import * as ReactNative from "react-native";
 
-import * as HTMLElements from "@expo/html-elements";
 import {
 	NextUIProvider,
 	lightThemeStitches,
 	darkThemeStitches,
 	createTheme,
 } from "@nextui-org/react";
-import { styled, DripsyProvider, useSx, useDripsyTheme } from "dripsy";
-import { TextLink as BaseTextLink, Link as BaseLink } from "solito/link";
+import { DripsyProvider } from "dripsy";
 
 import { ColorModeContext } from "app/contexts/color-mode-context";
 
-export const themes = {
+const themes = {
 	light: lightThemeStitches.theme,
 	dark: darkThemeStitches.theme,
 };
@@ -22,6 +20,8 @@ const nextThemes = {
 	light: createTheme({ type: "light", theme: themes.light }),
 	dark: createTheme({ type: "dark", theme: themes.dark }),
 };
+
+export type Theme = typeof themes["light"];
 
 const borderStyles = {
 	solid: "solid",
@@ -51,10 +51,7 @@ const commonTheme = {
 	borderWidths: themes.light.borderWeights,
 	borderStyles,
 	space: themes.light.space,
-	sizes: {
-		...themes.light.space,
-		full: "100%",
-	},
+	sizes: themes.light.space,
 	fonts: themes.light.fonts,
 	fontSizes: themes.light.fontSizes,
 	fontWeights: themes.light.fontWeights,
@@ -113,76 +110,3 @@ export const ThemeProvider: React.FC<React.PropsWithChildren<object>> = ({
 		</DripsyProvider>
 	);
 };
-
-export const Text = styled(ReactNative.Text)({ color: "text" });
-export const H1 = styled(HTMLElements.H1)({ color: "text" });
-export const P = styled(HTMLElements.P)({ color: "text" });
-export const A = styled(HTMLElements.A)({ color: "text" });
-export const Link = ({
-	viewProps,
-	style,
-	...props
-}: Omit<React.ComponentProps<typeof BaseLink>, "style"> & {
-	style?: ReactNative.StyleProp<ReactNative.ViewProps>;
-}) => (
-	<BaseLink
-		{...props}
-		viewProps={{
-			...viewProps,
-			style,
-		}}
-	/>
-);
-export const TextLink = ({
-	textProps,
-	...props
-}: React.ComponentProps<typeof BaseTextLink>) => {
-	const sx = useSx();
-	const linkStyle = sx({
-		fontSize: "base",
-		fontWeight: "bold",
-		color: "primary",
-	});
-	return (
-		<BaseTextLink
-			{...props}
-			textProps={{
-				...textProps,
-				style: ReactNative.StyleSheet.compose(linkStyle, props?.style),
-			}}
-		/>
-	);
-};
-const StyledTextInput = styled(ReactNative.TextInput)({
-	color: "text",
-	borderColor: "border",
-	width: 96,
-	borderWidth: "light",
-	borderRadius: "md",
-	padding: "sm",
-});
-export const TextInput = (
-	props: React.ComponentProps<typeof StyledTextInput>
-) => {
-	const { theme } = useDripsyTheme();
-	return (
-		<StyledTextInput placeholderTextColor={theme.colors.secondary} {...props} />
-	);
-};
-export const ScrollView = ({
-	contentContainerStyle,
-	...props
-}: ReactNative.ScrollViewProps) => {
-	const sx = useSx();
-	return (
-		<ReactNative.ScrollView
-			{...props}
-			contentContainerStyle={[
-				sx({ justifyContent: "center", alignItems: "stretch", width: "full" }),
-				contentContainerStyle,
-			]}
-		/>
-	);
-};
-
-export { styled };

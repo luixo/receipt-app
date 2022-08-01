@@ -1,11 +1,12 @@
 import React from "react";
 
+import { styled, Link } from "@nextui-org/react";
+
 import { cache } from "app/cache";
 import { User } from "app/components/user";
 import { trpc, TRPCQueryOutput } from "app/trpc";
-import { styled, Link } from "app/utils/styles";
 
-const WrapperLink = styled(Link)({
+const WrapperLink = styled(Link, {
 	flexDirection: "row",
 });
 
@@ -20,11 +21,7 @@ export const UserPreview: React.FC<Props> = ({ data: user }) => {
 		[trpcContext, user.id, user.name]
 	);
 	return (
-		<WrapperLink
-			href={`/users/${user.id}/`}
-			onClick={setUserName}
-			legacyBehavior={false}
-		>
+		<WrapperLink href={`/users/${user.id}/`} onClick={setUserName}>
 			<User user={user} />
 		</WrapperLink>
 	);

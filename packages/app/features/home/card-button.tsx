@@ -2,9 +2,9 @@ import React from "react";
 
 import { Card, Link, Text } from "@nextui-org/react";
 
-import { themes } from "app/utils/styles";
+import { Theme } from "app/utils/styles";
 
-type GradientColor = keyof typeof themes["light"]["colors"];
+type GradientColor = keyof Theme["colors"];
 type GradientColorStop = [number, GradientColor];
 export type Gradient = {
 	colorStops: GradientColorStop[];

@@ -1,7 +1,6 @@
 import React from "react";
-import * as ReactNative from "react-native";
 
-import { Button, Input } from "@nextui-org/react";
+import { styled, Button, Input } from "@nextui-org/react";
 import {
 	IoCheckmarkCircleOutline as CheckMark,
 	IoTrashBin as TrashBin,
@@ -13,12 +12,10 @@ import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
-import { styled } from "app/utils/styles";
 import { userNameSchema } from "app/utils/validation";
 
-const ButtonsContainer = styled(ReactNative.View)({
+const ButtonsContainer = styled("div", {
 	display: "flex",
-	flexDirection: "row",
 });
 
 type Props = {

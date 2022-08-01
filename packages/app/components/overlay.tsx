@@ -1,14 +1,19 @@
 import React from "react";
-import * as ReactNative from "react-native";
 
-import { styled } from "app/utils/styles";
+import { styled } from "@nextui-org/react";
 
-const Wrapper = styled(ReactNative.View)({
+const Wrapper = styled("div", {
 	position: "relative",
+	display: "flex",
+	flexDirection: "column",
 });
 
-const OverlayElement = styled(ReactNative.View)({
-	...ReactNative.StyleSheet.absoluteFillObject,
+const OverlayElement = styled("div", {
+	position: "absolute",
+	left: 0,
+	right: 0,
+	top: 0,
+	bottom: 0,
 	backgroundColor: "overlay",
 	display: "flex",
 	alignItems: "center",
