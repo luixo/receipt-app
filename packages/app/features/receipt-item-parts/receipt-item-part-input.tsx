@@ -13,7 +13,6 @@ import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { parseNumberWithDecimals, partSchema } from "app/utils/validation";
 import { ReceiptItemsId, ReceiptsId } from "next-app/db/models";
-import { Role } from "next-app/handlers/receipts/utils";
 
 type ReceiptItemPart =
 	TRPCQueryOutput<"receipt-items.get">["items"][number]["parts"][number];
@@ -22,7 +21,8 @@ type Props = {
 	receiptId: ReceiptsId;
 	receiptItemId: ReceiptItemsId;
 	itemPart: ReceiptItemPart;
-	role: Role;
+	itemParts: number;
+	readOnly?: boolean;
 	isLoading: boolean;
 };
 
@@ -30,8 +30,9 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 	receiptId,
 	receiptItemId,
 	itemPart,
+	itemParts,
 	isLoading,
-	role,
+	readOnly,
 }) => {
 	const [isEditing, { switchValue: switchEditing }] = useBooleanState();
 
@@ -102,8 +103,8 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 	);
 
 	const readOnlyComponent = (
-		<Text css={{ pl: "$6", display: "flex", alignItems: "center" }}>
-			{itemPart.part}
+		<Text css={{ px: "$6", display: "flex", alignItems: "center" }}>
+			{itemPart.part} / {itemParts}
 		</Text>
 	);
 
@@ -118,34 +119,39 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 		[bindings]
 	);
 
-	if (role === "viewer") {
+	if (readOnly) {
 		return readOnlyComponent;
 	}
 
 	if (isEditing) {
 		return wrap(
-			<Input
-				{...bindings}
-				aria-label="Item part"
-				onChange={onChange}
-				disabled={updateMutation.isLoading || isLoading}
-				status={inputState.error ? "warning" : undefined}
-				helperColor={inputState.error ? "warning" : "error"}
-				helperText={inputState.error?.message || updateMutation.error?.message}
-				contentRightStyling={updateMutation.isLoading}
-				contentRight={
-					<IconButton
-						title="Save item part"
-						light
-						isLoading={updateMutation.isLoading}
-						disabled={Boolean(inputState.error)}
-						onClick={() => updatePart(getValue())}
-						icon={<CheckMark size={24} />}
-					/>
-				}
-				bordered
-				width="$20"
-			/>
+			<>
+				<Input
+					{...bindings}
+					aria-label="Item part"
+					onChange={onChange}
+					disabled={updateMutation.isLoading || isLoading}
+					status={inputState.error ? "warning" : undefined}
+					helperColor={inputState.error ? "warning" : "error"}
+					helperText={
+						inputState.error?.message || updateMutation.error?.message
+					}
+					contentRightStyling={updateMutation.isLoading}
+					contentRight={
+						<IconButton
+							title="Save item part"
+							light
+							isLoading={updateMutation.isLoading}
+							disabled={Boolean(inputState.error)}
+							onClick={() => updatePart(getValue())}
+							icon={<CheckMark size={24} />}
+						/>
+					}
+					bordered
+					width="$20"
+				/>
+				<Text>/ {itemParts}</Text>
+			</>
 		);
 	}
 

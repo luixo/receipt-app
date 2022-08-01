@@ -78,6 +78,11 @@ export const ReceiptItem: React.FC<Props> = ({
 
 	const isDeleteLoading =
 		isReceiptDeleteLoading || removeReceiptItemMutation.isLoading;
+	const itemParts = receiptItem.parts.reduce(
+		(acc, itemPart) => acc + itemPart.part,
+		0
+	);
+	const isEditingDisabled = role === "viewer" || receiptItem.locked;
 
 	return (
 		<Card>
@@ -85,7 +90,7 @@ export const ReceiptItem: React.FC<Props> = ({
 				<ReceiptItemNameInput
 					receiptId={receiptId}
 					receiptItem={receiptItem}
-					role={role}
+					readOnly={isEditingDisabled}
 					isLoading={isDeleteLoading}
 				/>
 				<ReceiptItemLockedButton
@@ -103,17 +108,17 @@ export const ReceiptItem: React.FC<Props> = ({
 						receiptId={receiptId}
 						receiptItem={receiptItem}
 						currency={currency}
-						role={role}
+						readOnly={isEditingDisabled}
 						isLoading={isDeleteLoading}
 					/>
 					<ReceiptItemQuantityInput
 						receiptId={receiptId}
 						receiptItem={receiptItem}
-						role={role}
+						readOnly={isEditingDisabled}
 						isLoading={isDeleteLoading}
 					/>
 				</Sum>
-				{role === "viewer" ? null : (
+				{isEditingDisabled ? null : (
 					<>
 						<Spacer y={1} />
 						<ButtonsGroup
@@ -158,9 +163,10 @@ export const ReceiptItem: React.FC<Props> = ({
 									<ReceiptItemPart
 										receiptId={receiptId}
 										itemPart={part}
+										itemParts={itemParts}
 										participant={matchedParticipant}
 										receiptItemId={receiptItem.id}
-										role={role}
+										readOnly={isEditingDisabled}
 										isLoading={isDeleteLoading}
 									/>
 								</React.Fragment>
@@ -169,7 +175,7 @@ export const ReceiptItem: React.FC<Props> = ({
 					</>
 				)}
 			</Card.Body>
-			{role === "viewer" ? null : (
+			{isEditingDisabled ? null : (
 				<>
 					<Card.Divider />
 					<Card.Footer css={{ justifyContent: "flex-end" }}>

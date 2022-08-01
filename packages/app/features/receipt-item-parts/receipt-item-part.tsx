@@ -9,7 +9,6 @@ import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { ReceiptItemsId, ReceiptsId } from "next-app/db/models";
-import { Role } from "next-app/handlers/receipts/utils";
 
 import { ReceiptItemPartInput } from "./receipt-item-part-input";
 
@@ -40,7 +39,8 @@ type Props = {
 	receiptItemId: ReceiptItemsId;
 	participant: ReceiptParticipant;
 	itemPart: ReceiptItemParts[number];
-	role: Role;
+	itemParts: number;
+	readOnly?: boolean;
 	isLoading: boolean;
 };
 
@@ -48,8 +48,9 @@ export const ReceiptItemPart: React.FC<Props> = ({
 	receiptId,
 	receiptItemId,
 	itemPart,
+	itemParts,
 	participant,
-	role,
+	readOnly,
 	isLoading,
 }) => {
 	const deleteMutation = trpc.useMutation(
@@ -81,10 +82,11 @@ export const ReceiptItemPart: React.FC<Props> = ({
 					receiptId={receiptId}
 					receiptItemId={receiptItemId}
 					itemPart={itemPart}
-					role={role}
+					itemParts={itemParts}
+					readOnly={readOnly}
 					isLoading={isLoading || deleteMutation.isLoading}
 				/>
-				{role === "viewer" ? null : (
+				{readOnly ? null : (
 					<>
 						<Spacer x={1} y={0.5} />
 						<RemoveButton

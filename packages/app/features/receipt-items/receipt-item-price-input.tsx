@@ -13,7 +13,6 @@ import { trpc, TRPCQueryOutput } from "app/trpc";
 import { Currency } from "app/utils/currency";
 import { parseNumberWithDecimals, priceSchema } from "app/utils/validation";
 import { ReceiptsId } from "next-app/db/models";
-import { Role } from "next-app/handlers/receipts/utils";
 
 const Wrapper = styled("div", { display: "flex", alignItems: "center" });
 
@@ -22,7 +21,7 @@ type ReceiptItem = TRPCQueryOutput<"receipt-items.get">["items"][number];
 type Props = {
 	receiptId: ReceiptsId;
 	receiptItem: ReceiptItem;
-	role: Role;
+	readOnly?: boolean;
 	currency?: Currency;
 	isLoading: boolean;
 };
@@ -32,7 +31,7 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 	receiptItem,
 	isLoading,
 	currency,
-	role,
+	readOnly,
 }) => {
 	const [isEditing, { switchValue: switchEditing }] = useBooleanState();
 
@@ -80,7 +79,7 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 				<Text>
 					{receiptItem.price} {currency || "unknown"}
 				</Text>
-				{role !== "viewer" ? (
+				{!readOnly ? (
 					<IconButton
 						auto
 						light

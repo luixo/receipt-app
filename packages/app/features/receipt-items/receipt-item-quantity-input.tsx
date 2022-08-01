@@ -12,7 +12,6 @@ import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { parseNumberWithDecimals, quantitySchema } from "app/utils/validation";
 import { ReceiptsId } from "next-app/db/models";
-import { Role } from "next-app/handlers/receipts/utils";
 
 const Wrapper = styled("div", { display: "flex", alignItems: "center" });
 
@@ -21,7 +20,7 @@ type ReceiptItem = TRPCQueryOutput<"receipt-items.get">["items"][number];
 type Props = {
 	receiptId: ReceiptsId;
 	receiptItem: ReceiptItem;
-	role: Role;
+	readOnly?: boolean;
 	isLoading: boolean;
 };
 
@@ -29,7 +28,7 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 	receiptId,
 	receiptItem,
 	isLoading,
-	role,
+	readOnly,
 }) => {
 	const [isEditing, { switchValue: switchEditing }] = useBooleanState();
 
@@ -76,7 +75,7 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 			<Wrapper>
 				<Spacer x={0.5} />
 				<Text>x {receiptItem.quantity} unit</Text>
-				{role !== "viewer" ? (
+				{!readOnly ? (
 					<IconButton
 						auto
 						light
