@@ -29,7 +29,7 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 		{ ssr: false }
 	);
 	const currency = currenciesListQuery.data
-		? currenciesListQuery.data.find(
+		? currenciesListQuery.data.list.find(
 				(element) => element.code === receipt.currency
 		  )?.symbol
 		: receipt.currency;

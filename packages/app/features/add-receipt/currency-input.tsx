@@ -21,7 +21,7 @@ export const CurrencyInput: React.FC<Props> = ({ form, query }) => {
 		useBooleanState();
 
 	const onCurrencyChange = React.useCallback(
-		(nextCurrency: TRPCQueryOutput<"currency.get-list">[number]) => {
+		(nextCurrency: TRPCQueryOutput<"currency.get-list">["list"][number]) => {
 			closeModal();
 			form.setValue("currency", nextCurrency, { shouldValidate: true });
 		},

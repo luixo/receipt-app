@@ -24,7 +24,7 @@ export const ReceiptCurrencyInput: React.FC<Props> = ({
 		useTrpcMutationOptions(cache.receipts.update.mutationOptions)
 	);
 	const saveCurrency = React.useCallback(
-		(nextCurrency: TRPCQueryOutput<"currency.get-list">[number]) => {
+		(nextCurrency: TRPCQueryOutput<"currency.get-list">["list"][number]) => {
 			if (nextCurrency.code === receipt.currency) {
 				return;
 			}

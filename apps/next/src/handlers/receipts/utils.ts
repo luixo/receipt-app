@@ -6,7 +6,7 @@ import {
 	ReceiptsDatabase,
 	Database,
 } from "next-app/db";
-import { ReceiptsId } from "next-app/db/models";
+import { AccountsId, ReceiptsId } from "next-app/db/models";
 import { roleSchema } from "next-app/handlers/validation";
 
 export type Role = z.infer<typeof roleSchema>;
@@ -52,3 +52,24 @@ export const getReceiptById = <SE extends ReceiptsSelectExpression<"receipts">>(
 		.select(selectExpression)
 		.where("id", "=", id)
 		.executeTakeFirst();
+
+export const getOwnReceipts = (
+	database: Database,
+	ownerAccountId: AccountsId
+) =>
+	database.selectFrom("receipts").where("ownerAccountId", "=", ownerAccountId);
+
+export const getForeignReceipts = (
+	database: Database,
+	ownerAccountId: AccountsId
+) =>
+	database
+		.selectFrom("users")
+		.where("users.connectedAccountId", "=", ownerAccountId)
+		.where("users.ownerAccountId", "<>", ownerAccountId)
+		.innerJoin("receiptParticipants", (jb) =>
+			jb.onRef("receiptParticipants.userId", "=", "users.id")
+		)
+		.innerJoin("receipts", (jb) =>
+			jb.onRef("receipts.id", "=", "receiptParticipants.receiptId")
+		);

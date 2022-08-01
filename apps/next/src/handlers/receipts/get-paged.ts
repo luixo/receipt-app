@@ -5,6 +5,10 @@ import { z } from "zod";
 import { getDatabase } from "next-app/db";
 import { UsersId } from "next-app/db/models";
 import { AuthorizedContext } from "next-app/handlers/context";
+import {
+	getOwnReceipts,
+	getForeignReceipts,
+} from "next-app/handlers/receipts/utils";
 import { limitSchema } from "next-app/handlers/validation";
 
 export const router = trpc.router<AuthorizedContext>().query("get-paged", {
@@ -16,20 +20,8 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 	}),
 	resolve: async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
-		const foreignReceipts = database
-			.selectFrom("users")
-			.where("users.connectedAccountId", "=", ctx.auth.accountId)
-			.where("users.ownerAccountId", "<>", ctx.auth.accountId)
-			.innerJoin("receiptParticipants", (jb) =>
-				jb.onRef("receiptParticipants.userId", "=", "users.id")
-			)
-			.innerJoin("receipts", (jb) =>
-				jb.onRef("receipts.id", "=", "receiptParticipants.receiptId")
-			);
-
-		const ownReceipts = database
-			.selectFrom("receipts")
-			.where("ownerAccountId", "=", ctx.auth.accountId);
+		const foreignReceipts = getForeignReceipts(database, ctx.auth.accountId);
+		const ownReceipts = getOwnReceipts(database, ctx.auth.accountId);
 
 		const [receipts, receiptsCount] = await Promise.all([
 			database
