@@ -54,6 +54,7 @@ export const ReceiptNameInput: React.FC<Props> = ({ receipt, isLoading }) => {
 	return (
 		<Input
 			{...bindings}
+			aria-label="Receipt name"
 			css={{ flex: 1, ml: "$8" }}
 			disabled={updateReceiptMutation.isLoading || isLoading}
 			readOnly={receipt.role !== "owner"}

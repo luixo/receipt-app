@@ -86,6 +86,7 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 	return (
 		<Input
 			{...bindings}
+			aria-label="Receipt item quantity"
 			disabled={updateMutation.isLoading || isLoading}
 			status={inputState.error ? "warning" : undefined}
 			helperColor={inputState.error ? "warning" : "error"}
