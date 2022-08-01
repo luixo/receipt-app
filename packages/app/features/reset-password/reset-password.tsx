@@ -6,8 +6,10 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "solito/router";
 import { z } from "zod";
 
-import { MutationErrorMessage } from "app/components/mutation-error-message";
-import { QueryErrorMessage } from "app/components/query-error-message";
+import {
+	MutationErrorMessage,
+	QueryErrorMessage,
+} from "app/components/error-message";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { trpc, TRPCQueryResult } from "app/trpc";
 import { passwordSchema } from "app/utils/validation";

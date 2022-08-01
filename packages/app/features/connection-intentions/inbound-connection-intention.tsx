@@ -5,7 +5,7 @@ import { InfiniteData } from "react-query";
 
 import { cache } from "app/cache";
 import { UsersPicker } from "app/components/app/users-picker";
-import { MutationErrorMessage } from "app/components/mutation-error-message";
+import { MutationErrorMessage } from "app/components/error-message";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 

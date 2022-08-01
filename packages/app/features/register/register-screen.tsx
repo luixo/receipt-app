@@ -7,7 +7,7 @@ import { useRouter } from "solito/router";
 import { z } from "zod";
 
 import { cache } from "app/cache";
-import { MutationErrorMessage } from "app/components/mutation-error-message";
+import { MutationErrorMessage } from "app/components/error-message";
 import { Page } from "app/components/page";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { trpc } from "app/trpc";

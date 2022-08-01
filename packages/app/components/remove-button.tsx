@@ -11,7 +11,7 @@ import {
 import { IoTrashBin as TrashBin } from "react-icons/io5";
 import { UseMutationResult } from "react-query";
 
-import { MutationErrorMessage } from "app/components/mutation-error-message";
+import { MutationErrorMessage } from "app/components/error-message";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { TRPCError } from "app/trpc";
 

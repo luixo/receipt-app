@@ -2,7 +2,7 @@ import React from "react";
 
 import { Button, Card, Loading, Spacer, Text } from "@nextui-org/react";
 
-import { MutationErrorMessage } from "app/components/mutation-error-message";
+import { MutationErrorMessage } from "app/components/error-message";
 import { trpc } from "app/trpc";
 
 export const EmailVerificationCard: React.FC = () => {

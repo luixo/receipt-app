@@ -4,7 +4,7 @@ import { Loading, styled, Text } from "@nextui-org/react";
 
 import { cache } from "app/cache";
 import { Calendar } from "app/components/calendar";
-import { MutationErrorMessage } from "app/components/mutation-error-message";
+import { MutationErrorMessage } from "app/components/error-message";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 

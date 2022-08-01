@@ -2,7 +2,7 @@ import React from "react";
 
 import { Collapse, Loading, Spacer, styled, Text } from "@nextui-org/react";
 
-import { QueryErrorMessage } from "app/components/query-error-message";
+import { QueryErrorMessage } from "app/components/error-message";
 import { AddReceiptItemController } from "app/features/add-receipt-item/add-receipt-item-controller";
 import { ReceiptParticipants } from "app/features/receipt-participants/receipt-participants";
 import { trpc, TRPCQuerySuccessResult } from "app/trpc";

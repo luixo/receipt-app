@@ -2,8 +2,8 @@ import React from "react";
 
 import { styled, Text, Spacer, Loading } from "@nextui-org/react";
 
+import { QueryErrorMessage } from "app/components/error-message";
 import { Page } from "app/components/page";
-import { QueryErrorMessage } from "app/components/query-error-message";
 import { trpc } from "app/trpc";
 
 import { CardButton, Gradient } from "./card-button";

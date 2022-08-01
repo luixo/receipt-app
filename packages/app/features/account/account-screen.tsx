@@ -4,7 +4,7 @@ import { Button, Loading, Spacer, Text } from "@nextui-org/react";
 import { useRouter } from "solito/router";
 
 import { cache } from "app/cache";
-import { MutationErrorMessage } from "app/components/mutation-error-message";
+import { MutationErrorMessage } from "app/components/error-message";
 import { Page } from "app/components/page";
 import { ChangePasswordScreen } from "app/features/change-password/change-password-screen";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";

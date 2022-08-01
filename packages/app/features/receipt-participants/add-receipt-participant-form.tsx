@@ -4,7 +4,7 @@ import { Button, Loading, Modal, Spacer, Text } from "@nextui-org/react";
 import { MdAdd as AddIcon } from "react-icons/md";
 
 import { cache } from "app/cache";
-import { MutationErrorMessage } from "app/components/mutation-error-message";
+import { MutationErrorMessage } from "app/components/error-message";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCInfiniteQueryOutput } from "app/trpc";

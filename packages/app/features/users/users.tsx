@@ -11,9 +11,9 @@ import {
 import { MdAdd as AddIcon } from "react-icons/md";
 
 import { cache } from "app/cache";
+import { QueryErrorMessage } from "app/components/error-message";
 import { IconButton } from "app/components/icon-button";
 import { Overlay } from "app/components/overlay";
-import { QueryErrorMessage } from "app/components/query-error-message";
 import { useCursorPaging } from "app/hooks/use-cursor-paging";
 import {
 	trpc,

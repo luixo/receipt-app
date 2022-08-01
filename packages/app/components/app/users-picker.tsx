@@ -8,7 +8,7 @@ import {
 } from "react-query";
 
 import { ButtonsGroup } from "app/components/buttons-group";
-import { QueryErrorMessage } from "app/components/query-error-message";
+import { QueryErrorMessage } from "app/components/error-message";
 import { TRPCError } from "app/trpc";
 import { UsersId } from "next-app/src/db/models";
 

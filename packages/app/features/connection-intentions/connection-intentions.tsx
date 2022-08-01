@@ -2,7 +2,7 @@ import React from "react";
 
 import { Container, Loading, Spacer, styled, Text } from "@nextui-org/react";
 
-import { QueryErrorMessage } from "app/components/query-error-message";
+import { QueryErrorMessage } from "app/components/error-message";
 import { trpc, TRPCQuerySuccessResult } from "app/trpc";
 
 import { InboundConnectionIntention } from "./inbound-connection-intention";

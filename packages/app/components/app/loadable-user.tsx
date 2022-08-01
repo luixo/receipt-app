@@ -3,7 +3,7 @@ import React from "react";
 import { Loading } from "@nextui-org/react";
 
 import { User } from "app/components/app/user";
-import { QueryErrorMessage } from "app/components/query-error-message";
+import { QueryErrorMessage } from "app/components/error-message";
 import { trpc, TRPCQuerySuccessResult } from "app/trpc";
 import { ReceiptsId, UsersId } from "next-app/db/models";
 

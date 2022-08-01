@@ -7,9 +7,11 @@ import { useRouter } from "solito/router";
 import { z } from "zod";
 
 import { cache } from "app/cache";
-import { MutationErrorMessage } from "app/components/mutation-error-message";
+import {
+	MutationErrorMessage,
+	QueryErrorMessage,
+} from "app/components/error-message";
 import { Page } from "app/components/page";
-import { QueryErrorMessage } from "app/components/query-error-message";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";

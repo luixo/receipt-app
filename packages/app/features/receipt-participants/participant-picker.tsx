@@ -5,7 +5,7 @@ import { InfiniteData } from "react-query";
 
 import { cache } from "app/cache";
 import { UsersPicker } from "app/components/app/users-picker";
-import { QueryErrorMessage } from "app/components/query-error-message";
+import { QueryErrorMessage } from "app/components/error-message";
 import {
 	trpc,
 	TRPCInfiniteQueryOutput,

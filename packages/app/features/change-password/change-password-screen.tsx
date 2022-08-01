@@ -5,7 +5,7 @@ import { Button, Input, Loading, Spacer } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { MutationErrorMessage } from "app/components/mutation-error-message";
+import { MutationErrorMessage } from "app/components/error-message";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { trpc } from "app/trpc";

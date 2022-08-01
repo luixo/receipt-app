@@ -3,7 +3,7 @@ import React from "react";
 import { Button, Grid, Loading, Modal, Text } from "@nextui-org/react";
 import { QueryObserverSuccessResult } from "react-query";
 
-import { QueryErrorMessage } from "app/components/query-error-message";
+import { QueryErrorMessage } from "app/components/error-message";
 import { trpc, TRPCError, TRPCQueryOutput } from "app/trpc";
 import { Currency } from "app/utils/currency";
 

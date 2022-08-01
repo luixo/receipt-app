@@ -2,6 +2,13 @@ import React from "react";
 
 import { Button, Text, Card, Row, Spacer, styled } from "@nextui-org/react";
 import { IoWarning as WarningIcon } from "react-icons/io5";
+import {
+	MutationObserverErrorResult,
+	QueryObserverRefetchErrorResult,
+	QueryObserverLoadingErrorResult,
+} from "react-query";
+
+import { TRPCError } from "app/trpc";
 
 const Title = styled(Text, {
 	display: "flex",
@@ -41,3 +48,41 @@ export const ErrorMessage: React.FC<Props> = ({ message, button }) => (
 		) : null}
 	</Card>
 );
+
+type MutationProps = {
+	mutation: Pick<
+		MutationObserverErrorResult<any, TRPCError, any, any>,
+		"reset" | "error"
+	>;
+};
+
+export const MutationErrorMessage: React.FC<MutationProps> = ({ mutation }) => {
+	const reset = React.useCallback(() => mutation.reset(), [mutation]);
+	return (
+		<ErrorMessage
+			button={React.useMemo(() => ({ text: "Hide", onClick: reset }), [reset])}
+			message={mutation.error.message}
+		/>
+	);
+};
+
+type QueryObserverErrorResult =
+	| QueryObserverLoadingErrorResult<unknown, TRPCError>
+	| QueryObserverRefetchErrorResult<unknown, TRPCError>;
+
+type QueryProps = {
+	query: Pick<QueryObserverErrorResult, "refetch" | "error">;
+};
+
+export const QueryErrorMessage: React.FC<QueryProps> = ({ query }) => {
+	const refetch = React.useCallback(() => query.refetch(), [query]);
+	return (
+		<ErrorMessage
+			button={React.useMemo(
+				() => ({ text: "Refetch", onClick: refetch }),
+				[refetch]
+			)}
+			message={query.error.message}
+		/>
+	);
+};
