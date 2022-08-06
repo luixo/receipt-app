@@ -17,9 +17,9 @@ type InnerProps<Data, User> = {
 	query: InfiniteQueryObserverSuccessResult<Data, TRPCError>;
 	extractUsers: (data: InfiniteData<Data>) => User[];
 	extractDetails: (user: User) => { id: UsersId; name: string };
-	selectedUser?: User;
+	selectedUsers: User[];
 	getBreakIndex?: (data: InfiniteData<Data>) => number | undefined;
-	onChange: (nextUser: User) => void;
+	onUserClick: (user: User) => void;
 	loadMore: () => void;
 	disabled?: boolean;
 };
@@ -29,27 +29,31 @@ const UsersPickerInner = <Data, User>({
 	query,
 	extractUsers,
 	extractDetails,
-	selectedUser,
+	selectedUsers,
 	getBreakIndex,
-	onChange,
+	onUserClick,
 	loadMore,
 	disabled,
 }: InnerProps<Data, User>) => {
 	const users = extractUsers(query.data);
-	const selectedId = selectedUser ? extractDetails(selectedUser).id : undefined;
+	const selectedIds = selectedUsers.map((user) => extractDetails(user).id);
 	return (
 		<ButtonsGroup
 			type={type}
 			buttons={users}
 			extractDetails={extractDetails}
+			// TODO: move buttonProps to React.useCallback
+			// When slowdown of tsc is resolved
 			buttonProps={(user) => ({
 				auto: true,
 				flat: true,
 				disabled,
-				color: extractDetails(user).id === selectedId ? "success" : undefined,
+				color: selectedIds.includes(extractDetails(user).id)
+					? "success"
+					: undefined,
 			})}
 			breakIndex={getBreakIndex?.(query.data)}
-			onClick={onChange}
+			onClick={onUserClick}
 		>
 			{query.hasNextPage ? (
 				<Button

@@ -54,17 +54,18 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 
 	const isLoading =
 		acceptConnectionMutation.isLoading || rejectConnectionMutation.isLoading;
+	const selectedUsers = React.useMemo(() => (user ? [user] : []), [user]);
 	return (
 		<>
 			<Text>{intention.email}</Text>
 			<Spacer y={0.5} />
-			<UsersPicker
+			<UsersPicker<UsersResult, UsersResult["items"][number]>
 				type="linear"
 				query={usersQuery}
 				extractUsers={extractUsers}
 				extractDetails={({ id, name }) => ({ id, name })}
-				selectedUser={user}
-				onChange={setUser}
+				selectedUsers={selectedUsers}
+				onUserClick={setUser}
 				loadMore={loadMore}
 			/>
 			<Spacer y={1} />

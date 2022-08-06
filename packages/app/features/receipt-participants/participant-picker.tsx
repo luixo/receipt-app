@@ -41,12 +41,14 @@ type InnerProps = {
 	query: TRPCInfiniteQuerySuccessResult<"users.get-available">;
 	disabled: boolean;
 	onUserClick: (user: AvailableUsersResult["items"][number]) => void;
+	selectedParticipants: AvailableUsersResult["items"];
 };
 
 const ParticipantPickerInner: React.FC<InnerProps> = ({
 	query,
 	disabled,
 	onUserClick,
+	selectedParticipants,
 }) => {
 	const loadMore = React.useCallback(() => query.fetchNextPage(), [query]);
 	return (
@@ -55,8 +57,9 @@ const ParticipantPickerInner: React.FC<InnerProps> = ({
 			query={query}
 			extractUsers={extractUsers}
 			extractDetails={extractDetails}
+			selectedUsers={selectedParticipants}
 			getBreakIndex={getBreakIndex}
-			onChange={onUserClick}
+			onUserClick={onUserClick}
 			loadMore={loadMore}
 			disabled={disabled}
 		/>

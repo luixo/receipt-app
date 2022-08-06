@@ -3,9 +3,7 @@ import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
 import { AuthorizedContext } from "next-app/handlers/context";
-import { getReceiptParticipant } from "next-app/handlers/receipt-participants/utils";
 import { getReceiptById } from "next-app/handlers/receipts/utils";
-import { getUserById } from "next-app/handlers/users/utils";
 import {
 	receiptIdSchema,
 	assignableRoleSchema,
@@ -15,7 +13,7 @@ import {
 export const router = trpc.router<AuthorizedContext>().mutation("put", {
 	input: z.strictObject({
 		receiptId: receiptIdSchema,
-		userId: userIdSchema,
+		userIds: z.array(userIdSchema).nonempty(),
 		role: assignableRoleSchema,
 	}),
 	resolve: async ({ input, ctx }) => {
@@ -35,42 +33,58 @@ export const router = trpc.router<AuthorizedContext>().mutation("put", {
 				message: `Not enough rights to add participants to receipt ${input.receiptId}.`,
 			});
 		}
-		const user = await getUserById(database, input.userId, ["ownerAccountId"]);
-		if (!user) {
+		const users = await database
+			.selectFrom("users")
+			.select(["id", "ownerAccountId"])
+			.where("id", "in", input.userIds)
+			.execute();
+		if (users.length !== input.userIds.length) {
+			const missedUserIds = input.userIds.filter(
+				(userId) => !users.some((user) => user.id === userId)
+			);
 			throw new trpc.TRPCError({
 				code: "NOT_FOUND",
-				message: `User ${input.userId} does not exist.`,
+				message: `User(s) ${missedUserIds.join(", ")} do(es) not exist.`,
 			});
 		}
-		if (user.ownerAccountId !== ctx.auth.accountId) {
+		const notOwnedUsers = users.filter(
+			(user) => user.ownerAccountId !== ctx.auth.accountId
+		);
+		if (notOwnedUsers.length !== 0) {
 			throw new trpc.TRPCError({
 				code: "FORBIDDEN",
-				message: `Not enough rights to add user ${input.userId} to a receipt.`,
+				message: `Not enough rights to add user(s) ${notOwnedUsers
+					.map(({ id }) => id)
+					.join(", ")} to a receipt.`,
 			});
 		}
-		const receiptParticipant = await getReceiptParticipant(
-			database,
-			input.userId,
-			input.receiptId,
-			["userId"]
-		);
-		if (receiptParticipant) {
+		const receiptParticipants = await database
+			.selectFrom("receiptParticipants")
+			.where("receiptId", "=", input.receiptId)
+			.where("userId", "in", input.userIds)
+			.select(["userId"])
+			.execute();
+		if (receiptParticipants.length !== 0) {
 			throw new trpc.TRPCError({
 				code: "CONFLICT",
-				message: `User ${input.userId} already participates in receipt ${input.receiptId}.`,
+				message: `User(s) ${receiptParticipants.map(
+					({ userId }) => userId
+				)} already participate(s) in receipt ${input.receiptId}.`,
 			});
 		}
 		const result = await database
 			.insertInto("receiptParticipants")
-			.values({
-				receiptId: input.receiptId,
-				userId: input.userId,
-				role: ctx.auth.accountId === input.userId ? "owner" : input.role,
-			})
+			.values(
+				input.userIds.map((userId) => ({
+					receiptId: input.receiptId,
+					userId,
+					role: ctx.auth.accountId === userId ? "owner" : input.role,
+				}))
+			)
 			.returning("added")
-			.executeTakeFirstOrThrow();
+			.execute();
 		return {
-			added: result.added,
+			added: result.map(({ added }) => added),
 		};
 	},
 });

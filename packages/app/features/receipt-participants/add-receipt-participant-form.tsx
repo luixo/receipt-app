@@ -5,10 +5,11 @@ import { MdAdd as AddIcon } from "react-icons/md";
 
 import { cache } from "app/cache";
 import { MutationErrorMessage } from "app/components/error-message";
+import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCInfiniteQueryOutput } from "app/trpc";
-import { ReceiptsId } from "next-app/db/models";
+import { ReceiptsId, UsersId } from "next-app/db/models";
 
 import { ParticipantPicker } from "./participant-picker";
 
@@ -32,26 +33,52 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 		)
 	);
 
-	const addParticipant = React.useCallback(
-		(user: TRPCInfiniteQueryOutput<"users.get-available">["items"][number]) => {
-			closeModal();
-			addMutation.mutate({
+	const [selectedParticipants, setSelectedParticipants] = React.useState<
+		TRPCInfiniteQueryOutput<"users.get-available">["items"]
+	>([]);
+	const onParticipantClick = React.useCallback(
+		(
+			participant: TRPCInfiniteQueryOutput<"users.get-available">["items"][number]
+		) =>
+			setSelectedParticipants((prevParticipants) => {
+				const matchedIndex = prevParticipants.indexOf(participant);
+				if (matchedIndex === -1) {
+					return [...prevParticipants, participant];
+				}
+				return [
+					...prevParticipants.slice(0, matchedIndex),
+					...prevParticipants.slice(matchedIndex + 1),
+				];
+			}),
+		[setSelectedParticipants]
+	);
+	const addParticipants = useAsyncCallback(
+		async (isMount) => {
+			if (selectedParticipants.length === 0) {
+				return;
+			}
+			await addMutation.mutateAsync({
 				receiptId,
-				userId: user.id,
+				userIds: selectedParticipants.map((participant) => participant.id) as [
+					UsersId,
+					...UsersId[]
+				],
 				role: "editor",
 			});
+			if (!isMount()) {
+				return;
+			}
+			closeModal();
 		},
-		[addMutation, receiptId, closeModal]
+		[addMutation, receiptId, selectedParticipants, closeModal]
 	);
 
 	return (
 		<>
 			<Button
 				bordered
-				icon={
-					addMutation.isLoading ? <Loading size="xs" /> : <AddIcon size={24} />
-				}
-				disabled={disabled || addMutation.isLoading}
+				icon={<AddIcon size={24} />}
+				disabled={disabled}
 				onClick={openModal}
 				css={{ margin: "0 auto" }}
 			/>
@@ -69,14 +96,27 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 					<ParticipantPicker
 						receiptId={receiptId}
 						disabled={disabled}
-						onUserClick={addParticipant}
+						onUserClick={onParticipantClick}
+						selectedParticipants={selectedParticipants}
 					/>
 					<Spacer y={1} />
 				</Modal.Body>
+				<Modal.Footer>
+					<Button onClick={addParticipants}>
+						{addMutation.isLoading ? (
+							<Loading color="currentColor" size="sm" />
+						) : (
+							"Save"
+						)}
+					</Button>
+					{addMutation.status === "error" ? (
+						<>
+							<Spacer y={1} />
+							<MutationErrorMessage mutation={addMutation} />
+						</>
+					) : null}
+				</Modal.Footer>
 			</Modal>
-			{addMutation.status === "error" ? (
-				<MutationErrorMessage mutation={addMutation} />
-			) : null}
 		</>
 	);
 };

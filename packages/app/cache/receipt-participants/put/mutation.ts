@@ -4,23 +4,36 @@ import { ReceiptsId } from "next-app/db/models";
 
 export const mutationOptions: UseContextedMutationOptions<
 	"receipt-participants.put",
-	ReturnType<typeof cache["users"]["getAvailable"]["remove"]>,
+	ReturnType<typeof cache["users"]["getAvailable"]["remove"]>[],
 	ReceiptsId
 > = {
 	onMutate: (trpcContext, receiptId) => (variables) =>
-		cache.users.getAvailable.remove(trpcContext, receiptId, variables.userId),
+		variables.userIds.map((userId) =>
+			cache.users.getAvailable.remove(trpcContext, receiptId, userId)
+		),
 	onSuccess:
 		(trpcContext, receiptId) =>
 		({ added }, variables, snapshot) => {
 			if (snapshot) {
-				cache.receiptItems.get.receiptParticipant.add(trpcContext, receiptId, {
-					name: snapshot.name,
-					connectedAccountId: snapshot.connectedAccountId,
-					remoteUserId: variables.userId,
-					localUserId: variables.userId,
-					role: variables.role,
-					resolved: false,
-					added,
+				variables.userIds.forEach((userId, index) => {
+					const snapshotUser = snapshot[index];
+					const addedTimestamp = added[index];
+					if (!snapshotUser || !addedTimestamp) {
+						return;
+					}
+					cache.receiptItems.get.receiptParticipant.add(
+						trpcContext,
+						receiptId,
+						{
+							name: snapshotUser.name,
+							connectedAccountId: snapshotUser.connectedAccountId,
+							remoteUserId: userId,
+							localUserId: userId,
+							role: variables.role,
+							resolved: false,
+							added: addedTimestamp,
+						}
+					);
 				});
 			}
 		},
@@ -28,6 +41,8 @@ export const mutationOptions: UseContextedMutationOptions<
 		if (!snapshot) {
 			return;
 		}
-		cache.users.getAvailable.add(trpcContext, receiptId, snapshot);
+		snapshot.forEach((snapshotUser) =>
+			cache.users.getAvailable.add(trpcContext, receiptId, snapshotUser!)
+		);
 	},
 };
