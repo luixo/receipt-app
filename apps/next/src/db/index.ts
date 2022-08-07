@@ -54,12 +54,13 @@ const getLogger = (logger: Logger, url: string) => (logEvent: LogEvent) => {
 };
 
 const databaseConfig = getDatabaseConfig();
+const dialect = new PostgresDialect({
+	pool: new Pool(databaseConfig),
+});
 export type Database = Kysely<ReceiptsDatabase>;
 export const getDatabase = (ctx?: UnauthorizedContext) =>
 	new Kysely<ReceiptsDatabase>({
-		dialect: new PostgresDialect({
-			pool: new Pool(databaseConfig),
-		}),
+		dialect,
 		log:
 			ctx && ctx.debug
 				? getLogger(ctx.logger, ctx.req.url || "unknown")
