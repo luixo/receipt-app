@@ -1,4 +1,5 @@
 import * as trpc from "@trpc/server";
+import { sql } from "kysely";
 import { z } from "zod";
 
 import { MONTH } from "app/utils/time";
@@ -39,7 +40,11 @@ export const router = trpc.router<AuthorizedContext>().query("get-list", {
 					)
 			)
 			.selectFrom("mergedReceipts")
-			.select(["currency", database.fn.sum<string>("count").as("count")])
+			.select([
+				"currency",
+				// TODO: return `database.fn.sum<string>("count").as("count")`
+				sql`sum(count)`.as("count"),
+			])
 			.groupBy("currency")
 			.orderBy("count", "desc")
 			.execute();

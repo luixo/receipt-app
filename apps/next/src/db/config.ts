@@ -1,6 +1,6 @@
-import { PostgresDialectConfig } from "kysely";
+import { PoolConfig } from "pg";
 
-export const getDatabaseConfig = (): PostgresDialectConfig => {
+export const getDatabaseConfig = (): PoolConfig => {
 	if (!process.env.POSTGRES_HOST) {
 		throw new Error("Expected to have process.env.POSTGRES_HOST variable!");
 	}

@@ -5,7 +5,7 @@ import {
 	PostgresDialect,
 	SelectExpression,
 } from "kysely";
-import { TableExpressionDatabase } from "kysely/dist/cjs/parser/table-parser";
+import { Pool } from "pg";
 
 import { UnauthorizedContext } from "next-app/handlers/context";
 import { Logger } from "next-app/utils/logger";
@@ -34,7 +34,7 @@ export type ReceiptsDatabase = DatabaseColumnType<
 >;
 
 export type ReceiptsSelectExpression<TB extends keyof ReceiptsDatabase> =
-	SelectExpression<TableExpressionDatabase<ReceiptsDatabase, TB>, TB>;
+	SelectExpression<ReceiptsDatabase, TB>;
 
 const getLogger = (logger: Logger, url: string) => (logEvent: LogEvent) => {
 	if (logEvent.level === "query") {
@@ -57,7 +57,9 @@ const databaseConfig = getDatabaseConfig();
 export type Database = Kysely<ReceiptsDatabase>;
 export const getDatabase = (ctx?: UnauthorizedContext) =>
 	new Kysely<ReceiptsDatabase>({
-		dialect: new PostgresDialect(databaseConfig),
+		dialect: new PostgresDialect({
+			pool: new Pool(databaseConfig),
+		}),
 		log:
 			ctx && ctx.debug
 				? getLogger(ctx.logger, ctx.req.url || "unknown")

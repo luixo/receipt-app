@@ -1,5 +1,7 @@
+import * as fs from "fs";
 import { Migrator, FileMigrationProvider } from "kysely";
 import * as path from "path";
+import * as util from "util";
 
 import { getDatabase } from ".";
 
@@ -7,7 +9,11 @@ async function main() {
 	const database = getDatabase();
 	const migrator = new Migrator({
 		db: database,
-		provider: new FileMigrationProvider(path.join(__dirname, "./migrations")),
+		provider: new FileMigrationProvider({
+			fs: { readdir: util.promisify(fs.readdir) },
+			path,
+			migrationFolder: path.join(__dirname, "./migrations"),
+		}),
 	});
 
 	const { error, results } = await migrator.migrateToLatest();
