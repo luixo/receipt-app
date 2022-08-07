@@ -83,7 +83,6 @@ const UsersInner: React.FC<InnerProps> = ({ query }) => {
 						title="Add user"
 						bordered
 						icon={<AddIcon size={24} />}
-						linkStyle={{ display: "inline-flex" }}
 					/>{" "}
 					<Spacer x={0.5} />
 					to add a user

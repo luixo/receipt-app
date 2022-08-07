@@ -1,11 +1,12 @@
 import React from "react";
 
-import { Link, Text, Grid, styled } from "@nextui-org/react";
+import { Text, Grid, styled } from "@nextui-org/react";
 
 import { cache } from "app/cache";
 import { ReceiptAccountedButton } from "app/components/app/receipt-accounted-button";
 import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
 import { ReceiptResolvedParticipantsButton } from "app/components/app/receipt-resolved-participants-button";
+import { Link } from "app/components/link";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 
 const TitleLink = styled(Link, {
@@ -35,15 +36,15 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 		: receipt.currency;
 	return (
 		<>
-			<Grid css={{ whiteSpace: "normal" }} xs={7.5}>
-				<TitleLink href={`/receipts/${receipt.id}/`} onClick={setReceiptName}>
-					<Text>
+			<Grid css={{ whiteSpace: "normal", flexDirection: "column" }} xs={7.5}>
+				<TitleLink href={`/receipts/${receipt.id}/`}>
+					<Text onClick={setReceiptName} css={{ cursor: "pointer" }}>
 						{receipt.name} ({currency})
 					</Text>
-					<Text small css={{ color: "$accents7" }}>
-						{receipt.issued.toLocaleDateString()}
-					</Text>
 				</TitleLink>
+				<Text small css={{ color: "$accents7" }}>
+					{receipt.issued.toLocaleDateString()}
+				</Text>
 			</Grid>
 			<Grid xs={1.5} justify="center">
 				<ReceiptParticipantResolvedButton

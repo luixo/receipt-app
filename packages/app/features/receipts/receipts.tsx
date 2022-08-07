@@ -116,7 +116,6 @@ const ReceiptsInner: React.FC<InnerProps> = ({ query }) => {
 						title="Add receipt"
 						bordered
 						icon={<AddIcon size={24} />}
-						linkStyle={{ display: "inline-flex" }}
 					/>
 					<Spacer x={0.5} />
 					to add a receipt

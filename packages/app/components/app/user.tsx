@@ -50,32 +50,39 @@ type Props = {
 		email?: string | null;
 	};
 	avatarSize?: number;
+	onClick?: () => void;
 };
 
-export const User: React.FC<Props> = ({ user, avatarSize = 40 }) => {
-	const { theme } = useDripsyTheme();
-	const icon = React.useMemo(
-		() => getIdenticon(user.id, avatarSize, theme),
-		[user.id, avatarSize, theme]
-	);
-	return (
-		<Wrapper>
-			<AvatarImage
-				width={avatarSize}
-				height={avatarSize}
-				alt="Avatar"
-				src={icon}
-			/>
-			<Information>
-				{/* zero margin because of inherited margin from ChildText */}
-				<UserName css={{ margin: 0 }}>
-					{user.name + (user.publicName ? ` (${user.publicName})` : "")}
-				</UserName>
-				{/* color set in css because of inherited margin from Text */}
-				<Text small css={{ color: "$accents7", margin: 0 }}>
-					{user.email ?? undefined}
-				</Text>
-			</Information>
-		</Wrapper>
-	);
-};
+export const User = React.forwardRef<HTMLDivElement, Props>(
+	({ user, avatarSize = 40, onClick }, ref) => {
+		const { theme } = useDripsyTheme();
+		const icon = React.useMemo(
+			() => getIdenticon(user.id, avatarSize, theme),
+			[user.id, avatarSize, theme]
+		);
+		return (
+			<Wrapper
+				onClick={onClick}
+				css={onClick ? { cursor: "pointer" } : undefined}
+				ref={ref}
+			>
+				<AvatarImage
+					width={avatarSize}
+					height={avatarSize}
+					alt="Avatar"
+					src={icon}
+				/>
+				<Information>
+					{/* zero margin because of inherited margin from ChildText */}
+					<UserName css={{ margin: 0 }}>
+						{user.name + (user.publicName ? ` (${user.publicName})` : "")}
+					</UserName>
+					{/* color set in css because of inherited margin from Text */}
+					<Text small css={{ color: "$accents7", margin: 0 }}>
+						{user.email ?? undefined}
+					</Text>
+				</Information>
+			</Wrapper>
+		);
+	}
+);

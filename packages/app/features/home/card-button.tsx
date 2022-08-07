@@ -1,7 +1,8 @@
 import React from "react";
 
-import { Card, Link, Text } from "@nextui-org/react";
+import { Card, Text } from "@nextui-org/react";
 
+import { Link } from "app/components/link";
 import { Theme } from "app/utils/styles";
 
 type GradientColor = keyof Theme["colors"];
@@ -32,13 +33,16 @@ export const CardButton: React.FC<Props> = ({
 }) => (
 	<Card>
 		<Card.Body>
-			<Link href={href} css={{ display: "block", textAlign: "center" }}>
+			<Link href={href}>
 				<Text
 					h1
 					css={{
 						textGradient: `${degree}deg, ${colorStops
 							.map(([position, color]) => `$${color} ${position}%`)
 							.join(", ")}`,
+						display: "block",
+						textAlign: "center",
+						cursor: "pointer",
 					}}
 				>
 					{children}
