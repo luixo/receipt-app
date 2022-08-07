@@ -5,7 +5,7 @@ import { Database } from "..";
 const addReceiptParticipantsAddedTimestampColumn = async (db: Database) => {
 	await db.schema
 		.alterTable("receiptParticipants")
-		.addColumn("added", "timestamp")
+		.addColumn("added", "timestamp", (cb) => cb.defaultTo(sql`now()`))
 		.execute();
 	await db
 		.updateTable("receiptParticipants")
@@ -19,11 +19,6 @@ const addReceiptParticipantsAddedTimestampColumn = async (db: Database) => {
 		.alterTable("receiptParticipants")
 		.alterColumn("added")
 		.setNotNull()
-		.execute();
-	await db.schema
-		.alterTable("receiptParticipants")
-		.alterColumn("added")
-		.setDefault(sql`now()`)
 		.execute();
 };
 
