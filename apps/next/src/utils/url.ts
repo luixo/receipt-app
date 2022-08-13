@@ -1,7 +1,1 @@
-export const getBaseUrl = () => {
-	const baseUrl = process.env.BASE_URL;
-	if (!baseUrl) {
-		throw new Error("Expected to have process.env.BASE_URL variable!");
-	}
-	return baseUrl;
-};
+export const getBaseUrl = () => process.env.BASE_URL || "http://example.com/";

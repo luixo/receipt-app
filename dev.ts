@@ -3,19 +3,22 @@ import getPort, { portNumbers } from "get-port";
 import ngrok from "ngrok";
 
 const main = async () => {
-	const ngrokAuthToken = process.env.NGROK_AUTH_TOKEN;
-	if (!ngrokAuthToken) {
-		throw new Error("No NGROK_AUTH_TOKEN environment variable provided!");
-	}
 	const port = await getPort({
 		port: portNumbers(3000, 3100),
 	});
-	const host = await ngrok.connect({
-		addr: port,
-		region: "eu",
-		authtoken: ngrokAuthToken,
-	});
-	console.log(`Ngrok host started: ${host} at port ${port}`);
+	let host = "localhost";
+	const ngrokAuthToken = process.env.NGROK_AUTH_TOKEN;
+	if (!ngrokAuthToken) {
+		console.warn("No NGROK_AUTH_TOKEN environment variable provided!");
+		console.warn("You will not be able to connect to backend on mobile");
+	} else {
+		host = await ngrok.connect({
+			addr: port,
+			region: "eu",
+			authtoken: ngrokAuthToken,
+		});
+		console.log(`Ngrok host started: ${host} at port ${port}`);
+	}
 	const result = concurrently([
 		{
 			name: "expo",
