@@ -3,7 +3,8 @@
 	"private": true,
 	"workspaces": [
 		"apps/*",
-		"packages/*"
+		"packages/*",
+		"scripts"
 	],
 	"type": "module",
 	"devDependencies": {
@@ -12,7 +13,6 @@
 		"@types/react-native": "^0.67.4",
 		"@typescript-eslint/eslint-plugin": "^5.30.5",
 		"@typescript-eslint/parser": "^5.30.5",
-		"concurrently": "^7.1.0",
 		"dotenv": "^16.0.0",
 		"dotenv-cli": "^5.1.0",
 		"eslint": "^8.19.0",
@@ -24,15 +24,13 @@
 		"eslint-plugin-react": "^7.30.1",
 		"eslint-plugin-react-hooks": "^4.6.0",
 		"expo-module-scripts": "^2.0.0",
-		"get-port": "^6.1.2",
 		"pre-commit": "^1.2.2",
 		"prettier": "^2.7.1",
-		"ts-node": "^10.7.0",
 		"turbo": "^1.2.2",
-		"typescript": "^4.6.3"
+		"typescript": "^4.7.4"
 	},
 	"scripts": {
-		"dev": "dotenv -c -- ts-node dev.ts",
+		"dev": "dotenv -c -- yarn workspace scripts dev",
 		"native:dev": "yarn workspace expo-app dev",
 		"web:dev": "yarn workspace next-app dev",
 		"ios:build": "yarn workspace expo-app ios:update-version && yarn workspace expo-app ios:build",
@@ -42,7 +40,10 @@
 		"format:verify": "prettier --check '**/*.{js,jsx,ts,tsx,json}'",
 		"lint": "eslint . --ext .js,.jsx,.ts,.tsx",
 		"lint:fix": "eslint --fix . --ext .js,.jsx,.ts,.tsx",
-		"postinstall": "patch-package"
+		"postinstall": "patch-package",
+		"db:migrate": "dotenv -c -- yarn workspace scripts db:migrate",
+		"db:migrate:production": "dotenv -c production -- yarn workspace scripts db:migrate",
+		"db:generate-types": "dotenv -c -- yarn workspace scripts db:generate-types && yarn format"
 	},
 	"dependencies": {
 		"@nextui-org/react": "^1.0.0-beta.9",
@@ -52,7 +53,6 @@
 		"expo-splash-screen": "~0.14.1",
 		"expo-status-bar": "~1.2.0",
 		"next": "^12.2.2",
-		"ngrok": "^4.3.1",
 		"patch-package": "^6.4.7",
 		"react": "17.0.1",
 		"react-dom": "17.0.1",

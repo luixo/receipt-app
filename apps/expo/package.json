@@ -13,8 +13,7 @@
 		"react-native-gesture-handler": "~2.1.0",
 		"react-native-safe-area-context": "4.2.4",
 		"react-native-screens": "~3.13.1",
-		"react-native-web": "0.17.7",
-		"ts-morph": "^14.0.0"
+		"react-native-web": "0.17.7"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.12.9",
@@ -24,7 +23,7 @@
 		"dev": "expo start",
 		"android:dev": "expo run:android",
 		"ios:dev": "expo run:ios",
-		"ios:update-version": "ts-node update-version.ts",
+		"ios:update-version": "yarn workspace scripts expo:update-ios-version",
 		"ios:build": "eas build -p=ios",
 		"ios:publish": "eas submit --platform ios"
 	},

@@ -89,13 +89,14 @@ module.exports = {
 	},
 	overrides: [
 		{
-			files: ["dev.ts", "update-version.ts", "generate-types.ts", "migrate.ts"],
+			files: ["scripts/**/*"],
 			rules: { "no-console": "off" },
 		},
 		...[
-			["apps/next", ["next.config.js", "src/db/generate-types.ts"]],
+			["apps/next", ["next.config.js"]],
 			["apps/expo"],
 			["packages/app"],
+			["scripts"],
 		].map(([dir, devDependencies]) => ({
 			files: `${dir}/**/*`,
 			rules: {

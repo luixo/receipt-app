@@ -3,7 +3,7 @@ import { recase } from "@kristiandupont/recase";
 import { processDatabase } from "kanel";
 import path from "path";
 
-import { getDatabaseConfig } from "./config";
+import { getDatabaseConfig } from "next-app/src/db/config";
 
 const run = async () => {
 	console.log(`\n> Generating types...`);
@@ -18,7 +18,7 @@ const run = async () => {
 				{
 					name: "public",
 					ignore: ["__diesel_schema_migrations"],
-					modelFolder: path.join(__dirname, "./models"),
+					modelFolder: path.join(__dirname, "../apps/next/src/db/models"),
 				},
 			],
 		});
