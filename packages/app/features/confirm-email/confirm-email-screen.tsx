@@ -1,9 +1,10 @@
 import React from "react";
 
-import { Spacer, Text } from "@nextui-org/react";
+import { Spacer } from "@nextui-org/react";
 import { createParam } from "solito";
 
 import { cache } from "app/cache";
+import { Header } from "app/components/header";
 import { Page } from "app/components/page";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { trpc } from "app/trpc";
@@ -36,7 +37,7 @@ export const ConfirmEmailScreen: React.FC = () => {
 
 	return (
 		<Page>
-			<Text h2>Confirm email</Text>
+			<Header>Confirm email</Header>
 			<Spacer y={1} />
 			<ConfirmEmail token={token} confirmMutation={confirmEmailMutation} />
 		</Page>

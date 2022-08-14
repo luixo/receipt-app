@@ -7,13 +7,13 @@ import { useWindowSize } from "app/hooks/use-window-size";
 const StyledSpan = styled("span");
 
 type Props = {
-	min: number;
-	step?: number;
+	fontSizeMin: number;
+	fontSizeStep?: number;
 };
 
 export const ShrinkText: React.FC<
 	React.ComponentProps<typeof StyledSpan> & Props
-> = ({ min, step = 2, ...props }) => {
+> = ({ fontSizeMin, fontSizeStep = 2, ...props }) => {
 	const ref = React.useRef<HTMLSpanElement>(null);
 	const [fontSize, setFontSize] = React.useState<number | undefined>();
 	const windowSize = useWindowSize();
@@ -25,7 +25,7 @@ export const ShrinkText: React.FC<
 		const computedStyle = window.getComputedStyle(element);
 		element.style.fontSize = "inherit";
 		let currentFontSize =
-			parseInt(computedStyle.getPropertyValue("font-size"), 10) + step;
+			parseInt(computedStyle.getPropertyValue("font-size"), 10) + fontSizeStep;
 		const currentHeights = { element: 0, line: 0 };
 		do {
 			currentHeights.element = parseInt(
@@ -36,14 +36,14 @@ export const ShrinkText: React.FC<
 				computedStyle.getPropertyValue("line-height"),
 				10
 			);
-			currentFontSize -= step;
+			currentFontSize -= fontSizeStep;
 			element.style.fontSize = `${currentFontSize}px`;
 		} while (
 			currentHeights.element > currentHeights.line &&
-			currentFontSize > min
+			currentFontSize > fontSizeMin
 		);
 		element.style.removeProperty("font-size");
 		setFontSize(currentFontSize);
-	}, [ref, step, min, windowSize, setFontSize]);
+	}, [ref, fontSizeStep, fontSizeMin, windowSize, setFontSize]);
 	return <StyledSpan {...props} ref={ref} css={{ fontSize }} />;
 };

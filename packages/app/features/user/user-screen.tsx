@@ -1,18 +1,14 @@
 import React from "react";
 
-import { Text, Spacer, styled } from "@nextui-org/react";
+import { Spacer } from "@nextui-org/react";
 import { createParam } from "solito";
 
 import { User as UserTitle } from "app/components/app/user";
+import { Header } from "app/components/header";
 import { Page } from "app/components/page";
 import { trpc } from "app/trpc";
 
 import { User } from "./user";
-
-const Header = styled(Text, {
-	display: "flex",
-	alignItems: "center",
-});
 
 const { useParam } = createParam<{ id: string }>();
 
@@ -26,8 +22,7 @@ export const UserScreen: React.FC = () => {
 
 	return (
 		<Page>
-			{/* zero margin because of inherited margin from ChildText */}
-			<Header h2 css={{ m: 0 }}>
+			<Header>
 				<UserTitle
 					user={React.useMemo(
 						() => ({ id, name: userNameQuery.data || id }),

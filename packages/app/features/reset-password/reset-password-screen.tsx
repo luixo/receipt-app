@@ -1,8 +1,8 @@
 import React from "react";
 
-import { Text } from "@nextui-org/react";
 import { createParam } from "solito";
 
+import { Header } from "app/components/header";
 import { Page } from "app/components/page";
 import { trpc } from "app/trpc";
 
@@ -19,7 +19,7 @@ export const ResetPasswordScreen: React.FC = () => {
 
 	return (
 		<Page>
-			<Text h2>Reset password</Text>
+			<Header>Reset password</Header>
 			<ResetPassword
 				token={token}
 				intentionQuery={resetPasswordIntentionQuery}

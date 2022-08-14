@@ -1,13 +1,14 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Input, Loading, Spacer, Text } from "@nextui-org/react";
+import { Button, Input, Loading, Spacer } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "solito/router";
 import { z } from "zod";
 
 import { cache } from "app/cache";
 import { MutationErrorMessage } from "app/components/error-message";
+import { Header } from "app/components/header";
 import { Page } from "app/components/page";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
@@ -49,7 +50,7 @@ export const LoginScreen: React.FC = () => {
 
 	return (
 		<Page>
-			<Text h2>Login</Text>
+			<Header>Login</Header>
 			<Input
 				{...form.register("email")}
 				label="Email"

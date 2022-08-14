@@ -1,21 +1,28 @@
 import React from "react";
 
-import { Button, Loading, Spacer, Text } from "@nextui-org/react";
+import { Button, Loading, Spacer } from "@nextui-org/react";
 import { useRouter } from "solito/router";
 
-import { MutationErrorMessage } from "app/components/error-message";
+import {
+	MutationErrorMessage,
+	QueryErrorMessage,
+} from "app/components/error-message";
+import { Header } from "app/components/header";
 import { Page } from "app/components/page";
 import { ChangePasswordScreen } from "app/features/change-password/change-password-screen";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
-import { trpc } from "app/trpc";
+import { trpc, TRPCQuerySuccessResult } from "app/trpc";
 
 import { AccountNameInput } from "./account-name-input";
 import { AccountPublicNameInput } from "./account-public-name-input";
 
-export const AccountScreen: React.FC = () => {
+type InnerProps = {
+	query: TRPCQuerySuccessResult<"account.get">;
+};
+
+const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 	const router = useRouter();
-	const accountQuery = trpc.useQuery(["account.get"]);
 
 	const trpcContext = trpc.useContext();
 	const logoutMutation = trpc.useMutation("account.logout");
@@ -33,25 +40,12 @@ export const AccountScreen: React.FC = () => {
 
 	return (
 		<Page>
-			{/* zero margin because of inherited margin from ChildText */}
-			<Text h2 css={{ m: 0 }}>
-				{accountQuery.status === "success" ? (
-					`👨👩 ${accountQuery.data.name}`
-				) : accountQuery.status === "loading" ? (
-					<Loading />
-				) : (
-					"Please read below"
-				)}
-			</Text>
+			<Header icon="👨👩">{query.data.name}</Header>
 			<EmailVerificationCard />
-			{accountQuery.status === "success" ? (
-				<>
-					<Spacer y={1} />
-					<AccountNameInput account={accountQuery.data} />
-					<Spacer y={1} />
-					<AccountPublicNameInput account={accountQuery.data} />
-				</>
-			) : null}
+			<Spacer y={1} />
+			<AccountNameInput account={query.data} />
+			<Spacer y={1} />
+			<AccountPublicNameInput account={query.data} />
 			<Spacer y={1} />
 			<ChangePasswordScreen />
 			<Spacer y={2} />
@@ -72,4 +66,20 @@ export const AccountScreen: React.FC = () => {
 			) : null}
 		</Page>
 	);
+};
+
+type Props = Omit<InnerProps, "query">;
+
+export const AccountScreen: React.FC<Props> = () => {
+	const query = trpc.useQuery(["account.get"]);
+	if (query.status === "loading") {
+		return <Loading />;
+	}
+	if (query.status === "error") {
+		return <QueryErrorMessage query={query} />;
+	}
+	if (query.status === "idle") {
+		return null;
+	}
+	return <AccountScreenInner query={query} />;
 };

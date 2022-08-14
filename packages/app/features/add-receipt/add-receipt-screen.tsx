@@ -1,7 +1,7 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Loading, Spacer, styled, Text } from "@nextui-org/react";
+import { Button, Loading, Spacer } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "solito/router";
 import { z } from "zod";
@@ -11,6 +11,7 @@ import {
 	MutationErrorMessage,
 	QueryErrorMessage,
 } from "app/components/error-message";
+import { Header } from "app/components/header";
 import { Page } from "app/components/page";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
@@ -22,11 +23,6 @@ import { ReceiptsId } from "next-app/src/db/models";
 import { CurrencyInput } from "./currency-input";
 import { ReceiptNameInput } from "./receipt-name-input";
 import { Form } from "./types";
-
-const Header = styled(Text, {
-	display: "flex",
-	alignItems: "center",
-});
 
 export const AddReceiptScreen: React.FC = () => {
 	const router = useRouter();
@@ -63,10 +59,7 @@ export const AddReceiptScreen: React.FC = () => {
 
 	return (
 		<Page>
-			{/* zero margin because of inherited margin from ChildText */}
-			<Header h2 css={{ m: 0 }}>
-				Add receipt
-			</Header>
+			<Header>Add receipt</Header>
 			<EmailVerificationCard />
 			<Spacer y={1} />
 			<ReceiptNameInput form={form} query={addReceiptMutation} />

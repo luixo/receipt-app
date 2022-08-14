@@ -1,8 +1,9 @@
 import React from "react";
 
-import { Spacer, Text } from "@nextui-org/react";
+import { Spacer } from "@nextui-org/react";
 import { createParam } from "solito";
 
+import { Header } from "app/components/header";
 import { Page } from "app/components/page";
 import { trpc } from "app/trpc";
 
@@ -16,7 +17,7 @@ export const VoidAccountScreen: React.FC = () => {
 
 	return (
 		<Page>
-			<Text h2>Void account</Text>
+			<Header>Void account</Header>
 			<Spacer y={1} />
 			<VoidAccount token={token} voidMutation={voidAccountMutation} />
 		</Page>

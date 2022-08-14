@@ -20,9 +20,14 @@ type Props = {
 		role: Role;
 	};
 	isLoading: boolean;
+	unsetEditing: () => void;
 };
 
-export const ReceiptNameInput: React.FC<Props> = ({ receipt, isLoading }) => {
+export const ReceiptNameInput: React.FC<Props> = ({
+	receipt,
+	isLoading,
+	unsetEditing,
+}) => {
 	const {
 		bindings,
 		state: inputState,
@@ -39,23 +44,26 @@ export const ReceiptNameInput: React.FC<Props> = ({ receipt, isLoading }) => {
 	);
 	const saveName = useAsyncCallback(
 		async (isMount, nextName: string) => {
-			await updateReceiptMutation.mutateAsync({
-				id: receipt.id,
-				update: { type: "name", name: nextName },
-			});
+			if (receipt.name !== nextName) {
+				await updateReceiptMutation.mutateAsync({
+					id: receipt.id,
+					update: { type: "name", name: nextName },
+				});
+			}
 			if (!isMount()) {
 				return;
 			}
 			setValue(nextName);
+			unsetEditing();
 		},
-		[updateReceiptMutation, receipt.id]
+		[updateReceiptMutation, receipt.id, receipt.name, setValue, unsetEditing]
 	);
 
 	return (
 		<Input
 			{...bindings}
 			aria-label="Receipt name"
-			css={{ flex: 1, ml: "$8" }}
+			css={{ flex: 1 }}
 			disabled={updateReceiptMutation.isLoading || isLoading}
 			readOnly={receipt.role !== "owner"}
 			status={inputState.error ? "warning" : undefined}
@@ -69,7 +77,7 @@ export const ReceiptNameInput: React.FC<Props> = ({ receipt, isLoading }) => {
 					title="Save receipt name"
 					light
 					isLoading={updateReceiptMutation.isLoading}
-					disabled={receipt.name === getValue() || Boolean(inputState.error)}
+					disabled={Boolean(inputState.error)}
 					onClick={() => saveName(getValue())}
 					icon={<CheckMark size={24} />}
 				/>

@@ -1,13 +1,14 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Loading, Text, styled, Spacer } from "@nextui-org/react";
+import { Button, Loading, Spacer } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "solito/router";
 import { z } from "zod";
 
 import { cache } from "app/cache";
 import { MutationErrorMessage } from "app/components/error-message";
+import { Header } from "app/components/header";
 import { Page } from "app/components/page";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
@@ -19,11 +20,6 @@ import { UsersId } from "next-app/src/db/models";
 import { EmailInput } from "./email-input";
 import { Form } from "./types";
 import { UserNameInput } from "./user-name-input";
-
-const Header = styled(Text, {
-	display: "flex",
-	alignItems: "center",
-});
 
 export const AddUserScreen: React.FC = () => {
 	const router = useRouter();
@@ -53,7 +49,7 @@ export const AddUserScreen: React.FC = () => {
 
 	return (
 		<Page>
-			<Header h2>Add user</Header>
+			<Header>Add user</Header>
 			<EmailVerificationCard />
 			<Spacer y={1} />
 			<UserNameInput form={form} query={addUserMutation} />
