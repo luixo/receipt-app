@@ -52,6 +52,10 @@ export const useInputController = <
 		bindings: type === "number" ? { ...field, onChange } : field,
 		state: fieldState,
 		getValue: React.useCallback(() => form.watch(name), [form, name]),
+		getNumberValue: React.useCallback(
+			() => Number(form.watch(name)),
+			[form, name]
+		),
 		setValue,
 		form,
 	};

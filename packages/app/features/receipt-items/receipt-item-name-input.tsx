@@ -6,6 +6,7 @@ import { MdEdit as EditIcon } from "react-icons/md";
 
 import { cache } from "app/cache";
 import { IconButton } from "app/components/icon-button";
+import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -45,16 +46,18 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 		"receipt-items.update",
 		useTrpcMutationOptions(cache.receiptItems.update.mutationOptions, receiptId)
 	);
-	const updateName = React.useCallback(
-		(name: string) => {
-			switchEditing();
-			if (name === receiptItem.name) {
+	const updateName = useAsyncCallback(
+		async (isMount, name: string) => {
+			if (name !== receiptItem.name) {
+				updateMutation.mutateAsync({
+					id: receiptItem.id,
+					update: { type: "name", name },
+				});
+			}
+			if (!isMount()) {
 				return;
 			}
-			updateMutation.mutate({
-				id: receiptItem.id,
-				update: { type: "name", name },
-			});
+			switchEditing();
 		},
 		[updateMutation, receiptItem.id, receiptItem.name, switchEditing]
 	);

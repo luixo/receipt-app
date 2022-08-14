@@ -4,10 +4,10 @@ import { Input, Spacer, Text } from "@nextui-org/react";
 import { FiMinus as MinusIcon, FiPlus as PlusIcon } from "react-icons/fi";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 import { MdEdit as EditIcon } from "react-icons/md";
-import { z } from "zod";
 
 import { cache } from "app/cache";
 import { IconButton } from "app/components/icon-button";
+import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -35,15 +35,16 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 	isLoading,
 	readOnly,
 }) => {
-	const [isEditing, { switchValue: switchEditing }] = useBooleanState();
+	const [isEditing, { switchValue: switchEditing, setFalse: unsetEditing }] =
+		useBooleanState();
 
 	const {
 		bindings,
 		state: inputState,
-		getValue,
+		getNumberValue,
 	} = useSingleInput({
 		initialValue: itemPart.part,
-		schema: z.preprocess(Number, partSchema),
+		schema: partSchema,
 		type: "number",
 	});
 
@@ -55,28 +56,30 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 		)
 	);
 
-	const updatePart = React.useCallback(
-		(partUpdater: number | ((prev: number) => number)) => {
+	const updatePart = useAsyncCallback(
+		async (isMount, partUpdater: number | ((prev: number) => number)) => {
 			const nextPart =
 				typeof partUpdater === "function"
 					? partUpdater(itemPart.part)
 					: partUpdater;
-			switchEditing();
-			if (nextPart === itemPart.part) {
+			if (nextPart !== itemPart.part) {
+				await updateMutation.mutateAsync({
+					itemId: receiptItemId,
+					userId: itemPart.userId,
+					update: { type: "part", part: nextPart },
+				});
+			}
+			if (!isMount()) {
 				return;
 			}
-			updateMutation.mutate({
-				itemId: receiptItemId,
-				userId: itemPart.userId,
-				update: { type: "part", part: nextPart },
-			});
+			unsetEditing();
 		},
 		[
 			updateMutation,
 			receiptItemId,
 			itemPart.userId,
 			itemPart.part,
-			switchEditing,
+			unsetEditing,
 		]
 	);
 
@@ -133,7 +136,7 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 							light
 							isLoading={updateMutation.isLoading}
 							disabled={Boolean(inputState.error)}
-							onClick={() => updatePart(getValue())}
+							onClick={() => updatePart(getNumberValue())}
 							icon={<CheckMark size={24} />}
 						/>
 					}

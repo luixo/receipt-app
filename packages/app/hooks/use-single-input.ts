@@ -29,9 +29,14 @@ export const useSingleInput = <T>({
 		resolver: React.useMemo(
 			() =>
 				schema
-					? (zodResolver(z.object({ value: schema })) as Resolver<Form<T>>)
+					? (zodResolver(
+							z.object({
+								value:
+									type === "number" ? z.preprocess(Number, schema) : schema,
+							})
+					  ) as Resolver<Form<T>>)
 					: undefined,
-			[schema]
+			[schema, type]
 		),
 	});
 	return useInputController({

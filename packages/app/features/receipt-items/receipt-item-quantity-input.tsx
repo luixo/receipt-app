@@ -3,10 +3,10 @@ import React from "react";
 import { Input, Text, styled, Spacer } from "@nextui-org/react";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 import { MdEdit as EditIcon } from "react-icons/md";
-import { z } from "zod";
 
 import { cache } from "app/cache";
 import { IconButton } from "app/components/icon-button";
+import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -31,15 +31,16 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 	isLoading,
 	readOnly,
 }) => {
-	const [isEditing, { switchValue: switchEditing }] = useBooleanState();
+	const [isEditing, { switchValue: switchEditing, setFalse: unsetEditing }] =
+		useBooleanState();
 
 	const {
 		bindings,
 		state: inputState,
-		getValue,
+		getNumberValue,
 	} = useSingleInput({
 		initialValue: receiptItem.quantity,
-		schema: z.preprocess(Number, quantitySchema),
+		schema: quantitySchema,
 		type: "number",
 	});
 
@@ -47,18 +48,20 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 		"receipt-items.update",
 		useTrpcMutationOptions(cache.receiptItems.update.mutationOptions, receiptId)
 	);
-	const updateQuantity = React.useCallback(
-		(quantity: number) => {
-			switchEditing();
-			if (quantity === receiptItem.quantity) {
+	const updateQuantity = useAsyncCallback(
+		async (isMount, quantity: number) => {
+			if (quantity !== receiptItem.quantity) {
+				await updateMutation.mutateAsync({
+					id: receiptItem.id,
+					update: { type: "quantity", quantity },
+				});
+			}
+			if (!isMount()) {
 				return;
 			}
-			updateMutation.mutate({
-				id: receiptItem.id,
-				update: { type: "quantity", quantity },
-			});
+			unsetEditing();
 		},
-		[updateMutation, receiptItem.id, receiptItem.quantity, switchEditing]
+		[updateMutation, receiptItem.id, receiptItem.quantity, unsetEditing]
 	);
 
 	if (!isEditing) {
@@ -98,7 +101,7 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 					light
 					isLoading={updateMutation.isLoading}
 					disabled={Boolean(inputState.error)}
-					onClick={() => updateQuantity(getValue())}
+					onClick={() => updateQuantity(getNumberValue())}
 					icon={<CheckMark size={24} />}
 				/>
 			}
