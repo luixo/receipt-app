@@ -2159,7 +2159,7 @@ index 6ff6841..b03b9e7 100644
      className: string;
      selector: string;
 diff --git a/node_modules/@nextui-org/react/umd/nextui.js b/node_modules/@nextui-org/react/umd/nextui.js
-index d87d88e..0f1f132 100644
+index d87d88e..4ab41cf 100644
 --- a/node_modules/@nextui-org/react/umd/nextui.js
 +++ b/node_modules/@nextui-org/react/umd/nextui.js
 @@ -398,6 +398,7 @@ __webpack_require__.d(__webpack_exports__, {
@@ -2208,7 +2208,14 @@ index d87d88e..0f1f132 100644
  const createThemeBase = stitches.createTheme;
  const styled = stitches.styled;
  const css = stitches.css;
- 
+@@ -1481,6 +1495,7 @@ const keyframes = stitches.keyframes;
+ const getCssText = stitches.getCssText;
+ const theme = stitches.theme;
+ const config = stitches.config;
++
+ const createTheme = ({
+   type,
+   theme,
 @@ -14196,7 +14211,7 @@ const ThemeProvider = ({
    const {
      isBrowser
@@ -2262,7 +2269,6 @@ index d87d88e..0f1f132 100644
      columnNumber: 5
    }, undefined);
  };
- 
 diff --git a/node_modules/@nextui-org/react/umd/nextui.min.js b/node_modules/@nextui-org/react/umd/nextui.min.js
 index 4f8e790..91d5aed 100644
 --- a/node_modules/@nextui-org/react/umd/nextui.min.js
