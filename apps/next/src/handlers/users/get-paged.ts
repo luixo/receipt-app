@@ -31,11 +31,11 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 				.execute(),
 			accountUsers
 				.select(database.fn.count<string>("id").as("amount"))
-				.executeTakeFirstOrThrow(),
+				.executeTakeFirst(),
 		]);
 
 		return {
-			count: parseInt(usersCount.amount, 10),
+			count: usersCount ? parseInt(usersCount.amount, 10) : 0,
 			hasMore: users.length === input.limit + 1,
 			items: users.slice(0, input.limit),
 		};

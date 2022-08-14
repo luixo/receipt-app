@@ -127,11 +127,11 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 				.if(Boolean(input.onlyNonResolved), (qb) =>
 					qb.where("resolved", "=", false)
 				)
-				.executeTakeFirstOrThrow(),
+				.executeTakeFirst(),
 		]);
 
 		return {
-			count: parseInt(receiptsCount.amount, 10),
+			count: receiptsCount ? parseInt(receiptsCount.amount, 10) : 0,
 			hasMore: receipts.length === input.limit + 1,
 			items: receipts.slice(0, input.limit),
 		};
