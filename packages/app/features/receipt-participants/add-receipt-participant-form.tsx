@@ -81,7 +81,9 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 				disabled={disabled}
 				onClick={openModal}
 				css={{ margin: "0 auto" }}
-			/>
+			>
+				Participant
+			</Button>
 			<Modal
 				closeButton
 				aria-label="Receipt participant picker"

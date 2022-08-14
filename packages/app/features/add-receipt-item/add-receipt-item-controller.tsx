@@ -35,7 +35,9 @@ export const AddReceiptItemController: React.FC<Props> = ({
 			disabled={ids.length >= 10}
 			onClick={addId}
 			css={{ margin: "0 auto" }}
-		/>
+		>
+			Item
+		</Button>
 	);
 
 	return (
