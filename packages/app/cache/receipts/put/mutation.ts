@@ -20,8 +20,12 @@ export const mutationOptions: UseContextedMutationOptions<
 				issued: new Date(),
 				currency: variables.currency,
 				resolved: false,
-				participantResolved: false,
 				// Typesystem doesn't know that we use account id as self user id
+				participantResolved: variables.userIds?.includes(
+					selfAccountId as UsersId
+				)
+					? false
+					: null,
 				remoteUserId: selfAccountId as UsersId,
 				localUserId: selfAccountId as UsersId,
 			});
@@ -48,8 +52,12 @@ export const mutationOptions: UseContextedMutationOptions<
 				currency: variables.currency,
 				resolved: false,
 				sum: 0,
-				participantResolved: false,
 				// Typesystem doesn't know that we use account id as self user id
+				participantResolved: variables.userIds?.includes(
+					selfAccountId as UsersId
+				)
+					? false
+					: null,
 				ownerUserId: selfAccountId as UsersId,
 				selfUserId: selfAccountId as UsersId,
 			});

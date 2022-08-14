@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
 import { AuthorizedContext } from "next-app/handlers/context";
+import { addReceiptParticipants } from "next-app/handlers/receipt-participants/utils";
 import { getReceiptById } from "next-app/handlers/receipts/utils";
 import {
 	receiptIdSchema,
@@ -33,58 +34,11 @@ export const router = trpc.router<AuthorizedContext>().mutation("put", {
 				message: `Not enough rights to add participants to receipt ${input.receiptId}.`,
 			});
 		}
-		const users = await database
-			.selectFrom("users")
-			.select(["id", "ownerAccountId"])
-			.where("id", "in", input.userIds)
-			.execute();
-		if (users.length !== input.userIds.length) {
-			const missedUserIds = input.userIds.filter(
-				(userId) => !users.some((user) => user.id === userId)
-			);
-			throw new trpc.TRPCError({
-				code: "NOT_FOUND",
-				message: `User(s) ${missedUserIds.join(", ")} do(es) not exist.`,
-			});
-		}
-		const notOwnedUsers = users.filter(
-			(user) => user.ownerAccountId !== ctx.auth.accountId
+		return addReceiptParticipants(
+			database,
+			input.receiptId,
+			ctx.auth.accountId,
+			input.userIds.map((userId) => [userId, input.role])
 		);
-		if (notOwnedUsers.length !== 0) {
-			throw new trpc.TRPCError({
-				code: "FORBIDDEN",
-				message: `Not enough rights to add user(s) ${notOwnedUsers
-					.map(({ id }) => id)
-					.join(", ")} to a receipt.`,
-			});
-		}
-		const receiptParticipants = await database
-			.selectFrom("receiptParticipants")
-			.where("receiptId", "=", input.receiptId)
-			.where("userId", "in", input.userIds)
-			.select(["userId"])
-			.execute();
-		if (receiptParticipants.length !== 0) {
-			throw new trpc.TRPCError({
-				code: "CONFLICT",
-				message: `User(s) ${receiptParticipants.map(
-					({ userId }) => userId
-				)} already participate(s) in receipt ${input.receiptId}.`,
-			});
-		}
-		const result = await database
-			.insertInto("receiptParticipants")
-			.values(
-				input.userIds.map((userId) => ({
-					receiptId: input.receiptId,
-					userId,
-					role: ctx.auth.accountId === userId ? "owner" : input.role,
-				}))
-			)
-			.returning("added")
-			.execute();
-		return {
-			added: result.map(({ added }) => added),
-		};
 	},
 });
