@@ -44,7 +44,11 @@ export const add = (trpc: TRPCReactContext, nextReceipt: Receipt) => {
 	const shouldShiftRef = createRef(false);
 	updatePagedReceipts(trpc, (page, pageIndex, pages, input) => {
 		if (shouldShiftRef.current) {
-			return [pages[pageIndex - 1]!.at(-1)!, ...page.slice(0, input.limit)];
+			const prevPage = pages[pageIndex - 1];
+			if (!prevPage) {
+				return [];
+			}
+			return [prevPage.at(-1)!, ...page.slice(0, input.limit)];
 		}
 		const sortedPage = [...page, nextReceipt].sort(getSortByDate(input));
 		if (sortedPage.indexOf(nextReceipt) === page.length - 1) {

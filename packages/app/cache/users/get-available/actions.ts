@@ -20,7 +20,11 @@ export const add = (
 	const shouldShiftRef = createRef(false);
 	updateAvailableUsers(trpc, receiptId, (page, pageIndex, pages, input) => {
 		if (shouldShiftRef.current) {
-			return [pages[pageIndex - 1]!.at(-1)!, ...page.slice(0, input.limit)];
+			const prevPage = pages[pageIndex - 1];
+			if (!prevPage) {
+				return [];
+			}
+			return [prevPage.at(-1)!, ...page.slice(0, input.limit)];
 		}
 		const sortedPage = [...page, nextUser].sort(sortById);
 		if (sortedPage.indexOf(nextUser) === page.length - 1) {

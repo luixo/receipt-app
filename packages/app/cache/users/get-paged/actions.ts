@@ -35,7 +35,11 @@ export const add = (trpc: TRPCReactContext, nextUser: User) => {
 	const shouldShiftRef = createRef(false);
 	updatePagedUsers(trpc, (page, pageIndex, pages, input) => {
 		if (shouldShiftRef.current) {
-			return [pages[pageIndex - 1]!.at(-1)!, ...page.slice(0, input.limit)];
+			const prevPage = pages[pageIndex - 1];
+			if (!prevPage) {
+				return [];
+			}
+			return [prevPage.at(-1)!, ...page.slice(0, input.limit)];
 		}
 		const sortedPage = [...page, nextUser].sort(sortByName);
 		if (sortedPage.indexOf(nextUser) === page.length - 1) {
