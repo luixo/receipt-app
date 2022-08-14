@@ -2,9 +2,23 @@ import React from "react";
 
 import { UseInfiniteQueryResult } from "react-query";
 
+export type CursorPagingResult<T extends { count: number }> = {
+	onNextPage: () => void;
+	onPrevPage: () => void;
+	selectedPageIndex: number;
+	selectedPage: T | undefined;
+	prevSelectedPage: T | undefined;
+	isLoading: boolean;
+	prevDisabled: boolean;
+	prevLoading: boolean;
+	nextDisabled: boolean;
+	nextLoading: boolean;
+	totalCount?: number;
+};
+
 export const useCursorPaging = <T extends { count: number }>(
 	query: UseInfiniteQueryResult<T>
-) => {
+): CursorPagingResult<T> => {
 	const [selectedPageIndex, setSelectedPageIndex] = React.useState(0);
 	const [prevSelectedPageIndex, setPrevSelectedPageIndex] = React.useState(-1);
 	const isNextPageFetched = query.data

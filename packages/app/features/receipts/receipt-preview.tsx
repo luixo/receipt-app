@@ -64,6 +64,8 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 			</Grid>
 			<Grid xs={1.5} justify="center">
 				<ReceiptResolvedParticipantsButton
+					light
+					css={{ px: 0 }}
 					receiptId={receipt.id}
 					selfOwnedReceipt={receipt.role === "owner"}
 				/>

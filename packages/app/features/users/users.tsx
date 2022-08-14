@@ -101,7 +101,7 @@ const UsersInner: React.FC<InnerProps> = ({ query }) => {
 					{"<"}
 				</Button>
 				<Button>
-					Page {selectedPageIndex + 1} of{" "}
+					{selectedPageIndex + 1} of{" "}
 					{totalCount ? Math.ceil(totalCount / input.limit) : "unknown"}
 				</Button>
 				<Button

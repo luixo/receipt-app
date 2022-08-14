@@ -14,6 +14,10 @@ import {
 
 export type Revert<T> = (input: T) => T;
 
+export type ExtractInfiniteData<T> = T extends InfiniteData<infer X>
+	? X
+	: never;
+
 type Controller<Data, UpdaterInput = Data, UpdaterOutput = UpdaterInput> = {
 	get: () => Data | undefined;
 	set: (nextData: Data, ...args: UpdateArgs) => void;

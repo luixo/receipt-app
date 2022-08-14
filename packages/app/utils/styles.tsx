@@ -11,15 +11,54 @@ import { DripsyProvider } from "dripsy";
 
 import { ColorModeContext } from "app/contexts/color-mode-context";
 
+const breakpoints = {
+	xs: "320px",
+	sm: "480px",
+	md: "768px",
+	lg: "1024px",
+	xl: "1240px",
+} as const;
+
+const withBreakpoints = (stitchesTheme: typeof lightThemeStitches) => ({
+	...stitchesTheme,
+	theme: {
+		...stitchesTheme.theme,
+		breakpoints,
+	},
+	media: {
+		...stitchesTheme.media,
+		...(
+			Object.entries(breakpoints) as [
+				keyof typeof breakpoints,
+				typeof breakpoints[keyof typeof breakpoints]
+			][]
+		).reduce<Partial<typeof lightThemeStitches["media"]>>(
+			(acc, [key, breakpoint]) => {
+				acc[key] = `(min-width: ${breakpoint})`;
+				acc[`${key}Max`] = `(max-width: ${breakpoint})`;
+				return acc;
+			},
+			{}
+		),
+	},
+});
+
+const stitchesThemes = {
+	light: withBreakpoints(lightThemeStitches),
+	dark: withBreakpoints(darkThemeStitches),
+};
+
 const themes = {
-	light: lightThemeStitches.theme,
-	dark: darkThemeStitches.theme,
+	light: stitchesThemes.light.theme,
+	dark: stitchesThemes.dark.theme,
 };
 
 const nextThemes = {
 	light: createTheme({ type: "light", theme: themes.light }),
 	dark: createTheme({ type: "dark", theme: themes.dark }),
 };
+
+export const { media } = stitchesThemes.light;
 
 export type Theme = typeof themes["light"];
 
@@ -46,20 +85,21 @@ const evaluateColors = <T extends Record<string, string>>(colors: T): T => {
 	}, {} as T);
 };
 
+const theme = themes.light;
 const commonTheme = {
-	breakpoints: Object.values(themes.light.breakpoints),
-	borderWidths: themes.light.borderWeights,
+	breakpoints: Object.values(breakpoints),
+	borderWidths: theme.borderWeights,
 	borderStyles,
-	space: themes.light.space,
-	sizes: themes.light.space,
-	fonts: themes.light.fonts,
-	fontSizes: themes.light.fontSizes,
-	fontWeights: themes.light.fontWeights,
-	lineHeights: themes.light.lineHeights,
-	letterSpacings: themes.light.letterSpacings,
-	radii: themes.light.radii,
-	zIndices: themes.light.zIndices,
-	transitions: themes.light.transitions,
+	space: theme.space,
+	sizes: theme.space,
+	fonts: theme.fonts,
+	fontSizes: theme.fontSizes,
+	fontWeights: theme.fontWeights,
+	lineHeights: theme.lineHeights,
+	letterSpacings: theme.letterSpacings,
+	radii: theme.radii,
+	zIndices: theme.zIndices,
+	transitions: theme.transitions,
 	types,
 };
 
