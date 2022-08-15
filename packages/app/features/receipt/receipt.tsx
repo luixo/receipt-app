@@ -58,6 +58,7 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 				aside={React.useMemo(
 					() => [
 						<ReceiptParticipantResolvedButton
+							key="resolved"
 							ghost
 							receiptId={receipt.id}
 							remoteUserId={receipt.selfUserId}
@@ -67,6 +68,7 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 							disabled={deleteLoading || accountQuery.status !== "success"}
 						/>,
 						<ReceiptAccountedButton
+							key="accounted"
 							ghost
 							receiptId={receipt.id}
 							resolved={receipt.resolved}
