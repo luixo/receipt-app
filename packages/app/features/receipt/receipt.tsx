@@ -54,42 +54,40 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 
 	const [isEditing, { switchValue: switchEditing, setFalse: unsetEditing }] =
 		useBooleanState();
+	const asideButtons = React.useMemo(
+		() => [
+			<ReceiptParticipantResolvedButton
+				key="resolved"
+				ghost
+				receiptId={receipt.id}
+				remoteUserId={receipt.selfUserId}
+				// Typesystem doesn't know that we use account id as self user id
+				localUserId={accountQuery.data?.id! as UsersId}
+				resolved={receipt.participantResolved}
+				disabled={deleteLoading || accountQuery.status !== "success"}
+			/>,
+			<ReceiptAccountedButton
+				key="accounted"
+				ghost
+				receiptId={receipt.id}
+				resolved={receipt.resolved}
+				disabled={deleteLoading}
+			/>,
+		],
+		[
+			accountQuery.data?.id,
+			accountQuery.status,
+			deleteLoading,
+			receipt.id,
+			receipt.resolved,
+			receipt.participantResolved,
+			receipt.selfUserId,
+		]
+	);
 
 	return (
 		<>
-			<Header
-				icon="🧾"
-				aside={React.useMemo(
-					() => [
-						<ReceiptParticipantResolvedButton
-							key="resolved"
-							ghost
-							receiptId={receipt.id}
-							remoteUserId={receipt.selfUserId}
-							// Typesystem doesn't know that we use account id as self user id
-							localUserId={accountQuery.data?.id! as UsersId}
-							resolved={receipt.participantResolved}
-							disabled={deleteLoading || accountQuery.status !== "success"}
-						/>,
-						<ReceiptAccountedButton
-							key="accounted"
-							ghost
-							receiptId={receipt.id}
-							resolved={receipt.resolved}
-							disabled={deleteLoading}
-						/>,
-					],
-					[
-						accountQuery.data?.id,
-						accountQuery.status,
-						deleteLoading,
-						receipt.id,
-						receipt.resolved,
-						receipt.participantResolved,
-						receipt.selfUserId,
-					]
-				)}
-			>
+			<Header icon="🧾" aside={isEditing ? undefined : asideButtons}>
 				{isEditing && query.data.role === "owner" ? (
 					<ReceiptNameInput
 						receipt={query.data}
@@ -101,7 +99,7 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 						{query.data.name}
 					</ShrinkText>
 				)}
-				{query.data.role === "owner" ? (
+				{query.data.role === "owner" && !isEditing ? (
 					<IconButton
 						auto
 						light
