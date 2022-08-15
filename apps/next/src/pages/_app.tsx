@@ -1,5 +1,6 @@
 import React from "react";
 
+import { globalCss } from "@nextui-org/react";
 import { withTRPC } from "@trpc/next";
 import { getCookies } from "cookies-next";
 import { NextConfig } from "next";
@@ -26,7 +27,14 @@ import type { AppRouter } from "next-app/pages/api/trpc/[trpc]";
 import { AUTH_COOKIE } from "next-app/utils/auth-cookie";
 import { getCookie, serialize } from "next-app/utils/cookie";
 
+const globalStyles = globalCss({
+	html: {
+		overflowX: "hidden",
+	},
+});
+
 const GlobalHooksComponent: React.FC = () => {
+	globalStyles();
 	useColorModeCookies();
 	return null;
 };
