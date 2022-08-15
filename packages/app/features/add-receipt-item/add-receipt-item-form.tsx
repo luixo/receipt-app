@@ -59,8 +59,8 @@ export const AddReceiptItemForm: React.FC<Props> = ({
 		resolver: zodResolver(
 			z.object({
 				name: receiptItemNameSchema,
-				price: priceSchema,
-				quantity: quantitySchema,
+				price: z.preprocess(Number, priceSchema),
+				quantity: z.preprocess(Number, quantitySchema),
 			})
 		),
 		defaultValues: {
