@@ -43,10 +43,9 @@ export const AddReceiptItemController: React.FC<Props> = ({
 	return (
 		<>
 			{addButton}
-			<Spacer y={1} />
-			{ids.map((id, index) => (
+			{ids.map((id) => (
 				<React.Fragment key={id}>
-					{index === 0 ? null : <Spacer y={1} />}
+					<Spacer y={1} />
 					<AddReceiptItemForm
 						receiptId={receiptId}
 						isLoading={isLoading}

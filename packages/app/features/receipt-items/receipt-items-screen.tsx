@@ -29,7 +29,7 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 	isLoading,
 }) => (
 	<Collapse.Group accordion={false} divider={false}>
-		<Collapse title="🥸 Participants">
+		<Collapse title="🥸 Participants" shadow>
 			<ReceiptParticipants
 				data={data}
 				receiptId={receiptId}
@@ -37,6 +37,7 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 				isLoading={isLoading}
 			/>
 		</Collapse>
+		<Spacer y={1} />
 		<AddReceiptItemController receiptId={receiptId} isLoading={isLoading} />
 		<Spacer y={1} />
 		{data.items.map((receiptItem, index) => (
