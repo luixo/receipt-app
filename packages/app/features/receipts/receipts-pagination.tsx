@@ -10,9 +10,10 @@ import {
 	Dropdown,
 } from "@nextui-org/react";
 import {
-	MdArrowDropUp as ArrowUpIcon,
-	MdFilterAlt as FilterIcon,
-} from "react-icons/md";
+	BsSortNumericDown as SortDownIcon,
+	BsSortNumericUp as SortUpIcon,
+} from "react-icons/bs";
+import { MdFilterAlt as FilterIcon } from "react-icons/md";
 
 import { cache } from "app/cache";
 import { ExtractInfiniteData } from "app/cache/utils";
@@ -61,16 +62,8 @@ export const ReceiptsPagination: React.FC<Props> = ({ cursorPaging }) => {
 
 	const sortSelectOnClick = () =>
 		changeOrderBy(input.orderBy === "date-desc" ? "date-asc" : "date-desc");
-	const sortSelectIcon = (
-		<ArrowUpIcon
-			size={24}
-			style={
-				input.orderBy === "date-desc"
-					? { transform: "rotate(180deg)" }
-					: undefined
-			}
-		/>
-	);
+	const SortIcon = input.orderBy === "date-desc" ? SortDownIcon : SortUpIcon;
+	const sortSelectIcon = <SortIcon size={24} />;
 	const sortSelectText =
 		input.orderBy === "date-desc" ? "Newest first" : "Oldest first";
 
