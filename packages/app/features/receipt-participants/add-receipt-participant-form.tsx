@@ -104,7 +104,7 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 				<Modal.Body>
 					<ParticipantPicker
 						receiptId={receiptId}
-						disabled={disabled}
+						disabled={disabled || addMutation.isLoading}
 						onUserClick={onParticipantClick}
 						selectedParticipants={selectedParticipants}
 					/>
