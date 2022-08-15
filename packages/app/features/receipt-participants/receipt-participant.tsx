@@ -115,6 +115,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 								onRemove={deleteReceiptParticipant}
 								mutation={deleteReceiptParticipantMutation}
 								subtitle="This will remove participant with all his parts"
+								noConfirm={participant.sum === 0}
 							/>
 						</>
 					) : null}

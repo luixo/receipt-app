@@ -215,6 +215,7 @@ export const ReceiptItem: React.FC<Props> = ({
 							onRemove={removeItem}
 							mutation={removeReceiptItemMutation}
 							subtitle="This will remove item with all participant's parts"
+							noConfirm={receiptItem.parts.length === 0}
 						>
 							Remove item
 						</RemoveButton>
