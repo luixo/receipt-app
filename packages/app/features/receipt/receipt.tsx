@@ -30,6 +30,10 @@ const AlignEndView = styled("div", {
 	alignSelf: "flex-end",
 });
 
+const Sum = styled("div", {
+	display: "flex",
+});
+
 type InnerProps = {
 	query: TRPCQuerySuccessResult<"receipts.get">;
 	deleteLoadingState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
@@ -113,10 +117,12 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 			<Body>
 				<div>
 					<ReceiptDateInput receipt={receipt} isLoading={deleteLoading} />
-					<Text css={{ display: "inline-flex", fontSize: "$xl" }}>
-						{receipt.sum}
+					<Sum>
+						<Text css={{ display: "inline-flex", fontSize: "$xl" }}>
+							{receipt.sum}
+						</Text>
 						<ReceiptCurrencyInput receipt={receipt} isLoading={deleteLoading} />
-					</Text>
+					</Sum>
 				</div>
 				<ReceiptOwner receipt={receipt} />
 			</Body>
