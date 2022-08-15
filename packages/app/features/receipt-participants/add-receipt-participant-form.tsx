@@ -68,9 +68,16 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 			if (!isMount()) {
 				return;
 			}
+			setSelectedParticipants([]);
 			closeModal();
 		},
-		[addMutation, receiptId, selectedParticipants, closeModal]
+		[
+			addMutation,
+			receiptId,
+			selectedParticipants,
+			setSelectedParticipants,
+			closeModal,
+		]
 	);
 
 	return (
