@@ -19,7 +19,6 @@ export const mutationOptions: UseContextedMutationOptions<
 				name: variables.name,
 				issued: new Date(),
 				currency: variables.currency,
-				resolved: false,
 				// Typesystem doesn't know that we use account id as self user id
 				participantResolved: variables.userIds?.includes(
 					selfAccountId as UsersId

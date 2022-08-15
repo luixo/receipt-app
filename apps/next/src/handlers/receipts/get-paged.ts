@@ -33,7 +33,6 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 							"receipts.name",
 							"receipts.issued",
 							"receipts.currency",
-							"receipts.resolved",
 							"users.id as remoteUserId",
 							// We use `userId` = `ownerAccountId` contract
 							// But type system doesn't know about that
@@ -46,7 +45,6 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 								"receipts.name",
 								"receipts.issued",
 								"receipts.currency",
-								"receipts.resolved",
 								// We use `userId` = `ownerAccountId` contract
 								// But type system doesn't know about that
 								sql<UsersId>`receipts."ownerAccountId"`.as("remoteUserId"),
@@ -74,7 +72,6 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 					"name",
 					"issued",
 					"currency",
-					"mergedReceipts.resolved",
 					"receiptParticipants.resolved as participantResolved",
 					"mergedReceipts.remoteUserId",
 					"mergedReceipts.localUserId",

@@ -3,7 +3,6 @@ import React from "react";
 import { Text, Grid, styled } from "@nextui-org/react";
 
 import { cache } from "app/cache";
-import { ReceiptAccountedButton } from "app/components/app/receipt-accounted-button";
 import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
 import { ReceiptResolvedParticipantsButton } from "app/components/app/receipt-resolved-participants-button";
 import { Link } from "app/components/link";
@@ -36,7 +35,7 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 		: receipt.currency;
 	return (
 		<>
-			<Grid css={{ whiteSpace: "normal", flexDirection: "column" }} xs={7.5}>
+			<Grid css={{ whiteSpace: "normal", flexDirection: "column" }} xs={8}>
 				<TitleLink href={`/receipts/${receipt.id}/`}>
 					<Text onClick={setReceiptName} css={{ cursor: "pointer" }}>
 						{receipt.name} ({currency})
@@ -46,7 +45,7 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 					{receipt.issued.toLocaleDateString()}
 				</Text>
 			</Grid>
-			<Grid xs={1.5} justify="center">
+			<Grid xs={2} justify="center">
 				{receipt.participantResolved === null ? null : (
 					<ReceiptParticipantResolvedButton
 						light
@@ -57,14 +56,7 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 					/>
 				)}
 			</Grid>
-			<Grid xs={1.5} justify="center">
-				<ReceiptAccountedButton
-					light
-					receiptId={receipt.id}
-					resolved={receipt.resolved}
-				/>
-			</Grid>
-			<Grid xs={1.5} justify="center">
+			<Grid xs={2} justify="center">
 				<ReceiptResolvedParticipantsButton
 					light
 					css={{ px: 0 }}
