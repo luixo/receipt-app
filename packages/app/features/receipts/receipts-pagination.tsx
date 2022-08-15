@@ -102,14 +102,15 @@ export const ReceiptsPagination: React.FC<Props> = ({ cursorPaging }) => {
 					</GridElement>
 				)}
 				<GridElement xs={shouldShrink ? true : 4}>
-					<Button.Group size="sm">
+					<Button.Group size="sm" bordered>
 						<Button
 							onClick={prevLoading ? undefined : onPrevPage}
 							disabled={prevDisabled}
+							css={{ borderRight: "none" }}
 						>
 							{"<"}
 						</Button>
-						<Button>
+						<Button animated={false} css={{ borderRight: "none" }}>
 							{selectedPageIndex + 1} of{" "}
 							{totalCount ? Math.ceil(totalCount / input.limit) : "unknown"}
 						</Button>
