@@ -24,6 +24,7 @@
 		"eslint-plugin-react": "^7.30.1",
 		"eslint-plugin-react-hooks": "^4.6.0",
 		"expo-module-scripts": "^2.0.0",
+		"lint-staged": "^13.0.3",
 		"pre-commit": "^1.2.2",
 		"prettier": "^2.7.1",
 		"turbo": "^1.2.2",
@@ -43,7 +44,8 @@
 		"postinstall": "patch-package",
 		"db:migrate": "dotenv -c -- yarn workspace scripts db:migrate",
 		"db:migrate:production": "dotenv -c production -- yarn workspace scripts db:migrate",
-		"db:generate-types": "dotenv -c -- yarn workspace scripts db:generate-types && yarn format"
+		"db:generate-types": "dotenv -c -- yarn workspace scripts db:generate-types && yarn format",
+		"lint-staged": "lint-staged"
 	},
 	"dependencies": {
 		"@nextui-org/react": "^1.0.0-beta.9",
@@ -65,7 +67,12 @@
 	"version": "1.0.0",
 	"pre-commit": [
 		"typecheck",
-		"format:verify",
-		"lint"
-	]
+		"lint-staged"
+	],
+	"lint-staged": {
+		"*.{j,t}s{,x}": [
+			"prettier --write",
+			"eslint --fix"
+		]
+	}
 }
