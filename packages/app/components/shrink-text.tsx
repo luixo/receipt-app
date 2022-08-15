@@ -2,6 +2,7 @@ import React from "react";
 
 import { styled } from "@nextui-org/react";
 
+import { useIsomorphicLayoutEffect } from "app/hooks/use-isomorphic-layout-effect";
 import { useWindowSize } from "app/hooks/use-window-size";
 
 const StyledSpan = styled("span");
@@ -17,7 +18,7 @@ export const ShrinkText: React.FC<
 	const ref = React.useRef<HTMLSpanElement>(null);
 	const [fontSize, setFontSize] = React.useState<number | undefined>();
 	const windowSize = useWindowSize();
-	React.useLayoutEffect(() => {
+	useIsomorphicLayoutEffect(() => {
 		const element = ref.current;
 		if (!element) {
 			return;

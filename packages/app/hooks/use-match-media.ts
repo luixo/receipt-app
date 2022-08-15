@@ -1,5 +1,6 @@
 import React from "react";
 
+import { useIsomorphicLayoutEffect } from "app/hooks/use-isomorphic-layout-effect";
 import { media } from "app/utils/styles";
 
 type MediaKey = keyof typeof media;
@@ -19,7 +20,7 @@ export const useMatchMedia = (): MatchMediaObject => {
 	const [value, setValue] = React.useState(
 		getValue(typeof window !== "undefined")
 	);
-	React.useLayoutEffect(() => {
+	useIsomorphicLayoutEffect(() => {
 		const handler = () => setValue(getValue(true));
 		mediaQueryLists.forEach((mql) => mql!.addEventListener("change", handler));
 		handler();
