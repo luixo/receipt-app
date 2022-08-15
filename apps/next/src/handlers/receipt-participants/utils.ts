@@ -8,6 +8,7 @@ import {
 	Database,
 } from "next-app/db";
 import { AccountsId, ReceiptsId, UsersId } from "next-app/db/models";
+import { verifyUsersByIds } from "next-app/handlers/users/utils";
 import { assignableRoleSchema } from "next-app/handlers/validation";
 
 export const getReceiptParticipant = <
@@ -34,31 +35,7 @@ export const addReceiptParticipants = async (
 	usersToAdd: [UsersId, z.infer<typeof assignableRoleSchema>][]
 ) => {
 	const userIds = usersToAdd.map(([id]) => id);
-	const users = await database
-		.selectFrom("users")
-		.select(["id", "ownerAccountId"])
-		.where("id", "in", userIds)
-		.execute();
-	if (users.length !== userIds.length) {
-		const missedUserIds = userIds.filter(
-			(userId) => !users.some((user) => user.id === userId)
-		);
-		throw new trpc.TRPCError({
-			code: "NOT_FOUND",
-			message: `User(s) ${missedUserIds.join(", ")} do(es) not exist.`,
-		});
-	}
-	const notOwnedUsers = users.filter(
-		(user) => user.ownerAccountId !== receiptOwnerId
-	);
-	if (notOwnedUsers.length !== 0) {
-		throw new trpc.TRPCError({
-			code: "FORBIDDEN",
-			message: `Not enough rights to add user(s) ${notOwnedUsers
-				.map(({ id }) => id)
-				.join(", ")} to a receipt.`,
-		});
-	}
+	await verifyUsersByIds(database, userIds, receiptOwnerId);
 	const receiptParticipants = await database
 		.selectFrom("receiptParticipants")
 		.where("receiptId", "=", receiptId)

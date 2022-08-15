@@ -12,7 +12,7 @@ import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { Currency } from "app/utils/currency";
-import { ReceiptsId } from "next-app/db/models";
+import { ReceiptsId, UsersId } from "next-app/db/models";
 import { Role } from "next-app/handlers/receipts/utils";
 
 import { ReceiptItemNameInput } from "./receipt-item-name-input";
@@ -24,6 +24,9 @@ const Sum = styled("div", { display: "flex" });
 type ReceiptItems = TRPCQueryOutput<"receipt-items.get">["items"];
 type ReceiptParticipant =
 	TRPCQueryOutput<"receipt-items.get">["participants"][number];
+
+type EveryParticipantTag = "__ALL__";
+const EVERY_PARTICIPANT_TAG: EveryParticipantTag = "__ALL__";
 
 type Props = {
 	receiptId: ReceiptsId;
@@ -67,13 +70,22 @@ export const ReceiptItem: React.FC<Props> = ({
 		)
 	);
 	const addParticipant = React.useCallback(
-		(participant: ReceiptParticipant) => {
-			addItemPartMutation.mutate({
-				itemId: receiptItem.id,
-				userId: participant.remoteUserId,
-			});
+		(participant: ReceiptParticipant | EveryParticipantTag) => {
+			if (participant === EVERY_PARTICIPANT_TAG) {
+				addItemPartMutation.mutate({
+					itemId: receiptItem.id,
+					userIds: notAddedParticipants.map(
+						({ remoteUserId }) => remoteUserId
+					) as [UsersId, ...UsersId[]],
+				});
+			} else {
+				addItemPartMutation.mutate({
+					itemId: receiptItem.id,
+					userIds: [participant.remoteUserId],
+				});
+			}
 		},
-		[addItemPartMutation, receiptItem.id]
+		[addItemPartMutation, notAddedParticipants, receiptItem.id]
 	);
 
 	const isDeleteLoading =
@@ -121,26 +133,43 @@ export const ReceiptItem: React.FC<Props> = ({
 				{isEditingDisabled || notAddedParticipants.length === 0 ? null : (
 					<>
 						<Spacer y={1} />
-						<ButtonsGroup
+						<ButtonsGroup<ReceiptParticipant | EveryParticipantTag>
 							type="linear"
-							buttons={notAddedParticipants}
-							buttonProps={{ auto: true }}
-							extractDetails={(participant) => ({
-								id: participant.remoteUserId,
-								name: participant.name,
+							buttons={
+								notAddedParticipants.length === 1
+									? notAddedParticipants
+									: [EVERY_PARTICIPANT_TAG, ...notAddedParticipants]
+							}
+							buttonProps={(button) => ({
+								auto: true,
+								...(button === EVERY_PARTICIPANT_TAG
+									? { color: "secondary" }
+									: undefined),
 							})}
+							extractDetails={(participant) =>
+								participant === EVERY_PARTICIPANT_TAG
+									? {
+											id: EVERY_PARTICIPANT_TAG,
+											name: "Everyone",
+									  }
+									: {
+											id: participant.remoteUserId,
+											name: participant.name,
+									  }
+							}
 							onClick={addParticipant}
 						/>
 					</>
 				)}
-				{notAddedParticipants.length === 0 ? null : receiptItem.parts.length ===
-				  0 ? (
-					<>
-						<Spacer y={0.5} />
-						<Card.Divider />
-						<Spacer y={0.5} />
-						<Text h4>Add a user from a list above</Text>
-					</>
+				{receiptItem.parts.length === 0 ? (
+					notAddedParticipants.length === 0 ? null : (
+						<>
+							<Spacer y={0.5} />
+							<Card.Divider />
+							<Spacer y={0.5} />
+							<Text h4>Add a user from a list above</Text>
+						</>
+					)
 				) : (
 					<>
 						<Spacer y={1} />

@@ -8,19 +8,23 @@ export const mutationOptions: UseContextedMutationOptions<
 	ReceiptsId
 > = {
 	onMutate: (trpcContext, receiptId) => (variables) => {
-		cache.receiptItems.get.receiptItemPart.add(
-			trpcContext,
-			receiptId,
-			variables.itemId,
-			{ userId: variables.userId, part: 1 }
-		);
+		variables.userIds.forEach((userId) => {
+			cache.receiptItems.get.receiptItemPart.add(
+				trpcContext,
+				receiptId,
+				variables.itemId,
+				{ userId, part: 1 }
+			);
+		});
 	},
 	onError: (trpcContext, receiptId) => (_error, variables) => {
-		cache.receiptItems.get.receiptItemPart.remove(
-			trpcContext,
-			receiptId,
-			variables.itemId,
-			variables.userId
-		);
+		variables.userIds.forEach((userId) => {
+			cache.receiptItems.get.receiptItemPart.remove(
+				trpcContext,
+				receiptId,
+				variables.itemId,
+				userId
+			);
+		});
 	},
 };
