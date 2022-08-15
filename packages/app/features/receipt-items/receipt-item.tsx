@@ -118,7 +118,7 @@ export const ReceiptItem: React.FC<Props> = ({
 						isLoading={isDeleteLoading}
 					/>
 				</Sum>
-				{isEditingDisabled ? null : (
+				{isEditingDisabled || notAddedParticipants.length === 0 ? null : (
 					<>
 						<Spacer y={1} />
 						<ButtonsGroup
@@ -133,8 +133,11 @@ export const ReceiptItem: React.FC<Props> = ({
 						/>
 					</>
 				)}
-				{receiptItem.parts.length === 0 ? (
+				{notAddedParticipants.length === 0 ? null : receiptItem.parts.length ===
+				  0 ? (
 					<>
+						<Spacer y={0.5} />
+						<Card.Divider />
 						<Spacer y={0.5} />
 						<Text h4>Add a user from a list above</Text>
 					</>
