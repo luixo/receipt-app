@@ -47,13 +47,15 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 				</Text>
 			</Grid>
 			<Grid xs={1.5} justify="center">
-				<ReceiptParticipantResolvedButton
-					light
-					receiptId={receipt.id}
-					localUserId={receipt.localUserId}
-					remoteUserId={receipt.remoteUserId}
-					resolved={receipt.participantResolved}
-				/>
+				{receipt.participantResolved === null ? null : (
+					<ReceiptParticipantResolvedButton
+						light
+						receiptId={receipt.id}
+						localUserId={receipt.localUserId}
+						remoteUserId={receipt.remoteUserId}
+						resolved={receipt.participantResolved}
+					/>
+				)}
 			</Grid>
 			<Grid xs={1.5} justify="center">
 				<ReceiptAccountedButton
