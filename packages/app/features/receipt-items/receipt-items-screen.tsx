@@ -29,7 +29,13 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 	isLoading,
 }) => (
 	<Collapse.Group accordion={false} divider={false}>
-		<Collapse title="🥸 Participants" shadow>
+		<Collapse
+			title="🥸 Participants"
+			shadow
+			expanded={
+				data.participants.length === 0 ? data.role === "owner" : undefined
+			}
+		>
 			<ReceiptParticipants
 				data={data}
 				receiptId={receiptId}
