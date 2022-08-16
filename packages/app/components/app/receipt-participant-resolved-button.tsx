@@ -23,7 +23,6 @@ export const ReceiptParticipantResolvedButton: React.FC<Props> = ({
 	remoteUserId,
 	localUserId,
 	resolved,
-	css,
 	...props
 }) => {
 	const updateReceiptMutation = trpc.useMutation(

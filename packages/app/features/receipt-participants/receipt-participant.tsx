@@ -63,6 +63,10 @@ export const ReceiptParticipant: React.FC<Props> = ({
 		[deleteReceiptParticipantMutation, receiptId, participant.remoteUserId]
 	);
 
+	const disabledParticipantResolvedButton =
+		accountQuery.status !== "success" ||
+		participant.connectedAccountId !== accountQuery.data.id;
+
 	return (
 		<Body>
 			<BodyElement>
@@ -87,13 +91,13 @@ export const ReceiptParticipant: React.FC<Props> = ({
 					isLoading={isLoading}
 					role={role}
 				/>
-				<Spacer x={1} />
+				<Spacer x={0.5} />
 				<ReceiptParticipantResolvedButton
-					disabled={
-						accountQuery.status !== "success" ||
-						participant.connectedAccountId !== accountQuery.data.id
-					}
-					ghost
+					disabled={disabledParticipantResolvedButton}
+					{...(disabledParticipantResolvedButton
+						? { light: true }
+						: { ghost: true })}
+					css={{ px: "$6" }}
 					receiptId={receiptId}
 					remoteUserId={participant.remoteUserId}
 					/* Button is enabled only is that's our button, so we have localUserId */
@@ -102,7 +106,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 				/>
 				{role === "owner" ? (
 					<>
-						<Spacer x={1} />
+						<Spacer x={0.5} />
 						<RemoveButton
 							onRemove={deleteReceiptParticipant}
 							mutation={deleteReceiptParticipantMutation}
