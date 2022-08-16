@@ -1,10 +1,8 @@
 import React from "react";
 
-import { Button, Modal, Text } from "@nextui-org/react";
+import { Dropdown, Loading, Text } from "@nextui-org/react";
 
 import { cache } from "app/cache";
-import { IconButton } from "app/components/icon-button";
-import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { ReceiptsId } from "next-app/db/models";
@@ -29,9 +27,6 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 }) => {
 	const accountQuery = trpc.useQuery(["account.get"]);
 
-	const [isModalOpen, { setTrue: openModal, setFalse: closeModal }] =
-		useBooleanState();
-
 	const updateParticipantMutation = trpc.useMutation(
 		"receipt-participants.update",
 		useTrpcMutationOptions(cache.receiptParticipants.update.mutationOptions, {
@@ -43,7 +38,6 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 	);
 	const changeRole = React.useCallback(
 		(nextRole: AssignableRole) => {
-			closeModal();
 			if (nextRole === participant.role) {
 				return;
 			}
@@ -58,45 +52,33 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 			receiptId,
 			participant.remoteUserId,
 			participant.role,
-			closeModal,
 		]
 	);
 
 	return (
-		<>
-			<IconButton
-				auto
-				ghost
-				onClick={openModal}
+		<Dropdown>
+			<Dropdown.Button
+				flat
+				size="sm"
 				disabled={isLoading || role !== "owner" || participant.role === "owner"}
-				isLoading={updateParticipantMutation.isLoading}
-				css={{
-					// this should be a proper variable like $buttonHeight
-					// but this leads to var(--nextui--space--buttonHeight)
-					// TODO: figure out a proper variable here
-					height: "var(--nextui--buttonHeight)",
-					fontSize: "inherit",
-				}}
 			>
-				{participant.role}
-			</IconButton>
-			<Modal
-				closeButton
-				aria-label="Role picker"
-				open={isModalOpen}
-				onClose={closeModal}
-			>
-				<Modal.Header>
-					<Text h3>Please choose role for {participant.name}</Text>
-				</Modal.Header>
-				<Modal.Body>
-					{ROLES.map((pickRole) => (
-						<Button key={pickRole} ghost onClick={() => changeRole(pickRole)}>
-							{pickRole}
-						</Button>
-					))}
-				</Modal.Body>
-			</Modal>
-		</>
+				{updateParticipantMutation.isLoading ? (
+					<Loading size="xs" />
+				) : (
+					participant.role
+				)}
+			</Dropdown.Button>
+			<Dropdown.Menu aria-label="Roles" variant="shadow">
+				{ROLES.filter((pickRole) => pickRole !== participant.role).map(
+					(pickRole) => (
+						<Dropdown.Item key={pickRole}>
+							<Text onClick={() => changeRole(pickRole)}>
+								Set &quot;{pickRole}&quot; role
+							</Text>
+						</Dropdown.Item>
+					)
+				)}
+			</Dropdown.Menu>
+		</Dropdown>
 	);
 };

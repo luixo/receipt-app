@@ -15,20 +15,12 @@ import { Role } from "next-app/handlers/receipts/utils";
 
 import { ReceiptParticipantRoleInput } from "./receipt-participant-role-input";
 
-const Wrapper = styled("div", {
-	display: "flex",
-	alignItems: "center",
-	justifyContent: "space-between",
-});
-
 const Body = styled("div", {
 	display: "flex",
-	alignItems: "center",
 	justifyContent: "space-between",
 
 	"@xsMax": {
 		flexDirection: "column",
-		alignItems: "flex-end",
 	},
 });
 
@@ -72,55 +64,54 @@ export const ReceiptParticipant: React.FC<Props> = ({
 	);
 
 	return (
-		<Wrapper>
-			<User
-				user={{
-					id: participant.localUserId || participant.remoteUserId,
-					name: participant.name,
-				}}
-			/>
-			<Body>
-				<BodyElement>
-					<Text>
-						{`${Math.round(participant.sum * 100) / 100} ${
-							currency || "unknown"
-						}`}
-					</Text>
-					<Spacer x={1} />
-					<ReceiptParticipantRoleInput
-						receiptId={receiptId}
-						participant={participant}
-						isLoading={isLoading}
-						role={role}
-					/>
-				</BodyElement>
+		<Body>
+			<BodyElement>
+				<User
+					user={{
+						id: participant.localUserId || participant.remoteUserId,
+						name: participant.name,
+					}}
+				/>
 				<Spacer x={1} />
-				<BodyElement>
-					<ReceiptParticipantResolvedButton
-						disabled={
-							accountQuery.status !== "success" ||
-							participant.connectedAccountId !== accountQuery.data.id
-						}
-						ghost
-						receiptId={receiptId}
-						remoteUserId={participant.remoteUserId}
-						/* Button is enabled only is that's our button, so we have localUserId */
-						localUserId={participant.localUserId!}
-						resolved={participant.resolved}
-					/>
-					{role === "owner" ? (
-						<>
-							<Spacer x={1} />
-							<RemoveButton
-								onRemove={deleteReceiptParticipant}
-								mutation={deleteReceiptParticipantMutation}
-								subtitle="This will remove participant with all his parts"
-								noConfirm={participant.sum === 0}
-							/>
-						</>
-					) : null}
-				</BodyElement>
-			</Body>
-		</Wrapper>
+				<Text>
+					{`${Math.round(participant.sum * 100) / 100} ${
+						currency || "unknown"
+					}`}
+				</Text>
+			</BodyElement>
+			<Spacer x={1} />
+			<BodyElement css={{ alignSelf: "flex-end" }}>
+				<ReceiptParticipantRoleInput
+					receiptId={receiptId}
+					participant={participant}
+					isLoading={isLoading}
+					role={role}
+				/>
+				<Spacer x={1} />
+				<ReceiptParticipantResolvedButton
+					disabled={
+						accountQuery.status !== "success" ||
+						participant.connectedAccountId !== accountQuery.data.id
+					}
+					ghost
+					receiptId={receiptId}
+					remoteUserId={participant.remoteUserId}
+					/* Button is enabled only is that's our button, so we have localUserId */
+					localUserId={participant.localUserId!}
+					resolved={participant.resolved}
+				/>
+				{role === "owner" ? (
+					<>
+						<Spacer x={1} />
+						<RemoveButton
+							onRemove={deleteReceiptParticipant}
+							mutation={deleteReceiptParticipantMutation}
+							subtitle="This will remove participant with all his parts"
+							noConfirm={participant.sum === 0}
+						/>
+					</>
+				) : null}
+			</BodyElement>
+		</Body>
 	);
 };
