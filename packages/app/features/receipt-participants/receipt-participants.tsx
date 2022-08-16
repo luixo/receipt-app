@@ -62,31 +62,22 @@ export const ReceiptParticipants: React.FC<Props> = ({
 	}, [data, receiptId]);
 	return (
 		<>
-			<div>
-				{participants.map((participant, index) => (
-					<React.Fragment key={participant.remoteUserId}>
-						{index === 0 ? null : <Spacer y={0.5} />}
-						<ReceiptParticipant
-							receiptId={receiptId}
-							participant={participant}
-							role={data.role}
-							currency={currency}
-							isLoading={isLoading}
-						/>
-						{index === participants.length - 1 ? null : (
-							<SpacerWithBorder y={0.5} />
-						)}
-					</React.Fragment>
-				))}
-			</div>
-			{data.role !== "owner" ? null : (
-				<>
-					<Spacer y={1} />
-					<AddReceiptParticipantForm
-						disabled={isLoading}
+			{participants.map((participant, index) => (
+				<React.Fragment key={participant.remoteUserId}>
+					{index === 0 ? null : <Spacer y={0.5} />}
+					<ReceiptParticipant
 						receiptId={receiptId}
+						participant={participant}
+						role={data.role}
+						currency={currency}
+						isLoading={isLoading}
 					/>
-				</>
+					<SpacerWithBorder y={0.5} />
+					{index === participants.length - 1 ? <Spacer y={1} /> : null}
+				</React.Fragment>
+			))}
+			{data.role !== "owner" ? null : (
+				<AddReceiptParticipantForm disabled={isLoading} receiptId={receiptId} />
 			)}
 		</>
 	);
