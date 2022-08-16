@@ -34,7 +34,7 @@ export const ReceiptRemoveButton: React.FC<Props> = ({
 			}
 			router.replace("/receipts");
 		},
-		[deleteReceiptMutation, receipt.id]
+		[deleteReceiptMutation, receipt.id, router]
 	);
 
 	return (

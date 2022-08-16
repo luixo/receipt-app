@@ -86,6 +86,10 @@ module.exports = {
 		],
 		"no-console": "error",
 		"no-alert": "error",
+		"react-hooks/exhaustive-deps": [
+			"error",
+			{ additionalHooks: "(useAsyncCallback|useSubmitHandler)" },
+		],
 	},
 	overrides: [
 		{

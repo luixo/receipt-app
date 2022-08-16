@@ -53,8 +53,11 @@ export const AddReceiptScreen: React.FC = () => {
 				name: values.name,
 				currency: values.currency.code,
 			}),
-		[addReceiptMutation, router],
-		(id) => router.replace(`/receipts/${id}`)
+		[addReceiptMutation],
+		React.useCallback(
+			(id: ReceiptsId) => router.replace(`/receipts/${id}`),
+			[router]
+		)
 	);
 
 	return (

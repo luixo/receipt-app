@@ -43,8 +43,8 @@ export const AddUserScreen: React.FC = () => {
 			const { id } = await addUserMutation.mutateAsync(values);
 			return id;
 		},
-		[addUserMutation, router],
-		(id) => router.replace(`/users/${id}`)
+		[addUserMutation],
+		React.useCallback((id: UsersId) => router.replace(`/users/${id}`), [router])
 	);
 
 	return (

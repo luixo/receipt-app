@@ -31,7 +31,7 @@ export const ConfirmEmailScreen: React.FC = () => {
 				verified: true,
 			}));
 		},
-		[token, confirmEmailMutation]
+		[token, confirmEmailMutation, trpcContext]
 	);
 	React.useEffect(confirmEmail, [confirmEmail]);
 

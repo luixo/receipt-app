@@ -66,7 +66,7 @@ export const ReceiptItemPart: React.FC<Props> = ({
 				itemId: receiptItemId,
 				userId: itemPart.userId,
 			}),
-		[deleteMutation.mutate, receiptItemId, itemPart.userId]
+		[deleteMutation, receiptItemId, itemPart.userId]
 	);
 
 	return (

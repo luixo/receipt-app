@@ -54,7 +54,7 @@ export const UserPublicNameInput: React.FC<Props> = ({ user, isLoading }) => {
 			}
 			setValue(nextName ?? "");
 		},
-		[updateUserMutation, user.remoteId]
+		[updateUserMutation, user.remoteId, setValue]
 	);
 
 	if (!showInput) {

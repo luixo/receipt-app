@@ -38,7 +38,7 @@ export const UserRemoveButton: React.FC<Props> = ({
 			}
 			router.replace("/users");
 		},
-		[deleteUserMutation, user.remoteId]
+		[deleteUserMutation, user.remoteId, router]
 	);
 
 	return (

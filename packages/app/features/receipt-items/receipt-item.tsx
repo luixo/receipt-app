@@ -54,7 +54,7 @@ export const ReceiptItem: React.FC<Props> = ({
 			removeReceiptItemMutation.mutateAsync({
 				id: receiptItem.id,
 			}),
-		[removeReceiptItemMutation.mutate, receiptItem.id]
+		[removeReceiptItemMutation, receiptItem.id]
 	);
 
 	const addedParticipants = receiptItem.parts.map((part) => part.userId);

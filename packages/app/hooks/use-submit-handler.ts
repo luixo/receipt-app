@@ -15,5 +15,7 @@ export const useSubmitHandler = <F, T = unknown>(
 			}
 			onDone?.(result);
 		},
+		// This hook is overriding the rules of hook to accomplish its purpose
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[...deps, onDone]
 	) as SubmitHandler<F>;

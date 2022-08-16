@@ -58,7 +58,7 @@ export const AccountPublicNameInput: React.FC<Props> = ({ account }) => {
 			}
 			setValue(nextName ?? "");
 		},
-		[updateUserMutation, account.id, account.publicName]
+		[updateUserMutation, account.id, account.publicName, setValue]
 	);
 
 	if (!showInput) {

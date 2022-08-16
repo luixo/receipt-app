@@ -38,7 +38,7 @@ export const LoginScreen: React.FC = () => {
 	const loginMutation = trpc.useMutation("auth.login");
 	const onSubmit = useSubmitHandler(
 		(data: LoginForm) => loginMutation.mutateAsync(data),
-		[loginMutation, trpcContext],
+		[loginMutation],
 		React.useCallback(
 			({ accountId, ...account }: TRPCMutationOutput<"auth.login">) => {
 				cache.account.get.set(trpcContext, { id: accountId, ...account });

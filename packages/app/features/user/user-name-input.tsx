@@ -42,7 +42,7 @@ export const UserNameInput: React.FC<Props> = ({ user, isLoading }) => {
 			}
 			setValue(nextName);
 		},
-		[updateUserMutation, user.remoteId]
+		[updateUserMutation, user.remoteId, setValue]
 	);
 
 	return (

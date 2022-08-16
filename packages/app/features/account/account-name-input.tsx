@@ -46,7 +46,7 @@ export const AccountNameInput: React.FC<Props> = ({ account }) => {
 			}
 			setValue(nextName);
 		},
-		[updateUserMutation, account.id, account.name]
+		[updateUserMutation, account.id, account.name, setValue]
 	);
 
 	return (
