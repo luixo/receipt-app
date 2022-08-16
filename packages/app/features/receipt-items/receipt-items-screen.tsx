@@ -59,12 +59,7 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 				<Spacer y={1} />
 				<Text h4>Press a button above to add a receipt item</Text>
 			</NoReceiptItems>
-		) : (
-			<>
-				<Spacer y={1} />
-				<AddReceiptItemController receiptId={receiptId} isLoading={isLoading} />
-			</>
-		)}
+		) : null}
 	</Collapse.Group>
 );
 

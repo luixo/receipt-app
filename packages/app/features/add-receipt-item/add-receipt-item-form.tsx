@@ -30,15 +30,6 @@ const Inputs = styled("div", {
 	},
 });
 
-const Buttons = styled("div", {
-	display: "flex",
-	justifyContent: "space-between",
-});
-
-const CancelButton = styled("div", {
-	display: "flex",
-});
-
 type Props = {
 	receiptId: ReceiptsId;
 	isLoading: boolean;
@@ -86,18 +77,13 @@ export const AddReceiptItemForm: React.FC<Props> = ({
 				<ReceiptItemQuantityInput form={form} isLoading={isLoading} />
 			</Inputs>
 			<Spacer y={1} />
-			<Buttons>
-				<Button
-					onClick={form.handleSubmit(onSubmit)}
-					disabled={!form.formState.isValid || isLoading}
-				>
-					{addMutation.isLoading ? <Loading size="xs" /> : "Add item"}
-				</Button>
-				<CancelButton>
-					<Spacer x={1} />
-					<Button onClick={onDone}>Cancel</Button>
-				</CancelButton>
-			</Buttons>
+			<Button
+				onClick={form.handleSubmit(onSubmit)}
+				disabled={!form.formState.isValid || isLoading}
+				css={{ width: "100%" }}
+			>
+				{addMutation.isLoading ? <Loading size="xs" /> : "Save"}
+			</Button>
 			{addMutation.status === "error" ? (
 				<>
 					<Spacer y={1} />
