@@ -4,7 +4,10 @@ import { Button, Loading, Modal, Spacer, Text } from "@nextui-org/react";
 import { MdAdd as AddIcon } from "react-icons/md";
 
 import { cache } from "app/cache";
-import { MutationErrorMessage } from "app/components/error-message";
+import {
+	MutationErrorMessage,
+	QueryErrorMessage,
+} from "app/components/error-message";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -25,12 +28,13 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 	const [modalOpen, { setTrue: openModal, setFalse: closeModal }] =
 		useBooleanState();
 
+	const accountQuery = trpc.useQuery(["account.get"]);
 	const addMutation = trpc.useMutation(
 		"receipt-participants.put",
-		useTrpcMutationOptions(
-			cache.receiptParticipants.put.mutationOptions,
-			receiptId
-		)
+		useTrpcMutationOptions(cache.receiptParticipants.put.mutationOptions, {
+			receiptId,
+			selfAccountId: accountQuery.data?.id ?? "unknown",
+		})
 	);
 
 	const [selectedParticipants, setSelectedParticipants] = React.useState<
@@ -108,10 +112,19 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 						onUserClick={onParticipantClick}
 						selectedParticipants={selectedParticipants}
 					/>
+					{accountQuery.status === "error" ? (
+						<>
+							<Spacer y={1} />
+							<QueryErrorMessage query={accountQuery} />
+						</>
+					) : null}
 					<Spacer y={1} />
 				</Modal.Body>
 				<Modal.Footer>
-					<Button onClick={addParticipants}>
+					<Button
+						onClick={addParticipants}
+						disabled={accountQuery.status !== "success"}
+					>
 						{addMutation.isLoading ? (
 							<Loading color="currentColor" size="sm" />
 						) : (
