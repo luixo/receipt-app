@@ -28,6 +28,7 @@ export const ReceiptItemNameInput: React.FC<Props> = ({ form, isLoading }) => {
 			status={inputState.error ? "warning" : undefined}
 			helperColor="warning"
 			helperText={inputState.error?.message}
+			autoFocus
 		/>
 	);
 };

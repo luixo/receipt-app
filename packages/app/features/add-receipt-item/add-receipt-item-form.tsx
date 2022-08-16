@@ -41,6 +41,11 @@ export const AddReceiptItemForm: React.FC<Props> = ({
 	isLoading: isDeleteLoading,
 	onDone,
 }) => {
+	const inputsRef = React.useRef<HTMLDivElement>(null);
+	React.useEffect(() => {
+		inputsRef.current?.scrollIntoView();
+	}, [inputsRef]);
+
 	const addMutation = trpc.useMutation(
 		"receipt-items.put",
 		useTrpcMutationOptions(cache.receiptItems.put.mutationOptions, receiptId)
@@ -69,7 +74,7 @@ export const AddReceiptItemForm: React.FC<Props> = ({
 
 	return (
 		<>
-			<Inputs>
+			<Inputs ref={inputsRef}>
 				<ReceiptItemNameInput form={form} isLoading={isLoading} />
 				<Spacer x={1} />
 				<ReceiptItemPriceInput form={form} isLoading={isLoading} />
