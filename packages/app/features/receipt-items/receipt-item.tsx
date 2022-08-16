@@ -142,6 +142,7 @@ export const ReceiptItem: React.FC<Props> = ({
 							}
 							buttonProps={(button) => ({
 								auto: true,
+								ghost: true,
 								...(button === EVERY_PARTICIPANT_TAG
 									? { color: "secondary" }
 									: undefined),
