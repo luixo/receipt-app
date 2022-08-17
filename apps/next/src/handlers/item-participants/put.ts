@@ -51,7 +51,7 @@ export const router = trpc.router<AuthorizedContext>().mutation("put", {
 				message: `Not enough rights to modify receipt ${receiptItem.receiptId}.`,
 			});
 		}
-		await verifyUsersByIds(database, input.userIds, ctx.auth.accountId);
+		await verifyUsersByIds(database, input.userIds, receipt.ownerAccountId);
 		const receiptParticipants = await database
 			.selectFrom("receiptParticipants")
 			.where("receiptId", "=", receipt.id)
