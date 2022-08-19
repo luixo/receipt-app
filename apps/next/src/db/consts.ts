@@ -61,3 +61,13 @@ export const RESET_PASSWORD_INTENTIONS = {
 		ACCOUNT_ID: "resetPasswordIntentions:accountId:index",
 	},
 } as const;
+
+export const DEBTS = {
+	INDEXES: {
+		OWNER_ACCOUNT_ID: "debts:ownerAccountId:index",
+		USER_ID: "debts:userId:index",
+	},
+	CONSTRAINTS: {
+		OWNER_ID_DEBT_ID_PAIR: "debts:ownerAccountId:debtId:pair",
+	},
+} as const;

@@ -28,6 +28,13 @@ const GRADIENTS = {
 		],
 		degree: 40,
 	} as Gradient,
+	debts: {
+		colorStops: [
+			[-40, "red600"],
+			[80, "purple700"],
+		],
+		degree: 75,
+	} as Gradient,
 	users: {
 		colorStops: [
 			[-20, "blue800"],
@@ -60,6 +67,10 @@ export const HomeScreen: React.FC = () => {
 			<>
 				<CardButton href="/receipts" gradient={GRADIENTS.receipts}>
 					My receipts
+				</CardButton>
+				<Spacer y={1} />
+				<CardButton href="/debts" gradient={GRADIENTS.debts}>
+					My debts
 				</CardButton>
 				<Spacer y={1} />
 				<CardButton href="/users" gradient={GRADIENTS.users}>

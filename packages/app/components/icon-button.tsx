@@ -22,7 +22,7 @@ export const IconButton: React.FC<Props> = React.forwardRef(
 				{isLoading ? undefined : props.children}
 			</Button>
 		);
-		if (href) {
+		if (href && !props.disabled) {
 			return <Link href={href}>{button}</Link>;
 		}
 		return button;

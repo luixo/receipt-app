@@ -7,6 +7,7 @@ import { AddReceiptScreen } from "app/features/add-receipt/add-receipt-screen";
 import { AddUserScreen } from "app/features/add-user/add-user-screen";
 import { ChangePasswordScreen } from "app/features/change-password/change-password-screen";
 import { ConnectionIntentionsScreen } from "app/features/connection-intentions/connection-intentions-screen";
+import { DebtsScreen } from "app/features/debts/debts-screen";
 import { HomeScreen } from "app/features/home/home-screen";
 import { LoginScreen } from "app/features/login/login-screen";
 import { ReceiptScreen } from "app/features/receipt/receipt-screen";
@@ -36,6 +37,7 @@ export type AppParamList = {
 	resetPassword: {
 		token: string;
 	};
+	debts: undefined;
 };
 
 const Stack = createNativeStackNavigator<AppParamList>();
@@ -131,6 +133,13 @@ export const NativeNavigation: React.FC = () => (
 			component={ResetPasswordScreen}
 			options={{
 				title: "Reset password",
+			}}
+		/>
+		<Stack.Screen
+			name="debts"
+			component={DebtsScreen}
+			options={{
+				title: "Debts",
 			}}
 		/>
 	</Stack.Navigator>
