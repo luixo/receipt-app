@@ -11,7 +11,7 @@ import { DripsyProvider } from "dripsy";
 
 import { ColorModeContext } from "app/contexts/color-mode-context";
 
-const breakpoints = {
+export const breakpoints = {
 	xs: "320px",
 	sm: "480px",
 	md: "768px",

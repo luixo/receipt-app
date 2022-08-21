@@ -1,9 +1,10 @@
 import React from "react";
 
-import { Button, Card, Grid, Loading, Modal, Text } from "@nextui-org/react";
+import { Button, Card, Loading, Modal, Text } from "@nextui-org/react";
 import { QueryObserverSuccessResult } from "react-query";
 
 import { QueryErrorMessage } from "app/components/error-message";
+import { Grid } from "app/components/grid";
 import { trpc, TRPCError, TRPCQueryOutput } from "app/trpc";
 import { Currency } from "app/utils/currency";
 
@@ -49,13 +50,13 @@ const CurrenciesPickerInner: React.FC<InnerProps> = ({
 				<Text h3>Please choose currency</Text>
 			</Modal.Header>
 			<Modal.Body>
-				<Grid.Container gap={1} justify="center">
+				<Grid.Container gap={1}>
 					{query.data.list.map((currency, index) => (
 						<React.Fragment key={currency.code}>
 							{index === query.data.topAmount && index ? (
 								<Card.Divider y={1} />
 							) : null}
-							<Grid xs>
+							<Grid>
 								<Button
 									onClick={() => onChange(currency)}
 									auto

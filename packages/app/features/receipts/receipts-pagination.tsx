@@ -5,7 +5,6 @@ import {
 	Text,
 	Button,
 	styled,
-	Grid,
 	Checkbox,
 	Dropdown,
 } from "@nextui-org/react";
@@ -17,6 +16,7 @@ import { MdFilterAlt as FilterIcon } from "react-icons/md";
 
 import { cache } from "app/cache";
 import { ExtractInfiniteData } from "app/cache/utils";
+import { Grid } from "app/components/grid";
 import { IconButton } from "app/components/icon-button";
 import { CursorPagingResult } from "app/hooks/use-cursor-paging";
 import { useMatchMedia } from "app/hooks/use-match-media";
@@ -24,12 +24,6 @@ import { TRPCInfiniteQuerySuccessResult } from "app/trpc";
 
 const Wrapper = styled("div", {
 	display: "flex",
-	alignItems: "center",
-	justifyContent: "center",
-});
-
-const GridElement = styled(Grid, {
-	p: 0,
 	alignItems: "center",
 	justifyContent: "center",
 });
@@ -58,7 +52,6 @@ export const ReceiptsPagination: React.FC<Props> = ({ cursorPaging }) => {
 
 	const matchMedia = useMatchMedia();
 	const shouldShrink = !matchMedia.md;
-	const shouldSuperShrink = !matchMedia.xs;
 
 	const sortSelectOnClick = () =>
 		changeOrderBy(input.orderBy === "date-desc" ? "date-asc" : "date-desc");
@@ -82,13 +75,11 @@ export const ReceiptsPagination: React.FC<Props> = ({ cursorPaging }) => {
 
 	return (
 		<Wrapper>
-			<Grid.Container gap={2} justify="space-between">
+			<Grid.Container justify="space-between">
 				{shouldShrink ? (
-					shouldSuperShrink ? null : (
-						<GridElement xs={2} />
-					)
+					<Grid defaultCol={1} lessXsCol={0} />
 				) : (
-					<GridElement xs={4} justify="flex-start">
+					<Grid defaultCol={4} justify="flex-start">
 						<IconButton
 							light
 							auto
@@ -99,9 +90,9 @@ export const ReceiptsPagination: React.FC<Props> = ({ cursorPaging }) => {
 						>
 							{sortSelectText}
 						</IconButton>
-					</GridElement>
+					</Grid>
 				)}
-				<GridElement xs={shouldShrink ? true : 4}>
+				<Grid defaultCol={4} lessMdCol>
 					<Button.Group size="sm" bordered>
 						<Button
 							onClick={prevLoading ? undefined : onPrevPage}
@@ -121,9 +112,9 @@ export const ReceiptsPagination: React.FC<Props> = ({ cursorPaging }) => {
 							{nextLoading ? <Loading color="currentColor" size="xs" /> : ">"}
 						</Button>
 					</Button.Group>
-				</GridElement>
+				</Grid>
 				{shouldShrink ? (
-					<GridElement xs={2}>
+					<Grid defaultCol={3}>
 						<Dropdown closeOnSelect={false}>
 							<Dropdown.Button flat size="sm">
 								<FilterIcon size={24} />
@@ -139,9 +130,9 @@ export const ReceiptsPagination: React.FC<Props> = ({ cursorPaging }) => {
 								</Dropdown.Item>
 							</Dropdown.Menu>
 						</Dropdown>
-					</GridElement>
+					</Grid>
 				) : (
-					<GridElement xs={4} justify="flex-end">
+					<Grid defaultCol={4} justify="flex-end">
 						<IconButton
 							light
 							auto
@@ -152,7 +143,7 @@ export const ReceiptsPagination: React.FC<Props> = ({ cursorPaging }) => {
 						>
 							{switchNonResolvedText}
 						</IconButton>
-					</GridElement>
+					</Grid>
 				)}
 			</Grid.Container>
 		</Wrapper>

@@ -10,18 +10,16 @@ const mediaEntries = Object.entries(media) as [MediaKey, string][];
 const mediaQueryLists = mediaEntries.map(([, mediaQuery]) =>
 	typeof window === "undefined" ? null : window.matchMedia(mediaQuery)
 );
-const getValue = (isBrowser: boolean) => (): MatchMediaObject =>
+const getValue = (defaultValues: boolean) => (): MatchMediaObject =>
 	mediaEntries.reduce((acc, [key], index) => {
-		acc[key] = isBrowser ? mediaQueryLists[index]?.matches ?? false : false;
+		acc[key] = defaultValues ? false : mediaQueryLists[index]?.matches ?? false;
 		return acc;
 	}, {} as MatchMediaObject);
 
 export const useMatchMedia = (): MatchMediaObject => {
-	const [value, setValue] = React.useState(
-		getValue(typeof window !== "undefined")
-	);
+	const [value, setValue] = React.useState(getValue(true));
 	useIsomorphicLayoutEffect(() => {
-		const handler = () => setValue(getValue(true));
+		const handler = () => setValue(getValue(false));
 		mediaQueryLists.forEach((mql) => mql!.addEventListener("change", handler));
 		handler();
 		return () =>

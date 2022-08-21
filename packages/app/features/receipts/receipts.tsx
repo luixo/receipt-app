@@ -6,12 +6,13 @@ import {
 	Spacer,
 	Text,
 	styled,
-	Grid,
+	Card,
 } from "@nextui-org/react";
 import { MdAdd as AddIcon } from "react-icons/md";
 
 import { cache } from "app/cache";
 import { QueryErrorMessage } from "app/components/error-message";
+import { Grid } from "app/components/grid";
 import { IconButton } from "app/components/icon-button";
 import { Overlay } from "app/components/overlay";
 import { useCursorPaging } from "app/hooks/use-cursor-paging";
@@ -29,32 +30,20 @@ const NoReceiptsHint = styled(Text, {
 	alignItems: "center",
 });
 
-const GridHeaderColumn = styled(Grid, {
-	borderColor: "$border",
-	borderBottomStyle: "solid",
-
-	variants: {
-		centered: {
-			true: {
-				justifyContent: "center",
-			},
-		},
-	},
-});
-
 type PreviewsProps = {
 	receipts: TRPCQueryOutput<"receipts.get-paged">["items"];
 };
 
 const ReceiptPreviewsList: React.FC<PreviewsProps> = ({ receipts }) => (
 	<Grid.Container gap={2}>
-		<GridHeaderColumn xs={8}>Receipt</GridHeaderColumn>
-		<GridHeaderColumn xs={2} centered>
+		<Grid defaultCol={8}>Receipt</Grid>
+		<Grid defaultCol={2} justify="center">
 			Res.
-		</GridHeaderColumn>
-		<GridHeaderColumn xs={2} centered>
+		</Grid>
+		<Grid defaultCol={2} justify="center">
 			Wait.
-		</GridHeaderColumn>
+		</Grid>
+		<Card.Divider />
 		{receipts.map((receipt) => (
 			<ReceiptPreview key={receipt.id} receipt={receipt} />
 		))}
