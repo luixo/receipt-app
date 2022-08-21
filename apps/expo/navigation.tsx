@@ -14,6 +14,7 @@ import { ReceiptScreen } from "app/features/receipt/receipt-screen";
 import { ReceiptsScreen } from "app/features/receipts/receipts-screen";
 import { RegisterScreen } from "app/features/register/register-screen";
 import { ResetPasswordScreen } from "app/features/reset-password/reset-password-screen";
+import { UserDebtsScreen } from "app/features/user-debts/user-debts-screen";
 import { UserScreen } from "app/features/user/user-screen";
 import { UsersScreen } from "app/features/users/users-screen";
 
@@ -38,6 +39,9 @@ export type AppParamList = {
 		token: string;
 	};
 	debts: undefined;
+	userDebts: {
+		userId: string;
+	};
 };
 
 const Stack = createNativeStackNavigator<AppParamList>();
@@ -140,6 +144,13 @@ export const NativeNavigation: React.FC = () => (
 			component={DebtsScreen}
 			options={{
 				title: "Debts",
+			}}
+		/>
+		<Stack.Screen
+			name="userDebts"
+			component={UserDebtsScreen}
+			options={{
+				title: "User debts",
 			}}
 		/>
 	</Stack.Navigator>
