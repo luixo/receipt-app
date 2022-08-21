@@ -7,6 +7,7 @@ import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-par
 import { ReceiptResolvedParticipantsButton } from "app/components/app/receipt-resolved-participants-button";
 import { Grid } from "app/components/grid";
 import { Link } from "app/components/link";
+import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 
 const TitleLink = styled(Link, {
@@ -25,15 +26,7 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 		() => cache.receipts.getName.update(trpcContext, receipt.id, receipt.name),
 		[trpcContext, receipt.id, receipt.name]
 	);
-	const currenciesListQuery = trpc.useQuery(
-		["currency.get-list", { locale: "en" }],
-		{ ssr: false }
-	);
-	const currency = currenciesListQuery.data
-		? currenciesListQuery.data.list.find(
-				(element) => element.code === receipt.currency
-		  )?.symbol
-		: receipt.currency;
+	const currency = useFormattedCurrency(receipt.currency);
 	return (
 		<>
 			<Grid
