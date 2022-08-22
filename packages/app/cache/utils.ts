@@ -38,12 +38,16 @@ export const createGenericController = <Path extends TRPCQueryKey>(
 ): Controller<TRPCQueryOutput<Path>> => ({
 	get: () => trpc.getQueryData(pathAndInput) as any,
 	set: (data, options) => trpc.setQueryData(pathAndInput, data as any, options),
-	update: (updater, options) =>
-		trpc.setQueryData(
+	update: (updater, options) => {
+		if (trpc.getQueryData(pathAndInput) === undefined) {
+			return;
+		}
+		return trpc.setQueryData(
 			pathAndInput,
 			(prev: any) => (prev === undefined ? prev : updater(prev)),
 			options
-		),
+		);
+	},
 	invalidate: (filters, options) =>
 		trpc.invalidateQueries(pathAndInput, filters, options),
 });
