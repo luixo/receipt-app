@@ -1,6 +1,7 @@
 import React from "react";
 
 import { Loading, Spacer, Card } from "@nextui-org/react";
+import { useRouter } from "solito/router";
 
 import { LoadableUser } from "app/components/app/loadable-user";
 import { QueryErrorMessage } from "app/components/error-message";
@@ -15,20 +16,28 @@ type InnerProps = {
 	query: TRPCQuerySuccessResult<"debts.get-user">;
 };
 
-export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => (
-	<>
-		<Header>
-			<LoadableUser id={userId} />
-		</Header>
-		<Spacer y={1} />
-		{query.data.map((debt) => (
-			<React.Fragment key={debt.id}>
-				<Card.Divider />
-				<UserDebtPreview debt={debt} />
-			</React.Fragment>
-		))}
-	</>
-);
+export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
+	const router = useRouter();
+	React.useEffect(() => {
+		if (query.data.length === 0) {
+			router.replace("/debts");
+		}
+	}, [query.data, router]);
+	return (
+		<>
+			<Header>
+				<LoadableUser id={userId} />
+			</Header>
+			<Spacer y={1} />
+			{query.data.map((debt) => (
+				<React.Fragment key={debt.id}>
+					<Card.Divider />
+					<UserDebtPreview debt={debt} />
+				</React.Fragment>
+			))}
+		</>
+	);
+};
 
 type Props = Omit<InnerProps, "query">;
 
