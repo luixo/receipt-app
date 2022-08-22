@@ -32,32 +32,11 @@ export const router = trpc.router<AuthorizedContext>().query("get-by-users", {
 			return acc;
 		}, new Map());
 		const debtsByUsersEntries = [...debtsByUsers.entries()];
-		const debtsByUsersIds = debtsByUsersEntries.map(([userId]) => userId);
-
-		const users =
-			debtsByUsersIds.length === 0
-				? []
-				: await database
-						.selectFrom("users")
-						.where("users.id", "in", debtsByUsersIds)
-						.leftJoin("accounts", (qb) =>
-							qb.onRef("users.connectedAccountId", "=", "accounts.id")
-						)
-						.select(["users.id", "name", "publicName", "accounts.email"])
-						.execute();
-		type User = typeof users[number];
-		const usersMapping = users.reduce<Map<UsersId, User>>(
-			(mapping, user) => mapping.set(user.id, user),
-			new Map()
-		);
 
 		return debtsByUsersEntries.reduce<
-			Record<
-				UsersId,
-				{ debts: ExtractMapValue<typeof debtsByUsers>; user: User }
-			>
+			Record<UsersId, ExtractMapValue<typeof debtsByUsers>>
 		>((acc, [userId, userDebts]) => {
-			acc[userId] = { debts: userDebts, user: usersMapping.get(userId)! };
+			acc[userId] = userDebts;
 			return acc;
 		}, {});
 	},

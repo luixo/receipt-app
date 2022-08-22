@@ -50,10 +50,10 @@ const DebtsInner: React.FC<InnerProps> = ({ query }) => {
 
 	return (
 		<>
-			{debtEntries.map(([userId, { debts: userDebts, user }], index) => (
+			{debtEntries.map(([userId, userDebts], index) => (
 				<React.Fragment key={userId}>
 					{index === 0 ? null : <Spacer y={0.5} />}
-					<UserDebtsPreview debts={userDebts} user={user} />
+					<UserDebtsPreview debts={userDebts} userId={userId} />
 				</React.Fragment>
 			))}
 		</>

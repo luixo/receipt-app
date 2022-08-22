@@ -3,7 +3,7 @@ import React from "react";
 import { Spacer, Card } from "@nextui-org/react";
 
 import { cache } from "app/cache";
-import { User } from "app/components/app/user";
+import { LoadableUser } from "app/components/app/loadable-user";
 import { Link } from "app/components/link";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { UsersId } from "next-app/db/models";
@@ -11,21 +11,28 @@ import { UsersId } from "next-app/db/models";
 import { UserDebtPreview } from "./user-debt-preview";
 
 type Props = {
-	debts: TRPCQueryOutput<"debts.get-by-users">[UsersId]["debts"];
-	user: TRPCQueryOutput<"debts.get-by-users">[UsersId]["user"];
+	debts: TRPCQueryOutput<"debts.get-by-users">[UsersId];
+	userId: UsersId;
 };
 
-export const UserDebtsPreview: React.FC<Props> = ({ debts, user }) => {
+export const UserDebtsPreview: React.FC<Props> = ({ debts, userId }) => {
 	const trpcContext = trpc.useContext();
-	const setUserName = React.useCallback(
-		() => cache.users.getName.add(trpcContext, user.id, user.name),
-		[trpcContext, user.id, user.name]
-	);
+	const userQuery = trpc.useQuery(["users.get", { id: userId }]);
+	const setUserName = React.useCallback(() => {
+		if (userQuery.status !== "success") {
+			return;
+		}
+		cache.users.getName.add(
+			trpcContext,
+			userQuery.data.remoteId,
+			userQuery.data.name
+		);
+	}, [trpcContext, userQuery]);
 	return (
 		<Card>
 			<Link href={`/debts/user/${userId}`} color="text">
 				<Card.Body onClick={setUserName}>
-					<User user={user} />
+					<LoadableUser id={userId} />
 					<Spacer y={1} />
 					<div>
 						{debts.map((debt, index) => (

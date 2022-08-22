@@ -5,7 +5,7 @@ import { TRPCQueryOutput } from "app/trpc";
 import { UsersId } from "next-app/db/models";
 
 type Props = {
-	debt: TRPCQueryOutput<"debts.get-by-users">[UsersId]["debts"][number];
+	debt: TRPCQueryOutput<"debts.get-by-users">[UsersId][number];
 };
 
 export const UserDebtPreview: React.FC<Props> = ({ debt }) => {
