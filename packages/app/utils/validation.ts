@@ -43,18 +43,39 @@ export const userNameSchema = constrainLength(z.string(), {
 	target: "user name",
 });
 
+export const debtNoteSchema = constrainLength(z.string(), {
+	min: 0,
+	max: 255,
+	target: "note",
+});
+
 export const emailSchema = z
 	.string()
 	.email({ message: "Invalid email address" });
 
-const createNumberSchema = (name: string, decimals = 2) =>
-	z
+type NumberSchemaOptions = {
+	decimals?: number;
+	onlyPositive?: boolean;
+};
+
+const createNumberSchema = (
+	name: string,
+	{ decimals = 2, onlyPositive = true }: NumberSchemaOptions = {}
+) => {
+	const schema = z
 		.number()
-		.gt(0, { message: `${name} should be greater than 0` })
 		.multipleOf(Number((0.1 ** decimals).toFixed(decimals)), {
 			message: `Part should have at maximum ${decimals} decimals`,
 		});
+	if (onlyPositive) {
+		return schema.gt(0, { message: `${name} should be greater than 0` });
+	}
+	return schema;
+};
 
 export const priceSchema = createNumberSchema("Price");
 export const quantitySchema = createNumberSchema("Quantity");
-export const partSchema = createNumberSchema("Part", 5);
+export const partSchema = createNumberSchema("Part", { decimals: 5 });
+export const debtAmountSchema = createNumberSchema("Debt amount", {
+	onlyPositive: false,
+});

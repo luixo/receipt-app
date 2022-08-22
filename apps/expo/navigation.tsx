@@ -7,6 +7,7 @@ import { AddReceiptScreen } from "app/features/add-receipt/add-receipt-screen";
 import { AddUserScreen } from "app/features/add-user/add-user-screen";
 import { ChangePasswordScreen } from "app/features/change-password/change-password-screen";
 import { ConnectionIntentionsScreen } from "app/features/connection-intentions/connection-intentions-screen";
+import { DebtScreen } from "app/features/debt/debt-screen";
 import { DebtsScreen } from "app/features/debts/debts-screen";
 import { HomeScreen } from "app/features/home/home-screen";
 import { LoginScreen } from "app/features/login/login-screen";
@@ -41,6 +42,9 @@ export type AppParamList = {
 	debts: undefined;
 	userDebts: {
 		userId: string;
+	};
+	debt: {
+		id: string;
 	};
 };
 
@@ -151,6 +155,13 @@ export const NativeNavigation: React.FC = () => (
 			component={UserDebtsScreen}
 			options={{
 				title: "User debts",
+			}}
+		/>
+		<Stack.Screen
+			name="debt"
+			component={DebtScreen}
+			options={{
+				title: "Debt",
 			}}
 		/>
 	</Stack.Navigator>

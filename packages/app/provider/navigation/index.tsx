@@ -44,6 +44,7 @@ export const NavigationProvider: React.FC<React.PropsWithChildren<object>> = ({
 					resetPassword: "reset-password/",
 					debts: "debts/",
 					userDebts: "debts/user/:userId",
+					debt: "debts/:id",
 				},
 			},
 		}),
