@@ -5,7 +5,7 @@ import AccountConnectionsIntentions, {
 	AccountConnectionsIntentionsInitializer,
 } from "./account-connections-intentions";
 import Accounts, { AccountsInitializer, AccountsId } from "./accounts";
-import Debts, { DebtsInitializer } from "./debts";
+import Debts, { DebtsInitializer, DebtsId } from "./debts";
 import ItemParticipants, {
 	ItemParticipantsInitializer,
 } from "./item-participants";
@@ -67,7 +67,8 @@ type ModelId =
 	| ReceiptItemsId
 	| ReceiptsId
 	| SessionsId
-	| UsersId;
+	| UsersId
+	| DebtsId;
 
 interface ModelIdTypeMap {
 	accounts: AccountsId;
@@ -77,6 +78,7 @@ interface ModelIdTypeMap {
 	receipts: ReceiptsId;
 	sessions: SessionsId;
 	users: UsersId;
+	debts: DebtsId;
 }
 
 type Initializer =
@@ -116,6 +118,7 @@ export type {
 	AccountsId,
 	Debts,
 	DebtsInitializer,
+	DebtsId,
 	ItemParticipants,
 	ItemParticipantsInitializer,
 	KyselyMigration,

@@ -4,9 +4,11 @@
 import { AccountsId } from "./accounts";
 import { UsersId } from "./users";
 
+export type DebtsId = string & { " __flavor"?: "debts" };
+
 export default interface Debts {
 	/** Primary key. Index: debts:ownerAccountId:debtId:pair */
-	id: string;
+	id: DebtsId;
 
 	/**
 	 * Primary key. Index: debts:ownerAccountId:debtId:pair
@@ -30,7 +32,7 @@ export default interface Debts {
 
 export interface DebtsInitializer {
 	/** Primary key. Index: debts:ownerAccountId:debtId:pair */
-	id: string;
+	id: DebtsId;
 
 	/**
 	 * Primary key. Index: debts:ownerAccountId:debtId:pair
