@@ -137,3 +137,5 @@ web-build/
 dist/
 
 # @end expo-cli
+# Sentry
+.sentryclirc

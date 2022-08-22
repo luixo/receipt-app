@@ -11,6 +11,7 @@ const nextConfig = {
 };
 
 const { withExpo } = require("@expo/next-adapter");
+const { withSentryConfig } = require("@sentry/nextjs");
 const withPlugins = require("next-compose-plugins");
 const withTM = require("next-transpile-modules")([
 	"solito",
@@ -20,6 +21,10 @@ const withTM = require("next-transpile-modules")([
 ]);
 
 module.exports = withPlugins(
-	[withTM, [withExpo, { projectRoot: __dirname }]],
+	[
+		(config) => withSentryConfig(config, { silent: true }),
+		withTM,
+		[withExpo, { projectRoot: __dirname }],
+	],
 	nextConfig
 );
