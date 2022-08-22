@@ -13,6 +13,7 @@ import { FiSun as SunIcon, FiMoon as MoonIcon } from "react-icons/fi";
 import { ColorModeContext } from "app/contexts/color-mode-context";
 
 const Wrapper = styled("div", {
+	width: "100%",
 	display: "flex",
 	justifyContent: "space-evenly",
 });
