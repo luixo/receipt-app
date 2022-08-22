@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Spacer, Card } from "@nextui-org/react";
+import { Spacer, Card, styled } from "@nextui-org/react";
 
 import { cache } from "app/cache";
 import { LoadableUser } from "app/components/app/loadable-user";
@@ -9,6 +9,12 @@ import { trpc, TRPCQueryOutput } from "app/trpc";
 import { UsersId } from "next-app/db/models";
 
 import { UserDebtPreview } from "./user-debt-preview";
+
+const Debts = styled("div", {
+	display: "flex",
+});
+
+const Delimiter = styled("span", { mx: "$4" });
 
 type Props = {
 	debts: TRPCQueryOutput<"debts.get-by-users">[UsersId];
@@ -34,14 +40,14 @@ export const UserDebtsPreview: React.FC<Props> = ({ debts, userId }) => {
 				<Card.Body onClick={setUserName}>
 					<LoadableUser id={userId} />
 					<Spacer y={1} />
-					<div>
+					<Debts>
 						{debts.map((debt, index) => (
 							<React.Fragment key={debt.currency}>
-								{index === 0 ? null : <span> • </span>}
+								{index === 0 ? null : <Delimiter>•</Delimiter>}
 								<UserDebtPreview debt={debt} />
 							</React.Fragment>
 						))}
-					</div>
+					</Debts>
 				</Card.Body>
 			</Link>
 		</Card>
