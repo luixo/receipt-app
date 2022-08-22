@@ -69,7 +69,12 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 				loadMore={loadMore}
 			/>
 			<Spacer y={1} />
-			<Container display="flex" css={{ p: 0 }} justify="flex-end">
+			<Container
+				display="flex"
+				direction="column"
+				css={{ p: 0 }}
+				alignItems="flex-end"
+			>
 				<Button
 					auto
 					disabled={!user || isLoading}
@@ -78,7 +83,7 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 				>
 					{user ? `Connect "${user.name}"` : "Please choose user above"}
 				</Button>
-				<Spacer x={0.5} />
+				<Spacer y={0.5} />
 				<Button auto disabled={isLoading} onClick={rejectConnection}>
 					Reject connection
 				</Button>
