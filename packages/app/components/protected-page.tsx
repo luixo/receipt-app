@@ -1,7 +1,10 @@
 import React from "react";
 
 import { Loading } from "@nextui-org/react";
-import { BsReceipt as ReceiptsIcon } from "react-icons/bs";
+import {
+	BsReceipt as ReceiptsIcon,
+	BsGearFill as SettingsIcon,
+} from "react-icons/bs";
 import { FaUsers as UsersIcon, FaUser as AccountIcon } from "react-icons/fa";
 import { MdAttachMoney as DebtsIcon } from "react-icons/md";
 import { useRouter } from "solito/router";
@@ -15,6 +18,7 @@ const PROTECTED_ELEMENTS: MenuElement[] = [
 	{ Icon: DebtsIcon, text: "Debts", href: "/debts" },
 	{ Icon: UsersIcon, text: "Users", href: "/users" },
 	{ Icon: AccountIcon, text: "Account", href: "/account" },
+	{ Icon: SettingsIcon, text: "Settings", href: "/settings" },
 ];
 
 type Props = {
