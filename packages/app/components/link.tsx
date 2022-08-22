@@ -15,7 +15,7 @@ type Props = Omit<React.ComponentProps<typeof StyledLink>, "href"> & {
 
 export const Link: React.FC<Props> = React.forwardRef(
 	({ href, children, className, ...props }, ref) => (
-		<NextLink shallow href={href} {...props} ref={ref}>
+		<NextLink shallow href={href} {...props} ref={ref} passHref>
 			<StyledLink className={className}>{children}</StyledLink>
 		</NextLink>
 	)
