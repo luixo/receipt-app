@@ -5,13 +5,13 @@ import { MdAdd as AddIcon, MdLink as LinkIcon } from "react-icons/md";
 
 import { Header } from "app/components/header";
 import { IconButton } from "app/components/icon-button";
-import { Page } from "app/components/page";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
+import { PageWithLayout } from "next-app/types/page";
 
 import { Users } from "./users";
 
-export const UsersScreen: React.FC = () => (
-	<Page>
+export const UsersScreen: PageWithLayout = () => (
+	<>
 		<Header
 			icon="👨👩"
 			aside={React.useMemo(
@@ -39,5 +39,5 @@ export const UsersScreen: React.FC = () => (
 		<EmailVerificationCard />
 		<Spacer y={1} />
 		<Users />
-	</Page>
+	</>
 );

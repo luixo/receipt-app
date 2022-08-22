@@ -10,6 +10,7 @@ import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { trpc } from "app/trpc";
 import { passwordSchema } from "app/utils/validation";
+import { PageWithLayout } from "next-app/types/page";
 
 type Form = {
 	prevPassword: string;
@@ -17,7 +18,7 @@ type Form = {
 	passwordRetype: string;
 };
 
-export const ChangePasswordScreen: React.FC = () => {
+export const ChangePasswordScreen: PageWithLayout = () => {
 	const [changePasswordShown, { setTrue: showChangePassword }] =
 		useBooleanState();
 

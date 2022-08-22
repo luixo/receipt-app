@@ -87,7 +87,11 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 
 	return (
 		<>
-			<Header icon="🧾" aside={isEditing ? undefined : asideButtons}>
+			<Header
+				backHref="/receipts"
+				icon="🧾"
+				aside={isEditing ? undefined : asideButtons}
+			>
 				{isEditing && query.data.role === "owner" ? (
 					<ReceiptNameInput
 						receipt={query.data}
@@ -153,7 +157,7 @@ export const Receipt: React.FC<Props> = ({ id, ...props }) => {
 	if (query.status === "loading") {
 		return (
 			<>
-				<Header h2>{receiptNameQuery.data || id}</Header>
+				<Header>{receiptNameQuery.data || id}</Header>
 				<Loading />
 			</>
 		);

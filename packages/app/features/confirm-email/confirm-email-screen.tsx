@@ -5,15 +5,15 @@ import { createParam } from "solito";
 
 import { cache } from "app/cache";
 import { Header } from "app/components/header";
-import { Page } from "app/components/page";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { trpc } from "app/trpc";
+import { PageWithLayout } from "next-app/types/page";
 
 import { ConfirmEmail } from "./confirm-email";
 
 const { useParam } = createParam<{ token: string }>();
 
-export const ConfirmEmailScreen: React.FC = () => {
+export const ConfirmEmailScreen: PageWithLayout = () => {
 	const [token] = useParam("token");
 	const confirmEmailMutation = trpc.useMutation(["auth.confirm-email"]);
 	const trpcContext = trpc.useContext();
@@ -36,10 +36,10 @@ export const ConfirmEmailScreen: React.FC = () => {
 	React.useEffect(confirmEmail, [confirmEmail]);
 
 	return (
-		<Page>
+		<>
 			<Header>Confirm email</Header>
 			<Spacer y={1} />
 			<ConfirmEmail token={token} confirmMutation={confirmEmailMutation} />
-		</Page>
+		</>
 	);
 };

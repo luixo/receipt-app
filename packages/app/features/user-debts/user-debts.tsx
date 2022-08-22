@@ -25,7 +25,7 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 	}, [query.data, router]);
 	return (
 		<>
-			<Header>
+			<Header backHref="/debts">
 				<LoadableUser id={userId} />
 			</Header>
 			<Spacer y={1} />
@@ -47,7 +47,7 @@ export const UserDebts: React.FC<Props> = ({ userId, ...props }) => {
 	if (query.status === "loading") {
 		return (
 			<>
-				<Header h2>{userNameQuery.data || userId}</Header>
+				<Header>{userNameQuery.data || userId}</Header>
 				<Loading />
 			</>
 		);

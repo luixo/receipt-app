@@ -8,11 +8,11 @@ import {
 	QueryErrorMessage,
 } from "app/components/error-message";
 import { Header } from "app/components/header";
-import { Page } from "app/components/page";
 import { ChangePasswordScreen } from "app/features/change-password/change-password-screen";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { trpc, TRPCQuerySuccessResult } from "app/trpc";
+import { PageWithLayout } from "next-app/types/page";
 
 import { AccountNameInput } from "./account-name-input";
 import { AccountPublicNameInput } from "./account-public-name-input";
@@ -39,8 +39,8 @@ const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 	);
 
 	return (
-		<Page>
-			<Header icon="👨👩">{query.data.name}</Header>
+		<>
+			<Header icon="👤">{query.data.name}</Header>
 			<EmailVerificationCard />
 			<Spacer y={1} />
 			<AccountNameInput account={query.data} />
@@ -64,13 +64,11 @@ const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 					<MutationErrorMessage mutation={logoutMutation} />
 				</>
 			) : null}
-		</Page>
+		</>
 	);
 };
 
-type Props = Omit<InnerProps, "query">;
-
-export const AccountScreen: React.FC<Props> = () => {
+export const AccountScreen: PageWithLayout = () => {
 	const query = trpc.useQuery(["account.get"]);
 	if (query.status === "loading") {
 		return <Loading />;

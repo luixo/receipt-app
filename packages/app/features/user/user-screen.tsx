@@ -5,14 +5,14 @@ import { createParam } from "solito";
 
 import { User as UserTitle } from "app/components/app/user";
 import { Header } from "app/components/header";
-import { Page } from "app/components/page";
 import { trpc } from "app/trpc";
+import { PageWithLayout } from "next-app/types/page";
 
 import { User } from "./user";
 
 const { useParam } = createParam<{ id: string }>();
 
-export const UserScreen: React.FC = () => {
+export const UserScreen: PageWithLayout = () => {
 	const [id] = useParam("id");
 	if (!id) {
 		throw new Error("No id in param");
@@ -21,8 +21,8 @@ export const UserScreen: React.FC = () => {
 	const userNameQuery = trpc.useQuery(["users.get-name", { id }]);
 
 	return (
-		<Page>
-			<Header>
+		<>
+			<Header backHref="/users">
 				<UserTitle
 					user={React.useMemo(
 						() => ({ id, name: userNameQuery.data || id }),
@@ -32,6 +32,6 @@ export const UserScreen: React.FC = () => {
 			</Header>
 			<Spacer y={1} />
 			<User id={id} />
-		</Page>
+		</>
 	);
 };

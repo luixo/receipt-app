@@ -1,12 +1,12 @@
 import React from "react";
 
-import { Page } from "app/components/page";
 import { ConnectionIntentions } from "app/features/connection-intentions/connection-intentions";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
+import { PageWithLayout } from "next-app/types/page";
 
-export const ConnectionIntentionsScreen: React.FC = () => (
-	<Page>
+export const ConnectionIntentionsScreen: PageWithLayout = () => (
+	<>
 		<EmailVerificationCard />
 		<ConnectionIntentions />
-	</Page>
+	</>
 );

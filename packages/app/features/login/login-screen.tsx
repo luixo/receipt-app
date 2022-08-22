@@ -9,11 +9,11 @@ import { z } from "zod";
 import { cache } from "app/cache";
 import { MutationErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
-import { Page } from "app/components/page";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { trpc, TRPCMutationOutput } from "app/trpc";
 import { passwordSchema, emailSchema } from "app/utils/validation";
+import { PageWithLayout } from "next-app/types/page";
 
 import { ResetPasswordModal } from "./reset-password-modal";
 
@@ -22,7 +22,7 @@ type LoginForm = {
 	password: string;
 };
 
-export const LoginScreen: React.FC = () => {
+export const LoginScreen: PageWithLayout = () => {
 	const router = useRouter();
 	const form = useForm<LoginForm>({
 		mode: "onChange",
@@ -49,7 +49,7 @@ export const LoginScreen: React.FC = () => {
 	);
 
 	return (
-		<Page>
+		<>
 			<Header>Login</Header>
 			<Input
 				{...form.register("email")}
@@ -84,6 +84,6 @@ export const LoginScreen: React.FC = () => {
 				Forgot password?
 			</Button>
 			<ResetPasswordModal isModalOpen={modalOpen} closeModal={closeModal} />
-		</Page>
+		</>
 	);
 };

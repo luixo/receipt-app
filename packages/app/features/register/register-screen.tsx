@@ -9,7 +9,6 @@ import { z } from "zod";
 import { cache } from "app/cache";
 import { MutationErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
-import { Page } from "app/components/page";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { trpc } from "app/trpc";
 import {
@@ -18,6 +17,7 @@ import {
 	userNameSchema,
 } from "app/utils/validation";
 import { AccountsId } from "next-app/db/models";
+import { PageWithLayout } from "next-app/types/page";
 
 type RegistrationForm = {
 	email: string;
@@ -26,7 +26,7 @@ type RegistrationForm = {
 	passwordRetype: string;
 };
 
-export const RegisterScreen: React.FC = () => {
+export const RegisterScreen: PageWithLayout = () => {
 	const router = useRouter();
 	const form = useForm<RegistrationForm>({
 		mode: "onChange",
@@ -70,7 +70,7 @@ export const RegisterScreen: React.FC = () => {
 	);
 
 	return (
-		<Page>
+		<>
 			<Header>Register</Header>
 			<Input
 				{...form.register("email")}
@@ -117,6 +117,6 @@ export const RegisterScreen: React.FC = () => {
 					<MutationErrorMessage mutation={registerMutation} />
 				</>
 			) : null}
-		</Page>
+		</>
 	);
 };

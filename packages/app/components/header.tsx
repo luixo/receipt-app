@@ -37,18 +37,24 @@ export const Header: React.FC<Props> = ({
 	children,
 	aside,
 	icon,
+	backHref,
 	...props
 }) => {
 	const asideElements: JSX.Element[] | undefined =
 		aside === undefined ? aside : Array.isArray(aside) ? aside : [aside];
 	const router = useRouter();
-	const back = React.useCallback(() => router.back(), [router]);
+	const back = React.useCallback(
+		() => router.push(backHref!),
+		[router, backHref]
+	);
 	return (
 		<Wrapper>
 			<Title h2 {...props}>
-				<Icon onClick={back}>
-					<BackArrow />
-				</Icon>
+				{backHref ? (
+					<Icon onClick={back}>
+						<BackArrow />
+					</Icon>
+				) : null}
 				{icon ? <Icon>{icon}</Icon> : null}
 				{children}
 			</Title>

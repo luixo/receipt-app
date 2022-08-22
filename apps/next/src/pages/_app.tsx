@@ -11,6 +11,7 @@ import { ReactQueryDevtools } from "react-query/devtools";
 import "raf/polyfill";
 import superjson from "superjson";
 
+import { ProtectedPage } from "app/components/protected-page";
 import {
 	ColorModeConfig,
 	LAST_COLOR_MODE_COOKIE_NAME,
@@ -24,6 +25,7 @@ import {
 } from "app/utils/queries";
 import { useColorModeCookies } from "next-app/hooks/use-color-mode-cookies";
 import type { AppRouter } from "next-app/pages/api/trpc/[trpc]";
+import { PageWithLayout } from "next-app/types/page";
 import { AUTH_COOKIE } from "next-app/utils/auth-cookie";
 import { getCookie, serialize } from "next-app/utils/cookie";
 
@@ -49,24 +51,30 @@ declare module "next/app" {
 	}
 }
 
-const MyApp: AppType = ({ Component, pageProps }) => (
-	<>
-		<Head>
-			<title>Receipt App</title>
-			<meta name="description" content="Receipt App built on Solito" />
-			<meta
-				name="viewport"
-				content="width=device-width, initial-scale=1, maximum-scale=1"
-			/>
-			<link rel="icon" href="/favicon.svg" />
-		</Head>
-		<Provider initialColorModeConfig={pageProps.colorModeConfig}>
-			<ReactQueryDevtools />
-			<Component />
-			<GlobalHooksComponent />
-		</Provider>
-	</>
-);
+const MyApp: AppType = ({ Component, pageProps }) => {
+	const LayoutComponent =
+		(Component as PageWithLayout).LayoutComponent || ProtectedPage;
+	return (
+		<>
+			<Head>
+				<title>Receipt App</title>
+				<meta name="description" content="Receipt App built on Solito" />
+				<meta
+					name="viewport"
+					content="width=device-width, initial-scale=1, maximum-scale=1"
+				/>
+				<link rel="icon" href="/favicon.svg" />
+			</Head>
+			<Provider initialColorModeConfig={pageProps.colorModeConfig}>
+				<ReactQueryDevtools />
+				<LayoutComponent>
+					<Component />
+				</LayoutComponent>
+				<GlobalHooksComponent />
+			</Provider>
+		</>
+	);
+};
 
 MyApp.getInitialProps = async ({ ctx }) => {
 	const cookies = getCookies(ctx);

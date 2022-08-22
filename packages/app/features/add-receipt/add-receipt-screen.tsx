@@ -12,19 +12,19 @@ import {
 	QueryErrorMessage,
 } from "app/components/error-message";
 import { Header } from "app/components/header";
-import { Page } from "app/components/page";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc } from "app/trpc";
 import { receiptNameSchema } from "app/utils/validation";
 import { ReceiptsId } from "next-app/src/db/models";
+import { PageWithLayout } from "next-app/types/page";
 
 import { CurrencyInput } from "./currency-input";
 import { ReceiptNameInput } from "./receipt-name-input";
 import { Form } from "./types";
 
-export const AddReceiptScreen: React.FC = () => {
+export const AddReceiptScreen: PageWithLayout = () => {
 	const router = useRouter();
 	const accountQuery = trpc.useQuery(["account.get"]);
 
@@ -61,8 +61,8 @@ export const AddReceiptScreen: React.FC = () => {
 	);
 
 	return (
-		<Page>
-			<Header>Add receipt</Header>
+		<>
+			<Header backHref="/receipts">Add receipt</Header>
 			<EmailVerificationCard />
 			<Spacer y={1} />
 			<ReceiptNameInput form={form} query={addReceiptMutation} />
@@ -91,6 +91,6 @@ export const AddReceiptScreen: React.FC = () => {
 					<QueryErrorMessage query={accountQuery} />
 				</>
 			) : null}
-		</Page>
+		</>
 	);
 };

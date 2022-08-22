@@ -44,7 +44,7 @@ export const DebtInner: React.FC<InnerProps> = ({ query }) => {
 
 	return (
 		<>
-			<Header>Debt</Header>
+			<Header backHref={`/debts/user/${debt.userId}`}>Debt</Header>
 			<Spacer y={1} />
 			<LoadableUser id={debt.userId} />
 			<Spacer y={1} />

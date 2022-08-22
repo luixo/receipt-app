@@ -9,19 +9,19 @@ import { z } from "zod";
 import { cache } from "app/cache";
 import { MutationErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
-import { Page } from "app/components/page";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc } from "app/trpc";
 import { emailSchema, userNameSchema } from "app/utils/validation";
 import { UsersId } from "next-app/src/db/models";
+import { PageWithLayout } from "next-app/types/page";
 
 import { EmailInput } from "./email-input";
 import { Form } from "./types";
 import { UserNameInput } from "./user-name-input";
 
-export const AddUserScreen: React.FC = () => {
+export const AddUserScreen: PageWithLayout = () => {
 	const router = useRouter();
 
 	const addUserMutation = trpc.useMutation(
@@ -48,8 +48,8 @@ export const AddUserScreen: React.FC = () => {
 	);
 
 	return (
-		<Page>
-			<Header>Add user</Header>
+		<>
+			<Header backHref="/users">Add user</Header>
 			<EmailVerificationCard />
 			<Spacer y={1} />
 			<UserNameInput form={form} query={addUserMutation} />
@@ -68,6 +68,6 @@ export const AddUserScreen: React.FC = () => {
 					<MutationErrorMessage mutation={addUserMutation} />
 				</>
 			) : null}
-		</Page>
+		</>
 	);
 };

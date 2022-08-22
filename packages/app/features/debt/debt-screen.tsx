@@ -2,21 +2,17 @@ import React from "react";
 
 import { createParam } from "solito";
 
-import { Page } from "app/components/page";
+import { PageWithLayout } from "next-app/types/page";
 
 import { Debt } from "./debt";
 
 const { useParam } = createParam<{ id: string }>();
 
-export const DebtScreen: React.FC = () => {
+export const DebtScreen: PageWithLayout = () => {
 	const [id] = useParam("id");
 	if (!id) {
 		throw new Error("No id in param");
 	}
 
-	return (
-		<Page>
-			<Debt id={id} />
-		</Page>
-	);
+	return <Debt id={id} />;
 };
