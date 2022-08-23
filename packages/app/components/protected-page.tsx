@@ -11,12 +11,18 @@ import { useRouter } from "solito/router";
 
 import { QueryErrorMessage } from "app/components/error-message";
 import { MenuElement, Page } from "app/components/page";
+import { useConnectionIntentions } from "app/hooks/use-connection-intentions";
 import { trpc } from "app/trpc";
 
 const PROTECTED_ELEMENTS: MenuElement[] = [
 	{ Icon: ReceiptsIcon, href: "/receipts", text: "Receipts" },
 	{ Icon: DebtsIcon, text: "Debts", href: "/debts" },
-	{ Icon: UsersIcon, text: "Users", href: "/users" },
+	{
+		Icon: UsersIcon,
+		text: "Users",
+		href: "/users",
+		useBadgeAmount: useConnectionIntentions,
+	},
 	{ Icon: AccountIcon, text: "Account", href: "/account" },
 	{ Icon: SettingsIcon, text: "Settings", href: "/settings" },
 ];

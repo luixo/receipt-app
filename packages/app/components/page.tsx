@@ -7,6 +7,7 @@ import {
 	BsPersonCheck as LoginIcon,
 } from "react-icons/bs";
 
+import { Badge } from "app/components/badge";
 import { Link } from "app/components/link";
 
 const Wrapper = styled("div", {
@@ -65,6 +66,7 @@ export type MenuElement = {
 	Icon: React.FC<{ size: number }>;
 	text: string;
 	href: string;
+	useBadgeAmount?: () => number;
 };
 
 const UNPROTECTED_ELEMENTS: MenuElement[] = [
@@ -80,6 +82,28 @@ const UNPROTECTED_ELEMENTS: MenuElement[] = [
 	},
 ];
 
+const useZero = () => 0;
+
+const MenuItemComponent: React.FC<MenuElement> = ({
+	Icon,
+	href,
+	text,
+	useBadgeAmount = useZero,
+}) => {
+	const router = useRouter();
+	const amount = useBadgeAmount();
+	return (
+		<MenuItem key={href} href={href} selected={router.pathname === href}>
+			<Badge amount={amount} css={{ minWidth: 40 }}>
+				<Icon size={24} />
+			</Badge>
+			<Text size="$sm" css={{ lineHeight: "$md" }} color="inherit">
+				{text}
+			</Text>
+		</MenuItem>
+	);
+};
+
 type Props = {
 	children?: React.ReactNode;
 	elements?: MenuElement[];
@@ -88,28 +112,16 @@ type Props = {
 export const Page: React.FC<Props> = ({
 	children,
 	elements = UNPROTECTED_ELEMENTS,
-}) => {
-	const router = useRouter();
-	return (
-		<Wrapper>
-			{children}
-			<StickyMenu>
-				<MenuWrapper>
-					{elements.map(({ Icon, href, text }) => (
-						<MenuItem
-							key={href}
-							href={href}
-							selected={router.pathname === href}
-						>
-							<Icon size={24} />
-							<Text size="$sm" css={{ lineHeight: "$md" }} color="inherit">
-								{text}
-							</Text>
-						</MenuItem>
-					))}
-				</MenuWrapper>
-			</StickyMenu>
-			<StickyMenuPlaceholder />
-		</Wrapper>
-	);
-};
+}) => (
+	<Wrapper>
+		{children}
+		<StickyMenu>
+			<MenuWrapper>
+				{elements.map((props) => (
+					<MenuItemComponent key={props.href} {...props} />
+				))}
+			</MenuWrapper>
+		</StickyMenu>
+		<StickyMenuPlaceholder />
+	</Wrapper>
+);
