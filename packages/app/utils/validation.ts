@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { Currency } from "app/utils/currency";
+
 const getLengthMessage = (
 	amount: number,
 	target: string,
@@ -18,6 +20,8 @@ const constrainLength = (
 	schema
 		.min(min, { message: getMinimalLengthMessage(min, target) })
 		.max(max, { message: getMaximumLengthMessage(max, target) });
+
+export const flavored = <T extends string>(x: string): x is T => true;
 
 export const passwordSchema = constrainLength(z.string(), {
 	min: 6,
@@ -78,4 +82,12 @@ export const quantitySchema = createNumberSchema("Quantity");
 export const partSchema = createNumberSchema("Part", { decimals: 5 });
 export const debtAmountSchema = createNumberSchema("Debt amount", {
 	onlyPositive: false,
+});
+
+export const clientCurrencySchema = z.string().refine<Currency>(flavored);
+
+export const currencyObjectSchema = z.object({
+	code: clientCurrencySchema,
+	name: z.string().nonempty(),
+	symbol: z.string().nonempty(),
 });

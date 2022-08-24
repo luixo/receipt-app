@@ -5,7 +5,6 @@ import {
 	useController,
 	FieldValues,
 	FieldPath,
-	UnpackNestedValue,
 	FieldPathValue,
 	UseFormReturn,
 } from "react-hook-form";
@@ -32,7 +31,7 @@ export const useInputController = <
 		control: form.control,
 	});
 	const setValue = React.useCallback(
-		(nextValue: UnpackNestedValue<FieldPathValue<Form, FieldName>>) =>
+		(nextValue: FieldPathValue<Form, FieldName>) =>
 			form.setValue(name, nextValue),
 		[form, name]
 	);

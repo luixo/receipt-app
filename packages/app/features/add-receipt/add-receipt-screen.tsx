@@ -7,6 +7,7 @@ import { useRouter } from "solito/router";
 import { z } from "zod";
 
 import { cache } from "app/cache";
+import { CurrencyInput } from "app/components/app/currency-input";
 import {
 	MutationErrorMessage,
 	QueryErrorMessage,
@@ -16,11 +17,10 @@ import { EmailVerificationCard } from "app/features/email-verification/email-ver
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc } from "app/trpc";
-import { receiptNameSchema } from "app/utils/validation";
+import { currencyObjectSchema, receiptNameSchema } from "app/utils/validation";
 import { ReceiptsId } from "next-app/src/db/models";
 import { PageWithLayout } from "next-app/types/page";
 
-import { CurrencyInput } from "./currency-input";
 import { ReceiptNameInput } from "./receipt-name-input";
 import { Form } from "./types";
 
@@ -40,7 +40,7 @@ export const AddReceiptScreen: PageWithLayout = () => {
 		resolver: zodResolver(
 			z.object({
 				name: receiptNameSchema,
-				currency: z.object({ code: z.string().nonempty() }),
+				currency: currencyObjectSchema,
 			})
 		),
 		defaultValues: {
@@ -67,7 +67,7 @@ export const AddReceiptScreen: PageWithLayout = () => {
 			<Spacer y={1} />
 			<ReceiptNameInput form={form} query={addReceiptMutation} />
 			<Spacer y={1} />
-			<CurrencyInput form={form} query={addReceiptMutation} />
+			<CurrencyInput form={form} isLoading={addReceiptMutation.isLoading} />
 			<Spacer y={1} />
 			<Button
 				onClick={form.handleSubmit(onSubmit)}

@@ -4,7 +4,7 @@
 	"main": "index.ts",
 	"dependencies": {
 		"@expo/html-elements": "^0.0.1",
-		"@hookform/resolvers": "^2.9.6",
+		"@hookform/resolvers": "^2.9.7",
 		"@react-native-picker/picker": "^2.4.1",
 		"@react-navigation/native": "^6.0.8",
 		"@trpc/react": "^9.24.0",
@@ -15,7 +15,7 @@
 		"identicon.js": "^2.3.3",
 		"next-app": "*",
 		"react-calendar": "^3.7.0",
-		"react-hook-form": "^7.31.3",
+		"react-hook-form": "^7.34.2",
 		"solito": "latest",
 		"superjson": "^1.9.1",
 		"uuid": "^8.3.2",

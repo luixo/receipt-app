@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { flavored } from "app/utils/validation";
 import {
 	UsersId,
 	AccountsId,
@@ -9,8 +10,6 @@ import {
 	DebtsId,
 } from "next-app/db/models";
 import { isCurrency } from "next-app/utils/currency";
-
-export const flavored = <T extends string>(x: string): x is T => true;
 
 export const limitSchema = z.number().int().gt(0).max(100);
 
@@ -37,3 +36,5 @@ export const sessionIdSchema = z.string().uuid().refine<SessionsId>(flavored);
 export const debtIdSchema = z.string().uuid().refine<DebtsId>(flavored);
 export const resetPasswordTokenSchema = z.string().uuid();
 export const confirmEmailTokenSchema = z.string().uuid();
+
+export { flavored };
