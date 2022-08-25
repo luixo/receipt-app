@@ -40,7 +40,7 @@ const StickyMenu = styled("div", {
 
 // Reserved space after sticky menu - with its approx. height
 const StickyMenuPlaceholder = styled("div", {
-	height: 60,
+	height: 82,
 });
 
 const MenuItem = styled(Link, {
