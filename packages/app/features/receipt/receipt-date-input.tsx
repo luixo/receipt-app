@@ -35,7 +35,8 @@ export const ReceiptDateInput: React.FC<Props> = ({
 
 	return (
 		<DateInput
-			mutation={updateReceiptMutation}
+			loading={updateReceiptMutation.isLoading}
+			error={updateReceiptMutation.error}
 			timestamp={receipt.issued}
 			disabled={receipt.role !== "owner" || isOuterLoading}
 			onUpdate={saveDate}

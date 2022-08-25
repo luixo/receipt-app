@@ -5,6 +5,7 @@ import { DefaultValues, Path, Resolver, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { useInputController } from "app/hooks/use-input-controller";
+import { formatIsoDate } from "app/utils/date";
 
 type Form<T> = {
 	value: T;
@@ -24,7 +25,10 @@ export const useSingleInput = <T>({
 	const form = useForm<Form<T>>({
 		mode: "onChange",
 		defaultValues: {
-			value: initialValue,
+			value:
+				type === "date"
+					? formatIsoDate(initialValue as unknown as Date)
+					: initialValue,
 		} as DefaultValues<Form<T>>,
 		resolver: React.useMemo(
 			() =>
@@ -32,7 +36,11 @@ export const useSingleInput = <T>({
 					? (zodResolver(
 							z.object({
 								value:
-									type === "number" ? z.preprocess(Number, schema) : schema,
+									type === "number"
+										? z.preprocess(Number, schema)
+										: type === "date"
+										? z.preprocess((input) => new Date(input as string), schema)
+										: schema,
 							})
 					  ) as Resolver<Form<T>>)
 					: undefined,

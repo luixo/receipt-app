@@ -144,7 +144,7 @@ const calendarStyles = globalCss({
 });
 
 type Props = {
-	value: Date;
+	value?: Date;
 	onChange: (nextDate: Date) => void;
 	children: React.ReactElement;
 	disabled?: boolean;

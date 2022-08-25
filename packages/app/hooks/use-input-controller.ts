@@ -9,6 +9,8 @@ import {
 	UseFormReturn,
 } from "react-hook-form";
 
+import { formatIsoDate } from "app/utils/date";
+
 export type InputControllerOptions<
 	Form extends FieldValues = FieldValues,
 	FieldName extends FieldPath<Form> = FieldPath<Form>
@@ -31,9 +33,17 @@ export const useInputController = <
 		control: form.control,
 	});
 	const setValue = React.useCallback(
-		(nextValue: FieldPathValue<Form, FieldName>) =>
-			form.setValue(name, nextValue),
-		[form, name]
+		(nextValue: FieldPathValue<Form, FieldName>) => {
+			if (type === "date") {
+				form.setValue(
+					name,
+					formatIsoDate(nextValue as Date) as FieldPathValue<Form, FieldName>
+				);
+			} else {
+				form.setValue(name, nextValue);
+			}
+		},
+		[form, name, type]
 	);
 	const onChange = React.useMemo<React.ChangeEventHandler<FormElement>>(
 		() =>

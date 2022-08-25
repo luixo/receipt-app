@@ -119,6 +119,7 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 			<Body>
 				<div>
 					<ReceiptDateInput receipt={receipt} isLoading={deleteLoading} />
+					<Spacer y={0.5} />
 					<Sum>
 						<Text css={{ display: "inline-flex", fontSize: "$xl" }}>
 							{receipt.sum}

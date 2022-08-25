@@ -13,6 +13,7 @@ export const router = trpc.router<AuthorizedContext>().mutation("put", {
 		name: receiptNameSchema,
 		currency: currencySchema,
 		userIds: z.array(userIdSchema).optional(),
+		issued: z.date(),
 	}),
 	resolve: async ({ input, ctx }) => {
 		const id = v4();
@@ -25,7 +26,7 @@ export const router = trpc.router<AuthorizedContext>().mutation("put", {
 					name: input.name,
 					currency: input.currency,
 					created: new Date(),
-					issued: new Date(),
+					issued: input.issued,
 					ownerAccountId: ctx.auth.accountId,
 				})
 				.executeTakeFirst();

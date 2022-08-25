@@ -17,10 +17,12 @@ import { EmailVerificationCard } from "app/features/email-verification/email-ver
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc } from "app/trpc";
+import { getToday } from "app/utils/date";
 import { currencyObjectSchema, receiptNameSchema } from "app/utils/validation";
 import { ReceiptsId } from "next-app/src/db/models";
 import { PageWithLayout } from "next-app/types/page";
 
+import { ReceiptDateInput } from "./receipt-date-input";
 import { ReceiptNameInput } from "./receipt-name-input";
 import { Form } from "./types";
 
@@ -41,10 +43,12 @@ export const AddReceiptScreen: PageWithLayout = () => {
 			z.object({
 				name: receiptNameSchema,
 				currency: currencyObjectSchema,
+				issued: z.date(),
 			})
 		),
 		defaultValues: {
 			name: "",
+			issued: getToday(),
 		},
 	});
 	const onSubmit = useSubmitHandler<Form, ReceiptsId>(
@@ -52,6 +56,7 @@ export const AddReceiptScreen: PageWithLayout = () => {
 			addReceiptMutation.mutateAsync({
 				name: values.name,
 				currency: values.currency.code,
+				issued: values.issued,
 			}),
 		[addReceiptMutation],
 		React.useCallback(
@@ -68,6 +73,8 @@ export const AddReceiptScreen: PageWithLayout = () => {
 			<ReceiptNameInput form={form} query={addReceiptMutation} />
 			<Spacer y={1} />
 			<CurrencyInput form={form} isLoading={addReceiptMutation.isLoading} />
+			<Spacer y={1} />
+			<ReceiptDateInput form={form} query={addReceiptMutation} />
 			<Spacer y={1} />
 			<Button
 				onClick={form.handleSubmit(onSubmit)}
