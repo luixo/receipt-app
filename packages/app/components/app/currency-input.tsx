@@ -39,6 +39,16 @@ export const CurrencyInput = <T extends MinimalForm>({
 	);
 
 	const selectedCurrency = form.watch("currency" as Path<T> & "currency");
+
+	const onLoad = React.useCallback(
+		(currencies: z.infer<typeof currencyObjectSchema>[]) => {
+			if (!selectedCurrency && currencies[0]) {
+				onCurrencyChange(currencies[0]);
+			}
+		},
+		[onCurrencyChange, selectedCurrency]
+	);
+
 	return (
 		<>
 			{selectedCurrency ? (
@@ -68,6 +78,7 @@ export const CurrencyInput = <T extends MinimalForm>({
 				onChange={onCurrencyChange}
 				modalOpen={modalOpen}
 				onModalClose={closeModal}
+				onLoad={onLoad}
 			/>
 		</>
 	);
