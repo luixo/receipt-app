@@ -18,7 +18,6 @@ export const DebtsScreen: PageWithLayout = () => (
 				<IconButton
 					href="/debts/add"
 					title="Add debt"
-					disabled
 					bordered
 					icon={<AddIcon size={24} />}
 				/>

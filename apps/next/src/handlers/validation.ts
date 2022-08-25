@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { flavored } from "app/utils/validation";
+import { createNumberSchema, flavored, nonZero } from "app/utils/validation";
 import {
 	UsersId,
 	AccountsId,
@@ -36,5 +36,9 @@ export const sessionIdSchema = z.string().uuid().refine<SessionsId>(flavored);
 export const debtIdSchema = z.string().uuid().refine<DebtsId>(flavored);
 export const resetPasswordTokenSchema = z.string().uuid();
 export const confirmEmailTokenSchema = z.string().uuid();
+
+export const debtAmountSchema = nonZero(
+	createNumberSchema("Debt amount", { onlyPositive: false })
+);
 
 export { flavored };

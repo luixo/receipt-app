@@ -8,7 +8,7 @@ import { IconButton } from "app/components/icon-button";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
-import { debtAmountSchema } from "app/utils/validation";
+import { clientDebtAmountSchema } from "app/utils/validation";
 
 import { DebtCurrencyInput } from "./debt-currency-input";
 
@@ -25,13 +25,14 @@ type Props = {
 };
 
 export const DebtAmountInput: React.FC<Props> = ({ debt, isLoading }) => {
+	const absoluteAmount = Math.abs(debt.amount);
 	const {
 		bindings,
 		state: inputState,
 		getNumberValue,
 	} = useSingleInput({
-		initialValue: Math.abs(debt.amount),
-		schema: debtAmountSchema,
+		initialValue: absoluteAmount,
+		schema: clientDebtAmountSchema,
 		type: "number",
 	});
 
@@ -41,7 +42,7 @@ export const DebtAmountInput: React.FC<Props> = ({ debt, isLoading }) => {
 	);
 	const updateAmount = React.useCallback(
 		async (amount: number) => {
-			if (amount !== Math.abs(debt.amount)) {
+			if (amount !== absoluteAmount) {
 				const currentSign = debt.amount >= 0 ? 1 : -1;
 				updateMutation.mutate({
 					id: debt.id,
@@ -49,7 +50,7 @@ export const DebtAmountInput: React.FC<Props> = ({ debt, isLoading }) => {
 				});
 			}
 		},
-		[updateMutation, debt.id, debt.amount]
+		[updateMutation, debt.id, debt.amount, absoluteAmount]
 	);
 
 	return (
@@ -71,7 +72,7 @@ export const DebtAmountInput: React.FC<Props> = ({ debt, isLoading }) => {
 						disabled={isLoading || Boolean(inputState.error)}
 						onClick={() => updateAmount(getNumberValue())}
 						icon={<CheckMark color="currentColor" size={24} />}
-						color={getNumberValue() === debt.amount ? undefined : "warning"}
+						color={getNumberValue() === absoluteAmount ? undefined : "warning"}
 					/>
 				</Content>
 			}

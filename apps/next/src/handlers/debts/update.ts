@@ -2,11 +2,15 @@ import * as trpc from "@trpc/server";
 import { MutationObject } from "kysely";
 import { z } from "zod";
 
-import { debtAmountSchema, debtNoteSchema } from "app/utils/validation";
+import { debtNoteSchema } from "app/utils/validation";
 import { ReceiptsDatabase, getDatabase } from "next-app/db";
 import { AuthorizedContext } from "next-app/handlers/context";
 import { getDebt } from "next-app/handlers/debts/utils";
-import { currencySchema, debtIdSchema } from "next-app/handlers/validation";
+import {
+	debtAmountSchema,
+	currencySchema,
+	debtIdSchema,
+} from "next-app/handlers/validation";
 
 export const router = trpc.router<AuthorizedContext>().mutation("update", {
 	input: z.strictObject({

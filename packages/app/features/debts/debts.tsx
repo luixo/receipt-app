@@ -38,7 +38,6 @@ const DebtsInner: React.FC<InnerProps> = ({ query }) => {
 						href="/debts/add"
 						title="Add debt"
 						bordered
-						disabled
 						icon={<AddIcon size={24} />}
 					/>{" "}
 					<Spacer x={0.5} />

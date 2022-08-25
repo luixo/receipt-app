@@ -3,6 +3,7 @@ import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 import { AccountScreen } from "app/features/account/account-screen";
+import { AddDebtScreen } from "app/features/add-debt/add-debt-screen";
 import { AddReceiptScreen } from "app/features/add-receipt/add-receipt-screen";
 import { AddUserScreen } from "app/features/add-user/add-user-screen";
 import { ChangePasswordScreen } from "app/features/change-password/change-password-screen";
@@ -48,6 +49,7 @@ export type AppParamList = {
 		id: string;
 	};
 	settings: undefined;
+	addDebt: undefined;
 };
 
 const Stack = createNativeStackNavigator<AppParamList>();
@@ -171,6 +173,13 @@ export const NativeNavigation: React.FC = () => (
 			component={SettingsScreen}
 			options={{
 				title: "Settings",
+			}}
+		/>
+		<Stack.Screen
+			name="addDebt"
+			component={AddDebtScreen}
+			options={{
+				title: "Add debt",
 			}}
 		/>
 	</Stack.Navigator>

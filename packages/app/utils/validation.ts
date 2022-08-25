@@ -62,7 +62,7 @@ type NumberSchemaOptions = {
 	onlyPositive?: boolean;
 };
 
-const createNumberSchema = (
+export const createNumberSchema = (
 	name: string,
 	{ decimals = 2, onlyPositive = true }: NumberSchemaOptions = {}
 ) => {
@@ -77,17 +77,29 @@ const createNumberSchema = (
 	return schema;
 };
 
+export const nonZero = (schema: z.ZodNumber) =>
+	schema.refine((value) => value !== 0, "Value should not be zero");
+
 export const priceSchema = createNumberSchema("Price");
 export const quantitySchema = createNumberSchema("Quantity");
 export const partSchema = createNumberSchema("Part", { decimals: 5 });
-export const debtAmountSchema = createNumberSchema("Debt amount", {
-	onlyPositive: false,
-});
+export const clientDebtAmountSchema = nonZero(
+	createNumberSchema("Debt amount")
+);
 
 export const clientCurrencySchema = z.string().refine<Currency>(flavored);
 
+// TRPCQueryOutput<"currency.get-list">["list"][number]
 export const currencyObjectSchema = z.object({
 	code: clientCurrencySchema,
 	name: z.string().nonempty(),
 	symbol: z.string().nonempty(),
+});
+
+// TRPCInfiniteQueryOutput<"users.get-paged">["items"][number]
+export const userObjectSchema = z.object({
+	id: z.string().nonempty(),
+	name: z.string(),
+	publicName: z.union([z.string(), z.null()]),
+	email: z.union([z.string(), z.null()]),
 });
