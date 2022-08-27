@@ -3,7 +3,6 @@ import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
 import { AuthorizedContext } from "next-app/handlers/context";
-import { getUserById } from "next-app/handlers/users/utils";
 import { userIdSchema } from "next-app/handlers/validation";
 
 export const router = trpc.router<AuthorizedContext>().mutation("unlink", {
@@ -12,10 +11,23 @@ export const router = trpc.router<AuthorizedContext>().mutation("unlink", {
 	}),
 	resolve: async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
-		const user = await getUserById(database, input.id, [
-			"ownerAccountId",
-			"connectedAccountId",
-		]);
+		const user = await database
+			.selectFrom("users as usersMine")
+			.where("id", "=", input.id)
+			.innerJoin("accounts", (qb) =>
+				qb.on("accounts.id", "=", "usersMine.connectedAccountId")
+			)
+			.innerJoin("users as usersTheir", (qb) =>
+				qb
+					.on("usersTheir.connectedAccountId", "=", ctx.auth.accountId)
+					.onRef("usersTheir.ownerAccountId", "=", "accounts.id")
+			)
+			.select([
+				"usersMine.ownerAccountId",
+				"usersMine.connectedAccountId",
+				"usersTheir.id as theirUserId",
+			])
+			.executeTakeFirst();
 		if (!user) {
 			throw new trpc.TRPCError({
 				code: "PRECONDITION_FAILED",
@@ -34,10 +46,17 @@ export const router = trpc.router<AuthorizedContext>().mutation("unlink", {
 				message: `User ${input.id} doesn't have account connected to it`,
 			});
 		}
-		await database
-			.updateTable("users")
-			.set({ connectedAccountId: null })
-			.where("id", "=", input.id)
-			.executeTakeFirst();
+		await database.transaction().execute(async (tx) => {
+			await tx
+				.updateTable("users")
+				.set({ connectedAccountId: null })
+				.where("id", "=", input.id)
+				.executeTakeFirst();
+			await tx
+				.updateTable("users")
+				.set({ connectedAccountId: null })
+				.where("id", "=", user.theirUserId!)
+				.executeTakeFirst();
+		});
 	},
 });
