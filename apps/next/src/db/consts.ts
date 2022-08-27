@@ -71,3 +71,10 @@ export const DEBTS = {
 		OWNER_ID_DEBT_ID_PAIR: "debts:ownerAccountId:debtId:pair",
 	},
 } as const;
+
+export const DEBTS_SYNC_INTENTIONS = {
+	INDEXES: {
+		OWNER_ACCOUNT_ID: "debtsSyncIntentions:ownerAccountId:index",
+		DEBT_ID: "debtsSyncIntentions:debtId:index",
+	},
+} as const;

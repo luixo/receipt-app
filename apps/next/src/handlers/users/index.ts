@@ -8,6 +8,7 @@ import { router as getAvailableRouter } from "./get-available";
 import { router as getNameRouter } from "./get-name";
 import { router as getNotConnectedRouter } from "./get-not-connected";
 import { router as getPagedRouter } from "./get-paged";
+import { router as hasConnectedAccountRouter } from "./has-connected-account";
 import { router as putRouter } from "./put";
 import { router as unlinkRouter } from "./unlink";
 import { router as updateRouter } from "./update";
@@ -22,4 +23,5 @@ export const router = trpc
 	.merge(updateRouter)
 	.merge(getNameRouter)
 	.merge(unlinkRouter)
-	.merge(getNotConnectedRouter);
+	.merge(getNotConnectedRouter)
+	.merge(hasConnectedAccountRouter);

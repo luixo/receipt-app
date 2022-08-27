@@ -16,7 +16,18 @@ export const IconButton: React.FC<Props> = React.forwardRef(
 				auto
 				{...props}
 				css={{ $$buttonPadding: 0, ...props.css }}
-				icon={isLoading ? <Loading size="xs" /> : props.icon}
+				icon={
+					isLoading ? (
+						<Loading
+							size="xs"
+							color={
+								!props.color || props.color === "primary" ? "white" : undefined
+							}
+						/>
+					) : (
+						props.icon
+					)
+				}
 				ref={ref}
 			>
 				{isLoading ? undefined : props.children}

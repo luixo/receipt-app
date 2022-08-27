@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
 import { AuthorizedContext } from "next-app/handlers/context";
+import { getLockedStatus } from "next-app/handlers/debts-sync-intentions/utils";
 import { debtIdSchema } from "next-app/handlers/validation";
 
 export const router = trpc.router<AuthorizedContext>().query("get", {
@@ -11,7 +12,7 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 	}),
 	resolve: async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
-		const debt = await database
+		const maybeDebt = await database
 			.selectFrom("debts")
 			.where("debts.id", "=", input.id)
 			.where("debts.ownerAccountId", "=", ctx.auth.accountId)
@@ -22,18 +23,28 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 				"debts.note",
 				"debts.timestamp",
 				"debts.userId",
+				"debts.lockedTimestamp",
 			])
 			.executeTakeFirst();
-		if (!debt) {
+		if (!maybeDebt) {
 			throw new trpc.TRPCError({
 				code: "NOT_FOUND",
 				message: `Debt ${input.id} does not exist.`,
 			});
 		}
+		const [status, intentionDirection] = await getLockedStatus(
+			database,
+			input.id,
+			ctx.auth.accountId
+		);
+		const { amount, lockedTimestamp, ...debt } = maybeDebt;
 
 		return {
 			...debt,
-			amount: Number(debt.amount),
+			amount: Number(amount),
+			locked: Boolean(lockedTimestamp),
+			status,
+			intentionDirection,
 		};
 	},
 });

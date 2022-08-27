@@ -9,6 +9,7 @@ import { trpc, TRPCQuerySuccessResult } from "app/trpc";
 import { DebtsId } from "next-app/src/db/models";
 
 import { DebtAmountInput } from "./debt-amount-input";
+import { DebtControlButtons } from "./debt-control-buttons";
 import { DebtDateInput } from "./debt-date-input";
 import { DebtNoteInput } from "./debt-note-input";
 import { DebtRemoveButton } from "./debt-remove-button";
@@ -24,11 +25,16 @@ export const DebtInner: React.FC<InnerProps> = ({ query }) => {
 
 	return (
 		<>
-			<Header backHref={`/debts/user/${debt.userId}`}>Debt</Header>
+			<Header
+				backHref={`/debts/user/${debt.userId}`}
+				aside={<DebtControlButtons debt={debt} />}
+			>
+				Debt
+			</Header>
 			<Spacer y={1} />
 			<LoadableUser id={debt.userId} />
 			<Spacer y={1} />
-			<DebtSignButtonGroup disabled={isRemoving} debt={debt} />
+			<DebtSignButtonGroup debt={debt} disabled={isRemoving} />
 			<Spacer y={1} />
 			<DebtAmountInput debt={debt} isLoading={isRemoving} />
 			<Spacer y={1} />

@@ -12,11 +12,17 @@ import { useRouter } from "solito/router";
 import { QueryErrorMessage } from "app/components/error-message";
 import { MenuElement, Page } from "app/components/page";
 import { useConnectionIntentions } from "app/hooks/use-connection-intentions";
+import { useDebtsSyncIntentions } from "app/hooks/use-debts-sync-intentions";
 import { trpc } from "app/trpc";
 
 const PROTECTED_ELEMENTS: MenuElement[] = [
 	{ Icon: ReceiptsIcon, href: "/receipts", text: "Receipts" },
-	{ Icon: DebtsIcon, text: "Debts", href: "/debts" },
+	{
+		Icon: DebtsIcon,
+		text: "Debts",
+		href: "/debts",
+		useBadgeAmount: useDebtsSyncIntentions,
+	},
 	{
 		Icon: UsersIcon,
 		text: "Users",

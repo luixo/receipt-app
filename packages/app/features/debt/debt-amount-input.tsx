@@ -30,11 +30,16 @@ export const DebtAmountInput: React.FC<Props> = ({ debt, isLoading }) => {
 		bindings,
 		state: inputState,
 		getNumberValue,
+		setValue,
 	} = useSingleInput({
 		initialValue: absoluteAmount,
 		schema: clientDebtAmountSchema,
 		type: "number",
 	});
+	React.useEffect(
+		() => setValue(Math.abs(debt.amount)),
+		[debt.amount, setValue]
+	);
 
 	const updateMutation = trpc.useMutation(
 		"debts.update",
@@ -57,7 +62,7 @@ export const DebtAmountInput: React.FC<Props> = ({ debt, isLoading }) => {
 		<Input
 			{...bindings}
 			aria-label="Debt amount"
-			disabled={updateMutation.isLoading || isLoading}
+			disabled={updateMutation.isLoading || isLoading || debt.locked}
 			status={inputState.error ? "warning" : undefined}
 			helperColor={inputState.error ? "warning" : "error"}
 			helperText={inputState.error?.message || updateMutation.error?.message}
@@ -69,7 +74,7 @@ export const DebtAmountInput: React.FC<Props> = ({ debt, isLoading }) => {
 						title="Save debt amount"
 						light
 						isLoading={updateMutation.isLoading}
-						disabled={isLoading || Boolean(inputState.error)}
+						disabled={isLoading || Boolean(inputState.error) || debt.locked}
 						onClick={() => updateAmount(getNumberValue())}
 						icon={<CheckMark color="currentColor" size={24} />}
 						color={getNumberValue() === absoluteAmount ? undefined : "warning"}

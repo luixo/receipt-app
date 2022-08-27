@@ -28,6 +28,8 @@ export default interface Debts {
 	created: Date;
 
 	note: string;
+
+	lockedTimestamp: Date | null;
 }
 
 export interface DebtsInitializer {
@@ -52,4 +54,6 @@ export interface DebtsInitializer {
 	created: Date;
 
 	note: string;
+
+	lockedTimestamp?: Date | null;
 }

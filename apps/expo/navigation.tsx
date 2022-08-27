@@ -9,6 +9,7 @@ import { AddUserScreen } from "app/features/add-user/add-user-screen";
 import { ChangePasswordScreen } from "app/features/change-password/change-password-screen";
 import { ConnectionIntentionsScreen } from "app/features/connection-intentions/connection-intentions-screen";
 import { DebtScreen } from "app/features/debt/debt-screen";
+import { DebtsIntentionsScreen } from "app/features/debts-intentions/debts-intentions-screen";
 import { DebtsScreen } from "app/features/debts/debts-screen";
 import { HomeScreen } from "app/features/home/home-screen";
 import { LoginScreen } from "app/features/login/login-screen";
@@ -50,6 +51,7 @@ export type AppParamList = {
 	};
 	settings: undefined;
 	addDebt: undefined;
+	debtsSyncIntentions: undefined;
 };
 
 const Stack = createNativeStackNavigator<AppParamList>();
@@ -180,6 +182,13 @@ export const NativeNavigation: React.FC = () => (
 			component={AddDebtScreen}
 			options={{
 				title: "Add debt",
+			}}
+		/>
+		<Stack.Screen
+			name="debtsSyncIntentions"
+			component={DebtsIntentionsScreen}
+			options={{
+				title: "Debts sync intentions",
 			}}
 		/>
 	</Stack.Navigator>

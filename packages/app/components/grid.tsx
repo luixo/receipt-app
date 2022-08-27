@@ -9,7 +9,7 @@ import {
 } from "app/hooks/use-match-media-value";
 import { capitalize } from "app/utils/utils";
 
-type ColumnAmount = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
+type ColumnAmount = number;
 type ColumnAmountOrAuto = ColumnAmount | boolean;
 
 // Right from @nextui-org/react

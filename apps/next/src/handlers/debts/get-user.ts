@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
 import { AuthorizedContext } from "next-app/handlers/context";
+import { getLockedStatus } from "next-app/handlers/debts-sync-intentions/utils";
 import { userIdSchema } from "next-app/handlers/validation";
 
 export const router = trpc.router<AuthorizedContext>().query("get-user", {
@@ -32,14 +33,35 @@ export const router = trpc.router<AuthorizedContext>().query("get-user", {
 		const debts = await database
 			.selectFrom("debts")
 			.where("debts.userId", "=", input.userId)
-			.select(["id", "currency", "amount", "timestamp", "created", "note"])
+			.where("debts.ownerAccountId", "=", ctx.auth.accountId)
+			.select([
+				"id",
+				"currency",
+				"amount",
+				"timestamp",
+				"created",
+				"note",
+				"lockedTimestamp",
+			])
 			.orderBy("timestamp", "desc")
 			.orderBy("id")
 			.execute();
 
-		return debts.map((debt) => ({
-			...debt,
-			amount: Number(debt.amount),
-		}));
+		const statuses = await Promise.all(
+			debts.map((debt) =>
+				getLockedStatus(database, debt.id, ctx.auth.accountId)
+			)
+		);
+
+		return debts.map(({ amount, lockedTimestamp, ...debt }, index) => {
+			const [status, intentionDirection] = statuses[index]!;
+			return {
+				...debt,
+				locked: Boolean(lockedTimestamp),
+				amount: Number(amount),
+				status,
+				intentionDirection,
+			};
+		});
 	},
 });

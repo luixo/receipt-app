@@ -35,6 +35,7 @@ export const DateInput: React.FC<Props> = ({
 		initialValue: timestamp,
 		schema: z.date(),
 	});
+	React.useEffect(() => setValue(timestamp), [timestamp, setValue]);
 	const value = form.watch("value");
 	React.useEffect(() => {
 		if (!updateOnChange) {

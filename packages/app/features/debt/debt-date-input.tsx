@@ -12,10 +12,7 @@ type Props = {
 	isLoading: boolean;
 };
 
-export const DebtDateInput: React.FC<Props> = ({
-	debt,
-	isLoading: isOuterLoading,
-}) => {
+export const DebtDateInput: React.FC<Props> = ({ debt, isLoading }) => {
 	const updateMutation = trpc.useMutation(
 		"debts.update",
 		useTrpcMutationOptions(cache.debts.update.mutationOptions, debt)
@@ -40,7 +37,7 @@ export const DebtDateInput: React.FC<Props> = ({
 			loading={updateMutation.isLoading}
 			error={updateMutation.error}
 			timestamp={debt.timestamp}
-			disabled={isOuterLoading}
+			disabled={isLoading || debt.locked}
 			onUpdate={saveDate}
 		/>
 	);

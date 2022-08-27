@@ -24,7 +24,7 @@ export type TRPCMutationOptions<
 export type WithContextIfExists<
 	T,
 	Context = undefined
-> = Context extends undefined ? [T] : [T, Context];
+> = undefined extends Context ? [T] : [T, Context];
 
 export type UseContextedMutationOptions<
 	Path extends TRPCMutationKey,

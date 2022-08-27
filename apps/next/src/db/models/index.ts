@@ -6,6 +6,9 @@ import AccountConnectionsIntentions, {
 } from "./account-connections-intentions";
 import Accounts, { AccountsInitializer, AccountsId } from "./accounts";
 import Debts, { DebtsInitializer, DebtsId } from "./debts";
+import DebtsSyncIntentions, {
+	DebtsSyncIntentionsInitializer,
+} from "./debts-sync-intentions";
 import ItemParticipants, {
 	ItemParticipantsInitializer,
 } from "./item-participants";
@@ -35,6 +38,7 @@ type Model =
 	| AccountConnectionsIntentions
 	| Accounts
 	| Debts
+	| DebtsSyncIntentions
 	| ItemParticipants
 	| KyselyMigration
 	| KyselyMigrationLock
@@ -49,6 +53,7 @@ interface ModelTypeMap {
 	accountConnectionsIntentions: AccountConnectionsIntentions;
 	accounts: Accounts;
 	debts: Debts;
+	debtsSyncIntentions: DebtsSyncIntentions;
 	itemParticipants: ItemParticipants;
 	kysely_migration: KyselyMigration;
 	kysely_migration_lock: KyselyMigrationLock;
@@ -85,6 +90,7 @@ type Initializer =
 	| AccountConnectionsIntentionsInitializer
 	| AccountsInitializer
 	| DebtsInitializer
+	| DebtsSyncIntentionsInitializer
 	| ItemParticipantsInitializer
 	| KyselyMigrationInitializer
 	| KyselyMigrationLockInitializer
@@ -99,6 +105,7 @@ interface InitializerTypeMap {
 	accountConnectionsIntentions: AccountConnectionsIntentionsInitializer;
 	accounts: AccountsInitializer;
 	debts: DebtsInitializer;
+	debtsSyncIntentions: DebtsSyncIntentionsInitializer;
 	itemParticipants: ItemParticipantsInitializer;
 	kysely_migration: KyselyMigrationInitializer;
 	kysely_migration_lock: KyselyMigrationLockInitializer;
@@ -119,6 +126,8 @@ export type {
 	Debts,
 	DebtsInitializer,
 	DebtsId,
+	DebtsSyncIntentions,
+	DebtsSyncIntentionsInitializer,
 	ItemParticipants,
 	ItemParticipantsInitializer,
 	KyselyMigration,

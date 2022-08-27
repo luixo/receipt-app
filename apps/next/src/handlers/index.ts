@@ -7,6 +7,7 @@ import { router as accountConnectionIntentionsRouter } from "./account-connectio
 import { router as accountRouter } from "./account/index";
 import { router as authRouter } from "./auth";
 import { router as currencyRouter } from "./currency/index";
+import { router as debtsSyncIntentionsRouter } from "./debts-sync-intentions/index";
 import { router as debtsRouter } from "./debts/index";
 import { router as itemParticipantsRouter } from "./item-participants/index";
 import { middleware as verifyAuthorizedMiddleware } from "./middlewares/authorization";
@@ -34,4 +35,5 @@ export const router = trpc
 	.merge("currency.", currencyRouter)
 	.merge("item-participants.", itemParticipantsRouter)
 	.merge("account-connection-intentions.", accountConnectionIntentionsRouter)
-	.merge("debts.", debtsRouter);
+	.merge("debts.", debtsRouter)
+	.merge("debts-sync-intentions.", debtsSyncIntentionsRouter);

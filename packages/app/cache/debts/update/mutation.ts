@@ -1,6 +1,8 @@
 import { cache, Revert } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
+import { Currency } from "app/utils/currency";
+import { UsersId } from "next-app/db/models";
 
 type DebtSum = number;
 type DebtUserSnapshot = TRPCQueryOutput<"debts.get-user">[number];
@@ -16,6 +18,7 @@ const applySumUpdate = (
 			const delta = update.amount - prevAmount;
 			return sum + delta;
 		}
+		case "locked":
 		case "timestamp":
 		case "note":
 		case "currency":
@@ -36,6 +39,8 @@ const applyUserUpdate = (
 			return { ...item, note: update.note };
 		case "currency":
 			return { ...item, currency: update.currency };
+		case "locked":
+			return { ...item, locked: update.value };
 	}
 };
 
@@ -52,6 +57,8 @@ const applyUpdate = (
 			return { ...item, note: update.note };
 		case "currency":
 			return { ...item, currency: update.currency };
+		case "locked":
+			return { ...item, locked: update.value };
 	}
 };
 
@@ -70,6 +77,7 @@ const getSumRevert =
 			case "timestamp":
 			case "note":
 			case "currency":
+			case "locked":
 				return currentSum;
 		}
 	};
@@ -89,6 +97,8 @@ const getUserRevert =
 				return { ...debt, note: snapshot.note };
 			case "currency":
 				return { ...debt, currency: snapshot.currency };
+			case "locked":
+				return { ...debt, locked: snapshot.locked };
 		}
 	};
 
@@ -107,6 +117,8 @@ const getRevert =
 				return { ...debt, note: snapshot.note };
 			case "currency":
 				return { ...debt, currency: snapshot.currency };
+			case "locked":
+				return { ...debt, locked: snapshot.locked };
 		}
 	};
 
@@ -117,18 +129,18 @@ export const mutationOptions: UseContextedMutationOptions<
 		userRevert?: Revert<DebtUserSnapshot>;
 		revert?: Revert<DebtSnapshot>;
 	},
-	TRPCQueryOutput<"debts.get">
+	{ userId: UsersId; amount: number; currency: Currency }
 > = {
-	onMutate: (trpcContext, currDebt) => (updateObject) => {
+	onMutate: (trpcContext, currData) => (updateObject) => {
 		const updatedSum = cache.debts.getByUsers.update(
 			trpcContext,
-			currDebt.userId,
-			currDebt.currency,
-			(sum) => applySumUpdate(sum, currDebt.amount, updateObject.update)
+			currData.userId,
+			currData.currency,
+			(sum) => applySumUpdate(sum, currData.amount, updateObject.update)
 		);
 		const userSnapshot = cache.debts.getUser.update(
 			trpcContext,
-			currDebt.userId,
+			currData.userId,
 			updateObject.id,
 			(debt) => applyUserUpdate(debt, updateObject.update)
 		);
@@ -140,20 +152,39 @@ export const mutationOptions: UseContextedMutationOptions<
 		return {
 			sumRevert:
 				updatedSum !== undefined
-					? getSumRevert(updatedSum, currDebt.amount, updateObject.update)
+					? getSumRevert(updatedSum, currData.amount, updateObject.update)
 					: undefined,
 			userRevert:
 				userSnapshot && getUserRevert(userSnapshot, updateObject.update),
 			revert: snapshot && getRevert(snapshot, updateObject.update),
 		};
 	},
+	onSuccess: (trpcContext, currData) => (nextSyncData, updateObject) => {
+		if (updateObject.update.type !== "locked") {
+			return;
+		}
+		if (updateObject.update.value && nextSyncData) {
+			const [status, intentionDirection] = nextSyncData;
+			cache.debts.getUser.update(
+				trpcContext,
+				currData.userId,
+				updateObject.id,
+				(debt) => ({ ...debt, status, intentionDirection })
+			);
+			cache.debts.get.update(trpcContext, updateObject.id, (debt) => ({
+				...debt,
+				status,
+				intentionDirection,
+			}));
+		}
+	},
 	onError:
-		(trpcContext, currDebt) =>
+		(trpcContext, currData) =>
 		(_error, variables, { sumRevert, userRevert, revert } = {}) => {
 			if (sumRevert) {
 				cache.debts.getByUsers.update(
 					trpcContext,
-					currDebt.userId,
+					currData.userId,
 					variables.id,
 					sumRevert
 				);
@@ -161,7 +192,7 @@ export const mutationOptions: UseContextedMutationOptions<
 			if (userRevert) {
 				cache.debts.getUser.update(
 					trpcContext,
-					currDebt.userId,
+					currData.userId,
 					variables.id,
 					userRevert
 				);

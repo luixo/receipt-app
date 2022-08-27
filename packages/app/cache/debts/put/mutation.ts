@@ -19,6 +19,9 @@ const createUserDebt = (
 	created: new Date(),
 	timestamp: new Date(),
 	note: updateObject.note,
+	locked: false,
+	status: "nosync",
+	intentionDirection: undefined,
 });
 
 const createDebt = (
@@ -31,6 +34,9 @@ const createDebt = (
 	userId: updateObject.userId,
 	timestamp: new Date(),
 	note: updateObject.note,
+	locked: false,
+	status: "nosync",
+	intentionDirection: undefined,
 });
 
 export const mutationOptions: UseContextedMutationOptions<
