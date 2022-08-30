@@ -88,7 +88,10 @@ module.exports = {
 		"no-alert": "error",
 		"react-hooks/exhaustive-deps": [
 			"error",
-			{ additionalHooks: "(useAsyncCallback|useSubmitHandler)" },
+			{
+				additionalHooks:
+					"(useAsyncCallback|useSubmitHandler|useWindowSizeChange)",
+			},
 		],
 	},
 	overrides: [

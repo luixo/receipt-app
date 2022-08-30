@@ -4,9 +4,19 @@ import { Spacer, Text, styled } from "@nextui-org/react";
 import { IoMdArrowRoundBack as BackArrow } from "react-icons/io";
 import { useRouter } from "solito/router";
 
+import { useWindowSizeChange } from "app/hooks/use-window-size-change";
+
 const Wrapper = styled("div", {
 	display: "flex",
 	justifyContent: "space-between",
+
+	variants: {
+		column: {
+			true: {
+				flexDirection: "column",
+			},
+		},
+	},
 });
 
 const Title = styled(Text, {
@@ -24,6 +34,14 @@ const Aside = styled("div", {
 	display: "flex",
 	alignItems: "center",
 	flexShrink: 0,
+
+	variants: {
+		flexEnd: {
+			true: {
+				justifyContent: "flex-end",
+			},
+		},
+	},
 });
 
 type Props = {
@@ -47,8 +65,19 @@ export const Header: React.FC<Props> = ({
 		() => router.push(backHref!),
 		[router, backHref]
 	);
+	const [verticalLayout, setVerticalLayout] = React.useState(false);
+	const wrapperRef = React.useRef<HTMLDivElement>(null);
+	useWindowSizeChange(() => {
+		const container = wrapperRef.current;
+		if (!container) {
+			return;
+		}
+		container.style.flexDirection = "row";
+		setVerticalLayout(container.scrollWidth > container.offsetWidth);
+		container.style.flexDirection = "";
+	}, [setVerticalLayout, wrapperRef]);
 	return (
-		<Wrapper>
+		<Wrapper column={verticalLayout} ref={wrapperRef}>
 			<Title h2 {...props}>
 				{backHref ? (
 					<Icon onClick={back}>
@@ -59,14 +88,17 @@ export const Header: React.FC<Props> = ({
 				{children}
 			</Title>
 			{asideElements ? (
-				<Aside>
-					{asideElements.map((element, index) => (
-						<React.Fragment key={element.key}>
-							{index === 0 ? null : <Spacer x={0.5} />}
-							{element}
-						</React.Fragment>
-					))}
-				</Aside>
+				<>
+					{verticalLayout ? <Spacer y={1} /> : null}
+					<Aside flexEnd={verticalLayout}>
+						{asideElements.map((element, index) => (
+							<React.Fragment key={element.key}>
+								{index === 0 ? null : <Spacer x={0.5} />}
+								{element}
+							</React.Fragment>
+						))}
+					</Aside>
+				</>
 			) : null}
 		</Wrapper>
 	);
