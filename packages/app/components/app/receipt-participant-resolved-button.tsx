@@ -50,8 +50,7 @@ export const ReceiptParticipantResolvedButton: React.FC<Props> = ({
 			disabled={resolved === null || props.disabled}
 			color={resolved ? "success" : "warning"}
 			onClick={switchResolved}
-		>
-			{resolved ? <DoneIcon size={24} /> : <UndoneIcon size={24} />}
-		</IconButton>
+			icon={resolved ? <DoneIcon size={24} /> : <UndoneIcon size={24} />}
+		/>
 	);
 };
