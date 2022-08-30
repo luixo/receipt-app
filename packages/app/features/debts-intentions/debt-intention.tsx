@@ -58,7 +58,7 @@ export const DebtIntention: React.FC<Props> = ({ intention, children }) => {
 				<Wrapper css={{ justifyContent: "space-between" }}>
 					<Wrapper>
 						<SyncIcon size={24} />
-						<Text>{formatDateTime(intention.lockedTimestamp)}</Text>
+						<Text>{formatDateTime(intention.intentionTimestamp)}</Text>
 					</Wrapper>
 					{renderChildrenInline ? children : null}
 				</Wrapper>

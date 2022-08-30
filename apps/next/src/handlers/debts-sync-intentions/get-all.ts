@@ -12,7 +12,7 @@ type CommonIntention = {
 	currency: Currency;
 	amount: number;
 	timestamp: Date;
-	lockedTimestamp: Date;
+	intentionTimestamp: Date;
 	note: string;
 };
 
@@ -58,7 +58,7 @@ export const router = trpc.router<AuthorizedContext>().query("get-all", {
 						"debts.id",
 						"debts.ownerAccountId",
 						"debts.timestamp",
-						"debtsSyncIntentions.lockedTimestamp",
+						"debtsSyncIntentions.lockedTimestamp as intentionTimestamp",
 						"debts.amount",
 						"debts.currency",
 						"users.id as userId",
@@ -87,7 +87,7 @@ export const router = trpc.router<AuthorizedContext>().query("get-all", {
 								"debts.id",
 								"debts.ownerAccountId",
 								"debts.timestamp",
-								"debtsSyncIntentions.lockedTimestamp",
+								"debtsSyncIntentions.lockedTimestamp as intentionTimestamp",
 								"debts.amount",
 								"debts.currency",
 								"debts.userId",
@@ -99,7 +99,7 @@ export const router = trpc.router<AuthorizedContext>().query("get-all", {
 			)
 			.selectFrom("mergedIntentions")
 			.selectAll()
-			.orderBy("lockedTimestamp", "desc")
+			.orderBy("intentionTimestamp", "desc")
 			.execute();
 		return intentions.reduce<{
 			inbound: InboundIntention[];
@@ -111,7 +111,7 @@ export const router = trpc.router<AuthorizedContext>().query("get-all", {
 					userId: intention.userId,
 					amount: Number(intention.amount),
 					currency: intention.currency,
-					lockedTimestamp: intention.lockedTimestamp,
+					intentionTimestamp: intention.intentionTimestamp,
 					timestamp: intention.timestamp,
 					note: intention.note,
 				};

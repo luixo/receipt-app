@@ -16,15 +16,15 @@ export const mutationOptions: UseContextedMutationOptions<
 			amount: currDebt.amount,
 			currency: currDebt.currency,
 			timestamp: currDebt.timestamp,
-			lockedTimestamp: new Date(),
+			intentionTimestamp: new Date(),
 			note: currDebt.note,
 		});
 	},
-	onSuccess: (trpcContext, currDebt) => (lockedTimestamp, updateObject) => {
+	onSuccess: (trpcContext, currDebt) => (intentionTimestamp, updateObject) => {
 		cache.debtsSyncIntentions.getAll.outbound.update(
 			trpcContext,
 			updateObject.id,
-			(intention) => ({ ...intention, lockedTimestamp })
+			(intention) => ({ ...intention, intentionTimestamp })
 		);
 		cache.debts.get.update(trpcContext, updateObject.id, (debt) => ({
 			...debt,
