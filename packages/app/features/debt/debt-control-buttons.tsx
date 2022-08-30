@@ -164,7 +164,11 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 					debt.status === "nosync" ? null : (
 						<>
 							<Spacer x={0.5} />
-							<DebtSyncStatus debt={debt} size={size} />
+							<DebtSyncStatus
+								status={debt.status}
+								intentionDirection={debt.intentionDirection}
+								size={size}
+							/>
 						</>
 					)}
 					<VisibilityWrapper hidden={!debt.locked || debt.status === "sync"}>

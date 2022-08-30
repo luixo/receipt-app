@@ -7,16 +7,13 @@ import { Grid } from "app/components/grid";
 import { Link } from "app/components/link";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { TRPCQuerySuccessResult } from "app/trpc";
-import { UsersId } from "next-app/db/models";
 
 type Props = {
-	userId: UsersId;
 	debt: TRPCQuerySuccessResult<"debts.get-user">["data"][number];
 };
 
-export const UserDebtPreview: React.FC<Props> = ({ userId, debt }) => {
+export const UserDebtPreview: React.FC<Props> = ({ debt }) => {
 	const currency = useFormattedCurrency(debt.currency);
-	const statusDebt = React.useMemo(() => ({ ...debt, userId }), [debt, userId]);
 	return (
 		<Link href={`/debts/${debt.id}`} color="text">
 			<Grid.Container gap={2}>
@@ -29,7 +26,11 @@ export const UserDebtPreview: React.FC<Props> = ({ userId, debt }) => {
 					{new Date(debt.timestamp).toLocaleDateString()}
 				</Grid>
 				<Grid defaultCol={2}>
-					<DebtSyncStatus debt={statusDebt} size={24} />
+					<DebtSyncStatus
+						status={debt.status}
+						intentionDirection={debt.intentionDirection}
+						size={24}
+					/>
 				</Grid>
 				<Grid defaultCol={6} lessSmCol={12} lessMdCol={4} lessSmCss={{ pt: 0 }}>
 					{debt.note}

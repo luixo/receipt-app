@@ -32,7 +32,7 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 			{query.data.map((debt) => (
 				<React.Fragment key={debt.id}>
 					<Card.Divider />
-					<UserDebtPreview debt={debt} userId={userId} />
+					<UserDebtPreview debt={debt} />
 				</React.Fragment>
 			))}
 		</>

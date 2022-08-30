@@ -32,19 +32,18 @@ const StyledSyncIcon = styled(SyncIcon);
 const DirectionIcon = styled(OutcomingIcon);
 
 type Debt = TRPCQueryOutput<"debts.get">;
-type PartialDebt = Pick<Debt, "status" | "intentionDirection" | "locked">;
 
-const getContent = (debt: PartialDebt) => {
-	if (!debt.locked) {
-		return "Unlocked debt, cannot sync";
-	}
-	switch (debt.status) {
+const getContent = (
+	status: Debt["status"],
+	intentionDirection: Debt["intentionDirection"]
+) => {
+	switch (status) {
 		case "nosync":
 			return "Local debt, no sync";
 		case "sync":
 			return "In sync with a user";
 		case "unsync": {
-			switch (debt.intentionDirection) {
+			switch (intentionDirection) {
 				case "self":
 					return "Out of sync,\nour intention to sync was sent";
 				case "remote":
@@ -57,31 +56,34 @@ const getContent = (debt: PartialDebt) => {
 };
 
 type Props = {
-	debt: PartialDebt;
+	status: Debt["status"];
+	intentionDirection: Debt["intentionDirection"];
 	size: number;
 };
 
-export const DebtSyncStatus: React.FC<Props> = ({ size, debt }) => {
-	if (!debt.locked || debt.status === "nosync") {
+export const DebtSyncStatus: React.FC<Props> = ({
+	size,
+	status,
+	intentionDirection,
+}) => {
+	if (status === "nosync") {
 		return null;
 	}
 
 	return (
 		<Tooltip
-			content={getContent(debt)}
+			content={getContent(status, intentionDirection)}
 			css={{ whiteSpace: "pre" }}
 			placement="bottomEnd"
 		>
-			<Wrapper type={debt.status}>
+			<Wrapper type={status}>
 				<StyledSyncIcon
-					as={debt.status === "sync" ? SyncIcon : UnsyncIcon}
+					as={status === "sync" ? SyncIcon : UnsyncIcon}
 					css={{ size }}
 				/>
-				{debt.status === "sync" || !debt.intentionDirection ? null : (
+				{status === "sync" || !intentionDirection ? null : (
 					<DirectionIcon
-						as={
-							debt.intentionDirection === "self" ? OutcomingIcon : IncomingIcon
-						}
+						as={intentionDirection === "self" ? OutcomingIcon : IncomingIcon}
 						css={{ size, margin: `0 ${-(size / 4)}px` }}
 					/>
 				)}
