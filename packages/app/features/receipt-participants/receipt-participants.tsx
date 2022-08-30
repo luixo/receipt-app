@@ -3,10 +3,8 @@ import React from "react";
 import { Spacer, styled } from "@nextui-org/react";
 
 import { TRPCQueryOutput } from "app/trpc";
-import { rotate } from "app/utils/array";
 import { Currency } from "app/utils/currency";
-import { getIndexByString } from "app/utils/hash";
-import { calculateReceiptItemsWithSums } from "app/utils/receipt-item";
+import { getParticipantSums } from "app/utils/receipt-item";
 import { ReceiptsId } from "next-app/db/models";
 
 import { AddReceiptParticipantForm } from "./add-receipt-participant-form";
@@ -38,31 +36,10 @@ export const ReceiptParticipants: React.FC<Props> = ({
 	receiptId,
 	isLoading,
 }) => {
-	const participants = React.useMemo(() => {
-		const sortedParticipants = [...data.participants].sort(
-			(a, b) => a.added.valueOf() - b.added.valueOf()
-		);
-		const receiptItemsWithSums = calculateReceiptItemsWithSums(
-			data.items,
-			rotate(
-				sortedParticipants.map((participant) => participant.remoteUserId),
-				getIndexByString(receiptId)
-			)
-		);
-		return sortedParticipants.map((participant) => ({
-			...participant,
-			sum: data.items.reduce(
-				(acc, item) =>
-					acc +
-					(receiptItemsWithSums
-						.find((itemWithSum) => itemWithSum.id === item.id)!
-						.partsSums.find(
-							(partSum) => partSum.userId === participant.remoteUserId
-						)?.sum ?? 0),
-				0
-			),
-		}));
-	}, [data, receiptId]);
+	const participants = React.useMemo(
+		() => getParticipantSums(receiptId, data.items, data.participants),
+		[data, receiptId]
+	);
 	return (
 		<>
 			{participants.map((participant, index) => (

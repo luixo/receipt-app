@@ -1,8 +1,21 @@
-import { TRPCQueryOutput } from "app/trpc";
-import { ReceiptItemsId, UsersId } from "next-app/src/db/models";
+import { rotate } from "app/utils/array";
+import { getIndexByString } from "app/utils/hash";
+import { ReceiptItemsId, ReceiptsId, UsersId } from "next-app/src/db/models";
 
-type ReceiptItemsResult = TRPCQueryOutput<"receipt-items.get">;
-type ReceiptItem = ReceiptItemsResult["items"][number];
+type ReceiptItem = {
+	id: ReceiptItemsId;
+	quantity: number;
+	price: number;
+	parts: {
+		userId: UsersId;
+		part: number;
+	}[];
+};
+type ReceiptParticipant = {
+	added: Date;
+	localUserId: UsersId | null;
+	remoteUserId: UsersId;
+};
 
 type ReceiptItemWithSums = {
 	id: ReceiptItemsId;
@@ -10,7 +23,7 @@ type ReceiptItemWithSums = {
 	partsSums: { userId: UsersId; sum: number }[];
 };
 
-export const calculateReceiptItemsWithSums = (
+const calculateReceiptItemsWithSums = (
 	items: ReceiptItem[],
 	userIds: UsersId[],
 	decimalsDigits = 2
@@ -47,3 +60,33 @@ export const calculateReceiptItemsWithSums = (
 				})),
 		};
 	});
+
+export const getParticipantSums = <T extends ReceiptParticipant>(
+	receiptId: ReceiptsId,
+	items: ReceiptItem[],
+	participants: T[]
+) => {
+	const sortedParticipants = [...participants].sort(
+		(a, b) => a.added.valueOf() - b.added.valueOf()
+	);
+	const receiptItemsWithSums = calculateReceiptItemsWithSums(
+		items,
+		rotate(
+			sortedParticipants.map((participant) => participant.remoteUserId),
+			getIndexByString(receiptId)
+		)
+	);
+	return sortedParticipants.map((participant) => ({
+		...participant,
+		sum: items.reduce(
+			(acc, item) =>
+				acc +
+				(receiptItemsWithSums
+					.find((itemWithSum) => itemWithSum.id === item.id)!
+					.partsSums.find(
+						(partSum) => partSum.userId === participant.remoteUserId
+					)?.sum ?? 0),
+			0
+		),
+	}));
+};
