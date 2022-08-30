@@ -30,29 +30,33 @@ const getInboundIntentions = (
 	accountId: AccountsId
 ) =>
 	qc
-		.selectFrom("debtsSyncIntentions")
-		.where("debtsSyncIntentions.ownerAccountId", "<>", accountId)
-		.innerJoin("debts", (qb) =>
+		.selectFrom("users")
+		.where("users.connectedAccountId", "=", accountId)
+		.where("users.ownerAccountId", "<>", accountId)
+		.innerJoin("debts", (qb) => qb.onRef("debts.userId", "=", "users.id"))
+		.innerJoin("debtsSyncIntentions", (qb) =>
 			qb
-				.onRef("debts.id", "=", "debtsSyncIntentions.debtId")
+				.onRef("debtsSyncIntentions.debtId", "=", "debts.id")
 				.onRef(
-					"debts.ownerAccountId",
+					"debtsSyncIntentions.ownerAccountId",
+					"<>",
+					"users.connectedAccountId"
+				)
+		)
+		.leftJoin("debts as selfDebts", (qb) =>
+			qb
+				.onRef("debts.id", "=", "selfDebts.id")
+				.onRef("debts.ownerAccountId", "=", "users.connectedAccountId")
+		)
+		.innerJoin("users as usersMine", (qb) =>
+			qb
+				.onRef(
+					"usersMine.connectedAccountId",
 					"=",
 					"debtsSyncIntentions.ownerAccountId"
 				)
+				.onRef("usersMine.ownerAccountId", "=", "users.connectedAccountId")
 		)
-		.innerJoin("accounts", "accounts.id", "debts.ownerAccountId")
-		.innerJoin("users", "accounts.id", "users.connectedAccountId")
-		.leftJoin("debts as selfDebts", (qb) =>
-			qb
-				.onRef("selfDebts.id", "=", "debtsSyncIntentions.debtId")
-				.onRef(
-					"selfDebts.ownerAccountId",
-					"<>",
-					"debtsSyncIntentions.ownerAccountId"
-				)
-		)
-		.where("users.ownerAccountId", "=", accountId)
 		.select([
 			"debts.id",
 			"debts.ownerAccountId",
@@ -60,8 +64,15 @@ const getInboundIntentions = (
 			"debtsSyncIntentions.lockedTimestamp as intentionTimestamp",
 			"debts.amount",
 			"debts.currency",
-			"users.id as userId",
-			"debts.note",
+			"usersMine.id as userId",
+			sql`case
+				when "selfDebts".note is not null
+					then "selfDebts".note
+				else
+					"debts".note
+				end`
+				.castTo<string>()
+				.as("note"),
 			"selfDebts.amount as selfAmount",
 			"selfDebts.timestamp as selfTimestamp",
 		]);
@@ -72,16 +83,11 @@ const getOutboundIntentions = (
 ) =>
 	qc
 		.selectFrom("debtsSyncIntentions")
-		.where("debtsSyncIntentions.ownerAccountId", "=", accountId)
 		.innerJoin("debts", (qb) =>
-			qb
-				.onRef("debts.id", "=", "debtsSyncIntentions.debtId")
-				.onRef(
-					"debts.ownerAccountId",
-					"=",
-					"debtsSyncIntentions.ownerAccountId"
-				)
+			qb.onRef("debts.id", "=", "debtsSyncIntentions.debtId")
 		)
+		.where("debtsSyncIntentions.ownerAccountId", "=", accountId)
+		.where("debts.ownerAccountId", "=", accountId)
 		.select([
 			"debts.id",
 			"debts.ownerAccountId",
