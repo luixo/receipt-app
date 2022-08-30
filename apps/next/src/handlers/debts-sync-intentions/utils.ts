@@ -17,14 +17,13 @@ export const getDebtIntention = async (
 				.onRef("debts.id", "=", "debtsMine.id")
 				.on("debtsMine.ownerAccountId", "=", accountId)
 		)
-		.where("debtsMine.ownerAccountId", "=", accountId)
 		.leftJoin("debtsSyncIntentions", (qb) =>
 			qb.onRef("debts.id", "=", "debtsSyncIntentions.debtId")
 		)
 		.leftJoin("debts as debtsTheir", (qb) =>
 			qb
 				.onRef("debts.id", "=", "debtsTheir.id")
-				.onRef("debtsMine.ownerAccountId", "<>", "debtsTheir.ownerAccountId")
+				.on("debtsTheir.ownerAccountId", "<>", accountId)
 		)
 		.select([
 			"debtsSyncIntentions.ownerAccountId as intentionAccountId",
