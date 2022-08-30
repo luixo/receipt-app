@@ -11,7 +11,6 @@ import { ReceiptControlButtons } from "app/features/receipt/receipt-control-butt
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useMatchMediaValue } from "app/hooks/use-match-media-value";
 import { trpc, TRPCQuerySuccessResult } from "app/trpc";
-import { Currency } from "app/utils/currency";
 import { ReceiptsId } from "next-app/src/db/models";
 
 import { ReceiptCurrencyInput } from "./receipt-currency-input";
@@ -37,23 +36,16 @@ const Sum = styled("div", {
 type InnerProps = {
 	query: TRPCQuerySuccessResult<"receipts.get">;
 	deleteLoadingState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
-	setCurrency: React.Dispatch<React.SetStateAction<Currency | undefined>>;
 };
 
 export const ReceiptInner: React.FC<InnerProps> = ({
 	query,
 	deleteLoadingState: [deleteLoading, setDeleteLoading],
-	setCurrency,
 }) => {
 	const receipt = query.data;
-	React.useEffect(
-		() => setCurrency(receipt.currency),
-		[setCurrency, receipt.currency]
-	);
 
 	const [isEditing, { switchValue: switchEditing, setFalse: unsetEditing }] =
 		useBooleanState();
-
 	const asideButtons = (
 		<ReceiptControlButtons receipt={receipt} deleteLoading={deleteLoading} />
 	);

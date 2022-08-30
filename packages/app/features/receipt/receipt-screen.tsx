@@ -4,7 +4,6 @@ import { Spacer } from "@nextui-org/react";
 import { createParam } from "solito";
 
 import { ReceiptItems } from "app/features/receipt-items/receipt-items-screen";
-import { Currency } from "app/utils/currency";
 import { PageWithLayout } from "next-app/types/page";
 
 import { Receipt } from "./receipt";
@@ -18,21 +17,12 @@ export const ReceiptScreen: PageWithLayout = () => {
 	}
 
 	const deleteLoadingState = React.useState(false);
-	const [currency, setCurrency] = React.useState<Currency | undefined>();
 
 	return (
 		<>
-			<Receipt
-				deleteLoadingState={deleteLoadingState}
-				setCurrency={setCurrency}
-				id={id}
-			/>
+			<Receipt deleteLoadingState={deleteLoadingState} id={id} />
 			<Spacer y={1} />
-			<ReceiptItems
-				receiptId={id}
-				currency={currency}
-				isLoading={deleteLoadingState[0]}
-			/>
+			<ReceiptItems receiptId={id} isLoading={deleteLoadingState[0]} />
 		</>
 	);
 };
