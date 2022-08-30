@@ -15,7 +15,7 @@ const applyPagedUpdate = (
 			return { ...item, name: update.name };
 		case "issued":
 			return { ...item, issued: update.issued };
-		case "resolved":
+		case "locked":
 			return item;
 		case "currency":
 			return { ...item, currency: update.currency };
@@ -31,8 +31,8 @@ const applyUpdate = (
 			return { ...item, name: update.name };
 		case "issued":
 			return { ...item, issued: update.issued };
-		case "resolved":
-			return { ...item, resolved: update.resolved };
+		case "locked":
+			return { ...item, locked: update.value };
 		case "currency":
 			return { ...item, currency: update.currency };
 	}
@@ -49,8 +49,8 @@ const getRevert =
 				return { ...receipt, name: snapshot.name };
 			case "issued":
 				return { ...receipt, issued: snapshot.issued };
-			case "resolved":
-				return { ...receipt, resolved: snapshot.resolved };
+			case "locked":
+				return { ...receipt, resolved: snapshot.locked };
 			case "currency":
 				return { ...receipt, currency: snapshot.currency };
 		}
@@ -67,7 +67,7 @@ const getPagedRevert =
 				return { ...receipt, name: snapshot.name };
 			case "issued":
 				return { ...receipt, issued: snapshot.issued };
-			case "resolved":
+			case "locked":
 				return receipt;
 			case "currency":
 				return { ...receipt, currency: snapshot.currency };

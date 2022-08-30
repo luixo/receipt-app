@@ -23,6 +23,7 @@ type ButtonProps = React.ComponentProps<typeof Button>;
 type Props<T> = {
 	type: "linear" | "block";
 	buttons: T[];
+	disabled?: boolean;
 	extractDetails: (input: T) => { id: React.Key; name: string };
 	buttonProps?: ButtonProps | ((value: T) => ButtonProps);
 	onClick?: (value: T) => void;
@@ -33,6 +34,7 @@ type Props<T> = {
 
 export const ButtonsGroup = <T,>({
 	buttons,
+	disabled,
 	extractDetails,
 	buttonProps,
 	onClick,
@@ -55,6 +57,7 @@ export const ButtonsGroup = <T,>({
 						<Spacer x={0.25} />
 					)}
 					<Button
+						disabled={disabled}
 						{...evaluatedButtonProps}
 						onClick={() => onClick?.(button)}
 						css={

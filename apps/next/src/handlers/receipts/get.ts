@@ -42,7 +42,7 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 					"sum"
 				),
 				"receipts.ownerAccountId",
-				"receipts.resolved",
+				"receipts.lockedTimestamp",
 				"issued",
 				"receiptParticipants.resolved as participantResolved",
 				"usersMine.id as ownerUserId",
@@ -61,17 +61,19 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 				message: `No receipt ${input.id} found`,
 			});
 		}
-		const { ownerAccountId, ...receipt } = maybeReceipt;
+		const { ownerAccountId, lockedTimestamp, sum, ...receipt } = maybeReceipt;
 		const accessRole = await getAccessRole(
 			database,
 			{ ownerAccountId, id: input.id },
 			ctx.auth.accountId
 		);
 		if (accessRole) {
-			return { ...receipt, sum: Number(receipt.sum), role: accessRole } as Omit<
-				typeof receipt,
-				"sum"
-			> & { role: Role; sum: number };
+			return {
+				...receipt,
+				sum: Number(sum),
+				role: accessRole,
+				locked: Boolean(lockedTimestamp),
+			} as typeof receipt & { role: Role; sum: number; locked: boolean };
 		}
 		throw new trpc.TRPCError({
 			code: "FORBIDDEN",

@@ -25,9 +25,23 @@ export const router = trpc.router<AuthorizedContext>().mutation("delete", {
 				message: `User ${input.id} is not owned by ${ctx.auth.accountId}`,
 			});
 		}
-		await database
-			.deleteFrom("users")
-			.where("id", "=", input.id)
-			.executeTakeFirst();
+		await database.transaction().execute(async (tx) => {
+			await tx
+				.updateTable("receipts")
+				.innerJoin(
+					"receiptParticipants",
+					"receiptParticipants.receiptId",
+					"receipts.id"
+				)
+				.where("receiptParticipants.userId", "=", input.id)
+				.set({
+					lockedTimestamp: null,
+				})
+				.execute();
+			await tx
+				.deleteFrom("users")
+				.where("id", "=", input.id)
+				.executeTakeFirst();
+		});
 	},
 });

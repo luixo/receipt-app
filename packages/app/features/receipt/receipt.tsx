@@ -3,16 +3,16 @@ import React from "react";
 import { Loading, Spacer, styled, Text } from "@nextui-org/react";
 import { MdEdit as EditIcon } from "react-icons/md";
 
-import { ReceiptAccountedButton } from "app/components/app/receipt-accounted-button";
-import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
 import { QueryErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
 import { IconButton } from "app/components/icon-button";
 import { ShrinkText } from "app/components/shrink-text";
+import { ReceiptControlButtons } from "app/features/receipt/receipt-control-buttons";
 import { useBooleanState } from "app/hooks/use-boolean-state";
+import { useMatchMediaValue } from "app/hooks/use-match-media-value";
 import { trpc, TRPCQuerySuccessResult } from "app/trpc";
 import { Currency } from "app/utils/currency";
-import { ReceiptsId, UsersId } from "next-app/src/db/models";
+import { ReceiptsId } from "next-app/src/db/models";
 
 import { ReceiptCurrencyInput } from "./receipt-currency-input";
 import { ReceiptDateInput } from "./receipt-date-input";
@@ -45,7 +45,6 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 	deleteLoadingState: [deleteLoading, setDeleteLoading],
 	setCurrency,
 }) => {
-	const accountQuery = trpc.useQuery(["account.get"]);
 	const receipt = query.data;
 	React.useEffect(
 		() => setCurrency(receipt.currency),
@@ -54,36 +53,11 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 
 	const [isEditing, { switchValue: switchEditing, setFalse: unsetEditing }] =
 		useBooleanState();
-	const asideButtons = React.useMemo(
-		() => [
-			<ReceiptParticipantResolvedButton
-				key="resolved"
-				ghost
-				receiptId={receipt.id}
-				remoteUserId={receipt.selfUserId}
-				// Typesystem doesn't know that we use account id as self user id
-				localUserId={accountQuery.data?.id! as UsersId}
-				resolved={receipt.participantResolved}
-				disabled={deleteLoading || accountQuery.status !== "success"}
-			/>,
-			<ReceiptAccountedButton
-				key="accounted"
-				ghost
-				receiptId={receipt.id}
-				resolved={receipt.resolved}
-				disabled={deleteLoading}
-			/>,
-		],
-		[
-			accountQuery.data?.id,
-			accountQuery.status,
-			deleteLoading,
-			receipt.id,
-			receipt.resolved,
-			receipt.participantResolved,
-			receipt.selfUserId,
-		]
+
+	const asideButtons = (
+		<ReceiptControlButtons receipt={receipt} deleteLoading={deleteLoading} />
 	);
+	const dataDirection = useMatchMediaValue("row", { lessSm: "column" });
 
 	return (
 		<>
@@ -92,23 +66,23 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 				icon="🧾"
 				aside={isEditing ? undefined : asideButtons}
 			>
-				{isEditing && query.data.role === "owner" ? (
+				{isEditing && receipt.role === "owner" ? (
 					<ReceiptNameInput
-						receipt={query.data}
+						receipt={receipt}
 						isLoading={deleteLoading}
 						unsetEditing={unsetEditing}
 					/>
 				) : (
 					<ShrinkText fontSizeMin={16} fontSizeStep={2}>
-						{query.data.name}
+						{receipt.name}
 					</ShrinkText>
 				)}
-				{query.data.role === "owner" && !isEditing ? (
+				{receipt.role === "owner" && !isEditing ? (
 					<IconButton
 						auto
 						light
 						onClick={switchEditing}
-						disabled={deleteLoading}
+						disabled={deleteLoading || receipt.locked}
 						css={{ ml: "$4" }}
 					>
 						<EditIcon size={24} />
@@ -116,7 +90,7 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 				) : null}
 			</Header>
 			<Spacer y={1} />
-			<Body>
+			<Body css={{ flexDirection: dataDirection }}>
 				<div>
 					<ReceiptDateInput receipt={receipt} isLoading={deleteLoading} />
 					<Spacer y={0.5} />
@@ -127,6 +101,7 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 						<ReceiptCurrencyInput receipt={receipt} isLoading={deleteLoading} />
 					</Sum>
 				</div>
+				{dataDirection === "column" ? <Spacer y={0.5} /> : null}
 				<ReceiptOwner receipt={receipt} />
 			</Body>
 			{receipt.role === "owner" ? (
@@ -137,12 +112,6 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 						setLoading={setDeleteLoading}
 					/>
 				</AlignEndView>
-			) : null}
-			{accountQuery.status === "error" ? (
-				<>
-					<Spacer y={1} />
-					<QueryErrorMessage query={accountQuery} />
-				</>
 			) : null}
 		</>
 	);

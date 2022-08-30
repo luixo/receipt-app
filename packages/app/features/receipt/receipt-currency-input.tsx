@@ -43,7 +43,7 @@ export const ReceiptCurrencyInput: React.FC<Props> = ({
 				auto
 				light
 				onClick={openModal}
-				disabled={isLoading}
+				disabled={isLoading || receipt.role !== "owner" || receipt.locked}
 				isLoading={updateReceiptMutation.isLoading}
 				css={{
 					p: 0,

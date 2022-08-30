@@ -17,6 +17,7 @@ const NoReceiptItems = styled("div", {
 
 type InnerProps = {
 	receiptId: ReceiptsId;
+	receiptLocked?: boolean;
 	currency?: Currency;
 	query: TRPCQuerySuccessResult<"receipt-items.get">;
 	isLoading: boolean;
@@ -25,6 +26,7 @@ type InnerProps = {
 export const ReceiptItemsInner: React.FC<InnerProps> = ({
 	query: { data },
 	receiptId,
+	receiptLocked = true,
 	currency,
 	isLoading,
 }) => (
@@ -39,18 +41,24 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 			<ReceiptParticipants
 				data={data}
 				receiptId={receiptId}
+				receiptLocked={receiptLocked}
 				currency={currency}
 				isLoading={isLoading}
 			/>
 		</Collapse>
 		<Spacer y={1} />
-		<AddReceiptItemController receiptId={receiptId} isLoading={isLoading} />
+		<AddReceiptItemController
+			receiptId={receiptId}
+			receiptLocked={receiptLocked}
+			isLoading={isLoading}
+		/>
 		<Spacer y={1} />
 		{data.items.map((receiptItem, index) => (
 			<React.Fragment key={receiptItem.id}>
 				{index === 0 ? null : <Spacer y={1} />}
 				<ReceiptItem
 					receiptId={receiptId}
+					receiptLocked={receiptLocked}
 					receiptItem={receiptItem}
 					receiptParticipants={data.participants}
 					currency={currency}

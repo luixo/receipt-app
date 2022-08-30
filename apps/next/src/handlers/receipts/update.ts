@@ -3,7 +3,7 @@ import { MutationObject } from "kysely";
 import { z } from "zod";
 
 import { receiptNameSchema } from "app/utils/validation";
-import { ReceiptsDatabase, getDatabase } from "next-app/db";
+import { ReceiptsDatabase, getDatabase, Database } from "next-app/db";
 import { AuthorizedContext } from "next-app/handlers/context";
 import { getReceiptById } from "next-app/handlers/receipts/utils";
 import { currencySchema, receiptIdSchema } from "next-app/handlers/validation";
@@ -17,7 +17,7 @@ export const router = trpc.router<AuthorizedContext>().mutation("update", {
 				name: receiptNameSchema,
 			}),
 			z.strictObject({ type: z.literal("issued"), issued: z.date() }),
-			z.strictObject({ type: z.literal("resolved"), resolved: z.boolean() }),
+			z.strictObject({ type: z.literal("locked"), value: z.boolean() }),
 			z.strictObject({ type: z.literal("currency"), currency: currencySchema }),
 		]),
 	}),
@@ -25,6 +25,7 @@ export const router = trpc.router<AuthorizedContext>().mutation("update", {
 		const database = getDatabase(ctx);
 		const receipt = await getReceiptById(database, input.id, [
 			"ownerAccountId",
+			"lockedTimestamp",
 		]);
 		if (!receipt) {
 			throw new trpc.TRPCError({
@@ -32,13 +33,54 @@ export const router = trpc.router<AuthorizedContext>().mutation("update", {
 				message: `No receipt found by id ${input.id}`,
 			});
 		}
-		if (input.update.type === "name" || input.update.type === "issued") {
+		if (receipt.ownerAccountId !== ctx.auth.accountId) {
+			throw new trpc.TRPCError({
+				code: "UNAUTHORIZED",
+				message: `Receipt ${input.id} is not owned by ${ctx.auth.accountId}`,
+			});
+		}
+
+		const updateTable = (
+			localDatabase: Database,
+			setObject: MutationObject<ReceiptsDatabase, "receipts", "receipts">
+		) =>
+			localDatabase
+				.updateTable("receipts")
+				.set(setObject)
+				.where("id", "=", input.id)
+				.executeTakeFirst();
+
+		if (input.update.type === "locked") {
 			if (receipt.ownerAccountId !== ctx.auth.accountId) {
 				throw new trpc.TRPCError({
 					code: "UNAUTHORIZED",
-					message: `Receipt ${input.id} is not owned by ${ctx.auth.accountId}`,
+					message: `You don't have rights to change ${input.id} receipt locked state.`,
 				});
 			}
+			if (input.update.value) {
+				if (receipt.lockedTimestamp) {
+					throw new trpc.TRPCError({
+						code: "CONFLICT",
+						message: `Receipt ${input.id} is already locked.`,
+					});
+				}
+				await updateTable(database, { lockedTimestamp: new Date() });
+				return;
+			}
+			if (!receipt.lockedTimestamp) {
+				throw new trpc.TRPCError({
+					code: "CONFLICT",
+					message: `Receipt ${input.id} is not locked.`,
+				});
+			}
+			await updateTable(database, { lockedTimestamp: null });
+			return;
+		}
+		if (receipt.lockedTimestamp) {
+			throw new trpc.TRPCError({
+				code: "FORBIDDEN",
+				message: `Receipt ${input.id} cannot be updated while locked.`,
+			});
 		}
 		let setObject: MutationObject<ReceiptsDatabase, "receipts", "receipts"> =
 			{};
@@ -52,14 +94,7 @@ export const router = trpc.router<AuthorizedContext>().mutation("update", {
 			case "name":
 				setObject = { name: input.update.name };
 				break;
-			case "resolved":
-				setObject = { resolved: input.update.resolved };
-				break;
 		}
-		await database
-			.updateTable("receipts")
-			.set(setObject)
-			.where("id", "=", input.id)
-			.executeTakeFirst();
+		await updateTable(database, setObject);
 	},
 });

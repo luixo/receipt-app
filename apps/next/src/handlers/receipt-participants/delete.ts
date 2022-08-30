@@ -17,6 +17,7 @@ export const router = trpc.router<AuthorizedContext>().mutation("delete", {
 		const database = getDatabase(ctx);
 		const receipt = await getReceiptById(database, input.receiptId, [
 			"ownerAccountId",
+			"lockedTimestamp",
 		]);
 		if (!receipt) {
 			throw new trpc.TRPCError({
@@ -27,7 +28,7 @@ export const router = trpc.router<AuthorizedContext>().mutation("delete", {
 		if (receipt.ownerAccountId !== ctx.auth.accountId) {
 			throw new trpc.TRPCError({
 				code: "FORBIDDEN",
-				message: `Not enough rights to add participants to receipt ${input.receiptId}.`,
+				message: `Not enough rights to remove participants from receipt ${input.receiptId}.`,
 			});
 		}
 		const user = await getUserById(database, input.userId, ["ownerAccountId"]);
@@ -40,7 +41,7 @@ export const router = trpc.router<AuthorizedContext>().mutation("delete", {
 		if (user.ownerAccountId !== ctx.auth.accountId) {
 			throw new trpc.TRPCError({
 				code: "FORBIDDEN",
-				message: `Not enough rights to add user ${input.userId} to a receipt.`,
+				message: `Not enough rights to remove a user ${input.userId} from receipt ${input.receiptId}.`,
 			});
 		}
 		const receiptParticipant = await getReceiptParticipant(
@@ -53,6 +54,12 @@ export const router = trpc.router<AuthorizedContext>().mutation("delete", {
 			throw new trpc.TRPCError({
 				code: "NOT_FOUND",
 				message: `User ${input.userId} does not participate in receipt ${input.receiptId}.`,
+			});
+		}
+		if (receipt.lockedTimestamp) {
+			throw new trpc.TRPCError({
+				code: "FORBIDDEN",
+				message: `Receipt ${input.receiptId} cannot be updated while locked.`,
 			});
 		}
 

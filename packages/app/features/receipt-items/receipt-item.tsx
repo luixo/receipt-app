@@ -29,6 +29,7 @@ type EveryParticipantTag = "__ALL__";
 const EVERY_PARTICIPANT_TAG: EveryParticipantTag = "__ALL__";
 
 type Props = {
+	receiptLocked: boolean;
 	receiptId: ReceiptsId;
 	receiptItem: ReceiptItems[number];
 	receiptParticipants: ReceiptParticipant[];
@@ -38,6 +39,7 @@ type Props = {
 };
 
 export const ReceiptItem: React.FC<Props> = ({
+	receiptLocked,
 	receiptItem,
 	receiptParticipants,
 	receiptId,
@@ -102,7 +104,7 @@ export const ReceiptItem: React.FC<Props> = ({
 				<ReceiptItemNameInput
 					receiptId={receiptId}
 					receiptItem={receiptItem}
-					readOnly={isEditingDisabled}
+					readOnly={isEditingDisabled || receiptLocked}
 					isLoading={isDeleteLoading}
 				/>
 				<ReceiptItemLockedButton
@@ -120,17 +122,19 @@ export const ReceiptItem: React.FC<Props> = ({
 						receiptId={receiptId}
 						receiptItem={receiptItem}
 						currency={currency}
-						readOnly={isEditingDisabled}
+						readOnly={isEditingDisabled || receiptLocked}
 						isLoading={isDeleteLoading}
 					/>
 					<ReceiptItemQuantityInput
 						receiptId={receiptId}
 						receiptItem={receiptItem}
-						readOnly={isEditingDisabled}
+						readOnly={isEditingDisabled || receiptLocked}
 						isLoading={isDeleteLoading}
 					/>
 				</Sum>
-				{isEditingDisabled || notAddedParticipants.length === 0 ? null : (
+				{receiptLocked ||
+				isEditingDisabled ||
+				notAddedParticipants.length === 0 ? null : (
 					<>
 						<Spacer y={1} />
 						<ButtonsGroup<ReceiptParticipant | EveryParticipantTag>
@@ -159,11 +163,12 @@ export const ReceiptItem: React.FC<Props> = ({
 									  }
 							}
 							onClick={addParticipant}
+							disabled={receiptLocked}
 						/>
 					</>
 				)}
 				{receiptItem.parts.length === 0 ? (
-					notAddedParticipants.length === 0 ? null : (
+					notAddedParticipants.length === 0 || receiptLocked ? null : (
 						<>
 							<Spacer y={0.5} />
 							<Card.Divider />
@@ -199,7 +204,7 @@ export const ReceiptItem: React.FC<Props> = ({
 										itemParts={itemParts}
 										participant={matchedParticipant}
 										receiptItemId={receiptItem.id}
-										readOnly={isEditingDisabled}
+										readOnly={isEditingDisabled || receiptLocked}
 										isLoading={isDeleteLoading}
 									/>
 								</React.Fragment>
@@ -214,6 +219,7 @@ export const ReceiptItem: React.FC<Props> = ({
 					<Card.Footer css={{ justifyContent: "flex-end" }}>
 						<RemoveButton
 							onRemove={removeItem}
+							disabled={receiptLocked}
 							mutation={removeReceiptItemMutation}
 							subtitle="This will remove item with all participant's parts"
 							noConfirm={receiptItem.parts.length === 0}

@@ -7,6 +7,7 @@ import { rotate } from "app/utils/array";
 import { Currency } from "app/utils/currency";
 import { getIndexByString } from "app/utils/hash";
 import { calculateReceiptItemsWithSums } from "app/utils/receipt-item";
+import { ReceiptsId } from "next-app/db/models";
 
 import { AddReceiptParticipantForm } from "./add-receipt-participant-form";
 import { ReceiptParticipant } from "./receipt-participant";
@@ -24,13 +25,15 @@ const SpacerWithBorder = styled(Spacer, {
 
 type Props = {
 	data: TRPCQueryOutput<"receipt-items.get">;
-	receiptId: TRPCQueryOutput<"receipts.get">["id"];
+	receiptId: ReceiptsId;
+	receiptLocked: boolean;
 	currency?: Currency;
 	isLoading: boolean;
 };
 
 export const ReceiptParticipants: React.FC<Props> = ({
 	data,
+	receiptLocked,
 	currency,
 	receiptId,
 	isLoading,
@@ -67,6 +70,7 @@ export const ReceiptParticipants: React.FC<Props> = ({
 					{index === 0 ? null : <Spacer y={0.5} />}
 					<ReceiptParticipant
 						receiptId={receiptId}
+						receiptLocked={receiptLocked}
 						participant={participant}
 						role={data.role}
 						currency={currency}
@@ -77,7 +81,11 @@ export const ReceiptParticipants: React.FC<Props> = ({
 				</React.Fragment>
 			))}
 			{data.role !== "owner" ? null : (
-				<AddReceiptParticipantForm disabled={isLoading} receiptId={receiptId} />
+				<AddReceiptParticipantForm
+					disabled={isLoading}
+					receiptId={receiptId}
+					receiptLocked={receiptLocked}
+				/>
 			)}
 		</>
 	);

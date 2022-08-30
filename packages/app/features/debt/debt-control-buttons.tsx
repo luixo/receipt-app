@@ -1,10 +1,7 @@
 import React from "react";
 
-import { Loading, Spacer, styled, Tooltip } from "@nextui-org/react";
+import { Spacer, styled } from "@nextui-org/react";
 import {
-	MdSync as SyncIcon,
-	MdOutlineLock as LockedIcon,
-	MdOutlineLockOpen as UnlockedIcon,
 	MdSend as SendIcon,
 	MdCancel as CancelIcon,
 	MdCheckCircle as AcceptIcon,
@@ -14,6 +11,7 @@ import { cache } from "app/cache";
 import { DebtSyncStatus } from "app/components/app/debt-sync-status";
 import { MutationErrorMessage } from "app/components/error-message";
 import { IconButton } from "app/components/icon-button";
+import { LockedIcon } from "app/components/locked-icon";
 import { useMatchMediaValue } from "app/hooks/use-match-media-value";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
@@ -38,23 +36,6 @@ const VisibilityWrapper = styled("div", {
 const Buttons = styled("div", {
 	display: "flex",
 	gap: "$6",
-});
-
-const StyledSyncIcon = styled(SyncIcon, {
-	color: "$success",
-
-	variants: {
-		disabled: {
-			true: {
-				color: "$accents1",
-			},
-		},
-		unlocked: {
-			true: {
-				color: "$warning",
-			},
-		},
-	},
 });
 
 const getLockedContent = (locked: boolean) => {
@@ -163,23 +144,19 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 
 	return (
 		<Wrapper>
-			<Tooltip
-				content={getLockedContent(debt.locked)}
-				css={{ whiteSpace: "pre" }}
-				placement="bottomEnd"
-			>
-				{lockMutation.isLoading ? (
-					<Loading color="currentColor" />
-				) : (
-					<StyledSyncIcon
-						disabled={isMutationLoading}
-						unlocked={!debt.locked}
-						onClick={isMutationLoading ? undefined : mutateLock}
-						as={debt.locked ? LockedIcon : UnlockedIcon}
-						css={{ size }}
+			<IconButton
+				isLoading={lockMutation.isLoading}
+				disabled={isMutationLoading}
+				onClick={mutateLock}
+				ghost
+				color={debt.locked ? "success" : "warning"}
+				icon={
+					<LockedIcon
+						locked={debt.locked}
+						tooltip={getLockedContent(debt.locked)}
 					/>
-				)}
-			</Tooltip>
+				}
+			/>
 			{showConnectionStatus && !lockMutation.isLoading ? (
 				<>
 					{isMutationLoading ||

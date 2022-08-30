@@ -32,11 +32,18 @@ export const router = trpc.router<AuthorizedContext>().mutation("delete", {
 		const receipt = await getReceiptById(database, receiptItem.receiptId, [
 			"id",
 			"ownerAccountId",
+			"lockedTimestamp",
 		]);
 		if (!receipt) {
 			throw new trpc.TRPCError({
 				code: "NOT_FOUND",
 				message: `Receipt ${receiptItem.receiptId} does not exist.`,
+			});
+		}
+		if (receipt.lockedTimestamp) {
+			throw new trpc.TRPCError({
+				code: "FORBIDDEN",
+				message: `Receipt ${receiptItem.receiptId} cannot be updated while locked.`,
 			});
 		}
 		const accessRole = await getAccessRole(

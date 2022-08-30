@@ -32,12 +32,14 @@ const Inputs = styled("div", {
 
 type Props = {
 	receiptId: ReceiptsId;
+	receiptLocked: boolean;
 	isLoading: boolean;
 	onDone: () => void;
 };
 
 export const AddReceiptItemForm: React.FC<Props> = ({
 	receiptId,
+	receiptLocked,
 	isLoading: isDeleteLoading,
 	onDone,
 }) => {
@@ -84,7 +86,7 @@ export const AddReceiptItemForm: React.FC<Props> = ({
 			<Spacer y={1} />
 			<Button
 				onClick={form.handleSubmit(onSubmit)}
-				disabled={!form.formState.isValid || isLoading}
+				disabled={!form.formState.isValid || isLoading || receiptLocked}
 				css={{ width: "100%" }}
 			>
 				{addMutation.isLoading ? <Loading size="xs" /> : "Save"}

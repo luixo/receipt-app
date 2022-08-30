@@ -38,7 +38,7 @@ export const ReceiptDateInput: React.FC<Props> = ({
 			loading={updateReceiptMutation.isLoading}
 			error={updateReceiptMutation.error}
 			timestamp={receipt.issued}
-			disabled={receipt.role !== "owner" || isOuterLoading}
+			disabled={receipt.role !== "owner" || receipt.locked || isOuterLoading}
 			onUpdate={saveDate}
 		/>
 	);

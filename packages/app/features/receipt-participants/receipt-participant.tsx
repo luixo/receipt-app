@@ -31,6 +31,7 @@ const BodyElement = styled("div", {
 
 type Props = {
 	receiptId: ReceiptsId;
+	receiptLocked: boolean;
 	participant: TRPCQueryOutput<"receipt-items.get">["participants"][number] & {
 		sum: number;
 	};
@@ -42,6 +43,7 @@ type Props = {
 export const ReceiptParticipant: React.FC<Props> = ({
 	participant,
 	receiptId,
+	receiptLocked,
 	role,
 	currency,
 	isLoading,
@@ -110,6 +112,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 						<RemoveButton
 							onRemove={deleteReceiptParticipant}
 							mutation={deleteReceiptParticipantMutation}
+							disabled={receiptLocked}
 							subtitle="This will remove participant with all his parts"
 							noConfirm={participant.sum === 0}
 						/>

@@ -18,11 +18,13 @@ import { ParticipantPicker } from "./participant-picker";
 
 type Props = {
 	receiptId: ReceiptsId;
+	receiptLocked: boolean;
 	disabled: boolean;
 };
 
 export const AddReceiptParticipantForm: React.FC<Props> = ({
 	receiptId,
+	receiptLocked,
 	disabled,
 }) => {
 	const [modalOpen, { setTrue: openModal, setFalse: closeModal }] =
@@ -89,7 +91,7 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 			<Button
 				bordered
 				icon={<AddIcon size={24} />}
-				disabled={disabled}
+				disabled={disabled || receiptLocked}
 				onClick={openModal}
 				css={{ margin: "0 auto" }}
 			>

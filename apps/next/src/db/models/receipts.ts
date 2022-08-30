@@ -20,7 +20,7 @@ export default interface Receipts {
 
 	issued: Date;
 
-	resolved: boolean;
+	lockedTimestamp: Date | null;
 }
 
 export interface ReceiptsInitializer {
@@ -38,6 +38,5 @@ export interface ReceiptsInitializer {
 
 	issued: Date;
 
-	/** Default value: false */
-	resolved?: boolean;
+	lockedTimestamp?: Date | null;
 }

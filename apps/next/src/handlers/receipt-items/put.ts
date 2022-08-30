@@ -27,11 +27,18 @@ export const router = trpc.router<AuthorizedContext>().mutation("put", {
 		const receipt = await getReceiptById(database, input.receiptId, [
 			"ownerAccountId",
 			"id",
+			"lockedTimestamp",
 		]);
 		if (!receipt) {
 			throw new trpc.TRPCError({
 				code: "PRECONDITION_FAILED",
 				message: `No receipt found by id ${input.receiptId}`,
+			});
+		}
+		if (receipt.lockedTimestamp) {
+			throw new trpc.TRPCError({
+				code: "FORBIDDEN",
+				message: `Receipt ${input.receiptId} cannot be updated while locked.`,
 			});
 		}
 		const accessRole = await getAccessRole(
