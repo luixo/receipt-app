@@ -1,9 +1,11 @@
 import React from "react";
 
 import { Button, Spacer } from "@nextui-org/react";
+import { useRouter } from "solito/router";
 
 import { cache } from "app/cache";
 import { MutationErrorMessage } from "app/components/error-message";
+import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 
@@ -14,6 +16,8 @@ type Props = {
 };
 
 export const InboundDebtIntention: React.FC<Props> = ({ intention }) => {
+	const router = useRouter();
+
 	const acceptMutation = trpc.useMutation(
 		"debts-sync-intentions.accept",
 		useTrpcMutationOptions(
@@ -28,9 +32,15 @@ export const InboundDebtIntention: React.FC<Props> = ({ intention }) => {
 			)
 		)
 	);
-	const acceptSyncIntention = React.useCallback(
-		() => acceptMutation.mutate({ id: intention.id }),
-		[acceptMutation, intention.id]
+	const acceptSyncIntention = useAsyncCallback(
+		async (isMount, redirectToDebt = false) => {
+			await acceptMutation.mutateAsync({ id: intention.id });
+			if (!isMount() || !redirectToDebt) {
+				return;
+			}
+			router.push(`/debts/${intention.id}`);
+		},
+		[acceptMutation, intention.id, router]
 	);
 
 	const rejectMutation = trpc.useMutation(
@@ -58,10 +68,18 @@ export const InboundDebtIntention: React.FC<Props> = ({ intention }) => {
 			<Button.Group css={{ alignSelf: "flex-end" }}>
 				<Button
 					disabled={isLoading}
-					onClick={acceptSyncIntention}
+					onClick={() => acceptSyncIntention()}
 					title={`Accept debt for ${intention.amount} ${intention.currency}`}
 				>
 					Accept
+				</Button>
+				<Button
+					bordered
+					disabled={isLoading}
+					onClick={() => acceptSyncIntention(true)}
+					title={`Accept and edit debt for ${intention.amount} ${intention.currency}`}
+				>
+					Accept and edit
 				</Button>
 				<Button disabled={isLoading} onClick={rejectSyncIntention} bordered>
 					Reject
