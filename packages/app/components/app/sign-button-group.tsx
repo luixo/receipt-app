@@ -4,8 +4,8 @@ import { Button, Loading, styled } from "@nextui-org/react";
 
 export type Direction = "+" | "-";
 
-const Wrapper = styled(Button.Group, {
-	m: 0,
+const Wrapper = styled("div", {
+	display: "flex",
 });
 
 const ButtonWrapper = styled(Button, {
@@ -28,11 +28,23 @@ export const SignButtonGroup: React.FC<Props> = ({
 	const setPositive = React.useCallback(() => onUpdate("+"), [onUpdate]);
 	const setNegative = React.useCallback(() => onUpdate("-"), [onUpdate]);
 	return (
-		<Wrapper color="success" animated={false} disabled={disabled || isLoading}>
-			<ButtonWrapper onClick={setPositive} bordered={direction === "-"}>
+		<Wrapper>
+			<ButtonWrapper
+				onClick={setPositive}
+				bordered={direction === "-"}
+				css={{ flex: 1, bbrr: 0, btrr: 0 }}
+				color="success"
+				disabled={disabled || isLoading}
+			>
 				{isLoading ? <Loading size="xs" /> : "+ give"}
 			</ButtonWrapper>
-			<ButtonWrapper onClick={setNegative} bordered={direction === "+"}>
+			<ButtonWrapper
+				onClick={setNegative}
+				bordered={direction === "+"}
+				css={{ flex: 1, bblr: 0, btlr: 0 }}
+				color="error"
+				disabled={disabled || isLoading}
+			>
 				{isLoading ? <Loading size="xs" /> : "- take"}
 			</ButtonWrapper>
 		</Wrapper>
