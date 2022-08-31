@@ -48,7 +48,7 @@ export const UserRemoveButton: React.FC<Props> = ({
 			subtitle="This will remove user and all his participations"
 			{...props}
 		>
-			Remove receipt
+			Remove user
 		</RemoveButton>
 	);
 };
