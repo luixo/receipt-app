@@ -10,6 +10,12 @@ export const mutationOptions: UseContextedMutationOptions<
 	onSuccess:
 		(trpcContext, currData) =>
 		([status, intentionDirection], updateObject) => {
+			cache.debts.getReceipt.broad.updateByDebtId(
+				trpcContext,
+				currData.userId,
+				updateObject.id,
+				(debt) => ({ ...debt, status, intentionDirection })
+			);
 			cache.debtsSyncIntentions.getAll.outbound.remove(
 				trpcContext,
 				updateObject.id

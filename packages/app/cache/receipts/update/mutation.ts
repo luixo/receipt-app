@@ -98,6 +98,11 @@ export const mutationOptions: UseContextedMutationOptions<
 			revert: snapshot && getRevert(snapshot, updateObject.update),
 		};
 	},
+	onSuccess: (trpcContext) => (_result, updateObject) => {
+		if (updateObject.update.type === "locked" && !updateObject.update.value) {
+			cache.debts.getReceipt.invalidate(trpcContext, updateObject.id);
+		}
+	},
 	onError:
 		(trpcContext) =>
 		(_error, variables, { pagedRevert, revert } = {}) => {

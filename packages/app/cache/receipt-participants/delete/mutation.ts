@@ -17,6 +17,11 @@ export const mutationOptions: UseContextedMutationOptions<
 				receiptId,
 				userId
 			),
+	onSuccess:
+		(trpcContext, { receiptId }) =>
+		(_result, { userId }) => {
+			cache.debts.getReceipt.remove(trpcContext, receiptId, userId);
+		},
 	onError:
 		(trpcContext, { receiptId }) =>
 		(_error, _variables, snapshot) => {

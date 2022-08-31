@@ -61,6 +61,7 @@ export const mutationOptions: UseContextedMutationOptions<
 				locked: true,
 				intentionDirection: undefined,
 				status: "sync",
+				receiptId: result.receiptId,
 			});
 			cache.debts.get.add(trpcContext, {
 				id: updateObject.id,
@@ -72,6 +73,7 @@ export const mutationOptions: UseContextedMutationOptions<
 				locked: true,
 				intentionDirection: undefined,
 				status: "sync",
+				receiptId: result.receiptId,
 			});
 		}
 	},

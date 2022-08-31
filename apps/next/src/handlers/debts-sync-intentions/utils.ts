@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { Database } from "next-app/db";
 import { AccountsId, DebtsId } from "next-app/db/models";
+import { getValidParticipants } from "next-app/handlers/receipt-items/utils";
 
 export const getDebtIntention = async (
 	database: Database,
@@ -93,3 +94,28 @@ export const getLockedStatus = async (
 	}
 	return ["unsync", "remote"];
 };
+
+type Participant = Awaited<ReturnType<typeof getValidParticipants>>[number];
+
+export const upsertDebtIntentionFromReceipt = async (
+	database: Database,
+	participants: Participant[],
+	ownerAccountId: AccountsId,
+	created: Date
+) =>
+	database
+		.insertInto("debtsSyncIntentions")
+		.values(
+			participants.map((participant) => ({
+				debtId: participant.debtId,
+				ownerAccountId,
+				lockedTimestamp: created,
+			}))
+		)
+		.onConflict((oc) =>
+			oc.column("debtId").doUpdateSet({
+				ownerAccountId: (eb) => eb.ref("excluded.ownerAccountId"),
+				lockedTimestamp: (eb) => eb.ref("excluded.lockedTimestamp"),
+			})
+		)
+		.execute();

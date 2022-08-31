@@ -69,6 +69,8 @@ export const DEBTS = {
 	},
 	CONSTRAINTS: {
 		OWNER_ID_DEBT_ID_PAIR: "debts:ownerAccountId:debtId:pair",
+		OWNER_ID_RECEIPT_ID_USER_ID_TUPLE:
+			"debtsSyncIntentions:ownerAccountId:receiptId:userId:tuple",
 	},
 } as const;
 

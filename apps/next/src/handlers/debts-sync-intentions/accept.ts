@@ -66,6 +66,7 @@ export const router = trpc.router<AuthorizedContext>().mutation("accept", {
 					amount: nextAmount,
 					timestamp: fullForeignDebt.timestamp,
 					created: fullForeignDebt.created,
+					receiptId: null,
 					note: "never used",
 				};
 			});
@@ -94,6 +95,7 @@ export const router = trpc.router<AuthorizedContext>().mutation("accept", {
 					"lockedTimestamp",
 					"note",
 					"users.id as foreignUserId",
+					"receiptId",
 				])
 				.executeTakeFirstOrThrow();
 			const nextAmount = Number(fullForeignDebt.amount) * -1;
@@ -109,6 +111,7 @@ export const router = trpc.router<AuthorizedContext>().mutation("accept", {
 					created: createdTimestamp,
 					note: fullForeignDebt.note,
 					lockedTimestamp: fullForeignDebt.lockedTimestamp,
+					receiptId: fullForeignDebt.receiptId,
 				})
 				.execute();
 			await deleteIntention(tx);
@@ -117,6 +120,7 @@ export const router = trpc.router<AuthorizedContext>().mutation("accept", {
 				timestamp: fullForeignDebt.timestamp,
 				created: createdTimestamp,
 				note: fullForeignDebt.note,
+				receiptId: fullForeignDebt.receiptId,
 			};
 		});
 	},

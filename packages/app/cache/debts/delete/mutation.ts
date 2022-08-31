@@ -20,6 +20,11 @@ export const mutationOptions: UseContextedMutationOptions<
 		};
 	},
 	onSuccess: (trpcContext, currDebt) => (_result, updateObject) => {
+		cache.debts.getReceipt.broad.removeByDebtId(
+			trpcContext,
+			currDebt.userId,
+			updateObject.id
+		);
 		cache.debts.getUser.remove(trpcContext, currDebt.userId, updateObject.id);
 		cache.debts.get.remove(trpcContext, updateObject.id);
 	},

@@ -2,6 +2,7 @@ import React from "react";
 
 import { Loading, Spacer } from "@nextui-org/react";
 
+import { DebtControlButtons } from "app/components/app/debt-control-buttons";
 import { LoadableUser } from "app/components/app/loadable-user";
 import { QueryErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
@@ -9,7 +10,6 @@ import { trpc, TRPCQuerySuccessResult } from "app/trpc";
 import { DebtsId } from "next-app/src/db/models";
 
 import { DebtAmountInput } from "./debt-amount-input";
-import { DebtControlButtons } from "./debt-control-buttons";
 import { DebtDateInput } from "./debt-date-input";
 import { DebtNoteInput } from "./debt-note-input";
 import { DebtRemoveButton } from "./debt-remove-button";

@@ -51,9 +51,10 @@ type Debt = TRPCQueryOutput<"debts.get">;
 
 type Props = {
 	debt: Debt;
+	hideLocked?: boolean;
 };
 
-export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
+export const DebtControlButtons: React.FC<Props> = ({ debt, hideLocked }) => {
 	const lockMutation = trpc.useMutation(
 		"debts.update",
 		useTrpcMutationOptions(cache.debts.update.mutationOptions, debt)
@@ -144,19 +145,21 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 
 	return (
 		<Wrapper>
-			<IconButton
-				isLoading={lockMutation.isLoading}
-				disabled={isMutationLoading}
-				onClick={mutateLock}
-				ghost
-				color={debt.locked ? "success" : "warning"}
-				icon={
-					<LockedIcon
-						locked={debt.locked}
-						tooltip={getLockedContent(debt.locked)}
-					/>
-				}
-			/>
+			{hideLocked ? null : (
+				<IconButton
+					isLoading={lockMutation.isLoading}
+					disabled={isMutationLoading}
+					onClick={mutateLock}
+					ghost
+					color={debt.locked ? "success" : "warning"}
+					icon={
+						<LockedIcon
+							locked={debt.locked}
+							tooltip={getLockedContent(debt.locked)}
+						/>
+					}
+				/>
+			)}
 			{showConnectionStatus && !lockMutation.isLoading ? (
 				<>
 					{isMutationLoading ||

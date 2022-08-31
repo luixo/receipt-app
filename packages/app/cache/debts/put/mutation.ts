@@ -22,6 +22,7 @@ const createUserDebt = (
 	locked: false,
 	status: "nosync",
 	intentionDirection: undefined,
+	receiptId: null,
 });
 
 const createDebt = (
@@ -37,6 +38,7 @@ const createDebt = (
 	locked: false,
 	status: "nosync",
 	intentionDirection: undefined,
+	receiptId: null,
 });
 
 export const mutationOptions: UseContextedMutationOptions<

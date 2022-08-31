@@ -42,6 +42,7 @@ export const router = trpc.router<AuthorizedContext>().query("get-user", {
 				"created",
 				"note",
 				"lockedTimestamp",
+				"receiptId",
 			])
 			.orderBy("timestamp", "desc")
 			.orderBy("id")

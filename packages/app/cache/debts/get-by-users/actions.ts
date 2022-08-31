@@ -3,6 +3,7 @@ import { TRPCReactContext } from "app/trpc";
 import { Currency } from "app/utils/currency";
 import { UsersId } from "next-app/src/db/models";
 
+import { createController } from "./controller";
 import { updateUserDebts } from "./utils";
 
 export const update = (
@@ -39,3 +40,6 @@ export const update = (
 	});
 	return modifiedSumRef.current;
 };
+
+export const invalidate = (trpc: TRPCReactContext) =>
+	createController(trpc).invalidate();

@@ -2,6 +2,7 @@
 // Automatically generated. Don't change this file manually.
 
 import { AccountsId } from "./accounts";
+import { ReceiptsId } from "./receipts";
 import { UsersId } from "./users";
 
 export type DebtsId = string & { " __flavor"?: "debts" };
@@ -30,6 +31,8 @@ export default interface Debts {
 	note: string;
 
 	lockedTimestamp: Date | null;
+
+	receiptId: ReceiptsId | null;
 }
 
 export interface DebtsInitializer {
@@ -56,4 +59,6 @@ export interface DebtsInitializer {
 	note: string;
 
 	lockedTimestamp?: Date | null;
+
+	receiptId?: ReceiptsId | null;
 }

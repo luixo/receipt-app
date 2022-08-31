@@ -162,5 +162,5 @@ export const getValidParticipants = async (
 				// .. has to be someone but yourself
 				participant.remoteUserId !== ownerAccountId
 		)
-		.map((participant) => ({ ...participant, id: v4() }));
+		.map((participant) => ({ ...participant, debtId: v4() }));
 };

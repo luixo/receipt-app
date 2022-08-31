@@ -38,6 +38,7 @@ export const mutationOptions: UseContextedMutationOptions<
 					);
 				});
 			}
+			cache.debts.getReceipt.invalidate(trpcContext, receiptId);
 		},
 	onError:
 		(trpcContext, { receiptId }) =>

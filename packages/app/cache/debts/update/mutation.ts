@@ -176,6 +176,12 @@ export const mutationOptions: UseContextedMutationOptions<
 				status,
 				intentionDirection,
 			}));
+			cache.debts.getReceipt.broad.updateByDebtId(
+				trpcContext,
+				currData.userId,
+				updateObject.id,
+				(debt) => ({ ...debt, status, intentionDirection, synced: false })
+			);
 		}
 	},
 	onError:
