@@ -19,7 +19,7 @@ export const UserDebtPreview: React.FC<Props> = ({ debt }) => {
 			<Grid.Container gap={2}>
 				<Grid defaultCol={2} lessSmCol={5} lessMdCol={3}>
 					<Text color={debt.amount >= 0 ? "success" : "error"}>
-						{debt.amount} {currency}
+						{Math.abs(debt.amount)} {currency}
 					</Text>
 				</Grid>
 				<Grid defaultCol={2} lessSmCol={5} lessMdCol={3}>
