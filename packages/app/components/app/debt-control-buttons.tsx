@@ -12,6 +12,7 @@ import { DebtSyncStatus } from "app/components/app/debt-sync-status";
 import { MutationErrorMessage } from "app/components/error-message";
 import { IconButton } from "app/components/icon-button";
 import { LockedIcon } from "app/components/locked-icon";
+import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useMatchMediaValue } from "app/hooks/use-match-media-value";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
@@ -55,22 +56,6 @@ type Props = {
 };
 
 export const DebtControlButtons: React.FC<Props> = ({ debt, hideLocked }) => {
-	const lockMutation = trpc.useMutation(
-		"debts.update",
-		useTrpcMutationOptions(cache.debts.update.mutationOptions, debt)
-	);
-	const mutateLock = React.useCallback(
-		() =>
-			lockMutation.mutate({
-				id: debt.id,
-				update: {
-					type: "locked",
-					value: !debt.locked,
-				},
-			}),
-		[lockMutation, debt.id, debt.locked]
-	);
-
 	const connectedUser = trpc.useQuery([
 		"users.has-connected-account",
 		{ id: debt.userId },
@@ -135,6 +120,27 @@ export const DebtControlButtons: React.FC<Props> = ({ debt, hideLocked }) => {
 		[rejectMutation, debt.id]
 	);
 
+	const lockMutation = trpc.useMutation(
+		"debts.update",
+		useTrpcMutationOptions(cache.debts.update.mutationOptions, debt)
+	);
+	const mutateLock = useAsyncCallback(
+		async (isMount, shouldPropagate = false) => {
+			await lockMutation.mutateAsync({
+				id: debt.id,
+				update: {
+					type: "locked",
+					value: !debt.locked,
+				},
+			});
+			if (!isMount() || !shouldPropagate) {
+				return;
+			}
+			sendSyncIntention();
+		},
+		[lockMutation, debt.id, debt.locked, sendSyncIntention]
+	);
+
 	const isMutationLoading =
 		addMutation.isLoading ||
 		deleteMutation.isLoading ||
@@ -146,19 +152,42 @@ export const DebtControlButtons: React.FC<Props> = ({ debt, hideLocked }) => {
 	return (
 		<Wrapper>
 			{hideLocked ? null : (
-				<IconButton
-					isLoading={lockMutation.isLoading}
-					disabled={isMutationLoading}
-					onClick={mutateLock}
-					ghost
-					color={debt.locked ? "success" : "warning"}
-					icon={
-						<LockedIcon
-							locked={debt.locked}
-							tooltip={getLockedContent(debt.locked)}
-						/>
-					}
-				/>
+				<>
+					<IconButton
+						isLoading={lockMutation.isLoading}
+						disabled={isMutationLoading}
+						onClick={() => mutateLock()}
+						ghost
+						color={debt.locked ? "success" : "warning"}
+						icon={
+							<LockedIcon
+								locked={debt.locked}
+								tooltip={getLockedContent(debt.locked)}
+							/>
+						}
+					/>
+					{!debt.locked && !lockMutation.isLoading ? (
+						<>
+							<Spacer x={0.5} />
+							<IconButton
+								isLoading={lockMutation.isLoading}
+								disabled={isMutationLoading}
+								onClick={() => mutateLock(true)}
+								ghost
+								color={debt.locked ? "success" : "warning"}
+								icon={
+									<>
+										<LockedIcon
+											locked={debt.locked}
+											tooltip="Lock and send request"
+										/>
+										<SendIcon size={24} />
+									</>
+								}
+							/>
+						</>
+					) : null}
+				</>
 			)}
 			{showConnectionStatus && !lockMutation.isLoading ? (
 				<>
