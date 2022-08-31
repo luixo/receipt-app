@@ -46,7 +46,7 @@ const getInboundIntentions = (
 		.leftJoin("debts as selfDebts", (qb) =>
 			qb
 				.onRef("debts.id", "=", "selfDebts.id")
-				.onRef("debts.ownerAccountId", "=", "users.connectedAccountId")
+				.onRef("selfDebts.ownerAccountId", "=", "users.connectedAccountId")
 		)
 		.innerJoin("users as usersMine", (qb) =>
 			qb
@@ -65,14 +65,7 @@ const getInboundIntentions = (
 			"debts.amount",
 			"debts.currency",
 			"usersMine.id as userId",
-			sql`case
-				when "selfDebts".note is not null
-					then "selfDebts".note
-				else
-					"debts".note
-				end`
-				.castTo<string>()
-				.as("note"),
+			sql`coalesce("selfDebts".note, "debts".note)`.castTo<string>().as("note"),
 			"selfDebts.amount as selfAmount",
 			"selfDebts.timestamp as selfTimestamp",
 		]);
