@@ -15,7 +15,6 @@ import { trpc, TRPCQuerySuccessResult } from "app/trpc";
 import { PageWithLayout } from "next-app/types/page";
 
 import { AccountNameInput } from "./account-name-input";
-import { AccountPublicNameInput } from "./account-public-name-input";
 
 type InnerProps = {
 	query: TRPCQuerySuccessResult<"account.get">;
@@ -44,8 +43,6 @@ const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 			<EmailVerificationCard />
 			<Spacer y={1} />
 			<AccountNameInput account={query.data} />
-			<Spacer y={1} />
-			<AccountPublicNameInput account={query.data} />
 			<Spacer y={1} />
 			<ChangePasswordScreen />
 			<Spacer y={2} />
