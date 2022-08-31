@@ -1,13 +1,12 @@
 import { Selection } from "kysely";
 
-import { formatDate } from "app/utils/date";
 import {
 	ReceiptsSelectExpression,
 	ReceiptsDatabase,
 	Database,
 } from "next-app/db";
 import { DEBTS } from "next-app/db/consts";
-import { AccountsId, DebtsId, Receipts, UsersId } from "next-app/db/models";
+import { AccountsId, DebtsId, Receipts } from "next-app/db/models";
 import { getValidParticipants } from "next-app/handlers/receipt-items/utils";
 
 export const getDebt = <SE extends ReceiptsSelectExpression<"debts">>(
@@ -22,6 +21,9 @@ export const getDebt = <SE extends ReceiptsSelectExpression<"debts">>(
 		.where("ownerAccountId", "=", ownerAccountId)
 		.select(selectExpression)
 		.executeTakeFirst();
+
+const getReceiptDebtName = (receipt: Pick<Receipts, "name">) =>
+	`Receipt "${receipt.name}"`;
 
 type Participant = Awaited<ReturnType<typeof getValidParticipants>>[number];
 
@@ -41,7 +43,7 @@ export const upsertDebtFromReceipt = async (
 				id: participant.debtId,
 				ownerAccountId: receipt.ownerAccountId,
 				userId: participant.remoteUserId,
-				note: `Receipt "${receipt.name}" from ${formatDate(receipt.issued)}`,
+				note: getReceiptDebtName(receipt),
 				currency: receipt.currency,
 				created,
 				timestamp: receipt.issued,
@@ -60,12 +62,12 @@ export const upsertDebtFromReceipt = async (
 					lockedTimestamp: (eb) => eb.ref("excluded.lockedTimestamp"),
 				})
 		)
-		.returning(["id as debtId", "userId"])
+		.returning(["id as debtId", "userId", "note"])
 		.execute();
 
 export const getDebtsResult = (
 	participants: Participant[],
-	actualDebts: { debtId: DebtsId; userId: UsersId }[],
+	actualDebts: Awaited<ReturnType<typeof upsertDebtFromReceipt>>,
 	receipt: Pick<
 		Receipts,
 		"id" | "ownerAccountId" | "lockedTimestamp" | "name" | "issued" | "currency"
@@ -73,14 +75,14 @@ export const getDebtsResult = (
 	created: Date
 ) =>
 	participants.map((participant) => {
-		const actualDebtId = actualDebts.find(
+		const actualDebt = actualDebts.find(
 			(debt) => debt.userId === participant.remoteUserId
-		)!.debtId;
+		)!;
 		return {
-			debtId: actualDebtId,
+			debtId: actualDebt.debtId,
 			userId: participant.remoteUserId,
-			updated: actualDebtId !== participant.debtId,
-			note: `Receipt "${receipt.name}" from ${formatDate(receipt.issued)}`,
+			updated: actualDebt.debtId !== participant.debtId,
+			note: actualDebt.note,
 			currency: receipt.currency,
 			created,
 			timestamp: receipt.issued,
