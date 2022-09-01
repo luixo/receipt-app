@@ -1,7 +1,8 @@
 import React from "react";
 
 import { Spacer } from "@nextui-org/react";
-import { MdAdd as AddIcon, MdLink as LinkIcon } from "react-icons/md";
+import { IoMdMail as InboxIcon } from "react-icons/io";
+import { MdAdd as AddIcon } from "react-icons/md";
 
 import { Badge } from "app/components/badge";
 import { Header } from "app/components/header";
@@ -32,7 +33,7 @@ export const DebtsScreen: PageWithLayout = () => {
 								href="/debts/intentions"
 								title="Debts sync intentions"
 								bordered
-								icon={<LinkIcon size={24} />}
+								icon={<InboxIcon size={24} />}
 							/>
 						</Badge>,
 					],
