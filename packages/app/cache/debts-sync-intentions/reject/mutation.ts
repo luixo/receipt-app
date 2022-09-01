@@ -28,6 +28,15 @@ export const mutationOptions: UseContextedMutationOptions<
 				status: "unsync",
 				intentionDirection: undefined,
 			}));
+			cache.debts.getByReceiptId.update(
+				trpcContext,
+				updateObject.id,
+				(debt) => ({
+					...debt,
+					status: "unsync",
+					intentionDirection: undefined,
+				})
+			);
 		}
 	},
 };

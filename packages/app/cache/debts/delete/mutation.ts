@@ -27,6 +27,7 @@ export const mutationOptions: UseContextedMutationOptions<
 		);
 		cache.debts.getUser.remove(trpcContext, currDebt.userId, updateObject.id);
 		cache.debts.get.remove(trpcContext, updateObject.id);
+		cache.debts.getByReceiptId.remove(trpcContext);
 	},
 	onError:
 		(trpcContext, currDebt) =>

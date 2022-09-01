@@ -2,23 +2,36 @@ import { createRef } from "app/cache/utils";
 import { TRPCReactContext } from "app/trpc";
 import { DebtsId } from "next-app/db/models";
 
-import { createController } from "./controller";
+import { createBroadController } from "./controller";
 import { Debt } from "./types";
 
-export const add = (trpc: TRPCReactContext, debt: Debt) =>
-	createController(trpc, debt.id).set(debt);
-export const remove = (trpc: TRPCReactContext, debtId: DebtsId) =>
-	createController(trpc, debtId).invalidate();
+export const add = (trpc: TRPCReactContext, debt: Debt) => {
+	if (!debt.receiptId) {
+		return;
+	}
+	createBroadController(trpc).set([
+		[["debts.get-by-receipt-id", { receiptId: debt.receiptId }], debt],
+	]);
+};
+export const remove = (trpc: TRPCReactContext) =>
+	createBroadController(trpc).invalidate();
 
 export const update = (
 	trpc: TRPCReactContext,
 	debtId: DebtsId,
-	updater: (debt: Debt) => Debt
+	updater: (debt: Debt) => Debt | undefined
 ) => {
 	const modifiedDebtRef = createRef<Debt | undefined>();
-	createController(trpc, debtId).update((debt) => {
+	createBroadController(trpc).update(([, debt]) => {
+		if (!debt || debt.id !== debtId) {
+			return debt;
+		}
+		const maybeUpdatedDebt = updater(debt);
+		if (!maybeUpdatedDebt) {
+			return debt;
+		}
 		modifiedDebtRef.current = debt;
-		return updater(debt);
+		return maybeUpdatedDebt;
 	});
 	return modifiedDebtRef.current;
 };

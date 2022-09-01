@@ -25,6 +25,15 @@ export const mutationOptions: UseContextedMutationOptions<
 				status,
 				intentionDirection,
 			}));
+			cache.debts.getByReceiptId.update(
+				trpcContext,
+				updateObject.id,
+				(debt) => ({
+					...debt,
+					status,
+					intentionDirection,
+				})
+			);
 			cache.debts.getUser.update(
 				trpcContext,
 				currData.userId,

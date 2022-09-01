@@ -128,6 +128,7 @@ export const mutationOptions: UseContextedMutationOptions<
 		sumRevert?: Revert<DebtSum>;
 		userRevert?: Revert<DebtUserSnapshot>;
 		revert?: Revert<DebtSnapshot>;
+		byReceiptRevert?: Revert<DebtSnapshot>;
 	},
 	{ userId: UsersId; amount: number; currency: Currency }
 > = {
@@ -149,6 +150,11 @@ export const mutationOptions: UseContextedMutationOptions<
 			updateObject.id,
 			(debt) => applyUpdate(debt, updateObject.update)
 		);
+		const byReceiptSnapshot = cache.debts.getByReceiptId.update(
+			trpcContext,
+			updateObject.id,
+			(debt) => applyUpdate(debt, updateObject.update)
+		);
 		return {
 			sumRevert:
 				updatedSum !== undefined
@@ -157,6 +163,8 @@ export const mutationOptions: UseContextedMutationOptions<
 			userRevert:
 				userSnapshot && getUserRevert(userSnapshot, updateObject.update),
 			revert: snapshot && getRevert(snapshot, updateObject.update),
+			byReceiptRevert:
+				byReceiptSnapshot && getRevert(byReceiptSnapshot, updateObject.update),
 		};
 	},
 	onSuccess: (trpcContext, currData) => (nextSyncData, updateObject) => {
@@ -186,7 +194,11 @@ export const mutationOptions: UseContextedMutationOptions<
 	},
 	onError:
 		(trpcContext, currData) =>
-		(_error, variables, { sumRevert, userRevert, revert } = {}) => {
+		(
+			_error,
+			variables,
+			{ sumRevert, userRevert, revert, byReceiptRevert } = {}
+		) => {
 			if (sumRevert) {
 				cache.debts.getByUsers.update(
 					trpcContext,
@@ -205,6 +217,13 @@ export const mutationOptions: UseContextedMutationOptions<
 			}
 			if (revert) {
 				cache.debts.get.update(trpcContext, variables.id, revert);
+			}
+			if (byReceiptRevert) {
+				cache.debts.getByReceiptId.update(
+					trpcContext,
+					variables.id,
+					byReceiptRevert
+				);
 			}
 		},
 };

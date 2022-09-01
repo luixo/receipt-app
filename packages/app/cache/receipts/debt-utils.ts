@@ -37,6 +37,15 @@ export const updateReceiptCacheOnDebtUpdate = (
 				...updatedPartial,
 				...statusUpdate,
 			}));
+			cache.debts.getByReceiptId.update(
+				trpcContext,
+				updatedDebt.debtId,
+				(debt) => ({
+					...debt,
+					...updatedPartial,
+					...statusUpdate,
+				})
+			);
 			cache.debts.getUser.update(
 				trpcContext,
 				updatedDebt.userId,
@@ -55,6 +64,13 @@ export const updateReceiptCacheOnDebtUpdate = (
 				synced: true,
 			});
 			cache.debts.get.add(trpcContext, {
+				id: updatedDebt.debtId,
+				userId: updatedDebt.userId,
+				note: updatedDebt.note,
+				...updatedPartial,
+				...statusUpdate,
+			});
+			cache.debts.getByReceiptId.add(trpcContext, {
 				id: updatedDebt.debtId,
 				userId: updatedDebt.userId,
 				note: updatedDebt.note,

@@ -44,6 +44,17 @@ export const mutationOptions: UseContextedMutationOptions<
 				intentionDirection: undefined,
 				status: "sync",
 			}));
+			cache.debts.getByReceiptId.update(
+				trpcContext,
+				updateObject.id,
+				(debt) => ({
+					...debt,
+					amount: result.amount,
+					timestamp: result.timestamp,
+					intentionDirection: undefined,
+					status: "sync",
+				})
+			);
 		} else {
 			cache.debts.getByUsers.update(
 				trpcContext,
@@ -64,6 +75,18 @@ export const mutationOptions: UseContextedMutationOptions<
 				receiptId: result.receiptId,
 			});
 			cache.debts.get.add(trpcContext, {
+				id: updateObject.id,
+				userId: context.userId,
+				currency: context.currency,
+				amount: result.amount,
+				timestamp: result.timestamp,
+				note: result.note,
+				locked: true,
+				intentionDirection: undefined,
+				status: "sync",
+				receiptId: result.receiptId,
+			});
+			cache.debts.getByReceiptId.add(trpcContext, {
 				id: updateObject.id,
 				userId: context.userId,
 				currency: context.currency,

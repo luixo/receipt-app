@@ -80,6 +80,10 @@ export const mutationOptions: UseContextedMutationOptions<
 				...debt,
 				id: stableId,
 			}));
+			cache.debts.getByReceiptId.add(
+				trpcContext,
+				createDebt(stableId, updateObject)
+			);
 		},
 	onError:
 		(trpcContext) =>

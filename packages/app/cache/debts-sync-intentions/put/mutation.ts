@@ -31,6 +31,11 @@ export const mutationOptions: UseContextedMutationOptions<
 			status: "unsync",
 			intentionDirection: "self",
 		}));
+		cache.debts.getByReceiptId.update(trpcContext, updateObject.id, (debt) => ({
+			...debt,
+			status: "unsync",
+			intentionDirection: "self",
+		}));
 		cache.debts.getUser.update(
 			trpcContext,
 			currDebt.userId,
