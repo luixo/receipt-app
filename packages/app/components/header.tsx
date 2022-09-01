@@ -24,9 +24,10 @@ const Title = styled(Text, {
 	alignItems: "center",
 });
 
-const Icon = styled("span", {
+const Icon = styled("div", {
 	mr: "$4",
 	lineHeight: 0,
+	whiteSpace: "pre",
 });
 
 const Aside = styled("div", {
@@ -67,13 +68,18 @@ export const Header: React.FC<Props> = ({
 	);
 	const [verticalLayout, setVerticalLayout] = React.useState(false);
 	const wrapperRef = React.useRef<HTMLDivElement>(null);
+	const asideRef = React.useRef<HTMLDivElement>(null);
 	useWindowSizeChange(() => {
 		const container = wrapperRef.current;
-		if (!container) {
+		const asideContainer = asideRef.current;
+		if (!container || !asideContainer) {
 			return;
 		}
 		container.style.flexDirection = "row";
-		setVerticalLayout(container.scrollWidth > container.offsetWidth);
+		const asideOverflow =
+			asideContainer.scrollWidth - asideContainer.offsetWidth;
+		const containerOverflow = container.scrollWidth - container.offsetWidth;
+		setVerticalLayout(containerOverflow - asideOverflow > 1);
 		container.style.flexDirection = "";
 	}, [setVerticalLayout, wrapperRef]);
 	return (
@@ -90,7 +96,7 @@ export const Header: React.FC<Props> = ({
 			{asideElements ? (
 				<>
 					{verticalLayout ? <Spacer y={1} /> : null}
-					<Aside flexEnd={verticalLayout}>
+					<Aside flexEnd={verticalLayout} ref={asideRef}>
 						{asideElements.map((element, index) => (
 							<React.Fragment key={element.key}>
 								{index === 0 ? null : <Spacer x={0.5} />}
