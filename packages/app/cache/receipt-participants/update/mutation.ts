@@ -113,6 +113,12 @@ export const mutationOptions: UseContextedMutationOptions<
 						applyUpdateResolvedParticipants(receipt, userId, variables.update)
 				);
 			}
+			if (variables.update.type === "resolved") {
+				const nextResolved = variables.update.resolved;
+				cache.receipts.getNonResolvedAmount.update(trpcContext, (prevAmount) =>
+					nextResolved ? prevAmount - 1 : prevAmount + 1
+				);
+			}
 		},
 	onError: (trpcContext) => (_error, variables, revert) => {
 		if (!revert) {

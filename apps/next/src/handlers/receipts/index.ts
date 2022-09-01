@@ -5,6 +5,7 @@ import { AuthorizedContext } from "next-app/handlers/context";
 import { router as deleteRouter } from "./delete";
 import { router as getRouter } from "./get";
 import { router as getNameRouter } from "./get-name";
+import { router as getNonResolvedAmountRouter } from "./get-non-resolved-amount";
 import { router as getPagedRouter } from "./get-paged";
 import { router as getResolvedParticipantsRouter } from "./get-resolved-participants";
 import { router as propagateDebtsRouter } from "./propagate-debts";
@@ -22,4 +23,5 @@ export const router = trpc
 	.merge(getNameRouter)
 	.merge(getResolvedParticipantsRouter)
 	.merge(propagateDebtsRouter)
-	.merge(updateDebtRouter);
+	.merge(updateDebtRouter)
+	.merge(getNonResolvedAmountRouter);

@@ -13,10 +13,16 @@ import { QueryErrorMessage } from "app/components/error-message";
 import { MenuElement, Page } from "app/components/page";
 import { useConnectionIntentions } from "app/hooks/use-connection-intentions";
 import { useDebtsSyncIntentions } from "app/hooks/use-debts-sync-intentions";
+import { useNonResolvedReceipts } from "app/hooks/use-non-resolved-receipts";
 import { trpc } from "app/trpc";
 
 const PROTECTED_ELEMENTS: MenuElement[] = [
-	{ Icon: ReceiptsIcon, href: "/receipts", text: "Receipts" },
+	{
+		Icon: ReceiptsIcon,
+		href: "/receipts",
+		text: "Receipts",
+		useBadgeAmount: useNonResolvedReceipts,
+	},
 	{
 		Icon: DebtsIcon,
 		text: "Debts",
