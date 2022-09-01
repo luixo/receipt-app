@@ -21,10 +21,10 @@ const Wrapper = styled(LockIcon, {
 type Props = {
 	locked: boolean;
 	tooltip?: string;
-};
+} & React.ComponentProps<typeof Wrapper>;
 
-export const LockedIcon: React.FC<Props> = ({ locked, tooltip }) => {
-	const content = <Wrapper as={locked ? LockIcon : UnlockedIcon} />;
+export const LockedIcon: React.FC<Props> = ({ locked, tooltip, ...props }) => {
+	const content = <Wrapper as={locked ? LockIcon : UnlockedIcon} {...props} />;
 	if (tooltip) {
 		return (
 			<Tooltip

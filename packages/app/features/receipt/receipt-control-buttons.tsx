@@ -5,6 +5,7 @@ import { Spacer, styled } from "@nextui-org/react";
 import { cache } from "app/cache";
 import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
 import { QueryErrorMessage } from "app/components/error-message";
+import { LockedIcon } from "app/components/locked-icon";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { UsersId } from "next-app/db/models";
@@ -65,32 +66,36 @@ export const ReceiptControlButtons: React.FC<Props> = ({
 				resolved={receipt.participantResolved}
 				disabled={deleteLoading || accountQuery.status !== "success"}
 			/>
-			{receipt.locked ? (
+			<Spacer x={0.5} />
+			{receipt.role === "owner" ? (
 				<>
-					{receipt.role === "owner" ? (
-						<>
-							<Spacer x={0.5} />
-							<ReceiptLockedButton
-								receiptId={receipt.id}
-								locked={receipt.locked}
-								isLoading={deleteLoading}
-								isPropagating={propagateMutation.isLoading}
-								propagateDebts={propagateDebts}
-							/>
-							<ReceiptPropagateButton
-								receiptDebtsQuery={receiptDebtsQuery}
-								receiptId={receipt.id}
-								currency={receipt.currency}
-								isLoading={deleteLoading}
-								isPropagating={propagateMutation.isLoading}
-								propagateDebts={propagateDebts}
-							/>
-						</>
-					) : (
-						<ReceiptSelfDebtSyncInfo receiptId={receipt.id} />
-					)}
+					<ReceiptLockedButton
+						receiptId={receipt.id}
+						locked={receipt.locked}
+						isLoading={deleteLoading}
+						isPropagating={propagateMutation.isLoading}
+						propagateDebts={propagateDebts}
+					/>
+					{receipt.locked ? (
+						<ReceiptPropagateButton
+							receiptDebtsQuery={receiptDebtsQuery}
+							receiptId={receipt.id}
+							currency={receipt.currency}
+							isLoading={deleteLoading}
+							isPropagating={propagateMutation.isLoading}
+							propagateDebts={propagateDebts}
+						/>
+					) : null}
 				</>
-			) : null}
+			) : !receipt.locked ? (
+				<LockedIcon
+					locked={receipt.locked}
+					tooltip={receipt.locked ? "Receipt locked" : "Receipt unlocked"}
+					css={{ m: "$4", color: "$warning" }}
+				/>
+			) : (
+				<ReceiptSelfDebtSyncInfo receiptId={receipt.id} />
+			)}
 			{accountQuery.status === "error" ? (
 				<>
 					<Spacer x={1} />
