@@ -41,7 +41,7 @@ const addResolvedColumn = async (db: Database) => {
 	await db
 		.updateTable("receipts")
 		.set({
-			resolved: sql`case when "lockedTimestamp" <> null then true else false end`,
+			resolved: sql`case when "lockedTimestamp" is not null then true else false end`,
 		} as ReceiptsMutationObject)
 		.execute();
 };
