@@ -36,11 +36,14 @@ type PreviewsProps = {
 
 const ReceiptPreviewsList: React.FC<PreviewsProps> = ({ receipts }) => (
 	<Grid.Container gap={2}>
-		<Grid defaultCol={8}>Receipt</Grid>
-		<Grid defaultCol={2} justify="center">
+		<Grid defaultCol={7.5}>Receipt</Grid>
+		<Grid defaultCol={1.5} justify="center">
 			Res.
 		</Grid>
-		<Grid defaultCol={2} justify="center">
+		<Grid defaultCol={1.5} justify="center">
+			Lck.
+		</Grid>
+		<Grid defaultCol={1.5} justify="center">
 			Wait.
 		</Grid>
 		<Card.Divider />

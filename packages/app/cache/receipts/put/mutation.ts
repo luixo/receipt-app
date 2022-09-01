@@ -25,6 +25,7 @@ export const mutationOptions: UseContextedMutationOptions<
 				)
 					? false
 					: null,
+				locked: false,
 				remoteUserId: selfAccountId as UsersId,
 				localUserId: selfAccountId as UsersId,
 			});

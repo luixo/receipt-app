@@ -33,6 +33,7 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 							"receipts.name",
 							"receipts.issued",
 							"receipts.currency",
+							"receipts.lockedTimestamp",
 							"users.id as remoteUserId",
 							// We use `userId` = `ownerAccountId` contract
 							// But type system doesn't know about that
@@ -45,6 +46,7 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 								"receipts.name",
 								"receipts.issued",
 								"receipts.currency",
+								"receipts.lockedTimestamp",
 								// We use `userId` = `ownerAccountId` contract
 								// But type system doesn't know about that
 								sql<UsersId>`receipts."ownerAccountId"`.as("remoteUserId"),
@@ -72,6 +74,7 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 					"name",
 					"issued",
 					"currency",
+					"mergedReceipts.lockedTimestamp",
 					"receiptParticipants.resolved as participantResolved",
 					"mergedReceipts.remoteUserId",
 					"mergedReceipts.localUserId",
@@ -130,7 +133,12 @@ export const router = trpc.router<AuthorizedContext>().query("get-paged", {
 		return {
 			count: receiptsCount ? parseInt(receiptsCount.amount, 10) : 0,
 			hasMore: receipts.length === input.limit + 1,
-			items: receipts.slice(0, input.limit),
+			items: receipts
+				.slice(0, input.limit)
+				.map(({ lockedTimestamp, ...receipt }) => ({
+					...receipt,
+					locked: Boolean(lockedTimestamp),
+				})),
 		};
 	},
 });

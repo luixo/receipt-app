@@ -7,6 +7,7 @@ import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-par
 import { ReceiptResolvedParticipantsButton } from "app/components/app/receipt-resolved-participants-button";
 import { Grid } from "app/components/grid";
 import { Link } from "app/components/link";
+import { LockedIcon } from "app/components/locked-icon";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 
@@ -31,7 +32,7 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 		<>
 			<Grid
 				css={{ whiteSpace: "normal", flexDirection: "column" }}
-				defaultCol={8}
+				defaultCol={7.5}
 			>
 				<TitleLink href={`/receipts/${receipt.id}/`}>
 					<Text onClick={setReceiptName} css={{ cursor: "pointer" }}>
@@ -42,7 +43,7 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 					{receipt.issued.toLocaleDateString()}
 				</Text>
 			</Grid>
-			<Grid defaultCol={2} justify="center">
+			<Grid defaultCol={1.5} justify="center" alignItems="center">
 				{receipt.participantResolved === null ? null : (
 					<ReceiptParticipantResolvedButton
 						light
@@ -53,7 +54,10 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 					/>
 				)}
 			</Grid>
-			<Grid defaultCol={2} justify="center">
+			<Grid defaultCol={1.5} justify="center" alignItems="center">
+				<LockedIcon locked={receipt.locked} />
+			</Grid>
+			<Grid defaultCol={1.5} justify="center" alignItems="center">
 				<ReceiptResolvedParticipantsButton
 					light
 					css={{ px: 0 }}
