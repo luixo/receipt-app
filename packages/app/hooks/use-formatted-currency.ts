@@ -1,7 +1,7 @@
 import { trpc } from "app/trpc";
 import { Currency } from "app/utils/currency";
 
-export const useFormattedCurrency = (currency: Currency) => {
+export const useFormattedCurrency = (currency?: Currency) => {
 	const currenciesListQuery = trpc.useQuery(
 		["currency.get-list", { locale: "en" }],
 		{ ssr: false }

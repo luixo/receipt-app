@@ -9,9 +9,11 @@ import { ErrorMessage } from "app/components/error-message";
 import { RemoveButton } from "app/components/remove-button";
 import { ReceiptItemPart } from "app/features/receipt-item-parts/receipt-item-part";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
+import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { Currency } from "app/utils/currency";
+import { round } from "app/utils/math";
 import { ReceiptsId, UsersId } from "next-app/db/models";
 import { Role } from "next-app/handlers/receipts/utils";
 
@@ -19,7 +21,7 @@ import { ReceiptItemNameInput } from "./receipt-item-name-input";
 import { ReceiptItemPriceInput } from "./receipt-item-price-input";
 import { ReceiptItemQuantityInput } from "./receipt-item-quantity-input";
 
-const Sum = styled("div", { display: "flex" });
+const Sum = styled("div", { display: "flex", alignItems: "center" });
 
 type ReceiptItems = TRPCQueryOutput<"receipt-items.get">["items"];
 type ReceiptParticipant =
@@ -47,6 +49,7 @@ export const ReceiptItem: React.FC<Props> = ({
 	role,
 	isLoading: isReceiptDeleteLoading,
 }) => {
+	const formattedCurrency = useFormattedCurrency(currency);
 	const removeReceiptItemMutation = trpc.useMutation(
 		"receipt-items.delete",
 		useTrpcMutationOptions(cache.receiptItems.delete.mutationOptions, receiptId)
@@ -131,6 +134,11 @@ export const ReceiptItem: React.FC<Props> = ({
 						readOnly={isEditingDisabled || receiptLocked}
 						isLoading={isDeleteLoading}
 					/>
+					<Spacer x={0.5} />
+					<Text>
+						= {round(receiptItem.quantity * receiptItem.price)}{" "}
+						{formattedCurrency}
+					</Text>
 				</Sum>
 				{receiptLocked ||
 				isEditingDisabled ||

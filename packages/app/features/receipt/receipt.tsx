@@ -11,6 +11,7 @@ import { ReceiptControlButtons } from "app/features/receipt/receipt-control-butt
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useMatchMediaValue } from "app/hooks/use-match-media-value";
 import { trpc, TRPCQuerySuccessResult } from "app/trpc";
+import { round } from "app/utils/math";
 import { ReceiptsId } from "next-app/src/db/models";
 
 import { ReceiptCurrencyInput } from "./receipt-currency-input";
@@ -88,7 +89,7 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 					<Spacer y={0.5} />
 					<Sum>
 						<Text css={{ display: "inline-flex", fontSize: "$xl" }}>
-							{receipt.sum}
+							{round(receipt.sum)}
 						</Text>
 						<ReceiptCurrencyInput receipt={receipt} isLoading={deleteLoading} />
 					</Sum>
