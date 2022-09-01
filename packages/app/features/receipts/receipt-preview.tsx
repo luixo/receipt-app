@@ -6,9 +6,11 @@ import { cache } from "app/cache";
 import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
 import { ReceiptResolvedParticipantsButton } from "app/components/app/receipt-resolved-participants-button";
 import { Grid } from "app/components/grid";
+import { IconButton } from "app/components/icon-button";
 import { Link } from "app/components/link";
 import { LockedIcon } from "app/components/locked-icon";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
+import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 
 const TitleLink = styled(Link, {
@@ -28,6 +30,16 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 		[trpcContext, receipt.id, receipt.name]
 	);
 	const currency = useFormattedCurrency(receipt.currency);
+	const updateReceiptMutation = trpc.useMutation(
+		"receipts.update",
+		useTrpcMutationOptions(cache.receipts.update.mutationOptions)
+	);
+	const switchResolved = React.useCallback(() => {
+		updateReceiptMutation.mutate({
+			id: receipt.id,
+			update: { type: "locked", value: !receipt.locked },
+		});
+	}, [updateReceiptMutation, receipt.id, receipt.locked]);
 	return (
 		<>
 			<Grid
@@ -55,7 +67,14 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 				)}
 			</Grid>
 			<Grid defaultCol={1.5} justify="center" alignItems="center">
-				<LockedIcon locked={receipt.locked} />
+				<IconButton
+					light
+					isLoading={updateReceiptMutation.isLoading}
+					disabled={receipt.role !== "owner"}
+					color={receipt.locked ? "success" : "warning"}
+					icon={<LockedIcon locked={receipt.locked} />}
+					onClick={switchResolved}
+				/>
 			</Grid>
 			<Grid defaultCol={1.5} justify="center" alignItems="center">
 				<ReceiptResolvedParticipantsButton
