@@ -3,6 +3,7 @@ import React from "react";
 import { Container, Loading, Spacer, Text, styled } from "@nextui-org/react";
 import { MdAdd as AddIcon } from "react-icons/md";
 
+import { DebtsGroup } from "app/components/app/debts-group";
 import { QueryErrorMessage } from "app/components/error-message";
 import { IconButton } from "app/components/icon-button";
 import { trpc, TRPCQuerySuccessResult } from "app/trpc";
@@ -19,7 +20,23 @@ type InnerProps = {
 };
 
 const DebtsInner: React.FC<InnerProps> = ({ query }) => {
-	const debtEntries = Object.entries(query.data);
+	const debtEntries = React.useMemo(
+		() => Object.entries(query.data),
+		[query.data]
+	);
+
+	const sums = React.useMemo(
+		() =>
+			Object.entries(
+				debtEntries.reduce<Record<string, number>>((acc, [, userDebts]) => {
+					userDebts.forEach(({ currency, sum }) => {
+						acc[currency] = (acc[currency] || 0) + sum;
+					});
+					return acc;
+				}, {})
+			).map(([currency, sum]) => ({ currency, sum })),
+		[debtEntries]
+	);
 
 	if (debtEntries.length === 0) {
 		return (
@@ -49,6 +66,11 @@ const DebtsInner: React.FC<InnerProps> = ({ query }) => {
 
 	return (
 		<>
+			<DebtsGroup
+				debts={sums}
+				css={{ p: "$4", flexWrap: "wrap", alignItems: "center" }}
+			/>
+			<Spacer y={1} />
 			{debtEntries.map(([userId, userDebts], index) => (
 				<React.Fragment key={userId}>
 					{index === 0 ? null : <Spacer y={0.5} />}
