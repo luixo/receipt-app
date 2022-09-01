@@ -8,17 +8,16 @@ import { trpc, TRPCQuerySuccessResult } from "app/trpc";
 import { ReceiptsId } from "next-app/db/models";
 
 type InnerProps = {
-	query: TRPCQuerySuccessResult<"debts.get">;
+	query: TRPCQuerySuccessResult<"debts.get-by-receipt-id">;
 };
 
 export const ReceiptSelfDebtSyncInfoInner: React.FC<InnerProps> = ({
 	query,
 }) => {
-	const debt = query.data;
-	if (!debt) {
+	if (!query.data) {
 		return null;
 	}
-	return <DebtControlButtons debt={debt} hideLocked />;
+	return <DebtControlButtons debt={query.data} hideLocked />;
 };
 
 type Props = Omit<InnerProps, "query"> & {
@@ -29,18 +28,18 @@ export const ReceiptSelfDebtSyncInfo: React.FC<Props> = ({
 	receiptId,
 	...props
 }) => {
-	const query = trpc.useQuery(["debts.get", { receiptId }]);
-	if (query.status === "loading") {
+	const debtQuery = trpc.useQuery(["debts.get-by-receipt-id", { receiptId }]);
+	if (debtQuery.status === "loading") {
 		return <Loading size="xs" />;
 	}
-	if (query.status === "error") {
-		if (query.error.data?.code === "FORBIDDEN") {
+	if (debtQuery.status === "error") {
+		if (debtQuery.error.data?.code === "FORBIDDEN") {
 			return null;
 		}
-		return <QueryErrorMessage query={query} />;
+		return <QueryErrorMessage query={debtQuery} />;
 	}
-	if (query.status === "idle") {
+	if (debtQuery.status === "idle") {
 		return null;
 	}
-	return <ReceiptSelfDebtSyncInfoInner {...props} query={query} />;
+	return <ReceiptSelfDebtSyncInfoInner {...props} query={debtQuery} />;
 };
