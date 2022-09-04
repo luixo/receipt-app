@@ -48,7 +48,7 @@
 		"lint-staged": "lint-staged"
 	},
 	"dependencies": {
-		"@nextui-org/react": "^1.0.0-beta.9",
+		"@nextui-org/react": "^1.0.0-beta.10",
 		"@sentry/nextjs": "^7.11.1",
 		"dripsy": "^3.6.0",
 		"expo": "~44.0.2",

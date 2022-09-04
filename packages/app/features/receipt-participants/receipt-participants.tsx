@@ -62,6 +62,9 @@ export const ReceiptParticipants: React.FC<Props> = ({
 					disabled={isLoading}
 					receiptId={receiptId}
 					receiptLocked={receiptLocked}
+					filterIds={participants.map(
+						(participant) => participant.remoteUserId
+					)}
 				/>
 			)}
 		</>

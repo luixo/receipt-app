@@ -1,34 +1,20 @@
 import React from "react";
 
 import { Button, Container, Spacer, Text } from "@nextui-org/react";
-import { InfiniteData } from "react-query";
 
 import { cache } from "app/cache";
-import { UsersPicker } from "app/components/app/users-picker";
+import { UsersSuggest } from "app/components/app/users-suggest";
 import { MutationErrorMessage } from "app/components/error-message";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { trpc, TRPCQueryOutput } from "app/trpc";
+import { trpc, TRPCInfiniteQueryOutput, TRPCQueryOutput } from "app/trpc";
 
-type UsersResult = TRPCQueryOutput<"users.get-not-connected">;
-
-const extractUsers = (data: InfiniteData<UsersResult>) =>
-	data.pages.reduce<UsersResult["items"]>(
-		(acc, page) => [...acc, ...page.items],
-		[]
-	);
+type UsersResult = TRPCInfiniteQueryOutput<"users.suggest">;
 
 type Props = {
 	intention: TRPCQueryOutput<"account-connection-intentions.get-all">["inbound"][number];
 };
 
 export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
-	const [input] = cache.users.getNotConnected.useStore();
-	const usersQuery = trpc.useInfiniteQuery(["users.get-not-connected", input], {
-		getNextPageParam: cache.users.getNotConnected.getNextPage,
-	});
-	const loadMore = React.useCallback(() => {
-		usersQuery.fetchNextPage();
-	}, [usersQuery]);
 	const [user, setUser] = React.useState<UsersResult["items"][number]>();
 
 	const acceptConnectionMutation = trpc.useMutation(
@@ -54,19 +40,14 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 
 	const isLoading =
 		acceptConnectionMutation.isLoading || rejectConnectionMutation.isLoading;
-	const selectedUsers = React.useMemo(() => (user ? [user] : []), [user]);
 	return (
 		<>
 			<Text>{intention.email}</Text>
 			<Spacer y={0.5} />
-			<UsersPicker<UsersResult, UsersResult["items"][number]>
-				type="linear"
-				query={usersQuery}
-				extractUsers={extractUsers}
-				extractDetails={({ id, name }) => ({ id, name })}
-				selectedUsers={selectedUsers}
+			<UsersSuggest
+				selected={user}
 				onUserClick={setUser}
-				loadMore={loadMore}
+				options={React.useMemo(() => ({ type: "not-connected" }), [])}
 			/>
 			<Spacer y={1} />
 			<Container

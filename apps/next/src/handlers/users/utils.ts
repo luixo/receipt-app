@@ -33,7 +33,7 @@ export const verifyUsersByIds = async (
 ) => {
 	const users = await database
 		.selectFrom("users")
-		.select(["id", "ownerAccountId"])
+		.select(["id", "ownerAccountId", "name", "connectedAccountId"])
 		.where("id", "in", userIds)
 		.execute();
 	if (users.length !== userIds.length) {
@@ -56,4 +56,10 @@ export const verifyUsersByIds = async (
 				.join(", ")} to a receipt.`,
 		});
 	}
+	return userIds.map((userId) => {
+		const { ownerAccountId: disregardedOwnerAccountId, ...user } = users.find(
+			({ id }) => id === userId
+		)!;
+		return user;
+	});
 };

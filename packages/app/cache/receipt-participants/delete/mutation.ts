@@ -21,6 +21,7 @@ export const mutationOptions: UseContextedMutationOptions<
 		(trpcContext, { receiptId }) =>
 		(_result, { userId }) => {
 			cache.debts.getReceipt.remove(trpcContext, receiptId, userId);
+			cache.users.suggest.invalidate(trpcContext);
 		},
 	onError:
 		(trpcContext, { receiptId }) =>
@@ -34,8 +35,5 @@ export const mutationOptions: UseContextedMutationOptions<
 				snapshot.receiptParticipant,
 				snapshot.index
 			);
-			// It's too complicated to pass all the data needed
-			// to properly place a "users.get-available" user inside the list
-			cache.users.getAvailable.invalidate(trpcContext, receiptId);
 		},
 };

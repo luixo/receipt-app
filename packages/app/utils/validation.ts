@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 import { Currency } from "app/utils/currency";
+import { AccountsId, UsersId } from "next-app/db/models";
 
 const getLengthMessage = (
 	amount: number,
@@ -42,7 +43,7 @@ export const receiptItemNameSchema = constrainLength(z.string(), {
 });
 
 export const userNameSchema = constrainLength(z.string(), {
-	min: 2,
+	min: 1,
 	max: 255,
 	target: "user name",
 });
@@ -96,10 +97,18 @@ export const currencyObjectSchema = z.object({
 	symbol: z.string().nonempty(),
 });
 
-// TRPCInfiniteQueryOutput<"users.get-paged">["items"][number]
-export const userObjectSchema = z.object({
-	id: z.string().nonempty(),
-	name: z.string(),
-	publicName: z.union([z.string(), z.null()]),
-	email: z.union([z.string(), z.null()]),
+export const userIdSchema = z.string().uuid().refine<UsersId>(flavored);
+export const accountIdSchema = z.string().uuid().refine<AccountsId>(flavored);
+
+// TRPCInfiniteQueryOutput<"users.suggest">["items"][number]
+export const userItemSchema = z.strictObject({
+	id: userIdSchema,
+	name: userNameSchema,
+	publicName: userNameSchema.or(z.null()),
+	connectedAccount: z
+		.strictObject({
+			id: accountIdSchema,
+			email: z.string().email(),
+		})
+		.optional(),
 });

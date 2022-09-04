@@ -12,18 +12,19 @@ import {
 	Direction,
 	SignButtonGroup,
 } from "app/components/app/sign-button-group";
+import { UsersSuggest } from "app/components/app/users-suggest";
 import { MutationErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { trpc, TRPCInfiniteQueryOutput } from "app/trpc";
+import { trpc } from "app/trpc";
 import { getToday } from "app/utils/date";
 import {
 	currencyObjectSchema,
 	clientDebtAmountSchema,
 	debtNoteSchema,
-	userObjectSchema,
+	userItemSchema,
 } from "app/utils/validation";
 import { DebtsId } from "next-app/src/db/models";
 import { PageWithLayout } from "next-app/types/page";
@@ -31,7 +32,6 @@ import { PageWithLayout } from "next-app/types/page";
 import { DebtAmountInput } from "./debt-amount-input";
 import { DebtDateInput } from "./debt-date-input";
 import { DebtNoteInput } from "./debt-note-input";
-import { DebtUsersPicker } from "./debt-users-picker";
 import { Form } from "./types";
 
 export const AddDebtScreen: PageWithLayout = () => {
@@ -50,7 +50,7 @@ export const AddDebtScreen: PageWithLayout = () => {
 				amount: z.preprocess(Number, clientDebtAmountSchema),
 				direction: z.union([z.literal("-"), z.literal("+")]),
 				currency: currencyObjectSchema,
-				user: userObjectSchema,
+				user: userItemSchema,
 				note: debtNoteSchema,
 				timestamp: z.date(),
 			})
@@ -65,8 +65,7 @@ export const AddDebtScreen: PageWithLayout = () => {
 		},
 	});
 	const onUserClick = React.useCallback(
-		(user: TRPCInfiniteQueryOutput<"users.get-paged">["items"][number]) =>
-			form.setValue("user", user),
+		(user: z.infer<typeof userItemSchema>) => form.setValue("user", user),
 		[form]
 	);
 	const onDirectionUpdate = React.useCallback(
@@ -106,13 +105,14 @@ export const AddDebtScreen: PageWithLayout = () => {
 			<DebtAmountInput form={form} isLoading={addMutation.isLoading} />
 			<Spacer y={1} />
 			<CurrencyInput form={form} isLoading={addMutation.isLoading} />
-			<Spacer y={3} />
-			<DebtUsersPicker
+			<Spacer y={1} />
+			<UsersSuggest
+				selected={form.watch("user")}
 				disabled={addMutation.isLoading}
+				options={React.useMemo(() => ({ type: "debts" }), [])}
 				onUserClick={onUserClick}
-				selectedUser={form.watch("user")}
 			/>
-			<Spacer y={3} />
+			<Spacer y={1} />
 			<DebtDateInput form={form} isLoading={addMutation.isLoading} />
 			<Spacer y={1} />
 			<DebtNoteInput form={form} isLoading={addMutation.isLoading} />
