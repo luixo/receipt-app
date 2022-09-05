@@ -1,7 +1,6 @@
 import React from "react";
 
 import {
-	Button,
 	FormElement,
 	Input,
 	Loading,
@@ -9,7 +8,6 @@ import {
 	Text,
 	Badge,
 	styled,
-	NormalColors,
 	Card,
 } from "@nextui-org/react";
 
@@ -49,9 +47,8 @@ const Buttons = styled("div", {
 	gap: "$4",
 });
 
-const UserButton = styled(Button, {
-	// Overriding size="small" prop styles
-	minWidth: "initial !important",
+const UserBadge = styled(Badge, {
+	cursor: "pointer",
 });
 
 type DropdownProps = {
@@ -100,20 +97,14 @@ const UsersSuggestDropdown: React.FC<DropdownProps> = ({
 			{users
 				.filter((user) => !filterIds.includes(user.id))
 				.map((user) => (
-					<UserButton
-						key={user.id}
-						onClick={() => onUserClick(user)}
-						flat
-						color={"neutral" as NormalColors}
-						size="sm"
-					>
+					<UserBadge key={user.id} onClick={() => onUserClick(user)}>
 						{user.name}
-					</UserButton>
+					</UserBadge>
 				))}
 			{query.status === "success" && query.hasNextPage ? (
-				<UserButton onClick={loadMore} flat size="sm">
+				<UserBadge onClick={loadMore} flat size="sm">
 					Load more
-				</UserButton>
+				</UserBadge>
 			) : null}
 			{query.isRefetching ? <Loading size="xs" /> : null}
 		</Buttons>
@@ -149,15 +140,9 @@ const UsersSuggestTopDropdown: React.FC<TopDropdownProps> = ({
 			{users
 				.filter((user) => !filterIds.includes(user.id))
 				.map((user) => (
-					<UserButton
-						key={user.id}
-						onClick={() => onUserClick(user)}
-						flat
-						color={"neutral" as NormalColors}
-						size="sm"
-					>
+					<UserBadge key={user.id} onClick={() => onUserClick(user)}>
 						{user.name}
-					</UserButton>
+					</UserBadge>
 				))}
 		</Buttons>
 	);
