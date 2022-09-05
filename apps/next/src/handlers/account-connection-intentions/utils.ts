@@ -6,7 +6,7 @@ import { AccountsId, UsersId } from "next-app/db/models";
 import { getAccountByEmail } from "next-app/handlers/account/utils";
 import { getUserById } from "next-app/handlers/users/utils";
 
-export const putConnectionIntention = async (
+export const addConnectionIntention = async (
 	database: Database,
 	fromAccountId: AccountsId,
 	user: { name: string },

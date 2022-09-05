@@ -31,8 +31,8 @@ export const AddReceiptScreen: PageWithLayout = () => {
 	const accountQuery = trpc.useQuery(["account.get"]);
 
 	const addReceiptMutation = trpc.useMutation(
-		"receipts.put",
-		useTrpcMutationOptions(cache.receipts.put.mutationOptions, {
+		"receipts.add",
+		useTrpcMutationOptions(cache.receipts.add.mutationOptions, {
 			selfAccountId: accountQuery.data?.id ?? "unknown",
 		})
 	);

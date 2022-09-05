@@ -3,7 +3,7 @@ import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options
 import { AccountsId } from "next-app/src/db/models";
 
 export const mutationOptions: UseContextedMutationOptions<
-	"account-connection-intentions.put",
+	"account-connection-intentions.add",
 	AccountsId
 > = {
 	onSuccess:

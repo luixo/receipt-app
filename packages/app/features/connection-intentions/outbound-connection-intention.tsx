@@ -13,16 +13,16 @@ type Props = {
 };
 
 export const OutboundConnectionIntention: React.FC<Props> = ({ intention }) => {
-	const deleteConnectionMutation = trpc.useMutation(
-		"account-connection-intentions.delete",
-		useTrpcMutationOptions(cache.accountConnections.delete.mutationOptions)
+	const removeConnectionMutation = trpc.useMutation(
+		"account-connection-intentions.remove",
+		useTrpcMutationOptions(cache.accountConnections.remove.mutationOptions)
 	);
-	const deleteConnection = React.useCallback(() => {
-		deleteConnectionMutation.mutate({
+	const removeConnection = React.useCallback(() => {
+		removeConnectionMutation.mutate({
 			type: "targetAccountId",
 			targetAccountId: intention.accountId,
 		});
-	}, [deleteConnectionMutation, intention.accountId]);
+	}, [removeConnectionMutation, intention.accountId]);
 
 	return (
 		<Input
@@ -30,15 +30,15 @@ export const OutboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 			label={intention.userName}
 			readOnly
 			helperColor="error"
-			helperText={deleteConnectionMutation.error?.message}
+			helperText={removeConnectionMutation.error?.message}
 			contentRightStyling={false}
 			contentRight={
 				<IconButton
 					title="Unlink user from email"
 					light
-					isLoading={deleteConnectionMutation.isLoading}
+					isLoading={removeConnectionMutation.isLoading}
 					icon={<UnlinkIcon size={24} />}
-					onClick={deleteConnection}
+					onClick={removeConnection}
 				/>
 			}
 		/>

@@ -10,7 +10,7 @@ import { Form } from "./types";
 
 type Props = {
 	form: UseFormReturn<Form>;
-	query: TRPCMutationResult<"receipts.put">;
+	query: TRPCMutationResult<"receipts.add">;
 };
 
 export const ReceiptNameInput: React.FC<Props> = ({ form, query }) => {

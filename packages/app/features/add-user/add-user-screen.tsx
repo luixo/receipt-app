@@ -25,8 +25,8 @@ export const AddUserScreen: PageWithLayout = () => {
 	const router = useRouter();
 
 	const addUserMutation = trpc.useMutation(
-		"users.put",
-		useTrpcMutationOptions(cache.users.put.mutationOptions)
+		"users.add",
+		useTrpcMutationOptions(cache.users.add.mutationOptions)
 	);
 
 	const form = useForm<Form>({

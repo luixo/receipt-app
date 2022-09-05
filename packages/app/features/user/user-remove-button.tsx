@@ -22,29 +22,29 @@ export const UserRemoveButton: React.FC<Props> = ({
 	...props
 }) => {
 	const router = useRouter();
-	const deleteUserMutation = trpc.useMutation(
-		"users.delete",
-		useTrpcMutationOptions(cache.users.delete.mutationOptions)
+	const removeUserMutation = trpc.useMutation(
+		"users.remove",
+		useTrpcMutationOptions(cache.users.remove.mutationOptions)
 	);
 	React.useEffect(
-		() => setLoading(deleteUserMutation.isLoading),
-		[deleteUserMutation.isLoading, setLoading]
+		() => setLoading(removeUserMutation.isLoading),
+		[removeUserMutation.isLoading, setLoading]
 	);
-	const deleteUser = useAsyncCallback(
+	const removeUser = useAsyncCallback(
 		async (isMount) => {
-			await deleteUserMutation.mutateAsync({ id: user.remoteId });
+			await removeUserMutation.mutateAsync({ id: user.remoteId });
 			if (!isMount()) {
 				return;
 			}
 			router.replace("/users");
 		},
-		[deleteUserMutation, user.remoteId, router]
+		[removeUserMutation, user.remoteId, router]
 	);
 
 	return (
 		<RemoveButton
-			mutation={deleteUserMutation}
-			onRemove={deleteUser}
+			mutation={removeUserMutation}
+			onRemove={removeUser}
 			subtitle="This will remove user and all his participations"
 			{...props}
 		>

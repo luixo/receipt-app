@@ -66,24 +66,24 @@ export const DebtControlButtons: React.FC<Props> = ({ debt, hideLocked }) => {
 	const size = useMatchMediaValue(48, { lessSm: 36 });
 
 	const addMutation = trpc.useMutation(
-		"debts-sync-intentions.put",
-		useTrpcMutationOptions(cache.debtsSyncIntentions.put.mutationOptions, debt)
+		"debts-sync-intentions.add",
+		useTrpcMutationOptions(cache.debtsSyncIntentions.add.mutationOptions, debt)
 	);
 	const sendSyncIntention = React.useCallback(
 		() => addMutation.mutate({ id: debt.id }),
 		[addMutation, debt.id]
 	);
 
-	const deleteMutation = trpc.useMutation(
-		"debts-sync-intentions.delete",
+	const removeMutation = trpc.useMutation(
+		"debts-sync-intentions.remove",
 		useTrpcMutationOptions(
-			cache.debtsSyncIntentions.delete.mutationOptions,
+			cache.debtsSyncIntentions.remove.mutationOptions,
 			debt
 		)
 	);
 	const cancelSyncIntention = React.useCallback(
-		() => deleteMutation.mutate({ id: debt.id }),
-		[deleteMutation, debt.id]
+		() => removeMutation.mutate({ id: debt.id }),
+		[removeMutation, debt.id]
 	);
 
 	const acceptMutation = trpc.useMutation(
@@ -143,7 +143,7 @@ export const DebtControlButtons: React.FC<Props> = ({ debt, hideLocked }) => {
 
 	const isMutationLoading =
 		addMutation.isLoading ||
-		deleteMutation.isLoading ||
+		removeMutation.isLoading ||
 		acceptMutation.isLoading ||
 		rejectMutation.isLoading;
 
@@ -245,10 +245,10 @@ export const DebtControlButtons: React.FC<Props> = ({ debt, hideLocked }) => {
 					<MutationErrorMessage mutation={addMutation} />
 				</>
 			) : null}
-			{deleteMutation.status === "error" ? (
+			{removeMutation.status === "error" ? (
 				<>
 					<Spacer y={1} />
-					<MutationErrorMessage mutation={deleteMutation} />
+					<MutationErrorMessage mutation={removeMutation} />
 				</>
 			) : null}
 			{acceptMutation.status === "error" ? (

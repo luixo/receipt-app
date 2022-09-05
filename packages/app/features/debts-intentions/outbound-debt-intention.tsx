@@ -14,16 +14,16 @@ type Props = {
 };
 
 export const OutboundDebtIntention: React.FC<Props> = ({ intention }) => {
-	const deleteMutation = trpc.useMutation(
-		"debts-sync-intentions.delete",
+	const removeMutation = trpc.useMutation(
+		"debts-sync-intentions.remove",
 		useTrpcMutationOptions(
-			cache.debtsSyncIntentions.delete.mutationOptions,
+			cache.debtsSyncIntentions.remove.mutationOptions,
 			intention
 		)
 	);
 	const cancelSyncIntention = React.useCallback(
-		() => deleteMutation.mutate({ id: intention.id }),
-		[deleteMutation, intention.id]
+		() => removeMutation.mutate({ id: intention.id }),
+		[removeMutation, intention.id]
 	);
 
 	return (
@@ -32,16 +32,16 @@ export const OutboundDebtIntention: React.FC<Props> = ({ intention }) => {
 			<Button
 				css={{ alignSelf: "flex-end" }}
 				auto
-				disabled={deleteMutation.isLoading}
+				disabled={removeMutation.isLoading}
 				onClick={cancelSyncIntention}
 				color="warning"
 			>
 				Cancel
 			</Button>
-			{deleteMutation.status === "error" ? (
+			{removeMutation.status === "error" ? (
 				<>
 					<Spacer y={1} />
-					<MutationErrorMessage mutation={deleteMutation} />
+					<MutationErrorMessage mutation={removeMutation} />
 				</>
 			) : null}
 		</DebtIntention>

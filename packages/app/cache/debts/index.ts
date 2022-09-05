@@ -4,5 +4,5 @@ export * as getByUsers from "./get-by-users/actions";
 export * as getByReceiptId from "./get-by-receipt-id/actions";
 export * as getReceipt from "./get-receipt";
 export * as update from "./update/mutation";
-export * as delete from "./delete/mutation";
-export * as put from "./put/mutation";
+export * as remove from "./remove/mutation";
+export * as add from "./add/mutation";

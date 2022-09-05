@@ -29,7 +29,7 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 			: undefined;
 
 	const connectUserMutation = trpc.useMutation(
-		"account-connection-intentions.put",
+		"account-connection-intentions.add",
 		useTrpcMutationOptions(cache.users.connect.mutationOptions)
 	);
 	const connectUser = React.useCallback(
@@ -53,8 +53,8 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 	const [inputShown, setInputShown] = React.useState(Boolean(user.email));
 
 	const cancelRequestMutation = trpc.useMutation(
-		"account-connection-intentions.delete",
-		useTrpcMutationOptions(cache.accountConnections.delete.mutationOptions)
+		"account-connection-intentions.remove",
+		useTrpcMutationOptions(cache.accountConnections.remove.mutationOptions)
 	);
 	const cancelRequest = useAsyncCallback(
 		async (isMount) => {

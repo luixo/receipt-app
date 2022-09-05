@@ -1,3 +1,3 @@
-export * as put from "./put/mutation";
+export * as add from "./add/mutation";
 export * as update from "./update/mutation";
-export * as delete from "./delete/mutation";
+export * as remove from "./remove/mutation";

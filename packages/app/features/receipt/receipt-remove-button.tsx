@@ -18,30 +18,30 @@ export const ReceiptRemoveButton: React.FC<Props> = ({
 	setLoading,
 }) => {
 	const router = useRouter();
-	const deleteReceiptMutation = trpc.useMutation(
-		"receipts.delete",
-		useTrpcMutationOptions(cache.receipts.delete.mutationOptions)
+	const removeReceiptMutation = trpc.useMutation(
+		"receipts.remove",
+		useTrpcMutationOptions(cache.receipts.remove.mutationOptions)
 	);
 	React.useEffect(
-		() => setLoading(deleteReceiptMutation.isLoading),
-		[deleteReceiptMutation.isLoading, setLoading]
+		() => setLoading(removeReceiptMutation.isLoading),
+		[removeReceiptMutation.isLoading, setLoading]
 	);
-	const deleteReceipt = useAsyncCallback(
+	const removeReceipt = useAsyncCallback(
 		async (isMount) => {
-			await deleteReceiptMutation.mutateAsync({ id: receipt.id });
+			await removeReceiptMutation.mutateAsync({ id: receipt.id });
 			if (!isMount()) {
 				return;
 			}
 			router.replace("/receipts");
 		},
-		[deleteReceiptMutation, receipt.id, router]
+		[removeReceiptMutation, receipt.id, router]
 	);
 
 	return (
 		<RemoveButton
 			disabled={receipt.locked}
-			mutation={deleteReceiptMutation}
-			onRemove={deleteReceipt}
+			mutation={removeReceiptMutation}
+			onRemove={removeReceipt}
 			subtitle="This will remove receipt forever"
 			noConfirm={receipt.sum === 0}
 		>

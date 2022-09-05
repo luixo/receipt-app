@@ -53,20 +53,20 @@ export const ReceiptItemPart: React.FC<Props> = ({
 	readOnly,
 	isLoading,
 }) => {
-	const deleteMutation = trpc.useMutation(
-		"item-participants.delete",
+	const removeMutation = trpc.useMutation(
+		"item-participants.remove",
 		useTrpcMutationOptions(
-			cache.itemParticipants.delete.mutationOptions,
+			cache.itemParticipants.remove.mutationOptions,
 			receiptId
 		)
 	);
 	const removeItemPart = useAsyncCallback(
 		() =>
-			deleteMutation.mutateAsync({
+			removeMutation.mutateAsync({
 				itemId: receiptItemId,
 				userId: itemPart.userId,
 			}),
-		[deleteMutation, receiptItemId, itemPart.userId]
+		[removeMutation, receiptItemId, itemPart.userId]
 	);
 
 	return (
@@ -84,14 +84,14 @@ export const ReceiptItemPart: React.FC<Props> = ({
 					itemPart={itemPart}
 					itemParts={itemParts}
 					readOnly={readOnly}
-					isLoading={isLoading || deleteMutation.isLoading}
+					isLoading={isLoading || removeMutation.isLoading}
 				/>
 				{readOnly ? null : (
 					<>
 						<Spacer x={1} y={0.5} />
 						<RemoveButton
 							onRemove={removeItemPart}
-							mutation={deleteMutation}
+							mutation={removeMutation}
 							noConfirm
 						/>
 					</>

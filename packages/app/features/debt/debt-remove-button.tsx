@@ -17,29 +17,29 @@ type Props = {
 
 export const DebtRemoveButton: React.FC<Props> = ({ debt, setLoading }) => {
 	const router = useRouter();
-	const deleteMutation = trpc.useMutation(
-		"debts.delete",
-		useTrpcMutationOptions(cache.debts.delete.mutationOptions, debt)
+	const removeMutation = trpc.useMutation(
+		"debts.remove",
+		useTrpcMutationOptions(cache.debts.remove.mutationOptions, debt)
 	);
 	React.useEffect(
-		() => setLoading(deleteMutation.isLoading),
-		[deleteMutation.isLoading, setLoading]
+		() => setLoading(removeMutation.isLoading),
+		[removeMutation.isLoading, setLoading]
 	);
-	const deleteDebt = useAsyncCallback(
+	const removeDebt = useAsyncCallback(
 		async (isMount) => {
-			await deleteMutation.mutateAsync({ id: debt.id });
+			await removeMutation.mutateAsync({ id: debt.id });
 			if (!isMount()) {
 				return;
 			}
 			router.replace(`/debts/user/${debt.userId}`);
 		},
-		[deleteMutation, debt.id, debt.userId, router]
+		[removeMutation, debt.id, debt.userId, router]
 	);
 
 	return (
 		<RemoveButton
-			mutation={deleteMutation}
-			onRemove={deleteDebt}
+			mutation={removeMutation}
+			onRemove={removeDebt}
 			subtitle="This will remove debt forever"
 			noConfirm={debt.amount === 0}
 			css={{ alignSelf: "flex-end" }}

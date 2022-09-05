@@ -16,7 +16,7 @@ const Wrapper = styled("div", {
 
 type Props = {
 	form: UseFormReturn<Form>;
-	query: TRPCMutationResult<"receipts.put">;
+	query: TRPCMutationResult<"receipts.add">;
 };
 
 export const ReceiptDateInput: React.FC<Props> = ({ form, query }) => {

@@ -38,8 +38,8 @@ export const AddDebtScreen: PageWithLayout = () => {
 	const router = useRouter();
 
 	const addMutation = trpc.useMutation(
-		"debts.put",
-		useTrpcMutationOptions(cache.debts.put.mutationOptions)
+		"debts.add",
+		useTrpcMutationOptions(cache.debts.add.mutationOptions)
 	);
 
 	const form = useForm<Form>({
