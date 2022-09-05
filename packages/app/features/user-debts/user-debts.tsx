@@ -41,11 +41,22 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 	);
 	return (
 		<>
-			<Header backHref="/debts">
+			<Header
+				backHref="/debts"
+				aside={
+					<IconButton
+						key="add"
+						href="/debts/add"
+						title="Add debt"
+						bordered
+						icon={<AddIcon size={24} />}
+					/>
+				}
+			>
 				<LoadableUser id={userId} />
 			</Header>
 			<Spacer y={1} />
-			<DebtsGroup debts={aggregatedDebts} />
+			<DebtsGroup debts={aggregatedDebts} css={{ alignSelf: "center" }} />
 			<Spacer y={1} />
 			{debts.map((debt) => (
 				<React.Fragment key={debt.id}>
