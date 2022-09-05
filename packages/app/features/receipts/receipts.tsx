@@ -31,7 +31,7 @@ const NoReceiptsHint = styled(Text, {
 });
 
 type PreviewsProps = {
-	receipts: TRPCQueryOutput<"receipts.get-paged">["items"];
+	receipts: TRPCQueryOutput<"receipts.getPaged">["items"];
 };
 
 const ReceiptPreviewsList: React.FC<PreviewsProps> = ({ receipts }) => (
@@ -54,7 +54,7 @@ const ReceiptPreviewsList: React.FC<PreviewsProps> = ({ receipts }) => (
 );
 
 type InnerProps = {
-	query: TRPCInfiniteQuerySuccessResult<"receipts.get-paged">;
+	query: TRPCInfiniteQuerySuccessResult<"receipts.getPaged">;
 };
 
 const ReceiptsInner: React.FC<InnerProps> = ({ query }) => {
@@ -109,7 +109,7 @@ const ReceiptsInner: React.FC<InnerProps> = ({ query }) => {
 
 export const Receipts: React.FC = () => {
 	const [input] = cache.receipts.getPaged.useStore();
-	const query = trpc.useInfiniteQuery(["receipts.get-paged", input], {
+	const query = trpc.useInfiniteQuery(["receipts.getPaged", input], {
 		getNextPageParam: cache.receipts.getPaged.getNextPage,
 		keepPreviousData: true,
 	});

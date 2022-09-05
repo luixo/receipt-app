@@ -28,7 +28,7 @@ const NoUsersHint = styled(Text, {
 	alignItems: "center",
 });
 
-type UserPreviews = TRPCQueryOutput<"users.get-paged">["items"];
+type UserPreviews = TRPCQueryOutput<"users.getPaged">["items"];
 
 type PreviewsProps = {
 	users: UserPreviews;
@@ -46,7 +46,7 @@ const UserPreviewsList: React.FC<PreviewsProps> = ({ users }) => (
 );
 
 type InnerProps = {
-	query: TRPCInfiniteQuerySuccessResult<"users.get-paged">;
+	query: TRPCInfiniteQuerySuccessResult<"users.getPaged">;
 };
 
 const UsersInner: React.FC<InnerProps> = ({ query }) => {
@@ -133,7 +133,7 @@ const UsersInner: React.FC<InnerProps> = ({ query }) => {
 
 export const Users: React.FC = () => {
 	const [input] = cache.users.getPaged.useStore();
-	const query = trpc.useInfiniteQuery(["users.get-paged", input], {
+	const query = trpc.useInfiniteQuery(["users.getPaged", input], {
 		getNextPageParam: cache.users.getPaged.getNextPage,
 	});
 	if (query.status === "loading") {

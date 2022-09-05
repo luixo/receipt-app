@@ -11,7 +11,7 @@ import {
 } from "next-app/handlers/receipts/utils";
 import { limitSchema } from "next-app/handlers/validation";
 
-export const router = trpc.router<AuthorizedContext>().query("get-paged", {
+export const router = trpc.router<AuthorizedContext>().query("getPaged", {
 	input: z.strictObject({
 		cursor: z.date().optional(),
 		limit: limitSchema,

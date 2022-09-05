@@ -10,7 +10,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<string>) => {
 	const client = getTrpcClient();
 	const [removedSessions, removedResetPasswordIntentions] = await Promise.all([
 		client.mutation("sessions.cleanup"),
-		client.mutation("reset-password-intentions.cleanup"),
+		client.mutation("resetPasswordIntentions.cleanup"),
 	]);
 	res.send(
 		`Removed ${removedSessions} sessions and ${removedResetPasswordIntentions} reset password intentions`

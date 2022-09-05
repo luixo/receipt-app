@@ -6,7 +6,7 @@ import { AuthorizedContext } from "next-app/handlers/context";
 import { getUserById } from "next-app/handlers/users/utils";
 import { userIdSchema } from "next-app/handlers/validation";
 
-export const router = trpc.router<AuthorizedContext>().query("get-name", {
+export const router = trpc.router<AuthorizedContext>().query("getName", {
 	input: z.strictObject({
 		id: userIdSchema,
 	}),

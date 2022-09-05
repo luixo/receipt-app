@@ -31,7 +31,7 @@ const Wrapper = styled("div", {
 type Props = {
 	cursorPaging: CursorPagingResult<
 		ExtractInfiniteData<
-			TRPCInfiniteQuerySuccessResult<"receipts.get-paged">["data"]
+			TRPCInfiniteQuerySuccessResult<"receipts.getPaged">["data"]
 		>
 	>;
 };

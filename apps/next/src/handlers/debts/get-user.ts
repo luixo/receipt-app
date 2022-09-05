@@ -6,7 +6,7 @@ import { AuthorizedContext } from "next-app/handlers/context";
 import { getLockedStatus } from "next-app/handlers/debts-sync-intentions/utils";
 import { userIdSchema } from "next-app/handlers/validation";
 
-export const router = trpc.router<AuthorizedContext>().query("get-user", {
+export const router = trpc.router<AuthorizedContext>().query("getUser", {
 	input: z.strictObject({
 		userId: userIdSchema,
 	}),

@@ -7,7 +7,7 @@ import { trpc } from "app/trpc";
 
 export const EmailVerificationCard: React.FC = () => {
 	const accountQuery = trpc.useQuery(["account.get"]);
-	const resendEmailMutation = trpc.useMutation(["account.resend-email"]);
+	const resendEmailMutation = trpc.useMutation(["account.resendEmail"]);
 	const resendEmail = React.useCallback(
 		() => resendEmailMutation.mutate(),
 		[resendEmailMutation]

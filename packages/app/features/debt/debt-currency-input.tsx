@@ -25,7 +25,7 @@ export const DebtCurrencyInput: React.FC<Props> = ({ debt, isLoading }) => {
 		useTrpcMutationOptions(cache.debts.update.mutationOptions, debt)
 	);
 	const saveCurrency = React.useCallback(
-		(nextCurrency: TRPCQueryOutput<"currency.get-list">["list"][number]) => {
+		(nextCurrency: TRPCQueryOutput<"currency.getList">["list"][number]) => {
 			if (nextCurrency.code === debt.currency) {
 				return;
 			}

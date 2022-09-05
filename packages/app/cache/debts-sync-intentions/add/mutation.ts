@@ -5,7 +5,7 @@ import { TRPCQueryOutput } from "app/trpc";
 type Debt = TRPCQueryOutput<"debts.get">;
 
 export const mutationOptions: UseContextedMutationOptions<
-	"debts-sync-intentions.add",
+	"debtsSyncIntentions.add",
 	void,
 	Debt
 > = {

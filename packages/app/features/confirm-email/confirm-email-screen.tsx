@@ -15,7 +15,7 @@ const { useParam } = createParam<{ token: string }>();
 
 export const ConfirmEmailScreen: PageWithLayout = () => {
 	const [token] = useParam("token");
-	const confirmEmailMutation = trpc.useMutation(["auth.confirm-email"]);
+	const confirmEmailMutation = trpc.useMutation(["auth.confirmEmail"]);
 	const trpcContext = trpc.useContext();
 	const confirmEmail = useAsyncCallback(
 		async (isMount) => {

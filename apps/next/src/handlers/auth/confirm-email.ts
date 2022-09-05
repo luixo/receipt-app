@@ -7,7 +7,7 @@ import { confirmEmailTokenSchema } from "next-app/handlers/validation";
 
 export const router = trpc
 	.router<UnauthorizedContext>()
-	.mutation("confirm-email", {
+	.mutation("confirmEmail", {
 		input: z.strictObject({
 			token: confirmEmailTokenSchema,
 		}),

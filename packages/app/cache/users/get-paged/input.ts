@@ -7,7 +7,7 @@ import { UsersResult, Input } from "./types";
 
 export const getNextPage = (
 	result: UsersResult
-): TRPCInfiniteQueryCursor<"users.get-paged"> =>
+): TRPCInfiniteQueryCursor<"users.getPaged"> =>
 	result.hasMore ? result.items[result.items.length - 1]?.name : undefined;
 
 const inputStore = zustand<Input & Setters<Input>>((set) => ({

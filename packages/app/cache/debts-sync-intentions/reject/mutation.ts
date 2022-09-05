@@ -3,7 +3,7 @@ import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options
 import { UsersId } from "next-app/db/models";
 
 export const mutationOptions: UseContextedMutationOptions<
-	"debts-sync-intentions.reject",
+	"debtsSyncIntentions.reject",
 	void,
 	{ userId: UsersId; currentAmount?: number }
 > = {

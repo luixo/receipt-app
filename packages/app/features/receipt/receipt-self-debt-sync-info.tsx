@@ -8,7 +8,7 @@ import { trpc, TRPCQuerySuccessResult } from "app/trpc";
 import { ReceiptsId } from "next-app/db/models";
 
 type InnerProps = {
-	query: TRPCQuerySuccessResult<"debts.get-by-receipt-id">;
+	query: TRPCQuerySuccessResult<"debts.getByReceiptId">;
 };
 
 export const ReceiptSelfDebtSyncInfoInner: React.FC<InnerProps> = ({
@@ -28,7 +28,7 @@ export const ReceiptSelfDebtSyncInfo: React.FC<Props> = ({
 	receiptId,
 	...props
 }) => {
-	const debtQuery = trpc.useQuery(["debts.get-by-receipt-id", { receiptId }]);
+	const debtQuery = trpc.useQuery(["debts.getByReceiptId", { receiptId }]);
 	if (debtQuery.status === "loading") {
 		return <Loading size="xs" />;
 	}

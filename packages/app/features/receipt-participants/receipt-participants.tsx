@@ -22,7 +22,7 @@ const SpacerWithBorder = styled(Spacer, {
 });
 
 type Props = {
-	data: TRPCQueryOutput<"receipt-items.get">;
+	data: TRPCQueryOutput<"receiptItems.get">;
 	receiptId: ReceiptsId;
 	receiptLocked: boolean;
 	currency?: Currency;

@@ -28,9 +28,7 @@ export const ResetPasswordModal: React.FC<Props> = ({
 		resolver: zodResolver(z.object({ email: emailSchema })),
 	});
 
-	const resetPasswordMutation = trpc.useMutation(
-		"reset-password-intentions.add"
-	);
+	const resetPasswordMutation = trpc.useMutation("resetPasswordIntentions.add");
 	const onSubmit = useSubmitHandler(
 		(data: ResetPasswordForm) => resetPasswordMutation.mutateAsync(data),
 		[resetPasswordMutation]

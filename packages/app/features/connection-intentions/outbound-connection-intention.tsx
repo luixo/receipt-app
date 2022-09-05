@@ -9,12 +9,12 @@ import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 
 type Props = {
-	intention: TRPCQueryOutput<"account-connection-intentions.get-all">["outbound"][number];
+	intention: TRPCQueryOutput<"accountConnectionIntentions.getAll">["outbound"][number];
 };
 
 export const OutboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 	const removeConnectionMutation = trpc.useMutation(
-		"account-connection-intentions.remove",
+		"accountConnectionIntentions.remove",
 		useTrpcMutationOptions(cache.accountConnections.remove.mutationOptions)
 	);
 	const removeConnection = React.useCallback(() => {

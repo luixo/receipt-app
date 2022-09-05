@@ -17,7 +17,7 @@ import { ReceiptsId } from "next-app/db/models";
 
 const Wrapper = styled("div", { display: "flex", alignItems: "center" });
 
-type ReceiptItem = TRPCQueryOutput<"receipt-items.get">["items"][number];
+type ReceiptItem = TRPCQueryOutput<"receiptItems.get">["items"][number];
 
 type Props = {
 	receiptId: ReceiptsId;
@@ -48,7 +48,7 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 	});
 
 	const updateMutation = trpc.useMutation(
-		"receipt-items.update",
+		"receiptItems.update",
 		useTrpcMutationOptions(cache.receiptItems.update.mutationOptions, receiptId)
 	);
 	const updatePrice = useAsyncCallback(

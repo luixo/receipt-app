@@ -12,7 +12,7 @@ const WrapperLink = styled(Link, {
 });
 
 type Props = {
-	data: TRPCQueryOutput<"users.get-paged">["items"][number];
+	data: TRPCQueryOutput<"users.getPaged">["items"][number];
 };
 
 export const UserPreview: React.FC<Props> = ({ data: user }) => {

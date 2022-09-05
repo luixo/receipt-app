@@ -3,11 +3,11 @@ import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options
 import { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
 import { ReceiptsId } from "next-app/db/models";
 
-type ReceiptItem = TRPCQueryOutput<"receipt-items.get">["items"][number];
+type ReceiptItem = TRPCQueryOutput<"receiptItems.get">["items"][number];
 
 const applyUpdate = (
 	item: ReceiptItem,
-	update: TRPCMutationInput<"receipt-items.update">["update"]
+	update: TRPCMutationInput<"receiptItems.update">["update"]
 ): ReceiptItem => {
 	switch (update.type) {
 		case "name":
@@ -24,7 +24,7 @@ const applyUpdate = (
 const getRevert =
 	(
 		snapshot: ReceiptItem,
-		update: TRPCMutationInput<"receipt-items.update">["update"]
+		update: TRPCMutationInput<"receiptItems.update">["update"]
 	): Revert<ReceiptItem> =>
 	(item) => {
 		switch (update.type) {
@@ -40,7 +40,7 @@ const getRevert =
 	};
 
 export const mutationOptions: UseContextedMutationOptions<
-	"receipt-items.update",
+	"receiptItems.update",
 	Revert<ReceiptItem> | undefined,
 	ReceiptsId
 > = {

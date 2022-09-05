@@ -6,7 +6,7 @@ import { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
 import { DebtsId } from "next-app/db/models";
 
 type DebtSum = number;
-type DebtUserSnapshot = TRPCQueryOutput<"debts.get-user">[number];
+type DebtUserSnapshot = TRPCQueryOutput<"debts.getUser">[number];
 type DebtSnapshot = TRPCQueryOutput<"debts.get">;
 
 const createUserDebt = (

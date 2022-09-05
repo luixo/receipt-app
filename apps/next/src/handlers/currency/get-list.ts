@@ -12,7 +12,7 @@ import {
 import { localeSchema } from "next-app/handlers/validation";
 import { getCurrencies } from "next-app/utils/currency";
 
-export const router = trpc.router<AuthorizedContext>().query("get-list", {
+export const router = trpc.router<AuthorizedContext>().query("getList", {
 	input: z.strictObject({
 		locale: localeSchema,
 	}),

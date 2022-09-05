@@ -14,7 +14,7 @@ import { receiptIdSchema } from "next-app/handlers/validation";
 
 export const router = trpc
 	.router<AuthorizedContext>()
-	.mutation("propagate-debts", {
+	.mutation("propagateDebts", {
 		input: z.strictObject({
 			receiptId: receiptIdSchema,
 		}),

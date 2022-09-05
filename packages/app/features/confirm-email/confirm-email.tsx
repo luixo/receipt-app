@@ -8,7 +8,7 @@ import { TRPCMutationResult } from "app/trpc";
 
 type Props = {
 	token?: string;
-	confirmMutation: TRPCMutationResult<"auth.confirm-email">;
+	confirmMutation: TRPCMutationResult<"auth.confirmEmail">;
 };
 
 export const ConfirmEmail: React.FC<Props> = ({ token, confirmMutation }) => {

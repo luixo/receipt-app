@@ -9,7 +9,7 @@ import { generatePasswordData, getHash } from "next-app/utils/crypto";
 
 export const router = trpc
 	.router<AuthorizedContext>()
-	.mutation("change-password", {
+	.mutation("changePassword", {
 		input: z.strictObject({
 			prevPassword: passwordSchema,
 			password: passwordSchema,

@@ -5,7 +5,7 @@ import { ReceiptsId } from "next-app/db/models";
 export const updateReceiptCacheOnDebtUpdate = (
 	trpcContext: TRPCReactContext,
 	receiptId: ReceiptsId,
-	updatedDebts: TRPCMutationOutput<"receipts.update-debt">[],
+	updatedDebts: TRPCMutationOutput<"receipts.updateDebt">[],
 	updateIntention?: boolean
 ) => {
 	const statusUpdate = {

@@ -9,7 +9,7 @@ import { getLockedStatus } from "next-app/handlers/debts-sync-intentions/utils";
 import { getReceiptById } from "next-app/handlers/receipts/utils";
 import { receiptIdSchema } from "next-app/handlers/validation";
 
-export const router = trpc.router<AuthorizedContext>().query("get-receipt", {
+export const router = trpc.router<AuthorizedContext>().query("getReceipt", {
 	input: z.strictObject({
 		receiptId: receiptIdSchema,
 	}),

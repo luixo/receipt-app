@@ -28,7 +28,7 @@ const GridHeader = styled(Grid, {
 	},
 });
 
-type Participant = TRPCQueryOutput<"debts.get-receipt">[number];
+type Participant = TRPCQueryOutput<"debts.getReceipt">[number];
 
 const sortParticipants = (a: Participant, b: Participant): number => {
 	if (b.status === a.status) {
@@ -69,7 +69,7 @@ export const ReceiptDebtSyncInfoButton: React.FC<Props> = ({
 	const [popoverOpen, { setFalse: closeModal, setTrue: openModal }] =
 		useBooleanState();
 
-	const receiptItemsQuery = trpc.useQuery(["receipt-items.get", { receiptId }]);
+	const receiptItemsQuery = trpc.useQuery(["receiptItems.get", { receiptId }]);
 	const participantSums = React.useMemo(() => {
 		if (!receiptItemsQuery.data) {
 			return [];

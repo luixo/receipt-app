@@ -4,7 +4,7 @@ import { getDatabase } from "next-app/db";
 import { AccountsId, UsersId } from "next-app/db/models";
 import { AuthorizedContext } from "next-app/handlers/context";
 
-export const router = trpc.router<AuthorizedContext>().query("get-all", {
+export const router = trpc.router<AuthorizedContext>().query("getAll", {
 	resolve: async ({ ctx }) => {
 		const database = getDatabase(ctx);
 		const relatedIntentions = await database

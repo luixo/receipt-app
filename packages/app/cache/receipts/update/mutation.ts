@@ -3,7 +3,7 @@ import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options
 import { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
 
 type PagedReceiptSnapshot =
-	TRPCQueryOutput<"receipts.get-paged">["items"][number];
+	TRPCQueryOutput<"receipts.getPaged">["items"][number];
 type ReceiptSnapshot = TRPCQueryOutput<"receipts.get">;
 
 const applyPagedUpdate = (

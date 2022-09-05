@@ -7,7 +7,7 @@ import { userIdSchema } from "next-app/handlers/validation";
 
 export const router = trpc
 	.router<AuthorizedContext>()
-	.query("has-connected-account", {
+	.query("hasConnectedAccount", {
 		input: z.strictObject({
 			id: userIdSchema,
 		}),

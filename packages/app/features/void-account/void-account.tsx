@@ -13,7 +13,7 @@ const Buttons = styled("div", {
 
 type Props = {
 	token?: string;
-	voidMutation: TRPCMutationResult<"auth.void-account">;
+	voidMutation: TRPCMutationResult<"auth.voidAccount">;
 };
 
 export const VoidAccount: React.FC<Props> = ({ token, voidMutation }) => {

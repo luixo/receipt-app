@@ -9,7 +9,7 @@ import { generatePasswordData } from "next-app/utils/crypto";
 
 export const router = trpc
 	.router<UnauthorizedContext>()
-	.mutation("reset-password", {
+	.mutation("resetPassword", {
 		input: z.strictObject({
 			token: resetPasswordTokenSchema,
 			password: passwordSchema,

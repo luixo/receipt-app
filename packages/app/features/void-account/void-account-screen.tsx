@@ -13,7 +13,7 @@ const { useParam } = createParam<{ token: string }>();
 
 export const VoidAccountScreen: PageWithLayout = () => {
 	const [token] = useParam("token");
-	const voidAccountMutation = trpc.useMutation(["auth.void-account"]);
+	const voidAccountMutation = trpc.useMutation(["auth.voidAccount"]);
 
 	return (
 		<>

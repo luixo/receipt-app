@@ -9,7 +9,7 @@ import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { TRPCQuerySuccessResult } from "app/trpc";
 
 type Props = {
-	debt: TRPCQuerySuccessResult<"debts.get-user">["data"][number];
+	debt: TRPCQuerySuccessResult<"debts.getUser">["data"][number];
 };
 
 export const UserDebtPreview: React.FC<Props> = ({ debt }) => {

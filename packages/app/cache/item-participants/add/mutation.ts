@@ -3,7 +3,7 @@ import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options
 import { ReceiptsId } from "next-app/db/models";
 
 export const mutationOptions: UseContextedMutationOptions<
-	"item-participants.add",
+	"itemParticipants.add",
 	void,
 	ReceiptsId
 > = {

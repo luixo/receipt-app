@@ -17,7 +17,7 @@ const Wrapper = styled("div", {
 	gap: "$6",
 });
 
-type Intentions = TRPCQueryOutput<"debts-sync-intentions.get-all">;
+type Intentions = TRPCQueryOutput<"debtsSyncIntentions.getAll">;
 
 type Props = {
 	intention: Intentions["outbound"][number] | Intentions["inbound"][number];

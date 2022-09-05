@@ -19,7 +19,7 @@ type Props = {
 
 export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 	const connectionIntentionsQuery = trpc.useQuery([
-		"account-connection-intentions.get-all",
+		"accountConnectionIntentions.getAll",
 	]);
 	const outboundConnectionIntention =
 		connectionIntentionsQuery.status === "success"
@@ -29,7 +29,7 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 			: undefined;
 
 	const connectUserMutation = trpc.useMutation(
-		"account-connection-intentions.add",
+		"accountConnectionIntentions.add",
 		useTrpcMutationOptions(cache.users.connect.mutationOptions)
 	);
 	const connectUser = React.useCallback(
@@ -53,7 +53,7 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 	const [inputShown, setInputShown] = React.useState(Boolean(user.email));
 
 	const cancelRequestMutation = trpc.useMutation(
-		"account-connection-intentions.remove",
+		"accountConnectionIntentions.remove",
 		useTrpcMutationOptions(cache.accountConnections.remove.mutationOptions)
 	);
 	const cancelRequest = useAsyncCallback(

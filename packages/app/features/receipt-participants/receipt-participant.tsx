@@ -32,7 +32,7 @@ const BodyElement = styled("div", {
 type Props = {
 	receiptId: ReceiptsId;
 	receiptLocked: boolean;
-	participant: TRPCQueryOutput<"receipt-items.get">["participants"][number] & {
+	participant: TRPCQueryOutput<"receiptItems.get">["participants"][number] & {
 		sum: number;
 	};
 	role: Role;
@@ -51,7 +51,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 	const accountQuery = trpc.useQuery(["account.get"]);
 
 	const removeReceiptParticipantMutation = trpc.useMutation(
-		"receipt-participants.remove",
+		"receiptParticipants.remove",
 		useTrpcMutationOptions(cache.receiptParticipants.remove.mutationOptions, {
 			receiptId,
 		})

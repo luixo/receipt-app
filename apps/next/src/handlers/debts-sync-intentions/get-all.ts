@@ -94,7 +94,7 @@ const getOutboundIntentions = (
 			sql`null`.castTo<Date | null>().as("selfTimestamp"),
 		]);
 
-export const router = trpc.router<AuthorizedContext>().query("get-all", {
+export const router = trpc.router<AuthorizedContext>().query("getAll", {
 	resolve: async ({ ctx }) => {
 		const database = getDatabase(ctx);
 		const intentions = await database

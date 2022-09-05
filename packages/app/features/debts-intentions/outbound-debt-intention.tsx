@@ -10,12 +10,12 @@ import { trpc, TRPCQueryOutput } from "app/trpc";
 import { DebtIntention } from "./debt-intention";
 
 type Props = {
-	intention: TRPCQueryOutput<"debts-sync-intentions.get-all">["outbound"][number];
+	intention: TRPCQueryOutput<"debtsSyncIntentions.getAll">["outbound"][number];
 };
 
 export const OutboundDebtIntention: React.FC<Props> = ({ intention }) => {
 	const removeMutation = trpc.useMutation(
-		"debts-sync-intentions.remove",
+		"debtsSyncIntentions.remove",
 		useTrpcMutationOptions(
 			cache.debtsSyncIntentions.remove.mutationOptions,
 			intention

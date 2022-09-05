@@ -15,7 +15,7 @@ import { UserDebtPreview } from "./user-debt-preview";
 
 type InnerProps = {
 	userId: UsersId;
-	query: TRPCQuerySuccessResult<"debts.get-user">;
+	query: TRPCQuerySuccessResult<"debts.getUser">;
 };
 
 export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
@@ -60,8 +60,8 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 type Props = Omit<InnerProps, "query">;
 
 export const UserDebts: React.FC<Props> = ({ userId, ...props }) => {
-	const query = trpc.useQuery(["debts.get-user", { userId }]);
-	const userNameQuery = trpc.useQuery(["users.get-name", { id: userId }]);
+	const query = trpc.useQuery(["debts.getUser", { userId }]);
+	const userNameQuery = trpc.useQuery(["users.getName", { id: userId }]);
 	if (query.status === "loading") {
 		return (
 			<>

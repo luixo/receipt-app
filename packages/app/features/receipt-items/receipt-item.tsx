@@ -23,9 +23,9 @@ import { ReceiptItemQuantityInput } from "./receipt-item-quantity-input";
 
 const Sum = styled("div", { display: "flex", alignItems: "center" });
 
-type ReceiptItems = TRPCQueryOutput<"receipt-items.get">["items"];
+type ReceiptItems = TRPCQueryOutput<"receiptItems.get">["items"];
 type ReceiptParticipant =
-	TRPCQueryOutput<"receipt-items.get">["participants"][number];
+	TRPCQueryOutput<"receiptItems.get">["participants"][number];
 
 type EveryParticipantTag = "__ALL__";
 const EVERY_PARTICIPANT_TAG: EveryParticipantTag = "__ALL__";
@@ -51,7 +51,7 @@ export const ReceiptItem: React.FC<Props> = ({
 }) => {
 	const formattedCurrency = useFormattedCurrency(currency);
 	const removeReceiptItemMutation = trpc.useMutation(
-		"receipt-items.remove",
+		"receiptItems.remove",
 		useTrpcMutationOptions(cache.receiptItems.remove.mutationOptions, receiptId)
 	);
 	const removeItem = useAsyncCallback(
@@ -68,7 +68,7 @@ export const ReceiptItem: React.FC<Props> = ({
 	);
 
 	const addItemPartMutation = trpc.useMutation(
-		"item-participants.add",
+		"itemParticipants.add",
 		useTrpcMutationOptions(
 			cache.itemParticipants.add.mutationOptions,
 			receiptId

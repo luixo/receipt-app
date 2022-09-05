@@ -11,7 +11,7 @@ import { receiptIdSchema } from "next-app/handlers/validation";
 
 export const router = trpc
 	.router<AuthorizedContext>()
-	.query("get-resolved-participants", {
+	.query("getResolvedParticipants", {
 		input: z.strictObject({
 			receiptId: receiptIdSchema,
 		}),

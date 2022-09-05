@@ -16,7 +16,7 @@ import { ReceiptsId } from "next-app/db/models";
 import { ReceiptDebtSyncInfoButton } from "./receipt-debt-sync-info-button";
 
 type InnerProps = {
-	query: TRPCQuerySuccessResult<"debts.get-receipt">;
+	query: TRPCQuerySuccessResult<"debts.getReceipt">;
 	receiptId: ReceiptsId;
 	currency: Currency;
 	isLoading: boolean;
@@ -25,7 +25,7 @@ type InnerProps = {
 };
 
 export const showPropagateButton = (
-	participants: TRPCQueryOutput<"debts.get-receipt">
+	participants: TRPCQueryOutput<"debts.getReceipt">
 ) => {
 	// TODO: add info status for receipt for yourself!
 	// TODO: if user is now zero in receipt - let us remove the intention to sync
@@ -71,7 +71,7 @@ const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 };
 
 type Props = Omit<InnerProps, "query"> & {
-	receiptDebtsQuery: TRPCQueryResult<"debts.get-receipt">;
+	receiptDebtsQuery: TRPCQueryResult<"debts.getReceipt">;
 };
 
 export const ReceiptPropagateButton: React.FC<Props> = ({

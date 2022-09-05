@@ -16,7 +16,7 @@ import { partSchema } from "app/utils/validation";
 import { ReceiptItemsId, ReceiptsId } from "next-app/db/models";
 
 type ReceiptItemPart =
-	TRPCQueryOutput<"receipt-items.get">["items"][number]["parts"][number];
+	TRPCQueryOutput<"receiptItems.get">["items"][number]["parts"][number];
 
 type Props = {
 	receiptId: ReceiptsId;
@@ -49,7 +49,7 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 	});
 
 	const updateMutation = trpc.useMutation(
-		"item-participants.update",
+		"itemParticipants.update",
 		useTrpcMutationOptions(
 			cache.itemParticipants.update.mutationOptions,
 			receiptId

@@ -4,11 +4,11 @@ import { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
 import { UsersId } from "next-app/db/models";
 
 type ReceiptParticipant =
-	TRPCQueryOutput<"receipt-items.get">["participants"][number];
+	TRPCQueryOutput<"receiptItems.get">["participants"][number];
 
 const applyUpdate = (
 	item: ReceiptParticipant,
-	update: TRPCMutationInput<"receipt-participants.update">["update"]
+	update: TRPCMutationInput<"receiptParticipants.update">["update"]
 ): ReceiptParticipant => {
 	switch (update.type) {
 		case "role":
@@ -21,7 +21,7 @@ const applyUpdate = (
 const getRevert =
 	(
 		snapshot: ReceiptParticipant,
-		update: TRPCMutationInput<"receipt-participants.update">["update"]
+		update: TRPCMutationInput<"receiptParticipants.update">["update"]
 	): Revert<ReceiptParticipant> =>
 	(item) => {
 		switch (update.type) {
@@ -32,11 +32,11 @@ const getRevert =
 		}
 	};
 
-type PagedReceipt = TRPCQueryOutput<"receipts.get-paged">["items"][number];
+type PagedReceipt = TRPCQueryOutput<"receipts.getPaged">["items"][number];
 
 const applyUpdateReceiptPaged = (
 	item: PagedReceipt,
-	update: TRPCMutationInput<"receipt-participants.update">["update"]
+	update: TRPCMutationInput<"receiptParticipants.update">["update"]
 ): PagedReceipt => {
 	switch (update.type) {
 		case "resolved":
@@ -50,7 +50,7 @@ type Receipt = TRPCQueryOutput<"receipts.get">;
 
 const applyUpdateReceipt = (
 	item: Receipt,
-	update: TRPCMutationInput<"receipt-participants.update">["update"]
+	update: TRPCMutationInput<"receiptParticipants.update">["update"]
 ): Receipt => {
 	switch (update.type) {
 		case "resolved":
@@ -60,13 +60,12 @@ const applyUpdateReceipt = (
 	}
 };
 
-type ReceiptParticipants =
-	TRPCQueryOutput<"receipts.get-resolved-participants">;
+type ReceiptParticipants = TRPCQueryOutput<"receipts.getResolvedParticipants">;
 
 const applyUpdateResolvedParticipants = (
 	participants: ReceiptParticipants,
 	selfUserId: UsersId,
-	update: TRPCMutationInput<"receipt-participants.update">["update"]
+	update: TRPCMutationInput<"receiptParticipants.update">["update"]
 ): ReceiptParticipants => {
 	switch (update.type) {
 		case "resolved":
@@ -81,7 +80,7 @@ const applyUpdateResolvedParticipants = (
 };
 
 export const mutationOptions: UseContextedMutationOptions<
-	"receipt-participants.update",
+	"receiptParticipants.update",
 	Revert<ReceiptParticipant> | undefined,
 	{ userId?: UsersId }
 > = {

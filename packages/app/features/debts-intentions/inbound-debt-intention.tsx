@@ -12,14 +12,14 @@ import { trpc, TRPCQueryOutput } from "app/trpc";
 import { DebtIntention } from "./debt-intention";
 
 type Props = {
-	intention: TRPCQueryOutput<"debts-sync-intentions.get-all">["inbound"][number];
+	intention: TRPCQueryOutput<"debtsSyncIntentions.getAll">["inbound"][number];
 };
 
 export const InboundDebtIntention: React.FC<Props> = ({ intention }) => {
 	const router = useRouter();
 
 	const acceptMutation = trpc.useMutation(
-		"debts-sync-intentions.accept",
+		"debtsSyncIntentions.accept",
 		useTrpcMutationOptions(
 			cache.debtsSyncIntentions.accept.mutationOptions,
 			React.useMemo(
@@ -44,7 +44,7 @@ export const InboundDebtIntention: React.FC<Props> = ({ intention }) => {
 	);
 
 	const rejectMutation = trpc.useMutation(
-		"debts-sync-intentions.reject",
+		"debtsSyncIntentions.reject",
 		useTrpcMutationOptions(
 			cache.debtsSyncIntentions.reject.mutationOptions,
 			React.useMemo(

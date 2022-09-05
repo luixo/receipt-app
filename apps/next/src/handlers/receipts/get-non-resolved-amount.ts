@@ -5,7 +5,7 @@ import { AuthorizedContext } from "next-app/handlers/context";
 
 export const router = trpc
 	.router<AuthorizedContext>()
-	.query("get-non-resolved-amount", {
+	.query("getNonResolvedAmount", {
 		resolve: async ({ ctx }) => {
 			const database = getDatabase(ctx);
 

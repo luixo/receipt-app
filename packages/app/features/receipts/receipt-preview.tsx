@@ -20,7 +20,7 @@ const TitleLink = styled(Link, {
 });
 
 type Props = {
-	receipt: TRPCQueryOutput<"receipts.get-paged">["items"][number];
+	receipt: TRPCQueryOutput<"receipts.getPaged">["items"][number];
 };
 
 export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {

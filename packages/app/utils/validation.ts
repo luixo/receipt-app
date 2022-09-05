@@ -90,7 +90,7 @@ export const clientDebtAmountSchema = nonZero(
 
 export const clientCurrencySchema = z.string().refine<Currency>(flavored);
 
-// TRPCQueryOutput<"currency.get-list">["list"][number]
+// TRPCQueryOutput<"currency.getList">["list"][number]
 export const currencyObjectSchema = z.object({
 	code: clientCurrencySchema,
 	name: z.string().nonempty(),

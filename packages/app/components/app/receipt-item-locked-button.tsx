@@ -25,7 +25,7 @@ export const ReceiptItemLockedButton: React.FC<Props> = ({
 	...props
 }) => {
 	const updateMutation = trpc.useMutation(
-		"receipt-items.update",
+		"receiptItems.update",
 		useTrpcMutationOptions(cache.receiptItems.update.mutationOptions, receiptId)
 	);
 	const switchLocked = React.useCallback(() => {

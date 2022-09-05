@@ -11,14 +11,14 @@ import { trpc, TRPCInfiniteQueryOutput, TRPCQueryOutput } from "app/trpc";
 type UsersResult = TRPCInfiniteQueryOutput<"users.suggest">;
 
 type Props = {
-	intention: TRPCQueryOutput<"account-connection-intentions.get-all">["inbound"][number];
+	intention: TRPCQueryOutput<"accountConnectionIntentions.getAll">["inbound"][number];
 };
 
 export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 	const [user, setUser] = React.useState<UsersResult["items"][number]>();
 
 	const acceptConnectionMutation = trpc.useMutation(
-		"account-connection-intentions.accept",
+		"accountConnectionIntentions.accept",
 		useTrpcMutationOptions(cache.accountConnections.accept.mutationOptions)
 	);
 	const acceptConnection = React.useCallback(() => {
@@ -29,7 +29,7 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 	}, [acceptConnectionMutation, intention.accountId, user]);
 
 	const rejectConnectionMutation = trpc.useMutation(
-		"account-connection-intentions.reject",
+		"accountConnectionIntentions.reject",
 		useTrpcMutationOptions(cache.accountConnections.reject.mutationOptions)
 	);
 	const rejectConnection = React.useCallback(() => {

@@ -49,7 +49,7 @@ export const AddReceiptItemForm: React.FC<Props> = ({
 	}, [inputsRef]);
 
 	const addMutation = trpc.useMutation(
-		"receipt-items.add",
+		"receiptItems.add",
 		useTrpcMutationOptions(cache.receiptItems.add.mutationOptions, receiptId)
 	);
 	const form = useForm<Form>({

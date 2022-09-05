@@ -9,7 +9,7 @@ import {
 } from "next-app/handlers/receipts/utils";
 import { receiptIdSchema } from "next-app/handlers/validation";
 
-export const router = trpc.router<AuthorizedContext>().query("get-name", {
+export const router = trpc.router<AuthorizedContext>().query("getName", {
 	input: z.strictObject({
 		id: receiptIdSchema,
 	}),

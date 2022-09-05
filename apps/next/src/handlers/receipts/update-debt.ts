@@ -12,7 +12,7 @@ import { getValidParticipants } from "next-app/handlers/receipt-items/utils";
 import { getReceiptById } from "next-app/handlers/receipts/utils";
 import { receiptIdSchema, userIdSchema } from "next-app/handlers/validation";
 
-export const router = trpc.router<AuthorizedContext>().mutation("update-debt", {
+export const router = trpc.router<AuthorizedContext>().mutation("updateDebt", {
 	input: z.strictObject({
 		receiptId: receiptIdSchema,
 		userId: userIdSchema,

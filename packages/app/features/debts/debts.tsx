@@ -16,7 +16,7 @@ const NoDebtsHint = styled(Text, {
 });
 
 type InnerProps = {
-	query: TRPCQuerySuccessResult<"debts.get-by-users">;
+	query: TRPCQuerySuccessResult<"debts.getByUsers">;
 };
 
 const DebtsInner: React.FC<InnerProps> = ({ query }) => {
@@ -82,7 +82,7 @@ const DebtsInner: React.FC<InnerProps> = ({ query }) => {
 };
 
 export const Debts: React.FC = () => {
-	const query = trpc.useQuery(["debts.get-by-users"]);
+	const query = trpc.useQuery(["debts.getByUsers"]);
 	if (query.status === "loading") {
 		return <Loading size="xl" />;
 	}

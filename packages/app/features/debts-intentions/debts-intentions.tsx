@@ -14,7 +14,7 @@ const CenteredText = styled(Text, {
 });
 
 type Props = {
-	query: TRPCQuerySuccessResult<"debts-sync-intentions.get-all">;
+	query: TRPCQuerySuccessResult<"debtsSyncIntentions.getAll">;
 };
 
 const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
@@ -48,7 +48,7 @@ const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 };
 
 export const DebtIntentions: React.FC = () => {
-	const query = trpc.useQuery(["debts-sync-intentions.get-all"]);
+	const query = trpc.useQuery(["debtsSyncIntentions.getAll"]);
 	if (query.status === "loading") {
 		return <Loading size="xl" />;
 	}

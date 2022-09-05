@@ -4,7 +4,7 @@ import { Currency } from "app/utils/currency";
 import { UsersId } from "next-app/db/models";
 
 export const mutationOptions: UseContextedMutationOptions<
-	"debts-sync-intentions.accept",
+	"debtsSyncIntentions.accept",
 	void,
 	{
 		userId: UsersId;

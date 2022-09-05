@@ -29,9 +29,9 @@ const Body = styled("div", {
 	},
 });
 
-type ReceiptItem = TRPCQueryOutput<"receipt-items.get">["items"][number];
+type ReceiptItem = TRPCQueryOutput<"receiptItems.get">["items"][number];
 type ReceiptParticipant =
-	TRPCQueryOutput<"receipt-items.get">["participants"][number];
+	TRPCQueryOutput<"receiptItems.get">["participants"][number];
 type ReceiptItemParts = ReceiptItem["parts"];
 
 type Props = {
@@ -54,7 +54,7 @@ export const ReceiptItemPart: React.FC<Props> = ({
 	isLoading,
 }) => {
 	const removeMutation = trpc.useMutation(
-		"item-participants.remove",
+		"itemParticipants.remove",
 		useTrpcMutationOptions(
 			cache.itemParticipants.remove.mutationOptions,
 			receiptId

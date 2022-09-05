@@ -5,7 +5,7 @@ import { getDatabase } from "next-app/db";
 import { UsersId } from "next-app/db/models";
 import { AuthorizedContext } from "next-app/handlers/context";
 
-export const router = trpc.router<AuthorizedContext>().query("get-by-users", {
+export const router = trpc.router<AuthorizedContext>().query("getByUsers", {
 	resolve: async ({ ctx }) => {
 		const database = getDatabase(ctx);
 		const debts = await database

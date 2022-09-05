@@ -8,7 +8,7 @@ import { Grid } from "app/components/grid";
 import { trpc, TRPCError, TRPCQueryOutput, TRPCQueryResult } from "app/trpc";
 import { Currency } from "app/utils/currency";
 
-type CurrencyList = TRPCQueryOutput<"currency.get-list">;
+type CurrencyList = TRPCQueryOutput<"currency.getList">;
 type CurrencyListItem = CurrencyList["list"][number];
 
 type InnerProps = {
@@ -62,7 +62,7 @@ const CurrenciesPickerInner: React.FC<InnerProps> = ({
 };
 
 type LoaderProps = Omit<InnerProps, "query"> & {
-	query: TRPCQueryResult<"currency.get-list">;
+	query: TRPCQueryResult<"currency.getList">;
 };
 
 const CurrenciesPickerLoader: React.FC<LoaderProps> = ({ query, ...props }) => {
@@ -90,7 +90,7 @@ export const CurrenciesPicker: React.FC<WrapperProps> = ({
 	onLoad,
 	...props
 }) => {
-	const query = trpc.useQuery(["currency.get-list", { locale: "en" }], {
+	const query = trpc.useQuery(["currency.getList", { locale: "en" }], {
 		ssr: false,
 	});
 	React.useEffect(() => {

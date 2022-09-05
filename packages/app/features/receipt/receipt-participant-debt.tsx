@@ -36,7 +36,7 @@ const Border = styled("div", {
 	my: "$4",
 });
 
-type Participant = TRPCQueryOutput<"debts.get-receipt">[number];
+type Participant = TRPCQueryOutput<"debts.getReceipt">[number];
 
 type Props = {
 	receiptId: ReceiptsId;
@@ -54,7 +54,7 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 	const formattedCurrency = useFormattedCurrency(currency);
 
 	const updateMutation = trpc.useMutation(
-		"receipts.update-debt",
+		"receipts.updateDebt",
 		useTrpcMutationOptions(cache.receipts.updateDebt.mutationOptions)
 	);
 	const updateDebt = React.useCallback(

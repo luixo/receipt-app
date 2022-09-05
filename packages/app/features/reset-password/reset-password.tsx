@@ -21,7 +21,7 @@ type ChangePasswordForm = {
 
 type Props = {
 	token?: string;
-	intentionQuery: TRPCQueryResult<"reset-password-intentions.get">;
+	intentionQuery: TRPCQueryResult<"resetPasswordIntentions.get">;
 };
 
 export const ResetPassword: React.FC<Props> = ({ token, intentionQuery }) => {
@@ -33,7 +33,7 @@ export const ResetPassword: React.FC<Props> = ({ token, intentionQuery }) => {
 		),
 	});
 
-	const changePasswordMutation = trpc.useMutation("auth.reset-password");
+	const changePasswordMutation = trpc.useMutation("auth.resetPassword");
 	const onSubmit = useSubmitHandler(
 		async ({ password }: ChangePasswordForm) => {
 			if (!token) {

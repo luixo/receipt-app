@@ -10,7 +10,7 @@ import { trpc, TRPCQueryOutput } from "app/trpc";
 import { UsersId } from "next-app/db/models";
 
 type Props = {
-	debts: TRPCQueryOutput<"debts.get-by-users">[UsersId];
+	debts: TRPCQueryOutput<"debts.getByUsers">[UsersId];
 	userId: UsersId;
 };
 

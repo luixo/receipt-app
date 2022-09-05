@@ -1,7 +1,7 @@
 import { cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 
-export const mutationOptions: UseContextedMutationOptions<"account-connection-intentions.accept"> =
+export const mutationOptions: UseContextedMutationOptions<"accountConnectionIntentions.accept"> =
 	{
 		onSuccess: (trpcContext) => (email, variables) => {
 			cache.users.suggest.invalidate(trpcContext);

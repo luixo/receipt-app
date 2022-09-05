@@ -10,7 +10,7 @@ export const add = (trpc: TRPCReactContext, debt: Debt) => {
 		return;
 	}
 	createBroadController(trpc).set([
-		[["debts.get-by-receipt-id", { receiptId: debt.receiptId }], debt],
+		[["debts.getByReceiptId", { receiptId: debt.receiptId }], debt],
 	]);
 };
 export const remove = (trpc: TRPCReactContext) =>

@@ -2,7 +2,7 @@ import { cache, Revert } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
 
-type PagedUserSnapshot = TRPCQueryOutput<"users.get-paged">["items"][number];
+type PagedUserSnapshot = TRPCQueryOutput<"users.getPaged">["items"][number];
 type UserSnapshot = TRPCQueryOutput<"users.get">;
 
 const applyPagedUpdate = (

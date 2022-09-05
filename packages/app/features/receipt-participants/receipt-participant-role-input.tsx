@@ -14,7 +14,7 @@ const ROLES: AssignableRole[] = ["editor", "viewer"];
 
 type Props = {
 	receiptId: ReceiptsId;
-	participant: TRPCQueryOutput<"receipt-items.get">["participants"][number];
+	participant: TRPCQueryOutput<"receiptItems.get">["participants"][number];
 	isLoading: boolean;
 	role: Role;
 };
@@ -28,7 +28,7 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 	const accountQuery = trpc.useQuery(["account.get"]);
 
 	const updateParticipantMutation = trpc.useMutation(
-		"receipt-participants.update",
+		"receiptParticipants.update",
 		useTrpcMutationOptions(cache.receiptParticipants.update.mutationOptions, {
 			userId:
 				participant.localUserId === accountQuery.data?.id

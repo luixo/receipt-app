@@ -9,7 +9,7 @@ import { UsersId } from "next-app/db/models";
 import { InboundDebtIntention } from "./inbound-debt-intention";
 
 type Intention =
-	TRPCQueryOutput<"debts-sync-intentions.get-all">["inbound"][number];
+	TRPCQueryOutput<"debtsSyncIntentions.getAll">["inbound"][number];
 
 type Props = {
 	intentions: Intention[];

@@ -16,7 +16,7 @@ const NoReceiptItems = styled("div", {
 
 type InnerProps = {
 	receiptId: ReceiptsId;
-	query: TRPCQuerySuccessResult<"receipt-items.get">;
+	query: TRPCQuerySuccessResult<"receiptItems.get">;
 	isLoading: boolean;
 };
 
@@ -82,7 +82,7 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 type Props = Omit<InnerProps, "query">;
 
 export const ReceiptItems: React.FC<Props> = ({ receiptId, ...props }) => {
-	const query = trpc.useQuery(["receipt-items.get", { receiptId }]);
+	const query = trpc.useQuery(["receiptItems.get", { receiptId }]);
 	if (query.status === "loading") {
 		return <Loading />;
 	}

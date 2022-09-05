@@ -57,7 +57,7 @@ type Props = {
 
 export const DebtControlButtons: React.FC<Props> = ({ debt, hideLocked }) => {
 	const connectedUser = trpc.useQuery([
-		"users.has-connected-account",
+		"users.hasConnectedAccount",
 		{ id: debt.userId },
 	]);
 	const showConnectionStatus =
@@ -66,7 +66,7 @@ export const DebtControlButtons: React.FC<Props> = ({ debt, hideLocked }) => {
 	const size = useMatchMediaValue(48, { lessSm: 36 });
 
 	const addMutation = trpc.useMutation(
-		"debts-sync-intentions.add",
+		"debtsSyncIntentions.add",
 		useTrpcMutationOptions(cache.debtsSyncIntentions.add.mutationOptions, debt)
 	);
 	const sendSyncIntention = React.useCallback(
@@ -75,7 +75,7 @@ export const DebtControlButtons: React.FC<Props> = ({ debt, hideLocked }) => {
 	);
 
 	const removeMutation = trpc.useMutation(
-		"debts-sync-intentions.remove",
+		"debtsSyncIntentions.remove",
 		useTrpcMutationOptions(
 			cache.debtsSyncIntentions.remove.mutationOptions,
 			debt
@@ -87,7 +87,7 @@ export const DebtControlButtons: React.FC<Props> = ({ debt, hideLocked }) => {
 	);
 
 	const acceptMutation = trpc.useMutation(
-		"debts-sync-intentions.accept",
+		"debtsSyncIntentions.accept",
 		useTrpcMutationOptions(
 			cache.debtsSyncIntentions.accept.mutationOptions,
 			React.useMemo(
@@ -106,7 +106,7 @@ export const DebtControlButtons: React.FC<Props> = ({ debt, hideLocked }) => {
 	);
 
 	const rejectMutation = trpc.useMutation(
-		"debts-sync-intentions.reject",
+		"debtsSyncIntentions.reject",
 		useTrpcMutationOptions(
 			cache.debtsSyncIntentions.reject.mutationOptions,
 			React.useMemo(
