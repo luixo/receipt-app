@@ -17,7 +17,7 @@ export const mutationOptions: UseContextedMutationOptions<
 				id: temporaryId,
 				role: "owner",
 				name: variables.name,
-				issued: new Date(),
+				issued: variables.issued,
 				currency: variables.currency,
 				// Typesystem doesn't know that we use account id as self user id
 				participantResolved: variables.userIds?.includes(
@@ -48,7 +48,7 @@ export const mutationOptions: UseContextedMutationOptions<
 				id: actualId,
 				role: "owner",
 				name: variables.name,
-				issued: new Date(),
+				issued: variables.issued,
 				currency: variables.currency,
 				locked: false,
 				sum: 0,
