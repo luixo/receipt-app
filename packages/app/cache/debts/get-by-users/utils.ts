@@ -10,10 +10,7 @@ export const updateUserDebts = (
 	updater: (debts: Debts) => Debts
 ) =>
 	createController(trpc).update((prevData) => {
-		const matchedUser = prevData[userId];
-		if (!matchedUser) {
-			return prevData;
-		}
+		const matchedUser = prevData[userId] || [];
 		const nextUser = updater(matchedUser);
 		if (nextUser === matchedUser) {
 			return prevData;
