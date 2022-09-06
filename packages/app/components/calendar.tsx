@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Tooltip, globalCss } from "@nextui-org/react";
+import { globalCss, Popover } from "@nextui-org/react";
 import ReactCalendar from "react-calendar";
 
 const calendarStyles = globalCss({
@@ -156,22 +156,25 @@ export const Calendar: React.FC<Props> = ({
 	children,
 	disabled,
 }) => {
+	const [isOpen, changeOpen] = React.useState(false);
+	const onDateChange = React.useCallback(
+		(date: Date) => {
+			onChange(new Date(date.valueOf() - date.getTimezoneOffset() * 60000));
+			changeOpen(false);
+		},
+		[onChange, changeOpen]
+	);
 	calendarStyles();
 	if (disabled) {
 		return children;
 	}
 	const calendar = (
-		<ReactCalendar
-			value={value}
-			onChange={(date: Date) =>
-				onChange(new Date(date.valueOf() - date.getTimezoneOffset() * 60000))
-			}
-			selectRange={false}
-		/>
+		<ReactCalendar value={value} onChange={onDateChange} selectRange={false} />
 	);
 	return (
-		<Tooltip content={calendar} trigger="click" placement="bottomStart">
-			{children}
-		</Tooltip>
+		<Popover isOpen={isOpen} onOpenChange={changeOpen}>
+			<Popover.Trigger>{children}</Popover.Trigger>
+			<Popover.Content>{calendar}</Popover.Content>
+		</Popover>
 	);
 };
