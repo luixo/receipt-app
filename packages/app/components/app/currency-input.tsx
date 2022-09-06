@@ -58,6 +58,7 @@ export const CurrencyInput = <T extends MinimalForm>({
 					disabled={isLoading}
 					contentRightStyling={false}
 					readOnly
+					onClick={openModal}
 					contentRight={
 						<IconButton light auto onClick={openModal}>
 							<EditIcon size={24} />
