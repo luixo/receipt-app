@@ -48,6 +48,7 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 				selected={user}
 				onUserClick={setUser}
 				options={React.useMemo(() => ({ type: "not-connected" }), [])}
+				closeOnSelect
 			/>
 			<Spacer y={1} />
 			<Container

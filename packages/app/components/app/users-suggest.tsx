@@ -153,6 +153,7 @@ type Props = {
 	topLimit?: number;
 	filterIds?: UsersId[];
 	options: TRPCQueryInput<"users.suggest">["options"];
+	closeOnSelect?: boolean;
 } & React.ComponentProps<typeof Input>;
 
 export const UsersSuggest: React.FC<Props> = ({
@@ -163,7 +164,8 @@ export const UsersSuggest: React.FC<Props> = ({
 	topLimit = LIMIT,
 	options,
 	filterIds: outerFilterIds,
-	onUserClick,
+	onUserClick: onUserClickRaw,
+	closeOnSelect,
 	...props
 }) => {
 	const [dropdownVisible, { setFalse: hideDropdown, setTrue: showDropdown }] =
@@ -173,6 +175,15 @@ export const UsersSuggest: React.FC<Props> = ({
 	const onChange = React.useCallback(
 		(e: React.ChangeEvent<FormElement>) => setValue(e.currentTarget.value),
 		[setValue]
+	);
+	const onUserClick: typeof onUserClickRaw = React.useCallback(
+		(user) => {
+			onUserClickRaw(user);
+			if (closeOnSelect) {
+				hideDropdown();
+			}
+		},
+		[onUserClickRaw, hideDropdown, closeOnSelect]
 	);
 	const queryEnabled = debouncedValue.length >= 3;
 	const selectedUsers = Array.isArray(selected)

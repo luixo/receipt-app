@@ -136,6 +136,7 @@ export const AddDebtScreen: PageWithLayout = () => {
 				disabled={addMutation.isLoading}
 				options={React.useMemo(() => ({ type: "debts" }), [])}
 				onUserClick={onUserClick}
+				closeOnSelect
 			/>
 			<Spacer y={1} />
 			<DebtDateInput form={form} isLoading={addMutation.isLoading} />
