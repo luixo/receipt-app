@@ -6,8 +6,8 @@ import { MutationErrorMessage } from "app/components/error-message";
 import { trpc } from "app/trpc";
 
 export const EmailVerificationCard: React.FC = () => {
-	const accountQuery = trpc.useQuery(["account.get"]);
-	const resendEmailMutation = trpc.useMutation(["account.resendEmail"]);
+	const accountQuery = trpc.account.get.useQuery();
+	const resendEmailMutation = trpc.account.resendEmail.useMutation();
 	const resendEmail = React.useCallback(
 		() => resendEmailMutation.mutate(),
 		[resendEmailMutation]

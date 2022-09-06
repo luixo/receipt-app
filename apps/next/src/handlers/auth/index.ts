@@ -1,17 +1,15 @@
-import * as trpc from "@trpc/server";
+import { t } from "next-app/handlers/trpc";
 
-import { UnauthorizedContext } from "next-app/handlers/context";
+import { procedure as confirmEmail } from "./confirm-email";
+import { procedure as login } from "./login";
+import { procedure as register } from "./register";
+import { procedure as resetPassword } from "./reset-password";
+import { procedure as voidAccount } from "./void-account";
 
-import { router as confirmEmailRouter } from "./confirm-email";
-import { router as loginRouter } from "./login";
-import { router as registerRouter } from "./register";
-import { router as resetPasswordRouter } from "./reset-password";
-import { router as voidAccountRouter } from "./void-account";
-
-export const router = trpc
-	.router<UnauthorizedContext>()
-	.merge(loginRouter)
-	.merge(registerRouter)
-	.merge(resetPasswordRouter)
-	.merge(confirmEmailRouter)
-	.merge(voidAccountRouter);
+export const router = t.router({
+	login,
+	register,
+	resetPassword,
+	confirmEmail,
+	voidAccount,
+});

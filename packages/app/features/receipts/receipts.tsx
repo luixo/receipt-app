@@ -109,7 +109,7 @@ const ReceiptsInner: React.FC<InnerProps> = ({ query }) => {
 
 export const Receipts: React.FC = () => {
 	const [input] = cache.receipts.getPaged.useStore();
-	const query = trpc.useInfiniteQuery(["receipts.getPaged", input], {
+	const query = trpc.receipts.getPaged.useInfiniteQuery(input, {
 		getNextPageParam: cache.receipts.getPaged.getNextPage,
 		keepPreviousData: true,
 	});
@@ -118,9 +118,6 @@ export const Receipts: React.FC = () => {
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;
-	}
-	if (query.status === "idle") {
-		return null;
 	}
 	return <ReceiptsInner query={query} />;
 };

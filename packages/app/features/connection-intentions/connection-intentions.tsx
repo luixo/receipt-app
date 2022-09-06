@@ -68,15 +68,12 @@ const ConnectionIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 };
 
 export const ConnectionIntentions: React.FC = () => {
-	const query = trpc.useQuery(["accountConnectionIntentions.getAll"]);
+	const query = trpc.accountConnectionIntentions.getAll.useQuery();
 	if (query.status === "loading") {
 		return <Loading size="xl" />;
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;
-	}
-	if (query.status === "idle") {
-		return null;
 	}
 	return <ConnectionIntentionsInner query={query} />;
 };

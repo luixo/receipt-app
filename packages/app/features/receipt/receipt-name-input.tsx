@@ -38,8 +38,7 @@ export const ReceiptNameInput: React.FC<Props> = ({
 		schema: receiptNameSchema,
 	});
 
-	const updateReceiptMutation = trpc.useMutation(
-		"receipts.update",
+	const updateReceiptMutation = trpc.receipts.update.useMutation(
 		useTrpcMutationOptions(cache.receipts.update.mutationOptions)
 	);
 	const saveName = useAsyncCallback(

@@ -16,7 +16,7 @@ type Props = {
 
 export const UserDebtsPreview: React.FC<Props> = ({ debts, userId }) => {
 	const trpcContext = trpc.useContext();
-	const userQuery = trpc.useQuery(["users.get", { id: userId }]);
+	const userQuery = trpc.users.get.useQuery({ id: userId });
 	const setUserName = React.useCallback(() => {
 		if (userQuery.status !== "success") {
 			return;

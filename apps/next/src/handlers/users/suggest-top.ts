@@ -4,38 +4,42 @@ import { z } from "zod";
 import { MONTH } from "app/utils/time";
 import { userItemSchema } from "app/utils/validation";
 import { getDatabase } from "next-app/db";
-import { AuthorizedContext } from "next-app/handlers/context";
 import {
 	getReceiptById,
 	getAccessRole,
 } from "next-app/handlers/receipts/utils";
+import { authProcedure } from "next-app/handlers/trpc";
 import {
 	limitSchema,
 	receiptIdSchema,
 	userIdSchema,
 } from "next-app/handlers/validation";
 
-export const router = trpc.router<AuthorizedContext>().query("suggest-top", {
-	input: z.strictObject({
-		limit: limitSchema,
-		filterIds: z.array(userIdSchema).optional(),
-		options: z.discriminatedUnion("type", [
-			z.strictObject({
-				type: z.literal("not-connected"),
-			}),
-			z.strictObject({
-				type: z.literal("not-connected-receipt"),
-				receiptId: receiptIdSchema,
-			}),
-			z.strictObject({
-				type: z.literal("debts"),
-			}),
-		]),
-	}),
-	output: z.strictObject({
-		items: z.array(userItemSchema),
-	}),
-	resolve: async ({ input, ctx }) => {
+export const procedure = authProcedure
+	.input(
+		z.strictObject({
+			limit: limitSchema,
+			filterIds: z.array(userIdSchema).optional(),
+			options: z.discriminatedUnion("type", [
+				z.strictObject({
+					type: z.literal("not-connected"),
+				}),
+				z.strictObject({
+					type: z.literal("not-connected-receipt"),
+					receiptId: receiptIdSchema,
+				}),
+				z.strictObject({
+					type: z.literal("debts"),
+				}),
+			]),
+		})
+	)
+	.output(
+		z.strictObject({
+			items: z.array(userItemSchema),
+		})
+	)
+	.query(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
 		if (input.options.type === "not-connected-receipt") {
 			const { receiptId } = input.options;
@@ -150,5 +154,4 @@ export const router = trpc.router<AuthorizedContext>().query("suggest-top", {
 				}))
 				.slice(0, input.limit),
 		};
-	},
-});
+	});

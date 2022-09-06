@@ -2,14 +2,16 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
-import { AuthorizedContext } from "next-app/handlers/context";
+import { authProcedure } from "next-app/handlers/trpc";
 import { userIdSchema } from "next-app/handlers/validation";
 
-export const router = trpc.router<AuthorizedContext>().mutation("unlink", {
-	input: z.strictObject({
-		id: userIdSchema,
-	}),
-	resolve: async ({ input, ctx }) => {
+export const procedure = authProcedure
+	.input(
+		z.strictObject({
+			id: userIdSchema,
+		})
+	)
+	.mutation(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
 		const user = await database
 			.selectFrom("users as usersMine")
@@ -58,5 +60,4 @@ export const router = trpc.router<AuthorizedContext>().mutation("unlink", {
 				.where("id", "=", user.theirUserId!)
 				.executeTakeFirst();
 		});
-	},
-});
+	});

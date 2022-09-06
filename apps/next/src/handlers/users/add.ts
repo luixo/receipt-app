@@ -1,4 +1,3 @@
-import * as trpc from "@trpc/server";
 import { v4 } from "uuid";
 import { z } from "zod";
 
@@ -6,15 +5,17 @@ import { emailSchema, userNameSchema } from "app/utils/validation";
 import { getDatabase } from "next-app/db";
 import { UsersId } from "next-app/db/models";
 import { addConnectionIntention } from "next-app/handlers/account-connection-intentions/utils";
-import { AuthorizedContext } from "next-app/handlers/context";
+import { authProcedure } from "next-app/handlers/trpc";
 
-export const router = trpc.router<AuthorizedContext>().mutation("add", {
-	input: z.strictObject({
-		name: userNameSchema,
-		publicName: userNameSchema.optional(),
-		email: emailSchema.optional(),
-	}),
-	resolve: async ({ input, ctx }) => {
+export const procedure = authProcedure
+	.input(
+		z.strictObject({
+			name: userNameSchema,
+			publicName: userNameSchema.optional(),
+			email: emailSchema.optional(),
+		})
+	)
+	.mutation(async ({ input, ctx }) => {
 		const id: UsersId = v4();
 		const database = getDatabase(ctx);
 		return database.transaction().execute(async () => {
@@ -39,5 +40,4 @@ export const router = trpc.router<AuthorizedContext>().mutation("add", {
 			}
 			return { id };
 		});
-	},
-});
+	});

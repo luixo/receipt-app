@@ -1,18 +1,19 @@
-import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { userNameSchema } from "app/utils/validation";
 import { getDatabase } from "next-app/db";
 import { UsersId } from "next-app/db/models";
-import { AuthorizedContext } from "next-app/handlers/context";
+import { authProcedure } from "next-app/handlers/trpc";
 import { limitSchema } from "next-app/handlers/validation";
 
-export const router = trpc.router<AuthorizedContext>().query("getPaged", {
-	input: z.strictObject({
-		cursor: userNameSchema.optional(),
-		limit: limitSchema,
-	}),
-	resolve: async ({ input, ctx }) => {
+export const procedure = authProcedure
+	.input(
+		z.strictObject({
+			cursor: userNameSchema.optional(),
+			limit: limitSchema,
+		})
+	)
+	.query(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
 		const accountUsers = database
 			.selectFrom("users")
@@ -39,5 +40,4 @@ export const router = trpc.router<AuthorizedContext>().query("getPaged", {
 			hasMore: users.length === input.limit + 1,
 			items: users.slice(0, input.limit),
 		};
-	},
-});
+	});

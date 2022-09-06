@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Button, Card, Loading, Modal, Text } from "@nextui-org/react";
-import { QueryObserverSuccessResult } from "react-query";
+import { QueryObserverSuccessResult } from "@tanstack/react-query";
 
 import { QueryErrorMessage } from "app/components/error-message";
 import { Grid } from "app/components/grid";
@@ -72,9 +72,6 @@ const CurrenciesPickerLoader: React.FC<LoaderProps> = ({ query, ...props }) => {
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;
 	}
-	if (query.status === "idle") {
-		return null;
-	}
 	return <CurrenciesPickerInner {...props} query={query} />;
 };
 
@@ -90,9 +87,10 @@ export const CurrenciesPicker: React.FC<WrapperProps> = ({
 	onLoad,
 	...props
 }) => {
-	const query = trpc.useQuery(["currency.getList", { locale: "en" }], {
-		ssr: false,
-	});
+	const query = trpc.currency.getList.useQuery(
+		{ locale: "en" },
+		{ trpc: { ssr: false } }
+	);
 	React.useEffect(() => {
 		if (onLoad && query.status === "success") {
 			onLoad(query.data.list);

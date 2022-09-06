@@ -14,8 +14,7 @@ type Props = {
 };
 
 export const OutboundDebtIntention: React.FC<Props> = ({ intention }) => {
-	const removeMutation = trpc.useMutation(
-		"debtsSyncIntentions.remove",
+	const removeMutation = trpc.debtsSyncIntentions.remove.useMutation(
 		useTrpcMutationOptions(
 			cache.debtsSyncIntentions.remove.mutationOptions,
 			intention

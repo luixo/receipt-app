@@ -1,22 +1,23 @@
-import * as trpc from "@trpc/server";
 import { sql } from "kysely";
 import { z } from "zod";
 
 import { MONTH } from "app/utils/time";
 import { getDatabase } from "next-app/db";
-import { AuthorizedContext } from "next-app/handlers/context";
 import {
 	getForeignReceipts,
 	getOwnReceipts,
 } from "next-app/handlers/receipts/utils";
+import { authProcedure } from "next-app/handlers/trpc";
 import { localeSchema } from "next-app/handlers/validation";
 import { getCurrencies } from "next-app/utils/currency";
 
-export const router = trpc.router<AuthorizedContext>().query("getList", {
-	input: z.strictObject({
-		locale: localeSchema,
-	}),
-	resolve: async ({ input, ctx }) => {
+export const procedure = authProcedure
+	.input(
+		z.strictObject({
+			locale: localeSchema,
+		})
+	)
+	.query(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
 		const foreignReceipts = getForeignReceipts(database, ctx.auth.accountId);
 		const ownReceipts = getOwnReceipts(database, ctx.auth.accountId);
@@ -65,5 +66,4 @@ export const router = trpc.router<AuthorizedContext>().query("getList", {
 						topCurrenciesOrder.indexOf(a.code)
 				),
 		};
-	},
-});
+	});

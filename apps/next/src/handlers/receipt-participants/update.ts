@@ -3,9 +3,9 @@ import { MutationObject } from "kysely";
 import { z } from "zod";
 
 import { ReceiptsDatabase, getDatabase } from "next-app/db";
-import { AuthorizedContext } from "next-app/handlers/context";
 import { getReceiptParticipant } from "next-app/handlers/receipt-participants/utils";
 import { getReceiptById } from "next-app/handlers/receipts/utils";
+import { authProcedure } from "next-app/handlers/trpc";
 import { getUserById } from "next-app/handlers/users/utils";
 import {
 	assignableRoleSchema,
@@ -13,19 +13,21 @@ import {
 	userIdSchema,
 } from "next-app/handlers/validation";
 
-export const router = trpc.router<AuthorizedContext>().mutation("update", {
-	input: z.strictObject({
-		receiptId: receiptIdSchema,
-		userId: userIdSchema,
-		update: z.discriminatedUnion("type", [
-			z.strictObject({
-				type: z.literal("role"),
-				role: assignableRoleSchema,
-			}),
-			z.strictObject({ type: z.literal("resolved"), resolved: z.boolean() }),
-		]),
-	}),
-	resolve: async ({ input, ctx }) => {
+export const procedure = authProcedure
+	.input(
+		z.strictObject({
+			receiptId: receiptIdSchema,
+			userId: userIdSchema,
+			update: z.discriminatedUnion("type", [
+				z.strictObject({
+					type: z.literal("role"),
+					role: assignableRoleSchema,
+				}),
+				z.strictObject({ type: z.literal("resolved"), resolved: z.boolean() }),
+			]),
+		})
+	)
+	.mutation(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
 		const receipt = await getReceiptById(database, input.receiptId, [
 			"ownerAccountId",
@@ -98,5 +100,4 @@ export const router = trpc.router<AuthorizedContext>().mutation("update", {
 			.where("receiptId", "=", input.receiptId)
 			.where("userId", "=", input.userId)
 			.executeTakeFirst();
-	},
-});
+	});

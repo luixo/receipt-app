@@ -1,14 +1,17 @@
 import React from "react";
 
-import { QueryClient, QueryClientProvider } from "react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { createReactQueryHooks } from "@trpc/react";
 import superjson from "superjson";
 
-import { trpc } from "app/trpc";
 import {
 	getNativeBaseUrl,
 	getQueryClientConfig,
 	TRPC_ENDPOINT,
 } from "app/utils/queries";
+import { AppRouter } from "next-app/pages/api/trpc/[trpc]";
+
+const trpc = createReactQueryHooks<AppRouter>();
 
 export const QueriesProvider: React.FC<React.PropsWithChildren<object>> = ({
 	children,

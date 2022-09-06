@@ -3,15 +3,17 @@ import { sql } from "kysely";
 import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
-import { AuthorizedContext } from "next-app/handlers/context";
 import { getAccessRole, Role } from "next-app/handlers/receipts/utils";
+import { authProcedure } from "next-app/handlers/trpc";
 import { receiptIdSchema } from "next-app/handlers/validation";
 
-export const router = trpc.router<AuthorizedContext>().query("get", {
-	input: z.strictObject({
-		id: receiptIdSchema,
-	}),
-	resolve: async ({ input, ctx }) => {
+export const procedure = authProcedure
+	.input(
+		z.strictObject({
+			id: receiptIdSchema,
+		})
+	)
+	.query(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
 		const maybeReceipt = await database
 			.selectFrom("receipts")
@@ -79,5 +81,4 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 			code: "FORBIDDEN",
 			message: `Account id ${ctx.auth.accountId} has no access to receipt ${receipt.id}`,
 		});
-	},
-});
+	});

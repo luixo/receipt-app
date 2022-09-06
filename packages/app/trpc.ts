@@ -1,102 +1,120 @@
-import { createReactQueryHooks, TRPCClientErrorLike } from "@trpc/react";
-import { TRPCContextState } from "@trpc/react/dist/declarations/src/internals/context";
-import type { Procedure } from "@trpc/server/dist/declarations/src/internals/procedure";
-import type {
-	Router as GenericRouter,
-	ProcedureRecord,
-} from "@trpc/server/dist/declarations/src/router";
-import type {
+import {
 	InvalidateOptions,
 	InvalidateQueryFilters,
+	QueryClient,
 	SetDataOptions,
 	UseInfiniteQueryResult,
 	UseMutationResult,
+	useQueryClient,
 	UseQueryResult,
-} from "react-query";
+} from "@tanstack/react-query";
+import type {
+	DecoratedProcedureUtilsRecord,
+	TRPCClientErrorLike,
+} from "@trpc/react";
+import { createTRPCReact } from "@trpc/react";
+import type {
+	AnyProcedure,
+	QueryProcedure,
+	MutationProcedure,
+} from "@trpc/server/dist/core/procedure";
+import type { ProcedureRecord, AnyRouter } from "@trpc/server/dist/core/router";
+import type {
+	inferProcedureInput,
+	inferProcedureOutput,
+} from "@trpc/server/dist/core/types";
 
+import type {
+	ExtractObjectByPath,
+	FlattenObject,
+	SplitStringByComma,
+	UnionToIntersection,
+} from "app/utils/types";
 import type { AppRouter } from "next-app/pages/api/trpc/[trpc]";
-
-type AnyRouter<TContext = any> = GenericRouter<
-	any,
-	TContext,
-	any,
-	any,
-	any,
-	any,
-	any
->;
-type AnyProcedure = Procedure<any, any, any, any, any, any, any>;
-type AnyProcedureRecord = ProcedureRecord<any, any, any, any, any, any>;
-
-type InferProcedureInput<P extends AnyProcedure> = P extends Procedure<
-	any,
-	any,
-	any,
-	infer Input,
-	any,
-	any,
-	any
->
-	? undefined extends Input
-		? Input | null | void
-		: Input
-	: undefined;
-
-type InferProcedureOutput<P extends AnyProcedure> = Awaited<
-	ReturnType<P["call"]>
->;
-
-type InferProcedures<Obj extends AnyProcedureRecord> = {
-	[Path in keyof Obj]: {
-		input: InferProcedureInput<Obj[Path]>;
-		output: InferProcedureOutput<Obj[Path]>;
-	};
-};
 
 type TypeKey = "queries" | "mutations";
 
-type DefValues<
+type ProceduresValues<
 	Router extends AnyRouter,
-	Type extends TypeKey
-> = InferProcedures<Router["_def"][Type]>;
-
-type DefKey<
-	Router extends AnyRouter,
-	Type extends TypeKey
-> = keyof Router["_def"][Type];
-
-type InferInfiniteQueryNames<
-	TObj extends ProcedureRecord<any, any, any, any, any, any>
+	Type extends TypeKey,
+	Procedures extends Router["_def"]["procedures"] = Router["_def"]["procedures"],
+	ProcedureKeys extends keyof Procedures = keyof Procedures
 > = {
-	[TPath in keyof TObj]: InferProcedureInput<TObj[TPath]> extends {
-		cursor?: any;
-	}
-		? TPath
+	[K in ProcedureKeys]: Procedures[K] extends AnyRouter
+		? ProceduresValues<Procedures[K], Type>
+		: Type extends "queries"
+		? Procedures[K] extends QueryProcedure<any>
+			? Procedures[K]
+			: never
+		: Procedures[K] extends MutationProcedure<any>
+		? Procedures[K]
 		: never;
-}[keyof TObj];
+};
 
-type InfiniteQueryNames<
-	Router extends AnyRouter,
-	Type extends TypeKey
-> = InferInfiniteQueryNames<Router["_def"][Type]>;
+type QueriesProcedureValues = ProceduresValues<AppRouter, "queries">;
+
+type TRPCQueryValues = UnionToIntersection<
+	FlattenObject<AnyProcedure, QueriesProcedureValues>
+>;
+
+type MutationsProcedureValues = ProceduresValues<AppRouter, "mutations">;
+
+type TRPCMutationValues = UnionToIntersection<
+	FlattenObject<AnyProcedure, MutationsProcedureValues>
+>;
 
 // anything router-specific goes below
 
-export const trpc = createReactQueryHooks<AppRouter>();
+const rawTrpc = createTRPCReact<AppRouter>();
+export const trpc = new Proxy(rawTrpc, {
+	get: (targetTrpc, propTrpc) => {
+		if (propTrpc === "useContext") {
+			const useContextResult = targetTrpc[propTrpc];
+			return new Proxy(useContextResult, {
+				apply: (useContextTarget, thisObj) => {
+					// eslint-disable-next-line react-hooks/rules-of-hooks
+					const queryClient = useQueryClient();
+					const result = useContextTarget.apply(thisObj);
+					return new Proxy(result as any, {
+						get: (targetCtx, propCtx) => {
+							if (propCtx === "queryClient") {
+								return queryClient;
+							}
+							return targetCtx[propCtx as keyof typeof targetCtx];
+						},
+					});
+				},
+			});
+		}
+		return targetTrpc[propTrpc as keyof typeof targetTrpc];
+	},
+}) as Omit<typeof rawTrpc, "useContext"> & {
+	useContext: () => TRPCReactContext;
+};
 
 export type TRPCError = TRPCClientErrorLike<AppRouter>;
 
-export type TRPCReactContext = TRPCContextState<AppRouter, unknown>;
+export type TRPCSimpleReactContext = DecoratedProcedureUtilsRecord<AppRouter>;
 
-export type TRPCQueryKey = DefKey<AppRouter, "queries">;
+export type TRPCReactContext = TRPCSimpleReactContext & {
+	queryClient: QueryClient;
+};
 
-type TRPCQueryValues = DefValues<AppRouter, "queries">;
+type TRPCInfiniteQueryValues<P extends ProcedureRecord> = {
+	[K in keyof P as inferProcedureInput<P[K]> extends { cursor?: unknown }
+		? K
+		: never]: P[K];
+};
 
-export type TRPCQueryInput<Path extends TRPCQueryKey> =
-	TRPCQueryValues[Path]["input"];
+export type TRPCQueryKey = keyof TRPCQueryValues & string;
 
-export type TRPCQueryOutput<Path extends TRPCQueryKey> =
-	TRPCQueryValues[Path]["output"];
+export type TRPCQueryInput<Path extends TRPCQueryKey> = inferProcedureInput<
+	TRPCQueryValues[Path]
+>;
+
+export type TRPCQueryOutput<Path extends TRPCQueryKey> = inferProcedureOutput<
+	TRPCQueryValues[Path]
+>;
 
 export type TRPCQueryResult<Path extends TRPCQueryKey> = UseQueryResult<
 	TRPCQueryOutput<Path>,
@@ -108,17 +126,27 @@ export type TRPCQuerySuccessResult<
 	Result extends TRPCQueryResult<Path> = TRPCQueryResult<Path>
 > = Result extends { status: "success" } ? Result : never;
 
-export type TRPCInfiniteQueryKey = InfiniteQueryNames<AppRouter, "queries">;
+export type TRPCQueryProcedures = DecoratedProcedureUtilsRecord<AppRouter>;
+
+export type TRPCQueryProcedure<Path extends TRPCQueryKey> = ExtractObjectByPath<
+	TRPCQueryProcedures,
+	SplitStringByComma<Path>
+>;
+
+export type TRPCInfiniteQueryKey =
+	keyof TRPCInfiniteQueryValues<TRPCQueryValues>;
 
 export type TRPCInfiniteQueryInput<Path extends TRPCInfiniteQueryKey> = Omit<
-	TRPCQueryValues[Path]["input"],
+	inferProcedureInput<TRPCQueryValues[Path]>,
 	"cursor"
 >;
 export type TRPCInfiniteQueryOutput<Path extends TRPCInfiniteQueryKey> =
-	TRPCQueryValues[Path]["output"];
+	inferProcedureOutput<TRPCQueryValues[Path]>;
 
 export type TRPCInfiniteQueryCursor<Path extends TRPCInfiniteQueryKey> =
-	TRPCQueryValues[Path]["input"]["cursor"];
+	inferProcedureInput<TRPCQueryValues[Path]> extends { cursor?: unknown }
+		? inferProcedureInput<TRPCQueryValues[Path]>["cursor"]
+		: never;
 
 export type TRPCInfiniteQueryResult<Path extends TRPCQueryKey> =
 	UseInfiniteQueryResult<TRPCQueryOutput<Path>, TRPCError>;
@@ -128,15 +156,13 @@ export type TRPCInfiniteQuerySuccessResult<
 	Result extends TRPCInfiniteQueryResult<Path> = TRPCInfiniteQueryResult<Path>
 > = Result extends { status: "success" } ? Result : never;
 
-export type TRPCMutationKey = DefKey<AppRouter, "mutations">;
-
-type TRPCMutationValues = DefValues<AppRouter, "mutations">;
+export type TRPCMutationKey = keyof TRPCMutationValues;
 
 export type TRPCMutationInput<Path extends TRPCMutationKey> =
-	TRPCMutationValues[Path]["input"];
+	inferProcedureInput<TRPCMutationValues[Path]>;
 
 export type TRPCMutationOutput<Path extends TRPCMutationKey> =
-	TRPCMutationValues[Path]["output"];
+	inferProcedureOutput<TRPCMutationValues[Path]>;
 
 export type TRPCMutationResult<Path extends TRPCMutationKey> =
 	UseMutationResult<

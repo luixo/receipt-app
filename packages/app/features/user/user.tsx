@@ -40,15 +40,12 @@ type Props = Omit<InnerProps, "query"> & {
 };
 
 export const User: React.FC<Props> = ({ id, ...props }) => {
-	const query = trpc.useQuery(["users.get", { id }]);
+	const query = trpc.users.get.useQuery({ id });
 	if (query.status === "loading") {
 		return <Loading />;
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;
-	}
-	if (query.status === "idle") {
-		return null;
 	}
 	return <UserInner {...props} query={query} />;
 };

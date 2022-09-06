@@ -1,6 +1,6 @@
 import React from "react";
 
-import { UseInfiniteQueryResult } from "react-query";
+import { UseInfiniteQueryResult } from "@tanstack/react-query";
 
 export type CursorPagingResult<T extends { count: number }> = {
 	onNextPage: () => void;

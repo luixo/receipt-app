@@ -56,17 +56,15 @@ type Props = {
 };
 
 export const DebtControlButtons: React.FC<Props> = ({ debt, hideLocked }) => {
-	const connectedUser = trpc.useQuery([
-		"users.hasConnectedAccount",
-		{ id: debt.userId },
-	]);
+	const connectedUser = trpc.users.hasConnectedAccount.useQuery({
+		id: debt.userId,
+	});
 	const showConnectionStatus =
 		connectedUser.status === "success" ? connectedUser.data : false;
 
 	const size = useMatchMediaValue(48, { lessSm: 36 });
 
-	const addMutation = trpc.useMutation(
-		"debtsSyncIntentions.add",
+	const addMutation = trpc.debtsSyncIntentions.add.useMutation(
 		useTrpcMutationOptions(cache.debtsSyncIntentions.add.mutationOptions, debt)
 	);
 	const sendSyncIntention = React.useCallback(
@@ -74,8 +72,7 @@ export const DebtControlButtons: React.FC<Props> = ({ debt, hideLocked }) => {
 		[addMutation, debt.id]
 	);
 
-	const removeMutation = trpc.useMutation(
-		"debtsSyncIntentions.remove",
+	const removeMutation = trpc.debtsSyncIntentions.remove.useMutation(
 		useTrpcMutationOptions(
 			cache.debtsSyncIntentions.remove.mutationOptions,
 			debt
@@ -86,8 +83,7 @@ export const DebtControlButtons: React.FC<Props> = ({ debt, hideLocked }) => {
 		[removeMutation, debt.id]
 	);
 
-	const acceptMutation = trpc.useMutation(
-		"debtsSyncIntentions.accept",
+	const acceptMutation = trpc.debtsSyncIntentions.accept.useMutation(
 		useTrpcMutationOptions(
 			cache.debtsSyncIntentions.accept.mutationOptions,
 			React.useMemo(
@@ -105,8 +101,7 @@ export const DebtControlButtons: React.FC<Props> = ({ debt, hideLocked }) => {
 		[acceptMutation, debt.id]
 	);
 
-	const rejectMutation = trpc.useMutation(
-		"debtsSyncIntentions.reject",
+	const rejectMutation = trpc.debtsSyncIntentions.reject.useMutation(
 		useTrpcMutationOptions(
 			cache.debtsSyncIntentions.reject.mutationOptions,
 			React.useMemo(
@@ -120,8 +115,7 @@ export const DebtControlButtons: React.FC<Props> = ({ debt, hideLocked }) => {
 		[rejectMutation, debt.id]
 	);
 
-	const lockMutation = trpc.useMutation(
-		"debts.update",
+	const lockMutation = trpc.debts.update.useMutation(
 		useTrpcMutationOptions(cache.debts.update.mutationOptions, debt)
 	);
 	const mutateLock = useAsyncCallback(

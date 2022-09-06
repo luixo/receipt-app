@@ -48,15 +48,12 @@ const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 };
 
 export const DebtIntentions: React.FC = () => {
-	const query = trpc.useQuery(["debtsSyncIntentions.getAll"]);
+	const query = trpc.debtsSyncIntentions.getAll.useQuery();
 	if (query.status === "loading") {
 		return <Loading size="xl" />;
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;
-	}
-	if (query.status === "idle") {
-		return null;
 	}
 	return <DebtIntentionsInner query={query} />;
 };

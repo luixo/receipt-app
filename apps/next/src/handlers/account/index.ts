@@ -1,15 +1,13 @@
-import * as trpc from "@trpc/server";
+import { t } from "next-app/handlers/trpc";
 
-import { AuthorizedContext } from "next-app/handlers/context";
+import { procedure as changePassword } from "./change-password";
+import { procedure as get } from "./get";
+import { procedure as logout } from "./logout";
+import { procedure as resendEmail } from "./resend-email";
 
-import { router as changePasswordRouter } from "./change-password";
-import { router as getRouter } from "./get";
-import { router as logoutRouter } from "./logout";
-import { router as resendEmailRouter } from "./resend-email";
-
-export const router = trpc
-	.router<AuthorizedContext>()
-	.merge(getRouter)
-	.merge(logoutRouter)
-	.merge(changePasswordRouter)
-	.merge(resendEmailRouter);
+export const router = t.router({
+	get,
+	logout,
+	changePassword,
+	resendEmail,
+});

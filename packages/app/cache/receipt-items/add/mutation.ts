@@ -36,7 +36,7 @@ export const mutationOptions: UseContextedMutationOptions<
 			cache.receiptItems.get.receiptItem.update(
 				trpcContext,
 				receiptId,
-				temporaryId,
+				temporaryId!,
 				(item) => ({ ...item, id: actualId })
 			);
 			cache.receipts.utils.updateReceiptSum(trpcContext, receiptId);

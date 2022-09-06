@@ -1,15 +1,13 @@
-import * as trpc from "@trpc/server";
+import { t } from "next-app/handlers/trpc";
 
-import { AuthorizedContext } from "next-app/handlers/context";
+import { procedure as add } from "./add";
+import { procedure as get } from "./get";
+import { procedure as remove } from "./remove";
+import { procedure as update } from "./update";
 
-import { router as addRouter } from "./add";
-import { router as getRouter } from "./get";
-import { router as removeRouter } from "./remove";
-import { router as updateRouter } from "./update";
-
-export const router = trpc
-	.router<AuthorizedContext>()
-	.merge(getRouter)
-	.merge(addRouter)
-	.merge(removeRouter)
-	.merge(updateRouter);
+export const router = t.router({
+	get,
+	add,
+	remove,
+	update,
+});

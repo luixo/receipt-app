@@ -53,8 +53,7 @@ export const ReceiptItemPart: React.FC<Props> = ({
 	readOnly,
 	isLoading,
 }) => {
-	const removeMutation = trpc.useMutation(
-		"itemParticipants.remove",
+	const removeMutation = trpc.itemParticipants.remove.useMutation(
 		useTrpcMutationOptions(
 			cache.itemParticipants.remove.mutationOptions,
 			receiptId

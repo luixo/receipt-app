@@ -13,18 +13,20 @@ import {
 	createAuthorizationSession,
 	sendVerificationEmail,
 } from "next-app/handlers/auth/utils";
-import { UnauthorizedContext } from "next-app/handlers/context";
+import { unauthProcedure } from "next-app/handlers/trpc";
 import { setAuthCookie } from "next-app/utils/auth-cookie";
 import { generatePasswordData } from "next-app/utils/crypto";
 import { isEmailServiceActive } from "next-app/utils/email";
 
-export const router = trpc.router<UnauthorizedContext>().mutation("register", {
-	input: z.strictObject({
-		email: emailSchema,
-		password: passwordSchema,
-		name: userNameSchema,
-	}),
-	resolve: async ({ input, ctx }) => {
+export const procedure = unauthProcedure
+	.input(
+		z.strictObject({
+			email: emailSchema,
+			password: passwordSchema,
+			name: userNameSchema,
+		})
+	)
+	.mutation(async ({ input, ctx }) => {
 		const email = input.email.toLowerCase();
 		const database = getDatabase(ctx);
 		const account = await database
@@ -81,5 +83,4 @@ export const router = trpc.router<UnauthorizedContext>().mutation("register", {
 				accountId: id,
 			};
 		}
-	},
-});
+	});

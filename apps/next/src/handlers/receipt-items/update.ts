@@ -8,31 +8,33 @@ import {
 	receiptItemNameSchema,
 } from "app/utils/validation";
 import { ReceiptsDatabase, getDatabase } from "next-app/db";
-import { AuthorizedContext } from "next-app/handlers/context";
 import { getReceiptItemById } from "next-app/handlers/receipt-items/utils";
 import {
 	getReceiptById,
 	getAccessRole,
 } from "next-app/handlers/receipts/utils";
+import { authProcedure } from "next-app/handlers/trpc";
 import { receiptItemIdSchema } from "next-app/handlers/validation";
 
-export const router = trpc.router<AuthorizedContext>().mutation("update", {
-	input: z.strictObject({
-		id: receiptItemIdSchema,
-		update: z.discriminatedUnion("type", [
-			z.strictObject({
-				type: z.literal("name"),
-				name: receiptItemNameSchema,
-			}),
-			z.strictObject({ type: z.literal("price"), price: priceSchema }),
-			z.strictObject({
-				type: z.literal("quantity"),
-				quantity: quantitySchema,
-			}),
-			z.strictObject({ type: z.literal("locked"), locked: z.boolean() }),
-		]),
-	}),
-	resolve: async ({ input, ctx }) => {
+export const procedure = authProcedure
+	.input(
+		z.strictObject({
+			id: receiptItemIdSchema,
+			update: z.discriminatedUnion("type", [
+				z.strictObject({
+					type: z.literal("name"),
+					name: receiptItemNameSchema,
+				}),
+				z.strictObject({ type: z.literal("price"), price: priceSchema }),
+				z.strictObject({
+					type: z.literal("quantity"),
+					quantity: quantitySchema,
+				}),
+				z.strictObject({ type: z.literal("locked"), locked: z.boolean() }),
+			]),
+		})
+	)
+	.mutation(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
 		const receiptItem = await getReceiptItemById(database, input.id, [
 			"receiptId",
@@ -97,5 +99,4 @@ export const router = trpc.router<AuthorizedContext>().mutation("update", {
 			.set(setObject)
 			.where("id", "=", input.id)
 			.executeTakeFirst();
-	},
-});
+	});

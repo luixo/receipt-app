@@ -1,23 +1,21 @@
-import * as trpc from "@trpc/server";
+import { t } from "next-app/handlers/trpc";
 
-import { AuthorizedContext } from "next-app/handlers/context";
+import { procedure as add } from "./add";
+import { procedure as get } from "./get";
+import { procedure as getByReceiptId } from "./get-by-receipt-id";
+import { procedure as getByUsers } from "./get-by-users";
+import { procedure as getReceipt } from "./get-receipt";
+import { procedure as getUser } from "./get-user";
+import { procedure as remove } from "./remove";
+import { procedure as update } from "./update";
 
-import { router as addRouter } from "./add";
-import { router as getRouter } from "./get";
-import { router as getByReceiptIdRouter } from "./get-by-receipt-id";
-import { router as getByUsersRouter } from "./get-by-users";
-import { router as getReceiptRouter } from "./get-receipt";
-import { router as getUserRouter } from "./get-user";
-import { router as removeRouter } from "./remove";
-import { router as updateRouter } from "./update";
-
-export const router = trpc
-	.router<AuthorizedContext>()
-	.merge(getByUsersRouter)
-	.merge(getUserRouter)
-	.merge(getReceiptRouter)
-	.merge(getRouter)
-	.merge(updateRouter)
-	.merge(removeRouter)
-	.merge(addRouter)
-	.merge(getByReceiptIdRouter);
+export const router = t.router({
+	getByUsers,
+	getUser,
+	getReceipt,
+	get,
+	update,
+	remove,
+	add,
+	getByReceiptId,
+});

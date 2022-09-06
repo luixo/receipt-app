@@ -33,7 +33,7 @@ export const ResetPassword: React.FC<Props> = ({ token, intentionQuery }) => {
 		),
 	});
 
-	const changePasswordMutation = trpc.useMutation("auth.resetPassword");
+	const changePasswordMutation = trpc.auth.resetPassword.useMutation();
 	const onSubmit = useSubmitHandler(
 		async ({ password }: ChangePasswordForm) => {
 			if (!token) {
@@ -60,9 +60,6 @@ export const ResetPassword: React.FC<Props> = ({ token, intentionQuery }) => {
 	}
 	if (intentionQuery.status === "error") {
 		return <QueryErrorMessage query={intentionQuery} />;
-	}
-	if (intentionQuery.status === "idle") {
-		return null;
 	}
 	return (
 		<>

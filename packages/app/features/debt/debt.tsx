@@ -52,7 +52,7 @@ type Props = Omit<InnerProps, "query"> & {
 };
 
 export const Debt: React.FC<Props> = ({ id, ...props }) => {
-	const query = trpc.useQuery(["debts.get", { id }]);
+	const query = trpc.debts.get.useQuery({ id });
 	if (query.status === "loading") {
 		return (
 			<>
@@ -63,9 +63,6 @@ export const Debt: React.FC<Props> = ({ id, ...props }) => {
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;
-	}
-	if (query.status === "idle") {
-		return null;
 	}
 	return <DebtInner {...props} query={query} />;
 };

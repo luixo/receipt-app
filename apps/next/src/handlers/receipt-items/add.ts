@@ -8,21 +8,23 @@ import {
 	receiptItemNameSchema,
 } from "app/utils/validation";
 import { getDatabase } from "next-app/db";
-import { AuthorizedContext } from "next-app/handlers/context";
 import {
 	getAccessRole,
 	getReceiptById,
 } from "next-app/handlers/receipts/utils";
+import { authProcedure } from "next-app/handlers/trpc";
 import { receiptIdSchema } from "next-app/handlers/validation";
 
-export const router = trpc.router<AuthorizedContext>().mutation("add", {
-	input: z.strictObject({
-		receiptId: receiptIdSchema,
-		name: receiptItemNameSchema,
-		price: priceSchema,
-		quantity: quantitySchema,
-	}),
-	resolve: async ({ input, ctx }) => {
+export const procedure = authProcedure
+	.input(
+		z.strictObject({
+			receiptId: receiptIdSchema,
+			name: receiptItemNameSchema,
+			price: priceSchema,
+			quantity: quantitySchema,
+		})
+	)
+	.mutation(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
 		const receipt = await getReceiptById(database, input.receiptId, [
 			"ownerAccountId",
@@ -66,5 +68,4 @@ export const router = trpc.router<AuthorizedContext>().mutation("add", {
 			})
 			.executeTakeFirst();
 		return id;
-	},
-});
+	});

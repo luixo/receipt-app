@@ -74,9 +74,6 @@ const UsersSuggestDropdown: React.FC<DropdownProps> = ({
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;
 	}
-	if (query.status === "idle") {
-		return <Loading size="xs" />;
-	}
 	const users = query.data.pages.reduce<User[]>(
 		(acc, page) => [...acc, ...page.items],
 		[]
@@ -112,7 +109,7 @@ const UsersSuggestDropdown: React.FC<DropdownProps> = ({
 };
 
 type TopDropdownProps = {
-	query: TRPCQueryResult<"users.suggest-top">;
+	query: TRPCQueryResult<"users.suggestTop">;
 	filterIds: UsersId[];
 	onUserClick: (user: User) => void;
 };
@@ -127,9 +124,6 @@ const UsersSuggestTopDropdown: React.FC<TopDropdownProps> = ({
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;
-	}
-	if (query.status === "idle") {
-		return <Loading size="xs" />;
 	}
 	const users = query.data.items;
 	if (users.length === 0) {
@@ -190,12 +184,12 @@ export const UsersSuggest: React.FC<Props> = ({
 		...(outerFilterIds || []),
 		...selectedUsers.map((user) => user.id),
 	];
-	const topQuery = trpc.useQuery(
-		["users.suggest-top", { limit: topLimit, options, filterIds }],
+	const topQuery = trpc.users.suggestTop.useQuery(
+		{ limit: topLimit, options, filterIds },
 		{ keepPreviousData: true }
 	);
-	const query = trpc.useInfiniteQuery(
-		["users.suggest", { limit, input: debouncedValue, options, filterIds }],
+	const query = trpc.users.suggest.useInfiniteQuery(
+		{ limit, input: debouncedValue, options, filterIds },
 		{
 			getNextPageParam: (result) =>
 				result.hasMore ? result.cursor + limit : undefined,

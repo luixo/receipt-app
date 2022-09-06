@@ -14,8 +14,7 @@ export const ReceiptDateInput: React.FC<Props> = ({
 	receipt,
 	isLoading: isOuterLoading,
 }) => {
-	const updateReceiptMutation = trpc.useMutation(
-		"receipts.update",
+	const updateReceiptMutation = trpc.receipts.update.useMutation(
 		useTrpcMutationOptions(cache.receipts.update.mutationOptions)
 	);
 

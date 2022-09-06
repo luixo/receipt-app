@@ -18,8 +18,7 @@ type Props = {
 export const InboundDebtIntention: React.FC<Props> = ({ intention }) => {
 	const router = useRouter();
 
-	const acceptMutation = trpc.useMutation(
-		"debtsSyncIntentions.accept",
+	const acceptMutation = trpc.debtsSyncIntentions.accept.useMutation(
 		useTrpcMutationOptions(
 			cache.debtsSyncIntentions.accept.mutationOptions,
 			React.useMemo(
@@ -43,8 +42,7 @@ export const InboundDebtIntention: React.FC<Props> = ({ intention }) => {
 		[acceptMutation, intention.id, router]
 	);
 
-	const rejectMutation = trpc.useMutation(
-		"debtsSyncIntentions.reject",
+	const rejectMutation = trpc.debtsSyncIntentions.reject.useMutation(
 		useTrpcMutationOptions(
 			cache.debtsSyncIntentions.reject.mutationOptions,
 			React.useMemo(

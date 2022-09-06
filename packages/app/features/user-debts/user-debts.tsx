@@ -73,8 +73,8 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 type Props = Omit<InnerProps, "query">;
 
 export const UserDebts: React.FC<Props> = ({ userId, ...props }) => {
-	const query = trpc.useQuery(["debts.getUser", { userId }]);
-	const userNameQuery = trpc.useQuery(["users.getName", { id: userId }]);
+	const query = trpc.debts.getUser.useQuery({ userId });
+	const userNameQuery = trpc.users.getName.useQuery({ id: userId });
 	if (query.status === "loading") {
 		return (
 			<>
@@ -85,9 +85,6 @@ export const UserDebts: React.FC<Props> = ({ userId, ...props }) => {
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;
-	}
-	if (query.status === "idle") {
-		return null;
 	}
 	return <UserDebtsInner {...props} query={query} userId={userId} />;
 };

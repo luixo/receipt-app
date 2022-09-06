@@ -1,5 +1,5 @@
+import type { QueryClientConfig } from "@tanstack/react-query";
 import Constants from "expo-constants";
-import type { QueryClientConfig } from "react-query";
 
 import { MINUTE } from "app/utils/time";
 

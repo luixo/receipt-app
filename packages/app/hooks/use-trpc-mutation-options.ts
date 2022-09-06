@@ -1,6 +1,6 @@
 import React from "react";
 
-import type { MutationOptions } from "react-query";
+import { MutationOptions } from "@tanstack/react-query";
 
 import {
 	trpc,
@@ -59,18 +59,13 @@ export const useTrpcMutationOptions = <
 	>
 ): TRPCMutationOptions<Path, LifecycleContext> => {
 	const trpcContext = trpc.useContext();
-	const args = React.useMemo<WithContextIfExists<TRPCReactContext, Context>>(
-		() =>
-			[trpcContext, context] as WithContextIfExists<TRPCReactContext, Context>,
-		[trpcContext, context]
-	);
-	return React.useMemo(
-		() => ({
+	return React.useMemo(() => {
+		const args = [trpcContext, context] as any;
+		return {
 			onMutate: onMutate?.(...args),
 			onError: onError?.(...args),
 			onSettled: onSettled?.(...args),
 			onSuccess: onSuccess?.(...args),
-		}),
-		[args, onMutate, onError, onSettled, onSuccess]
-	);
+		};
+	}, [trpcContext, context, onMutate, onError, onSettled, onSuccess]);
 };

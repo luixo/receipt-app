@@ -1,12 +1,12 @@
 import React from "react";
 
 import { Button, Text, Card, Row, Spacer, styled } from "@nextui-org/react";
-import { IoWarning as WarningIcon } from "react-icons/io5";
 import {
 	MutationObserverErrorResult,
 	QueryObserverRefetchErrorResult,
 	QueryObserverLoadingErrorResult,
-} from "react-query";
+} from "@tanstack/react-query";
+import { IoWarning as WarningIcon } from "react-icons/io5";
 
 import { TRPCError } from "app/trpc";
 

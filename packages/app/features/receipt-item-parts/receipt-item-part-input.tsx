@@ -48,8 +48,7 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 		type: "number",
 	});
 
-	const updateMutation = trpc.useMutation(
-		"itemParticipants.update",
+	const updateMutation = trpc.itemParticipants.update.useMutation(
 		useTrpcMutationOptions(
 			cache.itemParticipants.update.mutationOptions,
 			receiptId

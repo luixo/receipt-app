@@ -24,7 +24,7 @@ const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 	const router = useRouter();
 
 	const trpcContext = trpc.useContext();
-	const logoutMutation = trpc.useMutation("account.logout");
+	const logoutMutation = trpc.account.logout.useMutation();
 	const logout = useAsyncCallback(
 		async (isMount) => {
 			await logoutMutation.mutateAsync();
@@ -66,15 +66,12 @@ const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 };
 
 export const AccountScreen: PageWithLayout = () => {
-	const query = trpc.useQuery(["account.get"]);
+	const query = trpc.account.get.useQuery();
 	if (query.status === "loading") {
 		return <Loading />;
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;
-	}
-	if (query.status === "idle") {
-		return null;
 	}
 	return <AccountScreenInner query={query} />;
 };

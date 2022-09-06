@@ -2,16 +2,18 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
-import { AuthorizedContext } from "next-app/handlers/context";
 import { getDebtIntention } from "next-app/handlers/debts-sync-intentions/utils";
 import { getDebt } from "next-app/handlers/debts/utils";
+import { authProcedure } from "next-app/handlers/trpc";
 import { debtIdSchema } from "next-app/handlers/validation";
 
-export const router = trpc.router<AuthorizedContext>().mutation("remove", {
-	input: z.strictObject({
-		id: debtIdSchema,
-	}),
-	resolve: async ({ input, ctx }) => {
+export const procedure = authProcedure
+	.input(
+		z.strictObject({
+			id: debtIdSchema,
+		})
+	)
+	.mutation(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
 		const debt = await getDebt(database, input.id, ctx.auth.accountId, []);
 		if (!debt) {
@@ -37,5 +39,4 @@ export const router = trpc.router<AuthorizedContext>().mutation("remove", {
 				.where("ownerAccountId", "=", ctx.auth.accountId)
 				.execute();
 		}
-	},
-});
+	});

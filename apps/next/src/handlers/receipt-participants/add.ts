@@ -2,22 +2,24 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
-import { AuthorizedContext } from "next-app/handlers/context";
 import { addReceiptParticipants } from "next-app/handlers/receipt-participants/utils";
 import { getReceiptById } from "next-app/handlers/receipts/utils";
+import { authProcedure } from "next-app/handlers/trpc";
 import {
 	receiptIdSchema,
 	assignableRoleSchema,
 	userIdSchema,
 } from "next-app/handlers/validation";
 
-export const router = trpc.router<AuthorizedContext>().mutation("add", {
-	input: z.strictObject({
-		receiptId: receiptIdSchema,
-		userIds: z.array(userIdSchema).nonempty(),
-		role: assignableRoleSchema,
-	}),
-	resolve: async ({ input, ctx }) => {
+export const procedure = authProcedure
+	.input(
+		z.strictObject({
+			receiptId: receiptIdSchema,
+			userIds: z.array(userIdSchema).nonempty(),
+			role: assignableRoleSchema,
+		})
+	)
+	.mutation(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
 		const receipt = await getReceiptById(database, input.receiptId, [
 			"ownerAccountId",
@@ -40,5 +42,4 @@ export const router = trpc.router<AuthorizedContext>().mutation("add", {
 			ctx.auth.accountId,
 			input.userIds.map((userId) => [userId, input.role])
 		);
-	},
-});
+	});

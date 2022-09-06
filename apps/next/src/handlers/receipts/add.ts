@@ -1,21 +1,22 @@
-import * as trpc from "@trpc/server";
 import { v4 } from "uuid";
 import { z } from "zod";
 
 import { receiptNameSchema } from "app/utils/validation";
 import { getDatabase } from "next-app/db";
-import { AuthorizedContext } from "next-app/handlers/context";
 import { addReceiptParticipants } from "next-app/handlers/receipt-participants/utils";
+import { authProcedure } from "next-app/handlers/trpc";
 import { currencySchema, userIdSchema } from "next-app/handlers/validation";
 
-export const router = trpc.router<AuthorizedContext>().mutation("add", {
-	input: z.strictObject({
-		name: receiptNameSchema,
-		currency: currencySchema,
-		userIds: z.array(userIdSchema).optional(),
-		issued: z.date(),
-	}),
-	resolve: async ({ input, ctx }) => {
+export const procedure = authProcedure
+	.input(
+		z.strictObject({
+			name: receiptNameSchema,
+			currency: currencySchema,
+			userIds: z.array(userIdSchema).optional(),
+			issued: z.date(),
+		})
+	)
+	.mutation(async ({ input, ctx }) => {
 		const id = v4();
 		const database = getDatabase(ctx);
 		await database.transaction().execute(async (tx) => {
@@ -40,5 +41,4 @@ export const router = trpc.router<AuthorizedContext>().mutation("add", {
 			}
 		});
 		return id;
-	},
-});
+	});

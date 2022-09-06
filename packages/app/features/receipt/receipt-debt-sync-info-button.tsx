@@ -69,7 +69,7 @@ export const ReceiptDebtSyncInfoButton: React.FC<Props> = ({
 	const [popoverOpen, { setFalse: closeModal, setTrue: openModal }] =
 		useBooleanState();
 
-	const receiptItemsQuery = trpc.useQuery(["receiptItems.get", { receiptId }]);
+	const receiptItemsQuery = trpc.receiptItems.get.useQuery({ receiptId });
 	const participantSums = React.useMemo(() => {
 		if (!receiptItemsQuery.data) {
 			return [];

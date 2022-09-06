@@ -1,24 +1,25 @@
-import * as trpc from "@trpc/server";
 import { sql } from "kysely";
 import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
 import { UsersId } from "next-app/db/models";
-import { AuthorizedContext } from "next-app/handlers/context";
 import {
 	getOwnReceipts,
 	getForeignReceipts,
 } from "next-app/handlers/receipts/utils";
+import { authProcedure } from "next-app/handlers/trpc";
 import { limitSchema } from "next-app/handlers/validation";
 
-export const router = trpc.router<AuthorizedContext>().query("getPaged", {
-	input: z.strictObject({
-		cursor: z.date().optional(),
-		limit: limitSchema,
-		orderBy: z.union([z.literal("date-asc"), z.literal("date-desc")]),
-		onlyNonResolved: z.boolean(),
-	}),
-	resolve: async ({ input, ctx }) => {
+export const procedure = authProcedure
+	.input(
+		z.strictObject({
+			cursor: z.date().optional(),
+			limit: limitSchema,
+			orderBy: z.union([z.literal("date-asc"), z.literal("date-desc")]),
+			onlyNonResolved: z.boolean(),
+		})
+	)
+	.query(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
 		const foreignReceipts = getForeignReceipts(database, ctx.auth.accountId);
 		const ownReceipts = getOwnReceipts(database, ctx.auth.accountId);
@@ -140,5 +141,4 @@ export const router = trpc.router<AuthorizedContext>().query("getPaged", {
 					locked: Boolean(lockedTimestamp),
 				})),
 		};
-	},
-});
+	});

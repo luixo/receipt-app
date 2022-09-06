@@ -4,16 +4,18 @@ import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
 import { UsersId } from "next-app/db/models";
-import { AuthorizedContext } from "next-app/handlers/context";
 import { getLockedStatus } from "next-app/handlers/debts-sync-intentions/utils";
 import { getReceiptById } from "next-app/handlers/receipts/utils";
+import { authProcedure } from "next-app/handlers/trpc";
 import { receiptIdSchema } from "next-app/handlers/validation";
 
-export const router = trpc.router<AuthorizedContext>().query("getReceipt", {
-	input: z.strictObject({
-		receiptId: receiptIdSchema,
-	}),
-	resolve: async ({ input, ctx }) => {
+export const procedure = authProcedure
+	.input(
+		z.strictObject({
+			receiptId: receiptIdSchema,
+		})
+	)
+	.query(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
 		const receipt = await getReceiptById(database, input.receiptId, [
 			"ownerAccountId",
@@ -133,5 +135,4 @@ export const router = trpc.router<AuthorizedContext>().query("getReceipt", {
 				intentionDirection,
 			};
 		});
-	},
-});
+	});

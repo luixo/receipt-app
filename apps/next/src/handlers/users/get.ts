@@ -4,15 +4,17 @@ import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
 import { UsersId } from "next-app/db/models";
-import { AuthorizedContext } from "next-app/handlers/context";
+import { authProcedure } from "next-app/handlers/trpc";
 import { receiptIdSchema, userIdSchema } from "next-app/handlers/validation";
 
-export const router = trpc.router<AuthorizedContext>().query("get", {
-	input: z.strictObject({
-		id: userIdSchema,
-		viaReceiptId: receiptIdSchema.optional(),
-	}),
-	resolve: async ({ input, ctx }) => {
+export const procedure = authProcedure
+	.input(
+		z.strictObject({
+			id: userIdSchema,
+			viaReceiptId: receiptIdSchema.optional(),
+		})
+	)
+	.query(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
 		const maybeUser = await database
 			.selectFrom("users")
@@ -121,5 +123,4 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 			...user,
 			localId: user.remoteId as UsersId | null,
 		};
-	},
-});
+	});

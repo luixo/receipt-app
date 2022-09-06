@@ -2,15 +2,17 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
-import { AuthorizedContext } from "next-app/handlers/context";
 import { getDebtIntention } from "next-app/handlers/debts-sync-intentions/utils";
+import { authProcedure } from "next-app/handlers/trpc";
 import { debtIdSchema } from "next-app/handlers/validation";
 
-export const router = trpc.router<AuthorizedContext>().mutation("reject", {
-	input: z.strictObject({
-		id: debtIdSchema,
-	}),
-	resolve: async ({ input, ctx }) => {
+export const procedure = authProcedure
+	.input(
+		z.strictObject({
+			id: debtIdSchema,
+		})
+	)
+	.mutation(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
 		const debtIntention = await getDebtIntention(
 			database,
@@ -39,5 +41,4 @@ export const router = trpc.router<AuthorizedContext>().mutation("reject", {
 			.deleteFrom("debtsSyncIntentions")
 			.where("debtId", "=", input.id)
 			.execute();
-	},
-});
+	});

@@ -27,8 +27,7 @@ export const AccountNameInput: React.FC<Props> = ({ account }) => {
 		schema: userNameSchema,
 	});
 
-	const updateUserMutation = trpc.useMutation(
-		"users.update",
+	const updateUserMutation = trpc.users.update.useMutation(
 		useTrpcMutationOptions(cache.users.update.mutationOptions)
 	);
 	const saveName = useAsyncCallback(

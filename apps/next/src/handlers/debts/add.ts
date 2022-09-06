@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { debtNoteSchema } from "app/utils/validation";
 import { getDatabase } from "next-app/db";
-import { AuthorizedContext } from "next-app/handlers/context";
+import { authProcedure } from "next-app/handlers/trpc";
 import { getUserById } from "next-app/handlers/users/utils";
 import {
 	debtAmountSchema,
@@ -12,15 +12,17 @@ import {
 	userIdSchema,
 } from "next-app/handlers/validation";
 
-export const router = trpc.router<AuthorizedContext>().mutation("add", {
-	input: z.strictObject({
-		note: debtNoteSchema,
-		currency: currencySchema,
-		userId: userIdSchema,
-		amount: debtAmountSchema,
-		timestamp: z.date().optional(),
-	}),
-	resolve: async ({ input, ctx }) => {
+export const procedure = authProcedure
+	.input(
+		z.strictObject({
+			note: debtNoteSchema,
+			currency: currencySchema,
+			userId: userIdSchema,
+			amount: debtAmountSchema,
+			timestamp: z.date().optional(),
+		})
+	)
+	.mutation(async ({ input, ctx }) => {
 		const id = v4();
 		const database = getDatabase(ctx);
 		const user = await getUserById(database, input.userId, ["ownerAccountId"]);
@@ -50,5 +52,4 @@ export const router = trpc.router<AuthorizedContext>().mutation("add", {
 			})
 			.executeTakeFirst();
 		return id;
-	},
-});
+	});

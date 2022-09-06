@@ -16,9 +16,9 @@
 	},
 	"dependencies": {
 		"@expo/next-adapter": "^4.0.0",
-		"@trpc/client": "^9.24.0",
-		"@trpc/next": "^9.24.0",
-		"@trpc/server": "^9.24.0",
+		"@trpc/client": "^10.0.0-alpha.48",
+		"@trpc/next": "^10.0.0-alpha.48",
+		"@trpc/server": "^10.0.0-alpha.48",
 		"@types/react": "^18.0.1",
 		"app": "*",
 		"cookie": "^0.5.0",

@@ -3,22 +3,24 @@ import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
 import { removeIntention } from "next-app/handlers/account-connection-intentions/utils";
-import { AuthorizedContext } from "next-app/handlers/context";
+import { authProcedure } from "next-app/handlers/trpc";
 import { getUserById } from "next-app/handlers/users/utils";
 import { accountIdSchema, userIdSchema } from "next-app/handlers/validation";
 
-export const router = trpc.router<AuthorizedContext>().mutation("remove", {
-	input: z.discriminatedUnion("type", [
-		z.strictObject({
-			type: z.literal("targetAccountId"),
-			targetAccountId: accountIdSchema,
-		}),
-		z.strictObject({
-			type: z.literal("userId"),
-			userId: userIdSchema,
-		}),
-	]),
-	resolve: async ({ ctx, input }) => {
+export const procedure = authProcedure
+	.input(
+		z.discriminatedUnion("type", [
+			z.strictObject({
+				type: z.literal("targetAccountId"),
+				targetAccountId: accountIdSchema,
+			}),
+			z.strictObject({
+				type: z.literal("userId"),
+				userId: userIdSchema,
+			}),
+		])
+	)
+	.mutation(async ({ ctx, input }) => {
 		const database = getDatabase(ctx);
 		switch (input.type) {
 			case "targetAccountId": {
@@ -65,5 +67,4 @@ export const router = trpc.router<AuthorizedContext>().mutation("remove", {
 				);
 			}
 		}
-	},
-});
+	});

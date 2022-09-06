@@ -4,25 +4,27 @@ import { z } from "zod";
 
 import { userNameSchema } from "app/utils/validation";
 import { ReceiptsDatabase, getDatabase } from "next-app/db";
-import { AuthorizedContext } from "next-app/handlers/context";
+import { authProcedure } from "next-app/handlers/trpc";
 import { getUserById } from "next-app/handlers/users/utils";
 import { userIdSchema } from "next-app/handlers/validation";
 
-export const router = trpc.router<AuthorizedContext>().mutation("update", {
-	input: z.strictObject({
-		id: userIdSchema,
-		update: z.discriminatedUnion("type", [
-			z.strictObject({
-				type: z.literal("name"),
-				name: userNameSchema,
-			}),
-			z.strictObject({
-				type: z.literal("publicName"),
-				publicName: userNameSchema.nullable(),
-			}),
-		]),
-	}),
-	resolve: async ({ input, ctx }) => {
+export const procedure = authProcedure
+	.input(
+		z.strictObject({
+			id: userIdSchema,
+			update: z.discriminatedUnion("type", [
+				z.strictObject({
+					type: z.literal("name"),
+					name: userNameSchema,
+				}),
+				z.strictObject({
+					type: z.literal("publicName"),
+					publicName: userNameSchema.nullable(),
+				}),
+			]),
+		})
+	)
+	.mutation(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
 		const user = await getUserById(database, input.id, ["ownerAccountId"]);
 		if (!user) {
@@ -51,5 +53,4 @@ export const router = trpc.router<AuthorizedContext>().mutation("update", {
 			.set(setObject)
 			.where("id", "=", input.id)
 			.executeTakeFirst();
-	},
-});
+	});

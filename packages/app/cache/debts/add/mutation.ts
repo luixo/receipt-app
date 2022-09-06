@@ -67,24 +67,22 @@ export const mutationOptions: UseContextedMutationOptions<
 					: undefined,
 		};
 	},
-	onSuccess:
-		(trpcContext) =>
-		(stableId, updateObject, { id }) => {
-			cache.debts.getUser.update(
-				trpcContext,
-				updateObject.userId,
-				id,
-				(debt) => ({ ...debt, id: stableId })
-			);
-			cache.debts.get.update(trpcContext, id, (debt) => ({
-				...debt,
-				id: stableId,
-			}));
-			cache.debts.getByReceiptId.add(
-				trpcContext,
-				createDebt(stableId, updateObject)
-			);
-		},
+	onSuccess: (trpcContext) => (stableId, updateObject, context) => {
+		cache.debts.getUser.update(
+			trpcContext,
+			updateObject.userId,
+			context!.id,
+			(debt) => ({ ...debt, id: stableId })
+		);
+		cache.debts.get.update(trpcContext, context!.id, (debt) => ({
+			...debt,
+			id: stableId,
+		}));
+		cache.debts.getByReceiptId.add(
+			trpcContext,
+			createDebt(stableId, updateObject)
+		);
+	},
 	onError:
 		(trpcContext) =>
 		(_error, updateObject, { sumRevert, id } = { id: "" }) => {

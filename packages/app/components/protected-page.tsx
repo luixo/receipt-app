@@ -46,7 +46,7 @@ type Props = {
 
 export const ProtectedPage: React.FC<Props> = ({ children, onData }) => {
 	const router = useRouter();
-	const query = trpc.useQuery(["account.get"]);
+	const query = trpc.account.get.useQuery();
 	React.useEffect(() => {
 		if (query.error && query.error.data?.code === "UNAUTHORIZED") {
 			router.push("/login");
@@ -60,7 +60,7 @@ export const ProtectedPage: React.FC<Props> = ({ children, onData }) => {
 	if (query.status === "error" && query.error.data?.code !== "UNAUTHORIZED") {
 		element = <QueryErrorMessage query={query} />;
 	}
-	if (query.status === "idle" || query.status === "loading") {
+	if (query.status === "loading") {
 		element = <Loading size="xl" />;
 	}
 

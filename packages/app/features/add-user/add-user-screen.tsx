@@ -24,8 +24,7 @@ import { UserNameInput } from "./user-name-input";
 export const AddUserScreen: PageWithLayout = () => {
 	const router = useRouter();
 
-	const addUserMutation = trpc.useMutation(
-		"users.add",
+	const addUserMutation = trpc.users.add.useMutation(
 		useTrpcMutationOptions(cache.users.add.mutationOptions)
 	);
 

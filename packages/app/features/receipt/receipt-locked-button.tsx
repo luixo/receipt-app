@@ -26,8 +26,7 @@ export const ReceiptLockedButton: React.FC<Props> = ({
 	isPropagating,
 	propagateDebts,
 }) => {
-	const updateReceiptMutation = trpc.useMutation(
-		"receipts.update",
+	const updateReceiptMutation = trpc.receipts.update.useMutation(
 		useTrpcMutationOptions(cache.receipts.update.mutationOptions)
 	);
 	const switchResolved = useAsyncCallback(

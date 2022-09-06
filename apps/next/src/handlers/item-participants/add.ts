@@ -2,24 +2,26 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
-import { AuthorizedContext } from "next-app/handlers/context";
 import { getReceiptItemById } from "next-app/handlers/receipt-items/utils";
 import {
 	getAccessRole,
 	getReceiptById,
 } from "next-app/handlers/receipts/utils";
+import { authProcedure } from "next-app/handlers/trpc";
 import { verifyUsersByIds } from "next-app/handlers/users/utils";
 import {
 	receiptItemIdSchema,
 	userIdSchema,
 } from "next-app/handlers/validation";
 
-export const router = trpc.router<AuthorizedContext>().mutation("add", {
-	input: z.strictObject({
-		itemId: receiptItemIdSchema,
-		userIds: z.array(userIdSchema).nonempty(),
-	}),
-	resolve: async ({ input, ctx }) => {
+export const procedure = authProcedure
+	.input(
+		z.strictObject({
+			itemId: receiptItemIdSchema,
+			userIds: z.array(userIdSchema).nonempty(),
+		})
+	)
+	.mutation(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
 		const receiptItem = await getReceiptItemById(database, input.itemId, [
 			"receiptId",
@@ -101,5 +103,4 @@ export const router = trpc.router<AuthorizedContext>().mutation("add", {
 				}))
 			)
 			.execute();
-	},
-});
+	});

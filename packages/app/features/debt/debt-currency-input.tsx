@@ -20,8 +20,7 @@ export const DebtCurrencyInput: React.FC<Props> = ({ debt, isLoading }) => {
 	const [isModalOpen, { setTrue: openModal, setFalse: closeModal }] =
 		useBooleanState();
 
-	const updateReceiptMutation = trpc.useMutation(
-		"debts.update",
+	const updateReceiptMutation = trpc.debts.update.useMutation(
 		useTrpcMutationOptions(cache.debts.update.mutationOptions, debt)
 	);
 	const saveCurrency = React.useCallback(

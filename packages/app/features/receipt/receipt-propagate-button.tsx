@@ -86,9 +86,6 @@ export const ReceiptPropagateButton: React.FC<Props> = ({
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;
 	}
-	if (query.status === "idle") {
-		return null;
-	}
 	return (
 		<ReceiptPropagateButtonInner
 			{...props}

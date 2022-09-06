@@ -13,8 +13,7 @@ type Props = {
 };
 
 export const DebtDateInput: React.FC<Props> = ({ debt, isLoading }) => {
-	const updateMutation = trpc.useMutation(
-		"debts.update",
+	const updateMutation = trpc.debts.update.useMutation(
 		useTrpcMutationOptions(cache.debts.update.mutationOptions, debt)
 	);
 

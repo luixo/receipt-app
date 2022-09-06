@@ -25,7 +25,7 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 	receiptId,
 	isLoading,
 }) => {
-	const receiptQuery = trpc.useQuery(["receipts.get", { id: receiptId }]);
+	const receiptQuery = trpc.receipts.get.useQuery({ id: receiptId });
 	const receiptLocked =
 		receiptQuery.status === "success" ? receiptQuery.data.locked : true;
 	const receiptCurrency =
@@ -82,15 +82,12 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 type Props = Omit<InnerProps, "query">;
 
 export const ReceiptItems: React.FC<Props> = ({ receiptId, ...props }) => {
-	const query = trpc.useQuery(["receiptItems.get", { receiptId }]);
+	const query = trpc.receiptItems.get.useQuery({ receiptId });
 	if (query.status === "loading") {
 		return <Loading />;
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;
-	}
-	if (query.status === "idle") {
-		return null;
 	}
 	return <ReceiptItemsInner {...props} receiptId={receiptId} query={query} />;
 };

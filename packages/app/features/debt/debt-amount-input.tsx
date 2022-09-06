@@ -41,8 +41,7 @@ export const DebtAmountInput: React.FC<Props> = ({ debt, isLoading }) => {
 		[debt.amount, setValue]
 	);
 
-	const updateMutation = trpc.useMutation(
-		"debts.update",
+	const updateMutation = trpc.debts.update.useMutation(
 		useTrpcMutationOptions(cache.debts.update.mutationOptions, debt)
 	);
 	const updateAmount = React.useCallback(

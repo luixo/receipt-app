@@ -25,8 +25,7 @@ export const ReceiptParticipantResolvedButton: React.FC<Props> = ({
 	resolved,
 	...props
 }) => {
-	const updateReceiptMutation = trpc.useMutation(
-		"receiptParticipants.update",
+	const updateReceiptMutation = trpc.receiptParticipants.update.useMutation(
 		useTrpcMutationOptions(cache.receiptParticipants.update.mutationOptions, {
 			userId: localUserId,
 		})

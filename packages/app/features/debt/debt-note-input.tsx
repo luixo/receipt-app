@@ -39,8 +39,7 @@ export const DebtNoteInput: React.FC<Props> = ({ debt, isLoading }) => {
 		schema: debtNoteSchema,
 	});
 
-	const updateMutation = trpc.useMutation(
-		"debts.update",
+	const updateMutation = trpc.debts.update.useMutation(
 		useTrpcMutationOptions(cache.debts.update.mutationOptions, debt)
 	);
 	const saveNote = useAsyncCallback(

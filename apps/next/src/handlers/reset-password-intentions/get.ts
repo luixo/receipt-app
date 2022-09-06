@@ -2,14 +2,16 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
-import { UnauthorizedContext } from "next-app/handlers/context";
+import { unauthProcedure } from "next-app/handlers/trpc";
 import { resetPasswordTokenSchema } from "next-app/handlers/validation";
 
-export const router = trpc.router<UnauthorizedContext>().query("get", {
-	input: z.strictObject({
-		token: resetPasswordTokenSchema,
-	}),
-	resolve: async ({ input, ctx }) => {
+export const procedure = unauthProcedure
+	.input(
+		z.strictObject({
+			token: resetPasswordTokenSchema,
+		})
+	)
+	.query(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
 		const resetPasswordIntention = await database
 			.selectFrom("resetPasswordIntentions")
@@ -28,5 +30,4 @@ export const router = trpc.router<UnauthorizedContext>().query("get", {
 		return {
 			email: resetPasswordIntention.email,
 		};
-	},
-});
+	});

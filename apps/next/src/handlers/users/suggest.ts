@@ -5,11 +5,11 @@ import { z } from "zod";
 import { userItemSchema } from "app/utils/validation";
 import { getDatabase } from "next-app/db";
 import { UsersId } from "next-app/db/models";
-import { AuthorizedContext } from "next-app/handlers/context";
 import {
 	getReceiptById,
 	getAccessRole,
 } from "next-app/handlers/receipts/utils";
+import { authProcedure } from "next-app/handlers/trpc";
 import {
 	limitSchema,
 	receiptIdSchema,
@@ -18,31 +18,35 @@ import {
 
 const SIMILARTY_THRESHOLD = 0.2;
 
-export const router = trpc.router<AuthorizedContext>().query("suggest", {
-	input: z.strictObject({
-		input: z.string().max(255),
-		cursor: z.number().optional(),
-		limit: limitSchema,
-		filterIds: z.array(userIdSchema).optional(),
-		options: z.discriminatedUnion("type", [
-			z.strictObject({
-				type: z.literal("not-connected"),
-			}),
-			z.strictObject({
-				type: z.literal("not-connected-receipt"),
-				receiptId: receiptIdSchema,
-			}),
-			z.strictObject({
-				type: z.literal("debts"),
-			}),
-		]),
-	}),
-	output: z.strictObject({
-		items: z.array(userItemSchema),
-		hasMore: z.boolean(),
-		cursor: z.number(),
-	}),
-	resolve: async ({ input, ctx }) => {
+export const procedure = authProcedure
+	.input(
+		z.strictObject({
+			input: z.string().max(255),
+			cursor: z.number().optional(),
+			limit: limitSchema,
+			filterIds: z.array(userIdSchema).optional(),
+			options: z.discriminatedUnion("type", [
+				z.strictObject({
+					type: z.literal("not-connected"),
+				}),
+				z.strictObject({
+					type: z.literal("not-connected-receipt"),
+					receiptId: receiptIdSchema,
+				}),
+				z.strictObject({
+					type: z.literal("debts"),
+				}),
+			]),
+		})
+	)
+	.output(
+		z.strictObject({
+			items: z.array(userItemSchema),
+			hasMore: z.boolean(),
+			cursor: z.number(),
+		})
+	)
+	.query(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
 		let filterIds = input.filterIds || [];
 		if (input.options.type === "not-connected-receipt") {
@@ -120,5 +124,4 @@ export const router = trpc.router<AuthorizedContext>().query("suggest", {
 			hasMore: mappedUsers.length === input.limit + 1,
 			items: mappedUsers.slice(0, input.limit),
 		};
-	},
-});
+	});

@@ -4,24 +4,29 @@ import { z } from "zod";
 
 import { receiptNameSchema } from "app/utils/validation";
 import { ReceiptsDatabase, getDatabase, Database } from "next-app/db";
-import { AuthorizedContext } from "next-app/handlers/context";
 import { getReceiptById } from "next-app/handlers/receipts/utils";
+import { authProcedure } from "next-app/handlers/trpc";
 import { currencySchema, receiptIdSchema } from "next-app/handlers/validation";
 
-export const router = trpc.router<AuthorizedContext>().mutation("update", {
-	input: z.strictObject({
-		id: receiptIdSchema,
-		update: z.discriminatedUnion("type", [
-			z.strictObject({
-				type: z.literal("name"),
-				name: receiptNameSchema,
-			}),
-			z.strictObject({ type: z.literal("issued"), issued: z.date() }),
-			z.strictObject({ type: z.literal("locked"), value: z.boolean() }),
-			z.strictObject({ type: z.literal("currency"), currency: currencySchema }),
-		]),
-	}),
-	resolve: async ({ input, ctx }) => {
+export const procedure = authProcedure
+	.input(
+		z.strictObject({
+			id: receiptIdSchema,
+			update: z.discriminatedUnion("type", [
+				z.strictObject({
+					type: z.literal("name"),
+					name: receiptNameSchema,
+				}),
+				z.strictObject({ type: z.literal("issued"), issued: z.date() }),
+				z.strictObject({ type: z.literal("locked"), value: z.boolean() }),
+				z.strictObject({
+					type: z.literal("currency"),
+					currency: currencySchema,
+				}),
+			]),
+		})
+	)
+	.mutation(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
 		const receipt = await getReceiptById(database, input.id, [
 			"ownerAccountId",
@@ -96,5 +101,4 @@ export const router = trpc.router<AuthorizedContext>().mutation("update", {
 				break;
 		}
 		await updateTable(database, setObject);
-	},
-});
+	});

@@ -39,15 +39,13 @@ export const ReceiptControlButtons: React.FC<Props> = ({
 	receipt,
 	deleteLoading,
 }) => {
-	const accountQuery = trpc.useQuery(["account.get"]);
+	const accountQuery = trpc.account.get.useQuery();
 
-	const receiptDebtsQuery = trpc.useQuery([
-		"debts.getReceipt",
-		{ receiptId: receipt.id },
-	]);
+	const receiptDebtsQuery = trpc.debts.getReceipt.useQuery({
+		receiptId: receipt.id,
+	});
 
-	const propagateMutation = trpc.useMutation(
-		"receipts.propagateDebts",
+	const propagateMutation = trpc.receipts.propagateDebts.useMutation(
 		useTrpcMutationOptions(cache.receipts.propagateDebts.mutationOptions)
 	);
 	const propagateDebts = React.useCallback(

@@ -39,14 +39,14 @@ const { useParam } = createParam<{ userId: UsersId }>();
 
 export const AddDebtScreen: PageWithLayout = () => {
 	const [userId] = useParam("userId");
-	const userQuery = trpc.useQuery(["users.get", { id: userId || "unknown" }], {
-		enabled: Boolean(userId),
-	});
+	const userQuery = trpc.users.get.useQuery(
+		{ id: userId || "unknown" },
+		{ enabled: Boolean(userId) }
+	);
 
 	const router = useRouter();
 
-	const addMutation = trpc.useMutation(
-		"debts.add",
+	const addMutation = trpc.debts.add.useMutation(
 		useTrpcMutationOptions(cache.debts.add.mutationOptions)
 	);
 

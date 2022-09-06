@@ -1,15 +1,11 @@
 import React from "react";
 
 import { globalCss } from "@nextui-org/react";
-import { withTRPC } from "@trpc/next";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { getCookies } from "cookies-next";
-import { NextConfig } from "next";
-import getConfig from "next/config";
 import { AppType } from "next/dist/shared/lib/utils";
 import Head from "next/head";
-import { ReactQueryDevtools } from "react-query/devtools";
 import "raf/polyfill";
-import superjson from "superjson";
 
 import { ProtectedPage } from "app/components/protected-page";
 import {
@@ -18,16 +14,9 @@ import {
 	SELECTED_COLOR_MODE_COOKIE_NAME,
 } from "app/contexts/color-mode-context";
 import { Provider } from "app/provider";
-import {
-	getQueryClientConfig,
-	getSsrHost,
-	TRPC_ENDPOINT,
-} from "app/utils/queries";
 import { useColorModeCookies } from "next-app/hooks/use-color-mode-cookies";
-import type { AppRouter } from "next-app/pages/api/trpc/[trpc]";
 import { PageWithLayout } from "next-app/types/page";
-import { AUTH_COOKIE } from "next-app/utils/auth-cookie";
-import { getCookie, serialize } from "next-app/utils/cookie";
+import { trpcNext } from "next-app/utils/trpc";
 
 const globalStyles = globalCss({
 	html: {
@@ -88,31 +77,4 @@ MyApp.getInitialProps = async ({ ctx }) => {
 	};
 };
 
-export default withTRPC<AppRouter>({
-	config: ({ ctx }) => {
-		const queryClientConfig = getQueryClientConfig();
-		const debugHeader = ctx?.query.debug ? "true" : undefined;
-		if (typeof window !== "undefined") {
-			return {
-				url: TRPC_ENDPOINT,
-				queryClientConfig,
-				headers: {
-					debug: debugHeader,
-				},
-				transformer: superjson,
-			};
-		}
-		const nextConfig: NextConfig = getConfig();
-		const authToken = ctx?.req ? getCookie(ctx.req, AUTH_COOKIE) : undefined;
-		return {
-			url: getSsrHost(nextConfig.serverRuntimeConfig?.port ?? 0),
-			queryClientConfig,
-			headers: {
-				debug: debugHeader,
-				cookie: authToken ? serialize(AUTH_COOKIE, authToken) : undefined,
-			},
-			transformer: superjson,
-		};
-	},
-	ssr: true,
-})(MyApp);
+export default trpcNext.withTRPC(MyApp);

@@ -26,8 +26,7 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 	disabled,
 	filterIds,
 }) => {
-	const addMutation = trpc.useMutation(
-		"receiptParticipants.add",
+	const addMutation = trpc.receiptParticipants.add.useMutation(
 		useTrpcMutationOptions(cache.receiptParticipants.add.mutationOptions, {
 			receiptId,
 		})

@@ -42,7 +42,7 @@ export const RegisterScreen: PageWithLayout = () => {
 
 	const trpcContext = trpc.useContext();
 
-	const registerMutation = trpc.useMutation("auth.register");
+	const registerMutation = trpc.auth.register.useMutation();
 	const onSubmit = useSubmitHandler(
 		async (data: RegistrationForm) => {
 			const result = await registerMutation.mutateAsync({

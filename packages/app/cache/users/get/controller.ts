@@ -3,4 +3,4 @@ import { TRPCReactContext } from "app/trpc";
 import { UsersId } from "next-app/db/models";
 
 export const createController = (trpc: TRPCReactContext, id: UsersId) =>
-	createGenericController(trpc, ["users.get", { id }]);
+	createGenericController<"users.get">(trpc.users.get, { id });

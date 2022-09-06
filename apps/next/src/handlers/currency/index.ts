@@ -1,7 +1,7 @@
-import * as trpc from "@trpc/server";
+import { t } from "next-app/handlers/trpc";
 
-import { AuthorizedContext } from "next-app/handlers/context";
+import { procedure as getList } from "./get-list";
 
-import { router as getListRouter } from "./get-list";
-
-export const router = trpc.router<AuthorizedContext>().merge(getListRouter);
+export const router = t.router({
+	getList,
+});

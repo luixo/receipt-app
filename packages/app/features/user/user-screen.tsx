@@ -18,7 +18,7 @@ export const UserScreen: PageWithLayout = () => {
 		throw new Error("No id in param");
 	}
 
-	const userNameQuery = trpc.useQuery(["users.getName", { id }]);
+	const userNameQuery = trpc.users.getName.useQuery({ id });
 
 	return (
 		<>

@@ -47,8 +47,7 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 		type: "number",
 	});
 
-	const updateMutation = trpc.useMutation(
-		"receiptItems.update",
+	const updateMutation = trpc.receiptItems.update.useMutation(
 		useTrpcMutationOptions(cache.receiptItems.update.mutationOptions, receiptId)
 	);
 	const updatePrice = useAsyncCallback(

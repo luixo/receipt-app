@@ -11,15 +11,12 @@ type Props = {
 };
 
 export const ReceiptOwner: React.FC<Props> = ({ receipt }) => {
-	const query = trpc.useQuery(["users.get", { id: receipt.ownerUserId }]);
+	const query = trpc.users.get.useQuery({ id: receipt.ownerUserId });
 	if (query.status === "loading") {
 		return <Loading />;
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;
-	}
-	if (query.status === "idle") {
-		return null;
 	}
 	return (
 		<User

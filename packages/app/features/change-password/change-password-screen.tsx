@@ -41,7 +41,7 @@ export const ChangePasswordScreen: PageWithLayout = () => {
 		),
 	});
 
-	const changePasswordMutation = trpc.useMutation(["account.changePassword"]);
+	const changePasswordMutation = trpc.account.changePassword.useMutation();
 	const onSubmit = useSubmitHandler<Form>(
 		(data) =>
 			changePasswordMutation.mutateAsync({

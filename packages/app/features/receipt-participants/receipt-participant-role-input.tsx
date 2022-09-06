@@ -25,10 +25,9 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 	isLoading,
 	role,
 }) => {
-	const accountQuery = trpc.useQuery(["account.get"]);
+	const accountQuery = trpc.account.get.useQuery();
 
-	const updateParticipantMutation = trpc.useMutation(
-		"receiptParticipants.update",
+	const updateParticipantMutation = trpc.receiptParticipants.update.useMutation(
 		useTrpcMutationOptions(cache.receiptParticipants.update.mutationOptions, {
 			userId:
 				participant.localUserId === accountQuery.data?.id

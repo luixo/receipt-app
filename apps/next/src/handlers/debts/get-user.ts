@@ -2,15 +2,17 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
-import { AuthorizedContext } from "next-app/handlers/context";
 import { getLockedStatus } from "next-app/handlers/debts-sync-intentions/utils";
+import { authProcedure } from "next-app/handlers/trpc";
 import { userIdSchema } from "next-app/handlers/validation";
 
-export const router = trpc.router<AuthorizedContext>().query("getUser", {
-	input: z.strictObject({
-		userId: userIdSchema,
-	}),
-	resolve: async ({ input, ctx }) => {
+export const procedure = authProcedure
+	.input(
+		z.strictObject({
+			userId: userIdSchema,
+		})
+	)
+	.query(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
 		const user = await database
 			.selectFrom("users")
@@ -64,5 +66,4 @@ export const router = trpc.router<AuthorizedContext>().query("getUser", {
 				intentionDirection,
 			};
 		});
-	},
-});
+	});

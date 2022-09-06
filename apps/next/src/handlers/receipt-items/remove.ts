@@ -2,19 +2,21 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
-import { AuthorizedContext } from "next-app/handlers/context";
 import { getReceiptItemById } from "next-app/handlers/receipt-items/utils";
 import {
 	getReceiptById,
 	getAccessRole,
 } from "next-app/handlers/receipts/utils";
+import { authProcedure } from "next-app/handlers/trpc";
 import { receiptItemIdSchema } from "next-app/handlers/validation";
 
-export const router = trpc.router<AuthorizedContext>().mutation("remove", {
-	input: z.strictObject({
-		id: receiptItemIdSchema,
-	}),
-	resolve: async ({ input, ctx }) => {
+export const procedure = authProcedure
+	.input(
+		z.strictObject({
+			id: receiptItemIdSchema,
+		})
+	)
+	.mutation(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
 		const receiptItem = await getReceiptItemById(database, input.id, [
 			"receiptId",
@@ -59,5 +61,4 @@ export const router = trpc.router<AuthorizedContext>().mutation("remove", {
 			.deleteFrom("receiptItems")
 			.where("id", "=", input.id)
 			.executeTakeFirst();
-	},
-});
+	});

@@ -1,27 +1,25 @@
-import * as trpc from "@trpc/server";
+import { t } from "next-app/handlers/trpc";
 
-import { AuthorizedContext } from "next-app/handlers/context";
+import { procedure as add } from "./add";
+import { procedure as get } from "./get";
+import { procedure as getName } from "./get-name";
+import { procedure as getNonResolvedAmount } from "./get-non-resolved-amount";
+import { procedure as getPaged } from "./get-paged";
+import { procedure as getResolvedParticipants } from "./get-resolved-participants";
+import { procedure as propagateDebts } from "./propagate-debts";
+import { procedure as remove } from "./remove";
+import { procedure as update } from "./update";
+import { procedure as updateDebt } from "./update-debt";
 
-import { router as addRouter } from "./add";
-import { router as getRouter } from "./get";
-import { router as getNameRouter } from "./get-name";
-import { router as getNonResolvedAmountRouter } from "./get-non-resolved-amount";
-import { router as getPagedRouter } from "./get-paged";
-import { router as getResolvedParticipantsRouter } from "./get-resolved-participants";
-import { router as propagateDebtsRouter } from "./propagate-debts";
-import { router as removeRouter } from "./remove";
-import { router as updateRouter } from "./update";
-import { router as updateDebtRouter } from "./update-debt";
-
-export const router = trpc
-	.router<AuthorizedContext>()
-	.merge(getRouter)
-	.merge(getPagedRouter)
-	.merge(removeRouter)
-	.merge(addRouter)
-	.merge(updateRouter)
-	.merge(getNameRouter)
-	.merge(getResolvedParticipantsRouter)
-	.merge(propagateDebtsRouter)
-	.merge(updateDebtRouter)
-	.merge(getNonResolvedAmountRouter);
+export const router = t.router({
+	get,
+	getPaged,
+	remove,
+	add,
+	update,
+	getName,
+	getResolvedParticipants,
+	propagateDebts,
+	updateDebt,
+	getNonResolvedAmount,
+});

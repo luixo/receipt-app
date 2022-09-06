@@ -22,8 +22,7 @@ export const UserRemoveButton: React.FC<Props> = ({
 	...props
 }) => {
 	const router = useRouter();
-	const removeUserMutation = trpc.useMutation(
-		"users.remove",
+	const removeUserMutation = trpc.users.remove.useMutation(
 		useTrpcMutationOptions(cache.users.remove.mutationOptions)
 	);
 	React.useEffect(

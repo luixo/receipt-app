@@ -28,7 +28,7 @@ export const ReceiptSelfDebtSyncInfo: React.FC<Props> = ({
 	receiptId,
 	...props
 }) => {
-	const debtQuery = trpc.useQuery(["debts.getByReceiptId", { receiptId }]);
+	const debtQuery = trpc.debts.getByReceiptId.useQuery({ receiptId });
 	if (debtQuery.status === "loading") {
 		return <Loading size="xs" />;
 	}
@@ -37,9 +37,6 @@ export const ReceiptSelfDebtSyncInfo: React.FC<Props> = ({
 			return null;
 		}
 		return <QueryErrorMessage query={debtQuery} />;
-	}
-	if (debtQuery.status === "idle") {
-		return null;
 	}
 	return <ReceiptSelfDebtSyncInfoInner {...props} query={debtQuery} />;
 };

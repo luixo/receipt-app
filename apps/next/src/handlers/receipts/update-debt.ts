@@ -2,7 +2,6 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
-import { AuthorizedContext } from "next-app/handlers/context";
 import { upsertDebtIntentionFromReceipt } from "next-app/handlers/debts-sync-intentions/utils";
 import {
 	getDebtsResult,
@@ -10,15 +9,18 @@ import {
 } from "next-app/handlers/debts/utils";
 import { getValidParticipants } from "next-app/handlers/receipt-items/utils";
 import { getReceiptById } from "next-app/handlers/receipts/utils";
+import { authProcedure } from "next-app/handlers/trpc";
 import { receiptIdSchema, userIdSchema } from "next-app/handlers/validation";
 
-export const router = trpc.router<AuthorizedContext>().mutation("updateDebt", {
-	input: z.strictObject({
-		receiptId: receiptIdSchema,
-		userId: userIdSchema,
-		updateIntention: z.boolean(),
-	}),
-	resolve: async ({ input, ctx }) => {
+export const procedure = authProcedure
+	.input(
+		z.strictObject({
+			receiptId: receiptIdSchema,
+			userId: userIdSchema,
+			updateIntention: z.boolean(),
+		})
+	)
+	.mutation(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
 		const receipt = await getReceiptById(database, input.receiptId, [
 			"id",
@@ -86,5 +88,4 @@ export const router = trpc.router<AuthorizedContext>().mutation("updateDebt", {
 			createdTimestamp
 		);
 		return updatedDebts[0]!;
-	},
-});
+	});

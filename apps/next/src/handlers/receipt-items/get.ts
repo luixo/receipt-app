@@ -1,16 +1,17 @@
-import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
-import { AuthorizedContext } from "next-app/handlers/context";
 import { getItemsWithParticipants } from "next-app/handlers/receipt-items/utils";
+import { authProcedure } from "next-app/handlers/trpc";
 import { receiptIdSchema } from "next-app/handlers/validation";
 
-export const router = trpc.router<AuthorizedContext>().query("get", {
-	input: z.strictObject({
-		receiptId: receiptIdSchema,
-	}),
-	resolve: async ({ input, ctx }) => {
+export const procedure = authProcedure
+	.input(
+		z.strictObject({
+			receiptId: receiptIdSchema,
+		})
+	)
+	.query(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
 		const [items, participants] = await getItemsWithParticipants(
 			database,
@@ -26,5 +27,4 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 			items,
 			participants,
 		};
-	},
-});
+	});

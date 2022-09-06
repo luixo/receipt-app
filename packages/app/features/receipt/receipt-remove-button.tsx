@@ -18,8 +18,7 @@ export const ReceiptRemoveButton: React.FC<Props> = ({
 	setLoading,
 }) => {
 	const router = useRouter();
-	const removeReceiptMutation = trpc.useMutation(
-		"receipts.remove",
+	const removeReceiptMutation = trpc.receipts.remove.useMutation(
 		useTrpcMutationOptions(cache.receipts.remove.mutationOptions)
 	);
 	React.useEffect(

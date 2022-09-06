@@ -48,8 +48,7 @@ export const AddReceiptItemForm: React.FC<Props> = ({
 		inputsRef.current?.scrollIntoView();
 	}, [inputsRef]);
 
-	const addMutation = trpc.useMutation(
-		"receiptItems.add",
+	const addMutation = trpc.receiptItems.add.useMutation(
 		useTrpcMutationOptions(cache.receiptItems.add.mutationOptions, receiptId)
 	);
 	const form = useForm<Form>({

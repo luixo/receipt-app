@@ -1,10 +1,9 @@
-import * as trpc from "@trpc/server";
 import { QueryCreator, sql } from "kysely";
 
 import { Currency } from "app/utils/currency";
 import { getDatabase, ReceiptsDatabase } from "next-app/db";
 import { AccountsId, DebtsId, UsersId } from "next-app/db/models";
-import { AuthorizedContext } from "next-app/handlers/context";
+import { authProcedure } from "next-app/handlers/trpc";
 
 type CommonIntention = {
 	id: DebtsId;
@@ -94,57 +93,55 @@ const getOutboundIntentions = (
 			sql`null`.castTo<Date | null>().as("selfTimestamp"),
 		]);
 
-export const router = trpc.router<AuthorizedContext>().query("getAll", {
-	resolve: async ({ ctx }) => {
-		const database = getDatabase(ctx);
-		const intentions = await database
-			.with("mergedIntentions", (qc) =>
-				getInboundIntentions(qc, ctx.auth.accountId).union(
-					getOutboundIntentions(qc, ctx.auth.accountId)
-				)
+export const procedure = authProcedure.query(async ({ ctx }) => {
+	const database = getDatabase(ctx);
+	const intentions = await database
+		.with("mergedIntentions", (qc) =>
+			getInboundIntentions(qc, ctx.auth.accountId).union(
+				getOutboundIntentions(qc, ctx.auth.accountId)
 			)
-			.selectFrom("mergedIntentions")
-			.selectAll()
-			.orderBy("intentionTimestamp", "desc")
-			.orderBy("id", "desc")
-			.execute();
-		return intentions.reduce<{
-			inbound: InboundIntention[];
-			outbound: OutboundIntention[];
-		}>(
-			(acc, intention) => {
-				const commonIntention: CommonIntention = {
-					id: intention.id,
-					userId: intention.userId,
-					amount: Number(intention.amount),
-					currency: intention.currency,
-					intentionTimestamp: intention.intentionTimestamp,
-					timestamp: intention.timestamp,
-					note: intention.note,
-				};
-				if (intention.ownerAccountId === ctx.auth.accountId) {
-					acc.outbound.push({
-						...commonIntention,
-					});
-				} else {
-					acc.inbound.push({
-						...commonIntention,
-						amount: -commonIntention.amount,
-						current:
-							intention.selfAmount !== null
-								? {
-										amount: Number(intention.selfAmount),
-										timestamp: intention.selfTimestamp!,
-								  }
-								: undefined,
-					});
-				}
-				return acc;
-			},
-			{
-				outbound: [],
-				inbound: [],
+		)
+		.selectFrom("mergedIntentions")
+		.selectAll()
+		.orderBy("intentionTimestamp", "desc")
+		.orderBy("id", "desc")
+		.execute();
+	return intentions.reduce<{
+		inbound: InboundIntention[];
+		outbound: OutboundIntention[];
+	}>(
+		(acc, intention) => {
+			const commonIntention: CommonIntention = {
+				id: intention.id,
+				userId: intention.userId,
+				amount: Number(intention.amount),
+				currency: intention.currency,
+				intentionTimestamp: intention.intentionTimestamp,
+				timestamp: intention.timestamp,
+				note: intention.note,
+			};
+			if (intention.ownerAccountId === ctx.auth.accountId) {
+				acc.outbound.push({
+					...commonIntention,
+				});
+			} else {
+				acc.inbound.push({
+					...commonIntention,
+					amount: -commonIntention.amount,
+					current:
+						intention.selfAmount !== null
+							? {
+									amount: Number(intention.selfAmount),
+									timestamp: intention.selfTimestamp!,
+							  }
+							: undefined,
+				});
 			}
-		);
-	},
+			return acc;
+		},
+		{
+			outbound: [],
+			inbound: [],
+		}
+	);
 });

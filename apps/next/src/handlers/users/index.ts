@@ -1,27 +1,25 @@
-import * as trpc from "@trpc/server";
+import { t } from "next-app/handlers/trpc";
 
-import { AuthorizedContext } from "next-app/handlers/context";
+import { procedure as add } from "./add";
+import { procedure as get } from "./get";
+import { procedure as getName } from "./get-name";
+import { procedure as getPaged } from "./get-paged";
+import { procedure as hasConnectedAccount } from "./has-connected-account";
+import { procedure as remove } from "./remove";
+import { procedure as suggest } from "./suggest";
+import { procedure as suggestTop } from "./suggest-top";
+import { procedure as unlink } from "./unlink";
+import { procedure as update } from "./update";
 
-import { router as addRouter } from "./add";
-import { router as getRouter } from "./get";
-import { router as getNameRouter } from "./get-name";
-import { router as getPagedRouter } from "./get-paged";
-import { router as hasConnectedAccountRouter } from "./has-connected-account";
-import { router as removeRouter } from "./remove";
-import { router as suggestRouter } from "./suggest";
-import { router as suggestTopRouter } from "./suggest-top";
-import { router as unlinkRouter } from "./unlink";
-import { router as updateRouter } from "./update";
-
-export const router = trpc
-	.router<AuthorizedContext>()
-	.merge(getRouter)
-	.merge(getPagedRouter)
-	.merge(addRouter)
-	.merge(removeRouter)
-	.merge(updateRouter)
-	.merge(getNameRouter)
-	.merge(unlinkRouter)
-	.merge(hasConnectedAccountRouter)
-	.merge(suggestRouter)
-	.merge(suggestTopRouter);
+export const router = t.router({
+	get,
+	getPaged,
+	add,
+	remove,
+	update,
+	getName,
+	unlink,
+	hasConnectedAccount,
+	suggest,
+	suggestTop,
+});

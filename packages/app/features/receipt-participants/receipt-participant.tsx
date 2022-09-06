@@ -48,14 +48,14 @@ export const ReceiptParticipant: React.FC<Props> = ({
 	currency,
 	isLoading,
 }) => {
-	const accountQuery = trpc.useQuery(["account.get"]);
+	const accountQuery = trpc.account.get.useQuery();
 
-	const removeReceiptParticipantMutation = trpc.useMutation(
-		"receiptParticipants.remove",
-		useTrpcMutationOptions(cache.receiptParticipants.remove.mutationOptions, {
-			receiptId,
-		})
-	);
+	const removeReceiptParticipantMutation =
+		trpc.receiptParticipants.remove.useMutation(
+			useTrpcMutationOptions(cache.receiptParticipants.remove.mutationOptions, {
+				receiptId,
+			})
+		);
 	const removeReceiptParticipant = useAsyncCallback(
 		() =>
 			removeReceiptParticipantMutation.mutateAsync({

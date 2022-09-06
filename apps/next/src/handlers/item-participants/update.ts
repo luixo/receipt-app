@@ -4,29 +4,31 @@ import { z } from "zod";
 
 import { partSchema } from "app/utils/validation";
 import { ReceiptsDatabase, getDatabase } from "next-app/db";
-import { AuthorizedContext } from "next-app/handlers/context";
 import { getItemParticipant } from "next-app/handlers/item-participants/utils";
 import { getReceiptItemById } from "next-app/handlers/receipt-items/utils";
 import {
 	getReceiptById,
 	getAccessRole,
 } from "next-app/handlers/receipts/utils";
+import { authProcedure } from "next-app/handlers/trpc";
 import { getUserById } from "next-app/handlers/users/utils";
 import {
 	receiptItemIdSchema,
 	userIdSchema,
 } from "next-app/handlers/validation";
 
-export const router = trpc.router<AuthorizedContext>().mutation("update", {
-	input: z.strictObject({
-		itemId: receiptItemIdSchema,
-		userId: userIdSchema,
-		update: z.strictObject({
-			type: z.literal("part"),
-			part: partSchema,
-		}),
-	}),
-	resolve: async ({ input, ctx }) => {
+export const procedure = authProcedure
+	.input(
+		z.strictObject({
+			itemId: receiptItemIdSchema,
+			userId: userIdSchema,
+			update: z.strictObject({
+				type: z.literal("part"),
+				part: partSchema,
+			}),
+		})
+	)
+	.mutation(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
 		const receiptItem = await getReceiptItemById(database, input.itemId, [
 			"receiptId",
@@ -100,5 +102,4 @@ export const router = trpc.router<AuthorizedContext>().mutation("update", {
 			.where("userId", "=", input.userId)
 			.where("itemId", "=", input.itemId)
 			.executeTakeFirst();
-	},
-});
+	});

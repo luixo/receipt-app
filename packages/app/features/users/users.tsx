@@ -133,7 +133,7 @@ const UsersInner: React.FC<InnerProps> = ({ query }) => {
 
 export const Users: React.FC = () => {
 	const [input] = cache.users.getPaged.useStore();
-	const query = trpc.useInfiniteQuery(["users.getPaged", input], {
+	const query = trpc.users.getPaged.useInfiniteQuery(input, {
 		getNextPageParam: cache.users.getPaged.getNextPage,
 	});
 	if (query.status === "loading") {
@@ -141,9 +141,6 @@ export const Users: React.FC = () => {
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;
-	}
-	if (query.status === "idle") {
-		return null;
 	}
 	return <UsersInner query={query} />;
 };

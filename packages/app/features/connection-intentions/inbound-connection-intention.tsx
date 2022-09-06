@@ -17,10 +17,10 @@ type Props = {
 export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 	const [user, setUser] = React.useState<UsersResult["items"][number]>();
 
-	const acceptConnectionMutation = trpc.useMutation(
-		"accountConnectionIntentions.accept",
-		useTrpcMutationOptions(cache.accountConnections.accept.mutationOptions)
-	);
+	const acceptConnectionMutation =
+		trpc.accountConnectionIntentions.accept.useMutation(
+			useTrpcMutationOptions(cache.accountConnections.accept.mutationOptions)
+		);
 	const acceptConnection = React.useCallback(() => {
 		acceptConnectionMutation.mutate({
 			accountId: intention.accountId,
@@ -28,10 +28,10 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 		});
 	}, [acceptConnectionMutation, intention.accountId, user]);
 
-	const rejectConnectionMutation = trpc.useMutation(
-		"accountConnectionIntentions.reject",
-		useTrpcMutationOptions(cache.accountConnections.reject.mutationOptions)
-	);
+	const rejectConnectionMutation =
+		trpc.accountConnectionIntentions.reject.useMutation(
+			useTrpcMutationOptions(cache.accountConnections.reject.mutationOptions)
+		);
 	const rejectConnection = React.useCallback(() => {
 		rejectConnectionMutation.mutate({
 			sourceAccountId: intention.accountId,

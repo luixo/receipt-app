@@ -27,7 +27,7 @@ export const mutationOptions: UseContextedMutationOptions<
 	onSuccess:
 		(trpcContext) =>
 		({ id: actualId, connection }, variables, temporaryId) => {
-			cache.users.getPaged.update(trpcContext, temporaryId, (user) => ({
+			cache.users.getPaged.update(trpcContext, temporaryId!, (user) => ({
 				...user,
 				id: actualId,
 			}));

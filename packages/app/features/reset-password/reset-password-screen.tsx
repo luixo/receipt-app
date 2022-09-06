@@ -12,8 +12,8 @@ const { useParam } = createParam<{ token: string }>();
 
 export const ResetPasswordScreen: PageWithLayout = () => {
 	const [token] = useParam("token");
-	const resetPasswordIntentionQuery = trpc.useQuery(
-		["resetPasswordIntentions.get", { token: token! }],
+	const resetPasswordIntentionQuery = trpc.resetPasswordIntentions.get.useQuery(
+		{ token: token! },
 		{ enabled: Boolean(token) }
 	);
 

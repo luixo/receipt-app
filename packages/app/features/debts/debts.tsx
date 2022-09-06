@@ -82,15 +82,12 @@ const DebtsInner: React.FC<InnerProps> = ({ query }) => {
 };
 
 export const Debts: React.FC = () => {
-	const query = trpc.useQuery(["debts.getByUsers"]);
+	const query = trpc.debts.getByUsers.useQuery();
 	if (query.status === "loading") {
 		return <Loading size="xl" />;
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;
-	}
-	if (query.status === "idle") {
-		return null;
 	}
 	return <DebtsInner query={query} />;
 };

@@ -1,16 +1,17 @@
-import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
 import { removeIntention } from "next-app/handlers/account-connection-intentions/utils";
-import { AuthorizedContext } from "next-app/handlers/context";
+import { authProcedure } from "next-app/handlers/trpc";
 import { accountIdSchema } from "next-app/handlers/validation";
 
-export const router = trpc.router<AuthorizedContext>().mutation("reject", {
-	input: z.strictObject({
-		sourceAccountId: accountIdSchema,
-	}),
-	resolve: async ({ ctx, input }) => {
+export const procedure = authProcedure
+	.input(
+		z.strictObject({
+			sourceAccountId: accountIdSchema,
+		})
+	)
+	.mutation(async ({ ctx, input }) => {
 		const database = getDatabase(ctx);
 		const intention = await database
 			.selectFrom("accountConnectionsIntentions")
@@ -23,5 +24,4 @@ export const router = trpc.router<AuthorizedContext>().mutation("reject", {
 			intention,
 			`from account id ${input.sourceAccountId}`
 		);
-	},
-});
+	});

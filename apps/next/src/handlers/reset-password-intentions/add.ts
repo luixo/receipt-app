@@ -7,14 +7,16 @@ import { emailSchema } from "app/utils/validation";
 import { getDatabase } from "next-app/db";
 import { generateResetPasswordEmail } from "next-app/email/utils";
 import { getAccountByEmail } from "next-app/handlers/account/utils";
-import { UnauthorizedContext } from "next-app/handlers/context";
+import { unauthProcedure } from "next-app/handlers/trpc";
 import { getEmailClient, isEmailServiceActive } from "next-app/utils/email";
 
-export const router = trpc.router<UnauthorizedContext>().mutation("add", {
-	input: z.strictObject({
-		email: emailSchema,
-	}),
-	resolve: async ({ input, ctx }) => {
+export const procedure = unauthProcedure
+	.input(
+		z.strictObject({
+			email: emailSchema,
+		})
+	)
+	.mutation(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
 		const account = await getAccountByEmail(database, input.email, ["id"]);
 		if (!account) {
@@ -51,5 +53,4 @@ export const router = trpc.router<UnauthorizedContext>().mutation("add", {
 				message: `Something went wrong: ${String(e)}`,
 			});
 		}
-	},
-});
+	});

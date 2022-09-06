@@ -8,11 +8,7 @@ import { trpc } from "app/trpc";
 export const RefreshSettings: React.FC = () => {
 	const trpcContext = trpc.useContext();
 	const refetch = React.useCallback(
-		() =>
-			trpcContext.invalidateQueries({
-				refetchInactive: true,
-				refetchActive: true,
-			}),
+		() => trpcContext.queryClient.invalidateQueries({ refetchType: "all" }),
 		[trpcContext]
 	);
 	return (

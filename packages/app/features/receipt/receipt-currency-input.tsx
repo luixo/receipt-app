@@ -19,8 +19,7 @@ export const ReceiptCurrencyInput: React.FC<Props> = ({
 	const [isModalOpen, { setTrue: openModal, setFalse: closeModal }] =
 		useBooleanState();
 
-	const updateReceiptMutation = trpc.useMutation(
-		"receipts.update",
+	const updateReceiptMutation = trpc.receipts.update.useMutation(
 		useTrpcMutationOptions(cache.receipts.update.mutationOptions)
 	);
 	const saveCurrency = React.useCallback(

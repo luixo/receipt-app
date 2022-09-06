@@ -35,7 +35,7 @@ export const LoginScreen: PageWithLayout = () => {
 		useBooleanState();
 
 	const trpcContext = trpc.useContext();
-	const loginMutation = trpc.useMutation("auth.login");
+	const loginMutation = trpc.auth.login.useMutation();
 	const onSubmit = useSubmitHandler(
 		(data: LoginForm) => loginMutation.mutateAsync(data),
 		[loginMutation],

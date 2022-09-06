@@ -28,10 +28,9 @@ import { Form } from "./types";
 
 export const AddReceiptScreen: PageWithLayout = () => {
 	const router = useRouter();
-	const accountQuery = trpc.useQuery(["account.get"]);
+	const accountQuery = trpc.account.get.useQuery();
 
-	const addReceiptMutation = trpc.useMutation(
-		"receipts.add",
+	const addReceiptMutation = trpc.receipts.add.useMutation(
 		useTrpcMutationOptions(cache.receipts.add.mutationOptions, {
 			selfAccountId: accountQuery.data?.id ?? "unknown",
 		})

@@ -30,8 +30,7 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 		[trpcContext, receipt.id, receipt.name]
 	);
 	const currency = useFormattedCurrency(receipt.currency);
-	const updateReceiptMutation = trpc.useMutation(
-		"receipts.update",
+	const updateReceiptMutation = trpc.receipts.update.useMutation(
 		useTrpcMutationOptions(cache.receipts.update.mutationOptions)
 	);
 	const switchResolved = React.useCallback(() => {

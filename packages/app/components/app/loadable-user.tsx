@@ -27,15 +27,12 @@ export const LoadableUser: React.FC<Props> = ({
 	viaReceiptId,
 	...props
 }) => {
-	const query = trpc.useQuery(["users.get", { id, viaReceiptId }]);
+	const query = trpc.users.get.useQuery({ id, viaReceiptId });
 	if (query.status === "loading") {
 		return <Loading />;
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;
-	}
-	if (query.status === "idle") {
-		return null;
 	}
 	return <LoadableUserInner {...props} query={query} />;
 };

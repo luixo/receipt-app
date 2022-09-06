@@ -8,8 +8,8 @@ import {
 	Text,
 	styled,
 } from "@nextui-org/react";
+import { UseMutationResult } from "@tanstack/react-query";
 import { IoTrashBin as TrashBin } from "react-icons/io5";
-import { UseMutationResult } from "react-query";
 
 import { MutationErrorMessage } from "app/components/error-message";
 import { useBooleanState } from "app/hooks/use-boolean-state";

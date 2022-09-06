@@ -5,7 +5,7 @@ import {
 	InfiniteData,
 	UseInfiniteQueryResult,
 	InfiniteQueryObserverSuccessResult,
-} from "react-query";
+} from "@tanstack/react-query";
 
 import { ButtonsGroup } from "app/components/buttons-group";
 import { QueryErrorMessage } from "app/components/error-message";
@@ -87,9 +87,6 @@ export const UsersPicker = <Data, User>({
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;
-	}
-	if (query.status === "idle") {
-		return null;
 	}
 	return <UsersPickerInner {...props} query={query} />;
 };

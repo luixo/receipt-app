@@ -13,8 +13,7 @@ type Props = {
 };
 
 export const DebtSignButtonGroup: React.FC<Props> = ({ debt, disabled }) => {
-	const updateMutation = trpc.useMutation(
-		"debts.update",
+	const updateMutation = trpc.debts.update.useMutation(
 		useTrpcMutationOptions(cache.debts.update.mutationOptions, debt)
 	);
 	const setDirection = React.useCallback(

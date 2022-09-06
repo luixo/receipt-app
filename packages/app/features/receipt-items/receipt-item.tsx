@@ -50,8 +50,7 @@ export const ReceiptItem: React.FC<Props> = ({
 	isLoading: isReceiptDeleteLoading,
 }) => {
 	const formattedCurrency = useFormattedCurrency(currency);
-	const removeReceiptItemMutation = trpc.useMutation(
-		"receiptItems.remove",
+	const removeReceiptItemMutation = trpc.receiptItems.remove.useMutation(
 		useTrpcMutationOptions(cache.receiptItems.remove.mutationOptions, receiptId)
 	);
 	const removeItem = useAsyncCallback(
@@ -67,8 +66,7 @@ export const ReceiptItem: React.FC<Props> = ({
 		(participant) => !addedParticipants.includes(participant.remoteUserId)
 	);
 
-	const addItemPartMutation = trpc.useMutation(
-		"itemParticipants.add",
+	const addItemPartMutation = trpc.itemParticipants.add.useMutation(
 		useTrpcMutationOptions(
 			cache.itemParticipants.add.mutationOptions,
 			receiptId

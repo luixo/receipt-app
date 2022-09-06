@@ -115,8 +115,8 @@ type Props = Omit<InnerProps, "query"> & {
 };
 
 export const Receipt: React.FC<Props> = ({ id, ...props }) => {
-	const query = trpc.useQuery(["receipts.get", { id }]);
-	const receiptNameQuery = trpc.useQuery(["receipts.getName", { id }]);
+	const query = trpc.receipts.get.useQuery({ id });
+	const receiptNameQuery = trpc.receipts.getName.useQuery({ id });
 	if (query.status === "loading") {
 		return (
 			<>
@@ -127,9 +127,6 @@ export const Receipt: React.FC<Props> = ({ id, ...props }) => {
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;
-	}
-	if (query.status === "idle") {
-		return null;
 	}
 	return <ReceiptInner {...props} query={query} />;
 };

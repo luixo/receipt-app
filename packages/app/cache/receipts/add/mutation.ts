@@ -40,7 +40,7 @@ export const mutationOptions: UseContextedMutationOptions<
 	onSuccess:
 		(trpcContext, { selfAccountId }) =>
 		(actualId, variables, temporaryId) => {
-			cache.receipts.getPaged.update(trpcContext, temporaryId, (receipt) => ({
+			cache.receipts.getPaged.update(trpcContext, temporaryId!, (receipt) => ({
 				...receipt,
 				id: actualId,
 			}));
