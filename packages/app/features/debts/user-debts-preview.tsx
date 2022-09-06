@@ -6,6 +6,7 @@ import { cache } from "app/cache";
 import { DebtsGroup } from "app/components/app/debts-group";
 import { LoadableUser } from "app/components/app/loadable-user";
 import { Link } from "app/components/link";
+import { useMatchMediaValue } from "app/hooks/use-match-media-value";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { UsersId } from "next-app/db/models";
 
@@ -27,10 +28,18 @@ export const UserDebtsPreview: React.FC<Props> = ({ debts, userId }) => {
 			userQuery.data.name
 		);
 	}, [trpcContext, userQuery]);
+	const showHorizontal = useMatchMediaValue(true, { lessMd: false });
 	return (
 		<Card>
 			<Link href={`/debts/user/${userId}`} color="text">
-				<Card.Body onClick={setUserName}>
+				<Card.Body
+					onClick={setUserName}
+					css={{
+						flexDirection: showHorizontal ? "row" : "column",
+						alignItems: showHorizontal ? "center" : undefined,
+						justifyContent: "space-between",
+					}}
+				>
 					<LoadableUser id={userId} />
 					<Spacer y={1} />
 					<DebtsGroup debts={debts} />
