@@ -26,6 +26,7 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 				"publicName",
 				"ownerAccountId",
 				"accounts.email",
+				"accounts.id as accountId",
 			])
 			.limit(1)
 			.executeTakeFirst();
@@ -99,6 +100,7 @@ export const router = trpc.router<AuthorizedContext>().query("get", {
 									"usersTheir"."publicName"
 								end`.as("publicName"),
 							"accounts.email",
+							"accounts.id as accountId",
 						])
 						.limit(1)
 						.executeTakeFirstOrThrow();

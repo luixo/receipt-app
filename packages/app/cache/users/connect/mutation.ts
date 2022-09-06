@@ -13,6 +13,7 @@ export const mutationOptions: UseContextedMutationOptions<
 				cache.users.get.update(trpcContext, variables.userId, (user) => ({
 					...user,
 					email: variables.email,
+					accountId,
 				}));
 				cache.users.getPaged.update(trpcContext, variables.userId, (user) => ({
 					...user,

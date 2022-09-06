@@ -3,6 +3,7 @@ import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Loading, Spacer } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
+import { createParam } from "solito";
 import { useRouter } from "solito/router";
 import { z } from "zod";
 
@@ -26,7 +27,7 @@ import {
 	debtNoteSchema,
 	userItemSchema,
 } from "app/utils/validation";
-import { DebtsId } from "next-app/src/db/models";
+import { DebtsId, UsersId } from "next-app/src/db/models";
 import { PageWithLayout } from "next-app/types/page";
 
 import { DebtAmountInput } from "./debt-amount-input";
@@ -34,7 +35,14 @@ import { DebtDateInput } from "./debt-date-input";
 import { DebtNoteInput } from "./debt-note-input";
 import { Form } from "./types";
 
+const { useParam } = createParam<{ userId: UsersId }>();
+
 export const AddDebtScreen: PageWithLayout = () => {
+	const [userId] = useParam("userId");
+	const userQuery = trpc.useQuery(["users.get", { id: userId || "unknown" }], {
+		enabled: Boolean(userId),
+	});
+
 	const router = useRouter();
 
 	const addMutation = trpc.useMutation(
@@ -64,6 +72,23 @@ export const AddDebtScreen: PageWithLayout = () => {
 			amount: "" as unknown as number,
 		},
 	});
+	React.useEffect(() => {
+		const user = userQuery.data;
+		if (user && !form.getValues("user")) {
+			form.setValue("user", {
+				id: user.remoteId,
+				name: user.name,
+				publicName: user.publicName,
+				connectedAccount:
+					user.accountId && user.email
+						? {
+								id: user.accountId,
+								email: user.email,
+						  }
+						: undefined,
+			});
+		}
+	}, [userQuery.data, form]);
 	const onUserClick = React.useCallback(
 		(user: z.infer<typeof userItemSchema>) => form.setValue("user", user),
 		[form]

@@ -37,6 +37,7 @@ export const mutationOptions: UseContextedMutationOptions<
 				name: variables.name,
 				publicName: null,
 				email: null,
+				accountId: null,
 			});
 			cache.users.getName.add(trpcContext, actualId, variables.name);
 			if (connection && !connection.connected) {

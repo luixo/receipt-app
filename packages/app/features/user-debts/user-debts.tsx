@@ -1,12 +1,14 @@
 import React from "react";
 
 import { Loading, Spacer, Card } from "@nextui-org/react";
+import { MdAdd as AddIcon } from "react-icons/md";
 import { useRouter } from "solito/router";
 
 import { DebtsGroup } from "app/components/app/debts-group";
 import { LoadableUser } from "app/components/app/loadable-user";
 import { QueryErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
+import { IconButton } from "app/components/icon-button";
 import { trpc, TRPCQuerySuccessResult } from "app/trpc";
 import { Currency } from "app/utils/currency";
 import { UsersId } from "next-app/src/db/models";
@@ -46,7 +48,7 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 				aside={
 					<IconButton
 						key="add"
-						href="/debts/add"
+						href={`/debts/add?userId=${userId}`}
 						title="Add debt"
 						bordered
 						icon={<AddIcon size={24} />}
