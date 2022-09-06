@@ -20,16 +20,13 @@ type InnerProps = {
 };
 
 const DebtsInner: React.FC<InnerProps> = ({ query }) => {
-	const debtEntries = React.useMemo(
-		() => Object.entries(query.data),
-		[query.data]
-	);
+	const debtEntries = query.data;
 
 	const sums = React.useMemo(
 		() =>
 			Object.entries(
-				debtEntries.reduce<Record<string, number>>((acc, [, userDebts]) => {
-					userDebts.forEach(({ currency, sum }) => {
+				debtEntries.reduce<Record<string, number>>((acc, { debts }) => {
+					debts.forEach(({ currency, sum }) => {
 						acc[currency] = (acc[currency] || 0) + sum;
 					});
 					return acc;
@@ -71,10 +68,10 @@ const DebtsInner: React.FC<InnerProps> = ({ query }) => {
 				css={{ p: "$4", flexWrap: "wrap", alignItems: "center" }}
 			/>
 			<Spacer y={1} />
-			{debtEntries.map(([userId, userDebts], index) => (
+			{debtEntries.map(({ userId, debts }, index) => (
 				<React.Fragment key={userId}>
 					{index === 0 ? null : <Spacer y={0.5} />}
-					<UserDebtsPreview debts={userDebts} userId={userId} />
+					<UserDebtsPreview debts={debts} userId={userId} />
 				</React.Fragment>
 			))}
 		</>

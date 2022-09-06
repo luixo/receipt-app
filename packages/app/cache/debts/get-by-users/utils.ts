@@ -10,16 +10,33 @@ export const updateUserDebts = (
 	updater: (debts: Debts) => Debts
 ) =>
 	createController(trpc).update((prevData) => {
-		const matchedUser = prevData[userId] || [];
-		const nextUser = updater(matchedUser);
-		if (nextUser === matchedUser) {
+		const matchedUserIndex = prevData.findIndex(
+			(debtsEntry) => debtsEntry.userId === userId
+		);
+		const matchedUser =
+			matchedUserIndex === -1
+				? { userId, debts: [] }
+				: prevData[matchedUserIndex]!;
+		const nextDebts = updater(matchedUser.debts);
+		if (nextDebts === matchedUser.debts) {
 			return prevData;
 		}
 		// Remove user from debts list in case of no debts left
-		if (Object.keys(nextUser).length === 0) {
-			const nextData = { ...prevData };
-			delete nextData[userId];
-			return nextData;
+		if (nextDebts.length === 0) {
+			if (matchedUserIndex === -1) {
+				return prevData;
+			}
+			return [
+				...prevData.slice(0, matchedUserIndex),
+				...prevData.slice(matchedUserIndex + 1),
+			];
 		}
-		return { ...prevData, [userId]: nextUser };
+		if (matchedUserIndex === -1) {
+			return [...prevData, { userId, debts: nextDebts }];
+		}
+		return [
+			...prevData.slice(0, matchedUserIndex),
+			{ userId, debts: nextDebts },
+			...prevData.slice(matchedUserIndex + 1),
+		];
 	});

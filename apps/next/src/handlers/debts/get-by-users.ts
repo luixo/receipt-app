@@ -1,4 +1,4 @@
-import { ExtractMapValue } from "app/utils/types";
+import { Currency } from "app/utils/currency";
 import { getDatabase } from "next-app/db";
 import { UsersId } from "next-app/db/models";
 import { authProcedure } from "next-app/handlers/trpc";
@@ -8,28 +8,32 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 	const debts = await database
 		.selectFrom("debts")
 		.where("debts.ownerAccountId", "=", ctx.auth.accountId)
-		.select([database.fn.sum<string>("amount").as("sum"), "currency", "userId"])
-		.groupBy("userId")
+		.innerJoin("users", (qb) => qb.onRef("users.id", "=", "debts.userId"))
+		.select([
+			database.fn.sum<string>("debts.amount").as("sum"),
+			"debts.currency",
+			"debts.userId",
+			"users.name",
+		])
+		.groupBy("debts.userId")
+		.groupBy("users.name")
 		.groupBy("currency")
 		.execute();
 
-	type Debt = typeof debts[number];
-
 	const debtsByUsers = debts.reduce<
-		Map<UsersId, (Omit<Debt, "sum" | "userId"> & { sum: number })[]>
-	>((acc, { sum, userId, ...debt }) => {
+		Map<UsersId, { items: { currency: Currency; sum: number }[]; name: string }>
+	>((acc, { sum, userId, currency, name }) => {
 		if (!acc.has(userId)) {
-			acc.set(userId, []);
+			acc.set(userId, { name, items: [] });
 		}
-		acc.get(userId)!.push({ ...debt, sum: Number(sum) });
+		acc.get(userId)!.items.push({ currency, sum: Number(sum) });
 		return acc;
 	}, new Map());
 	const debtsByUsersEntries = [...debtsByUsers.entries()];
 
-	return debtsByUsersEntries.reduce<
-		Record<UsersId, ExtractMapValue<typeof debtsByUsers>>
-	>((acc, [userId, userDebts]) => {
-		acc[userId] = userDebts;
-		return acc;
-	}, {});
+	return debtsByUsersEntries
+		.sort(([, { name: nameA }], [, { name: nameB }]) =>
+			nameA.localeCompare(nameB)
+		)
+		.map(([userId, { items }]) => ({ userId, debts: items }));
 });
