@@ -118,7 +118,7 @@ export const procedure = authProcedure
 						)
 				)
 				.selectFrom("mergedReceipts")
-				.select("amount")
+				.select(database.fn.sum<string>("amount").as("amount"))
 				.if(Boolean(input.onlyNonResolved), (qb) =>
 					qb.where("resolved", "=", false)
 				)
