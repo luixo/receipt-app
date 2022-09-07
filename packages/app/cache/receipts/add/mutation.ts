@@ -6,7 +6,7 @@ import { AccountsId, ReceiptsId, UsersId } from "next-app/src/db/models";
 
 export const mutationOptions: UseContextedMutationOptions<
 	"receipts.add",
-	{ temporaryId: ReceiptsId; sinceCursor: number },
+	{ temporaryId: ReceiptsId; sinceCursor?: number },
 	{ selfAccountId: AccountsId }
 > = {
 	onMutate:

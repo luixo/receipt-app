@@ -55,15 +55,15 @@ export const add = (trpc: TRPCReactContext, nextUser: User) => {
 			// The end of the page - probably should fit on the next page
 			return [page, count];
 		}
-		shiftedAtCursorRef.current = input.cursor || 0;
+		shiftedAtCursorRef.current = input.cursor;
 		return [sortedPage.slice(0, input.limit), count + 1];
 	});
-	return shiftedAtCursorRef.current || 0;
+	return shiftedAtCursorRef.current;
 };
 
 export const remove = (trpc: TRPCReactContext, userId: UsersId) => {
 	const removedUserRef = createRef<
-		{ data: User; cursor: number } | undefined
+		{ data: User; cursor?: number } | undefined
 	>();
 	updatePagedUsers(trpc, (page, count, input) => {
 		if (removedUserRef.current) {
@@ -75,7 +75,7 @@ export const remove = (trpc: TRPCReactContext, userId: UsersId) => {
 		}
 		removedUserRef.current = {
 			data: page[matchedUserIndex]!,
-			cursor: input.cursor || 0,
+			cursor: input.cursor,
 		};
 		return [
 			[
@@ -88,12 +88,11 @@ export const remove = (trpc: TRPCReactContext, userId: UsersId) => {
 	return removedUserRef.current;
 };
 
-export const invalidate = (trpc: TRPCReactContext, sinceCursor: number) =>
+export const invalidate = (trpc: TRPCReactContext, sinceCursor: number = 0) =>
 	createController(trpc).invalidate({
 		refetchType: "all",
 		predicate: (query) => {
 			const input = query.queryKey[1] as Input;
-			const localCursor = input.cursor || 0;
-			return localCursor >= sinceCursor;
+			return input.cursor >= sinceCursor;
 		},
 	});

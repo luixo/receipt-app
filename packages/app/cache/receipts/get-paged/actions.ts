@@ -64,10 +64,10 @@ export const add = (trpc: TRPCReactContext, nextReceipt: Receipt) => {
 			// The end of the page - probably should fit on the next page
 			return [page, count];
 		}
-		shiftedAtCursorRef.current = input.cursor || 0;
+		shiftedAtCursorRef.current = input.cursor;
 		return [sortedPage.slice(0, input.limit), count + 1];
 	});
-	return shiftedAtCursorRef.current || 0;
+	return shiftedAtCursorRef.current;
 };
 
 export const remove = (
@@ -76,7 +76,7 @@ export const remove = (
 	inputPredicate: (input: Input) => boolean = alwaysTrue
 ) => {
 	const removedReceiptRef = createRef<
-		{ data: Receipt; cursor: number } | undefined
+		{ data: Receipt; cursor?: number } | undefined
 	>();
 	updatePagedReceipts(trpc, (page, count, input) => {
 		if (!inputPredicate(input)) {
@@ -93,7 +93,7 @@ export const remove = (
 		}
 		removedReceiptRef.current = {
 			data: page[matchedReceiptIndex]!,
-			cursor: input.cursor || 0,
+			cursor: input.cursor,
 		};
 		return [
 			[
@@ -108,7 +108,7 @@ export const remove = (
 
 export const invalidate = (
 	trpc: TRPCReactContext,
-	sinceCursor: number,
+	sinceCursor: number = 0,
 	inputPredicate: (input: Input) => boolean = alwaysTrue
 ) =>
 	createController(trpc).invalidate({
@@ -118,7 +118,6 @@ export const invalidate = (
 			if (!inputPredicate(input)) {
 				return false;
 			}
-			const localCursor = input.cursor || 0;
-			return localCursor >= sinceCursor;
+			return input.cursor >= sinceCursor;
 		},
 	});

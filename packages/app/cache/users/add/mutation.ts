@@ -6,7 +6,7 @@ import { UsersId } from "next-app/src/db/models";
 
 export const mutationOptions: UseContextedMutationOptions<
 	"users.add",
-	{ temporaryId: UsersId; sinceCursor: number }
+	{ temporaryId: UsersId; sinceCursor?: number }
 > = {
 	onMutate: (trpcContext) => (form) => {
 		const temporaryId = v4();

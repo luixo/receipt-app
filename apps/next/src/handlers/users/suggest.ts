@@ -12,6 +12,7 @@ import {
 import { authProcedure } from "next-app/handlers/trpc";
 import {
 	limitSchema,
+	offsetSchema,
 	receiptIdSchema,
 	userIdSchema,
 } from "next-app/handlers/validation";
@@ -22,7 +23,7 @@ export const procedure = authProcedure
 	.input(
 		z.strictObject({
 			input: z.string().max(255),
-			cursor: z.number().optional(),
+			cursor: offsetSchema,
 			limit: limitSchema,
 			filterIds: z.array(userIdSchema).optional(),
 			options: z.discriminatedUnion("type", [
@@ -109,7 +110,7 @@ export const procedure = authProcedure
 				"connectedAccountId as accountId",
 			])
 			.orderBy(sql`similarity(name, ${input.input})`.castTo(), "desc")
-			.offset(input.cursor || 0)
+			.offset(input.cursor)
 			.limit(input.limit + 1)
 			.execute();
 		const mappedUsers = fuzzyMathedUsers.map(
@@ -120,7 +121,7 @@ export const procedure = authProcedure
 			})
 		);
 		return {
-			cursor: input.cursor || 0,
+			cursor: input.cursor,
 			hasMore: mappedUsers.length === input.limit + 1,
 			items: mappedUsers.slice(0, input.limit),
 		};
