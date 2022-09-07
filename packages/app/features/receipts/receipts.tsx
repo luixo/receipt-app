@@ -1,13 +1,6 @@
 import React from "react";
 
-import {
-	Container,
-	Loading,
-	Spacer,
-	Text,
-	styled,
-	Card,
-} from "@nextui-org/react";
+import { Loading, Spacer, Text, styled, Card } from "@nextui-org/react";
 import { MdAdd as AddIcon } from "react-icons/md";
 
 import { cache } from "app/cache";
@@ -20,6 +13,13 @@ import { trpc, TRPCQueryInput, TRPCQueryOutput } from "app/trpc";
 
 import { ReceiptPreview } from "./receipt-preview";
 import { ReceiptsPagination } from "./receipts-pagination";
+
+const Wrapper = styled("div", {
+	display: "flex",
+	flexDirection: "column",
+	alignItems: "center",
+	justifyContent: "center",
+});
 
 const NoReceiptsHint = styled(Text, {
 	display: "flex",
@@ -65,14 +65,9 @@ export const Receipts: React.FC = () => {
 	const cursorPaging = useCursorPaging(useReceiptQuery, input, "offset");
 	const { totalCount, isLoading, query } = cursorPaging;
 
-	if (totalCount === 0) {
+	if (totalCount === 0 && !input.onlyNonResolved) {
 		return (
-			<Container
-				display="flex"
-				direction="column"
-				alignItems="center"
-				justify="center"
-			>
+			<Wrapper>
 				<Text h2>You have no receipts</Text>
 				<Spacer y={0.5} />
 				<NoReceiptsHint h3>
@@ -87,7 +82,7 @@ export const Receipts: React.FC = () => {
 					<Spacer x={0.5} />
 					to add a receipt
 				</NoReceiptsHint>
-			</Container>
+			</Wrapper>
 		);
 	}
 
@@ -99,7 +94,11 @@ export const Receipts: React.FC = () => {
 			<Spacer y={1} />
 			<Overlay overlay={isLoading ? <Loading size="xl" /> : undefined}>
 				{query.status === "error" ? <QueryErrorMessage query={query} /> : null}
-				{query.status === "loading" ? (
+				{totalCount === 0 ? (
+					<Wrapper>
+						<Text h2>All receipts are resolved!</Text>
+					</Wrapper>
+				) : query.status === "loading" ? (
 					<Loading size="xl" />
 				) : query.data ? (
 					<ReceiptPreviewsList receipts={query.data.items} />
