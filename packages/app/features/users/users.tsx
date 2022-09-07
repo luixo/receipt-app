@@ -1,19 +1,13 @@
 import React from "react";
 
-import {
-	Container,
-	Loading,
-	Spacer,
-	Text,
-	Button,
-	styled,
-} from "@nextui-org/react";
+import { Container, Loading, Spacer, Text, styled } from "@nextui-org/react";
 import { MdAdd as AddIcon } from "react-icons/md";
 
 import { cache } from "app/cache";
 import { QueryErrorMessage } from "app/components/error-message";
 import { IconButton } from "app/components/icon-button";
 import { Overlay } from "app/components/overlay";
+import { Pagination } from "app/components/pagination";
 import { useCursorPaging } from "app/hooks/use-cursor-paging";
 import { trpc, TRPCQueryInput, TRPCQueryOutput } from "app/trpc";
 
@@ -52,20 +46,9 @@ const useUsersQuery = (input: Omit<Input, "cursor">, cursor: Input["cursor"]) =>
 export const Users: React.FC = () => {
 	const [input] = cache.users.getPaged.useStore();
 	const cursorPaging = useCursorPaging(useUsersQuery, input, "offset");
-	const {
-		onNextPage,
-		onPrevPage,
-		selectedPageIndex,
-		query,
-		isLoading,
-		prevDisabled,
-		prevLoading,
-		nextDisabled,
-		nextLoading,
-		totalCount,
-	} = cursorPaging;
+	const { totalCount, pagination, query, isLoading } = cursorPaging;
 
-	if (totalCount === 0) {
+	if (!totalCount) {
 		return (
 			<Container
 				display="flex"
@@ -91,32 +74,15 @@ export const Users: React.FC = () => {
 		);
 	}
 
-	const pagination = (
+	const paginationElement = (
 		<Container display="flex" justify="center">
-			<Button.Group size="sm">
-				<Button
-					onClick={prevLoading ? undefined : onPrevPage}
-					disabled={prevDisabled}
-				>
-					{prevLoading ? <Loading color="currentColor" size="xs" /> : "<"}
-				</Button>
-				<Button>
-					{selectedPageIndex + 1} of{" "}
-					{totalCount !== undefined ? Math.ceil(totalCount / input.limit) : "?"}
-				</Button>
-				<Button
-					onClick={nextLoading ? undefined : onNextPage}
-					disabled={nextDisabled}
-				>
-					{nextLoading ? <Loading color="currentColor" size="xs" /> : ">"}
-				</Button>
-			</Button.Group>
+			<Pagination {...pagination} />
 		</Container>
 	);
 
 	return (
 		<>
-			{pagination}
+			{paginationElement}
 			<Spacer y={1} />
 			<Overlay overlay={isLoading ? <Loading size="xl" /> : undefined}>
 				{query.status === "error" ? <QueryErrorMessage query={query} /> : null}
@@ -127,7 +93,7 @@ export const Users: React.FC = () => {
 				) : null}
 			</Overlay>
 			<Spacer y={1} />
-			{pagination}
+			{paginationElement}
 		</>
 	);
 };

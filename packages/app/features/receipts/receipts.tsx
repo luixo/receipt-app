@@ -63,9 +63,9 @@ const useReceiptQuery = (
 export const Receipts: React.FC = () => {
 	const [input] = cache.receipts.getPaged.useStore();
 	const cursorPaging = useCursorPaging(useReceiptQuery, input, "offset");
-	const { totalCount, isLoading, query } = cursorPaging;
+	const { totalCount, isLoading, query, pagination } = cursorPaging;
 
-	if (totalCount === 0 && !input.onlyNonResolved) {
+	if (!totalCount && !input.onlyNonResolved) {
 		return (
 			<Wrapper>
 				<Text h2>You have no receipts</Text>
@@ -86,15 +86,15 @@ export const Receipts: React.FC = () => {
 		);
 	}
 
-	const pagination = <ReceiptsPagination cursorPaging={cursorPaging} />;
+	const paginationElement = <ReceiptsPagination pagination={pagination} />;
 
 	return (
 		<>
-			{pagination}
+			{paginationElement}
 			<Spacer y={1} />
 			<Overlay overlay={isLoading ? <Loading size="xl" /> : undefined}>
 				{query.status === "error" ? <QueryErrorMessage query={query} /> : null}
-				{totalCount === 0 ? (
+				{!totalCount ? (
 					<Wrapper>
 						<Text h2>All receipts are resolved!</Text>
 					</Wrapper>
@@ -105,7 +105,7 @@ export const Receipts: React.FC = () => {
 				) : null}
 			</Overlay>
 			<Spacer y={1} />
-			{pagination}
+			{paginationElement}
 		</>
 	);
 };

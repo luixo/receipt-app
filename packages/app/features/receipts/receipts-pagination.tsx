@@ -1,13 +1,6 @@
 import React from "react";
 
-import {
-	Loading,
-	Text,
-	Button,
-	styled,
-	Checkbox,
-	Dropdown,
-} from "@nextui-org/react";
+import { Text, styled, Checkbox, Dropdown } from "@nextui-org/react";
 import {
 	BsSortNumericDown as SortDownIcon,
 	BsSortNumericUp as SortUpIcon,
@@ -15,12 +8,13 @@ import {
 import { MdFilterAlt as FilterIcon } from "react-icons/md";
 
 import { cache } from "app/cache";
-import { ExtractInfiniteData } from "app/cache/utils";
 import { Grid } from "app/components/grid";
 import { IconButton } from "app/components/icon-button";
-import { CursorPagingResult } from "app/hooks/use-cursor-paging";
+import {
+	Pagination,
+	Props as PaginationProps,
+} from "app/components/pagination";
 import { useMatchMedia } from "app/hooks/use-match-media";
-import { TRPCInfiniteQuerySuccessResult } from "app/trpc";
 
 const Wrapper = styled("div", {
 	display: "flex",
@@ -29,26 +23,12 @@ const Wrapper = styled("div", {
 });
 
 type Props = {
-	cursorPaging: CursorPagingResult<
-		ExtractInfiniteData<
-			TRPCInfiniteQuerySuccessResult<"receipts.getPaged">["data"]
-		>
-	>;
+	pagination: PaginationProps;
 };
 
-export const ReceiptsPagination: React.FC<Props> = ({ cursorPaging }) => {
+export const ReceiptsPagination: React.FC<Props> = ({ pagination }) => {
 	const [input, { changeOrderBy, changeOnlyNonResolved }] =
 		cache.receipts.getPaged.useStore();
-	const {
-		onNextPage,
-		onPrevPage,
-		selectedPageIndex,
-		prevDisabled,
-		prevLoading,
-		nextDisabled,
-		nextLoading,
-		totalCount,
-	} = cursorPaging;
 
 	const matchMedia = useMatchMedia();
 	const shouldShrink = !matchMedia.md;
@@ -93,27 +73,7 @@ export const ReceiptsPagination: React.FC<Props> = ({ cursorPaging }) => {
 					</Grid>
 				)}
 				<Grid defaultCol={4} lessMdCol>
-					<Button.Group size="sm" bordered>
-						<Button
-							onClick={prevLoading ? undefined : onPrevPage}
-							disabled={prevDisabled}
-							css={{ borderRight: "none" }}
-						>
-							{prevLoading ? <Loading color="currentColor" size="xs" /> : "<"}
-						</Button>
-						<Button animated={false} css={{ borderRight: "none" }}>
-							{selectedPageIndex + 1} of{" "}
-							{totalCount !== undefined
-								? Math.ceil(totalCount / input.limit)
-								: "?"}
-						</Button>
-						<Button
-							onClick={nextLoading ? undefined : onNextPage}
-							disabled={nextDisabled}
-						>
-							{nextLoading ? <Loading color="currentColor" size="xs" /> : ">"}
-						</Button>
-					</Button.Group>
+					<Pagination {...pagination} />
 				</Grid>
 				{shouldShrink ? (
 					<Grid defaultCol={3}>

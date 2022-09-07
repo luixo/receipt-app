@@ -4,18 +4,13 @@ import { QueryObserverResult } from "@tanstack/react-query";
 import { useQueryState } from "next-usequerystate";
 import { createParam } from "solito";
 
+import { Props as PaginationProps } from "app/components/pagination";
 import { TRPCError } from "app/trpc";
 
-export type CursorPagingResult<T extends { count: number }> = {
-	onNextPage: () => void;
-	onPrevPage: () => void;
-	selectedPageIndex: number;
-	query: QueryObserverResult<T, TRPCError>;
+type CursorPagingResult<T extends { count: number }> = {
+	pagination: PaginationProps;
 	isLoading: boolean;
-	prevDisabled: boolean;
-	prevLoading: boolean;
-	nextDisabled: boolean;
-	nextLoading: boolean;
+	query: QueryObserverResult<T, TRPCError>;
 	totalCount?: number;
 };
 
@@ -39,28 +34,96 @@ export const useCursorPaging = <
 
 	const [offset, setOffset] = React.useState(initialOffset);
 	const query = useQuery(input, offset);
+	const maxOffset = query.data
+		? Math.floor((query.data.count - 1) / limit) * limit
+		: undefined;
 	const onNextPage = React.useCallback(() => {
 		setOffset((prevOffset) => prevOffset + limit);
 	}, [setOffset, limit]);
+	const onNextAllPage = React.useCallback(() => {
+		if (!maxOffset) {
+			return;
+		}
+		setOffset(maxOffset);
+	}, [setOffset, maxOffset]);
 	const onPrevPage = React.useCallback(() => {
 		setOffset((prevOffset) => prevOffset - limit);
 	}, [setOffset, limit]);
+	const onPrevAllPage = React.useCallback(() => {
+		setOffset(0);
+	}, [setOffset]);
 
 	React.useEffect(() => {
 		setQueryOffset(offset ? offset.toString() : null);
 	}, [offset, setQueryOffset]);
+	React.useEffect(() => {
+		if (!maxOffset) {
+			return;
+		}
+		if (offset > maxOffset) {
+			setOffset(maxOffset);
+		}
+	}, [setOffset, maxOffset, offset]);
 
 	const isFetchingPage = Boolean(query.isPreviousData && query.data);
+	const prevButton = React.useMemo(
+		() => ({
+			disabled: offset === 0,
+			loading: isFetchingPage && query.data!.cursor > offset,
+			onClick: onPrevPage,
+		}),
+		[offset, isFetchingPage, query.data, onPrevPage]
+	);
+	const prevAllButton = React.useMemo(
+		() => ({
+			disabled: offset === 0,
+			loading: isFetchingPage && offset === 0,
+			onClick: onPrevAllPage,
+		}),
+		[offset, isFetchingPage, onPrevAllPage]
+	);
+	const nextButton = React.useMemo(
+		() => ({
+			disabled: maxOffset ? offset === maxOffset : true,
+			loading: isFetchingPage && query.data!.cursor <= offset,
+			onClick: onNextPage,
+		}),
+		[offset, maxOffset, isFetchingPage, query.data, onNextPage]
+	);
+	const nextAllButton = React.useMemo(
+		() => ({
+			disabled: maxOffset ? offset === maxOffset : true,
+			loading: isFetchingPage && offset === maxOffset,
+			onClick: onNextAllPage,
+		}),
+		[offset, maxOffset, isFetchingPage, onNextAllPage]
+	);
+	const pagination = React.useMemo(
+		() => ({
+			prev: prevButton,
+			prevAll: prevAllButton,
+			next: nextButton,
+			nextAll: nextAllButton,
+			selectedPage: query.data?.count === 0 ? 0 : offset / limit + 1,
+			totalPages:
+				query.data === undefined
+					? undefined
+					: Math.ceil(query.data.count / limit),
+		}),
+		[
+			prevButton,
+			prevAllButton,
+			nextButton,
+			nextAllButton,
+			query.data,
+			offset,
+			limit,
+		]
+	);
 	return {
-		onNextPage,
-		onPrevPage,
-		selectedPageIndex: query.data?.count === 0 ? -1 : offset / limit,
 		query,
 		isLoading: query.fetchStatus === "fetching",
-		prevDisabled: offset === 0,
-		prevLoading: isFetchingPage && query.data!.cursor > offset,
-		nextDisabled: query.data ? offset + limit >= query.data.count : true,
-		nextLoading: isFetchingPage && query.data!.cursor <= offset,
+		pagination,
 		totalCount: query.data?.count,
 	};
 };
