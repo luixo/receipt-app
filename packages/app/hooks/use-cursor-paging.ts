@@ -1,13 +1,16 @@
 import React from "react";
 
-import { UseInfiniteQueryResult } from "@tanstack/react-query";
+import { QueryObserverResult } from "@tanstack/react-query";
+import { useQueryState } from "next-usequerystate";
+import { createParam } from "solito";
+
+import { TRPCError } from "app/trpc";
 
 export type CursorPagingResult<T extends { count: number }> = {
 	onNextPage: () => void;
 	onPrevPage: () => void;
 	selectedPageIndex: number;
-	selectedPage: T | undefined;
-	prevSelectedPage: T | undefined;
+	query: QueryObserverResult<T, TRPCError>;
 	isLoading: boolean;
 	prevDisabled: boolean;
 	prevLoading: boolean;
@@ -16,47 +19,48 @@ export type CursorPagingResult<T extends { count: number }> = {
 	totalCount?: number;
 };
 
-export const useCursorPaging = <T extends { count: number }>(
-	query: UseInfiniteQueryResult<T>
+const { useParam } = createParam<{ [K in string]: string }>();
+
+export const useCursorPaging = <
+	T extends { count: number; hasMore: boolean; cursor: number },
+	Input extends { limit: number }
+>(
+	useQuery: (input: Input, offset: number) => QueryObserverResult<T, TRPCError>,
+	input: Input,
+	offsetParamName: string
 ): CursorPagingResult<T> => {
-	const [selectedPageIndex, setSelectedPageIndex] = React.useState(0);
-	const [prevSelectedPageIndex, setPrevSelectedPageIndex] = React.useState(-1);
-	const isNextPageFetched = query.data
-		? query.data.pages.length > selectedPageIndex + 1
-		: true;
-	const saveSelectedPageIndex = React.useCallback(() => {
-		setPrevSelectedPageIndex(selectedPageIndex);
-	}, [setPrevSelectedPageIndex, selectedPageIndex]);
+	const [serverSideQueryOffset] = useParam(offsetParamName);
+	const { limit } = input;
+	const [queryOffset, setQueryOffset] = useQueryState(offsetParamName, {
+		defaultValue: serverSideQueryOffset || "0",
+	});
+	const numberQueryOffset = Number(queryOffset);
+	const initialOffset = Number.isNaN(numberQueryOffset) ? 0 : numberQueryOffset;
+
+	const [offset, setOffset] = React.useState(initialOffset);
+	const query = useQuery(input, offset);
 	const onNextPage = React.useCallback(() => {
-		if (!query.data) {
-			return;
-		}
-		saveSelectedPageIndex();
-		setSelectedPageIndex((index) => index + 1);
-		if (!isNextPageFetched) {
-			query.fetchNextPage();
-		}
-	}, [saveSelectedPageIndex, query, setSelectedPageIndex, isNextPageFetched]);
+		setOffset((prevOffset) => prevOffset + limit);
+	}, [setOffset, limit]);
 	const onPrevPage = React.useCallback(() => {
-		saveSelectedPageIndex();
-		setSelectedPageIndex((index) => index - 1);
-	}, [saveSelectedPageIndex, setSelectedPageIndex]);
-	const selectedPage = query.data?.pages[selectedPageIndex];
-	const prevSelectedPage = query.data?.pages[prevSelectedPageIndex];
+		setOffset((prevOffset) => prevOffset - limit);
+	}, [setOffset, limit]);
+
+	React.useEffect(() => {
+		setQueryOffset(offset ? offset.toString() : null);
+	}, [offset, setQueryOffset]);
+
+	const isFetchingPage = Boolean(query.isPreviousData && query.data);
 	return {
 		onNextPage,
 		onPrevPage,
-		selectedPageIndex,
-		selectedPage,
-		prevSelectedPage,
-		isLoading:
-			query.isLoading ||
-			query.isFetching ||
-			(!isNextPageFetched && query.isFetchingNextPage),
-		prevDisabled: selectedPageIndex === 0,
-		prevLoading: false,
-		nextDisabled: isNextPageFetched ? false : !query.hasNextPage,
-		nextLoading: isNextPageFetched ? false : query.isFetchingNextPage,
-		totalCount: query.data?.pages[0]?.count,
+		selectedPageIndex: offset / limit,
+		query,
+		isLoading: query.fetchStatus === "fetching",
+		prevDisabled: offset === 0,
+		prevLoading: isFetchingPage && query.data!.cursor > offset,
+		nextDisabled: query.data ? offset + limit >= query.data.count : true,
+		nextLoading: isFetchingPage && query.data!.cursor <= offset,
+		totalCount: query.data?.count,
 	};
 };

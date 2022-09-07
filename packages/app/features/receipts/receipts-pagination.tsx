@@ -99,11 +99,11 @@ export const ReceiptsPagination: React.FC<Props> = ({ cursorPaging }) => {
 							disabled={prevDisabled}
 							css={{ borderRight: "none" }}
 						>
-							{"<"}
+							{prevLoading ? <Loading color="currentColor" size="xs" /> : "<"}
 						</Button>
 						<Button animated={false} css={{ borderRight: "none" }}>
 							{selectedPageIndex + 1} of{" "}
-							{totalCount ? Math.ceil(totalCount / input.limit) : "unknown"}
+							{totalCount ? Math.ceil(totalCount / input.limit) : "?"}
 						</Button>
 						<Button
 							onClick={nextLoading ? undefined : onNextPage}

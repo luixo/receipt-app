@@ -6,14 +6,14 @@ import { AccountsId, ReceiptsId, UsersId } from "next-app/src/db/models";
 
 export const mutationOptions: UseContextedMutationOptions<
 	"receipts.add",
-	ReceiptsId,
+	{ temporaryId: ReceiptsId; sinceCursor: number },
 	{ selfAccountId: AccountsId }
 > = {
 	onMutate:
 		(trpcContext, { selfAccountId }) =>
 		(variables) => {
 			const temporaryId = v4();
-			cache.receipts.getPaged.add(trpcContext, {
+			const sinceCursor = cache.receipts.getPaged.add(trpcContext, {
 				id: temporaryId,
 				role: "owner",
 				name: variables.name,
@@ -29,21 +29,26 @@ export const mutationOptions: UseContextedMutationOptions<
 				remoteUserId: selfAccountId as UsersId,
 				localUserId: selfAccountId as UsersId,
 			});
-			return temporaryId;
+			return { temporaryId, sinceCursor };
 		},
-	onError: (trpcContext) => (_error, _variables, temporaryId) => {
-		if (!temporaryId) {
+	onError: (trpcContext) => (_error, _variables, snapshot) => {
+		if (!snapshot) {
 			return;
 		}
-		cache.receipts.getPaged.remove(trpcContext, temporaryId);
+		cache.receipts.getPaged.remove(trpcContext, snapshot.temporaryId);
 	},
 	onSuccess:
 		(trpcContext, { selfAccountId }) =>
-		(actualId, variables, temporaryId) => {
-			cache.receipts.getPaged.update(trpcContext, temporaryId!, (receipt) => ({
-				...receipt,
-				id: actualId,
-			}));
+		(actualId, variables, snapshot) => {
+			cache.receipts.getPaged.invalidate(trpcContext, snapshot!.sinceCursor);
+			cache.receipts.getPaged.update(
+				trpcContext,
+				snapshot!.temporaryId,
+				(receipt) => ({
+					...receipt,
+					id: actualId,
+				})
+			);
 			cache.receipts.get.add(trpcContext, {
 				id: actualId,
 				role: "owner",

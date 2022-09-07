@@ -1,5 +1,4 @@
-import { TRPCInfiniteQueryInput, TRPCQueryOutput } from "app/trpc";
+import { TRPCQueryInput, TRPCQueryOutput } from "app/trpc";
 
-export type ReceiptsResult = TRPCQueryOutput<"receipts.getPaged">;
-export type Receipt = ReceiptsResult["items"][number];
-export type Input = TRPCInfiniteQueryInput<"receipts.getPaged">;
+export type Receipt = TRPCQueryOutput<"receipts.getPaged">["items"][number];
+export type Input = TRPCQueryInput<"receipts.getPaged">;

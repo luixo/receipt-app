@@ -16,11 +16,7 @@ import { Grid } from "app/components/grid";
 import { IconButton } from "app/components/icon-button";
 import { Overlay } from "app/components/overlay";
 import { useCursorPaging } from "app/hooks/use-cursor-paging";
-import {
-	trpc,
-	TRPCInfiniteQuerySuccessResult,
-	TRPCQueryOutput,
-} from "app/trpc";
+import { trpc, TRPCQueryInput, TRPCQueryOutput } from "app/trpc";
 
 import { ReceiptPreview } from "./receipt-preview";
 import { ReceiptsPagination } from "./receipts-pagination";
@@ -53,14 +49,21 @@ const ReceiptPreviewsList: React.FC<PreviewsProps> = ({ receipts }) => (
 	</Grid.Container>
 );
 
-type InnerProps = {
-	query: TRPCInfiniteQuerySuccessResult<"receipts.getPaged">;
-};
+type Input = TRPCQueryInput<"receipts.getPaged">;
 
-const ReceiptsInner: React.FC<InnerProps> = ({ query }) => {
-	const cursorPaging = useCursorPaging(query);
-	const { totalCount, isLoading, selectedPage, prevSelectedPage } =
-		cursorPaging;
+const useReceiptQuery = (
+	input: Omit<Input, "cursor">,
+	cursor: Input["cursor"]
+) =>
+	trpc.receipts.getPaged.useQuery(
+		{ ...input, cursor },
+		{ keepPreviousData: true }
+	);
+
+export const Receipts: React.FC = () => {
+	const [input] = cache.receipts.getPaged.useStore();
+	const cursorPaging = useCursorPaging(useReceiptQuery, input, "offset");
+	const { totalCount, isLoading, query } = cursorPaging;
 
 	if (totalCount === 0) {
 		return (
@@ -95,29 +98,15 @@ const ReceiptsInner: React.FC<InnerProps> = ({ query }) => {
 			{pagination}
 			<Spacer y={1} />
 			<Overlay overlay={isLoading ? <Loading size="xl" /> : undefined}>
-				{selectedPage ? (
-					<ReceiptPreviewsList receipts={selectedPage.items} />
-				) : prevSelectedPage ? (
-					<ReceiptPreviewsList receipts={prevSelectedPage.items} />
+				{query.status === "error" ? <QueryErrorMessage query={query} /> : null}
+				{query.status === "loading" ? (
+					<Loading size="xl" />
+				) : query.data ? (
+					<ReceiptPreviewsList receipts={query.data.items} />
 				) : null}
 			</Overlay>
 			<Spacer y={1} />
 			{pagination}
 		</>
 	);
-};
-
-export const Receipts: React.FC = () => {
-	const [input] = cache.receipts.getPaged.useStore();
-	const query = trpc.receipts.getPaged.useInfiniteQuery(input, {
-		getNextPageParam: cache.receipts.getPaged.getNextPage,
-		keepPreviousData: true,
-	});
-	if (query.status === "loading") {
-		return <Loading size="xl" />;
-	}
-	if (query.status === "error") {
-		return <QueryErrorMessage query={query} />;
-	}
-	return <ReceiptsInner query={query} />;
 };

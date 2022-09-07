@@ -8,12 +8,12 @@ import {
 	getForeignReceipts,
 } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
-import { limitSchema } from "next-app/handlers/validation";
+import { limitSchema, offsetSchema } from "next-app/handlers/validation";
 
 export const procedure = authProcedure
 	.input(
 		z.strictObject({
-			cursor: z.date().optional(),
+			cursor: offsetSchema,
 			limit: limitSchema,
 			orderBy: z.union([z.literal("date-asc"), z.literal("date-desc")]),
 			onlyNonResolved: z.boolean(),
@@ -81,16 +81,10 @@ export const procedure = authProcedure
 					"mergedReceipts.localUserId",
 				])
 				.orderBy("issued", input.orderBy === "date-asc" ? "asc" : "desc")
-				.if(Boolean(input.cursor), (qb) =>
-					qb.where(
-						"issued",
-						input.orderBy === "date-asc" ? ">" : "<",
-						input.cursor!
-					)
-				)
 				.if(Boolean(input.onlyNonResolved), (qb) =>
 					qb.where("receiptParticipants.resolved", "=", false)
 				)
+				.offset(input.cursor)
 				.limit(input.limit + 1)
 				.execute(),
 			database
@@ -134,6 +128,7 @@ export const procedure = authProcedure
 		return {
 			count: receiptsCount ? parseInt(receiptsCount.amount, 10) : 0,
 			hasMore: receipts.length === input.limit + 1,
+			cursor: input.cursor,
 			items: receipts
 				.slice(0, input.limit)
 				.map(({ lockedTimestamp, ...receipt }) => ({

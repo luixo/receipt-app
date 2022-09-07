@@ -3,6 +3,7 @@ import { TRPCReactContext } from "app/trpc";
 import { nonNullishGuard } from "app/utils/utils";
 import { ReceiptsId } from "next-app/src/db/models";
 
+import { createController } from "./controller";
 import { Receipt, Input } from "./types";
 import { updatePagedReceipts } from "./utils";
 
@@ -41,35 +42,38 @@ export const update = (
 };
 
 export const add = (trpc: TRPCReactContext, nextReceipt: Receipt) => {
-	const shouldShiftRef = createRef(false);
-	updatePagedReceipts(trpc, (page, pageIndex, pages, input) => {
-		if (shouldShiftRef.current) {
-			const prevPage = pages[pageIndex - 1];
-			if (!prevPage) {
-				return [];
-			}
-			return [prevPage.at(-1)!, ...page.slice(0, input.limit)];
-		}
-		const sortedPage = [...page, nextReceipt].sort(getSortByDate(input));
-		if (sortedPage.indexOf(nextReceipt) === page.length - 1) {
-			if (page.length !== input.limit) {
-				shouldShiftRef.current = true;
-				return sortedPage;
-			}
+	const shiftedAtCursorRef = createRef<number | undefined>();
+	updatePagedReceipts(trpc, (page, input) => {
+		if (shiftedAtCursorRef.current !== undefined) {
 			return page;
 		}
-		shouldShiftRef.current = true;
+		const sortedPage = [...page, nextReceipt].sort(getSortByDate(input));
+		const sortedIndex = sortedPage.indexOf(nextReceipt);
+		if (sortedIndex === 0) {
+			if (input.cursor === 0) {
+				shiftedAtCursorRef.current = input.cursor;
+				return sortedPage;
+			}
+			// The beginning of the page - probably should fit on the previous page
+			return page;
+		}
+		if (sortedIndex === sortedPage.length - 1) {
+			// The end of the page - probably should fit on the next page
+			return page;
+		}
+		shiftedAtCursorRef.current = input.cursor || 0;
 		return sortedPage.slice(0, input.limit);
 	});
+	return shiftedAtCursorRef.current || 0;
 };
 
 export const remove = (trpc: TRPCReactContext, receiptId: ReceiptsId) => {
-	const removedReceiptRef = createRef<Receipt | undefined>();
-	updatePagedReceipts(trpc, (page, pageIndex, pages) => {
+	const removedReceiptRef = createRef<
+		{ data: Receipt; cursor: number } | undefined
+	>();
+	updatePagedReceipts(trpc, (page, input) => {
 		if (removedReceiptRef.current) {
-			return [...page.slice(1), pages[pageIndex + 1]?.[0]].filter(
-				nonNullishGuard
-			);
+			return page;
 		}
 		const matchedReceiptIndex = page.findIndex(
 			(receipt) => receipt.id === receiptId
@@ -77,12 +81,24 @@ export const remove = (trpc: TRPCReactContext, receiptId: ReceiptsId) => {
 		if (matchedReceiptIndex === -1) {
 			return page;
 		}
-		removedReceiptRef.current = page[matchedReceiptIndex]!;
+		removedReceiptRef.current = {
+			data: page[matchedReceiptIndex]!,
+			cursor: input.cursor || 0,
+		};
 		return [
 			...page.slice(0, matchedReceiptIndex),
 			...page.slice(matchedReceiptIndex + 1),
-			pages[pageIndex + 1]?.[0],
 		].filter(nonNullishGuard);
 	});
 	return removedReceiptRef.current;
 };
+
+export const invalidate = (trpc: TRPCReactContext, sinceCursor: number) =>
+	createController(trpc).invalidate({
+		refetchType: "all",
+		predicate: (query) => {
+			const input = query.queryKey[1] as Input;
+			const localCursor = input.cursor || 0;
+			return localCursor >= sinceCursor;
+		},
+	});

@@ -1,16 +1,12 @@
 import zustand from "zustand";
 
-import { TRPCInfiniteQueryCursor } from "app/trpc";
 import { Setters } from "app/utils/types";
 
-import { UsersResult, Input } from "./types";
+import { Input } from "./types";
 
-export const getNextPage = (
-	result: UsersResult
-): TRPCInfiniteQueryCursor<"users.getPaged"> =>
-	result.hasMore ? result.items[result.items.length - 1]?.name : undefined;
+type CursorlessOmit = Omit<Input, "cursor">;
 
-const inputStore = zustand<Input & Setters<Input>>((set) => ({
+const inputStore = zustand<CursorlessOmit & Setters<CursorlessOmit>>((set) => ({
 	limit: 10,
 	changeLimit: (nextLimit: Input["limit"]) => set(() => ({ limit: nextLimit })),
 }));

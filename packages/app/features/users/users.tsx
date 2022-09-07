@@ -15,11 +15,7 @@ import { QueryErrorMessage } from "app/components/error-message";
 import { IconButton } from "app/components/icon-button";
 import { Overlay } from "app/components/overlay";
 import { useCursorPaging } from "app/hooks/use-cursor-paging";
-import {
-	trpc,
-	TRPCInfiniteQuerySuccessResult,
-	TRPCQueryOutput,
-} from "app/trpc";
+import { trpc, TRPCQueryInput, TRPCQueryOutput } from "app/trpc";
 
 import { UserPreview } from "./user-preview";
 
@@ -45,25 +41,29 @@ const UserPreviewsList: React.FC<PreviewsProps> = ({ users }) => (
 	</>
 );
 
-type InnerProps = {
-	query: TRPCInfiniteQuerySuccessResult<"users.getPaged">;
-};
+type Input = TRPCQueryInput<"users.getPaged">;
 
-const UsersInner: React.FC<InnerProps> = ({ query }) => {
+const useUsersQuery = (input: Omit<Input, "cursor">, cursor: Input["cursor"]) =>
+	trpc.users.getPaged.useQuery(
+		{ ...input, cursor },
+		{ keepPreviousData: true }
+	);
+
+export const Users: React.FC = () => {
 	const [input] = cache.users.getPaged.useStore();
+	const cursorPaging = useCursorPaging(useUsersQuery, input, "offset");
 	const {
 		onNextPage,
 		onPrevPage,
 		selectedPageIndex,
-		selectedPage,
-		prevSelectedPage,
+		query,
 		isLoading,
 		prevDisabled,
 		prevLoading,
 		nextDisabled,
 		nextLoading,
 		totalCount,
-	} = useCursorPaging(query);
+	} = cursorPaging;
 
 	if (totalCount === 0) {
 		return (
@@ -98,11 +98,11 @@ const UsersInner: React.FC<InnerProps> = ({ query }) => {
 					onClick={prevLoading ? undefined : onPrevPage}
 					disabled={prevDisabled}
 				>
-					{"<"}
+					{prevLoading ? <Loading color="currentColor" size="xs" /> : "<"}
 				</Button>
 				<Button>
 					{selectedPageIndex + 1} of{" "}
-					{totalCount ? Math.ceil(totalCount / input.limit) : "unknown"}
+					{totalCount ? Math.ceil(totalCount / input.limit) : "?"}
 				</Button>
 				<Button
 					onClick={nextLoading ? undefined : onNextPage}
@@ -119,28 +119,15 @@ const UsersInner: React.FC<InnerProps> = ({ query }) => {
 			{pagination}
 			<Spacer y={1} />
 			<Overlay overlay={isLoading ? <Loading size="xl" /> : undefined}>
-				{selectedPage ? (
-					<UserPreviewsList users={selectedPage.items} />
-				) : prevSelectedPage ? (
-					<UserPreviewsList users={prevSelectedPage.items} />
+				{query.status === "error" ? <QueryErrorMessage query={query} /> : null}
+				{query.status === "loading" ? (
+					<Loading size="xl" />
+				) : query.data ? (
+					<UserPreviewsList users={query.data.items} />
 				) : null}
 			</Overlay>
 			<Spacer y={1} />
 			{pagination}
 		</>
 	);
-};
-
-export const Users: React.FC = () => {
-	const [input] = cache.users.getPaged.useStore();
-	const query = trpc.users.getPaged.useInfiniteQuery(input, {
-		getNextPageParam: cache.users.getPaged.getNextPage,
-	});
-	if (query.status === "loading") {
-		return <Loading size="xl" />;
-	}
-	if (query.status === "error") {
-		return <QueryErrorMessage query={query} />;
-	}
-	return <UsersInner query={query} />;
 };

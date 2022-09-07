@@ -1,5 +1,4 @@
-import { TRPCInfiniteQueryInput, TRPCQueryOutput } from "app/trpc";
+import { TRPCQueryInput, TRPCQueryOutput } from "app/trpc";
 
-export type UsersResult = TRPCQueryOutput<"users.getPaged">;
-export type User = UsersResult["items"][number];
-export type Input = TRPCInfiniteQueryInput<"users.getPaged">;
+export type User = TRPCQueryOutput<"users.getPaged">["items"][number];
+export type Input = TRPCQueryInput<"users.getPaged">;

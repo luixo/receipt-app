@@ -6,31 +6,36 @@ import { UsersId } from "next-app/src/db/models";
 
 export const mutationOptions: UseContextedMutationOptions<
 	"users.add",
-	UsersId
+	{ temporaryId: UsersId; sinceCursor: number }
 > = {
 	onMutate: (trpcContext) => (form) => {
 		const temporaryId = v4();
-		cache.users.getPaged.add(trpcContext, {
+		const sinceCursor = cache.users.getPaged.add(trpcContext, {
 			id: temporaryId,
 			name: form.name,
 			publicName: null,
 			email: null,
 		});
-		return temporaryId;
+		return { temporaryId, sinceCursor };
 	},
-	onError: (trpcContext) => (_error, _variables, temporaryId) => {
-		if (!temporaryId) {
+	onError: (trpcContext) => (_error, _variables, snapshot) => {
+		if (!snapshot) {
 			return;
 		}
-		cache.users.getPaged.remove(trpcContext, temporaryId);
+		cache.users.getPaged.remove(trpcContext, snapshot.temporaryId);
 	},
 	onSuccess:
 		(trpcContext) =>
-		({ id: actualId, connection }, variables, temporaryId) => {
-			cache.users.getPaged.update(trpcContext, temporaryId!, (user) => ({
-				...user,
-				id: actualId,
-			}));
+		({ id: actualId, connection }, variables, snapshot) => {
+			cache.receipts.getPaged.invalidate(trpcContext, snapshot!.sinceCursor);
+			cache.users.getPaged.update(
+				trpcContext,
+				snapshot!.temporaryId,
+				(user) => ({
+					...user,
+					id: actualId,
+				})
+			);
 			cache.users.get.add(trpcContext, {
 				remoteId: actualId,
 				localId: actualId,

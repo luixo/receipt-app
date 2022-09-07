@@ -11,6 +11,11 @@ import {
 } from "next-app/db/models";
 import { isCurrency } from "next-app/utils/currency";
 
+export const offsetSchema = z
+	.number()
+	.int()
+	.gte(0)
+	.max(10 ** 4);
 export const limitSchema = z.number().int().gt(0).max(100);
 
 export const assignableRoleSchema = z.union([

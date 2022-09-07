@@ -1,15 +1,14 @@
 import { z } from "zod";
 
-import { userNameSchema } from "app/utils/validation";
 import { getDatabase } from "next-app/db";
 import { UsersId } from "next-app/db/models";
 import { authProcedure } from "next-app/handlers/trpc";
-import { limitSchema } from "next-app/handlers/validation";
+import { limitSchema, offsetSchema } from "next-app/handlers/validation";
 
 export const procedure = authProcedure
 	.input(
 		z.strictObject({
-			cursor: userNameSchema.optional(),
+			cursor: offsetSchema,
 			limit: limitSchema,
 		})
 	)
@@ -27,7 +26,7 @@ export const procedure = authProcedure
 				)
 				.select(["users.id", "name", "publicName", "accounts.email"])
 				.orderBy("name")
-				.if(Boolean(input.cursor), (qb) => qb.where("name", ">", input.cursor!))
+				.offset(input.cursor)
 				.limit(input.limit + 1)
 				.execute(),
 			accountUsers
@@ -37,6 +36,7 @@ export const procedure = authProcedure
 
 		return {
 			count: usersCount ? parseInt(usersCount.amount, 10) : 0,
+			cursor: input.cursor,
 			hasMore: users.length === input.limit + 1,
 			items: users.slice(0, input.limit),
 		};

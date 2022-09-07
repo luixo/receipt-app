@@ -18,7 +18,8 @@ export const mutationOptions: UseContextedMutationOptions<
 		(trpcContext) =>
 		(_error, _variables, { receiptSnapshot } = {}) => {
 			if (receiptSnapshot) {
-				cache.receipts.getPaged.add(trpcContext, receiptSnapshot);
+				cache.receipts.getPaged.add(trpcContext, receiptSnapshot.data);
+				cache.receipts.getPaged.invalidate(trpcContext, receiptSnapshot.cursor);
 			}
 		},
 	onSuccess: (trpcContext) => (_result, variables) =>
