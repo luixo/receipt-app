@@ -14,11 +14,13 @@ const OverlayElement = styled("div", {
 	right: 0,
 	top: 0,
 	bottom: 0,
-	backgroundColor: "overlay",
+	backgroundColor: "$neutral",
+	opacity: 0.3,
+	borderRadius: "$md",
 	display: "flex",
 	alignItems: "center",
 	justifyContent: "center",
-	zIndex: "max",
+	zIndex: "$2",
 });
 
 type Props = {

@@ -35,7 +35,7 @@ const StickyMenu = styled("div", {
 	shadow: "$xl",
 	p: "$4",
 	display: "flex",
-	zIndex: "$2",
+	zIndex: "$10",
 });
 
 // Reserved space after sticky menu - with its approx. height
