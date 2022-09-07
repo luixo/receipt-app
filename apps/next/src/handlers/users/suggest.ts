@@ -23,7 +23,7 @@ export const procedure = authProcedure
 	.input(
 		z.strictObject({
 			input: z.string().max(255),
-			cursor: offsetSchema,
+			cursor: offsetSchema.optional(),
 			limit: limitSchema,
 			filterIds: z.array(userIdSchema).optional(),
 			options: z.discriminatedUnion("type", [
@@ -50,6 +50,7 @@ export const procedure = authProcedure
 	.query(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
 		let filterIds = input.filterIds || [];
+		const cursor = input.cursor || 0;
 		if (input.options.type === "not-connected-receipt") {
 			const { receiptId } = input.options;
 			const receipt = await getReceiptById(database, receiptId, [
@@ -110,7 +111,7 @@ export const procedure = authProcedure
 				"connectedAccountId as accountId",
 			])
 			.orderBy(sql`similarity(name, ${input.input})`.castTo(), "desc")
-			.offset(input.cursor)
+			.offset(cursor)
 			.limit(input.limit + 1)
 			.execute();
 		const mappedUsers = fuzzyMathedUsers.map(
@@ -121,7 +122,7 @@ export const procedure = authProcedure
 			})
 		);
 		return {
-			cursor: input.cursor,
+			cursor,
 			hasMore: mappedUsers.length === input.limit + 1,
 			items: mappedUsers.slice(0, input.limit),
 		};
