@@ -103,7 +103,9 @@ export const ReceiptsPagination: React.FC<Props> = ({ cursorPaging }) => {
 						</Button>
 						<Button animated={false} css={{ borderRight: "none" }}>
 							{selectedPageIndex + 1} of{" "}
-							{totalCount ? Math.ceil(totalCount / input.limit) : "?"}
+							{totalCount !== undefined
+								? Math.ceil(totalCount / input.limit)
+								: "?"}
 						</Button>
 						<Button
 							onClick={nextLoading ? undefined : onNextPage}

@@ -102,7 +102,7 @@ export const Users: React.FC = () => {
 				</Button>
 				<Button>
 					{selectedPageIndex + 1} of{" "}
-					{totalCount ? Math.ceil(totalCount / input.limit) : "?"}
+					{totalCount !== undefined ? Math.ceil(totalCount / input.limit) : "?"}
 				</Button>
 				<Button
 					onClick={nextLoading ? undefined : onNextPage}
