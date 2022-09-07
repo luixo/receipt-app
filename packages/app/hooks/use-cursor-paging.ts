@@ -54,7 +54,7 @@ export const useCursorPaging = <
 	return {
 		onNextPage,
 		onPrevPage,
-		selectedPageIndex: offset / limit,
+		selectedPageIndex: query.data?.count === 0 ? -1 : offset / limit,
 		query,
 		isLoading: query.fetchStatus === "fetching",
 		prevDisabled: offset === 0,
