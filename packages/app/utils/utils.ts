@@ -7,3 +7,4 @@ export const capitalize = <T extends string>(input: T): Capitalize<T> =>
 
 export const noop = () => {};
 export const id = <T>(x: T): T => x;
+export const alwaysTrue = () => true;

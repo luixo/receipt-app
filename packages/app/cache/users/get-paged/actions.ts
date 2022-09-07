@@ -17,16 +17,19 @@ export const update = (
 	updater: (user: User) => User
 ) => {
 	const modifiedUserRef = createRef<User | undefined>();
-	updatePagedUsers(trpc, (page) => {
+	updatePagedUsers(trpc, (page, count) => {
 		const matchedUserIndex = page.findIndex((user) => user.id === userId);
 		if (matchedUserIndex === -1) {
-			return page;
+			return [page, count];
 		}
 		modifiedUserRef.current = page[matchedUserIndex]!;
 		return [
-			...page.slice(0, matchedUserIndex),
-			updater(modifiedUserRef.current),
-			...page.slice(matchedUserIndex + 1),
+			[
+				...page.slice(0, matchedUserIndex),
+				updater(modifiedUserRef.current),
+				...page.slice(matchedUserIndex + 1),
+			],
+			count,
 		];
 	});
 	return modifiedUserRef.current;
@@ -34,26 +37,26 @@ export const update = (
 
 export const add = (trpc: TRPCReactContext, nextUser: User) => {
 	const shiftedAtCursorRef = createRef<number | undefined>();
-	updatePagedUsers(trpc, (page, input) => {
+	updatePagedUsers(trpc, (page, count, input) => {
 		if (shiftedAtCursorRef.current !== undefined) {
-			return page;
+			return [page, count + 1];
 		}
 		const sortedPage = [...page, nextUser].sort(sortByName);
 		const sortedIndex = sortedPage.indexOf(nextUser);
 		if (sortedIndex === 0) {
 			if (input.cursor === 0) {
 				shiftedAtCursorRef.current = input.cursor;
-				return sortedPage;
+				return [sortedPage, count + 1];
 			}
 			// The beginning of the page - probably should fit on the previous page
-			return page;
+			return [page, count];
 		}
 		if (sortedIndex === sortedPage.length - 1) {
 			// The end of the page - probably should fit on the next page
-			return page;
+			return [page, count];
 		}
 		shiftedAtCursorRef.current = input.cursor || 0;
-		return sortedPage.slice(0, input.limit);
+		return [sortedPage.slice(0, input.limit), count + 1];
 	});
 	return shiftedAtCursorRef.current || 0;
 };
@@ -62,22 +65,25 @@ export const remove = (trpc: TRPCReactContext, userId: UsersId) => {
 	const removedUserRef = createRef<
 		{ data: User; cursor: number } | undefined
 	>();
-	updatePagedUsers(trpc, (page, input) => {
+	updatePagedUsers(trpc, (page, count, input) => {
 		if (removedUserRef.current) {
-			return page;
+			return [page, count - 1];
 		}
 		const matchedUserIndex = page.findIndex((user) => user.id === userId);
 		if (matchedUserIndex === -1) {
-			return page;
+			return [page, count];
 		}
 		removedUserRef.current = {
 			data: page[matchedUserIndex]!,
 			cursor: input.cursor || 0,
 		};
 		return [
-			...page.slice(0, matchedUserIndex),
-			...page.slice(matchedUserIndex + 1),
-		].filter(nonNullishGuard);
+			[
+				...page.slice(0, matchedUserIndex),
+				...page.slice(matchedUserIndex + 1),
+			].filter(nonNullishGuard),
+			count - 1,
+		];
 	});
 	return removedUserRef.current;
 };

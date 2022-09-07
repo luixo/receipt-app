@@ -117,6 +117,19 @@ export const mutationOptions: UseContextedMutationOptions<
 				cache.receipts.getNonResolvedAmount.update(trpcContext, (prevAmount) =>
 					nextResolved ? prevAmount - 1 : prevAmount + 1
 				);
+				if (variables.update.resolved) {
+					cache.receipts.getPaged.remove(
+						trpcContext,
+						variables.receiptId,
+						(input) => input.onlyNonResolved
+					);
+				} else {
+					cache.receipts.getPaged.invalidate(
+						trpcContext,
+						0,
+						(input) => input.onlyNonResolved
+					);
+				}
 			}
 		},
 	onError: (trpcContext) => (_error, variables, revert) => {
