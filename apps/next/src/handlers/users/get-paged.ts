@@ -35,7 +35,7 @@ export const procedure = authProcedure
 		]);
 
 		return {
-			count: usersCount ? parseInt(usersCount.amount, 10) : 0,
+			count: usersCount?.amount ? parseInt(usersCount.amount, 10) : 0,
 			cursor: input.cursor,
 			hasMore: users.length === input.limit + 1,
 			items: users.slice(0, input.limit),

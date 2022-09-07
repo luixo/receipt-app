@@ -126,7 +126,7 @@ export const procedure = authProcedure
 		]);
 
 		return {
-			count: receiptsCount ? parseInt(receiptsCount.amount, 10) : 0,
+			count: receiptsCount?.amount ? parseInt(receiptsCount.amount, 10) : 0,
 			hasMore: receipts.length === input.limit + 1,
 			cursor: input.cursor,
 			items: receipts
