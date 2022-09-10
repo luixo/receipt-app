@@ -9,7 +9,7 @@ import { Grid } from "app/components/grid";
 import { IconButton } from "app/components/icon-button";
 import { Overlay } from "app/components/overlay";
 import { useCursorPaging } from "app/hooks/use-cursor-paging";
-import { useSyncParsedQueryParam } from "app/hooks/use-sync-parsed-query-param";
+import { useSyncQueryParam } from "app/hooks/use-sync-query-param";
 import { trpc, TRPCQueryInput, TRPCQueryOutput } from "app/trpc";
 
 import { ReceiptPreview } from "./receipt-preview";
@@ -64,19 +64,14 @@ const useReceiptQuery = (
 export const Receipts: React.FC = () => {
 	const [input] = cache.receipts.getPaged.useStore();
 	const cursorPaging = useCursorPaging(useReceiptQuery, input, "offset");
-	useSyncParsedQueryParam<typeof input.onlyNonResolved>(
-		"non-resolved",
+	useSyncQueryParam(
 		cache.receipts.getPaged.onlyNonResolvedOptions,
 		input.onlyNonResolved
 	);
-	useSyncParsedQueryParam<typeof input.orderBy>(
-		"sort",
-		cache.receipts.getPaged.orderByOptions,
-		input.orderBy
-	);
+	useSyncQueryParam(cache.receipts.getPaged.orderByOptions, input.orderBy);
 	const { totalCount, isLoading, query, pagination } = cursorPaging;
 
-	if (!totalCount && !input.onlyNonResolved) {
+	if (!totalCount && !input.onlyNonResolved && !isLoading) {
 		return (
 			<Wrapper>
 				<Text h2>You have no receipts</Text>
@@ -105,7 +100,7 @@ export const Receipts: React.FC = () => {
 			<Spacer y={1} />
 			<Overlay overlay={isLoading ? <Loading size="xl" /> : undefined}>
 				{query.status === "error" ? <QueryErrorMessage query={query} /> : null}
-				{!totalCount ? (
+				{!totalCount && input.onlyNonResolved ? (
 					<Wrapper>
 						<Text h2>All receipts are resolved!</Text>
 					</Wrapper>

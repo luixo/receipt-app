@@ -1,18 +1,19 @@
-import zustand from "zustand";
-
+import { createStore } from "app/utils/store";
 import { Setters } from "app/utils/types";
 
 import { Input } from "./types";
 
 type CursorlessOmit = Omit<Input, "cursor">;
 
-const inputStore = zustand<CursorlessOmit & Setters<CursorlessOmit>>((set) => ({
-	limit: 10,
-	changeLimit: (nextLimit: Input["limit"]) => set(() => ({ limit: nextLimit })),
-}));
+export const inputStore = createStore<CursorlessOmit & Setters<CursorlessOmit>>(
+	(set) => ({
+		limit: 10,
+		changeLimit: (nextLimit) => set(() => ({ limit: nextLimit })),
+	})
+);
 
 export const useStore = () =>
 	[
-		inputStore(({ limit }) => ({ limit })),
-		inputStore(({ changeLimit }) => ({ changeLimit })),
+		inputStore.useStore(({ limit }) => ({ limit })),
+		inputStore.useStore(({ changeLimit }) => ({ changeLimit })),
 	] as const;

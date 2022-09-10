@@ -11,7 +11,7 @@ const { useParam } = createParam<{ [K in string]: string }>();
 export type QueryParamOptions<
 	T extends object | Exclude<Primitive, undefined> = string
 > = {
-	parse?: (input: string) => T;
+	parse?: (input: string | undefined) => T;
 	serialize?: (input: T) => string | null;
 	defaultValue?: T;
 };
@@ -36,7 +36,7 @@ export const useQueryParam = <
 	});
 
 	const parsedValue = React.useMemo(
-		() => parse(rawValue || ""),
+		() => parse(rawValue),
 		// We don't need to update parse on every rerender
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 		[rawValue]
@@ -44,7 +44,7 @@ export const useQueryParam = <
 	const setValue = React.useCallback(
 		(valueOrUpdater: React.SetStateAction<T>) => {
 			if (typeof valueOrUpdater === "function") {
-				setRawValue((prev) => serialize(valueOrUpdater(parse(prev || ""))));
+				setRawValue((prev) => serialize(valueOrUpdater(parse(prev))));
 			} else {
 				setRawValue(serialize(valueOrUpdater));
 			}

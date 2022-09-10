@@ -1,30 +1,31 @@
 import React from "react";
 
-import {
-	ColorModeConfig,
-	ColorModeContext,
-} from "app/contexts/color-mode-context";
+import { ExtraAppInitialProps } from "next/app";
+
+import { ColorModeContext } from "app/contexts/color-mode-context";
 import { ThemeProvider } from "app/utils/styles";
 
 import { NavigationProvider } from "./navigation";
 import { QueriesProvider } from "./queries";
+import { StateProvider } from "./state";
 
-type Props = {
-	initialColorModeConfig: ColorModeConfig;
-};
+type Props = ExtraAppInitialProps;
 
 export const Provider: React.FC<React.PropsWithChildren<Props>> = ({
 	children,
-	initialColorModeConfig,
+	colorModeConfig,
+	query,
 }) => {
-	const colorModeState = React.useState(initialColorModeConfig);
+	const colorModeState = React.useState(colorModeConfig);
 	return (
 		<QueriesProvider>
-			<ColorModeContext.Provider value={colorModeState}>
-				<ThemeProvider>
-					<NavigationProvider>{children}</NavigationProvider>
-				</ThemeProvider>
-			</ColorModeContext.Provider>
+			<StateProvider query={query}>
+				<ColorModeContext.Provider value={colorModeState}>
+					<ThemeProvider>
+						<NavigationProvider>{children}</NavigationProvider>
+					</ThemeProvider>
+				</ColorModeContext.Provider>
+			</StateProvider>
 		</QueriesProvider>
 	);
 };

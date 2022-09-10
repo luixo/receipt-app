@@ -6,6 +6,7 @@ import { getCookies } from "cookies-next";
 import { AppType } from "next/dist/shared/lib/utils";
 import Head from "next/head";
 import "raf/polyfill";
+import { ParsedUrlQuery } from "querystring";
 
 import { ProtectedPage } from "app/components/protected-page";
 import {
@@ -33,6 +34,7 @@ const GlobalHooksComponent: React.FC = () => {
 declare module "next/app" {
 	type ExtraAppInitialProps = {
 		colorModeConfig: ColorModeConfig;
+		query: ParsedUrlQuery;
 	};
 
 	interface AppInitialProps {
@@ -54,7 +56,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 				/>
 				<link rel="icon" href="/favicon.svg" />
 			</Head>
-			<Provider initialColorModeConfig={pageProps.colorModeConfig}>
+			<Provider {...pageProps}>
 				<ReactQueryDevtools />
 				<LayoutComponent>
 					<Component />
@@ -65,7 +67,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 	);
 };
 
-MyApp.getInitialProps = async ({ ctx }) => {
+MyApp.getInitialProps = async ({ ctx, router }) => {
 	const cookies = getCookies(ctx);
 	return {
 		pageProps: {
@@ -73,6 +75,7 @@ MyApp.getInitialProps = async ({ ctx }) => {
 				last: cookies[LAST_COLOR_MODE_COOKIE_NAME],
 				selected: cookies[SELECTED_COLOR_MODE_COOKIE_NAME],
 			} as ColorModeConfig,
+			query: router.query,
 		},
 	};
 };
