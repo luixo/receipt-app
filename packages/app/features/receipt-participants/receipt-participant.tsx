@@ -54,6 +54,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 		trpc.receiptParticipants.remove.useMutation(
 			useTrpcMutationOptions(cache.receiptParticipants.remove.mutationOptions, {
 				receiptId,
+				selfAccountId: accountQuery.data?.id ?? "unknown",
 			})
 		);
 	const removeReceiptParticipant = useAsyncCallback(
@@ -65,8 +66,9 @@ export const ReceiptParticipant: React.FC<Props> = ({
 		[removeReceiptParticipantMutation, receiptId, participant.remoteUserId]
 	);
 
+	const accountQueryNotLoaded = accountQuery.status !== "success";
 	const disabledParticipantResolvedButton =
-		accountQuery.status !== "success" ||
+		accountQueryNotLoaded ||
 		participant.connectedAccountId !== accountQuery.data.id;
 
 	return (
@@ -112,7 +114,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 						<RemoveButton
 							onRemove={removeReceiptParticipant}
 							mutation={removeReceiptParticipantMutation}
-							disabled={receiptLocked}
+							disabled={accountQueryNotLoaded || receiptLocked}
 							subtitle="This will remove participant with all his parts"
 							noConfirm={participant.sum === 0}
 						/>

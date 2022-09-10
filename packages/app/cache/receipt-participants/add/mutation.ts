@@ -21,6 +21,19 @@ export const mutationOptions: UseContextedMutationOptions<
 					added: resultItem.added,
 				});
 			});
+			const selfParticipating = result.find(
+				(resultItem) => resultItem.role === "owner"
+			);
+			if (selfParticipating) {
+				cache.receipts.getPaged.update(trpcContext, receiptId, (item) => ({
+					...item,
+					participantResolved: false,
+				}));
+				cache.receipts.get.update(trpcContext, receiptId, (item) => ({
+					...item,
+					participantResolved: false,
+				}));
+			}
 			cache.users.suggest.invalidate(trpcContext);
 			cache.debts.getReceipt.invalidate(trpcContext, receiptId);
 		},
