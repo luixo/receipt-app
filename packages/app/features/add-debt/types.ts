@@ -7,7 +7,7 @@ import { userItemSchema } from "app/utils/validation";
 export type Form = {
 	amount: number;
 	direction: Direction;
-	currency: TRPCQueryOutput<"currency.getList">["list"][number];
+	currency: TRPCQueryOutput<"currency.getList">[number];
 	user: z.infer<typeof userItemSchema>;
 	note: string;
 	timestamp: Date;

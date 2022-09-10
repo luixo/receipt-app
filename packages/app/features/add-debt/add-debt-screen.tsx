@@ -109,6 +109,7 @@ export const AddDebtScreen: PageWithLayout = () => {
 		[addMutation],
 		React.useCallback((id: DebtsId) => router.replace(`/debts/${id}`), [router])
 	);
+	const topCurrenciesQuery = trpc.currency.topDebts.useQuery();
 
 	return (
 		<>
@@ -129,7 +130,11 @@ export const AddDebtScreen: PageWithLayout = () => {
 			<Spacer y={1} />
 			<DebtAmountInput form={form} isLoading={addMutation.isLoading} />
 			<Spacer y={1} />
-			<CurrencyInput form={form} isLoading={addMutation.isLoading} />
+			<CurrencyInput
+				form={form}
+				isLoading={addMutation.isLoading}
+				topCurrenciesQuery={topCurrenciesQuery}
+			/>
 			<Spacer y={1} />
 			<UsersSuggest
 				selected={form.watch("user")}

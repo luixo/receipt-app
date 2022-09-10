@@ -6,41 +6,42 @@ import { QueryObserverSuccessResult } from "@tanstack/react-query";
 import { QueryErrorMessage } from "app/components/error-message";
 import { Grid } from "app/components/grid";
 import { trpc, TRPCError, TRPCQueryOutput, TRPCQueryResult } from "app/trpc";
-import { Currency } from "app/utils/currency";
 
 type CurrencyList = TRPCQueryOutput<"currency.getList">;
-type CurrencyListItem = CurrencyList["list"][number];
+type CurrencyListItem = CurrencyList[number];
 
 type InnerProps = {
 	query: QueryObserverSuccessResult<CurrencyList, TRPCError>;
-	initialCurrencyCode?: Currency;
 	selectedCurrency?: CurrencyListItem;
 	onChange: (nextCurrency: CurrencyListItem) => void;
+	topCurrenciesQuery:
+		| TRPCQueryResult<"currency.topDebts">
+		| TRPCQueryResult<"currency.topReceipts">;
 };
 
 const CurrenciesPickerInner: React.FC<InnerProps> = ({
 	query,
 	selectedCurrency,
-	initialCurrencyCode,
 	onChange,
+	topCurrenciesQuery,
 }) => {
-	React.useEffect(() => {
-		if (!selectedCurrency && initialCurrencyCode) {
-			const matchedCurrency = query.data.list.find(
-				(currency) => currency.code === initialCurrencyCode
-			);
-			if (matchedCurrency) {
-				onChange(matchedCurrency);
-			}
-		}
-	}, [selectedCurrency, initialCurrencyCode, query.data, onChange]);
+	const cutIndex =
+		topCurrenciesQuery.status === "success"
+			? topCurrenciesQuery.data.length
+			: 0;
+	const list =
+		topCurrenciesQuery.status === "success"
+			? query.data.sort(
+					(a, b) =>
+						topCurrenciesQuery.data.indexOf(b.code) -
+						topCurrenciesQuery.data.indexOf(a.code)
+			  )
+			: query.data;
 	return (
 		<Grid.Container gap={1}>
-			{query.data.list.map((currency, index) => (
+			{list.map((currency, index) => (
 				<React.Fragment key={currency.code}>
-					{index === query.data.topAmount && index ? (
-						<Card.Divider y={1} />
-					) : null}
+					{index === cutIndex && index ? <Card.Divider y={1} /> : null}
 					<Grid>
 						<Button
 							onClick={() => onChange(currency)}
@@ -93,7 +94,7 @@ export const CurrenciesPicker: React.FC<WrapperProps> = ({
 	);
 	React.useEffect(() => {
 		if (onLoad && query.status === "success") {
-			onLoad(query.data.list);
+			onLoad(query.data);
 		}
 	}, [onLoad, query]);
 	return (

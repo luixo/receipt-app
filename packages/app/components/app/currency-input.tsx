@@ -17,11 +17,15 @@ type MinimalForm = {
 type Props<T extends MinimalForm> = {
 	form: UseFormReturn<T>;
 	isLoading: boolean;
+	topCurrenciesQuery: React.ComponentProps<
+		typeof CurrenciesPicker
+	>["topCurrenciesQuery"];
 };
 
 export const CurrencyInput = <T extends MinimalForm>({
 	form,
 	isLoading,
+	topCurrenciesQuery,
 }: Props<T>) => {
 	const [modalOpen, { setFalse: closeModal, setTrue: openModal }] =
 		useBooleanState();
@@ -80,6 +84,7 @@ export const CurrencyInput = <T extends MinimalForm>({
 				modalOpen={modalOpen}
 				onModalClose={closeModal}
 				onLoad={onLoad}
+				topCurrenciesQuery={topCurrenciesQuery}
 			/>
 		</>
 	);

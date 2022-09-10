@@ -7,7 +7,7 @@ export const useFormattedCurrency = (currency?: Currency) => {
 		{ trpc: { ssr: false } }
 	);
 	return currenciesListQuery.data
-		? currenciesListQuery.data.list.find((element) => element.code === currency)
+		? currenciesListQuery.data.find((element) => element.code === currency)
 				?.symbol
 		: currency;
 };

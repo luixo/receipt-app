@@ -63,6 +63,7 @@ export const AddReceiptScreen: PageWithLayout = () => {
 			[router]
 		)
 	);
+	const topCurrenciesQuery = trpc.currency.topReceipts.useQuery();
 
 	return (
 		<>
@@ -71,7 +72,11 @@ export const AddReceiptScreen: PageWithLayout = () => {
 			<Spacer y={1} />
 			<ReceiptNameInput form={form} query={addReceiptMutation} />
 			<Spacer y={1} />
-			<CurrencyInput form={form} isLoading={addReceiptMutation.isLoading} />
+			<CurrencyInput
+				form={form}
+				isLoading={addReceiptMutation.isLoading}
+				topCurrenciesQuery={topCurrenciesQuery}
+			/>
 			<Spacer y={1} />
 			<ReceiptDateInput form={form} query={addReceiptMutation} />
 			<Spacer y={1} />

@@ -23,7 +23,7 @@ export const ReceiptCurrencyInput: React.FC<Props> = ({
 		useTrpcMutationOptions(cache.receipts.update.mutationOptions)
 	);
 	const saveCurrency = React.useCallback(
-		(nextCurrency: TRPCQueryOutput<"currency.getList">["list"][number]) => {
+		(nextCurrency: TRPCQueryOutput<"currency.getList">[number]) => {
 			if (nextCurrency.code === receipt.currency) {
 				return;
 			}
@@ -35,6 +35,7 @@ export const ReceiptCurrencyInput: React.FC<Props> = ({
 		},
 		[updateReceiptMutation, receipt.id, receipt.currency, closeModal]
 	);
+	const topCurrenciesQuery = trpc.currency.topReceipts.useQuery();
 
 	return (
 		<>
@@ -58,6 +59,7 @@ export const ReceiptCurrencyInput: React.FC<Props> = ({
 				onChange={saveCurrency}
 				modalOpen={isModalOpen}
 				onModalClose={closeModal}
+				topCurrenciesQuery={topCurrenciesQuery}
 			/>
 		</>
 	);
