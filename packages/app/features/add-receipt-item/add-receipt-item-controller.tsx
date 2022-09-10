@@ -26,7 +26,6 @@ export const AddReceiptItemController: React.FC<Props> = ({
 				receiptId={receiptId}
 				receiptLocked={receiptLocked}
 				isLoading={isLoading}
-				onDone={() => setOpen(false)}
 			/>
 		);
 	}

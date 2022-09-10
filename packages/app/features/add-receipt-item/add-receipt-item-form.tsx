@@ -34,14 +34,12 @@ type Props = {
 	receiptId: ReceiptsId;
 	receiptLocked: boolean;
 	isLoading: boolean;
-	onDone: () => void;
 };
 
 export const AddReceiptItemForm: React.FC<Props> = ({
 	receiptId,
 	receiptLocked,
 	isLoading: isDeleteLoading,
-	onDone,
 }) => {
 	const inputsRef = React.useRef<HTMLDivElement>(null);
 	React.useEffect(() => {
@@ -62,13 +60,15 @@ export const AddReceiptItemForm: React.FC<Props> = ({
 		),
 		defaultValues: {
 			name: "",
+			// TODO: fix numbers in forms
+			price: "" as unknown as number,
 			quantity: 1,
 		},
 	});
 	const onSubmit = useSubmitHandler<Form>(
 		(values) => addMutation.mutateAsync({ ...values, receiptId }),
 		[addMutation, receiptId],
-		onDone
+		React.useCallback(() => form.reset(), [form])
 	);
 
 	const isLoading = isDeleteLoading || addMutation.isLoading;
