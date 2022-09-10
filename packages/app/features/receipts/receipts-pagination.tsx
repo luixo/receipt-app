@@ -82,10 +82,13 @@ export const ReceiptsPagination: React.FC<Props> = ({ pagination }) => {
 								<FilterIcon size={24} />
 							</Dropdown.Button>
 							<Dropdown.Menu aria-label="Static Actions">
-								<Dropdown.Item icon={sortSelectIcon}>
+								<Dropdown.Item icon={sortSelectIcon} textValue={sortSelectText}>
 									<Text onClick={sortSelectOnClick}>{sortSelectText}</Text>
 								</Dropdown.Item>
-								<Dropdown.Item icon={switchNonResolvedIcon}>
+								<Dropdown.Item
+									icon={switchNonResolvedIcon}
+									textValue={switchNonResolvedText}
+								>
 									<Text onClick={switchNonResolvedOnClick}>
 										{switchNonResolvedText}
 									</Text>
