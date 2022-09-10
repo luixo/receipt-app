@@ -67,7 +67,6 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 					[receiptId]
 				)}
 				label="Add participants"
-				closeOnSelect
 			/>
 		</Wrapper>
 	);

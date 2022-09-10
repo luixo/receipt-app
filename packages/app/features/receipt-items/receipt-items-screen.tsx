@@ -32,13 +32,7 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 		receiptQuery.status === "success" ? receiptQuery.data.currency : undefined;
 	return (
 		<Collapse.Group accordion={false} divider={false}>
-			<Collapse
-				title="🥸 Participants"
-				shadow
-				expanded={
-					data.participants.length === 0 ? data.role === "owner" : undefined
-				}
-			>
+			<Collapse title="🥸 Participants" shadow expanded={data.role === "owner"}>
 				<ReceiptParticipants
 					data={data}
 					receiptId={receiptId}
