@@ -2,10 +2,10 @@ import React from "react";
 
 import { Spacer, styled } from "@nextui-org/react";
 
-import { TRPCQueryOutput } from "app/trpc";
+import { trpc, TRPCQueryOutput } from "app/trpc";
 import { Currency } from "app/utils/currency";
 import { getParticipantSums } from "app/utils/receipt-item";
-import { ReceiptsId } from "next-app/db/models";
+import { AccountsId, ReceiptsId } from "next-app/db/models";
 
 import { AddReceiptParticipantForm } from "./add-receipt-participant-form";
 import { ReceiptParticipant } from "./receipt-participant";
@@ -20,6 +20,30 @@ const SpacerWithBorder = styled(Spacer, {
 		},
 	},
 });
+
+type Participant = TRPCQueryOutput<"receiptItems.get">["participants"][number];
+
+const getSortParticipants =
+	(selfAccountId?: AccountsId) => (a: Participant, b: Participant) => {
+		if (selfAccountId) {
+			// Sort first by self
+			if (a.localUserId === selfAccountId) {
+				return -1;
+			}
+			if (b.localUserId === selfAccountId) {
+				return -1;
+			}
+		}
+		// Sort second by owner
+		if (a.role === "owner") {
+			return 1;
+		}
+		if (b.role === "owner") {
+			return 1;
+		}
+		// Sort everyone else by name
+		return a.name.localeCompare(b.name);
+	};
 
 type Props = {
 	data: TRPCQueryOutput<"receiptItems.get">;
@@ -36,9 +60,17 @@ export const ReceiptParticipants: React.FC<Props> = ({
 	receiptId,
 	isLoading,
 }) => {
+	const accountQuery = trpc.account.get.useQuery();
+	const sortParticipants = React.useMemo(
+		() => getSortParticipants(accountQuery.data?.id),
+		[accountQuery.data?.id]
+	);
 	const participants = React.useMemo(
-		() => getParticipantSums(receiptId, data.items, data.participants),
-		[data, receiptId]
+		() =>
+			getParticipantSums(receiptId, data.items, data.participants).sort(
+				sortParticipants
+			),
+		[data, receiptId, sortParticipants]
 	);
 	return (
 		<>
