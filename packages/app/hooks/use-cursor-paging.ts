@@ -22,11 +22,14 @@ export const useCursorPaging = <
 	offsetParamName: string
 ): CursorPagingResult<T> => {
 	const { limit } = input;
-	const [queryOffset, setQueryOffset] = useQueryParam(offsetParamName, "0");
-	const numberQueryOffset = Number(queryOffset);
-	const initialOffset = Number.isNaN(numberQueryOffset) ? 0 : numberQueryOffset;
-
-	const [offset, setOffset] = React.useState(initialOffset);
+	const [offset, setOffset] = useQueryParam<number>(offsetParamName, {
+		parse: (rawOffset) => {
+			const numberQueryOffset = Number(rawOffset);
+			return Number.isNaN(numberQueryOffset) ? 0 : numberQueryOffset;
+		},
+		serialize: (currentOffset) =>
+			currentOffset ? currentOffset.toString() : null,
+	});
 	const query = useQuery(input, offset);
 	const maxOffset = query.data
 		? Math.ceil(query.data.count / limit) * limit
@@ -47,9 +50,6 @@ export const useCursorPaging = <
 		setOffset(0);
 	}, [setOffset]);
 
-	React.useEffect(() => {
-		setQueryOffset(offset ? offset.toString() : null);
-	}, [offset, setQueryOffset]);
 	React.useEffect(() => {
 		if (!maxOffset) {
 			return;
