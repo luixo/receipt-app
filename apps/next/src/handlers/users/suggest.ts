@@ -4,7 +4,6 @@ import { z } from "zod";
 
 import { userItemSchema } from "app/utils/validation";
 import { getDatabase } from "next-app/db";
-import { UsersId } from "next-app/db/models";
 import {
 	getReceiptById,
 	getAccessRole,
@@ -82,7 +81,9 @@ export const procedure = authProcedure
 				.where("receiptParticipants.receiptId", "=", input.options.receiptId)
 				.select("users.id")
 				.execute();
-			filterIds = [...filterIds, ...userParticipants.map(({ id }) => id)];
+			filterIds = [
+				...new Set([...filterIds, ...userParticipants.map(({ id }) => id)]),
+			];
 		}
 		const fuzzyMathedUsers = await database
 			.selectFrom("users")
@@ -96,12 +97,15 @@ export const procedure = authProcedure
 			.if(Boolean(input.options.type === "not-connected"), (qb) =>
 				qb.where("users.connectedAccountId", "is", null)
 			)
-			// Typesystem doesn't know that we use account id as self user id
-			.where("users.id", "<>", ctx.auth.accountId as UsersId)
-			.where(
-				sql`similarity(name, ${input.input})`.castTo<number>(),
-				">",
-				SIMILARTY_THRESHOLD
+			.if(input.input.length < 3, (qb) =>
+				qb.where("name", "ilike", input.input)
+			)
+			.if(input.input.length >= 3, (qb) =>
+				qb.where(
+					sql`similarity(name, ${input.input})`.castTo<number>(),
+					">",
+					SIMILARTY_THRESHOLD
+				)
 			)
 			.select([
 				"users.id",
@@ -110,7 +114,10 @@ export const procedure = authProcedure
 				"accounts.email",
 				"connectedAccountId as accountId",
 			])
-			.orderBy(sql`similarity(name, ${input.input})`.castTo(), "desc")
+			.if(input.input.length < 3, (qb) => qb.orderBy("name"))
+			.if(input.input.length >= 3, (qb) =>
+				qb.orderBy(sql`similarity(name, ${input.input})`.castTo(), "desc")
+			)
 			.offset(cursor)
 			.limit(input.limit + 1)
 			.execute();

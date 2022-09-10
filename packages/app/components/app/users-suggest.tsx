@@ -66,7 +66,7 @@ const UsersSuggestDropdown: React.FC<DropdownProps> = ({
 }) => {
 	const loadMore = React.useCallback(() => query.fetchNextPage(), [query]);
 	if (!queryEnabled) {
-		return <Text>Please type 3 or more chars</Text>;
+		return <Text>Please type 1 or more chars</Text>;
 	}
 	if (query.status === "loading") {
 		return <Loading size="xs" />;
@@ -185,7 +185,7 @@ export const UsersSuggest: React.FC<Props> = ({
 		},
 		[onUserClickRaw, hideDropdown, closeOnSelect]
 	);
-	const queryEnabled = debouncedValue.length >= 3;
+	const queryEnabled = debouncedValue.length >= 1;
 	const selectedUsers = Array.isArray(selected)
 		? selected
 		: selected
