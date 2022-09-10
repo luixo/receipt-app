@@ -1,6 +1,7 @@
 import {
 	InvalidateOptions,
 	InvalidateQueryFilters,
+	Query,
 	QueryClient,
 	SetDataOptions,
 	UseInfiniteQueryResult,
@@ -125,6 +126,13 @@ export type TRPCQuerySuccessResult<
 	Path extends TRPCQueryKey,
 	Result extends TRPCQueryResult<Path> = TRPCQueryResult<Path>
 > = Result extends { status: "success" } ? Result : never;
+
+export type TRPCQuery<K extends TRPCQueryKey> = Query<
+	TRPCQueryOutput<K>,
+	TRPCError,
+	TRPCQueryOutput<K>,
+	readonly [K, TRPCQueryInput<K>]
+>;
 
 export type TRPCQueryProcedures = DecoratedProcedureUtilsRecord<AppRouter>;
 

@@ -5162,34 +5162,47 @@
   dependencies:
     defer-to-connect "^2.0.0"
 
-"@tanstack/match-sorter-utils@^8.0.0-alpha.82":
+"@tanstack/match-sorter-utils@^8.1.1":
   version "8.1.1"
   resolved "https://registry.yarnpkg.com/@tanstack/match-sorter-utils/-/match-sorter-utils-8.1.1.tgz#895f407813254a46082a6bbafad9b39b943dc834"
   integrity sha512-IdmEekEYxQsoLOR0XQyw3jD1GujBpRRYaGJYQUw1eOT1eUugWxdc7jomh1VQ1EKHcdwDLpLaCz/8y4KraU4T9A==
   dependencies:
     remove-accents "0.4.2"
 
-"@tanstack/query-core@4.2.3":
-  version "4.2.3"
-  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-4.2.3.tgz#52d75430c9662cc85c160761c1421de483c7791f"
-  integrity sha512-zdt5lYWs1dZaA3IxJbCgtAfHZJScRZONpiLL7YkeOkrme5MfjQqTpjq7LYbzpyuwPOh2Jx68le0PLl57JFv5hQ==
-
-"@tanstack/react-query-devtools@^4.2.3":
-  version "4.2.3"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-query-devtools/-/react-query-devtools-4.2.3.tgz#85e5990a447850c7cfffd64fef9f926554d460fb"
-  integrity sha512-0PH8n824BnFyMrtv7q5uLS0b7jYg2tDH8vU4etkSYzV1uL4RJjiqMh7Gyi8qhYCwM+khlrkRYlNZvE0cxlp3SQ==
+"@tanstack/query-async-storage-persister@^4.3.1":
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-async-storage-persister/-/query-async-storage-persister-4.3.1.tgz#719f866a137d678138eaee6a6ae0138893882d6f"
+  integrity sha512-1Yd0DcEg7rPoUyBNieG9aIJzT6zLJMBCzqz75dHOGcrdifjAv6SX1x3oJmqHn8kulQ31x9eOs++tgyWg5SEtng==
   dependencies:
-    "@tanstack/match-sorter-utils" "^8.0.0-alpha.82"
-    "@types/use-sync-external-store" "^0.0.3"
+    "@tanstack/react-query-persist-client" "4.3.1"
+
+"@tanstack/query-core@4.3.1":
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-4.3.1.tgz#ce4d13b391a8bca2f7717baaff69f74ede6b8abd"
+  integrity sha512-NrtvJYVxgO2vdXyogchORW2wDh81nHjnH8n51OvaLFilC59DE8hyMzrHmKI4J0MKx8wZvROChVHHXpbBGstR8A==
+
+"@tanstack/react-query-devtools@^4.3.1":
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query-devtools/-/react-query-devtools-4.3.1.tgz#e98f9682b05bffefd9ab2b00c3b29c038b3eb343"
+  integrity sha512-amcoHMp5Ea3md46KVys2BtVJVuv506jF8Y+FrQQRsYjTsijS3Lj913SUg7QlKKiYY0XnFKqdmkJJXpgkbB+BGw==
+  dependencies:
+    "@tanstack/match-sorter-utils" "^8.1.1"
     use-sync-external-store "^1.2.0"
 
-"@tanstack/react-query@^4.2.3":
-  version "4.2.3"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-4.2.3.tgz#782fd0f84553ba6219f1137a12ea28ab8cd3a3f3"
-  integrity sha512-JLaMOxoJTkiAu7QpevRCt2uI/0vd3E8K/rSlCuRgWlcW5DeJDFpDS5kfzmLO5MOcD97fgsJRrDbxDORxR1FdJA==
+"@tanstack/react-query-persist-client@4.3.1", "@tanstack/react-query-persist-client@^4.3.1":
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query-persist-client/-/react-query-persist-client-4.3.1.tgz#db058d3475395dd0b297c3b08c612fb7128df632"
+  integrity sha512-5T9JnX3yaeHBNEF41XYYxzHk8TGJiSU8tDSoThK77OlRkt+k388zBWofEwuXbNB6AuQ1B/1MZ5KWeTaUjMWYQQ==
   dependencies:
-    "@tanstack/query-core" "4.2.3"
-    "@types/use-sync-external-store" "^0.0.3"
+    "@tanstack/query-core" "4.3.1"
+    "@tanstack/react-query" "4.3.1"
+
+"@tanstack/react-query@4.3.1", "@tanstack/react-query@^4.3.1":
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-4.3.1.tgz#00f891aba81d47dac7a5b0bf39019deb5004fa30"
+  integrity sha512-rVtXi5yRbhK9EGrlrnIsLNSW+bNpu8OuTnSjf5SNau2L6N+0UXrL911rtkIgF908zPKwaOoAqW/dM7d+ICp+Dg==
+  dependencies:
+    "@tanstack/query-core" "4.3.1"
     use-sync-external-store "^1.2.0"
 
 "@testing-library/react-hooks@^3.2.1":
@@ -5580,11 +5593,6 @@
   integrity sha512-/xFrPIo+4zOeNGtVMbf9rUm0N+i4pDf1ynExomqtokIJmVzR3962lJ1UE+MmexMkA0cmN9oTzg5Xcbwge0Ij2Q==
   dependencies:
     source-map "^0.6.1"
-
-"@types/use-sync-external-store@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@types/use-sync-external-store/-/use-sync-external-store-0.0.3.tgz#b6725d5f4af24ace33b36fafd295136e75509f43"
-  integrity sha512-EwmlvuaxPNej9+T4v5AuBPJa2x2UOJVdjCtDHgcDqitUeOtjnJKJ+apYjVcAoBEMjKW1VVFGZLUb5+qqa09XFA==
 
 "@types/uuid@^8.3.4":
   version "8.3.4"
@@ -11891,6 +11899,13 @@ icss-utils@^4.0.0, icss-utils@^4.1.1:
   dependencies:
     postcss "^7.0.14"
 
+idb-keyval@^6.2.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/idb-keyval/-/idb-keyval-6.2.0.tgz#3af94a3cc0689d6ee0bc9e045d2a3340ea897173"
+  integrity sha512-uw+MIyQn2jl3+hroD7hF8J7PUviBU7BPKWw4f/ISf32D4LoGu98yHjrzWWJDASu9QNrX10tCJqk9YY0ClWm8Ng==
+  dependencies:
+    safari-14-idb-fix "^3.0.0"
+
 identicon.js@^2.3.3:
   version "2.3.3"
   resolved "https://registry.yarnpkg.com/identicon.js/-/identicon.js-2.3.3.tgz#c505b8d60ecc6ea13bbd991a33964c44c1ad60a1"
@@ -18144,6 +18159,11 @@ rxjs@^7.5.5:
   integrity sha512-dnyv2/YsXhnm461G+R/Pe5bWP41Nm6LBXEYWI6eiFP4fiwx6WRI/CD0zbdVAudd9xwLEF2IDcKXLHit0FYjUzw==
   dependencies:
     tslib "^2.1.0"
+
+safari-14-idb-fix@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/safari-14-idb-fix/-/safari-14-idb-fix-3.0.0.tgz#450fc049b996ec7f3fd9ca2f89d32e0761583440"
+  integrity sha512-eBNFLob4PMq8JA1dGyFn6G97q3/WzNtFK4RnzT1fnLq+9RyrGknzYiM/9B12MnKAxuj1IXr7UKYtTNtjyKMBog==
 
 safe-buffer@5.1.2, safe-buffer@~5.1.0, safe-buffer@~5.1.1:
   version "5.1.2"

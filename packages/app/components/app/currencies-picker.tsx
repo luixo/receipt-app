@@ -6,6 +6,7 @@ import { QueryObserverSuccessResult } from "@tanstack/react-query";
 import { QueryErrorMessage } from "app/components/error-message";
 import { Grid } from "app/components/grid";
 import { trpc, TRPCError, TRPCQueryOutput, TRPCQueryResult } from "app/trpc";
+import { MONTH } from "app/utils/time";
 
 type CurrencyList = TRPCQueryOutput<"currency.getList">;
 type CurrencyListItem = CurrencyList[number];
@@ -90,7 +91,7 @@ export const CurrenciesPicker: React.FC<WrapperProps> = ({
 }) => {
 	const query = trpc.currency.getList.useQuery(
 		{ locale: "en" },
-		{ trpc: { ssr: false } }
+		{ trpc: { ssr: false }, cacheTime: MONTH }
 	);
 	React.useEffect(() => {
 		if (onLoad && query.status === "success") {
