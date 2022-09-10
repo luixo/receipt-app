@@ -51,7 +51,7 @@ export const useCursorPaging = <
 	}, [setOffset]);
 
 	React.useEffect(() => {
-		if (!maxOffset) {
+		if (maxOffset === undefined) {
 			return;
 		}
 		if (offset > maxOffset) {
