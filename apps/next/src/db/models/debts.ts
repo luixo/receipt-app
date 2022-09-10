@@ -14,10 +14,14 @@ export default interface Debts {
 	/**
 	 * Primary key. Index: debts:ownerAccountId:debtId:pair
 	 * Index: debts:ownerAccountId:index
+	 * Index: debtsSyncIntentions:ownerAccountId:receiptId:userId:tuple
 	 */
 	ownerAccountId: AccountsId;
 
-	/** Index: debts:userId:index */
+	/**
+	 * Index: debts:userId:index
+	 * Index: debtsSyncIntentions:ownerAccountId:receiptId:userId:tuple
+	 */
 	userId: UsersId;
 
 	currency: string;
@@ -32,6 +36,7 @@ export default interface Debts {
 
 	lockedTimestamp: Date | null;
 
+	/** Index: debtsSyncIntentions:ownerAccountId:receiptId:userId:tuple */
 	receiptId: ReceiptsId | null;
 }
 
@@ -42,10 +47,14 @@ export interface DebtsInitializer {
 	/**
 	 * Primary key. Index: debts:ownerAccountId:debtId:pair
 	 * Index: debts:ownerAccountId:index
+	 * Index: debtsSyncIntentions:ownerAccountId:receiptId:userId:tuple
 	 */
 	ownerAccountId: AccountsId;
 
-	/** Index: debts:userId:index */
+	/**
+	 * Index: debts:userId:index
+	 * Index: debtsSyncIntentions:ownerAccountId:receiptId:userId:tuple
+	 */
 	userId: UsersId;
 
 	currency: string;
@@ -60,5 +69,6 @@ export interface DebtsInitializer {
 
 	lockedTimestamp?: Date | null;
 
+	/** Index: debtsSyncIntentions:ownerAccountId:receiptId:userId:tuple */
 	receiptId?: ReceiptsId | null;
 }

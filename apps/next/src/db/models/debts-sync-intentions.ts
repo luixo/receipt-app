@@ -7,14 +7,11 @@ import { DebtsId } from "./debts";
 export default interface DebtsSyncIntentions {
 	/**
 	 * Index: debtsSyncIntentions:debtId:index
-	 * Primary key. Index: debtsSyncIntentions:ownerAccountId:debtId:pair
+	 * Index: debtsSyncIntentions_debtId_key
 	 */
 	debtId: DebtsId;
 
-	/**
-	 * Primary key. Index: debtsSyncIntentions:ownerAccountId:debtId:pair
-	 * Index: debtsSyncIntentions:ownerAccountId:index
-	 */
+	/** Index: debtsSyncIntentions:ownerAccountId:index */
 	ownerAccountId: AccountsId;
 
 	lockedTimestamp: Date;
@@ -23,14 +20,11 @@ export default interface DebtsSyncIntentions {
 export interface DebtsSyncIntentionsInitializer {
 	/**
 	 * Index: debtsSyncIntentions:debtId:index
-	 * Primary key. Index: debtsSyncIntentions:ownerAccountId:debtId:pair
+	 * Index: debtsSyncIntentions_debtId_key
 	 */
 	debtId: DebtsId;
 
-	/**
-	 * Primary key. Index: debtsSyncIntentions:ownerAccountId:debtId:pair
-	 * Index: debtsSyncIntentions:ownerAccountId:index
-	 */
+	/** Index: debtsSyncIntentions:ownerAccountId:index */
 	ownerAccountId: AccountsId;
 
 	lockedTimestamp: Date;

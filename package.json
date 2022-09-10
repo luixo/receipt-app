@@ -44,7 +44,7 @@
 		"postinstall": "patch-package",
 		"db:migrate": "dotenv -c -- yarn workspace scripts db:migrate",
 		"db:migrate:production": "dotenv -c production -- yarn workspace scripts db:migrate",
-		"db:generate-types": "dotenv -c -- yarn workspace scripts db:generate-types && yarn format",
+		"db:generate-types": "dotenv -c -- yarn workspace scripts db:generate-types && yarn lint:fix && yarn format",
 		"lint-staged": "lint-staged"
 	},
 	"dependencies": {
