@@ -33,3 +33,17 @@ export interface ReceiptParticipantsInitializer {
 	/** Default value: now() */
 	added?: Date;
 }
+
+export interface ReceiptParticipantsMutator {
+	/** Index: receiptParticipants:receiptId:index */
+	receiptId?: ReceiptsId;
+
+	/** Index: receiptParticipants:userId:index */
+	userId?: UsersId;
+
+	role?: string;
+
+	resolved?: boolean;
+
+	added?: Date;
+}

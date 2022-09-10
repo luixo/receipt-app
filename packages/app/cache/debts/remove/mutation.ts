@@ -36,7 +36,7 @@ export const mutationOptions: UseContextedMutationOptions<
 				cache.debts.getByUsers.update(
 					trpcContext,
 					currDebt.userId,
-					variables.id,
+					currDebt.currency,
 					sumRevert
 				);
 			}

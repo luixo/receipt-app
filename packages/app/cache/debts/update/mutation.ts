@@ -203,7 +203,7 @@ export const mutationOptions: UseContextedMutationOptions<
 				cache.debts.getByUsers.update(
 					trpcContext,
 					currData.userId,
-					variables.id,
+					currData.currency,
 					sumRevert
 				);
 			}

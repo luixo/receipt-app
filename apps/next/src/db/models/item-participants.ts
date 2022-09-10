@@ -11,10 +11,10 @@ export default interface ItemParticipants {
 	 */
 	itemId: ReceiptItemsId;
 
-	part: string;
-
 	/** Primary key. Index: itemParticipants:itemId-userId:primaryKey */
 	userId: UsersId;
+
+	part: string;
 }
 
 export interface ItemParticipantsInitializer {
@@ -24,8 +24,21 @@ export interface ItemParticipantsInitializer {
 	 */
 	itemId: ReceiptItemsId;
 
-	part: string;
-
 	/** Primary key. Index: itemParticipants:itemId-userId:primaryKey */
 	userId: UsersId;
+
+	part: string;
+}
+
+export interface ItemParticipantsMutator {
+	/**
+	 * Primary key. Index: itemParticipants:itemId-userId:primaryKey
+	 * Index: itemParticipants:itemId:index
+	 */
+	itemId?: ReceiptItemsId;
+
+	/** Primary key. Index: itemParticipants:itemId-userId:primaryKey */
+	userId?: UsersId;
+
+	part?: string;
 }

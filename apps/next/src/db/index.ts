@@ -1,37 +1,11 @@
-import {
-	ColumnType,
-	Kysely,
-	LogEvent,
-	PostgresDialect,
-	SelectExpression,
-} from "kysely";
+import { Kysely, LogEvent, PostgresDialect, SelectExpression } from "kysely";
 import { Pool } from "pg";
 
 import { UnauthorizedContext } from "next-app/handlers/context";
 import { Logger } from "next-app/utils/logger";
 
 import { getDatabaseConfig } from "./config";
-import { InitializerTypeMap, ModelTypeMap } from "./models";
-
-type TableColumnType<WriteTable, ReadTable extends WriteTable> = Required<{
-	[C in keyof WriteTable]: ColumnType<
-		ReadTable[C],
-		WriteTable[C],
-		WriteTable[C]
-	>;
-}>;
-
-type DatabaseColumnType<WriteDatabase, ReadDatabase extends WriteDatabase> = {
-	[TB in keyof WriteDatabase]: TableColumnType<
-		WriteDatabase[TB],
-		ReadDatabase[TB]
-	>;
-};
-
-export type ReceiptsDatabase = DatabaseColumnType<
-	InitializerTypeMap,
-	ModelTypeMap
->;
+import { ReceiptsDatabase } from "./types";
 
 export type ReceiptsSelectExpression<TB extends keyof ReceiptsDatabase> =
 	SelectExpression<ReceiptsDatabase, TB>;

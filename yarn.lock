@@ -3816,7 +3816,7 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@kristiandupont/recase@^1.1.2":
+"@kristiandupont/recase@1.1.2", "@kristiandupont/recase@^1.1.2":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@kristiandupont/recase/-/recase-1.1.2.tgz#2aa1eb209c2747fba1d258e3e5750d6cbf4ad9a4"
   integrity sha512-n9j4x8DYMgwZNTSzJh7DZPIF0PgQZy7QDbrB8BsrrJfL/GgZRi7/bAjFgYK3pARGNCc8VvRZDMaC99L9I87rZQ==
@@ -7814,6 +7814,13 @@ cli-progress@3.10.0, cli-progress@^3.10.0:
   dependencies:
     string-width "^4.2.0"
 
+cli-progress@^3.11.2:
+  version "3.11.2"
+  resolved "https://registry.yarnpkg.com/cli-progress/-/cli-progress-3.11.2.tgz#f8c89bd157e74f3f2c43bcfb3505670b4d48fc77"
+  integrity sha512-lCPoS6ncgX4+rJu5bS3F/iCz17kZ9MPZ6dpuTtI0KXKABkhyXIdYB3Inby1OpaGti3YlI3EeEkM9AuWpelJrVA==
+  dependencies:
+    string-width "^4.2.3"
+
 cli-spinners@^2.0.0, cli-spinners@^2.4.0:
   version "2.6.1"
   resolved "https://registry.yarnpkg.com/cli-spinners/-/cli-spinners-2.6.1.tgz#adc954ebe281c37a6319bfa401e6dd2488ffb70d"
@@ -7995,20 +8002,15 @@ color@^3.0.0:
     color-convert "^1.9.3"
     color-string "^1.6.0"
 
-colorette@2.0.16:
-  version "2.0.16"
-  resolved "https://registry.yarnpkg.com/colorette/-/colorette-2.0.16.tgz#713b9af84fdb000139f04546bd4a93f62a5085da"
-  integrity sha512-hUewv7oMjCp+wkBv5Rm0v87eJhq4woh5rSR+42YSQJKecCqgIqNkZ6lAlQms/BwHPJA5NKMRlpxPRv0n8HQW6g==
+colorette@2.0.19, colorette@^2.0.16, colorette@^2.0.17:
+  version "2.0.19"
+  resolved "https://registry.yarnpkg.com/colorette/-/colorette-2.0.19.tgz#cdf044f47ad41a0f4b56b3a0d5b4e6e1a2d5a798"
+  integrity sha512-3tlv/dIP7FWvj3BsbHrGLJ6l/oKh1O3TcgBqMn+yyCagOxc23fyzDS6HypQbgxWbkpDnf52p1LuR4eWDQ/K9WQ==
 
 colorette@^1.0.7:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/colorette/-/colorette-1.4.0.tgz#5190fbb87276259a86ad700bff2c6d6faa3fca40"
   integrity sha512-Y2oEozpomLn7Q3HFP7dpww7AtMJplbM9lGZP6RDfHqmbeRjiwRg4n6VM6j4KLmRke85uWEI7JqF17f3pqdRA0g==
-
-colorette@^2.0.16, colorette@^2.0.17:
-  version "2.0.19"
-  resolved "https://registry.yarnpkg.com/colorette/-/colorette-2.0.19.tgz#cdf044f47ad41a0f4b56b3a0d5b4e6e1a2d5a798"
-  integrity sha512-3tlv/dIP7FWvj3BsbHrGLJ6l/oKh1O3TcgBqMn+yyCagOxc23fyzDS6HypQbgxWbkpDnf52p1LuR4eWDQ/K9WQ==
 
 colorette@^2.0.7:
   version "2.0.17"
@@ -8062,12 +8064,7 @@ commander@^7.2.0:
   resolved "https://registry.yarnpkg.com/commander/-/commander-7.2.0.tgz#a36cb57d0b501ce108e4d20559a150a391d97ab7"
   integrity sha512-QrWXB+ZQSVPmIWIhtEO9H+gwHaMGYiF5ChvoJ+K9ZGHG/sVsa6yiesAD1GC/x46sET00Xlwo1u49RVVVzvcSkw==
 
-commander@^8.3.0:
-  version "8.3.0"
-  resolved "https://registry.yarnpkg.com/commander/-/commander-8.3.0.tgz#4837ea1b2da67b9c616a67afbb0fafee567bca66"
-  integrity sha512-OkTL9umf+He2DZkUq8f8J9of7yL6RJKI24dVITBmNfZBmri9zYZQrKkuXiKhyfPSu8tUhnVBB1iKXevvnlR4Ww==
-
-commander@^9.3.0:
+commander@^9.1.0, commander@^9.3.0:
   version "9.4.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-9.4.0.tgz#bc4a40918fefe52e22450c111ecd6b7acce6f11c"
   integrity sha512-sRPT+umqkz90UA8M1yqYfnHlZA7fF6nSphDtxeywPZ49ysjxDQybzk13CL+mXekDRG92skbcqCLVovuCusNmFw==
@@ -8726,17 +8723,10 @@ debug@2, debug@2.6.9, debug@^2.2.0, debug@^2.3.3, debug@^2.6.0, debug@^2.6.9:
   dependencies:
     ms "2.0.0"
 
-debug@4, debug@^4.0.0, debug@^4.1.0, debug@^4.1.1, debug@^4.3.1, debug@^4.3.2, debug@^4.3.3, debug@^4.3.4:
+debug@4, debug@4.3.4, debug@^4.0.0, debug@^4.1.0, debug@^4.1.1, debug@^4.3.1, debug@^4.3.2, debug@^4.3.3, debug@^4.3.4:
   version "4.3.4"
   resolved "https://registry.yarnpkg.com/debug/-/debug-4.3.4.tgz#1319f6579357f2338d3337d2cdd4914bb5dcc865"
   integrity sha512-PRWFHuSU3eDtQJPvnNY7Jcket1j0t5OuOsFzPPzsekD52Zl8qUfFIPEiswXqIvHWGVHOgX+7G/vCNNhehwxfkQ==
-  dependencies:
-    ms "2.1.2"
-
-debug@4.3.3:
-  version "4.3.3"
-  resolved "https://registry.yarnpkg.com/debug/-/debug-4.3.3.tgz#04266e0b70a98d4462e6e288e38259213332b664"
-  integrity sha512-/zxw5+vh1Tfv+4Qn7a5nsbcJKPaSvCDhojn6FEl9vupwK2VCSDtEiEtqr8DFtzYFOdz63LBkxec7DYuc2jon6Q==
   dependencies:
     ms "2.1.2"
 
@@ -10490,16 +10480,17 @@ extglob@^2.0.4:
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
 
-extract-pg-schema@^3.1.7:
-  version "3.1.7"
-  resolved "https://registry.yarnpkg.com/extract-pg-schema/-/extract-pg-schema-3.1.7.tgz#2d1592d670208e54e23fb8031ae3873341f43328"
-  integrity sha512-23h6RLpYyByxLPgtQI7gfmClXtj7BKgFqYlz8KY+3dX++yIbA6zkPXd88bZ7ArKxHCDxXPZ0hT7s8q95enMx3A==
+extract-pg-schema@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/extract-pg-schema/-/extract-pg-schema-4.1.0.tgz#a61360801a972147a978026a6ae5401ffb6b73e0"
+  integrity sha512-GMIzcgQLRTcHTMyBqN8WnK1iY1KOq6LW+tw4ZQo5v9qUh9jsselQpUtAQXdU5rIm9n4QZPFf2eThR2NMFEqfZg==
   dependencies:
-    jsonpath "^1.0.2"
-    knex "1.0.4"
+    jsonpath "^1.1.1"
+    knex "2.3.0"
     pg "8.7.3"
     pg-query-emscripten "^0.1.0"
     ramda "^0.28.0"
+    tagged-comment-parser "^1.1.1"
 
 extract-zip@^2.0.1:
   version "2.0.1"
@@ -13686,7 +13677,7 @@ jsonify@~0.0.0:
   resolved "https://registry.yarnpkg.com/jsonify/-/jsonify-0.0.0.tgz#2c74b6ee41d93ca51b7b5aaee8f503631d252a73"
   integrity sha1-LHS27kHZPKUbe1qu6PUDYx0lKnM=
 
-jsonpath@^1.0.2:
+jsonpath@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/jsonpath/-/jsonpath-1.1.1.tgz#0ca1ed8fb65bb3309248cc9d5466d12d5b0b9901"
   integrity sha512-l6Cg7jRpixfbgoWgkrl77dgEj8RPvND0wMH6TwQmi9Qs4TFfS9u5cUFnbeKTwj5ga5Y3BTGGNI28k117LJ009w==
@@ -13721,17 +13712,20 @@ jsx-ast-utils@^3.3.1:
     array-includes "^3.1.5"
     object.assign "^4.1.2"
 
-kanel@^2.4.4:
-  version "2.4.4"
-  resolved "https://registry.yarnpkg.com/kanel/-/kanel-2.4.4.tgz#2dfdff44fed4f7daec51f45388aa46c049191f6a"
-  integrity sha512-AjUcO+Kcb9iEoLGD2gEdHlzBry5EHhUP6qlFGq1Ov18kZsFqRj0zQ1zh+F6Q88HA0n8UXO1oQ0ZYovQc7OIbxA==
+kanel@^3.0.4:
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/kanel/-/kanel-3.0.4.tgz#17265e716b2e29b74db3066417243d3b9282a167"
+  integrity sha512-95wFtSN4pGwtMBUXKyjAuq/Kj7xkONRsQj7ui1tBb/UkapPgsOdTAO7RThHAmPXpBpnX8zYfS7hfcq6j0xJOpg==
   dependencies:
+    "@kristiandupont/recase" "1.1.2"
     chalk "4.1.2"
-    extract-pg-schema "^3.1.7"
+    cli-progress "^3.11.2"
+    extract-pg-schema "^4.1.0"
     optionator "^0.9.1"
     pg "^8.6.0"
     ramda "^0.28.0"
     rmfr "^2.0.0"
+    tagged-comment-parser "^1.2.0"
 
 keychain@1.3.0:
   version "1.3.0"
@@ -13801,16 +13795,17 @@ kleur@^3.0.3:
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-3.0.3.tgz#a79c9ecc86ee1ce3fa6206d1216c501f147fc07e"
   integrity sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==
 
-knex@1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/knex/-/knex-1.0.4.tgz#b9db3c60d0e3a4af37239bb879244e50eb748124"
-  integrity sha512-cMQ81fpkVmr4ia20BtyrD3oPere/ir/Q6IGLAgcREKOzRVhMsasQ4nx1VQuDRJjqq6oK5kfcxmvWoYkHKrnuMA==
+knex@2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/knex/-/knex-2.3.0.tgz#87fa2a9553d7cafb125d7a0645256fbe29ef5967"
+  integrity sha512-WMizPaq9wRMkfnwKXKXgBZeZFOSHGdtoSz5SaLAVNs3WRDfawt9O89T4XyH52PETxjV8/kRk0Yf+8WBEP/zbYw==
   dependencies:
-    colorette "2.0.16"
-    commander "^8.3.0"
-    debug "4.3.3"
+    colorette "2.0.19"
+    commander "^9.1.0"
+    debug "4.3.4"
     escalade "^3.1.1"
     esm "^3.2.25"
+    get-package-type "^0.1.0"
     getopts "2.3.0"
     interpret "^2.2.0"
     lodash "^4.17.21"
@@ -19342,6 +19337,11 @@ symbol-tree@^3.2.2:
   version "3.2.4"
   resolved "https://registry.yarnpkg.com/symbol-tree/-/symbol-tree-3.2.4.tgz#430637d248ba77e078883951fb9aa0eed7c63fa2"
   integrity sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==
+
+tagged-comment-parser@^1.1.1, tagged-comment-parser@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/tagged-comment-parser/-/tagged-comment-parser-1.2.0.tgz#7eafc8227b3f403a02e58ea9c174beb1426cac6e"
+  integrity sha512-1vbvl3I0GZmmlw5+rWJwnrhJ7uKOnS7s3rCYtu4Yquwmxs8HT1ADWPc+73oqQ3MjR5W9mQXLbFxsAQEsNG9IMw==
 
 tapable@^1.0.0, tapable@^1.1.3:
   version "1.1.3"

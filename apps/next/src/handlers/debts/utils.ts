@@ -1,12 +1,9 @@
 import { Selection } from "kysely";
 
-import {
-	ReceiptsSelectExpression,
-	ReceiptsDatabase,
-	Database,
-} from "next-app/db";
+import { ReceiptsSelectExpression, Database } from "next-app/db";
 import { DEBTS } from "next-app/db/consts";
 import { AccountsId, DebtsId, Receipts } from "next-app/db/models";
+import { ReceiptsDatabase } from "next-app/db/types";
 import { getValidParticipants } from "next-app/handlers/receipt-items/utils";
 
 export const getDebt = <SE extends ReceiptsSelectExpression<"debts">>(

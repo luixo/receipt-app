@@ -6,7 +6,7 @@ import {
 	AccountsId,
 	ReceiptsId,
 	ReceiptItemsId,
-	SessionsId,
+	SessionsSessionId,
 	DebtsId,
 } from "next-app/db/models";
 import { isCurrency } from "next-app/utils/currency";
@@ -37,7 +37,10 @@ export const receiptItemIdSchema = z
 	.string()
 	.uuid()
 	.refine<ReceiptItemsId>(flavored);
-export const sessionIdSchema = z.string().uuid().refine<SessionsId>(flavored);
+export const sessionIdSchema = z
+	.string()
+	.uuid()
+	.refine<SessionsSessionId>(flavored);
 export const debtIdSchema = z.string().uuid().refine<DebtsId>(flavored);
 export const resetPasswordTokenSchema = z.string().uuid();
 export const confirmEmailTokenSchema = z.string().uuid();

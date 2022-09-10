@@ -1,6 +1,7 @@
 import { MutationObject, sql } from "kysely";
 
-import { Database, ReceiptsDatabase } from "..";
+import { Database } from "..";
+import { ReceiptsDatabase } from "../types";
 
 type ReceiptsMutationObject = MutationObject<
 	ReceiptsDatabase,

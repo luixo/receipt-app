@@ -6,8 +6,8 @@ import { DebtsId } from "./debts";
 
 export default interface DebtsSyncIntentions {
 	/**
-	 * Index: debtsSyncIntentions:debtId:index
 	 * Index: debtsSyncIntentions_debtId_key
+	 * Index: debtsSyncIntentions:debtId:index
 	 */
 	debtId: DebtsId;
 
@@ -19,8 +19,8 @@ export default interface DebtsSyncIntentions {
 
 export interface DebtsSyncIntentionsInitializer {
 	/**
-	 * Index: debtsSyncIntentions:debtId:index
 	 * Index: debtsSyncIntentions_debtId_key
+	 * Index: debtsSyncIntentions:debtId:index
 	 */
 	debtId: DebtsId;
 
@@ -28,4 +28,17 @@ export interface DebtsSyncIntentionsInitializer {
 	ownerAccountId: AccountsId;
 
 	lockedTimestamp: Date;
+}
+
+export interface DebtsSyncIntentionsMutator {
+	/**
+	 * Index: debtsSyncIntentions_debtId_key
+	 * Index: debtsSyncIntentions:debtId:index
+	 */
+	debtId?: DebtsId;
+
+	/** Index: debtsSyncIntentions:ownerAccountId:index */
+	ownerAccountId?: AccountsId;
+
+	lockedTimestamp?: Date;
 }

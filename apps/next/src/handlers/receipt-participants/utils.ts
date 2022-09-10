@@ -2,12 +2,9 @@ import * as trpc from "@trpc/server";
 import { Selection } from "kysely";
 import { z } from "zod";
 
-import {
-	ReceiptsSelectExpression,
-	ReceiptsDatabase,
-	Database,
-} from "next-app/db";
+import { ReceiptsSelectExpression, Database } from "next-app/db";
 import { AccountsId, ReceiptsId, UsersId } from "next-app/db/models";
+import { ReceiptsDatabase } from "next-app/db/types";
 import { verifyUsersByIds } from "next-app/handlers/users/utils";
 import { assignableRoleSchema } from "next-app/handlers/validation";
 

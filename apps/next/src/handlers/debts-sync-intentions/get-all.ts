@@ -1,8 +1,9 @@
 import { QueryCreator, sql } from "kysely";
 
 import { Currency } from "app/utils/currency";
-import { getDatabase, ReceiptsDatabase } from "next-app/db";
+import { getDatabase } from "next-app/db";
 import { AccountsId, DebtsId, UsersId } from "next-app/db/models";
+import { ReceiptsDatabase } from "next-app/db/types";
 import { authProcedure } from "next-app/handlers/trpc";
 
 type CommonIntention = {

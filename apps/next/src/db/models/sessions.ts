@@ -3,11 +3,12 @@
 
 import { AccountsId } from "./accounts";
 
-export type SessionsId = string & { " __flavor"?: "sessions" };
+/** Identifier type for "sessions" table */
+export type SessionsSessionId = string & { __flavor?: "sessions" };
 
 export default interface Sessions {
 	/** Primary key. Index: sessions_pkey */
-	sessionId: SessionsId;
+	sessionId: SessionsSessionId;
 
 	/** Index: sessions:accountId:index */
 	accountId: AccountsId;
@@ -17,10 +18,20 @@ export default interface Sessions {
 
 export interface SessionsInitializer {
 	/** Primary key. Index: sessions_pkey */
-	sessionId: SessionsId;
+	sessionId: SessionsSessionId;
 
 	/** Index: sessions:accountId:index */
 	accountId: AccountsId;
 
 	expirationTimestamp: Date;
+}
+
+export interface SessionsMutator {
+	/** Primary key. Index: sessions_pkey */
+	sessionId?: SessionsSessionId;
+
+	/** Index: sessions:accountId:index */
+	accountId?: AccountsId;
+
+	expirationTimestamp?: Date;
 }

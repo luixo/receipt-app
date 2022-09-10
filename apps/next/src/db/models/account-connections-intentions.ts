@@ -6,34 +6,31 @@ import { UsersId } from "./users";
 
 export default interface AccountConnectionsIntentions {
 	/**
-	 * Index: accountConnectionsIntentions:accountId:index
-	 * Index: accountConnectionsIntentions:accountUser:userPair
 	 * Primary key. Index: accountConnectionsIntentions:accounts:accountPair
+	 * Index: accountConnectionsIntentions:accountUser:userPair
+	 * Index: accountConnectionsIntentions:accountId:index
 	 */
 	accountId: AccountsId;
-
-	/** Index: accountConnectionsIntentions:accountUser:userPair */
-	userId: UsersId;
 
 	/**
 	 * Primary key. Index: accountConnectionsIntentions:accounts:accountPair
 	 * Index: accountConnectionsIntentions:targetAccountId:index
 	 */
 	targetAccountId: AccountsId;
+
+	/** Index: accountConnectionsIntentions:accountUser:userPair */
+	userId: UsersId;
 
 	created: Date;
 }
 
 export interface AccountConnectionsIntentionsInitializer {
 	/**
-	 * Index: accountConnectionsIntentions:accountId:index
-	 * Index: accountConnectionsIntentions:accountUser:userPair
 	 * Primary key. Index: accountConnectionsIntentions:accounts:accountPair
+	 * Index: accountConnectionsIntentions:accountUser:userPair
+	 * Index: accountConnectionsIntentions:accountId:index
 	 */
 	accountId: AccountsId;
-
-	/** Index: accountConnectionsIntentions:accountUser:userPair */
-	userId: UsersId;
 
 	/**
 	 * Primary key. Index: accountConnectionsIntentions:accounts:accountPair
@@ -41,5 +38,28 @@ export interface AccountConnectionsIntentionsInitializer {
 	 */
 	targetAccountId: AccountsId;
 
+	/** Index: accountConnectionsIntentions:accountUser:userPair */
+	userId: UsersId;
+
 	created: Date;
+}
+
+export interface AccountConnectionsIntentionsMutator {
+	/**
+	 * Primary key. Index: accountConnectionsIntentions:accounts:accountPair
+	 * Index: accountConnectionsIntentions:accountUser:userPair
+	 * Index: accountConnectionsIntentions:accountId:index
+	 */
+	accountId?: AccountsId;
+
+	/**
+	 * Primary key. Index: accountConnectionsIntentions:accounts:accountPair
+	 * Index: accountConnectionsIntentions:targetAccountId:index
+	 */
+	targetAccountId?: AccountsId;
+
+	/** Index: accountConnectionsIntentions:accountUser:userPair */
+	userId?: UsersId;
+
+	created?: Date;
 }

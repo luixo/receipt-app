@@ -3,7 +3,8 @@ import { MutationObject } from "kysely";
 import { z } from "zod";
 
 import { userNameSchema } from "app/utils/validation";
-import { ReceiptsDatabase, getDatabase } from "next-app/db";
+import { getDatabase } from "next-app/db";
+import { ReceiptsDatabase } from "next-app/db/types";
 import { authProcedure } from "next-app/handlers/trpc";
 import { getUserById } from "next-app/handlers/users/utils";
 import { userIdSchema } from "next-app/handlers/validation";

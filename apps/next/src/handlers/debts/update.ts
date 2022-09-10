@@ -3,7 +3,8 @@ import { MutationObject } from "kysely";
 import { z } from "zod";
 
 import { debtNoteSchema } from "app/utils/validation";
-import { ReceiptsDatabase, getDatabase, Database } from "next-app/db";
+import { getDatabase, Database } from "next-app/db";
+import { ReceiptsDatabase } from "next-app/db/types";
 import {
 	getDebtIntention,
 	statusSchema,

@@ -2,17 +2,14 @@ import { Selection, sql } from "kysely";
 import { v4 } from "uuid";
 
 import { getParticipantSums } from "app/utils/receipt-item";
-import {
-	Database,
-	ReceiptsSelectExpression,
-	ReceiptsDatabase,
-} from "next-app/db";
+import { Database, ReceiptsSelectExpression } from "next-app/db";
 import {
 	AccountsId,
 	ReceiptItemsId,
 	ReceiptsId,
 	UsersId,
 } from "next-app/db/models";
+import { ReceiptsDatabase } from "next-app/db/types";
 import { Role } from "next-app/handlers/receipts/utils";
 
 export const getReceiptItemById = <

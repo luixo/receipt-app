@@ -20,3 +20,12 @@ export interface ResetPasswordIntentionsInitializer {
 
 	token: string;
 }
+
+export interface ResetPasswordIntentionsMutator {
+	/** Index: resetPasswordIntentions:accountId:index */
+	accountId?: AccountsId;
+
+	expiresTimestamp?: Date;
+
+	token?: string;
+}

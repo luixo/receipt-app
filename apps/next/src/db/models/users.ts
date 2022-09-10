@@ -3,7 +3,8 @@
 
 import { AccountsId } from "./accounts";
 
-export type UsersId = string & { " __flavor"?: "users" };
+/** Identifier type for "users" table */
+export type UsersId = string & { __flavor?: "users" };
 
 export default interface Users {
 	/** Primary key. Index: users_pkey */
@@ -38,6 +39,24 @@ export interface UsersInitializer {
 	exposeReceipts?: boolean;
 
 	/** Default value: false */
+	acceptReceipts?: boolean;
+
+	connectedAccountId?: AccountsId | null;
+}
+
+export interface UsersMutator {
+	/** Primary key. Index: users_pkey */
+	id?: UsersId;
+
+	name?: string;
+
+	publicName?: string | null;
+
+	/** Index: users:ownerAccountId:index */
+	ownerAccountId?: AccountsId;
+
+	exposeReceipts?: boolean;
+
 	acceptReceipts?: boolean;
 
 	connectedAccountId?: AccountsId | null;

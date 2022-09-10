@@ -7,7 +7,8 @@ import {
 	quantitySchema,
 	receiptItemNameSchema,
 } from "app/utils/validation";
-import { ReceiptsDatabase, getDatabase } from "next-app/db";
+import { getDatabase } from "next-app/db";
+import { ReceiptsDatabase } from "next-app/db/types";
 import { getReceiptItemById } from "next-app/handlers/receipt-items/utils";
 import {
 	getReceiptById,

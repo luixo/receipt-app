@@ -1,12 +1,9 @@
 import { Selection } from "kysely";
 import { z } from "zod";
 
-import {
-	ReceiptsSelectExpression,
-	ReceiptsDatabase,
-	Database,
-} from "next-app/db";
+import { ReceiptsSelectExpression, Database } from "next-app/db";
 import { AccountsId, ReceiptsId } from "next-app/db/models";
+import { ReceiptsDatabase } from "next-app/db/types";
 import { roleSchema } from "next-app/handlers/validation";
 
 export type Role = z.infer<typeof roleSchema>;

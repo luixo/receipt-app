@@ -2,7 +2,8 @@ import * as trpc from "@trpc/server";
 import { MutationObject } from "kysely";
 import { z } from "zod";
 
-import { ReceiptsDatabase, getDatabase } from "next-app/db";
+import { getDatabase } from "next-app/db";
+import { ReceiptsDatabase } from "next-app/db/types";
 import { getReceiptParticipant } from "next-app/handlers/receipt-participants/utils";
 import { getReceiptById } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
