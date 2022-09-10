@@ -1,10 +1,9 @@
 import React from "react";
 
 import { QueryObserverResult } from "@tanstack/react-query";
-import { useQueryState } from "next-usequerystate";
-import { createParam } from "solito";
 
 import { Props as PaginationProps } from "app/components/pagination";
+import { useQueryParam } from "app/hooks/use-query-param";
 import { TRPCError } from "app/trpc";
 
 type CursorPagingResult<T extends { count: number }> = {
@@ -14,8 +13,6 @@ type CursorPagingResult<T extends { count: number }> = {
 	totalCount?: number;
 };
 
-const { useParam } = createParam<{ [K in string]: string }>();
-
 export const useCursorPaging = <
 	T extends { count: number; hasMore: boolean; cursor: number },
 	Input extends { limit: number }
@@ -24,11 +21,8 @@ export const useCursorPaging = <
 	input: Input,
 	offsetParamName: string
 ): CursorPagingResult<T> => {
-	const [serverSideQueryOffset] = useParam(offsetParamName);
 	const { limit } = input;
-	const [queryOffset, setQueryOffset] = useQueryState(offsetParamName, {
-		defaultValue: serverSideQueryOffset || "0",
-	});
+	const [queryOffset, setQueryOffset] = useQueryParam(offsetParamName, "0");
 	const numberQueryOffset = Number(queryOffset);
 	const initialOffset = Number.isNaN(numberQueryOffset) ? 0 : numberQueryOffset;
 
