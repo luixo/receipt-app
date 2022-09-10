@@ -9,6 +9,7 @@ import { Grid } from "app/components/grid";
 import { IconButton } from "app/components/icon-button";
 import { Overlay } from "app/components/overlay";
 import { useCursorPaging } from "app/hooks/use-cursor-paging";
+import { useSyncParsedQueryParam } from "app/hooks/use-sync-parsed-query-param";
 import { trpc, TRPCQueryInput, TRPCQueryOutput } from "app/trpc";
 
 import { ReceiptPreview } from "./receipt-preview";
@@ -63,6 +64,16 @@ const useReceiptQuery = (
 export const Receipts: React.FC = () => {
 	const [input] = cache.receipts.getPaged.useStore();
 	const cursorPaging = useCursorPaging(useReceiptQuery, input, "offset");
+	useSyncParsedQueryParam<typeof input.onlyNonResolved>(
+		"non-resolved",
+		cache.receipts.getPaged.onlyNonResolvedOptions,
+		input.onlyNonResolved
+	);
+	useSyncParsedQueryParam<typeof input.orderBy>(
+		"sort",
+		cache.receipts.getPaged.orderByOptions,
+		input.orderBy
+	);
 	const { totalCount, isLoading, query, pagination } = cursorPaging;
 
 	if (!totalCount && !input.onlyNonResolved) {

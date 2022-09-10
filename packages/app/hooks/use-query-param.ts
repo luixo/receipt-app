@@ -8,15 +8,19 @@ import { id } from "app/utils/utils";
 
 const { useParam } = createParam<{ [K in string]: string }>();
 
+export type QueryParamOptions<
+	T extends object | Exclude<Primitive, undefined> = string
+> = {
+	parse?: (input: string) => T;
+	serialize?: (input: T) => string | null;
+	defaultValue?: T;
+};
+
 export const useQueryParam = <
 	T extends object | Exclude<Primitive, undefined> = string
 >(
 	paramName: string,
-	options: {
-		parse?: (input: string) => T;
-		serialize?: (input: T) => string | null;
-		defaultValue?: T;
-	}
+	options: QueryParamOptions<T>
 ) => {
 	const [serverSideQueryOffset] = useParam(paramName);
 	const parse = (options.parse || id) as NonNullable<typeof options.parse>;
