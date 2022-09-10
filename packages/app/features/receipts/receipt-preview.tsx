@@ -80,7 +80,6 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 					light
 					css={{ px: 0 }}
 					receiptId={receipt.id}
-					selfOwnedReceipt={receipt.role === "owner"}
 				/>
 			</Grid>
 		</>

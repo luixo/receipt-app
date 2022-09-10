@@ -19,12 +19,10 @@ const Participants = styled("div");
 
 type Props = {
 	receiptId: ReceiptsId;
-	selfOwnedReceipt: boolean;
 } & Omit<React.ComponentProps<typeof IconButton>, "onClick" | "color">;
 
 export const ReceiptResolvedParticipantsButton: React.FC<Props> = ({
 	receiptId,
-	selfOwnedReceipt,
 	css,
 	...props
 }) => {
@@ -76,7 +74,6 @@ export const ReceiptResolvedParticipantsButton: React.FC<Props> = ({
 										{index === 0 ? null : <Spacer y={0.5} />}
 										<LoadableUser
 											id={participant.localUserId || participant.remoteUserId}
-											viaReceiptId={selfOwnedReceipt ? undefined : receiptId}
 										/>
 									</React.Fragment>
 								))}
@@ -101,7 +98,6 @@ export const ReceiptResolvedParticipantsButton: React.FC<Props> = ({
 										{index === 0 ? null : <Spacer y={0.5} />}
 										<LoadableUser
 											id={participant.localUserId || participant.remoteUserId}
-											viaReceiptId={selfOwnedReceipt ? undefined : receiptId}
 										/>
 									</React.Fragment>
 								))}

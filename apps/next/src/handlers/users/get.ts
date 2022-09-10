@@ -1,19 +1,13 @@
 import * as trpc from "@trpc/server";
-import { sql } from "kysely";
 import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
 import { UsersId } from "next-app/db/models";
 import { authProcedure } from "next-app/handlers/trpc";
-import { receiptIdSchema, userIdSchema } from "next-app/handlers/validation";
+import { userIdSchema } from "next-app/handlers/validation";
 
 export const procedure = authProcedure
-	.input(
-		z.strictObject({
-			id: userIdSchema,
-			viaReceiptId: receiptIdSchema.optional(),
-		})
-	)
+	.input(z.strictObject({ id: userIdSchema }))
 	.query(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
 		const maybeUser = await database
@@ -43,76 +37,74 @@ export const procedure = authProcedure
 			const errorMessage = `User ${input.id} is not owned by ${ctx.auth.accountId}`;
 			// We allow account fetch foreign users
 			// In case they share the same receipt
-			if (input.viaReceiptId) {
-				const check = await database
-					.selectFrom("receipts")
-					.where("receipts.id", "=", input.viaReceiptId)
-					.innerJoin("receiptParticipants", (qb) =>
-						qb.onRef("receiptParticipants.receiptId", "=", "receipts.id")
-					)
-					.innerJoin("users", (qb) =>
-						qb
-							.onRef("receiptParticipants.userId", "=", "users.id")
-							.on((innerQb) =>
-								innerQb
-									.on("users.connectedAccountId", "=", ctx.auth.accountId)
-									.orOn("users.id", "=", input.id)
-							)
-					)
-					.select(["receiptParticipants.userId"])
-					.execute();
-				if (
-					check.length === 2 &&
-					check.some((participant) => participant.userId === input.id)
-				) {
-					const localUser = await database
-						.selectFrom("users as usersTheir")
+			const ids = await database
+				.selectFrom("users as usersThem")
+				.where("usersThem.id", "=", input.id)
+				.innerJoin("receiptParticipants as receiptParticipantsThem", (qb) =>
+					qb.onRef("receiptParticipantsThem.userId", "=", "usersThem.id")
+				)
+				.innerJoin("receipts", (qb) =>
+					qb.onRef("receiptParticipantsThem.receiptId", "=", "receipts.id")
+				)
+				.innerJoin("receiptParticipants as receiptParticipantsMe", (qb) =>
+					qb.onRef("receiptParticipantsMe.receiptId", "=", "receipts.id")
+				)
+				.innerJoin("users as usersMe", (qb) =>
+					qb
+						.onRef("receiptParticipantsMe.userId", "=", "usersMe.id")
+						.on("usersMe.connectedAccountId", "=", ctx.auth.accountId)
+				)
+				.leftJoin("accounts", (qb) =>
+					qb.onRef("usersThem.connectedAccountId", "=", "accounts.id")
+				)
+				.leftJoin("users as usersMine", (qb) =>
+					qb.onRef("usersMine.connectedAccountId", "=", "accounts.id")
+				)
+				.select(["usersMine.id as mineId", "usersMe.id as meId"])
+				.groupBy(["usersMine.id", "usersMe.id"])
+				.executeTakeFirst();
+			if (ids) {
+				if (ids.mineId) {
+					const myUser = await database
+						.selectFrom("users")
 						.leftJoin("accounts", (qb) =>
 							qb.onRef("connectedAccountId", "=", "accounts.id")
 						)
-						.leftJoin("users as usersMine", (jb) =>
-							jb
-								.onRef(
-									"usersMine.connectedAccountId",
-									"=",
-									"usersTheir.connectedAccountId"
-								)
-								.on("usersMine.ownerAccountId", "=", ctx.auth.accountId)
-						)
-						.where("usersTheir.id", "=", input.id)
+						.where("users.id", "=", ids.mineId)
 						.select([
-							"usersTheir.id as remoteId",
-							"usersMine.id as localId",
-							sql<string>`case
-								when "usersMine".name is not null
-									then "usersMine".name
-								when "usersTheir"."publicName" is not null
-									then "usersTheir"."publicName"
-								else
-									"usersTheir".name
-								end`.as("name"),
-							sql<string>`case
-								when "usersMine"."publicName" is not null
-									then "usersMine"."publicName"
-								when "usersMine".name is not null
-									then null
-								when "usersTheir"."publicName" = "usersTheir".name
-									then null
-								else
-									"usersTheir"."publicName"
-								end`.as("publicName"),
+							"users.id as remoteId",
+							"name",
+							"publicName",
 							"accounts.email",
 							"accounts.id as accountId",
 						])
 						.limit(1)
 						.executeTakeFirstOrThrow();
-					return localUser;
+					return {
+						...myUser,
+						localId: user.remoteId as UsersId | null,
+					};
 				}
-
-				throw new trpc.TRPCError({
-					code: "FORBIDDEN",
-					message: `${errorMessage} and doesn't share receipt ${input.viaReceiptId} with him`,
-				});
+				const theirUser = await database
+					.selectFrom("users")
+					.leftJoin("accounts", (qb) =>
+						qb.onRef("connectedAccountId", "=", "accounts.id")
+					)
+					.where("users.id", "=", input.id)
+					.select([
+						"users.id as remoteId",
+						"users.publicName",
+						"users.name",
+						"accounts.email",
+						"accounts.id as accountId",
+					])
+					.executeTakeFirstOrThrow();
+				return {
+					...theirUser,
+					name: theirUser.publicName || theirUser.name,
+					publicName: theirUser.publicName,
+					localId: null as UsersId | null,
+				};
 			}
 			throw new trpc.TRPCError({
 				code: "FORBIDDEN",

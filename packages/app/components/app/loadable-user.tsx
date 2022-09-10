@@ -5,7 +5,7 @@ import { Loading } from "@nextui-org/react";
 import { User } from "app/components/app/user";
 import { QueryErrorMessage } from "app/components/error-message";
 import { trpc, TRPCQuerySuccessResult } from "app/trpc";
-import { ReceiptsId, UsersId } from "next-app/db/models";
+import { UsersId } from "next-app/db/models";
 
 type InnerProps = {
 	query: TRPCQuerySuccessResult<"users.get">;
@@ -19,15 +19,10 @@ export const LoadableUserInner: React.FC<InnerProps> = ({ query }) => (
 
 type Props = Omit<InnerProps, "query"> & {
 	id: UsersId;
-	viaReceiptId?: ReceiptsId;
 };
 
-export const LoadableUser: React.FC<Props> = ({
-	id,
-	viaReceiptId,
-	...props
-}) => {
-	const query = trpc.users.get.useQuery({ id, viaReceiptId });
+export const LoadableUser: React.FC<Props> = ({ id, ...props }) => {
+	const query = trpc.users.get.useQuery({ id });
 	if (query.status === "loading") {
 		return <Loading />;
 	}
