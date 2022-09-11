@@ -28,6 +28,7 @@ export const mutationOptions: UseContextedMutationOptions<
 				locked: false,
 				remoteUserId: selfAccountId as UsersId,
 				localUserId: selfAccountId as UsersId,
+				sum: 0,
 			});
 			return { temporaryId, sinceCursor };
 		},

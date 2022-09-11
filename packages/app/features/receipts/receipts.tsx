@@ -9,10 +9,11 @@ import { Grid } from "app/components/grid";
 import { IconButton } from "app/components/icon-button";
 import { Overlay } from "app/components/overlay";
 import { useCursorPaging } from "app/hooks/use-cursor-paging";
+import { useMatchMediaValue } from "app/hooks/use-match-media-value";
 import { useSyncQueryParam } from "app/hooks/use-sync-query-param";
 import { trpc, TRPCQueryInput, TRPCQueryOutput } from "app/trpc";
 
-import { ReceiptPreview } from "./receipt-preview";
+import { getWidths, ReceiptPreview } from "./receipt-preview";
 import { ReceiptsPagination } from "./receipts-pagination";
 
 const Wrapper = styled("div", {
@@ -31,24 +32,22 @@ type PreviewsProps = {
 	receipts: TRPCQueryOutput<"receipts.getPaged">["items"];
 };
 
-const ReceiptPreviewsList: React.FC<PreviewsProps> = ({ receipts }) => (
-	<Grid.Container gap={2}>
-		<Grid defaultCol={7.5}>Receipt</Grid>
-		<Grid defaultCol={1.5} justify="center">
-			Res.
-		</Grid>
-		<Grid defaultCol={1.5} justify="center">
-			Lck.
-		</Grid>
-		<Grid defaultCol={1.5} justify="center">
-			Wait.
-		</Grid>
-		<Card.Divider />
-		{receipts.map((receipt) => (
-			<ReceiptPreview key={receipt.id} receipt={receipt} />
-		))}
-	</Grid.Container>
-);
+const ReceiptPreviewsList: React.FC<PreviewsProps> = ({ receipts }) => {
+	const overflow = useMatchMediaValue(false, { lessSm: true });
+	const [nameWidth, sumWidth] = getWidths(overflow);
+	return (
+		<Grid.Container gap={2}>
+			<Grid defaultCol={nameWidth}>Receipt</Grid>
+			<Grid defaultCol={sumWidth} justify="flex-end">
+				Sum
+			</Grid>
+			<Card.Divider />
+			{receipts.map((receipt) => (
+				<ReceiptPreview key={receipt.id} receipt={receipt} />
+			))}
+		</Grid.Container>
+	);
+};
 
 type Input = TRPCQueryInput<"receipts.getPaged">;
 

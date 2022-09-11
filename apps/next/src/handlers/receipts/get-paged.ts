@@ -56,6 +56,9 @@ export const procedure = authProcedure
 						)
 				)
 				.selectFrom("mergedReceipts")
+				.leftJoin("receiptItems", (jb) =>
+					jb.onRef("receiptItems.receiptId", "=", "mergedReceipts.receiptId")
+				)
 				.leftJoin("receiptParticipants", (jb) =>
 					jb
 						.onRef(
@@ -72,15 +75,32 @@ export const procedure = authProcedure
 				.select([
 					"mergedReceipts.receiptId as id",
 					"mergedReceipts.role",
-					"name",
-					"issued",
-					"currency",
+					"mergedReceipts.name",
+					"mergedReceipts.issued",
+					"mergedReceipts.currency",
 					"mergedReceipts.lockedTimestamp",
 					"receiptParticipants.resolved as participantResolved",
 					"mergedReceipts.remoteUserId",
 					"mergedReceipts.localUserId",
+					sql<string>`coalesce(sum("receiptItems".price * "receiptItems".quantity), 0)`.as(
+						"sum"
+					),
 				])
-				.orderBy("issued", input.orderBy === "date-asc" ? "asc" : "desc")
+				.groupBy([
+					"mergedReceipts.receiptId",
+					"mergedReceipts.role",
+					"mergedReceipts.name",
+					"mergedReceipts.issued",
+					"mergedReceipts.currency",
+					"mergedReceipts.lockedTimestamp",
+					"receiptParticipants.resolved",
+					"mergedReceipts.remoteUserId",
+					"mergedReceipts.localUserId",
+				])
+				.orderBy(
+					"mergedReceipts.issued",
+					input.orderBy === "date-asc" ? "asc" : "desc"
+				)
 				.if(Boolean(input.onlyNonResolved), (qb) =>
 					qb.where("receiptParticipants.resolved", "=", false)
 				)
@@ -131,8 +151,9 @@ export const procedure = authProcedure
 			cursor: input.cursor,
 			items: receipts
 				.slice(0, input.limit)
-				.map(({ lockedTimestamp, ...receipt }) => ({
+				.map(({ lockedTimestamp, sum, ...receipt }) => ({
 					...receipt,
+					sum: Number(sum),
 					locked: Boolean(lockedTimestamp),
 				})),
 		};
