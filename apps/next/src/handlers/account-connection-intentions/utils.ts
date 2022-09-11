@@ -20,6 +20,20 @@ export const addConnectionIntention = async (
 			message: `Account with email ${toEmail} does not exist.`,
 		});
 	}
+	const connectedUser = await database
+		.selectFrom("accounts")
+		.where("accounts.email", "=", toEmail)
+		.innerJoin("users", (qb) =>
+			qb.onRef("users.connectedAccountId", "=", "accounts.id")
+		)
+		.select("users.name")
+		.executeTakeFirst();
+	if (connectedUser) {
+		throw new trpc.TRPCError({
+			code: "CONFLICT",
+			message: `Account with email ${toEmail} is already connected to user ${connectedUser.name}.`,
+		});
+	}
 	const viceVersaIntention = await database
 		.selectFrom("accountConnectionsIntentions")
 		.select("userId")
