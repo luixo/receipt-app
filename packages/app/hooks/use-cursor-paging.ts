@@ -32,7 +32,9 @@ export const useCursorPaging = <
 	});
 	const query = useQuery(input, offset);
 	const maxOffset = query.data
-		? Math.ceil(query.data.count / limit) * limit
+		? query.data.count === 0
+			? 0
+			: (Math.ceil(query.data.count / limit) - 1) * limit
 		: undefined;
 	const onNextPage = React.useCallback(() => {
 		setOffset((prevOffset) => prevOffset + limit);

@@ -44,14 +44,16 @@ export const useQueryParam = <
 	const setValue = React.useCallback(
 		(valueOrUpdater: React.SetStateAction<T>) => {
 			if (typeof valueOrUpdater === "function") {
-				setRawValue((prev) => serialize(valueOrUpdater(parse(prev))));
+				// We can't use update function of `setRawValue`
+				// as `rawValue` is not updated when it's been set to null
+				setRawValue(serialize(valueOrUpdater(parsedValue)));
 			} else {
 				setRawValue(serialize(valueOrUpdater));
 			}
 		},
 		// We don't need to update serialize / parse on every rerender
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[setRawValue]
+		[setRawValue, parsedValue]
 	);
 	return [parsedValue, setValue] as const;
 };
