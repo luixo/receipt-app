@@ -8,7 +8,6 @@ import { TRPCError } from "app/trpc";
 
 type CursorPagingResult<T extends { count: number }> = {
 	pagination: PaginationProps;
-	isLoading: boolean;
 	query: QueryObserverResult<T, TRPCError>;
 	totalCount?: number;
 };
@@ -118,7 +117,6 @@ export const useCursorPaging = <
 	);
 	return {
 		query,
-		isLoading: query.fetchStatus === "fetching",
 		pagination,
 		totalCount: query.data?.count,
 	};

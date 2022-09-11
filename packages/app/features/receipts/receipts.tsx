@@ -68,9 +68,13 @@ export const Receipts: React.FC = () => {
 		input.onlyNonResolved
 	);
 	useSyncQueryParam(cache.receipts.getPaged.orderByOptions, input.orderBy);
-	const { totalCount, isLoading, query, pagination } = cursorPaging;
+	const { totalCount, query, pagination } = cursorPaging;
 
-	if (!totalCount && !input.onlyNonResolved && !isLoading) {
+	if (
+		!totalCount &&
+		!input.onlyNonResolved &&
+		query.fetchStatus !== "fetching"
+	) {
 		return (
 			<Wrapper>
 				<Text h2>You have no receipts</Text>
@@ -97,7 +101,11 @@ export const Receipts: React.FC = () => {
 		<>
 			{paginationElement}
 			<Spacer y={1} />
-			<Overlay overlay={isLoading ? <Loading size="xl" /> : undefined}>
+			<Overlay
+				overlay={
+					query.fetchStatus === "fetching" ? <Loading size="xl" /> : undefined
+				}
+			>
 				{query.status === "error" ? <QueryErrorMessage query={query} /> : null}
 				{!totalCount && input.onlyNonResolved ? (
 					<Wrapper>

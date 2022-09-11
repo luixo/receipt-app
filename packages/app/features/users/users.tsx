@@ -46,9 +46,9 @@ const useUsersQuery = (input: Omit<Input, "cursor">, cursor: Input["cursor"]) =>
 export const Users: React.FC = () => {
 	const [input] = cache.users.getPaged.useStore();
 	const cursorPaging = useCursorPaging(useUsersQuery, input, "offset");
-	const { totalCount, pagination, query, isLoading } = cursorPaging;
+	const { totalCount, pagination, query } = cursorPaging;
 
-	if (!totalCount) {
+	if (!totalCount && query.fetchStatus !== "fetching") {
 		return (
 			<Container
 				display="flex"
@@ -84,7 +84,11 @@ export const Users: React.FC = () => {
 		<>
 			{paginationElement}
 			<Spacer y={1} />
-			<Overlay overlay={isLoading ? <Loading size="xl" /> : undefined}>
+			<Overlay
+				overlay={
+					query.fetchStatus === "fetching" ? <Loading size="xl" /> : undefined
+				}
+			>
 				{query.status === "error" ? <QueryErrorMessage query={query} /> : null}
 				{query.status === "loading" ? (
 					<Loading size="xl" />
