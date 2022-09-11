@@ -6,6 +6,7 @@ import { QueryObserverSuccessResult } from "@tanstack/react-query";
 import { QueryErrorMessage } from "app/components/error-message";
 import { Grid } from "app/components/grid";
 import { trpc, TRPCError, TRPCQueryOutput, TRPCQueryResult } from "app/trpc";
+import { Currency } from "app/utils/currency";
 import { MONTH } from "app/utils/time";
 
 type CurrencyList = TRPCQueryOutput<"currency.getList">;
@@ -80,13 +81,14 @@ const CurrenciesPickerLoader: React.FC<LoaderProps> = ({ query, ...props }) => {
 type WrapperProps = Omit<LoaderProps, "query"> & {
 	modalOpen: boolean;
 	onModalClose: () => void;
-	onLoad?: (currencies: CurrencyListItem[]) => void;
+	onLoad?: (currencies: CurrencyListItem[], topCurrencies: Currency[]) => void;
 };
 
 export const CurrenciesPicker: React.FC<WrapperProps> = ({
 	modalOpen,
 	onModalClose,
 	onLoad,
+	topCurrenciesQuery,
 	...props
 }) => {
 	const query = trpc.currency.getList.useQuery(
@@ -94,10 +96,14 @@ export const CurrenciesPicker: React.FC<WrapperProps> = ({
 		{ trpc: { ssr: false }, cacheTime: MONTH }
 	);
 	React.useEffect(() => {
-		if (onLoad && query.status === "success") {
-			onLoad(query.data);
+		if (
+			onLoad &&
+			query.status === "success" &&
+			topCurrenciesQuery.status === "success"
+		) {
+			onLoad(query.data, topCurrenciesQuery.data);
 		}
-	}, [onLoad, query]);
+	}, [onLoad, query, topCurrenciesQuery]);
 	return (
 		<Modal
 			closeButton
@@ -110,7 +116,11 @@ export const CurrenciesPicker: React.FC<WrapperProps> = ({
 				<Text h3>Please choose currency</Text>
 			</Modal.Header>
 			<Modal.Body>
-				<CurrenciesPickerLoader query={query} {...props} />
+				<CurrenciesPickerLoader
+					query={query}
+					topCurrenciesQuery={topCurrenciesQuery}
+					{...props}
+				/>
 			</Modal.Body>
 		</Modal>
 	);
