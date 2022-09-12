@@ -1,3 +1,5 @@
+import { Props as UserProps } from "app/components/app/user";
+import { TRPCQueryOutput } from "app/trpc";
 import { rotate } from "app/utils/array";
 import { getIndexByString } from "app/utils/hash";
 import { ReceiptItemsId, ReceiptsId, UsersId } from "next-app/src/db/models";
@@ -90,3 +92,12 @@ export const getParticipantSums = <T extends ReceiptParticipant>(
 		),
 	}));
 };
+
+export const convertParticipantToUser = (
+	participant: TRPCQueryOutput<"receiptItems.get">["participants"][number]
+): UserProps["user"] => ({
+	id: participant.localUserId || participant.remoteUserId,
+	name: participant.name,
+	publicName: participant.publicName,
+	email: participant.email,
+});

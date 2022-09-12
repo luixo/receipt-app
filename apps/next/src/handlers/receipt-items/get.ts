@@ -22,7 +22,7 @@ export const procedure = authProcedure
 		return {
 			role:
 				participants.find(
-					(participant) => participant.connectedAccountId === ctx.auth.accountId
+					(participant) => participant.accountId === ctx.auth.accountId
 				)?.role ?? "owner",
 			items,
 			participants,

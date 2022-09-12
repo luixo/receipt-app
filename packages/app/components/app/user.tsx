@@ -42,12 +42,12 @@ const getIdenticon = (hash: string, size: number, theme: DripsyFinalTheme) => {
 	}).toString()}`;
 };
 
-type Props = {
+export type Props = {
 	user: {
 		id: UsersId;
 		name: string;
-		publicName?: string | null;
-		email?: string | null;
+		publicName: string | null;
+		email: string | null;
 	};
 	avatarSize?: number;
 	onClick?: () => void;

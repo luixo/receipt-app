@@ -8,6 +8,7 @@ import { RemoveButton } from "app/components/remove-button";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
+import { convertParticipantToUser } from "app/utils/receipt-item";
 import { ReceiptItemsId, ReceiptsId } from "next-app/db/models";
 
 import { ReceiptItemPartInput } from "./receipt-item-part-input";
@@ -70,12 +71,7 @@ export const ReceiptItemPart: React.FC<Props> = ({
 
 	return (
 		<Wrapper>
-			<User
-				user={{
-					id: participant.localUserId || participant.remoteUserId,
-					name: participant.name,
-				}}
-			/>
+			<User user={convertParticipantToUser(participant)} />
 			<Body>
 				<ReceiptItemPartInput
 					receiptId={receiptId}

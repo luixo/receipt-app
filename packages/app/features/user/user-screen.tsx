@@ -18,6 +18,7 @@ export const UserScreen: PageWithLayout = () => {
 		throw new Error("No id in param");
 	}
 
+	const userQuery = trpc.users.get.useQuery({ id });
 	const userNameQuery = trpc.users.getName.useQuery({ id });
 
 	return (
@@ -25,8 +26,21 @@ export const UserScreen: PageWithLayout = () => {
 			<Header backHref="/users">
 				<UserTitle
 					user={React.useMemo(
-						() => ({ id, name: userNameQuery.data || id }),
-						[id, userNameQuery.data]
+						() =>
+							userQuery.data
+								? {
+										id: userQuery.data.localId || userQuery.data.remoteId,
+										name: userQuery.data.name,
+										publicName: userQuery.data.publicName,
+										email: userQuery.data.email,
+								  }
+								: {
+										id,
+										name: userNameQuery.data || id,
+										publicName: null,
+										email: null,
+								  },
+						[id, userNameQuery.data, userQuery.data]
 					)}
 				/>
 			</Header>

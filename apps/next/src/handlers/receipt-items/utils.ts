@@ -108,6 +108,9 @@ const getReceiptParticipants = (
 				)
 				.on("usersMine.ownerAccountId", "=", ownerAccountId)
 		)
+		.leftJoin("accounts", (qb) =>
+			qb.onRef("usersMine.connectedAccountId", "=", "accounts.id")
+		)
 		.select([
 			"userId as remoteUserId",
 			sql<string>`case
@@ -118,7 +121,9 @@ const getReceiptParticipants = (
 			else
 				"usersTheir".name
 			end`.as("name"),
-			"usersMine.connectedAccountId",
+			"usersMine.publicName",
+			"accounts.id as accountId",
+			"accounts.email",
 			// only exists if foreign user is connected to an account
 			// that local account owner also have
 			"usersMine.id as localUserId",

@@ -30,8 +30,18 @@ export const verifyUsersByIds = async (
 ) => {
 	const users = await database
 		.selectFrom("users")
-		.select(["id", "ownerAccountId", "name", "connectedAccountId"])
-		.where("id", "in", userIds)
+		.leftJoin("accounts", (qb) =>
+			qb.onRef("accounts.id", "=", "users.connectedAccountId")
+		)
+		.select([
+			"users.id",
+			"users.ownerAccountId",
+			"users.name",
+			"users.publicName",
+			"accounts.id as accountId",
+			"accounts.email",
+		])
+		.where("users.id", "in", userIds)
 		.execute();
 	if (users.length !== userIds.length) {
 		const missedUserIds = userIds.filter(

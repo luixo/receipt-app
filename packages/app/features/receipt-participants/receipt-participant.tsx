@@ -10,6 +10,7 @@ import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { Currency } from "app/utils/currency";
+import { convertParticipantToUser } from "app/utils/receipt-item";
 import { ReceiptsId } from "next-app/db/models";
 import { Role } from "next-app/handlers/receipts/utils";
 
@@ -68,18 +69,12 @@ export const ReceiptParticipant: React.FC<Props> = ({
 
 	const accountQueryNotLoaded = accountQuery.status !== "success";
 	const disabledParticipantResolvedButton =
-		accountQueryNotLoaded ||
-		participant.connectedAccountId !== accountQuery.data.id;
+		accountQueryNotLoaded || participant.accountId !== accountQuery.data.id;
 
 	return (
 		<Body>
 			<BodyElement>
-				<User
-					user={{
-						id: participant.localUserId || participant.remoteUserId,
-						name: participant.name,
-					}}
-				/>
+				<User user={convertParticipantToUser(participant)} />
 				<Spacer x={1} />
 				<Text>
 					{`${Math.round(participant.sum * 100) / 100} ${
