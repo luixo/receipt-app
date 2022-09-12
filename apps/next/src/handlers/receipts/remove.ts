@@ -29,8 +29,24 @@ export const procedure = authProcedure
 				message: `Receipt ${input.id} is not owned by ${ctx.auth.accountId}`,
 			});
 		}
-		await database
-			.deleteFrom("receipts")
-			.where("id", "=", input.id)
-			.executeTakeFirst();
+		await database.transaction().execute(async (tx) => {
+			const debts = await tx
+				.updateTable("debts")
+				.where("receiptId", "=", input.id)
+				.set({ receiptId: null })
+				.returning("id")
+				.execute();
+			await tx
+				.deleteFrom("debtsSyncIntentions")
+				.where(
+					"debtId",
+					"in",
+					debts.map(({ id }) => id)
+				)
+				.execute();
+			await tx
+				.deleteFrom("receipts")
+				.where("id", "=", input.id)
+				.executeTakeFirst();
+		});
 	});
