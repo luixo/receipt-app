@@ -24,7 +24,9 @@ export const addConnectionIntention = async (
 		.selectFrom("accounts")
 		.where("accounts.email", "=", toEmail)
 		.innerJoin("users", (qb) =>
-			qb.onRef("users.connectedAccountId", "=", "accounts.id")
+			qb
+				.onRef("users.connectedAccountId", "=", "accounts.id")
+				.on("users.ownerAccountId", "=", fromAccountId)
 		)
 		.select("users.name")
 		.executeTakeFirst();
