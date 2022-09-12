@@ -2,7 +2,6 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
-import { getDebtIntention } from "next-app/handlers/debts-sync-intentions/utils";
 import { getDebt } from "next-app/handlers/debts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import { debtIdSchema } from "next-app/handlers/validation";
@@ -27,16 +26,10 @@ export const procedure = authProcedure
 			.where("id", "=", input.id)
 			.where("ownerAccountId", "=", ctx.auth.accountId)
 			.executeTakeFirst();
-		const syncIntention = await getDebtIntention(
-			database,
-			input.id,
-			ctx.auth.accountId
-		);
-		if (syncIntention) {
-			await database
-				.deleteFrom("debtsSyncIntentions")
-				.where("debtId", "=", input.id)
-				.where("ownerAccountId", "=", ctx.auth.accountId)
-				.execute();
-		}
+		await database
+			.deleteFrom("debtsSyncIntentions")
+			.where("debtId", "=", input.id)
+			.where("ownerAccountId", "=", ctx.auth.accountId)
+			.returning("debtId")
+			.execute();
 	});
