@@ -28,14 +28,23 @@ export const procedure = authProcedure
 			});
 		}
 		await database.transaction().execute(async (tx) => {
-			await tx
-				.updateTable("receipts")
+			const receipts = await tx
+				.selectFrom("receipts")
 				.innerJoin(
 					"receiptParticipants",
 					"receiptParticipants.receiptId",
 					"receipts.id"
 				)
 				.where("receiptParticipants.userId", "=", input.id)
+				.select("id")
+				.execute();
+			await tx
+				.updateTable("receipts")
+				.where(
+					"id",
+					"in",
+					receipts.map(({ id }) => id)
+				)
 				.set({
 					lockedTimestamp: null,
 				})
