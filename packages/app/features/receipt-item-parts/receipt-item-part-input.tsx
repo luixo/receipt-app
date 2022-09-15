@@ -49,7 +49,9 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 	});
 
 	const updateMutation = trpc.itemParticipants.update.useMutation(
-		useTrpcMutationOptions(mutations.itemParticipants.update.options, receiptId)
+		useTrpcMutationOptions(mutations.itemParticipants.update.options, {
+			context: receiptId,
+		})
 	);
 
 	const updatePart = useAsyncCallback(

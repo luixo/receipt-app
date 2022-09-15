@@ -50,13 +50,17 @@ export const useTrpcMutationOptions = <
 	LifecycleContext = unknown,
 	Context = undefined
 >(
-	...[
-		{ onError, onMutate, onSettled, onSuccess },
+	{
+		onError,
+		onMutate,
+		onSettled,
+		onSuccess,
+	}: UseContextedMutationOptions<Path, LifecycleContext, Context>,
+	{
 		context,
-	]: WithContextIfExists<
-		UseContextedMutationOptions<Path, LifecycleContext, Context>,
-		Context
-	>
+	}: {
+		context?: Context;
+	} = {}
 ): TRPCMutationOptions<Path, LifecycleContext> => {
 	const trpcContext = trpc.useContext();
 	return React.useMemo(() => {

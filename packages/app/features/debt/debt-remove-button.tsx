@@ -18,7 +18,7 @@ type Props = {
 export const DebtRemoveButton: React.FC<Props> = ({ debt, setLoading }) => {
 	const router = useRouter();
 	const removeMutation = trpc.debts.remove.useMutation(
-		useTrpcMutationOptions(mutations.debts.remove.options, debt)
+		useTrpcMutationOptions(mutations.debts.remove.options, { context: debt })
 	);
 	React.useEffect(
 		() => setLoading(removeMutation.isLoading),

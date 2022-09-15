@@ -53,8 +53,10 @@ export const ReceiptParticipant: React.FC<Props> = ({
 	const removeReceiptParticipantMutation =
 		trpc.receiptParticipants.remove.useMutation(
 			useTrpcMutationOptions(mutations.receiptParticipants.remove.options, {
-				receiptId,
-				selfAccountId: accountQuery.data?.id ?? "unknown",
+				context: {
+					receiptId,
+					selfAccountId: accountQuery.data?.id ?? "unknown",
+				},
 			})
 		);
 	const removeReceiptParticipant = React.useCallback(

@@ -42,10 +42,12 @@ export const useTrpcQueryOptions = <
 	Path extends TRPCQueryKey,
 	Context = undefined
 >(
-	...[{ onError, onSettled, onSuccess }, context]: WithContextIfExists<
-		UseContextedQueryOptions<Path, Context>,
-		Context
-	>
+	{ onError, onSettled, onSuccess }: UseContextedQueryOptions<Path, Context>,
+	{
+		context,
+	}: {
+		context?: Context;
+	} = {}
 ): TRPCQueryOptions<Path> => {
 	const trpcContext = trpc.useContext();
 	return React.useMemo(() => {

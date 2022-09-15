@@ -54,7 +54,9 @@ export const ReceiptItemPart: React.FC<Props> = ({
 	isLoading,
 }) => {
 	const removeMutation = trpc.itemParticipants.remove.useMutation(
-		useTrpcMutationOptions(mutations.itemParticipants.remove.options, receiptId)
+		useTrpcMutationOptions(mutations.itemParticipants.remove.options, {
+			context: receiptId,
+		})
 	);
 	const removeItemPart = React.useCallback(
 		() =>

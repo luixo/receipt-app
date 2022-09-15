@@ -41,7 +41,9 @@ export const RegisterScreen: PageWithLayout = () => {
 
 	const registerMutation = trpc.auth.register.useMutation(
 		useTrpcMutationOptions(mutations.auth.register.options, {
-			name: form.watch("name"),
+			context: {
+				name: form.watch("name"),
+			},
 		})
 	);
 	const onSubmit = React.useCallback(

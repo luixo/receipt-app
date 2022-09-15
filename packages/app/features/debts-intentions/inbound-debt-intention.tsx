@@ -19,17 +19,16 @@ export const InboundDebtIntention: React.FC<Props> = ({ intention }) => {
 	const router = useRouter();
 
 	const acceptMutation = trpc.debtsSyncIntentions.accept.useMutation(
-		useTrpcMutationOptions(
-			mutations.debtsSyncIntentions.accept.options,
-			React.useMemo(
+		useTrpcMutationOptions(mutations.debtsSyncIntentions.accept.options, {
+			context: React.useMemo(
 				() => ({
 					userId: intention.userId,
 					currency: intention.currency,
 					currentAmount: intention.current?.amount,
 				}),
 				[intention]
-			)
-		)
+			),
+		})
 	);
 	const acceptSyncIntention = useAsyncCallback(
 		async (isMount, redirectToDebt = false) => {
@@ -43,16 +42,15 @@ export const InboundDebtIntention: React.FC<Props> = ({ intention }) => {
 	);
 
 	const rejectMutation = trpc.debtsSyncIntentions.reject.useMutation(
-		useTrpcMutationOptions(
-			mutations.debtsSyncIntentions.reject.options,
-			React.useMemo(
+		useTrpcMutationOptions(mutations.debtsSyncIntentions.reject.options, {
+			context: React.useMemo(
 				() => ({
 					userId: intention.userId,
 					currentAmount: intention.current?.amount,
 				}),
 				[intention]
-			)
-		)
+			),
+		})
 	);
 	const rejectSyncIntention = React.useCallback(
 		() => rejectMutation.mutate({ id: intention.id }),

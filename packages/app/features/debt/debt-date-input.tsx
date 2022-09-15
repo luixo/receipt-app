@@ -14,7 +14,7 @@ type Props = {
 
 export const DebtDateInput: React.FC<Props> = ({ debt, isLoading }) => {
 	const updateMutation = trpc.debts.update.useMutation(
-		useTrpcMutationOptions(mutations.debts.update.options, debt)
+		useTrpcMutationOptions(mutations.debts.update.options, { context: debt })
 	);
 
 	const saveDate = React.useCallback(

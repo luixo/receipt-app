@@ -43,7 +43,9 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 	});
 
 	const updateMutation = trpc.receiptItems.update.useMutation(
-		useTrpcMutationOptions(mutations.receiptItems.update.options, receiptId)
+		useTrpcMutationOptions(mutations.receiptItems.update.options, {
+			context: receiptId,
+		})
 	);
 	const updateName = useAsyncCallback(
 		async (isMount, name: string) => {

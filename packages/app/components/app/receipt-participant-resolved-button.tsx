@@ -27,7 +27,9 @@ export const ReceiptParticipantResolvedButton: React.FC<Props> = ({
 }) => {
 	const updateReceiptMutation = trpc.receiptParticipants.update.useMutation(
 		useTrpcMutationOptions(mutations.receiptParticipants.update.options, {
-			userId: localUserId,
+			context: {
+				userId: localUserId,
+			},
 		})
 	);
 	const switchResolved = React.useCallback(() => {

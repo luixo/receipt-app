@@ -50,7 +50,9 @@ export const ReceiptItem: React.FC<Props> = ({
 }) => {
 	const formattedCurrency = useFormattedCurrency(currency);
 	const removeReceiptItemMutation = trpc.receiptItems.remove.useMutation(
-		useTrpcMutationOptions(mutations.receiptItems.remove.options, receiptId)
+		useTrpcMutationOptions(mutations.receiptItems.remove.options, {
+			context: receiptId,
+		})
 	);
 	const removeItem = React.useCallback(
 		() => removeReceiptItemMutation.mutate({ id: receiptItem.id }),
@@ -63,7 +65,9 @@ export const ReceiptItem: React.FC<Props> = ({
 	);
 
 	const addItemPartMutation = trpc.itemParticipants.add.useMutation(
-		useTrpcMutationOptions(mutations.itemParticipants.add.options, receiptId)
+		useTrpcMutationOptions(mutations.itemParticipants.add.options, {
+			context: receiptId,
+		})
 	);
 	const addParticipant = React.useCallback(
 		(participant: ReceiptParticipant | EveryParticipantTag) => {

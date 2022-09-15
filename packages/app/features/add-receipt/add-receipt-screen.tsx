@@ -32,7 +32,9 @@ export const AddReceiptScreen: PageWithLayout = () => {
 
 	const addReceiptMutation = trpc.receipts.add.useMutation(
 		useTrpcMutationOptions(mutations.receipts.add.options, {
-			selfAccountId: accountQuery.data?.id ?? "unknown",
+			context: {
+				selfAccountId: accountQuery.data?.id ?? "unknown",
+			},
 		})
 	);
 

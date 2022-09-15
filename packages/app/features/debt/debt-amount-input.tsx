@@ -42,7 +42,7 @@ export const DebtAmountInput: React.FC<Props> = ({ debt, isLoading }) => {
 	);
 
 	const updateMutation = trpc.debts.update.useMutation(
-		useTrpcMutationOptions(mutations.debts.update.options, debt)
+		useTrpcMutationOptions(mutations.debts.update.options, { context: debt })
 	);
 	const updateAmount = React.useCallback(
 		async (amount: number) => {
