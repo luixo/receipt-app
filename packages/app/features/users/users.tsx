@@ -3,12 +3,12 @@ import React from "react";
 import { Container, Loading, Spacer, Text, styled } from "@nextui-org/react";
 import { MdAdd as AddIcon } from "react-icons/md";
 
-import { cache } from "app/cache";
 import { QueryErrorMessage } from "app/components/error-message";
 import { IconButton } from "app/components/icon-button";
 import { Overlay } from "app/components/overlay";
 import { Pagination } from "app/components/pagination";
 import { useCursorPaging } from "app/hooks/use-cursor-paging";
+import { queries } from "app/queries";
 import { trpc, TRPCQueryInput, TRPCQueryOutput } from "app/trpc";
 
 import { UserPreview } from "./user-preview";
@@ -44,7 +44,7 @@ const useUsersQuery = (input: Omit<Input, "cursor">, cursor: Input["cursor"]) =>
 	);
 
 export const Users: React.FC = () => {
-	const [input] = cache.users.getPaged.useStore();
+	const [input] = queries.users.getPaged.useStore();
 	const cursorPaging = useCursorPaging(useUsersQuery, input, "offset");
 	const { totalCount, pagination, query } = cursorPaging;
 

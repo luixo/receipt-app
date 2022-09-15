@@ -1,7 +1,8 @@
+import { TRPCQueryInput } from "app/trpc";
 import { createStore } from "app/utils/store";
 import { Setters } from "app/utils/types";
 
-import { Input } from "./types";
+type Input = TRPCQueryInput<"users.getPaged">;
 
 type CursorlessOmit = Omit<Input, "cursor">;
 

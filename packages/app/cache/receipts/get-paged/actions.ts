@@ -7,8 +7,6 @@ import { createController } from "./controller";
 import { Receipt, Input } from "./types";
 import { updatePagedReceipts } from "./utils";
 
-export * from "./input";
-
 const getSortByDate = (input: Input) => (a: Receipt, b: Receipt) => {
 	switch (input.orderBy) {
 		case "date-asc":

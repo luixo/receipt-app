@@ -1,26 +1,32 @@
 import { SyncQueryParamOptions } from "app/hooks/use-sync-query-param";
+import { TRPCQueryInput } from "app/trpc";
 import { createStore } from "app/utils/store";
 import { Setters } from "app/utils/types";
 
-import { Input } from "./types";
+type Input = TRPCQueryInput<"receipts.getPaged">;
 
 type CursorlessOmit = Omit<Input, "cursor">;
 type SortType = CursorlessOmit["orderBy"];
 
-export const DEFAULT_SORT: SortType = "date-desc";
-export const isOrder = (input: string): input is SortType =>
+const DEFAULT_SORT: SortType = "date-desc";
+const isOrder = (input: string): input is SortType =>
 	["date-asc", "date-desc"].includes(input);
 
-export const orderByOptions: SyncQueryParamOptions<SortType> = {
+const orderByQueryOptions: SyncQueryParamOptions<SortType> = {
 	param: "sort",
 	parse: (input) => (input && isOrder(input) ? input : DEFAULT_SORT),
 	serialize: (input) => (input === DEFAULT_SORT ? null : input),
 };
 
-export const onlyNonResolvedOptions: SyncQueryParamOptions<boolean> = {
+const onlyNonResolvedQueryOptions: SyncQueryParamOptions<boolean> = {
 	param: "non-resolved",
 	parse: (input) => input === "true",
 	serialize: (input) => (input ? "true" : null),
+};
+
+export const queryOptions = {
+	orderBy: orderByQueryOptions,
+	onlyNonResolved: onlyNonResolvedQueryOptions,
 };
 
 export const inputStore = createStore<CursorlessOmit & Setters<CursorlessOmit>>(
@@ -36,9 +42,9 @@ export const inputStore = createStore<CursorlessOmit & Setters<CursorlessOmit>>(
 			})),
 	}),
 	(query) => ({
-		orderBy: orderByOptions.parse(query[orderByOptions.param]),
-		onlyNonResolved: onlyNonResolvedOptions.parse(
-			query[onlyNonResolvedOptions.param]
+		orderBy: orderByQueryOptions.parse(query[orderByQueryOptions.param]),
+		onlyNonResolved: onlyNonResolvedQueryOptions.parse(
+			query[onlyNonResolvedQueryOptions.param]
 		),
 	})
 );

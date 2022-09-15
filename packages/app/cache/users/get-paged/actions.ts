@@ -7,8 +7,6 @@ import { createController } from "./controller";
 import { User, Input } from "./types";
 import { updatePagedUsers } from "./utils";
 
-export * from "./input";
-
 const sortByName = (a: User, b: User) => a.name.localeCompare(b.name);
 
 export const update = (

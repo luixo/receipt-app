@@ -7,7 +7,6 @@ import {
 } from "react-icons/bs";
 import { MdFilterAlt as FilterIcon } from "react-icons/md";
 
-import { cache } from "app/cache";
 import { Grid } from "app/components/grid";
 import { IconButton } from "app/components/icon-button";
 import {
@@ -15,6 +14,7 @@ import {
 	Props as PaginationProps,
 } from "app/components/pagination";
 import { useMatchMedia } from "app/hooks/use-match-media";
+import { queries } from "app/queries";
 
 const Wrapper = styled("div", {
 	display: "flex",
@@ -28,7 +28,7 @@ type Props = {
 
 export const ReceiptsPagination: React.FC<Props> = ({ pagination }) => {
 	const [input, { changeOrderBy, changeOnlyNonResolved }] =
-		cache.receipts.getPaged.useStore();
+		queries.receipts.getPaged.useStore();
 
 	const matchMedia = useMatchMedia();
 	const shouldShrink = !matchMedia.md;

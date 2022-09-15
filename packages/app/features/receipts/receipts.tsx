@@ -3,7 +3,6 @@ import React from "react";
 import { Loading, Spacer, Text, styled, Card } from "@nextui-org/react";
 import { MdAdd as AddIcon } from "react-icons/md";
 
-import { cache } from "app/cache";
 import { QueryErrorMessage } from "app/components/error-message";
 import { Grid } from "app/components/grid";
 import { IconButton } from "app/components/icon-button";
@@ -11,6 +10,7 @@ import { Overlay } from "app/components/overlay";
 import { useCursorPaging } from "app/hooks/use-cursor-paging";
 import { useMatchMediaValue } from "app/hooks/use-match-media-value";
 import { useSyncQueryParam } from "app/hooks/use-sync-query-param";
+import { queries } from "app/queries";
 import { trpc, TRPCQueryInput, TRPCQueryOutput } from "app/trpc";
 
 import { getWidths, ReceiptPreview } from "./receipt-preview";
@@ -61,13 +61,16 @@ const useReceiptQuery = (
 	);
 
 export const Receipts: React.FC = () => {
-	const [input] = cache.receipts.getPaged.useStore();
+	const [input] = queries.receipts.getPaged.useStore();
 	const cursorPaging = useCursorPaging(useReceiptQuery, input, "offset");
 	useSyncQueryParam(
-		cache.receipts.getPaged.onlyNonResolvedOptions,
+		queries.receipts.getPaged.queryOptions.onlyNonResolved,
 		input.onlyNonResolved
 	);
-	useSyncQueryParam(cache.receipts.getPaged.orderByOptions, input.orderBy);
+	useSyncQueryParam(
+		queries.receipts.getPaged.queryOptions.orderBy,
+		input.orderBy
+	);
 	const { totalCount, query, pagination } = cursorPaging;
 
 	if (
