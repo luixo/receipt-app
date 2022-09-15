@@ -3,7 +3,6 @@ import React from "react";
 import { useRouter } from "solito/router";
 
 import { RemoveButton } from "app/components/remove-button";
-import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
@@ -18,21 +17,18 @@ type Props = {
 export const DebtRemoveButton: React.FC<Props> = ({ debt, setLoading }) => {
 	const router = useRouter();
 	const removeMutation = trpc.debts.remove.useMutation(
-		useTrpcMutationOptions(mutations.debts.remove.options, { context: debt })
+		useTrpcMutationOptions(mutations.debts.remove.options, {
+			context: debt,
+			onSuccess: () => router.replace(`/debts/user/${debt.userId}`),
+		})
 	);
 	React.useEffect(
 		() => setLoading(removeMutation.isLoading),
 		[removeMutation.isLoading, setLoading]
 	);
-	const removeDebt = useAsyncCallback(
-		async (isMount) => {
-			await removeMutation.mutateAsync({ id: debt.id });
-			if (!isMount()) {
-				return;
-			}
-			router.replace(`/debts/user/${debt.userId}`);
-		},
-		[removeMutation, debt.id, debt.userId, router]
+	const removeDebt = React.useCallback(
+		() => removeMutation.mutate({ id: debt.id }),
+		[removeMutation, debt.id]
 	);
 
 	return (

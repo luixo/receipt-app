@@ -11,7 +11,6 @@ import { DebtSyncStatus } from "app/components/app/debt-sync-status";
 import { MutationErrorMessage } from "app/components/error-message";
 import { IconButton } from "app/components/icon-button";
 import { LockedIcon } from "app/components/locked-icon";
-import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useMatchMediaValue } from "app/hooks/use-match-media-value";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -117,19 +116,24 @@ export const DebtControlButtons: React.FC<Props> = ({ debt, hideLocked }) => {
 	const lockMutation = trpc.debts.update.useMutation(
 		useTrpcMutationOptions(mutations.debts.update.options, { context: debt })
 	);
-	const mutateLock = useAsyncCallback(
-		async (isMount, shouldPropagate = false) => {
-			await lockMutation.mutateAsync({
-				id: debt.id,
-				update: {
-					type: "locked",
-					value: !debt.locked,
+	const mutateLock = React.useCallback(
+		(shouldPropagate = false) => {
+			lockMutation.mutate(
+				{
+					id: debt.id,
+					update: {
+						type: "locked",
+						value: !debt.locked,
+					},
 				},
-			});
-			if (!isMount() || !shouldPropagate) {
-				return;
-			}
-			sendSyncIntention();
+				{
+					onSuccess: () => {
+						if (shouldPropagate) {
+							sendSyncIntention();
+						}
+					},
+				}
+			);
 		},
 		[lockMutation, debt.id, debt.locked, sendSyncIntention]
 	);

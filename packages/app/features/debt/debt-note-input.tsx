@@ -4,7 +4,6 @@ import { styled, Textarea } from "@nextui-org/react";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 
 import { IconButton } from "app/components/icon-button";
-import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -42,18 +41,15 @@ export const DebtNoteInput: React.FC<Props> = ({ debt, isLoading }) => {
 	const updateMutation = trpc.debts.update.useMutation(
 		useTrpcMutationOptions(mutations.debts.update.options, { context: debt })
 	);
-	const saveNote = useAsyncCallback(
-		async (isMount, nextNote: string) => {
-			if (debt.note !== nextNote) {
-				await updateMutation.mutateAsync({
-					id: debt.id,
-					update: { type: "note", note: nextNote },
-				});
-			}
-			if (!isMount()) {
+	const saveNote = React.useCallback(
+		(nextNote: string) => {
+			if (debt.note === nextNote) {
 				return;
 			}
-			setValue(nextNote);
+			updateMutation.mutate(
+				{ id: debt.id, update: { type: "note", note: nextNote } },
+				{ onSuccess: () => setValue(nextNote) }
+			);
 		},
 		[updateMutation, debt.id, debt.note, setValue]
 	);

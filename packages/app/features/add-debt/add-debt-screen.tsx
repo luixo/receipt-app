@@ -16,7 +16,6 @@ import { UsersSuggest } from "app/components/app/users-suggest";
 import { MutationErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
-import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
@@ -27,7 +26,7 @@ import {
 	debtNoteSchema,
 	userItemSchema,
 } from "app/utils/validation";
-import { DebtsId, UsersId } from "next-app/src/db/models";
+import { UsersId } from "next-app/src/db/models";
 import { PageWithLayout } from "next-app/types/page";
 
 import { DebtAmountInput } from "./debt-amount-input";
@@ -47,7 +46,9 @@ export const AddDebtScreen: PageWithLayout = () => {
 	const router = useRouter();
 
 	const addMutation = trpc.debts.add.useMutation(
-		useTrpcMutationOptions(mutations.debts.add.options)
+		useTrpcMutationOptions(mutations.debts.add.options, {
+			onSuccess: (id) => router.replace(`/debts/${id}`),
+		})
 	);
 
 	const form = useForm<Form>({
@@ -97,17 +98,16 @@ export const AddDebtScreen: PageWithLayout = () => {
 		(direction: Direction) => form.setValue("direction", direction),
 		[form]
 	);
-	const onSubmit = useSubmitHandler<Form, DebtsId>(
-		async (values) =>
-			addMutation.mutateAsync({
+	const onSubmit = React.useCallback(
+		(values: Form) =>
+			addMutation.mutate({
 				note: values.note,
 				currency: values.currency.code,
 				userId: values.user.id,
 				amount: values.amount * (values.direction === "+" ? 1 : -1),
 				timestamp: values.timestamp,
 			}),
-		[addMutation],
-		React.useCallback((id: DebtsId) => router.replace(`/debts/${id}`), [router])
+		[addMutation]
 	);
 	const topCurrenciesQuery = trpc.currency.topDebts.useQuery();
 

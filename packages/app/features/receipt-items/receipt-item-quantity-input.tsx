@@ -5,7 +5,6 @@ import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 import { MdEdit as EditIcon } from "react-icons/md";
 
 import { IconButton } from "app/components/icon-button";
-import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -47,22 +46,20 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 	const updateMutation = trpc.receiptItems.update.useMutation(
 		useTrpcMutationOptions(mutations.receiptItems.update.options, {
 			context: receiptId,
+			onSuccess: unsetEditing,
 		})
 	);
-	const updateQuantity = useAsyncCallback(
-		async (isMount, quantity: number) => {
-			if (quantity !== receiptItem.quantity) {
-				await updateMutation.mutateAsync({
-					id: receiptItem.id,
-					update: { type: "quantity", quantity },
-				});
-			}
-			if (!isMount()) {
+	const updateQuantity = React.useCallback(
+		(quantity: number) => {
+			if (quantity === receiptItem.quantity) {
 				return;
 			}
-			unsetEditing();
+			updateMutation.mutate({
+				id: receiptItem.id,
+				update: { type: "quantity", quantity },
+			});
 		},
-		[updateMutation, receiptItem.id, receiptItem.quantity, unsetEditing]
+		[updateMutation, receiptItem.id, receiptItem.quantity]
 	);
 
 	if (!isEditing) {

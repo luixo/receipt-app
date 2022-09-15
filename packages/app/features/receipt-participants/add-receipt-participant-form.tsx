@@ -3,7 +3,6 @@ import React from "react";
 import { styled } from "@nextui-org/react";
 
 import { UsersSuggest } from "app/components/app/users-suggest";
-import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc, TRPCInfiniteQueryOutput } from "app/trpc";
@@ -26,35 +25,30 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 	disabled,
 	filterIds,
 }) => {
+	const [localFilterIds, setLocalFilterIds] = React.useState<UsersId[]>([]);
 	const addMutation = trpc.receiptParticipants.add.useMutation(
 		useTrpcMutationOptions(mutations.receiptParticipants.add.options, {
 			context: {
 				receiptId,
 			},
+			onMutate: (vars) =>
+				setLocalFilterIds((prevIds) => [...prevIds, ...vars.userIds]),
+			onSettled: (_res, _err, vars) =>
+				setLocalFilterIds((prevIds) =>
+					prevIds.filter((id) => !vars.userIds.includes(id))
+				),
 		})
 	);
 
-	const [localFilterIds, setLocalFilterIds] = React.useState<UsersId[]>([]);
-	const addParticipants = useAsyncCallback(
+	const addParticipants = React.useCallback(
 		async (
-			isMount,
 			participant: TRPCInfiniteQueryOutput<"users.suggest">["items"][number]
-		) => {
-			setLocalFilterIds((prevIds) => [...prevIds, participant.id]);
-			try {
-				await addMutation.mutateAsync({
-					receiptId,
-					userIds: [participant.id],
-					role: "editor",
-				});
-			} finally {
-				if (isMount()) {
-					setLocalFilterIds((prevIds) =>
-						prevIds.filter((id) => id !== participant.id)
-					);
-				}
-			}
-		},
+		) =>
+			addMutation.mutate({
+				receiptId,
+				userIds: [participant.id],
+				role: "editor",
+			}),
 		[addMutation, receiptId]
 	);
 

@@ -5,7 +5,6 @@ import { MdSend as SendIcon } from "react-icons/md";
 
 import { IconButton } from "app/components/icon-button";
 import { LockedIcon } from "app/components/locked-icon";
-import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
@@ -29,16 +28,22 @@ export const ReceiptLockedButton: React.FC<Props> = ({
 	const updateReceiptMutation = trpc.receipts.update.useMutation(
 		useTrpcMutationOptions(mutations.receipts.update.options)
 	);
-	const switchResolved = useAsyncCallback(
-		async (isMount, shouldPropagate = false) => {
-			await updateReceiptMutation.mutateAsync({
-				id: receiptId,
-				update: { type: "locked", value: !locked },
-			});
-			if (!isMount() || !shouldPropagate) {
-				return;
-			}
-			propagateDebts();
+	const switchResolved = React.useCallback(
+		(shouldPropagate = false) => {
+			updateReceiptMutation.mutate(
+				{
+					id: receiptId,
+					update: { type: "locked", value: !locked },
+				},
+				{
+					onSuccess: () => {
+						if (!shouldPropagate) {
+							return;
+						}
+						propagateDebts();
+					},
+				}
+			);
 		},
 		[updateReceiptMutation, receiptId, locked, propagateDebts]
 	);

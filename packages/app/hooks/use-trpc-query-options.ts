@@ -29,33 +29,61 @@ export type UseContextedQueryOptions<
 > = {
 	onError?: (
 		...args: WithContextIfExists<TRPCReactContext, Context>
-	) => TRPCQueryOptions<Path>["onError"];
+	) => NonNullable<TRPCQueryOptions<Path>["onError"]>;
 	onSuccess?: (
 		...args: WithContextIfExists<TRPCReactContext, Context>
-	) => TRPCQueryOptions<Path>["onSuccess"];
+	) => NonNullable<TRPCQueryOptions<Path>["onSuccess"]>;
 	onSettled?: (
 		...args: WithContextIfExists<TRPCReactContext, Context>
-	) => TRPCQueryOptions<Path>["onSettled"];
+	) => NonNullable<TRPCQueryOptions<Path>["onSettled"]>;
 };
 
 export const useTrpcQueryOptions = <
 	Path extends TRPCQueryKey,
 	Context = undefined
 >(
-	{ onError, onSettled, onSuccess }: UseContextedQueryOptions<Path, Context>,
+	{
+		onError: onErrorTrpc,
+		onSettled: onSettledTrpc,
+		onSuccess: onSuccessTrpc,
+	}: UseContextedQueryOptions<Path, Context>,
 	{
 		context,
+		onError,
+		onSettled,
+		onSuccess,
+		...rest
 	}: {
 		context?: Context;
-	} = {}
+	} & TRPCQueryOptions<Path> = {}
 ): TRPCQueryOptions<Path> => {
 	const trpcContext = trpc.useContext();
 	return React.useMemo(() => {
-		const args = [trpcContext, context] as any;
+		const trpcArgs = [trpcContext, context] as any;
 		return {
-			onError: onError?.(...args),
-			onSettled: onSettled?.(...args),
-			onSuccess: onSuccess?.(...args),
+			onError: (...args) => {
+				onError?.(...args);
+				return onErrorTrpc?.(...trpcArgs)(...args);
+			},
+			onSettled: (...args) => {
+				onSettled?.(...args);
+				return onSettledTrpc?.(...trpcArgs)(...args);
+			},
+			onSuccess: (...args) => {
+				onSuccess?.(...args);
+				return onSuccessTrpc?.(...trpcArgs)(...args);
+			},
+			...rest,
 		};
-	}, [trpcContext, context, onError, onSettled, onSuccess]);
+	}, [
+		trpcContext,
+		context,
+		onError,
+		onSettled,
+		onSuccess,
+		onErrorTrpc,
+		onSettledTrpc,
+		onSuccessTrpc,
+		rest,
+	]);
 };

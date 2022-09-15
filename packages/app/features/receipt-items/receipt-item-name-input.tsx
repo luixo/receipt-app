@@ -5,7 +5,6 @@ import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 import { MdEdit as EditIcon } from "react-icons/md";
 
 import { IconButton } from "app/components/icon-button";
-import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -45,22 +44,20 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 	const updateMutation = trpc.receiptItems.update.useMutation(
 		useTrpcMutationOptions(mutations.receiptItems.update.options, {
 			context: receiptId,
+			onSuccess: switchEditing,
 		})
 	);
-	const updateName = useAsyncCallback(
-		async (isMount, name: string) => {
-			if (name !== receiptItem.name) {
-				updateMutation.mutateAsync({
-					id: receiptItem.id,
-					update: { type: "name", name },
-				});
-			}
-			if (!isMount()) {
+	const updateName = React.useCallback(
+		(name: string) => {
+			if (name === receiptItem.name) {
 				return;
 			}
-			switchEditing();
+			updateMutation.mutate({
+				id: receiptItem.id,
+				update: { type: "name", name },
+			});
 		},
-		[updateMutation, receiptItem.id, receiptItem.name, switchEditing]
+		[updateMutation, receiptItem.id, receiptItem.name]
 	);
 
 	if (!isEditing) {

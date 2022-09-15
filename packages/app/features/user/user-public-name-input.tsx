@@ -7,7 +7,6 @@ import {
 } from "react-icons/io5";
 
 import { IconButton } from "app/components/icon-button";
-import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -42,17 +41,15 @@ export const UserPublicNameInput: React.FC<Props> = ({ user, isLoading }) => {
 	const updateUserMutation = trpc.users.update.useMutation(
 		useTrpcMutationOptions(mutations.users.update.options)
 	);
-	const savePublicName = useAsyncCallback(
-		async (isMount, nextName: string | null) => {
-			await updateUserMutation.mutateAsync({
-				id: user.remoteId,
-				update: { type: "publicName", publicName: nextName },
-			});
-			if (!isMount()) {
-				return;
-			}
-			setValue(nextName ?? "");
-		},
+	const savePublicName = React.useCallback(
+		(nextName: string | null) =>
+			updateUserMutation.mutate(
+				{
+					id: user.remoteId,
+					update: { type: "publicName", publicName: nextName },
+				},
+				{ onSuccess: () => setValue(nextName ?? "") }
+			),
 		[updateUserMutation, user.remoteId, setValue]
 	);
 

@@ -13,13 +13,11 @@ import {
 } from "app/components/error-message";
 import { Header } from "app/components/header";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
-import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
 import { getToday } from "app/utils/date";
 import { currencyObjectSchema, receiptNameSchema } from "app/utils/validation";
-import { ReceiptsId } from "next-app/src/db/models";
 import { PageWithLayout } from "next-app/types/page";
 
 import { ReceiptDateInput } from "./receipt-date-input";
@@ -35,6 +33,7 @@ export const AddReceiptScreen: PageWithLayout = () => {
 			context: {
 				selfAccountId: accountQuery.data?.id ?? "unknown",
 			},
+			onSuccess: (id) => router.replace(`/receipts/${id}`),
 		})
 	);
 
@@ -52,18 +51,14 @@ export const AddReceiptScreen: PageWithLayout = () => {
 			issued: getToday(),
 		},
 	});
-	const onSubmit = useSubmitHandler<Form, ReceiptsId>(
-		async (values) =>
-			addReceiptMutation.mutateAsync({
+	const onSubmit = React.useCallback(
+		(values: Form) =>
+			addReceiptMutation.mutate({
 				name: values.name,
 				currency: values.currency.code,
 				issued: values.issued,
 			}),
-		[addReceiptMutation],
-		React.useCallback(
-			(id: ReceiptsId) => router.replace(`/receipts/${id}`),
-			[router]
-		)
+		[addReceiptMutation]
 	);
 	const topCurrenciesQuery = trpc.currency.topReceipts.useQuery();
 

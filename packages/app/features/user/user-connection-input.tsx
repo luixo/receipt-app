@@ -5,7 +5,6 @@ import { IoTrashBin as TrashBinIcon } from "react-icons/io5";
 import { MdLink as LinkIcon, MdLinkOff as UnlinkIcon } from "react-icons/md";
 
 import { IconButton } from "app/components/icon-button";
-import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -52,21 +51,20 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 
 	const cancelRequestMutation =
 		trpc.accountConnectionIntentions.remove.useMutation(
-			useTrpcMutationOptions(mutations.accountConnections.remove.options)
+			useTrpcMutationOptions(mutations.accountConnections.remove.options, {
+				onSuccess: () => {
+					setValue("");
+					setInputShown(false);
+				},
+			})
 		);
-	const cancelRequest = useAsyncCallback(
-		async (isMount) => {
-			await cancelRequestMutation.mutateAsync({
+	const cancelRequest = React.useCallback(
+		() =>
+			cancelRequestMutation.mutate({
 				type: "userId",
 				userId: user.remoteId,
-			});
-			if (!isMount()) {
-				return;
-			}
-			setValue("");
-			setInputShown(false);
-		},
-		[cancelRequestMutation, user.remoteId, setValue]
+			}),
+		[cancelRequestMutation, user.remoteId]
 	);
 
 	const unlinkMutation = trpc.users.unlink.useMutation(

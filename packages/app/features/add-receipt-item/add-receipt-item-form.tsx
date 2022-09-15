@@ -6,7 +6,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { MutationErrorMessage } from "app/components/error-message";
-import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
@@ -46,11 +45,6 @@ export const AddReceiptItemForm: React.FC<Props> = ({
 		inputsRef.current?.scrollIntoView();
 	}, [inputsRef]);
 
-	const addMutation = trpc.receiptItems.add.useMutation(
-		useTrpcMutationOptions(mutations.receiptItems.add.options, {
-			context: receiptId,
-		})
-	);
 	const form = useForm<Form>({
 		mode: "onChange",
 		resolver: zodResolver(
@@ -67,10 +61,15 @@ export const AddReceiptItemForm: React.FC<Props> = ({
 			quantity: 1,
 		},
 	});
-	const onSubmit = useSubmitHandler<Form>(
-		(values) => addMutation.mutateAsync({ ...values, receiptId }),
-		[addMutation, receiptId],
-		React.useCallback(() => form.reset(), [form])
+	const addMutation = trpc.receiptItems.add.useMutation(
+		useTrpcMutationOptions(mutations.receiptItems.add.options, {
+			context: receiptId,
+			onSuccess: () => form.reset(),
+		})
+	);
+	const onSubmit = React.useCallback(
+		(values: Form) => addMutation.mutate({ ...values, receiptId }),
+		[addMutation, receiptId]
 	);
 
 	const isLoading = isDeleteLoading || addMutation.isLoading;

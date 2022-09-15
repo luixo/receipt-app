@@ -4,7 +4,6 @@ import { Input } from "@nextui-org/react";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 
 import { IconButton } from "app/components/icon-button";
-import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -39,23 +38,21 @@ export const ReceiptNameInput: React.FC<Props> = ({
 	});
 
 	const updateReceiptMutation = trpc.receipts.update.useMutation(
-		useTrpcMutationOptions(mutations.receipts.update.options)
+		useTrpcMutationOptions(mutations.receipts.update.options, {
+			onSuccess: unsetEditing,
+		})
 	);
-	const saveName = useAsyncCallback(
-		async (isMount, nextName: string) => {
-			if (receipt.name !== nextName) {
-				await updateReceiptMutation.mutateAsync({
-					id: receipt.id,
-					update: { type: "name", name: nextName },
-				});
-			}
-			if (!isMount()) {
+	const saveName = React.useCallback(
+		(nextName: string) => {
+			if (receipt.name === nextName) {
 				return;
 			}
-			setValue(nextName);
-			unsetEditing();
+			updateReceiptMutation.mutate(
+				{ id: receipt.id, update: { type: "name", name: nextName } },
+				{ onSuccess: () => setValue(nextName) }
+			);
 		},
-		[updateReceiptMutation, receipt.id, receipt.name, setValue, unsetEditing]
+		[updateReceiptMutation, receipt.id, receipt.name, setValue]
 	);
 
 	return (

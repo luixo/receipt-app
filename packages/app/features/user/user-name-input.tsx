@@ -4,7 +4,6 @@ import { Input } from "@nextui-org/react";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 
 import { IconButton } from "app/components/icon-button";
-import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -30,16 +29,12 @@ export const UserNameInput: React.FC<Props> = ({ user, isLoading }) => {
 	const updateUserMutation = trpc.users.update.useMutation(
 		useTrpcMutationOptions(mutations.users.update.options)
 	);
-	const saveName = useAsyncCallback(
-		async (isMount, nextName: string) => {
-			await updateUserMutation.mutateAsync({
-				id: user.remoteId,
-				update: { type: "name", name: nextName },
-			});
-			if (!isMount()) {
-				return;
-			}
-			setValue(nextName);
+	const saveName = React.useCallback(
+		(nextName: string) => {
+			updateUserMutation.mutate(
+				{ id: user.remoteId, update: { type: "name", name: nextName } },
+				{ onSuccess: () => setValue(nextName) }
+			);
 		},
 		[updateUserMutation, user.remoteId, setValue]
 	);

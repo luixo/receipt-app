@@ -3,7 +3,6 @@ import React from "react";
 import { useRouter } from "solito/router";
 
 import { RemoveButton } from "app/components/remove-button";
-import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
@@ -19,21 +18,17 @@ export const ReceiptRemoveButton: React.FC<Props> = ({
 }) => {
 	const router = useRouter();
 	const removeReceiptMutation = trpc.receipts.remove.useMutation(
-		useTrpcMutationOptions(mutations.receipts.remove.options)
+		useTrpcMutationOptions(mutations.receipts.remove.options, {
+			onSuccess: () => router.replace("/receipts"),
+		})
 	);
 	React.useEffect(
 		() => setLoading(removeReceiptMutation.isLoading),
 		[removeReceiptMutation.isLoading, setLoading]
 	);
-	const removeReceipt = useAsyncCallback(
-		async (isMount) => {
-			await removeReceiptMutation.mutateAsync({ id: receipt.id });
-			if (!isMount()) {
-				return;
-			}
-			router.replace("/receipts");
-		},
-		[removeReceiptMutation, receipt.id, router]
+	const removeReceipt = React.useCallback(
+		() => removeReceiptMutation.mutate({ id: receipt.id }),
+		[removeReceiptMutation, receipt.id]
 	);
 
 	return (

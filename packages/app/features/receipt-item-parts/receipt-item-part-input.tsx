@@ -6,7 +6,6 @@ import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 import { MdEdit as EditIcon } from "react-icons/md";
 
 import { IconButton } from "app/components/icon-button";
-import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -51,34 +50,26 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 	const updateMutation = trpc.itemParticipants.update.useMutation(
 		useTrpcMutationOptions(mutations.itemParticipants.update.options, {
 			context: receiptId,
+			onSuccess: unsetEditing,
 		})
 	);
 
-	const updatePart = useAsyncCallback(
-		async (isMount, partUpdater: number | ((prev: number) => number)) => {
+	const updatePart = React.useCallback(
+		(partUpdater: number | ((prev: number) => number)) => {
 			const nextPart =
 				typeof partUpdater === "function"
 					? partUpdater(itemPart.part)
 					: partUpdater;
-			if (nextPart !== itemPart.part) {
-				await updateMutation.mutateAsync({
-					itemId: receiptItemId,
-					userId: itemPart.userId,
-					update: { type: "part", part: nextPart },
-				});
-			}
-			if (!isMount()) {
+			if (nextPart === itemPart.part) {
 				return;
 			}
-			unsetEditing();
+			updateMutation.mutate({
+				itemId: receiptItemId,
+				userId: itemPart.userId,
+				update: { type: "part", part: nextPart },
+			});
 		},
-		[
-			updateMutation,
-			receiptItemId,
-			itemPart.userId,
-			itemPart.part,
-			unsetEditing,
-		]
+		[updateMutation, receiptItemId, itemPart.userId, itemPart.part]
 	);
 
 	const wrap = React.useCallback(

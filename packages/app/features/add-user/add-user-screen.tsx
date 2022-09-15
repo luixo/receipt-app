@@ -9,12 +9,10 @@ import { z } from "zod";
 import { MutationErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
-import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
 import { emailSchema, userNameSchema } from "app/utils/validation";
-import { UsersId } from "next-app/src/db/models";
 import { PageWithLayout } from "next-app/types/page";
 
 import { EmailInput } from "./email-input";
@@ -25,7 +23,9 @@ export const AddUserScreen: PageWithLayout = () => {
 	const router = useRouter();
 
 	const addUserMutation = trpc.users.add.useMutation(
-		useTrpcMutationOptions(mutations.users.add.options)
+		useTrpcMutationOptions(mutations.users.add.options, {
+			onSuccess: ({ id }) => router.replace(`/users/${id}`),
+		})
 	);
 
 	const form = useForm<Form>({
@@ -37,13 +37,9 @@ export const AddUserScreen: PageWithLayout = () => {
 			})
 		),
 	});
-	const onSubmit = useSubmitHandler<Form, UsersId>(
-		async (values) => {
-			const { id } = await addUserMutation.mutateAsync(values);
-			return id;
-		},
-		[addUserMutation],
-		React.useCallback((id: UsersId) => router.replace(`/users/${id}`), [router])
+	const onSubmit = React.useCallback(
+		(values: Form) => addUserMutation.mutate(values),
+		[addUserMutation]
 	);
 
 	return (

@@ -4,7 +4,6 @@ import { Button, Spacer } from "@nextui-org/react";
 import { useRouter } from "solito/router";
 
 import { MutationErrorMessage } from "app/components/error-message";
-import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
@@ -30,13 +29,19 @@ export const InboundDebtIntention: React.FC<Props> = ({ intention }) => {
 			),
 		})
 	);
-	const acceptSyncIntention = useAsyncCallback(
-		async (isMount, redirectToDebt = false) => {
-			await acceptMutation.mutateAsync({ id: intention.id });
-			if (!isMount() || !redirectToDebt) {
-				return;
-			}
-			router.push(`/debts/${intention.id}`);
+	const acceptSyncIntention = React.useCallback(
+		(redirectToDebt = false) => {
+			acceptMutation.mutate(
+				{ id: intention.id },
+				{
+					onSuccess: () => {
+						if (!redirectToDebt) {
+							return;
+						}
+						router.push(`/debts/${intention.id}`);
+					},
+				}
+			);
 		},
 		[acceptMutation, intention.id, router]
 	);

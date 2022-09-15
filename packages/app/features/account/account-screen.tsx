@@ -10,7 +10,6 @@ import {
 import { Header } from "app/components/header";
 import { ChangePasswordScreen } from "app/features/change-password/change-password-screen";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
-import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { trpc, TRPCQuerySuccessResult } from "app/trpc";
 import { PageWithLayout } from "next-app/types/page";
 
@@ -24,17 +23,15 @@ const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 	const router = useRouter();
 
 	const trpcContext = trpc.useContext();
-	const logoutMutation = trpc.account.logout.useMutation();
-	const logout = useAsyncCallback(
-		async (isMount) => {
-			await logoutMutation.mutateAsync();
-			if (!isMount()) {
-				return;
-			}
+	const logoutMutation = trpc.account.logout.useMutation({
+		onSuccess: () => {
 			trpcContext.queryClient.resetQueries();
 			router.replace("/");
 		},
-		[logoutMutation, trpcContext, router]
+	});
+	const logout = React.useCallback(
+		() => logoutMutation.mutate(),
+		[logoutMutation]
 	);
 
 	return (
