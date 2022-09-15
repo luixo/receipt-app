@@ -2,7 +2,6 @@ import React from "react";
 
 import { Card, Spacer, styled, Text } from "@nextui-org/react";
 
-import { cache } from "app/cache";
 import { ReceiptItemLockedButton } from "app/components/app/receipt-item-locked-button";
 import { ButtonsGroup } from "app/components/buttons-group";
 import { ErrorMessage } from "app/components/error-message";
@@ -11,6 +10,7 @@ import { ReceiptItemPart } from "app/features/receipt-item-parts/receipt-item-pa
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { Currency } from "app/utils/currency";
 import { round } from "app/utils/math";
@@ -51,7 +51,7 @@ export const ReceiptItem: React.FC<Props> = ({
 }) => {
 	const formattedCurrency = useFormattedCurrency(currency);
 	const removeReceiptItemMutation = trpc.receiptItems.remove.useMutation(
-		useTrpcMutationOptions(cache.receiptItems.remove.mutationOptions, receiptId)
+		useTrpcMutationOptions(mutations.receiptItems.remove.options, receiptId)
 	);
 	const removeItem = useAsyncCallback(
 		() =>
@@ -67,10 +67,7 @@ export const ReceiptItem: React.FC<Props> = ({
 	);
 
 	const addItemPartMutation = trpc.itemParticipants.add.useMutation(
-		useTrpcMutationOptions(
-			cache.itemParticipants.add.mutationOptions,
-			receiptId
-		)
+		useTrpcMutationOptions(mutations.itemParticipants.add.options, receiptId)
 	);
 	const addParticipant = React.useCallback(
 		(participant: ReceiptParticipant | EveryParticipantTag) => {

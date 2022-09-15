@@ -1,8 +1,8 @@
 import React from "react";
 
-import { cache } from "app/cache";
 import { DateInput } from "app/components/date-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 
 type Props = {
@@ -15,7 +15,7 @@ export const ReceiptDateInput: React.FC<Props> = ({
 	isLoading: isOuterLoading,
 }) => {
 	const updateReceiptMutation = trpc.receipts.update.useMutation(
-		useTrpcMutationOptions(cache.receipts.update.mutationOptions)
+		useTrpcMutationOptions(mutations.receipts.update.options)
 	);
 
 	const saveDate = React.useCallback(

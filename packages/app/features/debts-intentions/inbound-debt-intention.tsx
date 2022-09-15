@@ -3,10 +3,10 @@ import React from "react";
 import { Button, Spacer } from "@nextui-org/react";
 import { useRouter } from "solito/router";
 
-import { cache } from "app/cache";
 import { MutationErrorMessage } from "app/components/error-message";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 
 import { DebtIntention } from "./debt-intention";
@@ -20,7 +20,7 @@ export const InboundDebtIntention: React.FC<Props> = ({ intention }) => {
 
 	const acceptMutation = trpc.debtsSyncIntentions.accept.useMutation(
 		useTrpcMutationOptions(
-			cache.debtsSyncIntentions.accept.mutationOptions,
+			mutations.debtsSyncIntentions.accept.options,
 			React.useMemo(
 				() => ({
 					userId: intention.userId,
@@ -44,7 +44,7 @@ export const InboundDebtIntention: React.FC<Props> = ({ intention }) => {
 
 	const rejectMutation = trpc.debtsSyncIntentions.reject.useMutation(
 		useTrpcMutationOptions(
-			cache.debtsSyncIntentions.reject.mutationOptions,
+			mutations.debtsSyncIntentions.reject.options,
 			React.useMemo(
 				() => ({
 					userId: intention.userId,

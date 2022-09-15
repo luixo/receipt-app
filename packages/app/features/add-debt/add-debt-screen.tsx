@@ -7,7 +7,6 @@ import { createParam } from "solito";
 import { useRouter } from "solito/router";
 import { z } from "zod";
 
-import { cache } from "app/cache";
 import { CurrencyInput } from "app/components/app/currency-input";
 import {
 	Direction,
@@ -19,6 +18,7 @@ import { Header } from "app/components/header";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
 import { getToday } from "app/utils/date";
 import {
@@ -47,7 +47,7 @@ export const AddDebtScreen: PageWithLayout = () => {
 	const router = useRouter();
 
 	const addMutation = trpc.debts.add.useMutation(
-		useTrpcMutationOptions(cache.debts.add.mutationOptions)
+		useTrpcMutationOptions(mutations.debts.add.options)
 	);
 
 	const form = useForm<Form>({

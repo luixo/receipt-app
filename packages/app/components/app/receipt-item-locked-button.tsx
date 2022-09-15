@@ -5,9 +5,9 @@ import {
 	MdLock as LockedIcon,
 } from "react-icons/md";
 
-import { cache } from "app/cache";
 import { IconButton } from "app/components/icon-button";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
 import { ReceiptItemsId, ReceiptsId } from "next-app/db/models";
 
@@ -25,7 +25,7 @@ export const ReceiptItemLockedButton: React.FC<Props> = ({
 	...props
 }) => {
 	const updateMutation = trpc.receiptItems.update.useMutation(
-		useTrpcMutationOptions(cache.receiptItems.update.mutationOptions, receiptId)
+		useTrpcMutationOptions(mutations.receiptItems.update.options, receiptId)
 	);
 	const switchLocked = React.useCallback(() => {
 		updateMutation.mutate({

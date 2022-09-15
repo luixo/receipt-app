@@ -6,11 +6,11 @@ import {
 	IoTrashBin as TrashBin,
 } from "react-icons/io5";
 
-import { cache } from "app/cache";
 import { IconButton } from "app/components/icon-button";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { userNameSchema } from "app/utils/validation";
 
@@ -40,7 +40,7 @@ export const UserPublicNameInput: React.FC<Props> = ({ user, isLoading }) => {
 	});
 
 	const updateUserMutation = trpc.users.update.useMutation(
-		useTrpcMutationOptions(cache.users.update.mutationOptions)
+		useTrpcMutationOptions(mutations.users.update.options)
 	);
 	const savePublicName = useAsyncCallback(
 		async (isMount, nextName: string | null) => {

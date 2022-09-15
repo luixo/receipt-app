@@ -6,12 +6,12 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "solito/router";
 import { z } from "zod";
 
-import { cache } from "app/cache";
 import { MutationErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
 import { emailSchema, userNameSchema } from "app/utils/validation";
 import { UsersId } from "next-app/src/db/models";
@@ -25,7 +25,7 @@ export const AddUserScreen: PageWithLayout = () => {
 	const router = useRouter();
 
 	const addUserMutation = trpc.users.add.useMutation(
-		useTrpcMutationOptions(cache.users.add.mutationOptions)
+		useTrpcMutationOptions(mutations.users.add.options)
 	);
 
 	const form = useForm<Form>({

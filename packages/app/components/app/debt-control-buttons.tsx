@@ -7,7 +7,6 @@ import {
 	MdCheckCircle as AcceptIcon,
 } from "react-icons/md";
 
-import { cache } from "app/cache";
 import { DebtSyncStatus } from "app/components/app/debt-sync-status";
 import { MutationErrorMessage } from "app/components/error-message";
 import { IconButton } from "app/components/icon-button";
@@ -15,6 +14,7 @@ import { LockedIcon } from "app/components/locked-icon";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useMatchMediaValue } from "app/hooks/use-match-media-value";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 
 const Wrapper = styled("div", {
@@ -65,7 +65,7 @@ export const DebtControlButtons: React.FC<Props> = ({ debt, hideLocked }) => {
 	const size = useMatchMediaValue(48, { lessSm: 36 });
 
 	const addMutation = trpc.debtsSyncIntentions.add.useMutation(
-		useTrpcMutationOptions(cache.debtsSyncIntentions.add.mutationOptions, debt)
+		useTrpcMutationOptions(mutations.debtsSyncIntentions.add.options, debt)
 	);
 	const sendSyncIntention = React.useCallback(
 		() => addMutation.mutate({ id: debt.id }),
@@ -73,10 +73,7 @@ export const DebtControlButtons: React.FC<Props> = ({ debt, hideLocked }) => {
 	);
 
 	const removeMutation = trpc.debtsSyncIntentions.remove.useMutation(
-		useTrpcMutationOptions(
-			cache.debtsSyncIntentions.remove.mutationOptions,
-			debt
-		)
+		useTrpcMutationOptions(mutations.debtsSyncIntentions.remove.options, debt)
 	);
 	const cancelSyncIntention = React.useCallback(
 		() => removeMutation.mutate({ id: debt.id }),
@@ -85,7 +82,7 @@ export const DebtControlButtons: React.FC<Props> = ({ debt, hideLocked }) => {
 
 	const acceptMutation = trpc.debtsSyncIntentions.accept.useMutation(
 		useTrpcMutationOptions(
-			cache.debtsSyncIntentions.accept.mutationOptions,
+			mutations.debtsSyncIntentions.accept.options,
 			React.useMemo(
 				() => ({
 					userId: debt.userId,
@@ -103,7 +100,7 @@ export const DebtControlButtons: React.FC<Props> = ({ debt, hideLocked }) => {
 
 	const rejectMutation = trpc.debtsSyncIntentions.reject.useMutation(
 		useTrpcMutationOptions(
-			cache.debtsSyncIntentions.reject.mutationOptions,
+			mutations.debtsSyncIntentions.reject.options,
 			React.useMemo(
 				() => ({ userId: debt.userId, currentAmount: debt.amount }),
 				[debt]
@@ -116,7 +113,7 @@ export const DebtControlButtons: React.FC<Props> = ({ debt, hideLocked }) => {
 	);
 
 	const lockMutation = trpc.debts.update.useMutation(
-		useTrpcMutationOptions(cache.debts.update.mutationOptions, debt)
+		useTrpcMutationOptions(mutations.debts.update.options, debt)
 	);
 	const mutateLock = useAsyncCallback(
 		async (isMount, shouldPropagate = false) => {

@@ -6,7 +6,6 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "solito/router";
 import { z } from "zod";
 
-import { cache } from "app/cache";
 import { CurrencyInput } from "app/components/app/currency-input";
 import {
 	MutationErrorMessage,
@@ -16,6 +15,7 @@ import { Header } from "app/components/header";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
 import { getToday } from "app/utils/date";
 import { currencyObjectSchema, receiptNameSchema } from "app/utils/validation";
@@ -31,7 +31,7 @@ export const AddReceiptScreen: PageWithLayout = () => {
 	const accountQuery = trpc.account.get.useQuery();
 
 	const addReceiptMutation = trpc.receipts.add.useMutation(
-		useTrpcMutationOptions(cache.receipts.add.mutationOptions, {
+		useTrpcMutationOptions(mutations.receipts.add.options, {
 			selfAccountId: accountQuery.data?.id ?? "unknown",
 		})
 	);

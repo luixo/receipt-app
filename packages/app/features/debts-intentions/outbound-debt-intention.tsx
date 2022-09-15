@@ -2,9 +2,9 @@ import React from "react";
 
 import { Spacer, Button } from "@nextui-org/react";
 
-import { cache } from "app/cache";
 import { MutationErrorMessage } from "app/components/error-message";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 
 import { DebtIntention } from "./debt-intention";
@@ -16,7 +16,7 @@ type Props = {
 export const OutboundDebtIntention: React.FC<Props> = ({ intention }) => {
 	const removeMutation = trpc.debtsSyncIntentions.remove.useMutation(
 		useTrpcMutationOptions(
-			cache.debtsSyncIntentions.remove.mutationOptions,
+			mutations.debtsSyncIntentions.remove.options,
 			intention
 		)
 	);

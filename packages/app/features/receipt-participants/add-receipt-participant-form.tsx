@@ -2,10 +2,10 @@ import React from "react";
 
 import { styled } from "@nextui-org/react";
 
-import { cache } from "app/cache";
 import { UsersSuggest } from "app/components/app/users-suggest";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc, TRPCInfiniteQueryOutput } from "app/trpc";
 import { ReceiptsId, UsersId } from "next-app/db/models";
 
@@ -27,7 +27,7 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 	filterIds,
 }) => {
 	const addMutation = trpc.receiptParticipants.add.useMutation(
-		useTrpcMutationOptions(cache.receiptParticipants.add.mutationOptions, {
+		useTrpcMutationOptions(mutations.receiptParticipants.add.options, {
 			receiptId,
 		})
 	);

@@ -1,10 +1,10 @@
 import React from "react";
 
-import { cache } from "app/cache";
 import { CurrenciesPicker } from "app/components/app/currencies-picker";
 import { IconButton } from "app/components/icon-button";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 
 type Props = {
@@ -20,7 +20,7 @@ export const ReceiptCurrencyInput: React.FC<Props> = ({
 		useBooleanState();
 
 	const updateReceiptMutation = trpc.receipts.update.useMutation(
-		useTrpcMutationOptions(cache.receipts.update.mutationOptions)
+		useTrpcMutationOptions(mutations.receipts.update.options)
 	);
 	const saveCurrency = React.useCallback(
 		(nextCurrency: TRPCQueryOutput<"currency.getList">[number]) => {

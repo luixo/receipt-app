@@ -2,11 +2,11 @@ import React from "react";
 
 import { Spacer, styled } from "@nextui-org/react";
 
-import { cache } from "app/cache";
 import { User } from "app/components/app/user";
 import { RemoveButton } from "app/components/remove-button";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { convertParticipantToUser } from "app/utils/receipt-item";
 import { ReceiptItemsId, ReceiptsId } from "next-app/db/models";
@@ -55,10 +55,7 @@ export const ReceiptItemPart: React.FC<Props> = ({
 	isLoading,
 }) => {
 	const removeMutation = trpc.itemParticipants.remove.useMutation(
-		useTrpcMutationOptions(
-			cache.itemParticipants.remove.mutationOptions,
-			receiptId
-		)
+		useTrpcMutationOptions(mutations.itemParticipants.remove.options, receiptId)
 	);
 	const removeItemPart = useAsyncCallback(
 		() =>

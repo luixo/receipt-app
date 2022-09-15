@@ -1,11 +1,11 @@
 import React from "react";
 
-import { cache } from "app/cache";
 import { CurrenciesPicker } from "app/components/app/currencies-picker";
 import { IconButton } from "app/components/icon-button";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 
 type Debt = TRPCQueryOutput<"debts.get">;
@@ -21,7 +21,7 @@ export const DebtCurrencyInput: React.FC<Props> = ({ debt, isLoading }) => {
 		useBooleanState();
 
 	const updateReceiptMutation = trpc.debts.update.useMutation(
-		useTrpcMutationOptions(cache.debts.update.mutationOptions, debt)
+		useTrpcMutationOptions(mutations.debts.update.options, debt)
 	);
 	const saveCurrency = React.useCallback(
 		(nextCurrency: TRPCQueryOutput<"currency.getList">[number]) => {

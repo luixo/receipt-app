@@ -4,12 +4,12 @@ import { Input, Text, styled, Spacer } from "@nextui-org/react";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 import { MdEdit as EditIcon } from "react-icons/md";
 
-import { cache } from "app/cache";
 import { IconButton } from "app/components/icon-button";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { quantitySchema } from "app/utils/validation";
 import { ReceiptsId } from "next-app/db/models";
@@ -45,7 +45,7 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 	});
 
 	const updateMutation = trpc.receiptItems.update.useMutation(
-		useTrpcMutationOptions(cache.receiptItems.update.mutationOptions, receiptId)
+		useTrpcMutationOptions(mutations.receiptItems.update.options, receiptId)
 	);
 	const updateQuantity = useAsyncCallback(
 		async (isMount, quantity: number) => {

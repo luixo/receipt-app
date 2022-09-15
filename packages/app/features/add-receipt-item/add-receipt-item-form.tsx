@@ -5,10 +5,10 @@ import { Button, Loading, Spacer, styled } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { cache } from "app/cache";
 import { MutationErrorMessage } from "app/components/error-message";
 import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
 import {
 	priceSchema,
@@ -47,7 +47,7 @@ export const AddReceiptItemForm: React.FC<Props> = ({
 	}, [inputsRef]);
 
 	const addMutation = trpc.receiptItems.add.useMutation(
-		useTrpcMutationOptions(cache.receiptItems.add.mutationOptions, receiptId)
+		useTrpcMutationOptions(mutations.receiptItems.add.options, receiptId)
 	);
 	const form = useForm<Form>({
 		mode: "onChange",

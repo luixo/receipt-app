@@ -1,8 +1,8 @@
 import React from "react";
 
-import { cache } from "app/cache";
 import { SignButtonGroup } from "app/components/app/sign-button-group";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 
 type Debt = TRPCQueryOutput<"debts.get">;
@@ -14,7 +14,7 @@ type Props = {
 
 export const DebtSignButtonGroup: React.FC<Props> = ({ debt, disabled }) => {
 	const updateMutation = trpc.debts.update.useMutation(
-		useTrpcMutationOptions(cache.debts.update.mutationOptions, debt)
+		useTrpcMutationOptions(mutations.debts.update.options, debt)
 	);
 	const setDirection = React.useCallback(
 		(direction: "+" | "-") => {

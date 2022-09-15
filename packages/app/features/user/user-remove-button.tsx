@@ -2,10 +2,10 @@ import React from "react";
 
 import { useRouter } from "solito/router";
 
-import { cache } from "app/cache";
 import { RemoveButton } from "app/components/remove-button";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 
 type Props = {
@@ -23,7 +23,7 @@ export const UserRemoveButton: React.FC<Props> = ({
 }) => {
 	const router = useRouter();
 	const removeUserMutation = trpc.users.remove.useMutation(
-		useTrpcMutationOptions(cache.users.remove.mutationOptions)
+		useTrpcMutationOptions(mutations.users.remove.options)
 	);
 	React.useEffect(
 		() => setLoading(removeUserMutation.isLoading),

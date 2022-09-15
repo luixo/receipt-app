@@ -2,11 +2,11 @@ import React from "react";
 
 import { Spacer, styled } from "@nextui-org/react";
 
-import { cache } from "app/cache";
 import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
 import { QueryErrorMessage } from "app/components/error-message";
 import { LockedIcon } from "app/components/locked-icon";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { UsersId } from "next-app/db/models";
 
@@ -46,7 +46,7 @@ export const ReceiptControlButtons: React.FC<Props> = ({
 	});
 
 	const propagateMutation = trpc.receipts.propagateDebts.useMutation(
-		useTrpcMutationOptions(cache.receipts.propagateDebts.mutationOptions)
+		useTrpcMutationOptions(mutations.receipts.propagateDebts.options)
 	);
 	const propagateDebts = React.useCallback(
 		() => propagateMutation.mutate({ receiptId: receipt.id }),

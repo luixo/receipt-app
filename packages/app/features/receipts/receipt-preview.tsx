@@ -12,6 +12,7 @@ import { LockedIcon } from "app/components/locked-icon";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useMatchMediaValue } from "app/hooks/use-match-media-value";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 
 const TitleLink = styled(Link, {
@@ -41,7 +42,7 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 	);
 	const currency = useFormattedCurrency(receipt.currency);
 	const updateReceiptMutation = trpc.receipts.update.useMutation(
-		useTrpcMutationOptions(cache.receipts.update.mutationOptions)
+		useTrpcMutationOptions(mutations.receipts.update.options)
 	);
 	const switchResolved = React.useCallback(() => {
 		updateReceiptMutation.mutate({

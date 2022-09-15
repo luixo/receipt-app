@@ -5,12 +5,12 @@ import { FiMinus as MinusIcon, FiPlus as PlusIcon } from "react-icons/fi";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 import { MdEdit as EditIcon } from "react-icons/md";
 
-import { cache } from "app/cache";
 import { IconButton } from "app/components/icon-button";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { partSchema } from "app/utils/validation";
 import { ReceiptItemsId, ReceiptsId } from "next-app/db/models";
@@ -49,10 +49,7 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 	});
 
 	const updateMutation = trpc.itemParticipants.update.useMutation(
-		useTrpcMutationOptions(
-			cache.itemParticipants.update.mutationOptions,
-			receiptId
-		)
+		useTrpcMutationOptions(mutations.itemParticipants.update.options, receiptId)
 	);
 
 	const updatePart = useAsyncCallback(

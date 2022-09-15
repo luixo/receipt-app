@@ -4,11 +4,11 @@ import { Button, Input, Loading } from "@nextui-org/react";
 import { IoTrashBin as TrashBinIcon } from "react-icons/io5";
 import { MdLink as LinkIcon, MdLinkOff as UnlinkIcon } from "react-icons/md";
 
-import { cache } from "app/cache";
 import { IconButton } from "app/components/icon-button";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { emailSchema } from "app/utils/validation";
 
@@ -28,7 +28,7 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 			: undefined;
 
 	const connectUserMutation = trpc.accountConnectionIntentions.add.useMutation(
-		useTrpcMutationOptions(cache.users.connect.mutationOptions)
+		useTrpcMutationOptions(mutations.users.connect.options)
 	);
 	const connectUser = React.useCallback(
 		(email: string) =>
@@ -52,7 +52,7 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 
 	const cancelRequestMutation =
 		trpc.accountConnectionIntentions.remove.useMutation(
-			useTrpcMutationOptions(cache.accountConnections.remove.mutationOptions)
+			useTrpcMutationOptions(mutations.accountConnections.remove.options)
 		);
 	const cancelRequest = useAsyncCallback(
 		async (isMount) => {
@@ -70,7 +70,7 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 	);
 
 	const unlinkMutation = trpc.users.unlink.useMutation(
-		useTrpcMutationOptions(cache.users.unlink.mutationOptions)
+		useTrpcMutationOptions(mutations.users.unlink.options)
 	);
 	const unlinkUser = React.useCallback(
 		() => unlinkMutation.mutate({ id: user.remoteId }),

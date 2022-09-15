@@ -3,11 +3,11 @@ import React from "react";
 import { Spacer } from "@nextui-org/react";
 import { MdSend as SendIcon } from "react-icons/md";
 
-import { cache } from "app/cache";
 import { IconButton } from "app/components/icon-button";
 import { LockedIcon } from "app/components/locked-icon";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
 import { ReceiptsId } from "next-app/db/models";
 
@@ -27,7 +27,7 @@ export const ReceiptLockedButton: React.FC<Props> = ({
 	propagateDebts,
 }) => {
 	const updateReceiptMutation = trpc.receipts.update.useMutation(
-		useTrpcMutationOptions(cache.receipts.update.mutationOptions)
+		useTrpcMutationOptions(mutations.receipts.update.options)
 	);
 	const switchResolved = useAsyncCallback(
 		async (isMount, shouldPropagate = false) => {

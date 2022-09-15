@@ -2,10 +2,10 @@ import React from "react";
 
 import { Button, Container, Spacer, Text } from "@nextui-org/react";
 
-import { cache } from "app/cache";
 import { UsersSuggest } from "app/components/app/users-suggest";
 import { MutationErrorMessage } from "app/components/error-message";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc, TRPCInfiniteQueryOutput, TRPCQueryOutput } from "app/trpc";
 
 type UsersResult = TRPCInfiniteQueryOutput<"users.suggest">;
@@ -19,7 +19,7 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 
 	const acceptConnectionMutation =
 		trpc.accountConnectionIntentions.accept.useMutation(
-			useTrpcMutationOptions(cache.accountConnections.accept.mutationOptions)
+			useTrpcMutationOptions(mutations.accountConnections.accept.options)
 		);
 	const acceptConnection = React.useCallback(() => {
 		acceptConnectionMutation.mutate({
@@ -30,7 +30,7 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 
 	const rejectConnectionMutation =
 		trpc.accountConnectionIntentions.reject.useMutation(
-			useTrpcMutationOptions(cache.accountConnections.reject.mutationOptions)
+			useTrpcMutationOptions(mutations.accountConnections.reject.options)
 		);
 	const rejectConnection = React.useCallback(() => {
 		rejectConnectionMutation.mutate({

@@ -9,7 +9,6 @@ import {
 	MdSync as SyncIcon,
 } from "react-icons/md";
 
-import { cache } from "app/cache";
 import { DebtSyncStatus } from "app/components/app/debt-sync-status";
 import { LoadableUser } from "app/components/app/loadable-user";
 import { Grid } from "app/components/grid";
@@ -17,6 +16,7 @@ import { IconButton } from "app/components/icon-button";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useMatchMediaValue } from "app/hooks/use-match-media-value";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { Currency } from "app/utils/currency";
 import { ReceiptsId, UsersId } from "next-app/db/models";
@@ -54,7 +54,7 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 	const formattedCurrency = useFormattedCurrency(currency);
 
 	const updateMutation = trpc.receipts.updateDebt.useMutation(
-		useTrpcMutationOptions(cache.receipts.updateDebt.mutationOptions)
+		useTrpcMutationOptions(mutations.receipts.updateDebt.options)
 	);
 	const updateDebt = React.useCallback(
 		(userId: UsersId, updateIntention: boolean) =>

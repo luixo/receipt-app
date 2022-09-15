@@ -3,10 +3,10 @@ import React from "react";
 import { Input, styled } from "@nextui-org/react";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 
-import { cache } from "app/cache";
 import { IconButton } from "app/components/icon-button";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { clientDebtAmountSchema } from "app/utils/validation";
 
@@ -42,7 +42,7 @@ export const DebtAmountInput: React.FC<Props> = ({ debt, isLoading }) => {
 	);
 
 	const updateMutation = trpc.debts.update.useMutation(
-		useTrpcMutationOptions(cache.debts.update.mutationOptions, debt)
+		useTrpcMutationOptions(mutations.debts.update.options, debt)
 	);
 	const updateAmount = React.useCallback(
 		async (amount: number) => {

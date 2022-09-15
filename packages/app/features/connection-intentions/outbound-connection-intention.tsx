@@ -3,9 +3,9 @@ import React from "react";
 import { Input } from "@nextui-org/react";
 import { MdLinkOff as UnlinkIcon } from "react-icons/md";
 
-import { cache } from "app/cache";
 import { IconButton } from "app/components/icon-button";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 
 type Props = {
@@ -15,7 +15,7 @@ type Props = {
 export const OutboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 	const removeConnectionMutation =
 		trpc.accountConnectionIntentions.remove.useMutation(
-			useTrpcMutationOptions(cache.accountConnections.remove.mutationOptions)
+			useTrpcMutationOptions(mutations.accountConnections.remove.options)
 		);
 	const removeConnection = React.useCallback(() => {
 		removeConnectionMutation.mutate({

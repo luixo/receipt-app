@@ -3,11 +3,11 @@ import React from "react";
 import { Input } from "@nextui-org/react";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 
-import { cache } from "app/cache";
 import { IconButton } from "app/components/icon-button";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
 import { receiptNameSchema } from "app/utils/validation";
 import { ReceiptsId } from "next-app/db/models";
@@ -39,7 +39,7 @@ export const ReceiptNameInput: React.FC<Props> = ({
 	});
 
 	const updateReceiptMutation = trpc.receipts.update.useMutation(
-		useTrpcMutationOptions(cache.receipts.update.mutationOptions)
+		useTrpcMutationOptions(mutations.receipts.update.options)
 	);
 	const saveName = useAsyncCallback(
 		async (isMount, nextName: string) => {

@@ -2,8 +2,3 @@ export * as get from "./get/actions";
 export * as getPaged from "./get-paged/actions";
 export * as getName from "./get-name/actions";
 export * as suggest from "./suggest/actions";
-export * as add from "./add/mutation";
-export * as connect from "./connect/mutation";
-export * as unlink from "./unlink/mutation";
-export * as remove from "./remove/mutation";
-export * as update from "./update/mutation";

@@ -1,8 +1,8 @@
 import React from "react";
 
-import { cache } from "app/cache";
 import { DateInput } from "app/components/date-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 
 type Debt = TRPCQueryOutput<"debts.get">;
@@ -14,7 +14,7 @@ type Props = {
 
 export const DebtDateInput: React.FC<Props> = ({ debt, isLoading }) => {
 	const updateMutation = trpc.debts.update.useMutation(
-		useTrpcMutationOptions(cache.debts.update.mutationOptions, debt)
+		useTrpcMutationOptions(mutations.debts.update.options, debt)
 	);
 
 	const saveDate = React.useCallback(

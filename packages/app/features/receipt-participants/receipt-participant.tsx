@@ -2,12 +2,12 @@ import React from "react";
 
 import { Spacer, styled, Text } from "@nextui-org/react";
 
-import { cache } from "app/cache";
 import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
 import { User } from "app/components/app/user";
 import { RemoveButton } from "app/components/remove-button";
 import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { Currency } from "app/utils/currency";
 import { convertParticipantToUser } from "app/utils/receipt-item";
@@ -53,7 +53,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 
 	const removeReceiptParticipantMutation =
 		trpc.receiptParticipants.remove.useMutation(
-			useTrpcMutationOptions(cache.receiptParticipants.remove.mutationOptions, {
+			useTrpcMutationOptions(mutations.receiptParticipants.remove.options, {
 				receiptId,
 				selfAccountId: accountQuery.data?.id ?? "unknown",
 			})

@@ -2,8 +2,8 @@ import React from "react";
 
 import { Dropdown, Loading, Text } from "@nextui-org/react";
 
-import { cache } from "app/cache";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { ReceiptsId } from "next-app/db/models";
 import { Role } from "next-app/handlers/receipts/utils";
@@ -28,7 +28,7 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 	const accountQuery = trpc.account.get.useQuery();
 
 	const updateParticipantMutation = trpc.receiptParticipants.update.useMutation(
-		useTrpcMutationOptions(cache.receiptParticipants.update.mutationOptions, {
+		useTrpcMutationOptions(mutations.receiptParticipants.update.options, {
 			userId:
 				participant.localUserId === accountQuery.data?.id
 					? participant.localUserId
