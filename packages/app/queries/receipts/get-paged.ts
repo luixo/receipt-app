@@ -1,4 +1,6 @@
+import { cache } from "app/cache";
 import { SyncQueryParamOptions } from "app/hooks/use-sync-query-param";
+import { UseContextedQueryOptions } from "app/hooks/use-trpc-query-options";
 import { TRPCQueryInput } from "app/trpc";
 import { createStore } from "app/utils/store";
 import { Setters } from "app/utils/types";
@@ -64,3 +66,11 @@ export const useStore = () =>
 			})
 		),
 	] as const;
+
+export const options: UseContextedQueryOptions<"receipts.getPaged"> = {
+	onSuccess: (trpcContext) => (data) => {
+		data.items.forEach((receipt) => {
+			cache.receipts.getName.update(trpcContext, receipt.id, receipt.name);
+		});
+	},
+};

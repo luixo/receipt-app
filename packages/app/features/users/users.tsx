@@ -8,6 +8,7 @@ import { IconButton } from "app/components/icon-button";
 import { Overlay } from "app/components/overlay";
 import { Pagination } from "app/components/pagination";
 import { useCursorPaging } from "app/hooks/use-cursor-paging";
+import { useTrpcQueryOptions } from "app/hooks/use-trpc-query-options";
 import { queries } from "app/queries";
 import { trpc, TRPCQueryInput, TRPCQueryOutput } from "app/trpc";
 
@@ -40,7 +41,10 @@ type Input = TRPCQueryInput<"users.getPaged">;
 const useUsersQuery = (input: Omit<Input, "cursor">, cursor: Input["cursor"]) =>
 	trpc.users.getPaged.useQuery(
 		{ ...input, cursor },
-		{ keepPreviousData: true }
+		{
+			...useTrpcQueryOptions(queries.users.getPaged.options),
+			keepPreviousData: true,
+		}
 	);
 
 export const Users: React.FC = () => {

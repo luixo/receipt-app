@@ -10,6 +10,7 @@ import { Overlay } from "app/components/overlay";
 import { useCursorPaging } from "app/hooks/use-cursor-paging";
 import { useMatchMediaValue } from "app/hooks/use-match-media-value";
 import { useSyncQueryParam } from "app/hooks/use-sync-query-param";
+import { useTrpcQueryOptions } from "app/hooks/use-trpc-query-options";
 import { queries } from "app/queries";
 import { trpc, TRPCQueryInput, TRPCQueryOutput } from "app/trpc";
 
@@ -57,7 +58,10 @@ const useReceiptQuery = (
 ) =>
 	trpc.receipts.getPaged.useQuery(
 		{ ...input, cursor },
-		{ keepPreviousData: true }
+		{
+			...useTrpcQueryOptions(queries.receipts.getPaged.options),
+			keepPreviousData: true,
+		}
 	);
 
 export const Receipts: React.FC = () => {

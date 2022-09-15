@@ -2,7 +2,6 @@ import React from "react";
 
 import { Text, styled, Card } from "@nextui-org/react";
 
-import { cache } from "app/cache";
 import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
 import { ReceiptResolvedParticipantsButton } from "app/components/app/receipt-resolved-participants-button";
 import { Grid } from "app/components/grid";
@@ -35,11 +34,6 @@ type Props = {
 };
 
 export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
-	const trpcContext = trpc.useContext();
-	const setReceiptName = React.useCallback(
-		() => cache.receipts.getName.update(trpcContext, receipt.id, receipt.name),
-		[trpcContext, receipt.id, receipt.name]
-	);
 	const currency = useFormattedCurrency(receipt.currency);
 	const updateReceiptMutation = trpc.receipts.update.useMutation(
 		useTrpcMutationOptions(mutations.receipts.update.options)
@@ -66,7 +60,6 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 				<TitleLink
 					href={`/receipts/${receipt.id}/`}
 					css={{ cursor: "pointer" }}
-					onClick={setReceiptName}
 				>
 					<Text>{receipt.name}</Text>
 				</TitleLink>

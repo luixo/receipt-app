@@ -2,10 +2,9 @@ import React from "react";
 
 import { styled } from "@nextui-org/react";
 
-import { cache } from "app/cache";
 import { User } from "app/components/app/user";
 import { Link } from "app/components/link";
-import { trpc, TRPCQueryOutput } from "app/trpc";
+import { TRPCQueryOutput } from "app/trpc";
 
 const WrapperLink = styled(Link, {
 	flexDirection: "row",
@@ -15,15 +14,8 @@ type Props = {
 	data: TRPCQueryOutput<"users.getPaged">["items"][number];
 };
 
-export const UserPreview: React.FC<Props> = ({ data: user }) => {
-	const trpcContext = trpc.useContext();
-	const setUserName = React.useCallback(
-		() => cache.users.getName.add(trpcContext, user.id, user.name),
-		[trpcContext, user.id, user.name]
-	);
-	return (
-		<WrapperLink href={`/users/${user.id}/`}>
-			<User user={user} onClick={setUserName} />
-		</WrapperLink>
-	);
-};
+export const UserPreview: React.FC<Props> = ({ data: user }) => (
+	<WrapperLink href={`/users/${user.id}/`}>
+		<User user={user} />
+	</WrapperLink>
+);
