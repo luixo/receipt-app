@@ -6,7 +6,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { MutationErrorMessage } from "app/components/error-message";
-import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { trpc } from "app/trpc";
 import { emailSchema } from "app/utils/validation";
 
@@ -29,8 +28,8 @@ export const ResetPasswordModal: React.FC<Props> = ({
 	});
 
 	const resetPasswordMutation = trpc.resetPasswordIntentions.add.useMutation();
-	const onSubmit = useSubmitHandler(
-		(data: ResetPasswordForm) => resetPasswordMutation.mutateAsync(data),
+	const onSubmit = React.useCallback(
+		(data: ResetPasswordForm) => resetPasswordMutation.mutate(data),
 		[resetPasswordMutation]
 	);
 

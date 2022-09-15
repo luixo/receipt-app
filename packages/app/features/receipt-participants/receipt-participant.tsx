@@ -5,7 +5,6 @@ import { Spacer, styled, Text } from "@nextui-org/react";
 import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
 import { User } from "app/components/app/user";
 import { RemoveButton } from "app/components/remove-button";
-import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
@@ -58,9 +57,9 @@ export const ReceiptParticipant: React.FC<Props> = ({
 				selfAccountId: accountQuery.data?.id ?? "unknown",
 			})
 		);
-	const removeReceiptParticipant = useAsyncCallback(
+	const removeReceiptParticipant = React.useCallback(
 		() =>
-			removeReceiptParticipantMutation.mutateAsync({
+			removeReceiptParticipantMutation.mutate({
 				receiptId,
 				userId: participant.remoteUserId,
 			}),

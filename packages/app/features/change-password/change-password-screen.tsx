@@ -7,7 +7,6 @@ import { z } from "zod";
 
 import { MutationErrorMessage } from "app/components/error-message";
 import { useBooleanState } from "app/hooks/use-boolean-state";
-import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { trpc } from "app/trpc";
 import { passwordSchema } from "app/utils/validation";
 import { PageWithLayout } from "next-app/types/page";
@@ -42,9 +41,9 @@ export const ChangePasswordScreen: PageWithLayout = () => {
 	});
 
 	const changePasswordMutation = trpc.account.changePassword.useMutation();
-	const onSubmit = useSubmitHandler<Form>(
-		(data) =>
-			changePasswordMutation.mutateAsync({
+	const onSubmit = React.useCallback(
+		(data: Form) =>
+			changePasswordMutation.mutate({
 				prevPassword: data.prevPassword,
 				password: data.password,
 			}),

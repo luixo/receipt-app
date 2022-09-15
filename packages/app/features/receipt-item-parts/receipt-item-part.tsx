@@ -4,7 +4,6 @@ import { Spacer, styled } from "@nextui-org/react";
 
 import { User } from "app/components/app/user";
 import { RemoveButton } from "app/components/remove-button";
-import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
@@ -57,9 +56,9 @@ export const ReceiptItemPart: React.FC<Props> = ({
 	const removeMutation = trpc.itemParticipants.remove.useMutation(
 		useTrpcMutationOptions(mutations.itemParticipants.remove.options, receiptId)
 	);
-	const removeItemPart = useAsyncCallback(
+	const removeItemPart = React.useCallback(
 		() =>
-			removeMutation.mutateAsync({
+			removeMutation.mutate({
 				itemId: receiptItemId,
 				userId: itemPart.userId,
 			}),

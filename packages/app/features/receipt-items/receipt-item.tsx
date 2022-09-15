@@ -7,7 +7,6 @@ import { ButtonsGroup } from "app/components/buttons-group";
 import { ErrorMessage } from "app/components/error-message";
 import { RemoveButton } from "app/components/remove-button";
 import { ReceiptItemPart } from "app/features/receipt-item-parts/receipt-item-part";
-import { useAsyncCallback } from "app/hooks/use-async-callback";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -53,11 +52,8 @@ export const ReceiptItem: React.FC<Props> = ({
 	const removeReceiptItemMutation = trpc.receiptItems.remove.useMutation(
 		useTrpcMutationOptions(mutations.receiptItems.remove.options, receiptId)
 	);
-	const removeItem = useAsyncCallback(
-		() =>
-			removeReceiptItemMutation.mutateAsync({
-				id: receiptItem.id,
-			}),
+	const removeItem = React.useCallback(
+		() => removeReceiptItemMutation.mutate({ id: receiptItem.id }),
 		[removeReceiptItemMutation, receiptItem.id]
 	);
 
