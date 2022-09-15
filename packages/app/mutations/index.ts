@@ -1,4 +1,5 @@
 import * as accountConnections from "./account-connection-intentions";
+import * as auth from "./auth";
 import * as debts from "./debts";
 import * as debtsSyncIntentions from "./debts-sync-intentions";
 import * as itemParticipants from "./item-participants";
@@ -16,4 +17,5 @@ export const mutations = {
 	itemParticipants,
 	debts,
 	debtsSyncIntentions,
+	auth,
 };

@@ -3,9 +3,9 @@ import React from "react";
 import { Spacer } from "@nextui-org/react";
 import { createParam } from "solito";
 
-import { cache } from "app/cache";
 import { Header } from "app/components/header";
-import { useAsyncCallback } from "app/hooks/use-async-callback";
+import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
 import { PageWithLayout } from "next-app/types/page";
 
@@ -15,24 +15,15 @@ const { useParam } = createParam<{ token: string }>();
 
 export const ConfirmEmailScreen: PageWithLayout = () => {
 	const [token] = useParam("token");
-	const confirmEmailMutation = trpc.auth.confirmEmail.useMutation();
-	const trpcContext = trpc.useContext();
-	const confirmEmail = useAsyncCallback(
-		async (isMount) => {
-			if (!token || confirmEmailMutation.status !== "idle") {
-				return;
-			}
-			await confirmEmailMutation.mutateAsync({ token });
-			if (!isMount()) {
-				return;
-			}
-			cache.account.get.update(trpcContext, (account) => ({
-				...account,
-				verified: true,
-			}));
-		},
-		[token, confirmEmailMutation, trpcContext]
+	const confirmEmailMutation = trpc.auth.confirmEmail.useMutation(
+		useTrpcMutationOptions(mutations.auth.confirmEmail.options)
 	);
+	const confirmEmail = React.useCallback(() => {
+		if (!token || confirmEmailMutation.status !== "idle") {
+			return;
+		}
+		confirmEmailMutation.mutate({ token });
+	}, [token, confirmEmailMutation]);
 	React.useEffect(confirmEmail, [confirmEmail]);
 
 	return (
