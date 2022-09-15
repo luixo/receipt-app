@@ -6,17 +6,16 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "solito/router";
 import { z } from "zod";
 
-import { cache } from "app/cache";
 import { MutationErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
-import { useSubmitHandler } from "app/hooks/use-submit-handler";
+import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
 import {
 	passwordSchema,
 	emailSchema,
 	userNameSchema,
 } from "app/utils/validation";
-import { AccountsId } from "next-app/db/models";
 import { PageWithLayout } from "next-app/types/page";
 
 type RegistrationForm = {
@@ -40,34 +39,25 @@ export const RegisterScreen: PageWithLayout = () => {
 		),
 	});
 
-	const trpcContext = trpc.useContext();
-
-	const registerMutation = trpc.auth.register.useMutation();
-	const onSubmit = useSubmitHandler(
-		async (data: RegistrationForm) => {
-			const result = await registerMutation.mutateAsync({
+	const registerMutation = trpc.auth.register.useMutation(
+		useTrpcMutationOptions(mutations.auth.register.options, {
+			name: form.watch("name"),
+		})
+	);
+	const onSubmit = React.useCallback(
+		(data: RegistrationForm) =>
+			registerMutation.mutate({
 				email: data.email,
 				name: data.name,
 				password: data.password,
-			});
-			return {
-				id: result.accountId,
-				name: data.name,
-			};
-		},
-		[registerMutation],
-		React.useCallback(
-			(account: { id: AccountsId; name: string }) => {
-				cache.account.get.set(trpcContext, {
-					...account,
-					publicName: null,
-					verified: false,
-				});
-				router.replace("/");
-			},
-			[router, trpcContext]
-		)
+			}),
+		[registerMutation]
 	);
+	React.useEffect(() => {
+		if (registerMutation.status === "success") {
+			router.replace("/");
+		}
+	}, [registerMutation, router]);
 
 	return (
 		<>

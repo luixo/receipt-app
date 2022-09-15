@@ -6,12 +6,12 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "solito/router";
 import { z } from "zod";
 
-import { cache } from "app/cache";
 import { MutationErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
 import { useBooleanState } from "app/hooks/use-boolean-state";
-import { useSubmitHandler } from "app/hooks/use-submit-handler";
-import { trpc, TRPCMutationOutput } from "app/trpc";
+import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
+import { trpc } from "app/trpc";
 import { passwordSchema, emailSchema } from "app/utils/validation";
 import { PageWithLayout } from "next-app/types/page";
 
@@ -34,19 +34,18 @@ export const LoginScreen: PageWithLayout = () => {
 	const [modalOpen, { setTrue: openModal, setFalse: closeModal }] =
 		useBooleanState();
 
-	const trpcContext = trpc.useContext();
-	const loginMutation = trpc.auth.login.useMutation();
-	const onSubmit = useSubmitHandler(
-		(data: LoginForm) => loginMutation.mutateAsync(data),
-		[loginMutation],
-		React.useCallback(
-			({ accountId, ...account }: TRPCMutationOutput<"auth.login">) => {
-				cache.account.get.set(trpcContext, { id: accountId, ...account });
-				router.replace("/");
-			},
-			[router, trpcContext]
-		)
+	const loginMutation = trpc.auth.login.useMutation(
+		useTrpcMutationOptions(mutations.auth.login.options)
 	);
+	const onSubmit = React.useCallback(
+		(data: LoginForm) => loginMutation.mutate(data),
+		[loginMutation]
+	);
+	React.useEffect(() => {
+		if (loginMutation.status === "success") {
+			router.replace("/");
+		}
+	}, [loginMutation, router]);
 
 	return (
 		<>
