@@ -10,7 +10,6 @@ import {
 	MutationErrorMessage,
 	QueryErrorMessage,
 } from "app/components/error-message";
-import { useSubmitHandler } from "app/hooks/use-submit-handler";
 import { trpc, TRPCQueryResult } from "app/trpc";
 import { passwordSchema } from "app/utils/validation";
 
@@ -34,16 +33,20 @@ export const ResetPassword: React.FC<Props> = ({ token, intentionQuery }) => {
 	});
 
 	const changePasswordMutation = trpc.auth.resetPassword.useMutation();
-	const onSubmit = useSubmitHandler(
-		async ({ password }: ChangePasswordForm) => {
+	const onSubmit = React.useCallback(
+		({ password }: ChangePasswordForm) => {
 			if (!token) {
 				return;
 			}
-			return changePasswordMutation.mutateAsync({ password, token });
+			changePasswordMutation.mutate({ password, token });
 		},
-		[changePasswordMutation, token],
-		React.useCallback(() => router.replace("/login"), [router])
+		[changePasswordMutation, token]
 	);
+	React.useEffect(() => {
+		if (changePasswordMutation.status === "success") {
+			router.replace("/login");
+		}
+	}, [router, changePasswordMutation]);
 
 	if (!token) {
 		return (
