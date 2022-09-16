@@ -3,6 +3,7 @@ import React from "react";
 import { Loading, Spacer } from "@nextui-org/react";
 
 import { DebtControlButtons } from "app/components/app/debt-control-buttons";
+import { DebtSyncStatus } from "app/components/app/debt-sync-status";
 import { LoadableUser } from "app/components/app/loadable-user";
 import { QueryErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
@@ -29,7 +30,15 @@ export const DebtInner: React.FC<InnerProps> = ({ query }) => {
 				backHref={`/debts/user/${debt.userId}`}
 				aside={<DebtControlButtons debt={debt} />}
 			>
-				Debt
+				<>
+					Debt
+					<Spacer x={1} />
+					<DebtSyncStatus
+						status={debt.status}
+						intentionDirection={debt.intentionDirection}
+						size={36}
+					/>
+				</>
 			</Header>
 			<Spacer y={1} />
 			<LoadableUser id={debt.userId} />

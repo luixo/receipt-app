@@ -7,11 +7,9 @@ import {
 	MdCheckCircle as AcceptIcon,
 } from "react-icons/md";
 
-import { DebtSyncStatus } from "app/components/app/debt-sync-status";
 import { MutationErrorMessage } from "app/components/error-message";
 import { IconButton } from "app/components/icon-button";
 import { LockedIcon } from "app/components/locked-icon";
-import { useMatchMediaValue } from "app/hooks/use-match-media-value";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
@@ -60,8 +58,6 @@ export const DebtControlButtons: React.FC<Props> = ({ debt, hideLocked }) => {
 	});
 	const showConnectionStatus =
 		connectedUser.status === "success" ? connectedUser.data : false;
-
-	const size = useMatchMediaValue(48, { lessSm: 36 });
 
 	const addMutation = trpc.debtsSyncIntentions.add.useMutation(
 		useTrpcMutationOptions(mutations.debtsSyncIntentions.add.options, {
@@ -192,54 +188,40 @@ export const DebtControlButtons: React.FC<Props> = ({ debt, hideLocked }) => {
 				</>
 			)}
 			{showConnectionStatus && !lockMutation.isLoading ? (
-				<>
-					{isMutationLoading ||
-					!debt.locked ||
-					debt.status === "nosync" ? null : (
-						<>
-							<Spacer x={0.5} />
-							<DebtSyncStatus
-								status={debt.status}
-								intentionDirection={debt.intentionDirection}
-								size={size}
-							/>
-						</>
-					)}
-					<VisibilityWrapper hidden={!debt.locked || debt.status === "sync"}>
-						<Spacer x={0.5} />
-						{debt.status === "nosync" ||
-						(debt.status === "unsync" && !debt.intentionDirection) ? (
+				<VisibilityWrapper hidden={!debt.locked || debt.status === "sync"}>
+					<Spacer x={0.5} />
+					{debt.status === "nosync" ||
+					(debt.status === "unsync" && !debt.intentionDirection) ? (
+						<IconButton
+							title="Send sync request"
+							isLoading={isLoading}
+							icon={<SendIcon size={24} />}
+							onClick={sendSyncIntention}
+						/>
+					) : debt.intentionDirection === "self" ? (
+						<IconButton
+							title="Cancel sync request"
+							isLoading={isLoading}
+							icon={<CancelIcon size={24} />}
+							onClick={cancelSyncIntention}
+						/>
+					) : (
+						<Buttons>
 							<IconButton
-								title="Send sync request"
+								title="Approve sync request"
 								isLoading={isLoading}
-								icon={<SendIcon size={24} />}
-								onClick={sendSyncIntention}
+								icon={<AcceptIcon size={24} />}
+								onClick={acceptSyncIntention}
 							/>
-						) : debt.intentionDirection === "self" ? (
 							<IconButton
-								title="Cancel sync request"
+								title="Reject sync request"
 								isLoading={isLoading}
 								icon={<CancelIcon size={24} />}
-								onClick={cancelSyncIntention}
+								onClick={rejectSyncIntention}
 							/>
-						) : (
-							<Buttons>
-								<IconButton
-									title="Approve sync request"
-									isLoading={isLoading}
-									icon={<AcceptIcon size={24} />}
-									onClick={acceptSyncIntention}
-								/>
-								<IconButton
-									title="Reject sync request"
-									isLoading={isLoading}
-									icon={<CancelIcon size={24} />}
-									onClick={rejectSyncIntention}
-								/>
-							</Buttons>
-						)}
-					</VisibilityWrapper>
-				</>
+						</Buttons>
+					)}
+				</VisibilityWrapper>
 			) : null}
 			{addMutation.status === "error" ? (
 				<>

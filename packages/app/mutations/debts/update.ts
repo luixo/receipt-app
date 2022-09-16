@@ -44,6 +44,13 @@ const applyUserUpdate =
 			case "currency":
 				return { ...item, currency: update.currency };
 			case "locked":
+				if (!update.value) {
+					return {
+						...item,
+						locked: update.value,
+						status: item.status === "sync" ? "unsync" : item.status,
+					};
+				}
 				return { ...item, locked: update.value };
 		}
 	};
@@ -63,6 +70,13 @@ const applyUpdate =
 			case "currency":
 				return { ...item, currency: update.currency };
 			case "locked":
+				if (!update.value) {
+					return {
+						...item,
+						locked: update.value,
+						status: item.status === "sync" ? "unsync" : item.status,
+					};
+				}
 				return { ...item, locked: update.value };
 		}
 	};
@@ -103,6 +117,13 @@ const getUserRevert =
 			case "currency":
 				return { ...debt, currency: snapshot.currency };
 			case "locked":
+				if (!update.value) {
+					return {
+						...debt,
+						locked: snapshot.locked,
+						status: snapshot.status,
+					};
+				}
 				return { ...debt, locked: snapshot.locked };
 		}
 	};
@@ -123,6 +144,13 @@ const getRevert =
 			case "currency":
 				return { ...debt, currency: snapshot.currency };
 			case "locked":
+				if (!update.value) {
+					return {
+						...debt,
+						locked: snapshot.locked,
+						status: snapshot.status,
+					};
+				}
 				return { ...debt, locked: snapshot.locked };
 		}
 	};
