@@ -107,9 +107,6 @@ export const procedure = authProcedure
 
 		const statuses = await Promise.all(
 			participants.map((participant) => {
-				if (!participant.connectedAccountId) {
-					return ["no-account" as const] as const;
-				}
 				if (!participant.parts) {
 					return ["no-parts" as const] as const;
 				}

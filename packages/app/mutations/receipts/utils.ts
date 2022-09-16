@@ -59,13 +59,17 @@ export const updateReceiptCacheOnDebtUpdate = (
 		}
 		return cache.debts.update(trpcContext, {
 			getReceipt: (controller) =>
-				controller.add(receiptId, {
-					debtId: updatedDebt.debtId,
-					userId: updatedDebt.userId,
-					...statusUpdate,
-					synced: true,
-					amount: updatedDebt.amount,
-				}),
+				controller.upsert(
+					receiptId,
+					(participant) => ({ ...participant, ...statusUpdate, synced: true }),
+					{
+						debtId: updatedDebt.debtId,
+						userId: updatedDebt.userId,
+						...statusUpdate,
+						synced: true,
+						amount: updatedDebt.amount,
+					}
+				),
 			get: (controller) =>
 				controller.add({
 					id: updatedDebt.debtId,

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Loading, Spacer } from "@nextui-org/react";
+import { Spacer } from "@nextui-org/react";
 import { MdSend as SendIcon } from "react-icons/md";
 
 import { QueryErrorMessage } from "app/components/error-message";
@@ -30,7 +30,7 @@ export const showPropagateButton = (
 	// TODO: add info status for receipt for yourself!
 	// TODO: if user is now zero in receipt - let us remove the intention to sync
 	const noneIsSyncedYet = participants.every((participant) =>
-		["nosync", "no-account", "no-parts"].includes(participant.status)
+		["nosync", "no-parts"].includes(participant.status)
 	);
 	const atLeastOneIsSyncable = participants.some(
 		(participant) => participant.status === "nosync"
@@ -81,7 +81,7 @@ export const ReceiptPropagateButton: React.FC<Props> = ({
 	...props
 }) => {
 	if (query.status === "loading") {
-		return <Loading size="xs" />;
+		return null;
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;

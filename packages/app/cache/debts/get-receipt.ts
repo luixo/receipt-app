@@ -102,6 +102,17 @@ export const getController = (trpc: TRPCReactContext) => {
 		) => updateAllInReceipt(controller, receiptId)(updater),
 		add: (receiptId: ReceiptsId, debt: ParticipantDebt, index = -1) =>
 			add(controller, receiptId, debt, index),
+		upsert: (
+			receiptId: ReceiptsId,
+			updater: utils.UpdateFn<ParticipantDebt>,
+			debt: ParticipantDebt,
+			index = -1
+		) => {
+			const updatedDebt = update(controller, receiptId, debt.userId)(updater);
+			if (!updatedDebt) {
+				add(controller, receiptId, debt, index);
+			}
+		},
 		remove: (userId: UsersId) => remove(controller, userId),
 	};
 };

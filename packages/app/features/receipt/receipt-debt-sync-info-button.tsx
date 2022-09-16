@@ -34,12 +34,6 @@ const sortParticipants = (a: Participant, b: Participant): number => {
 	if (b.status === a.status) {
 		return Number(b.synced) - Number(a.synced);
 	}
-	if (b.status === "no-account") {
-		return -1;
-	}
-	if (a.status === "no-account") {
-		return 1;
-	}
 	if (b.status === "no-parts") {
 		return -1;
 	}

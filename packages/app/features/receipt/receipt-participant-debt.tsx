@@ -3,7 +3,6 @@ import React from "react";
 import { Spacer, styled, Text } from "@nextui-org/react";
 import {
 	MdExposureZero as ZeroIcon,
-	MdOutlineNoAccounts as NoAccountIcon,
 	MdSend as SendIcon,
 	MdOutlineReceipt as ReceiptOffIcon,
 	MdSync as SyncIcon,
@@ -84,13 +83,11 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 			<Grid defaultCol={2.5} lessMdCol={4}>
 				{participant.status === "no-parts" ? (
 					<Icon as={ZeroIcon} />
-				) : participant.status === "no-account" ? (
-					<Icon as={NoAccountIcon} />
 				) : (
 					<>
-						{participant.synced ? null : (
+						{participant.synced ? null : participant.debtId ? (
 							<Icon as={ReceiptOffIcon} css={{ color: "$error" }} />
-						)}
+						) : null}
 						<DebtSyncStatus
 							status={participant.status}
 							intentionDirection={participant.intentionDirection}

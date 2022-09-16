@@ -157,11 +157,9 @@ export const getValidParticipants = async (
 	return getParticipantSums(receiptId, receiptItems, receiptParticipants)
 		.filter(
 			(participant) =>
-				// User has to has an account
-				participant.localUserId &&
-				// .. has to participate in a receipt
+				// user has to participate in a receipt
 				participant.sum !== 0 &&
-				// .. has to be someone but yourself
+				// .. and has to be someone but yourself
 				participant.remoteUserId !== ownerAccountId
 		)
 		.map((participant) => ({ ...participant, debtId: v4() }));

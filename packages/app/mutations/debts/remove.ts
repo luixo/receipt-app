@@ -28,7 +28,30 @@ export const options: UseContextedMutationOptions<
 			// but it's own page
 			// otherwise the page will try to refetch the data immediately
 			get: noop,
-			getReceipt: (controller) => controller.remove(currDebt.userId),
+			getReceipt: (controller) => {
+				if (!currDebt.receiptId) {
+					return;
+				}
+				return controller.update(
+					currDebt.receiptId,
+					currDebt.userId,
+					(debt) => ({
+						...debt,
+						debtId: null,
+						status: debt.status === "sync" ? "unsync" : debt.status,
+						intentionDirection:
+							debt.intentionDirection === "self"
+								? undefined
+								: debt.intentionDirection,
+					}),
+					(snapshot) => (debt) => ({
+						...debt,
+						debtId: snapshot.debtId,
+						status: snapshot.status,
+						intentionDirection: snapshot.intentionDirection,
+					})
+				);
+			},
 		}),
 	}),
 	onSuccess: (trpcContext) => (_result, updateObject) => {
