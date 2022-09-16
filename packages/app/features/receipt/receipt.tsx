@@ -10,6 +10,8 @@ import { ShrinkText } from "app/components/shrink-text";
 import { ReceiptControlButtons } from "app/features/receipt/receipt-control-buttons";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useMatchMediaValue } from "app/hooks/use-match-media-value";
+import { useTrpcQueryOptions } from "app/hooks/use-trpc-query-options";
+import { queries } from "app/queries";
 import { trpc, TRPCQuerySuccessResult } from "app/trpc";
 import { round } from "app/utils/math";
 import { ReceiptsId } from "next-app/src/db/models";
@@ -115,7 +117,10 @@ type Props = Omit<InnerProps, "query"> & {
 };
 
 export const Receipt: React.FC<Props> = ({ id, ...props }) => {
-	const query = trpc.receipts.get.useQuery({ id });
+	const query = trpc.receipts.get.useQuery(
+		{ id },
+		useTrpcQueryOptions(queries.receipts.get.options)
+	);
 	const receiptNameQuery = trpc.receipts.getName.useQuery({ id });
 	if (query.status === "loading") {
 		return (

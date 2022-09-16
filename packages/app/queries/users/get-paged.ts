@@ -3,6 +3,7 @@ import { UseContextedQueryOptions } from "app/hooks/use-trpc-query-options";
 import { TRPCQueryInput } from "app/trpc";
 import { createStore } from "app/utils/store";
 import { Setters } from "app/utils/types";
+import { noop } from "app/utils/utils";
 
 type Input = TRPCQueryInput<"users.getPaged">;
 
@@ -24,7 +25,11 @@ export const useStore = () =>
 export const options: UseContextedQueryOptions<"users.getPaged"> = {
 	onSuccess: (trpcContext) => (data) => {
 		data.items.forEach((user) => {
-			cache.users.getName.add(trpcContext, user.id, user.name);
+			cache.users.update(trpcContext, {
+				get: noop,
+				getPaged: noop,
+				getName: (controller) => controller.upsert(user.id, user.name),
+			});
 		});
 	},
 };

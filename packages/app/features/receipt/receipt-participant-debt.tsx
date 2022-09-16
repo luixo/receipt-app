@@ -54,7 +54,9 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 	const formattedCurrency = useFormattedCurrency(currency);
 
 	const updateMutation = trpc.receipts.updateDebt.useMutation(
-		useTrpcMutationOptions(mutations.receipts.updateDebt.options)
+		useTrpcMutationOptions(mutations.receipts.updateDebt.options, {
+			context: { prevAmount: participant.amount },
+		})
 	);
 	const updateDebt = React.useCallback(
 		(userId: UsersId, updateIntention: boolean) =>

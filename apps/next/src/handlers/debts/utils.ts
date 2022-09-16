@@ -83,6 +83,6 @@ export const getDebtsResult = (
 			currency: receipt.currency,
 			created,
 			timestamp: receipt.issued,
-			amount: participant.sum,
+			amount: Number(participant.sum),
 		};
 	});

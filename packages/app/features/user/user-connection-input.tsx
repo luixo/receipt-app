@@ -10,6 +10,7 @@ import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { emailSchema } from "app/utils/validation";
+import { AccountsId } from "next-app/db/models";
 
 type Props = {
 	user: TRPCQueryOutput<"users.get">;
@@ -59,12 +60,9 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 			})
 		);
 	const cancelRequest = React.useCallback(
-		() =>
-			cancelRequestMutation.mutate({
-				type: "userId",
-				userId: user.remoteId,
-			}),
-		[cancelRequestMutation, user.remoteId]
+		(accountId: AccountsId) =>
+			cancelRequestMutation.mutate({ targetAccountId: accountId }),
+		[cancelRequestMutation]
 	);
 
 	const unlinkMutation = trpc.users.unlink.useMutation(
@@ -102,7 +100,7 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 						isLoading={cancelRequestMutation.isLoading}
 						color="error"
 						icon={<TrashBinIcon size={24} />}
-						onClick={cancelRequest}
+						onClick={() => cancelRequest(outboundConnectionIntention.accountId)}
 					/>
 				}
 			/>

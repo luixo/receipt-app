@@ -1,44 +1,54 @@
 import { cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { UsersId } from "next-app/db/models";
+import { noop } from "app/utils/utils";
+import { ReceiptsId, UsersId } from "next-app/db/models";
 
 export const options: UseContextedMutationOptions<
 	"debtsSyncIntentions.remove",
-	void,
-	{ userId: UsersId }
+	{ userId: UsersId; receiptId: ReceiptsId | null }
 > = {
+	onMutate: (trpcContext) => (updateObject) => ({
+		revertFns: cache.debtsSyncIntentions.updateRevert(trpcContext, {
+			getAll: (controller) => controller.outbound.remove(updateObject.id),
+		}),
+	}),
 	onSuccess:
 		(trpcContext, currData) =>
 		([status, intentionDirection], updateObject) => {
-			cache.debts.getReceipt.broad.updateByDebtId(
-				trpcContext,
-				currData.userId,
-				updateObject.id,
-				(debt) => ({ ...debt, status, intentionDirection })
-			);
-			cache.debtsSyncIntentions.getAll.outbound.remove(
-				trpcContext,
-				updateObject.id
-			);
-			cache.debts.get.update(trpcContext, updateObject.id, (debt) => ({
-				...debt,
-				status,
-				intentionDirection,
-			}));
-			cache.debts.getByReceiptId.update(
-				trpcContext,
-				updateObject.id,
-				(debt) => ({
-					...debt,
-					status,
-					intentionDirection,
-				})
-			);
-			cache.debts.getUser.update(
-				trpcContext,
-				currData.userId,
-				updateObject.id,
-				(debt) => ({ ...debt, status, intentionDirection })
-			);
+			cache.debts.update(trpcContext, {
+				getReceipt: (controller) => {
+					if (!currData.receiptId) {
+						return;
+					}
+					return controller.update(
+						currData.receiptId,
+						currData.userId,
+						(debt) => ({ ...debt, status, intentionDirection })
+					);
+				},
+				get: (controller) =>
+					controller.update(updateObject.id, (debt) => ({
+						...debt,
+						status,
+						intentionDirection,
+					})),
+				getByReceiptId: (controller) => {
+					if (!currData.receiptId) {
+						return;
+					}
+					return controller.update(currData.receiptId, (debt) => ({
+						...debt,
+						status,
+						intentionDirection,
+					}));
+				},
+				getUser: (controller) =>
+					controller.update(currData.userId, updateObject.id, (debt) => ({
+						...debt,
+						status,
+						intentionDirection,
+					})),
+				getByUsers: noop,
+			});
 		},
 };

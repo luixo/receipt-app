@@ -1,52 +1,64 @@
 import { cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { TRPCQueryOutput } from "app/trpc";
+import { noop } from "app/utils/utils";
 
 type Debt = TRPCQueryOutput<"debts.get">;
 
 export const options: UseContextedMutationOptions<
 	"debtsSyncIntentions.add",
-	void,
 	Debt
 > = {
-	onMutate: (trpcContext, currDebt) => (updateObject) => {
-		cache.debtsSyncIntentions.getAll.outbound.add(trpcContext, {
-			id: updateObject.id,
-			userId: currDebt.userId,
-			amount: currDebt.amount,
-			currency: currDebt.currency,
-			timestamp: currDebt.timestamp,
-			intentionTimestamp: new Date(),
-			note: currDebt.note,
+	onMutate: (trpcContext, currDebt) => (updateObject) => ({
+		revertFns: cache.debtsSyncIntentions.updateRevert(trpcContext, {
+			getAll: (controller) =>
+				controller.outbound.add({
+					id: updateObject.id,
+					userId: currDebt.userId,
+					amount: currDebt.amount,
+					currency: currDebt.currency,
+					timestamp: currDebt.timestamp,
+					intentionTimestamp: new Date(),
+					note: currDebt.note,
+					receiptId: currDebt.receiptId,
+				}),
+		}),
+	}),
+	onSuccess: (trpcContext, currDebt) => (_intentionTimestamp, updateObject) => {
+		cache.debts.update(trpcContext, {
+			get: (controller) =>
+				controller.update(updateObject.id, (debt) => ({
+					...debt,
+					status: "unsync",
+					intentionDirection: "self",
+				})),
+			getByReceiptId: (controller) => {
+				if (!currDebt.receiptId) {
+					return;
+				}
+				controller.update(currDebt.receiptId, (debt) => ({
+					...debt,
+					status: "unsync",
+					intentionDirection: "self",
+				}));
+			},
+			getUser: (controller) =>
+				controller.update(currDebt.userId, updateObject.id, (debt) => ({
+					...debt,
+					status: "unsync",
+					intentionDirection: "self",
+				})),
+			getByUsers: noop,
+			getReceipt: (controller) => {
+				if (!currDebt.receiptId) {
+					return;
+				}
+				return controller.update(
+					currDebt.receiptId,
+					currDebt.userId,
+					(debt) => ({ ...debt, status: "unsync", intentionDirection: "self" })
+				);
+			},
 		});
-	},
-	onSuccess: (trpcContext, currDebt) => (intentionTimestamp, updateObject) => {
-		cache.debtsSyncIntentions.getAll.outbound.update(
-			trpcContext,
-			updateObject.id,
-			(intention) => ({ ...intention, intentionTimestamp })
-		);
-		cache.debts.get.update(trpcContext, updateObject.id, (debt) => ({
-			...debt,
-			status: "unsync",
-			intentionDirection: "self",
-		}));
-		cache.debts.getByReceiptId.update(trpcContext, updateObject.id, (debt) => ({
-			...debt,
-			status: "unsync",
-			intentionDirection: "self",
-		}));
-		cache.debts.getUser.update(
-			trpcContext,
-			currDebt.userId,
-			updateObject.id,
-			(debt) => ({ ...debt, status: "unsync", intentionDirection: "self" })
-		);
-	},
-	onError: (trpcContext) => (_error, updateObject) => {
-		cache.debtsSyncIntentions.getAll.outbound.remove(
-			trpcContext,
-			updateObject.id
-		);
 	},
 };

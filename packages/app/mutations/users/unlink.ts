@@ -1,54 +1,31 @@
-import { cache, Revert } from "app/cache";
+import { cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { TRPCQueryOutput } from "app/trpc";
+import { noop } from "app/utils/utils";
 
-type PagedUserSnapshot = TRPCQueryOutput<"users.getPaged">["items"][number];
-type UserSnapshot = TRPCQueryOutput<"users.get">;
-
-export const options: UseContextedMutationOptions<
-	"users.unlink",
-	{ pagedRevert?: Revert<PagedUserSnapshot>; revert?: Revert<UserSnapshot> }
-> = {
-	onMutate: (trpcContext) => (variables) => {
-		const pagedSnapshot = cache.users.getPaged.update(
-			trpcContext,
-			variables.id,
-			(user) => ({
-				...user,
-				email: null,
-			})
-		);
-		const snapshot = cache.users.get.update(
-			trpcContext,
-			variables.id,
-			(user) => ({ ...user, email: null, accountId: null })
-		);
-		return {
-			pagedRevert: pagedSnapshot
-				? (user) => ({
+export const options: UseContextedMutationOptions<"users.unlink"> = {
+	onMutate: (trpcContext) => (variables) => ({
+		revertFns: cache.users.updateRevert(trpcContext, {
+			get: (controller) =>
+				controller.update(
+					variables.id,
+					(user) => ({
 						...user,
-						email: pagedSnapshot.email,
-				  })
-				: undefined,
-			revert: snapshot
-				? (user) => ({
+						email: null,
+						accountId: null,
+					}),
+					(snapshot) => (user) => ({
 						...user,
 						email: snapshot.email,
 						accountId: snapshot.accountId,
-				  })
-				: undefined,
-		};
-	},
-	onError: (trpcContext) => (_error, variables, snapshot) => {
-		if (snapshot?.revert) {
-			cache.users.get.update(trpcContext, variables.id, snapshot.revert);
-		}
-		if (snapshot?.pagedRevert) {
-			cache.users.getPaged.update(
-				trpcContext,
-				variables.id,
-				snapshot.pagedRevert
-			);
-		}
-	},
+					})
+				),
+			getName: noop,
+			getPaged: (controller) =>
+				controller.update(
+					variables.id,
+					(user) => ({ ...user, email: null }),
+					(snapshot) => (user) => ({ ...user, email: snapshot.email })
+				),
+		}),
+	}),
 };

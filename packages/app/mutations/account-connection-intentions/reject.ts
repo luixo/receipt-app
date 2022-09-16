@@ -3,10 +3,10 @@ import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options
 
 export const options: UseContextedMutationOptions<"accountConnectionIntentions.reject"> =
 	{
-		onSuccess: (trpcContext) => (_result, variables) => {
-			cache.accountConnections.getAll.inbound.remove(
-				trpcContext,
-				variables.sourceAccountId
-			);
-		},
+		onMutate: (trpcContext) => (variables) => ({
+			revertFns: cache.accountConnections.updateRevert(trpcContext, {
+				getAll: (controller) =>
+					controller.inbound.remove(variables.sourceAccountId),
+			}),
+		}),
 	};

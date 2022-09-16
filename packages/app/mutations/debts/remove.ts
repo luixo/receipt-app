@@ -1,44 +1,43 @@
-import { cache, Revert } from "app/cache";
+import { cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { TRPCQueryOutput } from "app/trpc";
+import { noop } from "app/utils/utils";
 
 export const options: UseContextedMutationOptions<
 	"debts.remove",
-	{ sumRevert?: Revert<number> },
 	TRPCQueryOutput<"debts.get">
 > = {
-	onMutate: (trpcContext, currDebt) => () => {
-		const updatedSum = cache.debts.getByUsers.update(
-			trpcContext,
-			currDebt.userId,
-			currDebt.currency,
-			(sum) => sum - currDebt.amount
-		);
-		return {
-			sumRevert:
-				updatedSum !== undefined ? (sum) => sum + currDebt.amount : undefined,
-		};
-	},
-	onSuccess: (trpcContext, currDebt) => (_result, updateObject) => {
-		cache.debts.getReceipt.broad.removeByDebtId(
-			trpcContext,
-			currDebt.userId,
-			updateObject.id
-		);
-		cache.debts.getUser.remove(trpcContext, currDebt.userId, updateObject.id);
-		cache.debts.get.remove(trpcContext, updateObject.id);
-		cache.debts.getByReceiptId.remove(trpcContext);
-	},
-	onError:
-		(trpcContext, currDebt) =>
-		(_error, variables, { sumRevert } = {}) => {
-			if (sumRevert) {
-				cache.debts.getByUsers.update(
-					trpcContext,
+	onMutate: (trpcContext, currDebt) => (updateObject) => ({
+		revertFns: cache.debts.updateRevert(trpcContext, {
+			getByReceiptId: (controller) => {
+				if (!currDebt.receiptId) {
+					return;
+				}
+				return controller.remove(currDebt.receiptId, updateObject.id);
+			},
+			getByUsers: (controller) =>
+				controller.update(
 					currDebt.userId,
 					currDebt.currency,
-					sumRevert
-				);
-			}
-		},
+					(sum) => sum - currDebt.amount,
+					() => (sum) => sum + currDebt.amount
+				),
+			getUser: (controller) =>
+				controller.remove(currDebt.userId, updateObject.id),
+			// We remove the debt from everywhere else
+			// but it's own page
+			// otherwise the page will try to refetch the data immediately
+			get: noop,
+			getReceipt: (controller) => controller.remove(currDebt.userId),
+		}),
+	}),
+	onSuccess: (trpcContext) => (_result, updateObject) => {
+		cache.debts.update(trpcContext, {
+			getByReceiptId: noop,
+			getByUsers: noop,
+			getUser: noop,
+			get: (controller) => controller.remove(updateObject.id),
+			getReceipt: noop,
+		});
+	},
 };

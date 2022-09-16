@@ -21,6 +21,16 @@ export type TRPCMutationOptions<
 	LifecycleContext
 >;
 
+type WrappedContext<LifecycleContext = unknown> = {
+	revertFns: (() => void)[];
+	context?: LifecycleContext;
+};
+
+type WrappedMutationOptions<
+	Path extends TRPCMutationKey,
+	LifecycleContext = unknown
+> = TRPCMutationOptions<Path, WrappedContext<LifecycleContext>>;
+
 export type WithContextIfExists<
 	T,
 	Context = undefined
@@ -28,40 +38,42 @@ export type WithContextIfExists<
 
 export type UseContextedMutationOptions<
 	Path extends TRPCMutationKey,
-	OuterLifecycleContext = unknown,
-	Context = undefined
+	Context = undefined,
+	LifecycleContext = unknown,
+	Options extends TRPCMutationOptions<
+		Path,
+		LifecycleContext
+	> = TRPCMutationOptions<Path, LifecycleContext>,
+	WrappedOptions extends WrappedMutationOptions<
+		Path,
+		LifecycleContext
+	> = WrappedMutationOptions<Path, LifecycleContext>
 > = {
 	onMutate?: (
 		...args: WithContextIfExists<TRPCReactContext, Context>
-	) => NonNullable<
-		TRPCMutationOptions<Path, OuterLifecycleContext>["onMutate"]
-	>;
+	) => NonNullable<WrappedOptions["onMutate"]>;
 	onError?: (
 		...args: WithContextIfExists<TRPCReactContext, Context>
-	) => NonNullable<TRPCMutationOptions<Path, OuterLifecycleContext>["onError"]>;
+	) => NonNullable<Options["onError"]>;
 	onSuccess?: (
 		...args: WithContextIfExists<TRPCReactContext, Context>
-	) => NonNullable<
-		TRPCMutationOptions<Path, OuterLifecycleContext>["onSuccess"]
-	>;
+	) => NonNullable<Options["onSuccess"]>;
 	onSettled?: (
 		...args: WithContextIfExists<TRPCReactContext, Context>
-	) => NonNullable<
-		TRPCMutationOptions<Path, OuterLifecycleContext>["onSettled"]
-	>;
+	) => NonNullable<Options["onSettled"]>;
 };
 
 export const useTrpcMutationOptions = <
 	Path extends TRPCMutationKey = TRPCMutationKey,
-	LifecycleContext = unknown,
-	Context = undefined
+	Context = undefined,
+	LifecycleContext = unknown
 >(
 	{
 		onError: onErrorTrpc,
 		onMutate: onMutateTrpc,
 		onSettled: onSettledTrpc,
 		onSuccess: onSuccessTrpc,
-	}: UseContextedMutationOptions<Path, LifecycleContext, Context>,
+	}: UseContextedMutationOptions<Path, Context, LifecycleContext>,
 	{
 		context,
 		onError,
@@ -72,7 +84,7 @@ export const useTrpcMutationOptions = <
 	}: {
 		context?: Context;
 	} & TRPCMutationOptions<Path, LifecycleContext> = {}
-): TRPCMutationOptions<Path, LifecycleContext> => {
+): TRPCMutationOptions<Path, WrappedContext<LifecycleContext>> => {
 	const trpcContext = trpc.useContext();
 	return React.useMemo(() => {
 		const trpcArgs = [trpcContext, context] as any;
@@ -81,17 +93,27 @@ export const useTrpcMutationOptions = <
 				onMutate?.(...args);
 				return onMutateTrpc?.(...trpcArgs)(...args);
 			},
-			onError: (...args) => {
-				onError?.(...args);
-				return onErrorTrpc?.(...trpcArgs)(...args);
+			onError: (error, vars, wrappedContext) => {
+				onError?.(error, vars, wrappedContext?.context);
+				wrappedContext?.revertFns.forEach((fn) => fn());
+				return onErrorTrpc?.(...trpcArgs)(error, vars, wrappedContext?.context);
 			},
-			onSettled: (...args) => {
-				onSettled?.(...args);
-				return onSettledTrpc?.(...trpcArgs)(...args);
+			onSettled: (result, error, vars, wrappedContext) => {
+				onSettled?.(result, error, vars, wrappedContext?.context);
+				return onSettledTrpc?.(...trpcArgs)(
+					result,
+					error,
+					vars,
+					wrappedContext?.context
+				);
 			},
-			onSuccess: (...args) => {
-				onSuccess?.(...args);
-				return onSuccessTrpc?.(...trpcArgs)(...args);
+			onSuccess: (result, vars, wrappedContext) => {
+				onSuccess?.(result, vars, wrappedContext?.context);
+				return onSuccessTrpc?.(...trpcArgs)(
+					result,
+					vars,
+					wrappedContext?.context
+				);
 			},
 			...rest,
 		};

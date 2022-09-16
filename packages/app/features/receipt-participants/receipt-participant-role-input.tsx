@@ -30,10 +30,7 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 	const updateParticipantMutation = trpc.receiptParticipants.update.useMutation(
 		useTrpcMutationOptions(mutations.receiptParticipants.update.options, {
 			context: {
-				userId:
-					participant.localUserId === accountQuery.data?.id
-						? participant.localUserId
-						: undefined,
+				selfAccountId: accountQuery.data?.id ?? "unknown",
 			},
 		})
 	);
@@ -57,7 +54,7 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 	);
 
 	return (
-		<Dropdown>
+		<Dropdown isDisabled={accountQuery.status !== "success"}>
 			<Dropdown.Button
 				flat
 				size="sm"

@@ -1,42 +1,58 @@
 import { cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { UsersId } from "next-app/db/models";
+import { noop } from "app/utils/utils";
+import { ReceiptsId, UsersId } from "next-app/db/models";
 
 export const options: UseContextedMutationOptions<
 	"debtsSyncIntentions.reject",
-	void,
-	{ userId: UsersId; currentAmount?: number }
+	{ userId: UsersId; currentAmount?: number; receiptId: ReceiptsId | null }
 > = {
-	onSuccess: (trpcContext, context) => (_result, updateObject) => {
-		cache.debtsSyncIntentions.getAll.inbound.remove(
-			trpcContext,
-			updateObject.id
-		);
-		if (context.currentAmount !== undefined) {
-			cache.debts.getUser.update(
-				trpcContext,
-				context.userId,
-				updateObject.id,
-				(debt) => ({
-					...debt,
-					status: "unsync",
-					intentionDirection: undefined,
-				})
-			);
-			cache.debts.get.update(trpcContext, updateObject.id, (debt) => ({
-				...debt,
-				status: "unsync",
-				intentionDirection: undefined,
-			}));
-			cache.debts.getByReceiptId.update(
-				trpcContext,
-				updateObject.id,
-				(debt) => ({
-					...debt,
-					status: "unsync",
-					intentionDirection: undefined,
-				})
-			);
+	onMutate: (trpcContext) => (updateObject) => ({
+		revertFns: cache.debtsSyncIntentions.updateRevert(trpcContext, {
+			getAll: (controller) => controller.inbound.remove(updateObject.id),
+		}),
+	}),
+	onSuccess: (trpcContext, currDebt) => (_result, updateObject) => {
+		if (currDebt.currentAmount !== undefined) {
+			cache.debts.update(trpcContext, {
+				get: (controller) =>
+					controller.update(updateObject.id, (debt) => ({
+						...debt,
+						status: "unsync",
+						intentionDirection: undefined,
+					})),
+				getByReceiptId: (controller) => {
+					if (!currDebt.receiptId) {
+						return;
+					}
+					controller.update(currDebt.receiptId, (debt) => ({
+						...debt,
+						status: "unsync",
+						intentionDirection: undefined,
+					}));
+				},
+				getUser: (controller) =>
+					controller.update(currDebt.userId, updateObject.id, (debt) => ({
+						...debt,
+						status: "unsync",
+						intentionDirection: undefined,
+					})),
+				getByUsers: noop,
+				getReceipt: (controller) => {
+					if (!currDebt.receiptId) {
+						return;
+					}
+					return controller.update(
+						currDebt.receiptId,
+						currDebt.userId,
+						(debt) => ({
+							...debt,
+							status: "unsync",
+							intentionDirection: undefined,
+						})
+					);
+				},
+			});
 		}
 	},
 };

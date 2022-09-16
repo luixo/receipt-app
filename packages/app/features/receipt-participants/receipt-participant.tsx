@@ -56,6 +56,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 				context: {
 					receiptId,
 					selfAccountId: accountQuery.data?.id ?? "unknown",
+					resolvedStatus: participant.resolved,
 				},
 			})
 		);

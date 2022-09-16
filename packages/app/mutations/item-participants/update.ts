@@ -1,26 +1,29 @@
-import { cache, Revert } from "app/cache";
+import { cache } from "app/cache";
+import { SnapshotFn, UpdateFn } from "app/cache/utils";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
+import { noop } from "app/utils/utils";
 import { ReceiptsId } from "next-app/db/models";
 
 type ReceiptItem = TRPCQueryOutput<"receiptItems.get">["items"][number];
 type ReceiptItemPart = ReceiptItem["parts"][number];
 
-const applyUpdate = (
-	part: ReceiptItemPart,
-	update: TRPCMutationInput<"itemParticipants.update">["update"]
-): ReceiptItemPart => {
-	switch (update.type) {
-		case "part":
-			return { ...part, part: update.part };
-	}
-};
+const applyUpdate =
+	(
+		update: TRPCMutationInput<"itemParticipants.update">["update"]
+	): UpdateFn<ReceiptItemPart> =>
+	(part) => {
+		switch (update.type) {
+			case "part":
+				return { ...part, part: update.part };
+		}
+	};
 
 const getRevert =
 	(
-		snapshot: ReceiptItemPart,
 		update: TRPCMutationInput<"itemParticipants.update">["update"]
-	): Revert<ReceiptItemPart> =>
+	): SnapshotFn<ReceiptItemPart> =>
+	(snapshot) =>
 	(item) => {
 		switch (update.type) {
 			case "part":
@@ -30,29 +33,20 @@ const getRevert =
 
 export const options: UseContextedMutationOptions<
 	"itemParticipants.update",
-	Revert<ReceiptItemPart> | undefined,
 	ReceiptsId
 > = {
-	onMutate: (trpcContext, receiptId) => (variables) => {
-		const snapshot = cache.receiptItems.get.receiptItemPart.update(
-			trpcContext,
-			receiptId,
-			variables.itemId,
-			variables.userId,
-			(part) => applyUpdate(part, variables.update)
-		);
-		return snapshot && getRevert(snapshot, variables.update);
-	},
-	onError: (trpcContext, receiptId) => (_error, variables, revert) => {
-		if (!revert) {
-			return;
-		}
-		cache.receiptItems.get.receiptItemPart.update(
-			trpcContext,
-			receiptId,
-			variables.itemId,
-			variables.userId,
-			revert
-		);
-	},
+	onMutate: (trpcContext, receiptId) => (variables) => ({
+		revertFns: cache.receiptItems.updateRevert(trpcContext, {
+			getReceiptItem: noop,
+			getReceiptParticipant: noop,
+			getReceiptItemPart: (controller) =>
+				controller.update(
+					receiptId,
+					variables.itemId,
+					variables.userId,
+					applyUpdate(variables.update),
+					getRevert(variables.update)
+				),
+		}),
+	}),
 };

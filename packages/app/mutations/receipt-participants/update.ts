@@ -1,28 +1,31 @@
-import { cache, Revert } from "app/cache";
+import { cache } from "app/cache";
+import { SnapshotFn, UpdateFn } from "app/cache/utils";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
-import { UsersId } from "next-app/db/models";
+import { noop } from "app/utils/utils";
+import { AccountsId } from "next-app/db/models";
 
 type ReceiptParticipant =
 	TRPCQueryOutput<"receiptItems.get">["participants"][number];
 
-const applyUpdate = (
-	item: ReceiptParticipant,
-	update: TRPCMutationInput<"receiptParticipants.update">["update"]
-): ReceiptParticipant => {
-	switch (update.type) {
-		case "role":
-			return { ...item, role: update.role };
-		case "resolved":
-			return { ...item, resolved: update.resolved };
-	}
-};
+const applyUpdate =
+	(
+		update: TRPCMutationInput<"receiptParticipants.update">["update"]
+	): UpdateFn<ReceiptParticipant> =>
+	(item) => {
+		switch (update.type) {
+			case "role":
+				return { ...item, role: update.role };
+			case "resolved":
+				return { ...item, resolved: update.resolved };
+		}
+	};
 
 const getRevert =
 	(
-		snapshot: ReceiptParticipant,
 		update: TRPCMutationInput<"receiptParticipants.update">["update"]
-	): Revert<ReceiptParticipant> =>
+	): SnapshotFn<ReceiptParticipant> =>
+	(snapshot) =>
 	(item) => {
 		switch (update.type) {
 			case "role":
@@ -34,113 +37,110 @@ const getRevert =
 
 type PagedReceipt = TRPCQueryOutput<"receipts.getPaged">["items"][number];
 
-const applyUpdateReceiptPaged = (
-	item: PagedReceipt,
-	update: TRPCMutationInput<"receiptParticipants.update">["update"]
-): PagedReceipt => {
-	switch (update.type) {
-		case "resolved":
-			return { ...item, participantResolved: update.resolved };
-		case "role":
-			return { ...item, role: update.role };
-	}
-};
+const applyUpdateReceiptPaged =
+	(
+		update: TRPCMutationInput<"receiptParticipants.update">["update"]
+	): UpdateFn<PagedReceipt> =>
+	(item) => {
+		switch (update.type) {
+			case "resolved":
+				return { ...item, participantResolved: update.resolved };
+			case "role":
+				return { ...item, role: update.role };
+		}
+	};
 
 type Receipt = TRPCQueryOutput<"receipts.get">;
 
-const applyUpdateReceipt = (
-	item: Receipt,
-	update: TRPCMutationInput<"receiptParticipants.update">["update"]
-): Receipt => {
-	switch (update.type) {
-		case "resolved":
-			return { ...item, participantResolved: update.resolved };
-		case "role":
-			return { ...item, role: update.role };
-	}
-};
+const applyUpdateReceipt =
+	(
+		update: TRPCMutationInput<"receiptParticipants.update">["update"]
+	): UpdateFn<Receipt> =>
+	(item) => {
+		switch (update.type) {
+			case "resolved":
+				return { ...item, participantResolved: update.resolved };
+			case "role":
+				return { ...item, role: update.role };
+		}
+	};
 
-type ReceiptParticipants = TRPCQueryOutput<"receipts.getResolvedParticipants">;
+type ResolvedParticipant =
+	TRPCQueryOutput<"receipts.getResolvedParticipants">[number];
 
-const applyUpdateResolvedParticipants = (
-	participants: ReceiptParticipants,
-	selfUserId: UsersId,
-	update: TRPCMutationInput<"receiptParticipants.update">["update"]
-): ReceiptParticipants => {
-	switch (update.type) {
-		case "resolved":
-			return participants.map((participant) =>
-				participant.localUserId === selfUserId
-					? { ...participant, resolved: update.resolved }
-					: participant
-			);
-		case "role":
-			return participants;
-	}
-};
+const applyUpdateResolvedParticipants =
+	(
+		update: TRPCMutationInput<"receiptParticipants.update">["update"]
+	): UpdateFn<ResolvedParticipant> =>
+	(participant) => {
+		switch (update.type) {
+			case "resolved":
+				return { ...participant, resolved: update.resolved };
+			case "role":
+				return participant;
+		}
+	};
 
 export const options: UseContextedMutationOptions<
 	"receiptParticipants.update",
-	Revert<ReceiptParticipant> | undefined,
-	{ userId?: UsersId }
+	{ selfAccountId: AccountsId }
 > = {
-	onMutate: (trpcContext) => (variables) => {
-		const snapshot = cache.receiptItems.get.receiptParticipant.update(
-			trpcContext,
-			variables.receiptId,
-			variables.userId,
-			(participant) => applyUpdate(participant, variables.update)
-		);
-		return snapshot && getRevert(snapshot, variables.update);
-	},
+	onMutate: (trpcContext) => (variables) => ({
+		revertFns: cache.receiptItems.updateRevert(trpcContext, {
+			getReceiptItem: noop,
+			getReceiptParticipant: (controller) =>
+				controller.update(
+					variables.receiptId,
+					variables.userId,
+					applyUpdate(variables.update),
+					getRevert(variables.update)
+				),
+			getReceiptItemPart: noop,
+		}),
+	}),
 	onSuccess:
-		(trpcContext, { userId }) =>
+		(trpcContext, { selfAccountId }) =>
 		(_result, variables) => {
-			if (userId) {
-				cache.receipts.getPaged.update(
-					trpcContext,
-					variables.receiptId,
-					(receipt) => applyUpdateReceiptPaged(receipt, variables.update)
-				);
-				cache.receipts.get.update(trpcContext, variables.receiptId, (receipt) =>
-					applyUpdateReceipt(receipt, variables.update)
-				);
-				cache.receipts.getResolvedParticipants.update(
-					trpcContext,
-					variables.receiptId,
-					(receipt) =>
-						applyUpdateResolvedParticipants(receipt, userId, variables.update)
-				);
-			}
-			if (variables.update.type === "resolved") {
-				const nextResolved = variables.update.resolved;
-				cache.receipts.getNonResolvedAmount.update(trpcContext, (prevAmount) =>
-					nextResolved ? prevAmount - 1 : prevAmount + 1
-				);
-				if (variables.update.resolved) {
-					cache.receipts.getPaged.remove(
-						trpcContext,
-						variables.receiptId,
-						(input) => input.onlyNonResolved
-					);
-				} else {
-					cache.receipts.getPaged.invalidate(
-						trpcContext,
-						0,
-						(input) => input.onlyNonResolved
-					);
-				}
+			if (selfAccountId === variables.userId) {
+				cache.receipts.update(trpcContext, {
+					get: (controller) =>
+						controller.update(
+							variables.receiptId,
+							applyUpdateReceipt(variables.update)
+						),
+					getNonResolvedAmount: (controller) => {
+						if (variables.update.type !== "resolved") {
+							return;
+						}
+						const nextResolved = variables.update.resolved;
+						controller.update((prevAmount) =>
+							nextResolved ? prevAmount - 1 : prevAmount + 1
+						);
+					},
+					getPaged: (controller) => {
+						controller.update(
+							variables.receiptId,
+							applyUpdateReceiptPaged(variables.update)
+						);
+						if (variables.update.type === "resolved") {
+							if (variables.update.resolved) {
+								controller.remove(
+									variables.receiptId,
+									(input) => input.onlyNonResolved
+								);
+							} else {
+								controller.invalidate(0, (input) => input.onlyNonResolved);
+							}
+						}
+					},
+					getName: noop,
+					getResolvedParticipants: (controller) =>
+						controller.update(
+							variables.receiptId,
+							variables.userId,
+							applyUpdateResolvedParticipants(variables.update)
+						),
+				});
 			}
 		},
-	onError: (trpcContext) => (_error, variables, revert) => {
-		if (!revert) {
-			return;
-		}
-		cache.receiptItems.get.receiptParticipant.update(
-			trpcContext,
-			variables.receiptId,
-			variables.userId,
-			revert
-		);
-	},
 };

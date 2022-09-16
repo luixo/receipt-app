@@ -1,48 +1,52 @@
-import { cache, Revert } from "app/cache";
+import { cache } from "app/cache";
+import { SnapshotFn, UpdateFn } from "app/cache/utils";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
+import { noop } from "app/utils/utils";
 
 type PagedReceiptSnapshot =
 	TRPCQueryOutput<"receipts.getPaged">["items"][number];
 type ReceiptSnapshot = TRPCQueryOutput<"receipts.get">;
 
-const applyPagedUpdate = (
-	item: PagedReceiptSnapshot,
-	update: TRPCMutationInput<"receipts.update">["update"]
-): PagedReceiptSnapshot => {
-	switch (update.type) {
-		case "name":
-			return { ...item, name: update.name };
-		case "issued":
-			return { ...item, issued: update.issued };
-		case "locked":
-			return { ...item, locked: update.value };
-		case "currency":
-			return { ...item, currency: update.currency };
-	}
-};
+const applyPagedUpdate =
+	(
+		update: TRPCMutationInput<"receipts.update">["update"]
+	): UpdateFn<PagedReceiptSnapshot> =>
+	(item) => {
+		switch (update.type) {
+			case "name":
+				return { ...item, name: update.name };
+			case "issued":
+				return { ...item, issued: update.issued };
+			case "locked":
+				return { ...item, locked: update.value };
+			case "currency":
+				return { ...item, currency: update.currency };
+		}
+	};
 
-const applyUpdate = (
-	item: ReceiptSnapshot,
-	update: TRPCMutationInput<"receipts.update">["update"]
-): ReceiptSnapshot => {
-	switch (update.type) {
-		case "name":
-			return { ...item, name: update.name };
-		case "issued":
-			return { ...item, issued: update.issued };
-		case "locked":
-			return { ...item, locked: update.value };
-		case "currency":
-			return { ...item, currency: update.currency };
-	}
-};
+const applyUpdate =
+	(
+		update: TRPCMutationInput<"receipts.update">["update"]
+	): UpdateFn<ReceiptSnapshot> =>
+	(item) => {
+		switch (update.type) {
+			case "name":
+				return { ...item, name: update.name };
+			case "issued":
+				return { ...item, issued: update.issued };
+			case "locked":
+				return { ...item, locked: update.value };
+			case "currency":
+				return { ...item, currency: update.currency };
+		}
+	};
 
 const getRevert =
 	(
-		snapshot: ReceiptSnapshot,
 		update: TRPCMutationInput<"receipts.update">["update"]
-	): Revert<ReceiptSnapshot> =>
+	): SnapshotFn<ReceiptSnapshot> =>
+	(snapshot) =>
 	(receipt) => {
 		switch (update.type) {
 			case "name":
@@ -58,9 +62,9 @@ const getRevert =
 
 const getPagedRevert =
 	(
-		snapshot: PagedReceiptSnapshot,
 		update: TRPCMutationInput<"receipts.update">["update"]
-	): Revert<PagedReceiptSnapshot> =>
+	): SnapshotFn<PagedReceiptSnapshot> =>
+	(snapshot) =>
 	(receipt) => {
 		switch (update.type) {
 			case "name":
@@ -74,43 +78,48 @@ const getPagedRevert =
 		}
 	};
 
-export const options: UseContextedMutationOptions<
-	"receipts.update",
-	{
-		pagedRevert?: Revert<PagedReceiptSnapshot>;
-		revert?: Revert<ReceiptSnapshot>;
-	}
-> = {
-	onMutate: (trpcContext) => (updateObject) => {
-		const pagedSnapshot = cache.receipts.getPaged.update(
-			trpcContext,
-			updateObject.id,
-			(receipt) => applyPagedUpdate(receipt, updateObject.update)
-		);
-		const snapshot = cache.receipts.get.update(
-			trpcContext,
-			updateObject.id,
-			(receipt) => applyUpdate(receipt, updateObject.update)
-		);
-		return {
-			pagedSnapshot:
-				pagedSnapshot && getPagedRevert(pagedSnapshot, updateObject.update),
-			revert: snapshot && getRevert(snapshot, updateObject.update),
-		};
-	},
+export const options: UseContextedMutationOptions<"receipts.update"> = {
+	onMutate: (trpcContext) => (updateObject) => ({
+		revertFns: cache.receipts.updateRevert(trpcContext, {
+			get: (controller) =>
+				controller.update(
+					updateObject.id,
+					applyUpdate(updateObject.update),
+					getRevert(updateObject.update)
+				),
+			getNonResolvedAmount: noop,
+			getPaged: (controller) =>
+				controller.update(
+					updateObject.id,
+					applyPagedUpdate(updateObject.update),
+					getPagedRevert(updateObject.update)
+				),
+			getName: (controller) => {
+				if (updateObject.update.type === "name") {
+					return controller.upsert(updateObject.id, updateObject.update.name);
+				}
+			},
+			getResolvedParticipants: noop,
+		}),
+	}),
 	onSuccess: (trpcContext) => (_result, updateObject) => {
 		if (updateObject.update.type === "locked" && !updateObject.update.value) {
-			cache.debts.getReceipt.invalidate(trpcContext, updateObject.id);
+			cache.debts.update(trpcContext, {
+				getReceipt: (controller) =>
+					controller.updateAllInReceipt(updateObject.id, (participants) =>
+						participants.map((participant) => ({
+							...participant,
+							status:
+								participant.status === "sync" ? "unsync" : participant.status,
+							intentionDirection: undefined,
+							synced: false,
+						}))
+					),
+				getByUsers: noop,
+				getUser: noop,
+				get: noop,
+				getByReceiptId: noop,
+			});
 		}
 	},
-	onError:
-		(trpcContext) =>
-		(_error, variables, { pagedRevert, revert } = {}) => {
-			if (pagedRevert) {
-				cache.receipts.getPaged.update(trpcContext, variables.id, pagedRevert);
-			}
-			if (revert) {
-				cache.receipts.get.update(trpcContext, variables.id, revert);
-			}
-		},
 };

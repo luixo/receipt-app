@@ -1,12 +1,13 @@
 import { cache } from "app/cache";
 import { TRPCReactContext } from "app/trpc";
+import { noop } from "app/utils/utils";
 import { ReceiptsId } from "next-app/db/models";
 
 export const updateReceiptSum = (
 	trpc: TRPCReactContext,
 	receiptId: ReceiptsId
 ) => {
-	const receiptItems = cache.receiptItems.get.all.get(trpc, receiptId);
+	const receiptItems = cache.receiptItems.getters(trpc).all.get(receiptId);
 	if (!receiptItems) {
 		return;
 	}
@@ -14,12 +15,19 @@ export const updateReceiptSum = (
 		(acc, item) => acc + item.price * item.quantity,
 		0
 	);
-	cache.receipts.get.update(trpc, receiptId, (receipt) => ({
-		...receipt,
-		sum: nextSum,
-	}));
-	cache.receipts.getPaged.update(trpc, receiptId, (receipt) => ({
-		...receipt,
-		sum: nextSum,
-	}));
+	cache.receipts.update(trpc, {
+		get: (controller) =>
+			controller.update(receiptId, (receipt) => ({
+				...receipt,
+				sum: nextSum,
+			})),
+		getPaged: (controller) =>
+			controller.update(receiptId, (receipt) => ({
+				...receipt,
+				sum: nextSum,
+			})),
+		getNonResolvedAmount: noop,
+		getName: noop,
+		getResolvedParticipants: noop,
+	});
 };

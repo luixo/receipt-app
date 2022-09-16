@@ -1,135 +1,175 @@
 import React from "react";
 
-import { InfiniteData } from "@tanstack/react-query";
-
 import {
-	InvalidateArgs,
-	UpdateArgs,
-	TRPCInfiniteQueryKey,
+	TRPCQuery,
 	TRPCQueryInput,
 	TRPCQueryKey,
 	TRPCQueryOutput,
-	TRPCQueryProcedure,
 	TRPCReactContext,
+	UpdateArgs,
+	InvalidateArgs,
 } from "app/trpc";
+import { nonNullishGuard } from "app/utils/utils";
 
-export type Revert<T> = (input: T) => T;
-
-export type ExtractInfiniteData<T> = T extends InfiniteData<infer X>
-	? X
-	: never;
-
-type Controller<Data, UpdaterInput = Data, UpdaterOutput = UpdaterInput> = {
-	get: () => Data | undefined;
-	set: (nextData: Data, ...args: UpdateArgs) => void;
+export type GenericController<Key extends TRPCQueryKey> = {
+	get: () => (readonly [TRPCQueryInput<Key>, TRPCQueryOutput<Key>])[];
+	invalidate: (
+		fn: (
+			input: TRPCQueryInput<Key>,
+			prev: TRPCQueryOutput<Key>,
+			...args: InvalidateArgs
+		) => boolean,
+		...args: Omit<InvalidateArgs, "predicate">
+	) => void;
 	update: (
-		updater: (prevData: UpdaterInput) => UpdaterOutput,
+		fn: (
+			input: TRPCQueryInput<Key>,
+			prev: TRPCQueryOutput<Key>
+		) => TRPCQueryOutput<Key> | undefined,
 		...args: UpdateArgs
 	) => void;
-	invalidate: (...args: InvalidateArgs) => void;
+	upsert: (
+		input: TRPCQueryInput<Key>,
+		data: TRPCQueryOutput<Key>,
+		...args: UpdateArgs
+	) => void;
 };
 
-// TODO: fix anys
-
-export const createGenericController = <Path extends TRPCQueryKey>(
-	...[procedure, input]: undefined extends TRPCQueryInput<Path>
-		? [TRPCQueryProcedure<Path>, TRPCQueryInput<Path>?]
-		: [TRPCQueryProcedure<Path>, TRPCQueryInput<Path>]
-): Controller<TRPCQueryOutput<Path>> => ({
-	get: () => procedure.getData(input as any),
-	set: (data, options) => (procedure.setData as any)(data, input, options),
-	update: (updater, options) => {
-		if (procedure.getData(input as any) === undefined) {
-			return;
-		}
-		return (procedure.setData as any)(
-			(prev: any) => (prev === undefined ? prev : updater(prev)),
-			input,
-			options
-		);
-	},
-	invalidate: (filters, options) =>
-		procedure.invalidate(input as any, filters, options),
-});
-
-export const createGenericBroadController = <Path extends TRPCQueryKey>(
+export const createController = <Key extends TRPCQueryKey>(
 	trpc: TRPCReactContext,
-	path: Path
-): Controller<
-	[[Path, TRPCQueryInput<Path>], TRPCQueryOutput<Path>][],
-	[TRPCQueryInput<Path>, TRPCQueryOutput<Path>],
-	TRPCQueryOutput<Path>
-> => ({
-	get: () =>
-		trpc.queryClient.getQueriesData([path]) as [
-			[Path, TRPCQueryInput<Path>],
-			TRPCQueryOutput<Path>
-		][],
-	set: (data, options) => {
-		data.forEach(([queryKey, datum]) => {
-			trpc.queryClient.setQueryData(queryKey, datum);
-		}, options);
-	},
-	update: (updater, options) => {
-		const queries = trpc.queryClient.getQueriesData([path]) as [
-			[Path, TRPCQueryInput<Path>],
-			TRPCQueryOutput<Path>
-		][];
-		queries.forEach(([[actualPath, input], prevData]) => {
-			if (!prevData) {
-				return;
-			}
-			trpc.queryClient.setQueryData(
-				[actualPath, input],
-				updater([input, prevData]),
-				options
-			);
-		});
-	},
-	invalidate: (filters, options) =>
-		trpc.queryClient.invalidateQueries([path], filters, options),
-});
+	key: Key
+): GenericController<Key> => {
+	const getQueries = () =>
+		(
+			trpc.queryClient.getQueriesData([key]) as [
+				[Key, TRPCQueryInput<Key>],
+				TRPCQueryOutput<Key>
+			][]
+		).map(([[, input], query]) => [input, query] as const);
+	return {
+		get: getQueries,
+		invalidate: (fn, ...args) =>
+			getQueries()
+				.filter(([input, output]) => fn(input, output))
+				.forEach(([input]) =>
+					trpc.queryClient.invalidateQueries([key], {
+						predicate: (query) =>
+							input === (query as unknown as TRPCQuery<Key>).queryKey[1],
+						...args,
+					})
+				),
+		update: (fn, ...args) => {
+			getQueries().forEach(([input, prevData]) => {
+				if (!prevData) {
+					return;
+				}
+				trpc.queryClient.setQueryData(
+					input === undefined ? [key] : [key, input],
+					fn(input, prevData),
+					...args
+				);
+			});
+		},
+		upsert: (input, data, ...args) =>
+			trpc.queryClient.setQueryData([key, input], data, ...args),
+	};
+};
 
-export const createGenericInfiniteBroadController = <
-	Path extends TRPCInfiniteQueryKey
->(
-	trpc: TRPCReactContext,
-	path: Path
-): Controller<
-	[[Path, TRPCQueryInput<Path>], InfiniteData<TRPCQueryOutput<Path>>][],
-	[TRPCQueryInput<Path>, InfiniteData<TRPCQueryOutput<Path>>],
-	InfiniteData<TRPCQueryOutput<Path>>
-> => ({
-	get: () =>
-		trpc.queryClient.getQueriesData([path]) as [
-			[Path, TRPCQueryInput<Path>],
-			InfiniteData<TRPCQueryOutput<Path>>
-		][],
-	set: (data, options) => {
-		data.forEach(([queryKey, datum]) => {
-			trpc.queryClient.setQueryData(queryKey, datum, options);
-		});
-	},
-	update: (updater, options) => {
-		const queries = trpc.queryClient.getQueriesData([path]) as [
-			[Path, TRPCQueryInput<Path>],
-			InfiniteData<TRPCQueryOutput<Path>>
-		][];
-		queries.forEach(([[actualPath, input], prevData]) => {
-			if (!prevData) {
-				return;
-			}
-			trpc.queryClient.setQueryData(
-				[actualPath, input],
-				updater([input, prevData]),
-				options
-			);
-		});
-	},
-	invalidate: (filters, options) =>
-		trpc.queryClient.invalidateQueries([path], filters, options),
-});
+type RevertFn = () => void;
+
+export type UpdateFn<Value, ReturnValue = Value> = (
+	value: Value
+) => ReturnValue;
+
+export type SnapshotFn<Value, ReturnValue = Value> = (
+	snapshot: Value
+) => UpdateFn<Value, ReturnValue>;
+
+export type UpdateRevertOption<
+	GetController extends {
+		getRevertController: (trpc: TRPCReactContext) => unknown;
+	}
+> = (
+	controller: ReturnType<GetController["getRevertController"]>
+) => RevertFn | undefined;
+
+export type UpdateOption<
+	GetController extends { getController: (trpc: TRPCReactContext) => unknown }
+> = (controller: ReturnType<GetController["getController"]>) => void;
 
 export const createRef = <T>(
 	...args: undefined extends T ? [] : [T]
 ): React.MutableRefObject<T> => ({ current: args[0]! });
+
+export const withRef = <T>(
+	fn: (ref: React.MutableRefObject<T>) => void,
+	...args: undefined extends T ? [] : [T]
+) => {
+	const ref = createRef<T>(...args);
+	fn(ref);
+	return ref.current;
+};
+
+export const applyWithRevert = <Value>(
+	applyFn: () => Value | undefined,
+	revertFn: (snapshot: Value) => void
+): RevertFn | undefined => {
+	const appliedReturn = applyFn();
+	if (appliedReturn !== undefined) {
+		return () => revertFn(appliedReturn);
+	}
+};
+
+export const applyUpdateFnWithRevert = <Value>(
+	fn: (updater: UpdateFn<Value>) => Value | undefined,
+	updateFn: UpdateFn<Value>,
+	revertFn: ((snapshot: Value) => UpdateFn<Value>) | undefined
+): RevertFn | undefined => {
+	const modifiedValue = fn(updateFn);
+	if (modifiedValue !== undefined && revertFn) {
+		return () => {
+			fn(revertFn(modifiedValue));
+		};
+	}
+};
+
+export const getUpdaters = <
+	T extends Record<
+		string,
+		{
+			getRevertController: (trpc: TRPCReactContext) => unknown;
+			getController: (trpc: TRPCReactContext) => unknown;
+		}
+	>
+>(
+	input: T
+) => {
+	const updateRevert = (
+		trpc: TRPCReactContext,
+		options: {
+			[K in keyof T]: UpdateRevertOption<T[K]>;
+		}
+	) =>
+		Object.entries(input)
+			.map(([key, { getRevertController }]) =>
+				options[key]!(
+					getRevertController(trpc) as Parameters<typeof options[keyof T]>[0]
+				)
+			)
+			.filter(nonNullishGuard);
+
+	const update = (
+		trpc: TRPCReactContext,
+		options: {
+			[K in keyof T]: UpdateOption<T[K]>;
+		}
+	) => {
+		Object.entries(input).forEach(([key, { getController }]) => {
+			options[key]!(
+				getController(trpc) as Parameters<typeof options[keyof T]>[0]
+			);
+		});
+	};
+
+	return { updateRevert, update };
+};

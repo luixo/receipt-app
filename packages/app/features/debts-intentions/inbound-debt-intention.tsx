@@ -21,6 +21,7 @@ export const InboundDebtIntention: React.FC<Props> = ({ intention }) => {
 		useTrpcMutationOptions(mutations.debtsSyncIntentions.accept.options, {
 			context: React.useMemo(
 				() => ({
+					debtId: intention.id,
 					userId: intention.userId,
 					currency: intention.currency,
 					currentAmount: intention.current?.amount,
@@ -52,6 +53,7 @@ export const InboundDebtIntention: React.FC<Props> = ({ intention }) => {
 				() => ({
 					userId: intention.userId,
 					currentAmount: intention.current?.amount,
+					receiptId: intention.receiptId,
 				}),
 				[intention]
 			),

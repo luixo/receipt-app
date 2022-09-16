@@ -1,39 +1,42 @@
-import { cache, Revert } from "app/cache";
+import { cache } from "app/cache";
+import { SnapshotFn, UpdateFn } from "app/cache/utils";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
 
 type PagedUserSnapshot = TRPCQueryOutput<"users.getPaged">["items"][number];
 type UserSnapshot = TRPCQueryOutput<"users.get">;
 
-const applyPagedUpdate = (
-	item: PagedUserSnapshot,
-	update: TRPCMutationInput<"users.update">["update"]
-): PagedUserSnapshot => {
-	switch (update.type) {
-		case "name":
-			return { ...item, name: update.name };
-		case "publicName":
-			return { ...item, publicName: update.publicName };
-	}
-};
+const applyPagedUpdate =
+	(
+		update: TRPCMutationInput<"users.update">["update"]
+	): UpdateFn<PagedUserSnapshot> =>
+	(item) => {
+		switch (update.type) {
+			case "name":
+				return { ...item, name: update.name };
+			case "publicName":
+				return { ...item, publicName: update.publicName };
+		}
+	};
 
-const applyUpdate = (
-	item: UserSnapshot,
-	update: TRPCMutationInput<"users.update">["update"]
-): UserSnapshot => {
-	switch (update.type) {
-		case "name":
-			return { ...item, name: update.name };
-		case "publicName":
-			return { ...item, publicName: update.publicName };
-	}
-};
+const applyUpdate =
+	(
+		update: TRPCMutationInput<"users.update">["update"]
+	): UpdateFn<UserSnapshot> =>
+	(item) => {
+		switch (update.type) {
+			case "name":
+				return { ...item, name: update.name };
+			case "publicName":
+				return { ...item, publicName: update.publicName };
+		}
+	};
 
 const getRevert =
 	(
-		snapshot: UserSnapshot,
 		update: TRPCMutationInput<"users.update">["update"]
-	): Revert<UserSnapshot> =>
+	): SnapshotFn<UserSnapshot> =>
+	(snapshot) =>
 	(user) => {
 		switch (update.type) {
 			case "name":
@@ -45,9 +48,9 @@ const getRevert =
 
 const getPagedRevert =
 	(
-		snapshot: PagedUserSnapshot,
 		update: TRPCMutationInput<"users.update">["update"]
-	): Revert<PagedUserSnapshot> =>
+	): SnapshotFn<PagedUserSnapshot> =>
+	(snapshot) =>
 	(user) => {
 		switch (update.type) {
 			case "name":
@@ -57,35 +60,28 @@ const getPagedRevert =
 		}
 	};
 
-export const options: UseContextedMutationOptions<
-	"users.update",
-	{ pagedRevert?: Revert<PagedUserSnapshot>; revert?: Revert<UserSnapshot> }
-> = {
-	onMutate: (trpcContext) => (updateObject) => {
-		const pagedSnapshot = cache.users.getPaged.update(
-			trpcContext,
-			updateObject.id,
-			(user) => applyPagedUpdate(user, updateObject.update)
-		);
-		const snapshot = cache.users.get.update(
-			trpcContext,
-			updateObject.id,
-			(user) => applyUpdate(user, updateObject.update)
-		);
-		return {
-			pagedSnapshot:
-				pagedSnapshot && getPagedRevert(pagedSnapshot, updateObject.update),
-			revert: snapshot && getRevert(snapshot, updateObject.update),
-		};
-	},
-	onError:
-		(trpcContext) =>
-		(_error, variables, { pagedRevert, revert } = {}) => {
-			if (pagedRevert) {
-				cache.users.getPaged.update(trpcContext, variables.id, pagedRevert);
-			}
-			if (revert) {
-				cache.users.get.update(trpcContext, variables.id, revert);
-			}
-		},
+export const options: UseContextedMutationOptions<"users.update"> = {
+	onMutate: (trpcContext) => (updateObject) => ({
+		revertFns: cache.users.updateRevert(trpcContext, {
+			get: (controller) =>
+				controller.update(
+					updateObject.id,
+					applyUpdate(updateObject.update),
+					getRevert(updateObject.update)
+				),
+			getName: (controller) => {
+				if (updateObject.update.type !== "name") {
+					return;
+				}
+				return controller.upsert(updateObject.id, updateObject.update.name);
+			},
+			getPaged: (controller) =>
+				controller.update(
+					updateObject.id,
+					applyPagedUpdate(updateObject.update),
+					getPagedRevert(updateObject.update)
+				),
+		}),
+	}),
+	onSuccess: (trpcContext) => () => cache.users.invalidateSuggest(trpcContext),
 };

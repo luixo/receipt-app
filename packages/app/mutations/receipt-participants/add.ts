@@ -1,42 +1,66 @@
 import { cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { ReceiptsId } from "next-app/db/models";
+import { noop } from "app/utils/utils";
+import { AccountsId, ReceiptsId } from "next-app/db/models";
 
 export const options: UseContextedMutationOptions<
 	"receiptParticipants.add",
-	void,
-	{ receiptId: ReceiptsId }
+	{ receiptId: ReceiptsId; selfAccountId: AccountsId }
 > = {
 	onSuccess:
-		(trpcContext, { receiptId }) =>
+		(trpcContext, { receiptId, selfAccountId }) =>
 		(result) => {
-			result.forEach((resultItem) => {
-				cache.receiptItems.get.receiptParticipant.add(trpcContext, receiptId, {
-					name: resultItem.name,
-					publicName: resultItem.publicName,
-					accountId: resultItem.accountId,
-					email: resultItem.email,
-					remoteUserId: resultItem.id,
-					localUserId: resultItem.id,
-					role: resultItem.role,
-					resolved: false,
-					added: resultItem.added,
-				});
+			cache.receiptItems.update(trpcContext, {
+				getReceiptItem: noop,
+				getReceiptParticipant: (controller) => {
+					result.forEach((item) =>
+						controller.add(receiptId, {
+							name: item.name,
+							publicName: item.publicName,
+							accountId: item.accountId,
+							email: item.email,
+							remoteUserId: item.id,
+							localUserId: item.id,
+							role: item.role,
+							resolved: false,
+							added: item.added,
+						})
+					);
+				},
+				getReceiptItemPart: noop,
 			});
 			const selfParticipating = result.find(
 				(resultItem) => resultItem.role === "owner"
 			);
 			if (selfParticipating) {
-				cache.receipts.getPaged.update(trpcContext, receiptId, (item) => ({
-					...item,
-					participantResolved: false,
-				}));
-				cache.receipts.get.update(trpcContext, receiptId, (item) => ({
-					...item,
-					participantResolved: false,
-				}));
+				cache.receipts.update(trpcContext, {
+					get: (controller) =>
+						controller.update(receiptId, (item) => ({
+							...item,
+							participantResolved: false,
+						})),
+					getPaged: (controller) =>
+						controller.update(receiptId, (item) => ({
+							...item,
+							participantResolved: false,
+						})),
+					getName: noop,
+					getNonResolvedAmount: (controller) => {
+						if (!result.some((item) => selfAccountId === item.id)) {
+							return;
+						}
+						controller.update((prev) => prev + 1);
+					},
+					getResolvedParticipants: (controller) => {
+						result.forEach((item) => {
+							controller.add(receiptId, {
+								remoteUserId: item.id,
+								resolved: false,
+								localUserId: item.id,
+							});
+						});
+					},
+				});
 			}
-			cache.users.suggest.invalidate(trpcContext);
-			cache.debts.getReceipt.invalidate(trpcContext, receiptId);
 		},
 };

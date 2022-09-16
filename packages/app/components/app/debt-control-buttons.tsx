@@ -87,6 +87,7 @@ export const DebtControlButtons: React.FC<Props> = ({ debt, hideLocked }) => {
 		useTrpcMutationOptions(mutations.debtsSyncIntentions.accept.options, {
 			context: React.useMemo(
 				() => ({
+					debtId: debt.id,
 					userId: debt.userId,
 					currency: debt.currency,
 					currentAmount: debt.amount,
@@ -103,7 +104,11 @@ export const DebtControlButtons: React.FC<Props> = ({ debt, hideLocked }) => {
 	const rejectMutation = trpc.debtsSyncIntentions.reject.useMutation(
 		useTrpcMutationOptions(mutations.debtsSyncIntentions.reject.options, {
 			context: React.useMemo(
-				() => ({ userId: debt.userId, currentAmount: debt.amount }),
+				() => ({
+					userId: debt.userId,
+					currentAmount: debt.amount,
+					receiptId: debt.receiptId,
+				}),
 				[debt]
 			),
 		})

@@ -25,10 +25,11 @@ export const ReceiptParticipantResolvedButton: React.FC<Props> = ({
 	resolved,
 	...props
 }) => {
+	const accountQuery = trpc.account.get.useQuery();
 	const updateReceiptMutation = trpc.receiptParticipants.update.useMutation(
 		useTrpcMutationOptions(mutations.receiptParticipants.update.options, {
 			context: {
-				userId: localUserId,
+				selfAccountId: accountQuery.data?.id ?? "unknown",
 			},
 		})
 	);
@@ -44,11 +45,12 @@ export const ReceiptParticipantResolvedButton: React.FC<Props> = ({
 			update: { type: "resolved", resolved: !resolved },
 		});
 	}, [updateReceiptMutation, receiptId, remoteUserId, localUserId, resolved]);
+	const accountQueryNotLoaded = accountQuery.status !== "success";
 	return (
 		<IconButton
 			{...props}
 			isLoading={updateReceiptMutation.isLoading || props.isLoading}
-			disabled={resolved === null || props.disabled}
+			disabled={resolved === null || props.disabled || accountQueryNotLoaded}
 			color={resolved ? "success" : "warning"}
 			onClick={switchResolved}
 			icon={resolved ? <DoneIcon size={24} /> : <UndoneIcon size={24} />}

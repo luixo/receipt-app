@@ -1,79 +1,63 @@
 import { cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { noop } from "app/utils/utils";
 import { AccountsId, ReceiptsId } from "next-app/db/models";
 
 export const options: UseContextedMutationOptions<
 	"receiptParticipants.remove",
-	{
-		participant?: ReturnType<
-			typeof cache["receiptItems"]["get"]["receiptParticipant"]["remove"]
-		>;
-		prevResolved?: boolean;
-	},
-	{ receiptId: ReceiptsId; selfAccountId: AccountsId }
+	{ receiptId: ReceiptsId; selfAccountId: AccountsId; resolvedStatus: boolean }
 > = {
 	onMutate:
-		(trpcContext, { receiptId, selfAccountId }) =>
-		({ userId }) => {
-			const snapshot = cache.receiptItems.get.receiptParticipant.remove(
-				trpcContext,
-				receiptId,
-				userId
-			);
-			let prevResolved: boolean | undefined;
-			if (userId === selfAccountId) {
-				const updatedReceiptSnapshot = cache.receipts.getPaged.update(
-					trpcContext,
-					receiptId,
-					(item) => ({
-						...item,
-						participantResolved: null,
-					})
-				);
-				// null should never happen as participant may only be removed
-				// if previous participant resolved status was not null
-				if (
-					updatedReceiptSnapshot &&
-					updatedReceiptSnapshot.participantResolved !== null
-				) {
-					prevResolved = updatedReceiptSnapshot.participantResolved;
-				}
-				cache.receipts.get.update(trpcContext, receiptId, (item) => ({
-					...item,
-					participantResolved: null,
-				}));
-			}
-			return {
-				participant: snapshot,
-				prevResolved,
-			};
-		},
-	onSuccess:
-		(trpcContext, { receiptId }) =>
-		(_result, { userId }) => {
-			cache.debts.getReceipt.remove(trpcContext, receiptId, userId);
-			cache.users.suggest.invalidate(trpcContext);
-		},
-	onError:
-		(trpcContext, { receiptId, selfAccountId }) =>
-		(_error, { userId }, { prevResolved, participant } = {}) => {
-			if (participant) {
-				cache.receiptItems.get.receiptParticipant.add(
-					trpcContext,
-					receiptId,
-					participant.receiptParticipant,
-					participant.index
-				);
-			}
-			if (userId === selfAccountId && prevResolved !== undefined) {
-				cache.receipts.getPaged.update(trpcContext, receiptId, (item) => ({
-					...item,
-					participantResolved: prevResolved,
-				}));
-				cache.receipts.get.update(trpcContext, receiptId, (item) => ({
-					...item,
-					participantResolved: prevResolved,
-				}));
-			}
-		},
+		(trpcContext, { receiptId, selfAccountId, resolvedStatus }) =>
+		({ userId }) => ({
+			revertFns: [
+				...cache.receiptItems.updateRevert(trpcContext, {
+					getReceiptItem: noop,
+					getReceiptParticipant: (controller) =>
+						controller.remove(receiptId, userId),
+					getReceiptItemPart: (controller) =>
+						controller.removeByUser(receiptId, userId),
+				}),
+				...(userId === selfAccountId
+					? cache.receipts.updateRevert(trpcContext, {
+							get: (controller) =>
+								controller.update(
+									receiptId,
+									(item) => ({
+										...item,
+										participantResolved: null,
+									}),
+									(snapshot) => (item) => ({
+										...item,
+										participantResolved: snapshot.participantResolved,
+									})
+								),
+							getPaged: (controller) =>
+								controller.update(
+									receiptId,
+									(item) => ({
+										...item,
+										participantResolved: null,
+									}),
+									(snapshot) => (item) => ({
+										...item,
+										participantResolved: snapshot.participantResolved,
+									})
+								),
+							getName: noop,
+							getResolvedParticipants: (controller) =>
+								controller.remove(receiptId, userId),
+							getNonResolvedAmount: (controller) => {
+								if (userId !== selfAccountId || resolvedStatus) {
+									return;
+								}
+								return controller.update(
+									(prev) => prev - 1,
+									() => (prev) => prev + 1
+								);
+							},
+					  })
+					: []),
+			],
+		}),
 };

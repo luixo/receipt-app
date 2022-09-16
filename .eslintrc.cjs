@@ -92,6 +92,7 @@ module.exports = {
 				additionalHooks: "(useWindowSizeChange)",
 			},
 		],
+		"no-param-reassign": ["error", { props: false }],
 	},
 	overrides: [
 		{

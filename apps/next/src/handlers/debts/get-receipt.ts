@@ -75,11 +75,13 @@ export const procedure = authProcedure
 						"debts.id as debtId",
 						"users.connectedAccountId",
 						"debts.lockedTimestamp as debtLockedTimestamp",
+						"debts.amount as amount",
 						database.fn.sum<string>("itemParticipants.part").as("parts"),
 					])
 					.groupBy("users.connectedAccountId")
 					.groupBy("debts.id")
 					.groupBy("debts.lockedTimestamp")
+					.groupBy("debts.amount")
 					.groupBy("receiptParticipants.userId")
 					.groupBy("itemParticipants.userId")
 			)
@@ -91,6 +93,7 @@ export const procedure = authProcedure
 						"debtId",
 						"connectedAccountId",
 						"debtLockedTimestamp",
+						"amount",
 						"parts",
 						sql`rank() over (partition by "userId" order by "parts" asc)`
 							.castTo<string>()
@@ -133,6 +136,7 @@ export const procedure = authProcedure
 				userId: participant.userId,
 				status,
 				intentionDirection,
+				amount: Number(participant.amount),
 			};
 		});
 	});

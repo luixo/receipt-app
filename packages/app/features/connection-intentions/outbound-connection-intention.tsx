@@ -19,7 +19,6 @@ export const OutboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 		);
 	const removeConnection = React.useCallback(() => {
 		removeConnectionMutation.mutate({
-			type: "targetAccountId",
 			targetAccountId: intention.accountId,
 		});
 	}, [removeConnectionMutation, intention.accountId]);

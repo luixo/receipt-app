@@ -5,7 +5,9 @@ import { ReceiptsId } from "next-app/db/models";
 export const updateReceiptCacheOnDebtUpdate = (
 	trpcContext: TRPCReactContext,
 	receiptId: ReceiptsId,
-	updatedDebts: TRPCMutationOutput<"receipts.updateDebt">[],
+	updatedDebts: (TRPCMutationOutput<"receipts.updateDebt"> & {
+		deltaAmount: number;
+	})[],
 	updateIntention?: boolean
 ) => {
 	const statusUpdate = {
@@ -22,69 +24,78 @@ export const updateReceiptCacheOnDebtUpdate = (
 			...statusUpdate,
 		};
 		if (updatedDebt.updated) {
-			cache.debts.getReceipt.update(
-				trpcContext,
-				receiptId,
-				updatedDebt.userId,
-				(participant) => ({
-					...participant,
-					...statusUpdate,
-					synced: true,
-				})
-			);
-			cache.debts.get.update(trpcContext, updatedDebt.debtId, (debt) => ({
-				...debt,
-				...updatedPartial,
-				...statusUpdate,
-			}));
-			cache.debts.getByReceiptId.update(
-				trpcContext,
-				updatedDebt.debtId,
-				(debt) => ({
-					...debt,
-					...updatedPartial,
-					...statusUpdate,
-				})
-			);
-			cache.debts.getUser.update(
-				trpcContext,
-				updatedDebt.userId,
-				updatedDebt.debtId,
-				(debt) => ({
-					...debt,
-					...updatedPartial,
-					...statusUpdate,
-				})
-			);
-		} else {
-			cache.debts.getReceipt.add(trpcContext, receiptId, {
-				debtId: updatedDebt.debtId,
-				userId: updatedDebt.userId,
-				...statusUpdate,
-				synced: true,
-			});
-			cache.debts.get.add(trpcContext, {
-				id: updatedDebt.debtId,
-				userId: updatedDebt.userId,
-				note: updatedDebt.note,
-				...updatedPartial,
-				...statusUpdate,
-			});
-			cache.debts.getByReceiptId.add(trpcContext, {
-				id: updatedDebt.debtId,
-				userId: updatedDebt.userId,
-				note: updatedDebt.note,
-				...updatedPartial,
-				...statusUpdate,
-			});
-			cache.debts.getUser.add(trpcContext, updatedDebt.userId, {
-				id: updatedDebt.debtId,
-				created: updatedDebt.created,
-				note: updatedDebt.note,
-				...updatedPartial,
-				...statusUpdate,
+			return cache.debts.update(trpcContext, {
+				getReceipt: (controller) =>
+					controller.update(receiptId, updatedDebt.userId, (participant) => ({
+						...participant,
+						...statusUpdate,
+						synced: true,
+					})),
+				get: (controller) =>
+					controller.update(updatedDebt.debtId, (debt) => ({
+						...debt,
+						...updatedPartial,
+						...statusUpdate,
+					})),
+				getByReceiptId: (controller) =>
+					controller.update(receiptId, (debt) => ({
+						...debt,
+						...updatedPartial,
+						...statusUpdate,
+					})),
+				getUser: (controller) =>
+					controller.update(updatedDebt.userId, updatedDebt.debtId, (debt) => ({
+						...debt,
+						...updatedPartial,
+						...statusUpdate,
+					})),
+				getByUsers: (controller) =>
+					controller.update(
+						updatedDebt.userId,
+						updatedDebt.currency,
+						(sum) => sum + updatedDebt.deltaAmount
+					),
 			});
 		}
-		cache.debts.getByUsers.invalidate(trpcContext);
+		return cache.debts.update(trpcContext, {
+			getReceipt: (controller) =>
+				controller.add(receiptId, {
+					debtId: updatedDebt.debtId,
+					userId: updatedDebt.userId,
+					...statusUpdate,
+					synced: true,
+					amount: updatedDebt.amount,
+				}),
+			get: (controller) =>
+				controller.add({
+					id: updatedDebt.debtId,
+					userId: updatedDebt.userId,
+					note: updatedDebt.note,
+					...updatedPartial,
+					...statusUpdate,
+				}),
+			getByReceiptId: (controller) =>
+				controller.add({
+					id: updatedDebt.debtId,
+					userId: updatedDebt.userId,
+					note: updatedDebt.note,
+					...updatedPartial,
+					...statusUpdate,
+				}),
+			getUser: (controller) =>
+				controller.add(updatedDebt.userId, {
+					id: updatedDebt.debtId,
+					created: updatedDebt.created,
+					note: updatedDebt.note,
+					...updatedPartial,
+					...statusUpdate,
+				}),
+			getByUsers: (controller) =>
+				controller.update(
+					updatedDebt.userId,
+					updatedDebt.currency,
+					(sum) => sum + updatedDebt.amount
+				),
+		});
 	});
 };

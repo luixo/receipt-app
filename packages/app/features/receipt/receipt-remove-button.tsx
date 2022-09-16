@@ -19,6 +19,9 @@ export const ReceiptRemoveButton: React.FC<Props> = ({
 	const router = useRouter();
 	const removeReceiptMutation = trpc.receipts.remove.useMutation(
 		useTrpcMutationOptions(mutations.receipts.remove.options, {
+			context: {
+				participantResolved: receipt.participantResolved,
+			},
 			onSuccess: () => router.replace("/receipts"),
 		})
 	);

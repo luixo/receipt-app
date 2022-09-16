@@ -2,7 +2,7 @@ import { QueryCreator, sql } from "kysely";
 
 import { Currency } from "app/utils/currency";
 import { getDatabase } from "next-app/db";
-import { AccountsId, DebtsId, UsersId } from "next-app/db/models";
+import { AccountsId, DebtsId, ReceiptsId, UsersId } from "next-app/db/models";
 import { ReceiptsDatabase } from "next-app/db/types";
 import { authProcedure } from "next-app/handlers/trpc";
 
@@ -14,6 +14,7 @@ type CommonIntention = {
 	timestamp: Date;
 	intentionTimestamp: Date;
 	note: string;
+	receiptId: ReceiptsId | null;
 };
 
 type InboundIntention = CommonIntention & {
@@ -64,6 +65,7 @@ const getInboundIntentions = (
 			"debtsSyncIntentions.lockedTimestamp as intentionTimestamp",
 			"debts.amount",
 			"debts.currency",
+			"debts.receiptId",
 			"usersMine.id as userId",
 			sql`coalesce("selfDebts".note, "debts".note)`.castTo<string>().as("note"),
 			"selfDebts.amount as selfAmount",
@@ -88,6 +90,7 @@ const getOutboundIntentions = (
 			"debtsSyncIntentions.lockedTimestamp as intentionTimestamp",
 			"debts.amount",
 			"debts.currency",
+			"debts.receiptId",
 			"debts.userId",
 			"debts.note",
 			sql`null`.castTo<string | null>().as("selfAmount"),
@@ -120,6 +123,7 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 				intentionTimestamp: intention.intentionTimestamp,
 				timestamp: intention.timestamp,
 				note: intention.note,
+				receiptId: intention.receiptId,
 			};
 			if (intention.ownerAccountId === ctx.auth.accountId) {
 				acc.outbound.push({

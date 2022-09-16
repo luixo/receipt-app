@@ -1,5 +1,15 @@
-export * as getByReceiptId from "./get-by-receipt-id/actions";
-export * as getByUsers from "./get-by-users/actions";
-export * as getReceipt from "./get-receipt";
-export * as getUser from "./get-user/actions";
-export * as get from "./get/actions";
+import * as utils from "app/cache/utils";
+
+import * as get from "./get";
+import * as getByReceiptId from "./get-by-receipt-id";
+import * as getByUsers from "./get-by-users";
+import * as getReceipt from "./get-receipt";
+import * as getUser from "./get-user";
+
+export const { updateRevert, update } = utils.getUpdaters({
+	get,
+	getByReceiptId,
+	getByUsers,
+	getReceipt,
+	getUser,
+});
