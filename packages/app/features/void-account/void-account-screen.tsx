@@ -5,13 +5,13 @@ import { createParam } from "solito";
 
 import { Header } from "app/components/header";
 import { trpc } from "app/trpc";
-import { PageWithLayout } from "next-app/types/page";
+import { AppPage } from "next-app/types/page";
 
 import { VoidAccount } from "./void-account";
 
 const { useParam } = createParam<{ token: string }>();
 
-export const VoidAccountScreen: PageWithLayout = () => {
+export const VoidAccountScreen: AppPage = () => {
 	const [token] = useParam("token");
 	const voidAccountMutation = trpc.auth.voidAccount.useMutation();
 

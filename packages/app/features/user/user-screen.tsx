@@ -6,13 +6,13 @@ import { createParam } from "solito";
 import { User as UserTitle } from "app/components/app/user";
 import { Header } from "app/components/header";
 import { trpc } from "app/trpc";
-import { PageWithLayout } from "next-app/types/page";
+import { AppPage } from "next-app/types/page";
 
 import { User } from "./user";
 
 const { useParam } = createParam<{ id: string }>();
 
-export const UserScreen: PageWithLayout = () => {
+export const UserScreen: AppPage = () => {
 	const [id] = useParam("id");
 	if (!id) {
 		throw new Error("No id in param");

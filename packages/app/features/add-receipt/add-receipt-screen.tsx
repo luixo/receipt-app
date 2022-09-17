@@ -18,13 +18,13 @@ import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
 import { getToday } from "app/utils/date";
 import { currencyObjectSchema, receiptNameSchema } from "app/utils/validation";
-import { PageWithLayout } from "next-app/types/page";
+import { AppPage } from "next-app/types/page";
 
 import { ReceiptDateInput } from "./receipt-date-input";
 import { ReceiptNameInput } from "./receipt-name-input";
 import { Form } from "./types";
 
-export const AddReceiptScreen: PageWithLayout = () => {
+export const AddReceiptScreen: AppPage = () => {
 	const router = useRouter();
 	const accountQuery = trpc.account.get.useQuery();
 

@@ -9,7 +9,7 @@ import { MutationErrorMessage } from "app/components/error-message";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { trpc } from "app/trpc";
 import { passwordSchema } from "app/utils/validation";
-import { PageWithLayout } from "next-app/types/page";
+import { AppPage } from "next-app/types/page";
 
 type Form = {
 	prevPassword: string;
@@ -17,7 +17,7 @@ type Form = {
 	passwordRetype: string;
 };
 
-export const ChangePasswordScreen: PageWithLayout = () => {
+export const ChangePasswordScreen: AppPage = () => {
 	const [changePasswordShown, { setTrue: showChangePassword }] =
 		useBooleanState();
 

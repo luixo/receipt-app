@@ -4,9 +4,9 @@ import { Loading, Spacer, Text } from "@nextui-org/react";
 import { useRouter } from "solito/router";
 
 import { ProtectedPage } from "app/components/protected-page";
-import { PageWithLayout } from "next-app/types/page";
+import { AppPage } from "next-app/types/page";
 
-export const HomeScreen: PageWithLayout = () => {
+export const HomeScreen: AppPage = () => {
 	const router = useRouter();
 	const gotoReceipts = React.useCallback(
 		() => router.replace("/receipts"),

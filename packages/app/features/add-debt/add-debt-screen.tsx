@@ -27,7 +27,7 @@ import {
 	userItemSchema,
 } from "app/utils/validation";
 import { UsersId } from "next-app/src/db/models";
-import { PageWithLayout } from "next-app/types/page";
+import { AppPage } from "next-app/types/page";
 
 import { DebtAmountInput } from "./debt-amount-input";
 import { DebtDateInput } from "./debt-date-input";
@@ -36,7 +36,7 @@ import { Form } from "./types";
 
 const { useParam } = createParam<{ userId: UsersId }>();
 
-export const AddDebtScreen: PageWithLayout = () => {
+export const AddDebtScreen: AppPage = () => {
 	const [userId] = useParam("userId");
 	const userQuery = trpc.users.get.useQuery(
 		{ id: userId || "unknown" },

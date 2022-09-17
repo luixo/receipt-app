@@ -13,7 +13,7 @@ import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
 import { passwordSchema, emailSchema } from "app/utils/validation";
-import { PageWithLayout } from "next-app/types/page";
+import { AppPage } from "next-app/types/page";
 
 import { ResetPasswordModal } from "./reset-password-modal";
 
@@ -22,7 +22,7 @@ type LoginForm = {
 	password: string;
 };
 
-export const LoginScreen: PageWithLayout = () => {
+export const LoginScreen: AppPage = () => {
 	const router = useRouter();
 	const form = useForm<LoginForm>({
 		mode: "onChange",

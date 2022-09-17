@@ -16,7 +16,7 @@ import {
 } from "app/contexts/color-mode-context";
 import { Provider } from "app/provider";
 import { useColorModeCookies } from "next-app/hooks/use-color-mode-cookies";
-import { PageWithLayout } from "next-app/types/page";
+import { AppPage } from "next-app/types/page";
 import { trpcNext } from "next-app/utils/trpc";
 
 const globalStyles = globalCss({
@@ -44,7 +44,7 @@ declare module "next/app" {
 
 const MyApp: AppType = ({ Component, pageProps }) => {
 	const LayoutComponent =
-		(Component as PageWithLayout).LayoutComponent || ProtectedPage;
+		(Component as AppPage).LayoutComponent || ProtectedPage;
 	return (
 		<>
 			<Head>

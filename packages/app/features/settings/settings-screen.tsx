@@ -4,7 +4,7 @@ import { Card, Spacer, styled } from "@nextui-org/react";
 
 import { ColorModeSettings } from "app/features/settings/color-mode-settings";
 import { RefreshSettings } from "app/features/settings/refresh-settings";
-import { PageWithLayout } from "next-app/types/page";
+import { AppPage } from "next-app/types/page";
 
 const Wrapper = styled("div", {
 	display: "flex",
@@ -12,7 +12,7 @@ const Wrapper = styled("div", {
 	alignItems: "center",
 });
 
-export const SettingsScreen: PageWithLayout = () => (
+export const SettingsScreen: AppPage = () => (
 	<Wrapper>
 		<ColorModeSettings />
 		<Spacer y={1} />

@@ -16,7 +16,7 @@ import {
 	emailSchema,
 	userNameSchema,
 } from "app/utils/validation";
-import { PageWithLayout } from "next-app/types/page";
+import { AppPage } from "next-app/types/page";
 
 type RegistrationForm = {
 	email: string;
@@ -25,7 +25,7 @@ type RegistrationForm = {
 	passwordRetype: string;
 };
 
-export const RegisterScreen: PageWithLayout = () => {
+export const RegisterScreen: AppPage = () => {
 	const router = useRouter();
 	const form = useForm<RegistrationForm>({
 		mode: "onChange",

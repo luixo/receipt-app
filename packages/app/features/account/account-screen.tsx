@@ -11,7 +11,7 @@ import { Header } from "app/components/header";
 import { ChangePasswordScreen } from "app/features/change-password/change-password-screen";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { trpc, TRPCQuerySuccessResult } from "app/trpc";
-import { PageWithLayout } from "next-app/types/page";
+import { AppPage } from "next-app/types/page";
 
 import { AccountNameInput } from "./account-name-input";
 
@@ -62,7 +62,7 @@ const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 	);
 };
 
-export const AccountScreen: PageWithLayout = () => {
+export const AccountScreen: AppPage = () => {
 	const query = trpc.account.get.useQuery();
 	if (query.status === "loading") {
 		return <Loading />;

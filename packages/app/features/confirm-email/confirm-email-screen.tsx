@@ -7,13 +7,13 @@ import { Header } from "app/components/header";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
-import { PageWithLayout } from "next-app/types/page";
+import { AppPage } from "next-app/types/page";
 
 import { ConfirmEmail } from "./confirm-email";
 
 const { useParam } = createParam<{ token: string }>();
 
-export const ConfirmEmailScreen: PageWithLayout = () => {
+export const ConfirmEmailScreen: AppPage = () => {
 	const [token] = useParam("token");
 	const confirmEmailMutation = trpc.auth.confirmEmail.useMutation(
 		useTrpcMutationOptions(mutations.auth.confirmEmail.options)

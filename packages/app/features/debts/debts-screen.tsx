@@ -9,11 +9,11 @@ import { Header } from "app/components/header";
 import { IconButton } from "app/components/icon-button";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { useDebtsSyncIntentions } from "app/hooks/use-debts-sync-intentions";
-import { PageWithLayout } from "next-app/types/page";
+import { AppPage } from "next-app/types/page";
 
 import { Debts } from "./debts";
 
-export const DebtsScreen: PageWithLayout = () => {
+export const DebtsScreen: AppPage = () => {
 	const inboundDebtsAmount = useDebtsSyncIntentions();
 	return (
 		<>
