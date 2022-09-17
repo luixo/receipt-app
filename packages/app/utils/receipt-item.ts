@@ -19,77 +19,74 @@ type ReceiptParticipant = {
 	remoteUserId: UsersId;
 };
 
-type ReceiptItemWithSums = {
-	id: ReceiptItemsId;
-	price: number;
-	partsSums: { userId: UsersId; sum: number }[];
+const spreadCalculation = <T>(
+	total: number,
+	parts: { part: number; id: T }[],
+	ids: T[]
+) => {
+	// Say, we split 10$ by 3 parts
+	// We round 10.0000002$ (passed as 1000 cents) to 10$
+	const totalDecimal = Math.round(total);
+	// 3 parts
+	const partsAmount = parts.reduce((acc, itemPart) => acc + itemPart.part, 0);
+	// 333c, 333c and 333c
+	const partsTotals = parts.map((itemPart) =>
+		Math.floor((itemPart.part / partsAmount) * totalDecimal)
+	);
+	// 333c + 333c + 333c = 999c
+	const partsTotal = partsTotals.reduce((acc, sum) => acc + sum, 0);
+	// 1c leftover
+	const leftoversAmount = totalDecimal - partsTotal;
+	// 0c for everyone (should be like that every time, actually)
+	const leftoverForEveryone = Math.floor(leftoversAmount / parts.length);
+	// Who will get the leftovers from deltaDecimal? First 1 element
+	const leftoverThresholdIndex = leftoversAmount % parts.length;
+	return [...parts]
+		.sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id))
+		.map((part, index) => ({
+			id: part.id,
+			sum:
+				partsTotals[index]! +
+				leftoverForEveryone +
+				(index < leftoverThresholdIndex ? 1 : 0),
+		}));
 };
-
-const calculateReceiptItemsWithSums = (
-	items: ReceiptItem[],
-	userIds: UsersId[],
-	decimalsDigits = 2
-): ReceiptItemWithSums[] =>
-	items.map((item) => {
-		const decimalsPower = 10 ** decimalsDigits;
-		const itemPriceDecimal = item.quantity * item.price * decimalsPower;
-		const totalParts = item.parts.reduce(
-			(acc, itemPart) => acc + itemPart.part,
-			0
-		);
-		const approximatePartsSums = item.parts.map((itemPart) =>
-			Math.floor((itemPart.part / totalParts) * itemPriceDecimal)
-		);
-		const approximatePartsSum = approximatePartsSums.reduce(
-			(acc, sum) => acc + sum,
-			0
-		);
-		const deltaDecimal = itemPriceDecimal - approximatePartsSum;
-		const deltaPartForEveryone = Math.floor(deltaDecimal / item.parts.length);
-		const deltaPartThresholdIndex = deltaDecimal % item.parts.length;
-		return {
-			id: item.id,
-			price: itemPriceDecimal,
-			partsSums: [...item.parts]
-				.sort((a, b) => userIds.indexOf(a.userId) - userIds.indexOf(b.userId))
-				.map((itemPart, index) => ({
-					userId: itemPart.userId,
-					sum:
-						(approximatePartsSums[index]! +
-							deltaPartForEveryone +
-							(index < deltaPartThresholdIndex ? 1 : 0)) /
-						decimalsPower,
-				})),
-		};
-	});
 
 export const getParticipantSums = <T extends ReceiptParticipant>(
 	receiptId: ReceiptsId,
 	items: ReceiptItem[],
-	participants: T[]
+	participants: T[],
+	decimalsDigits = 2
 ) => {
 	const sortedParticipants = [...participants].sort(
 		(a, b) => a.added.valueOf() - b.added.valueOf()
 	);
-	const receiptItemsWithSums = calculateReceiptItemsWithSums(
-		items,
-		rotate(
-			sortedParticipants.map((participant) => participant.remoteUserId),
-			getIndexByString(receiptId)
-		)
+	const rotatedUserIds = rotate(
+		sortedParticipants.map((participant) => participant.remoteUserId),
+		getIndexByString(receiptId)
 	);
+	const decimalsPower = 10 ** decimalsDigits;
+	const receiptItemsWithSums = items.map((item) => ({
+		id: item.id,
+		partsSums: spreadCalculation(
+			item.price * item.quantity * decimalsPower,
+			item.parts.map(({ userId, part }) => ({ id: userId, part })),
+			rotatedUserIds
+		),
+	}));
+	const participantsSums = receiptItemsWithSums.reduce<
+		Partial<Record<UsersId, number>>
+	>((acc, item) => {
+		item.partsSums.forEach(({ id, sum }) => {
+			acc[id] = (acc[id] || 0) + sum;
+		});
+		return acc;
+	}, {});
 	return sortedParticipants.map((participant) => ({
 		...participant,
-		sum: items.reduce(
-			(acc, item) =>
-				acc +
-				(receiptItemsWithSums
-					.find((itemWithSum) => itemWithSum.id === item.id)!
-					.partsSums.find(
-						(partSum) => partSum.userId === participant.remoteUserId
-					)?.sum ?? 0),
-			0
-		),
+		sum:
+			Math.round(participantsSums[participant.remoteUserId] ?? 0) /
+			decimalsPower,
 	}));
 };
 
