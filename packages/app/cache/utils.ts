@@ -71,7 +71,11 @@ export const createController = <Key extends TRPCQueryKey>(
 			});
 		},
 		upsert: (input, data, ...args) =>
-			trpc.queryClient.setQueryData([key, input], data, ...args),
+			trpc.queryClient.setQueryData(
+				input === undefined ? [key] : [key, input],
+				data,
+				...args
+			),
 	};
 };
 
