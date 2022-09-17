@@ -5,7 +5,7 @@ import { Spacer, styled } from "@nextui-org/react";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { Currency } from "app/utils/currency";
 import { getParticipantSums } from "app/utils/receipt-item";
-import { AccountsId, ReceiptsId } from "next-app/db/models";
+import { AccountsId, ReceiptsId, UsersId } from "next-app/db/models";
 
 import { AddReceiptParticipantForm } from "./add-receipt-participant-form";
 import { ReceiptParticipant } from "./receipt-participant";
@@ -48,6 +48,7 @@ const getSortParticipants =
 type Props = {
 	data: TRPCQueryOutput<"receiptItems.get">;
 	receiptId: ReceiptsId;
+	receiptSelfUserId?: UsersId;
 	receiptLocked: boolean;
 	currency?: Currency;
 	isLoading: boolean;
@@ -56,6 +57,7 @@ type Props = {
 export const ReceiptParticipants: React.FC<Props> = ({
 	data,
 	receiptLocked,
+	receiptSelfUserId,
 	currency,
 	receiptId,
 	isLoading,
@@ -80,6 +82,7 @@ export const ReceiptParticipants: React.FC<Props> = ({
 					<ReceiptParticipant
 						receiptId={receiptId}
 						receiptLocked={receiptLocked}
+						receiptSelfUserId={receiptSelfUserId}
 						participant={participant}
 						role={data.role}
 						currency={currency}

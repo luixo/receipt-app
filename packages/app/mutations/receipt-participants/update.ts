@@ -3,7 +3,7 @@ import { SnapshotFn, UpdateFn } from "app/cache/utils";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
 import { noop } from "app/utils/utils";
-import { AccountsId } from "next-app/db/models";
+import { UsersId } from "next-app/db/models";
 
 type ReceiptParticipant =
 	TRPCQueryOutput<"receiptItems.get">["participants"][number];
@@ -83,7 +83,7 @@ const applyUpdateResolvedParticipants =
 
 export const options: UseContextedMutationOptions<
 	"receiptParticipants.update",
-	{ selfAccountId: AccountsId }
+	{ selfUserId: UsersId }
 > = {
 	onMutate: (trpcContext) => (variables) => ({
 		revertFns: cache.receiptItems.updateRevert(trpcContext, {
@@ -99,9 +99,9 @@ export const options: UseContextedMutationOptions<
 		}),
 	}),
 	onSuccess:
-		(trpcContext, { selfAccountId }) =>
+		(trpcContext, { selfUserId }) =>
 		(_result, variables) => {
-			if (selfAccountId === variables.userId) {
+			if (selfUserId === variables.userId) {
 				cache.receipts.update(trpcContext, {
 					get: (controller) =>
 						controller.update(

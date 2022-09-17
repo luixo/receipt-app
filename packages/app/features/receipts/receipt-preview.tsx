@@ -82,8 +82,8 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 					<ReceiptParticipantResolvedButton
 						light
 						receiptId={receipt.id}
-						localUserId={receipt.localUserId}
-						remoteUserId={receipt.remoteUserId}
+						userId={receipt.remoteUserId}
+						selfUserId={receipt.remoteUserId}
 						resolved={receipt.participantResolved}
 					/>
 				)}

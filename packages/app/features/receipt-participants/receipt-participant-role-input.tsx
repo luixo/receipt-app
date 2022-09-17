@@ -5,7 +5,7 @@ import { Dropdown, Loading, Text } from "@nextui-org/react";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
-import { ReceiptsId } from "next-app/db/models";
+import { ReceiptsId, UsersId } from "next-app/db/models";
 import { Role } from "next-app/handlers/receipts/utils";
 
 export type AssignableRole = Exclude<Role, "owner">;
@@ -14,6 +14,7 @@ const ROLES: AssignableRole[] = ["editor", "viewer"];
 
 type Props = {
 	receiptId: ReceiptsId;
+	selfUserId?: UsersId;
 	participant: TRPCQueryOutput<"receiptItems.get">["participants"][number];
 	isLoading: boolean;
 	role: Role;
@@ -21,17 +22,14 @@ type Props = {
 
 export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 	receiptId,
+	selfUserId,
 	participant,
 	isLoading,
 	role,
 }) => {
-	const accountQuery = trpc.account.get.useQuery();
-
 	const updateParticipantMutation = trpc.receiptParticipants.update.useMutation(
 		useTrpcMutationOptions(mutations.receiptParticipants.update.options, {
-			context: {
-				selfAccountId: accountQuery.data?.id ?? "unknown",
-			},
+			context: { selfUserId: selfUserId || "unknown" },
 		})
 	);
 	const changeRole = React.useCallback(
@@ -54,7 +52,7 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 	);
 
 	return (
-		<Dropdown isDisabled={accountQuery.status !== "success"}>
+		<Dropdown>
 			<Dropdown.Button
 				flat
 				size="sm"

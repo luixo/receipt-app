@@ -10,7 +10,7 @@ import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { Currency } from "app/utils/currency";
 import { convertParticipantToUser } from "app/utils/receipt-item";
-import { ReceiptsId } from "next-app/db/models";
+import { ReceiptsId, UsersId } from "next-app/db/models";
 import { Role } from "next-app/handlers/receipts/utils";
 
 import { ReceiptParticipantRoleInput } from "./receipt-participant-role-input";
@@ -31,6 +31,7 @@ const BodyElement = styled("div", {
 
 type Props = {
 	receiptId: ReceiptsId;
+	receiptSelfUserId?: UsersId;
 	receiptLocked: boolean;
 	participant: TRPCQueryOutput<"receiptItems.get">["participants"][number] & {
 		sum: number;
@@ -43,6 +44,7 @@ type Props = {
 export const ReceiptParticipant: React.FC<Props> = ({
 	participant,
 	receiptId,
+	receiptSelfUserId,
 	receiptLocked,
 	role,
 	currency,
@@ -69,10 +71,6 @@ export const ReceiptParticipant: React.FC<Props> = ({
 		[removeReceiptParticipantMutation, receiptId, participant.remoteUserId]
 	);
 
-	const accountQueryNotLoaded = accountQuery.status !== "success";
-	const disabledParticipantResolvedButton =
-		accountQueryNotLoaded || participant.accountId !== accountQuery.data.id;
-
 	return (
 		<Body>
 			<BodyElement>
@@ -88,21 +86,20 @@ export const ReceiptParticipant: React.FC<Props> = ({
 			<BodyElement css={{ alignSelf: "flex-end" }}>
 				<ReceiptParticipantRoleInput
 					receiptId={receiptId}
+					selfUserId={receiptSelfUserId}
 					participant={participant}
 					isLoading={isLoading}
 					role={role}
 				/>
 				<Spacer x={0.5} />
 				<ReceiptParticipantResolvedButton
-					disabled={disabledParticipantResolvedButton}
-					{...(disabledParticipantResolvedButton
+					{...(participant.remoteUserId !== receiptSelfUserId
 						? { light: true }
 						: { ghost: true })}
-					css={{ px: "$6" }}
+					css={{ px: "$6", boxSizing: "border-box" }}
 					receiptId={receiptId}
-					remoteUserId={participant.remoteUserId}
-					/* Button is enabled only is that's our button, so we have localUserId */
-					localUserId={participant.localUserId!}
+					userId={participant.remoteUserId}
+					selfUserId={receiptSelfUserId}
 					resolved={participant.resolved}
 				/>
 				{role === "owner" ? (
@@ -111,7 +108,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 						<RemoveButton
 							onRemove={removeReceiptParticipant}
 							mutation={removeReceiptParticipantMutation}
-							disabled={accountQueryNotLoaded || receiptLocked}
+							disabled={!accountQuery.data || receiptLocked}
 							subtitle="This will remove participant with all his parts"
 							noConfirm={participant.sum === 0}
 						/>

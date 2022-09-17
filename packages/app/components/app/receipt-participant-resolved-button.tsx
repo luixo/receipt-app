@@ -13,44 +13,35 @@ import { ReceiptsId, UsersId } from "next-app/db/models";
 
 type Props = {
 	receiptId: ReceiptsId;
-	remoteUserId: UsersId;
-	localUserId: UsersId;
+	userId: UsersId;
+	selfUserId?: UsersId;
 	resolved: boolean | null;
 } & Omit<React.ComponentProps<typeof IconButton>, "onClick" | "color">;
 
 export const ReceiptParticipantResolvedButton: React.FC<Props> = ({
 	receiptId,
-	remoteUserId,
-	localUserId,
+	userId,
+	selfUserId,
 	resolved,
 	...props
 }) => {
-	const accountQuery = trpc.account.get.useQuery();
 	const updateReceiptMutation = trpc.receiptParticipants.update.useMutation(
 		useTrpcMutationOptions(mutations.receiptParticipants.update.options, {
-			context: {
-				selfAccountId: accountQuery.data?.id ?? "unknown",
-			},
+			context: { selfUserId: selfUserId || "unknown" },
 		})
 	);
 	const switchResolved = React.useCallback(() => {
-		if (!localUserId) {
-			throw new Error(
-				"No localUserId in ReceiptParticipantResolvedButton component, cannot mutate"
-			);
-		}
 		updateReceiptMutation.mutate({
 			receiptId,
-			userId: remoteUserId,
+			userId,
 			update: { type: "resolved", resolved: !resolved },
 		});
-	}, [updateReceiptMutation, receiptId, remoteUserId, localUserId, resolved]);
-	const accountQueryNotLoaded = accountQuery.status !== "success";
+	}, [updateReceiptMutation, receiptId, userId, resolved]);
 	return (
 		<IconButton
 			{...props}
 			isLoading={updateReceiptMutation.isLoading || props.isLoading}
-			disabled={resolved === null || props.disabled || accountQueryNotLoaded}
+			disabled={resolved === null || props.disabled || selfUserId !== userId}
 			color={resolved ? "success" : "warning"}
 			onClick={switchResolved}
 			icon={resolved ? <DoneIcon size={24} /> : <UndoneIcon size={24} />}
