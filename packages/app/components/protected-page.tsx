@@ -41,26 +41,31 @@ const PROTECTED_ELEMENTS: MenuElement[] = [
 
 type Props = {
 	children: React.ReactNode;
-	onData?: () => void;
 };
 
-export const ProtectedPage: React.FC<Props> = ({ children, onData }) => {
+export const ProtectedPage: React.FC<Props> = ({ children }) => {
 	const router = useRouter();
-	const query = trpc.account.get.useQuery();
+	const accountQuery = trpc.account.get.useQuery(undefined, {
+		retry: (_count, error) => error.data?.code !== "UNAUTHORIZED",
+	});
 	React.useEffect(() => {
-		if (query.error && query.error.data?.code === "UNAUTHORIZED") {
+		if (
+			accountQuery.error &&
+			accountQuery.error.data?.code === "UNAUTHORIZED"
+		) {
 			router.push("/login");
 		}
-		if (query.data) {
-			onData?.();
-		}
-	}, [router, query.error, query.data, onData]);
+	}, [accountQuery.error, router]);
 
 	let element = children;
-	if (query.status === "error" && query.error.data?.code !== "UNAUTHORIZED") {
-		element = <QueryErrorMessage query={query} />;
+	if (accountQuery.status === "error") {
+		if (accountQuery.error.data?.code === "UNAUTHORIZED") {
+			element = <Loading size="xl" />;
+		} else {
+			element = <QueryErrorMessage query={accountQuery} />;
+		}
 	}
-	if (query.status === "loading") {
+	if (accountQuery.status === "loading") {
 		element = <Loading size="xl" />;
 	}
 

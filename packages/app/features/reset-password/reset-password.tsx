@@ -32,7 +32,9 @@ export const ResetPassword: React.FC<Props> = ({ token, intentionQuery }) => {
 		),
 	});
 
-	const changePasswordMutation = trpc.auth.resetPassword.useMutation();
+	const changePasswordMutation = trpc.auth.resetPassword.useMutation({
+		onSuccess: () => router.replace("/login"),
+	});
 	const onSubmit = React.useCallback(
 		({ password }: ChangePasswordForm) => {
 			if (!token) {
@@ -42,11 +44,6 @@ export const ResetPassword: React.FC<Props> = ({ token, intentionQuery }) => {
 		},
 		[changePasswordMutation, token]
 	);
-	React.useEffect(() => {
-		if (changePasswordMutation.status === "success") {
-			router.replace("/login");
-		}
-	}, [router, changePasswordMutation]);
 
 	if (!token) {
 		return (

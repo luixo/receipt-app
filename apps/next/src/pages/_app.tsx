@@ -9,6 +9,7 @@ import "raf/polyfill";
 import { ParsedUrlQuery } from "querystring";
 
 import { ProtectedPage } from "app/components/protected-page";
+import { PublicPage } from "app/components/public-page";
 import {
 	ColorModeConfig,
 	LAST_COLOR_MODE_COOKIE_NAME,
@@ -43,8 +44,9 @@ declare module "next/app" {
 }
 
 const MyApp: AppType = ({ Component, pageProps }) => {
-	const LayoutComponent =
-		(Component as AppPage).LayoutComponent || ProtectedPage;
+	const LayoutComponent = (Component as AppPage).public
+		? PublicPage
+		: ProtectedPage;
 	return (
 		<>
 			<Head>

@@ -2,10 +2,6 @@ import React from "react";
 
 import { styled, Text } from "@nextui-org/react";
 import { useRouter } from "next/router";
-import {
-	BsPersonPlusFill as RegisterIcon,
-	BsPersonCheck as LoginIcon,
-} from "react-icons/bs";
 
 import { Badge } from "app/components/badge";
 import { Link } from "app/components/link";
@@ -69,19 +65,6 @@ export type MenuElement = {
 	useBadgeAmount?: () => number;
 };
 
-const UNPROTECTED_ELEMENTS: MenuElement[] = [
-	{
-		href: "/login",
-		Icon: LoginIcon,
-		text: "Login",
-	},
-	{
-		href: "/register",
-		Icon: RegisterIcon,
-		text: "Register",
-	},
-];
-
 const useZero = () => 0;
 
 const MenuItemComponent: React.FC<MenuElement> = ({
@@ -106,13 +89,10 @@ const MenuItemComponent: React.FC<MenuElement> = ({
 
 type Props = {
 	children?: React.ReactNode;
-	elements?: MenuElement[];
+	elements: MenuElement[];
 };
 
-export const Page: React.FC<Props> = ({
-	children,
-	elements = UNPROTECTED_ELEMENTS,
-}) => (
+export const Page: React.FC<Props> = ({ children, elements }) => (
 	<Wrapper>
 		{children}
 		<StickyMenu>

@@ -35,17 +35,14 @@ export const LoginScreen: AppPage = () => {
 		useBooleanState();
 
 	const loginMutation = trpc.auth.login.useMutation(
-		useTrpcMutationOptions(mutations.auth.login.options)
+		useTrpcMutationOptions(mutations.auth.login.options, {
+			onSuccess: () => router.replace("/"),
+		})
 	);
 	const onSubmit = React.useCallback(
 		(data: LoginForm) => loginMutation.mutate(data),
 		[loginMutation]
 	);
-	React.useEffect(() => {
-		if (loginMutation.status === "success") {
-			router.replace("/");
-		}
-	}, [loginMutation, router]);
 
 	return (
 		<>

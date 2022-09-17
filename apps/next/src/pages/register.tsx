@@ -1,6 +1,5 @@
-import { Page } from "app/components/page";
 import { RegisterScreen } from "app/features/register/register-screen";
 
-RegisterScreen.LayoutComponent = Page;
+RegisterScreen.public = true;
 
 export default RegisterScreen;

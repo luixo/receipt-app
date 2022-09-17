@@ -44,6 +44,7 @@ export const RegisterScreen: AppPage = () => {
 			context: {
 				name: form.watch("name"),
 			},
+			onSuccess: () => router.replace("/"),
 		})
 	);
 	const onSubmit = React.useCallback(
@@ -55,11 +56,6 @@ export const RegisterScreen: AppPage = () => {
 			}),
 		[registerMutation]
 	);
-	React.useEffect(() => {
-		if (registerMutation.status === "success") {
-			router.replace("/");
-		}
-	}, [registerMutation, router]);
 
 	return (
 		<>

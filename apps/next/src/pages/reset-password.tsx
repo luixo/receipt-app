@@ -1,6 +1,5 @@
-import { Page } from "app/components/page";
 import { ResetPasswordScreen } from "app/features/reset-password/reset-password-screen";
 
-ResetPasswordScreen.LayoutComponent = Page;
+ResetPasswordScreen.public = true;
 
 export default ResetPasswordScreen;
