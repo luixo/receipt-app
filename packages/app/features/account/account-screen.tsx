@@ -1,7 +1,6 @@
 import React from "react";
 
 import { Button, Loading, Spacer } from "@nextui-org/react";
-import { useRouter } from "solito/router";
 
 import {
 	MutationErrorMessage,
@@ -10,6 +9,7 @@ import {
 import { Header } from "app/components/header";
 import { ChangePasswordScreen } from "app/features/change-password/change-password-screen";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
+import { useRouter } from "app/hooks/use-router";
 import { trpc, TRPCQuerySuccessResult } from "app/trpc";
 import { AppPage } from "next-app/types/page";
 

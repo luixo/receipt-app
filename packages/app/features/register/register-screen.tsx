@@ -3,11 +3,11 @@ import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Input, Loading, Spacer } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
-import { useRouter } from "solito/router";
 import { z } from "zod";
 
 import { MutationErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
+import { useRouter } from "app/hooks/use-router";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";

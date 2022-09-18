@@ -73,10 +73,10 @@ const MenuItemComponent: React.FC<MenuElement> = ({
 	text,
 	useBadgeAmount = useZero,
 }) => {
-	const router = useRouter();
+	const { pathname } = useRouter();
 	const amount = useBadgeAmount();
 	return (
-		<MenuItem key={href} href={href} selected={router.pathname === href}>
+		<MenuItem key={href} href={href} selected={pathname === href}>
 			<Badge amount={amount} css={{ minWidth: 40 }}>
 				<Icon size={24} />
 			</Badge>

@@ -2,8 +2,8 @@ import React from "react";
 
 import { Spacer, Text, styled } from "@nextui-org/react";
 import { IoMdArrowRoundBack as BackArrow } from "react-icons/io";
-import { useRouter } from "solito/router";
 
+import { useRouter } from "app/hooks/use-router";
 import { useWindowSizeChange } from "app/hooks/use-window-size-change";
 
 const Wrapper = styled("div", {

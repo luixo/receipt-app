@@ -1,9 +1,9 @@
 import React from "react";
 
 import { Button, Loading, Text } from "@nextui-org/react";
-import { useRouter } from "solito/router";
 
 import { MutationErrorMessage } from "app/components/error-message";
+import { useRouter } from "app/hooks/use-router";
 import { TRPCMutationResult } from "app/trpc";
 
 type Props = {

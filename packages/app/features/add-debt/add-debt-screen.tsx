@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Loading, Spacer } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { createParam } from "solito";
-import { useRouter } from "solito/router";
 import { z } from "zod";
 
 import { CurrencyInput } from "app/components/app/currency-input";
@@ -16,6 +15,7 @@ import { UsersSuggest } from "app/components/app/users-suggest";
 import { MutationErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
+import { useRouter } from "app/hooks/use-router";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";

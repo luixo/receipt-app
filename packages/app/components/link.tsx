@@ -2,7 +2,8 @@ import React from "react";
 
 import { styled } from "@nextui-org/react";
 import NextLink from "next/link";
-import { useRouter } from "solito/router";
+
+import { useRouter } from "app/hooks/use-router";
 
 const StyledLink = styled(NextLink, {
 	display: "block",
@@ -20,7 +21,7 @@ export const Link: React.FC<Props> = React.forwardRef(
 		const onClickCapture = React.useCallback(
 			(e: React.MouseEvent<HTMLAnchorElement>) => {
 				e.preventDefault();
-				router.push(href, undefined, { shallow: true });
+				router.push(href);
 			},
 			[router, href]
 		);

@@ -7,13 +7,13 @@ import {
 } from "react-icons/bs";
 import { FaUsers as UsersIcon, FaUser as AccountIcon } from "react-icons/fa";
 import { MdAttachMoney as DebtsIcon } from "react-icons/md";
-import { useRouter } from "solito/router";
 
 import { QueryErrorMessage } from "app/components/error-message";
 import { MenuElement, Page } from "app/components/page";
 import { useConnectionIntentions } from "app/hooks/use-connection-intentions";
 import { useDebtsSyncIntentions } from "app/hooks/use-debts-sync-intentions";
 import { useNonResolvedReceipts } from "app/hooks/use-non-resolved-receipts";
+import { useRouter } from "app/hooks/use-router";
 import { trpc } from "app/trpc";
 
 const PROTECTED_ELEMENTS: MenuElement[] = [

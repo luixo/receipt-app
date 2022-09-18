@@ -3,13 +3,13 @@ import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Input, Loading, Spacer, Text } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
-import { useRouter } from "solito/router";
 import { z } from "zod";
 
 import {
 	MutationErrorMessage,
 	QueryErrorMessage,
 } from "app/components/error-message";
+import { useRouter } from "app/hooks/use-router";
 import { trpc, TRPCQueryResult } from "app/trpc";
 import { passwordSchema } from "app/utils/validation";
 

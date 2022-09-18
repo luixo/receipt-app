@@ -4,9 +4,9 @@ import {
 	BsPersonPlusFill as RegisterIcon,
 	BsPersonCheck as LoginIcon,
 } from "react-icons/bs";
-import { useRouter } from "solito/router";
 
 import { MenuElement, Page } from "app/components/page";
+import { useRouter } from "app/hooks/use-router";
 import { trpc } from "app/trpc";
 
 const PUBLIC_ELEMENTS: MenuElement[] = [
