@@ -36,14 +36,16 @@ export const procedure = authProcedure
 				.set({ receiptId: null })
 				.returning("id")
 				.execute();
-			await tx
-				.deleteFrom("debtsSyncIntentions")
-				.where(
-					"debtId",
-					"in",
-					debts.map(({ id }) => id)
-				)
-				.execute();
+			if (debts.length !== 0) {
+				await tx
+					.deleteFrom("debtsSyncIntentions")
+					.where(
+						"debtId",
+						"in",
+						debts.map(({ id }) => id)
+					)
+					.execute();
+			}
 			await tx
 				.deleteFrom("receipts")
 				.where("id", "=", input.id)
