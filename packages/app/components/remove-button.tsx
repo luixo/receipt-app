@@ -50,6 +50,7 @@ export const RemoveButton: React.FC<Props> = ({
 				onClick={noConfirm ? onRemove : openModal}
 				color="error"
 				{...props}
+				disabled={props.disabled || mutation.isLoading}
 			>
 				<TrashBin size={24} />
 				{children ? (
