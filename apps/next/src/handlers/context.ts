@@ -15,6 +15,7 @@ export type AuthorizedContext = UnauthorizedContext & {
 	auth: {
 		sessionId: string;
 		accountId: AccountsId;
+		email: string;
 	};
 };
 

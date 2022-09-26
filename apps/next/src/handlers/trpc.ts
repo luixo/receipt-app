@@ -51,9 +51,12 @@ export const authProcedure = unauthProcedure.use(
 		const database = getDatabase(ctx);
 		const session = await database
 			.selectFrom("sessions")
-			.select(["accountId"])
-			.where("sessionId", "=", authToken)
-			.where("expirationTimestamp", ">", sql`now()`)
+			.innerJoin("accounts", (qb) =>
+				qb.onRef("accounts.id", "=", "sessions.accountId")
+			)
+			.select(["sessions.accountId", "accounts.email"])
+			.where("sessions.sessionId", "=", authToken)
+			.where("sessions.expirationTimestamp", ">", sql`now()`)
 			.executeTakeFirst();
 		if (!session) {
 			resetAuthCookie(ctx.res);
@@ -75,6 +78,7 @@ export const authProcedure = unauthProcedure.use(
 				auth: {
 					sessionId: authToken,
 					accountId: session.accountId,
+					email: session.email,
 				},
 			},
 		});
