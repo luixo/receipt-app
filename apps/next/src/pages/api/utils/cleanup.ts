@@ -7,7 +7,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<string>) => {
 		res.status(405).send("Only POST is supported");
 		return;
 	}
-	const client = getTrpcClient();
+	const client = getTrpcClient(req);
 	const [removedSessions, removedResetPasswordIntentions] = await Promise.all([
 		client.sessions.cleanup.mutate(),
 		client.resetPasswordIntentions.cleanup.mutate(),

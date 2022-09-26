@@ -9,11 +9,9 @@ import {
 	useQueryClient,
 	UseQueryResult,
 } from "@tanstack/react-query";
-import type {
-	DecoratedProcedureUtilsRecord,
-	TRPCClientErrorLike,
-} from "@trpc/react";
+import type { TRPCClientErrorLike } from "@trpc/react";
 import { createTRPCReact } from "@trpc/react";
+import type { DecoratedProcedureUtilsRecord } from "@trpc/react/dist/shared/proxy/utilsProxy";
 import type {
 	AnyProcedure,
 	QueryProcedure,

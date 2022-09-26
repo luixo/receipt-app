@@ -1,7 +1,8 @@
 import React from "react";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { createReactQueryHooks } from "@trpc/react";
+import { httpBatchLink } from "@trpc/client";
+import { createTRPCReact } from "@trpc/react";
 import superjson from "superjson";
 
 import {
@@ -11,7 +12,7 @@ import {
 } from "app/utils/queries";
 import { AppRouter } from "next-app/pages/api/trpc/[trpc]";
 
-const trpc = createReactQueryHooks<AppRouter>();
+const trpc = createTRPCReact<AppRouter>();
 
 export const QueriesProvider: React.FC<React.PropsWithChildren<object>> = ({
 	children,
@@ -21,7 +22,12 @@ export const QueriesProvider: React.FC<React.PropsWithChildren<object>> = ({
 	);
 	const [trpcClient] = React.useState(() =>
 		trpc.createClient({
-			url: `${getNativeBaseUrl()}${TRPC_ENDPOINT}`,
+			links: [
+				httpBatchLink({
+					url: `${getNativeBaseUrl()}${TRPC_ENDPOINT}`,
+					// TODO: add headers with cookie on react-native environment
+				}),
+			],
 			transformer: superjson,
 		})
 	);
