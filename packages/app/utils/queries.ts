@@ -2,6 +2,7 @@ import type { QueryClientConfig } from "@tanstack/react-query";
 import Constants from "expo-constants";
 
 import { MINUTE } from "app/utils/time";
+import { noop } from "app/utils/utils";
 
 export const getNativeBaseUrl = () => {
 	const host = Constants.manifest?.extra?.host;
@@ -22,6 +23,14 @@ export const getQueryClientConfig = (): QueryClientConfig => ({
 			refetchOnMount: false,
 		},
 	},
+	logger:
+		process.env.NODE_ENV === "production"
+			? undefined
+			: {
+					log: noop,
+					warn: noop,
+					error: noop,
+			  },
 });
 
 export const TRPC_ENDPOINT = "/api/trpc";
