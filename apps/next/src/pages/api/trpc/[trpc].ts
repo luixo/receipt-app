@@ -38,6 +38,7 @@ export default Sentry.withSentry(
 				}: ${error.message}`
 			);
 		},
+		responseMeta: () => ({ status: 200 }),
 	})
 );
 
