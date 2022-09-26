@@ -31,6 +31,7 @@ export const Link: React.FC<Props> = React.forwardRef(
 				passHref
 				legacyBehavior={false}
 				onClickCapture={onClickCapture}
+				shallow
 				{...props}
 				ref={ref}
 			>
