@@ -5,11 +5,10 @@ import { Button, Input, Loading, Spacer, Text } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import {
-	MutationErrorMessage,
-	QueryErrorMessage,
-} from "app/components/error-message";
+import { QueryErrorMessage } from "app/components/error-message";
 import { useRouter } from "app/hooks/use-router";
+import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc, TRPCQueryResult } from "app/trpc";
 import { passwordSchema } from "app/utils/validation";
 
@@ -32,9 +31,11 @@ export const ResetPassword: React.FC<Props> = ({ token, intentionQuery }) => {
 		),
 	});
 
-	const changePasswordMutation = trpc.auth.resetPassword.useMutation({
-		onSuccess: () => router.replace("/login"),
-	});
+	const changePasswordMutation = trpc.auth.resetPassword.useMutation(
+		useTrpcMutationOptions(mutations.auth.resetPassword.options, {
+			onSuccess: () => router.replace("/login"),
+		})
+	);
 	const onSubmit = React.useCallback(
 		({ password }: ChangePasswordForm) => {
 			if (!token) {
@@ -88,12 +89,6 @@ export const ResetPassword: React.FC<Props> = ({ token, intentionQuery }) => {
 			>
 				{changePasswordMutation.isLoading ? <Loading /> : "Save password"}
 			</Button>
-			{changePasswordMutation.status === "error" ? (
-				<>
-					<Spacer y={1} />
-					<MutationErrorMessage mutation={changePasswordMutation} />
-				</>
-			) : null}
 		</>
 	);
 };

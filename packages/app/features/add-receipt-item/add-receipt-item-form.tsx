@@ -5,7 +5,6 @@ import { Button, Loading, Spacer, styled } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { MutationErrorMessage } from "app/components/error-message";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
@@ -91,12 +90,6 @@ export const AddReceiptItemForm: React.FC<Props> = ({
 			>
 				{addMutation.isLoading ? <Loading size="xs" /> : "Save"}
 			</Button>
-			{addMutation.status === "error" ? (
-				<>
-					<Spacer y={1} />
-					<MutationErrorMessage mutation={addMutation} />
-				</>
-			) : null}
 		</>
 	);
 };

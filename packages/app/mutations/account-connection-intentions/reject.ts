@@ -9,4 +9,7 @@ export const options: UseContextedMutationOptions<"accountConnectionIntentions.r
 					controller.inbound.remove(variables.sourceAccountId),
 			}),
 		}),
+		errorToastOptions: () => (error) => ({
+			text: `Error rejecting an invite: ${error.message}`,
+		}),
 	};

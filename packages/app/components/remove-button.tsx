@@ -11,7 +11,6 @@ import {
 import { UseMutationResult } from "@tanstack/react-query";
 import { IoTrashBin as TrashBin } from "react-icons/io5";
 
-import { MutationErrorMessage } from "app/components/error-message";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { TRPCError } from "app/trpc";
 
@@ -60,7 +59,6 @@ export const RemoveButton: React.FC<Props> = ({
 					</>
 				) : null}
 			</Button>
-			{mutation.error ? <MutationErrorMessage mutation={mutation} /> : null}
 			<Modal
 				closeButton
 				aria-label="Remove modal"

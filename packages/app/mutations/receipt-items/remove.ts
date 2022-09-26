@@ -21,4 +21,7 @@ export const options: UseContextedMutationOptions<
 	onSuccess: (trpcContext, receiptId) => () => {
 		updateReceiptSum(trpcContext, receiptId);
 	},
+	errorToastOptions: () => (error) => ({
+		text: `Error removing item: ${error.message}`,
+	}),
 };

@@ -122,4 +122,7 @@ export const options: UseContextedMutationOptions<"receipts.update"> = {
 			});
 		}
 	},
+	errorToastOptions: () => (error) => ({
+		text: `Error updating receipt: ${error.message}`,
+	}),
 };

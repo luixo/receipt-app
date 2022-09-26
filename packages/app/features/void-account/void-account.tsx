@@ -2,7 +2,7 @@ import React from "react";
 
 import { Button, Loading, Spacer, styled, Text } from "@nextui-org/react";
 
-import { MutationErrorMessage } from "app/components/error-message";
+import { ErrorMessage } from "app/components/error-message";
 import { useRouter } from "app/hooks/use-router";
 import { TRPCMutationResult } from "app/trpc";
 
@@ -40,7 +40,7 @@ export const VoidAccount: React.FC<Props> = ({ token, voidMutation }) => {
 		return <Loading />;
 	}
 	if (voidMutation.status === "error") {
-		return <MutationErrorMessage mutation={voidMutation} />;
+		return <ErrorMessage message={voidMutation.error.message} />;
 	}
 	if (voidMutation.status === "idle") {
 		return (

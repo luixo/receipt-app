@@ -4,6 +4,7 @@ import * as React from "react";
 import { getInitialProps } from "@expo/next-adapter/document";
 import { CssBaseline } from "@nextui-org/react";
 import { getCookie } from "cookies-next";
+import { extractCss } from "goober";
 import NextDocument, { Head, Html, Main, NextScript } from "next/document";
 
 import {
@@ -45,6 +46,10 @@ Document.getInitialProps = async (ctx) => {
 		styles: (
 			<>
 				{prevProps.styles}
+				{/* see https://github.com/timolins/react-hot-toast/issues/189#issuecomment-1256797662 */}
+				<style id="_goober">
+					{"/* ! */"} {extractCss()}
+				</style>
 				{CssBaseline.flush()}
 			</>
 		),

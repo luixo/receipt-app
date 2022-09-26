@@ -37,4 +37,13 @@ export const options: UseContextedMutationOptions<"users.add"> = {
 				});
 			}
 		},
+	mutateToastOptions: () => (variables) => ({
+		text: `Adding user "${variables.name}"..`,
+	}),
+	successToastOptions: () => (_result, variables) => ({
+		text: `User "${variables.name}" added`,
+	}),
+	errorToastOptions: () => (error, variables) => ({
+		text: `Error adding user "${variables.name}": ${error.message}`,
+	}),
 };

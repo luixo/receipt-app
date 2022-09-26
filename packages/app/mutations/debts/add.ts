@@ -58,4 +58,13 @@ export const options: UseContextedMutationOptions<"debts.add"> = {
 			getReceipt: noop,
 		});
 	},
+	mutateToastOptions: {
+		text: "Adding debt..",
+	},
+	successToastOptions: {
+		text: "Debt added",
+	},
+	errorToastOptions: () => (error) => ({
+		text: `Error adding debt: ${error.message}`,
+	}),
 };

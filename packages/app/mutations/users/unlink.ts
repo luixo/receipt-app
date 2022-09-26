@@ -28,4 +28,7 @@ export const options: UseContextedMutationOptions<"users.unlink"> = {
 				),
 		}),
 	}),
+	errorToastOptions: () => (error) => ({
+		text: `Error unlinking user: ${error.message}`,
+	}),
 };

@@ -139,4 +139,13 @@ export const options: UseContextedMutationOptions<
 			});
 		}
 	},
+	mutateToastOptions: {
+		text: `Accepting debt..`,
+	},
+	successToastOptions: {
+		text: `Debt accepted successfully`,
+	},
+	errorToastOptions: () => (error) => ({
+		text: `Error accepting debt: ${error.message}`,
+	}),
 };

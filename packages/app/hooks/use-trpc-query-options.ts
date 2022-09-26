@@ -10,6 +10,7 @@ import {
 	TRPCQueryOutput,
 	TRPCReactContext,
 } from "app/trpc";
+import { MaybeAddElementToArray } from "app/utils/types";
 
 export type TRPCQueryOptions<Path extends TRPCQueryKey> = UseQueryOptions<
 	TRPCQueryOutput<Path>,
@@ -18,23 +19,23 @@ export type TRPCQueryOptions<Path extends TRPCQueryKey> = UseQueryOptions<
 	[Path, TRPCQueryInput<Path>]
 >;
 
-export type WithContextIfExists<
-	T,
-	Context = undefined
-> = undefined extends Context ? [T] : [T, Context];
+type Contexts<Context = undefined> = MaybeAddElementToArray<
+	[TRPCReactContext],
+	Context
+>;
 
 export type UseContextedQueryOptions<
 	Path extends TRPCQueryKey,
 	Context = undefined
 > = {
 	onError?: (
-		...args: WithContextIfExists<TRPCReactContext, Context>
+		...args: Contexts<Context>
 	) => NonNullable<TRPCQueryOptions<Path>["onError"]>;
 	onSuccess?: (
-		...args: WithContextIfExists<TRPCReactContext, Context>
+		...args: Contexts<Context>
 	) => NonNullable<TRPCQueryOptions<Path>["onSuccess"]>;
 	onSettled?: (
-		...args: WithContextIfExists<TRPCReactContext, Context>
+		...args: Contexts<Context>
 	) => NonNullable<TRPCQueryOptions<Path>["onSettled"]>;
 };
 

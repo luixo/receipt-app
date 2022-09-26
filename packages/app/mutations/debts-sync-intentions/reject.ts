@@ -55,4 +55,7 @@ export const options: UseContextedMutationOptions<
 			});
 		}
 	},
+	errorToastOptions: () => (error) => ({
+		text: `Error rejecting debt: ${error.message}`,
+	}),
 };

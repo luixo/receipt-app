@@ -17,4 +17,13 @@ export const options: UseContextedMutationOptions<
 						verified: false,
 					}),
 			}),
+	mutateToastOptions: {
+		text: "Registering..",
+	},
+	successToastOptions: {
+		text: "Register successful, redirecting..",
+	},
+	errorToastOptions: () => (error) => ({
+		text: error.message,
+	}),
 };

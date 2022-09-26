@@ -2,14 +2,13 @@ import React from "react";
 
 import { Button, Loading, Spacer } from "@nextui-org/react";
 
-import {
-	MutationErrorMessage,
-	QueryErrorMessage,
-} from "app/components/error-message";
+import { QueryErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
 import { ChangePasswordScreen } from "app/features/change-password/change-password-screen";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { useRouter } from "app/hooks/use-router";
+import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc, TRPCQuerySuccessResult } from "app/trpc";
 import { AppPage } from "next-app/types/page";
 
@@ -23,12 +22,14 @@ const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 	const router = useRouter();
 
 	const trpcContext = trpc.useContext();
-	const logoutMutation = trpc.account.logout.useMutation({
-		onSuccess: () => {
-			trpcContext.queryClient.resetQueries();
-			router.replace("/");
-		},
-	});
+	const logoutMutation = trpc.account.logout.useMutation(
+		useTrpcMutationOptions(mutations.account.logout.options, {
+			onSuccess: () => {
+				trpcContext.queryClient.resetQueries();
+				router.replace("/");
+			},
+		})
+	);
 	const logout = React.useCallback(
 		() => logoutMutation.mutate(),
 		[logoutMutation]
@@ -52,12 +53,6 @@ const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 			>
 				{logoutMutation.isLoading ? <Loading /> : "Logout"}
 			</Button>
-			{logoutMutation.status === "error" ? (
-				<>
-					<Spacer y={1} />
-					<MutationErrorMessage mutation={logoutMutation} />
-				</>
-			) : null}
 		</>
 	);
 };

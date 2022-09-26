@@ -11,4 +11,7 @@ export const options: UseContextedMutationOptions<"receipts.propagateDebts"> = {
 			true
 		),
 	}),
+	errorToastOptions: () => (error) => ({
+		text: `Error propagating debts: ${error.message}`,
+	}),
 };

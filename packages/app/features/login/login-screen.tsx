@@ -5,7 +5,6 @@ import { Button, Input, Loading, Spacer } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { MutationErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useRouter } from "app/hooks/use-router";
@@ -69,12 +68,6 @@ export const LoginScreen: AppPage = () => {
 			>
 				{loginMutation.isLoading ? <Loading /> : "Login"}
 			</Button>
-			{loginMutation.status === "error" ? (
-				<>
-					<Spacer y={1} />
-					<MutationErrorMessage mutation={loginMutation} />
-				</>
-			) : null}
 			<Spacer y={2} />
 			<Button disabled={loginMutation.isLoading} onClick={openModal}>
 				Forgot password?

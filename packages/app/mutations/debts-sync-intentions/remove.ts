@@ -51,4 +51,7 @@ export const options: UseContextedMutationOptions<
 				getByUsers: noop,
 			});
 		},
+	errorToastOptions: () => (error) => ({
+		text: `Error cancelling intention: ${error.message}`,
+	}),
 };

@@ -36,4 +36,13 @@ export const options: UseContextedMutationOptions<"accountConnectionIntentions.a
 					});
 				}
 			},
+		mutateToastOptions: () => (variables) => ({
+			text: `Sending connection intention to "${variables.email}"..`,
+		}),
+		successToastOptions: () => (_result, variables) => ({
+			text: `Connection intention to "${variables.email}" sent`,
+		}),
+		errorToastOptions: () => (error) => ({
+			text: `Error sending connection intention: ${error.message}`,
+		}),
 	};

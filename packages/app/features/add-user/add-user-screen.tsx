@@ -5,7 +5,6 @@ import { Button, Loading, Spacer } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { MutationErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { useRouter } from "app/hooks/use-router";
@@ -57,12 +56,6 @@ export const AddUserScreen: AppPage = () => {
 			>
 				{addUserMutation.isLoading ? <Loading size="sm" /> : "Add user"}
 			</Button>
-			{addUserMutation.status === "error" ? (
-				<>
-					<Spacer y={1} />
-					<MutationErrorMessage mutation={addUserMutation} />
-				</>
-			) : null}
 		</>
 	);
 };

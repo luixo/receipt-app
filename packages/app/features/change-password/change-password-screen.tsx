@@ -5,8 +5,9 @@ import { Button, Input, Loading, Spacer } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { MutationErrorMessage } from "app/components/error-message";
 import { useBooleanState } from "app/hooks/use-boolean-state";
+import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
 import { passwordSchema } from "app/utils/validation";
 import { AppPage } from "next-app/types/page";
@@ -40,7 +41,9 @@ export const ChangePasswordScreen: AppPage = () => {
 		),
 	});
 
-	const changePasswordMutation = trpc.account.changePassword.useMutation();
+	const changePasswordMutation = trpc.account.changePassword.useMutation(
+		useTrpcMutationOptions(mutations.account.changePassword.options)
+	);
 	const onSubmit = React.useCallback(
 		(data: Form) =>
 			changePasswordMutation.mutate({
@@ -86,9 +89,6 @@ export const ChangePasswordScreen: AppPage = () => {
 			>
 				{changePasswordMutation.isLoading ? <Loading /> : "Change password"}
 			</Button>
-			{changePasswordMutation.status === "error" ? (
-				<MutationErrorMessage mutation={changePasswordMutation} />
-			) : null}
 		</>
 	);
 };

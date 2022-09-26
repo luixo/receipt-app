@@ -84,4 +84,7 @@ export const options: UseContextedMutationOptions<"users.update"> = {
 		}),
 	}),
 	onSuccess: (trpcContext) => () => cache.users.invalidateSuggest(trpcContext),
+	errorToastOptions: () => (error) => ({
+		text: `Error updating user: ${error.message}`,
+	}),
 };

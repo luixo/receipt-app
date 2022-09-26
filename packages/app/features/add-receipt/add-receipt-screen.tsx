@@ -6,10 +6,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { CurrencyInput } from "app/components/app/currency-input";
-import {
-	MutationErrorMessage,
-	QueryErrorMessage,
-} from "app/components/error-message";
+import { QueryErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { useRouter } from "app/hooks/use-router";
@@ -87,12 +84,6 @@ export const AddReceiptScreen: AppPage = () => {
 			>
 				{addReceiptMutation.isLoading ? <Loading size="sm" /> : "Add receipt"}
 			</Button>
-			{addReceiptMutation.status === "error" ? (
-				<>
-					<Spacer y={1} />
-					<MutationErrorMessage mutation={addReceiptMutation} />
-				</>
-			) : null}
 			{accountQuery.status === "error" ? (
 				<>
 					<Spacer y={1} />

@@ -69,4 +69,7 @@ export const options: UseContextedMutationOptions<
 			updateReceiptSum(trpcContext, receiptId);
 		}
 	},
+	errorToastOptions: () => (error) => ({
+		text: `Error updating item: ${error.message}`,
+	}),
 };

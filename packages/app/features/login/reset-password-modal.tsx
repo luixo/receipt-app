@@ -5,7 +5,8 @@ import { Button, Input, Loading, Modal, Spacer, Text } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { MutationErrorMessage } from "app/components/error-message";
+import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
 import { emailSchema } from "app/utils/validation";
 
@@ -27,7 +28,9 @@ export const ResetPasswordModal: React.FC<Props> = ({
 		resolver: zodResolver(z.object({ email: emailSchema })),
 	});
 
-	const resetPasswordMutation = trpc.resetPasswordIntentions.add.useMutation();
+	const resetPasswordMutation = trpc.resetPasswordIntentions.add.useMutation(
+		useTrpcMutationOptions(mutations.resetPasswordIntentions.add.options)
+	);
 	const onSubmit = React.useCallback(
 		(data: ResetPasswordForm) => resetPasswordMutation.mutate(data),
 		[resetPasswordMutation]
@@ -59,12 +62,6 @@ export const ResetPasswordModal: React.FC<Props> = ({
 						>
 							{resetPasswordMutation.isLoading ? <Loading /> : "Send email"}
 						</Button>
-						{resetPasswordMutation.status === "error" ? (
-							<>
-								<Spacer y={1} />
-								<MutationErrorMessage mutation={resetPasswordMutation} />
-							</>
-						) : null}
 					</>
 				)}
 				<Spacer y={1} />

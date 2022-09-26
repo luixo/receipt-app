@@ -2,7 +2,7 @@ import React from "react";
 
 import { Button, Loading, Text } from "@nextui-org/react";
 
-import { MutationErrorMessage } from "app/components/error-message";
+import { ErrorMessage } from "app/components/error-message";
 import { useRouter } from "app/hooks/use-router";
 import { TRPCMutationResult } from "app/trpc";
 
@@ -29,7 +29,7 @@ export const ConfirmEmail: React.FC<Props> = ({ token, confirmMutation }) => {
 		return <Loading />;
 	}
 	if (confirmMutation.status === "error") {
-		return <MutationErrorMessage mutation={confirmMutation} />;
+		return <ErrorMessage message={confirmMutation.error.message} />;
 	}
 	if (confirmMutation.status === "idle") {
 		return null;

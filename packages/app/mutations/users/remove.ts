@@ -12,4 +12,13 @@ export const options: UseContextedMutationOptions<"users.remove"> = {
 			}),
 		}),
 	onSuccess: (trpcContext) => () => cache.users.invalidateSuggest(trpcContext),
+	mutateToastOptions: {
+		text: "Removing user..",
+	},
+	successToastOptions: {
+		text: "User removed",
+	},
+	errorToastOptions: () => (error) => ({
+		text: `Error removing user: ${error.message}`,
+	}),
 };

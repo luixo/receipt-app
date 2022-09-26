@@ -2,7 +2,6 @@ import React from "react";
 
 import { Spacer, Button } from "@nextui-org/react";
 
-import { MutationErrorMessage } from "app/components/error-message";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
@@ -36,12 +35,6 @@ export const OutboundDebtIntention: React.FC<Props> = ({ intention }) => {
 			>
 				Cancel
 			</Button>
-			{removeMutation.status === "error" ? (
-				<>
-					<Spacer y={1} />
-					<MutationErrorMessage mutation={removeMutation} />
-				</>
-			) : null}
 		</DebtIntention>
 	);
 };

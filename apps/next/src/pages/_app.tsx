@@ -10,6 +10,7 @@ import { ParsedUrlQuery } from "querystring";
 
 import { ProtectedPage } from "app/components/protected-page";
 import { PublicPage } from "app/components/public-page";
+import { Toaster } from "app/components/toaster";
 import {
 	ColorModeConfig,
 	LAST_COLOR_MODE_COOKIE_NAME,
@@ -64,6 +65,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 					<Component />
 				</LayoutComponent>
 				<GlobalHooksComponent />
+				<Toaster />
 			</Provider>
 		</>
 	);

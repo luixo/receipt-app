@@ -41,4 +41,13 @@ export const options: UseContextedMutationOptions<
 			getNonResolvedAmount: noop,
 		});
 	},
+	mutateToastOptions: {
+		text: "Removing receipt..",
+	},
+	successToastOptions: {
+		text: "Receipt removed",
+	},
+	errorToastOptions: () => (error) => ({
+		text: `Error removing receipt: ${error.message}`,
+	}),
 };

@@ -1,6 +1,7 @@
 import React from "react";
 
 import { MutationOptions } from "@tanstack/react-query";
+import { toast } from "react-hot-toast";
 
 import {
 	trpc,
@@ -10,6 +11,7 @@ import {
 	TRPCMutationOutput,
 	TRPCReactContext,
 } from "app/trpc";
+import { MaybeAddElementToArray } from "app/utils/types";
 
 export type TRPCMutationOptions<
 	Path extends TRPCMutationKey,
@@ -31,10 +33,16 @@ type WrappedMutationOptions<
 	LifecycleContext = unknown
 > = TRPCMutationOptions<Path, WrappedContext<LifecycleContext>>;
 
-export type WithContextIfExists<
-	T,
-	Context = undefined
-> = undefined extends Context ? [T] : [T, Context];
+type ToastArgs<Context> = MaybeAddElementToArray<[], Context>;
+
+type Contexts<Context = undefined> = MaybeAddElementToArray<
+	[TRPCReactContext],
+	Context
+>;
+
+type ToastOptions = {
+	text: string;
+};
 
 export type UseContextedMutationOptions<
 	Path extends TRPCMutationKey,
@@ -49,18 +57,33 @@ export type UseContextedMutationOptions<
 		LifecycleContext
 	> = WrappedMutationOptions<Path, LifecycleContext>
 > = {
+	mutateToastOptions?:
+		| ToastOptions
+		| ((
+				...contextArgs: ToastArgs<Context>
+		  ) => (
+				...args: Parameters<NonNullable<WrappedOptions["onMutate"]>>
+		  ) => ToastOptions | undefined);
 	onMutate?: (
-		...args: WithContextIfExists<TRPCReactContext, Context>
+		...args: Contexts<Context>
 	) => NonNullable<WrappedOptions["onMutate"]>;
-	onError?: (
-		...args: WithContextIfExists<TRPCReactContext, Context>
-	) => NonNullable<Options["onError"]>;
-	onSuccess?: (
-		...args: WithContextIfExists<TRPCReactContext, Context>
-	) => NonNullable<Options["onSuccess"]>;
-	onSettled?: (
-		...args: WithContextIfExists<TRPCReactContext, Context>
-	) => NonNullable<Options["onSettled"]>;
+	errorToastOptions:
+		| ToastOptions
+		| ((
+				...contextArgs: ToastArgs<Context>
+		  ) => (
+				...args: Parameters<NonNullable<Options["onError"]>>
+		  ) => ToastOptions);
+	onError?: (...args: Contexts<Context>) => NonNullable<Options["onError"]>;
+	successToastOptions?:
+		| ToastOptions
+		| ((
+				...contextArgs: ToastArgs<Context>
+		  ) => (
+				...args: Parameters<NonNullable<Options["onSuccess"]>>
+		  ) => ToastOptions | undefined);
+	onSuccess?: (...args: Contexts<Context>) => NonNullable<Options["onSuccess"]>;
+	onSettled?: (...args: Contexts<Context>) => NonNullable<Options["onSettled"]>;
 };
 
 export const useTrpcMutationOptions = <
@@ -69,6 +92,9 @@ export const useTrpcMutationOptions = <
 	LifecycleContext = unknown
 >(
 	{
+		mutateToastOptions,
+		errorToastOptions,
+		successToastOptions,
 		onError: onErrorTrpc,
 		onMutate: onMutateTrpc,
 		onSettled: onSettledTrpc,
@@ -87,30 +113,61 @@ export const useTrpcMutationOptions = <
 ): TRPCMutationOptions<Path, WrappedContext<LifecycleContext>> => {
 	const trpcContext = trpc.useContext();
 	return React.useMemo(() => {
-		const trpcArgs = [trpcContext, context] as any;
+		const trpcArgs = [trpcContext, context] as Contexts<Context>;
+		const toastArgs = [context] as ToastArgs<Context>;
+		let toastId: string | undefined;
 		return {
 			onMutate: async (...args) => {
+				const toastOptions =
+					typeof mutateToastOptions === "function"
+						? mutateToastOptions(...toastArgs)(...args)
+						: mutateToastOptions;
+				if (toastOptions) {
+					toastId = toast.loading(toastOptions.text);
+				}
 				onMutate?.(...args);
 				return onMutateTrpc?.(...trpcArgs)(...args);
 			},
 			onError: (error, vars, wrappedContext) => {
+				const toastOptions =
+					typeof errorToastOptions === "function"
+						? errorToastOptions(...toastArgs)(
+								error,
+								vars,
+								wrappedContext?.context
+						  )
+						: errorToastOptions;
+				if (toastOptions) {
+					toast.error(toastOptions.text, { id: toastId });
+				}
 				onError?.(error, vars, wrappedContext?.context);
 				wrappedContext?.revertFns.forEach((fn) => fn());
 				return onErrorTrpc?.(...trpcArgs)(error, vars, wrappedContext?.context);
+			},
+			onSuccess: (result, vars, wrappedContext) => {
+				const toastOptions =
+					typeof successToastOptions === "function"
+						? successToastOptions?.(...toastArgs)(
+								result,
+								vars,
+								wrappedContext?.context
+						  )
+						: successToastOptions;
+				if (toastOptions) {
+					toast.success(toastOptions.text, { id: toastId });
+				}
+				onSuccess?.(result, vars, wrappedContext?.context);
+				return onSuccessTrpc?.(...trpcArgs)(
+					result,
+					vars,
+					wrappedContext?.context
+				);
 			},
 			onSettled: (result, error, vars, wrappedContext) => {
 				onSettled?.(result, error, vars, wrappedContext?.context);
 				return onSettledTrpc?.(...trpcArgs)(
 					result,
 					error,
-					vars,
-					wrappedContext?.context
-				);
-			},
-			onSuccess: (result, vars, wrappedContext) => {
-				onSuccess?.(result, vars, wrappedContext?.context);
-				return onSuccessTrpc?.(...trpcArgs)(
-					result,
 					vars,
 					wrappedContext?.context
 				);
@@ -128,6 +185,9 @@ export const useTrpcMutationOptions = <
 		onErrorTrpc,
 		onSettledTrpc,
 		onSuccessTrpc,
+		mutateToastOptions,
+		errorToastOptions,
+		successToastOptions,
 		rest,
 	]);
 };

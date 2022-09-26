@@ -15,4 +15,7 @@ export const options: UseContextedMutationOptions<
 				controller.remove(receiptId, variables.itemId, variables.userId),
 		}),
 	}),
+	errorToastOptions: () => (error) => ({
+		text: `Error removing participant(s): ${error.message}`,
+	}),
 };

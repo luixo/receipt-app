@@ -2,7 +2,6 @@ import React from "react";
 
 import { Button, Spacer } from "@nextui-org/react";
 
-import { MutationErrorMessage } from "app/components/error-message";
 import { useRouter } from "app/hooks/use-router";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -88,18 +87,6 @@ export const InboundDebtIntention: React.FC<Props> = ({ intention }) => {
 					Reject
 				</Button>
 			</Button.Group>
-			{acceptMutation.status === "error" ? (
-				<>
-					<Spacer y={1} />
-					<MutationErrorMessage mutation={acceptMutation} />
-				</>
-			) : null}
-			{rejectMutation.status === "error" ? (
-				<>
-					<Spacer y={1} />
-					<MutationErrorMessage mutation={rejectMutation} />
-				</>
-			) : null}
 		</DebtIntention>
 	);
 };

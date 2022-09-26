@@ -2,12 +2,15 @@ import React from "react";
 
 import { Button, Card, Loading, Spacer, Text } from "@nextui-org/react";
 
-import { MutationErrorMessage } from "app/components/error-message";
+import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
 
 export const EmailVerificationCard: React.FC = () => {
 	const accountQuery = trpc.account.get.useQuery();
-	const resendEmailMutation = trpc.account.resendEmail.useMutation();
+	const resendEmailMutation = trpc.account.resendEmail.useMutation(
+		useTrpcMutationOptions(mutations.account.resendEmail.options)
+	);
 	const resendEmail = React.useCallback(
 		() => resendEmailMutation.mutate(),
 		[resendEmailMutation]
@@ -43,12 +46,6 @@ export const EmailVerificationCard: React.FC = () => {
 							{resendEmailMutation.isLoading ? <Loading /> : "Resend email"}
 						</Button>
 					)}
-					{resendEmailMutation.status === "error" ? (
-						<>
-							<Spacer y={1} />
-							<MutationErrorMessage mutation={resendEmailMutation} />
-						</>
-					) : null}
 				</Card.Body>
 			</Card>
 		</>

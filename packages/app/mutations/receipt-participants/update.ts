@@ -143,4 +143,7 @@ export const options: UseContextedMutationOptions<
 				});
 			}
 		},
+	errorToastOptions: () => (error) => ({
+		text: `Error updating a participant: ${error.message}`,
+	}),
 };

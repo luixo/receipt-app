@@ -7,7 +7,6 @@ import {
 	MdCheckCircle as AcceptIcon,
 } from "react-icons/md";
 
-import { MutationErrorMessage } from "app/components/error-message";
 import { IconButton } from "app/components/icon-button";
 import { LockedIcon } from "app/components/locked-icon";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -222,30 +221,6 @@ export const DebtControlButtons: React.FC<Props> = ({ debt, hideLocked }) => {
 						</Buttons>
 					)}
 				</VisibilityWrapper>
-			) : null}
-			{addMutation.status === "error" ? (
-				<>
-					<Spacer y={1} />
-					<MutationErrorMessage mutation={addMutation} />
-				</>
-			) : null}
-			{removeMutation.status === "error" ? (
-				<>
-					<Spacer y={1} />
-					<MutationErrorMessage mutation={removeMutation} />
-				</>
-			) : null}
-			{acceptMutation.status === "error" ? (
-				<>
-					<Spacer y={1} />
-					<MutationErrorMessage mutation={acceptMutation} />
-				</>
-			) : null}
-			{rejectMutation.status === "error" ? (
-				<>
-					<Spacer y={1} />
-					<MutationErrorMessage mutation={rejectMutation} />
-				</>
 			) : null}
 		</Wrapper>
 	);

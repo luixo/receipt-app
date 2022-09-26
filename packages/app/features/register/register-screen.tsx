@@ -5,7 +5,6 @@ import { Button, Input, Loading, Spacer } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { MutationErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
 import { useRouter } from "app/hooks/use-router";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -99,12 +98,6 @@ export const RegisterScreen: AppPage = () => {
 			>
 				{registerMutation.isLoading ? <Loading /> : "Register"}
 			</Button>
-			{registerMutation.status === "error" ? (
-				<>
-					<Spacer y={1} />
-					<MutationErrorMessage mutation={registerMutation} />
-				</>
-			) : null}
 		</>
 	);
 };

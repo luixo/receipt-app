@@ -8,4 +8,10 @@ export const options: UseContextedMutationOptions<"auth.login"> = {
 			cache.account.update(trpcContext, {
 				get: (controller) => controller.upsert({ id: accountId, ...account }),
 			}),
+	successToastOptions: {
+		text: "Login successful, redirecting..",
+	},
+	errorToastOptions: () => (error) => ({
+		text: error.message,
+	}),
 };

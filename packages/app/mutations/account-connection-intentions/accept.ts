@@ -25,4 +25,7 @@ export const options: UseContextedMutationOptions<"accountConnectionIntentions.a
 			});
 			cache.users.invalidateSuggest(trpcContext);
 		},
+		errorToastOptions: () => (error) => ({
+			text: `Error accepting an invite: ${error.message}`,
+		}),
 	};

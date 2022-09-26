@@ -60,4 +60,7 @@ export const options: UseContextedMutationOptions<
 					: []),
 			],
 		}),
+	errorToastOptions: () => (error) => ({
+		text: `Error removing a participant: ${error.message}`,
+	}),
 };

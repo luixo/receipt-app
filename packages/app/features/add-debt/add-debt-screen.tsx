@@ -12,7 +12,6 @@ import {
 	SignButtonGroup,
 } from "app/components/app/sign-button-group";
 import { UsersSuggest } from "app/components/app/users-suggest";
-import { MutationErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { useRouter } from "app/hooks/use-router";
@@ -115,12 +114,6 @@ export const AddDebtScreen: AppPage = () => {
 		<>
 			<Header backHref="/debts">Add debt</Header>
 			<EmailVerificationCard />
-			{addMutation.status === "error" ? (
-				<>
-					<Spacer y={1} />
-					<MutationErrorMessage mutation={addMutation} />
-				</>
-			) : null}
 			<Spacer y={1} />
 			<SignButtonGroup
 				isLoading={addMutation.isLoading}

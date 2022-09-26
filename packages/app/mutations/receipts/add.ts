@@ -54,4 +54,13 @@ export const options: UseContextedMutationOptions<
 				getResolvedParticipants: (controller) => controller.upsert(id, []),
 			});
 		},
+	mutateToastOptions: () => (variables) => ({
+		text: `Adding receipt "${variables.name}"..`,
+	}),
+	successToastOptions: () => (_result, variables) => ({
+		text: `Receipt "${variables.name}" added`,
+	}),
+	errorToastOptions: () => (error, variables) => ({
+		text: `Error adding receipt "${variables.name}": ${error.message}`,
+	}),
 };

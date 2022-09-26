@@ -61,4 +61,13 @@ export const options: UseContextedMutationOptions<
 			},
 		});
 	},
+	mutateToastOptions: {
+		text: "Sending debt..",
+	},
+	successToastOptions: {
+		text: "Debt sent",
+	},
+	errorToastOptions: () => (error) => ({
+		text: `Error sending debt: ${error.message}`,
+	}),
 };

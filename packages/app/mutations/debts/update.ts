@@ -244,4 +244,7 @@ export const options: UseContextedMutationOptions<
 			});
 		}
 	},
+	errorToastOptions: () => (error) => ({
+		text: `Error updating debt: ${error.message}`,
+	}),
 };

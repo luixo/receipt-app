@@ -3,7 +3,6 @@ import React from "react";
 import { Button, Container, Spacer, Text } from "@nextui-org/react";
 
 import { UsersSuggest } from "app/components/app/users-suggest";
-import { MutationErrorMessage } from "app/components/error-message";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc, TRPCInfiniteQueryOutput, TRPCQueryOutput } from "app/trpc";
@@ -70,18 +69,6 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 					Reject connection
 				</Button>
 			</Container>
-			{acceptConnectionMutation.status === "error" ? (
-				<>
-					<Spacer y={1} />
-					<MutationErrorMessage mutation={acceptConnectionMutation} />
-				</>
-			) : null}
-			{rejectConnectionMutation.status === "error" ? (
-				<>
-					<Spacer y={1} />
-					<MutationErrorMessage mutation={rejectConnectionMutation} />
-				</>
-			) : null}
 		</>
 	);
 };

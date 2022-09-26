@@ -49,4 +49,7 @@ export const options: UseContextedMutationOptions<
 				),
 		}),
 	}),
+	errorToastOptions: () => (error) => ({
+		text: `Error updating participant(s): ${error.message}`,
+	}),
 };

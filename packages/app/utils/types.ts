@@ -49,3 +49,8 @@ export type FlattenObject<
 		  >
 		: never
 	: never;
+
+export type MaybeAddElementToArray<
+	Args extends unknown[],
+	X = undefined
+> = undefined extends X ? Args : [...Args, X];

@@ -21,6 +21,7 @@
 		"react-calendar": "^3.7.0",
 		"react-date-picker": "^8.4.0",
 		"react-hook-form": "^7.34.2",
+		"react-hot-toast": "^2.4.0",
 		"solito": "latest",
 		"superjson": "^1.9.1",
 		"uuid": "^8.3.2",
