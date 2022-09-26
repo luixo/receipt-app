@@ -69,5 +69,11 @@ export const ProtectedPage: React.FC<Props> = ({ children }) => {
 		element = <Loading size="xl" />;
 	}
 
-	return <Page elements={PROTECTED_ELEMENTS}>{element}</Page>;
+	return (
+		<Page
+			elements={accountQuery.status === "success" ? PROTECTED_ELEMENTS : []}
+		>
+			{element}
+		</Page>
+	);
 };
