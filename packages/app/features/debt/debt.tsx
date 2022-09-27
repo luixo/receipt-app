@@ -14,6 +14,7 @@ import { DebtsId } from "next-app/src/db/models";
 import { DebtAmountInput } from "./debt-amount-input";
 import { DebtDateInput } from "./debt-date-input";
 import { DebtNoteInput } from "./debt-note-input";
+import { DebtReceiptLink } from "./debt-receipt-link";
 import { DebtRemoveButton } from "./debt-remove-button";
 import { DebtSignButtonGroup } from "./debt-sign-button-group";
 
@@ -41,6 +42,12 @@ export const DebtInner: React.FC<InnerProps> = ({ query }) => {
 						intentionDirection={debt.intentionDirection}
 						size={36}
 					/>
+					{debt.receiptId ? (
+						<>
+							<Spacer x={1} />
+							<DebtReceiptLink receiptId={debt.receiptId} />
+						</>
+					) : null}
 				</>
 			</Header>
 			<Spacer y={1} />
