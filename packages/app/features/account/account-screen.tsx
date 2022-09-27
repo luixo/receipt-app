@@ -37,7 +37,9 @@ const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 
 	return (
 		<>
-			<Header icon="👤">{query.data.name}</Header>
+			<Header icon="👤" textChildren="My account">
+				{query.data.name}
+			</Header>
 			<EmailVerificationCard />
 			<Spacer y={1} />
 			<AccountNameInput account={query.data} />

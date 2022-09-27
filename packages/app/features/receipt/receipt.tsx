@@ -60,6 +60,7 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 				backHref="/receipts"
 				icon="🧾"
 				aside={isEditing ? undefined : asideButtons}
+				textChildren={`Receipt ${receipt.name}`}
 			>
 				{isEditing && receipt.role === "owner" ? (
 					<ReceiptNameInput

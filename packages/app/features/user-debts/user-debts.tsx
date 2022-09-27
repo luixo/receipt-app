@@ -41,10 +41,14 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 			).map(([currency, sum]) => ({ currency, sum })),
 		[debts]
 	);
+	const userQuery = trpc.users.get.useQuery({ id: userId });
 	return (
 		<>
 			<Header
 				backHref="/debts"
+				textChildren={`${
+					userQuery.status === "success" ? userQuery.data.name : "..."
+				}'s debts`}
 				aside={
 					<IconButton
 						key="add"

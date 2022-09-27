@@ -23,7 +23,12 @@ export const UserScreen: AppPage = () => {
 
 	return (
 		<>
-			<Header backHref="/users">
+			<Header
+				backHref="/users"
+				textChildren={
+					userQuery.data ? userQuery.data.name : userNameQuery.data || "..."
+				}
+			>
 				<UserTitle
 					user={React.useMemo(
 						() =>

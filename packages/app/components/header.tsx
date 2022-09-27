@@ -1,6 +1,7 @@
 import React from "react";
 
 import { Spacer, Text, styled } from "@nextui-org/react";
+import Head from "next/head";
 import { IoMdArrowRoundBack as BackArrow } from "react-icons/io";
 
 import { useRouter } from "app/hooks/use-router";
@@ -48,9 +49,18 @@ const Aside = styled("div", {
 type Props = {
 	backHref?: string;
 	icon?: React.ReactNode;
-	children: React.ReactNode;
 	aside?: JSX.Element | JSX.Element[];
-} & React.ComponentProps<typeof Text>;
+} & React.ComponentProps<typeof Text> &
+	(
+		| {
+				children: Exclude<React.ReactNode, string>;
+				textChildren: string;
+		  }
+		| {
+				children: string;
+				textChildren?: string;
+		  }
+	);
 
 export const Header: React.FC<Props> = ({
 	children,
@@ -84,6 +94,11 @@ export const Header: React.FC<Props> = ({
 	}, [setVerticalLayout, wrapperRef]);
 	return (
 		<Wrapper column={verticalLayout} ref={wrapperRef}>
+			<Head>
+				<title>
+					RA - {"textChildren" in props ? props.textChildren : children}
+				</title>
+			</Head>
 			<Title h2 {...props}>
 				{backHref ? (
 					<Icon onClick={back}>

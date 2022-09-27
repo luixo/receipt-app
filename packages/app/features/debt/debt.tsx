@@ -7,6 +7,7 @@ import { DebtSyncStatus } from "app/components/app/debt-sync-status";
 import { LoadableUser } from "app/components/app/loadable-user";
 import { QueryErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
+import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { trpc, TRPCQuerySuccessResult } from "app/trpc";
 import { DebtsId } from "next-app/src/db/models";
 
@@ -23,15 +24,17 @@ type InnerProps = {
 export const DebtInner: React.FC<InnerProps> = ({ query }) => {
 	const debt = query.data;
 	const [isRemoving, setRemoving] = React.useState(false);
+	const formattedCurrency = useFormattedCurrency(debt.currency);
 
 	return (
 		<>
 			<Header
 				backHref={`/debts/user/${debt.userId}`}
 				aside={<DebtControlButtons debt={debt} />}
+				textChildren={`${debt.amount} ${formattedCurrency} debt`}
 			>
 				<>
-					Debt
+					{debt.amount} {formattedCurrency} debt
 					<Spacer x={1} />
 					<DebtSyncStatus
 						status={debt.status}
