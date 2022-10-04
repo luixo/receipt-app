@@ -1,7 +1,6 @@
 import React from "react";
 
 import {
-	TRPCQuery,
 	TRPCQueryInput,
 	TRPCQueryKey,
 	TRPCQueryOutput,
@@ -52,9 +51,8 @@ export const createController = <Key extends TRPCQueryKey>(
 			getQueries()
 				.filter(([input, output]) => fn(input, output))
 				.forEach(([input]) =>
-					trpc.queryClient.invalidateQueries([key], {
-						predicate: (query) =>
-							input === (query as unknown as TRPCQuery<Key>).queryKey[1],
+					trpc.queryClient.invalidateQueries([key, input], {
+						exact: true,
 						...args,
 					})
 				),
