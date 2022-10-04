@@ -38,8 +38,8 @@ export const RemoveButton: React.FC<Props> = ({
 	const [isModalOpen, { setFalse: closeModal, setTrue: openModal }] =
 		useBooleanState();
 	const onYesClick = React.useCallback(() => {
-		onRemove();
 		closeModal();
+		onRemove();
 	}, [onRemove, closeModal]);
 
 	return (
