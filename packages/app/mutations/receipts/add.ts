@@ -12,7 +12,7 @@ export const options: UseContextedMutationOptions<
 		(id, variables) => {
 			cache.receipts.update(trpcContext, {
 				getPaged: (controller) => {
-					const sinceCursor = controller.add({
+					controller.add({
 						id,
 						role: "owner",
 						name: variables.name,
@@ -29,7 +29,6 @@ export const options: UseContextedMutationOptions<
 						localUserId: selfAccountId as UsersId,
 						sum: 0,
 					});
-					controller.invalidate(sinceCursor);
 				},
 				get: (controller) =>
 					controller.add({

@@ -9,7 +9,6 @@ import { IconButton } from "app/components/icon-button";
 import { Overlay } from "app/components/overlay";
 import { useCursorPaging } from "app/hooks/use-cursor-paging";
 import { useMatchMediaValue } from "app/hooks/use-match-media-value";
-import { useSyncQueryParam } from "app/hooks/use-sync-query-param";
 import { useTrpcQueryOptions } from "app/hooks/use-trpc-query-options";
 import { queries } from "app/queries";
 import { trpc, TRPCQueryInput, TRPCQueryOutput } from "app/trpc";
@@ -66,22 +65,14 @@ const useReceiptQuery = (
 
 export const Receipts: React.FC = () => {
 	const [input] = queries.receipts.getPaged.useStore();
+	queries.receipts.getPaged.useSyncQueryParams();
 	const cursorPaging = useCursorPaging(useReceiptQuery, input, "offset");
-	useSyncQueryParam(
-		queries.receipts.getPaged.queryOptions.onlyNonResolved,
-		input.onlyNonResolved
-	);
-	useSyncQueryParam(
-		queries.receipts.getPaged.queryOptions.orderBy,
-		input.orderBy
-	);
 	const { totalCount, query, pagination } = cursorPaging;
 
-	if (
-		!totalCount &&
-		!input.onlyNonResolved &&
-		query.fetchStatus !== "fetching"
-	) {
+	if (!totalCount && !input.filters && query.fetchStatus !== "fetching") {
+		if (query.status === "error") {
+			return <QueryErrorMessage query={query} />;
+		}
 		return (
 			<Wrapper>
 				<Text h2>You have no receipts</Text>
@@ -110,16 +101,18 @@ export const Receipts: React.FC = () => {
 			<Spacer y={1} />
 			<Overlay
 				overlay={
-					query.fetchStatus === "fetching" ? <Loading size="xl" /> : undefined
+					query.fetchStatus === "fetching" && query.isPreviousData ? (
+						<Loading size="xl" />
+					) : undefined
 				}
 			>
 				{query.status === "error" ? <QueryErrorMessage query={query} /> : null}
-				{!totalCount && input.onlyNonResolved ? (
-					<Wrapper>
-						<Text h2>All receipts are resolved!</Text>
-					</Wrapper>
-				) : query.status === "loading" ? (
+				{query.status === "loading" ? (
 					<Loading size="xl" />
+				) : !totalCount && input.filters ? (
+					<Wrapper>
+						<Text h2>No receipts under given filters</Text>
+					</Wrapper>
 				) : query.data ? (
 					<ReceiptPreviewsList receipts={query.data.items} />
 				) : null}

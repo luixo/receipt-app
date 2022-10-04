@@ -122,16 +122,6 @@ export const options: UseContextedMutationOptions<
 							variables.receiptId,
 							applyUpdateReceiptPaged(variables.update)
 						);
-						if (variables.update.type === "resolved") {
-							if (variables.update.resolved) {
-								controller.remove(
-									variables.receiptId,
-									(input) => input.onlyNonResolved
-								);
-							} else {
-								controller.invalidate(0, (input) => input.onlyNonResolved);
-							}
-						}
 					},
 					getName: noop,
 					getResolvedParticipants: (controller) =>

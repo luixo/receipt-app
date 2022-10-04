@@ -1,7 +1,7 @@
 import { cache } from "app/cache";
 import { UseContextedQueryOptions } from "app/hooks/use-trpc-query-options";
 import { TRPCQueryInput } from "app/trpc";
-import { createStore } from "app/utils/store";
+import { createStore, updateWithFn } from "app/utils/store";
 import { Setters } from "app/utils/types";
 import { noop } from "app/utils/utils";
 
@@ -12,7 +12,8 @@ type CursorlessOmit = Omit<Input, "cursor">;
 export const inputStore = createStore<CursorlessOmit & Setters<CursorlessOmit>>(
 	(set) => ({
 		limit: 10,
-		changeLimit: (nextLimit) => set(() => ({ limit: nextLimit })),
+		changeLimit: (maybeUpdater) =>
+			set((prev) => ({ limit: updateWithFn(prev.limit, maybeUpdater) })),
 	})
 );
 

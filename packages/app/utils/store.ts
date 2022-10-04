@@ -6,6 +6,8 @@ import zustand, {
 } from "zustand";
 import createContext from "zustand/context";
 
+import { UpdateFn } from "app/cache/utils";
+
 export type ParsedQuery = Partial<Record<string, string>>;
 
 export const createStore = <
@@ -38,3 +40,8 @@ export const createStore = <
 	};
 	return { Provider, useStore, useCreateStore };
 };
+
+export const updateWithFn = <T>(prev: T, nextStateOrFn: T | UpdateFn<T>) =>
+	typeof nextStateOrFn === "function"
+		? (nextStateOrFn as UpdateFn<T>)(prev)
+		: nextStateOrFn;

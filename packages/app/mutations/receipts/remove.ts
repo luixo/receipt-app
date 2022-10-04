@@ -30,12 +30,7 @@ export const options: UseContextedMutationOptions<
 	onSuccess: (trpcContext) => (_result, variables) => {
 		cache.receipts.update(trpcContext, {
 			get: noop,
-			getPaged: (controller) => {
-				const snapshot = controller.remove(variables.id);
-				if (snapshot) {
-					controller.invalidate(snapshot.cursor);
-				}
-			},
+			getPaged: (controller) => controller.remove(variables.id),
 			getName: noop,
 			getResolvedParticipants: noop,
 			getNonResolvedAmount: noop,

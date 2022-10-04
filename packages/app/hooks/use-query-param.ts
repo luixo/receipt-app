@@ -8,17 +8,13 @@ import { id } from "app/utils/utils";
 
 const { useParam } = createParam<{ [K in string]: string }>();
 
-export type QueryParamOptions<
-	T extends object | Exclude<Primitive, undefined> = string
-> = {
+export type QueryParamOptions<T extends object | Primitive = string> = {
 	parse?: (input: string | undefined) => T;
 	serialize?: (input: T) => string | null;
 	defaultValue?: T;
 };
 
-export const useQueryParam = <
-	T extends object | Exclude<Primitive, undefined> = string
->(
+export const useQueryParam = <T extends object | Primitive = string>(
 	paramName: string,
 	options: QueryParamOptions<T>
 ) => {

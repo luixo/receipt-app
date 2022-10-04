@@ -1,15 +1,18 @@
 import { cache } from "app/cache";
-import { SyncQueryParamOptions } from "app/hooks/use-sync-query-param";
+import {
+	useSyncQueryParam,
+	SyncQueryParamOptions,
+} from "app/hooks/use-sync-query-param";
 import { UseContextedQueryOptions } from "app/hooks/use-trpc-query-options";
 import { TRPCQueryInput } from "app/trpc";
-import { createStore } from "app/utils/store";
+import { createStore, updateWithFn } from "app/utils/store";
 import { Setters } from "app/utils/types";
 import { noop } from "app/utils/utils";
 
 type Input = TRPCQueryInput<"receipts.getPaged">;
 
-type CursorlessOmit = Omit<Input, "cursor">;
-type SortType = CursorlessOmit["orderBy"];
+type CursorlessInput = Omit<Input, "cursor">;
+type SortType = CursorlessInput["orderBy"];
 
 const DEFAULT_SORT: SortType = "date-desc";
 const isOrder = (input: string): input is SortType =>
@@ -21,52 +24,88 @@ const orderByQueryOptions: SyncQueryParamOptions<SortType> = {
 	serialize: (input) => (input === DEFAULT_SORT ? null : input),
 };
 
-const onlyNonResolvedQueryOptions: SyncQueryParamOptions<boolean> = {
-	param: "non-resolved",
-	parse: (input) => input === "true",
-	serialize: (input) => (input ? "true" : null),
+const getOptionalBooleanOptions = (
+	param: string
+): SyncQueryParamOptions<boolean | undefined> => ({
+	param,
+	parse: (input) =>
+		input === "true" ? true : input === "false" ? false : undefined,
+	serialize: (input) => (typeof input === "boolean" ? input.toString() : null),
+});
+
+const getFilters = (
+	filters: CursorlessInput["filters"]
+): CursorlessInput["filters"] => {
+	if (
+		!filters ||
+		Object.values(filters).filter((value) => value !== undefined).length === 0
+	) {
+		return;
+	}
+	return filters;
 };
 
-export const queryOptions = {
+const queryOptions = {
 	orderBy: orderByQueryOptions,
-	onlyNonResolved: onlyNonResolvedQueryOptions,
+	filters: {
+		resolvedByMe: getOptionalBooleanOptions("filters.resolvedByMe"),
+		ownedByMe: getOptionalBooleanOptions("filters.ownedByMe"),
+		locked: getOptionalBooleanOptions("filters.locked"),
+	},
 };
 
-export const inputStore = createStore<CursorlessOmit & Setters<CursorlessOmit>>(
+export const inputStore = createStore<
+	CursorlessInput & Setters<CursorlessInput>
+>(
 	(set) => ({
 		limit: 10,
 		orderBy: DEFAULT_SORT,
-		onlyNonResolved: false,
-		changeLimit: (nextLimit) => set(() => ({ limit: nextLimit })),
-		changeOrderBy: (nextOrderBy) => set(() => ({ orderBy: nextOrderBy })),
-		changeOnlyNonResolved: (nextOnlyNonResolved) =>
-			set(() => ({
-				onlyNonResolved: nextOnlyNonResolved,
+		changeLimit: (maybeUpdater) =>
+			set((prev) => ({ limit: updateWithFn(prev.limit, maybeUpdater) })),
+		changeOrderBy: (maybeUpdater) =>
+			set((prev) => ({ orderBy: updateWithFn(prev.orderBy, maybeUpdater) })),
+		changeFilters: (maybeUpdater) =>
+			set((prev) => ({
+				filters: getFilters(updateWithFn(prev.filters, maybeUpdater)),
 			})),
 	}),
 	(query) => ({
-		orderBy: orderByQueryOptions.parse(query[orderByQueryOptions.param]),
-		onlyNonResolved: onlyNonResolvedQueryOptions.parse(
-			query[onlyNonResolvedQueryOptions.param]
-		),
+		orderBy: queryOptions.orderBy.parse(query[queryOptions.orderBy.param]),
+		filters: getFilters({
+			resolvedByMe: queryOptions.filters.resolvedByMe.parse(
+				query[queryOptions.filters.resolvedByMe.param]
+			),
+			ownedByMe: queryOptions.filters.ownedByMe.parse(
+				query[queryOptions.filters.ownedByMe.param]
+			),
+			locked: queryOptions.filters.locked.parse(
+				query[queryOptions.filters.locked.param]
+			),
+		}),
 	})
 );
 
 export const useStore = () =>
 	[
-		inputStore.useStore(({ limit, orderBy, onlyNonResolved }) => ({
+		inputStore.useStore(({ limit, orderBy, filters }) => ({
 			limit,
 			orderBy,
-			onlyNonResolved,
+			filters,
 		})),
-		inputStore.useStore(
-			({ changeLimit, changeOrderBy, changeOnlyNonResolved }) => ({
-				changeLimit,
-				changeOrderBy,
-				changeOnlyNonResolved,
-			})
-		),
+		inputStore.useStore(({ changeLimit, changeOrderBy, changeFilters }) => ({
+			changeLimit,
+			changeOrderBy,
+			changeFilters,
+		})),
 	] as const;
+
+export const useSyncQueryParams = () => {
+	const [{ orderBy, filters = {} }] = useStore();
+	useSyncQueryParam(queryOptions.filters.resolvedByMe, filters.resolvedByMe);
+	useSyncQueryParam(queryOptions.filters.ownedByMe, filters.ownedByMe);
+	useSyncQueryParam(queryOptions.filters.locked, filters.locked);
+	useSyncQueryParam(queryOptions.orderBy, orderBy);
+};
 
 export const options: UseContextedQueryOptions<"receipts.getPaged"> = {
 	onSuccess: (trpcContext) => (data) => {

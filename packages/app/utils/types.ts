@@ -1,6 +1,10 @@
-export type Setters<T> = {
-	[K in keyof T as `change${Capitalize<string & K>}`]: (input: T[K]) => void;
-};
+import { UpdateFn } from "app/cache/utils";
+
+export type Setters<T> = Required<{
+	[K in keyof T as `change${Capitalize<string & K>}`]: (
+		input: T[K] | UpdateFn<T[K]>
+	) => void;
+}>;
 
 export type SplitStringByComma<S extends string> =
 	S extends `${infer SS}.${infer SSS}` ? [SS, ...SplitStringByComma<SSS>] : [S];

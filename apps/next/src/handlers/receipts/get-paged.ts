@@ -16,45 +16,55 @@ export const procedure = authProcedure
 			cursor: offsetSchema,
 			limit: limitSchema,
 			orderBy: z.union([z.literal("date-asc"), z.literal("date-desc")]),
-			onlyNonResolved: z.boolean(),
+			filters: z
+				.strictObject({
+					resolvedByMe: z.boolean().optional(),
+					ownedByMe: z.boolean().optional(),
+					locked: z.boolean().optional(),
+				})
+				.optional(),
 		})
 	)
-	.query(async ({ input, ctx }) => {
+	.query(async ({ input: { filters = {}, ...input }, ctx }) => {
 		const database = getDatabase(ctx);
 		const foreignReceipts = getForeignReceipts(database, ctx.auth.accountId);
 		const ownReceipts = getOwnReceipts(database, ctx.auth.accountId);
 
 		const [receipts, receiptsCount] = await Promise.all([
 			database
-				.with("mergedReceipts", () =>
-					foreignReceipts
-						.select([
-							"receipts.id as receiptId",
-							"receiptParticipants.role",
-							"receipts.name",
-							"receipts.issued",
-							"receipts.currency",
-							"receipts.lockedTimestamp",
-							"users.id as remoteUserId",
-							// We use `userId` = `ownerAccountId` contract
-							// But type system doesn't know about that
-							sql<UsersId>`users."connectedAccountId"`.as("localUserId"),
-						])
-						.union(
-							ownReceipts.select([
-								"receipts.id as receiptId",
-								sql<string>`'owner'`.as("role"),
-								"receipts.name",
-								"receipts.issued",
-								"receipts.currency",
-								"receipts.lockedTimestamp",
-								// We use `userId` = `ownerAccountId` contract
-								// But type system doesn't know about that
-								sql<UsersId>`receipts."ownerAccountId"`.as("remoteUserId"),
-								sql<UsersId>`receipts."ownerAccountId"`.as("localUserId"),
-							])
-						)
-				)
+				.with("mergedReceipts", () => {
+					const foreignReceiptsBuilder = foreignReceipts.select([
+						"receipts.id as receiptId",
+						"receiptParticipants.role",
+						"receipts.name",
+						"receipts.issued",
+						"receipts.currency",
+						"receipts.lockedTimestamp",
+						"users.id as remoteUserId",
+						// We use `userId` = `ownerAccountId` contract
+						// But type system doesn't know about that
+						sql<UsersId>`users."connectedAccountId"`.as("localUserId"),
+					]);
+					const ownReceiptsBuilder = ownReceipts.select([
+						"receipts.id as receiptId",
+						sql<string>`'owner'`.as("role"),
+						"receipts.name",
+						"receipts.issued",
+						"receipts.currency",
+						"receipts.lockedTimestamp",
+						// We use `userId` = `ownerAccountId` contract
+						// But type system doesn't know about that
+						sql<UsersId>`receipts."ownerAccountId"`.as("remoteUserId"),
+						sql<UsersId>`receipts."ownerAccountId"`.as("localUserId"),
+					]);
+					if (typeof filters.ownedByMe !== "boolean") {
+						return foreignReceiptsBuilder.union(ownReceiptsBuilder);
+					}
+					if (filters.ownedByMe) {
+						return ownReceiptsBuilder;
+					}
+					return foreignReceiptsBuilder;
+				})
 				.selectFrom("mergedReceipts")
 				.leftJoin("receiptItems", (jb) =>
 					jb.onRef("receiptItems.receiptId", "=", "mergedReceipts.receiptId")
@@ -101,46 +111,73 @@ export const procedure = authProcedure
 					"mergedReceipts.issued",
 					input.orderBy === "date-asc" ? "asc" : "desc"
 				)
-				.if(Boolean(input.onlyNonResolved), (qb) =>
-					qb.where("receiptParticipants.resolved", "=", false)
+				.if(typeof filters.resolvedByMe === "boolean", (qb) =>
+					qb.where("receiptParticipants.resolved", "=", filters.resolvedByMe!)
+				)
+				.if(typeof filters.locked === "boolean", (qb) =>
+					qb.where(
+						"mergedReceipts.lockedTimestamp",
+						filters.locked ? "is not" : "is",
+						null
+					)
 				)
 				.offset(input.cursor)
 				.limit(input.limit + 1)
 				.execute(),
 			database
-				.with("mergedReceipts", () =>
-					foreignReceipts
+				.with("mergedReceipts", () => {
+					const foreignReceiptsBuilder = foreignReceipts
 						.select([
 							database.fn.count<string>("receipts.id").as("amount"),
 							sql<boolean | null>`"receiptParticipants"."resolved"`.as(
 								"resolved"
 							),
+							"receipts.lockedTimestamp",
 						])
-						.groupBy("receiptParticipants.resolved")
-						.union(
-							ownReceipts
-								.leftJoin("receiptParticipants", (jb) =>
-									jb
-										.onRef("receiptParticipants.receiptId", "=", "receipts.id")
-										.onRef(
-											"receiptParticipants.userId",
-											"=",
-											// We use `userId` = `ownerAccountId` contract
-											// But type system doesn't know about that
-											sql<UsersId>`receipts."ownerAccountId"`
-										)
+						.groupBy([
+							"receiptParticipants.resolved",
+							"receipts.lockedTimestamp",
+						]);
+					const ownReceiptsBuilder = ownReceipts
+						.leftJoin("receiptParticipants", (jb) =>
+							jb
+								.onRef("receiptParticipants.receiptId", "=", "receipts.id")
+								.onRef(
+									"receiptParticipants.userId",
+									"=",
+									// We use `userId` = `ownerAccountId` contract
+									// But type system doesn't know about that
+									sql<UsersId>`receipts."ownerAccountId"`
 								)
-								.select([
-									database.fn.count<string>("receipts.id").as("amount"),
-									"receiptParticipants.resolved",
-								])
-								.groupBy("receiptParticipants.resolved")
 						)
-				)
+						.select([
+							database.fn.count<string>("receipts.id").as("amount"),
+							"receiptParticipants.resolved",
+							"receipts.lockedTimestamp",
+						])
+						.groupBy([
+							"receiptParticipants.resolved",
+							"receipts.lockedTimestamp",
+						]);
+					if (typeof filters.ownedByMe !== "boolean") {
+						return foreignReceiptsBuilder.union(ownReceiptsBuilder);
+					}
+					if (filters.ownedByMe) {
+						return ownReceiptsBuilder;
+					}
+					return foreignReceiptsBuilder;
+				})
 				.selectFrom("mergedReceipts")
 				.select(database.fn.sum<string>("amount").as("amount"))
-				.if(Boolean(input.onlyNonResolved), (qb) =>
-					qb.where("resolved", "=", false)
+				.if(typeof filters.resolvedByMe === "boolean", (qb) =>
+					qb.where("resolved", "=", filters.resolvedByMe!)
+				)
+				.if(typeof filters.locked === "boolean", (qb) =>
+					qb.where(
+						"mergedReceipts.lockedTimestamp",
+						filters.locked ? "is not" : "is",
+						null
+					)
 				)
 				.executeTakeFirst(),
 		]);
