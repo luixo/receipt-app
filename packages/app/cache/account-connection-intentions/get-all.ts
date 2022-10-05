@@ -50,7 +50,7 @@ const updateIntention =
 					ref
 				)
 			)
-		);
+		).current;
 
 const removeIntention = <D extends Direction>(
 	controller: Controller,
@@ -65,7 +65,7 @@ const removeIntention = <D extends Direction>(
 				ref
 			)
 		)
-	);
+	).current;
 
 const addIntention = <D extends Direction>(
 	controller: Controller,

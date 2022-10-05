@@ -50,7 +50,7 @@ const updateCurrencyDebts =
 					ref
 				).filter((userCurrency) => userCurrency.sum !== 0)
 			);
-		})?.sum;
+		}).current?.sum;
 
 const invalidate = (controller: Controller) => () =>
 	controller.invalidate(alwaysTrue);

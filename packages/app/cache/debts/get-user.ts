@@ -41,14 +41,14 @@ const update =
 			updateDebts(controller, userId, (debts) =>
 				replaceInArray(debts, (debt) => debt.id === debtId, updater, ref)
 			)
-		);
+		).current;
 
 const remove = (controller: Controller, userId: UsersId, debtId: DebtsId) =>
 	utils.withRef<ItemWithIndex<Debt> | undefined>((ref) =>
 		updateDebts(controller, userId, (debts) =>
 			removeFromArray(debts, (debt) => debt.id === debtId, ref)
 		)
-	);
+	).current;
 
 const add = (
 	controller: Controller,

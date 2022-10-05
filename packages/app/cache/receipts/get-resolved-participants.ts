@@ -24,7 +24,7 @@ const updateItems =
 				ref.current = amount;
 				return updater(amount);
 			});
-		});
+		}).current;
 
 const upsert = (
 	controller: Controller,
@@ -42,7 +42,7 @@ const invalidate = (controller: Controller, receiptId: ReceiptsId) =>
 			ref.current = participants;
 			return true;
 		})
-	);
+	).current;
 
 const add = (
 	controller: Controller,
@@ -71,7 +71,7 @@ const remove = (
 				ref
 			)
 		)
-	);
+	).current;
 
 const update =
 	(controller: Controller, receiptId: ReceiptsId, userId: UsersId) =>
@@ -88,7 +88,7 @@ const update =
 					ref
 				)
 			)
-		);
+		).current;
 
 export const getController = (trpc: TRPCReactContext) => {
 	const controller = utils.createController(

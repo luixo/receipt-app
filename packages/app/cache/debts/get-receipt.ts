@@ -28,7 +28,7 @@ const update =
 					ref
 				);
 			});
-		});
+		}).current;
 
 const updateAllInReceipt =
 	(controller: Controller, receiptId: ReceiptsId) =>
@@ -45,7 +45,7 @@ const updateAllInReceipt =
 				ref.current = participants;
 				return nextParticipants;
 			});
-		});
+		}).current;
 
 const remove = (controller: Controller, userId: UsersId) => {
 	const receiptIdRef = utils.createRef<ReceiptsId | undefined>();
@@ -65,7 +65,7 @@ const remove = (controller: Controller, userId: UsersId) => {
 				ref
 			)
 		)
-	);
+	).current;
 	if (itemWithIndex && receiptIdRef.current) {
 		return {
 			...itemWithIndex,

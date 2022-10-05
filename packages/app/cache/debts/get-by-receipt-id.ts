@@ -17,7 +17,7 @@ const update =
 				ref.current = debt;
 				return updater(debt);
 			});
-		});
+		}).current;
 
 const upsert = (controller: Controller, debt: Debt) => {
 	if (!debt || !debt.receiptId) {
@@ -42,7 +42,7 @@ const remove = (
 			}
 			return false;
 		})
-	);
+	).current;
 
 export const getController = (trpc: TRPCReactContext) => {
 	const controller = utils.createController(trpc, "debts.getByReceiptId");

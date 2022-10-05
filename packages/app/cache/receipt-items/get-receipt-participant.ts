@@ -52,7 +52,7 @@ const remove = (
 				ref
 			)
 		)
-	);
+	).current;
 
 const update =
 	(controller: Controller, receiptId: ReceiptsId, userId: UsersId) =>
@@ -66,7 +66,7 @@ const update =
 					ref
 				)
 			)
-		);
+		).current;
 
 export const getController = (trpc: TRPCReactContext) => {
 	const controller = utils.createController(trpc, "receiptItems.get");

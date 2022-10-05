@@ -17,7 +17,7 @@ const update =
 				ref.current = user;
 				return updater(user);
 			});
-		});
+		}).current;
 
 const upsert = (controller: Controller, user: User) =>
 	controller.upsert({ id: user.remoteId }, user);
@@ -31,7 +31,7 @@ const remove = (controller: Controller, userId: UsersId) =>
 			ref.current = user;
 			return true;
 		});
-	});
+	}).current;
 
 export const getController = (trpc: TRPCReactContext) => {
 	const controller = utils.createController(trpc, "users.get");

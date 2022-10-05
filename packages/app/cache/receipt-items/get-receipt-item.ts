@@ -48,7 +48,7 @@ const remove = (
 		updateReceiptItems(controller, receiptId, (items) =>
 			removeFromArray(items, (item) => item.id === receiptItemId, ref)
 		)
-	);
+	).current;
 
 const update =
 	(controller: Controller, receiptId: ReceiptsId, id: ReceiptItemsId) =>
@@ -57,7 +57,7 @@ const update =
 			updateReceiptItems(controller, receiptId, (items) =>
 				replaceInArray(items, (item) => item.id === id, updater, ref)
 			)
-		);
+		).current;
 
 export const getController = (trpc: TRPCReactContext) => {
 	const controller = utils.createController(trpc, "receiptItems.get");

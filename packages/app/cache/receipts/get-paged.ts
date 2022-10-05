@@ -71,7 +71,7 @@ const updatePages = (
 				return { ...result, items: updatedItems, count: updatedCount };
 			}),
 		[]
-	);
+	).current;
 	controller.invalidate(({ cursor: firstCursor, ...lookupInput }) =>
 		inputsToInvalidate.some(
 			({ cursor: secondCursor, ...inputToInvalidate }) =>
@@ -93,7 +93,7 @@ const update =
 				),
 				count,
 			])
-		);
+		).current;
 
 const add = (controller: Controller, nextReceipt: Receipt) =>
 	updatePages(controller, (page, count, input) => [
@@ -117,7 +117,7 @@ const remove = (controller: Controller, receiptId: ReceiptsId) =>
 			}
 			return [nextPage, count - 1];
 		})
-	);
+	).current;
 
 export const getController = (trpc: TRPCReactContext) => {
 	const controller = utils.createController(trpc, "receipts.getPaged");

@@ -77,7 +77,7 @@ export const createController = <Key extends TRPCQueryKey>(
 	};
 };
 
-type RevertFn = () => void;
+type EmptyFn = () => void;
 
 export type UpdateFn<Value, ReturnValue = Value> = (
 	value: Value
@@ -93,7 +93,7 @@ export type UpdateRevertOption<
 	}
 > = (
 	controller: ReturnType<GetController["getRevertController"]>
-) => RevertFn | undefined;
+) => EmptyFn | undefined;
 
 export type UpdateOption<
 	GetController extends { getController: (trpc: TRPCReactContext) => unknown }
@@ -103,19 +103,22 @@ export const createRef = <T>(
 	...args: undefined extends T ? [] : [T]
 ): React.MutableRefObject<T> => ({ current: args[0]! });
 
-export const withRef = <T>(
-	fn: (ref: React.MutableRefObject<T>) => void,
+export const withRef = <T, R = void>(
+	fn: (ref: React.MutableRefObject<T>) => R,
 	...args: undefined extends T ? [] : [T]
 ) => {
 	const ref = createRef<T>(...args);
-	fn(ref);
-	return ref.current;
+	const returnValue = fn(ref);
+	return {
+		current: ref.current,
+		returnValue,
+	};
 };
 
 export const applyWithRevert = <Value>(
 	applyFn: () => Value | undefined,
 	revertFn: (snapshot: Value) => void
-): RevertFn | undefined => {
+): EmptyFn | undefined => {
 	const appliedReturn = applyFn();
 	if (appliedReturn !== undefined) {
 		return () => revertFn(appliedReturn);
@@ -126,7 +129,7 @@ export const applyUpdateFnWithRevert = <Value>(
 	fn: (updater: UpdateFn<Value>) => Value | undefined,
 	updateFn: UpdateFn<Value>,
 	revertFn: ((snapshot: Value) => UpdateFn<Value>) | undefined
-): RevertFn | undefined => {
+): EmptyFn | undefined => {
 	const modifiedValue = fn(updateFn);
 	if (modifiedValue !== undefined && revertFn) {
 		return () => {

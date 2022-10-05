@@ -18,7 +18,7 @@ const remove = (controller: Controller, userId: UsersId) =>
 			ref.current = user;
 			return true;
 		});
-	});
+	}).current;
 
 export const getController = (trpc: TRPCReactContext) => {
 	const controller = utils.createController(trpc, "users.getName");

@@ -17,7 +17,7 @@ const update =
 				ref.current = debt;
 				return updater(debt);
 			});
-		});
+		}).current;
 
 const upsert = (controller: Controller, debt: Debt) =>
 	controller.upsert({ id: debt.id }, debt);
@@ -31,7 +31,7 @@ const remove = (controller: Controller, debtId: DebtsId) =>
 			ref.current = debt;
 			return true;
 		});
-	});
+	}).current;
 
 export const getController = (trpc: TRPCReactContext) => {
 	const controller = utils.createController(trpc, "debts.get");

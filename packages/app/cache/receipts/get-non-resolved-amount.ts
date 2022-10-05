@@ -11,7 +11,7 @@ const update = (controller: Controller) => (updater: utils.UpdateFn<Amount>) =>
 			ref.current = amount;
 			return updater(amount);
 		});
-	});
+	}).current;
 
 export const getController = (trpc: TRPCReactContext) => {
 	const controller = utils.createController(

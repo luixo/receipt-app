@@ -50,7 +50,7 @@ const updateIntention =
 					ref
 				)
 			)
-		);
+		).current;
 
 const removeIntention = <D extends Direction>(
 	controller: Controller,
@@ -61,7 +61,7 @@ const removeIntention = <D extends Direction>(
 		updateIntentions(controller, direction, (intentions) =>
 			removeFromArray(intentions, (intention) => intention.id === debtId, ref)
 		)
-	);
+	).current;
 
 const addIntention = <D extends Direction>(
 	controller: Controller,

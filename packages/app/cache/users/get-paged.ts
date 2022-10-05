@@ -35,7 +35,7 @@ const update =
 				replaceInArray(page, (user) => user.id === userId, updater, ref),
 				count,
 			])
-		);
+		).current;
 
 const add = (controller: Controller, nextUser: User) =>
 	utils.withRef<number | undefined>((ref) =>
@@ -62,7 +62,7 @@ const add = (controller: Controller, nextUser: User) =>
 			ref.current = input.cursor;
 			return [sortedPage.slice(0, input.limit), count + 1];
 		})
-	);
+	).current;
 
 const remove = (controller: Controller, userId: UsersId) => {
 	const cursorRef = utils.createRef<number>(-1);
@@ -88,7 +88,7 @@ const remove = (controller: Controller, userId: UsersId) => {
 			}
 			return [nextPage, count - 1];
 		})
-	);
+	).current;
 	if (removedItem) {
 		return {
 			...removedItem,
@@ -114,7 +114,7 @@ const invalidate =
 					{ refetchType: "all" }
 				),
 			[]
-		);
+		).current;
 
 export const getController = (trpc: TRPCReactContext) => {
 	const controller = utils.createController(trpc, "users.getPaged");

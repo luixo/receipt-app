@@ -21,7 +21,7 @@ const remove = (controller: Controller, receiptId: ReceiptsId) =>
 			ref.current = receipt;
 			return true;
 		});
-	});
+	}).current;
 
 export const getController = (trpc: TRPCReactContext) => {
 	const controller = utils.createController(trpc, "receipts.getName");

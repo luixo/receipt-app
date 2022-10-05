@@ -18,7 +18,7 @@ const remove = (controller: Controller, receiptId: ReceiptsId) =>
 			ref.current = receipt;
 			return true;
 		});
-	});
+	}).current;
 
 const update =
 	(controller: Controller, receiptId: ReceiptsId) =>
@@ -31,7 +31,7 @@ const update =
 				ref.current = receipt;
 				return updater(receipt);
 			});
-		});
+		}).current;
 
 export const getController = (trpc: TRPCReactContext) => {
 	const controller = utils.createController(trpc, "receipts.get");
