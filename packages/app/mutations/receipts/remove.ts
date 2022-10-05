@@ -10,8 +10,8 @@ export const options: UseContextedMutationOptions<
 > = {
 	onMutate:
 		(trpcContext, { participantResolved }) =>
-		(variables) => ({
-			revertFns: cache.receipts.updateRevert(trpcContext, {
+		(variables) =>
+			cache.receipts.updateRevert(trpcContext, {
 				get: (controller) => controller.remove(variables.id),
 				getPaged: (controller) => controller.remove(variables.id),
 				getName: (controller) => controller.remove(variables.id),
@@ -26,7 +26,6 @@ export const options: UseContextedMutationOptions<
 					}
 				},
 			}),
-		}),
 	onSuccess: (trpcContext) => (_result, variables) => {
 		cache.receipts.update(trpcContext, {
 			get: noop,

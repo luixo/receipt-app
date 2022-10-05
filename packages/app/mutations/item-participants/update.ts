@@ -35,8 +35,8 @@ export const options: UseContextedMutationOptions<
 	"itemParticipants.update",
 	ReceiptsId
 > = {
-	onMutate: (trpcContext, receiptId) => (variables) => ({
-		revertFns: cache.receiptItems.updateRevert(trpcContext, {
+	onMutate: (trpcContext, receiptId) => (variables) =>
+		cache.receiptItems.updateRevert(trpcContext, {
 			getReceiptItem: noop,
 			getReceiptParticipant: noop,
 			getReceiptItemPart: (controller) =>
@@ -48,7 +48,6 @@ export const options: UseContextedMutationOptions<
 					getRevert(variables.update)
 				),
 		}),
-	}),
 	errorToastOptions: () => (error) => ({
 		text: `Error updating participant(s): ${error.message}`,
 	}),

@@ -4,11 +4,10 @@ import { noop } from "app/utils/utils";
 
 export const options: UseContextedMutationOptions<"accountConnectionIntentions.accept"> =
 	{
-		onMutate: (trpcContext) => (variables) => ({
-			revertFns: cache.accountConnections.updateRevert(trpcContext, {
+		onMutate: (trpcContext) => (variables) =>
+			cache.accountConnections.updateRevert(trpcContext, {
 				getAll: (controller) => controller.inbound.remove(variables.accountId),
 			}),
-		}),
 		onSuccess: (trpcContext) => (email, variables) => {
 			cache.users.update(trpcContext, {
 				get: (controller) => {

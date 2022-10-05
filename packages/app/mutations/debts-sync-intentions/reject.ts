@@ -7,11 +7,10 @@ export const options: UseContextedMutationOptions<
 	"debtsSyncIntentions.reject",
 	{ userId: UsersId; currentAmount?: number; receiptId: ReceiptsId | null }
 > = {
-	onMutate: (trpcContext) => (updateObject) => ({
-		revertFns: cache.debtsSyncIntentions.updateRevert(trpcContext, {
+	onMutate: (trpcContext) => (updateObject) =>
+		cache.debtsSyncIntentions.updateRevert(trpcContext, {
 			getAll: (controller) => controller.inbound.remove(updateObject.id),
 		}),
-	}),
 	onSuccess: (trpcContext, currDebt) => (_result, updateObject) => {
 		if (currDebt.currentAmount !== undefined) {
 			cache.debts.update(trpcContext, {

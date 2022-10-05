@@ -3,8 +3,8 @@ import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options
 import { noop } from "app/utils/utils";
 
 export const options: UseContextedMutationOptions<"users.unlink"> = {
-	onMutate: (trpcContext) => (variables) => ({
-		revertFns: cache.users.updateRevert(trpcContext, {
+	onMutate: (trpcContext) => (variables) =>
+		cache.users.updateRevert(trpcContext, {
 			get: (controller) =>
 				controller.update(
 					variables.id,
@@ -27,7 +27,6 @@ export const options: UseContextedMutationOptions<"users.unlink"> = {
 					(snapshot) => (user) => ({ ...user, email: snapshot.email })
 				),
 		}),
-	}),
 	errorToastOptions: () => (error) => ({
 		text: `Error unlinking user: ${error.message}`,
 	}),

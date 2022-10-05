@@ -9,8 +9,8 @@ export const options: UseContextedMutationOptions<
 	"debtsSyncIntentions.add",
 	Debt
 > = {
-	onMutate: (trpcContext, currDebt) => (updateObject) => ({
-		revertFns: cache.debtsSyncIntentions.updateRevert(trpcContext, {
+	onMutate: (trpcContext, currDebt) => (updateObject) =>
+		cache.debtsSyncIntentions.updateRevert(trpcContext, {
 			getAll: (controller) =>
 				controller.outbound.add({
 					id: updateObject.id,
@@ -23,7 +23,6 @@ export const options: UseContextedMutationOptions<
 					receiptId: currDebt.receiptId,
 				}),
 		}),
-	}),
 	onSuccess: (trpcContext, currDebt) => (_intentionTimestamp, updateObject) => {
 		cache.debts.update(trpcContext, {
 			get: (controller) =>

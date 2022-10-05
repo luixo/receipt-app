@@ -87,13 +87,18 @@ export type SnapshotFn<Value, ReturnValue = Value> = (
 	snapshot: Value
 ) => UpdateFn<Value, ReturnValue>;
 
+export type UpdaterRevertResult = {
+	revertFn?: EmptyFn;
+	finalizeFn?: EmptyFn;
+};
+
 export type UpdateRevertOption<
 	GetController extends {
 		getRevertController: (trpc: TRPCReactContext) => unknown;
 	}
 > = (
 	controller: ReturnType<GetController["getRevertController"]>
-) => EmptyFn | undefined;
+) => UpdaterRevertResult | undefined;
 
 export type UpdateOption<
 	GetController extends { getController: (trpc: TRPCReactContext) => unknown }
@@ -117,25 +122,61 @@ export const withRef = <T, R = void>(
 
 export const applyWithRevert = <Value>(
 	applyFn: () => Value | undefined,
-	revertFn: (snapshot: Value) => void
-): EmptyFn | undefined => {
+	revertFn: (snapshot: Value) => void,
+	finalizeFn?: (snapshot: Value) => void
+): UpdaterRevertResult | undefined => {
 	const appliedReturn = applyFn();
 	if (appliedReturn !== undefined) {
-		return () => revertFn(appliedReturn);
+		return {
+			revertFn: () => revertFn(appliedReturn),
+			finalizeFn: () => finalizeFn?.(appliedReturn),
+		};
 	}
 };
 
 export const applyUpdateFnWithRevert = <Value>(
 	fn: (updater: UpdateFn<Value>) => Value | undefined,
 	updateFn: UpdateFn<Value>,
-	revertFn: ((snapshot: Value) => UpdateFn<Value>) | undefined
-): EmptyFn | undefined => {
+	revertFn: ((snapshot: Value) => UpdateFn<Value>) | undefined,
+	finalizeFn?: (snapshot: Value) => void
+): UpdaterRevertResult | undefined => {
 	const modifiedValue = fn(updateFn);
-	if (modifiedValue !== undefined && revertFn) {
-		return () => {
-			fn(revertFn(modifiedValue));
+	if (modifiedValue !== undefined) {
+		return {
+			revertFn: () => {
+				if (!revertFn) {
+					return;
+				}
+				fn(revertFn(modifiedValue));
+			},
+			finalizeFn: () => {
+				if (!finalizeFn) {
+					return;
+				}
+				finalizeFn(modifiedValue);
+			},
 		};
 	}
+};
+
+export const mergeUpdaterResults = (
+	...results: (UpdaterRevertResult | undefined)[]
+): UpdaterRevertResult => {
+	const filteredResults = results.filter(nonNullishGuard);
+	return {
+		revertFn: () => {
+			filteredResults
+				.map(({ revertFn }) => revertFn)
+				.filter(nonNullishGuard)
+				.forEach((fn) => fn());
+		},
+		finalizeFn: () => {
+			filteredResults
+				.map(({ finalizeFn }) => finalizeFn)
+				.filter(nonNullishGuard)
+				.forEach((fn) => fn());
+		},
+	};
 };
 
 export const getUpdaters = <
@@ -155,13 +196,13 @@ export const getUpdaters = <
 			[K in keyof T]: UpdateRevertOption<T[K]>;
 		}
 	) =>
-		Object.entries(input)
-			.map(([key, { getRevertController }]) =>
+		mergeUpdaterResults(
+			...Object.entries(input).map(([key, { getRevertController }]) =>
 				options[key]!(
 					getRevertController(trpc) as Parameters<typeof options[keyof T]>[0]
 				)
 			)
-			.filter(nonNullishGuard);
+		);
 
 	const update = (
 		trpc: TRPCReactContext,

@@ -79,8 +79,8 @@ const getPagedRevert =
 	};
 
 export const options: UseContextedMutationOptions<"receipts.update"> = {
-	onMutate: (trpcContext) => (updateObject) => ({
-		revertFns: cache.receipts.updateRevert(trpcContext, {
+	onMutate: (trpcContext) => (updateObject) =>
+		cache.receipts.updateRevert(trpcContext, {
 			get: (controller) =>
 				controller.update(
 					updateObject.id,
@@ -101,7 +101,6 @@ export const options: UseContextedMutationOptions<"receipts.update"> = {
 			},
 			getResolvedParticipants: noop,
 		}),
-	}),
 	onSuccess: (trpcContext) => (_result, updateObject) => {
 		if (updateObject.update.type === "locked" && !updateObject.update.value) {
 			cache.debts.update(trpcContext, {

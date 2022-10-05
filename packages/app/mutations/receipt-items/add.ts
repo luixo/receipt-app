@@ -15,7 +15,7 @@ export const options: UseContextedMutationOptions<
 	onMutate: (trpcContext, receiptId) => (variables) => {
 		const temporaryId = v4();
 		return {
-			revertFns: cache.receiptItems.updateRevert(trpcContext, {
+			...cache.receiptItems.updateRevert(trpcContext, {
 				getReceiptItem: (controller) =>
 					controller.add(receiptId, {
 						id: temporaryId,

@@ -24,7 +24,8 @@ export type TRPCMutationOptions<
 >;
 
 type WrappedContext<LifecycleContext = unknown> = {
-	revertFns: (() => void)[];
+	revertFn?: () => void;
+	finalizeFn?: () => void;
 	context?: LifecycleContext;
 };
 
@@ -141,7 +142,7 @@ export const useTrpcMutationOptions = <
 					toast.error(toastOptions.text, { id: toastId });
 				}
 				onError?.(error, vars, wrappedContext?.context);
-				wrappedContext?.revertFns.forEach((fn) => fn());
+				wrappedContext?.revertFn?.();
 				return onErrorTrpc?.(...trpcArgs)(error, vars, wrappedContext?.context);
 			},
 			onSuccess: (result, vars, wrappedContext) => {
@@ -157,6 +158,7 @@ export const useTrpcMutationOptions = <
 					toast.success(toastOptions.text, { id: toastId });
 				}
 				onSuccess?.(result, vars, wrappedContext?.context);
+				wrappedContext?.finalizeFn?.();
 				return onSuccessTrpc?.(...trpcArgs)(
 					result,
 					vars,

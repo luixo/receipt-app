@@ -7,14 +7,13 @@ export const options: UseContextedMutationOptions<
 	"itemParticipants.remove",
 	ReceiptsId
 > = {
-	onMutate: (trpcContext, receiptId) => (variables) => ({
-		revertFns: cache.receiptItems.updateRevert(trpcContext, {
+	onMutate: (trpcContext, receiptId) => (variables) =>
+		cache.receiptItems.updateRevert(trpcContext, {
 			getReceiptItem: noop,
 			getReceiptParticipant: noop,
 			getReceiptItemPart: (controller) =>
 				controller.remove(receiptId, variables.itemId, variables.userId),
 		}),
-	}),
 	errorToastOptions: () => (error) => ({
 		text: `Error removing participant(s): ${error.message}`,
 	}),

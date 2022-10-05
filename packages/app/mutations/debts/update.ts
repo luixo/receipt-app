@@ -164,8 +164,8 @@ export const options: UseContextedMutationOptions<
 		receiptId: ReceiptsId | null;
 	}
 > = {
-	onMutate: (trpcContext, currData) => (updateObject) => ({
-		revertFns: cache.debts.updateRevert(trpcContext, {
+	onMutate: (trpcContext, currData) => (updateObject) =>
+		cache.debts.updateRevert(trpcContext, {
 			getByReceiptId: (controller) => {
 				if (!currData.receiptId) {
 					return;
@@ -198,7 +198,6 @@ export const options: UseContextedMutationOptions<
 				),
 			getReceipt: noop,
 		}),
-	}),
 	onSuccess: (trpcContext, currData) => (nextSyncData, updateObject) => {
 		if (updateObject.update.type !== "locked") {
 			return;

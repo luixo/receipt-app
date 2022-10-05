@@ -1,4 +1,5 @@
 import { cache } from "app/cache";
+import { mergeUpdaterResults } from "app/cache/utils";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { noop } from "app/utils/utils";
 import { AccountsId, ReceiptsId } from "next-app/db/models";
@@ -9,16 +10,16 @@ export const options: UseContextedMutationOptions<
 > = {
 	onMutate:
 		(trpcContext, { receiptId, selfAccountId, resolvedStatus }) =>
-		({ userId }) => ({
-			revertFns: [
-				...cache.receiptItems.updateRevert(trpcContext, {
+		({ userId }) =>
+			mergeUpdaterResults(
+				cache.receiptItems.updateRevert(trpcContext, {
 					getReceiptItem: noop,
 					getReceiptParticipant: (controller) =>
 						controller.remove(receiptId, userId),
 					getReceiptItemPart: (controller) =>
 						controller.removeByUser(receiptId, userId),
 				}),
-				...(userId === selfAccountId
+				userId === selfAccountId
 					? cache.receipts.updateRevert(trpcContext, {
 							get: (controller) =>
 								controller.update(
@@ -57,9 +58,8 @@ export const options: UseContextedMutationOptions<
 								);
 							},
 					  })
-					: []),
-			],
-		}),
+					: undefined
+			),
 	errorToastOptions: () => (error) => ({
 		text: `Error removing a participant: ${error.message}`,
 	}),

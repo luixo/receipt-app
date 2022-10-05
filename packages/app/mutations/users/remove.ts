@@ -4,13 +4,12 @@ import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options
 export const options: UseContextedMutationOptions<"users.remove"> = {
 	onMutate:
 		(trpcContext) =>
-		({ id }) => ({
-			revertFns: cache.users.updateRevert(trpcContext, {
+		({ id }) =>
+			cache.users.updateRevert(trpcContext, {
 				get: (controller) => controller.remove(id),
 				getName: (controller) => controller.remove(id),
 				getPaged: (controller) => controller.remove(id),
 			}),
-		}),
 	onSuccess: (trpcContext) => () => cache.users.invalidateSuggest(trpcContext),
 	mutateToastOptions: {
 		text: "Removing user..",
