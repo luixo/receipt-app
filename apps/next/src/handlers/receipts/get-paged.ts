@@ -111,6 +111,8 @@ export const procedure = authProcedure
 					"mergedReceipts.issued",
 					input.orderBy === "date-asc" ? "asc" : "desc"
 				)
+				// Stable order for receipts with the same date
+				.orderBy("mergedReceipts.receiptId")
 				.if(typeof filters.resolvedByMe === "boolean", (qb) =>
 					qb.where("receiptParticipants.resolved", "=", filters.resolvedByMe!)
 				)

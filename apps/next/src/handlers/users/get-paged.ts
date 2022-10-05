@@ -26,6 +26,8 @@ export const procedure = authProcedure
 				)
 				.select(["users.id", "name", "publicName", "accounts.email"])
 				.orderBy("name")
+				// Stable order for users with the same name
+				.orderBy("users.id")
 				.offset(input.cursor)
 				.limit(input.limit + 1)
 				.execute(),
