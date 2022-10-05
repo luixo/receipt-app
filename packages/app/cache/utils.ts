@@ -134,11 +134,11 @@ export const applyWithRevert = <Value>(
 	}
 };
 
-export const applyUpdateFnWithRevert = <Value>(
-	fn: (updater: UpdateFn<Value>) => Value | undefined,
+export const applyUpdateFnWithRevert = <Value, ResultValue = Value>(
+	fn: (updater: UpdateFn<Value>) => ResultValue | undefined,
 	updateFn: UpdateFn<Value>,
-	revertFn: ((snapshot: Value) => UpdateFn<Value>) | undefined,
-	finalizeFn?: (snapshot: Value) => void
+	revertFn: ((snapshot: ResultValue) => UpdateFn<Value>) | undefined,
+	finalizeFn?: (snapshot: ResultValue) => void
 ): UpdaterRevertResult | undefined => {
 	const modifiedValue = fn(updateFn);
 	if (modifiedValue !== undefined) {
