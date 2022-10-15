@@ -38,17 +38,19 @@ export const procedure = authProcedure
 				.where("receiptParticipants.userId", "=", input.id)
 				.select("id")
 				.execute();
-			await tx
-				.updateTable("receipts")
-				.where(
-					"id",
-					"in",
-					receipts.map(({ id }) => id)
-				)
-				.set({
-					lockedTimestamp: null,
-				})
-				.execute();
+			if (receipts.length !== 0) {
+				await tx
+					.updateTable("receipts")
+					.where(
+						"id",
+						"in",
+						receipts.map(({ id }) => id)
+					)
+					.set({
+						lockedTimestamp: null,
+					})
+					.execute();
+			}
 			await tx
 				.deleteFrom("users")
 				.where("id", "=", input.id)
