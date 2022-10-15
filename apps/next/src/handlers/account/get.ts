@@ -7,9 +7,7 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 	const database = getDatabase(ctx);
 	const maybeAccount = await database
 		.selectFrom("accounts")
-		.innerJoin("users", (jb) =>
-			jb.onRef("users.ownerAccountId", "=", "accounts.id")
-		)
+		.innerJoin("users", (jb) => jb.onRef("users.id", "=", "accounts.id"))
 		.select([
 			"accounts.id",
 			"users.name",
