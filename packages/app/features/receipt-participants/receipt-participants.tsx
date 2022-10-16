@@ -2,7 +2,8 @@ import React from "react";
 
 import { Spacer, styled } from "@nextui-org/react";
 
-import { trpc, TRPCQueryOutput } from "app/trpc";
+import { useSelfAccountId } from "app/hooks/use-self-account-id";
+import { TRPCQueryOutput } from "app/trpc";
 import { Currency } from "app/utils/currency";
 import { getParticipantSums } from "app/utils/receipt-item";
 import { AccountsId, ReceiptsId, UsersId } from "next-app/db/models";
@@ -62,10 +63,10 @@ export const ReceiptParticipants: React.FC<Props> = ({
 	receiptId,
 	isLoading,
 }) => {
-	const accountQuery = trpc.account.get.useQuery();
+	const selfAccountId = useSelfAccountId();
 	const sortParticipants = React.useMemo(
-		() => getSortParticipants(accountQuery.data?.id),
-		[accountQuery.data?.id]
+		() => getSortParticipants(selfAccountId),
+		[selfAccountId]
 	);
 	const participants = React.useMemo(
 		() =>

@@ -19,8 +19,7 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 	}
 	const { confirmationToken, id, name } = maybeAccount;
 	return {
-		id,
+		account: { id, verified: !confirmationToken },
 		user: { name },
-		verified: !confirmationToken,
 	};
 });

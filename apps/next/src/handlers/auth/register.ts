@@ -80,7 +80,7 @@ export const procedure = unauthProcedure
 			ctx.logger.debug(`Registration of account "${email}" succeed.`);
 			setAuthCookie(ctx.res, authToken, expirationDate);
 			return {
-				accountId: id,
+				account: { id },
 			};
 		}
 	});

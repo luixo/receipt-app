@@ -6,10 +6,10 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { CurrencyInput } from "app/components/app/currency-input";
-import { QueryErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { useRouter } from "app/hooks/use-router";
+import { useSelfAccountId } from "app/hooks/use-self-account-id";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
@@ -23,12 +23,12 @@ import { Form } from "./types";
 
 export const AddReceiptScreen: AppPage = () => {
 	const router = useRouter();
-	const accountQuery = trpc.account.get.useQuery();
+	const selfAccountId = useSelfAccountId();
 
 	const addReceiptMutation = trpc.receipts.add.useMutation(
 		useTrpcMutationOptions(mutations.receipts.add.options, {
 			context: {
-				selfAccountId: accountQuery.data?.id ?? "unknown",
+				selfAccountId: selfAccountId || "unknown",
 			},
 			onSuccess: (id) => router.replace(`/receipts/${id}`),
 		})
@@ -79,17 +79,11 @@ export const AddReceiptScreen: AppPage = () => {
 				disabled={
 					!form.formState.isValid ||
 					addReceiptMutation.isLoading ||
-					accountQuery.status !== "success"
+					!selfAccountId
 				}
 			>
 				{addReceiptMutation.isLoading ? <Loading size="sm" /> : "Add receipt"}
 			</Button>
-			{accountQuery.status === "error" ? (
-				<>
-					<Spacer y={1} />
-					<QueryErrorMessage query={accountQuery} />
-				</>
-			) : null}
 		</>
 	);
 };

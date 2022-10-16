@@ -5,6 +5,7 @@ import { Spacer, styled, Text } from "@nextui-org/react";
 import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
 import { User } from "app/components/app/user";
 import { RemoveButton } from "app/components/remove-button";
+import { useSelfAccountId } from "app/hooks/use-self-account-id";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
@@ -50,14 +51,14 @@ export const ReceiptParticipant: React.FC<Props> = ({
 	currency,
 	isLoading,
 }) => {
-	const accountQuery = trpc.account.get.useQuery();
+	const selfAccountId = useSelfAccountId();
 
 	const removeReceiptParticipantMutation =
 		trpc.receiptParticipants.remove.useMutation(
 			useTrpcMutationOptions(mutations.receiptParticipants.remove.options, {
 				context: {
 					receiptId,
-					selfAccountId: accountQuery.data?.id ?? "unknown",
+					selfAccountId: selfAccountId || "unknown",
 					resolvedStatus: participant.resolved,
 				},
 			})
@@ -108,7 +109,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 						<RemoveButton
 							onRemove={removeReceiptParticipant}
 							mutation={removeReceiptParticipantMutation}
-							disabled={!accountQuery.data || receiptLocked}
+							disabled={!selfAccountId || receiptLocked}
 							subtitle="This will remove participant with all his parts"
 							noConfirm={participant.sum === 0}
 						/>

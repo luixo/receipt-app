@@ -15,7 +15,7 @@ export const EmailVerificationCard: React.FC = () => {
 		() => resendEmailMutation.mutate(),
 		[resendEmailMutation]
 	);
-	if (accountQuery.status !== "success" || accountQuery.data.verified) {
+	if (accountQuery.status !== "success" || accountQuery.data.account.verified) {
 		return null;
 	}
 	return (

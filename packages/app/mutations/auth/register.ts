@@ -7,13 +7,12 @@ export const options: UseContextedMutationOptions<
 > = {
 	onSuccess:
 		(trpcContext, { name }) =>
-		({ accountId }) =>
+		({ account }) =>
 			cache.account.update(trpcContext, {
 				get: (controller) =>
 					controller.upsert({
-						id: accountId,
 						user: { name },
-						verified: false,
+						account: { id: account.id, verified: false },
 					}),
 			}),
 	mutateToastOptions: {

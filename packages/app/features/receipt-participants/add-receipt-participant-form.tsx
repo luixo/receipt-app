@@ -3,6 +3,7 @@ import React from "react";
 import { styled } from "@nextui-org/react";
 
 import { UsersSuggest } from "app/components/app/users-suggest";
+import { useSelfAccountId } from "app/hooks/use-self-account-id";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc, TRPCInfiniteQueryOutput } from "app/trpc";
@@ -26,12 +27,12 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 	filterIds,
 }) => {
 	const [localFilterIds, setLocalFilterIds] = React.useState<UsersId[]>([]);
-	const accountQuery = trpc.account.get.useQuery();
+	const selfAccountId = useSelfAccountId();
 	const addMutation = trpc.receiptParticipants.add.useMutation(
 		useTrpcMutationOptions(mutations.receiptParticipants.add.options, {
 			context: {
 				receiptId,
-				selfAccountId: accountQuery.data?.id ?? "unknown",
+				selfAccountId: selfAccountId || "unknown",
 			},
 			onMutate: (vars) =>
 				setLocalFilterIds((prevIds) => [...prevIds, ...vars.userIds]),
@@ -53,14 +54,13 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 			}),
 		[addMutation, receiptId]
 	);
-	const accountQueryNotLoaded = accountQuery.status !== "success";
 
 	return (
 		<Wrapper>
 			<UsersSuggest
 				filterIds={[...filterIds, ...localFilterIds]}
 				onUserClick={addParticipants}
-				disabled={disabled || receiptLocked || accountQueryNotLoaded}
+				disabled={disabled || receiptLocked || !selfAccountId}
 				options={React.useMemo(
 					() => ({ type: "not-connected-receipt", receiptId }),
 					[receiptId]

@@ -61,8 +61,10 @@ export const procedure = unauthProcedure
 				ctx.logger.debug(`Authorization of account "${email}" succeed.`);
 				setAuthCookie(ctx.res, authToken, expirationDate);
 				return {
-					accountId: result.accountId,
-					verified: !result.confirmationToken,
+					account: {
+						id: result.accountId,
+						verified: !result.confirmationToken,
+					},
 					user: {
 						name: result.name,
 					},
