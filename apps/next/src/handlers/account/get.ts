@@ -8,12 +8,7 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 	const maybeAccount = await database
 		.selectFrom("accounts")
 		.innerJoin("users", (jb) => jb.onRef("users.id", "=", "accounts.id"))
-		.select([
-			"accounts.id",
-			"users.name",
-			"users.publicName",
-			"accounts.confirmationToken",
-		])
+		.select(["accounts.id", "users.name", "accounts.confirmationToken"])
 		.where("accounts.id", "=", ctx.auth.accountId)
 		.executeTakeFirst();
 	if (!maybeAccount) {
