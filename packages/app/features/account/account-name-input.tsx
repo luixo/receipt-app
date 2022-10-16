@@ -9,7 +9,6 @@ import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { userNameSchema } from "app/utils/validation";
-import { UsersId } from "next-app/db/models";
 
 type Props = {
 	account: TRPCQueryOutput<"account.get">;
@@ -26,42 +25,38 @@ export const AccountNameInput: React.FC<Props> = ({ account }) => {
 		schema: userNameSchema,
 	});
 
-	const updateUserMutation = trpc.users.update.useMutation(
-		useTrpcMutationOptions(mutations.users.update.options)
+	const updateNameMutation = trpc.account.changeName.useMutation(
+		useTrpcMutationOptions(mutations.account.changeName.options)
 	);
 	const saveName = React.useCallback(
 		(nextName: string) => {
 			if (nextName === account.name) {
 				return;
 			}
-			updateUserMutation.mutate(
-				{
-					// Typesystem doesn't know that we use account id as self user id
-					id: account.id as UsersId,
-					update: { type: "name", name: nextName },
-				},
+			updateNameMutation.mutate(
+				{ name: nextName },
 				{ onSuccess: () => setValue(nextName) }
 			);
 		},
-		[updateUserMutation, account.id, account.name, setValue]
+		[updateNameMutation, account.name, setValue]
 	);
 
 	return (
 		<Input
 			{...bindings}
-			label="User name"
-			disabled={updateUserMutation.isLoading}
+			label="Your name in the receipts"
+			disabled={updateNameMutation.isLoading}
 			status={inputState.error ? "warning" : undefined}
 			helperColor={inputState.error ? "warning" : "error"}
 			helperText={
-				inputState.error?.message || updateUserMutation.error?.message
+				inputState.error?.message || updateNameMutation.error?.message
 			}
-			contentRightStyling={updateUserMutation.isLoading}
+			contentRightStyling={updateNameMutation.isLoading}
 			contentRight={
 				<IconButton
-					title="Save user name"
+					title="Save name"
 					light
-					isLoading={updateUserMutation.isLoading}
+					isLoading={updateNameMutation.isLoading}
 					disabled={Boolean(inputState.error)}
 					onClick={() => saveName(getValue())}
 					icon={<CheckMark size={24} />}
