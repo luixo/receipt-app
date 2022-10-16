@@ -9,6 +9,7 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 		.selectFrom("debts")
 		.select(["currency", database.fn.count<string>("id").as("count")])
 		.where("timestamp", ">", new Date(Date.now() - MONTH))
+		.where("debts.ownerAccountId", "=", ctx.auth.accountId)
 		.groupBy("currency")
 		.orderBy("count", "desc")
 		.execute();
