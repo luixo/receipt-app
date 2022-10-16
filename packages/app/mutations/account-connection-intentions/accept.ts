@@ -8,22 +8,24 @@ export const options: UseContextedMutationOptions<"accountConnectionIntentions.a
 			cache.accountConnections.updateRevert(trpcContext, {
 				getAll: (controller) => controller.inbound.remove(variables.accountId),
 			}),
-		onSuccess: (trpcContext) => (email, variables) => {
-			cache.users.update(trpcContext, {
-				get: (controller) => {
-					controller.update(variables.userId, (user) => ({
-						...user,
-						email,
-						accountId: variables.accountId,
-					}));
-				},
-				getPaged: (controller) => {
-					controller.update(variables.userId, (user) => ({ ...user, email }));
-				},
-				getName: noop,
-			});
-			cache.users.invalidateSuggest(trpcContext);
-		},
+		onSuccess:
+			(trpcContext) =>
+			({ email }, variables) => {
+				cache.users.update(trpcContext, {
+					get: (controller) => {
+						controller.update(variables.userId, (user) => ({
+							...user,
+							email,
+							accountId: variables.accountId,
+						}));
+					},
+					getPaged: (controller) => {
+						controller.update(variables.userId, (user) => ({ ...user, email }));
+					},
+					getName: noop,
+				});
+				cache.users.invalidateSuggest(trpcContext);
+			},
 		errorToastOptions: () => (error) => ({
 			text: `Error accepting an invite: ${error.message}`,
 		}),

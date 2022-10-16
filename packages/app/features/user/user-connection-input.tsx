@@ -23,7 +23,7 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 	const outboundConnectionIntention =
 		connectionIntentionsQuery.status === "success"
 			? connectionIntentionsQuery.data.outbound.find(
-					(element) => element.userId === user.remoteId
+					(element) => element.user.id === user.remoteId
 			  ) ?? null
 			: undefined;
 
@@ -89,7 +89,7 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 		return (
 			<Input
 				label="Outbound request"
-				value={outboundConnectionIntention.email}
+				value={outboundConnectionIntention.account.email}
 				readOnly
 				helperColor="error"
 				helperText={mutationError}
@@ -100,7 +100,9 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 						isLoading={cancelRequestMutation.isLoading}
 						color="error"
 						icon={<TrashBinIcon size={24} />}
-						onClick={() => cancelRequest(outboundConnectionIntention.accountId)}
+						onClick={() =>
+							cancelRequest(outboundConnectionIntention.account.id)
+						}
 					/>
 				}
 			/>

@@ -45,7 +45,7 @@ const updateIntention =
 			updateIntentions<D>(controller, direction, (intentions) =>
 				replaceInArray(
 					intentions,
-					(intention) => intention.accountId === accountId,
+					(intention) => intention.account.id === accountId,
 					updater,
 					ref
 				)
@@ -61,7 +61,7 @@ const removeIntention = <D extends Direction>(
 		updateIntentions<D>(controller, direction, (intentions) =>
 			removeFromArray(
 				intentions,
-				(intention) => intention.accountId === accountId,
+				(intention) => intention.account.id === accountId,
 				ref
 			)
 		)
@@ -115,7 +115,7 @@ const addRevert =
 	(intention: IntentionMapping[D], index?: number) =>
 		utils.applyWithRevert(
 			() => addIntention(controller, direction, intention, index),
-			() => removeIntention(controller, direction, intention.accountId)
+			() => removeIntention(controller, direction, intention.account.id)
 		);
 
 const add =

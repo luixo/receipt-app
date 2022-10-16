@@ -41,7 +41,7 @@ const ConnectionIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 					<CenteredText h2>Inbound connections</CenteredText>
 					<Spacer y={0.5} />
 					{data.inbound.map((intention, index) => (
-						<React.Fragment key={intention.accountId}>
+						<React.Fragment key={intention.account.id}>
 							{index === 0 ? null : <Spacer y={1.5} />}
 							<InboundConnectionIntention intention={intention} />
 						</React.Fragment>
@@ -56,7 +56,7 @@ const ConnectionIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 					<CenteredText h2>Outbound connections</CenteredText>
 					<Spacer y={1} />
 					{data.outbound.map((intention, index) => (
-						<React.Fragment key={intention.accountId}>
+						<React.Fragment key={intention.account.id}>
 							{index === 0 ? null : <Spacer y={1} />}
 							<OutboundConnectionIntention intention={intention} />
 						</React.Fragment>

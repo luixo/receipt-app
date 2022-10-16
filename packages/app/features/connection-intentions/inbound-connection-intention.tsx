@@ -22,10 +22,10 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 		);
 	const acceptConnection = React.useCallback(() => {
 		acceptConnectionMutation.mutate({
-			accountId: intention.accountId,
+			accountId: intention.account.id,
 			userId: user!.id,
 		});
-	}, [acceptConnectionMutation, intention.accountId, user]);
+	}, [acceptConnectionMutation, intention.account.id, user]);
 
 	const rejectConnectionMutation =
 		trpc.accountConnectionIntentions.reject.useMutation(
@@ -33,15 +33,15 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 		);
 	const rejectConnection = React.useCallback(() => {
 		rejectConnectionMutation.mutate({
-			sourceAccountId: intention.accountId,
+			sourceAccountId: intention.account.id,
 		});
-	}, [rejectConnectionMutation, intention.accountId]);
+	}, [rejectConnectionMutation, intention.account.id]);
 
 	const isLoading =
 		acceptConnectionMutation.isLoading || rejectConnectionMutation.isLoading;
 	return (
 		<>
-			<Text>{intention.email}</Text>
+			<Text>{intention.account.email}</Text>
 			<Spacer y={0.5} />
 			<UsersSuggest
 				selected={user}
@@ -60,7 +60,9 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 					auto
 					disabled={!user || isLoading}
 					onClick={acceptConnection}
-					title={user ? `Connect ${intention.email} as ${user.name}` : ""}
+					title={
+						user ? `Connect ${intention.account.email} as ${user.name}` : ""
+					}
 				>
 					{user ? `Connect "${user.name}"` : "Please choose user above"}
 				</Button>

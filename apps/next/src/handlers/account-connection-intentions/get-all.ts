@@ -20,33 +20,39 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 		.select([
 			"accountId",
 			"targetAccountId",
-			"userId",
+			"users.id as userId",
 			"users.name",
 			"sourceAccounts.email as sourceAccountEmail",
 			"targetAccounts.email as targetAccountEmail",
 		])
 		.execute();
 	return relatedIntentions.reduce<{
-		inbound: { accountId: AccountsId; email: string }[];
+		inbound: {
+			account: { id: AccountsId; email: string };
+		}[];
 		outbound: {
-			accountId: AccountsId;
-			email: string;
-			userId: UsersId;
-			userName: string;
+			account: { id: AccountsId; email: string };
+			user: { id: UsersId; name: string };
 		}[];
 	}>(
 		(acc, intention) => {
 			if (intention.accountId === ctx.auth.accountId) {
 				acc.outbound.push({
-					accountId: intention.targetAccountId,
-					userId: intention.userId,
-					userName: intention.name,
-					email: intention.targetAccountEmail,
+					account: {
+						id: intention.targetAccountId,
+						email: intention.targetAccountEmail,
+					},
+					user: {
+						id: intention.userId,
+						name: intention.name,
+					},
 				});
 			} else {
 				acc.inbound.push({
-					accountId: intention.accountId,
-					email: intention.sourceAccountEmail,
+					account: {
+						id: intention.accountId,
+						email: intention.sourceAccountEmail,
+					},
 				});
 			}
 			return acc;

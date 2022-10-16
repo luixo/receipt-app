@@ -80,5 +80,5 @@ export const procedure = authProcedure
 				.where("targetAccountId", "=", ctx.auth.accountId)
 				.executeTakeFirst();
 		});
-		return account.email;
+		return { email: account.email };
 	});

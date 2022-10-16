@@ -19,14 +19,14 @@ export const OutboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 		);
 	const removeConnection = React.useCallback(() => {
 		removeConnectionMutation.mutate({
-			targetAccountId: intention.accountId,
+			targetAccountId: intention.account.id,
 		});
-	}, [removeConnectionMutation, intention.accountId]);
+	}, [removeConnectionMutation, intention.account.id]);
 
 	return (
 		<Input
-			value={intention.email}
-			label={intention.userName}
+			value={intention.account.email}
+			label={intention.user.name}
 			readOnly
 			helperColor="error"
 			helperText={removeConnectionMutation.error?.message}

@@ -67,8 +67,10 @@ export const addConnectionIntention = async (
 		});
 		return {
 			id: targetAccount.id,
-			userName: user.name,
 			connected: true,
+			user: {
+				name: user.name,
+			},
 		};
 	}
 	try {
@@ -83,8 +85,10 @@ export const addConnectionIntention = async (
 			.executeTakeFirst();
 		return {
 			id: targetAccount.id,
-			userName: user.name,
 			connected: false,
+			user: {
+				name: user.name,
+			},
 		};
 	} catch (e) {
 		// Could be like `duplicate key value violates unique constraint "..."`

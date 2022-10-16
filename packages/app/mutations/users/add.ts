@@ -29,10 +29,14 @@ export const options: UseContextedMutationOptions<"users.add"> = {
 				cache.accountConnections.update(trpcContext, {
 					getAll: (controller) =>
 						controller.outbound.add({
-							accountId: connection.id,
-							email: variables.email!,
-							userId: id,
-							userName: variables.name,
+							account: {
+								id: connection.id,
+								email: variables.email!,
+							},
+							user: {
+								id,
+								name: variables.name,
+							},
 						}),
 				});
 			}
