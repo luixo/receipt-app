@@ -2,7 +2,6 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
-import { getAccountById } from "next-app/handlers/account/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import { getUserById } from "next-app/handlers/users/utils";
 import { accountIdSchema, userIdSchema } from "next-app/handlers/validation";
@@ -39,10 +38,11 @@ export const procedure = authProcedure
 				message: `User ${input.userId} is already connected to an account.`,
 			});
 		}
-		const account = await getAccountById(database, input.accountId, [
-			"id",
-			"email",
-		]);
+		const account = await database
+			.selectFrom("accounts")
+			.select(["id", "email"])
+			.where("id", "=", input.accountId)
+			.executeTakeFirst();
 		if (!account) {
 			throw new trpc.TRPCError({
 				code: "NOT_FOUND",

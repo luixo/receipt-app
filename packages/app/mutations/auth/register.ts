@@ -12,7 +12,7 @@ export const options: UseContextedMutationOptions<
 				get: (controller) =>
 					controller.upsert({
 						id: accountId,
-						name,
+						user: { name },
 						verified: false,
 					}),
 			}),

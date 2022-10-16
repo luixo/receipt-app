@@ -6,7 +6,6 @@ import { DAY } from "app/utils/time";
 import { emailSchema } from "app/utils/validation";
 import { getDatabase } from "next-app/db";
 import { generateResetPasswordEmail } from "next-app/email/utils";
-import { getAccountByEmail } from "next-app/handlers/account/utils";
 import { unauthProcedure } from "next-app/handlers/trpc";
 import { getEmailClient, isEmailServiceActive } from "next-app/utils/email";
 
@@ -18,7 +17,11 @@ export const procedure = unauthProcedure
 	)
 	.mutation(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
-		const account = await getAccountByEmail(database, input.email, ["id"]);
+		const account = await database
+			.selectFrom("accounts")
+			.select("id")
+			.where("email", "=", input.email)
+			.executeTakeFirst();
 		if (!account) {
 			throw new trpc.TRPCError({
 				code: "NOT_FOUND",

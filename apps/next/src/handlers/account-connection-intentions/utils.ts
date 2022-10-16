@@ -3,7 +3,6 @@ import * as trpc from "@trpc/server";
 import { Database } from "next-app/db";
 import { ACCOUNT_CONNECTIONS_INTENTIONS } from "next-app/db/consts";
 import { AccountsId, UsersId } from "next-app/db/models";
-import { getAccountByEmail } from "next-app/handlers/account/utils";
 import { getUserById } from "next-app/handlers/users/utils";
 
 export const addConnectionIntention = async (
@@ -13,7 +12,11 @@ export const addConnectionIntention = async (
 	toEmail: string,
 	asUserId: UsersId
 ) => {
-	const targetAccount = await getAccountByEmail(database, toEmail, ["id"]);
+	const targetAccount = await database
+		.selectFrom("accounts")
+		.select("id")
+		.where("email", "=", toEmail)
+		.executeTakeFirst();
 	if (!targetAccount) {
 		throw new trpc.TRPCError({
 			code: "NOT_FOUND",

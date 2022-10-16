@@ -21,7 +21,7 @@ export const AccountNameInput: React.FC<Props> = ({ account }) => {
 		getValue,
 		setValue,
 	} = useSingleInput({
-		initialValue: account.name,
+		initialValue: account.user.name,
 		schema: userNameSchema,
 	});
 
@@ -30,7 +30,7 @@ export const AccountNameInput: React.FC<Props> = ({ account }) => {
 	);
 	const saveName = React.useCallback(
 		(nextName: string) => {
-			if (nextName === account.name) {
+			if (nextName === account.user.name) {
 				return;
 			}
 			updateNameMutation.mutate(
@@ -38,7 +38,7 @@ export const AccountNameInput: React.FC<Props> = ({ account }) => {
 				{ onSuccess: () => setValue(nextName) }
 			);
 		},
-		[updateNameMutation, account.name, setValue]
+		[updateNameMutation, account.user.name, setValue]
 	);
 
 	return (

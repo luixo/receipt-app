@@ -17,9 +17,10 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 			message: `Account ${ctx.auth.accountId} is not found`,
 		});
 	}
-	const { confirmationToken, ...account } = maybeAccount;
+	const { confirmationToken, id, name } = maybeAccount;
 	return {
-		...account,
+		id,
+		user: { name },
 		verified: !confirmationToken,
 	};
 });

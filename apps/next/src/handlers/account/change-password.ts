@@ -3,7 +3,6 @@ import { z } from "zod";
 
 import { passwordSchema } from "app/utils/validation";
 import { getDatabase } from "next-app/db";
-import { getAccountById } from "next-app/handlers/account/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import { generatePasswordData, getHash } from "next-app/utils/crypto";
 
@@ -16,10 +15,11 @@ export const procedure = authProcedure
 	)
 	.mutation(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
-		const account = await getAccountById(database, ctx.auth.accountId, [
-			"passwordHash",
-			"passwordSalt",
-		]);
+		const account = await database
+			.selectFrom("accounts")
+			.select(["passwordHash", "passwordSalt"])
+			.where("id", "=", ctx.auth.accountId)
+			.executeTakeFirst();
 		if (!account) {
 			throw new trpc.TRPCError({
 				code: "UNAUTHORIZED",

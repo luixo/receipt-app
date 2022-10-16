@@ -30,7 +30,6 @@ export const procedure = unauthProcedure
 				"passwordSalt",
 				"passwordHash",
 				"users.name",
-				"users.publicName",
 				"confirmationToken",
 			])
 			.executeTakeFirst();
@@ -63,9 +62,10 @@ export const procedure = unauthProcedure
 				setAuthCookie(ctx.res, authToken, expirationDate);
 				return {
 					accountId: result.accountId,
-					name: result.name,
-					publicName: result.publicName,
 					verified: !result.confirmationToken,
+					user: {
+						name: result.name,
+					},
 				};
 			}
 		}
