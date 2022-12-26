@@ -11,26 +11,28 @@ import { trpc, TRPCQueryOutput } from "app/trpc";
 import { userNameSchema } from "app/utils/validation";
 
 type Props = {
-	account: TRPCQueryOutput<"account.get">;
+	accountQuery: TRPCQueryOutput<"account.get">;
 };
 
-export const AccountNameInput: React.FC<Props> = ({ account }) => {
+export const AccountNameInput: React.FC<Props> = ({ accountQuery }) => {
 	const {
 		bindings,
 		state: inputState,
 		getValue,
 		setValue,
 	} = useSingleInput({
-		initialValue: account.user.name,
+		initialValue: accountQuery.user.name,
 		schema: userNameSchema,
 	});
 
 	const updateNameMutation = trpc.account.changeName.useMutation(
-		useTrpcMutationOptions(mutations.account.changeName.options)
+		useTrpcMutationOptions(mutations.account.changeName.options, {
+			context: { id: accountQuery.account.id },
+		})
 	);
 	const saveName = React.useCallback(
 		(nextName: string) => {
-			if (nextName === account.user.name) {
+			if (nextName === accountQuery.user.name) {
 				return;
 			}
 			updateNameMutation.mutate(
@@ -38,7 +40,7 @@ export const AccountNameInput: React.FC<Props> = ({ account }) => {
 				{ onSuccess: () => setValue(nextName) }
 			);
 		},
-		[updateNameMutation, account.user.name, setValue]
+		[updateNameMutation, accountQuery.user.name, setValue]
 	);
 
 	return (

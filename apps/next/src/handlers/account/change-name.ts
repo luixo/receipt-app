@@ -18,7 +18,8 @@ export const procedure = authProcedure
 			.selectFrom("users")
 			// Typesystem doesn't know that we use account id as self user id
 			.where("users.id", "=", ctx.auth.accountId as UsersId)
-			.select("users.name");
+			.select("users.name")
+			.executeTakeFirst();
 		if (!user) {
 			throw new trpc.TRPCError({
 				code: "INTERNAL_SERVER_ERROR",

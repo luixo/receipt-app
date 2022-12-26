@@ -32,7 +32,10 @@ export const options: UseContextedMutationOptions<
 			get: (controller) => {
 				controller.update((account) => ({
 					...account,
-					name: updateObject.name,
+					user: {
+						...account.user,
+						name: updateObject.name,
+					},
 				}));
 			},
 		});

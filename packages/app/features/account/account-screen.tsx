@@ -42,7 +42,7 @@ const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 			</Header>
 			<EmailVerificationCard />
 			<Spacer y={1} />
-			<AccountNameInput account={query.data} />
+			<AccountNameInput accountQuery={query.data} />
 			<Spacer y={1} />
 			<ChangePasswordScreen />
 			<Spacer y={2} />
