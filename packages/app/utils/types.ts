@@ -54,7 +54,21 @@ export type FlattenObject<
 		: never
 	: never;
 
+export type Exact<A, B> = (<T>() => T extends A ? 1 : 0) extends <
+	T
+>() => T extends B ? 1 : 0
+	? A extends B
+		? B extends A
+			? unknown
+			: never
+		: never
+	: never;
+
 export type MaybeAddElementToArray<
 	Args extends unknown[],
 	X = undefined
-> = undefined extends X ? Args : [...Args, X];
+> = Exact<X, undefined> extends never
+	? X extends undefined
+		? [...Args, X?]
+		: [...Args, X]
+	: Args;
