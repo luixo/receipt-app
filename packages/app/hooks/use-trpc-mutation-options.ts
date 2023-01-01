@@ -102,20 +102,21 @@ export const useTrpcMutationOptions = <
 			onSettled: onSettledTrpc,
 			onSuccess: onSuccessTrpc,
 		},
-		options = {},
+		options,
 	]: MaybeAddElementToArray<
 		[UseContextedMutationOptions<Path, Context, LifecycleContext>],
 		Exact<Context, undefined> extends never
 			? TRPCMutationOptions<Path, LifecycleContext> & { context: Context }
-			: TRPCMutationOptions<Path, LifecycleContext> | undefined
+			:
+					| (TRPCMutationOptions<Path, LifecycleContext> & {
+							context?: Context;
+					  })
+					| undefined
 	>
 ): TRPCMutationOptions<Path, WrappedContext<LifecycleContext>> => {
-	const { onError, onMutate, onSettled, onSuccess, ...rest } = options;
+	const { context, onError, onMutate, onSettled, onSuccess, ...rest } =
+		options || {};
 	const trpcContext = trpc.useContext();
-	const context =
-		typeof options === "object" && "context" in options
-			? options.context
-			: undefined;
 	return React.useMemo(() => {
 		const trpcArgs = [trpcContext, context] as Contexts<Context>;
 		const toastArgs = [context] as ToastArgs<Context>;
