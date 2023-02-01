@@ -19,7 +19,7 @@ type ReceiptParticipant = {
 	remoteUserId: UsersId;
 };
 
-const spreadCalculation = <T>(
+const spreadCalculation = <T extends string>(
 	total: number,
 	parts: { part: number; id: T }[],
 	ids: T[]
@@ -30,11 +30,18 @@ const spreadCalculation = <T>(
 	// 3 parts
 	const partsAmount = parts.reduce((acc, itemPart) => acc + itemPart.part, 0);
 	// 333c, 333c and 333c
-	const partsTotals = parts.map((itemPart) =>
-		Math.floor((itemPart.part / partsAmount) * totalDecimal)
+	const partsTotals = parts.reduce<Record<T, number>>(
+		(partsAcc, itemPart) => ({
+			...partsAcc,
+			[itemPart.id]: Math.floor((itemPart.part / partsAmount) * totalDecimal),
+		}),
+		{} as Record<T, number>
 	);
 	// 333c + 333c + 333c = 999c
-	const partsTotal = partsTotals.reduce((acc, sum) => acc + sum, 0);
+	const partsTotal = (Object.values(partsTotals) as number[]).reduce(
+		(acc, sum) => acc + sum,
+		0
+	);
 	// 1c leftover
 	const leftoversAmount = totalDecimal - partsTotal;
 	// 0c for everyone (should be like that every time, actually)
@@ -46,7 +53,7 @@ const spreadCalculation = <T>(
 		.map((part, index) => ({
 			id: part.id,
 			sum:
-				partsTotals[index]! +
+				partsTotals[part.id] +
 				leftoverForEveryone +
 				(index < leftoverThresholdIndex ? 1 : 0),
 		}));
