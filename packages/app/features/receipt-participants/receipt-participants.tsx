@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Spacer, styled } from "@nextui-org/react";
+import { Collapse, Spacer, styled } from "@nextui-org/react";
 
 import { useSelfAccountId } from "app/hooks/use-self-account-id";
 import { TRPCQueryOutput } from "app/trpc";
@@ -76,7 +76,12 @@ export const ReceiptParticipants: React.FC<Props> = ({
 		[data, receiptId, sortParticipants]
 	);
 	return (
-		<>
+		<Collapse
+			key={participants.map(({ remoteUserId }) => remoteUserId).join(";")}
+			title="🥸 Participants"
+			shadow
+			expanded={data.role === "owner"}
+		>
 			{participants.map((participant, index) => (
 				<React.Fragment key={participant.remoteUserId}>
 					{index === 0 ? null : <Spacer y={0.5} />}
@@ -103,6 +108,6 @@ export const ReceiptParticipants: React.FC<Props> = ({
 					)}
 				/>
 			)}
-		</>
+		</Collapse>
 	);
 };

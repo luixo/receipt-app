@@ -36,16 +36,14 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 			: undefined;
 	return (
 		<Collapse.Group accordion={false} divider={false}>
-			<Collapse title="🥸 Participants" shadow expanded={data.role === "owner"}>
-				<ReceiptParticipants
-					data={data}
-					receiptId={receiptId}
-					receiptSelfUserId={receiptSelfUserId}
-					receiptLocked={receiptLocked}
-					currency={receiptCurrency}
-					isLoading={isLoading}
-				/>
-			</Collapse>
+			<ReceiptParticipants
+				data={data}
+				receiptId={receiptId}
+				receiptSelfUserId={receiptSelfUserId}
+				receiptLocked={receiptLocked}
+				currency={receiptCurrency}
+				isLoading={isLoading}
+			/>
 			<Spacer y={1} />
 			<AddReceiptItemController
 				receiptId={receiptId}
