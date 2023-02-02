@@ -2,6 +2,12 @@ import { Props as UserProps } from "app/components/app/user";
 import { TRPCQueryOutput } from "app/trpc";
 import { rotate } from "app/utils/array";
 import { getIndexByString } from "app/utils/hash";
+import {
+	mapObjectKeys,
+	mapObjectValues,
+	values,
+	entries,
+} from "app/utils/object";
 import { ReceiptItemsId, ReceiptsId, UsersId } from "next-app/src/db/models";
 
 type ReceiptItem = {
@@ -19,81 +25,203 @@ type ReceiptParticipant = {
 	remoteUserId: UsersId;
 };
 
-const spreadCalculation = <T extends string>(
-	total: number,
-	parts: { part: number; id: T }[],
-	ids: T[]
+const getItemCalculations = <T extends string>(
+	itemSum: number,
+	parts: Record<T, number>
 ) => {
-	// Say, we split 10$ by 3 parts
-	// We round 10.0000002$ (passed as 1000 cents) to 10$
-	const totalDecimal = Math.round(total);
-	// 3 parts
-	const partsAmount = parts.reduce((acc, itemPart) => acc + itemPart.part, 0);
-	// 333c, 333c and 333c
-	const partsTotals = parts.reduce<Record<T, number>>(
-		(partsAcc, itemPart) => ({
-			...partsAcc,
-			[itemPart.id]: Math.floor((itemPart.part / partsAmount) * totalDecimal),
-		}),
-		{} as Record<T, number>
+	const sumRounded = Math.round(itemSum);
+	const partsAmount = values(parts).reduce((acc, part) => acc + part, 0);
+	const sumByUser = mapObjectValues(
+		parts,
+		(part) => (part / partsAmount) * sumRounded
 	);
-	// 333c + 333c + 333c = 999c
-	const partsTotal = (Object.values(partsTotals) as number[]).reduce(
-		(acc, sum) => acc + sum,
+	const sumTotal = values(sumByUser).reduce(
+		(acc, sum) => acc + Math.floor(sum),
 		0
 	);
-	// 1c leftover
-	const leftoversAmount = totalDecimal - partsTotal;
-	// 0c for everyone (should be like that every time, actually)
-	const leftoverForEveryone = Math.floor(leftoversAmount / parts.length);
-	// Who will get the leftovers from deltaDecimal? First 1 element
-	const leftoverThresholdIndex = leftoversAmount % parts.length;
-	return [...parts]
-		.sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id))
-		.map((part, index) => ({
-			id: part.id,
-			sum:
-				partsTotals[part.id] +
-				leftoverForEveryone +
-				(index < leftoverThresholdIndex ? 1 : 0),
-		}));
+	return {
+		sumFlooredByParticipant: mapObjectKeys(parts, (id) =>
+			Math.floor(sumByUser[id])
+		),
+		leftover: sumRounded - sumTotal,
+		shortageByParticipant: mapObjectKeys(
+			parts,
+			(id) => sumByUser[id] - Math.floor(sumByUser[id])
+		),
+	};
 };
 
+/*
+	How does distributing sums work?
+	Calculation consist of three phases:
+	- calculate floored sums, participant shortages and leftovers
+	- reimbursed shortages with some of leftovers
+	- distribute lucky leftovers
+
+	E.g.:
+	- receipt has 3 items - 40.01$, 4.01$ and 4$ (I1, I2 and I3)
+	- 3 participants (P1, P2 and P3) share 4$ and 4.01$ items equally, 40.01$ has P1 10/12, the rest have 1/12
+	
+	First, we calculate floored sums, participant shortage and leftovers for every item.
+	For I1 those would be:
+	- floored sums: P1 3334, P2 333, P3 333
+	- participant shortage: P1 0.1(6), P2 0.41(6), P3 0.41(6)
+	- leftover: 4001 - 3334 - 333 - 333 = 1
+	For I2 those would be:
+	- floored sums: 133 each participant
+	- participant shortage: 0.(6) each participant
+	- leftover: 401 - 133 - 133 - 133 = 2
+	For I3 those would be:
+	- floored sums: 133 each participant
+	- participant shortage: 0.(3) each participant
+	- leftover: 400 - 133 - 133 - 133 = 1
+
+	Slice by participants:
+	P1:
+	- floored sum is 3334 + 133 + 133 = 3600
+	- shortage is 0.1(6) + 0.(6) + 0.(3) = 1.1(6)
+	P2 and P3:
+	- floored sum is 333 + 133 + 133 = 599
+	- shortage is 0.41(6) + 0.(6) + 0.(3) = 1.41(6)
+
+	Total leftover is 1 + 2 + 1 = 4
+
+	Second, we reimburse shortages - the integer ones - for each participant.
+	Every participant gets 1 as reimburse, and is left with non-reimbursed shortage:
+	P1: 0.1(6)
+	P2 and P3: 0.41(6)
+
+	Total leftover is now 1.
+
+	Third, we order participants by non-reimbursed shortage:
+	(1st place) P2 and P3
+	(2nd place) P1
+
+	Fourth, we roll the (determenistic) dice to figure out who will recieve the leftovers first:
+	(1st) P2 (wins in dice roll)
+	(2nd) P3
+	(3rd) P1
+
+	Finally, we give one cent to each participant with index less than amount of leftover (which is 1)
+
+	Final slice by participant:
+	P1: total 3601 (36.01$)
+	- floored sum is 3600
+	- reimbursed shortage is 1
+	- lucky leftover gave 0
+	P2: total 601 (6.01$)
+	- floored sum is 599
+	- reimbursed shortage is 1
+	- lucky leftover gave 1
+	P3: total 600 (6.00$)
+	- floored sum is 599
+	- reimbursed shortage is 1
+	- lucky leftover gave 0
+*/
 export const getParticipantSums = <T extends ReceiptParticipant>(
 	receiptId: ReceiptsId,
 	items: ReceiptItem[],
 	participants: T[],
 	decimalsDigits = 2
 ) => {
-	const sortedParticipants = [...participants].sort(
-		(a, b) => a.added.valueOf() - b.added.valueOf()
-	);
-	const rotatedUserIds = rotate(
-		sortedParticipants.map((participant) => participant.remoteUserId),
-		getIndexByString(receiptId)
-	);
 	const decimalsPower = 10 ** decimalsDigits;
-	const receiptItemsWithSums = items.map((item) => ({
-		id: item.id,
-		partsSums: spreadCalculation(
-			item.price * item.quantity * decimalsPower,
-			item.parts.map(({ userId, part }) => ({ id: userId, part })),
-			rotatedUserIds
-		),
-	}));
-	const participantsSums = receiptItemsWithSums.reduce<
-		Partial<Record<UsersId, number>>
-	>((acc, item) => {
-		item.partsSums.forEach(({ id, sum }) => {
-			acc[id] = (acc[id] || 0) + sum;
-		});
-		return acc;
-	}, {});
-	return sortedParticipants.map((participant) => ({
+	const {
+		sumFlooredByParticipant,
+		shortageByParticipant,
+		leftoverBeforeReimburse,
+	} = items
+		.map((item) =>
+			getItemCalculations<UsersId>(
+				item.price * item.quantity * decimalsPower,
+				item.parts.reduce(
+					(acc, { userId, part }) => ({ ...acc, [userId]: part }),
+					{}
+				)
+			)
+		)
+		.reduce<{
+			sumFlooredByParticipant: Record<UsersId, number>;
+			shortageByParticipant: Record<UsersId, number>;
+			leftoverBeforeReimburse: number;
+		}>(
+			(acc, item) => ({
+				sumFlooredByParticipant: entries(item.sumFlooredByParticipant).reduce(
+					(subacc, [id, sum]) => ({
+						...subacc,
+						[id]: (subacc[id] || 0) + sum,
+					}),
+					acc.sumFlooredByParticipant
+				),
+				shortageByParticipant: entries(item.shortageByParticipant).reduce(
+					(subacc, [id, shortage]) => ({
+						...subacc,
+						[id]: (subacc[id] || 0) + shortage,
+					}),
+					acc.shortageByParticipant
+				),
+				leftoverBeforeReimburse: acc.leftoverBeforeReimburse + item.leftover,
+			}),
+			{
+				sumFlooredByParticipant: {},
+				shortageByParticipant: {},
+				leftoverBeforeReimburse: 0,
+			}
+		);
+
+	const reimbursedShortages = mapObjectValues(
+		shortageByParticipant,
+		(shortage) => {
+			const integer = Math.trunc(shortage);
+			return {
+				reimbursed: integer,
+				notReimbursed: shortage - integer,
+			};
+		}
+	);
+	const totalReimbursedShortage = values(reimbursedShortages).reduce(
+		(acc, { reimbursed }) => acc + reimbursed,
+		0
+	);
+	const leftover = leftoverBeforeReimburse - totalReimbursedShortage;
+
+	const nonEmptyParticipantIds = rotate(
+		participants
+			.filter((participant) => {
+				const sum = sumFlooredByParticipant[participant.remoteUserId];
+				return sum && sum >= 0;
+			})
+			.sort((a, b) => a.added.valueOf() - b.added.valueOf()),
+		getIndexByString(receiptId)
+	)
+		.sort((a, b) => {
+			const leftoverA = reimbursedShortages[a.remoteUserId]?.notReimbursed ?? 0;
+			const leftoverB = reimbursedShortages[b.remoteUserId]?.notReimbursed ?? 0;
+			return leftoverB - leftoverA;
+		})
+		.map(({ remoteUserId }) => remoteUserId);
+
+	if (leftover > nonEmptyParticipantIds.length) {
+		throw new Error("Unexpected leftover bigger than participants left");
+	}
+	// 1c left for a few lucky ones
+	const leftoverThresholdIndex = leftover % nonEmptyParticipantIds.length;
+	const luckyLeftovers = nonEmptyParticipantIds.reduce<Record<UsersId, number>>(
+		(acc, id, index) => ({
+			...acc,
+			[id]: index < leftoverThresholdIndex ? 1 : 0,
+		}),
+		{}
+	);
+
+	return participants.map(({ remoteUserId, ...participant }) => ({
 		...participant,
+		remoteUserId,
 		sum:
-			Math.round(participantsSums[participant.remoteUserId] ?? 0) /
-			decimalsPower,
+			Math.round(
+				(sumFlooredByParticipant[remoteUserId] ?? 0) +
+					(reimbursedShortages[remoteUserId]?.reimbursed ?? 0) +
+					(luckyLeftovers[remoteUserId] ?? 0)
+			) / decimalsPower,
 	}));
 };
 
