@@ -6,8 +6,9 @@ import { QueryErrorMessage } from "app/components/error-message";
 import { AddReceiptItemController } from "app/features/add-receipt-item/add-receipt-item-controller";
 import { ReceiptParticipants } from "app/features/receipt-participants/receipt-participants";
 import { trpc, TRPCQuerySuccessResult } from "app/trpc";
-import { ReceiptsId } from "next-app/db/models";
+import { ReceiptItemsId, ReceiptsId } from "next-app/db/models";
 
+import { EmptyItems } from "./empty-items";
 import { ReceiptItem } from "./receipt-item";
 
 const NoReceiptItems = styled("div", {
@@ -34,8 +35,32 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 		receiptQuery.status === "success"
 			? receiptQuery.data.selfUserId
 			: undefined;
+	const emptyItems = data.items.filter((item) => item.parts.length === 0);
+	const itemsRef = React.useRef<Record<ReceiptItemsId, HTMLDivElement | null>>(
+		{}
+	);
+	const onEmptyItemClick = React.useCallback(
+		(id: ReceiptItemsId) => {
+			const matchedItem = itemsRef.current[id];
+			if (!matchedItem) {
+				return;
+			}
+			matchedItem.scrollIntoView();
+		},
+		[itemsRef]
+	);
 	return (
 		<Collapse.Group accordion={false} divider={false}>
+			{emptyItems.length === 0 ? null : (
+				<>
+					<EmptyItems
+						items={emptyItems}
+						currency={receiptCurrency}
+						onClick={onEmptyItemClick}
+					/>
+					<Spacer y={1} />
+				</>
+			)}
 			<ReceiptParticipants
 				data={data}
 				receiptId={receiptId}
@@ -62,6 +87,9 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 						currency={receiptCurrency}
 						role={data.role}
 						isLoading={isLoading}
+						ref={(element) => {
+							itemsRef.current[receiptItem.id] = element;
+						}}
 					/>
 				</React.Fragment>
 			))}

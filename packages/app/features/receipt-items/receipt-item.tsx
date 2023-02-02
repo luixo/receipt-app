@@ -39,199 +39,204 @@ type Props = {
 	isLoading: boolean;
 };
 
-export const ReceiptItem: React.FC<Props> = ({
-	receiptLocked,
-	receiptItem,
-	receiptParticipants,
-	receiptId,
-	currency,
-	role,
-	isLoading: isReceiptDeleteLoading,
-}) => {
-	const formattedCurrency = useFormattedCurrency(currency);
-	const removeReceiptItemMutation = trpc.receiptItems.remove.useMutation(
-		useTrpcMutationOptions(mutations.receiptItems.remove.options, {
-			context: receiptId,
-		})
-	);
-	const removeItem = React.useCallback(
-		() => removeReceiptItemMutation.mutate({ id: receiptItem.id }),
-		[removeReceiptItemMutation, receiptItem.id]
-	);
-
-	const addedParticipants = receiptItem.parts.map((part) => part.userId);
-	const notAddedParticipants = receiptParticipants.filter(
-		(participant) => !addedParticipants.includes(participant.remoteUserId)
-	);
-
-	const addItemPartMutation = trpc.itemParticipants.add.useMutation(
-		useTrpcMutationOptions(mutations.itemParticipants.add.options, {
-			context: receiptId,
-		})
-	);
-	const addParticipant = React.useCallback(
-		(participant: ReceiptParticipant | EveryParticipantTag) => {
-			if (participant === EVERY_PARTICIPANT_TAG) {
-				addItemPartMutation.mutate({
-					itemId: receiptItem.id,
-					userIds: notAddedParticipants.map(
-						({ remoteUserId }) => remoteUserId
-					) as [UsersId, ...UsersId[]],
-				});
-			} else {
-				addItemPartMutation.mutate({
-					itemId: receiptItem.id,
-					userIds: [participant.remoteUserId],
-				});
-			}
+export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
+	(
+		{
+			receiptLocked,
+			receiptItem,
+			receiptParticipants,
+			receiptId,
+			currency,
+			role,
+			isLoading: isReceiptDeleteLoading,
 		},
-		[addItemPartMutation, notAddedParticipants, receiptItem.id]
-	);
+		ref
+	) => {
+		const formattedCurrency = useFormattedCurrency(currency);
+		const removeReceiptItemMutation = trpc.receiptItems.remove.useMutation(
+			useTrpcMutationOptions(mutations.receiptItems.remove.options, {
+				context: receiptId,
+			})
+		);
+		const removeItem = React.useCallback(
+			() => removeReceiptItemMutation.mutate({ id: receiptItem.id }),
+			[removeReceiptItemMutation, receiptItem.id]
+		);
 
-	const isDeleteLoading =
-		isReceiptDeleteLoading || removeReceiptItemMutation.isLoading;
-	const itemParts = receiptItem.parts.reduce(
-		(acc, itemPart) => acc + itemPart.part,
-		0
-	);
-	const isEditingDisabled = role === "viewer" || receiptItem.locked;
+		const addedParticipants = receiptItem.parts.map((part) => part.userId);
+		const notAddedParticipants = receiptParticipants.filter(
+			(participant) => !addedParticipants.includes(participant.remoteUserId)
+		);
 
-	return (
-		<Card>
-			<Card.Header css={{ justifyContent: "space-between" }}>
-				<ReceiptItemNameInput
-					receiptId={receiptId}
-					receiptItem={receiptItem}
-					readOnly={isEditingDisabled || receiptLocked}
-					isLoading={isDeleteLoading}
-				/>
-				<ReceiptItemLockedButton
-					ghost
-					receiptId={receiptId}
-					receiptItemId={receiptItem.id}
-					locked={receiptItem.locked}
-					disabled={role === "viewer"}
-				/>
-			</Card.Header>
-			<Card.Divider />
-			<Card.Body>
-				<Sum>
-					<ReceiptItemPriceInput
+		const addItemPartMutation = trpc.itemParticipants.add.useMutation(
+			useTrpcMutationOptions(mutations.itemParticipants.add.options, {
+				context: receiptId,
+			})
+		);
+		const addParticipant = React.useCallback(
+			(participant: ReceiptParticipant | EveryParticipantTag) => {
+				if (participant === EVERY_PARTICIPANT_TAG) {
+					addItemPartMutation.mutate({
+						itemId: receiptItem.id,
+						userIds: notAddedParticipants.map(
+							({ remoteUserId }) => remoteUserId
+						) as [UsersId, ...UsersId[]],
+					});
+				} else {
+					addItemPartMutation.mutate({
+						itemId: receiptItem.id,
+						userIds: [participant.remoteUserId],
+					});
+				}
+			},
+			[addItemPartMutation, notAddedParticipants, receiptItem.id]
+		);
+
+		const isDeleteLoading =
+			isReceiptDeleteLoading || removeReceiptItemMutation.isLoading;
+		const itemParts = receiptItem.parts.reduce(
+			(acc, itemPart) => acc + itemPart.part,
+			0
+		);
+		const isEditingDisabled = role === "viewer" || receiptItem.locked;
+
+		return (
+			<Card ref={ref}>
+				<Card.Header css={{ justifyContent: "space-between" }}>
+					<ReceiptItemNameInput
 						receiptId={receiptId}
 						receiptItem={receiptItem}
-						currency={currency}
 						readOnly={isEditingDisabled || receiptLocked}
 						isLoading={isDeleteLoading}
 					/>
-					<ReceiptItemQuantityInput
+					<ReceiptItemLockedButton
+						ghost
 						receiptId={receiptId}
-						receiptItem={receiptItem}
-						readOnly={isEditingDisabled || receiptLocked}
-						isLoading={isDeleteLoading}
+						receiptItemId={receiptItem.id}
+						locked={receiptItem.locked}
+						disabled={role === "viewer"}
 					/>
-					<Spacer x={0.5} />
-					<Text>
-						= {round(receiptItem.quantity * receiptItem.price)}{" "}
-						{formattedCurrency}
-					</Text>
-				</Sum>
-				{receiptLocked ||
-				isEditingDisabled ||
-				notAddedParticipants.length === 0 ? null : (
-					<>
-						<Spacer y={1} />
-						<ButtonsGroup<ReceiptParticipant | EveryParticipantTag>
-							type="linear"
-							buttons={
-								notAddedParticipants.length === 1
-									? notAddedParticipants
-									: [EVERY_PARTICIPANT_TAG, ...notAddedParticipants]
-							}
-							buttonProps={(button) => ({
-								auto: true,
-								ghost: true,
-								...(button === EVERY_PARTICIPANT_TAG
-									? { color: "secondary" }
-									: undefined),
-							})}
-							extractDetails={(participant) =>
-								participant === EVERY_PARTICIPANT_TAG
-									? {
-											id: EVERY_PARTICIPANT_TAG,
-											name: "Everyone",
-									  }
-									: {
-											id: participant.remoteUserId,
-											name: participant.name,
-									  }
-							}
-							onClick={addParticipant}
-							disabled={receiptLocked}
+				</Card.Header>
+				<Card.Divider />
+				<Card.Body>
+					<Sum>
+						<ReceiptItemPriceInput
+							receiptId={receiptId}
+							receiptItem={receiptItem}
+							currency={currency}
+							readOnly={isEditingDisabled || receiptLocked}
+							isLoading={isDeleteLoading}
 						/>
-					</>
-				)}
-				{receiptItem.parts.length === 0 ? (
-					notAddedParticipants.length === 0 || receiptLocked ? null : (
+						<ReceiptItemQuantityInput
+							receiptId={receiptId}
+							receiptItem={receiptItem}
+							readOnly={isEditingDisabled || receiptLocked}
+							isLoading={isDeleteLoading}
+						/>
+						<Spacer x={0.5} />
+						<Text>
+							= {round(receiptItem.quantity * receiptItem.price)}{" "}
+							{formattedCurrency}
+						</Text>
+					</Sum>
+					{receiptLocked ||
+					isEditingDisabled ||
+					notAddedParticipants.length === 0 ? null : (
 						<>
-							<Spacer y={0.5} />
-							<Card.Divider />
-							<Spacer y={0.5} />
-							<Text h4>Add a user from a list above</Text>
+							<Spacer y={1} />
+							<ButtonsGroup<ReceiptParticipant | EveryParticipantTag>
+								type="linear"
+								buttons={
+									notAddedParticipants.length === 1
+										? notAddedParticipants
+										: [EVERY_PARTICIPANT_TAG, ...notAddedParticipants]
+								}
+								buttonProps={(button) => ({
+									auto: true,
+									ghost: true,
+									...(button === EVERY_PARTICIPANT_TAG
+										? { color: "secondary" }
+										: undefined),
+								})}
+								extractDetails={(participant) =>
+									participant === EVERY_PARTICIPANT_TAG
+										? {
+												id: EVERY_PARTICIPANT_TAG,
+												name: "Everyone",
+										  }
+										: {
+												id: participant.remoteUserId,
+												name: participant.name,
+										  }
+								}
+								onClick={addParticipant}
+								disabled={receiptLocked}
+							/>
 						</>
-					)
-				) : (
-					<>
-						<Spacer y={1} />
-						<Card.Divider />
-						<Spacer y={1} />
-						{receiptItem.parts.map((part, index) => {
-							const matchedParticipant = receiptParticipants.find(
-								(participant) => participant.remoteUserId === part.userId
-							);
-							if (!matchedParticipant) {
+					)}
+					{receiptItem.parts.length === 0 ? (
+						notAddedParticipants.length === 0 || receiptLocked ? null : (
+							<>
+								<Spacer y={0.5} />
+								<Card.Divider />
+								<Spacer y={0.5} />
+								<Text h4>Add a user from a list above</Text>
+							</>
+						)
+					) : (
+						<>
+							<Spacer y={1} />
+							<Card.Divider />
+							<Spacer y={1} />
+							{receiptItem.parts.map((part, index) => {
+								const matchedParticipant = receiptParticipants.find(
+									(participant) => participant.remoteUserId === part.userId
+								);
+								if (!matchedParticipant) {
+									return (
+										<React.Fragment key={part.userId}>
+											{index === 0 ? null : <Spacer y={0.5} />}
+											<ErrorMessage
+												message={`Part for user id ${part.userId} is orphaned. Please report this to support, include receipt id, receipt item name and mentioned user id`}
+											/>
+										</React.Fragment>
+									);
+								}
 								return (
 									<React.Fragment key={part.userId}>
 										{index === 0 ? null : <Spacer y={0.5} />}
-										<ErrorMessage
-											message={`Part for user id ${part.userId} is orphaned. Please report this to support, include receipt id, receipt item name and mentioned user id`}
+										<ReceiptItemPart
+											receiptId={receiptId}
+											itemPart={part}
+											itemParts={itemParts}
+											participant={matchedParticipant}
+											receiptItemId={receiptItem.id}
+											readOnly={isEditingDisabled || receiptLocked}
+											isLoading={isDeleteLoading}
 										/>
 									</React.Fragment>
 								);
-							}
-							return (
-								<React.Fragment key={part.userId}>
-									{index === 0 ? null : <Spacer y={0.5} />}
-									<ReceiptItemPart
-										receiptId={receiptId}
-										itemPart={part}
-										itemParts={itemParts}
-										participant={matchedParticipant}
-										receiptItemId={receiptItem.id}
-										readOnly={isEditingDisabled || receiptLocked}
-										isLoading={isDeleteLoading}
-									/>
-								</React.Fragment>
-							);
-						})}
+							})}
+						</>
+					)}
+				</Card.Body>
+				{isEditingDisabled ? null : (
+					<>
+						<Card.Divider />
+						<Card.Footer css={{ justifyContent: "flex-end" }}>
+							<RemoveButton
+								onRemove={removeItem}
+								disabled={receiptLocked}
+								mutation={removeReceiptItemMutation}
+								subtitle="This will remove item with all participant's parts"
+								noConfirm={receiptItem.parts.length === 0}
+							>
+								Remove item
+							</RemoveButton>
+						</Card.Footer>
 					</>
 				)}
-			</Card.Body>
-			{isEditingDisabled ? null : (
-				<>
-					<Card.Divider />
-					<Card.Footer css={{ justifyContent: "flex-end" }}>
-						<RemoveButton
-							onRemove={removeItem}
-							disabled={receiptLocked}
-							mutation={removeReceiptItemMutation}
-							subtitle="This will remove item with all participant's parts"
-							noConfirm={receiptItem.parts.length === 0}
-						>
-							Remove item
-						</RemoveButton>
-					</Card.Footer>
-				</>
-			)}
-		</Card>
-	);
-};
+			</Card>
+		);
+	}
+);

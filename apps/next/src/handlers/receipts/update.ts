@@ -1,5 +1,5 @@
 import * as trpc from "@trpc/server";
-import { MutationObject } from "kysely";
+import { MutationObject, sql } from "kysely";
 import { z } from "zod";
 
 import { receiptNameSchema } from "app/utils/validation";
@@ -61,6 +61,26 @@ export const procedure = authProcedure
 				throw new trpc.TRPCError({
 					code: "UNAUTHORIZED",
 					message: `You don't have rights to change ${input.id} receipt locked state.`,
+				});
+			}
+			const emptyItems = await database
+				.selectFrom("receiptItems")
+				.where("receiptItems.receiptId", "=", input.id)
+				.leftJoin("itemParticipants", (qb) =>
+					qb.onRef("itemParticipants.itemId", "=", "receiptItems.id")
+				)
+				.groupBy("receiptItems.id")
+				.having(
+					database.fn.sum<string>("itemParticipants.part"),
+					"is",
+					sql`null`
+				)
+				.select("receiptItems.id")
+				.executeTakeFirst();
+			if (emptyItems) {
+				throw new trpc.TRPCError({
+					code: "FORBIDDEN",
+					message: `Receipt ${input.id} has items with no participants.`,
 				});
 			}
 			if (input.update.value) {

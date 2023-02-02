@@ -118,10 +118,13 @@ const getItemCalculations = <T extends string>(
 	- reimbursed shortage is 1
 	- lucky leftover gave 0
 */
-export const getParticipantSums = <T extends ReceiptParticipant>(
+export const getParticipantSums = <
+	P extends ReceiptParticipant,
+	I extends ReceiptItem
+>(
 	receiptId: ReceiptsId,
-	items: ReceiptItem[],
-	participants: T[],
+	items: I[],
+	participants: P[],
 	decimalsDigits = 2
 ) => {
 	const decimalsPower = 10 ** decimalsDigits;
@@ -130,6 +133,7 @@ export const getParticipantSums = <T extends ReceiptParticipant>(
 		shortageByParticipant,
 		leftoverBeforeReimburse,
 	} = items
+		.filter((item) => item.parts.length !== 0)
 		.map((item) =>
 			getItemCalculations<UsersId>(
 				item.price * item.quantity * decimalsPower,

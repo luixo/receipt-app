@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Spacer } from "@nextui-org/react";
+import { Spacer, Tooltip } from "@nextui-org/react";
 import { MdSend as SendIcon } from "react-icons/md";
 
 import { IconButton } from "app/components/icon-button";
@@ -47,12 +47,25 @@ export const ReceiptLockedButton: React.FC<Props> = ({
 		},
 		[updateReceiptMutation, receiptId, locked, propagateDebts]
 	);
-	return (
+	const receiptItemsQuery = trpc.receiptItems.get.useQuery({ receiptId });
+	const emptyItemsWarning = React.useMemo(() => {
+		if (!receiptItemsQuery.data) {
+			return `Please wait until we verify receipt has no empty items..`;
+		}
+		const emptyItems = receiptItemsQuery.data.items.filter(
+			(item) => item.parts.length === 0
+		);
+		if (emptyItems.length === 0) {
+			return;
+		}
+		return `There are ${emptyItems.length} empty items, cannot lock`;
+	}, [receiptItemsQuery.data]);
+	const elements = (
 		<>
 			<IconButton
 				ghost
 				isLoading={updateReceiptMutation.isLoading}
-				disabled={isLoading}
+				disabled={isLoading || Boolean(emptyItemsWarning)}
 				onClick={() => switchResolved()}
 				color={locked ? "success" : "warning"}
 				icon={
@@ -68,7 +81,7 @@ export const ReceiptLockedButton: React.FC<Props> = ({
 					<IconButton
 						ghost
 						isLoading={updateReceiptMutation.isLoading || isPropagating}
-						disabled={isLoading}
+						disabled={isLoading || Boolean(emptyItemsWarning)}
 						onClick={() => switchResolved(true)}
 						color={locked ? "success" : "warning"}
 						icon={
@@ -85,4 +98,12 @@ export const ReceiptLockedButton: React.FC<Props> = ({
 			) : null}
 		</>
 	);
+	if (emptyItemsWarning) {
+		return (
+			<Tooltip content={emptyItemsWarning} placement="bottomEnd">
+				{elements}
+			</Tooltip>
+		);
+	}
+	return elements;
 };
