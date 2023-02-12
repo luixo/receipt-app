@@ -24,6 +24,7 @@ export const procedure = unauthProcedure
 			.innerJoin("users", (qb) =>
 				qb.onRef("users.connectedAccountId", "=", "accounts.id")
 			)
+			.whereRef("users.id", "=", "users.connectedAccountId")
 			.select([
 				"accounts.id as accountId",
 				"email",
