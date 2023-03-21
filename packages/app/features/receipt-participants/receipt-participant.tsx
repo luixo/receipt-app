@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Spacer, styled, Text } from "@nextui-org/react";
+import { Spacer, styled, Text, Collapse } from "@nextui-org/react";
 
 import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
 import { User } from "app/components/app/user";
@@ -11,10 +11,14 @@ import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { Currency } from "app/utils/currency";
 import { convertParticipantToUser } from "app/utils/receipt-item";
-import { ReceiptsId, UsersId } from "next-app/db/models";
+import { ReceiptItemsId, ReceiptsId, UsersId } from "next-app/db/models";
 import { Role } from "next-app/handlers/receipts/utils";
 
 import { ReceiptParticipantRoleInput } from "./receipt-participant-role-input";
+
+const Wrapper = styled("div", {
+	display: "flex",
+});
 
 const Body = styled("div", {
 	display: "flex",
@@ -36,6 +40,12 @@ type Props = {
 	receiptLocked: boolean;
 	participant: TRPCQueryOutput<"receiptItems.get">["participants"][number] & {
 		sum: number;
+		items: {
+			sum: number;
+			id: ReceiptItemsId;
+			hasExtra: boolean;
+			name: string;
+		}[];
 	};
 	role: Role;
 	currency?: Currency;
@@ -73,49 +83,66 @@ export const ReceiptParticipant: React.FC<Props> = ({
 	);
 
 	return (
-		<Body>
-			<BodyElement>
-				<User user={convertParticipantToUser(participant)} />
-				<Spacer x={1} />
-				<Text>
-					{`${Math.round(participant.sum * 100) / 100} ${
+		<Collapse
+			disabled={participant.items.length === 0}
+			title={
+				<Wrapper>
+					<Body>
+						<BodyElement>
+							<User user={convertParticipantToUser(participant)} />
+							<Spacer x={1} />
+							<Text>
+								{`${Math.round(participant.sum * 100) / 100} ${
+									currency || "unknown"
+								}`}
+							</Text>
+						</BodyElement>
+						<Spacer x={1} />
+						<BodyElement css={{ alignSelf: "flex-end" }}>
+							<ReceiptParticipantRoleInput
+								receiptId={receiptId}
+								selfUserId={receiptSelfUserId}
+								participant={participant}
+								isLoading={isLoading}
+								role={role}
+							/>
+							<Spacer x={0.5} />
+							<ReceiptParticipantResolvedButton
+								{...(participant.remoteUserId !== receiptSelfUserId
+									? { light: true }
+									: { ghost: true })}
+								css={{ px: "$6", boxSizing: "border-box" }}
+								receiptId={receiptId}
+								userId={participant.remoteUserId}
+								selfUserId={receiptSelfUserId}
+								resolved={participant.resolved}
+							/>
+							{role === "owner" ? (
+								<>
+									<Spacer x={0.5} />
+									<RemoveButton
+										onRemove={removeReceiptParticipant}
+										mutation={removeReceiptParticipantMutation}
+										disabled={!selfAccountId || receiptLocked}
+										subtitle="This will remove participant with all his parts"
+										noConfirm={participant.sum === 0}
+									/>
+								</>
+							) : null}
+						</BodyElement>
+					</Body>
+					<Spacer x={0.5} />
+				</Wrapper>
+			}
+		>
+			{participant.items.map((item) => (
+				<Text key={item.id}>
+					{item.name} -{" "}
+					{`${Math.round(item.sum * 100) / 100}${item.hasExtra ? "+" : ""} ${
 						currency || "unknown"
 					}`}
 				</Text>
-			</BodyElement>
-			<Spacer x={1} />
-			<BodyElement css={{ alignSelf: "flex-end" }}>
-				<ReceiptParticipantRoleInput
-					receiptId={receiptId}
-					selfUserId={receiptSelfUserId}
-					participant={participant}
-					isLoading={isLoading}
-					role={role}
-				/>
-				<Spacer x={0.5} />
-				<ReceiptParticipantResolvedButton
-					{...(participant.remoteUserId !== receiptSelfUserId
-						? { light: true }
-						: { ghost: true })}
-					css={{ px: "$6", boxSizing: "border-box" }}
-					receiptId={receiptId}
-					userId={participant.remoteUserId}
-					selfUserId={receiptSelfUserId}
-					resolved={participant.resolved}
-				/>
-				{role === "owner" ? (
-					<>
-						<Spacer x={0.5} />
-						<RemoveButton
-							onRemove={removeReceiptParticipant}
-							mutation={removeReceiptParticipantMutation}
-							disabled={!selfAccountId || receiptLocked}
-							subtitle="This will remove participant with all his parts"
-							noConfirm={participant.sum === 0}
-						/>
-					</>
-				) : null}
-			</BodyElement>
-		</Body>
+			))}
+		</Collapse>
 	);
 };

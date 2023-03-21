@@ -10,6 +10,8 @@ import {
 } from "app/utils/object";
 import { ReceiptItemsId, ReceiptsId, UsersId } from "next-app/src/db/models";
 
+export const getDecimalsPower = (decimalDigits = 2) => 10 ** decimalDigits;
+
 type ReceiptItem = {
 	id: ReceiptItemsId;
 	quantity: number;
@@ -25,11 +27,13 @@ type ReceiptParticipant = {
 	remoteUserId: UsersId;
 };
 
-const getItemCalculations = <T extends string>(
+export const getItemCalculations = <T extends string>(
 	itemSum: number,
-	parts: Record<T, number>
+	parts: Record<T, number>,
+	decimalDigits = 2
 ) => {
-	const sumRounded = Math.round(itemSum);
+	const decimalsPower = getDecimalsPower(decimalDigits);
+	const sumRounded = Math.round(itemSum * decimalsPower);
 	const partsAmount = values(parts).reduce((acc, part) => acc + part, 0);
 	const sumByUser = mapObjectValues(
 		parts,
@@ -127,7 +131,7 @@ export const getParticipantSums = <
 	participants: P[],
 	decimalsDigits = 2
 ) => {
-	const decimalsPower = 10 ** decimalsDigits;
+	const decimalsPower = getDecimalsPower(decimalsDigits);
 	const {
 		sumFlooredByParticipant,
 		shortageByParticipant,
@@ -136,11 +140,12 @@ export const getParticipantSums = <
 		.filter((item) => item.parts.length !== 0)
 		.map((item) =>
 			getItemCalculations<UsersId>(
-				item.price * item.quantity * decimalsPower,
+				item.price * item.quantity,
 				item.parts.reduce(
 					(acc, { userId, part }) => ({ ...acc, [userId]: part }),
 					{}
-				)
+				),
+				decimalsDigits
 			)
 		)
 		.reduce<{
