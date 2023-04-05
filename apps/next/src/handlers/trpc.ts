@@ -2,8 +2,11 @@ import * as trpc from "@trpc/server";
 import { sql } from "kysely";
 import superjson from "superjson";
 
-import { DAY } from "app/utils/time";
 import { getDatabase } from "next-app/db";
+import {
+	shouldUpdateExpirationDate,
+	updateAuthorizationSession,
+} from "next-app/handlers/auth/utils";
 import { UnauthorizedContext } from "next-app/handlers/context";
 import { sessionIdSchema } from "next-app/handlers/validation";
 import { AUTH_COOKIE, resetAuthCookie } from "next-app/utils/auth-cookie";
@@ -32,6 +35,7 @@ export const unauthProcedure = t.procedure.use(
 		return result;
 	})
 );
+
 export const authProcedure = unauthProcedure.use(
 	t.middleware(async ({ ctx, next }) => {
 		const authToken = getCookie(ctx.req, AUTH_COOKIE);
@@ -54,7 +58,11 @@ export const authProcedure = unauthProcedure.use(
 			.innerJoin("accounts", (qb) =>
 				qb.onRef("accounts.id", "=", "sessions.accountId")
 			)
-			.select(["sessions.accountId", "accounts.email"])
+			.select([
+				"sessions.accountId",
+				"accounts.email",
+				"sessions.expirationTimestamp",
+			])
 			.where("sessions.sessionId", "=", authToken)
 			.where("sessions.expirationTimestamp", ">", sql`now()`)
 			.executeTakeFirst();
@@ -65,12 +73,9 @@ export const authProcedure = unauthProcedure.use(
 				message: "Session id mismatch",
 			});
 		}
-		const expirationDate = new Date(Date.now() + 7 * DAY);
-		await database
-			.updateTable("sessions")
-			.set({ expirationTimestamp: expirationDate })
-			.where("sessionId", "=", authToken)
-			.executeTakeFirst();
+		if (shouldUpdateExpirationDate(session.expirationTimestamp)) {
+			void updateAuthorizationSession(database, authToken);
+		}
 		return next({
 			ctx: {
 				...ctx,
