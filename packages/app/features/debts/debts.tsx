@@ -6,13 +6,21 @@ import { MdAdd as AddIcon } from "react-icons/md";
 import { DebtsGroup } from "app/components/app/debts-group";
 import { QueryErrorMessage } from "app/components/error-message";
 import { IconButton } from "app/components/icon-button";
+import { ShowResolvedDebtsOption } from "app/features/settings/show-resolved-debts-option";
 import { trpc, TRPCQuerySuccessResult } from "app/trpc";
+import { useShowResolvedDebts } from "next-app/hooks/use-show-resolved-debts";
 
 import { UserDebtsPreview } from "./user-debts-preview";
 
 const NoDebtsHint = styled(Text, {
 	display: "flex",
 	alignItems: "center",
+});
+
+const DebtsHeader = styled("div", {
+	display: "flex",
+	alignItems: "center",
+	justifyContent: "space-between",
 });
 
 type InnerProps = {
@@ -34,6 +42,7 @@ const DebtsInner: React.FC<InnerProps> = ({ query }) => {
 			).map(([currency, sum]) => ({ currency, sum })),
 		[debtEntries]
 	);
+	const [showResolvedDebts] = useShowResolvedDebts();
 
 	if (debtEntries.length === 0) {
 		return (
@@ -61,17 +70,31 @@ const DebtsInner: React.FC<InnerProps> = ({ query }) => {
 		);
 	}
 
+	const filteredDebtsEntries = showResolvedDebts
+		? debtEntries
+		: debtEntries.filter((entry) => entry.debts.some((debt) => debt.sum !== 0));
 	return (
 		<>
-			<DebtsGroup
-				debts={sums}
-				css={{ p: "$4", flexWrap: "wrap", alignItems: "center" }}
-			/>
+			<DebtsHeader>
+				<DebtsGroup
+					debts={sums}
+					css={{ p: "$4", flexWrap: "wrap", alignItems: "center" }}
+				/>
+				{debtEntries.every((entry) =>
+					entry.debts.every((debt) => debt.sum !== 0)
+				) ? null : (
+					<ShowResolvedDebtsOption />
+				)}
+			</DebtsHeader>
 			<Spacer y={1} />
-			{debtEntries.map(({ userId, debts }, index) => (
+			{filteredDebtsEntries.map(({ userId, debts }, index) => (
 				<React.Fragment key={userId}>
 					{index === 0 ? null : <Spacer y={0.5} />}
-					<UserDebtsPreview debts={debts} userId={userId} />
+					<UserDebtsPreview
+						debts={debts}
+						userId={userId}
+						transparent={debts.every((debt) => debt.sum === 0)}
+					/>
 				</React.Fragment>
 			))}
 		</>

@@ -112,3 +112,12 @@ export const userItemSchema = z.strictObject({
 		})
 		.optional(),
 });
+
+export const fallback = <T extends z.Schema<any>>(
+	schema: T,
+	value: z.infer<T>
+): T =>
+	z.any().transform((val) => {
+		const safe = schema.safeParse(val);
+		return safe.success ? safe.data : value;
+	}) as unknown as T;

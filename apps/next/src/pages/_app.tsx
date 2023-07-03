@@ -16,8 +16,14 @@ import {
 	LAST_COLOR_MODE_COOKIE_NAME,
 	SELECTED_COLOR_MODE_COOKIE_NAME,
 } from "app/contexts/color-mode-context";
+import {
+	Settings,
+	SETTINGS_COOKIE_NAME,
+	validateSettings,
+} from "app/contexts/settings-context";
 import { Provider } from "app/provider";
 import { useColorModeCookies } from "next-app/hooks/use-color-mode-cookies";
+import { useSettingsCookies } from "next-app/hooks/use-settings-cookies";
 import { AppPage } from "next-app/types/page";
 import { trpcNext } from "next-app/utils/trpc";
 
@@ -30,12 +36,14 @@ const globalStyles = globalCss({
 const GlobalHooksComponent: React.FC = () => {
 	globalStyles();
 	useColorModeCookies();
+	useSettingsCookies();
 	return null;
 };
 
 declare module "next/app" {
 	type ExtraAppInitialProps = {
 		colorModeConfig: ColorModeConfig;
+		settings: Settings;
 		query: ParsedUrlQuery;
 	};
 
@@ -79,6 +87,7 @@ MyApp.getInitialProps = async ({ ctx, router }) => {
 				last: cookies[LAST_COLOR_MODE_COOKIE_NAME],
 				selected: cookies[SELECTED_COLOR_MODE_COOKIE_NAME],
 			} as ColorModeConfig,
+			settings: validateSettings(cookies[SETTINGS_COOKIE_NAME]),
 			query: router.query,
 		},
 	};

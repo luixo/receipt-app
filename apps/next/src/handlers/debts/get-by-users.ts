@@ -15,7 +15,6 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 			"debts.userId",
 			"users.name",
 		])
-		.having(database.fn.sum<string>("debts.amount"), "!=", "0")
 		.groupBy("debts.userId")
 		.groupBy("users.name")
 		.groupBy("currency")

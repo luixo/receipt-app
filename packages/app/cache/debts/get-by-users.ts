@@ -48,7 +48,7 @@ const updateCurrencyDebts =
 					},
 					{ currency, sum: 0 },
 					ref
-				).filter((userCurrency) => userCurrency.sum !== 0)
+				)
 			);
 		}).current?.sum;
 

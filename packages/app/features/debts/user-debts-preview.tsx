@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Spacer, Card } from "@nextui-org/react";
+import { Spacer, Card, styled } from "@nextui-org/react";
 
 import { DebtsGroup } from "app/components/app/debts-group";
 import { LoadableUser } from "app/components/app/loadable-user";
@@ -11,19 +11,34 @@ import { queries } from "app/queries";
 import { trpc, TRPCQueryOutput } from "app/trpc";
 import { UsersId } from "next-app/db/models";
 
+const CardWrapper = styled(Card, {
+	variants: {
+		transparent: {
+			true: {
+				opacity: 0.5,
+			},
+		},
+	},
+});
+
 type Props = {
 	debts: TRPCQueryOutput<"debts.getByUsers">[number]["debts"];
 	userId: UsersId;
+	transparent: boolean;
 };
 
-export const UserDebtsPreview: React.FC<Props> = ({ debts, userId }) => {
+export const UserDebtsPreview: React.FC<Props> = ({
+	debts,
+	userId,
+	transparent,
+}) => {
 	trpc.users.get.useQuery(
 		{ id: userId },
 		useTrpcQueryOptions(queries.users.get.options)
 	);
 	const showHorizontal = useMatchMediaValue(true, { lessMd: false });
 	return (
-		<Card>
+		<CardWrapper transparent={transparent}>
 			<Link href={`/debts/user/${userId}`} color="text">
 				<Card.Body
 					css={{
@@ -37,6 +52,6 @@ export const UserDebtsPreview: React.FC<Props> = ({ debts, userId }) => {
 					<DebtsGroup debts={debts} />
 				</Card.Body>
 			</Link>
-		</Card>
+		</CardWrapper>
 	);
 };
