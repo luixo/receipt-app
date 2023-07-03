@@ -3,7 +3,7 @@ import { sql } from "kysely";
 import { Database } from "..";
 
 const addTrigramExtension = async (db: Database) => {
-	await sql`create extension pg_trgm`.execute(db);
+	await sql`create extension if not exists pg_trgm`.execute(db);
 };
 
 const removeTrigramExtension = async (db: Database) => {
