@@ -44,24 +44,28 @@ const getReceiptItems = async (database: Database, receiptId: ReceiptsId) => {
 		.orderBy("receiptItems.id")
 		.execute();
 	return Object.values(
-		items.reduce((acc, { price, quantity, itemId, userId, part, ...rest }) => {
-			if (!acc[itemId]) {
-				acc[itemId] = {
-					id: itemId,
-					price: Number(price),
-					quantity: Number(quantity),
-					parts: [],
-					...rest,
-				};
-			}
-			if (userId) {
-				acc[itemId]!.parts.push({
-					userId,
-					part: Number(part),
-				});
-			}
-			return acc;
-		}, {} as Record<ReceiptItemsId, ReceiptItem>)
+		items.reduce(
+			(acc, { price, quantity, itemId, userId, part, locked, ...rest }) => {
+				if (!acc[itemId]) {
+					acc[itemId] = {
+						id: itemId,
+						price: Number(price),
+						quantity: Number(quantity),
+						parts: [],
+						locked: Boolean(locked),
+						...rest,
+					};
+				}
+				if (userId) {
+					acc[itemId]!.parts.push({
+						userId,
+						part: Number(part),
+					});
+				}
+				return acc;
+			},
+			{} as Record<ReceiptItemsId, ReceiptItem>
+		)
 	);
 };
 

@@ -1,9 +1,9 @@
 // @generated
 // Automatically generated. Don't change this file manually.
 
-import { AccountsId } from "./accounts";
-import { ReceiptsId } from "./receipts";
-import { UsersId } from "./users";
+import type { AccountsId } from "./accounts";
+import type { ReceiptsId } from "./receipts";
+import type { UsersId } from "./users";
 
 /** Identifier type for "debts" table */
 export type DebtsId = string & { __flavor?: "debts" };
@@ -13,15 +13,15 @@ export default interface Debts {
 	id: DebtsId;
 
 	/**
-	 * Primary key. Index: debts:ownerAccountId:debtId:pair
 	 * Index: debts:ownerAccountId:index
+	 * Primary key. Index: debts:ownerAccountId:debtId:pair
 	 * Index: debtsSyncIntentions:ownerAccountId:receiptId:userId:tuple
 	 */
 	ownerAccountId: AccountsId;
 
 	/**
-	 * Index: debts:userId:index
 	 * Index: debtsSyncIntentions:ownerAccountId:receiptId:userId:tuple
+	 * Index: debts:userId:index
 	 */
 	userId: UsersId;
 
@@ -46,15 +46,15 @@ export interface DebtsInitializer {
 	id: DebtsId;
 
 	/**
-	 * Primary key. Index: debts:ownerAccountId:debtId:pair
 	 * Index: debts:ownerAccountId:index
+	 * Primary key. Index: debts:ownerAccountId:debtId:pair
 	 * Index: debtsSyncIntentions:ownerAccountId:receiptId:userId:tuple
 	 */
 	ownerAccountId: AccountsId;
 
 	/**
-	 * Index: debts:userId:index
 	 * Index: debtsSyncIntentions:ownerAccountId:receiptId:userId:tuple
+	 * Index: debts:userId:index
 	 */
 	userId: UsersId;
 
@@ -79,15 +79,15 @@ export interface DebtsMutator {
 	id?: DebtsId;
 
 	/**
-	 * Primary key. Index: debts:ownerAccountId:debtId:pair
 	 * Index: debts:ownerAccountId:index
+	 * Primary key. Index: debts:ownerAccountId:debtId:pair
 	 * Index: debtsSyncIntentions:ownerAccountId:receiptId:userId:tuple
 	 */
 	ownerAccountId?: AccountsId;
 
 	/**
-	 * Index: debts:userId:index
 	 * Index: debtsSyncIntentions:ownerAccountId:receiptId:userId:tuple
+	 * Index: debts:userId:index
 	 */
 	userId?: UsersId;
 

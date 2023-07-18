@@ -1,8 +1,8 @@
 // @generated
 // Automatically generated. Don't change this file manually.
 
-import { ReceiptItemsId } from "./receipt-items";
-import { UsersId } from "./users";
+import type { ReceiptItemsId } from "./receipt-items";
+import type { UsersId } from "./users";
 
 export default interface ItemParticipants {
 	/**

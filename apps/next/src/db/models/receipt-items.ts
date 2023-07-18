@@ -1,7 +1,7 @@
 // @generated
 // Automatically generated. Don't change this file manually.
 
-import { ReceiptsId } from "./receipts";
+import type { ReceiptsId } from "./receipts";
 
 /** Identifier type for "receiptItems" table */
 export type ReceiptItemsId = string & { __flavor?: "receiptItems" };
@@ -19,7 +19,7 @@ export default interface ReceiptItems {
 	/** Index: receiptItems:receiptId:index */
 	receiptId: ReceiptsId;
 
-	locked: boolean;
+	locked: boolean | null;
 }
 
 export interface ReceiptItemsInitializer {
@@ -36,7 +36,7 @@ export interface ReceiptItemsInitializer {
 	receiptId: ReceiptsId;
 
 	/** Default value: false */
-	locked?: boolean;
+	locked?: boolean | null;
 }
 
 export interface ReceiptItemsMutator {
@@ -52,5 +52,5 @@ export interface ReceiptItemsMutator {
 	/** Index: receiptItems:receiptId:index */
 	receiptId?: ReceiptsId;
 
-	locked?: boolean;
+	locked?: boolean | null;
 }

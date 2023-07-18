@@ -1,13 +1,13 @@
 // @generated
 // Automatically generated. Don't change this file manually.
 
-import { AccountsId } from "./accounts";
+import type { AccountsId } from "./accounts";
 
 /** Identifier type for "sessions" table */
 export type SessionsSessionId = string & { __flavor?: "sessions" };
 
 export default interface Sessions {
-	/** Primary key. Index: sessions_pkey */
+	/** Primary key. Index: authorization_pk */
 	sessionId: SessionsSessionId;
 
 	/** Index: sessions:accountId:index */
@@ -17,7 +17,7 @@ export default interface Sessions {
 }
 
 export interface SessionsInitializer {
-	/** Primary key. Index: sessions_pkey */
+	/** Primary key. Index: authorization_pk */
 	sessionId: SessionsSessionId;
 
 	/** Index: sessions:accountId:index */
@@ -27,7 +27,7 @@ export interface SessionsInitializer {
 }
 
 export interface SessionsMutator {
-	/** Primary key. Index: sessions_pkey */
+	/** Primary key. Index: authorization_pk */
 	sessionId?: SessionsSessionId;
 
 	/** Index: sessions:accountId:index */

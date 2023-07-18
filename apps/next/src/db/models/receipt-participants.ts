@@ -1,8 +1,8 @@
 // @generated
 // Automatically generated. Don't change this file manually.
 
-import { ReceiptsId } from "./receipts";
-import { UsersId } from "./users";
+import type { ReceiptsId } from "./receipts";
+import type { UsersId } from "./users";
 
 export default interface ReceiptParticipants {
 	/** Index: receiptParticipants:receiptId:index */

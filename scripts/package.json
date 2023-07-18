@@ -13,7 +13,7 @@
 		"concurrently": "^7.1.0",
 		"extract-pg-schema": "^4.1.0",
 		"get-port": "^6.1.2",
-		"kanel": "^3.0.4",
+		"kanel": "^3.4.1",
 		"next-app": "*",
 		"ngrok": "^4.3.1",
 		"tsconfig-paths": "^4.1.0",

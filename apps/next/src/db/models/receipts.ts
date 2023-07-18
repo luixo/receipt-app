@@ -1,7 +1,7 @@
 // @generated
 // Automatically generated. Don't change this file manually.
 
-import { AccountsId } from "./accounts";
+import type { AccountsId } from "./accounts";
 
 /** Identifier type for "receipts" table */
 export type ReceiptsId = string & { __flavor?: "receipts" };

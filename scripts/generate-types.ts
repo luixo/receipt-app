@@ -69,7 +69,7 @@ const run = async () => {
 						"// Automatically generated. Don't change this file manually.",
 						"",
 						filePath.endsWith("debts-sync-intentions.ts")
-							? "import { DebtsId } from './debts';"
+							? "import type { DebtsId } from './debts';"
 							: undefined,
 						...lines,
 					].filter((s): s is string => s !== undefined),

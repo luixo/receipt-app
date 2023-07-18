@@ -1,7 +1,7 @@
 // @generated
 // Automatically generated. Don't change this file manually.
 
-import { AccountsId } from "./accounts";
+import type { AccountsId } from "./accounts";
 
 /** Identifier type for "users" table */
 export type UsersId = string & { __flavor?: "users" };
@@ -12,10 +12,10 @@ export default interface Users {
 
 	name: string;
 
-	publicName: string | null;
-
 	/** Index: users:ownerAccountId:index */
 	ownerAccountId: AccountsId;
+
+	publicName: string | null;
 
 	exposeReceipts: boolean;
 
@@ -30,10 +30,10 @@ export interface UsersInitializer {
 
 	name: string;
 
-	publicName?: string | null;
-
 	/** Index: users:ownerAccountId:index */
 	ownerAccountId: AccountsId;
+
+	publicName?: string | null;
 
 	/** Default value: false */
 	exposeReceipts?: boolean;
@@ -50,10 +50,10 @@ export interface UsersMutator {
 
 	name?: string;
 
-	publicName?: string | null;
-
 	/** Index: users:ownerAccountId:index */
 	ownerAccountId?: AccountsId;
+
+	publicName?: string | null;
 
 	exposeReceipts?: boolean;
 

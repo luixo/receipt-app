@@ -1,8 +1,8 @@
 // @generated
 // Automatically generated. Don't change this file manually.
 
-import { AccountsId } from "./accounts";
-import { DebtsId } from "./debts";
+import type { AccountsId } from "./accounts";
+import type { DebtsId } from "./debts";
 
 export default interface DebtsSyncIntentions {
 	/**
