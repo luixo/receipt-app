@@ -39,7 +39,7 @@ export const procedure = authProcedure
 			.select([
 				"receipts.id",
 				"receipts.name",
-				"currency",
+				"currencyCode",
 				sql<string>`coalesce(sum("receiptItems".price * "receiptItems".quantity), 0)`.as(
 					"sum"
 				),
@@ -75,7 +75,11 @@ export const procedure = authProcedure
 				sum: Number(sum),
 				role: accessRole,
 				locked: Boolean(lockedTimestamp),
-			} as typeof receipt & { role: Role; sum: number; locked: boolean };
+			} as typeof receipt & {
+				role: Role;
+				sum: number;
+				locked: boolean;
+			};
 		}
 		throw new trpc.TRPCError({
 			code: "FORBIDDEN",

@@ -8,7 +8,7 @@ import { IconButton } from "app/components/icon-button";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useMatchMediaValue } from "app/hooks/use-match-media-value";
 import { trpc, TRPCQueryOutput } from "app/trpc";
-import { Currency } from "app/utils/currency";
+import { CurrencyCode } from "app/utils/currency";
 import { getParticipantSums } from "app/utils/receipt-item";
 import { ReceiptsId } from "next-app/db/models";
 
@@ -51,13 +51,13 @@ const sortParticipants = (a: Participant, b: Participant): number => {
 
 type Props = {
 	receiptId: ReceiptsId;
-	currency: Currency;
+	currencyCode: CurrencyCode;
 	participants: Participant[];
 };
 
 export const ReceiptDebtSyncInfoButton: React.FC<Props> = ({
 	receiptId,
-	currency,
+	currencyCode,
 	participants,
 }) => {
 	const [popoverOpen, { setFalse: closeModal, setTrue: openModal }] =
@@ -115,7 +115,7 @@ export const ReceiptDebtSyncInfoButton: React.FC<Props> = ({
 							<ReceiptParticipantDebt
 								key={participant.userId}
 								receiptId={receiptId}
-								currency={currency}
+								currencyCode={currencyCode}
 								participant={participant}
 								sum={
 									participantSums.find(

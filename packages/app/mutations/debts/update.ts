@@ -2,7 +2,7 @@ import { cache } from "app/cache";
 import { SnapshotFn, UpdateFn } from "app/cache/utils";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
-import { Currency } from "app/utils/currency";
+import { CurrencyCode } from "app/utils/currency";
 import { noop } from "app/utils/utils";
 import { ReceiptsId, UsersId } from "next-app/db/models";
 
@@ -24,7 +24,7 @@ const applySumUpdate =
 			case "locked":
 			case "timestamp":
 			case "note":
-			case "currency":
+			case "currencyCode":
 				return sum;
 		}
 	};
@@ -41,8 +41,8 @@ const applyUserUpdate =
 				return { ...item, timestamp: update.timestamp };
 			case "note":
 				return { ...item, note: update.note };
-			case "currency":
-				return { ...item, currency: update.currency };
+			case "currencyCode":
+				return { ...item, currencyCode: update.currencyCode };
 			case "locked":
 				if (!update.value) {
 					return {
@@ -67,8 +67,8 @@ const applyUpdate =
 				return { ...item, timestamp: update.timestamp };
 			case "note":
 				return { ...item, note: update.note };
-			case "currency":
-				return { ...item, currency: update.currency };
+			case "currencyCode":
+				return { ...item, currencyCode: update.currencyCode };
 			case "locked":
 				if (!update.value) {
 					return {
@@ -95,7 +95,7 @@ const getSumRevert =
 			}
 			case "timestamp":
 			case "note":
-			case "currency":
+			case "currencyCode":
 			case "locked":
 				return currentSum;
 		}
@@ -114,8 +114,8 @@ const getUserRevert =
 				return { ...debt, timestamp: snapshot.timestamp };
 			case "note":
 				return { ...debt, note: snapshot.note };
-			case "currency":
-				return { ...debt, currency: snapshot.currency };
+			case "currencyCode":
+				return { ...debt, currencyCode: snapshot.currencyCode };
 			case "locked":
 				if (!update.value) {
 					return {
@@ -141,8 +141,8 @@ const getRevert =
 				return { ...debt, timestamp: snapshot.timestamp };
 			case "note":
 				return { ...debt, note: snapshot.note };
-			case "currency":
-				return { ...debt, currency: snapshot.currency };
+			case "currencyCode":
+				return { ...debt, currencyCode: snapshot.currencyCode };
 			case "locked":
 				if (!update.value) {
 					return {
@@ -160,7 +160,7 @@ export const options: UseContextedMutationOptions<
 	{
 		userId: UsersId;
 		amount: number;
-		currency: Currency;
+		currencyCode: CurrencyCode;
 		receiptId: ReceiptsId | null;
 	}
 > = {
@@ -179,7 +179,7 @@ export const options: UseContextedMutationOptions<
 			getByUsers: (controller) =>
 				controller.update(
 					currData.userId,
-					currData.currency,
+					currData.currencyCode,
 					applySumUpdate(currData.amount, updateObject.update),
 					getSumRevert(currData.amount, updateObject.update)
 				),

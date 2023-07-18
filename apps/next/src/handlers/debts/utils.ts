@@ -29,7 +29,12 @@ export const upsertDebtFromReceipt = async (
 	participants: Participant[],
 	receipt: Pick<
 		Receipts,
-		"id" | "ownerAccountId" | "lockedTimestamp" | "name" | "issued" | "currency"
+		| "id"
+		| "ownerAccountId"
+		| "lockedTimestamp"
+		| "name"
+		| "issued"
+		| "currencyCode"
 	>,
 	created: Date
 ) =>
@@ -41,7 +46,7 @@ export const upsertDebtFromReceipt = async (
 				ownerAccountId: receipt.ownerAccountId,
 				userId: participant.remoteUserId,
 				note: getReceiptDebtName(receipt),
-				currency: receipt.currency,
+				currencyCode: receipt.currencyCode,
 				created,
 				timestamp: receipt.issued,
 				amount: participant.sum.toString(),
@@ -53,7 +58,7 @@ export const upsertDebtFromReceipt = async (
 			oc
 				.constraint(DEBTS.CONSTRAINTS.OWNER_ID_RECEIPT_ID_USER_ID_TUPLE)
 				.doUpdateSet({
-					currency: (eb) => eb.ref("excluded.currency"),
+					currencyCode: (eb) => eb.ref("excluded.currencyCode"),
 					timestamp: (eb) => eb.ref("excluded.timestamp"),
 					amount: (eb) => eb.ref("excluded.amount"),
 					lockedTimestamp: (eb) => eb.ref("excluded.lockedTimestamp"),
@@ -67,7 +72,12 @@ export const getDebtsResult = (
 	actualDebts: Awaited<ReturnType<typeof upsertDebtFromReceipt>>,
 	receipt: Pick<
 		Receipts,
-		"id" | "ownerAccountId" | "lockedTimestamp" | "name" | "issued" | "currency"
+		| "id"
+		| "ownerAccountId"
+		| "lockedTimestamp"
+		| "name"
+		| "issued"
+		| "currencyCode"
 	>,
 	created: Date
 ) =>
@@ -80,7 +90,7 @@ export const getDebtsResult = (
 			userId: participant.remoteUserId,
 			updated: actualDebt.debtId !== participant.debtId,
 			note: actualDebt.note,
-			currency: receipt.currency,
+			currencyCode: receipt.currencyCode,
 			created,
 			timestamp: receipt.issued,
 			amount: Number(participant.sum),

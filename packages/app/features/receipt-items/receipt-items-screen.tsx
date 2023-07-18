@@ -29,8 +29,10 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 	const receiptQuery = trpc.receipts.get.useQuery({ id: receiptId });
 	const receiptLocked =
 		receiptQuery.status === "success" ? receiptQuery.data.locked : true;
-	const receiptCurrency =
-		receiptQuery.status === "success" ? receiptQuery.data.currency : undefined;
+	const receiptCurrencyCode =
+		receiptQuery.status === "success"
+			? receiptQuery.data.currencyCode
+			: undefined;
 	const receiptSelfUserId =
 		receiptQuery.status === "success"
 			? receiptQuery.data.selfUserId
@@ -55,7 +57,7 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 				<>
 					<EmptyItems
 						items={emptyItems}
-						currency={receiptCurrency}
+						currencyCode={receiptCurrencyCode}
 						onClick={onEmptyItemClick}
 					/>
 					<Spacer y={1} />
@@ -66,7 +68,7 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 				receiptId={receiptId}
 				receiptSelfUserId={receiptSelfUserId}
 				receiptLocked={receiptLocked}
-				currency={receiptCurrency}
+				currencyCode={receiptCurrencyCode}
 				isLoading={isLoading}
 			/>
 			<Spacer y={1} />
@@ -84,7 +86,7 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 						receiptLocked={receiptLocked}
 						receiptItem={receiptItem}
 						receiptParticipants={data.participants}
-						currency={receiptCurrency}
+						currencyCode={receiptCurrencyCode}
 						role={data.role}
 						isLoading={isLoading}
 						ref={(element) => {

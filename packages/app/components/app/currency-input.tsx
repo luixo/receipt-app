@@ -8,11 +8,11 @@ import { z } from "zod";
 import { CurrenciesPicker } from "app/components/app/currencies-picker";
 import { IconButton } from "app/components/icon-button";
 import { useBooleanState } from "app/hooks/use-boolean-state";
-import { Currency } from "app/utils/currency";
-import { currencyObjectSchema } from "app/utils/validation";
+import { CurrencyCode } from "app/utils/currency";
+import { currencySchema } from "app/utils/validation";
 
 type MinimalForm = {
-	currency: z.infer<typeof currencyObjectSchema>;
+	currency: z.infer<typeof currencySchema>;
 };
 
 type Props<T extends MinimalForm> = {
@@ -32,7 +32,7 @@ export const CurrencyInput = <T extends MinimalForm>({
 		useBooleanState();
 
 	const onCurrencyChange = React.useCallback(
-		(nextCurrency: z.infer<typeof currencyObjectSchema>) => {
+		(nextCurrency: z.infer<typeof currencySchema>) => {
 			closeModal();
 			form.setValue(
 				"currency" as Path<T>,
@@ -47,16 +47,16 @@ export const CurrencyInput = <T extends MinimalForm>({
 
 	const onLoad = React.useCallback(
 		(
-			currencies: z.infer<typeof currencyObjectSchema>[],
-			topCurrencies: Currency[]
+			currencies: z.infer<typeof currencySchema>[],
+			topCurrencyCodes: CurrencyCode[]
 		) => {
 			if (!selectedCurrency) {
-				const matchedTopCurrency = topCurrencies
-					.map((topCurrency) =>
-						currencies.find((currency) => currency.code === topCurrency)
+				const matchedTopCurrencyCode = topCurrencyCodes
+					.map((topCurrencyCode) =>
+						currencies.find((currency) => currency.code === topCurrencyCode)
 					)
 					.find(Boolean);
-				const nextSelectedCurrency = matchedTopCurrency || currencies[0];
+				const nextSelectedCurrency = matchedTopCurrencyCode || currencies[0];
 				if (nextSelectedCurrency) {
 					onCurrencyChange(nextSelectedCurrency);
 				}

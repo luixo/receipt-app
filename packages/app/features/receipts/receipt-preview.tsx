@@ -34,7 +34,7 @@ type Props = {
 };
 
 export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
-	const currency = useFormattedCurrency(receipt.currency);
+	const currency = useFormattedCurrency(receipt.currencyCode);
 	const updateReceiptMutation = trpc.receipts.update.useMutation(
 		useTrpcMutationOptions(mutations.receipts.update.options)
 	);

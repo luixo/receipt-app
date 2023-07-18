@@ -6,7 +6,7 @@ import { QueryObserverSuccessResult } from "@tanstack/react-query";
 import { QueryErrorMessage } from "app/components/error-message";
 import { Grid } from "app/components/grid";
 import { trpc, TRPCError, TRPCQueryOutput, TRPCQueryResult } from "app/trpc";
-import { Currency } from "app/utils/currency";
+import { CurrencyCode } from "app/utils/currency";
 import { MONTH } from "app/utils/time";
 
 type CurrencyList = TRPCQueryOutput<"currency.getList">;
@@ -27,18 +27,17 @@ const CurrenciesPickerInner: React.FC<InnerProps> = ({
 	onChange,
 	topCurrenciesQuery,
 }) => {
-	const cutIndex =
+	const topCurrencyCodes =
 		topCurrenciesQuery.status === "success"
-			? topCurrenciesQuery.data.length
-			: 0;
-	const list =
-		topCurrenciesQuery.status === "success"
-			? query.data.sort(
-					(a, b) =>
-						topCurrenciesQuery.data.indexOf(b.code) -
-						topCurrenciesQuery.data.indexOf(a.code)
-			  )
-			: query.data;
+			? topCurrenciesQuery.data.map(({ currencyCode }) => currencyCode)
+			: undefined;
+	const cutIndex = topCurrencyCodes ? topCurrencyCodes.length : 0;
+	const list = topCurrencyCodes
+		? query.data.sort(
+				(a, b) =>
+					topCurrencyCodes.indexOf(b.code) - topCurrencyCodes.indexOf(a.code)
+		  )
+		: query.data;
 	return (
 		<Grid.Container gap={1}>
 			{list.map((currency, index) => (
@@ -81,7 +80,10 @@ const CurrenciesPickerLoader: React.FC<LoaderProps> = ({ query, ...props }) => {
 type WrapperProps = Omit<LoaderProps, "query"> & {
 	modalOpen: boolean;
 	onModalClose: () => void;
-	onLoad?: (currencies: CurrencyListItem[], topCurrencies: Currency[]) => void;
+	onLoad?: (
+		currencies: CurrencyListItem[],
+		topCurrencyCodes: CurrencyCode[]
+	) => void;
 };
 
 export const CurrenciesPicker: React.FC<WrapperProps> = ({
@@ -101,7 +103,10 @@ export const CurrenciesPicker: React.FC<WrapperProps> = ({
 			query.status === "success" &&
 			topCurrenciesQuery.status === "success"
 		) {
-			onLoad(query.data, topCurrenciesQuery.data);
+			onLoad(
+				query.data,
+				topCurrenciesQuery.data.map(({ currencyCode }) => currencyCode)
+			);
 		}
 	}, [onLoad, query, topCurrenciesQuery]);
 	return (

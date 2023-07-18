@@ -25,17 +25,17 @@ type InnerProps = {
 export const DebtInner: React.FC<InnerProps> = ({ query }) => {
 	const debt = query.data;
 	const [isRemoving, setRemoving] = React.useState(false);
-	const formattedCurrency = useFormattedCurrency(debt.currency);
+	const currency = useFormattedCurrency(debt.currencyCode);
 
 	return (
 		<>
 			<Header
 				backHref={`/debts/user/${debt.userId}`}
 				aside={<DebtControlButtons debt={debt} />}
-				textChildren={`${debt.amount} ${formattedCurrency} debt`}
+				textChildren={`${debt.amount} ${currency} debt`}
 			>
 				<>
-					{debt.amount} {formattedCurrency} debt
+					{debt.amount} {currency} debt
 					<Spacer x={1} />
 					<DebtSyncStatus
 						status={debt.status}

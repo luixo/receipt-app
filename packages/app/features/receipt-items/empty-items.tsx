@@ -4,7 +4,7 @@ import { Spacer, Text, Checkbox } from "@nextui-org/react";
 
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { TRPCQueryOutput } from "app/trpc";
-import { Currency } from "app/utils/currency";
+import { CurrencyCode } from "app/utils/currency";
 import { round } from "app/utils/math";
 import { ReceiptItemsId } from "next-app/db/models";
 
@@ -12,12 +12,16 @@ type Item = TRPCQueryOutput<"receiptItems.get">["items"][number];
 
 type Props = {
 	items: Item[];
-	currency?: Currency;
+	currencyCode?: CurrencyCode;
 	onClick: (itemId: ReceiptItemsId) => void;
 };
 
-export const EmptyItems: React.FC<Props> = ({ items, currency, onClick }) => {
-	const formattedCurrency = useFormattedCurrency(currency);
+export const EmptyItems: React.FC<Props> = ({
+	items,
+	currencyCode,
+	onClick,
+}) => {
+	const currency = useFormattedCurrency(currencyCode);
 	return (
 		<>
 			<Text b h3>
@@ -35,7 +39,7 @@ export const EmptyItems: React.FC<Props> = ({ items, currency, onClick }) => {
 					>
 						{`"${item.name}" — ${round(
 							item.quantity * item.price
-						)} ${formattedCurrency}`}
+						)} ${currency}`}
 					</Checkbox>
 					{index === items.length - 1 ? <Spacer y={1} /> : null}
 				</React.Fragment>

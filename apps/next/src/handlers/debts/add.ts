@@ -8,7 +8,7 @@ import { authProcedure } from "next-app/handlers/trpc";
 import { getUserById } from "next-app/handlers/users/utils";
 import {
 	debtAmountSchema,
-	currencySchema,
+	currencyCodeSchema,
 	userIdSchema,
 } from "next-app/handlers/validation";
 
@@ -16,7 +16,7 @@ export const procedure = authProcedure
 	.input(
 		z.strictObject({
 			note: debtNoteSchema,
-			currency: currencySchema,
+			currencyCode: currencyCodeSchema,
 			userId: userIdSchema,
 			amount: debtAmountSchema,
 			timestamp: z.date().optional(),
@@ -45,7 +45,7 @@ export const procedure = authProcedure
 				ownerAccountId: ctx.auth.accountId,
 				userId: input.userId,
 				note: input.note,
-				currency: input.currency,
+				currencyCode: input.currencyCode,
 				created: new Date(),
 				timestamp: input.timestamp || new Date(),
 				amount: input.amount.toString(),

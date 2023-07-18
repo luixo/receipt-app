@@ -34,12 +34,12 @@ const DebtsInner: React.FC<InnerProps> = ({ query }) => {
 		() =>
 			Object.entries(
 				debtEntries.reduce<Record<string, number>>((acc, { debts }) => {
-					debts.forEach(({ currency, sum }) => {
-						acc[currency] = (acc[currency] || 0) + sum;
+					debts.forEach(({ currencyCode, sum }) => {
+						acc[currencyCode] = (acc[currencyCode] || 0) + sum;
 					});
 					return acc;
 				}, {})
-			).map(([currency, sum]) => ({ currency, sum })),
+			).map(([currencyCode, sum]) => ({ currencyCode, sum })),
 		[debtEntries]
 	);
 	const [showResolvedDebts] = useShowResolvedDebts();

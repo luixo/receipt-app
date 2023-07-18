@@ -1,6 +1,8 @@
 // @generated
 // Automatically generated. Don't change this file manually.
 
+import type { CurrencyCode } from "app/utils/currency";
+
 import type { AccountsId } from "./accounts";
 
 /** Identifier type for "receipts" table */
@@ -12,7 +14,7 @@ export default interface Receipts {
 
 	name: string;
 
-	currency: string;
+	currencyCode: CurrencyCode;
 
 	created: Date;
 
@@ -30,7 +32,7 @@ export interface ReceiptsInitializer {
 
 	name: string;
 
-	currency: string;
+	currencyCode: CurrencyCode;
 
 	created: Date;
 
@@ -48,7 +50,7 @@ export interface ReceiptsMutator {
 
 	name?: string;
 
-	currency?: string;
+	currencyCode?: CurrencyCode;
 
 	created?: Date;
 

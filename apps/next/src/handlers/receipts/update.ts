@@ -7,7 +7,10 @@ import { getDatabase, Database } from "next-app/db";
 import { ReceiptsDatabase } from "next-app/db/types";
 import { getReceiptById } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
-import { currencySchema, receiptIdSchema } from "next-app/handlers/validation";
+import {
+	currencyCodeSchema,
+	receiptIdSchema,
+} from "next-app/handlers/validation";
 
 export const procedure = authProcedure
 	.input(
@@ -21,8 +24,8 @@ export const procedure = authProcedure
 				z.strictObject({ type: z.literal("issued"), issued: z.date() }),
 				z.strictObject({ type: z.literal("locked"), value: z.boolean() }),
 				z.strictObject({
-					type: z.literal("currency"),
-					currency: currencySchema,
+					type: z.literal("currencyCode"),
+					currencyCode: currencyCodeSchema,
 				}),
 			]),
 		})
@@ -111,8 +114,8 @@ export const procedure = authProcedure
 		let setObject: MutationObject<ReceiptsDatabase, "receipts", "receipts"> =
 			{};
 		switch (input.update.type) {
-			case "currency":
-				setObject = { currency: input.update.currency };
+			case "currencyCode":
+				setObject = { currencyCode: input.update.currencyCode };
 				break;
 			case "issued":
 				setObject = { issued: input.update.issued };

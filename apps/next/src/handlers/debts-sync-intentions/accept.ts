@@ -93,7 +93,7 @@ export const procedure = authProcedure
 				.select([
 					"amount",
 					"timestamp",
-					"currency",
+					"currencyCode",
 					"lockedTimestamp",
 					"note",
 					"users.id as foreignUserId",
@@ -107,7 +107,7 @@ export const procedure = authProcedure
 					id: input.id,
 					ownerAccountId: ctx.auth.accountId,
 					userId: fullForeignDebt.foreignUserId,
-					currency: fullForeignDebt.currency,
+					currencyCode: fullForeignDebt.currencyCode,
 					amount: nextAmount.toString(),
 					timestamp: fullForeignDebt.timestamp,
 					created: createdTimestamp,

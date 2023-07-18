@@ -16,7 +16,7 @@ export const updateReceiptCacheOnDebtUpdate = (
 	};
 	updatedDebts.forEach((updatedDebt) => {
 		const updatedPartial = {
-			currency: updatedDebt.currency,
+			currencyCode: updatedDebt.currencyCode,
 			timestamp: updatedDebt.timestamp,
 			amount: updatedDebt.amount,
 			locked: true,
@@ -52,7 +52,7 @@ export const updateReceiptCacheOnDebtUpdate = (
 				getByUsers: (controller) =>
 					controller.update(
 						updatedDebt.userId,
-						updatedDebt.currency,
+						updatedDebt.currencyCode,
 						(sum) => sum + updatedDebt.deltaAmount
 					),
 			});
@@ -97,7 +97,7 @@ export const updateReceiptCacheOnDebtUpdate = (
 			getByUsers: (controller) =>
 				controller.update(
 					updatedDebt.userId,
-					updatedDebt.currency,
+					updatedDebt.currencyCode,
 					(sum) => sum + updatedDebt.amount
 				),
 		});

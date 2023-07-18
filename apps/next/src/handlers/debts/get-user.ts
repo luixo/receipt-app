@@ -38,7 +38,7 @@ export const procedure = authProcedure
 			.where("debts.ownerAccountId", "=", ctx.auth.accountId)
 			.select([
 				"id",
-				"currency",
+				"currencyCode",
 				"amount",
 				"timestamp",
 				"created",

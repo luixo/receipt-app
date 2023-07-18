@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { Currency } from "app/utils/currency";
+import { CurrencyCode } from "app/utils/currency";
 import { AccountsId, UsersId } from "next-app/db/models";
 
 const getLengthMessage = (
@@ -88,11 +88,11 @@ export const clientDebtAmountSchema = nonZero(
 	createNumberSchema("Debt amount")
 );
 
-export const clientCurrencySchema = z.string().refine<Currency>(flavored);
+export const currencyCodeSchema = z.string().refine<CurrencyCode>(flavored);
 
 // TRPCQueryOutput<"currency.getList">[number]
-export const currencyObjectSchema = z.object({
-	code: clientCurrencySchema,
+export const currencySchema = z.object({
+	code: currencyCodeSchema,
 	name: z.string().nonempty(),
 	symbol: z.string().nonempty(),
 });

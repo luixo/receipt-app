@@ -20,7 +20,7 @@ export const procedure = authProcedure
 			.select([
 				"debts.id",
 				"debts.amount",
-				"debts.currency",
+				"debts.currencyCode",
 				"debts.note",
 				"debts.timestamp",
 				"debts.userId",
@@ -46,7 +46,7 @@ export const procedure = authProcedure
 				.select([
 					"debts.id",
 					"debts.amount",
-					"debts.currency",
+					"debts.currencyCode",
 					"debts.timestamp",
 					"usersMine.id as userId",
 					"debts.lockedTimestamp",

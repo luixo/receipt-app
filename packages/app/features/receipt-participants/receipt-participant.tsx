@@ -5,11 +5,12 @@ import { Spacer, styled, Text, Collapse } from "@nextui-org/react";
 import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
 import { User } from "app/components/app/user";
 import { RemoveButton } from "app/components/remove-button";
+import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useSelfAccountId } from "app/hooks/use-self-account-id";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
-import { Currency } from "app/utils/currency";
+import { CurrencyCode } from "app/utils/currency";
 import { convertParticipantToUser } from "app/utils/receipt-item";
 import { ReceiptItemsId, ReceiptsId, UsersId } from "next-app/db/models";
 import { Role } from "next-app/handlers/receipts/utils";
@@ -48,7 +49,7 @@ type Props = {
 		}[];
 	};
 	role: Role;
-	currency?: Currency;
+	currencyCode?: CurrencyCode;
 	isLoading: boolean;
 };
 
@@ -58,7 +59,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 	receiptSelfUserId,
 	receiptLocked,
 	role,
-	currency,
+	currencyCode,
 	isLoading,
 }) => {
 	const selfAccountId = useSelfAccountId();
@@ -81,6 +82,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 			}),
 		[removeReceiptParticipantMutation, receiptId, participant.remoteUserId]
 	);
+	const currency = useFormattedCurrency(currencyCode);
 
 	return (
 		<Collapse
@@ -92,9 +94,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 							<User user={convertParticipantToUser(participant)} />
 							<Spacer x={1} />
 							<Text>
-								{`${Math.round(participant.sum * 100) / 100} ${
-									currency || "unknown"
-								}`}
+								{`${Math.round(participant.sum * 100) / 100} ${currency}`}
 							</Text>
 						</BodyElement>
 						<Spacer x={1} />
@@ -138,9 +138,9 @@ export const ReceiptParticipant: React.FC<Props> = ({
 			{participant.items.map((item) => (
 				<Text key={item.id}>
 					{item.name} -{" "}
-					{`${Math.round(item.sum * 100) / 100}${item.hasExtra ? "+" : ""} ${
-						currency || "unknown"
-					}`}
+					{`${Math.round(item.sum * 100) / 100}${
+						item.hasExtra ? "+" : ""
+					} ${currency}`}
 				</Text>
 			))}
 		</Collapse>

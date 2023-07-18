@@ -16,7 +16,7 @@ type Props = {
 };
 
 export const DebtCurrencyInput: React.FC<Props> = ({ debt, isLoading }) => {
-	const currency = useFormattedCurrency(debt.currency);
+	const currency = useFormattedCurrency(debt.currencyCode);
 	const [isModalOpen, { setTrue: openModal, setFalse: closeModal }] =
 		useBooleanState();
 
@@ -25,16 +25,16 @@ export const DebtCurrencyInput: React.FC<Props> = ({ debt, isLoading }) => {
 	);
 	const saveCurrency = React.useCallback(
 		(nextCurrency: TRPCQueryOutput<"currency.getList">[number]) => {
-			if (nextCurrency.code === debt.currency) {
+			if (nextCurrency.code === debt.currencyCode) {
 				return;
 			}
 			closeModal();
 			updateReceiptMutation.mutate({
 				id: debt.id,
-				update: { type: "currency", currency: nextCurrency!.code },
+				update: { type: "currencyCode", currencyCode: nextCurrency!.code },
 			});
 		},
-		[updateReceiptMutation, debt.id, debt.currency, closeModal]
+		[updateReceiptMutation, debt.id, debt.currencyCode, closeModal]
 	);
 	const topCurrenciesQuery = trpc.currency.topDebts.useQuery();
 

@@ -4,7 +4,7 @@ import { Collapse } from "@nextui-org/react";
 
 import { useSelfAccountId } from "app/hooks/use-self-account-id";
 import { TRPCQueryOutput } from "app/trpc";
-import { Currency } from "app/utils/currency";
+import { CurrencyCode } from "app/utils/currency";
 import {
 	getDecimalsPower,
 	getItemCalculations,
@@ -45,7 +45,7 @@ type Props = {
 	receiptId: ReceiptsId;
 	receiptSelfUserId?: UsersId;
 	receiptLocked: boolean;
-	currency?: Currency;
+	currencyCode?: CurrencyCode;
 	isLoading: boolean;
 };
 
@@ -53,7 +53,7 @@ export const ReceiptParticipants: React.FC<Props> = ({
 	data,
 	receiptLocked,
 	receiptSelfUserId,
-	currency,
+	currencyCode,
 	receiptId,
 	isLoading,
 }) => {
@@ -118,7 +118,7 @@ export const ReceiptParticipants: React.FC<Props> = ({
 						receiptSelfUserId={receiptSelfUserId}
 						participant={participant}
 						role={data.role}
-						currency={currency}
+						currencyCode={currencyCode}
 						isLoading={isLoading}
 					/>
 				))}

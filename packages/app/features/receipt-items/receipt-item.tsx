@@ -11,7 +11,7 @@ import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
-import { Currency } from "app/utils/currency";
+import { CurrencyCode } from "app/utils/currency";
 import { round } from "app/utils/math";
 import { ReceiptsId, UsersId } from "next-app/db/models";
 import { Role } from "next-app/handlers/receipts/utils";
@@ -34,7 +34,7 @@ type Props = {
 	receiptId: ReceiptsId;
 	receiptItem: ReceiptItems[number];
 	receiptParticipants: ReceiptParticipant[];
-	currency?: Currency;
+	currencyCode?: CurrencyCode;
 	role: Role;
 	isLoading: boolean;
 };
@@ -46,13 +46,13 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 			receiptItem,
 			receiptParticipants,
 			receiptId,
-			currency,
+			currencyCode,
 			role,
 			isLoading: isReceiptDeleteLoading,
 		},
 		ref
 	) => {
-		const formattedCurrency = useFormattedCurrency(currency);
+		const currency = useFormattedCurrency(currencyCode);
 		const removeReceiptItemMutation = trpc.receiptItems.remove.useMutation(
 			useTrpcMutationOptions(mutations.receiptItems.remove.options, {
 				context: receiptId,
@@ -123,7 +123,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 						<ReceiptItemPriceInput
 							receiptId={receiptId}
 							receiptItem={receiptItem}
-							currency={currency}
+							currencyCode={currencyCode}
 							readOnly={isEditingDisabled || receiptLocked}
 							isLoading={isDeleteLoading}
 						/>
@@ -135,8 +135,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 						/>
 						<Spacer x={0.5} />
 						<Text>
-							= {round(receiptItem.quantity * receiptItem.price)}{" "}
-							{formattedCurrency}
+							= {round(receiptItem.quantity * receiptItem.price)} {currency}
 						</Text>
 					</Sum>
 					{receiptLocked ||

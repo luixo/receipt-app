@@ -13,7 +13,7 @@ const createUserDebt = (
 ): DebtUserSnapshot => ({
 	id,
 	amount: updateObject.amount,
-	currency: updateObject.currency,
+	currencyCode: updateObject.currencyCode,
 	created: new Date(),
 	timestamp: updateObject.timestamp || new Date(),
 	note: updateObject.note,
@@ -29,7 +29,7 @@ const createDebt = (
 ): DebtSnapshot => ({
 	id,
 	amount: updateObject.amount,
-	currency: updateObject.currency,
+	currencyCode: updateObject.currencyCode,
 	userId: updateObject.userId,
 	timestamp: updateObject.timestamp || new Date(),
 	note: updateObject.note,
@@ -46,7 +46,7 @@ export const options: UseContextedMutationOptions<"debts.add"> = {
 			getByUsers: (controller) =>
 				controller.update(
 					updateObject.userId,
-					updateObject.currency,
+					updateObject.currencyCode,
 					(sum) => sum + updateObject.amount
 				),
 			getUser: (controller) =>

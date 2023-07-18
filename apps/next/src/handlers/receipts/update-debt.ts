@@ -28,7 +28,7 @@ export const procedure = authProcedure
 			"lockedTimestamp",
 			"name",
 			"issued",
-			"currency",
+			"currencyCode",
 		]);
 		if (!receipt) {
 			throw new trpc.TRPCError({

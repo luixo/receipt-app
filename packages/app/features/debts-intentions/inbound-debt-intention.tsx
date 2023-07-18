@@ -22,7 +22,7 @@ export const InboundDebtIntention: React.FC<Props> = ({ intention }) => {
 				() => ({
 					debtId: intention.id,
 					userId: intention.userId,
-					currency: intention.currency,
+					currencyCode: intention.currencyCode,
 					currentAmount: intention.current?.amount,
 				}),
 				[intention]
@@ -71,7 +71,7 @@ export const InboundDebtIntention: React.FC<Props> = ({ intention }) => {
 				<Button
 					disabled={isLoading}
 					onClick={() => acceptSyncIntention()}
-					title={`Accept debt for ${intention.amount} ${intention.currency}`}
+					title={`Accept debt for ${intention.amount} ${intention.currencyCode}`}
 				>
 					Accept
 				</Button>
@@ -79,7 +79,7 @@ export const InboundDebtIntention: React.FC<Props> = ({ intention }) => {
 					bordered
 					disabled={isLoading}
 					onClick={() => acceptSyncIntention(true)}
-					title={`Accept and edit debt for ${intention.amount} ${intention.currency}`}
+					title={`Accept and edit debt for ${intention.amount} ${intention.currencyCode}`}
 				>
 					Accept and edit
 				</Button>

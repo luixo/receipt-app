@@ -5,13 +5,13 @@ import { receiptNameSchema } from "app/utils/validation";
 import { getDatabase } from "next-app/db";
 import { addReceiptParticipants } from "next-app/handlers/receipt-participants/utils";
 import { authProcedure } from "next-app/handlers/trpc";
-import { currencySchema, userIdSchema } from "next-app/handlers/validation";
+import { currencyCodeSchema, userIdSchema } from "next-app/handlers/validation";
 
 export const procedure = authProcedure
 	.input(
 		z.strictObject({
 			name: receiptNameSchema,
-			currency: currencySchema,
+			currencyCode: currencyCodeSchema,
 			userIds: z.array(userIdSchema).optional(),
 			issued: z.date(),
 		})
@@ -25,7 +25,7 @@ export const procedure = authProcedure
 				.values({
 					id,
 					name: input.name,
-					currency: input.currency,
+					currencyCode: input.currencyCode,
 					created: new Date(),
 					issued: input.issued,
 					ownerAccountId: ctx.auth.accountId,

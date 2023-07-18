@@ -1,6 +1,6 @@
 import { cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { Currency } from "app/utils/currency";
+import { CurrencyCode } from "app/utils/currency";
 import { DebtsId, UsersId } from "next-app/db/models";
 
 export const options: UseContextedMutationOptions<
@@ -8,7 +8,7 @@ export const options: UseContextedMutationOptions<
 	{
 		debtId: DebtsId;
 		userId: UsersId;
-		currency: Currency;
+		currencyCode: CurrencyCode;
 		currentAmount?: number;
 	}
 > = {
@@ -38,7 +38,7 @@ export const options: UseContextedMutationOptions<
 				getByUsers: (controller) =>
 					controller.update(
 						context.userId,
-						context.currency,
+						context.currencyCode,
 						(sum) => sum + result.amount - currentAmount
 					),
 				getUser: (controller) => {
@@ -90,13 +90,13 @@ export const options: UseContextedMutationOptions<
 				getByUsers: (controller) =>
 					controller.update(
 						context.userId,
-						context.currency,
+						context.currencyCode,
 						(sum) => sum + result.amount
 					),
 				getUser: (controller) =>
 					controller.add(context.userId, {
 						id: updateObject.id,
-						currency: context.currency,
+						currencyCode: context.currencyCode,
 						amount: result.amount,
 						timestamp: result.timestamp,
 						created: result.created,
@@ -110,7 +110,7 @@ export const options: UseContextedMutationOptions<
 					controller.add({
 						id: updateObject.id,
 						userId: context.userId,
-						currency: context.currency,
+						currencyCode: context.currencyCode,
 						amount: result.amount,
 						timestamp: result.timestamp,
 						note: result.note,
@@ -126,7 +126,7 @@ export const options: UseContextedMutationOptions<
 					return controller.add({
 						id: updateObject.id,
 						userId: context.userId,
-						currency: context.currency,
+						currencyCode: context.currencyCode,
 						amount: result.amount,
 						timestamp: result.timestamp,
 						note: result.note,

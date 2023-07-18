@@ -73,7 +73,7 @@ export const ReceiptControlButtons: React.FC<Props> = ({
 						<ReceiptPropagateButton
 							receiptDebtsQuery={receiptDebtsQuery}
 							receiptId={receipt.id}
-							currency={receipt.currency}
+							currencyCode={receipt.currencyCode}
 							isLoading={deleteLoading}
 							isPropagating={propagateMutation.isLoading}
 							propagateDebts={propagateDebts}

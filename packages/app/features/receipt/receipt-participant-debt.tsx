@@ -17,7 +17,7 @@ import { useMatchMediaValue } from "app/hooks/use-match-media-value";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
-import { Currency } from "app/utils/currency";
+import { CurrencyCode } from "app/utils/currency";
 import { ReceiptsId, UsersId } from "next-app/db/models";
 
 const SIZE = 36;
@@ -39,18 +39,18 @@ type Participant = TRPCQueryOutput<"debts.getReceipt">[number];
 
 type Props = {
 	receiptId: ReceiptsId;
-	currency: Currency;
+	currencyCode: CurrencyCode;
 	participant: Participant;
 	sum?: number;
 };
 
 export const ReceiptParticipantDebt: React.FC<Props> = ({
 	receiptId,
-	currency,
+	currencyCode,
 	participant,
 	sum,
 }) => {
-	const formattedCurrency = useFormattedCurrency(currency);
+	const currency = useFormattedCurrency(currencyCode);
 
 	const updateMutation = trpc.receipts.updateDebt.useMutation(
 		useTrpcMutationOptions(mutations.receipts.updateDebt.options, {
@@ -78,7 +78,7 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 				{showSpacer ? <Spacer y={1} /> : null}
 			</Grid>
 			<Grid defaultCol={2.5} lessMdCol={4} css={{ alignItems: "center" }}>
-				<Text>{sum !== undefined ? `${sum} ${formattedCurrency}` : null}</Text>
+				<Text>{sum !== undefined ? `${sum} ${currency}` : null}</Text>
 			</Grid>
 			<Grid defaultCol={2.5} lessMdCol={4}>
 				{participant.status === "no-parts" ? (

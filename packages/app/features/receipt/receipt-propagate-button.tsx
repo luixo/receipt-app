@@ -10,7 +10,7 @@ import {
 	TRPCQueryResult,
 	TRPCQuerySuccessResult,
 } from "app/trpc";
-import { Currency } from "app/utils/currency";
+import { CurrencyCode } from "app/utils/currency";
 import { ReceiptsId } from "next-app/db/models";
 
 import { ReceiptDebtSyncInfoButton } from "./receipt-debt-sync-info-button";
@@ -18,7 +18,7 @@ import { ReceiptDebtSyncInfoButton } from "./receipt-debt-sync-info-button";
 type InnerProps = {
 	query: TRPCQuerySuccessResult<"debts.getReceipt">;
 	receiptId: ReceiptsId;
-	currency: Currency;
+	currencyCode: CurrencyCode;
 	isLoading: boolean;
 	isPropagating: boolean;
 	propagateDebts: () => void;
@@ -41,7 +41,7 @@ export const showPropagateButton = (
 const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 	query,
 	receiptId,
-	currency,
+	currencyCode,
 	isLoading,
 	isPropagating,
 	propagateDebts,
@@ -63,7 +63,7 @@ const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 				<ReceiptDebtSyncInfoButton
 					participants={participants}
 					receiptId={receiptId}
-					currency={currency}
+					currencyCode={currencyCode}
 				/>
 			)}
 		</>
@@ -76,7 +76,7 @@ type Props = Omit<InnerProps, "query"> & {
 
 export const ReceiptPropagateButton: React.FC<Props> = ({
 	receiptId,
-	currency,
+	currencyCode,
 	receiptDebtsQuery: query,
 	...props
 }) => {
@@ -90,7 +90,7 @@ export const ReceiptPropagateButton: React.FC<Props> = ({
 		<ReceiptPropagateButtonInner
 			{...props}
 			receiptId={receiptId}
-			currency={currency}
+			currencyCode={currencyCode}
 			query={query}
 		/>
 	);

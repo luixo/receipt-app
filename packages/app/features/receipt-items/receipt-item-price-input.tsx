@@ -6,11 +6,12 @@ import { MdEdit as EditIcon } from "react-icons/md";
 
 import { IconButton } from "app/components/icon-button";
 import { useBooleanState } from "app/hooks/use-boolean-state";
+import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc, TRPCQueryOutput } from "app/trpc";
-import { Currency } from "app/utils/currency";
+import { CurrencyCode } from "app/utils/currency";
 import { priceSchema } from "app/utils/validation";
 import { ReceiptsId } from "next-app/db/models";
 
@@ -22,7 +23,7 @@ type Props = {
 	receiptId: ReceiptsId;
 	receiptItem: ReceiptItem;
 	readOnly?: boolean;
-	currency?: Currency;
+	currencyCode?: CurrencyCode;
 	isLoading: boolean;
 };
 
@@ -30,7 +31,7 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 	receiptId,
 	receiptItem,
 	isLoading,
-	currency,
+	currencyCode,
 	readOnly,
 }) => {
 	const [isEditing, { switchValue: switchEditing, setFalse: unsetEditing }] =
@@ -64,12 +65,13 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 		},
 		[updateMutation, receiptItem.id, receiptItem.price]
 	);
+	const currency = useFormattedCurrency(currencyCode);
 
 	if (!isEditing) {
 		return (
 			<Wrapper>
 				<Text>
-					{receiptItem.price} {currency || "unknown"}
+					{receiptItem.price} {currency}
 				</Text>
 				{!readOnly ? (
 					<IconButton

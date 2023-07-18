@@ -1,4 +1,4 @@
-import { Currency } from "app/utils/currency";
+import { CurrencyCode } from "app/utils/currency";
 import { getDatabase } from "next-app/db";
 import { UsersId } from "next-app/db/models";
 import { authProcedure } from "next-app/handlers/trpc";
@@ -11,22 +11,25 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 		.innerJoin("users", (qb) => qb.onRef("users.id", "=", "debts.userId"))
 		.select([
 			database.fn.sum<string>("debts.amount").as("sum"),
-			"debts.currency",
+			"debts.currencyCode",
 			"debts.userId",
 			"users.name",
 		])
 		.groupBy("debts.userId")
 		.groupBy("users.name")
-		.groupBy("currency")
+		.groupBy("currencyCode")
 		.execute();
 
 	const debtsByUsers = debts.reduce<
-		Map<UsersId, { items: { currency: Currency; sum: number }[]; name: string }>
-	>((acc, { sum, userId, currency, name }) => {
+		Map<
+			UsersId,
+			{ items: { currencyCode: CurrencyCode; sum: number }[]; name: string }
+		>
+	>((acc, { sum, userId, currencyCode, name }) => {
 		if (!acc.has(userId)) {
 			acc.set(userId, { name, items: [] });
 		}
-		acc.get(userId)!.items.push({ currency, sum: Number(sum) });
+		acc.get(userId)!.items.push({ currencyCode, sum: Number(sum) });
 		return acc;
 	}, new Map());
 	const debtsByUsersEntries = [...debtsByUsers.entries()];

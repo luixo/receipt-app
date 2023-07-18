@@ -13,7 +13,7 @@ import { getDebt } from "next-app/handlers/debts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import {
 	debtAmountSchema,
-	currencySchema,
+	currencyCodeSchema,
 	debtIdSchema,
 } from "next-app/handlers/validation";
 
@@ -35,8 +35,8 @@ export const procedure = authProcedure
 					note: debtNoteSchema,
 				}),
 				z.strictObject({
-					type: z.literal("currency"),
-					currency: currencySchema,
+					type: z.literal("currencyCode"),
+					currencyCode: currencyCodeSchema,
 				}),
 				z.strictObject({
 					type: z.literal("locked"),
@@ -122,7 +122,7 @@ export const procedure = authProcedure
 					message: `Debt ${input.id} cannot be updated while locked.`,
 				});
 			}
-			if (input.update.type === "currency") {
+			if (input.update.type === "currencyCode") {
 				const debtIntention = await getDebtIntention(
 					database,
 					input.id,
@@ -152,8 +152,8 @@ export const procedure = authProcedure
 				case "note":
 					setObject = { note: input.update.note };
 					break;
-				case "currency":
-					setObject = { currency: input.update.currency };
+				case "currencyCode":
+					setObject = { currencyCode: input.update.currencyCode };
 					break;
 			}
 			await updateTable(database, setObject);

@@ -18,7 +18,7 @@ export const options: UseContextedMutationOptions<
 			getByUsers: (controller) =>
 				controller.update(
 					currDebt.userId,
-					currDebt.currency,
+					currDebt.currencyCode,
 					(sum) => sum - currDebt.amount,
 					() => (sum) => sum + currDebt.amount
 				),

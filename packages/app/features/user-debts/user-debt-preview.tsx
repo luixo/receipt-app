@@ -13,7 +13,7 @@ type Props = {
 };
 
 export const UserDebtPreview: React.FC<Props> = ({ debt }) => {
-	const currency = useFormattedCurrency(debt.currency);
+	const currency = useFormattedCurrency(debt.currencyCode);
 	return (
 		<Link href={`/debts/${debt.id}`} color="text">
 			<Grid.Container gap={2}>

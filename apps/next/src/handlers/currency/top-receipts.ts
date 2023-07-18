@@ -1,6 +1,5 @@
 import { sql } from "kysely";
 
-import { Currency } from "app/utils/currency";
 import { MONTH } from "app/utils/time";
 import { getDatabase } from "next-app/db";
 import {
@@ -17,29 +16,29 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 		.with("mergedReceipts", () =>
 			foreignReceipts
 				.select([
-					"receipts.currency",
+					"receipts.currencyCode",
 					database.fn.count<string>("receipts.id").as("count"),
 				])
 				.where("issued", ">", new Date(Date.now() - MONTH))
-				.groupBy("receipts.currency")
+				.groupBy("receipts.currencyCode")
 				.union(
 					ownReceipts
 						.select([
-							"receipts.currency",
+							"receipts.currencyCode",
 							database.fn.count<string>("receipts.id").as("count"),
 						])
 						.where("issued", ">", new Date(Date.now() - MONTH))
-						.groupBy("receipts.currency")
+						.groupBy("receipts.currencyCode")
 				)
 		)
 		.selectFrom("mergedReceipts")
 		.select([
-			"currency",
+			"currencyCode",
 			// TODO: return `database.fn.sum<string>("count").as("count")`
 			sql`sum(count)`.as("count"),
 		])
-		.groupBy("currency")
+		.groupBy("currencyCode")
 		.orderBy("count", "desc")
 		.execute();
-	return topCurrenciesResult.map(({ currency }) => currency as Currency);
+	return topCurrenciesResult;
 });

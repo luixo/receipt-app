@@ -9,7 +9,7 @@ import {
 	SessionsSessionId,
 	DebtsId,
 } from "next-app/db/models";
-import { isCurrency } from "next-app/utils/currency";
+import { isCurrencyCode } from "next-app/utils/currency";
 
 export const offsetSchema = z
 	.number()
@@ -25,7 +25,7 @@ export const assignableRoleSchema = z.union([
 
 export const roleSchema = assignableRoleSchema.or(z.literal("owner"));
 
-export const currencySchema = z.string().refine(isCurrency);
+export const currencyCodeSchema = z.string().refine(isCurrencyCode);
 
 // TODO: make narrower
 export const localeSchema = z.string();

@@ -38,7 +38,7 @@ export const procedure = authProcedure
 						"receiptParticipants.role",
 						"receipts.name",
 						"receipts.issued",
-						"receipts.currency",
+						"receipts.currencyCode",
 						"receipts.lockedTimestamp",
 						"users.id as remoteUserId",
 						// We use `userId` = `ownerAccountId` contract
@@ -50,7 +50,7 @@ export const procedure = authProcedure
 						sql<string>`'owner'`.as("role"),
 						"receipts.name",
 						"receipts.issued",
-						"receipts.currency",
+						"receipts.currencyCode",
 						"receipts.lockedTimestamp",
 						// We use `userId` = `ownerAccountId` contract
 						// But type system doesn't know about that
@@ -87,7 +87,7 @@ export const procedure = authProcedure
 					"mergedReceipts.role",
 					"mergedReceipts.name",
 					"mergedReceipts.issued",
-					"mergedReceipts.currency",
+					"mergedReceipts.currencyCode",
 					"mergedReceipts.lockedTimestamp",
 					"receiptParticipants.resolved as participantResolved",
 					"mergedReceipts.remoteUserId",
@@ -101,7 +101,7 @@ export const procedure = authProcedure
 					"mergedReceipts.role",
 					"mergedReceipts.name",
 					"mergedReceipts.issued",
-					"mergedReceipts.currency",
+					"mergedReceipts.currencyCode",
 					"mergedReceipts.lockedTimestamp",
 					"receiptParticipants.resolved",
 					"mergedReceipts.remoteUserId",

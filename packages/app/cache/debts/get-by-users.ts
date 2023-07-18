@@ -1,7 +1,7 @@
 import * as utils from "app/cache/utils";
 import { TRPCQueryOutput, TRPCReactContext } from "app/trpc";
 import { upsertInArray } from "app/utils/array";
-import { Currency } from "app/utils/currency";
+import { CurrencyCode } from "app/utils/currency";
 import { alwaysTrue } from "app/utils/utils";
 import { UsersId } from "next-app/db/models";
 
@@ -32,13 +32,13 @@ const updateUserDebts = (
 	);
 
 const updateCurrencyDebts =
-	(controller: Controller, userId: UsersId, currency: Currency) =>
+	(controller: Controller, userId: UsersId, currencyCode: CurrencyCode) =>
 	(updater: utils.UpdateFn<number>) =>
 		utils.withRef<Debt | undefined>((ref) => {
 			updateUserDebts(controller, userId, (debts) =>
 				upsertInArray(
 					debts,
-					(debt) => debt.currency === currency,
+					(debt) => debt.currencyCode === currencyCode,
 					(userCurrency) => {
 						const nextSum = updater(userCurrency.sum);
 						if (nextSum === userCurrency.sum) {
@@ -46,7 +46,7 @@ const updateCurrencyDebts =
 						}
 						return { ...userCurrency, sum: nextSum };
 					},
-					{ currency, sum: 0 },
+					{ currencyCode, sum: 0 },
 					ref
 				)
 			);
@@ -60,9 +60,9 @@ export const getController = (trpc: TRPCReactContext) => {
 	return {
 		update: (
 			userId: UsersId,
-			currency: Currency,
+			currencyCode: CurrencyCode,
 			updater: utils.UpdateFn<number>
-		) => updateCurrencyDebts(controller, userId, currency)(updater),
+		) => updateCurrencyDebts(controller, userId, currencyCode)(updater),
 		invalidate: invalidate(controller),
 	};
 };
@@ -72,12 +72,12 @@ export const getRevertController = (trpc: TRPCReactContext) => {
 	return {
 		update: (
 			userId: UsersId,
-			currency: Currency,
+			currencyCode: CurrencyCode,
 			updater: utils.UpdateFn<number>,
 			revertUpdater: utils.SnapshotFn<number>
 		) =>
 			utils.applyUpdateFnWithRevert(
-				updateCurrencyDebts(controller, userId, currency),
+				updateCurrencyDebts(controller, userId, currencyCode),
 				updater,
 				revertUpdater
 			),

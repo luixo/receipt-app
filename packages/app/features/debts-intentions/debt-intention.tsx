@@ -25,7 +25,7 @@ type Props = {
 };
 
 export const DebtIntention: React.FC<Props> = ({ intention, children }) => {
-	const currency = useFormattedCurrency(intention.currency);
+	const currency = useFormattedCurrency(intention.currencyCode);
 	const renderChildrenInline = useMatchMediaValue(true, { lessSm: false });
 	const intentionDataComponent = (
 		<Wrapper>

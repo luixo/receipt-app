@@ -10,7 +10,7 @@ import { Header } from "app/components/header";
 import { IconButton } from "app/components/icon-button";
 import { useRouter } from "app/hooks/use-router";
 import { trpc, TRPCQuerySuccessResult } from "app/trpc";
-import { Currency } from "app/utils/currency";
+import { CurrencyCode } from "app/utils/currency";
 import { UsersId } from "next-app/src/db/models";
 
 import { UserDebtPreview } from "./user-debt-preview";
@@ -31,14 +31,14 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 	const aggregatedDebts = React.useMemo(
 		() =>
 			Object.entries(
-				debts.reduce<Record<Currency, number>>((acc, debt) => {
-					if (!acc[debt.currency]) {
-						acc[debt.currency] = 0;
+				debts.reduce<Record<CurrencyCode, number>>((acc, debt) => {
+					if (!acc[debt.currencyCode]) {
+						acc[debt.currencyCode] = 0;
 					}
-					acc[debt.currency] += debt.amount;
+					acc[debt.currencyCode] += debt.amount;
 					return acc;
 				}, {})
-			).map(([currency, sum]) => ({ currency, sum })),
+			).map(([currencyCode, sum]) => ({ currencyCode, sum })),
 		[debts]
 	);
 	const userQuery = trpc.users.get.useQuery({ id: userId });

@@ -1,6 +1,8 @@
 // @generated
 // Automatically generated. Don't change this file manually.
 
+import type { CurrencyCode } from "app/utils/currency";
+
 import type { AccountsId } from "./accounts";
 import type { ReceiptsId } from "./receipts";
 import type { UsersId } from "./users";
@@ -25,7 +27,7 @@ export default interface Debts {
 	 */
 	userId: UsersId;
 
-	currency: string;
+	currencyCode: CurrencyCode;
 
 	amount: string;
 
@@ -58,7 +60,7 @@ export interface DebtsInitializer {
 	 */
 	userId: UsersId;
 
-	currency: string;
+	currencyCode: CurrencyCode;
 
 	amount: string;
 
@@ -91,7 +93,7 @@ export interface DebtsMutator {
 	 */
 	userId?: UsersId;
 
-	currency?: string;
+	currencyCode?: CurrencyCode;
 
 	amount?: string;
 

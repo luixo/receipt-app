@@ -27,6 +27,7 @@ const run = async () => {
 				path: path.join(outputPath, fileRecase(details.name)),
 			}),
 			getPropertyMetadata: (rawProperty, details, generateFor) => {
+				let typeOverride: string | undefined;
 				const property = rawProperty as TableColumn;
 				const comments = property.comment ? [property.comment] : [];
 				if (property.indices) {
@@ -39,13 +40,19 @@ const run = async () => {
 				if (property.defaultValue && generateFor === "initializer") {
 					comments.push(`Default value: ${property.defaultValue}`);
 				}
+				if (
+					property.name === "debtId" &&
+					details.name === "debtsSyncIntentions"
+				) {
+					typeOverride = "DebtsId";
+				}
+				if (property.name === "currencyCode") {
+					typeOverride = "CurrencyCode";
+				}
 				return {
 					name: property.name,
 					comment: comments,
-					typeOverride:
-						property.name === "debtId" && details.name === "debtsSyncIntentions"
-							? "DebtsId"
-							: undefined,
+					typeOverride,
 				};
 			},
 			generateIdentifierType: (column, details) => ({
@@ -63,16 +70,28 @@ const run = async () => {
 			},
 			preRenderHooks: [generateIndexFile],
 			postRenderHooks: [
-				(filePath, lines) =>
-					[
+				(_filePath, lines) => {
+					const prepended = [
 						"// @generated",
 						"// Automatically generated. Don't change this file manually.",
 						"",
-						filePath.endsWith("debts-sync-intentions.ts")
-							? "import type { DebtsId } from './debts';"
-							: undefined,
-						...lines,
-					].filter((s): s is string => s !== undefined),
+					];
+					if (
+						lines.some((line) => line.includes(": CurrencyCode")) &&
+						!lines.some((line) => line.includes("type CurrencyCode"))
+					) {
+						prepended.push(
+							"import type { CurrencyCode } from 'app/utils/currency';"
+						);
+					}
+					if (
+						lines.some((line) => line.includes(": DebtsId")) &&
+						!lines.some((line) => line.includes("type DebtsId"))
+					) {
+						prepended.push("import type { DebtsId } from './debts';");
+					}
+					return [...prepended, ...lines];
+				},
 			],
 		});
 		console.log(`< Types successfully generated!`);

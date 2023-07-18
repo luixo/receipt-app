@@ -16,7 +16,7 @@ export const options: UseContextedMutationOptions<
 					id: updateObject.id,
 					userId: currDebt.userId,
 					amount: currDebt.amount,
-					currency: currDebt.currency,
+					currencyCode: currDebt.currencyCode,
 					timestamp: currDebt.timestamp,
 					intentionTimestamp: new Date(),
 					note: currDebt.note,

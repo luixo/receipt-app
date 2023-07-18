@@ -84,7 +84,7 @@ export const DebtControlButtons: React.FC<Props> = ({ debt, hideLocked }) => {
 				() => ({
 					debtId: debt.id,
 					userId: debt.userId,
-					currency: debt.currency,
+					currencyCode: debt.currencyCode,
 					currentAmount: debt.amount,
 				}),
 				[debt]

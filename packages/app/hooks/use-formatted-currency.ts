@@ -1,13 +1,16 @@
 import { trpc } from "app/trpc";
-import { Currency } from "app/utils/currency";
+import { CurrencyCode } from "app/utils/currency";
 
-export const useFormattedCurrency = (currency?: Currency) => {
+export const useFormattedCurrency = (currencyCode?: CurrencyCode) => {
 	const currenciesListQuery = trpc.currency.getList.useQuery(
 		{ locale: "en" },
 		{ trpc: { ssr: false } }
 	);
-	return currenciesListQuery.data
-		? currenciesListQuery.data.find((element) => element.code === currency)
-				?.symbol
-		: currency;
+	return (
+		(currenciesListQuery.data
+			? currenciesListQuery.data.find(
+					(element) => element.code === currencyCode
+			  )?.symbol
+			: currencyCode) ?? "???"
+	);
 };

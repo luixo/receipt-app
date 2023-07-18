@@ -24,16 +24,16 @@ export const ReceiptCurrencyInput: React.FC<Props> = ({
 	);
 	const saveCurrency = React.useCallback(
 		(nextCurrency: TRPCQueryOutput<"currency.getList">[number]) => {
-			if (nextCurrency.code === receipt.currency) {
+			if (nextCurrency.code === receipt.currencyCode) {
 				return;
 			}
 			closeModal();
 			updateReceiptMutation.mutate({
 				id: receipt.id,
-				update: { type: "currency", currency: nextCurrency!.code },
+				update: { type: "currencyCode", currencyCode: nextCurrency!.code },
 			});
 		},
-		[updateReceiptMutation, receipt.id, receipt.currency, closeModal]
+		[updateReceiptMutation, receipt.id, receipt.currencyCode, closeModal]
 	);
 	const topCurrenciesQuery = trpc.currency.topReceipts.useQuery();
 
@@ -53,7 +53,7 @@ export const ReceiptCurrencyInput: React.FC<Props> = ({
 					fontSize: "inherit",
 				}}
 			>
-				{receipt.currency}
+				{receipt.currencyCode}
 			</IconButton>
 			<CurrenciesPicker
 				onChange={saveCurrency}
