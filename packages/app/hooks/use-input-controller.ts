@@ -5,8 +5,8 @@ import {
 	useController,
 	FieldValues,
 	FieldPath,
-	FieldPathValue,
 	UseFormReturn,
+	PathValue,
 } from "react-hook-form";
 
 import { formatIsoDate } from "app/utils/date";
@@ -18,6 +18,7 @@ export type InputControllerOptions<
 	form: UseFormReturn<Form>;
 	name: FieldName;
 	type?: React.HTMLInputTypeAttribute;
+	defaultValue?: PathValue<Form, FieldName>;
 };
 
 export const useInputController = <
@@ -27,17 +28,19 @@ export const useInputController = <
 	form,
 	name,
 	type,
+	defaultValue,
 }: InputControllerOptions<Form, FieldName>) => {
 	const { field, fieldState } = useController({
 		name,
 		control: form.control,
+		defaultValue,
 	});
 	const setValue = React.useCallback(
-		(nextValue: FieldPathValue<Form, FieldName>) => {
+		(nextValue: PathValue<Form, FieldName>) => {
 			if (type === "date") {
 				form.setValue(
 					name,
-					formatIsoDate(nextValue as Date) as FieldPathValue<Form, FieldName>
+					formatIsoDate(nextValue as Date) as PathValue<Form, FieldName>
 				);
 			} else {
 				form.setValue(name, nextValue);
@@ -51,7 +54,7 @@ export const useInputController = <
 				? (e) => {
 						const { value } = e.currentTarget;
 						if (/^\d*[.,]?\d*$/.test(value)) {
-							field.onChange(value);
+							field.onChange(value as PathValue<Form, FieldName>);
 						}
 				  }
 				: field.onChange,

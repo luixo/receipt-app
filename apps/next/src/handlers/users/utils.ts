@@ -23,6 +23,24 @@ export const getUserById = <SE extends ReceiptsSelectExpression<"users">>(
 	return selection.executeTakeFirst();
 };
 
+export const getUsersByIds = <SE extends ReceiptsSelectExpression<"users">>(
+	database: Database,
+	ids: UsersId[],
+	selectExpression: SE[],
+	queryBuilder?: <O>(
+		qb: SelectQueryBuilder<ReceiptsDatabase, "users", O>
+	) => SelectQueryBuilder<ReceiptsDatabase, "users", O>
+): Promise<Selection<ReceiptsDatabase, "users", SE>[]> => {
+	let selection = database
+		.selectFrom("users")
+		.select(selectExpression)
+		.where("id", "in", ids);
+	if (queryBuilder) {
+		selection = queryBuilder(selection);
+	}
+	return selection.execute();
+};
+
 export const verifyUsersByIds = async (
 	database: Database,
 	userIds: UsersId[],

@@ -1,6 +1,7 @@
 import React from "react";
 
-import { Loading, Spacer, Card } from "@nextui-org/react";
+import { Loading, Spacer, Card, styled } from "@nextui-org/react";
+import { BsCurrencyExchange as ExchangeIcon } from "react-icons/bs";
 import { MdAdd as AddIcon } from "react-icons/md";
 
 import { DebtsGroup } from "app/components/app/debts-group";
@@ -8,12 +9,17 @@ import { LoadableUser } from "app/components/app/loadable-user";
 import { QueryErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
 import { IconButton } from "app/components/icon-button";
-import { useRouter } from "app/hooks/use-router";
+import { useAggregatedDebts } from "app/hooks/use-aggregated-debts";
 import { trpc, TRPCQuerySuccessResult } from "app/trpc";
-import { CurrencyCode } from "app/utils/currency";
 import { UsersId } from "next-app/src/db/models";
 
 import { UserDebtPreview } from "./user-debt-preview";
+
+const DebtsHeader = styled("div", {
+	display: "flex",
+	alignContent: "center",
+	justifyContent: "center",
+});
 
 type InnerProps = {
 	userId: UsersId;
@@ -21,26 +27,7 @@ type InnerProps = {
 };
 
 export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
-	const debts = query.data;
-	const router = useRouter();
-	React.useEffect(() => {
-		if (debts.length === 0) {
-			router.replace("/debts");
-		}
-	}, [debts, router]);
-	const aggregatedDebts = React.useMemo(
-		() =>
-			Object.entries(
-				debts.reduce<Record<CurrencyCode, number>>((acc, debt) => {
-					if (!acc[debt.currencyCode]) {
-						acc[debt.currencyCode] = 0;
-					}
-					acc[debt.currencyCode] += debt.amount;
-					return acc;
-				}, {})
-			).map(([currencyCode, sum]) => ({ currencyCode, sum })),
-		[debts]
-	);
+	const aggregatedDebts = useAggregatedDebts(query);
 	const userQuery = trpc.users.get.useQuery({ id: userId });
 	return (
 		<>
@@ -62,9 +49,22 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 				<LoadableUser id={userId} />
 			</Header>
 			<Spacer y={1} />
-			<DebtsGroup debts={aggregatedDebts} css={{ alignSelf: "center" }} />
+			<DebtsHeader>
+				<DebtsGroup debts={aggregatedDebts} css={{ alignSelf: "center" }} />
+				{aggregatedDebts.filter((debt) => debt.sum).length > 1 ? (
+					<>
+						<Spacer x={1} />
+						<IconButton
+							href={`/debts/user/${userId}/exchange/`}
+							auto
+							bordered
+							icon={<ExchangeIcon />}
+						/>
+					</>
+				) : null}
+			</DebtsHeader>
 			<Spacer y={1} />
-			{debts.map((debt) => (
+			{query.data.map((debt) => (
 				<React.Fragment key={debt.id}>
 					<Card.Divider />
 					<UserDebtPreview debt={debt} />

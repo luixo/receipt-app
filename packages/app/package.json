@@ -21,7 +21,7 @@
 		"next-usequerystate": "^1.7.2",
 		"react-calendar": "^3.7.0",
 		"react-date-picker": "^8.4.0",
-		"react-hook-form": "^7.34.2",
+		"react-hook-form": "^7.45.1",
 		"react-hot-toast": "^2.4.0",
 		"solito": "latest",
 		"superjson": "^1.9.1",

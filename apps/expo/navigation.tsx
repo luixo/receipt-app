@@ -9,6 +9,8 @@ import { AddUserScreen } from "app/features/add-user/add-user-screen";
 import { ChangePasswordScreen } from "app/features/change-password/change-password-screen";
 import { ConnectionIntentionsScreen } from "app/features/connection-intentions/connection-intentions-screen";
 import { DebtScreen } from "app/features/debt/debt-screen";
+import { DebtsExchangeAllScreen } from "app/features/debts-exchange-all/debts-exchange-all-screen";
+import { DebtsExchangeScreen } from "app/features/debts-exchange/debts-exchange-screen";
 import { DebtsIntentionsScreen } from "app/features/debts-intentions/debts-intentions-screen";
 import { DebtsScreen } from "app/features/debts/debts-screen";
 import { HomeScreen } from "app/features/home/home-screen";
@@ -44,6 +46,12 @@ export type AppParamList = {
 	};
 	debts: undefined;
 	userDebts: {
+		userId: string;
+	};
+	debtsExchange: {
+		userId: string;
+	};
+	debtsExchangeAll: {
 		userId: string;
 	};
 	debt: {
@@ -161,6 +169,20 @@ export const NativeNavigation: React.FC = () => (
 			component={UserDebtsScreen}
 			options={{
 				title: "User debts",
+			}}
+		/>
+		<Stack.Screen
+			name="debtsExchange"
+			component={DebtsExchangeScreen}
+			options={{
+				title: "Debts exchange",
+			}}
+		/>
+		<Stack.Screen
+			name="debtsExchangeAll"
+			component={DebtsExchangeAllScreen}
+			options={{
+				title: "Debts exchange / All",
 			}}
 		/>
 		<Stack.Screen

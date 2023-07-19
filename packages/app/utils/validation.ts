@@ -70,7 +70,7 @@ export const createNumberSchema = (
 	const schema = z
 		.number()
 		.multipleOf(Number((0.1 ** decimals).toFixed(decimals)), {
-			message: `Part should have at maximum ${decimals} decimals`,
+			message: `${name} should have at maximum ${decimals} decimals`,
 		});
 	if (onlyPositive) {
 		return schema.gt(0, { message: `${name} should be greater than 0` });
@@ -95,6 +95,9 @@ export const currencySchema = z.object({
 	code: currencyCodeSchema,
 	name: z.string().nonempty(),
 	symbol: z.string().nonempty(),
+});
+export const currencyRateSchema = createNumberSchema("Currency rate", {
+	decimals: 6,
 });
 
 export const userIdSchema = z.string().uuid().refine<UsersId>(flavored);
