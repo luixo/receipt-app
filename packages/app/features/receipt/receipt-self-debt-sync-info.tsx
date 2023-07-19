@@ -4,39 +4,23 @@ import { Loading } from "@nextui-org/react";
 
 import { DebtControlButtons } from "app/components/app/debt-control-buttons";
 import { QueryErrorMessage } from "app/components/error-message";
-import { trpc, TRPCQuerySuccessResult } from "app/trpc";
+import { trpc } from "app/trpc";
 import { ReceiptsId } from "next-app/db/models";
 
-type InnerProps = {
-	query: TRPCQuerySuccessResult<"debts.getByReceiptId">;
-};
-
-export const ReceiptSelfDebtSyncInfoInner: React.FC<InnerProps> = ({
-	query,
-}) => {
-	if (!query.data) {
-		return null;
-	}
-	return <DebtControlButtons debt={query.data} hideLocked />;
-};
-
-type Props = Omit<InnerProps, "query"> & {
+type Props = {
 	receiptId: ReceiptsId;
 };
 
-export const ReceiptSelfDebtSyncInfo: React.FC<Props> = ({
-	receiptId,
-	...props
-}) => {
-	const debtQuery = trpc.debts.getByReceiptId.useQuery({ receiptId });
+export const ReceiptSelfDebtSyncInfo: React.FC<Props> = ({ receiptId }) => {
+	const debtQuery = trpc.debts.get.useQuery({ receiptId });
 	if (debtQuery.status === "loading") {
 		return <Loading size="xs" />;
 	}
 	if (debtQuery.status === "error") {
-		if (debtQuery.error.data?.code === "FORBIDDEN") {
+		if (debtQuery.error.data?.code === "NOT_FOUND") {
 			return null;
 		}
 		return <QueryErrorMessage query={debtQuery} />;
 	}
-	return <ReceiptSelfDebtSyncInfoInner {...props} query={debtQuery} />;
+	return <DebtControlButtons debt={debtQuery.data} hideLocked />;
 };

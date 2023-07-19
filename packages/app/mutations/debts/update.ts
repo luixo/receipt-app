@@ -166,16 +166,6 @@ export const options: UseContextedMutationOptions<
 > = {
 	onMutate: (trpcContext, currData) => (updateObject) =>
 		cache.debts.updateRevert(trpcContext, {
-			getByReceiptId: (controller) => {
-				if (!currData.receiptId) {
-					return;
-				}
-				return controller.update(
-					currData.receiptId,
-					applyUpdate(updateObject.update),
-					getRevert(updateObject.update)
-				);
-			},
 			getByUsers: (controller) =>
 				controller.update(
 					currData.userId,
@@ -192,7 +182,7 @@ export const options: UseContextedMutationOptions<
 				),
 			get: (controller) =>
 				controller.update(
-					updateObject.id,
+					{ id: updateObject.id },
 					applyUpdate(updateObject.update),
 					getRevert(updateObject.update)
 				),
@@ -205,16 +195,6 @@ export const options: UseContextedMutationOptions<
 		if (updateObject.update.value && nextSyncData) {
 			const [status, intentionDirection] = nextSyncData;
 			cache.debts.update(trpcContext, {
-				getByReceiptId: (controller) => {
-					if (!currData.receiptId) {
-						return;
-					}
-					return controller.update(currData.receiptId, (debt) => ({
-						...debt,
-						status,
-						intentionDirection,
-					}));
-				},
 				// Sum is already update in onMutate
 				getByUsers: noop,
 				getUser: (controller) => {
@@ -225,7 +205,7 @@ export const options: UseContextedMutationOptions<
 					}));
 				},
 				get: (controller) =>
-					controller.update(updateObject.id, (debt) => ({
+					controller.update({ id: updateObject.id }, (debt) => ({
 						...debt,
 						status,
 						intentionDirection,

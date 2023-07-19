@@ -3,7 +3,6 @@ import { t } from "next-app/handlers/trpc";
 import { procedure as add } from "./add";
 import { procedure as addBatch } from "./add-batch";
 import { procedure as get } from "./get";
-import { procedure as getByReceiptId } from "./get-by-receipt-id";
 import { procedure as getByUsers } from "./get-by-users";
 import { procedure as getReceipt } from "./get-receipt";
 import { procedure as getUser } from "./get-user";
@@ -19,5 +18,4 @@ export const router = t.router({
 	remove,
 	add,
 	addBatch,
-	getByReceiptId,
 });

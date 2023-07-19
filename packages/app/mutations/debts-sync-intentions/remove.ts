@@ -26,21 +26,11 @@ export const options: UseContextedMutationOptions<
 					);
 				},
 				get: (controller) =>
-					controller.update(updateObject.id, (debt) => ({
+					controller.update({ id: updateObject.id }, (debt) => ({
 						...debt,
 						status,
 						intentionDirection,
 					})),
-				getByReceiptId: (controller) => {
-					if (!currData.receiptId) {
-						return;
-					}
-					return controller.update(currData.receiptId, (debt) => ({
-						...debt,
-						status,
-						intentionDirection,
-					}));
-				},
 				getUser: (controller) =>
 					controller.update(currData.userId, updateObject.id, (debt) => ({
 						...debt,

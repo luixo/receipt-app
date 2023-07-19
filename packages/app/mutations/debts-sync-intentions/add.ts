@@ -26,21 +26,11 @@ export const options: UseContextedMutationOptions<
 	onSuccess: (trpcContext, currDebt) => (_intentionTimestamp, updateObject) => {
 		cache.debts.update(trpcContext, {
 			get: (controller) =>
-				controller.update(updateObject.id, (debt) => ({
+				controller.update({ id: updateObject.id }, (debt) => ({
 					...debt,
 					status: "unsync",
 					intentionDirection: "self",
 				})),
-			getByReceiptId: (controller) => {
-				if (!currDebt.receiptId) {
-					return;
-				}
-				controller.update(currDebt.receiptId, (debt) => ({
-					...debt,
-					status: "unsync",
-					intentionDirection: "self",
-				}));
-			},
 			getUser: (controller) =>
 				controller.update(currDebt.userId, updateObject.id, (debt) => ({
 					...debt,

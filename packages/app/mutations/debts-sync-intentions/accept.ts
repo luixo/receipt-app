@@ -51,25 +51,13 @@ export const options: UseContextedMutationOptions<
 					}));
 				},
 				get: (controller) =>
-					controller.update(updateObject.id, (debt) => ({
+					controller.update({ id: updateObject.id }, (debt) => ({
 						...debt,
 						amount: result.amount,
 						timestamp: result.timestamp,
 						intentionDirection: undefined,
 						status: "sync",
 					})),
-				getByReceiptId: (controller) => {
-					if (!result.receiptId) {
-						return;
-					}
-					return controller.update(result.receiptId, (debt) => ({
-						...debt,
-						amount: result.amount,
-						timestamp: result.timestamp,
-						intentionDirection: undefined,
-						status: "sync",
-					}));
-				},
 			});
 		} else {
 			cache.debts.update(trpcContext, {
@@ -119,23 +107,6 @@ export const options: UseContextedMutationOptions<
 						status: "sync",
 						receiptId: result.receiptId,
 					}),
-				getByReceiptId: (controller) => {
-					if (!result.receiptId) {
-						return;
-					}
-					return controller.add({
-						id: updateObject.id,
-						userId: context.userId,
-						currencyCode: context.currencyCode,
-						amount: result.amount,
-						timestamp: result.timestamp,
-						note: result.note,
-						locked: true,
-						intentionDirection: undefined,
-						status: "sync",
-						receiptId: result.receiptId,
-					});
-				},
 			});
 		}
 	},

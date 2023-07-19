@@ -9,12 +9,6 @@ export const options: UseContextedMutationOptions<
 > = {
 	onMutate: (trpcContext, currDebt) => (updateObject) =>
 		cache.debts.updateRevert(trpcContext, {
-			getByReceiptId: (controller) => {
-				if (!currDebt.receiptId) {
-					return;
-				}
-				return controller.remove(currDebt.receiptId, updateObject.id);
-			},
 			getByUsers: (controller) =>
 				controller.update(
 					currDebt.userId,
@@ -55,10 +49,9 @@ export const options: UseContextedMutationOptions<
 		}),
 	onSuccess: (trpcContext) => (_result, updateObject) => {
 		cache.debts.update(trpcContext, {
-			getByReceiptId: noop,
 			getByUsers: noop,
 			getUser: noop,
-			get: (controller) => controller.remove(updateObject.id),
+			get: (controller) => controller.remove({ id: updateObject.id }),
 			getReceipt: noop,
 		});
 	},

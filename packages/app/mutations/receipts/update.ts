@@ -117,7 +117,6 @@ export const options: UseContextedMutationOptions<"receipts.update"> = {
 				getByUsers: noop,
 				getUser: noop,
 				get: noop,
-				getByReceiptId: noop,
 			});
 		}
 	},

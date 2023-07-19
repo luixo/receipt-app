@@ -42,7 +42,6 @@ const createDebt = (
 export const options: UseContextedMutationOptions<"debts.add"> = {
 	onSuccess: (trpcContext) => (stableId, updateObject) => {
 		cache.debts.update(trpcContext, {
-			getByReceiptId: noop,
 			getByUsers: (controller) =>
 				controller.update(
 					updateObject.userId,

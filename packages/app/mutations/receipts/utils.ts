@@ -32,13 +32,7 @@ export const updateReceiptCacheOnDebtUpdate = (
 						synced: true,
 					})),
 				get: (controller) =>
-					controller.update(updatedDebt.debtId, (debt) => ({
-						...debt,
-						...updatedPartial,
-						...statusUpdate,
-					})),
-				getByReceiptId: (controller) =>
-					controller.update(receiptId, (debt) => ({
+					controller.update({ id: updatedDebt.debtId }, (debt) => ({
 						...debt,
 						...updatedPartial,
 						...statusUpdate,
@@ -71,14 +65,6 @@ export const updateReceiptCacheOnDebtUpdate = (
 					}
 				),
 			get: (controller) =>
-				controller.add({
-					id: updatedDebt.debtId,
-					userId: updatedDebt.userId,
-					note: updatedDebt.note,
-					...updatedPartial,
-					...statusUpdate,
-				}),
-			getByReceiptId: (controller) =>
 				controller.add({
 					id: updatedDebt.debtId,
 					userId: updatedDebt.userId,
