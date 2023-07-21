@@ -9,8 +9,11 @@ import { LoadableUser } from "app/components/app/loadable-user";
 import { QueryErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
 import { IconButton } from "app/components/icon-button";
+import { ShowResolvedDebtsOption } from "app/features/settings/show-resolved-debts-option";
 import { useAggregatedDebts } from "app/hooks/use-aggregated-debts";
+import { useRouter } from "app/hooks/use-router";
 import { trpc, TRPCQuerySuccessResult } from "app/trpc";
+import { useShowResolvedDebts } from "next-app/hooks/use-show-resolved-debts";
 import { UsersId } from "next-app/src/db/models";
 
 import { UserDebtPreview } from "./user-debt-preview";
@@ -19,6 +22,12 @@ const DebtsHeader = styled("div", {
 	display: "flex",
 	alignContent: "center",
 	justifyContent: "center",
+	position: "relative",
+});
+
+const ResolvedSwitch = styled("div", {
+	position: "absolute",
+	right: 0,
 });
 
 type InnerProps = {
@@ -27,7 +36,14 @@ type InnerProps = {
 };
 
 export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
-	const aggregatedDebts = useAggregatedDebts(query);
+	const [showResolvedDebts] = useShowResolvedDebts();
+	const [aggregatedDebts, nonZeroAggregateDebts] = useAggregatedDebts(query);
+	const router = useRouter();
+	React.useEffect(() => {
+		if (query.data.length === 0) {
+			router.replace("/debts");
+		}
+	}, [query.data, router]);
 	const userQuery = trpc.users.get.useQuery({ id: userId });
 	return (
 		<>
@@ -50,8 +66,10 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 			</Header>
 			<Spacer y={1} />
 			<DebtsHeader>
-				<DebtsGroup debts={aggregatedDebts} css={{ alignSelf: "center" }} />
-				{aggregatedDebts.filter((debt) => debt.sum).length > 1 ? (
+				<DebtsGroup
+					debts={showResolvedDebts ? aggregatedDebts : nonZeroAggregateDebts}
+				/>
+				{nonZeroAggregateDebts.length > 1 ? (
 					<>
 						<Spacer x={1} />
 						<IconButton
@@ -61,6 +79,11 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 							icon={<ExchangeIcon />}
 						/>
 					</>
+				) : null}
+				{aggregatedDebts.length !== nonZeroAggregateDebts.length ? (
+					<ResolvedSwitch>
+						<ShowResolvedDebtsOption />
+					</ResolvedSwitch>
 				) : null}
 			</DebtsHeader>
 			<Spacer y={1} />

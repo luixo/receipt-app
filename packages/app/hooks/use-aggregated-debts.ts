@@ -1,6 +1,5 @@
 import React from "react";
 
-import { useRouter } from "app/hooks/use-router";
 import { TRPCQuerySuccessResult } from "app/trpc";
 import { CurrencyCode } from "app/utils/currency";
 import { round } from "app/utils/math";
@@ -9,13 +8,7 @@ export const useAggregatedDebts = (
 	query: TRPCQuerySuccessResult<"debts.getUser">
 ) => {
 	const debts = query.data;
-	const router = useRouter();
-	React.useEffect(() => {
-		if (debts.length === 0) {
-			router.replace("/debts");
-		}
-	}, [debts, router]);
-	return React.useMemo(
+	const aggregatedDebts = React.useMemo(
 		() =>
 			Object.entries(
 				debts.reduce<Record<CurrencyCode, number>>((acc, debt) => {
@@ -25,7 +18,14 @@ export const useAggregatedDebts = (
 					acc[debt.currencyCode] += debt.amount;
 					return acc;
 				}, {})
-			).map(([currencyCode, sum]) => ({ currencyCode, sum: round(sum) })),
+			).map(([currencyCode, sum]) => ({
+				currencyCode: currencyCode as CurrencyCode,
+				sum: round(sum),
+			})),
 		[debts]
 	);
+	return [
+		aggregatedDebts,
+		aggregatedDebts.filter((debt) => debt.sum !== 0),
+	] as const;
 };

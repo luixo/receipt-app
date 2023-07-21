@@ -12,6 +12,7 @@ import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useRouter } from "app/hooks/use-router";
 import { trpc, TRPCQueryOutput, TRPCQuerySuccessResult } from "app/trpc";
 import { noop } from "app/utils/utils";
+import { useShowResolvedDebts } from "next-app/hooks/use-show-resolved-debts";
 import { UsersId } from "next-app/src/db/models";
 
 import { CurrenciesGroup } from "./currencies-group";
@@ -23,7 +24,8 @@ type InnerProps = {
 };
 
 const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
-	const aggregatedDebts = useAggregatedDebts(query);
+	const [showResolvedDebts] = useShowResolvedDebts();
+	const [aggregatedDebts, nonZeroAggregateDebts] = useAggregatedDebts(query);
 	const userQuery = trpc.users.get.useQuery({ id: userId });
 	const topCurrenciesQuery = trpc.currency.topDebts.useQuery();
 	const [selectedCurrency, setSelectedCurrency] = React.useState<
@@ -43,6 +45,11 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 		() => router.replace(`/debts/user/${userId}`),
 		[router, userId]
 	);
+	React.useEffect(() => {
+		if (nonZeroAggregateDebts.length <= 1) {
+			back();
+		}
+	}, [nonZeroAggregateDebts, back]);
 	return (
 		<>
 			<Header
@@ -54,11 +61,13 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 				<LoadableUser id={userId} />
 			</Header>
 			<Spacer y={1} />
-			<DebtsGroup debts={aggregatedDebts} css={{ alignSelf: "center" }} />
+			<DebtsGroup
+				debts={showResolvedDebts ? aggregatedDebts : nonZeroAggregateDebts}
+			/>
 			<Spacer y={1} />
 			<CurrenciesGroup
 				selectedCurrencyCode={selectedCurrency?.code}
-				aggregatedDebts={aggregatedDebts}
+				aggregatedDebts={nonZeroAggregateDebts}
 				setSelectedCurrency={setSelectedCurrency}
 				onSelectOther={openModal}
 			/>
@@ -75,7 +84,7 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 				<PlannedDebts
 					userId={userId}
 					selectedCurrencyCode={selectedCurrency.code}
-					aggregatedDebts={aggregatedDebts}
+					aggregatedDebts={nonZeroAggregateDebts}
 					onDone={back}
 				/>
 			) : null}

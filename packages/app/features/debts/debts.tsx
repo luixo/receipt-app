@@ -7,6 +7,7 @@ import { DebtsGroup } from "app/components/app/debts-group";
 import { QueryErrorMessage } from "app/components/error-message";
 import { IconButton } from "app/components/icon-button";
 import { ShowResolvedDebtsOption } from "app/features/settings/show-resolved-debts-option";
+import { useAggregatedAllDebts } from "app/hooks/use-aggregated-all-debts";
 import { trpc, TRPCQuerySuccessResult } from "app/trpc";
 import { useShowResolvedDebts } from "next-app/hooks/use-show-resolved-debts";
 
@@ -20,7 +21,13 @@ const NoDebtsHint = styled(Text, {
 const DebtsHeader = styled("div", {
 	display: "flex",
 	alignItems: "center",
-	justifyContent: "space-between",
+	justifyContent: "center",
+	position: "relative",
+});
+
+const ResolvedSwitch = styled("div", {
+	position: "absolute",
+	right: 0,
 });
 
 type InnerProps = {
@@ -28,23 +35,10 @@ type InnerProps = {
 };
 
 const DebtsInner: React.FC<InnerProps> = ({ query }) => {
-	const debtEntries = query.data;
-
-	const sums = React.useMemo(
-		() =>
-			Object.entries(
-				debtEntries.reduce<Record<string, number>>((acc, { debts }) => {
-					debts.forEach(({ currencyCode, sum }) => {
-						acc[currencyCode] = (acc[currencyCode] || 0) + sum;
-					});
-					return acc;
-				}, {})
-			).map(([currencyCode, sum]) => ({ currencyCode, sum })),
-		[debtEntries]
-	);
 	const [showResolvedDebts] = useShowResolvedDebts();
+	const [sums, nonZeroSums] = useAggregatedAllDebts(query.data);
 
-	if (debtEntries.length === 0) {
+	if (showResolvedDebts ? sums.length === 0 : nonZeroSums.length === 0) {
 		return (
 			<Container
 				display="flex"
@@ -66,37 +60,48 @@ const DebtsInner: React.FC<InnerProps> = ({ query }) => {
 					<Spacer x={0.5} />
 					to add a debt
 				</NoDebtsHint>
+				{sums.length !== nonZeroSums.length ? (
+					<>
+						<Spacer y={0.5} />
+						<ShowResolvedDebtsOption />
+					</>
+				) : null}
 			</Container>
 		);
 	}
 
-	const filteredDebtsEntries = showResolvedDebts
-		? debtEntries
-		: debtEntries.filter((entry) => entry.debts.some((debt) => debt.sum !== 0));
 	return (
 		<>
 			<DebtsHeader>
 				<DebtsGroup
-					debts={sums}
+					debts={showResolvedDebts ? sums : nonZeroSums}
 					css={{ p: "$4", flexWrap: "wrap", alignItems: "center" }}
 				/>
-				{debtEntries.every((entry) =>
-					entry.debts.every((debt) => debt.sum !== 0)
-				) ? null : (
-					<ShowResolvedDebtsOption />
-				)}
+				{sums.length !== nonZeroSums.length ? (
+					<ResolvedSwitch>
+						<ShowResolvedDebtsOption />
+					</ResolvedSwitch>
+				) : null}
 			</DebtsHeader>
 			<Spacer y={1} />
-			{filteredDebtsEntries.map(({ userId, debts }, index) => (
-				<React.Fragment key={userId}>
-					{index === 0 ? null : <Spacer y={0.5} />}
-					<UserDebtsPreview
-						debts={debts}
-						userId={userId}
-						transparent={debts.every((debt) => debt.sum === 0)}
-					/>
-				</React.Fragment>
-			))}
+			{query.data.map(({ userId, debts }, index) => {
+				const allDebtsResolved = debts.every((debt) => debt.sum === 0);
+				if (allDebtsResolved && !showResolvedDebts) {
+					return null;
+				}
+				return (
+					<React.Fragment key={userId}>
+						{index === 0 ? null : <Spacer y={0.5} />}
+						<UserDebtsPreview
+							debts={debts.filter((debt) =>
+								showResolvedDebts ? true : debt.sum !== 0
+							)}
+							userId={userId}
+							transparent={allDebtsResolved}
+						/>
+					</React.Fragment>
+				);
+			})}
 		</>
 	);
 };

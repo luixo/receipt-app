@@ -1,7 +1,7 @@
 import React from "react";
 
 import { Switch, SwitchEvent } from "@nextui-org/react";
-import { IoCheckmarkDoneOutline as ResolveIcon } from "react-icons/io5";
+import { FaCreativeCommonsZero as ResolveIcon } from "react-icons/fa";
 
 import { useShowResolvedDebts } from "next-app/hooks/use-show-resolved-debts";
 

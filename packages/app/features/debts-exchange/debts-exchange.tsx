@@ -9,6 +9,7 @@ import { Header } from "app/components/header";
 import { useAggregatedDebts } from "app/hooks/use-aggregated-debts";
 import { useRouter } from "app/hooks/use-router";
 import { trpc, TRPCQuerySuccessResult } from "app/trpc";
+import { useShowResolvedDebts } from "next-app/hooks/use-show-resolved-debts";
 import { UsersId } from "next-app/src/db/models";
 
 type InnerProps = {
@@ -17,7 +18,8 @@ type InnerProps = {
 };
 
 const DebtsExchangeInner: React.FC<InnerProps> = ({ userId, query }) => {
-	const aggregatedDebts = useAggregatedDebts(query);
+	const [showResolvedDebts] = useShowResolvedDebts();
+	const [aggregatedDebts, nonZeroAggregateDebts] = useAggregatedDebts(query);
 	const userQuery = trpc.users.get.useQuery({ id: userId });
 	const router = useRouter();
 	const onAllClick = React.useCallback(
@@ -35,7 +37,9 @@ const DebtsExchangeInner: React.FC<InnerProps> = ({ userId, query }) => {
 				<LoadableUser id={userId} />
 			</Header>
 			<Spacer y={1} />
-			<DebtsGroup debts={aggregatedDebts} css={{ alignSelf: "center" }} />
+			<DebtsGroup
+				debts={showResolvedDebts ? aggregatedDebts : nonZeroAggregateDebts}
+			/>
 			<Spacer y={1} />
 			<Button href={`/debts/user/${userId}/exchange/all`} onClick={onAllClick}>
 				Exchange all to one currency

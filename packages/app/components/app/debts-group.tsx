@@ -8,6 +8,8 @@ import { round } from "app/utils/math";
 
 const Debts = styled("div", {
 	display: "flex",
+	alignItems: "center",
+	justifyContent: "center",
 });
 
 const Debt = styled("div", {
@@ -50,5 +52,6 @@ export const DebtsGroup: React.FC<Props> = ({ debts, ...props }) => (
 				<DebtGroupElement currencyCode={currencyCode} sum={sum} />
 			</React.Fragment>
 		))}
+		{debts.length === 0 ? "No debts yet" : null}
 	</Debts>
 );
