@@ -9,10 +9,10 @@ import { AddUserScreen } from "app/features/add-user/add-user-screen";
 import { ChangePasswordScreen } from "app/features/change-password/change-password-screen";
 import { ConnectionIntentionsScreen } from "app/features/connection-intentions/connection-intentions-screen";
 import { DebtScreen } from "app/features/debt/debt-screen";
-import { DebtsExchangeAllScreen } from "app/features/debts-exchange-all/debts-exchange-all-screen";
-import { DebtsExchangeScreen } from "app/features/debts-exchange/debts-exchange-screen";
-import { DebtsIntentionsScreen } from "app/features/debts-intentions/debts-intentions-screen";
 import { DebtsScreen } from "app/features/debts/debts-screen";
+import { DebtsExchangeScreen } from "app/features/debts-exchange/debts-exchange-screen";
+import { DebtsExchangeAllScreen } from "app/features/debts-exchange-all/debts-exchange-all-screen";
+import { DebtsIntentionsScreen } from "app/features/debts-intentions/debts-intentions-screen";
 import { HomeScreen } from "app/features/home/home-screen";
 import { LoginScreen } from "app/features/login/login-screen";
 import { ReceiptScreen } from "app/features/receipt/receipt-screen";
@@ -20,8 +20,8 @@ import { ReceiptsScreen } from "app/features/receipts/receipts-screen";
 import { RegisterScreen } from "app/features/register/register-screen";
 import { ResetPasswordScreen } from "app/features/reset-password/reset-password-screen";
 import { SettingsScreen } from "app/features/settings/settings-screen";
-import { UserDebtsScreen } from "app/features/user-debts/user-debts-screen";
 import { UserScreen } from "app/features/user/user-screen";
+import { UserDebtsScreen } from "app/features/user-debts/user-debts-screen";
 import { UsersScreen } from "app/features/users/users-screen";
 
 export type AppParamList = {

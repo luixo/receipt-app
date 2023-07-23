@@ -55,12 +55,12 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 	const updateMutation = trpc.receipts.updateDebt.useMutation(
 		useTrpcMutationOptions(mutations.receipts.updateDebt.options, {
 			context: { prevAmount: participant.amount },
-		})
+		}),
 	);
 	const updateDebt = React.useCallback(
 		(userId: UsersId, updateIntention: boolean) =>
 			updateMutation.mutate({ receiptId, userId, updateIntention }),
-		[updateMutation, receiptId]
+		[updateMutation, receiptId],
 	);
 
 	const showSpacer = useMatchMediaValue(false, { lessMd: true });

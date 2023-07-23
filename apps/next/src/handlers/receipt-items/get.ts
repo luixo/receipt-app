@@ -9,20 +9,20 @@ export const procedure = authProcedure
 	.input(
 		z.strictObject({
 			receiptId: receiptIdSchema,
-		})
+		}),
 	)
 	.query(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
 		const [items, participants] = await getItemsWithParticipants(
 			database,
 			input.receiptId,
-			ctx.auth.accountId
+			ctx.auth.accountId,
 		);
 
 		return {
 			role:
 				participants.find(
-					(participant) => participant.accountId === ctx.auth.accountId
+					(participant) => participant.accountId === ctx.auth.accountId,
 				)?.role ?? "owner",
 			items,
 			participants,

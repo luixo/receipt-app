@@ -5,7 +5,7 @@ import { CurrencyCode } from "app/utils/currency";
 import { round } from "app/utils/math";
 
 export const useAggregatedDebts = (
-	query: TRPCQuerySuccessResult<"debts.getUser">
+	query: TRPCQuerySuccessResult<"debts.getUser">,
 ) => {
 	const debts = query.data;
 	const aggregatedDebts = React.useMemo(
@@ -17,12 +17,12 @@ export const useAggregatedDebts = (
 					}
 					acc[debt.currencyCode] += debt.amount;
 					return acc;
-				}, {})
+				}, {}),
 			).map(([currencyCode, sum]) => ({
 				currencyCode: currencyCode as CurrencyCode,
 				sum: round(sum),
 			})),
-		[debts]
+		[debts],
 	);
 	return [
 		aggregatedDebts,

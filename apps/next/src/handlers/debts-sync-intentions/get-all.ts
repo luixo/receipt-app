@@ -28,7 +28,7 @@ type OutboundIntention = CommonIntention;
 
 const getInboundIntentions = (
 	qc: QueryCreator<ReceiptsDatabase>,
-	accountId: AccountsId
+	accountId: AccountsId,
 ) =>
 	qc
 		.selectFrom("users")
@@ -41,22 +41,22 @@ const getInboundIntentions = (
 				.onRef(
 					"debtsSyncIntentions.ownerAccountId",
 					"<>",
-					"users.connectedAccountId"
-				)
+					"users.connectedAccountId",
+				),
 		)
 		.leftJoin("debts as selfDebts", (qb) =>
 			qb
 				.onRef("debts.id", "=", "selfDebts.id")
-				.onRef("selfDebts.ownerAccountId", "=", "users.connectedAccountId")
+				.onRef("selfDebts.ownerAccountId", "=", "users.connectedAccountId"),
 		)
 		.innerJoin("users as usersMine", (qb) =>
 			qb
 				.onRef(
 					"usersMine.connectedAccountId",
 					"=",
-					"debtsSyncIntentions.ownerAccountId"
+					"debtsSyncIntentions.ownerAccountId",
 				)
-				.onRef("usersMine.ownerAccountId", "=", "users.connectedAccountId")
+				.onRef("usersMine.ownerAccountId", "=", "users.connectedAccountId"),
 		)
 		.select([
 			"debts.id",
@@ -74,12 +74,12 @@ const getInboundIntentions = (
 
 const getOutboundIntentions = (
 	qc: QueryCreator<ReceiptsDatabase>,
-	accountId: AccountsId
+	accountId: AccountsId,
 ) =>
 	qc
 		.selectFrom("debtsSyncIntentions")
 		.innerJoin("debts", (qb) =>
-			qb.onRef("debts.id", "=", "debtsSyncIntentions.debtId")
+			qb.onRef("debts.id", "=", "debtsSyncIntentions.debtId"),
 		)
 		.where("debtsSyncIntentions.ownerAccountId", "=", accountId)
 		.where("debts.ownerAccountId", "=", accountId)
@@ -102,8 +102,8 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 	const intentions = await database
 		.with("mergedIntentions", (qc) =>
 			getInboundIntentions(qc, ctx.auth.accountId).union(
-				getOutboundIntentions(qc, ctx.auth.accountId)
-			)
+				getOutboundIntentions(qc, ctx.auth.accountId),
+			),
 		)
 		.selectFrom("mergedIntentions")
 		.selectAll()
@@ -147,6 +147,6 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 		{
 			outbound: [],
 			inbound: [],
-		}
+		},
 	);
 });

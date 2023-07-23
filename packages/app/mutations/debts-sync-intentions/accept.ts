@@ -32,14 +32,14 @@ export const options: UseContextedMutationOptions<
 							...debt,
 							intentionDirection: undefined,
 							status: "sync",
-						})
+						}),
 					);
 				},
 				getByUsers: (controller) =>
 					controller.update(
 						context.userId,
 						context.currencyCode,
-						(sum) => sum + result.amount - currentAmount
+						(sum) => sum + result.amount - currentAmount,
 					),
 				getUser: (controller) => {
 					controller.update(context.userId, updateObject.id, (debt) => ({
@@ -72,14 +72,14 @@ export const options: UseContextedMutationOptions<
 							...debt,
 							intentionDirection: undefined,
 							status: "sync",
-						})
+						}),
 					);
 				},
 				getByUsers: (controller) =>
 					controller.update(
 						context.userId,
 						context.currencyCode,
-						(sum) => sum + result.amount
+						(sum) => sum + result.amount,
 					),
 				getUser: (controller) =>
 					controller.add(context.userId, {

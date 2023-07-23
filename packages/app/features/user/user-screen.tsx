@@ -45,7 +45,7 @@ export const UserScreen: AppPage = () => {
 										publicName: null,
 										email: null,
 								  },
-						[id, userNameQuery.data, userQuery.data]
+						[id, userNameQuery.data, userQuery.data],
 					)}
 				/>
 			</Header>

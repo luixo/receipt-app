@@ -20,7 +20,7 @@ export type AuthorizedContext = UnauthorizedContext & {
 };
 
 export const createContext = (
-	opts: trpcNext.CreateNextContextOptions
+	opts: trpcNext.CreateNextContextOptions,
 ): UnauthorizedContext => ({
 	req: opts.req,
 	res: opts.res,

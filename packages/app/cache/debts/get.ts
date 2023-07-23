@@ -68,22 +68,22 @@ export const getRevertController = (trpc: TRPCReactContext) => {
 		update: (
 			selector: Selector,
 			updater: utils.UpdateFn<Debt>,
-			revertUpdater: utils.SnapshotFn<Debt>
+			revertUpdater: utils.SnapshotFn<Debt>,
 		) =>
 			utils.applyUpdateFnWithRevert(
 				update(controller, selector),
 				updater,
-				revertUpdater
+				revertUpdater,
 			),
 		add: (debt: Debt) =>
 			utils.applyWithRevert(
 				() => upsert(controller, debt),
-				() => remove(controller, { id: debt.id })
+				() => remove(controller, { id: debt.id }),
 			),
 		remove: (debtId: DebtsId) =>
 			utils.applyWithRevert(
 				() => remove(controller, { id: debtId }),
-				(snapshot) => upsert(controller, snapshot)
+				(snapshot) => upsert(controller, snapshot),
 			),
 	};
 };

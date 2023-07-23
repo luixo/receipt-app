@@ -23,7 +23,7 @@ export const procedure = authProcedure
 					locked: z.boolean().optional(),
 				})
 				.optional(),
-		})
+		}),
 	)
 	.query(async ({ input: { filters = {}, ...input }, ctx }) => {
 		const database = getDatabase(ctx);
@@ -67,20 +67,20 @@ export const procedure = authProcedure
 				})
 				.selectFrom("mergedReceipts")
 				.leftJoin("receiptItems", (jb) =>
-					jb.onRef("receiptItems.receiptId", "=", "mergedReceipts.receiptId")
+					jb.onRef("receiptItems.receiptId", "=", "mergedReceipts.receiptId"),
 				)
 				.leftJoin("receiptParticipants", (jb) =>
 					jb
 						.onRef(
 							"receiptParticipants.receiptId",
 							"=",
-							"mergedReceipts.receiptId"
+							"mergedReceipts.receiptId",
 						)
 						.onRef(
 							"receiptParticipants.userId",
 							"=",
-							"mergedReceipts.remoteUserId"
-						)
+							"mergedReceipts.remoteUserId",
+						),
 				)
 				.select([
 					"mergedReceipts.receiptId as id",
@@ -93,7 +93,7 @@ export const procedure = authProcedure
 					"mergedReceipts.remoteUserId",
 					"mergedReceipts.localUserId",
 					sql<string>`coalesce(sum("receiptItems".price * "receiptItems".quantity), 0)`.as(
-						"sum"
+						"sum",
 					),
 				])
 				.groupBy([
@@ -109,19 +109,19 @@ export const procedure = authProcedure
 				])
 				.orderBy(
 					"mergedReceipts.issued",
-					input.orderBy === "date-asc" ? "asc" : "desc"
+					input.orderBy === "date-asc" ? "asc" : "desc",
 				)
 				// Stable order for receipts with the same date
 				.orderBy("mergedReceipts.receiptId")
 				.if(typeof filters.resolvedByMe === "boolean", (qb) =>
-					qb.where("receiptParticipants.resolved", "=", filters.resolvedByMe!)
+					qb.where("receiptParticipants.resolved", "=", filters.resolvedByMe!),
 				)
 				.if(typeof filters.locked === "boolean", (qb) =>
 					qb.where(
 						"mergedReceipts.lockedTimestamp",
 						filters.locked ? "is not" : "is",
-						null
-					)
+						null,
+					),
 				)
 				.offset(input.cursor)
 				.limit(input.limit + 1)
@@ -132,7 +132,7 @@ export const procedure = authProcedure
 						.select([
 							database.fn.count<string>("receipts.id").as("amount"),
 							sql<boolean | null>`"receiptParticipants"."resolved"`.as(
-								"resolved"
+								"resolved",
 							),
 							"receipts.lockedTimestamp",
 						])
@@ -149,8 +149,8 @@ export const procedure = authProcedure
 									"=",
 									// We use `userId` = `ownerAccountId` contract
 									// But type system doesn't know about that
-									sql<UsersId>`receipts."ownerAccountId"`
-								)
+									sql<UsersId>`receipts."ownerAccountId"`,
+								),
 						)
 						.select([
 							database.fn.count<string>("receipts.id").as("amount"),
@@ -172,14 +172,14 @@ export const procedure = authProcedure
 				.selectFrom("mergedReceipts")
 				.select(database.fn.sum<string>("amount").as("amount"))
 				.if(typeof filters.resolvedByMe === "boolean", (qb) =>
-					qb.where("resolved", "=", filters.resolvedByMe!)
+					qb.where("resolved", "=", filters.resolvedByMe!),
 				)
 				.if(typeof filters.locked === "boolean", (qb) =>
 					qb.where(
 						"mergedReceipts.lockedTimestamp",
 						filters.locked ? "is not" : "is",
-						null
-					)
+						null,
+					),
 				)
 				.executeTakeFirst(),
 		]);

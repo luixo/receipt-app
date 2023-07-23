@@ -7,6 +7,6 @@ export const logger = pino(
 	},
 	pinoPretty({
 		colorize: true,
-	})
+	}),
 );
 export type { Logger };

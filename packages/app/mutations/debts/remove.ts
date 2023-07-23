@@ -14,7 +14,7 @@ export const options: UseContextedMutationOptions<
 					currDebt.userId,
 					currDebt.currencyCode,
 					(sum) => sum - currDebt.amount,
-					() => (sum) => sum + currDebt.amount
+					() => (sum) => sum + currDebt.amount,
 				),
 			getUser: (controller) =>
 				controller.remove(currDebt.userId, updateObject.id),
@@ -43,7 +43,7 @@ export const options: UseContextedMutationOptions<
 						debtId: snapshot.debtId,
 						status: snapshot.status,
 						intentionDirection: snapshot.intentionDirection,
-					})
+					}),
 				);
 			},
 		}),

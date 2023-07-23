@@ -24,7 +24,7 @@ const DebtsExchangeInner: React.FC<InnerProps> = ({ userId, query }) => {
 	const router = useRouter();
 	const onAllClick = React.useCallback(
 		() => router.push(`/debts/user/${userId}/exchange/all`),
-		[router, userId]
+		[router, userId],
 	);
 	return (
 		<>

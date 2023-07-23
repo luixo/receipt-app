@@ -1,7 +1,7 @@
 import { migrate } from "next-app/db/migration";
 
 const isValidTarget = (
-	maybeTarget = ""
+	maybeTarget = "",
 ): maybeTarget is "up" | "down" | "latest" =>
 	["up", "down", "latest"].includes(maybeTarget);
 
@@ -16,7 +16,7 @@ const main = async ([firstArg]: string[]) => {
 		migrationResult.results.forEach((result) => {
 			if (result.status === "Success") {
 				console.log(
-					`Migration "${result.migrationName}" was executed successfully`
+					`Migration "${result.migrationName}" was executed successfully`,
 				);
 			} else if (result.status === "Error") {
 				console.error(`Failed to execute migration "${result.migrationName}"`);

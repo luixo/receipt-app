@@ -18,7 +18,7 @@ const replace = <T>(
 	array: T[],
 	item: T,
 	index: number,
-	ref?: React.MutableRefObject<T | undefined>
+	ref?: React.MutableRefObject<T | undefined>,
 ) => {
 	if (array[index] === item) {
 		return array;
@@ -33,7 +33,7 @@ export const replaceInArray = <T>(
 	array: T[],
 	predicate: (item: T, index: number, items: T[]) => boolean,
 	updater: (prevItem: T) => T,
-	ref?: React.MutableRefObject<T | undefined>
+	ref?: React.MutableRefObject<T | undefined>,
 ) => {
 	const matchedIndex = array.findIndex(predicate);
 	if (matchedIndex === -1) {
@@ -47,21 +47,21 @@ export const upsertInArray = <T>(
 	predicate: (item: T, index: number, items: T[]) => boolean,
 	updater: (prevItem: T) => T,
 	defaultValue: T,
-	ref?: React.MutableRefObject<T | undefined>
+	ref?: React.MutableRefObject<T | undefined>,
 ) => {
 	const matchedIndex = array.findIndex(predicate);
 	return replace(
 		array,
 		updater(array[matchedIndex] || defaultValue),
 		matchedIndex === -1 ? Infinity : matchedIndex,
-		ref
+		ref,
 	);
 };
 
 export const removeFromArray = <T>(
 	array: T[],
 	predicate: (item: T, index: number, items: T[]) => boolean,
-	ref?: React.MutableRefObject<ItemWithIndex<T> | undefined>
+	ref?: React.MutableRefObject<ItemWithIndex<T> | undefined>,
 ) => {
 	const matchedIndex = array.findIndex(predicate);
 	if (matchedIndex === -1) {

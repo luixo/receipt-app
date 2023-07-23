@@ -24,7 +24,7 @@ export const procedure = unauthProcedure
 			email: emailSchema,
 			password: passwordSchema,
 			name: userNameSchema,
-		})
+		}),
 	)
 	.mutation(async ({ input, ctx }) => {
 		const email = input.email.toLowerCase();
@@ -36,7 +36,7 @@ export const procedure = unauthProcedure
 			.executeTakeFirst();
 		if (account) {
 			ctx.logger.debug(
-				`Registration of account "${email}" failed: email already exists.`
+				`Registration of account "${email}" failed: email already exists.`,
 			);
 			throw new trpc.TRPCError({
 				code: "CONFLICT",
@@ -75,7 +75,7 @@ export const procedure = unauthProcedure
 				.execute();
 			const { authToken, expirationDate } = await createAuthorizationSession(
 				database,
-				id
+				id,
 			);
 			ctx.logger.debug(`Registration of account "${email}" succeed.`);
 			setAuthCookie(ctx.res, authToken, expirationDate);

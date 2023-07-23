@@ -9,7 +9,7 @@ type ReceiptName = TRPCQueryOutput<"receipts.getName">;
 const uspert = (
 	controller: Controller,
 	receiptId: ReceiptsId,
-	name: ReceiptName
+	name: ReceiptName,
 ) => controller.upsert({ id: receiptId }, name);
 
 const remove = (controller: Controller, receiptId: ReceiptsId) =>
@@ -38,12 +38,12 @@ export const getRevertController = (trpc: TRPCReactContext) => {
 		upsert: (receiptId: ReceiptsId, name: ReceiptName) =>
 			utils.applyWithRevert(
 				() => uspert(controller, receiptId, name),
-				() => remove(controller, receiptId)
+				() => remove(controller, receiptId),
 			),
 		remove: (receiptId: ReceiptsId) =>
 			utils.applyWithRevert(
 				() => remove(controller, receiptId),
-				(snapshot) => uspert(controller, receiptId, snapshot)
+				(snapshot) => uspert(controller, receiptId, snapshot),
 			),
 	};
 };

@@ -15,7 +15,7 @@ export type BreakpointValues<T> = Partial<Record<BreakpointType, T>>;
 
 export const useMatchMediaValue = <T>(
 	defaultValue: T,
-	values: BreakpointValues<T>
+	values: BreakpointValues<T>,
 ) => {
 	const matchMedia = useMatchMedia();
 

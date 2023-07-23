@@ -20,7 +20,7 @@ export const options: UseContextedMutationOptions<
 						currencyCode: variables.currencyCode,
 						// Typesystem doesn't know that we use account id as self user id
 						participantResolved: variables.userIds?.includes(
-							selfAccountId as UsersId
+							selfAccountId as UsersId,
 						)
 							? false
 							: null,
@@ -41,7 +41,7 @@ export const options: UseContextedMutationOptions<
 						sum: 0,
 						// Typesystem doesn't know that we use account id as self user id
 						participantResolved: variables.userIds?.includes(
-							selfAccountId as UsersId
+							selfAccountId as UsersId,
 						)
 							? false
 							: null,

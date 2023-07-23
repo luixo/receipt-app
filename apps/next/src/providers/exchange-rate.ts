@@ -13,10 +13,10 @@ const responseSchema = z.object({
 
 export const getExchangeRate = async (
 	from: CurrencyCode,
-	to: CurrencyCode[]
+	to: CurrencyCode[],
 ): Promise<Record<CurrencyCode, number>> => {
 	const response = await fetch(
-		`https://api.exchangerate.host/latest?base=${from}&symbols=${to.join(",")}`
+		`https://api.exchangerate.host/latest?base=${from}&symbols=${to.join(",")}`,
 	);
 	if (response.status !== 200) {
 		throw new Error(`Response to exchange rate request is ${response.status}`);

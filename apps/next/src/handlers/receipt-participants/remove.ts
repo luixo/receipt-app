@@ -13,7 +13,7 @@ export const procedure = authProcedure
 		z.strictObject({
 			receiptId: receiptIdSchema,
 			userId: userIdSchema,
-		})
+		}),
 	)
 	.mutation(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
@@ -50,7 +50,7 @@ export const procedure = authProcedure
 			database,
 			input.userId,
 			input.receiptId,
-			["userId"]
+			["userId"],
 		);
 		if (!receiptParticipant) {
 			throw new trpc.TRPCError({
@@ -73,7 +73,7 @@ export const procedure = authProcedure
 					eb
 						.selectFrom("receiptItems")
 						.where("receiptId", "=", input.receiptId)
-						.select("id")
+						.select("id"),
 				)
 				.executeTakeFirst();
 			await tx

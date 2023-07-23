@@ -39,7 +39,7 @@ export const DebtNoteInput: React.FC<Props> = ({ debt, isLoading }) => {
 	});
 
 	const updateMutation = trpc.debts.update.useMutation(
-		useTrpcMutationOptions(mutations.debts.update.options, { context: debt })
+		useTrpcMutationOptions(mutations.debts.update.options, { context: debt }),
 	);
 	const saveNote = React.useCallback(
 		(nextNote: string) => {
@@ -48,10 +48,10 @@ export const DebtNoteInput: React.FC<Props> = ({ debt, isLoading }) => {
 			}
 			updateMutation.mutate(
 				{ id: debt.id, update: { type: "note", note: nextNote } },
-				{ onSuccess: () => setValue(nextNote) }
+				{ onSuccess: () => setValue(nextNote) },
 			);
 		},
-		[updateMutation, debt.id, debt.note, setValue]
+		[updateMutation, debt.id, debt.note, setValue],
 	);
 
 	return (

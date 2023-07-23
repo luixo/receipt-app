@@ -37,14 +37,14 @@ export const procedure = authProcedure
 					type: z.literal("debts"),
 				}),
 			]),
-		})
+		}),
 	)
 	.output(
 		z.strictObject({
 			items: z.array(userItemSchema),
 			hasMore: z.boolean(),
 			cursor: z.number(),
-		})
+		}),
 	)
 	.query(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
@@ -65,7 +65,7 @@ export const procedure = authProcedure
 			const accessRole = await getAccessRole(
 				database,
 				receipt,
-				ctx.auth.accountId
+				ctx.auth.accountId,
 			);
 			if (!accessRole) {
 				throw new trpc.TRPCError({
@@ -76,7 +76,7 @@ export const procedure = authProcedure
 			const userParticipants = await database
 				.selectFrom("receiptParticipants")
 				.innerJoin("users", (jb) =>
-					jb.onRef("users.id", "=", "receiptParticipants.userId")
+					jb.onRef("users.id", "=", "receiptParticipants.userId"),
 				)
 				.where("receiptParticipants.receiptId", "=", input.options.receiptId)
 				.select("users.id")
@@ -88,24 +88,24 @@ export const procedure = authProcedure
 		const fuzzyMathedUsers = await database
 			.selectFrom("users")
 			.leftJoin("accounts", (qb) =>
-				qb.onRef("connectedAccountId", "=", "accounts.id")
+				qb.onRef("connectedAccountId", "=", "accounts.id"),
 			)
 			.if(filterIds.length !== 0, (qb) =>
-				qb.where("users.id", "not in", filterIds)
+				qb.where("users.id", "not in", filterIds),
 			)
 			.where("users.ownerAccountId", "=", ctx.auth.accountId)
 			.if(Boolean(input.options.type === "not-connected"), (qb) =>
-				qb.where("users.connectedAccountId", "is", null)
+				qb.where("users.connectedAccountId", "is", null),
 			)
 			.if(input.input.length < 3, (qb) =>
-				qb.where("name", "ilike", input.input)
+				qb.where("name", "ilike", input.input),
 			)
 			.if(input.input.length >= 3, (qb) =>
 				qb.where(
 					sql`similarity(name, ${input.input})`.castTo<number>(),
 					">",
-					SIMILARTY_THRESHOLD
-				)
+					SIMILARTY_THRESHOLD,
+				),
 			)
 			.select([
 				"users.id",
@@ -116,7 +116,7 @@ export const procedure = authProcedure
 			])
 			.if(input.input.length < 3, (qb) => qb.orderBy("name"))
 			.if(input.input.length >= 3, (qb) =>
-				qb.orderBy(sql`similarity(name, ${input.input})`.castTo(), "desc")
+				qb.orderBy(sql`similarity(name, ${input.input})`.castTo(), "desc"),
 			)
 			.offset(cursor)
 			.limit(input.limit + 1)
@@ -126,7 +126,7 @@ export const procedure = authProcedure
 				...user,
 				connectedAccount:
 					accountId && email ? { id: accountId, email } : undefined,
-			})
+			}),
 		);
 		return {
 			cursor,

@@ -34,7 +34,7 @@ export const UserDebtsPreview: React.FC<Props> = ({
 }) => {
 	trpc.users.get.useQuery(
 		{ id: userId },
-		useTrpcQueryOptions(queries.users.get.options)
+		useTrpcQueryOptions(queries.users.get.options),
 	);
 	const showHorizontal = useMatchMediaValue(true, { lessMd: false });
 	return (

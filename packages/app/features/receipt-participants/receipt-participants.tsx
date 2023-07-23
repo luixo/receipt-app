@@ -60,7 +60,7 @@ export const ReceiptParticipants: React.FC<Props> = ({
 	const selfAccountId = useSelfAccountId();
 	const sortParticipants = React.useMemo(
 		() => getSortParticipants(selfAccountId),
-		[selfAccountId]
+		[selfAccountId],
 	);
 	const participants = React.useMemo(() => {
 		const decimalsPower = getDecimalsPower();
@@ -69,8 +69,8 @@ export const ReceiptParticipants: React.FC<Props> = ({
 				item.price * item.quantity,
 				item.parts.reduce(
 					(acc, { userId, part }) => ({ ...acc, [userId]: part }),
-					{}
-				)
+					{},
+				),
 			),
 			id: item.id,
 			name: item.name,
@@ -93,7 +93,7 @@ export const ReceiptParticipants: React.FC<Props> = ({
 							hasExtra: Boolean(
 								item.calculations.shortageByParticipant[
 									participant.remoteUserId
-								]
+								],
 							),
 							id: item.id,
 							name: item.name,
@@ -129,7 +129,7 @@ export const ReceiptParticipants: React.FC<Props> = ({
 					receiptId={receiptId}
 					receiptLocked={receiptLocked}
 					filterIds={participants.map(
-						(participant) => participant.remoteUserId
+						(participant) => participant.remoteUserId,
 					)}
 				/>
 			)}

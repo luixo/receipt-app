@@ -37,12 +37,12 @@ export const ChangePasswordScreen: AppPage = () => {
 				.refine((obj) => obj.password === obj.passwordRetype, {
 					path: ["passwordRetype"],
 					message: "Passwords don't match",
-				})
+				}),
 		),
 	});
 
 	const changePasswordMutation = trpc.account.changePassword.useMutation(
-		useTrpcMutationOptions(mutations.account.changePassword.options)
+		useTrpcMutationOptions(mutations.account.changePassword.options),
 	);
 	const onSubmit = React.useCallback(
 		(data: Form) =>
@@ -50,7 +50,7 @@ export const ChangePasswordScreen: AppPage = () => {
 				prevPassword: data.prevPassword,
 				password: data.password,
 			}),
-		[changePasswordMutation]
+		[changePasswordMutation],
 	);
 
 	if (!changePasswordShown) {

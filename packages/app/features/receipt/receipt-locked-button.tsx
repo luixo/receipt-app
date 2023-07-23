@@ -26,7 +26,7 @@ export const ReceiptLockedButton: React.FC<Props> = ({
 	propagateDebts,
 }) => {
 	const updateReceiptMutation = trpc.receipts.update.useMutation(
-		useTrpcMutationOptions(mutations.receipts.update.options)
+		useTrpcMutationOptions(mutations.receipts.update.options),
 	);
 	const switchResolved = React.useCallback(
 		(shouldPropagate = false) => {
@@ -42,10 +42,10 @@ export const ReceiptLockedButton: React.FC<Props> = ({
 						}
 						propagateDebts();
 					},
-				}
+				},
 			);
 		},
-		[updateReceiptMutation, receiptId, locked, propagateDebts]
+		[updateReceiptMutation, receiptId, locked, propagateDebts],
 	);
 	const receiptItemsQuery = trpc.receiptItems.get.useQuery({ receiptId });
 	const emptyItemsWarning = React.useMemo(() => {
@@ -53,7 +53,7 @@ export const ReceiptLockedButton: React.FC<Props> = ({
 			return `Please wait until we verify receipt has no empty items..`;
 		}
 		const emptyItems = receiptItemsQuery.data.items.filter(
-			(item) => item.parts.length === 0
+			(item) => item.parts.length === 0,
 		);
 		if (emptyItems.length === 0) {
 			return;

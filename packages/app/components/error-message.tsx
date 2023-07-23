@@ -62,7 +62,7 @@ export const QueryErrorMessage: React.FC<QueryProps> = ({ query }) => {
 		<ErrorMessage
 			button={React.useMemo(
 				() => ({ text: "Refetch", onClick: refetch }),
-				[refetch]
+				[refetch],
 			)}
 			message={query.error.message}
 		/>

@@ -46,7 +46,7 @@ export const resetPasswordTokenSchema = z.string().uuid();
 export const confirmEmailTokenSchema = z.string().uuid();
 
 export const debtAmountSchema = nonZero(
-	createNumberSchema("Debt amount", { onlyPositive: false })
+	createNumberSchema("Debt amount", { onlyPositive: false }),
 );
 
 export { flavored };

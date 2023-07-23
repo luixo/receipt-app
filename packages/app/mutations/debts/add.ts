@@ -9,7 +9,7 @@ type DebtSnapshot = TRPCQueryOutput<"debts.get">;
 
 const createUserDebt = (
 	id: DebtsId,
-	updateObject: TRPCMutationInput<"debts.add">
+	updateObject: TRPCMutationInput<"debts.add">,
 ): DebtUserSnapshot => ({
 	id,
 	amount: updateObject.amount,
@@ -25,7 +25,7 @@ const createUserDebt = (
 
 const createDebt = (
 	id: DebtsId,
-	updateObject: TRPCMutationInput<"debts.add">
+	updateObject: TRPCMutationInput<"debts.add">,
 ): DebtSnapshot => ({
 	id,
 	amount: updateObject.amount,
@@ -46,12 +46,12 @@ export const options: UseContextedMutationOptions<"debts.add"> = {
 				controller.update(
 					updateObject.userId,
 					updateObject.currencyCode,
-					(sum) => sum + updateObject.amount
+					(sum) => sum + updateObject.amount,
 				),
 			getUser: (controller) =>
 				controller.add(
 					updateObject.userId,
-					createUserDebt(stableId, updateObject)
+					createUserDebt(stableId, updateObject),
 				),
 			get: (controller) => controller.add(createDebt(stableId, updateObject)),
 			getReceipt: noop,

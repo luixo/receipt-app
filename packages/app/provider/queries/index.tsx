@@ -18,7 +18,7 @@ export const QueriesProvider: React.FC<React.PropsWithChildren<object>> = ({
 	children,
 }) => {
 	const [queryClient] = React.useState(
-		() => new QueryClient(getQueryClientConfig())
+		() => new QueryClient(getQueryClientConfig()),
 	);
 	const [trpcClient] = React.useState(() =>
 		trpc.createClient({
@@ -29,7 +29,7 @@ export const QueriesProvider: React.FC<React.PropsWithChildren<object>> = ({
 				}),
 			],
 			transformer: superjson,
-		})
+		}),
 	);
 	return (
 		<trpc.Provider client={trpcClient} queryClient={queryClient}>

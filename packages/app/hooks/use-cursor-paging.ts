@@ -14,11 +14,11 @@ type CursorPagingResult<T extends { count: number }> = {
 
 export const useCursorPaging = <
 	T extends { count: number; hasMore: boolean; cursor: number },
-	Input extends { limit: number }
+	Input extends { limit: number },
 >(
 	useQuery: (input: Input, offset: number) => QueryObserverResult<T, TRPCError>,
 	input: Input,
-	offsetParamName: string
+	offsetParamName: string,
 ): CursorPagingResult<T> => {
 	const { limit } = input;
 	const [offset, setOffset] = useQueryParam<number>(offsetParamName, {
@@ -67,7 +67,7 @@ export const useCursorPaging = <
 			loading: isFetchingPage && query.data!.cursor > offset,
 			onClick: onPrevPage,
 		}),
-		[offset, isFetchingPage, query.data, onPrevPage]
+		[offset, isFetchingPage, query.data, onPrevPage],
 	);
 	const prevAllButton = React.useMemo(
 		() => ({
@@ -75,7 +75,7 @@ export const useCursorPaging = <
 			loading: isFetchingPage && offset === 0,
 			onClick: onPrevAllPage,
 		}),
-		[offset, isFetchingPage, onPrevAllPage]
+		[offset, isFetchingPage, onPrevAllPage],
 	);
 	const nextButton = React.useMemo(
 		() => ({
@@ -83,7 +83,7 @@ export const useCursorPaging = <
 			loading: isFetchingPage && query.data!.cursor <= offset,
 			onClick: onNextPage,
 		}),
-		[offset, maxOffset, isFetchingPage, query.data, onNextPage]
+		[offset, maxOffset, isFetchingPage, query.data, onNextPage],
 	);
 	const nextAllButton = React.useMemo(
 		() => ({
@@ -91,7 +91,7 @@ export const useCursorPaging = <
 			loading: isFetchingPage && offset === maxOffset,
 			onClick: onNextAllPage,
 		}),
-		[offset, maxOffset, isFetchingPage, onNextAllPage]
+		[offset, maxOffset, isFetchingPage, onNextAllPage],
 	);
 	const pagination = React.useMemo(
 		() => ({
@@ -113,7 +113,7 @@ export const useCursorPaging = <
 			query.data,
 			offset,
 			limit,
-		]
+		],
 	);
 	return {
 		query,

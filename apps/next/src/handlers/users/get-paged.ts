@@ -10,7 +10,7 @@ export const procedure = authProcedure
 		z.strictObject({
 			cursor: offsetSchema,
 			limit: limitSchema,
-		})
+		}),
 	)
 	.query(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
@@ -22,7 +22,7 @@ export const procedure = authProcedure
 		const [users, usersCount] = await Promise.all([
 			accountUsers
 				.leftJoin("accounts", (qb) =>
-					qb.onRef("connectedAccountId", "=", "accounts.id")
+					qb.onRef("connectedAccountId", "=", "accounts.id"),
 				)
 				.select(["users.id", "name", "publicName", "accounts.email"])
 				.orderBy("name")

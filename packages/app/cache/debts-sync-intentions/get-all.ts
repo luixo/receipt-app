@@ -23,7 +23,7 @@ type IntentionMapping = {
 const updateIntentions = <D extends Direction>(
 	controller: Controller,
 	direction: Direction,
-	updater: (intentions: IntentionMapping[D][]) => IntentionMapping[D][]
+	updater: (intentions: IntentionMapping[D][]) => IntentionMapping[D][],
 ) =>
 	controller.update((_input, intentions) => {
 		const prevIntentions = intentions[direction] as IntentionMapping[D][];
@@ -38,7 +38,7 @@ const updateIntention =
 	<D extends Direction>(
 		controller: Controller,
 		direction: Direction,
-		debtId: DebtsId
+		debtId: DebtsId,
 	) =>
 	(updater: (intention: IntentionMapping[D]) => IntentionMapping[D]) =>
 		utils.withRef<IntentionMapping[D] | undefined>((ref) =>
@@ -47,30 +47,30 @@ const updateIntention =
 					intentions,
 					(intention) => intention.id === debtId,
 					updater,
-					ref
-				)
-			)
+					ref,
+				),
+			),
 		).current;
 
 const removeIntention = <D extends Direction>(
 	controller: Controller,
 	direction: Direction,
-	debtId: DebtsId
+	debtId: DebtsId,
 ) =>
 	utils.withRef<ItemWithIndex<IntentionMapping[D]> | undefined>((ref) =>
 		updateIntentions(controller, direction, (intentions) =>
-			removeFromArray(intentions, (intention) => intention.id === debtId, ref)
-		)
+			removeFromArray(intentions, (intention) => intention.id === debtId, ref),
+		),
 	).current;
 
 const addIntention = <D extends Direction>(
 	controller: Controller,
 	direction: Direction,
 	intention: IntentionMapping[D],
-	index = 0
+	index = 0,
 ) => {
 	updateIntentions(controller, direction, (intentions) =>
-		addToArray(intentions, intention, index)
+		addToArray(intentions, intention, index),
 	);
 };
 
@@ -79,12 +79,12 @@ const updateRevert =
 	(
 		debtId: DebtsId,
 		updateFn: utils.UpdateFn<IntentionMapping[D]>,
-		revertFn?: utils.SnapshotFn<IntentionMapping[D]>
+		revertFn?: utils.SnapshotFn<IntentionMapping[D]>,
 	) =>
 		utils.applyUpdateFnWithRevert(
 			updateIntention(controller, direction, debtId),
 			updateFn,
-			revertFn
+			revertFn,
 		);
 
 const update =
@@ -97,7 +97,7 @@ const removeRevert =
 	(debtId: DebtsId) =>
 		utils.applyWithRevert(
 			() => removeIntention(controller, direction, debtId),
-			({ index, item }) => addIntention(controller, direction, item, index)
+			({ index, item }) => addIntention(controller, direction, item, index),
 		);
 
 const remove =
@@ -110,7 +110,7 @@ const addRevert =
 	(intention: IntentionMapping[D], index?: number) =>
 		utils.applyWithRevert(
 			() => addIntention(controller, direction, intention, index),
-			() => removeIntention(controller, direction, intention.id)
+			() => removeIntention(controller, direction, intention.id),
 		);
 
 const add =

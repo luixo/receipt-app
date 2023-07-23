@@ -8,7 +8,7 @@ export const useShowResolvedDebts = () => {
 		(showResolvedDebts: boolean) => {
 			setSettings((prevSettings) => ({ ...prevSettings, showResolvedDebts }));
 		},
-		[setSettings]
+		[setSettings],
 	);
 	return [settings.showResolvedDebts, setShowResolvedDebts] as const;
 };

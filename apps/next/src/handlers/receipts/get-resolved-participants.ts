@@ -13,7 +13,7 @@ export const procedure = authProcedure
 	.input(
 		z.strictObject({
 			receiptId: receiptIdSchema,
-		})
+		}),
 	)
 	.query(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
@@ -30,7 +30,7 @@ export const procedure = authProcedure
 		const accessRole = await getAccessRole(
 			database,
 			receipt,
-			ctx.auth.accountId
+			ctx.auth.accountId,
 		);
 		if (!accessRole) {
 			throw new trpc.TRPCError({
@@ -42,16 +42,16 @@ export const procedure = authProcedure
 			.selectFrom("receiptParticipants")
 			.where("receiptId", "=", input.receiptId)
 			.innerJoin("users as usersTheir", (jb) =>
-				jb.onRef("usersTheir.id", "=", "receiptParticipants.userId")
+				jb.onRef("usersTheir.id", "=", "receiptParticipants.userId"),
 			)
 			.leftJoin("users as usersMine", (jb) =>
 				jb
 					.onRef(
 						"usersMine.connectedAccountId",
 						"=",
-						"usersTheir.connectedAccountId"
+						"usersTheir.connectedAccountId",
 					)
-					.on("usersMine.ownerAccountId", "=", ctx.auth.accountId)
+					.on("usersMine.ownerAccountId", "=", ctx.auth.accountId),
 			)
 			.select([
 				"receiptParticipants.userId as remoteUserId",

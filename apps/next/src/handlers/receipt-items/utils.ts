@@ -13,11 +13,11 @@ import { ReceiptsDatabase } from "next-app/db/types";
 import { Role } from "next-app/handlers/receipts/utils";
 
 export const getReceiptItemById = <
-	SE extends ReceiptsSelectExpression<"receiptItems">
+	SE extends ReceiptsSelectExpression<"receiptItems">,
 >(
 	database: Database,
 	id: ReceiptItemsId,
-	selectExpression: SE[]
+	selectExpression: SE[],
 ): Promise<Selection<ReceiptsDatabase, "receiptItems", SE> | undefined> =>
 	database
 		.selectFrom("receiptItems")
@@ -29,7 +29,7 @@ const getReceiptItems = async (database: Database, receiptId: ReceiptsId) => {
 	const items = await database
 		.selectFrom("receiptItems")
 		.leftJoin("itemParticipants", (jb) =>
-			jb.onRef("receiptItems.id", "=", "itemParticipants.itemId")
+			jb.onRef("receiptItems.id", "=", "itemParticipants.itemId"),
 		)
 		.select([
 			"receiptItems.id as itemId",
@@ -64,8 +64,8 @@ const getReceiptItems = async (database: Database, receiptId: ReceiptsId) => {
 				}
 				return acc;
 			},
-			{} as Record<ReceiptItemsId, ReceiptItem>
-		)
+			{} as Record<ReceiptItemsId, ReceiptItem>,
+		),
 	);
 };
 
@@ -95,25 +95,25 @@ type ReceiptItem = Omit<
 const getReceiptParticipants = (
 	database: Database,
 	receiptId: ReceiptsId,
-	ownerAccountId: AccountsId
+	ownerAccountId: AccountsId,
 ) =>
 	database
 		.selectFrom("receiptParticipants")
 		.where("receiptId", "=", receiptId)
 		.innerJoin("users as usersTheir", (jb) =>
-			jb.onRef("usersTheir.id", "=", "receiptParticipants.userId")
+			jb.onRef("usersTheir.id", "=", "receiptParticipants.userId"),
 		)
 		.leftJoin("users as usersMine", (jb) =>
 			jb
 				.onRef(
 					"usersMine.connectedAccountId",
 					"=",
-					"usersTheir.connectedAccountId"
+					"usersTheir.connectedAccountId",
 				)
-				.on("usersMine.ownerAccountId", "=", ownerAccountId)
+				.on("usersMine.ownerAccountId", "=", ownerAccountId),
 		)
 		.leftJoin("accounts", (qb) =>
-			qb.onRef("usersMine.connectedAccountId", "=", "accounts.id")
+			qb.onRef("usersMine.connectedAccountId", "=", "accounts.id"),
 		)
 		.select([
 			"userId as remoteUserId",
@@ -141,7 +141,7 @@ const getReceiptParticipants = (
 export const getItemsWithParticipants = async (
 	database: Database,
 	receiptId: ReceiptsId,
-	ownerAccountId: AccountsId
+	ownerAccountId: AccountsId,
 ) =>
 	Promise.all([
 		getReceiptItems(database, receiptId),
@@ -151,12 +151,12 @@ export const getItemsWithParticipants = async (
 export const getValidParticipants = async (
 	database: Database,
 	receiptId: ReceiptsId,
-	ownerAccountId: AccountsId
+	ownerAccountId: AccountsId,
 ) => {
 	const [receiptItems, receiptParticipants] = await getItemsWithParticipants(
 		database,
 		receiptId,
-		ownerAccountId
+		ownerAccountId,
 	);
 	return getParticipantSums(receiptId, receiptItems, receiptParticipants)
 		.filter(
@@ -164,7 +164,7 @@ export const getValidParticipants = async (
 				// user has to participate in a receipt
 				participant.sum !== 0 &&
 				// .. and has to be someone but yourself
-				participant.remoteUserId !== ownerAccountId
+				participant.remoteUserId !== ownerAccountId,
 		)
 		.map((participant) => ({ ...participant, debtId: v4() }));
 };

@@ -58,7 +58,7 @@ export const User = React.forwardRef<HTMLDivElement, Props>(
 		const { theme } = useDripsyTheme();
 		const icon = React.useMemo(
 			() => getIdenticon(user.id, avatarSize, theme),
-			[user.id, avatarSize, theme]
+			[user.id, avatarSize, theme],
 		);
 		return (
 			<Wrapper
@@ -84,5 +84,5 @@ export const User = React.forwardRef<HTMLDivElement, Props>(
 				</Information>
 			</Wrapper>
 		);
-	}
+	},
 );

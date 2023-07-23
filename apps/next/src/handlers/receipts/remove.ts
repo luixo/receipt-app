@@ -10,7 +10,7 @@ export const procedure = authProcedure
 	.input(
 		z.strictObject({
 			id: receiptIdSchema,
-		})
+		}),
 	)
 	.mutation(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
@@ -42,7 +42,7 @@ export const procedure = authProcedure
 					.where(
 						"debtId",
 						"in",
-						debts.map(({ id }) => id)
+						debts.map(({ id }) => id),
 					)
 					.execute();
 			}

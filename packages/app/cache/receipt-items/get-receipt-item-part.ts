@@ -17,14 +17,14 @@ type ReceiptItemPart = ReceiptItem["parts"][number];
 
 type PartsUpdateFn = (
 	itemParts: ReceiptItemPart[],
-	item: ReceiptItem
+	item: ReceiptItem,
 ) => ReceiptItemPart[];
 
 const updateParts = (
 	controller: Controller,
 	receiptId: ReceiptsId,
 	predicate: (item: ReceiptItem) => boolean,
-	updater: PartsUpdateFn
+	updater: PartsUpdateFn,
 ) =>
 	controller.update((input, data) => {
 		if (input.receiptId !== receiptId) {
@@ -47,13 +47,13 @@ const updatePartsByItemId = (
 	controller: Controller,
 	receiptId: ReceiptsId,
 	itemId: ReceiptItemsId,
-	updater: PartsUpdateFn
+	updater: PartsUpdateFn,
 ) => updateParts(controller, receiptId, (item) => item.id === itemId, updater);
 
 const updateAllParts = (
 	controller: Controller,
 	receiptId: ReceiptsId,
-	updater: PartsUpdateFn
+	updater: PartsUpdateFn,
 ) => updateParts(controller, receiptId, alwaysTrue, updater);
 
 const add = (
@@ -61,28 +61,28 @@ const add = (
 	receiptId: ReceiptsId,
 	itemId: ReceiptItemsId,
 	itemPart: ReceiptItemPart,
-	index = 0
+	index = 0,
 ) =>
 	updatePartsByItemId(controller, receiptId, itemId, (parts) =>
-		addToArray(parts, itemPart, index)
+		addToArray(parts, itemPart, index),
 	);
 
 const remove = (
 	controller: Controller,
 	receiptId: ReceiptsId,
 	itemId: ReceiptItemsId,
-	userId: UsersId
+	userId: UsersId,
 ) =>
 	utils.withRef<ItemWithIndex<ReceiptItemPart> | undefined>((ref) =>
 		updatePartsByItemId(controller, receiptId, itemId, (parts) =>
-			removeFromArray(parts, (part) => part.userId === userId, ref)
-		)
+			removeFromArray(parts, (part) => part.userId === userId, ref),
+		),
 	).current;
 
 const removeByUser = (
 	controller: Controller,
 	receiptId: ReceiptsId,
-	userId: UsersId
+	userId: UsersId,
 ) =>
 	utils.withRef<
 		(ItemWithIndex<ReceiptItemPart> & { itemId: ReceiptItemsId })[]
@@ -100,9 +100,9 @@ const removeByUser = (
 						itemId: item.id,
 					});
 					return true;
-				})
+				}),
 			),
-		[]
+		[],
 	).current;
 
 const update =
@@ -110,13 +110,13 @@ const update =
 		controller: Controller,
 		receiptId: ReceiptsId,
 		itemId: ReceiptItemsId,
-		userId: UsersId
+		userId: UsersId,
 	) =>
 	(updater: utils.UpdateFn<ReceiptItemPart>) =>
 		utils.withRef<ReceiptItemPart | undefined>((ref) =>
 			updatePartsByItemId(controller, receiptId, itemId, (parts) =>
-				replaceInArray(parts, (part) => part.userId === userId, updater, ref)
-			)
+				replaceInArray(parts, (part) => part.userId === userId, updater, ref),
+			),
 		).current;
 
 export const getController = (trpc: TRPCReactContext) => {
@@ -126,13 +126,13 @@ export const getController = (trpc: TRPCReactContext) => {
 			receiptId: ReceiptsId,
 			itemId: ReceiptItemsId,
 			userId: UsersId,
-			updater: utils.UpdateFn<ReceiptItemPart>
+			updater: utils.UpdateFn<ReceiptItemPart>,
 		) => update(controller, receiptId, itemId, userId)(updater),
 		add: (
 			receiptId: ReceiptsId,
 			itemId: ReceiptItemsId,
 			itemPart: ReceiptItemPart,
-			index = 0
+			index = 0,
 		) => add(controller, receiptId, itemId, itemPart, index),
 		remove: (receiptId: ReceiptsId, itemId: ReceiptItemsId, userId: UsersId) =>
 			remove(controller, receiptId, itemId, userId),
@@ -149,36 +149,36 @@ export const getRevertController = (trpc: TRPCReactContext) => {
 			itemId: ReceiptItemsId,
 			userId: UsersId,
 			updater: utils.UpdateFn<ReceiptItemPart>,
-			revertUpdater: utils.SnapshotFn<ReceiptItemPart>
+			revertUpdater: utils.SnapshotFn<ReceiptItemPart>,
 		) =>
 			utils.applyUpdateFnWithRevert(
 				update(controller, receiptId, itemId, userId),
 				updater,
-				revertUpdater
+				revertUpdater,
 			),
 		add: (
 			receiptId: ReceiptsId,
 			itemId: ReceiptItemsId,
 			itemPart: ReceiptItemPart,
-			index = 0
+			index = 0,
 		) =>
 			utils.applyWithRevert(
 				() => add(controller, receiptId, itemId, itemPart, index),
-				() => remove(controller, receiptId, itemId, itemPart.userId)
+				() => remove(controller, receiptId, itemId, itemPart.userId),
 			),
 		remove: (receiptId: ReceiptsId, itemId: ReceiptItemsId, userId: UsersId) =>
 			utils.applyWithRevert(
 				() => remove(controller, receiptId, itemId, userId),
 				({ item: part, index }) =>
-					add(controller, receiptId, itemId, part, index)
+					add(controller, receiptId, itemId, part, index),
 			),
 		removeByUser: (receiptId: ReceiptsId, userId: UsersId) =>
 			utils.applyWithRevert(
 				() => removeByUser(controller, receiptId, userId),
 				(snapshots) =>
 					snapshots.forEach(({ itemId, item: part, index }) =>
-						add(controller, receiptId, itemId, part, index)
-					)
+						add(controller, receiptId, itemId, part, index),
+					),
 			),
 	};
 };

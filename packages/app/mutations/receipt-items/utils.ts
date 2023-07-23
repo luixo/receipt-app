@@ -5,7 +5,7 @@ import { ReceiptsId } from "next-app/db/models";
 
 export const updateReceiptSum = (
 	trpc: TRPCReactContext,
-	receiptId: ReceiptsId
+	receiptId: ReceiptsId,
 ) => {
 	const receiptItems = cache.receiptItems.getters(trpc).all.get(receiptId);
 	if (!receiptItems) {
@@ -13,7 +13,7 @@ export const updateReceiptSum = (
 	}
 	const nextSum = receiptItems.items.reduce(
 		(acc, item) => acc + item.price * item.quantity,
-		0
+		0,
 	);
 	cache.receipts.update(trpc, {
 		get: (controller) =>

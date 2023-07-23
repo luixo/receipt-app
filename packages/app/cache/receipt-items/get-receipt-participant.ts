@@ -16,7 +16,7 @@ type ReceiptParticipant = ReceiptItemsResult["participants"][number];
 const updateReceiptParticipants = (
 	controller: Controller,
 	receiptId: ReceiptsId,
-	updater: utils.UpdateFn<ReceiptParticipant[]>
+	updater: utils.UpdateFn<ReceiptParticipant[]>,
 ) =>
 	controller.update((input, prevData) => {
 		if (input.receiptId !== receiptId) {
@@ -33,25 +33,25 @@ const add = (
 	controller: Controller,
 	receiptId: ReceiptsId,
 	participant: ReceiptParticipant,
-	index = 0
+	index = 0,
 ) =>
 	updateReceiptParticipants(controller, receiptId, (items) =>
-		addToArray(items, participant, index)
+		addToArray(items, participant, index),
 	);
 
 const remove = (
 	controller: Controller,
 	receiptId: ReceiptsId,
-	userId: UsersId
+	userId: UsersId,
 ) =>
 	utils.withRef<ItemWithIndex<ReceiptParticipant> | undefined>((ref) =>
 		updateReceiptParticipants(controller, receiptId, (pariticipants) =>
 			removeFromArray(
 				pariticipants,
 				(participant) => participant.remoteUserId === userId,
-				ref
-			)
-		)
+				ref,
+			),
+		),
 	).current;
 
 const update =
@@ -63,9 +63,9 @@ const update =
 					pariticipants,
 					(participant) => participant.remoteUserId === userId,
 					updater,
-					ref
-				)
-			)
+					ref,
+				),
+			),
 		).current;
 
 export const getController = (trpc: TRPCReactContext) => {
@@ -74,7 +74,7 @@ export const getController = (trpc: TRPCReactContext) => {
 		update: (
 			receiptId: ReceiptsId,
 			userId: UsersId,
-			updater: utils.UpdateFn<ReceiptParticipant>
+			updater: utils.UpdateFn<ReceiptParticipant>,
 		) => update(controller, receiptId, userId)(updater),
 		add: (receiptId: ReceiptsId, item: ReceiptParticipant, index = 0) =>
 			add(controller, receiptId, item, index),
@@ -91,22 +91,22 @@ export const getRevertController = (trpc: TRPCReactContext) => {
 			receiptId: ReceiptsId,
 			userId: UsersId,
 			updater: utils.UpdateFn<ReceiptParticipant>,
-			revertUpdater: utils.SnapshotFn<ReceiptParticipant>
+			revertUpdater: utils.SnapshotFn<ReceiptParticipant>,
 		) =>
 			utils.applyUpdateFnWithRevert(
 				update(controller, receiptId, userId),
 				updater,
-				revertUpdater
+				revertUpdater,
 			),
 		add: (receiptId: ReceiptsId, item: ReceiptParticipant, index = 0) =>
 			utils.applyWithRevert(
 				() => add(controller, receiptId, item, index),
-				() => remove(controller, receiptId, item.remoteUserId)
+				() => remove(controller, receiptId, item.remoteUserId),
 			),
 		remove: (receiptId: ReceiptsId, userId: UsersId) =>
 			utils.applyWithRevert(
 				() => remove(controller, receiptId, userId),
-				({ item, index }) => add(controller, receiptId, item, index)
+				({ item, index }) => add(controller, receiptId, item, index),
 			),
 	};
 };

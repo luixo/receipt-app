@@ -19,7 +19,7 @@ export const shouldUpdateExpirationDate = (expirationTimestamp: Date) =>
 
 export const createAuthorizationSession = async (
 	database: Database,
-	accountId: AccountsId
+	accountId: AccountsId,
 ) => {
 	const uuid = v4();
 	const expirationDate = getExpirationDate();
@@ -39,7 +39,7 @@ export const createAuthorizationSession = async (
 
 export const updateAuthorizationSession = async (
 	database: Database,
-	authToken: SessionsSessionId
+	authToken: SessionsSessionId,
 ) => {
 	database
 		.updateTable("sessions")
@@ -50,7 +50,7 @@ export const updateAuthorizationSession = async (
 
 export const removeAuthorizationSession = async (
 	database: Database,
-	sessionId: SessionsSessionId
+	sessionId: SessionsSessionId,
 ) => {
 	await database
 		.deleteFrom("sessions")

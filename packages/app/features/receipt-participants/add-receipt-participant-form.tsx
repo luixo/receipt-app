@@ -38,21 +38,21 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 				setLocalFilterIds((prevIds) => [...prevIds, ...vars.userIds]),
 			onSettled: (_res, _err, vars) =>
 				setLocalFilterIds((prevIds) =>
-					prevIds.filter((id) => !vars.userIds.includes(id))
+					prevIds.filter((id) => !vars.userIds.includes(id)),
 				),
-		})
+		}),
 	);
 
 	const addParticipants = React.useCallback(
 		async (
-			participant: TRPCInfiniteQueryOutput<"users.suggest">["items"][number]
+			participant: TRPCInfiniteQueryOutput<"users.suggest">["items"][number],
 		) =>
 			addMutation.mutate({
 				receiptId,
 				userIds: [participant.id],
 				role: "editor",
 			}),
-		[addMutation, receiptId]
+		[addMutation, receiptId],
 	);
 
 	return (
@@ -63,7 +63,7 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 				disabled={disabled || receiptLocked || !selfAccountId}
 				options={React.useMemo(
 					() => ({ type: "not-connected-receipt", receiptId }),
-					[receiptId]
+					[receiptId],
 				)}
 				label="Add participants"
 			/>

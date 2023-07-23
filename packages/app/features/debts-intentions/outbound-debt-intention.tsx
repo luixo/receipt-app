@@ -16,11 +16,11 @@ export const OutboundDebtIntention: React.FC<Props> = ({ intention }) => {
 	const removeMutation = trpc.debtsSyncIntentions.remove.useMutation(
 		useTrpcMutationOptions(mutations.debtsSyncIntentions.remove.options, {
 			context: intention,
-		})
+		}),
 	);
 	const cancelSyncIntention = React.useCallback(
 		() => removeMutation.mutate({ id: intention.id }),
-		[removeMutation, intention.id]
+		[removeMutation, intention.id],
 	);
 
 	return (

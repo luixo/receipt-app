@@ -11,7 +11,7 @@ export type ColorModeConfig = {
 
 type ColorModeContextType = [
 	ColorModeConfig,
-	React.Dispatch<React.SetStateAction<ColorModeConfig>>
+	React.Dispatch<React.SetStateAction<ColorModeConfig>>,
 ];
 
 export const ColorModeContext = React.createContext<ColorModeContextType>([

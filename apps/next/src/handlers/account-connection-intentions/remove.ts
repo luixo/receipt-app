@@ -9,7 +9,7 @@ export const procedure = authProcedure
 	.input(
 		z.strictObject({
 			targetAccountId: accountIdSchema,
-		})
+		}),
 	)
 	.mutation(async ({ ctx, input }) => {
 		const database = getDatabase(ctx);
@@ -22,6 +22,6 @@ export const procedure = authProcedure
 		return removeIntention(
 			database,
 			intention,
-			`for account id ${input.targetAccountId}`
+			`for account id ${input.targetAccountId}`,
 		);
 	});

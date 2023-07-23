@@ -61,21 +61,21 @@ export const DebtControlButtons: React.FC<Props> = ({ debt, hideLocked }) => {
 	const addMutation = trpc.debtsSyncIntentions.add.useMutation(
 		useTrpcMutationOptions(mutations.debtsSyncIntentions.add.options, {
 			context: debt,
-		})
+		}),
 	);
 	const sendSyncIntention = React.useCallback(
 		() => addMutation.mutate({ id: debt.id }),
-		[addMutation, debt.id]
+		[addMutation, debt.id],
 	);
 
 	const removeMutation = trpc.debtsSyncIntentions.remove.useMutation(
 		useTrpcMutationOptions(mutations.debtsSyncIntentions.remove.options, {
 			context: debt,
-		})
+		}),
 	);
 	const cancelSyncIntention = React.useCallback(
 		() => removeMutation.mutate({ id: debt.id }),
-		[removeMutation, debt.id]
+		[removeMutation, debt.id],
 	);
 
 	const acceptMutation = trpc.debtsSyncIntentions.accept.useMutation(
@@ -87,13 +87,13 @@ export const DebtControlButtons: React.FC<Props> = ({ debt, hideLocked }) => {
 					currencyCode: debt.currencyCode,
 					currentAmount: debt.amount,
 				}),
-				[debt]
+				[debt],
 			),
-		})
+		}),
 	);
 	const acceptSyncIntention = React.useCallback(
 		() => acceptMutation.mutate({ id: debt.id }),
-		[acceptMutation, debt.id]
+		[acceptMutation, debt.id],
 	);
 
 	const rejectMutation = trpc.debtsSyncIntentions.reject.useMutation(
@@ -104,17 +104,17 @@ export const DebtControlButtons: React.FC<Props> = ({ debt, hideLocked }) => {
 					currentAmount: debt.amount,
 					receiptId: debt.receiptId,
 				}),
-				[debt]
+				[debt],
 			),
-		})
+		}),
 	);
 	const rejectSyncIntention = React.useCallback(
 		() => rejectMutation.mutate({ id: debt.id }),
-		[rejectMutation, debt.id]
+		[rejectMutation, debt.id],
 	);
 
 	const lockMutation = trpc.debts.update.useMutation(
-		useTrpcMutationOptions(mutations.debts.update.options, { context: debt })
+		useTrpcMutationOptions(mutations.debts.update.options, { context: debt }),
 	);
 	const mutateLock = React.useCallback(
 		(shouldPropagate = false) => {
@@ -132,10 +132,10 @@ export const DebtControlButtons: React.FC<Props> = ({ debt, hideLocked }) => {
 							sendSyncIntention();
 						}
 					},
-				}
+				},
 			);
 		},
-		[lockMutation, debt.id, debt.locked, sendSyncIntention]
+		[lockMutation, debt.id, debt.locked, sendSyncIntention],
 	);
 
 	const isMutationLoading =

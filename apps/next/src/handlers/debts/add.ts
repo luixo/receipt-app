@@ -20,7 +20,7 @@ export const procedure = authProcedure
 			userId: userIdSchema,
 			amount: debtAmountSchema,
 			timestamp: z.date().optional(),
-		})
+		}),
 	)
 	.mutation(async ({ input, ctx }) => {
 		const id = v4();

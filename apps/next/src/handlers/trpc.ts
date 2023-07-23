@@ -33,7 +33,7 @@ export const unauthProcedure = t.procedure.use(
 		}
 
 		return result;
-	})
+	}),
 );
 
 export const authProcedure = unauthProcedure.use(
@@ -56,7 +56,7 @@ export const authProcedure = unauthProcedure.use(
 		const session = await database
 			.selectFrom("sessions")
 			.innerJoin("accounts", (qb) =>
-				qb.onRef("accounts.id", "=", "sessions.accountId")
+				qb.onRef("accounts.id", "=", "sessions.accountId"),
 			)
 			.select([
 				"sessions.accountId",
@@ -87,5 +87,5 @@ export const authProcedure = unauthProcedure.use(
 				},
 			},
 		});
-	})
+	}),
 );

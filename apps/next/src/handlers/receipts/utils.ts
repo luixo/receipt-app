@@ -11,7 +11,7 @@ export type Role = z.infer<typeof roleSchema>;
 export const getAccessRole = async (
 	database: Database,
 	receipt: { ownerAccountId: string; id: string },
-	accountId: string
+	accountId: string,
 ): Promise<Role | undefined> => {
 	if (receipt.ownerAccountId === accountId) {
 		return "owner";
@@ -19,10 +19,10 @@ export const getAccessRole = async (
 	const participant = await database
 		.selectFrom("receiptParticipants")
 		.innerJoin("users", (jb) =>
-			jb.onRef("users.id", "=", "receiptParticipants.userId")
+			jb.onRef("users.id", "=", "receiptParticipants.userId"),
 		)
 		.innerJoin("accounts", (jb) =>
-			jb.onRef("accounts.id", "=", "users.connectedAccountId")
+			jb.onRef("accounts.id", "=", "users.connectedAccountId"),
 		)
 		.where("accounts.id", "=", accountId)
 		.where("receiptParticipants.receiptId", "=", receipt.id)
@@ -42,7 +42,7 @@ export const getAccessRole = async (
 export const getReceiptById = <SE extends ReceiptsSelectExpression<"receipts">>(
 	database: Database,
 	id: ReceiptsId,
-	selectExpression: SE[]
+	selectExpression: SE[],
 ): Promise<Selection<ReceiptsDatabase, "receipts", SE> | undefined> =>
 	database
 		.selectFrom("receipts")
@@ -52,21 +52,21 @@ export const getReceiptById = <SE extends ReceiptsSelectExpression<"receipts">>(
 
 export const getOwnReceipts = (
 	database: Database,
-	ownerAccountId: AccountsId
+	ownerAccountId: AccountsId,
 ) =>
 	database.selectFrom("receipts").where("ownerAccountId", "=", ownerAccountId);
 
 export const getForeignReceipts = (
 	database: Database,
-	ownerAccountId: AccountsId
+	ownerAccountId: AccountsId,
 ) =>
 	database
 		.selectFrom("users")
 		.where("users.connectedAccountId", "=", ownerAccountId)
 		.where("users.ownerAccountId", "<>", ownerAccountId)
 		.innerJoin("receiptParticipants", (jb) =>
-			jb.onRef("receiptParticipants.userId", "=", "users.id")
+			jb.onRef("receiptParticipants.userId", "=", "users.id"),
 		)
 		.innerJoin("receipts", (jb) =>
-			jb.onRef("receipts.id", "=", "receiptParticipants.receiptId")
+			jb.onRef("receipts.id", "=", "receiptParticipants.receiptId"),
 		);

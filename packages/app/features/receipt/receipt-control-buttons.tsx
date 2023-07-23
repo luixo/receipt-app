@@ -42,11 +42,11 @@ export const ReceiptControlButtons: React.FC<Props> = ({
 	});
 
 	const propagateMutation = trpc.receipts.propagateDebts.useMutation(
-		useTrpcMutationOptions(mutations.receipts.propagateDebts.options)
+		useTrpcMutationOptions(mutations.receipts.propagateDebts.options),
 	);
 	const propagateDebts = React.useCallback(
 		() => propagateMutation.mutate({ receiptId: receipt.id }),
-		[propagateMutation, receipt.id]
+		[propagateMutation, receipt.id],
 	);
 
 	return (

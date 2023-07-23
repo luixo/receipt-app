@@ -39,7 +39,7 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 			: undefined;
 	const emptyItems = data.items.filter((item) => item.parts.length === 0);
 	const itemsRef = React.useRef<Record<ReceiptItemsId, HTMLDivElement | null>>(
-		{}
+		{},
 	);
 	const onEmptyItemClick = React.useCallback(
 		(id: ReceiptItemsId) => {
@@ -49,7 +49,7 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 			}
 			matchedItem.scrollIntoView();
 		},
-		[itemsRef]
+		[itemsRef],
 	);
 	return (
 		<Collapse.Group accordion={false} divider={false}>

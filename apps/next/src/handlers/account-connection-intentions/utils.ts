@@ -10,7 +10,7 @@ export const addConnectionIntention = async (
 	fromAccountId: AccountsId,
 	user: { name: string },
 	toEmail: string,
-	asUserId: UsersId
+	asUserId: UsersId,
 ) => {
 	const targetAccount = await database
 		.selectFrom("accounts")
@@ -29,7 +29,7 @@ export const addConnectionIntention = async (
 		.innerJoin("users", (qb) =>
 			qb
 				.onRef("users.connectedAccountId", "=", "accounts.id")
-				.on("users.ownerAccountId", "=", fromAccountId)
+				.on("users.ownerAccountId", "=", fromAccountId),
 		)
 		.select("users.name")
 		.executeTakeFirst();
@@ -105,7 +105,7 @@ export const addConnectionIntention = async (
 			const existingUser = await getUserById(
 				database,
 				existingIntention.userId,
-				["name"]
+				["name"],
 			);
 			throw new trpc.TRPCError({
 				code: "CONFLICT",
@@ -134,7 +134,7 @@ export const removeIntention = async (
 				accountId: AccountsId;
 		  }
 		| undefined,
-	intentionType: string
+	intentionType: string,
 ) => {
 	if (!intention) {
 		throw new trpc.TRPCError({

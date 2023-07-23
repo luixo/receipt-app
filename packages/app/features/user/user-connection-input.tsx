@@ -23,12 +23,12 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 	const outboundConnectionIntention =
 		connectionIntentionsQuery.status === "success"
 			? connectionIntentionsQuery.data.outbound.find(
-					(element) => element.user.id === user.remoteId
+					(element) => element.user.id === user.remoteId,
 			  ) ?? null
 			: undefined;
 
 	const connectUserMutation = trpc.accountConnectionIntentions.add.useMutation(
-		useTrpcMutationOptions(mutations.users.connect.options)
+		useTrpcMutationOptions(mutations.users.connect.options),
 	);
 	const connectUser = React.useCallback(
 		(email: string) =>
@@ -36,7 +36,7 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 				userId: user.remoteId,
 				email,
 			}),
-		[connectUserMutation, user.remoteId]
+		[connectUserMutation, user.remoteId],
 	);
 
 	const {
@@ -57,20 +57,20 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 					setValue("");
 					setInputShown(false);
 				},
-			})
+			}),
 		);
 	const cancelRequest = React.useCallback(
 		(accountId: AccountsId) =>
 			cancelRequestMutation.mutate({ targetAccountId: accountId }),
-		[cancelRequestMutation]
+		[cancelRequestMutation],
 	);
 
 	const unlinkMutation = trpc.users.unlink.useMutation(
-		useTrpcMutationOptions(mutations.users.unlink.options)
+		useTrpcMutationOptions(mutations.users.unlink.options),
 	);
 	const unlinkUser = React.useCallback(
 		() => unlinkMutation.mutate({ id: user.remoteId }),
-		[unlinkMutation, user.remoteId]
+		[unlinkMutation, user.remoteId],
 	);
 
 	if (outboundConnectionIntention === undefined) {

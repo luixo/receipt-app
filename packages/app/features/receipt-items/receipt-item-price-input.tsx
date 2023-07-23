@@ -51,7 +51,7 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 		useTrpcMutationOptions(mutations.receiptItems.update.options, {
 			context: receiptId,
 			onSuccess: unsetEditing,
-		})
+		}),
 	);
 	const updatePrice = React.useCallback(
 		(price: number) => {
@@ -63,7 +63,7 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 				update: { type: "price", price },
 			});
 		},
-		[updateMutation, receiptItem.id, receiptItem.price]
+		[updateMutation, receiptItem.id, receiptItem.price],
 	);
 	const currency = useFormattedCurrency(currencyCode);
 

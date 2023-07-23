@@ -9,11 +9,11 @@ import { trpc } from "app/trpc";
 export const EmailVerificationCard: React.FC = () => {
 	const accountQuery = trpc.account.get.useQuery();
 	const resendEmailMutation = trpc.account.resendEmail.useMutation(
-		useTrpcMutationOptions(mutations.account.resendEmail.options)
+		useTrpcMutationOptions(mutations.account.resendEmail.options),
 	);
 	const resendEmail = React.useCallback(
 		() => resendEmailMutation.mutate(),
-		[resendEmailMutation]
+		[resendEmailMutation],
 	);
 	if (accountQuery.status !== "success" || accountQuery.data.account.verified) {
 		return null;

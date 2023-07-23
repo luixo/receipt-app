@@ -162,7 +162,7 @@ export const Calendar: React.FC<Props> = ({
 			onChange(new Date(date.valueOf() - date.getTimezoneOffset() * 60000));
 			changeOpen(false);
 		},
-		[onChange, changeOpen]
+		[onChange, changeOpen],
 	);
 	calendarStyles();
 	if (disabled) {

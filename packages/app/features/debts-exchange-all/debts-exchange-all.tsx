@@ -38,12 +38,12 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 			setSelectedCurrency(currency);
 			closeModal();
 		},
-		[closeModal]
+		[closeModal],
 	);
 	const router = useRouter();
 	const back = React.useCallback(
 		() => router.replace(`/debts/user/${userId}`),
-		[router, userId]
+		[router, userId],
 	);
 	React.useEffect(() => {
 		if (nonZeroAggregateDebts.length <= 1) {

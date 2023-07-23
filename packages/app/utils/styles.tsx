@@ -30,15 +30,15 @@ const withBreakpoints = (stitchesTheme: typeof lightThemeStitches) => ({
 		...(
 			Object.entries(breakpoints) as [
 				keyof typeof breakpoints,
-				typeof breakpoints[keyof typeof breakpoints]
+				(typeof breakpoints)[keyof typeof breakpoints],
 			][]
-		).reduce<Partial<typeof lightThemeStitches["media"]>>(
+		).reduce<Partial<(typeof lightThemeStitches)["media"]>>(
 			(acc, [key, breakpoint]) => {
 				acc[key] = `(min-width: ${breakpoint})`;
 				acc[`${key}Max`] = `(max-width: ${breakpoint})`;
 				return acc;
 			},
-			{}
+			{},
 		),
 	},
 });
@@ -60,7 +60,7 @@ const nextThemes = {
 
 export const { media } = stitchesThemes.light;
 
-export type Theme = typeof themes["light"];
+export type Theme = (typeof themes)["light"];
 
 const borderStyles = {
 	solid: "solid",
@@ -124,7 +124,7 @@ const dripsyThemes = {
 	},
 };
 
-type DripsyTheme = typeof dripsyThemes["light"];
+type DripsyTheme = (typeof dripsyThemes)["light"];
 
 declare module "dripsy" {
 	interface DripsyCustomTheme extends DripsyTheme {}

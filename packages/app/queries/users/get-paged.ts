@@ -14,7 +14,7 @@ export const inputStore = createStore<CursorlessOmit & Setters<CursorlessOmit>>(
 		limit: 10,
 		changeLimit: (maybeUpdater) =>
 			set((prev) => ({ limit: updateWithFn(prev.limit, maybeUpdater) })),
-	})
+	}),
 );
 
 export const useStore = () =>

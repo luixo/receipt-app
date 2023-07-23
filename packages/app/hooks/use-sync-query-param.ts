@@ -13,7 +13,7 @@ export type SyncQueryParamOptions<T extends object | Primitive> = Required<
 
 export const useSyncQueryParam = <T extends object | Primitive = string>(
 	options: SyncQueryParamOptions<T>,
-	valueToSync: T
+	valueToSync: T,
 ) => {
 	const { param, ...rest } = options;
 	const [value, setValue] = useQueryParam(param, rest);

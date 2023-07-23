@@ -29,11 +29,11 @@ export const ResetPasswordModal: React.FC<Props> = ({
 	});
 
 	const resetPasswordMutation = trpc.resetPasswordIntentions.add.useMutation(
-		useTrpcMutationOptions(mutations.resetPasswordIntentions.add.options)
+		useTrpcMutationOptions(mutations.resetPasswordIntentions.add.options),
 	);
 	const onSubmit = React.useCallback(
 		(data: ResetPasswordForm) => resetPasswordMutation.mutate(data),
-		[resetPasswordMutation]
+		[resetPasswordMutation],
 	);
 
 	return (

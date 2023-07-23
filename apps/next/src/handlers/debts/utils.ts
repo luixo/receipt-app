@@ -10,7 +10,7 @@ export const getDebt = <SE extends ReceiptsSelectExpression<"debts">>(
 	database: Database,
 	id: DebtsId,
 	ownerAccountId: AccountsId,
-	selectExpression: SE[]
+	selectExpression: SE[],
 ): Promise<Selection<ReceiptsDatabase, "debts", SE> | undefined> =>
 	database
 		.selectFrom("debts")
@@ -36,7 +36,7 @@ export const upsertDebtFromReceipt = async (
 		| "issued"
 		| "currencyCode"
 	>,
-	created: Date
+	created: Date,
 ) =>
 	database
 		.insertInto("debts")
@@ -52,7 +52,7 @@ export const upsertDebtFromReceipt = async (
 				amount: participant.sum.toString(),
 				receiptId: receipt.id,
 				lockedTimestamp: receipt.lockedTimestamp,
-			}))
+			})),
 		)
 		.onConflict((oc) =>
 			oc
@@ -62,7 +62,7 @@ export const upsertDebtFromReceipt = async (
 					timestamp: (eb) => eb.ref("excluded.timestamp"),
 					amount: (eb) => eb.ref("excluded.amount"),
 					lockedTimestamp: (eb) => eb.ref("excluded.lockedTimestamp"),
-				})
+				}),
 		)
 		.returning(["id as debtId", "userId", "note"])
 		.execute();
@@ -79,11 +79,11 @@ export const getDebtsResult = (
 		| "issued"
 		| "currencyCode"
 	>,
-	created: Date
+	created: Date,
 ) =>
 	participants.map((participant) => {
 		const actualDebt = actualDebts.find(
-			(debt) => debt.userId === participant.remoteUserId
+			(debt) => debt.userId === participant.remoteUserId,
 		)!;
 		return {
 			debtId: actualDebt.debtId,

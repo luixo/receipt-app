@@ -38,11 +38,11 @@ export const DebtAmountInput: React.FC<Props> = ({ debt, isLoading }) => {
 	});
 	React.useEffect(
 		() => setValue(Math.abs(debt.amount)),
-		[debt.amount, setValue]
+		[debt.amount, setValue],
 	);
 
 	const updateMutation = trpc.debts.update.useMutation(
-		useTrpcMutationOptions(mutations.debts.update.options, { context: debt })
+		useTrpcMutationOptions(mutations.debts.update.options, { context: debt }),
 	);
 	const updateAmount = React.useCallback(
 		async (amount: number) => {
@@ -54,7 +54,7 @@ export const DebtAmountInput: React.FC<Props> = ({ debt, isLoading }) => {
 				});
 			}
 		},
-		[updateMutation, debt.id, debt.amount, absoluteAmount]
+		[updateMutation, debt.id, debt.amount, absoluteAmount],
 	);
 
 	return (

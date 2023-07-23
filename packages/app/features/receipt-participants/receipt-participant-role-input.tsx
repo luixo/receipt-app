@@ -30,7 +30,7 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 	const updateParticipantMutation = trpc.receiptParticipants.update.useMutation(
 		useTrpcMutationOptions(mutations.receiptParticipants.update.options, {
 			context: { selfUserId: selfUserId || "unknown" },
-		})
+		}),
 	);
 	const changeRole = React.useCallback(
 		(nextRole: AssignableRole) => {
@@ -48,7 +48,7 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 			receiptId,
 			participant.remoteUserId,
 			participant.role,
-		]
+		],
 	);
 
 	return (
@@ -72,7 +72,7 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 								Set &quot;{pickRole}&quot; role
 							</Text>
 						</Dropdown.Item>
-					)
+					),
 				)}
 			</Dropdown.Menu>
 		</Dropdown>

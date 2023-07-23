@@ -9,7 +9,7 @@ export const RefreshSettings: React.FC = () => {
 	const trpcContext = trpc.useContext();
 	const refetch = React.useCallback(
 		() => trpcContext.queryClient.invalidateQueries({ refetchType: "all" }),
-		[trpcContext]
+		[trpcContext],
 	);
 	return (
 		<Button size="lg" icon={<RefreshIcon />} onClick={refetch} auto>

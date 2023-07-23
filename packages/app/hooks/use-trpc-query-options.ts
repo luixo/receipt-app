@@ -26,7 +26,7 @@ type Contexts<Context = undefined> = MaybeAddElementToArray<
 
 export type UseContextedQueryOptions<
 	Path extends TRPCQueryKey,
-	Context = undefined
+	Context = undefined,
 > = {
 	onError?: (
 		...args: Contexts<Context>
@@ -41,7 +41,7 @@ export type UseContextedQueryOptions<
 
 export const useTrpcQueryOptions = <
 	Path extends TRPCQueryKey,
-	Context = undefined
+	Context = undefined,
 >(
 	{
 		onError: onErrorTrpc,
@@ -56,7 +56,7 @@ export const useTrpcQueryOptions = <
 		...rest
 	}: {
 		context?: Context;
-	} & TRPCQueryOptions<Path> = {}
+	} & TRPCQueryOptions<Path> = {},
 ): TRPCQueryOptions<Path> => {
 	const trpcContext = trpc.useContext();
 	return React.useMemo(() => {

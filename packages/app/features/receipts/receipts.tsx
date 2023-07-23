@@ -53,14 +53,14 @@ type Input = TRPCQueryInput<"receipts.getPaged">;
 
 const useReceiptQuery = (
 	input: Omit<Input, "cursor">,
-	cursor: Input["cursor"]
+	cursor: Input["cursor"],
 ) =>
 	trpc.receipts.getPaged.useQuery(
 		{ ...input, cursor },
 		{
 			...useTrpcQueryOptions(queries.receipts.getPaged.options),
 			keepPreviousData: true,
-		}
+		},
 	);
 
 export const Receipts: React.FC = () => {

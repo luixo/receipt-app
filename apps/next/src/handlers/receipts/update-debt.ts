@@ -2,11 +2,11 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
-import { upsertDebtIntentionFromReceipt } from "next-app/handlers/debts-sync-intentions/utils";
 import {
 	getDebtsResult,
 	upsertDebtFromReceipt,
 } from "next-app/handlers/debts/utils";
+import { upsertDebtIntentionFromReceipt } from "next-app/handlers/debts-sync-intentions/utils";
 import { getValidParticipants } from "next-app/handlers/receipt-items/utils";
 import { getReceiptById } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
@@ -18,7 +18,7 @@ export const procedure = authProcedure
 			receiptId: receiptIdSchema,
 			userId: userIdSchema,
 			updateIntention: z.boolean(),
-		})
+		}),
 	)
 	.mutation(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
@@ -52,10 +52,10 @@ export const procedure = authProcedure
 		const validParticipants = await getValidParticipants(
 			database,
 			input.receiptId,
-			ctx.auth.accountId
+			ctx.auth.accountId,
 		);
 		const matchedParticipant = validParticipants.find(
-			(participant) => participant.remoteUserId === input.userId
+			(participant) => participant.remoteUserId === input.userId,
 		);
 		if (!matchedParticipant) {
 			throw new trpc.TRPCError({
@@ -69,14 +69,14 @@ export const procedure = authProcedure
 				tx,
 				[matchedParticipant],
 				receipt,
-				createdTimestamp
+				createdTimestamp,
 			);
 			if (input.updateIntention) {
 				await upsertDebtIntentionFromReceipt(
 					tx,
 					[{ ...matchedParticipant, debtId: debts[0]!.debtId }],
 					ctx.auth.accountId,
-					createdTimestamp
+					createdTimestamp,
 				);
 			}
 			return debts;
@@ -85,7 +85,7 @@ export const procedure = authProcedure
 			[matchedParticipant],
 			actualDebts,
 			receipt,
-			createdTimestamp
+			createdTimestamp,
 		);
 		return updatedDebts[0]!;
 	});

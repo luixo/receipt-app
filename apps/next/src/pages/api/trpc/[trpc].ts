@@ -14,7 +14,7 @@ const SENTRY_DSN = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
 Sentry.init({ dsn: SENTRY_DSN, tracesSampleRate: 1.0 });
 
 const isAuthorizedContext = (
-	context: UnauthorizedContext
+	context: UnauthorizedContext,
 ): context is AuthorizedContext => "auth" in context;
 
 export default Sentry.withSentry(
@@ -35,11 +35,11 @@ export default Sentry.withSentry(
 					ctx.req.socket.localPort
 				}] [${ctx.req.headers["user-agent"]}] ${type} "${path}"${
 					email ? ` (by ${email})` : ""
-				}: ${error.message}`
+				}: ${error.message}`,
 			);
 		},
 		responseMeta: () => ({ status: 200 }),
-	})
+	}),
 );
 
 export const config = {

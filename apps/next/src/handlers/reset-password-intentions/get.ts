@@ -9,7 +9,7 @@ export const procedure = unauthProcedure
 	.input(
 		z.strictObject({
 			token: resetPasswordTokenSchema,
-		})
+		}),
 	)
 	.query(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
@@ -17,7 +17,7 @@ export const procedure = unauthProcedure
 			.selectFrom("resetPasswordIntentions")
 			.where("token", "=", input.token)
 			.innerJoin("accounts", (qb) =>
-				qb.onRef("accounts.id", "=", "resetPasswordIntentions.accountId")
+				qb.onRef("accounts.id", "=", "resetPasswordIntentions.accountId"),
 			)
 			.select("email")
 			.executeTakeFirst();

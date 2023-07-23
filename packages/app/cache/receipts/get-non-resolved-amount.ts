@@ -16,7 +16,7 @@ const update = (controller: Controller) => (updater: utils.UpdateFn<Amount>) =>
 export const getController = (trpc: TRPCReactContext) => {
 	const controller = utils.createController(
 		trpc,
-		"receipts.getNonResolvedAmount"
+		"receipts.getNonResolvedAmount",
 	);
 	return {
 		update: (updater: utils.UpdateFn<Amount>) => update(controller)(updater),
@@ -26,12 +26,12 @@ export const getController = (trpc: TRPCReactContext) => {
 export const getRevertController = (trpc: TRPCReactContext) => {
 	const controller = utils.createController(
 		trpc,
-		"receipts.getNonResolvedAmount"
+		"receipts.getNonResolvedAmount",
 	);
 	return {
 		update: (
 			updater: utils.UpdateFn<Amount>,
-			revertUpdater: utils.SnapshotFn<Amount>
+			revertUpdater: utils.SnapshotFn<Amount>,
 		) =>
 			utils.applyUpdateFnWithRevert(update(controller), updater, revertUpdater),
 	};

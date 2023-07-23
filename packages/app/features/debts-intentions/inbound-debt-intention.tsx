@@ -25,9 +25,9 @@ export const InboundDebtIntention: React.FC<Props> = ({ intention }) => {
 					currencyCode: intention.currencyCode,
 					currentAmount: intention.current?.amount,
 				}),
-				[intention]
+				[intention],
 			),
-		})
+		}),
 	);
 	const acceptSyncIntention = React.useCallback(
 		(redirectToDebt = false) => {
@@ -40,10 +40,10 @@ export const InboundDebtIntention: React.FC<Props> = ({ intention }) => {
 						}
 						router.push(`/debts/${intention.id}`);
 					},
-				}
+				},
 			);
 		},
-		[acceptMutation, intention.id, router]
+		[acceptMutation, intention.id, router],
 	);
 
 	const rejectMutation = trpc.debtsSyncIntentions.reject.useMutation(
@@ -54,13 +54,13 @@ export const InboundDebtIntention: React.FC<Props> = ({ intention }) => {
 					currentAmount: intention.current?.amount,
 					receiptId: intention.receiptId,
 				}),
-				[intention]
+				[intention],
 			),
-		})
+		}),
 	);
 	const rejectSyncIntention = React.useCallback(
 		() => rejectMutation.mutate({ id: intention.id }),
-		[rejectMutation, intention.id]
+		[rejectMutation, intention.id],
 	);
 
 	const isLoading = acceptMutation.isLoading || rejectMutation.isLoading;

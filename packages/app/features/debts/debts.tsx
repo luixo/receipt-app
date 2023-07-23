@@ -94,7 +94,7 @@ const DebtsInner: React.FC<InnerProps> = ({ query }) => {
 						{index === 0 ? null : <Spacer y={0.5} />}
 						<UserDebtsPreview
 							debts={debts.filter((debt) =>
-								showResolvedDebts ? true : debt.sum !== 0
+								showResolvedDebts ? true : debt.sum !== 0,
 							)}
 							userId={userId}
 							transparent={allDebtsResolved}

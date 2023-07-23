@@ -10,14 +10,14 @@ const createDebtsTable = async (db: Database) => {
 				.notNull()
 				.references("accounts.id")
 				.onUpdate("cascade")
-				.onDelete("cascade")
+				.onDelete("cascade"),
 		)
 		.addColumn("userId", "uuid", (cb) =>
 			cb
 				.notNull()
 				.references("users.id")
 				.onUpdate("cascade")
-				.onDelete("cascade")
+				.onDelete("cascade"),
 		)
 		.addColumn("currency", "varchar(3)", (cb) => cb.notNull())
 		.addColumn("amount", "numeric(19, 4)", (cb) => cb.notNull())

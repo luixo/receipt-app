@@ -21,7 +21,7 @@ const TitleLink = styled(Link, {
 });
 
 export const getWidths = (
-	overflow: boolean
+	overflow: boolean,
 ): [number, number, number, number, number] => {
 	if (overflow) {
 		return [8, 4, 4, 4, 4];
@@ -36,7 +36,7 @@ type Props = {
 export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 	const currency = useFormattedCurrency(receipt.currencyCode);
 	const updateReceiptMutation = trpc.receipts.update.useMutation(
-		useTrpcMutationOptions(mutations.receipts.update.options)
+		useTrpcMutationOptions(mutations.receipts.update.options),
 	);
 	const switchResolved = React.useCallback(() => {
 		updateReceiptMutation.mutate({

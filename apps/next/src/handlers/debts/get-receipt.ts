@@ -13,7 +13,7 @@ export const procedure = authProcedure
 	.input(
 		z.strictObject({
 			receiptId: receiptIdSchema,
-		})
+		}),
 	)
 	.query(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
@@ -43,23 +43,23 @@ export const procedure = authProcedure
 					.where(
 						"receiptParticipants.userId",
 						"<>",
-						ctx.auth.accountId as UsersId
+						ctx.auth.accountId as UsersId,
 					)
 					.innerJoin("users", (qb) =>
-						qb.onRef("receiptParticipants.userId", "=", "users.id")
+						qb.onRef("receiptParticipants.userId", "=", "users.id"),
 					)
 					.leftJoin("debts", (qb) =>
 						qb
 							.onRef("debts.userId", "=", "receiptParticipants.userId")
 							.onRef("debts.receiptId", "=", "receiptParticipants.receiptId")
-							.on("debts.ownerAccountId", "=", ctx.auth.accountId)
+							.on("debts.ownerAccountId", "=", ctx.auth.accountId),
 					)
 					.leftJoin("receiptItems", (qb) =>
 						qb.onRef(
 							"receiptItems.receiptId",
 							"=",
-							"receiptParticipants.receiptId"
-						)
+							"receiptParticipants.receiptId",
+						),
 					)
 					.leftJoin("itemParticipants", (qb) =>
 						qb
@@ -67,8 +67,8 @@ export const procedure = authProcedure
 							.onRef(
 								"receiptParticipants.userId",
 								"=",
-								"itemParticipants.userId"
-							)
+								"itemParticipants.userId",
+							),
 					)
 					.select([
 						"receiptParticipants.userId",
@@ -83,7 +83,7 @@ export const procedure = authProcedure
 					.groupBy("debts.lockedTimestamp")
 					.groupBy("debts.amount")
 					.groupBy("receiptParticipants.userId")
-					.groupBy("itemParticipants.userId")
+					.groupBy("itemParticipants.userId"),
 			)
 			.with("rankedParticipants", (qc) =>
 				qc
@@ -98,7 +98,7 @@ export const procedure = authProcedure
 						sql`rank() over (partition by "userId" order by "parts" asc)`
 							.castTo<string>()
 							.as("rank"),
-					])
+					]),
 			)
 			.selectFrom("rankedParticipants")
 			.selectAll()
@@ -114,11 +114,11 @@ export const procedure = authProcedure
 					return getLockedStatus(
 						database,
 						participant.debtId,
-						ctx.auth.accountId
+						ctx.auth.accountId,
 					);
 				}
 				return ["nosync" as const] as const;
-			})
+			}),
 		);
 
 		return participants.map((participant, index) => {

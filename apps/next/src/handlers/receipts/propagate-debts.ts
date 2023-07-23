@@ -2,11 +2,11 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
-import { upsertDebtIntentionFromReceipt } from "next-app/handlers/debts-sync-intentions/utils";
 import {
 	getDebtsResult,
 	upsertDebtFromReceipt,
 } from "next-app/handlers/debts/utils";
+import { upsertDebtIntentionFromReceipt } from "next-app/handlers/debts-sync-intentions/utils";
 import { getValidParticipants } from "next-app/handlers/receipt-items/utils";
 import { getReceiptById } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
@@ -16,7 +16,7 @@ export const procedure = authProcedure
 	.input(
 		z.strictObject({
 			receiptId: receiptIdSchema,
-		})
+		}),
 	)
 	.mutation(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
@@ -50,7 +50,7 @@ export const procedure = authProcedure
 		const validParticipants = await getValidParticipants(
 			database,
 			input.receiptId,
-			ctx.auth.accountId
+			ctx.auth.accountId,
 		);
 		const createdTimestamp = new Date();
 		const actualDebts = await database.transaction().execute(async (tx) => {
@@ -58,7 +58,7 @@ export const procedure = authProcedure
 				tx,
 				validParticipants,
 				receipt,
-				createdTimestamp
+				createdTimestamp,
 			);
 			await upsertDebtIntentionFromReceipt(
 				tx,
@@ -67,7 +67,7 @@ export const procedure = authProcedure
 					debtId: debts[index]!.debtId,
 				})),
 				ctx.auth.accountId,
-				createdTimestamp
+				createdTimestamp,
 			);
 			return debts;
 		});
@@ -75,6 +75,6 @@ export const procedure = authProcedure
 			validParticipants,
 			actualDebts,
 			receipt,
-			createdTimestamp
+			createdTimestamp,
 		);
 	});

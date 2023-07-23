@@ -21,7 +21,7 @@ export const options: UseContextedMutationOptions<
 					if (participantResolved === false) {
 						return controller.update(
 							(prev) => prev - 1,
-							() => (prev) => prev + 1
+							() => (prev) => prev + 1,
 						);
 					}
 				},

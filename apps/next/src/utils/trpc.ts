@@ -28,7 +28,7 @@ export const trpcNext = createTRPCNext<
 					url: isBrowser
 						? TRPC_ENDPOINT
 						: getSsrHost(
-								(getConfig() as NextConfig).serverRuntimeConfig?.port ?? 0
+								(getConfig() as NextConfig).serverRuntimeConfig?.port ?? 0,
 						  ),
 					headers: {
 						debug: hasDebug ? "true" : undefined,

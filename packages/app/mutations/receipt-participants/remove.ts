@@ -31,7 +31,7 @@ export const options: UseContextedMutationOptions<
 									(snapshot) => (item) => ({
 										...item,
 										participantResolved: snapshot.participantResolved,
-									})
+									}),
 								),
 							getPaged: (controller) =>
 								controller.update(
@@ -43,7 +43,7 @@ export const options: UseContextedMutationOptions<
 									(snapshot) => (item) => ({
 										...item,
 										participantResolved: snapshot.participantResolved,
-									})
+									}),
 								),
 							getName: noop,
 							getResolvedParticipants: (controller) =>
@@ -54,11 +54,11 @@ export const options: UseContextedMutationOptions<
 								}
 								return controller.update(
 									(prev) => prev - 1,
-									() => (prev) => prev + 1
+									() => (prev) => prev + 1,
 								);
 							},
 					  })
-					: undefined
+					: undefined,
 			),
 	errorToastOptions: () => (error) => ({
 		text: `Error removing a participant: ${error.message}`,

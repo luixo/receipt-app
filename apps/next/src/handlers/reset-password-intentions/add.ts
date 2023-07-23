@@ -13,7 +13,7 @@ export const procedure = unauthProcedure
 	.input(
 		z.strictObject({
 			email: emailSchema,
-		})
+		}),
 	)
 	.mutation(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);

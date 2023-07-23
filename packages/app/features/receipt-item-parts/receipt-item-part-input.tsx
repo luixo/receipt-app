@@ -51,7 +51,7 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 		useTrpcMutationOptions(mutations.itemParticipants.update.options, {
 			context: receiptId,
 			onSuccess: unsetEditing,
-		})
+		}),
 	);
 
 	const updatePart = React.useCallback(
@@ -69,7 +69,7 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 				update: { type: "part", part: nextPart },
 			});
 		},
-		[updateMutation, receiptItemId, itemPart.userId, itemPart.part]
+		[updateMutation, receiptItemId, itemPart.userId, itemPart.part],
 	);
 
 	const wrap = React.useCallback(
@@ -93,7 +93,7 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 				/>
 			</div>
 		),
-		[updatePart, itemPart.part, updateMutation.isLoading]
+		[updatePart, itemPart.part, updateMutation.isLoading],
 	);
 
 	const readOnlyComponent = (
@@ -133,7 +133,7 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 					width="$20"
 				/>
 				<Text>/ {itemParts}</Text>
-			</>
+			</>,
 		);
 	}
 
@@ -147,6 +147,6 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 			icon={<EditIcon size={12} />}
 		>
 			{readOnlyComponent}
-		</IconButton>
+		</IconButton>,
 	);
 };

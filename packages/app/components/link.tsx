@@ -23,7 +23,7 @@ export const Link: React.FC<Props> = React.forwardRef(
 				e.preventDefault();
 				router.push(href);
 			},
-			[router, href]
+			[router, href],
 		);
 		return (
 			<StyledLink
@@ -38,5 +38,5 @@ export const Link: React.FC<Props> = React.forwardRef(
 				{children}
 			</StyledLink>
 		);
-	}
+	},
 );

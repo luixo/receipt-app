@@ -74,7 +74,7 @@ export const Header: React.FC<Props> = ({
 	const router = useRouter();
 	const back = React.useCallback(
 		() => router.push(backHref!),
-		[router, backHref]
+		[router, backHref],
 	);
 	const [verticalLayout, setVerticalLayout] = React.useState(false);
 	const wrapperRef = React.useRef<HTMLDivElement>(null);

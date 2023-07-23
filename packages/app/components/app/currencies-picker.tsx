@@ -35,7 +35,7 @@ const CurrenciesPickerInner: React.FC<InnerProps> = ({
 	const list = topCurrencyCodes
 		? query.data.sort(
 				(a, b) =>
-					topCurrencyCodes.indexOf(b.code) - topCurrencyCodes.indexOf(a.code)
+					topCurrencyCodes.indexOf(b.code) - topCurrencyCodes.indexOf(a.code),
 		  )
 		: query.data;
 	return (
@@ -82,7 +82,7 @@ type WrapperProps = Omit<LoaderProps, "query"> & {
 	onModalClose: () => void;
 	onLoad?: (
 		currencies: CurrencyListItem[],
-		topCurrencyCodes: CurrencyCode[]
+		topCurrencyCodes: CurrencyCode[],
 	) => void;
 };
 
@@ -95,7 +95,7 @@ export const CurrenciesPicker: React.FC<WrapperProps> = ({
 }) => {
 	const query = trpc.currency.getList.useQuery(
 		{ locale: "en" },
-		{ trpc: { ssr: false }, cacheTime: MONTH }
+		{ trpc: { ssr: false }, cacheTime: MONTH },
 	);
 	React.useEffect(() => {
 		if (
@@ -105,7 +105,7 @@ export const CurrenciesPicker: React.FC<WrapperProps> = ({
 		) {
 			onLoad(
 				query.data,
-				topCurrenciesQuery.data.map(({ currencyCode }) => currencyCode)
+				topCurrenciesQuery.data.map(({ currencyCode }) => currencyCode),
 			);
 		}
 	}, [onLoad, query, topCurrenciesQuery]);

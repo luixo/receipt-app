@@ -30,20 +30,20 @@ export const createAccountConnectionsTable = async (db: Database) => {
 				.notNull()
 				.references("accounts.id")
 				.onUpdate("cascade")
-				.onDelete("cascade")
+				.onDelete("cascade"),
 		)
 		.addColumn("secondAccountId", "uuid", (cb) =>
 			cb
 				.notNull()
 				.references("accounts.id")
 				.onUpdate("cascade")
-				.onDelete("cascade")
+				.onDelete("cascade"),
 		)
 		.addColumn("firstStatus", "varchar(20)", (cb) =>
-			cb.notNull().defaultTo("pending")
+			cb.notNull().defaultTo("pending"),
 		)
 		.addColumn("secondStatus", "varchar(20)", (cb) =>
-			cb.notNull().defaultTo("pending")
+			cb.notNull().defaultTo("pending"),
 		)
 		.addPrimaryKeyConstraint("account_connections_pair", [
 			"firstAccountId",
@@ -81,7 +81,7 @@ const createReceiptsTable = async (db: Database) => {
 				.notNull()
 				.references("accounts.id")
 				.onUpdate("cascade")
-				.onDelete("cascade")
+				.onDelete("cascade"),
 		)
 		.addColumn("issued", "timestamp", (cb) => cb.notNull())
 		.addColumn("resolved", "boolean", (cb) => cb.notNull().defaultTo("false"))
@@ -111,10 +111,10 @@ const createReceiptItemsTable = async (db: Database) => {
 				.notNull()
 				.references("receipts.id")
 				.onUpdate("cascade")
-				.onDelete("cascade")
+				.onDelete("cascade"),
 		)
 		.addColumn("locked", "boolean", (cb) =>
-			cb.notNull().defaultTo("false").notNull()
+			cb.notNull().defaultTo("false").notNull(),
 		)
 		.execute();
 	await db.schema
@@ -139,7 +139,7 @@ const createSessionsTable = async (db: Database) => {
 				.notNull()
 				.references("accounts.id")
 				.onUpdate("cascade")
-				.onDelete("cascade")
+				.onDelete("cascade"),
 		)
 		.addColumn("expirationTimestamp", "timestamp", (cb) => cb.notNull())
 		.execute();
@@ -167,16 +167,16 @@ const createUsersTable = async (db: Database) => {
 				.notNull()
 				.references("accounts.id")
 				.onUpdate("cascade")
-				.onDelete("cascade")
+				.onDelete("cascade"),
 		)
 		.addColumn("exposeReceipts", "boolean", (cb) =>
-			cb.notNull().defaultTo("false")
+			cb.notNull().defaultTo("false"),
 		)
 		.addColumn("acceptReceipts", "boolean", (cb) =>
-			cb.notNull().defaultTo("false")
+			cb.notNull().defaultTo("false"),
 		)
 		.addColumn("connectedAccountId", "uuid", (cb) =>
-			cb.references("accounts.id").onUpdate("cascade").onDelete("set null")
+			cb.references("accounts.id").onUpdate("cascade").onDelete("set null"),
 		)
 		.execute();
 };
@@ -194,7 +194,7 @@ const createItemParticipantsTable = async (db: Database) => {
 				.notNull()
 				.references("receipt_items.id")
 				.onUpdate("cascade")
-				.onDelete("cascade")
+				.onDelete("cascade"),
 		)
 		.addColumn("part", "numeric(5, 2)", (cb) => cb.notNull())
 		.addColumn("userId", "uuid", (cb) =>
@@ -202,7 +202,7 @@ const createItemParticipantsTable = async (db: Database) => {
 				.notNull()
 				.references("users.id")
 				.onUpdate("cascade")
-				.onDelete("cascade")
+				.onDelete("cascade"),
 		)
 		.addPrimaryKeyConstraint("itemParticipants_pk", ["itemId", "userId"])
 		.execute();
@@ -227,14 +227,14 @@ const createReceiptParticipantsTable = async (db: Database) => {
 				.notNull()
 				.references("receipts.id")
 				.onUpdate("cascade")
-				.onDelete("cascade")
+				.onDelete("cascade"),
 		)
 		.addColumn("userId", "uuid", (cb) =>
 			cb
 				.notNull()
 				.references("users.id")
 				.onUpdate("cascade")
-				.onDelete("cascade")
+				.onDelete("cascade"),
 		)
 		.addColumn("role", "varchar(255)", (cb) => cb.notNull())
 		.addColumn("resolved", "boolean", (cb) => cb.notNull().defaultTo("false"))

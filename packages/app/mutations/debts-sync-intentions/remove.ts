@@ -22,7 +22,7 @@ export const options: UseContextedMutationOptions<
 					return controller.update(
 						currData.receiptId,
 						currData.userId,
-						(debt) => ({ ...debt, status, intentionDirection })
+						(debt) => ({ ...debt, status, intentionDirection }),
 					);
 				},
 				get: (controller) =>

@@ -9,7 +9,7 @@ export const procedure = authProcedure
 	.input(
 		z.strictObject({
 			id: userIdSchema,
-		})
+		}),
 	)
 	.query(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);

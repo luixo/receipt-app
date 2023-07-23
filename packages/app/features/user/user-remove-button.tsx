@@ -23,15 +23,15 @@ export const UserRemoveButton: React.FC<Props> = ({
 	const removeUserMutation = trpc.users.remove.useMutation(
 		useTrpcMutationOptions(mutations.users.remove.options, {
 			onSuccess: () => router.replace("/users"),
-		})
+		}),
 	);
 	React.useEffect(
 		() => setLoading(removeUserMutation.isLoading),
-		[removeUserMutation.isLoading, setLoading]
+		[removeUserMutation.isLoading, setLoading],
 	);
 	const removeUser = React.useCallback(
 		() => removeUserMutation.mutate({ id: user.remoteId }),
-		[removeUserMutation, user.remoteId]
+		[removeUserMutation, user.remoteId],
 	);
 
 	return (

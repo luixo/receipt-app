@@ -76,7 +76,7 @@ const UsersSuggestDropdown: React.FC<DropdownProps> = ({
 	}
 	const users = query.data.pages.reduce<User[]>(
 		(acc, page) => [...acc, ...page.items],
-		[]
+		[],
 	);
 	if (users.length === 0) {
 		return (
@@ -174,7 +174,7 @@ export const UsersSuggest: React.FC<Props> = ({
 	const debouncedValue = useDebouncedValue(value, throttledMs);
 	const onChange = React.useCallback(
 		(e: React.ChangeEvent<FormElement>) => setValue(e.currentTarget.value),
-		[setValue]
+		[setValue],
 	);
 	const onUserClick: typeof onUserClickRaw = React.useCallback(
 		(user) => {
@@ -183,7 +183,7 @@ export const UsersSuggest: React.FC<Props> = ({
 				hideDropdown();
 			}
 		},
-		[onUserClickRaw, hideDropdown, closeOnSelect]
+		[onUserClickRaw, hideDropdown, closeOnSelect],
 	);
 	const queryEnabled = debouncedValue.length >= 1;
 	const selectedUsers = Array.isArray(selected)
@@ -197,7 +197,7 @@ export const UsersSuggest: React.FC<Props> = ({
 	];
 	const topQuery = trpc.users.suggestTop.useQuery(
 		{ limit: topLimit, options, filterIds },
-		{ keepPreviousData: true }
+		{ keepPreviousData: true },
 	);
 	const query = trpc.users.suggest.useInfiniteQuery(
 		{ limit, input: debouncedValue, options, filterIds },
@@ -206,12 +206,12 @@ export const UsersSuggest: React.FC<Props> = ({
 				result.hasMore ? result.cursor + limit : undefined,
 			enabled: queryEnabled,
 			keepPreviousData: true,
-		}
+		},
 	);
 	const inputRef = React.useRef<HTMLInputElement>(null);
 	const focusInput = React.useCallback(
 		() => inputRef.current?.focus(),
-		[inputRef]
+		[inputRef],
 	);
 	React.useEffect(() => {
 		if (dropdownVisible) {
@@ -232,7 +232,7 @@ export const UsersSuggest: React.FC<Props> = ({
 			const inputElement = inputRef.current;
 			return inputElement ? !inputElement.contains(e) : true;
 		},
-		[inputRef]
+		[inputRef],
 	);
 	return (
 		<Wrapper>

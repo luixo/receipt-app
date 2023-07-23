@@ -19,7 +19,7 @@ export const procedure = authProcedure
 		z.strictObject({
 			itemId: receiptItemIdSchema,
 			userIds: z.array(userIdSchema).nonempty(),
-		})
+		}),
 	)
 	.mutation(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
@@ -52,7 +52,7 @@ export const procedure = authProcedure
 		const accessRole = await getAccessRole(
 			database,
 			receipt,
-			ctx.auth.accountId
+			ctx.auth.accountId,
 		);
 		if (accessRole !== "owner" && accessRole !== "editor") {
 			throw new trpc.TRPCError({
@@ -69,7 +69,7 @@ export const procedure = authProcedure
 			.execute();
 		if (receiptParticipants.length !== input.userIds.length) {
 			const participatingUserIds = receiptParticipants.map(
-				({ userId }) => userId
+				({ userId }) => userId,
 			);
 			throw new trpc.TRPCError({
 				code: "FORBIDDEN",
@@ -89,7 +89,7 @@ export const procedure = authProcedure
 			throw new trpc.TRPCError({
 				code: "CONFLICT",
 				message: `User(s) ${userWithParts.join(
-					", "
+					", ",
 				)} already have / has a part in item ${input.itemId}.`,
 			});
 		}
@@ -100,7 +100,7 @@ export const procedure = authProcedure
 					userId,
 					itemId: input.itemId,
 					part: "1",
-				}))
+				})),
 			)
 			.execute();
 	});

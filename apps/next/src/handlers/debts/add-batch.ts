@@ -29,12 +29,12 @@ export const procedure = authProcedure
 			.array()
 			.max(
 				MAX_BATCH_DEBTS,
-				`Maximum amount of batched debts is ${MAX_BATCH_DEBTS}`
+				`Maximum amount of batched debts is ${MAX_BATCH_DEBTS}`,
 			)
 			.min(
 				MIN_BATCH_DEBTS,
-				`Minimum amount of batched debts is ${MIN_BATCH_DEBTS}`
-			)
+				`Minimum amount of batched debts is ${MIN_BATCH_DEBTS}`,
+			),
 	)
 	.mutation(async ({ input, ctx }) => {
 		const ids = input.map(() => v4());
@@ -47,7 +47,7 @@ export const procedure = authProcedure
 		if (users.length !== userIds.length) {
 			const foundUserIds = users.map((user) => user.id);
 			const missingUserIds = userIds.filter(
-				(requestedUserId) => !foundUserIds.includes(requestedUserId)
+				(requestedUserId) => !foundUserIds.includes(requestedUserId),
 			);
 			throw new trpc.TRPCError({
 				code: "NOT_FOUND",
@@ -55,7 +55,7 @@ export const procedure = authProcedure
 			});
 		}
 		const foreignUsers = users.filter(
-			({ ownerAccountId }) => ownerAccountId !== ctx.auth.accountId
+			({ ownerAccountId }) => ownerAccountId !== ctx.auth.accountId,
 		);
 		if (foreignUsers.length !== 0) {
 			const foreignUserIds = foreignUsers.map((foreignUser) => foreignUser.id);
@@ -78,7 +78,7 @@ export const procedure = authProcedure
 					created: new Date(),
 					timestamp: debt.timestamp || new Date(),
 					amount: debt.amount.toString(),
-				}))
+				})),
 			)
 			.execute();
 		return ids;

@@ -15,7 +15,7 @@ import { Exact, MaybeAddElementToArray } from "app/utils/types";
 
 export type TRPCMutationOptions<
 	Path extends TRPCMutationKey,
-	LifecycleContext = unknown
+	LifecycleContext = unknown,
 > = MutationOptions<
 	TRPCMutationOutput<Path>,
 	TRPCError,
@@ -31,7 +31,7 @@ type WrappedContext<LifecycleContext = unknown> = {
 
 type WrappedMutationOptions<
 	Path extends TRPCMutationKey,
-	LifecycleContext = unknown
+	LifecycleContext = unknown,
 > = TRPCMutationOptions<Path, WrappedContext<LifecycleContext>>;
 
 type ToastArgs<Context> = MaybeAddElementToArray<[], Context>;
@@ -56,7 +56,7 @@ export type UseContextedMutationOptions<
 	WrappedOptions extends WrappedMutationOptions<
 		Path,
 		LifecycleContext
-	> = WrappedMutationOptions<Path, LifecycleContext>
+	> = WrappedMutationOptions<Path, LifecycleContext>,
 > = {
 	mutateToastOptions?:
 		| ToastOptions
@@ -90,7 +90,7 @@ export type UseContextedMutationOptions<
 export const useTrpcMutationOptions = <
 	Path extends TRPCMutationKey = TRPCMutationKey,
 	Context = undefined,
-	LifecycleContext = unknown
+	LifecycleContext = unknown,
 >(
 	...[
 		{
@@ -139,7 +139,7 @@ export const useTrpcMutationOptions = <
 						? errorToastOptions(...toastArgs)(
 								error,
 								vars,
-								wrappedContext?.context
+								wrappedContext?.context,
 						  )
 						: errorToastOptions;
 				if (toastOptions) {
@@ -155,7 +155,7 @@ export const useTrpcMutationOptions = <
 						? successToastOptions?.(...toastArgs)(
 								result,
 								vars,
-								wrappedContext?.context
+								wrappedContext?.context,
 						  )
 						: successToastOptions;
 				if (toastOptions) {
@@ -166,7 +166,7 @@ export const useTrpcMutationOptions = <
 				return onSuccessTrpc?.(...trpcArgs)(
 					result,
 					vars,
-					wrappedContext?.context
+					wrappedContext?.context,
 				);
 			},
 			onSettled: (result, error, vars, wrappedContext) => {
@@ -175,7 +175,7 @@ export const useTrpcMutationOptions = <
 					result,
 					error,
 					vars,
-					wrappedContext?.context
+					wrappedContext?.context,
 				);
 			},
 			...rest,

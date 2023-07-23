@@ -72,7 +72,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 					selfAccountId: selfAccountId || "unknown",
 					resolvedStatus: participant.resolved,
 				},
-			})
+			}),
 		);
 	const removeReceiptParticipant = React.useCallback(
 		() =>
@@ -80,7 +80,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 				receiptId,
 				userId: participant.remoteUserId,
 			}),
-		[removeReceiptParticipantMutation, receiptId, participant.remoteUserId]
+		[removeReceiptParticipantMutation, receiptId, participant.remoteUserId],
 	);
 	const currency = useFormattedCurrency(currencyCode);
 

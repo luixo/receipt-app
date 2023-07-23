@@ -24,13 +24,13 @@ export const options: UseContextedMutationOptions<
 							role: item.role,
 							resolved: false,
 							added: item.added,
-						})
+						}),
 					);
 				},
 				getReceiptItemPart: noop,
 			});
 			const selfParticipating = result.find(
-				(resultItem) => resultItem.role === "owner"
+				(resultItem) => resultItem.role === "owner",
 			);
 			if (selfParticipating) {
 				cache.receipts.update(trpcContext, {

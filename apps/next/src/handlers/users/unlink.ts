@@ -9,7 +9,7 @@ export const procedure = authProcedure
 	.input(
 		z.strictObject({
 			id: userIdSchema,
-		})
+		}),
 	)
 	.mutation(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
@@ -17,12 +17,12 @@ export const procedure = authProcedure
 			.selectFrom("users as usersMine")
 			.where("id", "=", input.id)
 			.innerJoin("accounts", (qb) =>
-				qb.on("accounts.id", "=", "usersMine.connectedAccountId")
+				qb.on("accounts.id", "=", "usersMine.connectedAccountId"),
 			)
 			.innerJoin("users as usersTheir", (qb) =>
 				qb
 					.on("usersTheir.connectedAccountId", "=", ctx.auth.accountId)
-					.onRef("usersTheir.ownerAccountId", "=", "accounts.id")
+					.onRef("usersTheir.ownerAccountId", "=", "accounts.id"),
 			)
 			.select([
 				"usersMine.ownerAccountId",

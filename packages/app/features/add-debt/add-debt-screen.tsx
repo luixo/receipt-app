@@ -39,7 +39,7 @@ export const AddDebtScreen: AppPage = () => {
 	const [userId] = useParam("userId");
 	const userQuery = trpc.users.get.useQuery(
 		{ id: userId || "unknown" },
-		{ enabled: Boolean(userId) }
+		{ enabled: Boolean(userId) },
 	);
 
 	const router = useRouter();
@@ -47,7 +47,7 @@ export const AddDebtScreen: AppPage = () => {
 	const addMutation = trpc.debts.add.useMutation(
 		useTrpcMutationOptions(mutations.debts.add.options, {
 			onSuccess: (id) => router.replace(`/debts/${id}`),
-		})
+		}),
 	);
 
 	const form = useForm<Form>({
@@ -61,7 +61,7 @@ export const AddDebtScreen: AppPage = () => {
 				user: userItemSchema,
 				note: debtNoteSchema,
 				timestamp: z.date(),
-			})
+			}),
 		),
 		defaultValues: {
 			note: "",
@@ -91,11 +91,11 @@ export const AddDebtScreen: AppPage = () => {
 	}, [userQuery.data, form]);
 	const onUserClick = React.useCallback(
 		(user: z.infer<typeof userItemSchema>) => form.setValue("user", user),
-		[form]
+		[form],
 	);
 	const onDirectionUpdate = React.useCallback(
 		(direction: Direction) => form.setValue("direction", direction),
-		[form]
+		[form],
 	);
 	const onSubmit = React.useCallback(
 		(values: Form) =>
@@ -106,7 +106,7 @@ export const AddDebtScreen: AppPage = () => {
 				amount: values.amount * (values.direction === "+" ? 1 : -1),
 				timestamp: values.timestamp,
 			}),
-		[addMutation]
+		[addMutation],
 	);
 	const topCurrenciesQuery = trpc.currency.topDebts.useQuery();
 

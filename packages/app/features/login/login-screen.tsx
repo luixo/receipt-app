@@ -26,7 +26,7 @@ export const LoginScreen: AppPage = () => {
 	const form = useForm<LoginForm>({
 		mode: "onChange",
 		resolver: zodResolver(
-			z.object({ email: emailSchema, password: passwordSchema })
+			z.object({ email: emailSchema, password: passwordSchema }),
 		),
 	});
 
@@ -36,11 +36,11 @@ export const LoginScreen: AppPage = () => {
 	const loginMutation = trpc.auth.login.useMutation(
 		useTrpcMutationOptions(mutations.auth.login.options, {
 			onSuccess: () => router.replace("/"),
-		})
+		}),
 	);
 	const onSubmit = React.useCallback(
 		(data: LoginForm) => loginMutation.mutate(data),
-		[loginMutation]
+		[loginMutation],
 	);
 
 	return (

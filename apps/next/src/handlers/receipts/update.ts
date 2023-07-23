@@ -28,7 +28,7 @@ export const procedure = authProcedure
 					currencyCode: currencyCodeSchema,
 				}),
 			]),
-		})
+		}),
 	)
 	.mutation(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
@@ -51,7 +51,7 @@ export const procedure = authProcedure
 
 		const updateTable = (
 			localDatabase: Database,
-			setObject: MutationObject<ReceiptsDatabase, "receipts", "receipts">
+			setObject: MutationObject<ReceiptsDatabase, "receipts", "receipts">,
 		) =>
 			localDatabase
 				.updateTable("receipts")
@@ -70,13 +70,13 @@ export const procedure = authProcedure
 				.selectFrom("receiptItems")
 				.where("receiptItems.receiptId", "=", input.id)
 				.leftJoin("itemParticipants", (qb) =>
-					qb.onRef("itemParticipants.itemId", "=", "receiptItems.id")
+					qb.onRef("itemParticipants.itemId", "=", "receiptItems.id"),
 				)
 				.groupBy("receiptItems.id")
 				.having(
 					database.fn.sum<string>("itemParticipants.part"),
 					"is",
-					sql`null`
+					sql`null`,
 				)
 				.select("receiptItems.id")
 				.executeTakeFirst();

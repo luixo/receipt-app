@@ -35,12 +35,12 @@ export const getRevertController = (trpc: TRPCReactContext) => {
 		upsert: (userId: UsersId, name: UserName) =>
 			utils.applyWithRevert(
 				() => uspert(controller, userId, name),
-				() => remove(controller, userId)
+				() => remove(controller, userId),
 			),
 		remove: (userId: UsersId) =>
 			utils.applyWithRevert(
 				() => remove(controller, userId),
-				(snapshot) => uspert(controller, userId, snapshot)
+				(snapshot) => uspert(controller, userId, snapshot),
 			),
 	};
 };

@@ -28,7 +28,7 @@ export const AccountNameInput: React.FC<Props> = ({ accountQuery }) => {
 	const updateNameMutation = trpc.account.changeName.useMutation(
 		useTrpcMutationOptions(mutations.account.changeName.options, {
 			context: { id: accountQuery.account.id },
-		})
+		}),
 	);
 	const saveName = React.useCallback(
 		(nextName: string) => {
@@ -37,10 +37,10 @@ export const AccountNameInput: React.FC<Props> = ({ accountQuery }) => {
 			}
 			updateNameMutation.mutate(
 				{ name: nextName },
-				{ onSuccess: () => setValue(nextName) }
+				{ onSuccess: () => setValue(nextName) },
 			);
 		},
-		[updateNameMutation, accountQuery.user.name, setValue]
+		[updateNameMutation, accountQuery.user.name, setValue],
 	);
 
 	return (

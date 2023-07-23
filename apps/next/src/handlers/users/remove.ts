@@ -10,7 +10,7 @@ export const procedure = authProcedure
 	.input(
 		z.strictObject({
 			id: userIdSchema,
-		})
+		}),
 	)
 	.mutation(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
@@ -33,7 +33,7 @@ export const procedure = authProcedure
 				.innerJoin(
 					"receiptParticipants",
 					"receiptParticipants.receiptId",
-					"receipts.id"
+					"receipts.id",
 				)
 				.where("receiptParticipants.userId", "=", input.id)
 				.select("id")
@@ -44,7 +44,7 @@ export const procedure = authProcedure
 					.where(
 						"id",
 						"in",
-						receipts.map(({ id }) => id)
+						receipts.map(({ id }) => id),
 					)
 					.set({
 						lockedTimestamp: null,

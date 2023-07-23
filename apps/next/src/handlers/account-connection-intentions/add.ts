@@ -13,7 +13,7 @@ export const procedure = authProcedure
 		z.strictObject({
 			userId: userIdSchema,
 			email: emailSchema,
-		})
+		}),
 	)
 	.mutation(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
@@ -46,6 +46,6 @@ export const procedure = authProcedure
 			ctx.auth.accountId,
 			user,
 			input.email,
-			input.userId
+			input.userId,
 		);
 	});

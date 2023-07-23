@@ -26,5 +26,5 @@ module.exports = withPlugins(
 		withTM,
 		[withExpo, { projectRoot: __dirname }],
 	],
-	nextConfig
+	nextConfig,
 );

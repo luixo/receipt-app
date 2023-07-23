@@ -9,7 +9,7 @@ export const procedure = unauthProcedure
 	.input(
 		z.strictObject({
 			token: confirmEmailTokenSchema,
-		})
+		}),
 	)
 	.mutation(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);

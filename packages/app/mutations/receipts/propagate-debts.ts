@@ -8,7 +8,7 @@ export const options: UseContextedMutationOptions<"receipts.propagateDebts"> = {
 			trpcContext,
 			updateObject.receiptId,
 			updatedDebts.map((debt) => ({ ...debt, deltaAmount: debt.amount })),
-			true
+			true,
 		),
 	}),
 	errorToastOptions: () => (error) => ({

@@ -14,10 +14,10 @@ type Debt = Debts[number];
 const updateUserDebts = (
 	controller: Controller,
 	userId: UsersId,
-	updater: (debts: Debts) => Debts
+	updater: (debts: Debts) => Debts,
 ) =>
 	controller.update((_input, prevData) =>
-		upsertInArray<typeof prevData[number]>(
+		upsertInArray<(typeof prevData)[number]>(
 			prevData,
 			(debtsEntry) => debtsEntry.userId === userId,
 			(user) => {
@@ -27,8 +27,8 @@ const updateUserDebts = (
 				}
 				return { ...user, debts: nextDebts };
 			},
-			{ userId, debts: [] }
-		).filter((userDebts) => userDebts.debts.length !== 0)
+			{ userId, debts: [] },
+		).filter((userDebts) => userDebts.debts.length !== 0),
 	);
 
 const updateCurrencyDebts =
@@ -47,8 +47,8 @@ const updateCurrencyDebts =
 						return { ...userCurrency, sum: nextSum };
 					},
 					{ currencyCode, sum: 0 },
-					ref
-				)
+					ref,
+				),
 			);
 		}).current?.sum;
 
@@ -61,7 +61,7 @@ export const getController = (trpc: TRPCReactContext) => {
 		update: (
 			userId: UsersId,
 			currencyCode: CurrencyCode,
-			updater: utils.UpdateFn<number>
+			updater: utils.UpdateFn<number>,
 		) => updateCurrencyDebts(controller, userId, currencyCode)(updater),
 		invalidate: invalidate(controller),
 	};
@@ -74,12 +74,12 @@ export const getRevertController = (trpc: TRPCReactContext) => {
 			userId: UsersId,
 			currencyCode: CurrencyCode,
 			updater: utils.UpdateFn<number>,
-			revertUpdater: utils.SnapshotFn<number>
+			revertUpdater: utils.SnapshotFn<number>,
 		) =>
 			utils.applyUpdateFnWithRevert(
 				updateCurrencyDebts(controller, userId, currencyCode),
 				updater,
-				revertUpdater
+				revertUpdater,
 			),
 		invalidate: invalidate(controller),
 	};

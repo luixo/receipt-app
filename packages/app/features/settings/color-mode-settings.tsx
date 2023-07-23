@@ -28,7 +28,7 @@ export const ColorModeSettings: React.FC = () => {
 				selected: e.target.checked ? "dark" : "light",
 			}));
 		},
-		[setColorModeConfig]
+		[setColorModeConfig],
 	);
 	const changeAuto = React.useCallback(
 		(nextAuto: boolean) => {
@@ -41,10 +41,10 @@ export const ColorModeSettings: React.FC = () => {
 					: {
 							...prevConfig,
 							selected: prevConfig.last,
-					  }
+					  },
 			);
 		},
-		[setColorModeConfig]
+		[setColorModeConfig],
 	);
 	return (
 		<>

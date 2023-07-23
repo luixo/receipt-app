@@ -44,7 +44,7 @@ const useUsersQuery = (input: Omit<Input, "cursor">, cursor: Input["cursor"]) =>
 		{
 			...useTrpcQueryOptions(queries.users.getPaged.options),
 			keepPreviousData: true,
-		}
+		},
 	);
 
 export const Users: React.FC = () => {

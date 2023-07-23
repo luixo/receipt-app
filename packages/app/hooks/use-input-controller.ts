@@ -13,7 +13,7 @@ import { formatIsoDate } from "app/utils/date";
 
 export type InputControllerOptions<
 	Form extends FieldValues = FieldValues,
-	FieldName extends FieldPath<Form> = FieldPath<Form>
+	FieldName extends FieldPath<Form> = FieldPath<Form>,
 > = {
 	form: UseFormReturn<Form>;
 	name: FieldName;
@@ -23,7 +23,7 @@ export type InputControllerOptions<
 
 export const useInputController = <
 	Form extends FieldValues = FieldValues,
-	FieldName extends FieldPath<Form> = FieldPath<Form>
+	FieldName extends FieldPath<Form> = FieldPath<Form>,
 >({
 	form,
 	name,
@@ -40,13 +40,13 @@ export const useInputController = <
 			if (type === "date") {
 				form.setValue(
 					name,
-					formatIsoDate(nextValue as Date) as PathValue<Form, FieldName>
+					formatIsoDate(nextValue as Date) as PathValue<Form, FieldName>,
 				);
 			} else {
 				form.setValue(name, nextValue);
 			}
 		},
-		[form, name, type]
+		[form, name, type],
 	);
 	const onChange = React.useMemo<React.ChangeEventHandler<FormElement>>(
 		() =>
@@ -58,7 +58,7 @@ export const useInputController = <
 						}
 				  }
 				: field.onChange,
-		[field, type]
+		[field, type],
 	);
 	return {
 		bindings: type === "number" ? { ...field, onChange } : field,
@@ -66,7 +66,7 @@ export const useInputController = <
 		getValue: React.useCallback(() => form.watch(name), [form, name]),
 		getNumberValue: React.useCallback(
 			() => Number(form.watch(name)),
-			[form, name]
+			[form, name],
 		),
 		setValue,
 		form,

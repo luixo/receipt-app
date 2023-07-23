@@ -31,11 +31,11 @@ export const ShrinkText: React.FC<
 		do {
 			currentHeights.element = parseInt(
 				computedStyle.getPropertyValue("height"),
-				10
+				10,
 			);
 			currentHeights.line = parseInt(
 				computedStyle.getPropertyValue("line-height"),
-				10
+				10,
 			);
 			currentFontSize -= fontSizeStep;
 			element.style.fontSize = `${currentFontSize}px`;

@@ -38,7 +38,7 @@ export const ReceiptsPagination: React.FC<Props> = ({ pagination }) => {
 
 	const sortSelectOnClick = React.useCallback(
 		() => changeOrderBy(orderBy === "date-desc" ? "date-asc" : "date-desc"),
-		[changeOrderBy, orderBy]
+		[changeOrderBy, orderBy],
 	);
 	const SortIcon = orderBy === "date-desc" ? SortDownIcon : SortUpIcon;
 
@@ -59,20 +59,20 @@ export const ReceiptsPagination: React.FC<Props> = ({ pagination }) => {
 					changeFilters((prev) => ({ ...prev, [filterKey]: undefined }));
 			}
 		},
-		[changeFilters]
+		[changeFilters],
 	);
 	const onResolvedFilterSelectionChange = React.useCallback(
 		(selection: Selection) =>
 			onFilterSelectionChange("resolvedByMe", selection),
-		[onFilterSelectionChange]
+		[onFilterSelectionChange],
 	);
 	const onOwnedFilterSelectionChange = React.useCallback(
 		(selection: Selection) => onFilterSelectionChange("ownedByMe", selection),
-		[onFilterSelectionChange]
+		[onFilterSelectionChange],
 	);
 	const onLockedFilterSelectionChange = React.useCallback(
 		(selection: Selection) => onFilterSelectionChange("locked", selection),
-		[onFilterSelectionChange]
+		[onFilterSelectionChange],
 	);
 
 	return (

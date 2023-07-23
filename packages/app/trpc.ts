@@ -36,8 +36,9 @@ type TypeKey = "queries" | "mutations";
 type ProceduresValues<
 	Router extends AnyRouter,
 	Type extends TypeKey,
-	Procedures extends Router["_def"]["procedures"] = Router["_def"]["procedures"],
-	ProcedureKeys extends keyof Procedures = keyof Procedures
+	Procedures extends
+		Router["_def"]["procedures"] = Router["_def"]["procedures"],
+	ProcedureKeys extends keyof Procedures = keyof Procedures,
 > = {
 	[K in ProcedureKeys]: Procedures[K] extends AnyRouter
 		? ProceduresValues<Procedures[K], Type>
@@ -62,7 +63,7 @@ type TRPCMutationValues = UnionToIntersection<
 	FlattenObject<AnyProcedure, MutationsProcedureValues>
 >;
 
-export type TRPCReactContext = ReturnType<typeof rawTrpc["useContext"]> & {
+export type TRPCReactContext = ReturnType<(typeof rawTrpc)["useContext"]> & {
 	queryClient: QueryClient;
 };
 
@@ -120,7 +121,7 @@ export type TRPCQueryResult<Path extends TRPCQueryKey> = UseQueryResult<
 
 export type TRPCQuerySuccessResult<
 	Path extends TRPCQueryKey,
-	Result extends TRPCQueryResult<Path> = TRPCQueryResult<Path>
+	Result extends TRPCQueryResult<Path> = TRPCQueryResult<Path>,
 > = Result extends { status: "success" } ? Result : never;
 
 export type TRPCQuery<K extends TRPCQueryKey> = Query<
@@ -157,7 +158,7 @@ export type TRPCInfiniteQueryResult<Path extends TRPCQueryKey> =
 
 export type TRPCInfiniteQuerySuccessResult<
 	Path extends TRPCInfiniteQueryKey,
-	Result extends TRPCInfiniteQueryResult<Path> = TRPCInfiniteQueryResult<Path>
+	Result extends TRPCInfiniteQueryResult<Path> = TRPCInfiniteQueryResult<Path>,
 > = Result extends { status: "success" } ? Result : never;
 
 export type TRPCMutationKey = keyof TRPCMutationValues;

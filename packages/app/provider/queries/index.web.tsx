@@ -17,7 +17,7 @@ export const QueriesProvider: React.FC<React.PropsWithChildren<object>> = ({
 	const [persister] = React.useState(() =>
 		createAsyncStoragePersister({
 			storage: typeof window === "undefined" ? undefined : createIDBStorage(),
-		})
+		}),
 	);
 	return (
 		<PersistQueryClientProvider

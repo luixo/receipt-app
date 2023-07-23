@@ -8,7 +8,7 @@ import { getValidParticipants } from "next-app/handlers/receipt-items/utils";
 export const getDebtIntention = async (
 	database: Database,
 	debtId: DebtsId,
-	accountId: AccountsId
+	accountId: AccountsId,
 ) =>
 	database
 		.selectFrom("debts")
@@ -16,15 +16,15 @@ export const getDebtIntention = async (
 		.leftJoin("debts as debtsMine", (qb) =>
 			qb
 				.onRef("debts.id", "=", "debtsMine.id")
-				.on("debtsMine.ownerAccountId", "=", accountId)
+				.on("debtsMine.ownerAccountId", "=", accountId),
 		)
 		.leftJoin("debtsSyncIntentions", (qb) =>
-			qb.onRef("debts.id", "=", "debtsSyncIntentions.debtId")
+			qb.onRef("debts.id", "=", "debtsSyncIntentions.debtId"),
 		)
 		.leftJoin("debts as debtsTheir", (qb) =>
 			qb
 				.onRef("debts.id", "=", "debtsTheir.id")
-				.on("debtsTheir.ownerAccountId", "<>", accountId)
+				.on("debtsTheir.ownerAccountId", "<>", accountId),
 		)
 		.select([
 			"debtsSyncIntentions.ownerAccountId as intentionAccountId",
@@ -54,7 +54,7 @@ export const statusSchema = z.tuple([
 export const getLockedStatus = async (
 	database: Database,
 	debtId: DebtsId,
-	accountId: AccountsId
+	accountId: AccountsId,
 ): Promise<z.infer<typeof statusSchema>> => {
 	const debtIntention = await getDebtIntention(database, debtId, accountId);
 	if (!debtIntention) {
@@ -101,7 +101,7 @@ export const upsertDebtIntentionFromReceipt = async (
 	database: Database,
 	participants: Participant[],
 	ownerAccountId: AccountsId,
-	created: Date
+	created: Date,
 ) =>
 	database
 		.insertInto("debtsSyncIntentions")
@@ -110,12 +110,12 @@ export const upsertDebtIntentionFromReceipt = async (
 				debtId: participant.debtId,
 				ownerAccountId,
 				lockedTimestamp: created,
-			}))
+			})),
 		)
 		.onConflict((oc) =>
 			oc.column("debtId").doUpdateSet({
 				ownerAccountId: (eb) => eb.ref("excluded.ownerAccountId"),
 				lockedTimestamp: (eb) => eb.ref("excluded.lockedTimestamp"),
-			})
+			}),
 		)
 		.execute();

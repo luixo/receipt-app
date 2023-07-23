@@ -56,7 +56,7 @@ export const ReceiptItemPart: React.FC<Props> = ({
 	const removeMutation = trpc.itemParticipants.remove.useMutation(
 		useTrpcMutationOptions(mutations.itemParticipants.remove.options, {
 			context: receiptId,
-		})
+		}),
 	);
 	const removeItemPart = React.useCallback(
 		() =>
@@ -64,7 +64,7 @@ export const ReceiptItemPart: React.FC<Props> = ({
 				itemId: receiptItemId,
 				userId: itemPart.userId,
 			}),
-		[removeMutation, receiptItemId, itemPart.userId]
+		[removeMutation, receiptItemId, itemPart.userId],
 	);
 
 	return (

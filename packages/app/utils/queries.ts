@@ -8,7 +8,7 @@ export const getNativeBaseUrl = () => {
 	const host = Constants.manifest?.extra?.host;
 	if (!host) {
 		throw new Error(
-			"Expected to have BACKEND_HOST environment variable in extra specification in app.config.ts"
+			"Expected to have BACKEND_HOST environment variable in extra specification in app.config.ts",
 		);
 	}
 	return host;

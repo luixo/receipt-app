@@ -5,7 +5,7 @@ const addReceiptIdColumn = async (db: Database) => {
 	await db.schema
 		.alterTable("debts")
 		.addColumn("receiptId", "uuid", (cb) =>
-			cb.references("receipts.id").onUpdate("cascade").onDelete("cascade")
+			cb.references("receipts.id").onUpdate("cascade").onDelete("cascade"),
 		)
 		.execute();
 };

@@ -45,7 +45,7 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 		useTrpcMutationOptions(mutations.receiptItems.update.options, {
 			context: receiptId,
 			onSuccess: switchEditing,
-		})
+		}),
 	);
 	const updateName = React.useCallback(
 		(name: string) => {
@@ -57,7 +57,7 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 				update: { type: "name", name },
 			});
 		},
-		[updateMutation, receiptItem.id, receiptItem.name]
+		[updateMutation, receiptItem.id, receiptItem.name],
 	);
 
 	if (!isEditing) {

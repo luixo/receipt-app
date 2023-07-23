@@ -25,15 +25,15 @@ type InnerProps = {
 };
 
 export const showPropagateButton = (
-	participants: TRPCQueryOutput<"debts.getReceipt">
+	participants: TRPCQueryOutput<"debts.getReceipt">,
 ) => {
 	// TODO: add info status for receipt for yourself!
 	// TODO: if user is now zero in receipt - let us remove the intention to sync
 	const noneIsSyncedYet = participants.every((participant) =>
-		["nosync", "no-parts"].includes(participant.status)
+		["nosync", "no-parts"].includes(participant.status),
 	);
 	const atLeastOneIsSyncable = participants.some(
-		(participant) => participant.status === "nosync"
+		(participant) => participant.status === "nosync",
 	);
 	return noneIsSyncedYet && atLeastOneIsSyncable;
 };

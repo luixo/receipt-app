@@ -10,7 +10,7 @@ export const procedure = authProcedure
 	.input(
 		z.strictObject({
 			userId: userIdSchema,
-		})
+		}),
 	)
 	.query(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
@@ -52,8 +52,8 @@ export const procedure = authProcedure
 
 		const statuses = await Promise.all(
 			debts.map((debt) =>
-				getLockedStatus(database, debt.id, ctx.auth.accountId)
-			)
+				getLockedStatus(database, debt.id, ctx.auth.accountId),
+			),
 		);
 
 		return debts.map(({ amount, lockedTimestamp, ...debt }, index) => {

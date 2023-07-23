@@ -14,7 +14,7 @@ const getLogger = (logger: Logger, url: string) => (logEvent: LogEvent) => {
 	if (logEvent.level === "query") {
 		logger.debug({
 			sql: logEvent.query.sql.replaceAll(/\$\d+/g, (input) =>
-				String(logEvent.query.parameters[Number(input.slice(1))])
+				String(logEvent.query.parameters[Number(input.slice(1))]),
 			),
 			url,
 			duration: logEvent.queryDurationMillis,

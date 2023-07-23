@@ -120,7 +120,7 @@ type Props = Omit<InnerProps, "query"> & {
 export const Receipt: React.FC<Props> = ({ id, ...props }) => {
 	const query = trpc.receipts.get.useQuery(
 		{ id },
-		useTrpcQueryOptions(queries.receipts.get.options)
+		useTrpcQueryOptions(queries.receipts.get.options),
 	);
 	const receiptNameQuery = trpc.receipts.getName.useQuery({ id });
 	if (query.status === "loading") {

@@ -21,7 +21,7 @@ type Props = {
 export const DebtDateInput: React.FC<Props> = ({ form, isLoading }) => {
 	const onDateUpdate = React.useCallback(
 		(date: Date) => form.setValue("timestamp", date),
-		[form]
+		[form],
 	);
 	return (
 		<Wrapper>

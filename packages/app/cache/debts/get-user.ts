@@ -20,7 +20,7 @@ const sortByTimestamp = (a: Debt, b: Debt) =>
 const updateDebts = (
 	controller: Controller,
 	userId: UsersId,
-	updater: utils.UpdateFn<Debts>
+	updater: utils.UpdateFn<Debts>,
 ) =>
 	controller.update((input, prevDebts) => {
 		if (input.userId !== userId) {
@@ -39,22 +39,22 @@ const update =
 	(updater: utils.UpdateFn<Debt>) =>
 		utils.withRef<Debt | undefined>((ref) =>
 			updateDebts(controller, userId, (debts) =>
-				replaceInArray(debts, (debt) => debt.id === debtId, updater, ref)
-			)
+				replaceInArray(debts, (debt) => debt.id === debtId, updater, ref),
+			),
 		).current;
 
 const remove = (controller: Controller, userId: UsersId, debtId: DebtsId) =>
 	utils.withRef<ItemWithIndex<Debt> | undefined>((ref) =>
 		updateDebts(controller, userId, (debts) =>
-			removeFromArray(debts, (debt) => debt.id === debtId, ref)
-		)
+			removeFromArray(debts, (debt) => debt.id === debtId, ref),
+		),
 	).current;
 
 const add = (
 	controller: Controller,
 	userId: UsersId,
 	debt: Debt,
-	index = 0
+	index = 0,
 ) => {
 	updateDebts(controller, userId, (debts) => addToArray(debts, debt, index));
 };
@@ -77,22 +77,22 @@ export const getRevertController = (trpc: TRPCReactContext) => {
 			userId: UsersId,
 			debtId: DebtsId,
 			updater: utils.UpdateFn<Debt>,
-			revertUpdater: utils.SnapshotFn<Debt>
+			revertUpdater: utils.SnapshotFn<Debt>,
 		) =>
 			utils.applyUpdateFnWithRevert(
 				update(controller, userId, debtId),
 				updater,
-				revertUpdater
+				revertUpdater,
 			),
 		add: (userId: UsersId, nextDebt: Debt) =>
 			utils.applyWithRevert(
 				() => add(controller, userId, nextDebt),
-				() => remove(controller, userId, nextDebt.id)
+				() => remove(controller, userId, nextDebt.id),
 			),
 		remove: (userId: UsersId, debtId: DebtsId) =>
 			utils.applyWithRevert(
 				() => remove(controller, userId, debtId),
-				({ item, index }) => add(controller, userId, item, index)
+				({ item, index }) => add(controller, userId, item, index),
 			),
 	};
 };

@@ -37,10 +37,10 @@ export const CurrencyInput = <T extends MinimalForm>({
 			form.setValue(
 				"currency" as Path<T>,
 				nextCurrency as PathValue<T, Path<T>>,
-				{ shouldValidate: true }
+				{ shouldValidate: true },
 			);
 		},
-		[form, closeModal]
+		[form, closeModal],
 	);
 
 	const selectedCurrency = form.watch("currency" as Path<T> & "currency");
@@ -48,12 +48,12 @@ export const CurrencyInput = <T extends MinimalForm>({
 	const onLoad = React.useCallback(
 		(
 			currencies: z.infer<typeof currencySchema>[],
-			topCurrencyCodes: CurrencyCode[]
+			topCurrencyCodes: CurrencyCode[],
 		) => {
 			if (!selectedCurrency) {
 				const matchedTopCurrencyCode = topCurrencyCodes
 					.map((topCurrencyCode) =>
-						currencies.find((currency) => currency.code === topCurrencyCode)
+						currencies.find((currency) => currency.code === topCurrencyCode),
 					)
 					.find(Boolean);
 				const nextSelectedCurrency = matchedTopCurrencyCode || currencies[0];
@@ -62,7 +62,7 @@ export const CurrencyInput = <T extends MinimalForm>({
 				}
 			}
 		},
-		[onCurrencyChange, selectedCurrency]
+		[onCurrencyChange, selectedCurrency],
 	);
 
 	return (

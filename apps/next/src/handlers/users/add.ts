@@ -13,7 +13,7 @@ export const procedure = authProcedure
 			name: userNameSchema,
 			publicName: userNameSchema.optional(),
 			email: emailSchema.optional(),
-		})
+		}),
 	)
 	.mutation(async ({ input, ctx }) => {
 		const id: UsersId = v4();
@@ -34,7 +34,7 @@ export const procedure = authProcedure
 					ctx.auth.accountId,
 					{ name: input.name },
 					input.email,
-					id
+					id,
 				);
 				return { id, connection };
 			}

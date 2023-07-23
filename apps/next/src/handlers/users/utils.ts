@@ -10,8 +10,8 @@ export const getUserById = <SE extends ReceiptsSelectExpression<"users">>(
 	id: UsersId,
 	selectExpression: SE[],
 	queryBuilder?: <O>(
-		qb: SelectQueryBuilder<ReceiptsDatabase, "users", O>
-	) => SelectQueryBuilder<ReceiptsDatabase, "users", O>
+		qb: SelectQueryBuilder<ReceiptsDatabase, "users", O>,
+	) => SelectQueryBuilder<ReceiptsDatabase, "users", O>,
 ): Promise<Selection<ReceiptsDatabase, "users", SE> | undefined> => {
 	let selection = database
 		.selectFrom("users")
@@ -28,8 +28,8 @@ export const getUsersByIds = <SE extends ReceiptsSelectExpression<"users">>(
 	ids: UsersId[],
 	selectExpression: SE[],
 	queryBuilder?: <O>(
-		qb: SelectQueryBuilder<ReceiptsDatabase, "users", O>
-	) => SelectQueryBuilder<ReceiptsDatabase, "users", O>
+		qb: SelectQueryBuilder<ReceiptsDatabase, "users", O>,
+	) => SelectQueryBuilder<ReceiptsDatabase, "users", O>,
 ): Promise<Selection<ReceiptsDatabase, "users", SE>[]> => {
 	let selection = database
 		.selectFrom("users")
@@ -44,12 +44,12 @@ export const getUsersByIds = <SE extends ReceiptsSelectExpression<"users">>(
 export const verifyUsersByIds = async (
 	database: Database,
 	userIds: UsersId[],
-	ownerAccountId: AccountsId
+	ownerAccountId: AccountsId,
 ) => {
 	const users = await database
 		.selectFrom("users")
 		.leftJoin("accounts", (qb) =>
-			qb.onRef("accounts.id", "=", "users.connectedAccountId")
+			qb.onRef("accounts.id", "=", "users.connectedAccountId"),
 		)
 		.select([
 			"users.id",
@@ -63,7 +63,7 @@ export const verifyUsersByIds = async (
 		.execute();
 	if (users.length !== userIds.length) {
 		const missedUserIds = userIds.filter(
-			(userId) => !users.some((user) => user.id === userId)
+			(userId) => !users.some((user) => user.id === userId),
 		);
 		throw new trpc.TRPCError({
 			code: "NOT_FOUND",
@@ -71,7 +71,7 @@ export const verifyUsersByIds = async (
 		});
 	}
 	const notOwnedUsers = users.filter(
-		(user) => user.ownerAccountId !== ownerAccountId
+		(user) => user.ownerAccountId !== ownerAccountId,
 	);
 	if (notOwnedUsers.length !== 0) {
 		throw new trpc.TRPCError({
@@ -83,7 +83,7 @@ export const verifyUsersByIds = async (
 	}
 	return userIds.map((userId) => {
 		const { ownerAccountId: disregardedOwnerAccountId, ...user } = users.find(
-			({ id }) => id === userId
+			({ id }) => id === userId,
 		)!;
 		return user;
 	});

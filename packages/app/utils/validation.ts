@@ -6,7 +6,7 @@ import { AccountsId, UsersId } from "next-app/db/models";
 const getLengthMessage = (
 	amount: number,
 	target: string,
-	type: "min" | "max"
+	type: "min" | "max",
 ) =>
 	`${type === "min" ? "Minimal" : "Maximum"} length for ${target} is ${amount}`;
 const getMinimalLengthMessage = (min: number, target: string) =>
@@ -16,7 +16,7 @@ const getMaximumLengthMessage = (max: number, target: string) =>
 
 const constrainLength = (
 	schema: z.ZodString,
-	{ min, max, target }: { min: number; max: number; target: string }
+	{ min, max, target }: { min: number; max: number; target: string },
 ): z.ZodString =>
 	schema
 		.min(min, { message: getMinimalLengthMessage(min, target) })
@@ -65,7 +65,7 @@ type NumberSchemaOptions = {
 
 export const createNumberSchema = (
 	name: string,
-	{ decimals = 2, onlyPositive = true }: NumberSchemaOptions = {}
+	{ decimals = 2, onlyPositive = true }: NumberSchemaOptions = {},
 ) => {
 	const schema = z
 		.number()
@@ -85,7 +85,7 @@ export const priceSchema = createNumberSchema("Price");
 export const quantitySchema = createNumberSchema("Quantity");
 export const partSchema = createNumberSchema("Part", { decimals: 5 });
 export const clientDebtAmountSchema = nonZero(
-	createNumberSchema("Debt amount")
+	createNumberSchema("Debt amount"),
 );
 
 export const currencyCodeSchema = z.string().refine<CurrencyCode>(flavored);
@@ -118,7 +118,7 @@ export const userItemSchema = z.strictObject({
 
 export const fallback = <T extends z.Schema<any>>(
 	schema: T,
-	value: z.infer<T>
+	value: z.infer<T>,
 ): T =>
 	z.any().transform((val) => {
 		const safe = schema.safeParse(val);

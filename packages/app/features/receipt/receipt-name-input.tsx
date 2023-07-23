@@ -40,7 +40,7 @@ export const ReceiptNameInput: React.FC<Props> = ({
 	const updateReceiptMutation = trpc.receipts.update.useMutation(
 		useTrpcMutationOptions(mutations.receipts.update.options, {
 			onSuccess: unsetEditing,
-		})
+		}),
 	);
 	const saveName = React.useCallback(
 		(nextName: string) => {
@@ -49,10 +49,10 @@ export const ReceiptNameInput: React.FC<Props> = ({
 			}
 			updateReceiptMutation.mutate(
 				{ id: receipt.id, update: { type: "name", name: nextName } },
-				{ onSuccess: () => setValue(nextName) }
+				{ onSuccess: () => setValue(nextName) },
 			);
 		},
-		[updateReceiptMutation, receipt.id, receipt.name, setValue]
+		[updateReceiptMutation, receipt.id, receipt.name, setValue],
 	);
 
 	return (

@@ -15,7 +15,7 @@ export const procedure = authProcedure
 			z.strictObject({
 				receiptId: receiptIdSchema,
 			}),
-		])
+		]),
 	)
 	.query(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
@@ -53,12 +53,12 @@ export const procedure = authProcedure
 				.innerJoin("users as usersTheir", (qb) =>
 					qb
 						.onRef("usersTheir.id", "=", "debts.userId")
-						.on("usersTheir.connectedAccountId", "=", ctx.auth.accountId)
+						.on("usersTheir.connectedAccountId", "=", ctx.auth.accountId),
 				)
 				.innerJoin("users as usersMine", (qb) =>
 					qb
 						.onRef("usersMine.connectedAccountId", "=", "debts.ownerAccountId")
-						.on("usersMine.ownerAccountId", "=", ctx.auth.accountId)
+						.on("usersMine.ownerAccountId", "=", ctx.auth.accountId),
 				)
 				.select([
 					"debts.id",
@@ -90,7 +90,7 @@ export const procedure = authProcedure
 		const [status, intentionDirection] = await getLockedStatus(
 			database,
 			selfDebt.id,
-			ctx.auth.accountId
+			ctx.auth.accountId,
 		);
 		const { amount, lockedTimestamp, ...debt } = selfDebt;
 

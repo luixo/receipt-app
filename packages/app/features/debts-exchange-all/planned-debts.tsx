@@ -27,7 +27,7 @@ import { PlannedDebt } from "./planned-debt";
 const getDefaultValues = (
 	selectedCurrencyCode: CurrencyCode,
 	debts: { currencyCode: CurrencyCode }[],
-	currentRates: Partial<Record<CurrencyCode, number>> = {}
+	currentRates: Partial<Record<CurrencyCode, number>> = {},
 ) => ({
 	...debts.reduce(
 		(acc, debt) =>
@@ -37,10 +37,10 @@ const getDefaultValues = (
 						...acc,
 						[debt.currencyCode]: 0,
 				  },
-		{}
+		{},
 	),
 	...Object.fromEntries(
-		Object.entries(currentRates).filter(([, value]) => value !== undefined)
+		Object.entries(currentRates).filter(([, value]) => value !== undefined),
 	),
 });
 
@@ -62,13 +62,13 @@ export const PlannedDebts: React.FC<Props> = ({
 		resolver: zodResolver(
 			z.record(
 				currencyCodeSchema,
-				z.record(currencyCodeSchema, z.preprocess(Number, currencyRateSchema))
-			)
+				z.record(currencyCodeSchema, z.preprocess(Number, currencyRateSchema)),
+			),
 		),
 		defaultValues: {
 			[selectedCurrencyCode]: getDefaultValues(
 				selectedCurrencyCode,
-				aggregatedDebts
+				aggregatedDebts,
 			),
 		},
 	});
@@ -76,19 +76,19 @@ export const PlannedDebts: React.FC<Props> = ({
 		const currentRates = form.getValues()[selectedCurrencyCode];
 		form.setValue(
 			selectedCurrencyCode as `${CurrencyCode}`,
-			getDefaultValues(selectedCurrencyCode, aggregatedDebts, currentRates)
+			getDefaultValues(selectedCurrencyCode, aggregatedDebts, currentRates),
 		);
 	}, [selectedCurrencyCode, aggregatedDebts, form]);
 	const rates = form.watch();
 	const convertedFromDebts = React.useMemo(
 		() =>
 			aggregatedDebts.filter(
-				(debt) => debt.currencyCode !== selectedCurrencyCode
+				(debt) => debt.currencyCode !== selectedCurrencyCode,
 			),
-		[aggregatedDebts, selectedCurrencyCode]
+		[aggregatedDebts, selectedCurrencyCode],
 	);
 	const currencies = useFormattedCurrencies(
-		convertedFromDebts.map((debt) => debt.currencyCode)
+		convertedFromDebts.map((debt) => debt.currencyCode),
 	);
 	const selectedCurrency = useFormattedCurrency(selectedCurrencyCode);
 	const convertedDebts = React.useMemo(() => {
@@ -137,23 +137,23 @@ export const PlannedDebts: React.FC<Props> = ({
 				if (!currentRates || !currentRates[key]) {
 					form.setValue(
 						`${selectedCurrencyCode}.${key}` as `${CurrencyCode}.${CurrencyCode}`,
-						value
+						value,
 					);
 				}
 			});
 		},
-		[form, selectedCurrencyCode]
+		[form, selectedCurrencyCode],
 	);
 	const ratesQuery = trpc.currency.rates.useQuery(
 		{
 			from: selectedCurrencyCode,
 			to: debts.map((debt) => debt.currencyCode),
 		},
-		{ onSuccess: fillRatesData }
+		{ onSuccess: fillRatesData },
 	);
 	const retryButton = React.useMemo(
 		() => ({ text: "Refetch rates", onClick: () => ratesQuery.refetch() }),
-		[ratesQuery]
+		[ratesQuery],
 	);
 	useMountEffect(() => {
 		if (ratesQuery.status === "success") {
@@ -163,7 +163,7 @@ export const PlannedDebts: React.FC<Props> = ({
 	const addBatchMutation = trpc.debts.addBatch.useMutation(
 		useTrpcMutationOptions(mutations.debts.addBatch.options, {
 			onSuccess: () => onDone(),
-		})
+		}),
 	);
 	const addBatch = React.useCallback(
 		() =>
@@ -174,9 +174,9 @@ export const PlannedDebts: React.FC<Props> = ({
 					userId,
 					amount: debt.amount,
 					timestamp: new Date(Date.now() + index),
-				}))
+				})),
 			),
-		[addBatchMutation, debts, userId]
+		[addBatchMutation, debts, userId],
 	);
 	const emptyConvertedDebts = convertedDebts.filter((debt) => debt.sum === 0);
 
@@ -222,7 +222,7 @@ export const PlannedDebts: React.FC<Props> = ({
 					addBatchMutation.error.message
 				) : emptyConvertedDebts.length !== 0 ? (
 					`${emptyConvertedDebts.map(
-						(debt) => debt.currencyCode
+						(debt) => debt.currencyCode,
 					)} debt(s) are empty`
 				) : debts.length > MAX_BATCH_DEBTS ? (
 					`Cannot send more than ${MAX_BATCH_DEBTS} simultaneously`

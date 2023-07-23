@@ -9,7 +9,7 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 		.innerJoin("users", (qb) =>
 			qb
 				.on("users.connectedAccountId", "=", ctx.auth.accountId)
-				.onRef("users.id", "=", "receiptParticipants.userId")
+				.onRef("users.id", "=", "receiptParticipants.userId"),
 		)
 		.where("receiptParticipants.resolved", "=", false)
 		.select("receiptId")

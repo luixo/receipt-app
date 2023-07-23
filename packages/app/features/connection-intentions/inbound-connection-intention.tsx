@@ -18,7 +18,7 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 
 	const acceptConnectionMutation =
 		trpc.accountConnectionIntentions.accept.useMutation(
-			useTrpcMutationOptions(mutations.accountConnections.accept.options)
+			useTrpcMutationOptions(mutations.accountConnections.accept.options),
 		);
 	const acceptConnection = React.useCallback(() => {
 		acceptConnectionMutation.mutate({
@@ -29,7 +29,7 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 
 	const rejectConnectionMutation =
 		trpc.accountConnectionIntentions.reject.useMutation(
-			useTrpcMutationOptions(mutations.accountConnections.reject.options)
+			useTrpcMutationOptions(mutations.accountConnections.reject.options),
 		);
 	const rejectConnection = React.useCallback(() => {
 		rejectConnectionMutation.mutate({

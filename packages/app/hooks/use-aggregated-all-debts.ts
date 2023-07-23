@@ -4,7 +4,7 @@ import { TRPCQueryOutput } from "app/trpc";
 import { CurrencyCode } from "app/utils/currency";
 
 export const useAggregatedAllDebts = (
-	data: TRPCQueryOutput<"debts.getByUsers">
+	data: TRPCQueryOutput<"debts.getByUsers">,
 ) => {
 	const sums = React.useMemo(
 		() =>
@@ -20,13 +20,13 @@ export const useAggregatedAllDebts = (
 								acc[currencyCode] += sum;
 								return subacc;
 							}, acc),
-						{}
-					)
+						{},
+					),
 			).map(([currencyCode, sum]) => ({
 				currencyCode: currencyCode as CurrencyCode,
 				sum,
 			})),
-		[data]
+		[data],
 	);
 	const nonZeroSums = sums.filter(({ sum }) => sum !== 0);
 	return [sums, nonZeroSums] as const;

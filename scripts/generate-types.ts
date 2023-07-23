@@ -21,7 +21,7 @@ const run = async () => {
 				name: kebabToPascal(
 					generateFor === "selector"
 						? details.name
-						: `${details.name}-${generateFor}`
+						: `${details.name}-${generateFor}`,
 				),
 				comment: undefined,
 				path: path.join(outputPath, fileRecase(details.name)),
@@ -33,8 +33,8 @@ const run = async () => {
 				if (property.indices) {
 					comments.push(
 						...property.indices.map(({ name, isPrimary }) =>
-							isPrimary ? `Primary key. Index: ${name}` : `Index: ${name}`
-						)
+							isPrimary ? `Primary key. Index: ${name}` : `Index: ${name}`,
+						),
 					);
 				}
 				if (property.defaultValue && generateFor === "initializer") {
@@ -81,7 +81,7 @@ const run = async () => {
 						!lines.some((line) => line.includes("type CurrencyCode"))
 					) {
 						prepended.push(
-							"import type { CurrencyCode } from 'app/utils/currency';"
+							"import type { CurrencyCode } from 'app/utils/currency';",
 						);
 					}
 					if (

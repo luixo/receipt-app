@@ -22,7 +22,7 @@ type Props = {
 export const ReceiptDateInput: React.FC<Props> = ({ form, query }) => {
 	const onDateUpdate = React.useCallback(
 		(date: Date) => form.setValue("issued", date),
-		[form]
+		[form],
 	);
 	return (
 		<Wrapper>

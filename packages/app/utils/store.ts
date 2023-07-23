@@ -13,10 +13,10 @@ export type ParsedQuery = Partial<Record<string, string>>;
 export const createStore = <
 	T extends State,
 	S extends StoreApi<State> & StoreApi<T> = StoreApi<State> & StoreApi<T>,
-	Mos extends [StoreMutatorIdentifier, unknown][] = []
+	Mos extends [StoreMutatorIdentifier, unknown][] = [],
 >(
 	initializer: StateCreator<T, [], Mos>,
-	getDataByQuery?: (query: ParsedQuery) => Partial<T>
+	getDataByQuery?: (query: ParsedQuery) => Partial<T>,
 ) => {
 	const zustandContext = createContext<S>();
 

@@ -49,17 +49,17 @@ const unwrapProps = <
 		Postfix,
 		Value
 	> = BreakpointValuesWithPostfix<Postfix, Value>,
-	Values extends ExtraValues = ExtraValues
+	Values extends ExtraValues = ExtraValues,
 >(
 	values: Values,
-	postfix: Postfix
+	postfix: Postfix,
 ): [Omit<Values, keyof ExtraValues>, Partial<BreakpointValues<Value>>] => {
 	const valuesClone = { ...values };
 	const extraValues: Partial<BreakpointValues<Value>> = {};
 	breakpointKeys.forEach((key) => {
 		const lessKey = `less${capitalize(key)}` as keyof BreakpointValues<unknown>;
 		const postfixLessKey = `${lessKey}${capitalize(
-			postfix
+			postfix,
 		)}` as keyof ExtraValues;
 		if (valuesClone[postfixLessKey] !== undefined) {
 			extraValues[lessKey] = valuesClone[postfixLessKey] as Value;
@@ -70,11 +70,11 @@ const unwrapProps = <
 };
 
 export const Grid: React.FC<Props> & {
-	Container: typeof OriginalGrid["Container"];
+	Container: (typeof OriginalGrid)["Container"];
 } = ({ defaultCol, ...props }) => {
 	const [propsWithoutCols, cols] = unwrapProps<ColumnAmountOrAuto, "col">(
 		props,
-		"col"
+		"col",
 	);
 	const columnValue = useMatchMediaValue(defaultCol, cols);
 	const [plainProps, csss] = unwrapProps<CSS>(propsWithoutCols, "css");

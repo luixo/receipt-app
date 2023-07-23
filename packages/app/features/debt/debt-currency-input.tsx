@@ -21,7 +21,7 @@ export const DebtCurrencyInput: React.FC<Props> = ({ debt, isLoading }) => {
 		useBooleanState();
 
 	const updateReceiptMutation = trpc.debts.update.useMutation(
-		useTrpcMutationOptions(mutations.debts.update.options, { context: debt })
+		useTrpcMutationOptions(mutations.debts.update.options, { context: debt }),
 	);
 	const saveCurrency = React.useCallback(
 		(nextCurrency: TRPCQueryOutput<"currency.getList">[number]) => {
@@ -34,7 +34,7 @@ export const DebtCurrencyInput: React.FC<Props> = ({ debt, isLoading }) => {
 				update: { type: "currencyCode", currencyCode: nextCurrency!.code },
 			});
 		},
-		[updateReceiptMutation, debt.id, debt.currencyCode, closeModal]
+		[updateReceiptMutation, debt.id, debt.currencyCode, closeModal],
 	);
 	const topCurrenciesQuery = trpc.currency.topDebts.useQuery();
 

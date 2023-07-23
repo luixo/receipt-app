@@ -50,28 +50,28 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 			role,
 			isLoading: isReceiptDeleteLoading,
 		},
-		ref
+		ref,
 	) => {
 		const currency = useFormattedCurrency(currencyCode);
 		const removeReceiptItemMutation = trpc.receiptItems.remove.useMutation(
 			useTrpcMutationOptions(mutations.receiptItems.remove.options, {
 				context: receiptId,
-			})
+			}),
 		);
 		const removeItem = React.useCallback(
 			() => removeReceiptItemMutation.mutate({ id: receiptItem.id }),
-			[removeReceiptItemMutation, receiptItem.id]
+			[removeReceiptItemMutation, receiptItem.id],
 		);
 
 		const addedParticipants = receiptItem.parts.map((part) => part.userId);
 		const notAddedParticipants = receiptParticipants.filter(
-			(participant) => !addedParticipants.includes(participant.remoteUserId)
+			(participant) => !addedParticipants.includes(participant.remoteUserId),
 		);
 
 		const addItemPartMutation = trpc.itemParticipants.add.useMutation(
 			useTrpcMutationOptions(mutations.itemParticipants.add.options, {
 				context: receiptId,
-			})
+			}),
 		);
 		const addParticipant = React.useCallback(
 			(participant: ReceiptParticipant | EveryParticipantTag) => {
@@ -79,7 +79,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 					addItemPartMutation.mutate({
 						itemId: receiptItem.id,
 						userIds: notAddedParticipants.map(
-							({ remoteUserId }) => remoteUserId
+							({ remoteUserId }) => remoteUserId,
 						) as [UsersId, ...UsersId[]],
 					});
 				} else {
@@ -89,14 +89,14 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 					});
 				}
 			},
-			[addItemPartMutation, notAddedParticipants, receiptItem.id]
+			[addItemPartMutation, notAddedParticipants, receiptItem.id],
 		);
 
 		const isDeleteLoading =
 			isReceiptDeleteLoading || removeReceiptItemMutation.isLoading;
 		const itemParts = receiptItem.parts.reduce(
 			(acc, itemPart) => acc + itemPart.part,
-			0
+			0,
 		);
 		const isEditingDisabled = role === "viewer" || receiptItem.locked;
 
@@ -189,7 +189,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 							<Spacer y={1} />
 							{receiptItem.parts.map((part, index) => {
 								const matchedParticipant = receiptParticipants.find(
-									(participant) => participant.remoteUserId === part.userId
+									(participant) => participant.remoteUserId === part.userId,
 								);
 								if (!matchedParticipant) {
 									return (
@@ -237,5 +237,5 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 				)}
 			</Card>
 		);
-	}
+	},
 );

@@ -28,11 +28,11 @@ const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 				trpcContext.queryClient.resetQueries();
 				router.replace("/");
 			},
-		})
+		}),
 	);
 	const logout = React.useCallback(
 		() => logoutMutation.mutate(),
-		[logoutMutation]
+		[logoutMutation],
 	);
 
 	return (

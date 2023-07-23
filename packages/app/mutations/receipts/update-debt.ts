@@ -13,7 +13,7 @@ export const options: UseContextedMutationOptions<
 				trpcContext,
 				updateObject.receiptId,
 				[{ ...updatedDebt, deltaAmount: updatedDebt.amount - prevAmount }],
-				updateObject.updateIntention
+				updateObject.updateIntention,
 			),
 	errorToastOptions: () => (error) => ({
 		text: `Error updating debt: ${error.message}`,

@@ -20,7 +20,7 @@ export const ConfirmEmailScreen: AppPage = () => {
 	const confirmEmailMutation = trpc.auth.confirmEmail.useMutation(
 		useTrpcMutationOptions(mutations.auth.confirmEmail.options, {
 			onSuccess: () => router.replace("/"),
-		})
+		}),
 	);
 	const confirmEmail = React.useCallback(() => {
 		if (!token || confirmEmailMutation.status !== "idle") {

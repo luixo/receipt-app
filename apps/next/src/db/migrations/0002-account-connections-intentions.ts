@@ -15,26 +15,26 @@ const createAccountConnectionsIntentionsTable = async (db: Database) => {
 				.notNull()
 				.references("accounts.id")
 				.onUpdate("cascade")
-				.onDelete("cascade")
+				.onDelete("cascade"),
 		)
 		.addColumn("userId", "uuid", (cb) =>
 			cb
 				.notNull()
 				.references("users.id")
 				.onUpdate("cascade")
-				.onDelete("cascade")
+				.onDelete("cascade"),
 		)
 		.addColumn("targetAccountId", "uuid", (cb) =>
 			cb
 				.notNull()
 				.references("accounts.id")
 				.onUpdate("cascade")
-				.onDelete("cascade")
+				.onDelete("cascade"),
 		)
 		.addColumn("created", "timestamp", (cb) => cb.notNull())
 		.addPrimaryKeyConstraint(
 			ACCOUNT_CONNECTIONS_INTENTIONS.CONSTRAINTS.ACCOUNT_PAIR,
-			["accountId", "targetAccountId"]
+			["accountId", "targetAccountId"],
 		)
 		.addUniqueConstraint(ACCOUNT_CONNECTIONS_INTENTIONS.CONSTRAINTS.USER_PAIR, [
 			"accountId",

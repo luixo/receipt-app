@@ -17,7 +17,7 @@ export const procedure = authProcedure
 			receiptId: receiptIdSchema,
 			userIds: z.array(userIdSchema).nonempty(),
 			role: assignableRoleSchema,
-		})
+		}),
 	)
 	.mutation(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
@@ -40,6 +40,6 @@ export const procedure = authProcedure
 			database,
 			input.receiptId,
 			ctx.auth.accountId,
-			input.userIds.map((userId) => [userId, input.role])
+			input.userIds.map((userId) => [userId, input.role]),
 		);
 	});

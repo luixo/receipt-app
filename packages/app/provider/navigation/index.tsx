@@ -21,7 +21,7 @@ export const NavigationProvider: React.FC<React.PropsWithChildren<object>> = ({
 				notification: theme.colors.accents0,
 			},
 		}),
-		[theme]
+		[theme],
 	);
 	const linking = React.useMemo<LinkingOptions<AppParamList>>(
 		() => ({
@@ -51,7 +51,7 @@ export const NavigationProvider: React.FC<React.PropsWithChildren<object>> = ({
 				},
 			},
 		}),
-		[]
+		[],
 	);
 	return (
 		<NavigationContainer linking={linking} theme={navigationTheme}>

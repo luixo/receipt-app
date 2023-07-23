@@ -14,7 +14,7 @@ export const procedure = authProcedure
 			currencyCode: currencyCodeSchema,
 			userIds: z.array(userIdSchema).optional(),
 			issued: z.date(),
-		})
+		}),
 	)
 	.mutation(async ({ input, ctx }) => {
 		const id = v4();
@@ -36,7 +36,7 @@ export const procedure = authProcedure
 					tx,
 					id,
 					ctx.auth.accountId,
-					input.userIds.map((userId) => [userId, "editor"])
+					input.userIds.map((userId) => [userId, "editor"]),
 				);
 			}
 		});

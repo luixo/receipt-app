@@ -10,7 +10,7 @@ const createDebtsSyncIntentionsTable = async (db: Database) => {
 				.notNull()
 				.references("accounts.id")
 				.onUpdate("cascade")
-				.onDelete("cascade")
+				.onDelete("cascade"),
 		)
 		.addColumn("lockedTimestamp", "timestamp", (cb) => cb.notNull())
 		.execute();

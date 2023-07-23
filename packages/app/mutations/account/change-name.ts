@@ -16,13 +16,13 @@ export const options: UseContextedMutationOptions<
 						// Typesystem doesn't know that we use account id as self user id
 						id as UsersId,
 						(user) => ({ ...user, name: updateObject.name }),
-						(prevUser) => (user) => ({ ...user, name: prevUser.name })
+						(prevUser) => (user) => ({ ...user, name: prevUser.name }),
 					),
 				getName: (controller) =>
 					controller.upsert(
 						// Typesystem doesn't know that we use account id as self user id
 						id as UsersId,
-						updateObject.name
+						updateObject.name,
 					),
 				getPaged: noop,
 			}),

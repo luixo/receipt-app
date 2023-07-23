@@ -17,12 +17,12 @@ export const procedure = authProcedure
 		z.strictObject({
 			from: currencyCodeSchema,
 			to: currencyCodeSchema.array(),
-		})
+		}),
 	)
 	.query(async ({ input }) => {
 		const cacheKey = getKey(input.from, input.to);
 		const cachedRates = await cacheDatabase.get<Record<CurrencyCode, number>>(
-			cacheKey
+			cacheKey,
 		);
 		if (cachedRates) {
 			return cachedRates;

@@ -13,7 +13,7 @@ export const procedure = authProcedure
 		const maybeUser = await database
 			.selectFrom("users")
 			.leftJoin("accounts", (qb) =>
-				qb.onRef("connectedAccountId", "=", "accounts.id")
+				qb.onRef("connectedAccountId", "=", "accounts.id"),
 			)
 			.where("users.id", "=", input.id)
 			.select([
@@ -41,24 +41,24 @@ export const procedure = authProcedure
 				.selectFrom("users as usersThem")
 				.where("usersThem.id", "=", input.id)
 				.innerJoin("receiptParticipants as receiptParticipantsThem", (qb) =>
-					qb.onRef("receiptParticipantsThem.userId", "=", "usersThem.id")
+					qb.onRef("receiptParticipantsThem.userId", "=", "usersThem.id"),
 				)
 				.innerJoin("receipts", (qb) =>
-					qb.onRef("receiptParticipantsThem.receiptId", "=", "receipts.id")
+					qb.onRef("receiptParticipantsThem.receiptId", "=", "receipts.id"),
 				)
 				.innerJoin("receiptParticipants as receiptParticipantsMe", (qb) =>
-					qb.onRef("receiptParticipantsMe.receiptId", "=", "receipts.id")
+					qb.onRef("receiptParticipantsMe.receiptId", "=", "receipts.id"),
 				)
 				.innerJoin("users as usersMe", (qb) =>
 					qb
 						.onRef("receiptParticipantsMe.userId", "=", "usersMe.id")
-						.on("usersMe.connectedAccountId", "=", ctx.auth.accountId)
+						.on("usersMe.connectedAccountId", "=", ctx.auth.accountId),
 				)
 				.leftJoin("accounts", (qb) =>
-					qb.onRef("usersThem.connectedAccountId", "=", "accounts.id")
+					qb.onRef("usersThem.connectedAccountId", "=", "accounts.id"),
 				)
 				.leftJoin("users as usersMine", (qb) =>
-					qb.onRef("usersMine.connectedAccountId", "=", "accounts.id")
+					qb.onRef("usersMine.connectedAccountId", "=", "accounts.id"),
 				)
 				.select(["usersMine.id as mineId", "usersMe.id as meId"])
 				.groupBy(["usersMine.id", "usersMe.id"])
@@ -68,7 +68,7 @@ export const procedure = authProcedure
 					const myUser = await database
 						.selectFrom("users")
 						.leftJoin("accounts", (qb) =>
-							qb.onRef("connectedAccountId", "=", "accounts.id")
+							qb.onRef("connectedAccountId", "=", "accounts.id"),
 						)
 						.where("users.id", "=", ids.mineId)
 						.select([
@@ -88,7 +88,7 @@ export const procedure = authProcedure
 				const theirUser = await database
 					.selectFrom("users")
 					.leftJoin("accounts", (qb) =>
-						qb.onRef("connectedAccountId", "=", "accounts.id")
+						qb.onRef("connectedAccountId", "=", "accounts.id"),
 					)
 					.where("users.id", "=", input.id)
 					.select([

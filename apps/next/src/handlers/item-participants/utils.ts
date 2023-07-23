@@ -5,12 +5,12 @@ import { ReceiptItemsId, UsersId } from "next-app/db/models";
 import { ReceiptsDatabase } from "next-app/db/types";
 
 export const getItemParticipant = <
-	SE extends ReceiptsSelectExpression<"itemParticipants">
+	SE extends ReceiptsSelectExpression<"itemParticipants">,
 >(
 	database: Database,
 	userId: UsersId,
 	itemId: ReceiptItemsId,
-	selectExpression: SE[]
+	selectExpression: SE[],
 ): Promise<Selection<ReceiptsDatabase, "itemParticipants", SE> | undefined> =>
 	database
 		.selectFrom("itemParticipants")

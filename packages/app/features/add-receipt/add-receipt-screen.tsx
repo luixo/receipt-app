@@ -31,7 +31,7 @@ export const AddReceiptScreen: AppPage = () => {
 				selfAccountId: selfAccountId || "unknown",
 			},
 			onSuccess: (id) => router.replace(`/receipts/${id}`),
-		})
+		}),
 	);
 
 	const form = useForm<Form>({
@@ -41,7 +41,7 @@ export const AddReceiptScreen: AppPage = () => {
 				name: receiptNameSchema,
 				currency: currencySchema,
 				issued: z.date(),
-			})
+			}),
 		),
 		defaultValues: {
 			name: "",
@@ -55,7 +55,7 @@ export const AddReceiptScreen: AppPage = () => {
 				currencyCode: values.currency.code,
 				issued: values.issued,
 			}),
-		[addReceiptMutation]
+		[addReceiptMutation],
 	);
 	const topCurrenciesQuery = trpc.currency.topReceipts.useQuery();
 

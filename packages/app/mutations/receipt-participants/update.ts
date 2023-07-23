@@ -10,7 +10,7 @@ type ReceiptParticipant =
 
 const applyUpdate =
 	(
-		update: TRPCMutationInput<"receiptParticipants.update">["update"]
+		update: TRPCMutationInput<"receiptParticipants.update">["update"],
 	): UpdateFn<ReceiptParticipant> =>
 	(item) => {
 		switch (update.type) {
@@ -23,7 +23,7 @@ const applyUpdate =
 
 const getRevert =
 	(
-		update: TRPCMutationInput<"receiptParticipants.update">["update"]
+		update: TRPCMutationInput<"receiptParticipants.update">["update"],
 	): SnapshotFn<ReceiptParticipant> =>
 	(snapshot) =>
 	(item) => {
@@ -39,7 +39,7 @@ type PagedReceipt = TRPCQueryOutput<"receipts.getPaged">["items"][number];
 
 const applyUpdateReceiptPaged =
 	(
-		update: TRPCMutationInput<"receiptParticipants.update">["update"]
+		update: TRPCMutationInput<"receiptParticipants.update">["update"],
 	): UpdateFn<PagedReceipt> =>
 	(item) => {
 		switch (update.type) {
@@ -54,7 +54,7 @@ type Receipt = TRPCQueryOutput<"receipts.get">;
 
 const applyUpdateReceipt =
 	(
-		update: TRPCMutationInput<"receiptParticipants.update">["update"]
+		update: TRPCMutationInput<"receiptParticipants.update">["update"],
 	): UpdateFn<Receipt> =>
 	(item) => {
 		switch (update.type) {
@@ -70,7 +70,7 @@ type ResolvedParticipant =
 
 const applyUpdateResolvedParticipants =
 	(
-		update: TRPCMutationInput<"receiptParticipants.update">["update"]
+		update: TRPCMutationInput<"receiptParticipants.update">["update"],
 	): UpdateFn<ResolvedParticipant> =>
 	(participant) => {
 		switch (update.type) {
@@ -93,7 +93,7 @@ export const options: UseContextedMutationOptions<
 					variables.receiptId,
 					variables.userId,
 					applyUpdate(variables.update),
-					getRevert(variables.update)
+					getRevert(variables.update),
 				),
 			getReceiptItemPart: noop,
 		}),
@@ -105,7 +105,7 @@ export const options: UseContextedMutationOptions<
 					get: (controller) =>
 						controller.update(
 							variables.receiptId,
-							applyUpdateReceipt(variables.update)
+							applyUpdateReceipt(variables.update),
 						),
 					getNonResolvedAmount: (controller) => {
 						if (variables.update.type !== "resolved") {
@@ -113,13 +113,13 @@ export const options: UseContextedMutationOptions<
 						}
 						const nextResolved = variables.update.resolved;
 						controller.update((prevAmount) =>
-							nextResolved ? prevAmount - 1 : prevAmount + 1
+							nextResolved ? prevAmount - 1 : prevAmount + 1,
 						);
 					},
 					getPaged: (controller) => {
 						controller.update(
 							variables.receiptId,
-							applyUpdateReceiptPaged(variables.update)
+							applyUpdateReceiptPaged(variables.update),
 						);
 					},
 					getName: noop,
@@ -127,7 +127,7 @@ export const options: UseContextedMutationOptions<
 						controller.update(
 							variables.receiptId,
 							variables.userId,
-							applyUpdateResolvedParticipants(variables.update)
+							applyUpdateResolvedParticipants(variables.update),
 						),
 				});
 			}

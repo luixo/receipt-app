@@ -15,7 +15,7 @@ export const ReceiptDateInput: React.FC<Props> = ({
 	isLoading: isOuterLoading,
 }) => {
 	const updateReceiptMutation = trpc.receipts.update.useMutation(
-		useTrpcMutationOptions(mutations.receipts.update.options)
+		useTrpcMutationOptions(mutations.receipts.update.options),
 	);
 
 	const saveDate = React.useCallback(
@@ -29,7 +29,7 @@ export const ReceiptDateInput: React.FC<Props> = ({
 				update: { type: "issued", issued: nextDate },
 			});
 		},
-		[updateReceiptMutation, receipt.id, receipt.issued]
+		[updateReceiptMutation, receipt.id, receipt.issued],
 	);
 
 	return (

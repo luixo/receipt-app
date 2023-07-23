@@ -8,7 +8,7 @@ export const updateReceiptCacheOnDebtUpdate = (
 	updatedDebts: (TRPCMutationOutput<"receipts.updateDebt"> & {
 		deltaAmount: number;
 	})[],
-	updateIntention?: boolean
+	updateIntention?: boolean,
 ) => {
 	const statusUpdate = {
 		status: "unsync" as const,
@@ -47,7 +47,7 @@ export const updateReceiptCacheOnDebtUpdate = (
 					controller.update(
 						updatedDebt.userId,
 						updatedDebt.currencyCode,
-						(sum) => sum + updatedDebt.deltaAmount
+						(sum) => sum + updatedDebt.deltaAmount,
 					),
 			});
 		}
@@ -62,7 +62,7 @@ export const updateReceiptCacheOnDebtUpdate = (
 						...statusUpdate,
 						synced: true,
 						amount: updatedDebt.amount,
-					}
+					},
 				),
 			get: (controller) =>
 				controller.add({
@@ -84,7 +84,7 @@ export const updateReceiptCacheOnDebtUpdate = (
 				controller.update(
 					updatedDebt.userId,
 					updatedDebt.currencyCode,
-					(sum) => sum + updatedDebt.amount
+					(sum) => sum + updatedDebt.amount,
 				),
 		});
 	});

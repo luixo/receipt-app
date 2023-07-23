@@ -30,27 +30,27 @@ type ReceiptParticipant = {
 export const getItemCalculations = <T extends string>(
 	itemSum: number,
 	parts: Record<T, number>,
-	decimalDigits = 2
+	decimalDigits = 2,
 ) => {
 	const decimalsPower = getDecimalsPower(decimalDigits);
 	const sumRounded = Math.round(itemSum * decimalsPower);
 	const partsAmount = values(parts).reduce((acc, part) => acc + part, 0);
 	const sumByUser = mapObjectValues(
 		parts,
-		(part) => (part / partsAmount) * sumRounded
+		(part) => (part / partsAmount) * sumRounded,
 	);
 	const sumTotal = values(sumByUser).reduce(
 		(acc, sum) => acc + Math.floor(sum),
-		0
+		0,
 	);
 	return {
 		sumFlooredByParticipant: mapObjectKeys(parts, (id) =>
-			Math.floor(sumByUser[id])
+			Math.floor(sumByUser[id]),
 		),
 		leftover: sumRounded - sumTotal,
 		shortageByParticipant: mapObjectKeys(
 			parts,
-			(id) => sumByUser[id] - Math.floor(sumByUser[id])
+			(id) => sumByUser[id] - Math.floor(sumByUser[id]),
 		),
 	};
 };
@@ -124,12 +124,12 @@ export const getItemCalculations = <T extends string>(
 */
 export const getParticipantSums = <
 	P extends ReceiptParticipant,
-	I extends ReceiptItem
+	I extends ReceiptItem,
 >(
 	receiptId: ReceiptsId,
 	items: I[],
 	participants: P[],
-	decimalsDigits = 2
+	decimalsDigits = 2,
 ) => {
 	const decimalsPower = getDecimalsPower(decimalsDigits);
 	const {
@@ -143,10 +143,10 @@ export const getParticipantSums = <
 				item.price * item.quantity,
 				item.parts.reduce(
 					(acc, { userId, part }) => ({ ...acc, [userId]: part }),
-					{}
+					{},
 				),
-				decimalsDigits
-			)
+				decimalsDigits,
+			),
 		)
 		.reduce<{
 			sumFlooredByParticipant: Record<UsersId, number>;
@@ -159,14 +159,14 @@ export const getParticipantSums = <
 						...subacc,
 						[id]: (subacc[id] || 0) + sum,
 					}),
-					acc.sumFlooredByParticipant
+					acc.sumFlooredByParticipant,
 				),
 				shortageByParticipant: entries(item.shortageByParticipant).reduce(
 					(subacc, [id, shortage]) => ({
 						...subacc,
 						[id]: (subacc[id] || 0) + shortage,
 					}),
-					acc.shortageByParticipant
+					acc.shortageByParticipant,
 				),
 				leftoverBeforeReimburse: acc.leftoverBeforeReimburse + item.leftover,
 			}),
@@ -174,7 +174,7 @@ export const getParticipantSums = <
 				sumFlooredByParticipant: {},
 				shortageByParticipant: {},
 				leftoverBeforeReimburse: 0,
-			}
+			},
 		);
 
 	const reimbursedShortages = mapObjectValues(
@@ -185,11 +185,11 @@ export const getParticipantSums = <
 				reimbursed: integer,
 				notReimbursed: shortage - integer,
 			};
-		}
+		},
 	);
 	const totalReimbursedShortage = values(reimbursedShortages).reduce(
 		(acc, { reimbursed }) => acc + reimbursed,
-		0
+		0,
 	);
 	const leftover = leftoverBeforeReimburse - totalReimbursedShortage;
 
@@ -200,7 +200,7 @@ export const getParticipantSums = <
 				return sum && sum >= 0;
 			})
 			.sort((a, b) => a.added.valueOf() - b.added.valueOf()),
-		getIndexByString(receiptId)
+		getIndexByString(receiptId),
 	)
 		.sort((a, b) => {
 			const leftoverA = reimbursedShortages[a.remoteUserId]?.notReimbursed ?? 0;
@@ -219,7 +219,7 @@ export const getParticipantSums = <
 			...acc,
 			[id]: index < leftoverThresholdIndex ? 1 : 0,
 		}),
-		{}
+		{},
 	);
 
 	return participants.map(({ remoteUserId, ...participant }) => ({
@@ -229,13 +229,13 @@ export const getParticipantSums = <
 			Math.round(
 				(sumFlooredByParticipant[remoteUserId] ?? 0) +
 					(reimbursedShortages[remoteUserId]?.reimbursed ?? 0) +
-					(luckyLeftovers[remoteUserId] ?? 0)
+					(luckyLeftovers[remoteUserId] ?? 0),
 			) / decimalsPower,
 	}));
 };
 
 export const convertParticipantToUser = (
-	participant: TRPCQueryOutput<"receiptItems.get">["participants"][number]
+	participant: TRPCQueryOutput<"receiptItems.get">["participants"][number],
 ): UserProps["user"] => ({
 	id: participant.localUserId || participant.remoteUserId,
 	name: participant.name,

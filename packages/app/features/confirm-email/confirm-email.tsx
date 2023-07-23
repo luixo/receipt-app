@@ -15,7 +15,7 @@ export const ConfirmEmail: React.FC<Props> = ({ token, confirmMutation }) => {
 	const router = useRouter();
 	const navigateToHomePage = React.useCallback(
 		() => router.replace("/"),
-		[router]
+		[router],
 	);
 	if (!token) {
 		return (

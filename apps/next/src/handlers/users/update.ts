@@ -23,7 +23,7 @@ export const procedure = authProcedure
 					publicName: userNameSchema.nullable(),
 				}),
 			]),
-		})
+		}),
 	)
 	.mutation(async ({ input, ctx }) => {
 		if (input.id === ctx.auth.accountId) {

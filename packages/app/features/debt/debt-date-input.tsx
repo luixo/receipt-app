@@ -14,7 +14,7 @@ type Props = {
 
 export const DebtDateInput: React.FC<Props> = ({ debt, isLoading }) => {
 	const updateMutation = trpc.debts.update.useMutation(
-		useTrpcMutationOptions(mutations.debts.update.options, { context: debt })
+		useTrpcMutationOptions(mutations.debts.update.options, { context: debt }),
 	);
 
 	const saveDate = React.useCallback(
@@ -28,7 +28,7 @@ export const DebtDateInput: React.FC<Props> = ({ debt, isLoading }) => {
 				update: { type: "timestamp", timestamp: nextDate },
 			});
 		},
-		[updateMutation, debt.id, debt.timestamp]
+		[updateMutation, debt.id, debt.timestamp],
 	);
 
 	return (

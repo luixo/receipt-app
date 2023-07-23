@@ -20,7 +20,7 @@ export const VoidAccount: React.FC<Props> = ({ token, voidMutation }) => {
 	const router = useRouter();
 	const navigateToHomePage = React.useCallback(
 		() => router.replace("/"),
-		[router]
+		[router],
 	);
 	const voidAccount = React.useCallback(() => {
 		if (!token) {

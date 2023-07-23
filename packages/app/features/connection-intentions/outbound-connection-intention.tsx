@@ -15,7 +15,7 @@ type Props = {
 export const OutboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 	const removeConnectionMutation =
 		trpc.accountConnectionIntentions.remove.useMutation(
-			useTrpcMutationOptions(mutations.accountConnections.remove.options)
+			useTrpcMutationOptions(mutations.accountConnections.remove.options),
 		);
 	const removeConnection = React.useCallback(() => {
 		removeConnectionMutation.mutate({

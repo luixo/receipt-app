@@ -15,7 +15,7 @@ type ButtonProps = {
 	selected: boolean;
 	currencyCode: CurrencyCode;
 	setSelectedCurrency: (
-		currency: TRPCQueryOutput<"currency.getList">[number]
+		currency: TRPCQueryOutput<"currency.getList">[number],
 	) => void;
 };
 
@@ -26,14 +26,14 @@ const CurrencyButton: React.FC<ButtonProps> = ({
 }) => {
 	const currenciesListQuery = trpc.currency.getList.useQuery(
 		{ locale: "en" },
-		{ trpc: { ssr: false } }
+		{ trpc: { ssr: false } },
 	);
 	const select = React.useCallback(() => {
 		if (currenciesListQuery.status !== "success") {
 			return;
 		}
 		const matchedCurrency = currenciesListQuery.data.find(
-			(currency) => currency.code === currencyCode
+			(currency) => currency.code === currencyCode,
 		);
 		if (!matchedCurrency) {
 			return;

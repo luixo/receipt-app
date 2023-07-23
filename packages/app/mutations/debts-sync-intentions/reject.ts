@@ -38,7 +38,7 @@ export const options: UseContextedMutationOptions<
 							...debt,
 							status: "unsync",
 							intentionDirection: undefined,
-						})
+						}),
 					);
 				},
 			});

@@ -17,7 +17,7 @@ const sortByName = (a: User, b: User) => a.name.localeCompare(b.name);
 
 const updatePages = (
 	controller: Controller,
-	updater: (page: User[], count: number, input: Input) => [User[], number]
+	updater: (page: User[], count: number, input: Input) => [User[], number],
 ) =>
 	controller.update((input, result) => {
 		const [nextItems, nextCount] = updater(result.items, result.count, input);
@@ -34,7 +34,7 @@ const update =
 			updatePages(controller, (page, count) => [
 				replaceInArray(page, (user) => user.id === userId, updater, ref),
 				count,
-			])
+			]),
 		).current;
 
 const add = (controller: Controller, nextUser: User) =>
@@ -61,7 +61,7 @@ const add = (controller: Controller, nextUser: User) =>
 			}
 			ref.current = input.cursor;
 			return [sortedPage.slice(0, input.limit), count + 1];
-		})
+		}),
 	).current;
 
 const remove = (controller: Controller, userId: UsersId) => {
@@ -81,13 +81,13 @@ const remove = (controller: Controller, userId: UsersId) => {
 					cursorRef.current = input.cursor;
 					return true;
 				},
-				ref
+				ref,
 			);
 			if (nextPage.length === page.length) {
 				return [page, count];
 			}
 			return [nextPage, count - 1];
-		})
+		}),
 	).current;
 	if (removedItem) {
 		return {
@@ -111,9 +111,9 @@ const invalidate =
 						ref.current.push(page);
 						return true;
 					},
-					{ refetchType: "all" }
+					{ refetchType: "all" },
 				),
-			[]
+			[],
 		).current;
 
 export const getController = (trpc: TRPCReactContext) => {
@@ -134,22 +134,22 @@ export const getRevertController = (trpc: TRPCReactContext) => {
 			// TODO: add paged invalidation on adding a user
 			utils.applyWithRevert(
 				() => add(controller, user),
-				() => remove(controller, user.id)
+				() => remove(controller, user.id),
 			),
 		update: (
 			userId: UsersId,
 			updater: utils.UpdateFn<User>,
-			revertUpdater: utils.SnapshotFn<User>
+			revertUpdater: utils.SnapshotFn<User>,
 		) =>
 			utils.applyUpdateFnWithRevert(
 				update(controller, userId),
 				updater,
-				revertUpdater
+				revertUpdater,
 			),
 		remove: (userId: UsersId) =>
 			utils.applyWithRevert(
 				() => remove(controller, userId),
-				({ item }) => add(controller, item)
+				({ item }) => add(controller, item),
 			),
 		invalidate: invalidate(controller),
 	};

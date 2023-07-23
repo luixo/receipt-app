@@ -16,7 +16,7 @@ export type QueryParamOptions<T extends object | Primitive = string> = {
 
 export const useQueryParam = <T extends object | Primitive = string>(
 	paramName: string,
-	options: QueryParamOptions<T>
+	options: QueryParamOptions<T>,
 ) => {
 	const [serverSideQueryOffset] = useParam(paramName);
 	const parse = (options.parse || id) as NonNullable<typeof options.parse>;
@@ -35,7 +35,7 @@ export const useQueryParam = <T extends object | Primitive = string>(
 		() => parse(rawValue),
 		// We don't need to update parse on every rerender
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[rawValue]
+		[rawValue],
 	);
 	const setValue = React.useCallback(
 		(valueOrUpdater: React.SetStateAction<T>) => {
@@ -49,7 +49,7 @@ export const useQueryParam = <T extends object | Primitive = string>(
 		},
 		// We don't need to update serialize / parse on every rerender
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-		[setRawValue, parsedValue]
+		[setRawValue, parsedValue],
 	);
 	return [parsedValue, setValue] as const;
 };

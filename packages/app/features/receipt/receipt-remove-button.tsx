@@ -22,15 +22,15 @@ export const ReceiptRemoveButton: React.FC<Props> = ({
 				participantResolved: receipt.participantResolved,
 			},
 			onSuccess: () => router.replace("/receipts"),
-		})
+		}),
 	);
 	React.useEffect(
 		() => setLoading(removeReceiptMutation.isLoading),
-		[removeReceiptMutation.isLoading, setLoading]
+		[removeReceiptMutation.isLoading, setLoading],
 	);
 	const removeReceipt = React.useCallback(
 		() => removeReceiptMutation.mutate({ id: receipt.id }),
-		[removeReceiptMutation, receipt.id]
+		[removeReceiptMutation, receipt.id],
 	);
 
 	return (

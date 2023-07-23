@@ -10,6 +10,6 @@ export const useRouter = () => {
 			replace: (url: string) =>
 				router.replace(url, undefined, { shallow: true }),
 		}),
-		[router]
+		[router],
 	);
 };

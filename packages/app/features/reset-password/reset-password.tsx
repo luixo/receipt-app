@@ -27,14 +27,14 @@ export const ResetPassword: React.FC<Props> = ({ token, intentionQuery }) => {
 	const form = useForm<ChangePasswordForm>({
 		mode: "onChange",
 		resolver: zodResolver(
-			z.object({ password: passwordSchema, passwordRetype: passwordSchema })
+			z.object({ password: passwordSchema, passwordRetype: passwordSchema }),
 		),
 	});
 
 	const changePasswordMutation = trpc.auth.resetPassword.useMutation(
 		useTrpcMutationOptions(mutations.auth.resetPassword.options, {
 			onSuccess: () => router.replace("/login"),
-		})
+		}),
 	);
 	const onSubmit = React.useCallback(
 		({ password }: ChangePasswordForm) => {
@@ -43,7 +43,7 @@ export const ResetPassword: React.FC<Props> = ({ token, intentionQuery }) => {
 			}
 			changePasswordMutation.mutate({ password, token });
 		},
-		[changePasswordMutation, token]
+		[changePasswordMutation, token],
 	);
 
 	if (!token) {

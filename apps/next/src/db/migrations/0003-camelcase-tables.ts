@@ -101,7 +101,7 @@ const camelcaseItemParticipantsTable = async (db: Database) => {
 		.execute();
 	await sql
 		.raw(
-			`ALTER TABLE "itemParticipants" RENAME CONSTRAINT "itemParticipants_pk" TO "${ITEM_PARTICIPANTS.CONSTRAINTS.ITEM_ID_USER_ID_PAIR}"`
+			`ALTER TABLE "itemParticipants" RENAME CONSTRAINT "itemParticipants_pk" TO "${ITEM_PARTICIPANTS.CONSTRAINTS.ITEM_ID_USER_ID_PAIR}"`,
 		)
 		.execute(db);
 	await db.schema
@@ -119,7 +119,7 @@ const uncamelcaseItemParticipantsTable = async (db: Database) => {
 		.execute();
 	await sql
 		.raw(
-			`ALTER TABLE "item_participants" RENAME CONSTRAINT "${ITEM_PARTICIPANTS.CONSTRAINTS.ITEM_ID_USER_ID_PAIR}" TO "itemParticipants_pk"`
+			`ALTER TABLE "item_participants" RENAME CONSTRAINT "${ITEM_PARTICIPANTS.CONSTRAINTS.ITEM_ID_USER_ID_PAIR}" TO "itemParticipants_pk"`,
 		)
 		.execute(db);
 	await db.schema

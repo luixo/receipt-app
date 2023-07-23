@@ -19,15 +19,15 @@ export const DebtRemoveButton: React.FC<Props> = ({ debt, setLoading }) => {
 		useTrpcMutationOptions(mutations.debts.remove.options, {
 			context: debt,
 			onSuccess: () => router.replace(`/debts/user/${debt.userId}`),
-		})
+		}),
 	);
 	React.useEffect(
 		() => setLoading(removeMutation.isLoading),
-		[removeMutation.isLoading, setLoading]
+		[removeMutation.isLoading, setLoading],
 	);
 	const removeDebt = React.useCallback(
 		() => removeMutation.mutate({ id: debt.id }),
-		[removeMutation, debt.id]
+		[removeMutation, debt.id],
 	);
 
 	return (

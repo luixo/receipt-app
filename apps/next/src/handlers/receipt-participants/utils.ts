@@ -9,12 +9,12 @@ import { verifyUsersByIds } from "next-app/handlers/users/utils";
 import { assignableRoleSchema } from "next-app/handlers/validation";
 
 export const getReceiptParticipant = <
-	SE extends ReceiptsSelectExpression<"receiptParticipants">
+	SE extends ReceiptsSelectExpression<"receiptParticipants">,
 >(
 	database: Database,
 	userId: UsersId,
 	receiptId: ReceiptsId,
-	selectExpression: SE[]
+	selectExpression: SE[],
 ): Promise<
 	Selection<ReceiptsDatabase, "receiptParticipants", SE> | undefined
 > =>
@@ -29,7 +29,7 @@ export const addReceiptParticipants = async (
 	database: Database,
 	receiptId: ReceiptsId,
 	receiptOwnerId: AccountsId,
-	usersToAdd: [UsersId, z.infer<typeof assignableRoleSchema>][]
+	usersToAdd: [UsersId, z.infer<typeof assignableRoleSchema>][],
 ) => {
 	const userIds = usersToAdd.map(([id]) => id);
 	const userData = await verifyUsersByIds(database, userIds, receiptOwnerId);
@@ -43,7 +43,7 @@ export const addReceiptParticipants = async (
 		throw new trpc.TRPCError({
 			code: "CONFLICT",
 			message: `User(s) ${receiptParticipants.map(
-				({ userId }) => userId
+				({ userId }) => userId,
 			)} already participate(s) in receipt ${receiptId}.`,
 		});
 	}
@@ -54,7 +54,7 @@ export const addReceiptParticipants = async (
 				receiptId,
 				userId: id,
 				role: receiptOwnerId === id ? "owner" : role,
-			}))
+			})),
 		)
 		.returning(["added", "userId"])
 		.execute();

@@ -23,7 +23,7 @@ export type GenericController<Key extends TRPCQueryKey> = {
 	update: (
 		fn: (
 			input: TRPCQueryInput<Key>,
-			prev: TRPCQueryOutput<Key>
+			prev: TRPCQueryOutput<Key>,
 		) => TRPCQueryOutput<Key> | undefined,
 		...args: UpdateArgs
 	) => void;
@@ -36,14 +36,14 @@ export type GenericController<Key extends TRPCQueryKey> = {
 
 export const createController = <Key extends TRPCQueryKey>(
 	trpc: TRPCReactContext,
-	key: Key
+	key: Key,
 ): GenericController<Key> => {
 	const splitKey = key.split(".");
 	const getQueries = () =>
 		(
 			trpc.queryClient.getQueriesData([splitKey]) as [
 				[Key, { input: TRPCQueryInput<Key>; type: "infinite" | "query" }],
-				TRPCQueryOutput<Key>
+				TRPCQueryOutput<Key>,
 			][]
 		).map(([[, inputWrapper], data]) => [inputWrapper, data] as const);
 	return {
@@ -55,7 +55,7 @@ export const createController = <Key extends TRPCQueryKey>(
 					trpc.queryClient.invalidateQueries([splitKey, inputWrapper], {
 						exact: true,
 						...args,
-					})
+					}),
 				),
 		update: (fn, ...args) => {
 			getQueries().forEach(([inputWrapper, prevData]) => {
@@ -67,7 +67,7 @@ export const createController = <Key extends TRPCQueryKey>(
 						? [splitKey]
 						: [splitKey, inputWrapper],
 					fn(inputWrapper.input, prevData),
-					...args
+					...args,
 				);
 			});
 		},
@@ -75,7 +75,7 @@ export const createController = <Key extends TRPCQueryKey>(
 			trpc.queryClient.setQueryData(
 				input === undefined ? [splitKey] : [splitKey, { input, type: "query" }],
 				data,
-				...args
+				...args,
 			),
 	};
 };
@@ -83,11 +83,11 @@ export const createController = <Key extends TRPCQueryKey>(
 type EmptyFn = () => void;
 
 export type UpdateFn<Value, ReturnValue = Value> = (
-	value: Value
+	value: Value,
 ) => ReturnValue;
 
 export type SnapshotFn<Value, ReturnValue = Value> = (
-	snapshot: Value
+	snapshot: Value,
 ) => UpdateFn<Value, ReturnValue>;
 
 export type UpdaterRevertResult = {
@@ -98,13 +98,13 @@ export type UpdaterRevertResult = {
 export type UpdateRevertOption<
 	GetController extends {
 		getRevertController: (trpc: TRPCReactContext) => unknown;
-	}
+	},
 > = (
-	controller: ReturnType<GetController["getRevertController"]>
+	controller: ReturnType<GetController["getRevertController"]>,
 ) => UpdaterRevertResult | undefined;
 
 export type UpdateOption<
-	GetController extends { getController: (trpc: TRPCReactContext) => unknown }
+	GetController extends { getController: (trpc: TRPCReactContext) => unknown },
 > = (controller: ReturnType<GetController["getController"]>) => void;
 
 export const createRef = <T>(
@@ -126,7 +126,7 @@ export const withRef = <T, R = void>(
 export const applyWithRevert = <Value>(
 	applyFn: () => Value | undefined,
 	revertFn: (snapshot: Value) => void,
-	finalizeFn?: (snapshot: Value) => void
+	finalizeFn?: (snapshot: Value) => void,
 ): UpdaterRevertResult | undefined => {
 	const appliedReturn = applyFn();
 	if (appliedReturn !== undefined) {
@@ -141,7 +141,7 @@ export const applyUpdateFnWithRevert = <Value, ResultValue = Value>(
 	fn: (updater: UpdateFn<Value>) => ResultValue | undefined,
 	updateFn: UpdateFn<Value>,
 	revertFn: ((snapshot: ResultValue) => UpdateFn<Value>) | undefined,
-	finalizeFn?: (snapshot: ResultValue) => void
+	finalizeFn?: (snapshot: ResultValue) => void,
 ): UpdaterRevertResult | undefined => {
 	const modifiedValue = fn(updateFn);
 	if (modifiedValue !== undefined) {
@@ -189,33 +189,33 @@ export const getUpdaters = <
 			getRevertController: (trpc: TRPCReactContext) => unknown;
 			getController: (trpc: TRPCReactContext) => unknown;
 		}
-	>
+	>,
 >(
-	input: T
+	input: T,
 ) => {
 	const updateRevert = (
 		trpc: TRPCReactContext,
 		options: {
 			[K in keyof T]: UpdateRevertOption<T[K]>;
-		}
+		},
 	) =>
 		mergeUpdaterResults(
 			...Object.entries(input).map(([key, { getRevertController }]) =>
 				options[key]!(
-					getRevertController(trpc) as Parameters<typeof options[keyof T]>[0]
-				)
-			)
+					getRevertController(trpc) as Parameters<(typeof options)[keyof T]>[0],
+				),
+			),
 		);
 
 	const update = (
 		trpc: TRPCReactContext,
 		options: {
 			[K in keyof T]: UpdateOption<T[K]>;
-		}
+		},
 	) => {
 		Object.entries(input).forEach(([key, { getController }]) => {
 			options[key]!(
-				getController(trpc) as Parameters<typeof options[keyof T]>[0]
+				getController(trpc) as Parameters<(typeof options)[keyof T]>[0],
 			);
 		});
 	};

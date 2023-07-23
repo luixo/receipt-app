@@ -13,7 +13,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<string>) => {
 		client.resetPasswordIntentions.cleanup.mutate(),
 	]);
 	res.send(
-		`Removed ${removedSessions} sessions and ${removedResetPasswordIntentions} reset password intentions`
+		`Removed ${removedSessions} sessions and ${removedResetPasswordIntentions} reset password intentions`,
 	);
 };
 

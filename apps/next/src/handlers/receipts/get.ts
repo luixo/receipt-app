@@ -11,7 +11,7 @@ export const procedure = authProcedure
 	.input(
 		z.strictObject({
 			id: receiptIdSchema,
-		})
+		}),
 	)
 	.query(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
@@ -21,27 +21,31 @@ export const procedure = authProcedure
 			.innerJoin("users as usersTheir", (jb) =>
 				jb
 					.on("usersTheir.connectedAccountId", "=", ctx.auth.accountId)
-					.onRef("usersTheir.ownerAccountId", "=", "receipts.ownerAccountId")
+					.onRef("usersTheir.ownerAccountId", "=", "receipts.ownerAccountId"),
 			)
 			.leftJoin("receiptItems", (jb) =>
-				jb.onRef("receiptItems.receiptId", "=", "receipts.id")
+				jb.onRef("receiptItems.receiptId", "=", "receipts.id"),
 			)
 			.leftJoin("receiptParticipants", (jb) =>
 				jb
 					.onRef("receiptParticipants.receiptId", "=", "receipts.id")
-					.onRef("receiptParticipants.userId", "=", "usersTheir.id")
+					.onRef("receiptParticipants.userId", "=", "usersTheir.id"),
 			)
 			.innerJoin("users as usersMine", (jb) =>
 				jb
 					.on("usersMine.ownerAccountId", "=", ctx.auth.accountId)
-					.onRef("usersMine.connectedAccountId", "=", "receipts.ownerAccountId")
+					.onRef(
+						"usersMine.connectedAccountId",
+						"=",
+						"receipts.ownerAccountId",
+					),
 			)
 			.select([
 				"receipts.id",
 				"receipts.name",
 				"currencyCode",
 				sql<string>`coalesce(sum("receiptItems".price * "receiptItems".quantity), 0)`.as(
-					"sum"
+					"sum",
 				),
 				"receipts.ownerAccountId",
 				"receipts.lockedTimestamp",
@@ -67,7 +71,7 @@ export const procedure = authProcedure
 		const accessRole = await getAccessRole(
 			database,
 			{ ownerAccountId, id: input.id },
-			ctx.auth.accountId
+			ctx.auth.accountId,
 		);
 		if (accessRole) {
 			return {

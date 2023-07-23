@@ -26,7 +26,7 @@ export const UserPublicNameInput: React.FC<Props> = ({ user, isLoading }) => {
 	const [showInput, setShowInput] = React.useState(user.publicName !== null);
 	const switchShowInput = React.useCallback(
 		() => setShowInput((prev) => !prev),
-		[setShowInput]
+		[setShowInput],
 	);
 	const {
 		bindings,
@@ -39,7 +39,7 @@ export const UserPublicNameInput: React.FC<Props> = ({ user, isLoading }) => {
 	});
 
 	const updateUserMutation = trpc.users.update.useMutation(
-		useTrpcMutationOptions(mutations.users.update.options)
+		useTrpcMutationOptions(mutations.users.update.options),
 	);
 	const savePublicName = React.useCallback(
 		(nextName: string | null) =>
@@ -48,9 +48,9 @@ export const UserPublicNameInput: React.FC<Props> = ({ user, isLoading }) => {
 					id: user.remoteId,
 					update: { type: "publicName", publicName: nextName },
 				},
-				{ onSuccess: () => setValue(nextName ?? "") }
+				{ onSuccess: () => setValue(nextName ?? "") },
 			),
-		[updateUserMutation, user.remoteId, setValue]
+		[updateUserMutation, user.remoteId, setValue],
 	);
 
 	if (!showInput) {

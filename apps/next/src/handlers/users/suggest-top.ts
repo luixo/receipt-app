@@ -32,12 +32,12 @@ export const procedure = authProcedure
 					type: z.literal("debts"),
 				}),
 			]),
-		})
+		}),
 	)
 	.output(
 		z.strictObject({
 			items: z.array(userItemSchema),
-		})
+		}),
 	)
 	.query(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
@@ -56,7 +56,7 @@ export const procedure = authProcedure
 			const accessRole = await getAccessRole(
 				database,
 				receipt,
-				ctx.auth.accountId
+				ctx.auth.accountId,
 			);
 			if (!accessRole) {
 				throw new trpc.TRPCError({
@@ -74,24 +74,24 @@ export const procedure = authProcedure
 							eb
 								.selectFrom("receiptParticipants")
 								.innerJoin("users", (jb) =>
-									jb.onRef("users.id", "=", "receiptParticipants.userId")
+									jb.onRef("users.id", "=", "receiptParticipants.userId"),
 								)
 								.where("receiptParticipants.receiptId", "=", receiptId)
-								.select("users.id")
+								.select("users.id"),
 						)
 						.leftJoin("accounts", (qb) =>
-							qb.onRef("connectedAccountId", "=", "accounts.id")
+							qb.onRef("connectedAccountId", "=", "accounts.id"),
 						)
 						.if(filterIds.length !== 0, (qb) =>
-							qb.where("users.id", "not in", filterIds)
+							qb.where("users.id", "not in", filterIds),
 						)
 						.leftJoin("receiptParticipants", (qb) =>
-							qb.onRef("receiptParticipants.userId", "=", "users.id")
+							qb.onRef("receiptParticipants.userId", "=", "users.id"),
 						)
 						.leftJoin("receipts", (qb) =>
 							qb
 								.onRef("receiptParticipants.receiptId", "=", "receipts.id")
-								.on("receipts.issued", ">", new Date(Date.now() - MONTH))
+								.on("receipts.issued", ">", new Date(Date.now() - MONTH)),
 						)
 						.distinctOn(["users.id"])
 						.select([
@@ -104,7 +104,7 @@ export const procedure = authProcedure
 						])
 						.groupBy("users.id")
 						.groupBy("accounts.email")
-						.orderBy("users.id")
+						.orderBy("users.id"),
 				)
 				.selectFrom("orderedUsers")
 				.select(["id", "name", "publicName", "accountId", "email"])
@@ -129,7 +129,7 @@ export const procedure = authProcedure
 			.where("debts.timestamp", ">", new Date(Date.now() - MONTH))
 			.innerJoin("users", (qb) => qb.onRef("users.id", "=", "debts.userId"))
 			.leftJoin("accounts", (qb) =>
-				qb.onRef("connectedAccountId", "=", "accounts.id")
+				qb.onRef("connectedAccountId", "=", "accounts.id"),
 			)
 			.select([
 				"users.id",

@@ -10,7 +10,7 @@ type ReceiptSnapshot = TRPCQueryOutput<"receipts.get">;
 
 const applyPagedUpdate =
 	(
-		update: TRPCMutationInput<"receipts.update">["update"]
+		update: TRPCMutationInput<"receipts.update">["update"],
 	): UpdateFn<PagedReceiptSnapshot> =>
 	(item) => {
 		switch (update.type) {
@@ -27,7 +27,7 @@ const applyPagedUpdate =
 
 const applyUpdate =
 	(
-		update: TRPCMutationInput<"receipts.update">["update"]
+		update: TRPCMutationInput<"receipts.update">["update"],
 	): UpdateFn<ReceiptSnapshot> =>
 	(item) => {
 		switch (update.type) {
@@ -44,7 +44,7 @@ const applyUpdate =
 
 const getRevert =
 	(
-		update: TRPCMutationInput<"receipts.update">["update"]
+		update: TRPCMutationInput<"receipts.update">["update"],
 	): SnapshotFn<ReceiptSnapshot> =>
 	(snapshot) =>
 	(receipt) => {
@@ -62,7 +62,7 @@ const getRevert =
 
 const getPagedRevert =
 	(
-		update: TRPCMutationInput<"receipts.update">["update"]
+		update: TRPCMutationInput<"receipts.update">["update"],
 	): SnapshotFn<PagedReceiptSnapshot> =>
 	(snapshot) =>
 	(receipt) => {
@@ -85,14 +85,14 @@ export const options: UseContextedMutationOptions<"receipts.update"> = {
 				controller.update(
 					updateObject.id,
 					applyUpdate(updateObject.update),
-					getRevert(updateObject.update)
+					getRevert(updateObject.update),
 				),
 			getNonResolvedAmount: noop,
 			getPaged: (controller) =>
 				controller.update(
 					updateObject.id,
 					applyPagedUpdate(updateObject.update),
-					getPagedRevert(updateObject.update)
+					getPagedRevert(updateObject.update),
 				),
 			getName: (controller) => {
 				if (updateObject.update.type === "name") {
@@ -112,7 +112,7 @@ export const options: UseContextedMutationOptions<"receipts.update"> = {
 								participant.status === "sync" ? "unsync" : participant.status,
 							intentionDirection: undefined,
 							synced: false,
-						}))
+						})),
 					),
 				getByUsers: noop,
 				getUser: noop,

@@ -11,7 +11,7 @@ export const procedure = authProcedure
 		z.strictObject({
 			prevPassword: passwordSchema,
 			password: passwordSchema,
-		})
+		}),
 	)
 	.mutation(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);

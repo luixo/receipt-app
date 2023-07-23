@@ -24,7 +24,7 @@ export const AddUserScreen: AppPage = () => {
 	const addUserMutation = trpc.users.add.useMutation(
 		useTrpcMutationOptions(mutations.users.add.options, {
 			onSuccess: ({ id }) => router.replace(`/users/${id}`),
-		})
+		}),
 	);
 
 	const form = useForm<Form>({
@@ -33,12 +33,12 @@ export const AddUserScreen: AppPage = () => {
 			z.object({
 				name: userNameSchema,
 				email: emailSchema.optional().or(z.literal("")),
-			})
+			}),
 		),
 	});
 	const onSubmit = React.useCallback(
 		(values: Form) => addUserMutation.mutate(values),
-		[addUserMutation]
+		[addUserMutation],
 	);
 
 	return (

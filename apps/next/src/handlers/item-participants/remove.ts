@@ -18,7 +18,7 @@ export const procedure = authProcedure
 		z.strictObject({
 			itemId: receiptItemIdSchema,
 			userId: userIdSchema,
-		})
+		}),
 	)
 	.mutation(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
@@ -51,7 +51,7 @@ export const procedure = authProcedure
 		const accessRole = await getAccessRole(
 			database,
 			receipt,
-			ctx.auth.accountId
+			ctx.auth.accountId,
 		);
 		if (accessRole !== "owner" && accessRole !== "editor") {
 			throw new trpc.TRPCError({

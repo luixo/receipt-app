@@ -41,10 +41,10 @@ export const useSingleInput = <T>({
 										: type === "date"
 										? z.preprocess((input) => new Date(input as string), schema)
 										: schema,
-							})
+							}),
 					  ) as Resolver<Form<T>>)
 					: undefined,
-			[schema, type]
+			[schema, type],
 		),
 	});
 	return useInputController({

@@ -5,11 +5,11 @@ import { z } from "zod";
 import { debtNoteSchema } from "app/utils/validation";
 import { getDatabase, Database } from "next-app/db";
 import { ReceiptsDatabase } from "next-app/db/types";
+import { getDebt } from "next-app/handlers/debts/utils";
 import {
 	getDebtIntention,
 	statusSchema,
 } from "next-app/handlers/debts-sync-intentions/utils";
-import { getDebt } from "next-app/handlers/debts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import {
 	debtAmountSchema,
@@ -43,7 +43,7 @@ export const procedure = authProcedure
 					value: z.boolean(),
 				}),
 			]),
-		})
+		}),
 	)
 	.mutation(
 		async ({
@@ -63,7 +63,7 @@ export const procedure = authProcedure
 
 			const updateTable = (
 				localDatabase: Database,
-				setObject: MutationObject<ReceiptsDatabase, "debts", "debts">
+				setObject: MutationObject<ReceiptsDatabase, "debts", "debts">,
 			) =>
 				localDatabase
 					.updateTable("debts")
@@ -84,7 +84,7 @@ export const procedure = authProcedure
 					const debtIntention = await getDebtIntention(
 						database,
 						input.id,
-						ctx.auth.accountId
+						ctx.auth.accountId,
 					);
 					if (!debtIntention) {
 						throw new trpc.TRPCError({
@@ -126,7 +126,7 @@ export const procedure = authProcedure
 				const debtIntention = await getDebtIntention(
 					database,
 					input.id,
-					ctx.auth.accountId
+					ctx.auth.accountId,
 				);
 				if (!debtIntention) {
 					throw new trpc.TRPCError({
@@ -157,5 +157,5 @@ export const procedure = authProcedure
 					break;
 			}
 			await updateTable(database, setObject);
-		}
+		},
 	);

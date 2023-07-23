@@ -28,8 +28,8 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 							database.fn.count<string>("receipts.id").as("count"),
 						])
 						.where("issued", ">", new Date(Date.now() - MONTH))
-						.groupBy("receipts.currencyCode")
-				)
+						.groupBy("receipts.currencyCode"),
+				),
 		)
 		.selectFrom("mergedReceipts")
 		.select([

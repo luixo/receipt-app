@@ -71,7 +71,7 @@ export const ReceiptDebtSyncInfoButton: React.FC<Props> = ({
 		return getParticipantSums(
 			receiptId,
 			receiptItemsQuery.data.items,
-			receiptItemsQuery.data.participants
+			receiptItemsQuery.data.participants,
 		).map((participant) => ({
 			userId: participant.remoteUserId,
 			sum: participant.sum,
@@ -80,7 +80,7 @@ export const ReceiptDebtSyncInfoButton: React.FC<Props> = ({
 	const showBorder = useMatchMediaValue(true, { lessMd: false });
 	const sortedParticipants = React.useMemo(
 		() => [...participants].sort(sortParticipants),
-		[participants]
+		[participants],
 	);
 
 	if (sortedParticipants.length === 0) {
@@ -119,7 +119,7 @@ export const ReceiptDebtSyncInfoButton: React.FC<Props> = ({
 								participant={participant}
 								sum={
 									participantSums.find(
-										({ userId }) => participant.userId === userId
+										({ userId }) => participant.userId === userId,
 									)?.sum
 								}
 							/>

@@ -34,7 +34,7 @@ export const RegisterScreen: AppPage = () => {
 				name: userNameSchema,
 				password: passwordSchema,
 				passwordRetype: passwordSchema,
-			})
+			}),
 		),
 	});
 
@@ -44,7 +44,7 @@ export const RegisterScreen: AppPage = () => {
 				name: form.watch("name"),
 			},
 			onSuccess: () => router.replace("/"),
-		})
+		}),
 	);
 	const onSubmit = React.useCallback(
 		(data: RegistrationForm) =>
@@ -53,7 +53,7 @@ export const RegisterScreen: AppPage = () => {
 				name: data.name,
 				password: data.password,
 			}),
-		[registerMutation]
+		[registerMutation],
 	);
 
 	return (

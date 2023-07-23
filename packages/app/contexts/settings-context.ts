@@ -14,7 +14,7 @@ export type Settings = z.infer<typeof settingsSchema>;
 
 type SettingsContextType = [
 	Settings,
-	React.Dispatch<React.SetStateAction<Settings>>
+	React.Dispatch<React.SetStateAction<Settings>>,
 ];
 
 export const defaultSettings: Settings = { showResolvedDebts: false };
@@ -22,7 +22,7 @@ export const defaultSettings: Settings = { showResolvedDebts: false };
 export const validateSettings = (input: unknown): Settings => {
 	try {
 		return fallback(settingsSchema, defaultSettings).parse(
-			typeof input === "string" ? JSON.parse(input) : input
+			typeof input === "string" ? JSON.parse(input) : input,
 		);
 	} catch (e) {
 		return defaultSettings;

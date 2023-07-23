@@ -25,7 +25,7 @@ const update =
 					participants,
 					(participant) => participant.userId === userId,
 					updater,
-					ref
+					ref,
 				);
 			});
 		}).current;
@@ -62,9 +62,9 @@ const remove = (controller: Controller, userId: UsersId) => {
 					}
 					return match;
 				},
-				ref
-			)
-		)
+				ref,
+			),
+		),
 	).current;
 	if (itemWithIndex && receiptIdRef.current) {
 		return {
@@ -78,7 +78,7 @@ const add = (
 	controller: Controller,
 	receiptId: ReceiptsId,
 	debt: ParticipantDebt,
-	index = 0
+	index = 0,
 ) => {
 	controller.update((input, prevParticipants) => {
 		if (input.receiptId !== receiptId) {
@@ -94,11 +94,11 @@ export const getController = (trpc: TRPCReactContext) => {
 		update: (
 			receiptId: ReceiptsId,
 			userId: UsersId,
-			updater: utils.UpdateFn<ParticipantDebt>
+			updater: utils.UpdateFn<ParticipantDebt>,
 		) => update(controller, receiptId, userId)(updater),
 		updateAllInReceipt: (
 			receiptId: ReceiptsId,
-			updater: utils.UpdateFn<ParticipantDebt[]>
+			updater: utils.UpdateFn<ParticipantDebt[]>,
 		) => updateAllInReceipt(controller, receiptId)(updater),
 		add: (receiptId: ReceiptsId, debt: ParticipantDebt, index = -1) =>
 			add(controller, receiptId, debt, index),
@@ -106,7 +106,7 @@ export const getController = (trpc: TRPCReactContext) => {
 			receiptId: ReceiptsId,
 			updater: utils.UpdateFn<ParticipantDebt>,
 			debt: ParticipantDebt,
-			index = -1
+			index = -1,
 		) => {
 			const updatedDebt = update(controller, receiptId, debt.userId)(updater);
 			if (!updatedDebt) {
@@ -124,32 +124,32 @@ export const getRevertController = (trpc: TRPCReactContext) => {
 			receiptId: ReceiptsId,
 			userId: UsersId,
 			updater: utils.UpdateFn<ParticipantDebt>,
-			revertUpdater: utils.SnapshotFn<ParticipantDebt>
+			revertUpdater: utils.SnapshotFn<ParticipantDebt>,
 		) =>
 			utils.applyUpdateFnWithRevert(
 				update(controller, receiptId, userId),
 				updater,
-				revertUpdater
+				revertUpdater,
 			),
 		updateAllInReceipt: (
 			receiptId: ReceiptsId,
 			updater: utils.UpdateFn<ParticipantDebt[]>,
-			revertUpdater: utils.SnapshotFn<ParticipantDebt[]>
+			revertUpdater: utils.SnapshotFn<ParticipantDebt[]>,
 		) =>
 			utils.applyUpdateFnWithRevert(
 				updateAllInReceipt(controller, receiptId),
 				updater,
-				revertUpdater
+				revertUpdater,
 			),
 		add: (receiptId: ReceiptsId, debt: ParticipantDebt, index = -1) =>
 			utils.applyWithRevert(
 				() => add(controller, receiptId, debt, index),
-				() => remove(controller, debt.userId)
+				() => remove(controller, debt.userId),
 			),
 		remove: (userId: UsersId) =>
 			utils.applyWithRevert(
 				() => remove(controller, userId),
-				({ receiptId, item, index }) => add(controller, receiptId, item, index)
+				({ receiptId, item, index }) => add(controller, receiptId, item, index),
 			),
 	};
 };

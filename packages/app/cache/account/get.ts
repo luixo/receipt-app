@@ -33,13 +33,13 @@ export const getRevertController = (trpc: TRPCReactContext) => {
 	return {
 		update: (
 			updater: utils.UpdateFn<Account>,
-			revertUpdater: utils.SnapshotFn<Account>
+			revertUpdater: utils.SnapshotFn<Account>,
 		) =>
 			utils.applyUpdateFnWithRevert(update(controller), updater, revertUpdater),
 		upsert: (account: Account) =>
 			utils.applyWithRevert(
 				() => upsert(controller, account),
-				() => invalidateAccount(controller)
+				() => invalidateAccount(controller),
 			),
 	};
 };

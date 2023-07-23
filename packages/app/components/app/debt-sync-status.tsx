@@ -35,7 +35,7 @@ type Debt = TRPCQueryOutput<"debts.get">;
 
 const getContent = (
 	status: Debt["status"],
-	intentionDirection: Debt["intentionDirection"]
+	intentionDirection: Debt["intentionDirection"],
 ) => {
 	switch (status) {
 		case "nosync":

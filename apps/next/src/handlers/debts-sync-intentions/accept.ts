@@ -10,14 +10,14 @@ export const procedure = authProcedure
 	.input(
 		z.strictObject({
 			id: debtIdSchema,
-		})
+		}),
 	)
 	.mutation(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
 		const debtIntention = await getDebtIntention(
 			database,
 			input.id,
-			ctx.auth.accountId
+			ctx.auth.accountId,
 		);
 		if (!debtIntention || !debtIntention.intentionAccountId) {
 			throw new trpc.TRPCError({
@@ -88,7 +88,7 @@ export const procedure = authProcedure
 				.innerJoin("users", (qb) =>
 					qb
 						.onRef("users.connectedAccountId", "=", "debts.ownerAccountId")
-						.on("users.ownerAccountId", "=", ctx.auth.accountId)
+						.on("users.ownerAccountId", "=", ctx.auth.accountId),
 				)
 				.select([
 					"amount",

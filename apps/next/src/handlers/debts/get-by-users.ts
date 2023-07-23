@@ -36,7 +36,7 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 
 	return debtsByUsersEntries
 		.sort(([, { name: nameA }], [, { name: nameB }]) =>
-			nameA.localeCompare(nameB)
+			nameA.localeCompare(nameB),
 		)
 		.map(([userId, { items }]) => ({ userId, debts: items }));
 });

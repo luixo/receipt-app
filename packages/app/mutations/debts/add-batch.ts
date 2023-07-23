@@ -12,7 +12,7 @@ type DebtSnapshot = TRPCQueryOutput<"debts.get">;
 
 const createUserDebts = (
 	ids: DebtsId[],
-	updateObjects: TRPCMutationInput<"debts.addBatch">
+	updateObjects: TRPCMutationInput<"debts.addBatch">,
 ): [DebtUserSnapshot, UsersId][] =>
 	updateObjects.map((updateObject, index) => [
 		{
@@ -32,7 +32,7 @@ const createUserDebts = (
 
 const createDebts = (
 	ids: DebtsId[],
-	updateObjects: TRPCMutationInput<"debts.addBatch">
+	updateObjects: TRPCMutationInput<"debts.addBatch">,
 ): DebtSnapshot[] =>
 	updateObjects.map((updateObject, index) => ({
 		id: ids[index]!,
@@ -55,18 +55,18 @@ export const options: UseContextedMutationOptions<"debts.addBatch"> = {
 					controller.update(
 						updateObject.userId,
 						updateObject.currencyCode,
-						(sum) => sum + updateObject.amount
-					)
+						(sum) => sum + updateObject.amount,
+					),
 				);
 			},
 			getUser: (controller) => {
 				createUserDebts(stableIds, updateObjects).forEach(([debt, userId]) =>
-					controller.add(userId, debt)
+					controller.add(userId, debt),
 				);
 			},
 			get: (controller) =>
 				createDebts(stableIds, updateObjects).forEach((debt) =>
-					controller.add(debt)
+					controller.add(debt),
 				),
 			getReceipt: noop,
 		});

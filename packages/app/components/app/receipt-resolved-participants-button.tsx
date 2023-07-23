@@ -29,10 +29,10 @@ export const ReceiptResolvedParticipantsButton: React.FC<Props> = ({
 	const [popoverOpen, setPopoverOpen] = React.useState(false);
 	const query = trpc.receipts.getResolvedParticipants.useQuery({ receiptId });
 	const notResolvedParticipants = query.data?.filter(
-		(participant) => !participant.resolved
+		(participant) => !participant.resolved,
 	);
 	const resolvedParticipants = query.data?.filter(
-		(participant) => participant.resolved
+		(participant) => participant.resolved,
 	);
 	return (
 		<Popover

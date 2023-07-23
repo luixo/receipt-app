@@ -9,7 +9,7 @@ export const ShowResolvedDebtsOption: React.FC = () => {
 	const [showResolvedDebts, setShowResolvedDebts] = useShowResolvedDebts();
 	const onResolvedChange = React.useCallback(
 		(e: SwitchEvent) => setShowResolvedDebts(e.target.checked),
-		[setShowResolvedDebts]
+		[setShowResolvedDebts],
 	);
 	return (
 		<Switch

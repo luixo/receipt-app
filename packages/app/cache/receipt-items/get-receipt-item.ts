@@ -16,7 +16,7 @@ type ReceiptItem = ReceiptItemsResult["items"][number];
 const updateReceiptItems = (
 	controller: Controller,
 	receiptId: ReceiptsId,
-	updater: utils.UpdateFn<ReceiptItem[]>
+	updater: utils.UpdateFn<ReceiptItem[]>,
 ) =>
 	controller.update((input, prevData) => {
 		if (input.receiptId !== receiptId) {
@@ -33,21 +33,21 @@ const add = (
 	controller: Controller,
 	receiptId: ReceiptsId,
 	item: ReceiptItem,
-	index = 0
+	index = 0,
 ) =>
 	updateReceiptItems(controller, receiptId, (items) =>
-		addToArray(items, item, index)
+		addToArray(items, item, index),
 	);
 
 const remove = (
 	controller: Controller,
 	receiptId: ReceiptsId,
-	receiptItemId: ReceiptItemsId
+	receiptItemId: ReceiptItemsId,
 ) =>
 	utils.withRef<ItemWithIndex<ReceiptItem> | undefined>((ref) =>
 		updateReceiptItems(controller, receiptId, (items) =>
-			removeFromArray(items, (item) => item.id === receiptItemId, ref)
-		)
+			removeFromArray(items, (item) => item.id === receiptItemId, ref),
+		),
 	).current;
 
 const update =
@@ -55,8 +55,8 @@ const update =
 	(updater: utils.UpdateFn<ReceiptItem>) =>
 		utils.withRef<ReceiptItem | undefined>((ref) =>
 			updateReceiptItems(controller, receiptId, (items) =>
-				replaceInArray(items, (item) => item.id === id, updater, ref)
-			)
+				replaceInArray(items, (item) => item.id === id, updater, ref),
+			),
 		).current;
 
 export const getController = (trpc: TRPCReactContext) => {
@@ -65,7 +65,7 @@ export const getController = (trpc: TRPCReactContext) => {
 		update: (
 			receiptId: ReceiptsId,
 			id: ReceiptItemsId,
-			updater: utils.UpdateFn<ReceiptItem>
+			updater: utils.UpdateFn<ReceiptItem>,
 		) => update(controller, receiptId, id)(updater),
 		add: (receiptId: ReceiptsId, item: ReceiptItem, index = 0) =>
 			add(controller, receiptId, item, index),
@@ -82,22 +82,22 @@ export const getRevertController = (trpc: TRPCReactContext) => {
 			receiptId: ReceiptsId,
 			id: ReceiptItemsId,
 			updater: utils.UpdateFn<ReceiptItem>,
-			revertUpdater: utils.SnapshotFn<ReceiptItem>
+			revertUpdater: utils.SnapshotFn<ReceiptItem>,
 		) =>
 			utils.applyUpdateFnWithRevert(
 				update(controller, receiptId, id),
 				updater,
-				revertUpdater
+				revertUpdater,
 			),
 		add: (receiptId: ReceiptsId, item: ReceiptItem, index = 0) =>
 			utils.applyWithRevert(
 				() => add(controller, receiptId, item, index),
-				() => remove(controller, receiptId, item.id)
+				() => remove(controller, receiptId, item.id),
 			),
 		remove: (receiptId: ReceiptsId, receiptItemId: ReceiptItemsId) =>
 			utils.applyWithRevert(
 				() => remove(controller, receiptId, receiptItemId),
-				({ item, index }) => add(controller, receiptId, item, index)
+				({ item, index }) => add(controller, receiptId, item, index),
 			),
 	};
 };

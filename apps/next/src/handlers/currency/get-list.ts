@@ -9,12 +9,12 @@ export const procedure = authProcedure
 	.input(
 		z.strictObject({
 			locale: localeSchema,
-		})
+		}),
 	)
 	.query(async ({ input }) =>
 		Object.entries(getCurrencies(input.locale)).map(([code, currency]) => ({
 			code: code as CurrencyCode,
 			name: currency.name_plural,
 			symbol: currency.symbol_native,
-		}))
+		})),
 	);

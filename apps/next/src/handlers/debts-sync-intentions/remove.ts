@@ -13,14 +13,14 @@ export const procedure = authProcedure
 	.input(
 		z.strictObject({
 			id: debtIdSchema,
-		})
+		}),
 	)
 	.mutation(async ({ input, ctx }): Promise<z.infer<typeof statusSchema>> => {
 		const database = getDatabase(ctx);
 		const debtIntention = await getDebtIntention(
 			database,
 			input.id,
-			ctx.auth.accountId
+			ctx.auth.accountId,
 		);
 		if (!debtIntention) {
 			throw new trpc.TRPCError({

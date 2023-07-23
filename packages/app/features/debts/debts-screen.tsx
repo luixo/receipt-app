@@ -37,7 +37,7 @@ export const DebtsScreen: AppPage = () => {
 							/>
 						</Badge>,
 					],
-					[inboundDebtsAmount]
+					[inboundDebtsAmount],
 				)}
 			>
 				Debts

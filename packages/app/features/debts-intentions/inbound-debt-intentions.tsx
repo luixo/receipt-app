@@ -24,7 +24,7 @@ export const InboundDebtIntentions: React.FC<Props> = ({ intentions }) => {
 			acc[intention.userId]!.push(intention);
 			return acc;
 		},
-		{}
+		{},
 	);
 	return (
 		<>
@@ -42,7 +42,7 @@ export const InboundDebtIntentions: React.FC<Props> = ({ intentions }) => {
 							</React.Fragment>
 						))}
 					</React.Fragment>
-				)
+				),
 			)}
 		</>
 	);

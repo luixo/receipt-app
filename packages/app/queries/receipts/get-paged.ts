@@ -25,7 +25,7 @@ const orderByQueryOptions: SyncQueryParamOptions<SortType> = {
 };
 
 const getOptionalBooleanOptions = (
-	param: string
+	param: string,
 ): SyncQueryParamOptions<boolean | undefined> => ({
 	param,
 	parse: (input) =>
@@ -34,7 +34,7 @@ const getOptionalBooleanOptions = (
 });
 
 const getFilters = (
-	filters: CursorlessInput["filters"]
+	filters: CursorlessInput["filters"],
 ): CursorlessInput["filters"] => {
 	if (
 		!filters ||
@@ -73,16 +73,16 @@ export const inputStore = createStore<
 		orderBy: queryOptions.orderBy.parse(query[queryOptions.orderBy.param]),
 		filters: getFilters({
 			resolvedByMe: queryOptions.filters.resolvedByMe.parse(
-				query[queryOptions.filters.resolvedByMe.param]
+				query[queryOptions.filters.resolvedByMe.param],
 			),
 			ownedByMe: queryOptions.filters.ownedByMe.parse(
-				query[queryOptions.filters.ownedByMe.param]
+				query[queryOptions.filters.ownedByMe.param],
 			),
 			locked: queryOptions.filters.locked.parse(
-				query[queryOptions.filters.locked.param]
+				query[queryOptions.filters.locked.param],
 			),
 		}),
-	})
+	}),
 );
 
 export const useStore = () =>

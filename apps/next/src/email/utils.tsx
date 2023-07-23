@@ -20,8 +20,8 @@ const convertStylesToString = (styles: AugmentedProperies): string =>
 			([key, value]) =>
 				`${key.replace(
 					/[A-Z]/g,
-					(match) => `-${match.toLowerCase()}`
-				)}:${value};`
+					(match) => `-${match.toLowerCase()}`,
+				)}:${value};`,
 		)
 		.join("");
 
@@ -51,7 +51,7 @@ const generateEmail = (element: React.ReactElement) => {
 				<BaseUrlContext.Provider value={getBaseUrl()}>
 					{element}
 				</BaseUrlContext.Provider>
-			</StylingContext.Provider>
+			</StylingContext.Provider>,
 		)}
 		</body>
 	</html>`;
@@ -65,16 +65,16 @@ const generateEmail = (element: React.ReactElement) => {
 					acc[mediaKey] = {};
 				}
 				(acc[mediaKey] as NestedStyles)[selector] = convertStylesToString(
-					mediaStyles!
+					mediaStyles!,
 				);
 			});
 			return acc;
 		},
-		{} as NestedStyles
+		{} as NestedStyles,
 	);
 	return markup.replace(
 		STYLE_REPLACER,
-		`<style>${reduceStyles(nestedStyles)}</style>`
+		`<style>${reduceStyles(nestedStyles)}</style>`,
 	);
 };
 

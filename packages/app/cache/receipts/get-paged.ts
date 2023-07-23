@@ -23,7 +23,11 @@ const getSortByDate = (input: Input) => (a: Receipt, b: Receipt) => {
 
 const updatePages = (
 	controller: Controller,
-	updater: (page: Receipt[], count: number, input: Input) => [Receipt[], number]
+	updater: (
+		page: Receipt[],
+		count: number,
+		input: Input,
+	) => [Receipt[], number],
 ) => {
 	const inputsToInvalidate = utils.withRef<Input[]>(
 		(ref) =>
@@ -31,7 +35,7 @@ const updatePages = (
 				const [nextItems, nextCount] = updater(
 					result.items,
 					result.count,
-					input
+					input,
 				);
 				let updatedItems = [...nextItems];
 				if (typeof input.filters?.locked === "boolean") {
@@ -51,11 +55,11 @@ const updatePages = (
 				if (typeof input.filters?.resolvedByMe === "boolean") {
 					if (input.filters.resolvedByMe) {
 						updatedItems = updatedItems.filter(
-							(item) => item.participantResolved === true
+							(item) => item.participantResolved === true,
 						);
 					} else {
 						updatedItems = updatedItems.filter(
-							(item) => item.participantResolved === false
+							(item) => item.participantResolved === false,
 						);
 					}
 				}
@@ -71,14 +75,14 @@ const updatePages = (
 				}
 				return { ...result, items: updatedItems, count: updatedCount };
 			}),
-		[]
+		[],
 	).current;
 	return () =>
 		controller.invalidate(({ cursor: firstCursor, ...lookupInput }) =>
 			inputsToInvalidate.some(
 				({ cursor: secondCursor, ...inputToInvalidate }) =>
-					hashQueryKey([inputToInvalidate]) === hashQueryKey([lookupInput])
-			)
+					hashQueryKey([inputToInvalidate]) === hashQueryKey([lookupInput]),
+			),
 		);
 };
 
@@ -91,10 +95,10 @@ const update =
 					page,
 					(receipt) => receipt.id === receiptId,
 					updater,
-					ref
+					ref,
 				),
 				count,
-			])
+			]),
 		);
 
 const add = (controller: Controller, nextReceipt: Receipt) =>
@@ -118,7 +122,7 @@ const remove = (controller: Controller, receiptId: ReceiptsId) =>
 				return [page, count];
 			}
 			return [nextPage, count - 1];
-		})
+		}),
 	);
 
 export const getController = (trpc: TRPCReactContext) => {
@@ -138,12 +142,12 @@ export const getRevertController = (trpc: TRPCReactContext) => {
 			utils.applyWithRevert(
 				() => add(controller, receipt),
 				() => remove(controller, receipt.id),
-				(invalidatePages) => invalidatePages()
+				(invalidatePages) => invalidatePages(),
 			),
 		update: (
 			receiptId: ReceiptsId,
 			updater: utils.UpdateFn<Receipt>,
-			revertUpdater: utils.SnapshotFn<Receipt>
+			revertUpdater: utils.SnapshotFn<Receipt>,
 		) =>
 			utils.applyUpdateFnWithRevert(
 				update(controller, receiptId),
@@ -154,7 +158,7 @@ export const getRevertController = (trpc: TRPCReactContext) => {
 					}
 					return id;
 				},
-				({ returnValue: invalidatePages }) => invalidatePages()
+				({ returnValue: invalidatePages }) => invalidatePages(),
 			),
 		remove: (receiptId: ReceiptsId) =>
 			utils.applyWithRevert(
@@ -165,7 +169,7 @@ export const getRevertController = (trpc: TRPCReactContext) => {
 					}
 					return id;
 				},
-				({ returnValue: invalidatePages }) => invalidatePages()
+				({ returnValue: invalidatePages }) => invalidatePages(),
 			),
 	};
 };

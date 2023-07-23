@@ -8,7 +8,7 @@ type MatchMediaObject = Record<MediaKey, boolean>;
 
 const mediaEntries = Object.entries(media) as [MediaKey, string][];
 const mediaQueryLists = mediaEntries.map(([, mediaQuery]) =>
-	typeof window === "undefined" ? null : window.matchMedia(mediaQuery)
+	typeof window === "undefined" ? null : window.matchMedia(mediaQuery),
 );
 const getValue = (defaultValues: boolean) => (): MatchMediaObject =>
 	mediaEntries.reduce((acc, [key], index) => {
@@ -24,7 +24,7 @@ export const useMatchMedia = (): MatchMediaObject => {
 		handler();
 		return () =>
 			mediaQueryLists.forEach((mql) =>
-				mql!.removeEventListener("change", handler)
+				mql!.removeEventListener("change", handler),
 			);
 	}, [setValue]);
 	return value;

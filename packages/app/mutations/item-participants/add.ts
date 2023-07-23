@@ -15,8 +15,8 @@ export const options: UseContextedMutationOptions<
 			getReceiptItemPart: (controller) =>
 				mergeUpdaterResults(
 					...variables.userIds.map((userId) =>
-						controller.add(receiptId, variables.itemId, { userId, part: 1 })
-					)
+						controller.add(receiptId, variables.itemId, { userId, part: 1 }),
+					),
 				),
 		}),
 	errorToastOptions: () => (error) => ({

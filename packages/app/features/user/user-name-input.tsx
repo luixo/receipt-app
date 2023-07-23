@@ -27,16 +27,16 @@ export const UserNameInput: React.FC<Props> = ({ user, isLoading }) => {
 	});
 
 	const updateUserMutation = trpc.users.update.useMutation(
-		useTrpcMutationOptions(mutations.users.update.options)
+		useTrpcMutationOptions(mutations.users.update.options),
 	);
 	const saveName = React.useCallback(
 		(nextName: string) => {
 			updateUserMutation.mutate(
 				{ id: user.remoteId, update: { type: "name", name: nextName } },
-				{ onSuccess: () => setValue(nextName) }
+				{ onSuccess: () => setValue(nextName) },
 			);
 		},
-		[updateUserMutation, user.remoteId, setValue]
+		[updateUserMutation, user.remoteId, setValue],
 	);
 
 	return (

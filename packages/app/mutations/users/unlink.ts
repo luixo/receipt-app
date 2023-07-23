@@ -17,14 +17,14 @@ export const options: UseContextedMutationOptions<"users.unlink"> = {
 						...user,
 						email: snapshot.email,
 						accountId: snapshot.accountId,
-					})
+					}),
 				),
 			getName: noop,
 			getPaged: (controller) =>
 				controller.update(
 					variables.id,
 					(user) => ({ ...user, email: null }),
-					(snapshot) => (user) => ({ ...user, email: snapshot.email })
+					(snapshot) => (user) => ({ ...user, email: snapshot.email }),
 				),
 		}),
 	errorToastOptions: () => (error) => ({

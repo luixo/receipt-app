@@ -20,7 +20,7 @@ export const StateProvider: React.FC<React.PropsWithChildren<Props>> = ({
 				: valueOrValues;
 			return acc;
 		},
-		{}
+		{},
 	);
 	return inputs.reduce(
 		(acc, input) => (
@@ -28,6 +28,6 @@ export const StateProvider: React.FC<React.PropsWithChildren<Props>> = ({
 				{acc}
 			</input.Provider>
 		),
-		children
+		children,
 	);
 };

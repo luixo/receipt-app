@@ -5,7 +5,7 @@ if (!process.env.REDIS_DATABASE_URL) {
 }
 if (!process.env.REDIS_DATABASE_TOKEN) {
 	throw new Error(
-		"Expected to have process.env.REDIS_DATABASE_TOKEN variable!"
+		"Expected to have process.env.REDIS_DATABASE_TOKEN variable!",
 	);
 }
 

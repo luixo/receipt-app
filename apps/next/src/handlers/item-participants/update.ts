@@ -27,7 +27,7 @@ export const procedure = authProcedure
 				type: z.literal("part"),
 				part: partSchema,
 			}),
-		})
+		}),
 	)
 	.mutation(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
@@ -60,7 +60,7 @@ export const procedure = authProcedure
 		const accessRole = await getAccessRole(
 			database,
 			receipt,
-			ctx.auth.accountId
+			ctx.auth.accountId,
 		);
 		if (accessRole !== "owner" && accessRole !== "editor") {
 			throw new trpc.TRPCError({
@@ -79,7 +79,7 @@ export const procedure = authProcedure
 			database,
 			input.userId,
 			input.itemId,
-			["userId"]
+			["userId"],
 		);
 		if (!itemParticipant) {
 			throw new trpc.TRPCError({

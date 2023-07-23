@@ -2,7 +2,7 @@ import { UpdateFn } from "app/cache/utils";
 
 export type Setters<T> = Required<{
 	[K in keyof T as `change${Capitalize<string & K>}`]: (
-		input: T[K] | UpdateFn<T[K]>
+		input: T[K] | UpdateFn<T[K]>,
 	) => void;
 }>;
 
@@ -13,7 +13,7 @@ type ExtractObj<S extends object, K> = K extends keyof S ? S[K] : never;
 
 export type ExtractObjectByPath<
 	S extends object,
-	T extends unknown[]
+	T extends unknown[],
 > = T extends [infer T0, ...infer TR]
 	? TR extends []
 		? ExtractObj<S, T0> extends never
@@ -37,7 +37,7 @@ export type FlattenObject<
 	Terminator,
 	T extends Record<string, unknown>,
 	PrevKey extends string = "",
-	Key = keyof T
+	Key = keyof T,
 > = Key extends string
 	? T[Key] extends never
 		? never
@@ -55,7 +55,7 @@ export type FlattenObject<
 	: never;
 
 export type Exact<A, B> = (<T>() => T extends A ? 1 : 0) extends <
-	T
+	T,
 >() => T extends B ? 1 : 0
 	? A extends B
 		? B extends A
@@ -66,7 +66,7 @@ export type Exact<A, B> = (<T>() => T extends A ? 1 : 0) extends <
 
 export type MaybeAddElementToArray<
 	Args extends unknown[],
-	X = undefined
+	X = undefined,
 > = Exact<X, undefined> extends never
 	? X extends undefined
 		? [...Args, X?]

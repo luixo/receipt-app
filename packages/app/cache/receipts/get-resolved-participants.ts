@@ -29,7 +29,7 @@ const updateItems =
 const upsert = (
 	controller: Controller,
 	receiptId: ReceiptsId,
-	items: ReceiptParticipants
+	items: ReceiptParticipants,
 ) => controller.upsert({ receiptId }, items);
 
 const invalidate = (controller: Controller, receiptId: ReceiptsId) =>
@@ -41,36 +41,36 @@ const invalidate = (controller: Controller, receiptId: ReceiptsId) =>
 			}
 			ref.current = participants;
 			return true;
-		})
+		}),
 	).current;
 
 const add = (
 	controller: Controller,
 	receiptId: ReceiptsId,
 	participant: ReceiptParticipant,
-	index = 0
+	index = 0,
 ) =>
 	updateItems(
 		controller,
-		receiptId
+		receiptId,
 	)((participants) => addToArray(participants, participant, index));
 
 const remove = (
 	controller: Controller,
 	receiptId: ReceiptsId,
-	userId: UsersId
+	userId: UsersId,
 ) =>
 	utils.withRef<ItemWithIndex<ReceiptParticipant> | undefined>((ref) =>
 		updateItems(
 			controller,
-			receiptId
+			receiptId,
 		)((participants) =>
 			removeFromArray(
 				participants,
 				(participant) => participant.remoteUserId === userId,
-				ref
-			)
-		)
+				ref,
+			),
+		),
 	).current;
 
 const update =
@@ -79,27 +79,27 @@ const update =
 		utils.withRef<ReceiptParticipant | undefined>((ref) =>
 			updateItems(
 				controller,
-				receiptId
+				receiptId,
 			)((items) =>
 				replaceInArray(
 					items,
 					(participant) => participant.remoteUserId === userId,
 					updater,
-					ref
-				)
-			)
+					ref,
+				),
+			),
 		).current;
 
 export const getController = (trpc: TRPCReactContext) => {
 	const controller = utils.createController(
 		trpc,
-		"receipts.getResolvedParticipants"
+		"receipts.getResolvedParticipants",
 	);
 	return {
 		update: (
 			receiptId: ReceiptsId,
 			userId: UsersId,
-			updater: utils.UpdateFn<ReceiptParticipant>
+			updater: utils.UpdateFn<ReceiptParticipant>,
 		) => update(controller, receiptId, userId)(updater),
 		add: (receiptId: ReceiptsId, participant: ReceiptParticipant, index = -1) =>
 			add(controller, receiptId, participant, index),
@@ -112,39 +112,39 @@ export const getController = (trpc: TRPCReactContext) => {
 export const getRevertController = (trpc: TRPCReactContext) => {
 	const controller = utils.createController(
 		trpc,
-		"receipts.getResolvedParticipants"
+		"receipts.getResolvedParticipants",
 	);
 	return {
 		update: (
 			receiptId: ReceiptsId,
 			userId: UsersId,
 			updater: utils.UpdateFn<ReceiptParticipant>,
-			revertUpdater: utils.SnapshotFn<ReceiptParticipant>
+			revertUpdater: utils.SnapshotFn<ReceiptParticipant>,
 		) =>
 			utils.applyUpdateFnWithRevert(
 				update(controller, receiptId, userId),
 				updater,
-				revertUpdater
+				revertUpdater,
 			),
 		add: (receiptId: ReceiptsId, participant: ReceiptParticipant, index = -1) =>
 			utils.applyWithRevert(
 				() => add(controller, receiptId, participant, index),
-				() => remove(controller, receiptId, participant.remoteUserId)
+				() => remove(controller, receiptId, participant.remoteUserId),
 			),
 		remove: (receiptId: ReceiptsId, userId: UsersId) =>
 			utils.applyWithRevert(
 				() => remove(controller, receiptId, userId),
-				({ item, index }) => add(controller, receiptId, item, index)
+				({ item, index }) => add(controller, receiptId, item, index),
 			),
 		upsert: (receiptId: ReceiptsId, items: ReceiptParticipants) =>
 			utils.applyWithRevert(
 				() => upsert(controller, receiptId, items),
-				() => invalidate(controller, receiptId)
+				() => invalidate(controller, receiptId),
 			),
 		invalidate: (receiptId: ReceiptsId) =>
 			utils.applyWithRevert(
 				() => invalidate(controller, receiptId),
-				(items) => upsert(controller, receiptId, items)
+				(items) => upsert(controller, receiptId, items),
 			),
 	};
 };

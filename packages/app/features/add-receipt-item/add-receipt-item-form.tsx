@@ -51,7 +51,7 @@ export const AddReceiptItemForm: React.FC<Props> = ({
 				name: receiptItemNameSchema,
 				price: z.preprocess(Number, priceSchema),
 				quantity: z.preprocess(Number, quantitySchema),
-			})
+			}),
 		),
 		defaultValues: {
 			name: "",
@@ -64,11 +64,11 @@ export const AddReceiptItemForm: React.FC<Props> = ({
 		useTrpcMutationOptions(mutations.receiptItems.add.options, {
 			context: receiptId,
 			onSuccess: () => form.reset(),
-		})
+		}),
 	);
 	const onSubmit = React.useCallback(
 		(values: Form) => addMutation.mutate({ ...values, receiptId }),
-		[addMutation, receiptId]
+		[addMutation, receiptId],
 	);
 
 	const isLoading = isDeleteLoading || addMutation.isLoading;

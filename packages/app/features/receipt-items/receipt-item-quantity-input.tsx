@@ -47,7 +47,7 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 		useTrpcMutationOptions(mutations.receiptItems.update.options, {
 			context: receiptId,
 			onSuccess: unsetEditing,
-		})
+		}),
 	);
 	const updateQuantity = React.useCallback(
 		(quantity: number) => {
@@ -59,7 +59,7 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 				update: { type: "quantity", quantity },
 			});
 		},
-		[updateMutation, receiptItem.id, receiptItem.quantity]
+		[updateMutation, receiptItem.id, receiptItem.quantity],
 	);
 
 	if (!isEditing) {

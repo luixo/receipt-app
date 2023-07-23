@@ -45,7 +45,7 @@ export const options: UseContextedMutationOptions<
 				return controller.update(
 					currDebt.receiptId,
 					currDebt.userId,
-					(debt) => ({ ...debt, status: "unsync", intentionDirection: "self" })
+					(debt) => ({ ...debt, status: "unsync", intentionDirection: "self" }),
 				);
 			},
 		});

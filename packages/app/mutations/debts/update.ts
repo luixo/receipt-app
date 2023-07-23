@@ -13,7 +13,7 @@ type DebtSnapshot = TRPCQueryOutput<"debts.get">;
 const applySumUpdate =
 	(
 		prevAmount: number,
-		update: TRPCMutationInput<"debts.update">["update"]
+		update: TRPCMutationInput<"debts.update">["update"],
 	): UpdateFn<DebtSum> =>
 	(sum) => {
 		switch (update.type) {
@@ -31,7 +31,7 @@ const applySumUpdate =
 
 const applyUserUpdate =
 	(
-		update: TRPCMutationInput<"debts.update">["update"]
+		update: TRPCMutationInput<"debts.update">["update"],
 	): UpdateFn<DebtUserSnapshot> =>
 	(item) => {
 		switch (update.type) {
@@ -57,7 +57,7 @@ const applyUserUpdate =
 
 const applyUpdate =
 	(
-		update: TRPCMutationInput<"debts.update">["update"]
+		update: TRPCMutationInput<"debts.update">["update"],
 	): UpdateFn<DebtSnapshot> =>
 	(item) => {
 		switch (update.type) {
@@ -84,7 +84,7 @@ const applyUpdate =
 const getSumRevert =
 	(
 		prevAmount: number,
-		update: TRPCMutationInput<"debts.update">["update"]
+		update: TRPCMutationInput<"debts.update">["update"],
 	): SnapshotFn<DebtSum> =>
 	(updatedSum) =>
 	(currentSum) => {
@@ -103,7 +103,7 @@ const getSumRevert =
 
 const getUserRevert =
 	(
-		update: TRPCMutationInput<"debts.update">["update"]
+		update: TRPCMutationInput<"debts.update">["update"],
 	): SnapshotFn<DebtUserSnapshot> =>
 	(snapshot) =>
 	(debt) => {
@@ -130,7 +130,7 @@ const getUserRevert =
 
 const getRevert =
 	(
-		update: TRPCMutationInput<"debts.update">["update"]
+		update: TRPCMutationInput<"debts.update">["update"],
 	): SnapshotFn<DebtSnapshot> =>
 	(snapshot) =>
 	(debt) => {
@@ -171,20 +171,20 @@ export const options: UseContextedMutationOptions<
 					currData.userId,
 					currData.currencyCode,
 					applySumUpdate(currData.amount, updateObject.update),
-					getSumRevert(currData.amount, updateObject.update)
+					getSumRevert(currData.amount, updateObject.update),
 				),
 			getUser: (controller) =>
 				controller.update(
 					currData.userId,
 					updateObject.id,
 					applyUserUpdate(updateObject.update),
-					getUserRevert(updateObject.update)
+					getUserRevert(updateObject.update),
 				),
 			get: (controller) =>
 				controller.update(
 					{ id: updateObject.id },
 					applyUpdate(updateObject.update),
-					getRevert(updateObject.update)
+					getRevert(updateObject.update),
 				),
 			getReceipt: noop,
 		}),
@@ -217,7 +217,7 @@ export const options: UseContextedMutationOptions<
 					return controller.update(
 						currData.receiptId,
 						currData.userId,
-						(debt) => ({ ...debt, status, intentionDirection, synced: false })
+						(debt) => ({ ...debt, status, intentionDirection, synced: false }),
 					);
 				},
 			});

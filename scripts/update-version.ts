@@ -35,7 +35,7 @@ const main = async () => {
 						console.log(`Updated dynamic app buildNumber to ${nextVersion}`);
 						return ts.factory.createPropertyAssignment(
 							node.name,
-							ts.factory.createStringLiteral(nextVersion)
+							ts.factory.createStringLiteral(nextVersion),
 						);
 					}
 				}

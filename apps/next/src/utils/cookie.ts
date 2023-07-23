@@ -13,7 +13,7 @@ const getParsedCookies = (cookieHeader?: string | string[] | number) => {
 
 export const getCookie = (
 	req: IncomingMessage,
-	cookieName: string
+	cookieName: string,
 ): string | undefined => {
 	const parsedCookies = getParsedCookies(req.headers.cookie);
 	return parsedCookies[cookieName];
@@ -23,12 +23,12 @@ export const setCookie = (
 	res: ServerResponse,
 	cookieName: string,
 	cookieValue: string,
-	opts?: cookie.CookieSerializeOptions
+	opts?: cookie.CookieSerializeOptions,
 ) => {
 	const setCookieHeader = res.getHeader("set-cookie") || "";
 	res.setHeader(
 		"set-cookie",
-		setCookieHeader + cookie.serialize(cookieName, cookieValue, opts)
+		setCookieHeader + cookie.serialize(cookieName, cookieValue, opts),
 	);
 };
 

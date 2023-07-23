@@ -36,7 +36,7 @@ export const UsersScreen: AppPage = () => {
 							/>
 						</Badge>,
 					],
-					[inboundConnectionsAmount]
+					[inboundConnectionsAmount],
 				)}
 			>
 				Users

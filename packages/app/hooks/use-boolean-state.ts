@@ -6,7 +6,7 @@ export const useBooleanState = (initialValue = false) => {
 	const setFalse = React.useCallback(() => setValue(false), [setValue]);
 	const switchValue = React.useCallback(
 		() => setValue((prev) => !prev),
-		[setValue]
+		[setValue],
 	);
 	return [value, { setTrue, setFalse, switchValue }] as const;
 };

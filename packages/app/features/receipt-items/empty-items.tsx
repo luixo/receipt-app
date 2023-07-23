@@ -38,7 +38,7 @@ export const EmptyItems: React.FC<Props> = ({
 						onChange={() => onClick(item.id)}
 					>
 						{`"${item.name}" — ${round(
-							item.quantity * item.price
+							item.quantity * item.price,
 						)} ${currency}`}
 					</Checkbox>
 					{index === items.length - 1 ? <Spacer y={1} /> : null}

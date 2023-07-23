@@ -13,7 +13,7 @@ export const procedure = unauthProcedure
 		z.strictObject({
 			email: emailSchema,
 			password: passwordSchema,
-		})
+		}),
 	)
 	.mutation(async ({ input, ctx }) => {
 		const email = input.email.toLowerCase();
@@ -22,7 +22,7 @@ export const procedure = unauthProcedure
 			.selectFrom("accounts")
 			.where("email", "=", input.email)
 			.innerJoin("users", (qb) =>
-				qb.onRef("users.connectedAccountId", "=", "accounts.id")
+				qb.onRef("users.connectedAccountId", "=", "accounts.id"),
 			)
 			.whereRef("users.id", "=", "users.connectedAccountId")
 			.select([
@@ -37,7 +37,7 @@ export const procedure = unauthProcedure
 
 		if (!result) {
 			ctx.logger.debug(
-				`Authorization of account "${email}" failed: account not found.`
+				`Authorization of account "${email}" failed: account not found.`,
 			);
 			throw new trpc.TRPCError({
 				code: "UNAUTHORIZED",
@@ -48,7 +48,7 @@ export const procedure = unauthProcedure
 				getHash(input.password, result.passwordSalt) === result.passwordHash;
 			if (!isPasswordValid) {
 				ctx.logger.debug(
-					`Authorization of account "${email}" failed: wrong password.`
+					`Authorization of account "${email}" failed: wrong password.`,
 				);
 				throw new trpc.TRPCError({
 					code: "UNAUTHORIZED",
@@ -57,7 +57,7 @@ export const procedure = unauthProcedure
 			} else {
 				const { authToken, expirationDate } = await createAuthorizationSession(
 					database,
-					result.accountId
+					result.accountId,
 				);
 				ctx.logger.debug(`Authorization of account "${email}" succeed.`);
 				setAuthCookie(ctx.res, authToken, expirationDate);

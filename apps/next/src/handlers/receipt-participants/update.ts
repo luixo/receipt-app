@@ -26,7 +26,7 @@ export const procedure = authProcedure
 				}),
 				z.strictObject({ type: z.literal("resolved"), resolved: z.boolean() }),
 			]),
-		})
+		}),
 	)
 	.mutation(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
@@ -74,7 +74,7 @@ export const procedure = authProcedure
 			database,
 			input.userId,
 			input.receiptId,
-			["userId"]
+			["userId"],
 		);
 		if (!receiptParticipant) {
 			throw new trpc.TRPCError({

@@ -10,7 +10,7 @@ const addResetPasswordIntentionsTable = async (db: Database) => {
 				.notNull()
 				.references("accounts.id")
 				.onUpdate("cascade")
-				.onDelete("cascade")
+				.onDelete("cascade"),
 		)
 		.addColumn("expiresTimestamp", "timestamp", (cb) => cb.notNull())
 		.addColumn("token", "uuid", (cb) => cb.notNull())
