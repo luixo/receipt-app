@@ -14,11 +14,13 @@ import type { AppRouter } from "next-app/pages/api/trpc/[trpc]";
 import { AUTH_COOKIE } from "next-app/utils/auth-cookie";
 import { getCookie, serialize } from "next-app/utils/cookie";
 
+const SSR_TIMEOUT = 3 * SECOND;
+
 export const trpcNext = createTRPCNext<
 	AppRouter,
 	{ authToken?: string; hasDebug: boolean }
 >({
-	config: ({ meta }) => {
+	config: ({ meta: { authToken, hasDebug } }) => {
 		const isBrowser = typeof window !== "undefined";
 		return {
 			links: [
@@ -29,16 +31,13 @@ export const trpcNext = createTRPCNext<
 								(getConfig() as NextConfig).serverRuntimeConfig?.port ?? 0
 						  ),
 					headers: {
-						debug: meta.hasDebug ? "true" : undefined,
-						cookie: meta.authToken
-							? serialize(AUTH_COOKIE, meta.authToken)
-							: undefined,
+						debug: hasDebug ? "true" : undefined,
+						cookie: authToken ? serialize(AUTH_COOKIE, authToken) : undefined,
 					},
 				}),
 			],
 			queryClientConfig: getQueryClientConfig(),
 			transformer: superjson,
-			ssrTimeout: 3 * SECOND,
 		};
 	},
 	meta: (ctx) => ({
@@ -46,4 +45,28 @@ export const trpcNext = createTRPCNext<
 		hasDebug: Boolean(ctx.query.debug),
 	}),
 	ssr: true,
+	awaitPrespassRender: async (queryClient) => {
+		if (!queryClient.isFetching()) {
+			return true;
+		}
+
+		const prefetchPromise = new Promise<void>((resolve) => {
+			const unsub = queryClient.getQueryCache().subscribe((event) => {
+				if (event?.query.getObserversCount() === 0) {
+					resolve();
+					unsub();
+				}
+			});
+		});
+		await Promise.race([
+			prefetchPromise,
+			new Promise((resolve) => {
+				setTimeout(() => {
+					void queryClient.cancelQueries();
+					resolve(undefined);
+				}, SSR_TIMEOUT);
+			}),
+		]);
+		return true;
+	},
 });

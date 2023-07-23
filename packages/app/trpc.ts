@@ -9,13 +9,13 @@ import {
 	useQueryClient,
 	UseQueryResult,
 } from "@tanstack/react-query";
-import type { TRPCClientErrorLike } from "@trpc/react";
-import { createTRPCReact } from "@trpc/react";
-import type { DecoratedProcedureUtilsRecord } from "@trpc/react/dist/shared/proxy/utilsProxy";
+import type { TRPCClientErrorLike } from "@trpc/react-query";
+import { createTRPCReact } from "@trpc/react-query";
+import type { UtilsLike } from "@trpc/react-query/shared";
 import type {
 	AnyProcedure,
-	QueryProcedure,
-	MutationProcedure,
+	AnyQueryProcedure,
+	AnyMutationProcedure,
 } from "@trpc/server/dist/core/procedure";
 import type { ProcedureRecord, AnyRouter } from "@trpc/server/dist/core/router";
 import type {
@@ -42,10 +42,10 @@ type ProceduresValues<
 	[K in ProcedureKeys]: Procedures[K] extends AnyRouter
 		? ProceduresValues<Procedures[K], Type>
 		: Type extends "queries"
-		? Procedures[K] extends QueryProcedure<any>
+		? Procedures[K] extends AnyQueryProcedure
 			? Procedures[K]
 			: never
-		: Procedures[K] extends MutationProcedure<any>
+		: Procedures[K] extends AnyMutationProcedure
 		? Procedures[K]
 		: never;
 };
@@ -61,6 +61,10 @@ type MutationsProcedureValues = ProceduresValues<AppRouter, "mutations">;
 type TRPCMutationValues = UnionToIntersection<
 	FlattenObject<AnyProcedure, MutationsProcedureValues>
 >;
+
+export type TRPCReactContext = ReturnType<typeof rawTrpc["useContext"]> & {
+	queryClient: QueryClient;
+};
 
 // anything router-specific goes below
 
@@ -92,12 +96,6 @@ export const trpc = new Proxy(rawTrpc, {
 };
 
 export type TRPCError = TRPCClientErrorLike<AppRouter>;
-
-export type TRPCSimpleReactContext = DecoratedProcedureUtilsRecord<AppRouter>;
-
-export type TRPCReactContext = TRPCSimpleReactContext & {
-	queryClient: QueryClient;
-};
 
 type TRPCInfiniteQueryValues<P extends ProcedureRecord> = {
 	[K in keyof P as inferProcedureInput<P[K]> extends { cursor?: unknown }
@@ -132,7 +130,7 @@ export type TRPCQuery<K extends TRPCQueryKey> = Query<
 	readonly [K, TRPCQueryInput<K>]
 >;
 
-export type TRPCQueryProcedures = DecoratedProcedureUtilsRecord<AppRouter>;
+export type TRPCQueryProcedures = UtilsLike<AppRouter>;
 
 export type TRPCQueryProcedure<Path extends TRPCQueryKey> = ExtractObjectByPath<
 	TRPCQueryProcedures,

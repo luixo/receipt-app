@@ -16,9 +16,9 @@
 	},
 	"dependencies": {
 		"@expo/next-adapter": "^4.0.0",
-		"@trpc/client": "^10.0.0-proxy-beta.7",
-		"@trpc/next": "^10.0.0-proxy-beta.7",
-		"@trpc/server": "^10.0.0-proxy-beta.7",
+		"@trpc/client": "^10.35.0",
+		"@trpc/next": "^10.35.0",
+		"@trpc/server": "^10.35.0",
 		"@types/react": "^18.0.1",
 		"@upstash/redis": "^1.22.0",
 		"app": "*",
