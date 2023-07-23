@@ -108,9 +108,10 @@ export const options: UseContextedMutationOptions<"receipts.update"> = {
 					controller.updateAllInReceipt(updateObject.id, (participants) =>
 						participants.map((participant) => ({
 							...participant,
-							status:
-								participant.status === "sync" ? "unsync" : participant.status,
-							intentionDirection: undefined,
+							syncStatus:
+								participant.syncStatus.type === "sync"
+									? { type: "unsync" }
+									: participant.syncStatus,
 							synced: false,
 						})),
 					),

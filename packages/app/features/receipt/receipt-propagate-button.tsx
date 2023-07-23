@@ -30,10 +30,10 @@ export const showPropagateButton = (
 	// TODO: add info status for receipt for yourself!
 	// TODO: if user is now zero in receipt - let us remove the intention to sync
 	const noneIsSyncedYet = participants.every((participant) =>
-		["nosync", "no-parts"].includes(participant.status),
+		["nosync", "no-parts"].includes(participant.syncStatus.type),
 	);
 	const atLeastOneIsSyncable = participants.some(
-		(participant) => participant.status === "nosync",
+		(participant) => participant.syncStatus.type === "nosync",
 	);
 	return noneIsSyncedYet && atLeastOneIsSyncable;
 };

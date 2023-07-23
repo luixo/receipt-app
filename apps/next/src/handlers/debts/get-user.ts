@@ -2,7 +2,7 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
-import { getLockedStatus } from "next-app/handlers/debts-sync-intentions/utils";
+import { getSyncStatus } from "next-app/handlers/debts-sync-intentions/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import { userIdSchema } from "next-app/handlers/validation";
 
@@ -51,19 +51,16 @@ export const procedure = authProcedure
 			.execute();
 
 		const statuses = await Promise.all(
-			debts.map((debt) =>
-				getLockedStatus(database, debt.id, ctx.auth.accountId),
-			),
+			debts.map((debt) => getSyncStatus(database, debt.id, ctx.auth.accountId)),
 		);
 
 		return debts.map(({ amount, lockedTimestamp, ...debt }, index) => {
-			const [status, intentionDirection] = statuses[index]!;
+			const syncStatus = statuses[index]!;
 			return {
 				...debt,
 				locked: Boolean(lockedTimestamp),
 				amount: Number(amount),
-				status,
-				intentionDirection,
+				syncStatus,
 			};
 		});
 	});

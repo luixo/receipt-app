@@ -9,6 +9,7 @@ import {
 } from "react-icons/md";
 
 import { TRPCQueryOutput } from "app/trpc";
+import { SyncStatus } from "next-app/handlers/debts-sync-intentions/utils";
 
 const Wrapper = styled("div", {
 	display: "flex",
@@ -33,17 +34,15 @@ const DirectionIcon = styled(OutcomingIcon);
 
 type Debt = TRPCQueryOutput<"debts.get">;
 
-const getContent = (
-	status: Debt["status"],
-	intentionDirection: Debt["intentionDirection"],
-) => {
-	switch (status) {
+const getContent = (syncStatus: Debt["syncStatus"]) => {
+	switch (syncStatus.type) {
 		case "nosync":
 			return "Local debt, no sync";
 		case "sync":
 			return "In sync with a user";
 		case "unsync": {
-			switch (intentionDirection) {
+			// eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
+			switch (syncStatus.intention?.direction) {
 				case "self":
 					return "Out of sync,\nour intention to sync was sent";
 				case "remote":
@@ -56,34 +55,33 @@ const getContent = (
 };
 
 type Props = {
-	status: Debt["status"];
-	intentionDirection: Debt["intentionDirection"];
+	syncStatus: SyncStatus;
 	size: number;
 };
 
-export const DebtSyncStatus: React.FC<Props> = ({
-	size,
-	status,
-	intentionDirection,
-}) => {
-	if (status === "nosync") {
+export const DebtSyncStatus: React.FC<Props> = ({ size, syncStatus }) => {
+	if (syncStatus.type === "nosync") {
 		return null;
 	}
 
 	return (
 		<Tooltip
-			content={getContent(status, intentionDirection)}
+			content={getContent(syncStatus)}
 			css={{ whiteSpace: "pre" }}
 			placement="bottomEnd"
 		>
-			<Wrapper type={status}>
+			<Wrapper type={syncStatus.type}>
 				<StyledSyncIcon
-					as={status === "sync" ? SyncIcon : UnsyncIcon}
+					as={syncStatus.type === "sync" ? SyncIcon : UnsyncIcon}
 					css={{ size }}
 				/>
-				{status === "sync" || !intentionDirection ? null : (
+				{syncStatus.type === "sync" || !syncStatus.intention ? null : (
 					<DirectionIcon
-						as={intentionDirection === "self" ? OutcomingIcon : IncomingIcon}
+						as={
+							syncStatus.intention.direction === "self"
+								? OutcomingIcon
+								: IncomingIcon
+						}
 						css={{ size, margin: `0 ${-(size / 4)}px` }}
 					/>
 				)}

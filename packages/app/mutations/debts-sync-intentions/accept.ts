@@ -2,6 +2,7 @@ import { cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { CurrencyCode } from "app/utils/currency";
 import { DebtsId, UsersId } from "next-app/db/models";
+import { SyncStatus } from "next-app/handlers/debts-sync-intentions/utils";
 
 export const options: UseContextedMutationOptions<
 	"debtsSyncIntentions.accept",
@@ -18,6 +19,7 @@ export const options: UseContextedMutationOptions<
 		cache.debtsSyncIntentions.update(trpcContext, {
 			getAll: (controller) => controller.inbound.remove(updateObject.id),
 		});
+		const syncStatus = { type: "sync" } satisfies SyncStatus;
 		const { currentAmount } = context;
 		if (currentAmount !== undefined) {
 			cache.debts.update(trpcContext, {
@@ -28,11 +30,7 @@ export const options: UseContextedMutationOptions<
 					return controller.update(
 						result.receiptId,
 						context.userId,
-						(debt) => ({
-							...debt,
-							intentionDirection: undefined,
-							status: "sync",
-						}),
+						(debt) => ({ ...debt, syncStatus }),
 					);
 				},
 				getByUsers: (controller) =>
@@ -46,8 +44,7 @@ export const options: UseContextedMutationOptions<
 						...debt,
 						amount: result.amount,
 						timestamp: result.timestamp,
-						intentionDirection: undefined,
-						status: "sync",
+						syncStatus,
 					}));
 				},
 				get: (controller) =>
@@ -55,8 +52,7 @@ export const options: UseContextedMutationOptions<
 						...debt,
 						amount: result.amount,
 						timestamp: result.timestamp,
-						intentionDirection: undefined,
-						status: "sync",
+						syncStatus,
 					})),
 			});
 		} else {
@@ -68,11 +64,7 @@ export const options: UseContextedMutationOptions<
 					return controller.update(
 						result.receiptId,
 						context.userId,
-						(debt) => ({
-							...debt,
-							intentionDirection: undefined,
-							status: "sync",
-						}),
+						(debt) => ({ ...debt, syncStatus }),
 					);
 				},
 				getByUsers: (controller) =>
@@ -90,8 +82,7 @@ export const options: UseContextedMutationOptions<
 						created: result.created,
 						note: result.note,
 						locked: true,
-						intentionDirection: undefined,
-						status: "sync",
+						syncStatus,
 						receiptId: result.receiptId,
 					}),
 				get: (controller) =>
@@ -103,8 +94,7 @@ export const options: UseContextedMutationOptions<
 						timestamp: result.timestamp,
 						note: result.note,
 						locked: true,
-						intentionDirection: undefined,
-						status: "sync",
+						syncStatus,
 						receiptId: result.receiptId,
 					}),
 			});

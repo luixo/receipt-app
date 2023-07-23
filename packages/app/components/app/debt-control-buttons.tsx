@@ -2,9 +2,9 @@ import React from "react";
 
 import { Spacer, styled } from "@nextui-org/react";
 import {
-	MdSend as SendIcon,
-	MdCancel as CancelIcon,
 	MdCheckCircle as AcceptIcon,
+	MdCancel as CancelIcon,
+	MdSend as SendIcon,
 } from "react-icons/md";
 
 import { IconButton } from "app/components/icon-button";
@@ -42,6 +42,64 @@ const getLockedContent = (locked: boolean) => {
 		case true:
 			return "Locked debt, ready to sync";
 	}
+};
+
+type SyncButtonProps = {
+	debt: Debt;
+	isLoading: boolean;
+	rejectSyncIntention: () => void;
+	cancelSyncIntention: () => void;
+	acceptSyncIntention: () => void;
+	sendSyncIntention: () => void;
+};
+
+const SyncButton: React.FC<SyncButtonProps> = ({
+	debt,
+	isLoading,
+	rejectSyncIntention,
+	cancelSyncIntention,
+	acceptSyncIntention,
+	sendSyncIntention,
+}) => {
+	if (debt.syncStatus.type === "sync") {
+		return null;
+	}
+	if (debt.syncStatus.type === "nosync" || !debt.syncStatus.intention) {
+		return (
+			<IconButton
+				title="Send sync request"
+				isLoading={isLoading}
+				icon={<SendIcon size={24} />}
+				onClick={sendSyncIntention}
+			/>
+		);
+	}
+	if (debt.syncStatus.intention.direction === "self") {
+		return (
+			<IconButton
+				title="Cancel sync request"
+				isLoading={isLoading}
+				icon={<CancelIcon size={24} />}
+				onClick={cancelSyncIntention}
+			/>
+		);
+	}
+	return (
+		<Buttons>
+			<IconButton
+				title="Approve sync request"
+				isLoading={isLoading}
+				icon={<AcceptIcon size={24} />}
+				onClick={acceptSyncIntention}
+			/>
+			<IconButton
+				title="Reject sync request"
+				isLoading={isLoading}
+				icon={<CancelIcon size={24} />}
+				onClick={rejectSyncIntention}
+			/>
+		</Buttons>
+	);
 };
 
 type Debt = TRPCQueryOutput<"debts.get">;
@@ -187,39 +245,18 @@ export const DebtControlButtons: React.FC<Props> = ({ debt, hideLocked }) => {
 				</>
 			)}
 			{showConnectionStatus && !lockMutation.isLoading ? (
-				<VisibilityWrapper hidden={!debt.locked || debt.status === "sync"}>
+				<VisibilityWrapper
+					hidden={!debt.locked || debt.syncStatus.type === "sync"}
+				>
 					<Spacer x={0.5} />
-					{debt.status === "nosync" ||
-					(debt.status === "unsync" && !debt.intentionDirection) ? (
-						<IconButton
-							title="Send sync request"
-							isLoading={isLoading}
-							icon={<SendIcon size={24} />}
-							onClick={sendSyncIntention}
-						/>
-					) : debt.intentionDirection === "self" ? (
-						<IconButton
-							title="Cancel sync request"
-							isLoading={isLoading}
-							icon={<CancelIcon size={24} />}
-							onClick={cancelSyncIntention}
-						/>
-					) : (
-						<Buttons>
-							<IconButton
-								title="Approve sync request"
-								isLoading={isLoading}
-								icon={<AcceptIcon size={24} />}
-								onClick={acceptSyncIntention}
-							/>
-							<IconButton
-								title="Reject sync request"
-								isLoading={isLoading}
-								icon={<CancelIcon size={24} />}
-								onClick={rejectSyncIntention}
-							/>
-						</Buttons>
-					)}
+					<SyncButton
+						debt={debt}
+						isLoading={isLoading}
+						rejectSyncIntention={rejectSyncIntention}
+						cancelSyncIntention={cancelSyncIntention}
+						acceptSyncIntention={acceptSyncIntention}
+						sendSyncIntention={sendSyncIntention}
+					/>
 				</VisibilityWrapper>
 			) : null}
 		</Wrapper>

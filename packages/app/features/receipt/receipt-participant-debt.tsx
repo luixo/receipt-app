@@ -66,8 +66,9 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 	const showSpacer = useMatchMediaValue(false, { lessMd: true });
 
 	const showUpdateDebt =
-		participant.status === "nosync" ||
-		(participant.status === "unsync" && !participant.intentionDirection);
+		participant.syncStatus.type === "nosync" ||
+		(participant.syncStatus.type === "unsync" &&
+			!participant.syncStatus.intention);
 
 	return (
 		<>
@@ -81,18 +82,14 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 				<Text>{sum !== undefined ? `${sum} ${currency}` : null}</Text>
 			</Grid>
 			<Grid defaultCol={2.5} lessMdCol={4}>
-				{participant.status === "no-parts" ? (
+				{participant.syncStatus.type === "no-parts" ? (
 					<Icon as={ZeroIcon} />
 				) : (
 					<>
 						{participant.synced ? null : participant.debtId ? (
 							<Icon as={ReceiptOffIcon} css={{ color: "$error" }} />
 						) : null}
-						<DebtSyncStatus
-							status={participant.status}
-							intentionDirection={participant.intentionDirection}
-							size={SIZE}
-						/>
+						<DebtSyncStatus syncStatus={participant.syncStatus} size={SIZE} />
 					</>
 				)}
 			</Grid>

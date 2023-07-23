@@ -11,35 +11,31 @@ export const options: UseContextedMutationOptions<
 		cache.debtsSyncIntentions.updateRevert(trpcContext, {
 			getAll: (controller) => controller.outbound.remove(updateObject.id),
 		}),
-	onSuccess:
-		(trpcContext, currData) =>
-		([status, intentionDirection], updateObject) => {
-			cache.debts.update(trpcContext, {
-				getReceipt: (controller) => {
-					if (!currData.receiptId) {
-						return;
-					}
-					return controller.update(
-						currData.receiptId,
-						currData.userId,
-						(debt) => ({ ...debt, status, intentionDirection }),
-					);
-				},
-				get: (controller) =>
-					controller.update({ id: updateObject.id }, (debt) => ({
-						...debt,
-						status,
-						intentionDirection,
-					})),
-				getUser: (controller) =>
-					controller.update(currData.userId, updateObject.id, (debt) => ({
-						...debt,
-						status,
-						intentionDirection,
-					})),
-				getByUsers: noop,
-			});
-		},
+	onSuccess: (trpcContext, currData) => (syncStatus, updateObject) => {
+		cache.debts.update(trpcContext, {
+			getReceipt: (controller) => {
+				if (!currData.receiptId) {
+					return;
+				}
+				return controller.update(
+					currData.receiptId,
+					currData.userId,
+					(debt) => ({ ...debt, syncStatus }),
+				);
+			},
+			get: (controller) =>
+				controller.update({ id: updateObject.id }, (debt) => ({
+					...debt,
+					syncStatus,
+				})),
+			getUser: (controller) =>
+				controller.update(currData.userId, updateObject.id, (debt) => ({
+					...debt,
+					syncStatus,
+				})),
+			getByUsers: noop,
+		});
+	},
 	errorToastOptions: () => (error) => ({
 		text: `Error cancelling intention: ${error.message}`,
 	}),

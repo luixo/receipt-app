@@ -32,17 +32,13 @@ export const options: UseContextedMutationOptions<
 					(debt) => ({
 						...debt,
 						debtId: null,
-						status: debt.status === "sync" ? "unsync" : debt.status,
-						intentionDirection:
-							debt.intentionDirection === "self"
-								? undefined
-								: debt.intentionDirection,
+						// Should verify all cases including the leftover of foreign debt after removing a local one
+						syncStatus: { type: "unsync" },
 					}),
 					(snapshot) => (debt) => ({
 						...debt,
 						debtId: snapshot.debtId,
-						status: snapshot.status,
-						intentionDirection: snapshot.intentionDirection,
+						syncStatus: snapshot.syncStatus,
 					}),
 				);
 			},

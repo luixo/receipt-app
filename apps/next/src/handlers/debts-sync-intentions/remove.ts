@@ -4,7 +4,7 @@ import { z } from "zod";
 import { getDatabase } from "next-app/db";
 import {
 	getDebtIntention,
-	statusSchema,
+	SyncStatus,
 } from "next-app/handlers/debts-sync-intentions/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import { debtIdSchema } from "next-app/handlers/validation";
@@ -15,7 +15,7 @@ export const procedure = authProcedure
 			id: debtIdSchema,
 		}),
 	)
-	.mutation(async ({ input, ctx }): Promise<z.infer<typeof statusSchema>> => {
+	.mutation(async ({ input, ctx }): Promise<SyncStatus> => {
 		const database = getDatabase(ctx);
 		const debtIntention = await getDebtIntention(
 			database,
@@ -45,7 +45,7 @@ export const procedure = authProcedure
 			.where("debtId", "=", input.id)
 			.execute();
 		if (debtIntention.theirOwnerAccountId) {
-			return ["unsync", undefined];
+			return { type: "unsync" };
 		}
-		return ["nosync", undefined];
+		return { type: "nosync" };
 	});

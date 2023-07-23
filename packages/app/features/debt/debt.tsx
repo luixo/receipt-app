@@ -37,11 +37,7 @@ export const DebtInner: React.FC<InnerProps> = ({ query }) => {
 				<>
 					{debt.amount} {currency} debt
 					<Spacer x={1} />
-					<DebtSyncStatus
-						status={debt.status}
-						intentionDirection={debt.intentionDirection}
-						size={36}
-					/>
+					<DebtSyncStatus syncStatus={debt.syncStatus} size={36} />
 					{debt.receiptId ? (
 						<>
 							<Spacer x={1} />

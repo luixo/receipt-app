@@ -35,27 +35,29 @@ export const getDebtIntention = async (
 		])
 		.executeTakeFirst();
 
-const syncStatusSchema = z.union([
+const syncStatusSchema = z.discriminatedUnion("type", [
 	// The foreign user doesn't have a debt
-	z.literal("nosync"),
+	z.strictObject({ type: z.literal("nosync") }),
 	// The foreign user debt's data is different
-	z.literal("unsync"),
+	z.strictObject({
+		type: z.literal("unsync"),
+		intention: z
+			.strictObject({
+				direction: z.union([z.literal("self"), z.literal("remote")]),
+			})
+			.optional(),
+	}),
 	// The foreign user debt's data is in sync
-	z.literal("sync"),
-]);
-const intentionDirectionSchema = z
-	.union([z.literal("self"), z.literal("remote")])
-	.optional();
-export const statusSchema = z.tuple([
-	syncStatusSchema,
-	intentionDirectionSchema,
+	z.strictObject({ type: z.literal("sync") }),
 ]);
 
-export const getLockedStatus = async (
+export type SyncStatus = z.infer<typeof syncStatusSchema>;
+
+export const getSyncStatus = async (
 	database: Database,
 	debtId: DebtsId,
 	accountId: AccountsId,
-): Promise<z.infer<typeof statusSchema>> => {
+): Promise<SyncStatus> => {
 	const debtIntention = await getDebtIntention(database, debtId, accountId);
 	if (!debtIntention) {
 		throw new trpc.TRPCError({
@@ -81,18 +83,24 @@ export const getLockedStatus = async (
 		mineLockedTimestamp &&
 		theirLockedTimestamp.valueOf() === mineLockedTimestamp.valueOf()
 	) {
-		return ["sync", undefined];
+		return { type: "sync" };
 	}
 	if (!intentionAccountId) {
 		if (theirOwnerAccountId) {
-			return ["unsync", undefined];
+			return { type: "unsync" };
 		}
-		return ["nosync", undefined];
+		return { type: "nosync" };
 	}
 	if (intentionAccountId === accountId) {
-		return ["unsync", "self"];
+		return {
+			type: "unsync",
+			intention: { direction: "self" },
+		};
 	}
-	return ["unsync", "remote"];
+	return {
+		type: "unsync",
+		intention: { direction: "remote" },
+	};
 };
 
 type Participant = Awaited<ReturnType<typeof getValidParticipants>>[number];

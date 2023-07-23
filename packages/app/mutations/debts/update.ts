@@ -48,7 +48,10 @@ const applyUserUpdate =
 					return {
 						...item,
 						locked: update.value,
-						status: item.status === "sync" ? "unsync" : item.status,
+						syncStatus:
+							item.syncStatus.type === "sync"
+								? { type: "unsync" }
+								: item.syncStatus,
 					};
 				}
 				return { ...item, locked: update.value };
@@ -74,7 +77,10 @@ const applyUpdate =
 					return {
 						...item,
 						locked: update.value,
-						status: item.status === "sync" ? "unsync" : item.status,
+						syncStatus:
+							item.syncStatus.type === "sync"
+								? { type: "unsync" }
+								: item.syncStatus,
 					};
 				}
 				return { ...item, locked: update.value };
@@ -121,7 +127,7 @@ const getUserRevert =
 					return {
 						...debt,
 						locked: snapshot.locked,
-						status: snapshot.status,
+						syncStatus: snapshot.syncStatus,
 					};
 				}
 				return { ...debt, locked: snapshot.locked };
@@ -148,7 +154,7 @@ const getRevert =
 					return {
 						...debt,
 						locked: snapshot.locked,
-						status: snapshot.status,
+						syncStatus: snapshot.syncStatus,
 					};
 				}
 				return { ...debt, locked: snapshot.locked };
@@ -188,27 +194,24 @@ export const options: UseContextedMutationOptions<
 				),
 			getReceipt: noop,
 		}),
-	onSuccess: (trpcContext, currData) => (nextSyncData, updateObject) => {
+	onSuccess: (trpcContext, currData) => (nextSyncStatus, updateObject) => {
 		if (updateObject.update.type !== "locked") {
 			return;
 		}
-		if (updateObject.update.value && nextSyncData) {
-			const [status, intentionDirection] = nextSyncData;
+		if (updateObject.update.value && nextSyncStatus) {
 			cache.debts.update(trpcContext, {
 				// Sum is already update in onMutate
 				getByUsers: noop,
 				getUser: (controller) => {
 					controller.update(currData.userId, updateObject.id, (debt) => ({
 						...debt,
-						status,
-						intentionDirection,
+						syncStatus: nextSyncStatus,
 					}));
 				},
 				get: (controller) =>
 					controller.update({ id: updateObject.id }, (debt) => ({
 						...debt,
-						status,
-						intentionDirection,
+						syncStatus: nextSyncStatus,
 					})),
 				getReceipt: (controller) => {
 					if (!currData.receiptId) {
@@ -217,7 +220,7 @@ export const options: UseContextedMutationOptions<
 					return controller.update(
 						currData.receiptId,
 						currData.userId,
-						(debt) => ({ ...debt, status, intentionDirection, synced: false }),
+						(debt) => ({ ...debt, syncStatus: nextSyncStatus, synced: false }),
 					);
 				},
 			});

@@ -4,7 +4,10 @@ import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
 import { UsersId } from "next-app/db/models";
-import { getLockedStatus } from "next-app/handlers/debts-sync-intentions/utils";
+import {
+	SyncStatus,
+	getSyncStatus,
+} from "next-app/handlers/debts-sync-intentions/utils";
 import { getReceiptById } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import { receiptIdSchema } from "next-app/handlers/validation";
@@ -106,23 +109,25 @@ export const procedure = authProcedure
 			.execute();
 
 		const statuses = await Promise.all(
-			participants.map((participant) => {
-				if (!participant.parts) {
-					return ["no-parts" as const] as const;
-				}
-				if (participant.debtId) {
-					return getLockedStatus(
-						database,
-						participant.debtId,
-						ctx.auth.accountId,
-					);
-				}
-				return ["nosync" as const] as const;
-			}),
+			participants.map<Promise<SyncStatus | { type: "no-parts" }>>(
+				async (participant) => {
+					if (!participant.parts) {
+						return { type: "no-parts" };
+					}
+					if (participant.debtId) {
+						return getSyncStatus(
+							database,
+							participant.debtId,
+							ctx.auth.accountId,
+						);
+					}
+					return { type: "nosync" };
+				},
+			),
 		);
 
 		return participants.map((participant, index) => {
-			const [status, intentionDirection] = statuses[index]!;
+			const syncStatus = statuses[index]!;
 			return {
 				debtId: participant.debtId,
 				synced:
@@ -131,8 +136,7 @@ export const procedure = authProcedure
 						  receipt.lockedTimestamp.valueOf()
 						: false,
 				userId: participant.userId,
-				status,
-				intentionDirection,
+				syncStatus,
 				amount: Number(participant.amount),
 			};
 		});

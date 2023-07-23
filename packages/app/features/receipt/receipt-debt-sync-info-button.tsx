@@ -31,19 +31,19 @@ const GridHeader = styled(Grid, {
 type Participant = TRPCQueryOutput<"debts.getReceipt">[number];
 
 const sortParticipants = (a: Participant, b: Participant): number => {
-	if (b.status === a.status) {
+	if (b.syncStatus.type === a.syncStatus.type) {
 		return Number(b.synced) - Number(a.synced);
 	}
-	if (b.status === "no-parts") {
+	if (b.syncStatus.type === "no-parts") {
 		return -1;
 	}
-	if (a.status === "no-parts") {
+	if (a.syncStatus.type === "no-parts") {
 		return 1;
 	}
-	if (b.status === "sync") {
+	if (b.syncStatus.type === "sync") {
 		return -1;
 	}
-	if (a.status === "sync") {
+	if (a.syncStatus.type === "sync") {
 		return 1;
 	}
 	return Number(b.synced) - Number(a.synced);

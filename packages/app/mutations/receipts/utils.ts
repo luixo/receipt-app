@@ -1,6 +1,7 @@
 import { cache } from "app/cache";
 import { TRPCMutationOutput, TRPCReactContext } from "app/trpc";
 import { ReceiptsId } from "next-app/db/models";
+import { SyncStatus } from "next-app/handlers/debts-sync-intentions/utils";
 
 export const updateReceiptCacheOnDebtUpdate = (
 	trpcContext: TRPCReactContext,
@@ -11,8 +12,10 @@ export const updateReceiptCacheOnDebtUpdate = (
 	updateIntention?: boolean,
 ) => {
 	const statusUpdate = {
-		status: "unsync" as const,
-		intentionDirection: updateIntention ? ("self" as const) : undefined,
+		syncStatus: {
+			type: "unsync",
+			intention: updateIntention ? { direction: "self" } : undefined,
+		} satisfies SyncStatus,
 	};
 	updatedDebts.forEach((updatedDebt) => {
 		const updatedPartial = {

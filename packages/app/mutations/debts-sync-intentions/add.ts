@@ -2,6 +2,7 @@ import { cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { TRPCQueryOutput } from "app/trpc";
 import { noop } from "app/utils/utils";
+import { SyncStatus } from "next-app/handlers/debts-sync-intentions/utils";
 
 type Debt = TRPCQueryOutput<"debts.get">;
 
@@ -24,18 +25,20 @@ export const options: UseContextedMutationOptions<
 				}),
 		}),
 	onSuccess: (trpcContext, currDebt) => (_intentionTimestamp, updateObject) => {
+		const syncStatus = {
+			type: "unsync",
+			intention: { direction: "self" },
+		} satisfies SyncStatus;
 		cache.debts.update(trpcContext, {
 			get: (controller) =>
 				controller.update({ id: updateObject.id }, (debt) => ({
 					...debt,
-					status: "unsync",
-					intentionDirection: "self",
+					syncStatus,
 				})),
 			getUser: (controller) =>
 				controller.update(currDebt.userId, updateObject.id, (debt) => ({
 					...debt,
-					status: "unsync",
-					intentionDirection: "self",
+					syncStatus,
 				})),
 			getByUsers: noop,
 			getReceipt: (controller) => {
@@ -45,7 +48,7 @@ export const options: UseContextedMutationOptions<
 				return controller.update(
 					currDebt.receiptId,
 					currDebt.userId,
-					(debt) => ({ ...debt, status: "unsync", intentionDirection: "self" }),
+					(debt) => ({ ...debt, syncStatus }),
 				);
 			},
 		});

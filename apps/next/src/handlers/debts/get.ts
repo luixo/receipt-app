@@ -2,7 +2,10 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
-import { getLockedStatus } from "next-app/handlers/debts-sync-intentions/utils";
+import {
+	SyncStatus,
+	getSyncStatus,
+} from "next-app/handlers/debts-sync-intentions/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import { debtIdSchema, receiptIdSchema } from "next-app/handlers/validation";
 
@@ -77,17 +80,27 @@ export const procedure = authProcedure
 				});
 			}
 			const { amount, lockedTimestamp, ...debt } = foreignDebt;
+			if (!lockedTimestamp) {
+				throw new trpc.TRPCError({
+					code: "UNAUTHORIZED",
+					message: `You do not have access to debt for receipt ${input.receiptId}.`,
+				});
+			}
 			return {
 				...debt,
 				amount: -Number(amount),
 				locked: Boolean(lockedTimestamp),
 				note: "",
-				status: "unsync" as const,
-				intentionDirection: "remote" as const,
+				syncStatus: {
+					type: "unsync",
+					intention: {
+						direction: "remote",
+					},
+				} satisfies SyncStatus,
 			};
 		}
 
-		const [status, intentionDirection] = await getLockedStatus(
+		const syncStatus = await getSyncStatus(
 			database,
 			selfDebt.id,
 			ctx.auth.accountId,
@@ -98,7 +111,6 @@ export const procedure = authProcedure
 			...debt,
 			amount: Number(amount),
 			locked: Boolean(lockedTimestamp),
-			status,
-			intentionDirection,
+			syncStatus,
 		};
 	});

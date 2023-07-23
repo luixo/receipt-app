@@ -8,7 +8,7 @@ import { ReceiptsDatabase } from "next-app/db/types";
 import { getDebt } from "next-app/handlers/debts/utils";
 import {
 	getDebtIntention,
-	statusSchema,
+	SyncStatus,
 } from "next-app/handlers/debts-sync-intentions/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import {
@@ -45,84 +45,38 @@ export const procedure = authProcedure
 			]),
 		}),
 	)
-	.mutation(
-		async ({
-			input,
-			ctx,
-		}): Promise<z.infer<typeof statusSchema> | undefined> => {
-			const database = getDatabase(ctx);
-			const debt = await getDebt(database, input.id, ctx.auth.accountId, [
-				"lockedTimestamp",
-			]);
-			if (!debt) {
-				throw new trpc.TRPCError({
-					code: "NOT_FOUND",
-					message: `Debt ${input.id} does not exist on account ${ctx.auth.accountId}.`,
-				});
-			}
+	.mutation(async ({ input, ctx }): Promise<SyncStatus | undefined> => {
+		const database = getDatabase(ctx);
+		const debt = await getDebt(database, input.id, ctx.auth.accountId, [
+			"lockedTimestamp",
+		]);
+		if (!debt) {
+			throw new trpc.TRPCError({
+				code: "NOT_FOUND",
+				message: `Debt ${input.id} does not exist on account ${ctx.auth.accountId}.`,
+			});
+		}
 
-			const updateTable = (
-				localDatabase: Database,
-				setObject: MutationObject<ReceiptsDatabase, "debts", "debts">,
-			) =>
-				localDatabase
-					.updateTable("debts")
-					.set(setObject)
-					.where("id", "=", input.id)
-					.where("ownerAccountId", "=", ctx.auth.accountId)
-					.executeTakeFirst();
+		const updateTable = (
+			localDatabase: Database,
+			setObject: MutationObject<ReceiptsDatabase, "debts", "debts">,
+		) =>
+			localDatabase
+				.updateTable("debts")
+				.set(setObject)
+				.where("id", "=", input.id)
+				.where("ownerAccountId", "=", ctx.auth.accountId)
+				.executeTakeFirst();
 
-			if (input.update.type === "locked") {
-				if (input.update.value) {
-					if (debt.lockedTimestamp) {
-						throw new trpc.TRPCError({
-							code: "CONFLICT",
-							message: `Debt ${input.id} is already locked.`,
-						});
-					}
-					await updateTable(database, { lockedTimestamp: new Date() });
-					const debtIntention = await getDebtIntention(
-						database,
-						input.id,
-						ctx.auth.accountId,
-					);
-					if (!debtIntention) {
-						throw new trpc.TRPCError({
-							code: "INTERNAL_SERVER_ERROR",
-							message: `Debt ${input.id} not found on debts update.`,
-						});
-					}
-					if (!debtIntention.theirOwnerAccountId) {
-						return ["nosync", undefined];
-					}
-					return [
-						"unsync",
-						debtIntention.intentionAccountId ? "remote" : undefined,
-					];
-				}
-				if (!debt.lockedTimestamp) {
+		if (input.update.type === "locked") {
+			if (input.update.value) {
+				if (debt.lockedTimestamp) {
 					throw new trpc.TRPCError({
 						code: "CONFLICT",
-						message: `Debt ${input.id} is not locked.`,
+						message: `Debt ${input.id} is already locked.`,
 					});
 				}
-				await database.transaction().execute(async (tx) => {
-					await updateTable(tx, { lockedTimestamp: null });
-					await tx
-						.deleteFrom("debtsSyncIntentions")
-						.where("debtId", "=", input.id)
-						.where("ownerAccountId", "=", ctx.auth.accountId)
-						.execute();
-				});
-				return ["unsync", undefined];
-			}
-			if (debt.lockedTimestamp && input.update.type !== "note") {
-				throw new trpc.TRPCError({
-					code: "FORBIDDEN",
-					message: `Debt ${input.id} cannot be updated while locked.`,
-				});
-			}
-			if (input.update.type === "currencyCode") {
+				await updateTable(database, { lockedTimestamp: new Date() });
 				const debtIntention = await getDebtIntention(
 					database,
 					input.id,
@@ -134,28 +88,71 @@ export const procedure = authProcedure
 						message: `Debt ${input.id} not found on debts update.`,
 					});
 				}
-				if (debtIntention.theirOwnerAccountId) {
-					throw new trpc.TRPCError({
-						code: "FORBIDDEN",
-						message: `Debt ${input.id} currency cannot be updated as it exists on counterparty side as well.`,
-					});
+				if (!debtIntention.theirOwnerAccountId) {
+					return { type: "nosync" };
 				}
+				return {
+					type: "unsync",
+					intention: debtIntention.intentionAccountId
+						? { direction: "remote" }
+						: undefined,
+				};
 			}
-			let setObject: MutationObject<ReceiptsDatabase, "debts", "debts"> = {};
-			switch (input.update.type) {
-				case "amount":
-					setObject = { amount: input.update.amount.toString() };
-					break;
-				case "timestamp":
-					setObject = { timestamp: input.update.timestamp };
-					break;
-				case "note":
-					setObject = { note: input.update.note };
-					break;
-				case "currencyCode":
-					setObject = { currencyCode: input.update.currencyCode };
-					break;
+			if (!debt.lockedTimestamp) {
+				throw new trpc.TRPCError({
+					code: "CONFLICT",
+					message: `Debt ${input.id} is not locked.`,
+				});
 			}
-			await updateTable(database, setObject);
-		},
-	);
+			await database.transaction().execute(async (tx) => {
+				await updateTable(tx, { lockedTimestamp: null });
+				await tx
+					.deleteFrom("debtsSyncIntentions")
+					.where("debtId", "=", input.id)
+					.where("ownerAccountId", "=", ctx.auth.accountId)
+					.execute();
+			});
+			return { type: "unsync" };
+		}
+		if (debt.lockedTimestamp && input.update.type !== "note") {
+			throw new trpc.TRPCError({
+				code: "FORBIDDEN",
+				message: `Debt ${input.id} cannot be updated while locked.`,
+			});
+		}
+		if (input.update.type === "currencyCode") {
+			const debtIntention = await getDebtIntention(
+				database,
+				input.id,
+				ctx.auth.accountId,
+			);
+			if (!debtIntention) {
+				throw new trpc.TRPCError({
+					code: "INTERNAL_SERVER_ERROR",
+					message: `Debt ${input.id} not found on debts update.`,
+				});
+			}
+			if (debtIntention.theirOwnerAccountId) {
+				throw new trpc.TRPCError({
+					code: "FORBIDDEN",
+					message: `Debt ${input.id} currency cannot be updated as it exists on counterparty side as well.`,
+				});
+			}
+		}
+		let setObject: MutationObject<ReceiptsDatabase, "debts", "debts"> = {};
+		switch (input.update.type) {
+			case "amount":
+				setObject = { amount: input.update.amount.toString() };
+				break;
+			case "timestamp":
+				setObject = { timestamp: input.update.timestamp };
+				break;
+			case "note":
+				setObject = { note: input.update.note };
+				break;
+			case "currencyCode":
+				setObject = { currencyCode: input.update.currencyCode };
+				break;
+		}
+		await updateTable(database, setObject);
+	});

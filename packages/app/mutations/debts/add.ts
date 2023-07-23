@@ -18,8 +18,7 @@ const createUserDebt = (
 	timestamp: updateObject.timestamp || new Date(),
 	note: updateObject.note,
 	locked: false,
-	status: "nosync",
-	intentionDirection: undefined,
+	syncStatus: { type: "nosync" },
 	receiptId: null,
 });
 
@@ -34,8 +33,7 @@ const createDebt = (
 	timestamp: updateObject.timestamp || new Date(),
 	note: updateObject.note,
 	locked: false,
-	status: "nosync",
-	intentionDirection: undefined,
+	syncStatus: { type: "nosync" },
 	receiptId: null,
 });
 
