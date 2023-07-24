@@ -28,7 +28,9 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 }) => {
 	const receiptQuery = trpc.receipts.get.useQuery({ id: receiptId });
 	const receiptLocked =
-		receiptQuery.status === "success" ? receiptQuery.data.locked : true;
+		receiptQuery.status === "success"
+			? Boolean(receiptQuery.data.lockedTimestamp)
+			: true;
 	const receiptCurrencyCode =
 		receiptQuery.status === "success"
 			? receiptQuery.data.currencyCode

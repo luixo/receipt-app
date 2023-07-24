@@ -78,11 +78,11 @@ export const procedure = authProcedure
 				...receipt,
 				sum: Number(sum),
 				role: accessRole,
-				locked: Boolean(lockedTimestamp),
+				lockedTimestamp: lockedTimestamp || undefined,
 			} as typeof receipt & {
 				role: Role;
 				sum: number;
-				locked: boolean;
+				lockedTimestamp?: Date;
 			};
 		}
 		throw new trpc.TRPCError({

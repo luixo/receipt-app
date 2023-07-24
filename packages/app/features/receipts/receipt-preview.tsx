@@ -38,12 +38,16 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 	const updateReceiptMutation = trpc.receipts.update.useMutation(
 		useTrpcMutationOptions(mutations.receipts.update.options),
 	);
+	const receiptLocked = Boolean(receipt.lockedTimestamp);
 	const switchResolved = React.useCallback(() => {
 		updateReceiptMutation.mutate({
 			id: receipt.id,
-			update: { type: "locked", value: !receipt.locked },
+			update: {
+				type: "lockedTimestamp",
+				lockedTimestamp: receiptLocked ? undefined : new Date(),
+			},
 		});
-	}, [updateReceiptMutation, receipt.id, receipt.locked]);
+	}, [updateReceiptMutation, receipt.id, receiptLocked]);
 	const overflow = useMatchMediaValue(false, { lessSm: true });
 	const [nameWidth, sumWidth, ...buttonsWidth] = getWidths(overflow);
 	return (
@@ -93,8 +97,8 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 					light
 					isLoading={updateReceiptMutation.isLoading}
 					disabled={receipt.role !== "owner"}
-					color={receipt.locked ? "success" : "warning"}
-					icon={<LockedIcon locked={receipt.locked} />}
+					color={receiptLocked ? "success" : "warning"}
+					icon={<LockedIcon locked={receiptLocked} />}
 					onClick={switchResolved}
 				/>
 			</Grid>

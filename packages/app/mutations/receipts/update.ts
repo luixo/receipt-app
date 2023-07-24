@@ -18,8 +18,8 @@ const applyPagedUpdate =
 				return { ...item, name: update.name };
 			case "issued":
 				return { ...item, issued: update.issued };
-			case "locked":
-				return { ...item, locked: update.value };
+			case "lockedTimestamp":
+				return { ...item, lockedTimestamp: update.lockedTimestamp };
 			case "currencyCode":
 				return { ...item, currencyCode: update.currencyCode };
 		}
@@ -35,8 +35,8 @@ const applyUpdate =
 				return { ...item, name: update.name };
 			case "issued":
 				return { ...item, issued: update.issued };
-			case "locked":
-				return { ...item, locked: update.value };
+			case "lockedTimestamp":
+				return { ...item, lockedTimestamp: update.lockedTimestamp };
 			case "currencyCode":
 				return { ...item, currencyCode: update.currencyCode };
 		}
@@ -53,8 +53,8 @@ const getRevert =
 				return { ...receipt, name: snapshot.name };
 			case "issued":
 				return { ...receipt, issued: snapshot.issued };
-			case "locked":
-				return { ...receipt, resolved: snapshot.locked };
+			case "lockedTimestamp":
+				return { ...receipt, lockedTimestamp: snapshot.lockedTimestamp };
 			case "currencyCode":
 				return { ...receipt, currencyCode: snapshot.currencyCode };
 		}
@@ -71,8 +71,8 @@ const getPagedRevert =
 				return { ...receipt, name: snapshot.name };
 			case "issued":
 				return { ...receipt, issued: snapshot.issued };
-			case "locked":
-				return { ...receipt, locked: snapshot.locked };
+			case "lockedTimestamp":
+				return { ...receipt, lockedTimestamp: snapshot.lockedTimestamp };
 			case "currencyCode":
 				return { ...receipt, currencyCode: snapshot.currencyCode };
 		}
@@ -101,8 +101,11 @@ export const options: UseContextedMutationOptions<"receipts.update"> = {
 			},
 			getResolvedParticipants: noop,
 		}),
-	onSuccess: (trpcContext) => (_result, updateObject) => {
-		if (updateObject.update.type === "locked" && !updateObject.update.value) {
+	onSuccess: (trpcContext) => (result, updateObject) => {
+		if (
+			updateObject.update.type === "lockedTimestamp" &&
+			!updateObject.update.lockedTimestamp
+		) {
 			cache.debts.update(trpcContext, {
 				getReceipt: (controller) =>
 					controller.updateAllInReceipt(updateObject.id, (participants) =>

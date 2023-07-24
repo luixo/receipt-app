@@ -2,6 +2,7 @@ import * as trpc from "@trpc/server";
 import { MutationObject, sql } from "kysely";
 import { z } from "zod";
 
+import { SECOND } from "app/utils/time";
 import { receiptNameSchema } from "app/utils/validation";
 import { getDatabase, Database } from "next-app/db";
 import { ReceiptsDatabase } from "next-app/db/types";
@@ -22,7 +23,10 @@ export const procedure = authProcedure
 					name: receiptNameSchema,
 				}),
 				z.strictObject({ type: z.literal("issued"), issued: z.date() }),
-				z.strictObject({ type: z.literal("locked"), value: z.boolean() }),
+				z.strictObject({
+					type: z.literal("lockedTimestamp"),
+					lockedTimestamp: z.date().optional(),
+				}),
 				z.strictObject({
 					type: z.literal("currencyCode"),
 					currencyCode: currencyCodeSchema,
@@ -59,11 +63,11 @@ export const procedure = authProcedure
 				.where("id", "=", input.id)
 				.executeTakeFirst();
 
-		if (input.update.type === "locked") {
+		if (input.update.type === "lockedTimestamp") {
 			if (receipt.ownerAccountId !== ctx.auth.accountId) {
 				throw new trpc.TRPCError({
 					code: "UNAUTHORIZED",
-					message: `You don't have rights to change ${input.id} receipt locked state.`,
+					message: `You don't have rights to change ${input.id} receipt locked timestamp.`,
 				});
 			}
 			const emptyItems = await database
@@ -86,11 +90,18 @@ export const procedure = authProcedure
 					message: `Receipt ${input.id} has items with no participants.`,
 				});
 			}
-			if (input.update.value) {
+			if (input.update.lockedTimestamp) {
 				if (receipt.lockedTimestamp) {
 					throw new trpc.TRPCError({
 						code: "CONFLICT",
 						message: `Receipt ${input.id} is already locked.`,
+					});
+				}
+				const msDiff = input.update.lockedTimestamp.valueOf() - Date.now();
+				if (Math.abs(msDiff) > 10 * SECOND) {
+					throw new trpc.TRPCError({
+						code: "FORBIDDEN",
+						message: `Input locked timestamp is too old or too new (${msDiff}ms ahead).`,
 					});
 				}
 				await updateTable(database, { lockedTimestamp: new Date() });

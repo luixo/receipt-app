@@ -193,7 +193,7 @@ export const procedure = authProcedure
 				.map(({ lockedTimestamp, sum, ...receipt }) => ({
 					...receipt,
 					sum: Number(sum),
-					locked: Boolean(lockedTimestamp),
+					lockedTimestamp: lockedTimestamp || undefined,
 				})),
 		};
 	});

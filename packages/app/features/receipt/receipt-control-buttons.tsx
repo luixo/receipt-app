@@ -50,7 +50,7 @@ export const ReceiptControlButtons: React.FC<Props> = ({
 	);
 
 	return (
-		<Wrapper locked={receipt.locked}>
+		<Wrapper locked={Boolean(receipt.lockedTimestamp)}>
 			<ReceiptParticipantResolvedButton
 				ghost
 				receiptId={receipt.id}
@@ -64,12 +64,12 @@ export const ReceiptControlButtons: React.FC<Props> = ({
 				<>
 					<ReceiptLockedButton
 						receiptId={receipt.id}
-						locked={receipt.locked}
+						locked={Boolean(receipt.lockedTimestamp)}
 						isLoading={deleteLoading}
 						isPropagating={propagateMutation.isLoading}
 						propagateDebts={propagateDebts}
 					/>
-					{receipt.locked ? (
+					{receipt.lockedTimestamp ? (
 						<ReceiptPropagateButton
 							receiptDebtsQuery={receiptDebtsQuery}
 							receiptId={receipt.id}
@@ -80,10 +80,10 @@ export const ReceiptControlButtons: React.FC<Props> = ({
 						/>
 					) : null}
 				</>
-			) : !receipt.locked ? (
+			) : !receipt.lockedTimestamp ? (
 				<LockedIcon
-					locked={receipt.locked}
-					tooltip={receipt.locked ? "Receipt locked" : "Receipt unlocked"}
+					locked={false}
+					tooltip="Receipt unlocked"
 					css={{ m: "$4", color: "$warning" }}
 				/>
 			) : (

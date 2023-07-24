@@ -35,7 +35,7 @@ export const ReceiptRemoveButton: React.FC<Props> = ({
 
 	return (
 		<RemoveButton
-			disabled={receipt.locked}
+			disabled={Boolean(receipt.lockedTimestamp)}
 			mutation={removeReceiptMutation}
 			onRemove={removeReceipt}
 			subtitle="This will remove receipt forever"

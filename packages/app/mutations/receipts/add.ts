@@ -24,7 +24,7 @@ export const options: UseContextedMutationOptions<
 						)
 							? false
 							: null,
-						locked: false,
+						lockedTimestamp: undefined,
 						remoteUserId: selfAccountId as UsersId,
 						localUserId: selfAccountId as UsersId,
 						sum: 0,
@@ -37,7 +37,6 @@ export const options: UseContextedMutationOptions<
 						name: variables.name,
 						issued: variables.issued,
 						currencyCode: variables.currencyCode,
-						locked: false,
 						sum: 0,
 						// Typesystem doesn't know that we use account id as self user id
 						participantResolved: variables.userIds?.includes(

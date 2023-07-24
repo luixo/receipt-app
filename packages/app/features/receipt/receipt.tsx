@@ -78,7 +78,7 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 						auto
 						light
 						onClick={switchEditing}
-						disabled={deleteLoading || receipt.locked}
+						disabled={deleteLoading || Boolean(receipt.lockedTimestamp)}
 						css={{ ml: "$4" }}
 					>
 						<EditIcon size={24} />

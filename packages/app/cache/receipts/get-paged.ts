@@ -40,9 +40,11 @@ const updatePages = (
 				let updatedItems = [...nextItems];
 				if (typeof input.filters?.locked === "boolean") {
 					if (input.filters.locked) {
-						updatedItems = updatedItems.filter((item) => item.locked);
+						updatedItems = updatedItems.filter((item) =>
+							Boolean(item.lockedTimestamp),
+						);
 					} else {
-						updatedItems = updatedItems.filter((item) => !item.locked);
+						updatedItems = updatedItems.filter((item) => !item.lockedTimestamp);
 					}
 				}
 				if (typeof input.filters?.ownedByMe === "boolean") {
