@@ -22,12 +22,14 @@ export const StateProvider: React.FC<React.PropsWithChildren<Props>> = ({
 		},
 		{},
 	);
-	return inputs.reduce(
-		(acc, input) => (
-			<input.Provider createStore={input.useCreateStore(parsedQuery)}>
-				{acc}
-			</input.Provider>
-		),
-		children,
+	return (
+		<>
+			{inputs.reduce(
+				(acc, { Provider }) => (
+					<Provider parsedQuery={parsedQuery}>{acc}</Provider>
+				),
+				children,
+			)}
+		</>
 	);
 };

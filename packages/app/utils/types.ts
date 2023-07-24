@@ -1,5 +1,12 @@
 import { UpdateFn } from "app/cache/utils";
 
+export type ParametersExceptFirst<F> = F extends (
+	arg0: any,
+	...rest: infer R
+) => any
+	? R
+	: never;
+
 export type Setters<T> = Required<{
 	[K in keyof T as `change${Capitalize<string & K>}`]: (
 		input: T[K] | UpdateFn<T[K]>,

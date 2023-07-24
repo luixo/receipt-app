@@ -1,0 +1,16 @@
+diff --git a/node_modules/zustand/react.d.ts b/node_modules/zustand/react.d.ts
+index 8646581..aedd8a3 100644
+--- a/node_modules/zustand/react.d.ts
++++ b/node_modules/zustand/react.d.ts
+@@ -1,9 +1,9 @@
+ import type { Mutate, StateCreator, StoreApi, StoreMutatorIdentifier } from './vanilla';
+-type ExtractState<S> = S extends {
++export type ExtractState<S> = S extends {
+     getState: () => infer T;
+ } ? T : never;
+ type ReadonlyStoreApi<T> = Pick<StoreApi<T>, 'getState' | 'subscribe'>;
+-type WithReact<S extends ReadonlyStoreApi<unknown>> = S & {
++export type WithReact<S extends ReadonlyStoreApi<unknown>> = S & {
+     getServerState?: () => ExtractState<S>;
+ };
+ export declare function useStore<S extends WithReact<StoreApi<unknown>>>(api: S): ExtractState<S>;

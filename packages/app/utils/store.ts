@@ -1,44 +1,67 @@
-import zustand, {
-	State,
+import React from "react";
+
+import {
+	createStore as createZustandStore,
+	useStore,
 	StateCreator,
-	StoreApi,
 	StoreMutatorIdentifier,
+	StoreApi,
+	WithReact,
+	ExtractState,
 } from "zustand";
-import createContext from "zustand/context";
 
 import { UpdateFn } from "app/cache/utils";
+import { ParametersExceptFirst } from "app/utils/types";
 
 export type ParsedQuery = Partial<Record<string, string>>;
 
+// curried useStore hook type recreation
+type UseStoreCurried<T> = {
+	<S extends WithReact<StoreApi<T>>>(): ExtractState<S>;
+	<S extends WithReact<StoreApi<T>>, U>(
+		selector: (state: ExtractState<S>) => U,
+		equalityFn?: (a: U, b: U) => boolean,
+	): U;
+	<TState, StateSlice>(
+		selector: (state: TState) => StateSlice,
+		equalityFn?: (a: StateSlice, b: StateSlice) => boolean,
+	): StateSlice;
+};
+
 export const createStore = <
-	T extends State,
-	S extends StoreApi<State> & StoreApi<T> = StoreApi<State> & StoreApi<T>,
+	T,
 	Mos extends [StoreMutatorIdentifier, unknown][] = [],
 >(
 	initializer: StateCreator<T, [], Mos>,
 	getDataByQuery?: (query: ParsedQuery) => Partial<T>,
 ) => {
-	const zustandContext = createContext<S>();
-
-	const { Provider, useStore } = zustandContext;
-
-	const initializeStore = (query: ParsedQuery) => {
-		const boundStore = zustand(initializer);
-		if (getDataByQuery) {
-			boundStore.setState(getDataByQuery(query));
+	const StoreContext = React.createContext<StoreApi<T> | undefined>(undefined);
+	const useStoreCurried: UseStoreCurried<T> = (...args: unknown[]) => {
+		const store = React.useContext(StoreContext);
+		if (!store) {
+			throw new Error("Expected to have store context");
 		}
-		return boundStore;
+		return useStore(store, ...(args as ParametersExceptFirst<typeof useStore>));
 	};
 
-	let store: ReturnType<typeof initializeStore>;
-	const useCreateStore = (query: ParsedQuery) => {
-		if (typeof window === "undefined") {
-			return () => initializeStore(query);
-		}
-		store = store ?? initializeStore(query);
-		return () => store;
-	};
-	return { Provider, useStore, useCreateStore };
+	const Provider = React.memo<
+		React.PropsWithChildren<{ parsedQuery: ParsedQuery }>
+	>(({ children, parsedQuery }) => {
+		const [store] = React.useState(() => {
+			const boundStore = createZustandStore<T, Mos>(initializer);
+			if (getDataByQuery) {
+				boundStore.setState(getDataByQuery(parsedQuery));
+			}
+			return boundStore;
+		});
+		return React.createElement(
+			StoreContext.Provider,
+			{ value: store },
+			children,
+		);
+	});
+
+	return { Provider, useStore: useStoreCurried };
 };
 
 export const updateWithFn = <T>(prev: T, nextStateOrFn: T | UpdateFn<T>) =>
