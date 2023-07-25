@@ -51,12 +51,14 @@ const sortParticipants = (a: Participant, b: Participant): number => {
 
 type Props = {
 	receiptId: ReceiptsId;
+	receiptTimestamp: Date;
 	currencyCode: CurrencyCode;
 	participants: Participant[];
 };
 
 export const ReceiptDebtSyncInfoButton: React.FC<Props> = ({
 	receiptId,
+	receiptTimestamp,
 	currencyCode,
 	participants,
 }) => {
@@ -115,6 +117,7 @@ export const ReceiptDebtSyncInfoButton: React.FC<Props> = ({
 							<ReceiptParticipantDebt
 								key={participant.userId}
 								receiptId={receiptId}
+								receiptTimestamp={receiptTimestamp}
 								currencyCode={currencyCode}
 								participant={participant}
 								sum={

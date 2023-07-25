@@ -18,6 +18,7 @@ import { ReceiptDebtSyncInfoButton } from "./receipt-debt-sync-info-button";
 type InnerProps = {
 	query: TRPCQuerySuccessResult<"debts.getReceipt">;
 	receiptId: ReceiptsId;
+	receiptTimestamp: Date;
 	currencyCode: CurrencyCode;
 	isLoading: boolean;
 	isPropagating: boolean;
@@ -41,6 +42,7 @@ export const showPropagateButton = (
 const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 	query,
 	receiptId,
+	receiptTimestamp,
 	currencyCode,
 	isLoading,
 	isPropagating,
@@ -63,6 +65,7 @@ const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 				<ReceiptDebtSyncInfoButton
 					participants={participants}
 					receiptId={receiptId}
+					receiptTimestamp={receiptTimestamp}
 					currencyCode={currencyCode}
 				/>
 			)}

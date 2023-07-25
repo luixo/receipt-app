@@ -44,6 +44,7 @@ const syncStatusSchema = z.discriminatedUnion("type", [
 		intention: z
 			.strictObject({
 				direction: z.union([z.literal("self"), z.literal("remote")]),
+				timestamp: z.date(),
 			})
 			.optional(),
 	}),
@@ -92,14 +93,28 @@ export const getSyncStatus = async (
 		return { type: "nosync" };
 	}
 	if (intentionAccountId === accountId) {
+		if (!mineLockedTimestamp) {
+			throw new trpc.TRPCError({
+				code: "INTERNAL_SERVER_ERROR",
+				message:
+					"Unexpected to have my sync intention with no mine locked timestamp",
+			});
+		}
 		return {
 			type: "unsync",
-			intention: { direction: "self" },
+			intention: { direction: "self", timestamp: mineLockedTimestamp },
 		};
+	}
+	if (!theirLockedTimestamp) {
+		throw new trpc.TRPCError({
+			code: "INTERNAL_SERVER_ERROR",
+			message:
+				"Unexpected to have their sync intention with no their locked timestamp",
+		});
 	}
 	return {
 		type: "unsync",
-		intention: { direction: "remote" },
+		intention: { direction: "remote", timestamp: theirLockedTimestamp },
 	};
 };
 

@@ -54,7 +54,18 @@ const applyUserUpdate =
 								: item.syncStatus,
 					};
 				}
-				return { ...item, locked: update.value };
+				return {
+					...item,
+					locked: update.value,
+					syncStatus: {
+						type: "unsync",
+						intention: {
+							direction: "self",
+							// This will be overriden in onSuccess
+							timestamp: new Date(),
+						},
+					},
+				};
 		}
 	};
 
@@ -83,7 +94,18 @@ const applyUpdate =
 								: item.syncStatus,
 					};
 				}
-				return { ...item, locked: update.value };
+				return {
+					...item,
+					locked: update.value,
+					syncStatus: {
+						type: "unsync",
+						intention: {
+							direction: "self",
+							// This will be overriden in onSuccess
+							timestamp: new Date(),
+						},
+					},
+				};
 		}
 	};
 
@@ -130,7 +152,11 @@ const getUserRevert =
 						syncStatus: snapshot.syncStatus,
 					};
 				}
-				return { ...debt, locked: snapshot.locked };
+				return {
+					...debt,
+					locked: snapshot.locked,
+					syncStatus: snapshot.syncStatus,
+				};
 		}
 	};
 
@@ -157,7 +183,11 @@ const getRevert =
 						syncStatus: snapshot.syncStatus,
 					};
 				}
-				return { ...debt, locked: snapshot.locked };
+				return {
+					...debt,
+					locked: snapshot.locked,
+					syncStatus: snapshot.syncStatus,
+				};
 		}
 	};
 
@@ -198,7 +228,12 @@ export const options: UseContextedMutationOptions<
 		if (updateObject.update.type !== "locked") {
 			return;
 		}
-		if (updateObject.update.value && nextSyncStatus) {
+		if (!nextSyncStatus) {
+			throw new Error(
+				"Expected to have syncStatuc when update type is `locked`",
+			);
+		}
+		if (updateObject.update.value) {
 			cache.debts.update(trpcContext, {
 				// Sum is already update in onMutate
 				getByUsers: noop,

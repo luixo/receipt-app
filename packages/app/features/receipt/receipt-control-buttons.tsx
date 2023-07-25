@@ -45,7 +45,8 @@ export const ReceiptControlButtons: React.FC<Props> = ({
 		useTrpcMutationOptions(mutations.receipts.propagateDebts.options),
 	);
 	const propagateDebts = React.useCallback(
-		() => propagateMutation.mutate({ receiptId: receipt.id }),
+		(lockedTimestamp: Date) => () =>
+			propagateMutation.mutate({ receiptId: receipt.id, lockedTimestamp }),
 		[propagateMutation, receipt.id],
 	);
 
@@ -73,10 +74,11 @@ export const ReceiptControlButtons: React.FC<Props> = ({
 						<ReceiptPropagateButton
 							receiptDebtsQuery={receiptDebtsQuery}
 							receiptId={receipt.id}
+							receiptTimestamp={receipt.lockedTimestamp}
 							currencyCode={receipt.currencyCode}
 							isLoading={deleteLoading}
 							isPropagating={propagateMutation.isLoading}
-							propagateDebts={propagateDebts}
+							propagateDebts={propagateDebts(receipt.lockedTimestamp)}
 						/>
 					) : null}
 				</>

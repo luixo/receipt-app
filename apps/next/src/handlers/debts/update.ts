@@ -92,10 +92,19 @@ export const procedure = authProcedure
 				if (!debtIntention.theirOwnerAccountId) {
 					return { type: "nosync" };
 				}
+				const theirTimestamp = debtIntention.intentionAccountId
+					? debtIntention.theirLockedTimestamp
+					: undefined;
+				if (debtIntention.intentionAccountId && !theirTimestamp) {
+					throw new trpc.TRPCError({
+						code: "INTERNAL_SERVER_ERROR",
+						message: `Unexpected to have an intention but no their locked timestamp`,
+					});
+				}
 				return {
 					type: "unsync",
-					intention: debtIntention.intentionAccountId
-						? { direction: "remote" }
+					intention: theirTimestamp
+						? { direction: "remote", timestamp: theirTimestamp }
 						: undefined,
 				};
 			}

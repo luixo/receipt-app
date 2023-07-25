@@ -16,6 +16,7 @@ export const procedure = authProcedure
 	.input(
 		z.strictObject({
 			receiptId: receiptIdSchema,
+			lockedTimestamp: z.date(),
 		}),
 	)
 	.mutation(async ({ input, ctx }) => {

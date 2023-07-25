@@ -39,6 +39,7 @@ type Participant = TRPCQueryOutput<"debts.getReceipt">[number];
 
 type Props = {
 	receiptId: ReceiptsId;
+	receiptTimestamp: Date;
 	currencyCode: CurrencyCode;
 	participant: Participant;
 	sum?: number;
@@ -46,6 +47,7 @@ type Props = {
 
 export const ReceiptParticipantDebt: React.FC<Props> = ({
 	receiptId,
+	receiptTimestamp,
 	currencyCode,
 	participant,
 	sum,
@@ -54,7 +56,7 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 
 	const updateMutation = trpc.receipts.updateDebt.useMutation(
 		useTrpcMutationOptions(mutations.receipts.updateDebt.options, {
-			context: { prevAmount: participant.amount },
+			context: { prevAmount: participant.amount, receiptTimestamp },
 		}),
 	);
 	const updateDebt = React.useCallback(

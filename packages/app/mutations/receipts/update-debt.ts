@@ -4,14 +4,15 @@ import { updateReceiptCacheOnDebtUpdate } from "./utils";
 
 export const options: UseContextedMutationOptions<
 	"receipts.updateDebt",
-	{ prevAmount: number }
+	{ prevAmount: number; receiptTimestamp: Date }
 > = {
 	onSuccess:
-		(trpcContext, { prevAmount }) =>
+		(trpcContext, { prevAmount, receiptTimestamp }) =>
 		(updatedDebt, updateObject) =>
 			updateReceiptCacheOnDebtUpdate(
 				trpcContext,
 				updateObject.receiptId,
+				receiptTimestamp,
 				[{ ...updatedDebt, deltaAmount: updatedDebt.amount - prevAmount }],
 				updateObject.updateIntention,
 			),

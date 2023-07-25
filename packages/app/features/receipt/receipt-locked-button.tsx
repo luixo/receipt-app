@@ -15,7 +15,7 @@ type Props = {
 	locked: boolean;
 	isLoading: boolean;
 	isPropagating: boolean;
-	propagateDebts: () => void;
+	propagateDebts: (lockedTimestamp: Date) => () => void;
 };
 
 export const ReceiptLockedButton: React.FC<Props> = ({
@@ -36,11 +36,16 @@ export const ReceiptLockedButton: React.FC<Props> = ({
 					update: { type: "locked", locked: !locked },
 				},
 				{
-					onSuccess: () => {
+					onSuccess: (result) => {
 						if (!shouldPropagate) {
 							return;
 						}
-						propagateDebts();
+						if (!result.lockedTimestamp) {
+							throw new Error(
+								"Expected to have lockedTimestamp as a result of locking a receipt",
+							);
+						}
+						propagateDebts(result.lockedTimestamp)();
 					},
 				},
 			);

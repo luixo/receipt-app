@@ -19,16 +19,27 @@ export const options: UseContextedMutationOptions<
 					amount: currDebt.amount,
 					currencyCode: currDebt.currencyCode,
 					timestamp: currDebt.timestamp,
+					// This will be updated in onSuccess
 					intentionTimestamp: new Date(),
 					note: currDebt.note,
 					receiptId: currDebt.receiptId,
 				}),
 		}),
-	onSuccess: (trpcContext, currDebt) => (_intentionTimestamp, updateObject) => {
+	onSuccess: (trpcContext, currDebt) => (intentionTimestamp, updateObject) => {
 		const syncStatus = {
 			type: "unsync",
-			intention: { direction: "self" },
+			intention: {
+				direction: "self",
+				timestamp: intentionTimestamp,
+			},
 		} satisfies SyncStatus;
+		cache.debtsSyncIntentions.update(trpcContext, {
+			getAll: (controller) =>
+				controller.outbound.update(updateObject.id, (intention) => ({
+					...intention,
+					intentionTimestamp,
+				})),
+		});
 		cache.debts.update(trpcContext, {
 			get: (controller) =>
 				controller.update({ id: updateObject.id }, (debt) => ({

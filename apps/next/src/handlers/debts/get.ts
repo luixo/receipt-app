@@ -95,6 +95,7 @@ export const procedure = authProcedure
 					type: "unsync",
 					intention: {
 						direction: "remote",
+						timestamp: lockedTimestamp,
 					},
 				} satisfies SyncStatus,
 			};
