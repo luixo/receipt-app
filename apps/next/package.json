@@ -15,7 +15,7 @@
 		]
 	},
 	"dependencies": {
-		"@expo/next-adapter": "^4.0.0",
+		"@expo/next-adapter": "^5.0.2",
 		"@trpc/client": "^10.35.0",
 		"@trpc/next": "^10.35.0",
 		"@trpc/server": "^10.35.0",
@@ -23,7 +23,7 @@
 		"@upstash/redis": "^1.22.0",
 		"app": "*",
 		"cookie": "^0.5.0",
-		"cookies-next": "^2.0.4",
+		"cookies-next": "^2.1.2",
 		"currency-list": "^1.0.8",
 		"goober": "^2.1.11",
 		"isomorphic-fetch": "^3.0.0",
@@ -43,10 +43,8 @@
 		"@types/isomorphic-fetch": "^0.0.36",
 		"@types/node": "17.0.21",
 		"@types/pg": "^8.6.5",
-		"@types/react-dom": "^18.0.6",
+		"@types/react-dom": "^18.2.7",
 		"@types/uuid": "^8.3.4",
-		"eslint-config-next": "^13.4.2",
-		"next-compose-plugins": "^2.2.1",
-		"next-transpile-modules": "^9.0.0"
+		"eslint-config-next": "^13.4.2"
 	}
 }

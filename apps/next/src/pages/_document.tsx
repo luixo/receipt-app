@@ -1,7 +1,5 @@
 import * as React from "react";
 
-// Yep, we definitely need that.
-import { getInitialProps } from "@expo/next-adapter/document";
 import { CssBaseline } from "@nextui-org/react";
 import { getCookie } from "cookies-next";
 import { extractCss } from "goober";
@@ -37,7 +35,7 @@ class Document extends NextDocument<DocumentProps> {
 }
 
 Document.getInitialProps = async (ctx) => {
-	const prevProps = await getInitialProps(ctx);
+	const prevProps = await ctx.defaultGetInitialProps(ctx);
 	const lastColorModeCookie = getCookie(LAST_COLOR_MODE_COOKIE_NAME, ctx);
 	const lastColorMode: ColorMode =
 		lastColorModeCookie === "dark" ? "dark" : "light";

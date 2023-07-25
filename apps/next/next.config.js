@@ -1,30 +1,29 @@
+// TODO: put back when getting back to Expo
+const { withExpo } = require("@expo/next-adapter");
+const { withSentryConfig } = require("@sentry/nextjs");
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	reactStrictMode: true,
-	webpack5: true,
 	serverRuntimeConfig: {
 		port: process.env.PORT,
 	},
 	eslint: {
 		ignoreDuringBuilds: true,
 	},
+	transpilePackages: [
+		"react-native",
+		"react-native-web",
+		"solito",
+		"dripsy",
+		"@expo/html-elements",
+		"expo-constants",
+		"expo-modules-core",
+	],
 };
 
-const { withExpo } = require("@expo/next-adapter");
-const { withSentryConfig } = require("@sentry/nextjs");
-const withPlugins = require("next-compose-plugins");
-const withTM = require("next-transpile-modules")([
-	"solito",
-	"dripsy",
-	"@dripsy/core",
-	"app",
-]);
-
-module.exports = withPlugins(
-	[
-		(config) => withSentryConfig(config, { silent: true }),
-		withTM,
-		[withExpo, { projectRoot: __dirname }],
-	],
-	nextConfig,
-);
+const plugins = [
+	(config) => withSentryConfig(config, { silent: true }),
+	(config) => withExpo(config),
+];
+module.exports = plugins.reduce((acc, plugin) => plugin(acc), nextConfig);
