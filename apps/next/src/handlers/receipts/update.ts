@@ -2,7 +2,6 @@ import * as trpc from "@trpc/server";
 import { sql } from "kysely";
 import { z } from "zod";
 
-import { SECOND } from "app/utils/time";
 import { receiptNameSchema } from "app/utils/validation";
 import { getDatabase, Database } from "next-app/db";
 import { SimpleUpdateObject } from "next-app/db/types";
@@ -25,10 +24,7 @@ export const procedure = authProcedure
 					name: receiptNameSchema,
 				}),
 				z.strictObject({ type: z.literal("issued"), issued: z.date() }),
-				z.strictObject({
-					type: z.literal("lockedTimestamp"),
-					lockedTimestamp: z.date().optional(),
-				}),
+				z.strictObject({ type: z.literal("locked"), locked: z.boolean() }),
 				z.strictObject({
 					type: z.literal("currencyCode"),
 					currencyCode: currencyCodeSchema,
@@ -36,7 +32,7 @@ export const procedure = authProcedure
 			]),
 		}),
 	)
-	.mutation(async ({ input, ctx }) => {
+	.mutation(async ({ input, ctx }): Promise<ReceiptUpdateObject> => {
 		const database = getDatabase(ctx);
 		const receipt = await getReceiptById(database, input.id, [
 			"ownerAccountId",
@@ -65,7 +61,7 @@ export const procedure = authProcedure
 				.where("id", "=", input.id)
 				.executeTakeFirst();
 
-		if (input.update.type === "lockedTimestamp") {
+		if (input.update.type === "locked") {
 			if (receipt.ownerAccountId !== ctx.auth.accountId) {
 				throw new trpc.TRPCError({
 					code: "UNAUTHORIZED",
@@ -92,24 +88,16 @@ export const procedure = authProcedure
 					message: `Receipt ${input.id} has items with no participants.`,
 				});
 			}
-			if (input.update.lockedTimestamp) {
+			if (input.update.locked) {
 				if (receipt.lockedTimestamp) {
 					throw new trpc.TRPCError({
 						code: "CONFLICT",
 						message: `Receipt ${input.id} is already locked.`,
 					});
 				}
-				const msDiff = input.update.lockedTimestamp.valueOf() - Date.now();
-				if (Math.abs(msDiff) > 10 * SECOND) {
-					throw new trpc.TRPCError({
-						code: "FORBIDDEN",
-						message: `Input locked timestamp is too old or too new (${msDiff}ms ahead).`,
-					});
-				}
-				await updateTable(database, {
-					lockedTimestamp: input.update.lockedTimestamp,
-				});
-				return;
+				const lockedTimestamp = new Date();
+				await updateTable(database, { lockedTimestamp });
+				return { lockedTimestamp };
 			}
 			if (!receipt.lockedTimestamp) {
 				throw new trpc.TRPCError({
@@ -118,7 +106,7 @@ export const procedure = authProcedure
 				});
 			}
 			await updateTable(database, { lockedTimestamp: null });
-			return;
+			return { lockedTimestamp: undefined };
 		}
 		if (receipt.lockedTimestamp) {
 			throw new trpc.TRPCError({
@@ -139,4 +127,5 @@ export const procedure = authProcedure
 				break;
 		}
 		await updateTable(database, setObject);
+		return setObject;
 	});

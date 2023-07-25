@@ -42,10 +42,7 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 	const switchResolved = React.useCallback(() => {
 		updateReceiptMutation.mutate({
 			id: receipt.id,
-			update: {
-				type: "lockedTimestamp",
-				lockedTimestamp: receiptLocked ? undefined : new Date(),
-			},
+			update: { type: "locked", locked: !receiptLocked },
 		});
 	}, [updateReceiptMutation, receipt.id, receiptLocked]);
 	const overflow = useMatchMediaValue(false, { lessSm: true });

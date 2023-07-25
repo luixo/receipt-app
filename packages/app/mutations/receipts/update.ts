@@ -1,7 +1,11 @@
 import { cache } from "app/cache";
 import { SnapshotFn, UpdateFn } from "app/cache/utils";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
+import {
+	TRPCMutationInput,
+	TRPCMutationOutput,
+	TRPCQueryOutput,
+} from "app/trpc";
 import { noop } from "app/utils/utils";
 
 type PagedReceiptSnapshot =
@@ -18,10 +22,30 @@ const applyPagedUpdate =
 				return { ...item, name: update.name };
 			case "issued":
 				return { ...item, issued: update.issued };
-			case "lockedTimestamp":
-				return { ...item, lockedTimestamp: update.lockedTimestamp };
+			case "locked":
+				return {
+					...item,
+					lockedTimestamp: update.locked ? new Date() : undefined,
+				};
 			case "currencyCode":
 				return { ...item, currencyCode: update.currencyCode };
+		}
+	};
+
+const applySuccessPagedUpdate =
+	(
+		update: TRPCMutationInput<"receipts.update">["update"],
+		result: TRPCMutationOutput<"receipts.update">,
+	): UpdateFn<PagedReceiptSnapshot> =>
+	(item) => {
+		switch (update.type) {
+			case "locked":
+				return {
+					...item,
+					lockedTimestamp: result.lockedTimestamp || undefined,
+				};
+			default:
+				return item;
 		}
 	};
 
@@ -35,10 +59,30 @@ const applyUpdate =
 				return { ...item, name: update.name };
 			case "issued":
 				return { ...item, issued: update.issued };
-			case "lockedTimestamp":
-				return { ...item, lockedTimestamp: update.lockedTimestamp };
+			case "locked":
+				return {
+					...item,
+					lockedTimestamp: update.locked ? new Date() : undefined,
+				};
 			case "currencyCode":
 				return { ...item, currencyCode: update.currencyCode };
+		}
+	};
+
+const applySuccessUpdate =
+	(
+		update: TRPCMutationInput<"receipts.update">["update"],
+		result: TRPCMutationOutput<"receipts.update">,
+	): UpdateFn<ReceiptSnapshot> =>
+	(item) => {
+		switch (update.type) {
+			case "locked":
+				return {
+					...item,
+					lockedTimestamp: result.lockedTimestamp || undefined,
+				};
+			default:
+				return item;
 		}
 	};
 
@@ -53,7 +97,7 @@ const getRevert =
 				return { ...receipt, name: snapshot.name };
 			case "issued":
 				return { ...receipt, issued: snapshot.issued };
-			case "lockedTimestamp":
+			case "locked":
 				return { ...receipt, lockedTimestamp: snapshot.lockedTimestamp };
 			case "currencyCode":
 				return { ...receipt, currencyCode: snapshot.currencyCode };
@@ -71,7 +115,7 @@ const getPagedRevert =
 				return { ...receipt, name: snapshot.name };
 			case "issued":
 				return { ...receipt, issued: snapshot.issued };
-			case "lockedTimestamp":
+			case "locked":
 				return { ...receipt, lockedTimestamp: snapshot.lockedTimestamp };
 			case "currencyCode":
 				return { ...receipt, currencyCode: snapshot.currencyCode };
@@ -102,10 +146,22 @@ export const options: UseContextedMutationOptions<"receipts.update"> = {
 			getResolvedParticipants: noop,
 		}),
 	onSuccess: (trpcContext) => (result, updateObject) => {
-		if (
-			updateObject.update.type === "lockedTimestamp" &&
-			!updateObject.update.lockedTimestamp
-		) {
+		cache.receipts.update(trpcContext, {
+			get: (controller) =>
+				controller.update(
+					updateObject.id,
+					applySuccessUpdate(updateObject.update, result),
+				),
+			getNonResolvedAmount: noop,
+			getPaged: (controller) =>
+				controller.update(
+					updateObject.id,
+					applySuccessPagedUpdate(updateObject.update, result),
+				),
+			getName: noop,
+			getResolvedParticipants: noop,
+		});
+		if (updateObject.update.type === "locked" && !updateObject.update.locked) {
 			cache.debts.update(trpcContext, {
 				getReceipt: (controller) =>
 					controller.updateAllInReceipt(updateObject.id, (participants) =>

@@ -33,10 +33,7 @@ export const ReceiptLockedButton: React.FC<Props> = ({
 			updateReceiptMutation.mutate(
 				{
 					id: receiptId,
-					update: {
-						type: "lockedTimestamp",
-						lockedTimestamp: locked ? undefined : new Date(),
-					},
+					update: { type: "locked", locked: !locked },
 				},
 				{
 					onSuccess: () => {
