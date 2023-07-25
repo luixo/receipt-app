@@ -1,6 +1,6 @@
 import React from "react";
 
-import { setCookies, removeCookies } from "cookies-next";
+import { setCookie, deleteCookie } from "cookies-next";
 
 import {
 	ColorModeContext,
@@ -13,22 +13,22 @@ export const useColorModeCookies = () => {
 	const [colorModeConfig] = React.useContext(ColorModeContext);
 	React.useEffect(() => {
 		if (colorModeConfig.last) {
-			setCookies(LAST_COLOR_MODE_COOKIE_NAME, colorModeConfig.last, {
+			setCookie(LAST_COLOR_MODE_COOKIE_NAME, colorModeConfig.last, {
 				path: "/",
 				maxAge: MONTH / 1000,
 			});
 		} else {
-			removeCookies(LAST_COLOR_MODE_COOKIE_NAME);
+			deleteCookie(LAST_COLOR_MODE_COOKIE_NAME);
 		}
 	}, [colorModeConfig.last]);
 	React.useEffect(() => {
 		if (colorModeConfig.selected) {
-			setCookies(SELECTED_COLOR_MODE_COOKIE_NAME, colorModeConfig.selected, {
+			setCookie(SELECTED_COLOR_MODE_COOKIE_NAME, colorModeConfig.selected, {
 				path: "/",
 				maxAge: MONTH / 1000,
 			});
 		} else {
-			removeCookies(SELECTED_COLOR_MODE_COOKIE_NAME);
+			deleteCookie(SELECTED_COLOR_MODE_COOKIE_NAME);
 		}
 	}, [colorModeConfig.selected]);
 };
