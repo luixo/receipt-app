@@ -157,8 +157,14 @@ export const Calendar: React.FC<Props> = ({
 	disabled,
 }) => {
 	const [isOpen, changeOpen] = React.useState(false);
-	const onDateChange = React.useCallback(
-		(date: Date) => {
+	const onDateChange = React.useCallback<
+		NonNullable<React.ComponentProps<typeof ReactCalendar>["onChange"]>
+	>(
+		(dateOrDates) => {
+			if (Array.isArray(dateOrDates) || !dateOrDates) {
+				return;
+			}
+			const date = dateOrDates;
 			onChange(new Date(date.valueOf() - date.getTimezoneOffset() * 60000));
 			changeOpen(false);
 		},

@@ -2,7 +2,7 @@
 	"dependencies": {
 		"@react-navigation/native-stack": "^6.9.13",
 		"app": "*",
-		"dotenv": "^16.0.0",
+		"dotenv": "^16.3.1",
 		"eas-cli": "^3.17.0",
 		"expo": "^49.0.4",
 		"expo-splash-screen": "^0.20.4",
@@ -17,7 +17,7 @@
 	},
 	"devDependencies": {
 		"@babel/core": "^7.22.9",
-		"@types/react": "^18.2.15"
+		"@types/react": "^18.2.16"
 	},
 	"scripts": {
 		"dev": "expo start",

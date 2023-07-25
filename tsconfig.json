@@ -4,6 +4,7 @@
 		"strict": true,
 		"strictNullChecks": true,
 		"noUncheckedIndexedAccess": true,
+		"jsx": "react",
 		"paths": {
 			"app/*": ["./packages/app/*"],
 			"next-app/*": ["./apps/next/src/*"]
