@@ -67,6 +67,7 @@ export const Header: React.FC<Props> = ({
 	aside,
 	icon,
 	backHref,
+	textChildren,
 	...props
 }) => {
 	const asideElements: JSX.Element[] | undefined =
@@ -95,9 +96,7 @@ export const Header: React.FC<Props> = ({
 	return (
 		<Wrapper column={verticalLayout} ref={wrapperRef}>
 			<Head>
-				<title>
-					{`RA - ${"textChildren" in props ? props.textChildren : children}`}
-				</title>
+				<title>{`RA - ${textChildren || children}`}</title>
 			</Head>
 			<Title h2 {...props}>
 				{backHref ? (
