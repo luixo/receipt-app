@@ -1,6 +1,6 @@
 import { httpLink, httpBatchLink } from "@trpc/client";
 import { createTRPCNext } from "@trpc/next";
-import { NextConfig } from "next";
+import { NextConfig, NextPageContext } from "next";
 import getConfig from "next/config";
 import superjson from "superjson";
 
@@ -18,7 +18,8 @@ const SSR_TIMEOUT = 3 * SECOND;
 
 export const trpcNext = createTRPCNext<
 	AppRouter,
-	{ authToken?: string; hasDebug: boolean }
+	{ authToken?: string; hasDebug: boolean },
+	NextPageContext & { timeoutPromise: Promise<true> }
 >({
 	config: ({ meta: { authToken, hasDebug } }) => {
 		const isBrowser = typeof window !== "undefined";
@@ -45,28 +46,29 @@ export const trpcNext = createTRPCNext<
 		hasDebug: Boolean(ctx.query.debug),
 	}),
 	ssr: true,
-	awaitPrespassRender: async (queryClient) => {
+	awaitPrespassRender: async ({ queryClient, ctx }) => {
+		ctx.timeoutPromise =
+			ctx.timeoutPromise ||
+			new Promise((resolve) => {
+				setTimeout(() => {
+					void queryClient.cancelQueries();
+					// true for "SSR render is resolved"
+					resolve(true);
+				}, SSR_TIMEOUT);
+			});
 		if (!queryClient.isFetching()) {
 			return true;
 		}
 
-		const prefetchPromise = new Promise<void>((resolve) => {
+		const prefetchPromise = new Promise<false>((resolve) => {
 			const unsub = queryClient.getQueryCache().subscribe((event) => {
-				if (event?.query.getObserversCount() === 0) {
-					resolve();
+				if (event.query.getObserversCount() === 0) {
+					// true for "SSR render is not resolved, need another render pass"
+					resolve(false);
 					unsub();
 				}
 			});
 		});
-		await Promise.race([
-			prefetchPromise,
-			new Promise((resolve) => {
-				setTimeout(() => {
-					void queryClient.cancelQueries();
-					resolve(undefined);
-				}, SSR_TIMEOUT);
-			}),
-		]);
-		return true;
+		return Promise.race([prefetchPromise, ctx.timeoutPromise]);
 	},
 });
