@@ -90,17 +90,17 @@ export const procedure = authProcedure
 			.leftJoin("accounts", (qb) =>
 				qb.onRef("connectedAccountId", "=", "accounts.id"),
 			)
-			.if(filterIds.length !== 0, (qb) =>
+			.$if(filterIds.length !== 0, (qb) =>
 				qb.where("users.id", "not in", filterIds),
 			)
 			.where("users.ownerAccountId", "=", ctx.auth.accountId)
-			.if(Boolean(input.options.type === "not-connected"), (qb) =>
+			.$if(Boolean(input.options.type === "not-connected"), (qb) =>
 				qb.where("users.connectedAccountId", "is", null),
 			)
-			.if(input.input.length < 3, (qb) =>
+			.$if(input.input.length < 3, (qb) =>
 				qb.where("name", "ilike", input.input),
 			)
-			.if(input.input.length >= 3, (qb) =>
+			.$if(input.input.length >= 3, (qb) =>
 				qb.where(
 					sql`similarity(name, ${input.input})`.castTo<number>(),
 					">",
@@ -114,8 +114,8 @@ export const procedure = authProcedure
 				"accounts.email",
 				"connectedAccountId as accountId",
 			])
-			.if(input.input.length < 3, (qb) => qb.orderBy("name"))
-			.if(input.input.length >= 3, (qb) =>
+			.$if(input.input.length < 3, (qb) => qb.orderBy("name"))
+			.$if(input.input.length >= 3, (qb) =>
 				qb.orderBy(sql`similarity(name, ${input.input})`.castTo(), "desc"),
 			)
 			.offset(cursor)

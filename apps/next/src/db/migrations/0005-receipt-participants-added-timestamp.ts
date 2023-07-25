@@ -17,8 +17,7 @@ const addReceiptParticipantsAddedTimestampColumn = async (db: Database) => {
 		.execute();
 	await db.schema
 		.alterTable("receiptParticipants")
-		.alterColumn("added")
-		.setNotNull()
+		.alterColumn("added", (acb) => acb.setNotNull())
 		.execute();
 };
 

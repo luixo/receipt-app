@@ -1,5 +1,5 @@
 import * as trpc from "@trpc/server";
-import { MutationObject } from "kysely";
+import { UpdateObject } from "kysely";
 import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
@@ -82,7 +82,7 @@ export const procedure = authProcedure
 				message: `User ${input.userId} does not participate in receipt ${input.receiptId}.`,
 			});
 		}
-		let setObject: MutationObject<
+		let setObject: UpdateObject<
 			ReceiptsDatabase,
 			"receiptParticipants",
 			"receiptParticipants"

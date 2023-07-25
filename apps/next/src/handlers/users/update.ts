@@ -1,5 +1,5 @@
 import * as trpc from "@trpc/server";
-import { MutationObject } from "kysely";
+import { UpdateObject } from "kysely";
 import { z } from "zod";
 
 import { userNameSchema } from "app/utils/validation";
@@ -55,7 +55,7 @@ export const procedure = authProcedure
 				message: `User ${input.id} is not owned by ${ctx.auth.accountId}`,
 			});
 		}
-		let setObject: MutationObject<ReceiptsDatabase, "users", "users"> = {};
+		let setObject: UpdateObject<ReceiptsDatabase, "users", "users"> = {};
 		switch (input.update.type) {
 			case "name":
 				setObject = { name: input.update.name };

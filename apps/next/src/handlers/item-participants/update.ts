@@ -1,5 +1,5 @@
 import * as trpc from "@trpc/server";
-import { MutationObject } from "kysely";
+import { UpdateObject } from "kysely";
 import { z } from "zod";
 
 import { partSchema } from "app/utils/validation";
@@ -87,7 +87,7 @@ export const procedure = authProcedure
 				message: `User ${input.userId} does not participate in item ${input.itemId} of the receipt ${receiptItem.receiptId}.`,
 			});
 		}
-		let setObject: MutationObject<
+		let setObject: UpdateObject<
 			ReceiptsDatabase,
 			"itemParticipants",
 			"itemParticipants"

@@ -15,8 +15,12 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 		.innerJoin("users", (qb) =>
 			qb.onRef("users.id", "=", "accountConnectionsIntentions.userId"),
 		)
-		.where("accountId", "=", ctx.auth.accountId)
-		.orWhere("targetAccountId", "=", ctx.auth.accountId)
+		.where((eb) =>
+			eb.or([
+				eb("accountId", "=", ctx.auth.accountId),
+				eb("targetAccountId", "=", ctx.auth.accountId),
+			]),
+		)
 		.select([
 			"accountId",
 			"targetAccountId",

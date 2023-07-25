@@ -27,7 +27,7 @@
 		"currency-list": "^1.0.8",
 		"goober": "^2.1.11",
 		"isomorphic-fetch": "^3.0.0",
-		"kysely": "^0.20.1",
+		"kysely": "^0.26.1",
 		"pg": "^8.7.3",
 		"pino": "^8.0.0",
 		"pino-pretty": "^8.0.0",

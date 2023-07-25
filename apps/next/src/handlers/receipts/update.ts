@@ -1,5 +1,5 @@
 import * as trpc from "@trpc/server";
-import { MutationObject, sql } from "kysely";
+import { UpdateObject, sql } from "kysely";
 import { z } from "zod";
 
 import { SECOND } from "app/utils/time";
@@ -55,7 +55,7 @@ export const procedure = authProcedure
 
 		const updateTable = (
 			localDatabase: Database,
-			setObject: MutationObject<ReceiptsDatabase, "receipts", "receipts">,
+			setObject: UpdateObject<ReceiptsDatabase, "receipts", "receipts">,
 		) =>
 			localDatabase
 				.updateTable("receipts")
@@ -122,8 +122,7 @@ export const procedure = authProcedure
 				message: `Receipt ${input.id} cannot be updated while locked.`,
 			});
 		}
-		let setObject: MutationObject<ReceiptsDatabase, "receipts", "receipts"> =
-			{};
+		let setObject: UpdateObject<ReceiptsDatabase, "receipts", "receipts"> = {};
 		switch (input.update.type) {
 			case "currencyCode":
 				setObject = { currencyCode: input.update.currencyCode };

@@ -1,5 +1,5 @@
 import * as trpc from "@trpc/server";
-import { MutationObject } from "kysely";
+import { UpdateObject } from "kysely";
 import { z } from "zod";
 
 import {
@@ -76,7 +76,7 @@ export const procedure = authProcedure
 				} with role ${accessRole || "nobody"}`,
 			});
 		}
-		let setObject: MutationObject<
+		let setObject: UpdateObject<
 			ReceiptsDatabase,
 			"receiptItems",
 			"receiptItems"

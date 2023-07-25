@@ -24,11 +24,11 @@ export const procedure = authProcedure
 		const database = getDatabase(ctx);
 		const selfDebt = await database
 			.selectFrom("debts")
-			.where((qb) => {
+			.where((eb) => {
 				if ("id" in input) {
-					return qb.where("debts.id", "=", input.id);
+					return eb("debts.id", "=", input.id);
 				}
-				return qb.where("debts.receiptId", "=", input.receiptId);
+				return eb("debts.receiptId", "=", input.receiptId);
 			})
 			.where("debts.ownerAccountId", "=", ctx.auth.accountId)
 			.select([

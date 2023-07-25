@@ -1,5 +1,5 @@
 import * as trpc from "@trpc/server";
-import { MutationObject } from "kysely";
+import { UpdateObject } from "kysely";
 import { z } from "zod";
 
 import { debtNoteSchema } from "app/utils/validation";
@@ -59,7 +59,7 @@ export const procedure = authProcedure
 
 		const updateTable = (
 			localDatabase: Database,
-			setObject: MutationObject<ReceiptsDatabase, "debts", "debts">,
+			setObject: UpdateObject<ReceiptsDatabase, "debts", "debts">,
 		) =>
 			localDatabase
 				.updateTable("debts")
@@ -139,7 +139,7 @@ export const procedure = authProcedure
 				});
 			}
 		}
-		let setObject: MutationObject<ReceiptsDatabase, "debts", "debts"> = {};
+		let setObject: UpdateObject<ReceiptsDatabase, "debts", "debts"> = {};
 		switch (input.update.type) {
 			case "amount":
 				setObject = { amount: input.update.amount.toString() };

@@ -82,7 +82,7 @@ export const procedure = authProcedure
 						.leftJoin("accounts", (qb) =>
 							qb.onRef("connectedAccountId", "=", "accounts.id"),
 						)
-						.if(filterIds.length !== 0, (qb) =>
+						.$if(filterIds.length !== 0, (qb) =>
 							qb.where("users.id", "not in", filterIds),
 						)
 						.leftJoin("receiptParticipants", (qb) =>

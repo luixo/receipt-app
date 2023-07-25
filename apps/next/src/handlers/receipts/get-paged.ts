@@ -113,10 +113,10 @@ export const procedure = authProcedure
 				)
 				// Stable order for receipts with the same date
 				.orderBy("mergedReceipts.receiptId")
-				.if(typeof filters.resolvedByMe === "boolean", (qb) =>
+				.$if(typeof filters.resolvedByMe === "boolean", (qb) =>
 					qb.where("receiptParticipants.resolved", "=", filters.resolvedByMe!),
 				)
-				.if(typeof filters.locked === "boolean", (qb) =>
+				.$if(typeof filters.locked === "boolean", (qb) =>
 					qb.where(
 						"mergedReceipts.lockedTimestamp",
 						filters.locked ? "is not" : "is",
@@ -171,10 +171,10 @@ export const procedure = authProcedure
 				})
 				.selectFrom("mergedReceipts")
 				.select(database.fn.sum<string>("amount").as("amount"))
-				.if(typeof filters.resolvedByMe === "boolean", (qb) =>
+				.$if(typeof filters.resolvedByMe === "boolean", (qb) =>
 					qb.where("resolved", "=", filters.resolvedByMe!),
 				)
-				.if(typeof filters.locked === "boolean", (qb) =>
+				.$if(typeof filters.locked === "boolean", (qb) =>
 					qb.where(
 						"mergedReceipts.lockedTimestamp",
 						filters.locked ? "is not" : "is",

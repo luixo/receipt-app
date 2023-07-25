@@ -9389,10 +9389,10 @@ knex@2.4.2:
     tarn "^3.0.2"
     tildify "2.0.0"
 
-kysely@^0.20.1:
-  version "0.20.1"
-  resolved "https://registry.yarnpkg.com/kysely/-/kysely-0.20.1.tgz#f5cf0e8631a4942f36026e057c622451ab15ae8a"
-  integrity sha512-YEPzr1ZdyQumuvKLG1NY9g4ijfSUmYmmzeJ+ZQ/tINCfovn9TcuZS8PU9PzDE/sDJm6dGY9CYpYI+98zDrOLqQ==
+kysely@^0.26.1:
+  version "0.26.1"
+  resolved "https://registry.yarnpkg.com/kysely/-/kysely-0.26.1.tgz#2d2fb9316d53f3062596102c98d0d476e4e097b5"
+  integrity sha512-FVRomkdZofBu3O8SiwAOXrwbhPZZr8mBN5ZeUWyprH29jzvy6Inzqbd0IMmGxpd4rcOCL9HyyBNWBa8FBqDAdg==
 
 language-subtag-registry@~0.3.2:
   version "0.3.22"

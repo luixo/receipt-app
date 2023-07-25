@@ -5,8 +5,7 @@ import { Database } from "..";
 const addNullablePublicName = async (db: Database) => {
 	await db.schema
 		.alterTable("users")
-		.alterColumn("publicName")
-		.dropNotNull()
+		.alterColumn("publicName", (acb) => acb.dropNotNull())
 		.execute();
 	await db
 		.updateTable("users")
@@ -23,8 +22,7 @@ const removeNullablePublicName = async (db: Database) => {
 		.execute();
 	await db.schema
 		.alterTable("users")
-		.alterColumn("publicName")
-		.setNotNull()
+		.alterColumn("publicName", (acb) => acb.setNotNull())
 		.execute();
 };
 

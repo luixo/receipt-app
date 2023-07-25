@@ -1,9 +1,9 @@
-import { MutationObject, sql } from "kysely";
+import { UpdateObject, sql } from "kysely";
 
 import { Database } from "..";
 import { ReceiptsDatabase } from "../types";
 
-type ReceiptsMutationObject = MutationObject<
+type ReceiptsMutationObject = UpdateObject<
 	ReceiptsDatabase,
 	"receipts",
 	"receipts"
