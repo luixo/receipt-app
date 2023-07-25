@@ -1,9 +1,9 @@
-import { UpdateObject, sql } from "kysely";
+import { sql, UpdateObject } from "kysely";
 
 import { Database } from "..";
 import { ReceiptsDatabase } from "../types";
 
-type ReceiptsMutationObject = UpdateObject<
+type ReceiptsUpdateObject = UpdateObject<
 	ReceiptsDatabase,
 	"receipts",
 	"receipts"
@@ -42,8 +42,10 @@ const addResolvedColumn = async (db: Database) => {
 	await db
 		.updateTable("receipts")
 		.set({
+			// Types are different at the moment, so one might expect an error
+			// @ts-expect-error
 			resolved: sql`case when "lockedTimestamp" is not null then true else false end`,
-		} as ReceiptsMutationObject)
+		} satisfies ReceiptsUpdateObject)
 		.execute();
 };
 

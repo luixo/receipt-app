@@ -1,4 +1,4 @@
-import { ColumnType } from "kysely";
+import { ColumnType, UpdateKeys, UpdateType } from "kysely";
 
 import * as models from "./models";
 
@@ -79,3 +79,7 @@ export type ReceiptsDatabase = DatabaseColumnType<
 	InsertTypeMap,
 	UpdateTypeMap
 >;
+
+export type SimpleUpdateObject<TB extends keyof ReceiptsDatabase> = {
+	[C in UpdateKeys<ReceiptsDatabase[TB]>]?: UpdateType<ReceiptsDatabase[TB][C]>;
+};

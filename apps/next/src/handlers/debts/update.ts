@@ -1,10 +1,9 @@
 import * as trpc from "@trpc/server";
-import { UpdateObject } from "kysely";
 import { z } from "zod";
 
 import { debtNoteSchema } from "app/utils/validation";
 import { getDatabase, Database } from "next-app/db";
-import { ReceiptsDatabase } from "next-app/db/types";
+import { SimpleUpdateObject } from "next-app/db/types";
 import { getDebt } from "next-app/handlers/debts/utils";
 import {
 	getDebtIntention,
@@ -16,6 +15,8 @@ import {
 	currencyCodeSchema,
 	debtIdSchema,
 } from "next-app/handlers/validation";
+
+type DebtUpdateObject = SimpleUpdateObject<"debts">;
 
 export const procedure = authProcedure
 	.input(
@@ -59,7 +60,7 @@ export const procedure = authProcedure
 
 		const updateTable = (
 			localDatabase: Database,
-			setObject: UpdateObject<ReceiptsDatabase, "debts", "debts">,
+			setObject: DebtUpdateObject,
 		) =>
 			localDatabase
 				.updateTable("debts")
@@ -139,7 +140,7 @@ export const procedure = authProcedure
 				});
 			}
 		}
-		let setObject: UpdateObject<ReceiptsDatabase, "debts", "debts"> = {};
+		let setObject: DebtUpdateObject = {};
 		switch (input.update.type) {
 			case "amount":
 				setObject = { amount: input.update.amount.toString() };

@@ -1,5 +1,4 @@
 import * as trpc from "@trpc/server";
-import { UpdateObject } from "kysely";
 import { z } from "zod";
 
 import {
@@ -8,7 +7,7 @@ import {
 	receiptItemNameSchema,
 } from "app/utils/validation";
 import { getDatabase } from "next-app/db";
-import { ReceiptsDatabase } from "next-app/db/types";
+import { SimpleUpdateObject } from "next-app/db/types";
 import { getReceiptItemById } from "next-app/handlers/receipt-items/utils";
 import {
 	getReceiptById,
@@ -76,11 +75,7 @@ export const procedure = authProcedure
 				} with role ${accessRole || "nobody"}`,
 			});
 		}
-		let setObject: UpdateObject<
-			ReceiptsDatabase,
-			"receiptItems",
-			"receiptItems"
-		> = {};
+		let setObject: SimpleUpdateObject<"receiptItems"> = {};
 		switch (input.update.type) {
 			case "name":
 				setObject = { name: input.update.name };

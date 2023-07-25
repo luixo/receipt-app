@@ -1,17 +1,19 @@
 import * as trpc from "@trpc/server";
-import { UpdateObject, sql } from "kysely";
+import { sql } from "kysely";
 import { z } from "zod";
 
 import { SECOND } from "app/utils/time";
 import { receiptNameSchema } from "app/utils/validation";
 import { getDatabase, Database } from "next-app/db";
-import { ReceiptsDatabase } from "next-app/db/types";
+import { SimpleUpdateObject } from "next-app/db/types";
 import { getReceiptById } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import {
 	currencyCodeSchema,
 	receiptIdSchema,
 } from "next-app/handlers/validation";
+
+type ReceiptUpdateObject = SimpleUpdateObject<"receipts">;
 
 export const procedure = authProcedure
 	.input(
@@ -55,7 +57,7 @@ export const procedure = authProcedure
 
 		const updateTable = (
 			localDatabase: Database,
-			setObject: UpdateObject<ReceiptsDatabase, "receipts", "receipts">,
+			setObject: ReceiptUpdateObject,
 		) =>
 			localDatabase
 				.updateTable("receipts")
@@ -124,7 +126,7 @@ export const procedure = authProcedure
 				message: `Receipt ${input.id} cannot be updated while locked.`,
 			});
 		}
-		let setObject: UpdateObject<ReceiptsDatabase, "receipts", "receipts"> = {};
+		let setObject: ReceiptUpdateObject = {};
 		switch (input.update.type) {
 			case "currencyCode":
 				setObject = { currencyCode: input.update.currencyCode };

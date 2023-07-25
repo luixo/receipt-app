@@ -1,10 +1,9 @@
 import * as trpc from "@trpc/server";
-import { UpdateObject } from "kysely";
 import { z } from "zod";
 
 import { partSchema } from "app/utils/validation";
 import { getDatabase } from "next-app/db";
-import { ReceiptsDatabase } from "next-app/db/types";
+import { SimpleUpdateObject } from "next-app/db/types";
 import { getItemParticipant } from "next-app/handlers/item-participants/utils";
 import { getReceiptItemById } from "next-app/handlers/receipt-items/utils";
 import {
@@ -87,11 +86,7 @@ export const procedure = authProcedure
 				message: `User ${input.userId} does not participate in item ${input.itemId} of the receipt ${receiptItem.receiptId}.`,
 			});
 		}
-		let setObject: UpdateObject<
-			ReceiptsDatabase,
-			"itemParticipants",
-			"itemParticipants"
-		> = {};
+		let setObject: SimpleUpdateObject<"itemParticipants"> = {};
 		switch (input.update.type) {
 			case "part":
 				setObject = { part: input.update.part.toString() };

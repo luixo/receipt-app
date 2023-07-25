@@ -1,10 +1,9 @@
 import * as trpc from "@trpc/server";
-import { UpdateObject } from "kysely";
 import { z } from "zod";
 
 import { userNameSchema } from "app/utils/validation";
 import { getDatabase } from "next-app/db";
-import { ReceiptsDatabase } from "next-app/db/types";
+import { SimpleUpdateObject } from "next-app/db/types";
 import { authProcedure } from "next-app/handlers/trpc";
 import { getUserById } from "next-app/handlers/users/utils";
 import { userIdSchema } from "next-app/handlers/validation";
@@ -55,7 +54,7 @@ export const procedure = authProcedure
 				message: `User ${input.id} is not owned by ${ctx.auth.accountId}`,
 			});
 		}
-		let setObject: UpdateObject<ReceiptsDatabase, "users", "users"> = {};
+		let setObject: SimpleUpdateObject<"users"> = {};
 		switch (input.update.type) {
 			case "name":
 				setObject = { name: input.update.name };
