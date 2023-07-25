@@ -104,7 +104,9 @@ export const procedure = authProcedure
 						message: `Input locked timestamp is too old or too new (${msDiff}ms ahead).`,
 					});
 				}
-				await updateTable(database, { lockedTimestamp: new Date() });
+				await updateTable(database, {
+					lockedTimestamp: input.update.lockedTimestamp,
+				});
 				return;
 			}
 			if (!receipt.lockedTimestamp) {
