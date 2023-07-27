@@ -1,28 +1,17 @@
 import * as utils from "app/cache/utils";
-import { TRPCQueryInput, TRPCQueryOutput, TRPCReactContext } from "app/trpc";
+import { TRPCQueryOutput, TRPCReactContext } from "app/trpc";
 import { DebtsId } from "next-app/db/models";
 
 type Controller = utils.GenericController<"debts.get">;
 
 type Debt = TRPCQueryOutput<"debts.get">;
 
-type Selector = TRPCQueryInput<"debts.get">;
-
 const update =
-	(controller: Controller, selector: Selector) =>
+	(controller: Controller, debtId: DebtsId) =>
 	(updater: utils.UpdateFn<Debt>) =>
 		utils.withRef<Debt | undefined>((ref) => {
 			controller.update((input, debt) => {
-				if (
-					"id" in selector &&
-					(!("id" in input) || input.id !== selector.id)
-				) {
-					return;
-				}
-				if (
-					"receiptId" in selector &&
-					(!("receiptId" in input) || input.receiptId !== selector.receiptId)
-				) {
+				if (input.id !== debtId) {
 					return;
 				}
 				ref.current = debt;
@@ -33,16 +22,10 @@ const update =
 const upsert = (controller: Controller, debt: Debt) =>
 	controller.upsert({ id: debt.id }, debt);
 
-const remove = (controller: Controller, selector: Selector) =>
+const remove = (controller: Controller, debtId: DebtsId) =>
 	utils.withRef<Debt | undefined>((ref) => {
 		controller.invalidate((input, debt) => {
-			if ("id" in selector && (!("id" in input) || input.id !== selector.id)) {
-				return false;
-			}
-			if (
-				"receiptId" in selector &&
-				(!("receiptId" in input) || input.receiptId !== selector.receiptId)
-			) {
+			if (input.id !== debtId) {
 				return false;
 			}
 			ref.current = debt;
@@ -53,11 +36,11 @@ const remove = (controller: Controller, selector: Selector) =>
 export const getController = (trpc: TRPCReactContext) => {
 	const controller = utils.createController(trpc, "debts.get");
 	return {
-		update: (selector: Selector, updater: utils.UpdateFn<Debt>) =>
-			update(controller, selector)(updater),
+		update: (debtId: DebtsId, updater: utils.UpdateFn<Debt>) =>
+			update(controller, debtId)(updater),
 		add: (debt: Debt) => upsert(controller, debt),
-		remove: (selector: Selector) => {
-			remove(controller, selector);
+		remove: (debtId: DebtsId) => {
+			remove(controller, debtId);
 		},
 	};
 };
@@ -66,23 +49,23 @@ export const getRevertController = (trpc: TRPCReactContext) => {
 	const controller = utils.createController(trpc, "debts.get");
 	return {
 		update: (
-			selector: Selector,
+			debtId: DebtsId,
 			updater: utils.UpdateFn<Debt>,
 			revertUpdater: utils.SnapshotFn<Debt>,
 		) =>
 			utils.applyUpdateFnWithRevert(
-				update(controller, selector),
+				update(controller, debtId),
 				updater,
 				revertUpdater,
 			),
 		add: (debt: Debt) =>
 			utils.applyWithRevert(
 				() => upsert(controller, debt),
-				() => remove(controller, { id: debt.id }),
+				() => remove(controller, debt.id),
 			),
 		remove: (debtId: DebtsId) =>
 			utils.applyWithRevert(
-				() => remove(controller, { id: debtId }),
+				() => remove(controller, debtId),
 				(snapshot) => upsert(controller, snapshot),
 			),
 	};

@@ -43,12 +43,35 @@ export const options: UseContextedMutationOptions<
 				);
 			},
 		}),
-	onSuccess: (trpcContext) => (_result, updateObject) => {
+	onSuccess: (trpcContext, currDebt) => (_result, updateObject) => {
 		cache.debts.update(trpcContext, {
 			getByUsers: noop,
 			getUser: noop,
-			get: (controller) => controller.remove({ id: updateObject.id }),
+			get: (controller) => controller.remove(updateObject.id),
 			getReceipt: noop,
+		});
+		cache.receipts.update(trpcContext, {
+			get: (controller) => {
+				if (!currDebt.receiptId) {
+					return;
+				}
+				controller.update(currDebt.receiptId, (receipt) => {
+					if (!receipt.debtData || receipt.debtData.type === "foreign") {
+						return receipt;
+					}
+					return {
+						...receipt,
+						debtData:
+							currDebt.syncStatus.type === "nosync"
+								? undefined
+								: { type: "foreign", id: receipt.debtData.id },
+					};
+				});
+			},
+			getNonResolvedAmount: noop,
+			getPaged: noop,
+			getName: noop,
+			getResolvedParticipants: noop,
 		});
 	},
 	mutateToastOptions: {

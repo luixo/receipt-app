@@ -1,8 +1,10 @@
 import React from "react";
 
 import { Spacer, styled } from "@nextui-org/react";
+import { PiMoney as DebtIcon } from "react-icons/pi";
 
 import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
+import { IconButton } from "app/components/icon-button";
 import { LockedIcon } from "app/components/locked-icon";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -10,7 +12,6 @@ import { trpc, TRPCQueryOutput } from "app/trpc";
 
 import { ReceiptLockedButton } from "./receipt-locked-button";
 import { ReceiptPropagateButton } from "./receipt-propagate-button";
-import { ReceiptSelfDebtSyncInfo } from "./receipt-self-debt-sync-info";
 
 const Wrapper = styled("div", {
 	display: "flex",
@@ -88,9 +89,18 @@ export const ReceiptControlButtons: React.FC<Props> = ({
 					tooltip="Receipt unlocked"
 					css={{ m: "$4", color: "$warning" }}
 				/>
-			) : (
-				<ReceiptSelfDebtSyncInfo receiptId={receipt.id} />
-			)}
+			) : receipt.debtData ? (
+				<IconButton
+					href={
+						receipt.debtData.type === "mine"
+							? `/debts/${receipt.debtData.id}`
+							: `/debts/intentions#${receipt.debtData.id}`
+					}
+					title="Incoming debt"
+					bordered
+					icon={<DebtIcon size={24} />}
+				/>
+			) : null}
 		</Wrapper>
 	);
 };

@@ -1,7 +1,8 @@
 import { cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { CurrencyCode } from "app/utils/currency";
-import { DebtsId, UsersId } from "next-app/db/models";
+import { noop } from "app/utils/utils";
+import { DebtsId, ReceiptsId, UsersId } from "next-app/db/models";
 import { SyncStatus } from "next-app/handlers/debts-sync-intentions/utils";
 
 export const options: UseContextedMutationOptions<
@@ -11,6 +12,7 @@ export const options: UseContextedMutationOptions<
 		userId: UsersId;
 		currencyCode: CurrencyCode;
 		currentAmount?: number;
+		receiptId: ReceiptsId | null;
 	}
 > = {
 	// TODO: move everything to onMutate as we have intention
@@ -48,7 +50,7 @@ export const options: UseContextedMutationOptions<
 					}));
 				},
 				get: (controller) =>
-					controller.update({ id: updateObject.id }, (debt) => ({
+					controller.update(updateObject.id, (debt) => ({
 						...debt,
 						amount: result.amount,
 						timestamp: result.timestamp,
@@ -97,6 +99,21 @@ export const options: UseContextedMutationOptions<
 						syncStatus,
 						receiptId: result.receiptId,
 					}),
+			});
+			cache.receipts.update(trpcContext, {
+				get: (controller) => {
+					if (!context.receiptId) {
+						return;
+					}
+					controller.update(context.receiptId, (receipt) => ({
+						...receipt,
+						debtData: { type: "mine", id: context.debtId },
+					}));
+				},
+				getNonResolvedAmount: noop,
+				getPaged: noop,
+				getName: noop,
+				getResolvedParticipants: noop,
 			});
 		}
 	},

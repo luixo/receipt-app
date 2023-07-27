@@ -24,46 +24,50 @@ type Props = {
 	children?: React.ReactNode;
 };
 
-export const DebtIntention: React.FC<Props> = ({ intention, children }) => {
-	const currency = useFormattedCurrency(intention.currencyCode);
-	const renderChildrenInline = useMatchMediaValue(true, { lessSm: false });
-	const intentionDataComponent = (
-		<Wrapper>
-			<Text color={intention.amount >= 0 ? "success" : "error"}>
-				{Math.abs(intention.amount)} {currency}
-			</Text>
-			<Text>{formatDate(intention.timestamp)}</Text>
-		</Wrapper>
-	);
-	return (
-		<Card>
-			<Card.Body>
-				{"current" in intention && intention.current ? (
-					<Wrapper>
+export const DebtIntention = React.forwardRef<HTMLDivElement, Props>(
+	({ intention, children }, ref) => {
+		const currency = useFormattedCurrency(intention.currencyCode);
+		const renderChildrenInline = useMatchMediaValue(true, { lessSm: false });
+		const intentionDataComponent = (
+			<Wrapper>
+				<Text color={intention.amount >= 0 ? "success" : "error"}>
+					{Math.abs(intention.amount)} {currency}
+				</Text>
+				<Text>{formatDate(intention.timestamp)}</Text>
+			</Wrapper>
+		);
+		return (
+			<Card ref={ref}>
+				<Card.Body>
+					{"current" in intention && intention.current ? (
 						<Wrapper>
-							<Text color={intention.current.amount >= 0 ? "success" : "error"}>
-								{Math.abs(intention.current.amount)} {currency}
-							</Text>
-							<Text>{formatDate(intention.current.timestamp)}</Text>
+							<Wrapper>
+								<Text
+									color={intention.current.amount >= 0 ? "success" : "error"}
+								>
+									{Math.abs(intention.current.amount)} {currency}
+								</Text>
+								<Text>{formatDate(intention.current.timestamp)}</Text>
+							</Wrapper>
+							<ArrowIcon size={24} />
+							{intentionDataComponent}
 						</Wrapper>
-						<ArrowIcon size={24} />
-						{intentionDataComponent}
+					) : (
+						intentionDataComponent
+					)}
+					<Spacer y={0.25} />
+					<Text>{intention.note}</Text>
+					<Spacer y={0.5} />
+					<Wrapper css={{ justifyContent: "space-between" }}>
+						<Wrapper>
+							<SyncIcon size={24} />
+							<Text>{formatDateTime(intention.intentionTimestamp)}</Text>
+						</Wrapper>
+						{renderChildrenInline ? children : null}
 					</Wrapper>
-				) : (
-					intentionDataComponent
-				)}
-				<Spacer y={0.25} />
-				<Text>{intention.note}</Text>
-				<Spacer y={0.5} />
-				<Wrapper css={{ justifyContent: "space-between" }}>
-					<Wrapper>
-						<SyncIcon size={24} />
-						<Text>{formatDateTime(intention.intentionTimestamp)}</Text>
-					</Wrapper>
-					{renderChildrenInline ? children : null}
-				</Wrapper>
-				{renderChildrenInline ? null : children}
-			</Card.Body>
-		</Card>
-	);
-};
+					{renderChildrenInline ? null : children}
+				</Card.Body>
+			</Card>
+		);
+	},
+);

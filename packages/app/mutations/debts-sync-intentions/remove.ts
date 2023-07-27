@@ -24,7 +24,7 @@ export const options: UseContextedMutationOptions<
 				);
 			},
 			get: (controller) =>
-				controller.update({ id: updateObject.id }, (debt) => ({
+				controller.update(updateObject.id, (debt) => ({
 					...debt,
 					syncStatus,
 				})),
