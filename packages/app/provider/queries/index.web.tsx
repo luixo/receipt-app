@@ -6,9 +6,20 @@ import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persi
 import { useQueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 
-import { TRPCQueryKey, TRPCQuery } from "app/trpc";
+import { TRPCQueryKey, TRPCQuery, TRPCSplitQueryKey } from "app/trpc";
 import { createIDBStorage } from "app/utils/idb";
 import { MONTH } from "app/utils/time";
+
+const isKeyEqual = <K1 extends TRPCSplitQueryKey, K2 extends TRPCSplitQueryKey>(
+	keyA: K1,
+	keyB: K2,
+) =>
+	keyA.length === keyB.length &&
+	keyA.every((element, index) => element === keyB[index]);
+
+const PERSISTED_QUERIES: Readonly<TRPCSplitQueryKey>[] = [
+	["currency", "getList"],
+];
 
 export const QueriesProvider: React.FC<React.PropsWithChildren<object>> = ({
 	children,
@@ -28,11 +39,9 @@ export const QueriesProvider: React.FC<React.PropsWithChildren<object>> = ({
 				dehydrateOptions: {
 					shouldDehydrateQuery: (query) => {
 						const trpcQuery = query as unknown as TRPCQuery<TRPCQueryKey>;
-						const [trpcKey] = trpcQuery.queryKey;
-						if (trpcKey === "currency.getList") {
-							return true;
-						}
-						return false;
+						return PERSISTED_QUERIES.some((persistedKey) =>
+							isKeyEqual(persistedKey, trpcQuery.queryKey[0]),
+						);
 					},
 				},
 			}}

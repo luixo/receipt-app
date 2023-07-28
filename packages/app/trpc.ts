@@ -106,6 +106,9 @@ type TRPCInfiniteQueryValues<P extends ProcedureRecord> = {
 
 export type TRPCQueryKey = keyof TRPCQueryValues & string;
 
+export type TRPCSplitQueryKey<K extends TRPCQueryKey = TRPCQueryKey> =
+	SplitStringByComma<K> & string[];
+
 export type TRPCQueryInput<Path extends TRPCQueryKey> = inferProcedureInput<
 	TRPCQueryValues[Path]
 >;
@@ -128,14 +131,19 @@ export type TRPCQuery<K extends TRPCQueryKey> = Query<
 	TRPCQueryOutput<K>,
 	TRPCError,
 	TRPCQueryOutput<K>,
-	readonly [K, TRPCQueryInput<K>]
+	readonly [
+		Readonly<TRPCSplitQueryKey<K>>,
+		TRPCQueryInput<K> extends undefined
+			? undefined
+			: { input: TRPCQueryInput<K>; type: "infinite" | "query" },
+	]
 >;
 
 export type TRPCQueryProcedures = UtilsLike<AppRouter>;
 
 export type TRPCQueryProcedure<Path extends TRPCQueryKey> = ExtractObjectByPath<
 	TRPCQueryProcedures,
-	SplitStringByComma<Path>
+	TRPCSplitQueryKey<Path>
 >;
 
 export type TRPCInfiniteQueryKey =

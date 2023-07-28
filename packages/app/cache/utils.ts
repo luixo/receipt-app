@@ -7,8 +7,8 @@ import {
 	TRPCReactContext,
 	UpdateArgs,
 	InvalidateArgs,
+	TRPCSplitQueryKey,
 } from "app/trpc";
-import { SplitStringByComma } from "app/utils/types";
 import { nonNullishGuard } from "app/utils/utils";
 
 export type GenericController<Key extends TRPCQueryKey> = {
@@ -39,12 +39,12 @@ export const createController = <Key extends TRPCQueryKey>(
 	trpc: TRPCReactContext,
 	key: Key,
 ): GenericController<Key> => {
-	const splitKey = key.split(".") as SplitStringByComma<Key>;
+	const splitKey = key.split(".") as TRPCSplitQueryKey<Key>;
 	const getQueries = () =>
 		(
 			trpc.queryClient.getQueriesData([splitKey]) as [
 				[
-					SplitStringByComma<Key>,
+					TRPCSplitQueryKey<Key>,
 					TRPCQueryInput<Key> extends undefined
 						? undefined
 						: { input: TRPCQueryInput<Key>; type: "infinite" | "query" },
