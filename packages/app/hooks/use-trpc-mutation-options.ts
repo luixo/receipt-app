@@ -23,6 +23,10 @@ export type TRPCMutationOptions<
 	LifecycleContext
 >;
 
+type ExternalContext<C> = C & {
+	toastId?: string;
+};
+
 type WrappedContext<LifecycleContext = unknown> = {
 	revertFn?: () => void;
 	finalizeFn?: () => void;
@@ -113,16 +117,19 @@ export const useTrpcMutationOptions = <
 					  })
 					| undefined
 	>
-): TRPCMutationOptions<Path, WrappedContext<LifecycleContext>> => {
+): TRPCMutationOptions<
+	Path,
+	ExternalContext<WrappedContext<LifecycleContext>>
+> => {
 	const { context, onError, onMutate, onSettled, onSuccess, ...rest } =
 		options || {};
 	const trpcContext = trpc.useContext();
 	return React.useMemo(() => {
 		const trpcArgs = [trpcContext, context] as Contexts<Context>;
 		const toastArgs = [context] as ToastArgs<Context>;
-		let toastId: string | undefined;
 		return {
 			onMutate: async (...args) => {
+				let toastId: string | undefined;
 				const toastOptions =
 					typeof mutateToastOptions === "function"
 						? mutateToastOptions(...toastArgs)(...args)
@@ -131,9 +138,11 @@ export const useTrpcMutationOptions = <
 					toastId = toast.loading(toastOptions.text);
 				}
 				onMutate?.(...args);
-				return onMutateTrpc?.(...trpcArgs)(...args);
+				const wrappedContext = onMutateTrpc?.(...trpcArgs)(...args);
+				return { ...wrappedContext, toastId };
 			},
-			onError: (error, vars, wrappedContext) => {
+			onError: (error, vars, externalContext) => {
+				const { toastId, ...wrappedContext } = externalContext!;
 				const toastOptions =
 					typeof errorToastOptions === "function"
 						? errorToastOptions(...toastArgs)(
@@ -149,7 +158,8 @@ export const useTrpcMutationOptions = <
 				wrappedContext?.revertFn?.();
 				return onErrorTrpc?.(...trpcArgs)(error, vars, wrappedContext?.context);
 			},
-			onSuccess: (result, vars, wrappedContext) => {
+			onSuccess: (result, vars, externalContext) => {
+				const { toastId, ...wrappedContext } = externalContext!;
 				const toastOptions =
 					typeof successToastOptions === "function"
 						? successToastOptions?.(...toastArgs)(

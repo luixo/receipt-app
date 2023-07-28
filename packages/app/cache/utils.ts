@@ -42,15 +42,23 @@ export const createController = <Key extends TRPCQueryKey>(
 	const getQueries = () =>
 		(
 			trpc.queryClient.getQueriesData([splitKey]) as [
-				[Key, { input: TRPCQueryInput<Key>; type: "infinite" | "query" }],
+				[
+					Key,
+					TRPCQueryInput<Key> extends undefined
+						? undefined
+						: { input: TRPCQueryInput<Key>; type: "infinite" | "query" },
+				],
 				TRPCQueryOutput<Key>,
 			][]
 		).map(([[, inputWrapper], data]) => [inputWrapper, data] as const);
 	return {
-		get: () => getQueries().map(([{ input }, data]) => [input, data] as const),
+		get: () =>
+			getQueries().map(
+				([inputWrapper, data]) => [inputWrapper?.input, data] as const,
+			),
 		invalidate: (fn, ...args) =>
 			getQueries()
-				.filter(([{ input }, output]) => fn(input, output))
+				.filter(([inputWrapper, output]) => fn(inputWrapper?.input, output))
 				.forEach(([inputWrapper]) =>
 					trpc.queryClient.invalidateQueries([splitKey, inputWrapper], {
 						exact: true,
@@ -63,10 +71,10 @@ export const createController = <Key extends TRPCQueryKey>(
 					return;
 				}
 				trpc.queryClient.setQueryData(
-					inputWrapper.input === undefined
+					inputWrapper?.input === undefined
 						? [splitKey]
 						: [splitKey, inputWrapper],
-					fn(inputWrapper.input, prevData),
+					fn(inputWrapper?.input, prevData),
 					...args,
 				);
 			});
