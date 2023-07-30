@@ -1,23 +1,11 @@
 import React from "react";
 
-import {
-	Button,
-	Loading,
-	Modal,
-	Spacer,
-	Text,
-	styled,
-} from "@nextui-org/react";
+import { Button, Spacer } from "@nextui-org/react";
 import { UseMutationResult } from "@tanstack/react-query";
 import { IoTrashBin as TrashBin } from "react-icons/io5";
 
-import { useBooleanState } from "app/hooks/use-boolean-state";
+import { ConfirmModal } from "app/components/confirm-modal";
 import { TRPCError } from "app/trpc";
-
-const RemoveButtons = styled("div", {
-	display: "flex",
-	justifyContent: "center",
-});
 
 type Props = {
 	mutation: UseMutationResult<any, TRPCError, any>;
@@ -34,16 +22,15 @@ export const RemoveButton: React.FC<Props> = ({
 	subtitle,
 	noConfirm,
 	...props
-}) => {
-	const [isModalOpen, { setFalse: closeModal, setTrue: openModal }] =
-		useBooleanState();
-	const onYesClick = React.useCallback(() => {
-		closeModal();
-		onRemove();
-	}, [onRemove, closeModal]);
-
-	return (
-		<>
+}) => (
+	<ConfirmModal
+		action={onRemove}
+		isLoading={mutation.isLoading}
+		title="Remove modal"
+		subtitle={subtitle}
+		confirmText="Are you sure?"
+	>
+		{({ openModal }) => (
 			<Button
 				auto
 				onClick={noConfirm ? onRemove : openModal}
@@ -59,37 +46,6 @@ export const RemoveButton: React.FC<Props> = ({
 					</>
 				) : null}
 			</Button>
-			<Modal
-				closeButton
-				aria-label="Remove modal"
-				open={isModalOpen}
-				onClose={closeModal}
-			>
-				<Modal.Header css={{ flexDirection: "column" }}>
-					<Text h3>Are you sure?</Text>
-					{subtitle ? <Text color="warning">{subtitle}</Text> : null}
-				</Modal.Header>
-				<Modal.Body css={{ pt: "$4", pb: "$12" }}>
-					<RemoveButtons>
-						<Button
-							auto
-							onClick={onYesClick}
-							disabled={mutation.isLoading}
-							color="error"
-						>
-							{mutation.isLoading ? (
-								<Loading color="currentColor" size="sm" />
-							) : (
-								"Yes"
-							)}
-						</Button>
-						<Spacer x={0.5} />
-						<Button auto onClick={closeModal} disabled={mutation.isLoading}>
-							No
-						</Button>
-					</RemoveButtons>
-				</Modal.Body>
-			</Modal>
-		</>
-	);
-};
+		)}
+	</ConfirmModal>
+);
