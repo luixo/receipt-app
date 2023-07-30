@@ -1,7 +1,6 @@
 import { cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { CurrencyCode } from "app/utils/currency";
-import { noop } from "app/utils/utils";
 import { DebtsId, ReceiptsId, UsersId } from "next-app/db/models";
 import { SyncStatus } from "next-app/handlers/debts-sync-intentions/utils";
 
@@ -25,16 +24,6 @@ export const options: UseContextedMutationOptions<
 		const { currentAmount } = context;
 		if (currentAmount !== undefined) {
 			cache.debts.update(trpcContext, {
-				getReceipt: (controller) => {
-					if (!result.receiptId) {
-						return;
-					}
-					return controller.update(
-						result.receiptId,
-						context.userId,
-						(debt) => ({ ...debt, syncStatus }),
-					);
-				},
 				getByUsers: (controller) =>
 					controller.update(
 						context.userId,
@@ -59,16 +48,6 @@ export const options: UseContextedMutationOptions<
 			});
 		} else {
 			cache.debts.update(trpcContext, {
-				getReceipt: (controller) => {
-					if (!result.receiptId) {
-						return;
-					}
-					return controller.update(
-						result.receiptId,
-						context.userId,
-						(debt) => ({ ...debt, syncStatus }),
-					);
-				},
 				getByUsers: (controller) =>
 					controller.update(
 						context.userId,
@@ -99,21 +78,6 @@ export const options: UseContextedMutationOptions<
 						syncStatus,
 						receiptId: result.receiptId,
 					}),
-			});
-			cache.receipts.update(trpcContext, {
-				get: (controller) => {
-					if (!context.receiptId) {
-						return;
-					}
-					controller.update(context.receiptId, (receipt) => ({
-						...receipt,
-						debtData: { type: "mine", id: context.debtId },
-					}));
-				},
-				getNonResolvedAmount: noop,
-				getPaged: noop,
-				getName: noop,
-				getResolvedParticipants: noop,
 			});
 		}
 	},

@@ -127,6 +127,11 @@ export type TRPCQuerySuccessResult<
 	Result extends TRPCQueryResult<Path> = TRPCQueryResult<Path>,
 > = Result extends { status: "success" } ? Result : never;
 
+export type TRPCQueryErrorResult<
+	Path extends TRPCQueryKey,
+	Result extends TRPCQueryResult<Path> = TRPCQueryResult<Path>,
+> = Result extends { status: "error" } ? Result : never;
+
 export type TRPCQuery<K extends TRPCQueryKey> = Query<
 	TRPCQueryOutput<K>,
 	TRPCError,

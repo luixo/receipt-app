@@ -8,10 +8,16 @@ import { getAccessRole, Role } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import { receiptIdSchema } from "next-app/handlers/validation";
 
-type DebtData = {
-	id: DebtsId;
-	type: "mine" | "foreign";
-};
+type ReceiptDebt =
+	| {
+			direction: "incoming";
+			type: "mine" | "foreign";
+			id: DebtsId;
+	  }
+	| {
+			direction: "outcoming";
+			ids: DebtsId[];
+	  };
 
 export const procedure = authProcedure
 	.input(
@@ -49,13 +55,13 @@ export const procedure = authProcedure
 			.select([
 				"receipts.id",
 				"receipts.name",
-				"currencyCode",
+				"receipts.currencyCode",
 				sql<string>`coalesce(sum("receiptItems".price * "receiptItems".quantity), 0)`.as(
 					"sum",
 				),
 				"receipts.ownerAccountId",
 				"receipts.lockedTimestamp",
-				"issued",
+				"receipts.issued",
 				"receiptParticipants.resolved as participantResolved",
 				"usersMine.id as ownerUserId",
 				"usersTheir.id as selfUserId",
@@ -79,9 +85,33 @@ export const procedure = authProcedure
 			{ ownerAccountId, id: input.id },
 			ctx.auth.accountId,
 		);
-		let debtData: DebtData | undefined;
-		if (accessRole) {
-			if (lockedTimestamp && ownerAccountId !== ctx.auth.accountId) {
+		if (!accessRole) {
+			throw new trpc.TRPCError({
+				code: "FORBIDDEN",
+				message: `Account id ${ctx.auth.accountId} has no access to receipt ${receipt.id}`,
+			});
+		}
+		if (!lockedTimestamp) {
+			return {
+				...receipt,
+				sum: Number(sum),
+				role: accessRole,
+			};
+		}
+		let debt: ReceiptDebt | undefined;
+		if (lockedTimestamp) {
+			if (ownerAccountId === ctx.auth.accountId) {
+				const results = await database
+					.selectFrom("debts")
+					.where("debts.receiptId", "=", input.id)
+					.where("debts.ownerAccountId", "=", ctx.auth.accountId)
+					.select("debts.id")
+					.execute();
+				debt = {
+					direction: "outcoming",
+					ids: results.map(({ id }) => id),
+				};
+			} else {
 				const mineDebt = await database
 					.selectFrom("debts")
 					.where("debts.receiptId", "=", input.id)
@@ -89,7 +119,11 @@ export const procedure = authProcedure
 					.select("debts.id")
 					.executeTakeFirst();
 				if (mineDebt) {
-					debtData = { type: "mine", id: mineDebt.id };
+					debt = {
+						direction: "incoming",
+						type: "mine",
+						id: mineDebt.id,
+					};
 				} else {
 					const foreignDebt = await database
 						.selectFrom("debts")
@@ -104,25 +138,25 @@ export const procedure = authProcedure
 						.select("debts.id")
 						.executeTakeFirst();
 					if (foreignDebt) {
-						debtData = { type: "foreign", id: foreignDebt.id };
+						debt = {
+							direction: "incoming",
+							type: "foreign",
+							id: foreignDebt.id,
+						};
 					}
 				}
 			}
-			return {
-				...receipt,
-				sum: Number(sum),
-				role: accessRole,
-				lockedTimestamp: lockedTimestamp || undefined,
-				debtData,
-			} as typeof receipt & {
-				role: Role;
-				sum: number;
-				lockedTimestamp?: Date;
-				debtData?: DebtData;
-			};
 		}
-		throw new trpc.TRPCError({
-			code: "FORBIDDEN",
-			message: `Account id ${ctx.auth.accountId} has no access to receipt ${receipt.id}`,
-		});
+		return {
+			...receipt,
+			sum: Number(sum),
+			role: accessRole,
+			lockedTimestamp: lockedTimestamp || undefined,
+			debt,
+		} as typeof receipt & {
+			role: Role;
+			sum: number;
+			lockedTimestamp?: Date;
+			debt?: ReceiptDebt;
+		};
 	});

@@ -52,16 +52,6 @@ export const options: UseContextedMutationOptions<
 					syncStatus,
 				})),
 			getByUsers: noop,
-			getReceipt: (controller) => {
-				if (!currDebt.receiptId) {
-					return;
-				}
-				return controller.update(
-					currDebt.receiptId,
-					currDebt.userId,
-					(debt) => ({ ...debt, syncStatus }),
-				);
-			},
 		});
 	},
 	mutateToastOptions: {

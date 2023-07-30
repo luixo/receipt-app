@@ -13,16 +13,6 @@ export const options: UseContextedMutationOptions<
 		}),
 	onSuccess: (trpcContext, currData) => (syncStatus, updateObject) => {
 		cache.debts.update(trpcContext, {
-			getReceipt: (controller) => {
-				if (!currData.receiptId) {
-					return;
-				}
-				return controller.update(
-					currData.receiptId,
-					currData.userId,
-					(debt) => ({ ...debt, syncStatus }),
-				);
-			},
 			get: (controller) =>
 				controller.update(updateObject.id, (debt) => ({
 					...debt,

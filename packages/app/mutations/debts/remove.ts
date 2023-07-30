@@ -22,33 +22,12 @@ export const options: UseContextedMutationOptions<
 			// but it's own page
 			// otherwise the page will try to refetch the data immediately
 			get: noop,
-			getReceipt: (controller) => {
-				if (!currDebt.receiptId) {
-					return;
-				}
-				return controller.update(
-					currDebt.receiptId,
-					currDebt.userId,
-					(debt) => ({
-						...debt,
-						debtId: null,
-						// Should verify all cases including the leftover of foreign debt after removing a local one
-						syncStatus: { type: "unsync" },
-					}),
-					(snapshot) => (debt) => ({
-						...debt,
-						debtId: snapshot.debtId,
-						syncStatus: snapshot.syncStatus,
-					}),
-				);
-			},
 		}),
 	onSuccess: (trpcContext, currDebt) => (_result, updateObject) => {
 		cache.debts.update(trpcContext, {
 			getByUsers: noop,
 			getUser: noop,
 			get: (controller) => controller.remove(updateObject.id),
-			getReceipt: noop,
 		});
 		cache.receipts.update(trpcContext, {
 			get: (controller) => {
@@ -56,15 +35,23 @@ export const options: UseContextedMutationOptions<
 					return;
 				}
 				controller.update(currDebt.receiptId, (receipt) => {
-					if (!receipt.debtData || receipt.debtData.type === "foreign") {
+					if (
+						!receipt.debt ||
+						receipt.debt.direction === "outcoming" ||
+						receipt.debt.type === "foreign"
+					) {
 						return receipt;
 					}
 					return {
 						...receipt,
-						debtData:
+						debt:
 							currDebt.syncStatus.type === "nosync"
 								? undefined
-								: { type: "foreign", id: receipt.debtData.id },
+								: {
+										direction: "incoming",
+										type: "foreign",
+										id: receipt.debt.id,
+								  },
 					};
 				});
 			},

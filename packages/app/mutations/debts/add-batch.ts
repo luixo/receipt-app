@@ -1,7 +1,6 @@
 import { cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
-import { noop } from "app/utils/utils";
 import { DebtsId, UsersId } from "next-app/db/models";
 
 export const MIN_BATCH_DEBTS = 1;
@@ -66,7 +65,6 @@ export const options: UseContextedMutationOptions<"debts.addBatch"> = {
 				createDebts(stableIds, updateObjects).forEach((debt) =>
 					controller.add(debt),
 				),
-			getReceipt: noop,
 		});
 	},
 	mutateToastOptions: {

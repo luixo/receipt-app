@@ -7,12 +7,13 @@ import { Grid } from "app/components/grid";
 import { IconButton } from "app/components/icon-button";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useMatchMediaValue } from "app/hooks/use-match-media-value";
-import { trpc, TRPCQueryOutput } from "app/trpc";
 import { CurrencyCode } from "app/utils/currency";
-import { getParticipantSums } from "app/utils/receipt-item";
 import { ReceiptsId } from "next-app/db/models";
 
-import { ReceiptParticipantDebt } from "./receipt-participant-debt";
+import {
+	DebtParticipant,
+	ReceiptParticipantDebt,
+} from "./receipt-participant-debt";
 
 const GridHeader = styled(Grid, {
 	pb: "$4",
@@ -28,32 +29,30 @@ const GridHeader = styled(Grid, {
 	},
 });
 
-type Participant = TRPCQueryOutput<"debts.getReceipt">[number];
-
-const sortParticipants = (a: Participant, b: Participant): number => {
-	if (b.syncStatus.type === a.syncStatus.type) {
-		return Number(b.synced) - Number(a.synced);
-	}
-	if (b.syncStatus.type === "no-parts") {
+const sortParticipants = (a: DebtParticipant, b: DebtParticipant): number => {
+	const aDebt = a.debt;
+	const bDebt = b.debt;
+	if (!bDebt) {
 		return -1;
 	}
-	if (a.syncStatus.type === "no-parts") {
+	if (!aDebt) {
 		return 1;
 	}
-	if (b.syncStatus.type === "sync") {
+	// TODO: should we return comparison between receipt and debt locked timestamps?
+	if (bDebt.syncStatus.type === "sync") {
 		return -1;
 	}
-	if (a.syncStatus.type === "sync") {
+	if (aDebt.syncStatus.type === "sync") {
 		return 1;
 	}
-	return Number(b.synced) - Number(a.synced);
+	return 0;
 };
 
 type Props = {
 	receiptId: ReceiptsId;
 	receiptTimestamp: Date;
 	currencyCode: CurrencyCode;
-	participants: Participant[];
+	participants: DebtParticipant[];
 };
 
 export const ReceiptDebtSyncInfoButton: React.FC<Props> = ({
@@ -65,20 +64,6 @@ export const ReceiptDebtSyncInfoButton: React.FC<Props> = ({
 	const [popoverOpen, { setFalse: closeModal, setTrue: openModal }] =
 		useBooleanState();
 
-	const receiptItemsQuery = trpc.receiptItems.get.useQuery({ receiptId });
-	const participantSums = React.useMemo(() => {
-		if (!receiptItemsQuery.data) {
-			return [];
-		}
-		return getParticipantSums(
-			receiptId,
-			receiptItemsQuery.data.items,
-			receiptItemsQuery.data.participants,
-		).map((participant) => ({
-			userId: participant.remoteUserId,
-			sum: participant.sum,
-		}));
-	}, [receiptItemsQuery.data, receiptId]);
 	const showBorder = useMatchMediaValue(true, { lessMd: false });
 	const sortedParticipants = React.useMemo(
 		() => [...participants].sort(sortParticipants),
@@ -120,11 +105,6 @@ export const ReceiptDebtSyncInfoButton: React.FC<Props> = ({
 								receiptTimestamp={receiptTimestamp}
 								currencyCode={currencyCode}
 								participant={participant}
-								sum={
-									participantSums.find(
-										({ userId }) => participant.userId === userId,
-									)?.sum
-								}
 							/>
 						))}
 					</Grid.Container>

@@ -6,17 +6,22 @@ import { MdSend as SendIcon } from "react-icons/md";
 import { QueryErrorMessage } from "app/components/error-message";
 import { IconButton } from "app/components/icon-button";
 import {
-	TRPCQueryOutput,
+	TRPCQueryErrorResult,
 	TRPCQueryResult,
 	TRPCQuerySuccessResult,
+	trpc,
 } from "app/trpc";
 import { CurrencyCode } from "app/utils/currency";
-import { ReceiptsId } from "next-app/db/models";
+import { getParticipantSums } from "app/utils/receipt-item";
+import { ReceiptsId, UsersId } from "next-app/db/models";
 
 import { ReceiptDebtSyncInfoButton } from "./receipt-debt-sync-info-button";
+import { DebtParticipant } from "./receipt-participant-debt";
 
 type InnerProps = {
-	query: TRPCQuerySuccessResult<"debts.getReceipt">;
+	queries: TRPCQuerySuccessResult<"debts.get">[];
+	itemsQuery: TRPCQuerySuccessResult<"receiptItems.get">;
+	selfUserId: UsersId;
 	receiptId: ReceiptsId;
 	receiptTimestamp: Date;
 	currencyCode: CurrencyCode;
@@ -25,22 +30,20 @@ type InnerProps = {
 	propagateDebts: () => void;
 };
 
-export const showPropagateButton = (
-	participants: TRPCQueryOutput<"debts.getReceipt">,
-) => {
-	// TODO: add info status for receipt for yourself!
-	// TODO: if user is now zero in receipt - let us remove the intention to sync
-	const noneIsSyncedYet = participants.every((participant) =>
-		["nosync", "no-parts"].includes(participant.syncStatus.type),
+export const showPropagateButton = (participants: DebtParticipant[]) => {
+	const noneIsSyncedYet = participants.every(
+		({ debt }) => !debt || debt.syncStatus.type === "nosync",
 	);
 	const atLeastOneIsSyncable = participants.some(
-		(participant) => participant.syncStatus.type === "nosync",
+		({ debt }) => !debt || debt.syncStatus.type === "nosync",
 	);
 	return noneIsSyncedYet && atLeastOneIsSyncable;
 };
 
 const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
-	query,
+	queries,
+	itemsQuery,
+	selfUserId,
 	receiptId,
 	receiptTimestamp,
 	currencyCode,
@@ -48,7 +51,25 @@ const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 	isPropagating,
 	propagateDebts,
 }) => {
-	const participants = query.data;
+	const debts = React.useMemo(
+		() => queries.map((query) => query.data),
+		[queries],
+	);
+	const participants = React.useMemo(
+		() =>
+			getParticipantSums(
+				receiptId,
+				itemsQuery.data.items,
+				itemsQuery.data.participants,
+			)
+				.map((participant) => ({
+					userId: participant.remoteUserId,
+					sum: participant.sum,
+					debt: debts.find((debt) => debt.userId === participant.remoteUserId),
+				}))
+				.filter((participant) => participant.userId !== selfUserId),
+		[itemsQuery.data, receiptId, debts, selfUserId],
+	);
 	return (
 		<>
 			<Spacer x={0.5} />
@@ -73,28 +94,40 @@ const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 	);
 };
 
-type Props = Omit<InnerProps, "query"> & {
-	receiptDebtsQuery: TRPCQueryResult<"debts.getReceipt">;
+type Props = Omit<InnerProps, "queries" | "itemsQuery"> & {
+	queries: TRPCQueryResult<"debts.get">[];
 };
 
 export const ReceiptPropagateButton: React.FC<Props> = ({
 	receiptId,
 	currencyCode,
-	receiptDebtsQuery: query,
+	queries,
 	...props
 }) => {
-	if (query.status === "loading") {
+	const itemsQuery = trpc.receiptItems.get.useQuery({ receiptId });
+	if (
+		queries.some((query) => query.status === "loading") ||
+		itemsQuery.status === "loading"
+	) {
 		return null;
 	}
-	if (query.status === "error") {
-		return <QueryErrorMessage query={query} />;
+	const errorQuery = queries.find(
+		(query): query is TRPCQueryErrorResult<"debts.get"> =>
+			query.status === "error",
+	);
+	if (errorQuery) {
+		return <QueryErrorMessage query={errorQuery} />;
+	}
+	if (itemsQuery.status === "error") {
+		return <QueryErrorMessage query={itemsQuery} />;
 	}
 	return (
 		<ReceiptPropagateButtonInner
 			{...props}
 			receiptId={receiptId}
 			currencyCode={currencyCode}
-			query={query}
+			queries={queries as TRPCQuerySuccessResult<"debts.get">[]}
+			itemsQuery={itemsQuery}
 		/>
 	);
 };

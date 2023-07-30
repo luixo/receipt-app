@@ -4,7 +4,6 @@ import { procedure as add } from "./add";
 import { procedure as addBatch } from "./add-batch";
 import { procedure as get } from "./get";
 import { procedure as getByUsers } from "./get-by-users";
-import { procedure as getReceipt } from "./get-receipt";
 import { procedure as getUser } from "./get-user";
 import { procedure as remove } from "./remove";
 import { procedure as update } from "./update";
@@ -12,7 +11,6 @@ import { procedure as update } from "./update";
 export const router = t.router({
 	getByUsers,
 	getUser,
-	getReceipt,
 	get,
 	update,
 	remove,

@@ -161,24 +161,6 @@ export const options: UseContextedMutationOptions<"receipts.update"> = {
 			getName: noop,
 			getResolvedParticipants: noop,
 		});
-		if (updateObject.update.type === "locked" && !updateObject.update.locked) {
-			cache.debts.update(trpcContext, {
-				getReceipt: (controller) =>
-					controller.updateAllInReceipt(updateObject.id, (participants) =>
-						participants.map((participant) => ({
-							...participant,
-							syncStatus:
-								participant.syncStatus.type === "sync"
-									? { type: "unsync" }
-									: participant.syncStatus,
-							synced: false,
-						})),
-					),
-				getByUsers: noop,
-				getUser: noop,
-				get: noop,
-			});
-		}
 	},
 	errorToastOptions: () => (error) => ({
 		text: `Error updating receipt: ${error.message}`,

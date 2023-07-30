@@ -3,11 +3,11 @@ import React from "react";
 import { Loading, Spacer, styled, Text } from "@nextui-org/react";
 import { MdEdit as EditIcon } from "react-icons/md";
 
+import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
 import { QueryErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
 import { IconButton } from "app/components/icon-button";
 import { ShrinkText } from "app/components/shrink-text";
-import { ReceiptControlButtons } from "app/features/receipt/receipt-control-buttons";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useMatchMediaValue } from "app/hooks/use-match-media-value";
 import { useTrpcQueryOptions } from "app/hooks/use-trpc-query-options";
@@ -18,8 +18,10 @@ import { ReceiptsId } from "next-app/src/db/models";
 
 import { ReceiptCurrencyInput } from "./receipt-currency-input";
 import { ReceiptDateInput } from "./receipt-date-input";
+import { ReceiptGuestControlButton } from "./receipt-guest-control-button";
 import { ReceiptNameInput } from "./receipt-name-input";
 import { ReceiptOwner } from "./receipt-owner";
+import { ReceiptOwnerControlButton } from "./receipt-owner-control-button";
 import { ReceiptRemoveButton } from "./receipt-remove-button";
 
 const Body = styled("div", {
@@ -36,6 +38,20 @@ const Sum = styled("div", {
 	display: "flex",
 });
 
+const ControlsWrapper = styled("div", {
+	display: "flex",
+	alignItems: "center",
+	color: "$primary",
+
+	variants: {
+		locked: {
+			true: {
+				color: "$secondary",
+			},
+		},
+	},
+});
+
 type InnerProps = {
 	query: TRPCQuerySuccessResult<"receipts.get">;
 	deleteLoadingState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
@@ -49,9 +65,6 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 
 	const [isEditing, { switchValue: switchEditing, setFalse: unsetEditing }] =
 		useBooleanState();
-	const asideButtons = (
-		<ReceiptControlButtons receipt={receipt} deleteLoading={deleteLoading} />
-	);
 	const dataDirection = useMatchMediaValue("row", { lessSm: "column" });
 
 	return (
@@ -59,7 +72,29 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 			<Header
 				backHref="/receipts"
 				icon="🧾"
-				aside={isEditing ? undefined : asideButtons}
+				aside={
+					isEditing ? undefined : (
+						<ControlsWrapper locked={Boolean(receipt.lockedTimestamp)}>
+							<ReceiptParticipantResolvedButton
+								ghost
+								receiptId={receipt.id}
+								userId={receipt.selfUserId}
+								selfUserId={receipt.selfUserId}
+								resolved={receipt.participantResolved}
+								disabled={deleteLoading}
+							/>
+							<Spacer x={0.5} />
+							{receipt.role === "owner" ? (
+								<ReceiptOwnerControlButton
+									receipt={receipt}
+									deleteLoading={deleteLoading}
+								/>
+							) : (
+								<ReceiptGuestControlButton receipt={receipt} />
+							)}
+						</ControlsWrapper>
+					)
+				}
 				textChildren={`Receipt ${receipt.name}`}
 			>
 				{isEditing && receipt.role === "owner" ? (

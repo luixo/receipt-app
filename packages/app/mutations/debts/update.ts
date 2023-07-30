@@ -222,7 +222,6 @@ export const options: UseContextedMutationOptions<
 					applyUpdate(updateObject.update),
 					getRevert(updateObject.update),
 				),
-			getReceipt: noop,
 		}),
 	onSuccess: (trpcContext, currData) => (nextSyncStatus, updateObject) => {
 		if (updateObject.update.type !== "locked") {
@@ -248,16 +247,6 @@ export const options: UseContextedMutationOptions<
 						...debt,
 						syncStatus: nextSyncStatus,
 					})),
-				getReceipt: (controller) => {
-					if (!currData.receiptId) {
-						return;
-					}
-					return controller.update(
-						currData.receiptId,
-						currData.userId,
-						(debt) => ({ ...debt, syncStatus: nextSyncStatus, synced: false }),
-					);
-				},
 			});
 		}
 	},

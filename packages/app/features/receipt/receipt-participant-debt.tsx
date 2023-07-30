@@ -35,14 +35,17 @@ const Border = styled("div", {
 	my: "$4",
 });
 
-type Participant = TRPCQueryOutput<"debts.getReceipt">[number];
+export type DebtParticipant = {
+	userId: UsersId;
+	sum: number;
+	debt?: TRPCQueryOutput<"debts.get">;
+};
 
 type Props = {
 	receiptId: ReceiptsId;
 	receiptTimestamp: Date;
 	currencyCode: CurrencyCode;
-	participant: Participant;
-	sum?: number;
+	participant: DebtParticipant;
 };
 
 export const ReceiptParticipantDebt: React.FC<Props> = ({
@@ -50,13 +53,12 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 	receiptTimestamp,
 	currencyCode,
 	participant,
-	sum,
 }) => {
 	const currency = useFormattedCurrency(currencyCode);
 
 	const updateMutation = trpc.receipts.updateDebt.useMutation(
 		useTrpcMutationOptions(mutations.receipts.updateDebt.options, {
-			context: { prevAmount: participant.amount, receiptTimestamp },
+			context: { prevAmount: participant.debt?.amount ?? 0, receiptTimestamp },
 		}),
 	);
 	const updateDebt = React.useCallback(
@@ -66,11 +68,9 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 	);
 
 	const showSpacer = useMatchMediaValue(false, { lessMd: true });
-
-	const showUpdateDebt =
-		participant.syncStatus.type === "nosync" ||
-		(participant.syncStatus.type === "unsync" &&
-			!participant.syncStatus.intention);
+	// TODO: this is not actual "in sync with the receipt" as intended
+	// Will get fixed in lockedTimestamp simplification
+	const synced = participant.sum === participant.debt?.amount;
 
 	return (
 		<>
@@ -81,37 +81,40 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 				{showSpacer ? <Spacer y={1} /> : null}
 			</Grid>
 			<Grid defaultCol={2.5} lessMdCol={4} css={{ alignItems: "center" }}>
-				<Text>{sum !== undefined ? `${sum} ${currency}` : null}</Text>
+				<Text>{`${participant.sum} ${currency}`}</Text>
 			</Grid>
 			<Grid defaultCol={2.5} lessMdCol={4}>
-				{participant.syncStatus.type === "no-parts" ? (
+				{participant.sum === 0 ? (
 					<Icon as={ZeroIcon} />
 				) : (
 					<>
-						{participant.synced ? null : participant.debtId ? (
+						{synced ? null : participant.debt ? (
 							<Icon as={ReceiptOffIcon} css={{ color: "$error" }} />
 						) : null}
-						<DebtSyncStatus syncStatus={participant.syncStatus} size={SIZE} />
+						{participant.debt ? (
+							<DebtSyncStatus
+								syncStatus={participant.debt.syncStatus}
+								size={SIZE}
+							/>
+						) : null}
 					</>
 				)}
 			</Grid>
 			<Grid defaultCol={1.5} lessMdCol={4}>
-				{showUpdateDebt ? (
-					participant.synced ? (
-						<IconButton
-							title="Send sync request"
-							isLoading={updateMutation.isLoading}
-							icon={<SendIcon size={24} />}
-							onClick={() => updateDebt(participant.userId, true)}
-						/>
-					) : (
-						<IconButton
-							title="Update debt for user"
-							isLoading={updateMutation.isLoading}
-							icon={<SyncIcon size={24} />}
-							onClick={() => updateDebt(participant.userId, false)}
-						/>
-					)
+				{!participant.debt ? (
+					<IconButton
+						title="Send sync request"
+						isLoading={updateMutation.isLoading}
+						icon={<SendIcon size={24} />}
+						onClick={() => updateDebt(participant.userId, true)}
+					/>
+				) : !synced ? (
+					<IconButton
+						title="Update debt for user"
+						isLoading={updateMutation.isLoading}
+						icon={<SyncIcon size={24} />}
+						onClick={() => updateDebt(participant.userId, false)}
+					/>
 				) : null}
 			</Grid>
 		</>
