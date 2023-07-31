@@ -5,6 +5,7 @@ import * as models from "./models";
 type SelectTypeMap = {
 	accountConnectionsIntentions: models.AccountConnectionsIntentions;
 	accounts: models.Accounts;
+	accountSettings: models.AccountSettings;
 	debts: models.Debts;
 	itemParticipants: models.ItemParticipants;
 	receiptItems: models.ReceiptItems;
@@ -18,6 +19,7 @@ type SelectTypeMap = {
 type InsertTypeMap = {
 	accountConnectionsIntentions: models.AccountConnectionsIntentionsInitializer;
 	accounts: models.AccountsInitializer;
+	accountSettings: models.AccountSettingsInitializer;
 	debts: models.DebtsInitializer;
 	itemParticipants: models.ItemParticipantsInitializer;
 	receiptItems: models.ReceiptItemsInitializer;
@@ -31,6 +33,7 @@ type InsertTypeMap = {
 type UpdateTypeMap = {
 	accountConnectionsIntentions: models.AccountConnectionsIntentionsMutator;
 	accounts: models.AccountsMutator;
+	accountSettings: models.AccountSettingsMutator;
 	debts: models.DebtsMutator;
 	itemParticipants: models.ItemParticipantsMutator;
 	receiptItems: models.ReceiptItemsMutator;

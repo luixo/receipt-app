@@ -228,21 +228,25 @@ export const options: UseContextedMutationOptions<
 			},
 		}),
 	onSuccess: (controllerContext, currData) => (result, updateObject) => {
-		if (!result) {
+		// lockedTimestamp is not defined (in contrary to being undefined)
+		// hence we didn't update it in this transaction and we should update nothing in cache
+		if (!("lockedTimestamp" in result)) {
 			return;
 		}
-		const { lockedTimestamp } = result;
+		const { lockedTimestamp, reverseUpdated } = result;
 		cache.debts.update(controllerContext, {
 			getByUsers: undefined,
 			getUser: (controller) =>
 				controller.update(currData.userId, updateObject.id, (debt) => ({
 					...debt,
 					lockedTimestamp,
+					their: reverseUpdated ? { lockedTimestamp } : debt.their,
 				})),
 			get: (controller) =>
 				controller.update(updateObject.id, (debt) => ({
 					...debt,
 					lockedTimestamp,
+					their: reverseUpdated ? { lockedTimestamp } : debt.their,
 				})),
 			getIntentions: (controller) => {
 				if (

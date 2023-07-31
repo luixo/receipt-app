@@ -2,6 +2,7 @@ import { t } from "next-app/handlers/trpc";
 
 import { router as accountRouter } from "./account/index";
 import { router as accountConnectionIntentionsRouter } from "./account-connection-intentions/index";
+import { router as accountSettingsRouter } from "./account-settings/index";
 import { router as authRouter } from "./auth";
 import { router as currencyRouter } from "./currency/index";
 import { router as debtsRouter } from "./debts/index";
@@ -20,6 +21,7 @@ export const router = t.router({
 	resetPasswordIntentions: resetPasswordIntentionsRouter,
 	// Auth
 	account: accountRouter,
+	accountSettings: accountSettingsRouter,
 	receipts: receiptsRouter,
 	receiptItems: receiptItemsRouter,
 	users: usersRouter,

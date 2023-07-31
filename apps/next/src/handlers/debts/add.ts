@@ -5,7 +5,6 @@ import { z } from "zod";
 import { debtNoteSchema } from "app/utils/validation";
 import { getDatabase } from "next-app/db";
 import { authProcedure } from "next-app/handlers/trpc";
-import { getUserById } from "next-app/handlers/users/utils";
 import {
 	debtAmountSchema,
 	currencyCodeSchema,
@@ -25,33 +24,79 @@ export const procedure = authProcedure
 	.mutation(async ({ input, ctx }) => {
 		const id = v4();
 		const database = getDatabase(ctx);
-		const user = await getUserById(database, input.userId, ["ownerAccountId"]);
+		const user = await database
+			.selectFrom("users")
+			.leftJoin("accountSettings", (qb) =>
+				qb.onRef("users.connectedAccountId", "=", "accountSettings.accountId"),
+			)
+			.select([
+				"users.ownerAccountId as selfAccountId",
+				"accountSettings.accountId as foreignAccountId",
+				"accountSettings.autoAcceptDebts",
+			])
+			.where("id", "=", input.userId)
+			.executeTakeFirst();
 		if (!user) {
 			throw new trpc.TRPCError({
 				code: "NOT_FOUND",
 				message: `User ${input.userId} does not exist.`,
 			});
 		}
-		if (user.ownerAccountId !== ctx.auth.accountId) {
+		if (user.selfAccountId !== ctx.auth.accountId) {
 			throw new trpc.TRPCError({
 				code: "FORBIDDEN",
 				message: `User ${input.userId} is not owned by ${ctx.auth.accountId}.`,
 			});
 		}
 		const lockedTimestamp = new Date();
+		let reverseAccepted = false;
+		const commonPart = {
+			id,
+			note: input.note,
+			currencyCode: input.currencyCode,
+			created: new Date(),
+			timestamp: input.timestamp || new Date(),
+			lockedTimestamp,
+		};
+		if (user.autoAcceptDebts) {
+			if (!user.foreignAccountId) {
+				throw new trpc.TRPCError({
+					code: "INTERNAL_SERVER_ERROR",
+					message: `Unexpected having "autoAcceptDebts" but not having "accountId"`,
+				});
+			}
+			// TODO: incorporate reverse user into VALUES clause
+			const reverseUser = await database
+				.selectFrom("users")
+				.where("users.ownerAccountId", "=", user.foreignAccountId)
+				.where("users.connectedAccountId", "=", ctx.auth.accountId)
+				.select("users.id")
+				.executeTakeFirst();
+			if (!reverseUser) {
+				throw new trpc.TRPCError({
+					code: "INTERNAL_SERVER_ERROR",
+					message: `Unexpected having "autoAcceptDebts" but not having reverse user "id"`,
+				});
+			}
+			await database
+				.insertInto("debts")
+				.values({
+					...commonPart,
+					ownerAccountId: user.foreignAccountId,
+					userId: reverseUser.id,
+					amount: (-input.amount).toString(),
+				})
+				.executeTakeFirst();
+			reverseAccepted = true;
+		}
 		await database
 			.insertInto("debts")
 			.values({
-				id,
+				...commonPart,
 				ownerAccountId: ctx.auth.accountId,
 				userId: input.userId,
-				note: input.note,
-				currencyCode: input.currencyCode,
-				created: new Date(),
-				timestamp: input.timestamp || new Date(),
-				lockedTimestamp,
 				amount: input.amount.toString(),
 			})
 			.executeTakeFirst();
-		return { id, lockedTimestamp };
+		return { id, lockedTimestamp, reverseAccepted };
 	});

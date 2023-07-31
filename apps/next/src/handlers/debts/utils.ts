@@ -1,29 +1,7 @@
-import { ReceiptsSelectExpression, Database } from "next-app/db";
+import { Database } from "next-app/db";
 import { DEBTS } from "next-app/db/consts";
-import { AccountsId, DebtsId, Receipts } from "next-app/db/models";
+import { Receipts } from "next-app/db/models";
 import { getValidParticipants } from "next-app/handlers/receipt-items/utils";
-
-export const getDebt = <SE extends ReceiptsSelectExpression<"debts">>(
-	database: Database,
-	id: DebtsId,
-	ownerAccountId: AccountsId,
-	selectExpression: SE[],
-) =>
-	database
-		.selectFrom("debts")
-		.where("debts.id", "=", id)
-		.where("debts.ownerAccountId", "=", ownerAccountId)
-		.leftJoin("debts as theirDebts", (qb) =>
-			qb
-				.onRef("theirDebts.id", "=", "debts.id")
-				.onRef("theirDebts.ownerAccountId", "<>", "debts.ownerAccountId"),
-		)
-		.select([
-			...selectExpression,
-			"theirDebts.ownerAccountId as theirOwnerAccountId",
-			"theirDebts.lockedTimestamp as theirLockedTimestamp",
-		])
-		.executeTakeFirst();
 
 const getReceiptDebtName = (receipt: Pick<Receipts, "name">) =>
 	`Receipt "${receipt.name}"`;

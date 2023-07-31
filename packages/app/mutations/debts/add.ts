@@ -1,14 +1,17 @@
 import { cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
-import { DebtsId } from "next-app/db/models";
+import {
+	TRPCMutationInput,
+	TRPCMutationOutput,
+	TRPCQueryOutput,
+} from "app/trpc";
 
 type DebtUserSnapshot = TRPCQueryOutput<"debts.getUser">[number];
 type DebtSnapshot = TRPCQueryOutput<"debts.get">;
+type AddResult = TRPCMutationOutput<"debts.add">;
 
 const createUserDebt = (
-	id: DebtsId,
-	lockedTimestamp: Date,
+	{ id, lockedTimestamp, reverseAccepted }: AddResult,
 	updateObject: TRPCMutationInput<"debts.add">,
 ): DebtUserSnapshot => ({
 	id,
@@ -18,13 +21,12 @@ const createUserDebt = (
 	timestamp: updateObject.timestamp || new Date(),
 	note: updateObject.note,
 	lockedTimestamp,
-	their: undefined,
+	their: reverseAccepted ? { lockedTimestamp } : undefined,
 	receiptId: null,
 });
 
 const createDebt = (
-	id: DebtsId,
-	lockedTimestamp: Date,
+	{ id, lockedTimestamp, reverseAccepted }: AddResult,
 	updateObject: TRPCMutationInput<"debts.add">,
 ): DebtSnapshot => ({
 	id,
@@ -34,31 +36,28 @@ const createDebt = (
 	timestamp: updateObject.timestamp || new Date(),
 	note: updateObject.note,
 	lockedTimestamp,
-	their: undefined,
+	their: reverseAccepted ? { lockedTimestamp } : undefined,
 	receiptId: null,
 });
 
 export const options: UseContextedMutationOptions<"debts.add"> = {
-	onSuccess:
-		(controllerContext) =>
-		({ id: stableId, lockedTimestamp }, updateObject) => {
-			cache.debts.update(controllerContext, {
-				getByUsers: (controller) =>
-					controller.update(
-						updateObject.userId,
-						updateObject.currencyCode,
-						(sum) => sum + updateObject.amount,
-					),
-				getUser: (controller) =>
-					controller.add(
-						updateObject.userId,
-						createUserDebt(stableId, lockedTimestamp, updateObject),
-					),
-				get: (controller) =>
-					controller.add(createDebt(stableId, lockedTimestamp, updateObject)),
-				getIntentions: undefined,
-			});
-		},
+	onSuccess: (controllerContext) => (result, updateObject) => {
+		cache.debts.update(controllerContext, {
+			getByUsers: (controller) =>
+				controller.update(
+					updateObject.userId,
+					updateObject.currencyCode,
+					(sum) => sum + updateObject.amount,
+				),
+			getUser: (controller) =>
+				controller.add(
+					updateObject.userId,
+					createUserDebt(result, updateObject),
+				),
+			get: (controller) => controller.add(createDebt(result, updateObject)),
+			getIntentions: undefined,
+		});
+	},
 	mutateToastOptions: {
 		text: "Adding debt..",
 	},

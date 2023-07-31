@@ -29,7 +29,7 @@ export const options: UseContextedMutationOptions<
 			getUser: undefined,
 			get: (controller) => controller.remove(updateObject.id),
 			getIntentions: (controller) => {
-				if (!currDebt.their?.lockedTimestamp) {
+				if (!currDebt.their?.lockedTimestamp || result.reverseRemoved) {
 					return;
 				}
 				if (

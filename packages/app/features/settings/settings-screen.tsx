@@ -2,10 +2,12 @@ import React from "react";
 
 import { Card, Spacer, styled, Text } from "@nextui-org/react";
 
-import { ColorModeSettings } from "app/features/settings/color-mode-settings";
-import { RefreshSettings } from "app/features/settings/refresh-settings";
-import { ShowResolvedDebtsOption } from "app/features/settings/show-resolved-debts-option";
 import { AppPage } from "next-app/types/page";
+
+import { AutoAcceptDebtsOption } from "./auto-accept-debts-option";
+import { ColorModeSettings } from "./color-mode-settings";
+import { RefreshSettings } from "./refresh-settings";
+import { ShowResolvedDebtsOption } from "./show-resolved-debts-option";
 
 const Wrapper = styled("div", {
 	display: "flex",
@@ -16,6 +18,10 @@ const Wrapper = styled("div", {
 const Line = styled("div", {
 	display: "flex",
 	alignItems: "center",
+
+	"& + &": {
+		marginTop: 12,
+	},
 });
 
 export const SettingsScreen: AppPage = () => (
@@ -29,6 +35,11 @@ export const SettingsScreen: AppPage = () => (
 			<Text>Show user with resolved debts</Text>
 			<Spacer x={1} />
 			<ShowResolvedDebtsOption />
+		</Line>
+		<Line>
+			<Text>Auto-accept debts</Text>
+			<Spacer x={1} />
+			<AutoAcceptDebtsOption />
 		</Line>
 		<Spacer y={1} />
 		<Card.Divider />
