@@ -2,9 +2,9 @@ import React from "react";
 
 import { Spacer } from "@nextui-org/react";
 import {
-	MdSync as SyncIcon,
-	MdSyncDisabled as UnsyncIcon,
-} from "react-icons/md";
+	BsEyeFill as SyncIcon,
+	BsEyeSlashFill as UnsyncIcon,
+} from "react-icons/bs";
 
 import { ConfirmModal } from "app/components/confirm-modal";
 import { IconButton } from "app/components/icon-button";
