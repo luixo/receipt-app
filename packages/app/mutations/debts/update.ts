@@ -3,7 +3,6 @@ import { SnapshotFn, UpdateFn } from "app/cache/utils";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
 import { CurrencyCode } from "app/utils/currency";
-import { noop } from "app/utils/utils";
 import { ReceiptsId, UsersId } from "next-app/db/models";
 
 type DebtSum = number;
@@ -234,7 +233,7 @@ export const options: UseContextedMutationOptions<
 		}
 		const { lockedTimestamp } = result;
 		cache.debts.update(controllerContext, {
-			getByUsers: noop,
+			getByUsers: undefined,
 			getUser: (controller) =>
 				controller.update(currData.userId, updateObject.id, (debt) => ({
 					...debt,

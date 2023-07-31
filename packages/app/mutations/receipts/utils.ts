@@ -1,7 +1,6 @@
 import { cache } from "app/cache";
 import { ControllerContext } from "app/cache/utils";
 import { TRPCMutationOutput } from "app/trpc";
-import { noop } from "app/utils/utils";
 import { ReceiptsId } from "next-app/db/models";
 
 export const updateReceiptCacheOnDebtUpdate = (
@@ -22,10 +21,10 @@ export const updateReceiptCacheOnDebtUpdate = (
 				},
 			}));
 		},
-		getNonResolvedAmount: noop,
-		getPaged: noop,
-		getName: noop,
-		getResolvedParticipants: noop,
+		getNonResolvedAmount: undefined,
+		getPaged: undefined,
+		getName: undefined,
+		getResolvedParticipants: undefined,
 	});
 	updatedDebts.forEach((updatedDebt) => {
 		const updatedPartial = {

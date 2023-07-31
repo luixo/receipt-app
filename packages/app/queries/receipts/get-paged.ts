@@ -7,7 +7,6 @@ import { UseContextedQueryOptions } from "app/hooks/use-trpc-query-options";
 import { TRPCQueryInput } from "app/trpc";
 import { createStore, updateWithFn } from "app/utils/store";
 import { Setters } from "app/utils/types";
-import { noop } from "app/utils/utils";
 
 type Input = TRPCQueryInput<"receipts.getPaged">;
 
@@ -111,11 +110,11 @@ export const options: UseContextedQueryOptions<"receipts.getPaged"> = {
 	onSuccess: (controllerContext) => (data) => {
 		data.items.forEach((receipt) => {
 			cache.receipts.update(controllerContext, {
-				get: noop,
+				get: undefined,
 				getName: (controller) => controller.upsert(receipt.id, receipt.name),
-				getPaged: noop,
-				getNonResolvedAmount: noop,
-				getResolvedParticipants: noop,
+				getPaged: undefined,
+				getNonResolvedAmount: undefined,
+				getResolvedParticipants: undefined,
 			});
 		});
 	},

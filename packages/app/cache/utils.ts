@@ -152,30 +152,36 @@ export const getUpdaters = <
 	const updateRevert = (
 		controllerContext: ControllerContext,
 		options: {
-			[K in keyof T]: UpdateRevertOption<T[K]>;
+			[K in keyof T]: UpdateRevertOption<T[K]> | undefined;
 		},
 	) =>
 		mergeUpdaterResults(
-			...Object.entries(input).map(([key, { getRevertController }]) =>
-				options[key]!(
+			...Object.entries(input).map(([key, { getRevertController }]) => {
+				const updater = options[key];
+				if (!updater) {
+					return;
+				}
+				return updater(
 					getRevertController(controllerContext) as Parameters<
-						(typeof options)[keyof T]
+						typeof updater
 					>[0],
-				),
-			),
+				);
+			}),
 		);
 
 	const update = (
 		controllerContext: ControllerContext,
 		options: {
-			[K in keyof T]: UpdateOption<T[K]>;
+			[K in keyof T]: UpdateOption<T[K]> | undefined;
 		},
 	) => {
 		Object.entries(input).forEach(([key, { getController }]) => {
-			options[key]!(
-				getController(controllerContext) as Parameters<
-					(typeof options)[keyof T]
-				>[0],
+			const updater = options[key];
+			if (!updater) {
+				return;
+			}
+			return updater(
+				getController(controllerContext) as Parameters<typeof updater>[0],
 			);
 		});
 	};

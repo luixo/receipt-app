@@ -1,7 +1,6 @@
 import { cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
-import { noop } from "app/utils/utils";
 import { DebtsId } from "next-app/db/models";
 
 type DebtUserSnapshot = TRPCQueryOutput<"debts.getUser">[number];
@@ -57,7 +56,7 @@ export const options: UseContextedMutationOptions<"debts.add"> = {
 					),
 				get: (controller) =>
 					controller.add(createDebt(stableId, lockedTimestamp, updateObject)),
-				getIntentions: noop,
+				getIntentions: undefined,
 			});
 		},
 	mutateToastOptions: {

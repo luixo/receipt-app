@@ -2,7 +2,6 @@ import { cache } from "app/cache";
 import { SnapshotFn, UpdateFn } from "app/cache/utils";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
-import { noop } from "app/utils/utils";
 import { ReceiptsId } from "next-app/db/models";
 
 type ReceiptItem = TRPCQueryOutput<"receiptItems.get">["items"][number];
@@ -37,8 +36,8 @@ export const options: UseContextedMutationOptions<
 > = {
 	onMutate: (controllerContext, receiptId) => (variables) =>
 		cache.receiptItems.updateRevert(controllerContext, {
-			getReceiptItem: noop,
-			getReceiptParticipant: noop,
+			getReceiptItem: undefined,
+			getReceiptParticipant: undefined,
 			getReceiptItemPart: (controller) =>
 				controller.update(
 					receiptId,

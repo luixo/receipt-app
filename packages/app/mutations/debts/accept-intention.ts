@@ -2,7 +2,6 @@ import { cache } from "app/cache";
 import { mergeUpdaterResults } from "app/cache/utils";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { CurrencyCode } from "app/utils/currency";
-import { noop } from "app/utils/utils";
 import { DebtsId, ReceiptsId, UsersId } from "next-app/db/models";
 
 export const options: UseContextedMutationOptions<
@@ -122,14 +121,14 @@ export const options: UseContextedMutationOptions<
 				return;
 			}
 			cache.debts.update(controllerContext, {
-				getByUsers: noop,
+				getByUsers: undefined,
 				getUser: (controller) =>
 					controller.update(userId, updateObject.id, (debt) => ({
 						...debt,
 						created,
 					})),
-				get: noop,
-				getIntentions: noop,
+				get: undefined,
+				getIntentions: undefined,
 			});
 		},
 	mutateToastOptions: {

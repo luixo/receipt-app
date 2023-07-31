@@ -2,7 +2,6 @@ import { v4 } from "uuid";
 
 import { cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { noop } from "app/utils/utils";
 import { ReceiptItemsId, ReceiptsId } from "next-app/db/models";
 
 import { updateReceiptSum } from "./utils";
@@ -25,8 +24,8 @@ export const options: UseContextedMutationOptions<
 						locked: false,
 						parts: [],
 					}),
-				getReceiptParticipant: noop,
-				getReceiptItemPart: noop,
+				getReceiptParticipant: undefined,
+				getReceiptItemPart: undefined,
 			}),
 			context: temporaryId,
 		};
@@ -39,8 +38,8 @@ export const options: UseContextedMutationOptions<
 						...item,
 						id,
 					})),
-				getReceiptParticipant: noop,
-				getReceiptItemPart: noop,
+				getReceiptParticipant: undefined,
+				getReceiptItemPart: undefined,
 			});
 			updateReceiptSum(controllerContext, receiptId);
 		},

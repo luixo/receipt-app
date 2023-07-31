@@ -1,6 +1,5 @@
 import { cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { noop } from "app/utils/utils";
 import { AccountsId, UsersId } from "next-app/src/db/models";
 
 export const options: UseContextedMutationOptions<
@@ -48,7 +47,7 @@ export const options: UseContextedMutationOptions<
 						selfUserId: selfAccountId as UsersId,
 					}),
 				getName: (controller) => controller.upsert(id, variables.name),
-				getNonResolvedAmount: noop,
+				getNonResolvedAmount: undefined,
 				getResolvedParticipants: (controller) => controller.upsert(id, []),
 			});
 		},

@@ -1,6 +1,5 @@
 import { cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { noop } from "app/utils/utils";
 
 export const options: UseContextedMutationOptions<"users.unlink"> = {
 	onMutate: (controllerContext) => (variables) =>
@@ -19,7 +18,7 @@ export const options: UseContextedMutationOptions<"users.unlink"> = {
 						accountId: snapshot.accountId,
 					}),
 				),
-			getName: noop,
+			getName: undefined,
 			getPaged: (controller) =>
 				controller.update(
 					variables.id,

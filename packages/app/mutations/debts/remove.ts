@@ -1,7 +1,6 @@
 import { cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { TRPCQueryOutput } from "app/trpc";
-import { noop } from "app/utils/utils";
 
 export const options: UseContextedMutationOptions<
 	"debts.remove",
@@ -21,15 +20,15 @@ export const options: UseContextedMutationOptions<
 			// We remove the debt from everywhere else
 			// but it's own page
 			// otherwise the page will try to refetch the data immediately
-			get: noop,
-			getIntentions: noop,
+			get: undefined,
+			getIntentions: undefined,
 		}),
 	onSuccess: (controllerContext) => (_result, updateObject) => {
 		cache.debts.update(controllerContext, {
-			getByUsers: noop,
-			getUser: noop,
+			getByUsers: undefined,
+			getUser: undefined,
 			get: (controller) => controller.remove(updateObject.id),
-			getIntentions: noop,
+			getIntentions: undefined,
 		});
 	},
 	mutateToastOptions: {

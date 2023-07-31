@@ -1,6 +1,5 @@
 import { cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { noop } from "app/utils/utils";
 import { AccountsId, ReceiptsId } from "next-app/db/models";
 
 export const options: UseContextedMutationOptions<
@@ -11,7 +10,7 @@ export const options: UseContextedMutationOptions<
 		(controllerContext, { receiptId, selfAccountId }) =>
 		(result) => {
 			cache.receiptItems.update(controllerContext, {
-				getReceiptItem: noop,
+				getReceiptItem: undefined,
 				getReceiptParticipant: (controller) => {
 					result.forEach((item) =>
 						controller.add(receiptId, {
@@ -27,7 +26,7 @@ export const options: UseContextedMutationOptions<
 						}),
 					);
 				},
-				getReceiptItemPart: noop,
+				getReceiptItemPart: undefined,
 			});
 			const selfParticipating = result.find(
 				(resultItem) => resultItem.role === "owner",
@@ -44,7 +43,7 @@ export const options: UseContextedMutationOptions<
 							...item,
 							participantResolved: false,
 						})),
-					getName: noop,
+					getName: undefined,
 					getNonResolvedAmount: (controller) => {
 						if (!result.some((item) => selfAccountId === item.id)) {
 							return;

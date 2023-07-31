@@ -1,6 +1,5 @@
 import { cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { noop } from "app/utils/utils";
 
 export const options: UseContextedMutationOptions<"accountConnectionIntentions.accept"> =
 	{
@@ -22,7 +21,7 @@ export const options: UseContextedMutationOptions<"accountConnectionIntentions.a
 					getPaged: (controller) => {
 						controller.update(variables.userId, (user) => ({ ...user, email }));
 					},
-					getName: noop,
+					getName: undefined,
 				});
 				cache.users.invalidateSuggest(controllerContext);
 			},

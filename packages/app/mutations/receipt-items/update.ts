@@ -2,7 +2,6 @@ import { cache } from "app/cache";
 import { SnapshotFn, UpdateFn } from "app/cache/utils";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
-import { noop } from "app/utils/utils";
 import { ReceiptsId } from "next-app/db/models";
 
 import { updateReceiptSum } from "./utils";
@@ -57,8 +56,8 @@ export const options: UseContextedMutationOptions<
 					applyUpdate(updateObject.update),
 					getRevert(updateObject.update),
 				),
-			getReceiptParticipant: noop,
-			getReceiptItemPart: noop,
+			getReceiptParticipant: undefined,
+			getReceiptItemPart: undefined,
 		}),
 	onSuccess: (controllerContext, receiptId) => (_value, updateObject) => {
 		if (

@@ -1,6 +1,5 @@
 import { cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { noop } from "app/utils/utils";
 
 export const options: UseContextedMutationOptions<
 	"receipts.remove",
@@ -28,11 +27,11 @@ export const options: UseContextedMutationOptions<
 			}),
 	onSuccess: (controllerContext) => (_result, variables) => {
 		cache.receipts.update(controllerContext, {
-			get: noop,
+			get: undefined,
 			getPaged: (controller) => controller.remove(variables.id),
-			getName: noop,
-			getResolvedParticipants: noop,
-			getNonResolvedAmount: noop,
+			getName: undefined,
+			getResolvedParticipants: undefined,
+			getNonResolvedAmount: undefined,
 		});
 	},
 	mutateToastOptions: {

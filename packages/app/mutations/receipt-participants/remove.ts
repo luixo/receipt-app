@@ -1,7 +1,6 @@
 import { cache } from "app/cache";
 import { mergeUpdaterResults } from "app/cache/utils";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { noop } from "app/utils/utils";
 import { AccountsId, ReceiptsId } from "next-app/db/models";
 
 export const options: UseContextedMutationOptions<
@@ -13,7 +12,7 @@ export const options: UseContextedMutationOptions<
 		({ userId }) =>
 			mergeUpdaterResults(
 				cache.receiptItems.updateRevert(controllerContext, {
-					getReceiptItem: noop,
+					getReceiptItem: undefined,
 					getReceiptParticipant: (controller) =>
 						controller.remove(receiptId, userId),
 					getReceiptItemPart: (controller) =>
@@ -45,7 +44,7 @@ export const options: UseContextedMutationOptions<
 										participantResolved: snapshot.participantResolved,
 									}),
 								),
-							getName: noop,
+							getName: undefined,
 							getResolvedParticipants: (controller) =>
 								controller.remove(receiptId, userId),
 							getNonResolvedAmount: (controller) => {

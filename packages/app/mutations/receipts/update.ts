@@ -6,7 +6,6 @@ import {
 	TRPCMutationOutput,
 	TRPCQueryOutput,
 } from "app/trpc";
-import { noop } from "app/utils/utils";
 
 type PagedReceiptSnapshot =
 	TRPCQueryOutput<"receipts.getPaged">["items"][number];
@@ -147,7 +146,7 @@ export const options: UseContextedMutationOptions<"receipts.update"> = {
 					applyUpdate(updateObject.update),
 					getRevert(updateObject.update),
 				),
-			getNonResolvedAmount: noop,
+			getNonResolvedAmount: undefined,
 			getPaged: (controller) =>
 				controller.update(
 					updateObject.id,
@@ -159,7 +158,7 @@ export const options: UseContextedMutationOptions<"receipts.update"> = {
 					return controller.upsert(updateObject.id, updateObject.update.name);
 				}
 			},
-			getResolvedParticipants: noop,
+			getResolvedParticipants: undefined,
 		}),
 	onSuccess: (controllerContext) => (result, updateObject) => {
 		cache.receipts.update(controllerContext, {
@@ -168,14 +167,14 @@ export const options: UseContextedMutationOptions<"receipts.update"> = {
 					updateObject.id,
 					applySuccessUpdate(updateObject.update, result),
 				),
-			getNonResolvedAmount: noop,
+			getNonResolvedAmount: undefined,
 			getPaged: (controller) =>
 				controller.update(
 					updateObject.id,
 					applySuccessPagedUpdate(updateObject.update, result),
 				),
-			getName: noop,
-			getResolvedParticipants: noop,
+			getName: undefined,
+			getResolvedParticipants: undefined,
 		});
 	},
 	errorToastOptions: () => (error) => ({

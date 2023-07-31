@@ -1,6 +1,5 @@
 import { cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { noop } from "app/utils/utils";
 import { ReceiptsId } from "next-app/db/models";
 
 import { updateReceiptSum } from "./utils";
@@ -14,8 +13,8 @@ export const options: UseContextedMutationOptions<
 		({ id: removedId }) =>
 			cache.receiptItems.updateRevert(controllerContext, {
 				getReceiptItem: (controller) => controller.remove(receiptId, removedId),
-				getReceiptParticipant: noop,
-				getReceiptItemPart: noop,
+				getReceiptParticipant: undefined,
+				getReceiptItemPart: undefined,
 			}),
 	onSuccess: (controllerContext, receiptId) => () => {
 		updateReceiptSum(controllerContext, receiptId);

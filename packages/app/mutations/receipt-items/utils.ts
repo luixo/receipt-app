@@ -1,6 +1,5 @@
 import { cache } from "app/cache";
 import * as utils from "app/cache/utils";
-import { noop } from "app/utils/utils";
 import { ReceiptsId } from "next-app/db/models";
 
 export const updateReceiptSum = (
@@ -28,8 +27,8 @@ export const updateReceiptSum = (
 				...receipt,
 				sum: nextSum,
 			})),
-		getNonResolvedAmount: noop,
-		getName: noop,
-		getResolvedParticipants: noop,
+		getNonResolvedAmount: undefined,
+		getName: undefined,
+		getResolvedParticipants: undefined,
 	});
 };

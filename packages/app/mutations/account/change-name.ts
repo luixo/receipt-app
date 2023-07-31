@@ -1,6 +1,5 @@
 import { cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { noop } from "app/utils/utils";
 import { AccountsId, UsersId } from "next-app/db/models";
 
 export const options: UseContextedMutationOptions<
@@ -24,7 +23,7 @@ export const options: UseContextedMutationOptions<
 						id as UsersId,
 						updateObject.name,
 					),
-				getPaged: noop,
+				getPaged: undefined,
 			}),
 	onSuccess: (controllerContext) => (_result, updateObject) => {
 		cache.users.invalidateSuggest(controllerContext);
