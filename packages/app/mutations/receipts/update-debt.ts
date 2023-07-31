@@ -7,10 +7,10 @@ export const options: UseContextedMutationOptions<
 	{ prevAmount: number; receiptTimestamp: Date }
 > = {
 	onSuccess:
-		(trpcContext, { prevAmount, receiptTimestamp }) =>
+		(controllerContext, { prevAmount, receiptTimestamp }) =>
 		(updatedDebt, updateObject) =>
 			updateReceiptCacheOnDebtUpdate(
-				trpcContext,
+				controllerContext,
 				updateObject.receiptId,
 				receiptTimestamp,
 				[{ ...updatedDebt, deltaAmount: updatedDebt.amount - prevAmount }],

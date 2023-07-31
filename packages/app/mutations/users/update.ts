@@ -61,8 +61,8 @@ const getPagedRevert =
 	};
 
 export const options: UseContextedMutationOptions<"users.update"> = {
-	onMutate: (trpcContext) => (updateObject) =>
-		cache.users.updateRevert(trpcContext, {
+	onMutate: (controllerContext) => (updateObject) =>
+		cache.users.updateRevert(controllerContext, {
 			get: (controller) =>
 				controller.update(
 					updateObject.id,
@@ -82,7 +82,8 @@ export const options: UseContextedMutationOptions<"users.update"> = {
 					getPagedRevert(updateObject.update),
 				),
 		}),
-	onSuccess: (trpcContext) => () => cache.users.invalidateSuggest(trpcContext),
+	onSuccess: (controllerContext) => () =>
+		cache.users.invalidateSuggest(controllerContext),
 	errorToastOptions: () => (error) => ({
 		text: `Error updating user: ${error.message}`,
 	}),

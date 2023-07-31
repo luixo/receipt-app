@@ -108,9 +108,9 @@ export const useSyncQueryParams = () => {
 };
 
 export const options: UseContextedQueryOptions<"receipts.getPaged"> = {
-	onSuccess: (trpcContext) => (data) => {
+	onSuccess: (controllerContext) => (data) => {
 		data.items.forEach((receipt) => {
-			cache.receipts.update(trpcContext, {
+			cache.receipts.update(controllerContext, {
 				get: noop,
 				getName: (controller) => controller.upsert(receipt.id, receipt.name),
 				getPaged: noop,

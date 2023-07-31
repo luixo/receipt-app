@@ -3,9 +3,9 @@ import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options
 
 export const options: UseContextedMutationOptions<"accountConnectionIntentions.add"> =
 	{
-		onSuccess: (trpcContext) => (result, variables) => {
+		onSuccess: (controllerContext) => (result, variables) => {
 			if (result.connected) {
-				cache.users.update(trpcContext, {
+				cache.users.update(controllerContext, {
 					get: (controller) => {
 						controller.update(variables.userId, (user) => ({
 							...user,
@@ -23,7 +23,7 @@ export const options: UseContextedMutationOptions<"accountConnectionIntentions.a
 					},
 				});
 			} else {
-				cache.accountConnections.update(trpcContext, {
+				cache.accountConnections.update(controllerContext, {
 					getAll: (controller) =>
 						controller.outbound.add({
 							account: {

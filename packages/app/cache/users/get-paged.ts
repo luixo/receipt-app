@@ -1,5 +1,13 @@
+import { QueryClient } from "@tanstack/react-query";
+import { getQueryKey } from "@trpc/react-query";
+
 import * as utils from "app/cache/utils";
-import { TRPCQueryInput, TRPCQueryOutput, TRPCReactContext } from "app/trpc";
+import {
+	TRPCQueryInput,
+	TRPCQueryOutput,
+	TRPCReactContext,
+	trpc,
+} from "app/trpc";
 import {
 	ItemWithIndex,
 	removeFromArray,
@@ -7,7 +15,7 @@ import {
 } from "app/utils/array";
 import { UsersId } from "next-app/src/db/models";
 
-type Controller = utils.GenericController<"users.getPaged">;
+type Controller = TRPCReactContext["users"]["getPaged"];
 
 type UserPage = TRPCQueryOutput<"users.getPaged">;
 type User = UserPage["items"][number];
@@ -15,31 +23,44 @@ type Input = TRPCQueryInput<"users.getPaged">;
 
 const sortByName = (a: User, b: User) => a.name.localeCompare(b.name);
 
+const getPagedInputs = (queryClient: QueryClient) =>
+	utils.getAllInputs<"users.getPaged">(
+		queryClient,
+		getQueryKey(trpc.users.getPaged),
+	);
+
 const updatePages = (
 	controller: Controller,
+	inputs: Input[],
 	updater: (page: User[], count: number, input: Input) => [User[], number],
-) =>
-	controller.update((input, result) => {
-		const [nextItems, nextCount] = updater(result.items, result.count, input);
-		if (nextItems === result.items && nextCount === result.count) {
-			return result;
-		}
-		return { ...result, items: nextItems, count: nextCount };
+) => {
+	inputs.forEach((input) => {
+		controller.setData(input, (result) => {
+			if (!result) {
+				return;
+			}
+			const [nextItems, nextCount] = updater(result.items, result.count, input);
+			if (nextItems === result.items && nextCount === result.count) {
+				return result;
+			}
+			return { ...result, items: nextItems, count: nextCount };
+		});
 	});
+};
 
 const update =
-	(controller: Controller, userId: UsersId) =>
+	(controller: Controller, inputs: Input[], userId: UsersId) =>
 	(updater: utils.UpdateFn<User>) =>
 		utils.withRef<User | undefined>((ref) =>
-			updatePages(controller, (page, count) => [
+			updatePages(controller, inputs, (page, count) => [
 				replaceInArray(page, (user) => user.id === userId, updater, ref),
 				count,
 			]),
 		).current;
 
-const add = (controller: Controller, nextUser: User) =>
+const add = (controller: Controller, inputs: Input[], nextUser: User) =>
 	utils.withRef<number | undefined>((ref) =>
-		updatePages(controller, (page, count, input) => {
+		updatePages(controller, inputs, (page, count, input) => {
 			if (ref.current !== undefined) {
 				return [page, count + 1];
 			}
@@ -64,10 +85,10 @@ const add = (controller: Controller, nextUser: User) =>
 		}),
 	).current;
 
-const remove = (controller: Controller, userId: UsersId) => {
+const remove = (controller: Controller, inputs: Input[], userId: UsersId) => {
 	const cursorRef = utils.createRef<number>(-1);
 	const removedItem = utils.withRef<ItemWithIndex<User> | undefined>((ref) =>
-		updatePages(controller, (page, count, input) => {
+		updatePages(controller, inputs, (page, count, input) => {
 			if (ref.current) {
 				return [page, count - 1];
 			}
@@ -98,43 +119,49 @@ const remove = (controller: Controller, userId: UsersId) => {
 };
 
 const invalidate =
-	(controller: Controller) =>
+	(controller: Controller, inputs: Input[]) =>
 	(sinceCursor: number = 0) =>
-		utils.withRef<UserPage[]>(
-			(ref) =>
-				controller.invalidate(
-					(input, page) => {
-						const match = input.cursor >= sinceCursor;
-						if (!match) {
-							return false;
-						}
-						ref.current.push(page);
-						return true;
-					},
-					{ refetchType: "all" },
-				),
-			[],
-		).current;
+		utils.withRef<UserPage[]>((ref) => {
+			inputs
+				.filter((input) => input.cursor >= sinceCursor)
+				.forEach((input) => {
+					const page = controller.getData(input);
+					if (!page) {
+						return;
+					}
+					ref.current.push(page);
+					controller.invalidate(input, { refetchType: "all" });
+				});
+		}, []).current;
 
-export const getController = (trpc: TRPCReactContext) => {
-	const controller = utils.createController(trpc, "users.getPaged");
+export const getController = ({
+	trpcContext,
+	queryClient,
+}: utils.ControllerContext) => {
+	const controller = trpcContext.users.getPaged;
+	const inputs = getPagedInputs(queryClient);
 	return {
-		add: (user: User) => add(controller, user),
+		add: (user: User) => add(controller, inputs, user),
 		update: (userId: UsersId, updater: utils.UpdateFn<User>) =>
-			update(controller, userId)(updater),
-		remove: (userId: UsersId) => remove(controller, userId),
-		invalidate: invalidate(controller),
+			update(controller, inputs, userId)(updater),
+		remove: (userId: UsersId) => remove(controller, inputs, userId),
+		invalidate: (sinceCursor?: number) =>
+			invalidate(controller, inputs)(sinceCursor),
 	};
 };
 
-export const getRevertController = (trpc: TRPCReactContext) => {
-	const controller = utils.createController(trpc, "users.getPaged");
+export const getRevertController = ({
+	trpcContext,
+	queryClient,
+}: utils.ControllerContext) => {
+	const controller = trpcContext.users.getPaged;
+	const inputs = getPagedInputs(queryClient);
 	return {
 		add: (user: User) =>
 			// TODO: add paged invalidation on adding a user
 			utils.applyWithRevert(
-				() => add(controller, user),
-				() => remove(controller, user.id),
+				() => add(controller, inputs, user),
+				() => remove(controller, inputs, user.id),
 			),
 		update: (
 			userId: UsersId,
@@ -142,15 +169,16 @@ export const getRevertController = (trpc: TRPCReactContext) => {
 			revertUpdater: utils.SnapshotFn<User>,
 		) =>
 			utils.applyUpdateFnWithRevert(
-				update(controller, userId),
+				update(controller, inputs, userId),
 				updater,
 				revertUpdater,
 			),
 		remove: (userId: UsersId) =>
 			utils.applyWithRevert(
-				() => remove(controller, userId),
-				({ item }) => add(controller, item),
+				() => remove(controller, inputs, userId),
+				({ item }) => add(controller, inputs, item),
 			),
-		invalidate: invalidate(controller),
+		invalidate: (sinceCursor?: number) =>
+			invalidate(controller, inputs)(sinceCursor),
 	};
 };

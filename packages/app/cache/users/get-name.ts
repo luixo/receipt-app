@@ -2,26 +2,21 @@ import * as utils from "app/cache/utils";
 import { TRPCQueryOutput, TRPCReactContext } from "app/trpc";
 import { UsersId } from "next-app/db/models";
 
-type Controller = utils.GenericController<"users.getName">;
+type Controller = TRPCReactContext["users"]["getName"];
 
 type UserName = TRPCQueryOutput<"users.getName">;
 
 const uspert = (controller: Controller, userId: UsersId, name: UserName) =>
-	controller.upsert({ id: userId }, name);
+	controller.setData({ id: userId }, name);
 
 const remove = (controller: Controller, userId: UsersId) =>
 	utils.withRef<UserName | undefined>((ref) => {
-		controller.invalidate((input, user) => {
-			if (input.id !== userId) {
-				return false;
-			}
-			ref.current = user;
-			return true;
-		});
+		ref.current = controller.getData({ id: userId });
+		controller.invalidate({ id: userId });
 	}).current;
 
-export const getController = (trpc: TRPCReactContext) => {
-	const controller = utils.createController(trpc, "users.getName");
+export const getController = ({ trpcContext }: utils.ControllerContext) => {
+	const controller = trpcContext.users.getName;
 	return {
 		upsert: (userId: UsersId, name: UserName) =>
 			uspert(controller, userId, name),
@@ -29,8 +24,10 @@ export const getController = (trpc: TRPCReactContext) => {
 	};
 };
 
-export const getRevertController = (trpc: TRPCReactContext) => {
-	const controller = utils.createController(trpc, "users.getName");
+export const getRevertController = ({
+	trpcContext,
+}: utils.ControllerContext) => {
+	const controller = trpcContext.users.getName;
 	return {
 		upsert: (userId: UsersId, name: UserName) =>
 			utils.applyWithRevert(

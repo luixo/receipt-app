@@ -2,30 +2,25 @@ import * as utils from "app/cache/utils";
 import { TRPCQueryOutput, TRPCReactContext } from "app/trpc";
 import { ReceiptsId } from "next-app/db/models";
 
-type Controller = utils.GenericController<"receipts.get">;
+type Controller = TRPCReactContext["receipts"]["get"];
 
 type Receipt = TRPCQueryOutput<"receipts.get">;
 
 const upsert = (controller: Controller, receipt: Receipt) =>
-	controller.upsert({ id: receipt.id }, receipt);
+	controller.setData({ id: receipt.id }, receipt);
 
 const remove = (controller: Controller, receiptId: ReceiptsId) =>
 	utils.withRef<Receipt | undefined>((ref) => {
-		controller.invalidate((input, receipt) => {
-			if (input.id !== receiptId) {
-				return false;
-			}
-			ref.current = receipt;
-			return true;
-		});
+		ref.current = controller.getData({ id: receiptId });
+		controller.invalidate({ id: receiptId });
 	}).current;
 
 const update =
 	(controller: Controller, receiptId: ReceiptsId) =>
 	(updater: utils.UpdateFn<Receipt>) =>
 		utils.withRef<Receipt | undefined>((ref) => {
-			controller.update((input, receipt) => {
-				if (input.id !== receiptId) {
+			controller.setData({ id: receiptId }, (receipt) => {
+				if (!receipt) {
 					return;
 				}
 				ref.current = receipt;
@@ -33,8 +28,8 @@ const update =
 			});
 		}).current;
 
-export const getController = (trpc: TRPCReactContext) => {
-	const controller = utils.createController(trpc, "receipts.get");
+export const getController = ({ trpcContext }: utils.ControllerContext) => {
+	const controller = trpcContext.receipts.get;
 	return {
 		update: (receiptId: ReceiptsId, updater: utils.UpdateFn<Receipt>) =>
 			update(controller, receiptId)(updater),
@@ -45,8 +40,10 @@ export const getController = (trpc: TRPCReactContext) => {
 	};
 };
 
-export const getRevertController = (trpc: TRPCReactContext) => {
-	const controller = utils.createController(trpc, "receipts.get");
+export const getRevertController = ({
+	trpcContext,
+}: utils.ControllerContext) => {
+	const controller = trpcContext.receipts.get;
 	return {
 		update: (
 			receiptId: ReceiptsId,

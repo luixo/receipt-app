@@ -3,8 +3,8 @@ import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options
 import { noop } from "app/utils/utils";
 
 export const options: UseContextedMutationOptions<"users.unlink"> = {
-	onMutate: (trpcContext) => (variables) =>
-		cache.users.updateRevert(trpcContext, {
+	onMutate: (controllerContext) => (variables) =>
+		cache.users.updateRevert(controllerContext, {
 			get: (controller) =>
 				controller.update(
 					variables.id,

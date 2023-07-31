@@ -8,7 +8,7 @@ import {
 } from "app/utils/array";
 import { AccountsId } from "next-app/db/models";
 
-type Controller = utils.GenericController<"accountConnectionIntentions.getAll">;
+type Controller = TRPCReactContext["accountConnectionIntentions"]["getAll"];
 
 type Intentions = TRPCQueryOutput<"accountConnectionIntentions.getAll">;
 type InboundIntention = Intentions["inbound"][number];
@@ -25,7 +25,10 @@ const updateIntentions = <D extends Direction>(
 	direction: Direction,
 	updater: (intentions: IntentionMapping[D][]) => IntentionMapping[D][],
 ) =>
-	controller.update((_input, intentions) => {
+	controller.setData(undefined, (intentions) => {
+		if (!intentions) {
+			return;
+		}
 		const prevIntentions = intentions[direction] as IntentionMapping[D][];
 		const nextIntentions = updater(prevIntentions);
 		if (nextIntentions === prevIntentions) {
@@ -123,11 +126,8 @@ const add =
 	(intention: IntentionMapping[D], index?: number) =>
 		addIntention(controller, direction, intention, index);
 
-export const getController = (trpc: TRPCReactContext) => {
-	const controller = utils.createController(
-		trpc,
-		"accountConnectionIntentions.getAll",
-	);
+export const getController = ({ trpcContext }: utils.ControllerContext) => {
+	const controller = trpcContext.accountConnectionIntentions.getAll;
 	return {
 		inbound: {
 			update: update(controller, "inbound"),
@@ -142,11 +142,10 @@ export const getController = (trpc: TRPCReactContext) => {
 	};
 };
 
-export const getRevertController = (trpc: TRPCReactContext) => {
-	const controller = utils.createController(
-		trpc,
-		"accountConnectionIntentions.getAll",
-	);
+export const getRevertController = ({
+	trpcContext,
+}: utils.ControllerContext) => {
+	const controller = trpcContext.accountConnectionIntentions.getAll;
 	return {
 		inbound: {
 			update: updateRevert(controller, "inbound"),

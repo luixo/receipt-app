@@ -9,7 +9,7 @@ import {
 } from "app/utils/array";
 import { DebtsId, UsersId } from "next-app/db/models";
 
-type Controller = utils.GenericController<"debts.getUser">;
+type Controller = TRPCReactContext["debts"]["getUser"];
 
 type Debts = TRPCQueryOutput<"debts.getUser">;
 type Debt = Debts[number];
@@ -22,8 +22,8 @@ const updateDebts = (
 	userId: UsersId,
 	updater: utils.UpdateFn<Debts>,
 ) =>
-	controller.update((input, prevDebts) => {
-		if (input.userId !== userId) {
+	controller.setData({ userId }, (prevDebts) => {
+		if (!prevDebts) {
 			return;
 		}
 		const nextDebts = updater(prevDebts);
@@ -59,8 +59,8 @@ const add = (
 	updateDebts(controller, userId, (debts) => addToArray(debts, debt, index));
 };
 
-export const getController = (trpc: TRPCReactContext) => {
-	const controller = utils.createController(trpc, "debts.getUser");
+export const getController = ({ trpcContext }: utils.ControllerContext) => {
+	const controller = trpcContext.debts.getUser;
 	return {
 		update: (userId: UsersId, debtId: DebtsId, updater: utils.UpdateFn<Debt>) =>
 			update(controller, userId, debtId)(updater),
@@ -70,8 +70,10 @@ export const getController = (trpc: TRPCReactContext) => {
 	};
 };
 
-export const getRevertController = (trpc: TRPCReactContext) => {
-	const controller = utils.createController(trpc, "debts.getUser");
+export const getRevertController = ({
+	trpcContext,
+}: utils.ControllerContext) => {
+	const controller = trpcContext.debts.getUser;
 	return {
 		update: (
 			userId: UsersId,

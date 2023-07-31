@@ -2,8 +2,8 @@ import { cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 
 export const options: UseContextedMutationOptions<"auth.confirmEmail"> = {
-	onSuccess: (trpcContext) => () =>
-		cache.account.update(trpcContext, {
+	onSuccess: (controllerContext) => () =>
+		cache.account.update(controllerContext, {
 			get: (controller) => {
 				controller.update((account) => ({ ...account, verified: true }));
 			},

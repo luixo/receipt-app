@@ -1,15 +1,14 @@
 import React from "react";
 
 import { Button } from "@nextui-org/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { FiRefreshCw as RefreshIcon } from "react-icons/fi";
 
-import { trpc } from "app/trpc";
-
 export const RefreshSettings: React.FC = () => {
-	const trpcContext = trpc.useContext();
+	const queryClient = useQueryClient();
 	const refetch = React.useCallback(
-		() => trpcContext.queryClient.invalidateQueries({ refetchType: "all" }),
-		[trpcContext],
+		() => queryClient.invalidateQueries({ refetchType: "all" }),
+		[queryClient],
 	);
 	return (
 		<Button size="lg" icon={<RefreshIcon />} onClick={refetch} auto>

@@ -48,8 +48,8 @@ export const options: UseContextedMutationOptions<
 	"receiptItems.update",
 	ReceiptsId
 > = {
-	onMutate: (trpcContext, receiptId) => (updateObject) =>
-		cache.receiptItems.updateRevert(trpcContext, {
+	onMutate: (controllerContext, receiptId) => (updateObject) =>
+		cache.receiptItems.updateRevert(controllerContext, {
 			getReceiptItem: (controller) =>
 				controller.update(
 					receiptId,
@@ -60,12 +60,12 @@ export const options: UseContextedMutationOptions<
 			getReceiptParticipant: noop,
 			getReceiptItemPart: noop,
 		}),
-	onSuccess: (trpcContext, receiptId) => (_value, updateObject) => {
+	onSuccess: (controllerContext, receiptId) => (_value, updateObject) => {
 		if (
 			updateObject.update.type === "price" ||
 			updateObject.update.type === "quantity"
 		) {
-			updateReceiptSum(trpcContext, receiptId);
+			updateReceiptSum(controllerContext, receiptId);
 		}
 	},
 	errorToastOptions: () => (error) => ({

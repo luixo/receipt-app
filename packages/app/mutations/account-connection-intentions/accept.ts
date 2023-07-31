@@ -4,14 +4,14 @@ import { noop } from "app/utils/utils";
 
 export const options: UseContextedMutationOptions<"accountConnectionIntentions.accept"> =
 	{
-		onMutate: (trpcContext) => (variables) =>
-			cache.accountConnections.updateRevert(trpcContext, {
+		onMutate: (controllerContext) => (variables) =>
+			cache.accountConnections.updateRevert(controllerContext, {
 				getAll: (controller) => controller.inbound.remove(variables.accountId),
 			}),
 		onSuccess:
-			(trpcContext) =>
+			(controllerContext) =>
 			({ email }, variables) => {
-				cache.users.update(trpcContext, {
+				cache.users.update(controllerContext, {
 					get: (controller) => {
 						controller.update(variables.userId, (user) => ({
 							...user,
@@ -24,7 +24,7 @@ export const options: UseContextedMutationOptions<"accountConnectionIntentions.a
 					},
 					getName: noop,
 				});
-				cache.users.invalidateSuggest(trpcContext);
+				cache.users.invalidateSuggest(controllerContext);
 			},
 		errorToastOptions: () => (error) => ({
 			text: `Error accepting an invite: ${error.message}`,

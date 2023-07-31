@@ -3,9 +3,9 @@ import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options
 import { updateReceiptCacheOnDebtUpdate } from "./utils";
 
 export const options: UseContextedMutationOptions<"receipts.propagateDebts"> = {
-	onSuccess: (trpcContext) => (updatedDebts, updateObject) => {
+	onSuccess: (controllerContext) => (updatedDebts, updateObject) => {
 		updateReceiptCacheOnDebtUpdate(
-			trpcContext,
+			controllerContext,
 			updateObject.receiptId,
 			updateObject.lockedTimestamp,
 			updatedDebts.map((debt) => ({ ...debt, deltaAmount: debt.amount })),

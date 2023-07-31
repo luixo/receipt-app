@@ -7,8 +7,8 @@ export const options: UseContextedMutationOptions<
 	"itemParticipants.remove",
 	ReceiptsId
 > = {
-	onMutate: (trpcContext, receiptId) => (variables) =>
-		cache.receiptItems.updateRevert(trpcContext, {
+	onMutate: (controllerContext, receiptId) => (variables) =>
+		cache.receiptItems.updateRevert(controllerContext, {
 			getReceiptItem: noop,
 			getReceiptParticipant: noop,
 			getReceiptItemPart: (controller) =>

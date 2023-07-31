@@ -3,9 +3,9 @@ import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options
 
 export const options: UseContextedMutationOptions<"users.add"> = {
 	onSuccess:
-		(trpcContext) =>
+		(controllerContext) =>
 		({ id, connection }, variables) => {
-			cache.users.update(trpcContext, {
+			cache.users.update(controllerContext, {
 				get: (controller) =>
 					controller.add({
 						remoteId: id,
@@ -24,9 +24,9 @@ export const options: UseContextedMutationOptions<"users.add"> = {
 					}),
 				getName: (controller) => controller.upsert(id, variables.name),
 			});
-			cache.users.invalidateSuggest(trpcContext);
+			cache.users.invalidateSuggest(controllerContext);
 			if (connection && !connection.connected) {
-				cache.accountConnections.update(trpcContext, {
+				cache.accountConnections.update(controllerContext, {
 					getAll: (controller) =>
 						controller.outbound.add({
 							account: {

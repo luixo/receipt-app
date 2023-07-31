@@ -1,5 +1,4 @@
 import * as utils from "app/cache/utils";
-import { TRPCReactContext } from "app/trpc";
 
 import * as getAll from "./get-all";
 import * as getReceiptItem from "./get-receipt-item";
@@ -12,6 +11,6 @@ export const { updateRevert, update } = utils.getUpdaters({
 	getReceiptItemPart,
 });
 
-export const getters = (trpcContext: TRPCReactContext) => ({
-	all: getAll.getController(trpcContext),
+export const getters = (controllerContext: utils.ControllerContext) => ({
+	all: getAll.getController(controllerContext),
 });

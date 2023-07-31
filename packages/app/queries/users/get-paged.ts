@@ -24,9 +24,9 @@ export const useStore = () =>
 	] as const;
 
 export const options: UseContextedQueryOptions<"users.getPaged"> = {
-	onSuccess: (trpcContext) => (data) => {
+	onSuccess: (controllerContext) => (data) => {
 		data.items.forEach((user) => {
-			cache.users.update(trpcContext, {
+			cache.users.update(controllerContext, {
 				get: noop,
 				getPaged: noop,
 				getName: (controller) => controller.upsert(user.id, user.name),

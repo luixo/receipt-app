@@ -1,12 +1,18 @@
-import { hashQueryKey } from "@tanstack/react-query";
+import { QueryClient, hashQueryKey } from "@tanstack/react-query";
+import { getQueryKey } from "@trpc/react-query";
 
 import * as utils from "app/cache/utils";
-import { TRPCQueryInput, TRPCQueryOutput, TRPCReactContext } from "app/trpc";
+import {
+	TRPCQueryInput,
+	TRPCQueryOutput,
+	TRPCReactContext,
+	trpc,
+} from "app/trpc";
 import { removeFromArray, replaceInArray } from "app/utils/array";
 import { id } from "app/utils/utils";
 import { ReceiptsId } from "next-app/src/db/models";
 
-type Controller = utils.GenericController<"receipts.getPaged">;
+type Controller = TRPCReactContext["receipts"]["getPaged"];
 
 type ReceiptPage = TRPCQueryOutput<"receipts.getPaged">;
 type Receipt = ReceiptPage["items"][number];
@@ -21,17 +27,27 @@ const getSortByDate = (input: Input) => (a: Receipt, b: Receipt) => {
 	}
 };
 
+const getPagedInputs = (queryClient: QueryClient) =>
+	utils.getAllInputs<"receipts.getPaged">(
+		queryClient,
+		getQueryKey(trpc.receipts.getPaged),
+	);
+
 const updatePages = (
 	controller: Controller,
+	inputs: Input[],
 	updater: (
 		page: Receipt[],
 		count: number,
 		input: Input,
 	) => [Receipt[], number],
 ) => {
-	const inputsToInvalidate = utils.withRef<Input[]>(
-		(ref) =>
-			controller.update((input, result) => {
+	const inputsToInvalidate = utils.withRef<Input[]>((ref) => {
+		inputs.forEach((input) => {
+			controller.setData(input, (result) => {
+				if (!result) {
+					return;
+				}
 				const [nextItems, nextCount] = updater(
 					result.items,
 					result.count,
@@ -76,23 +92,32 @@ const updatePages = (
 					return result;
 				}
 				return { ...result, items: updatedItems, count: updatedCount };
-			}),
-		[],
-	).current;
-	return () =>
-		controller.invalidate(({ cursor: firstCursor, ...lookupInput }) =>
-			inputsToInvalidate.some(
-				({ cursor: secondCursor, ...inputToInvalidate }) =>
-					hashQueryKey([inputToInvalidate]) === hashQueryKey([lookupInput]),
-			),
-		);
+			});
+		});
+	}, []).current;
+	return () => {
+		inputs
+			.filter(({ cursor: _, ...lookupInput }) =>
+				inputsToInvalidate.some(
+					({ cursor: __, ...inputToInvalidate }) =>
+						hashQueryKey([inputToInvalidate]) === hashQueryKey([lookupInput]),
+				),
+			)
+			.forEach((input) => {
+				const page = controller.getData(input);
+				if (!page) {
+					return;
+				}
+				controller.invalidate(input);
+			});
+	};
 };
 
 const update =
-	(controller: Controller, receiptId: ReceiptsId) =>
+	(controller: Controller, inputs: Input[], receiptId: ReceiptsId) =>
 	(updater: (receipt: Receipt) => Receipt) =>
 		utils.withRef<Receipt | undefined, () => void>((ref) =>
-			updatePages(controller, (page, count) => [
+			updatePages(controller, inputs, (page, count) => [
 				replaceInArray(
 					page,
 					(receipt) => receipt.id === receiptId,
@@ -103,15 +128,19 @@ const update =
 			]),
 		);
 
-const add = (controller: Controller, nextReceipt: Receipt) =>
-	updatePages(controller, (page, count, input) => [
+const add = (controller: Controller, inputs: Input[], nextReceipt: Receipt) =>
+	updatePages(controller, inputs, (page, count, input) => [
 		[...page, nextReceipt].sort(getSortByDate(input)).slice(0, input.limit),
 		count + 1,
 	]);
 
-const remove = (controller: Controller, receiptId: ReceiptsId) =>
+const remove = (
+	controller: Controller,
+	inputs: Input[],
+	receiptId: ReceiptsId,
+) =>
 	utils.withRef<Receipt | undefined, () => void>((ref) =>
-		updatePages(controller, (page, count) => {
+		updatePages(controller, inputs, (page, count) => {
 			const nextPage = removeFromArray(page, (receipt) => {
 				const match = receipt.id === receiptId;
 				if (!match) {
@@ -127,23 +156,31 @@ const remove = (controller: Controller, receiptId: ReceiptsId) =>
 		}),
 	);
 
-export const getController = (trpc: TRPCReactContext) => {
-	const controller = utils.createController(trpc, "receipts.getPaged");
+export const getController = ({
+	trpcContext,
+	queryClient,
+}: utils.ControllerContext) => {
+	const controller = trpcContext.receipts.getPaged;
+	const inputs = getPagedInputs(queryClient);
 	return {
-		add: (receipt: Receipt) => add(controller, receipt),
+		add: (receipt: Receipt) => add(controller, inputs, receipt),
 		update: (receiptId: ReceiptsId, updater: utils.UpdateFn<Receipt>) =>
-			update(controller, receiptId)(updater),
-		remove: (receiptId: ReceiptsId) => remove(controller, receiptId),
+			update(controller, inputs, receiptId)(updater),
+		remove: (receiptId: ReceiptsId) => remove(controller, inputs, receiptId),
 	};
 };
 
-export const getRevertController = (trpc: TRPCReactContext) => {
-	const controller = utils.createController(trpc, "receipts.getPaged");
+export const getRevertController = ({
+	trpcContext,
+	queryClient,
+}: utils.ControllerContext) => {
+	const controller = trpcContext.receipts.getPaged;
+	const inputs = getPagedInputs(queryClient);
 	return {
 		add: (receipt: Receipt) =>
 			utils.applyWithRevert(
-				() => add(controller, receipt),
-				() => remove(controller, receipt.id),
+				() => add(controller, inputs, receipt),
+				() => remove(controller, inputs, receipt.id),
 				(invalidatePages) => invalidatePages(),
 			),
 		update: (
@@ -152,7 +189,7 @@ export const getRevertController = (trpc: TRPCReactContext) => {
 			revertUpdater: utils.SnapshotFn<Receipt>,
 		) =>
 			utils.applyUpdateFnWithRevert(
-				update(controller, receiptId),
+				update(controller, inputs, receiptId),
 				updater,
 				({ current }) => {
 					if (current) {
@@ -164,10 +201,10 @@ export const getRevertController = (trpc: TRPCReactContext) => {
 			),
 		remove: (receiptId: ReceiptsId) =>
 			utils.applyWithRevert(
-				() => remove(controller, receiptId),
+				() => remove(controller, inputs, receiptId),
 				({ current: receipt }) => {
 					if (receipt) {
-						return add(controller, receipt);
+						return add(controller, inputs, receipt);
 					}
 					return id;
 				},

@@ -9,10 +9,10 @@ export const options: UseContextedMutationOptions<
 	{ receiptId: ReceiptsId; selfAccountId: AccountsId; resolvedStatus: boolean }
 > = {
 	onMutate:
-		(trpcContext, { receiptId, selfAccountId, resolvedStatus }) =>
+		(controllerContext, { receiptId, selfAccountId, resolvedStatus }) =>
 		({ userId }) =>
 			mergeUpdaterResults(
-				cache.receiptItems.updateRevert(trpcContext, {
+				cache.receiptItems.updateRevert(controllerContext, {
 					getReceiptItem: noop,
 					getReceiptParticipant: (controller) =>
 						controller.remove(receiptId, userId),
@@ -20,7 +20,7 @@ export const options: UseContextedMutationOptions<
 						controller.removeByUser(receiptId, userId),
 				}),
 				userId === selfAccountId
-					? cache.receipts.updateRevert(trpcContext, {
+					? cache.receipts.updateRevert(controllerContext, {
 							get: (controller) =>
 								controller.update(
 									receiptId,

@@ -1,5 +1,4 @@
 import * as utils from "app/cache/utils";
-import { TRPCReactContext } from "app/trpc";
 
 import * as get from "./get";
 import * as getName from "./get-name";
@@ -12,5 +11,5 @@ export const { updateRevert, update } = utils.getUpdaters({
 	getPaged,
 });
 
-export const invalidateSuggest = (trpc: TRPCReactContext) =>
-	suggest.getController(trpc).invalidate();
+export const invalidateSuggest = (controllerContext: utils.ControllerContext) =>
+	suggest.getController(controllerContext).invalidate();

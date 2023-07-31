@@ -8,9 +8,9 @@ export const options: UseContextedMutationOptions<
 	{ selfAccountId: AccountsId }
 > = {
 	onSuccess:
-		(trpcContext, { selfAccountId }) =>
+		(controllerContext, { selfAccountId }) =>
 		(id, variables) => {
-			cache.receipts.update(trpcContext, {
+			cache.receipts.update(controllerContext, {
 				getPaged: (controller) => {
 					controller.add({
 						id,

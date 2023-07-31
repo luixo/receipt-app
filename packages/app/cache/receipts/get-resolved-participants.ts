@@ -8,7 +8,7 @@ import {
 } from "app/utils/array";
 import { ReceiptsId, UsersId } from "next-app/db/models";
 
-type Controller = utils.GenericController<"receipts.getResolvedParticipants">;
+type Controller = TRPCReactContext["receipts"]["getResolvedParticipants"];
 
 type ReceiptParticipants = TRPCQueryOutput<"receipts.getResolvedParticipants">;
 type ReceiptParticipant = ReceiptParticipants[number];
@@ -17,32 +17,23 @@ const updateItems =
 	(controller: Controller, receiptId: ReceiptsId) =>
 	(updater: utils.UpdateFn<ReceiptParticipants>) =>
 		utils.withRef<ReceiptParticipants | undefined>((ref) => {
-			controller.update((input, amount) => {
-				if (input.receiptId !== receiptId) {
-					return;
-				}
-				ref.current = amount;
-				return updater(amount);
-			});
+			ref.current = controller.getData({ receiptId });
+			controller.setData({ receiptId }, (amount) =>
+				amount === undefined ? undefined : updater(amount),
+			);
 		}).current;
 
 const upsert = (
 	controller: Controller,
 	receiptId: ReceiptsId,
 	items: ReceiptParticipants,
-) => controller.upsert({ receiptId }, items);
+) => controller.setData({ receiptId }, items);
 
 const invalidate = (controller: Controller, receiptId: ReceiptsId) =>
-	utils.withRef<ReceiptParticipants | undefined>((ref) =>
-		controller.invalidate((input, participants) => {
-			const match = input.receiptId === receiptId;
-			if (!match) {
-				return false;
-			}
-			ref.current = participants;
-			return true;
-		}),
-	).current;
+	utils.withRef<ReceiptParticipants | undefined>((ref) => {
+		ref.current = controller.getData({ receiptId });
+		controller.invalidate({ receiptId });
+	}).current;
 
 const add = (
 	controller: Controller,
@@ -90,11 +81,8 @@ const update =
 			),
 		).current;
 
-export const getController = (trpc: TRPCReactContext) => {
-	const controller = utils.createController(
-		trpc,
-		"receipts.getResolvedParticipants",
-	);
+export const getController = ({ trpcContext }: utils.ControllerContext) => {
+	const controller = trpcContext.receipts.getResolvedParticipants;
 	return {
 		update: (
 			receiptId: ReceiptsId,
@@ -109,11 +97,10 @@ export const getController = (trpc: TRPCReactContext) => {
 	};
 };
 
-export const getRevertController = (trpc: TRPCReactContext) => {
-	const controller = utils.createController(
-		trpc,
-		"receipts.getResolvedParticipants",
-	);
+export const getRevertController = ({
+	trpcContext,
+}: utils.ControllerContext) => {
+	const controller = trpcContext.receipts.getResolvedParticipants;
 	return {
 		update: (
 			receiptId: ReceiptsId,

@@ -8,7 +8,7 @@ import {
 } from "app/utils/array";
 import { DebtsId } from "next-app/db/models";
 
-type Controller = utils.GenericController<"debts.getIntentions">;
+type Controller = TRPCReactContext["debts"]["getIntentions"];
 
 type DebtsIntentions = TRPCQueryOutput<"debts.getIntentions">;
 type Intention = DebtsIntentions[number];
@@ -17,7 +17,10 @@ const updateIntentions = (
 	controller: Controller,
 	updater: (intentions: Intention[]) => Intention[],
 ) =>
-	controller.update((_input, prevIntentions) => {
+	controller.setData(undefined, (prevIntentions) => {
+		if (!prevIntentions) {
+			return;
+		}
 		const nextIntentions = updater(prevIntentions);
 		return nextIntentions === prevIntentions ? prevIntentions : nextIntentions;
 	});
@@ -92,15 +95,13 @@ const add =
 		addIntention(controller, intention, index);
 
 const invalidate = (controller: Controller) => () =>
-	utils.withRef<Intention[] | undefined>((ref) =>
-		controller.invalidate((_input, participants) => {
-			ref.current = participants;
-			return true;
-		}),
-	).current;
+	utils.withRef<Intention[] | undefined>((ref) => {
+		ref.current = controller.getData();
+		controller.invalidate();
+	}).current;
 
-export const getController = (trpc: TRPCReactContext) => {
-	const controller = utils.createController(trpc, "debts.getIntentions");
+export const getController = ({ trpcContext }: utils.ControllerContext) => {
+	const controller = trpcContext.debts.getIntentions;
 	return {
 		update: update(controller),
 		add: add(controller),
@@ -109,8 +110,10 @@ export const getController = (trpc: TRPCReactContext) => {
 	};
 };
 
-export const getRevertController = (trpc: TRPCReactContext) => {
-	const controller = utils.createController(trpc, "debts.getIntentions");
+export const getRevertController = ({
+	trpcContext,
+}: utils.ControllerContext) => {
+	const controller = trpcContext.debts.getIntentions;
 	return {
 		update: updateRevert(controller),
 		add: addRevert(controller),

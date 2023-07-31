@@ -1,33 +1,29 @@
 import * as utils from "app/cache/utils";
 import { TRPCQueryOutput, TRPCReactContext } from "app/trpc";
 
-type Controller = utils.GenericController<"receipts.getNonResolvedAmount">;
+type Controller = TRPCReactContext["receipts"]["getNonResolvedAmount"];
 
 type Amount = TRPCQueryOutput<"receipts.getNonResolvedAmount">;
 
 const update = (controller: Controller) => (updater: utils.UpdateFn<Amount>) =>
 	utils.withRef<Amount | undefined>((ref) => {
-		controller.update((_input, amount) => {
-			ref.current = amount;
-			return updater(amount);
-		});
+		ref.current = controller.getData();
+		controller.setData(undefined, (amount) =>
+			amount === undefined ? undefined : updater(amount),
+		);
 	}).current;
 
-export const getController = (trpc: TRPCReactContext) => {
-	const controller = utils.createController(
-		trpc,
-		"receipts.getNonResolvedAmount",
-	);
+export const getController = ({ trpcContext }: utils.ControllerContext) => {
+	const controller = trpcContext.receipts.getNonResolvedAmount;
 	return {
 		update: (updater: utils.UpdateFn<Amount>) => update(controller)(updater),
 	};
 };
 
-export const getRevertController = (trpc: TRPCReactContext) => {
-	const controller = utils.createController(
-		trpc,
-		"receipts.getNonResolvedAmount",
-	);
+export const getRevertController = ({
+	trpcContext,
+}: utils.ControllerContext) => {
+	const controller = trpcContext.receipts.getNonResolvedAmount;
 	return {
 		update: (
 			updater: utils.UpdateFn<Amount>,

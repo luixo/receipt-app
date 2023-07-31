@@ -1,15 +1,15 @@
 import React from "react";
 
-import { MutationOptions } from "@tanstack/react-query";
+import { MutationOptions, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 
+import { ControllerContext } from "app/cache/utils";
 import {
 	trpc,
 	TRPCError,
 	TRPCMutationInput,
 	TRPCMutationKey,
 	TRPCMutationOutput,
-	TRPCReactContext,
 } from "app/trpc";
 import { Exact, MaybeAddElementToArray } from "app/utils/types";
 
@@ -41,7 +41,7 @@ type WrappedMutationOptions<
 type ToastArgs<Context> = MaybeAddElementToArray<[], Context>;
 
 type Contexts<Context = undefined> = MaybeAddElementToArray<
-	[TRPCReactContext],
+	[ControllerContext],
 	Context
 >;
 
@@ -124,8 +124,10 @@ export const useTrpcMutationOptions = <
 	const { context, onError, onMutate, onSettled, onSuccess, ...rest } =
 		options || {};
 	const trpcContext = trpc.useContext();
+	const queryClient = useQueryClient();
 	return React.useMemo(() => {
-		const trpcArgs = [trpcContext, context] as Contexts<Context>;
+		const controllerContext = { queryClient, trpcContext };
+		const trpcArgs = [controllerContext, context] as Contexts<Context>;
 		const toastArgs = [context] as ToastArgs<Context>;
 		return {
 			onMutate: async (...args) => {
@@ -192,6 +194,7 @@ export const useTrpcMutationOptions = <
 		};
 	}, [
 		trpcContext,
+		queryClient,
 		context,
 		onMutate,
 		onError,

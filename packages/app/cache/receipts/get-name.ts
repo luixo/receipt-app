@@ -2,7 +2,7 @@ import * as utils from "app/cache/utils";
 import { TRPCQueryOutput, TRPCReactContext } from "app/trpc";
 import { ReceiptsId } from "next-app/db/models";
 
-type Controller = utils.GenericController<"receipts.getName">;
+type Controller = TRPCReactContext["receipts"]["getName"];
 
 type ReceiptName = TRPCQueryOutput<"receipts.getName">;
 
@@ -10,21 +10,16 @@ const uspert = (
 	controller: Controller,
 	receiptId: ReceiptsId,
 	name: ReceiptName,
-) => controller.upsert({ id: receiptId }, name);
+) => controller.setData({ id: receiptId }, name);
 
 const remove = (controller: Controller, receiptId: ReceiptsId) =>
 	utils.withRef<ReceiptName | undefined>((ref) => {
-		controller.invalidate((input, receipt) => {
-			if (input.id !== receiptId) {
-				return false;
-			}
-			ref.current = receipt;
-			return true;
-		});
+		ref.current = controller.getData({ id: receiptId });
+		controller.invalidate({ id: receiptId });
 	}).current;
 
-export const getController = (trpc: TRPCReactContext) => {
-	const controller = utils.createController(trpc, "receipts.getName");
+export const getController = ({ trpcContext }: utils.ControllerContext) => {
+	const controller = trpcContext.receipts.getName;
 	return {
 		upsert: (receiptId: ReceiptsId, name: ReceiptName) =>
 			uspert(controller, receiptId, name),
@@ -32,8 +27,10 @@ export const getController = (trpc: TRPCReactContext) => {
 	};
 };
 
-export const getRevertController = (trpc: TRPCReactContext) => {
-	const controller = utils.createController(trpc, "receipts.getName");
+export const getRevertController = ({
+	trpcContext,
+}: utils.ControllerContext) => {
+	const controller = trpcContext.receipts.getName;
 	return {
 		upsert: (receiptId: ReceiptsId, name: ReceiptName) =>
 			utils.applyWithRevert(

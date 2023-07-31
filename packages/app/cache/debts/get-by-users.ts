@@ -2,10 +2,9 @@ import * as utils from "app/cache/utils";
 import { TRPCQueryOutput, TRPCReactContext } from "app/trpc";
 import { upsertInArray } from "app/utils/array";
 import { CurrencyCode } from "app/utils/currency";
-import { alwaysTrue } from "app/utils/utils";
 import { UsersId } from "next-app/db/models";
 
-type Controller = utils.GenericController<"debts.getByUsers">;
+type Controller = TRPCReactContext["debts"]["getByUsers"];
 
 type AllDebts = TRPCQueryOutput<"debts.getByUsers">;
 type Debts = AllDebts[number]["debts"];
@@ -16,19 +15,21 @@ const updateUserDebts = (
 	userId: UsersId,
 	updater: (debts: Debts) => Debts,
 ) =>
-	controller.update((_input, prevData) =>
-		upsertInArray<(typeof prevData)[number]>(
-			prevData,
-			(debtsEntry) => debtsEntry.userId === userId,
-			(user) => {
-				const nextDebts = updater(user.debts);
-				if (nextDebts === user.debts) {
-					return user;
-				}
-				return { ...user, debts: nextDebts };
-			},
-			{ userId, debts: [] },
-		).filter((userDebts) => userDebts.debts.length !== 0),
+	controller.setData(undefined, (prevData) =>
+		prevData
+			? upsertInArray<(typeof prevData)[number]>(
+					prevData,
+					(debtsEntry) => debtsEntry.userId === userId,
+					(user) => {
+						const nextDebts = updater(user.debts);
+						if (nextDebts === user.debts) {
+							return user;
+						}
+						return { ...user, debts: nextDebts };
+					},
+					{ userId, debts: [] },
+			  ).filter((userDebts) => userDebts.debts.length !== 0)
+			: undefined,
 	);
 
 const updateCurrencyDebts =
@@ -52,11 +53,10 @@ const updateCurrencyDebts =
 			);
 		}).current?.sum;
 
-const invalidate = (controller: Controller) => () =>
-	controller.invalidate(alwaysTrue);
+const invalidate = (controller: Controller) => () => controller.invalidate();
 
-export const getController = (trpc: TRPCReactContext) => {
-	const controller = utils.createController(trpc, "debts.getByUsers");
+export const getController = ({ trpcContext }: utils.ControllerContext) => {
+	const controller = trpcContext.debts.getByUsers;
 	return {
 		update: (
 			userId: UsersId,
@@ -67,8 +67,10 @@ export const getController = (trpc: TRPCReactContext) => {
 	};
 };
 
-export const getRevertController = (trpc: TRPCReactContext) => {
-	const controller = utils.createController(trpc, "debts.getByUsers");
+export const getRevertController = ({
+	trpcContext,
+}: utils.ControllerContext) => {
+	const controller = trpcContext.debts.getByUsers;
 	return {
 		update: (
 			userId: UsersId,

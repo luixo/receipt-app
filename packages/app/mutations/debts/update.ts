@@ -196,8 +196,8 @@ export const options: UseContextedMutationOptions<
 		receiptId: ReceiptsId | null;
 	}
 > = {
-	onMutate: (trpcContext, currData) => (updateObject) =>
-		cache.debts.updateRevert(trpcContext, {
+	onMutate: (controllerContext, currData) => (updateObject) =>
+		cache.debts.updateRevert(controllerContext, {
 			getByUsers: (controller) =>
 				controller.update(
 					currData.userId,
@@ -228,12 +228,12 @@ export const options: UseContextedMutationOptions<
 				return controller.remove(updateObject.id);
 			},
 		}),
-	onSuccess: (trpcContext, currData) => (result, updateObject) => {
+	onSuccess: (controllerContext, currData) => (result, updateObject) => {
 		if (!result) {
 			return;
 		}
 		const { lockedTimestamp } = result;
-		cache.debts.update(trpcContext, {
+		cache.debts.update(controllerContext, {
 			getByUsers: noop,
 			getUser: (controller) =>
 				controller.update(currData.userId, updateObject.id, (debt) => ({

@@ -12,10 +12,10 @@ export const options: UseContextedMutationOptions<
 	ReceiptsId,
 	ReceiptItemsId
 > = {
-	onMutate: (trpcContext, receiptId) => (variables) => {
+	onMutate: (controllerContext, receiptId) => (variables) => {
 		const temporaryId = v4();
 		return {
-			...cache.receiptItems.updateRevert(trpcContext, {
+			...cache.receiptItems.updateRevert(controllerContext, {
 				getReceiptItem: (controller) =>
 					controller.add(receiptId, {
 						id: temporaryId,
@@ -31,15 +31,19 @@ export const options: UseContextedMutationOptions<
 			context: temporaryId,
 		};
 	},
-	onSuccess: (trpcContext, receiptId) => (id, _variables, temporaryId) => {
-		cache.receiptItems.update(trpcContext, {
-			getReceiptItem: (controller) =>
-				controller.update(receiptId, temporaryId!, (item) => ({ ...item, id })),
-			getReceiptParticipant: noop,
-			getReceiptItemPart: noop,
-		});
-		updateReceiptSum(trpcContext, receiptId);
-	},
+	onSuccess:
+		(controllerContext, receiptId) => (id, _variables, temporaryId) => {
+			cache.receiptItems.update(controllerContext, {
+				getReceiptItem: (controller) =>
+					controller.update(receiptId, temporaryId!, (item) => ({
+						...item,
+						id,
+					})),
+				getReceiptParticipant: noop,
+				getReceiptItemPart: noop,
+			});
+			updateReceiptSum(controllerContext, receiptId);
+		},
 	errorToastOptions: () => (error, variables) => ({
 		text: `Error adding item "${variables.name}": ${error.message}`,
 	}),

@@ -1,14 +1,14 @@
 import React from "react";
 
-import { UseQueryOptions } from "@tanstack/react-query";
+import { useQueryClient, UseQueryOptions } from "@tanstack/react-query";
 
+import { ControllerContext } from "app/cache/utils";
 import {
 	trpc,
 	TRPCError,
 	TRPCQueryInput,
 	TRPCQueryKey,
 	TRPCQueryOutput,
-	TRPCReactContext,
 } from "app/trpc";
 import { MaybeAddElementToArray } from "app/utils/types";
 
@@ -20,7 +20,7 @@ export type TRPCQueryOptions<Path extends TRPCQueryKey> = UseQueryOptions<
 >;
 
 type Contexts<Context = undefined> = MaybeAddElementToArray<
-	[TRPCReactContext],
+	[ControllerContext],
 	Context
 >;
 
@@ -59,8 +59,10 @@ export const useTrpcQueryOptions = <
 	} & TRPCQueryOptions<Path> = {},
 ): TRPCQueryOptions<Path> => {
 	const trpcContext = trpc.useContext();
+	const queryClient = useQueryClient();
 	return React.useMemo(() => {
-		const trpcArgs = [trpcContext, context] as any;
+		const controllerContext = { queryClient, trpcContext };
+		const trpcArgs = [controllerContext, context] as Contexts<Context>;
 		return {
 			onError: (...args) => {
 				onError?.(...args);
@@ -78,6 +80,7 @@ export const useTrpcQueryOptions = <
 		};
 	}, [
 		trpcContext,
+		queryClient,
 		context,
 		onError,
 		onSettled,

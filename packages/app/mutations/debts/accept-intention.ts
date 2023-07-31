@@ -25,9 +25,9 @@ export const options: UseContextedMutationOptions<
 	}
 > = {
 	onMutate:
-		(trpcContext, { userId, intended, current }) =>
+		(controllerContext, { userId, intended, current }) =>
 		(updateObject) =>
-			cache.debts.updateRevert(trpcContext, {
+			cache.debts.updateRevert(controllerContext, {
 				getByUsers: (controller) =>
 					mergeUpdaterResults(
 						...[
@@ -116,12 +116,12 @@ export const options: UseContextedMutationOptions<
 				getIntentions: (controller) => controller.remove(updateObject.id),
 			}),
 	onSuccess:
-		(trpcContext, { userId, current }) =>
+		(controllerContext, { userId, current }) =>
 		({ created }, updateObject) => {
 			if (current) {
 				return;
 			}
-			cache.debts.update(trpcContext, {
+			cache.debts.update(controllerContext, {
 				getByUsers: noop,
 				getUser: (controller) =>
 					controller.update(userId, updateObject.id, (debt) => ({

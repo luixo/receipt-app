@@ -9,7 +9,7 @@ import {
 import { alwaysTrue } from "app/utils/utils";
 import { ReceiptItemsId, ReceiptsId, UsersId } from "next-app/db/models";
 
-type Controller = utils.GenericController<"receiptItems.get">;
+type Controller = TRPCReactContext["receiptItems"]["get"];
 
 type ReceiptItemsResult = TRPCQueryOutput<"receiptItems.get">;
 type ReceiptItem = ReceiptItemsResult["items"][number];
@@ -26,8 +26,8 @@ const updateParts = (
 	predicate: (item: ReceiptItem) => boolean,
 	updater: PartsUpdateFn,
 ) =>
-	controller.update((input, data) => {
-		if (input.receiptId !== receiptId) {
+	controller.setData({ receiptId }, (data) => {
+		if (!data) {
 			return;
 		}
 		const nextItems = replaceInArray(data.items, predicate, (item) => {
@@ -119,8 +119,8 @@ const update =
 			),
 		).current;
 
-export const getController = (trpc: TRPCReactContext) => {
-	const controller = utils.createController(trpc, "receiptItems.get");
+export const getController = ({ trpcContext }: utils.ControllerContext) => {
+	const controller = trpcContext.receiptItems.get;
 	return {
 		update: (
 			receiptId: ReceiptsId,
@@ -141,8 +141,10 @@ export const getController = (trpc: TRPCReactContext) => {
 	};
 };
 
-export const getRevertController = (trpc: TRPCReactContext) => {
-	const controller = utils.createController(trpc, "receiptItems.get");
+export const getRevertController = ({
+	trpcContext,
+}: utils.ControllerContext) => {
+	const controller = trpcContext.receiptItems.get;
 	return {
 		update: (
 			receiptId: ReceiptsId,

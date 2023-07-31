@@ -8,9 +8,9 @@ export const options: UseContextedMutationOptions<
 	{ receiptId: ReceiptsId; selfAccountId: AccountsId }
 > = {
 	onSuccess:
-		(trpcContext, { receiptId, selfAccountId }) =>
+		(controllerContext, { receiptId, selfAccountId }) =>
 		(result) => {
-			cache.receiptItems.update(trpcContext, {
+			cache.receiptItems.update(controllerContext, {
 				getReceiptItem: noop,
 				getReceiptParticipant: (controller) => {
 					result.forEach((item) =>
@@ -33,7 +33,7 @@ export const options: UseContextedMutationOptions<
 				(resultItem) => resultItem.role === "owner",
 			);
 			if (selfParticipating) {
-				cache.receipts.update(trpcContext, {
+				cache.receipts.update(controllerContext, {
 					get: (controller) =>
 						controller.update(receiptId, (item) => ({
 							...item,

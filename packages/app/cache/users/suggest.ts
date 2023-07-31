@@ -1,14 +1,12 @@
 import * as utils from "app/cache/utils";
 import { TRPCReactContext } from "app/trpc";
-import { alwaysTrue } from "app/utils/utils";
 
-type Controller = utils.GenericController<"users.suggest">;
+type Controller = TRPCReactContext["users"]["suggest"];
 
-const invalidate = (controller: Controller) =>
-	controller.invalidate(alwaysTrue);
+const invalidate = (controller: Controller) => controller.invalidate();
 
-export const getController = (trpc: TRPCReactContext) => {
-	const controller = utils.createController(trpc, "users.suggest");
+export const getController = ({ trpcContext }: utils.ControllerContext) => {
+	const controller = trpcContext.users.suggest;
 	return {
 		invalidate: () => invalidate(controller),
 	};

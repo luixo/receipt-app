@@ -85,8 +85,8 @@ export const options: UseContextedMutationOptions<
 	"receiptParticipants.update",
 	{ selfUserId: UsersId }
 > = {
-	onMutate: (trpcContext) => (variables) =>
-		cache.receiptItems.updateRevert(trpcContext, {
+	onMutate: (controllerContext) => (variables) =>
+		cache.receiptItems.updateRevert(controllerContext, {
 			getReceiptItem: noop,
 			getReceiptParticipant: (controller) =>
 				controller.update(
@@ -98,10 +98,10 @@ export const options: UseContextedMutationOptions<
 			getReceiptItemPart: noop,
 		}),
 	onSuccess:
-		(trpcContext, { selfUserId }) =>
+		(controllerContext, { selfUserId }) =>
 		(_result, variables) => {
 			if (selfUserId === variables.userId) {
-				cache.receipts.update(trpcContext, {
+				cache.receipts.update(controllerContext, {
 					get: (controller) =>
 						controller.update(
 							variables.receiptId,

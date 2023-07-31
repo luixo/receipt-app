@@ -139,8 +139,8 @@ const getPagedRevert =
 	};
 
 export const options: UseContextedMutationOptions<"receipts.update"> = {
-	onMutate: (trpcContext) => (updateObject) =>
-		cache.receipts.updateRevert(trpcContext, {
+	onMutate: (controllerContext) => (updateObject) =>
+		cache.receipts.updateRevert(controllerContext, {
 			get: (controller) =>
 				controller.update(
 					updateObject.id,
@@ -161,8 +161,8 @@ export const options: UseContextedMutationOptions<"receipts.update"> = {
 			},
 			getResolvedParticipants: noop,
 		}),
-	onSuccess: (trpcContext) => (result, updateObject) => {
-		cache.receipts.update(trpcContext, {
+	onSuccess: (controllerContext) => (result, updateObject) => {
+		cache.receipts.update(controllerContext, {
 			get: (controller) =>
 				controller.update(
 					updateObject.id,

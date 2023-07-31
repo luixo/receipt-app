@@ -1,91 +1,33 @@
 import React from "react";
 
+import { QueryClient, QueryKey } from "@tanstack/react-query";
+
 import {
 	TRPCQueryInput,
 	TRPCQueryKey,
 	TRPCQueryOutput,
 	TRPCReactContext,
-	UpdateArgs,
-	InvalidateArgs,
 	TRPCSplitQueryKey,
 } from "app/trpc";
 import { nonNullishGuard } from "app/utils/utils";
 
-export type GenericController<Key extends TRPCQueryKey> = {
-	get: () => (readonly [TRPCQueryInput<Key>, TRPCQueryOutput<Key>])[];
-	invalidate: (
-		fn: (
-			input: TRPCQueryInput<Key>,
-			prev: TRPCQueryOutput<Key>,
-			...args: InvalidateArgs
-		) => boolean,
-		...args: Omit<InvalidateArgs, "predicate">
-	) => void;
-	update: (
-		fn: (
-			input: TRPCQueryInput<Key>,
-			prev: TRPCQueryOutput<Key>,
-		) => TRPCQueryOutput<Key> | undefined,
-		...args: UpdateArgs
-	) => void;
-	upsert: (
-		input: TRPCQueryInput<Key>,
-		data: TRPCQueryOutput<Key>,
-		...args: UpdateArgs
-	) => void;
-};
+type QueryClientData<Key extends TRPCQueryKey> = [
+	[
+		TRPCSplitQueryKey<Key>,
+		TRPCQueryInput<Key> extends undefined
+			? undefined
+			: { input: TRPCQueryInput<Key>; type: "infinite" | "query" },
+	],
+	TRPCQueryOutput<Key>,
+];
 
-export const createController = <Key extends TRPCQueryKey>(
-	trpc: TRPCReactContext,
-	key: Key,
-): GenericController<Key> => {
-	const splitKey = key.split(".") as TRPCSplitQueryKey<Key>;
-	const getQueries = () =>
-		(
-			trpc.queryClient.getQueriesData([splitKey]) as [
-				[
-					TRPCSplitQueryKey<Key>,
-					TRPCQueryInput<Key> extends undefined
-						? undefined
-						: { input: TRPCQueryInput<Key>; type: "infinite" | "query" },
-				],
-				TRPCQueryOutput<Key>,
-			][]
-		).map(([[, inputWrapper], data]) => [inputWrapper, data] as const);
-	return {
-		get: () =>
-			getQueries().map(
-				([inputWrapper, data]) => [inputWrapper?.input, data] as const,
-			),
-		invalidate: (fn, ...args) =>
-			getQueries()
-				.filter(([inputWrapper, output]) => fn(inputWrapper?.input, output))
-				.forEach(([inputWrapper]) =>
-					trpc.queryClient.invalidateQueries([splitKey, inputWrapper], {
-						exact: true,
-						...args,
-					}),
-				),
-		update: (fn, ...args) => {
-			getQueries().forEach(([inputWrapper, prevData]) => {
-				if (!prevData) {
-					return;
-				}
-				trpc.queryClient.setQueryData(
-					[splitKey, inputWrapper],
-					fn(inputWrapper?.input, prevData),
-					...args,
-				);
-			});
-		},
-		upsert: (input, data, ...args) =>
-			trpc.queryClient.setQueryData(
-				input === undefined ? [splitKey] : [splitKey, { input, type: "query" }],
-				data,
-				...args,
-			),
-	};
-};
+export const getAllInputs = <Key extends TRPCQueryKey>(
+	queryClient: QueryClient,
+	queryKey: QueryKey,
+) =>
+	(queryClient.getQueriesData(queryKey) as QueryClientData<Key>[]).map(
+		(query) => query[0][1]?.input,
+	) as TRPCQueryInput<Key>[];
 
 type EmptyFn = () => void;
 
@@ -97,22 +39,10 @@ export type SnapshotFn<Value, ReturnValue = Value> = (
 	snapshot: Value,
 ) => UpdateFn<Value, ReturnValue>;
 
-export type UpdaterRevertResult = {
+type UpdaterRevertResult = {
 	revertFn?: EmptyFn;
 	finalizeFn?: EmptyFn;
 };
-
-export type UpdateRevertOption<
-	GetController extends {
-		getRevertController: (trpc: TRPCReactContext) => unknown;
-	},
-> = (
-	controller: ReturnType<GetController["getRevertController"]>,
-) => UpdaterRevertResult | undefined;
-
-export type UpdateOption<
-	GetController extends { getController: (trpc: TRPCReactContext) => unknown },
-> = (controller: ReturnType<GetController["getController"]>) => void;
 
 export const createRef = <T>(
 	...args: undefined extends T ? [] : [T]
@@ -189,19 +119,38 @@ export const mergeUpdaterResults = (
 	};
 };
 
+export type ControllerContext = {
+	trpcContext: TRPCReactContext;
+	queryClient: QueryClient;
+};
+
+type UpdateRevertOption<
+	GetController extends {
+		getRevertController: (controllerContext: ControllerContext) => unknown;
+	},
+> = (
+	controller: ReturnType<GetController["getRevertController"]>,
+) => UpdaterRevertResult | undefined;
+
+type UpdateOption<
+	GetController extends {
+		getController: (controllerContext: ControllerContext) => unknown;
+	},
+> = (controller: ReturnType<GetController["getController"]>) => void;
+
 export const getUpdaters = <
 	T extends Record<
 		string,
 		{
-			getRevertController: (trpc: TRPCReactContext) => unknown;
-			getController: (trpc: TRPCReactContext) => unknown;
+			getRevertController: (controllerContext: ControllerContext) => unknown;
+			getController: (controllerContext: ControllerContext) => unknown;
 		}
 	>,
 >(
 	input: T,
 ) => {
 	const updateRevert = (
-		trpc: TRPCReactContext,
+		controllerContext: ControllerContext,
 		options: {
 			[K in keyof T]: UpdateRevertOption<T[K]>;
 		},
@@ -209,20 +158,24 @@ export const getUpdaters = <
 		mergeUpdaterResults(
 			...Object.entries(input).map(([key, { getRevertController }]) =>
 				options[key]!(
-					getRevertController(trpc) as Parameters<(typeof options)[keyof T]>[0],
+					getRevertController(controllerContext) as Parameters<
+						(typeof options)[keyof T]
+					>[0],
 				),
 			),
 		);
 
 	const update = (
-		trpc: TRPCReactContext,
+		controllerContext: ControllerContext,
 		options: {
 			[K in keyof T]: UpdateOption<T[K]>;
 		},
 	) => {
 		Object.entries(input).forEach(([key, { getController }]) => {
 			options[key]!(
-				getController(trpc) as Parameters<(typeof options)[keyof T]>[0],
+				getController(controllerContext) as Parameters<
+					(typeof options)[keyof T]
+				>[0],
 			);
 		});
 	};

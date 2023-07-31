@@ -2,7 +2,7 @@ import * as utils from "app/cache/utils";
 import { TRPCQueryOutput, TRPCReactContext } from "app/trpc";
 import { DebtsId } from "next-app/db/models";
 
-type Controller = utils.GenericController<"debts.get">;
+type Controller = TRPCReactContext["debts"]["get"];
 
 type Debt = TRPCQueryOutput<"debts.get">;
 
@@ -10,8 +10,8 @@ const update =
 	(controller: Controller, debtId: DebtsId) =>
 	(updater: utils.UpdateFn<Debt>) =>
 		utils.withRef<Debt | undefined>((ref) => {
-			controller.update((input, debt) => {
-				if (input.id !== debtId) {
+			controller.setData({ id: debtId }, (debt) => {
+				if (!debt) {
 					return;
 				}
 				ref.current = debt;
@@ -20,21 +20,16 @@ const update =
 		}).current;
 
 const upsert = (controller: Controller, debt: Debt) =>
-	controller.upsert({ id: debt.id }, debt);
+	controller.setData({ id: debt.id }, debt);
 
 const remove = (controller: Controller, debtId: DebtsId) =>
 	utils.withRef<Debt | undefined>((ref) => {
-		controller.invalidate((input, debt) => {
-			if (input.id !== debtId) {
-				return false;
-			}
-			ref.current = debt;
-			return true;
-		});
+		ref.current = controller.getData({ id: debtId });
+		controller.invalidate({ id: debtId });
 	}).current;
 
-export const getController = (trpc: TRPCReactContext) => {
-	const controller = utils.createController(trpc, "debts.get");
+export const getController = ({ trpcContext }: utils.ControllerContext) => {
+	const controller = trpcContext.debts.get;
 	return {
 		update: (debtId: DebtsId, updater: utils.UpdateFn<Debt>) =>
 			update(controller, debtId)(updater),
@@ -45,8 +40,10 @@ export const getController = (trpc: TRPCReactContext) => {
 	};
 };
 
-export const getRevertController = (trpc: TRPCReactContext) => {
-	const controller = utils.createController(trpc, "debts.get");
+export const getRevertController = ({
+	trpcContext,
+}: utils.ControllerContext) => {
+	const controller = trpcContext.debts.get;
 	return {
 		update: (
 			debtId: DebtsId,

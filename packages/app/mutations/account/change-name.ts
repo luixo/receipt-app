@@ -8,9 +8,9 @@ export const options: UseContextedMutationOptions<
 	{ id: AccountsId }
 > = {
 	onMutate:
-		(trpcContext, { id }) =>
+		(controllerContext, { id }) =>
 		(updateObject) =>
-			cache.users.updateRevert(trpcContext, {
+			cache.users.updateRevert(controllerContext, {
 				get: (controller) =>
 					controller.update(
 						// Typesystem doesn't know that we use account id as self user id
@@ -26,9 +26,9 @@ export const options: UseContextedMutationOptions<
 					),
 				getPaged: noop,
 			}),
-	onSuccess: (trpcContext) => (_result, updateObject) => {
-		cache.users.invalidateSuggest(trpcContext);
-		cache.account.update(trpcContext, {
+	onSuccess: (controllerContext) => (_result, updateObject) => {
+		cache.users.invalidateSuggest(controllerContext);
+		cache.account.update(controllerContext, {
 			get: (controller) => {
 				controller.update((account) => ({
 					...account,

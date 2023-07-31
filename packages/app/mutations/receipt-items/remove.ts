@@ -10,15 +10,15 @@ export const options: UseContextedMutationOptions<
 	ReceiptsId
 > = {
 	onMutate:
-		(trpcContext, receiptId) =>
+		(controllerContext, receiptId) =>
 		({ id: removedId }) =>
-			cache.receiptItems.updateRevert(trpcContext, {
+			cache.receiptItems.updateRevert(controllerContext, {
 				getReceiptItem: (controller) => controller.remove(receiptId, removedId),
 				getReceiptParticipant: noop,
 				getReceiptItemPart: noop,
 			}),
-	onSuccess: (trpcContext, receiptId) => () => {
-		updateReceiptSum(trpcContext, receiptId);
+	onSuccess: (controllerContext, receiptId) => () => {
+		updateReceiptSum(controllerContext, receiptId);
 	},
 	errorToastOptions: () => (error) => ({
 		text: `Error removing item: ${error.message}`,

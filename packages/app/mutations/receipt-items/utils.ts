@@ -1,13 +1,15 @@
 import { cache } from "app/cache";
-import { TRPCReactContext } from "app/trpc";
+import * as utils from "app/cache/utils";
 import { noop } from "app/utils/utils";
 import { ReceiptsId } from "next-app/db/models";
 
 export const updateReceiptSum = (
-	trpc: TRPCReactContext,
+	controllerContext: utils.ControllerContext,
 	receiptId: ReceiptsId,
 ) => {
-	const receiptItems = cache.receiptItems.getters(trpc).all.get(receiptId);
+	const receiptItems = cache.receiptItems
+		.getters(controllerContext)
+		.all.get(receiptId);
 	if (!receiptItems) {
 		return;
 	}
@@ -15,7 +17,7 @@ export const updateReceiptSum = (
 		(acc, item) => acc + item.price * item.quantity,
 		0,
 	);
-	cache.receipts.update(trpc, {
+	cache.receipts.update(controllerContext, {
 		get: (controller) =>
 			controller.update(receiptId, (receipt) => ({
 				...receipt,

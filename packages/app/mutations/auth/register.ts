@@ -6,9 +6,9 @@ export const options: UseContextedMutationOptions<
 	{ name: string }
 > = {
 	onSuccess:
-		(trpcContext, { name }) =>
+		(controllerContext, { name }) =>
 		({ account }) =>
-			cache.account.update(trpcContext, {
+			cache.account.update(controllerContext, {
 				get: (controller) =>
 					controller.upsert({
 						user: { name },

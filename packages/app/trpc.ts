@@ -2,11 +2,9 @@ import {
 	InvalidateOptions,
 	InvalidateQueryFilters,
 	Query,
-	QueryClient,
 	SetDataOptions,
 	UseInfiniteQueryResult,
 	UseMutationResult,
-	useQueryClient,
 	UseQueryResult,
 } from "@tanstack/react-query";
 import type { TRPCClientErrorLike } from "@trpc/react-query";
@@ -63,38 +61,11 @@ type TRPCMutationValues = UnionToIntersection<
 	FlattenObject<AnyProcedure, MutationsProcedureValues>
 >;
 
-export type TRPCReactContext = ReturnType<(typeof rawTrpc)["useContext"]> & {
-	queryClient: QueryClient;
-};
-
 // anything router-specific goes below
 
-const rawTrpc = createTRPCReact<AppRouter>();
-export const trpc = new Proxy(rawTrpc, {
-	get: (targetTrpc, propTrpc) => {
-		if (propTrpc === "useContext") {
-			const useContextResult = targetTrpc[propTrpc];
-			return new Proxy(useContextResult, {
-				apply: (useContextTarget, thisObj) => {
-					// eslint-disable-next-line react-hooks/rules-of-hooks
-					const queryClient = useQueryClient();
-					const result = useContextTarget.apply(thisObj);
-					return new Proxy(result as any, {
-						get: (targetCtx, propCtx) => {
-							if (propCtx === "queryClient") {
-								return queryClient;
-							}
-							return targetCtx[propCtx as keyof typeof targetCtx];
-						},
-					});
-				},
-			});
-		}
-		return targetTrpc[propTrpc as keyof typeof targetTrpc];
-	},
-}) as Omit<typeof rawTrpc, "useContext"> & {
-	useContext: () => TRPCReactContext;
-};
+export const trpc = createTRPCReact<AppRouter>();
+
+export type TRPCReactContext = ReturnType<(typeof trpc)["useContext"]>;
 
 export type TRPCError = TRPCClientErrorLike<AppRouter>;
 

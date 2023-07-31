@@ -1,6 +1,7 @@
 import React from "react";
 
 import { Button, Loading, Spacer } from "@nextui-org/react";
+import { useQueryClient } from "@tanstack/react-query";
 
 import { QueryErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
@@ -21,11 +22,11 @@ type InnerProps = {
 const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 	const router = useRouter();
 
-	const trpcContext = trpc.useContext();
+	const queryClient = useQueryClient();
 	const logoutMutation = trpc.account.logout.useMutation(
 		useTrpcMutationOptions(mutations.account.logout.options, {
 			onSuccess: () => {
-				trpcContext.queryClient.resetQueries();
+				queryClient.resetQueries();
 				router.replace("/");
 			},
 		}),

@@ -1,17 +1,18 @@
 import { cache } from "app/cache";
-import { TRPCMutationOutput, TRPCReactContext } from "app/trpc";
+import { ControllerContext } from "app/cache/utils";
+import { TRPCMutationOutput } from "app/trpc";
 import { noop } from "app/utils/utils";
 import { ReceiptsId } from "next-app/db/models";
 
 export const updateReceiptCacheOnDebtUpdate = (
-	trpcContext: TRPCReactContext,
+	controllerContext: ControllerContext,
 	receiptId: ReceiptsId,
 	receiptTimestamp: Date,
 	updatedDebts: (TRPCMutationOutput<"receipts.updateDebt"> & {
 		deltaAmount: number;
 	})[],
 ) => {
-	cache.receipts.update(trpcContext, {
+	cache.receipts.update(controllerContext, {
 		get: (controller) => {
 			controller.update(receiptId, (receipt) => ({
 				...receipt,
@@ -36,7 +37,7 @@ export const updateReceiptCacheOnDebtUpdate = (
 			lockedTimestamp: receiptTimestamp,
 		};
 		if (updatedDebt.updated) {
-			return cache.debts.update(trpcContext, {
+			return cache.debts.update(controllerContext, {
 				get: (controller) =>
 					controller.update(updatedDebt.debtId, (debt) => ({
 						...debt,
@@ -56,7 +57,7 @@ export const updateReceiptCacheOnDebtUpdate = (
 				getIntentions: (controller) => controller.remove(updatedDebt.debtId),
 			});
 		}
-		return cache.debts.update(trpcContext, {
+		return cache.debts.update(controllerContext, {
 			get: (controller) =>
 				controller.add({
 					id: updatedDebt.debtId,
