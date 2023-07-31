@@ -221,9 +221,9 @@ export const PlannedDebts: React.FC<Props> = ({
 				) : addBatchMutation.error ? (
 					addBatchMutation.error.message
 				) : emptyConvertedDebts.length !== 0 ? (
-					`${emptyConvertedDebts.map(
-						(debt) => debt.currencyCode,
-					)} debt(s) are empty`
+					`${emptyConvertedDebts
+						.map((debt) => debt.currencyCode)
+						.join(", ")} debt(s) are empty`
 				) : debts.length > MAX_BATCH_DEBTS ? (
 					`Cannot send more than ${MAX_BATCH_DEBTS} simultaneously`
 				) : debts.length < MIN_BATCH_DEBTS ? (

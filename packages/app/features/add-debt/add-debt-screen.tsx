@@ -46,7 +46,7 @@ export const AddDebtScreen: AppPage = () => {
 
 	const addMutation = trpc.debts.add.useMutation(
 		useTrpcMutationOptions(mutations.debts.add.options, {
-			onSuccess: (id) => router.replace(`/debts/${id}`),
+			onSuccess: ({ id }) => router.replace(`/debts/${id}`),
 		}),
 	);
 

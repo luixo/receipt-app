@@ -96,7 +96,7 @@ export const Header: React.FC<Props> = ({
 	return (
 		<Wrapper column={verticalLayout} ref={wrapperRef}>
 			<Head>
-				<title>{`RA - ${textChildren || children}`}</title>
+				<title>{`RA - ${textChildren || (children as string)}`}</title>
 			</Head>
 			<Title h2 {...props}>
 				{backHref ? (

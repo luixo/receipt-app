@@ -87,6 +87,7 @@ module.exports = {
 			},
 		],
 		"no-param-reassign": ["error", { props: false }],
+		"@typescript-eslint/restrict-template-expressions": "error",
 	},
 	overrides: [
 		{
