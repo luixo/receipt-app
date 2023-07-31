@@ -23,12 +23,34 @@ export const options: UseContextedMutationOptions<
 			get: undefined,
 			getIntentions: undefined,
 		}),
-	onSuccess: (controllerContext) => (_result, updateObject) => {
+	onSuccess: (controllerContext, currDebt) => (result, updateObject) => {
 		cache.debts.update(controllerContext, {
 			getByUsers: undefined,
 			getUser: undefined,
 			get: (controller) => controller.remove(updateObject.id),
-			getIntentions: undefined,
+			getIntentions: (controller) => {
+				if (!currDebt.their?.lockedTimestamp) {
+					return;
+				}
+				if (
+					currDebt.their.lockedTimestamp.valueOf() ===
+					currDebt.lockedTimestamp?.valueOf()
+				) {
+					controller.add({
+						id: currDebt.id,
+						userId: currDebt.userId,
+						amount: currDebt.amount,
+						currencyCode: currDebt.currencyCode,
+						lockedTimestamp: currDebt.lockedTimestamp,
+						timestamp: currDebt.timestamp,
+						note: currDebt.note,
+						receiptId: currDebt.receiptId,
+					});
+				} else {
+					// We don't know the parameters of counterparty debt, hence we should invalidate intentions
+					controller.invalidate();
+				}
+			},
 		});
 	},
 	mutateToastOptions: {
