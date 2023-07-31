@@ -13,11 +13,13 @@ export const down = async (db: Database) => {
 	await createDebtsSyncIntentionsTable(db);
 	// A poor attempt to restore intentions from less data that we used to have
 	await db
-		// Error are expected as table does not exist anymore
+		// Errors are expected as table does not exist anymore
+		/* eslint-disable @typescript-eslint/ban-ts-comment */
 		// @ts-expect-error
 		.insertInto("debtsSyncIntentions")
 		// @ts-expect-error
 		.columns(["debtId", "ownerAccountId", "lockedTimestamp"])
+		/* eslint-enable @typescript-eslint/ban-ts-comment */
 		.expression((eb) =>
 			eb
 				.selectFrom("debts")

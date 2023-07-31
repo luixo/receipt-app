@@ -116,7 +116,7 @@ export const userItemSchema = z.strictObject({
 		.optional(),
 });
 
-export const fallback = <T extends z.Schema<any>>(
+export const fallback = <T extends z.Schema<unknown>>(
 	schema: T,
 	value: z.infer<T>,
 ): T =>

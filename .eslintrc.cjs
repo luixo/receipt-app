@@ -13,6 +13,8 @@ const getExtraneousDependenciesConfig = (
 
 module.exports = {
 	extends: [
+		"eslint:recommended",
+		"plugin:@typescript-eslint/recommended",
 		"airbnb",
 		"airbnb-typescript",
 		"airbnb/hooks",
@@ -111,6 +113,12 @@ module.exports = {
 		{
 			extends: ["plugin:@typescript-eslint/disable-type-checked"],
 			files: ["*.cjs", "*.js"],
+		},
+		{
+			rules: {
+				"@typescript-eslint/no-var-requires": "off",
+			},
+			files: ["*.js"],
 		},
 	],
 };

@@ -160,7 +160,5 @@ export type TRPCMutationResult<Path extends TRPCMutationKey> =
 		TRPCMutationInput<Path>
 	>;
 
-export type AnyTRPCMutationResult = UseMutationResult<any, TRPCError, any>;
-
 export type InvalidateArgs = [InvalidateQueryFilters?, InvalidateOptions?];
 export type UpdateArgs = [SetDataOptions?];

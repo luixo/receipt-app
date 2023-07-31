@@ -42,9 +42,11 @@ const addResolvedColumn = async (db: Database) => {
 	await db
 		.updateTable("receipts")
 		.set({
-			// Types are different at the moment, so one might expect an error
+			// Error is expected as column does not exist anymore
+			/* eslint-disable @typescript-eslint/ban-ts-comment */
 			// @ts-expect-error
 			resolved: sql`case when "lockedTimestamp" is not null then true else false end`,
+			/* eslint-enable @typescript-eslint/ban-ts-comment */
 		} satisfies ReceiptsUpdateObject)
 		.execute();
 };

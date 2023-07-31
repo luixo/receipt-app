@@ -1,14 +1,12 @@
 import React from "react";
 
 import { Button, Spacer } from "@nextui-org/react";
-import { UseMutationResult } from "@tanstack/react-query";
 import { IoTrashBin as TrashBin } from "react-icons/io5";
 
 import { ConfirmModal } from "app/components/confirm-modal";
-import { TRPCError } from "app/trpc";
 
 type Props = {
-	mutation: UseMutationResult<any, TRPCError, any>;
+	mutation: { isLoading: boolean };
 	onRemove: () => void;
 	children?: string;
 	subtitle?: string;

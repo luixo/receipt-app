@@ -1,15 +1,13 @@
-export const keys = <T extends Record<string, any>>(obj: T): (keyof T)[] =>
+export const keys = <T extends Record<string, unknown>>(obj: T): (keyof T)[] =>
 	Object.keys(obj);
 
-export const values = <T extends Record<string, any>>(
-	obj: T,
-): NonNullable<T[keyof T]>[] => Object.values(obj);
+export const values = <T extends Record<string, unknown>>(obj: T) =>
+	Object.values(obj) as NonNullable<T[keyof T]>[];
 
-export const entries = <T extends Record<string, any>>(
-	obj: T,
-): [keyof T, NonNullable<T[keyof T]>][] => Object.entries(obj);
+export const entries = <T extends Record<string, unknown>>(obj: T) =>
+	Object.entries(obj) as [keyof T, NonNullable<T[keyof T]>][];
 
-export const mapObjectKeys = <Output, T extends Record<string, any>>(
+export const mapObjectKeys = <Output, T extends Record<string, unknown>>(
 	obj: T,
 	mapper: (input: keyof T) => Output,
 ) =>
@@ -18,7 +16,7 @@ export const mapObjectKeys = <Output, T extends Record<string, any>>(
 		{} as Record<keyof T, Output>,
 	);
 
-export const mapObjectValues = <Output, T extends Record<string, any>>(
+export const mapObjectValues = <Output, T extends Record<string, unknown>>(
 	obj: T,
 	mapper: (input: NonNullable<T[keyof T]>) => Output,
 ) =>

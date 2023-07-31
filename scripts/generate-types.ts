@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { recase } from "@kristiandupont/recase";
 import { TableColumn } from "extract-pg-schema";
