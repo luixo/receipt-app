@@ -6,7 +6,6 @@ import {
 	getDebtsResult,
 	upsertDebtFromReceipt,
 } from "next-app/handlers/debts/utils";
-import { upsertDebtIntentionFromReceipt } from "next-app/handlers/debts-sync-intentions/utils";
 import { getValidParticipants } from "next-app/handlers/receipt-items/utils";
 import { getReceiptById } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
@@ -54,24 +53,12 @@ export const procedure = authProcedure
 			ctx.auth.accountId,
 		);
 		const createdTimestamp = new Date();
-		const actualDebts = await database.transaction().execute(async (tx) => {
-			const debts = await upsertDebtFromReceipt(
-				tx,
-				validParticipants,
-				receipt,
-				createdTimestamp,
-			);
-			await upsertDebtIntentionFromReceipt(
-				tx,
-				validParticipants.map((participant, index) => ({
-					...participant,
-					debtId: debts[index]!.debtId,
-				})),
-				ctx.auth.accountId,
-				createdTimestamp,
-			);
-			return debts;
-		});
+		const actualDebts = await upsertDebtFromReceipt(
+			database,
+			validParticipants,
+			receipt,
+			createdTimestamp,
+		);
 		return getDebtsResult(
 			validParticipants,
 			actualDebts,

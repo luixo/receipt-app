@@ -32,10 +32,12 @@ type InnerProps = {
 
 export const showPropagateButton = (participants: DebtParticipant[]) => {
 	const noneIsSyncedYet = participants.every(
-		({ debt }) => !debt || debt.syncStatus.type === "nosync",
+		({ debt }) => !debt?.lockedTimestamp,
 	);
 	const atLeastOneIsSyncable = participants.some(
-		({ debt }) => !debt || debt.syncStatus.type === "nosync",
+		({ debt, sum }) =>
+			sum !== 0 &&
+			(!debt || debt.lockedTimestamp !== debt.their?.lockedTimestamp),
 	);
 	return noneIsSyncedYet && atLeastOneIsSyncable;
 };

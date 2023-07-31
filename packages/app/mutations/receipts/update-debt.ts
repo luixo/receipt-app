@@ -14,7 +14,6 @@ export const options: UseContextedMutationOptions<
 				updateObject.receiptId,
 				receiptTimestamp,
 				[{ ...updatedDebt, deltaAmount: updatedDebt.amount - prevAmount }],
-				updateObject.updateIntention,
 			),
 	errorToastOptions: () => (error) => ({
 		text: `Error updating debt: ${error.message}`,

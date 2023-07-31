@@ -6,7 +6,6 @@ import {
 	getDebtsResult,
 	upsertDebtFromReceipt,
 } from "next-app/handlers/debts/utils";
-import { upsertDebtIntentionFromReceipt } from "next-app/handlers/debts-sync-intentions/utils";
 import { getValidParticipants } from "next-app/handlers/receipt-items/utils";
 import { getReceiptById } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
@@ -17,7 +16,6 @@ export const procedure = authProcedure
 		z.strictObject({
 			receiptId: receiptIdSchema,
 			userId: userIdSchema,
-			updateIntention: z.boolean(),
 		}),
 	)
 	.mutation(async ({ input, ctx }) => {
@@ -64,23 +62,12 @@ export const procedure = authProcedure
 			});
 		}
 		const createdTimestamp = new Date();
-		const actualDebts = await database.transaction().execute(async (tx) => {
-			const debts = await upsertDebtFromReceipt(
-				tx,
-				[matchedParticipant],
-				receipt,
-				createdTimestamp,
-			);
-			if (input.updateIntention) {
-				await upsertDebtIntentionFromReceipt(
-					tx,
-					[{ ...matchedParticipant, debtId: debts[0]!.debtId }],
-					ctx.auth.accountId,
-					createdTimestamp,
-				);
-			}
-			return debts;
-		});
+		const actualDebts = await upsertDebtFromReceipt(
+			database,
+			[matchedParticipant],
+			receipt,
+			createdTimestamp,
+		);
 		const updatedDebts = getDebtsResult(
 			[matchedParticipant],
 			actualDebts,

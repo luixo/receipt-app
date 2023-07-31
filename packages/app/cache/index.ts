@@ -1,7 +1,6 @@
 import * as account from "./account";
 import * as accountConnections from "./account-connection-intentions";
 import * as debts from "./debts";
-import * as debtsSyncIntentions from "./debts-sync-intentions";
 import * as receiptItems from "./receipt-items";
 import * as receipts from "./receipts";
 import * as users from "./users";
@@ -13,5 +12,4 @@ export const cache = {
 	accountConnections,
 	account,
 	debts,
-	debtsSyncIntentions,
 };

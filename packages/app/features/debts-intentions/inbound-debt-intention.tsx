@@ -10,22 +10,33 @@ import { trpc, TRPCQueryOutput } from "app/trpc";
 import { DebtIntention } from "./debt-intention";
 
 type Props = {
-	intention: TRPCQueryOutput<"debtsSyncIntentions.getAll">["inbound"][number];
+	intention: TRPCQueryOutput<"debts.getIntentions">[number];
 };
 
 export const InboundDebtIntention = React.forwardRef<HTMLDivElement, Props>(
 	({ intention }, ref) => {
 		const router = useRouter();
 
-		const acceptMutation = trpc.debtsSyncIntentions.accept.useMutation(
-			useTrpcMutationOptions(mutations.debtsSyncIntentions.accept.options, {
+		const acceptMutation = trpc.debts.acceptIntention.useMutation(
+			useTrpcMutationOptions(mutations.debts.acceptIntention.options, {
 				context: React.useMemo(
 					() => ({
 						debtId: intention.id,
 						userId: intention.userId,
-						currencyCode: intention.currencyCode,
-						currentAmount: intention.current?.amount,
-						receiptId: intention.receiptId,
+						intended: {
+							amount: intention.amount,
+							currencyCode: intention.currencyCode,
+							timestamp: intention.timestamp,
+							lockedTimestamp: intention.lockedTimestamp,
+							note: intention.note,
+							receiptId: intention.receiptId,
+						},
+						current: intention.current
+							? {
+									currencyCode: intention.current.currencyCode,
+									amount: intention.current.amount,
+							  }
+							: undefined,
 					}),
 					[intention],
 				),
@@ -48,24 +59,7 @@ export const InboundDebtIntention = React.forwardRef<HTMLDivElement, Props>(
 			[acceptMutation, intention.id, router],
 		);
 
-		const rejectMutation = trpc.debtsSyncIntentions.reject.useMutation(
-			useTrpcMutationOptions(mutations.debtsSyncIntentions.reject.options, {
-				context: React.useMemo(
-					() => ({
-						userId: intention.userId,
-						currentAmount: intention.current?.amount,
-						receiptId: intention.receiptId,
-					}),
-					[intention],
-				),
-			}),
-		);
-		const rejectSyncIntention = React.useCallback(
-			() => rejectMutation.mutate({ id: intention.id }),
-			[rejectMutation, intention.id],
-		);
-
-		const isLoading = acceptMutation.isLoading || rejectMutation.isLoading;
+		const { isLoading } = acceptMutation;
 		return (
 			<DebtIntention intention={intention} ref={ref}>
 				<Spacer y={0.5} />
@@ -85,7 +79,7 @@ export const InboundDebtIntention = React.forwardRef<HTMLDivElement, Props>(
 					>
 						Accept and edit
 					</Button>
-					<Button disabled={isLoading} onClick={rejectSyncIntention} bordered>
+					<Button disabled bordered>
 						Reject
 					</Button>
 				</Button.Group>

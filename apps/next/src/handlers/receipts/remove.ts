@@ -30,22 +30,11 @@ export const procedure = authProcedure
 			});
 		}
 		await database.transaction().execute(async (tx) => {
-			const debts = await tx
+			await tx
 				.updateTable("debts")
 				.where("receiptId", "=", input.id)
 				.set({ receiptId: null })
-				.returning("id")
 				.execute();
-			if (debts.length !== 0) {
-				await tx
-					.deleteFrom("debtsSyncIntentions")
-					.where(
-						"debtId",
-						"in",
-						debts.map(({ id }) => id),
-					)
-					.execute();
-			}
 			await tx
 				.deleteFrom("receipts")
 				.where("id", "=", input.id)

@@ -26,10 +26,4 @@ export const procedure = authProcedure
 			.where("id", "=", input.id)
 			.where("ownerAccountId", "=", ctx.auth.accountId)
 			.executeTakeFirst();
-		await database
-			.deleteFrom("debtsSyncIntentions")
-			.where("debtId", "=", input.id)
-			.where("ownerAccountId", "=", ctx.auth.accountId)
-			.returning("debtId")
-			.execute();
 	});

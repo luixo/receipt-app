@@ -3,7 +3,7 @@ import { sql } from "kysely";
 import { z } from "zod";
 
 import { receiptNameSchema } from "app/utils/validation";
-import { getDatabase, Database } from "next-app/db";
+import { getDatabase } from "next-app/db";
 import { SimpleUpdateObject } from "next-app/db/types";
 import { getReceiptById } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
@@ -50,24 +50,31 @@ export const procedure = authProcedure
 				message: `Receipt ${input.id} is not owned by ${ctx.auth.accountId}`,
 			});
 		}
-
-		const updateTable = (
-			localDatabase: Database,
-			setObject: ReceiptUpdateObject,
-		) =>
-			localDatabase
-				.updateTable("receipts")
-				.set(setObject)
-				.where("id", "=", input.id)
-				.executeTakeFirst();
-
-		if (input.update.type === "locked") {
-			if (receipt.ownerAccountId !== ctx.auth.accountId) {
-				throw new trpc.TRPCError({
-					code: "UNAUTHORIZED",
-					message: `You don't have rights to change ${input.id} receipt locked timestamp.`,
-				});
-			}
+		const setObject: ReceiptUpdateObject =
+			receipt.lockedTimestamp === null
+				? {}
+				: {
+						lockedTimestamp: new Date(),
+				  };
+		switch (input.update.type) {
+			case "currencyCode":
+				setObject.currencyCode = input.update.currencyCode;
+				break;
+			case "issued":
+				setObject.issued = input.update.issued;
+				// lockedTimestamp should not update if "issued" is changed
+				setObject.lockedTimestamp = undefined;
+				break;
+			case "name":
+				setObject.name = input.update.name;
+				// lockedTimestamp should not update if "name" is changed
+				setObject.lockedTimestamp = undefined;
+				break;
+			case "locked":
+				setObject.lockedTimestamp = input.update.locked ? new Date() : null;
+				break;
+		}
+		if (!receipt.lockedTimestamp && setObject.lockedTimestamp) {
 			const emptyItems = await database
 				.selectFrom("receiptItems")
 				.where("receiptItems.receiptId", "=", input.id)
@@ -88,44 +95,17 @@ export const procedure = authProcedure
 					message: `Receipt ${input.id} has items with no participants.`,
 				});
 			}
-			if (input.update.locked) {
-				if (receipt.lockedTimestamp) {
-					throw new trpc.TRPCError({
-						code: "CONFLICT",
-						message: `Receipt ${input.id} is already locked.`,
-					});
-				}
-				const lockedTimestamp = new Date();
-				await updateTable(database, { lockedTimestamp });
-				return { lockedTimestamp };
-			}
-			if (!receipt.lockedTimestamp) {
-				throw new trpc.TRPCError({
-					code: "CONFLICT",
-					message: `Receipt ${input.id} is not locked.`,
-				});
-			}
-			await updateTable(database, { lockedTimestamp: null });
-			return { lockedTimestamp: undefined };
 		}
-		if (receipt.lockedTimestamp) {
-			throw new trpc.TRPCError({
-				code: "FORBIDDEN",
-				message: `Receipt ${input.id} cannot be updated while locked.`,
-			});
-		}
-		let setObject: ReceiptUpdateObject = {};
-		switch (input.update.type) {
-			case "currencyCode":
-				setObject = { currencyCode: input.update.currencyCode };
-				break;
-			case "issued":
-				setObject = { issued: input.update.issued };
-				break;
-			case "name":
-				setObject = { name: input.update.name };
-				break;
-		}
-		await updateTable(database, setObject);
-		return setObject;
+
+		await database
+			.updateTable("receipts")
+			.set(setObject)
+			.where("id", "=", input.id)
+			.executeTakeFirst();
+		return setObject.lockedTimestamp === undefined
+			? setObject
+			: {
+					...setObject,
+					lockedTimestamp: setObject.lockedTimestamp || undefined,
+			  };
 	});

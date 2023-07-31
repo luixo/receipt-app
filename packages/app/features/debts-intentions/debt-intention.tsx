@@ -17,16 +17,17 @@ const Wrapper = styled("div", {
 	gap: "$6",
 });
 
-type Intentions = TRPCQueryOutput<"debtsSyncIntentions.getAll">;
+type Intentions = TRPCQueryOutput<"debts.getIntentions">;
 
 type Props = {
-	intention: Intentions["outbound"][number] | Intentions["inbound"][number];
+	intention: Intentions[number];
 	children?: React.ReactNode;
 };
 
 export const DebtIntention = React.forwardRef<HTMLDivElement, Props>(
 	({ intention, children }, ref) => {
 		const currency = useFormattedCurrency(intention.currencyCode);
+		const selfCurrency = useFormattedCurrency(intention.current?.currencyCode);
 		const renderChildrenInline = useMatchMediaValue(true, { lessSm: false });
 		const intentionDataComponent = (
 			<Wrapper>
@@ -39,13 +40,13 @@ export const DebtIntention = React.forwardRef<HTMLDivElement, Props>(
 		return (
 			<Card ref={ref}>
 				<Card.Body>
-					{"current" in intention && intention.current ? (
+					{intention.current ? (
 						<Wrapper>
 							<Wrapper>
 								<Text
 									color={intention.current.amount >= 0 ? "success" : "error"}
 								>
-									{Math.abs(intention.current.amount)} {currency}
+									{Math.abs(intention.current.amount)} {selfCurrency}
 								</Text>
 								<Text>{formatDate(intention.current.timestamp)}</Text>
 							</Wrapper>
@@ -61,7 +62,7 @@ export const DebtIntention = React.forwardRef<HTMLDivElement, Props>(
 					<Wrapper css={{ justifyContent: "space-between" }}>
 						<Wrapper>
 							<SyncIcon size={24} />
-							<Text>{formatDateTime(intention.intentionTimestamp)}</Text>
+							<Text>{formatDateTime(intention.lockedTimestamp)}</Text>
 						</Wrapper>
 						{renderChildrenInline ? children : null}
 					</Wrapper>

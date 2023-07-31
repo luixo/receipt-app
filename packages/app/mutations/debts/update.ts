@@ -34,37 +34,34 @@ const applyUserUpdate =
 		update: TRPCMutationInput<"debts.update">["update"],
 	): UpdateFn<DebtUserSnapshot> =>
 	(item) => {
+		// lockedTimestamp will be overriden in onSuccess
+		const nextLockedTimestamp =
+			item.lockedTimestamp === undefined ? undefined : new Date();
 		switch (update.type) {
 			case "amount":
-				return { ...item, amount: update.amount };
+				return {
+					...item,
+					amount: update.amount,
+					lockedTimestamp: nextLockedTimestamp,
+				};
 			case "timestamp":
-				return { ...item, timestamp: update.timestamp };
+				return {
+					...item,
+					timestamp: update.timestamp,
+					lockedTimestamp: nextLockedTimestamp,
+				};
 			case "note":
 				return { ...item, note: update.note };
 			case "currencyCode":
-				return { ...item, currencyCode: update.currencyCode };
-			case "locked":
-				if (!update.value) {
-					return {
-						...item,
-						locked: update.value,
-						syncStatus:
-							item.syncStatus.type === "sync"
-								? { type: "unsync" }
-								: item.syncStatus,
-					};
-				}
 				return {
 					...item,
-					locked: update.value,
-					syncStatus: {
-						type: "unsync",
-						intention: {
-							direction: "self",
-							// This will be overriden in onSuccess
-							timestamp: new Date(),
-						},
-					},
+					currencyCode: update.currencyCode,
+					lockedTimestamp: nextLockedTimestamp,
+				};
+			case "locked":
+				return {
+					...item,
+					lockedTimestamp: update.locked ? new Date() : undefined,
 				};
 		}
 	};
@@ -74,37 +71,34 @@ const applyUpdate =
 		update: TRPCMutationInput<"debts.update">["update"],
 	): UpdateFn<DebtSnapshot> =>
 	(item) => {
+		// lockedTimestamp will be overriden in onSuccess
+		const nextLockedTimestamp =
+			item.lockedTimestamp === undefined ? undefined : new Date();
 		switch (update.type) {
 			case "amount":
-				return { ...item, amount: update.amount };
+				return {
+					...item,
+					amount: update.amount,
+					lockedTimestamp: nextLockedTimestamp,
+				};
 			case "timestamp":
-				return { ...item, timestamp: update.timestamp };
+				return {
+					...item,
+					timestamp: update.timestamp,
+					lockedTimestamp: nextLockedTimestamp,
+				};
 			case "note":
 				return { ...item, note: update.note };
 			case "currencyCode":
-				return { ...item, currencyCode: update.currencyCode };
-			case "locked":
-				if (!update.value) {
-					return {
-						...item,
-						locked: update.value,
-						syncStatus:
-							item.syncStatus.type === "sync"
-								? { type: "unsync" }
-								: item.syncStatus,
-					};
-				}
 				return {
 					...item,
-					locked: update.value,
-					syncStatus: {
-						type: "unsync",
-						intention: {
-							direction: "self",
-							// This will be overriden in onSuccess
-							timestamp: new Date(),
-						},
-					},
+					currencyCode: update.currencyCode,
+					lockedTimestamp: nextLockedTimestamp,
+				};
+			case "locked":
+				return {
+					...item,
+					lockedTimestamp: update.locked ? new Date() : undefined,
 				};
 		}
 	};
@@ -137,26 +131,27 @@ const getUserRevert =
 	(debt) => {
 		switch (update.type) {
 			case "amount":
-				return { ...debt, amount: snapshot.amount };
+				return {
+					...debt,
+					amount: snapshot.amount,
+					lockedTimestamp: snapshot.lockedTimestamp,
+				};
 			case "timestamp":
-				return { ...debt, timestamp: snapshot.timestamp };
+				return {
+					...debt,
+					timestamp: snapshot.timestamp,
+					lockedTimestamp: snapshot.lockedTimestamp,
+				};
 			case "note":
 				return { ...debt, note: snapshot.note };
 			case "currencyCode":
-				return { ...debt, currencyCode: snapshot.currencyCode };
-			case "locked":
-				if (!update.value) {
-					return {
-						...debt,
-						locked: snapshot.locked,
-						syncStatus: snapshot.syncStatus,
-					};
-				}
 				return {
 					...debt,
-					locked: snapshot.locked,
-					syncStatus: snapshot.syncStatus,
+					currencyCode: snapshot.currencyCode,
+					lockedTimestamp: snapshot.lockedTimestamp,
 				};
+			case "locked":
+				return { ...debt, lockedTimestamp: snapshot.lockedTimestamp };
 		}
 	};
 
@@ -168,26 +163,27 @@ const getRevert =
 	(debt) => {
 		switch (update.type) {
 			case "amount":
-				return { ...debt, amount: snapshot.amount };
+				return {
+					...debt,
+					amount: snapshot.amount,
+					lockedTimestamp: snapshot.lockedTimestamp,
+				};
 			case "timestamp":
-				return { ...debt, timestamp: snapshot.timestamp };
+				return {
+					...debt,
+					timestamp: snapshot.timestamp,
+					lockedTimestamp: snapshot.lockedTimestamp,
+				};
 			case "note":
 				return { ...debt, note: snapshot.note };
 			case "currencyCode":
-				return { ...debt, currencyCode: snapshot.currencyCode };
-			case "locked":
-				if (!update.value) {
-					return {
-						...debt,
-						locked: snapshot.locked,
-						syncStatus: snapshot.syncStatus,
-					};
-				}
 				return {
 					...debt,
-					locked: snapshot.locked,
-					syncStatus: snapshot.syncStatus,
+					currencyCode: snapshot.currencyCode,
+					lockedTimestamp: snapshot.lockedTimestamp,
 				};
+			case "locked":
+				return { ...debt, lockedTimestamp: snapshot.lockedTimestamp };
 		}
 	};
 
@@ -222,33 +218,46 @@ export const options: UseContextedMutationOptions<
 					applyUpdate(updateObject.update),
 					getRevert(updateObject.update),
 				),
+			getIntentions: (controller) => {
+				if (
+					updateObject.update.type !== "locked" ||
+					updateObject.update.locked
+				) {
+					return;
+				}
+				return controller.remove(updateObject.id);
+			},
 		}),
-	onSuccess: (trpcContext, currData) => (nextSyncStatus, updateObject) => {
-		if (updateObject.update.type !== "locked") {
+	onSuccess: (trpcContext, currData) => (result, updateObject) => {
+		if (!result) {
 			return;
 		}
-		if (!nextSyncStatus) {
-			throw new Error(
-				"Expected to have syncStatuc when update type is `locked`",
-			);
-		}
-		if (updateObject.update.value) {
-			cache.debts.update(trpcContext, {
-				// Sum is already update in onMutate
-				getByUsers: noop,
-				getUser: (controller) => {
-					controller.update(currData.userId, updateObject.id, (debt) => ({
-						...debt,
-						syncStatus: nextSyncStatus,
-					}));
-				},
-				get: (controller) =>
-					controller.update(updateObject.id, (debt) => ({
-						...debt,
-						syncStatus: nextSyncStatus,
-					})),
-			});
-		}
+		const { lockedTimestamp } = result;
+		cache.debts.update(trpcContext, {
+			getByUsers: noop,
+			getUser: (controller) =>
+				controller.update(currData.userId, updateObject.id, (debt) => ({
+					...debt,
+					lockedTimestamp,
+				})),
+			get: (controller) =>
+				controller.update(updateObject.id, (debt) => ({
+					...debt,
+					lockedTimestamp,
+				})),
+			getIntentions: (controller) => {
+				if (
+					updateObject.update.type !== "locked" ||
+					!updateObject.update.locked
+				) {
+					return;
+				}
+				// It seems like it doesn't work
+				// because whenever we update lockedTimestmap it is more fresh than counteryparty's
+				// hence we never get intentions actually updated here
+				controller.invalidate();
+			},
+		});
 	},
 	errorToastOptions: () => (error) => ({
 		text: `Error updating debt: ${error.message}`,

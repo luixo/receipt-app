@@ -19,11 +19,6 @@ export type {
 	DebtsId,
 } from "./debts";
 export type {
-	default as DebtsSyncIntentions,
-	DebtsSyncIntentionsInitializer,
-	DebtsSyncIntentionsMutator,
-} from "./debts-sync-intentions";
-export type {
 	default as ItemParticipants,
 	ItemParticipantsInitializer,
 	ItemParticipantsMutator,

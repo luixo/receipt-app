@@ -62,15 +62,13 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 		}),
 	);
 	const updateDebt = React.useCallback(
-		(userId: UsersId, updateIntention: boolean) =>
-			updateMutation.mutate({ receiptId, userId, updateIntention }),
+		(userId: UsersId) => updateMutation.mutate({ receiptId, userId }),
 		[updateMutation, receiptId],
 	);
 
 	const showSpacer = useMatchMediaValue(false, { lessMd: true });
-	// TODO: this is not actual "in sync with the receipt" as intended
-	// Will get fixed in lockedTimestamp simplification
-	const synced = participant.sum === participant.debt?.amount;
+	const synced =
+		participant.debt?.lockedTimestamp?.valueOf() === receiptTimestamp.valueOf();
 
 	return (
 		<>
@@ -93,7 +91,10 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 						) : null}
 						{participant.debt ? (
 							<DebtSyncStatus
-								syncStatus={participant.debt.syncStatus}
+								debt={{
+									lockedTimestamp: participant.debt.lockedTimestamp,
+									their: participant.debt.their,
+								}}
 								size={SIZE}
 							/>
 						) : null}
@@ -101,21 +102,24 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 				)}
 			</Grid>
 			<Grid defaultCol={1.5} lessMdCol={4}>
-				{!participant.debt ? (
+				{synced ? null : (
 					<IconButton
-						title="Send sync request"
+						title={
+							participant.debt?.their
+								? "Update debt for user"
+								: "Send sync request"
+						}
 						isLoading={updateMutation.isLoading}
-						icon={<SendIcon size={24} />}
-						onClick={() => updateDebt(participant.userId, true)}
+						icon={
+							participant.debt?.their ? (
+								<SyncIcon size={24} />
+							) : (
+								<SendIcon size={24} />
+							)
+						}
+						onClick={() => updateDebt(participant.userId)}
 					/>
-				) : !synced ? (
-					<IconButton
-						title="Update debt for user"
-						isLoading={updateMutation.isLoading}
-						icon={<SyncIcon size={24} />}
-						onClick={() => updateDebt(participant.userId, false)}
-					/>
-				) : null}
+				)}
 			</Grid>
 		</>
 	);

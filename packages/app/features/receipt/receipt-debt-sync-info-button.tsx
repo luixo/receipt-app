@@ -29,24 +29,32 @@ const GridHeader = styled(Grid, {
 	},
 });
 
-const sortParticipants = (a: DebtParticipant, b: DebtParticipant): number => {
-	const aDebt = a.debt;
-	const bDebt = b.debt;
-	if (!bDebt) {
-		return -1;
-	}
-	if (!aDebt) {
-		return 1;
-	}
-	// TODO: should we return comparison between receipt and debt locked timestamps?
-	if (bDebt.syncStatus.type === "sync") {
-		return -1;
-	}
-	if (aDebt.syncStatus.type === "sync") {
-		return 1;
-	}
-	return 0;
-};
+const sortParticipants =
+	(receiptLockedTimestamp: Date) =>
+	(a: DebtParticipant, b: DebtParticipant): number => {
+		const aLockedTimestamp = a.debt?.their?.lockedTimestamp?.valueOf();
+		const bLockedTimestamp = b.debt?.their?.lockedTimestamp?.valueOf();
+		if (aLockedTimestamp === bLockedTimestamp) {
+			if (a.sum === b.sum) {
+				return b.userId.localeCompare(a.userId);
+			}
+			return b.sum - a.sum;
+		}
+		if (!aLockedTimestamp) {
+			return 1;
+		}
+		if (!bLockedTimestamp) {
+			return -1;
+		}
+		const receiptLockedTimestampValue = receiptLockedTimestamp.valueOf();
+		if (receiptLockedTimestampValue === aLockedTimestamp) {
+			return -1;
+		}
+		if (receiptLockedTimestampValue === bLockedTimestamp) {
+			return 1;
+		}
+		return bLockedTimestamp - aLockedTimestamp;
+	};
 
 type Props = {
 	receiptId: ReceiptsId;
@@ -66,8 +74,8 @@ export const ReceiptDebtSyncInfoButton: React.FC<Props> = ({
 
 	const showBorder = useMatchMediaValue(true, { lessMd: false });
 	const sortedParticipants = React.useMemo(
-		() => [...participants].sort(sortParticipants),
-		[participants],
+		() => [...participants].sort(sortParticipants(receiptTimestamp)),
+		[participants, receiptTimestamp],
 	);
 
 	if (sortedParticipants.length === 0) {

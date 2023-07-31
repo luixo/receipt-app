@@ -9,7 +9,6 @@ import {
 } from "react-icons/md";
 
 import { TRPCQueryOutput } from "app/trpc";
-import { SyncStatus } from "next-app/handlers/debts-sync-intentions/utils";
 
 const Wrapper = styled("div", {
 	display: "flex",
@@ -17,7 +16,6 @@ const Wrapper = styled("div", {
 
 	variants: {
 		type: {
-			nosync: {},
 			sync: {
 				color: "$success",
 			},
@@ -34,53 +32,57 @@ const DirectionIcon = styled(OutcomingIcon);
 
 type Debt = TRPCQueryOutput<"debts.get">;
 
-const getContent = (syncStatus: Debt["syncStatus"]) => {
-	switch (syncStatus.type) {
-		case "nosync":
-			return "Local debt, no sync";
-		case "sync":
-			return "In sync with a user";
-		case "unsync": {
-			// eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
-			switch (syncStatus.intention?.direction) {
-				case "self":
-					return "Out of sync,\nour intention to sync was sent";
-				case "remote":
-					return "Out of sync,\nwe recieved an intention to sync";
-				case undefined:
-					return "Out of sync,\nno intentions to sync from either party";
-			}
-		}
+const getContent = (
+	lockedTimestamp: Debt["lockedTimestamp"],
+	their: Debt["their"],
+) => {
+	if (!lockedTimestamp) {
+		return "Local debt, no sync";
 	}
+	if (!their) {
+		return "Out of sync,\nwe intent to push";
+	}
+	if (!their.lockedTimestamp) {
+		return "Out of sync,\nwe intent to sync, but they're not";
+	}
+	if (their.lockedTimestamp.valueOf() !== lockedTimestamp.valueOf()) {
+		return `Out of sync, ${
+			lockedTimestamp >= their.lockedTimestamp ? "we" : "they"
+		} intent to sync`;
+	}
+	return "In sync with them";
 };
 
 type Props = {
-	syncStatus: SyncStatus;
+	debt: Pick<Debt, "lockedTimestamp" | "their">;
 	size: number;
 };
 
-export const DebtSyncStatus: React.FC<Props> = ({ size, syncStatus }) => {
-	if (syncStatus.type === "nosync") {
+export const DebtSyncStatus: React.FC<Props> = ({
+	size,
+	debt: { lockedTimestamp, their },
+}) => {
+	if (!lockedTimestamp) {
 		return null;
 	}
 
+	const isSynced =
+		lockedTimestamp &&
+		their?.lockedTimestamp?.valueOf() === lockedTimestamp.valueOf();
 	return (
 		<Tooltip
-			content={getContent(syncStatus)}
+			content={getContent(lockedTimestamp, their)}
 			css={{ whiteSpace: "pre" }}
 			placement="bottomEnd"
 		>
-			<Wrapper type={syncStatus.type}>
-				<StyledSyncIcon
-					as={syncStatus.type === "sync" ? SyncIcon : UnsyncIcon}
-					css={{ size }}
-				/>
-				{syncStatus.type === "sync" || !syncStatus.intention ? null : (
+			<Wrapper type={isSynced ? "sync" : "unsync"}>
+				<StyledSyncIcon as={isSynced ? SyncIcon : UnsyncIcon} css={{ size }} />
+				{isSynced || !lockedTimestamp ? null : (
 					<DirectionIcon
 						as={
-							syncStatus.intention.direction === "self"
-								? OutcomingIcon
-								: IncomingIcon
+							(their?.lockedTimestamp ?? 0) >= lockedTimestamp
+								? IncomingIcon
+								: OutcomingIcon
 						}
 						css={{ size, margin: `0 ${-(size / 4)}px` }}
 					/>

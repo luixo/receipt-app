@@ -17,6 +17,9 @@ const applyPagedUpdate =
 		update: TRPCMutationInput<"receipts.update">["update"],
 	): UpdateFn<PagedReceiptSnapshot> =>
 	(item) => {
+		// lockedTimestamp will be overriden in onSuccess
+		const nextLockedTimestamp =
+			item.lockedTimestamp === undefined ? undefined : new Date();
 		switch (update.type) {
 			case "name":
 				return { ...item, name: update.name };
@@ -25,10 +28,14 @@ const applyPagedUpdate =
 			case "locked":
 				return {
 					...item,
-					lockedTimestamp: update.locked ? new Date() : undefined,
+					lockedTimestamp: update.locked ? nextLockedTimestamp : undefined,
 				};
 			case "currencyCode":
-				return { ...item, currencyCode: update.currencyCode };
+				return {
+					...item,
+					currencyCode: update.currencyCode,
+					lockedTimestamp: nextLockedTimestamp,
+				};
 		}
 	};
 
@@ -40,6 +47,7 @@ const applySuccessPagedUpdate =
 	(item) => {
 		switch (update.type) {
 			case "locked":
+			case "currencyCode":
 				return {
 					...item,
 					lockedTimestamp: result.lockedTimestamp || undefined,
@@ -54,6 +62,9 @@ const applyUpdate =
 		update: TRPCMutationInput<"receipts.update">["update"],
 	): UpdateFn<ReceiptSnapshot> =>
 	(item) => {
+		// lockedTimestamp will be overriden in onSuccess
+		const nextLockedTimestamp =
+			item.lockedTimestamp === undefined ? undefined : new Date();
 		switch (update.type) {
 			case "name":
 				return { ...item, name: update.name };
@@ -62,10 +73,14 @@ const applyUpdate =
 			case "locked":
 				return {
 					...item,
-					lockedTimestamp: update.locked ? new Date() : undefined,
+					lockedTimestamp: update.locked ? nextLockedTimestamp : undefined,
 				};
 			case "currencyCode":
-				return { ...item, currencyCode: update.currencyCode };
+				return {
+					...item,
+					currencyCode: update.currencyCode,
+					lockedTimestamp: nextLockedTimestamp,
+				};
 		}
 	};
 
@@ -76,6 +91,7 @@ const applySuccessUpdate =
 	): UpdateFn<ReceiptSnapshot> =>
 	(item) => {
 		switch (update.type) {
+			case "currencyCode":
 			case "locked":
 				return {
 					...item,

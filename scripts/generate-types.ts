@@ -40,12 +40,6 @@ const run = async () => {
 				if (property.defaultValue && generateFor === "initializer") {
 					comments.push(`Default value: ${property.defaultValue}`);
 				}
-				if (
-					property.name === "debtId" &&
-					details.name === "debtsSyncIntentions"
-				) {
-					typeOverride = "DebtsId";
-				}
 				if (property.name === "currencyCode") {
 					typeOverride = "CurrencyCode";
 				}

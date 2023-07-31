@@ -66,6 +66,7 @@ export const procedure = authProcedure
 				}.`,
 			});
 		}
+		const lockedTimestamp = new Date();
 		await database
 			.insertInto("debts")
 			.values(
@@ -77,9 +78,10 @@ export const procedure = authProcedure
 					currencyCode: debt.currencyCode,
 					created: new Date(),
 					timestamp: debt.timestamp || new Date(),
+					lockedTimestamp,
 					amount: debt.amount.toString(),
 				})),
 			)
 			.execute();
-		return ids;
+		return { ids, lockedTimestamp };
 	});

@@ -8,13 +8,13 @@ import { Badge } from "app/components/badge";
 import { Header } from "app/components/header";
 import { IconButton } from "app/components/icon-button";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
-import { useDebtsSyncIntentions } from "app/hooks/use-debts-sync-intentions";
+import { useDebtsIntentions } from "app/hooks/use-debts-intentions";
 import { AppPage } from "next-app/types/page";
 
 import { Debts } from "./debts";
 
 export const DebtsScreen: AppPage = () => {
-	const inboundDebtsAmount = useDebtsSyncIntentions();
+	const inboundDebtsAmount = useDebtsIntentions();
 	return (
 		<>
 			<Header

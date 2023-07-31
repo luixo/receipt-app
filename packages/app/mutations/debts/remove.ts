@@ -22,43 +22,14 @@ export const options: UseContextedMutationOptions<
 			// but it's own page
 			// otherwise the page will try to refetch the data immediately
 			get: noop,
+			getIntentions: noop,
 		}),
-	onSuccess: (trpcContext, currDebt) => (_result, updateObject) => {
+	onSuccess: (trpcContext) => (_result, updateObject) => {
 		cache.debts.update(trpcContext, {
 			getByUsers: noop,
 			getUser: noop,
 			get: (controller) => controller.remove(updateObject.id),
-		});
-		cache.receipts.update(trpcContext, {
-			get: (controller) => {
-				if (!currDebt.receiptId) {
-					return;
-				}
-				controller.update(currDebt.receiptId, (receipt) => {
-					if (
-						!receipt.debt ||
-						receipt.debt.direction === "outcoming" ||
-						receipt.debt.type === "foreign"
-					) {
-						return receipt;
-					}
-					return {
-						...receipt,
-						debt:
-							currDebt.syncStatus.type === "nosync"
-								? undefined
-								: {
-										direction: "incoming",
-										type: "foreign",
-										id: receipt.debt.id,
-								  },
-					};
-				});
-			},
-			getNonResolvedAmount: noop,
-			getPaged: noop,
-			getName: noop,
-			getResolvedParticipants: noop,
+			getIntentions: noop,
 		});
 	},
 	mutateToastOptions: {

@@ -44,7 +44,7 @@ export const DebtCurrencyInput: React.FC<Props> = ({ debt, isLoading }) => {
 				auto
 				light
 				onClick={openModal}
-				disabled={isLoading || debt.locked}
+				disabled={isLoading}
 				isLoading={updateReceiptMutation.isLoading}
 				css={{ p: 0 }}
 			>

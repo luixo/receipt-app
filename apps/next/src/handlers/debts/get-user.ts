@@ -2,7 +2,6 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
-import { getSyncStatus } from "next-app/handlers/debts-sync-intentions/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import { userIdSchema } from "next-app/handlers/validation";
 
@@ -36,31 +35,43 @@ export const procedure = authProcedure
 			.selectFrom("debts")
 			.where("debts.userId", "=", input.userId)
 			.where("debts.ownerAccountId", "=", ctx.auth.accountId)
+			.leftJoin("debts as theirDebts", (qb) =>
+				qb
+					.onRef("theirDebts.id", "=", "debts.id")
+					.onRef("theirDebts.ownerAccountId", "<>", "debts.ownerAccountId"),
+			)
 			.select([
-				"id",
-				"currencyCode",
-				"amount",
-				"timestamp",
-				"created",
-				"note",
-				"lockedTimestamp",
-				"receiptId",
+				"debts.id",
+				"debts.currencyCode",
+				"debts.amount",
+				"debts.timestamp",
+				"debts.created",
+				"debts.note",
+				"debts.lockedTimestamp",
+				"debts.receiptId",
+				"theirDebts.ownerAccountId as theirOwnerAccountId",
+				"theirDebts.lockedTimestamp as theirLockedTimestamp",
 			])
 			.orderBy("timestamp", "desc")
-			.orderBy("id")
+			.orderBy("debts.id")
 			.execute();
 
-		const statuses = await Promise.all(
-			debts.map((debt) => getSyncStatus(database, debt.id, ctx.auth.accountId)),
-		);
-
-		return debts.map(({ amount, lockedTimestamp, ...debt }, index) => {
-			const syncStatus = statuses[index]!;
-			return {
+		return debts.map(
+			({
+				amount,
+				lockedTimestamp,
+				theirOwnerAccountId,
+				theirLockedTimestamp,
+				...debt
+			}) => ({
 				...debt,
-				locked: Boolean(lockedTimestamp),
 				amount: Number(amount),
-				syncStatus,
-			};
-		});
+				lockedTimestamp: lockedTimestamp || undefined,
+				their: theirOwnerAccountId
+					? {
+							lockedTimestamp: theirLockedTimestamp || undefined,
+					  }
+					: undefined,
+			}),
+		);
 	});

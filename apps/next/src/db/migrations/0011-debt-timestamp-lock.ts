@@ -1,7 +1,7 @@
 import { Database } from "..";
 import { DEBTS_SYNC_INTENTIONS } from "../consts";
 
-const createDebtsSyncIntentionsTable = async (db: Database) => {
+export const createDebtsSyncIntentionsTable = async (db: Database) => {
 	await db.schema
 		.createTable("debtsSyncIntentions")
 		.addColumn("debtId", "uuid", (cb) => cb.notNull().unique())
@@ -26,7 +26,7 @@ const createDebtsSyncIntentionsTable = async (db: Database) => {
 		.execute();
 };
 
-const removeDebtsSyncIntentionsTable = async (db: Database) => {
+export const removeDebtsSyncIntentionsTable = async (db: Database) => {
 	await db.schema
 		.dropIndex(DEBTS_SYNC_INTENTIONS.INDEXES.OWNER_ACCOUNT_ID)
 		.execute();

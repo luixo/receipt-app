@@ -1,6 +1,7 @@
 import { cache } from "app/cache";
 import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
+import { noop } from "app/utils/utils";
 import { DebtsId, UsersId } from "next-app/db/models";
 
 export const MIN_BATCH_DEBTS = 1;
@@ -11,6 +12,7 @@ type DebtSnapshot = TRPCQueryOutput<"debts.get">;
 
 const createUserDebts = (
 	ids: DebtsId[],
+	lockedTimestamp: Date,
 	updateObjects: TRPCMutationInput<"debts.addBatch">,
 ): [DebtUserSnapshot, UsersId][] =>
 	updateObjects.map((updateObject, index) => [
@@ -21,8 +23,8 @@ const createUserDebts = (
 			created: new Date(),
 			timestamp: updateObject.timestamp || new Date(),
 			note: updateObject.note,
-			locked: false,
-			syncStatus: { type: "nosync" },
+			lockedTimestamp,
+			their: undefined,
 			receiptId: null,
 		},
 		updateObject.userId,
@@ -30,6 +32,7 @@ const createUserDebts = (
 
 const createDebts = (
 	ids: DebtsId[],
+	lockedTimestamp: Date,
 	updateObjects: TRPCMutationInput<"debts.addBatch">,
 ): DebtSnapshot[] =>
 	updateObjects.map((updateObject, index) => ({
@@ -39,34 +42,37 @@ const createDebts = (
 		userId: updateObject.userId,
 		timestamp: updateObject.timestamp || new Date(),
 		note: updateObject.note,
-		locked: false,
-		syncStatus: { type: "nosync" },
+		lockedTimestamp,
+		their: undefined,
 		receiptId: null,
 	}));
 
 export const options: UseContextedMutationOptions<"debts.addBatch"> = {
-	onSuccess: (trpcContext) => (stableIds, updateObjects) => {
-		cache.debts.update(trpcContext, {
-			getByUsers: (controller) => {
-				updateObjects.forEach((updateObject) =>
-					controller.update(
-						updateObject.userId,
-						updateObject.currencyCode,
-						(sum) => sum + updateObject.amount,
+	onSuccess:
+		(trpcContext) =>
+		({ ids: stableIds, lockedTimestamp }, updateObjects) => {
+			cache.debts.update(trpcContext, {
+				getByUsers: (controller) => {
+					updateObjects.forEach((updateObject) =>
+						controller.update(
+							updateObject.userId,
+							updateObject.currencyCode,
+							(sum) => sum + updateObject.amount,
+						),
+					);
+				},
+				getUser: (controller) => {
+					createUserDebts(stableIds, lockedTimestamp, updateObjects).forEach(
+						([debt, userId]) => controller.add(userId, debt),
+					);
+				},
+				get: (controller) =>
+					createDebts(stableIds, lockedTimestamp, updateObjects).forEach(
+						(debt) => controller.add(debt),
 					),
-				);
-			},
-			getUser: (controller) => {
-				createUserDebts(stableIds, updateObjects).forEach(([debt, userId]) =>
-					controller.add(userId, debt),
-				);
-			},
-			get: (controller) =>
-				createDebts(stableIds, updateObjects).forEach((debt) =>
-					controller.add(debt),
-				),
-		});
-	},
+				getIntentions: noop,
+			});
+		},
 	mutateToastOptions: {
 		text: "Adding debts..",
 	},

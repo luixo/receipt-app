@@ -38,6 +38,7 @@ export const procedure = authProcedure
 				message: `User ${input.userId} is not owned by ${ctx.auth.accountId}.`,
 			});
 		}
+		const lockedTimestamp = new Date();
 		await database
 			.insertInto("debts")
 			.values({
@@ -48,8 +49,9 @@ export const procedure = authProcedure
 				currencyCode: input.currencyCode,
 				created: new Date(),
 				timestamp: input.timestamp || new Date(),
+				lockedTimestamp,
 				amount: input.amount.toString(),
 			})
 			.executeTakeFirst();
-		return id;
+		return { id, lockedTimestamp };
 	});

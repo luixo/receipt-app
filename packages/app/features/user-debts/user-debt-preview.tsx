@@ -26,7 +26,7 @@ export const UserDebtPreview: React.FC<Props> = ({ debt }) => {
 					{new Date(debt.timestamp).toLocaleDateString()}
 				</Grid>
 				<Grid defaultCol={2}>
-					<DebtSyncStatus syncStatus={debt.syncStatus} size={24} />
+					<DebtSyncStatus debt={debt} size={24} />
 				</Grid>
 				<Grid defaultCol={6} lessSmCol={12} lessMdCol={4} lessSmCss={{ pt: 0 }}>
 					{debt.note}

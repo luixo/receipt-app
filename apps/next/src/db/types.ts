@@ -6,7 +6,6 @@ type SelectTypeMap = {
 	accountConnectionsIntentions: models.AccountConnectionsIntentions;
 	accounts: models.Accounts;
 	debts: models.Debts;
-	debtsSyncIntentions: models.DebtsSyncIntentions;
 	itemParticipants: models.ItemParticipants;
 	receiptItems: models.ReceiptItems;
 	receiptParticipants: models.ReceiptParticipants;
@@ -20,7 +19,6 @@ type InsertTypeMap = {
 	accountConnectionsIntentions: models.AccountConnectionsIntentionsInitializer;
 	accounts: models.AccountsInitializer;
 	debts: models.DebtsInitializer;
-	debtsSyncIntentions: models.DebtsSyncIntentionsInitializer;
 	itemParticipants: models.ItemParticipantsInitializer;
 	receiptItems: models.ReceiptItemsInitializer;
 	receiptParticipants: models.ReceiptParticipantsInitializer;
@@ -34,7 +32,6 @@ type UpdateTypeMap = {
 	accountConnectionsIntentions: models.AccountConnectionsIntentionsMutator;
 	accounts: models.AccountsMutator;
 	debts: models.DebtsMutator;
-	debtsSyncIntentions: models.DebtsSyncIntentionsMutator;
 	itemParticipants: models.ItemParticipantsMutator;
 	receiptItems: models.ReceiptItemsMutator;
 	receiptParticipants: models.ReceiptParticipantsMutator;

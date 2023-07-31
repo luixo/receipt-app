@@ -2,7 +2,7 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { getDatabase } from "next-app/db";
-import { getSyncStatus } from "next-app/handlers/debts-sync-intentions/utils";
+import { getDebt } from "next-app/handlers/debts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import { debtIdSchema } from "next-app/handlers/validation";
 
@@ -10,21 +10,16 @@ export const procedure = authProcedure
 	.input(z.strictObject({ id: debtIdSchema }))
 	.query(async ({ input, ctx }) => {
 		const database = getDatabase(ctx);
-		const selfDebt = await database
-			.selectFrom("debts")
-			.where("debts.id", "=", input.id)
-			.where("debts.ownerAccountId", "=", ctx.auth.accountId)
-			.select([
-				"debts.id",
-				"debts.amount",
-				"debts.currencyCode",
-				"debts.note",
-				"debts.timestamp",
-				"debts.userId",
-				"debts.lockedTimestamp",
-				"debts.receiptId",
-			])
-			.executeTakeFirst();
+		const selfDebt = await getDebt(database, input.id, ctx.auth.accountId, [
+			"debts.id",
+			"debts.amount",
+			"debts.currencyCode",
+			"debts.note",
+			"debts.timestamp",
+			"debts.userId",
+			"debts.lockedTimestamp",
+			"debts.receiptId",
+		]);
 		if (!selfDebt) {
 			throw new trpc.TRPCError({
 				code: "NOT_FOUND",
@@ -32,17 +27,22 @@ export const procedure = authProcedure
 			});
 		}
 
-		const syncStatus = await getSyncStatus(
-			database,
-			selfDebt.id,
-			ctx.auth.accountId,
-		);
-		const { amount, lockedTimestamp, ...debt } = selfDebt;
+		const {
+			amount,
+			lockedTimestamp,
+			theirOwnerAccountId,
+			theirLockedTimestamp,
+			...debt
+		} = selfDebt;
 
 		return {
 			...debt,
 			amount: Number(amount),
-			locked: Boolean(lockedTimestamp),
-			syncStatus,
+			lockedTimestamp: lockedTimestamp || undefined,
+			their: theirOwnerAccountId
+				? {
+						lockedTimestamp: theirLockedTimestamp || undefined,
+				  }
+				: undefined,
 		};
 	});
