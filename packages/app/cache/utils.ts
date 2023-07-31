@@ -72,9 +72,7 @@ export const createController = <Key extends TRPCQueryKey>(
 					return;
 				}
 				trpc.queryClient.setQueryData(
-					inputWrapper?.input === undefined
-						? [splitKey]
-						: [splitKey, inputWrapper],
+					[splitKey, inputWrapper],
 					fn(inputWrapper?.input, prevData),
 					...args,
 				);
