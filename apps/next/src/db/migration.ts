@@ -7,6 +7,7 @@ import { getDatabase } from "./index";
 
 type MigrateOptions = {
 	target: "latest" | "up" | "down";
+	schemaName?: string;
 };
 
 type MigrationResponse =
@@ -21,10 +22,13 @@ type MigrationResponse =
 
 export const migrate = async ({
 	target,
+	schemaName,
 }: MigrateOptions): Promise<MigrationResponse> => {
 	const database = getDatabase();
 	const migrator = new Migrator({
 		db: database,
+		// see https://github.com/kysely-org/kysely/issues/648
+		migrationTableSchema: schemaName,
 		provider: new FileMigrationProvider({
 			fs: { readdir: util.promisify(fs.readdir) },
 			path,
