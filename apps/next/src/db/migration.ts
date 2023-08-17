@@ -19,6 +19,7 @@ type MigrationResponse =
 	| {
 			ok: false;
 			error: unknown;
+			results: MigrationResult[];
 	  };
 
 export const migrate = async ({
@@ -49,6 +50,7 @@ export const migrate = async ({
 		return {
 			ok: false,
 			error,
+			results: results!,
 		};
 	}
 	return {
