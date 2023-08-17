@@ -1,14 +1,17 @@
 import * as trpcNext from "@trpc/server/adapters/next";
 import { NextApiRequest, NextApiResponse } from "next";
+import { Pool } from "pg";
 
+import { Database, getDatabase } from "next-app/db";
+import { getDatabaseConfig } from "next-app/db/config";
 import { AccountsId } from "next-app/db/models";
-import { Logger, logger } from "next-app/utils/logger";
+import { Logger, baseLogger } from "next-app/utils/logger";
 
 export type UnauthorizedContext = {
 	req: NextApiRequest;
 	res: NextApiResponse;
 	logger: Logger;
-	debug: boolean;
+	database: Database;
 };
 
 export type AuthorizedContext = UnauthorizedContext & {
@@ -19,11 +22,18 @@ export type AuthorizedContext = UnauthorizedContext & {
 	};
 };
 
+const sharedPool = new Pool(getDatabaseConfig());
+
 export const createContext = (
 	opts: trpcNext.CreateNextContextOptions,
 ): UnauthorizedContext => ({
 	req: opts.req,
 	res: opts.res,
-	logger,
-	debug: Boolean(opts.req.headers.debug),
+	logger: baseLogger,
+	database: getDatabase({
+		logger: opts.req.headers.debug
+			? baseLogger.child({ url: opts.req.url || "unknown" })
+			: undefined,
+		pool: sharedPool,
+	}),
 });

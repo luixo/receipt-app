@@ -2,7 +2,6 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { userNameSchema } from "app/utils/validation";
-import { getDatabase } from "next-app/db";
 import { UsersId } from "next-app/db/models";
 import { authProcedure } from "next-app/handlers/trpc";
 
@@ -13,7 +12,7 @@ export const procedure = authProcedure
 		}),
 	)
 	.mutation(async ({ input, ctx }) => {
-		const database = getDatabase(ctx);
+		const { database } = ctx;
 		const user = await database
 			.selectFrom("users")
 			// Typesystem doesn't know that we use account id as self user id

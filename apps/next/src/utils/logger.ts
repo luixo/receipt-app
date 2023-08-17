@@ -1,7 +1,7 @@
 import pino, { Logger } from "pino";
 import pinoPretty from "pino-pretty";
 
-export const logger = pino(
+export const baseLogger = pino(
 	{
 		level: process.env.VERCEL ? "trace" : "info",
 	},

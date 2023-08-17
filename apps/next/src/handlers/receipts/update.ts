@@ -3,7 +3,6 @@ import { sql } from "kysely";
 import { z } from "zod";
 
 import { receiptNameSchema } from "app/utils/validation";
-import { getDatabase } from "next-app/db";
 import { SimpleUpdateObject } from "next-app/db/types";
 import { getReceiptById } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
@@ -33,7 +32,7 @@ export const procedure = authProcedure
 		}),
 	)
 	.mutation(async ({ input, ctx }): Promise<ReceiptUpdateObject> => {
-		const database = getDatabase(ctx);
+		const { database } = ctx;
 		const receipt = await getReceiptById(database, input.id, [
 			"ownerAccountId",
 			"lockedTimestamp",

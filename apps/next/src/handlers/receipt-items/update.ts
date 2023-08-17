@@ -6,7 +6,6 @@ import {
 	quantitySchema,
 	receiptItemNameSchema,
 } from "app/utils/validation";
-import { getDatabase } from "next-app/db";
 import { SimpleUpdateObject } from "next-app/db/types";
 import { getReceiptItemById } from "next-app/handlers/receipt-items/utils";
 import {
@@ -35,7 +34,7 @@ export const procedure = authProcedure
 		}),
 	)
 	.mutation(async ({ input, ctx }) => {
-		const database = getDatabase(ctx);
+		const { database } = ctx;
 		const receiptItem = await getReceiptItemById(database, input.id, [
 			"receiptId",
 		]);
@@ -90,7 +89,7 @@ export const procedure = authProcedure
 				setObject = { locked: input.update.locked };
 				break;
 		}
-		await getDatabase(ctx)
+		await database
 			.updateTable("receiptItems")
 			.set(setObject)
 			.where("id", "=", input.id)

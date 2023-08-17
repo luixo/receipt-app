@@ -2,7 +2,6 @@ import * as trpc from "@trpc/server";
 import { sql } from "kysely";
 
 import { CurrencyCode } from "app/utils/currency";
-import { getDatabase } from "next-app/db";
 import { DebtsId, ReceiptsId, UsersId } from "next-app/db/models";
 import { authProcedure } from "next-app/handlers/trpc";
 
@@ -23,7 +22,7 @@ type InboundIntention = {
 };
 
 export const procedure = authProcedure.query(async ({ ctx }) => {
-	const database = getDatabase(ctx);
+	const { database } = ctx;
 	const debts = await database
 		.selectFrom("users")
 		.where("users.connectedAccountId", "=", ctx.auth.accountId)

@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-import { getDatabase } from "next-app/db";
 import { UsersId } from "next-app/db/models";
 import { authProcedure } from "next-app/handlers/trpc";
 import { limitSchema, offsetSchema } from "next-app/handlers/validation";
@@ -13,7 +12,7 @@ export const procedure = authProcedure
 		}),
 	)
 	.query(async ({ input, ctx }) => {
-		const database = getDatabase(ctx);
+		const { database } = ctx;
 		const accountUsers = database
 			.selectFrom("users")
 			.where("users.ownerAccountId", "=", ctx.auth.accountId)

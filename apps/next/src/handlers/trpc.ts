@@ -2,7 +2,6 @@ import * as trpc from "@trpc/server";
 import { sql } from "kysely";
 import superjson from "superjson";
 
-import { getDatabase } from "next-app/db";
 import {
 	shouldUpdateExpirationDate,
 	updateAuthorizationSession,
@@ -52,7 +51,7 @@ export const authProcedure = unauthProcedure.use(
 				message: "Session id mismatch",
 			});
 		}
-		const database = getDatabase(ctx);
+		const { database } = ctx;
 		const session = await database
 			.selectFrom("sessions")
 			.innerJoin("accounts", (qb) =>

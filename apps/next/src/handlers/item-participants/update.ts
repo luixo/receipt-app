@@ -2,7 +2,6 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { partSchema } from "app/utils/validation";
-import { getDatabase } from "next-app/db";
 import { SimpleUpdateObject } from "next-app/db/types";
 import { getItemParticipant } from "next-app/handlers/item-participants/utils";
 import { getReceiptItemById } from "next-app/handlers/receipt-items/utils";
@@ -29,7 +28,7 @@ export const procedure = authProcedure
 		}),
 	)
 	.mutation(async ({ input, ctx }) => {
-		const database = getDatabase(ctx);
+		const { database } = ctx;
 		const receiptItem = await getReceiptItemById(database, input.itemId, [
 			"receiptId",
 		]);
@@ -92,7 +91,7 @@ export const procedure = authProcedure
 				setObject = { part: input.update.part.toString() };
 				break;
 		}
-		await getDatabase(ctx)
+		await database
 			.updateTable("itemParticipants")
 			.set(setObject)
 			.where("userId", "=", input.userId)

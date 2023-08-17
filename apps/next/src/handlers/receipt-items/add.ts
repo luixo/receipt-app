@@ -7,7 +7,6 @@ import {
 	quantitySchema,
 	receiptItemNameSchema,
 } from "app/utils/validation";
-import { getDatabase } from "next-app/db";
 import {
 	getAccessRole,
 	getReceiptById,
@@ -25,7 +24,7 @@ export const procedure = authProcedure
 		}),
 	)
 	.mutation(async ({ input, ctx }) => {
-		const database = getDatabase(ctx);
+		const { database } = ctx;
 		const receipt = await getReceiptById(database, input.receiptId, [
 			"ownerAccountId",
 			"id",

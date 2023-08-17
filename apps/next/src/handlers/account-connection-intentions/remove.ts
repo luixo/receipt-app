@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-import { getDatabase } from "next-app/db";
 import { removeIntention } from "next-app/handlers/account-connection-intentions/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import { accountIdSchema } from "next-app/handlers/validation";
@@ -12,7 +11,7 @@ export const procedure = authProcedure
 		}),
 	)
 	.mutation(async ({ ctx, input }) => {
-		const database = getDatabase(ctx);
+		const { database } = ctx;
 		const intention = await database
 			.selectFrom("accountConnectionsIntentions")
 			.select(["accountId", "targetAccountId"])

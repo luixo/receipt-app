@@ -2,7 +2,6 @@ import { v4 } from "uuid";
 import { z } from "zod";
 
 import { receiptNameSchema } from "app/utils/validation";
-import { getDatabase } from "next-app/db";
 import { addReceiptParticipants } from "next-app/handlers/receipt-participants/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import { currencyCodeSchema, userIdSchema } from "next-app/handlers/validation";
@@ -18,7 +17,7 @@ export const procedure = authProcedure
 	)
 	.mutation(async ({ input, ctx }) => {
 		const id = v4();
-		const database = getDatabase(ctx);
+		const { database } = ctx;
 		await database.transaction().execute(async (tx) => {
 			await tx
 				.insertInto("receipts")

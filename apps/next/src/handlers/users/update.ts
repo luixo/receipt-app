@@ -2,7 +2,6 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { userNameSchema } from "app/utils/validation";
-import { getDatabase } from "next-app/db";
 import { SimpleUpdateObject } from "next-app/db/types";
 import { authProcedure } from "next-app/handlers/trpc";
 import { getUserById } from "next-app/handlers/users/utils";
@@ -40,7 +39,7 @@ export const procedure = authProcedure
 				});
 			}
 		}
-		const database = getDatabase(ctx);
+		const { database } = ctx;
 		const user = await getUserById(database, input.id, ["ownerAccountId"]);
 		if (!user) {
 			throw new trpc.TRPCError({

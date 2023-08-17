@@ -1,8 +1,7 @@
-import { getDatabase } from "next-app/db";
 import { authProcedure } from "next-app/handlers/trpc";
 
 export const procedure = authProcedure.query(async ({ ctx }) => {
-	const database = getDatabase(ctx);
+	const { database } = ctx;
 
 	const receiptIds = await database
 		.selectFrom("receiptParticipants")

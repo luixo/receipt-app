@@ -1,4 +1,3 @@
-import { getDatabase } from "next-app/db";
 import { ReceiptsDatabase } from "next-app/db/types";
 import { authProcedure } from "next-app/handlers/trpc";
 
@@ -12,7 +11,7 @@ export const DEFAULT_ACCOUNT_SETTINGS: Settings = {
 };
 
 export const procedure = authProcedure.query(async ({ ctx }) => {
-	const database = getDatabase(ctx);
+	const { database } = ctx;
 	const account = await database
 		.selectFrom("accountSettings")
 		.select(["accountSettings.autoAcceptDebts"])

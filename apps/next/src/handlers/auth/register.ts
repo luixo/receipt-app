@@ -7,7 +7,6 @@ import {
 	passwordSchema,
 	userNameSchema,
 } from "app/utils/validation";
-import { getDatabase } from "next-app/db";
 import { AccountsId, UsersId } from "next-app/db/models";
 import {
 	createAuthorizationSession,
@@ -28,7 +27,7 @@ export const procedure = unauthProcedure
 	)
 	.mutation(async ({ input, ctx }) => {
 		const email = input.email.toLowerCase();
-		const database = getDatabase(ctx);
+		const { database } = ctx;
 		const account = await database
 			.selectFrom("accounts")
 			.select([])

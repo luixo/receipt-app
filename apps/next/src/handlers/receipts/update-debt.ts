@@ -1,7 +1,6 @@
 import * as trpc from "@trpc/server";
 import { z } from "zod";
 
-import { getDatabase } from "next-app/db";
 import {
 	getDebtsResult,
 	upsertDebtFromReceipt,
@@ -19,7 +18,7 @@ export const procedure = authProcedure
 		}),
 	)
 	.mutation(async ({ input, ctx }) => {
-		const database = getDatabase(ctx);
+		const { database } = ctx;
 		const receipt = await getReceiptById(database, input.receiptId, [
 			"id",
 			"ownerAccountId",

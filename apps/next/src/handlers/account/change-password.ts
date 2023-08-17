@@ -2,7 +2,6 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { passwordSchema } from "app/utils/validation";
-import { getDatabase } from "next-app/db";
 import { authProcedure } from "next-app/handlers/trpc";
 import { generatePasswordData, getHash } from "next-app/utils/crypto";
 
@@ -14,7 +13,7 @@ export const procedure = authProcedure
 		}),
 	)
 	.mutation(async ({ input, ctx }) => {
-		const database = getDatabase(ctx);
+		const { database } = ctx;
 		const account = await database
 			.selectFrom("accounts")
 			.select(["passwordHash", "passwordSalt"])

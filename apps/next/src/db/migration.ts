@@ -3,9 +3,10 @@ import { Migrator, FileMigrationProvider, MigrationResult } from "kysely";
 import * as path from "path";
 import * as util from "util";
 
-import { getDatabase } from "./index";
+import type { Database } from "./index";
 
 type MigrateOptions = {
+	database: Database;
 	target: "latest" | "up" | "down";
 	schemaName?: string;
 };
@@ -22,9 +23,9 @@ type MigrationResponse =
 
 export const migrate = async ({
 	target,
+	database,
 	schemaName,
 }: MigrateOptions): Promise<MigrationResponse> => {
-	const database = getDatabase();
 	const migrator = new Migrator({
 		db: database,
 		// see https://github.com/kysely-org/kysely/issues/648
@@ -43,8 +44,6 @@ export const migrate = async ({
 			? "migrateDown"
 			: "migrateUp"
 	]();
-
-	await database.destroy();
 
 	if (error) {
 		return {

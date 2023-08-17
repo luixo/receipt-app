@@ -1,4 +1,9 @@
+import { Pool } from "pg";
+
+import { getDatabase } from "next-app/db";
+import { getDatabaseConfig } from "next-app/db/config";
 import { migrate } from "next-app/db/migration";
+import { baseLogger } from "next-app/utils/logger";
 
 const isValidTarget = (
 	maybeTarget = "",
@@ -7,9 +12,16 @@ const isValidTarget = (
 
 const main = async ([firstArg]: string[]) => {
 	const target = isValidTarget(firstArg) ? firstArg : "latest";
-	const migrationResult = await migrate({ target });
+	const database = getDatabase({
+		logger: baseLogger,
+		pool: new Pool(getDatabaseConfig()),
+	});
 	console.log(`Migration target: ${target}`);
-	if (migrationResult.ok) {
+	try {
+		const migrationResult = await migrate({ target, database });
+		if (!migrationResult.ok) {
+			throw migrationResult.error;
+		}
 		if (migrationResult.results.length === 0) {
 			console.log("No migrations to execute");
 		}
@@ -22,10 +34,12 @@ const main = async ([firstArg]: string[]) => {
 				console.error(`Failed to execute migration "${result.migrationName}"`);
 			}
 		});
-	} else {
+	} catch (e) {
 		console.error("Failed to migrate");
-		console.error(migrationResult.error);
+		console.error(e);
 		process.exit(1);
+	} finally {
+		await database.destroy();
 	}
 };
 

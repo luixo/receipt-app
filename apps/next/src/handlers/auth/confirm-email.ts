@@ -1,7 +1,6 @@
 import * as trpc from "@trpc/server";
 import { z } from "zod";
 
-import { getDatabase } from "next-app/db";
 import { unauthProcedure } from "next-app/handlers/trpc";
 import { confirmEmailTokenSchema } from "next-app/handlers/validation";
 
@@ -12,7 +11,7 @@ export const procedure = unauthProcedure
 		}),
 	)
 	.mutation(async ({ input, ctx }) => {
-		const database = getDatabase(ctx);
+		const { database } = ctx;
 		const account = await database
 			.selectFrom("accounts")
 			.select(["id", "email"])

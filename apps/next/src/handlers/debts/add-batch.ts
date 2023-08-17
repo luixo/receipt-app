@@ -8,7 +8,6 @@ import {
 } from "app/mutations/debts/add-batch";
 import { nonNullishGuard } from "app/utils/utils";
 import { debtNoteSchema } from "app/utils/validation";
-import { getDatabase } from "next-app/db";
 import { UsersId } from "next-app/db/models";
 import { authProcedure } from "next-app/handlers/trpc";
 import {
@@ -39,7 +38,7 @@ export const procedure = authProcedure
 	)
 	.mutation(async ({ input: debts, ctx }) => {
 		const ids = debts.map(() => v4());
-		const database = getDatabase(ctx);
+		const { database } = ctx;
 		const userIds = [...new Set(debts.map(({ userId }) => userId))];
 		const users = await database
 			.selectFrom("users")

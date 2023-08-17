@@ -1,9 +1,8 @@
-import { getDatabase } from "next-app/db";
 import { AccountsId, UsersId } from "next-app/db/models";
 import { authProcedure } from "next-app/handlers/trpc";
 
 export const procedure = authProcedure.query(async ({ ctx }) => {
-	const database = getDatabase(ctx);
+	const { database } = ctx;
 	const relatedIntentions = await database
 		.selectFrom("accountConnectionsIntentions")
 		.innerJoin("accounts as sourceAccounts", (qb) =>

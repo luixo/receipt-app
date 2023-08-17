@@ -4,7 +4,6 @@ import { z } from "zod";
 
 import { DAY } from "app/utils/time";
 import { emailSchema } from "app/utils/validation";
-import { getDatabase } from "next-app/db";
 import { generateResetPasswordEmail } from "next-app/email/utils";
 import { unauthProcedure } from "next-app/handlers/trpc";
 import { getEmailClient, isEmailServiceActive } from "next-app/utils/email";
@@ -16,7 +15,7 @@ export const procedure = unauthProcedure
 		}),
 	)
 	.mutation(async ({ input, ctx }) => {
-		const database = getDatabase(ctx);
+		const { database } = ctx;
 		const account = await database
 			.selectFrom("accounts")
 			.select("id")

@@ -1,9 +1,8 @@
 import { MONTH } from "app/utils/time";
-import { getDatabase } from "next-app/db";
 import { authProcedure } from "next-app/handlers/trpc";
 
 export const procedure = authProcedure.query(async ({ ctx }) => {
-	const database = getDatabase(ctx);
+	const { database } = ctx;
 	const topCurrenciesResult = await database
 		.selectFrom("debts")
 		.select(["currencyCode", database.fn.count<string>("id").as("count")])

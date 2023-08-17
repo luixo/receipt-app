@@ -1,6 +1,5 @@
 import { z } from "zod";
 
-import { getDatabase } from "next-app/db";
 import { SimpleUpdateObject } from "next-app/db/types";
 import { authProcedure } from "next-app/handlers/trpc";
 
@@ -18,7 +17,7 @@ export const procedure = authProcedure
 		]),
 	)
 	.mutation(async ({ ctx, input }) => {
-		const database = getDatabase(ctx);
+		const { database } = ctx;
 		const updateObject: SettingsUpdateObject = {};
 		switch (input.type) {
 			case "autoAcceptDebts":

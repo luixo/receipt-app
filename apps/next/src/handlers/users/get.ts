@@ -1,7 +1,6 @@
 import * as trpc from "@trpc/server";
 import { z } from "zod";
 
-import { getDatabase } from "next-app/db";
 import { UsersId } from "next-app/db/models";
 import { authProcedure } from "next-app/handlers/trpc";
 import { userIdSchema } from "next-app/handlers/validation";
@@ -9,7 +8,7 @@ import { userIdSchema } from "next-app/handlers/validation";
 export const procedure = authProcedure
 	.input(z.strictObject({ id: userIdSchema }))
 	.query(async ({ input, ctx }) => {
-		const database = getDatabase(ctx);
+		const { database } = ctx;
 		const maybeUser = await database
 			.selectFrom("users")
 			.leftJoin("accounts", (qb) =>

@@ -2,12 +2,11 @@ import * as trpc from "@trpc/server";
 import { v4 } from "uuid";
 
 import { HOUR } from "app/utils/time";
-import { getDatabase } from "next-app/db";
 import { sendVerificationEmail } from "next-app/handlers/auth/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 
 export const procedure = authProcedure.mutation(async ({ ctx }) => {
-	const database = getDatabase(ctx);
+	const { database } = ctx;
 	const account = await database
 		.selectFrom("accounts")
 		.select(["email", "confirmationTokenTimestamp"])

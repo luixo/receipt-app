@@ -1,14 +1,13 @@
 import * as trpc from "@trpc/server";
 import { z } from "zod";
 
-import { getDatabase } from "next-app/db";
 import { authProcedure } from "next-app/handlers/trpc";
 import { debtIdSchema } from "next-app/handlers/validation";
 
 export const procedure = authProcedure
 	.input(z.strictObject({ id: debtIdSchema }))
 	.query(async ({ input, ctx }) => {
-		const database = getDatabase(ctx);
+		const { database } = ctx;
 		const selfDebt = await database
 			.selectFrom("debts")
 			.where("debts.id", "=", input.id)

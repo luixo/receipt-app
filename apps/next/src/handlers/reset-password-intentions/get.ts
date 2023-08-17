@@ -1,7 +1,6 @@
 import * as trpc from "@trpc/server";
 import { z } from "zod";
 
-import { getDatabase } from "next-app/db";
 import { unauthProcedure } from "next-app/handlers/trpc";
 import { resetPasswordTokenSchema } from "next-app/handlers/validation";
 
@@ -12,7 +11,7 @@ export const procedure = unauthProcedure
 		}),
 	)
 	.query(async ({ input, ctx }) => {
-		const database = getDatabase(ctx);
+		const { database } = ctx;
 		const resetPasswordIntention = await database
 			.selectFrom("resetPasswordIntentions")
 			.where("token", "=", input.token)

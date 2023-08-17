@@ -1,10 +1,9 @@
 import { CurrencyCode } from "app/utils/currency";
-import { getDatabase } from "next-app/db";
 import { UsersId } from "next-app/db/models";
 import { authProcedure } from "next-app/handlers/trpc";
 
 export const procedure = authProcedure.query(async ({ ctx }) => {
-	const database = getDatabase(ctx);
+	const { database } = ctx;
 	const debts = await database
 		.selectFrom("debts")
 		.where("debts.ownerAccountId", "=", ctx.auth.accountId)

@@ -3,7 +3,6 @@ import { v4 } from "uuid";
 import { z } from "zod";
 
 import { debtNoteSchema } from "app/utils/validation";
-import { getDatabase } from "next-app/db";
 import { authProcedure } from "next-app/handlers/trpc";
 import {
 	debtAmountSchema,
@@ -23,7 +22,7 @@ export const procedure = authProcedure
 	)
 	.mutation(async ({ input, ctx }) => {
 		const id = v4();
-		const database = getDatabase(ctx);
+		const { database } = ctx;
 		const user = await database
 			.selectFrom("users")
 			.leftJoin("accountSettings", (qb) =>

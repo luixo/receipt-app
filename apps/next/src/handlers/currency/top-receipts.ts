@@ -1,7 +1,6 @@
 import { sql } from "kysely";
 
 import { MONTH } from "app/utils/time";
-import { getDatabase } from "next-app/db";
 import {
 	getForeignReceipts,
 	getOwnReceipts,
@@ -9,7 +8,7 @@ import {
 import { authProcedure } from "next-app/handlers/trpc";
 
 export const procedure = authProcedure.query(async ({ ctx }) => {
-	const database = getDatabase(ctx);
+	const { database } = ctx;
 	const foreignReceipts = getForeignReceipts(database, ctx.auth.accountId);
 	const ownReceipts = getOwnReceipts(database, ctx.auth.accountId);
 	const topCurrenciesResult = await database

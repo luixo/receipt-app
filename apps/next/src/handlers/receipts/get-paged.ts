@@ -1,7 +1,6 @@
 import { sql } from "kysely";
 import { z } from "zod";
 
-import { getDatabase } from "next-app/db";
 import { UsersId } from "next-app/db/models";
 import {
 	getOwnReceipts,
@@ -26,7 +25,7 @@ export const procedure = authProcedure
 		}),
 	)
 	.query(async ({ input: { filters = {}, ...input }, ctx }) => {
-		const database = getDatabase(ctx);
+		const { database } = ctx;
 		const foreignReceipts = getForeignReceipts(database, ctx.auth.accountId);
 		const ownReceipts = getOwnReceipts(database, ctx.auth.accountId);
 

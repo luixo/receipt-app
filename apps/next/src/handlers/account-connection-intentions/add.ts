@@ -2,7 +2,6 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { emailSchema } from "app/utils/validation";
-import { getDatabase } from "next-app/db";
 import { addConnectionIntention } from "next-app/handlers/account-connection-intentions/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import { getUserById } from "next-app/handlers/users/utils";
@@ -16,7 +15,7 @@ export const procedure = authProcedure
 		}),
 	)
 	.mutation(async ({ input, ctx }) => {
-		const database = getDatabase(ctx);
+		const { database } = ctx;
 		const user = await getUserById(database, input.userId, [
 			"id",
 			"name",

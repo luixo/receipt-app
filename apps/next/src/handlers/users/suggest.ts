@@ -3,7 +3,6 @@ import { sql } from "kysely";
 import { z } from "zod";
 
 import { userItemSchema } from "app/utils/validation";
-import { getDatabase } from "next-app/db";
 import {
 	getReceiptById,
 	getAccessRole,
@@ -47,7 +46,7 @@ export const procedure = authProcedure
 		}),
 	)
 	.query(async ({ input, ctx }) => {
-		const database = getDatabase(ctx);
+		const { database } = ctx;
 		let filterIds = input.filterIds || [];
 		const cursor = input.cursor || 0;
 		if (input.options.type === "not-connected-receipt") {

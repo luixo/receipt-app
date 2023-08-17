@@ -3,7 +3,6 @@ import { z } from "zod";
 
 import { MONTH } from "app/utils/time";
 import { userItemSchema } from "app/utils/validation";
-import { getDatabase } from "next-app/db";
 import {
 	getReceiptById,
 	getAccessRole,
@@ -40,7 +39,7 @@ export const procedure = authProcedure
 		}),
 	)
 	.query(async ({ input, ctx }) => {
-		const database = getDatabase(ctx);
+		const { database } = ctx;
 		if (input.options.type === "not-connected-receipt") {
 			const { receiptId } = input.options;
 			const receipt = await getReceiptById(database, receiptId, [

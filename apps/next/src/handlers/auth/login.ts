@@ -2,7 +2,6 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { emailSchema, passwordSchema } from "app/utils/validation";
-import { getDatabase } from "next-app/db";
 import { createAuthorizationSession } from "next-app/handlers/auth/utils";
 import { unauthProcedure } from "next-app/handlers/trpc";
 import { setAuthCookie } from "next-app/utils/auth-cookie";
@@ -17,7 +16,7 @@ export const procedure = unauthProcedure
 	)
 	.mutation(async ({ input, ctx }) => {
 		const email = input.email.toLowerCase();
-		const database = getDatabase(ctx);
+		const { database } = ctx;
 		const result = await database
 			.selectFrom("accounts")
 			.where("email", "=", input.email)
