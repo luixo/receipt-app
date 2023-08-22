@@ -1,6 +1,6 @@
 import React from "react";
 
-import { setCookie, deleteCookie } from "cookies-next";
+import { deleteCookie, setCookie } from "cookies-next";
 
 import {
 	ColorModeContext,

@@ -11,11 +11,11 @@ import type { TRPCClientErrorLike } from "@trpc/react-query";
 import { createTRPCReact } from "@trpc/react-query";
 import type { UtilsLike } from "@trpc/react-query/shared";
 import type {
+	AnyMutationProcedure,
 	AnyProcedure,
 	AnyQueryProcedure,
-	AnyMutationProcedure,
 } from "@trpc/server/dist/core/procedure";
-import type { ProcedureRecord, AnyRouter } from "@trpc/server/dist/core/router";
+import type { AnyRouter, ProcedureRecord } from "@trpc/server/dist/core/router";
 import type {
 	inferProcedureInput,
 	inferProcedureOutput,

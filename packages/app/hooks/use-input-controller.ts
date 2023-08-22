@@ -2,10 +2,10 @@ import React from "react";
 
 import type { FormElement } from "@nextui-org/react";
 import type {
-	FieldValues,
 	FieldPath,
-	UseFormReturn,
+	FieldValues,
 	PathValue,
+	UseFormReturn,
 } from "react-hook-form";
 import { useController } from "react-hook-form";
 

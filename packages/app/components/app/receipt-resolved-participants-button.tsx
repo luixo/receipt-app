@@ -1,9 +1,9 @@
 import React from "react";
 
-import { Popover, Spacer, styled, Text } from "@nextui-org/react";
+import { Popover, Spacer, Text, styled } from "@nextui-org/react";
 import {
-	MdHourglassEmpty as WaitIcon,
 	MdHourglassDisabled as CrossWaitIcon,
+	MdHourglassEmpty as WaitIcon,
 } from "react-icons/md";
 
 import { LoadableUser } from "app/components/app/loadable-user";

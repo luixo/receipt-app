@@ -11,8 +11,8 @@ import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
 import {
-	passwordSchema,
 	emailSchema,
+	passwordSchema,
 	userNameSchema,
 } from "app/utils/validation";
 import type { AppPage } from "next-app/types/page";

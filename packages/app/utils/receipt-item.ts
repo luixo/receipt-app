@@ -3,10 +3,10 @@ import type { TRPCQueryOutput } from "app/trpc";
 import { rotate } from "app/utils/array";
 import { getIndexByString } from "app/utils/hash";
 import {
+	entries,
 	mapObjectKeys,
 	mapObjectValues,
 	values,
-	entries,
 } from "app/utils/object";
 import type {
 	ReceiptItemsId,

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Text, styled, Dropdown, Modal, Card, Spacer } from "@nextui-org/react";
+import { Card, Dropdown, Modal, Spacer, Text, styled } from "@nextui-org/react";
 import type { Selection } from "@react-types/shared/src/selection";
 import {
 	BsSortNumericDown as SortDownIcon,

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Text, styled, Card } from "@nextui-org/react";
+import { Card, Text, styled } from "@nextui-org/react";
 
 import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
 import { ReceiptResolvedParticipantsButton } from "app/components/app/receipt-resolved-participants-button";

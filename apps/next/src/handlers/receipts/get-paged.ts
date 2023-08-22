@@ -3,8 +3,8 @@ import { z } from "zod";
 
 import type { UsersId } from "next-app/db/models";
 import {
-	getOwnReceipts,
 	getForeignReceipts,
+	getOwnReceipts,
 } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import { limitSchema, offsetSchema } from "next-app/handlers/validation";

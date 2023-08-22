@@ -1,6 +1,6 @@
 import type { Selection } from "kysely";
 
-import type { ReceiptsSelectExpression, Database } from "next-app/db";
+import type { Database, ReceiptsSelectExpression } from "next-app/db";
 import type { ReceiptItemsId, UsersId } from "next-app/db/models";
 import type { ReceiptsDatabase } from "next-app/db/types";
 

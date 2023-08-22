@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Spacer, Text, Checkbox } from "@nextui-org/react";
+import { Checkbox, Spacer, Text } from "@nextui-org/react";
 
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import type { TRPCQueryOutput } from "app/trpc";

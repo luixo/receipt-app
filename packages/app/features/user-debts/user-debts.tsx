@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Loading, Spacer, Card, styled } from "@nextui-org/react";
+import { Card, Loading, Spacer, styled } from "@nextui-org/react";
 import { BsCurrencyExchange as ExchangeIcon } from "react-icons/bs";
 import { MdAdd as AddIcon } from "react-icons/md";
 

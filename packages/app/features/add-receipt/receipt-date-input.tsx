@@ -1,6 +1,6 @@
 import React from "react";
 
-import { styled, Text } from "@nextui-org/react";
+import { Text, styled } from "@nextui-org/react";
 import type { UseFormReturn } from "react-hook-form";
 
 import { DateInput } from "app/components/date-input";

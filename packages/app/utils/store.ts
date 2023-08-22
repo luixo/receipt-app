@@ -1,11 +1,11 @@
 import React from "react";
 
 import type {
-	StateCreator,
-	StoreMutatorIdentifier,
-	StoreApi,
-	WithReact,
 	ExtractState,
+	StateCreator,
+	StoreApi,
+	StoreMutatorIdentifier,
+	WithReact,
 } from "zustand";
 import { createStore as createZustandStore, useStore } from "zustand";
 

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Modal, styled, Text } from "@nextui-org/react";
+import { Modal, Text, styled } from "@nextui-org/react";
 import { MdInfo as InfoIcon } from "react-icons/md";
 
 import { Grid } from "app/components/grid";

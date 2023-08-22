@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Card, Spacer, styled, Text } from "@nextui-org/react";
+import { Card, Spacer, Text, styled } from "@nextui-org/react";
 
 import { ReceiptItemLockedButton } from "app/components/app/receipt-item-locked-button";
 import { ButtonsGroup } from "app/components/buttons-group";

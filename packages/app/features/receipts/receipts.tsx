@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Loading, Spacer, Text, styled, Card } from "@nextui-org/react";
+import { Card, Loading, Spacer, Text, styled } from "@nextui-org/react";
 import { MdAdd as AddIcon } from "react-icons/md";
 
 import { QueryErrorMessage } from "app/components/error-message";
@@ -14,7 +14,7 @@ import { queries } from "app/queries";
 import type { TRPCQueryInput, TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
 
-import { getWidths, ReceiptPreview } from "./receipt-preview";
+import { ReceiptPreview, getWidths } from "./receipt-preview";
 import { ReceiptsPagination } from "./receipts-pagination";
 
 const Wrapper = styled("div", {

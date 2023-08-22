@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Collapse, Loading, Spacer, styled, Text } from "@nextui-org/react";
+import { Collapse, Loading, Spacer, Text, styled } from "@nextui-org/react";
 
 import { QueryErrorMessage } from "app/components/error-message";
 import { AddReceiptItemController } from "app/features/add-receipt-item/add-receipt-item-controller";

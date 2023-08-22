@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Container, Loading, Spacer, styled, Text } from "@nextui-org/react";
+import { Container, Loading, Spacer, Text, styled } from "@nextui-org/react";
 import { useRouter } from "next/router";
 
 import { LoadableUser } from "app/components/app/loadable-user";

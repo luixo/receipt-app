@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Spacer, styled, Text, Collapse } from "@nextui-org/react";
+import { Collapse, Spacer, Text, styled } from "@nextui-org/react";
 
 import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
 import { User } from "app/components/app/user";

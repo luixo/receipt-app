@@ -1,11 +1,11 @@
 import React from "react";
 
-import { styled, Tooltip } from "@nextui-org/react";
+import { Tooltip, styled } from "@nextui-org/react";
 import {
-	MdSync as SyncIcon,
-	MdSyncProblem as UnsyncIcon,
 	MdKeyboardArrowLeft as IncomingIcon,
 	MdKeyboardArrowRight as OutcomingIcon,
+	MdSync as SyncIcon,
+	MdSyncProblem as UnsyncIcon,
 } from "react-icons/md";
 
 import type { TRPCQueryOutput } from "app/trpc";

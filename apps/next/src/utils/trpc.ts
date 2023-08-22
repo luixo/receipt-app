@@ -1,13 +1,13 @@
-import { httpLink, httpBatchLink } from "@trpc/client";
+import { httpBatchLink, httpLink } from "@trpc/client";
 import { createTRPCNext } from "@trpc/next";
 import type { NextConfig, NextPageContext } from "next";
 import getConfig from "next/config";
 import superjson from "superjson";
 
 import {
+	TRPC_ENDPOINT,
 	getQueryClientConfig,
 	getSsrHost,
-	TRPC_ENDPOINT,
 } from "app/utils/queries";
 import { SECOND } from "app/utils/time";
 import type { AppRouter } from "next-app/pages/api/trpc/[trpc]";

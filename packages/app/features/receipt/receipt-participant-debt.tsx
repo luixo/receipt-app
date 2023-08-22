@@ -1,11 +1,11 @@
 import React from "react";
 
-import { Spacer, styled, Text } from "@nextui-org/react";
+import { Spacer, Text, styled } from "@nextui-org/react";
 import {
-	MdExposureZero as ZeroIcon,
-	MdSend as SendIcon,
 	MdOutlineReceipt as ReceiptOffIcon,
+	MdSend as SendIcon,
 	MdSync as SyncIcon,
+	MdExposureZero as ZeroIcon,
 } from "react-icons/md";
 
 import { DebtSyncStatus } from "app/components/app/debt-sync-status";

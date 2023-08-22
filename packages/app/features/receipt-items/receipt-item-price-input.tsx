@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Input, Text, styled, Spacer } from "@nextui-org/react";
+import { Input, Spacer, Text, styled } from "@nextui-org/react";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 import { MdEdit as EditIcon } from "react-icons/md";
 

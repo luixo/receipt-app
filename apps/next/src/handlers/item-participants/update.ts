@@ -6,8 +6,8 @@ import type { SimpleUpdateObject } from "next-app/db/types";
 import { getItemParticipant } from "next-app/handlers/item-participants/utils";
 import { getReceiptItemById } from "next-app/handlers/receipt-items/utils";
 import {
-	getReceiptById,
 	getAccessRole,
+	getReceiptById,
 } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import { getUserById } from "next-app/handlers/users/utils";

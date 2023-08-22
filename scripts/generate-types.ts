@@ -2,7 +2,7 @@
 // @ts-ignore
 import { recase } from "@kristiandupont/recase";
 import type { TableColumn } from "extract-pg-schema";
-import { processDatabase, generateIndexFile } from "kanel";
+import { generateIndexFile, processDatabase } from "kanel";
 import path from "path";
 
 import { getDatabaseConfig } from "next-app/src/db/config";

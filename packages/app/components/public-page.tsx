@@ -1,8 +1,8 @@
 import React from "react";
 
 import {
-	BsPersonPlusFill as RegisterIcon,
 	BsPersonCheck as LoginIcon,
+	BsPersonPlusFill as RegisterIcon,
 } from "react-icons/bs";
 
 import type { MenuElement } from "app/components/page";

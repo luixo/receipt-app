@@ -1,9 +1,9 @@
 import React from "react";
 
-import { Button, Text, Card, Row, Spacer, styled } from "@nextui-org/react";
+import { Button, Card, Row, Spacer, Text, styled } from "@nextui-org/react";
 import type {
-	QueryObserverRefetchErrorResult,
 	QueryObserverLoadingErrorResult,
+	QueryObserverRefetchErrorResult,
 } from "@tanstack/react-query";
 import { IoWarning as WarningIcon } from "react-icons/io5";
 

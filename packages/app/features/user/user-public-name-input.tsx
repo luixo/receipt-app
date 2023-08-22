@@ -1,6 +1,6 @@
 import React from "react";
 
-import { styled, Button, Input } from "@nextui-org/react";
+import { Button, Input, styled } from "@nextui-org/react";
 import {
 	IoCheckmarkCircleOutline as CheckMark,
 	IoTrashBin as TrashBin,

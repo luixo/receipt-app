@@ -5,8 +5,8 @@ import { addReceiptParticipants } from "next-app/handlers/receipt-participants/u
 import { getReceiptById } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import {
-	receiptIdSchema,
 	assignableRoleSchema,
+	receiptIdSchema,
 	userIdSchema,
 } from "next-app/handlers/validation";
 

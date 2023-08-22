@@ -5,8 +5,8 @@ import { debtNoteSchema } from "app/utils/validation";
 import type { SimpleUpdateObject } from "next-app/db/types";
 import { authProcedure } from "next-app/handlers/trpc";
 import {
-	debtAmountSchema,
 	currencyCodeSchema,
+	debtAmountSchema,
 	debtIdSchema,
 } from "next-app/handlers/validation";
 

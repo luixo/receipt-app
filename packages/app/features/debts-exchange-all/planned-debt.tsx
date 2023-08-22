@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Loading, Input, Text, styled } from "@nextui-org/react";
+import { Input, Loading, Text, styled } from "@nextui-org/react";
 import type { UseFormReturn } from "react-hook-form";
 
 import { Grid } from "app/components/grid";

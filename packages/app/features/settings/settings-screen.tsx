@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Card, Spacer, styled, Text } from "@nextui-org/react";
+import { Card, Spacer, Text, styled } from "@nextui-org/react";
 
 import type { AppPage } from "next-app/types/page";
 

@@ -91,6 +91,7 @@ module.exports = {
 		"no-param-reassign": ["error", { props: false }],
 		"@typescript-eslint/restrict-template-expressions": "error",
 		"@typescript-eslint/consistent-type-imports": "error",
+		"sort-imports": ["error", { ignoreDeclarationSort: true }],
 	},
 	overrides: [
 		{

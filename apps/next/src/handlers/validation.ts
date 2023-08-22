@@ -2,12 +2,12 @@ import { z } from "zod";
 
 import { createNumberSchema, flavored, nonZero } from "app/utils/validation";
 import type {
-	UsersId,
 	AccountsId,
-	ReceiptsId,
-	ReceiptItemsId,
-	SessionsSessionId,
 	DebtsId,
+	ReceiptItemsId,
+	ReceiptsId,
+	SessionsSessionId,
+	UsersId,
 } from "next-app/db/models";
 import { isCurrencyCode } from "next-app/utils/currency";
 

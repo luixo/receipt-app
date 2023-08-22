@@ -18,8 +18,8 @@ import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
 import { getToday } from "app/utils/date";
 import {
-	currencySchema,
 	clientDebtAmountSchema,
+	currencySchema,
 	debtNoteSchema,
 	userItemSchema,
 } from "app/utils/validation";

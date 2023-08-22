@@ -1,9 +1,9 @@
 import React from "react";
 
-import { Card, Spacer, styled, Text } from "@nextui-org/react";
+import { Card, Spacer, Text, styled } from "@nextui-org/react";
 import {
-	MdSync as SyncIcon,
 	MdNavigateNext as ArrowIcon,
+	MdSync as SyncIcon,
 } from "react-icons/md";
 
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";

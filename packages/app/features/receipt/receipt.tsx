@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Loading, Spacer, styled, Text } from "@nextui-org/react";
+import { Loading, Spacer, Text, styled } from "@nextui-org/react";
 import { MdEdit as EditIcon } from "react-icons/md";
 
 import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";

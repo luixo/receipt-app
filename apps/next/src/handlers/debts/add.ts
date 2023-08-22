@@ -5,8 +5,8 @@ import { z } from "zod";
 import { debtNoteSchema } from "app/utils/validation";
 import { authProcedure } from "next-app/handlers/trpc";
 import {
-	debtAmountSchema,
 	currencyCodeSchema,
+	debtAmountSchema,
 	userIdSchema,
 } from "next-app/handlers/validation";
 

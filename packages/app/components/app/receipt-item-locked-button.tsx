@@ -1,8 +1,8 @@
 import React from "react";
 
 import {
-	MdLockOpen as UnlockedIcon,
 	MdLock as LockedIcon,
+	MdLockOpen as UnlockedIcon,
 } from "react-icons/md";
 
 import { IconButton } from "app/components/icon-button";

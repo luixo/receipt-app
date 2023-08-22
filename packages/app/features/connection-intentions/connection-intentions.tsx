@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Container, Loading, Spacer, styled, Text } from "@nextui-org/react";
+import { Container, Loading, Spacer, Text, styled } from "@nextui-org/react";
 
 import { QueryErrorMessage } from "app/components/error-message";
 import type { TRPCQuerySuccessResult } from "app/trpc";

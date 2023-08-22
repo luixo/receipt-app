@@ -6,7 +6,7 @@ import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persi
 import { useQueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 
-import type { TRPCQueryKey, TRPCQuery, TRPCSplitQueryKey } from "app/trpc";
+import type { TRPCQuery, TRPCQueryKey, TRPCSplitQueryKey } from "app/trpc";
 import { createIDBStorage } from "app/utils/idb";
 import { MONTH } from "app/utils/time";
 

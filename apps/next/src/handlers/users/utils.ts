@@ -1,5 +1,5 @@
 import * as trpc from "@trpc/server";
-import type { Selection, SelectQueryBuilder } from "kysely";
+import type { SelectQueryBuilder, Selection } from "kysely";
 
 import type { Database, ReceiptsSelectExpression } from "next-app/db";
 import type { AccountsId, UsersId } from "next-app/db/models";

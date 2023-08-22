@@ -3,9 +3,9 @@ import * as ReactNative from "react-native";
 
 import {
 	NextUIProvider,
-	lightThemeStitches,
-	darkThemeStitches,
 	createTheme,
+	darkThemeStitches,
+	lightThemeStitches,
 } from "@nextui-org/react";
 import { DripsyProvider } from "dripsy";
 

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { globalCss, Popover } from "@nextui-org/react";
+import { Popover, globalCss } from "@nextui-org/react";
 import ReactCalendar from "react-calendar";
 
 const calendarStyles = globalCss({

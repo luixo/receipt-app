@@ -1,6 +1,6 @@
 import React from "react";
 
-import { styled, Text, Image } from "@nextui-org/react";
+import { Image, Text, styled } from "@nextui-org/react";
 import type { DripsyFinalTheme } from "dripsy";
 import { useDripsyTheme } from "dripsy";
 import IdenticonJs from "identicon.js";

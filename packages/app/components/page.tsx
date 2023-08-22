@@ -1,6 +1,6 @@
 import React from "react";
 
-import { styled, Text } from "@nextui-org/react";
+import { Text, styled } from "@nextui-org/react";
 import { useRouter } from "next/router";
 
 import { Badge } from "app/components/badge";

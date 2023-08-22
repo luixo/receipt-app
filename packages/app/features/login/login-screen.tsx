@@ -11,7 +11,7 @@ import { useRouter } from "app/hooks/use-router";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
-import { passwordSchema, emailSchema } from "app/utils/validation";
+import { emailSchema, passwordSchema } from "app/utils/validation";
 import type { AppPage } from "next-app/types/page";
 
 import { ResetPasswordModal } from "./reset-password-modal";

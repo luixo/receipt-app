@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, Loading, Spacer, styled, Text } from "@nextui-org/react";
+import { Button, Loading, Spacer, Text, styled } from "@nextui-org/react";
 
 import { ErrorMessage } from "app/components/error-message";
 import { useRouter } from "app/hooks/use-router";

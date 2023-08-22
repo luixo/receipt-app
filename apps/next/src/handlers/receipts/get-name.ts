@@ -2,8 +2,8 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import {
-	getReceiptById,
 	getAccessRole,
+	getReceiptById,
 } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import { receiptIdSchema } from "next-app/handlers/validation";

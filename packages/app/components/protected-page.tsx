@@ -5,7 +5,7 @@ import {
 	BsReceipt as ReceiptsIcon,
 	BsGearFill as SettingsIcon,
 } from "react-icons/bs";
-import { FaUsers as UsersIcon, FaUser as AccountIcon } from "react-icons/fa";
+import { FaUser as AccountIcon, FaUsers as UsersIcon } from "react-icons/fa";
 import { MdAttachMoney as DebtsIcon } from "react-icons/md";
 
 import { QueryErrorMessage } from "app/components/error-message";

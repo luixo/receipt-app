@@ -1,6 +1,6 @@
 import React from "react";
 
-import { styled, Textarea } from "@nextui-org/react";
+import { Textarea, styled } from "@nextui-org/react";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 
 import { IconButton } from "app/components/icon-button";

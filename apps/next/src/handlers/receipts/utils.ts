@@ -1,7 +1,7 @@
 import type { Selection } from "kysely";
 import type { z } from "zod";
 
-import type { ReceiptsSelectExpression, Database } from "next-app/db";
+import type { Database, ReceiptsSelectExpression } from "next-app/db";
 import type { AccountsId, ReceiptsId } from "next-app/db/models";
 import type { ReceiptsDatabase } from "next-app/db/types";
 import { roleSchema } from "next-app/handlers/validation";

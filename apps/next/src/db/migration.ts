@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import type { MigrationResult } from "kysely";
-import { Migrator, FileMigrationProvider } from "kysely";
+import { FileMigrationProvider, Migrator } from "kysely";
 import * as path from "path";
 import * as util from "util";
 

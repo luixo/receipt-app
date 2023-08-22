@@ -6,9 +6,9 @@ import { createTRPCReact } from "@trpc/react-query";
 import superjson from "superjson";
 
 import {
+	TRPC_ENDPOINT,
 	getNativeBaseUrl,
 	getQueryClientConfig,
-	TRPC_ENDPOINT,
 } from "app/utils/queries";
 import type { AppRouter } from "next-app/pages/api/trpc/[trpc]";
 
