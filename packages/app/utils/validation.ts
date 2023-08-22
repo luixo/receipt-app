@@ -124,3 +124,6 @@ export const fallback = <T extends z.Schema<unknown>>(
 		const safe = schema.safeParse(val);
 		return safe.success ? safe.data : value;
 	}) as unknown as T;
+
+export const MIN_BATCH_DEBTS = 1;
+export const MAX_BATCH_DEBTS = 10;

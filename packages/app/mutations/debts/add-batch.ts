@@ -7,9 +7,6 @@ import type {
 } from "app/trpc";
 import type { UsersId } from "next-app/db/models";
 
-export const MIN_BATCH_DEBTS = 1;
-export const MAX_BATCH_DEBTS = 10;
-
 type DebtUserSnapshot = TRPCQueryOutput<"debts.getUser">[number];
 type DebtSnapshot = TRPCQueryOutput<"debts.get">;
 type AddBatchResult = TRPCMutationOutput<"debts.addBatch">;

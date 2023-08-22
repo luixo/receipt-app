@@ -11,14 +11,14 @@ import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useMountEffect } from "app/hooks/use-mount-effect";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
-import {
-	MAX_BATCH_DEBTS,
-	MIN_BATCH_DEBTS,
-} from "app/mutations/debts/add-batch";
 import { trpc } from "app/trpc";
 import type { CurrencyCode } from "app/utils/currency";
 import { round } from "app/utils/math";
-import { currencyRateSchema } from "app/utils/validation";
+import {
+	MAX_BATCH_DEBTS,
+	MIN_BATCH_DEBTS,
+	currencyRateSchema,
+} from "app/utils/validation";
 import type { UsersId } from "next-app/db/models";
 import { currencyCodeSchema } from "next-app/handlers/validation";
 
