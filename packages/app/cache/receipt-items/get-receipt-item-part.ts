@@ -1,13 +1,9 @@
 import * as utils from "app/cache/utils";
-import { TRPCQueryOutput, TRPCReactContext } from "app/trpc";
-import {
-	addToArray,
-	ItemWithIndex,
-	removeFromArray,
-	replaceInArray,
-} from "app/utils/array";
+import type { TRPCQueryOutput, TRPCReactContext } from "app/trpc";
+import type { ItemWithIndex } from "app/utils/array";
+import { addToArray, removeFromArray, replaceInArray } from "app/utils/array";
 import { alwaysTrue } from "app/utils/utils";
-import { ReceiptItemsId, ReceiptsId, UsersId } from "next-app/db/models";
+import type { ReceiptItemsId, ReceiptsId, UsersId } from "next-app/db/models";
 
 type Controller = TRPCReactContext["receiptItems"]["get"];
 

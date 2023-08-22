@@ -2,7 +2,8 @@ import React from "react";
 
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
-import { trpc, TRPCQueryOutput } from "app/trpc";
+import type { TRPCQueryOutput } from "app/trpc";
+import { trpc } from "app/trpc";
 
 import { ReceiptLockedButton } from "./receipt-locked-button";
 import { ReceiptPropagateButton } from "./receipt-propagate-button";

@@ -6,7 +6,7 @@ import { DebtSyncStatus } from "app/components/app/debt-sync-status";
 import { Grid } from "app/components/grid";
 import { Link } from "app/components/link";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
-import { TRPCQuerySuccessResult } from "app/trpc";
+import type { TRPCQuerySuccessResult } from "app/trpc";
 
 type Props = {
 	debt: TRPCQuerySuccessResult<"debts.getUser">["data"][number];

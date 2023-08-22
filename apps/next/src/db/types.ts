@@ -1,6 +1,6 @@
-import { ColumnType, UpdateKeys, UpdateType } from "kysely";
+import type { ColumnType, UpdateKeys, UpdateType } from "kysely";
 
-import * as models from "./models";
+import type * as models from "./models";
 
 type SelectTypeMap = {
 	accountConnectionsIntentions: models.AccountConnectionsIntentions;

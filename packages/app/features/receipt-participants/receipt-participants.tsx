@@ -3,15 +3,15 @@ import React from "react";
 import { Collapse } from "@nextui-org/react";
 
 import { useSelfAccountId } from "app/hooks/use-self-account-id";
-import { TRPCQueryOutput } from "app/trpc";
-import { CurrencyCode } from "app/utils/currency";
+import type { TRPCQueryOutput } from "app/trpc";
+import type { CurrencyCode } from "app/utils/currency";
 import {
 	getDecimalsPower,
 	getItemCalculations,
 	getParticipantSums,
 } from "app/utils/receipt-item";
 import { nonNullishGuard } from "app/utils/utils";
-import { AccountsId, ReceiptsId, UsersId } from "next-app/db/models";
+import type { AccountsId, ReceiptsId, UsersId } from "next-app/db/models";
 
 import { AddReceiptParticipantForm } from "./add-receipt-participant-form";
 import { ReceiptParticipant } from "./receipt-participant";

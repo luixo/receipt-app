@@ -5,7 +5,8 @@ import { Button, Spacer } from "@nextui-org/react";
 import { useRouter } from "app/hooks/use-router";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
-import { trpc, TRPCQueryOutput } from "app/trpc";
+import type { TRPCQueryOutput } from "app/trpc";
+import { trpc } from "app/trpc";
 
 import { DebtIntention } from "./debt-intention";
 

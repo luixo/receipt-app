@@ -10,11 +10,12 @@ import { ReceiptItemPart } from "app/features/receipt-item-parts/receipt-item-pa
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
-import { trpc, TRPCQueryOutput } from "app/trpc";
-import { CurrencyCode } from "app/utils/currency";
+import type { TRPCQueryOutput } from "app/trpc";
+import { trpc } from "app/trpc";
+import type { CurrencyCode } from "app/utils/currency";
 import { round } from "app/utils/math";
-import { ReceiptsId, UsersId } from "next-app/db/models";
-import { Role } from "next-app/handlers/receipts/utils";
+import type { ReceiptsId, UsersId } from "next-app/db/models";
+import type { Role } from "next-app/handlers/receipts/utils";
 
 import { ReceiptItemNameInput } from "./receipt-item-name-input";
 import { ReceiptItemPriceInput } from "./receipt-item-price-input";

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { UsersId } from "next-app/db/models";
+import type { UsersId } from "next-app/db/models";
 import { authProcedure } from "next-app/handlers/trpc";
 import { limitSchema, offsetSchema } from "next-app/handlers/validation";
 

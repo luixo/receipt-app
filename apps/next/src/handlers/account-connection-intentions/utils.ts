@@ -1,8 +1,8 @@
 import * as trpc from "@trpc/server";
 
-import { Database } from "next-app/db";
+import type { Database } from "next-app/db";
 import { ACCOUNT_CONNECTIONS_INTENTIONS } from "next-app/db/consts";
-import { AccountsId, UsersId } from "next-app/db/models";
+import type { AccountsId, UsersId } from "next-app/db/models";
 import { getUserById } from "next-app/handlers/users/utils";
 
 export const addConnectionIntention = async (

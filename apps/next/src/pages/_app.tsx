@@ -3,28 +3,28 @@ import React from "react";
 import { globalCss } from "@nextui-org/react";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { getCookies } from "cookies-next";
-import { AppType } from "next/dist/shared/lib/utils";
+import type { AppType } from "next/dist/shared/lib/utils";
 import Head from "next/head";
 import "raf/polyfill";
-import { ParsedUrlQuery } from "querystring";
+import type { ParsedUrlQuery } from "querystring";
 
 import { ProtectedPage } from "app/components/protected-page";
 import { PublicPage } from "app/components/public-page";
 import { Toaster } from "app/components/toaster";
+import type { ColorModeConfig } from "app/contexts/color-mode-context";
 import {
-	ColorModeConfig,
 	LAST_COLOR_MODE_COOKIE_NAME,
 	SELECTED_COLOR_MODE_COOKIE_NAME,
 } from "app/contexts/color-mode-context";
+import type { Settings } from "app/contexts/settings-context";
 import {
-	Settings,
 	SETTINGS_COOKIE_NAME,
 	validateSettings,
 } from "app/contexts/settings-context";
 import { Provider } from "app/provider";
 import { useColorModeCookies } from "next-app/hooks/use-color-mode-cookies";
 import { useSettingsCookies } from "next-app/hooks/use-settings-cookies";
-import { AppPage } from "next-app/types/page";
+import type { AppPage } from "next-app/types/page";
 import { trpcNext } from "next-app/utils/trpc";
 
 const globalStyles = globalCss({

@@ -1,8 +1,8 @@
 import { cache } from "app/cache";
-import { UseContextedQueryOptions } from "app/hooks/use-trpc-query-options";
-import { TRPCQueryInput } from "app/trpc";
+import type { UseContextedQueryOptions } from "app/hooks/use-trpc-query-options";
+import type { TRPCQueryInput } from "app/trpc";
 import { createStore, updateWithFn } from "app/utils/store";
-import { Setters } from "app/utils/types";
+import type { Setters } from "app/utils/types";
 
 type Input = TRPCQueryInput<"users.getPaged">;
 

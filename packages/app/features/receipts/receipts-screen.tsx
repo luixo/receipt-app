@@ -6,7 +6,7 @@ import { MdAdd as AddIcon } from "react-icons/md";
 import { Header } from "app/components/header";
 import { IconButton } from "app/components/icon-button";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
-import { AppPage } from "next-app/types/page";
+import type { AppPage } from "next-app/types/page";
 
 import { Receipts } from "./receipts";
 

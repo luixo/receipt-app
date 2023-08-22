@@ -9,8 +9,8 @@ import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
 import { receiptNameSchema } from "app/utils/validation";
-import { ReceiptsId } from "next-app/db/models";
-import { Role } from "next-app/handlers/receipts/utils";
+import type { ReceiptsId } from "next-app/db/models";
+import type { Role } from "next-app/handlers/receipts/utils";
 
 type Props = {
 	receipt: {

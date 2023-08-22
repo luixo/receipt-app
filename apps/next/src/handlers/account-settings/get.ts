@@ -1,4 +1,4 @@
-import { ReceiptsDatabase } from "next-app/db/types";
+import type { ReceiptsDatabase } from "next-app/db/types";
 import { authProcedure } from "next-app/handlers/trpc";
 
 type SettingsKey = Omit<ReceiptsDatabase["accountSettings"], "accountId">;

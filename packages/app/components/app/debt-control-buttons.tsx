@@ -10,7 +10,8 @@ import { ConfirmModal } from "app/components/confirm-modal";
 import { IconButton } from "app/components/icon-button";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
-import { trpc, TRPCQueryOutput } from "app/trpc";
+import type { TRPCQueryOutput } from "app/trpc";
+import { trpc } from "app/trpc";
 
 type Debt = TRPCQueryOutput<"debts.get">;
 

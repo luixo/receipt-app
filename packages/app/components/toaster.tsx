@@ -1,12 +1,8 @@
 import React from "react";
 
 import { css } from "@nextui-org/react";
-import {
-	ToastBar,
-	Toaster as RawToaster,
-	toast,
-	Toast as ToastType,
-} from "react-hot-toast";
+import type { Toast as ToastType } from "react-hot-toast";
+import { ToastBar, Toaster as RawToaster, toast } from "react-hot-toast";
 
 const toaster = css({
 	background: "$backgroundContrast",

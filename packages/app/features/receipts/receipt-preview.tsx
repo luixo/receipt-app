@@ -12,7 +12,8 @@ import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useMatchMediaValue } from "app/hooks/use-match-media-value";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
-import { trpc, TRPCQueryOutput } from "app/trpc";
+import type { TRPCQueryOutput } from "app/trpc";
+import { trpc } from "app/trpc";
 
 const TitleLink = styled(Link, {
 	display: "flex",

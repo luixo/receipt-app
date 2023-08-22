@@ -1,19 +1,16 @@
-import { QueryClient } from "@tanstack/react-query";
+import type { QueryClient } from "@tanstack/react-query";
 import { getQueryKey } from "@trpc/react-query";
 
 import * as utils from "app/cache/utils";
-import {
+import type {
 	TRPCQueryInput,
 	TRPCQueryOutput,
 	TRPCReactContext,
-	trpc,
 } from "app/trpc";
-import {
-	ItemWithIndex,
-	removeFromArray,
-	replaceInArray,
-} from "app/utils/array";
-import { UsersId } from "next-app/src/db/models";
+import { trpc } from "app/trpc";
+import type { ItemWithIndex } from "app/utils/array";
+import { removeFromArray, replaceInArray } from "app/utils/array";
+import type { UsersId } from "next-app/src/db/models";
 
 type Controller = TRPCReactContext["users"]["getPaged"];
 

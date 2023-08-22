@@ -1,8 +1,8 @@
-import { z } from "zod";
+import type { z } from "zod";
 
-import { Direction } from "app/components/app/sign-button-group";
-import { TRPCQueryOutput } from "app/trpc";
-import { userItemSchema } from "app/utils/validation";
+import type { Direction } from "app/components/app/sign-button-group";
+import type { TRPCQueryOutput } from "app/trpc";
+import type { userItemSchema } from "app/utils/validation";
 
 export type Form = {
 	amount: number;

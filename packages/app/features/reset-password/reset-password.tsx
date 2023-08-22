@@ -9,7 +9,8 @@ import { QueryErrorMessage } from "app/components/error-message";
 import { useRouter } from "app/hooks/use-router";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
-import { trpc, TRPCQueryResult } from "app/trpc";
+import type { TRPCQueryResult } from "app/trpc";
+import { trpc } from "app/trpc";
 import { passwordSchema } from "app/utils/validation";
 
 type ChangePasswordForm = {

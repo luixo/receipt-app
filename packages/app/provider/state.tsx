@@ -1,9 +1,9 @@
 import React from "react";
 
-import { NextParsedUrlQuery } from "next/dist/server/request-meta";
+import type { NextParsedUrlQuery } from "next/dist/server/request-meta";
 
 import { inputs } from "app/queries";
-import { ParsedQuery } from "app/utils/store";
+import type { ParsedQuery } from "app/utils/store";
 
 type Props = {
 	query: NextParsedUrlQuery;

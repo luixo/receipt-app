@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { createNumberSchema, flavored, nonZero } from "app/utils/validation";
-import {
+import type {
 	UsersId,
 	AccountsId,
 	ReceiptsId,

@@ -2,7 +2,7 @@ import React from "react";
 
 import { Card, Spacer, styled, Text } from "@nextui-org/react";
 
-import { AppPage } from "next-app/types/page";
+import type { AppPage } from "next-app/types/page";
 
 import { AutoAcceptDebtsOption } from "./auto-accept-debts-option";
 import { ColorModeSettings } from "./color-mode-settings";

@@ -1,8 +1,8 @@
 import { v4 } from "uuid";
 
 import { cache } from "app/cache";
-import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { ReceiptItemsId, ReceiptsId } from "next-app/db/models";
+import type { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import type { ReceiptItemsId, ReceiptsId } from "next-app/db/models";
 
 import { updateReceiptSum } from "./utils";
 

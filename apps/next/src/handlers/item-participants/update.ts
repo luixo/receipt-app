@@ -2,7 +2,7 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { partSchema } from "app/utils/validation";
-import { SimpleUpdateObject } from "next-app/db/types";
+import type { SimpleUpdateObject } from "next-app/db/types";
 import { getItemParticipant } from "next-app/handlers/item-participants/utils";
 import { getReceiptItemById } from "next-app/handlers/receipt-items/utils";
 import {

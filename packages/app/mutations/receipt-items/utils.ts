@@ -1,6 +1,6 @@
 import { cache } from "app/cache";
-import * as utils from "app/cache/utils";
-import { ReceiptsId } from "next-app/db/models";
+import type * as utils from "app/cache/utils";
+import type { ReceiptsId } from "next-app/db/models";
 
 export const updateReceiptSum = (
 	controllerContext: utils.ControllerContext,

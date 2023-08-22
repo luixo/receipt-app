@@ -1,7 +1,8 @@
 import React from "react";
 
 import { Body } from "./body";
-import { Child, Props as ChildProps } from "./child";
+import type { Props as ChildProps } from "./child";
+import { Child } from "./child";
 import { Footer } from "./footer";
 import { Header } from "./header";
 import { Style } from "./style";

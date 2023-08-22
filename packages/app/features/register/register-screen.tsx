@@ -15,7 +15,7 @@ import {
 	emailSchema,
 	userNameSchema,
 } from "app/utils/validation";
-import { AppPage } from "next-app/types/page";
+import type { AppPage } from "next-app/types/page";
 
 type RegistrationForm = {
 	email: string;

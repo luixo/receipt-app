@@ -9,7 +9,8 @@ import { FaUsers as UsersIcon, FaUser as AccountIcon } from "react-icons/fa";
 import { MdAttachMoney as DebtsIcon } from "react-icons/md";
 
 import { QueryErrorMessage } from "app/components/error-message";
-import { MenuElement, Page } from "app/components/page";
+import type { MenuElement } from "app/components/page";
+import { Page } from "app/components/page";
 import { useConnectionIntentions } from "app/hooks/use-connection-intentions";
 import { useDebtsIntentions } from "app/hooks/use-debts-intentions";
 import { useNonResolvedReceipts } from "app/hooks/use-non-resolved-receipts";

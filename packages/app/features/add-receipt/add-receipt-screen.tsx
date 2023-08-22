@@ -15,11 +15,11 @@ import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
 import { getToday } from "app/utils/date";
 import { currencySchema, receiptNameSchema } from "app/utils/validation";
-import { AppPage } from "next-app/types/page";
+import type { AppPage } from "next-app/types/page";
 
 import { ReceiptDateInput } from "./receipt-date-input";
 import { ReceiptNameInput } from "./receipt-name-input";
-import { Form } from "./types";
+import type { Form } from "./types";
 
 export const AddReceiptScreen: AppPage = () => {
 	const router = useRouter();

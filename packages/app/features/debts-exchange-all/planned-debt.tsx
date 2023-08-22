@@ -1,11 +1,11 @@
 import React from "react";
 
 import { Loading, Input, Text, styled } from "@nextui-org/react";
-import { UseFormReturn } from "react-hook-form";
+import type { UseFormReturn } from "react-hook-form";
 
 import { Grid } from "app/components/grid";
 import { useInputController } from "app/hooks/use-input-controller";
-import { CurrencyCode } from "app/utils/currency";
+import type { CurrencyCode } from "app/utils/currency";
 import { round } from "app/utils/math";
 
 const GridContainer = styled(Grid.Container, {

@@ -2,8 +2,9 @@ import * as trpc from "@trpc/server";
 import { sql } from "kysely";
 import { z } from "zod";
 
-import { DebtsId } from "next-app/db/models";
-import { getAccessRole, Role } from "next-app/handlers/receipts/utils";
+import type { DebtsId } from "next-app/db/models";
+import type { Role } from "next-app/handlers/receipts/utils";
+import { getAccessRole } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import { receiptIdSchema } from "next-app/handlers/validation";
 

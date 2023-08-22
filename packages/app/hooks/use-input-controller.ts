@@ -1,13 +1,13 @@
 import React from "react";
 
-import { FormElement } from "@nextui-org/react";
-import {
-	useController,
+import type { FormElement } from "@nextui-org/react";
+import type {
 	FieldValues,
 	FieldPath,
 	UseFormReturn,
 	PathValue,
 } from "react-hook-form";
+import { useController } from "react-hook-form";
 
 import { formatIsoDate } from "app/utils/date";
 

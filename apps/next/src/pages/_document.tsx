@@ -5,10 +5,8 @@ import { getCookie } from "cookies-next";
 import { extractCss } from "goober";
 import NextDocument, { Head, Html, Main, NextScript } from "next/document";
 
-import {
-	ColorMode,
-	LAST_COLOR_MODE_COOKIE_NAME,
-} from "app/contexts/color-mode-context";
+import type { ColorMode } from "app/contexts/color-mode-context";
+import { LAST_COLOR_MODE_COOKIE_NAME } from "app/contexts/color-mode-context";
 
 type DocumentProps = {
 	lastColorMode: ColorMode;

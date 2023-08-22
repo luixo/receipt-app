@@ -1,9 +1,10 @@
-import { Kysely, LogEvent, PostgresDialect, SelectExpression } from "kysely";
-import { Pool } from "pg";
+import type { LogEvent, SelectExpression } from "kysely";
+import { Kysely, PostgresDialect } from "kysely";
+import type { Pool } from "pg";
 
-import { Logger } from "next-app/utils/logger";
+import type { Logger } from "next-app/utils/logger";
 
-import { ReceiptsDatabase } from "./types";
+import type { ReceiptsDatabase } from "./types";
 
 export type ReceiptsSelectExpression<TB extends keyof ReceiptsDatabase> =
 	SelectExpression<ReceiptsDatabase, TB>;

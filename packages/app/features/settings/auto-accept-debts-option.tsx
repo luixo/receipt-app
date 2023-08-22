@@ -1,6 +1,7 @@
 import React from "react";
 
-import { Loading, Switch, SwitchEvent } from "@nextui-org/react";
+import type { SwitchEvent } from "@nextui-org/react";
+import { Loading, Switch } from "@nextui-org/react";
 
 import { ErrorMessage, QueryErrorMessage } from "app/components/error-message";
 import { trpc } from "app/trpc";

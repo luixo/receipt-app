@@ -4,9 +4,10 @@ import { Dropdown, Loading, Text } from "@nextui-org/react";
 
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
-import { trpc, TRPCQueryOutput } from "app/trpc";
-import { ReceiptsId, UsersId } from "next-app/db/models";
-import { Role } from "next-app/handlers/receipts/utils";
+import type { TRPCQueryOutput } from "app/trpc";
+import { trpc } from "app/trpc";
+import type { ReceiptsId, UsersId } from "next-app/db/models";
+import type { Role } from "next-app/handlers/receipts/utils";
 
 export type AssignableRole = Exclude<Role, "owner">;
 

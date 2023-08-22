@@ -1,8 +1,9 @@
 import React from "react";
 
-import { LinkingOptions, NavigationContainer } from "@react-navigation/native";
+import type { LinkingOptions } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { useDripsyTheme } from "dripsy";
-import { AppParamList } from "expo-app/navigation";
+import type { AppParamList } from "expo-app/navigation";
 import * as Linking from "expo-linking";
 
 export const NavigationProvider: React.FC<React.PropsWithChildren<object>> = ({

@@ -8,7 +8,7 @@ import {
 	MdKeyboardArrowRight as OutcomingIcon,
 } from "react-icons/md";
 
-import { TRPCQueryOutput } from "app/trpc";
+import type { TRPCQueryOutput } from "app/trpc";
 
 const Wrapper = styled("div", {
 	display: "flex",

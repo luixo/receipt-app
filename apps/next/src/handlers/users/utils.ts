@@ -1,9 +1,9 @@
 import * as trpc from "@trpc/server";
-import { Selection, SelectQueryBuilder } from "kysely";
+import type { Selection, SelectQueryBuilder } from "kysely";
 
-import { Database, ReceiptsSelectExpression } from "next-app/db";
-import { AccountsId, UsersId } from "next-app/db/models";
-import { ReceiptsDatabase } from "next-app/db/types";
+import type { Database, ReceiptsSelectExpression } from "next-app/db";
+import type { AccountsId, UsersId } from "next-app/db/models";
+import type { ReceiptsDatabase } from "next-app/db/types";
 
 export const getUserById = <SE extends ReceiptsSelectExpression<"users">>(
 	database: Database,

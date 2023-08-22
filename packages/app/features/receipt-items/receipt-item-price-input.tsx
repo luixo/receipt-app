@@ -10,10 +10,11 @@ import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
-import { trpc, TRPCQueryOutput } from "app/trpc";
-import { CurrencyCode } from "app/utils/currency";
+import type { TRPCQueryOutput } from "app/trpc";
+import { trpc } from "app/trpc";
+import type { CurrencyCode } from "app/utils/currency";
 import { priceSchema } from "app/utils/validation";
-import { ReceiptsId } from "next-app/db/models";
+import type { ReceiptsId } from "next-app/db/models";
 
 const Wrapper = styled("div", { display: "flex", alignItems: "center" });
 

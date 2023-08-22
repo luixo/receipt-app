@@ -1,4 +1,4 @@
-import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
+import type { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { get, set, del } from "idb-keyval";
 
 export const createIDBStorage = (): Parameters<

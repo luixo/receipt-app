@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { SimpleUpdateObject } from "next-app/db/types";
+import type { SimpleUpdateObject } from "next-app/db/types";
 import { authProcedure } from "next-app/handlers/trpc";
 
 import { DEFAULT_ACCOUNT_SETTINGS } from "./get";

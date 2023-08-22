@@ -8,7 +8,7 @@ import { useRouter } from "app/hooks/use-router";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
-import { AppPage } from "next-app/types/page";
+import type { AppPage } from "next-app/types/page";
 
 import { ConfirmEmail } from "./confirm-email";
 

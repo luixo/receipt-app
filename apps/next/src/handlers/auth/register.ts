@@ -7,7 +7,7 @@ import {
 	passwordSchema,
 	userNameSchema,
 } from "app/utils/validation";
-import { AccountsId, UsersId } from "next-app/db/models";
+import type { AccountsId, UsersId } from "next-app/db/models";
 import {
 	createAuthorizationSession,
 	sendVerificationEmail,

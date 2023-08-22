@@ -2,7 +2,7 @@ import React from "react";
 
 import { useQueryState } from "next-usequerystate";
 import { createParam } from "solito";
-import { Primitive } from "zod";
+import type { Primitive } from "zod";
 
 import { id } from "app/utils/utils";
 

@@ -1,4 +1,4 @@
-import { ServerResponse } from "http";
+import type { ServerResponse } from "http";
 
 import { setCookie } from "next-app/utils/cookie";
 

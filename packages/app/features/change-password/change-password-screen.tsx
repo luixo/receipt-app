@@ -10,7 +10,7 @@ import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
 import { passwordSchema } from "app/utils/validation";
-import { AppPage } from "next-app/types/page";
+import type { AppPage } from "next-app/types/page";
 
 type Form = {
 	prevPassword: string;

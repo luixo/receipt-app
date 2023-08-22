@@ -3,8 +3,9 @@ import React from "react";
 import { Loading, Spacer } from "@nextui-org/react";
 
 import { QueryErrorMessage } from "app/components/error-message";
-import { trpc, TRPCQuerySuccessResult } from "app/trpc";
-import { UsersId } from "next-app/db/models";
+import type { TRPCQuerySuccessResult } from "app/trpc";
+import { trpc } from "app/trpc";
+import type { UsersId } from "next-app/db/models";
 
 import { UserConnectionInput } from "./user-connection-input";
 import { UserNameInput } from "./user-name-input";

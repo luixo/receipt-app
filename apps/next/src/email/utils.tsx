@@ -7,7 +7,8 @@ import { getBaseUrl } from "next-app/utils/url";
 import { BaseUrlContext } from "./base-url-context";
 import { ConfirmEmailEmail } from "./confirm-email-email";
 import { ResetPasswordEmail } from "./reset-password-email";
-import { AugmentedProperies, StylingContext } from "./styling-context";
+import type { AugmentedProperies } from "./styling-context";
+import { StylingContext } from "./styling-context";
 
 const STYLE_REPLACER = "__style_replacer__";
 

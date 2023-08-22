@@ -5,7 +5,8 @@ import { Button, Container, Spacer, Text } from "@nextui-org/react";
 import { UsersSuggest } from "app/components/app/users-suggest";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
-import { trpc, TRPCInfiniteQueryOutput, TRPCQueryOutput } from "app/trpc";
+import type { TRPCInfiniteQueryOutput, TRPCQueryOutput } from "app/trpc";
+import { trpc } from "app/trpc";
 
 type UsersResult = TRPCInfiniteQueryOutput<"users.suggest">;
 

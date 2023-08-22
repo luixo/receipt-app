@@ -9,7 +9,7 @@ import {
 import { LoadableUser } from "app/components/app/loadable-user";
 import { IconButton } from "app/components/icon-button";
 import { trpc } from "app/trpc";
-import { ReceiptsId } from "next-app/db/models";
+import type { ReceiptsId } from "next-app/db/models";
 
 const Wrapper = styled("div", {
 	p: "$8",

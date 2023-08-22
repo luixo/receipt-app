@@ -4,7 +4,7 @@ import { createParam } from "solito";
 
 import { Header } from "app/components/header";
 import { trpc } from "app/trpc";
-import { AppPage } from "next-app/types/page";
+import type { AppPage } from "next-app/types/page";
 
 import { ResetPassword } from "./reset-password";
 

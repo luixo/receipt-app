@@ -1,13 +1,13 @@
 import React from "react";
 
 import { Button, Text, Card, Row, Spacer, styled } from "@nextui-org/react";
-import {
+import type {
 	QueryObserverRefetchErrorResult,
 	QueryObserverLoadingErrorResult,
 } from "@tanstack/react-query";
 import { IoWarning as WarningIcon } from "react-icons/io5";
 
-import { TRPCError } from "app/trpc";
+import type { TRPCError } from "app/trpc";
 
 const Title = styled(Text, {
 	display: "flex",

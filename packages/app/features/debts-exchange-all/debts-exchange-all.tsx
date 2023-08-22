@@ -10,10 +10,11 @@ import { Header } from "app/components/header";
 import { useAggregatedDebts } from "app/hooks/use-aggregated-debts";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useRouter } from "app/hooks/use-router";
-import { trpc, TRPCQueryOutput, TRPCQuerySuccessResult } from "app/trpc";
+import type { TRPCQueryOutput, TRPCQuerySuccessResult } from "app/trpc";
+import { trpc } from "app/trpc";
 import { noop } from "app/utils/utils";
 import { useShowResolvedDebts } from "next-app/hooks/use-show-resolved-debts";
-import { UsersId } from "next-app/src/db/models";
+import type { UsersId } from "next-app/src/db/models";
 
 import { CurrenciesGroup } from "./currencies-group";
 import { PlannedDebts } from "./planned-debts";

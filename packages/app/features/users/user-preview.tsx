@@ -4,7 +4,7 @@ import { styled } from "@nextui-org/react";
 
 import { User } from "app/components/app/user";
 import { Link } from "app/components/link";
-import { TRPCQueryOutput } from "app/trpc";
+import type { TRPCQueryOutput } from "app/trpc";
 
 const WrapperLink = styled(Link, {
 	flexDirection: "row",

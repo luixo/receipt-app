@@ -1,6 +1,6 @@
 import { cache } from "app/cache";
-import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import {
+import type { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import type {
 	TRPCMutationInput,
 	TRPCMutationOutput,
 	TRPCQueryOutput,

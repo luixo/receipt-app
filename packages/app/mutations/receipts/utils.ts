@@ -1,7 +1,7 @@
 import { cache } from "app/cache";
-import { ControllerContext } from "app/cache/utils";
-import { TRPCMutationOutput } from "app/trpc";
-import { ReceiptsId } from "next-app/db/models";
+import type { ControllerContext } from "app/cache/utils";
+import type { TRPCMutationOutput } from "app/trpc";
+import type { ReceiptsId } from "next-app/db/models";
 
 export const updateReceiptCacheOnDebtUpdate = (
 	controllerContext: ControllerContext,

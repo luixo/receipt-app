@@ -1,5 +1,5 @@
-import { CurrencyCode } from "app/utils/currency";
-import { UsersId } from "next-app/db/models";
+import type { CurrencyCode } from "app/utils/currency";
+import type { UsersId } from "next-app/db/models";
 import { authProcedure } from "next-app/handlers/trpc";
 
 export const procedure = authProcedure.query(async ({ ctx }) => {

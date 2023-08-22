@@ -1,16 +1,17 @@
-import { Selection, sql } from "kysely";
+import type { Selection } from "kysely";
+import { sql } from "kysely";
 import { v4 } from "uuid";
 
 import { getParticipantSums } from "app/utils/receipt-item";
-import { Database, ReceiptsSelectExpression } from "next-app/db";
-import {
+import type { Database, ReceiptsSelectExpression } from "next-app/db";
+import type {
 	AccountsId,
 	ReceiptItemsId,
 	ReceiptsId,
 	UsersId,
 } from "next-app/db/models";
-import { ReceiptsDatabase } from "next-app/db/types";
-import { Role } from "next-app/handlers/receipts/utils";
+import type { ReceiptsDatabase } from "next-app/db/types";
+import type { Role } from "next-app/handlers/receipts/utils";
 
 export const getReceiptItemById = <
 	SE extends ReceiptsSelectExpression<"receiptItems">,

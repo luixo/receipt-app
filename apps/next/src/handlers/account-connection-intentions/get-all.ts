@@ -1,4 +1,4 @@
-import { AccountsId, UsersId } from "next-app/db/models";
+import type { AccountsId, UsersId } from "next-app/db/models";
 import { authProcedure } from "next-app/handlers/trpc";
 
 export const procedure = authProcedure.query(async ({ ctx }) => {

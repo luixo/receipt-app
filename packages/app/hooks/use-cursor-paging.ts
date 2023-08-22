@@ -1,10 +1,10 @@
 import React from "react";
 
-import { QueryObserverResult } from "@tanstack/react-query";
+import type { QueryObserverResult } from "@tanstack/react-query";
 
-import { Props as PaginationProps } from "app/components/pagination";
+import type { Props as PaginationProps } from "app/components/pagination";
 import { useQueryParam } from "app/hooks/use-query-param";
-import { TRPCError } from "app/trpc";
+import type { TRPCError } from "app/trpc";
 
 type CursorPagingResult<T extends { count: number }> = {
 	pagination: PaginationProps;

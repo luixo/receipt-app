@@ -1,5 +1,5 @@
 import { trpc } from "app/trpc";
-import { CurrencyCode } from "app/utils/currency";
+import type { CurrencyCode } from "app/utils/currency";
 
 export const useFormattedCurrencies = (currencyCodes: CurrencyCode[]) => {
 	const currenciesListQuery = trpc.currency.getList.useQuery(

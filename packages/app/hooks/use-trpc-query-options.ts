@@ -1,16 +1,17 @@
 import React from "react";
 
-import { useQueryClient, UseQueryOptions } from "@tanstack/react-query";
+import type { UseQueryOptions } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
-import { ControllerContext } from "app/cache/utils";
-import {
-	trpc,
+import type { ControllerContext } from "app/cache/utils";
+import type {
 	TRPCError,
 	TRPCQueryInput,
 	TRPCQueryKey,
 	TRPCQueryOutput,
 } from "app/trpc";
-import { MaybeAddElementToArray } from "app/utils/types";
+import { trpc } from "app/trpc";
+import type { MaybeAddElementToArray } from "app/utils/types";
 
 export type TRPCQueryOptions<Path extends TRPCQueryKey> = UseQueryOptions<
 	TRPCQueryOutput<Path>,

@@ -1,12 +1,8 @@
 import * as utils from "app/cache/utils";
-import { TRPCQueryOutput, TRPCReactContext } from "app/trpc";
-import {
-	addToArray,
-	ItemWithIndex,
-	removeFromArray,
-	replaceInArray,
-} from "app/utils/array";
-import { ReceiptItemsId, ReceiptsId } from "next-app/db/models";
+import type { TRPCQueryOutput, TRPCReactContext } from "app/trpc";
+import type { ItemWithIndex } from "app/utils/array";
+import { addToArray, removeFromArray, replaceInArray } from "app/utils/array";
+import type { ReceiptItemsId, ReceiptsId } from "next-app/db/models";
 
 type Controller = TRPCReactContext["receiptItems"]["get"];
 

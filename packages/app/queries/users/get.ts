@@ -1,5 +1,5 @@
 import { cache } from "app/cache";
-import { UseContextedQueryOptions } from "app/hooks/use-trpc-query-options";
+import type { UseContextedQueryOptions } from "app/hooks/use-trpc-query-options";
 
 export const options: UseContextedQueryOptions<"users.get"> = {
 	onSuccess: (controllerContext) => (data) => {

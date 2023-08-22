@@ -12,10 +12,10 @@ import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
 import { emailSchema, userNameSchema } from "app/utils/validation";
-import { AppPage } from "next-app/types/page";
+import type { AppPage } from "next-app/types/page";
 
 import { EmailInput } from "./email-input";
-import { Form } from "./types";
+import type { Form } from "./types";
 import { UserNameInput } from "./user-name-input";
 
 export const AddUserScreen: AppPage = () => {

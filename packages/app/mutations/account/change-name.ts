@@ -1,6 +1,6 @@
 import { cache } from "app/cache";
-import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { AccountsId, UsersId } from "next-app/db/models";
+import type { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import type { AccountsId, UsersId } from "next-app/db/models";
 
 export const options: UseContextedMutationOptions<
 	"account.changeName",

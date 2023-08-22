@@ -3,7 +3,7 @@ import React from "react";
 import { PiMoney as DebtIcon } from "react-icons/pi";
 
 import { IconButton } from "app/components/icon-button";
-import { TRPCQueryOutput } from "app/trpc";
+import type { TRPCQueryOutput } from "app/trpc";
 
 type Receipt = TRPCQueryOutput<"receipts.get">;
 

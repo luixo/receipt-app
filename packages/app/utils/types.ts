@@ -1,4 +1,4 @@
-import { UpdateFn } from "app/cache/utils";
+import type { UpdateFn } from "app/cache/utils";
 
 export type ParametersExceptFirst<F> = F extends (
 	arg0: unknown,

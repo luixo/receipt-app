@@ -3,10 +3,10 @@ import React from "react";
 import { Spacer, Text, Checkbox } from "@nextui-org/react";
 
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
-import { TRPCQueryOutput } from "app/trpc";
-import { CurrencyCode } from "app/utils/currency";
+import type { TRPCQueryOutput } from "app/trpc";
+import type { CurrencyCode } from "app/utils/currency";
 import { round } from "app/utils/math";
-import { ReceiptItemsId } from "next-app/db/models";
+import type { ReceiptItemsId } from "next-app/db/models";
 
 type Item = TRPCQueryOutput<"receiptItems.get">["items"][number];
 

@@ -1,4 +1,4 @@
-import { Database } from "..";
+import type { Database } from "..";
 
 const addAccountSettings = async (db: Database) => {
 	await db.schema

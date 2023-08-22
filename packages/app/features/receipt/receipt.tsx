@@ -12,9 +12,10 @@ import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useMatchMediaValue } from "app/hooks/use-match-media-value";
 import { useTrpcQueryOptions } from "app/hooks/use-trpc-query-options";
 import { queries } from "app/queries";
-import { trpc, TRPCQuerySuccessResult } from "app/trpc";
+import type { TRPCQuerySuccessResult } from "app/trpc";
+import { trpc } from "app/trpc";
 import { round } from "app/utils/math";
-import { ReceiptsId } from "next-app/src/db/models";
+import type { ReceiptsId } from "next-app/src/db/models";
 
 import { ReceiptCurrencyInput } from "./receipt-currency-input";
 import { ReceiptDateInput } from "./receipt-date-input";

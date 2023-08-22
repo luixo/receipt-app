@@ -1,4 +1,4 @@
-import { Database } from "..";
+import type { Database } from "..";
 import { ACCOUNT_CONNECTIONS_INTENTIONS } from "../consts";
 
 import {

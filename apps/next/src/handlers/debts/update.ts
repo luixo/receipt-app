@@ -2,7 +2,7 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { debtNoteSchema } from "app/utils/validation";
-import { SimpleUpdateObject } from "next-app/db/types";
+import type { SimpleUpdateObject } from "next-app/db/types";
 import { authProcedure } from "next-app/handlers/trpc";
 import {
 	debtAmountSchema,

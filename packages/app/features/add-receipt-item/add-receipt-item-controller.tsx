@@ -3,7 +3,7 @@ import React from "react";
 import { Button } from "@nextui-org/react";
 import { MdAdd as AddIcon } from "react-icons/md";
 
-import { ReceiptsId } from "next-app/db/models";
+import type { ReceiptsId } from "next-app/db/models";
 
 import { AddReceiptItemForm } from "./add-receipt-item-form";
 

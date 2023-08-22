@@ -1,7 +1,7 @@
 import { cache } from "app/cache";
 import { mergeUpdaterResults } from "app/cache/utils";
-import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { ReceiptsId } from "next-app/db/models";
+import type { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import type { ReceiptsId } from "next-app/db/models";
 
 export const options: UseContextedMutationOptions<
 	"itemParticipants.add",

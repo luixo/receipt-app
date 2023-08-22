@@ -8,7 +8,8 @@ import { QueryErrorMessage } from "app/components/error-message";
 import { IconButton } from "app/components/icon-button";
 import { ShowResolvedDebtsOption } from "app/features/settings/show-resolved-debts-option";
 import { useAggregatedAllDebts } from "app/hooks/use-aggregated-all-debts";
-import { trpc, TRPCQuerySuccessResult } from "app/trpc";
+import type { TRPCQuerySuccessResult } from "app/trpc";
+import { trpc } from "app/trpc";
 import { useShowResolvedDebts } from "next-app/hooks/use-show-resolved-debts";
 
 import { UserDebtsPreview } from "./user-debts-preview";

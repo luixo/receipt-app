@@ -13,12 +13,12 @@ import {
 	quantitySchema,
 	receiptItemNameSchema,
 } from "app/utils/validation";
-import { ReceiptsId } from "next-app/db/models";
+import type { ReceiptsId } from "next-app/db/models";
 
 import { ReceiptItemNameInput } from "./receipt-item-name-input";
 import { ReceiptItemPriceInput } from "./receipt-item-price-input";
 import { ReceiptItemQuantityInput } from "./receipt-item-quantity-input";
-import { Form } from "./types";
+import type { Form } from "./types";
 
 const Inputs = styled("div", {
 	display: "flex",

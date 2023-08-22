@@ -4,7 +4,7 @@ import { Spacer } from "@nextui-org/react";
 import { createParam } from "solito";
 
 import { ReceiptItems } from "app/features/receipt-items/receipt-items-screen";
-import { AppPage } from "next-app/types/page";
+import type { AppPage } from "next-app/types/page";
 
 import { Receipt } from "./receipt";
 

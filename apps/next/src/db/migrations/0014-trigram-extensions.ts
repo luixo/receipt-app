@@ -1,6 +1,6 @@
 import { sql } from "kysely";
 
-import { Database } from "..";
+import type { Database } from "..";
 
 const addTrigramExtension = async (db: Database) => {
 	await sql`create extension if not exists pg_trgm`.execute(db);

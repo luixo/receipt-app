@@ -1,4 +1,4 @@
-import { TRPCQueryOutput } from "app/trpc";
+import type { TRPCQueryOutput } from "app/trpc";
 
 export type Currency = TRPCQueryOutput<"currency.getList">[number];
 

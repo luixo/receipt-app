@@ -6,7 +6,7 @@ import { createParam } from "solito";
 import { User as UserTitle } from "app/components/app/user";
 import { Header } from "app/components/header";
 import { trpc } from "app/trpc";
-import { AppPage } from "next-app/types/page";
+import type { AppPage } from "next-app/types/page";
 
 import { User } from "./user";
 

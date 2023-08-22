@@ -10,10 +10,8 @@ import { MdFilterAlt as FilterIcon } from "react-icons/md";
 
 import { Grid } from "app/components/grid";
 import { IconButton } from "app/components/icon-button";
-import {
-	Pagination,
-	Props as PaginationProps,
-} from "app/components/pagination";
+import type { Props as PaginationProps } from "app/components/pagination";
+import { Pagination } from "app/components/pagination";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { queries } from "app/queries";
 

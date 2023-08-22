@@ -1,6 +1,6 @@
 import { sql } from "kysely";
 
-import { Database } from "..";
+import type { Database } from "..";
 
 const addNullablePublicName = async (db: Database) => {
 	await db.schema

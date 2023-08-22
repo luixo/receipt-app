@@ -11,7 +11,8 @@ import { useCursorPaging } from "app/hooks/use-cursor-paging";
 import { useMatchMediaValue } from "app/hooks/use-match-media-value";
 import { useTrpcQueryOptions } from "app/hooks/use-trpc-query-options";
 import { queries } from "app/queries";
-import { trpc, TRPCQueryInput, TRPCQueryOutput } from "app/trpc";
+import type { TRPCQueryInput, TRPCQueryOutput } from "app/trpc";
+import { trpc } from "app/trpc";
 
 import { getWidths, ReceiptPreview } from "./receipt-preview";
 import { ReceiptsPagination } from "./receipts-pagination";

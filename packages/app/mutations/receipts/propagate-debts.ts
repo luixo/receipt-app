@@ -1,4 +1,4 @@
-import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import type { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 
 import { updateReceiptCacheOnDebtUpdate } from "./utils";
 

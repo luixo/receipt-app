@@ -1,5 +1,5 @@
-import { Props as UserProps } from "app/components/app/user";
-import { TRPCQueryOutput } from "app/trpc";
+import type { Props as UserProps } from "app/components/app/user";
+import type { TRPCQueryOutput } from "app/trpc";
 import { rotate } from "app/utils/array";
 import { getIndexByString } from "app/utils/hash";
 import {
@@ -8,7 +8,11 @@ import {
 	values,
 	entries,
 } from "app/utils/object";
-import { ReceiptItemsId, ReceiptsId, UsersId } from "next-app/src/db/models";
+import type {
+	ReceiptItemsId,
+	ReceiptsId,
+	UsersId,
+} from "next-app/src/db/models";
 
 export const getDecimalsPower = (decimalDigits = 2) => 10 ** decimalDigits;
 

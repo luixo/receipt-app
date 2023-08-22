@@ -1,6 +1,7 @@
 import React from "react";
 
-import { AugmentedProperies, StylingContext } from "./styling-context";
+import type { AugmentedProperies } from "./styling-context";
+import { StylingContext } from "./styling-context";
 
 type Props = {
 	selector: string;

@@ -1,15 +1,15 @@
 import React from "react";
 
 import { Button, Input } from "@nextui-org/react";
-import { Path, PathValue, UseFormReturn } from "react-hook-form";
+import type { Path, PathValue, UseFormReturn } from "react-hook-form";
 import { MdEdit as EditIcon } from "react-icons/md";
-import { z } from "zod";
+import type { z } from "zod";
 
 import { CurrenciesPicker } from "app/components/app/currencies-picker";
 import { IconButton } from "app/components/icon-button";
 import { useBooleanState } from "app/hooks/use-boolean-state";
-import { CurrencyCode } from "app/utils/currency";
-import { currencySchema } from "app/utils/validation";
+import type { CurrencyCode } from "app/utils/currency";
+import type { currencySchema } from "app/utils/validation";
 
 type MinimalForm = {
 	currency: z.infer<typeof currencySchema>;

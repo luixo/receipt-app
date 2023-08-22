@@ -1,6 +1,6 @@
 import currencyList from "currency-list";
 
-import { CurrencyCode } from "app/utils/currency";
+import type { CurrencyCode } from "app/utils/currency";
 
 type CurrencyDescription = ReturnType<typeof currencyList.get>;
 const CURRENCY_CODES = Object.keys(currencyList.getAll("en"));

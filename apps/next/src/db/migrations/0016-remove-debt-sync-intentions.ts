@@ -3,7 +3,7 @@ import {
 	removeDebtsSyncIntentionsTable,
 } from "next-app/db/migrations/0011-debt-timestamp-lock";
 
-import { Database } from "..";
+import type { Database } from "..";
 
 export const up = async (db: Database) => {
 	await removeDebtsSyncIntentionsTable(db);

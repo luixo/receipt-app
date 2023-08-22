@@ -4,7 +4,7 @@ import { styled } from "@nextui-org/react";
 import { MdOutlineReceipt as RawReceiptIcon } from "react-icons/md";
 
 import { IconButton } from "app/components/icon-button";
-import { ReceiptsId } from "next-app/db/models";
+import type { ReceiptsId } from "next-app/db/models";
 
 const ReceiptIcon = styled(RawReceiptIcon, {
 	size: 24,

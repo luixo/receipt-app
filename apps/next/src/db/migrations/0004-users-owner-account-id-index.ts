@@ -1,4 +1,4 @@
-import { Database } from "..";
+import type { Database } from "..";
 import { USERS } from "../consts";
 
 const addUsersOwnerAccountIdIndex = async (db: Database) => {

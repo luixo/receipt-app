@@ -3,7 +3,8 @@ import React from "react";
 import { Container, Loading, Spacer, styled, Text } from "@nextui-org/react";
 
 import { QueryErrorMessage } from "app/components/error-message";
-import { trpc, TRPCQuerySuccessResult } from "app/trpc";
+import type { TRPCQuerySuccessResult } from "app/trpc";
+import { trpc } from "app/trpc";
 
 import { InboundConnectionIntention } from "./inbound-connection-intention";
 import { OutboundConnectionIntention } from "./outbound-connection-intention";

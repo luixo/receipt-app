@@ -1,11 +1,11 @@
 import React from "react";
 
 import { Input } from "@nextui-org/react";
-import { UseFormReturn } from "react-hook-form";
+import type { UseFormReturn } from "react-hook-form";
 
 import { useInputController } from "app/hooks/use-input-controller";
 
-import { Form } from "./types";
+import type { Form } from "./types";
 
 type Props = {
 	form: UseFormReturn<Form>;

@@ -1,7 +1,8 @@
 import React from "react";
 
 import { BaseUrlContext } from "./base-url-context";
-import { Child, Props as ChildProps } from "./child";
+import type { Props as ChildProps } from "./child";
+import { Child } from "./child";
 import { Style } from "./style";
 import { Table } from "./table";
 

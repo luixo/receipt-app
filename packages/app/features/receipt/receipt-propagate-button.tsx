@@ -5,18 +5,18 @@ import { MdSend as SendIcon } from "react-icons/md";
 
 import { QueryErrorMessage } from "app/components/error-message";
 import { IconButton } from "app/components/icon-button";
-import {
+import type {
 	TRPCQueryErrorResult,
 	TRPCQueryResult,
 	TRPCQuerySuccessResult,
-	trpc,
 } from "app/trpc";
-import { CurrencyCode } from "app/utils/currency";
+import { trpc } from "app/trpc";
+import type { CurrencyCode } from "app/utils/currency";
 import { getParticipantSums } from "app/utils/receipt-item";
-import { ReceiptsId, UsersId } from "next-app/db/models";
+import type { ReceiptsId, UsersId } from "next-app/db/models";
 
 import { ReceiptDebtSyncInfoButton } from "./receipt-debt-sync-info-button";
-import { DebtParticipant } from "./receipt-participant-debt";
+import type { DebtParticipant } from "./receipt-participant-debt";
 
 type InnerProps = {
 	queries: TRPCQuerySuccessResult<"debts.get">[];

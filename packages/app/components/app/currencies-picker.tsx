@@ -1,12 +1,13 @@
 import React from "react";
 
 import { Button, Card, Loading, Modal, Text } from "@nextui-org/react";
-import { QueryObserverSuccessResult } from "@tanstack/react-query";
+import type { QueryObserverSuccessResult } from "@tanstack/react-query";
 
 import { QueryErrorMessage } from "app/components/error-message";
 import { Grid } from "app/components/grid";
-import { trpc, TRPCError, TRPCQueryOutput, TRPCQueryResult } from "app/trpc";
-import { CurrencyCode } from "app/utils/currency";
+import type { TRPCError, TRPCQueryOutput, TRPCQueryResult } from "app/trpc";
+import { trpc } from "app/trpc";
+import type { CurrencyCode } from "app/utils/currency";
 import { MONTH } from "app/utils/time";
 
 type CurrencyList = TRPCQueryOutput<"currency.getList">;

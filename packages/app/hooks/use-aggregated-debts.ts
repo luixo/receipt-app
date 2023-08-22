@@ -1,7 +1,7 @@
 import React from "react";
 
-import { TRPCQuerySuccessResult } from "app/trpc";
-import { CurrencyCode } from "app/utils/currency";
+import type { TRPCQuerySuccessResult } from "app/trpc";
+import type { CurrencyCode } from "app/utils/currency";
 import { round } from "app/utils/math";
 
 export const useAggregatedDebts = (

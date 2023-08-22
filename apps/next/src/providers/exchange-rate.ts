@@ -1,7 +1,7 @@
 import fetch from "isomorphic-fetch";
 import { z } from "zod";
 
-import { CurrencyCode } from "app/utils/currency";
+import type { CurrencyCode } from "app/utils/currency";
 import { currencyCodeSchema } from "app/utils/validation";
 
 const responseSchema = z.object({

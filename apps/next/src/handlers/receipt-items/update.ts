@@ -6,7 +6,7 @@ import {
 	quantitySchema,
 	receiptItemNameSchema,
 } from "app/utils/validation";
-import { SimpleUpdateObject } from "next-app/db/types";
+import type { SimpleUpdateObject } from "next-app/db/types";
 import { getReceiptItemById } from "next-app/handlers/receipt-items/utils";
 import {
 	getReceiptById,

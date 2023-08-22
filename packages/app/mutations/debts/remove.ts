@@ -1,6 +1,6 @@
 import { cache } from "app/cache";
-import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { TRPCQueryOutput } from "app/trpc";
+import type { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import type { TRPCQueryOutput } from "app/trpc";
 
 export const options: UseContextedMutationOptions<
 	"debts.remove",

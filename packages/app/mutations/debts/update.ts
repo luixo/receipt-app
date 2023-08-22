@@ -1,9 +1,9 @@
 import { cache } from "app/cache";
-import { SnapshotFn, UpdateFn } from "app/cache/utils";
-import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
-import { CurrencyCode } from "app/utils/currency";
-import { ReceiptsId, UsersId } from "next-app/db/models";
+import type { SnapshotFn, UpdateFn } from "app/cache/utils";
+import type { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import type { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
+import type { CurrencyCode } from "app/utils/currency";
+import type { ReceiptsId, UsersId } from "next-app/db/models";
 
 type DebtSum = number;
 type DebtUserSnapshot = TRPCQueryOutput<"debts.getUser">[number];

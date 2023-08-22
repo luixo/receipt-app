@@ -2,7 +2,7 @@ import React from "react";
 
 import { createParam } from "solito";
 
-import { AppPage } from "next-app/types/page";
+import type { AppPage } from "next-app/types/page";
 
 import { UserDebts } from "./user-debts";
 

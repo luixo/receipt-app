@@ -1,4 +1,4 @@
-import { Database } from "next-app/db";
+import type { Database } from "next-app/db";
 
 const MOCK_TABLE_NAME = "debts";
 

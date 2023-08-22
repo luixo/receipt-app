@@ -10,9 +10,10 @@ import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
-import { trpc, TRPCQueryOutput } from "app/trpc";
+import type { TRPCQueryOutput } from "app/trpc";
+import { trpc } from "app/trpc";
 import { partSchema } from "app/utils/validation";
-import { ReceiptItemsId, ReceiptsId } from "next-app/db/models";
+import type { ReceiptItemsId, ReceiptsId } from "next-app/db/models";
 
 type ReceiptItemPart =
 	TRPCQueryOutput<"receiptItems.get">["items"][number]["parts"][number];

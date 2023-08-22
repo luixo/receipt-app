@@ -2,7 +2,7 @@ import { v4 } from "uuid";
 import { z } from "zod";
 
 import { emailSchema, userNameSchema } from "app/utils/validation";
-import { UsersId } from "next-app/db/models";
+import type { UsersId } from "next-app/db/models";
 import { addConnectionIntention } from "next-app/handlers/account-connection-intentions/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 

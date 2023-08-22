@@ -1,11 +1,11 @@
 import React from "react";
 
 import { styled } from "@nextui-org/react";
-import { UseFormReturn } from "react-hook-form";
+import type { UseFormReturn } from "react-hook-form";
 
 import { DateInput } from "app/components/date-input";
 
-import { Form } from "./types";
+import type { Form } from "./types";
 
 const Wrapper = styled("div", {
 	display: "flex",

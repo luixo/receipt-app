@@ -1,7 +1,7 @@
 import React from "react";
 
-import { TRPCQueryOutput } from "app/trpc";
-import { CurrencyCode } from "app/utils/currency";
+import type { TRPCQueryOutput } from "app/trpc";
+import type { CurrencyCode } from "app/utils/currency";
 
 export const useAggregatedAllDebts = (
 	data: TRPCQueryOutput<"debts.getByUsers">,

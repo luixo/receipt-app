@@ -16,10 +16,10 @@ import {
 	MIN_BATCH_DEBTS,
 } from "app/mutations/debts/add-batch";
 import { trpc } from "app/trpc";
-import { CurrencyCode } from "app/utils/currency";
+import type { CurrencyCode } from "app/utils/currency";
 import { round } from "app/utils/math";
 import { currencyRateSchema } from "app/utils/validation";
-import { UsersId } from "next-app/db/models";
+import type { UsersId } from "next-app/db/models";
 import { currencyCodeSchema } from "next-app/handlers/validation";
 
 import { PlannedDebt } from "./planned-debt";

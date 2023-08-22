@@ -1,8 +1,8 @@
 import { cache } from "app/cache";
 import { mergeUpdaterResults } from "app/cache/utils";
-import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { CurrencyCode } from "app/utils/currency";
-import { DebtsId, ReceiptsId, UsersId } from "next-app/db/models";
+import type { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import type { CurrencyCode } from "app/utils/currency";
+import type { DebtsId, ReceiptsId, UsersId } from "next-app/db/models";
 
 export const options: UseContextedMutationOptions<
 	"debts.acceptIntention",

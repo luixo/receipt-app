@@ -1,10 +1,11 @@
 import React from "react";
 
 import { styled, Text, Image } from "@nextui-org/react";
-import { DripsyFinalTheme, useDripsyTheme } from "dripsy";
+import type { DripsyFinalTheme } from "dripsy";
+import { useDripsyTheme } from "dripsy";
 import IdenticonJs from "identicon.js";
 
-import { UsersId } from "next-app/db/models";
+import type { UsersId } from "next-app/db/models";
 
 const Wrapper = styled("div", {
 	display: "flex",

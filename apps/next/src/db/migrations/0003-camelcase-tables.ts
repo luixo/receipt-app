@@ -2,7 +2,7 @@ import { sql } from "kysely";
 
 import { tableWithSchema } from "next-app/db/utils";
 
-import { Database } from "..";
+import type { Database } from "..";
 import {
 	ACCOUNTS,
 	ITEM_PARTICIPANTS,

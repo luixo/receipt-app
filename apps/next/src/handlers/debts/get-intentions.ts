@@ -1,8 +1,8 @@
 import * as trpc from "@trpc/server";
 import { sql } from "kysely";
 
-import { CurrencyCode } from "app/utils/currency";
-import { DebtsId, ReceiptsId, UsersId } from "next-app/db/models";
+import type { CurrencyCode } from "app/utils/currency";
+import type { DebtsId, ReceiptsId, UsersId } from "next-app/db/models";
 import { authProcedure } from "next-app/handlers/trpc";
 
 type InboundIntention = {

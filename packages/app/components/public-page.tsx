@@ -5,7 +5,8 @@ import {
 	BsPersonCheck as LoginIcon,
 } from "react-icons/bs";
 
-import { MenuElement, Page } from "app/components/page";
+import type { MenuElement } from "app/components/page";
+import { Page } from "app/components/page";
 import { useRouter } from "app/hooks/use-router";
 import { trpc } from "app/trpc";
 

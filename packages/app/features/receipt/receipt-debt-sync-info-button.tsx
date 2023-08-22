@@ -7,13 +7,11 @@ import { Grid } from "app/components/grid";
 import { IconButton } from "app/components/icon-button";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useMatchMediaValue } from "app/hooks/use-match-media-value";
-import { CurrencyCode } from "app/utils/currency";
-import { ReceiptsId } from "next-app/db/models";
+import type { CurrencyCode } from "app/utils/currency";
+import type { ReceiptsId } from "next-app/db/models";
 
-import {
-	DebtParticipant,
-	ReceiptParticipantDebt,
-} from "./receipt-participant-debt";
+import type { DebtParticipant } from "./receipt-participant-debt";
+import { ReceiptParticipantDebt } from "./receipt-participant-debt";
 
 const GridHeader = styled(Grid, {
 	pb: "$4",

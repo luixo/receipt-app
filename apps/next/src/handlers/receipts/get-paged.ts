@@ -1,7 +1,7 @@
 import { sql } from "kysely";
 import { z } from "zod";
 
-import { UsersId } from "next-app/db/models";
+import type { UsersId } from "next-app/db/models";
 import {
 	getOwnReceipts,
 	getForeignReceipts,

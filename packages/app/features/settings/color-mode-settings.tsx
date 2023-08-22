@@ -1,13 +1,7 @@
 import React from "react";
 
-import {
-	Checkbox,
-	Spacer,
-	styled,
-	Switch,
-	SwitchEvent,
-	Text,
-} from "@nextui-org/react";
+import type { SwitchEvent } from "@nextui-org/react";
+import { Checkbox, Spacer, styled, Switch, Text } from "@nextui-org/react";
 import { FiSun as SunIcon, FiMoon as MoonIcon } from "react-icons/fi";
 
 import { ColorModeContext } from "app/contexts/color-mode-context";

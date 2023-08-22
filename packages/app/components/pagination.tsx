@@ -1,6 +1,7 @@
 import React from "react";
 
-import { Button, CSS, Loading } from "@nextui-org/react";
+import type { CSS } from "@nextui-org/react";
+import { Button, Loading } from "@nextui-org/react";
 
 type PaginationButton = {
 	loading: boolean;

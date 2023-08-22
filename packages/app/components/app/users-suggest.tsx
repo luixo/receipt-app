@@ -1,7 +1,7 @@
 import React from "react";
 
+import type { FormElement } from "@nextui-org/react";
 import {
-	FormElement,
 	Input,
 	Loading,
 	Popover,
@@ -15,14 +15,14 @@ import { QueryErrorMessage } from "app/components/error-message";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useDebouncedValue } from "app/hooks/use-debounced-value";
 import { useWindowSizeChange } from "app/hooks/use-window-size-change";
-import {
-	trpc,
+import type {
 	TRPCQueryOutput,
 	TRPCInfiniteQueryResult,
 	TRPCQueryInput,
 	TRPCQueryResult,
 } from "app/trpc";
-import { UsersId } from "next-app/db/models";
+import { trpc } from "app/trpc";
+import type { UsersId } from "next-app/db/models";
 
 type UsersResponse = TRPCQueryOutput<"users.suggest">;
 type User = UsersResponse["items"][number];

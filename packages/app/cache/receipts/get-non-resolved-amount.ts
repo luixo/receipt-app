@@ -1,5 +1,5 @@
 import * as utils from "app/cache/utils";
-import { TRPCQueryOutput, TRPCReactContext } from "app/trpc";
+import type { TRPCQueryOutput, TRPCReactContext } from "app/trpc";
 
 type Controller = TRPCReactContext["receipts"]["getNonResolvedAmount"];
 

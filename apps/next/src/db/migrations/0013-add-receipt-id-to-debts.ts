@@ -1,4 +1,4 @@
-import { Database } from "..";
+import type { Database } from "..";
 import { DEBTS } from "../consts";
 
 const addReceiptIdColumn = async (db: Database) => {

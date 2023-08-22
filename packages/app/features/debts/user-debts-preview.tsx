@@ -8,8 +8,9 @@ import { Link } from "app/components/link";
 import { useMatchMediaValue } from "app/hooks/use-match-media-value";
 import { useTrpcQueryOptions } from "app/hooks/use-trpc-query-options";
 import { queries } from "app/queries";
-import { trpc, TRPCQueryOutput } from "app/trpc";
-import { UsersId } from "next-app/db/models";
+import type { TRPCQueryOutput } from "app/trpc";
+import { trpc } from "app/trpc";
+import type { UsersId } from "next-app/db/models";
 
 const CardWrapper = styled(Card, {
 	variants: {

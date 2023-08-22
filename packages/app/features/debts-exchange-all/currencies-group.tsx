@@ -3,8 +3,9 @@ import React from "react";
 import { Button, styled } from "@nextui-org/react";
 
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
-import { TRPCQueryOutput, trpc } from "app/trpc";
-import { CurrencyCode } from "app/utils/currency";
+import type { TRPCQueryOutput } from "app/trpc";
+import { trpc } from "app/trpc";
+import type { CurrencyCode } from "app/utils/currency";
 
 const Wrapper = styled("div", {
 	display: "flex",

@@ -1,4 +1,4 @@
-import { PoolConfig } from "pg";
+import type { PoolConfig } from "pg";
 
 export const getDatabaseConfig = (): PoolConfig => {
 	if (!process.env.DATABASE_URL) {

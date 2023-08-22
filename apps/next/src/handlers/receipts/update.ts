@@ -3,7 +3,7 @@ import { sql } from "kysely";
 import { z } from "zod";
 
 import { receiptNameSchema } from "app/utils/validation";
-import { SimpleUpdateObject } from "next-app/db/types";
+import type { SimpleUpdateObject } from "next-app/db/types";
 import { getReceiptById } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import {

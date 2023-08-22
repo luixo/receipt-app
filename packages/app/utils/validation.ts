@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-import { CurrencyCode } from "app/utils/currency";
-import { AccountsId, UsersId } from "next-app/db/models";
+import type { CurrencyCode } from "app/utils/currency";
+import type { AccountsId, UsersId } from "next-app/db/models";
 
 const getLengthMessage = (
 	amount: number,

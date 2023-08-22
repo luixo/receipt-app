@@ -1,6 +1,6 @@
 import { httpLink, httpBatchLink } from "@trpc/client";
 import { createTRPCNext } from "@trpc/next";
-import { NextConfig, NextPageContext } from "next";
+import type { NextConfig, NextPageContext } from "next";
 import getConfig from "next/config";
 import superjson from "superjson";
 

@@ -1,8 +1,9 @@
 import React from "react";
 
-import { Primitive } from "zod";
+import type { Primitive } from "zod";
 
-import { QueryParamOptions, useQueryParam } from "./use-query-param";
+import type { QueryParamOptions } from "./use-query-param";
+import { useQueryParam } from "./use-query-param";
 
 export type SyncQueryParamOptions<T extends object | Primitive> = Required<
 	Omit<QueryParamOptions<T>, "defaultValue">

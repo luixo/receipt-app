@@ -3,7 +3,7 @@ import React from "react";
 import { Loading, Spacer, Text } from "@nextui-org/react";
 
 import { useRouter } from "app/hooks/use-router";
-import { AppPage } from "next-app/types/page";
+import type { AppPage } from "next-app/types/page";
 
 export const HomeScreen: AppPage = () => {
 	const router = useRouter();

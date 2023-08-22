@@ -10,7 +10,8 @@ import { IconButton } from "app/components/icon-button";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
-import { trpc, TRPCQueryOutput } from "app/trpc";
+import type { TRPCQueryOutput } from "app/trpc";
+import { trpc } from "app/trpc";
 import { userNameSchema } from "app/utils/validation";
 
 const ButtonsContainer = styled("div", {

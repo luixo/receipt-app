@@ -8,7 +8,7 @@ import {
 
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useMatchMediaValue } from "app/hooks/use-match-media-value";
-import { TRPCQueryOutput } from "app/trpc";
+import type { TRPCQueryOutput } from "app/trpc";
 import { formatDate, formatDateTime } from "app/utils/date";
 
 const Wrapper = styled("div", {

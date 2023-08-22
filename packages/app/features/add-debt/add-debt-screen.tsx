@@ -7,10 +7,8 @@ import { createParam } from "solito";
 import { z } from "zod";
 
 import { CurrencyInput } from "app/components/app/currency-input";
-import {
-	Direction,
-	SignButtonGroup,
-} from "app/components/app/sign-button-group";
+import type { Direction } from "app/components/app/sign-button-group";
+import { SignButtonGroup } from "app/components/app/sign-button-group";
 import { UsersSuggest } from "app/components/app/users-suggest";
 import { Header } from "app/components/header";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
@@ -25,13 +23,13 @@ import {
 	debtNoteSchema,
 	userItemSchema,
 } from "app/utils/validation";
-import { UsersId } from "next-app/src/db/models";
-import { AppPage } from "next-app/types/page";
+import type { UsersId } from "next-app/src/db/models";
+import type { AppPage } from "next-app/types/page";
 
 import { DebtAmountInput } from "./debt-amount-input";
 import { DebtDateInput } from "./debt-date-input";
 import { DebtNoteInput } from "./debt-note-input";
-import { Form } from "./types";
+import type { Form } from "./types";
 
 const { useParam } = createParam<{ userId: UsersId }>();
 

@@ -1,11 +1,11 @@
 import { cache } from "app/cache";
-import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import {
+import type { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import type {
 	TRPCMutationInput,
 	TRPCMutationOutput,
 	TRPCQueryOutput,
 } from "app/trpc";
-import { UsersId } from "next-app/db/models";
+import type { UsersId } from "next-app/db/models";
 
 export const MIN_BATCH_DEBTS = 1;
 export const MAX_BATCH_DEBTS = 10;

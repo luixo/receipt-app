@@ -10,7 +10,8 @@ import { Pagination } from "app/components/pagination";
 import { useCursorPaging } from "app/hooks/use-cursor-paging";
 import { useTrpcQueryOptions } from "app/hooks/use-trpc-query-options";
 import { queries } from "app/queries";
-import { trpc, TRPCQueryInput, TRPCQueryOutput } from "app/trpc";
+import type { TRPCQueryInput, TRPCQueryOutput } from "app/trpc";
+import { trpc } from "app/trpc";
 
 import { UserPreview } from "./user-preview";
 

@@ -2,7 +2,7 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { userNameSchema } from "app/utils/validation";
-import { UsersId } from "next-app/db/models";
+import type { UsersId } from "next-app/db/models";
 import { authProcedure } from "next-app/handlers/trpc";
 
 export const procedure = authProcedure

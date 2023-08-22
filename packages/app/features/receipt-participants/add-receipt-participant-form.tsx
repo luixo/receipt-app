@@ -6,8 +6,9 @@ import { UsersSuggest } from "app/components/app/users-suggest";
 import { useSelfAccountId } from "app/hooks/use-self-account-id";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
-import { trpc, TRPCInfiniteQueryOutput } from "app/trpc";
-import { ReceiptsId, UsersId } from "next-app/db/models";
+import type { TRPCInfiniteQueryOutput } from "app/trpc";
+import { trpc } from "app/trpc";
+import type { ReceiptsId, UsersId } from "next-app/db/models";
 
 const Wrapper = styled("div", {
 	pb: "$4",

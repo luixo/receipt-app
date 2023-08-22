@@ -9,7 +9,7 @@ import { IconButton } from "app/components/icon-button";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
-import { ReceiptsId, UsersId } from "next-app/db/models";
+import type { ReceiptsId, UsersId } from "next-app/db/models";
 
 type Props = {
 	receiptId: ReceiptsId;

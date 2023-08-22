@@ -1,4 +1,4 @@
-import { Database } from "..";
+import type { Database } from "..";
 
 const createAccountsTable = async (db: Database) => {
 	await db.schema

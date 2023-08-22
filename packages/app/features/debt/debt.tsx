@@ -8,8 +8,9 @@ import { LoadableUser } from "app/components/app/loadable-user";
 import { QueryErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
-import { trpc, TRPCQuerySuccessResult } from "app/trpc";
-import { DebtsId } from "next-app/src/db/models";
+import type { TRPCQuerySuccessResult } from "app/trpc";
+import { trpc } from "app/trpc";
+import type { DebtsId } from "next-app/src/db/models";
 
 import { DebtAmountInput } from "./debt-amount-input";
 import { DebtDateInput } from "./debt-date-input";

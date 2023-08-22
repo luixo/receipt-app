@@ -4,7 +4,7 @@ import { Button, Loading, Spacer, styled, Text } from "@nextui-org/react";
 
 import { ErrorMessage } from "app/components/error-message";
 import { useRouter } from "app/hooks/use-router";
-import { TRPCMutationResult } from "app/trpc";
+import type { TRPCMutationResult } from "app/trpc";
 
 const Buttons = styled("div", {
 	display: "flex",

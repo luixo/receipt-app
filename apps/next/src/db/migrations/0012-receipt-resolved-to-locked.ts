@@ -1,7 +1,8 @@
-import { sql, UpdateObject } from "kysely";
+import type { UpdateObject } from "kysely";
+import { sql } from "kysely";
 
-import { Database } from "..";
-import { ReceiptsDatabase } from "../types";
+import type { Database } from "..";
+import type { ReceiptsDatabase } from "../types";
 
 type ReceiptsUpdateObject = UpdateObject<
 	ReceiptsDatabase,

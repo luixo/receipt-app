@@ -8,9 +8,10 @@ import { QueryErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
 import { useAggregatedDebts } from "app/hooks/use-aggregated-debts";
 import { useRouter } from "app/hooks/use-router";
-import { trpc, TRPCQuerySuccessResult } from "app/trpc";
+import type { TRPCQuerySuccessResult } from "app/trpc";
+import { trpc } from "app/trpc";
 import { useShowResolvedDebts } from "next-app/hooks/use-show-resolved-debts";
-import { UsersId } from "next-app/src/db/models";
+import type { UsersId } from "next-app/src/db/models";
 
 type InnerProps = {
 	userId: UsersId;

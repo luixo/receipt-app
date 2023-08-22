@@ -1,7 +1,8 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { DefaultValues, Path, Resolver, useForm } from "react-hook-form";
+import type { DefaultValues, Path, Resolver } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { useInputController } from "app/hooks/use-input-controller";

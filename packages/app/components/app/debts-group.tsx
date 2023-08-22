@@ -3,7 +3,7 @@ import React from "react";
 import { styled } from "@nextui-org/react";
 
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
-import { CurrencyCode } from "app/utils/currency";
+import type { CurrencyCode } from "app/utils/currency";
 import { round } from "app/utils/math";
 
 const Debts = styled("div", {

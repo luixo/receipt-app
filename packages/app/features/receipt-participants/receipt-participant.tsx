@@ -9,11 +9,12 @@ import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useSelfAccountId } from "app/hooks/use-self-account-id";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
-import { trpc, TRPCQueryOutput } from "app/trpc";
-import { CurrencyCode } from "app/utils/currency";
+import type { TRPCQueryOutput } from "app/trpc";
+import { trpc } from "app/trpc";
+import type { CurrencyCode } from "app/utils/currency";
 import { convertParticipantToUser } from "app/utils/receipt-item";
-import { ReceiptItemsId, ReceiptsId, UsersId } from "next-app/db/models";
-import { Role } from "next-app/handlers/receipts/utils";
+import type { ReceiptItemsId, ReceiptsId, UsersId } from "next-app/db/models";
+import type { Role } from "next-app/handlers/receipts/utils";
 
 import { ReceiptParticipantRoleInput } from "./receipt-participant-role-input";
 

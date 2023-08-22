@@ -1,8 +1,8 @@
-import { Selection } from "kysely";
+import type { Selection } from "kysely";
 
-import { ReceiptsSelectExpression, Database } from "next-app/db";
-import { ReceiptItemsId, UsersId } from "next-app/db/models";
-import { ReceiptsDatabase } from "next-app/db/types";
+import type { ReceiptsSelectExpression, Database } from "next-app/db";
+import type { ReceiptItemsId, UsersId } from "next-app/db/models";
+import type { ReceiptsDatabase } from "next-app/db/types";
 
 export const getItemParticipant = <
 	SE extends ReceiptsSelectExpression<"itemParticipants">,

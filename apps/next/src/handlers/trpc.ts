@@ -6,7 +6,7 @@ import {
 	shouldUpdateExpirationDate,
 	updateAuthorizationSession,
 } from "next-app/handlers/auth/utils";
-import { UnauthorizedContext } from "next-app/handlers/context";
+import type { UnauthorizedContext } from "next-app/handlers/context";
 import { sessionIdSchema } from "next-app/handlers/validation";
 import { AUTH_COOKIE, resetAuthCookie } from "next-app/utils/auth-cookie";
 import { getCookie } from "next-app/utils/cookie";

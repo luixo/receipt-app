@@ -8,7 +8,7 @@ import {
 } from "app/mutations/debts/add-batch";
 import { nonNullishGuard } from "app/utils/utils";
 import { debtNoteSchema } from "app/utils/validation";
-import { UsersId } from "next-app/db/models";
+import type { UsersId } from "next-app/db/models";
 import { authProcedure } from "next-app/handlers/trpc";
 import {
 	debtAmountSchema,

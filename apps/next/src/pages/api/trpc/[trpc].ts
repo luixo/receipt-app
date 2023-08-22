@@ -2,11 +2,11 @@ import * as Sentry from "@sentry/nextjs";
 import * as trpcNext from "@trpc/server/adapters/next";
 
 import { router } from "next-app/handlers";
-import {
-	createContext,
+import type {
 	UnauthorizedContext,
 	AuthorizedContext,
 } from "next-app/handlers/context";
+import { createContext } from "next-app/handlers/context";
 
 export type AppRouter = typeof router;
 

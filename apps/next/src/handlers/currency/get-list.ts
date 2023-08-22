@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { CurrencyCode } from "app/utils/currency";
+import type { CurrencyCode } from "app/utils/currency";
 import { authProcedure } from "next-app/handlers/trpc";
 import { localeSchema } from "next-app/handlers/validation";
 import { getCurrencies } from "next-app/utils/currency";

@@ -1,10 +1,11 @@
 import React from "react";
 
-import { Grid as OriginalGrid, CSS } from "@nextui-org/react";
+import type { CSS } from "@nextui-org/react";
+import { Grid as OriginalGrid } from "@nextui-org/react";
 
+import type { BreakpointValues } from "app/hooks/use-match-media-value";
 import {
 	breakpointKeys,
-	BreakpointValues,
 	useMatchMediaValue,
 } from "app/hooks/use-match-media-value";
 import { capitalize } from "app/utils/utils";

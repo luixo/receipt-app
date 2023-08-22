@@ -10,8 +10,9 @@ import { EmailVerificationCard } from "app/features/email-verification/email-ver
 import { useRouter } from "app/hooks/use-router";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
-import { trpc, TRPCQuerySuccessResult } from "app/trpc";
-import { AppPage } from "next-app/types/page";
+import type { TRPCQuerySuccessResult } from "app/trpc";
+import { trpc } from "app/trpc";
+import type { AppPage } from "next-app/types/page";
 
 import { AccountNameInput } from "./account-name-input";
 

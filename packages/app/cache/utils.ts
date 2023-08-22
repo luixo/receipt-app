@@ -1,8 +1,8 @@
-import React from "react";
+import type React from "react";
 
-import { QueryClient, QueryKey } from "@tanstack/react-query";
+import type { QueryClient, QueryKey } from "@tanstack/react-query";
 
-import {
+import type {
 	TRPCQueryInput,
 	TRPCQueryKey,
 	TRPCQueryOutput,

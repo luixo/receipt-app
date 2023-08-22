@@ -1,6 +1,6 @@
 import React from "react";
 
-import { ExtraAppInitialProps } from "next/app";
+import type { ExtraAppInitialProps } from "next/app";
 
 import { ColorModeContext } from "app/contexts/color-mode-context";
 import { SettingsContext } from "app/contexts/settings-context";

@@ -6,9 +6,10 @@ import { User } from "app/components/app/user";
 import { RemoveButton } from "app/components/remove-button";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
-import { trpc, TRPCQueryOutput } from "app/trpc";
+import type { TRPCQueryOutput } from "app/trpc";
+import { trpc } from "app/trpc";
 import { convertParticipantToUser } from "app/utils/receipt-item";
-import { ReceiptItemsId, ReceiptsId } from "next-app/db/models";
+import type { ReceiptItemsId, ReceiptsId } from "next-app/db/models";
 
 import { ReceiptItemPartInput } from "./receipt-item-part-input";
 

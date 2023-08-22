@@ -1,8 +1,8 @@
 import * as utils from "app/cache/utils";
-import { TRPCQueryOutput, TRPCReactContext } from "app/trpc";
+import type { TRPCQueryOutput, TRPCReactContext } from "app/trpc";
 import { upsertInArray } from "app/utils/array";
-import { CurrencyCode } from "app/utils/currency";
-import { UsersId } from "next-app/db/models";
+import type { CurrencyCode } from "app/utils/currency";
+import type { UsersId } from "next-app/db/models";
 
 type Controller = TRPCReactContext["debts"]["getByUsers"];
 

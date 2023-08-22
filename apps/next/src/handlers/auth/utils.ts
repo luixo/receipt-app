@@ -2,8 +2,8 @@ import * as trpc from "@trpc/server";
 import { v4 } from "uuid";
 
 import { DAY } from "app/utils/time";
-import { Database } from "next-app/db";
-import { AccountsId, SessionsSessionId } from "next-app/db/models";
+import type { Database } from "next-app/db";
+import type { AccountsId, SessionsSessionId } from "next-app/db/models";
 import { generateConfirmEmailEmail } from "next-app/email/utils";
 import { getEmailClient } from "next-app/utils/email";
 

@@ -1,8 +1,8 @@
 import { cache } from "app/cache";
-import { SnapshotFn, UpdateFn } from "app/cache/utils";
-import { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
-import { ReceiptsId } from "next-app/db/models";
+import type { SnapshotFn, UpdateFn } from "app/cache/utils";
+import type { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import type { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
+import type { ReceiptsId } from "next-app/db/models";
 
 type ReceiptItem = TRPCQueryOutput<"receiptItems.get">["items"][number];
 type ReceiptItemPart = ReceiptItem["parts"][number];

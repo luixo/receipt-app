@@ -7,7 +7,7 @@ import { z } from "zod";
 import { Calendar } from "app/components/calendar";
 import { IconButton } from "app/components/icon-button";
 import { useSingleInput } from "app/hooks/use-single-input";
-import { TRPCError } from "app/trpc";
+import type { TRPCError } from "app/trpc";
 import { formatDate } from "app/utils/date";
 import { noop } from "app/utils/utils";
 

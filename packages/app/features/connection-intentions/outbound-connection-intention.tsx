@@ -6,7 +6,8 @@ import { MdLinkOff as UnlinkIcon } from "react-icons/md";
 import { IconButton } from "app/components/icon-button";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
-import { trpc, TRPCQueryOutput } from "app/trpc";
+import type { TRPCQueryOutput } from "app/trpc";
+import { trpc } from "app/trpc";
 
 type Props = {
 	intention: TRPCQueryOutput<"accountConnectionIntentions.getAll">["outbound"][number];

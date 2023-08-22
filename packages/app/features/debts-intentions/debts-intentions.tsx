@@ -6,8 +6,9 @@ import { useRouter } from "next/router";
 import { LoadableUser } from "app/components/app/loadable-user";
 import { QueryErrorMessage } from "app/components/error-message";
 import { useRefs } from "app/hooks/use-refs";
-import { trpc, TRPCQuerySuccessResult } from "app/trpc";
-import { UsersId } from "next-app/db/models";
+import type { TRPCQuerySuccessResult } from "app/trpc";
+import { trpc } from "app/trpc";
+import type { UsersId } from "next-app/db/models";
 
 import { InboundDebtIntention } from "./inbound-debt-intention";
 

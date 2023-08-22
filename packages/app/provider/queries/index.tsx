@@ -10,7 +10,7 @@ import {
 	getQueryClientConfig,
 	TRPC_ENDPOINT,
 } from "app/utils/queries";
-import { AppRouter } from "next-app/pages/api/trpc/[trpc]";
+import type { AppRouter } from "next-app/pages/api/trpc/[trpc]";
 
 const trpc = createTRPCReact<AppRouter>();
 
