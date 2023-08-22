@@ -11,6 +11,10 @@ const getExtraneousDependenciesConfig = (
 	packageDir: [".", packageJsonDir].filter(Boolean),
 });
 
+const getParserOptions = (dir = "") => ({
+	project: [".", dir, "tsconfig.json"].filter(Boolean).join("/"),
+});
+
 module.exports = {
 	extends: [
 		"eslint:recommended",
@@ -21,9 +25,7 @@ module.exports = {
 		"plugin:@next/next/recommended",
 		"prettier",
 	],
-	parserOptions: {
-		project: true,
-	},
+	parserOptions: getParserOptions(),
 	rules: {
 		"react/function-component-definition": [
 			"error",
@@ -111,6 +113,13 @@ module.exports = {
 					getExtraneousDependenciesConfig(dir, devDependencies),
 				],
 			},
+		})),
+		// tsconfig.json is nothing specific for scripts/ and scripts/modular/ dirs
+		// Parsing more tsconfigs slows down eslint
+		// See https://github.com/typescript-eslint/typescript-eslint/issues/1192
+		...["apps/next", "apps/expo"].map((dir) => ({
+			files: `${dir}/**/*`,
+			parserOptions: getParserOptions(dir),
 		})),
 		{
 			extends: ["plugin:@typescript-eslint/disable-type-checked"],
