@@ -8,7 +8,7 @@
 		"db:generate-types": "tsx generate-types.ts",
 		"expo:update-ios-version": "tsx update-version.ts"
 	},
-	"dependencies": {
+	"devDependencies": {
 		"@kristiandupont/recase": "^1.1.2",
 		"concurrently": "^7.1.0",
 		"extract-pg-schema": "^4.1.0",
