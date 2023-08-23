@@ -1,18 +1,30 @@
 import * as trpc from "@trpc/server";
 import { sql } from "kysely";
 import superjson from "superjson";
+import { ZodError } from "zod";
 
 import {
 	shouldUpdateExpirationDate,
 	updateAuthorizationSession,
 } from "next-app/handlers/auth/utils";
 import type { UnauthorizedContext } from "next-app/handlers/context";
+import { formatZodErrors } from "next-app/handlers/errors";
 import { sessionIdSchema } from "next-app/handlers/validation";
 import { AUTH_COOKIE, resetAuthCookie } from "next-app/utils/auth-cookie";
 import { getCookie } from "next-app/utils/cookie";
 
 export const t = trpc.initTRPC.context<UnauthorizedContext>().create({
 	transformer: superjson,
+	errorFormatter: (opts) => {
+		const { shape, error } = opts;
+		return {
+			...shape,
+			message:
+				error.code === "BAD_REQUEST" && error.cause instanceof ZodError
+					? formatZodErrors(error.cause)
+					: shape.message,
+		};
+	},
 });
 
 export const unauthProcedure = t.procedure.use(
