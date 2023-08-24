@@ -3,6 +3,7 @@ import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
 import type { Kysely } from "kysely";
 import { createHash } from "node:crypto";
 import { Pool } from "pg";
+import * as timekeeper from "timekeeper";
 
 import { getDatabase } from "next-app/db";
 import type { ReceiptsDatabase } from "next-app/db/types";
@@ -82,9 +83,11 @@ beforeAll(async () => {
 
 beforeEach(async () => {
 	setSeed(expect.getState().currentTestName || "unknown");
+	timekeeper.freeze(new Date("2020-01-01"));
 });
 
 afterEach(async () => {
+	timekeeper.reset();
 	unsetSeed();
 	const { databaseName } = global.testContext!;
 	global.testContext!.emailService = {

@@ -1,5 +1,4 @@
 import { faker } from "@faker-js/faker";
-import * as timekeeper from "timekeeper";
 
 import { MINUTE } from "app/utils/time";
 import { router } from "next-app/handlers/index";
@@ -49,8 +48,6 @@ describe("account.resendEmail", () => {
 	});
 
 	describe("functionality", () => {
-		const freezeDate = new Date("2020-01-01");
-
 		const insertReadyForEmailAccount = async () => {
 			const { database } = global.testContext!;
 			const {
@@ -71,31 +68,25 @@ describe("account.resendEmail", () => {
 		test("email is not resent - service is disabled", async () => {
 			const { emailService } = global.testContext!;
 			emailService.active = false;
-
-			await timekeeper.withFreeze(freezeDate, async () => {
-				const { sessionId } = await insertReadyForEmailAccount();
-				const caller = router.createCaller(createAuthContext(sessionId));
-				await expectTRPCError(
-					() => caller.account.resendEmail(),
-					"FORBIDDEN",
-					"Currently email resend is not supported",
-				);
-			});
+			const { sessionId } = await insertReadyForEmailAccount();
+			const caller = router.createCaller(createAuthContext(sessionId));
+			await expectTRPCError(
+				() => caller.account.resendEmail(),
+				"FORBIDDEN",
+				"Currently email resend is not supported",
+			);
 		});
 
 		test("email is not resent - something failed in an email provider", async () => {
 			const { emailService } = global.testContext!;
 			emailService.broke = true;
-
-			await timekeeper.withFreeze(freezeDate, async () => {
-				const { sessionId } = await insertReadyForEmailAccount();
-				const caller = router.createCaller(createAuthContext(sessionId));
-				await expectTRPCError(
-					() => caller.account.resendEmail(),
-					"INTERNAL_SERVER_ERROR",
-					"Something went wrong: Test context broke email service error",
-				);
-			});
+			const { sessionId } = await insertReadyForEmailAccount();
+			const caller = router.createCaller(createAuthContext(sessionId));
+			await expectTRPCError(
+				() => caller.account.resendEmail(),
+				"INTERNAL_SERVER_ERROR",
+				"Something went wrong: Test context broke email service error",
+			);
 		});
 
 		test("email is resent", async () => {
@@ -104,13 +95,11 @@ describe("account.resendEmail", () => {
 			// Verifying other accounts are not affected
 			await insertAccountWithSession(database);
 			await insertReadyForEmailAccount();
-			await timekeeper.withFreeze(freezeDate, async () => {
-				const { sessionId, email } = await insertReadyForEmailAccount();
-				const caller = router.createCaller(createAuthContext(sessionId));
-				await expectDatabaseDiffSnapshot(async () => {
-					const { email: returnEmail } = await caller.account.resendEmail();
-					expect(returnEmail).toEqual(email);
-				});
+			const { sessionId, email } = await insertReadyForEmailAccount();
+			const caller = router.createCaller(createAuthContext(sessionId));
+			await expectDatabaseDiffSnapshot(async () => {
+				const { email: returnEmail } = await caller.account.resendEmail();
+				expect(returnEmail).toEqual(email);
 			});
 			expect(emailService.messages).toHaveLength(1);
 			expect(emailService.messages[0]).toMatchSnapshot();
