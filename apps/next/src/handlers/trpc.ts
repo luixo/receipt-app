@@ -1,5 +1,4 @@
 import * as trpc from "@trpc/server";
-import { sql } from "kysely";
 import superjson from "superjson";
 
 import {
@@ -68,7 +67,7 @@ export const authProcedure = unauthProcedure.use(
 				"sessions.expirationTimestamp",
 			])
 			.where("sessions.sessionId", "=", authToken)
-			.where("sessions.expirationTimestamp", ">", sql`now()`)
+			.where("sessions.expirationTimestamp", ">", new Date())
 			.executeTakeFirst();
 		if (!session) {
 			resetAuthCookie(ctx.res);
