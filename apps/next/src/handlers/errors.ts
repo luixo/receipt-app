@@ -1,4 +1,5 @@
-import type { z } from "zod";
+import type { TRPCError } from "@trpc/server";
+import { ZodError, type z } from "zod";
 import { generateErrorMessage } from "zod-error";
 
 export const formatZodErrors = (error: z.ZodError) =>
@@ -21,3 +22,11 @@ export const formatZodErrors = (error: z.ZodError) =>
 			`At "${params.pathComponent}": ${params.messageComponent}`,
 		code: { enabled: false },
 	});
+
+export const formatErrorMessage = (
+	error: TRPCError,
+	fallbackMessage: string,
+) =>
+	error.code === "BAD_REQUEST" && error.cause instanceof ZodError
+		? formatZodErrors(error.cause)
+		: fallbackMessage;

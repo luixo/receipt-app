@@ -32,10 +32,12 @@ export const createContext = (
 	req: opts.req,
 	res: opts.res,
 	logger: baseLogger,
-	database: getDatabase({
-		logger: opts.req.headers.debug
-			? baseLogger.child({ url: opts.req.url || "unknown" })
-			: undefined,
-		pool: sharedPool,
-	}),
+	database:
+		global.testContext?.database ||
+		getDatabase({
+			logger: opts.req.headers.debug
+				? baseLogger.child({ url: opts.req.url || "unknown" })
+				: undefined,
+			pool: sharedPool,
+		}),
 });
