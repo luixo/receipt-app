@@ -1,0 +1,11 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`sessions.cleanup functionality sessions are removed 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.sessions VALUES ('0eb0c6e7-6bf8-4410-b6c6-3c4efc4878e1', '335153bd-ceb6-424d-90e7-c03776c587bf', '2019-12-31 23:59:00');
+- INSERT INTO public.sessions VALUES ('8eda0876-8664-4725-b386-9f0673ff0a88', '335153bd-ceb6-424d-90e7-c03776c587bf', '2019-01-01 00:00:00');"
+`;
