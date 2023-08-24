@@ -9,7 +9,6 @@
 		"expo:update-ios-version": "tsx update-version.ts"
 	},
 	"devDependencies": {
-		"@kristiandupont/recase": "^1.1.2",
 		"concurrently": "^7.1.0",
 		"extract-pg-schema": "^4.1.0",
 		"get-port": "^6.1.2",

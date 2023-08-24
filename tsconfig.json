@@ -7,8 +7,12 @@
 		"jsx": "react",
 		"paths": {
 			"app/*": ["./packages/app/*"],
-			"next-app/*": ["./apps/next/src/*"]
+			"next-app/*": ["./apps/next/src/*"],
+			"next-tests/*": ["./apps/next/tests/*"]
 		}
 	},
-	"extends": "expo/tsconfig.base"
+	"extends": "expo/tsconfig.base",
+	"ts-node": {
+		"require": ["tsconfig-paths/register"]
+	}
 }

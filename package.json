@@ -8,12 +8,17 @@
 	],
 	"devDependencies": {
 		"@babel/core": "^7.12.9",
+		"@kristiandupont/recase": "^1.1.2",
+		"@types/jest": "^29.5.3",
 		"@types/react": "^18.0.1",
 		"@types/react-native": "^0.72.2",
 		"@typescript-eslint/eslint-plugin": "^6.1.0",
 		"@typescript-eslint/parser": "^6.1.0",
+		"alias-hq": "^6.2.1",
 		"dotenv": "^16.0.0",
 		"dotenv-cli": "^5.1.0",
+		"esbuild": "^0.18.17",
+		"esbuild-jest": "^0.5.0",
 		"eslint": "^8.45.0",
 		"eslint-config-airbnb": "^19.0.4",
 		"eslint-config-airbnb-typescript": "^17.1.0",
@@ -22,9 +27,14 @@
 		"eslint-plugin-jsx-a11y": "^6.7.1",
 		"eslint-plugin-react": "^7.33.0",
 		"eslint-plugin-react-hooks": "^4.6.0",
+		"find-free-ports": "^3.1.1",
+		"jest": "^29.6.2",
 		"lint-staged": "^13.2.3",
 		"pre-commit": "^1.2.2",
 		"prettier": "^3.0.0",
+		"snapshot-diff": "^0.10.0",
+		"testcontainers": "^8.12.0",
+		"ts-node": "^10.9.1",
 		"turbo": "^1.2.2",
 		"typescript": "^5.1.6"
 	},
@@ -42,7 +52,8 @@
 		"db:migrate": "dotenv -c -- yarn workspace scripts db:migrate",
 		"db:migrate:production": "dotenv -c production -- yarn workspace scripts db:migrate",
 		"db:generate-types": "dotenv -c -- yarn workspace scripts db:generate-types && yarn lint:fix && yarn format",
-		"lint-staged": "lint-staged"
+		"lint-staged": "lint-staged",
+		"backend:test": "jest"
 	},
 	"dependencies": {
 		"@nextui-org/react": "1.0.0-beta.10",
@@ -77,6 +88,7 @@
 	"resolutions": {
 		"zustand@^4.3.9": "patch:zustand@npm%3A4.3.9#./patches/zustand-npm-4.3.9.patch",
 		"@trpc/next@^10.35.0": "patch:@trpc/next@npm%3A10.35.0#./patches/@trpc-next-npm-10.35.0.patch",
+		"@trpc/server@^10.35.0": "patch:@trpc/server@npm%3A10.35.0#./patches/@trpc-server-npm-10.35.0.patch",
 		"@nextui-org/react@1.0.0-beta.10": "patch:@nextui-org/react@npm%3A1.0.0-beta.10#./patches/@nextui-org-react-npm-1.0.0-beta.10.patch"
 	}
 }
