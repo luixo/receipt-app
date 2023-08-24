@@ -104,7 +104,7 @@ module.exports = {
 			["apps/next", ["next.config.js"]],
 			["apps/expo"],
 			["packages/app"],
-			["scripts"],
+			["scripts", ["**/*"]],
 		].map(([dir, devDependencies]) => ({
 			files: `${dir}/**/*`,
 			rules: {

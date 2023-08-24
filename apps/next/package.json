@@ -9,11 +9,6 @@
 		"lint": "next lint",
 		"typecheck": "tsc --noEmit"
 	},
-	"workspaces": {
-		"nohoist": [
-			"@types/react"
-		]
-	},
 	"dependencies": {
 		"@expo/next-adapter": "^5.0.2",
 		"@trpc/client": "^10.35.0",

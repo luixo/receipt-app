@@ -2,10 +2,31 @@ name: Setup node with .nvmrc
 runs:
   using: composite
   steps:
+    - name: Get ngrok version
+      id: ngrok-version
+      # Outputs something like 1.0.0
+      run: |
+        VERSION=$(cat scripts/package.json| jq -r .devDependencies.ngrok | cut -c 2-)
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+      shell: bash
+    - name: Cache ngrok module
+      uses: actions/cache@v3
+      env:
+        cache-name: cache-ngrok-module
+      with:
+        # ngrok cache files are stored in `~/.ngrok` on Linux/macOS
+        path: ~/.ngrok
+        key: ${{ runner.os }}-${{ env.cache-name }}-${{ steps.ngrok-version.outputs.version }}
+        restore-keys: ${{ runner.os }}-${{ env.cache-name }}-${{ steps.ngrok-version.outputs.version }}
     - uses: actions/setup-node@v3
       with:
         node-version-file: .nvmrc
+    - name: Enable Corepack
+      run: corepack enable
+      shell: bash
+    - uses: actions/setup-node@v3
+      with:
         cache: "yarn"
-    - name: Yarn install
-      run: yarn install && yarn postinstall
+    - name: Install dependencies
+      run: corepack yarn install --immutable
       shell: bash

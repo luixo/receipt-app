@@ -1,7 +1,7 @@
-diff --git a/node_modules/zustand/react.d.ts b/node_modules/zustand/react.d.ts
-index 8646581..aedd8a3 100644
---- a/node_modules/zustand/react.d.ts
-+++ b/node_modules/zustand/react.d.ts
+diff --git a/react.d.ts b/react.d.ts
+index 8646581f052daf191521a143b5f9dd9e9440693b..aedd8a37f1a1c0ef972f98d465cb9b53556a1f91 100644
+--- a/react.d.ts
++++ b/react.d.ts
 @@ -1,9 +1,9 @@
  import type { Mutate, StateCreator, StoreApi, StoreMutatorIdentifier } from './vanilla';
 -type ExtractState<S> = S extends {
