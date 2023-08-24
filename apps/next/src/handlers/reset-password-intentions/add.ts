@@ -1,11 +1,11 @@
 import * as trpc from "@trpc/server";
-import { v4 } from "uuid";
 import { z } from "zod";
 
 import { DAY } from "app/utils/time";
 import { emailSchema } from "app/utils/validation";
 import { generateResetPasswordEmail } from "next-app/email/utils";
 import { unauthProcedure } from "next-app/handlers/trpc";
+import { getUuid } from "next-app/utils/crypto";
 import { getEmailClient, isEmailServiceActive } from "next-app/utils/email";
 
 export const procedure = unauthProcedure
@@ -27,7 +27,7 @@ export const procedure = unauthProcedure
 				message: `Account with email ${input.email} does not exist.`,
 			});
 		}
-		const uuid = v4();
+		const uuid = getUuid();
 		const expirationDate = new Date(Date.now() + DAY);
 		if (!isEmailServiceActive()) {
 			throw new trpc.TRPCError({

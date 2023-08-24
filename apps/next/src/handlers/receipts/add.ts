@@ -1,10 +1,10 @@
-import { v4 } from "uuid";
 import { z } from "zod";
 
 import { receiptNameSchema } from "app/utils/validation";
 import { addReceiptParticipants } from "next-app/handlers/receipt-participants/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import { currencyCodeSchema, userIdSchema } from "next-app/handlers/validation";
+import { getUuid } from "next-app/utils/crypto";
 
 export const procedure = authProcedure
 	.input(
@@ -16,7 +16,7 @@ export const procedure = authProcedure
 		}),
 	)
 	.mutation(async ({ input, ctx }) => {
-		const id = v4();
+		const id = getUuid();
 		const { database } = ctx;
 		await database.transaction().execute(async (tx) => {
 			await tx

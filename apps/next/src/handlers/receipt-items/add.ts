@@ -1,5 +1,4 @@
 import * as trpc from "@trpc/server";
-import { v4 } from "uuid";
 import { z } from "zod";
 
 import {
@@ -13,6 +12,7 @@ import {
 } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import { receiptIdSchema } from "next-app/handlers/validation";
+import { getUuid } from "next-app/utils/crypto";
 
 export const procedure = authProcedure
 	.input(
@@ -55,7 +55,7 @@ export const procedure = authProcedure
 				} with role ${accessRole || "nobody"}`,
 			});
 		}
-		const id = v4();
+		const id = getUuid();
 		await database
 			.insertInto("receiptItems")
 			.values({

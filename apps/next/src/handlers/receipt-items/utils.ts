@@ -1,6 +1,5 @@
 import type { Selection } from "kysely";
 import { sql } from "kysely";
-import { v4 } from "uuid";
 
 import { getParticipantSums } from "app/utils/receipt-item";
 import type { Database, ReceiptsSelectExpression } from "next-app/db";
@@ -12,6 +11,7 @@ import type {
 } from "next-app/db/models";
 import type { ReceiptsDatabase } from "next-app/db/types";
 import type { Role } from "next-app/handlers/receipts/utils";
+import { getUuid } from "next-app/utils/crypto";
 
 export const getReceiptItemById = <
 	SE extends ReceiptsSelectExpression<"receiptItems">,
@@ -167,5 +167,5 @@ export const getValidParticipants = async (
 				// .. and has to be someone but yourself
 				participant.remoteUserId !== ownerAccountId,
 		)
-		.map((participant) => ({ ...participant, debtId: v4() }));
+		.map((participant) => ({ ...participant, debtId: getUuid() }));
 };

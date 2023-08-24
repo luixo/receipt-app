@@ -1,5 +1,3 @@
-import { v4 } from "uuid";
-
 import { cache } from "app/cache";
 import type { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import type { ReceiptItemsId, ReceiptsId } from "next-app/db/models";
@@ -12,7 +10,7 @@ export const options: UseContextedMutationOptions<
 	ReceiptItemsId
 > = {
 	onMutate: (controllerContext, receiptId) => (variables) => {
-		const temporaryId = v4();
+		const temporaryId = `temp-${Math.random()}`;
 		return {
 			...cache.receiptItems.updateRevert(controllerContext, {
 				getReceiptItem: (controller) =>

@@ -1,5 +1,4 @@
 import * as trpc from "@trpc/server";
-import { v4 } from "uuid";
 import { z } from "zod";
 
 import { nonNullishGuard } from "app/utils/utils";
@@ -15,6 +14,7 @@ import {
 	debtAmountSchema,
 	userIdSchema,
 } from "next-app/handlers/validation";
+import { getUuid } from "next-app/utils/crypto";
 
 export const procedure = authProcedure
 	.input(
@@ -37,7 +37,7 @@ export const procedure = authProcedure
 			),
 	)
 	.mutation(async ({ input: debts, ctx }) => {
-		const ids = debts.map(() => v4());
+		const ids = debts.map(() => getUuid());
 		const { database } = ctx;
 		const userIds = [...new Set(debts.map(({ userId }) => userId))];
 		const users = await database

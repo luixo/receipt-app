@@ -27,8 +27,10 @@ declare global {
 				database: Kysely<ReceiptsDatabase>;
 				dumpDatabase: () => Promise<string>;
 				databaseName: string;
-				// Fixed salt for password generation on tests
-				salt: string;
+				// Fixed random data for tests
+				random: {
+					getUuid: () => string;
+				};
 		  }
 		| undefined;
 }
@@ -58,7 +60,9 @@ beforeAll(async () => {
 		}),
 		dumpDatabase: () => client.dumpDatabase.query({ databaseName }),
 		databaseName,
-		salt: faker.string.uuid(),
+		random: {
+			getUuid: () => faker.string.uuid(),
+		},
 	};
 	unsetSeed();
 });

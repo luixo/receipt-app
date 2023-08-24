@@ -1,5 +1,4 @@
 import * as trpc from "@trpc/server";
-import { v4 } from "uuid";
 import { z } from "zod";
 
 import {
@@ -14,7 +13,7 @@ import {
 } from "next-app/handlers/auth/utils";
 import { unauthProcedure } from "next-app/handlers/trpc";
 import { setAuthCookie } from "next-app/utils/auth-cookie";
-import { generatePasswordData } from "next-app/utils/crypto";
+import { generatePasswordData, getUuid } from "next-app/utils/crypto";
 import { isEmailServiceActive } from "next-app/utils/email";
 
 export const procedure = unauthProcedure
@@ -42,8 +41,8 @@ export const procedure = unauthProcedure
 				message: "Email already exist",
 			});
 		} else {
-			const id: AccountsId = v4();
-			const confirmationToken = v4();
+			const id: AccountsId = getUuid();
+			const confirmationToken = getUuid();
 			const emailServiceActive = isEmailServiceActive();
 			const passwordData = generatePasswordData(input.password);
 			if (emailServiceActive) {
