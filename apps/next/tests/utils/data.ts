@@ -31,7 +31,7 @@ export const insertAccount = async (
 			.insertInto("accounts")
 			.values({
 				id: data.id || faker.string.uuid(),
-				email: data.email || faker.internet.email(),
+				email: (data.email || faker.internet.email()).toLowerCase(),
 				passwordHash,
 				passwordSalt,
 				confirmationToken: data.confirmation

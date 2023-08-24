@@ -44,6 +44,10 @@ export const sessionIdSchema = z
 export const debtIdSchema = z.string().uuid().refine<DebtsId>(flavored);
 export const resetPasswordTokenSchema = z.string().uuid();
 export const confirmEmailTokenSchema = z.string().uuid();
+export const emailSchema = z
+	.string()
+	.email({ message: "Invalid email address" })
+	.transform((email) => ({ lowercase: email.toLowerCase(), original: email }));
 
 export const debtAmountSchema = nonZero(
 	createNumberSchema("Debt amount", { onlyPositive: false }),

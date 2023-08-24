@@ -1,11 +1,10 @@
 import * as trpc from "@trpc/server";
 import { z } from "zod";
 
-import { emailSchema } from "app/utils/validation";
 import { addConnectionIntention } from "next-app/handlers/account-connection-intentions/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import { getUserById } from "next-app/handlers/users/utils";
-import { userIdSchema } from "next-app/handlers/validation";
+import { emailSchema, userIdSchema } from "next-app/handlers/validation";
 
 export const procedure = authProcedure
 	.input(

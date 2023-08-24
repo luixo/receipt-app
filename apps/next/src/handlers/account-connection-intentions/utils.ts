@@ -1,31 +1,33 @@
 import * as trpc from "@trpc/server";
+import type { z } from "zod";
 
 import type { Database } from "next-app/db";
 import { ACCOUNT_CONNECTIONS_INTENTIONS } from "next-app/db/consts";
 import type { AccountsId, UsersId } from "next-app/db/models";
 import { getUserById } from "next-app/handlers/users/utils";
+import type { emailSchema } from "next-app/handlers/validation";
 
 export const addConnectionIntention = async (
 	database: Database,
 	fromAccountId: AccountsId,
 	user: { name: string },
-	toEmail: string,
+	toEmail: z.infer<typeof emailSchema>,
 	asUserId: UsersId,
 ) => {
 	const targetAccount = await database
 		.selectFrom("accounts")
 		.select("id")
-		.where("email", "=", toEmail)
+		.where("email", "=", toEmail.lowercase)
 		.executeTakeFirst();
 	if (!targetAccount) {
 		throw new trpc.TRPCError({
 			code: "NOT_FOUND",
-			message: `Account with email ${toEmail} does not exist.`,
+			message: `Account with email ${toEmail.original} does not exist.`,
 		});
 	}
 	const connectedUser = await database
 		.selectFrom("accounts")
-		.where("accounts.email", "=", toEmail)
+		.where("accounts.email", "=", toEmail.lowercase)
 		.innerJoin("users", (qb) =>
 			qb
 				.onRef("users.connectedAccountId", "=", "accounts.id")
@@ -36,7 +38,7 @@ export const addConnectionIntention = async (
 	if (connectedUser) {
 		throw new trpc.TRPCError({
 			code: "CONFLICT",
-			message: `Account with email ${toEmail} is already connected to user ${connectedUser.name}.`,
+			message: `Account with email ${toEmail.original} is already connected to user ${connectedUser.name}.`,
 		});
 	}
 	const viceVersaIntention = await database
@@ -109,9 +111,9 @@ export const addConnectionIntention = async (
 			);
 			throw new trpc.TRPCError({
 				code: "CONFLICT",
-				message: `You already has intention to connect to ${toEmail} as user ${
-					existingUser!.name
-				}.`,
+				message: `You already has intention to connect to ${
+					toEmail.original
+				} as user ${existingUser!.name}.`,
 			});
 		}
 		if (

@@ -1,9 +1,10 @@
 import { z } from "zod";
 
-import { emailSchema, userNameSchema } from "app/utils/validation";
+import { userNameSchema } from "app/utils/validation";
 import type { UsersId } from "next-app/db/models";
 import { addConnectionIntention } from "next-app/handlers/account-connection-intentions/utils";
 import { authProcedure } from "next-app/handlers/trpc";
+import { emailSchema } from "next-app/handlers/validation";
 import { getUuid } from "next-app/utils/crypto";
 
 export const procedure = authProcedure

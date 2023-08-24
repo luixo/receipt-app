@@ -6,13 +6,13 @@ exports[`account.resendEmail functionality email is resent 1`] = `
 + After snapshot
 
 @@ --- --- @@
-- INSERT INTO public.accounts VALUES ('17a41dff-e239-4e3c-9569-9c5a0766bfd6', 'Al.Hagenes12@gmail.com', '808d842c86439647f2190d302c348d218d9beff5dab423c6a45def0d07bb3babe63a0ffb7582115df6a0135f17ec0a96c682bf2324ca2037ea5109bc0aa22be2', '71dde27a-0a98-459f-bda0-c6d097c9b3fd', '4c7b2e89-6c2b-4087-a03f-226db8027bce', '2019-12-31 22:55:00');
-+ INSERT INTO public.accounts VALUES ('17a41dff-e239-4e3c-9569-9c5a0766bfd6', 'Al.Hagenes12@gmail.com', '808d842c86439647f2190d302c348d218d9beff5dab423c6a45def0d07bb3babe63a0ffb7582115df6a0135f17ec0a96c682bf2324ca2037ea5109bc0aa22be2', '71dde27a-0a98-459f-bda0-c6d097c9b3fd', '9f41ce04-eee6-4acf-b2d6-dd4a9f5d4199', '2020-01-01 00:00:00');"
+- INSERT INTO public.accounts VALUES ('17a41dff-e239-4e3c-9569-9c5a0766bfd6', 'al.hagenes12@gmail.com', '808d842c86439647f2190d302c348d218d9beff5dab423c6a45def0d07bb3babe63a0ffb7582115df6a0135f17ec0a96c682bf2324ca2037ea5109bc0aa22be2', '71dde27a-0a98-459f-bda0-c6d097c9b3fd', '4c7b2e89-6c2b-4087-a03f-226db8027bce', '2019-12-31 22:55:00');
++ INSERT INTO public.accounts VALUES ('17a41dff-e239-4e3c-9569-9c5a0766bfd6', 'al.hagenes12@gmail.com', '808d842c86439647f2190d302c348d218d9beff5dab423c6a45def0d07bb3babe63a0ffb7582115df6a0135f17ec0a96c682bf2324ca2037ea5109bc0aa22be2', '71dde27a-0a98-459f-bda0-c6d097c9b3fd', '9f41ce04-eee6-4acf-b2d6-dd4a9f5d4199', '2020-01-01 00:00:00');"
 `;
 
 exports[`account.resendEmail functionality email is resent 2`] = `
 {
-  "address": "Al.Hagenes12@gmail.com",
+  "address": "al.hagenes12@gmail.com",
   "body": "
 	<!doctype html lang="en">
 	<html lang="en">

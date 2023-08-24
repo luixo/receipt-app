@@ -2,9 +2,9 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { DAY } from "app/utils/time";
-import { emailSchema } from "app/utils/validation";
 import { generateResetPasswordEmail } from "next-app/email/utils";
 import { unauthProcedure } from "next-app/handlers/trpc";
+import { emailSchema } from "next-app/handlers/validation";
 import { getUuid } from "next-app/utils/crypto";
 import { getEmailClient, isEmailServiceActive } from "next-app/utils/email";
 
@@ -19,12 +19,12 @@ export const procedure = unauthProcedure
 		const account = await database
 			.selectFrom("accounts")
 			.select("id")
-			.where("email", "=", input.email)
+			.where("email", "=", input.email.lowercase)
 			.executeTakeFirst();
 		if (!account) {
 			throw new trpc.TRPCError({
 				code: "NOT_FOUND",
-				message: `Account with email ${input.email} does not exist.`,
+				message: `Account with email ${input.email.original} does not exist.`,
 			});
 		}
 		const uuid = getUuid();
@@ -45,7 +45,7 @@ export const procedure = unauthProcedure
 			.executeTakeFirst();
 		try {
 			await getEmailClient().send({
-				address: input.email,
+				address: input.email.lowercase,
 				subject: "Reset password intention in Receipt App",
 				body: generateResetPasswordEmail(uuid),
 			});
