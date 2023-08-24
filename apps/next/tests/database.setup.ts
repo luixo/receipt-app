@@ -6,6 +6,7 @@ import { Pool } from "pg";
 
 import { getDatabase } from "next-app/db";
 import type { ReceiptsDatabase } from "next-app/db/types";
+import type { Email } from "next-app/utils/email";
 import { baseLogger } from "next-app/utils/logger";
 
 import { makeConnectionString } from "./databases/connection";
@@ -30,6 +31,11 @@ declare global {
 				// Fixed random data for tests
 				random: {
 					getUuid: () => string;
+				};
+				emailService: {
+					active: boolean;
+					broke: boolean;
+					messages: Email[];
 				};
 		  }
 		| undefined;
@@ -63,6 +69,11 @@ beforeAll(async () => {
 		random: {
 			getUuid: () => faker.string.uuid(),
 		},
+		emailService: {
+			active: true,
+			broke: false,
+			messages: [],
+		},
 	};
 	unsetSeed();
 });
@@ -74,6 +85,11 @@ beforeEach(async () => {
 afterEach(async () => {
 	unsetSeed();
 	const { databaseName } = global.testContext!;
+	global.testContext!.emailService = {
+		active: true,
+		broke: false,
+		messages: [],
+	};
 	await client.truncateDatabase.mutate({ databaseName });
 });
 

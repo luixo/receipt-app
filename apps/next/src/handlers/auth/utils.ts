@@ -5,7 +5,7 @@ import type { Database } from "next-app/db";
 import type { AccountsId, SessionsSessionId } from "next-app/db/models";
 import { generateConfirmEmailEmail } from "next-app/email/utils";
 import { getUuid } from "next-app/utils/crypto";
-import { getEmailClient } from "next-app/utils/email";
+import { getEmailClient, isEmailServiceActive } from "next-app/utils/email";
 
 // How long a session should last
 const SESSION_EXPIRATION_DURATION = 30 * DAY;
@@ -59,6 +59,12 @@ export const removeAuthorizationSession = async (
 };
 
 export const sendVerificationEmail = async (email: string, token: string) => {
+	if (!isEmailServiceActive()) {
+		throw new trpc.TRPCError({
+			code: "FORBIDDEN",
+			message: "Currently email resend is not supported",
+		});
+	}
 	try {
 		await getEmailClient().send({
 			address: email,
@@ -68,7 +74,9 @@ export const sendVerificationEmail = async (email: string, token: string) => {
 	} catch (e) {
 		throw new trpc.TRPCError({
 			code: "INTERNAL_SERVER_ERROR",
-			message: `Something went wrong: ${String(e)}`,
+			message: `Something went wrong: ${
+				e instanceof Error ? e.message : String(e)
+			}`,
 		});
 	}
 };
