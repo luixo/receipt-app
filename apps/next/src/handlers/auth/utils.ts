@@ -48,16 +48,6 @@ export const updateAuthorizationSession = async (
 		.executeTakeFirst();
 };
 
-export const removeAuthorizationSession = async (
-	database: Database,
-	sessionId: SessionsSessionId,
-) => {
-	await database
-		.deleteFrom("sessions")
-		.where("sessionId", "=", sessionId)
-		.executeTakeFirst();
-};
-
 export const sendVerificationEmail = async (email: string, token: string) => {
 	if (!isEmailServiceActive()) {
 		throw new trpc.TRPCError({

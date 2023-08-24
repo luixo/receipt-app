@@ -18,13 +18,7 @@ export const procedure = authProcedure
 			.selectFrom("accounts")
 			.select(["passwordHash", "passwordSalt"])
 			.where("id", "=", ctx.auth.accountId)
-			.executeTakeFirst();
-		if (!account) {
-			throw new trpc.TRPCError({
-				code: "UNAUTHORIZED",
-				message: `Change password of account "${ctx.auth.accountId}" failed: user doesn't exist.`,
-			});
-		}
+			.executeTakeFirstOrThrow();
 		const isPrevPasswordValid =
 			getHash(input.prevPassword, account.passwordSalt) ===
 			account.passwordHash;

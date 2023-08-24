@@ -2,7 +2,7 @@ import { router } from "next-app/handlers/index";
 import { createAuthContext } from "next-tests/utils/context";
 import {
 	insertAccount,
-	insertSelfUser,
+	insertAccountWithSession,
 	insertSession,
 } from "next-tests/utils/data";
 import {
@@ -32,33 +32,32 @@ describe("account.get", () => {
 	describe("functionality", () => {
 		test("verified account", async () => {
 			const { database } = global.testContext!;
-			const { id: accountId } = await insertAccount(database);
-			const { id: sessionId } = await insertSession(database, accountId);
-			const { name: userName } = await insertSelfUser(database, accountId);
+			const { sessionId, accountId, name } = await insertAccountWithSession(
+				database,
+			);
 			const caller = router.createCaller(createAuthContext(sessionId));
 
 			const account = await caller.account.get();
 
 			expect(account).toMatchObject<typeof account>({
 				account: { id: accountId, verified: true },
-				user: { name: userName },
+				user: { name },
 			});
 		});
 
 		test("unverified account", async () => {
 			const { database } = global.testContext!;
-			const { id: accountId } = await insertAccount(database, {
-				confirmation: {},
-			});
-			const { id: sessionId } = await insertSession(database, accountId);
-			const { name: userName } = await insertSelfUser(database, accountId);
+			const { sessionId, accountId, name } = await insertAccountWithSession(
+				database,
+				{ account: { confirmation: {} } },
+			);
 			const caller = router.createCaller(createAuthContext(sessionId));
 
 			const account = await caller.account.get();
 
 			expect(account).toMatchObject<typeof account>({
 				account: { id: accountId, verified: false },
-				user: { name: userName },
+				user: { name },
 			});
 		});
 	});

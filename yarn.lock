@@ -19863,6 +19863,7 @@ __metadata:
     react-native-web: ^0.19.7
     snapshot-diff: ^0.10.0
     testcontainers: ^8.12.0
+    timekeeper: ^2.3.1
     ts-node: ^10.9.1
     turbo: ^1.2.2
     typescript: ^5.1.6
@@ -22080,6 +22081,13 @@ __metadata:
   version: 2.0.0
   resolution: "tildify@npm:2.0.0"
   checksum: 0f5fee93624c4afdf75ee224c3b65aece4817ba5317fd70f49eaf084ea720d73556a6ef3f50079425a773ba3b93805b4524d14057841d4e4336516fdbe80635b
+  languageName: node
+  linkType: hard
+
+"timekeeper@npm:^2.3.1":
+  version: 2.3.1
+  resolution: "timekeeper@npm:2.3.1"
+  checksum: 856e15c2b76faa51c247e6a2c09b8c37d16b712c12db50aeb53af759777668ea342c8cf3474f36d7bc0c83dce59153862e8b7918d08195168a06cfb23739f5be
   languageName: node
   linkType: hard
 

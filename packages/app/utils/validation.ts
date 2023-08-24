@@ -24,9 +24,12 @@ const constrainLength = (
 
 export const flavored = <T extends string>(x: string): x is T => true;
 
+export const MIN_PASSWORD_LENGTH = 6;
+export const MAX_PASSWORD_LENGTH = 255;
+
 export const passwordSchema = constrainLength(z.string(), {
-	min: 6,
-	max: 255,
+	min: MIN_PASSWORD_LENGTH,
+	max: MAX_PASSWORD_LENGTH,
 	target: "password",
 });
 
@@ -42,9 +45,12 @@ export const receiptItemNameSchema = constrainLength(z.string(), {
 	target: "receipt item name",
 });
 
+export const MIN_USERNAME_LENGTH = 1;
+export const MAX_USERNAME_LENGTH = 255;
+
 export const userNameSchema = constrainLength(z.string(), {
-	min: 1,
-	max: 255,
+	min: MIN_USERNAME_LENGTH,
+	max: MAX_USERNAME_LENGTH,
 	target: "user name",
 });
 
