@@ -11,13 +11,7 @@ export const procedure = authProcedure.mutation(async ({ ctx }) => {
 		.selectFrom("accounts")
 		.select(["email", "confirmationTokenTimestamp"])
 		.where("id", "=", ctx.auth.accountId)
-		.executeTakeFirst();
-	if (!account) {
-		throw new trpc.TRPCError({
-			code: "PRECONDITION_FAILED",
-			message: `There is no account with id ${ctx.auth.accountId}`,
-		});
-	}
+		.executeTakeFirstOrThrow();
 	if (!account.confirmationTokenTimestamp) {
 		throw new trpc.TRPCError({
 			code: "BAD_REQUEST",

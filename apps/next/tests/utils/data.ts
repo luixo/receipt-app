@@ -118,3 +118,25 @@ export const insertSession = async (
 		.executeTakeFirstOrThrow();
 	return { id: sessionId, expirationTimestamp };
 };
+
+type AccountWithSessionData = {
+	account?: AccountData;
+	session?: SessionData;
+	user?: Pick<UserData, "name">;
+};
+
+export const insertAccountWithSession = async (
+	database: Database,
+	data: AccountWithSessionData = {},
+) => {
+	const { id: accountId, ...account } = await insertAccount(
+		database,
+		data.account,
+	);
+	const { id: sessionId, ...session } = await insertSession(
+		database,
+		accountId,
+	);
+	const { name } = await insertSelfUser(database, accountId, data.user);
+	return { accountId, account, sessionId, session, name };
+};
