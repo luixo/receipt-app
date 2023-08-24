@@ -6447,7 +6447,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"app@*, app@workspace:packages/app":
+"app@workspace:*, app@workspace:packages/app":
   version: 0.0.0-use.local
   resolution: "app@workspace:packages/app"
   dependencies:
@@ -6463,13 +6463,13 @@ __metadata:
     "@types/identicon.js": ^2.3.1
     "@types/react-calendar": ^4.1.0
     "@types/uuid": ^9.0.2
-    app: "*"
-    expo-app: "*"
+    app: "workspace:*"
+    expo-app: "workspace:*"
     expo-constants: ^14.4.2
     expo-linking: ^5.0.2
     idb-keyval: ^6.2.1
     identicon.js: ^2.3.3
-    next-app: "*"
+    next-app: "workspace:*"
     next-usequerystate: ^1.7.3
     react-calendar: ^4.5.0
     react-date-picker: ^10.3.0
@@ -9953,14 +9953,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"expo-app@*, expo-app@workspace:apps/expo":
+"expo-app@workspace:*, expo-app@workspace:apps/expo":
   version: 0.0.0-use.local
   resolution: "expo-app@workspace:apps/expo"
   dependencies:
     "@babel/core": ^7.22.9
     "@react-navigation/native-stack": ^6.9.13
     "@types/react": ^18.2.16
-    app: "*"
+    app: "workspace:*"
     dotenv: ^16.3.1
     eas-cli: ^3.17.0
     expo: ^49.0.4
@@ -14441,7 +14441,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next-app@*, next-app@workspace:apps/next":
+"next-app@workspace:*, next-app@workspace:apps/next":
   version: 0.0.0-use.local
   resolution: "next-app@workspace:apps/next"
   dependencies:
@@ -14458,7 +14458,7 @@ __metadata:
     "@types/react-dom": ^18.2.7
     "@types/uuid": ^9.0.2
     "@upstash/redis": ^1.22.0
-    app: "*"
+    app: "workspace:*"
     cookie: ^0.5.0
     cookies-next: ^2.1.2
     currency-list: ^1.0.8
@@ -14466,6 +14466,7 @@ __metadata:
     goober: ^2.1.13
     isomorphic-fetch: ^3.0.0
     kysely: ^0.26.1
+    next: ^13.4.12
     pg: ^8.11.1
     pino: ^8.14.1
     pino-pretty: ^10.1.0
@@ -17754,7 +17755,7 @@ __metadata:
     extract-pg-schema: ^4.1.0
     get-port: ^6.1.2
     kanel: ^3.4.1
-    next-app: "*"
+    next-app: "workspace:*"
     ngrok: ^4.3.1
     pg: ^8.11.3
     ts-morph: ^14.0.0

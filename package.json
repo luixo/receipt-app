@@ -6,7 +6,6 @@
 		"packages/*",
 		"scripts"
 	],
-	"type": "module",
 	"devDependencies": {
 		"@babel/core": "^7.12.9",
 		"@types/react": "^18.0.1",

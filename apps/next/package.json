@@ -6,8 +6,7 @@
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",
-		"lint": "next lint",
-		"typecheck": "tsc --noEmit"
+		"lint": "next lint"
 	},
 	"dependencies": {
 		"@expo/next-adapter": "^5.0.2",
@@ -16,13 +15,14 @@
 		"@trpc/server": "^10.35.0",
 		"@types/react": "^18.2.16",
 		"@upstash/redis": "^1.22.0",
-		"app": "*",
+		"app": "workspace:*",
 		"cookie": "^0.5.0",
 		"cookies-next": "^2.1.2",
 		"currency-list": "^1.0.8",
 		"goober": "^2.1.13",
 		"isomorphic-fetch": "^3.0.0",
 		"kysely": "^0.26.1",
+		"next": "^13.4.12",
 		"pg": "^8.11.1",
 		"pino": "^8.14.1",
 		"pino-pretty": "^10.1.0",

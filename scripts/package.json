@@ -14,7 +14,7 @@
 		"extract-pg-schema": "^4.1.0",
 		"get-port": "^6.1.2",
 		"kanel": "^3.4.1",
-		"next-app": "*",
+		"next-app": "workspace:*",
 		"ngrok": "^4.3.1",
 		"pg": "^8.11.3",
 		"ts-morph": "^14.0.0",
