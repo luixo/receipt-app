@@ -17,6 +17,8 @@ describe("account.logout", () => {
 	describe("functionality", () => {
 		test("session is removed", async () => {
 			const { database } = global.testContext!;
+			// Verifying other accounts are not affected
+			await insertAccountWithSession(database);
 			const { sessionId } = await timekeeper.withFreeze(
 				new Date("2030-01-01").valueOf(),
 				() => insertAccountWithSession(database),

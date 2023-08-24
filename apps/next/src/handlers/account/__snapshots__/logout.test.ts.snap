@@ -6,5 +6,5 @@ exports[`account.logout functionality session is removed 1`] = `
 + After snapshot
 
 @@ --- --- @@
-- INSERT INTO public.sessions VALUES ('d3e31f7d-5235-4350-837a-2d43c003dde1', '31d77c70-5232-47fb-90fd-5f93c70cb0a0', '2031-01-01 00:00:00');"
+- INSERT INTO public.sessions VALUES ('1f7390e3-1154-4937-ae29-6f94c6dc9366', '1268d6af-1379-4bb7-a959-30a29160dcbe', '2031-01-01 00:00:00');"
 `;

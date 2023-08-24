@@ -76,6 +76,8 @@ describe("account.changePassword", () => {
 	describe("functionality", () => {
 		test("password changes", async () => {
 			const { database } = global.testContext!;
+			// Verifying other accounts are not affected
+			await insertAccountWithSession(database);
 			const currentPassword = faker.internet.password();
 			const nextPassword = faker.internet.password();
 			const { sessionId } = await insertAccountWithSession(database, {

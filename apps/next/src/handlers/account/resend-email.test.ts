@@ -99,8 +99,11 @@ describe("account.resendEmail", () => {
 		});
 
 		test("email is resent", async () => {
-			const { emailService } = global.testContext!;
+			const { database, emailService } = global.testContext!;
 
+			// Verifying other accounts are not affected
+			await insertAccountWithSession(database);
+			await insertReadyForEmailAccount();
 			await timekeeper.withFreeze(freezeDate, async () => {
 				const { sessionId, email } = await insertReadyForEmailAccount();
 				const caller = router.createCaller(createAuthContext(sessionId));

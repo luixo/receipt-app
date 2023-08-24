@@ -6,6 +6,6 @@ exports[`account.changeName functionality name changes 1`] = `
 + After snapshot
 
 @@ --- --- @@
-- INSERT INTO public.users VALUES ('dc7169b3-8540-4d4d-9662-0372196e071e', 'Effie', NULL, 'dc7169b3-8540-4d4d-9662-0372196e071e', false, false, 'dc7169b3-8540-4d4d-9662-0372196e071e');
-+ INSERT INTO public.users VALUES ('dc7169b3-8540-4d4d-9662-0372196e071e', 'Torrance', NULL, 'dc7169b3-8540-4d4d-9662-0372196e071e', false, false, 'dc7169b3-8540-4d4d-9662-0372196e071e');"
+- INSERT INTO public.users VALUES ('d4d29a06-2f7a-43c8-b01d-862ab1a29ea3', 'Barton', NULL, 'd4d29a06-2f7a-43c8-b01d-862ab1a29ea3', false, false, 'd4d29a06-2f7a-43c8-b01d-862ab1a29ea3');
++ INSERT INTO public.users VALUES ('d4d29a06-2f7a-43c8-b01d-862ab1a29ea3', 'Alden', NULL, 'd4d29a06-2f7a-43c8-b01d-862ab1a29ea3', false, false, 'd4d29a06-2f7a-43c8-b01d-862ab1a29ea3');"
 `;

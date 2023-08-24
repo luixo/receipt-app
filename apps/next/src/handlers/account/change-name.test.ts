@@ -50,6 +50,8 @@ describe("account.changeName", () => {
 	describe("functionality", () => {
 		test("name changes", async () => {
 			const { database } = global.testContext!;
+			// Verifying other users are not affected
+			await insertAccountWithSession(database);
 			const { sessionId } = await insertAccountWithSession(database);
 			const caller = router.createCaller(createAuthContext(sessionId));
 
