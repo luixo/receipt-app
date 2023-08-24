@@ -15,6 +15,8 @@ import type { appRouter } from "./databases/router";
 process.env.DATABASE_URL = "unknown";
 process.env.REDIS_DATABASE_URL = "unknown";
 process.env.REDIS_DATABASE_TOKEN = "unknown";
+// Url included in emails
+process.env.BASE_URL = "http://receipt-app.test/";
 
 const { port, hostname } = globalThis.routerConfig;
 const client = createTRPCProxyClient<typeof appRouter>({
