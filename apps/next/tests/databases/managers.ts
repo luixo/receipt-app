@@ -77,7 +77,6 @@ export const databaseManagerFactory = (
 					}),
 				});
 				await cleanupManager.withCleanup(
-					name,
 					() => database.destroy(),
 					async () => {
 						await sql`CREATE DATABASE ${sql.id(name)} TEMPLATE ${sql.id(
@@ -100,48 +99,19 @@ export const databaseManagerFactory = (
 
 type CleanupFn = () => Promise<void>;
 export const cleanupManagerFactory = () => {
-	const cleanupFns: Record<string, CleanupFn[]> = {};
-	const tagWaiters: Record<string, (() => void)[]> = {};
+	let cleanupFns: CleanupFn[] = [];
 	return {
 		withCleanup: async (
-			tag: string,
 			cleanupFn: CleanupFn,
 			actualFn: () => Promise<void>,
 		) => {
-			if (!cleanupFns[tag]) {
-				cleanupFns[tag] = [];
-			}
-			cleanupFns[tag]!.push(cleanupFn);
+			cleanupFns.push(cleanupFn);
 			await actualFn();
-			cleanupFns[tag] = cleanupFns[tag]!.filter(
-				(lookupFn) => lookupFn !== cleanupFn,
-			);
-			if (cleanupFns[tag]!.length === 0) {
-				delete cleanupFns[tag];
-				if (tagWaiters[tag]) {
-					tagWaiters[tag]!.forEach((waiter) => waiter());
-					delete tagWaiters[tag];
-				}
-			}
+			cleanupFns = cleanupFns.filter((lookupFn) => lookupFn !== cleanupFn);
 			await cleanupFn();
 		},
-		waitForTag: (tag: string) => {
-			if (!cleanupFns[tag] || cleanupFns[tag]!.length === 0) {
-				return Promise.resolve();
-			}
-			if (!tagWaiters[tag]) {
-				tagWaiters[tag] = [];
-			}
-			return new Promise<void>((resolve) => {
-				tagWaiters[tag]!.push(resolve);
-			});
-		},
 		cleanup: async () => {
-			await Promise.all(
-				Object.values(cleanupFns)
-					.reduce((acc, fns) => [...acc, ...fns], [])
-					.map((fn) => fn()),
-			);
+			await Promise.all(cleanupFns.map((fn) => fn()));
 		},
 	};
 };

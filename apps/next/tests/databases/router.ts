@@ -83,7 +83,6 @@ export const appRouter = router({
 				}),
 			});
 			await cleanupManager.withCleanup(
-				"general",
 				() => database.destroy(),
 				async () => {
 					const migrationResult = await migrate({ target: "latest", database });
@@ -192,7 +191,6 @@ export const appRouter = router({
 				}),
 			});
 			await instance.cleanupManager.withCleanup(
-				input.databaseName,
 				() => database.destroy(),
 				async () => {
 					await sql`TRUNCATE ${sql.join(
@@ -206,7 +204,6 @@ export const appRouter = router({
 		.input(z.object({ databaseName: z.string() }))
 		.mutation(async ({ input, ctx: { instance } }) => {
 			instance.databaseManager.release(input.databaseName);
-			await instance.cleanupManager.waitForTag(input.databaseName);
 		}),
 });
 

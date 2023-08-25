@@ -5,6 +5,7 @@ import { createHash } from "node:crypto";
 import { Pool } from "pg";
 import * as timekeeper from "timekeeper";
 
+import { SECOND } from "app/utils/time";
 import { getDatabase } from "next-app/db";
 import type { ReceiptsDatabase } from "next-app/db/types";
 import type { Email } from "next-app/utils/email";
@@ -79,7 +80,7 @@ beforeAll(async () => {
 		},
 	};
 	unsetSeed();
-});
+}, 10 * SECOND);
 
 beforeEach(async () => {
 	setSeed(expect.getState().currentTestName || "unknown");
@@ -102,4 +103,4 @@ afterAll(async () => {
 	const { databaseName, database } = global.testContext!;
 	await database.destroy();
 	await client.releaseDatabase.mutate({ databaseName });
-});
+}, 10 * SECOND);
