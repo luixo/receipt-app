@@ -5,6 +5,7 @@
 		"strictNullChecks": true,
 		"noUncheckedIndexedAccess": true,
 		"jsx": "react",
+		"module": "esnext",
 		"paths": {
 			"app/*": ["./packages/app/*"],
 			"next-app/*": ["./apps/next/src/*"],

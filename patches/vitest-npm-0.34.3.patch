@@ -1,0 +1,63 @@
+diff --git a/dist/vendor-environments.8eb4d407.js b/dist/vendor-environments.8eb4d407.js
+index 026d4643dbd4af4d204ad0c9d0bec39ca8c4e529..4b9450524f3ca1a9455b1b3154507fa26fec13d9 100644
+--- a/dist/vendor-environments.8eb4d407.js
++++ b/dist/vendor-environments.8eb4d407.js
+@@ -628,17 +628,20 @@ const envPackageNames = {
+ function isBuiltinEnvironment(env) {
+   return env in environments;
+ }
+-function getEnvPackageName(env) {
++function getCustomEnvResolution(env, root) {
++  return env[0] === "." || env[0] === "/" ? resolve(root, env) : resolveModule(`vitest-environment-${env}`, { url: [root] }) ?? resolve(root, env);
++}
++function getEnvPackageName(env, root) {
+   if (env === "node")
+     return null;
+   if (env in envPackageNames)
+     return envPackageNames[env];
+-  return `vitest-environment-${env}`;
++  return getCustomEnvResolution(env, root);
+ }
+ async function loadEnvironment(name, root) {
+   if (isBuiltinEnvironment(name))
+     return environments[name];
+-  const packageId = name[0] === "." || name[0] === "/" ? resolve(root, name) : await resolvePath(`vitest-environment-${name}`, { url: [root] }) ?? resolve(root, name);
++  const packageId = getCustomEnvResolution(name, root);
+   const pkg = await import(pathToFileURL(normalize(packageId)).href);
+   if (!pkg || !pkg.default || typeof pkg.default !== "object") {
+     throw new TypeError(
+diff --git a/dist/vendor-node.5ce5f335.js b/dist/vendor-node.5ce5f335.js
+index 9259fd20aac2576890169456226a1ebc4613c0b8..b64c350857d52b2207a3b9cabc29b3aad4b08b03 100644
+--- a/dist/vendor-node.5ce5f335.js
++++ b/dist/vendor-node.5ce5f335.js
+@@ -18041,7 +18041,7 @@ async function startVitest(mode, cliFilters = [], options = {}, viteOverrides) {
+       }
+     }
+   }
+-  const environmentPackage = getEnvPackageName(ctx.config.environment);
++  const environmentPackage = getEnvPackageName(ctx.config.environment, root);
+   if (environmentPackage && !await ensurePackageInstalled(environmentPackage, root)) {
+     process.exitCode = 1;
+     return ctx;
+diff --git a/dist/vendor-node.5ce5f335.js b/dist/vendor-node.5ce5f335.js
+index 9259fd20aac2576890169456226a1ebc4613c0b8..942d8088f24d5229b5538145e55431e6a8f2ea00 100644
+--- a/dist/vendor-node.5ce5f335.js
++++ b/dist/vendor-node.5ce5f335.js
+@@ -10395,7 +10395,7 @@ function GlobalSetupPlugin(project, logger) {
+       globalSetupFiles = await loadGlobalSetupFiles(project);
+       try {
+         for (const globalSetupFile of globalSetupFiles) {
+-          const teardown = await ((_b = globalSetupFile.setup) == null ? void 0 : _b.call(globalSetupFile));
++          const teardown = await ((_b = globalSetupFile.setup) == null ? void 0 : _b.call(globalSetupFile, project));
+           if (teardown == null || !!globalSetupFile.teardown)
+             continue;
+           if (typeof teardown !== "function")
+@@ -10414,7 +10414,7 @@ ${c.red(divider(c.bold(c.inverse(" Error during global setup "))))}`);
+       if (globalSetupFiles == null ? void 0 : globalSetupFiles.length) {
+         for (const globalSetupFile of globalSetupFiles.reverse()) {
+           try {
+-            await ((_a = globalSetupFile.teardown) == null ? void 0 : _a.call(globalSetupFile));
++            await ((_a = globalSetupFile.teardown) == null ? void 0 : _a.call(globalSetupFile, project));
+           } catch (error) {
+             logger.error(`error during global teardown of ${globalSetupFile.file}`, error);
+           }

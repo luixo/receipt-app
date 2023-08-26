@@ -40,17 +40,11 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup-env
       - name: Run backend tests
-        run: yarn backend:test --ci --testLocationInResults --json --outputFile=coverage.json
+        run: yarn backend:test
       - name: Archive code coverage results
         uses: actions/upload-artifact@v3
         with:
           name: code-coverage-report
           path: coverage
       - name: Report coverage
-        uses: ArtiomTr/jest-coverage-report-action@v2
-        with:
-          skip-step: all
-          package-manager: yarn
-          coverage-file: coverage.json
-          base-coverage-file: coverage.json
-          annotations: none
+        uses: davelosert/vitest-coverage-report-action@v2

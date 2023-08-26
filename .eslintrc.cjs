@@ -36,7 +36,7 @@ module.exports = {
 		],
 		"import/no-extraneous-dependencies": [
 			"error",
-			getExtraneousDependenciesConfig(undefined, ["dev.ts"]),
+			getExtraneousDependenciesConfig(undefined, ["vitest.config.ts"]),
 		],
 		"no-void": ["error", { allowAsStatement: true }],
 		"react/require-default-props": "off",
