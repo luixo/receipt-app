@@ -1,11 +1,11 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`account.changeName functionality name changes 1`] = `
+exports[`account.changeName > functionality > name changes 1`] = `
 "Snapshot Diff:
 - Before snapshot
 + After snapshot
 
 @@ --- --- @@
-- INSERT INTO public.users VALUES ('d4d29a06-2f7a-43c8-b01d-862ab1a29ea3', 'Barton', NULL, 'd4d29a06-2f7a-43c8-b01d-862ab1a29ea3', false, false, 'd4d29a06-2f7a-43c8-b01d-862ab1a29ea3');
-+ INSERT INTO public.users VALUES ('d4d29a06-2f7a-43c8-b01d-862ab1a29ea3', 'Alden', NULL, 'd4d29a06-2f7a-43c8-b01d-862ab1a29ea3', false, false, 'd4d29a06-2f7a-43c8-b01d-862ab1a29ea3');"
+- INSERT INTO public.users VALUES ('1b42fde4-863c-4987-9b4e-6d17cf92b79a', 'Bella', NULL, '1b42fde4-863c-4987-9b4e-6d17cf92b79a', false, false, '1b42fde4-863c-4987-9b4e-6d17cf92b79a');
++ INSERT INTO public.users VALUES ('1b42fde4-863c-4987-9b4e-6d17cf92b79a', 'Monica', NULL, '1b42fde4-863c-4987-9b4e-6d17cf92b79a', false, false, '1b42fde4-863c-4987-9b4e-6d17cf92b79a');"
 `;

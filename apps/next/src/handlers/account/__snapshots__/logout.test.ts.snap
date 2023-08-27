@@ -1,10 +1,10 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`account.logout functionality session is removed 1`] = `
+exports[`account.logout > functionality > session is removed 1`] = `
 "Snapshot Diff:
 - Before snapshot
 + After snapshot
 
 @@ --- --- @@
-- INSERT INTO public.sessions VALUES ('1f7390e3-1154-4937-ae29-6f94c6dc9366', '1268d6af-1379-4bb7-a959-30a29160dcbe', '2020-12-31 00:00:00');"
+- INSERT INTO public.sessions VALUES ('ae86e650-1641-40c7-b38d-fb4772238733', 'a07ad5ee-6fb9-41e7-b0e8-486b876e36ae', '2020-12-31 00:00:00');"
 `;

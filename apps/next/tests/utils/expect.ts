@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import type { TRPC_ERROR_CODE_KEY } from "@trpc/server/rpc";
 import snapshotDiff from "snapshot-diff";
+import { expect, test } from "vitest";
 
 import { router } from "next-app/handlers";
 import { formatErrorMessage } from "next-app/handlers/errors";

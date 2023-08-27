@@ -120,7 +120,7 @@ export const appRouter = router({
 				databaseName: z.string(),
 			}),
 		)
-		.query(async ({ ctx: { instance } }) => {
+		.mutation(async ({ ctx: { instance } }) => {
 			const firstUnlockedDatabase = instance.databaseManager.getFirstUnlocked();
 			if (firstUnlockedDatabase) {
 				firstUnlockedDatabase.locked = true;
@@ -138,7 +138,7 @@ export const appRouter = router({
 		}),
 	dumpDatabase: runningProcedure
 		.input(z.object({ databaseName: z.string() }))
-		.query(async ({ input, ctx: { instance } }) => {
+		.mutation(async ({ input, ctx: { instance } }) => {
 			const pgDumpOptions = {
 				username: instance.connectionData.username,
 				format: "plain",

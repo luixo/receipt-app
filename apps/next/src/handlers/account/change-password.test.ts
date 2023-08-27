@@ -1,4 +1,5 @@
 import { faker } from "@faker-js/faker";
+import { describe, test } from "vitest";
 
 import { MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH } from "app/utils/validation";
 import { router } from "next-app/handlers/index";

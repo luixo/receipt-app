@@ -1,3 +1,5 @@
+import { describe, expect, test } from "vitest";
+
 import { router } from "next-app/handlers/index";
 import type { HeaderPair } from "next-tests/utils/context";
 import { createAuthContext } from "next-tests/utils/context";

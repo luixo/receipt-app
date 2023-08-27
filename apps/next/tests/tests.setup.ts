@@ -4,6 +4,8 @@ import type { Kysely } from "kysely";
 import { createHash } from "node:crypto";
 import { Pool } from "pg";
 import * as timekeeper from "timekeeper";
+import type { ResolvedConfig } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach, expect } from "vitest";
 
 import { SECOND } from "app/utils/time";
 import { getDatabase } from "next-app/db";
@@ -20,7 +22,10 @@ process.env.REDIS_DATABASE_TOKEN = "unknown";
 // Url included in emails
 process.env.BASE_URL = "http://receipt-app.test/";
 
-const { port, hostname } = globalThis.routerConfig;
+// See https://github.com/vitest-dev/vitest/issues/4025
+// eslint-disable-next-line no-underscore-dangle, @typescript-eslint/no-explicit-any
+const config = (globalThis as any).__vitest_worker__.config as ResolvedConfig;
+const { port, hostname } = config.environmentOptions.routerConfig;
 const client = createTRPCProxyClient<typeof appRouter>({
 	links: [httpBatchLink({ url: `http://${hostname}:${port}` })],
 });
@@ -59,7 +64,7 @@ const unsetSeed = () => {
 };
 
 beforeAll(async () => {
-	const { databaseName, connectionData } = await client.lockDatabase.query();
+	const { databaseName, connectionData } = await client.lockDatabase.mutate();
 	setSeed(expect.getState().testPath || "unkown");
 	global.testContext = {
 		database: getDatabase({
@@ -68,7 +73,7 @@ beforeAll(async () => {
 				connectionString: makeConnectionString(connectionData, databaseName),
 			}),
 		}),
-		dumpDatabase: () => client.dumpDatabase.query({ databaseName }),
+		dumpDatabase: () => client.dumpDatabase.mutate({ databaseName }),
 		databaseName,
 		random: {
 			getUuid: () => faker.string.uuid(),
