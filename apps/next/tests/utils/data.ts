@@ -25,19 +25,19 @@ export const insertAccount = async (
 ) => {
 	const password = data.password || faker.internet.password();
 	const { salt: passwordSalt, hash: passwordHash } = generatePasswordData(
-		{ getSalt: globalThis.testContext!.random.getUuid },
+		{ getSalt: ctx.getTestSalt },
 		password,
 	);
 	const { id, email, confirmationToken, confirmationTokenTimestamp } =
 		await ctx.database
 			.insertInto("accounts")
 			.values({
-				id: data.id || faker.string.uuid(),
+				id: data.id || ctx.getTestUuid(),
 				email: (data.email || faker.internet.email()).toLowerCase(),
 				passwordHash,
 				passwordSalt,
 				confirmationToken: data.confirmation
-					? data.confirmation.token || faker.string.uuid()
+					? data.confirmation.token || ctx.getTestUuid()
 					: undefined,
 				confirmationTokenTimestamp: data.confirmation
 					? data.confirmation.timestamp || new Date()
@@ -76,7 +76,7 @@ export const insertUser = async (
 	const { id, name } = await ctx.database
 		.insertInto("users")
 		.values({
-			id: data.id || faker.string.uuid(),
+			id: data.id || ctx.getTestUuid(),
 			ownerAccountId,
 			name: data.name || faker.person.firstName(),
 			publicName: data.publicName,
@@ -111,7 +111,7 @@ export const insertSession = async (
 	const { sessionId, expirationTimestamp } = await ctx.database
 		.insertInto("sessions")
 		.values({
-			sessionId: data.id || faker.string.uuid(),
+			sessionId: data.id || ctx.getTestUuid(),
 			accountId,
 			expirationTimestamp:
 				data.expirationTimestamp || new Date(new Date().valueOf() + YEAR),
@@ -138,7 +138,7 @@ export const insertResetPasswordIntention = async (
 			accountId,
 			expiresTimestamp:
 				data.expiresTimestamp || new Date(new Date().valueOf() + YEAR),
-			token: data.token || faker.string.uuid(),
+			token: data.token || ctx.getTestUuid(),
 		})
 		.returning(["expiresTimestamp", "token"])
 		.executeTakeFirstOrThrow();

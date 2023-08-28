@@ -6,9 +6,9 @@ exports[`auth.voidAccount > functionality > account voided 1`] = `
 + After snapshot
 
 @@ --- --- @@
-- INSERT INTO public.accounts VALUES ('160f0c0f-c86a-467a-b5ab-799b39f180ab', 'kara_maggio@gmail.com', 'eefae1e8fcd5dc2db9cf3ada887955d312253b41112c1fb6e20c2487813deb785bc634b75aa022e2e2334f187b7ad11131d2e8c981d63f4dfcef307ae679594e', 'a04898a8-6b8b-415d-a83a-35711194d289', '4384e85a-3746-4c2c-958d-be74d333f2ce', '2020-01-01 00:00:00');
+- INSERT INTO public.accounts VALUES ('48a6ed4c-06f2-4b7d-9ad9-da3f946e68b8', 'maegan_goldner@yahoo.com', 'cc8fb9d95189d1e8b721db9298131c753c67fecfe8f94a8182f6485797a0cf136e848a8c5e8f9963b3adc367fdd4c3298129796197a8445cf40f64fad09d64d5', 'db1de7b867adcfdc7466c5f2a7c5aaa09f5a02ec5ccbcc9aecec1f8adbd58fecc99ace2e1c74683b6d3ea734ce97bcded2ebfdbd36eccb54095ba78bdf56db5b', 'caacb8be-04a0-4663-8bf4-cf24f1e6dc94', '2020-01-01 00:00:00');
 @@ --- --- @@
-- INSERT INTO public.users VALUES ('160f0c0f-c86a-467a-b5ab-799b39f180ab', 'Milo', NULL, '160f0c0f-c86a-467a-b5ab-799b39f180ab', false, false, '160f0c0f-c86a-467a-b5ab-799b39f180ab');
+- INSERT INTO public.users VALUES ('48a6ed4c-06f2-4b7d-9ad9-da3f946e68b8', 'Makayla', NULL, '48a6ed4c-06f2-4b7d-9ad9-da3f946e68b8', false, false, '48a6ed4c-06f2-4b7d-9ad9-da3f946e68b8');
 @@ --- --- @@
-- INSERT INTO public.sessions VALUES ('5b45663c-d81e-4455-afb9-39f8440ae5e6', '160f0c0f-c86a-467a-b5ab-799b39f180ab', '2020-12-31 00:00:00');"
+- INSERT INTO public.sessions VALUES ('06d8982c-9d23-42e2-8124-8262c6042c4a', '48a6ed4c-06f2-4b7d-9ad9-da3f946e68b8', '2020-12-31 00:00:00');"
 `;

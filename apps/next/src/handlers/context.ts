@@ -4,25 +4,23 @@ import * as crypto from "node:crypto";
 import { Pool } from "pg";
 import { v4 } from "uuid";
 
-import type { Database } from "next-app/db";
 import { getDatabase } from "next-app/db";
 import { getDatabaseConfig } from "next-app/db/config";
 import type { AccountsId } from "next-app/db/models";
-import type { EmailOptions } from "next-app/utils/email";
 import type { Logger } from "next-app/utils/logger";
 import { baseLogger } from "next-app/utils/logger";
+import type { TestContext } from "next-tests/utils/test";
+
+type TestContextPicks = Pick<
+	TestContext,
+	"emailOptions" | "database" | "getSalt" | "getUuid"
+>;
 
 export type UnauthorizedContext = {
 	req: NextApiRequest;
 	res: NextApiResponse;
 	logger: Logger;
-	database: Database;
-	emailOptions: EmailOptions;
-	getUuid: () => string;
-	getSalt: () => string;
-};
-
-type TestContextKeys = "emailOptions" | "database";
+} & TestContextPicks;
 
 export type AuthorizedContext = UnauthorizedContext & {
 	auth: {
@@ -38,8 +36,7 @@ const defaultGetSalt = () => crypto.randomBytes(64).toString("hex");
 const defaultGetUuid = () => v4();
 
 export const createContext = (
-	opts: trpcNext.CreateNextContextOptions &
-		Partial<Pick<UnauthorizedContext, TestContextKeys>>,
+	opts: trpcNext.CreateNextContextOptions & Partial<TestContextPicks>,
 ): UnauthorizedContext => ({
 	req: opts.req,
 	res: opts.res,
@@ -56,6 +53,6 @@ export const createContext = (
 		active: Boolean(process.env.NO_EMAIL_SERVICE),
 		broken: false,
 	},
-	getSalt: global.testContext?.random.getUuid || defaultGetSalt,
-	getUuid: global.testContext?.random.getUuid || defaultGetUuid,
+	getSalt: opts.getSalt || defaultGetSalt,
+	getUuid: opts.getUuid || defaultGetUuid,
 });

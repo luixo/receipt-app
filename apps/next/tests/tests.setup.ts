@@ -1,4 +1,4 @@
-import { faker } from "@faker-js/faker";
+import { Faker, en, faker } from "@faker-js/faker";
 import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
 import { createHash } from "node:crypto";
 import { Pool } from "pg";
@@ -28,29 +28,19 @@ const client = createTRPCProxyClient<typeof appRouter>({
 	links: [httpBatchLink({ url: `http://${hostname}:${port}` })],
 });
 
-declare global {
-	// eslint-disable-next-line vars-on-top, no-var
-	var testContext:
-		| {
-				// Fixed random data for tests
-				random: {
-					getUuid: () => string;
-				};
-		  }
-		| undefined;
-}
-
 const HASH_MAGNITUDE = 10 ** 30;
 
-const setSeed = (input: string) => {
-	faker.seed(
+const setSeed = (instance: Faker, input: string) => {
+	instance.seed(
 		parseInt(createHash("sha1").update(input).digest("hex"), 16) /
 			HASH_MAGNITUDE,
 	);
 };
 
-const unsetSeed = () => {
-	faker.seed();
+const createStableFaker = (input: string) => {
+	const instance = new Faker({ locale: en });
+	setSeed(instance, input);
+	return instance;
 };
 
 declare module "vitest" {
@@ -59,30 +49,46 @@ declare module "vitest" {
 			database: Database;
 			dumpDatabase: () => Promise<string>;
 			truncateDatabase: () => Promise<void>;
+			getUuid: () => string;
+			getTestUuid: () => string;
+			getSalt: () => string;
+			getTestSalt: () => string;
 		};
 	}
 }
 
 beforeAll(async (suite) => {
 	const { databaseName, connectionData } = await client.lockDatabase.mutate();
-	setSeed(expect.getState().testPath || "unkown");
 	const database = getDatabase({
 		logger: baseLogger,
 		pool: new Pool({
 			connectionString: makeConnectionString(connectionData, databaseName),
 		}),
 	});
+	const suiteId = expect.getState().testPath || "unkown";
+	// Stable faker to generate uuid / salt on handler side
+	const handlerIdFaker = createStableFaker(suiteId);
+	// Stable faker to generate uuid / salt on tests side
+	const testIdFaker = createStableFaker(suiteId);
 	(suite as OriginalSuite).suiteContext = {
 		database,
 		dumpDatabase: () => client.dumpDatabase.mutate({ databaseName }),
 		truncateDatabase: () => client.truncateDatabase.mutate({ databaseName }),
+		getUuid: () => handlerIdFaker.string.uuid(),
+		getSalt: () =>
+			handlerIdFaker.string.hexadecimal({
+				length: 128,
+				casing: "lower",
+				prefix: "",
+			}),
+		getTestUuid: () => testIdFaker.string.uuid(),
+		getTestSalt: () =>
+			testIdFaker.string.hexadecimal({
+				length: 128,
+				casing: "lower",
+				prefix: "",
+			}),
 	};
-	global.testContext = {
-		random: {
-			getUuid: () => faker.string.uuid(),
-		},
-	};
-	unsetSeed();
 	return async () => {
 		await database.destroy();
 		await client.releaseDatabase.mutate({ databaseName });
@@ -90,11 +96,11 @@ beforeAll(async (suite) => {
 }, 10 * SECOND);
 
 beforeEach(async ({ task }) => {
-	setSeed(expect.getState().currentTestName || "unknown");
+	setSeed(faker, expect.getState().currentTestName || "unknown");
 	timekeeper.freeze(new Date("2020-01-01"));
 	return async () => {
 		timekeeper.reset();
-		unsetSeed();
+		faker.seed();
 		await task.suite.file!.suiteContext.truncateDatabase();
 	};
 });

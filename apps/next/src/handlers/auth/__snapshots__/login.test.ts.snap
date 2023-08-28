@@ -6,14 +6,14 @@ exports[`auth.login > functionality > login successful 1`] = `
 + After snapshot
 
 @@ --- --- @@
-+ INSERT INTO public.sessions VALUES ('7ebcb0d0-0d89-40a3-a724-764ec20d8e6a', 'cb0b7ea3-1df2-4f95-b7e7-dba5e9783b48', '2020-01-31 00:00:00');"
++ INSERT INTO public.sessions VALUES ('fda5cf1f-d5fa-4fc5-9ff2-7739308d1fbe', 'a666aa31-94bc-4c0e-829f-583098033050', '2020-01-31 00:00:00');"
 `;
 
 exports[`auth.login > functionality > login successful 2`] = `
 [
   {
     "name": "set-cookie",
-    "value": "authToken=7ebcb0d0-0d89-40a3-a724-764ec20d8e6a; Path=/; Expires=Fri, 31 Jan 2020 00:00:00 GMT; HttpOnly",
+    "value": "authToken=fda5cf1f-d5fa-4fc5-9ff2-7739308d1fbe; Path=/; Expires=Fri, 31 Jan 2020 00:00:00 GMT; HttpOnly",
   },
 ]
 `;

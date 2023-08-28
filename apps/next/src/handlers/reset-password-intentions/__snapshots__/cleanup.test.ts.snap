@@ -6,6 +6,6 @@ exports[`resetPasswordIntentions.cleanup > functionality > reset password intent
 + After snapshot
 
 @@ --- --- @@
-- INSERT INTO public.\\"resetPasswordIntentions\\" VALUES ('177b3574-1a07-4292-a82f-c51d5c3ec809', '2019-12-31 23:59:00', 'fa4bb534-f0b9-46e9-b76c-655772c7fd9b');
-- INSERT INTO public.\\"resetPasswordIntentions\\" VALUES ('177b3574-1a07-4292-a82f-c51d5c3ec809', '2019-01-01 00:00:00', '37217c78-01ce-4d9f-a4ad-3ec47a346547');"
+- INSERT INTO public.\\"resetPasswordIntentions\\" VALUES ('fbe0e475-75f4-4931-878f-36e5b179d688', '2019-12-31 23:59:00', '85697d15-d96f-4d4e-ba30-d4b415ac4d6f');
+- INSERT INTO public.\\"resetPasswordIntentions\\" VALUES ('fbe0e475-75f4-4931-878f-36e5b179d688', '2019-01-01 00:00:00', '428b61d2-2081-438a-97bc-576c9d43857e');"
 `;
