@@ -7,7 +7,7 @@ import {
 	MIN_PASSWORD_LENGTH,
 	MIN_USERNAME_LENGTH,
 } from "app/utils/validation";
-import { router } from "next-app/handlers/index";
+import { t } from "next-app/handlers/trpc";
 import { UUID_REGEX } from "next-app/handlers/validation";
 import { createContext } from "next-tests/utils/context";
 import { insertAccountWithSession } from "next-tests/utils/data";
@@ -17,6 +17,10 @@ import {
 } from "next-tests/utils/expect";
 import { test } from "next-tests/utils/test";
 
+import { procedure } from "./register";
+
+const router = t.router({ procedure });
+
 describe("auth.register", () => {
 	describe("input verification", () => {
 		describe("email", () => {
@@ -24,7 +28,7 @@ describe("auth.register", () => {
 				const caller = router.createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
-						caller.auth.register({
+						caller.procedure({
 							email: "invalid@@mail.org",
 							password: "a".repeat(MIN_PASSWORD_LENGTH),
 							name: "a".repeat(MIN_USERNAME_LENGTH),
@@ -40,7 +44,7 @@ describe("auth.register", () => {
 				const caller = router.createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
-						caller.auth.register({
+						caller.procedure({
 							email: "valid@mail.org",
 							password: "a".repeat(MIN_PASSWORD_LENGTH - 1),
 							name: "a".repeat(MIN_USERNAME_LENGTH),
@@ -54,7 +58,7 @@ describe("auth.register", () => {
 				const caller = router.createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
-						caller.auth.register({
+						caller.procedure({
 							email: "valid@mail.org",
 							password: "a".repeat(MAX_PASSWORD_LENGTH + 1),
 							name: "a".repeat(MIN_USERNAME_LENGTH),
@@ -70,7 +74,7 @@ describe("auth.register", () => {
 				const caller = router.createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
-						caller.auth.register({
+						caller.procedure({
 							email: "valid@mail.org",
 							password: "a".repeat(MIN_PASSWORD_LENGTH),
 							name: "a".repeat(MIN_USERNAME_LENGTH - 1),
@@ -84,7 +88,7 @@ describe("auth.register", () => {
 				const caller = router.createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
-						caller.auth.register({
+						caller.procedure({
 							email: "valid@mail.org",
 							password: "a".repeat(MIN_PASSWORD_LENGTH),
 							name: "a".repeat(MAX_USERNAME_LENGTH + 1),
@@ -102,7 +106,7 @@ describe("auth.register", () => {
 			} = await insertAccountWithSession(ctx);
 			await expectTRPCError(
 				() =>
-					caller.auth.register({
+					caller.procedure({
 						email: existingEmail,
 						password: "a".repeat(MIN_PASSWORD_LENGTH),
 						name: "a".repeat(MIN_USERNAME_LENGTH),
@@ -118,7 +122,7 @@ describe("auth.register", () => {
 			ctx.emailOptions.active = false;
 			const caller = router.createCaller(createContext(ctx));
 			await expectDatabaseDiffSnapshot(ctx, async () => {
-				const result = await caller.auth.register({
+				const result = await caller.procedure({
 					email: faker.internet.email(),
 					password: faker.internet.password(),
 					name: faker.person.firstName(),
@@ -134,7 +138,7 @@ describe("auth.register", () => {
 		test("email sent if active", async ({ ctx }) => {
 			const caller = router.createCaller(createContext(ctx));
 			await expectDatabaseDiffSnapshot(ctx, () =>
-				caller.auth.register({
+				caller.procedure({
 					email: faker.internet.email(),
 					password: faker.internet.password(),
 					name: faker.person.firstName(),
@@ -150,7 +154,7 @@ describe("auth.register", () => {
 			const caller = router.createCaller(context);
 			await expectTRPCError(
 				() =>
-					caller.auth.register({
+					caller.procedure({
 						email: faker.internet.email(),
 						password: faker.internet.password(),
 						name: faker.person.firstName(),

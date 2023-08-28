@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker";
 import { describe, expect } from "vitest";
 
 import { MINUTE } from "app/utils/time";
-import { router } from "next-app/handlers/index";
+import { t } from "next-app/handlers/trpc";
 import { createContext } from "next-tests/utils/context";
 import {
 	insertAccount,
@@ -12,13 +12,17 @@ import {
 import { expectTRPCError } from "next-tests/utils/expect";
 import { test } from "next-tests/utils/test";
 
+import { procedure } from "./get";
+
+const router = t.router({ procedure });
+
 describe("resetPasswordIntentions.get", () => {
 	describe("input verification", () => {
 		describe("token", () => {
 			test("invalid", async ({ ctx }) => {
 				const caller = router.createCaller(createContext(ctx));
 				await expectTRPCError(
-					() => caller.resetPasswordIntentions.get({ token: "invalid-uuid" }),
+					() => caller.procedure({ token: "invalid-uuid" }),
 					"BAD_REQUEST",
 					`Zod error\n\nAt "token": Invalid uuid`,
 				);
@@ -29,7 +33,7 @@ describe("resetPasswordIntentions.get", () => {
 			const caller = router.createCaller(createContext(ctx));
 			const intentionToken = faker.string.uuid();
 			await expectTRPCError(
-				() => caller.resetPasswordIntentions.get({ token: intentionToken }),
+				() => caller.procedure({ token: intentionToken }),
 				"NOT_FOUND",
 				`Reset password intention ${intentionToken} does not exist or expired.`,
 			);
@@ -42,7 +46,7 @@ describe("resetPasswordIntentions.get", () => {
 				expiresTimestamp: new Date(Date.now() - MINUTE),
 			});
 			await expectTRPCError(
-				() => caller.resetPasswordIntentions.get({ token }),
+				() => caller.procedure({ token }),
 				"NOT_FOUND",
 				`Reset password intention ${token} does not exist or expired.`,
 			);
@@ -57,7 +61,7 @@ describe("resetPasswordIntentions.get", () => {
 			} = await insertAccountWithSession(ctx);
 			const { token } = await insertResetPasswordIntention(ctx, accountId);
 			const caller = router.createCaller(createContext(ctx));
-			const result = await caller.resetPasswordIntentions.get({ token });
+			const result = await caller.procedure({ token });
 			expect(result).toEqual<typeof result>({ email });
 		});
 	});

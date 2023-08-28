@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker";
 import { describe } from "vitest";
 
 import { MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH } from "app/utils/validation";
-import { router } from "next-app/handlers/index";
+import { t } from "next-app/handlers/trpc";
 import { createAuthContext } from "next-tests/utils/context";
 import { insertAccountWithSession } from "next-tests/utils/data";
 import {
@@ -12,10 +12,16 @@ import {
 } from "next-tests/utils/expect";
 import { test } from "next-tests/utils/test";
 
+import { procedure } from "./change-password";
+
+const router = t.router({ procedure });
+
 describe("account.changePassword", () => {
 	describe("input verification", () => {
-		expectUnauthorizedError((caller) =>
-			caller.account.changePassword({ prevPassword: "", password: "" }),
+		expectUnauthorizedError((context) =>
+			router
+				.createCaller(context)
+				.procedure({ prevPassword: "", password: "" }),
 		);
 
 		const types = ["password", "prevPassword"] as const;
@@ -27,7 +33,7 @@ describe("account.changePassword", () => {
 					const caller = router.createCaller(createAuthContext(ctx, sessionId));
 					await expectTRPCError(
 						() =>
-							caller.account.changePassword({
+							caller.procedure({
 								[type as "password"]: "a".repeat(MIN_PASSWORD_LENGTH - 1),
 								[otherType as "prevPassword"]: "a".repeat(MIN_PASSWORD_LENGTH),
 							}),
@@ -41,7 +47,7 @@ describe("account.changePassword", () => {
 					const caller = router.createCaller(createAuthContext(ctx, sessionId));
 					await expectTRPCError(
 						() =>
-							caller.account.changePassword({
+							caller.procedure({
 								[type as "password"]: "a".repeat(MAX_PASSWORD_LENGTH + 1),
 								[otherType as "prevPassword"]: "a".repeat(MAX_PASSWORD_LENGTH),
 							}),
@@ -61,7 +67,7 @@ describe("account.changePassword", () => {
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
-					caller.account.changePassword({
+					caller.procedure({
 						password: nextPassword,
 						prevPassword: `not_${currentPassword}`,
 					}),
@@ -83,7 +89,7 @@ describe("account.changePassword", () => {
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 
 			await expectDatabaseDiffSnapshot(ctx, () =>
-				caller.account.changePassword({
+				caller.procedure({
 					password: nextPassword,
 					prevPassword: currentPassword,
 				}),

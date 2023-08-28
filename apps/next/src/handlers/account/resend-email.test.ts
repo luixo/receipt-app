@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker";
 import { describe, expect } from "vitest";
 
 import { MINUTE } from "app/utils/time";
-import { router } from "next-app/handlers/index";
+import { t } from "next-app/handlers/trpc";
 import { createAuthContext } from "next-tests/utils/context";
 import { insertAccountWithSession } from "next-tests/utils/data";
 import {
@@ -13,15 +13,21 @@ import {
 import type { TestContext } from "next-tests/utils/test";
 import { test } from "next-tests/utils/test";
 
+import { procedure } from "./resend-email";
+
+const router = t.router({ procedure });
+
 describe("account.resendEmail", () => {
 	describe("input verification", () => {
-		expectUnauthorizedError((caller) => caller.account.resendEmail());
+		expectUnauthorizedError((context) =>
+			router.createCaller(context).procedure(),
+		);
 
 		test("account is already verified", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
-				() => caller.account.resendEmail(),
+				() => caller.procedure(),
 				"BAD_REQUEST",
 				`Account with id ${accountId} is already verified`,
 			);
@@ -40,7 +46,7 @@ describe("account.resendEmail", () => {
 			});
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
-				() => caller.account.resendEmail(),
+				() => caller.procedure(),
 				"BAD_REQUEST",
 				`Verification email to ${accountId} was sent less than an hour ago. Please try again later.`,
 			);
@@ -69,7 +75,7 @@ describe("account.resendEmail", () => {
 			const { sessionId } = await insertReadyForEmailAccount(ctx);
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
-				() => caller.account.resendEmail(),
+				() => caller.procedure(),
 				"FORBIDDEN",
 				"Currently email resend is not supported",
 			);
@@ -82,7 +88,7 @@ describe("account.resendEmail", () => {
 			const { sessionId } = await insertReadyForEmailAccount(ctx);
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
-				() => caller.account.resendEmail(),
+				() => caller.procedure(),
 				"INTERNAL_SERVER_ERROR",
 				"Something went wrong: Test context broke email service error",
 			);
@@ -96,7 +102,7 @@ describe("account.resendEmail", () => {
 			const { sessionId, email } = await insertReadyForEmailAccount(ctx);
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			await expectDatabaseDiffSnapshot(ctx, async () => {
-				const { email: returnEmail } = await caller.account.resendEmail();
+				const { email: returnEmail } = await caller.procedure();
 				expect(returnEmail).toEqual(email);
 			});
 			expect(ctx.emailOptions.cachedMessages).toHaveLength(1);

@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker";
 import { describe } from "vitest";
 
 import { MAX_USERNAME_LENGTH, MIN_USERNAME_LENGTH } from "app/utils/validation";
-import { router } from "next-app/handlers/index";
+import { t } from "next-app/handlers/trpc";
 import { createAuthContext } from "next-tests/utils/context";
 import { insertAccountWithSession } from "next-tests/utils/data";
 import {
@@ -12,10 +12,14 @@ import {
 } from "next-tests/utils/expect";
 import { test } from "next-tests/utils/test";
 
+import { procedure } from "./change-name";
+
+const router = t.router({ procedure });
+
 describe("account.changeName", () => {
 	describe("input verification", () => {
-		expectUnauthorizedError((caller) =>
-			caller.account.changeName({ name: "" }),
+		expectUnauthorizedError((context) =>
+			router.createCaller(context).procedure({ name: "" }),
 		);
 
 		describe("user name", () => {
@@ -24,7 +28,7 @@ describe("account.changeName", () => {
 				const caller = router.createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
-						caller.account.changeName({
+						caller.procedure({
 							name: "a".repeat(MIN_USERNAME_LENGTH - 1),
 						}),
 					"BAD_REQUEST",
@@ -37,7 +41,7 @@ describe("account.changeName", () => {
 				const caller = router.createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
-						caller.account.changeName({
+						caller.procedure({
 							name: "a".repeat(MAX_USERNAME_LENGTH + 1),
 						}),
 					"BAD_REQUEST",
@@ -55,7 +59,7 @@ describe("account.changeName", () => {
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 
 			await expectDatabaseDiffSnapshot(ctx, () =>
-				caller.account.changeName({ name: faker.person.firstName() }),
+				caller.procedure({ name: faker.person.firstName() }),
 			);
 		});
 	});

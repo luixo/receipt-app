@@ -1,6 +1,6 @@
 import { describe, expect } from "vitest";
 
-import { router } from "next-app/handlers/index";
+import { t } from "next-app/handlers/trpc";
 import { createAuthContext } from "next-tests/utils/context";
 import { insertAccountWithSession } from "next-tests/utils/data";
 import {
@@ -9,9 +9,15 @@ import {
 } from "next-tests/utils/expect";
 import { test } from "next-tests/utils/test";
 
+import { procedure } from "./logout";
+
+const router = t.router({ procedure });
+
 describe("account.logout", () => {
 	describe("input verification", () => {
-		expectUnauthorizedError((caller) => caller.account.logout());
+		expectUnauthorizedError((context) =>
+			router.createCaller(context).procedure(),
+		);
 	});
 
 	describe("functionality", () => {
@@ -21,7 +27,7 @@ describe("account.logout", () => {
 			const { sessionId } = await insertAccountWithSession(ctx);
 			const context = createAuthContext(ctx, sessionId);
 			const caller = router.createCaller(context);
-			await expectDatabaseDiffSnapshot(ctx, () => caller.account.logout());
+			await expectDatabaseDiffSnapshot(ctx, () => caller.procedure());
 			expect(ctx.responseHeaders).toMatchSnapshot();
 		});
 	});

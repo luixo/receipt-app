@@ -3,7 +3,7 @@ import { describe, expect } from "vitest";
 
 import { MINUTE } from "app/utils/time";
 import { MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH } from "app/utils/validation";
-import { router } from "next-app/handlers/index";
+import { t } from "next-app/handlers/trpc";
 import { getHash } from "next-app/utils/crypto";
 import { createContext } from "next-tests/utils/context";
 import {
@@ -16,6 +16,10 @@ import {
 } from "next-tests/utils/expect";
 import { test } from "next-tests/utils/test";
 
+import { procedure } from "./reset-password";
+
+const router = t.router({ procedure });
+
 describe("auth.resetPassword", () => {
 	describe("input verification", () => {
 		describe("token", () => {
@@ -23,7 +27,7 @@ describe("auth.resetPassword", () => {
 				const caller = router.createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
-						caller.auth.resetPassword({
+						caller.procedure({
 							token: "invalid-uuid",
 							password: "a".repeat(MIN_PASSWORD_LENGTH),
 						}),
@@ -38,7 +42,7 @@ describe("auth.resetPassword", () => {
 				const caller = router.createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
-						caller.auth.resetPassword({
+						caller.procedure({
 							token: faker.string.uuid(),
 							password: "a".repeat(MIN_PASSWORD_LENGTH - 1),
 						}),
@@ -51,7 +55,7 @@ describe("auth.resetPassword", () => {
 				const caller = router.createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
-						caller.auth.resetPassword({
+						caller.procedure({
 							token: faker.string.uuid(),
 							password: "a".repeat(MAX_PASSWORD_LENGTH + 1),
 						}),
@@ -66,7 +70,7 @@ describe("auth.resetPassword", () => {
 			const intentionToken = faker.string.uuid();
 			await expectTRPCError(
 				() =>
-					caller.auth.resetPassword({
+					caller.procedure({
 						token: intentionToken,
 						password: "a".repeat(MIN_PASSWORD_LENGTH),
 					}),
@@ -83,7 +87,7 @@ describe("auth.resetPassword", () => {
 			const caller = router.createCaller(createContext(ctx));
 			await expectTRPCError(
 				() =>
-					caller.auth.resetPassword({
+					caller.procedure({
 						token,
 						password: "a".repeat(MIN_PASSWORD_LENGTH),
 					}),
@@ -109,7 +113,7 @@ describe("auth.resetPassword", () => {
 			const caller = router.createCaller(createContext(ctx));
 			const password = faker.internet.password();
 			await expectDatabaseDiffSnapshot(ctx, async () => {
-				await caller.auth.resetPassword({
+				await caller.procedure({
 					token,
 					password,
 				});

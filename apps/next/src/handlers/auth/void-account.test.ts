@@ -2,7 +2,7 @@ import { faker } from "@faker-js/faker";
 import assert from "node:assert";
 import { describe, expect } from "vitest";
 
-import { router } from "next-app/handlers/index";
+import { t } from "next-app/handlers/trpc";
 import { createContext } from "next-tests/utils/context";
 import { insertAccountWithSession } from "next-tests/utils/data";
 import {
@@ -11,13 +11,17 @@ import {
 } from "next-tests/utils/expect";
 import { test } from "next-tests/utils/test";
 
+import { procedure } from "./void-account";
+
+const router = t.router({ procedure });
+
 describe("auth.voidAccount", () => {
 	describe("input verification", () => {
 		describe("token", () => {
 			test("invalid", async ({ ctx }) => {
 				const caller = router.createCaller(createContext(ctx));
 				await expectTRPCError(
-					() => caller.auth.voidAccount({ token: "invalid-uuid" }),
+					() => caller.procedure({ token: "invalid-uuid" }),
 					"BAD_REQUEST",
 					`Zod error\n\nAt "token": Invalid uuid`,
 				);
@@ -33,7 +37,7 @@ describe("auth.voidAccount", () => {
 				account: { confirmation: {} },
 			});
 			await expectTRPCError(
-				() => caller.auth.voidAccount({ token: confirmationToken }),
+				() => caller.procedure({ token: confirmationToken }),
 				"NOT_FOUND",
 				`There is no account with confirmation token ${confirmationToken}`,
 			);
@@ -59,7 +63,7 @@ describe("auth.voidAccount", () => {
 				"Confirmation token should exist on creation of test account",
 			);
 			await expectDatabaseDiffSnapshot(ctx, async () => {
-				const result = await caller.auth.voidAccount({
+				const result = await caller.procedure({
 					token: confirmationToken,
 				});
 				expect(result).toEqual<typeof result>({ email });
