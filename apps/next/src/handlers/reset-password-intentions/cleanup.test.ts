@@ -13,22 +13,21 @@ import { test } from "next-tests/utils/test";
 describe("resetPasswordIntentions.cleanup", () => {
 	describe("functionality", () => {
 		test("reset password intentions are removed", async ({ ctx }) => {
-			const { database } = global.testContext!;
-			const { id: accountId } = await insertAccount(database);
-			await insertResetPasswordIntention(database, accountId, {
+			const { id: accountId } = await insertAccount(ctx.database);
+			await insertResetPasswordIntention(ctx.database, accountId, {
 				// non-expired intention
 				expiresTimestamp: new Date(Date.now() + MINUTE),
 			});
-			await insertResetPasswordIntention(database, accountId, {
+			await insertResetPasswordIntention(ctx.database, accountId, {
 				// just expired intention
 				expiresTimestamp: new Date(Date.now() - MINUTE),
 			});
-			await insertResetPasswordIntention(database, accountId, {
+			await insertResetPasswordIntention(ctx.database, accountId, {
 				// long expired intention
 				expiresTimestamp: new Date(Date.now() - YEAR),
 			});
 			const caller = router.createCaller(createContext(ctx));
-			await expectDatabaseDiffSnapshot(() =>
+			await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.resetPasswordIntentions.cleanup(),
 			);
 		});

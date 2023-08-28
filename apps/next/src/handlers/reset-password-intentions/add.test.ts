@@ -39,16 +39,15 @@ describe("resetPasswordIntentions.add", () => {
 		});
 
 		test("too many reset intentions", async ({ ctx }) => {
-			const { database } = global.testContext!;
 			const caller = router.createCaller(createContext(ctx));
 			const {
 				accountId,
 				account: { email },
-			} = await insertAccountWithSession(database);
+			} = await insertAccountWithSession(ctx.database);
 			await Promise.all(
 				new Array(MAX_INTENTIONS_AMOUNT)
 					.fill(null)
-					.map(() => insertResetPasswordIntention(database, accountId)),
+					.map(() => insertResetPasswordIntention(ctx.database, accountId)),
 			);
 			await expectTRPCError(
 				() => caller.resetPasswordIntentions.add({ email }),
@@ -60,11 +59,10 @@ describe("resetPasswordIntentions.add", () => {
 
 	describe("functionality", () => {
 		test("email service is disabled", async ({ ctx }) => {
-			const { database } = global.testContext!;
 			ctx.emailOptions.active = false;
 			const {
 				account: { email },
-			} = await insertAccountWithSession(database);
+			} = await insertAccountWithSession(ctx.database);
 			const caller = router.createCaller(createContext(ctx));
 
 			await expectTRPCError(
@@ -75,11 +73,10 @@ describe("resetPasswordIntentions.add", () => {
 		});
 
 		test("email service is broken", async ({ ctx }) => {
-			const { database } = global.testContext!;
 			ctx.emailOptions.broken = true;
 			const {
 				account: { email },
-			} = await insertAccountWithSession(database);
+			} = await insertAccountWithSession(ctx.database);
 			const caller = router.createCaller(createContext(ctx));
 
 			await expectTRPCError(
@@ -90,16 +87,15 @@ describe("resetPasswordIntentions.add", () => {
 		});
 
 		test("reset password intention added", async ({ ctx }) => {
-			const { database } = global.testContext!;
 			const {
 				accountId,
 				account: { email },
-			} = await insertAccountWithSession(database);
+			} = await insertAccountWithSession(ctx.database);
 			const caller = router.createCaller(createContext(ctx));
 
 			// Verify we can add an intention even if we already have one
-			await insertResetPasswordIntention(database, accountId);
-			await expectDatabaseDiffSnapshot(() =>
+			await insertResetPasswordIntention(ctx.database, accountId);
+			await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.resetPasswordIntentions.add({ email }),
 			);
 			expect(ctx.emailOptions.cachedMessages).toHaveLength(1);

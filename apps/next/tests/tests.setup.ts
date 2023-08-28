@@ -1,15 +1,14 @@
 import { faker } from "@faker-js/faker";
 import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
-import type { Kysely } from "kysely";
 import { createHash } from "node:crypto";
 import { Pool } from "pg";
 import * as timekeeper from "timekeeper";
-import type { ResolvedConfig } from "vitest";
+import type { Suite as OriginalSuite, ResolvedConfig } from "vitest";
 import { beforeAll, beforeEach, expect } from "vitest";
 
 import { SECOND } from "app/utils/time";
+import type { Database } from "next-app/db";
 import { getDatabase } from "next-app/db";
-import type { ReceiptsDatabase } from "next-app/db/types";
 import { baseLogger } from "next-app/utils/logger";
 
 import { makeConnectionString } from "./databases/connection";
@@ -33,9 +32,6 @@ declare global {
 	// eslint-disable-next-line vars-on-top, no-var
 	var testContext:
 		| {
-				database: Kysely<ReceiptsDatabase>;
-				dumpDatabase: () => Promise<string>;
-				databaseName: string;
 				// Fixed random data for tests
 				random: {
 					getUuid: () => string;
@@ -57,7 +53,17 @@ const unsetSeed = () => {
 	faker.seed();
 };
 
-beforeAll(async () => {
+declare module "vitest" {
+	interface Suite {
+		suiteContext: {
+			database: Database;
+			dumpDatabase: () => Promise<string>;
+			truncateDatabase: () => Promise<void>;
+		};
+	}
+}
+
+beforeAll(async (suite) => {
 	const { databaseName, connectionData } = await client.lockDatabase.mutate();
 	setSeed(expect.getState().testPath || "unkown");
 	const database = getDatabase({
@@ -66,10 +72,12 @@ beforeAll(async () => {
 			connectionString: makeConnectionString(connectionData, databaseName),
 		}),
 	});
-	global.testContext = {
+	(suite as OriginalSuite).suiteContext = {
 		database,
 		dumpDatabase: () => client.dumpDatabase.mutate({ databaseName }),
-		databaseName,
+		truncateDatabase: () => client.truncateDatabase.mutate({ databaseName }),
+	};
+	global.testContext = {
 		random: {
 			getUuid: () => faker.string.uuid(),
 		},
@@ -81,13 +89,12 @@ beforeAll(async () => {
 	};
 }, 10 * SECOND);
 
-beforeEach(async () => {
+beforeEach(async ({ task }) => {
 	setSeed(expect.getState().currentTestName || "unknown");
 	timekeeper.freeze(new Date("2020-01-01"));
 	return async () => {
 		timekeeper.reset();
 		unsetSeed();
-		const { databaseName } = global.testContext!;
-		await client.truncateDatabase.mutate({ databaseName });
+		await task.suite.file!.suiteContext.truncateDatabase();
 	};
 });

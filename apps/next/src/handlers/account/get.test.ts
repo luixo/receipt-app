@@ -20,9 +20,8 @@ describe("account.get", () => {
 
 	describe("data verification", () => {
 		test("account-matched user does not exist", async ({ ctx }) => {
-			const { database } = global.testContext!;
-			const { id: accountId } = await insertAccount(database);
-			const { id: sessionId } = await insertSession(database, accountId);
+			const { id: accountId } = await insertAccount(ctx.database);
+			const { id: sessionId } = await insertSession(ctx.database, accountId);
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.account.get(),
@@ -34,9 +33,8 @@ describe("account.get", () => {
 
 	describe("functionality", () => {
 		test("verified account", async ({ ctx }) => {
-			const { database } = global.testContext!;
 			const { sessionId, accountId, name } = await insertAccountWithSession(
-				database,
+				ctx.database,
 			);
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 
@@ -49,9 +47,8 @@ describe("account.get", () => {
 		});
 
 		test("unverified account", async ({ ctx }) => {
-			const { database } = global.testContext!;
 			const { sessionId, accountId, name } = await insertAccountWithSession(
-				database,
+				ctx.database,
 				{ account: { confirmation: {} } },
 			);
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));

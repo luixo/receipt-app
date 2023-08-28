@@ -14,24 +14,23 @@ import { test } from "next-tests/utils/test";
 describe("sessions.cleanup", () => {
 	describe("functionality", () => {
 		test("sessions are removed", async ({ ctx }) => {
-			const { database } = global.testContext!;
 			// Verifying other sessions are not affected
-			await insertAccountWithSession(database);
-			const { id: accountId } = await insertAccount(database);
-			await insertSession(database, accountId, {
+			await insertAccountWithSession(ctx.database);
+			const { id: accountId } = await insertAccount(ctx.database);
+			await insertSession(ctx.database, accountId, {
 				// non-expired session
 				expirationTimestamp: new Date(Date.now() + MINUTE),
 			});
-			await insertSession(database, accountId, {
+			await insertSession(ctx.database, accountId, {
 				// just expired session
 				expirationTimestamp: new Date(Date.now() - MINUTE),
 			});
-			await insertSession(database, accountId, {
+			await insertSession(ctx.database, accountId, {
 				// long expired session
 				expirationTimestamp: new Date(Date.now() - YEAR),
 			});
 			const caller = router.createCaller(createContext(ctx));
-			await expectDatabaseDiffSnapshot(() => caller.sessions.cleanup());
+			await expectDatabaseDiffSnapshot(ctx, () => caller.sessions.cleanup());
 		});
 	});
 });

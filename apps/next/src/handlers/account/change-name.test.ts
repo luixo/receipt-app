@@ -20,8 +20,7 @@ describe("account.changeName", () => {
 
 		describe("user name", () => {
 			test("minimal length", async ({ ctx }) => {
-				const { database } = global.testContext!;
-				const { sessionId } = await insertAccountWithSession(database);
+				const { sessionId } = await insertAccountWithSession(ctx.database);
 				const caller = router.createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -34,8 +33,7 @@ describe("account.changeName", () => {
 			});
 
 			test("maximum length", async ({ ctx }) => {
-				const { database } = global.testContext!;
-				const { sessionId } = await insertAccountWithSession(database);
+				const { sessionId } = await insertAccountWithSession(ctx.database);
 				const caller = router.createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -51,13 +49,12 @@ describe("account.changeName", () => {
 
 	describe("functionality", () => {
 		test("name changes", async ({ ctx }) => {
-			const { database } = global.testContext!;
 			// Verifying other users are not affected
-			await insertAccountWithSession(database);
-			const { sessionId } = await insertAccountWithSession(database);
+			await insertAccountWithSession(ctx.database);
+			const { sessionId } = await insertAccountWithSession(ctx.database);
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 
-			await expectDatabaseDiffSnapshot(() =>
+			await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.account.changeName({ name: faker.person.firstName() }),
 			);
 		});

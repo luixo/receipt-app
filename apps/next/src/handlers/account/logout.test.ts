@@ -17,13 +17,12 @@ describe("account.logout", () => {
 
 	describe("functionality", () => {
 		test("session is removed", async ({ ctx }) => {
-			const { database } = global.testContext!;
 			// Verifying other accounts are not affected
-			await insertAccountWithSession(database);
-			const { sessionId } = await insertAccountWithSession(database);
+			await insertAccountWithSession(ctx.database);
+			const { sessionId } = await insertAccountWithSession(ctx.database);
 			const context = createAuthContext(ctx, sessionId);
 			const caller = router.createCaller(context);
-			await expectDatabaseDiffSnapshot(() => caller.account.logout());
+			await expectDatabaseDiffSnapshot(ctx, () => caller.account.logout());
 			expect(context.setHeaders).toEqual<HeaderPair[]>([
 				{
 					name: "set-cookie",

@@ -23,8 +23,7 @@ describe("account.changePassword", () => {
 			const otherType = types.filter((lookupType) => lookupType !== type)[0]!;
 			describe(type, () => {
 				test("minimal length", async ({ ctx }) => {
-					const { database } = global.testContext!;
-					const { sessionId } = await insertAccountWithSession(database);
+					const { sessionId } = await insertAccountWithSession(ctx.database);
 					const caller = router.createCaller(createAuthContext(ctx, sessionId));
 					await expectTRPCError(
 						() =>
@@ -38,8 +37,7 @@ describe("account.changePassword", () => {
 				});
 
 				test("maximum length", async ({ ctx }) => {
-					const { database } = global.testContext!;
-					const { sessionId } = await insertAccountWithSession(database);
+					const { sessionId } = await insertAccountWithSession(ctx.database);
 					const caller = router.createCaller(createAuthContext(ctx, sessionId));
 					await expectTRPCError(
 						() =>
@@ -55,11 +53,10 @@ describe("account.changePassword", () => {
 		});
 
 		test("previous password doesn't match", async ({ ctx }) => {
-			const { database } = global.testContext!;
 			const currentPassword = faker.internet.password();
 			const nextPassword = faker.internet.password();
 			const { sessionId, accountId } = await insertAccountWithSession(
-				database,
+				ctx.database,
 				{ account: { password: currentPassword } },
 			);
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
@@ -77,17 +74,16 @@ describe("account.changePassword", () => {
 
 	describe("functionality", () => {
 		test("password changes", async ({ ctx }) => {
-			const { database } = global.testContext!;
 			// Verifying other accounts are not affected
-			await insertAccountWithSession(database);
+			await insertAccountWithSession(ctx.database);
 			const currentPassword = faker.internet.password();
 			const nextPassword = faker.internet.password();
-			const { sessionId } = await insertAccountWithSession(database, {
+			const { sessionId } = await insertAccountWithSession(ctx.database, {
 				account: { password: currentPassword },
 			});
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 
-			await expectDatabaseDiffSnapshot(() =>
+			await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.account.changePassword({
 					password: nextPassword,
 					prevPassword: currentPassword,

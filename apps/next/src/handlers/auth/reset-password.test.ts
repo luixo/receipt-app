@@ -76,10 +76,9 @@ describe("auth.resetPassword", () => {
 		});
 
 		test("intention expires", async ({ ctx }) => {
-			const { database } = global.testContext!;
-			const { accountId } = await insertAccountWithSession(database);
+			const { accountId } = await insertAccountWithSession(ctx.database);
 			const { token } = await insertResetPasswordIntention(
-				database,
+				ctx.database,
 				accountId,
 				{ expiresTimestamp: new Date(Date.now() - MINUTE) },
 			);
@@ -98,30 +97,32 @@ describe("auth.resetPassword", () => {
 
 	describe("functionality", () => {
 		test("password reset", async ({ ctx }) => {
-			const { database } = global.testContext!;
-			const { accountId } = await insertAccountWithSession(database);
+			const { accountId } = await insertAccountWithSession(ctx.database);
 			// Verifying other accounts are not affected
 			const { accountId: otherAccountId } = await insertAccountWithSession(
-				database,
+				ctx.database,
 			);
 			// Verifying other intentions are not affected
-			await insertResetPasswordIntention(database, otherAccountId);
+			await insertResetPasswordIntention(ctx.database, otherAccountId);
 			// Verifying other intentions of the same user are removed
-			await insertResetPasswordIntention(database, accountId);
-			await insertResetPasswordIntention(database, accountId, {
+			await insertResetPasswordIntention(ctx.database, accountId);
+			await insertResetPasswordIntention(ctx.database, accountId, {
 				expiresTimestamp: new Date(Date.now() - MINUTE),
 			});
-			const { token } = await insertResetPasswordIntention(database, accountId);
+			const { token } = await insertResetPasswordIntention(
+				ctx.database,
+				accountId,
+			);
 			const context = createContext(ctx);
 			const caller = router.createCaller(context);
 			const password = faker.internet.password();
-			await expectDatabaseDiffSnapshot(async () => {
+			await expectDatabaseDiffSnapshot(ctx, async () => {
 				await caller.auth.resetPassword({
 					token,
 					password,
 				});
 			});
-			const { passwordHash, passwordSalt } = await database
+			const { passwordHash, passwordSalt } = await ctx.database
 				.selectFrom("accounts")
 				.where("id", "=", accountId)
 				.select(["passwordHash", "passwordSalt"])

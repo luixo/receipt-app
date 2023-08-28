@@ -96,11 +96,10 @@ describe("auth.register", () => {
 		});
 
 		test("email already exist", async ({ ctx }) => {
-			const { database } = global.testContext!;
 			const caller = router.createCaller(createContext(ctx));
 			const {
 				account: { email: existingEmail },
-			} = await insertAccountWithSession(database);
+			} = await insertAccountWithSession(ctx.database);
 			await expectTRPCError(
 				() =>
 					caller.auth.register({
@@ -119,7 +118,7 @@ describe("auth.register", () => {
 			ctx.emailOptions.active = false;
 			const context = createContext(ctx);
 			const caller = router.createCaller(context);
-			await expectDatabaseDiffSnapshot(async () => {
+			await expectDatabaseDiffSnapshot(ctx, async () => {
 				const result = await caller.auth.register({
 					email: faker.internet.email(),
 					password: faker.internet.password(),
@@ -135,7 +134,7 @@ describe("auth.register", () => {
 
 		test("email sent if active", async ({ ctx }) => {
 			const caller = router.createCaller(createContext(ctx));
-			await expectDatabaseDiffSnapshot(() =>
+			await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.auth.register({
 					email: faker.internet.email(),
 					password: faker.internet.password(),

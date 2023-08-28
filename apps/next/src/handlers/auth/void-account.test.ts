@@ -25,12 +25,11 @@ describe("auth.voidAccount", () => {
 		});
 
 		test("no confirmation token exists", async ({ ctx }) => {
-			const { database } = global.testContext!;
 			const caller = router.createCaller(createContext(ctx));
 			const confirmationToken = faker.string.uuid();
 			// Verify that not every not verified account counts
-			await insertAccountWithSession(database);
-			await insertAccountWithSession(database, {
+			await insertAccountWithSession(ctx.database);
+			await insertAccountWithSession(ctx.database, {
 				account: { confirmation: {} },
 			});
 			await expectTRPCError(
@@ -43,15 +42,14 @@ describe("auth.voidAccount", () => {
 
 	describe("functionality", () => {
 		test("account voided", async ({ ctx }) => {
-			const { database } = global.testContext!;
 			const {
 				account: { confirmationToken, email },
-			} = await insertAccountWithSession(database, {
+			} = await insertAccountWithSession(ctx.database, {
 				account: { confirmation: {} },
 			});
 			// Verifying other accounts (both confirmed and not) are not affected
-			await insertAccountWithSession(database);
-			await insertAccountWithSession(database, {
+			await insertAccountWithSession(ctx.database);
+			await insertAccountWithSession(ctx.database, {
 				account: { confirmation: {} },
 			});
 			const context = createContext(ctx);
@@ -60,7 +58,7 @@ describe("auth.voidAccount", () => {
 				confirmationToken,
 				"Confirmation token should exist on creation of test account",
 			);
-			await expectDatabaseDiffSnapshot(async () => {
+			await expectDatabaseDiffSnapshot(ctx, async () => {
 				const result = await caller.auth.voidAccount({
 					token: confirmationToken,
 				});

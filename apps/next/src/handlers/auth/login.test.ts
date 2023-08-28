@@ -71,10 +71,9 @@ describe("auth.login", () => {
 		});
 
 		test("authentication failed", async ({ ctx }) => {
-			const { database } = global.testContext!;
 			const {
 				account: { email, password },
-			} = await insertAccountWithSession(database);
+			} = await insertAccountWithSession(ctx.database);
 			const caller = router.createCaller(createContext(ctx));
 			await expectTRPCError(
 				() =>
@@ -90,15 +89,14 @@ describe("auth.login", () => {
 
 	describe("functionality", () => {
 		test("login successful", async ({ ctx }) => {
-			const { database } = global.testContext!;
 			const {
 				accountId,
 				account: { email, password },
 				name,
-			} = await insertAccountWithSession(database);
+			} = await insertAccountWithSession(ctx.database);
 			const context = createContext(ctx);
 			const caller = router.createCaller(context);
-			await expectDatabaseDiffSnapshot(async () => {
+			await expectDatabaseDiffSnapshot(ctx, async () => {
 				const result = await caller.auth.login({ email, password });
 				expect(result).toEqual<typeof result>({
 					account: { id: accountId, verified: true },
@@ -109,13 +107,11 @@ describe("auth.login", () => {
 		});
 
 		test("login successful - unverified user", async ({ ctx }) => {
-			const { database } = global.testContext!;
-
 			const {
 				accountId,
 				account: { email, password },
 				name,
-			} = await insertAccountWithSession(database, {
+			} = await insertAccountWithSession(ctx.database, {
 				account: { confirmation: {} },
 			});
 			const context = createContext(ctx);
@@ -128,10 +124,9 @@ describe("auth.login", () => {
 		});
 
 		test("login successful - with different casing", async ({ ctx }) => {
-			const { database } = global.testContext!;
 			const {
 				account: { email, password },
-			} = await insertAccountWithSession(database);
+			} = await insertAccountWithSession(ctx.database);
 			const context = createContext(ctx);
 			const caller = router.createCaller(context);
 			await caller.auth.login({ email: email.toUpperCase(), password });

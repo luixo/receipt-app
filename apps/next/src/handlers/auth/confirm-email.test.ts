@@ -25,10 +25,9 @@ describe("auth.confirmEmail", () => {
 		});
 
 		test("no confirmation token exists", async ({ ctx }) => {
-			const { database } = global.testContext!;
 			const caller = router.createCaller(createContext(ctx));
 			const confirmationToken = faker.string.uuid();
-			await insertAccountWithSession(database);
+			await insertAccountWithSession(ctx.database);
 			await expectTRPCError(
 				() => caller.auth.confirmEmail({ token: confirmationToken }),
 				"NOT_FOUND",
@@ -39,15 +38,14 @@ describe("auth.confirmEmail", () => {
 
 	describe("functionality", () => {
 		test("account confirmed", async ({ ctx }) => {
-			const { database } = global.testContext!;
 			const {
 				account: { confirmationToken, email },
-			} = await insertAccountWithSession(database, {
+			} = await insertAccountWithSession(ctx.database, {
 				account: { confirmation: {} },
 			});
 			// Verifying other accounts (both confirmed and not) are not affected
-			await insertAccountWithSession(database);
-			await insertAccountWithSession(database, {
+			await insertAccountWithSession(ctx.database);
+			await insertAccountWithSession(ctx.database, {
 				account: { confirmation: {} },
 			});
 			const context = createContext(ctx);
@@ -56,7 +54,7 @@ describe("auth.confirmEmail", () => {
 				confirmationToken,
 				"Confirmation token should exist on creation of test account",
 			);
-			await expectDatabaseDiffSnapshot(async () => {
+			await expectDatabaseDiffSnapshot(ctx, async () => {
 				const result = await caller.auth.confirmEmail({
 					token: confirmationToken,
 				});

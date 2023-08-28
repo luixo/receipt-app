@@ -10,6 +10,7 @@ import {
 	expectTRPCError,
 	expectUnauthorizedError,
 } from "next-tests/utils/expect";
+import type { TestContext } from "next-tests/utils/test";
 import { test } from "next-tests/utils/test";
 
 describe("account.resendEmail", () => {
@@ -17,8 +18,9 @@ describe("account.resendEmail", () => {
 		expectUnauthorizedError((caller) => caller.account.resendEmail());
 
 		test("account is already verified", async ({ ctx }) => {
-			const { database } = global.testContext!;
-			const { sessionId, accountId } = await insertAccountWithSession(database);
+			const { sessionId, accountId } = await insertAccountWithSession(
+				ctx.database,
+			);
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.account.resendEmail(),
@@ -30,9 +32,8 @@ describe("account.resendEmail", () => {
 		test("account is not eligible for repeating email sending", async ({
 			ctx,
 		}) => {
-			const { database } = global.testContext!;
 			const { sessionId, accountId } = await insertAccountWithSession(
-				database,
+				ctx.database,
 				{
 					account: {
 						confirmation: {
@@ -52,12 +53,11 @@ describe("account.resendEmail", () => {
 	});
 
 	describe("functionality", () => {
-		const insertReadyForEmailAccount = async () => {
-			const { database } = global.testContext!;
+		const insertReadyForEmailAccount = async (ctx: TestContext) => {
 			const {
 				sessionId,
 				account: { email },
-			} = await insertAccountWithSession(database, {
+			} = await insertAccountWithSession(ctx.database, {
 				account: {
 					email: faker.internet.email(),
 					confirmation: {
@@ -71,7 +71,7 @@ describe("account.resendEmail", () => {
 
 		test("email is not resent - service is disabled", async ({ ctx }) => {
 			ctx.emailOptions.active = false;
-			const { sessionId } = await insertReadyForEmailAccount();
+			const { sessionId } = await insertReadyForEmailAccount(ctx);
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.account.resendEmail(),
@@ -84,7 +84,7 @@ describe("account.resendEmail", () => {
 			ctx,
 		}) => {
 			ctx.emailOptions.broken = true;
-			const { sessionId } = await insertReadyForEmailAccount();
+			const { sessionId } = await insertReadyForEmailAccount(ctx);
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.account.resendEmail(),
@@ -95,14 +95,12 @@ describe("account.resendEmail", () => {
 		});
 
 		test("email is resent", async ({ ctx }) => {
-			const { database } = global.testContext!;
-
 			// Verifying other accounts are not affected
-			await insertAccountWithSession(database);
-			await insertReadyForEmailAccount();
-			const { sessionId, email } = await insertReadyForEmailAccount();
+			await insertAccountWithSession(ctx.database);
+			await insertReadyForEmailAccount(ctx);
+			const { sessionId, email } = await insertReadyForEmailAccount(ctx);
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
-			await expectDatabaseDiffSnapshot(async () => {
+			await expectDatabaseDiffSnapshot(ctx, async () => {
 				const { email: returnEmail } = await caller.account.resendEmail();
 				expect(returnEmail).toEqual(email);
 			});

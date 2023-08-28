@@ -18,7 +18,7 @@ export type UnauthorizedContext = {
 	emailOptions: EmailOptions;
 };
 
-type TestContextKeys = "emailOptions";
+type TestContextKeys = "emailOptions" | "database";
 
 export type AuthorizedContext = UnauthorizedContext & {
 	auth: {
@@ -38,7 +38,7 @@ export const createContext = (
 	res: opts.res,
 	logger: baseLogger,
 	database:
-		global.testContext?.database ||
+		opts.database ||
 		getDatabase({
 			logger: opts.req.headers.debug
 				? baseLogger.child({ url: opts.req.url || "unknown" })

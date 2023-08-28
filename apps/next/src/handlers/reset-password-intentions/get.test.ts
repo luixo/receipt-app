@@ -36,11 +36,10 @@ describe("resetPasswordIntentions.get", () => {
 		});
 
 		test("intention token is expired", async ({ ctx }) => {
-			const { database } = global.testContext!;
 			const caller = router.createCaller(createContext(ctx));
-			const { id: accountId } = await insertAccount(database);
+			const { id: accountId } = await insertAccount(ctx.database);
 			const { token } = await insertResetPasswordIntention(
-				database,
+				ctx.database,
 				accountId,
 				{ expiresTimestamp: new Date(Date.now() - MINUTE) },
 			);
@@ -54,12 +53,14 @@ describe("resetPasswordIntentions.get", () => {
 
 	describe("functionality", () => {
 		test("email is returned", async ({ ctx }) => {
-			const { database } = global.testContext!;
 			const {
 				accountId,
 				account: { email },
-			} = await insertAccountWithSession(database);
-			const { token } = await insertResetPasswordIntention(database, accountId);
+			} = await insertAccountWithSession(ctx.database);
+			const { token } = await insertResetPasswordIntention(
+				ctx.database,
+				accountId,
+			);
 			const caller = router.createCaller(createContext(ctx));
 			const result = await caller.resetPasswordIntentions.get({ token });
 			expect(result).toEqual<typeof result>({ email });

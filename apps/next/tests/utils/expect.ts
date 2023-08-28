@@ -6,6 +6,7 @@ import { expect } from "vitest";
 import { router } from "next-app/handlers";
 import { formatErrorMessage } from "next-app/handlers/errors";
 import { createContext } from "next-tests/utils/context";
+import type { TestContext} from "next-tests/utils/test";
 import { test } from "next-tests/utils/test";
 import type { RouterCaller } from "next-tests/utils/types";
 
@@ -45,13 +46,13 @@ export const expectUnauthorizedError = (
 };
 
 export const expectDatabaseDiffSnapshot = async (
+	ctx: TestContext,
 	fn: () => Promise<unknown>,
 	snapshotName?: string,
 ) => {
-	const { dumpDatabase } = global.testContext!;
-	const snapshotBefore = await dumpDatabase();
+	const snapshotBefore = await ctx.dumpDatabase();
 	await fn();
-	const snapshotAfter = await dumpDatabase();
+	const snapshotAfter = await ctx.dumpDatabase();
 	const diff = snapshotDiff(snapshotBefore, snapshotAfter, {
 		contextLines: 0,
 		stablePatchmarks: true,
