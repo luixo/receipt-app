@@ -1,0 +1,29 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`resetPasswordIntentions.add > functionality > reset password intention added 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
++ INSERT INTO public.\\"resetPasswordIntentions\\" VALUES ('70ff70e8-0cbb-4dcb-bf69-65f053c83963', '2020-01-02 00:00:00', 'f47a21f2-d2e1-4e1e-ad26-564eeb9ab8cc');"
+`;
+
+exports[`resetPasswordIntentions.add > functionality > reset password intention added 2`] = `
+{
+  "address": "juwan74@hotmail.com",
+  "body": "
+	<!doctype html lang=\\"en\\">
+	<html lang=\\"en\\">
+		<head>
+			<meta name=\\"viewport\\" content=\\"width=device-width\\" />
+			<meta http-equiv=\\"Content-Type\\" content=\\"text/html; charset=UTF-8\\" />
+			<title>Receipt App</title>
+			<style> body {background-color:#eaebed;font-family:sans-serif;font-size:14px;line-height:1.4;margin:0;padding:0;-webkit-font-smoothing:antialiased;-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%;} h1,h2,h3,h4 {color:#06090f;font-family:sans-serif;font-weight:400;line-height:1.4;margin:0;} p {font-family:sans-serif;font-size:14px;font-weight:normal;margin:0;margin-bottom:15px;} @media only screen and (max-width: 620px) { p {font-size:16px !important;} a {font-size:16px !important;} td {font-size:16px !important;} span {font-size:16px !important;} .container {padding:0 !important;width:100% !important;} .content {padding:0 !important;} .main {border-left-width:0 !important;border-radius:0 !important;border-right-width:0 !important;} .wrapper {padding:10px !important;} table[class=body] h3 {font-size:22px !important;margin-bottom:10px !important;} .btn table {width:100% !important;} .btn a {width:100% !important;}} a {color:#ec0867;text-decoration:underline;} .container {display:block;margin:0 auto !important;max-width:580px;padding:10px;width:580px;} .content {box-sizing:border-box;display:block;margin:0 auto;max-width:580px;padding:10px;} .preheader {color:transparent;display:none;height:0;max-height:0;max-width:0;opacity:0;overflow:hidden;mso-hide:all;visibility:hidden;width:0;} table {border-collapse:separate;mso-table-lspace:0pt;mso-table-rspace:0pt;min-width:100%;width:100%;} table td {font-family:sans-serif;font-size:14px;vertical-align:top;} .header {padding:20px 0;} h1 {font-size:35px;font-weight:300;text-align:center;text-transform:capitalize;} .align-center {text-align:center;} .main {background:#ffffff;border-radius:3px;width:100%;} .wrapper {box-sizing:border-box;padding:20px;} .btn {box-sizing:border-box;width:100%;} .btn > tbody > tr > td  {padding-bottom:15px;} .btn table {min-width:auto;width:auto;} .btn table td {background-color:#ffffff;border-radius:5px;text-align:center;} .btn a {background-color:#ffffff;border:solid 1px #ec0867;border-radius:5px;box-sizing:border-box;color:#ec0867;cursor:pointer;display:inline-block;font-size:14px;font-weight:bold;margin:0;padding:12px 25px;text-decoration:none;text-transform:capitalize;} .btn-primary table td {background-color:#ec0867;} .btn-primary a {background-color:#ec0867;border-color:#ec0867;color:#ffffff;} .btn-primary table td:hover {background-color:#d5075d !important;} .btn-primary a:hover {background-color:#d5075d !important;border-color:#d5075d !important;} .footer {clear:both;margin-top:10px;text-align:center;width:100%;} .footer td,.footer p,.footer span,.footer a {color:#9a9ea6;font-size:12px;text-align:center;} .footer-block {padding-bottom:10px;padding-top:10px;}</style>
+		</head>
+		<body><table role=\\"presentation\\" style=\\"border:0\\" cellPadding=\\"0\\" cellSpacing=\\"0\\" class=\\"body\\"><tr><td> </td><td class=\\"container\\"><div class=\\"header\\"><table role=\\"presentation\\" style=\\"border:0\\" cellPadding=\\"0\\" cellSpacing=\\"0\\" width=\\"100%\\"><tr><td class=\\"align-center\\" width=\\"100%\\"><h1>Receipt App</h1></td></tr></table></div><div class=\\"content\\"><span class=\\"preheader\\">Receipt App reset password</span><table role=\\"presentation\\" class=\\"main\\"><tr><td class=\\"wrapper\\"><table role=\\"presentation\\" style=\\"border:0\\" cellPadding=\\"0\\" cellSpacing=\\"0\\"><tr><td><h3>Forgot your password?</h3><p>We received a request to reset your password.</p><table role=\\"presentation\\" style=\\"border:0\\" cellPadding=\\"0\\" cellSpacing=\\"0\\" class=\\"btn btn-primary\\"><tbody><tr><td align=\\"left\\"><table role=\\"presentation\\" style=\\"border:0\\" cellPadding=\\"0\\" cellSpacing=\\"0\\"><tbody><tr><td> <a href=\\"http://receipt-app.test/reset-password?token=f47a21f2-d2e1-4e1e-ad26-564eeb9ab8cc\\" rel=\\"noreferrer\\" target=\\"_blank\\">Reset my password</a> </td></tr></tbody></table></td></tr></tbody></table><p>Didn’t request a password reset? You can ignore this message.</p></td></tr></table></td></tr></table><div class=\\"footer\\"><table role=\\"presentation\\" style=\\"border:0\\" cellPadding=\\"0\\" cellSpacing=\\"0\\"><tr><td class=\\"footer-block\\"><p>This link will expire in the next 24 hours.</p></td></tr><tr><td class=\\"footer-block\\"><span class=\\"apple-link\\">Contact us on receipt@luixo.ru</span><br/>You can click <a href=\\"http://receipt-app.test/unsubscribe\\">unsubscribe</a>, but there is nothing to unsubscribe from.</td></tr><tr><td class=\\"footer-block powered-by\\">Inspired by <a href=\\"https://postdrop.io\\">Postdrop</a>.</td></tr></table></div></div></td><td> </td></tr></table>
+		</body>
+	</html>",
+  "subject": "Reset password intention in Receipt App",
+}
+`;
