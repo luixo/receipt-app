@@ -35,42 +35,38 @@ export const procedure = unauthProcedure
 			.executeTakeFirst();
 
 		if (!result) {
-			ctx.logger.debug(
-				`Authorization of account "${input.email.original}" failed: account not found.`,
-			);
+			const errorMessage = `Authentication of account "${input.email.original}" failed: account not found.`;
+			ctx.logger.debug(errorMessage);
 			throw new trpc.TRPCError({
 				code: "UNAUTHORIZED",
-				message: `Authorization of account "${input.email.original}" failed: account not found.`,
+				message: errorMessage,
 			});
-		} else {
-			const isPasswordValid =
-				getHash(input.password, result.passwordSalt) === result.passwordHash;
-			if (!isPasswordValid) {
-				ctx.logger.debug(
-					`Authorization of account "${input.email.original}" failed: wrong password.`,
-				);
-				throw new trpc.TRPCError({
-					code: "UNAUTHORIZED",
-					message: `Authentication of account "${input.email.original}" failed.`,
-				});
-			} else {
-				const { authToken, expirationDate } = await createAuthorizationSession(
-					database,
-					result.accountId,
-				);
-				ctx.logger.debug(
-					`Authorization of account "${input.email.original}" succeed.`,
-				);
-				setAuthCookie(ctx.res, authToken, expirationDate);
-				return {
-					account: {
-						id: result.accountId,
-						verified: !result.confirmationToken,
-					},
-					user: {
-						name: result.name,
-					},
-				};
-			}
 		}
+		const isPasswordValid =
+			getHash(input.password, result.passwordSalt) === result.passwordHash;
+		if (!isPasswordValid) {
+			const errorMessage = `Authentication of account "${input.email.original}" failed: password is wrong.`;
+			ctx.logger.debug(errorMessage);
+			throw new trpc.TRPCError({
+				code: "UNAUTHORIZED",
+				message: errorMessage,
+			});
+		}
+		const { authToken, expirationDate } = await createAuthorizationSession(
+			database,
+			result.accountId,
+		);
+		ctx.logger.debug(
+			`Authentication of account "${input.email.original}" succeed.`,
+		);
+		setAuthCookie(ctx.res, authToken, expirationDate);
+		return {
+			account: {
+				id: result.accountId,
+				verified: !result.confirmationToken,
+			},
+			user: {
+				name: result.name,
+			},
+		};
 	});
