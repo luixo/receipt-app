@@ -73,7 +73,7 @@ describe("auth.login", () => {
 		test("authentication failed", async ({ ctx }) => {
 			const {
 				account: { email, password },
-			} = await insertAccountWithSession(ctx.database);
+			} = await insertAccountWithSession(ctx);
 			const caller = router.createCaller(createContext(ctx));
 			await expectTRPCError(
 				() =>
@@ -93,7 +93,7 @@ describe("auth.login", () => {
 				accountId,
 				account: { email, password },
 				name,
-			} = await insertAccountWithSession(ctx.database);
+			} = await insertAccountWithSession(ctx);
 			const context = createContext(ctx);
 			const caller = router.createCaller(context);
 			await expectDatabaseDiffSnapshot(ctx, async () => {
@@ -111,7 +111,7 @@ describe("auth.login", () => {
 				accountId,
 				account: { email, password },
 				name,
-			} = await insertAccountWithSession(ctx.database, {
+			} = await insertAccountWithSession(ctx, {
 				account: { confirmation: {} },
 			});
 			const context = createContext(ctx);
@@ -126,7 +126,7 @@ describe("auth.login", () => {
 		test("login successful - with different casing", async ({ ctx }) => {
 			const {
 				account: { email, password },
-			} = await insertAccountWithSession(ctx.database);
+			} = await insertAccountWithSession(ctx);
 			const context = createContext(ctx);
 			const caller = router.createCaller(context);
 			await caller.auth.login({ email: email.toUpperCase(), password });

@@ -37,12 +37,10 @@ describe("resetPasswordIntentions.get", () => {
 
 		test("intention token is expired", async ({ ctx }) => {
 			const caller = router.createCaller(createContext(ctx));
-			const { id: accountId } = await insertAccount(ctx.database);
-			const { token } = await insertResetPasswordIntention(
-				ctx.database,
-				accountId,
-				{ expiresTimestamp: new Date(Date.now() - MINUTE) },
-			);
+			const { id: accountId } = await insertAccount(ctx);
+			const { token } = await insertResetPasswordIntention(ctx, accountId, {
+				expiresTimestamp: new Date(Date.now() - MINUTE),
+			});
 			await expectTRPCError(
 				() => caller.resetPasswordIntentions.get({ token }),
 				"NOT_FOUND",
@@ -56,11 +54,8 @@ describe("resetPasswordIntentions.get", () => {
 			const {
 				accountId,
 				account: { email },
-			} = await insertAccountWithSession(ctx.database);
-			const { token } = await insertResetPasswordIntention(
-				ctx.database,
-				accountId,
-			);
+			} = await insertAccountWithSession(ctx);
+			const { token } = await insertResetPasswordIntention(ctx, accountId);
 			const caller = router.createCaller(createContext(ctx));
 			const result = await caller.resetPasswordIntentions.get({ token });
 			expect(result).toEqual<typeof result>({ email });

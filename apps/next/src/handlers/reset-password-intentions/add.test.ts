@@ -43,11 +43,11 @@ describe("resetPasswordIntentions.add", () => {
 			const {
 				accountId,
 				account: { email },
-			} = await insertAccountWithSession(ctx.database);
+			} = await insertAccountWithSession(ctx);
 			await Promise.all(
 				new Array(MAX_INTENTIONS_AMOUNT)
 					.fill(null)
-					.map(() => insertResetPasswordIntention(ctx.database, accountId)),
+					.map(() => insertResetPasswordIntention(ctx, accountId)),
 			);
 			await expectTRPCError(
 				() => caller.resetPasswordIntentions.add({ email }),
@@ -62,7 +62,7 @@ describe("resetPasswordIntentions.add", () => {
 			ctx.emailOptions.active = false;
 			const {
 				account: { email },
-			} = await insertAccountWithSession(ctx.database);
+			} = await insertAccountWithSession(ctx);
 			const caller = router.createCaller(createContext(ctx));
 
 			await expectTRPCError(
@@ -76,7 +76,7 @@ describe("resetPasswordIntentions.add", () => {
 			ctx.emailOptions.broken = true;
 			const {
 				account: { email },
-			} = await insertAccountWithSession(ctx.database);
+			} = await insertAccountWithSession(ctx);
 			const caller = router.createCaller(createContext(ctx));
 
 			await expectTRPCError(
@@ -90,11 +90,11 @@ describe("resetPasswordIntentions.add", () => {
 			const {
 				accountId,
 				account: { email },
-			} = await insertAccountWithSession(ctx.database);
+			} = await insertAccountWithSession(ctx);
 			const caller = router.createCaller(createContext(ctx));
 
 			// Verify we can add an intention even if we already have one
-			await insertResetPasswordIntention(ctx.database, accountId);
+			await insertResetPasswordIntention(ctx, accountId);
 			await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.resetPasswordIntentions.add({ email }),
 			);

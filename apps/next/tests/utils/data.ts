@@ -1,13 +1,13 @@
 import { faker } from "@faker-js/faker";
 
 import { YEAR } from "app/utils/time";
-import type { Database } from "next-app/db";
 import type {
 	AccountsId,
 	SessionsSessionId,
 	UsersId,
 } from "next-app/db/models";
 import { generatePasswordData } from "next-app/utils/crypto";
+import type { TestContext } from "next-tests/utils/test";
 
 type AccountData = {
 	id?: AccountsId;
@@ -20,14 +20,14 @@ type AccountData = {
 };
 
 export const insertAccount = async (
-	database: Database,
+	ctx: TestContext,
 	data: AccountData = {},
 ) => {
 	const password = data.password || faker.internet.password();
 	const { salt: passwordSalt, hash: passwordHash } =
 		generatePasswordData(password);
 	const { id, email, confirmationToken, confirmationTokenTimestamp } =
-		await database
+		await ctx.database
 			.insertInto("accounts")
 			.values({
 				id: data.id || faker.string.uuid(),
@@ -67,11 +67,11 @@ type UserData = {
 };
 
 export const insertUser = async (
-	database: Database,
+	ctx: TestContext,
 	ownerAccountId: AccountsId,
 	data: UserData = {},
 ) => {
-	const { id, name } = await database
+	const { id, name } = await ctx.database
 		.insertInto("users")
 		.values({
 			id: data.id || faker.string.uuid(),
@@ -86,11 +86,11 @@ export const insertUser = async (
 };
 
 export const insertSelfUser = async (
-	database: Database,
+	ctx: TestContext,
 	ownerAccountId: AccountsId,
 	data: Omit<UserData, "id" | "publicName" | "connectedAccountId"> = {},
 ) =>
-	insertUser(database, ownerAccountId, {
+	insertUser(ctx, ownerAccountId, {
 		id: ownerAccountId as UsersId,
 		connectedAccountId: ownerAccountId,
 		...data,
@@ -102,11 +102,11 @@ type SessionData = {
 };
 
 export const insertSession = async (
-	database: Database,
+	ctx: TestContext,
 	accountId: AccountsId,
 	data: SessionData = {},
 ) => {
-	const { sessionId, expirationTimestamp } = await database
+	const { sessionId, expirationTimestamp } = await ctx.database
 		.insertInto("sessions")
 		.values({
 			sessionId: data.id || faker.string.uuid(),
@@ -126,11 +126,11 @@ type ResetPasswordIntentionData = {
 };
 
 export const insertResetPasswordIntention = async (
-	database: Database,
+	ctx: TestContext,
 	accountId: AccountsId,
 	data: ResetPasswordIntentionData = {},
 ) => {
-	const { token, expiresTimestamp } = await database
+	const { token, expiresTimestamp } = await ctx.database
 		.insertInto("resetPasswordIntentions")
 		.values({
 			accountId,
@@ -150,17 +150,11 @@ type AccountWithSessionData = {
 };
 
 export const insertAccountWithSession = async (
-	database: Database,
+	ctx: TestContext,
 	data: AccountWithSessionData = {},
 ) => {
-	const { id: accountId, ...account } = await insertAccount(
-		database,
-		data.account,
-	);
-	const { id: sessionId, ...session } = await insertSession(
-		database,
-		accountId,
-	);
-	const { name } = await insertSelfUser(database, accountId, data.user);
+	const { id: accountId, ...account } = await insertAccount(ctx, data.account);
+	const { id: sessionId, ...session } = await insertSession(ctx, accountId);
+	const { name } = await insertSelfUser(ctx, accountId, data.user);
 	return { accountId, account, sessionId, session, name };
 };

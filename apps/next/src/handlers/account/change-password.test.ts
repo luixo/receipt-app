@@ -23,7 +23,7 @@ describe("account.changePassword", () => {
 			const otherType = types.filter((lookupType) => lookupType !== type)[0]!;
 			describe(type, () => {
 				test("minimal length", async ({ ctx }) => {
-					const { sessionId } = await insertAccountWithSession(ctx.database);
+					const { sessionId } = await insertAccountWithSession(ctx);
 					const caller = router.createCaller(createAuthContext(ctx, sessionId));
 					await expectTRPCError(
 						() =>
@@ -37,7 +37,7 @@ describe("account.changePassword", () => {
 				});
 
 				test("maximum length", async ({ ctx }) => {
-					const { sessionId } = await insertAccountWithSession(ctx.database);
+					const { sessionId } = await insertAccountWithSession(ctx);
 					const caller = router.createCaller(createAuthContext(ctx, sessionId));
 					await expectTRPCError(
 						() =>
@@ -55,10 +55,9 @@ describe("account.changePassword", () => {
 		test("previous password doesn't match", async ({ ctx }) => {
 			const currentPassword = faker.internet.password();
 			const nextPassword = faker.internet.password();
-			const { sessionId, accountId } = await insertAccountWithSession(
-				ctx.database,
-				{ account: { password: currentPassword } },
-			);
+			const { sessionId, accountId } = await insertAccountWithSession(ctx, {
+				account: { password: currentPassword },
+			});
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
@@ -75,10 +74,10 @@ describe("account.changePassword", () => {
 	describe("functionality", () => {
 		test("password changes", async ({ ctx }) => {
 			// Verifying other accounts are not affected
-			await insertAccountWithSession(ctx.database);
+			await insertAccountWithSession(ctx);
 			const currentPassword = faker.internet.password();
 			const nextPassword = faker.internet.password();
-			const { sessionId } = await insertAccountWithSession(ctx.database, {
+			const { sessionId } = await insertAccountWithSession(ctx, {
 				account: { password: currentPassword },
 			});
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));

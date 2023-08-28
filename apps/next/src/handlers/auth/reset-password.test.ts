@@ -76,12 +76,10 @@ describe("auth.resetPassword", () => {
 		});
 
 		test("intention expires", async ({ ctx }) => {
-			const { accountId } = await insertAccountWithSession(ctx.database);
-			const { token } = await insertResetPasswordIntention(
-				ctx.database,
-				accountId,
-				{ expiresTimestamp: new Date(Date.now() - MINUTE) },
-			);
+			const { accountId } = await insertAccountWithSession(ctx);
+			const { token } = await insertResetPasswordIntention(ctx, accountId, {
+				expiresTimestamp: new Date(Date.now() - MINUTE),
+			});
 			const caller = router.createCaller(createContext(ctx));
 			await expectTRPCError(
 				() =>
@@ -97,22 +95,17 @@ describe("auth.resetPassword", () => {
 
 	describe("functionality", () => {
 		test("password reset", async ({ ctx }) => {
-			const { accountId } = await insertAccountWithSession(ctx.database);
+			const { accountId } = await insertAccountWithSession(ctx);
 			// Verifying other accounts are not affected
-			const { accountId: otherAccountId } = await insertAccountWithSession(
-				ctx.database,
-			);
+			const { accountId: otherAccountId } = await insertAccountWithSession(ctx);
 			// Verifying other intentions are not affected
-			await insertResetPasswordIntention(ctx.database, otherAccountId);
+			await insertResetPasswordIntention(ctx, otherAccountId);
 			// Verifying other intentions of the same user are removed
-			await insertResetPasswordIntention(ctx.database, accountId);
-			await insertResetPasswordIntention(ctx.database, accountId, {
+			await insertResetPasswordIntention(ctx, accountId);
+			await insertResetPasswordIntention(ctx, accountId, {
 				expiresTimestamp: new Date(Date.now() - MINUTE),
 			});
-			const { token } = await insertResetPasswordIntention(
-				ctx.database,
-				accountId,
-			);
+			const { token } = await insertResetPasswordIntention(ctx, accountId);
 			const context = createContext(ctx);
 			const caller = router.createCaller(context);
 			const password = faker.internet.password();

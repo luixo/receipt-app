@@ -18,8 +18,8 @@ describe("account.logout", () => {
 	describe("functionality", () => {
 		test("session is removed", async ({ ctx }) => {
 			// Verifying other accounts are not affected
-			await insertAccountWithSession(ctx.database);
-			const { sessionId } = await insertAccountWithSession(ctx.database);
+			await insertAccountWithSession(ctx);
+			const { sessionId } = await insertAccountWithSession(ctx);
 			const context = createAuthContext(ctx, sessionId);
 			const caller = router.createCaller(context);
 			await expectDatabaseDiffSnapshot(ctx, () => caller.account.logout());

@@ -20,7 +20,7 @@ describe("account.changeName", () => {
 
 		describe("user name", () => {
 			test("minimal length", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx.database);
+				const { sessionId } = await insertAccountWithSession(ctx);
 				const caller = router.createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -33,7 +33,7 @@ describe("account.changeName", () => {
 			});
 
 			test("maximum length", async ({ ctx }) => {
-				const { sessionId } = await insertAccountWithSession(ctx.database);
+				const { sessionId } = await insertAccountWithSession(ctx);
 				const caller = router.createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
@@ -50,8 +50,8 @@ describe("account.changeName", () => {
 	describe("functionality", () => {
 		test("name changes", async ({ ctx }) => {
 			// Verifying other users are not affected
-			await insertAccountWithSession(ctx.database);
-			const { sessionId } = await insertAccountWithSession(ctx.database);
+			await insertAccountWithSession(ctx);
+			const { sessionId } = await insertAccountWithSession(ctx);
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 
 			await expectDatabaseDiffSnapshot(ctx, () =>

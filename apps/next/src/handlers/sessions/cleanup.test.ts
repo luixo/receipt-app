@@ -15,17 +15,17 @@ describe("sessions.cleanup", () => {
 	describe("functionality", () => {
 		test("sessions are removed", async ({ ctx }) => {
 			// Verifying other sessions are not affected
-			await insertAccountWithSession(ctx.database);
-			const { id: accountId } = await insertAccount(ctx.database);
-			await insertSession(ctx.database, accountId, {
+			await insertAccountWithSession(ctx);
+			const { id: accountId } = await insertAccount(ctx);
+			await insertSession(ctx, accountId, {
 				// non-expired session
 				expirationTimestamp: new Date(Date.now() + MINUTE),
 			});
-			await insertSession(ctx.database, accountId, {
+			await insertSession(ctx, accountId, {
 				// just expired session
 				expirationTimestamp: new Date(Date.now() - MINUTE),
 			});
-			await insertSession(ctx.database, accountId, {
+			await insertSession(ctx, accountId, {
 				// long expired session
 				expirationTimestamp: new Date(Date.now() - YEAR),
 			});

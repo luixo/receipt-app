@@ -99,7 +99,7 @@ describe("auth.register", () => {
 			const caller = router.createCaller(createContext(ctx));
 			const {
 				account: { email: existingEmail },
-			} = await insertAccountWithSession(ctx.database);
+			} = await insertAccountWithSession(ctx);
 			await expectTRPCError(
 				() =>
 					caller.auth.register({

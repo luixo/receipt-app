@@ -28,8 +28,8 @@ describe("auth.voidAccount", () => {
 			const caller = router.createCaller(createContext(ctx));
 			const confirmationToken = faker.string.uuid();
 			// Verify that not every not verified account counts
-			await insertAccountWithSession(ctx.database);
-			await insertAccountWithSession(ctx.database, {
+			await insertAccountWithSession(ctx);
+			await insertAccountWithSession(ctx, {
 				account: { confirmation: {} },
 			});
 			await expectTRPCError(
@@ -44,12 +44,12 @@ describe("auth.voidAccount", () => {
 		test("account voided", async ({ ctx }) => {
 			const {
 				account: { confirmationToken, email },
-			} = await insertAccountWithSession(ctx.database, {
+			} = await insertAccountWithSession(ctx, {
 				account: { confirmation: {} },
 			});
 			// Verifying other accounts (both confirmed and not) are not affected
-			await insertAccountWithSession(ctx.database);
-			await insertAccountWithSession(ctx.database, {
+			await insertAccountWithSession(ctx);
+			await insertAccountWithSession(ctx, {
 				account: { confirmation: {} },
 			});
 			const context = createContext(ctx);

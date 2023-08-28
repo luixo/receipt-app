@@ -18,9 +18,7 @@ describe("account.resendEmail", () => {
 		expectUnauthorizedError((caller) => caller.account.resendEmail());
 
 		test("account is already verified", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(
-				ctx.database,
-			);
+			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.account.resendEmail(),
@@ -32,17 +30,14 @@ describe("account.resendEmail", () => {
 		test("account is not eligible for repeating email sending", async ({
 			ctx,
 		}) => {
-			const { sessionId, accountId } = await insertAccountWithSession(
-				ctx.database,
-				{
-					account: {
-						confirmation: {
-							// Simulating an email sent 55 minutes ago
-							timestamp: new Date(Date.now() - 55 * MINUTE),
-						},
+			const { sessionId, accountId } = await insertAccountWithSession(ctx, {
+				account: {
+					confirmation: {
+						// Simulating an email sent 55 minutes ago
+						timestamp: new Date(Date.now() - 55 * MINUTE),
 					},
 				},
-			);
+			});
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.account.resendEmail(),
@@ -57,7 +52,7 @@ describe("account.resendEmail", () => {
 			const {
 				sessionId,
 				account: { email },
-			} = await insertAccountWithSession(ctx.database, {
+			} = await insertAccountWithSession(ctx, {
 				account: {
 					email: faker.internet.email(),
 					confirmation: {
@@ -96,7 +91,7 @@ describe("account.resendEmail", () => {
 
 		test("email is resent", async ({ ctx }) => {
 			// Verifying other accounts are not affected
-			await insertAccountWithSession(ctx.database);
+			await insertAccountWithSession(ctx);
 			await insertReadyForEmailAccount(ctx);
 			const { sessionId, email } = await insertReadyForEmailAccount(ctx);
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));

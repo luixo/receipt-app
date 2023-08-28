@@ -13,16 +13,16 @@ import { test } from "next-tests/utils/test";
 describe("resetPasswordIntentions.cleanup", () => {
 	describe("functionality", () => {
 		test("reset password intentions are removed", async ({ ctx }) => {
-			const { id: accountId } = await insertAccount(ctx.database);
-			await insertResetPasswordIntention(ctx.database, accountId, {
+			const { id: accountId } = await insertAccount(ctx);
+			await insertResetPasswordIntention(ctx, accountId, {
 				// non-expired intention
 				expiresTimestamp: new Date(Date.now() + MINUTE),
 			});
-			await insertResetPasswordIntention(ctx.database, accountId, {
+			await insertResetPasswordIntention(ctx, accountId, {
 				// just expired intention
 				expiresTimestamp: new Date(Date.now() - MINUTE),
 			});
-			await insertResetPasswordIntention(ctx.database, accountId, {
+			await insertResetPasswordIntention(ctx, accountId, {
 				// long expired intention
 				expiresTimestamp: new Date(Date.now() - YEAR),
 			});
