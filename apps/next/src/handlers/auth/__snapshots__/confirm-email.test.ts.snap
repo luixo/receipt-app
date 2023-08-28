@@ -1,0 +1,12 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`auth.confirmEmail > functionality > account confirmed 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.accounts VALUES ('29dc3bb9-72c7-4342-b4d0-55d50837e3f7', 'lorena.gutmann@gmail.com', '484f2b2ecef653104325f01cc5b0e707e89f2ba09e748ed1475dc7a47ad97030dd51a5e0261622412c178bce75ff5f0c2b1f6685fa692148a373f0e078b98906', 'e95304ad-ef28-43ae-a143-3eb7ba7e15cb', '02cd2112-1f58-4833-bdc4-fa12a0add5a9', '2020-01-01 00:00:00');
+@@ --- --- @@
++ INSERT INTO public.accounts VALUES ('29dc3bb9-72c7-4342-b4d0-55d50837e3f7', 'lorena.gutmann@gmail.com', '484f2b2ecef653104325f01cc5b0e707e89f2ba09e748ed1475dc7a47ad97030dd51a5e0261622412c178bce75ff5f0c2b1f6685fa692148a373f0e078b98906', 'e95304ad-ef28-43ae-a143-3eb7ba7e15cb', NULL, NULL);"
+`;

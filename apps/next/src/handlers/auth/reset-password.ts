@@ -18,15 +18,16 @@ export const procedure = unauthProcedure
 		const resetPasswordIntention = await database
 			.selectFrom("resetPasswordIntentions")
 			.where("token", "=", input.token)
+			.where("resetPasswordIntentions.expiresTimestamp", ">", new Date())
 			.innerJoin("accounts", (qb) =>
 				qb.onRef("accounts.id", "=", "resetPasswordIntentions.accountId"),
 			)
-			.select(["email", "token", "accounts.id as accountId"])
+			.select(["accounts.id as accountId"])
 			.executeTakeFirst();
 		if (!resetPasswordIntention) {
 			throw new trpc.TRPCError({
 				code: "NOT_FOUND",
-				message: `Reset password intention ${input.token} does not exist.`,
+				message: `Reset password intention ${input.token} does not exist or expired.`,
 			});
 		}
 		const passwordData = generatePasswordData(input.password);
@@ -41,7 +42,11 @@ export const procedure = unauthProcedure
 				.executeTakeFirst();
 			await tx
 				.deleteFrom("resetPasswordIntentions")
-				.where("token", "=", input.token)
+				.where(
+					"resetPasswordIntentions.accountId",
+					"=",
+					resetPasswordIntention.accountId,
+				)
 				.execute();
 		});
 	});

@@ -1,0 +1,19 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`auth.login > functionality > login successful 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
++ INSERT INTO public.sessions VALUES ('7ebcb0d0-0d89-40a3-a724-764ec20d8e6a', 'cb0b7ea3-1df2-4f95-b7e7-dba5e9783b48', '2020-01-31 00:00:00');"
+`;
+
+exports[`auth.login > functionality > login successful 2`] = `
+[
+  {
+    "name": "set-cookie",
+    "value": "authToken=7ebcb0d0-0d89-40a3-a724-764ec20d8e6a; Path=/; Expires=Fri, 31 Jan 2020 00:00:00 GMT; HttpOnly",
+  },
+]
+`;

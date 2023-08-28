@@ -88,6 +88,7 @@ describe("account.resendEmail", () => {
 				"INTERNAL_SERVER_ERROR",
 				"Something went wrong: Test context broke email service error",
 			);
+			expect(emailService.messages).toHaveLength(0);
 		});
 
 		test("email is resent", async () => {

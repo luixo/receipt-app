@@ -119,6 +119,30 @@ export const insertSession = async (
 	return { id: sessionId, expirationTimestamp };
 };
 
+type ResetPasswordIntentionData = {
+	id?: SessionsSessionId;
+	expiresTimestamp?: Date;
+	token?: string;
+};
+
+export const insertResetPasswordIntention = async (
+	database: Database,
+	accountId: AccountsId,
+	data: ResetPasswordIntentionData = {},
+) => {
+	const { token, expiresTimestamp } = await database
+		.insertInto("resetPasswordIntentions")
+		.values({
+			accountId,
+			expiresTimestamp:
+				data.expiresTimestamp || new Date(new Date().valueOf() + YEAR),
+			token: data.token || faker.string.uuid(),
+		})
+		.returning(["expiresTimestamp", "token"])
+		.executeTakeFirstOrThrow();
+	return { token, expiresTimestamp };
+};
+
 type AccountWithSessionData = {
 	account?: AccountData;
 	session?: SessionData;
