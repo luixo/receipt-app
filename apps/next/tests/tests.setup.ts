@@ -5,7 +5,7 @@ import { createHash } from "node:crypto";
 import { Pool } from "pg";
 import * as timekeeper from "timekeeper";
 import type { ResolvedConfig } from "vitest";
-import { afterAll, afterEach, beforeAll, beforeEach, expect } from "vitest";
+import { beforeAll, beforeEach, expect } from "vitest";
 
 import { SECOND } from "app/utils/time";
 import { getDatabase } from "next-app/db";
@@ -60,13 +60,14 @@ const unsetSeed = () => {
 beforeAll(async () => {
 	const { databaseName, connectionData } = await client.lockDatabase.mutate();
 	setSeed(expect.getState().testPath || "unkown");
-	global.testContext = {
-		database: getDatabase({
-			logger: baseLogger,
-			pool: new Pool({
-				connectionString: makeConnectionString(connectionData, databaseName),
-			}),
+	const database = getDatabase({
+		logger: baseLogger,
+		pool: new Pool({
+			connectionString: makeConnectionString(connectionData, databaseName),
 		}),
+	});
+	global.testContext = {
+		database,
 		dumpDatabase: () => client.dumpDatabase.mutate({ databaseName }),
 		databaseName,
 		random: {
@@ -74,22 +75,19 @@ beforeAll(async () => {
 		},
 	};
 	unsetSeed();
+	return async () => {
+		await database.destroy();
+		await client.releaseDatabase.mutate({ databaseName });
+	};
 }, 10 * SECOND);
 
 beforeEach(async () => {
 	setSeed(expect.getState().currentTestName || "unknown");
 	timekeeper.freeze(new Date("2020-01-01"));
+	return async () => {
+		timekeeper.reset();
+		unsetSeed();
+		const { databaseName } = global.testContext!;
+		await client.truncateDatabase.mutate({ databaseName });
+	};
 });
-
-afterEach(async () => {
-	timekeeper.reset();
-	unsetSeed();
-	const { databaseName } = global.testContext!;
-	await client.truncateDatabase.mutate({ databaseName });
-});
-
-afterAll(async () => {
-	const { databaseName, database } = global.testContext!;
-	await database.destroy();
-	await client.releaseDatabase.mutate({ databaseName });
-}, 10 * SECOND);
