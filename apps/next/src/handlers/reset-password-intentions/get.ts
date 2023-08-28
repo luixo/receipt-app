@@ -15,6 +15,7 @@ export const procedure = unauthProcedure
 		const resetPasswordIntention = await database
 			.selectFrom("resetPasswordIntentions")
 			.where("token", "=", input.token)
+			.where("expiresTimestamp", ">", new Date())
 			.innerJoin("accounts", (qb) =>
 				qb.onRef("accounts.id", "=", "resetPasswordIntentions.accountId"),
 			)
@@ -23,7 +24,7 @@ export const procedure = unauthProcedure
 		if (!resetPasswordIntention) {
 			throw new trpc.TRPCError({
 				code: "NOT_FOUND",
-				message: `Reset password intention ${input.token} does not exist.`,
+				message: `Reset password intention ${input.token} does not exist or expired.`,
 			});
 		}
 		return {

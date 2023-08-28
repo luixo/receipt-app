@@ -4,7 +4,10 @@ import { z } from "zod";
 import { DAY } from "app/utils/time";
 import { generateResetPasswordEmail } from "next-app/email/utils";
 import { unauthProcedure } from "next-app/handlers/trpc";
-import { emailSchema } from "next-app/handlers/validation";
+import {
+	MAX_INTENTIONS_AMOUNT,
+	emailSchema,
+} from "next-app/handlers/validation";
 import { getUuid } from "next-app/utils/crypto";
 import { getEmailClient, isEmailServiceActive } from "next-app/utils/email";
 
@@ -35,6 +38,18 @@ export const procedure = unauthProcedure
 				message: `Currently password reset is not supported`,
 			});
 		}
+		const currentIntentions = await database
+			.selectFrom("resetPasswordIntentions")
+			.where("resetPasswordIntentions.accountId", "=", account.id)
+			.where("expiresTimestamp", ">", new Date())
+			.select("expiresTimestamp")
+			.execute();
+		if (currentIntentions.length >= MAX_INTENTIONS_AMOUNT) {
+			throw new trpc.TRPCError({
+				code: "FORBIDDEN",
+				message: `Maximum amount of intentions per day is ${MAX_INTENTIONS_AMOUNT}, please try later`,
+			});
+		}
 		await database
 			.insertInto("resetPasswordIntentions")
 			.values({
@@ -43,16 +58,9 @@ export const procedure = unauthProcedure
 				token: uuid,
 			})
 			.executeTakeFirst();
-		try {
-			await getEmailClient().send({
-				address: input.email.lowercase,
-				subject: "Reset password intention in Receipt App",
-				body: generateResetPasswordEmail(uuid),
-			});
-		} catch (e) {
-			throw new trpc.TRPCError({
-				code: "INTERNAL_SERVER_ERROR",
-				message: `Something went wrong: ${String(e)}`,
-			});
-		}
+		await getEmailClient().send({
+			address: input.email.lowercase,
+			subject: "Reset password intention in Receipt App",
+			body: generateResetPasswordEmail(uuid),
+		});
 	});
