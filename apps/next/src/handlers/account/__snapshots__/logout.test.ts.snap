@@ -8,3 +8,12 @@ exports[`account.logout > functionality > session is removed 1`] = `
 @@ --- --- @@
 - INSERT INTO public.sessions VALUES ('985bdd48-fec3-4acb-83e8-e2c3aae5b609', 'a666aa31-94bc-4c0e-829f-583098033050', '2020-12-31 00:00:00');"
 `;
+
+exports[`account.logout > functionality > session is removed 2`] = `
+[
+  [
+    "set-cookie",
+    "authToken=; Path=/; Expires=Wed, 01 Jan 2020 00:00:00 GMT; HttpOnly",
+  ],
+]
+`;

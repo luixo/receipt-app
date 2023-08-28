@@ -116,8 +116,7 @@ describe("auth.register", () => {
 	describe("functionality", () => {
 		test("register successful", async ({ ctx }) => {
 			ctx.emailOptions.active = false;
-			const context = createContext(ctx);
-			const caller = router.createCaller(context);
+			const caller = router.createCaller(createContext(ctx));
 			await expectDatabaseDiffSnapshot(ctx, async () => {
 				const result = await caller.auth.register({
 					email: faker.internet.email(),
@@ -129,7 +128,7 @@ describe("auth.register", () => {
 					account: { id: result.account.id },
 				});
 			});
-			expect(context.setHeaders).toMatchSnapshot();
+			expect(ctx.responseHeaders).toMatchSnapshot();
 		});
 
 		test("email sent if active", async ({ ctx }) => {

@@ -10,30 +10,23 @@ type ContextOptions = {
 	headers?: IncomingHttpHeaders;
 };
 
-type HeaderValue = number | string | ReadonlyArray<string>;
-export type HeaderPair = { name: string; value: HeaderValue };
-type ControllerExtension = { setHeaders: HeaderPair[] };
-
 export const createContext = (
 	ctx: TestContext,
 	options: ContextOptions = {},
-): UnauthorizedContext & ControllerExtension => {
-	const setHeaders: HeaderPair[] = [];
+): UnauthorizedContext =>
 	// A poor emulation of real req / res, add props as needed
-	const context = createContextRaw({
+	createContextRaw({
 		...ctx,
 		req: {
 			headers: options.headers || {},
 		} as unknown as NextApiRequest,
 		res: {
 			getHeader: () => "",
-			setHeader: (name: string, value: HeaderValue) => {
-				setHeaders.push({ name, value });
+			setHeader: (...args: (typeof ctx)["responseHeaders"][0]) => {
+				ctx.responseHeaders.push(args);
 			},
 		} as unknown as NextApiResponse,
 	});
-	return { ...context, setHeaders };
-};
 
 export const createAuthContext = (
 	ctx: TestContext,

@@ -94,8 +94,7 @@ describe("auth.login", () => {
 				account: { email, password },
 				name,
 			} = await insertAccountWithSession(ctx);
-			const context = createContext(ctx);
-			const caller = router.createCaller(context);
+			const caller = router.createCaller(createContext(ctx));
 			await expectDatabaseDiffSnapshot(ctx, async () => {
 				const result = await caller.auth.login({ email, password });
 				expect(result).toEqual<typeof result>({
@@ -103,7 +102,7 @@ describe("auth.login", () => {
 					user: { name },
 				});
 			});
-			expect(context.setHeaders).toMatchSnapshot();
+			expect(ctx.responseHeaders).toMatchSnapshot();
 		});
 
 		test("login successful - unverified user", async ({ ctx }) => {

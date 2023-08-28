@@ -11,9 +11,9 @@ exports[`auth.login > functionality > login successful 1`] = `
 
 exports[`auth.login > functionality > login successful 2`] = `
 [
-  {
-    "name": "set-cookie",
-    "value": "authToken=fda5cf1f-d5fa-4fc5-9ff2-7739308d1fbe; Path=/; Expires=Fri, 31 Jan 2020 00:00:00 GMT; HttpOnly",
-  },
+  [
+    "set-cookie",
+    "authToken=fda5cf1f-d5fa-4fc5-9ff2-7739308d1fbe; Path=/; Expires=Fri, 31 Jan 2020 00:00:00 GMT; HttpOnly",
+  ],
 ]
 `;

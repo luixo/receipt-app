@@ -106,8 +106,7 @@ describe("auth.resetPassword", () => {
 				expiresTimestamp: new Date(Date.now() - MINUTE),
 			});
 			const { token } = await insertResetPasswordIntention(ctx, accountId);
-			const context = createContext(ctx);
-			const caller = router.createCaller(context);
+			const caller = router.createCaller(createContext(ctx));
 			const password = faker.internet.password();
 			await expectDatabaseDiffSnapshot(ctx, async () => {
 				await caller.auth.resetPassword({
@@ -121,7 +120,7 @@ describe("auth.resetPassword", () => {
 				.select(["passwordHash", "passwordSalt"])
 				.executeTakeFirstOrThrow();
 			expect(getHash(password, passwordSalt)).toEqual(passwordHash);
-			expect(context.setHeaders).toHaveLength(0);
+			expect(ctx.responseHeaders).toHaveLength(0);
 		});
 	});
 });

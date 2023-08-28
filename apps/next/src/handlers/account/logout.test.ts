@@ -1,7 +1,6 @@
 import { describe, expect } from "vitest";
 
 import { router } from "next-app/handlers/index";
-import type { HeaderPair } from "next-tests/utils/context";
 import { createAuthContext } from "next-tests/utils/context";
 import { insertAccountWithSession } from "next-tests/utils/data";
 import {
@@ -23,13 +22,7 @@ describe("account.logout", () => {
 			const context = createAuthContext(ctx, sessionId);
 			const caller = router.createCaller(context);
 			await expectDatabaseDiffSnapshot(ctx, () => caller.account.logout());
-			expect(context.setHeaders).toEqual<HeaderPair[]>([
-				{
-					name: "set-cookie",
-					value:
-						"authToken=; Path=/; Expires=Wed, 01 Jan 2020 00:00:00 GMT; HttpOnly",
-				},
-			]);
+			expect(ctx.responseHeaders).toMatchSnapshot();
 		});
 	});
 });
