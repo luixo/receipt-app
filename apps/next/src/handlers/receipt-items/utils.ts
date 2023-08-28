@@ -5,13 +5,14 @@ import { getParticipantSums } from "app/utils/receipt-item";
 import type { Database, ReceiptsSelectExpression } from "next-app/db";
 import type {
 	AccountsId,
+	DebtsId,
 	ReceiptItemsId,
 	ReceiptsId,
 	UsersId,
 } from "next-app/db/models";
 import type { ReceiptsDatabase } from "next-app/db/types";
+import type { UnauthorizedContext } from "next-app/handlers/context";
 import type { Role } from "next-app/handlers/receipts/utils";
-import { getUuid } from "next-app/utils/crypto";
 
 export const getReceiptItemById = <
 	SE extends ReceiptsSelectExpression<"receiptItems">,
@@ -150,12 +151,12 @@ export const getItemsWithParticipants = async (
 	]);
 
 export const getValidParticipants = async (
-	database: Database,
+	ctx: UnauthorizedContext,
 	receiptId: ReceiptsId,
 	ownerAccountId: AccountsId,
 ) => {
 	const [receiptItems, receiptParticipants] = await getItemsWithParticipants(
-		database,
+		ctx.database,
 		receiptId,
 		ownerAccountId,
 	);
@@ -167,5 +168,8 @@ export const getValidParticipants = async (
 				// .. and has to be someone but yourself
 				participant.remoteUserId !== ownerAccountId,
 		)
-		.map((participant) => ({ ...participant, debtId: getUuid() }));
+		.map((participant) => ({
+			...participant,
+			debtId: ctx.getUuid() as DebtsId,
+		}));
 };

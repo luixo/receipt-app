@@ -2,13 +2,13 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import { debtNoteSchema } from "app/utils/validation";
+import type { DebtsId } from "next-app/db/models";
 import { authProcedure } from "next-app/handlers/trpc";
 import {
 	currencyCodeSchema,
 	debtAmountSchema,
 	userIdSchema,
 } from "next-app/handlers/validation";
-import { getUuid } from "next-app/utils/crypto";
 
 export const procedure = authProcedure
 	.input(
@@ -21,7 +21,7 @@ export const procedure = authProcedure
 		}),
 	)
 	.mutation(async ({ input, ctx }) => {
-		const id = getUuid();
+		const id: DebtsId = ctx.getUuid();
 		const { database } = ctx;
 		const user = await database
 			.selectFrom("users")

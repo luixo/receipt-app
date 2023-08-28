@@ -53,7 +53,7 @@ export const procedure = unauthProcedure
 			});
 		}
 		const { authToken, expirationDate } = await createAuthorizationSession(
-			database,
+			ctx,
 			result.accountId,
 		);
 		ctx.logger.debug(

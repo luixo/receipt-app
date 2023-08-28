@@ -6,13 +6,13 @@ import {
 	quantitySchema,
 	receiptItemNameSchema,
 } from "app/utils/validation";
+import type { ReceiptItemsId } from "next-app/db/models";
 import {
 	getAccessRole,
 	getReceiptById,
 } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import { receiptIdSchema } from "next-app/handlers/validation";
-import { getUuid } from "next-app/utils/crypto";
 
 export const procedure = authProcedure
 	.input(
@@ -55,7 +55,7 @@ export const procedure = authProcedure
 				} with role ${accessRole || "nobody"}`,
 			});
 		}
-		const id = getUuid();
+		const id: ReceiptItemsId = ctx.getUuid();
 		await database
 			.insertInto("receiptItems")
 			.values({

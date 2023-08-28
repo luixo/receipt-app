@@ -4,7 +4,7 @@ import { DAY } from "app/utils/time";
 import type { Database } from "next-app/db";
 import type { AccountsId, SessionsSessionId } from "next-app/db/models";
 import { generateConfirmEmailEmail } from "next-app/email/utils";
-import { getUuid } from "next-app/utils/crypto";
+import type { UnauthorizedContext } from "next-app/handlers/context";
 import type { EmailOptions } from "next-app/utils/email";
 import { getEmailClient } from "next-app/utils/email";
 
@@ -19,12 +19,12 @@ export const shouldUpdateExpirationDate = (expirationTimestamp: Date) =>
 	expirationTimestamp.valueOf() - Date.now() < SESSION_SHOULD_UPDATE_DURATION;
 
 export const createAuthorizationSession = async (
-	database: Database,
+	ctx: UnauthorizedContext,
 	accountId: AccountsId,
 ) => {
-	const uuid = getUuid();
+	const uuid: SessionsSessionId = ctx.getUuid();
 	const expirationDate = getExpirationDate();
-	await database
+	await ctx.database
 		.insertInto("sessions")
 		.values({
 			accountId,

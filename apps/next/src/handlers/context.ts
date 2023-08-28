@@ -1,6 +1,8 @@
 import type * as trpcNext from "@trpc/server/adapters/next";
 import type { NextApiRequest, NextApiResponse } from "next";
+import * as crypto from "node:crypto";
 import { Pool } from "pg";
+import { v4 } from "uuid";
 
 import type { Database } from "next-app/db";
 import { getDatabase } from "next-app/db";
@@ -16,6 +18,8 @@ export type UnauthorizedContext = {
 	logger: Logger;
 	database: Database;
 	emailOptions: EmailOptions;
+	getUuid: () => string;
+	getSalt: () => string;
 };
 
 type TestContextKeys = "emailOptions" | "database";
@@ -29,6 +33,9 @@ export type AuthorizedContext = UnauthorizedContext & {
 };
 
 const sharedPool = new Pool(getDatabaseConfig());
+
+const defaultGetSalt = () => crypto.randomBytes(64).toString("hex");
+const defaultGetUuid = () => v4();
 
 export const createContext = (
 	opts: trpcNext.CreateNextContextOptions &
@@ -49,4 +56,6 @@ export const createContext = (
 		active: Boolean(process.env.NO_EMAIL_SERVICE),
 		broken: false,
 	},
+	getSalt: global.testContext?.random.getUuid || defaultGetSalt,
+	getUuid: global.testContext?.random.getUuid || defaultGetUuid,
 });

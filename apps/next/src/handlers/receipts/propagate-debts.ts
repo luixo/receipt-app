@@ -47,7 +47,7 @@ export const procedure = authProcedure
 			});
 		}
 		const validParticipants = await getValidParticipants(
-			database,
+			ctx,
 			input.receiptId,
 			ctx.auth.accountId,
 		);

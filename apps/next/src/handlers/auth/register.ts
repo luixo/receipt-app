@@ -10,7 +10,7 @@ import {
 import { unauthProcedure } from "next-app/handlers/trpc";
 import { emailSchema } from "next-app/handlers/validation";
 import { setAuthCookie } from "next-app/utils/auth-cookie";
-import { generatePasswordData, getUuid } from "next-app/utils/crypto";
+import { generatePasswordData } from "next-app/utils/crypto";
 
 export const procedure = unauthProcedure
 	.input(
@@ -36,10 +36,10 @@ export const procedure = unauthProcedure
 				message: "Email already exist",
 			});
 		}
-		const id: AccountsId = getUuid();
-		const confirmationToken = getUuid();
+		const id: AccountsId = ctx.getUuid();
+		const confirmationToken = ctx.getUuid();
 		const emailServiceActive = ctx.emailOptions.active;
-		const passwordData = generatePasswordData(input.password);
+		const passwordData = generatePasswordData(ctx, input.password);
 		if (emailServiceActive) {
 			await sendVerificationEmail(
 				ctx.emailOptions,
@@ -71,7 +71,7 @@ export const procedure = unauthProcedure
 			})
 			.execute();
 		const { authToken, expirationDate } = await createAuthorizationSession(
-			database,
+			ctx,
 			id,
 		);
 		ctx.logger.debug(

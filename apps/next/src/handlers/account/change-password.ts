@@ -28,7 +28,7 @@ export const procedure = authProcedure
 				message: `Change password of account "${ctx.auth.accountId}" failed: password doesn't match.`,
 			});
 		}
-		const passwordData = generatePasswordData(input.password);
+		const passwordData = generatePasswordData(ctx, input.password);
 		await database
 			.updateTable("accounts")
 			.set({

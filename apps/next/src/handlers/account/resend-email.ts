@@ -3,7 +3,6 @@ import * as trpc from "@trpc/server";
 import { HOUR } from "app/utils/time";
 import { sendVerificationEmail } from "next-app/handlers/auth/utils";
 import { authProcedure } from "next-app/handlers/trpc";
-import { getUuid } from "next-app/utils/crypto";
 
 export const procedure = authProcedure.mutation(async ({ ctx }) => {
 	const { database } = ctx;
@@ -25,7 +24,7 @@ export const procedure = authProcedure.mutation(async ({ ctx }) => {
 			message: `Verification email to ${ctx.auth.accountId} was sent less than an hour ago. Please try again later.`,
 		});
 	}
-	const token = getUuid();
+	const token = ctx.getUuid();
 	await sendVerificationEmail(ctx.emailOptions, account.email, token);
 	await database
 		.updateTable("accounts")

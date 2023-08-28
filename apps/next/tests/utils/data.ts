@@ -24,8 +24,10 @@ export const insertAccount = async (
 	data: AccountData = {},
 ) => {
 	const password = data.password || faker.internet.password();
-	const { salt: passwordSalt, hash: passwordHash } =
-		generatePasswordData(password);
+	const { salt: passwordSalt, hash: passwordHash } = generatePasswordData(
+		{ getSalt: globalThis.testContext!.random.getUuid },
+		password,
+	);
 	const { id, email, confirmationToken, confirmationTokenTimestamp } =
 		await ctx.database
 			.insertInto("accounts")

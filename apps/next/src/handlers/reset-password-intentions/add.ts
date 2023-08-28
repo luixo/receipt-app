@@ -8,7 +8,6 @@ import {
 	MAX_INTENTIONS_AMOUNT,
 	emailSchema,
 } from "next-app/handlers/validation";
-import { getUuid } from "next-app/utils/crypto";
 import { getEmailClient } from "next-app/utils/email";
 
 export const procedure = unauthProcedure
@@ -30,7 +29,7 @@ export const procedure = unauthProcedure
 				message: `Account with email ${input.email.original} does not exist.`,
 			});
 		}
-		const uuid = getUuid();
+		const uuid: string = ctx.getUuid();
 		const expirationDate = new Date(Date.now() + DAY);
 		if (!ctx.emailOptions.active) {
 			throw new trpc.TRPCError({
