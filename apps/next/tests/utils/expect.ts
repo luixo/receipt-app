@@ -1,11 +1,12 @@
 import { TRPCError } from "@trpc/server";
 import type { TRPC_ERROR_CODE_KEY } from "@trpc/server/rpc";
 import snapshotDiff from "snapshot-diff";
-import { expect, test } from "vitest";
+import { expect } from "vitest";
 
 import { router } from "next-app/handlers";
 import { formatErrorMessage } from "next-app/handlers/errors";
 import { createContext } from "next-tests/utils/context";
+import { test } from "next-tests/utils/test";
 import type { RouterCaller } from "next-tests/utils/types";
 
 export const expectTRPCError = async (
@@ -33,8 +34,8 @@ export const expectTRPCError = async (
 export const expectUnauthorizedError = (
 	fn: (caller: RouterCaller) => Promise<unknown>,
 ) => {
-	test("should be authenticated", async () => {
-		const caller = router.createCaller(createContext());
+	test("should be authenticated", async ({ ctx }) => {
+		const caller = router.createCaller(createContext(ctx));
 		await expectTRPCError(
 			() => fn(caller),
 			"UNAUTHORIZED",

@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 import assert from "node:assert";
-import { describe, expect, test } from "vitest";
+import { describe, expect } from "vitest";
 
 import { router } from "next-app/handlers/index";
 import { createContext } from "next-tests/utils/context";
@@ -9,12 +9,13 @@ import {
 	expectDatabaseDiffSnapshot,
 	expectTRPCError,
 } from "next-tests/utils/expect";
+import { test } from "next-tests/utils/test";
 
 describe("auth.voidAccount", () => {
 	describe("input verification", () => {
 		describe("token", () => {
-			test("invalid", async () => {
-				const caller = router.createCaller(createContext());
+			test("invalid", async ({ ctx }) => {
+				const caller = router.createCaller(createContext(ctx));
 				await expectTRPCError(
 					() => caller.auth.voidAccount({ token: "invalid-uuid" }),
 					"BAD_REQUEST",
@@ -23,9 +24,9 @@ describe("auth.voidAccount", () => {
 			});
 		});
 
-		test("no confirmation token exists", async () => {
+		test("no confirmation token exists", async ({ ctx }) => {
 			const { database } = global.testContext!;
-			const caller = router.createCaller(createContext());
+			const caller = router.createCaller(createContext(ctx));
 			const confirmationToken = faker.string.uuid();
 			// Verify that not every not verified account counts
 			await insertAccountWithSession(database);
@@ -41,7 +42,7 @@ describe("auth.voidAccount", () => {
 	});
 
 	describe("functionality", () => {
-		test("account voided", async () => {
+		test("account voided", async ({ ctx }) => {
 			const { database } = global.testContext!;
 			const {
 				account: { confirmationToken, email },
@@ -53,7 +54,7 @@ describe("auth.voidAccount", () => {
 			await insertAccountWithSession(database, {
 				account: { confirmation: {} },
 			});
-			const context = createContext();
+			const context = createContext(ctx);
 			const caller = router.createCaller(context);
 			assert(
 				confirmationToken,

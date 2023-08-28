@@ -10,7 +10,6 @@ import { afterAll, afterEach, beforeAll, beforeEach, expect } from "vitest";
 import { SECOND } from "app/utils/time";
 import { getDatabase } from "next-app/db";
 import type { ReceiptsDatabase } from "next-app/db/types";
-import type { Email } from "next-app/utils/email";
 import { baseLogger } from "next-app/utils/logger";
 
 import { makeConnectionString } from "./databases/connection";
@@ -40,11 +39,6 @@ declare global {
 				// Fixed random data for tests
 				random: {
 					getUuid: () => string;
-				};
-				emailService: {
-					active: boolean;
-					broke: boolean;
-					messages: Email[];
 				};
 		  }
 		| undefined;
@@ -78,11 +72,6 @@ beforeAll(async () => {
 		random: {
 			getUuid: () => faker.string.uuid(),
 		},
-		emailService: {
-			active: true,
-			broke: false,
-			messages: [],
-		},
 	};
 	unsetSeed();
 }, 10 * SECOND);
@@ -96,11 +85,6 @@ afterEach(async () => {
 	timekeeper.reset();
 	unsetSeed();
 	const { databaseName } = global.testContext!;
-	global.testContext!.emailService = {
-		active: true,
-		broke: false,
-		messages: [],
-	};
 	await client.truncateDatabase.mutate({ databaseName });
 });
 

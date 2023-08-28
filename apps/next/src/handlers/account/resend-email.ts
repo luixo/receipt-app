@@ -26,7 +26,7 @@ export const procedure = authProcedure.mutation(async ({ ctx }) => {
 		});
 	}
 	const token = getUuid();
-	await sendVerificationEmail(account.email, token);
+	await sendVerificationEmail(ctx.emailOptions, account.email, token);
 	await database
 		.updateTable("accounts")
 		.set({

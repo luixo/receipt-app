@@ -6,26 +6,30 @@ export type Email = {
 	body: string;
 };
 
+export type EmailOptions = {
+	active: boolean;
+	broken: boolean;
+	cachedMessages?: Email[];
+};
+
 type EmailClient = {
 	send: (email: Email) => Promise<void>;
 };
 
 let emailClient: EmailClient;
 
-export const getEmailClient = (): EmailClient => {
-	if (emailClient) {
-		return emailClient;
-	}
-	if (global.testContext) {
-		emailClient = {
+export const getEmailClient = (options: EmailOptions): EmailClient => {
+	if (options.cachedMessages) {
+		return {
 			send: async (email: Email) => {
-				const { emailService } = global.testContext!;
-				if (emailService.broke) {
+				if (options.broken) {
 					throw new Error("Test context broke email service error");
 				}
-				emailService.messages.push(email);
+				options.cachedMessages!.push(email);
 			},
 		};
+	}
+	if (emailClient) {
 		return emailClient;
 	}
 	const mailSender = process.env.MAILER_SENDER;
@@ -50,11 +54,4 @@ export const getEmailClient = (): EmailClient => {
 		},
 	};
 	return emailClient;
-};
-
-export const isEmailServiceActive = () => {
-	if (global.testContext) {
-		return global.testContext.emailService.active;
-	}
-	return !process.env.NO_EMAIL_SERVICE;
 };

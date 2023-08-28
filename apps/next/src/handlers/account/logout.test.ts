@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect } from "vitest";
 
 import { router } from "next-app/handlers/index";
 import type { HeaderPair } from "next-tests/utils/context";
@@ -8,6 +8,7 @@ import {
 	expectDatabaseDiffSnapshot,
 	expectUnauthorizedError,
 } from "next-tests/utils/expect";
+import { test } from "next-tests/utils/test";
 
 describe("account.logout", () => {
 	describe("input verification", () => {
@@ -15,12 +16,12 @@ describe("account.logout", () => {
 	});
 
 	describe("functionality", () => {
-		test("session is removed", async () => {
+		test("session is removed", async ({ ctx }) => {
 			const { database } = global.testContext!;
 			// Verifying other accounts are not affected
 			await insertAccountWithSession(database);
 			const { sessionId } = await insertAccountWithSession(database);
-			const context = createAuthContext(sessionId);
+			const context = createAuthContext(ctx, sessionId);
 			const caller = router.createCaller(context);
 			await expectDatabaseDiffSnapshot(() => caller.account.logout());
 			expect(context.setHeaders).toEqual<HeaderPair[]>([

@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { describe, test } from "vitest";
+import { describe } from "vitest";
 
 import { MAX_USERNAME_LENGTH, MIN_USERNAME_LENGTH } from "app/utils/validation";
 import { router } from "next-app/handlers/index";
@@ -10,6 +10,7 @@ import {
 	expectTRPCError,
 	expectUnauthorizedError,
 } from "next-tests/utils/expect";
+import { test } from "next-tests/utils/test";
 
 describe("account.changeName", () => {
 	describe("input verification", () => {
@@ -18,10 +19,10 @@ describe("account.changeName", () => {
 		);
 
 		describe("user name", () => {
-			test("minimal length", async () => {
+			test("minimal length", async ({ ctx }) => {
 				const { database } = global.testContext!;
 				const { sessionId } = await insertAccountWithSession(database);
-				const caller = router.createCaller(createAuthContext(sessionId));
+				const caller = router.createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.account.changeName({
@@ -32,10 +33,10 @@ describe("account.changeName", () => {
 				);
 			});
 
-			test("maximum length", async () => {
+			test("maximum length", async ({ ctx }) => {
 				const { database } = global.testContext!;
 				const { sessionId } = await insertAccountWithSession(database);
-				const caller = router.createCaller(createAuthContext(sessionId));
+				const caller = router.createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.account.changeName({
@@ -49,12 +50,12 @@ describe("account.changeName", () => {
 	});
 
 	describe("functionality", () => {
-		test("name changes", async () => {
+		test("name changes", async ({ ctx }) => {
 			const { database } = global.testContext!;
 			// Verifying other users are not affected
 			await insertAccountWithSession(database);
 			const { sessionId } = await insertAccountWithSession(database);
-			const caller = router.createCaller(createAuthContext(sessionId));
+			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 
 			await expectDatabaseDiffSnapshot(() =>
 				caller.account.changeName({ name: faker.person.firstName() }),

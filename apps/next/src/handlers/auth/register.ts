@@ -11,7 +11,6 @@ import { unauthProcedure } from "next-app/handlers/trpc";
 import { emailSchema } from "next-app/handlers/validation";
 import { setAuthCookie } from "next-app/utils/auth-cookie";
 import { generatePasswordData, getUuid } from "next-app/utils/crypto";
-import { isEmailServiceActive } from "next-app/utils/email";
 
 export const procedure = unauthProcedure
 	.input(
@@ -39,10 +38,14 @@ export const procedure = unauthProcedure
 		}
 		const id: AccountsId = getUuid();
 		const confirmationToken = getUuid();
-		const emailServiceActive = isEmailServiceActive();
+		const emailServiceActive = ctx.emailOptions.active;
 		const passwordData = generatePasswordData(input.password);
 		if (emailServiceActive) {
-			await sendVerificationEmail(input.email.lowercase, confirmationToken);
+			await sendVerificationEmail(
+				ctx.emailOptions,
+				input.email.lowercase,
+				confirmationToken,
+			);
 		}
 		await database
 			.insertInto("accounts")

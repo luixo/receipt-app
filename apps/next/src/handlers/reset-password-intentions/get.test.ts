@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { describe, expect, test } from "vitest";
+import { describe, expect } from "vitest";
 
 import { MINUTE } from "app/utils/time";
 import { router } from "next-app/handlers/index";
@@ -10,12 +10,13 @@ import {
 	insertResetPasswordIntention,
 } from "next-tests/utils/data";
 import { expectTRPCError } from "next-tests/utils/expect";
+import { test } from "next-tests/utils/test";
 
 describe("resetPasswordIntentions.get", () => {
 	describe("input verification", () => {
 		describe("token", () => {
-			test("invalid", async () => {
-				const caller = router.createCaller(createContext());
+			test("invalid", async ({ ctx }) => {
+				const caller = router.createCaller(createContext(ctx));
 				await expectTRPCError(
 					() => caller.resetPasswordIntentions.get({ token: "invalid-uuid" }),
 					"BAD_REQUEST",
@@ -24,8 +25,8 @@ describe("resetPasswordIntentions.get", () => {
 			});
 		});
 
-		test("no intention token exists", async () => {
-			const caller = router.createCaller(createContext());
+		test("no intention token exists", async ({ ctx }) => {
+			const caller = router.createCaller(createContext(ctx));
 			const intentionToken = faker.string.uuid();
 			await expectTRPCError(
 				() => caller.resetPasswordIntentions.get({ token: intentionToken }),
@@ -34,9 +35,9 @@ describe("resetPasswordIntentions.get", () => {
 			);
 		});
 
-		test("intention token is expired", async () => {
+		test("intention token is expired", async ({ ctx }) => {
 			const { database } = global.testContext!;
-			const caller = router.createCaller(createContext());
+			const caller = router.createCaller(createContext(ctx));
 			const { id: accountId } = await insertAccount(database);
 			const { token } = await insertResetPasswordIntention(
 				database,
@@ -52,14 +53,14 @@ describe("resetPasswordIntentions.get", () => {
 	});
 
 	describe("functionality", () => {
-		test("email is returned", async () => {
+		test("email is returned", async ({ ctx }) => {
 			const { database } = global.testContext!;
 			const {
 				accountId,
 				account: { email },
 			} = await insertAccountWithSession(database);
 			const { token } = await insertResetPasswordIntention(database, accountId);
-			const caller = router.createCaller(createContext());
+			const caller = router.createCaller(createContext(ctx));
 			const result = await caller.resetPasswordIntentions.get({ token });
 			expect(result).toEqual<typeof result>({ email });
 		});

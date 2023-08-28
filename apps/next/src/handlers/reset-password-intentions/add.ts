@@ -9,7 +9,7 @@ import {
 	emailSchema,
 } from "next-app/handlers/validation";
 import { getUuid } from "next-app/utils/crypto";
-import { getEmailClient, isEmailServiceActive } from "next-app/utils/email";
+import { getEmailClient } from "next-app/utils/email";
 
 export const procedure = unauthProcedure
 	.input(
@@ -32,7 +32,7 @@ export const procedure = unauthProcedure
 		}
 		const uuid = getUuid();
 		const expirationDate = new Date(Date.now() + DAY);
-		if (!isEmailServiceActive()) {
+		if (!ctx.emailOptions.active) {
 			throw new trpc.TRPCError({
 				code: "FORBIDDEN",
 				message: `Currently password reset is not supported`,
@@ -58,7 +58,7 @@ export const procedure = unauthProcedure
 				token: uuid,
 			})
 			.executeTakeFirst();
-		await getEmailClient().send({
+		await getEmailClient(ctx.emailOptions).send({
 			address: input.email.lowercase,
 			subject: "Reset password intention in Receipt App",
 			body: generateResetPasswordEmail(uuid),

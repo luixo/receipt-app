@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { describe, test } from "vitest";
+import { describe } from "vitest";
 
 import { MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH } from "app/utils/validation";
 import { router } from "next-app/handlers/index";
@@ -10,6 +10,7 @@ import {
 	expectTRPCError,
 	expectUnauthorizedError,
 } from "next-tests/utils/expect";
+import { test } from "next-tests/utils/test";
 
 describe("account.changePassword", () => {
 	describe("input verification", () => {
@@ -21,10 +22,10 @@ describe("account.changePassword", () => {
 		types.forEach((type) => {
 			const otherType = types.filter((lookupType) => lookupType !== type)[0]!;
 			describe(type, () => {
-				test("minimal length", async () => {
+				test("minimal length", async ({ ctx }) => {
 					const { database } = global.testContext!;
 					const { sessionId } = await insertAccountWithSession(database);
-					const caller = router.createCaller(createAuthContext(sessionId));
+					const caller = router.createCaller(createAuthContext(ctx, sessionId));
 					await expectTRPCError(
 						() =>
 							caller.account.changePassword({
@@ -36,10 +37,10 @@ describe("account.changePassword", () => {
 					);
 				});
 
-				test("maximum length", async () => {
+				test("maximum length", async ({ ctx }) => {
 					const { database } = global.testContext!;
 					const { sessionId } = await insertAccountWithSession(database);
-					const caller = router.createCaller(createAuthContext(sessionId));
+					const caller = router.createCaller(createAuthContext(ctx, sessionId));
 					await expectTRPCError(
 						() =>
 							caller.account.changePassword({
@@ -53,7 +54,7 @@ describe("account.changePassword", () => {
 			});
 		});
 
-		test("previous password doesn't match", async () => {
+		test("previous password doesn't match", async ({ ctx }) => {
 			const { database } = global.testContext!;
 			const currentPassword = faker.internet.password();
 			const nextPassword = faker.internet.password();
@@ -61,7 +62,7 @@ describe("account.changePassword", () => {
 				database,
 				{ account: { password: currentPassword } },
 			);
-			const caller = router.createCaller(createAuthContext(sessionId));
+			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.account.changePassword({
@@ -75,7 +76,7 @@ describe("account.changePassword", () => {
 	});
 
 	describe("functionality", () => {
-		test("password changes", async () => {
+		test("password changes", async ({ ctx }) => {
 			const { database } = global.testContext!;
 			// Verifying other accounts are not affected
 			await insertAccountWithSession(database);
@@ -84,7 +85,7 @@ describe("account.changePassword", () => {
 			const { sessionId } = await insertAccountWithSession(database, {
 				account: { password: currentPassword },
 			});
-			const caller = router.createCaller(createAuthContext(sessionId));
+			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 
 			await expectDatabaseDiffSnapshot(() =>
 				caller.account.changePassword({

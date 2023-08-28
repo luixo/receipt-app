@@ -6,6 +6,7 @@ import type { Database } from "next-app/db";
 import { getDatabase } from "next-app/db";
 import { getDatabaseConfig } from "next-app/db/config";
 import type { AccountsId } from "next-app/db/models";
+import type { EmailOptions } from "next-app/utils/email";
 import type { Logger } from "next-app/utils/logger";
 import { baseLogger } from "next-app/utils/logger";
 
@@ -14,7 +15,10 @@ export type UnauthorizedContext = {
 	res: NextApiResponse;
 	logger: Logger;
 	database: Database;
+	emailOptions: EmailOptions;
 };
+
+type TestContextKeys = "emailOptions";
 
 export type AuthorizedContext = UnauthorizedContext & {
 	auth: {
@@ -27,7 +31,8 @@ export type AuthorizedContext = UnauthorizedContext & {
 const sharedPool = new Pool(getDatabaseConfig());
 
 export const createContext = (
-	opts: trpcNext.CreateNextContextOptions,
+	opts: trpcNext.CreateNextContextOptions &
+		Partial<Pick<UnauthorizedContext, TestContextKeys>>,
 ): UnauthorizedContext => ({
 	req: opts.req,
 	res: opts.res,
@@ -40,4 +45,8 @@ export const createContext = (
 				: undefined,
 			pool: sharedPool,
 		}),
+	emailOptions: opts.emailOptions || {
+		active: Boolean(process.env.NO_EMAIL_SERVICE),
+		broken: false,
+	},
 });

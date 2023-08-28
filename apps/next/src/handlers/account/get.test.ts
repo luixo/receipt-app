@@ -1,4 +1,4 @@
-import { describe, expect, test } from "vitest";
+import { describe, expect } from "vitest";
 
 import { router } from "next-app/handlers/index";
 import { createAuthContext } from "next-tests/utils/context";
@@ -11,6 +11,7 @@ import {
 	expectTRPCError,
 	expectUnauthorizedError,
 } from "next-tests/utils/expect";
+import { test } from "next-tests/utils/test";
 
 describe("account.get", () => {
 	describe("input verification", () => {
@@ -18,11 +19,11 @@ describe("account.get", () => {
 	});
 
 	describe("data verification", () => {
-		test("account-matched user does not exist", async () => {
+		test("account-matched user does not exist", async ({ ctx }) => {
 			const { database } = global.testContext!;
 			const { id: accountId } = await insertAccount(database);
 			const { id: sessionId } = await insertSession(database, accountId);
-			const caller = router.createCaller(createAuthContext(sessionId));
+			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.account.get(),
 				"INTERNAL_SERVER_ERROR",
@@ -32,12 +33,12 @@ describe("account.get", () => {
 	});
 
 	describe("functionality", () => {
-		test("verified account", async () => {
+		test("verified account", async ({ ctx }) => {
 			const { database } = global.testContext!;
 			const { sessionId, accountId, name } = await insertAccountWithSession(
 				database,
 			);
-			const caller = router.createCaller(createAuthContext(sessionId));
+			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 
 			const account = await caller.account.get();
 
@@ -47,13 +48,13 @@ describe("account.get", () => {
 			});
 		});
 
-		test("unverified account", async () => {
+		test("unverified account", async ({ ctx }) => {
 			const { database } = global.testContext!;
 			const { sessionId, accountId, name } = await insertAccountWithSession(
 				database,
 				{ account: { confirmation: {} } },
 			);
-			const caller = router.createCaller(createAuthContext(sessionId));
+			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 
 			const account = await caller.account.get();
 

@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { describe, expect, test } from "vitest";
+import { describe, expect } from "vitest";
 
 import {
 	MAX_PASSWORD_LENGTH,
@@ -15,12 +15,13 @@ import {
 	expectDatabaseDiffSnapshot,
 	expectTRPCError,
 } from "next-tests/utils/expect";
+import { test } from "next-tests/utils/test";
 
 describe("auth.register", () => {
 	describe("input verification", () => {
 		describe("email", () => {
-			test("invalid", async () => {
-				const caller = router.createCaller(createContext());
+			test("invalid", async ({ ctx }) => {
+				const caller = router.createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.auth.register({
@@ -35,8 +36,8 @@ describe("auth.register", () => {
 		});
 
 		describe("password", () => {
-			test("minimal length", async () => {
-				const caller = router.createCaller(createContext());
+			test("minimal length", async ({ ctx }) => {
+				const caller = router.createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.auth.register({
@@ -49,8 +50,8 @@ describe("auth.register", () => {
 				);
 			});
 
-			test("maximum length", async () => {
-				const caller = router.createCaller(createContext());
+			test("maximum length", async ({ ctx }) => {
+				const caller = router.createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.auth.register({
@@ -65,8 +66,8 @@ describe("auth.register", () => {
 		});
 
 		describe("name", () => {
-			test("minimal length", async () => {
-				const caller = router.createCaller(createContext());
+			test("minimal length", async ({ ctx }) => {
+				const caller = router.createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.auth.register({
@@ -79,8 +80,8 @@ describe("auth.register", () => {
 				);
 			});
 
-			test("maximum length", async () => {
-				const caller = router.createCaller(createContext());
+			test("maximum length", async ({ ctx }) => {
+				const caller = router.createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.auth.register({
@@ -94,9 +95,9 @@ describe("auth.register", () => {
 			});
 		});
 
-		test("email already exist", async () => {
+		test("email already exist", async ({ ctx }) => {
 			const { database } = global.testContext!;
-			const caller = router.createCaller(createContext());
+			const caller = router.createCaller(createContext(ctx));
 			const {
 				account: { email: existingEmail },
 			} = await insertAccountWithSession(database);
@@ -114,10 +115,9 @@ describe("auth.register", () => {
 	});
 
 	describe("functionality", () => {
-		test("register successful", async () => {
-			const { emailService } = global.testContext!;
-			emailService.active = false;
-			const context = createContext();
+		test("register successful", async ({ ctx }) => {
+			ctx.emailOptions.active = false;
+			const context = createContext(ctx);
 			const caller = router.createCaller(context);
 			await expectDatabaseDiffSnapshot(async () => {
 				const result = await caller.auth.register({
@@ -133,9 +133,8 @@ describe("auth.register", () => {
 			expect(context.setHeaders).toMatchSnapshot();
 		});
 
-		test("email sent if active", async () => {
-			const { emailService } = global.testContext!;
-			const caller = router.createCaller(createContext());
+		test("email sent if active", async ({ ctx }) => {
+			const caller = router.createCaller(createContext(ctx));
 			await expectDatabaseDiffSnapshot(() =>
 				caller.auth.register({
 					email: faker.internet.email(),
@@ -143,14 +142,13 @@ describe("auth.register", () => {
 					name: faker.person.firstName(),
 				}),
 			);
-			expect(emailService.messages).toHaveLength(1);
-			expect(emailService.messages[0]).toMatchSnapshot();
+			expect(ctx.emailOptions.cachedMessages).toHaveLength(1);
+			expect(ctx.emailOptions.cachedMessages![0]).toMatchSnapshot();
 		});
 
-		test("email reports error if broken", async () => {
-			const { emailService } = global.testContext!;
-			emailService.broke = true;
-			const context = createContext();
+		test("email reports error if broken", async ({ ctx }) => {
+			ctx.emailOptions.broken = true;
+			const context = createContext(ctx);
 			const caller = router.createCaller(context);
 			await expectTRPCError(
 				() =>
@@ -162,7 +160,7 @@ describe("auth.register", () => {
 				"INTERNAL_SERVER_ERROR",
 				"Something went wrong: Test context broke email service error",
 			);
-			expect(emailService.messages).toHaveLength(0);
+			expect(ctx.emailOptions.cachedMessages).toHaveLength(0);
 		});
 	});
 });

@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { describe, expect, test } from "vitest";
+import { describe, expect } from "vitest";
 
 import { MINUTE } from "app/utils/time";
 import { MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH } from "app/utils/validation";
@@ -14,12 +14,13 @@ import {
 	expectDatabaseDiffSnapshot,
 	expectTRPCError,
 } from "next-tests/utils/expect";
+import { test } from "next-tests/utils/test";
 
 describe("auth.resetPassword", () => {
 	describe("input verification", () => {
 		describe("token", () => {
-			test("invalid", async () => {
-				const caller = router.createCaller(createContext());
+			test("invalid", async ({ ctx }) => {
+				const caller = router.createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.auth.resetPassword({
@@ -33,8 +34,8 @@ describe("auth.resetPassword", () => {
 		});
 
 		describe("password", () => {
-			test("minimal length", async () => {
-				const caller = router.createCaller(createContext());
+			test("minimal length", async ({ ctx }) => {
+				const caller = router.createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.auth.resetPassword({
@@ -46,8 +47,8 @@ describe("auth.resetPassword", () => {
 				);
 			});
 
-			test("maximum length", async () => {
-				const caller = router.createCaller(createContext());
+			test("maximum length", async ({ ctx }) => {
+				const caller = router.createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.auth.resetPassword({
@@ -60,8 +61,8 @@ describe("auth.resetPassword", () => {
 			});
 		});
 
-		test("no intention exists", async () => {
-			const caller = router.createCaller(createContext());
+		test("no intention exists", async ({ ctx }) => {
+			const caller = router.createCaller(createContext(ctx));
 			const intentionToken = faker.string.uuid();
 			await expectTRPCError(
 				() =>
@@ -74,7 +75,7 @@ describe("auth.resetPassword", () => {
 			);
 		});
 
-		test("intention expires", async () => {
+		test("intention expires", async ({ ctx }) => {
 			const { database } = global.testContext!;
 			const { accountId } = await insertAccountWithSession(database);
 			const { token } = await insertResetPasswordIntention(
@@ -82,7 +83,7 @@ describe("auth.resetPassword", () => {
 				accountId,
 				{ expiresTimestamp: new Date(Date.now() - MINUTE) },
 			);
-			const caller = router.createCaller(createContext());
+			const caller = router.createCaller(createContext(ctx));
 			await expectTRPCError(
 				() =>
 					caller.auth.resetPassword({
@@ -96,7 +97,7 @@ describe("auth.resetPassword", () => {
 	});
 
 	describe("functionality", () => {
-		test("password reset", async () => {
+		test("password reset", async ({ ctx }) => {
 			const { database } = global.testContext!;
 			const { accountId } = await insertAccountWithSession(database);
 			// Verifying other accounts are not affected
@@ -111,7 +112,7 @@ describe("auth.resetPassword", () => {
 				expiresTimestamp: new Date(Date.now() - MINUTE),
 			});
 			const { token } = await insertResetPasswordIntention(database, accountId);
-			const context = createContext();
+			const context = createContext(ctx);
 			const caller = router.createCaller(context);
 			const password = faker.internet.password();
 			await expectDatabaseDiffSnapshot(async () => {

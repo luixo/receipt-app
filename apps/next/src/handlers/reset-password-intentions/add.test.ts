@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { describe, expect, test } from "vitest";
+import { describe, expect } from "vitest";
 
 import { router } from "next-app/handlers/index";
 import { MAX_INTENTIONS_AMOUNT } from "next-app/handlers/validation";
@@ -12,12 +12,13 @@ import {
 	expectDatabaseDiffSnapshot,
 	expectTRPCError,
 } from "next-tests/utils/expect";
+import { test } from "next-tests/utils/test";
 
 describe("resetPasswordIntentions.add", () => {
 	describe("input verification", () => {
 		describe("email", () => {
-			test("invalid", async () => {
-				const caller = router.createCaller(createContext());
+			test("invalid", async ({ ctx }) => {
+				const caller = router.createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.resetPasswordIntentions.add({ email: "invalid@@mail.org" }),
@@ -27,8 +28,8 @@ describe("resetPasswordIntentions.add", () => {
 			});
 		});
 
-		test("email doesn't exist", async () => {
-			const caller = router.createCaller(createContext());
+		test("email doesn't exist", async ({ ctx }) => {
+			const caller = router.createCaller(createContext(ctx));
 			const email = faker.internet.email();
 			await expectTRPCError(
 				() => caller.resetPasswordIntentions.add({ email }),
@@ -37,9 +38,9 @@ describe("resetPasswordIntentions.add", () => {
 			);
 		});
 
-		test("too many reset intentions", async () => {
+		test("too many reset intentions", async ({ ctx }) => {
 			const { database } = global.testContext!;
-			const caller = router.createCaller(createContext());
+			const caller = router.createCaller(createContext(ctx));
 			const {
 				accountId,
 				account: { email },
@@ -58,13 +59,13 @@ describe("resetPasswordIntentions.add", () => {
 	});
 
 	describe("functionality", () => {
-		test("email service is disabled", async () => {
-			const { database, emailService } = global.testContext!;
-			emailService.active = false;
+		test("email service is disabled", async ({ ctx }) => {
+			const { database } = global.testContext!;
+			ctx.emailOptions.active = false;
 			const {
 				account: { email },
 			} = await insertAccountWithSession(database);
-			const caller = router.createCaller(createContext());
+			const caller = router.createCaller(createContext(ctx));
 
 			await expectTRPCError(
 				() => caller.resetPasswordIntentions.add({ email }),
@@ -73,13 +74,13 @@ describe("resetPasswordIntentions.add", () => {
 			);
 		});
 
-		test("email service is broken", async () => {
-			const { database, emailService } = global.testContext!;
-			emailService.broke = true;
+		test("email service is broken", async ({ ctx }) => {
+			const { database } = global.testContext!;
+			ctx.emailOptions.broken = true;
 			const {
 				account: { email },
 			} = await insertAccountWithSession(database);
-			const caller = router.createCaller(createContext());
+			const caller = router.createCaller(createContext(ctx));
 
 			await expectTRPCError(
 				() => caller.resetPasswordIntentions.add({ email }),
@@ -88,21 +89,21 @@ describe("resetPasswordIntentions.add", () => {
 			);
 		});
 
-		test("reset password intention added", async () => {
-			const { database, emailService } = global.testContext!;
+		test("reset password intention added", async ({ ctx }) => {
+			const { database } = global.testContext!;
 			const {
 				accountId,
 				account: { email },
 			} = await insertAccountWithSession(database);
-			const caller = router.createCaller(createContext());
+			const caller = router.createCaller(createContext(ctx));
 
 			// Verify we can add an intention even if we already have one
 			await insertResetPasswordIntention(database, accountId);
 			await expectDatabaseDiffSnapshot(() =>
 				caller.resetPasswordIntentions.add({ email }),
 			);
-			expect(emailService.messages).toHaveLength(1);
-			expect(emailService.messages[0]).toMatchSnapshot();
+			expect(ctx.emailOptions.cachedMessages).toHaveLength(1);
+			expect(ctx.emailOptions.cachedMessages![0]).toMatchSnapshot();
 		});
 	});
 });

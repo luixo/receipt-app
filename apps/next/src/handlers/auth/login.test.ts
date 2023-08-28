@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { describe, expect, test } from "vitest";
+import { describe, expect } from "vitest";
 
 import { MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH } from "app/utils/validation";
 import { router } from "next-app/handlers/index";
@@ -9,12 +9,13 @@ import {
 	expectDatabaseDiffSnapshot,
 	expectTRPCError,
 } from "next-tests/utils/expect";
+import { test } from "next-tests/utils/test";
 
 describe("auth.login", () => {
 	describe("input verification", () => {
 		describe("email", () => {
-			test("invalid", async () => {
-				const caller = router.createCaller(createContext());
+			test("invalid", async ({ ctx }) => {
+				const caller = router.createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.auth.login({
@@ -28,8 +29,8 @@ describe("auth.login", () => {
 		});
 
 		describe("password", () => {
-			test("minimal length", async () => {
-				const caller = router.createCaller(createContext());
+			test("minimal length", async ({ ctx }) => {
+				const caller = router.createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.auth.login({
@@ -41,8 +42,8 @@ describe("auth.login", () => {
 				);
 			});
 
-			test("maximum length", async () => {
-				const caller = router.createCaller(createContext());
+			test("maximum length", async ({ ctx }) => {
+				const caller = router.createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.auth.login({
@@ -55,8 +56,8 @@ describe("auth.login", () => {
 			});
 		});
 
-		test("account not found", async () => {
-			const caller = router.createCaller(createContext());
+		test("account not found", async ({ ctx }) => {
+			const caller = router.createCaller(createContext(ctx));
 			const email = faker.internet.email();
 			await expectTRPCError(
 				() =>
@@ -69,12 +70,12 @@ describe("auth.login", () => {
 			);
 		});
 
-		test("authentication failed", async () => {
+		test("authentication failed", async ({ ctx }) => {
 			const { database } = global.testContext!;
 			const {
 				account: { email, password },
 			} = await insertAccountWithSession(database);
-			const caller = router.createCaller(createContext());
+			const caller = router.createCaller(createContext(ctx));
 			await expectTRPCError(
 				() =>
 					caller.auth.login({
@@ -88,14 +89,14 @@ describe("auth.login", () => {
 	});
 
 	describe("functionality", () => {
-		test("login successful", async () => {
+		test("login successful", async ({ ctx }) => {
 			const { database } = global.testContext!;
 			const {
 				accountId,
 				account: { email, password },
 				name,
 			} = await insertAccountWithSession(database);
-			const context = createContext();
+			const context = createContext(ctx);
 			const caller = router.createCaller(context);
 			await expectDatabaseDiffSnapshot(async () => {
 				const result = await caller.auth.login({ email, password });
@@ -107,7 +108,7 @@ describe("auth.login", () => {
 			expect(context.setHeaders).toMatchSnapshot();
 		});
 
-		test("login successful - unverified user", async () => {
+		test("login successful - unverified user", async ({ ctx }) => {
 			const { database } = global.testContext!;
 
 			const {
@@ -117,7 +118,7 @@ describe("auth.login", () => {
 			} = await insertAccountWithSession(database, {
 				account: { confirmation: {} },
 			});
-			const context = createContext();
+			const context = createContext(ctx);
 			const caller = router.createCaller(context);
 			const result = await caller.auth.login({ email, password });
 			expect(result).toEqual<typeof result>({
@@ -126,12 +127,12 @@ describe("auth.login", () => {
 			});
 		});
 
-		test("login successful - with different casing", async () => {
+		test("login successful - with different casing", async ({ ctx }) => {
 			const { database } = global.testContext!;
 			const {
 				account: { email, password },
 			} = await insertAccountWithSession(database);
-			const context = createContext();
+			const context = createContext(ctx);
 			const caller = router.createCaller(context);
 			await caller.auth.login({ email: email.toUpperCase(), password });
 		});

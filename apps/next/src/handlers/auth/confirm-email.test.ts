@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
 import assert from "node:assert";
-import { describe, expect, test } from "vitest";
+import { describe, expect } from "vitest";
 
 import { router } from "next-app/handlers/index";
 import { createContext } from "next-tests/utils/context";
@@ -9,12 +9,13 @@ import {
 	expectDatabaseDiffSnapshot,
 	expectTRPCError,
 } from "next-tests/utils/expect";
+import { test } from "next-tests/utils/test";
 
 describe("auth.confirmEmail", () => {
 	describe("input verification", () => {
 		describe("token", () => {
-			test("invalid", async () => {
-				const caller = router.createCaller(createContext());
+			test("invalid", async ({ ctx }) => {
+				const caller = router.createCaller(createContext(ctx));
 				await expectTRPCError(
 					() => caller.auth.confirmEmail({ token: "invalid-uuid" }),
 					"BAD_REQUEST",
@@ -23,9 +24,9 @@ describe("auth.confirmEmail", () => {
 			});
 		});
 
-		test("no confirmation token exists", async () => {
+		test("no confirmation token exists", async ({ ctx }) => {
 			const { database } = global.testContext!;
-			const caller = router.createCaller(createContext());
+			const caller = router.createCaller(createContext(ctx));
 			const confirmationToken = faker.string.uuid();
 			await insertAccountWithSession(database);
 			await expectTRPCError(
@@ -37,7 +38,7 @@ describe("auth.confirmEmail", () => {
 	});
 
 	describe("functionality", () => {
-		test("account confirmed", async () => {
+		test("account confirmed", async ({ ctx }) => {
 			const { database } = global.testContext!;
 			const {
 				account: { confirmationToken, email },
@@ -49,7 +50,7 @@ describe("auth.confirmEmail", () => {
 			await insertAccountWithSession(database, {
 				account: { confirmation: {} },
 			});
-			const context = createContext();
+			const context = createContext(ctx);
 			const caller = router.createCaller(context);
 			assert(
 				confirmationToken,
