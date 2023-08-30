@@ -83,3 +83,17 @@ export type MaybeAddElementToArray<
 export type KeysMatching<T extends object, V> = {
 	[K in keyof T]-?: T[K] extends V ? K : never;
 }[keyof T];
+
+export type AddParameters<
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	Fn extends (...args: any) => unknown,
+	AddedParameters extends [...args: unknown[]],
+> = (...args: [...Parameters<Fn>, ...AddedParameters]) => ReturnType<Fn>;
+
+export type RemoveFirstParameter<Fn> = Fn extends (
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	parameterToRemove: any,
+	...args: infer Args
+) => infer Result
+	? (...args: Args) => Result
+	: never;

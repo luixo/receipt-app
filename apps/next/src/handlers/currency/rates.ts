@@ -28,7 +28,7 @@ export const procedure = authProcedure
 		if (cachedRates) {
 			return cachedRates;
 		}
-		const fetchedRates = await getExchangeRate(input.from, input.to);
+		const fetchedRates = await getExchangeRate(ctx, input.from, input.to);
 		cacheDatabase.setex(cacheKey, CACHE_TTL, fetchedRates);
 		return fetchedRates;
 	});

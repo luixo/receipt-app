@@ -8,6 +8,7 @@ import type { CacheDbOptions } from "next-app/cache-db";
 import { getDatabase } from "next-app/db";
 import { getDatabaseConfig } from "next-app/db/config";
 import type { AccountsId } from "next-app/db/models";
+import type { ExchangeRateOptions } from "next-app/providers/exchange-rate";
 import type { EmailOptions } from "next-app/utils/email";
 import type { Logger } from "next-app/utils/logger";
 import { baseLogger } from "next-app/utils/logger";
@@ -19,6 +20,7 @@ type TestContextPicks = Pick<
 > & {
 	emailOptions: EmailOptions;
 	cacheDbOptions: CacheDbOptions;
+	exchangeRateOptions: ExchangeRateOptions;
 };
 
 export type UnauthorizedContext = {
@@ -51,6 +53,7 @@ const defaultGetEmailOptions = () => ({
 	broken: false,
 });
 const defaultGetCacheDbOptions = () => ({});
+const defaultGetExchangeRateOptions = () => ({});
 
 export const createContext = (
 	opts: trpcNext.CreateNextContextOptions & Partial<TestContextPicks>,
@@ -61,6 +64,8 @@ export const createContext = (
 	database: opts.database || defaultGetDatabase(opts.req),
 	emailOptions: opts.emailOptions || defaultGetEmailOptions(),
 	cacheDbOptions: opts.cacheDbOptions || defaultGetCacheDbOptions(),
+	exchangeRateOptions:
+		opts.exchangeRateOptions || defaultGetExchangeRateOptions(),
 	getSalt: opts.getSalt || defaultGetSalt,
 	getUuid: opts.getUuid || defaultGetUuid,
 });
