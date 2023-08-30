@@ -92,7 +92,7 @@ describe("account.resendEmail", () => {
 				"INTERNAL_SERVER_ERROR",
 				"Something went wrong: Test context broke email service error",
 			);
-			expect(ctx.emailOptions.cachedMessages).toHaveLength(0);
+			expect(ctx.emailOptions.mock.getMessages()).toHaveLength(0);
 		});
 
 		test("email is resent", async ({ ctx }) => {
@@ -105,8 +105,8 @@ describe("account.resendEmail", () => {
 				const { email: returnEmail } = await caller.procedure();
 				expect(returnEmail).toEqual(email);
 			});
-			expect(ctx.emailOptions.cachedMessages).toHaveLength(1);
-			expect(ctx.emailOptions.cachedMessages![0]).toMatchSnapshot();
+			expect(ctx.emailOptions.mock.getMessages()).toHaveLength(1);
+			expect(ctx.emailOptions.mock.getMessages()[0]).toMatchSnapshot();
 		});
 	});
 });

@@ -99,8 +99,8 @@ describe("resetPasswordIntentions.add", () => {
 			// Verify we can add an intention even if we already have one
 			await insertResetPasswordIntention(ctx, accountId);
 			await expectDatabaseDiffSnapshot(ctx, () => caller.procedure({ email }));
-			expect(ctx.emailOptions.cachedMessages).toHaveLength(1);
-			expect(ctx.emailOptions.cachedMessages![0]).toMatchSnapshot();
+			expect(ctx.emailOptions.mock.getMessages()).toHaveLength(1);
+			expect(ctx.emailOptions.mock.getMessages()[0]).toMatchSnapshot();
 		});
 	});
 });

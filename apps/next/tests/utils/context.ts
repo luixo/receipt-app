@@ -22,9 +22,7 @@ export const createContext = (
 		} as unknown as NextApiRequest,
 		res: {
 			getHeader: () => "",
-			setHeader: (...args: (typeof ctx)["responseHeaders"][0]) => {
-				ctx.responseHeaders.push(args);
-			},
+			setHeader: ctx.responseHeaders.add,
 		} as unknown as NextApiResponse,
 	});
 

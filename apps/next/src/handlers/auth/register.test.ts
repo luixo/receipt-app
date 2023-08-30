@@ -132,7 +132,7 @@ describe("auth.register", () => {
 					account: { id: result.account.id },
 				});
 			});
-			expect(ctx.responseHeaders).toMatchSnapshot();
+			expect(ctx.responseHeaders.get()).toMatchSnapshot();
 		});
 
 		test("email sent if active", async ({ ctx }) => {
@@ -144,8 +144,8 @@ describe("auth.register", () => {
 					name: faker.person.firstName(),
 				}),
 			);
-			expect(ctx.emailOptions.cachedMessages).toHaveLength(1);
-			expect(ctx.emailOptions.cachedMessages![0]).toMatchSnapshot();
+			expect(ctx.emailOptions.mock.getMessages()).toHaveLength(1);
+			expect(ctx.emailOptions.mock.getMessages()[0]).toMatchSnapshot();
 		});
 
 		test("email reports error if broken", async ({ ctx }) => {
@@ -162,7 +162,7 @@ describe("auth.register", () => {
 				"INTERNAL_SERVER_ERROR",
 				"Something went wrong: Test context broke email service error",
 			);
-			expect(ctx.emailOptions.cachedMessages).toHaveLength(0);
+			expect(ctx.emailOptions.mock.getMessages()).toHaveLength(0);
 		});
 	});
 });

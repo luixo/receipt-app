@@ -8,8 +8,7 @@ export type Email = {
 
 export type EmailOptions = {
 	active: boolean;
-	broken: boolean;
-	cachedMessages?: Email[];
+	mock?: EmailClient;
 };
 
 type EmailClient = {
@@ -19,15 +18,8 @@ type EmailClient = {
 let emailClient: EmailClient;
 
 export const getEmailClient = (options: EmailOptions): EmailClient => {
-	if (options.cachedMessages) {
-		return {
-			send: async (email: Email) => {
-				if (options.broken) {
-					throw new Error("Test context broke email service error");
-				}
-				options.cachedMessages!.push(email);
-			},
-		};
+	if (options.mock) {
+		return options.mock;
 	}
 	if (emailClient) {
 		return emailClient;

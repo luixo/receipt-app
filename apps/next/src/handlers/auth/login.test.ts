@@ -106,7 +106,7 @@ describe("auth.login", () => {
 					user: { name },
 				});
 			});
-			expect(ctx.responseHeaders).toMatchSnapshot();
+			expect(ctx.responseHeaders.get()).toMatchSnapshot();
 		});
 
 		test("login successful - unverified user", async ({ ctx }) => {

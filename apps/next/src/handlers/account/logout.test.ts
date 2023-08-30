@@ -28,7 +28,7 @@ describe("account.logout", () => {
 			const context = createAuthContext(ctx, sessionId);
 			const caller = router.createCaller(context);
 			await expectDatabaseDiffSnapshot(ctx, () => caller.procedure());
-			expect(ctx.responseHeaders).toMatchSnapshot();
+			expect(ctx.responseHeaders.get()).toMatchSnapshot();
 		});
 	});
 });
