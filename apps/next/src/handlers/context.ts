@@ -4,6 +4,7 @@ import * as crypto from "node:crypto";
 import { Pool } from "pg";
 import { v4 } from "uuid";
 
+import type { CacheDbOptions } from "next-app/cache-db";
 import { getDatabase } from "next-app/db";
 import { getDatabaseConfig } from "next-app/db/config";
 import type { AccountsId } from "next-app/db/models";
@@ -17,6 +18,7 @@ type TestContextPicks = Pick<
 	"database" | "getSalt" | "getUuid"
 > & {
 	emailOptions: EmailOptions;
+	cacheDbOptions: CacheDbOptions;
 };
 
 export type UnauthorizedContext = {
@@ -48,6 +50,7 @@ const defaultGetEmailOptions = () => ({
 	active: Boolean(process.env.NO_EMAIL_SERVICE),
 	broken: false,
 });
+const defaultGetCacheDbOptions = () => ({});
 
 export const createContext = (
 	opts: trpcNext.CreateNextContextOptions & Partial<TestContextPicks>,
@@ -57,6 +60,7 @@ export const createContext = (
 	logger: baseLogger,
 	database: opts.database || defaultGetDatabase(opts.req),
 	emailOptions: opts.emailOptions || defaultGetEmailOptions(),
+	cacheDbOptions: opts.cacheDbOptions || defaultGetCacheDbOptions(),
 	getSalt: opts.getSalt || defaultGetSalt,
 	getUuid: opts.getUuid || defaultGetUuid,
 });

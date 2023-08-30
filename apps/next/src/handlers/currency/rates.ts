@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import type { CurrencyCode } from "app/utils/currency";
-import { cacheDatabase } from "next-app/cache-db";
+import { getCacheDatabase } from "next-app/cache-db";
 import { authProcedure } from "next-app/handlers/trpc";
 import { currencyCodeSchema } from "next-app/handlers/validation";
 import { getExchangeRate } from "next-app/providers/exchange-rate";
@@ -19,8 +19,9 @@ export const procedure = authProcedure
 			to: currencyCodeSchema.array(),
 		}),
 	)
-	.query(async ({ input }) => {
+	.query(async ({ ctx, input }) => {
 		const cacheKey = getKey(input.from, input.to);
+		const cacheDatabase = getCacheDatabase(ctx);
 		const cachedRates = await cacheDatabase.get<Record<CurrencyCode, number>>(
 			cacheKey,
 		);
