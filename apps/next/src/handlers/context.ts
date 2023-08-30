@@ -18,6 +18,7 @@ type TestContextPicks = Pick<
 	TestContext,
 	"database" | "getSalt" | "getUuid"
 > & {
+	logger: Logger;
 	emailOptions: EmailOptions;
 	cacheDbOptions: CacheDbOptions;
 	exchangeRateOptions: ExchangeRateOptions;
@@ -26,7 +27,6 @@ type TestContextPicks = Pick<
 export type UnauthorizedContext = {
 	req: NextApiRequest;
 	res: NextApiResponse;
-	logger: Logger;
 } & TestContextPicks;
 
 export type AuthorizedContext = UnauthorizedContext & {
@@ -54,13 +54,14 @@ const defaultGetEmailOptions = () => ({
 });
 const defaultGetCacheDbOptions = () => ({});
 const defaultGetExchangeRateOptions = () => ({});
+const defaultLogger = baseLogger;
 
 export const createContext = (
 	opts: trpcNext.CreateNextContextOptions & Partial<TestContextPicks>,
 ): UnauthorizedContext => ({
 	req: opts.req,
 	res: opts.res,
-	logger: baseLogger,
+	logger: opts.logger || defaultLogger,
 	database: opts.database || defaultGetDatabase(opts.req),
 	emailOptions: opts.emailOptions || defaultGetEmailOptions(),
 	cacheDbOptions: opts.cacheDbOptions || defaultGetCacheDbOptions(),

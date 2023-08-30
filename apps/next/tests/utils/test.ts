@@ -7,6 +7,8 @@ import type { EmailOptionsMock } from "next-tests/utils/mocks/email";
 import { getEmailOptions } from "next-tests/utils/mocks/email";
 import type { ExchangeRateOptionsMock } from "next-tests/utils/mocks/exchange-rate";
 import { getExchangeRateOptions } from "next-tests/utils/mocks/exchange-rate";
+import type { LoggerMock } from "next-tests/utils/mocks/logger";
+import { getLogger } from "next-tests/utils/mocks/logger";
 import type { ResponseHeadersMock } from "next-tests/utils/mocks/response-headers";
 import { getResponseHeaders } from "next-tests/utils/mocks/response-headers";
 
@@ -15,6 +17,7 @@ export type TestContext = {
 	responseHeaders: ResponseHeadersMock;
 	cacheDbOptions: CacheDbOptionsMock;
 	exchangeRateOptions: ExchangeRateOptionsMock;
+	logger: LoggerMock;
 } & Suite["suiteContext"];
 export type TestFixture = { ctx: TestContext };
 
@@ -25,6 +28,7 @@ export const test = originalTest.extend<TestFixture>({
 			cacheDbOptions: getCacheDbOptions(),
 			responseHeaders: getResponseHeaders(),
 			exchangeRateOptions: getExchangeRateOptions(),
+			logger: getLogger(),
 			...task.suite.file!.suiteContext,
 		});
 	},
