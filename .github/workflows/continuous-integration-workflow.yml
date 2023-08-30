@@ -6,6 +6,18 @@ on:
       - master
 
 jobs:
+  replace-pr-number:
+    name: Replace PR number in a message
+    runs-on: ubuntu-latest
+    if: ${{ github.ref != 'refs/heads/master' }}
+    steps:
+      - name: Replace Pull Request Body
+        uses: ivangabriele/find-and-replace-pull-request-body@v1.1.5
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+          find: "{{PR_NUMBER}}"
+          replace: ${{ github.event.pull_request.number }}
+
   prettier:
     name: Prettier
     runs-on: ubuntu-latest
@@ -36,6 +48,8 @@ jobs:
   backend-test:
     name: Backend tests
     runs-on: ubuntu-latest
+    outputs:
+      coverage: ${{ steps.coverage-percent.outputs.coverage }}
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup-env
@@ -48,3 +62,28 @@ jobs:
           path: coverage
       - name: Report coverage
         uses: davelosert/vitest-coverage-report-action@v2
+      - name: Pass coverage percent to output
+        id: coverage-percent
+        run: |
+          COVERAGE=$(node -e 'console.log(Object.entries(require("./coverage/coverage-summary.json").total).reduce((acc, [, m]) => Math.min(acc, m.pct), 100))')
+          echo "Coverage is $COVERAGE"
+          echo "coverage=$COVERAGE" >> $GITHUB_OUTPUT
+
+  update-badges:
+    name: Badges
+    runs-on: ubuntu-latest
+    needs: backend-test
+    steps:
+      - name: Backend coverage badge
+        uses: schneegans/dynamic-badges-action@v1.6.0
+        env:
+          branch: ${{ github.ref == 'refs/heads/master' && 'master' || github.event.pull_request.number }}
+        with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: 878178ea4ba8d28122cc72204df909e7
+          filename: coverage_${{ env.branch }}.json
+          label: Backend coverage
+          message: ${{ needs.backend-test.outputs.coverage }}%
+          valColorRange: ${{ needs.backend-test.outputs.coverage }}
+          minColorRange: 50
+          maxColorRange: 100
