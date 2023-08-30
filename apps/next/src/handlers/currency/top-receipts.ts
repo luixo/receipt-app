@@ -20,7 +20,7 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 				])
 				.where("issued", ">", new Date(Date.now() - MONTH))
 				.groupBy("receipts.currencyCode")
-				.union(
+				.unionAll(
 					ownReceipts
 						.select([
 							"receipts.currencyCode",
