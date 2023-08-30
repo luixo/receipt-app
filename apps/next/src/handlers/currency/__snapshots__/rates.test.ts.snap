@@ -1,0 +1,42 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`currency.rates > functionality > cache has required data > exchange rate returned 1`] = `
+{
+  "EUR": 48.8,
+  "MOP": 4.8,
+  "VND": 91.04,
+}
+`;
+
+exports[`currency.rates > functionality > cache is empty > exchange rate returned 1`] = `
+{
+  "EUR": 1,
+  "MOP": 1,
+  "VND": 1,
+}
+`;
+
+exports[`currency.rates > functionality > cache is empty > exchange rate returned 2`] = `
+[
+  [
+    "get",
+    [
+      "USD->EUR,MOP,VND",
+    ],
+    {
+      "result": null,
+    },
+  ],
+  [
+    "setex",
+    [
+      "USD->EUR,MOP,VND",
+      60,
+      "{\\"EUR\\":1,\\"MOP\\":1,\\"VND\\":1}",
+    ],
+    {
+      "result": "OK",
+    },
+  ],
+]
+`;
