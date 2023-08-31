@@ -6,9 +6,9 @@ import { v4 } from "uuid";
 import type { CacheDbOptions } from "next-app/cache-db";
 import { getDatabase } from "next-app/db";
 import type { AccountsId } from "next-app/db/models";
+import type { EmailOptions } from "next-app/providers/email";
 import type { ExchangeRateOptions } from "next-app/providers/exchange-rate";
 import { getPool } from "next-app/providers/pg";
-import type { EmailOptions } from "next-app/utils/email";
 import type { Logger } from "next-app/utils/logger";
 import { baseLogger } from "next-app/utils/logger";
 import type { TestContext } from "next-tests/utils/test";
@@ -47,7 +47,6 @@ const defaultGetDatabase = (req: NextApiRequest) =>
 	});
 const defaultGetEmailOptions = () => ({
 	active: Boolean(process.env.NO_EMAIL_SERVICE),
-	broken: false,
 });
 const defaultGetCacheDbOptions = () => ({});
 const defaultGetExchangeRateOptions = () => ({});

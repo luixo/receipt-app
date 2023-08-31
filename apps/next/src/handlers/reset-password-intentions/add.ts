@@ -8,7 +8,7 @@ import {
 	MAX_INTENTIONS_AMOUNT,
 	emailSchema,
 } from "next-app/handlers/validation";
-import { getEmailClient } from "next-app/utils/email";
+import { getEmailClient } from "next-app/providers/email";
 
 export const procedure = unauthProcedure
 	.input(

@@ -1,4 +1,4 @@
-import type { Email, EmailOptions } from "next-app/utils/email";
+import type { Email, EmailOptions } from "next-app/providers/email";
 
 export type EmailOptionsMock = EmailOptions & {
 	broken: boolean;

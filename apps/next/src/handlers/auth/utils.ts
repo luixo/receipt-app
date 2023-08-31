@@ -5,8 +5,8 @@ import type { Database } from "next-app/db";
 import type { AccountsId, SessionsSessionId } from "next-app/db/models";
 import { generateConfirmEmailEmail } from "next-app/email/utils";
 import type { UnauthorizedContext } from "next-app/handlers/context";
-import type { EmailOptions } from "next-app/utils/email";
-import { getEmailClient } from "next-app/utils/email";
+import type { EmailOptions } from "next-app/providers/email";
+import { getEmailClient } from "next-app/providers/email";
 
 // How long a session should last
 const SESSION_EXPIRATION_DURATION = 30 * DAY;
