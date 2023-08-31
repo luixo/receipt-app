@@ -5,17 +5,18 @@ import type { TableColumn } from "extract-pg-schema";
 import { generateIndexFile, processDatabase } from "kanel";
 import path from "path";
 
-import { getDatabaseConfig } from "next-app/src/db/config";
-
 const fileRecase = recase("pascal", "dash");
 const kebabToPascal = recase("dash", "pascal");
 
 const run = async () => {
 	console.log(`\n> Generating types...`);
 	try {
+		if (!process.env.DATABASE_URL) {
+			throw new Error("Expected to have process.env.DATABASE_URL variable!");
+		}
 		const outputPath = path.join(__dirname, "../apps/next/src/db/models");
 		await processDatabase({
-			connection: getDatabaseConfig(),
+			connection: process.env.DATABASE_URL,
 			outputPath,
 			preDeleteOutputFolder: true,
 			getMetadata: (details, generateFor) => ({

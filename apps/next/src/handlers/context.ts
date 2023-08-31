@@ -1,14 +1,13 @@
 import type * as trpcNext from "@trpc/server/adapters/next";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as crypto from "node:crypto";
-import { Pool } from "pg";
 import { v4 } from "uuid";
 
 import type { CacheDbOptions } from "next-app/cache-db";
 import { getDatabase } from "next-app/db";
-import { getDatabaseConfig } from "next-app/db/config";
 import type { AccountsId } from "next-app/db/models";
 import type { ExchangeRateOptions } from "next-app/providers/exchange-rate";
+import { getPool } from "next-app/providers/pg";
 import type { EmailOptions } from "next-app/utils/email";
 import type { Logger } from "next-app/utils/logger";
 import { baseLogger } from "next-app/utils/logger";
@@ -37,8 +36,6 @@ export type AuthorizedContext = UnauthorizedContext & {
 	};
 };
 
-const sharedPool = new Pool(getDatabaseConfig());
-
 const defaultGetSalt = () => crypto.randomBytes(64).toString("hex");
 const defaultGetUuid = () => v4();
 const defaultGetDatabase = (req: NextApiRequest) =>
@@ -46,7 +43,7 @@ const defaultGetDatabase = (req: NextApiRequest) =>
 		logger: req.headers.debug
 			? baseLogger.child({ url: req.url || "unknown" })
 			: undefined,
-		pool: sharedPool,
+		pool: getPool(),
 	});
 const defaultGetEmailOptions = () => ({
 	active: Boolean(process.env.NO_EMAIL_SERVICE),

@@ -14,7 +14,6 @@ import { baseLogger } from "next-app/utils/logger";
 import { makeConnectionString } from "./databases/connection";
 import type { appRouter } from "./databases/router";
 
-process.env.DATABASE_URL = "unknown";
 // Url included in emails
 process.env.BASE_URL = "http://receipt-app.test/";
 

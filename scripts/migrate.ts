@@ -1,7 +1,6 @@
 import { Pool } from "pg";
 
 import { getDatabase } from "next-app/db";
-import { getDatabaseConfig } from "next-app/db/config";
 import { migrate } from "next-app/db/migration";
 import { baseLogger } from "next-app/utils/logger";
 
@@ -12,9 +11,12 @@ const isValidTarget = (
 
 const main = async ([firstArg]: string[]) => {
 	const target = isValidTarget(firstArg) ? firstArg : "latest";
+	if (!process.env.DATABASE_URL) {
+		throw new Error("Expected to have process.env.DATABASE_URL variable!");
+	}
 	const database = getDatabase({
 		logger: baseLogger,
-		pool: new Pool(getDatabaseConfig()),
+		pool: new Pool({ connectionString: process.env.DATABASE_URL }),
 	});
 	console.log(`Migration target: ${target}`);
 	try {
