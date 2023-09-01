@@ -2,6 +2,7 @@ import type { HTTPHeaders } from "@trpc/client";
 import { createTRPCProxyClient, httpLink } from "@trpc/client";
 import { createHTTPServer } from "@trpc/server/adapters/standalone";
 import findFreePorts from "find-free-ports";
+import { sql } from "kysely";
 import type { NextApiRequest, NextApiResponse } from "next";
 import superjson from "superjson";
 import { describe, expect } from "vitest";
@@ -60,5 +61,19 @@ describe("router index", () => {
 			).rejects.toThrowErrorMatchingSnapshot();
 			await destroy();
 		});
+	});
+
+	// Covering SQL error logging
+	test("SQL error logger works", async ({ ctx }) => {
+		await expect(() => sql`SELECT foo`.execute(ctx.database)).rejects.toThrow();
+		const loggedMessages = ctx.logger.getMessages();
+		await expect(loggedMessages).toHaveLength(1);
+		await expect(loggedMessages[0]!).toHaveLength(1);
+		await expect(loggedMessages[0]![0]!).toHaveProperty("duration");
+		type MessageType = { duration: number; sql: string };
+		const typedMessage = loggedMessages[0]![0] as MessageType;
+		await expect(typedMessage.duration).toBeTypeOf("number");
+		typedMessage.duration = 0.111;
+		await expect(typedMessage).toMatchSnapshot();
 	});
 });

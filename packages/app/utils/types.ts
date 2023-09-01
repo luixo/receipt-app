@@ -97,3 +97,7 @@ export type RemoveFirstParameter<Fn> = Fn extends (
 ) => infer Result
 	? (...args: Args) => Result
 	: never;
+
+export type Tail<T extends unknown[]> = T extends [unknown, ...infer R]
+	? R
+	: never;

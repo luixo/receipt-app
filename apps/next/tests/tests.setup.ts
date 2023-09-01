@@ -9,10 +9,11 @@ import { beforeAll, beforeEach, expect } from "vitest";
 import { SECOND } from "app/utils/time";
 import type { Database } from "next-app/db";
 import { getDatabase } from "next-app/db";
-import { baseLogger } from "next-app/providers/logger";
 
 import { makeConnectionString } from "./databases/connection";
 import type { appRouter } from "./databases/router";
+import type { LoggerMock } from "./utils/mocks/logger";
+import { getLogger } from "./utils/mocks/logger";
 
 // See https://github.com/vitest-dev/vitest/issues/4025
 // eslint-disable-next-line no-underscore-dangle, @typescript-eslint/no-explicit-any
@@ -40,6 +41,7 @@ const createStableFaker = (input: string) => {
 declare module "vitest" {
 	interface Suite {
 		suiteContext: {
+			logger: LoggerMock;
 			database: Database;
 			dumpDatabase: () => Promise<string>;
 			truncateDatabase: () => Promise<void>;
@@ -53,8 +55,9 @@ declare module "vitest" {
 
 beforeAll(async (suite) => {
 	const { databaseName, connectionData } = await client.lockDatabase.mutate();
+	const logger = getLogger();
 	const database = getDatabase({
-		logger: baseLogger,
+		logger,
 		pool: new Pool({
 			connectionString: makeConnectionString(connectionData, databaseName),
 		}),
@@ -65,6 +68,7 @@ beforeAll(async (suite) => {
 	// Stable faker to generate uuid / salt on tests side
 	const testIdFaker = createStableFaker(suiteId);
 	(suite as OriginalSuite).suiteContext = {
+		logger,
 		database,
 		dumpDatabase: () => client.dumpDatabase.mutate({ databaseName }),
 		truncateDatabase: () => client.truncateDatabase.mutate({ databaseName }),

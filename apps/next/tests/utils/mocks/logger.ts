@@ -1,5 +1,7 @@
 import type { Level, pino } from "pino";
 
+import type { Tail } from "app/utils/types";
+
 type LevelWithSilent = Level | "silent";
 
 // see https://github.com/pinojs/pino/blob/master/docs/api.md#loggerlevel-string-gettersetter
@@ -13,15 +15,32 @@ const LEVELS: Record<LevelWithSilent, number> = {
 	trace: 10,
 };
 type Message = [number, ...unknown[]];
-export type LoggerMock = pino.Logger & {
+type MessagesHandler = {
+	addMessage: (message: Message) => void;
 	getMessages: () => Message[];
+	resetMessages: () => void;
+};
+const createMessagesHandler = (): MessagesHandler => {
+	let messages: Message[] = [];
+	return {
+		addMessage: (message: Message) => {
+			messages.push(message);
+		},
+		getMessages: () => messages,
+		resetMessages: () => {
+			messages = [];
+		},
+	};
+};
+export type LoggerMock = pino.Logger & {
+	getMessages: () => Tail<Message>[];
+	resetMessages: () => void;
 };
 type LevelLoggers = Record<LevelWithSilent, pino.LogFn>;
 export const getLogger = (
 	bindings: pino.Bindings = {},
-	messagesHandler: Message[] = [],
+	messagesHandler: MessagesHandler = createMessagesHandler(),
 ): LoggerMock => {
-	const messages: Message[] = messagesHandler;
 	// see https://github.com/pinojs/pino/blob/master/docs/api.md#optionslevel-string
 	let innerLevel: number = LEVELS.info;
 	const levels = Object.entries(LEVELS).reduce<LevelLoggers>(
@@ -32,7 +51,7 @@ export const getLogger = (
 				if (Object.keys(bindings).length !== 0) {
 					values.splice(1, 0, bindings);
 				}
-				messages.push(values);
+				messagesHandler.addMessage(values);
 			},
 		}),
 		{} as LevelLoggers,
@@ -48,10 +67,17 @@ export const getLogger = (
 		},
 		...levels,
 		getMessages: () =>
-			messages
+			messagesHandler
+				.getMessages()
 				.filter(([levelValue]) => levelValue >= innerLevel)
 				.map(([, ...rest]) => rest),
+		resetMessages: () => {
+			messagesHandler.resetMessages();
+		},
 		child: (childBindings) =>
-			getLogger({ ...bindings, ...childBindings }, messages) as pino.Logger,
+			getLogger(
+				{ ...bindings, ...childBindings },
+				messagesHandler,
+			) as pino.Logger,
 	} as LoggerMock;
 };
