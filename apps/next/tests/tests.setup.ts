@@ -9,7 +9,7 @@ import { beforeAll, beforeEach, expect } from "vitest";
 import { SECOND } from "app/utils/time";
 import type { Database } from "next-app/db";
 import { getDatabase } from "next-app/db";
-import { baseLogger } from "next-app/utils/logger";
+import { baseLogger } from "next-app/providers/logger";
 
 import { makeConnectionString } from "./databases/connection";
 import type { appRouter } from "./databases/router";

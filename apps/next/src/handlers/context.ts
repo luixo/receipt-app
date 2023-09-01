@@ -8,9 +8,9 @@ import type { AccountsId } from "next-app/db/models";
 import type { CacheDbOptions } from "next-app/providers/cache-db";
 import type { EmailOptions } from "next-app/providers/email";
 import type { ExchangeRateOptions } from "next-app/providers/exchange-rate";
+import type { Logger } from "next-app/providers/logger";
+import { baseLogger } from "next-app/providers/logger";
 import { getPool } from "next-app/providers/pg";
-import type { Logger } from "next-app/utils/logger";
-import { baseLogger } from "next-app/utils/logger";
 import type { TestContext } from "next-tests/utils/test";
 
 type TestContextPicks = Pick<

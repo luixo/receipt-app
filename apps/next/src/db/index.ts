@@ -2,7 +2,7 @@ import type { LogEvent, SelectExpression } from "kysely";
 import { Kysely, PostgresDialect } from "kysely";
 import type { Pool } from "pg";
 
-import type { Logger } from "next-app/utils/logger";
+import type { Logger } from "next-app/providers/logger";
 
 import type { ReceiptsDatabase } from "./types";
 
