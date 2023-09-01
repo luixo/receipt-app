@@ -2,7 +2,7 @@ import React from "react";
 
 import * as ReactDOMServer from "react-dom/server";
 
-import { getBaseUrl } from "next-app/utils/url";
+import type { EmailOptions } from "next-app/providers/email";
 
 import { BaseUrlContext } from "./base-url-context";
 import { ConfirmEmailEmail } from "./confirm-email-email";
@@ -34,7 +34,7 @@ const reduceStyles = (styles: NestedStyles): string =>
 		return `${acc} ${selector} {${reduceStyles(style)}}`;
 	}, "");
 
-const generateEmail = (element: React.ReactElement) => {
+const generateEmail = (options: EmailOptions, element: React.ReactElement) => {
 	// That's one-time render, we don't care about rerenders
 	// eslint-disable-next-line react/jsx-no-constructed-context-values
 	const stylesMapping: React.ContextType<typeof StylingContext> = {};
@@ -49,7 +49,7 @@ const generateEmail = (element: React.ReactElement) => {
 		</head>
 		<body>${ReactDOMServer.renderToStaticMarkup(
 			<StylingContext.Provider value={stylesMapping}>
-				<BaseUrlContext.Provider value={getBaseUrl()}>
+				<BaseUrlContext.Provider value={options.baseUrl}>
 					{element}
 				</BaseUrlContext.Provider>
 			</StylingContext.Provider>,
@@ -79,8 +79,12 @@ const generateEmail = (element: React.ReactElement) => {
 	);
 };
 
-export const generateResetPasswordEmail = (token: string) =>
-	generateEmail(<ResetPasswordEmail token={token} />);
+export const generateResetPasswordEmail = (
+	options: EmailOptions,
+	token: string,
+) => generateEmail(options, <ResetPasswordEmail token={token} />);
 
-export const generateConfirmEmailEmail = (token: string) =>
-	generateEmail(<ConfirmEmailEmail token={token} />);
+export const generateConfirmEmailEmail = (
+	options: EmailOptions,
+	token: string,
+) => generateEmail(options, <ConfirmEmailEmail token={token} />);

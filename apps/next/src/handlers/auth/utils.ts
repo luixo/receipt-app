@@ -64,7 +64,7 @@ export const sendVerificationEmail = async (
 		await getEmailClient(emailOptions).send({
 			address: email,
 			subject: "Confirm email in Receipt App",
-			body: generateConfirmEmailEmail(token),
+			body: generateConfirmEmailEmail(emailOptions, token),
 		});
 	} catch (e) {
 		throw new trpc.TRPCError({

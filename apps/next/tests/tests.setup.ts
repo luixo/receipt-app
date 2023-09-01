@@ -14,9 +14,6 @@ import { baseLogger } from "next-app/providers/logger";
 import { makeConnectionString } from "./databases/connection";
 import type { appRouter } from "./databases/router";
 
-// Url included in emails
-process.env.BASE_URL = "http://receipt-app.test/";
-
 // See https://github.com/vitest-dev/vitest/issues/4025
 // eslint-disable-next-line no-underscore-dangle, @typescript-eslint/no-explicit-any
 const config = (globalThis as any).__vitest_worker__.config as ResolvedConfig;

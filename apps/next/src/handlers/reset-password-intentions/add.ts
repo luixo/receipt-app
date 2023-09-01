@@ -60,6 +60,6 @@ export const procedure = unauthProcedure
 		await getEmailClient(ctx.emailOptions).send({
 			address: input.email.lowercase,
 			subject: "Reset password intention in Receipt App",
-			body: generateResetPasswordEmail(uuid),
+			body: generateResetPasswordEmail(ctx.emailOptions, uuid),
 		});
 	});

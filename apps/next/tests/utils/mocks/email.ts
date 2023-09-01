@@ -9,6 +9,7 @@ export type EmailOptionsMock = EmailOptions & {
 export const getEmailOptions = (): EmailOptionsMock => {
 	let innerBroken = false;
 	let innerActive = true;
+	let innerBaseUrl = "http://receipt-app.test/";
 	const messages: Email[] = [];
 	return {
 		get broken() {
@@ -22,6 +23,12 @@ export const getEmailOptions = (): EmailOptionsMock => {
 		},
 		set active(value) {
 			innerActive = value;
+		},
+		get baseUrl() {
+			return innerBaseUrl;
+		},
+		set baseUrl(value) {
+			innerBaseUrl = value;
 		},
 		mock: {
 			send: async (email) => {

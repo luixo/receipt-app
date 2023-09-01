@@ -8,6 +8,7 @@ export type Email = {
 
 export type EmailOptions = {
 	active: boolean;
+	baseUrl: string;
 	mock?: EmailClient;
 };
 

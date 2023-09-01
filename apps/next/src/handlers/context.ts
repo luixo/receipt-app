@@ -45,9 +45,18 @@ const defaultGetDatabase = (req: NextApiRequest) =>
 			: undefined,
 		pool: getPool(),
 	});
-const defaultGetEmailOptions = () => ({
-	active: Boolean(process.env.NO_EMAIL_SERVICE),
-});
+const defaultGetEmailOptions = () => {
+	const active = Boolean(process.env.NO_EMAIL_SERVICE);
+	if (active && !process.env.BASE_URL) {
+		throw new Error(
+			`Expected to have env variable BASE_URL while creating context with active email`,
+		);
+	}
+	return {
+		active: Boolean(process.env.NO_EMAIL_SERVICE),
+		baseUrl: process.env.BASE_URL || "http://example.com/",
+	};
+};
 const defaultGetCacheDbOptions = () => ({});
 const defaultGetExchangeRateOptions = () => ({});
 const defaultLogger = baseLogger;
