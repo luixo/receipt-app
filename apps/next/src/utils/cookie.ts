@@ -1,21 +1,13 @@
 import * as cookie from "cookie";
 import type { IncomingMessage, ServerResponse } from "http";
 
-const getParsedCookies = (cookieHeader?: string | string[] | number) => {
-	let stringCookie: string;
-	if (Array.isArray(cookieHeader)) {
-		stringCookie = cookieHeader[0] || "";
-	} else {
-		stringCookie = String(cookieHeader);
-	}
-	return cookie.parse(stringCookie || "");
-};
-
 export const getCookie = (
 	req: IncomingMessage,
 	cookieName: string,
 ): string | undefined => {
-	const parsedCookies = getParsedCookies(req.headers.cookie);
+	const parsedCookies = cookie.parse(
+		req.headers.cookie ? String(req.headers.cookie) : "",
+	);
 	return parsedCookies[cookieName];
 };
 
