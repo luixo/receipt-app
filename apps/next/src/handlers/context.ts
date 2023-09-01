@@ -3,9 +3,9 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import * as crypto from "node:crypto";
 import { v4 } from "uuid";
 
-import type { CacheDbOptions } from "next-app/cache-db";
 import { getDatabase } from "next-app/db";
 import type { AccountsId } from "next-app/db/models";
+import type { CacheDbOptions } from "next-app/providers/cache-db";
 import type { EmailOptions } from "next-app/providers/email";
 import type { ExchangeRateOptions } from "next-app/providers/exchange-rate";
 import { getPool } from "next-app/providers/pg";

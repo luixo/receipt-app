@@ -2,9 +2,9 @@ import * as trpc from "@trpc/server";
 import { z } from "zod";
 
 import type { CurrencyCode } from "app/utils/currency";
-import { getCacheDatabase } from "next-app/cache-db";
 import { authProcedure } from "next-app/handlers/trpc";
 import { currencyCodeSchema } from "next-app/handlers/validation";
+import { getCacheDatabase } from "next-app/providers/cache-db";
 import { getExchangeRate } from "next-app/providers/exchange-rate";
 
 // Minutes
