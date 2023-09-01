@@ -22,21 +22,6 @@ export const Child: React.FC<Props> = (props) => {
 	switch (props.type) {
 		case "text": {
 			switch (props.size) {
-				case "h1":
-					return (
-						<>
-							<Style
-								selector="table[class=body] h1"
-								media={{
-									"@media only screen and (max-width: 620px)": {
-										fontSize: "28px !important",
-										marginBottom: "10px !important",
-									},
-								}}
-							/>
-							<h1>{props.text}</h1>
-						</>
-					);
 				case "h3":
 					return (
 						<>
@@ -58,8 +43,6 @@ export const Child: React.FC<Props> = (props) => {
 		}
 		case "action":
 			return <Button href={props.href} text={props.text} />;
-		default:
-			return null;
 	}
 };
 /* eslint-enable react/destructuring-assignment */
