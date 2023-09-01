@@ -36,6 +36,7 @@ export type AuthorizedContext = UnauthorizedContext & {
 	};
 };
 
+/* c8 ignore start */
 const defaultGetSalt = () => crypto.randomBytes(64).toString("hex");
 const defaultGetUuid = () => v4();
 const defaultGetDatabase = (req: NextApiRequest) =>
@@ -75,3 +76,4 @@ export const createContext = (
 	getSalt: opts.getSalt || defaultGetSalt,
 	getUuid: opts.getUuid || defaultGetUuid,
 });
+/* c8 ignore stop */
