@@ -1,0 +1,29 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`accountSettings.update > functionality > autoAcceptDebts > settings found 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.\\"accountSettings\\" VALUES ('ffa9c3a7-8129-4ff9-b074-0bf93d46c1af', true);
++ INSERT INTO public.\\"accountSettings\\" VALUES ('ffa9c3a7-8129-4ff9-b074-0bf93d46c1af', false);"
+`;
+
+exports[`accountSettings.update > functionality > autoAcceptDebts > settings not found - updated with default-like 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
++ INSERT INTO public.\\"accountSettings\\" VALUES ('29d23d45-08dc-4872-b2dc-0be05d1acdc2', false);"
+`;
+
+exports[`accountSettings.update > functionality > autoAcceptDebts > settings not found - updated with non-default value 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
++ INSERT INTO public.\\"accountSettings\\" VALUES ('ac043aa8-40f6-4d7a-8274-d2b2688855ae', true);"
+`;

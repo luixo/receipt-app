@@ -254,6 +254,24 @@ export const insertReceiptParticipant = async (
 	return { added };
 };
 
+type AccountSettingsData = {
+	autoAcceptDebts: boolean;
+};
+
+export const insertAccountSettings = async (
+	ctx: TestContext,
+	accountId: AccountsId,
+	data: AccountSettingsData,
+) => {
+	await ctx.database
+		.insertInto("accountSettings")
+		.values({
+			accountId,
+			autoAcceptDebts: data.autoAcceptDebts,
+		})
+		.executeTakeFirstOrThrow();
+};
+
 type AccountWithSessionData = {
 	account?: AccountData;
 	session?: SessionData;
