@@ -52,6 +52,16 @@ describe("currency.rates", () => {
 				`Zod error\n\nAt "to": Array must contain at least 1 element(s)`,
 			);
 		});
+
+		test(`"to" and "from" codes are the same`, async ({ ctx }) => {
+			const { sessionId } = await insertAccountWithSession(ctx);
+			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			await expectTRPCError(
+				() => caller.procedure({ from: "EUR", to: ["EUR", "USD"] }),
+				"BAD_REQUEST",
+				`Currency code "from" and "to" must be different`,
+			);
+		});
 	});
 
 	describe("functionality", () => {

@@ -21,6 +21,12 @@ export const procedure = authProcedure
 		}),
 	)
 	.query(async ({ ctx, input }) => {
+		if (input.to.includes(input.from)) {
+			throw new trpc.TRPCError({
+				code: "BAD_REQUEST",
+				message: 'Currency code "from" and "to" must be different',
+			});
+		}
 		const cacheKey = getKey(input.from, input.to);
 		const cacheDatabase = getCacheDatabase(ctx);
 		const cachedRates = await cacheDatabase.get<Record<CurrencyCode, number>>(

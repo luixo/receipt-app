@@ -147,7 +147,9 @@ export const PlannedDebts: React.FC<Props> = ({
 	const ratesQuery = trpc.currency.rates.useQuery(
 		{
 			from: selectedCurrencyCode,
-			to: debts.map((debt) => debt.currencyCode),
+			to: debts
+				.map((debt) => debt.currencyCode)
+				.filter((code) => code !== selectedCurrencyCode),
 		},
 		{ onSuccess: fillRatesData },
 	);
