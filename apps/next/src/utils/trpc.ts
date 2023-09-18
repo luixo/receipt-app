@@ -1,5 +1,9 @@
-import { httpBatchLink, httpLink } from "@trpc/client";
+import * as Sentry from "@sentry/nextjs";
+import type { TRPCLink } from "@trpc/client";
+import { TRPCClientError, httpBatchLink, httpLink } from "@trpc/client";
 import { createTRPCNext } from "@trpc/next";
+import type { AnyRouter } from "@trpc/server";
+import { observable } from "@trpc/server/observable";
 import type { NextConfig, NextPageContext } from "next";
 import getConfig from "next/config";
 import superjson from "superjson";
@@ -16,6 +20,24 @@ import { getCookie, serialize } from "next-app/utils/cookie";
 
 const SSR_TIMEOUT = 3 * SECOND;
 
+type UnexpectedErrorLinkOptions<Router extends AnyRouter> = {
+	mapper: (error: TRPCClientError<Router>) => TRPCClientError<Router>;
+};
+
+const mapError =
+	<Router extends AnyRouter>({
+		mapper,
+	}: UnexpectedErrorLinkOptions<Router>): TRPCLink<Router> =>
+	() =>
+	({ next, op }) =>
+		observable((observer) =>
+			next(op).subscribe({
+				next: (value) => observer.next(value),
+				error: (error) => observer.error(mapper(error)),
+				complete: () => observer.complete(),
+			}),
+		);
+
 export const trpcNext = createTRPCNext<
 	AppRouter,
 	{ authToken?: string; hasDebug: boolean },
@@ -25,6 +47,27 @@ export const trpcNext = createTRPCNext<
 		const isBrowser = typeof window !== "undefined";
 		return {
 			links: [
+				mapError({
+					mapper: (error) => {
+						if (
+							error instanceof TRPCClientError &&
+							error.meta?.response instanceof Response &&
+							error.meta.response.status !== 200
+						) {
+							const transactionId = Math.random().toString(36).slice(2, 9);
+							Sentry.captureException(error, {
+								tags: { transaction_id: transactionId },
+							});
+							return TRPCClientError.from(
+								new Error(
+									`Internal server error\nError fingerprint "${transactionId}"`,
+								),
+								{ meta: error.meta },
+							);
+						}
+						return error;
+					},
+				}),
 				(isBrowser ? httpBatchLink : httpLink)({
 					url: isBrowser
 						? TRPC_ENDPOINT

@@ -14,6 +14,10 @@ const Title = styled(Text, {
 	alignItems: "center",
 });
 
+const Message = styled(Text, {
+	whiteSpace: "pre-wrap",
+});
+
 type Props = {
 	message: string;
 	button?: {
@@ -33,7 +37,7 @@ export const ErrorMessage: React.FC<Props> = ({ message, button }) => (
 		</Card.Header>
 		<Card.Divider />
 		<Card.Body>
-			<Text>{message}</Text>
+			<Message>{message}</Message>
 		</Card.Body>
 		{button ? (
 			<>
