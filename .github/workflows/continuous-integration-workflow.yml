@@ -58,10 +58,12 @@ jobs:
       - name: Archive code coverage results
         uses: actions/upload-artifact@v3
         with:
-          name: code-coverage-report
+          name: backend-coverage-report
           path: coverage
       - name: Report coverage
         uses: davelosert/vitest-coverage-report-action@v2
+        with:
+          name: backend
       - name: Pass coverage percent to output
         id: coverage-percent
         run: |
@@ -81,7 +83,7 @@ jobs:
         with:
           auth: ${{ secrets.GIST_SECRET }}
           gistID: 878178ea4ba8d28122cc72204df909e7
-          filename: coverage_${{ env.branch }}.json
+          filename: backend_coverage_${{ env.branch }}.json
           label: Backend coverage
           message: ${{ needs.backend-test.outputs.coverage }}%
           valColorRange: ${{ needs.backend-test.outputs.coverage }}
