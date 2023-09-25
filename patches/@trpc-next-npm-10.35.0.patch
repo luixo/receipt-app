@@ -1,7 +1,7 @@
 # `awaitPrespassRender` fn added
 # meta context added
 diff --git a/dist/createTRPCNext.d.ts b/dist/createTRPCNext.d.ts
-index a50d3bf..a8b5c1b 100644
+index a50d3bf43261dbc2f36e5fc7fb351b40e5a05a90..a8b5c1bf1da1a702e3e9e69c13eab04da93c87b8 100644
 --- a/dist/createTRPCNext.d.ts
 +++ b/dist/createTRPCNext.d.ts
 @@ -14,5 +14,5 @@ export interface CreateTRPCNextBase<TRouter extends AnyRouter, TSSRContext exten
@@ -13,7 +13,7 @@ index a50d3bf..a8b5c1b 100644
  //# sourceMappingURL=createTRPCNext.d.ts.map
 \ No newline at end of file
 diff --git a/dist/createTRPCNext.d.ts.map b/dist/createTRPCNext.d.ts.map
-index 6bc1aac..f6eed72 100644
+index 6bc1aacc8e1e5b46d4651931eeba2a2360af4e69..f6eed72ee4071c988b67511563faa59b2de0dd31 100644
 --- a/dist/createTRPCNext.d.ts.map
 +++ b/dist/createTRPCNext.d.ts.map
 @@ -1 +1 @@
@@ -22,7 +22,7 @@ index 6bc1aac..f6eed72 100644
 +{"version":3,"file":"createTRPCNext.d.ts","sourceRoot":"","sources":["../src/createTRPCNext.tsx"],"names":[],"mappings":"AAEA,OAAO,EAIL,qBAAqB,EACrB,wBAAwB,EACxB,cAAc,EACf,MAAM,0BAA0B,CAAC;AAClC,OAAO,EAAE,SAAS,EAAE,qBAAqB,EAAE,MAAM,cAAc,CAAC;AAEhE,OAAO,EAAE,eAAe,EAAE,MAAM,YAAY,CAAC;AAE7C,OAAO,EAAE,QAAQ,EAAE,oBAAoB,EAAE,kBAAkB,EAAE,MAAM,YAAY,CAAC;AAEhF;;GAEG;AACH,MAAM,WAAW,kBAAkB,CACjC,OAAO,SAAS,SAAS,EACzB,WAAW,SAAS,eAAe;IAEnC,UAAU,IAAI,qBAAqB,CAAC,OAAO,EAAE,WAAW,CAAC,CAAC;IAC1D,QAAQ,EAAE,UAAU,CAAC,OAAO,QAAQ,CAAC,OAAO,EAAE,WAAW,CAAC,CAAC,CAAC;IAC5D,UAAU,EAAE,cAAc,CAAC,OAAO,CAAC,CAAC;CACrC;AAED;;GAEG;AACH,MAAM,MAAM,cAAc,CACxB,OAAO,SAAS,SAAS,EACzB,WAAW,SAAS,eAAe,EACnC,MAAM,IACJ,qBAAqB,CACvB,kBAAkB,CAAC,OAAO,EAAE,WAAW,CAAC,EACxC,wBAAwB,CAAC,OAAO,CAAC,MAAM,CAAC,CAAC,QAAQ,CAAC,EAAE,MAAM,CAAC,CAC5D,CAAC;AAEF,wBAAgB,cAAc,CAC5B,OAAO,SAAS,SAAS,EACzB,YAAY,GAAG,IAAI,EACnB,WAAW,SAAS,eAAe,GAAG,eAAe,EACrD,MAAM,GAAG,IAAI,EAEb,IAAI,EACA,oBAAoB,CAAC,OAAO,EAAE,YAAY,EAAE,WAAW,CAAC,GACxD,kBAAkB,CAAC,OAAO,EAAE,YAAY,EAAE,WAAW,CAAC,GACzD,cAAc,CAAC,OAAO,EAAE,WAAW,EAAE,MAAM,CAAC,CA2B9C"}
 \ No newline at end of file
 diff --git a/dist/index.js b/dist/index.js
-index d062a0b..10c9cdb 100644
+index d062a0bf622b57fd28742b5dafdb29fcc2a65e1e..70636a22ef0b7681e9d5f0a7dfa88fb92de0b43a 100644
 --- a/dist/index.js
 +++ b/dist/index.js
 @@ -32,16 +32,34 @@ function transformQueryOrMutationCacheErrors(result) {
@@ -63,7 +63,7 @@ index d062a0b..10c9cdb 100644
                  const queryClient = shared.getQueryClient(config);
                  const trpcClient = trpc.createClient(config);
                  return {
-@@ -83,23 +101,26 @@ function withTRPC(opts) {
+@@ -83,23 +101,27 @@ function withTRPC(opts) {
                          ...pageProps
                      };
                  }
@@ -77,7 +77,7 @@ index d062a0b..10c9cdb 100644
                      return getAppTreeProps(pageProps);
                  }
                  const config = getClientConfig({
--                    ctx
+                     ctx
 +                    meta: metaContext
                  });
                  const trpcClient = reactQuery.createTRPCClient(config);
@@ -93,7 +93,7 @@ index d062a0b..10c9cdb 100644
                  };
                  const prepassProps = {
                      pageProps,
-@@ -110,18 +131,14 @@ function withTRPC(opts) {
+@@ -110,18 +132,14 @@ function withTRPC(opts) {
                  while(true){
                      // render full tree
                      await ssrPrepass__default["default"](/*#__PURE__*/ React.createElement(AppTree, prepassProps));
@@ -118,14 +118,14 @@ index d062a0b..10c9cdb 100644
                  }
                  const dehydratedCache = reactQuery$1.dehydrate(queryClient, {
                      shouldDehydrateQuery () {
-@@ -192,4 +209,5 @@ function createTRPCNext(opts) {
+@@ -192,4 +210,5 @@ function createTRPCNext(opts) {
  }
  
  exports.createTRPCNext = createTRPCNext;
 +exports.waitUntilNoObservers = waitUntilNoObservers;
  exports.withTRPC = withTRPC;
 diff --git a/dist/index.mjs b/dist/index.mjs
-index 2cc5de2..d50f935 100644
+index 2cc5de26cc5f7a5293dd2ad318ac423ce3d3df63..a8d23c61ec70a6d7a33621103ad549f0545bdfdb 100644
 --- a/dist/index.mjs
 +++ b/dist/index.mjs
 @@ -23,16 +23,34 @@ function transformQueryOrMutationCacheErrors(result) {
@@ -166,7 +166,7 @@ index 2cc5de2..d50f935 100644
                  const queryClient = getQueryClient(config);
                  const trpcClient = trpc.createClient(config);
                  return {
-@@ -74,23 +92,26 @@ function withTRPC(opts) {
+@@ -74,23 +92,27 @@ function withTRPC(opts) {
                          ...pageProps
                      };
                  }
@@ -181,6 +181,7 @@ index 2cc5de2..d50f935 100644
                  }
                  const config = getClientConfig({
 -                    ctx
++                    ctx,
 +                    meta: metaContext
                  });
                  const trpcClient = createTRPCClient(config);
@@ -196,7 +197,7 @@ index 2cc5de2..d50f935 100644
                  };
                  const prepassProps = {
                      pageProps,
-@@ -101,18 +122,14 @@ function withTRPC(opts) {
+@@ -101,18 +123,14 @@ function withTRPC(opts) {
                  while(true){
                      // render full tree
                      await ssrPrepass(/*#__PURE__*/ createElement(AppTree, prepassProps));
@@ -221,14 +222,14 @@ index 2cc5de2..d50f935 100644
                  }
                  const dehydratedCache = dehydrate(queryClient, {
                      shouldDehydrateQuery () {
-@@ -182,4 +199,4 @@ function createTRPCNext(opts) {
+@@ -182,4 +200,4 @@ function createTRPCNext(opts) {
      });
  }
  
 -export { createTRPCNext, withTRPC };
 +export { createTRPCNext, waitUntilNoObservers, withTRPC };
 diff --git a/dist/withTRPC.d.ts b/dist/withTRPC.d.ts
-index 984b95a..a63c5f0 100644
+index 984b95add4c0935cd67a15d30581d63112ab7524..c2f70a391ecfadc04c4ca24c838ea39494547b11 100644
 --- a/dist/withTRPC.d.ts
 +++ b/dist/withTRPC.d.ts
 @@ -1,3 +1,8 @@
@@ -240,14 +241,14 @@ index 984b95a..a63c5f0 100644
  import type { CreateTRPCClientOptions } from '@trpc/client';
  import { TRPCClientError } from '@trpc/react-query';
  import { CreateTRPCReactOptions, CreateTRPCReactQueryClientConfig } from '@trpc/react-query/shared';
-@@ -7,21 +12,29 @@ import { NextComponentType, NextPageContext } from 'next/dist/shared/lib/utils';
+@@ -7,21 +12,30 @@ import { NextComponentType, NextPageContext } from 'next/dist/shared/lib/utils';
  export type WithTRPCConfig<TRouter extends AnyRouter> = CreateTRPCClientOptions<TRouter> & CreateTRPCReactQueryClientConfig & {
      abortOnUnmount?: boolean;
  };
 -interface WithTRPCOptions<TRouter extends AnyRouter> extends CreateTRPCReactOptions<TRouter> {
 +interface WithTRPCOptions<TRouter extends AnyRouter, TMetaContext, TSSRContext extends NextPageContext> extends CreateTRPCReactOptions<TRouter> {
      config: (info: {
--        ctx?: NextPageContext;
+         ctx?: NextPageContext;
 +        meta: TMetaContext;
      }) => WithTRPCConfig<TRouter>;
 +    awaitPrespassRender?: (options: {
@@ -277,7 +278,7 @@ index 984b95a..a63c5f0 100644
  //# sourceMappingURL=withTRPC.d.ts.map
 \ No newline at end of file
 diff --git a/dist/withTRPC.d.ts.map b/dist/withTRPC.d.ts.map
-index df573c8..442178c 100644
+index df573c89ec9acca6927bc54c0f8d6b57a68bf845..442178c343d238b9216c6db67842d2e717bd8158 100644
 --- a/dist/withTRPC.d.ts.map
 +++ b/dist/withTRPC.d.ts.map
 @@ -1 +1 @@
@@ -286,7 +287,7 @@ index df573c8..442178c 100644
 +{"version":3,"file":"withTRPC.d.ts","sourceRoot":"","sources":["../src/withTRPC.tsx"],"names":[],"mappings":"AAAA;;;GAGG;AACH,OAAO,EAIL,WAAW,EAEZ,MAAM,uBAAuB,CAAC;AAC/B,OAAO,KAAK,EAAE,uBAAuB,EAAE,MAAM,cAAc,CAAC;AAC5D,OAAO,EAIL,eAAe,EAEhB,MAAM,mBAAmB,CAAC;AAC3B,OAAO,EACL,sBAAsB,EACtB,gCAAgC,EAEjC,MAAM,0BAA0B,CAAC;AAClC,OAAO,KAAK,EAAE,SAAS,EAAe,MAAM,cAAc,CAAC;AAC3D,OAAO,KAAK,EAAE,YAAY,EAAE,MAAM,mBAAmB,CAAC;AACtD,OAAO,EAGL,iBAAiB,EACjB,eAAe,EAChB,MAAM,4BAA4B,CAAC;AA2BpC,MAAM,MAAM,cAAc,CAAC,OAAO,SAAS,SAAS,IAClD,uBAAuB,CAAC,OAAO,CAAC,GAC9B,gCAAgC,GAAG;IACjC,cAAc,CAAC,EAAE,OAAO,CAAC;CAC1B,CAAC;AAEN,UAAU,eAAe,CACvB,OAAO,SAAS,SAAS,EACzB,YAAY,EACZ,WAAW,SAAS,eAAe,CACnC,SAAQ,sBAAsB,CAAC,OAAO,CAAC;IACvC,MAAM,EAAE,CAAC,IAAI,EAAE;QAAE,IAAI,EAAE,YAAY,CAAA;KAAE,KAAK,cAAc,CAAC,OAAO,CAAC,CAAC;IAClE,mBAAmB,CAAC,EAAE,CAAC,OAAO,EAAE;QAC9B,GAAG,EAAE,WAAW,CAAC;QACjB,WAAW,EAAE,WAAW,CAAC;KAC1B,KAAK,OAAO,CAAC,OAAO,CAAC,CAAC;CACxB;AAED,UAAU,mBAAmB,CAC3B,OAAO,SAAS,SAAS,EACzB,YAAY,EACZ,WAAW,SAAS,eAAe,CACnC,SAAQ,eAAe,CAAC,OAAO,EAAE,YAAY,EAAE,WAAW,CAAC;IAC3D,IAAI,CAAC,EAAE,CAAC,GAAG,EAAE,eAAe,KAAK,YAAY,CAAC;CAC/C;AAED,MAAM,WAAW,kBAAkB,CACjC,OAAO,SAAS,SAAS,EACzB,YAAY,EACZ,WAAW,SAAS,eAAe,CACnC,SAAQ,mBAAmB,CAAC,OAAO,EAAE,YAAY,EAAE,WAAW,CAAC;IAC/D,GAAG,EAAE,IAAI,CAAC;IACV,YAAY,CAAC,EAAE,CAAC,IAAI,EAAE;QACpB,GAAG,EAAE,eAAe,CAAC;QACrB,YAAY,EAAE,eAAe,CAAC,OAAO,CAAC,EAAE,CAAC;KAC1C,KAAK,YAAY,CAAC;CACpB;AACD,MAAM,WAAW,oBAAoB,CACnC,OAAO,SAAS,SAAS,EACzB,YAAY,EACZ,WAAW,SAAS,eAAe,CACnC,SAAQ,mBAAmB,CAAC,OAAO,EAAE,YAAY,EAAE,WAAW,CAAC;IAC/D,GAAG,CAAC,EAAE,KAAK,CAAC;CACb;AAED,eAAO,MAAM,oBAAoB,gBAAiB,WAAW,kBAQzD,CAAC;AAaL,wBAAgB,QAAQ,CACtB,OAAO,SAAS,SAAS,EACzB,YAAY,GAAG,IAAI,EACnB,WAAW,SAAS,eAAe,GAAG,eAAe,EAErD,IAAI,EACA,oBAAoB,CAAC,OAAO,EAAE,YAAY,EAAE,WAAW,CAAC,GACxD,kBAAkB,CAAC,OAAO,EAAE,YAAY,EAAE,WAAW,CAAC,eAevC,kBAAkB,GAAG,EAAE,GAAG,EAAE,GAAG,CAAC,KAAG,iBAAiB,CA6KxE"}
 \ No newline at end of file
 diff --git a/src/createTRPCNext.tsx b/src/createTRPCNext.tsx
-index 13637f5..19cb455 100644
+index 13637f53194ac3e3a68d9e620d3718d8a8161f0c..19cb4558899178418d2789db4ede3269587f9318 100644
 --- a/src/createTRPCNext.tsx
 +++ b/src/createTRPCNext.tsx
 @@ -40,10 +40,13 @@ export type CreateTRPCNext<
@@ -305,7 +306,7 @@ index 13637f5..19cb455 100644
    const hooks = createHooksInternal<TRouter, TSSRContext>(opts);
  
 diff --git a/src/withTRPC.tsx b/src/withTRPC.tsx
-index 3d0e4eb..36f8d4e 100644
+index 3d0e4ebf7a4e98ec4005b53eec62bd4be4aa3e7b..891104d2211865cb01d6232cd77ccbab61c7cfa6 100644
 --- a/src/withTRPC.tsx
 +++ b/src/withTRPC.tsx
 @@ -62,29 +62,80 @@ export type WithTRPCConfig<TRouter extends AnyRouter> =
@@ -320,7 +321,7 @@ index 3d0e4eb..36f8d4e 100644
 +  TMetaContext,
 +  TSSRContext extends NextPageContext,
 +> extends CreateTRPCReactOptions<TRouter> {
-+  config: (info: { meta: TMetaContext }) => WithTRPCConfig<TRouter>;
++  config: (info: { ctx?: NextPageContext, meta: TMetaContext }) => WithTRPCConfig<TRouter>;
 +  awaitPrespassRender?: (options: {
 +    ctx: TSSRContext;
 +    queryClient: QueryClient;
@@ -438,7 +439,7 @@ index 3d0e4eb..36f8d4e 100644
          }
  
 -        const config = getClientConfig({ ctx });
-+        const config = getClientConfig({ meta: metaContext });
++        const config = getClientConfig({ ctx, meta: metaContext });
          const trpcClient = createTRPCClient(config);
          const queryClient = getQueryClient(config);
  

@@ -41,11 +41,12 @@ const mapError =
 
 export const trpcNext = createTRPCNext<
 	AppRouter,
-	{ authToken?: string; hasDebug: boolean },
+	{ hasDebug: boolean },
 	NextPageContext & { timeoutPromise: Promise<true> }
 >({
-	config: ({ meta: { authToken, hasDebug } }) => {
+	config: ({ meta: { hasDebug }, ctx }) => {
 		const isBrowser = typeof window !== "undefined";
+		const authToken = ctx?.req ? getCookie(ctx.req, AUTH_COOKIE) : undefined;
 		return {
 			links: [
 				mapError({
@@ -86,10 +87,7 @@ export const trpcNext = createTRPCNext<
 			transformer: superjson,
 		};
 	},
-	meta: (ctx) => ({
-		authToken: ctx.req ? getCookie(ctx.req, AUTH_COOKIE) : undefined,
-		hasDebug: Boolean(ctx.query.debug),
-	}),
+	meta: (ctx) => ({ hasDebug: Boolean(ctx.query.debug) }),
 	ssr: true,
 	awaitPrespassRender: async ({ queryClient, ctx }) => {
 		ctx.timeoutPromise =

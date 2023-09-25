@@ -5572,7 +5572,7 @@ __metadata:
 
 "@trpc/next@patch:@trpc/next@npm%3A10.35.0#./patches/@trpc-next-npm-10.35.0.patch::locator=receipt-app%40workspace%3A.":
   version: 10.35.0
-  resolution: "@trpc/next@patch:@trpc/next@npm%3A10.35.0#./patches/@trpc-next-npm-10.35.0.patch::version=10.35.0&hash=609a57&locator=receipt-app%40workspace%3A."
+  resolution: "@trpc/next@patch:@trpc/next@npm%3A10.35.0#./patches/@trpc-next-npm-10.35.0.patch::version=10.35.0&hash=61c140&locator=receipt-app%40workspace%3A."
   dependencies:
     react-ssr-prepass: ^1.5.0
   peerDependencies:
@@ -5583,7 +5583,7 @@ __metadata:
     next: "*"
     react: ">=16.8.0"
     react-dom: ">=16.8.0"
-  checksum: dba38876235a7ce72dee66342fec343802931966a95f579c1e70971e1d0235bc15d6f9e6b1573dee9cd486c69554638f59f3270d1e819a1f3bef79d9ec743477
+  checksum: d34bb2b984adff16e9d38fd591ca11cea54b9460df9d6616efccb66e084e063b40606b158bee8e3f4a84e2e17124f390e62a4c8c04711fc0cb252cd5d7770676
   languageName: node
   linkType: hard
 
