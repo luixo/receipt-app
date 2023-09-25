@@ -8,6 +8,7 @@ import { ThemeProvider } from "app/utils/styles";
 
 import { NavigationProvider } from "./navigation";
 import { QueriesProvider } from "./queries";
+import { SSRProvider } from "./ssr";
 import { StateProvider } from "./state";
 
 type Props = ExtraAppInitialProps;
@@ -17,6 +18,7 @@ export const Provider: React.FC<React.PropsWithChildren<Props>> = ({
 	colorModeConfig,
 	settings,
 	query,
+	ssrContext,
 }) => {
 	const colorModeState = React.useState(colorModeConfig);
 	const settingsState = React.useState(settings);
@@ -25,9 +27,11 @@ export const Provider: React.FC<React.PropsWithChildren<Props>> = ({
 			<StateProvider query={query}>
 				<ColorModeContext.Provider value={colorModeState}>
 					<SettingsContext.Provider value={settingsState}>
-						<ThemeProvider>
-							<NavigationProvider>{children}</NavigationProvider>
-						</ThemeProvider>
+						<SSRProvider {...ssrContext}>
+							<ThemeProvider>
+								<NavigationProvider>{children}</NavigationProvider>
+							</ThemeProvider>
+						</SSRProvider>
 					</SettingsContext.Provider>
 				</ColorModeContext.Provider>
 			</StateProvider>

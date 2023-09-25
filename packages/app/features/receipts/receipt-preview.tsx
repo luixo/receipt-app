@@ -10,6 +10,7 @@ import { Link } from "app/components/link";
 import { LockedIcon } from "app/components/locked-icon";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useMatchMediaValue } from "app/hooks/use-match-media-value";
+import { useSsrFormat } from "app/hooks/use-ssr-format";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import type { TRPCQueryOutput } from "app/trpc";
@@ -35,6 +36,7 @@ type Props = {
 };
 
 export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
+	const { formatDate } = useSsrFormat();
 	const currency = useFormattedCurrency(receipt.currencyCode);
 	const updateReceiptMutation = trpc.receipts.update.useMutation(
 		useTrpcMutationOptions(mutations.receipts.update.options),
@@ -66,7 +68,7 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 					<Text>{receipt.name}</Text>
 				</TitleLink>
 				<Text small css={{ color: "$accents7" }}>
-					{receipt.issued.toLocaleDateString()}
+					{formatDate(receipt.issued)}
 				</Text>
 			</Grid>
 			<Grid

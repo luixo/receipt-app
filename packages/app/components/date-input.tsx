@@ -7,8 +7,8 @@ import { z } from "zod";
 import { Calendar } from "app/components/calendar";
 import { IconButton } from "app/components/icon-button";
 import { useSingleInput } from "app/hooks/use-single-input";
+import { useSsrFormat } from "app/hooks/use-ssr-format";
 import type { TRPCError } from "app/trpc";
-import { formatDate } from "app/utils/date";
 import { noop } from "app/utils/utils";
 
 type Props = {
@@ -30,6 +30,7 @@ export const DateInput: React.FC<Props> = ({
 	onUpdate,
 	updateOnChange,
 }) => {
+	const { formatDate } = useSsrFormat();
 	const { bindings, state, getValue, setValue, form } = useSingleInput({
 		type: "date",
 		initialValue: timestamp,

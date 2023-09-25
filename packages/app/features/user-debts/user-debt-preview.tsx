@@ -6,6 +6,7 @@ import { DebtSyncStatus } from "app/components/app/debt-sync-status";
 import { Grid } from "app/components/grid";
 import { Link } from "app/components/link";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
+import { useSsrFormat } from "app/hooks/use-ssr-format";
 import type { TRPCQuerySuccessResult } from "app/trpc";
 
 type Props = {
@@ -14,6 +15,7 @@ type Props = {
 
 export const UserDebtPreview: React.FC<Props> = ({ debt }) => {
 	const currency = useFormattedCurrency(debt.currencyCode);
+	const { formatDate } = useSsrFormat();
 	return (
 		<Link href={`/debts/${debt.id}`} color="text">
 			<Grid.Container gap={2}>
@@ -23,7 +25,7 @@ export const UserDebtPreview: React.FC<Props> = ({ debt }) => {
 					</Text>
 				</Grid>
 				<Grid defaultCol={2} lessSmCol={5} lessMdCol={3}>
-					{new Date(debt.timestamp).toLocaleDateString()}
+					{formatDate(debt.timestamp)}
 				</Grid>
 				<Grid defaultCol={2}>
 					<DebtSyncStatus debt={debt} size={24} />

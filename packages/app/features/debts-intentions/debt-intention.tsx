@@ -8,8 +8,8 @@ import {
 
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useMatchMediaValue } from "app/hooks/use-match-media-value";
+import { useSsrFormat } from "app/hooks/use-ssr-format";
 import type { TRPCQueryOutput } from "app/trpc";
-import { formatDate, formatDateTime } from "app/utils/date";
 
 const Wrapper = styled("div", {
 	display: "flex",
@@ -26,6 +26,7 @@ type Props = {
 
 export const DebtIntention = React.forwardRef<HTMLDivElement, Props>(
 	({ intention, children }, ref) => {
+		const { formatDate, formatDateTime } = useSsrFormat();
 		const currency = useFormattedCurrency(intention.currencyCode);
 		const selfCurrency = useFormattedCurrency(intention.current?.currencyCode);
 		const renderChildrenInline = useMatchMediaValue(true, { lessSm: false });
