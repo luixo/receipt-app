@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import type { IncomingHttpHeaders } from "node:http";
 
+import type { TestContext } from "@tests/backend/utils/test";
 import type { SessionsSessionId } from "next-app/db/models";
 import type { UnauthorizedContext } from "next-app/handlers/context";
 import { createContext as createContextRaw } from "next-app/handlers/context";
-import type { TestContext } from "next-tests/utils/test";
 
 type ContextOptions = {
 	headers?: IncomingHttpHeaders;

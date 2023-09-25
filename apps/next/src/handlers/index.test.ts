@@ -7,9 +7,9 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import superjson from "superjson";
 import { describe, expect } from "vitest";
 
+import type { TestContext } from "@tests/backend/utils/test";
+import { test } from "@tests/backend/utils/test";
 import { createContext } from "next-app/handlers/context";
-import type { TestContext } from "next-tests/utils/test";
-import { test } from "next-tests/utils/test";
 
 import { router } from "./index";
 

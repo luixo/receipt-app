@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
 
+import type { TestContext } from "@tests/backend/utils/test";
 import type { CurrencyCode } from "app/utils/currency";
 import { YEAR } from "app/utils/time";
 import type {
@@ -10,7 +11,6 @@ import type {
 	UsersId,
 } from "next-app/db/models";
 import { generatePasswordData } from "next-app/utils/crypto";
-import type { TestContext } from "next-tests/utils/test";
 
 type AccountData = {
 	id?: AccountsId;

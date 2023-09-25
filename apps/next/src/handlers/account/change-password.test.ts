@@ -1,16 +1,16 @@
 import { faker } from "@faker-js/faker";
 import { describe } from "vitest";
 
-import { MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH } from "app/utils/validation";
-import { t } from "next-app/handlers/trpc";
-import { createAuthContext } from "next-tests/utils/context";
-import { insertAccountWithSession } from "next-tests/utils/data";
+import { createAuthContext } from "@tests/backend/utils/context";
+import { insertAccountWithSession } from "@tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
 	expectTRPCError,
 	expectUnauthorizedError,
-} from "next-tests/utils/expect";
-import { test } from "next-tests/utils/test";
+} from "@tests/backend/utils/expect";
+import { test } from "@tests/backend/utils/test";
+import { MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH } from "app/utils/validation";
+import { t } from "next-app/handlers/trpc";
 
 import { procedure } from "./change-password";
 

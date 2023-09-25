@@ -2,14 +2,14 @@ import { faker } from "@faker-js/faker";
 import assert from "node:assert";
 import { describe, expect } from "vitest";
 
-import { t } from "next-app/handlers/trpc";
-import { createContext } from "next-tests/utils/context";
-import { insertAccountWithSession } from "next-tests/utils/data";
+import { createContext } from "@tests/backend/utils/context";
+import { insertAccountWithSession } from "@tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
 	expectTRPCError,
-} from "next-tests/utils/expect";
-import { test } from "next-tests/utils/test";
+} from "@tests/backend/utils/expect";
+import { test } from "@tests/backend/utils/test";
+import { t } from "next-app/handlers/trpc";
 
 import { procedure } from "./void-account";
 

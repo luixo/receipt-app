@@ -3,11 +3,11 @@ import type { TRPC_ERROR_CODE_KEY } from "@trpc/server/rpc";
 import snapshotDiff from "snapshot-diff";
 import { expect } from "vitest";
 
+import { createContext } from "@tests/backend/utils/context";
+import type { TestContext } from "@tests/backend/utils/test";
+import { test } from "@tests/backend/utils/test";
 import type { UnauthorizedContext } from "next-app/handlers/context";
 import { formatErrorMessage } from "next-app/handlers/errors";
-import { createContext } from "next-tests/utils/context";
-import type { TestContext } from "next-tests/utils/test";
-import { test } from "next-tests/utils/test";
 
 export const expectTRPCError = async (
 	fn: () => Promise<unknown>,

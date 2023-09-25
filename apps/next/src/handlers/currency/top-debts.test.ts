@@ -1,12 +1,15 @@
 import { describe, expect } from "vitest";
 
+import { createAuthContext } from "@tests/backend/utils/context";
+import {
+	insertAccountWithSession,
+	insertDebt,
+} from "@tests/backend/utils/data";
+import { expectUnauthorizedError } from "@tests/backend/utils/expect";
+import { test } from "@tests/backend/utils/test";
 import type { CurrencyCode } from "app/utils/currency";
 import { MONTH } from "app/utils/time";
 import { t } from "next-app/handlers/trpc";
-import { createAuthContext } from "next-tests/utils/context";
-import { insertAccountWithSession, insertDebt } from "next-tests/utils/data";
-import { expectUnauthorizedError } from "next-tests/utils/expect";
-import { test } from "next-tests/utils/test";
 
 import { procedure } from "./top-debts";
 
