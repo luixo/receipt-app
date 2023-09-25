@@ -14,6 +14,7 @@ import {
 	getSsrHost,
 } from "app/utils/queries";
 import { SECOND } from "app/utils/time";
+import { omitUndefined } from "app/utils/utils";
 import type { AppRouter } from "next-app/pages/api/trpc/[trpc]";
 import { AUTH_COOKIE } from "next-app/utils/auth-cookie";
 import { getCookie, serialize } from "next-app/utils/cookie";
@@ -74,10 +75,11 @@ export const trpcNext = createTRPCNext<
 						: getSsrHost(
 								(getConfig() as NextConfig).serverRuntimeConfig?.port ?? 0,
 						  ),
-					headers: {
+					// undefined is stringified and passed to the server
+					headers: omitUndefined({
 						debug: hasDebug ? "true" : undefined,
 						cookie: authToken ? serialize(AUTH_COOKIE, authToken) : undefined,
-					},
+					}),
 				}),
 			],
 			queryClientConfig: getQueryClientConfig(),
