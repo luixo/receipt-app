@@ -1,6 +1,6 @@
 import React from "react";
 
-import { setCookies } from "cookies-next";
+import { setCookie } from "cookies-next";
 
 import {
 	SETTINGS_COOKIE_NAME,
@@ -11,7 +11,7 @@ import { MONTH } from "app/utils/time";
 export const useSettingsCookies = () => {
 	const [settings] = React.useContext(SettingsContext);
 	React.useEffect(() => {
-		setCookies(SETTINGS_COOKIE_NAME, settings, {
+		setCookie(SETTINGS_COOKIE_NAME, settings, {
 			path: "/",
 			maxAge: MONTH / 1000,
 		});
