@@ -1,5 +1,6 @@
 import * as Sentry from "@sentry/nextjs";
 import * as trpcNext from "@trpc/server/adapters/next";
+import type { NextApiHandler } from "next";
 
 import { router } from "next-app/handlers";
 import type {
@@ -17,29 +18,32 @@ const isAuthorizedContext = (
 	context: UnauthorizedContext,
 ): context is AuthorizedContext => "auth" in context;
 
-export default Sentry.withSentry(
-	trpcNext.createNextApiHandler<AppRouter>({
-		router,
-		createContext,
-		onError: ({ error, type, path, ctx }) => {
-			if (!ctx) {
-				return;
-			}
-			const email = isAuthorizedContext(ctx) ? ctx.auth.email : undefined;
-			if (error.code === "UNAUTHORIZED" && path === "account.get") {
-				// Do not log an attempt to fetch the account without a cookie
-				return;
-			}
-			ctx.logger.error(
-				`[${error.code}] [${ctx.req.socket.remoteAddress}:${
-					ctx.req.socket.localPort
-				}] [${ctx.req.headers["user-agent"]}] ${type} "${path}"${
-					email ? ` (by ${email})` : ""
-				}: ${error.message}`,
-			);
-		},
-		responseMeta: () => ({ status: 200 }),
-	}),
+const handler = trpcNext.createNextApiHandler<AppRouter>({
+	router,
+	createContext,
+	onError: ({ error, type, path, ctx }) => {
+		if (!ctx) {
+			return;
+		}
+		const email = isAuthorizedContext(ctx) ? ctx.auth.email : undefined;
+		if (error.code === "UNAUTHORIZED" && path === "account.get") {
+			// Do not log an attempt to fetch the account without a cookie
+			return;
+		}
+		ctx.logger.error(
+			`[${error.code}] [${ctx.req.socket.remoteAddress}:${
+				ctx.req.socket.localPort
+			}] [${ctx.req.headers["user-agent"]}] ${type} "${path}"${
+				email ? ` (by ${email})` : ""
+			}: ${error.message}`,
+		);
+	},
+	responseMeta: () => ({ status: 200 }),
+});
+
+export default Sentry.wrapApiHandlerWithSentry<NextApiHandler>(
+	handler,
+	"/trpc/[trpc]",
 );
 
 export const config = {
