@@ -2,10 +2,12 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import type { UserConfig } from "vitest/config";
 import { configDefaults, defineConfig } from "vitest/config";
 
+export const testsRoot = "apps/next/src/";
+
 const testConfig: NonNullable<UserConfig["test"]> = {
 	globalSetup: "./apps/next/tests/global.setup.ts",
 	setupFiles: "./apps/next/tests/tests.setup.ts",
-	exclude: [...configDefaults.exclude, "./apps/next/.next/**/*", ".history"],
+	include: [`./${testsRoot}**/*.test.ts`],
 	coverage: {
 		enabled: true,
 		reporter: ["text", "html", "lcov", "json-summary", "json"],
@@ -13,7 +15,7 @@ const testConfig: NonNullable<UserConfig["test"]> = {
 			...configDefaults.coverage.exclude!,
 			"packages/**/*",
 			"apps/next/tests/**/*",
-			"apps/next/src/providers/**/*",
+			`${testsRoot}/providers/**/*`,
 		],
 	},
 	experimentalVmThreads: true,

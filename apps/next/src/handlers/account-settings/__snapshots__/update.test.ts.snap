@@ -6,8 +6,8 @@ exports[`accountSettings.update > functionality > autoAcceptDebts > settings fou
 + After snapshot
 
 @@ --- --- @@
-- INSERT INTO public.\\"accountSettings\\" VALUES ('ffa9c3a7-8129-4ff9-b074-0bf93d46c1af', true);
-+ INSERT INTO public.\\"accountSettings\\" VALUES ('ffa9c3a7-8129-4ff9-b074-0bf93d46c1af', false);"
+- INSERT INTO public.\\"accountSettings\\" VALUES ('7e8fbfa4-7c2b-41da-9721-bdc6f99c80bb', true);
++ INSERT INTO public.\\"accountSettings\\" VALUES ('7e8fbfa4-7c2b-41da-9721-bdc6f99c80bb', false);"
 `;
 
 exports[`accountSettings.update > functionality > autoAcceptDebts > settings not found - updated with default-like 1`] = `
@@ -16,7 +16,7 @@ exports[`accountSettings.update > functionality > autoAcceptDebts > settings not
 + After snapshot
 
 @@ --- --- @@
-+ INSERT INTO public.\\"accountSettings\\" VALUES ('29d23d45-08dc-4872-b2dc-0be05d1acdc2', false);"
++ INSERT INTO public.\\"accountSettings\\" VALUES ('adaa8036-6cad-46a2-930d-17a4dac71b7d', false);"
 `;
 
 exports[`accountSettings.update > functionality > autoAcceptDebts > settings not found - updated with non-default value 1`] = `
@@ -25,5 +25,5 @@ exports[`accountSettings.update > functionality > autoAcceptDebts > settings not
 + After snapshot
 
 @@ --- --- @@
-+ INSERT INTO public.\\"accountSettings\\" VALUES ('ac043aa8-40f6-4d7a-8274-d2b2688855ae', true);"
++ INSERT INTO public.\\"accountSettings\\" VALUES ('ffaa53de-faa9-417e-af6a-b1698122f0aa', true);"
 `;

@@ -6,9 +6,9 @@ exports[`auth.voidAccount > functionality > account voided 1`] = `
 + After snapshot
 
 @@ --- --- @@
-- INSERT INTO public.accounts VALUES ('48a6ed4c-06f2-4b7d-9ad9-da3f946e68b8', 'maegan_goldner@yahoo.com', 'cc8fb9d95189d1e8b721db9298131c753c67fecfe8f94a8182f6485797a0cf136e848a8c5e8f9963b3adc367fdd4c3298129796197a8445cf40f64fad09d64d5', 'db1de7b867adcfdc7466c5f2a7c5aaa09f5a02ec5ccbcc9aecec1f8adbd58fecc99ace2e1c74683b6d3ea734ce97bcded2ebfdbd36eccb54095ba78bdf56db5b', 'caacb8be-04a0-4663-8bf4-cf24f1e6dc94', '2020-01-01 00:00:00');
+- INSERT INTO public.accounts VALUES ('28095869-a2a9-4f88-9b12-6d333f7e9a0a', 'alejandra_stamm@hotmail.com', 'a16043c658859ad353be4371f62c0bea783428045734d82d74d3960901e97a234369962a798d04f8d21958e9fce0beb51b0cad2f8b11c6ebed6e64f0f775b43a', 'bec905ee2fa978e39a031532acaffb4b7be67b14e5efcb965fbf9148cf5d9b26b8f25c3f4c746ad2e84dac8aa2bd230ec5ba44609ce9b30e23acfbfa818d44ff', 'f3ff3a33-9601-4132-b0b3-af60d821e2c4', '2020-01-01 00:00:00');
 @@ --- --- @@
-- INSERT INTO public.users VALUES ('48a6ed4c-06f2-4b7d-9ad9-da3f946e68b8', 'Makayla', NULL, '48a6ed4c-06f2-4b7d-9ad9-da3f946e68b8', false, false, '48a6ed4c-06f2-4b7d-9ad9-da3f946e68b8');
+- INSERT INTO public.users VALUES ('28095869-a2a9-4f88-9b12-6d333f7e9a0a', 'Lemuel', NULL, '28095869-a2a9-4f88-9b12-6d333f7e9a0a', false, false, '28095869-a2a9-4f88-9b12-6d333f7e9a0a');
 @@ --- --- @@
-- INSERT INTO public.sessions VALUES ('06d8982c-9d23-42e2-8124-8262c6042c4a', '48a6ed4c-06f2-4b7d-9ad9-da3f946e68b8', '2020-12-31 00:00:00');"
+- INSERT INTO public.sessions VALUES ('b3a38c06-e466-4915-bb1d-bf2c0cf02cb4', '28095869-a2a9-4f88-9b12-6d333f7e9a0a', '2020-12-31 00:00:00');"
 `;

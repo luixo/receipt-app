@@ -2,9 +2,9 @@
 
 exports[`currency.rates > functionality > cache has required data > exchange rate returned 1`] = `
 {
-  "EUR": 48.8,
-  "MOP": 4.8,
-  "VND": 91.04,
+  "EUR": 56.78,
+  "MOP": 8.36,
+  "VND": 76.84,
 }
 `;
 

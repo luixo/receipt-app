@@ -6,7 +6,7 @@ exports[`auth.confirmEmail > functionality > account confirmed 1`] = `
 + After snapshot
 
 @@ --- --- @@
-- INSERT INTO public.accounts VALUES ('a666aa31-94bc-4c0e-829f-583098033050', 'thora30@gmail.com', '5cb08350cc58164ba5ae5808dd7066f7e8d3a741ca32b8df0bb5e2435ac1a1551368a85f54baa6857cb087fe24b25f2ea42084dcedd81eb208710f96bbac028e', 'b89dac27cd9fc6ee40d5f627eb6c8fe52bf92c330b14cdafa7a9add55c7ae97c4b0708dadb1334cdcaffb70ffe53d987e3cc34b671bcaba43ca0fe07c2ebca4b', '985bdd48-fec3-4acb-83e8-e2c3aae5b609', '2020-01-01 00:00:00');
+- INSERT INTO public.accounts VALUES ('a1c94e09-15e9-4dad-9b5d-8f03bd8ab6dd', 'bernadine.lindgren@yahoo.com', '767f26fb7317b85a0739a991a259b6083ced149fb3e2c23d36bc592321e0541dffbe9ac2ac0cc0a482ab50a933ab61e9af06bf5d30cd124c5c53e48a6c676e67', '6edd85c7e9238cbbf3b9ecabfd1deca2a7eb4acf42db16b1c83caad4ac1c8f528e1e53ed548f1f4f3fe7daf78c9b5bafacfb8fa427aa41cacf14625ebff3ffe7', '4b656d5d-c27e-4b9b-a4ff-2dc3218a5a3f', '2020-01-01 00:00:00');
 @@ --- --- @@
-+ INSERT INTO public.accounts VALUES ('a666aa31-94bc-4c0e-829f-583098033050', 'thora30@gmail.com', '5cb08350cc58164ba5ae5808dd7066f7e8d3a741ca32b8df0bb5e2435ac1a1551368a85f54baa6857cb087fe24b25f2ea42084dcedd81eb208710f96bbac028e', 'b89dac27cd9fc6ee40d5f627eb6c8fe52bf92c330b14cdafa7a9add55c7ae97c4b0708dadb1334cdcaffb70ffe53d987e3cc34b671bcaba43ca0fe07c2ebca4b', NULL, NULL);"
++ INSERT INTO public.accounts VALUES ('a1c94e09-15e9-4dad-9b5d-8f03bd8ab6dd', 'bernadine.lindgren@yahoo.com', '767f26fb7317b85a0739a991a259b6083ced149fb3e2c23d36bc592321e0541dffbe9ac2ac0cc0a482ab50a933ab61e9af06bf5d30cd124c5c53e48a6c676e67', '6edd85c7e9238cbbf3b9ecabfd1deca2a7eb4acf42db16b1c83caad4ac1c8f528e1e53ed548f1f4f3fe7daf78c9b5bafacfb8fa427aa41cacf14625ebff3ffe7', NULL, NULL);"
 `;
