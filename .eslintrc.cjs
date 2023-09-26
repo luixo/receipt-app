@@ -6,7 +6,9 @@ const getExtraneousDependenciesConfig = (
 ) => ({
 	devDependencies:
 		devDependencies &&
-		devDependencies.map((filename) => path.join(packageJsonDir, filename)),
+		(Array.isArray(devDependencies)
+			? devDependencies.map((filename) => path.join(packageJsonDir, filename))
+			: devDependencies),
 	optionalDependencies: false,
 	packageDir: [".", packageJsonDir].filter(Boolean),
 });
@@ -102,10 +104,11 @@ module.exports = {
 			rules: { "no-console": "off" },
 		},
 		...[
-			["apps/next", ["next.config.js", "tests/**/*", "**/*.test.ts"]],
+			["apps/next", ["next.config.js", "**/*.test.ts"]],
 			["apps/expo"],
 			["packages/app"],
-			["scripts", ["**/*"]],
+			["scripts", true],
+			["testing/vitest", true],
 		].map(([dir, devDependencies]) => ({
 			files: `${dir}/**/*`,
 			rules: {

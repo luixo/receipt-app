@@ -4,7 +4,8 @@
 	"workspaces": [
 		"apps/*",
 		"packages/*",
-		"scripts"
+		"scripts",
+		"testing/*"
 	],
 	"devDependencies": {
 		"@babel/core": "^7.12.9",
@@ -13,7 +14,6 @@
 		"@types/react-native": "^0.72.2",
 		"@typescript-eslint/eslint-plugin": "^6.1.0",
 		"@typescript-eslint/parser": "^6.1.0",
-		"@vitest/coverage-v8": "^0.34.3",
 		"alias-hq": "^6.2.1",
 		"dotenv": "^16.0.0",
 		"dotenv-cli": "^5.1.0",
@@ -30,14 +30,10 @@
 		"lint-staged": "^13.2.3",
 		"pre-commit": "^1.2.2",
 		"prettier": "^3.0.0",
-		"snapshot-diff": "^0.10.0",
 		"testcontainers": "^8.12.0",
-		"timekeeper": "^2.3.1",
 		"ts-node": "^10.9.1",
 		"turbo": "^1.2.2",
-		"typescript": "^5.1.6",
-		"vite-tsconfig-paths": "^4.2.0",
-		"vitest": "^0.34.1"
+		"typescript": "^5.1.6"
 	},
 	"scripts": {
 		"dev": "dotenv -c -- yarn workspace scripts dev",
@@ -54,7 +50,7 @@
 		"db:migrate:production": "dotenv -c production -- yarn workspace scripts db:migrate",
 		"db:generate-types": "dotenv -c -- yarn workspace scripts db:generate-types && yarn lint:fix && yarn format",
 		"lint-staged": "lint-staged",
-		"backend:test": "TZ=GMT NODE_OPTIONS='--loader tsx --no-warnings' vitest"
+		"backend:test": "yarn workspace vitest test"
 	},
 	"dependencies": {
 		"@nextui-org/react": "1.0.0-beta.10",

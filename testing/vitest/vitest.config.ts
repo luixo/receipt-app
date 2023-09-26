@@ -1,20 +1,21 @@
+import path from "node:path";
 import tsconfigPaths from "vite-tsconfig-paths";
 import type { UserConfig } from "vitest/config";
 import { configDefaults, defineConfig } from "vitest/config";
 
-export const testsRoot = "apps/next/src/";
+const pathToRoot = path.resolve(__dirname, "../..");
+export const testsRoot = `${pathToRoot}/apps/next/src/`;
 
 const testConfig: NonNullable<UserConfig["test"]> = {
-	globalSetup: "./apps/next/tests/global.setup.ts",
-	setupFiles: "./apps/next/tests/tests.setup.ts",
-	include: [`./${testsRoot}**/*.test.ts`],
+	globalSetup: "./global.setup.ts",
+	setupFiles: "./tests.setup.ts",
+	include: [`${pathToRoot}/apps/next/**/*.test.ts`],
 	coverage: {
 		enabled: true,
 		reporter: ["text", "html", "lcov", "json-summary", "json"],
 		exclude: [
 			...configDefaults.coverage.exclude!,
-			"packages/**/*",
-			"apps/next/tests/**/*",
+			`${pathToRoot}/packages/**/*`,
 			`${testsRoot}/providers/**/*`,
 		],
 	},
