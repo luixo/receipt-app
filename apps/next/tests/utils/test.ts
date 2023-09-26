@@ -1,14 +1,14 @@
 import type { Suite } from "vitest";
 import { test as originalTest } from "vitest";
 
-import type { CacheDbOptionsMock } from "next-tests/utils/mocks/cache-db";
-import { getCacheDbOptions } from "next-tests/utils/mocks/cache-db";
-import type { EmailOptionsMock } from "next-tests/utils/mocks/email";
-import { getEmailOptions } from "next-tests/utils/mocks/email";
-import type { ExchangeRateOptionsMock } from "next-tests/utils/mocks/exchange-rate";
-import { getExchangeRateOptions } from "next-tests/utils/mocks/exchange-rate";
-import type { ResponseHeadersMock } from "next-tests/utils/mocks/response-headers";
-import { getResponseHeaders } from "next-tests/utils/mocks/response-headers";
+import type { CacheDbOptionsMock } from "@tests/backend/utils/mocks/cache-db";
+import { getCacheDbOptions } from "@tests/backend/utils/mocks/cache-db";
+import type { EmailOptionsMock } from "@tests/backend/utils/mocks/email";
+import { getEmailOptions } from "@tests/backend/utils/mocks/email";
+import type { ExchangeRateOptionsMock } from "@tests/backend/utils/mocks/exchange-rate";
+import { getExchangeRateOptions } from "@tests/backend/utils/mocks/exchange-rate";
+import type { ResponseHeadersMock } from "@tests/backend/utils/mocks/response-headers";
+import { getResponseHeaders } from "@tests/backend/utils/mocks/response-headers";
 
 export type TestContext = {
 	emailOptions: EmailOptionsMock;

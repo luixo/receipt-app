@@ -1,14 +1,14 @@
 import { describe } from "vitest";
 
-import { MINUTE, YEAR } from "app/utils/time";
-import { t } from "next-app/handlers/trpc";
-import { createContext } from "next-tests/utils/context";
+import { createContext } from "@tests/backend/utils/context";
 import {
 	insertAccount,
 	insertResetPasswordIntention,
-} from "next-tests/utils/data";
-import { expectDatabaseDiffSnapshot } from "next-tests/utils/expect";
-import { test } from "next-tests/utils/test";
+} from "@tests/backend/utils/data";
+import { expectDatabaseDiffSnapshot } from "@tests/backend/utils/expect";
+import { test } from "@tests/backend/utils/test";
+import { MINUTE, YEAR } from "app/utils/time";
+import { t } from "next-app/handlers/trpc";
 
 import { procedure } from "./cleanup";
 

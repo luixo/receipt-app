@@ -1,6 +1,13 @@
 import { faker } from "@faker-js/faker";
 import { describe, expect } from "vitest";
 
+import { createContext } from "@tests/backend/utils/context";
+import { insertAccountWithSession } from "@tests/backend/utils/data";
+import {
+	expectDatabaseDiffSnapshot,
+	expectTRPCError,
+} from "@tests/backend/utils/expect";
+import { test } from "@tests/backend/utils/test";
 import {
 	MAX_PASSWORD_LENGTH,
 	MAX_USERNAME_LENGTH,
@@ -9,13 +16,6 @@ import {
 } from "app/utils/validation";
 import { t } from "next-app/handlers/trpc";
 import { UUID_REGEX } from "next-app/handlers/validation";
-import { createContext } from "next-tests/utils/context";
-import { insertAccountWithSession } from "next-tests/utils/data";
-import {
-	expectDatabaseDiffSnapshot,
-	expectTRPCError,
-} from "next-tests/utils/expect";
-import { test } from "next-tests/utils/test";
 
 import { procedure } from "./register";
 

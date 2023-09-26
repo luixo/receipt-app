@@ -69,7 +69,7 @@ module.exports = {
 						position: "before",
 					},
 					{
-						pattern: "{next-app,next-tests,app}/**",
+						pattern: "{next-app,@tests,app}/**",
 						group: "internal",
 						position: "before",
 					},
@@ -79,7 +79,7 @@ module.exports = {
 					"react-native",
 					"app",
 					"next-app",
-					"next-tests",
+					"@tests",
 				],
 			},
 		],

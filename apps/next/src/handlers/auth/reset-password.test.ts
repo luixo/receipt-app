@@ -1,20 +1,20 @@
 import { faker } from "@faker-js/faker";
 import { describe, expect } from "vitest";
 
+import { createContext } from "@tests/backend/utils/context";
+import {
+	insertAccountWithSession,
+	insertResetPasswordIntention,
+} from "@tests/backend/utils/data";
+import {
+	expectDatabaseDiffSnapshot,
+	expectTRPCError,
+} from "@tests/backend/utils/expect";
+import { test } from "@tests/backend/utils/test";
 import { MINUTE } from "app/utils/time";
 import { MAX_PASSWORD_LENGTH, MIN_PASSWORD_LENGTH } from "app/utils/validation";
 import { t } from "next-app/handlers/trpc";
 import { getHash } from "next-app/utils/crypto";
-import { createContext } from "next-tests/utils/context";
-import {
-	insertAccountWithSession,
-	insertResetPasswordIntention,
-} from "next-tests/utils/data";
-import {
-	expectDatabaseDiffSnapshot,
-	expectTRPCError,
-} from "next-tests/utils/expect";
-import { test } from "next-tests/utils/test";
 
 import { procedure } from "./reset-password";
 

@@ -1,18 +1,18 @@
 import { faker } from "@faker-js/faker";
 import { describe, expect } from "vitest";
 
-import { t } from "next-app/handlers/trpc";
-import { MAX_INTENTIONS_AMOUNT } from "next-app/handlers/validation";
-import { createContext } from "next-tests/utils/context";
+import { createContext } from "@tests/backend/utils/context";
 import {
 	insertAccountWithSession,
 	insertResetPasswordIntention,
-} from "next-tests/utils/data";
+} from "@tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
 	expectTRPCError,
-} from "next-tests/utils/expect";
-import { test } from "next-tests/utils/test";
+} from "@tests/backend/utils/expect";
+import { test } from "@tests/backend/utils/test";
+import { t } from "next-app/handlers/trpc";
+import { MAX_INTENTIONS_AMOUNT } from "next-app/handlers/validation";
 
 import { procedure } from "./add";
 

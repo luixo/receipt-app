@@ -9,7 +9,7 @@
 		"paths": {
 			"app/*": ["./packages/app/*"],
 			"next-app/*": ["./apps/next/src/*"],
-			"next-tests/*": ["./apps/next/tests/*"]
+			"@tests/backend/*": ["./apps/next/tests/*"]
 		}
 	},
 	"extends": "expo/tsconfig.base",

@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import * as crypto from "node:crypto";
 import { v4 } from "uuid";
 
+import type { TestContext } from "@tests/backend/utils/test";
 import { getDatabase } from "next-app/db";
 import type { AccountsId } from "next-app/db/models";
 import type { CacheDbOptions } from "next-app/providers/cache-db";
@@ -11,7 +12,6 @@ import type { ExchangeRateOptions } from "next-app/providers/exchange-rate";
 import type { Logger } from "next-app/providers/logger";
 import { baseLogger } from "next-app/providers/logger";
 import { getPool } from "next-app/providers/pg";
-import type { TestContext } from "next-tests/utils/test";
 
 type TestContextPicks = Pick<
 	TestContext,
