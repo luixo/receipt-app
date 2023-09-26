@@ -59,15 +59,16 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: backend-coverage-report
-          path: coverage
+          path: testing/vitest/coverage
       - name: Report coverage
         uses: davelosert/vitest-coverage-report-action@v2
         with:
           name: backend
+          working-directory: testing/vitest
       - name: Pass coverage percent to output
         id: coverage-percent
         run: |
-          COVERAGE=$(node -e 'console.log(Object.entries(require("./coverage/coverage-summary.json").total).reduce((acc, [, m]) => Math.min(acc, m.pct), 100))')
+          COVERAGE=$(node -e 'console.log(Object.entries(require("./testing/vitest/coverage/coverage-summary.json").total).reduce((acc, [, m]) => Math.min(acc, m.pct), 100))')
           echo "Coverage is $COVERAGE"
           echo "coverage=$COVERAGE" >> $GITHUB_OUTPUT
 

@@ -1,17 +1,16 @@
 import { Faker, en, faker } from "@faker-js/faker";
 import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
 import { createHash } from "node:crypto";
+import path from "node:path";
 import { Pool } from "pg";
 import * as timekeeper from "timekeeper";
 import type { Suite as OriginalSuite, ResolvedConfig } from "vitest";
 import { beforeAll, beforeEach } from "vitest";
 
+import { rootPath, testsRoot } from "@tests/backend/vitest.config";
 import { SECOND } from "app/utils/time";
 import type { Database } from "next-app/db";
 import { getDatabase } from "next-app/db";
-
-// eslint-disable-next-line import/no-relative-packages
-import { testsRoot } from "../../../vitest.config";
 
 import { makeConnectionString } from "./databases/connection";
 import type { appRouter } from "./databases/router";
@@ -65,7 +64,9 @@ beforeAll(async (suite) => {
 			connectionString: makeConnectionString(connectionData, databaseName),
 		}),
 	});
-	const suiteId = suite.name.replace(testsRoot, "");
+	const suiteId = path
+		.resolve(rootPath, suite.name)
+		.replace(`${testsRoot}/`, "");
 	// Stable faker to generate uuid / salt on handler side
 	const handlerIdFaker = createStableFaker(suiteId);
 	// Stable faker to generate uuid / salt on tests side

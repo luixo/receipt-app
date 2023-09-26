@@ -7084,7 +7084,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"app@workspace:*, app@workspace:packages/app":
+"app@*, app@workspace:*, app@workspace:packages/app":
   version: 0.0.0-use.local
   resolution: "app@workspace:packages/app"
   dependencies:
@@ -16378,6 +16378,7 @@ __metadata:
     react-dom: ^18.2.0
     superjson: ^1.13.1
     uuid: ^9.0.0
+    vitest: ^0.34.1
     zod-error: ^1.5.0
   languageName: unknown
   linkType: soft
@@ -19153,7 +19154,6 @@ __metadata:
     "@types/react-native": ^0.72.2
     "@typescript-eslint/eslint-plugin": ^6.1.0
     "@typescript-eslint/parser": ^6.1.0
-    "@vitest/coverage-v8": ^0.34.3
     alias-hq: ^6.2.1
     dotenv: ^16.0.0
     dotenv-cli: ^5.1.0
@@ -19181,14 +19181,10 @@ __metadata:
     react-icons: ^4.10.1
     react-native: ^0.72.3
     react-native-web: ^0.19.7
-    snapshot-diff: ^0.10.0
     testcontainers: ^8.12.0
-    timekeeper: ^2.3.1
     ts-node: ^10.9.1
     turbo: ^1.2.2
     typescript: ^5.1.6
-    vite-tsconfig-paths: ^4.2.0
-    vitest: ^0.34.1
     zod: ^3.21.4
   languageName: unknown
   linkType: soft
@@ -22511,6 +22507,25 @@ __metadata:
   checksum: ac2e15b2ad4195ef4d29150f73507904694846844d0402f3bd915b86751a9586ca08b4dbba982a3a29907058f1c2acdcbd89538ccb2d4e15bfd47320b96ab8ea
   languageName: node
   linkType: hard
+
+"vitest@workspace:testing/vitest":
+  version: 0.0.0-use.local
+  resolution: "vitest@workspace:testing/vitest"
+  dependencies:
+    "@faker-js/faker": ^8.0.2
+    "@trpc/client": ^10.35.0
+    "@trpc/server": ^10.35.0
+    "@vitest/coverage-v8": ^0.34.3
+    app: "*"
+    find-free-ports: ^3.1.1
+    kysely: ^0.26.1
+    pg: ^8.11.3
+    snapshot-diff: ^0.10.0
+    timekeeper: ^2.3.1
+    vite-tsconfig-paths: ^4.2.0
+    vitest: ^0.34.1
+  languageName: unknown
+  linkType: soft
 
 "vlq@npm:^1.0.0":
   version: 1.0.1
