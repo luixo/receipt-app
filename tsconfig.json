@@ -12,6 +12,7 @@
 			"@tests/backend/*": ["./testing/vitest/*"]
 		}
 	},
+	"include": ["**/*"],
 	"extends": "expo/tsconfig.base",
 	"ts-node": {
 		"require": ["tsconfig-paths/register"]

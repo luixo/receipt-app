@@ -9,12 +9,10 @@ import { beforeAll, beforeEach } from "vitest";
 
 import { rootPath, testsRoot } from "@tests/backend/vitest.config";
 import { SECOND } from "app/utils/time";
-import type { Database } from "next-app/db";
 import { getDatabase } from "next-app/db";
 
 import { makeConnectionString } from "./databases/connection";
 import type { appRouter } from "./databases/router";
-import type { LoggerMock } from "./utils/mocks/logger";
 import { getLogger } from "./utils/mocks/logger";
 
 // See https://github.com/vitest-dev/vitest/issues/4025
@@ -39,21 +37,6 @@ const createStableFaker = (input: string) => {
 	setSeed(instance, input);
 	return instance;
 };
-
-declare module "vitest" {
-	interface Suite {
-		suiteContext: {
-			logger: LoggerMock;
-			database: Database;
-			dumpDatabase: () => Promise<string>;
-			truncateDatabase: () => Promise<void>;
-			getUuid: () => string;
-			getTestUuid: () => string;
-			getSalt: () => string;
-			getTestSalt: () => string;
-		};
-	}
-}
 
 beforeAll(async (suite) => {
 	const { databaseName, connectionData } = await client.lockDatabase.mutate();
