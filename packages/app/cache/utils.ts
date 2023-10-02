@@ -39,7 +39,7 @@ export type SnapshotFn<Value, ReturnValue = Value> = (
 	snapshot: Value,
 ) => UpdateFn<Value, ReturnValue>;
 
-type UpdaterRevertResult = {
+export type UpdaterRevertResult = {
 	revertFn?: EmptyFn;
 	finalizeFn?: EmptyFn;
 };

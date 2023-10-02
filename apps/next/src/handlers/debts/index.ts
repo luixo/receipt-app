@@ -1,5 +1,6 @@
 import { t } from "next-app/handlers/trpc";
 
+import { procedure as acceptAllIntentions } from "./accept-all-intentions";
 import { procedure as acceptIntention } from "./accept-intention";
 import { procedure as add } from "./add";
 import { procedure as addBatch } from "./add-batch";
@@ -20,4 +21,5 @@ export const router = t.router({
 	addBatch,
 	getIntentions,
 	acceptIntention,
+	acceptAllIntentions,
 });

@@ -10,6 +10,7 @@ import type { TRPCQuerySuccessResult } from "app/trpc";
 import { trpc } from "app/trpc";
 import type { UsersId } from "next-app/db/models";
 
+import { AcceptAllIntentionsButton } from "./accept-all-intentions-button";
 import { InboundDebtIntention } from "./inbound-debt-intention";
 
 const CenteredText = styled(Text, {
@@ -62,6 +63,12 @@ const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 		<>
 			<Text h2>Inbound debts</Text>
 			<Spacer y={0.5} />
+			{data.length === 1 ? null : (
+				<>
+					<AcceptAllIntentionsButton intentions={data} />
+					<Spacer y={1} />
+				</>
+			)}
 			{Object.entries(intentionsByUser).map(
 				([userId, groupedIntentions], index) => (
 					<React.Fragment key={userId}>

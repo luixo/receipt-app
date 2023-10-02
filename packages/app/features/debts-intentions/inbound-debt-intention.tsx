@@ -20,27 +20,7 @@ export const InboundDebtIntention = React.forwardRef<HTMLDivElement, Props>(
 
 		const acceptMutation = trpc.debts.acceptIntention.useMutation(
 			useTrpcMutationOptions(mutations.debts.acceptIntention.options, {
-				context: React.useMemo(
-					() => ({
-						debtId: intention.id,
-						userId: intention.userId,
-						intended: {
-							amount: intention.amount,
-							currencyCode: intention.currencyCode,
-							timestamp: intention.timestamp,
-							lockedTimestamp: intention.lockedTimestamp,
-							note: intention.note,
-							receiptId: intention.receiptId,
-						},
-						current: intention.current
-							? {
-									currencyCode: intention.current.currencyCode,
-									amount: intention.current.amount,
-							  }
-							: undefined,
-					}),
-					[intention],
-				),
+				context: intention,
 			}),
 		);
 		const acceptSyncIntention = React.useCallback(
