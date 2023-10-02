@@ -217,7 +217,11 @@ export const getParticipantSums = <
 		throw new Error("Unexpected leftover bigger than participants left");
 	}
 	// 1c left for a few lucky ones
-	const leftoverThresholdIndex = leftover % nonEmptyParticipantIds.length;
+	const leftoverAmount = leftover % nonEmptyParticipantIds.length;
+	// leftoverAmount === 0 means that everyone gets a 1c leftover
+	// Aamount of leftover cents roughly equals to shortage sum (because of rounding)
+	const leftoverThresholdIndex =
+		leftoverAmount === 0 ? nonEmptyParticipantIds.length : leftoverAmount;
 	const luckyLeftovers = nonEmptyParticipantIds.reduce<Record<UsersId, number>>(
 		(acc, id, index) => ({
 			...acc,
