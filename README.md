@@ -2,14 +2,20 @@
 
 ![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/luixo/878178ea4ba8d28122cc72204df909e7/raw/backend_coverage_master.json)
 
-Based on [Solito](https://solito.dev)
+## What is this?
 
-## Preparation
+This is a pet project to help manage receipts and debts between multiple parties - in a nerdy way that popular apps do not provide.
 
-- Install dependencies: `yarn install`
+## How do I use it?
 
-- Copy all `.env.example` files as `.env.local` and fill with proper values
+Check out the [web version](https://receipt.luixo.ru). It currently lacks onboarding, but it lacks user base as well.
 
-## 🏁 Start the app
+Mobile version will be released some day.
 
-- Next.js & expo local dev: `yarn dev`
+## Tech stack
+
+Based on [Solito](https://solito.dev) hence Next.js on web and Expo on mobile.
+
+Currently, mobile version is neglected until migrating to React Native components.
+
+Web version is CD'd on Vercel.
