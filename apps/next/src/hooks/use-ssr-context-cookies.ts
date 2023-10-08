@@ -14,6 +14,7 @@ export const useSSRContextCookies = () => {
 		setCookie(SSR_CONTEXT_COOKIE_NAME, ssrContextCookieData, {
 			path: "/",
 			maxAge: YEAR,
+			sameSite: "strict",
 		});
 	}, [ssrContextCookieData]);
 };

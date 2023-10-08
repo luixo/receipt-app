@@ -16,9 +16,10 @@ export const useColorModeCookies = () => {
 			setCookie(LAST_COLOR_MODE_COOKIE_NAME, colorModeConfig.last, {
 				path: "/",
 				maxAge: MONTH / 1000,
+				sameSite: "strict",
 			});
 		} else {
-			deleteCookie(LAST_COLOR_MODE_COOKIE_NAME);
+			deleteCookie(LAST_COLOR_MODE_COOKIE_NAME, { sameSite: "strict" });
 		}
 	}, [colorModeConfig.last]);
 	React.useEffect(() => {
@@ -26,9 +27,10 @@ export const useColorModeCookies = () => {
 			setCookie(SELECTED_COLOR_MODE_COOKIE_NAME, colorModeConfig.selected, {
 				path: "/",
 				maxAge: MONTH / 1000,
+				sameSite: "strict",
 			});
 		} else {
-			deleteCookie(SELECTED_COLOR_MODE_COOKIE_NAME);
+			deleteCookie(SELECTED_COLOR_MODE_COOKIE_NAME, { sameSite: "strict" });
 		}
 	}, [colorModeConfig.selected]);
 };

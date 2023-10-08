@@ -13,7 +13,7 @@ exports[`account.logout > functionality > session is removed 2`] = `
 [
   [
     "set-cookie",
-    "authToken=; Path=/; Expires=Wed, 01 Jan 2020 00:00:00 GMT; HttpOnly",
+    "authToken=; Path=/; Expires=Wed, 01 Jan 2020 00:00:00 GMT; HttpOnly; SameSite=Strict",
   ],
 ]
 `;

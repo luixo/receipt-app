@@ -13,6 +13,7 @@ export const setAuthCookie = (
 		httpOnly: true,
 		expires: expirationDate,
 		path: "/",
+		sameSite: "strict",
 	});
 };
 

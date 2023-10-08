@@ -45,7 +45,7 @@ exports[`auth.register > functionality > register successful 2`] = `
 [
   [
     "set-cookie",
-    "authToken=dffcbe65-285f-4554-8669-20df32ae8838; Path=/; Expires=Fri, 31 Jan 2020 00:00:00 GMT; HttpOnly",
+    "authToken=dffcbe65-285f-4554-8669-20df32ae8838; Path=/; Expires=Fri, 31 Jan 2020 00:00:00 GMT; HttpOnly; SameSite=Strict",
   ],
 ]
 `;

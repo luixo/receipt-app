@@ -14,6 +14,7 @@ export const useSettingsCookies = () => {
 		setCookie(SETTINGS_COOKIE_NAME, settings, {
 			path: "/",
 			maxAge: MONTH / 1000,
+			sameSite: "strict",
 		});
 	}, [settings]);
 };
