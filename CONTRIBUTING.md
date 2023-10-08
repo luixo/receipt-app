@@ -40,7 +40,13 @@ To run backend tests:
 yarn backend:test
 ```
 
-On completion tests provide coverage report in `coverage/backend` directory.
+In case snapshots need to be updated, run:
+
+```sh
+yarn backend:test --update
+```
+
+On completion tests provide coverage report in `testing/vitest/coverage` directory.
 
 ### Tests structure
 
