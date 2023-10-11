@@ -2,6 +2,10 @@ name: Setup node with .nvmrc
 runs:
   using: composite
   steps:
+    - name: Install jq
+      # Only install jq if not present
+      run: command -v jq &> /dev/null || (apt-get update && apt-get install -y jq)
+      shell: bash
     - name: Get ngrok version
       id: ngrok-version
       # Outputs something like 1.0.0

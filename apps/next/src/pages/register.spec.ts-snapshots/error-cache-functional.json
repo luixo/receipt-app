@@ -1,0 +1,34 @@
+{
+	"mutations": {
+		"0": {
+			"mutationKey": [
+				[
+					"auth",
+					"register"
+				]
+			],
+			"state": {
+				"context": {
+					"toastId": "1"
+				},
+				"error": {
+					"message": "Email already exist",
+					"data": {
+						"code": "CONFLICT",
+						"httpStatus": 409,
+						"path": "auth.register",
+						"stack": "<redacted>"
+					}
+				},
+				"failureCount": 1,
+				"isPaused": false,
+				"status": "error",
+				"variables": {
+					"email": "test@mail.ru",
+					"name": "Test name",
+					"password": "strong-password"
+				}
+			}
+		}
+	}
+}

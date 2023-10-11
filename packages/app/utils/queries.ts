@@ -25,7 +25,8 @@ export const getQueryClientConfig = (): QueryClientConfig => ({
 		},
 	},
 	logger:
-		process.env.NODE_ENV === "production"
+		// Only leave logging on production if we're in the browser
+		process.env.NODE_ENV === "production" && typeof window !== "undefined"
 			? undefined
 			: {
 					log: noop,

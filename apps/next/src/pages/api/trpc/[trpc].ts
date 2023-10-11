@@ -1,6 +1,7 @@
 import * as Sentry from "@sentry/nextjs";
 import * as trpcNext from "@trpc/server/adapters/next";
 import type { NextApiHandler } from "next";
+import httpProxyMiddleware from "next-http-proxy-middleware";
 
 import { router } from "next-app/handlers";
 import type {
@@ -42,7 +43,24 @@ const handler = trpcNext.createNextApiHandler<AppRouter>({
 });
 
 export default Sentry.wrapApiHandlerWithSentry<NextApiHandler>(
-	handler,
+	async (req, res) => {
+		const proxyPort = req.headers["x-proxy-port"];
+		if (proxyPort && typeof proxyPort === "string") {
+			if (process.env.NEXT_PUBLIC_ENV !== "test") {
+				// eslint-disable-next-line no-console
+				console.warn(
+					"You are trying to use proxying without activating NEXT_PUBLIC_ENV=test",
+				);
+				res.status(403).end("Proxying is only allowed in test mode");
+				return;
+			}
+			httpProxyMiddleware(req, res, {
+				target: `http://localhost:${proxyPort}`,
+			});
+			return;
+		}
+		return handler(req, res);
+	},
 	"/trpc/[trpc]",
 );
 

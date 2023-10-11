@@ -11,6 +11,7 @@ const testConfig: NonNullable<UserConfig["test"]> = {
 	root: rootPath,
 	globalSetup: path.resolve(vitestRoot, "./global.setup.ts"),
 	setupFiles: path.resolve(vitestRoot, "./tests.setup.ts"),
+	include: [path.resolve(testsRoot, "**/*.test.ts")],
 	coverage: {
 		enabled: true,
 		reporter: ["text", "html", "lcov", "json-summary", "json"],

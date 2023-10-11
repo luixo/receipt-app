@@ -29,6 +29,9 @@ import {
 import { Provider } from "app/provider";
 import type { Props as SsrContext } from "app/provider/ssr";
 import { useColorModeCookies } from "next-app/hooks/use-color-mode-cookies";
+import { useHydratedMark } from "next-app/hooks/use-hydrated-mark";
+import { useQueryCacheHelper } from "next-app/hooks/use-query-cache-helper";
+import { useRemoveTestQueryParams } from "next-app/hooks/use-remove-test-query-params";
 import { useSettingsCookies } from "next-app/hooks/use-settings-cookies";
 import { useSSRContextCookies } from "next-app/hooks/use-ssr-context-cookies";
 import type { AppPage } from "next-app/types/page";
@@ -45,6 +48,9 @@ const GlobalHooksComponent: React.FC = () => {
 	useColorModeCookies();
 	useSettingsCookies();
 	useSSRContextCookies();
+	useQueryCacheHelper();
+	useHydratedMark();
+	useRemoveTestQueryParams();
 	return null;
 };
 

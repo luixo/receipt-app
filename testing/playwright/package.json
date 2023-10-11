@@ -1,0 +1,21 @@
+{
+	"name": "playwright",
+	"type": "module",
+	"scripts": {
+		"test": "playwright test -c playwright.config.ts"
+	},
+	"devDependencies": {
+		"@playwright/test": "^1.38.0",
+		"@trpc/client": "^10.35.0",
+		"@trpc/server": "^10.35.0",
+		"app": "*",
+		"async-await-queue": "^2.1.4",
+		"deep-object-diff": "^1.1.9",
+		"join-images": "^1.1.5",
+		"playwright": "^1.38.1",
+		"sharp": "^0.32.6",
+		"snapshot-diff": "^0.10.0",
+		"superjson": "^1.13.1",
+		"uuid": "^9.0.0"
+	}
+}

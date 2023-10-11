@@ -95,7 +95,7 @@ type Props = {
 export const Page: React.FC<Props> = ({ children, elements }) => (
 	<Wrapper>
 		{children}
-		<StickyMenu>
+		<StickyMenu data-testid="sticky-menu">
 			<MenuWrapper>
 				{elements.map((props) => (
 					<MenuItemComponent key={props.href} {...props} />

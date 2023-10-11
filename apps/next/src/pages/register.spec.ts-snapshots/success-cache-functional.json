@@ -1,0 +1,84 @@
+{
+	"queries": {
+		"0": {
+			"state": {
+				"data": {
+					"user": {
+						"name": "Test name"
+					},
+					"account": {
+						"id": "test",
+						"verified": false
+					}
+				},
+				"dataUpdateCount": 1,
+				"dataUpdatedAt": -1,
+				"error": null,
+				"status": "success"
+			}
+		},
+		"1": {
+			"state": {
+				"data": {
+					"items": [],
+					"hasMore": false,
+					"cursor": -1,
+					"count": 0
+				},
+				"dataUpdateCount": 1,
+				"dataUpdatedAt": -1,
+				"error": null,
+				"errorUpdateCount": 0,
+				"errorUpdatedAt": 0,
+				"fetchFailureCount": 0,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			},
+			"queryKey": [
+				[
+					"receipts",
+					"getPaged"
+				],
+				{
+					"input": {
+						"limit": 10,
+						"orderBy": "date-desc",
+						"cursor": 0
+					},
+					"type": "query"
+				}
+			]
+		}
+	},
+	"mutations": {
+		"0": {
+			"mutationKey": [
+				[
+					"auth",
+					"register"
+				]
+			],
+			"state": {
+				"context": {
+					"toastId": "1"
+				},
+				"data": {
+					"account": {
+						"id": "test"
+					}
+				},
+				"error": null,
+				"failureCount": 0,
+				"isPaused": false,
+				"status": "success",
+				"variables": {
+					"email": "test@mail.ru",
+					"name": "Test name",
+					"password": "strong-password"
+				}
+			}
+		}
+	}
+}
