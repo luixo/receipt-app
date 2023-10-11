@@ -20,6 +20,7 @@ const nextConfig = {
 		"expo-constants",
 		"expo-modules-core",
 	],
+	ignorePages: /\.spec\.tsx?$/,
 };
 
 const plugins = [

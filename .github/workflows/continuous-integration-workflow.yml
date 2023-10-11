@@ -72,6 +72,28 @@ jobs:
           echo "Coverage is $COVERAGE"
           echo "coverage=$COVERAGE" >> $GITHUB_OUTPUT
 
+  frontend-test:
+    name: Frontend tests
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.38.0-jammy
+    outputs:
+      coverage: ${{ steps.coverage-percent.outputs.coverage }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup-env
+      - name: Build frontend
+        run: NODE_ENV=test yarn web:build
+      - name: Run frontend tests
+        # see https://github.com/microsoft/playwright/issues/6500
+        run: HOME=/root yarn frontend:test
+        continue-on-error: true
+      - uses: actions/upload-artifact@v3
+        with:
+          name: playwright-report
+          path: testing/playwright/playwright-report/
+          retention-days: 30
+
   update-badges:
     name: Badges
     runs-on: ubuntu-latest

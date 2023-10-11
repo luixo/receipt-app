@@ -41,10 +41,16 @@ const mapError =
 
 export const trpcNext = createTRPCNext<
 	AppRouter,
-	{ hasDebug: boolean },
+	{
+		hasDebug: boolean;
+		// Required to define Playwright test worker for a mock response
+		proxyPort?: number;
+		// Required to define Playwright test id for a mock response
+		controllerId?: string;
+	},
 	NextPageContext & { timeoutPromise: Promise<true> }
 >({
-	config: ({ meta: { hasDebug }, ctx }) => {
+	config: ({ meta: { hasDebug, proxyPort, controllerId }, ctx }) => {
 		const isBrowser = typeof window !== "undefined";
 		const authToken = ctx?.req ? getCookie(ctx.req, AUTH_COOKIE) : undefined;
 		return {
@@ -80,6 +86,8 @@ export const trpcNext = createTRPCNext<
 					headers: omitUndefined({
 						debug: hasDebug ? "true" : undefined,
 						cookie: authToken ? serialize(AUTH_COOKIE, authToken) : undefined,
+						"x-proxy-port": proxyPort ? String(proxyPort) : undefined,
+						"x-controller-id": controllerId,
 					}),
 				}),
 			],
@@ -87,7 +95,16 @@ export const trpcNext = createTRPCNext<
 			transformer: superjson,
 		};
 	},
-	meta: (ctx) => ({ hasDebug: Boolean(ctx.query.debug) }),
+	meta: (ctx) => ({
+		hasDebug: Boolean(ctx.query.debug),
+		proxyPort: Number.isNaN(Number(ctx.query.proxyPort))
+			? undefined
+			: Number(ctx.query.proxyPort),
+		controllerId:
+			typeof ctx.query.controllerId === "string"
+				? ctx.query.controllerId
+				: undefined,
+	}),
 	ssr: true,
 	awaitPrespassRender: async ({ queryClient, ctx }) => {
 		ctx.timeoutPromise =

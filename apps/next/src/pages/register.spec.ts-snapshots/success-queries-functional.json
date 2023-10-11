@@ -1,0 +1,20 @@
+{
+	"account.get": {
+		"serverCalls": 1
+	},
+	"accountConnectionIntentions.getAll": {
+		"clientCalls": 1
+	},
+	"auth.register": {
+		"clientCalls": 1
+	},
+	"debts.getIntentions": {
+		"clientCalls": 1
+	},
+	"receipts.getNonResolvedAmount": {
+		"clientCalls": 1
+	},
+	"receipts.getPaged": {
+		"clientCalls": 1
+	}
+}

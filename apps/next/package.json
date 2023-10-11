@@ -23,6 +23,7 @@
 		"isomorphic-fetch": "^3.0.0",
 		"kysely": "^0.26.1",
 		"next": "^13.4.12",
+		"next-http-proxy-middleware": "^1.2.5",
 		"pg": "^8.11.1",
 		"pino": "^8.14.1",
 		"pino-pretty": "^10.1.0",

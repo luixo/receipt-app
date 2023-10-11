@@ -4,3 +4,4 @@ apps/next/.expo
 apps/expo/.expo
 ios/
 android/
+**/*-snapshots/*.json

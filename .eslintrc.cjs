@@ -104,11 +104,12 @@ module.exports = {
 			rules: { "no-console": "off" },
 		},
 		...[
-			["apps/next", ["next.config.js", "**/*.test.ts"]],
+			["apps/next", ["next.config.js", "**/*.test.ts", "**/*.spec.ts",]],
 			["apps/expo"],
 			["packages/app"],
 			["scripts", true],
 			["testing/vitest", true],
+			["testing/playwright", true],
 		].map(([dir, devDependencies]) => ({
 			files: `${dir}/**/*`,
 			rules: {

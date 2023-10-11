@@ -95,6 +95,7 @@ export const RegisterScreen: AppPage = () => {
 			<Button
 				disabled={!form.formState.isValid || registerMutation.isLoading}
 				onClick={form.handleSubmit(onSubmit)}
+				type="submit"
 			>
 				{registerMutation.isLoading ? <Loading /> : "Register"}
 			</Button>

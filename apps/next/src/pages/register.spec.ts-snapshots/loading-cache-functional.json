@@ -1,0 +1,26 @@
+{
+	"mutations": {
+		"0": {
+			"mutationKey": [
+				[
+					"auth",
+					"register"
+				]
+			],
+			"state": {
+				"context": {
+					"toastId": "1"
+				},
+				"error": null,
+				"failureCount": 0,
+				"isPaused": false,
+				"status": "loading",
+				"variables": {
+					"email": "test@mail.ru",
+					"name": "Test name",
+					"password": "strong-password"
+				}
+			}
+		}
+	}
+}

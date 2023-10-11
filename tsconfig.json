@@ -9,7 +9,8 @@
 		"paths": {
 			"app/*": ["./packages/app/*"],
 			"next-app/*": ["./apps/next/src/*"],
-			"@tests/backend/*": ["./testing/vitest/*"]
+			"@tests/backend/*": ["./testing/vitest/*"],
+			"@tests/frontend/*": ["./testing/playwright/*"]
 		}
 	},
 	"include": ["**/*"],
