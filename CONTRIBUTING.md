@@ -60,6 +60,8 @@ Succesful calls should verify the DB diff after the call as well as side effects
 
 Frontend tests only cover the UI layer (all data is mocked).
 
+On completion tests provide coverage report in `testing/playwright/coverage` directory.
+
 ### Functional tests
 
 To run (functional) frontend tests:
