@@ -6,7 +6,7 @@ exports[`auth.confirmEmail > functionality > account confirmed 1`] = `
 + After snapshot
 
 @@ --- --- @@
-- INSERT INTO public.accounts VALUES ('a1c94e09-15e9-4dad-9b5d-8f03bd8ab6dd', 'bernadine.lindgren@yahoo.com', '767f26fb7317b85a0739a991a259b6083ced149fb3e2c23d36bc592321e0541dffbe9ac2ac0cc0a482ab50a933ab61e9af06bf5d30cd124c5c53e48a6c676e67', '6edd85c7e9238cbbf3b9ecabfd1deca2a7eb4acf42db16b1c83caad4ac1c8f528e1e53ed548f1f4f3fe7daf78c9b5bafacfb8fa427aa41cacf14625ebff3ffe7', '4b656d5d-c27e-4b9b-a4ff-2dc3218a5a3f', '2020-01-01 00:00:00');
+- INSERT INTO public.accounts VALUES ('0e58efec-192a-4235-979f-90e9cc0e2035', 'bernadine.lindgren@yahoo.com', 'fabe32951e8b35e2d9aec7eaeb91afff3abbbee765e8ffa10fc9552df0459e3f319a707dc73b0d2cd0c7fcc64a84ea1e7ac3ad91c5cb0d7b01db72137513f1ac', '6f6ddc5bdb1064cf875b28ba93ebbee4fb7daa674eeb1dbeeeef86aeb5df2eed5ce3b745dde2cfc7df7432dd04f07ce94eeffac914f5fbdf82b47bfcbb583d9b', '0f4699d2-4ea7-4371-b567-dd9f358db940', '2020-01-01 00:00:00');
 @@ --- --- @@
-+ INSERT INTO public.accounts VALUES ('a1c94e09-15e9-4dad-9b5d-8f03bd8ab6dd', 'bernadine.lindgren@yahoo.com', '767f26fb7317b85a0739a991a259b6083ced149fb3e2c23d36bc592321e0541dffbe9ac2ac0cc0a482ab50a933ab61e9af06bf5d30cd124c5c53e48a6c676e67', '6edd85c7e9238cbbf3b9ecabfd1deca2a7eb4acf42db16b1c83caad4ac1c8f528e1e53ed548f1f4f3fe7daf78c9b5bafacfb8fa427aa41cacf14625ebff3ffe7', NULL, NULL);"
++ INSERT INTO public.accounts VALUES ('0e58efec-192a-4235-979f-90e9cc0e2035', 'bernadine.lindgren@yahoo.com', 'fabe32951e8b35e2d9aec7eaeb91afff3abbbee765e8ffa10fc9552df0459e3f319a707dc73b0d2cd0c7fcc64a84ea1e7ac3ad91c5cb0d7b01db72137513f1ac', '6f6ddc5bdb1064cf875b28ba93ebbee4fb7daa674eeb1dbeeeef86aeb5df2eed5ce3b745dde2cfc7df7432dd04f07ce94eeffac914f5fbdf82b47bfcbb583d9b', NULL, NULL);"
 `;

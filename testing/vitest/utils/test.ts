@@ -1,3 +1,5 @@
+import { Faker, en, faker } from "@faker-js/faker";
+import { createHash } from "node:crypto";
 import { test as originalTest } from "vitest";
 
 import type { CacheDbOptionsMock } from "@tests/backend/utils/mocks/cache-db";
@@ -16,10 +18,6 @@ type SuiteContext = {
 	database: Database;
 	dumpDatabase: () => Promise<string>;
 	truncateDatabase: () => Promise<void>;
-	getUuid: () => string;
-	getTestUuid: () => string;
-	getSalt: () => string;
-	getTestSalt: () => string;
 };
 
 declare module "vitest" {
@@ -28,23 +26,68 @@ declare module "vitest" {
 	}
 }
 
-export type TestContext = {
+type FakerContext = {
+	getUuid: () => string;
+	getTestUuid: () => string;
+	getSalt: () => string;
+	getTestSalt: () => string;
+};
+
+type MockContext = {
 	emailOptions: EmailOptionsMock;
 	responseHeaders: ResponseHeadersMock;
 	cacheDbOptions: CacheDbOptionsMock;
 	exchangeRateOptions: ExchangeRateOptionsMock;
-} & SuiteContext;
+};
+
+export type TestContext = FakerContext & MockContext & SuiteContext;
 export type TestFixture = { ctx: TestContext };
+
+const HASH_MAGNITUDE = 10 ** 30;
+
+const setSeed = (instance: Faker, input: string) => {
+	instance.seed(
+		parseInt(createHash("sha1").update(input).digest("hex"), 16) /
+			HASH_MAGNITUDE,
+	);
+};
+
+export const createStableFaker = (input: string) => {
+	const instance = new Faker({ locale: en });
+	setSeed(instance, input);
+	return instance;
+};
 
 export const test = originalTest.extend<TestFixture>({
 	ctx: async ({ task }, use) => {
 		const { suiteContext } = task.suite.file!;
 		suiteContext.logger.resetMessages();
+		// Stable faker to generate uuid / salt on handler side
+		const handlerIdFaker = createStableFaker(task.name);
+		// Stable faker to generate uuid / salt on tests side
+		const testIdFaker = createStableFaker(task.name);
+		const testId = task.name;
+		// Regular faker to generate fake data in a test
+		setSeed(faker, testId);
 		await use({
 			emailOptions: getEmailOptions(),
 			cacheDbOptions: getCacheDbOptions(),
 			responseHeaders: getResponseHeaders(),
 			exchangeRateOptions: getExchangeRateOptions(),
+			getUuid: () => handlerIdFaker.string.uuid(),
+			getSalt: () =>
+				handlerIdFaker.string.hexadecimal({
+					length: 128,
+					casing: "lower",
+					prefix: "",
+				}),
+			getTestUuid: () => testIdFaker.string.uuid(),
+			getTestSalt: () =>
+				testIdFaker.string.hexadecimal({
+					length: 128,
+					casing: "lower",
+					prefix: "",
+				}),
 			...suiteContext,
 		});
 	},

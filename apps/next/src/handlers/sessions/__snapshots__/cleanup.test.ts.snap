@@ -6,6 +6,6 @@ exports[`sessions.cleanup > functionality > sessions are removed 1`] = `
 + After snapshot
 
 @@ --- --- @@
-- INSERT INTO public.sessions VALUES ('89e7bd97-1bf5-4f11-a76d-cd4cc07b7a89', '158c56db-b9bd-42ce-a4c8-0d4cf0b0b1a1', '2019-12-31 23:59:00');
-- INSERT INTO public.sessions VALUES ('a19c51ec-1355-475b-b67c-2873413249cc', '158c56db-b9bd-42ce-a4c8-0d4cf0b0b1a1', '2019-01-01 00:00:00');"
+- INSERT INTO public.sessions VALUES ('3be259b9-24bb-4bf9-bb83-6ed4bc789620', '46548e5a-c86e-425d-9504-8b2c12232bb2', '2019-12-31 23:59:00');
+- INSERT INTO public.sessions VALUES ('4f0be312-8b97-4c04-a87a-c1462082d462', '46548e5a-c86e-425d-9504-8b2c12232bb2', '2019-01-01 00:00:00');"
 `;

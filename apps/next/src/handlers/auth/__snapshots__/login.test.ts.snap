@@ -6,5 +6,5 @@ exports[`auth.login > functionality > login successful 1`] = `
 + After snapshot
 
 @@ --- --- @@
-+ INSERT INTO public.sessions VALUES ('39369cc3-eba9-48b9-82f2-c65cc9adbac4', 'ad0ab45a-e4c6-4051-b41f-2eeb2c98a1e3', '2020-01-31 00:00:00');"
++ INSERT INTO public.sessions VALUES ('3a5a4d2e-cde5-4132-9be0-c13d55fb2b6c', '5acba26a-7c4b-4340-9aa6-0a1942365f2e', '2020-01-31 00:00:00');"
 `;
