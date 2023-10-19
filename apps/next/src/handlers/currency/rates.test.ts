@@ -157,14 +157,46 @@ describe("currency.rates", () => {
 			test("exchange rate returned", async ({ ctx }) => {
 				const dbMock = ctx.cacheDbOptions.mock!;
 				respondAsEmptyCache(dbMock);
+				ctx.exchangeRateOptions.mock.addInterceptor(async (_, to) =>
+					to.reduce(
+						(acc, currency) => ({ ...acc, [currency]: getFakeRate() }),
+						{},
+					),
+				);
 				const { sessionId } = await insertAccountWithSession(ctx);
 				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const currencyFrom = "USD";
+				const currenciesTo = ["EUR", "MOP", "VND"];
 				const result = await caller.procedure({
-					from: "USD",
-					to: ["EUR", "MOP", "VND"],
+					from: currencyFrom,
+					to: currenciesTo,
 				});
-				expect(result).toMatchSnapshot();
-				expect(dbMock.getMessages()).toMatchSnapshot();
+				expect(Object.keys(result).sort()).toStrictEqual<typeof currenciesTo>(
+					[...currenciesTo].sort(),
+				);
+				expect(result).toStrictEqual<typeof result>(
+					currenciesTo.reduce(
+						(acc, currency) => ({ ...acc, [currency]: result[currency] }),
+						{},
+					),
+				);
+				const dbMessages = dbMock.getMessages();
+				expect(dbMessages).toStrictEqual<typeof dbMessages>([
+					[
+						"get",
+						[`${currencyFrom}->${currenciesTo.join(",")}`],
+						{ result: null },
+					],
+					[
+						"setex",
+						[
+							`${currencyFrom}->${currenciesTo.join(",")}`,
+							60,
+							JSON.stringify(result),
+						],
+						{ result: "OK" },
+					],
+				]);
 			});
 		});
 
@@ -180,11 +212,21 @@ describe("currency.rates", () => {
 				});
 				const { sessionId } = await insertAccountWithSession(ctx);
 				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const currencyFrom = "USD";
+				const currenciesTo = ["EUR", "MOP", "VND"];
 				const result = await caller.procedure({
-					from: "USD",
-					to: ["EUR", "MOP", "VND"],
+					from: currencyFrom,
+					to: currenciesTo,
 				});
-				expect(result).toMatchSnapshot();
+				expect(Object.keys(result).sort()).toStrictEqual<typeof currenciesTo>(
+					[...currenciesTo].sort(),
+				);
+				expect(result).toStrictEqual<typeof result>(
+					currenciesTo.reduce(
+						(acc, currency) => ({ ...acc, [currency]: result[currency] }),
+						{},
+					),
+				);
 			});
 		});
 	});

@@ -112,12 +112,12 @@ describe("auth.resetPassword", () => {
 			const { token } = await insertResetPasswordIntention(ctx, accountId);
 			const caller = router.createCaller(createContext(ctx));
 			const password = faker.internet.password();
-			await expectDatabaseDiffSnapshot(ctx, async () => {
-				await caller.procedure({
+			await expectDatabaseDiffSnapshot(ctx, () =>
+				caller.procedure({
 					token,
 					password,
-				});
-			});
+				}),
+			);
 			const { passwordHash, passwordSalt } = await ctx.database
 				.selectFrom("accounts")
 				.where("id", "=", accountId)

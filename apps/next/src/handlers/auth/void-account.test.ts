@@ -62,12 +62,10 @@ describe("auth.voidAccount", () => {
 				confirmationToken,
 				"Confirmation token should exist on creation of test account",
 			);
-			await expectDatabaseDiffSnapshot(ctx, async () => {
-				const result = await caller.procedure({
-					token: confirmationToken,
-				});
-				expect(result).toEqual<typeof result>({ email });
-			});
+			const result = await expectDatabaseDiffSnapshot(ctx, () =>
+				caller.procedure({ token: confirmationToken }),
+			);
+			expect(result).toEqual<typeof result>({ email });
 		});
 
 		test.todo("verify account users are removed");

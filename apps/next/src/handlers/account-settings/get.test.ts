@@ -24,21 +24,30 @@ describe("accountSettings.get", () => {
 		test("settings not found - default returned", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
-			await expect(await caller.procedure()).toMatchSnapshot();
+			const result = await caller.procedure();
+			await expect(result).toStrictEqual<typeof result>({
+				autoAcceptDebts: false,
+			});
 		});
 
 		test("settings found - default", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			await insertAccountSettings(ctx, accountId, { autoAcceptDebts: false });
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
-			await expect(await caller.procedure()).toMatchSnapshot();
+			const result = await caller.procedure();
+			await expect(result).toStrictEqual<typeof result>({
+				autoAcceptDebts: false,
+			});
 		});
 
 		test("settings found - changed", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			await insertAccountSettings(ctx, accountId, { autoAcceptDebts: true });
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
-			await expect(await caller.procedure()).toMatchSnapshot();
+			const result = await caller.procedure();
+			await expect(result).toStrictEqual<typeof result>({
+				autoAcceptDebts: true,
+			});
 		});
 	});
 });

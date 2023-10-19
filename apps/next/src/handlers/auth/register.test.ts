@@ -121,31 +121,53 @@ describe("auth.register", () => {
 		test("register successful", async ({ ctx }) => {
 			ctx.emailOptions.active = false;
 			const caller = router.createCaller(createContext(ctx));
-			await expectDatabaseDiffSnapshot(ctx, async () => {
-				const result = await caller.procedure({
-					email: faker.internet.email(),
-					password: faker.internet.password(),
-					name: faker.person.firstName(),
-				});
-				expect(result.account.id).toMatch(UUID_REGEX);
-				expect(result).toEqual<typeof result>({
-					account: { id: result.account.id },
-				});
-			});
-			expect(ctx.responseHeaders.get()).toMatchSnapshot();
-		});
-
-		test("email sent if active", async ({ ctx }) => {
-			const caller = router.createCaller(createContext(ctx));
-			await expectDatabaseDiffSnapshot(ctx, () =>
+			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({
 					email: faker.internet.email(),
 					password: faker.internet.password(),
 					name: faker.person.firstName(),
 				}),
 			);
+			expect(result.account.id).toMatch(UUID_REGEX);
+			expect(result).toEqual<typeof result>({
+				account: { id: result.account.id },
+			});
+			const responseHeaders = ctx.responseHeaders.get();
+			const setCookieTuple = responseHeaders.find(
+				([key]) => key === "set-cookie",
+			);
+			expect(setCookieTuple).toBeTruthy();
+			const tokenMatch = setCookieTuple![1]!
+				.toString()
+				.match(/authToken=([^;]+)/);
+			expect(tokenMatch).toBeTruthy();
+			const token = tokenMatch![1]!;
+			expect(responseHeaders).toStrictEqual<typeof responseHeaders>([
+				[
+					"set-cookie",
+					`authToken=${token}; Path=/; Expires=Fri, 31 Jan 2020 00:00:00 GMT; HttpOnly; SameSite=Strict`,
+				],
+			]);
+		});
+
+		test("email sent if active", async ({ ctx }) => {
+			const email = faker.internet.email();
+			const caller = router.createCaller(createContext(ctx));
+			await expectDatabaseDiffSnapshot(ctx, () =>
+				caller.procedure({
+					email,
+					password: faker.internet.password(),
+					name: faker.person.firstName(),
+				}),
+			);
 			expect(ctx.emailOptions.mock.getMessages()).toHaveLength(1);
-			expect(ctx.emailOptions.mock.getMessages()[0]).toMatchSnapshot();
+			const message = ctx.emailOptions.mock.getMessages()[0]!;
+			expect(message).toStrictEqual<typeof message>({
+				address: email.toLowerCase(),
+				body: message.body,
+				subject: "Confirm email in Receipt App",
+			});
+			expect(message.body).toMatchSnapshot();
 		});
 
 		test("email reports error if broken", async ({ ctx }) => {

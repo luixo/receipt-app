@@ -12,9 +12,7 @@ exports[`auth.register > functionality > email sent if active 1`] = `
 `;
 
 exports[`auth.register > functionality > email sent if active 2`] = `
-{
-  "address": "roberto9@yahoo.com",
-  "body": "
+"
 	<!doctype html lang=\\"en\\">
 	<html lang=\\"en\\">
 		<head>
@@ -25,9 +23,7 @@ exports[`auth.register > functionality > email sent if active 2`] = `
 		</head>
 		<body><table role=\\"presentation\\" style=\\"border:0\\" cellPadding=\\"0\\" cellSpacing=\\"0\\" class=\\"body\\"><tr><td> </td><td class=\\"container\\"><div class=\\"header\\"><table role=\\"presentation\\" style=\\"border:0\\" cellPadding=\\"0\\" cellSpacing=\\"0\\" width=\\"100%\\"><tr><td class=\\"align-center\\" width=\\"100%\\"><h1>Receipt App</h1></td></tr></table></div><div class=\\"content\\"><span class=\\"preheader\\">Receipt App confirm email</span><table role=\\"presentation\\" class=\\"main\\"><tr><td class=\\"wrapper\\"><table role=\\"presentation\\" style=\\"border:0\\" cellPadding=\\"0\\" cellSpacing=\\"0\\"><tr><td><h3>✨Welcome to Receipt App✨</h3><p>Happy counting!</p><table role=\\"presentation\\" style=\\"border:0\\" cellPadding=\\"0\\" cellSpacing=\\"0\\" class=\\"btn btn-primary\\"><tbody><tr><td align=\\"left\\"><table role=\\"presentation\\" style=\\"border:0\\" cellPadding=\\"0\\" cellSpacing=\\"0\\"><tbody><tr><td> <a href=\\"http://receipt-app.test/confirm-email?token=1668eb65-2967-4c4e-94cd-98ddf052c611\\" rel=\\"noreferrer\\" target=\\"_blank\\">Confirm email</a> </td></tr></tbody></table></td></tr></tbody></table><p>Didn’t register in Receipt App? Click below to void your account.</p><table role=\\"presentation\\" style=\\"border:0\\" cellPadding=\\"0\\" cellSpacing=\\"0\\" class=\\"btn btn-primary\\"><tbody><tr><td align=\\"left\\"><table role=\\"presentation\\" style=\\"border:0\\" cellPadding=\\"0\\" cellSpacing=\\"0\\"><tbody><tr><td> <a href=\\"http://receipt-app.test/void-account?token=1668eb65-2967-4c4e-94cd-98ddf052c611\\" rel=\\"noreferrer\\" target=\\"_blank\\">Void account</a> </td></tr></tbody></table></td></tr></tbody></table></td></tr></table></td></tr></table><div class=\\"footer\\"><table role=\\"presentation\\" style=\\"border:0\\" cellPadding=\\"0\\" cellSpacing=\\"0\\"><tr><td class=\\"footer-block\\"><span class=\\"apple-link\\">Contact us on receipt@luixo.ru</span><br/>You can click <a href=\\"http://receipt-app.test/unsubscribe\\">unsubscribe</a>, but there is nothing to unsubscribe from.</td></tr><tr><td class=\\"footer-block powered-by\\">Inspired by <a href=\\"https://postdrop.io\\">Postdrop</a>.</td></tr></table></div></div></td><td> </td></tr></table>
 		</body>
-	</html>",
-  "subject": "Confirm email in Receipt App",
-}
+	</html>"
 `;
 
 exports[`auth.register > functionality > register successful 1`] = `
@@ -39,13 +35,4 @@ exports[`auth.register > functionality > register successful 1`] = `
 + INSERT INTO public.accounts VALUES ('f6c4adc4-b35f-40f4-91ac-a439e3b74466', 'octavia.schuster@hotmail.com', '05ee93383ba895e6a7c28c5f1851969e7a30a7459c3763b6ac167997b7e164b84558dbdc5058a72d7cb2a2c0acdbb3338b906e3b0b70fd77ced272a6d8541f8a', 'f3ce5da5bca27c69d47cddacaf30e0da6c11b89779ffcf50d207fd1c9cccc09360def24f1b08692eadba855ad7a292addd56b9a65f26b1ab8dfd1f20fb32ba4b', NULL, NULL);
 + INSERT INTO public.users VALUES ('f6c4adc4-b35f-40f4-91ac-a439e3b74466', 'Destinee', NULL, 'f6c4adc4-b35f-40f4-91ac-a439e3b74466', true, true, 'f6c4adc4-b35f-40f4-91ac-a439e3b74466');
 + INSERT INTO public.sessions VALUES ('dffcbe65-285f-4554-8669-20df32ae8838', 'f6c4adc4-b35f-40f4-91ac-a439e3b74466', '2020-01-31 00:00:00');"
-`;
-
-exports[`auth.register > functionality > register successful 2`] = `
-[
-  [
-    "set-cookie",
-    "authToken=dffcbe65-285f-4554-8669-20df32ae8838; Path=/; Expires=Fri, 31 Jan 2020 00:00:00 GMT; HttpOnly; SameSite=Strict",
-  ],
-]
 `;

@@ -100,7 +100,13 @@ describe("resetPasswordIntentions.add", () => {
 			await insertResetPasswordIntention(ctx, accountId);
 			await expectDatabaseDiffSnapshot(ctx, () => caller.procedure({ email }));
 			expect(ctx.emailOptions.mock.getMessages()).toHaveLength(1);
-			expect(ctx.emailOptions.mock.getMessages()[0]).toMatchSnapshot();
+			const message = ctx.emailOptions.mock.getMessages()[0]!;
+			expect(message).toStrictEqual<typeof message>({
+				address: email.toLowerCase(),
+				body: message.body,
+				subject: "Reset password intention in Receipt App",
+			});
+			expect(message.body).toMatchSnapshot();
 		});
 	});
 });

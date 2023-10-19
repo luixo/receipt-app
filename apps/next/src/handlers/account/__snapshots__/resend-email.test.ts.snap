@@ -11,9 +11,7 @@ exports[`account.resendEmail > functionality > email is resent 1`] = `
 `;
 
 exports[`account.resendEmail > functionality > email is resent 2`] = `
-{
-  "address": "nicolette.dickinson7@yahoo.com",
-  "body": "
+"
 	<!doctype html lang=\\"en\\">
 	<html lang=\\"en\\">
 		<head>
@@ -24,7 +22,5 @@ exports[`account.resendEmail > functionality > email is resent 2`] = `
 		</head>
 		<body><table role=\\"presentation\\" style=\\"border:0\\" cellPadding=\\"0\\" cellSpacing=\\"0\\" class=\\"body\\"><tr><td> </td><td class=\\"container\\"><div class=\\"header\\"><table role=\\"presentation\\" style=\\"border:0\\" cellPadding=\\"0\\" cellSpacing=\\"0\\" width=\\"100%\\"><tr><td class=\\"align-center\\" width=\\"100%\\"><h1>Receipt App</h1></td></tr></table></div><div class=\\"content\\"><span class=\\"preheader\\">Receipt App confirm email</span><table role=\\"presentation\\" class=\\"main\\"><tr><td class=\\"wrapper\\"><table role=\\"presentation\\" style=\\"border:0\\" cellPadding=\\"0\\" cellSpacing=\\"0\\"><tr><td><h3>✨Welcome to Receipt App✨</h3><p>Happy counting!</p><table role=\\"presentation\\" style=\\"border:0\\" cellPadding=\\"0\\" cellSpacing=\\"0\\" class=\\"btn btn-primary\\"><tbody><tr><td align=\\"left\\"><table role=\\"presentation\\" style=\\"border:0\\" cellPadding=\\"0\\" cellSpacing=\\"0\\"><tbody><tr><td> <a href=\\"http://receipt-app.test/confirm-email?token=1f558420-d6c4-4ea7-a0c6-cdb5b9a65574\\" rel=\\"noreferrer\\" target=\\"_blank\\">Confirm email</a> </td></tr></tbody></table></td></tr></tbody></table><p>Didn’t register in Receipt App? Click below to void your account.</p><table role=\\"presentation\\" style=\\"border:0\\" cellPadding=\\"0\\" cellSpacing=\\"0\\" class=\\"btn btn-primary\\"><tbody><tr><td align=\\"left\\"><table role=\\"presentation\\" style=\\"border:0\\" cellPadding=\\"0\\" cellSpacing=\\"0\\"><tbody><tr><td> <a href=\\"http://receipt-app.test/void-account?token=1f558420-d6c4-4ea7-a0c6-cdb5b9a65574\\" rel=\\"noreferrer\\" target=\\"_blank\\">Void account</a> </td></tr></tbody></table></td></tr></tbody></table></td></tr></table></td></tr></table><div class=\\"footer\\"><table role=\\"presentation\\" style=\\"border:0\\" cellPadding=\\"0\\" cellSpacing=\\"0\\"><tr><td class=\\"footer-block\\"><span class=\\"apple-link\\">Contact us on receipt@luixo.ru</span><br/>You can click <a href=\\"http://receipt-app.test/unsubscribe\\">unsubscribe</a>, but there is nothing to unsubscribe from.</td></tr><tr><td class=\\"footer-block powered-by\\">Inspired by <a href=\\"https://postdrop.io\\">Postdrop</a>.</td></tr></table></div></div></td><td> </td></tr></table>
 		</body>
-	</html>",
-  "subject": "Confirm email in Receipt App",
-}
+	</html>"
 `;

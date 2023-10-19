@@ -99,14 +99,29 @@ describe("auth.login", () => {
 				name,
 			} = await insertAccountWithSession(ctx);
 			const caller = router.createCaller(createContext(ctx));
-			await expectDatabaseDiffSnapshot(ctx, async () => {
-				const result = await caller.procedure({ email, password });
-				expect(result).toEqual<typeof result>({
-					account: { id: accountId, verified: true },
-					user: { name },
-				});
+			const result = await expectDatabaseDiffSnapshot(ctx, () =>
+				caller.procedure({ email, password }),
+			);
+			expect(result).toEqual<typeof result>({
+				account: { id: accountId, verified: true },
+				user: { name },
 			});
-			expect(ctx.responseHeaders.get()).toMatchSnapshot();
+			const responseHeaders = ctx.responseHeaders.get();
+			const setCookieTuple = responseHeaders.find(
+				([key]) => key === "set-cookie",
+			);
+			expect(setCookieTuple).toBeTruthy();
+			const tokenMatch = setCookieTuple![1]!
+				.toString()
+				.match(/authToken=([^;]+)/);
+			expect(tokenMatch).toBeTruthy();
+			const token = tokenMatch![1]!;
+			expect(responseHeaders).toStrictEqual<typeof responseHeaders>([
+				[
+					"set-cookie",
+					`authToken=${token}; Path=/; Expires=Fri, 31 Jan 2020 00:00:00 GMT; HttpOnly; SameSite=Strict`,
+				],
+			]);
 		});
 
 		test("login successful - unverified user", async ({ ctx }) => {

@@ -56,6 +56,8 @@ Erroneous calls should verify inputs and all errors that might happen in an API 
 
 Succesful calls should verify the DB diff after the call as well as side effects (external services being called, cookies being set etc.). If possible, potential unintended effects on DB should be checked (e.g. if a call is supposed to affect a receipt, check other receipts are not affected).
 
+Snapshots should preferably be used to verify DB diffs, but not call results.
+
 ## Frontend
 
 Frontend tests only cover the UI layer (all data is mocked).

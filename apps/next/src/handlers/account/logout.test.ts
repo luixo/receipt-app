@@ -28,7 +28,13 @@ describe("account.logout", () => {
 			const context = createAuthContext(ctx, sessionId);
 			const caller = router.createCaller(context);
 			await expectDatabaseDiffSnapshot(ctx, () => caller.procedure());
-			expect(ctx.responseHeaders.get()).toMatchSnapshot();
+			const responseHeaders = ctx.responseHeaders.get();
+			expect(responseHeaders).toStrictEqual<typeof responseHeaders>([
+				[
+					"set-cookie",
+					"authToken=; Path=/; Expires=Wed, 01 Jan 2020 00:00:00 GMT; HttpOnly; SameSite=Strict",
+				],
+			]);
 		});
 	});
 });

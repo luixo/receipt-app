@@ -101,12 +101,18 @@ describe("account.resendEmail", () => {
 			await insertReadyForEmailAccount(ctx);
 			const { sessionId, email } = await insertReadyForEmailAccount(ctx);
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
-			await expectDatabaseDiffSnapshot(ctx, async () => {
-				const { email: returnEmail } = await caller.procedure();
-				expect(returnEmail).toEqual(email);
-			});
+			const { email: returnEmail } = await expectDatabaseDiffSnapshot(ctx, () =>
+				caller.procedure(),
+			);
+			expect(returnEmail).toEqual(email);
 			expect(ctx.emailOptions.mock.getMessages()).toHaveLength(1);
-			expect(ctx.emailOptions.mock.getMessages()[0]).toMatchSnapshot();
+			const message = ctx.emailOptions.mock.getMessages()[0]!;
+			expect(message).toStrictEqual<typeof message>({
+				address: email.toLowerCase(),
+				body: message.body,
+				subject: "Confirm email in Receipt App",
+			});
+			expect(message.body).toMatchSnapshot();
 		});
 	});
 });

@@ -8,12 +8,3 @@ exports[`auth.login > functionality > login successful 1`] = `
 @@ --- --- @@
 + INSERT INTO public.sessions VALUES ('39369cc3-eba9-48b9-82f2-c65cc9adbac4', 'ad0ab45a-e4c6-4051-b41f-2eeb2c98a1e3', '2020-01-31 00:00:00');"
 `;
-
-exports[`auth.login > functionality > login successful 2`] = `
-[
-  [
-    "set-cookie",
-    "authToken=39369cc3-eba9-48b9-82f2-c65cc9adbac4; Path=/; Expires=Fri, 31 Jan 2020 00:00:00 GMT; HttpOnly; SameSite=Strict",
-  ],
-]
-`;

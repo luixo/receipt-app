@@ -44,13 +44,13 @@ export const expectUnauthorizedError = (
 	});
 };
 
-export const expectDatabaseDiffSnapshot = async (
+export const expectDatabaseDiffSnapshot = async <T>(
 	ctx: TestContext,
-	fn: () => Promise<unknown>,
+	fn: () => Promise<T>,
 	snapshotName?: string,
 ) => {
 	const snapshotBefore = await ctx.dumpDatabase();
-	await fn();
+	const result = await fn();
 	const snapshotAfter = await ctx.dumpDatabase();
 	const diff = snapshotDiff(snapshotBefore, snapshotAfter, {
 		contextLines: 0,
@@ -63,4 +63,5 @@ export const expectDatabaseDiffSnapshot = async (
 	} else {
 		expect(diff).toMatchSnapshot();
 	}
+	return result;
 };

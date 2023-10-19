@@ -10,9 +10,7 @@ exports[`resetPasswordIntentions.add > functionality > reset password intention 
 `;
 
 exports[`resetPasswordIntentions.add > functionality > reset password intention added 2`] = `
-{
-  "address": "jaiden94@gmail.com",
-  "body": "
+"
 	<!doctype html lang=\\"en\\">
 	<html lang=\\"en\\">
 		<head>
@@ -23,7 +21,5 @@ exports[`resetPasswordIntentions.add > functionality > reset password intention 
 		</head>
 		<body><table role=\\"presentation\\" style=\\"border:0\\" cellPadding=\\"0\\" cellSpacing=\\"0\\" class=\\"body\\"><tr><td> </td><td class=\\"container\\"><div class=\\"header\\"><table role=\\"presentation\\" style=\\"border:0\\" cellPadding=\\"0\\" cellSpacing=\\"0\\" width=\\"100%\\"><tr><td class=\\"align-center\\" width=\\"100%\\"><h1>Receipt App</h1></td></tr></table></div><div class=\\"content\\"><span class=\\"preheader\\">Receipt App reset password</span><table role=\\"presentation\\" class=\\"main\\"><tr><td class=\\"wrapper\\"><table role=\\"presentation\\" style=\\"border:0\\" cellPadding=\\"0\\" cellSpacing=\\"0\\"><tr><td><h3>Forgot your password?</h3><p>We received a request to reset your password.</p><table role=\\"presentation\\" style=\\"border:0\\" cellPadding=\\"0\\" cellSpacing=\\"0\\" class=\\"btn btn-primary\\"><tbody><tr><td align=\\"left\\"><table role=\\"presentation\\" style=\\"border:0\\" cellPadding=\\"0\\" cellSpacing=\\"0\\"><tbody><tr><td> <a href=\\"http://receipt-app.test/reset-password?token=79fde555-f768-497b-b5b3-0daa1d3e29f8\\" rel=\\"noreferrer\\" target=\\"_blank\\">Reset my password</a> </td></tr></tbody></table></td></tr></tbody></table><p>Didn’t request a password reset? You can ignore this message.</p></td></tr></table></td></tr></table><div class=\\"footer\\"><table role=\\"presentation\\" style=\\"border:0\\" cellPadding=\\"0\\" cellSpacing=\\"0\\"><tr><td class=\\"footer-block\\"><p>This link will expire in the next 24 hours.</p></td></tr><tr><td class=\\"footer-block\\"><span class=\\"apple-link\\">Contact us on receipt@luixo.ru</span><br/>You can click <a href=\\"http://receipt-app.test/unsubscribe\\">unsubscribe</a>, but there is nothing to unsubscribe from.</td></tr><tr><td class=\\"footer-block powered-by\\">Inspired by <a href=\\"https://postdrop.io\\">Postdrop</a>.</td></tr></table></div></div></td><td> </td></tr></table>
 		</body>
-	</html>",
-  "subject": "Reset password intention in Receipt App",
-}
+	</html>"
 `;

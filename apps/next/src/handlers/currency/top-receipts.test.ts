@@ -88,7 +88,20 @@ describe("currency.rates", () => {
 
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
-			expect(result).toMatchSnapshot();
+			expect(result).toStrictEqual<typeof result>([
+				{
+					count: "2",
+					currencyCode: "GEL",
+				},
+				{
+					count: "1",
+					currencyCode: "AMD",
+				},
+				{
+					count: "1",
+					currencyCode: "USD",
+				},
+			]);
 		});
 	});
 });

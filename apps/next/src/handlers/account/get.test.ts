@@ -46,7 +46,7 @@ describe("account.get", () => {
 
 			const account = await caller.procedure();
 
-			expect(account).toMatchObject<typeof account>({
+			expect(account).toStrictEqual<typeof account>({
 				account: { id: accountId, verified: true },
 				user: { name },
 			});
@@ -61,7 +61,7 @@ describe("account.get", () => {
 
 			const account = await caller.procedure();
 
-			expect(account).toMatchObject<typeof account>({
+			expect(account).toStrictEqual<typeof account>({
 				account: { id: accountId, verified: false },
 				user: { name },
 			});
