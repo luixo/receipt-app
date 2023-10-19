@@ -81,6 +81,9 @@ export const procedure = authProcedure
 						.executeTakeFirstOrThrow();
 					return {
 						...myUser,
+						publicName:
+							myUser.publicName === null ? undefined : myUser.publicName,
+						email: myUser.email === null ? undefined : myUser.email,
 						localId: user.remoteId as UsersId | null,
 					};
 				}
@@ -101,7 +104,9 @@ export const procedure = authProcedure
 				return {
 					...theirUser,
 					name: theirUser.publicName || theirUser.name,
-					publicName: theirUser.publicName,
+					publicName:
+						theirUser.publicName === null ? undefined : theirUser.publicName,
+					email: theirUser.email === null ? undefined : theirUser.email,
 					localId: null as UsersId | null,
 				};
 			}
@@ -112,6 +117,8 @@ export const procedure = authProcedure
 		}
 		return {
 			...user,
+			publicName: user.publicName === null ? undefined : user.publicName,
+			email: user.email === null ? undefined : user.email,
 			localId: user.remoteId as UsersId | null,
 		};
 	});

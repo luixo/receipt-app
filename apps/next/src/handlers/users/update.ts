@@ -18,7 +18,7 @@ export const procedure = authProcedure
 				}),
 				z.strictObject({
 					type: z.literal("publicName"),
-					publicName: userNameSchema.nullable(),
+					publicName: userNameSchema.optional(),
 				}),
 			]),
 		}),

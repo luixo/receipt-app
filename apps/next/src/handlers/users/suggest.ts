@@ -121,8 +121,9 @@ export const procedure = authProcedure
 			.limit(input.limit + 1)
 			.execute();
 		const mappedUsers = fuzzyMathedUsers.map(
-			({ accountId, email, ...user }) => ({
+			({ accountId, email, publicName, ...user }) => ({
 				...user,
+				publicName: publicName === null ? undefined : publicName,
 				connectedAccount:
 					accountId && email ? { id: accountId, email } : undefined,
 			}),

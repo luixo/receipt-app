@@ -42,8 +42,8 @@ export const UserScreen: AppPage = () => {
 								: {
 										id,
 										name: userNameQuery.data || id,
-										publicName: null,
-										email: null,
+										publicName: undefined,
+										email: undefined,
 								  },
 						[id, userNameQuery.data, userQuery.data],
 					)}

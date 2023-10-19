@@ -247,6 +247,8 @@ export const convertParticipantToUser = (
 ): UserProps["user"] => ({
 	id: participant.localUserId || participant.remoteUserId,
 	name: participant.name,
-	publicName: participant.publicName,
-	email: participant.email,
+	// TODO: remove when receipt item participants are also moved to undefined
+	publicName: participant.publicName ?? undefined,
+	// TODO: remove when receipt item participants are also moved to undefined
+	email: participant.email ?? undefined,
 });

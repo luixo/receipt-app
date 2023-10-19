@@ -9,7 +9,7 @@ export const options: UseContextedMutationOptions<"users.unlink"> = {
 					variables.id,
 					(user) => ({
 						...user,
-						email: null,
+						email: undefined,
 						accountId: null,
 					}),
 					(snapshot) => (user) => ({
@@ -22,7 +22,7 @@ export const options: UseContextedMutationOptions<"users.unlink"> = {
 			getPaged: (controller) =>
 				controller.update(
 					variables.id,
-					(user) => ({ ...user, email: null }),
+					(user) => ({ ...user, email: undefined }),
 					(snapshot) => (user) => ({ ...user, email: snapshot.email }),
 				),
 		}),

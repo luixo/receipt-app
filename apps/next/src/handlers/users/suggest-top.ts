@@ -114,8 +114,9 @@ export const procedure = authProcedure
 
 			return {
 				items: users
-					.map(({ accountId, email, ...user }) => ({
+					.map(({ accountId, email, publicName, ...user }) => ({
 						...user,
+						publicName: publicName === null ? undefined : publicName,
 						connectedAccount:
 							accountId && email ? { id: accountId, email } : undefined,
 					}))
@@ -146,8 +147,9 @@ export const procedure = authProcedure
 
 		return {
 			items: users
-				.map(({ latestCount, accountId, email, ...user }) => ({
+				.map(({ latestCount, accountId, email, publicName, ...user }) => ({
 					...user,
+					publicName: publicName === null ? undefined : publicName,
 					connectedAccount:
 						accountId && email ? { id: accountId, email } : undefined,
 				}))

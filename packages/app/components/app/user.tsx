@@ -47,8 +47,8 @@ export type Props = {
 	user: {
 		id: UsersId;
 		name: string;
-		publicName: string | null;
-		email: string | null;
+		publicName?: string;
+		email?: string;
 	};
 	avatarSize?: number;
 	onClick?: () => void;
@@ -80,7 +80,7 @@ export const User = React.forwardRef<HTMLDivElement, Props>(
 					</UserName>
 					{/* color set in css because of inherited margin from Text */}
 					<Text small css={{ color: "$accents7", margin: 0 }}>
-						{user.email ?? undefined}
+						{user.email}
 					</Text>
 				</Information>
 			</Wrapper>

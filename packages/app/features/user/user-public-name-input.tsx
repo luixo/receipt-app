@@ -43,7 +43,7 @@ export const UserPublicNameInput: React.FC<Props> = ({ user, isLoading }) => {
 		useTrpcMutationOptions(mutations.users.update.options),
 	);
 	const savePublicName = React.useCallback(
-		(nextName: string | null) =>
+		(nextName: string | undefined) =>
 			updateUserMutation.mutate(
 				{
 					id: user.remoteId,
@@ -93,7 +93,9 @@ export const UserPublicNameInput: React.FC<Props> = ({ user, isLoading }) => {
 						light
 						isLoading={updateUserMutation.isLoading}
 						onClick={
-							user.publicName ? () => savePublicName(null) : switchShowInput
+							user.publicName
+								? () => savePublicName(undefined)
+								: switchShowInput
 						}
 						color="error"
 						icon={<TrashBin size={24} />}

@@ -39,6 +39,12 @@ export const procedure = authProcedure
 			count: usersCount?.amount ? parseInt(usersCount.amount, 10) : 0,
 			cursor: input.cursor,
 			hasMore: users.length === input.limit + 1,
-			items: users.slice(0, input.limit),
+			items: users
+				.slice(0, input.limit)
+				.map(({ publicName, email, ...user }) => ({
+					...user,
+					publicName: publicName === null ? undefined : publicName,
+					email: email == null ? undefined : email,
+				})),
 		};
 	});

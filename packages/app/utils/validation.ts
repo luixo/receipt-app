@@ -113,7 +113,7 @@ export const accountIdSchema = z.string().uuid().refine<AccountsId>(flavored);
 export const userItemSchema = z.strictObject({
 	id: userIdSchema,
 	name: userNameSchema,
-	publicName: userNameSchema.or(z.null()),
+	publicName: userNameSchema.optional(),
 	connectedAccount: z
 		.strictObject({
 			id: accountIdSchema,
