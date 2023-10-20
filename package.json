@@ -46,7 +46,7 @@
 		"typecheck": "tsc --noEmit",
 		"format": "prettier --write '**/*.{js,jsx,ts,tsx,json}'",
 		"format:verify": "prettier --check '**/*.{js,jsx,ts,tsx,json}'",
-		"lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+		"lint": "NODE_OPTIONS=\"--max-old-space-size=4096\" eslint . --ext .js,.jsx,.ts,.tsx",
 		"lint:fix": "eslint --fix . --ext .js,.jsx,.ts,.tsx",
 		"db:migrate": "dotenv -c -- yarn workspace scripts db:migrate",
 		"db:migrate:production": "dotenv -c production -- yarn workspace scripts db:migrate",
