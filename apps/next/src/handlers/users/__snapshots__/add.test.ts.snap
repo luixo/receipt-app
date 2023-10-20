@@ -1,0 +1,42 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`users.add > functionality > user is added - no public name, no email 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
++ INSERT INTO public.users VALUES ('5cef6eeb-d06c-414e-813b-705457dfa76a', 'Dr. Jill Grimes', NULL, '7ee13f62-dbf2-4296-bb95-8154ae2c093a', false, false, NULL);"
+`;
+
+exports[`users.add > functionality > user is added - public name, no email 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
++ INSERT INTO public.users VALUES ('3ec84632-ed0b-423d-8191-31544ac6bfc0', 'Carlos Anderson', 'Lewis Hand', '165535c3-68d2-4e19-b854-8d166ce9c56f', false, false, NULL);"
+`;
+
+exports[`users.add > functionality > user is added - with email > doesn't have a vice versa intention 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
++ INSERT INTO public.users VALUES ('0fb185c3-c540-4168-a8bf-956c8ce3cbb5', 'Gilberto Nolan PhD', NULL, '29c912b8-219f-426a-b3d2-67fca04d4210', false, false, NULL);
++ INSERT INTO public.\\"accountConnectionsIntentions\\" VALUES ('29c912b8-219f-426a-b3d2-67fca04d4210', '0fb185c3-c540-4168-a8bf-956c8ce3cbb5', 'e137d89d-f6d2-4cb1-829e-fa58ed8d7ec1', '2020-01-01 00:00:00');"
+`;
+
+exports[`users.add > functionality > user is added - with email > has a vice versa intention 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.users VALUES ('9b2513a6-420a-4961-8f9c-b2ab9d115d3f', 'Ramiro', NULL, '2344445d-bb11-4058-b0f9-10ed5ddba150', false, false, NULL);
+@@ --- --- @@
+- INSERT INTO public.\\"accountConnectionsIntentions\\" VALUES ('2344445d-bb11-4058-b0f9-10ed5ddba150', '9b2513a6-420a-4961-8f9c-b2ab9d115d3f', 'd20a5a4f-9477-4707-8b24-0470962cd596', '2020-01-01 00:00:00');
++ INSERT INTO public.users VALUES ('9b2513a6-420a-4961-8f9c-b2ab9d115d3f', 'Ramiro', NULL, '2344445d-bb11-4058-b0f9-10ed5ddba150', false, false, 'd20a5a4f-9477-4707-8b24-0470962cd596');
++ INSERT INTO public.users VALUES ('a51d7aae-0076-49df-8284-1a59ea6590e3', 'Roland Mante', NULL, 'd20a5a4f-9477-4707-8b24-0470962cd596', false, false, '2344445d-bb11-4058-b0f9-10ed5ddba150');"
+`;
