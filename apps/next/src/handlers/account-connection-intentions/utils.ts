@@ -22,7 +22,7 @@ export const addConnectionIntention = async (
 	if (!targetAccount) {
 		throw new trpc.TRPCError({
 			code: "NOT_FOUND",
-			message: `Account with email ${toEmail.original} does not exist.`,
+			message: `Account with email "${toEmail.original}" does not exist.`,
 		});
 	}
 	const connectedUser = await database
@@ -38,7 +38,7 @@ export const addConnectionIntention = async (
 	if (connectedUser) {
 		throw new trpc.TRPCError({
 			code: "CONFLICT",
-			message: `Account with email ${toEmail.original} is already connected to user ${connectedUser.name}.`,
+			message: `Account with email "${toEmail.original}" is already connected to user "${connectedUser.name}".`,
 		});
 	}
 	const viceVersaIntention = await database
@@ -111,9 +111,9 @@ export const addConnectionIntention = async (
 			);
 			throw new trpc.TRPCError({
 				code: "CONFLICT",
-				message: `You already has intention to connect to ${
+				message: `You already has intention to connect to "${
 					toEmail.original
-				} as user ${existingUser!.name}.`,
+				}" as user "${existingUser!.name}".`,
 			});
 		}
 		if (
@@ -121,7 +121,7 @@ export const addConnectionIntention = async (
 		) {
 			throw new trpc.TRPCError({
 				code: "CONFLICT",
-				message: `You already has intention to connect to user ${user.name}.`,
+				message: `You already has intention to connect to user "${user.name}".`,
 			});
 		}
 		throw e;

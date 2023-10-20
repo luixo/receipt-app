@@ -29,13 +29,13 @@ export const procedure = authProcedure
 				throw new trpc.TRPCError({
 					code: "BAD_REQUEST",
 					message:
-						'Please user "account.changeName" handler to update your own name',
+						'Please use "account.changeName" handler to update your own name.',
 				});
 			} else {
 				throw new trpc.TRPCError({
 					code: "BAD_REQUEST",
 					message:
-						'Updating self user property expect but "name" is not allowed',
+						'Updating self user property expect but "name" is not allowed.',
 				});
 			}
 		}
@@ -43,14 +43,14 @@ export const procedure = authProcedure
 		const user = await getUserById(database, input.id, ["ownerAccountId"]);
 		if (!user) {
 			throw new trpc.TRPCError({
-				code: "PRECONDITION_FAILED",
-				message: `No user found by id ${input.id}`,
+				code: "NOT_FOUND",
+				message: `No user found by id "${input.id}".`,
 			});
 		}
 		if (user.ownerAccountId !== ctx.auth.accountId) {
 			throw new trpc.TRPCError({
-				code: "UNAUTHORIZED",
-				message: `User ${input.id} is not owned by ${ctx.auth.accountId}`,
+				code: "FORBIDDEN",
+				message: `User "${input.id}" is not owned by "${ctx.auth.email}".`,
 			});
 		}
 		let setObject: SimpleUpdateObject<"users"> = {};

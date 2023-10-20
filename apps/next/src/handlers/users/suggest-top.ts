@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { MONTH } from "app/utils/time";
 import { userItemSchema } from "app/utils/validation";
+import type { UsersId } from "next-app/db/models";
 import {
 	getAccessRole,
 	getReceiptById,
@@ -40,6 +41,7 @@ export const procedure = authProcedure
 	)
 	.query(async ({ input, ctx }) => {
 		const { database } = ctx;
+		const filterIds = input.filterIds || [];
 		if (input.options.type === "not-connected-receipt") {
 			const { receiptId } = input.options;
 			const receipt = await getReceiptById(database, receiptId, [
@@ -49,7 +51,7 @@ export const procedure = authProcedure
 			if (!receipt) {
 				throw new trpc.TRPCError({
 					code: "NOT_FOUND",
-					message: `Receipt ${receiptId} does not exist.`,
+					message: `Receipt "${receiptId}" does not exist.`,
 				});
 			}
 			const accessRole = await getAccessRole(
@@ -60,10 +62,9 @@ export const procedure = authProcedure
 			if (!accessRole) {
 				throw new trpc.TRPCError({
 					code: "FORBIDDEN",
-					message: `Not enough rights to view receipt ${receiptId}.`,
+					message: `Not enough rights to view receipt "${receiptId}".`,
 				});
 			}
-			const filterIds = input.filterIds || [];
 			const users = await database
 				.with("orderedUsers", (qc) =>
 					qc
@@ -107,29 +108,65 @@ export const procedure = authProcedure
 				)
 				.selectFrom("orderedUsers")
 				.select(["id", "name", "publicName", "accountId", "email"])
-				.where("latestCount", "<>", "0")
 				.orderBy("latestCount", "desc")
 				.limit(input.limit)
 				.execute();
 
 			return {
-				items: users
-					.map(({ accountId, email, publicName, ...user }) => ({
-						...user,
-						publicName: publicName === null ? undefined : publicName,
-						connectedAccount:
-							accountId && email ? { id: accountId, email } : undefined,
-					}))
-					.slice(0, input.limit),
+				items: users.map(({ accountId, email, publicName, ...user }) => ({
+					...user,
+					publicName: publicName === null ? undefined : publicName,
+					connectedAccount:
+						accountId && email ? { id: accountId, email } : undefined,
+				})),
+			};
+		}
+		if (input.options.type === "not-connected") {
+			const users = await database
+				.selectFrom("users")
+				.where("users.ownerAccountId", "=", ctx.auth.accountId)
+				.where("users.connectedAccountId", "is", null)
+				.leftJoin("debts", (qb) =>
+					qb
+						.onRef("debts.userId", "=", "users.id")
+						.on("debts.timestamp", ">", new Date(Date.now() - MONTH)),
+				)
+				.$if(filterIds.length !== 0, (qb) =>
+					qb.where("users.id", "not in", filterIds),
+				)
+				.select([
+					"users.id",
+					"users.name",
+					"users.publicName",
+					database.fn.count<string>("debts.id").as("latestCount"),
+				])
+				.groupBy("users.id")
+				.orderBy("latestCount", "desc")
+				.orderBy("users.id")
+				.limit(input.limit)
+				.execute();
+			return {
+				items: users.map(({ latestCount, publicName, ...user }) => ({
+					publicName: publicName === null ? undefined : publicName,
+					...user,
+					connectedAccount: undefined,
+				})),
 			};
 		}
 		const users = await database
-			.selectFrom("debts")
-			.where("debts.ownerAccountId", "=", ctx.auth.accountId)
-			.where("debts.timestamp", ">", new Date(Date.now() - MONTH))
-			.innerJoin("users", (qb) => qb.onRef("users.id", "=", "debts.userId"))
+			.selectFrom("users")
+			.where("users.ownerAccountId", "=", ctx.auth.accountId)
+			.where("users.id", "<>", ctx.auth.accountId as UsersId)
+			.leftJoin("debts", (qb) =>
+				qb
+					.onRef("users.id", "=", "debts.userId")
+					.on("debts.timestamp", ">", new Date(Date.now() - MONTH)),
+			)
 			.leftJoin("accounts", (qb) =>
 				qb.onRef("connectedAccountId", "=", "accounts.id"),
+			)
+			.$if(filterIds.length !== 0, (qb) =>
+				qb.where("users.id", "not in", filterIds),
 			)
 			.select([
 				"users.id",
@@ -143,16 +180,17 @@ export const procedure = authProcedure
 			.groupBy("accounts.email")
 			.orderBy("latestCount", "desc")
 			.orderBy("users.id")
+			.limit(input.limit)
 			.execute();
 
 		return {
-			items: users
-				.map(({ latestCount, accountId, email, publicName, ...user }) => ({
+			items: users.map(
+				({ latestCount, accountId, email, publicName, ...user }) => ({
 					...user,
 					publicName: publicName === null ? undefined : publicName,
 					connectedAccount:
 						accountId && email ? { id: accountId, email } : undefined,
-				}))
-				.slice(0, input.limit),
+				}),
+			),
 		};
 	});

@@ -1,0 +1,22 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`users.update > functionality > name is changed 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.users VALUES ('5bbbf9f4-c81f-4157-a501-682568f0b691', 'Octavia', NULL, 'c93663cb-7451-4b72-9682-2a76f24ecd9f', false, false, NULL);
++ INSERT INTO public.users VALUES ('5bbbf9f4-c81f-4157-a501-682568f0b691', 'Denise Rolfson', NULL, 'c93663cb-7451-4b72-9682-2a76f24ecd9f', false, false, NULL);"
+`;
+
+exports[`users.update > functionality > public name is changed 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.users VALUES ('69873d27-7822-4273-b5c2-8ee0a2d004d6', 'Maymie', NULL, 'bb77478a-ebb2-49a7-8833-e1180d2eea85', false, false, NULL);
+@@ --- --- @@
++ INSERT INTO public.users VALUES ('69873d27-7822-4273-b5c2-8ee0a2d004d6', 'Maymie', 'Chelsea Durgan-Skiles', 'bb77478a-ebb2-49a7-8833-e1180d2eea85', false, false, NULL);"
+`;

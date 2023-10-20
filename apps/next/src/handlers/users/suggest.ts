@@ -2,7 +2,7 @@ import * as trpc from "@trpc/server";
 import { sql } from "kysely";
 import { z } from "zod";
 
-import { userItemSchema } from "app/utils/validation";
+import { MAX_SUGGEST_LENGTH, userItemSchema } from "app/utils/validation";
 import {
 	getAccessRole,
 	getReceiptById,
@@ -15,12 +15,12 @@ import {
 	userIdSchema,
 } from "next-app/handlers/validation";
 
-const SIMILARTY_THRESHOLD = 0.2;
+const SIMILARTY_THRESHOLD = 0.33;
 
 export const procedure = authProcedure
 	.input(
 		z.strictObject({
-			input: z.string().max(255),
+			input: z.string().max(MAX_SUGGEST_LENGTH),
 			cursor: offsetSchema.optional(),
 			limit: limitSchema,
 			filterIds: z.array(userIdSchema).optional(),
@@ -58,7 +58,7 @@ export const procedure = authProcedure
 			if (!receipt) {
 				throw new trpc.TRPCError({
 					code: "NOT_FOUND",
-					message: `Receipt ${receiptId} does not exist.`,
+					message: `Receipt "${receiptId}" does not exist.`,
 				});
 			}
 			const accessRole = await getAccessRole(
@@ -69,7 +69,7 @@ export const procedure = authProcedure
 			if (!accessRole) {
 				throw new trpc.TRPCError({
 					code: "FORBIDDEN",
-					message: `Not enough rights to view receipt ${receiptId}.`,
+					message: `Not enough rights to view receipt "${receiptId}".`,
 				});
 			}
 			const userParticipants = await database
@@ -97,12 +97,12 @@ export const procedure = authProcedure
 				qb.where("users.connectedAccountId", "is", null),
 			)
 			.$if(input.input.length < 3, (qb) =>
-				qb.where("name", "ilike", input.input),
+				qb.where("name", "ilike", `%${input.input}%`),
 			)
 			.$if(input.input.length >= 3, (qb) =>
 				qb.where(
-					sql`similarity(name, ${input.input})`.castTo<number>(),
-					">",
+					sql`strict_word_similarity(${input.input}, name)`.castTo<number>(),
+					">=",
 					SIMILARTY_THRESHOLD,
 				),
 			)
@@ -115,8 +115,13 @@ export const procedure = authProcedure
 			])
 			.$if(input.input.length < 3, (qb) => qb.orderBy("name"))
 			.$if(input.input.length >= 3, (qb) =>
-				qb.orderBy(sql`similarity(name, ${input.input})`.castTo(), "desc"),
+				qb.orderBy(
+					sql`strict_word_similarity(${input.input}, name)`.castTo(),
+					"desc",
+				),
 			)
+			// Stable order for users with the same name
+			.orderBy("users.id")
 			.offset(cursor)
 			.limit(input.limit + 1)
 			.execute();

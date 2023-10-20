@@ -6,6 +6,7 @@ import { YEAR } from "app/utils/time";
 import type {
 	AccountsId,
 	DebtsId,
+	ReceiptItemsId,
 	ReceiptsId,
 	SessionsSessionId,
 	UsersId,
@@ -87,7 +88,12 @@ export const insertUser = async (
 		})
 		.returning(["id", "name"])
 		.executeTakeFirstOrThrow();
-	return { id, name };
+	return {
+		id,
+		name,
+		publicName: data.publicName,
+		connectedAccountId: data.connectedAccountId,
+	};
 };
 
 export const insertSelfUser = async (
@@ -254,6 +260,71 @@ export const insertReceiptParticipant = async (
 	return { added };
 };
 
+type ReceiptItemData = {
+	id?: ReceiptItemsId;
+	name?: string;
+	price?: number;
+	quantity?: number;
+};
+
+export const insertReceiptItem = async (
+	ctx: TestContext,
+	receiptId: ReceiptsId,
+	data: ReceiptItemData = {},
+) => {
+	await ctx.database
+		.selectFrom("receipts")
+		.where("receipts.id", "=", receiptId)
+		.executeTakeFirstOrThrow(
+			() => new Error(`Expected to have receipt id ${receiptId} in tests`),
+		);
+	const { id, name, price, quantity } = await ctx.database
+		.insertInto("receiptItems")
+		.values({
+			receiptId,
+			id: data.id || ctx.getTestUuid(),
+			name: data.name ?? faker.commerce.product(),
+			price: (
+				data.price ??
+				faker.number.float({ min: 1, max: 10000, precision: 0.01 })
+			).toString(),
+			quantity: (
+				data.quantity ?? faker.number.int({ min: 1, max: 5 })
+			).toString(),
+		})
+		.returning(["id", "name", "price", "quantity"])
+		.executeTakeFirstOrThrow();
+	return { id, name, price, quantity };
+};
+
+type ItemParticipantData = {
+	part?: number;
+};
+
+export const insertItemParticipant = async (
+	ctx: TestContext,
+	itemId: ReceiptItemsId,
+	userId: UsersId,
+	data: ItemParticipantData = {},
+) => {
+	await ctx.database
+		.selectFrom("receiptItems")
+		.where("receiptItems.id", "=", itemId)
+		.executeTakeFirstOrThrow(
+			() => new Error(`Expected to have receipt item id ${itemId} in tests`),
+		);
+	const { part } = await ctx.database
+		.insertInto("itemParticipants")
+		.values({
+			userId,
+			itemId,
+			part: (data.part ?? 1).toString(),
+		})
+		.returning(["part"])
+		.executeTakeFirstOrThrow();
+	return { part };
+};
+
 type AccountSettingsData = {
 	autoAcceptDebts: boolean;
 };
@@ -268,6 +339,28 @@ export const insertAccountSettings = async (
 		.values({
 			accountId,
 			autoAcceptDebts: data.autoAcceptDebts,
+		})
+		.executeTakeFirstOrThrow();
+};
+
+type AccountConnectionIntentionData = {
+	created?: Date;
+};
+
+export const insertAccountConnectionIntention = async (
+	ctx: TestContext,
+	accountId: AccountsId,
+	targetAccountId: AccountsId,
+	userId: UsersId,
+	data: AccountConnectionIntentionData = {},
+) => {
+	await ctx.database
+		.insertInto("accountConnectionsIntentions")
+		.values({
+			accountId,
+			targetAccountId,
+			userId,
+			created: data.created ?? new Date(),
 		})
 		.executeTakeFirstOrThrow();
 };

@@ -1,6 +1,12 @@
 import { z } from "zod";
 
-import { createNumberSchema, flavored, nonZero } from "app/utils/validation";
+import {
+	MAX_LIMIT,
+	MAX_OFFSET,
+	createNumberSchema,
+	flavored,
+	nonZero,
+} from "app/utils/validation";
 import type {
 	AccountsId,
 	DebtsId,
@@ -11,12 +17,8 @@ import type {
 } from "next-app/db/models";
 import { isCurrencyCode } from "next-app/utils/currency";
 
-export const offsetSchema = z
-	.number()
-	.int()
-	.gte(0)
-	.max(10 ** 4);
-export const limitSchema = z.number().int().gt(0).max(100);
+export const offsetSchema = z.number().int().gte(0).max(MAX_OFFSET);
+export const limitSchema = z.number().int().gt(0).max(MAX_LIMIT);
 
 export const assignableRoleSchema = z.union([
 	z.literal("viewer"),

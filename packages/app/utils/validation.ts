@@ -24,6 +24,9 @@ const constrainLength = (
 
 export const flavored = <T extends string>(x: string): x is T => true;
 
+export const MAX_LIMIT = 100;
+export const MAX_OFFSET = 10 ** 4;
+
 export const MIN_PASSWORD_LENGTH = 6;
 export const MAX_PASSWORD_LENGTH = 255;
 
@@ -53,6 +56,8 @@ export const userNameSchema = constrainLength(z.string(), {
 	max: MAX_USERNAME_LENGTH,
 	target: "user name",
 });
+
+export const MAX_SUGGEST_LENGTH = 255;
 
 export const debtNoteSchema = constrainLength(z.string(), {
 	min: 0,
