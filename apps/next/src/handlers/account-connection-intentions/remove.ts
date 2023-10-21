@@ -1,6 +1,6 @@
+import * as trpc from "@trpc/server";
 import { z } from "zod";
 
-import { removeIntention } from "next-app/handlers/account-connection-intentions/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import { accountIdSchema } from "next-app/handlers/validation";
 
@@ -18,9 +18,15 @@ export const procedure = authProcedure
 			.where("accountId", "=", ctx.auth.accountId)
 			.where("targetAccountId", "=", input.targetAccountId)
 			.executeTakeFirst();
-		return removeIntention(
-			database,
-			intention,
-			`for account id ${input.targetAccountId}`,
-		);
+		if (!intention) {
+			throw new trpc.TRPCError({
+				code: "NOT_FOUND",
+				message: `Intention for account id "${input.targetAccountId}" not found.`,
+			});
+		}
+		await database
+			.deleteFrom("accountConnectionsIntentions")
+			.where("accountId", "=", intention.accountId)
+			.where("targetAccountId", "=", intention.targetAccountId)
+			.execute();
 	});

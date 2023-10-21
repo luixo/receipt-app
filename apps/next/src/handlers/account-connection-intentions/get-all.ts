@@ -6,10 +6,18 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 	const relatedIntentions = await database
 		.selectFrom("accountConnectionsIntentions")
 		.innerJoin("accounts as sourceAccounts", (qb) =>
-			qb.onRef("accountId", "=", "sourceAccounts.id"),
+			qb.onRef(
+				"accountConnectionsIntentions.accountId",
+				"=",
+				"sourceAccounts.id",
+			),
 		)
 		.innerJoin("accounts as targetAccounts", (qb) =>
-			qb.onRef("targetAccountId", "=", "targetAccounts.id"),
+			qb.onRef(
+				"accountConnectionsIntentions.targetAccountId",
+				"=",
+				"targetAccounts.id",
+			),
 		)
 		.innerJoin("users", (qb) =>
 			qb.onRef("users.id", "=", "accountConnectionsIntentions.userId"),
@@ -21,13 +29,14 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 			]),
 		)
 		.select([
-			"accountId",
-			"targetAccountId",
+			"accountConnectionsIntentions.accountId",
+			"accountConnectionsIntentions.targetAccountId",
 			"users.id as userId",
 			"users.name",
 			"sourceAccounts.email as sourceAccountEmail",
 			"targetAccounts.email as targetAccountEmail",
 		])
+		.orderBy("accountConnectionsIntentions.created", "desc")
 		.execute();
 	return relatedIntentions.reduce<{
 		inbound: {
