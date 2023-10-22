@@ -1,0 +1,16 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`accountConnectionIntentions.accept > functionality > account connection intention is accepted 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.users VALUES ('bc38347a-c16d-407f-8d09-cf52738c37e1', 'Brenna', NULL, 'aedbd8b6-7b96-4ad6-9114-e893be9f3067', false, false, NULL);
+@@ --- --- @@
+- INSERT INTO public.users VALUES ('bd1f875a-de35-4367-93f5-f7915ffa7ac8', 'Donnell', NULL, '16ea7bee-2f60-42e6-b8ab-36b34b457f3a', false, false, NULL);
+@@ --- --- @@
+- INSERT INTO public.\\"accountConnectionsIntentions\\" VALUES ('16ea7bee-2f60-42e6-b8ab-36b34b457f3a', 'bd1f875a-de35-4367-93f5-f7915ffa7ac8', 'aedbd8b6-7b96-4ad6-9114-e893be9f3067', '2020-01-01 00:00:00');
++ INSERT INTO public.users VALUES ('bd1f875a-de35-4367-93f5-f7915ffa7ac8', 'Donnell', NULL, '16ea7bee-2f60-42e6-b8ab-36b34b457f3a', false, false, 'aedbd8b6-7b96-4ad6-9114-e893be9f3067');
++ INSERT INTO public.users VALUES ('bc38347a-c16d-407f-8d09-cf52738c37e1', 'Brenna', NULL, 'aedbd8b6-7b96-4ad6-9114-e893be9f3067', false, false, '16ea7bee-2f60-42e6-b8ab-36b34b457f3a');"
+`;
