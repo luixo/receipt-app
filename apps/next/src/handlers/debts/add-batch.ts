@@ -5,15 +5,12 @@ import { nonNullishGuard } from "app/utils/utils";
 import {
 	MAX_BATCH_DEBTS,
 	MIN_BATCH_DEBTS,
+	debtAmountSchema,
 	debtNoteSchema,
 } from "app/utils/validation";
 import type { DebtsId, UsersId } from "next-app/db/models";
 import { authProcedure } from "next-app/handlers/trpc";
-import {
-	currencyCodeSchema,
-	debtAmountSchema,
-	userIdSchema,
-} from "next-app/handlers/validation";
+import { currencyCodeSchema, userIdSchema } from "next-app/handlers/validation";
 
 export const procedure = authProcedure
 	.input(

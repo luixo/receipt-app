@@ -18,8 +18,8 @@ import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
 import { getToday } from "app/utils/date";
 import {
-	clientDebtAmountSchema,
 	currencySchema,
+	debtAmountSchema,
 	debtNoteSchema,
 	userItemSchema,
 } from "app/utils/validation";
@@ -53,7 +53,7 @@ export const AddDebtScreen: AppPage = () => {
 		reValidateMode: "onChange",
 		resolver: zodResolver(
 			z.object({
-				amount: z.preprocess(Number, clientDebtAmountSchema),
+				amount: z.preprocess(Number, debtAmountSchema),
 				direction: z.union([z.literal("-"), z.literal("+")]),
 				currency: currencySchema,
 				user: userItemSchema,

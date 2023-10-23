@@ -9,7 +9,7 @@ import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import type { TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
-import { clientDebtAmountSchema } from "app/utils/validation";
+import { debtAmountSchema } from "app/utils/validation";
 
 import { DebtCurrencyInput } from "./debt-currency-input";
 
@@ -34,7 +34,7 @@ export const DebtAmountInput: React.FC<Props> = ({ debt, isLoading }) => {
 		setValue,
 	} = useSingleInput({
 		initialValue: absoluteAmount,
-		schema: clientDebtAmountSchema,
+		schema: debtAmountSchema,
 		type: "number",
 	});
 	React.useEffect(

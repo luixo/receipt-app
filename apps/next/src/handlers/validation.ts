@@ -1,12 +1,6 @@
 import { z } from "zod";
 
-import {
-	MAX_LIMIT,
-	MAX_OFFSET,
-	createNumberSchema,
-	flavored,
-	nonZero,
-} from "app/utils/validation";
+import { MAX_LIMIT, MAX_OFFSET, flavored } from "app/utils/validation";
 import type {
 	AccountsId,
 	DebtsId,
@@ -50,10 +44,6 @@ export const emailSchema = z
 	.string()
 	.email({ message: "Invalid email address" })
 	.transform((email) => ({ lowercase: email.toLowerCase(), original: email }));
-
-export const debtAmountSchema = nonZero(
-	createNumberSchema("Debt amount", { onlyPositive: false }),
-);
 
 export const UUID_REGEX =
 	/^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$/i;

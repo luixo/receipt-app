@@ -1,14 +1,10 @@
 import * as trpc from "@trpc/server";
 import { z } from "zod";
 
-import { debtNoteSchema } from "app/utils/validation";
+import { debtAmountSchema, debtNoteSchema } from "app/utils/validation";
 import type { SimpleUpdateObject } from "next-app/db/types";
 import { authProcedure } from "next-app/handlers/trpc";
-import {
-	currencyCodeSchema,
-	debtAmountSchema,
-	debtIdSchema,
-} from "next-app/handlers/validation";
+import { currencyCodeSchema, debtIdSchema } from "next-app/handlers/validation";
 
 type DebtUpdateObject = SimpleUpdateObject<"debts">;
 
