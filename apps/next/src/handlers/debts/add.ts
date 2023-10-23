@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { debtAmountSchema, debtNoteSchema } from "app/utils/validation";
@@ -32,13 +32,13 @@ export const procedure = authProcedure
 			.where("id", "=", input.userId)
 			.executeTakeFirst();
 		if (!user) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "NOT_FOUND",
 				message: `User ${input.userId} does not exist.`,
 			});
 		}
 		if (user.selfAccountId !== ctx.auth.accountId) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `User ${input.userId} is not owned by ${ctx.auth.accountId}.`,
 			});
@@ -55,7 +55,7 @@ export const procedure = authProcedure
 		};
 		if (user.autoAcceptDebts) {
 			if (!user.foreignAccountId) {
-				throw new trpc.TRPCError({
+				throw new TRPCError({
 					code: "INTERNAL_SERVER_ERROR",
 					message: `Unexpected having "autoAcceptDebts" but not having "accountId"`,
 				});
@@ -68,7 +68,7 @@ export const procedure = authProcedure
 				.select("users.id")
 				.executeTakeFirst();
 			if (!reverseUser) {
-				throw new trpc.TRPCError({
+				throw new TRPCError({
 					code: "INTERNAL_SERVER_ERROR",
 					message: `Unexpected having "autoAcceptDebts" but not having reverse user "id"`,
 				});

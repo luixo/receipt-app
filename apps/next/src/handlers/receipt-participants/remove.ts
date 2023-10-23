@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { getReceiptParticipant } from "next-app/handlers/receipt-participants/utils";
@@ -21,26 +21,26 @@ export const procedure = authProcedure
 			"lockedTimestamp",
 		]);
 		if (!receipt) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "NOT_FOUND",
 				message: `Receipt ${input.receiptId} does not exist.`,
 			});
 		}
 		if (receipt.ownerAccountId !== ctx.auth.accountId) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Not enough rights to remove participants from receipt ${input.receiptId}.`,
 			});
 		}
 		const user = await getUserById(database, input.userId, ["ownerAccountId"]);
 		if (!user) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "NOT_FOUND",
 				message: `User ${input.userId} does not exist.`,
 			});
 		}
 		if (user.ownerAccountId !== ctx.auth.accountId) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Not enough rights to remove a user ${input.userId} from receipt ${input.receiptId}.`,
 			});
@@ -52,13 +52,13 @@ export const procedure = authProcedure
 			["userId"],
 		);
 		if (!receiptParticipant) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "NOT_FOUND",
 				message: `User ${input.userId} does not participate in receipt ${input.receiptId}.`,
 			});
 		}
 		if (receipt.lockedTimestamp) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Receipt ${input.receiptId} cannot be updated while locked.`,
 			});

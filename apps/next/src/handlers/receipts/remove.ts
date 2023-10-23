@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { getReceiptById } from "next-app/handlers/receipts/utils";
@@ -17,13 +17,13 @@ export const procedure = authProcedure
 			"ownerAccountId",
 		]);
 		if (!receipt) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "PRECONDITION_FAILED",
 				message: `No receipt found by id ${input.id}`,
 			});
 		}
 		if (receipt.ownerAccountId !== ctx.auth.accountId) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "UNAUTHORIZED",
 				message: `Receipt ${input.id} is not owned by ${ctx.auth.accountId}`,
 			});

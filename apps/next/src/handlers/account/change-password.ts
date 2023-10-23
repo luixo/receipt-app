@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { passwordSchema } from "app/utils/validation";
@@ -23,7 +23,7 @@ export const procedure = authProcedure
 			getHash(input.prevPassword, account.passwordSalt) ===
 			account.passwordHash;
 		if (!isPrevPasswordValid) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "UNAUTHORIZED",
 				message: `Change password of account "${ctx.auth.accountId}" failed: password doesn't match.`,
 			});

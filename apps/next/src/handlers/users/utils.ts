@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import type { SelectQueryBuilder, Selection } from "kysely";
 
 import type { Database, ReceiptsSelectExpression } from "next-app/db";
@@ -47,7 +47,7 @@ export const verifyUsersByIds = async (
 		const missedUserIds = userIds.filter(
 			(userId) => !users.some((user) => user.id === userId),
 		);
-		throw new trpc.TRPCError({
+		throw new TRPCError({
 			code: "NOT_FOUND",
 			message: `User(s) ${missedUserIds.join(", ")} do(es) not exist.`,
 		});
@@ -56,7 +56,7 @@ export const verifyUsersByIds = async (
 		(user) => user.ownerAccountId !== ownerAccountId,
 	);
 	if (notOwnedUsers.length !== 0) {
-		throw new trpc.TRPCError({
+		throw new TRPCError({
 			code: "FORBIDDEN",
 			message: `Not enough rights to add user(s) ${notOwnedUsers
 				.map(({ id }) => id)

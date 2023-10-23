@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import type { CurrencyCode } from "app/utils/currency";
@@ -22,7 +22,7 @@ export const procedure = authProcedure
 	)
 	.query(async ({ ctx, input }) => {
 		if (input.to.includes(input.from)) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "BAD_REQUEST",
 				message: 'Currency code "from" and "to" must be different',
 			});
@@ -42,12 +42,12 @@ export const procedure = authProcedure
 		if (missingCodes.length !== 0) {
 			const notAvailablePostfix = `not available on remote server. Please contact app owner.`;
 			if (missingCodes.length === input.to.length) {
-				throw new trpc.TRPCError({
+				throw new TRPCError({
 					code: "INTERNAL_SERVER_ERROR",
 					message: `Code "${input.from}" is ${notAvailablePostfix}`,
 				});
 			}
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "INTERNAL_SERVER_ERROR",
 				message: `Code${missingCodes.length === 1 ? "" : "s"} ${missingCodes
 					.map((code) => `"${code}"`)

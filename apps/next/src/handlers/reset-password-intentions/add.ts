@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { DAY } from "app/utils/time";
@@ -24,7 +24,7 @@ export const procedure = unauthProcedure
 			.where("email", "=", input.email.lowercase)
 			.executeTakeFirst();
 		if (!account) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "NOT_FOUND",
 				message: `Account with email ${input.email.original} does not exist.`,
 			});
@@ -32,7 +32,7 @@ export const procedure = unauthProcedure
 		const uuid: string = ctx.getUuid();
 		const expirationDate = new Date(Date.now() + DAY);
 		if (!ctx.emailOptions.active) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Currently password reset is not supported`,
 			});
@@ -44,7 +44,7 @@ export const procedure = unauthProcedure
 			.select("expiresTimestamp")
 			.execute();
 		if (currentIntentions.length >= MAX_INTENTIONS_AMOUNT) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Maximum amount of intentions per day is ${MAX_INTENTIONS_AMOUNT}, please try later`,
 			});

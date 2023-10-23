@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { sql } from "kysely";
 
 import type { CurrencyCode } from "app/utils/currency";
@@ -72,7 +72,7 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 		.execute();
 	return debts.map<InboundIntention>((debt) => {
 		if (!debt.lockedTimestamp) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "INTERNAL_SERVER_ERROR",
 				message: `Locked timestamp does not exist on debt id ${debt.id} though it was filtered to exist`,
 			});

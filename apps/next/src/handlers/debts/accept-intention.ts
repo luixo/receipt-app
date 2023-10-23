@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { authProcedure } from "next-app/handlers/trpc";
@@ -39,13 +39,13 @@ export const procedure = authProcedure
 			])
 			.executeTakeFirst();
 		if (!debt) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "NOT_FOUND",
 				message: `Intention for debt ${input.id} is not found.`,
 			});
 		}
 		if (!debt.lockedTimestamp) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "INTERNAL_SERVER_ERROR",
 				message: `Counterparty debt ${input.id} is not expected to be in sync.`,
 			});

@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 
 import type { DebtsId } from "next-app/db/models";
 import { authProcedure } from "next-app/handlers/trpc";
@@ -55,7 +55,7 @@ export const procedure = authProcedure.mutation(async ({ ctx }) => {
 		])
 		.execute();
 	if (debts.length === 0) {
-		throw new trpc.TRPCError({
+		throw new TRPCError({
 			code: "BAD_REQUEST",
 			message: `Expected to have at least one debt to accept.`,
 		});

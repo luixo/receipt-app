@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { passwordSchema } from "app/utils/validation";
@@ -37,7 +37,7 @@ export const procedure = unauthProcedure
 		if (!result) {
 			const errorMessage = `Authentication of account "${input.email.original}" failed: account not found.`;
 			ctx.logger.debug(errorMessage);
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "UNAUTHORIZED",
 				message: errorMessage,
 			});
@@ -47,7 +47,7 @@ export const procedure = unauthProcedure
 		if (!isPasswordValid) {
 			const errorMessage = `Authentication of account "${input.email.original}" failed: password is wrong.`;
 			ctx.logger.debug(errorMessage);
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "UNAUTHORIZED",
 				message: errorMessage,
 			});

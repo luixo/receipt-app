@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import type { Selection } from "kysely";
 import type { z } from "zod";
 
@@ -40,7 +40,7 @@ export const addReceiptParticipants = async (
 		.select(["userId"])
 		.execute();
 	if (receiptParticipants.length !== 0) {
-		throw new trpc.TRPCError({
+		throw new TRPCError({
 			code: "CONFLICT",
 			message: `User(s) ${receiptParticipants
 				.map(({ userId }) => userId)

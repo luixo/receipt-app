@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { userNameSchema } from "app/utils/validation";
@@ -26,13 +26,13 @@ export const procedure = authProcedure
 	.mutation(async ({ input, ctx }) => {
 		if (input.id === ctx.auth.accountId) {
 			if (input.update.type === "name") {
-				throw new trpc.TRPCError({
+				throw new TRPCError({
 					code: "BAD_REQUEST",
 					message:
 						'Please use "account.changeName" handler to update your own name.',
 				});
 			} else {
-				throw new trpc.TRPCError({
+				throw new TRPCError({
 					code: "BAD_REQUEST",
 					message:
 						'Updating self user property expect but "name" is not allowed.',
@@ -42,13 +42,13 @@ export const procedure = authProcedure
 		const { database } = ctx;
 		const user = await getUserById(database, input.id, ["ownerAccountId"]);
 		if (!user) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "NOT_FOUND",
 				message: `No user found by id "${input.id}".`,
 			});
 		}
 		if (user.ownerAccountId !== ctx.auth.accountId) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `User "${input.id}" is not owned by "${ctx.auth.email}".`,
 			});

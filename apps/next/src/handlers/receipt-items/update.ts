@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import {
@@ -39,7 +39,7 @@ export const procedure = authProcedure
 			"receiptId",
 		]);
 		if (!receiptItem) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "PRECONDITION_FAILED",
 				message: `No receipt item found by id ${input.id}`,
 			});
@@ -50,13 +50,13 @@ export const procedure = authProcedure
 			"lockedTimestamp",
 		]);
 		if (!receipt) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "PRECONDITION_FAILED",
 				message: `No receipt found by id ${input.id}`,
 			});
 		}
 		if (receipt.lockedTimestamp && input.update.type !== "locked") {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Receipt ${receiptItem.receiptId} cannot be updated while locked.`,
 			});
@@ -67,7 +67,7 @@ export const procedure = authProcedure
 			ctx.auth.accountId,
 		);
 		if (accessRole !== "owner" && accessRole !== "editor") {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "UNAUTHORIZED",
 				message: `Receipt ${receipt.id} is not allowed to be modified by ${
 					ctx.auth.accountId

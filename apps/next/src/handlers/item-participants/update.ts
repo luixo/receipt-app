@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { partSchema } from "app/utils/validation";
@@ -33,7 +33,7 @@ export const procedure = authProcedure
 			"receiptId",
 		]);
 		if (!receiptItem) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "NOT_FOUND",
 				message: `Item ${input.itemId} does not exist.`,
 			});
@@ -44,13 +44,13 @@ export const procedure = authProcedure
 			"lockedTimestamp",
 		]);
 		if (!receipt) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "NOT_FOUND",
 				message: `Receipt ${receiptItem.receiptId} does not exist.`,
 			});
 		}
 		if (receipt.lockedTimestamp) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Receipt ${receiptItem.receiptId} cannot be updated while locked.`,
 			});
@@ -61,14 +61,14 @@ export const procedure = authProcedure
 			ctx.auth.accountId,
 		);
 		if (accessRole !== "owner" && accessRole !== "editor") {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Not enough rights to modify receipt ${receiptItem.receiptId}.`,
 			});
 		}
 		const user = await getUserById(database, input.userId, ["ownerAccountId"]);
 		if (!user) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "NOT_FOUND",
 				message: `User ${input.userId} does not exist.`,
 			});
@@ -80,7 +80,7 @@ export const procedure = authProcedure
 			["userId"],
 		);
 		if (!itemParticipant) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "NOT_FOUND",
 				message: `User ${input.userId} does not participate in item ${input.itemId} of the receipt ${receiptItem.receiptId}.`,
 			});

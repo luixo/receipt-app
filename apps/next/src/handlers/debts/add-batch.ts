@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { nonNullishGuard } from "app/utils/utils";
@@ -54,7 +54,7 @@ export const procedure = authProcedure
 			const missingUserIds = userIds.filter(
 				(requestedUserId) => !foundUserIds.includes(requestedUserId),
 			);
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "NOT_FOUND",
 				message: `Users ${missingUserIds.join(", ")} do not exist.`,
 			});
@@ -64,7 +64,7 @@ export const procedure = authProcedure
 		);
 		if (foreignUsers.length !== 0) {
 			const foreignUserIds = foreignUsers.map((foreignUser) => foreignUser.id);
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Users ${foreignUserIds.join(", ")} are not owned by ${
 					ctx.auth.accountId
@@ -87,7 +87,7 @@ export const procedure = authProcedure
 				.map((user) => user.foreignAccountId)
 				.filter(nonNullishGuard);
 			if (autoAcceptingUsersAccountIds.length !== autoAcceptingUsers.length) {
-				throw new trpc.TRPCError({
+				throw new TRPCError({
 					code: "INTERNAL_SERVER_ERROR",
 					message: `Unexpected having "autoAcceptDebts" but not having "accountId"`,
 				});
@@ -102,7 +102,7 @@ export const procedure = authProcedure
 			if (
 				reverseAutoAcceptingUsers.length !== autoAcceptingUsersAccountIds.length
 			) {
-				throw new trpc.TRPCError({
+				throw new TRPCError({
 					code: "INTERNAL_SERVER_ERROR",
 					message: `Unexpected having "autoAcceptDebts" but not having reverse user "id"`,
 				});

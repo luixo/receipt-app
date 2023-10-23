@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { MONTH } from "app/utils/time";
@@ -49,7 +49,7 @@ export const procedure = authProcedure
 				"ownerAccountId",
 			]);
 			if (!receipt) {
-				throw new trpc.TRPCError({
+				throw new TRPCError({
 					code: "NOT_FOUND",
 					message: `Receipt "${receiptId}" does not exist.`,
 				});
@@ -60,7 +60,7 @@ export const procedure = authProcedure
 				ctx.auth.accountId,
 			);
 			if (!accessRole) {
-				throw new trpc.TRPCError({
+				throw new TRPCError({
 					code: "FORBIDDEN",
 					message: `Not enough rights to view receipt "${receiptId}".`,
 				});

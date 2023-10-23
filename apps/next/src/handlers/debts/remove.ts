@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { authProcedure } from "next-app/handlers/trpc";
@@ -32,7 +32,7 @@ export const procedure = authProcedure
 			.select(["accountSettings.autoAcceptDebts"])
 			.executeTakeFirst();
 		if (!debt) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "PRECONDITION_FAILED",
 				message: `No debt found by id ${input.id} on account ${ctx.auth.accountId}`,
 			});

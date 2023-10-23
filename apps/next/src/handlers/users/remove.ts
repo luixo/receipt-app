@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { authProcedure } from "next-app/handlers/trpc";
@@ -15,13 +15,13 @@ export const procedure = authProcedure
 		const { database } = ctx;
 		const user = await getUserById(database, input.id, ["ownerAccountId"]);
 		if (!user) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "NOT_FOUND",
 				message: `No user found by id "${input.id}".`,
 			});
 		}
 		if (user.ownerAccountId !== ctx.auth.accountId) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `User "${input.id}" is not owned by "${ctx.auth.email}".`,
 			});

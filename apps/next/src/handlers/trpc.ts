@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError, initTRPC } from "@trpc/server";
 import superjson from "superjson";
 
 import {
@@ -11,7 +11,7 @@ import { sessionIdSchema } from "next-app/handlers/validation";
 import { AUTH_COOKIE, resetAuthCookie } from "next-app/utils/auth-cookie";
 import { getCookie } from "next-app/utils/cookie";
 
-export const t = trpc.initTRPC.context<UnauthorizedContext>().create({
+export const t = initTRPC.context<UnauthorizedContext>().create({
 	transformer: superjson,
 	errorFormatter: (opts) => {
 		const { shape, error } = opts;
@@ -43,14 +43,14 @@ export const authProcedure = unauthProcedure.use(
 	t.middleware(async ({ ctx, next }) => {
 		const authToken = getCookie(ctx.req, AUTH_COOKIE);
 		if (typeof authToken !== "string" || !authToken) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "UNAUTHORIZED",
 				message: "No token provided",
 			});
 		}
 		const uuidVerification = sessionIdSchema.safeParse(authToken);
 		if (!uuidVerification.success) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "UNAUTHORIZED",
 				message: "Session id mismatch",
 			});
@@ -71,7 +71,7 @@ export const authProcedure = unauthProcedure.use(
 			.executeTakeFirst();
 		if (!session) {
 			resetAuthCookie(ctx.res);
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "UNAUTHORIZED",
 				message: "Session id mismatch",
 			});

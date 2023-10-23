@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { passwordSchema } from "app/utils/validation";
@@ -25,7 +25,7 @@ export const procedure = unauthProcedure
 			.select(["accounts.id as accountId"])
 			.executeTakeFirst();
 		if (!resetPasswordIntention) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "NOT_FOUND",
 				message: `Reset password intention ${input.token} does not exist or expired.`,
 			});

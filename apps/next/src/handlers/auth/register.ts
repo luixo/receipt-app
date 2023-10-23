@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { passwordSchema, userNameSchema } from "app/utils/validation";
@@ -31,7 +31,7 @@ export const procedure = unauthProcedure
 			ctx.logger.debug(
 				`Registration of account "${input.email.original}" failed: email already exists.`,
 			);
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "CONFLICT",
 				message: "Email already exist",
 			});

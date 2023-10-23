@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { getReceiptItemById } from "next-app/handlers/receipt-items/utils";
@@ -26,7 +26,7 @@ export const procedure = authProcedure
 			"receiptId",
 		]);
 		if (!receiptItem) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "NOT_FOUND",
 				message: `Item ${input.itemId} does not exist.`,
 			});
@@ -37,13 +37,13 @@ export const procedure = authProcedure
 			"lockedTimestamp",
 		]);
 		if (!receipt) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "NOT_FOUND",
 				message: `Receipt ${receiptItem.receiptId} does not exist.`,
 			});
 		}
 		if (receipt.lockedTimestamp) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Receipt ${receiptItem.receiptId} cannot be updated while locked.`,
 			});
@@ -54,7 +54,7 @@ export const procedure = authProcedure
 			ctx.auth.accountId,
 		);
 		if (accessRole !== "owner" && accessRole !== "editor") {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Not enough rights to modify receipt ${receiptItem.receiptId}.`,
 			});
@@ -70,7 +70,7 @@ export const procedure = authProcedure
 			const participatingUserIds = receiptParticipants.map(
 				({ userId }) => userId,
 			);
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `User(s) ${input.userIds
 					.filter((id) => participatingUserIds.includes(id))
@@ -85,7 +85,7 @@ export const procedure = authProcedure
 			.execute();
 		if (itemParts.length !== 0) {
 			const userWithParts = itemParts.map(({ userId }) => userId);
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "CONFLICT",
 				message: `User(s) ${userWithParts.join(
 					", ",

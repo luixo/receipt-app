@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { getReceiptItemById } from "next-app/handlers/receipt-items/utils";
@@ -25,7 +25,7 @@ export const procedure = authProcedure
 			"receiptId",
 		]);
 		if (!receiptItem) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "NOT_FOUND",
 				message: `Item ${input.itemId} does not exist.`,
 			});
@@ -36,13 +36,13 @@ export const procedure = authProcedure
 			"lockedTimestamp",
 		]);
 		if (!receipt) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "NOT_FOUND",
 				message: `Receipt ${receiptItem.receiptId} does not exist.`,
 			});
 		}
 		if (receipt.lockedTimestamp) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Receipt ${receiptItem.receiptId} cannot be updated while locked.`,
 			});
@@ -53,7 +53,7 @@ export const procedure = authProcedure
 			ctx.auth.accountId,
 		);
 		if (accessRole !== "owner" && accessRole !== "editor") {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Not enough rights to modify receipt ${receiptItem.receiptId}.`,
 			});
@@ -65,7 +65,7 @@ export const procedure = authProcedure
 			.returning("itemParticipants.userId")
 			.executeTakeFirst();
 		if (!deleteResult) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "BAD_REQUEST",
 				message: `Item participant ${input.userId} on item ${input.itemId} on receipt ${receipt.id} doesn't exist.`,
 			});

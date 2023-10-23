@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { addReceiptParticipants } from "next-app/handlers/receipt-participants/utils";
@@ -24,13 +24,13 @@ export const procedure = authProcedure
 			"ownerAccountId",
 		]);
 		if (!receipt) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "PRECONDITION_FAILED",
 				message: `Receipt ${input.receiptId} does not exist.`,
 			});
 		}
 		if (receipt.ownerAccountId !== ctx.auth.accountId) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Not enough rights to add participants to receipt ${input.receiptId}.`,
 			});

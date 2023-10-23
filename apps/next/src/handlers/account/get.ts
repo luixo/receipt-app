@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 
 import { authProcedure } from "next-app/handlers/trpc";
 
@@ -11,7 +11,7 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 		.where("accounts.id", "=", ctx.auth.accountId)
 		.executeTakeFirstOrThrow(
 			() =>
-				new trpc.TRPCError({
+				new TRPCError({
 					code: "INTERNAL_SERVER_ERROR",
 					message: `No result for ${ctx.auth.accountId} account found, self-user may be non-existent`,
 				}),

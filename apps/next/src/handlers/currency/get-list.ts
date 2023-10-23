@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import type { CurrencyCode } from "app/utils/currency";
@@ -15,7 +15,7 @@ export const procedure = authProcedure
 	.query(async ({ input }) => {
 		const currencies = getCurrencies(input.locale);
 		if (!currencies) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "BAD_REQUEST",
 				message: `Locale ${input.locale} is invalid.`,
 			});

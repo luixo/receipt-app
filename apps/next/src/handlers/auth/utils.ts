@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 
 import { DAY } from "app/utils/time";
 import type { Database } from "next-app/db";
@@ -55,7 +55,7 @@ export const sendVerificationEmail = async (
 	token: string,
 ) => {
 	if (!emailOptions.active) {
-		throw new trpc.TRPCError({
+		throw new TRPCError({
 			code: "FORBIDDEN",
 			message: "Currently email resend is not supported",
 		});
@@ -67,7 +67,7 @@ export const sendVerificationEmail = async (
 			body: generateConfirmEmailEmail(emailOptions, token),
 		});
 	} catch (e) {
-		throw new trpc.TRPCError({
+		throw new TRPCError({
 			code: "INTERNAL_SERVER_ERROR",
 			message: `Something went wrong: ${
 				e instanceof Error ? e.message : String(e)

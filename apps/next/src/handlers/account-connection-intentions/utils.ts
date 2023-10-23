@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import type { z } from "zod";
 
 import type { Database } from "next-app/db";
@@ -20,7 +20,7 @@ export const addConnectionIntention = async (
 		.where("email", "=", toEmail.lowercase)
 		.executeTakeFirst();
 	if (!targetAccount) {
-		throw new trpc.TRPCError({
+		throw new TRPCError({
 			code: "NOT_FOUND",
 			message: `Account with email "${toEmail.original}" does not exist.`,
 		});
@@ -36,7 +36,7 @@ export const addConnectionIntention = async (
 		.select("users.name")
 		.executeTakeFirst();
 	if (connectedUser) {
-		throw new trpc.TRPCError({
+		throw new TRPCError({
 			code: "CONFLICT",
 			message: `Account with email "${toEmail.original}" is already connected to user "${connectedUser.name}".`,
 		});
@@ -109,7 +109,7 @@ export const addConnectionIntention = async (
 				existingIntention.userId,
 				["name"],
 			);
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "CONFLICT",
 				message: `You already has intention to connect to "${
 					toEmail.original
@@ -119,7 +119,7 @@ export const addConnectionIntention = async (
 		if (
 			message.includes(ACCOUNT_CONNECTIONS_INTENTIONS.CONSTRAINTS.USER_PAIR)
 		) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "CONFLICT",
 				message: `You already has intention to connect to user "${user.name}".`,
 			});

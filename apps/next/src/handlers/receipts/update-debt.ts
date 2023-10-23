@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import {
@@ -28,20 +28,20 @@ export const procedure = authProcedure
 			"currencyCode",
 		]);
 		if (!receipt) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "PRECONDITION_FAILED",
 				message: `No receipt found by id ${input.receiptId}`,
 			});
 		}
 		if (receipt.ownerAccountId !== ctx.auth.accountId) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "UNAUTHORIZED",
 				message: `Receipt ${input.receiptId} is not owned by ${ctx.auth.accountId}`,
 			});
 		}
 		const { lockedTimestamp } = receipt;
 		if (!lockedTimestamp) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Receipt ${input.receiptId} should be locked in order to update debt`,
 			});
@@ -55,7 +55,7 @@ export const procedure = authProcedure
 			(participant) => participant.remoteUserId === input.userId,
 		);
 		if (!matchedParticipant) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "PRECONDITION_FAILED",
 				message: `${input.userId} is not a valid participant of receipt ${input.receiptId}`,
 			});

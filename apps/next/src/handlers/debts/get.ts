@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { authProcedure } from "next-app/handlers/trpc";
@@ -31,7 +31,7 @@ export const procedure = authProcedure
 			])
 			.executeTakeFirst();
 		if (!selfDebt) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "NOT_FOUND",
 				message: `Debt ${input.id} does not exist or you don't have access to it.`,
 			});

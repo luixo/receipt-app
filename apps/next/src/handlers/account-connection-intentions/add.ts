@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { addConnectionIntention } from "next-app/handlers/account-connection-intentions/utils";
@@ -28,19 +28,19 @@ export const procedure = authProcedure
 			.where("users.id", "=", input.userId)
 			.executeTakeFirst();
 		if (!user) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "NOT_FOUND",
 				message: `User "${input.userId}" does not exist.`,
 			});
 		}
 		if (user.ownerAccountId !== ctx.auth.accountId) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `User "${input.userId}" is not owned by "${ctx.auth.email}".`,
 			});
 		}
 		if (user.email) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "CONFLICT",
 				message: `User "${input.userId}" is already connected to account "${user.email}".`,
 			});

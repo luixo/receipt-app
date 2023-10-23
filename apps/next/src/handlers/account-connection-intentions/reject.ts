@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { authProcedure } from "next-app/handlers/trpc";
@@ -19,7 +19,7 @@ export const procedure = authProcedure
 			.where("targetAccountId", "=", ctx.auth.accountId)
 			.executeTakeFirst();
 		if (!intention) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "NOT_FOUND",
 				message: `Intention from account id "${input.sourceAccountId}" not found.`,
 			});

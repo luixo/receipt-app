@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { authProcedure } from "next-app/handlers/trpc";
@@ -30,25 +30,25 @@ export const procedure = authProcedure
 			])
 			.executeTakeFirst();
 		if (!user) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "NOT_FOUND",
 				message: `No user found by id "${input.id}".`,
 			});
 		}
 		if (user.ownerAccountId !== ctx.auth.accountId) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `User "${input.id}" is not owned by "${ctx.auth.email}".`,
 			});
 		}
 		if (!user.connectedAccountId) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "NOT_FOUND",
 				message: `User "${input.id}" doesn't have account connected to it.`,
 			});
 		}
 		if (!user.theirUserId) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "INTERNAL_SERVER_ERROR",
 				message: `User "${input.id}" doesn't have a counterparty to unlink from.`,
 			});

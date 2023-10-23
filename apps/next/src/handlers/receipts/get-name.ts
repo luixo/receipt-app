@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import {
@@ -22,7 +22,7 @@ export const procedure = authProcedure
 			"ownerAccountId",
 		]);
 		if (!receipt) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "NOT_FOUND",
 				message: `Receipt ${input.id} does not exist.`,
 			});
@@ -33,7 +33,7 @@ export const procedure = authProcedure
 			ctx.auth.accountId,
 		);
 		if (!accessRole) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Account id ${ctx.auth.accountId} has no access to receipt ${receipt.id}`,
 			});

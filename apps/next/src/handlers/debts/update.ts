@@ -1,4 +1,4 @@
-import * as trpc from "@trpc/server";
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { debtAmountSchema, debtNoteSchema } from "app/utils/validation";
@@ -57,7 +57,7 @@ export const procedure = authProcedure
 			])
 			.executeTakeFirst();
 		if (!debt) {
-			throw new trpc.TRPCError({
+			throw new TRPCError({
 				code: "NOT_FOUND",
 				message: `Debt ${input.id} does not exist on account ${ctx.auth.accountId}.`,
 			});
@@ -98,7 +98,7 @@ export const procedure = authProcedure
 				reverseSetObject.amount = `-${reverseSetObject.amount}`;
 			}
 			if (!debt.foreignAccountId) {
-				throw new trpc.TRPCError({
+				throw new TRPCError({
 					code: "INTERNAL_SERVER_ERROR",
 					message: `Unexpected having "autoAcceptDebts" but not having "accountId"`,
 				});
