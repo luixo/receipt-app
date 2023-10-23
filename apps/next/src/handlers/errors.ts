@@ -19,7 +19,7 @@ export const formatZodErrors = (error: z.ZodError) =>
 			label: null,
 		},
 		transform: (params) =>
-			`At "${params.pathComponent}": ${params.messageComponent}`,
+			`At "${params.pathComponent || "<root>"}": ${params.messageComponent}`,
 		code: { enabled: false },
 	});
 
