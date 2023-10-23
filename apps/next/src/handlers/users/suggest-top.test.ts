@@ -5,6 +5,7 @@ import { createAuthContext } from "@tests/backend/utils/context";
 import {
 	insertAccount,
 	insertAccountWithSession,
+	insertConnectedUsers,
 	insertDebt,
 	insertReceipt,
 	insertReceiptParticipant,
@@ -166,16 +167,17 @@ describe("users.suggestTop", () => {
 				await insertUser(ctx, otherAccount.id);
 
 				const user = await insertUser(ctx, accountId);
-				const connectedUser = await insertUser(ctx, accountId, {
-					connectedAccountId: otherAccount.id,
-				});
+				const [connectedUser] = await insertConnectedUsers(ctx, [
+					accountId,
+					otherAccount.id,
+				]);
 				const publicNamedUser = await insertUser(ctx, accountId, {
 					publicName: faker.person.fullName(),
 				});
-				const connectedPublicNamedUser = await insertUser(ctx, accountId, {
-					connectedAccountId: secondAccount.id,
-					publicName: faker.person.fullName(),
-				});
+				const [connectedPublicNamedUser] = await insertConnectedUsers(ctx, [
+					{ accountId, publicName: faker.person.fullName() },
+					secondAccount.id,
+				]);
 
 				const caller = router.createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
@@ -201,9 +203,10 @@ describe("users.suggestTop", () => {
 				await insertDebt(ctx, accountId, otherUserId);
 
 				const { id: oneDebtUserId } = await insertUser(ctx, accountId);
-				const { id: twoDebtsUserId } = await insertUser(ctx, accountId, {
-					connectedAccountId: otherAccountId,
-				});
+				const [{ id: twoDebtsUserId }] = await insertConnectedUsers(ctx, [
+					accountId,
+					otherAccountId,
+				]);
 				const { id: threeDebtsUserId } = await insertUser(ctx, accountId);
 				const { id: zeroDebtsUserId } = await insertUser(ctx, accountId);
 				const { id: lastZeroDebtsUserId } = await insertUser(ctx, accountId, {
@@ -304,9 +307,7 @@ describe("users.suggestTop", () => {
 				const publicNamedUser = await insertUser(ctx, accountId, {
 					publicName: faker.person.fullName(),
 				});
-				await insertUser(ctx, accountId, {
-					connectedAccountId: otherAccountId,
-				});
+				await insertConnectedUsers(ctx, [accountId, otherAccountId]);
 
 				const caller = router.createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
@@ -333,9 +334,10 @@ describe("users.suggestTop", () => {
 				const { id: oneDebtUserId } = await insertUser(ctx, accountId);
 				await insertDebt(ctx, accountId, oneDebtUserId);
 
-				const { id: twoDebtsUserId } = await insertUser(ctx, accountId, {
-					connectedAccountId: otherAccountId,
-				});
+				const [{ id: twoDebtsUserId }] = await insertConnectedUsers(ctx, [
+					accountId,
+					otherAccountId,
+				]);
 				await insertDebt(ctx, accountId, twoDebtsUserId);
 				await insertDebt(ctx, accountId, twoDebtsUserId);
 
@@ -405,9 +407,10 @@ describe("users.suggestTop", () => {
 				const { id: otherAccountId } = await insertAccount(ctx);
 				const { id: oldDebtsUserId } = await insertUser(ctx, accountId);
 				const { id: newDebtsUserId } = await insertUser(ctx, accountId);
-				const { id: connectedUserId } = await insertUser(ctx, accountId, {
-					connectedAccountId: otherAccountId,
-				});
+				const [{ id: connectedUserId }] = await insertConnectedUsers(ctx, [
+					accountId,
+					otherAccountId,
+				]);
 				await insertDebt(ctx, accountId, oldDebtsUserId, {
 					timestamp: new Date(Date.now() - MONTH),
 				});
@@ -432,7 +435,8 @@ describe("users.suggestTop", () => {
 
 		describe("not connected to receipt users", () => {
 			test("returns top users", async ({ ctx }) => {
-				const otherAccount = await insertAccount(ctx);
+				const firstOtherAccount = await insertAccount(ctx);
+				const secondOtherAccount = await insertAccount(ctx);
 				const {
 					sessionId,
 					accountId,
@@ -443,15 +447,12 @@ describe("users.suggestTop", () => {
 				const { id: receiptId } = await insertReceipt(ctx, accountId);
 
 				// Verify other receipts and users don't affect our top users
-				await insertReceipt(ctx, otherAccount.id);
-				await insertUser(ctx, otherAccount.id);
+				await insertReceipt(ctx, firstOtherAccount.id);
+				await insertUser(ctx, firstOtherAccount.id);
 
 				const { id: participatingUserId } = await insertUser(ctx, accountId);
-				const { id: participatingConnectedUserId } = await insertUser(
-					ctx,
-					accountId,
-					{ connectedAccountId: otherAccount.id },
-				);
+				const [{ id: participatingConnectedUserId }] =
+					await insertConnectedUsers(ctx, [accountId, firstOtherAccount.id]);
 				await insertReceiptParticipant(ctx, receiptId, participatingUserId);
 				await insertReceiptParticipant(
 					ctx,
@@ -462,9 +463,10 @@ describe("users.suggestTop", () => {
 				const publicNamedUser = await insertUser(ctx, accountId, {
 					publicName: faker.person.fullName(),
 				});
-				const connectedUser = await insertUser(ctx, accountId, {
-					connectedAccountId: otherAccount.id,
-				});
+				const [connectedUser] = await insertConnectedUsers(ctx, [
+					accountId,
+					secondOtherAccount.id,
+				]);
 				const selfUser = {
 					id: selfUserId,
 					name,
@@ -484,7 +486,7 @@ describe("users.suggestTop", () => {
 				expect(result).toStrictEqual<typeof result>({
 					items: mapUserToSuggestResult(
 						[user, publicNamedUser, connectedUser, selfUser],
-						[otherAccount, selfAccount],
+						[selfAccount, firstOtherAccount, secondOtherAccount],
 					).sort((a, b) => a.id.localeCompare(b.id)),
 				});
 			});
@@ -510,9 +512,10 @@ describe("users.suggestTop", () => {
 				const { id: oneReceiptUserId } = await insertUser(ctx, accountId);
 				await insertReceiptParticipant(ctx, firstReceiptId, oneReceiptUserId);
 
-				const { id: twoReceiptsUserId } = await insertUser(ctx, accountId, {
-					connectedAccountId: otherAccountId,
-				});
+				const [{ id: twoReceiptsUserId }] = await insertConnectedUsers(ctx, [
+					accountId,
+					otherAccountId,
+				]);
 				await insertReceiptParticipant(ctx, firstReceiptId, twoReceiptsUserId);
 				await insertReceiptParticipant(ctx, secondReceiptId, twoReceiptsUserId);
 

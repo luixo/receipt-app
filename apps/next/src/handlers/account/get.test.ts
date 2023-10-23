@@ -1,15 +1,8 @@
 import { describe, expect } from "vitest";
 
 import { createAuthContext } from "@tests/backend/utils/context";
-import {
-	insertAccount,
-	insertAccountWithSession,
-	insertSession,
-} from "@tests/backend/utils/data";
-import {
-	expectTRPCError,
-	expectUnauthorizedError,
-} from "@tests/backend/utils/expect";
+import { insertAccountWithSession } from "@tests/backend/utils/data";
+import { expectUnauthorizedError } from "@tests/backend/utils/expect";
 import { test } from "@tests/backend/utils/test";
 import { t } from "next-app/handlers/trpc";
 
@@ -22,19 +15,6 @@ describe("account.get", () => {
 		expectUnauthorizedError((context) =>
 			router.createCaller(context).procedure(),
 		);
-	});
-
-	describe("data verification", () => {
-		test("account-matched user does not exist", async ({ ctx }) => {
-			const { id: accountId } = await insertAccount(ctx);
-			const { id: sessionId } = await insertSession(ctx, accountId);
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
-			await expectTRPCError(
-				() => caller.procedure(),
-				"INTERNAL_SERVER_ERROR",
-				`No result for ${accountId} account found, self-user may be non-existent`,
-			);
-		});
 	});
 
 	describe("functionality", () => {

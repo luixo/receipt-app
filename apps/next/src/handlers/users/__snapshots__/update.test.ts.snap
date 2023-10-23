@@ -16,7 +16,7 @@ exports[`users.update > functionality > public name is changed 1`] = `
 + After snapshot
 
 @@ --- --- @@
-- INSERT INTO public.users VALUES ('69873d27-7822-4273-b5c2-8ee0a2d004d6', 'Maymie', NULL, 'bb77478a-ebb2-49a7-8833-e1180d2eea85', false, false, NULL);
+- INSERT INTO public.users VALUES ('69873d27-7822-4273-b5c2-8ee0a2d004d6', 'Christine', NULL, 'bb77478a-ebb2-49a7-8833-e1180d2eea85', false, false, NULL);
 @@ --- --- @@
-+ INSERT INTO public.users VALUES ('69873d27-7822-4273-b5c2-8ee0a2d004d6', 'Maymie', 'Chelsea Durgan-Skiles', 'bb77478a-ebb2-49a7-8833-e1180d2eea85', false, false, NULL);"
++ INSERT INTO public.users VALUES ('69873d27-7822-4273-b5c2-8ee0a2d004d6', 'Christine', 'Mike Gleichner', 'bb77478a-ebb2-49a7-8833-e1180d2eea85', false, false, NULL);"
 `;

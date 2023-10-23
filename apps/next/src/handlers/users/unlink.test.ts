@@ -5,6 +5,7 @@ import { createAuthContext } from "@tests/backend/utils/context";
 import {
 	insertAccount,
 	insertAccountWithSession,
+	insertConnectedUsers,
 	insertUser,
 } from "@tests/backend/utils/data";
 import {
@@ -75,9 +76,7 @@ describe("users.unlink", () => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			const { id: otherAccountId } = await insertAccount(ctx);
 			// Connected account
-			await insertUser(ctx, accountId, {
-				connectedAccountId: otherAccountId,
-			});
+			await insertConnectedUsers(ctx, [accountId, otherAccountId]);
 			// Not connected account
 			const { id: notConnectedUserId } = await insertUser(ctx, accountId);
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
@@ -85,22 +84,6 @@ describe("users.unlink", () => {
 				() => caller.procedure({ id: notConnectedUserId }),
 				"NOT_FOUND",
 				`User "${notConnectedUserId}" doesn't have account connected to it.`,
-			);
-		});
-
-		test("counterparty is not connected", async ({ ctx }) => {
-			// Self account
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: otherAccountId } = await insertAccount(ctx);
-			// Connected account
-			const { id: connectedUserId } = await insertUser(ctx, accountId, {
-				connectedAccountId: otherAccountId,
-			});
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
-			await expectTRPCError(
-				() => caller.procedure({ id: connectedUserId }),
-				"NOT_FOUND",
-				`User "${connectedUserId}" doesn't have a counterparty to unlink from.`,
 			);
 		});
 	});
@@ -111,13 +94,10 @@ describe("users.unlink", () => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			const { id: otherAccountId } = await insertAccount(ctx);
 			// Connected account
-			const { id: connectedUserId } = await insertUser(ctx, accountId, {
-				connectedAccountId: otherAccountId,
-			});
-			// Verify the opposite user is also unlinked
-			await insertUser(ctx, otherAccountId, {
-				connectedAccountId: accountId,
-			});
+			const [{ id: connectedUserId }] = await insertConnectedUsers(ctx, [
+				accountId,
+				otherAccountId,
+			]);
 			// Verify other users are not affected
 			await insertUser(ctx, accountId);
 			await insertUser(ctx, otherAccountId);

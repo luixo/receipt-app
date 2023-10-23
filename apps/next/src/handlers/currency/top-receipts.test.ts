@@ -3,6 +3,7 @@ import { describe, expect } from "vitest";
 import { createAuthContext } from "@tests/backend/utils/context";
 import {
 	insertAccountWithSession,
+	insertConnectedUsers,
 	insertReceipt,
 	insertReceiptParticipant,
 	insertUser,
@@ -61,9 +62,10 @@ describe("currency.rates", () => {
 			await insertReceiptParticipant(ctx, selfOutdatedReceiptId, userId);
 			// Foreign receipts
 			const { accountId: otherAccountId } = await insertAccountWithSession(ctx);
-			const { id: foreignUserId } = await insertUser(ctx, otherAccountId, {
-				connectedAccountId: accountId,
-			});
+			const [{ id: foreignUserId }] = await insertConnectedUsers(ctx, [
+				otherAccountId,
+				accountId,
+			]);
 			const { id: otherReceiptId } = await insertReceipt(ctx, otherAccountId, {
 				currencyCode: "GEL",
 			});

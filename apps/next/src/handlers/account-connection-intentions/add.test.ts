@@ -7,6 +7,7 @@ import {
 	insertAccount,
 	insertAccountConnectionIntention,
 	insertAccountWithSession,
+	insertConnectedUsers,
 	insertUser,
 } from "@tests/backend/utils/data";
 import {
@@ -124,9 +125,10 @@ describe("accountConnectionIntentions.add", () => {
 				const { id: otherAccountId, email: otherEmail } = await insertAccount(
 					ctx,
 				);
-				const { id: userId } = await insertUser(ctx, accountId, {
-					connectedAccountId: otherAccountId,
-				});
+				const [{ id: userId }] = await insertConnectedUsers(ctx, [
+					accountId,
+					otherAccountId,
+				]);
 				// Verify that other users don't affect error
 				await insertUser(ctx, accountId);
 
@@ -149,12 +151,10 @@ describe("accountConnectionIntentions.add", () => {
 				const { id: otherAccountId, email: otherEmail } = await insertAccount(
 					ctx,
 				);
-				await insertUser(ctx, otherAccountId, {
-					connectedAccountId: accountId,
-				});
-				const { name: userName } = await insertUser(ctx, accountId, {
-					connectedAccountId: otherAccountId,
-				});
+				const [{ name: userName }] = await insertConnectedUsers(ctx, [
+					accountId,
+					otherAccountId,
+				]);
 
 				const { id: userId } = await insertUser(ctx, accountId);
 				const caller = router.createCaller(createAuthContext(ctx, sessionId));

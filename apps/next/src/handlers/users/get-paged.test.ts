@@ -5,6 +5,7 @@ import { createAuthContext } from "@tests/backend/utils/context";
 import {
 	insertAccount,
 	insertAccountWithSession,
+	insertConnectedUsers,
 	insertUser,
 } from "@tests/backend/utils/data";
 import {
@@ -123,14 +124,15 @@ describe("users.getPaged", () => {
 				publicName: "Alice",
 			});
 			const firstAccount = await insertAccount(ctx);
-			const connectedUser = await insertUser(ctx, accountId, {
-				connectedAccountId: firstAccount.id,
-			});
+			const [connectedUser] = await insertConnectedUsers(ctx, [
+				accountId,
+				firstAccount.id,
+			]);
 			const secondAccount = await insertAccount(ctx);
-			const connectedPublicNamedUser = await insertUser(ctx, accountId, {
-				publicName: "Bob",
-				connectedAccountId: secondAccount.id,
-			});
+			const [connectedPublicNamedUser] = await insertConnectedUsers(ctx, [
+				{ accountId, publicName: "Bob" },
+				secondAccount.id,
+			]);
 			const extraUser = await insertUser(ctx, accountId, {
 				name: "Z - last name in a list",
 			});
@@ -155,11 +157,12 @@ describe("users.getPaged", () => {
 						id: userObject.id,
 						name: userObject.name,
 						publicName: userObject.publicName,
-						email: userObject.connectedAccountId
-							? accounts.find(
-									(account) => account.id === userObject.connectedAccountId,
-							  )?.email
-							: undefined,
+						email:
+							"connectedAccountId" in userObject
+								? accounts.find(
+										(account) => account.id === userObject.connectedAccountId,
+								  )?.email
+								: undefined,
 					}))
 					.sort((a, b) => a.name.localeCompare(b.name))
 					.slice(0, limit),

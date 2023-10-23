@@ -5,6 +5,7 @@ import { createAuthContext } from "@tests/backend/utils/context";
 import {
 	insertAccount,
 	insertAccountWithSession,
+	insertConnectedUsers,
 	insertReceipt,
 	insertReceiptParticipant,
 	insertUser,
@@ -243,16 +244,17 @@ describe("users.suggest", () => {
 				insertUser(ctx, accountId, { name: "Alice from work" }),
 				insertUser(ctx, accountId, { name: "Alice from school" }),
 				insertUser(ctx, accountId, { name: "Alice from gym" }),
-				insertUser(ctx, accountId, {
-					name: "Connected Alice",
-					connectedAccountId: accounts[0].id,
-				}),
 			]);
+			const [connectedMatchedUser] = await insertConnectedUsers(ctx, [
+				{ accountId, name: "Connected Alice" },
+				accounts[0].id,
+			]);
+			matchedUsers.push(connectedMatchedUser);
 			await insertUser(ctx, accountId, { name: "Bob" });
-			await insertUser(ctx, accountId, {
-				name: "Connected Bob",
-				connectedAccountId: accounts[1].id,
-			});
+			await insertConnectedUsers(ctx, [
+				{ accountId, name: "Connected Bob" },
+				accounts[1].id,
+			]);
 
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({
@@ -328,16 +330,17 @@ describe("users.suggest", () => {
 			});
 			const matchedUsers = await Promise.all([
 				insertUser(ctx, accountId, { name: "Alice from gym" }),
-				insertUser(ctx, accountId, {
-					name: "Connected Alice",
-					connectedAccountId: accounts[0].id,
-				}),
 			]);
+			const [matchedConnectedUser] = await insertConnectedUsers(ctx, [
+				{ accountId, name: "Connected Alice" },
+				accounts[0].id,
+			]);
+			matchedUsers.push(matchedConnectedUser);
 			await insertUser(ctx, accountId, { name: "Bob" });
-			await insertUser(ctx, accountId, {
-				name: "Connected Bob",
-				connectedAccountId: accounts[1].id,
-			});
+			await insertConnectedUsers(ctx, [
+				{ accountId, name: "Connected Bob" },
+				accounts[1].id,
+			]);
 
 			await insertReceiptParticipant(ctx, receiptId, participatingUserId);
 
@@ -371,15 +374,15 @@ describe("users.suggest", () => {
 				insertUser(ctx, accountId, { name: "Alice from school" }),
 				insertUser(ctx, accountId, { name: "Alice from gym" }),
 			]);
-			await insertUser(ctx, accountId, {
-				name: "Connected Alice",
-				connectedAccountId: accounts[0].id,
-			});
+			await insertConnectedUsers(ctx, [
+				{ accountId, name: "Connected Alice" },
+				accounts[0].id,
+			]);
 			await insertUser(ctx, accountId, { name: "Bob from work" });
-			await insertUser(ctx, accountId, {
-				name: "Connected Bob",
-				connectedAccountId: accounts[1].id,
-			});
+			await insertConnectedUsers(ctx, [
+				{ accountId, name: "Connected Bob" },
+				accounts[1].id,
+			]);
 
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({
@@ -468,11 +471,12 @@ describe("users.suggest", () => {
 			const matchedUsers = await Promise.all([
 				insertUser(ctx, accountId, { name: "Alice from school" }),
 				insertUser(ctx, accountId, { name: "Alice from gym" }),
-				insertUser(ctx, accountId, {
-					name: "Connected Alice",
-					connectedAccountId: accounts[0].id,
-				}),
 			]);
+			const [connectedMatchedUser] = await insertConnectedUsers(ctx, [
+				{ accountId, name: "Connected Alice" },
+				accounts[0].id,
+			]);
+			matchedUsers.push(connectedMatchedUser);
 
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({

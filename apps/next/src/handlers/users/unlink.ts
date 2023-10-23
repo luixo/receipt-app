@@ -49,7 +49,7 @@ export const procedure = authProcedure
 		}
 		if (!user.theirUserId) {
 			throw new trpc.TRPCError({
-				code: "NOT_FOUND",
+				code: "INTERNAL_SERVER_ERROR",
 				message: `User "${input.id}" doesn't have a counterparty to unlink from.`,
 			});
 		}

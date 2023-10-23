@@ -6,9 +6,9 @@ exports[`users.unlink > functionality > account is unlinked from a user 1`] = `
 + After snapshot
 
 @@ --- --- @@
-- INSERT INTO public.users VALUES ('7600d780-8a44-48e5-a365-6f3beb058c1e', 'Estella', NULL, '0b634541-5371-442d-bc82-316251111958', false, false, '648398cd-4d61-48dc-8896-53444aee15a1');
-- INSERT INTO public.users VALUES ('448026ba-5f53-43cc-86e4-74f0ce5b41dc', 'Creola', NULL, '648398cd-4d61-48dc-8896-53444aee15a1', false, false, '0b634541-5371-442d-bc82-316251111958');
+- INSERT INTO public.users VALUES ('7600d780-8a44-48e5-a365-6f3beb058c1e', 'Creola', NULL, '0b634541-5371-442d-bc82-316251111958', false, false, '648398cd-4d61-48dc-8896-53444aee15a1');
+- INSERT INTO public.users VALUES ('448026ba-5f53-43cc-86e4-74f0ce5b41dc', 'Dennis', NULL, '648398cd-4d61-48dc-8896-53444aee15a1', false, false, '0b634541-5371-442d-bc82-316251111958');
 @@ --- --- @@
-+ INSERT INTO public.users VALUES ('7600d780-8a44-48e5-a365-6f3beb058c1e', 'Estella', NULL, '0b634541-5371-442d-bc82-316251111958', false, false, NULL);
-+ INSERT INTO public.users VALUES ('448026ba-5f53-43cc-86e4-74f0ce5b41dc', 'Creola', NULL, '648398cd-4d61-48dc-8896-53444aee15a1', false, false, NULL);"
++ INSERT INTO public.users VALUES ('7600d780-8a44-48e5-a365-6f3beb058c1e', 'Creola', NULL, '0b634541-5371-442d-bc82-316251111958', false, false, NULL);
++ INSERT INTO public.users VALUES ('448026ba-5f53-43cc-86e4-74f0ce5b41dc', 'Dennis', NULL, '648398cd-4d61-48dc-8896-53444aee15a1', false, false, NULL);"
 `;

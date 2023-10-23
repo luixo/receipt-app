@@ -28,3 +28,19 @@ export const createPromise = <R, E = unknown>() => {
 export type ControlledPromise<R = void, E = unknown> = ReturnType<
 	typeof createPromise<R, E>
 >;
+
+type TupleOf<T, N extends number> = N extends N
+	? number extends N
+		? T[]
+		: InnerTupleOf<T, N, []>
+	: never;
+type InnerTupleOf<
+	T,
+	N extends number,
+	R extends unknown[],
+> = R["length"] extends N ? R : InnerTupleOf<T, N, [T, ...R]>;
+
+export const asFixedSizeArray =
+	<N extends number>() =>
+	<T>(array: T[]) =>
+		array as TupleOf<T, N>;

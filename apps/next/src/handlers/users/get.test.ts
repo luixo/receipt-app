@@ -5,9 +5,9 @@ import { createAuthContext } from "@tests/backend/utils/context";
 import {
 	insertAccount,
 	insertAccountWithSession,
+	insertConnectedUsers,
 	insertReceipt,
 	insertReceiptParticipant,
-	insertSelfUser,
 	insertUser,
 } from "@tests/backend/utils/data";
 import {
@@ -116,11 +116,10 @@ describe("users.get", () => {
 					ctx,
 					foreignAccountId,
 				);
-				const { id: foreignSelfUserId } = await insertUser(
-					ctx,
+				const [{ id: foreignSelfUserId }] = await insertConnectedUsers(ctx, [
 					foreignAccountId,
-					{ connectedAccountId: accountId },
-				);
+					accountId,
+				]);
 
 				// Adding a foreign user into the receipt
 				await insertReceiptParticipant(ctx, receiptId, foreignUserId);
@@ -152,24 +151,19 @@ describe("users.get", () => {
 					const { sessionId, accountId } = await insertAccountWithSession(ctx);
 					const { id: foreignAccountId } = await insertAccount(ctx);
 
-					const {
-						id: localConnectedUserId,
-						name,
-						publicName,
-					} = await insertUser(ctx, accountId, {
+					const [{ id: localConnectedUserId, name, publicName }] =
+						await insertConnectedUsers(ctx, [
+							{ accountId, publicName: faker.person.fullName() },
+							connectedAccountId,
+						]);
+					const [{ id: foreignUserId }] = await insertConnectedUsers(ctx, [
+						foreignAccountId,
 						connectedAccountId,
-						publicName: faker.person.fullName(),
-					});
-					const { id: foreignUserId } = await insertUser(
-						ctx,
+					]);
+					const [{ id: foreignSelfUserId }] = await insertConnectedUsers(ctx, [
 						foreignAccountId,
-						{ connectedAccountId },
-					);
-					const { id: foreignSelfUserId } = await insertUser(
-						ctx,
-						foreignAccountId,
-						{ connectedAccountId: accountId },
-					);
+						accountId,
+					]);
 
 					const { id: receiptId } = await insertReceipt(ctx, foreignAccountId);
 					await insertReceiptParticipant(ctx, receiptId, foreignUserId);
@@ -197,13 +191,10 @@ describe("users.get", () => {
 						await insertAccountWithSession(ctx);
 					const { id: foreignAccountId } = await insertAccount(ctx);
 
-					const { id: foreignSelfUserId } = await insertUser(
-						ctx,
+					const [{ id: foreignSelfUserId }] = await insertConnectedUsers(ctx, [
 						foreignAccountId,
-						{
-							connectedAccountId: accountId,
-						},
-					);
+						accountId,
+					]);
 
 					const { id: receiptId } = await insertReceipt(ctx, foreignAccountId);
 					await insertReceiptParticipant(ctx, receiptId, foreignSelfUserId);
@@ -222,25 +213,19 @@ describe("users.get", () => {
 
 				test("as a foreign account", async ({ ctx }) => {
 					const { sessionId, accountId } = await insertAccountWithSession(ctx);
-					const { id: foreignAccountId, email } = await insertAccount(ctx);
-					const { id: foreignAccountUserId } = await insertSelfUser(
-						ctx,
-						foreignAccountId,
-					);
-
 					const {
-						id: foreignUserId,
-						name,
-						publicName,
-					} = await insertUser(ctx, accountId, {
-						connectedAccountId: foreignAccountId,
-						publicName: faker.person.fullName(),
-					});
-					const { id: foreignSelfUserId } = await insertUser(
-						ctx,
+						id: foreignAccountId,
+						email,
+						userId: foreignAccountUserId,
+					} = await insertAccount(ctx);
+
+					const [
+						{ id: foreignUserId, name, publicName },
+						{ id: foreignSelfUserId },
+					] = await insertConnectedUsers(ctx, [
+						{ accountId, publicName: faker.person.fullName() },
 						foreignAccountId,
-						{ connectedAccountId: accountId },
-					);
+					]);
 
 					const { id: receiptId } = await insertReceipt(ctx, foreignAccountId);
 					await insertReceiptParticipant(ctx, receiptId, foreignAccountUserId);

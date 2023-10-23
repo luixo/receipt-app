@@ -3,6 +3,7 @@ import { faker } from "@faker-js/faker";
 import type { TestContext } from "@tests/backend/utils/test";
 import type { CurrencyCode } from "app/utils/currency";
 import { YEAR } from "app/utils/time";
+import { asFixedSizeArray } from "app/utils/utils";
 import type {
 	AccountsId,
 	DebtsId,
@@ -31,6 +32,32 @@ export const insertAccountSettings = async (
 		.executeTakeFirstOrThrow();
 };
 
+type UserData = {
+	id?: UsersId;
+	name?: string;
+	publicName?: string;
+};
+
+export const insertUser = async (
+	ctx: TestContext,
+	ownerAccountId: AccountsId,
+	data: UserData = {},
+) => {
+	const extendedData = data as UserData & { connectedAccountId?: AccountsId };
+	const { id, name } = await ctx.database
+		.insertInto("users")
+		.values({
+			id: data.id || ctx.getTestUuid(),
+			ownerAccountId,
+			name: data.name || faker.person.firstName(),
+			publicName: data.publicName,
+			connectedAccountId: extendedData.connectedAccountId,
+		})
+		.returning(["id", "name"])
+		.executeTakeFirstOrThrow();
+	return { id, name, publicName: data.publicName };
+};
+
 type AccountData = {
 	id?: AccountsId;
 	email?: string;
@@ -40,6 +67,7 @@ type AccountData = {
 		timestamp?: Date;
 	};
 	settings?: AccountSettingsData;
+	user?: Pick<UserData, "name">;
 };
 
 export const insertAccount = async (
@@ -76,6 +104,16 @@ export const insertAccount = async (
 	if (data.settings) {
 		await insertAccountSettings(ctx, id, data.settings);
 	}
+	const { id: userId, name } = await ctx.database
+		.insertInto("users")
+		.values({
+			id: id as UsersId,
+			ownerAccountId: id,
+			name: data.user?.name || faker.person.firstName(),
+			connectedAccountId: id,
+		})
+		.returning(["id", "name"])
+		.executeTakeFirstOrThrow();
 	return {
 		id,
 		email,
@@ -84,50 +122,75 @@ export const insertAccount = async (
 		passwordHash,
 		confirmationToken,
 		confirmationTokenTimestamp,
-	};
-};
-
-type UserData = {
-	id?: UsersId;
-	name?: string;
-	publicName?: string;
-	connectedAccountId?: AccountsId;
-};
-
-export const insertUser = async (
-	ctx: TestContext,
-	ownerAccountId: AccountsId,
-	data: UserData = {},
-) => {
-	const { id, name } = await ctx.database
-		.insertInto("users")
-		.values({
-			id: data.id || ctx.getTestUuid(),
-			ownerAccountId,
-			name: data.name || faker.person.firstName(),
-			publicName: data.publicName,
-			connectedAccountId: data.connectedAccountId,
-		})
-		.returning(["id", "name"])
-		.executeTakeFirstOrThrow();
-	return {
-		id,
+		userId,
 		name,
-		publicName: data.publicName,
-		connectedAccountId: data.connectedAccountId,
 	};
 };
 
-export const insertSelfUser = async (
+type ConnectedUserData = { accountId: AccountsId } & Omit<
+	UserData,
+	"connectedAccountId"
+>;
+
+export const insertConnectedUsers = async (
 	ctx: TestContext,
-	ownerAccountId: AccountsId,
-	data: Omit<UserData, "id" | "publicName" | "connectedAccountId"> = {},
-) =>
-	insertUser(ctx, ownerAccountId, {
-		id: ownerAccountId as UsersId,
-		connectedAccountId: ownerAccountId,
-		...data,
-	});
+	accountsOrData: [
+		AccountsId | ConnectedUserData,
+		AccountsId | ConnectedUserData,
+	],
+) => {
+	const asTwoElementsTuple = asFixedSizeArray<2>();
+	const dataWithIds = asTwoElementsTuple(
+		accountsOrData.map((accountOrDatum, index) => {
+			const connectedData = accountsOrData[index === 0 ? 1 : 0];
+			const sureData: Omit<ConnectedUserData, "accountId"> =
+				typeof accountOrDatum === "string" ? {} : accountOrDatum;
+			return {
+				accountId:
+					typeof accountOrDatum === "string"
+						? accountOrDatum
+						: accountOrDatum.accountId,
+				connectedAccountId:
+					typeof connectedData === "string"
+						? connectedData
+						: connectedData.accountId,
+				data: sureData,
+			};
+		}),
+	);
+	const [firstResult, secondResult] = asTwoElementsTuple(
+		await Promise.all(
+			dataWithIds.map(({ accountId, connectedAccountId, data }) =>
+				ctx.database
+					.insertInto("users")
+					.values({
+						id: data.id || ctx.getTestUuid(),
+						ownerAccountId: accountId,
+						name: data.name || faker.person.firstName(),
+						publicName: data.publicName,
+						connectedAccountId,
+					})
+					.returning(["id", "name"])
+					.executeTakeFirstOrThrow(),
+			),
+		),
+	);
+	const [firstDatum, secondDatum] = dataWithIds;
+	return asTwoElementsTuple([
+		{
+			id: firstResult.id,
+			name: firstResult.name,
+			publicName: firstDatum.data.publicName,
+			connectedAccountId: firstDatum.connectedAccountId,
+		},
+		{
+			id: secondResult.id,
+			name: secondResult.name,
+			publicName: secondDatum.data.publicName,
+			connectedAccountId: secondDatum.connectedAccountId,
+		},
+	]);
+};
 
 type SessionData = {
 	id?: SessionsSessionId;
@@ -379,8 +442,12 @@ export const insertAccountWithSession = async (
 	ctx: TestContext,
 	data: AccountWithSessionData = {},
 ) => {
-	const { id: accountId, ...account } = await insertAccount(ctx, data.account);
+	const {
+		id: accountId,
+		userId,
+		name,
+		...account
+	} = await insertAccount(ctx, data.account);
 	const { id: sessionId, ...session } = await insertSession(ctx, accountId);
-	const { id: userId, name } = await insertSelfUser(ctx, accountId, data.user);
 	return { accountId, account, sessionId, session, userId, name };
 };

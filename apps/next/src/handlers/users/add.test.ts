@@ -7,6 +7,7 @@ import {
 	insertAccount,
 	insertAccountConnectionIntention,
 	insertAccountWithSession,
+	insertConnectedUsers,
 	insertUser,
 } from "@tests/backend/utils/data";
 import {
@@ -101,12 +102,10 @@ describe("users.add", () => {
 				);
 				// Self account
 				const { accountId, sessionId } = await insertAccountWithSession(ctx);
-				await insertUser(ctx, otherAccountId, {
-					connectedAccountId: accountId,
-				});
-				const { name: userName } = await insertUser(ctx, accountId, {
-					connectedAccountId: otherAccountId,
-				});
+				const [{ name: userName }] = await insertConnectedUsers(ctx, [
+					accountId,
+					otherAccountId,
+				]);
 				const caller = router.createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>

@@ -6,6 +6,7 @@ import {
 	insertAccount,
 	insertAccountConnectionIntention,
 	insertAccountWithSession,
+	insertConnectedUsers,
 	insertUser,
 } from "@tests/backend/utils/data";
 import {
@@ -102,9 +103,10 @@ describe("accountConnectionIntentions.accept", () => {
 			const { id: foreignAccountId, email: foreignEmail } = await insertAccount(
 				ctx,
 			);
-			const { id: userId } = await insertUser(ctx, accountId, {
-				connectedAccountId: foreignAccountId,
-			});
+			const [{ id: userId }] = await insertConnectedUsers(ctx, [
+				accountId,
+				foreignAccountId,
+			]);
 
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
