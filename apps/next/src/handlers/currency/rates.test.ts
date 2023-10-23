@@ -229,5 +229,27 @@ describe("currency.rates", () => {
 				);
 			});
 		});
+
+		test(`currencyCode casing is ignored`, async ({ ctx }) => {
+			const dbMock = ctx.cacheDbOptions.mock!;
+			dbMock.setResponder("get", async (key) => {
+				const toCurrencies = key.split("->")[1]!.split(",");
+				return toCurrencies.reduce(
+					(acc, currency) => ({ ...acc, [currency]: getFakeRate() }),
+					{},
+				);
+			});
+			const { sessionId } = await insertAccountWithSession(ctx);
+			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const currencyFrom = "uSd";
+			const currenciesTo = ["EUR", "mop", "VnD"];
+			const result = await caller.procedure({
+				from: currencyFrom,
+				to: currenciesTo,
+			});
+			expect(Object.keys(result).sort()).toStrictEqual<typeof currenciesTo>(
+				[...currenciesTo].map((code) => code.toUpperCase()).sort(),
+			);
+		});
 	});
 });

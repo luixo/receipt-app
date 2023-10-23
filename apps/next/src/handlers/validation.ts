@@ -21,7 +21,10 @@ export const assignableRoleSchema = z.union([
 
 export const roleSchema = assignableRoleSchema.or(z.literal("owner"));
 
-export const currencyCodeSchema = z.string().refine(isCurrencyCode);
+export const currencyCodeSchema = z
+	.string()
+	.transform((code) => code.toUpperCase())
+	.refine(isCurrencyCode);
 
 // TODO: make narrower
 export const localeSchema = z.string();
