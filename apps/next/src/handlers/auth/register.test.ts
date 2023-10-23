@@ -112,7 +112,7 @@ describe("auth.register", () => {
 						name: "a".repeat(MIN_USERNAME_LENGTH),
 					}),
 				"CONFLICT",
-				"Email already exist",
+				`Email "${existingEmail}" already exists.`,
 			);
 		});
 	});

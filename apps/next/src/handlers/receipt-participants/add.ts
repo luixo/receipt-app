@@ -26,13 +26,13 @@ export const procedure = authProcedure
 		if (!receipt) {
 			throw new TRPCError({
 				code: "PRECONDITION_FAILED",
-				message: `Receipt ${input.receiptId} does not exist.`,
+				message: `Receipt "${input.receiptId}" does not exist.`,
 			});
 		}
 		if (receipt.ownerAccountId !== ctx.auth.accountId) {
 			throw new TRPCError({
 				code: "FORBIDDEN",
-				message: `Not enough rights to add participants to receipt ${input.receiptId}.`,
+				message: `Not enough rights to add participants to receipt "${input.receiptId}".`,
 			});
 		}
 		return addReceiptParticipants(

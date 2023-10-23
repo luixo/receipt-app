@@ -26,7 +26,7 @@ export const procedure = unauthProcedure
 		if (!account) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `Account with email ${input.email.original} does not exist.`,
+				message: `Account "${input.email.original}" does not exist.`,
 			});
 		}
 		const uuid: string = ctx.getUuid();
@@ -34,7 +34,7 @@ export const procedure = unauthProcedure
 		if (!ctx.emailOptions.active) {
 			throw new TRPCError({
 				code: "FORBIDDEN",
-				message: `Currently password reset is not supported`,
+				message: `Currently password reset is not supported.`,
 			});
 		}
 		const currentIntentions = await database
@@ -46,7 +46,7 @@ export const procedure = unauthProcedure
 		if (currentIntentions.length >= MAX_INTENTIONS_AMOUNT) {
 			throw new TRPCError({
 				code: "FORBIDDEN",
-				message: `Maximum amount of intentions per day is ${MAX_INTENTIONS_AMOUNT}, please try later`,
+				message: `Maximum amount of intentions per day is ${MAX_INTENTIONS_AMOUNT}, please try later.`,
 			});
 		}
 		await database

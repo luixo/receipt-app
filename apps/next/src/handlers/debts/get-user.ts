@@ -20,13 +20,13 @@ export const procedure = authProcedure
 		if (!user) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `User ${input.userId} does not exist.`,
+				message: `User "${input.userId}" does not exist.`,
 			});
 		}
 		if (user.ownerAccountId !== ctx.auth.accountId) {
 			throw new TRPCError({
 				code: "FORBIDDEN",
-				message: `User ${input.userId} is not owned by ${ctx.auth.accountId}.`,
+				message: `User "${input.userId}" is not owned by "${ctx.auth.email}".`,
 			});
 		}
 

@@ -24,7 +24,7 @@ export const procedure = authProcedure
 		if (!receipt) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `Receipt ${input.id} does not exist.`,
+				message: `Receipt "${input.id}" does not exist.`,
 			});
 		}
 		const accessRole = await getAccessRole(
@@ -35,7 +35,7 @@ export const procedure = authProcedure
 		if (!accessRole) {
 			throw new TRPCError({
 				code: "FORBIDDEN",
-				message: `Account id ${ctx.auth.accountId} has no access to receipt ${receipt.id}`,
+				message: `Account "${ctx.auth.email}" has no access to receipt "${receipt.id}"`,
 			});
 		}
 		return receipt.name;

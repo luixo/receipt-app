@@ -42,9 +42,13 @@ export const addReceiptParticipants = async (
 	if (receiptParticipants.length !== 0) {
 		throw new TRPCError({
 			code: "CONFLICT",
-			message: `User(s) ${receiptParticipants
-				.map(({ userId }) => userId)
-				.join(", ")} already participate(s) in receipt ${receiptId}.`,
+			message: `${
+				receiptParticipants.length === 1 ? "User" : "Users"
+			} ${receiptParticipants
+				.map(({ userId }) => `"${userId}"`)
+				.join(", ")} already ${
+				receiptParticipants.length === 1 ? "participates" : "participate"
+			} in receipt "${receiptId}".`,
 		});
 	}
 	const result = await database

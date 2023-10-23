@@ -59,7 +59,7 @@ export const procedure = authProcedure
 		if (!debt) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `Debt ${input.id} does not exist on account ${ctx.auth.accountId}.`,
+				message: `Debt "${input.id}" does not exist on account "${ctx.auth.email}".`,
 			});
 		}
 

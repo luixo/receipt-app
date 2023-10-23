@@ -33,7 +33,7 @@ export const procedure = authProcedure
 		if (!selfDebt) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `Debt ${input.id} does not exist or you don't have access to it.`,
+				message: `Debt "${input.id}" does not exist or you don't have access to it.`,
 			});
 		}
 

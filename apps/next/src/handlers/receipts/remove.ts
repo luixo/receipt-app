@@ -19,13 +19,13 @@ export const procedure = authProcedure
 		if (!receipt) {
 			throw new TRPCError({
 				code: "PRECONDITION_FAILED",
-				message: `No receipt found by id ${input.id}`,
+				message: `No receipt found by id "${input.id}".`,
 			});
 		}
 		if (receipt.ownerAccountId !== ctx.auth.accountId) {
 			throw new TRPCError({
 				code: "UNAUTHORIZED",
-				message: `Receipt ${input.id} is not owned by ${ctx.auth.accountId}`,
+				message: `Receipt "${input.id}" is not owned by "${ctx.auth.email}".`,
 			});
 		}
 		await database.transaction().execute(async (tx) => {

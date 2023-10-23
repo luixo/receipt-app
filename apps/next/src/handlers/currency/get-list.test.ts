@@ -25,7 +25,7 @@ describe("currency.getList", () => {
 			await expectTRPCError(
 				() => caller.procedure({ locale: "foo" }),
 				"BAD_REQUEST",
-				"Locale foo is invalid.",
+				`Locale "foo" is invalid.`,
 			);
 		});
 	});

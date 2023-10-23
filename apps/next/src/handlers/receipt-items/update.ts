@@ -41,7 +41,7 @@ export const procedure = authProcedure
 		if (!receiptItem) {
 			throw new TRPCError({
 				code: "PRECONDITION_FAILED",
-				message: `No receipt item found by id ${input.id}`,
+				message: `No receipt item found by id "${input.id}".`,
 			});
 		}
 		const receipt = await getReceiptById(database, receiptItem.receiptId, [
@@ -52,13 +52,13 @@ export const procedure = authProcedure
 		if (!receipt) {
 			throw new TRPCError({
 				code: "PRECONDITION_FAILED",
-				message: `No receipt found by id ${input.id}`,
+				message: `No receipt found by id "${input.id}".`,
 			});
 		}
 		if (receipt.lockedTimestamp && input.update.type !== "locked") {
 			throw new TRPCError({
 				code: "FORBIDDEN",
-				message: `Receipt ${receiptItem.receiptId} cannot be updated while locked.`,
+				message: `Receipt "${receiptItem.receiptId}" cannot be updated while locked.`,
 			});
 		}
 		const accessRole = await getAccessRole(
@@ -69,9 +69,9 @@ export const procedure = authProcedure
 		if (accessRole !== "owner" && accessRole !== "editor") {
 			throw new TRPCError({
 				code: "UNAUTHORIZED",
-				message: `Receipt ${receipt.id} is not allowed to be modified by ${
-					ctx.auth.accountId
-				} with role ${accessRole || "nobody"}`,
+				message: `Receipt "${receipt.id}" is not allowed to be modified by "${
+					ctx.auth.email
+				}" with role "${accessRole || "nobody"}"`,
 			});
 		}
 		let setObject: SimpleUpdateObject<"receiptItems"> = {};

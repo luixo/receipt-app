@@ -27,7 +27,7 @@ export const procedure = authProcedure
 		if (!receiptItem) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `Item ${input.itemId} does not exist.`,
+				message: `Item "${input.itemId}" does not exist.`,
 			});
 		}
 		const receipt = await getReceiptById(database, receiptItem.receiptId, [
@@ -38,13 +38,13 @@ export const procedure = authProcedure
 		if (!receipt) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `Receipt ${receiptItem.receiptId} does not exist.`,
+				message: `Receipt "${receiptItem.receiptId}" does not exist.`,
 			});
 		}
 		if (receipt.lockedTimestamp) {
 			throw new TRPCError({
 				code: "FORBIDDEN",
-				message: `Receipt ${receiptItem.receiptId} cannot be updated while locked.`,
+				message: `Receipt "${receiptItem.receiptId}" cannot be updated while locked.`,
 			});
 		}
 		const accessRole = await getAccessRole(
@@ -55,7 +55,7 @@ export const procedure = authProcedure
 		if (accessRole !== "owner" && accessRole !== "editor") {
 			throw new TRPCError({
 				code: "FORBIDDEN",
-				message: `Not enough rights to modify receipt ${receiptItem.receiptId}.`,
+				message: `Not enough rights to modify receipt "${receiptItem.receiptId}".`,
 			});
 		}
 		const deleteResult = await database
@@ -67,7 +67,7 @@ export const procedure = authProcedure
 		if (!deleteResult) {
 			throw new TRPCError({
 				code: "BAD_REQUEST",
-				message: `Item participant ${input.userId} on item ${input.itemId} on receipt ${receipt.id} doesn't exist.`,
+				message: `Item participant "${input.userId}" on item "${input.itemId}" on receipt "${receipt.id}" doesn't exist.`,
 			});
 		}
 	});

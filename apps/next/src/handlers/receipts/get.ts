@@ -76,7 +76,7 @@ export const procedure = authProcedure
 		if (!maybeReceipt) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `No receipt ${input.id} found`,
+				message: `No receipt "${input.id}" found.`,
 			});
 		}
 		const { ownerAccountId, lockedTimestamp, sum, ...receipt } = maybeReceipt;
@@ -88,7 +88,7 @@ export const procedure = authProcedure
 		if (!accessRole) {
 			throw new TRPCError({
 				code: "FORBIDDEN",
-				message: `Account id ${ctx.auth.accountId} has no access to receipt ${receipt.id}`,
+				message: `Account "${ctx.auth.email}" has no access to receipt "${receipt.id}"`,
 			});
 		}
 		if (!lockedTimestamp) {

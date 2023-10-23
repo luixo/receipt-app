@@ -34,7 +34,7 @@ export const procedure = authProcedure
 		if (!debt) {
 			throw new TRPCError({
 				code: "PRECONDITION_FAILED",
-				message: `No debt found by id ${input.id} on account ${ctx.auth.accountId}`,
+				message: `No debt found by id "${input.id}" on account "${ctx.auth.email}"`,
 			});
 		}
 		const reverseRemoved = Boolean(debt.autoAcceptDebts);

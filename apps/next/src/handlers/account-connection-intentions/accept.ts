@@ -59,7 +59,7 @@ export const procedure = authProcedure
 		if (!intention) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `Intention from account id "${input.accountId}" not found.`,
+				message: `Intention from account "${account.email}" not found.`,
 			});
 		}
 		await database.transaction().execute(async (tx) => {

@@ -13,7 +13,7 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 			() =>
 				new TRPCError({
 					code: "INTERNAL_SERVER_ERROR",
-					message: `No result for ${ctx.auth.accountId} account found, self-user may be non-existent`,
+					message: `No result for "${ctx.auth.email}" account found, self-user may be non-existent.`,
 				}),
 		);
 	return {

@@ -30,20 +30,20 @@ export const procedure = authProcedure
 		if (!receipt) {
 			throw new TRPCError({
 				code: "PRECONDITION_FAILED",
-				message: `No receipt found by id ${input.receiptId}`,
+				message: `No receipt found by id "${input.receiptId}".`,
 			});
 		}
 		if (receipt.ownerAccountId !== ctx.auth.accountId) {
 			throw new TRPCError({
 				code: "UNAUTHORIZED",
-				message: `Receipt ${input.receiptId} is not owned by ${ctx.auth.accountId}`,
+				message: `Receipt "${input.receiptId}" is not owned by "${ctx.auth.email}".`,
 			});
 		}
 		const lockedTimestamp = { receipt };
 		if (!lockedTimestamp) {
 			throw new TRPCError({
 				code: "FORBIDDEN",
-				message: `Receipt ${input.receiptId} should be locked in order to propagate debts`,
+				message: `Receipt "${input.receiptId}" should be locked in order to propagate debts.`,
 			});
 		}
 		const validParticipants = await getValidParticipants(

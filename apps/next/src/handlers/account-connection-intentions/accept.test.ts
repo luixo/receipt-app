@@ -145,7 +145,9 @@ describe("accountConnectionIntentions.accept", () => {
 			const { id: selfToForeignUserId } = await insertUser(ctx, accountId);
 			const { id: selfToOuterUserId } = await insertUser(ctx, accountId);
 
-			const { id: foreignAccountId } = await insertAccount(ctx);
+			const { id: foreignAccountId, email: foreignEmail } = await insertAccount(
+				ctx,
+			);
 			const { id: foreignToOuterUserId } = await insertUser(
 				ctx,
 				foreignAccountId,
@@ -198,7 +200,7 @@ describe("accountConnectionIntentions.accept", () => {
 						accountId: foreignAccountId,
 					}),
 				"NOT_FOUND",
-				`Intention from account id "${foreignAccountId}" not found.`,
+				`Intention from account "${foreignEmail}" not found.`,
 			);
 		});
 	});

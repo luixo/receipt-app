@@ -28,7 +28,7 @@ export const procedure = authProcedure
 		if (!receiptItem) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `Item ${input.itemId} does not exist.`,
+				message: `Item "${input.itemId}" does not exist.`,
 			});
 		}
 		const receipt = await getReceiptById(database, receiptItem.receiptId, [
@@ -39,13 +39,13 @@ export const procedure = authProcedure
 		if (!receipt) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `Receipt ${receiptItem.receiptId} does not exist.`,
+				message: `Receipt "${receiptItem.receiptId}" does not exist.`,
 			});
 		}
 		if (receipt.lockedTimestamp) {
 			throw new TRPCError({
 				code: "FORBIDDEN",
-				message: `Receipt ${receiptItem.receiptId} cannot be updated while locked.`,
+				message: `Receipt "${receiptItem.receiptId}" cannot be updated while locked.`,
 			});
 		}
 		const accessRole = await getAccessRole(
@@ -56,7 +56,7 @@ export const procedure = authProcedure
 		if (accessRole !== "owner" && accessRole !== "editor") {
 			throw new TRPCError({
 				code: "FORBIDDEN",
-				message: `Not enough rights to modify receipt ${receiptItem.receiptId}.`,
+				message: `Not enough rights to modify receipt "${receiptItem.receiptId}".`,
 			});
 		}
 		await verifyUsersByIds(database, input.userIds, receipt.ownerAccountId);
@@ -70,11 +70,16 @@ export const procedure = authProcedure
 			const participatingUserIds = receiptParticipants.map(
 				({ userId }) => userId,
 			);
+			const notParticipatingUsers = input.userIds.filter((id) =>
+				participatingUserIds.includes(id),
+			);
 			throw new TRPCError({
 				code: "FORBIDDEN",
-				message: `User(s) ${input.userIds
-					.filter((id) => participatingUserIds.includes(id))
-					.join(", ")} do(es)n't participate in receipt ${receipt.id}.`,
+				message: `${
+					notParticipatingUsers.length === 1 ? "User" : "Users"
+				} ${notParticipatingUsers.map((id) => `"${id}"`).join(", ")} ${
+					notParticipatingUsers.length === 1 ? "doesn't" : "don't"
+				} participate in receipt "${receipt.id}".`,
 			});
 		}
 		const itemParts = await database
@@ -87,9 +92,11 @@ export const procedure = authProcedure
 			const userWithParts = itemParts.map(({ userId }) => userId);
 			throw new TRPCError({
 				code: "CONFLICT",
-				message: `User(s) ${userWithParts.join(
-					", ",
-				)} already have / has a part in item ${input.itemId}.`,
+				message: `${
+					userWithParts.length === 1 ? "User" : "Users"
+				} ${userWithParts.map((id) => `"${id}"`).join(", ")} already ${
+					userWithParts.length === 1 ? "has" : "have"
+				} a part in item "${input.itemId}".`,
 			});
 		}
 		await database

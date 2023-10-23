@@ -41,13 +41,13 @@ export const procedure = authProcedure
 		if (!debt) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `Intention for debt ${input.id} is not found.`,
+				message: `Intention for debt "${input.id}" is not found.`,
 			});
 		}
 		if (!debt.lockedTimestamp) {
 			throw new TRPCError({
 				code: "INTERNAL_SERVER_ERROR",
-				message: `Counterparty debt ${input.id} is not expected to be in sync.`,
+				message: `Counterparty debt "${input.id}" is not expected to be in sync.`,
 			});
 		}
 		if (debt.selfLockedTimestamp) {

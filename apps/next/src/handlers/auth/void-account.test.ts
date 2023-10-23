@@ -39,7 +39,7 @@ describe("auth.voidAccount", () => {
 			await expectTRPCError(
 				() => caller.procedure({ token: confirmationToken }),
 				"NOT_FOUND",
-				`There is no account with confirmation token ${confirmationToken}`,
+				`There is no account with confirmation token "${confirmationToken}".`,
 			);
 		});
 	});

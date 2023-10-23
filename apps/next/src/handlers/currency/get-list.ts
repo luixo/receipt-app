@@ -17,7 +17,7 @@ export const procedure = authProcedure
 		if (!currencies) {
 			throw new TRPCError({
 				code: "BAD_REQUEST",
-				message: `Locale ${input.locale} is invalid.`,
+				message: `Locale "${input.locale}" is invalid.`,
 			});
 		}
 		return Object.entries(currencies).map(([code, currency]) => ({

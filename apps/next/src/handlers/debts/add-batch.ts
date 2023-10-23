@@ -56,7 +56,9 @@ export const procedure = authProcedure
 			);
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `Users ${missingUserIds.join(", ")} do not exist.`,
+				message: `Users ${missingUserIds
+					.map((userId) => `"${userId}"`)
+					.join(", ")} do not exist.`,
 			});
 		}
 		const foreignUsers = users.filter(
@@ -66,9 +68,9 @@ export const procedure = authProcedure
 			const foreignUserIds = foreignUsers.map((foreignUser) => foreignUser.id);
 			throw new TRPCError({
 				code: "FORBIDDEN",
-				message: `Users ${foreignUserIds.join(", ")} are not owned by ${
-					ctx.auth.accountId
-				}.`,
+				message: `Users ${foreignUserIds
+					.map((userId) => `"${userId}"`)
+					.join(", ")} are not owned by "${ctx.auth.email}".`,
 			});
 		}
 		const autoAcceptingUsers = users.filter((user) => user.autoAcceptDebts);

@@ -30,20 +30,20 @@ export const procedure = authProcedure
 		if (!receipt) {
 			throw new TRPCError({
 				code: "PRECONDITION_FAILED",
-				message: `No receipt found by id ${input.receiptId}`,
+				message: `No receipt found by id "${input.receiptId}".`,
 			});
 		}
 		if (receipt.ownerAccountId !== ctx.auth.accountId) {
 			throw new TRPCError({
 				code: "UNAUTHORIZED",
-				message: `Receipt ${input.receiptId} is not owned by ${ctx.auth.accountId}`,
+				message: `Receipt "${input.receiptId}" is not owned by "${ctx.auth.email}".`,
 			});
 		}
 		const { lockedTimestamp } = receipt;
 		if (!lockedTimestamp) {
 			throw new TRPCError({
 				code: "FORBIDDEN",
-				message: `Receipt ${input.receiptId} should be locked in order to update debt`,
+				message: `Receipt "${input.receiptId}" should be locked in order to update debt.`,
 			});
 		}
 		const validParticipants = await getValidParticipants(
@@ -57,7 +57,7 @@ export const procedure = authProcedure
 		if (!matchedParticipant) {
 			throw new TRPCError({
 				code: "PRECONDITION_FAILED",
-				message: `${input.userId} is not a valid participant of receipt ${input.receiptId}`,
+				message: `"${input.userId}" is not a valid participant of receipt "${input.receiptId}".`,
 			});
 		}
 		const createdTimestamp = new Date();

@@ -14,14 +14,14 @@ export const procedure = authProcedure.mutation(async ({ ctx }) => {
 	if (!account.confirmationTokenTimestamp) {
 		throw new TRPCError({
 			code: "BAD_REQUEST",
-			message: `Account with id ${ctx.auth.accountId} is already verified`,
+			message: `Account "${ctx.auth.email}" is already verified.`,
 		});
 	}
 	const now = Date.now();
 	if (now - account.confirmationTokenTimestamp.valueOf() < HOUR) {
 		throw new TRPCError({
 			code: "BAD_REQUEST",
-			message: `Verification email to ${ctx.auth.accountId} was sent less than an hour ago. Please try again later.`,
+			message: `Verification email to "${ctx.auth.email}" was sent less than an hour ago. Please try again later.`,
 		});
 	}
 	const token = ctx.getUuid();

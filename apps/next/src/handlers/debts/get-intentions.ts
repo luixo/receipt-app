@@ -74,7 +74,7 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 		if (!debt.lockedTimestamp) {
 			throw new TRPCError({
 				code: "INTERNAL_SERVER_ERROR",
-				message: `Locked timestamp does not exist on debt id ${debt.id} though it was filtered to exist`,
+				message: `Locked timestamp does not exist on debt id "${debt.id}" though it was filtered to exist`,
 			});
 		}
 		return {

@@ -34,14 +34,14 @@ export const procedure = authProcedure
 		if (!receipt) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `Receipt ${input.receiptId} does not exist.`,
+				message: `Receipt "${input.receiptId}" does not exist.`,
 			});
 		}
 		if (input.update.type === "role") {
 			if (receipt.ownerAccountId !== ctx.auth.accountId) {
 				throw new TRPCError({
 					code: "FORBIDDEN",
-					message: `Not enough rights to modify role on receipt ${input.receiptId}.`,
+					message: `Not enough rights to modify role on receipt "${input.receiptId}".`,
 				});
 			}
 			if (input.userId === ctx.auth.accountId) {
@@ -58,13 +58,13 @@ export const procedure = authProcedure
 			if (!user) {
 				throw new TRPCError({
 					code: "NOT_FOUND",
-					message: `User ${input.userId} does not exist.`,
+					message: `User "${input.userId}" does not exist.`,
 				});
 			}
 			if (user.connectedAccountId !== ctx.auth.accountId) {
 				throw new TRPCError({
 					code: "FORBIDDEN",
-					message: `Not enough rights to modify resolved on user ${input.userId}.`,
+					message: `Not enough rights to modify resolved on user "${input.userId}".`,
 				});
 			}
 		}
@@ -77,7 +77,7 @@ export const procedure = authProcedure
 		if (!receiptParticipant) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `User ${input.userId} does not participate in receipt ${input.receiptId}.`,
+				message: `User "${input.userId}" does not participate in receipt "${input.receiptId}".`,
 			});
 		}
 		let setObject: SimpleUpdateObject<"receiptParticipants"> = {};

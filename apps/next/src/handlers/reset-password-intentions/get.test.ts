@@ -35,7 +35,7 @@ describe("resetPasswordIntentions.get", () => {
 			await expectTRPCError(
 				() => caller.procedure({ token: intentionToken }),
 				"NOT_FOUND",
-				`Reset password intention ${intentionToken} does not exist or expired.`,
+				`Reset password intention "${intentionToken}" does not exist or expired.`,
 			);
 		});
 
@@ -48,7 +48,7 @@ describe("resetPasswordIntentions.get", () => {
 			await expectTRPCError(
 				() => caller.procedure({ token }),
 				"NOT_FOUND",
-				`Reset password intention ${token} does not exist or expired.`,
+				`Reset password intention "${token}" does not exist or expired.`,
 			);
 		});
 	});

@@ -75,7 +75,7 @@ describe("auth.resetPassword", () => {
 						password: "a".repeat(MIN_PASSWORD_LENGTH),
 					}),
 				"NOT_FOUND",
-				`Reset password intention ${intentionToken} does not exist or expired.`,
+				`Reset password intention "${intentionToken}" does not exist or expired.`,
 			);
 		});
 
@@ -92,7 +92,7 @@ describe("auth.resetPassword", () => {
 						password: "a".repeat(MIN_PASSWORD_LENGTH),
 					}),
 				"NOT_FOUND",
-				`Reset password intention ${token} does not exist or expired.`,
+				`Reset password intention "${token}" does not exist or expired.`,
 			);
 		});
 	});

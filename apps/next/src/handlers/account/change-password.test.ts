@@ -61,7 +61,10 @@ describe("account.changePassword", () => {
 		test("previous password doesn't match", async ({ ctx }) => {
 			const currentPassword = faker.internet.password();
 			const nextPassword = faker.internet.password();
-			const { sessionId, accountId } = await insertAccountWithSession(ctx, {
+			const {
+				sessionId,
+				account: { email },
+			} = await insertAccountWithSession(ctx, {
 				account: { password: currentPassword },
 			});
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
@@ -72,7 +75,7 @@ describe("account.changePassword", () => {
 						prevPassword: `not_${currentPassword}`,
 					}),
 				"UNAUTHORIZED",
-				`Change password of account "${accountId}" failed: password doesn't match.`,
+				`Change password of account "${email}" failed: password doesn't match.`,
 			);
 		});
 	});

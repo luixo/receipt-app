@@ -23,26 +23,26 @@ export const procedure = authProcedure
 		if (!receipt) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `Receipt ${input.receiptId} does not exist.`,
+				message: `Receipt "${input.receiptId}" does not exist.`,
 			});
 		}
 		if (receipt.ownerAccountId !== ctx.auth.accountId) {
 			throw new TRPCError({
 				code: "FORBIDDEN",
-				message: `Not enough rights to remove participants from receipt ${input.receiptId}.`,
+				message: `Not enough rights to remove participants from receipt "${input.receiptId}".`,
 			});
 		}
 		const user = await getUserById(database, input.userId, ["ownerAccountId"]);
 		if (!user) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `User ${input.userId} does not exist.`,
+				message: `User "${input.userId}" does not exist.`,
 			});
 		}
 		if (user.ownerAccountId !== ctx.auth.accountId) {
 			throw new TRPCError({
 				code: "FORBIDDEN",
-				message: `Not enough rights to remove a user ${input.userId} from receipt ${input.receiptId}.`,
+				message: `Not enough rights to remove a user "${input.userId}" from receipt "${input.receiptId}".`,
 			});
 		}
 		const receiptParticipant = await getReceiptParticipant(
@@ -54,13 +54,13 @@ export const procedure = authProcedure
 		if (!receiptParticipant) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `User ${input.userId} does not participate in receipt ${input.receiptId}.`,
+				message: `User "${input.userId}" does not participate in receipt "${input.receiptId}".`,
 			});
 		}
 		if (receipt.lockedTimestamp) {
 			throw new TRPCError({
 				code: "FORBIDDEN",
-				message: `Receipt ${input.receiptId} cannot be updated while locked.`,
+				message: `Receipt "${input.receiptId}" cannot be updated while locked.`,
 			});
 		}
 

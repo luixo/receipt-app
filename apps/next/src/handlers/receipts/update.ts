@@ -40,13 +40,13 @@ export const procedure = authProcedure
 		if (!receipt) {
 			throw new TRPCError({
 				code: "PRECONDITION_FAILED",
-				message: `No receipt found by id ${input.id}`,
+				message: `No receipt found by id "${input.id}".`,
 			});
 		}
 		if (receipt.ownerAccountId !== ctx.auth.accountId) {
 			throw new TRPCError({
 				code: "UNAUTHORIZED",
-				message: `Receipt ${input.id} is not owned by ${ctx.auth.accountId}`,
+				message: `Receipt "${input.id}" is not owned by "${ctx.auth.email}".`,
 			});
 		}
 		const setObject: ReceiptUpdateObject =
@@ -91,7 +91,7 @@ export const procedure = authProcedure
 			if (emptyItems) {
 				throw new TRPCError({
 					code: "FORBIDDEN",
-					message: `Receipt ${input.id} has items with no participants.`,
+					message: `Receipt "${input.id}" has items with no participants.`,
 				});
 			}
 		}

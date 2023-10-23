@@ -25,7 +25,7 @@ export const procedure = authProcedure
 		if (!isPrevPasswordValid) {
 			throw new TRPCError({
 				code: "UNAUTHORIZED",
-				message: `Change password of account "${ctx.auth.accountId}" failed: password doesn't match.`,
+				message: `Change password of account "${ctx.auth.email}" failed: password doesn't match.`,
 			});
 		}
 		const passwordData = generatePasswordData(ctx, input.password);

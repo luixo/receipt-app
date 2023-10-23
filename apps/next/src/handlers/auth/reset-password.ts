@@ -27,7 +27,7 @@ export const procedure = unauthProcedure
 		if (!resetPasswordIntention) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `Reset password intention ${input.token} does not exist or expired.`,
+				message: `Reset password intention "${input.token}" does not exist or expired.`,
 			});
 		}
 		const passwordData = generatePasswordData(ctx, input.password);

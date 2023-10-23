@@ -24,19 +24,25 @@ describe("account.resendEmail", () => {
 		);
 
 		test("account is already verified", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const {
+				sessionId,
+				account: { email },
+			} = await insertAccountWithSession(ctx);
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure(),
 				"BAD_REQUEST",
-				`Account with id ${accountId} is already verified`,
+				`Account "${email}" is already verified.`,
 			);
 		});
 
 		test("account is not eligible for repeating email sending", async ({
 			ctx,
 		}) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx, {
+			const {
+				sessionId,
+				account: { email },
+			} = await insertAccountWithSession(ctx, {
 				account: {
 					confirmation: {
 						// Simulating an email sent 55 minutes ago
@@ -48,7 +54,7 @@ describe("account.resendEmail", () => {
 			await expectTRPCError(
 				() => caller.procedure(),
 				"BAD_REQUEST",
-				`Verification email to ${accountId} was sent less than an hour ago. Please try again later.`,
+				`Verification email to "${email}" was sent less than an hour ago. Please try again later.`,
 			);
 		});
 	});

@@ -37,7 +37,7 @@ describe("resetPasswordIntentions.add", () => {
 			await expectTRPCError(
 				() => caller.procedure({ email }),
 				"NOT_FOUND",
-				`Account with email ${email} does not exist.`,
+				`Account "${email}" does not exist.`,
 			);
 		});
 
@@ -55,7 +55,7 @@ describe("resetPasswordIntentions.add", () => {
 			await expectTRPCError(
 				() => caller.procedure({ email }),
 				"FORBIDDEN",
-				`Maximum amount of intentions per day is ${MAX_INTENTIONS_AMOUNT}, please try later`,
+				`Maximum amount of intentions per day is ${MAX_INTENTIONS_AMOUNT}, please try later.`,
 			);
 		});
 	});
@@ -71,7 +71,7 @@ describe("resetPasswordIntentions.add", () => {
 			await expectTRPCError(
 				() => caller.procedure({ email }),
 				"FORBIDDEN",
-				`Currently password reset is not supported`,
+				`Currently password reset is not supported.`,
 			);
 		});
 

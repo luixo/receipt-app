@@ -33,7 +33,7 @@ export const procedure = unauthProcedure
 			);
 			throw new TRPCError({
 				code: "CONFLICT",
-				message: "Email already exist",
+				message: `Email "${input.email.original}" already exists.`,
 			});
 		}
 		const id: AccountsId = ctx.getUuid();

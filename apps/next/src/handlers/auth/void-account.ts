@@ -20,7 +20,7 @@ export const procedure = unauthProcedure
 		if (!account) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `There is no account with confirmation token ${input.token}`,
+				message: `There is no account with confirmation token "${input.token}".`,
 			});
 		}
 		await database

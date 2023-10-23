@@ -49,7 +49,9 @@ export const verifyUsersByIds = async (
 		);
 		throw new TRPCError({
 			code: "NOT_FOUND",
-			message: `User(s) ${missedUserIds.join(", ")} do(es) not exist.`,
+			message: `${missedUserIds.length === 1 ? "User" : "Users"} ${missedUserIds
+				.map((id) => `"${id}"`)
+				.join(", ")} ${missedUserIds.length === 1 ? "does" : "do"} not exist.`,
 		});
 	}
 	const notOwnedUsers = users.filter(
@@ -58,9 +60,9 @@ export const verifyUsersByIds = async (
 	if (notOwnedUsers.length !== 0) {
 		throw new TRPCError({
 			code: "FORBIDDEN",
-			message: `Not enough rights to add user(s) ${notOwnedUsers
-				.map(({ id }) => id)
-				.join(", ")} to a receipt.`,
+			message: `Not enough rights to add ${
+				notOwnedUsers.length === 1 ? "user" : "users"
+			} ${notOwnedUsers.map(({ id }) => `"${id}"`).join(", ")} to a receipt.`,
 		});
 	}
 	return userIds.map((userId) => {
