@@ -13,6 +13,24 @@ import type {
 } from "next-app/db/models";
 import { generatePasswordData } from "next-app/utils/crypto";
 
+type AccountSettingsData = {
+	autoAcceptDebts: boolean;
+};
+
+export const insertAccountSettings = async (
+	ctx: TestContext,
+	accountId: AccountsId,
+	data: AccountSettingsData,
+) => {
+	await ctx.database
+		.insertInto("accountSettings")
+		.values({
+			accountId,
+			autoAcceptDebts: data.autoAcceptDebts,
+		})
+		.executeTakeFirstOrThrow();
+};
+
 type AccountData = {
 	id?: AccountsId;
 	email?: string;
@@ -21,6 +39,7 @@ type AccountData = {
 		token?: string;
 		timestamp?: Date;
 	};
+	settings?: AccountSettingsData;
 };
 
 export const insertAccount = async (
@@ -54,6 +73,9 @@ export const insertAccount = async (
 				"confirmationTokenTimestamp",
 			])
 			.executeTakeFirstOrThrow();
+	if (data.settings) {
+		await insertAccountSettings(ctx, id, data.settings);
+	}
 	return {
 		id,
 		email,
@@ -323,24 +345,6 @@ export const insertItemParticipant = async (
 		.returning(["part"])
 		.executeTakeFirstOrThrow();
 	return { part };
-};
-
-type AccountSettingsData = {
-	autoAcceptDebts: boolean;
-};
-
-export const insertAccountSettings = async (
-	ctx: TestContext,
-	accountId: AccountsId,
-	data: AccountSettingsData,
-) => {
-	await ctx.database
-		.insertInto("accountSettings")
-		.values({
-			accountId,
-			autoAcceptDebts: data.autoAcceptDebts,
-		})
-		.executeTakeFirstOrThrow();
 };
 
 type AccountConnectionIntentionData = {

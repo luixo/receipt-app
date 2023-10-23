@@ -1,10 +1,7 @@
 import { describe, expect } from "vitest";
 
 import { createAuthContext } from "@tests/backend/utils/context";
-import {
-	insertAccountSettings,
-	insertAccountWithSession,
-} from "@tests/backend/utils/data";
+import { insertAccountWithSession } from "@tests/backend/utils/data";
 import { expectUnauthorizedError } from "@tests/backend/utils/expect";
 import { test } from "@tests/backend/utils/test";
 import { t } from "next-app/handlers/trpc";
@@ -31,8 +28,9 @@ describe("accountSettings.get", () => {
 		});
 
 		test("settings found - default", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			await insertAccountSettings(ctx, accountId, { autoAcceptDebts: false });
+			const { sessionId } = await insertAccountWithSession(ctx, {
+				account: { settings: { autoAcceptDebts: false } },
+			});
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
 			await expect(result).toStrictEqual<typeof result>({
@@ -41,8 +39,9 @@ describe("accountSettings.get", () => {
 		});
 
 		test("settings found - changed", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			await insertAccountSettings(ctx, accountId, { autoAcceptDebts: true });
+			const { sessionId } = await insertAccountWithSession(ctx, {
+				account: { settings: { autoAcceptDebts: true } },
+			});
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
 			await expect(result).toStrictEqual<typeof result>({

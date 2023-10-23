@@ -3,7 +3,6 @@ import { describe } from "vitest";
 import { createAuthContext } from "@tests/backend/utils/context";
 import {
 	insertAccount,
-	insertAccountSettings,
 	insertAccountWithSession,
 } from "@tests/backend/utils/data";
 import {
@@ -55,8 +54,9 @@ describe("accountSettings.update", () => {
 			test("settings found", async ({ ctx }) => {
 				// Verifying other accounts are not affected
 				await insertAccount(ctx);
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				await insertAccountSettings(ctx, accountId, { autoAcceptDebts: true });
+				const { sessionId } = await insertAccountWithSession(ctx, {
+					account: { settings: { autoAcceptDebts: true } },
+				});
 				const caller = router.createCaller(createAuthContext(ctx, sessionId));
 				await expectDatabaseDiffSnapshot(ctx, () =>
 					caller.procedure({ type: "autoAcceptDebts", value: false }),
