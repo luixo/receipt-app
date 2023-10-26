@@ -74,26 +74,32 @@ export const emailSchema = z
 
 type NumberSchemaOptions = {
 	decimals?: number;
+	onlyPositive?: boolean;
 };
 
 export const createNumberSchema = (
 	name: string,
-	{ decimals = 2 }: NumberSchemaOptions = {},
-) =>
-	z
+	{ decimals = 2, onlyPositive = true }: NumberSchemaOptions = {},
+) => {
+	let schema = z
 		.number()
 		.multipleOf(Number((0.1 ** decimals).toFixed(decimals)), {
 			message: `${name} should have at maximum ${decimals} decimals`,
-		})
-		.gt(0, { message: `${name} should be greater than 0` });
+		});
+	if (onlyPositive) {
+		schema = schema.gte(0, { message: `${name} should be greater than 0` });
+	}
+	return schema;
+};
 
 export const priceSchema = createNumberSchema("Price");
 export const quantitySchema = createNumberSchema("Quantity");
 export const partSchema = createNumberSchema("Part", { decimals: 5 });
-export const debtAmountSchema = createNumberSchema("Debt amount").max(
-	10 ** 15 - 1,
-	"Debt amount should be less than 10^15",
-);
+export const debtAmountSchema = createNumberSchema("Debt amount", {
+	onlyPositive: false,
+})
+	.max(10 ** 15 - 1, "Debt amount should be less than 10^15")
+	.refine((x) => x !== 0, `Debt amount should be non-zero`);
 
 export const currencyCodeSchema = z.string().refine<CurrencyCode>(flavored);
 

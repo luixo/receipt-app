@@ -21,7 +21,7 @@ export const getValidDebt = (userId: UsersId = faker.string.uuid()) => ({
 	note: faker.lorem.words(),
 	currencyCode: getRandomCurrencyCode(),
 	userId,
-	amount: Number(faker.finance.amount()),
+	amount: Number(faker.finance.amount()) * (faker.datatype.boolean() ? 1 : -1),
 });
 
 export const verifyAmount = <T>(
@@ -29,23 +29,13 @@ export const verifyAmount = <T>(
 	prefix: string,
 ) => {
 	describe("amount", () => {
-		test("negative", async ({ ctx }) => {
-			const { sessionId } = await insertAccountWithSession(ctx);
-			const context = createAuthContext(ctx, sessionId);
-			await expectTRPCError(
-				() => runProcedure(context, -1),
-				"BAD_REQUEST",
-				`Zod error\n\nAt "${prefix}amount": Debt amount should be greater than 0`,
-			);
-		});
-
 		test("zero", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
 			const context = createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, 0),
 				"BAD_REQUEST",
-				`Zod error\n\nAt "${prefix}amount": Debt amount should be greater than 0`,
+				`Zod error\n\nAt "${prefix}amount": Debt amount should be non-zero`,
 			);
 		});
 
