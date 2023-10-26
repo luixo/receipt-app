@@ -34,6 +34,7 @@ export const procedure = authProcedure
 				"theirDebts.timestamp",
 				"theirDebts.currencyCode",
 				"theirDebts.receiptId",
+				"selfDebts.id as selfId",
 				"selfDebts.lockedTimestamp as selfLockedTimestamp",
 				"users.id as foreignUserId",
 			])
@@ -46,43 +47,55 @@ export const procedure = authProcedure
 		}
 		if (!debt.lockedTimestamp) {
 			throw new TRPCError({
-				code: "INTERNAL_SERVER_ERROR",
+				code: "FORBIDDEN",
 				message: `Counterparty debt "${input.id}" is not expected to be in sync.`,
 			});
 		}
-		if (debt.selfLockedTimestamp) {
+		if (!debt.selfId) {
+			const createdTimestamp = new Date();
 			const nextAmount = Number(debt.amount) * -1;
-			const result = await database
-				.updateTable("debts")
-				.where("id", "=", input.id)
-				.where("ownerAccountId", "=", ctx.auth.accountId)
-				.set({
-					amount: nextAmount.toString(),
+			await database
+				.insertInto("debts")
+				.values({
+					id: input.id,
+					ownerAccountId: ctx.auth.accountId,
+					userId: debt.foreignUserId,
 					currencyCode: debt.currencyCode,
+					amount: nextAmount.toString(),
 					timestamp: debt.timestamp,
+					created: createdTimestamp,
+					note: debt.note,
 					lockedTimestamp: debt.lockedTimestamp,
+					receiptId: debt.receiptId,
 				})
-				.returning("debts.created")
-				.executeTakeFirstOrThrow();
-
-			return { created: result.created };
+				.execute();
+			return { created: createdTimestamp };
 		}
-		const createdTimestamp = new Date();
+		if (!debt.selfLockedTimestamp) {
+			throw new TRPCError({
+				code: "FORBIDDEN",
+				message: `Debt "${input.id}" is not expected to be in sync.`,
+			});
+		}
+		if (debt.selfLockedTimestamp.valueOf() > debt.lockedTimestamp.valueOf()) {
+			throw new TRPCError({
+				code: "FORBIDDEN",
+				message: `The counterparty is intended to accept debt "${input.id}" as our timestamp is more fresh.`,
+			});
+		}
 		const nextAmount = Number(debt.amount) * -1;
-		await database
-			.insertInto("debts")
-			.values({
-				id: input.id,
-				ownerAccountId: ctx.auth.accountId,
-				userId: debt.foreignUserId,
-				currencyCode: debt.currencyCode,
+		const result = await database
+			.updateTable("debts")
+			.where("id", "=", input.id)
+			.where("ownerAccountId", "=", ctx.auth.accountId)
+			.set({
 				amount: nextAmount.toString(),
+				currencyCode: debt.currencyCode,
 				timestamp: debt.timestamp,
-				created: createdTimestamp,
-				note: debt.note,
 				lockedTimestamp: debt.lockedTimestamp,
-				receiptId: debt.receiptId,
 			})
-			.execute();
-		return { created: createdTimestamp };
+			.returning("debts.created")
+			.executeTakeFirstOrThrow();
+
+		return { created: result.created };
 	});

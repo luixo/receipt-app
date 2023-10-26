@@ -88,7 +88,7 @@ export const procedure = authProcedure
 				setObject.lockedTimestamp = input.update.locked ? new Date() : null;
 				break;
 		}
-		let reverseUpdated = false;
+		let reverseLockedTimestampUpdated = false;
 		if (debt.autoAcceptDebts) {
 			const reverseSetObject = { ...setObject };
 			if (reverseSetObject.note) {
@@ -109,11 +109,12 @@ export const procedure = authProcedure
 			) {
 				await database
 					.updateTable("debts")
-					.set(setObject)
+					.set(reverseSetObject)
 					.where("id", "=", input.id)
 					.where("ownerAccountId", "=", debt.foreignAccountId)
 					.executeTakeFirst();
-				reverseUpdated = reverseSetObject.lockedTimestamp !== undefined;
+				reverseLockedTimestampUpdated =
+					reverseSetObject.lockedTimestamp !== undefined;
 			}
 		}
 		await database
@@ -126,6 +127,6 @@ export const procedure = authProcedure
 			...(setObject.lockedTimestamp === undefined
 				? undefined
 				: { lockedTimestamp: setObject.lockedTimestamp || undefined }),
-			reverseUpdated,
+			reverseLockedTimestampUpdated,
 		};
 	});

@@ -29,7 +29,7 @@ export const procedure = authProcedure
 			)
 			.min(
 				MIN_BATCH_DEBTS,
-				`Minimum amount of batched debts is ${MIN_BATCH_DEBTS}`,
+				`Minimal amount of batched debts is ${MIN_BATCH_DEBTS}`,
 			),
 	)
 	.mutation(async ({ input: debts, ctx }) => {
@@ -56,9 +56,11 @@ export const procedure = authProcedure
 			);
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `Users ${missingUserIds
-					.map((userId) => `"${userId}"`)
-					.join(", ")} do not exist.`,
+				message: `${
+					missingUserIds.length === 1 ? "User" : "Users"
+				} ${missingUserIds.map((userId) => `"${userId}"`).join(", ")} ${
+					missingUserIds.length === 1 ? "does" : "do"
+				} not exist.`,
 			});
 		}
 		const foreignUsers = users.filter(
@@ -68,12 +70,30 @@ export const procedure = authProcedure
 			const foreignUserIds = foreignUsers.map((foreignUser) => foreignUser.id);
 			throw new TRPCError({
 				code: "FORBIDDEN",
-				message: `Users ${foreignUserIds
+				message: `${
+					foreignUserIds.length === 1 ? "User" : "Users"
+				} ${foreignUserIds
+					.sort()
 					.map((userId) => `"${userId}"`)
-					.join(", ")} are not owned by "${ctx.auth.email}".`,
+					.join(", ")} ${
+					foreignUserIds.length === 1 ? "is" : "are"
+				} not owned by "${ctx.auth.email}".`,
 			});
 		}
-		const autoAcceptingUsers = users.filter((user) => user.autoAcceptDebts);
+		const hasSelfUser = users.some((user) => user.id === user.selfAccountId);
+		if (hasSelfUser) {
+			throw new TRPCError({
+				code: "FORBIDDEN",
+				message: `Cannot add debts for yourself.`,
+			});
+		}
+		const uniqueAutoAcceptingUsers = users
+			.filter((user) => user.autoAcceptDebts)
+			.reduce<typeof users>(
+				(acc, user) =>
+					acc.some(({ id }) => id === user.id) ? acc : [...acc, user],
+				[],
+			);
 		const lockedTimestamp = new Date();
 		let reverseAcceptedUserIds: UsersId[] = [];
 		const commonParts = debts.map((debt, index) => ({
@@ -84,11 +104,13 @@ export const procedure = authProcedure
 			timestamp: debt.timestamp || new Date(),
 			lockedTimestamp,
 		}));
-		if (autoAcceptingUsers.length !== 0) {
-			const autoAcceptingUsersAccountIds = autoAcceptingUsers
+		if (uniqueAutoAcceptingUsers.length !== 0) {
+			const autoAcceptingUsersAccountIds = uniqueAutoAcceptingUsers
 				.map((user) => user.foreignAccountId)
 				.filter(nonNullishGuard);
-			if (autoAcceptingUsersAccountIds.length !== autoAcceptingUsers.length) {
+			if (
+				autoAcceptingUsersAccountIds.length !== uniqueAutoAcceptingUsers.length
+			) {
 				throw new TRPCError({
 					code: "INTERNAL_SERVER_ERROR",
 					message: `Unexpected having "autoAcceptDebts" but not having "accountId"`,
@@ -127,15 +149,15 @@ export const procedure = authProcedure
 							}
 							return {
 								...commonPart,
-								ownerAccountId: ctx.auth.accountId,
-								userId: debts[index]!.userId,
-								amount: debts[index]!.amount.toString(),
+								ownerAccountId: matchedReverseUser.ownerAccountId,
+								userId: matchedReverseUser.id,
+								amount: (-debts[index]!.amount).toString(),
 							};
 						})
 						.filter(nonNullishGuard),
 				)
 				.executeTakeFirst();
-			reverseAcceptedUserIds = autoAcceptingUsers.map((user) => user.id);
+			reverseAcceptedUserIds = uniqueAutoAcceptingUsers.map((user) => user.id);
 		}
 		await database
 			.insertInto("debts")

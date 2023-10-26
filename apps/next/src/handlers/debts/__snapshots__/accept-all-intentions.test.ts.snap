@@ -1,0 +1,13 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`debts.acceptAllIntentions > functionality > debts are synced 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.debts VALUES ('051e068b-a996-4014-842a-c9964f794711', '49833966-c16f-4eb9-a0c0-318c6a73279f', '520cf00c-3d4b-439c-ba64-0afc88b455dd', 'XCD', 610.8800, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Hic nemo non officia vero.', '2020-06-01 00:00:00', NULL);
+@@ --- --- @@
++ INSERT INTO public.debts VALUES ('051e068b-a996-4014-842a-c9964f794711', '49833966-c16f-4eb9-a0c0-318c6a73279f', '520cf00c-3d4b-439c-ba64-0afc88b455dd', 'ZAR', 277.2200, '2020-04-01 00:00:00', '2020-01-01 00:00:00', 'Hic nemo non officia vero.', '2020-06-02 00:00:00', NULL);
++ INSERT INTO public.debts VALUES ('9881bd4c-8880-4b04-8f7f-0c3c30f3246d', '49833966-c16f-4eb9-a0c0-318c6a73279f', '520cf00c-3d4b-439c-ba64-0afc88b455dd', 'SRD', -269.8300, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Ducimus minus at porro modi ipsam asperiores perferendis.', '2020-01-01 00:00:00', '72d7ec08-0e0e-417b-ab70-06dbab5c1f6a');"
+`;

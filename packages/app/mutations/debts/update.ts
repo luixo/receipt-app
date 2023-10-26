@@ -233,20 +233,24 @@ export const options: UseContextedMutationOptions<
 		if (!("lockedTimestamp" in result)) {
 			return;
 		}
-		const { lockedTimestamp, reverseUpdated } = result;
+		const { lockedTimestamp, reverseLockedTimestampUpdated } = result;
 		cache.debts.update(controllerContext, {
 			getByUsers: undefined,
 			getUser: (controller) =>
 				controller.update(currData.userId, updateObject.id, (debt) => ({
 					...debt,
 					lockedTimestamp,
-					their: reverseUpdated ? { lockedTimestamp } : debt.their,
+					their: reverseLockedTimestampUpdated
+						? { lockedTimestamp }
+						: debt.their,
 				})),
 			get: (controller) =>
 				controller.update(updateObject.id, (debt) => ({
 					...debt,
 					lockedTimestamp,
-					their: reverseUpdated ? { lockedTimestamp } : debt.their,
+					their: reverseLockedTimestampUpdated
+						? { lockedTimestamp }
+						: debt.their,
 				})),
 			getIntentions: (controller) => {
 				if (

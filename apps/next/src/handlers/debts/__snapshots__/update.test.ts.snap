@@ -1,0 +1,285 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`debts.update > functionality > update amount > counterparty auto-accepts > locked before update 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.debts VALUES ('c6921060-1137-45b4-b942-59630a98b84a', '16881856-073a-4f5f-84e4-969b374cba81', '6f8ed306-9451-4c1e-8148-231beb699702', 'BRL', 128.8000, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Et praesentium provident magni eveniet modi quo possimus beatae.', '2021-01-01 00:00:00', NULL);
+- INSERT INTO public.debts VALUES ('c6921060-1137-45b4-b942-59630a98b84a', 'b4fba71b-3720-46f4-befe-54e779c889fc', '2d1fed05-9774-484e-bf14-e6249527e4e3', 'BRL', -128.8000, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Et praesentium provident magni eveniet modi quo possimus beatae.', '2021-01-01 00:00:00', NULL);
+@@ --- --- @@
++ INSERT INTO public.debts VALUES ('c6921060-1137-45b4-b942-59630a98b84a', 'b4fba71b-3720-46f4-befe-54e779c889fc', '2d1fed05-9774-484e-bf14-e6249527e4e3', 'BRL', -446.8100, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Et praesentium provident magni eveniet modi quo possimus beatae.', '2020-01-01 00:00:00', NULL);
++ INSERT INTO public.debts VALUES ('c6921060-1137-45b4-b942-59630a98b84a', '16881856-073a-4f5f-84e4-969b374cba81', '6f8ed306-9451-4c1e-8148-231beb699702', 'BRL', 446.8100, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Et praesentium provident magni eveniet modi quo possimus beatae.', '2020-01-01 00:00:00', NULL);"
+`;
+
+exports[`debts.update > functionality > update amount > counterparty auto-accepts > unlocked before update 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.debts VALUES ('7a95f491-5b34-488a-b337-a6222e2af061', 'd8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b', '84b1e8c2-9288-47aa-8337-5c7482756de6', 'SLE', 643.7300, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Officiis quibusdam doloribus ea delectus omnis blanditiis.', NULL, NULL);
+- INSERT INTO public.debts VALUES ('7a95f491-5b34-488a-b337-a6222e2af061', '32bcb6f1-76a9-4892-a8c2-9e755afa6fe7', '86a63627-74ee-4db4-8a79-0cf83f6da8c5', 'SLE', -643.7300, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Officiis quibusdam doloribus ea delectus omnis blanditiis.', NULL, NULL);
+@@ --- --- @@
++ INSERT INTO public.debts VALUES ('7a95f491-5b34-488a-b337-a6222e2af061', '32bcb6f1-76a9-4892-a8c2-9e755afa6fe7', '86a63627-74ee-4db4-8a79-0cf83f6da8c5', 'SLE', -881.0800, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Officiis quibusdam doloribus ea delectus omnis blanditiis.', NULL, NULL);
++ INSERT INTO public.debts VALUES ('7a95f491-5b34-488a-b337-a6222e2af061', 'd8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b', '84b1e8c2-9288-47aa-8337-5c7482756de6', 'SLE', 881.0800, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Officiis quibusdam doloribus ea delectus omnis blanditiis.', NULL, NULL);"
+`;
+
+exports[`debts.update > functionality > update amount > counterparty doesn't auto-accept > locked before update 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.debts VALUES ('c6921060-1137-45b4-b942-59630a98b84a', '16881856-073a-4f5f-84e4-969b374cba81', '6f8ed306-9451-4c1e-8148-231beb699702', 'BRL', 128.8000, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Et praesentium provident magni eveniet modi quo possimus beatae.', '2021-01-01 00:00:00', NULL);
+@@ --- --- @@
++ INSERT INTO public.debts VALUES ('c6921060-1137-45b4-b942-59630a98b84a', '16881856-073a-4f5f-84e4-969b374cba81', '6f8ed306-9451-4c1e-8148-231beb699702', 'BRL', 446.8100, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Et praesentium provident magni eveniet modi quo possimus beatae.', '2020-01-01 00:00:00', NULL);"
+`;
+
+exports[`debts.update > functionality > update amount > counterparty doesn't auto-accept > unlocked before update 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.debts VALUES ('7a95f491-5b34-488a-b337-a6222e2af061', 'd8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b', '84b1e8c2-9288-47aa-8337-5c7482756de6', 'SLE', 643.7300, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Officiis quibusdam doloribus ea delectus omnis blanditiis.', NULL, NULL);
+@@ --- --- @@
++ INSERT INTO public.debts VALUES ('7a95f491-5b34-488a-b337-a6222e2af061', 'd8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b', '84b1e8c2-9288-47aa-8337-5c7482756de6', 'SLE', 881.0800, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Officiis quibusdam doloribus ea delectus omnis blanditiis.', NULL, NULL);"
+`;
+
+exports[`debts.update > functionality > update currency code > counterparty auto-accepts > locked before update 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.debts VALUES ('c6921060-1137-45b4-b942-59630a98b84a', '16881856-073a-4f5f-84e4-969b374cba81', '6f8ed306-9451-4c1e-8148-231beb699702', 'BRL', 128.8000, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Et praesentium provident magni eveniet modi quo possimus beatae.', '2021-01-01 00:00:00', NULL);
+- INSERT INTO public.debts VALUES ('c6921060-1137-45b4-b942-59630a98b84a', 'b4fba71b-3720-46f4-befe-54e779c889fc', '2d1fed05-9774-484e-bf14-e6249527e4e3', 'BRL', -128.8000, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Et praesentium provident magni eveniet modi quo possimus beatae.', '2021-01-01 00:00:00', NULL);
+@@ --- --- @@
++ INSERT INTO public.debts VALUES ('c6921060-1137-45b4-b942-59630a98b84a', 'b4fba71b-3720-46f4-befe-54e779c889fc', '2d1fed05-9774-484e-bf14-e6249527e4e3', 'JPY', -128.8000, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Et praesentium provident magni eveniet modi quo possimus beatae.', '2020-01-01 00:00:00', NULL);
++ INSERT INTO public.debts VALUES ('c6921060-1137-45b4-b942-59630a98b84a', '16881856-073a-4f5f-84e4-969b374cba81', '6f8ed306-9451-4c1e-8148-231beb699702', 'JPY', 128.8000, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Et praesentium provident magni eveniet modi quo possimus beatae.', '2020-01-01 00:00:00', NULL);"
+`;
+
+exports[`debts.update > functionality > update currency code > counterparty auto-accepts > unlocked before update 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.debts VALUES ('7a95f491-5b34-488a-b337-a6222e2af061', 'd8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b', '84b1e8c2-9288-47aa-8337-5c7482756de6', 'SLE', 643.7300, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Officiis quibusdam doloribus ea delectus omnis blanditiis.', NULL, NULL);
+- INSERT INTO public.debts VALUES ('7a95f491-5b34-488a-b337-a6222e2af061', '32bcb6f1-76a9-4892-a8c2-9e755afa6fe7', '86a63627-74ee-4db4-8a79-0cf83f6da8c5', 'SLE', -643.7300, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Officiis quibusdam doloribus ea delectus omnis blanditiis.', NULL, NULL);
+@@ --- --- @@
++ INSERT INTO public.debts VALUES ('7a95f491-5b34-488a-b337-a6222e2af061', '32bcb6f1-76a9-4892-a8c2-9e755afa6fe7', '86a63627-74ee-4db4-8a79-0cf83f6da8c5', 'TTD', -643.7300, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Officiis quibusdam doloribus ea delectus omnis blanditiis.', NULL, NULL);
++ INSERT INTO public.debts VALUES ('7a95f491-5b34-488a-b337-a6222e2af061', 'd8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b', '84b1e8c2-9288-47aa-8337-5c7482756de6', 'TTD', 643.7300, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Officiis quibusdam doloribus ea delectus omnis blanditiis.', NULL, NULL);"
+`;
+
+exports[`debts.update > functionality > update currency code > counterparty doesn't auto-accept > locked before update 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.debts VALUES ('c6921060-1137-45b4-b942-59630a98b84a', '16881856-073a-4f5f-84e4-969b374cba81', '6f8ed306-9451-4c1e-8148-231beb699702', 'BRL', 128.8000, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Et praesentium provident magni eveniet modi quo possimus beatae.', '2021-01-01 00:00:00', NULL);
+@@ --- --- @@
++ INSERT INTO public.debts VALUES ('c6921060-1137-45b4-b942-59630a98b84a', '16881856-073a-4f5f-84e4-969b374cba81', '6f8ed306-9451-4c1e-8148-231beb699702', 'JPY', 128.8000, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Et praesentium provident magni eveniet modi quo possimus beatae.', '2020-01-01 00:00:00', NULL);"
+`;
+
+exports[`debts.update > functionality > update currency code > counterparty doesn't auto-accept > unlocked before update 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.debts VALUES ('7a95f491-5b34-488a-b337-a6222e2af061', 'd8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b', '84b1e8c2-9288-47aa-8337-5c7482756de6', 'SLE', 643.7300, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Officiis quibusdam doloribus ea delectus omnis blanditiis.', NULL, NULL);
+@@ --- --- @@
++ INSERT INTO public.debts VALUES ('7a95f491-5b34-488a-b337-a6222e2af061', 'd8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b', '84b1e8c2-9288-47aa-8337-5c7482756de6', 'TTD', 643.7300, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Officiis quibusdam doloribus ea delectus omnis blanditiis.', NULL, NULL);"
+`;
+
+exports[`debts.update > functionality > update locked - false > counterparty auto-accepts > locked before update 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.debts VALUES ('c6921060-1137-45b4-b942-59630a98b84a', '16881856-073a-4f5f-84e4-969b374cba81', '6f8ed306-9451-4c1e-8148-231beb699702', 'BRL', 128.8000, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Et praesentium provident magni eveniet modi quo possimus beatae.', '2021-01-01 00:00:00', NULL);
+- INSERT INTO public.debts VALUES ('c6921060-1137-45b4-b942-59630a98b84a', 'b4fba71b-3720-46f4-befe-54e779c889fc', '2d1fed05-9774-484e-bf14-e6249527e4e3', 'BRL', -128.8000, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Et praesentium provident magni eveniet modi quo possimus beatae.', '2021-01-01 00:00:00', NULL);
+@@ --- --- @@
++ INSERT INTO public.debts VALUES ('c6921060-1137-45b4-b942-59630a98b84a', 'b4fba71b-3720-46f4-befe-54e779c889fc', '2d1fed05-9774-484e-bf14-e6249527e4e3', 'BRL', -128.8000, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Et praesentium provident magni eveniet modi quo possimus beatae.', NULL, NULL);
++ INSERT INTO public.debts VALUES ('c6921060-1137-45b4-b942-59630a98b84a', '16881856-073a-4f5f-84e4-969b374cba81', '6f8ed306-9451-4c1e-8148-231beb699702', 'BRL', 128.8000, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Et praesentium provident magni eveniet modi quo possimus beatae.', NULL, NULL);"
+`;
+
+exports[`debts.update > functionality > update locked - false > counterparty auto-accepts > unlocked before update 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.debts VALUES ('7a95f491-5b34-488a-b337-a6222e2af061', 'd8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b', '84b1e8c2-9288-47aa-8337-5c7482756de6', 'SLE', 643.7300, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Officiis quibusdam doloribus ea delectus omnis blanditiis.', NULL, NULL);
+- INSERT INTO public.debts VALUES ('7a95f491-5b34-488a-b337-a6222e2af061', '32bcb6f1-76a9-4892-a8c2-9e755afa6fe7', '86a63627-74ee-4db4-8a79-0cf83f6da8c5', 'SLE', -643.7300, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Officiis quibusdam doloribus ea delectus omnis blanditiis.', NULL, NULL);
+@@ --- --- @@
++ INSERT INTO public.debts VALUES ('7a95f491-5b34-488a-b337-a6222e2af061', '32bcb6f1-76a9-4892-a8c2-9e755afa6fe7', '86a63627-74ee-4db4-8a79-0cf83f6da8c5', 'SLE', -643.7300, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Officiis quibusdam doloribus ea delectus omnis blanditiis.', NULL, NULL);
++ INSERT INTO public.debts VALUES ('7a95f491-5b34-488a-b337-a6222e2af061', 'd8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b', '84b1e8c2-9288-47aa-8337-5c7482756de6', 'SLE', 643.7300, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Officiis quibusdam doloribus ea delectus omnis blanditiis.', NULL, NULL);"
+`;
+
+exports[`debts.update > functionality > update locked - false > counterparty doesn't auto-accept > locked before update 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.debts VALUES ('c6921060-1137-45b4-b942-59630a98b84a', '16881856-073a-4f5f-84e4-969b374cba81', '6f8ed306-9451-4c1e-8148-231beb699702', 'BRL', 128.8000, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Et praesentium provident magni eveniet modi quo possimus beatae.', '2021-01-01 00:00:00', NULL);
+@@ --- --- @@
++ INSERT INTO public.debts VALUES ('c6921060-1137-45b4-b942-59630a98b84a', '16881856-073a-4f5f-84e4-969b374cba81', '6f8ed306-9451-4c1e-8148-231beb699702', 'BRL', 128.8000, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Et praesentium provident magni eveniet modi quo possimus beatae.', NULL, NULL);"
+`;
+
+exports[`debts.update > functionality > update locked - false > counterparty doesn't auto-accept > unlocked before update 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.debts VALUES ('7a95f491-5b34-488a-b337-a6222e2af061', 'd8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b', '84b1e8c2-9288-47aa-8337-5c7482756de6', 'SLE', 643.7300, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Officiis quibusdam doloribus ea delectus omnis blanditiis.', NULL, NULL);
+@@ --- --- @@
++ INSERT INTO public.debts VALUES ('7a95f491-5b34-488a-b337-a6222e2af061', 'd8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b', '84b1e8c2-9288-47aa-8337-5c7482756de6', 'SLE', 643.7300, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Officiis quibusdam doloribus ea delectus omnis blanditiis.', NULL, NULL);"
+`;
+
+exports[`debts.update > functionality > update locked - true > counterparty auto-accepts > locked before update 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.debts VALUES ('c6921060-1137-45b4-b942-59630a98b84a', '16881856-073a-4f5f-84e4-969b374cba81', '6f8ed306-9451-4c1e-8148-231beb699702', 'BRL', 128.8000, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Et praesentium provident magni eveniet modi quo possimus beatae.', '2021-01-01 00:00:00', NULL);
+- INSERT INTO public.debts VALUES ('c6921060-1137-45b4-b942-59630a98b84a', 'b4fba71b-3720-46f4-befe-54e779c889fc', '2d1fed05-9774-484e-bf14-e6249527e4e3', 'BRL', -128.8000, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Et praesentium provident magni eveniet modi quo possimus beatae.', '2021-01-01 00:00:00', NULL);
+@@ --- --- @@
++ INSERT INTO public.debts VALUES ('c6921060-1137-45b4-b942-59630a98b84a', 'b4fba71b-3720-46f4-befe-54e779c889fc', '2d1fed05-9774-484e-bf14-e6249527e4e3', 'BRL', -128.8000, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Et praesentium provident magni eveniet modi quo possimus beatae.', '2020-01-01 00:00:00', NULL);
++ INSERT INTO public.debts VALUES ('c6921060-1137-45b4-b942-59630a98b84a', '16881856-073a-4f5f-84e4-969b374cba81', '6f8ed306-9451-4c1e-8148-231beb699702', 'BRL', 128.8000, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Et praesentium provident magni eveniet modi quo possimus beatae.', '2020-01-01 00:00:00', NULL);"
+`;
+
+exports[`debts.update > functionality > update locked - true > counterparty auto-accepts > unlocked before update 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.debts VALUES ('7a95f491-5b34-488a-b337-a6222e2af061', 'd8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b', '84b1e8c2-9288-47aa-8337-5c7482756de6', 'SLE', 643.7300, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Officiis quibusdam doloribus ea delectus omnis blanditiis.', NULL, NULL);
+- INSERT INTO public.debts VALUES ('7a95f491-5b34-488a-b337-a6222e2af061', '32bcb6f1-76a9-4892-a8c2-9e755afa6fe7', '86a63627-74ee-4db4-8a79-0cf83f6da8c5', 'SLE', -643.7300, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Officiis quibusdam doloribus ea delectus omnis blanditiis.', NULL, NULL);
+@@ --- --- @@
++ INSERT INTO public.debts VALUES ('7a95f491-5b34-488a-b337-a6222e2af061', '32bcb6f1-76a9-4892-a8c2-9e755afa6fe7', '86a63627-74ee-4db4-8a79-0cf83f6da8c5', 'SLE', -643.7300, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Officiis quibusdam doloribus ea delectus omnis blanditiis.', '2020-01-01 00:00:00', NULL);
++ INSERT INTO public.debts VALUES ('7a95f491-5b34-488a-b337-a6222e2af061', 'd8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b', '84b1e8c2-9288-47aa-8337-5c7482756de6', 'SLE', 643.7300, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Officiis quibusdam doloribus ea delectus omnis blanditiis.', '2020-01-01 00:00:00', NULL);"
+`;
+
+exports[`debts.update > functionality > update locked - true > counterparty doesn't auto-accept > locked before update 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.debts VALUES ('c6921060-1137-45b4-b942-59630a98b84a', '16881856-073a-4f5f-84e4-969b374cba81', '6f8ed306-9451-4c1e-8148-231beb699702', 'BRL', 128.8000, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Et praesentium provident magni eveniet modi quo possimus beatae.', '2021-01-01 00:00:00', NULL);
+@@ --- --- @@
++ INSERT INTO public.debts VALUES ('c6921060-1137-45b4-b942-59630a98b84a', '16881856-073a-4f5f-84e4-969b374cba81', '6f8ed306-9451-4c1e-8148-231beb699702', 'BRL', 128.8000, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Et praesentium provident magni eveniet modi quo possimus beatae.', '2020-01-01 00:00:00', NULL);"
+`;
+
+exports[`debts.update > functionality > update locked - true > counterparty doesn't auto-accept > unlocked before update 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.debts VALUES ('7a95f491-5b34-488a-b337-a6222e2af061', 'd8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b', '84b1e8c2-9288-47aa-8337-5c7482756de6', 'SLE', 643.7300, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Officiis quibusdam doloribus ea delectus omnis blanditiis.', NULL, NULL);
+@@ --- --- @@
++ INSERT INTO public.debts VALUES ('7a95f491-5b34-488a-b337-a6222e2af061', 'd8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b', '84b1e8c2-9288-47aa-8337-5c7482756de6', 'SLE', 643.7300, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Officiis quibusdam doloribus ea delectus omnis blanditiis.', '2020-01-01 00:00:00', NULL);"
+`;
+
+exports[`debts.update > functionality > update note > counterparty auto-accepts > locked before update 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.debts VALUES ('c6921060-1137-45b4-b942-59630a98b84a', '16881856-073a-4f5f-84e4-969b374cba81', '6f8ed306-9451-4c1e-8148-231beb699702', 'BRL', 128.8000, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Et praesentium provident magni eveniet modi quo possimus beatae.', '2021-01-01 00:00:00', NULL);
+@@ --- --- @@
++ INSERT INTO public.debts VALUES ('c6921060-1137-45b4-b942-59630a98b84a', '16881856-073a-4f5f-84e4-969b374cba81', '6f8ed306-9451-4c1e-8148-231beb699702', 'BRL', 128.8000, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'in est explicabo', '2021-01-01 00:00:00', NULL);"
+`;
+
+exports[`debts.update > functionality > update note > counterparty auto-accepts > unlocked before update 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.debts VALUES ('7a95f491-5b34-488a-b337-a6222e2af061', 'd8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b', '84b1e8c2-9288-47aa-8337-5c7482756de6', 'SLE', 643.7300, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Officiis quibusdam doloribus ea delectus omnis blanditiis.', NULL, NULL);
+@@ --- --- @@
++ INSERT INTO public.debts VALUES ('7a95f491-5b34-488a-b337-a6222e2af061', 'd8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b', '84b1e8c2-9288-47aa-8337-5c7482756de6', 'SLE', 643.7300, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'accusamus nihil aperiam', NULL, NULL);"
+`;
+
+exports[`debts.update > functionality > update note > counterparty doesn't auto-accept > locked before update 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.debts VALUES ('c6921060-1137-45b4-b942-59630a98b84a', '16881856-073a-4f5f-84e4-969b374cba81', '6f8ed306-9451-4c1e-8148-231beb699702', 'BRL', 128.8000, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Et praesentium provident magni eveniet modi quo possimus beatae.', '2021-01-01 00:00:00', NULL);
+@@ --- --- @@
++ INSERT INTO public.debts VALUES ('c6921060-1137-45b4-b942-59630a98b84a', '16881856-073a-4f5f-84e4-969b374cba81', '6f8ed306-9451-4c1e-8148-231beb699702', 'BRL', 128.8000, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'in est explicabo', '2021-01-01 00:00:00', NULL);"
+`;
+
+exports[`debts.update > functionality > update note > counterparty doesn't auto-accept > unlocked before update 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.debts VALUES ('7a95f491-5b34-488a-b337-a6222e2af061', 'd8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b', '84b1e8c2-9288-47aa-8337-5c7482756de6', 'SLE', 643.7300, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Officiis quibusdam doloribus ea delectus omnis blanditiis.', NULL, NULL);
+@@ --- --- @@
++ INSERT INTO public.debts VALUES ('7a95f491-5b34-488a-b337-a6222e2af061', 'd8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b', '84b1e8c2-9288-47aa-8337-5c7482756de6', 'SLE', 643.7300, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'accusamus nihil aperiam', NULL, NULL);"
+`;
+
+exports[`debts.update > functionality > update timestamp > counterparty auto-accepts > locked before update 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.debts VALUES ('c6921060-1137-45b4-b942-59630a98b84a', '16881856-073a-4f5f-84e4-969b374cba81', '6f8ed306-9451-4c1e-8148-231beb699702', 'BRL', 128.8000, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Et praesentium provident magni eveniet modi quo possimus beatae.', '2021-01-01 00:00:00', NULL);
+- INSERT INTO public.debts VALUES ('c6921060-1137-45b4-b942-59630a98b84a', 'b4fba71b-3720-46f4-befe-54e779c889fc', '2d1fed05-9774-484e-bf14-e6249527e4e3', 'BRL', -128.8000, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Et praesentium provident magni eveniet modi quo possimus beatae.', '2021-01-01 00:00:00', NULL);
+@@ --- --- @@
++ INSERT INTO public.debts VALUES ('c6921060-1137-45b4-b942-59630a98b84a', 'b4fba71b-3720-46f4-befe-54e779c889fc', '2d1fed05-9774-484e-bf14-e6249527e4e3', 'BRL', -128.8000, '2020-06-01 00:00:00', '2020-01-01 00:00:00', 'Et praesentium provident magni eveniet modi quo possimus beatae.', '2020-01-01 00:00:00', NULL);
++ INSERT INTO public.debts VALUES ('c6921060-1137-45b4-b942-59630a98b84a', '16881856-073a-4f5f-84e4-969b374cba81', '6f8ed306-9451-4c1e-8148-231beb699702', 'BRL', 128.8000, '2020-06-01 00:00:00', '2020-01-01 00:00:00', 'Et praesentium provident magni eveniet modi quo possimus beatae.', '2020-01-01 00:00:00', NULL);"
+`;
+
+exports[`debts.update > functionality > update timestamp > counterparty auto-accepts > unlocked before update 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.debts VALUES ('7a95f491-5b34-488a-b337-a6222e2af061', 'd8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b', '84b1e8c2-9288-47aa-8337-5c7482756de6', 'SLE', 643.7300, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Officiis quibusdam doloribus ea delectus omnis blanditiis.', NULL, NULL);
+- INSERT INTO public.debts VALUES ('7a95f491-5b34-488a-b337-a6222e2af061', '32bcb6f1-76a9-4892-a8c2-9e755afa6fe7', '86a63627-74ee-4db4-8a79-0cf83f6da8c5', 'SLE', -643.7300, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Officiis quibusdam doloribus ea delectus omnis blanditiis.', NULL, NULL);
+@@ --- --- @@
++ INSERT INTO public.debts VALUES ('7a95f491-5b34-488a-b337-a6222e2af061', '32bcb6f1-76a9-4892-a8c2-9e755afa6fe7', '86a63627-74ee-4db4-8a79-0cf83f6da8c5', 'SLE', -643.7300, '2020-06-01 00:00:00', '2020-01-01 00:00:00', 'Officiis quibusdam doloribus ea delectus omnis blanditiis.', NULL, NULL);
++ INSERT INTO public.debts VALUES ('7a95f491-5b34-488a-b337-a6222e2af061', 'd8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b', '84b1e8c2-9288-47aa-8337-5c7482756de6', 'SLE', 643.7300, '2020-06-01 00:00:00', '2020-01-01 00:00:00', 'Officiis quibusdam doloribus ea delectus omnis blanditiis.', NULL, NULL);"
+`;
+
+exports[`debts.update > functionality > update timestamp > counterparty doesn't auto-accept > locked before update 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.debts VALUES ('c6921060-1137-45b4-b942-59630a98b84a', '16881856-073a-4f5f-84e4-969b374cba81', '6f8ed306-9451-4c1e-8148-231beb699702', 'BRL', 128.8000, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Et praesentium provident magni eveniet modi quo possimus beatae.', '2021-01-01 00:00:00', NULL);
+@@ --- --- @@
++ INSERT INTO public.debts VALUES ('c6921060-1137-45b4-b942-59630a98b84a', '16881856-073a-4f5f-84e4-969b374cba81', '6f8ed306-9451-4c1e-8148-231beb699702', 'BRL', 128.8000, '2020-06-01 00:00:00', '2020-01-01 00:00:00', 'Et praesentium provident magni eveniet modi quo possimus beatae.', '2020-01-01 00:00:00', NULL);"
+`;
+
+exports[`debts.update > functionality > update timestamp > counterparty doesn't auto-accept > unlocked before update 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.debts VALUES ('7a95f491-5b34-488a-b337-a6222e2af061', 'd8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b', '84b1e8c2-9288-47aa-8337-5c7482756de6', 'SLE', 643.7300, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Officiis quibusdam doloribus ea delectus omnis blanditiis.', NULL, NULL);
+@@ --- --- @@
++ INSERT INTO public.debts VALUES ('7a95f491-5b34-488a-b337-a6222e2af061', 'd8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b', '84b1e8c2-9288-47aa-8337-5c7482756de6', 'SLE', 643.7300, '2020-06-01 00:00:00', '2020-01-01 00:00:00', 'Officiis quibusdam doloribus ea delectus omnis blanditiis.', NULL, NULL);"
+`;
