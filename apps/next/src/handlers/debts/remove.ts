@@ -24,26 +24,21 @@ export const procedure = authProcedure
 			.leftJoin("accountSettings", (qb) =>
 				qb.onRef("users.connectedAccountId", "=", "accountSettings.accountId"),
 			)
-			.leftJoin("debts as theirDebts", (qb) =>
-				qb
-					.onRef("theirDebts.id", "=", "debts.id")
-					.onRef("theirDebts.ownerAccountId", "<>", "debts.ownerAccountId"),
-			)
 			.select(["accountSettings.autoAcceptDebts"])
 			.executeTakeFirst();
 		if (!debt) {
 			throw new TRPCError({
-				code: "PRECONDITION_FAILED",
+				code: "NOT_FOUND",
 				message: `No debt found by id "${input.id}" on account "${ctx.auth.email}"`,
 			});
 		}
 		const reverseRemoved = Boolean(debt.autoAcceptDebts);
-		await database
+		const deleteResult = await database
 			.deleteFrom("debts")
 			.where("id", "=", input.id)
 			.$if(!reverseRemoved, (qb) =>
 				qb.where("ownerAccountId", "=", ctx.auth.accountId),
 			)
 			.executeTakeFirst();
-		return { reverseRemoved };
+		return { reverseRemoved: Number(deleteResult.numDeletedRows) > 1 };
 	});

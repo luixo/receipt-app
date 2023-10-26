@@ -3,7 +3,7 @@ import { faker } from "@faker-js/faker";
 import type { TestContext } from "@tests/backend/utils/test";
 import type { CurrencyCode } from "app/utils/currency";
 import { YEAR } from "app/utils/time";
-import { asFixedSizeArray } from "app/utils/utils";
+import { asFixedSizeArray, id as idFn } from "app/utils/utils";
 import type {
 	AccountsId,
 	DebtsId,
@@ -256,31 +256,81 @@ export const insertDebt = async (
 	userId: UsersId,
 	data: DebtData = {},
 ) => {
-	const { id, currencyCode, amount, timestamp, created, note } =
-		await ctx.database
-			.insertInto("debts")
-			.values({
-				id: data.id || ctx.getTestUuid(),
-				ownerAccountId,
-				userId,
-				currencyCode: data.currencyCode || faker.finance.currencyCode(),
-				amount: data.amount?.toString() ?? faker.finance.amount(),
-				timestamp: data.timestamp ?? new Date(),
-				created: data.created ?? new Date(),
-				note: data.note ?? faker.lorem.sentence(),
-				lockedTimestamp: data.lockedTimestamp ?? null,
-				receiptId: data.receiptId ?? null,
-			})
-			.returning([
-				"id",
-				"currencyCode",
-				"amount",
-				"timestamp",
-				"created",
-				"note",
-			])
-			.executeTakeFirstOrThrow();
-	return { id, currencyCode, amount, timestamp, created, note };
+	const {
+		id,
+		currencyCode,
+		amount,
+		timestamp,
+		created,
+		note,
+		lockedTimestamp,
+		receiptId,
+	} = await ctx.database
+		.insertInto("debts")
+		.values({
+			id: data.id || ctx.getTestUuid(),
+			ownerAccountId,
+			userId,
+			currencyCode: data.currencyCode || faker.finance.currencyCode(),
+			amount: data.amount?.toString() ?? faker.finance.amount(),
+			timestamp: data.timestamp ?? new Date(),
+			created: data.created ?? new Date(),
+			note: data.note ?? faker.lorem.sentence(),
+			lockedTimestamp: data.lockedTimestamp ?? null,
+			receiptId: data.receiptId ?? null,
+		})
+		.returning([
+			"id",
+			"currencyCode",
+			"amount",
+			"timestamp",
+			"created",
+			"note",
+			"lockedTimestamp",
+			"receiptId",
+		])
+		.executeTakeFirstOrThrow();
+	return {
+		id,
+		currencyCode,
+		amount,
+		timestamp,
+		created,
+		note,
+		lockedTimestamp,
+		receiptId,
+	};
+};
+
+type ReturnDebtData = Awaited<ReturnType<typeof insertDebt>>;
+
+export const insertSyncedDebts = async (
+	ctx: TestContext,
+	[ownerAccountId, userId, data = {}]: [AccountsId, UsersId, DebtData?],
+	[foreignOwnerAccountId, foreignUserId, getForeignDebt = idFn]: [
+		AccountsId,
+		UsersId,
+		((input: ReturnDebtData) => ReturnDebtData)?,
+	],
+) => {
+	const originalDebt = await insertDebt(ctx, ownerAccountId, userId, data);
+	const debt = getForeignDebt(originalDebt);
+	const reverseDebt = await insertDebt(
+		ctx,
+		foreignOwnerAccountId,
+		foreignUserId,
+		{
+			id: debt.id,
+			currencyCode: debt.currencyCode,
+			amount: -debt.amount,
+			timestamp: debt.timestamp,
+			created: debt.created,
+			note: debt.note,
+			lockedTimestamp: debt.lockedTimestamp || undefined,
+			receiptId: debt.receiptId || undefined,
+		},
+	);
+	return [originalDebt, reverseDebt] as const;
 };
 
 type ReceiptData = {

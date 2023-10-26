@@ -59,9 +59,12 @@ export const userNameSchema = constrainLength(z.string(), {
 
 export const MAX_SUGGEST_LENGTH = 255;
 
+export const MIN_DEBT_NOTE_LENGTH = 1;
+export const MAX_DEBT_NOTE_LENGTH = 255;
+
 export const debtNoteSchema = constrainLength(z.string(), {
-	min: 0,
-	max: 255,
+	min: MIN_DEBT_NOTE_LENGTH,
+	max: MAX_DEBT_NOTE_LENGTH,
 	target: "note",
 });
 
@@ -89,7 +92,7 @@ export const quantitySchema = createNumberSchema("Quantity");
 export const partSchema = createNumberSchema("Part", { decimals: 5 });
 export const debtAmountSchema = createNumberSchema("Debt amount").max(
 	10 ** 15 - 1,
-	"Debt amount should less than 10^15",
+	"Debt amount should be less than 10^15",
 );
 
 export const currencyCodeSchema = z.string().refine<CurrencyCode>(flavored);

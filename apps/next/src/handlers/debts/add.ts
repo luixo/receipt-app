@@ -43,6 +43,12 @@ export const procedure = authProcedure
 				message: `User "${input.userId}" is not owned by "${ctx.auth.email}".`,
 			});
 		}
+		if (input.userId === user.selfAccountId) {
+			throw new TRPCError({
+				code: "FORBIDDEN",
+				message: `Cannot add a debt for yourself.`,
+			});
+		}
 		const lockedTimestamp = new Date();
 		let reverseAccepted = false;
 		const commonPart = {
@@ -66,13 +72,13 @@ export const procedure = authProcedure
 				.where("users.ownerAccountId", "=", user.foreignAccountId)
 				.where("users.connectedAccountId", "=", ctx.auth.accountId)
 				.select("users.id")
-				.executeTakeFirst();
-			if (!reverseUser) {
-				throw new TRPCError({
-					code: "INTERNAL_SERVER_ERROR",
-					message: `Unexpected having "autoAcceptDebts" but not having reverse user "id"`,
-				});
-			}
+				.executeTakeFirstOrThrow(
+					() =>
+						new TRPCError({
+							code: "INTERNAL_SERVER_ERROR",
+							message: `Unexpected having "autoAcceptDebts" but not having reverse user "id"`,
+						}),
+				);
 			await database
 				.insertInto("debts")
 				.values({
