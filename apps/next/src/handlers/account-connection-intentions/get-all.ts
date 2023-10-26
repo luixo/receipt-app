@@ -37,6 +37,7 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 			"targetAccounts.email as targetAccountEmail",
 		])
 		.orderBy("accountConnectionsIntentions.created", "desc")
+		.orderBy("users.id")
 		.execute();
 	return relatedIntentions.reduce<{
 		inbound: {
