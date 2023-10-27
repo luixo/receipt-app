@@ -29,10 +29,16 @@ export const addReceiptParticipants = async (
 	database: Database,
 	receiptId: ReceiptsId,
 	receiptOwnerId: AccountsId,
+	receiptOwnerEmail: string,
 	usersToAdd: [UsersId, z.infer<typeof assignableRoleSchema>][],
 ) => {
 	const userIds = usersToAdd.map(([id]) => id);
-	const userData = await verifyUsersByIds(database, userIds, receiptOwnerId);
+	const userData = await verifyUsersByIds(
+		database,
+		userIds,
+		receiptOwnerId,
+		receiptOwnerEmail,
+	);
 	const receiptParticipants = await database
 		.selectFrom("receiptParticipants")
 		.where("receiptId", "=", receiptId)
@@ -58,6 +64,7 @@ export const addReceiptParticipants = async (
 				receiptId,
 				userId: id,
 				role: receiptOwnerId === id ? "owner" : role,
+				added: new Date(),
 			})),
 		)
 		.returning(["added", "userId"])

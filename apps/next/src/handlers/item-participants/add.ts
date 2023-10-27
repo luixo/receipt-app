@@ -2,10 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { getReceiptItemById } from "next-app/handlers/receipt-items/utils";
-import {
-	getAccessRole,
-	getReceiptById,
-} from "next-app/handlers/receipts/utils";
+import { getAccessRole } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import { verifyUsersByIds } from "next-app/handlers/users/utils";
 import {
@@ -31,11 +28,19 @@ export const procedure = authProcedure
 				message: `Item "${input.itemId}" does not exist.`,
 			});
 		}
-		const receipt = await getReceiptById(database, receiptItem.receiptId, [
-			"id",
-			"ownerAccountId",
-			"lockedTimestamp",
-		]);
+		const receipt = await database
+			.selectFrom("receipts")
+			.innerJoin("accounts", (qb) =>
+				qb.onRef("accounts.id", "=", "receipts.ownerAccountId"),
+			)
+			.select([
+				"receipts.id",
+				"receipts.ownerAccountId",
+				"receipts.lockedTimestamp",
+				"accounts.email as ownerEmail",
+			])
+			.where("id", "=", receiptItem.receiptId)
+			.executeTakeFirst();
 		if (!receipt) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
@@ -59,7 +64,12 @@ export const procedure = authProcedure
 				message: `Not enough rights to modify receipt "${receiptItem.receiptId}".`,
 			});
 		}
-		await verifyUsersByIds(database, input.userIds, receipt.ownerAccountId);
+		await verifyUsersByIds(
+			database,
+			input.userIds,
+			receipt.ownerAccountId,
+			receipt.ownerEmail,
+		);
 		const receiptParticipants = await database
 			.selectFrom("receiptParticipants")
 			.where("receiptId", "=", receipt.id)

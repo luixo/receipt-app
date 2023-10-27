@@ -18,7 +18,7 @@ exports[`users.remove > functionality > user is removed 1`] = `
 @@ --- --- @@
 - INSERT INTO public.\\"itemParticipants\\" VALUES ('67c5619b-e07c-4906-b64b-645016fb6692', 1.00, 'fdcb634c-87ad-4c72-8be9-d4c85c60907e');
 @@ --- --- @@
-- INSERT INTO public.\\"receiptParticipants\\" VALUES ('41330bce-1d2b-4a80-b006-3068f8faee0d', 'fdcb634c-87ad-4c72-8be9-d4c85c60907e', 'user', false, '2020-01-01 00:00:00');
+- INSERT INTO public.\\"receiptParticipants\\" VALUES ('41330bce-1d2b-4a80-b006-3068f8faee0d', 'fdcb634c-87ad-4c72-8be9-d4c85c60907e', 'viewer', false, '2020-01-01 00:00:00');
 @@ --- --- @@
-- INSERT INTO public.\\"receiptParticipants\\" VALUES ('18ffb6ec-b75d-42f5-b460-4f63d202b401', 'fdcb634c-87ad-4c72-8be9-d4c85c60907e', 'user', false, '2020-01-01 00:00:00');"
+- INSERT INTO public.\\"receiptParticipants\\" VALUES ('18ffb6ec-b75d-42f5-b460-4f63d202b401', 'fdcb634c-87ad-4c72-8be9-d4c85c60907e', 'viewer', false, '2020-01-01 00:00:00');"
 `;

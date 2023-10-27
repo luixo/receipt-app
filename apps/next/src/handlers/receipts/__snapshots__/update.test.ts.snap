@@ -1,0 +1,111 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`receipts.update > functionality > update currency code > locked before update 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.receipts VALUES ('65b1d21a-4b9d-4019-a838-fbddad09c2b2', 'aliquam corporis', 'NOK', '2020-01-01 00:00:00', '16881856-073a-4f5f-84e4-969b374cba81', '2020-01-01 00:00:00', '2020-06-01 00:00:00');
+@@ --- --- @@
++ INSERT INTO public.receipts VALUES ('65b1d21a-4b9d-4019-a838-fbddad09c2b2', 'aliquam corporis', 'MAD', '2020-01-01 00:00:00', '16881856-073a-4f5f-84e4-969b374cba81', '2020-01-01 00:00:00', '2020-01-01 00:00:00');"
+`;
+
+exports[`receipts.update > functionality > update currency code > unlocked before update 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.receipts VALUES ('ce2a0b7b-e615-42b9-be91-214ad04913ba', 'fugit et', 'FKP', '2020-01-01 00:00:00', 'd8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b', '2020-01-01 00:00:00', NULL);
+@@ --- --- @@
++ INSERT INTO public.receipts VALUES ('ce2a0b7b-e615-42b9-be91-214ad04913ba', 'fugit et', 'LTL', '2020-01-01 00:00:00', 'd8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b', '2020-01-01 00:00:00', NULL);"
+`;
+
+exports[`receipts.update > functionality > update issued > locked before update 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.receipts VALUES ('65b1d21a-4b9d-4019-a838-fbddad09c2b2', 'aliquam corporis', 'NOK', '2020-01-01 00:00:00', '16881856-073a-4f5f-84e4-969b374cba81', '2020-01-01 00:00:00', '2020-06-01 00:00:00');
+@@ --- --- @@
++ INSERT INTO public.receipts VALUES ('65b1d21a-4b9d-4019-a838-fbddad09c2b2', 'aliquam corporis', 'NOK', '2020-01-01 00:00:00', '16881856-073a-4f5f-84e4-969b374cba81', '2020-06-01 00:00:00', '2020-06-01 00:00:00');"
+`;
+
+exports[`receipts.update > functionality > update issued > unlocked before update 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.receipts VALUES ('ce2a0b7b-e615-42b9-be91-214ad04913ba', 'fugit et', 'FKP', '2020-01-01 00:00:00', 'd8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b', '2020-01-01 00:00:00', NULL);
+@@ --- --- @@
++ INSERT INTO public.receipts VALUES ('ce2a0b7b-e615-42b9-be91-214ad04913ba', 'fugit et', 'FKP', '2020-01-01 00:00:00', 'd8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b', '2020-06-01 00:00:00', NULL);"
+`;
+
+exports[`receipts.update > functionality > update locked - false > locked before update 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.receipts VALUES ('65b1d21a-4b9d-4019-a838-fbddad09c2b2', 'aliquam corporis', 'NOK', '2020-01-01 00:00:00', '16881856-073a-4f5f-84e4-969b374cba81', '2020-01-01 00:00:00', '2020-06-01 00:00:00');
+@@ --- --- @@
++ INSERT INTO public.receipts VALUES ('65b1d21a-4b9d-4019-a838-fbddad09c2b2', 'aliquam corporis', 'NOK', '2020-01-01 00:00:00', '16881856-073a-4f5f-84e4-969b374cba81', '2020-01-01 00:00:00', NULL);"
+`;
+
+exports[`receipts.update > functionality > update locked - false > unlocked before update 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.receipts VALUES ('ce2a0b7b-e615-42b9-be91-214ad04913ba', 'fugit et', 'FKP', '2020-01-01 00:00:00', 'd8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b', '2020-01-01 00:00:00', NULL);
+@@ --- --- @@
++ INSERT INTO public.receipts VALUES ('ce2a0b7b-e615-42b9-be91-214ad04913ba', 'fugit et', 'FKP', '2020-01-01 00:00:00', 'd8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b', '2020-01-01 00:00:00', NULL);"
+`;
+
+exports[`receipts.update > functionality > update locked - true > locked before update 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.receipts VALUES ('65b1d21a-4b9d-4019-a838-fbddad09c2b2', 'aliquam corporis', 'NOK', '2020-01-01 00:00:00', '16881856-073a-4f5f-84e4-969b374cba81', '2020-01-01 00:00:00', '2020-06-01 00:00:00');
+@@ --- --- @@
++ INSERT INTO public.receipts VALUES ('65b1d21a-4b9d-4019-a838-fbddad09c2b2', 'aliquam corporis', 'NOK', '2020-01-01 00:00:00', '16881856-073a-4f5f-84e4-969b374cba81', '2020-01-01 00:00:00', '2020-01-01 00:00:00');"
+`;
+
+exports[`receipts.update > functionality > update locked - true > unlocked before update 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.receipts VALUES ('ce2a0b7b-e615-42b9-be91-214ad04913ba', 'fugit et', 'FKP', '2020-01-01 00:00:00', 'd8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b', '2020-01-01 00:00:00', NULL);
+@@ --- --- @@
++ INSERT INTO public.receipts VALUES ('ce2a0b7b-e615-42b9-be91-214ad04913ba', 'fugit et', 'FKP', '2020-01-01 00:00:00', 'd8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b', '2020-01-01 00:00:00', '2020-01-01 00:00:00');"
+`;
+
+exports[`receipts.update > functionality > update name > locked before update 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.receipts VALUES ('65b1d21a-4b9d-4019-a838-fbddad09c2b2', 'aliquam corporis', 'NOK', '2020-01-01 00:00:00', '16881856-073a-4f5f-84e4-969b374cba81', '2020-01-01 00:00:00', '2020-06-01 00:00:00');
+@@ --- --- @@
++ INSERT INTO public.receipts VALUES ('65b1d21a-4b9d-4019-a838-fbddad09c2b2', 'cupiditate asperiores aperiam', 'NOK', '2020-01-01 00:00:00', '16881856-073a-4f5f-84e4-969b374cba81', '2020-01-01 00:00:00', '2020-06-01 00:00:00');"
+`;
+
+exports[`receipts.update > functionality > update name > unlocked before update 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.receipts VALUES ('ce2a0b7b-e615-42b9-be91-214ad04913ba', 'fugit et', 'FKP', '2020-01-01 00:00:00', 'd8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b', '2020-01-01 00:00:00', NULL);
+@@ --- --- @@
++ INSERT INTO public.receipts VALUES ('ce2a0b7b-e615-42b9-be91-214ad04913ba', 'totam dolores amet', 'FKP', '2020-01-01 00:00:00', 'd8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b', '2020-01-01 00:00:00', NULL);"
+`;

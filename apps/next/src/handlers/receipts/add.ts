@@ -11,7 +11,7 @@ export const procedure = authProcedure
 		z.strictObject({
 			name: receiptNameSchema,
 			currencyCode: currencyCodeSchema,
-			userIds: z.array(userIdSchema).optional(),
+			participants: z.array(userIdSchema).optional(),
 			issued: z.date(),
 		}),
 	)
@@ -30,14 +30,19 @@ export const procedure = authProcedure
 					ownerAccountId: ctx.auth.accountId,
 				})
 				.executeTakeFirst();
-			if (input.userIds) {
-				await addReceiptParticipants(
-					tx,
-					id,
-					ctx.auth.accountId,
-					input.userIds.map((userId) => [userId, "editor"]),
-				);
+			if (!input.participants) {
+				return;
 			}
+			await addReceiptParticipants(
+				tx,
+				id,
+				ctx.auth.accountId,
+				ctx.auth.email,
+				input.participants.map((participantUserId) => [
+					participantUserId,
+					"editor",
+				]),
+			);
 		});
 		return id;
 	});

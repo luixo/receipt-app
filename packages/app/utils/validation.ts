@@ -36,15 +36,21 @@ export const passwordSchema = constrainLength(z.string(), {
 	target: "password",
 });
 
+export const MIN_RECEIPT_NAME_LENGTH = 2;
+export const MAX_RECEIPT_NAME_LENGTH = 255;
+
 export const receiptNameSchema = constrainLength(z.string(), {
-	min: 2,
-	max: 255,
+	min: MIN_RECEIPT_NAME_LENGTH,
+	max: MAX_RECEIPT_NAME_LENGTH,
 	target: "receipt name",
 });
 
+export const MIN_RECEIPT_ITEM_NAME_LENGTH = 2;
+export const MAX_RECEIPT_ITEM_NAME_LENGTH = 255;
+
 export const receiptItemNameSchema = constrainLength(z.string(), {
-	min: 2,
-	max: 255,
+	min: MIN_RECEIPT_ITEM_NAME_LENGTH,
+	max: MAX_RECEIPT_ITEM_NAME_LENGTH,
 	target: "receipt item name",
 });
 

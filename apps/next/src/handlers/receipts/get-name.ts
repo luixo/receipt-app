@@ -24,7 +24,7 @@ export const procedure = authProcedure
 		if (!receipt) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `Receipt "${input.id}" does not exist.`,
+				message: `Receipt "${input.id}" is not found.`,
 			});
 		}
 		const accessRole = await getAccessRole(
