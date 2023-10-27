@@ -3,7 +3,6 @@ import { sql } from "kysely";
 import { z } from "zod";
 
 import type { DebtsId } from "next-app/db/models";
-import type { Role } from "next-app/handlers/receipts/utils";
 import { getAccessRole } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import { receiptIdSchema } from "next-app/handlers/validation";
@@ -45,7 +44,11 @@ export const procedure = authProcedure
 			)
 			.innerJoin("users as usersMine", (jb) =>
 				jb
-					.on("usersMine.ownerAccountId", "=", ctx.auth.accountId)
+					.onRef(
+						"usersMine.ownerAccountId",
+						"=",
+						"usersTheir.connectedAccountId",
+					)
 					.onRef(
 						"usersMine.connectedAccountId",
 						"=",
@@ -76,7 +79,7 @@ export const procedure = authProcedure
 		if (!maybeReceipt) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `No receipt "${input.id}" found.`,
+				message: `Receipt "${input.id}" is not found.`,
 			});
 		}
 		const { ownerAccountId, lockedTimestamp, sum, ...receipt } = maybeReceipt;
@@ -91,72 +94,80 @@ export const procedure = authProcedure
 				message: `Account "${ctx.auth.email}" has no access to receipt "${receipt.id}"`,
 			});
 		}
+		const common = {
+			...receipt,
+			sum: Number(sum),
+			role: accessRole,
+		};
+		type ReturnValue = typeof common & {
+			debt?: ReceiptDebt;
+			lockedTimestamp?: Date;
+		};
 		if (!lockedTimestamp) {
-			return {
-				...receipt,
-				sum: Number(sum),
-				role: accessRole,
-			};
+			return common as ReturnValue;
 		}
-		let debt: ReceiptDebt | undefined;
-		if (lockedTimestamp) {
-			if (ownerAccountId === ctx.auth.accountId) {
-				const results = await database
-					.selectFrom("debts")
-					.where("debts.receiptId", "=", input.id)
-					.where("debts.ownerAccountId", "=", ctx.auth.accountId)
-					.select("debts.id")
-					.execute();
-				debt = {
-					direction: "outcoming",
-					ids: results.map(({ id }) => id),
-				};
-			} else {
-				const mineDebt = await database
-					.selectFrom("debts")
-					.where("debts.receiptId", "=", input.id)
-					.where("debts.ownerAccountId", "=", ctx.auth.accountId)
-					.select("debts.id")
-					.executeTakeFirst();
-				if (mineDebt) {
-					debt = {
-						direction: "incoming",
-						type: "mine",
-						id: mineDebt.id,
-					};
-				} else {
-					const foreignDebt = await database
-						.selectFrom("debts")
-						.where("debts.receiptId", "=", input.id)
-						.where("debts.ownerAccountId", "<>", ctx.auth.accountId)
-						.innerJoin("users as usersTheir", (qb) =>
-							qb
-								.onRef("usersTheir.id", "=", "debts.userId")
-								.on("usersTheir.connectedAccountId", "=", ctx.auth.accountId),
-						)
-						.whereRef("debts.userId", "=", "usersTheir.id")
-						.select("debts.id")
-						.executeTakeFirst();
-					if (foreignDebt) {
-						debt = {
-							direction: "incoming",
-							type: "foreign",
-							id: foreignDebt.id,
-						};
-					}
-				}
-			}
-		}
-		return {
+		const commonLockedTimestamp: ReturnValue = {
 			...receipt,
 			sum: Number(sum),
 			role: accessRole,
 			lockedTimestamp: lockedTimestamp || undefined,
-			debt,
-		} as typeof receipt & {
-			role: Role;
-			sum: number;
-			lockedTimestamp?: Date;
-			debt?: ReceiptDebt;
 		};
+		if (ownerAccountId === ctx.auth.accountId) {
+			const results = await database
+				.selectFrom("debts")
+				.where("debts.receiptId", "=", input.id)
+				.where("debts.ownerAccountId", "=", ctx.auth.accountId)
+				.select("debts.id")
+				.orderBy("debts.id")
+				.execute();
+			if (results.length !== 0) {
+				return {
+					...commonLockedTimestamp,
+					debt: {
+						direction: "outcoming",
+						ids: results.map(({ id }) => id),
+					},
+				} satisfies ReturnValue;
+			}
+			return commonLockedTimestamp;
+		}
+		const mineDebt = await database
+			.selectFrom("debts")
+			.where("debts.receiptId", "=", input.id)
+			.where("debts.ownerAccountId", "=", ctx.auth.accountId)
+			.select("debts.id")
+			.executeTakeFirst();
+		if (mineDebt) {
+			return {
+				...commonLockedTimestamp,
+				debt: {
+					direction: "incoming",
+					type: "mine",
+					id: mineDebt.id,
+				},
+			} satisfies ReturnValue;
+		}
+		const foreignDebt = await database
+			.selectFrom("debts")
+			.where("debts.receiptId", "=", input.id)
+			.where("debts.ownerAccountId", "<>", ctx.auth.accountId)
+			.innerJoin("users as usersTheir", (qb) =>
+				qb
+					.onRef("usersTheir.id", "=", "debts.userId")
+					.on("usersTheir.connectedAccountId", "=", ctx.auth.accountId),
+			)
+			.whereRef("debts.userId", "=", "usersTheir.id")
+			.select("debts.id")
+			.executeTakeFirst();
+		if (foreignDebt) {
+			return {
+				...commonLockedTimestamp,
+				debt: {
+					direction: "incoming",
+					type: "foreign",
+					id: foreignDebt.id,
+				},
+			} satisfies ReturnValue;
+		}
+		return commonLockedTimestamp;
 	});

@@ -39,13 +39,13 @@ export const procedure = authProcedure
 		]);
 		if (!receipt) {
 			throw new TRPCError({
-				code: "PRECONDITION_FAILED",
+				code: "NOT_FOUND",
 				message: `No receipt found by id "${input.id}".`,
 			});
 		}
 		if (receipt.ownerAccountId !== ctx.auth.accountId) {
 			throw new TRPCError({
-				code: "UNAUTHORIZED",
+				code: "FORBIDDEN",
 				message: `Receipt "${input.id}" is not owned by "${ctx.auth.email}".`,
 			});
 		}
@@ -102,9 +102,6 @@ export const procedure = authProcedure
 			.where("id", "=", input.id)
 			.executeTakeFirst();
 		return setObject.lockedTimestamp === undefined
-			? setObject
-			: {
-					...setObject,
-					lockedTimestamp: setObject.lockedTimestamp || undefined,
-			  };
+			? {}
+			: { lockedTimestamp: setObject.lockedTimestamp || undefined };
 	});

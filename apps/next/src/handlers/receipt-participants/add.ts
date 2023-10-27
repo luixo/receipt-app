@@ -39,6 +39,7 @@ export const procedure = authProcedure
 			database,
 			input.receiptId,
 			ctx.auth.accountId,
+			ctx.auth.email,
 			input.userIds.map((userId) => [userId, input.role]),
 		);
 	});

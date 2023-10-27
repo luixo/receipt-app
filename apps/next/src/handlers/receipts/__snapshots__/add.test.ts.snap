@@ -1,0 +1,21 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`receipts.add > functionality > receipt is added - with users 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
++ INSERT INTO public.receipts VALUES ('23345cd5-9763-4f6c-950c-0d92511f1e71', 'consequatur illo eius', 'SGD', '2020-01-01 00:00:00', '19dc7ddc-bbdb-4896-bd92-2deed2136929', '2020-01-01 00:00:00', NULL);
++ INSERT INTO public.\\"receiptParticipants\\" VALUES ('23345cd5-9763-4f6c-950c-0d92511f1e71', 'be70a9a6-7d78-45ed-ba31-8b5daefdb497', 'editor', false, '2020-01-01 00:00:00');
++ INSERT INTO public.\\"receiptParticipants\\" VALUES ('23345cd5-9763-4f6c-950c-0d92511f1e71', '19dc7ddc-bbdb-4896-bd92-2deed2136929', 'owner', false, '2020-01-01 00:00:00');"
+`;
+
+exports[`receipts.add > functionality > receipt is added 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
++ INSERT INTO public.receipts VALUES ('2d658309-93f9-4fee-bd0f-a1abdb942283', 'commodi vitae error', 'GNF', '2020-01-01 00:00:00', 'ba8bebfc-741c-49a8-b07f-2a80c4e34146', '2020-01-01 00:00:00', NULL);"
+`;

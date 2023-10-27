@@ -23,7 +23,7 @@ export const procedure = authProcedure
 		if (!receipt) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `Receipt "${input.receiptId}" does not exist.`,
+				message: `Receipt "${input.receiptId}" is not found.`,
 			});
 		}
 		const accessRole = await getAccessRole(
@@ -56,7 +56,16 @@ export const procedure = authProcedure
 				"receiptParticipants.userId as remoteUserId",
 				"receiptParticipants.resolved",
 				"usersMine.id as localUserId",
+				"usersTheir.ownerAccountId",
 			])
+			.orderBy("receiptParticipants.userId")
+			.orderBy("usersMine.id")
 			.execute();
-		return participants;
+		return participants.map(({ ownerAccountId, ...participant }) => ({
+			...participant,
+			localUserId:
+				ownerAccountId === ctx.auth.accountId
+					? participant.remoteUserId
+					: participant.localUserId,
+		}));
 	});

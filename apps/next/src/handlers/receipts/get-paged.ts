@@ -2,6 +2,7 @@ import { sql } from "kysely";
 import { z } from "zod";
 
 import type { UsersId } from "next-app/db/models";
+import type { Role } from "next-app/handlers/receipts/utils";
 import {
 	getForeignReceipts,
 	getOwnReceipts,
@@ -40,13 +41,10 @@ export const procedure = authProcedure
 						"receipts.currencyCode",
 						"receipts.lockedTimestamp",
 						"users.id as remoteUserId",
-						// We use `userId` = `ownerAccountId` contract
-						// But type system doesn't know about that
-						sql<UsersId>`users."connectedAccountId"`.as("localUserId"),
 					]);
 					const ownReceiptsBuilder = ownReceipts.select([
 						"receipts.id as receiptId",
-						sql<string>`'owner'`.as("role"),
+						sql<Role>`'owner'`.as("role"),
 						"receipts.name",
 						"receipts.issued",
 						"receipts.currencyCode",
@@ -54,7 +52,6 @@ export const procedure = authProcedure
 						// We use `userId` = `ownerAccountId` contract
 						// But type system doesn't know about that
 						sql<UsersId>`receipts."ownerAccountId"`.as("remoteUserId"),
-						sql<UsersId>`receipts."ownerAccountId"`.as("localUserId"),
 					]);
 					if (typeof filters.ownedByMe !== "boolean") {
 						return foreignReceiptsBuilder.union(ownReceiptsBuilder);
@@ -90,7 +87,6 @@ export const procedure = authProcedure
 					"mergedReceipts.lockedTimestamp",
 					"receiptParticipants.resolved as participantResolved",
 					"mergedReceipts.remoteUserId",
-					"mergedReceipts.localUserId",
 					sql<string>`coalesce(sum("receiptItems".price * "receiptItems".quantity), 0)`.as(
 						"sum",
 					),
@@ -104,7 +100,6 @@ export const procedure = authProcedure
 					"mergedReceipts.lockedTimestamp",
 					"receiptParticipants.resolved",
 					"mergedReceipts.remoteUserId",
-					"mergedReceipts.localUserId",
 				])
 				.orderBy(
 					"mergedReceipts.issued",

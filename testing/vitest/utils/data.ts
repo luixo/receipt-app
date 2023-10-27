@@ -12,6 +12,7 @@ import type {
 	SessionsSessionId,
 	UsersId,
 } from "next-app/db/models";
+import type { Role } from "next-app/handlers/receipts/utils";
 import { generatePasswordData } from "next-app/utils/crypto";
 
 type AccountSettingsData = {
@@ -347,24 +348,41 @@ export const insertReceipt = async (
 	ownerAccountId: AccountsId,
 	data: ReceiptData = {},
 ) => {
-	const { id, currencyCode, name, created, issued } = await ctx.database
-		.insertInto("receipts")
-		.values({
-			id: data.id || ctx.getTestUuid(),
-			ownerAccountId,
-			name: data.name ?? faker.lorem.words(2),
-			currencyCode: data.currencyCode || faker.finance.currencyCode(),
-			created: data.created ?? new Date(),
-			issued: data.issued ?? new Date(),
-			lockedTimestamp: data.lockedTimestamp ?? null,
-		})
-		.returning(["id", "currencyCode", "name", "created", "issued"])
-		.executeTakeFirstOrThrow();
-	return { id, currencyCode, name, created, issued };
+	const { id, currencyCode, name, created, issued, lockedTimestamp } =
+		await ctx.database
+			.insertInto("receipts")
+			.values({
+				id: data.id || ctx.getTestUuid(),
+				ownerAccountId,
+				name: data.name ?? faker.lorem.words(2),
+				currencyCode: data.currencyCode || faker.finance.currencyCode(),
+				created: data.created ?? new Date(),
+				issued: data.issued ?? new Date(),
+				lockedTimestamp: data.lockedTimestamp ?? null,
+			})
+			.returning([
+				"id",
+				"currencyCode",
+				"name",
+				"created",
+				"issued",
+				"lockedTimestamp",
+			])
+			.executeTakeFirstOrThrow();
+	return {
+		id,
+		currencyCode,
+		name,
+		created,
+		issued,
+		lockedTimestamp,
+		ownerAccountId,
+	};
 };
 
 type ReceiptParticipantData = {
 	resolved?: boolean;
+	role?: Exclude<Role, "owner">;
 	added?: Date;
 };
 
@@ -381,18 +399,18 @@ export const insertReceiptParticipant = async (
 		.executeTakeFirstOrThrow(
 			() => new Error(`Expected to have receipt id ${receiptId} in tests`),
 		);
-	const { added } = await ctx.database
+	const { added, resolved } = await ctx.database
 		.insertInto("receiptParticipants")
 		.values({
 			receiptId,
 			userId,
-			role: userId === ownerAccountId ? "admin" : "user",
+			role: userId === ownerAccountId ? "owner" : data.role ?? "viewer",
 			resolved: data.resolved ?? false,
 			added: data.added ?? new Date(),
 		})
-		.returning(["added"])
+		.returning(["added", "resolved"])
 		.executeTakeFirstOrThrow();
-	return { added };
+	return { added, userId, resolved };
 };
 
 type ReceiptItemData = {

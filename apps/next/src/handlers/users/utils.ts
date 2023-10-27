@@ -27,6 +27,7 @@ export const verifyUsersByIds = async (
 	database: Database,
 	userIds: UsersId[],
 	ownerAccountId: AccountsId,
+	ownerEmail: string,
 ) => {
 	const users = await database
 		.selectFrom("users")
@@ -60,9 +61,9 @@ export const verifyUsersByIds = async (
 	if (notOwnedUsers.length !== 0) {
 		throw new TRPCError({
 			code: "FORBIDDEN",
-			message: `Not enough rights to add ${
-				notOwnedUsers.length === 1 ? "user" : "users"
-			} ${notOwnedUsers.map(({ id }) => `"${id}"`).join(", ")} to a receipt.`,
+			message: `${notOwnedUsers.length === 1 ? "User" : "Users"} ${notOwnedUsers
+				.map(({ id }) => `"${id}"`)
+				.join(", ")} is not owned by "${ownerEmail}".`,
 		});
 	}
 	return userIds.map((userId) => {
