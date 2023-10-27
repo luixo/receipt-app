@@ -54,10 +54,9 @@ export default Sentry.wrapApiHandlerWithSentry<NextApiHandler>(
 				res.status(403).end("Proxying is only allowed in test mode");
 				return;
 			}
-			httpProxyMiddleware(req, res, {
+			return httpProxyMiddleware(req, res, {
 				target: `http://localhost:${proxyPort}`,
 			});
-			return;
 		}
 		return handler(req, res);
 	},

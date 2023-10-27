@@ -32,7 +32,7 @@ export const PublicPage: React.FC<Props> = ({ children }) => {
 	const accountQuery = trpc.account.get.useQuery();
 	React.useEffect(() => {
 		if (accountQuery.status === "success") {
-			router.replace("/");
+			void router.replace("/");
 		}
 	}, [accountQuery.status, router]);
 

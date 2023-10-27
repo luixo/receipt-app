@@ -118,18 +118,22 @@ const remove = (controller: Controller, inputs: Input[], userId: UsersId) => {
 const invalidate =
 	(controller: Controller, inputs: Input[]) =>
 	(sinceCursor: number = 0) =>
-		utils.withRef<UserPage[]>((ref) => {
-			inputs
-				.filter((input) => input.cursor >= sinceCursor)
-				.forEach((input) => {
-					const page = controller.getData(input);
-					if (!page) {
-						return;
-					}
-					ref.current.push(page);
-					controller.invalidate(input, { refetchType: "all" });
-				});
-		}, []).current;
+		utils.withRef<UserPage[]>(
+			(ref) =>
+				Promise.all(
+					inputs
+						.filter((input) => input.cursor >= sinceCursor)
+						.map((input) => {
+							const page = controller.getData(input);
+							if (!page) {
+								return;
+							}
+							ref.current.push(page);
+							return controller.invalidate(input, { refetchType: "all" });
+						}),
+				),
+			[],
+		).current;
 
 export const getController = ({
 	trpcContext,

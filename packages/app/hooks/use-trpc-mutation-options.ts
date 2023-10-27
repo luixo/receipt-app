@@ -140,7 +140,7 @@ export const useTrpcMutationOptions = <
 				if (toastOptions) {
 					toastId = toast.loading(toastOptions.text);
 				}
-				onMutate?.(...args);
+				await onMutate?.(...args);
 				const wrappedContext = onMutateTrpc?.(...trpcArgs)(...args);
 				return { ...wrappedContext, toastId };
 			},

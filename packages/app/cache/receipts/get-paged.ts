@@ -96,22 +96,23 @@ const updatePages = (
 			});
 		});
 	}, []).current;
-	return () => {
-		inputs
-			.filter(({ cursor: _, ...lookupInput }) =>
-				inputsToInvalidate.some(
-					({ cursor: __, ...inputToInvalidate }) =>
-						hashQueryKey([inputToInvalidate]) === hashQueryKey([lookupInput]),
-				),
-			)
-			.forEach((input) => {
-				const page = controller.getData(input);
-				if (!page) {
-					return;
-				}
-				controller.invalidate(input);
-			});
-	};
+	return () =>
+		Promise.all(
+			inputs
+				.filter(({ cursor: _, ...lookupInput }) =>
+					inputsToInvalidate.some(
+						({ cursor: __, ...inputToInvalidate }) =>
+							hashQueryKey([inputToInvalidate]) === hashQueryKey([lookupInput]),
+					),
+				)
+				.map((input) => {
+					const page = controller.getData(input);
+					if (!page) {
+						return;
+					}
+					return controller.invalidate(input);
+				}),
+		);
 };
 
 const update =

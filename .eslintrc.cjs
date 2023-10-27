@@ -99,6 +99,7 @@ module.exports = {
 		"@typescript-eslint/restrict-template-expressions": "error",
 		"@typescript-eslint/consistent-type-imports": "error",
 		"sort-imports": ["error", { ignoreDeclarationSort: true }],
+		"@typescript-eslint/no-floating-promises": "error",
 	},
 	overrides: [
 		{

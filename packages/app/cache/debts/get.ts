@@ -25,7 +25,7 @@ const upsert = (controller: Controller, debt: Debt) =>
 const remove = (controller: Controller, debtId: DebtsId) =>
 	utils.withRef<Debt | undefined>((ref) => {
 		ref.current = controller.getData({ id: debtId });
-		controller.invalidate({ id: debtId });
+		return controller.invalidate({ id: debtId });
 	}).current;
 
 export const getController = ({ trpcContext }: utils.ControllerContext) => {

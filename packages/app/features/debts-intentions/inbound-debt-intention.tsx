@@ -32,7 +32,7 @@ export const InboundDebtIntention = React.forwardRef<HTMLDivElement, Props>(
 							if (!redirectToDebt) {
 								return;
 							}
-							router.push(`/debts/${intention.id}`);
+							void router.push(`/debts/${intention.id}`);
 						},
 					},
 				);

@@ -26,9 +26,9 @@ const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 	const queryClient = useQueryClient();
 	const logoutMutation = trpc.account.logout.useMutation(
 		useTrpcMutationOptions(mutations.account.logout.options, {
-			onSuccess: () => {
-				queryClient.resetQueries();
-				router.replace("/");
+			onSuccess: async () => {
+				await queryClient.resetQueries();
+				void router.replace("/");
 			},
 		}),
 	);

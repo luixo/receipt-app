@@ -13,7 +13,7 @@ export const templateDatabaseManagerFactory = () => {
 		if (topListener) {
 			await topListener();
 			listeners.shift();
-			release();
+			void release();
 		}
 	};
 	return {
@@ -25,7 +25,7 @@ export const templateDatabaseManagerFactory = () => {
 				};
 				listeners.push(promisifiedListener);
 				if (listeners.length === 1) {
-					release();
+					void release();
 				}
 			}),
 	};

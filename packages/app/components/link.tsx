@@ -21,7 +21,7 @@ export const Link: React.FC<Props> = React.forwardRef(
 		const onClickCapture = React.useCallback(
 			(e: React.MouseEvent<HTMLAnchorElement>) => {
 				e.preventDefault();
-				router.push(href);
+				void router.push(href);
 			},
 			[router, href],
 		);

@@ -15,7 +15,7 @@ const uspert = (
 const remove = (controller: Controller, receiptId: ReceiptsId) =>
 	utils.withRef<ReceiptName | undefined>((ref) => {
 		ref.current = controller.getData({ id: receiptId });
-		controller.invalidate({ id: receiptId });
+		return controller.invalidate({ id: receiptId });
 	}).current;
 
 export const getController = ({ trpcContext }: utils.ControllerContext) => {

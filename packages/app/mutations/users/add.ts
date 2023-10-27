@@ -24,7 +24,6 @@ export const options: UseContextedMutationOptions<"users.add"> = {
 					}),
 				getName: (controller) => controller.upsert(id, variables.name),
 			});
-			cache.users.invalidateSuggest(controllerContext);
 			if (connection && !connection.connected) {
 				cache.accountConnections.update(controllerContext, {
 					getAll: (controller) =>
@@ -40,6 +39,7 @@ export const options: UseContextedMutationOptions<"users.add"> = {
 						}),
 				});
 			}
+			void cache.users.invalidateSuggest(controllerContext);
 		},
 	mutateToastOptions: () => (variables) => ({
 		text: `Adding user "${variables.name}"..`,

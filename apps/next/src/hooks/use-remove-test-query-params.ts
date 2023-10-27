@@ -12,7 +12,7 @@ export const useRemoveTestQueryParams = () => {
 		}
 		params.delete("proxyPort");
 		params.delete("controllerId");
-		router.replace({ pathname, query: params.toString() }, undefined, {
+		void router.replace({ pathname, query: params.toString() }, undefined, {
 			shallow: true,
 		});
 	}, [router]);

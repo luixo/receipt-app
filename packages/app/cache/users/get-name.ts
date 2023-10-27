@@ -12,7 +12,7 @@ const uspert = (controller: Controller, userId: UsersId, name: UserName) =>
 const remove = (controller: Controller, userId: UsersId) =>
 	utils.withRef<UserName | undefined>((ref) => {
 		ref.current = controller.getData({ id: userId });
-		controller.invalidate({ id: userId });
+		return controller.invalidate({ id: userId });
 	}).current;
 
 export const getController = ({ trpcContext }: utils.ControllerContext) => {

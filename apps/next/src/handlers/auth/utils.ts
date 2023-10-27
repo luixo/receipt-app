@@ -41,13 +41,12 @@ export const createAuthorizationSession = async (
 export const updateAuthorizationSession = async (
 	database: Database,
 	authToken: SessionsSessionId,
-) => {
+) =>
 	database
 		.updateTable("sessions")
 		.set({ expirationTimestamp: getExpirationDate() })
 		.where("sessionId", "=", authToken)
 		.executeTakeFirst();
-};
 
 export const sendVerificationEmail = async (
 	emailOptions: EmailOptions,

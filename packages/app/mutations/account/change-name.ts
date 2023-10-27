@@ -26,7 +26,6 @@ export const options: UseContextedMutationOptions<
 				getPaged: undefined,
 			}),
 	onSuccess: (controllerContext) => (_result, updateObject) => {
-		cache.users.invalidateSuggest(controllerContext);
 		cache.account.update(controllerContext, {
 			get: (controller) => {
 				controller.update((account) => ({
@@ -38,6 +37,7 @@ export const options: UseContextedMutationOptions<
 				}));
 			},
 		});
+		void cache.users.invalidateSuggest(controllerContext);
 	},
 	errorToastOptions: () => (error) => ({
 		text: `Error updating your name: ${error.message}`,

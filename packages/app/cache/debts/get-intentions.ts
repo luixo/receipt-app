@@ -93,7 +93,7 @@ const add =
 const invalidate = (controller: Controller) => () =>
 	utils.withRef<Intention[] | undefined>((ref) => {
 		ref.current = controller.getData();
-		controller.invalidate();
+		return controller.invalidate();
 	}).current;
 
 export const getController = ({ trpcContext }: utils.ControllerContext) => {

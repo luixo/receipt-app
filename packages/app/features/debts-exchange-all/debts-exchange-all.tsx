@@ -48,7 +48,7 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 	);
 	React.useEffect(() => {
 		if (nonZeroAggregateDebts.length <= 1) {
-			back();
+			void back();
 		}
 	}, [nonZeroAggregateDebts, back]);
 	return (

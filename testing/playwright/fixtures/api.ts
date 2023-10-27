@@ -275,10 +275,10 @@ export const createApiManager = async (
 				request.method(),
 				async () => request.postData() || "{}",
 			);
-			route.fulfill({ json: response });
+			await route.fulfill({ json: response });
 		} catch (e) {
 			if (e === CLEANUP_MARK) {
-				route.abort();
+				await route.abort();
 				return;
 			}
 			throw e;

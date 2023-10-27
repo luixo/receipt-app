@@ -54,7 +54,7 @@ export const ProtectedPage: React.FC<Props> = ({ children }) => {
 			accountQuery.error &&
 			accountQuery.error.data?.code === "UNAUTHORIZED"
 		) {
-			router.push("/login");
+			void router.push("/login");
 		}
 	}, [accountQuery.error, router]);
 

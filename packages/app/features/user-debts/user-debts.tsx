@@ -42,7 +42,7 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 	const router = useRouter();
 	React.useEffect(() => {
 		if (query.data.length === 0) {
-			router.replace("/debts");
+			void router.replace("/debts");
 		}
 	}, [query.data, router]);
 	const userQuery = trpc.users.get.useQuery({ id: userId });

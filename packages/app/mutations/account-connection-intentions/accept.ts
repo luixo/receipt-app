@@ -23,7 +23,7 @@ export const options: UseContextedMutationOptions<"accountConnectionIntentions.a
 					},
 					getName: undefined,
 				});
-				cache.users.invalidateSuggest(controllerContext);
+				void cache.users.invalidateSuggest(controllerContext);
 			},
 		errorToastOptions: () => (error) => ({
 			text: `Error accepting an invite: ${error.message}`,

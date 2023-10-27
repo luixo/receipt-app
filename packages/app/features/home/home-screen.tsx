@@ -8,7 +8,7 @@ import type { AppPage } from "next-app/types/page";
 export const HomeScreen: AppPage = () => {
 	const router = useRouter();
 	React.useEffect(() => {
-		router.replace("/receipts");
+		void router.replace("/receipts");
 	}, [router]);
 	return (
 		<>

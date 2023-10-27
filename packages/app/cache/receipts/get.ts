@@ -12,7 +12,7 @@ const upsert = (controller: Controller, receipt: Receipt) =>
 const remove = (controller: Controller, receiptId: ReceiptsId) =>
 	utils.withRef<Receipt | undefined>((ref) => {
 		ref.current = controller.getData({ id: receiptId });
-		controller.invalidate({ id: receiptId });
+		return controller.invalidate({ id: receiptId });
 	}).current;
 
 const update =

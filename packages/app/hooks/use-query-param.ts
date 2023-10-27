@@ -42,9 +42,9 @@ export const useQueryParam = <T extends object | Primitive = string>(
 			if (typeof valueOrUpdater === "function") {
 				// We can't use update function of `setRawValue`
 				// as `rawValue` is not updated when it's been set to null
-				setRawValue(serialize(valueOrUpdater(parsedValue)));
+				void setRawValue(serialize(valueOrUpdater(parsedValue)));
 			} else {
-				setRawValue(serialize(valueOrUpdater));
+				void setRawValue(serialize(valueOrUpdater));
 			}
 		},
 		// We don't need to update serialize / parse on every rerender

@@ -28,7 +28,7 @@ const upsert = (
 const invalidate = (controller: Controller, receiptId: ReceiptsId) =>
 	utils.withRef<ReceiptParticipants | undefined>((ref) => {
 		ref.current = controller.getData({ receiptId });
-		controller.invalidate({ receiptId });
+		return controller.invalidate({ receiptId });
 	}).current;
 
 const add = (
