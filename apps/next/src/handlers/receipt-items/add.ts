@@ -32,14 +32,8 @@ export const procedure = authProcedure
 		]);
 		if (!receipt) {
 			throw new TRPCError({
-				code: "PRECONDITION_FAILED",
-				message: `No receipt found by id "${input.receiptId}"`,
-			});
-		}
-		if (receipt.lockedTimestamp) {
-			throw new TRPCError({
-				code: "FORBIDDEN",
-				message: `Receipt "${input.receiptId}" cannot be updated while locked.`,
+				code: "NOT_FOUND",
+				message: `Receipt "${input.receiptId}" does not exist.`,
 			});
 		}
 		const accessRole = await getAccessRole(
@@ -47,12 +41,22 @@ export const procedure = authProcedure
 			receipt,
 			ctx.auth.accountId,
 		);
+		if (!accessRole) {
+			throw new TRPCError({
+				code: "FORBIDDEN",
+				message: `Receipt "${receipt.id}" is not allowed to be modified by "${ctx.auth.email}"`,
+			});
+		}
 		if (accessRole !== "owner" && accessRole !== "editor") {
 			throw new TRPCError({
-				code: "UNAUTHORIZED",
-				message: `Receipt "${receipt.id}" is not allowed to be modified by "${
-					ctx.auth.email
-				}" with role "${accessRole || "nobody"}"`,
+				code: "FORBIDDEN",
+				message: `Receipt "${receipt.id}" is not allowed to be modified by "${ctx.auth.email}" with role "${accessRole}"`,
+			});
+		}
+		if (receipt.lockedTimestamp) {
+			throw new TRPCError({
+				code: "FORBIDDEN",
+				message: `Receipt "${input.receiptId}" cannot be updated while locked.`,
 			});
 		}
 		const id: ReceiptItemsId = ctx.getUuid();

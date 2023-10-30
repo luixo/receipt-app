@@ -2,7 +2,6 @@ import React from "react";
 
 import { Collapse } from "@nextui-org/react";
 
-import { useSelfAccountId } from "app/hooks/use-self-account-id";
 import type { TRPCQueryOutput } from "app/trpc";
 import type { CurrencyCode } from "app/utils/currency";
 import {
@@ -11,34 +10,24 @@ import {
 	getParticipantSums,
 } from "app/utils/receipt-item";
 import { nonNullishGuard } from "app/utils/utils";
-import type { AccountsId, ReceiptsId, UsersId } from "next-app/db/models";
+import type { ReceiptsId, UsersId } from "next-app/db/models";
 
 import { AddReceiptParticipantForm } from "./add-receipt-participant-form";
 import { ReceiptParticipant } from "./receipt-participant";
 
 type Participant = TRPCQueryOutput<"receiptItems.get">["participants"][number];
 
-const getSortParticipants =
-	(selfAccountId?: AccountsId) => (a: Participant, b: Participant) => {
-		if (selfAccountId) {
-			// Sort first by self
-			if (a.localUserId === selfAccountId) {
-				return -1;
-			}
-			if (b.localUserId === selfAccountId) {
-				return -1;
-			}
-		}
-		// Sort second by owner
-		if (a.role === "owner") {
-			return 1;
-		}
-		if (b.role === "owner") {
-			return 1;
-		}
-		// Sort everyone else by name
-		return a.name.localeCompare(b.name);
-	};
+const getSortParticipants = () => (a: Participant, b: Participant) => {
+	// Sort first by owner
+	if (a.role === "owner") {
+		return 1;
+	}
+	if (b.role === "owner") {
+		return 1;
+	}
+	// Sort everyone else by name
+	return a.name.localeCompare(b.name);
+};
 
 type Props = {
 	data: TRPCQueryOutput<"receiptItems.get">;
@@ -57,11 +46,7 @@ export const ReceiptParticipants: React.FC<Props> = ({
 	receiptId,
 	isLoading,
 }) => {
-	const selfAccountId = useSelfAccountId();
-	const sortParticipants = React.useMemo(
-		() => getSortParticipants(selfAccountId),
-		[selfAccountId],
-	);
+	const sortParticipants = React.useMemo(() => getSortParticipants(), []);
 	const participants = React.useMemo(() => {
 		const decimalsPower = getDecimalsPower();
 		const items = data.items.map((item) => ({

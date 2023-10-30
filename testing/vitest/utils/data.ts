@@ -399,7 +399,7 @@ export const insertReceiptParticipant = async (
 		.executeTakeFirstOrThrow(
 			() => new Error(`Expected to have receipt id ${receiptId} in tests`),
 		);
-	const { added, resolved } = await ctx.database
+	const { added, resolved, role } = await ctx.database
 		.insertInto("receiptParticipants")
 		.values({
 			receiptId,
@@ -408,9 +408,9 @@ export const insertReceiptParticipant = async (
 			resolved: data.resolved ?? false,
 			added: data.added ?? new Date(),
 		})
-		.returning(["added", "resolved"])
+		.returning(["added", "resolved", "role"])
 		.executeTakeFirstOrThrow();
-	return { added, userId, resolved };
+	return { added, userId, resolved, role: role as Role };
 };
 
 type ReceiptItemData = {
@@ -418,6 +418,7 @@ type ReceiptItemData = {
 	name?: string;
 	price?: number;
 	quantity?: number;
+	locked?: boolean;
 };
 
 export const insertReceiptItem = async (
@@ -431,7 +432,7 @@ export const insertReceiptItem = async (
 		.executeTakeFirstOrThrow(
 			() => new Error(`Expected to have receipt id ${receiptId} in tests`),
 		);
-	const { id, name, price, quantity } = await ctx.database
+	const { id, name, price, quantity, locked } = await ctx.database
 		.insertInto("receiptItems")
 		.values({
 			receiptId,
@@ -444,10 +445,11 @@ export const insertReceiptItem = async (
 			quantity: (
 				data.quantity ?? faker.number.int({ min: 1, max: 5 })
 			).toString(),
+			locked: data.locked ?? false,
 		})
-		.returning(["id", "name", "price", "quantity"])
+		.returning(["id", "name", "price", "quantity", "locked"])
 		.executeTakeFirstOrThrow();
-	return { id, name, price, quantity };
+	return { id, name, price, quantity, locked };
 };
 
 type ItemParticipantData = {
@@ -475,7 +477,7 @@ export const insertItemParticipant = async (
 		})
 		.returning(["part"])
 		.executeTakeFirstOrThrow();
-	return { part };
+	return { part, userId, itemId };
 };
 
 type AccountConnectionIntentionData = {

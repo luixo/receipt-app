@@ -1,0 +1,19 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`receiptItems.add > functionality > foreign receipt 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
++ INSERT INTO public.\\"receiptItems\\" VALUES ('3ed660de-52d8-4423-aa79-fcb1ce767e1b', 'maiores perspiciatis dignissimos', 701.7700, 46.0000, '49fc80e6-78a8-4b86-aabf-a015b909fe31', false);"
+`;
+
+exports[`receiptItems.add > functionality > own receipt 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
++ INSERT INTO public.\\"receiptItems\\" VALUES ('28cfeae0-3076-4054-a67e-d3566e5a782e', 'laboriosam similique excepturi', 383.8500, 69.0000, '17409b67-e538-4600-8d2b-055ceb5957fc', false);"
+`;

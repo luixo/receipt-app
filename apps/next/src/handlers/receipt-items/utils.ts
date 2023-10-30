@@ -68,7 +68,12 @@ const getReceiptItems = async (database: Database, receiptId: ReceiptsId) => {
 			},
 			{} as Record<ReceiptItemsId, ReceiptItem>,
 		),
-	);
+	)
+		.map(({ parts, ...receiptItem }) => ({
+			...receiptItem,
+			parts: parts.sort((a, b) => a.userId.localeCompare(b.userId)),
+		}))
+		.sort((a, b) => a.name.localeCompare(b.name));
 };
 
 type RawReceiptItem = {
@@ -94,12 +99,12 @@ type ReceiptItem = Omit<
 	}[];
 };
 
-const getReceiptParticipants = (
+const getReceiptParticipants = async (
 	database: Database,
 	receiptId: ReceiptsId,
 	ownerAccountId: AccountsId,
-) =>
-	database
+) => {
+	const participants = await database
 		.selectFrom("receiptParticipants")
 		.where("receiptId", "=", receiptId)
 		.innerJoin("users as usersTheir", (jb) =>
@@ -119,26 +124,25 @@ const getReceiptParticipants = (
 		)
 		.select([
 			"userId as remoteUserId",
-			sql<string>`case
-			when "usersMine"."name" is not null
-				then "usersMine".name
-			when "usersTheir"."publicName" is not null
-				then "usersTheir"."publicName"
-			else
-				"usersTheir".name
-			end`.as("name"),
 			"usersMine.publicName",
+			"usersMine.name",
+			"usersTheir.publicName as theirPublicName",
+			"usersTheir.name as theirName",
 			"accounts.id as accountId",
 			"accounts.email",
-			// only exists if foreign user is connected to an account
-			// that local account owner also have
-			"usersMine.id as localUserId",
 			sql`role`.castTo<Role>().as("role"),
 			"receiptParticipants.resolved",
 			"added",
 		])
 		.orderBy("userId")
 		.execute();
+	return participants.map(
+		({ name, theirName, theirPublicName, ...participant }) => ({
+			...participant,
+			name: name ?? theirPublicName ?? theirName,
+		}),
+	);
+};
 
 export const getItemsWithParticipants = async (
 	database: Database,
