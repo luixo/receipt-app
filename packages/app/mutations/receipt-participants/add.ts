@@ -19,7 +19,6 @@ export const options: UseContextedMutationOptions<
 							accountId: item.accountId,
 							email: item.email,
 							remoteUserId: item.id,
-							localUserId: item.id,
 							role: item.role,
 							resolved: false,
 							added: item.added,

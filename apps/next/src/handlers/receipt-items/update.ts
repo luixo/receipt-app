@@ -7,11 +7,7 @@ import {
 	receiptItemNameSchema,
 } from "app/utils/validation";
 import type { SimpleUpdateObject } from "next-app/db/types";
-import { getReceiptItemById } from "next-app/handlers/receipt-items/utils";
-import {
-	getAccessRole,
-	getReceiptById,
-} from "next-app/handlers/receipts/utils";
+import { getAccessRole } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import { receiptItemIdSchema } from "next-app/handlers/validation";
 
@@ -35,27 +31,27 @@ export const procedure = authProcedure
 	)
 	.mutation(async ({ input, ctx }) => {
 		const { database } = ctx;
-		const receiptItem = await getReceiptItemById(database, input.id, [
-			"receiptId",
-		]);
+		const receiptItem = await database
+			.selectFrom("receiptItems")
+			.innerJoin("receipts", (qb) =>
+				qb.onRef("receipts.id", "=", "receiptItems.receiptId"),
+			)
+			.select([
+				"receipts.id as receiptId",
+				"receipts.ownerAccountId",
+				"receipts.lockedTimestamp",
+			])
+			.where("receiptItems.id", "=", input.id)
+			.executeTakeFirst();
 		if (!receiptItem) {
 			throw new TRPCError({
-				code: "PRECONDITION_FAILED",
-				message: `No receipt item found by id "${input.id}".`,
+				code: "NOT_FOUND",
+				message: `Receipt item "${input.id}" is not found.`,
 			});
 		}
-		const receipt = await getReceiptById(database, receiptItem.receiptId, [
-			"id",
-			"ownerAccountId",
-			"lockedTimestamp",
-		]);
-		if (!receipt) {
-			throw new TRPCError({
-				code: "PRECONDITION_FAILED",
-				message: `No receipt found by id "${input.id}".`,
-			});
-		}
-		if (receipt.lockedTimestamp && input.update.type !== "locked") {
+		// We can update lock status of an item while the receipt is locked
+		// it doesn't affect the receipt
+		if (receiptItem.lockedTimestamp && input.update.type !== "locked") {
 			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Receipt "${receiptItem.receiptId}" cannot be updated while locked.`,
@@ -63,15 +59,19 @@ export const procedure = authProcedure
 		}
 		const accessRole = await getAccessRole(
 			database,
-			receipt,
+			{ id: receiptItem.receiptId, ownerAccountId: receiptItem.ownerAccountId },
 			ctx.auth.accountId,
 		);
+		if (!accessRole) {
+			throw new TRPCError({
+				code: "FORBIDDEN",
+				message: `Receipt "${receiptItem.receiptId}" is not allowed to be modified by "${ctx.auth.email}".`,
+			});
+		}
 		if (accessRole !== "owner" && accessRole !== "editor") {
 			throw new TRPCError({
-				code: "UNAUTHORIZED",
-				message: `Receipt "${receipt.id}" is not allowed to be modified by "${
-					ctx.auth.email
-				}" with role "${accessRole || "nobody"}"`,
+				code: "FORBIDDEN",
+				message: `Receipt "${receiptItem.receiptId}" is not allowed to be modified by "${ctx.auth.email}" with role "${accessRole}"`,
 			});
 		}
 		let setObject: SimpleUpdateObject<"receiptItems"> = {};
