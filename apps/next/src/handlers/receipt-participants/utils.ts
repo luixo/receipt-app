@@ -57,6 +57,41 @@ export const addReceiptParticipants = async (
 			} in receipt "${receiptId}".`,
 		});
 	}
+	const users = await database
+		.selectFrom("users")
+		.where("id", "in", userIds)
+		.select(["id", "ownerAccountId"])
+		.execute();
+	const missingUserIds = usersToAdd
+		.map(([userId]) => userId)
+		.filter((userId) => !users.find(({ id }) => id === userId));
+	if (missingUserIds.length !== 0) {
+		throw new TRPCError({
+			code: "FORBIDDEN",
+			message: `${
+				missingUserIds.length === 1 ? "User" : "Users"
+			} ${missingUserIds.map((id) => `"${id}"`).join(", ")} ${
+				missingUserIds.length === 1 ? "does" : "do"
+			} not exist.`,
+		});
+	}
+	const foreignUserIds = usersToAdd
+		.map(([userId]) => userId)
+		.filter(
+			(userId) =>
+				users.find(({ id }) => id === userId)?.ownerAccountId !==
+				receiptOwnerId,
+		);
+	if (foreignUserIds.length !== 0) {
+		throw new TRPCError({
+			code: "FORBIDDEN",
+			message: `${
+				foreignUserIds.length === 1 ? "User" : "Users"
+			} ${foreignUserIds.map((id) => `"${id}"`).join(", ")} ${
+				foreignUserIds.length === 1 ? "is" : "are"
+			} not owned by "${receiptOwnerEmail}".`,
+		});
+	}
 	const result = await database
 		.insertInto("receiptParticipants")
 		.values(

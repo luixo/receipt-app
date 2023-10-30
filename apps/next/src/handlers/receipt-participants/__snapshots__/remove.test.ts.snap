@@ -1,0 +1,12 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`receiptParticipants.remove > functionality > user is removed 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.\\"itemParticipants\\" VALUES ('47c3aa72-d37e-4039-91bb-78a75ea71923', 1.00, '4a950a61-6655-4a98-8554-dc797c4131a2');
+@@ --- --- @@
+- INSERT INTO public.\\"receiptParticipants\\" VALUES ('ba0db3c1-5954-4d81-923a-e5ab58e56bfc', '4a950a61-6655-4a98-8554-dc797c4131a2', 'editor', true, '2020-01-01 00:00:00');"
+`;
