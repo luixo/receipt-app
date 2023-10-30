@@ -1,0 +1,12 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`receiptParticipants.add > functionality > participants are added 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
++ INSERT INTO public.\\"receiptParticipants\\" VALUES ('aa05f9ce-d200-45cb-8e12-3a0e8bc25881', 'fd5de2a0-fa28-4cde-a57a-de95fdc45b1f', 'owner', false, '2020-01-01 00:00:00');
++ INSERT INTO public.\\"receiptParticipants\\" VALUES ('aa05f9ce-d200-45cb-8e12-3a0e8bc25881', 'cb17aaa4-3a3e-4f9b-9af8-e10833ff3cd8', 'editor', false, '2020-01-01 00:00:00');
++ INSERT INTO public.\\"receiptParticipants\\" VALUES ('aa05f9ce-d200-45cb-8e12-3a0e8bc25881', '183275d6-37c7-4bdd-a1e1-d38b51a52442', 'editor', false, '2020-01-01 00:00:00');"
+`;

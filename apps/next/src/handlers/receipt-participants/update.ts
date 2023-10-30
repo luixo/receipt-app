@@ -37,11 +37,21 @@ export const procedure = authProcedure
 				message: `Receipt "${input.receiptId}" does not exist.`,
 			});
 		}
+		const user = await getUserById(database, input.userId, [
+			"ownerAccountId",
+			"connectedAccountId",
+		]);
+		if (!user) {
+			throw new TRPCError({
+				code: "NOT_FOUND",
+				message: `User "${input.userId}" does not exist.`,
+			});
+		}
 		if (input.update.type === "role") {
 			if (receipt.ownerAccountId !== ctx.auth.accountId) {
 				throw new TRPCError({
 					code: "FORBIDDEN",
-					message: `Not enough rights to modify role on receipt "${input.receiptId}".`,
+					message: `Only receipt owner can modify user receipt role.`,
 				});
 			}
 			if (input.userId === ctx.auth.accountId) {
@@ -51,20 +61,10 @@ export const procedure = authProcedure
 				});
 			}
 		} else if (input.update.type === "resolved") {
-			const user = await getUserById(database, input.userId, [
-				"ownerAccountId",
-				"connectedAccountId",
-			]);
-			if (!user) {
-				throw new TRPCError({
-					code: "NOT_FOUND",
-					message: `User "${input.userId}" does not exist.`,
-				});
-			}
 			if (user.connectedAccountId !== ctx.auth.accountId) {
 				throw new TRPCError({
 					code: "FORBIDDEN",
-					message: `Not enough rights to modify resolved on user "${input.userId}".`,
+					message: `You can modify only your own "resolved" status.`,
 				});
 			}
 		}
@@ -76,7 +76,7 @@ export const procedure = authProcedure
 		);
 		if (!receiptParticipant) {
 			throw new TRPCError({
-				code: "NOT_FOUND",
+				code: "CONFLICT",
 				message: `User "${input.userId}" does not participate in receipt "${input.receiptId}".`,
 			});
 		}

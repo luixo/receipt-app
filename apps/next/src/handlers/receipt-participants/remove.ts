@@ -29,7 +29,7 @@ export const procedure = authProcedure
 		if (receipt.ownerAccountId !== ctx.auth.accountId) {
 			throw new TRPCError({
 				code: "FORBIDDEN",
-				message: `Not enough rights to remove participants from receipt "${input.receiptId}".`,
+				message: `Not enough rights to remove participant from receipt "${input.receiptId}".`,
 			});
 		}
 		const user = await getUserById(database, input.userId, ["ownerAccountId"]);
@@ -42,7 +42,7 @@ export const procedure = authProcedure
 		if (user.ownerAccountId !== ctx.auth.accountId) {
 			throw new TRPCError({
 				code: "FORBIDDEN",
-				message: `Not enough rights to remove a user "${input.userId}" from receipt "${input.receiptId}".`,
+				message: `User "${input.userId}" is not owned by "${ctx.auth.email}".`,
 			});
 		}
 		const receiptParticipant = await getReceiptParticipant(
@@ -53,7 +53,7 @@ export const procedure = authProcedure
 		);
 		if (!receiptParticipant) {
 			throw new TRPCError({
-				code: "NOT_FOUND",
+				code: "CONFLICT",
 				message: `User "${input.userId}" does not participate in receipt "${input.receiptId}".`,
 			});
 		}

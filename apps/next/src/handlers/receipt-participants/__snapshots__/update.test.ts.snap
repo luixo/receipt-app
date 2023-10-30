@@ -1,0 +1,34 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`receiptParticipants.update > functionality > update resolved > in a foreign receipt 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.\\"receiptParticipants\\" VALUES ('4f1de7be-0faf-41c1-b1c8-ee3a1bfd3a15', 'a65ef047-bb8f-457b-9e2b-64869a0fe5fb', 'viewer', true, '2020-01-01 00:00:00');
+@@ --- --- @@
++ INSERT INTO public.\\"receiptParticipants\\" VALUES ('4f1de7be-0faf-41c1-b1c8-ee3a1bfd3a15', 'a65ef047-bb8f-457b-9e2b-64869a0fe5fb', 'viewer', false, '2020-01-01 00:00:00');"
+`;
+
+exports[`receiptParticipants.update > functionality > update resolved > in an own receipt 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.\\"receiptParticipants\\" VALUES ('54f4531b-3780-4280-b274-f67d711dda7c', 'aaff189b-afe1-4389-aac8-0457cde0436b', 'owner', true, '2020-01-01 00:00:00');
+@@ --- --- @@
++ INSERT INTO public.\\"receiptParticipants\\" VALUES ('54f4531b-3780-4280-b274-f67d711dda7c', 'aaff189b-afe1-4389-aac8-0457cde0436b', 'owner', false, '2020-01-01 00:00:00');"
+`;
+
+exports[`receiptParticipants.update > functionality > update role > for another user 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.\\"receiptParticipants\\" VALUES ('c27ebd16-5e6c-40e0-a5da-5729efd65c20', 'fbabce36-a6a3-4822-9d09-82380d3ca64f', 'editor', true, '2020-01-01 00:00:00');
+@@ --- --- @@
++ INSERT INTO public.\\"receiptParticipants\\" VALUES ('c27ebd16-5e6c-40e0-a5da-5729efd65c20', 'fbabce36-a6a3-4822-9d09-82380d3ca64f', 'viewer', true, '2020-01-01 00:00:00');"
+`;
