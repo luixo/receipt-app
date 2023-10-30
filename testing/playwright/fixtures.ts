@@ -1,3 +1,4 @@
+import { mixinFixtures as mixinCoverage } from "@bgotink/playwright-coverage";
 import type { Expect, Locator, PageScreenshotOptions } from "@playwright/test";
 import { test as base, expect } from "@playwright/test";
 import type {
@@ -178,5 +179,7 @@ export const test = base.extend<Fixture, WorkerFixture>({
 		);
 	},
 });
+
+export const coverageTest = mixinCoverage(test);
 
 export { expect };

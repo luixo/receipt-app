@@ -27,6 +27,7 @@
 		"eslint-plugin-react": "^7.33.0",
 		"eslint-plugin-react-hooks": "^4.6.0",
 		"find-free-ports": "^3.1.1",
+		"glob": "^10.3.10",
 		"lint-staged": "^13.2.3",
 		"pre-commit": "^1.2.2",
 		"prettier": "^3.0.0",
@@ -91,6 +92,8 @@
 		"@trpc/server@^10.35.0": "patch:@trpc/server@npm%3A10.35.0#./patches/@trpc-server-npm-10.35.0.patch",
 		"@nextui-org/react@1.0.0-beta.10": "patch:@nextui-org/react@npm%3A1.0.0-beta.10#./patches/@nextui-org-react-npm-1.0.0-beta.10.patch",
 		"vitest@^0.34.1": "patch:vitest@npm%3A0.34.3#./patches/vitest-npm-0.34.3.patch",
-		"next@^13.4.12": "patch:next@npm%3A13.4.12#./patches/next-npm-13.4.12.patch"
+		"next@^13.4.12": "patch:next@npm%3A13.4.12#./patches/next-npm-13.4.12.patch",
+		"@bgotink/playwright-coverage@^0.2.1": "patch:@bgotink/playwright-coverage@npm%3A0.2.1#./patches/@bgotink-playwright-coverage-npm-0.2.1.patch",
+		"v8-to-istanbul@^9.1.0": "patch:v8-to-istanbul@npm%3A9.1.0#./patches/v8-to-istanbul-npm-9.1.0.patch"
 	}
 }

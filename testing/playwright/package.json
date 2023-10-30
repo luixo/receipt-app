@@ -5,6 +5,7 @@
 		"test": "playwright test -c playwright.config.ts"
 	},
 	"devDependencies": {
+		"@bgotink/playwright-coverage": "^0.2.1",
 		"@playwright/test": "^1.38.0",
 		"@trpc/client": "^10.35.0",
 		"@trpc/server": "^10.35.0",
