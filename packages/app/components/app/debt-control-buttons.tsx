@@ -26,19 +26,13 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 	const setLocked = React.useCallback(() => {
 		updateMutation.mutate({
 			id: debt.id,
-			update: {
-				type: "locked",
-				locked: !debt.lockedTimestamp,
-			},
+			update: { locked: !debt.lockedTimestamp },
 		});
 	}, [updateMutation, debt.id, debt.lockedTimestamp]);
 	const updateLocked = React.useCallback(() => {
 		updateMutation.mutate({
 			id: debt.id,
-			update: {
-				type: "locked",
-				locked: true,
-			},
+			update: { locked: true },
 		});
 	}, [updateMutation, debt.id]);
 

@@ -51,7 +51,7 @@ export const DebtAmountInput: React.FC<Props> = ({ debt, isLoading }) => {
 				const currentSign = debt.amount >= 0 ? 1 : -1;
 				updateMutation.mutate({
 					id: debt.id,
-					update: { type: "amount", amount: amount * currentSign },
+					update: { amount: amount * currentSign },
 				});
 			}
 		},

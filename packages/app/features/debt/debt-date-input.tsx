@@ -26,7 +26,7 @@ export const DebtDateInput: React.FC<Props> = ({ debt, isLoading }) => {
 			}
 			updateMutation.mutate({
 				id: debt.id,
-				update: { type: "timestamp", timestamp: nextDate },
+				update: { timestamp: nextDate },
 			});
 		},
 		[updateMutation, debt.id, debt.timestamp],

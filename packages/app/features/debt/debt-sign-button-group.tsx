@@ -27,7 +27,7 @@ export const DebtSignButtonGroup: React.FC<Props> = ({ debt, disabled }) => {
 			}
 			return updateMutation.mutate({
 				id: debt.id,
-				update: { type: "amount", amount: debt.amount * -1 },
+				update: { amount: debt.amount * -1 },
 			});
 		},
 		[updateMutation, debt.id, debt.amount],

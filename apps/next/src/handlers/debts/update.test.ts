@@ -33,12 +33,11 @@ const router = t.router({ procedure });
 
 const updateDescribes = (
 	getUpdate: () => TRPCMutationInput<"debts.update">["update"],
-	isLockedTimestampUpdated: (lockedBefore: boolean) => boolean,
+	getNextTimestamp: (lockedBefore: boolean) => Date | null | undefined,
 	isReverseLockedTimestampUpdated: (
 		lockedBefore: boolean,
 		counterpartyAutoAcceptDebts: boolean,
 	) => boolean,
-	getNextTimestamp: () => Date | undefined = () => new Date(),
 ) => {
 	const runTest = async ({
 		ctx,
@@ -81,14 +80,10 @@ const updateDescribes = (
 			lockedBefore,
 			counterPartyAccepts,
 		);
-		expect(result).toStrictEqual<typeof result>(
-			isLockedTimestampUpdated(lockedBefore)
-				? {
-						reverseLockedTimestampUpdated,
-						lockedTimestamp: getNextTimestamp(),
-				  }
-				: { reverseLockedTimestampUpdated },
-		);
+		expect(result).toStrictEqual<typeof result>({
+			lockedTimestamp: getNextTimestamp(lockedBefore),
+			reverseLockedTimestampUpdated,
+		});
 	};
 
 	const lockedStateTests = ({
@@ -118,7 +113,7 @@ describe("debts.update", () => {
 		expectUnauthorizedError((context) =>
 			router.createCaller(context).procedure({
 				id: faker.string.uuid(),
-				update: { type: "amount", amount: Number(faker.finance.amount()) },
+				update: { amount: Number(faker.finance.amount()) },
 			}),
 		);
 
@@ -131,7 +126,6 @@ describe("debts.update", () => {
 						caller.procedure({
 							id: "not-a-valid-uuid",
 							update: {
-								type: "amount",
 								amount: Number(faker.finance.amount()),
 							},
 						}),
@@ -141,11 +135,27 @@ describe("debts.update", () => {
 			});
 		});
 
+		describe("update", () => {
+			test("should have at least one key", async ({ ctx }) => {
+				const { sessionId } = await insertAccountWithSession(ctx);
+				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				await expectTRPCError(
+					() =>
+						caller.procedure({
+							id: faker.string.uuid(),
+							update: {},
+						}),
+					"BAD_REQUEST",
+					`Zod error\n\nAt "update": Update object has to have at least one key to update`,
+				);
+			});
+		});
+
 		verifyAmount(
 			(context, amount) =>
 				router.createCaller(context).procedure({
 					id: faker.string.uuid(),
-					update: { type: "amount", amount },
+					update: { amount },
 				}),
 			"update.",
 		);
@@ -154,7 +164,7 @@ describe("debts.update", () => {
 			(context, note) =>
 				router.createCaller(context).procedure({
 					id: faker.string.uuid(),
-					update: { type: "note", note },
+					update: { note },
 				}),
 			"update.",
 		);
@@ -163,7 +173,7 @@ describe("debts.update", () => {
 			(context, currencyCode) =>
 				router.createCaller(context).procedure({
 					id: faker.string.uuid(),
-					update: { type: "currencyCode", currencyCode },
+					update: { currencyCode },
 				}),
 			"update.",
 		);
@@ -172,7 +182,7 @@ describe("debts.update", () => {
 			(context, timestamp) =>
 				router.createCaller(context).procedure({
 					id: faker.string.uuid(),
-					update: { type: "timestamp", timestamp },
+					update: { timestamp },
 				}),
 			"update.",
 		);
@@ -194,7 +204,7 @@ describe("debts.update", () => {
 				() =>
 					caller.procedure({
 						id: fakeDebtId,
-						update: { type: "amount", amount: Number(faker.finance.amount()) },
+						update: { amount: Number(faker.finance.amount()) },
 					}),
 				"NOT_FOUND",
 				`Debt "${fakeDebtId}" does not exist on account "${email}".`,
@@ -225,7 +235,7 @@ describe("debts.update", () => {
 				() =>
 					caller.procedure({
 						id: debtId,
-						update: { type: "amount", amount: Number(faker.finance.amount()) },
+						update: { amount: Number(faker.finance.amount()) },
 					}),
 				"NOT_FOUND",
 				`Debt "${debtId}" does not exist on account "${email}".`,
@@ -236,8 +246,8 @@ describe("debts.update", () => {
 	describe("functionality", () => {
 		describe("update amount", () => {
 			updateDescribes(
-				() => ({ type: "amount", amount: Number(faker.finance.amount()) }),
-				(lockedBefore) => lockedBefore,
+				() => ({ amount: Number(faker.finance.amount()) }),
+				(lockedBefore) => (lockedBefore ? new Date() : undefined),
 				(lockedBefore, counterPartyAccepts) =>
 					lockedBefore && counterPartyAccepts,
 			);
@@ -245,8 +255,8 @@ describe("debts.update", () => {
 
 		describe("update timestamp", () => {
 			updateDescribes(
-				() => ({ type: "timestamp", timestamp: new Date("2020-06-01") }),
-				(lockedBefore) => lockedBefore,
+				() => ({ timestamp: new Date("2020-06-01") }),
+				(lockedBefore) => (lockedBefore ? new Date() : undefined),
 				(lockedBefore, counterPartyAccepts) =>
 					lockedBefore && counterPartyAccepts,
 			);
@@ -254,16 +264,16 @@ describe("debts.update", () => {
 
 		describe("update note", () => {
 			updateDescribes(
-				() => ({ type: "note", note: faker.lorem.words() }),
-				() => false,
+				() => ({ note: faker.lorem.words() }),
+				() => undefined,
 				() => false,
 			);
 		});
 
 		describe("update currency code", () => {
 			updateDescribes(
-				() => ({ type: "currencyCode", currencyCode: getRandomCurrencyCode() }),
-				(lockedBefore) => lockedBefore,
+				() => ({ currencyCode: getRandomCurrencyCode() }),
+				(lockedBefore) => (lockedBefore ? new Date() : undefined),
 				(lockedBefore, counterPartyAccepts) =>
 					lockedBefore && counterPartyAccepts,
 			);
@@ -271,19 +281,62 @@ describe("debts.update", () => {
 
 		describe("update locked - true", () => {
 			updateDescribes(
-				() => ({ type: "locked", locked: true }),
-				() => true,
+				() => ({ locked: true }),
+				() => new Date(),
 				(_, counterPartyAccepts) => counterPartyAccepts,
 			);
 		});
 
 		describe("update locked - false", () => {
 			updateDescribes(
-				() => ({ type: "locked", locked: false }),
-				() => true,
+				() => ({ locked: false }),
+				() => null,
 				(_, counterPartyAccepts) => counterPartyAccepts,
-				() => undefined,
 			);
+		});
+
+		describe("update multiple", () => {
+			describe("no locked", () => {
+				updateDescribes(
+					() => ({
+						amount: Number(faker.finance.amount()),
+						timestamp: new Date("2020-06-01"),
+						note: faker.lorem.words(),
+						currencyCode: getRandomCurrencyCode(),
+					}),
+					(lockedBefore) => (lockedBefore ? new Date() : undefined),
+					(lockedBefore, counterPartyAccepts) =>
+						lockedBefore && counterPartyAccepts,
+				);
+			});
+
+			describe("locked as true", () => {
+				updateDescribes(
+					() => ({
+						amount: Number(faker.finance.amount()),
+						timestamp: new Date("2020-06-01"),
+						note: faker.lorem.words(),
+						currencyCode: getRandomCurrencyCode(),
+						locked: true,
+					}),
+					() => new Date(),
+					(_, counterPartyAccepts) => counterPartyAccepts,
+				);
+			});
+
+			describe("locked as false", () => {
+				updateDescribes(
+					() => ({
+						amount: Number(faker.finance.amount()),
+						timestamp: new Date("2020-06-01"),
+						note: faker.lorem.words(),
+						currencyCode: getRandomCurrencyCode(),
+						locked: false,
+					}),
+					() => null,
+					(_, counterPartyAccepts) => counterPartyAccepts,
+				);
+			});
 		});
 	});
 });

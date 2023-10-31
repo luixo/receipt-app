@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
+import { omitUndefined } from "app/utils/utils";
 import { debtAmountSchema, debtNoteSchema } from "app/utils/validation";
 import type { SimpleUpdateObject } from "next-app/db/types";
 import { authProcedure } from "next-app/handlers/trpc";
@@ -12,28 +13,19 @@ export const procedure = authProcedure
 	.input(
 		z.strictObject({
 			id: debtIdSchema,
-			update: z.discriminatedUnion("type", [
-				z.strictObject({
-					type: z.literal("amount"),
+			update: z
+				.strictObject({
 					amount: debtAmountSchema,
-				}),
-				z.strictObject({
-					type: z.literal("timestamp"),
 					timestamp: z.date(),
-				}),
-				z.strictObject({
-					type: z.literal("note"),
 					note: debtNoteSchema,
-				}),
-				z.strictObject({
-					type: z.literal("currencyCode"),
 					currencyCode: currencyCodeSchema,
-				}),
-				z.strictObject({
-					type: z.literal("locked"),
 					locked: z.boolean(),
-				}),
-			]),
+				})
+				.partial()
+				.refine(
+					(obj) => Object.keys(obj).length !== 0,
+					"Update object has to have at least one key to update",
+				),
 		}),
 	)
 	.mutation(async ({ input, ctx }) => {
@@ -63,40 +55,32 @@ export const procedure = authProcedure
 			});
 		}
 
-		const setObject: DebtUpdateObject =
-			debt.lockedTimestamp === null
-				? {}
-				: {
-						lockedTimestamp: new Date(),
-				  };
-		switch (input.update.type) {
-			case "amount":
-				setObject.amount = input.update.amount.toString();
-				break;
-			case "timestamp":
-				setObject.timestamp = input.update.timestamp;
-				break;
-			case "note":
-				// Updating note should not affect lockedTimestamp
-				setObject.lockedTimestamp = undefined;
-				setObject.note = input.update.note;
-				break;
-			case "currencyCode":
-				setObject.currencyCode = input.update.currencyCode;
-				break;
-			case "locked":
-				setObject.lockedTimestamp = input.update.locked ? new Date() : null;
-				break;
+		const setObject: DebtUpdateObject = omitUndefined({
+			amount: input.update.amount?.toString(),
+			timestamp: input.update.timestamp,
+			note: input.update.note,
+			currencyCode: input.update.currencyCode,
+			lockedTimestamp:
+				input.update.locked === undefined
+					? debt.lockedTimestamp === null
+						? undefined
+						: new Date()
+					: input.update.locked
+					? new Date()
+					: null,
+		});
+		const modifiedKeys = Object.keys(input.update);
+		if (modifiedKeys.length === 1 && modifiedKeys[0] === "note") {
+			// don't update lockedTimestamp if we updated only note
+			delete setObject.lockedTimestamp;
 		}
 		let reverseLockedTimestampUpdated = false;
 		if (debt.autoAcceptDebts) {
-			const reverseSetObject = { ...setObject };
-			if (reverseSetObject.note) {
-				reverseSetObject.note = undefined;
-			}
-			if (reverseSetObject.amount) {
-				reverseSetObject.amount = `-${reverseSetObject.amount}`;
-			}
+			const reverseSetObject = {
+				...setObject,
+				note: undefined,
+				amount: setObject.amount ? `-${setObject.amount}` : undefined,
+			};
 			if (!debt.foreignAccountId) {
 				throw new TRPCError({
 					code: "INTERNAL_SERVER_ERROR",
@@ -124,9 +108,8 @@ export const procedure = authProcedure
 			.where("ownerAccountId", "=", ctx.auth.accountId)
 			.executeTakeFirst();
 		return {
-			...(setObject.lockedTimestamp === undefined
-				? undefined
-				: { lockedTimestamp: setObject.lockedTimestamp || undefined }),
+			// value or null for set object, undefined for not being set
+			lockedTimestamp: setObject.lockedTimestamp,
 			reverseLockedTimestampUpdated,
 		};
 	});

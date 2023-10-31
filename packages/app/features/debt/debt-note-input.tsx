@@ -48,7 +48,7 @@ export const DebtNoteInput: React.FC<Props> = ({ debt, isLoading }) => {
 				return;
 			}
 			updateMutation.mutate(
-				{ id: debt.id, update: { type: "note", note: nextNote } },
+				{ id: debt.id, update: { note: nextNote } },
 				{ onSuccess: () => setValue(nextNote) },
 			);
 		},

@@ -15,91 +15,74 @@ const applySumUpdate =
 		update: TRPCMutationInput<"debts.update">["update"],
 	): UpdateFn<DebtSum> =>
 	(sum) => {
-		switch (update.type) {
-			case "amount": {
-				const delta = update.amount - prevAmount;
-				return sum + delta;
-			}
-			case "locked":
-			case "timestamp":
-			case "note":
-			case "currencyCode":
-				return sum;
+		if (update.amount !== undefined) {
+			const delta = update.amount - prevAmount;
+			return sum + delta;
 		}
+		return sum;
 	};
+
+const getNextLockedTimestamp = (
+	update: TRPCMutationInput<"debts.update">["update"],
+) =>
+	update.amount !== undefined ||
+	update.timestamp !== undefined ||
+	update.currencyCode !== undefined ||
+	update.locked === true
+		? // lockedTimestamp will be overriden in onSuccess
+		  new Date()
+		: update.locked === false
+		? null
+		: undefined;
 
 const applyUserUpdate =
 	(
 		update: TRPCMutationInput<"debts.update">["update"],
 	): UpdateFn<DebtUserSnapshot> =>
-	(item) => {
-		// lockedTimestamp will be overriden in onSuccess
-		const nextLockedTimestamp =
-			item.lockedTimestamp === undefined ? undefined : new Date();
-		switch (update.type) {
-			case "amount":
-				return {
-					...item,
-					amount: update.amount,
-					lockedTimestamp: nextLockedTimestamp,
-				};
-			case "timestamp":
-				return {
-					...item,
-					timestamp: update.timestamp,
-					lockedTimestamp: nextLockedTimestamp,
-				};
-			case "note":
-				return { ...item, note: update.note };
-			case "currencyCode":
-				return {
-					...item,
-					currencyCode: update.currencyCode,
-					lockedTimestamp: nextLockedTimestamp,
-				};
-			case "locked":
-				return {
-					...item,
-					lockedTimestamp: update.locked ? new Date() : undefined,
-				};
+	(debt) => {
+		const nextDebt = { ...debt };
+		if (update.amount !== undefined) {
+			nextDebt.amount = update.amount;
 		}
+		if (update.timestamp !== undefined) {
+			nextDebt.timestamp = update.timestamp;
+		}
+		if (update.currencyCode !== undefined) {
+			nextDebt.currencyCode = update.currencyCode;
+		}
+		if (update.note !== undefined) {
+			nextDebt.note = update.note;
+		}
+		const nextLockedTimestamp = getNextLockedTimestamp(update);
+		if (nextLockedTimestamp !== null) {
+			nextDebt.lockedTimestamp = nextLockedTimestamp;
+		}
+		return nextDebt;
 	};
 
 const applyUpdate =
 	(
 		update: TRPCMutationInput<"debts.update">["update"],
 	): UpdateFn<DebtSnapshot> =>
-	(item) => {
-		// lockedTimestamp will be overriden in onSuccess
-		const nextLockedTimestamp =
-			item.lockedTimestamp === undefined ? undefined : new Date();
-		switch (update.type) {
-			case "amount":
-				return {
-					...item,
-					amount: update.amount,
-					lockedTimestamp: nextLockedTimestamp,
-				};
-			case "timestamp":
-				return {
-					...item,
-					timestamp: update.timestamp,
-					lockedTimestamp: nextLockedTimestamp,
-				};
-			case "note":
-				return { ...item, note: update.note };
-			case "currencyCode":
-				return {
-					...item,
-					currencyCode: update.currencyCode,
-					lockedTimestamp: nextLockedTimestamp,
-				};
-			case "locked":
-				return {
-					...item,
-					lockedTimestamp: update.locked ? new Date() : undefined,
-				};
+	(debt) => {
+		const nextDebt = { ...debt };
+		if (update.amount !== undefined) {
+			nextDebt.amount = update.amount;
 		}
+		if (update.timestamp !== undefined) {
+			nextDebt.timestamp = update.timestamp;
+		}
+		if (update.currencyCode !== undefined) {
+			nextDebt.currencyCode = update.currencyCode;
+		}
+		if (update.note !== undefined) {
+			nextDebt.note = update.note;
+		}
+		const nextLockedTimestamp = getNextLockedTimestamp(update);
+		if (nextLockedTimestamp !== null) {
+			nextDebt.lockedTimestamp = nextLockedTimestamp;
+		}
+		return nextDebt;
 	};
 
 const getSumRevert =
@@ -109,17 +92,11 @@ const getSumRevert =
 	): SnapshotFn<DebtSum> =>
 	(updatedSum) =>
 	(currentSum) => {
-		switch (update.type) {
-			case "amount": {
-				const delta = updatedSum - prevAmount;
-				return currentSum - delta;
-			}
-			case "timestamp":
-			case "note":
-			case "currencyCode":
-			case "locked":
-				return currentSum;
+		if (update.amount !== undefined) {
+			const delta = updatedSum - prevAmount;
+			return currentSum - delta;
 		}
+		return currentSum;
 	};
 
 const getUserRevert =
@@ -128,30 +105,24 @@ const getUserRevert =
 	): SnapshotFn<DebtUserSnapshot> =>
 	(snapshot) =>
 	(debt) => {
-		switch (update.type) {
-			case "amount":
-				return {
-					...debt,
-					amount: snapshot.amount,
-					lockedTimestamp: snapshot.lockedTimestamp,
-				};
-			case "timestamp":
-				return {
-					...debt,
-					timestamp: snapshot.timestamp,
-					lockedTimestamp: snapshot.lockedTimestamp,
-				};
-			case "note":
-				return { ...debt, note: snapshot.note };
-			case "currencyCode":
-				return {
-					...debt,
-					currencyCode: snapshot.currencyCode,
-					lockedTimestamp: snapshot.lockedTimestamp,
-				};
-			case "locked":
-				return { ...debt, lockedTimestamp: snapshot.lockedTimestamp };
+		const revertDebt = { ...debt };
+		if (update.amount !== undefined) {
+			revertDebt.amount = snapshot.amount;
 		}
+		if (update.timestamp !== undefined) {
+			revertDebt.timestamp = snapshot.timestamp;
+		}
+		if (update.currencyCode !== undefined) {
+			revertDebt.currencyCode = snapshot.currencyCode;
+		}
+		if (update.note !== undefined) {
+			revertDebt.note = snapshot.note;
+		}
+		const nextLockedTimestamp = getNextLockedTimestamp(update);
+		if (nextLockedTimestamp !== null) {
+			revertDebt.lockedTimestamp = snapshot.lockedTimestamp;
+		}
+		return revertDebt;
 	};
 
 const getRevert =
@@ -160,30 +131,24 @@ const getRevert =
 	): SnapshotFn<DebtSnapshot> =>
 	(snapshot) =>
 	(debt) => {
-		switch (update.type) {
-			case "amount":
-				return {
-					...debt,
-					amount: snapshot.amount,
-					lockedTimestamp: snapshot.lockedTimestamp,
-				};
-			case "timestamp":
-				return {
-					...debt,
-					timestamp: snapshot.timestamp,
-					lockedTimestamp: snapshot.lockedTimestamp,
-				};
-			case "note":
-				return { ...debt, note: snapshot.note };
-			case "currencyCode":
-				return {
-					...debt,
-					currencyCode: snapshot.currencyCode,
-					lockedTimestamp: snapshot.lockedTimestamp,
-				};
-			case "locked":
-				return { ...debt, lockedTimestamp: snapshot.lockedTimestamp };
+		const revertDebt = { ...debt };
+		if (update.amount !== undefined) {
+			revertDebt.amount = snapshot.amount;
 		}
+		if (update.timestamp !== undefined) {
+			revertDebt.timestamp = snapshot.timestamp;
+		}
+		if (update.currencyCode !== undefined) {
+			revertDebt.currencyCode = snapshot.currencyCode;
+		}
+		if (update.note !== undefined) {
+			revertDebt.note = snapshot.note;
+		}
+		const nextLockedTimestamp = getNextLockedTimestamp(update);
+		if (nextLockedTimestamp !== null) {
+			revertDebt.lockedTimestamp = snapshot.lockedTimestamp;
+		}
+		return revertDebt;
 	};
 
 export const options: UseContextedMutationOptions<
@@ -218,22 +183,21 @@ export const options: UseContextedMutationOptions<
 					getRevert(updateObject.update),
 				),
 			getIntentions: (controller) => {
-				if (
-					updateObject.update.type !== "locked" ||
-					updateObject.update.locked
-				) {
+				const nextLockedTimestamp = getNextLockedTimestamp(updateObject.update);
+				if (!nextLockedTimestamp) {
 					return;
 				}
 				return controller.remove(updateObject.id);
 			},
 		}),
 	onSuccess: (controllerContext, currData) => (result, updateObject) => {
-		// lockedTimestamp is not defined (in contrary to being undefined)
+		// lockedTimestamp is undefined (in contrary to being null)
 		// hence we didn't update it in this transaction and we should update nothing in cache
-		if (!("lockedTimestamp" in result)) {
+		if (result.lockedTimestamp === undefined) {
 			return;
 		}
-		const { lockedTimestamp, reverseLockedTimestampUpdated } = result;
+		const lockedTimestamp = result.lockedTimestamp || undefined;
+		const { reverseLockedTimestampUpdated } = result;
 		cache.debts.update(controllerContext, {
 			getByUsers: undefined,
 			getUser: (controller) =>
@@ -253,10 +217,8 @@ export const options: UseContextedMutationOptions<
 						: debt.their,
 				})),
 			getIntentions: (controller) => {
-				if (
-					updateObject.update.type !== "locked" ||
-					!updateObject.update.locked
-				) {
+				const nextLockedTimestamp = getNextLockedTimestamp(updateObject.update);
+				if (!nextLockedTimestamp) {
 					return;
 				}
 				// It seems like it doesn't work

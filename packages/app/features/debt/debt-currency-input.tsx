@@ -32,7 +32,7 @@ export const DebtCurrencyInput: React.FC<Props> = ({ debt, isLoading }) => {
 			closeModal();
 			updateReceiptMutation.mutate({
 				id: debt.id,
-				update: { type: "currencyCode", currencyCode: nextCurrency!.code },
+				update: { currencyCode: nextCurrency!.code },
 			});
 		},
 		[updateReceiptMutation, debt.id, debt.currencyCode, closeModal],
