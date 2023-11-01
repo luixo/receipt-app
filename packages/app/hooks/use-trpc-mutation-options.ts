@@ -156,6 +156,8 @@ export const useTrpcMutationOptions = <
 						: errorToastOptions;
 				if (toastOptions) {
 					toast.error(toastOptions.text, { id: toastId });
+				} else {
+					toast.dismiss(toastId);
 				}
 				onError?.(error, vars, wrappedContext?.context);
 				wrappedContext?.revertFn?.();
@@ -173,6 +175,8 @@ export const useTrpcMutationOptions = <
 						: successToastOptions;
 				if (toastOptions) {
 					toast.success(toastOptions.text, { id: toastId });
+				} else {
+					toast.dismiss(toastId);
 				}
 				onSuccess?.(result, vars, wrappedContext?.context);
 				wrappedContext?.finalizeFn?.();
