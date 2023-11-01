@@ -176,6 +176,7 @@ export const expectQueriesSnapshot = async <T>(
 		name,
 	}: Partial<SnapshotQueryCacheOptions> = {},
 ): Promise<T> => {
+	api.clearActions();
 	const prevQueryCache = await getQueryCache(page);
 	const result = await fn();
 	const nextQueryCache = await getQueryCache(page);
@@ -191,7 +192,6 @@ export const expectQueriesSnapshot = async <T>(
 			.soft(`${JSON.stringify(remapActions(api.getActions()), null, "\t")}\n`)
 			.toMatchSnapshot(getSnapshotName(testInfo, "queriesIndex", name, "json"));
 	});
-	api.clearActions();
 	return result;
 };
 

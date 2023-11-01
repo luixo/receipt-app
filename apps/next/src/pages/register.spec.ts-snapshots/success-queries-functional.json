@@ -1,7 +1,4 @@
 {
-	"account.get": {
-		"serverCalls": 1
-	},
 	"accountConnectionIntentions.getAll": {
 		"clientCalls": 1
 	},

@@ -1,7 +1,4 @@
 {
-	"account.get": {
-		"serverCalls": 1
-	},
 	"auth.register": {
 		"clientCalls": 1
 	}
