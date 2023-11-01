@@ -7,6 +7,7 @@ import type {
 } from "@tanstack/react-query";
 import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
 import joinImages from "join-images";
+import * as timekeeper from "timekeeper";
 
 import { setSeed } from "@tests/backend/utils/faker";
 import type { TRPCQueryKey } from "app/trpc";
@@ -62,6 +63,7 @@ type Fixture = {
 };
 type WorkerFixture = {
 	globalApiManager: WorkerManager;
+	timekeeper: void;
 };
 
 export const test = base.extend<Fixture, WorkerFixture>({
@@ -78,6 +80,15 @@ export const test = base.extend<Fixture, WorkerFixture>({
 			await client.release.mutate({ hash });
 			await use(workerManager);
 			await cleanup();
+		},
+		{ auto: true, scope: "worker" },
+	],
+	timekeeper: [
+		// eslint-disable-next-line no-empty-pattern
+		async ({}, use) => {
+			timekeeper.freeze(new Date("2020-01-01"));
+			await use();
+			timekeeper.reset();
 		},
 		{ auto: true, scope: "worker" },
 	],

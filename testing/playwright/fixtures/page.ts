@@ -14,6 +14,26 @@ export const gotoWithMocks = (page: Page, api: ApiManager): Page["goto"] => {
 			urlObject.toString().replace(baseUrl, ""),
 			options,
 		);
+
+		// Fake date
+		const localMockedTimestamp = new Date().valueOf();
+		await page.evaluate(
+			([mockedTimestamp]) => {
+				Date.now = () => mockedTimestamp!;
+				// eslint-disable-next-line no-global-assign
+				Date = class extends Date {
+					constructor(...args: Parameters<DateConstructor>) {
+						if (args.length === 0) {
+							super(mockedTimestamp!);
+						} else {
+							super(...args);
+						}
+					}
+				} as DateConstructor;
+			},
+			[localMockedTimestamp],
+		);
+
 		await page.locator("hydrated").waitFor({ state: "attached" });
 		return result;
 	};
