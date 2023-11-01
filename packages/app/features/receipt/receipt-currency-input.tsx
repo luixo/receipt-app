@@ -7,6 +7,7 @@ import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import type { TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
+import type { Currency } from "app/utils/currency";
 
 type Props = {
 	receipt: TRPCQueryOutput<"receipts.get">;
@@ -24,7 +25,7 @@ export const ReceiptCurrencyInput: React.FC<Props> = ({
 		useTrpcMutationOptions(mutations.receipts.update.options),
 	);
 	const saveCurrency = React.useCallback(
-		(nextCurrency: TRPCQueryOutput<"currency.getList">[number]) => {
+		(nextCurrency: Currency) => {
 			if (nextCurrency.code === receipt.currencyCode) {
 				return;
 			}

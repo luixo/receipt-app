@@ -1,6 +1,4 @@
-import type { TRPCQueryOutput } from "app/trpc";
-
-export type Currency = TRPCQueryOutput<"currency.getList">[number];
+import type { Currency } from "app/utils/currency";
 
 export type Form = {
 	name: string;

@@ -10,8 +10,9 @@ import { Header } from "app/components/header";
 import { useAggregatedDebts } from "app/hooks/use-aggregated-debts";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useRouter } from "app/hooks/use-router";
-import type { TRPCQueryOutput, TRPCQuerySuccessResult } from "app/trpc";
+import type { TRPCQuerySuccessResult } from "app/trpc";
 import { trpc } from "app/trpc";
+import type { Currency } from "app/utils/currency";
 import { noop } from "app/utils/utils";
 import { useShowResolvedDebts } from "next-app/hooks/use-show-resolved-debts";
 import type { UsersId } from "next-app/src/db/models";
@@ -30,12 +31,12 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 	const userQuery = trpc.users.get.useQuery({ id: userId });
 	const topCurrenciesQuery = trpc.currency.topDebts.useQuery();
 	const [selectedCurrency, setSelectedCurrency] = React.useState<
-		TRPCQueryOutput<"currency.getList">[number] | undefined
+		Currency | undefined
 	>();
 	const [modalOpen, { setFalse: closeModal, setTrue: openModal }] =
 		useBooleanState();
 	const onSelectModalCurrency = React.useCallback(
-		(currency: TRPCQueryOutput<"currency.getList">[number]) => {
+		(currency: Currency) => {
 			setSelectedCurrency(currency);
 			closeModal();
 		},

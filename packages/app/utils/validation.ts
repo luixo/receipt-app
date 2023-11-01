@@ -135,7 +135,6 @@ export const debtAmountSchema = createNumberSchema("Debt amount", {
 
 export const currencyCodeSchema = z.string().refine<CurrencyCode>(flavored);
 
-// TRPCQueryOutput<"currency.getList">[number]
 export const currencySchema = z.object({
 	code: currencyCodeSchema,
 	name: z.string().nonempty(),

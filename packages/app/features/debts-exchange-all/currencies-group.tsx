@@ -3,9 +3,8 @@ import React from "react";
 import { Button, styled } from "@nextui-org/react";
 
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
-import type { TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
-import type { CurrencyCode } from "app/utils/currency";
+import type { Currency, CurrencyCode } from "app/utils/currency";
 
 const Wrapper = styled("div", {
 	display: "flex",
@@ -15,9 +14,7 @@ const Wrapper = styled("div", {
 type ButtonProps = {
 	selected: boolean;
 	currencyCode: CurrencyCode;
-	setSelectedCurrency: (
-		currency: TRPCQueryOutput<"currency.getList">[number],
-	) => void;
+	setSelectedCurrency: (currency: Currency) => void;
 };
 
 const CurrencyButton: React.FC<ButtonProps> = ({
