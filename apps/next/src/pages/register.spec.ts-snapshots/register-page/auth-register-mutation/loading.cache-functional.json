@@ -1,16 +1,7 @@
 {
 	"mutations": {
-		"0": {
-			"mutationKey": [
-				[
-					"auth",
-					"register"
-				]
-			],
+		"auth.register": {
 			"state": {
-				"context": {
-					"toastId": "1"
-				},
 				"error": null,
 				"failureCount": 0,
 				"isPaused": false,

@@ -1,6 +1,6 @@
 {
 	"queries": {
-		"0": {
+		"account.get": {
 			"state": {
 				"data": {
 					"user": {
@@ -17,7 +17,7 @@
 				"status": "success"
 			}
 		},
-		"1": {
+		"receipts.getPaged:[{\"limit\":10,\"orderBy\":\"date-desc\",\"cursor\":0}]": {
 			"state": {
 				"data": {
 					"items": [],
@@ -35,35 +35,12 @@
 				"isInvalidated": false,
 				"status": "success",
 				"fetchStatus": "idle"
-			},
-			"queryKey": [
-				[
-					"receipts",
-					"getPaged"
-				],
-				{
-					"input": {
-						"limit": 10,
-						"orderBy": "date-desc",
-						"cursor": 0
-					},
-					"type": "query"
-				}
-			]
+			}
 		}
 	},
 	"mutations": {
-		"0": {
-			"mutationKey": [
-				[
-					"auth",
-					"register"
-				]
-			],
+		"auth.register": {
 			"state": {
-				"context": {
-					"toastId": "1"
-				},
 				"data": {
 					"account": {
 						"id": "test"

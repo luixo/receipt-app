@@ -1,6 +1,6 @@
 {
 	"queries": {
-		"0": {
+		"account.get": {
 			"state": {
 				"dataUpdateCount": 0,
 				"dataUpdatedAt": 0,
@@ -20,16 +20,7 @@
 				"isInvalidated": false,
 				"status": "error",
 				"fetchStatus": "idle"
-			},
-			"queryKey": [
-				[
-					"account",
-					"get"
-				],
-				{
-					"type": "query"
-				}
-			]
+			}
 		}
 	}
 }
