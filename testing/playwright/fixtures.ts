@@ -30,6 +30,7 @@ declare global {
 			queryKey: TRPCQueryKey,
 			subscriber: (event: QueryCacheNotifyEvent) => void,
 		) => void;
+		dismissToasts: () => void;
 	}
 }
 
@@ -58,6 +59,7 @@ type Fixture = {
 	consoleManager: ConsoleManager;
 	consoleMessages: void;
 	verifyToastTexts: (textOrTexts: string | string[]) => Promise<void>;
+	clearToasts: () => Promise<void>;
 	withLoader: (locator: Locator) => Locator;
 	faker: void;
 };
@@ -170,10 +172,22 @@ export const test = base.extend<Fixture, WorkerFixture>({
 									toast instanceof HTMLDivElement ? toast.innerText : "unknown",
 							),
 						),
-					{ message: "Toast messages differ" },
+					// Every toast is shown for at least 1 second
+					{ message: "Toast messages differ", timeout: 1000 },
 				)
 				.toEqual(Array.isArray(textOrTexts) ? textOrTexts : [textOrTexts]),
 		);
+	},
+	clearToasts: async ({ page }, use) => {
+		await use(async () => {
+			await page.evaluate(() => {
+				if (!window.dismissToasts) {
+					return;
+				}
+				window.dismissToasts();
+			});
+			await page.locator(".toaster > div").waitFor({ state: "detached" });
+		});
 	},
 	// eslint-disable-next-line no-empty-pattern
 	consoleManager: async ({}, use) => use(createConsoleManager()),

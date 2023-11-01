@@ -49,12 +49,17 @@ const Toast: React.FC<ToastType> = (toastInstance) => {
 	);
 };
 
-export const Toaster: React.FC = () => (
-	<RawToaster
-		toastOptions={toastOptions}
-		containerClassName="toaster"
-		gutter={12}
-	>
-		{(toastInstance) => <Toast {...toastInstance} />}
-	</RawToaster>
-);
+export const Toaster: React.FC = () => {
+	React.useEffect(() => {
+		window.dismissToasts = () => toast.dismiss();
+	}, []);
+	return (
+		<RawToaster
+			toastOptions={toastOptions}
+			containerClassName="toaster"
+			gutter={12}
+		>
+			{(toastInstance) => <Toast {...toastInstance} />}
+		</RawToaster>
+	);
+};
