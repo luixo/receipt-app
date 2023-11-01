@@ -54,7 +54,9 @@ type Fixture = {
 	expectScreenshotWithSchemes: (
 		name: string,
 		options?: PageScreenshotOptions &
-			Parameters<ReturnType<Expect>["toMatchSnapshot"]>[0],
+			Parameters<
+				ReturnType<Expect<NonNullable<unknown>>>["toMatchSnapshot"]
+			>[0],
 	) => Promise<void>;
 	consoleManager: ConsoleManager;
 	consoleMessages: void;
