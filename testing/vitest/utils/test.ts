@@ -1,7 +1,7 @@
 import { Faker, en, faker } from "@faker-js/faker";
-import { createHash } from "node:crypto";
 import { test as originalTest } from "vitest";
 
+import { setSeed } from "@tests/backend/utils/faker";
 import type { CacheDbOptionsMock } from "@tests/backend/utils/mocks/cache-db";
 import { getCacheDbOptions } from "@tests/backend/utils/mocks/cache-db";
 import type { EmailOptionsMock } from "@tests/backend/utils/mocks/email";
@@ -42,15 +42,6 @@ type MockContext = {
 
 export type TestContext = FakerContext & MockContext & SuiteContext;
 export type TestFixture = { ctx: TestContext };
-
-const HASH_MAGNITUDE = 10 ** 30;
-
-const setSeed = (instance: Faker, input: string) => {
-	instance.seed(
-		parseInt(createHash("sha1").update(input).digest("hex"), 16) /
-			HASH_MAGNITUDE,
-	);
-};
 
 export const createStableFaker = (input: string) => {
 	const instance = new Faker({ locale: en });
