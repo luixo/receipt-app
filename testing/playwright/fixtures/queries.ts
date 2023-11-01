@@ -34,6 +34,15 @@ const getSnapshotName = (
 ) => {
 	const snapshotsNames = getSnapshotNames(testInfo);
 	snapshotsNames[indexKey] ??= 0;
+	const path = testInfo.titlePath.slice(1, -1).map((element) =>
+		element
+			.replace(/[^a-zA-Z0-9]/g, "-")
+			// Trim dashes
+			.replace(/(^-*|-*$)/g, "")
+			// Replace multiple dashes with one
+			.replaceAll(/-{2,}/g, "-")
+			.toLowerCase(),
+	);
 	const name = [
 		recase("mixed", "dash")(testInfo.title.replace(/[^a-zA-Z0-9]/g, "-")),
 		indexKey.replace("Index", ""),
@@ -44,7 +53,7 @@ const getSnapshotName = (
 		.filter(Boolean)
 		.join(".");
 	snapshotsNames[indexKey]! += 1;
-	return name;
+	return [...path, name];
 };
 
 const getQueryCache = (page: Page) =>
@@ -147,9 +156,9 @@ const remapActions = (actions: Action[]) =>
 
 const withNoPlatformPath = (testInfo: TestInfo, fn: () => void) => {
 	const originalSnapshotPath = testInfo.snapshotPath;
-	testInfo.snapshotPath = (snapshotName) =>
+	testInfo.snapshotPath = (...snapshotPath) =>
 		originalSnapshotPath
-			.call(testInfo, snapshotName)
+			.apply(testInfo, snapshotPath)
 			.replace(`-${process.platform}`, "");
 	fn();
 	testInfo.snapshotPath = originalSnapshotPath;
