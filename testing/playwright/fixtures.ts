@@ -1,3 +1,4 @@
+import { faker } from "@faker-js/faker";
 import type { Expect, Locator, PageScreenshotOptions } from "@playwright/test";
 import { test as base, expect } from "@playwright/test";
 import type {
@@ -7,6 +8,7 @@ import type {
 import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
 import joinImages from "join-images";
 
+import { setSeed } from "@tests/backend/utils/faker";
 import type { TRPCQueryKey } from "app/trpc";
 
 import type { ApiManager, WorkerManager } from "./fixtures/api";
@@ -56,6 +58,7 @@ type Fixture = {
 	consoleMessages: void;
 	verifyToastTexts: (textOrTexts: string | string[]) => Promise<void>;
 	withLoader: (locator: Locator) => Locator;
+	faker: void;
 };
 type WorkerFixture = {
 	globalApiManager: WorkerManager;
@@ -77,6 +80,15 @@ export const test = base.extend<Fixture, WorkerFixture>({
 			await cleanup();
 		},
 		{ auto: true, scope: "worker" },
+	],
+	faker: [
+		// eslint-disable-next-line no-empty-pattern
+		async ({}, use, testInfo) => {
+			// Remove first element as it is a file name
+			setSeed(faker, testInfo.titlePath.slice(0, 1).join(" / "));
+			await use();
+		},
+		{ auto: true },
 	],
 	api: [
 		async ({ globalApiManager, context }, use) => {

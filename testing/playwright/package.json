@@ -5,6 +5,7 @@
 		"test": "playwright test -c playwright.config.ts"
 	},
 	"devDependencies": {
+		"@faker-js/faker": "^8.0.2",
 		"@playwright/test": "^1.38.0",
 		"@trpc/client": "^10.35.0",
 		"@trpc/server": "^10.35.0",
