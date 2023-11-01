@@ -5,9 +5,18 @@ import { omitUndefined } from "app/utils/utils";
 import { debtAmountSchema, debtNoteSchema } from "app/utils/validation";
 import type { SimpleUpdateObject } from "next-app/db/types";
 import { authProcedure } from "next-app/handlers/trpc";
-import { currencyCodeSchema, debtIdSchema } from "next-app/handlers/validation";
+import {
+	currencyCodeSchema,
+	debtIdSchema,
+	receiptIdSchema,
+} from "next-app/handlers/validation";
 
 type DebtUpdateObject = SimpleUpdateObject<"debts">;
+
+const KEYS_NOT_UPDATE_LOCKED_TIMESTAMP: (keyof DebtUpdateObject)[] = [
+	"note",
+	"receiptId",
+];
 
 export const procedure = authProcedure
 	.input(
@@ -20,6 +29,7 @@ export const procedure = authProcedure
 					note: debtNoteSchema,
 					currencyCode: currencyCodeSchema,
 					locked: z.boolean(),
+					receiptId: receiptIdSchema.optional(),
 				})
 				.partial()
 				.refine(
@@ -55,11 +65,12 @@ export const procedure = authProcedure
 			});
 		}
 
-		const setObject: DebtUpdateObject = omitUndefined({
+		const setObject: DebtUpdateObject = omitUndefined<DebtUpdateObject>({
 			amount: input.update.amount?.toString(),
 			timestamp: input.update.timestamp,
 			note: input.update.note,
 			currencyCode: input.update.currencyCode,
+			receiptId: input.update.receiptId,
 			lockedTimestamp:
 				input.update.locked === undefined
 					? debt.lockedTimestamp === null
@@ -69,9 +80,14 @@ export const procedure = authProcedure
 					? new Date()
 					: null,
 		});
-		const modifiedKeys = Object.keys(input.update);
-		if (modifiedKeys.length === 1 && modifiedKeys[0] === "note") {
-			// don't update lockedTimestamp if we updated only note
+		const keysToUpdateLockedTimestamp = Object.keys(input.update).filter(
+			(key) =>
+				!KEYS_NOT_UPDATE_LOCKED_TIMESTAMP.includes(
+					key as keyof DebtUpdateObject,
+				),
+		);
+		if (keysToUpdateLockedTimestamp.length === 0) {
+			// don't update lockedTimestamp if we updated keys that don't require lockedTimestamp update
 			delete setObject.lockedTimestamp;
 		}
 		let reverseLockedTimestampUpdated = false;

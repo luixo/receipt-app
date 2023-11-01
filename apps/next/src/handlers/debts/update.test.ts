@@ -7,6 +7,7 @@ import {
 	insertAccountWithSession,
 	insertConnectedUsers,
 	insertDebt,
+	insertReceipt,
 	insertSyncedDebts,
 	insertUser,
 } from "@tests/backend/utils/data";
@@ -18,6 +19,7 @@ import {
 import type { TestContext } from "@tests/backend/utils/test";
 import { test } from "@tests/backend/utils/test";
 import type { TRPCMutationInput } from "app/trpc";
+import type { ReceiptsId } from "next-app/db/models";
 import { t } from "next-app/handlers/trpc";
 
 import {
@@ -25,6 +27,7 @@ import {
 	verifyAmount,
 	verifyCurrencyCode,
 	verifyNote,
+	verifyReceiptId,
 	verifyTimestamp,
 } from "./test.utils";
 import { procedure } from "./update";
@@ -32,12 +35,10 @@ import { procedure } from "./update";
 const router = t.router({ procedure });
 
 const updateDescribes = (
-	getUpdate: () => TRPCMutationInput<"debts.update">["update"],
+	getUpdate: (opts: {
+		receiptId: ReceiptsId;
+	}) => TRPCMutationInput<"debts.update">["update"],
 	getNextTimestamp: (lockedBefore: boolean) => Date | null | undefined,
-	isReverseLockedTimestampUpdated: (
-		lockedBefore: boolean,
-		counterpartyAutoAcceptDebts: boolean,
-	) => boolean,
 ) => {
 	const runTest = async ({
 		ctx,
@@ -71,17 +72,17 @@ const updateDescribes = (
 		const { id: foreignUserId } = await insertUser(ctx, foreignAccountId);
 		await insertDebt(ctx, accountId, userId);
 		await insertDebt(ctx, foreignAccountId, foreignUserId);
+		const { id: receiptId } = await insertReceipt(ctx, accountId);
 
 		const caller = router.createCaller(createAuthContext(ctx, sessionId));
 		const result = await expectDatabaseDiffSnapshot(ctx, () =>
-			caller.procedure({ id: debtId, update: getUpdate() }),
+			caller.procedure({ id: debtId, update: getUpdate({ receiptId }) }),
 		);
-		const reverseLockedTimestampUpdated = isReverseLockedTimestampUpdated(
-			lockedBefore,
-			counterPartyAccepts,
-		);
+		const nextLockedTimestamp = getNextTimestamp(lockedBefore);
+		const reverseLockedTimestampUpdated =
+			nextLockedTimestamp !== undefined && counterPartyAccepts;
 		expect(result).toStrictEqual<typeof result>({
-			lockedTimestamp: getNextTimestamp(lockedBefore),
+			lockedTimestamp: nextLockedTimestamp,
 			reverseLockedTimestampUpdated,
 		});
 	};
@@ -187,6 +188,15 @@ describe("debts.update", () => {
 			"update.",
 		);
 
+		verifyReceiptId(
+			(context, receiptId) =>
+				router.createCaller(context).procedure({
+					id: faker.string.uuid(),
+					update: { receiptId },
+				}),
+			"update.",
+		);
+
 		test("debt does not exist", async ({ ctx }) => {
 			const {
 				sessionId,
@@ -248,8 +258,6 @@ describe("debts.update", () => {
 			updateDescribes(
 				() => ({ amount: Number(faker.finance.amount()) }),
 				(lockedBefore) => (lockedBefore ? new Date() : undefined),
-				(lockedBefore, counterPartyAccepts) =>
-					lockedBefore && counterPartyAccepts,
 			);
 		});
 
@@ -257,8 +265,6 @@ describe("debts.update", () => {
 			updateDescribes(
 				() => ({ timestamp: new Date("2020-06-01") }),
 				(lockedBefore) => (lockedBefore ? new Date() : undefined),
-				(lockedBefore, counterPartyAccepts) =>
-					lockedBefore && counterPartyAccepts,
 			);
 		});
 
@@ -266,7 +272,6 @@ describe("debts.update", () => {
 			updateDescribes(
 				() => ({ note: faker.lorem.words() }),
 				() => undefined,
-				() => false,
 			);
 		});
 
@@ -274,8 +279,13 @@ describe("debts.update", () => {
 			updateDescribes(
 				() => ({ currencyCode: getRandomCurrencyCode() }),
 				(lockedBefore) => (lockedBefore ? new Date() : undefined),
-				(lockedBefore, counterPartyAccepts) =>
-					lockedBefore && counterPartyAccepts,
+			);
+		});
+
+		describe("update receipt id", () => {
+			updateDescribes(
+				({ receiptId }) => ({ receiptId }),
+				() => undefined,
 			);
 		});
 
@@ -283,7 +293,6 @@ describe("debts.update", () => {
 			updateDescribes(
 				() => ({ locked: true }),
 				() => new Date(),
-				(_, counterPartyAccepts) => counterPartyAccepts,
 			);
 		});
 
@@ -291,50 +300,48 @@ describe("debts.update", () => {
 			updateDescribes(
 				() => ({ locked: false }),
 				() => null,
-				(_, counterPartyAccepts) => counterPartyAccepts,
 			);
 		});
 
 		describe("update multiple", () => {
 			describe("no locked", () => {
 				updateDescribes(
-					() => ({
+					({ receiptId }) => ({
 						amount: Number(faker.finance.amount()),
 						timestamp: new Date("2020-06-01"),
 						note: faker.lorem.words(),
 						currencyCode: getRandomCurrencyCode(),
+						receiptId,
 					}),
 					(lockedBefore) => (lockedBefore ? new Date() : undefined),
-					(lockedBefore, counterPartyAccepts) =>
-						lockedBefore && counterPartyAccepts,
 				);
 			});
 
 			describe("locked as true", () => {
 				updateDescribes(
-					() => ({
+					({ receiptId }) => ({
 						amount: Number(faker.finance.amount()),
 						timestamp: new Date("2020-06-01"),
 						note: faker.lorem.words(),
 						currencyCode: getRandomCurrencyCode(),
+						receiptId,
 						locked: true,
 					}),
 					() => new Date(),
-					(_, counterPartyAccepts) => counterPartyAccepts,
 				);
 			});
 
 			describe("locked as false", () => {
 				updateDescribes(
-					() => ({
+					({ receiptId }) => ({
 						amount: Number(faker.finance.amount()),
 						timestamp: new Date("2020-06-01"),
 						note: faker.lorem.words(),
 						currencyCode: getRandomCurrencyCode(),
+						receiptId,
 						locked: false,
 					}),
 					() => null,
-					(_, counterPartyAccepts) => counterPartyAccepts,
 				);
 			});
 		});

@@ -2,9 +2,14 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { debtAmountSchema, debtNoteSchema } from "app/utils/validation";
+import { DEBTS } from "next-app/db/consts";
 import type { DebtsId } from "next-app/db/models";
 import { authProcedure } from "next-app/handlers/trpc";
-import { currencyCodeSchema, userIdSchema } from "next-app/handlers/validation";
+import {
+	currencyCodeSchema,
+	receiptIdSchema,
+	userIdSchema,
+} from "next-app/handlers/validation";
 
 export const procedure = authProcedure
 	.input(
@@ -14,6 +19,7 @@ export const procedure = authProcedure
 			userId: userIdSchema,
 			amount: debtAmountSchema,
 			timestamp: z.date().optional(),
+			receiptId: receiptIdSchema.optional(),
 		}),
 	)
 	.mutation(async ({ input, ctx }) => {
@@ -58,6 +64,7 @@ export const procedure = authProcedure
 			created: new Date(),
 			timestamp: input.timestamp || new Date(),
 			lockedTimestamp,
+			receiptId: input.receiptId,
 		};
 		if (user.autoAcceptDebts) {
 			if (!user.foreignAccountId) {
@@ -79,25 +86,53 @@ export const procedure = authProcedure
 							message: `Unexpected having "autoAcceptDebts" but not having reverse user "id"`,
 						}),
 				);
+			try {
+				await database
+					.insertInto("debts")
+					.values({
+						...commonPart,
+						ownerAccountId: user.foreignAccountId,
+						userId: reverseUser.id,
+						amount: (-input.amount).toString(),
+					})
+					.executeTakeFirst();
+				reverseAccepted = true;
+			} catch (e) {
+				// Could be like `duplicate key value violates unique constraint "..."`
+				const message = String(e);
+				if (
+					message.includes(DEBTS.CONSTRAINTS.OWNER_ID_RECEIPT_ID_USER_ID_TUPLE)
+				) {
+					throw new TRPCError({
+						code: "FORBIDDEN",
+						message: `There is already a debt for user "${reverseUser.id}" in receipt "${input.receiptId}".`,
+					});
+				}
+				throw e;
+			}
+		}
+		try {
 			await database
 				.insertInto("debts")
 				.values({
 					...commonPart,
-					ownerAccountId: user.foreignAccountId,
-					userId: reverseUser.id,
-					amount: (-input.amount).toString(),
+					ownerAccountId: ctx.auth.accountId,
+					userId: input.userId,
+					amount: input.amount.toString(),
 				})
 				.executeTakeFirst();
-			reverseAccepted = true;
+			return { id, lockedTimestamp, reverseAccepted };
+		} catch (e) {
+			// Could be like `duplicate key value violates unique constraint "..."`
+			const message = String(e);
+			if (
+				message.includes(DEBTS.CONSTRAINTS.OWNER_ID_RECEIPT_ID_USER_ID_TUPLE)
+			) {
+				throw new TRPCError({
+					code: "FORBIDDEN",
+					message: `There is already a debt for user "${input.userId}" in receipt "${input.receiptId}".`,
+				});
+			}
+			throw e;
 		}
-		await database
-			.insertInto("debts")
-			.values({
-				...commonPart,
-				ownerAccountId: ctx.auth.accountId,
-				userId: input.userId,
-				amount: input.amount.toString(),
-			})
-			.executeTakeFirst();
-		return { id, lockedTimestamp, reverseAccepted };
 	});

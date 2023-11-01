@@ -10,7 +10,7 @@ import {
 	MAX_DEBT_NOTE_LENGTH,
 	MIN_DEBT_NOTE_LENGTH,
 } from "app/utils/validation";
-import type { UsersId } from "next-app/db/models";
+import type { ReceiptsId, UsersId } from "next-app/db/models";
 import type { UnauthorizedContext } from "next-app/handlers/context";
 import { CURRENCY_CODES } from "next-app/utils/currency";
 
@@ -120,6 +120,26 @@ export const verifyTimestamp = <T>(
 				() => runProcedure(context, new Date("not a date")),
 				"BAD_REQUEST",
 				`Zod error\n\nAt "${prefix}timestamp": Invalid date`,
+			);
+		});
+	});
+};
+
+export const verifyReceiptId = <T>(
+	runProcedure: (
+		context: UnauthorizedContext,
+		receiptId: ReceiptsId,
+	) => Promise<T>,
+	prefix: string,
+) => {
+	describe("receiptId", () => {
+		test("invalid", async ({ ctx }) => {
+			const { sessionId } = await insertAccountWithSession(ctx);
+			const context = createAuthContext(ctx, sessionId);
+			await expectTRPCError(
+				() => runProcedure(context, "not-a-uuid"),
+				"BAD_REQUEST",
+				`Zod error\n\nAt "${prefix}receiptId": Invalid uuid`,
 			);
 		});
 	});
