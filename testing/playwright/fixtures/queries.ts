@@ -1,14 +1,37 @@
 import { recase } from "@kristiandupont/recase";
-import type { Page, TestInfo } from "@playwright/test";
+import type {
+	Expect,
+	Page,
+	PageScreenshotOptions,
+	TestInfo,
+} from "@playwright/test";
 import { expect } from "@playwright/test";
+import type {
+	DehydratedState,
+	QueryCacheNotifyEvent,
+} from "@tanstack/react-query";
 import { type TRPCClientErrorLike } from "@trpc/client";
 import type { QueryKey } from "@trpc/react-query/src/internals/getArrayQueryKey";
 import { diff as objectDiff } from "deep-object-diff";
+import joinImages from "join-images";
 
 import type { TRPCQueryKey } from "app/trpc";
 import type { AppRouter } from "next-app/pages/api/trpc/[trpc]";
 
-import type { Action, ApiManager, TRPCKey } from "./api";
+import type { ApiManager, ApiMixin, TRPCKey } from "./api";
+import { createMixin } from "./utils";
+
+declare global {
+	interface Window {
+		getDehydratedCache: () => DehydratedState;
+		subscribeToQuery: (
+			queryKey: TRPCQueryKey,
+			subscriber: (event: QueryCacheNotifyEvent) => void,
+		) => void;
+	}
+}
+
+const DEFAULT_AWAIT_QUERY_TIMEOUT = 5000;
 
 type SnapshotNames = {
 	queriesIndex?: number;
@@ -163,7 +186,7 @@ const getQueryCache = (page: Page, ignoreKeys: TRPCKey[]) =>
 		[ignoreKeys],
 	);
 
-const remapActions = (actions: Action[]) =>
+const remapActions = (actions: ReturnType<ApiManager["getActions"]>) =>
 	Object.fromEntries(
 		Object.entries(
 			actions.reduce<
@@ -193,7 +216,7 @@ const withNoPlatformPath = (testInfo: TestInfo, fn: () => void) => {
 	testInfo.snapshotPath = originalSnapshotPath;
 };
 
-export type SnapshotQueryCacheOptions = {
+type SnapshotQueryCacheOptions = {
 	name: string;
 	ignoreKeys: TRPCKey[];
 };
@@ -204,55 +227,112 @@ const DEFAULT_IGNORE_KEYS: TRPCKey[] = [
 	"accountConnectionIntentions.getAll",
 ];
 
-export const expectQueriesSnapshot = async <T>(
-	page: Page,
-	api: ApiManager,
-	testInfo: TestInfo,
-	fn: () => Promise<T>,
-	{
-		ignoreKeys = DEFAULT_IGNORE_KEYS,
-		name,
-	}: Partial<SnapshotQueryCacheOptions> = {},
-): Promise<T> => {
-	api.clearActions();
-	const prevQueryCache = await getQueryCache(page, ignoreKeys);
-	const result = await fn();
-	const nextQueryCache = await getQueryCache(page, ignoreKeys);
-	const diff = objectDiff(prevQueryCache, nextQueryCache);
-	withNoPlatformPath(testInfo, () => {
-		expect
-			.soft(`${JSON.stringify(diff, null, "\t")}\n`)
-			.toMatchSnapshot(getSnapshotName(testInfo, "cacheIndex", name, "json"));
-		expect
-			.soft(`${JSON.stringify(remapActions(api.getActions()), null, "\t")}\n`)
-			.toMatchSnapshot(getSnapshotName(testInfo, "queriesIndex", name, "json"));
-	});
-	return result;
+type QueriesMixin = {
+	snapshotQueries: <T>(
+		fn: () => Promise<T>,
+		options?: Partial<SnapshotQueryCacheOptions>,
+	) => Promise<T>;
+	awaitQuery: <T extends TRPCQueryKey>(path: T) => Promise<void>;
+	expectScreenshotWithSchemes: (
+		name: string,
+		options?: PageScreenshotOptions &
+			Parameters<
+				ReturnType<Expect<NonNullable<unknown>>>["toMatchSnapshot"]
+			>[0],
+	) => Promise<void>;
 };
 
-export const awaitQuery = <T extends TRPCQueryKey>(
-	page: Page,
-	awaitedKey: T,
-	timeout = 10000,
-): Promise<void> =>
-	page.evaluate(
-		([awaitedKeyInner, timeoutInner]) => {
-			if (!window.subscribeToQuery) {
-				return Promise.reject(
-					new Error("window.subscribeToQuery is not defined yet"),
-				);
-			}
-			return new Promise((resolve, reject) => {
-				window.subscribeToQuery(awaitedKeyInner, (event) => {
-					if (event.type !== "updated") {
-						return;
-					}
-					if (event.action.type === "success") {
-						resolve();
-					}
-				});
-				setTimeout(reject, timeoutInner);
+export const queriesMixin = createMixin<
+	QueriesMixin,
+	NonNullable<unknown>,
+	ApiMixin
+>({
+	snapshotQueries: async ({ page, api }, use, testInfo) => {
+		await use(async (fn, { ignoreKeys = DEFAULT_IGNORE_KEYS, name } = {}) => {
+			api.clearActions();
+			const prevQueryCache = await getQueryCache(page, ignoreKeys);
+			const result = await fn();
+			const nextQueryCache = await getQueryCache(page, ignoreKeys);
+			const diff = objectDiff(prevQueryCache, nextQueryCache);
+			withNoPlatformPath(testInfo, () => {
+				expect
+					.soft(`${JSON.stringify(diff, null, "\t")}\n`)
+					.toMatchSnapshot(
+						getSnapshotName(testInfo, "cacheIndex", name, "json"),
+					);
+				expect
+					.soft(
+						`${JSON.stringify(remapActions(api.getActions()), null, "\t")}\n`,
+					)
+					.toMatchSnapshot(
+						getSnapshotName(testInfo, "queriesIndex", name, "json"),
+					);
 			});
-		},
-		[awaitedKey, timeout] as const,
-	);
+			return result;
+		});
+	},
+	awaitQuery: async ({ page }, use) => {
+		await use((queryKey, timeout = DEFAULT_AWAIT_QUERY_TIMEOUT) =>
+			page.evaluate(
+				([awaitedKeyInner, timeoutInner]) => {
+					if (!window.subscribeToQuery) {
+						return Promise.reject(
+							new Error("window.subscribeToQuery is not defined yet"),
+						);
+					}
+					return new Promise((resolve, reject) => {
+						window.subscribeToQuery(awaitedKeyInner, (event) => {
+							if (event.type !== "updated") {
+								return;
+							}
+							if (event.action.type === "success") {
+								resolve();
+							}
+						});
+						setTimeout(reject, timeoutInner);
+					});
+				},
+				[queryKey, timeout] as const,
+			),
+		);
+	},
+	expectScreenshotWithSchemes: async ({ page }, use) => {
+		await use(
+			async (
+				name,
+				{
+					maxDiffPixelRatio,
+					maxDiffPixels,
+					threshold,
+					fullPage = true,
+					mask = [page.getByTestId("sticky-menu")],
+					animations = "disabled",
+					...restScreenshotOptions
+				} = {},
+			) => {
+				const screenshotOptions = {
+					fullPage,
+					mask,
+					animations,
+					...restScreenshotOptions,
+				};
+				await page.emulateMedia({ colorScheme: "light" });
+				const lightImage = await page.stableScreenshot(screenshotOptions);
+				await page.emulateMedia({ colorScheme: "dark" });
+				const darkImage = await page.stableScreenshot(screenshotOptions);
+
+				const mergedImage = await joinImages([lightImage, darkImage], {
+					direction: "horizontal",
+					color: "#00ff00",
+				});
+				await expect
+					.soft(await mergedImage.toFormat("png").toBuffer())
+					.toMatchSnapshot(name, {
+						maxDiffPixelRatio,
+						maxDiffPixels,
+						threshold,
+					});
+			},
+		);
+	},
+});

@@ -1,4 +1,5 @@
 import type { BrowserContext } from "@playwright/test";
+import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
 import { TRPCError } from "@trpc/server";
 import { getHTTPStatusCodeFromError } from "@trpc/server/http";
 import {
@@ -22,6 +23,10 @@ import type {
 import type { ControlledPromise } from "app/utils/utils";
 import { createPromise } from "app/utils/utils";
 
+import type { appRouter } from "../global/router";
+
+import { createMixin } from "./utils";
+
 const CLEANUP_MARK = "__CLEANUP_MARK__";
 
 export type TRPCKey = TRPCQueryKey | TRPCMutationKey;
@@ -39,19 +44,13 @@ type MutationHandlers = {
 
 type CleanupFn = () => Promise<void>;
 
-export type QueryOrMutationInput<K extends TRPCKey> = K extends TRPCQueryKey
+type QueryOrMutationInput<K extends TRPCKey> = K extends TRPCQueryKey
 	? TRPCQueryInput<K>
 	: K extends TRPCMutationKey
 	? TRPCMutationInput<K>
 	: void;
 
-export type QueryOrMutationOutput<K extends TRPCKey> = K extends TRPCQueryKey
-	? TRPCQueryOutput<K>
-	: K extends TRPCMutationKey
-	? TRPCMutationOutput<K>
-	: void;
-
-export type WorkerManager = {
+type WorkerManager = {
 	getPort: () => number;
 	start: () => Promise<CleanupFn>;
 	createController: (id: string) => {
@@ -70,7 +69,7 @@ export type ApiManager = {
 };
 
 type Handlers = Partial<QueryHandlers & MutationHandlers>;
-export type Action<K extends TRPCKey = TRPCKey> = [
+type Action<K extends TRPCKey = TRPCKey> = [
 	type: CallType,
 	name: K,
 	input: QueryOrMutationInput<K>,
@@ -169,9 +168,7 @@ const handleRequest = async (
 	return handleCall(controller, type, name, input);
 };
 
-export const createWorkerManager = async (
-	port: number,
-): Promise<WorkerManager> => {
+const createWorkerManager = async (port: number): Promise<WorkerManager> => {
 	const controllers: Record<string, Controller> = {};
 	const server = http.createServer(async (req, res) => {
 		let body = "";
@@ -257,7 +254,7 @@ export const createWorkerManager = async (
 	};
 };
 
-export const createApiManager = async (
+const createApiManager = async (
 	globalManager: WorkerManager,
 	context: BrowserContext,
 ): Promise<ApiManager & { cleanup: CleanupFn }> => {
@@ -312,3 +309,79 @@ export const createApiManager = async (
 		cleanup,
 	};
 };
+
+type Account = TRPCQueryOutput<"account.get">;
+
+const getMockUtils = (api: ApiManager) => {
+	const authAnyPage = () => {
+		api.mock("receipts.getNonResolvedAmount", () => 0);
+		api.mock("debts.getIntentions", () => []);
+		api.mock("accountConnectionIntentions.getAll", () => ({
+			inbound: [],
+			outbound: [],
+		}));
+	};
+	return {
+		noAuth: () => {
+			api.mock("account.get", () => {
+				throw new TRPCError({
+					code: "UNAUTHORIZED",
+					message: "No token provided - mocked",
+				});
+			});
+		},
+		auth: (account: Account | (() => Account)) => {
+			api.mock("account.get", account);
+			authAnyPage();
+		},
+		authAnyPage,
+		emptyReceipts: () => {
+			api.mock("receipts.getPaged", () => ({
+				items: [],
+				hasMore: false,
+				cursor: -1,
+				count: 0,
+			}));
+		},
+	};
+};
+
+export type ApiMixin = {
+	api: ApiManager & {
+		mockUtils: ReturnType<typeof getMockUtils>;
+	};
+};
+
+type ApiWorkerMixin = {
+	globalApiManager: WorkerManager;
+};
+
+export const apiMixin = createMixin<ApiMixin, ApiWorkerMixin>({
+	api: [
+		async ({ globalApiManager, context }, use) => {
+			const { cleanup, ...api } = await createApiManager(
+				globalApiManager,
+				context,
+			);
+			await use({ ...api, mockUtils: getMockUtils(api) });
+			await cleanup();
+		},
+		{ auto: true },
+	],
+	globalApiManager: [
+		// eslint-disable-next-line no-empty-pattern
+		async ({}, use) => {
+			const managerPort = process.env.MANAGER_PORT;
+			const client = createTRPCProxyClient<typeof appRouter>({
+				links: [httpBatchLink({ url: `http://localhost:${managerPort}` })],
+			});
+			const { port, hash } = await client.lockPort.mutate();
+			const workerManager = await createWorkerManager(port);
+			const cleanup = await workerManager.start();
+			await client.release.mutate({ hash });
+			await use(workerManager);
+			await cleanup();
+		},
+		{ auto: true, scope: "worker" },
+	],
+});
