@@ -18,8 +18,7 @@ import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import type { TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
-import type { CurrencyCode } from "app/utils/currency";
-import type { ReceiptsId, UsersId } from "next-app/db/models";
+import type { UsersId } from "next-app/db/models";
 
 const SIZE = 36;
 
@@ -42,34 +41,40 @@ export type DebtParticipant = {
 	debt?: TRPCQueryOutput<"debts.get">;
 };
 
+export type LockedReceipt = Omit<
+	TRPCQueryOutput<"receipts.get">,
+	"lockedTimestamp"
+> & { lockedTimestamp: Date };
+
 type Props = {
-	receiptId: ReceiptsId;
-	receiptTimestamp: Date;
-	currencyCode: CurrencyCode;
+	receipt: LockedReceipt;
 	participant: DebtParticipant;
 };
 
 export const ReceiptParticipantDebt: React.FC<Props> = ({
-	receiptId,
-	receiptTimestamp,
-	currencyCode,
+	receipt,
 	participant,
 }) => {
-	const currency = useFormattedCurrency(currencyCode);
+	const currency = useFormattedCurrency(receipt.currencyCode);
 
 	const updateMutation = trpc.receipts.updateDebt.useMutation(
 		useTrpcMutationOptions(mutations.receipts.updateDebt.options, {
-			context: { prevAmount: participant.debt?.amount ?? 0, receiptTimestamp },
+			context: {
+				prevAmount: participant.debt?.amount ?? 0,
+				receiptTimestamp: receipt.lockedTimestamp,
+			},
 		}),
 	);
 	const updateDebt = React.useCallback(
-		(userId: UsersId) => updateMutation.mutate({ receiptId, userId }),
-		[updateMutation, receiptId],
+		(userId: UsersId) =>
+			updateMutation.mutate({ receiptId: receipt.id, userId }),
+		[updateMutation, receipt.id],
 	);
 
 	const showSpacer = useMatchMediaValue(false, { lessMd: true });
 	const synced =
-		participant.debt?.lockedTimestamp?.valueOf() === receiptTimestamp.valueOf();
+		participant.debt?.lockedTimestamp?.valueOf() ===
+		receipt.lockedTimestamp.valueOf();
 
 	return (
 		<>

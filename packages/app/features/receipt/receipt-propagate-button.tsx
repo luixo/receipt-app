@@ -11,20 +11,18 @@ import type {
 	TRPCQuerySuccessResult,
 } from "app/trpc";
 import { trpc } from "app/trpc";
-import type { CurrencyCode } from "app/utils/currency";
 import { getParticipantSums } from "app/utils/receipt-item";
-import type { ReceiptsId, UsersId } from "next-app/db/models";
 
 import { ReceiptDebtSyncInfoButton } from "./receipt-debt-sync-info-button";
-import type { DebtParticipant } from "./receipt-participant-debt";
+import type {
+	DebtParticipant,
+	LockedReceipt,
+} from "./receipt-participant-debt";
 
 type InnerProps = {
 	queries: TRPCQuerySuccessResult<"debts.get">[];
 	itemsQuery: TRPCQuerySuccessResult<"receiptItems.get">;
-	selfUserId: UsersId;
-	receiptId: ReceiptsId;
-	receiptTimestamp: Date;
-	currencyCode: CurrencyCode;
+	receipt: LockedReceipt;
 	isLoading: boolean;
 	isPropagating: boolean;
 	propagateDebts: () => void;
@@ -45,10 +43,7 @@ export const showPropagateButton = (participants: DebtParticipant[]) => {
 const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 	queries,
 	itemsQuery,
-	selfUserId,
-	receiptId,
-	receiptTimestamp,
-	currencyCode,
+	receipt,
 	isLoading,
 	isPropagating,
 	propagateDebts,
@@ -60,7 +55,7 @@ const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 	const participants = React.useMemo(
 		() =>
 			getParticipantSums(
-				receiptId,
+				receipt.id,
 				itemsQuery.data.items,
 				itemsQuery.data.participants,
 			)
@@ -69,8 +64,8 @@ const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 					sum: participant.sum,
 					debt: debts.find((debt) => debt.userId === participant.remoteUserId),
 				}))
-				.filter((participant) => participant.userId !== selfUserId),
-		[itemsQuery.data, receiptId, debts, selfUserId],
+				.filter((participant) => participant.userId !== receipt.selfUserId),
+		[itemsQuery.data, receipt.id, debts, receipt.selfUserId],
 	);
 	return (
 		<>
@@ -87,9 +82,7 @@ const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 			) : (
 				<ReceiptDebtSyncInfoButton
 					participants={participants}
-					receiptId={receiptId}
-					receiptTimestamp={receiptTimestamp}
-					currencyCode={currencyCode}
+					receipt={receipt}
 				/>
 			)}
 		</>
@@ -101,12 +94,11 @@ type Props = Omit<InnerProps, "queries" | "itemsQuery"> & {
 };
 
 export const ReceiptPropagateButton: React.FC<Props> = ({
-	receiptId,
-	currencyCode,
+	receipt,
 	queries,
 	...props
 }) => {
-	const itemsQuery = trpc.receiptItems.get.useQuery({ receiptId });
+	const itemsQuery = trpc.receiptItems.get.useQuery({ receiptId: receipt.id });
 	if (
 		queries.some((query) => query.status === "loading") ||
 		itemsQuery.status === "loading"
@@ -126,8 +118,7 @@ export const ReceiptPropagateButton: React.FC<Props> = ({
 	return (
 		<ReceiptPropagateButtonInner
 			{...props}
-			receiptId={receiptId}
-			currencyCode={currencyCode}
+			receipt={receipt}
 			queries={queries as TRPCQuerySuccessResult<"debts.get">[]}
 			itemsQuery={itemsQuery}
 		/>

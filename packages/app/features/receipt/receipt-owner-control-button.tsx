@@ -6,6 +6,7 @@ import type { TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
 
 import { ReceiptLockedButton } from "./receipt-locked-button";
+import type { LockedReceipt } from "./receipt-participant-debt";
 import { ReceiptPropagateButton } from "./receipt-propagate-button";
 
 type Receipt = TRPCQueryOutput<"receipts.get">;
@@ -56,10 +57,7 @@ export const ReceiptOwnerControlButton: React.FC<Props> = ({
 			{receipt.lockedTimestamp ? (
 				<ReceiptPropagateButton
 					queries={debtsQueries}
-					selfUserId={receipt.selfUserId}
-					receiptId={receipt.id}
-					receiptTimestamp={receipt.lockedTimestamp}
-					currencyCode={receipt.currencyCode}
+					receipt={receipt as LockedReceipt}
 					isLoading={deleteLoading}
 					isPropagating={propagateMutation.isLoading}
 					propagateDebts={propagateDebts(receipt.lockedTimestamp)}

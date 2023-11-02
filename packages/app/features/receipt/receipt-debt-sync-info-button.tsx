@@ -7,10 +7,11 @@ import { Grid } from "app/components/grid";
 import { IconButton } from "app/components/icon-button";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useMatchMediaValue } from "app/hooks/use-match-media-value";
-import type { CurrencyCode } from "app/utils/currency";
-import type { ReceiptsId } from "next-app/db/models";
 
-import type { DebtParticipant } from "./receipt-participant-debt";
+import type {
+	DebtParticipant,
+	LockedReceipt,
+} from "./receipt-participant-debt";
 import { ReceiptParticipantDebt } from "./receipt-participant-debt";
 
 const GridHeader = styled(Grid, {
@@ -55,16 +56,12 @@ const sortParticipants =
 	};
 
 type Props = {
-	receiptId: ReceiptsId;
-	receiptTimestamp: Date;
-	currencyCode: CurrencyCode;
+	receipt: LockedReceipt;
 	participants: DebtParticipant[];
 };
 
 export const ReceiptDebtSyncInfoButton: React.FC<Props> = ({
-	receiptId,
-	receiptTimestamp,
-	currencyCode,
+	receipt,
 	participants,
 }) => {
 	const [popoverOpen, { setFalse: closeModal, setTrue: openModal }] =
@@ -72,8 +69,8 @@ export const ReceiptDebtSyncInfoButton: React.FC<Props> = ({
 
 	const showBorder = useMatchMediaValue(true, { lessMd: false });
 	const sortedParticipants = React.useMemo(
-		() => [...participants].sort(sortParticipants(receiptTimestamp)),
-		[participants, receiptTimestamp],
+		() => [...participants].sort(sortParticipants(receipt.lockedTimestamp)),
+		[participants, receipt.lockedTimestamp],
 	);
 
 	if (sortedParticipants.length === 0) {
@@ -107,9 +104,7 @@ export const ReceiptDebtSyncInfoButton: React.FC<Props> = ({
 						{sortedParticipants.map((participant) => (
 							<ReceiptParticipantDebt
 								key={participant.userId}
-								receiptId={receiptId}
-								receiptTimestamp={receiptTimestamp}
-								currencyCode={currencyCode}
+								receipt={receipt}
 								participant={participant}
 							/>
 						))}
