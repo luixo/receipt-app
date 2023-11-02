@@ -35,6 +35,20 @@ const Border = styled("div", {
 	my: "$4",
 });
 
+const isDebtInSyncWithReceipt = (
+	receiptDebt: Pick<LockedReceipt, "currencyCode" | "issued" | "id"> & {
+		participantSum: number;
+	},
+	debt: Pick<
+		NonNullable<DebtParticipant["currentDebt"]>,
+		"currencyCode" | "amount" | "timestamp" | "receiptId"
+	>,
+) =>
+	receiptDebt.currencyCode === debt.currencyCode &&
+	receiptDebt.participantSum === debt.amount &&
+	receiptDebt.issued.valueOf() === debt.timestamp.valueOf() &&
+	receiptDebt.id === debt.receiptId;
+
 export type DebtParticipant = {
 	userId: UsersId;
 	sum: number;
@@ -72,9 +86,12 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 	);
 
 	const showSpacer = useMatchMediaValue(false, { lessMd: true });
-	const synced =
-		participant.currentDebt?.lockedTimestamp?.valueOf() ===
-		receipt.lockedTimestamp.valueOf();
+	const synced = participant.currentDebt
+		? isDebtInSyncWithReceipt(
+				{ ...receipt, participantSum: participant.sum },
+				participant.currentDebt,
+		  )
+		: false;
 
 	return (
 		<>
