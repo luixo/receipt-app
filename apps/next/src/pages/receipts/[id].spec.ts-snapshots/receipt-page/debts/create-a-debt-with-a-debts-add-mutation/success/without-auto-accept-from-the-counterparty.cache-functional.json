@@ -1,0 +1,63 @@
+{
+	"queries": {
+		"debts.get:[{\"id\":\"8601c66f-5a1a-4958-825b-66e26156872f\"}]": {
+			"state": {
+				"data": {
+					"id": "8601c66f-5a1a-4958-825b-66e26156872f",
+					"amount": 23999.14,
+					"currencyCode": "KZT",
+					"userId": "61cf92e4-ce70-444d-b636-507bb003d1ce",
+					"timestamp": "2020-01-01T00:00:00.000Z",
+					"note": "Receipt \"officiis perferendis officia\"",
+					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+					"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"
+				},
+				"dataUpdateCount": 1,
+				"dataUpdatedAt": -1,
+				"error": null,
+				"errorUpdateCount": 0,
+				"errorUpdatedAt": 0,
+				"fetchFailureCount": 0,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"receipts.get:[{\"id\":\"0092bd1e-03f7-48be-9c4e-dbc610808222\"}]": {
+			"state": {
+				"data": {
+					"debt": {
+						"ids": {
+							"4": "8601c66f-5a1a-4958-825b-66e26156872f"
+						}
+					}
+				},
+				"dataUpdateCount": 2
+			}
+		}
+	},
+	"mutations": {
+		"debts.add": {
+			"state": {
+				"data": {
+					"id": "8601c66f-5a1a-4958-825b-66e26156872f",
+					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+					"reverseAccepted": false
+				},
+				"error": null,
+				"failureCount": 0,
+				"isPaused": false,
+				"status": "success",
+				"variables": {
+					"currencyCode": "KZT",
+					"userId": "61cf92e4-ce70-444d-b636-507bb003d1ce",
+					"amount": 23999.14,
+					"timestamp": "2020-01-01T00:00:00.000Z",
+					"note": "Receipt \"officiis perferendis officia\"",
+					"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"
+				}
+			}
+		}
+	}
+}

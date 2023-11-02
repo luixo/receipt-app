@@ -1,10 +1,8 @@
+import { getReceiptDebtName } from "app/utils/receipt";
 import type { Database } from "next-app/db";
 import { DEBTS } from "next-app/db/consts";
 import type { Receipts } from "next-app/db/models";
 import type { getValidParticipants } from "next-app/handlers/receipt-items/utils";
-
-const getReceiptDebtName = (receipt: Pick<Receipts, "name">) =>
-	`Receipt "${receipt.name}"`;
 
 type Participant = Awaited<ReturnType<typeof getValidParticipants>>[number];
 
@@ -29,7 +27,7 @@ export const upsertDebtFromReceipt = async (
 				id: participant.debtId,
 				ownerAccountId: receipt.ownerAccountId,
 				userId: participant.remoteUserId,
-				note: getReceiptDebtName(receipt),
+				note: getReceiptDebtName(receipt.name),
 				currencyCode: receipt.currencyCode,
 				created,
 				timestamp: receipt.issued,

@@ -1,0 +1,28 @@
+{
+	"mutations": {
+		"debts.add": {
+			"state": {
+				"error": {
+					"message": "Forbidden to add a debt",
+					"data": {
+						"code": "FORBIDDEN",
+						"httpStatus": 403,
+						"path": "debts.add",
+						"stack": "<redacted>"
+					}
+				},
+				"failureCount": 1,
+				"isPaused": false,
+				"status": "error",
+				"variables": {
+					"currencyCode": "KZT",
+					"userId": "61cf92e4-ce70-444d-b636-507bb003d1ce",
+					"amount": 23999.14,
+					"timestamp": "2020-01-01T00:00:00.000Z",
+					"note": "Receipt \"officiis perferendis officia\"",
+					"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"
+				}
+			}
+		}
+	}
+}

@@ -7,7 +7,7 @@ export const updateReceiptCacheOnDebtUpdate = (
 	controllerContext: ControllerContext,
 	receiptId: ReceiptsId,
 	receiptTimestamp: Date,
-	updatedDebts: (TRPCMutationOutput<"receipts.updateDebt"> & {
+	updatedDebts: (TRPCMutationOutput<"receipts.propagateDebts">[number] & {
 		deltaAmount: number;
 	})[],
 ) => {

@@ -18,6 +18,7 @@ import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import type { TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
+import { getReceiptDebtName } from "app/utils/receipt";
 import type { UsersId } from "next-app/db/models";
 
 const SIZE = 36;
@@ -71,27 +72,77 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 }) => {
 	const currency = useFormattedCurrency(receipt.currencyCode);
 
-	const updateMutation = trpc.receipts.updateDebt.useMutation(
-		useTrpcMutationOptions(mutations.receipts.updateDebt.options, {
-			context: {
-				prevAmount: participant.currentDebt?.amount ?? 0,
-				receiptTimestamp: receipt.lockedTimestamp,
-			},
+	const updateMutation = trpc.debts.update.useMutation(
+		useTrpcMutationOptions(mutations.debts.update.options, {
+			context: participant.currentDebt
+				? {
+						userId: participant.userId,
+						amount: participant.currentDebt.amount,
+						currencyCode: participant.currentDebt.currencyCode,
+						receiptId: receipt.id,
+				  }
+				: {
+						userId: participant.userId,
+						amount: 0,
+						currencyCode: "unknown",
+						receiptId: receipt.id,
+				  },
 		}),
 	);
 	const updateDebt = React.useCallback(
-		(userId: UsersId) =>
-			updateMutation.mutate({ receiptId: receipt.id, userId }),
-		[updateMutation, receipt.id],
+		(currentDebt: NonNullable<DebtParticipant["currentDebt"]>) =>
+			updateMutation.mutate({
+				id: currentDebt.id,
+				update: {
+					amount: participant.sum,
+					currencyCode: receipt.currencyCode,
+					timestamp: receipt.issued,
+					locked: true,
+					receiptId: receipt.id,
+				},
+			}),
+		[
+			updateMutation,
+			participant.sum,
+			receipt.currencyCode,
+			receipt.issued,
+			receipt.id,
+		],
+	);
+
+	const addMutation = trpc.debts.add.useMutation(
+		useTrpcMutationOptions(mutations.debts.add.options),
+	);
+	const addDebt = React.useCallback(
+		() =>
+			addMutation.mutate({
+				currencyCode: receipt.currencyCode,
+				userId: participant.userId,
+				amount: participant.sum,
+				timestamp: receipt.issued,
+				note: getReceiptDebtName(receipt.name),
+				receiptId: receipt.id,
+			}),
+		[
+			addMutation,
+			participant.sum,
+			receipt.currencyCode,
+			receipt.issued,
+			receipt.name,
+			participant.userId,
+			receipt.id,
+		],
 	);
 
 	const showSpacer = useMatchMediaValue(false, { lessMd: true });
-	const synced = participant.currentDebt
+	const { currentDebt } = participant;
+	const isReceiptSyncedWithOurDebt = currentDebt
 		? isDebtInSyncWithReceipt(
 				{ ...receipt, participantSum: participant.sum },
-				participant.currentDebt,
+				currentDebt,
 		  )
 		: false;
+	const isUpdating = updateMutation.isLoading || addMutation.isLoading;
 
 	return (
 		<>
@@ -109,7 +160,7 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 					<Icon as={ZeroIcon} />
 				) : (
 					<>
-						{synced ? null : participant.currentDebt ? (
+						{isReceiptSyncedWithOurDebt ? null : participant.currentDebt ? (
 							<Icon as={ReceiptOffIcon} css={{ color: "$error" }} />
 						) : null}
 						{participant.currentDebt ? (
@@ -125,14 +176,15 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 				)}
 			</Grid>
 			<Grid defaultCol={1.5} lessMdCol={4}>
-				{synced ? null : (
+				{isReceiptSyncedWithOurDebt && !isUpdating ? null : (
 					<IconButton
 						title={
 							participant.currentDebt?.their
 								? "Update debt for user"
-								: "Send sync request"
+								: "Send debt to a user"
 						}
-						isLoading={updateMutation.isLoading}
+						isLoading={isUpdating}
+						disabled={isUpdating}
 						icon={
 							participant.currentDebt?.their ? (
 								<SyncIcon size={24} />
@@ -140,7 +192,11 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 								<SendIcon size={24} />
 							)
 						}
-						onClick={() => updateDebt(participant.userId)}
+						onClick={() =>
+							participant.currentDebt?.their
+								? updateDebt(participant.currentDebt)
+								: addDebt()
+						}
 					/>
 				)}
 			</Grid>

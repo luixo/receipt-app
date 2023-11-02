@@ -82,8 +82,14 @@ export const ReceiptDebtSyncInfoButton: React.FC<Props> = ({
 				onClick={openModal}
 				color={popoverOpen ? "secondary" : undefined}
 				icon={<InfoIcon size={24} />}
+				title="Show sync status"
 			/>
-			<Modal open={popoverOpen} onClose={closeModal} width="90%">
+			<Modal
+				open={popoverOpen}
+				onClose={closeModal}
+				width="90%"
+				title="Receipt sync status"
+			>
 				<Modal.Header>
 					<Text h3>Sync status</Text>
 				</Modal.Header>
