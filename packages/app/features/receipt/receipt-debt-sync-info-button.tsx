@@ -31,8 +31,8 @@ const GridHeader = styled(Grid, {
 const sortParticipants =
 	(receiptLockedTimestamp: Date) =>
 	(a: DebtParticipant, b: DebtParticipant): number => {
-		const aLockedTimestamp = a.debt?.their?.lockedTimestamp?.valueOf();
-		const bLockedTimestamp = b.debt?.their?.lockedTimestamp?.valueOf();
+		const aLockedTimestamp = a.currentDebt?.their?.lockedTimestamp?.valueOf();
+		const bLockedTimestamp = b.currentDebt?.their?.lockedTimestamp?.valueOf();
 		if (aLockedTimestamp === bLockedTimestamp) {
 			if (a.sum === b.sum) {
 				return b.userId.localeCompare(a.userId);

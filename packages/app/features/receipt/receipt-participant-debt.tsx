@@ -38,7 +38,7 @@ const Border = styled("div", {
 export type DebtParticipant = {
 	userId: UsersId;
 	sum: number;
-	debt?: TRPCQueryOutput<"debts.get">;
+	currentDebt?: TRPCQueryOutput<"debts.get">;
 };
 
 export type LockedReceipt = Omit<
@@ -60,7 +60,7 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 	const updateMutation = trpc.receipts.updateDebt.useMutation(
 		useTrpcMutationOptions(mutations.receipts.updateDebt.options, {
 			context: {
-				prevAmount: participant.debt?.amount ?? 0,
+				prevAmount: participant.currentDebt?.amount ?? 0,
 				receiptTimestamp: receipt.lockedTimestamp,
 			},
 		}),
@@ -73,7 +73,7 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 
 	const showSpacer = useMatchMediaValue(false, { lessMd: true });
 	const synced =
-		participant.debt?.lockedTimestamp?.valueOf() ===
+		participant.currentDebt?.lockedTimestamp?.valueOf() ===
 		receipt.lockedTimestamp.valueOf();
 
 	return (
@@ -92,14 +92,14 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 					<Icon as={ZeroIcon} />
 				) : (
 					<>
-						{synced ? null : participant.debt ? (
+						{synced ? null : participant.currentDebt ? (
 							<Icon as={ReceiptOffIcon} css={{ color: "$error" }} />
 						) : null}
-						{participant.debt ? (
+						{participant.currentDebt ? (
 							<DebtSyncStatus
 								debt={{
-									lockedTimestamp: participant.debt.lockedTimestamp,
-									their: participant.debt.their,
+									lockedTimestamp: participant.currentDebt.lockedTimestamp,
+									their: participant.currentDebt.their,
 								}}
 								size={SIZE}
 							/>
@@ -111,13 +111,13 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 				{synced ? null : (
 					<IconButton
 						title={
-							participant.debt?.their
+							participant.currentDebt?.their
 								? "Update debt for user"
 								: "Send sync request"
 						}
 						isLoading={updateMutation.isLoading}
 						icon={
-							participant.debt?.their ? (
+							participant.currentDebt?.their ? (
 								<SyncIcon size={24} />
 							) : (
 								<SendIcon size={24} />

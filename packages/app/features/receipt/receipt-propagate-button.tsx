@@ -30,12 +30,13 @@ type InnerProps = {
 
 export const showPropagateButton = (participants: DebtParticipant[]) => {
 	const noneIsSyncedYet = participants.every(
-		({ debt }) => !debt?.lockedTimestamp,
+		({ currentDebt }) => !currentDebt?.lockedTimestamp,
 	);
 	const atLeastOneIsSyncable = participants.some(
-		({ debt, sum }) =>
+		({ currentDebt, sum }) =>
 			sum !== 0 &&
-			(!debt || debt.lockedTimestamp !== debt.their?.lockedTimestamp),
+			(!currentDebt ||
+				currentDebt.lockedTimestamp !== currentDebt.their?.lockedTimestamp),
 	);
 	return noneIsSyncedYet && atLeastOneIsSyncable;
 };
@@ -62,7 +63,9 @@ const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 				.map((participant) => ({
 					userId: participant.remoteUserId,
 					sum: participant.sum,
-					debt: debts.find((debt) => debt.userId === participant.remoteUserId),
+					currentDebt: debts.find(
+						(debt) => debt.userId === participant.remoteUserId,
+					),
 				}))
 				.filter((participant) => participant.userId !== receipt.selfUserId),
 		[itemsQuery.data, receipt.id, debts, receipt.selfUserId],
