@@ -191,6 +191,29 @@ export const options: UseContextedMutationOptions<
 			},
 		}),
 	onSuccess: (controllerContext, currData) => (result, updateObject) => {
+		const { receiptId } = currData;
+		if (receiptId) {
+			cache.receipts.update(controllerContext, {
+				get: (controller) => {
+					controller.update(receiptId, (receipt) => ({
+						...receipt,
+						debt: {
+							direction: "outcoming",
+							ids:
+								receipt.debt?.direction === "outcoming"
+									? receipt.debt.ids.includes(updateObject.id)
+										? receipt.debt.ids
+										: [...receipt.debt.ids, updateObject.id]
+									: [updateObject.id],
+						},
+					}));
+				},
+				getNonResolvedAmount: undefined,
+				getPaged: undefined,
+				getName: undefined,
+				getResolvedParticipants: undefined,
+			});
+		}
 		// lockedTimestamp is undefined (in contrary to being null)
 		// hence we didn't update it in this transaction and we should update nothing in cache
 		if (result.lockedTimestamp === undefined) {
