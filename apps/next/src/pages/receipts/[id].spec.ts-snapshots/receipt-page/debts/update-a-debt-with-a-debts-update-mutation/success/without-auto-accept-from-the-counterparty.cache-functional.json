@@ -1,0 +1,42 @@
+{
+	"queries": {
+		"debts.get:[{\"id\":\"4eaf7a26-d0ef-4a3c-b034-798a3396d05a\"}]": {
+			"state": {
+				"data": {
+					"amount": 23999.14,
+					"lockedTimestamp": "2020-01-01T00:00:00.000Z"
+				},
+				"dataUpdateCount": 3
+			}
+		},
+		"receipts.get:[{\"id\":\"0092bd1e-03f7-48be-9c4e-dbc610808222\"}]": {
+			"state": {
+				"dataUpdateCount": 2
+			}
+		}
+	},
+	"mutations": {
+		"debts.update": {
+			"state": {
+				"data": {
+					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+					"reverseLockedTimestampUpdated": false
+				},
+				"error": null,
+				"failureCount": 0,
+				"isPaused": false,
+				"status": "success",
+				"variables": {
+					"id": "4eaf7a26-d0ef-4a3c-b034-798a3396d05a",
+					"update": {
+						"amount": 23999.14,
+						"currencyCode": "KZT",
+						"timestamp": "2020-01-01T00:00:00.000Z",
+						"locked": true,
+						"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"
+					}
+				}
+			}
+		}
+	}
+}

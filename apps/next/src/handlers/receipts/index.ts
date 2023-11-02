@@ -9,7 +9,6 @@ import { procedure as getResolvedParticipants } from "./get-resolved-participant
 import { procedure as propagateDebts } from "./propagate-debts";
 import { procedure as remove } from "./remove";
 import { procedure as update } from "./update";
-import { procedure as updateDebt } from "./update-debt";
 
 export const router = t.router({
 	get,
@@ -20,6 +19,5 @@ export const router = t.router({
 	getName,
 	getResolvedParticipants,
 	propagateDebts,
-	updateDebt,
 	getNonResolvedAmount,
 });

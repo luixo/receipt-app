@@ -20,8 +20,10 @@ import type {
 	TRPCQueryKey,
 	TRPCQueryOutput,
 } from "app/trpc";
+import type { Currency, CurrencyCode } from "app/utils/currency";
 import type { ControlledPromise } from "app/utils/utils";
 import { createPromise } from "app/utils/utils";
+import { getCurrencies } from "next-app/utils/currency";
 
 import type { appRouter } from "../global/router";
 
@@ -333,6 +335,18 @@ const getMockUtils = (api: ApiManager) => {
 		auth: (account: Account | (() => Account)) => {
 			api.mock("account.get", account);
 			authAnyPage();
+		},
+		currencyList: (currencies?: Currency[]) => {
+			api.mock(
+				"currency.getList",
+				() =>
+					currencies ||
+					Object.entries(getCurrencies("en")).map(([code, currency]) => ({
+						code: code as CurrencyCode,
+						name: currency.name_plural,
+						symbol: currency.symbol_native,
+					})),
+			);
 		},
 		authAnyPage,
 		emptyReceipts: () => {

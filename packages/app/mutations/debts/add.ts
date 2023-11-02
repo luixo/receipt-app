@@ -22,7 +22,7 @@ const createUserDebt = (
 	note: updateObject.note,
 	lockedTimestamp,
 	their: reverseAccepted ? { lockedTimestamp } : undefined,
-	receiptId: null,
+	receiptId: updateObject.receiptId ?? null,
 });
 
 const createDebt = (
@@ -37,11 +37,34 @@ const createDebt = (
 	note: updateObject.note,
 	lockedTimestamp,
 	their: reverseAccepted ? { lockedTimestamp } : undefined,
-	receiptId: null,
+	receiptId: updateObject.receiptId ?? null,
 });
 
 export const options: UseContextedMutationOptions<"debts.add"> = {
 	onSuccess: (controllerContext) => (result, updateObject) => {
+		const { receiptId } = updateObject;
+		if (receiptId) {
+			cache.receipts.update(controllerContext, {
+				get: (controller) => {
+					controller.update(receiptId, (receipt) => ({
+						...receipt,
+						debt: {
+							direction: "outcoming",
+							ids:
+								receipt.debt?.direction === "outcoming"
+									? receipt.debt.ids.includes(result.id)
+										? receipt.debt.ids
+										: [...receipt.debt.ids, result.id]
+									: [result.id],
+						},
+					}));
+				},
+				getNonResolvedAmount: undefined,
+				getPaged: undefined,
+				getName: undefined,
+				getResolvedParticipants: undefined,
+			});
+		}
 		cache.debts.update(controllerContext, {
 			getByUsers: (controller) =>
 				controller.update(
