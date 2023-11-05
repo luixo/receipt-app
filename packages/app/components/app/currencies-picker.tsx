@@ -96,7 +96,7 @@ export const CurrenciesPicker: React.FC<WrapperProps> = ({
 }) => {
 	const query = trpc.currency.getList.useQuery(
 		{ locale: "en" },
-		{ trpc: { ssr: false }, cacheTime: MONTH },
+		{ trpc: { ssr: false }, staleTime: MONTH },
 	);
 	React.useEffect(() => {
 		if (
