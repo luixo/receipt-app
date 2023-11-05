@@ -39,7 +39,7 @@ export const procedure = authProcedure
 				"receipts.lockedTimestamp",
 				"accounts.email as ownerEmail",
 			])
-			.where("id", "=", receiptItem.receiptId)
+			.where("receipts.id", "=", receiptItem.receiptId)
 			.executeTakeFirst();
 		if (!receipt) {
 			throw new TRPCError({
