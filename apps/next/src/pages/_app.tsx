@@ -30,7 +30,7 @@ import { Provider } from "app/provider";
 import type { Props as SsrContext } from "app/provider/ssr";
 import { useColorModeCookies } from "next-app/hooks/use-color-mode-cookies";
 import { useHydratedMark } from "next-app/hooks/use-hydrated-mark";
-import { useQueryCacheHelper } from "next-app/hooks/use-query-cache-helper";
+import { useQueryClientHelper } from "next-app/hooks/use-query-client-helper";
 import { useRemoveTestQueryParams } from "next-app/hooks/use-remove-test-query-params";
 import { useSettingsCookies } from "next-app/hooks/use-settings-cookies";
 import { useSSRContextCookies } from "next-app/hooks/use-ssr-context-cookies";
@@ -48,7 +48,7 @@ const GlobalHooksComponent: React.FC = () => {
 	useColorModeCookies();
 	useSettingsCookies();
 	useSSRContextCookies();
-	useQueryCacheHelper();
+	useQueryClientHelper();
 	useHydratedMark();
 	useRemoveTestQueryParams();
 	return null;

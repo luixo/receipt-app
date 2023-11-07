@@ -6,10 +6,7 @@ import type {
 	TestInfo,
 } from "@playwright/test";
 import { expect } from "@playwright/test";
-import type {
-	DehydratedState,
-	QueryCacheNotifyEvent,
-} from "@tanstack/react-query";
+import type { DehydratedState, QueryClient } from "@tanstack/react-query";
 import { type TRPCClientErrorLike } from "@trpc/client";
 import type { QueryKey } from "@trpc/react-query/src/internals/getArrayQueryKey";
 import { diff as objectDiff } from "deep-object-diff";
@@ -24,10 +21,7 @@ import { createMixin } from "./utils";
 declare global {
 	interface Window {
 		getDehydratedCache: () => DehydratedState;
-		subscribeToQuery: (
-			queryKey: TRPCQueryKey,
-			subscriber: (event: QueryCacheNotifyEvent) => void,
-		) => void;
+		queryClient: QueryClient;
 	}
 }
 
@@ -272,20 +266,28 @@ export const queriesMixin = createMixin<
 		await use((queryKey, timeout = DEFAULT_AWAIT_QUERY_TIMEOUT) =>
 			page.evaluate(
 				([awaitedKeyInner, timeoutInner]) => {
-					if (!window.subscribeToQuery) {
+					if (!window.queryClient) {
 						return Promise.reject(
-							new Error("window.subscribeToQuery is not defined yet"),
+							new Error("window.queryClient is not defined yet"),
 						);
 					}
 					return new Promise((resolve, reject) => {
-						window.subscribeToQuery(awaitedKeyInner, (event) => {
-							if (event.type !== "updated") {
-								return;
-							}
-							if (event.action.type === "success") {
-								resolve();
-							}
-						});
+						window.queryClient
+							.getQueryCache()
+							.subscribe((queryCacheNotifyEvent) => {
+								if (
+									queryCacheNotifyEvent.query.queryKey[0].join(".") !==
+									awaitedKeyInner
+								) {
+									return;
+								}
+								if (queryCacheNotifyEvent.type !== "updated") {
+									return;
+								}
+								if (queryCacheNotifyEvent.action.type === "success") {
+									resolve();
+								}
+							});
 						setTimeout(reject, timeoutInner);
 					});
 				},
