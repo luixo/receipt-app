@@ -39,14 +39,11 @@ type SnapshotNames = {
 };
 
 const getSnapshotNames = (testInfo: TestInfo): SnapshotNames => {
-	const snapshotNamesSymbol = Object.getOwnPropertySymbols(testInfo).find(
-		(symbol) => symbol.description === "snapshotNames",
-	)!;
 	const testInfoExtended = testInfo as TestInfo & {
-		[key: typeof snapshotNamesSymbol]: SnapshotNames;
+		queriesSnapshotNames: SnapshotNames;
 	};
-	testInfoExtended[snapshotNamesSymbol] ??= {};
-	return testInfoExtended[snapshotNamesSymbol] as SnapshotNames;
+	testInfoExtended.queriesSnapshotNames ??= {};
+	return testInfoExtended.queriesSnapshotNames as SnapshotNames;
 };
 
 const getSnapshotName = (
