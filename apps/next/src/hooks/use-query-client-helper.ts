@@ -11,12 +11,27 @@ export const useQueryClientHelper = () => {
 			return;
 		}
 		window.queryClient = queryClient;
-		window.getDehydratedCache = () =>
-			dehydrate(queryClient, {
-				dehydrateQueries: true,
-				dehydrateMutations: true,
-				shouldDehydrateQuery: alwaysTrue,
-				shouldDehydrateMutation: alwaysTrue,
+		window.getDehydratedCache = async (timeout: number) => {
+			const getData = () =>
+				dehydrate(queryClient, {
+					dehydrateQueries: true,
+					dehydrateMutations: true,
+					shouldDehydrateQuery: alwaysTrue,
+					shouldDehydrateMutation: alwaysTrue,
+				});
+			return new Promise((resolve, reject) => {
+				if (queryClient.isFetching()) {
+					const unsub = window.queryClient.getQueryCache().subscribe(() => {
+						if (!window.queryClient.isFetching()) {
+							resolve(getData());
+							unsub();
+						}
+					});
+					setTimeout(reject, timeout);
+					return;
+				}
+				resolve(getData());
 			});
+		};
 	}, [queryClient]);
 };

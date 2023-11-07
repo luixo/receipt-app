@@ -20,7 +20,7 @@ import { createMixin } from "./utils";
 
 declare global {
 	interface Window {
-		getDehydratedCache: () => DehydratedState;
+		getDehydratedCache: (timeout: number) => Promise<DehydratedState>;
 		queryClient: QueryClient;
 	}
 }
@@ -70,13 +70,13 @@ const getSnapshotName = (
 	return [...path, name];
 };
 
-const getQueryCache = (page: Page, ignoreKeys: TRPCKey[]) =>
+const getQueryCache = (page: Page, ignoreKeys: TRPCKey[], timeout: number) =>
 	page.evaluate(
-		([ignoreKeysInner]) => {
+		async ([ignoreKeysInner, timeoutInner]) => {
 			if (!window.getDehydratedCache) {
 				return { mutations: [], queries: [] };
 			}
-			const cache = window.getDehydratedCache();
+			const cache = await window.getDehydratedCache(timeoutInner);
 			const flattenError = (error: unknown) => {
 				if (
 					(error instanceof Error && error.name === "TRPCClientError") ||
@@ -174,7 +174,7 @@ const getQueryCache = (page: Page, ignoreKeys: TRPCKey[]) =>
 				),
 			};
 		},
-		[ignoreKeys],
+		[ignoreKeys, timeout] as const,
 	);
 
 const remapActions = (actions: ReturnType<ApiManager["getActions"]>) =>
@@ -210,6 +210,7 @@ const withNoPlatformPath = (testInfo: TestInfo, fn: () => void) => {
 type SnapshotQueryCacheOptions = {
 	name: string;
 	ignoreKeys: TRPCKey[];
+	timeout?: number;
 };
 
 const DEFAULT_IGNORE_KEYS: TRPCKey[] = [
@@ -223,7 +224,10 @@ type QueriesMixin = {
 		fn: () => Promise<T>,
 		options?: Partial<SnapshotQueryCacheOptions>,
 	) => Promise<T>;
-	awaitQuery: <T extends TRPCQueryKey>(path: T) => Promise<void>;
+	awaitQuery: <T extends TRPCQueryKey>(
+		path: T,
+		timeout?: number,
+	) => Promise<void>;
 	expectScreenshotWithSchemes: (
 		name: string,
 		options?: PageScreenshotOptions &
@@ -239,28 +243,37 @@ export const queriesMixin = createMixin<
 	ApiMixin
 >({
 	snapshotQueries: async ({ page, api }, use, testInfo) => {
-		await use(async (fn, { ignoreKeys = DEFAULT_IGNORE_KEYS, name } = {}) => {
-			api.clearActions();
-			const prevQueryCache = await getQueryCache(page, ignoreKeys);
-			const result = await fn();
-			const nextQueryCache = await getQueryCache(page, ignoreKeys);
-			const diff = objectDiff(prevQueryCache, nextQueryCache);
-			withNoPlatformPath(testInfo, () => {
-				expect
-					.soft(`${JSON.stringify(diff, null, "\t")}\n`)
-					.toMatchSnapshot(
-						getSnapshotName(testInfo, "cacheIndex", name, "json"),
-					);
-				expect
-					.soft(
-						`${JSON.stringify(remapActions(api.getActions()), null, "\t")}\n`,
-					)
-					.toMatchSnapshot(
-						getSnapshotName(testInfo, "queriesIndex", name, "json"),
-					);
-			});
-			return result;
-		});
+		await use(
+			async (
+				fn,
+				{
+					ignoreKeys = DEFAULT_IGNORE_KEYS,
+					name,
+					timeout = DEFAULT_AWAIT_QUERY_TIMEOUT,
+				} = {},
+			) => {
+				api.clearActions();
+				const prevQueryCache = await getQueryCache(page, ignoreKeys, timeout);
+				const result = await fn();
+				const nextQueryCache = await getQueryCache(page, ignoreKeys, timeout);
+				const diff = objectDiff(prevQueryCache, nextQueryCache);
+				withNoPlatformPath(testInfo, () => {
+					expect
+						.soft(`${JSON.stringify(diff, null, "\t")}\n`)
+						.toMatchSnapshot(
+							getSnapshotName(testInfo, "cacheIndex", name, "json"),
+						);
+					expect
+						.soft(
+							`${JSON.stringify(remapActions(api.getActions()), null, "\t")}\n`,
+						)
+						.toMatchSnapshot(
+							getSnapshotName(testInfo, "queriesIndex", name, "json"),
+						);
+				});
+				return result;
+			},
+		);
 	},
 	awaitQuery: async ({ page }, use) => {
 		await use((queryKey, timeout = DEFAULT_AWAIT_QUERY_TIMEOUT) =>
