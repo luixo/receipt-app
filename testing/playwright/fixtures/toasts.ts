@@ -27,15 +27,21 @@ export const toastsMixin = createMixin<ToastsMixin>({
 					() =>
 						page.evaluate(
 							([selector]) =>
-								Array.from(document.querySelectorAll(selector)).map((toast) =>
-									toast instanceof HTMLDivElement ? toast.innerText : "unknown",
-								),
+								Array.from(document.querySelectorAll(selector))
+									.map((toast) =>
+										toast instanceof HTMLDivElement
+											? toast.innerText
+											: "unknown",
+									)
+									.sort(),
 							[TOAST_SELECTOR] as const,
 						),
 					// Every toast is shown for at least 1 second
 					{ message: "Toast messages differ", timeout },
 				)
-				.toEqual(Array.isArray(textOrTexts) ? textOrTexts : [textOrTexts]),
+				.toEqual(
+					(Array.isArray(textOrTexts) ? textOrTexts : [textOrTexts]).sort(),
+				),
 		);
 	},
 	clearToasts: async ({ page }, use) => {
@@ -46,7 +52,7 @@ export const toastsMixin = createMixin<ToastsMixin>({
 				}
 				window.dismissToasts();
 			});
-			await page.locator(TOAST_SELECTOR).waitFor({ state: "detached" });
+			await expect.poll(() => page.locator(TOAST_SELECTOR).count()).toBe(0);
 		});
 	},
 });
