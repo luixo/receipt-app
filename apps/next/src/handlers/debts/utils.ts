@@ -1,7 +1,9 @@
+import { TRPCError } from "@trpc/server";
+
 import { getReceiptDebtName } from "app/utils/receipt";
 import type { Database } from "next-app/db";
 import { DEBTS } from "next-app/db/consts";
-import type { Receipts } from "next-app/db/models";
+import type { Receipts, ReceiptsId, UsersId } from "next-app/db/models";
 import type { getValidParticipants } from "next-app/handlers/receipt-items/utils";
 
 type Participant = Awaited<ReturnType<typeof getValidParticipants>>[number];
@@ -78,3 +80,24 @@ export const getDebtsResult = (
 			amount: Number(participant.sum),
 		};
 	});
+
+export const withOwnerReceiptUserConstraint = async <T>(
+	fn: () => Promise<T>,
+	extractData: (e: unknown) => { receiptId: ReceiptsId; userId: UsersId },
+) => {
+	try {
+		const result = await fn();
+		return result;
+	} catch (e) {
+		// Could be like `duplicate key value violates unique constraint "..."`
+		const message = String(e);
+		if (message.includes(DEBTS.CONSTRAINTS.OWNER_ID_RECEIPT_ID_USER_ID_TUPLE)) {
+			const { receiptId, userId } = extractData(e);
+			throw new TRPCError({
+				code: "FORBIDDEN",
+				message: `There is already a debt for user "${userId}" in receipt "${receiptId}".`,
+			});
+		}
+		throw e;
+	}
+};

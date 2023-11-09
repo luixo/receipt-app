@@ -27,7 +27,7 @@ const createUserDebts = (
 			their: reverseAcceptedUserIds.includes(updateObject.userId)
 				? { lockedTimestamp }
 				: undefined,
-			receiptId: null,
+			receiptId: updateObject.receiptId ?? null,
 		},
 		updateObject.userId,
 	]);
@@ -47,11 +47,41 @@ const createDebts = (
 		their: reverseAcceptedUserIds.includes(updateObject.userId)
 			? { lockedTimestamp }
 			: undefined,
-		receiptId: null,
+		receiptId: updateObject.receiptId ?? null,
 	}));
 
 export const options: UseContextedMutationOptions<"debts.addBatch"> = {
 	onSuccess: (controllerContext) => (result, updateObjects) => {
+		const receiptIdUpdateObjects = updateObjects
+			.map((updateObject, index) => ({
+				...updateObject,
+				id: result.ids[index]!,
+			}))
+			.filter((updateObject) => updateObject.receiptId);
+		if (receiptIdUpdateObjects.length !== 0) {
+			cache.receipts.update(controllerContext, {
+				get: (controller) => {
+					receiptIdUpdateObjects.forEach((updateObject) => {
+						controller.update(updateObject.receiptId!, (receipt) => ({
+							...receipt,
+							debt: {
+								direction: "outcoming",
+								ids:
+									receipt.debt?.direction === "outcoming"
+										? receipt.debt.ids.includes(updateObject.id)
+											? receipt.debt.ids
+											: [...receipt.debt.ids, updateObject.id]
+										: [updateObject.id],
+							},
+						}));
+					});
+				},
+				getNonResolvedAmount: undefined,
+				getPaged: undefined,
+				getName: undefined,
+				getResolvedParticipants: undefined,
+			});
+		}
 		cache.debts.update(controllerContext, {
 			getByUsers: (controller) => {
 				updateObjects.forEach((updateObject) =>

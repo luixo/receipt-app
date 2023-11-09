@@ -2,7 +2,6 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { debtAmountSchema, debtNoteSchema } from "app/utils/validation";
-import { DEBTS } from "next-app/db/consts";
 import type { DebtsId } from "next-app/db/models";
 import { authProcedure } from "next-app/handlers/trpc";
 import {
@@ -10,6 +9,8 @@ import {
 	receiptIdSchema,
 	userIdSchema,
 } from "next-app/handlers/validation";
+
+import { withOwnerReceiptUserConstraint } from "./utils";
 
 export const procedure = authProcedure
 	.input(
@@ -67,7 +68,8 @@ export const procedure = authProcedure
 			receiptId: input.receiptId,
 		};
 		if (user.autoAcceptDebts) {
-			if (!user.foreignAccountId) {
+			const { foreignAccountId } = user;
+			if (!foreignAccountId) {
 				throw new TRPCError({
 					code: "INTERNAL_SERVER_ERROR",
 					message: `Unexpected having "autoAcceptDebts" but not having "accountId"`,
@@ -76,7 +78,7 @@ export const procedure = authProcedure
 			// TODO: incorporate reverse user into VALUES clause
 			const reverseUser = await database
 				.selectFrom("users")
-				.where("users.ownerAccountId", "=", user.foreignAccountId)
+				.where("users.ownerAccountId", "=", foreignAccountId)
 				.where("users.connectedAccountId", "=", ctx.auth.accountId)
 				.select("users.id")
 				.executeTakeFirstOrThrow(
@@ -86,53 +88,33 @@ export const procedure = authProcedure
 							message: `Unexpected having "autoAcceptDebts" but not having reverse user "id"`,
 						}),
 				);
-			try {
-				await database
+			await withOwnerReceiptUserConstraint(
+				() =>
+					database
+						.insertInto("debts")
+						.values({
+							...commonPart,
+							ownerAccountId: foreignAccountId,
+							userId: reverseUser.id,
+							amount: (-input.amount).toString(),
+						})
+						.executeTakeFirst(),
+				() => ({ receiptId: input.receiptId!, userId: reverseUser.id }),
+			);
+			reverseAccepted = true;
+		}
+		await withOwnerReceiptUserConstraint(
+			() =>
+				database
 					.insertInto("debts")
 					.values({
 						...commonPart,
-						ownerAccountId: user.foreignAccountId,
-						userId: reverseUser.id,
-						amount: (-input.amount).toString(),
+						ownerAccountId: ctx.auth.accountId,
+						userId: input.userId,
+						amount: input.amount.toString(),
 					})
-					.executeTakeFirst();
-				reverseAccepted = true;
-			} catch (e) {
-				// Could be like `duplicate key value violates unique constraint "..."`
-				const message = String(e);
-				if (
-					message.includes(DEBTS.CONSTRAINTS.OWNER_ID_RECEIPT_ID_USER_ID_TUPLE)
-				) {
-					throw new TRPCError({
-						code: "FORBIDDEN",
-						message: `There is already a debt for user "${reverseUser.id}" in receipt "${input.receiptId}".`,
-					});
-				}
-				throw e;
-			}
-		}
-		try {
-			await database
-				.insertInto("debts")
-				.values({
-					...commonPart,
-					ownerAccountId: ctx.auth.accountId,
-					userId: input.userId,
-					amount: input.amount.toString(),
-				})
-				.executeTakeFirst();
-			return { id, lockedTimestamp, reverseAccepted };
-		} catch (e) {
-			// Could be like `duplicate key value violates unique constraint "..."`
-			const message = String(e);
-			if (
-				message.includes(DEBTS.CONSTRAINTS.OWNER_ID_RECEIPT_ID_USER_ID_TUPLE)
-			) {
-				throw new TRPCError({
-					code: "FORBIDDEN",
-					message: `There is already a debt for user "${input.userId}" in receipt "${input.receiptId}".`,
-				});
-			}
-			throw e;
-		}
+					.executeTakeFirst(),
+			() => ({ receiptId: input.receiptId!, userId: input.userId }),
+		);
+		return { id, lockedTimestamp, reverseAccepted };
 	});

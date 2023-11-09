@@ -7,6 +7,9 @@ import {
 	insertAccountSettings,
 	insertAccountWithSession,
 	insertConnectedUsers,
+	insertDebt,
+	insertReceipt,
+	insertReceiptParticipant,
 	insertUser,
 } from "@tests/backend/utils/data";
 import {
@@ -25,6 +28,7 @@ import {
 	verifyAmount,
 	verifyCurrencyCode,
 	verifyNote,
+	verifyReceiptId,
 	verifyTimestamp,
 	verifyUserId,
 } from "./test.utils";
@@ -90,6 +94,14 @@ describe("debts.addBatch", () => {
 			"[0].",
 		);
 
+		verifyReceiptId(
+			(context, receiptId) =>
+				router
+					.createCaller(context)
+					.procedure([{ ...getValidDebt(), receiptId }]),
+			"[0].",
+		);
+
 		verifyUserId(
 			(context, userId) =>
 				router.createCaller(context).procedure([getValidDebt(userId)]),
@@ -145,6 +157,56 @@ describe("debts.addBatch", () => {
 				() => caller.procedure([getValidDebt(userId)]),
 				"FORBIDDEN",
 				`Cannot add debts for yourself.`,
+			);
+		});
+
+		test("there is a receipt id debt with that user", async ({ ctx }) => {
+			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { id: receiptId } = await insertReceipt(ctx, accountId);
+			const { id: userId } = await insertUser(ctx, accountId);
+			await insertReceiptParticipant(ctx, receiptId, userId);
+			await insertDebt(ctx, accountId, userId, { receiptId });
+
+			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			await expectTRPCError(
+				() =>
+					caller.procedure([
+						{
+							...getValidDebt(userId),
+							receiptId,
+						},
+					]),
+				"FORBIDDEN",
+				`There is already a debt for user "${userId}" in receipt "${receiptId}".`,
+			);
+		});
+
+		test("there is a receipt id reverse debt with that user", async ({
+			ctx,
+		}) => {
+			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { id: foreignAccountId } = await insertAccount(ctx, {
+				settings: { autoAcceptDebts: true },
+			});
+			const { id: receiptId } = await insertReceipt(ctx, accountId);
+			const [{ id: foreignUserId }, { id: foreignToSelfUserId }] =
+				await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
+			await insertReceiptParticipant(ctx, receiptId, foreignUserId);
+			await insertDebt(ctx, foreignAccountId, foreignToSelfUserId, {
+				receiptId,
+			});
+
+			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			await expectTRPCError(
+				() =>
+					caller.procedure([
+						{
+							...getValidDebt(foreignUserId),
+							receiptId,
+						},
+					]),
+				"FORBIDDEN",
+				`There is already a debt for user "${foreignToSelfUserId}" in receipt "${receiptId}".`,
 			);
 		});
 	});
@@ -224,6 +286,7 @@ describe("debts.addBatch", () => {
 				accountId,
 				otherForeignAccountId,
 			]);
+			const { id: receiptId } = await insertReceipt(ctx, accountId);
 
 			// Verify unrelated data doesn't affect the result
 			await insertUser(ctx, accountId);
@@ -234,7 +297,7 @@ describe("debts.addBatch", () => {
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure([
-					getValidDebt(acceptingUserId),
+					{ ...getValidDebt(acceptingUserId), receiptId },
 					getValidDebt(acceptingUserId),
 					getValidDebt(anotherAcceptingUserId),
 					getValidDebt(otherUserId),

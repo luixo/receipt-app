@@ -16,13 +16,13 @@ exports[`debts.addBatch > functionality > debts are added - some are auto-accept
 + After snapshot
 
 @@ --- --- @@
-+ INSERT INTO public.debts VALUES ('6b8c3687-6276-48ef-b194-295365be669a', '4adfd369-72a9-4631-903a-3353c3e5dba5', '4670ef39-264b-4f7e-bfeb-13962a4e383c', 'BYN', -696.3300, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'distinctio cupiditate dolorem', '2020-01-01 00:00:00', NULL);
-+ INSERT INTO public.debts VALUES ('caffcfe2-fdb5-4e5a-8f19-f45b76e51e15', '4adfd369-72a9-4631-903a-3353c3e5dba5', '4670ef39-264b-4f7e-bfeb-13962a4e383c', 'PEN', 734.4000, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'placeat repellendus aperiam', '2020-01-01 00:00:00', NULL);
-+ INSERT INTO public.debts VALUES ('f703d7a1-1162-440f-96e3-cddb7688bc47', '1c1913a2-358a-42cf-96c1-97c9a12923e1', '207afcd4-1bbf-4956-ac87-539df7c576e1', 'TND', 182.2700, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'iure laboriosam quas', '2020-01-01 00:00:00', NULL);
-+ INSERT INTO public.debts VALUES ('6b8c3687-6276-48ef-b194-295365be669a', 'b931b7cd-0bbb-4668-be2c-f59cfdecfddb', 'e8537d1e-2f77-4a92-b31e-4188c399be5a', 'BYN', 696.3300, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'distinctio cupiditate dolorem', '2020-01-01 00:00:00', NULL);
-+ INSERT INTO public.debts VALUES ('caffcfe2-fdb5-4e5a-8f19-f45b76e51e15', 'b931b7cd-0bbb-4668-be2c-f59cfdecfddb', 'e8537d1e-2f77-4a92-b31e-4188c399be5a', 'PEN', -734.4000, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'placeat repellendus aperiam', '2020-01-01 00:00:00', NULL);
-+ INSERT INTO public.debts VALUES ('f703d7a1-1162-440f-96e3-cddb7688bc47', 'b931b7cd-0bbb-4668-be2c-f59cfdecfddb', '465229c7-e6a6-486b-a6bb-7ce4792a7b4b', 'TND', -182.2700, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'iure laboriosam quas', '2020-01-01 00:00:00', NULL);
-+ INSERT INTO public.debts VALUES ('3fb62100-8408-48de-bb3a-f1e3f899ef83', 'b931b7cd-0bbb-4668-be2c-f59cfdecfddb', 'a61eabf7-3766-45cc-884e-962e538d734c', 'SOS', -990.0300, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'a ad omnis', '2020-01-01 00:00:00', NULL);"
++ INSERT INTO public.debts VALUES ('6b8c3687-6276-48ef-b194-295365be669a', '4adfd369-72a9-4631-903a-3353c3e5dba5', '4670ef39-264b-4f7e-bfeb-13962a4e383c', 'LKR', -835.0700, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'illo quidem nihil', '2020-01-01 00:00:00', '2474d40a-1505-46a5-a055-4495ed5f3b7b');
++ INSERT INTO public.debts VALUES ('caffcfe2-fdb5-4e5a-8f19-f45b76e51e15', '4adfd369-72a9-4631-903a-3353c3e5dba5', '4670ef39-264b-4f7e-bfeb-13962a4e383c', 'ILS', 388.2900, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'rerum tempore soluta', '2020-01-01 00:00:00', NULL);
++ INSERT INTO public.debts VALUES ('f703d7a1-1162-440f-96e3-cddb7688bc47', '1c1913a2-358a-42cf-96c1-97c9a12923e1', '207afcd4-1bbf-4956-ac87-539df7c576e1', 'VEF', 320.7700, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'officiis qui quo', '2020-01-01 00:00:00', NULL);
++ INSERT INTO public.debts VALUES ('6b8c3687-6276-48ef-b194-295365be669a', 'b931b7cd-0bbb-4668-be2c-f59cfdecfddb', 'e8537d1e-2f77-4a92-b31e-4188c399be5a', 'LKR', 835.0700, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'illo quidem nihil', '2020-01-01 00:00:00', '2474d40a-1505-46a5-a055-4495ed5f3b7b');
++ INSERT INTO public.debts VALUES ('caffcfe2-fdb5-4e5a-8f19-f45b76e51e15', 'b931b7cd-0bbb-4668-be2c-f59cfdecfddb', 'e8537d1e-2f77-4a92-b31e-4188c399be5a', 'ILS', -388.2900, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'rerum tempore soluta', '2020-01-01 00:00:00', NULL);
++ INSERT INTO public.debts VALUES ('f703d7a1-1162-440f-96e3-cddb7688bc47', 'b931b7cd-0bbb-4668-be2c-f59cfdecfddb', '465229c7-e6a6-486b-a6bb-7ce4792a7b4b', 'VEF', -320.7700, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'officiis qui quo', '2020-01-01 00:00:00', NULL);
++ INSERT INTO public.debts VALUES ('3fb62100-8408-48de-bb3a-f1e3f899ef83', 'b931b7cd-0bbb-4668-be2c-f59cfdecfddb', 'a61eabf7-3766-45cc-884e-962e538d734c', 'UAH', -794.6400, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'quisquam asperiores temporibus', '2020-01-01 00:00:00', NULL);"
 `;
 
 exports[`debts.addBatch > functionality > debts are added - user-provided timestamp 1`] = `
