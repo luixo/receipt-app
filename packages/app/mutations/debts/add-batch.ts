@@ -104,13 +104,16 @@ export const options: UseContextedMutationOptions<"debts.addBatch"> = {
 			getIntentions: undefined,
 		});
 	},
-	mutateToastOptions: {
-		text: "Adding debts..",
-	},
-	successToastOptions: {
-		text: "Debts added",
-	},
-	errorToastOptions: () => (error) => ({
-		text: `Error adding debts: ${error.message}`,
+	mutateToastOptions: () => (debts) => ({
+		text:
+			debts.length === 1 ? "Adding debt.." : `Adding ${debts.length} debts..`,
+	}),
+	successToastOptions: () => (_results, debts) => ({
+		text: debts.length === 1 ? "Debt added" : `${debts.length} debts added`,
+	}),
+	errorToastOptions: () => (error, debts) => ({
+		text: `Error adding ${
+			debts.length === 1 ? "debt" : `${debts.length} debts`
+		}: ${error.message}`,
 	}),
 };
