@@ -123,7 +123,7 @@ export const trpcNext = createTRPCNext<
 		const prefetchPromise = new Promise<false>((resolve) => {
 			const unsub = queryClient.getQueryCache().subscribe((event) => {
 				if (event.query.getObserversCount() === 0) {
-					// true for "SSR render is not resolved, need another render pass"
+					// false for "SSR render is not resolved, need another render pass"
 					resolve(false);
 					unsub();
 				}
