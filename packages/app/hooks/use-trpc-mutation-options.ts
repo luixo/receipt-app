@@ -24,27 +24,45 @@ export type TRPCMutationOptions<
 	LifecycleContext
 >;
 
-type ExternalContext<C> = C & {
-	toastId?: string;
-};
+/*
+Context passed around in query hooks is complicated.
 
-type WrappedContext<LifecycleContext = unknown> = {
+There is `outerContext` which represents data from the component that uses the hook.
+E.g.: while updating a debt, we need to know what the previous debt was.
+
+There is `lifecycleContext` which represents data passed as the result of mutation to success / error fns.
+E.g.: while adding a debt, we created a random id for it, on success we need to find that debt and replace the id to a proper one.
+
+There is `controllerContext` which is the object with `queryClient` and `trpcContext` included.
+E.g.: while updating a user, we need `trpcContext` to optimistically update that user's data in the query cache.
+
+There is `internalContext` which is the actual lifecycle context object that is passed around.
+It includes `controllerContext`, `outerContext`, `lifecycleContext`
+as well as possible update functions (the ones we need to run in success / error hooks to revert or finalize the data)
+as well as toast data (the id of the toast we need to update).
+*/
+
+type ControllerContextWith<OuterContext = undefined> = MaybeAddElementToArray<
+	[ControllerContext],
+	OuterContext
+>;
+
+type LifecycleContextWithUpdateFns<LifecycleContext = unknown> = {
 	revertFn?: () => void;
 	finalizeFn?: () => void;
-	context?: LifecycleContext;
+	lifecycleContext?: LifecycleContext;
 };
 
-type WrappedMutationOptions<
-	Path extends TRPCMutationKey,
+type InternalContext<
+	OuterContext = undefined,
 	LifecycleContext = unknown,
-> = TRPCMutationOptions<Path, WrappedContext<LifecycleContext>>;
+> = LifecycleContextWithUpdateFns<LifecycleContext> & {
+	toastId?: string;
+	controllerContext: ControllerContext;
+	outerContext: OuterContext;
+};
 
-type ToastArgs<Context> = MaybeAddElementToArray<[], Context>;
-
-type Contexts<Context = undefined> = MaybeAddElementToArray<
-	[ControllerContext],
-	Context
->;
+type ToastArgs<OuterContext> = MaybeAddElementToArray<[], OuterContext>;
 
 type ToastOptions = {
 	text: string;
@@ -52,49 +70,75 @@ type ToastOptions = {
 
 export type UseContextedMutationOptions<
 	Path extends TRPCMutationKey,
-	Context = undefined,
+	OuterContext = undefined,
 	LifecycleContext = unknown,
 	Options extends TRPCMutationOptions<
 		Path,
 		LifecycleContext
 	> = TRPCMutationOptions<Path, LifecycleContext>,
-	WrappedOptions extends WrappedMutationOptions<
+	MutationOptionsWithUpdateFns extends TRPCMutationOptions<
 		Path,
-		LifecycleContext
-	> = WrappedMutationOptions<Path, LifecycleContext>,
+		LifecycleContextWithUpdateFns<LifecycleContext>
+	> = TRPCMutationOptions<
+		Path,
+		LifecycleContextWithUpdateFns<LifecycleContext>
+	>,
 > = {
 	mutateToastOptions?:
 		| ToastOptions
 		| ((
-				...contextArgs: ToastArgs<Context>
+				...contextArgs: ToastArgs<OuterContext>
 		  ) => (
-				...args: Parameters<NonNullable<WrappedOptions["onMutate"]>>
+				...args: Parameters<
+					NonNullable<MutationOptionsWithUpdateFns["onMutate"]>
+				>
 		  ) => ToastOptions | undefined);
 	onMutate?: (
-		...args: Contexts<Context>
-	) => NonNullable<WrappedOptions["onMutate"]>;
+		...args: ControllerContextWith<OuterContext>
+	) => NonNullable<MutationOptionsWithUpdateFns["onMutate"]>;
 	errorToastOptions:
 		| ToastOptions
 		| ((
-				...contextArgs: ToastArgs<Context>
+				...contextArgs: ToastArgs<OuterContext>
 		  ) => (
 				...args: Parameters<NonNullable<Options["onError"]>>
 		  ) => ToastOptions);
-	onError?: (...args: Contexts<Context>) => NonNullable<Options["onError"]>;
+	onError?: (
+		...args: ControllerContextWith<OuterContext>
+	) => NonNullable<Options["onError"]>;
 	successToastOptions?:
 		| ToastOptions
 		| ((
-				...contextArgs: ToastArgs<Context>
+				...contextArgs: ToastArgs<OuterContext>
 		  ) => (
 				...args: Parameters<NonNullable<Options["onSuccess"]>>
 		  ) => ToastOptions | undefined);
-	onSuccess?: (...args: Contexts<Context>) => NonNullable<Options["onSuccess"]>;
-	onSettled?: (...args: Contexts<Context>) => NonNullable<Options["onSettled"]>;
+	onSuccess?: (
+		...args: ControllerContextWith<OuterContext>
+	) => NonNullable<Options["onSuccess"]>;
+	onSettled?: (
+		...args: ControllerContextWith<OuterContext>
+	) => NonNullable<Options["onSettled"]>;
 };
+
+const getToastArgs = <OC>(
+	internalContext: Pick<InternalContext<OC, unknown>, "outerContext">,
+) => [internalContext.outerContext] as MaybeAddElementToArray<[], OC>;
+
+const getTrpcArgs = <OC>(
+	internalContext: Pick<
+		InternalContext<OC, unknown>,
+		"controllerContext" | "outerContext"
+	>,
+) =>
+	[
+		internalContext.controllerContext,
+		internalContext.outerContext,
+	] as MaybeAddElementToArray<[ControllerContext], OC>;
 
 export const useTrpcMutationOptions = <
 	Path extends TRPCMutationKey = TRPCMutationKey,
-	Context = undefined,
+	OuterContext = undefined,
 	LifecycleContext = unknown,
 >(
 	...[
@@ -109,49 +153,67 @@ export const useTrpcMutationOptions = <
 		},
 		options,
 	]: MaybeAddElementToArray<
-		[UseContextedMutationOptions<Path, Context, LifecycleContext>],
-		Exact<Context, undefined> extends never
-			? TRPCMutationOptions<Path, LifecycleContext> & { context: Context }
+		[UseContextedMutationOptions<Path, OuterContext, LifecycleContext>],
+		Exact<OuterContext, undefined> extends never
+			? TRPCMutationOptions<Path, LifecycleContext> & { context: OuterContext }
 			:
 					| (TRPCMutationOptions<Path, LifecycleContext> & {
-							context?: Context;
+							context?: OuterContext;
 					  })
 					| undefined
 	>
 ): TRPCMutationOptions<
 	Path,
-	ExternalContext<WrappedContext<LifecycleContext>>
+	InternalContext<OuterContext, LifecycleContext>
 > => {
-	const { context, onError, onMutate, onSettled, onSuccess, ...rest } =
-		options || {};
+	const {
+		context: pinnedOuterContext,
+		onError,
+		onMutate,
+		onSettled,
+		onSuccess,
+		...rest
+	} = options || {};
 	const trpcContext = trpc.useContext();
 	const queryClient = useQueryClient();
-	return React.useMemo(() => {
-		const controllerContext = { queryClient, trpcContext };
-		const trpcArgs = [controllerContext, context] as Contexts<Context>;
-		const toastArgs = [context] as ToastArgs<Context>;
-		return {
+	return React.useMemo(
+		() => ({
 			onMutate: async (...args) => {
+				const partialInternalContext: Pick<
+					InternalContext<OuterContext, LifecycleContext>,
+					"controllerContext" | "outerContext"
+				> = {
+					controllerContext: { queryClient, trpcContext },
+					outerContext: pinnedOuterContext!,
+				};
 				let toastId: string | undefined;
 				const toastOptions =
 					typeof mutateToastOptions === "function"
-						? mutateToastOptions(...toastArgs)(...args)
+						? mutateToastOptions(...getToastArgs(partialInternalContext))(
+								...args,
+						  )
 						: mutateToastOptions;
 				if (toastOptions) {
 					toastId = toast.loading(toastOptions.text);
 				}
 				await onMutate?.(...args);
-				const wrappedContext = onMutateTrpc?.(...trpcArgs)(...args);
-				return { ...wrappedContext, toastId };
+				const lifecycleContextWithUpdateFns = await onMutateTrpc?.(
+					...getTrpcArgs(partialInternalContext),
+				)(...args);
+				return {
+					...partialInternalContext,
+					...lifecycleContextWithUpdateFns,
+					toastId,
+				};
 			},
-			onError: (error, vars, externalContext) => {
-				const { toastId, ...wrappedContext } = externalContext!;
+			onError: (error, vars, internalContext) => {
+				const { toastId, lifecycleContext, revertFn } = internalContext!;
 				const toastOptions =
 					typeof errorToastOptions === "function"
-						? errorToastOptions(...toastArgs)(
+						? errorToastOptions(...getToastArgs(internalContext!))(
 								error,
 								vars,
-								wrappedContext?.context,
+								lifecycleContext,
 						  )
 						: errorToastOptions;
 				if (toastOptions) {
@@ -159,18 +221,22 @@ export const useTrpcMutationOptions = <
 				} else {
 					toast.dismiss(toastId);
 				}
-				onError?.(error, vars, wrappedContext?.context);
-				wrappedContext?.revertFn?.();
-				return onErrorTrpc?.(...trpcArgs)(error, vars, wrappedContext?.context);
+				onError?.(error, vars, lifecycleContext);
+				revertFn?.();
+				return onErrorTrpc?.(...getTrpcArgs(internalContext!))(
+					error,
+					vars,
+					lifecycleContext,
+				);
 			},
-			onSuccess: (result, vars, externalContext) => {
-				const { toastId, ...wrappedContext } = externalContext!;
+			onSuccess: (result, vars, internalContext) => {
+				const { toastId, lifecycleContext, finalizeFn } = internalContext!;
 				const toastOptions =
 					typeof successToastOptions === "function"
-						? successToastOptions?.(...toastArgs)(
+						? successToastOptions?.(...getToastArgs(internalContext!))(
 								result,
 								vars,
-								wrappedContext?.context,
+								lifecycleContext,
 						  )
 						: successToastOptions;
 				if (toastOptions) {
@@ -178,40 +244,42 @@ export const useTrpcMutationOptions = <
 				} else {
 					toast.dismiss(toastId);
 				}
-				onSuccess?.(result, vars, wrappedContext?.context);
-				wrappedContext?.finalizeFn?.();
-				return onSuccessTrpc?.(...trpcArgs)(
+				onSuccess?.(result, vars, lifecycleContext);
+				finalizeFn?.();
+				return onSuccessTrpc?.(...getTrpcArgs(internalContext!))(
 					result,
 					vars,
-					wrappedContext?.context,
+					lifecycleContext,
 				);
 			},
-			onSettled: (result, error, vars, wrappedContext) => {
-				onSettled?.(result, error, vars, wrappedContext?.context);
-				return onSettledTrpc?.(...trpcArgs)(
+			onSettled: (result, error, vars, internalContext) => {
+				const { lifecycleContext } = internalContext!;
+				onSettled?.(result, error, vars, lifecycleContext);
+				return onSettledTrpc?.(...getTrpcArgs(internalContext!))(
 					result,
 					error,
 					vars,
-					wrappedContext?.context,
+					lifecycleContext,
 				);
 			},
 			...rest,
-		};
-	}, [
-		trpcContext,
-		queryClient,
-		context,
-		onMutate,
-		onError,
-		onSettled,
-		onSuccess,
-		onMutateTrpc,
-		onErrorTrpc,
-		onSettledTrpc,
-		onSuccessTrpc,
-		mutateToastOptions,
-		errorToastOptions,
-		successToastOptions,
-		rest,
-	]);
+		}),
+		[
+			trpcContext,
+			queryClient,
+			pinnedOuterContext,
+			onMutate,
+			onError,
+			onSettled,
+			onSuccess,
+			onMutateTrpc,
+			onErrorTrpc,
+			onSettledTrpc,
+			onSuccessTrpc,
+			mutateToastOptions,
+			errorToastOptions,
+			successToastOptions,
+			rest,
+		],
+	);
 };
