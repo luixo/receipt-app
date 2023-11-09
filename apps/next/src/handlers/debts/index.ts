@@ -10,12 +10,14 @@ import { procedure as getIntentions } from "./get-intentions";
 import { procedure as getUser } from "./get-user";
 import { procedure as remove } from "./remove";
 import { procedure as update } from "./update";
+import { procedure as updateBatch } from "./update-batch";
 
 export const router = t.router({
 	getByUsers,
 	getUser,
 	get,
 	update,
+	updateBatch,
 	remove,
 	add,
 	addBatch,

@@ -1,0 +1,452 @@
+import { faker } from "@faker-js/faker";
+import { describe, expect } from "vitest";
+
+import { createAuthContext } from "@tests/backend/utils/context";
+import {
+	insertAccount,
+	insertAccountWithSession,
+	insertConnectedUsers,
+	insertDebt,
+	insertReceipt,
+	insertSyncedDebts,
+	insertUser,
+} from "@tests/backend/utils/data";
+import {
+	expectDatabaseDiffSnapshot,
+	expectTRPCError,
+	expectUnauthorizedError,
+} from "@tests/backend/utils/expect";
+import type { TestContext } from "@tests/backend/utils/test";
+import { test } from "@tests/backend/utils/test";
+import type { TRPCMutationInput } from "app/trpc";
+import { nonNullishGuard } from "app/utils/utils";
+import type { AccountsId, UsersId } from "next-app/db/models";
+import { t } from "next-app/handlers/trpc";
+
+import {
+	getRandomCurrencyCode,
+	verifyAmount,
+	verifyCurrencyCode,
+	verifyNote,
+	verifyReceiptId,
+	verifyTimestamp,
+} from "./test.utils";
+import { procedure } from "./update-batch";
+
+const router = t.router({ procedure });
+
+const updateDescribes = (
+	getUpdates: (opts: {
+		ctx: TestContext;
+		selfAccountId: AccountsId;
+		defaultDebt: Awaited<ReturnType<typeof insertDebt>>;
+		defaultUserId: UsersId;
+	}) => Promise<{
+		updates: TRPCMutationInput<"debts.updateBatch">;
+		debts?: Awaited<ReturnType<typeof insertDebt>>[];
+	}>,
+	getNextTimestamp: (opts: {
+		update: TRPCMutationInput<"debts.updateBatch">[number];
+		debt: Awaited<ReturnType<typeof insertDebt>>;
+	}) => Date | null | undefined,
+	only = false,
+) => {
+	const runTest = async ({
+		ctx,
+		lockedBefore,
+		counterPartyAccepts,
+	}: {
+		ctx: TestContext;
+		lockedBefore: boolean;
+		counterPartyAccepts: boolean;
+	}) => {
+		const { sessionId, accountId } = await insertAccountWithSession(ctx);
+		const { id: foreignAccountId } = await insertAccount(
+			ctx,
+			counterPartyAccepts ? { settings: { autoAcceptDebts: true } } : undefined,
+		);
+		const [{ id: userId }, { id: foreignToSelfUserId }] =
+			await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
+		const [debt] = await insertSyncedDebts(
+			ctx,
+			[
+				accountId,
+				userId,
+				lockedBefore ? { lockedTimestamp: new Date("2021-01-01") } : undefined,
+			],
+			[foreignAccountId, foreignToSelfUserId],
+		);
+
+		// Verify unrelated data doesn't affect the result
+		await insertUser(ctx, accountId);
+		await insertUser(ctx, foreignAccountId);
+		const { id: foreignUserId } = await insertUser(ctx, foreignAccountId);
+		await insertDebt(ctx, accountId, userId);
+		await insertDebt(ctx, foreignAccountId, foreignUserId);
+
+		const { updates, debts = [] } = await getUpdates({
+			ctx,
+			selfAccountId: accountId,
+			defaultDebt: debt,
+			defaultUserId: userId,
+		});
+
+		const caller = router.createCaller(createAuthContext(ctx, sessionId));
+		const result = await expectDatabaseDiffSnapshot(ctx, () =>
+			caller.procedure(updates),
+		);
+		expect(result).toStrictEqual<typeof result>(
+			updates
+				.map((update) => {
+					const matchedDebt = [debt, ...debts].find(
+						({ id }) => id === update.id,
+					);
+					if (!matchedDebt) {
+						throw new Error(`You should pass a debt with id ${debt.id}.`);
+					}
+					const nextLockedTimestamp = getNextTimestamp({
+						debt: matchedDebt,
+						update,
+					});
+					if (nextLockedTimestamp === undefined) {
+						return null;
+					}
+					const reverseLockedTimestampUpdated =
+						nextLockedTimestamp !== undefined && counterPartyAccepts;
+					return {
+						debtId: update.id,
+						lockedTimestamp: nextLockedTimestamp,
+						reverseLockedTimestampUpdated,
+					};
+				})
+				.filter(nonNullishGuard),
+		);
+	};
+
+	const lockedStateTests = ({
+		counterPartyAccepts,
+	}: {
+		counterPartyAccepts: boolean;
+	}) => {
+		(only ? test.only : test)("locked before update", async ({ ctx }) => {
+			await runTest({ ctx, lockedBefore: true, counterPartyAccepts });
+		});
+		test("unlocked before update", async ({ ctx }) => {
+			await runTest({ ctx, lockedBefore: false, counterPartyAccepts });
+		});
+	};
+
+	describe("counterparty doesn't auto-accept", () => {
+		lockedStateTests({ counterPartyAccepts: false });
+	});
+
+	describe("counterparty auto-accepts", () => {
+		lockedStateTests({ counterPartyAccepts: true });
+	});
+};
+
+describe("debts.updateBatch", () => {
+	describe("input verification", () => {
+		expectUnauthorizedError((context) =>
+			router.createCaller(context).procedure([
+				{
+					id: faker.string.uuid(),
+					update: { amount: Number(faker.finance.amount()) },
+				},
+			]),
+		);
+
+		describe("id", () => {
+			test("invalid", async ({ ctx }) => {
+				const { sessionId } = await insertAccountWithSession(ctx);
+				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				await expectTRPCError(
+					() =>
+						caller.procedure([
+							{
+								id: "not-a-valid-uuid",
+								update: {
+									amount: Number(faker.finance.amount()),
+								},
+							},
+						]),
+					"BAD_REQUEST",
+					`Zod error\n\nAt "[0].id": Invalid uuid`,
+				);
+			});
+		});
+
+		describe("update", () => {
+			test("should have at least one key", async ({ ctx }) => {
+				const { sessionId } = await insertAccountWithSession(ctx);
+				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				await expectTRPCError(
+					() =>
+						caller.procedure([
+							{
+								id: faker.string.uuid(),
+								update: {},
+							},
+						]),
+					"BAD_REQUEST",
+					`Zod error\n\nAt "[0].update": Update object has to have at least one key to update`,
+				);
+			});
+		});
+
+		verifyAmount(
+			(context, amount) =>
+				router.createCaller(context).procedure([
+					{
+						id: faker.string.uuid(),
+						update: { amount },
+					},
+				]),
+			"[0].update.",
+		);
+
+		verifyNote(
+			(context, note) =>
+				router.createCaller(context).procedure([
+					{
+						id: faker.string.uuid(),
+						update: { note },
+					},
+				]),
+			"[0].update.",
+		);
+
+		verifyCurrencyCode(
+			(context, currencyCode) =>
+				router.createCaller(context).procedure([
+					{
+						id: faker.string.uuid(),
+						update: { currencyCode },
+					},
+				]),
+			"[0].update.",
+		);
+
+		verifyTimestamp(
+			(context, timestamp) =>
+				router.createCaller(context).procedure([
+					{
+						id: faker.string.uuid(),
+						update: { timestamp },
+					},
+				]),
+			"[0].update.",
+		);
+
+		verifyReceiptId(
+			(context, receiptId) =>
+				router.createCaller(context).procedure([
+					{
+						id: faker.string.uuid(),
+						update: { receiptId },
+					},
+				]),
+			"[0].update.",
+		);
+
+		test("debt does not exist", async ({ ctx }) => {
+			const {
+				sessionId,
+				accountId,
+				account: { email },
+			} = await insertAccountWithSession(ctx);
+			const { id: userId } = await insertUser(ctx, accountId);
+
+			// Verify that other debts don't affect the result
+			await insertDebt(ctx, accountId, userId);
+
+			const fakeDebtId = faker.string.uuid();
+			const anotherFakeDebtId = faker.string.uuid();
+			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			await expectTRPCError(
+				() =>
+					caller.procedure([
+						{
+							id: fakeDebtId,
+							update: { amount: Number(faker.finance.amount()) },
+						},
+						{
+							id: anotherFakeDebtId,
+							update: { amount: Number(faker.finance.amount()) },
+						},
+					]),
+				"NOT_FOUND",
+				`Debts "${fakeDebtId}", "${anotherFakeDebtId}" do not exist on account "${email}".`,
+			);
+		});
+
+		test("debt is not owned by an account", async ({ ctx }) => {
+			const {
+				sessionId,
+				accountId,
+				account: { email },
+			} = await insertAccountWithSession(ctx);
+
+			const { id: foreignAccountId } = await insertAccount(ctx);
+			const { id: foreignUserId } = await insertUser(ctx, foreignAccountId);
+			const { id: debtId } = await insertDebt(
+				ctx,
+				foreignAccountId,
+				foreignUserId,
+			);
+
+			// Verify that other debts don't affect the result
+			const { id: userId } = await insertUser(ctx, accountId);
+			await insertDebt(ctx, accountId, userId);
+
+			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			await expectTRPCError(
+				() =>
+					caller.procedure([
+						{
+							id: debtId,
+							update: { amount: Number(faker.finance.amount()) },
+						},
+					]),
+				"NOT_FOUND",
+				`Debt "${debtId}" does not exist on account "${email}".`,
+			);
+		});
+	});
+
+	describe("functionality", () => {
+		describe("no locked", () => {
+			updateDescribes(
+				async ({ defaultDebt, selfAccountId, ctx }) => {
+					const { id: receiptId } = await insertReceipt(ctx, selfAccountId);
+					return {
+						updates: [
+							{
+								id: defaultDebt.id,
+								update: {
+									amount: Number(faker.finance.amount()),
+									timestamp: new Date("2020-06-01"),
+									note: faker.lorem.words(),
+									currencyCode: getRandomCurrencyCode(),
+									receiptId,
+								},
+							},
+						],
+					};
+				},
+				({ debt }) => (debt.lockedTimestamp ? new Date() : undefined),
+			);
+		});
+
+		describe("locked as true", () => {
+			updateDescribes(
+				async ({ defaultDebt, selfAccountId, ctx }) => {
+					const { id: receiptId } = await insertReceipt(ctx, selfAccountId);
+					return {
+						updates: [
+							{
+								id: defaultDebt.id,
+								update: {
+									amount: Number(faker.finance.amount()),
+									timestamp: new Date("2020-06-01"),
+									note: faker.lorem.words(),
+									currencyCode: getRandomCurrencyCode(),
+									receiptId,
+									locked: true,
+								},
+							},
+						],
+					};
+				},
+				() => new Date(),
+			);
+		});
+
+		describe("locked as false", () => {
+			updateDescribes(
+				async ({ defaultDebt, selfAccountId, ctx }) => {
+					const { id: receiptId } = await insertReceipt(ctx, selfAccountId);
+					return {
+						updates: [
+							{
+								id: defaultDebt.id,
+								update: {
+									amount: Number(faker.finance.amount()),
+									timestamp: new Date("2020-06-01"),
+									note: faker.lorem.words(),
+									currencyCode: getRandomCurrencyCode(),
+									receiptId,
+									locked: false,
+								},
+							},
+						],
+					};
+				},
+				() => null,
+			);
+		});
+	});
+
+	describe("update multiple debts", () => {
+		describe("with non-locking values", () => {
+			updateDescribes(
+				async ({ defaultDebt, defaultUserId, selfAccountId, ctx }) => {
+					const otherDebt = await insertDebt(ctx, selfAccountId, defaultUserId);
+					return {
+						updates: [
+							{ id: defaultDebt.id, update: { note: faker.lorem.words() } },
+							{ id: otherDebt.id, update: { note: faker.lorem.words() } },
+						],
+						debts: [otherDebt],
+					};
+				},
+				() => undefined,
+			);
+		});
+
+		describe("with locking values", () => {
+			updateDescribes(
+				async ({ defaultDebt, defaultUserId, selfAccountId, ctx }) => {
+					const otherDebt = await insertDebt(ctx, selfAccountId, defaultUserId);
+					return {
+						updates: [
+							{
+								id: defaultDebt.id,
+								update: { amount: Number(faker.finance.amount()) },
+							},
+							{
+								id: otherDebt.id,
+								update: { amount: Number(faker.finance.amount()) },
+							},
+						],
+						debts: [otherDebt],
+					};
+				},
+				({ debt }) => (debt.lockedTimestamp ? new Date() : undefined),
+			);
+		});
+
+		describe("with distinctly locking values", () => {
+			updateDescribes(
+				async ({ defaultDebt, defaultUserId, selfAccountId, ctx }) => {
+					const otherDebt = await insertDebt(ctx, selfAccountId, defaultUserId);
+					return {
+						updates: [
+							{
+								id: defaultDebt.id,
+								update: { amount: Number(faker.finance.amount()) },
+							},
+							{
+								id: otherDebt.id,
+								update: { note: faker.lorem.words() },
+							},
+						],
+						debts: [otherDebt],
+					};
+				},
+				({ update, debt }) =>
+					debt.lockedTimestamp && update.update.amount ? new Date() : undefined,
+			);
+		});
+	});
+});

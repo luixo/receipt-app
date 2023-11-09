@@ -1,10 +1,19 @@
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 import { getReceiptDebtName } from "app/utils/receipt";
+import { omitUndefined } from "app/utils/utils";
+import { debtAmountSchema, debtNoteSchema } from "app/utils/validation";
 import type { Database } from "next-app/db";
 import { DEBTS } from "next-app/db/consts";
 import type { Receipts, ReceiptsId, UsersId } from "next-app/db/models";
+import type { SimpleUpdateObject } from "next-app/db/types";
 import type { getValidParticipants } from "next-app/handlers/receipt-items/utils";
+import {
+	currencyCodeSchema,
+	debtIdSchema,
+	receiptIdSchema,
+} from "next-app/handlers/validation";
 
 type Participant = Awaited<ReturnType<typeof getValidParticipants>>[number];
 
@@ -100,4 +109,68 @@ export const withOwnerReceiptUserConstraint = async <T>(
 		}
 		throw e;
 	}
+};
+
+type DebtUpdateObject = SimpleUpdateObject<"debts">;
+
+const KEYS_NOT_UPDATE_LOCKED_TIMESTAMP: (keyof DebtUpdateObject)[] = [
+	"note",
+	"receiptId",
+];
+
+export const updateDebtSchema = z.strictObject({
+	id: debtIdSchema,
+	update: z
+		.strictObject({
+			amount: debtAmountSchema,
+			timestamp: z.date(),
+			note: debtNoteSchema,
+			currencyCode: currencyCodeSchema,
+			locked: z.boolean(),
+			receiptId: receiptIdSchema.optional(),
+		})
+		.partial()
+		.refine(
+			(obj) => Object.keys(obj).length !== 0,
+			"Update object has to have at least one key to update",
+		),
+});
+
+export const buildSetObjects = (
+	input: z.infer<typeof updateDebtSchema>,
+	debt: { lockedTimestamp: Date | null },
+) => {
+	const setObject: DebtUpdateObject = omitUndefined<DebtUpdateObject>({
+		amount: input.update.amount?.toString(),
+		timestamp: input.update.timestamp,
+		note: input.update.note,
+		currencyCode: input.update.currencyCode,
+		receiptId: input.update.receiptId,
+		lockedTimestamp:
+			input.update.locked === undefined
+				? debt.lockedTimestamp === null
+					? undefined
+					: new Date()
+				: input.update.locked
+				? new Date()
+				: null,
+	});
+	const keysToUpdateLockedTimestamp = Object.keys(input.update).filter(
+		(key) =>
+			!KEYS_NOT_UPDATE_LOCKED_TIMESTAMP.includes(key as keyof DebtUpdateObject),
+	);
+	if (keysToUpdateLockedTimestamp.length === 0) {
+		// don't update lockedTimestamp if we updated keys that don't require lockedTimestamp update
+		delete setObject.lockedTimestamp;
+	}
+	const reverseSetObject = omitUndefined({
+		...setObject,
+		note: undefined,
+		amount: setObject.amount ? `-${setObject.amount}` : undefined,
+	});
+	return {
+		setObject,
+		reverseSetObject:
+			Object.keys(reverseSetObject).length === 0 ? undefined : reverseSetObject,
+	};
 };

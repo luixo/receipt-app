@@ -18,6 +18,12 @@ export type SplitStringByComma<S extends string> =
 
 type ExtractObj<S extends object, K> = K extends keyof S ? S[K] : never;
 
+type NonNullableFields<T> = {
+	[P in keyof T]: NonNullable<T[P]>;
+};
+export type NonNullableField<T, K extends keyof T> = T &
+	NonNullableFields<Pick<T, K>>;
+
 export type ExtractObjectByPath<
 	S extends object,
 	T extends unknown[],

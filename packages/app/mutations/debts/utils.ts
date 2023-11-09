@@ -1,7 +1,14 @@
-import type { cache } from "app/cache";
-import type { UpdaterRevertResult } from "app/cache/utils";
+import { cache } from "app/cache";
 import { mergeUpdaterResults } from "app/cache/utils";
-import type { TRPCQueryOutput } from "app/trpc";
+import type {
+	ControllerContext,
+	SnapshotFn,
+	UpdateFn,
+	UpdaterRevertResult,
+} from "app/cache/utils";
+import type { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
+import type { CurrencyCode } from "app/utils/currency";
+import type { DebtsId, ReceiptsId, UsersId } from "next-app/db/models";
 
 export type Intention = TRPCQueryOutput<"debts.getIntentions">[number];
 
@@ -165,5 +172,203 @@ export const updateGetUserSuccess = (
 			return;
 		}
 		controller.update(userId, id, (debt) => ({ ...debt, created }));
+	});
+};
+
+export type CurrentDebt = {
+	userId: UsersId;
+	amount: number;
+	currencyCode: CurrencyCode;
+	receiptId: ReceiptsId | null;
+};
+
+type DebtSum = number;
+type DebtUserSnapshot = TRPCQueryOutput<"debts.getUser">[number];
+type DebtSnapshot = TRPCQueryOutput<"debts.get">;
+type DebtUpdateObject = TRPCMutationInput<"debts.update">["update"];
+
+export const getNextLockedTimestamp = (update: DebtUpdateObject) =>
+	update.amount !== undefined ||
+	update.timestamp !== undefined ||
+	update.currencyCode !== undefined ||
+	update.locked === true
+		? // lockedTimestamp will be overriden in onSuccess
+		  new Date()
+		: update.locked === false
+		? null
+		: undefined;
+
+export const applySumUpdate =
+	(prevAmount: number, update: DebtUpdateObject): UpdateFn<DebtSum> =>
+	(sum) => {
+		if (update.amount !== undefined) {
+			const delta = update.amount - prevAmount;
+			return sum + delta;
+		}
+		return sum;
+	};
+
+export const applyUserUpdate =
+	(update: DebtUpdateObject): UpdateFn<DebtUserSnapshot> =>
+	(debt) => {
+		const nextDebt = { ...debt };
+		if (update.amount !== undefined) {
+			nextDebt.amount = update.amount;
+		}
+		if (update.timestamp !== undefined) {
+			nextDebt.timestamp = update.timestamp;
+		}
+		if (update.currencyCode !== undefined) {
+			nextDebt.currencyCode = update.currencyCode;
+		}
+		if (update.note !== undefined) {
+			nextDebt.note = update.note;
+		}
+		const nextLockedTimestamp = getNextLockedTimestamp(update);
+		if (nextLockedTimestamp !== null) {
+			nextDebt.lockedTimestamp = nextLockedTimestamp;
+		}
+		return nextDebt;
+	};
+
+export const applyUpdate =
+	(update: DebtUpdateObject): UpdateFn<DebtSnapshot> =>
+	(debt) => {
+		const nextDebt = { ...debt };
+		if (update.amount !== undefined) {
+			nextDebt.amount = update.amount;
+		}
+		if (update.timestamp !== undefined) {
+			nextDebt.timestamp = update.timestamp;
+		}
+		if (update.currencyCode !== undefined) {
+			nextDebt.currencyCode = update.currencyCode;
+		}
+		if (update.note !== undefined) {
+			nextDebt.note = update.note;
+		}
+		const nextLockedTimestamp = getNextLockedTimestamp(update);
+		if (nextLockedTimestamp !== null) {
+			nextDebt.lockedTimestamp = nextLockedTimestamp;
+		}
+		return nextDebt;
+	};
+
+export const getSumRevert =
+	(prevAmount: number, update: DebtUpdateObject): SnapshotFn<DebtSum> =>
+	(updatedSum) =>
+	(currentSum) => {
+		if (update.amount !== undefined) {
+			const delta = updatedSum - prevAmount;
+			return currentSum - delta;
+		}
+		return currentSum;
+	};
+
+export const getUserRevert =
+	(update: DebtUpdateObject): SnapshotFn<DebtUserSnapshot> =>
+	(snapshot) =>
+	(debt) => {
+		const revertDebt = { ...debt };
+		if (update.amount !== undefined) {
+			revertDebt.amount = snapshot.amount;
+		}
+		if (update.timestamp !== undefined) {
+			revertDebt.timestamp = snapshot.timestamp;
+		}
+		if (update.currencyCode !== undefined) {
+			revertDebt.currencyCode = snapshot.currencyCode;
+		}
+		if (update.note !== undefined) {
+			revertDebt.note = snapshot.note;
+		}
+		const nextLockedTimestamp = getNextLockedTimestamp(update);
+		if (nextLockedTimestamp !== null) {
+			revertDebt.lockedTimestamp = snapshot.lockedTimestamp;
+		}
+		return revertDebt;
+	};
+
+export const getRevert =
+	(update: DebtUpdateObject): SnapshotFn<DebtSnapshot> =>
+	(snapshot) =>
+	(debt) => {
+		const revertDebt = { ...debt };
+		if (update.amount !== undefined) {
+			revertDebt.amount = snapshot.amount;
+		}
+		if (update.timestamp !== undefined) {
+			revertDebt.timestamp = snapshot.timestamp;
+		}
+		if (update.currencyCode !== undefined) {
+			revertDebt.currencyCode = snapshot.currencyCode;
+		}
+		if (update.note !== undefined) {
+			revertDebt.note = snapshot.note;
+		}
+		const nextLockedTimestamp = getNextLockedTimestamp(update);
+		if (nextLockedTimestamp !== null) {
+			revertDebt.lockedTimestamp = snapshot.lockedTimestamp;
+		}
+		return revertDebt;
+	};
+
+export const updateReceiptWithOutcomingDebtId = (
+	controllerContext: ControllerContext,
+	receiptId: ReceiptsId,
+	debtId: DebtsId,
+) => {
+	cache.receipts.update(controllerContext, {
+		get: (controller) => {
+			controller.update(receiptId, (receipt) => ({
+				...receipt,
+				debt: {
+					direction: "outcoming",
+					ids:
+						receipt.debt?.direction === "outcoming"
+							? receipt.debt.ids.includes(debtId)
+								? receipt.debt.ids
+								: [...receipt.debt.ids, debtId]
+							: [debtId],
+				},
+			}));
+		},
+		getNonResolvedAmount: undefined,
+		getPaged: undefined,
+		getName: undefined,
+		getResolvedParticipants: undefined,
+	});
+};
+
+export const updateLockedTimestamps = (
+	controllerContext: ControllerContext,
+	userId: UsersId,
+	debtId: DebtsId,
+	lockedTimestamp: Date | undefined,
+	reverseLockedTimestampUpdated: boolean,
+) => {
+	cache.debts.update(controllerContext, {
+		getByUsers: undefined,
+		getUser: (controller) =>
+			controller.update(userId, debtId, (debt) => ({
+				...debt,
+				lockedTimestamp,
+				their: reverseLockedTimestampUpdated ? { lockedTimestamp } : debt.their,
+			})),
+		get: (controller) =>
+			controller.update(debtId, (debt) => ({
+				...debt,
+				lockedTimestamp,
+				their: reverseLockedTimestampUpdated ? { lockedTimestamp } : debt.their,
+			})),
+		getIntentions: (controller) => {
+			if (!lockedTimestamp) {
+				return;
+			}
+			// It seems like it doesn't work
+			// because whenever we update lockedTimestmap it is more fresh than counteryparty's
+			// hence we never get intentions actually updated here
+			controller.invalidate();
+		},
 	});
 };
