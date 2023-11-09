@@ -1,11 +1,8 @@
 import React from "react";
 
 import { Modal, Text, styled } from "@nextui-org/react";
-import { MdInfo as InfoIcon } from "react-icons/md";
 
 import { Grid } from "app/components/grid";
-import { IconButton } from "app/components/icon-button";
-import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useMatchMediaValue } from "app/hooks/use-match-media-value";
 
 import type {
@@ -56,17 +53,18 @@ const sortParticipants =
 	};
 
 type Props = {
+	isOpen: boolean;
+	closeModal: () => void;
 	receipt: LockedReceipt;
 	participants: DebtParticipant[];
 };
 
-export const ReceiptDebtSyncInfoButton: React.FC<Props> = ({
+export const ReceiptDebtSyncInfoModal: React.FC<Props> = ({
+	isOpen,
+	closeModal,
 	receipt,
 	participants,
 }) => {
-	const [popoverOpen, { setFalse: closeModal, setTrue: openModal }] =
-		useBooleanState();
-
 	const showBorder = useMatchMediaValue(true, { lessMd: false });
 	const sortedParticipants = React.useMemo(
 		() => [...participants].sort(sortParticipants(receipt.lockedTimestamp)),
@@ -77,46 +75,38 @@ export const ReceiptDebtSyncInfoButton: React.FC<Props> = ({
 		return null;
 	}
 	return (
-		<>
-			<IconButton
-				onClick={openModal}
-				color={popoverOpen ? "secondary" : undefined}
-				icon={<InfoIcon size={24} />}
-				title="Show sync status"
-			/>
-			<Modal
-				open={popoverOpen}
-				onClose={closeModal}
-				width="90%"
-				title="Receipt sync status"
-			>
-				<Modal.Header>
-					<Text h3>Sync status</Text>
-				</Modal.Header>
-				<Modal.Body>
-					<Grid.Container>
-						<GridHeader border={showBorder} defaultCol={5.5} lessMdCol={0}>
-							User
-						</GridHeader>
-						<GridHeader border={showBorder} defaultCol={2.5} lessMdCol={4}>
-							Amount
-						</GridHeader>
-						<GridHeader border={showBorder} defaultCol={2.5} lessMdCol={4}>
-							Status
-						</GridHeader>
-						<GridHeader border={showBorder} defaultCol={1.5} lessMdCol={4}>
-							Actions
-						</GridHeader>
-						{sortedParticipants.map((participant) => (
-							<ReceiptParticipantDebt
-								key={participant.userId}
-								receipt={receipt}
-								participant={participant}
-							/>
-						))}
-					</Grid.Container>
-				</Modal.Body>
-			</Modal>
-		</>
+		<Modal
+			open={isOpen}
+			onClose={closeModal}
+			width="90%"
+			title="Receipt sync status"
+		>
+			<Modal.Header>
+				<Text h3>Sync status</Text>
+			</Modal.Header>
+			<Modal.Body>
+				<Grid.Container>
+					<GridHeader border={showBorder} defaultCol={5.5} lessMdCol={0}>
+						User
+					</GridHeader>
+					<GridHeader border={showBorder} defaultCol={2.5} lessMdCol={4}>
+						Amount
+					</GridHeader>
+					<GridHeader border={showBorder} defaultCol={2.5} lessMdCol={4}>
+						Status
+					</GridHeader>
+					<GridHeader border={showBorder} defaultCol={1.5} lessMdCol={4}>
+						Actions
+					</GridHeader>
+					{sortedParticipants.map((participant) => (
+						<ReceiptParticipantDebt
+							key={participant.userId}
+							receipt={receipt}
+							participant={participant}
+						/>
+					))}
+				</Grid.Container>
+			</Modal.Body>
+		</Modal>
 	);
 };

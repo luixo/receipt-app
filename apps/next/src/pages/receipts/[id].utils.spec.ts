@@ -59,6 +59,7 @@ type Fixtures = {
 	mockReceipt: (options?: MockReceiptOptions) => Promise<MockReceiptResult>;
 	sendDebtButton: Locator;
 	updateDebtButton: Locator;
+	propagateDebtsButton: Locator;
 	openDebtsInfoPanel: () => Promise<void>;
 };
 
@@ -214,13 +215,12 @@ export const test = originalTest.extend<Fixtures>({
 						sum,
 						role: "owner",
 						lockedTimestamp,
-						debt:
-							debts.length !== 0
-								? {
-										direction: "outcoming",
-										ids: debts.map((debt) => debt.id),
-								  }
-								: undefined,
+						debt: lockedTimestamp
+							? {
+									direction: "outcoming",
+									ids: debts.map((debt) => debt.id),
+							  }
+							: undefined,
 					};
 				});
 				api.mock("receiptItems.get", (input) => {
@@ -283,6 +283,9 @@ export const test = originalTest.extend<Fixtures>({
 
 	sendDebtButton: ({ page }, use) =>
 		use(page.locator("button[title='Send debt to a user']")),
+
+	propagateDebtsButton: ({ page }, use) =>
+		use(page.locator("button[title='Propagate debts']")),
 
 	openDebtsInfoPanel: ({ page, modal }, use) =>
 		use(async () => {

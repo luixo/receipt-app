@@ -36,7 +36,7 @@ const Border = styled("div", {
 	my: "$4",
 });
 
-const isDebtInSyncWithReceipt = (
+export const isDebtInSyncWithReceipt = (
 	receiptDebt: Pick<LockedReceipt, "currencyCode" | "issued" | "id"> & {
 		participantSum: number;
 	},

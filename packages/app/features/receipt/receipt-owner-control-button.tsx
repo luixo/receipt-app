@@ -1,7 +1,5 @@
 import React from "react";
 
-import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { mutations } from "app/mutations";
 import type { TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
 
@@ -26,22 +24,11 @@ export const ReceiptOwnerControlButton: React.FC<Props> = ({
 		debtIds.map((id) => t.debts.get({ id })),
 	);
 
-	const propagateMutation = trpc.receipts.propagateDebts.useMutation(
-		useTrpcMutationOptions(mutations.receipts.propagateDebts.options),
-	);
-	const propagateDebts = React.useCallback(
-		(lockedTimestamp: Date) => () =>
-			propagateMutation.mutate({ receiptId: receipt.id, lockedTimestamp }),
-		[propagateMutation, receipt.id],
-	);
-
 	const lockedButton = (
 		<ReceiptLockedButton
 			receiptId={receipt.id}
 			locked={Boolean(receipt.lockedTimestamp)}
 			isLoading={deleteLoading}
-			isPropagating={propagateMutation.isLoading}
-			propagateDebts={propagateDebts}
 		/>
 	);
 	if (!receipt.debt) {
@@ -59,8 +46,6 @@ export const ReceiptOwnerControlButton: React.FC<Props> = ({
 					queries={debtsQueries}
 					receipt={receipt as LockedReceipt}
 					isLoading={deleteLoading}
-					isPropagating={propagateMutation.isLoading}
-					propagateDebts={propagateDebts(receipt.lockedTimestamp)}
 				/>
 			) : null}
 		</>

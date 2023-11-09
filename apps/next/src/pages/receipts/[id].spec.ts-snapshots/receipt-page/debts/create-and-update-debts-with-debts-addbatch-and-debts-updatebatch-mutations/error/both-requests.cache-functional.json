@@ -1,0 +1,81 @@
+{
+	"queries": {
+		"debts.get:[{\"id\":\"4eaf7a26-d0ef-4a3c-b034-798a3396d05a\"}]": {
+			"state": {
+				"dataUpdateCount": 3
+			}
+		}
+	},
+	"mutations": {
+		"debts.addBatch": {
+			"state": {
+				"error": {
+					"message": "Forbidden to add debts",
+					"data": {
+						"code": "FORBIDDEN",
+						"httpStatus": 403,
+						"path": "debts.addBatch",
+						"stack": "<redacted>"
+					}
+				},
+				"failureCount": 1,
+				"isPaused": false,
+				"status": "error",
+				"variables": [
+					{
+						"note": "Receipt \"officiis perferendis officia\"",
+						"currencyCode": "KZT",
+						"userId": "ce7db7b7-4200-4e3c-86e0-da6fa28a512e",
+						"amount": 24414.05,
+						"timestamp": "2020-01-01T00:00:00.000Z",
+						"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"
+					},
+					{
+						"note": "Receipt \"officiis perferendis officia\"",
+						"currencyCode": "KZT",
+						"userId": "b71beaf6-a141-4d5d-9075-9e7a6921ff09",
+						"amount": 96481.98,
+						"timestamp": "2020-01-01T00:00:00.000Z",
+						"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"
+					},
+					{
+						"note": "Receipt \"officiis perferendis officia\"",
+						"currencyCode": "KZT",
+						"userId": "8fc006f3-1580-45ae-807c-6a6cb9c825fd",
+						"amount": 2115.27,
+						"timestamp": "2020-01-01T00:00:00.000Z",
+						"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"
+					}
+				]
+			}
+		},
+		"debts.updateBatch": {
+			"state": {
+				"error": {
+					"message": "Forbidden to update debts",
+					"data": {
+						"code": "FORBIDDEN",
+						"httpStatus": 403,
+						"path": "debts.updateBatch",
+						"stack": "<redacted>"
+					}
+				},
+				"failureCount": 1,
+				"isPaused": false,
+				"status": "error",
+				"variables": [
+					{
+						"id": "4eaf7a26-d0ef-4a3c-b034-798a3396d05a",
+						"update": {
+							"amount": 23999.14,
+							"currencyCode": "KZT",
+							"timestamp": "2020-01-01T00:00:00.000Z",
+							"locked": true,
+							"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"
+						}
+					}
+				]
+			}
+		}
+	}
+}

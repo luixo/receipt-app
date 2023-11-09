@@ -152,6 +152,7 @@ test.describe("Receipt page", () => {
 				await expect(page).toHaveURL(`/receipts/${receipt.id}`);
 			});
 		});
+
 		test.describe("Update a debt with a 'debts.update' mutation", () => {
 			const singleDebtLockedTimestampMismatch: ModifyOutcomingDebts = (
 				debts,
@@ -300,6 +301,241 @@ test.describe("Receipt page", () => {
 				await updateDebtButton.click();
 				await verifyToastTexts("Debt updated successfully");
 				await expect(page).toHaveURL(`/receipts/${receipt.id}`);
+			});
+		});
+
+		test.describe("Create and update debts with 'debts.addBatch' and 'debts.updateBatch' mutations", () => {
+			const emptyDebts: ModifyOutcomingDebts = (debts) => [
+				{ ...debts[0]!, amount: debts[0]!.amount + 1, their: undefined },
+			];
+
+			test("loading", async ({
+				page,
+				api,
+				propagateDebtsButton,
+				mockReceipt,
+				snapshotQueries,
+				withLoader,
+				verifyToastTexts,
+				awaitQuery,
+			}) => {
+				const { receipt } = await mockReceipt({
+					modifyOutcomingDebts: emptyDebts,
+					lockedTimestamp: new Date(),
+				});
+				api.pause("debts.addBatch");
+				api.pause("debts.updateBatch");
+
+				await page.goto(`/receipts/${receipt.id}`);
+				await awaitQuery("currency.getList");
+
+				await snapshotQueries(async () => {
+					const buttonWithLoader = withLoader(propagateDebtsButton);
+					await expect(buttonWithLoader).not.toBeVisible();
+					await propagateDebtsButton.click();
+					await verifyToastTexts(["Adding 3 debts..", "Updating debt.."]);
+					await expect(propagateDebtsButton).toBeDisabled();
+					await expect(buttonWithLoader).toBeVisible();
+				});
+			});
+
+			test.describe("success", () => {
+				test("with auto-accept from the counterparty", async ({
+					page,
+					api,
+					propagateDebtsButton,
+					mockReceipt,
+					verifyToastTexts,
+					snapshotQueries,
+					awaitQuery,
+				}) => {
+					const { receipt } = await mockReceipt({
+						modifyOutcomingDebts: emptyDebts,
+						lockedTimestamp: new Date(),
+					});
+					api.mock("debts.addBatch", (debts) => ({
+						ids: debts.map(() => faker.string.uuid()),
+						lockedTimestamp: new Date(),
+						reverseAcceptedUserIds: [
+							...new Set(debts.map((debt) => debt.userId)),
+						],
+					}));
+					api.mock("debts.updateBatch", (debts) =>
+						debts.map((debt) => ({
+							lockedTimestamp: new Date(),
+							debtId: debt.id,
+							reverseLockedTimestampUpdated: true,
+						})),
+					);
+
+					await page.goto(`/receipts/${receipt.id}`);
+					await awaitQuery("currency.getList");
+
+					await snapshotQueries(async () => {
+						await propagateDebtsButton.click();
+						await verifyToastTexts([
+							"3 debts added",
+							"Debt updated successfully",
+						]);
+						await expect(page).toHaveURL(`/receipts/${receipt.id}`);
+					});
+				});
+
+				test("without auto-accept from the counterparty", async ({
+					page,
+					api,
+					propagateDebtsButton,
+					mockReceipt,
+					verifyToastTexts,
+					snapshotQueries,
+					awaitQuery,
+				}) => {
+					const { receipt } = await mockReceipt({
+						modifyOutcomingDebts: emptyDebts,
+						lockedTimestamp: new Date(),
+					});
+					api.mock("debts.addBatch", (debts) => ({
+						ids: debts.map(() => faker.string.uuid()),
+						lockedTimestamp: new Date(),
+						reverseAcceptedUserIds: [],
+					}));
+					api.mock("debts.updateBatch", (debts) =>
+						debts.map((debt) => ({
+							lockedTimestamp: new Date(),
+							debtId: debt.id,
+							reverseLockedTimestampUpdated: false,
+						})),
+					);
+
+					await page.goto(`/receipts/${receipt.id}`);
+					await awaitQuery("currency.getList");
+
+					await snapshotQueries(async () => {
+						await propagateDebtsButton.click();
+						await verifyToastTexts([
+							"3 debts added",
+							"Debt updated successfully",
+						]);
+						await expect(page).toHaveURL(`/receipts/${receipt.id}`);
+					});
+				});
+			});
+
+			test.describe("error", () => {
+				test("single request", async ({
+					page,
+					api,
+					propagateDebtsButton,
+					mockReceipt,
+					snapshotQueries,
+					verifyToastTexts,
+					clearToasts,
+					awaitQuery,
+				}) => {
+					const { receipt } = await mockReceipt({
+						modifyOutcomingDebts: emptyDebts,
+						lockedTimestamp: new Date(),
+					});
+					api.mock("debts.addBatch", (debts) => ({
+						ids: debts.map(() => faker.string.uuid()),
+						lockedTimestamp: new Date(),
+						reverseAcceptedUserIds: [],
+					}));
+					api.mock("debts.updateBatch", () => {
+						throw new TRPCError({
+							code: "FORBIDDEN",
+							message: "Forbidden to update debts",
+						});
+					});
+
+					await page.goto(`/receipts/${receipt.id}`);
+					await awaitQuery("currency.getList");
+
+					await snapshotQueries(async () => {
+						await propagateDebtsButton.click();
+						await verifyToastTexts([
+							"Error updating debt: Forbidden to update debts",
+							"3 debts added",
+						]);
+					});
+					await expect(page).toHaveURL(`/receipts/${receipt.id}`);
+
+					// Verify that "debts.updateBatch" works after error is removed
+					api.mock("debts.updateBatch", (debts) =>
+						debts.map((debt) => ({
+							lockedTimestamp: new Date(),
+							debtId: debt.id,
+							reverseLockedTimestampUpdated: false,
+						})),
+					);
+					await clearToasts();
+					await snapshotQueries(async () => {
+						await propagateDebtsButton.click();
+						await verifyToastTexts("Debt updated successfully");
+					});
+					await expect(page).toHaveURL(`/receipts/${receipt.id}`);
+				});
+
+				test("both requests", async ({
+					page,
+					api,
+					propagateDebtsButton,
+					mockReceipt,
+					snapshotQueries,
+					verifyToastTexts,
+					clearToasts,
+					awaitQuery,
+				}) => {
+					const { receipt } = await mockReceipt({
+						modifyOutcomingDebts: emptyDebts,
+						lockedTimestamp: new Date(),
+					});
+					api.mock("debts.addBatch", () => {
+						throw new TRPCError({
+							code: "FORBIDDEN",
+							message: "Forbidden to add debts",
+						});
+					});
+					api.mock("debts.updateBatch", () => {
+						throw new TRPCError({
+							code: "FORBIDDEN",
+							message: "Forbidden to update debts",
+						});
+					});
+
+					await page.goto(`/receipts/${receipt.id}`);
+					await awaitQuery("currency.getList");
+
+					await snapshotQueries(async () => {
+						await propagateDebtsButton.click();
+						await verifyToastTexts([
+							"Error adding 3 debts: Forbidden to add debts",
+							"Error updating debt: Forbidden to update debts",
+						]);
+					});
+					await expect(page).toHaveURL(`/receipts/${receipt.id}`);
+
+					// Verify that "debts.addBatch" and "debts.updateBatch" work after error is removed
+					api.mock("debts.addBatch", (debts) => ({
+						ids: debts.map(() => faker.string.uuid()),
+						lockedTimestamp: new Date(),
+						reverseAcceptedUserIds: [],
+					}));
+					api.mock("debts.updateBatch", (debts) =>
+						debts.map((debt) => ({
+							lockedTimestamp: new Date(),
+							debtId: debt.id,
+							reverseLockedTimestampUpdated: false,
+						})),
+					);
+					await clearToasts();
+					await propagateDebtsButton.click();
+					await verifyToastTexts([
+						"3 debts added",
+						"Debt updated successfully",
+					]);
+					await expect(page).toHaveURL(`/receipts/${receipt.id}`);
+				});
 			});
 		});
 	});

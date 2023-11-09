@@ -6,7 +6,6 @@ import { procedure as getName } from "./get-name";
 import { procedure as getNonResolvedAmount } from "./get-non-resolved-amount";
 import { procedure as getPaged } from "./get-paged";
 import { procedure as getResolvedParticipants } from "./get-resolved-participants";
-import { procedure as propagateDebts } from "./propagate-debts";
 import { procedure as remove } from "./remove";
 import { procedure as update } from "./update";
 
@@ -18,6 +17,5 @@ export const router = t.router({
 	update,
 	getName,
 	getResolvedParticipants,
-	propagateDebts,
 	getNonResolvedAmount,
 });
