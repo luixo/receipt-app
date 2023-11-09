@@ -6,7 +6,7 @@ exports[`receiptItems.remove > functionality > foreign receipt 1`] = `
 + After snapshot
 
 @@ --- --- @@
-- INSERT INTO public.\\"receiptItems\\" VALUES ('3a1d473d-4610-4e99-bd6b-bbf7a915a391', 'Computer', 6100.7400, 3.0000, '49fc80e6-78a8-4b86-aabf-a015b909fe31', false);"
+- INSERT INTO public."receiptItems" VALUES ('3a1d473d-4610-4e99-bd6b-bbf7a915a391', 'Computer', 6100.7400, 3.0000, '49fc80e6-78a8-4b86-aabf-a015b909fe31', false);"
 `;
 
 exports[`receiptItems.remove > functionality > own receipt 1`] = `
@@ -15,5 +15,5 @@ exports[`receiptItems.remove > functionality > own receipt 1`] = `
 + After snapshot
 
 @@ --- --- @@
-- INSERT INTO public.\\"receiptItems\\" VALUES ('de4fb403-feea-48c9-adce-0723a3cd011c', 'Bike', 6045.7600, 1.0000, '17409b67-e538-4600-8d2b-055ceb5957fc', false);"
+- INSERT INTO public."receiptItems" VALUES ('de4fb403-feea-48c9-adce-0723a3cd011c', 'Bike', 6045.7600, 1.0000, '17409b67-e538-4600-8d2b-055ceb5957fc', false);"
 `;

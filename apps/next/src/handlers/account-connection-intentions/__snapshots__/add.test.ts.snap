@@ -6,7 +6,7 @@ exports[`accountConnectionIntentions.add > functionality > account connection in
 + After snapshot
 
 @@ --- --- @@
-+ INSERT INTO public.\\"accountConnectionsIntentions\\" VALUES ('bee9956a-939c-410e-9ede-373d8d12984a', 'cbaa13f5-0f0b-4c6e-a08f-13ba4484efaf', '03c4e8a7-1cb7-4874-a313-06d8d5862855', '2020-01-01 00:00:00');"
++ INSERT INTO public."accountConnectionsIntentions" VALUES ('bee9956a-939c-410e-9ede-373d8d12984a', 'cbaa13f5-0f0b-4c6e-a08f-13ba4484efaf', '03c4e8a7-1cb7-4874-a313-06d8d5862855', '2020-01-01 00:00:00');"
 `;
 
 exports[`accountConnectionIntentions.add > functionality > account connection intention collapse - has a vice versa intention 1`] = `
@@ -17,7 +17,7 @@ exports[`accountConnectionIntentions.add > functionality > account connection in
 @@ --- --- @@
 - INSERT INTO public.users VALUES ('51964bec-0be3-46cc-ac58-a1b41f96cd32', 'Marcus', NULL, 'f1f00c55-fca6-4317-8bce-7efb4600c278', false, false, NULL);
 - INSERT INTO public.users VALUES ('7e8b2e18-af2d-4dc2-86d0-3ae35a6d08c4', 'Cale', NULL, '45f692a0-cd28-45e3-b3d3-0fa98669c760', false, false, NULL);
-- INSERT INTO public.\\"accountConnectionsIntentions\\" VALUES ('f1f00c55-fca6-4317-8bce-7efb4600c278', '51964bec-0be3-46cc-ac58-a1b41f96cd32', '45f692a0-cd28-45e3-b3d3-0fa98669c760', '2020-01-01 00:00:00');
+- INSERT INTO public."accountConnectionsIntentions" VALUES ('f1f00c55-fca6-4317-8bce-7efb4600c278', '51964bec-0be3-46cc-ac58-a1b41f96cd32', '45f692a0-cd28-45e3-b3d3-0fa98669c760', '2020-01-01 00:00:00');
 + INSERT INTO public.users VALUES ('51964bec-0be3-46cc-ac58-a1b41f96cd32', 'Marcus', NULL, 'f1f00c55-fca6-4317-8bce-7efb4600c278', false, false, '45f692a0-cd28-45e3-b3d3-0fa98669c760');
 + INSERT INTO public.users VALUES ('7e8b2e18-af2d-4dc2-86d0-3ae35a6d08c4', 'Cale', NULL, '45f692a0-cd28-45e3-b3d3-0fa98669c760', false, false, 'f1f00c55-fca6-4317-8bce-7efb4600c278');"
 `;

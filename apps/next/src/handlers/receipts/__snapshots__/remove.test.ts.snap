@@ -8,10 +8,10 @@ exports[`receipts.remove > functionality > receipt is removed 1`] = `
 @@ --- --- @@
 - INSERT INTO public.receipts VALUES ('1657e0b1-af47-4802-b508-9c3cfbc6e0ef', 'sint error', 'ALL', '2020-01-01 00:00:00', 'e578d406-9700-4e7f-88cb-70e0e5548a42', '2020-01-01 00:00:00', NULL);
 @@ --- --- @@
-- INSERT INTO public.\\"receiptItems\\" VALUES ('ff403c95-9784-4de0-8a0e-66e9dc76fe5e', 'Shoes', 9030.2900, 2.0000, '1657e0b1-af47-4802-b508-9c3cfbc6e0ef', false);
-- INSERT INTO public.\\"receiptItems\\" VALUES ('a02ef01f-3420-4178-8637-729274749591', 'Shoes', 2548.3000, 5.0000, '1657e0b1-af47-4802-b508-9c3cfbc6e0ef', false);
-- INSERT INTO public.\\"receiptItems\\" VALUES ('a7d27271-ee65-4644-88cb-c1860422e5db', 'Salad', 4109.9000, 2.0000, '1657e0b1-af47-4802-b508-9c3cfbc6e0ef', false);
+- INSERT INTO public."receiptItems" VALUES ('ff403c95-9784-4de0-8a0e-66e9dc76fe5e', 'Shoes', 9030.2900, 2.0000, '1657e0b1-af47-4802-b508-9c3cfbc6e0ef', false);
+- INSERT INTO public."receiptItems" VALUES ('a02ef01f-3420-4178-8637-729274749591', 'Shoes', 2548.3000, 5.0000, '1657e0b1-af47-4802-b508-9c3cfbc6e0ef', false);
+- INSERT INTO public."receiptItems" VALUES ('a7d27271-ee65-4644-88cb-c1860422e5db', 'Salad', 4109.9000, 2.0000, '1657e0b1-af47-4802-b508-9c3cfbc6e0ef', false);
 @@ --- --- @@
-- INSERT INTO public.\\"receiptParticipants\\" VALUES ('1657e0b1-af47-4802-b508-9c3cfbc6e0ef', '08bd06fb-ddb6-4835-af60-caa6a243a5f5', 'viewer', false, '2020-01-01 00:00:00');
-- INSERT INTO public.\\"receiptParticipants\\" VALUES ('1657e0b1-af47-4802-b508-9c3cfbc6e0ef', 'e578d406-9700-4e7f-88cb-70e0e5548a42', 'owner', false, '2020-01-01 00:00:00');"
+- INSERT INTO public."receiptParticipants" VALUES ('1657e0b1-af47-4802-b508-9c3cfbc6e0ef', '08bd06fb-ddb6-4835-af60-caa6a243a5f5', 'viewer', false, '2020-01-01 00:00:00');
+- INSERT INTO public."receiptParticipants" VALUES ('1657e0b1-af47-4802-b508-9c3cfbc6e0ef', 'e578d406-9700-4e7f-88cb-70e0e5548a42', 'owner', false, '2020-01-01 00:00:00');"
 `;

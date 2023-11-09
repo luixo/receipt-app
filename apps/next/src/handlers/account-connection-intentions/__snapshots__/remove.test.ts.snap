@@ -6,5 +6,5 @@ exports[`accountConnectionIntentions.remove > functionality > account connection
 + After snapshot
 
 @@ --- --- @@
-- INSERT INTO public.\\"accountConnectionsIntentions\\" VALUES ('48c2e24a-608c-4813-923d-c1f7122d3538', 'c53bcee3-8c25-4953-bd85-746b2a0c47f7', '5cd9c297-1547-4806-8da8-4b83d6ab4ecc', '2020-01-01 00:00:00');"
+- INSERT INTO public."accountConnectionsIntentions" VALUES ('48c2e24a-608c-4813-923d-c1f7122d3538', 'c53bcee3-8c25-4953-bd85-746b2a0c47f7', '5cd9c297-1547-4806-8da8-4b83d6ab4ecc', '2020-01-01 00:00:00');"
 `;

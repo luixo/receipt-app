@@ -7,8 +7,8 @@ exports[`receipts.add > functionality > receipt is added - with users 1`] = `
 
 @@ --- --- @@
 + INSERT INTO public.receipts VALUES ('23345cd5-9763-4f6c-950c-0d92511f1e71', 'consequatur illo eius', 'SGD', '2020-01-01 00:00:00', '19dc7ddc-bbdb-4896-bd92-2deed2136929', '2020-01-01 00:00:00', NULL);
-+ INSERT INTO public.\\"receiptParticipants\\" VALUES ('23345cd5-9763-4f6c-950c-0d92511f1e71', 'be70a9a6-7d78-45ed-ba31-8b5daefdb497', 'editor', false, '2020-01-01 00:00:00');
-+ INSERT INTO public.\\"receiptParticipants\\" VALUES ('23345cd5-9763-4f6c-950c-0d92511f1e71', '19dc7ddc-bbdb-4896-bd92-2deed2136929', 'owner', false, '2020-01-01 00:00:00');"
++ INSERT INTO public."receiptParticipants" VALUES ('23345cd5-9763-4f6c-950c-0d92511f1e71', 'be70a9a6-7d78-45ed-ba31-8b5daefdb497', 'editor', false, '2020-01-01 00:00:00');
++ INSERT INTO public."receiptParticipants" VALUES ('23345cd5-9763-4f6c-950c-0d92511f1e71', '19dc7ddc-bbdb-4896-bd92-2deed2136929', 'owner', false, '2020-01-01 00:00:00');"
 `;
 
 exports[`receipts.add > functionality > receipt is added 1`] = `
