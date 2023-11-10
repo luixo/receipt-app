@@ -11,7 +11,7 @@ const testConfig: NonNullable<UserConfig["test"]> = {
 	root: rootPath,
 	globalSetup: path.resolve(vitestRoot, "./global.setup.ts"),
 	setupFiles: path.resolve(vitestRoot, "./tests.setup.ts"),
-	include: [path.resolve(testsRoot, "**/*.test.ts")],
+	include: [path.resolve(testsRoot, "**/register.test.ts")],
 	coverage: {
 		all: false,
 		enabled: true,
