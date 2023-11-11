@@ -4,7 +4,6 @@ import { z } from "zod";
 import { getReceiptItemById } from "next-app/handlers/receipt-items/utils";
 import { getAccessRole } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
-import { verifyUsersByIds } from "next-app/handlers/users/utils";
 import {
 	receiptItemIdSchema,
 	userIdSchema,
@@ -64,12 +63,6 @@ export const procedure = authProcedure
 				message: `Not enough rights to modify receipt "${receiptItem.receiptId}".`,
 			});
 		}
-		await verifyUsersByIds(
-			database,
-			input.userIds,
-			receipt.ownerAccountId,
-			receipt.ownerEmail,
-		);
 		const receiptParticipants = await database
 			.selectFrom("receiptParticipants")
 			.where("receiptId", "=", receipt.id)
@@ -80,8 +73,8 @@ export const procedure = authProcedure
 			const participatingUserIds = receiptParticipants.map(
 				({ userId }) => userId,
 			);
-			const notParticipatingUsers = input.userIds.filter((id) =>
-				participatingUserIds.includes(id),
+			const notParticipatingUsers = input.userIds.filter(
+				(id) => !participatingUserIds.includes(id),
 			);
 			throw new TRPCError({
 				code: "FORBIDDEN",

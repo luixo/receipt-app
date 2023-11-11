@@ -5,7 +5,6 @@ import type { z } from "zod";
 import type { Database, ReceiptsSelectExpression } from "next-app/db";
 import type { AccountsId, ReceiptsId, UsersId } from "next-app/db/models";
 import type { ReceiptsDatabase } from "next-app/db/types";
-import { verifyUsersByIds } from "next-app/handlers/users/utils";
 import type { assignableRoleSchema } from "next-app/handlers/validation";
 
 export const getReceiptParticipant = <
@@ -33,12 +32,51 @@ export const addReceiptParticipants = async (
 	usersToAdd: [UsersId, z.infer<typeof assignableRoleSchema>][],
 ) => {
 	const userIds = usersToAdd.map(([id]) => id);
-	const userData = await verifyUsersByIds(
-		database,
-		userIds,
-		receiptOwnerId,
-		receiptOwnerEmail,
+	const users = await database
+		.selectFrom("users")
+		.leftJoin("accounts", (qb) =>
+			qb.onRef("accounts.id", "=", "users.connectedAccountId"),
+		)
+		.select([
+			"users.id",
+			"users.ownerAccountId",
+			"users.name",
+			"users.publicName",
+			"accounts.id as accountId",
+			"accounts.email",
+		])
+		.where("users.id", "in", userIds)
+		.execute();
+	if (users.length !== userIds.length) {
+		const missedUserIds = userIds.filter(
+			(userId) => !users.some((user) => user.id === userId),
+		);
+		throw new TRPCError({
+			code: "NOT_FOUND",
+			message: `${missedUserIds.length === 1 ? "User" : "Users"} ${missedUserIds
+				.map((id) => `"${id}"`)
+				.join(", ")} ${missedUserIds.length === 1 ? "does" : "do"} not exist.`,
+		});
+	}
+	const notOwnedUsers = users.filter(
+		(user) => user.ownerAccountId !== receiptOwnerId,
 	);
+	if (notOwnedUsers.length !== 0) {
+		throw new TRPCError({
+			code: "FORBIDDEN",
+			message: `${notOwnedUsers.length === 1 ? "User" : "Users"} ${notOwnedUsers
+				.map(({ id }) => `"${id}"`)
+				.join(", ")} ${
+				notOwnedUsers.length === 1 ? "is" : "are"
+			} not owned by "${receiptOwnerEmail}".`,
+		});
+	}
+	const userData = userIds.map((userId) => {
+		const { ownerAccountId: disregardedOwnerAccountId, ...user } = users.find(
+			({ id }) => id === userId,
+		)!;
+		return user;
+	});
 	const receiptParticipants = await database
 		.selectFrom("receiptParticipants")
 		.where("receiptId", "=", receiptId)
@@ -55,41 +93,6 @@ export const addReceiptParticipants = async (
 				.join(", ")} already ${
 				receiptParticipants.length === 1 ? "participates" : "participate"
 			} in receipt "${receiptId}".`,
-		});
-	}
-	const users = await database
-		.selectFrom("users")
-		.where("id", "in", userIds)
-		.select(["id", "ownerAccountId"])
-		.execute();
-	const missingUserIds = usersToAdd
-		.map(([userId]) => userId)
-		.filter((userId) => !users.find(({ id }) => id === userId));
-	if (missingUserIds.length !== 0) {
-		throw new TRPCError({
-			code: "FORBIDDEN",
-			message: `${
-				missingUserIds.length === 1 ? "User" : "Users"
-			} ${missingUserIds.map((id) => `"${id}"`).join(", ")} ${
-				missingUserIds.length === 1 ? "does" : "do"
-			} not exist.`,
-		});
-	}
-	const foreignUserIds = usersToAdd
-		.map(([userId]) => userId)
-		.filter(
-			(userId) =>
-				users.find(({ id }) => id === userId)?.ownerAccountId !==
-				receiptOwnerId,
-		);
-	if (foreignUserIds.length !== 0) {
-		throw new TRPCError({
-			code: "FORBIDDEN",
-			message: `${
-				foreignUserIds.length === 1 ? "User" : "Users"
-			} ${foreignUserIds.map((id) => `"${id}"`).join(", ")} ${
-				foreignUserIds.length === 1 ? "is" : "are"
-			} not owned by "${receiptOwnerEmail}".`,
 		});
 	}
 	const result = await database
