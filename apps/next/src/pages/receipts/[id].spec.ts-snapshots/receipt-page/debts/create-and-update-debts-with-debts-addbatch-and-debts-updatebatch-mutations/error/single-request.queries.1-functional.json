@@ -1,0 +1,8 @@
+{
+	"debts.getIntentions": {
+		"clientCalls": 1
+	},
+	"debts.updateBatch": {
+		"clientCalls": 1
+	}
+}

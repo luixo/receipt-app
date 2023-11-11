@@ -1,7 +1,6 @@
 import React from "react";
 
-import { Spacer, Tooltip } from "@nextui-org/react";
-import { MdSend as SendIcon } from "react-icons/md";
+import { Tooltip } from "@nextui-org/react";
 
 import { IconButton } from "app/components/icon-button";
 import { LockedIcon } from "app/components/locked-icon";
@@ -14,44 +13,22 @@ type Props = {
 	receiptId: ReceiptsId;
 	locked: boolean;
 	isLoading: boolean;
-	isPropagating: boolean;
-	propagateDebts: (lockedTimestamp: Date) => () => void;
 };
 
 export const ReceiptLockedButton: React.FC<Props> = ({
 	receiptId,
 	locked,
 	isLoading,
-	isPropagating,
-	propagateDebts,
 }) => {
 	const updateReceiptMutation = trpc.receipts.update.useMutation(
 		useTrpcMutationOptions(mutations.receipts.update.options),
 	);
-	const switchResolved = React.useCallback(
-		(shouldPropagate = false) => {
-			updateReceiptMutation.mutate(
-				{
-					id: receiptId,
-					update: { type: "locked", locked: !locked },
-				},
-				{
-					onSuccess: (result) => {
-						if (!shouldPropagate) {
-							return;
-						}
-						if (!result.lockedTimestamp) {
-							throw new Error(
-								"Expected to have lockedTimestamp as a result of locking a receipt",
-							);
-						}
-						propagateDebts(result.lockedTimestamp)();
-					},
-				},
-			);
-		},
-		[updateReceiptMutation, receiptId, locked, propagateDebts],
-	);
+	const switchResolved = React.useCallback(() => {
+		updateReceiptMutation.mutate({
+			id: receiptId,
+			update: { type: "locked", locked: !locked },
+		});
+	}, [updateReceiptMutation, receiptId, locked]);
 	const receiptItemsQuery = trpc.receiptItems.get.useQuery({ receiptId });
 	const emptyItemsWarning = React.useMemo(() => {
 		if (!receiptItemsQuery.data) {
@@ -66,42 +43,19 @@ export const ReceiptLockedButton: React.FC<Props> = ({
 		return `There are ${emptyItems.length} empty items, cannot lock`;
 	}, [receiptItemsQuery.data]);
 	const elements = (
-		<>
-			<IconButton
-				ghost
-				isLoading={updateReceiptMutation.isLoading}
-				disabled={isLoading || Boolean(emptyItemsWarning)}
-				onClick={() => switchResolved()}
-				color={locked ? "success" : "warning"}
-				icon={
-					<LockedIcon
-						locked={locked}
-						tooltip={locked ? "Receipt locked" : "Receipt unlocked"}
-					/>
-				}
-			/>
-			{!locked ? (
-				<>
-					<Spacer x={0.5} />
-					<IconButton
-						ghost
-						isLoading={updateReceiptMutation.isLoading || isPropagating}
-						disabled={isLoading || Boolean(emptyItemsWarning)}
-						onClick={() => switchResolved(true)}
-						color={locked ? "success" : "warning"}
-						icon={
-							<>
-								<LockedIcon
-									locked={locked}
-									tooltip={locked ? "Receipt locked" : "Receipt unlocked"}
-								/>
-								<SendIcon size={24} />
-							</>
-						}
-					/>
-				</>
-			) : null}
-		</>
+		<IconButton
+			ghost
+			isLoading={updateReceiptMutation.isLoading}
+			disabled={isLoading || Boolean(emptyItemsWarning)}
+			onClick={() => switchResolved()}
+			color={locked ? "success" : "warning"}
+			icon={
+				<LockedIcon
+					locked={locked}
+					tooltip={locked ? "Receipt locked" : "Receipt unlocked"}
+				/>
+			}
+		/>
 	);
 	if (emptyItemsWarning) {
 		return (

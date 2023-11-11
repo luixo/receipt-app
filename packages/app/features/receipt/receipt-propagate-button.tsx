@@ -1,22 +1,31 @@
 import React from "react";
 
 import { Spacer } from "@nextui-org/react";
-import { MdSend as SendIcon } from "react-icons/md";
+import {
+	MdInfo as InfoIcon,
+	MdSend as SendIcon,
+	MdSync as SyncIcon,
+} from "react-icons/md";
 
 import { QueryErrorMessage } from "app/components/error-message";
 import { IconButton } from "app/components/icon-button";
+import { useBooleanState } from "app/hooks/use-boolean-state";
+import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import type {
 	TRPCQueryErrorResult,
 	TRPCQueryResult,
 	TRPCQuerySuccessResult,
 } from "app/trpc";
 import { trpc } from "app/trpc";
+import { getReceiptDebtName } from "app/utils/receipt";
 import { getParticipantSums } from "app/utils/receipt-item";
+import type { NonNullableField } from "app/utils/types";
 
-import { ReceiptDebtSyncInfoButton } from "./receipt-debt-sync-info-button";
-import type {
-	DebtParticipant,
-	LockedReceipt,
+import { ReceiptDebtSyncInfoModal } from "./receipt-debt-sync-info-modal";
+import {
+	type LockedReceipt,
+	isDebtInSyncWithReceipt,
 } from "./receipt-participant-debt";
 
 type InnerProps = {
@@ -24,21 +33,6 @@ type InnerProps = {
 	itemsQuery: TRPCQuerySuccessResult<"receiptItems.get">;
 	receipt: LockedReceipt;
 	isLoading: boolean;
-	isPropagating: boolean;
-	propagateDebts: () => void;
-};
-
-export const showPropagateButton = (participants: DebtParticipant[]) => {
-	const noneIsSyncedYet = participants.every(
-		({ currentDebt }) => !currentDebt?.lockedTimestamp,
-	);
-	const atLeastOneIsSyncable = participants.some(
-		({ currentDebt, sum }) =>
-			sum !== 0 &&
-			(!currentDebt ||
-				currentDebt.lockedTimestamp !== currentDebt.their?.lockedTimestamp),
-	);
-	return noneIsSyncedYet && atLeastOneIsSyncable;
 };
 
 const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
@@ -46,8 +40,6 @@ const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 	itemsQuery,
 	receipt,
 	isLoading,
-	isPropagating,
-	propagateDebts,
 }) => {
 	const debts = React.useMemo(
 		() => queries.map((query) => query.data),
@@ -70,24 +62,132 @@ const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 				.filter((participant) => participant.userId !== receipt.selfUserId),
 		[itemsQuery.data, receipt.id, debts, receipt.selfUserId],
 	);
+
+	const syncableParticipants = React.useMemo(
+		() => participants.filter(({ sum }) => sum !== 0),
+		[participants],
+	);
+	// Debts not being created yet
+	const unsyncedParticipants = React.useMemo(
+		() => syncableParticipants.filter(({ currentDebt }) => !currentDebt),
+		[syncableParticipants],
+	);
+	// Debts being de-synced from the receipt
+	const desyncedParticipants = React.useMemo(
+		() =>
+			syncableParticipants.filter(
+				(
+					participant,
+				): participant is NonNullableField<
+					typeof participant,
+					"currentDebt"
+				> =>
+					participant.currentDebt
+						? !isDebtInSyncWithReceipt(
+								{ ...receipt, participantSum: participant.sum },
+								participant.currentDebt,
+						  )
+						: false,
+			),
+		[syncableParticipants, receipt],
+	);
+	const addBatchMutation = trpc.debts.addBatch.useMutation(
+		useTrpcMutationOptions(mutations.debts.addBatch.options),
+	);
+	const updateBatchMutation = trpc.debts.updateBatch.useMutation(
+		useTrpcMutationOptions(mutations.debts.updateBatch.options, {
+			context: desyncedParticipants.map(({ currentDebt, userId }) => ({
+				id: currentDebt.id,
+				userId,
+				amount: currentDebt.amount,
+				currencyCode: currentDebt.currencyCode,
+				receiptId: currentDebt.receiptId,
+			})),
+		}),
+	);
+	const propagateDebts = React.useCallback(() => {
+		if (unsyncedParticipants.length !== 0) {
+			addBatchMutation.mutate(
+				unsyncedParticipants.map((participant) => ({
+					note: getReceiptDebtName(receipt.name),
+					currencyCode: receipt.currencyCode,
+					userId: participant.userId,
+					amount: participant.sum,
+					timestamp: receipt.issued,
+					receiptId: receipt.id,
+				})),
+			);
+		}
+		if (desyncedParticipants.length !== 0) {
+			updateBatchMutation.mutate(
+				desyncedParticipants.map((participant) => ({
+					id: participant.currentDebt.id,
+					update: {
+						amount: participant.sum,
+						currencyCode: receipt.currencyCode,
+						timestamp: receipt.issued,
+						locked: true,
+						receiptId: receipt.id,
+					},
+				})),
+			);
+		}
+	}, [
+		addBatchMutation,
+		updateBatchMutation,
+		receipt.id,
+		receipt.currencyCode,
+		receipt.issued,
+		receipt.name,
+		desyncedParticipants,
+		unsyncedParticipants,
+	]);
+	const isPropagating =
+		addBatchMutation.isLoading || updateBatchMutation.isLoading;
+
+	const [
+		infoPopoverOpen,
+		{ setFalse: closeInfoButtonPopover, setTrue: openInfoButtonPopover },
+	] = useBooleanState();
 	return (
 		<>
-			<Spacer x={0.5} />
-			{showPropagateButton(participants) ? (
-				<IconButton
-					ghost
-					isLoading={isPropagating}
-					disabled={isLoading}
-					onClick={propagateDebts}
-					color="warning"
-					icon={<SendIcon size={24} />}
-				/>
-			) : (
-				<ReceiptDebtSyncInfoButton
-					participants={participants}
-					receipt={receipt}
-				/>
+			{desyncedParticipants.length !== 0 ||
+			unsyncedParticipants.length !== 0 ? (
+				<>
+					<Spacer x={0.5} />
+					<IconButton
+						ghost
+						title="Propagate debts"
+						isLoading={isPropagating}
+						disabled={isLoading || isPropagating}
+						onClick={propagateDebts}
+						color="warning"
+						icon={
+							desyncedParticipants.length === 0 ? (
+								<SendIcon size={24} />
+							) : (
+								<SyncIcon size={24} />
+							)
+						}
+					/>
+				</>
+			) : null}
+			{desyncedParticipants.length === 0 ? null : (
+				<>
+					<Spacer x={0.5} />
+					<IconButton
+						onClick={openInfoButtonPopover}
+						icon={<InfoIcon size={24} />}
+						title="Show sync status"
+					/>
+				</>
 			)}
+			<ReceiptDebtSyncInfoModal
+				isOpen={infoPopoverOpen}
+				closeModal={closeInfoButtonPopover}
+				participants={participants}
+				receipt={receipt}
+			/>
 		</>
 	);
 };
