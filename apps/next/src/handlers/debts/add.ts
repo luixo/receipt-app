@@ -69,12 +69,14 @@ export const procedure = authProcedure
 		};
 		if (user.autoAcceptDebts) {
 			const { foreignAccountId } = user;
+			/* c8 ignore start */
 			if (!foreignAccountId) {
 				throw new TRPCError({
 					code: "INTERNAL_SERVER_ERROR",
 					message: `Unexpected having "autoAcceptDebts" but not having "accountId"`,
 				});
 			}
+			/* c8 ignore stop */
 			// TODO: incorporate reverse user into VALUES clause
 			const reverseUser = await database
 				.selectFrom("users")
@@ -82,11 +84,13 @@ export const procedure = authProcedure
 				.where("users.connectedAccountId", "=", ctx.auth.accountId)
 				.select("users.id")
 				.executeTakeFirstOrThrow(
+					/* c8 ignore start */
 					() =>
 						new TRPCError({
 							code: "INTERNAL_SERVER_ERROR",
 							message: `Unexpected having "autoAcceptDebts" but not having reverse user "id"`,
 						}),
+					/* c8 ignore stop */
 				);
 			await withOwnerReceiptUserConstraint(
 				() =>

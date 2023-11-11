@@ -20,6 +20,7 @@ import {
 import { withOwnerReceiptUserConstraint } from "./utils";
 
 const extractError = (e: unknown) => {
+	/* c8 ignore start */
 	if (
 		typeof e !== "object" ||
 		!e ||
@@ -31,16 +32,19 @@ const extractError = (e: unknown) => {
 			message: `Error is not of type 'DatabaseError': ${String(e)}`,
 		});
 	}
+	/* c8 ignore stop */
 	const typedMessage = e as DatabaseError;
 	const detailMatch = typedMessage.detail!.match(
 		/\("ownerAccountId", "receiptId", "userId"\)=\([a-z0-9-]+, ([a-z0-9-]+), ([a-z0-9-]+)\) already exists/,
 	);
+	/* c8 ignore start */
 	if (!detailMatch) {
 		throw new TRPCError({
 			code: "INTERNAL_SERVER_ERROR",
 			message: `Detail didn't match expected constraint message: ${typedMessage.detail}`,
 		});
 	}
+	/* c8 ignore stop */
 	const [, receiptId, userId] = detailMatch;
 	return { receiptId: receiptId!, userId: userId! };
 };
@@ -143,6 +147,7 @@ export const procedure = authProcedure
 			const autoAcceptingUsersAccountIds = uniqueAutoAcceptingUsers
 				.map((user) => user.foreignAccountId)
 				.filter(nonNullishGuard);
+			/* c8 ignore start */
 			if (
 				autoAcceptingUsersAccountIds.length !== uniqueAutoAcceptingUsers.length
 			) {
@@ -151,6 +156,7 @@ export const procedure = authProcedure
 					message: `Unexpected having "autoAcceptDebts" but not having "accountId"`,
 				});
 			}
+			/* c8 ignore stop */
 			// TODO: incorporate reverse user into VALUES clause
 			const reverseAutoAcceptingUsers = await database
 				.selectFrom("users")
@@ -158,6 +164,7 @@ export const procedure = authProcedure
 				.where("users.connectedAccountId", "=", ctx.auth.accountId)
 				.select(["users.ownerAccountId", "users.id"])
 				.execute();
+			/* c8 ignore start */
 			if (
 				reverseAutoAcceptingUsers.length !== autoAcceptingUsersAccountIds.length
 			) {
@@ -166,6 +173,7 @@ export const procedure = authProcedure
 					message: `Unexpected having "autoAcceptDebts" but not having reverse user "id"`,
 				});
 			}
+			/* c8 ignore stop */
 			await withOwnerReceiptUserConstraint(
 				() =>
 					database

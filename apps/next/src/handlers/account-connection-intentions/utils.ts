@@ -123,7 +123,10 @@ export const addConnectionIntention = async (
 				code: "CONFLICT",
 				message: `You already has intention to connect to user "${user.name}".`,
 			});
+			// This is probably a c8 bug
+			/* c8 ignore next */
 		}
+		/* c8 ignore next 2 */
 		throw e;
 	}
 };

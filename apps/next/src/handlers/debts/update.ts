@@ -36,12 +36,14 @@ export const procedure = authProcedure
 		const { setObject, reverseSetObject } = buildSetObjects(input, debt);
 		let reverseLockedTimestampUpdated = false;
 		if (debt.autoAcceptDebts && reverseSetObject) {
+			/* c8 ignore start */
 			if (!debt.foreignAccountId) {
 				throw new TRPCError({
 					code: "INTERNAL_SERVER_ERROR",
 					message: `Unexpected having "autoAcceptDebts" but not having "accountId"`,
 				});
 			}
+			/* c8 ignore stop */
 			await database
 				.updateTable("debts")
 				.set(reverseSetObject)

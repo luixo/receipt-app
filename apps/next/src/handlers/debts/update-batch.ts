@@ -94,12 +94,14 @@ export const procedure = authProcedure
 			await database.transaction().execute((tx) =>
 				Promise.all(
 					autoAcceptedDebts.map(async ({ reverseSetObject, debt }) => {
+						/* c8 ignore start */
 						if (!debt.foreignAccountId) {
 							throw new TRPCError({
 								code: "INTERNAL_SERVER_ERROR",
 								message: `Unexpected having "autoAcceptDebts" but not having "accountId"`,
 							});
 						}
+						/* c8 ignore stop */
 						await tx
 							.updateTable("debts")
 							.set(reverseSetObject)

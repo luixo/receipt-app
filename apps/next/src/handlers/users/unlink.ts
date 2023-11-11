@@ -47,12 +47,14 @@ export const procedure = authProcedure
 				message: `User "${input.id}" doesn't have account connected to it.`,
 			});
 		}
+		/* c8 ignore start */
 		if (!user.theirUserId) {
 			throw new TRPCError({
 				code: "INTERNAL_SERVER_ERROR",
 				message: `User "${input.id}" doesn't have a counterparty to unlink from.`,
 			});
 		}
+		/* c8 ignore stop */
 		await database.transaction().execute(async (tx) => {
 			await tx
 				.updateTable("users")

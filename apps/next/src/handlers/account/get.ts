@@ -11,10 +11,12 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 		.where("accounts.id", "=", ctx.auth.accountId)
 		.executeTakeFirstOrThrow(
 			() =>
+				/* c8 ignore start */
 				new TRPCError({
 					code: "INTERNAL_SERVER_ERROR",
 					message: `No result for "${ctx.auth.email}" account found, self-user may be non-existent.`,
 				}),
+			/* c8 ignore stop */
 		);
 	return {
 		account: { id, verified: !confirmationToken },

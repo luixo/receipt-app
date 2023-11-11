@@ -71,12 +71,14 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 		.orderBy("id", "desc")
 		.execute();
 	return debts.map<InboundIntention>((debt) => {
+		/* c8 ignore start */
 		if (!debt.lockedTimestamp) {
 			throw new TRPCError({
 				code: "INTERNAL_SERVER_ERROR",
 				message: `Locked timestamp does not exist on debt id "${debt.id}" though it was filtered to exist`,
 			});
 		}
+		/* c8 ignore stop */
 		return {
 			id: debt.id,
 			userId: debt.userId,

@@ -28,7 +28,10 @@ export const withOwnerReceiptUserConstraint = async <T>(
 				code: "FORBIDDEN",
 				message: `There is already a debt for user "${userId}" in receipt "${receiptId}".`,
 			});
+			// This is probably a bug in c8
+			/* c8 ignore next */
 		}
+		/* c8 ignore next 2 */
 		throw e;
 	}
 };

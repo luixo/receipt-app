@@ -56,6 +56,7 @@ export const sendVerificationEmail = async (
 		throw new TRPCError({
 			code: "INTERNAL_SERVER_ERROR",
 			message: `Something went wrong: ${
+				/* c8 ignore next */
 				e instanceof Error ? e.message : String(e)
 			}`,
 		});

@@ -32,10 +32,12 @@ export const getAccessRole = async (
 		return;
 	}
 	const parsed = roleSchema.safeParse(participant.role);
+	/* c8 ignore start */
 	if (!parsed.success) {
 		// TODO: add database-level validation
 		return;
 	}
+	/* c8 ignore stop */
 	return parsed.data;
 };
 

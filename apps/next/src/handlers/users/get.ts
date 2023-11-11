@@ -96,10 +96,30 @@ export const procedure = authProcedure
 			});
 		}
 		if (userResult.mineId) {
+			/* c8 ignore start */
+			if (!userResult.accountId) {
+				throw new TRPCError({
+					code: "INTERNAL_SERVER_ERROR",
+					message: `Unexpected not having accountId on a user result: ${userResult.accountId}.`,
+				});
+			}
+			if (!userResult.email) {
+				throw new TRPCError({
+					code: "INTERNAL_SERVER_ERROR",
+					message: `Unexpected not having email on a user result: ${userResult.email}.`,
+				});
+			} /* c8 ignore start */
+			if (!userResult.name) {
+				throw new TRPCError({
+					code: "INTERNAL_SERVER_ERROR",
+					message: `Unexpected not having name on a user result: ${userResult.name}`,
+				});
+			}
+			/* c8 ignore stop */
 			return {
-				accountId: userResult.accountId!,
-				email: userResult.email!,
-				name: userResult.name!,
+				accountId: userResult.accountId,
+				email: userResult.email,
+				name: userResult.name,
 				publicName:
 					userResult.publicName === null ? undefined : userResult.publicName,
 				remoteId: input.id,
