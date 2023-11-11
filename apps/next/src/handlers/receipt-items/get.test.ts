@@ -214,6 +214,19 @@ describe("receiptItems.get", () => {
 			});
 		});
 
+		test("own receipt - no participants", async ({ ctx }) => {
+			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { id: receiptId } = await insertReceipt(ctx, accountId);
+
+			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const result = await caller.procedure({ receiptId });
+			expect(result).toStrictEqual<typeof result>({
+				role: "owner",
+				items: [],
+				participants: [],
+			});
+		});
+
 		test("foreign receipt", async ({ ctx }) => {
 			const {
 				sessionId,

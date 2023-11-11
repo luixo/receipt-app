@@ -82,65 +82,145 @@ describe("users.get", () => {
 	});
 
 	describe("functionality", () => {
-		test("user is fetched", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			// Verify other users do not interfere
-			await insertUser(ctx, accountId);
-			const { id: userId, name } = await insertUser(ctx, accountId);
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
-			const result = await caller.procedure({ id: userId });
-			expect(result).toStrictEqual<typeof result>({
-				accountId: null,
-				email: undefined,
-				localId: userId,
-				name,
-				publicName: undefined,
-				remoteId: userId,
+		describe("own user", () => {
+			test("with public name and email", async ({ ctx }) => {
+				const { sessionId, accountId } = await insertAccountWithSession(ctx);
+				const { id: foreignAccountId, email: foreignEmail } =
+					await insertAccount(ctx);
+				// Verify other users do not interfere
+				await insertUser(ctx, accountId);
+				const [{ id: userId, name, publicName }] = await insertConnectedUsers(
+					ctx,
+					[
+						{ accountId, publicName: faker.person.fullName() },
+						foreignAccountId,
+					],
+				);
+				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const result = await caller.procedure({ id: userId });
+				expect(result).toStrictEqual<typeof result>({
+					accountId: foreignAccountId,
+					email: foreignEmail,
+					localId: userId,
+					name,
+					publicName,
+					remoteId: userId,
+				});
+			});
+
+			test("without public name and email", async ({ ctx }) => {
+				const { sessionId, accountId } = await insertAccountWithSession(ctx);
+				// Verify other users do not interfere
+				await insertUser(ctx, accountId);
+				const { id: userId, name } = await insertUser(ctx, accountId);
+				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const result = await caller.procedure({ id: userId });
+				expect(result).toStrictEqual<typeof result>({
+					accountId: null,
+					email: undefined,
+					localId: userId,
+					name,
+					publicName: undefined,
+					remoteId: userId,
+				});
 			});
 		});
 
 		describe("foreign user is fetched via connected receipt", () => {
-			test("not connected to a local user", async ({ ctx }) => {
-				const { sessionId, accountId, account } =
-					await insertAccountWithSession(ctx);
-				const { id: foreignAccountId } = await insertAccount(ctx);
-				const { id: receiptId } = await insertReceipt(ctx, foreignAccountId);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			describe("not connected to a local user", () => {
+				test("with public name and email", async ({ ctx }) => {
+					const { sessionId, accountId, account } =
+						await insertAccountWithSession(ctx);
+					const { id: foreignAccountId } = await insertAccount(ctx);
+					const { id: otherAccountId, email: otherEmail } = await insertAccount(
+						ctx,
+					);
+					const { id: receiptId } = await insertReceipt(ctx, foreignAccountId);
+					const caller = router.createCaller(createAuthContext(ctx, sessionId));
 
-				// Verify other users do not interfere
-				const { id: otherUserId } = await insertUser(ctx, accountId);
-				// Verify other receipt participants do not interfere
-				await insertReceiptParticipant(ctx, receiptId, otherUserId);
+					// Verify other users do not interfere
+					const { id: otherUserId } = await insertUser(ctx, accountId);
+					// Verify other receipt participants do not interfere
+					await insertReceiptParticipant(ctx, receiptId, otherUserId);
 
-				const { id: foreignUserId, name } = await insertUser(
-					ctx,
-					foreignAccountId,
-				);
-				const [{ id: foreignSelfUserId }] = await insertConnectedUsers(ctx, [
-					foreignAccountId,
-					accountId,
-				]);
+					const [{ id: foreignUserId, name, publicName: foreignPublicName }] =
+						await insertConnectedUsers(ctx, [
+							{
+								accountId: foreignAccountId,
+								publicName: faker.person.fullName(),
+							},
+							otherAccountId,
+						]);
+					const [{ id: foreignSelfUserId }] = await insertConnectedUsers(ctx, [
+						foreignAccountId,
+						accountId,
+					]);
 
-				// Adding a foreign user into the receipt
-				await insertReceiptParticipant(ctx, receiptId, foreignUserId);
-				// Verify that we cannot access a user before we are added into the receipt
-				await expectTRPCError(
-					() => caller.procedure({ id: foreignUserId }),
-					"FORBIDDEN",
-					`User "${foreignUserId}" is not owned by "${account.email}".`,
-				);
+					// Adding a foreign user into the receipt
+					await insertReceiptParticipant(ctx, receiptId, foreignUserId);
+					// Verify that we cannot access a user before we are added into the receipt
+					await expectTRPCError(
+						() => caller.procedure({ id: foreignUserId }),
+						"FORBIDDEN",
+						`User "${foreignUserId}" is not owned by "${account.email}".`,
+					);
 
-				// Adding ourselves into the receipt
-				await insertReceiptParticipant(ctx, receiptId, foreignSelfUserId);
+					// Adding ourselves into the receipt
+					await insertReceiptParticipant(ctx, receiptId, foreignSelfUserId);
 
-				const result = await caller.procedure({ id: foreignUserId });
-				expect(result).toStrictEqual<typeof result>({
-					accountId: null,
-					email: undefined,
-					localId: null,
-					name,
-					publicName: undefined,
-					remoteId: foreignUserId,
+					const result = await caller.procedure({ id: foreignUserId });
+					expect(result).toStrictEqual<typeof result>({
+						accountId: otherAccountId,
+						email: otherEmail,
+						localId: null,
+						name: foreignPublicName || name,
+						publicName: foreignPublicName,
+						remoteId: foreignUserId,
+					});
+				});
+
+				test("no public name and email", async ({ ctx }) => {
+					const { sessionId, accountId, account } =
+						await insertAccountWithSession(ctx);
+					const { id: foreignAccountId } = await insertAccount(ctx);
+					const { id: receiptId } = await insertReceipt(ctx, foreignAccountId);
+					const caller = router.createCaller(createAuthContext(ctx, sessionId));
+
+					// Verify other users do not interfere
+					const { id: otherUserId } = await insertUser(ctx, accountId);
+					// Verify other receipt participants do not interfere
+					await insertReceiptParticipant(ctx, receiptId, otherUserId);
+
+					const { id: foreignUserId, name } = await insertUser(
+						ctx,
+						foreignAccountId,
+					);
+					const [{ id: foreignSelfUserId }] = await insertConnectedUsers(ctx, [
+						foreignAccountId,
+						accountId,
+					]);
+
+					// Adding a foreign user into the receipt
+					await insertReceiptParticipant(ctx, receiptId, foreignUserId);
+					// Verify that we cannot access a user before we are added into the receipt
+					await expectTRPCError(
+						() => caller.procedure({ id: foreignUserId }),
+						"FORBIDDEN",
+						`User "${foreignUserId}" is not owned by "${account.email}".`,
+					);
+
+					// Adding ourselves into the receipt
+					await insertReceiptParticipant(ctx, receiptId, foreignSelfUserId);
+
+					const result = await caller.procedure({ id: foreignUserId });
+					expect(result).toStrictEqual<typeof result>({
+						accountId: null,
+						email: undefined,
+						localId: null,
+						name,
+						publicName: undefined,
+						remoteId: foreignUserId,
+					});
 				});
 			});
 

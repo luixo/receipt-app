@@ -121,6 +121,16 @@ describe("receiptParticipants.add", () => {
 				"FORBIDDEN",
 				`Not enough rights to add participant to receipt "${foreignReceiptId}".`,
 			);
+			await expectTRPCError(
+				() =>
+					caller.procedure({
+						receiptId: foreignReceiptId,
+						userIds: [faker.string.uuid(), faker.string.uuid()],
+						role: "editor",
+					}),
+				"FORBIDDEN",
+				`Not enough rights to add participants to receipt "${foreignReceiptId}".`,
+			);
 		});
 
 		describe("one of the users", () => {
@@ -128,6 +138,7 @@ describe("receiptParticipants.add", () => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				const { id: receiptId } = await insertReceipt(ctx, accountId);
 				const fakeUserId = faker.string.uuid();
+				const anotherFakerUserId = faker.string.uuid();
 
 				const caller = router.createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
@@ -140,6 +151,16 @@ describe("receiptParticipants.add", () => {
 					"NOT_FOUND",
 					`User "${fakeUserId}" does not exist.`,
 				);
+				await expectTRPCError(
+					() =>
+						caller.procedure({
+							receiptId,
+							userIds: [fakeUserId, anotherFakerUserId],
+							role: "editor",
+						}),
+					"NOT_FOUND",
+					`Users "${fakeUserId}", "${anotherFakerUserId}" do not exist.`,
+				);
 			});
 
 			test("is not owned by the account", async ({ ctx }) => {
@@ -151,6 +172,10 @@ describe("receiptParticipants.add", () => {
 				const { id: receiptId } = await insertReceipt(ctx, accountId);
 				const { id: foreignAccountId } = await insertAccount(ctx);
 				const { id: foreignUserId } = await insertUser(ctx, foreignAccountId);
+				const { id: anotherForeignUserId } = await insertUser(
+					ctx,
+					foreignAccountId,
+				);
 
 				const caller = router.createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
@@ -163,15 +188,34 @@ describe("receiptParticipants.add", () => {
 					"FORBIDDEN",
 					`User "${foreignUserId}" is not owned by "${email}".`,
 				);
+				await expectTRPCError(
+					() =>
+						caller.procedure({
+							receiptId,
+							userIds: [foreignUserId, anotherForeignUserId],
+							role: "editor",
+						}),
+					"FORBIDDEN",
+					`Users "${anotherForeignUserId}", "${foreignUserId}" are not owned by "${email}".`,
+				);
 			});
 
 			test("is already added to the receipt", async ({ ctx }) => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				await insertReceipt(ctx, accountId);
 
-				const { id: participantUserId } = await insertUser(ctx, accountId);
 				const { id: receiptId } = await insertReceipt(ctx, accountId);
+				const { id: participantUserId } = await insertUser(ctx, accountId);
 				await insertReceiptParticipant(ctx, receiptId, participantUserId);
+				const { id: anotherParticipantUserId } = await insertUser(
+					ctx,
+					accountId,
+				);
+				await insertReceiptParticipant(
+					ctx,
+					receiptId,
+					anotherParticipantUserId,
+				);
 
 				const caller = router.createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
@@ -183,6 +227,16 @@ describe("receiptParticipants.add", () => {
 						}),
 					"CONFLICT",
 					`User "${participantUserId}" already participates in receipt "${receiptId}".`,
+				);
+				await expectTRPCError(
+					() =>
+						caller.procedure({
+							receiptId,
+							userIds: [participantUserId, anotherParticipantUserId],
+							role: "editor",
+						}),
+					"CONFLICT",
+					`Users "${participantUserId}", "${anotherParticipantUserId}" already participate in receipt "${receiptId}".`,
 				);
 			});
 		});

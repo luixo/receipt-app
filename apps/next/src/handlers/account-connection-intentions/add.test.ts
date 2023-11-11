@@ -171,9 +171,8 @@ describe("accountConnectionIntentions.add", () => {
 
 			test("target user already has an intention", async ({ ctx }) => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				const { id: otherAccountId, email: otherEmail } = await insertAccount(
-					ctx,
-				);
+				const { id: otherAccountId } = await insertAccount(ctx);
+				const { email: targetEmail } = await insertAccount(ctx);
 				const { id: userId, name: userName } = await insertUser(ctx, accountId);
 				// Self account's intention to connect to foreign account
 				await insertAccountConnectionIntention(
@@ -188,10 +187,10 @@ describe("accountConnectionIntentions.add", () => {
 					() =>
 						caller.procedure({
 							userId,
-							email: otherEmail,
+							email: targetEmail,
 						}),
 					"CONFLICT",
-					`You already has intention to connect to "${otherEmail}" as user "${userName}".`,
+					`You already has intention to connect to user "${userName}".`,
 				);
 			});
 

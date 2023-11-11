@@ -242,7 +242,10 @@ describe("users.suggest", () => {
 
 			const matchedUsers = await Promise.all([
 				insertUser(ctx, accountId, { name: "Alice from work" }),
-				insertUser(ctx, accountId, { name: "Alice from school" }),
+				insertUser(ctx, accountId, {
+					name: "Alice from school",
+					publicName: faker.person.fullName(),
+				}),
 				insertUser(ctx, accountId, { name: "Alice from gym" }),
 			]);
 			const [connectedMatchedUser] = await insertConnectedUsers(ctx, [
@@ -277,7 +280,10 @@ describe("users.suggest", () => {
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			const matchedUsers = await Promise.all([
 				insertUser(ctx, accountId, { name: "Ally" }),
-				insertUser(ctx, accountId, { name: "Alice" }),
+				insertUser(ctx, accountId, {
+					name: "Alice",
+					publicName: faker.person.fullName(),
+				}),
 				insertUser(ctx, accountId, { name: "Aliko" }),
 			]);
 			const result = await caller.procedure({
@@ -327,6 +333,7 @@ describe("users.suggest", () => {
 			});
 			const { id: participatingUserId } = await insertUser(ctx, accountId, {
 				name: "Alice from school",
+				publicName: faker.person.fullName(),
 			});
 			const matchedUsers = await Promise.all([
 				insertUser(ctx, accountId, { name: "Alice from gym" }),
@@ -371,7 +378,10 @@ describe("users.suggest", () => {
 
 			const matchedUsers = await Promise.all([
 				insertUser(ctx, accountId, { name: "Alice from work" }),
-				insertUser(ctx, accountId, { name: "Alice from school" }),
+				insertUser(ctx, accountId, {
+					name: "Alice from school",
+					publicName: faker.person.fullName(),
+				}),
 				insertUser(ctx, accountId, { name: "Alice from gym" }),
 			]);
 			await insertConnectedUsers(ctx, [
@@ -405,7 +415,10 @@ describe("users.suggest", () => {
 
 			const matchedUsers = await Promise.all([
 				insertUser(ctx, accountId, { name: "Alice from work" }),
-				insertUser(ctx, accountId, { name: "Alice from school" }),
+				insertUser(ctx, accountId, {
+					name: "Alice from school",
+					publicName: faker.person.fullName(),
+				}),
 				insertUser(ctx, accountId, { name: "Alide - a typo" }),
 			]);
 			// Too fuzzy - should not be returned
@@ -469,7 +482,10 @@ describe("users.suggest", () => {
 				name: "Alice from work",
 			});
 			const matchedUsers = await Promise.all([
-				insertUser(ctx, accountId, { name: "Alice from school" }),
+				insertUser(ctx, accountId, {
+					name: "Alice from school",
+					publicName: faker.person.fullName(),
+				}),
 				insertUser(ctx, accountId, { name: "Alice from gym" }),
 			]);
 			const [connectedMatchedUser] = await insertConnectedUsers(ctx, [

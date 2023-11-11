@@ -152,6 +152,15 @@ describe("currency.rates", () => {
 					"INTERNAL_SERVER_ERROR",
 					'Codes "MOP", "VND" are not available on remote server. Please contact app owner.',
 				);
+				await expectTRPCError(
+					() =>
+						caller.procedure({
+							from: "USD",
+							to: ["MOP", "VND"],
+						}),
+					"INTERNAL_SERVER_ERROR",
+					'Code "VND" is not available on remote server. Please contact app owner.',
+				);
 			});
 
 			test("exchange rate returned", async ({ ctx }) => {
