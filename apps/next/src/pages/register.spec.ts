@@ -34,6 +34,7 @@ test.describe("Register page", () => {
 			fillValidFields,
 			snapshotQueries,
 			withLoader,
+			verifyToastTexts,
 		}) => {
 			api.mockUtils.noAuth();
 			api.pause("auth.register");
@@ -45,6 +46,7 @@ test.describe("Register page", () => {
 				const buttonWithLoader = withLoader(registerButton);
 				await expect(buttonWithLoader).not.toBeVisible();
 				await registerButton.click();
+				await verifyToastTexts("Registering..");
 				await expect(registerButton).toBeDisabled();
 				await expect(buttonWithLoader).toBeVisible();
 				const inputs = await page.locator("input").all();
@@ -54,6 +56,7 @@ test.describe("Register page", () => {
 					await expect(input).toBeDisabled();
 				}
 			});
+			await expect(page).toHaveURL("/register");
 		});
 
 		test("success", async ({
@@ -63,7 +66,6 @@ test.describe("Register page", () => {
 			fillValidFields,
 			verifyToastTexts,
 			snapshotQueries,
-			awaitQuery,
 			consoleManager,
 		}) => {
 			// Remove this ignored pattern when we will explicitly redirect to "/receipts"
@@ -79,14 +81,9 @@ test.describe("Register page", () => {
 			await fillValidFields();
 
 			await snapshotQueries(async () => {
-				const loggedInLoaded = awaitQuery("receipts.getPaged");
-				api.pause("auth.register");
 				await registerButton.click();
-				await verifyToastTexts("Registering..");
-				api.unpause("auth.register");
 				await verifyToastTexts("Register successful, redirecting..");
 				await expect(page).toHaveURL("/receipts");
-				await loggedInLoaded;
 			});
 		});
 
@@ -103,7 +100,7 @@ test.describe("Register page", () => {
 			api.mock("auth.register", () => {
 				throw new TRPCError({
 					code: "CONFLICT",
-					message: "Email already exist",
+					message: `Mock "auth.register" error`,
 				});
 			});
 
@@ -111,7 +108,7 @@ test.describe("Register page", () => {
 			await fillValidFields();
 			await snapshotQueries(async () => {
 				await registerButton.click();
-				await verifyToastTexts("Email already exist");
+				await verifyToastTexts(`Mock "auth.register" error`);
 				await expect(page).toHaveURL("/register");
 			});
 

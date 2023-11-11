@@ -3,7 +3,7 @@
 		"auth.register": {
 			"state": {
 				"error": {
-					"message": "Email already exist",
+					"message": "Mock \"auth.register\" error",
 					"data": {
 						"code": "CONFLICT",
 						"httpStatus": 409,
