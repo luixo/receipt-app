@@ -21,7 +21,7 @@ import { test } from "@tests/backend/utils/test";
 import { t } from "next-app/handlers/trpc";
 
 import { procedure } from "./get";
-import { getSum } from "./test.utils";
+import { getSum } from "./utils.test";
 
 const router = t.router({ procedure });
 

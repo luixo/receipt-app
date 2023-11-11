@@ -21,14 +21,14 @@ import { test } from "@tests/backend/utils/test";
 import type { TRPCMutationInput } from "app/trpc";
 import { t } from "next-app/handlers/trpc";
 
+import { procedure } from "./update";
 import {
 	getRandomCurrencyCode,
 	verifyCurrencyCode,
 	verifyIssued,
 	verifyName,
 	verifyReceiptId,
-} from "./test.utils";
-import { procedure } from "./update";
+} from "./utils.test";
 
 const router = t.router({ procedure });
 

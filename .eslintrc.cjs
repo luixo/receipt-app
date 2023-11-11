@@ -107,10 +107,7 @@ module.exports = {
 			rules: { "no-console": "off" },
 		},
 		...[
-			[
-				"apps/next",
-				["next.config.js", "**/*.test.ts", "**/test.utils.ts", "**/*.spec.ts"],
-			],
+			["apps/next", ["next.config.js", "**/*.test.ts", "**/*.spec.ts"]],
 			["apps/expo"],
 			["packages/app"],
 			["scripts", true],

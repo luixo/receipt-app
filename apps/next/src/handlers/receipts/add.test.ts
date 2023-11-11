@@ -22,7 +22,7 @@ import {
 	verifyCurrencyCode,
 	verifyIssued,
 	verifyName,
-} from "./test.utils";
+} from "./utils.test";
 
 const router = t.router({ procedure });
 

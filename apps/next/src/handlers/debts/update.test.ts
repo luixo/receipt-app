@@ -22,6 +22,7 @@ import type { TRPCMutationInput } from "app/trpc";
 import type { ReceiptsId } from "next-app/db/models";
 import { t } from "next-app/handlers/trpc";
 
+import { procedure } from "./update";
 import {
 	getRandomCurrencyCode,
 	verifyAmount,
@@ -29,8 +30,7 @@ import {
 	verifyNote,
 	verifyReceiptId,
 	verifyTimestamp,
-} from "./test.utils";
-import { procedure } from "./update";
+} from "./utils.test";
 
 const router = t.router({ procedure });
 

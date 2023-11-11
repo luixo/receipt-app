@@ -23,6 +23,7 @@ import { nonNullishGuard } from "app/utils/utils";
 import type { AccountsId, UsersId } from "next-app/db/models";
 import { t } from "next-app/handlers/trpc";
 
+import { procedure } from "./update-batch";
 import {
 	getRandomCurrencyCode,
 	verifyAmount,
@@ -30,8 +31,7 @@ import {
 	verifyNote,
 	verifyReceiptId,
 	verifyTimestamp,
-} from "./test.utils";
-import { procedure } from "./update-batch";
+} from "./utils.test";
 
 const router = t.router({ procedure });
 

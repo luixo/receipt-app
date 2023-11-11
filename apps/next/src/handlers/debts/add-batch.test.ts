@@ -31,7 +31,7 @@ import {
 	verifyReceiptId,
 	verifyTimestamp,
 	verifyUserId,
-} from "./test.utils";
+} from "./utils.test";
 
 const router = t.router({ procedure });
 

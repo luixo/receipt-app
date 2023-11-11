@@ -23,7 +23,7 @@ import type { UsersId } from "next-app/db/models";
 import { t } from "next-app/handlers/trpc";
 
 import { procedure } from "./get-paged";
-import { getSum } from "./test.utils";
+import { getSum } from "./utils.test";
 
 const router = t.router({ procedure });
 

@@ -21,7 +21,7 @@ import { MAX_LIMIT } from "app/utils/validation";
 import { t } from "next-app/handlers/trpc";
 
 import { procedure } from "./suggest-top";
-import { mapUserToSuggestResult } from "./test.utils";
+import { mapUserToSuggestResult } from "./utils.test";
 
 const router = t.router({ procedure });
 

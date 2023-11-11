@@ -20,7 +20,7 @@ import { MINUTE } from "app/utils/time";
 import { t } from "next-app/handlers/trpc";
 
 import { procedure } from "./accept-all-intentions";
-import { getRandomCurrencyCode } from "./test.utils";
+import { getRandomCurrencyCode } from "./utils.test";
 
 const router = t.router({ procedure });
 

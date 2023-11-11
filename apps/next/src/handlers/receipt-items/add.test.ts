@@ -24,7 +24,7 @@ import {
 	verifyName,
 	verifyPrice,
 	verifyQuantity,
-} from "./test.utils";
+} from "./utils.test";
 
 const router = t.router({ procedure });
 

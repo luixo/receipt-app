@@ -19,7 +19,7 @@ import { test } from "@tests/backend/utils/test";
 import { t } from "next-app/handlers/trpc";
 
 import { procedure } from "./remove";
-import { verifyReceiptItemId } from "./test.utils";
+import { verifyReceiptItemId } from "./utils.test";
 
 const router = t.router({ procedure });
 

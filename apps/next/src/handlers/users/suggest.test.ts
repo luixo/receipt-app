@@ -23,7 +23,7 @@ import {
 import { t } from "next-app/handlers/trpc";
 
 import { procedure } from "./suggest";
-import { mapUserToSuggestResult } from "./test.utils";
+import { mapUserToSuggestResult } from "./utils.test";
 
 const router = t.router({ procedure });
 
