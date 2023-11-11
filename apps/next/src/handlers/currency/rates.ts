@@ -49,9 +49,11 @@ export const procedure = authProcedure
 			}
 			throw new TRPCError({
 				code: "INTERNAL_SERVER_ERROR",
-				message: `Code${missingCodes.length === 1 ? "" : "s"} ${missingCodes
+				message: `${missingCodes.length === 1 ? "Code" : "Codes"} ${missingCodes
 					.map((code) => `"${code}"`)
-					.join(", ")} are ${notAvailablePostfix}`,
+					.join(", ")} ${
+					missingCodes.length === 1 ? "is" : "are"
+				} ${notAvailablePostfix}`,
 			});
 		}
 		cacheDatabase.setex(cacheKey, CACHE_TTL, fetchedRates).catch((e) => {

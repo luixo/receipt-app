@@ -32,8 +32,8 @@ export const procedure = authProcedure
 		if (receipt.ownerAccountId !== ctx.auth.accountId) {
 			throw new TRPCError({
 				code: "FORBIDDEN",
-				message: `Not enough rights to add participant${
-					input.userIds.length === 1 ? "" : "s"
+				message: `Not enough rights to add ${
+					input.userIds.length === 1 ? "participant" : "participants"
 				} to receipt "${input.receiptId}".`,
 			});
 		}
