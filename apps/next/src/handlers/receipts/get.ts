@@ -110,7 +110,7 @@ export const procedure = authProcedure
 			...receipt,
 			sum: Number(sum),
 			role: accessRole,
-			lockedTimestamp: lockedTimestamp || undefined,
+			lockedTimestamp,
 		};
 		if (ownerAccountId === ctx.auth.accountId) {
 			const results = await database

@@ -125,13 +125,7 @@ export const procedure = authProcedure
 				message: `Cannot add debts for yourself.`,
 			});
 		}
-		const uniqueAutoAcceptingUsers = users
-			.filter((user) => user.autoAcceptDebts)
-			.reduce<typeof users>(
-				(acc, user) =>
-					acc.some(({ id }) => id === user.id) ? acc : [...acc, user],
-				[],
-			);
+		const autoAcceptingUsers = users.filter((user) => user.autoAcceptDebts);
 		const lockedTimestamp = new Date();
 		let reverseAcceptedUserIds: UsersId[] = [];
 		const commonParts = debts.map((debt, index) => ({
@@ -143,14 +137,12 @@ export const procedure = authProcedure
 			lockedTimestamp,
 			receiptId: debt.receiptId,
 		}));
-		if (uniqueAutoAcceptingUsers.length !== 0) {
-			const autoAcceptingUsersAccountIds = uniqueAutoAcceptingUsers
+		if (autoAcceptingUsers.length !== 0) {
+			const autoAcceptingUsersAccountIds = autoAcceptingUsers
 				.map((user) => user.foreignAccountId)
 				.filter(nonNullishGuard);
 			/* c8 ignore start */
-			if (
-				autoAcceptingUsersAccountIds.length !== uniqueAutoAcceptingUsers.length
-			) {
+			if (autoAcceptingUsersAccountIds.length !== autoAcceptingUsers.length) {
 				throw new TRPCError({
 					code: "INTERNAL_SERVER_ERROR",
 					message: `Unexpected having "autoAcceptDebts" but not having "accountId"`,
@@ -205,7 +197,7 @@ export const procedure = authProcedure
 						.executeTakeFirst(),
 				extractError,
 			);
-			reverseAcceptedUserIds = uniqueAutoAcceptingUsers.map((user) => user.id);
+			reverseAcceptedUserIds = autoAcceptingUsers.map((user) => user.id);
 		}
 		await withOwnerReceiptUserConstraint(
 			() =>

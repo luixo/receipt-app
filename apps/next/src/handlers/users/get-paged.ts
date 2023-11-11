@@ -32,11 +32,11 @@ export const procedure = authProcedure
 				.execute(),
 			accountUsers
 				.select(database.fn.count<string>("id").as("amount"))
-				.executeTakeFirst(),
+				.executeTakeFirstOrThrow(),
 		]);
 
 		return {
-			count: usersCount?.amount ? parseInt(usersCount.amount, 10) : 0,
+			count: parseInt(usersCount.amount, 10),
 			cursor: input.cursor,
 			hasMore: users.length === input.limit + 1,
 			items: users
