@@ -1,3 +1,0 @@
-// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
-
-exports[`router index > http server > error formatter works 1`] = `"Session id mismatch"`;

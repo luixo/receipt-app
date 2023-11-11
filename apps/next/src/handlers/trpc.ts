@@ -2,13 +2,18 @@ import { TRPCError, initTRPC } from "@trpc/server";
 import superjson from "superjson";
 
 import {
-	shouldUpdateExpirationDate,
-	updateAuthorizationSession,
+	SESSION_EXPIRATION_DURATION,
+	SESSION_SHOULD_UPDATE_EVERY,
+	getExpirationDate,
 } from "next-app/handlers/auth/utils";
 import type { UnauthorizedContext } from "next-app/handlers/context";
 import { formatErrorMessage } from "next-app/handlers/errors";
 import { sessionIdSchema } from "next-app/handlers/validation";
-import { AUTH_COOKIE, resetAuthCookie } from "next-app/utils/auth-cookie";
+import {
+	AUTH_COOKIE,
+	resetAuthCookie,
+	setAuthCookie,
+} from "next-app/utils/auth-cookie";
 import { getCookie } from "next-app/utils/cookie";
 
 export const t = initTRPC.context<UnauthorizedContext>().create({
@@ -32,7 +37,7 @@ export const unauthProcedure = t.procedure.use(
 		if (result.ok) {
 			ctx.logger.trace(options, "OK request timing:");
 		} else {
-			ctx.logger.trace(options, "Non-OK request timing");
+			ctx.logger.trace(options, "Non-OK request timing:");
 		}
 
 		return result;
@@ -76,8 +81,17 @@ export const authProcedure = unauthProcedure.use(
 				message: "Session id mismatch",
 			});
 		}
-		if (shouldUpdateExpirationDate(session.expirationTimestamp)) {
-			void updateAuthorizationSession(database, authToken);
+		if (
+			session.expirationTimestamp.valueOf() - Date.now() <
+			SESSION_EXPIRATION_DURATION - SESSION_SHOULD_UPDATE_EVERY
+		) {
+			const nextExpirationTimestamp = getExpirationDate();
+			void database
+				.updateTable("sessions")
+				.set({ expirationTimestamp: nextExpirationTimestamp })
+				.where("sessionId", "=", authToken)
+				.executeTakeFirst();
+			setAuthCookie(ctx.res, authToken, nextExpirationTimestamp);
 		}
 		return next({
 			ctx: {

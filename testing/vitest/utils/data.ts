@@ -518,6 +518,10 @@ export const insertAccountWithSession = async (
 		name,
 		...account
 	} = await insertAccount(ctx, data.account);
-	const { id: sessionId, ...session } = await insertSession(ctx, accountId);
+	const { id: sessionId, ...session } = await insertSession(
+		ctx,
+		accountId,
+		data.session,
+	);
 	return { accountId, account, sessionId, session, userId, name };
 };

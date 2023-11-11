@@ -1,0 +1,16 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`procedures > auth procedure > session is auto-updated 1`] = `
+"Snapshot Diff:
+- Before snapshot
++ After snapshot
+
+@@ --- --- @@
+- INSERT INTO public.sessions VALUES ('47976683-7307-4041-9a33-4f42da683bd8', '008d0fb7-c004-4726-8121-eaa0c2b6d906', '2020-01-28 23:59:59');
++ INSERT INTO public.sessions VALUES ('47976683-7307-4041-9a33-4f42da683bd8', '008d0fb7-c004-4726-8121-eaa0c2b6d906', '2020-01-31 00:00:00');"
+`;
+
+exports[`procedures > auth procedure > session is not auto-updated 1`] = `
+"Snapshot Diff:
+Compared values have no visual difference."
+`;

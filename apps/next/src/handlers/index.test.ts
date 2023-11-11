@@ -1,6 +1,7 @@
 import type { HTTPHeaders } from "@trpc/client";
-import { createTRPCProxyClient, httpLink } from "@trpc/client";
+import { TRPCClientError, createTRPCProxyClient, httpLink } from "@trpc/client";
 import { createHTTPServer } from "@trpc/server/adapters/standalone";
+import type { TRPCErrorShape } from "@trpc/server/rpc";
 import findFreePorts from "find-free-ports";
 import { sql } from "kysely";
 import type { NextApiRequest, NextApiResponse } from "next";
@@ -56,9 +57,11 @@ describe("router index", () => {
 			const port = (await findFreePorts())[0]!;
 			const destroy = await runServer(ctx, port);
 			const client = createClient(port, { cookie: "authToken=fake" });
-			await expect(() =>
-				client.account.get.query(),
-			).rejects.toThrowErrorMatchingSnapshot();
+			const error = await client.account.get.query().catch((e) => e);
+			expect(error).toBeInstanceOf(TRPCClientError);
+			expect(
+				(error as TRPCClientError<TRPCErrorShape<number>>).message,
+			).toStrictEqual("Session id mismatch");
 			await destroy();
 		});
 	});
