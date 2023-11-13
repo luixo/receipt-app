@@ -1,8 +1,8 @@
 import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
 import { Pool } from "pg";
 import * as timekeeper from "timekeeper";
-import type { Suite as OriginalSuite, ResolvedConfig } from "vitest";
-import { beforeAll, beforeEach } from "vitest";
+import type { Suite as OriginalSuite } from "vitest";
+import { beforeAll, beforeEach, inject } from "vitest";
 
 import { SECOND } from "app/utils/time";
 import { getDatabase } from "next-app/db";
@@ -11,10 +11,7 @@ import { makeConnectionString } from "./databases/connection";
 import type { appRouter } from "./databases/router";
 import { getLogger } from "./utils/mocks/logger";
 
-// See https://github.com/vitest-dev/vitest/issues/4025
-// eslint-disable-next-line no-underscore-dangle, @typescript-eslint/no-explicit-any
-const config = (globalThis as any).__vitest_worker__.config as ResolvedConfig;
-const { port, hostname } = config.environmentOptions.routerConfig;
+const { port, hostname } = inject("routerConfig");
 const client = createTRPCProxyClient<typeof appRouter>({
 	links: [httpBatchLink({ url: `http://${hostname}:${port}` })],
 });

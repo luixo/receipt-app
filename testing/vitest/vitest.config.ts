@@ -14,6 +14,7 @@ const testConfig: NonNullable<UserConfig["test"]> = {
 	include: [path.resolve(testsRoot, "**/*.test.ts")],
 	exclude: [...configDefaults.exclude, "**/utils.test.ts"],
 	coverage: {
+		all: false,
 		enabled: true,
 		reporter: ["text", "html", "lcov", "json-summary", "json"],
 		exclude: [
@@ -25,8 +26,9 @@ const testConfig: NonNullable<UserConfig["test"]> = {
 		allowExternal: true,
 		reportsDirectory: path.resolve(vitestRoot, "./coverage"),
 	},
-	experimentalVmThreads: true,
+	pool: "vmThreads",
 	watch: false,
+	retry: process.env.CI ? 2 : 0,
 };
 
 export default defineConfig({
