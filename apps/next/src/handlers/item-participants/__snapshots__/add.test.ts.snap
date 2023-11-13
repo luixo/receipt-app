@@ -1,0 +1,25 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`itemParticipants.add > functionality > item participants are added 1`] = `
+{
+  "added": {
+    "itemParticipants": {
+      "itemId:3338c60b-0751-441e-aae7-99eee5777257|userId:4260c12c-9b4c-4223-8308-3fd8abc833ee": {
+        "itemId": "3338c60b-0751-441e-aae7-99eee5777257",
+        "part": "1.00",
+        "userId": "4260c12c-9b4c-4223-8308-3fd8abc833ee",
+      },
+      "itemId:3338c60b-0751-441e-aae7-99eee5777257|userId:ab289ed9-9ec6-451b-b51e-e0ab4d11ea83": {
+        "itemId": "3338c60b-0751-441e-aae7-99eee5777257",
+        "part": "1.00",
+        "userId": "ab289ed9-9ec6-451b-b51e-e0ab4d11ea83",
+      },
+      "itemId:3338c60b-0751-441e-aae7-99eee5777257|userId:da4aab66-e6d2-4b2c-8bd1-fce0621c02c0": {
+        "itemId": "3338c60b-0751-441e-aae7-99eee5777257",
+        "part": "1.00",
+        "userId": "da4aab66-e6d2-4b2c-8bd1-fce0621c02c0",
+      },
+    },
+  },
+}
+`;

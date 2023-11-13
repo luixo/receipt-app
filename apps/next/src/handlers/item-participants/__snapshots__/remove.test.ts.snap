@@ -1,0 +1,11 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`itemParticipants.remove > functionality > part is removed 1`] = `
+{
+  "deleted": {
+    "itemParticipants": {
+      "itemId:2f02735c-81de-4347-a8e6-e4801e40dd22|userId:f3776714-3c88-4d1e-8fe8-dce3ddd8c69f": undefined,
+    },
+  },
+}
+`;
