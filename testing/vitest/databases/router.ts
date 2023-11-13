@@ -19,6 +19,7 @@ const POSTGRES_PASSWORD = "test-password";
 const POSTGRES_HOST = "localhost";
 const POSTGRES_PORT = 5432;
 const POSTGRES_TEMPLATE_DATABASE = "template-test";
+const POSTGRES_TEMP_DIR = "/temp_pgdata";
 
 const TABLES: Record<keyof ReceiptsDatabase, true> = {
 	accountConnectionsIntentions: true,
@@ -61,10 +62,12 @@ export const appRouter = router({
 		.input(z.strictObject({ maxDatabases: z.number() }))
 		.mutation(async ({ input }) => {
 			const container = new GenericContainer("postgres")
+				.withTmpFs({ [POSTGRES_TEMP_DIR]: "rw" })
 				.withExposedPorts(POSTGRES_PORT)
 				.withEnv("POSTGRES_USER", POSTGRES_USER)
 				.withEnv("POSTGRES_PASSWORD", POSTGRES_PASSWORD)
-				.withEnv("POSTGRES_DB", POSTGRES_TEMPLATE_DATABASE);
+				.withEnv("POSTGRES_DB", POSTGRES_TEMPLATE_DATABASE)
+				.withEnv("PGDATA", POSTGRES_TEMP_DIR);
 			const runningContainer = await container.start();
 			const connectionData = {
 				host: POSTGRES_HOST,
@@ -144,7 +147,6 @@ export const appRouter = router({
 				format: "plain",
 				dataOnly: true,
 				noComments: true,
-				noSync: true,
 				noOwner: true,
 				// This keeps table name in the same row as data which helps with 0 lines context diff
 				inserts: true,
