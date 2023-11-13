@@ -1,4 +1,3 @@
-import { recase } from "@kristiandupont/recase";
 import { initTRPC } from "@trpc/server";
 import { Kysely, PostgresDialect, sql } from "kysely";
 import { Pool } from "pg";
@@ -21,18 +20,23 @@ const POSTGRES_PORT = 5432;
 const POSTGRES_TEMPLATE_DATABASE = "template-test";
 const POSTGRES_TEMP_DIR = "/temp_pgdata";
 
-const TABLES: Record<keyof ReceiptsDatabase, true> = {
-	accountConnectionsIntentions: true,
-	accounts: true,
-	accountSettings: true,
-	debts: true,
-	itemParticipants: true,
-	receiptItems: true,
-	receiptParticipants: true,
-	receipts: true,
-	resetPasswordIntentions: true,
-	sessions: true,
-	users: true,
+type OrderBy<DB, TB extends keyof DB> = keyof DB[TB];
+const ORDERS: {
+	[K in keyof ReceiptsDatabase]:
+		| OrderBy<ReceiptsDatabase, K>
+		| OrderBy<ReceiptsDatabase, K>[];
+} = {
+	accountConnectionsIntentions: ["accountId", "targetAccountId"],
+	accounts: "id",
+	accountSettings: "accountId",
+	debts: ["id", "ownerAccountId"],
+	itemParticipants: ["itemId", "userId"],
+	receiptItems: "id",
+	receiptParticipants: ["receiptId", "userId"],
+	receipts: "id",
+	resetPasswordIntentions: ["accountId", "token"],
+	sessions: "sessionId",
+	users: "id",
 };
 
 const { router, procedure, middleware } = initTRPC.create();
@@ -142,42 +146,45 @@ export const appRouter = router({
 	dumpDatabase: runningProcedure
 		.input(z.object({ databaseName: z.string() }))
 		.mutation(async ({ input, ctx: { instance } }) => {
-			const pgDumpOptions = {
-				username: instance.connectionData.username,
-				format: "plain",
-				dataOnly: true,
-				noComments: true,
-				noOwner: true,
-				// This keeps table name in the same row as data which helps with 0 lines context diff
-				inserts: true,
-				// We don't need migration data
-				excludeTable: "*kysely*",
-			};
-			const { exitCode, output } = await instance.container.exec(
-				[
-					"/bin/sh",
-					"-c",
-					`PGPASSWORD=${
-						instance.connectionData.password
-					} pg_dump ${Object.entries(pgDumpOptions)
-						.map(([key, option]) =>
-							[
-								`--${recase("camel", "dash")(key)}`,
-								option === true ? undefined : option,
-							]
-								.filter(Boolean)
-								.join("="),
-						)
-						.join(" ")} ${
-						input.databaseName
-					} | grep -v -E "SET|^--$|^-- Data" | grep .`,
-				],
-				{ tty: true },
+			const database = getDatabase({
+				pool: new Pool({
+					connectionString: makeConnectionString(
+						instance.connectionData,
+						input.databaseName,
+					),
+				}),
+			});
+			const dump = await Promise.all(
+				(Object.keys(ORDERS) as (keyof typeof ORDERS)[]).map(
+					async (tableName) => {
+						const orderOrOrders = ORDERS[tableName];
+						const orders = Array.isArray(orderOrOrders)
+							? orderOrOrders
+							: [orderOrOrders];
+						const data = await database
+							.selectFrom(tableName)
+							.selectAll()
+							.execute();
+						return {
+							tableName,
+							data: data.reduce(
+								(dataAcc, element) => ({
+									...dataAcc,
+									[orders
+										.map((column) => `${column}:${String(element[column])}`)
+										.join("|")]: element,
+								}),
+								{},
+							),
+						};
+					},
+				),
 			);
-			if (exitCode !== 0) {
-				throw new Error(output);
-			}
-			return output;
+			await database.destroy();
+			return dump.reduce(
+				(acc, { tableName, data }) => ({ ...acc, [tableName]: data }),
+				{},
+			);
 		}),
 	truncateDatabase: runningProcedure
 		.input(z.object({ databaseName: z.string() }))
@@ -196,7 +203,7 @@ export const appRouter = router({
 				() => database.destroy(),
 				async () => {
 					await sql`TRUNCATE ${sql.join(
-						Object.keys(TABLES).map((table) => sql.table(table)),
+						Object.keys(ORDERS).map((table) => sql.table(table)),
 						sql`,`,
 					)} RESTART IDENTITY`.execute(database);
 				},

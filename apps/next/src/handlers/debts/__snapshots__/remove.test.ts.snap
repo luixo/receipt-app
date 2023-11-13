@@ -1,29 +1,32 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`debts.remove > functionality > auto-accepted by counterparty > debt does not exist 1`] = `
-"Snapshot Diff:
-- Before snapshot
-+ After snapshot
-
-@@ --- --- @@
-- INSERT INTO public.debts VALUES ('9ac5225a-77fd-4a24-aab8-47297743468e', '56bae36c-0cfa-4100-b1d6-5efe427b3048', 'ab68606f-8786-4d6a-9cc9-1319497e0cbe', 'RUB', 628.6500, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Reprehenderit molestias voluptatem voluptatibus voluptas molestias dignissimos quibusdam facere.', NULL, NULL);"
+{
+  "deleted": {
+    "debts": {
+      "id:9ac5225a-77fd-4a24-aab8-47297743468e|ownerAccountId:56bae36c-0cfa-4100-b1d6-5efe427b3048": undefined,
+    },
+  },
+}
 `;
 
 exports[`debts.remove > functionality > auto-accepted by counterparty > debt exists 1`] = `
-"Snapshot Diff:
-- Before snapshot
-+ After snapshot
-
-@@ --- --- @@
-- INSERT INTO public.debts VALUES ('a6b4315f-09a6-42eb-8af7-02fd9117f580', '3e46b9c3-3d53-441d-b4f2-8cfa063914d5', 'a4c6a511-3ae0-4749-b1a2-b762b91ff052', 'AZN', 537.8300, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Nostrum distinctio odio quidem totam vitae praesentium impedit iure perferendis.', NULL, NULL);
-- INSERT INTO public.debts VALUES ('a6b4315f-09a6-42eb-8af7-02fd9117f580', '9d9adde3-1a01-4d09-bc04-92447f0ccc48', '74204966-bb44-4569-ab3e-694935c4c3b6', 'AZN', -537.8300, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Nostrum distinctio odio quidem totam vitae praesentium impedit iure perferendis.', NULL, NULL);"
+{
+  "deleted": {
+    "debts": {
+      "id:a6b4315f-09a6-42eb-8af7-02fd9117f580|ownerAccountId:3e46b9c3-3d53-441d-b4f2-8cfa063914d5": undefined,
+      "id:a6b4315f-09a6-42eb-8af7-02fd9117f580|ownerAccountId:9d9adde3-1a01-4d09-bc04-92447f0ccc48": undefined,
+    },
+  },
+}
 `;
 
 exports[`debts.remove > functionality > not auto-accepted by counterparty 1`] = `
-"Snapshot Diff:
-- Before snapshot
-+ After snapshot
-
-@@ --- --- @@
-- INSERT INTO public.debts VALUES ('ecdfb1f0-7c98-461b-a826-1dd52f144ec0', 'f04752bd-4d20-4189-9652-34eabba08a46', '3350bace-20e3-49c2-b632-dd40922a4481', 'VES', 666.4900, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Harum ipsam qui iste repellendus.', NULL, NULL);"
+{
+  "deleted": {
+    "debts": {
+      "id:ecdfb1f0-7c98-461b-a826-1dd52f144ec0|ownerAccountId:f04752bd-4d20-4189-9652-34eabba08a46": undefined,
+    },
+  },
+}
 `;

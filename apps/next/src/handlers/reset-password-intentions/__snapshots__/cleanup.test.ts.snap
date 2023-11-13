@@ -1,11 +1,12 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`resetPasswordIntentions.cleanup > functionality > reset password intentions are removed 1`] = `
-"Snapshot Diff:
-- Before snapshot
-+ After snapshot
-
-@@ --- --- @@
-- INSERT INTO public.\\"resetPasswordIntentions\\" VALUES ('8bb70d3a-398a-4d0b-aa4d-60000fc80e14', '2019-12-31 23:59:00', '799671c8-2985-4f99-82d8-df44da695511');
-- INSERT INTO public.\\"resetPasswordIntentions\\" VALUES ('8bb70d3a-398a-4d0b-aa4d-60000fc80e14', '2019-01-01 00:00:00', '455bb7b9-8232-4b30-a851-acdd2817454f');"
+{
+  "deleted": {
+    "resetPasswordIntentions": {
+      "accountId:8bb70d3a-398a-4d0b-aa4d-60000fc80e14|token:455bb7b9-8232-4b30-a851-acdd2817454f": undefined,
+      "accountId:8bb70d3a-398a-4d0b-aa4d-60000fc80e14|token:799671c8-2985-4f99-82d8-df44da695511": undefined,
+    },
+  },
+}
 `;

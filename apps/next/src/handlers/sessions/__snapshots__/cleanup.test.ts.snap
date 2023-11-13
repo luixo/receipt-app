@@ -1,11 +1,12 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`sessions.cleanup > functionality > sessions are removed 1`] = `
-"Snapshot Diff:
-- Before snapshot
-+ After snapshot
-
-@@ --- --- @@
-- INSERT INTO public.sessions VALUES ('3be259b9-24bb-4bf9-bb83-6ed4bc789620', '46548e5a-c86e-425d-9504-8b2c12232bb2', '2019-12-31 23:59:00');
-- INSERT INTO public.sessions VALUES ('4f0be312-8b97-4c04-a87a-c1462082d462', '46548e5a-c86e-425d-9504-8b2c12232bb2', '2019-01-01 00:00:00');"
+{
+  "deleted": {
+    "sessions": {
+      "sessionId:3be259b9-24bb-4bf9-bb83-6ed4bc789620": undefined,
+      "sessionId:4f0be312-8b97-4c04-a87a-c1462082d462": undefined,
+    },
+  },
+}
 `;

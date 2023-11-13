@@ -1,24 +1,31 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`users.remove > functionality > user is removed 1`] = `
-"Snapshot Diff:
-- Before snapshot
-+ After snapshot
-
-@@ --- --- @@
-- INSERT INTO public.users VALUES ('fdcb634c-87ad-4c72-8be9-d4c85c60907e', 'Kim', NULL, '67b3cc78-fe50-41ba-883e-a9fc9803058c', false, false, NULL);
-@@ --- --- @@
-- INSERT INTO public.\\"accountConnectionsIntentions\\" VALUES ('67b3cc78-fe50-41ba-883e-a9fc9803058c', 'fdcb634c-87ad-4c72-8be9-d4c85c60907e', '38beadfc-ab98-48cc-a18a-f76577d55b4b', '2020-01-01 00:00:00');
-- INSERT INTO public.receipts VALUES ('41330bce-1d2b-4a80-b006-3068f8faee0d', 'at itaque', 'GMD', '2020-01-01 00:00:00', '67b3cc78-fe50-41ba-883e-a9fc9803058c', '2020-01-01 00:00:00', '2020-01-01 00:00:00');
-+ INSERT INTO public.receipts VALUES ('4d77b3a1-67e4-4bff-855c-64a258d8fef7', 'qui delectus', 'BBD', '2020-01-01 00:00:00', '67b3cc78-fe50-41ba-883e-a9fc9803058c', '2020-01-01 00:00:00', '2020-01-01 00:00:00');
-+ INSERT INTO public.receipts VALUES ('41330bce-1d2b-4a80-b006-3068f8faee0d', 'at itaque', 'GMD', '2020-01-01 00:00:00', '67b3cc78-fe50-41ba-883e-a9fc9803058c', '2020-01-01 00:00:00', NULL);
-@@ --- --- @@
-- INSERT INTO public.receipts VALUES ('4d77b3a1-67e4-4bff-855c-64a258d8fef7', 'qui delectus', 'BBD', '2020-01-01 00:00:00', '67b3cc78-fe50-41ba-883e-a9fc9803058c', '2020-01-01 00:00:00', '2020-01-01 00:00:00');
-- INSERT INTO public.debts VALUES ('28d9f5bc-d510-49ef-a19b-5ac7bd3a2315', '67b3cc78-fe50-41ba-883e-a9fc9803058c', 'fdcb634c-87ad-4c72-8be9-d4c85c60907e', 'RUB', 647.4000, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Sunt et aut ipsam atque.', NULL, NULL);
-@@ --- --- @@
-- INSERT INTO public.\\"itemParticipants\\" VALUES ('67c5619b-e07c-4906-b64b-645016fb6692', 1.00, 'fdcb634c-87ad-4c72-8be9-d4c85c60907e');
-@@ --- --- @@
-- INSERT INTO public.\\"receiptParticipants\\" VALUES ('41330bce-1d2b-4a80-b006-3068f8faee0d', 'fdcb634c-87ad-4c72-8be9-d4c85c60907e', 'viewer', false, '2020-01-01 00:00:00');
-@@ --- --- @@
-- INSERT INTO public.\\"receiptParticipants\\" VALUES ('18ffb6ec-b75d-42f5-b460-4f63d202b401', 'fdcb634c-87ad-4c72-8be9-d4c85c60907e', 'viewer', false, '2020-01-01 00:00:00');"
+{
+  "deleted": {
+    "accountConnectionsIntentions": {
+      "accountId:67b3cc78-fe50-41ba-883e-a9fc9803058c|targetAccountId:38beadfc-ab98-48cc-a18a-f76577d55b4b": undefined,
+    },
+    "debts": {
+      "id:28d9f5bc-d510-49ef-a19b-5ac7bd3a2315|ownerAccountId:67b3cc78-fe50-41ba-883e-a9fc9803058c": undefined,
+    },
+    "itemParticipants": {
+      "itemId:67c5619b-e07c-4906-b64b-645016fb6692|userId:fdcb634c-87ad-4c72-8be9-d4c85c60907e": undefined,
+    },
+    "receiptParticipants": {
+      "receiptId:18ffb6ec-b75d-42f5-b460-4f63d202b401|userId:fdcb634c-87ad-4c72-8be9-d4c85c60907e": undefined,
+      "receiptId:41330bce-1d2b-4a80-b006-3068f8faee0d|userId:fdcb634c-87ad-4c72-8be9-d4c85c60907e": undefined,
+    },
+    "users": {
+      "id:fdcb634c-87ad-4c72-8be9-d4c85c60907e": undefined,
+    },
+  },
+  "updated": {
+    "receipts": {
+      "id:41330bce-1d2b-4a80-b006-3068f8faee0d": {
+        "lockedTimestamp": null,
+      },
+    },
+  },
+}
 `;

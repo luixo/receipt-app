@@ -1,11 +1,13 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`account.changeName > functionality > name changes 1`] = `
-"Snapshot Diff:
-- Before snapshot
-+ After snapshot
-
-@@ --- --- @@
-- INSERT INTO public.users VALUES ('c97b491c-01ac-42c9-a484-9e076fd553f0', 'Orlando', NULL, 'c97b491c-01ac-42c9-a484-9e076fd553f0', false, false, 'c97b491c-01ac-42c9-a484-9e076fd553f0');
-+ INSERT INTO public.users VALUES ('c97b491c-01ac-42c9-a484-9e076fd553f0', 'Makayla', NULL, 'c97b491c-01ac-42c9-a484-9e076fd553f0', false, false, 'c97b491c-01ac-42c9-a484-9e076fd553f0');"
+{
+  "updated": {
+    "users": {
+      "id:c97b491c-01ac-42c9-a484-9e076fd553f0": {
+        "name": "Makayla",
+      },
+    },
+  },
+}
 `;
