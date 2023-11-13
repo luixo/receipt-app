@@ -14,7 +14,7 @@ const testConfig: NonNullable<UserConfig["test"]> = {
 	include: [path.resolve(testsRoot, "**/*.test.ts")],
 	exclude: [...configDefaults.exclude, "**/utils.test.ts"],
 	coverage: {
-		enabled: true,
+		enabled: false,
 		reporter: ["text", "html", "lcov", "json-summary", "json"],
 		exclude: [
 			...configDefaults.coverage.exclude!,
