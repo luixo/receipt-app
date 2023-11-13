@@ -90,7 +90,6 @@
 		"@trpc/next@^10.35.0": "patch:@trpc/next@npm%3A10.35.0#./patches/@trpc-next-npm-10.35.0.patch",
 		"@trpc/server@^10.35.0": "patch:@trpc/server@npm%3A10.35.0#./patches/@trpc-server-npm-10.35.0.patch",
 		"@nextui-org/react@1.0.0-beta.10": "patch:@nextui-org/react@npm%3A1.0.0-beta.10#./patches/@nextui-org-react-npm-1.0.0-beta.10.patch",
-		"vitest@^0.34.1": "patch:vitest@npm%3A0.34.3#./patches/vitest-npm-0.34.3.patch",
 		"next@^13.4.12": "patch:next@npm%3A13.4.12#./patches/next-npm-13.4.12.patch"
 	}
 }

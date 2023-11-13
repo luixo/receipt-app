@@ -1,11 +1,11 @@
 import { createHTTPServer } from "@trpc/server/adapters/standalone";
 import findFreePorts from "find-free-ports";
-import type { Vitest } from "vitest";
+import type { GlobalSetupContext } from "vitest/node";
 
 import { appRouter } from "./databases/router";
 
 declare module "vitest" {
-	interface EnvironmentOptions {
+	interface ProvidedContext {
 		routerConfig: {
 			port: number;
 			hostname: string;
@@ -13,20 +13,18 @@ declare module "vitest" {
 	}
 }
 
-export default async (vitest: Vitest) => {
+export default async (context: GlobalSetupContext) => {
 	const routerConfig = {
 		port: (await findFreePorts())[0]!,
 		hostname: "localhost",
 	};
-	vitest.configOverride.environmentOptions = {
-		routerConfig,
-	};
+	context.provide("routerConfig", routerConfig);
 	const httpServer = createHTTPServer({ router: appRouter });
 	await new Promise<void>((resolve) => {
 		httpServer.listen(routerConfig.port, routerConfig.hostname, resolve);
 	});
 	const caller = appRouter.createCaller({});
-	await caller.setup({ maxDatabases: vitest.config.maxConcurrency });
+	await caller.setup({ maxDatabases: context.config.maxConcurrency });
 	return async () => {
 		await caller.teardown();
 		await new Promise<void>((resolve, reject) => {
