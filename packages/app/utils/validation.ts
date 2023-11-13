@@ -81,6 +81,7 @@ export const emailSchema = z
 type NumberSchemaOptions = {
 	decimals?: number;
 	onlyPositive?: boolean;
+	nonZero?: boolean;
 	max?:
 		| number
 		| {
@@ -89,9 +90,14 @@ type NumberSchemaOptions = {
 		  };
 };
 
-export const createNumberSchema = (
+const createNumberSchema = (
 	name: string,
-	{ decimals = 2, onlyPositive = true, max }: NumberSchemaOptions = {},
+	{
+		decimals = 2,
+		onlyPositive = true,
+		max,
+		nonZero = true,
+	}: NumberSchemaOptions = {},
 ) => {
 	let schema = z
 		.number()
@@ -109,6 +115,9 @@ export const createNumberSchema = (
 			}`,
 		);
 	}
+	if (nonZero) {
+		return schema.refine((x) => x !== 0, `${name} should be non-zero`);
+	}
 	return schema;
 };
 
@@ -117,21 +126,27 @@ export const priceSchema = createNumberSchema("Price", {
 		visual: "10^15",
 		value: 10 ** 15 - 1,
 	},
-}).refine((x) => x !== 0, `Price should be non-zero`);
+});
 export const quantitySchema = createNumberSchema("Quantity", {
 	max: {
 		visual: "1 million",
 		value: 10 ** 9,
 	},
-}).refine((x) => x !== 0, `Quantity should be non-zero`);
-export const partSchema = createNumberSchema("Part", { decimals: 5 });
+});
+export const partSchema = createNumberSchema("Part", {
+	decimals: 5,
+	max: {
+		visual: "1 million",
+		value: 10 ** 9,
+	},
+});
 export const debtAmountSchema = createNumberSchema("Debt amount", {
 	onlyPositive: false,
 	max: {
 		visual: "10^15",
 		value: 10 ** 15 - 1,
 	},
-}).refine((x) => x !== 0, `Debt amount should be non-zero`);
+});
 
 export const currencyCodeSchema = z.string().refine<CurrencyCode>(flavored);
 

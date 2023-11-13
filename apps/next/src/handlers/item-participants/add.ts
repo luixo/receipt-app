@@ -1,7 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { getReceiptItemById } from "next-app/handlers/receipt-items/utils";
 import { getAccessRole } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import {
@@ -18,17 +17,12 @@ export const procedure = authProcedure
 	)
 	.mutation(async ({ input, ctx }) => {
 		const { database } = ctx;
-		const receiptItem = await getReceiptItemById(database, input.itemId, [
-			"receiptId",
-		]);
-		if (!receiptItem) {
-			throw new TRPCError({
-				code: "NOT_FOUND",
-				message: `Item "${input.itemId}" does not exist.`,
-			});
-		}
 		const receipt = await database
-			.selectFrom("receipts")
+			.selectFrom("receiptItems")
+			.where("receiptItems.id", "=", input.itemId)
+			.innerJoin("receipts", (qb) =>
+				qb.onRef("receipts.id", "=", "receiptItems.receiptId"),
+			)
 			.innerJoin("accounts", (qb) =>
 				qb.onRef("accounts.id", "=", "receipts.ownerAccountId"),
 			)
@@ -36,20 +30,18 @@ export const procedure = authProcedure
 				"receipts.id",
 				"receipts.ownerAccountId",
 				"receipts.lockedTimestamp",
-				"accounts.email as ownerEmail",
 			])
-			.where("receipts.id", "=", receiptItem.receiptId)
 			.executeTakeFirst();
 		if (!receipt) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `Receipt "${receiptItem.receiptId}" does not exist.`,
+				message: `Receipt item "${input.itemId}" does not exist.`,
 			});
 		}
 		if (receipt.lockedTimestamp) {
 			throw new TRPCError({
 				code: "FORBIDDEN",
-				message: `Receipt "${receiptItem.receiptId}" cannot be updated while locked.`,
+				message: `Receipt "${receipt.id}" cannot be updated while locked.`,
 			});
 		}
 		const accessRole = await getAccessRole(
@@ -60,7 +52,7 @@ export const procedure = authProcedure
 		if (accessRole !== "owner" && accessRole !== "editor") {
 			throw new TRPCError({
 				code: "FORBIDDEN",
-				message: `Not enough rights to modify receipt "${receiptItem.receiptId}".`,
+				message: `Not enough rights to add item to receipt "${receipt.id}".`,
 			});
 		}
 		const receiptParticipants = await database
@@ -77,7 +69,7 @@ export const procedure = authProcedure
 				(id) => !participatingUserIds.includes(id),
 			);
 			throw new TRPCError({
-				code: "FORBIDDEN",
+				code: "PRECONDITION_FAILED",
 				message: `${
 					notParticipatingUsers.length === 1 ? "User" : "Users"
 				} ${notParticipatingUsers.map((id) => `"${id}"`).join(", ")} ${
