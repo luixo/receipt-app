@@ -227,7 +227,7 @@ type QueriesMixin = {
 	awaitQuery: <T extends TRPCQueryKey>(
 		path: T,
 		timeout?: number,
-	) => Promise<void>;
+	) => Promise<boolean>;
 	expectScreenshotWithSchemes: (
 		name: string,
 		options?: PageScreenshotOptions &
@@ -284,23 +284,29 @@ export const queriesMixin = createMixin<
 							new Error("window.queryClient is not defined yet"),
 						);
 					}
+					const queryCache = window.queryClient.getQueryCache();
+					const matchedQuery = queryCache.findAll([
+						awaitedKeyInner.split("."),
+					])[0];
+					if (matchedQuery) {
+						return Promise.resolve(true);
+					}
+
 					return new Promise((resolve, reject) => {
-						window.queryClient
-							.getQueryCache()
-							.subscribe((queryCacheNotifyEvent) => {
-								if (
-									queryCacheNotifyEvent.query.queryKey[0].join(".") !==
-									awaitedKeyInner
-								) {
-									return;
-								}
-								if (queryCacheNotifyEvent.type !== "updated") {
-									return;
-								}
-								if (queryCacheNotifyEvent.action.type === "success") {
-									resolve();
-								}
-							});
+						queryCache.subscribe((queryCacheNotifyEvent) => {
+							if (
+								queryCacheNotifyEvent.query.queryKey[0].join(".") !==
+								awaitedKeyInner
+							) {
+								return;
+							}
+							if (queryCacheNotifyEvent.type !== "updated") {
+								return;
+							}
+							if (queryCacheNotifyEvent.action.type === "success") {
+								resolve(false);
+							}
+						});
 						setTimeout(reject, timeoutInner);
 					});
 				},
