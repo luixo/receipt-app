@@ -1,5 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import type { TRPC_ERROR_CODE_KEY } from "@trpc/server/rpc";
+import { performance } from "perf_hooks";
 import snapshotDiff from "snapshot-diff";
 import { expect } from "vitest";
 
@@ -52,12 +53,14 @@ export const expectDatabaseDiffSnapshot = async <T>(
 	const snapshotBefore = await ctx.dumpDatabase();
 	const result = await fn();
 	const snapshotAfter = await ctx.dumpDatabase();
+	const start = performance.now();
 	const diff = snapshotDiff(snapshotBefore, snapshotAfter, {
 		contextLines: 0,
 		stablePatchmarks: true,
 		aAnnotation: "Before snapshot",
 		bAnnotation: "After snapshot",
 	});
+	ctx.logDiffTime(performance.now() - start);
 	if (snapshotName) {
 		expect(diff).toMatchSnapshot(snapshotName);
 	} else {

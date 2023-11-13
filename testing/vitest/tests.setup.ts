@@ -28,15 +28,18 @@ beforeAll(async (suite) => {
 			connectionString: makeConnectionString(connectionData, databaseName),
 		}),
 	});
+	let totalDiffTime = 0;
 	(suite as OriginalSuite).suiteContext = {
 		logger,
 		database,
 		dumpDatabase: () => client.dumpDatabase.mutate({ databaseName }),
 		truncateDatabase: () => client.truncateDatabase.mutate({ databaseName }),
+		logDiffTime: (time) => (totalDiffTime += time),
 	};
 	return async () => {
 		await database.destroy();
 		await client.releaseDatabase.mutate({ databaseName });
+		await client.logDiffTime.mutate({ diffTime: totalDiffTime });
 	};
 }, 10 * SECOND);
 

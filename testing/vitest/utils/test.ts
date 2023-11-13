@@ -18,6 +18,7 @@ type SuiteContext = {
 	database: Database;
 	dumpDatabase: () => Promise<string>;
 	truncateDatabase: () => Promise<void>;
+	logDiffTime: (time: number) => void;
 };
 
 declare module "vitest" {

@@ -21,6 +21,12 @@ const POSTGRES_PORT = 5432;
 const POSTGRES_TEMPLATE_DATABASE = "template-test";
 const POSTGRES_TEMP_DIR = "/temp_pgdata";
 
+const timings = {
+	diff: 0,
+	dump: 0,
+	truncate: 0,
+};
+
 const TABLES: Record<keyof ReceiptsDatabase, true> = {
 	accountConnectionsIntentions: true,
 	accounts: true,
@@ -108,9 +114,11 @@ export const appRouter = router({
 				cleanupManager,
 			};
 		}),
-	teardown: runningProcedure.mutation(async ({ ctx: { instance } }) =>
-		instance.container.stop({ timeout: 10000 }),
-	),
+	teardown: runningProcedure.mutation(async ({ ctx: { instance } }) => {
+		// eslint-disable-next-line no-console
+		console.log(`\nTiming: ${JSON.stringify(timings, null, 4)}`);
+		await instance.container.stop({ timeout: 10000 });
+	}),
 	lockDatabase: runningProcedure
 		.output(
 			z.strictObject({
@@ -142,6 +150,7 @@ export const appRouter = router({
 	dumpDatabase: runningProcedure
 		.input(z.object({ databaseName: z.string() }))
 		.mutation(async ({ input, ctx: { instance } }) => {
+			const start = performance.now();
 			const pgDumpOptions = {
 				username: instance.connectionData.username,
 				format: "plain",
@@ -177,6 +186,7 @@ export const appRouter = router({
 			if (exitCode !== 0) {
 				throw new Error(output);
 			}
+			timings.dump += performance.now() - start;
 			return output;
 		}),
 	truncateDatabase: runningProcedure
@@ -192,6 +202,7 @@ export const appRouter = router({
 					}),
 				}),
 			});
+			const start = performance.now();
 			await instance.cleanupManager.withCleanup(
 				() => database.destroy(),
 				async () => {
@@ -201,11 +212,17 @@ export const appRouter = router({
 					)} RESTART IDENTITY`.execute(database);
 				},
 			);
+			timings.truncate += performance.now() - start;
 		}),
 	releaseDatabase: runningProcedure
 		.input(z.object({ databaseName: z.string() }))
 		.mutation(async ({ input, ctx: { instance } }) => {
 			instance.databaseManager.release(input.databaseName);
+		}),
+	logDiffTime: runningProcedure
+		.input(z.object({ diffTime: z.number() }))
+		.mutation(async ({ input }) => {
+			timings.diff += input.diffTime;
 		}),
 });
 
