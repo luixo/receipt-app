@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import type { TRPC_ERROR_CODE_KEY } from "@trpc/server/rpc";
-import snapshotDiff from "snapshot-diff";
+import { detailedDiff } from "deep-object-diff";
 import { expect } from "vitest";
 
 import { createContext } from "@tests/backend/utils/context";
@@ -52,12 +52,18 @@ export const expectDatabaseDiffSnapshot = async <T>(
 	const snapshotBefore = await ctx.dumpDatabase();
 	const result = await fn();
 	const snapshotAfter = await ctx.dumpDatabase();
-	const diff = snapshotDiff(snapshotBefore, snapshotAfter, {
-		contextLines: 0,
-		stablePatchmarks: true,
-		aAnnotation: "Before snapshot",
-		bAnnotation: "After snapshot",
-	});
+	const diff = Object.fromEntries(
+		Object.entries(detailedDiff(snapshotBefore, snapshotAfter))
+			.filter(([, diffs]) => Object.keys(diffs).length !== 0)
+			.map(([detailedDiffKey, diffs]) => [
+				detailedDiffKey,
+				Object.fromEntries(
+					Object.entries(
+						diffs as Record<string, Record<string, unknown>>,
+					).filter(([, tableValues]) => Object.keys(tableValues).length !== 0),
+				),
+			]),
+	);
 	if (snapshotName) {
 		expect(diff).toMatchSnapshot(snapshotName);
 	} else {

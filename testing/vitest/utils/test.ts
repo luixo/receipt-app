@@ -1,6 +1,8 @@
 import { Faker, en, faker } from "@faker-js/faker";
+import type { inferProcedureOutput } from "@trpc/server";
 import { test as originalTest } from "vitest";
 
+import type { AppRouter } from "@tests/backend/databases/router";
 import { setSeed } from "@tests/backend/utils/faker";
 import type { CacheDbOptionsMock } from "@tests/backend/utils/mocks/cache-db";
 import { getCacheDbOptions } from "@tests/backend/utils/mocks/cache-db";
@@ -16,8 +18,10 @@ import type { Database } from "next-app/db";
 type SuiteContext = {
 	logger: LoggerMock;
 	database: Database;
-	dumpDatabase: () => Promise<string>;
-	truncateDatabase: () => Promise<void>;
+	dumpDatabase: () => Promise<inferProcedureOutput<AppRouter["dumpDatabase"]>>;
+	truncateDatabase: () => Promise<
+		inferProcedureOutput<AppRouter["truncateDatabase"]>
+	>;
 };
 
 declare module "vitest" {

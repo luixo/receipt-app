@@ -1,85 +1,97 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`receiptItems.update > functionality > update locked > foreign 1`] = `
-"Snapshot Diff:
-- Before snapshot
-+ After snapshot
-
-@@ --- --- @@
-- INSERT INTO public.\\"receiptItems\\" VALUES ('f6ddac04-d233-4e5a-926c-680d1eeae1d5', 'Shoes', 1167.8300, 2.0000, 'd3a2a718-f51b-4355-8777-b4615e935fa6', false);
-+ INSERT INTO public.\\"receiptItems\\" VALUES ('f6ddac04-d233-4e5a-926c-680d1eeae1d5', 'Shoes', 1167.8300, 2.0000, 'd3a2a718-f51b-4355-8777-b4615e935fa6', true);"
+{
+  "updated": {
+    "receiptItems": {
+      "id:f6ddac04-d233-4e5a-926c-680d1eeae1d5": {
+        "locked": true,
+      },
+    },
+  },
+}
 `;
 
 exports[`receiptItems.update > functionality > update locked > own 1`] = `
-"Snapshot Diff:
-- Before snapshot
-+ After snapshot
-
-@@ --- --- @@
-- INSERT INTO public.\\"receiptItems\\" VALUES ('11dfa3bf-8270-4233-8644-efa2066d2e0b', 'Hat', 8124.3700, 1.0000, 'ec6c1495-54c6-4c11-b965-73b5a08b1049', false);
-@@ --- --- @@
-+ INSERT INTO public.\\"receiptItems\\" VALUES ('11dfa3bf-8270-4233-8644-efa2066d2e0b', 'Hat', 8124.3700, 1.0000, 'ec6c1495-54c6-4c11-b965-73b5a08b1049', true);"
+{
+  "updated": {
+    "receiptItems": {
+      "id:11dfa3bf-8270-4233-8644-efa2066d2e0b": {
+        "locked": true,
+      },
+    },
+  },
+}
 `;
 
 exports[`receiptItems.update > functionality > update name > foreign 1`] = `
-"Snapshot Diff:
-- Before snapshot
-+ After snapshot
-
-@@ --- --- @@
-- INSERT INTO public.\\"receiptItems\\" VALUES ('f6ddac04-d233-4e5a-926c-680d1eeae1d5', 'Shoes', 1167.8300, 2.0000, 'd3a2a718-f51b-4355-8777-b4615e935fa6', false);
-+ INSERT INTO public.\\"receiptItems\\" VALUES ('f6ddac04-d233-4e5a-926c-680d1eeae1d5', 'repellat asperiores rerum', 1167.8300, 2.0000, 'd3a2a718-f51b-4355-8777-b4615e935fa6', false);"
+{
+  "updated": {
+    "receiptItems": {
+      "id:f6ddac04-d233-4e5a-926c-680d1eeae1d5": {
+        "name": "repellat asperiores rerum",
+      },
+    },
+  },
+}
 `;
 
 exports[`receiptItems.update > functionality > update name > own 1`] = `
-"Snapshot Diff:
-- Before snapshot
-+ After snapshot
-
-@@ --- --- @@
-- INSERT INTO public.\\"receiptItems\\" VALUES ('11dfa3bf-8270-4233-8644-efa2066d2e0b', 'Hat', 8124.3700, 1.0000, 'ec6c1495-54c6-4c11-b965-73b5a08b1049', false);
-@@ --- --- @@
-+ INSERT INTO public.\\"receiptItems\\" VALUES ('11dfa3bf-8270-4233-8644-efa2066d2e0b', 'eos ad deleniti', 8124.3700, 1.0000, 'ec6c1495-54c6-4c11-b965-73b5a08b1049', false);"
+{
+  "updated": {
+    "receiptItems": {
+      "id:11dfa3bf-8270-4233-8644-efa2066d2e0b": {
+        "name": "eos ad deleniti",
+      },
+    },
+  },
+}
 `;
 
 exports[`receiptItems.update > functionality > update price > foreign 1`] = `
-"Snapshot Diff:
-- Before snapshot
-+ After snapshot
-
-@@ --- --- @@
-- INSERT INTO public.\\"receiptItems\\" VALUES ('f6ddac04-d233-4e5a-926c-680d1eeae1d5', 'Shoes', 1167.8300, 2.0000, 'd3a2a718-f51b-4355-8777-b4615e935fa6', false);
-+ INSERT INTO public.\\"receiptItems\\" VALUES ('f6ddac04-d233-4e5a-926c-680d1eeae1d5', 'Shoes', 998.1600, 2.0000, 'd3a2a718-f51b-4355-8777-b4615e935fa6', false);"
+{
+  "updated": {
+    "receiptItems": {
+      "id:f6ddac04-d233-4e5a-926c-680d1eeae1d5": {
+        "price": "998.1600",
+      },
+    },
+  },
+}
 `;
 
 exports[`receiptItems.update > functionality > update price > own 1`] = `
-"Snapshot Diff:
-- Before snapshot
-+ After snapshot
-
-@@ --- --- @@
-- INSERT INTO public.\\"receiptItems\\" VALUES ('11dfa3bf-8270-4233-8644-efa2066d2e0b', 'Hat', 8124.3700, 1.0000, 'ec6c1495-54c6-4c11-b965-73b5a08b1049', false);
-@@ --- --- @@
-+ INSERT INTO public.\\"receiptItems\\" VALUES ('11dfa3bf-8270-4233-8644-efa2066d2e0b', 'Hat', 180.0700, 1.0000, 'ec6c1495-54c6-4c11-b965-73b5a08b1049', false);"
+{
+  "updated": {
+    "receiptItems": {
+      "id:11dfa3bf-8270-4233-8644-efa2066d2e0b": {
+        "price": "180.0700",
+      },
+    },
+  },
+}
 `;
 
 exports[`receiptItems.update > functionality > update quantity > foreign 1`] = `
-"Snapshot Diff:
-- Before snapshot
-+ After snapshot
-
-@@ --- --- @@
-- INSERT INTO public.\\"receiptItems\\" VALUES ('f6ddac04-d233-4e5a-926c-680d1eeae1d5', 'Shoes', 1167.8300, 2.0000, 'd3a2a718-f51b-4355-8777-b4615e935fa6', false);
-+ INSERT INTO public.\\"receiptItems\\" VALUES ('f6ddac04-d233-4e5a-926c-680d1eeae1d5', 'Shoes', 1167.8300, 100.0000, 'd3a2a718-f51b-4355-8777-b4615e935fa6', false);"
+{
+  "updated": {
+    "receiptItems": {
+      "id:f6ddac04-d233-4e5a-926c-680d1eeae1d5": {
+        "quantity": "100.0000",
+      },
+    },
+  },
+}
 `;
 
 exports[`receiptItems.update > functionality > update quantity > own 1`] = `
-"Snapshot Diff:
-- Before snapshot
-+ After snapshot
-
-@@ --- --- @@
-- INSERT INTO public.\\"receiptItems\\" VALUES ('11dfa3bf-8270-4233-8644-efa2066d2e0b', 'Hat', 8124.3700, 1.0000, 'ec6c1495-54c6-4c11-b965-73b5a08b1049', false);
-@@ --- --- @@
-+ INSERT INTO public.\\"receiptItems\\" VALUES ('11dfa3bf-8270-4233-8644-efa2066d2e0b', 'Hat', 8124.3700, 18.0000, 'ec6c1495-54c6-4c11-b965-73b5a08b1049', false);"
+{
+  "updated": {
+    "receiptItems": {
+      "id:11dfa3bf-8270-4233-8644-efa2066d2e0b": {
+        "quantity": "18.0000",
+      },
+    },
+  },
+}
 `;

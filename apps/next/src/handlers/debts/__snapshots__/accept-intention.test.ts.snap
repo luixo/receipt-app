@@ -1,21 +1,37 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`debts.acceptIntention > functionality > debt is synced - created 1`] = `
-"Snapshot Diff:
-- Before snapshot
-+ After snapshot
-
-@@ --- --- @@
-+ INSERT INTO public.debts VALUES ('2c59da16-ee80-4ed3-a62f-291fbfc17b70', '65cd5b19-b0a7-426c-876e-3a4bef3b17f1', 'dc0d920f-d9d2-41fa-be3d-cb499782b796', 'VES', -393.8000, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Inventore sed optio.', '2020-01-01 00:00:00', '442ab28a-d0c3-4a76-bb51-faa5e93cec17');"
+{
+  "added": {
+    "debts": {
+      "id:2c59da16-ee80-4ed3-a62f-291fbfc17b70|ownerAccountId:65cd5b19-b0a7-426c-876e-3a4bef3b17f1": {
+        "amount": "-393.8000",
+        "created": "2020-01-01T00:00:00.000Z",
+        "currencyCode": "VES",
+        "id": "2c59da16-ee80-4ed3-a62f-291fbfc17b70",
+        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+        "note": "Inventore sed optio.",
+        "ownerAccountId": "65cd5b19-b0a7-426c-876e-3a4bef3b17f1",
+        "receiptId": "442ab28a-d0c3-4a76-bb51-faa5e93cec17",
+        "timestamp": "2020-01-01T00:00:00.000Z",
+        "userId": "dc0d920f-d9d2-41fa-be3d-cb499782b796",
+      },
+    },
+  },
+}
 `;
 
 exports[`debts.acceptIntention > functionality > debt is synced - updated 1`] = `
-"Snapshot Diff:
-- Before snapshot
-+ After snapshot
-
-@@ --- --- @@
-- INSERT INTO public.debts VALUES ('592887da-bdb5-43eb-86f0-4f570c986d2d', '19cb23bc-c128-49c3-a6e8-a65f1e5b750e', '8151ea1e-df0a-4e8e-a74c-9f98e61b326c', 'TOP', 867.0100, '2020-01-01 00:00:00', '2020-01-01 00:00:00', 'Beatae accusamus animi fugit iure.', '2020-06-01 00:00:00', NULL);
-@@ --- --- @@
-+ INSERT INTO public.debts VALUES ('592887da-bdb5-43eb-86f0-4f570c986d2d', '19cb23bc-c128-49c3-a6e8-a65f1e5b750e', '8151ea1e-df0a-4e8e-a74c-9f98e61b326c', 'GEL', 438.2600, '2020-04-01 00:00:00', '2020-01-01 00:00:00', 'Beatae accusamus animi fugit iure.', '2020-06-02 00:00:00', NULL);"
+{
+  "updated": {
+    "debts": {
+      "id:592887da-bdb5-43eb-86f0-4f570c986d2d|ownerAccountId:19cb23bc-c128-49c3-a6e8-a65f1e5b750e": {
+        "amount": "438.2600",
+        "currencyCode": "GEL",
+        "lockedTimestamp": "2020-06-02T00:00:00.000Z",
+        "timestamp": "2020-04-01T00:00:00.000Z",
+      },
+    },
+  },
+}
 `;

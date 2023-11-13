@@ -1,29 +1,39 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`accountSettings.update > functionality > autoAcceptDebts > settings found 1`] = `
-"Snapshot Diff:
-- Before snapshot
-+ After snapshot
-
-@@ --- --- @@
-- INSERT INTO public.\\"accountSettings\\" VALUES ('535c16d9-e7f8-46b9-8ec1-7249f8db6e66', true);
-+ INSERT INTO public.\\"accountSettings\\" VALUES ('535c16d9-e7f8-46b9-8ec1-7249f8db6e66', false);"
+{
+  "updated": {
+    "accountSettings": {
+      "accountId:535c16d9-e7f8-46b9-8ec1-7249f8db6e66": {
+        "autoAcceptDebts": false,
+      },
+    },
+  },
+}
 `;
 
 exports[`accountSettings.update > functionality > autoAcceptDebts > settings not found - updated with default-like 1`] = `
-"Snapshot Diff:
-- Before snapshot
-+ After snapshot
-
-@@ --- --- @@
-+ INSERT INTO public.\\"accountSettings\\" VALUES ('cd58f9d1-e657-491e-b40b-d55c1cdcd984', false);"
+{
+  "added": {
+    "accountSettings": {
+      "accountId:cd58f9d1-e657-491e-b40b-d55c1cdcd984": {
+        "accountId": "cd58f9d1-e657-491e-b40b-d55c1cdcd984",
+        "autoAcceptDebts": false,
+      },
+    },
+  },
+}
 `;
 
 exports[`accountSettings.update > functionality > autoAcceptDebts > settings not found - updated with non-default value 1`] = `
-"Snapshot Diff:
-- Before snapshot
-+ After snapshot
-
-@@ --- --- @@
-+ INSERT INTO public.\\"accountSettings\\" VALUES ('47376ecf-e921-41c2-8dfd-f733c8d46ed4', true);"
+{
+  "added": {
+    "accountSettings": {
+      "accountId:47376ecf-e921-41c2-8dfd-f733c8d46ed4": {
+        "accountId": "47376ecf-e921-41c2-8dfd-f733c8d46ed4",
+        "autoAcceptDebts": true,
+      },
+    },
+  },
+}
 `;

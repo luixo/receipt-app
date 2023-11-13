@@ -1,14 +1,17 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`auth.voidAccount > functionality > account voided 1`] = `
-"Snapshot Diff:
-- Before snapshot
-+ After snapshot
-
-@@ --- --- @@
-- INSERT INTO public.accounts VALUES ('22e89cb5-1cc7-442c-946a-c3bd980ae298', 'alejandra_stamm@hotmail.com', 'a10c3f701c45479ac7dbed7c2fae80d697dc271d6c342461945417490832cafa8ed70cef254f396227a8e1bf5f0a72f2ee0b6dcc63164b68f9011e63bba2a00b', 'bdacbf3733a960d9d3abaa0ccf8bd78ea6111056da07fa95b1a2ef8058eceb793dadee33a1bf83dd2e262b86d2f7c3f335fcc85b24aba8bef922a6af0dfc4a2b', '7e4d0446-f9dc-46e8-b471-bc3ad7f937b4', '2020-01-01 00:00:00');
-@@ --- --- @@
-- INSERT INTO public.users VALUES ('22e89cb5-1cc7-442c-946a-c3bd980ae298', 'Lemuel', NULL, '22e89cb5-1cc7-442c-946a-c3bd980ae298', false, false, '22e89cb5-1cc7-442c-946a-c3bd980ae298');
-@@ --- --- @@
-- INSERT INTO public.sessions VALUES ('b037d56f-5112-45a9-933d-366dbd0d0165', '22e89cb5-1cc7-442c-946a-c3bd980ae298', '2020-12-31 00:00:00');"
+{
+  "deleted": {
+    "accounts": {
+      "id:22e89cb5-1cc7-442c-946a-c3bd980ae298": undefined,
+    },
+    "sessions": {
+      "sessionId:b037d56f-5112-45a9-933d-366dbd0d0165": undefined,
+    },
+    "users": {
+      "id:22e89cb5-1cc7-442c-946a-c3bd980ae298": undefined,
+    },
+  },
+}
 `;

@@ -1,12 +1,17 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`resetPasswordIntentions.add > functionality > reset password intention added 1`] = `
-"Snapshot Diff:
-- Before snapshot
-+ After snapshot
-
-@@ --- --- @@
-+ INSERT INTO public.\\"resetPasswordIntentions\\" VALUES ('7713d481-74cf-4b1a-9268-9ccfa60bdd4a', '2020-01-02 00:00:00', 'ced8dc42-4484-4d35-8162-518b77651f6b');"
+{
+  "added": {
+    "resetPasswordIntentions": {
+      "accountId:7713d481-74cf-4b1a-9268-9ccfa60bdd4a|token:ced8dc42-4484-4d35-8162-518b77651f6b": {
+        "accountId": "7713d481-74cf-4b1a-9268-9ccfa60bdd4a",
+        "expiresTimestamp": "2020-01-02T00:00:00.000Z",
+        "token": "ced8dc42-4484-4d35-8162-518b77651f6b",
+      },
+    },
+  },
+}
 `;
 
 exports[`resetPasswordIntentions.add > functionality > reset password intention added 2`] = `
