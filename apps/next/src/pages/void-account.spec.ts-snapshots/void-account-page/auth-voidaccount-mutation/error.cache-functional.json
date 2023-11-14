@@ -1,0 +1,23 @@
+{
+	"mutations": {
+		"auth.voidAccount": {
+			"state": {
+				"error": {
+					"message": "Mock \"auth.voidAccount\" error",
+					"data": {
+						"code": "CONFLICT",
+						"httpStatus": 409,
+						"path": "auth.voidAccount",
+						"stack": "<redacted>"
+					}
+				},
+				"failureCount": 1,
+				"isPaused": false,
+				"status": "error",
+				"variables": {
+					"token": "foo"
+				}
+			}
+		}
+	}
+}

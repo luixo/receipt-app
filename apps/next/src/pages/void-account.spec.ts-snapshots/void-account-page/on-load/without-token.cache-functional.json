@@ -1,0 +1,26 @@
+{
+	"queries": {
+		"account.get": {
+			"state": {
+				"dataUpdateCount": 0,
+				"dataUpdatedAt": 0,
+				"error": {
+					"message": "No token provided - mocked",
+					"data": {
+						"code": "UNAUTHORIZED",
+						"httpStatus": 401,
+						"path": "account.get",
+						"stack": "<redacted>"
+					}
+				},
+				"errorUpdateCount": 1,
+				"errorUpdatedAt": -1,
+				"fetchFailureCount": 1,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "error",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}

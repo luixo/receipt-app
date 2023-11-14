@@ -16,7 +16,7 @@ type ToastsMixin = {
 		textOrTexts: string | string[],
 		timeout?: number,
 	) => Promise<void>;
-	clearToasts: () => Promise<void>;
+	clearToasts: (options?: { shouldAwait?: boolean }) => Promise<void>;
 };
 
 export const toastsMixin = createMixin<ToastsMixin>({
@@ -45,7 +45,12 @@ export const toastsMixin = createMixin<ToastsMixin>({
 		);
 	},
 	clearToasts: async ({ page }, use) => {
-		await use(async () => {
+		await use(async ({ shouldAwait } = {}) => {
+			if (shouldAwait) {
+				await expect
+					.poll(() => page.locator(TOAST_SELECTOR).count())
+					.not.toBe(0);
+			}
 			await page.evaluate(() => {
 				if (!window.dismissToasts) {
 					return;
