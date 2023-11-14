@@ -1,0 +1,18 @@
+{
+	"mutations": {
+		"auth.voidAccount": {
+			"state": {
+				"data": {
+					"email": "foo@gmail.com"
+				},
+				"error": null,
+				"failureCount": 0,
+				"isPaused": false,
+				"status": "success",
+				"variables": {
+					"token": "foo"
+				}
+			}
+		}
+	}
+}
