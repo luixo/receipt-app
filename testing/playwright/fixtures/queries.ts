@@ -288,7 +288,11 @@ export const queriesMixin = createMixin<
 					const matchedQuery = queryCache.findAll([
 						awaitedKeyInner.split("."),
 					])[0];
-					if (matchedQuery) {
+					if (
+						matchedQuery &&
+						(matchedQuery.state.status === "success" ||
+							matchedQuery.state.status === "error")
+					) {
 						return Promise.resolve(true);
 					}
 
