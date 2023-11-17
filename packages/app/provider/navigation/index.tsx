@@ -2,24 +2,25 @@ import React from "react";
 
 import type { LinkingOptions } from "@react-navigation/native";
 import { NavigationContainer } from "@react-navigation/native";
-import { useDripsyTheme } from "dripsy";
 import type { AppParamList } from "expo-app/navigation";
 import * as Linking from "expo-linking";
+
+import { useTheme } from "app/hooks/use-theme";
 
 export const NavigationProvider: React.FC<React.PropsWithChildren<object>> = ({
 	children,
 }) => {
-	const { theme } = useDripsyTheme();
+	const theme = useTheme();
 	const navigationTheme = React.useMemo(
 		() => ({
 			dark: false,
 			colors: {
-				primary: theme.colors.primary,
-				background: theme.colors.background,
-				card: theme.colors.background,
-				text: theme.colors.text,
-				border: theme.colors.border,
-				notification: theme.colors.accents0,
+				primary: theme.colors.primary.value,
+				background: theme.colors.background.value,
+				card: theme.colors.background.value,
+				text: theme.colors.text.value,
+				border: theme.colors.border.value,
+				notification: theme.colors.accents0.value,
 			},
 		}),
 		[theme],
