@@ -50,7 +50,7 @@ type ControllerContextWith<OuterContext = undefined> = MaybeAddElementToArray<
 type LifecycleContextWithUpdateFns<LifecycleContext = unknown> = {
 	revertFn?: () => void;
 	finalizeFn?: () => void;
-	lifecycleContext?: LifecycleContext;
+	context?: LifecycleContext;
 };
 
 type InternalContext<
@@ -207,7 +207,11 @@ export const useTrpcMutationOptions = <
 				};
 			},
 			onError: (error, vars, internalContext) => {
-				const { toastId, lifecycleContext, revertFn } = internalContext!;
+				const {
+					toastId,
+					context: lifecycleContext,
+					revertFn,
+				} = internalContext!;
 				const toastOptions =
 					typeof errorToastOptions === "function"
 						? errorToastOptions(...getToastArgs(internalContext!))(
@@ -230,7 +234,11 @@ export const useTrpcMutationOptions = <
 				);
 			},
 			onSuccess: (result, vars, internalContext) => {
-				const { toastId, lifecycleContext, finalizeFn } = internalContext!;
+				const {
+					toastId,
+					context: lifecycleContext,
+					finalizeFn,
+				} = internalContext!;
 				const toastOptions =
 					typeof successToastOptions === "function"
 						? successToastOptions?.(...getToastArgs(internalContext!))(
@@ -253,7 +261,7 @@ export const useTrpcMutationOptions = <
 				);
 			},
 			onSettled: (result, error, vars, internalContext) => {
-				const { lifecycleContext } = internalContext!;
+				const { context: lifecycleContext } = internalContext!;
 				onSettled?.(result, error, vars, lifecycleContext);
 				return onSettledTrpc?.(...getTrpcArgs(internalContext!))(
 					result,
