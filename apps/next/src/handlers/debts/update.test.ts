@@ -24,6 +24,7 @@ import { t } from "next-app/handlers/trpc";
 
 import { procedure } from "./update";
 import {
+	getRandomAmount,
 	getRandomCurrencyCode,
 	verifyAmount,
 	verifyCurrencyCode,
@@ -114,7 +115,7 @@ describe("debts.update", () => {
 		expectUnauthorizedError((context) =>
 			router.createCaller(context).procedure({
 				id: faker.string.uuid(),
-				update: { amount: Number(faker.finance.amount()) },
+				update: { amount: getRandomAmount() },
 			}),
 		);
 
@@ -127,7 +128,7 @@ describe("debts.update", () => {
 						caller.procedure({
 							id: "not-a-valid-uuid",
 							update: {
-								amount: Number(faker.finance.amount()),
+								amount: getRandomAmount(),
 							},
 						}),
 					"BAD_REQUEST",
@@ -214,7 +215,7 @@ describe("debts.update", () => {
 				() =>
 					caller.procedure({
 						id: fakeDebtId,
-						update: { amount: Number(faker.finance.amount()) },
+						update: { amount: getRandomAmount() },
 					}),
 				"NOT_FOUND",
 				`Debt "${fakeDebtId}" does not exist on account "${email}".`,
@@ -245,7 +246,7 @@ describe("debts.update", () => {
 				() =>
 					caller.procedure({
 						id: debtId,
-						update: { amount: Number(faker.finance.amount()) },
+						update: { amount: getRandomAmount() },
 					}),
 				"NOT_FOUND",
 				`Debt "${debtId}" does not exist on account "${email}".`,
@@ -256,7 +257,7 @@ describe("debts.update", () => {
 	describe("functionality", () => {
 		describe("update amount", () => {
 			updateDescribes(
-				() => ({ amount: Number(faker.finance.amount()) }),
+				() => ({ amount: getRandomAmount() }),
 				(lockedBefore) => (lockedBefore ? new Date() : undefined),
 			);
 		});
@@ -307,7 +308,7 @@ describe("debts.update", () => {
 			describe("no locked", () => {
 				updateDescribes(
 					({ receiptId }) => ({
-						amount: Number(faker.finance.amount()),
+						amount: getRandomAmount(),
 						timestamp: new Date("2020-06-01"),
 						note: faker.lorem.words(),
 						currencyCode: getRandomCurrencyCode(),
@@ -320,7 +321,7 @@ describe("debts.update", () => {
 			describe("locked as true", () => {
 				updateDescribes(
 					({ receiptId }) => ({
-						amount: Number(faker.finance.amount()),
+						amount: getRandomAmount(),
 						timestamp: new Date("2020-06-01"),
 						note: faker.lorem.words(),
 						currencyCode: getRandomCurrencyCode(),
@@ -334,7 +335,7 @@ describe("debts.update", () => {
 			describe("locked as false", () => {
 				updateDescribes(
 					({ receiptId }) => ({
-						amount: Number(faker.finance.amount()),
+						amount: getRandomAmount(),
 						timestamp: new Date("2020-06-01"),
 						note: faker.lorem.words(),
 						currencyCode: getRandomCurrencyCode(),

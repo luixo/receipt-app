@@ -91,7 +91,10 @@ export const buildSetObjects = (
 	const reverseSetObject = omitUndefined({
 		...setObject,
 		note: undefined,
-		amount: setObject.amount ? `-${setObject.amount}` : undefined,
+		amount:
+			input.update.amount === undefined
+				? undefined
+				: (-input.update.amount).toString(),
 	});
 	return {
 		setObject,

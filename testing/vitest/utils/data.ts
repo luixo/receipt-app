@@ -273,7 +273,9 @@ export const insertDebt = async (
 			ownerAccountId,
 			userId,
 			currencyCode: data.currencyCode || faker.finance.currencyCode(),
-			amount: data.amount?.toString() ?? faker.finance.amount(),
+			amount:
+				data.amount?.toString() ??
+				(faker.datatype.boolean() ? "" : "-") + faker.finance.amount(),
 			timestamp: data.timestamp ?? new Date(),
 			created: data.created ?? new Date(),
 			note: data.note ?? faker.lorem.sentence(),

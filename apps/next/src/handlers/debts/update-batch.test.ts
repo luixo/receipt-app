@@ -25,6 +25,7 @@ import { t } from "next-app/handlers/trpc";
 
 import { procedure } from "./update-batch";
 import {
+	getRandomAmount,
 	getRandomCurrencyCode,
 	verifyAmount,
 	verifyCurrencyCode,
@@ -151,7 +152,7 @@ describe("debts.updateBatch", () => {
 			router.createCaller(context).procedure([
 				{
 					id: faker.string.uuid(),
-					update: { amount: Number(faker.finance.amount()) },
+					update: { amount: getRandomAmount() },
 				},
 			]),
 		);
@@ -166,7 +167,7 @@ describe("debts.updateBatch", () => {
 							{
 								id: "not-a-valid-uuid",
 								update: {
-									amount: Number(faker.finance.amount()),
+									amount: getRandomAmount(),
 								},
 							},
 						]),
@@ -268,11 +269,11 @@ describe("debts.updateBatch", () => {
 					caller.procedure([
 						{
 							id: fakeDebtId,
-							update: { amount: Number(faker.finance.amount()) },
+							update: { amount: getRandomAmount() },
 						},
 						{
 							id: anotherFakeDebtId,
-							update: { amount: Number(faker.finance.amount()) },
+							update: { amount: getRandomAmount() },
 						},
 					]),
 				"NOT_FOUND",
@@ -305,7 +306,7 @@ describe("debts.updateBatch", () => {
 					caller.procedure([
 						{
 							id: debtId,
-							update: { amount: Number(faker.finance.amount()) },
+							update: { amount: getRandomAmount() },
 						},
 					]),
 				"NOT_FOUND",
@@ -324,7 +325,7 @@ describe("debts.updateBatch", () => {
 							{
 								id: defaultDebt.id,
 								update: {
-									amount: Number(faker.finance.amount()),
+									amount: getRandomAmount(),
 									timestamp: new Date("2020-06-01"),
 									note: faker.lorem.words(),
 									currencyCode: getRandomCurrencyCode(),
@@ -347,7 +348,7 @@ describe("debts.updateBatch", () => {
 							{
 								id: defaultDebt.id,
 								update: {
-									amount: Number(faker.finance.amount()),
+									amount: getRandomAmount(),
 									timestamp: new Date("2020-06-01"),
 									note: faker.lorem.words(),
 									currencyCode: getRandomCurrencyCode(),
@@ -371,7 +372,7 @@ describe("debts.updateBatch", () => {
 							{
 								id: defaultDebt.id,
 								update: {
-									amount: Number(faker.finance.amount()),
+									amount: getRandomAmount(),
 									timestamp: new Date("2020-06-01"),
 									note: faker.lorem.words(),
 									currencyCode: getRandomCurrencyCode(),
@@ -412,11 +413,11 @@ describe("debts.updateBatch", () => {
 						updates: [
 							{
 								id: defaultDebt.id,
-								update: { amount: Number(faker.finance.amount()) },
+								update: { amount: getRandomAmount() },
 							},
 							{
 								id: otherDebt.id,
-								update: { amount: Number(faker.finance.amount()) },
+								update: { amount: getRandomAmount() },
 							},
 						],
 						debts: [otherDebt],
@@ -434,7 +435,7 @@ describe("debts.updateBatch", () => {
 						updates: [
 							{
 								id: defaultDebt.id,
-								update: { amount: Number(faker.finance.amount()) },
+								update: { amount: getRandomAmount() },
 							},
 							{
 								id: otherDebt.id,

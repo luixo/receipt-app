@@ -17,6 +17,9 @@ import { CURRENCY_CODES } from "next-app/utils/currency";
 export const getRandomCurrencyCode = () =>
 	faker.helpers.arrayElement(CURRENCY_CODES);
 
+export const getRandomAmount = () =>
+	(faker.datatype.boolean() ? 1 : -1) * Number(faker.finance.amount());
+
 export const getValidDebt = (userId: UsersId = faker.string.uuid()) => ({
 	note: faker.lorem.words(),
 	currencyCode: getRandomCurrencyCode(),

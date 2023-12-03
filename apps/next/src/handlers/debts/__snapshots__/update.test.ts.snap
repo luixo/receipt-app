@@ -5,11 +5,11 @@ exports[`debts.update > functionality > update amount > counterparty auto-accept
   "updated": {
     "debts": {
       "id:c6921060-1137-45b4-b942-59630a98b84a|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "amount": "207.0400",
+        "amount": "569.7900",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
       },
       "id:c6921060-1137-45b4-b942-59630a98b84a|ownerAccountId:b4fba71b-3720-46f4-befe-54e779c889fc": {
-        "amount": "-207.0400",
+        "amount": "-569.7900",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
       },
     },
@@ -22,10 +22,10 @@ exports[`debts.update > functionality > update amount > counterparty auto-accept
   "updated": {
     "debts": {
       "id:7a95f491-5b34-488a-b337-a6222e2af061|ownerAccountId:32bcb6f1-76a9-4892-a8c2-9e755afa6fe7": {
-        "amount": "-890.6300",
+        "amount": "-622.0400",
       },
       "id:7a95f491-5b34-488a-b337-a6222e2af061|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
-        "amount": "890.6300",
+        "amount": "622.0400",
       },
     },
   },
@@ -37,7 +37,7 @@ exports[`debts.update > functionality > update amount > counterparty doesn't aut
   "updated": {
     "debts": {
       "id:c6921060-1137-45b4-b942-59630a98b84a|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "amount": "207.0400",
+        "amount": "569.7900",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
       },
     },
@@ -50,7 +50,7 @@ exports[`debts.update > functionality > update amount > counterparty doesn't aut
   "updated": {
     "debts": {
       "id:7a95f491-5b34-488a-b337-a6222e2af061|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
-        "amount": "890.6300",
+        "amount": "622.0400",
       },
     },
   },
@@ -79,10 +79,10 @@ exports[`debts.update > functionality > update currency code > counterparty auto
   "updated": {
     "debts": {
       "id:7a95f491-5b34-488a-b337-a6222e2af061|ownerAccountId:32bcb6f1-76a9-4892-a8c2-9e755afa6fe7": {
-        "currencyCode": "TND",
+        "currencyCode": "BOB",
       },
       "id:7a95f491-5b34-488a-b337-a6222e2af061|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
-        "currencyCode": "TND",
+        "currencyCode": "BOB",
       },
     },
   },
@@ -107,7 +107,7 @@ exports[`debts.update > functionality > update currency code > counterparty does
   "updated": {
     "debts": {
       "id:7a95f491-5b34-488a-b337-a6222e2af061|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
-        "currencyCode": "TND",
+        "currencyCode": "BOB",
       },
     },
   },
@@ -204,16 +204,16 @@ exports[`debts.update > functionality > update multiple > locked as false > coun
   "updated": {
     "debts": {
       "id:c6921060-1137-45b4-b942-59630a98b84a|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "amount": "207.0400",
-        "currencyCode": "KRW",
+        "amount": "569.7900",
+        "currencyCode": "AUD",
         "lockedTimestamp": null,
-        "note": "excepturi harum porro",
+        "note": "harum porro maxime",
         "receiptId": "b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5",
         "timestamp": "2020-06-01T00:00:00.000Z",
       },
       "id:c6921060-1137-45b4-b942-59630a98b84a|ownerAccountId:b4fba71b-3720-46f4-befe-54e779c889fc": {
-        "amount": "-207.0400",
-        "currencyCode": "KRW",
+        "amount": "-569.7900",
+        "currencyCode": "AUD",
         "lockedTimestamp": null,
         "receiptId": "b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5",
         "timestamp": "2020-06-01T00:00:00.000Z",
@@ -228,15 +228,15 @@ exports[`debts.update > functionality > update multiple > locked as false > coun
   "updated": {
     "debts": {
       "id:7a95f491-5b34-488a-b337-a6222e2af061|ownerAccountId:32bcb6f1-76a9-4892-a8c2-9e755afa6fe7": {
-        "amount": "-890.6300",
-        "currencyCode": "XAF",
+        "amount": "-622.0400",
+        "currencyCode": "ISK",
         "receiptId": "697ea37b-9f1b-40f4-9661-9f0e19b2a033",
         "timestamp": "2020-06-01T00:00:00.000Z",
       },
       "id:7a95f491-5b34-488a-b337-a6222e2af061|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
-        "amount": "890.6300",
-        "currencyCode": "XAF",
-        "note": "delectus suscipit laudantium",
+        "amount": "622.0400",
+        "currencyCode": "ISK",
+        "note": "dignissimos aliquam quam",
         "receiptId": "697ea37b-9f1b-40f4-9661-9f0e19b2a033",
         "timestamp": "2020-06-01T00:00:00.000Z",
       },
@@ -250,10 +250,10 @@ exports[`debts.update > functionality > update multiple > locked as false > coun
   "updated": {
     "debts": {
       "id:c6921060-1137-45b4-b942-59630a98b84a|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "amount": "207.0400",
-        "currencyCode": "KRW",
+        "amount": "569.7900",
+        "currencyCode": "AUD",
         "lockedTimestamp": null,
-        "note": "excepturi harum porro",
+        "note": "harum porro maxime",
         "receiptId": "b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5",
         "timestamp": "2020-06-01T00:00:00.000Z",
       },
@@ -267,9 +267,9 @@ exports[`debts.update > functionality > update multiple > locked as false > coun
   "updated": {
     "debts": {
       "id:7a95f491-5b34-488a-b337-a6222e2af061|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
-        "amount": "890.6300",
-        "currencyCode": "XAF",
-        "note": "delectus suscipit laudantium",
+        "amount": "622.0400",
+        "currencyCode": "ISK",
+        "note": "dignissimos aliquam quam",
         "receiptId": "697ea37b-9f1b-40f4-9661-9f0e19b2a033",
         "timestamp": "2020-06-01T00:00:00.000Z",
       },
@@ -283,16 +283,16 @@ exports[`debts.update > functionality > update multiple > locked as true > count
   "updated": {
     "debts": {
       "id:c6921060-1137-45b4-b942-59630a98b84a|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "amount": "207.0400",
-        "currencyCode": "KRW",
+        "amount": "569.7900",
+        "currencyCode": "AUD",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "note": "excepturi harum porro",
+        "note": "harum porro maxime",
         "receiptId": "b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5",
         "timestamp": "2020-06-01T00:00:00.000Z",
       },
       "id:c6921060-1137-45b4-b942-59630a98b84a|ownerAccountId:b4fba71b-3720-46f4-befe-54e779c889fc": {
-        "amount": "-207.0400",
-        "currencyCode": "KRW",
+        "amount": "-569.7900",
+        "currencyCode": "AUD",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
         "receiptId": "b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5",
         "timestamp": "2020-06-01T00:00:00.000Z",
@@ -307,17 +307,17 @@ exports[`debts.update > functionality > update multiple > locked as true > count
   "updated": {
     "debts": {
       "id:7a95f491-5b34-488a-b337-a6222e2af061|ownerAccountId:32bcb6f1-76a9-4892-a8c2-9e755afa6fe7": {
-        "amount": "-890.6300",
-        "currencyCode": "XAF",
+        "amount": "-622.0400",
+        "currencyCode": "ISK",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
         "receiptId": "697ea37b-9f1b-40f4-9661-9f0e19b2a033",
         "timestamp": "2020-06-01T00:00:00.000Z",
       },
       "id:7a95f491-5b34-488a-b337-a6222e2af061|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
-        "amount": "890.6300",
-        "currencyCode": "XAF",
+        "amount": "622.0400",
+        "currencyCode": "ISK",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "note": "delectus suscipit laudantium",
+        "note": "dignissimos aliquam quam",
         "receiptId": "697ea37b-9f1b-40f4-9661-9f0e19b2a033",
         "timestamp": "2020-06-01T00:00:00.000Z",
       },
@@ -331,10 +331,10 @@ exports[`debts.update > functionality > update multiple > locked as true > count
   "updated": {
     "debts": {
       "id:c6921060-1137-45b4-b942-59630a98b84a|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "amount": "207.0400",
-        "currencyCode": "KRW",
+        "amount": "569.7900",
+        "currencyCode": "AUD",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "note": "excepturi harum porro",
+        "note": "harum porro maxime",
         "receiptId": "b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5",
         "timestamp": "2020-06-01T00:00:00.000Z",
       },
@@ -348,10 +348,10 @@ exports[`debts.update > functionality > update multiple > locked as true > count
   "updated": {
     "debts": {
       "id:7a95f491-5b34-488a-b337-a6222e2af061|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
-        "amount": "890.6300",
-        "currencyCode": "XAF",
+        "amount": "622.0400",
+        "currencyCode": "ISK",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "note": "delectus suscipit laudantium",
+        "note": "dignissimos aliquam quam",
         "receiptId": "697ea37b-9f1b-40f4-9661-9f0e19b2a033",
         "timestamp": "2020-06-01T00:00:00.000Z",
       },
@@ -365,16 +365,16 @@ exports[`debts.update > functionality > update multiple > no locked > counterpar
   "updated": {
     "debts": {
       "id:c6921060-1137-45b4-b942-59630a98b84a|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "amount": "207.0400",
-        "currencyCode": "KRW",
+        "amount": "569.7900",
+        "currencyCode": "AUD",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "note": "excepturi harum porro",
+        "note": "harum porro maxime",
         "receiptId": "b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5",
         "timestamp": "2020-06-01T00:00:00.000Z",
       },
       "id:c6921060-1137-45b4-b942-59630a98b84a|ownerAccountId:b4fba71b-3720-46f4-befe-54e779c889fc": {
-        "amount": "-207.0400",
-        "currencyCode": "KRW",
+        "amount": "-569.7900",
+        "currencyCode": "AUD",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
         "receiptId": "b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5",
         "timestamp": "2020-06-01T00:00:00.000Z",
@@ -389,15 +389,15 @@ exports[`debts.update > functionality > update multiple > no locked > counterpar
   "updated": {
     "debts": {
       "id:7a95f491-5b34-488a-b337-a6222e2af061|ownerAccountId:32bcb6f1-76a9-4892-a8c2-9e755afa6fe7": {
-        "amount": "-890.6300",
-        "currencyCode": "XAF",
+        "amount": "-622.0400",
+        "currencyCode": "ISK",
         "receiptId": "697ea37b-9f1b-40f4-9661-9f0e19b2a033",
         "timestamp": "2020-06-01T00:00:00.000Z",
       },
       "id:7a95f491-5b34-488a-b337-a6222e2af061|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
-        "amount": "890.6300",
-        "currencyCode": "XAF",
-        "note": "delectus suscipit laudantium",
+        "amount": "622.0400",
+        "currencyCode": "ISK",
+        "note": "dignissimos aliquam quam",
         "receiptId": "697ea37b-9f1b-40f4-9661-9f0e19b2a033",
         "timestamp": "2020-06-01T00:00:00.000Z",
       },
@@ -411,10 +411,10 @@ exports[`debts.update > functionality > update multiple > no locked > counterpar
   "updated": {
     "debts": {
       "id:c6921060-1137-45b4-b942-59630a98b84a|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "amount": "207.0400",
-        "currencyCode": "KRW",
+        "amount": "569.7900",
+        "currencyCode": "AUD",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "note": "excepturi harum porro",
+        "note": "harum porro maxime",
         "receiptId": "b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5",
         "timestamp": "2020-06-01T00:00:00.000Z",
       },
@@ -428,9 +428,9 @@ exports[`debts.update > functionality > update multiple > no locked > counterpar
   "updated": {
     "debts": {
       "id:7a95f491-5b34-488a-b337-a6222e2af061|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
-        "amount": "890.6300",
-        "currencyCode": "XAF",
-        "note": "delectus suscipit laudantium",
+        "amount": "622.0400",
+        "currencyCode": "ISK",
+        "note": "dignissimos aliquam quam",
         "receiptId": "697ea37b-9f1b-40f4-9661-9f0e19b2a033",
         "timestamp": "2020-06-01T00:00:00.000Z",
       },
@@ -456,7 +456,7 @@ exports[`debts.update > functionality > update note > counterparty auto-accepts 
   "updated": {
     "debts": {
       "id:7a95f491-5b34-488a-b337-a6222e2af061|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
-        "note": "debitis delectus suscipit",
+        "note": "architecto error dignissimos",
       },
     },
   },
@@ -480,7 +480,7 @@ exports[`debts.update > functionality > update note > counterparty doesn't auto-
   "updated": {
     "debts": {
       "id:7a95f491-5b34-488a-b337-a6222e2af061|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
-        "note": "debitis delectus suscipit",
+        "note": "architecto error dignissimos",
       },
     },
   },

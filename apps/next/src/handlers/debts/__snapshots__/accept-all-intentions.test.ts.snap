@@ -5,12 +5,12 @@ exports[`debts.acceptAllIntentions > functionality > debts are synced 1`] = `
   "added": {
     "debts": {
       "id:9881bd4c-8880-4b04-8f7f-0c3c30f3246d|ownerAccountId:49833966-c16f-4eb9-a0c0-318c6a73279f": {
-        "amount": "-269.8300",
+        "amount": "-991.3800",
         "created": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "SRD",
+        "currencyCode": "ETB",
         "id": "9881bd4c-8880-4b04-8f7f-0c3c30f3246d",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "note": "Ducimus minus at porro modi ipsam asperiores perferendis.",
+        "note": "Minus accusamus hic.",
         "ownerAccountId": "49833966-c16f-4eb9-a0c0-318c6a73279f",
         "receiptId": "72d7ec08-0e0e-417b-ab70-06dbab5c1f6a",
         "timestamp": "2020-01-01T00:00:00.000Z",
@@ -21,8 +21,8 @@ exports[`debts.acceptAllIntentions > functionality > debts are synced 1`] = `
   "updated": {
     "debts": {
       "id:051e068b-a996-4014-842a-c9964f794711|ownerAccountId:49833966-c16f-4eb9-a0c0-318c6a73279f": {
-        "amount": "277.2200",
-        "currencyCode": "ZAR",
+        "amount": "787.8000",
+        "currencyCode": "QAR",
         "lockedTimestamp": "2020-06-02T00:00:00.000Z",
         "timestamp": "2020-04-01T00:00:00.000Z",
       },
