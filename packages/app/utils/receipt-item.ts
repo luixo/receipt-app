@@ -217,10 +217,12 @@ export const getParticipantSums = <
 	}
 	// 1c left for a few lucky ones
 	const leftoverAmount = leftover % nonEmptyParticipantIds.length;
-	// leftoverAmount === 0 means that everyone gets a 1c leftover
+	// leftoverAmount === 0 with some leftover means that everyone gets a 1c leftover
 	// Aamount of leftover cents roughly equals to shortage sum (because of rounding)
 	const leftoverThresholdIndex =
-		leftoverAmount === 0 ? nonEmptyParticipantIds.length : leftoverAmount;
+		leftoverAmount === 0 && leftover !== 0
+			? nonEmptyParticipantIds.length
+			: leftoverAmount;
 	const luckyLeftovers = nonEmptyParticipantIds.reduce<Record<UsersId, number>>(
 		(acc, id, index) => ({
 			...acc,
