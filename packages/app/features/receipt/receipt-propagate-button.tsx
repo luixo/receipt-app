@@ -153,26 +153,23 @@ const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 		<>
 			{desyncedParticipants.length !== 0 ||
 			unsyncedParticipants.length !== 0 ? (
-				<>
-					<Spacer x={0.5} />
-					<IconButton
-						ghost
-						title="Propagate debts"
-						isLoading={isPropagating}
-						disabled={isLoading || isPropagating}
-						onClick={propagateDebts}
-						color="warning"
-						icon={
-							desyncedParticipants.length === 0 ? (
-								<SendIcon size={24} />
-							) : (
-								<SyncIcon size={24} />
-							)
-						}
-					/>
-				</>
+				<IconButton
+					ghost
+					title="Propagate debts"
+					isLoading={isPropagating}
+					disabled={isLoading || isPropagating}
+					onClick={propagateDebts}
+					color="warning"
+					icon={
+						desyncedParticipants.length === 0 ? (
+							<SendIcon size={24} />
+						) : (
+							<SyncIcon size={24} />
+						)
+					}
+				/>
 			) : null}
-			{desyncedParticipants.length === 0 ? null : (
+			{desyncedParticipants.length !== 0 ? (
 				<>
 					<Spacer x={0.5} />
 					<IconButton
@@ -181,7 +178,7 @@ const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 						title="Show sync status"
 					/>
 				</>
-			)}
+			) : null}
 			<ReceiptDebtSyncInfoModal
 				isOpen={infoPopoverOpen}
 				closeModal={closeInfoButtonPopover}
