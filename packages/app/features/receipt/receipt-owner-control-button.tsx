@@ -1,5 +1,7 @@
 import React from "react";
 
+import { Spacer } from "@nextui-org/react";
+
 import type { TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
 
@@ -24,29 +26,22 @@ export const ReceiptOwnerControlButton: React.FC<Props> = ({
 		debtIds.map((id) => t.debts.get({ id })),
 	);
 
-	const lockedButton = (
-		<ReceiptLockedButton
-			receiptId={receipt.id}
-			locked={Boolean(receipt.lockedTimestamp)}
-			isLoading={deleteLoading}
-		/>
-	);
-	if (!receipt.debt) {
-		return lockedButton;
-	}
-	if (receipt.debt.direction === "incoming") {
-		throw new Error("Unexpected owner control button with incoming debt");
-	}
-
 	return (
 		<>
-			{lockedButton}
+			<ReceiptLockedButton
+				receiptId={receipt.id}
+				locked={Boolean(receipt.lockedTimestamp)}
+				isLoading={deleteLoading}
+			/>
 			{receipt.lockedTimestamp ? (
-				<ReceiptPropagateButton
-					queries={debtsQueries}
-					receipt={receipt as LockedReceipt}
-					isLoading={deleteLoading}
-				/>
+				<>
+					<Spacer x={0.5} />
+					<ReceiptPropagateButton
+						queries={debtsQueries}
+						receipt={receipt as LockedReceipt}
+						isLoading={deleteLoading}
+					/>
+				</>
 			) : null}
 		</>
 	);
