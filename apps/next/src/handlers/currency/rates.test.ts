@@ -118,60 +118,10 @@ describe("currency.rates", () => {
 				);
 			});
 
-			test("exchange rate provider have empty data", async ({ ctx }) => {
-				const dbMock = ctx.cacheDbOptions.mock!;
-				respondAsEmptyCache(dbMock);
-				ctx.exchangeRateOptions.mock.addInterceptor(async () => ({}));
-				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
-				await expectTRPCError(
-					() =>
-						caller.procedure({
-							from: "USD",
-							to: ["EUR", "MOP", "VND"],
-						}),
-					"INTERNAL_SERVER_ERROR",
-					'Code "USD" is not available on remote server. Please contact app owner.',
-				);
-			});
-
-			test("exchange rate provider have semi-full data", async ({ ctx }) => {
-				const dbMock = ctx.cacheDbOptions.mock!;
-				respondAsEmptyCache(dbMock);
-				ctx.exchangeRateOptions.mock.addInterceptor(async (_, to) => ({
-					[String(to[0])]: getFakeRate(),
-				}));
-				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
-				await expectTRPCError(
-					() =>
-						caller.procedure({
-							from: "USD",
-							to: ["EUR", "MOP", "VND"],
-						}),
-					"INTERNAL_SERVER_ERROR",
-					'Codes "MOP", "VND" are not available on remote server. Please contact app owner.',
-				);
-				await expectTRPCError(
-					() =>
-						caller.procedure({
-							from: "USD",
-							to: ["MOP", "VND"],
-						}),
-					"INTERNAL_SERVER_ERROR",
-					'Code "VND" is not available on remote server. Please contact app owner.',
-				);
-			});
-
 			test("exchange rate returned", async ({ ctx }) => {
 				const dbMock = ctx.cacheDbOptions.mock!;
 				respondAsEmptyCache(dbMock);
-				ctx.exchangeRateOptions.mock.addInterceptor(async (_, to) =>
-					to.reduce(
-						(acc, currency) => ({ ...acc, [currency]: getFakeRate() }),
-						{},
-					),
-				);
+				ctx.exchangeRateOptions.mock.addInterceptor(async () => getFakeRate());
 				const { sessionId } = await insertAccountWithSession(ctx);
 				const caller = router.createCaller(createAuthContext(ctx, sessionId));
 				const currencyFrom = "USD";
@@ -191,34 +141,29 @@ describe("currency.rates", () => {
 				);
 				const dbMessages = dbMock.getMessages();
 				expect(dbMessages).toStrictEqual<typeof dbMessages>([
-					[
+					...currenciesTo.map<(typeof dbMessages)[number]>((currencyTo) => [
 						"get",
-						[`${currencyFrom}->${currenciesTo.join(",")}`],
+						[`${currencyFrom}->${currencyTo}`],
 						{ result: null },
-					],
-					[
+					]),
+					...currenciesTo.map<(typeof dbMessages)[number]>((currencyTo) => [
 						"setex",
-						[
-							`${currencyFrom}->${currenciesTo.join(",")}`,
-							60,
-							JSON.stringify(result),
-						],
+						[`${currencyFrom}->${currencyTo}`, 1440, result[currencyTo]],
 						{ result: "OK" },
-					],
+					]),
 				]);
 			});
 		});
 
-		describe("cache has required data", () => {
+		describe("cache has partial data", () => {
 			test(`exchange rate returned`, async ({ ctx }) => {
 				const dbMock = ctx.cacheDbOptions.mock!;
-				dbMock.setResponder("get", async (key) => {
-					const toCurrencies = key.split("->")[1]!.split(",");
-					return toCurrencies.reduce(
-						(acc, currency) => ({ ...acc, [currency]: getFakeRate() }),
-						{},
-					);
-				});
+				const currencyInCache = "EUR";
+				const fakeRate = getFakeRate();
+				dbMock.setResponder("get", async (key) =>
+					key.includes(currencyInCache) ? fakeRate : null,
+				);
+				dbMock.setResponder("setex", async () => "OK" as const);
 				const { sessionId } = await insertAccountWithSession(ctx);
 				const caller = router.createCaller(createAuthContext(ctx, sessionId));
 				const currencyFrom = "USD";
@@ -236,18 +181,69 @@ describe("currency.rates", () => {
 						{},
 					),
 				);
+				const dbMessages = dbMock.getMessages();
+				expect(dbMessages).toStrictEqual<typeof dbMessages>([
+					...currenciesTo.map<(typeof dbMessages)[number]>((currencyTo) => [
+						"get",
+						[`${currencyFrom}->${currencyTo}`],
+						{ result: currencyTo === currencyInCache ? fakeRate : null },
+					]),
+					...currenciesTo
+						.filter((currencyTo) => currencyTo !== currencyInCache)
+						.map<(typeof dbMessages)[number]>((currencyTo) => [
+							"setex",
+							[`${currencyFrom}->${currencyTo}`, 1440, result[currencyTo]],
+							{ result: "OK" },
+						]),
+				]);
+			});
+		});
+
+		describe("cache has required data", () => {
+			test(`exchange rate returned`, async ({ ctx }) => {
+				const currencyFrom = "USD";
+				const currenciesTo = ["EUR", "MOP", "VND"];
+				const dbMock = ctx.cacheDbOptions.mock!;
+				const fakeRates = currenciesTo.reduce<Record<string, number>>(
+					(acc, currencyTo) => ({
+						...acc,
+						[currencyTo]: getFakeRate(),
+					}),
+					{},
+				);
+				dbMock.setResponder("get", async (key) => {
+					const currencyTo = key.split("->")[1]!;
+					return fakeRates[currencyTo];
+				});
+				const { sessionId } = await insertAccountWithSession(ctx);
+				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const result = await caller.procedure({
+					from: currencyFrom,
+					to: currenciesTo,
+				});
+				expect(Object.keys(result).sort()).toStrictEqual<typeof currenciesTo>(
+					[...currenciesTo].sort(),
+				);
+				expect(result).toStrictEqual<typeof result>(
+					currenciesTo.reduce(
+						(acc, currency) => ({ ...acc, [currency]: result[currency] }),
+						{},
+					),
+				);
+				const dbMessages = dbMock.getMessages();
+				expect(dbMessages).toStrictEqual<typeof dbMessages>([
+					...currenciesTo.map<(typeof dbMessages)[number]>((currencyTo) => [
+						"get",
+						[`${currencyFrom}->${currencyTo}`],
+						{ result: fakeRates[currencyTo] },
+					]),
+				]);
 			});
 		});
 
 		test(`currencyCode casing is ignored`, async ({ ctx }) => {
 			const dbMock = ctx.cacheDbOptions.mock!;
-			dbMock.setResponder("get", async (key) => {
-				const toCurrencies = key.split("->")[1]!.split(",");
-				return toCurrencies.reduce(
-					(acc, currency) => ({ ...acc, [currency]: getFakeRate() }),
-					{},
-				);
-			});
+			dbMock.setResponder("get", async () => getFakeRate());
 			const { sessionId } = await insertAccountWithSession(ctx);
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			const currencyFrom = "uSd";

@@ -96,14 +96,6 @@ export type AddParameters<
 	AddedParameters extends [...args: unknown[]],
 > = (...args: [...Parameters<Fn>, ...AddedParameters]) => ReturnType<Fn>;
 
-export type RemoveFirstParameter<Fn> = Fn extends (
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	parameterToRemove: any,
-	...args: infer Args
-) => infer Result
-	? (...args: Args) => Result
-	: never;
-
 export type Tail<T extends unknown[]> = T extends [unknown, ...infer R]
 	? R
 	: never;

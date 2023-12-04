@@ -29,6 +29,7 @@ export const getCacheDatabase = (ctx: UnauthorizedContext) => {
 	database = new Redis({
 		url: process.env.REDIS_DATABASE_URL,
 		token: process.env.REDIS_DATABASE_TOKEN,
+		retry: { retries: 0 },
 	});
 	return database;
 };

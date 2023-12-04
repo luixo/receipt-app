@@ -2,7 +2,7 @@ import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Card, Loading, Spacer } from "@nextui-org/react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
 import { ErrorMessage } from "app/components/error-message";
@@ -72,14 +72,6 @@ export const PlannedDebts: React.FC<Props> = ({
 			),
 		},
 	});
-	React.useEffect(() => {
-		const currentRates = form.getValues()[selectedCurrencyCode];
-		form.setValue(
-			selectedCurrencyCode as `${CurrencyCode}`,
-			getDefaultValues(selectedCurrencyCode, aggregatedDebts, currentRates),
-		);
-	}, [selectedCurrencyCode, aggregatedDebts, form]);
-	const rates = form.watch();
 	const convertedFromDebts = React.useMemo(
 		() =>
 			aggregatedDebts.filter(
@@ -91,8 +83,11 @@ export const PlannedDebts: React.FC<Props> = ({
 		convertedFromDebts.map((debt) => debt.currencyCode),
 	);
 	const selectedCurrency = useFormattedCurrency(selectedCurrencyCode);
+	const selectedRates = useWatch({
+		control: form.control,
+		name: selectedCurrencyCode as `${string & CurrencyCode}`,
+	});
 	const convertedDebts = React.useMemo(() => {
-		const selectedRates = rates[selectedCurrencyCode];
 		if (!selectedRates) {
 			return convertedFromDebts.map((debt) => ({
 				sum: 0,
@@ -100,19 +95,23 @@ export const PlannedDebts: React.FC<Props> = ({
 			}));
 		}
 		return convertedFromDebts.map((debt) => {
-			const selectedRate = selectedRates[debt.currencyCode];
+			const selectedRate = selectedRates[debt.currencyCode]!;
 			return {
 				sum: selectedRate ? round(debt.sum / selectedRate) : 0,
 				currencyCode: debt.currencyCode,
 			};
 		});
-	}, [convertedFromDebts, selectedCurrencyCode, rates]);
+	}, [convertedFromDebts, selectedRates]);
 	const debts = React.useMemo(() => {
-		const debtsToConvert = convertedFromDebts.map((debt, index) => ({
-			amount: -debt.sum,
-			currencyCode: debt.currencyCode,
-			note: `Converted to ${convertedDebts[index]!.sum} ${selectedCurrency}`,
-		}));
+		const debtsToConvert = convertedFromDebts.map((debt, index) => {
+			const convertedSumRaw = convertedDebts[index]!.sum;
+			const convertedSum = convertedSumRaw === Infinity ? "∞" : convertedSumRaw;
+			return {
+				amount: -debt.sum,
+				currencyCode: debt.currencyCode,
+				note: `Converted to ${convertedSum} ${selectedCurrency}`,
+			};
+		});
 		return [
 			...debtsToConvert,
 			{
@@ -180,7 +179,10 @@ export const PlannedDebts: React.FC<Props> = ({
 			),
 		[addBatchMutation, debts, userId],
 	);
-	const emptyConvertedDebts = convertedDebts.filter((debt) => debt.sum === 0);
+	const invalidConvertedDebts = convertedDebts.filter(
+		(debt) =>
+			debt.sum === 0 || Number.isNaN(debt.sum) || !Number.isFinite(debt.sum),
+	);
 
 	return (
 		<>
@@ -214,7 +216,7 @@ export const PlannedDebts: React.FC<Props> = ({
 					ratesQuery.isLoading ||
 					debts.length > MAX_BATCH_DEBTS ||
 					debts.length < MIN_BATCH_DEBTS ||
-					emptyConvertedDebts.length !== 0
+					invalidConvertedDebts.length !== 0
 				}
 				color={addBatchMutation.status === "error" ? "error" : undefined}
 			>
@@ -222,10 +224,10 @@ export const PlannedDebts: React.FC<Props> = ({
 					<Loading color="currentColor" size="sm" />
 				) : addBatchMutation.error ? (
 					addBatchMutation.error.message
-				) : emptyConvertedDebts.length !== 0 ? (
-					`${emptyConvertedDebts
+				) : invalidConvertedDebts.length !== 0 ? (
+					`${invalidConvertedDebts
 						.map((debt) => debt.currencyCode)
-						.join(", ")} debt(s) are empty`
+						.join(", ")} debt(s) are invalid`
 				) : debts.length > MAX_BATCH_DEBTS ? (
 					`Cannot send more than ${MAX_BATCH_DEBTS} simultaneously`
 				) : debts.length < MIN_BATCH_DEBTS ? (
