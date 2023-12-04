@@ -1,9 +1,12 @@
 import React from "react";
 
-import type { ExtraAppInitialProps } from "next/app";
+import type { ParsedUrlQuery } from "querystring";
 
+import type { ColorModeConfig } from "app/contexts/color-mode-context";
 import { ColorModeContext } from "app/contexts/color-mode-context";
+import type { Settings } from "app/contexts/settings-context";
 import { SettingsContext } from "app/contexts/settings-context";
+import type { Props as SsrContext } from "app/provider/ssr";
 import { ThemeProvider } from "app/utils/styles";
 
 import { NavigationProvider } from "./navigation";
@@ -11,7 +14,12 @@ import { QueriesProvider } from "./queries";
 import { SSRProvider } from "./ssr";
 import { StateProvider } from "./state";
 
-type Props = ExtraAppInitialProps;
+export type Props = {
+	colorModeConfig: ColorModeConfig;
+	settings: Settings;
+	query: ParsedUrlQuery;
+	ssrContext: SsrContext;
+};
 
 export const Provider: React.FC<React.PropsWithChildren<Props>> = ({
 	children,

@@ -3,11 +3,9 @@ import React from "react";
 import { globalCss } from "@nextui-org/react";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { getCookies } from "cookies-next";
-import type { ExtraAppInitialProps } from "next/app";
 import type { AppType } from "next/dist/shared/lib/utils";
 import Head from "next/head";
 import "raf/polyfill";
-import type { ParsedUrlQuery } from "querystring";
 
 import { ProtectedPage } from "app/components/protected-page";
 import { PublicPage } from "app/components/public-page";
@@ -17,7 +15,6 @@ import {
 	LAST_COLOR_MODE_COOKIE_NAME,
 	SELECTED_COLOR_MODE_COOKIE_NAME,
 } from "app/contexts/color-mode-context";
-import type { Settings } from "app/contexts/settings-context";
 import {
 	SETTINGS_COOKIE_NAME,
 	validateSettings,
@@ -26,8 +23,8 @@ import {
 	SSR_CONTEXT_COOKIE_NAME,
 	getSSRContextData,
 } from "app/contexts/ssr-context";
+import type { Props as ProviderProps } from "app/provider";
 import { Provider } from "app/provider";
-import type { Props as SsrContext } from "app/provider/ssr";
 import { useColorModeCookies } from "next-app/hooks/use-color-mode-cookies";
 import { useHydratedMark } from "next-app/hooks/use-hydrated-mark";
 import { useQueryClientHelper } from "next-app/hooks/use-query-client-helper";
@@ -55,16 +52,8 @@ const GlobalHooksComponent: React.FC = () => {
 };
 
 declare module "next/app" {
-	// eslint-disable-next-line @typescript-eslint/no-shadow
-	type ExtraAppInitialProps = {
-		colorModeConfig: ColorModeConfig;
-		settings: Settings;
-		query: ParsedUrlQuery;
-		ssrContext: SsrContext;
-	};
-
 	interface AppInitialProps {
-		pageProps: ExtraAppInitialProps;
+		pageProps: ProviderProps;
 	}
 }
 
@@ -97,7 +86,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 
 MyApp.getInitialProps = async ({ ctx, router }) => {
 	const cookies = getCookies(ctx);
-	const pageProps: ExtraAppInitialProps = {
+	const pageProps: ProviderProps = {
 		colorModeConfig: {
 			last: cookies[LAST_COLOR_MODE_COOKIE_NAME],
 			selected: cookies[SELECTED_COLOR_MODE_COOKIE_NAME],
