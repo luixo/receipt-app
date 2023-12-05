@@ -59,7 +59,7 @@ export const procedure = authProcedure
 				setObject = { name: input.update.name };
 				break;
 			case "publicName":
-				setObject = { publicName: input.update.publicName };
+				setObject = { publicName: input.update.publicName || null };
 				break;
 		}
 		await database

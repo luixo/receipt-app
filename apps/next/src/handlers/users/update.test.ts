@@ -210,5 +210,26 @@ describe("users.update", () => {
 				}),
 			);
 		});
+
+		test("public name is changed to undefined", async ({ ctx }) => {
+			// Foreign account
+			const { id: otherAccountId } = await insertAccount(ctx);
+			await insertUser(ctx, otherAccountId);
+			// Self account
+			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { id: userId } = await insertUser(ctx, accountId, {
+				publicName: "foo",
+			});
+			// Verify other users are not affected
+			await insertUser(ctx, accountId);
+			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+
+			await expectDatabaseDiffSnapshot(ctx, () =>
+				caller.procedure({
+					id: userId,
+					update: { type: "publicName", publicName: undefined },
+				}),
+			);
+		});
 	});
 });

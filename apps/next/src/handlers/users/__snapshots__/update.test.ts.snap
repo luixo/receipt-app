@@ -23,3 +23,15 @@ exports[`users.update > functionality > public name is changed 1`] = `
   },
 }
 `;
+
+exports[`users.update > functionality > public name is changed to undefined 1`] = `
+{
+  "updated": {
+    "users": {
+      "id:f92f2993-628f-46db-b161-808fbb113989": {
+        "publicName": null,
+      },
+    },
+  },
+}
+`;
