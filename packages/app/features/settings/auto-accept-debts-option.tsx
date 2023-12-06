@@ -4,11 +4,15 @@ import type { SwitchEvent } from "@nextui-org/react";
 import { Loading, Switch } from "@nextui-org/react";
 
 import { ErrorMessage, QueryErrorMessage } from "app/components/error-message";
+import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
 
 export const AutoAcceptDebtsOption: React.FC = () => {
 	const settingsQuery = trpc.accountSettings.get.useQuery();
-	const updateSettingsMutation = trpc.accountSettings.update.useMutation();
+	const updateSettingsMutation = trpc.accountSettings.update.useMutation(
+		useTrpcMutationOptions(mutations.accountSettings.update.options),
+	);
 	const onChange = React.useCallback(
 		(e: SwitchEvent) =>
 			updateSettingsMutation.mutate({

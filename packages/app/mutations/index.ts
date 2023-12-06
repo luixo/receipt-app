@@ -1,5 +1,6 @@
 import * as account from "./account";
 import * as accountConnections from "./account-connection-intentions";
+import * as accountSettings from "./account-settings";
 import * as auth from "./auth";
 import * as debts from "./debts";
 import * as itemParticipants from "./item-participants";
@@ -19,5 +20,6 @@ export const mutations = {
 	debts,
 	auth,
 	account,
+	accountSettings,
 	resetPasswordIntentions,
 };
