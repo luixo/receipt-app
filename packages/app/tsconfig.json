@@ -1,0 +1,4 @@
+{
+	"extends": "../../tsconfig",
+	"include": ["rnw-env.d.ts", "nativewind-env.d.ts", "**/*.ts", "**/*.tsx"]
+}

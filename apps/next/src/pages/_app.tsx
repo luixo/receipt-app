@@ -1,6 +1,5 @@
 import React from "react";
 
-import { globalCss } from "@nextui-org/react";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { getCookies } from "cookies-next";
 import type { AppType } from "next/dist/shared/lib/utils";
@@ -33,15 +32,9 @@ import { useSettingsCookies } from "next-app/hooks/use-settings-cookies";
 import { useSSRContextCookies } from "next-app/hooks/use-ssr-context-cookies";
 import type { AppPage } from "next-app/types/page";
 import { trpcNext } from "next-app/utils/trpc";
-
-const globalStyles = globalCss({
-	html: {
-		overflowX: "hidden",
-	},
-});
+import "next-app/global.css";
 
 const GlobalHooksComponent: React.FC = () => {
-	globalStyles();
 	useColorModeCookies();
 	useSettingsCookies();
 	useSSRContextCookies();

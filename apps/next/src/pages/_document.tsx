@@ -16,6 +16,7 @@ class Document extends NextDocument<DocumentProps> {
 	render() {
 		return (
 			<Html
+				// eslint-disable-next-line tailwindcss/no-custom-classname
 				className={
 					this.props.lastColorMode === "dark" ? "dark-theme" : "light-theme"
 				}
@@ -41,12 +42,12 @@ Document.getInitialProps = async (ctx) => {
 		...prevProps,
 		styles: (
 			<>
+				{CssBaseline.flush()}
 				{prevProps.styles}
 				{/* see https://github.com/timolins/react-hot-toast/issues/189#issuecomment-1256797662 */}
 				<style id="_goober">
 					{"/* ! */"} {extractCss()}
 				</style>
-				{CssBaseline.flush()}
 			</>
 		),
 		lastColorMode,

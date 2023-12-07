@@ -7,8 +7,10 @@ import {
 	darkThemeStitches,
 	lightThemeStitches,
 } from "@nextui-org/react";
+import { NextUIProvider as ModernNextUIProvider } from "@nextui-org/react-tailwind";
 
 import { ColorModeContext } from "app/contexts/color-mode-context";
+import { useRouter } from "app/hooks/use-router";
 
 export const breakpoints = {
 	xs: "320px",
@@ -68,7 +70,16 @@ export const ThemeProvider: React.FC<React.PropsWithChildren<object>> = ({
 	}, [colorScheme, setColorModeConfig]);
 	const selectedMode = colorModeConfig.selected || colorModeConfig.last;
 	const sureMode = selectedMode ?? "light";
+	React.useEffect(() => {
+		const html = document.querySelector("html")!;
+		html.setAttribute("data-theme", sureMode);
+		html.classList.add(sureMode);
+		html.classList.remove(sureMode === "dark" ? "light" : "dark");
+	}, [sureMode]);
+	const router = useRouter();
 	return (
-		<NextUIProvider theme={nextThemes[sureMode]}>{children}</NextUIProvider>
+		<ModernNextUIProvider navigate={router.push}>
+			<NextUIProvider theme={nextThemes[sureMode]}>{children}</NextUIProvider>
+		</ModernNextUIProvider>
 	);
 };

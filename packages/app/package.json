@@ -5,6 +5,7 @@
 	"dependencies": {
 		"@expo/html-elements": "^0.5.1",
 		"@hookform/resolvers": "^3.1.1",
+		"@nextui-org/react-tailwind": "npm:@nextui-org/react@2.2.9",
 		"@react-native-picker/picker": "^2.4.10",
 		"@react-navigation/native": "^6.1.7",
 		"@tanstack/query-async-storage-persister": "^4.32.0",
@@ -15,8 +16,10 @@
 		"expo-app": "workspace:*",
 		"expo-constants": "^14.4.2",
 		"expo-linking": "^5.0.2",
+		"framer-motion": "^10.16.12",
 		"idb-keyval": "^6.2.1",
 		"identicon.js": "^2.3.3",
+		"nativewind": "^4.0.16",
 		"next-app": "workspace:*",
 		"next-usequerystate": "1.13.0",
 		"react-calendar": "^4.5.0",
