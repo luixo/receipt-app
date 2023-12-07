@@ -1,10 +1,11 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Input } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { Input } from "app/components/base/input";
 import { PageHeader } from "app/components/page-header";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useRouter } from "app/hooks/use-router";
@@ -49,17 +50,13 @@ export const LoginScreen: AppPage = () => {
 			<Input
 				{...form.register("email")}
 				label="Email"
-				labelPlacement="outside"
-				isInvalid={Boolean(form.formState.errors.email)}
-				errorMessage={form.formState.errors.email?.message}
+				fieldError={form.formState.errors.email}
 				isDisabled={loginMutation.isLoading}
 			/>
 			<Input
 				{...form.register("password")}
 				label="Password"
-				labelPlacement="outside"
-				isInvalid={Boolean(form.formState.errors.password)}
-				errorMessage={form.formState.errors.password?.message}
+				fieldError={form.formState.errors.password}
 				isDisabled={loginMutation.isLoading}
 				type="password"
 			/>

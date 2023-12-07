@@ -1,9 +1,9 @@
 import React from "react";
 
-import { Button, Input } from "@nextui-org/react";
-import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
+import { Button } from "@nextui-org/react";
 import { MdEdit as EditIcon } from "react-icons/md";
 
+import { Input } from "app/components/base/input";
 import { Text } from "app/components/base/text";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useSingleInput } from "app/hooks/use-single-input";
@@ -81,31 +81,19 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 		);
 	}
 
-	const isQuantitySync = receiptItem.quantity === getNumberValue();
-
 	return (
 		<Input
 			{...bindings}
-			value={bindings.value.toString()}
 			aria-label="Receipt item quantity"
-			labelPlacement="outside"
-			isDisabled={updateMutation.isLoading || isLoading}
+			mutation={updateMutation}
+			fieldError={inputState.error}
+			isDisabled={isLoading}
 			className="w-28"
-			isInvalid={Boolean(inputState.error || updateMutation.error)}
-			errorMessage={inputState.error?.message || updateMutation.error?.message}
-			endContent={
-				<Button
-					title="Save receipt item quantity"
-					variant="light"
-					isLoading={updateMutation.isLoading}
-					color={isQuantitySync ? "success" : "warning"}
-					isDisabled={Boolean(inputState.error)}
-					onClick={() => updateQuantity(getNumberValue())}
-					isIconOnly
-				>
-					<CheckMark size={24} />
-				</Button>
-			}
+			saveProps={{
+				title: "Save receipt item quantity",
+				isHidden: receiptItem.quantity === getNumberValue(),
+				onClick: () => updateQuantity(getNumberValue()),
+			}}
 			variant="bordered"
 		/>
 	);

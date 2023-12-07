@@ -45,8 +45,8 @@ export const AddUserScreen: AppPage = () => {
 		<>
 			<PageHeader backHref="/users">Add user</PageHeader>
 			<EmailVerificationCard />
-			<UserNameInput form={form} query={addUserMutation} />
-			<EmailInput form={form} query={addUserMutation} />
+			<UserNameInput form={form} isLoading={addUserMutation.isLoading} />
+			<EmailInput form={form} isLoading={addUserMutation.isLoading} />
 			<Button
 				color="primary"
 				onClick={form.handleSubmit(onSubmit)}

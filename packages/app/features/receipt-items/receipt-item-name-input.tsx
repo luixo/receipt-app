@@ -1,10 +1,10 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Button, Input } from "@nextui-org/react";
-import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
+import { Button } from "@nextui-org/react";
 import { MdEdit as EditIcon } from "react-icons/md";
 
+import { Input } from "app/components/base/input";
 import { Text } from "app/components/base/text";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useSingleInput } from "app/hooks/use-single-input";
@@ -80,29 +80,18 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 		);
 	}
 
-	const isNameSync = receiptItem.name === getValue();
-
 	return (
 		<Input
 			{...bindings}
 			aria-label="Receipt item name"
-			labelPlacement="outside"
-			isDisabled={updateMutation.isLoading || isLoading}
-			isInvalid={Boolean(inputState.error || updateMutation.error)}
-			errorMessage={inputState.error?.message || updateMutation.error?.message}
-			endContent={
-				<Button
-					title="Save receipt item name"
-					variant="light"
-					isLoading={updateMutation.isLoading}
-					color={isNameSync ? "success" : "warning"}
-					isDisabled={Boolean(inputState.error)}
-					onClick={() => updateName(getValue())}
-					isIconOnly
-				>
-					<CheckMark size={24} />
-				</Button>
-			}
+			mutation={updateMutation}
+			fieldError={inputState.error}
+			isDisabled={isLoading}
+			saveProps={{
+				title: "Save receipt item name",
+				isHidden: receiptItem.name === getValue(),
+				onClick: () => updateName(getValue()),
+			}}
 		/>
 	);
 };

@@ -1,8 +1,6 @@
 import React from "react";
 
-import { Button, Input } from "@nextui-org/react";
-import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
-
+import { Input } from "app/components/base/input";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -51,33 +49,21 @@ export const DebtAmountInput: React.FC<Props> = ({ debt, isLoading }) => {
 		},
 		[updateMutation, debt.id, debt.amount, absoluteAmount],
 	);
-	const isAmountSync = absoluteAmount === getNumberValue();
 
 	return (
 		<Input
 			{...bindings}
 			value={bindings.value.toString()}
 			aria-label="Debt amount"
-			labelPlacement="outside"
-			isDisabled={updateMutation.isLoading || isLoading}
-			isInvalid={Boolean(inputState.error || updateMutation.error)}
-			errorMessage={inputState.error?.message || updateMutation.error?.message}
-			endContent={
-				<>
-					<DebtCurrencyInput debt={debt} isLoading={isLoading} />
-					<Button
-						title="Save debt amount"
-						variant="light"
-						isLoading={updateMutation.isLoading}
-						isDisabled={isLoading || Boolean(inputState.error) || isAmountSync}
-						onClick={() => updateAmount(getNumberValue())}
-						isIconOnly
-						color={isAmountSync ? "success" : "warning"}
-					>
-						<CheckMark color="currentColor" size={24} />
-					</Button>
-				</>
-			}
+			mutation={updateMutation}
+			fieldError={inputState.error}
+			isDisabled={isLoading}
+			saveProps={{
+				title: "Save debt amount",
+				isHidden: absoluteAmount === getNumberValue(),
+				onClick: () => updateAmount(getNumberValue()),
+			}}
+			endContent={<DebtCurrencyInput debt={debt} isLoading={isLoading} />}
 			variant="bordered"
 		/>
 	);

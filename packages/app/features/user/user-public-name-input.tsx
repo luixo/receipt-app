@@ -1,11 +1,9 @@
 import React from "react";
 
-import { Button, Input } from "@nextui-org/react";
-import {
-	IoCheckmarkCircleOutline as CheckMark,
-	IoTrashBin as TrashBin,
-} from "react-icons/io5";
+import { Button } from "@nextui-org/react";
+import { IoTrashBin as TrashBin } from "react-icons/io5";
 
+import { Input } from "app/components/base/input";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -71,46 +69,31 @@ export const UserPublicNameInput: React.FC<Props> = ({ user, isLoading }) => {
 		);
 	}
 
-	const isNameSync = user.publicName === getValue();
-
 	return (
 		<Input
 			{...bindings}
 			label="Public user name"
-			labelPlacement="outside"
-			isDisabled={updateUserMutation.isLoading || isLoading}
-			isInvalid={Boolean(inputState.error || updateUserMutation.error)}
-			errorMessage={
-				inputState.error?.message || updateUserMutation.error?.message
-			}
+			mutation={updateUserMutation}
+			fieldError={inputState.error}
+			isDisabled={isLoading}
+			saveProps={{
+				title: "Save user public name",
+				isHidden: user.publicName === getValue(),
+				onClick: () => savePublicName(getValue()),
+			}}
 			endContent={
-				<>
+				user.publicName === undefined ? null : (
 					<Button
-						title="Save user public name"
+						title="Remove user public name"
 						variant="light"
 						isLoading={updateUserMutation.isLoading}
-						isDisabled={
-							Boolean(inputState.error) || isNameSync || getValue() === ""
-						}
-						onClick={() => savePublicName(getValue())}
-						color={isNameSync ? "success" : "warning"}
+						onClick={() => savePublicName(undefined)}
+						color="danger"
 						isIconOnly
 					>
-						<CheckMark size={24} />
+						<TrashBin size={24} />
 					</Button>
-					{user.publicName === undefined ? null : (
-						<Button
-							title="Remove user public name"
-							variant="light"
-							isLoading={updateUserMutation.isLoading}
-							onClick={() => savePublicName(undefined)}
-							color="danger"
-							isIconOnly
-						>
-							<TrashBin size={24} />
-						</Button>
-					)}
-				</>
+				)
 			}
 		/>
 	);

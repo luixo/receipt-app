@@ -1,19 +1,18 @@
 import React from "react";
 
-import { Input } from "@nextui-org/react";
 import type { UseFormReturn } from "react-hook-form";
 
+import { Input } from "app/components/base/input";
 import { useInputController } from "app/hooks/use-input-controller";
-import type { TRPCMutationResult } from "app/trpc";
 
 import type { Form } from "./types";
 
 type Props = {
 	form: UseFormReturn<Form>;
-	query: TRPCMutationResult<"users.add">;
+	isLoading: boolean;
 };
 
-export const UserNameInput: React.FC<Props> = ({ form, query }) => {
+export const UserNameInput: React.FC<Props> = ({ form, isLoading }) => {
 	const { bindings, state: inputState } = useInputController({
 		name: "name",
 		form,
@@ -24,10 +23,8 @@ export const UserNameInput: React.FC<Props> = ({ form, query }) => {
 			{...bindings}
 			required
 			label="User name"
-			labelPlacement="outside"
-			isDisabled={query.isLoading}
-			isInvalid={Boolean(inputState.error)}
-			errorMessage={inputState.error?.message}
+			isDisabled={isLoading}
+			fieldError={inputState.error}
 		/>
 	);
 };

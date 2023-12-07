@@ -1,9 +1,10 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Input, Spinner } from "@nextui-org/react";
+import { Spinner } from "@nextui-org/react";
 import type { UseFormReturn } from "react-hook-form";
 
+import { Input } from "app/components/base/input";
 import { Text } from "app/components/base/text";
 import { useInputController } from "app/hooks/use-input-controller";
 import type { CurrencyCode } from "app/utils/currency";
@@ -28,14 +29,11 @@ const RateInput: React.FC<InputProps> = ({
 		<Input
 			key={`${selectedCurrencyCode}.${currencyCode}`}
 			{...bindings}
-			value={bindings.value.toString()}
 			aria-label={currencyCode}
-			labelPlacement="outside"
 			required
 			type="number"
 			min="0"
-			isInvalid={Boolean(inputState.error)}
-			errorMessage={inputState.error?.message}
+			fieldError={inputState.error}
 		/>
 	);
 };

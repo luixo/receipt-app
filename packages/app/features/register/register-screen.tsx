@@ -1,10 +1,11 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Input } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { Input } from "app/components/base/input";
 import { PageHeader } from "app/components/page-header";
 import { useRouter } from "app/hooks/use-router";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -62,35 +63,27 @@ export const RegisterScreen: AppPage = () => {
 			<Input
 				{...form.register("email")}
 				label="Email"
-				labelPlacement="outside"
-				isInvalid={Boolean(form.formState.errors.email)}
-				errorMessage={form.formState.errors.email?.message}
-				isDisabled={registerMutation.isLoading}
+				fieldError={form.formState.errors.email}
+				mutation={registerMutation}
 			/>
 			<Input
 				{...form.register("name")}
 				label="Name"
-				labelPlacement="outside"
 				placeholder="You can change it later"
-				isInvalid={Boolean(form.formState.errors.name)}
-				errorMessage={form.formState.errors.name?.message}
+				fieldError={form.formState.errors.name}
 				isDisabled={registerMutation.isLoading}
 			/>
 			<Input
 				{...form.register("password")}
 				label="New password"
-				labelPlacement="outside"
-				isInvalid={Boolean(form.formState.errors.password)}
-				errorMessage={form.formState.errors.password?.message}
+				fieldError={form.formState.errors.password}
 				isDisabled={registerMutation.isLoading}
 				type="password"
 			/>
 			<Input
 				{...form.register("passwordRetype")}
 				label="Retype new password"
-				labelPlacement="outside"
-				isInvalid={Boolean(form.formState.errors.passwordRetype)}
-				errorMessage={form.formState.errors.passwordRetype?.message}
+				fieldError={form.formState.errors.passwordRetype}
 				isDisabled={registerMutation.isLoading}
 				type="password"
 			/>

@@ -1,9 +1,10 @@
 import React from "react";
 
-import { Button, Input, Spinner } from "@nextui-org/react";
+import { Button, Spinner } from "@nextui-org/react";
 import { IoTrashBin as TrashBinIcon } from "react-icons/io5";
 import { MdLink as LinkIcon, MdLinkOff as UnlinkIcon } from "react-icons/md";
 
+import { Input } from "app/components/base/input";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -91,15 +92,12 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 	}
 
 	if (outboundConnectionIntention) {
-		const mutationError = cancelRequestMutation.error?.message;
 		return (
 			<Input
 				label="Outbound request"
-				labelPlacement="outside"
 				value={outboundConnectionIntention.account.email}
 				isReadOnly
-				isInvalid={Boolean(mutationError)}
-				errorMessage={mutationError}
+				mutation={cancelRequestMutation}
 				endContent={
 					<Button
 						title="Cancel request"
@@ -130,17 +128,14 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 		);
 	}
 
-	const mutationError =
-		connectUserMutation.error?.message || unlinkMutation.error?.message;
 	return (
 		<Input
 			{...bindings}
 			label="Email"
-			labelPlacement="outside"
-			isDisabled={connectUserMutation.isLoading || isLoading}
+			mutation={[connectUserMutation, unlinkMutation]}
+			fieldError={inputState.error}
+			isDisabled={isLoading}
 			isReadOnly={Boolean(user.email)}
-			isInvalid={Boolean(inputState.error || mutationError)}
-			errorMessage={inputState.error?.message || mutationError}
 			endContent={
 				<>
 					{user.email ? (

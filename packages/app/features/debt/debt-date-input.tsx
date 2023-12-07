@@ -34,8 +34,7 @@ export const DebtDateInput: React.FC<Props> = ({ debt, isLoading }) => {
 
 	return (
 		<DateInput
-			isLoading={updateMutation.isLoading}
-			error={updateMutation.error}
+			mutation={updateMutation}
 			timestamp={debt.timestamp}
 			isDisabled={isLoading}
 			onUpdate={saveDate}

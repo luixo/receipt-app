@@ -1,11 +1,12 @@
 import React from "react";
 
-import { Button, Input } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import type { Path, PathValue, UseFormReturn } from "react-hook-form";
 import { MdEdit as EditIcon } from "react-icons/md";
 import type { z } from "zod";
 
 import { CurrenciesPicker } from "app/components/app/currencies-picker";
+import { Input } from "app/components/base/input";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import type { CurrencyCode } from "app/utils/currency";
 import type { currencySchema } from "app/utils/validation";
@@ -72,7 +73,6 @@ export const CurrencyInput = <T extends MinimalForm>({
 				<Input
 					value={`${selectedCurrency.name} (${selectedCurrency.code})`}
 					label="Currency"
-					labelPlacement="outside"
 					isDisabled={isLoading}
 					isReadOnly
 					onClick={openModal}

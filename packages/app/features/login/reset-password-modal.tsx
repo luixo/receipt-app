@@ -3,7 +3,6 @@ import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
 	Button,
-	Input,
 	Modal,
 	ModalBody,
 	ModalContent,
@@ -13,6 +12,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Header } from "app/components/base/header";
+import { Input } from "app/components/base/input";
 import { Text } from "app/components/base/text";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -51,7 +51,7 @@ export const ResetPasswordModal: React.FC<Props> = ({
 				<ModalHeader>
 					<Header>Forgot password</Header>
 				</ModalHeader>
-				<ModalBody>
+				<ModalBody className="gap-4">
 					{resetPasswordMutation.status === "success" ? (
 						<Text>Reset password link was sent to {form.watch("email")}</Text>
 					) : (
@@ -59,9 +59,7 @@ export const ResetPasswordModal: React.FC<Props> = ({
 							<Input
 								{...form.register("email")}
 								label="Email"
-								labelPlacement="outside"
-								isInvalid={Boolean(form.formState.errors.email)}
-								errorMessage={form.formState.errors.email?.message}
+								fieldError={form.formState.errors.email}
 								isDisabled={resetPasswordMutation.isLoading}
 							/>
 							<Button

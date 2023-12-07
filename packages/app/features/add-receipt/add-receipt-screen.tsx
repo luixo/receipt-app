@@ -63,13 +63,13 @@ export const AddReceiptScreen: AppPage = () => {
 		<>
 			<PageHeader backHref="/receipts">Add receipt</PageHeader>
 			<EmailVerificationCard />
-			<ReceiptNameInput form={form} query={addReceiptMutation} />
+			<ReceiptNameInput form={form} isLoading={addReceiptMutation.isLoading} />
 			<CurrencyInput
 				form={form}
 				isLoading={addReceiptMutation.isLoading}
 				topCurrenciesQuery={topCurrenciesQuery}
 			/>
-			<ReceiptDateInput form={form} query={addReceiptMutation} />
+			<ReceiptDateInput form={form} isLoading={addReceiptMutation.isLoading} />
 			<Button
 				className="mt-4"
 				color="primary"

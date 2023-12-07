@@ -19,7 +19,7 @@ export const DebtDateInput: React.FC<Props> = ({ form, isLoading }) => {
 	return (
 		<DateInput
 			timestamp={form.getValues("timestamp")}
-			isLoading={isLoading}
+			isDisabled={isLoading}
 			onUpdate={onDateUpdate}
 			updateOnChange
 		/>

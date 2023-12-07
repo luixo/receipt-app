@@ -1,19 +1,18 @@
 import React from "react";
 
-import { Button, Input } from "@nextui-org/react";
-import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 import { z } from "zod";
 
+import { Input } from "app/components/base/input";
 import { Text } from "app/components/base/text";
 import { Calendar } from "app/components/calendar";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useSsrFormat } from "app/hooks/use-ssr-format";
-import type { TRPCError } from "app/trpc";
+import type { TRPCMutationResult } from "app/trpc";
 
 type Props = {
 	timestamp: Date;
-	error?: TRPCError | null;
-	isLoading?: boolean;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	mutation?: TRPCMutationResult<any>;
 	isDisabled?: boolean;
 	label?: string;
 	onUpdate: (nextDate: Date) => void;
@@ -22,8 +21,7 @@ type Props = {
 
 export const DateInput: React.FC<Props> = ({
 	timestamp,
-	error,
-	isLoading: loading,
+	mutation,
 	isDisabled,
 	label,
 	onUpdate,
@@ -45,12 +43,11 @@ export const DateInput: React.FC<Props> = ({
 	}, [updateOnChange, onUpdate, value]);
 	// TODO: make getValue() return Date (currently string)
 	const dateValue = new Date(getValue());
-	const isValueSync = dateValue.valueOf() === timestamp.valueOf();
 	return (
 		<Calendar
 			value={Number.isNaN(dateValue.valueOf()) ? undefined : dateValue}
 			onChange={setValue}
-			disabled={loading || isDisabled}
+			disabled={mutation?.isLoading || isDisabled}
 		>
 			{isDisabled ? (
 				<Text className="text-xl">{formatDate(dateValue)}</Text>
@@ -60,28 +57,17 @@ export const DateInput: React.FC<Props> = ({
 					value={formatDate(dateValue)}
 					aria-label={label || "Date"}
 					label={label}
-					labelPlacement="outside"
-					isDisabled={loading}
-					isInvalid={Boolean(state.error)}
-					errorMessage={state.error?.message || error?.message}
-					endContent={
-						updateOnChange ? (
-							// Bug: https://github.com/nextui-org/nextui/issues/2069
-							// eslint-disable-next-line react/jsx-no-useless-fragment
-							<></>
-						) : (
-							<Button
-								title="Save date"
-								variant="light"
-								isLoading={loading}
-								isDisabled={Boolean(state.error) || isValueSync}
-								onClick={() => onUpdate(dateValue)}
-								isIconOnly
-								color={isValueSync ? "success" : "warning"}
-							>
-								<CheckMark size={24} />
-							</Button>
-						)
+					mutation={mutation}
+					fieldError={state.error}
+					saveProps={
+						updateOnChange
+							? undefined
+							: {
+									title: "Save date",
+									isHidden:
+										dateValue.toDateString() === timestamp.toDateString(),
+									onClick: () => onUpdate(dateValue),
+							  }
 					}
 				/>
 			)}

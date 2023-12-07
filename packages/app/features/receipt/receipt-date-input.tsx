@@ -11,10 +11,7 @@ type Props = {
 	isLoading: boolean;
 };
 
-export const ReceiptDateInput: React.FC<Props> = ({
-	receipt,
-	isLoading: isOuterLoading,
-}) => {
+export const ReceiptDateInput: React.FC<Props> = ({ receipt, isLoading }) => {
 	const updateReceiptMutation = trpc.receipts.update.useMutation(
 		useTrpcMutationOptions(mutations.receipts.update.options),
 	);
@@ -35,13 +32,12 @@ export const ReceiptDateInput: React.FC<Props> = ({
 
 	return (
 		<DateInput
-			isLoading={updateReceiptMutation.isLoading}
-			error={updateReceiptMutation.error}
+			mutation={updateReceiptMutation}
 			timestamp={receipt.issued}
 			isDisabled={
 				receipt.role !== "owner" ||
 				Boolean(receipt.lockedTimestamp) ||
-				isOuterLoading
+				isLoading
 			}
 			onUpdate={saveDate}
 		/>

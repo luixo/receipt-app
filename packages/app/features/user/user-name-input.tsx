@@ -1,8 +1,6 @@
 import React from "react";
 
-import { Button, Input } from "@nextui-org/react";
-import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
-
+import { Input } from "app/components/base/input";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -38,31 +36,19 @@ export const UserNameInput: React.FC<Props> = ({ user, isLoading }) => {
 		},
 		[updateUserMutation, user.remoteId, setValue],
 	);
-	const isNameSync = user.name === getValue();
 
 	return (
 		<Input
 			{...bindings}
 			label="User name"
-			labelPlacement="outside"
-			isDisabled={updateUserMutation.isLoading || isLoading}
-			isInvalid={Boolean(inputState.error || updateUserMutation.error)}
-			errorMessage={
-				inputState.error?.message || updateUserMutation.error?.message
-			}
-			endContent={
-				<Button
-					title="Save user name"
-					variant="light"
-					isLoading={updateUserMutation.isLoading}
-					isDisabled={Boolean(inputState.error) || isNameSync}
-					color={isNameSync ? "success" : "warning"}
-					onClick={() => saveName(getValue())}
-					isIconOnly
-				>
-					<CheckMark size={24} />
-				</Button>
-			}
+			mutation={updateUserMutation}
+			fieldError={inputState.error}
+			isDisabled={isLoading}
+			saveProps={{
+				title: "Save user name",
+				isHidden: user.name === getValue(),
+				onClick: () => saveName(getValue()),
+			}}
 		/>
 	);
 };

@@ -1,8 +1,8 @@
 import React from "react";
 
-import { Input } from "@nextui-org/react";
 import type { UseFormReturn } from "react-hook-form";
 
+import { Input } from "app/components/base/input";
 import { useInputController } from "app/hooks/use-input-controller";
 
 import type { Form } from "./types";
@@ -22,15 +22,12 @@ export const DebtAmountInput: React.FC<Props> = ({ form, isLoading }) => {
 	return (
 		<Input
 			{...bindings}
-			value={bindings.value.toString()}
 			required
 			type="number"
 			min="0"
 			label="Amount"
-			labelPlacement="outside"
 			isDisabled={isLoading}
-			isInvalid={Boolean(inputState.error)}
-			errorMessage={inputState.error?.message}
+			fieldError={inputState.error}
 		/>
 	);
 };

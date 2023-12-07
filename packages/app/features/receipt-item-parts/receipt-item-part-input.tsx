@@ -1,11 +1,11 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Button, Input } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { FiMinus as MinusIcon, FiPlus as PlusIcon } from "react-icons/fi";
-import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 import { MdEdit as EditIcon } from "react-icons/md";
 
+import { Input } from "app/components/base/input";
 import { Text } from "app/components/base/text";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useSingleInput } from "app/hooks/use-single-input";
@@ -119,35 +119,21 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 		return readOnlyComponent;
 	}
 
-	const isPartSync = getNumberValue() === itemPart.part;
-
 	if (isEditing) {
 		return wrap(
 			<>
 				<Input
 					{...bindings}
-					value={bindings.value.toString()}
 					className="w-24"
 					aria-label="Item part"
-					labelPlacement="outside"
-					isDisabled={updateMutation.isLoading || isLoading}
-					isInvalid={Boolean(inputState.error || updateMutation.error)}
-					errorMessage={
-						inputState.error?.message || updateMutation.error?.message
-					}
-					endContent={
-						<Button
-							title="Save item part"
-							variant="light"
-							color={isPartSync ? "success" : "warning"}
-							isLoading={updateMutation.isLoading}
-							isDisabled={Boolean(inputState.error)}
-							onClick={() => updatePart(getNumberValue())}
-							isIconOnly
-						>
-							<CheckMark size={24} />
-						</Button>
-					}
+					mutation={updateMutation}
+					fieldError={inputState.error}
+					isDisabled={isLoading}
+					saveProps={{
+						title: "Save item part",
+						isHidden: getNumberValue() === itemPart.part,
+						onClick: () => updatePart(getNumberValue()),
+					}}
 					variant="bordered"
 				/>
 				<Text className="ml-2">/ {itemParts}</Text>

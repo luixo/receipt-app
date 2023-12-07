@@ -1,10 +1,11 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Input } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { Input } from "app/components/base/input";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -66,28 +67,23 @@ export const ChangePasswordScreen: AppPage = () => {
 			<Input
 				{...form.register("prevPassword")}
 				label="Current password"
-				labelPlacement="outside"
 				isDisabled={changePasswordMutation.isLoading}
-				isInvalid={Boolean(form.formState.errors.prevPassword)}
-				errorMessage={form.formState.errors.prevPassword?.message}
+				mutation={changePasswordMutation}
+				fieldError={form.formState.errors.prevPassword}
 				type="password"
 			/>
 			<Input
 				{...form.register("password")}
 				label="New password"
-				labelPlacement="outside"
 				isDisabled={changePasswordMutation.isLoading}
-				isInvalid={Boolean(form.formState.errors.password)}
-				errorMessage={form.formState.errors.password?.message}
+				fieldError={form.formState.errors.password}
 				type="password"
 			/>
 			<Input
 				{...form.register("passwordRetype")}
 				label="Retype new password"
-				labelPlacement="outside"
 				isDisabled={changePasswordMutation.isLoading}
-				isInvalid={Boolean(form.formState.errors.passwordRetype)}
-				errorMessage={form.formState.errors.passwordRetype?.message}
+				fieldError={form.formState.errors.passwordRetype}
 				type="password"
 			/>
 			<Button
