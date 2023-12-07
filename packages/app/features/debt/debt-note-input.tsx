@@ -1,7 +1,7 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Textarea, styled } from "@nextui-org/react";
-import { Button } from "@nextui-org/react-tailwind";
+import { Button, Textarea } from "@nextui-org/react-tailwind";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 
 import { useSingleInput } from "app/hooks/use-single-input";
@@ -10,16 +10,6 @@ import { mutations } from "app/mutations";
 import type { TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
 import { debtNoteSchema } from "app/utils/validation";
-
-const Wrapper = styled("div", {
-	position: "relative",
-});
-
-const CornerIcon = styled("div", {
-	position: "absolute",
-	bottom: 0,
-	right: 0,
-});
 
 type Debt = TRPCQueryOutput<"debts.get">;
 
@@ -57,29 +47,29 @@ export const DebtNoteInput: React.FC<Props> = ({ debt, isLoading }) => {
 	const isNoteSync = debt.note === getValue();
 
 	return (
-		<Wrapper>
+		<View>
 			<Textarea
 				{...bindings}
 				aria-label="Debt note"
-				fullWidth
-				disabled={updateMutation.isLoading || isLoading}
-				status={inputState.error ? "warning" : undefined}
-				helperColor={inputState.error ? "warning" : "error"}
-				helperText={inputState.error?.message || updateMutation.error?.message}
+				labelPlacement="outside"
+				isDisabled={updateMutation.isLoading || isLoading}
+				isInvalid={Boolean(inputState.error || updateMutation.error)}
+				errorMessage={
+					inputState.error?.message || updateMutation.error?.message
+				}
 			/>
-			<CornerIcon>
-				<Button
-					title="Save receipt name"
-					variant="light"
-					isLoading={updateMutation.isLoading}
-					isDisabled={isLoading || Boolean(inputState.error) || isNoteSync}
-					onClick={() => saveNote(getValue())}
-					color={getValue() === debt.note ? "success" : "warning"}
-					isIconOnly
-				>
-					<CheckMark size={24} />
-				</Button>
-			</CornerIcon>
-		</Wrapper>
+			<Button
+				className="absolute bottom-0 right-3"
+				title="Save receipt name"
+				variant="light"
+				isLoading={updateMutation.isLoading}
+				isDisabled={isLoading || Boolean(inputState.error) || isNoteSync}
+				onClick={() => saveNote(getValue())}
+				color={getValue() === debt.note ? "success" : "warning"}
+				isIconOnly
+			>
+				<CheckMark size={24} />
+			</Button>
+		</View>
 	);
 };

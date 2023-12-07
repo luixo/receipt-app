@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Input, Spacer, styled } from "@nextui-org/react";
-import { Button } from "@nextui-org/react-tailwind";
+import { Spacer, styled } from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react-tailwind";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 import { MdEdit as EditIcon } from "react-icons/md";
 
@@ -68,7 +68,6 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 	if (!isEditing) {
 		return (
 			<Wrapper>
-				<Spacer x={0.5} />
 				<Text>x {receiptItem.quantity} unit</Text>
 				{!readOnly ? (
 					<Button
@@ -92,13 +91,14 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 	return (
 		<Input
 			{...bindings}
+			value={bindings.value.toString()}
 			aria-label="Receipt item quantity"
-			disabled={updateMutation.isLoading || isLoading}
-			status={inputState.error ? "warning" : undefined}
-			helperColor={inputState.error ? "warning" : "error"}
-			helperText={inputState.error?.message || updateMutation.error?.message}
-			contentRightStyling={false}
-			contentRight={
+			labelPlacement="outside"
+			isDisabled={updateMutation.isLoading || isLoading}
+			className="w-28"
+			isInvalid={Boolean(inputState.error || updateMutation.error)}
+			errorMessage={inputState.error?.message || updateMutation.error?.message}
+			endContent={
 				<Button
 					title="Save receipt item quantity"
 					variant="light"
@@ -111,8 +111,7 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 					<CheckMark size={24} />
 				</Button>
 			}
-			bordered
-			width="$24"
+			variant="bordered"
 		/>
 	);
 };

@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Input, styled } from "@nextui-org/react";
-import { Button } from "@nextui-org/react-tailwind";
+import { styled } from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react-tailwind";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 import { MdEdit as EditIcon } from "react-icons/md";
 
@@ -89,12 +89,11 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 		<Input
 			{...bindings}
 			aria-label="Receipt item name"
-			disabled={updateMutation.isLoading || isLoading}
-			status={inputState.error ? "warning" : undefined}
-			helperColor={inputState.error ? "warning" : "error"}
-			helperText={inputState.error?.message || updateMutation.error?.message}
-			contentRightStyling={false}
-			contentRight={
+			labelPlacement="outside"
+			isDisabled={updateMutation.isLoading || isLoading}
+			isInvalid={Boolean(inputState.error || updateMutation.error)}
+			errorMessage={inputState.error?.message || updateMutation.error?.message}
+			endContent={
 				<Button
 					title="Save receipt item name"
 					variant="light"

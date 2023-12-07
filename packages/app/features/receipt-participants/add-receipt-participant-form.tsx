@@ -61,7 +61,7 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 			<UsersSuggest
 				filterIds={[...filterIds, ...localFilterIds]}
 				onUserClick={addParticipants}
-				disabled={disabled || receiptLocked || !selfAccountId}
+				isDisabled={disabled || receiptLocked || !selfAccountId}
 				options={React.useMemo(
 					() => ({ type: "not-connected-receipt", receiptId }),
 					[receiptId],

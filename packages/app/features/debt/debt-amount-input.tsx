@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Input, styled } from "@nextui-org/react";
-import { Button } from "@nextui-org/react-tailwind";
+import { styled } from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react-tailwind";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 
 import { useSingleInput } from "app/hooks/use-single-input";
@@ -62,13 +62,13 @@ export const DebtAmountInput: React.FC<Props> = ({ debt, isLoading }) => {
 	return (
 		<Input
 			{...bindings}
+			value={bindings.value.toString()}
 			aria-label="Debt amount"
-			disabled={updateMutation.isLoading || isLoading}
-			status={inputState.error ? "warning" : undefined}
-			helperColor={inputState.error ? "warning" : "error"}
-			helperText={inputState.error?.message || updateMutation.error?.message}
-			contentRightStyling={false}
-			contentRight={
+			labelPlacement="outside"
+			isDisabled={updateMutation.isLoading || isLoading}
+			isInvalid={Boolean(inputState.error || updateMutation.error)}
+			errorMessage={inputState.error?.message || updateMutation.error?.message}
+			endContent={
 				<Content>
 					<DebtCurrencyInput debt={debt} isLoading={isLoading} />
 					<Button
@@ -84,8 +84,7 @@ export const DebtAmountInput: React.FC<Props> = ({ debt, isLoading }) => {
 					</Button>
 				</Content>
 			}
-			css={{ maxWidth: "$96" }}
-			bordered
+			variant="bordered"
 		/>
 	);
 };

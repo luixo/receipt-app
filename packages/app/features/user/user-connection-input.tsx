@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Input, Loading } from "@nextui-org/react";
-import { Button } from "@nextui-org/react-tailwind";
+import { Loading } from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react-tailwind";
 import { IoTrashBin as TrashBinIcon } from "react-icons/io5";
 import { MdLink as LinkIcon, MdLinkOff as UnlinkIcon } from "react-icons/md";
 
@@ -96,12 +96,12 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 		return (
 			<Input
 				label="Outbound request"
+				labelPlacement="outside"
 				value={outboundConnectionIntention.account.email}
-				readOnly
-				helperColor="error"
-				helperText={mutationError}
-				contentRightStyling={false}
-				contentRight={
+				isReadOnly
+				isInvalid={Boolean(mutationError)}
+				errorMessage={mutationError}
+				endContent={
 					<Button
 						title="Cancel request"
 						variant="light"
@@ -137,13 +137,12 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 		<Input
 			{...bindings}
 			label="Email"
-			disabled={connectUserMutation.isLoading || isLoading}
-			readOnly={Boolean(user.email)}
-			status={inputState.error ? "warning" : undefined}
-			helperColor={inputState.error ? "warning" : "error"}
-			helperText={inputState.error?.message || mutationError}
-			contentRightStyling={false}
-			contentRight={
+			labelPlacement="outside"
+			isDisabled={connectUserMutation.isLoading || isLoading}
+			isReadOnly={Boolean(user.email)}
+			isInvalid={Boolean(inputState.error || mutationError)}
+			errorMessage={inputState.error?.message || mutationError}
+			endContent={
 				<>
 					{user.email ? (
 						<Button

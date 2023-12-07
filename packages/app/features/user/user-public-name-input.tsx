@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Input, Spacer, styled } from "@nextui-org/react";
-import { Button } from "@nextui-org/react-tailwind";
+import { Spacer, styled } from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react-tailwind";
 import {
 	IoCheckmarkCircleOutline as CheckMark,
 	IoTrashBin as TrashBin,
@@ -82,14 +82,13 @@ export const UserPublicNameInput: React.FC<Props> = ({ user, isLoading }) => {
 		<Input
 			{...bindings}
 			label="Public user name"
-			disabled={updateUserMutation.isLoading || isLoading}
-			status={inputState.error ? "warning" : undefined}
-			helperColor={inputState.error ? "warning" : "error"}
-			helperText={
+			labelPlacement="outside"
+			isDisabled={updateUserMutation.isLoading || isLoading}
+			isInvalid={Boolean(inputState.error || updateUserMutation.error)}
+			errorMessage={
 				inputState.error?.message || updateUserMutation.error?.message
 			}
-			contentRightStyling={false}
-			contentRight={
+			endContent={
 				<ButtonsContainer>
 					<Button
 						title="Save user public name"

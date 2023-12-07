@@ -1,8 +1,8 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Input, Spacer } from "@nextui-org/react";
-import { Button } from "@nextui-org/react-tailwind";
+import { Spacer } from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react-tailwind";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -63,34 +63,40 @@ export const RegisterScreen: AppPage = () => {
 			<Input
 				{...form.register("email")}
 				label="Email"
-				helperColor="warning"
-				helperText={form.formState.errors.email?.message}
-				disabled={registerMutation.isLoading}
+				labelPlacement="outside"
+				isInvalid={Boolean(form.formState.errors.email)}
+				errorMessage={form.formState.errors.email?.message}
+				isDisabled={registerMutation.isLoading}
 			/>
 			<Spacer y={1} />
 			<Input
 				{...form.register("name")}
 				label="Name"
+				labelPlacement="outside"
 				placeholder="You can change it later"
-				helperColor="warning"
-				helperText={form.formState.errors.name?.message}
-				disabled={registerMutation.isLoading}
+				isInvalid={Boolean(form.formState.errors.name)}
+				errorMessage={form.formState.errors.name?.message}
+				isDisabled={registerMutation.isLoading}
 			/>
 			<Spacer y={1} />
-			<Input.Password
+			<Input
 				{...form.register("password")}
 				label="New password"
-				helperColor="warning"
-				helperText={form.formState.errors.password?.message}
-				disabled={registerMutation.isLoading}
+				labelPlacement="outside"
+				isInvalid={Boolean(form.formState.errors.password)}
+				errorMessage={form.formState.errors.password?.message}
+				isDisabled={registerMutation.isLoading}
+				type="password"
 			/>
 			<Spacer y={1} />
-			<Input.Password
+			<Input
 				{...form.register("passwordRetype")}
 				label="Retype new password"
-				helperColor="warning"
-				helperText={form.formState.errors.passwordRetype?.message}
-				disabled={registerMutation.isLoading}
+				labelPlacement="outside"
+				isInvalid={Boolean(form.formState.errors.passwordRetype)}
+				errorMessage={form.formState.errors.passwordRetype?.message}
+				isDisabled={registerMutation.isLoading}
+				type="password"
 			/>
 			<Spacer y={1} />
 			<Button

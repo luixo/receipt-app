@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Input } from "@nextui-org/react";
+import { Input } from "@nextui-org/react-tailwind";
 import type { UseFormReturn } from "react-hook-form";
 
 import { useInputController } from "app/hooks/use-input-controller";
@@ -23,10 +23,10 @@ export const EmailInput: React.FC<Props> = ({ form, query }) => {
 		<Input
 			{...bindings}
 			label="Email"
-			disabled={query.isLoading}
-			status={inputState.error ? "warning" : undefined}
-			helperColor="warning"
-			helperText={inputState.error?.message}
+			labelPlacement="outside"
+			isDisabled={query.isLoading}
+			isInvalid={Boolean(inputState.error)}
+			errorMessage={inputState.error?.message}
 		/>
 	);
 };

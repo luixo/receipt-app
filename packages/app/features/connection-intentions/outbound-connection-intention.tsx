@@ -1,7 +1,6 @@
 import React from "react";
 
-import { Input } from "@nextui-org/react";
-import { Button } from "@nextui-org/react-tailwind";
+import { Button, Input } from "@nextui-org/react-tailwind";
 import { MdLinkOff as UnlinkIcon } from "react-icons/md";
 
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -28,11 +27,11 @@ export const OutboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 		<Input
 			value={intention.account.email}
 			label={intention.user.name}
-			readOnly
-			helperColor="error"
-			helperText={removeConnectionMutation.error?.message}
-			contentRightStyling={false}
-			contentRight={
+			labelPlacement="outside"
+			isReadOnly
+			isInvalid={Boolean(removeConnectionMutation.error)}
+			errorMessage={removeConnectionMutation.error?.message}
+			endContent={
 				<Button
 					title="Unlink user from email"
 					variant="light"

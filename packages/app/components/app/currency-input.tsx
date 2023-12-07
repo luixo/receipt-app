@@ -1,7 +1,6 @@
 import React from "react";
 
-import { Input } from "@nextui-org/react";
-import { Button } from "@nextui-org/react-tailwind";
+import { Button, Input } from "@nextui-org/react-tailwind";
 import type { Path, PathValue, UseFormReturn } from "react-hook-form";
 import { MdEdit as EditIcon } from "react-icons/md";
 import type { z } from "zod";
@@ -71,11 +70,11 @@ export const CurrencyInput = <T extends MinimalForm>({
 				<Input
 					value={`${selectedCurrency.name} (${selectedCurrency.code})`}
 					label="Currency"
-					disabled={isLoading}
-					contentRightStyling={false}
-					readOnly
+					labelPlacement="outside"
+					isDisabled={isLoading}
+					isReadOnly
 					onClick={openModal}
-					contentRight={
+					endContent={
 						<Button variant="light" isIconOnly onClick={openModal}>
 							<EditIcon size={24} />
 						</Button>

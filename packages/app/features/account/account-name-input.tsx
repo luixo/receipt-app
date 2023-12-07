@@ -1,7 +1,6 @@
 import React from "react";
 
-import { Input } from "@nextui-org/react";
-import { Button } from "@nextui-org/react-tailwind";
+import { Button, Input } from "@nextui-org/react-tailwind";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 
 import { useSingleInput } from "app/hooks/use-single-input";
@@ -49,14 +48,13 @@ export const AccountNameInput: React.FC<Props> = ({ accountQuery }) => {
 		<Input
 			{...bindings}
 			label="Your name in the receipts"
-			disabled={updateNameMutation.isLoading}
-			status={inputState.error ? "warning" : undefined}
-			helperColor={inputState.error ? "warning" : "error"}
-			helperText={
+			labelPlacement="outside"
+			isDisabled={updateNameMutation.isLoading}
+			isInvalid={Boolean(inputState.error)}
+			errorMessage={
 				inputState.error?.message || updateNameMutation.error?.message
 			}
-			contentRightStyling={false}
-			contentRight={
+			endContent={
 				<Button
 					title="Save name"
 					variant="light"

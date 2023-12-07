@@ -1,8 +1,7 @@
 import React from "react";
 
-import type { FormElement } from "@nextui-org/react";
-import { Badge, Input, Loading, Popover, styled } from "@nextui-org/react";
-import { Divider } from "@nextui-org/react-tailwind";
+import { Badge, Loading, Popover, Spacer, styled } from "@nextui-org/react";
+import { Divider, Input } from "@nextui-org/react-tailwind";
 
 import { Text } from "app/components/base/text";
 import { QueryErrorMessage } from "app/components/error-message";
@@ -166,10 +165,6 @@ export const UsersSuggest: React.FC<Props> = ({
 		useBooleanState(false);
 	const [value, setValue] = React.useState("");
 	const debouncedValue = useDebouncedValue(value, throttledMs);
-	const onChange = React.useCallback(
-		(e: React.ChangeEvent<FormElement>) => setValue(e.currentTarget.value),
-		[setValue],
-	);
 	const onUserClick: typeof onUserClickRaw = React.useCallback(
 		(user) => {
 			onUserClickRaw(user);
@@ -237,12 +232,14 @@ export const UsersSuggest: React.FC<Props> = ({
 					))}
 				</Badges>
 			) : null}
+			<Spacer y={1} />
 			<Input
 				value={value}
-				onChange={onChange}
+				onValueChange={setValue}
 				onClick={showDropdown}
-				disabled={disabled}
+				isDisabled={disabled}
 				label="User"
+				labelPlacement="outside"
 				placeholder="Start typing"
 				ref={inputRef}
 				{...props}

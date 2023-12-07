@@ -1,6 +1,7 @@
 import React from "react";
 
-import { Input, Loading, styled } from "@nextui-org/react";
+import { Loading, styled } from "@nextui-org/react";
+import { Input } from "@nextui-org/react-tailwind";
 import type { UseFormReturn } from "react-hook-form";
 
 import { Text } from "app/components/base/text";
@@ -32,13 +33,14 @@ const RateInput: React.FC<InputProps> = ({
 		<Input
 			key={`${selectedCurrencyCode}.${currencyCode}`}
 			{...bindings}
+			value={bindings.value.toString()}
 			aria-label={currencyCode}
+			labelPlacement="outside"
 			required
 			type="number"
 			min="0"
-			status={inputState.error ? "warning" : undefined}
-			helperColor="warning"
-			helperText={inputState.error?.message}
+			isInvalid={Boolean(inputState.error)}
+			errorMessage={inputState.error?.message}
 		/>
 	);
 };

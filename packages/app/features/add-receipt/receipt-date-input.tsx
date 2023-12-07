@@ -3,7 +3,6 @@ import React from "react";
 import { styled } from "@nextui-org/react";
 import type { UseFormReturn } from "react-hook-form";
 
-import { Text } from "app/components/base/text";
 import { DateInput } from "app/components/date-input";
 import type { TRPCMutationResult } from "app/trpc";
 
@@ -27,10 +26,10 @@ export const ReceiptDateInput: React.FC<Props> = ({ form, query }) => {
 	);
 	return (
 		<Wrapper>
-			<Text>Issued on:</Text>
 			<DateInput
+				label="Issued on"
 				timestamp={form.getValues("issued")}
-				loading={query.isLoading}
+				isLoading={query.isLoading}
 				onUpdate={onDateUpdate}
 				updateOnChange
 			/>

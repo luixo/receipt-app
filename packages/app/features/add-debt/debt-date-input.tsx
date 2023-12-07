@@ -27,7 +27,7 @@ export const DebtDateInput: React.FC<Props> = ({ form, isLoading }) => {
 		<Wrapper>
 			<DateInput
 				timestamp={form.getValues("timestamp")}
-				loading={isLoading}
+				isLoading={isLoading}
 				onUpdate={onDateUpdate}
 				updateOnChange
 			/>

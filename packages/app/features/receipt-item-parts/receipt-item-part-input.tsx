@@ -1,8 +1,8 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Input, Spacer } from "@nextui-org/react";
-import { Button } from "@nextui-org/react-tailwind";
+import { Spacer } from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react-tailwind";
 import { FiMinus as MinusIcon, FiPlus as PlusIcon } from "react-icons/fi";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 import { MdEdit as EditIcon } from "react-icons/md";
@@ -129,15 +129,16 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 			<>
 				<Input
 					{...bindings}
+					value={bindings.value.toString()}
+					className="w-24"
 					aria-label="Item part"
-					disabled={updateMutation.isLoading || isLoading}
-					status={inputState.error ? "warning" : undefined}
-					helperColor={inputState.error ? "warning" : "error"}
-					helperText={
+					labelPlacement="outside"
+					isDisabled={updateMutation.isLoading || isLoading}
+					isInvalid={Boolean(inputState.error || updateMutation.error)}
+					errorMessage={
 						inputState.error?.message || updateMutation.error?.message
 					}
-					contentRightStyling={false}
-					contentRight={
+					endContent={
 						<Button
 							title="Save item part"
 							variant="light"
@@ -150,8 +151,7 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 							<CheckMark size={24} />
 						</Button>
 					}
-					bordered
-					width="$20"
+					variant="bordered"
 				/>
 				<Text className="ml-2">/ {itemParts}</Text>
 			</>,

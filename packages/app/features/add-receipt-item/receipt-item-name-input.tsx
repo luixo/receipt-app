@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Input } from "@nextui-org/react";
+import { Input } from "@nextui-org/react-tailwind";
 import type { UseFormReturn } from "react-hook-form";
 
 import { useInputController } from "app/hooks/use-input-controller";
@@ -21,13 +21,12 @@ export const ReceiptItemNameInput: React.FC<Props> = ({ form, isLoading }) => {
 	return (
 		<Input
 			{...bindings}
-			fullWidth
 			required
 			label="Item name"
-			disabled={isLoading}
-			status={inputState.error ? "warning" : undefined}
-			helperColor="warning"
-			helperText={inputState.error?.message}
+			labelPlacement="outside"
+			isDisabled={isLoading}
+			isInvalid={Boolean(inputState.error)}
+			errorMessage={inputState.error?.message}
 			autoFocus
 		/>
 	);

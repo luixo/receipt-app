@@ -1,7 +1,6 @@
 import React from "react";
 
-import { Input } from "@nextui-org/react";
-import { Button } from "@nextui-org/react-tailwind";
+import { Button, Input } from "@nextui-org/react-tailwind";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 import { z } from "zod";
 
@@ -10,13 +9,12 @@ import { Calendar } from "app/components/calendar";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useSsrFormat } from "app/hooks/use-ssr-format";
 import type { TRPCError } from "app/trpc";
-import { noop } from "app/utils/utils";
 
 type Props = {
 	timestamp: Date;
 	error?: TRPCError | null;
-	loading?: boolean;
-	disabled?: boolean;
+	isLoading?: boolean;
+	isDisabled?: boolean;
 	label?: string;
 	onUpdate: (nextDate: Date) => void;
 	updateOnChange?: boolean;
@@ -25,8 +23,8 @@ type Props = {
 export const DateInput: React.FC<Props> = ({
 	timestamp,
 	error,
-	loading,
-	disabled,
+	isLoading: loading,
+	isDisabled,
 	label,
 	onUpdate,
 	updateOnChange,
@@ -52,24 +50,25 @@ export const DateInput: React.FC<Props> = ({
 		<Calendar
 			value={Number.isNaN(dateValue.valueOf()) ? undefined : dateValue}
 			onChange={setValue}
-			disabled={loading || disabled}
+			disabled={loading || isDisabled}
 		>
-			{disabled ? (
+			{isDisabled ? (
 				<Text className="text-xl">{formatDate(dateValue)}</Text>
 			) : (
 				<Input
 					{...bindings}
-					onChange={noop}
 					value={formatDate(dateValue)}
 					aria-label={label || "Date"}
 					label={label}
-					disabled={loading}
-					status={state.error ? "warning" : undefined}
-					helperColor={state.error ? "warning" : "error"}
-					helperText={state.error?.message || error?.message}
-					contentRightStyling={false}
-					contentRight={
-						updateOnChange ? null : (
+					labelPlacement="outside"
+					isDisabled={loading}
+					isInvalid={Boolean(state.error)}
+					errorMessage={state.error?.message || error?.message}
+					endContent={
+						updateOnChange ? (
+							// Bug: https://github.com/nextui-org/nextui/issues/2069
+							<div />
+						) : (
 							<Button
 								title="Save date"
 								variant="light"

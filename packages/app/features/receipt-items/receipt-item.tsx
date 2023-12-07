@@ -119,6 +119,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 						readOnly={isEditingDisabled || receiptLocked}
 						isLoading={isDeleteLoading}
 					/>
+					<Spacer x={1} />
 					<ReceiptItemLockedButton
 						receiptId={receiptId}
 						receiptItemId={receiptItem.id}
@@ -136,6 +137,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 							readOnly={isEditingDisabled || receiptLocked}
 							isLoading={isDeleteLoading}
 						/>
+						<Spacer x={0.5} />
 						<ReceiptItemQuantityInput
 							receiptId={receiptId}
 							receiptItem={receiptItem}
