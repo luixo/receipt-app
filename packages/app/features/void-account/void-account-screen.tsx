@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Spacer } from "@nextui-org/react";
+import { Spacer } from "@nextui-org/react-tailwind";
 import { createParam } from "solito";
 
 import { Text } from "app/components/base/text";
@@ -17,7 +17,7 @@ export const VoidAccountScreen: AppPage = () => {
 	return (
 		<>
 			<Header>Void account</Header>
-			<Spacer y={1} />
+			<Spacer y={4} />
 			{token ? (
 				<VoidAccount token={token} />
 			) : (

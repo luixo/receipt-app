@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Spacer } from "@nextui-org/react";
+import { Spacer } from "@nextui-org/react-tailwind";
 
 import type { TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
@@ -35,7 +35,7 @@ export const ReceiptOwnerControlButton: React.FC<Props> = ({
 			/>
 			{receipt.lockedTimestamp ? (
 				<>
-					<Spacer x={0.5} />
+					<Spacer x={2} />
 					<ReceiptPropagateButton
 						queries={debtsQueries}
 						receipt={receipt as LockedReceipt}

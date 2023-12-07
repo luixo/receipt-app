@@ -1,6 +1,7 @@
 import React from "react";
 
-import { Loading, Spacer } from "@nextui-org/react";
+import { Loading } from "@nextui-org/react";
+import { Spacer } from "@nextui-org/react-tailwind";
 
 import { DebtControlButtons } from "app/components/app/debt-control-buttons";
 import { DebtSyncStatus } from "app/components/app/debt-sync-status";
@@ -37,27 +38,27 @@ export const DebtInner: React.FC<InnerProps> = ({ query }) => {
 			>
 				<>
 					{debt.amount} {currency} debt
-					<Spacer x={1} />
+					<Spacer x={4} />
 					<DebtSyncStatus debt={debt} size={36} />
 					{debt.receiptId ? (
 						<>
-							<Spacer x={1} />
+							<Spacer x={4} />
 							<DebtReceiptLink receiptId={debt.receiptId} />
 						</>
 					) : null}
 				</>
 			</Header>
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<LoadableUser id={debt.userId} />
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<DebtSignButtonGroup debt={debt} disabled={isRemoving} />
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<DebtAmountInput debt={debt} isLoading={isRemoving} />
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<DebtDateInput debt={debt} isLoading={isRemoving} />
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<DebtNoteInput debt={debt} isLoading={isRemoving} />
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<DebtRemoveButton debt={debt} setLoading={setRemoving} />
 		</>
 	);

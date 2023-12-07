@@ -1,8 +1,7 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Spacer } from "@nextui-org/react";
-import { Button } from "@nextui-org/react-tailwind";
+import { Button, Spacer } from "@nextui-org/react-tailwind";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -46,11 +45,11 @@ export const AddUserScreen: AppPage = () => {
 		<>
 			<Header backHref="/users">Add user</Header>
 			<EmailVerificationCard />
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<UserNameInput form={form} query={addUserMutation} />
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<EmailInput form={form} query={addUserMutation} />
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<Button
 				color="primary"
 				onClick={form.handleSubmit(onSubmit)}

@@ -1,6 +1,7 @@
 import React from "react";
 
-import { Spacer, styled } from "@nextui-org/react";
+import { styled } from "@nextui-org/react";
+import { Spacer } from "@nextui-org/react-tailwind";
 
 import { User } from "app/components/app/user";
 import { RemoveButton } from "app/components/remove-button";
@@ -82,7 +83,7 @@ export const ReceiptItemPart: React.FC<Props> = ({
 				/>
 				{readOnly ? null : (
 					<>
-						<Spacer x={1} y={0.5} />
+						<Spacer x={4} y={2} />
 						<RemoveButton
 							onRemove={removeItemPart}
 							mutation={removeMutation}

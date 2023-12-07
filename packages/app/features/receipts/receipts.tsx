@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Loading, Spacer, styled } from "@nextui-org/react";
-import { Button, Divider, Link } from "@nextui-org/react-tailwind";
+import { Loading, styled } from "@nextui-org/react";
+import { Button, Divider, Link, Spacer } from "@nextui-org/react-tailwind";
 import { MdAdd as AddIcon } from "react-icons/md";
 
 import { Text } from "app/components/base/text";
@@ -73,7 +73,7 @@ export const Receipts: React.FC = () => {
 		return (
 			<Wrapper>
 				<Text className="text-4xl font-medium">You have no receipts</Text>
-				<Spacer y={0.5} />
+				<Spacer y={2} />
 				<Text className="text-center text-2xl font-medium">
 					Press
 					<Button
@@ -98,7 +98,7 @@ export const Receipts: React.FC = () => {
 	return (
 		<>
 			{paginationElement}
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<Overlay
 				overlay={
 					query.fetchStatus === "fetching" && query.isPreviousData ? (
@@ -119,7 +119,7 @@ export const Receipts: React.FC = () => {
 					<ReceiptPreviewsList receipts={query.data.items} />
 				) : null}
 			</Overlay>
-			<Spacer y={1} />
+			<Spacer y={4} />
 			{paginationElement}
 		</>
 	);

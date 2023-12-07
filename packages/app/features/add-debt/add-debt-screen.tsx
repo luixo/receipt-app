@@ -1,8 +1,7 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Spacer } from "@nextui-org/react";
-import { Button } from "@nextui-org/react-tailwind";
+import { Button, Spacer } from "@nextui-org/react-tailwind";
 import { useForm } from "react-hook-form";
 import { createParam } from "solito";
 import { z } from "zod";
@@ -113,21 +112,21 @@ export const AddDebtScreen: AppPage = () => {
 		<>
 			<Header backHref="/debts">Add debt</Header>
 			<EmailVerificationCard />
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<SignButtonGroup
 				isLoading={addMutation.isLoading}
 				onUpdate={onDirectionUpdate}
 				direction={form.watch("direction")}
 			/>
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<DebtAmountInput form={form} isLoading={addMutation.isLoading} />
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<CurrencyInput
 				form={form}
 				isLoading={addMutation.isLoading}
 				topCurrenciesQuery={topCurrenciesQuery}
 			/>
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<UsersSuggest
 				selected={form.watch("user")}
 				isDisabled={addMutation.isLoading}
@@ -135,11 +134,11 @@ export const AddDebtScreen: AppPage = () => {
 				onUserClick={onUserClick}
 				closeOnSelect
 			/>
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<DebtDateInput form={form} isLoading={addMutation.isLoading} />
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<DebtNoteInput form={form} isLoading={addMutation.isLoading} />
-			<Spacer y={3} />
+			<Spacer y={12} />
 			<Button
 				color="primary"
 				onClick={form.handleSubmit(onSubmit)}

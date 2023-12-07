@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Loading, Spacer, styled } from "@nextui-org/react";
-import { Button, Divider, Link } from "@nextui-org/react-tailwind";
+import { Loading, styled } from "@nextui-org/react";
+import { Button, Divider, Link, Spacer } from "@nextui-org/react-tailwind";
 import { BsCurrencyExchange as ExchangeIcon } from "react-icons/bs";
 import { MdAdd as AddIcon } from "react-icons/md";
 
@@ -69,14 +69,14 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 			>
 				<LoadableUser id={userId} />
 			</Header>
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<DebtsHeader>
 				<DebtsGroup
 					debts={showResolvedDebts ? aggregatedDebts : nonZeroAggregateDebts}
 				/>
 				{nonZeroAggregateDebts.length > 1 ? (
 					<>
-						<Spacer x={1} />
+						<Spacer x={4} />
 						<Button
 							color="primary"
 							href={`/debts/user/${userId}/exchange/`}
@@ -94,7 +94,7 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 					</ResolvedSwitch>
 				) : null}
 			</DebtsHeader>
-			<Spacer y={1} />
+			<Spacer y={4} />
 			{query.data.map((debt) => (
 				<React.Fragment key={debt.id}>
 					<Divider />

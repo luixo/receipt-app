@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Container, Loading, Spacer, styled } from "@nextui-org/react";
-import { Button, Link } from "@nextui-org/react-tailwind";
+import { Container, Loading, styled } from "@nextui-org/react";
+import { Button, Link, Spacer } from "@nextui-org/react-tailwind";
 import { MdAdd as AddIcon } from "react-icons/md";
 
 import { DebtsGroup } from "app/components/app/debts-group";
@@ -44,7 +44,7 @@ const DebtsInner: React.FC<InnerProps> = ({ query }) => {
 				justify="center"
 			>
 				<Text className="text-4xl font-medium">You have no debts</Text>
-				<Spacer y={1} />
+				<Spacer y={4} />
 				<Text className="text-center text-2xl font-medium">
 					Press
 					<Button
@@ -62,7 +62,7 @@ const DebtsInner: React.FC<InnerProps> = ({ query }) => {
 				</Text>
 				{sums.length !== nonZeroSums.length ? (
 					<>
-						<Spacer y={1} />
+						<Spacer y={4} />
 						<ShowResolvedDebtsOption />
 					</>
 				) : null}
@@ -83,7 +83,7 @@ const DebtsInner: React.FC<InnerProps> = ({ query }) => {
 					</ResolvedSwitch>
 				) : null}
 			</DebtsHeader>
-			<Spacer y={1} />
+			<Spacer y={4} />
 			{query.data.map(({ userId, debts }, index) => {
 				const allDebtsResolved = debts.every((debt) => debt.sum === 0);
 				if (allDebtsResolved && !showResolvedDebts) {
@@ -91,7 +91,7 @@ const DebtsInner: React.FC<InnerProps> = ({ query }) => {
 				}
 				return (
 					<React.Fragment key={userId}>
-						{index === 0 ? null : <Spacer y={0.5} />}
+						{index === 0 ? null : <Spacer y={2} />}
 						<UserDebtsPreview
 							debts={debts.filter((debt) =>
 								showResolvedDebts ? true : debt.sum !== 0,

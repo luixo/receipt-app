@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Loading, Spacer } from "@nextui-org/react";
-import { Divider } from "@nextui-org/react-tailwind";
+import { Loading } from "@nextui-org/react";
+import { Divider, Spacer } from "@nextui-org/react-tailwind";
 
 import { CurrenciesPicker } from "app/components/app/currencies-picker";
 import { DebtsGroup } from "app/components/app/debts-group";
@@ -63,11 +63,11 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 			>
 				<LoadableUser id={userId} />
 			</Header>
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<DebtsGroup
 				debts={showResolvedDebts ? aggregatedDebts : nonZeroAggregateDebts}
 			/>
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<CurrenciesGroup
 				selectedCurrencyCode={selectedCurrency?.code}
 				aggregatedDebts={nonZeroAggregateDebts}
@@ -84,9 +84,9 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 			/>
 			{selectedCurrency ? (
 				<>
-					<Spacer y={1} />
+					<Spacer y={4} />
 					<Divider />
-					<Spacer y={1} />
+					<Spacer y={4} />
 					<PlannedDebts
 						userId={userId}
 						selectedCurrencyCode={selectedCurrency.code}

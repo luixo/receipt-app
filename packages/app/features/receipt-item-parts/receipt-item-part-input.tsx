@@ -1,8 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Spacer } from "@nextui-org/react";
-import { Button, Input } from "@nextui-org/react-tailwind";
+import { Button, Input, Spacer } from "@nextui-org/react-tailwind";
 import { FiMinus as MinusIcon, FiPlus as PlusIcon } from "react-icons/fi";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 import { MdEdit as EditIcon } from "react-icons/md";
@@ -95,9 +94,9 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 				>
 					<MinusIcon size={24} />
 				</Button>
-				<Spacer x={0.5} />
+				<Spacer x={2} />
 				{children}
-				<Spacer x={0.5} />
+				<Spacer x={2} />
 				<Button
 					variant="ghost"
 					color="primary"

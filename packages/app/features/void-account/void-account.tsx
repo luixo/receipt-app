@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Spacer, styled } from "@nextui-org/react";
-import { Button } from "@nextui-org/react-tailwind";
+import { styled } from "@nextui-org/react";
+import { Button, Spacer } from "@nextui-org/react-tailwind";
 
 import { Text } from "app/components/base/text";
 import { ErrorMessage } from "app/components/error-message";
@@ -36,9 +36,9 @@ export const VoidAccount: React.FC<Props> = ({ token }) => {
 		return (
 			<>
 				<Text className="text-2xl font-medium">{voidMutation.data.email}</Text>
-				<Spacer y={0.5} />
+				<Spacer y={2} />
 				<Text className="text-success">Account removed succesfully</Text>
-				<Spacer y={1} />
+				<Spacer y={4} />
 				<Button color="primary" onClick={navigateToHomePage}>
 					To home page
 				</Button>
@@ -50,7 +50,7 @@ export const VoidAccount: React.FC<Props> = ({ token }) => {
 			<Text className="text-2xl font-medium">
 				Are you sure you want to void your account?
 			</Text>
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<Buttons>
 				<Button
 					onClick={voidAccount}
@@ -61,7 +61,7 @@ export const VoidAccount: React.FC<Props> = ({ token }) => {
 				>
 					Yes
 				</Button>
-				<Spacer x={0.5} />
+				<Spacer x={2} />
 				<Button
 					color="primary"
 					onClick={navigateToHomePage}
@@ -72,7 +72,7 @@ export const VoidAccount: React.FC<Props> = ({ token }) => {
 			</Buttons>
 			{voidMutation.status === "error" ? (
 				<>
-					<Spacer y={1} />
+					<Spacer y={4} />
 					<ErrorMessage message={voidMutation.error.message} />
 				</>
 			) : null}

@@ -1,8 +1,7 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Spacer } from "@nextui-org/react";
-import { Button } from "@nextui-org/react-tailwind";
+import { Button, Spacer } from "@nextui-org/react-tailwind";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -64,17 +63,17 @@ export const AddReceiptScreen: AppPage = () => {
 		<>
 			<Header backHref="/receipts">Add receipt</Header>
 			<EmailVerificationCard />
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<ReceiptNameInput form={form} query={addReceiptMutation} />
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<CurrencyInput
 				form={form}
 				isLoading={addReceiptMutation.isLoading}
 				topCurrenciesQuery={topCurrenciesQuery}
 			/>
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<ReceiptDateInput form={form} query={addReceiptMutation} />
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<Button
 				color="primary"
 				onClick={form.handleSubmit(onSubmit)}

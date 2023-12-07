@@ -1,7 +1,6 @@
 import React from "react";
 
-import { Spacer } from "@nextui-org/react";
-import { Button, Link } from "@nextui-org/react-tailwind";
+import { Button, Link, Spacer } from "@nextui-org/react-tailwind";
 import {
 	MdAdd as AddIcon,
 	MdOutlineReceipt as ReceiptIcon,
@@ -33,7 +32,7 @@ export const ReceiptsScreen: AppPage = () => (
 			Receipts
 		</Header>
 		<EmailVerificationCard />
-		<Spacer y={1} />
+		<Spacer y={4} />
 		<Receipts />
 	</>
 );

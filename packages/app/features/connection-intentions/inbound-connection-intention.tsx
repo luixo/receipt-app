@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Container, Spacer } from "@nextui-org/react";
-import { Button } from "@nextui-org/react-tailwind";
+import { Container } from "@nextui-org/react";
+import { Button, Spacer } from "@nextui-org/react-tailwind";
 
 import { UsersSuggest } from "app/components/app/users-suggest";
 import { Text } from "app/components/base/text";
@@ -45,14 +45,14 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 	return (
 		<>
 			<Text>{intention.account.email}</Text>
-			<Spacer y={0.5} />
+			<Spacer y={2} />
 			<UsersSuggest
 				selected={user}
 				onUserClick={setUser}
 				options={React.useMemo(() => ({ type: "not-connected" }), [])}
 				closeOnSelect
 			/>
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<Container
 				display="flex"
 				direction="column"
@@ -69,7 +69,7 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 				>
 					{user ? `Connect "${user.name}"` : "Please choose user above"}
 				</Button>
-				<Spacer y={0.5} />
+				<Spacer y={2} />
 				<Button
 					color="warning"
 					isDisabled={isLoading}

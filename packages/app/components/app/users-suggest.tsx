@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Badge, Loading, Popover, Spacer, styled } from "@nextui-org/react";
-import { Divider, Input } from "@nextui-org/react-tailwind";
+import { Badge, Loading, Popover, styled } from "@nextui-org/react";
+import { Divider, Input, Spacer } from "@nextui-org/react-tailwind";
 
 import { Text } from "app/components/base/text";
 import { QueryErrorMessage } from "app/components/error-message";
@@ -232,7 +232,7 @@ export const UsersSuggest: React.FC<Props> = ({
 					))}
 				</Badges>
 			) : null}
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<Input
 				value={value}
 				onValueChange={setValue}

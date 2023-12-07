@@ -1,8 +1,7 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Spacer } from "@nextui-org/react";
-import { Button } from "@nextui-org/react-tailwind";
+import { Button, Spacer } from "@nextui-org/react-tailwind";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
@@ -193,7 +192,7 @@ export const PlannedDebts: React.FC<Props> = ({
 						message={ratesQuery.error.message}
 						button={retryButton}
 					/>
-					<Spacer y={1} />
+					<Spacer y={4} />
 				</>
 			) : null}
 			{debts.map((debt) => (
@@ -207,7 +206,7 @@ export const PlannedDebts: React.FC<Props> = ({
 					note={debt.note}
 				/>
 			))}
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<Button
 				onClick={addBatch}
 				isDisabled={

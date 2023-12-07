@@ -1,7 +1,12 @@
 import React from "react";
 
-import { Dropdown, Modal, Spacer, styled } from "@nextui-org/react";
-import { Button, Divider, Pagination } from "@nextui-org/react-tailwind";
+import { Dropdown, Modal, styled } from "@nextui-org/react";
+import {
+	Button,
+	Divider,
+	Pagination,
+	Spacer,
+} from "@nextui-org/react-tailwind";
 import type { Selection } from "@react-types/shared/src/selection";
 import {
 	BsSortNumericDown as SortDownIcon,
@@ -98,11 +103,11 @@ export const ReceiptsPagination: React.FC<Props> = ({ pagination }) => {
 						<SortIcon size={24} />
 						{orderBy === "date-desc" ? "Newest first" : "Oldest first"}
 					</Button>
-					<Spacer y={1} />
+					<Spacer y={4} />
 					<Divider />
-					<Spacer y={0.5} />
+					<Spacer y={2} />
 					<Text className="text-2xl font-medium">Filters</Text>
-					<Spacer y={0.5} />
+					<Spacer y={2} />
 					<Dropdown>
 						<Dropdown.Button flat auto>
 							{filters.resolvedByMe === undefined
@@ -125,7 +130,7 @@ export const ReceiptsPagination: React.FC<Props> = ({ pagination }) => {
 							<Dropdown.Item key="false">Only non-resolved</Dropdown.Item>
 						</Dropdown.Menu>
 					</Dropdown>
-					<Spacer y={0.5} />
+					<Spacer y={2} />
 					<Dropdown>
 						<Dropdown.Button flat auto>
 							{filters.ownedByMe === undefined
@@ -146,7 +151,7 @@ export const ReceiptsPagination: React.FC<Props> = ({ pagination }) => {
 							<Dropdown.Item key="false">Owned not by me</Dropdown.Item>
 						</Dropdown.Menu>
 					</Dropdown>
-					<Spacer y={0.5} />
+					<Spacer y={2} />
 					<Dropdown>
 						<Dropdown.Button flat auto>
 							{filters.locked === undefined

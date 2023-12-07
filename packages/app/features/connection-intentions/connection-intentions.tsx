@@ -1,6 +1,7 @@
 import React from "react";
 
-import { Container, Loading, Spacer } from "@nextui-org/react";
+import { Container, Loading } from "@nextui-org/react";
+import { Spacer } from "@nextui-org/react-tailwind";
 
 import { Text } from "app/components/base/text";
 import { QueryErrorMessage } from "app/components/error-message";
@@ -26,7 +27,7 @@ const ConnectionIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 				<Text className="text-center text-4xl font-medium">
 					You have no intention connections
 				</Text>
-				<Spacer y={1} />
+				<Spacer y={4} />
 				<Text className="text-2xl font-medium">
 					Add a user with an email or add an email to existing user
 				</Text>
@@ -40,27 +41,25 @@ const ConnectionIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 					<Text className="text-center text-4xl font-medium">
 						Inbound connections
 					</Text>
-					<Spacer y={0.5} />
-					{data.inbound.map((intention, index) => (
+					{data.inbound.map((intention) => (
 						<React.Fragment key={intention.account.id}>
-							{index === 0 ? null : <Spacer y={1.5} />}
+							<Spacer y={2} />
 							<InboundConnectionIntention intention={intention} />
 						</React.Fragment>
 					))}
 				</>
 			)}
 			{data.inbound.length !== 0 && data.outbound.length !== 0 ? (
-				<Spacer y={1} />
+				<Spacer y={4} />
 			) : null}
 			{data.outbound.length === 0 ? null : (
 				<>
 					<Text className="text-center text-4xl font-medium">
 						Outbound connections
 					</Text>
-					<Spacer y={1} />
-					{data.outbound.map((intention, index) => (
+					{data.outbound.map((intention) => (
 						<React.Fragment key={intention.account.id}>
-							{index === 0 ? null : <Spacer y={1} />}
+							<Spacer y={4} />
 							<OutboundConnectionIntention intention={intention} />
 						</React.Fragment>
 					))}

@@ -1,8 +1,8 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Modal, Spacer } from "@nextui-org/react";
-import { Button, Input } from "@nextui-org/react-tailwind";
+import { Modal } from "@nextui-org/react";
+import { Button, Input, Spacer } from "@nextui-org/react-tailwind";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -56,7 +56,7 @@ export const ResetPasswordModal: React.FC<Props> = ({
 							errorMessage={form.formState.errors.email?.message}
 							isDisabled={resetPasswordMutation.isLoading}
 						/>
-						<Spacer y={0.25} />
+						<Spacer y={2} />
 						<Button
 							color="primary"
 							isDisabled={
@@ -69,7 +69,6 @@ export const ResetPasswordModal: React.FC<Props> = ({
 						</Button>
 					</>
 				)}
-				<Spacer y={1} />
 			</Modal.Body>
 		</Modal>
 	);

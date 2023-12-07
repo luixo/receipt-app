@@ -1,8 +1,8 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Spacer, styled } from "@nextui-org/react";
-import { Button } from "@nextui-org/react-tailwind";
+import { styled } from "@nextui-org/react";
+import { Button, Spacer } from "@nextui-org/react-tailwind";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -78,12 +78,12 @@ export const AddReceiptItemForm: React.FC<Props> = ({
 		<>
 			<Inputs ref={inputsRef}>
 				<ReceiptItemNameInput form={form} isLoading={isLoading} />
-				<Spacer x={1} />
+				<Spacer x={4} />
 				<ReceiptItemPriceInput form={form} isLoading={isLoading} />
-				<Spacer x={1} />
+				<Spacer x={4} />
 				<ReceiptItemQuantityInput form={form} isLoading={isLoading} />
 			</Inputs>
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<Button
 				color="primary"
 				onClick={form.handleSubmit(onSubmit)}

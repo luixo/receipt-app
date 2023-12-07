@@ -1,7 +1,6 @@
 import React from "react";
 
-import { Spacer } from "@nextui-org/react";
-import { Button, Link } from "@nextui-org/react-tailwind";
+import { Button, Link, Spacer } from "@nextui-org/react-tailwind";
 import { FaUsers as UsersIcon } from "react-icons/fa";
 import { MdAdd as AddIcon, MdLink as LinkIcon } from "react-icons/md";
 
@@ -51,7 +50,7 @@ export const UsersScreen: AppPage = () => {
 				Users
 			</Header>
 			<EmailVerificationCard />
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<Users />
 		</>
 	);

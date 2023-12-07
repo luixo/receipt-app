@@ -1,7 +1,8 @@
 import React from "react";
 
 import type { SwitchEvent } from "@nextui-org/react";
-import { Checkbox, Spacer, Switch, styled } from "@nextui-org/react";
+import { Checkbox, Switch, styled } from "@nextui-org/react";
+import { Spacer } from "@nextui-org/react-tailwind";
 import { FiMoon as MoonIcon, FiSun as SunIcon } from "react-icons/fi";
 
 import { Text } from "app/components/base/text";
@@ -44,7 +45,7 @@ export const ColorModeSettings: React.FC = () => {
 	return (
 		<>
 			<Text className="text-4xl font-medium">Color mode</Text>
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<Wrapper>
 				<Checkbox
 					isSelected={colorModeConfig.selected === undefined}

@@ -1,7 +1,6 @@
 import React from "react";
 
-import { Spacer } from "@nextui-org/react";
-import { Button } from "@nextui-org/react-tailwind";
+import { Button, Spacer } from "@nextui-org/react-tailwind";
 import {
 	BsEyeSlashFill as ShouldNotSyncIcon,
 	BsEyeFill as ShouldSyncIcon,
@@ -100,8 +99,7 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 						</Button>
 						)}
 					</ConfirmModal>
-
-					<Spacer x={0.5} />
+					<Spacer x={2} />
 				</>
 			) : null}
 			<ConfirmModal

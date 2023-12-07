@@ -1,7 +1,8 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Checkbox, Spacer } from "@nextui-org/react";
+import { Checkbox } from "@nextui-org/react";
+import { Spacer } from "@nextui-org/react-tailwind";
 
 import { Text } from "app/components/base/text";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
@@ -29,7 +30,7 @@ export const EmptyItems: React.FC<Props> = ({
 			<Text className="text-2xl font-medium">Items with no participants</Text>
 			{items.map((item) => (
 				<React.Fragment key={item.id}>
-					<Spacer y={1} />
+					<Spacer y={4} />
 					<Checkbox
 						isIndeterminate
 						color="warning"

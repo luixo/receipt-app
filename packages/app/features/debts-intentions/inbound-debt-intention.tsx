@@ -1,7 +1,6 @@
 import React from "react";
 
-import { Spacer } from "@nextui-org/react";
-import { Button, ButtonGroup } from "@nextui-org/react-tailwind";
+import { Button, ButtonGroup, Spacer } from "@nextui-org/react-tailwind";
 
 import { useRouter } from "app/hooks/use-router";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -44,7 +43,7 @@ export const InboundDebtIntention = React.forwardRef<HTMLDivElement, Props>(
 		const { isLoading } = acceptMutation;
 		return (
 			<DebtIntention intention={intention} ref={ref}>
-				<Spacer y={0.5} />
+				<Spacer y={2} />
 				<ButtonGroup className="self-end" color="primary">
 					<Button
 						isDisabled={isLoading}

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Spacer } from "@nextui-org/react";
+import { Spacer } from "@nextui-org/react-tailwind";
 import { createParam } from "solito";
 
 import { Header } from "app/components/header";
@@ -33,7 +33,7 @@ export const ConfirmEmailScreen: AppPage = () => {
 	return (
 		<>
 			<Header>Confirm email</Header>
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<ConfirmEmail token={token} confirmMutation={confirmEmailMutation} />
 		</>
 	);

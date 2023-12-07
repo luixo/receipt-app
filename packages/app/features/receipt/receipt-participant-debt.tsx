@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Spacer, styled } from "@nextui-org/react";
-import { Button } from "@nextui-org/react-tailwind";
+import { styled } from "@nextui-org/react";
+import { Button, Spacer } from "@nextui-org/react-tailwind";
 import {
 	MdOutlineReceipt as ReceiptOffIcon,
 	MdSend as SendIcon,
@@ -14,7 +14,6 @@ import { LoadableUser } from "app/components/app/loadable-user";
 import { Text } from "app/components/base/text";
 import { Grid } from "app/components/grid";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
-import { useMatchMediaValue } from "app/hooks/use-match-media-value";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import type { TRPCQueryOutput } from "app/trpc";
@@ -135,7 +134,6 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 		],
 	);
 
-	const showSpacer = useMatchMediaValue(false, { lessMd: true });
 	const { currentDebt } = participant;
 	const isReceiptSyncedWithOurDebt = currentDebt
 		? isDebtInSyncWithReceipt(
@@ -147,11 +145,10 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 
 	return (
 		<>
-			<Spacer css={{ width: "100%" }} y={0.5} />
+			<Spacer className="w-full" y={4} />
 			<Grid defaultCol={5.5} lessMdCol={12} css={{ flexDirection: "column" }}>
-				{showSpacer ? <Border /> : null}
+				<Border className="md:hidden" />
 				<LoadableUser id={participant.userId} />
-				{showSpacer ? <Spacer y={1} /> : null}
 			</Grid>
 			<Grid defaultCol={2.5} lessMdCol={4} css={{ alignItems: "center" }}>
 				<Text>{`${participant.sum} ${currency}`}</Text>

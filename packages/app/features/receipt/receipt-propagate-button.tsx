@@ -1,7 +1,6 @@
 import React from "react";
 
-import { Spacer } from "@nextui-org/react";
-import { Button } from "@nextui-org/react-tailwind";
+import { Button, Spacer } from "@nextui-org/react-tailwind";
 import {
 	MdInfo as InfoIcon,
 	MdSend as SendIcon,
@@ -171,7 +170,7 @@ const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 			) : null}
 			{desyncedParticipants.length !== 0 ? (
 				<>
-					<Spacer x={0.5} />
+					<Spacer x={2} />
 					<Button
 						onClick={openInfoButtonPopover}
 						color="primary"

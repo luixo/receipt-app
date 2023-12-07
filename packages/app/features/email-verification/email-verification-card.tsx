@@ -1,12 +1,12 @@
 import React from "react";
 
-import { Spacer } from "@nextui-org/react";
 import {
 	Button,
 	Card,
 	CardBody,
 	CardHeader,
 	Divider,
+	Spacer,
 } from "@nextui-org/react-tailwind";
 
 import { Text } from "app/components/base/text";
@@ -39,7 +39,7 @@ export const EmailVerificationCard: React.FC = () => {
 						Until you verify your email, you won&apos;t be able to use most of
 						the app&apos;s features
 					</Text>
-					<Spacer y={1} />
+					<Spacer y={4} />
 					{resendEmailMutation.status === "success" ? (
 						<Text className="text-center text-2xl">
 							Email successfully sent to {resendEmailMutation.data.email}!

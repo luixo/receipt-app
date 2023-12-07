@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Popover, Spacer, styled } from "@nextui-org/react";
-import { Button } from "@nextui-org/react-tailwind";
+import { Popover, styled } from "@nextui-org/react";
+import { Button, Spacer } from "@nextui-org/react-tailwind";
 import {
 	MdHourglassDisabled as CrossWaitIcon,
 	MdHourglassEmpty as WaitIcon,
@@ -73,13 +73,13 @@ export const ReceiptResolvedParticipantsButton: React.FC<Props> = ({
 					{notResolvedParticipants && notResolvedParticipants.length !== 0 ? (
 						<>
 							<Text className="font-medium">Not resolved participants: </Text>
-							<Spacer y={1} />
+							<Spacer y={4} />
 							<Participants>
 								{notResolvedParticipants.map((participant, index) => (
 									<React.Fragment
 										key={participant.localUserId || participant.remoteUserId}
 									>
-										{index === 0 ? null : <Spacer y={0.5} />}
+										{index === 0 ? null : <Spacer y={2} />}
 										<LoadableUser
 											id={participant.localUserId || participant.remoteUserId}
 										/>
@@ -92,18 +92,18 @@ export const ReceiptResolvedParticipantsButton: React.FC<Props> = ({
 					notResolvedParticipants.length !== 0 &&
 					resolvedParticipants &&
 					resolvedParticipants.length !== 0 ? (
-						<Spacer y={2} />
+						<Spacer y={6} />
 					) : null}
 					{resolvedParticipants && resolvedParticipants.length !== 0 ? (
 						<>
 							<Text className="font-medium">Resolved participants: </Text>
-							<Spacer y={1} />
+							<Spacer y={4} />
 							<Participants>
 								{resolvedParticipants?.map((participant, index) => (
 									<React.Fragment
 										key={participant.localUserId || participant.remoteUserId}
 									>
-										{index === 0 ? null : <Spacer y={0.5} />}
+										{index === 0 ? null : <Spacer y={2} />}
 										<LoadableUser
 											id={participant.localUserId || participant.remoteUserId}
 										/>

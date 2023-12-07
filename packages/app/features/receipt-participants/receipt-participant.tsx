@@ -1,6 +1,7 @@
 import React from "react";
 
-import { Collapse, Spacer, styled } from "@nextui-org/react";
+import { Collapse, styled } from "@nextui-org/react";
+import { Spacer } from "@nextui-org/react-tailwind";
 
 import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
 import { User } from "app/components/app/user";
@@ -94,12 +95,12 @@ export const ReceiptParticipant: React.FC<Props> = ({
 					<Body>
 						<BodyElement>
 							<User user={convertParticipantToUser(participant)} />
-							<Spacer x={1} />
+							<Spacer x={4} />
 							<Text>
 								{`${Math.round(participant.sum * 100) / 100} ${currency}`}
 							</Text>
 						</BodyElement>
-						<Spacer x={1} />
+						<Spacer x={4} />
 						<BodyElement css={{ alignSelf: "flex-end" }}>
 							<ReceiptParticipantRoleInput
 								receiptId={receiptId}
@@ -108,7 +109,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 								isLoading={isLoading}
 								role={role}
 							/>
-							<Spacer x={0.5} />
+							<Spacer x={2} />
 							<ReceiptParticipantResolvedButton
 								variant={
 									participant.remoteUserId === receiptSelfUserId
@@ -126,7 +127,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 							/>
 							{role === "owner" ? (
 								<>
-									<Spacer x={0.5} />
+									<Spacer x={2} />
 									<RemoveButton
 										onRemove={removeReceiptParticipant}
 										mutation={removeReceiptParticipantMutation}
@@ -138,7 +139,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 							) : null}
 						</BodyElement>
 					</Body>
-					<Spacer x={0.5} />
+					<Spacer x={2} />
 				</Wrapper>
 			}
 		>

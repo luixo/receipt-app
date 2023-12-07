@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Spacer, styled } from "@nextui-org/react";
-import { Divider } from "@nextui-org/react-tailwind";
+import { styled } from "@nextui-org/react";
+import { Divider, Spacer } from "@nextui-org/react-tailwind";
 
 import { Text } from "app/components/base/text";
 import type { AppPage } from "next-app/types/page";
@@ -29,24 +29,24 @@ const Line = styled("div", {
 export const SettingsScreen: AppPage = () => (
 	<Wrapper>
 		<ColorModeSettings />
-		<Spacer y={1} />
+		<Spacer y={4} />
 		<Divider />
-		<Spacer y={1} />
+		<Spacer y={4} />
 		<Text className="text-4xl font-medium">Settings</Text>
-		<Spacer y={1} />
+		<Spacer y={4} />
 		<Line>
 			<Text>Show user with resolved debts</Text>
-			<Spacer x={1} />
+			<Spacer x={4} />
 			<ShowResolvedDebtsOption />
 		</Line>
 		<Line>
 			<Text>Auto-accept debts</Text>
-			<Spacer x={1} />
+			<Spacer x={4} />
 			<AutoAcceptDebtsOption />
 		</Line>
-		<Spacer y={1} />
+		<Spacer y={4} />
 		<Divider />
-		<Spacer y={1} />
+		<Spacer y={4} />
 		<RefreshSettings />
 	</Wrapper>
 );

@@ -1,6 +1,7 @@
 import React from "react";
 
-import { Container, Loading, Spacer } from "@nextui-org/react";
+import { Container, Loading } from "@nextui-org/react";
+import { Spacer } from "@nextui-org/react-tailwind";
 import { useRouter } from "next/router";
 
 import { LoadableUser } from "app/components/app/loadable-user";
@@ -43,7 +44,7 @@ const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 				<Text className="text-center text-4xl font-medium">
 					You have no incoming sync requests
 				</Text>
-				<Spacer y={1} />
+				<Spacer y={4} />
 				<Text className="text-center text-2xl">
 					Ask a friend to create a debt for you ;)
 				</Text>
@@ -62,30 +63,27 @@ const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 	return (
 		<>
 			<Text className="text-center text-4xl font-medium">Inbound debts</Text>
-			<Spacer y={1} />
 			{data.length === 1 ? null : (
 				<>
+					<Spacer y={4} />
 					<AcceptAllIntentionsButton intentions={data} />
-					<Spacer y={1} />
 				</>
 			)}
-			{Object.entries(intentionsByUser).map(
-				([userId, groupedIntentions], index) => (
-					<React.Fragment key={userId}>
-						{index === 0 ? null : <Spacer y={1.5} />}
-						<LoadableUser id={userId} />
-						{groupedIntentions.map((intention) => (
-							<React.Fragment key={intention.id}>
-								<Spacer y={1} />
-								<InboundDebtIntention
-									intention={intention}
-									ref={intentionsRefs.setRef(intention.id)}
-								/>
-							</React.Fragment>
-						))}
-					</React.Fragment>
-				),
-			)}
+			{Object.entries(intentionsByUser).map(([userId, groupedIntentions]) => (
+				<React.Fragment key={userId}>
+					<Spacer y={4} />
+					<LoadableUser id={userId} />
+					{groupedIntentions.map((intention) => (
+						<React.Fragment key={intention.id}>
+							<Spacer y={4} />
+							<InboundDebtIntention
+								intention={intention}
+								ref={intentionsRefs.setRef(intention.id)}
+							/>
+						</React.Fragment>
+					))}
+				</React.Fragment>
+			))}
 		</>
 	);
 };

@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Loading, Spacer } from "@nextui-org/react";
-import { Button, Link } from "@nextui-org/react-tailwind";
+import { Loading } from "@nextui-org/react";
+import { Button, Link, Spacer } from "@nextui-org/react-tailwind";
 
 import { DebtsGroup } from "app/components/app/debts-group";
 import { LoadableUser } from "app/components/app/loadable-user";
@@ -38,11 +38,11 @@ const DebtsExchangeInner: React.FC<InnerProps> = ({ userId, query }) => {
 			>
 				<LoadableUser id={userId} />
 			</Header>
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<DebtsGroup
 				debts={showResolvedDebts ? aggregatedDebts : nonZeroAggregateDebts}
 			/>
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<Button
 				color="primary"
 				as={Link}
@@ -51,7 +51,7 @@ const DebtsExchangeInner: React.FC<InnerProps> = ({ userId, query }) => {
 			>
 				Exchange all to one currency
 			</Button>
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<Button
 				color="primary"
 				as={Link}

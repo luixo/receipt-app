@@ -1,8 +1,7 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Spacer } from "@nextui-org/react";
-import { Button, Input } from "@nextui-org/react-tailwind";
+import { Button, Input, Spacer } from "@nextui-org/react-tailwind";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -55,7 +54,7 @@ export const LoginScreen: AppPage = () => {
 				errorMessage={form.formState.errors.email?.message}
 				isDisabled={loginMutation.isLoading}
 			/>
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<Input
 				{...form.register("password")}
 				label="Password"
@@ -65,7 +64,7 @@ export const LoginScreen: AppPage = () => {
 				isDisabled={loginMutation.isLoading}
 				type="password"
 			/>
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<Button
 				color="primary"
 				isDisabled={!form.formState.isValid || loginMutation.isLoading}
@@ -74,7 +73,7 @@ export const LoginScreen: AppPage = () => {
 			>
 				Login
 			</Button>
-			<Spacer y={2} />
+			<Spacer y={8} />
 			<Button
 				color="primary"
 				isDisabled={loginMutation.isLoading}

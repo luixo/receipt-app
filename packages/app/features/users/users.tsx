@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Container, Loading, Spacer } from "@nextui-org/react";
-import { Button, Link, Pagination } from "@nextui-org/react-tailwind";
+import { Container, Loading } from "@nextui-org/react";
+import { Button, Link, Pagination, Spacer } from "@nextui-org/react-tailwind";
 import { MdAdd as AddIcon } from "react-icons/md";
 
 import { Text } from "app/components/base/text";
@@ -25,7 +25,7 @@ const UserPreviewsList: React.FC<PreviewsProps> = ({ users }) => (
 	<>
 		{users.map((user, index) => (
 			<React.Fragment key={user.id}>
-				{index === 0 ? null : <Spacer y={0.5} />}
+				{index === 0 ? null : <Spacer y={2} />}
 				<UserPreview data={user} />
 			</React.Fragment>
 		))}
@@ -89,7 +89,7 @@ export const Users: React.FC = () => {
 	return (
 		<>
 			{paginationElement}
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<Overlay
 				overlay={
 					query.fetchStatus === "fetching" ? <Loading size="xl" /> : undefined
@@ -102,7 +102,7 @@ export const Users: React.FC = () => {
 					<UserPreviewsList users={query.data.items} />
 				) : null}
 			</Overlay>
-			<Spacer y={1} />
+			<Spacer y={4} />
 			{paginationElement}
 		</>
 	);

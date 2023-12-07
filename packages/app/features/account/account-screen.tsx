@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Loading, Spacer } from "@nextui-org/react";
-import { Button } from "@nextui-org/react-tailwind";
+import { Loading } from "@nextui-org/react";
+import { Button, Spacer } from "@nextui-org/react-tailwind";
 import { useQueryClient } from "@tanstack/react-query";
 import { FaUser as AccountIcon } from "react-icons/fa";
 
@@ -45,11 +45,11 @@ const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 				{query.data.user.name}
 			</Header>
 			<EmailVerificationCard />
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<AccountNameInput accountQuery={query.data} />
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<ChangePasswordScreen />
-			<Spacer y={2} />
+			<Spacer y={8} />
 			<Button
 				isDisabled={logoutMutation.isLoading}
 				onClick={logout}

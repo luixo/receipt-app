@@ -1,6 +1,7 @@
 import React from "react";
 
-import { Collapse, Loading, Spacer, styled } from "@nextui-org/react";
+import { Collapse, Loading, styled } from "@nextui-org/react";
+import { Spacer } from "@nextui-org/react-tailwind";
 
 import { Text } from "app/components/base/text";
 import { QueryErrorMessage } from "app/components/error-message";
@@ -64,7 +65,7 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 						currencyCode={receiptCurrencyCode}
 						onClick={onEmptyItemClick}
 					/>
-					<Spacer y={1} />
+					<Spacer y={4} />
 				</>
 			)}
 			<ReceiptParticipants
@@ -75,16 +76,15 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 				currencyCode={receiptCurrencyCode}
 				isLoading={isLoading}
 			/>
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<AddReceiptItemController
 				receiptId={receiptId}
 				receiptLocked={receiptLocked}
 				isLoading={isLoading}
 			/>
-			<Spacer y={1} />
-			{data.items.map((receiptItem, index) => (
+			{data.items.map((receiptItem) => (
 				<React.Fragment key={receiptItem.id}>
-					{index === 0 ? null : <Spacer y={1} />}
+					<Spacer y={4} />
 					<ReceiptItem
 						receiptId={receiptId}
 						receiptLocked={receiptLocked}
@@ -100,15 +100,18 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 				</React.Fragment>
 			))}
 			{data.items.length === 0 ? (
-				<NoReceiptItems>
-					<Text className="text-2xl font-medium">
-						You have no receipt items yet
-					</Text>
-					<Spacer y={1} />
-					<Text className="text-xl">
-						Press a button above to add a receipt item
-					</Text>
-				</NoReceiptItems>
+				<>
+					<Spacer y={4} />
+					<NoReceiptItems>
+						<Text className="text-2xl font-medium">
+							You have no receipt items yet
+						</Text>
+						<Spacer y={4} />
+						<Text className="text-xl">
+							Press a button above to add a receipt item
+						</Text>
+					</NoReceiptItems>
+				</>
 			) : null}
 		</Collapse.Group>
 	);

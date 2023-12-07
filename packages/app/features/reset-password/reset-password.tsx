@@ -1,8 +1,8 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loading, Spacer } from "@nextui-org/react";
-import { Button, Input } from "@nextui-org/react-tailwind";
+import { Loading } from "@nextui-org/react";
+import { Button, Input, Spacer } from "@nextui-org/react-tailwind";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -69,7 +69,7 @@ export const ResetPassword: React.FC<Props> = ({ token, intentionQuery }) => {
 		<>
 			<Text className="text-2xl font-medium">{intentionQuery.data.email}</Text>
 			<Input value={token} label="Token" labelPlacement="outside" isReadOnly />
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<Input
 				{...form.register("password")}
 				label="New password"
@@ -79,7 +79,7 @@ export const ResetPassword: React.FC<Props> = ({ token, intentionQuery }) => {
 				disabled={changePasswordMutation.isLoading}
 				type="password"
 			/>
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<Input
 				{...form.register("passwordRetype")}
 				label="Retype new password"
@@ -89,7 +89,7 @@ export const ResetPassword: React.FC<Props> = ({ token, intentionQuery }) => {
 				disabled={changePasswordMutation.isLoading}
 				type="password"
 			/>
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<Button
 				color="primary"
 				isDisabled={!form.formState.isValid || changePasswordMutation.isLoading}

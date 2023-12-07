@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Spacer, styled } from "@nextui-org/react";
-import { Card, CardBody } from "@nextui-org/react-tailwind";
+import { styled } from "@nextui-org/react";
+import { Card, CardBody, Spacer } from "@nextui-org/react-tailwind";
 import {
 	MdNavigateNext as ArrowIcon,
 	MdSync as SyncIcon,
@@ -63,9 +63,9 @@ export const DebtIntention = React.forwardRef<HTMLDivElement, Props>(
 					) : (
 						intentionDataComponent
 					)}
-					<Spacer y={1} />
+					<Spacer y={4} />
 					<Text>{intention.note}</Text>
-					<Spacer y={1} />
+					<Spacer y={4} />
 					<Wrapper css={{ justifyContent: "space-between" }}>
 						<Wrapper>
 							<SyncIcon size={24} />

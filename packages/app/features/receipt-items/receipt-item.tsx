@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Spacer, styled } from "@nextui-org/react";
+import { styled } from "@nextui-org/react";
 import {
 	Card,
 	CardBody,
@@ -9,6 +9,7 @@ import {
 	CardHeader,
 	Chip,
 	Divider,
+	Spacer,
 } from "@nextui-org/react-tailwind";
 
 import { ReceiptItemLockedButton } from "app/components/app/receipt-item-locked-button";
@@ -119,7 +120,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 						readOnly={isEditingDisabled || receiptLocked}
 						isLoading={isDeleteLoading}
 					/>
-					<Spacer x={1} />
+					<Spacer x={4} />
 					<ReceiptItemLockedButton
 						receiptId={receiptId}
 						receiptItemId={receiptItem.id}
@@ -137,14 +138,14 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 							readOnly={isEditingDisabled || receiptLocked}
 							isLoading={isDeleteLoading}
 						/>
-						<Spacer x={0.5} />
+						<Spacer x={2} />
 						<ReceiptItemQuantityInput
 							receiptId={receiptId}
 							receiptItem={receiptItem}
 							readOnly={isEditingDisabled || receiptLocked}
 							isLoading={isDeleteLoading}
 						/>
-						<Spacer x={0.5} />
+						<Spacer x={2} />
 						<Text>
 							= {round(receiptItem.quantity * receiptItem.price)} {currency}
 						</Text>
@@ -153,7 +154,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 					isEditingDisabled ||
 					notAddedParticipants.length === 0 ? null : (
 						<>
-							<Spacer y={1} />
+							<Spacer y={4} />
 							<View className="flex-row">
 								{(notAddedParticipants.length === 1
 									? notAddedParticipants
@@ -166,7 +167,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 												: participant.remoteUserId
 										}
 									>
-										{index === 0 ? null : <Spacer x={0.25} />}
+										{index === 0 ? null : <Spacer x={1} />}
 										<Chip
 											color={
 												participant === EVERY_PARTICIPANT_TAG
@@ -189,17 +190,17 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 					{receiptItem.parts.length === 0 ? (
 						notAddedParticipants.length === 0 || receiptLocked ? null : (
 							<>
-								<Spacer y={1} />
+								<Spacer y={4} />
 								<Divider />
-								<Spacer y={0.5} />
+								<Spacer y={2} />
 								<Text className="text-lg">Add a user from a list above</Text>
 							</>
 						)
 					) : (
 						<>
-							<Spacer y={1} />
+							<Spacer y={4} />
 							<Divider />
-							<Spacer y={0.5} />
+							<Spacer y={2} />
 							{receiptItem.parts.map((part, index) => {
 								const matchedParticipant = receiptParticipants.find(
 									(participant) => participant.remoteUserId === part.userId,
@@ -207,7 +208,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 								if (!matchedParticipant) {
 									return (
 										<React.Fragment key={part.userId}>
-											{index === 0 ? null : <Spacer y={0.5} />}
+											{index === 0 ? null : <Spacer y={2} />}
 											<ErrorMessage
 												message={`Part for user id ${part.userId} is orphaned. Please report this to support, include receipt id, receipt item name and mentioned user id`}
 											/>
@@ -216,7 +217,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 								}
 								return (
 									<React.Fragment key={part.userId}>
-										{index === 0 ? null : <Spacer y={0.5} />}
+										{index === 0 ? null : <Spacer y={2} />}
 										<ReceiptItemPart
 											receiptId={receiptId}
 											itemPart={part}

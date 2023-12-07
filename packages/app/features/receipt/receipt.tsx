@@ -1,8 +1,11 @@
 import React from "react";
 
-import { Loading, Spacer, styled } from "@nextui-org/react";
-import { Button } from "@nextui-org/react-tailwind";
-import { MdEdit as EditIcon , MdOutlineReceipt as ReceiptIcon } from "react-icons/md";
+import { Loading, styled } from "@nextui-org/react";
+import { Button, Spacer } from "@nextui-org/react-tailwind";
+import {
+	MdEdit as EditIcon,
+	MdOutlineReceipt as ReceiptIcon,
+} from "react-icons/md";
 
 import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
 import { Text } from "app/components/base/text";
@@ -88,7 +91,7 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 								resolved={receipt.participantResolved}
 								isDisabled={deleteLoading}
 							/>
-							<Spacer x={0.5} />
+							<Spacer x={2} />
 							{receipt.role === "owner" ? (
 								<ReceiptOwnerControlButton
 									receipt={receipt}
@@ -125,25 +128,25 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 					</Button>
 				) : null}
 			</Header>
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<Body css={{ flexDirection: dataDirection }}>
 				<div>
 					<ReceiptDateInput receipt={receipt} isLoading={deleteLoading} />
-					<Spacer y={0.5} />
+					<Spacer y={2} />
 					<Sum>
 						<Text className="text-2xl">
 							{round(receipt.sum)} {currency}
 						</Text>
-						<Spacer x={0.5} />
+						<Spacer x={2} />
 						<ReceiptCurrencyInput receipt={receipt} isLoading={deleteLoading} />
 					</Sum>
 				</div>
-				{dataDirection === "column" ? <Spacer y={0.5} /> : null}
+				{dataDirection === "column" ? <Spacer y={2} /> : null}
 				<ReceiptOwner receipt={receipt} />
 			</Body>
 			{receipt.role === "owner" ? (
 				<AlignEndView>
-					<Spacer y={1} />
+					<Spacer y={4} />
 					<ReceiptRemoveButton
 						receipt={receipt}
 						setLoading={setDeleteLoading}

@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Spacer, styled } from "@nextui-org/react";
-import { Button, Input } from "@nextui-org/react-tailwind";
+import { styled } from "@nextui-org/react";
+import { Button, Input, Spacer } from "@nextui-org/react-tailwind";
 import {
 	IoCheckmarkCircleOutline as CheckMark,
 	IoTrashBin as TrashBin,
@@ -105,7 +105,7 @@ export const UserPublicNameInput: React.FC<Props> = ({ user, isLoading }) => {
 					</Button>
 					{user.publicName === undefined ? null : (
 						<>
-							<Spacer x={0.25} />
+							<Spacer x={1} />
 							<Button
 								title="Remove user public name"
 								variant="light"

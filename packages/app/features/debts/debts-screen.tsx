@@ -1,7 +1,6 @@
 import React from "react";
 
-import { Spacer } from "@nextui-org/react";
-import { Button, Link } from "@nextui-org/react-tailwind";
+import { Button, Link, Spacer } from "@nextui-org/react-tailwind";
 import { IoMdMail as InboxIcon } from "react-icons/io";
 import { MdAdd as AddIcon } from "react-icons/md";
 import { PiMoney as DebtIcon } from "react-icons/pi";
@@ -52,7 +51,7 @@ export const DebtsScreen: AppPage = () => {
 				Debts
 			</Header>
 			<EmailVerificationCard />
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<Debts />
 		</>
 	);

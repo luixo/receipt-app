@@ -1,7 +1,8 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Spacer, styled } from "@nextui-org/react";
+import { styled } from "@nextui-org/react";
+import { Spacer } from "@nextui-org/react-tailwind";
 import Head from "next/head";
 import { IoMdArrowRoundBack as BackArrow } from "react-icons/io";
 
@@ -98,11 +99,11 @@ export const Header: React.FC<Props> = ({
 			</View>
 			{asideElements ? (
 				<>
-					{verticalLayout ? <Spacer y={1} /> : null}
+					{verticalLayout ? <Spacer y={4} /> : null}
 					<Aside flexEnd={verticalLayout} ref={asideRef}>
 						{asideElements.map((element, index) => (
 							<React.Fragment key={element.key}>
-								{index === 0 ? null : <Spacer x={0.5} />}
+								{index === 0 ? null : <Spacer x={2} />}
 								{element}
 							</React.Fragment>
 						))}

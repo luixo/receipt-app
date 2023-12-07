@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Spacer } from "@nextui-org/react";
+import { Spacer } from "@nextui-org/react-tailwind";
 import { createParam } from "solito";
 
 import { User as UserTitle } from "app/components/app/user";
@@ -49,7 +49,7 @@ export const UserScreen: AppPage = () => {
 					)}
 				/>
 			</Header>
-			<Spacer y={1} />
+			<Spacer y={4} />
 			<User id={id} />
 		</>
 	);
