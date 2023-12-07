@@ -1,6 +1,7 @@
 import React from "react";
 
-import { Button, styled } from "@nextui-org/react";
+import { styled } from "@nextui-org/react";
+import { Button, ButtonGroup } from "@nextui-org/react-tailwind";
 
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { trpc } from "app/trpc";
@@ -41,9 +42,9 @@ const CurrencyButton: React.FC<ButtonProps> = ({
 	const currency = useFormattedCurrency(currencyCode);
 	return (
 		<Button
-			ghost={!selected}
+			variant={selected ? undefined : "ghost"}
 			onClick={select}
-			disabled={currenciesListQuery.status !== "success"}
+			isDisabled={currenciesListQuery.status !== "success"}
 		>
 			{currency}
 		</Button>
@@ -68,7 +69,7 @@ export const CurrenciesGroup: React.FC<Props> = ({
 	const otherCurrency = useFormattedCurrency(selectedCurrencyCode);
 	return (
 		<Wrapper>
-			<Button.Group color="primary" bordered auto>
+			<ButtonGroup color="primary">
 				{aggregatedDebts.map((debt) => (
 					<CurrencyButton
 						key={debt.currencyCode}
@@ -77,10 +78,13 @@ export const CurrenciesGroup: React.FC<Props> = ({
 						setSelectedCurrency={setSelectedCurrency}
 					/>
 				))}
-				<Button ghost={!isSelectedOther} onClick={onSelectOther}>
+				<Button
+					variant={isSelectedOther ? undefined : "ghost"}
+					onClick={onSelectOther}
+				>
 					{isSelectedOther ? otherCurrency : "Other"}
 				</Button>
-			</Button.Group>
+			</ButtonGroup>
 		</Wrapper>
 	);
 };

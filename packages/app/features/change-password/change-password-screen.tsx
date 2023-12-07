@@ -1,7 +1,8 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Input, Loading, Spacer } from "@nextui-org/react";
+import { Input, Spacer } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -54,7 +55,11 @@ export const ChangePasswordScreen: AppPage = () => {
 	);
 
 	if (!changePasswordShown) {
-		return <Button onClick={showChangePassword}>Change password</Button>;
+		return (
+			<Button color="primary" onClick={showChangePassword}>
+				Change password
+			</Button>
+		);
 	}
 
 	return (
@@ -84,10 +89,12 @@ export const ChangePasswordScreen: AppPage = () => {
 			/>
 			<Spacer />
 			<Button
-				disabled={!form.formState.isValid || changePasswordMutation.isLoading}
+				color="primary"
+				isDisabled={!form.formState.isValid || changePasswordMutation.isLoading}
+				isLoading={changePasswordMutation.isLoading}
 				onClick={form.handleSubmit(onSubmit)}
 			>
-				{changePasswordMutation.isLoading ? <Loading /> : "Change password"}
+				Change password
 			</Button>
 		</>
 	);

@@ -1,6 +1,7 @@
 import React from "react";
 
 import { Card, Loading, Spacer, styled } from "@nextui-org/react";
+import { Button, Link } from "@nextui-org/react-tailwind";
 import { BsCurrencyExchange as ExchangeIcon } from "react-icons/bs";
 import { MdAdd as AddIcon } from "react-icons/md";
 
@@ -8,7 +9,6 @@ import { DebtsGroup } from "app/components/app/debts-group";
 import { LoadableUser } from "app/components/app/loadable-user";
 import { QueryErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
-import { IconButton } from "app/components/icon-button";
 import { ShowResolvedDebtsOption } from "app/features/settings/show-resolved-debts-option";
 import { useAggregatedDebts } from "app/hooks/use-aggregated-debts";
 import { useRouter } from "app/hooks/use-router";
@@ -54,13 +54,17 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 					userQuery.status === "success" ? userQuery.data.name : "..."
 				}'s debts`}
 				aside={
-					<IconButton
+					<Button
 						key="add"
+						color="primary"
 						href={`/debts/add?userId=${userId}`}
+						as={Link}
 						title="Add debt"
-						bordered
-						icon={<AddIcon size={24} />}
-					/>
+						variant="bordered"
+						isIconOnly
+					>
+						<AddIcon size={24} />
+					</Button>
 				}
 			>
 				<LoadableUser id={userId} />
@@ -73,12 +77,15 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 				{nonZeroAggregateDebts.length > 1 ? (
 					<>
 						<Spacer x={1} />
-						<IconButton
+						<Button
+							color="primary"
 							href={`/debts/user/${userId}/exchange/`}
-							auto
-							bordered
-							icon={<ExchangeIcon />}
-						/>
+							as={Link}
+							variant="bordered"
+							isIconOnly
+						>
+							<ExchangeIcon />
+						</Button>
 					</>
 				) : null}
 				{aggregatedDebts.length !== nonZeroAggregateDebts.length ? (

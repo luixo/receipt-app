@@ -37,7 +37,7 @@ export const DebtRemoveButton: React.FC<Props> = ({ debt, setLoading }) => {
 			onRemove={removeDebt}
 			subtitle="This will remove debt forever"
 			noConfirm={debt.amount === 0}
-			css={{ alignSelf: "flex-end" }}
+			className="self-end"
 		>
 			Remove debt
 		</RemoveButton>

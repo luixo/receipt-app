@@ -1,6 +1,7 @@
 import React from "react";
 
-import { Button, Card, Loading, Spacer, Text } from "@nextui-org/react";
+import { Card, Spacer, Text } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -39,11 +40,12 @@ export const EmailVerificationCard: React.FC = () => {
 						</Text>
 					) : (
 						<Button
-							auto
+							color="primary"
 							onClick={resendEmail}
-							disabled={resendEmailMutation.isLoading}
+							isDisabled={resendEmailMutation.isLoading}
+							isLoading={resendEmailMutation.isLoading}
 						>
-							{resendEmailMutation.isLoading ? <Loading /> : "Resend email"}
+							Resend email
 						</Button>
 					)}
 				</Card.Body>

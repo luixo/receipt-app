@@ -1,9 +1,9 @@
 import React from "react";
 
 import { Input, styled } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 
-import { IconButton } from "app/components/icon-button";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -57,6 +57,7 @@ export const DebtAmountInput: React.FC<Props> = ({ debt, isLoading }) => {
 		},
 		[updateMutation, debt.id, debt.amount, absoluteAmount],
 	);
+	const isAmountSync = absoluteAmount === getNumberValue();
 
 	return (
 		<Input
@@ -70,15 +71,17 @@ export const DebtAmountInput: React.FC<Props> = ({ debt, isLoading }) => {
 			contentRight={
 				<Content>
 					<DebtCurrencyInput debt={debt} isLoading={isLoading} />
-					<IconButton
+					<Button
 						title="Save debt amount"
-						light
+						variant="light"
 						isLoading={updateMutation.isLoading}
-						disabled={isLoading || Boolean(inputState.error)}
+						isDisabled={isLoading || Boolean(inputState.error) || isAmountSync}
 						onClick={() => updateAmount(getNumberValue())}
-						icon={<CheckMark color="currentColor" size={24} />}
-						color={getNumberValue() === absoluteAmount ? undefined : "warning"}
-					/>
+						isIconOnly
+						color={isAmountSync ? "success" : "warning"}
+					>
+						<CheckMark color="currentColor" size={24} />
+					</Button>
 				</Content>
 			}
 			css={{ maxWidth: "$96" }}

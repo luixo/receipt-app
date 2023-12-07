@@ -1,11 +1,11 @@
 import React from "react";
 
 import { Card, Text, styled } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 
 import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
 import { ReceiptResolvedParticipantsButton } from "app/components/app/receipt-resolved-participants-button";
 import { Grid } from "app/components/grid";
-import { IconButton } from "app/components/icon-button";
 import { Link } from "app/components/link";
 import { LockedIcon } from "app/components/locked-icon";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
@@ -84,7 +84,7 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 			<Grid defaultCol={buttonsWidth[0]} justify="center" alignItems="center">
 				{receipt.participantResolved === null ? null : (
 					<ReceiptParticipantResolvedButton
-						light
+						variant="light"
 						receiptId={receipt.id}
 						userId={receipt.remoteUserId}
 						selfUserId={receipt.remoteUserId}
@@ -93,21 +93,19 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 				)}
 			</Grid>
 			<Grid defaultCol={buttonsWidth[1]} justify="center" alignItems="center">
-				<IconButton
-					light
+				<Button
+					variant="light"
 					isLoading={updateReceiptMutation.isLoading}
-					disabled={receipt.role !== "owner"}
+					isDisabled={receipt.role !== "owner"}
 					color={receiptLocked ? "success" : "warning"}
-					icon={<LockedIcon locked={receiptLocked} />}
+					isIconOnly
 					onClick={switchResolved}
-				/>
+				>
+					<LockedIcon locked={receiptLocked} />
+				</Button>
 			</Grid>
 			<Grid defaultCol={buttonsWidth[2]} justify="center" alignItems="center">
-				<ReceiptResolvedParticipantsButton
-					light
-					css={{ px: 0 }}
-					receiptId={receipt.id}
-				/>
+				<ReceiptResolvedParticipantsButton receiptId={receipt.id} />
 			</Grid>
 		</>
 	);

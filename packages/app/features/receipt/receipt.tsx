@@ -1,14 +1,15 @@
 import React from "react";
 
 import { Loading, Spacer, Text, styled } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 import { MdEdit as EditIcon } from "react-icons/md";
 
 import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
 import { QueryErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
-import { IconButton } from "app/components/icon-button";
 import { ShrinkText } from "app/components/shrink-text";
 import { useBooleanState } from "app/hooks/use-boolean-state";
+import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useMatchMediaValue } from "app/hooks/use-match-media-value";
 import { useTrpcQueryOptions } from "app/hooks/use-trpc-query-options";
 import { queries } from "app/queries";
@@ -68,6 +69,8 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 		useBooleanState();
 	const dataDirection = useMatchMediaValue("row", { lessSm: "column" });
 
+	const currency = useFormattedCurrency(receipt.currencyCode);
+
 	return (
 		<>
 			<Header
@@ -77,12 +80,12 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 					isEditing ? undefined : (
 						<ControlsWrapper locked={Boolean(receipt.lockedTimestamp)}>
 							<ReceiptParticipantResolvedButton
-								ghost
+								variant="ghost"
 								receiptId={receipt.id}
 								userId={receipt.selfUserId}
 								selfUserId={receipt.selfUserId}
 								resolved={receipt.participantResolved}
-								disabled={deleteLoading}
+								isDisabled={deleteLoading}
 							/>
 							<Spacer x={0.5} />
 							{receipt.role === "owner" ? (
@@ -110,15 +113,15 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 					</ShrinkText>
 				)}
 				{receipt.role === "owner" && !isEditing ? (
-					<IconButton
-						auto
-						light
+					<Button
+						className="ml-2"
+						variant="light"
 						onClick={switchEditing}
-						disabled={deleteLoading || Boolean(receipt.lockedTimestamp)}
-						css={{ ml: "$4" }}
+						isDisabled={deleteLoading || Boolean(receipt.lockedTimestamp)}
+						isIconOnly
 					>
 						<EditIcon size={24} />
-					</IconButton>
+					</Button>
 				) : null}
 			</Header>
 			<Spacer y={1} />
@@ -128,8 +131,9 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 					<Spacer y={0.5} />
 					<Sum>
 						<Text css={{ display: "inline-flex", fontSize: "$xl" }}>
-							{round(receipt.sum)}
+							{round(receipt.sum)} {currency}
 						</Text>
+						<Spacer x={0.5} />
 						<ReceiptCurrencyInput receipt={receipt} isLoading={deleteLoading} />
 					</Sum>
 				</div>

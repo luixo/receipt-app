@@ -1,8 +1,8 @@
 import React from "react";
 
 import { Tooltip } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 
-import { IconButton } from "app/components/icon-button";
 import { LockedIcon } from "app/components/locked-icon";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -43,19 +43,19 @@ export const ReceiptLockedButton: React.FC<Props> = ({
 		return `There are ${emptyItems.length} empty items, cannot lock`;
 	}, [receiptItemsQuery.data]);
 	const elements = (
-		<IconButton
-			ghost
+		<Button
+			variant="ghost"
 			isLoading={updateReceiptMutation.isLoading}
-			disabled={isLoading || Boolean(emptyItemsWarning)}
+			isDisabled={isLoading || Boolean(emptyItemsWarning)}
 			onClick={() => switchResolved()}
 			color={locked ? "success" : "warning"}
-			icon={
-				<LockedIcon
-					locked={locked}
-					tooltip={locked ? "Receipt locked" : "Receipt unlocked"}
-				/>
-			}
-		/>
+			isIconOnly
+		>
+			<LockedIcon
+				locked={locked}
+				tooltip={locked ? "Receipt locked" : "Receipt unlocked"}
+			/>
+		</Button>
 	);
 	if (emptyItemsWarning) {
 		return (

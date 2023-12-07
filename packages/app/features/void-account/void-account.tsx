@@ -1,6 +1,7 @@
 import React from "react";
 
-import { Button, Loading, Spacer, Text, styled } from "@nextui-org/react";
+import { Spacer, Text, styled } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 
 import { ErrorMessage } from "app/components/error-message";
 import { useRouter } from "app/hooks/use-router";
@@ -39,7 +40,7 @@ export const VoidAccount: React.FC<Props> = ({ token }) => {
 					Account removed succesfully
 				</Text>
 				<Spacer y={1} />
-				<Button auto onClick={navigateToHomePage}>
+				<Button color="primary" onClick={navigateToHomePage}>
 					To home page
 				</Button>
 			</>
@@ -52,18 +53,19 @@ export const VoidAccount: React.FC<Props> = ({ token }) => {
 			<Buttons>
 				<Button
 					onClick={voidAccount}
-					disabled={voidMutation.isLoading}
-					color="error"
+					isDisabled={voidMutation.isLoading}
+					isLoading={voidMutation.isLoading}
+					color="danger"
 					type="submit"
 				>
-					{voidMutation.isLoading ? (
-						<Loading color="currentColor" size="sm" />
-					) : (
-						"Yes"
-					)}
+					Yes
 				</Button>
 				<Spacer x={0.5} />
-				<Button onClick={navigateToHomePage} disabled={voidMutation.isLoading}>
+				<Button
+					color="primary"
+					onClick={navigateToHomePage}
+					isDisabled={voidMutation.isLoading}
+				>
 					No
 				</Button>
 			</Buttons>

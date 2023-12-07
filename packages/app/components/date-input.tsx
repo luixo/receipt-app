@@ -1,11 +1,11 @@
 import React from "react";
 
 import { Input, Text } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 import { z } from "zod";
 
 import { Calendar } from "app/components/calendar";
-import { IconButton } from "app/components/icon-button";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useSsrFormat } from "app/hooks/use-ssr-format";
 import type { TRPCError } from "app/trpc";
@@ -46,6 +46,7 @@ export const DateInput: React.FC<Props> = ({
 	}, [updateOnChange, onUpdate, value]);
 	// TODO: make getValue() return Date (currently string)
 	const dateValue = new Date(getValue());
+	const isValueSync = dateValue.valueOf() === timestamp.valueOf();
 	return (
 		<Calendar
 			value={Number.isNaN(dateValue.valueOf()) ? undefined : dateValue}
@@ -65,22 +66,20 @@ export const DateInput: React.FC<Props> = ({
 					status={state.error ? "warning" : undefined}
 					helperColor={state.error ? "warning" : "error"}
 					helperText={state.error?.message || error?.message}
-					contentRightStyling
+					contentRightStyling={false}
 					contentRight={
 						updateOnChange ? null : (
-							<IconButton
+							<Button
 								title="Save date"
-								light
+								variant="light"
 								isLoading={loading}
-								disabled={Boolean(state.error)}
+								isDisabled={Boolean(state.error) || isValueSync}
 								onClick={() => onUpdate(dateValue)}
-								color={
-									dateValue.valueOf() === timestamp.valueOf()
-										? undefined
-										: "warning"
-								}
-								icon={<CheckMark size={24} />}
-							/>
+								isIconOnly
+								color={isValueSync ? "success" : "warning"}
+							>
+								<CheckMark size={24} />
+							</Button>
 						)
 					}
 				/>

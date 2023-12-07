@@ -1,6 +1,7 @@
 import React from "react";
 
-import { Button, Card, Loading, Modal, Text } from "@nextui-org/react";
+import { Card, Loading, Modal, Text } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 import type { QueryObserverSuccessResult } from "@tanstack/react-query";
 
 import { QueryErrorMessage } from "app/components/error-message";
@@ -47,15 +48,14 @@ const CurrenciesPickerInner: React.FC<InnerProps> = ({
 					<Grid>
 						<Button
 							onClick={() => onChange(currency)}
-							auto
-							flat
+							variant="flat"
 							color={
-								currency.code === selectedCurrency?.code ? "success" : undefined
+								currency.code === selectedCurrency?.code ? "success" : "primary"
 							}
 						>
-							{currency.name} ({currency.code}
-							{currency.code === currency.symbol ? "" : ` / ${currency.symbol}`}
-							)
+							{`${currency.name} (${currency.code}${
+								currency.code === currency.symbol ? "" : ` / ${currency.symbol}`
+							})`}
 						</Button>
 					</Grid>
 				</React.Fragment>

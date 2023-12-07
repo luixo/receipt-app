@@ -1,9 +1,9 @@
 import React from "react";
 
 import { Input } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 import { MdLinkOff as UnlinkIcon } from "react-icons/md";
 
-import { IconButton } from "app/components/icon-button";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import type { TRPCQueryOutput } from "app/trpc";
@@ -33,13 +33,15 @@ export const OutboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 			helperText={removeConnectionMutation.error?.message}
 			contentRightStyling={false}
 			contentRight={
-				<IconButton
+				<Button
 					title="Unlink user from email"
-					light
+					variant="light"
 					isLoading={removeConnectionMutation.isLoading}
-					icon={<UnlinkIcon size={24} />}
+					isIconOnly
 					onClick={removeConnection}
-				/>
+				>
+					<UnlinkIcon size={24} />
+				</Button>
 			}
 		/>
 	);

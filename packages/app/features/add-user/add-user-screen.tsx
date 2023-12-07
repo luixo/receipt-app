@@ -1,7 +1,8 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Loading, Spacer } from "@nextui-org/react";
+import { Spacer } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -51,10 +52,12 @@ export const AddUserScreen: AppPage = () => {
 			<EmailInput form={form} query={addUserMutation} />
 			<Spacer y={1} />
 			<Button
+				color="primary"
 				onClick={form.handleSubmit(onSubmit)}
-				disabled={!form.formState.isValid || addUserMutation.isLoading}
+				isDisabled={!form.formState.isValid || addUserMutation.isLoading}
+				isLoading={addUserMutation.isLoading}
 			>
-				{addUserMutation.isLoading ? <Loading size="sm" /> : "Add user"}
+				Add user
 			</Button>
 		</>
 	);

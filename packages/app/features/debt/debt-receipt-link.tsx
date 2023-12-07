@@ -1,9 +1,9 @@
 import React from "react";
 
 import { styled } from "@nextui-org/react";
+import { Button, Link } from "@nextui-org/react-tailwind";
 import { MdOutlineReceipt as RawReceiptIcon } from "react-icons/md";
 
-import { IconButton } from "app/components/icon-button";
 import type { ReceiptsId } from "next-app/db/models";
 
 const ReceiptIcon = styled(RawReceiptIcon, {
@@ -15,11 +15,13 @@ type Props = {
 };
 
 export const DebtReceiptLink: React.FC<Props> = ({ receiptId }) => (
-	<IconButton
+	<Button
+		as={Link}
 		href={`/receipts/${receiptId}`}
-		bordered
-		auto
+		variant="bordered"
 		color="success"
-		icon={<ReceiptIcon />}
-	/>
+		isIconOnly
+	>
+		<ReceiptIcon />
+	</Button>
 );

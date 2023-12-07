@@ -1,6 +1,7 @@
 import React from "react";
 
-import { Button, Container, Spacer, Text } from "@nextui-org/react";
+import { Container, Spacer, Text } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 
 import { UsersSuggest } from "app/components/app/users-suggest";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -58,8 +59,8 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 				alignItems="flex-end"
 			>
 				<Button
-					auto
-					disabled={!user || isLoading}
+					color="primary"
+					isDisabled={!user || isLoading}
 					onClick={acceptConnection}
 					title={
 						user ? `Connect ${intention.account.email} as ${user.name}` : ""
@@ -68,7 +69,11 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 					{user ? `Connect "${user.name}"` : "Please choose user above"}
 				</Button>
 				<Spacer y={0.5} />
-				<Button auto disabled={isLoading} onClick={rejectConnection}>
+				<Button
+					color="warning"
+					isDisabled={isLoading}
+					onClick={rejectConnection}
+				>
 					Reject connection
 				</Button>
 			</Container>

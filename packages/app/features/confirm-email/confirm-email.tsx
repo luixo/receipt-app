@@ -1,6 +1,7 @@
 import React from "react";
 
-import { Button, Loading, Text } from "@nextui-org/react";
+import { Loading, Text } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 
 import { ErrorMessage } from "app/components/error-message";
 import { useRouter } from "app/hooks/use-router";
@@ -40,7 +41,9 @@ export const ConfirmEmail: React.FC<Props> = ({ token, confirmMutation }) => {
 			<Text h4 color="success">
 				Email verification successful!
 			</Text>
-			<Button onClick={navigateToHomePage}>To home page</Button>
+			<Button color="primary" onClick={navigateToHomePage}>
+				To home page
+			</Button>
 		</>
 	);
 };

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 import { MdAdd as AddIcon } from "react-icons/md";
 
 import type { ReceiptsId } from "next-app/db/models";
@@ -31,12 +31,13 @@ export const AddReceiptItemController: React.FC<Props> = ({
 	}
 	return (
 		<Button
-			bordered
-			disabled={receiptLocked}
-			icon={<AddIcon size={24} />}
+			color="primary"
+			variant="bordered"
+			isDisabled={receiptLocked}
 			onClick={() => setOpen(true)}
-			css={{ margin: "0 auto" }}
+			className="w-full"
 		>
+			<AddIcon size={24} />
 			Item
 		</Button>
 	);

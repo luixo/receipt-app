@@ -1,9 +1,9 @@
 import React from "react";
 
 import { Textarea, styled } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 
-import { IconButton } from "app/components/icon-button";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -54,6 +54,7 @@ export const DebtNoteInput: React.FC<Props> = ({ debt, isLoading }) => {
 		},
 		[updateMutation, debt.id, debt.note, setValue],
 	);
+	const isNoteSync = debt.note === getValue();
 
 	return (
 		<Wrapper>
@@ -67,15 +68,17 @@ export const DebtNoteInput: React.FC<Props> = ({ debt, isLoading }) => {
 				helperText={inputState.error?.message || updateMutation.error?.message}
 			/>
 			<CornerIcon>
-				<IconButton
+				<Button
 					title="Save receipt name"
-					light
+					variant="light"
 					isLoading={updateMutation.isLoading}
-					disabled={isLoading || Boolean(inputState.error)}
+					isDisabled={isLoading || Boolean(inputState.error) || isNoteSync}
 					onClick={() => saveNote(getValue())}
-					color={getValue() === debt.note ? undefined : "warning"}
-					icon={<CheckMark size={24} />}
-				/>
+					color={getValue() === debt.note ? "success" : "warning"}
+					isIconOnly
+				>
+					<CheckMark size={24} />
+				</Button>
 			</CornerIcon>
 		</Wrapper>
 	);

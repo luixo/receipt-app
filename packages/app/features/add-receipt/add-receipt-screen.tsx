@@ -1,7 +1,8 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Loading, Spacer } from "@nextui-org/react";
+import { Spacer } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -75,14 +76,16 @@ export const AddReceiptScreen: AppPage = () => {
 			<ReceiptDateInput form={form} query={addReceiptMutation} />
 			<Spacer y={1} />
 			<Button
+				color="primary"
 				onClick={form.handleSubmit(onSubmit)}
-				disabled={
+				isDisabled={
 					!form.formState.isValid ||
 					addReceiptMutation.isLoading ||
 					!selfAccountId
 				}
+				isLoading={addReceiptMutation.isLoading}
 			>
-				{addReceiptMutation.isLoading ? <Loading size="sm" /> : "Add receipt"}
+				Add receipt
 			</Button>
 		</>
 	);

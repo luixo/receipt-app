@@ -1,11 +1,11 @@
 import React from "react";
 
 import { Container, Loading, Spacer, Text, styled } from "@nextui-org/react";
+import { Button, Link } from "@nextui-org/react-tailwind";
 import { MdAdd as AddIcon } from "react-icons/md";
 
 import { DebtsGroup } from "app/components/app/debts-group";
 import { QueryErrorMessage } from "app/components/error-message";
-import { IconButton } from "app/components/icon-button";
 import { ShowResolvedDebtsOption } from "app/features/settings/show-resolved-debts-option";
 import { useAggregatedAllDebts } from "app/hooks/use-aggregated-all-debts";
 import type { TRPCQuerySuccessResult } from "app/trpc";
@@ -52,12 +52,16 @@ const DebtsInner: React.FC<InnerProps> = ({ query }) => {
 				<NoDebtsHint h3>
 					Press
 					<Spacer x={0.5} />
-					<IconButton
+					<Button
 						href="/debts/add"
+						as={Link}
+						color="primary"
 						title="Add debt"
-						bordered
-						icon={<AddIcon size={24} />}
-					/>{" "}
+						variant="bordered"
+						isIconOnly
+					>
+						<AddIcon size={24} />
+					</Button>{" "}
 					<Spacer x={0.5} />
 					to add a debt
 				</NoDebtsHint>

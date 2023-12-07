@@ -1,9 +1,10 @@
 import React from "react";
+import { View } from "react-native";
 
 import { Card, Spacer, Text, styled } from "@nextui-org/react";
+import { Chip } from "@nextui-org/react-tailwind";
 
 import { ReceiptItemLockedButton } from "app/components/app/receipt-item-locked-button";
-import { ButtonsGroup } from "app/components/buttons-group";
 import { ErrorMessage } from "app/components/error-message";
 import { RemoveButton } from "app/components/remove-button";
 import { ReceiptItemPart } from "app/features/receipt-item-parts/receipt-item-part";
@@ -75,7 +76,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 			}),
 		);
 		const addParticipant = React.useCallback(
-			(participant: ReceiptParticipant | EveryParticipantTag) => {
+			(participant: ReceiptParticipant | EveryParticipantTag) => () => {
 				if (participant === EVERY_PARTICIPANT_TAG) {
 					addItemPartMutation.mutate({
 						itemId: receiptItem.id,
@@ -111,11 +112,10 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 						isLoading={isDeleteLoading}
 					/>
 					<ReceiptItemLockedButton
-						ghost
 						receiptId={receiptId}
 						receiptItemId={receiptItem.id}
 						locked={receiptItem.locked}
-						disabled={role === "viewer"}
+						isDisabled={role === "viewer"}
 					/>
 				</Card.Header>
 				<Card.Divider />
@@ -144,34 +144,36 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 					notAddedParticipants.length === 0 ? null : (
 						<>
 							<Spacer y={1} />
-							<ButtonsGroup<ReceiptParticipant | EveryParticipantTag>
-								type="linear"
-								buttons={
-									notAddedParticipants.length === 1
-										? notAddedParticipants
-										: [EVERY_PARTICIPANT_TAG, ...notAddedParticipants]
-								}
-								buttonProps={(button) => ({
-									auto: true,
-									ghost: true,
-									...(button === EVERY_PARTICIPANT_TAG
-										? { color: "secondary" }
-										: undefined),
-								})}
-								extractDetails={(participant) =>
-									participant === EVERY_PARTICIPANT_TAG
-										? {
-												id: EVERY_PARTICIPANT_TAG,
-												name: "Everyone",
-										  }
-										: {
-												id: participant.remoteUserId,
-												name: participant.name,
-										  }
-								}
-								onClick={addParticipant}
-								disabled={receiptLocked}
-							/>
+							<View className="flex-row">
+								{(notAddedParticipants.length === 1
+									? notAddedParticipants
+									: [EVERY_PARTICIPANT_TAG, ...notAddedParticipants]
+								).map((participant, index) => (
+									<React.Fragment
+										key={
+											participant === EVERY_PARTICIPANT_TAG
+												? participant
+												: participant.remoteUserId
+										}
+									>
+										{index === 0 ? null : <Spacer x={0.25} />}
+										<Chip
+											color={
+												participant === EVERY_PARTICIPANT_TAG
+													? "secondary"
+													: "default"
+											}
+											className="cursor-pointer"
+											onClick={addParticipant(participant)}
+											isDisabled={receiptLocked}
+										>
+											{participant === EVERY_PARTICIPANT_TAG
+												? "Everyone"
+												: `+ ${participant.name}`}
+										</Chip>
+									</React.Fragment>
+								))}
+							</View>
 						</>
 					)}
 					{receiptItem.parts.length === 0 ? (
@@ -226,7 +228,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 						<Card.Footer css={{ justifyContent: "flex-end" }}>
 							<RemoveButton
 								onRemove={removeItem}
-								disabled={receiptLocked}
+								isDisabled={receiptLocked}
 								mutation={removeReceiptItemMutation}
 								subtitle="This will remove item with all participant's parts"
 								noConfirm={receiptItem.parts.length === 0}

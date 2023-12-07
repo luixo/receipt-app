@@ -1,6 +1,7 @@
 import React from "react";
 
 import { Spacer } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 import {
 	MdInfo as InfoIcon,
 	MdSend as SendIcon,
@@ -8,7 +9,6 @@ import {
 } from "react-icons/md";
 
 import { QueryErrorMessage } from "app/components/error-message";
-import { IconButton } from "app/components/icon-button";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -153,30 +153,33 @@ const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 		<>
 			{desyncedParticipants.length !== 0 ||
 			unsyncedParticipants.length !== 0 ? (
-				<IconButton
-					ghost
+				<Button
+					variant="ghost"
 					title="Propagate debts"
 					isLoading={isPropagating}
-					disabled={isLoading || isPropagating}
+					isDisabled={isLoading || isPropagating}
 					onClick={propagateDebts}
-					color="warning"
-					icon={
-						desyncedParticipants.length === 0 ? (
-							<SendIcon size={24} />
-						) : (
-							<SyncIcon size={24} />
-						)
-					}
-				/>
+					color="primary"
+					isIconOnly
+				>
+					{desyncedParticipants.length === 0 ? (
+						<SendIcon size={24} />
+					) : (
+						<SyncIcon size={24} />
+					)}
+				</Button>
 			) : null}
 			{desyncedParticipants.length !== 0 ? (
 				<>
 					<Spacer x={0.5} />
-					<IconButton
+					<Button
 						onClick={openInfoButtonPopover}
-						icon={<InfoIcon size={24} />}
+						color="primary"
+						isIconOnly
 						title="Show sync status"
-					/>
+					>
+						<InfoIcon size={24} />
+					</Button>
 				</>
 			) : null}
 			<ReceiptDebtSyncInfoModal

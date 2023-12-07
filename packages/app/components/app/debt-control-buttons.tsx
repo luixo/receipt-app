@@ -1,6 +1,7 @@
 import React from "react";
 
 import { Spacer } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 import {
 	BsEyeSlashFill as ShouldNotSyncIcon,
 	BsEyeFill as ShouldSyncIcon,
@@ -8,7 +9,6 @@ import {
 import { MdSync as SyncIcon } from "react-icons/md";
 
 import { ConfirmModal } from "app/components/confirm-modal";
-import { IconButton } from "app/components/icon-button";
 import { DebtIntention } from "app/features/debts-intentions/debt-intention";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -88,15 +88,16 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 						confirmText="Are you sure?"
 					>
 						{({ openModal }) => (
-							<IconButton
-								isLoading={updateMutation.isLoading}
-								disabled={updateMutation.isLoading}
-								onClick={openModal}
-								ghost
-								color="warning"
-								title="Update debt to a counterparty's version"
-								icon={<SyncIcon size={24} />}
-							/>
+							<Button
+							isLoading={updateMutation.isLoading}
+							isDisabled={updateMutation.isLoading}
+							onClick={openModal}
+							variant="ghost"
+							color="warning"
+							isIconOnly
+						>
+							<SyncIcon size={24} />
+						</Button>
 						)}
 					</ConfirmModal>
 
@@ -115,20 +116,20 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 				confirmText="Are you sure?"
 			>
 				{({ openModal }) => (
-					<IconButton
+					<Button
 						isLoading={updateMutation.isLoading}
-						disabled={updateMutation.isLoading}
+						isDisabled={updateMutation.isLoading}
 						onClick={debt.lockedTimestamp ? openModal : setLocked}
-						ghost
-						color={debt.lockedTimestamp ? "error" : "success"}
-						icon={
-							debt.lockedTimestamp ? (
-								<ShouldNotSyncIcon size={24} />
+						variant="ghost"
+						color={debt.lockedTimestamp ? "danger" : "success"}
+						isIconOnly
+					>
+						{debt.lockedTimestamp ? (
+							<ShouldNotSyncIcon size={24} />
 							) : (
 								<ShouldSyncIcon size={24} />
-							)
-						}
-					/>
+						)}
+					</Button>
 				)}
 			</ConfirmModal>
 		</>

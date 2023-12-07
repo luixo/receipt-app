@@ -1,6 +1,7 @@
 import React from "react";
 
 import { Spacer, Text, styled } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 import {
 	MdOutlineReceipt as ReceiptOffIcon,
 	MdSend as SendIcon,
@@ -11,7 +12,6 @@ import {
 import { DebtSyncStatus } from "app/components/app/debt-sync-status";
 import { LoadableUser } from "app/components/app/loadable-user";
 import { Grid } from "app/components/grid";
-import { IconButton } from "app/components/icon-button";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useMatchMediaValue } from "app/hooks/use-match-media-value";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -177,27 +177,28 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 			</Grid>
 			<Grid defaultCol={1.5} lessMdCol={4}>
 				{isReceiptSyncedWithOurDebt && !isUpdating ? null : (
-					<IconButton
+					<Button
 						title={
 							participant.currentDebt?.their
 								? "Update debt for user"
 								: "Send debt to a user"
 						}
 						isLoading={isUpdating}
-						disabled={isUpdating}
-						icon={
-							participant.currentDebt?.their ? (
-								<SyncIcon size={24} />
-							) : (
-								<SendIcon size={24} />
-							)
-						}
+						isDisabled={isUpdating}
+						isIconOnly
+						color="primary"
 						onClick={() =>
 							participant.currentDebt?.their
 								? updateDebt(participant.currentDebt)
 								: addDebt()
 						}
-					/>
+					>
+						{participant.currentDebt?.their ? (
+							<SyncIcon size={24} />
+						) : (
+							<SendIcon size={24} />
+						)}
+					</Button>
 				)}
 			</Grid>
 		</>

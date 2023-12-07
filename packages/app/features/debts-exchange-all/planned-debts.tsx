@@ -1,7 +1,8 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Card, Loading, Spacer } from "@nextui-org/react";
+import { Card, Spacer } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
@@ -211,30 +212,27 @@ export const PlannedDebts: React.FC<Props> = ({
 			<Spacer y={1} />
 			<Button
 				onClick={addBatch}
-				disabled={
+				isDisabled={
 					addBatchMutation.isLoading ||
 					ratesQuery.isLoading ||
 					debts.length > MAX_BATCH_DEBTS ||
 					debts.length < MIN_BATCH_DEBTS ||
 					invalidConvertedDebts.length !== 0
 				}
-				color={addBatchMutation.status === "error" ? "error" : undefined}
+				isLoading={addBatchMutation.isLoading || ratesQuery.isLoading}
+				color={addBatchMutation.status === "error" ? "danger" : "primary"}
 			>
-				{addBatchMutation.isLoading || ratesQuery.isLoading ? (
-					<Loading color="currentColor" size="sm" />
-				) : addBatchMutation.error ? (
-					addBatchMutation.error.message
-				) : invalidConvertedDebts.length !== 0 ? (
-					`${invalidConvertedDebts
-						.map((debt) => debt.currencyCode)
-						.join(", ")} debt(s) are invalid`
-				) : debts.length > MAX_BATCH_DEBTS ? (
-					`Cannot send more than ${MAX_BATCH_DEBTS} simultaneously`
-				) : debts.length < MIN_BATCH_DEBTS ? (
-					`Cannot send less than ${MIN_BATCH_DEBTS} simultaneously`
-				) : (
-					"Send debts"
-				)}
+				{addBatchMutation.error
+					? addBatchMutation.error.message
+					: invalidConvertedDebts.length !== 0
+					? `${invalidConvertedDebts
+							.map((debt) => debt.currencyCode)
+							.join(", ")} debt(s) are invalid`
+					: debts.length > MAX_BATCH_DEBTS
+					? `Cannot send more than ${MAX_BATCH_DEBTS} simultaneously`
+					: debts.length < MIN_BATCH_DEBTS
+					? `Cannot send less than ${MIN_BATCH_DEBTS} simultaneously`
+					: "Send debts"}
 			</Button>
 		</>
 	);

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 import { useQueryClient } from "@tanstack/react-query";
 import { FiRefreshCw as RefreshIcon } from "react-icons/fi";
 
@@ -11,7 +11,8 @@ export const RefreshSettings: React.FC = () => {
 		[queryClient],
 	);
 	return (
-		<Button size="lg" icon={<RefreshIcon />} onClick={refetch} auto>
+		<Button color="primary" size="lg" onClick={refetch}>
+			<RefreshIcon />
 			Refetch all data
 		</Button>
 	);

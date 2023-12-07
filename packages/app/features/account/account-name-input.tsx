@@ -1,9 +1,9 @@
 import React from "react";
 
 import { Input } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 
-import { IconButton } from "app/components/icon-button";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -43,6 +43,7 @@ export const AccountNameInput: React.FC<Props> = ({ accountQuery }) => {
 		},
 		[updateNameMutation, accountQuery.user.name, setValue],
 	);
+	const isNameSync = accountQuery.user.name === getValue();
 
 	return (
 		<Input
@@ -54,16 +55,19 @@ export const AccountNameInput: React.FC<Props> = ({ accountQuery }) => {
 			helperText={
 				inputState.error?.message || updateNameMutation.error?.message
 			}
-			contentRightStyling={updateNameMutation.isLoading}
+			contentRightStyling={false}
 			contentRight={
-				<IconButton
+				<Button
 					title="Save name"
-					light
+					variant="light"
+					color={isNameSync ? "success" : "warning"}
 					isLoading={updateNameMutation.isLoading}
-					disabled={Boolean(inputState.error)}
+					isDisabled={Boolean(inputState.error) || isNameSync}
 					onClick={() => saveName(getValue())}
-					icon={<CheckMark size={24} />}
-				/>
+					isIconOnly
+				>
+					<CheckMark size={24} />
+				</Button>
 			}
 		/>
 	);

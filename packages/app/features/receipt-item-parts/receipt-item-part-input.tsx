@@ -1,11 +1,11 @@
 import React from "react";
 
 import { Input, Spacer, Text } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 import { FiMinus as MinusIcon, FiPlus as PlusIcon } from "react-icons/fi";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 import { MdEdit as EditIcon } from "react-icons/md";
 
-import { IconButton } from "app/components/icon-button";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -62,6 +62,7 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 					? partUpdater(itemPart.part)
 					: partUpdater;
 			if (nextPart === itemPart.part) {
+				unsetEditing();
 				return;
 			}
 			updateMutation.mutate({
@@ -70,28 +71,40 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 				update: { type: "part", part: nextPart },
 			});
 		},
-		[updateMutation, receiptItemId, itemPart.userId, itemPart.part],
+		[
+			updateMutation,
+			receiptItemId,
+			itemPart.userId,
+			itemPart.part,
+			unsetEditing,
+		],
 	);
 
 	const wrap = React.useCallback(
 		(children: React.ReactElement) => (
 			<div style={{ display: "flex" }}>
-				<IconButton
-					ghost
+				<Button
+					variant="ghost"
+					color="primary"
 					isLoading={updateMutation.isLoading}
 					onClick={() => updatePart((prev) => prev - 1)}
-					disabled={itemPart.part <= 1}
-					icon={<MinusIcon size={24} />}
-				/>
+					isDisabled={itemPart.part <= 1}
+					isIconOnly
+				>
+					<MinusIcon size={24} />
+				</Button>
 				<Spacer x={0.5} />
 				{children}
 				<Spacer x={0.5} />
-				<IconButton
-					ghost
+				<Button
+					variant="ghost"
+					color="primary"
 					isLoading={updateMutation.isLoading}
 					onClick={() => updatePart((prev) => prev + 1)}
-					icon={<PlusIcon size={24} />}
-				/>
+					isIconOnly
+				>
+					<PlusIcon size={24} />
+				</Button>
 			</div>
 		),
 		[updatePart, itemPart.part, updateMutation.isLoading],
@@ -107,6 +120,8 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 		return readOnlyComponent;
 	}
 
+	const isPartSync = getNumberValue() === itemPart.part;
+
 	if (isEditing) {
 		return wrap(
 			<>
@@ -119,16 +134,19 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 					helperText={
 						inputState.error?.message || updateMutation.error?.message
 					}
-					contentRightStyling={updateMutation.isLoading}
+					contentRightStyling={false}
 					contentRight={
-						<IconButton
+						<Button
 							title="Save item part"
-							light
+							variant="light"
+							color={isPartSync ? "success" : "warning"}
 							isLoading={updateMutation.isLoading}
-							disabled={Boolean(inputState.error)}
+							isDisabled={Boolean(inputState.error)}
 							onClick={() => updatePart(getNumberValue())}
-							icon={<CheckMark size={24} />}
-						/>
+							isIconOnly
+						>
+							<CheckMark size={24} />
+						</Button>
 					}
 					bordered
 					width="$20"
@@ -139,15 +157,14 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 	}
 
 	return wrap(
-		<IconButton
-			auto
-			light
+		<Button
+			variant="light"
 			onClick={switchEditing}
-			disabled={isLoading}
-			css={{ p: 0, width: "$20" }}
-			icon={<EditIcon size={12} />}
+			isDisabled={isLoading}
+			className="p-0"
+			endContent={<EditIcon size={12} />}
 		>
 			{readOnlyComponent}
-		</IconButton>,
+		</Button>,
 	);
 };

@@ -1,6 +1,7 @@
 import React from "react";
 
-import { Button, Card, Row, Spacer, Text, styled } from "@nextui-org/react";
+import { Card, Row, Spacer, Text, styled } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 import type {
 	QueryObserverLoadingErrorResult,
 	QueryObserverRefetchErrorResult,
@@ -44,7 +45,9 @@ export const ErrorMessage: React.FC<Props> = ({ message, button }) => (
 				<Card.Divider />
 				<Card.Footer>
 					<Row justify="flex-end">
-						<Button onClick={button.onClick}>{button.text}</Button>
+						<Button color="primary" onClick={button.onClick}>
+							{button.text}
+						</Button>
 					</Row>
 				</Card.Footer>
 			</>

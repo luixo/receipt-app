@@ -1,7 +1,8 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Loading, Spacer, styled } from "@nextui-org/react";
+import { Spacer, styled } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -84,11 +85,13 @@ export const AddReceiptItemForm: React.FC<Props> = ({
 			</Inputs>
 			<Spacer y={1} />
 			<Button
+				color="primary"
 				onClick={form.handleSubmit(onSubmit)}
-				disabled={!form.formState.isValid || isLoading || receiptLocked}
-				css={{ width: "100%" }}
+				isDisabled={!form.formState.isValid || isLoading || receiptLocked}
+				className="w-full"
+				isLoading={addMutation.isLoading}
 			>
-				{addMutation.isLoading ? <Loading size="xs" /> : "Save"}
+				Save
 			</Button>
 		</>
 	);

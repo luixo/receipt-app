@@ -1,12 +1,11 @@
 import React from "react";
 
 import { Container, Loading, Spacer, Text, styled } from "@nextui-org/react";
+import { Button, Link, Pagination } from "@nextui-org/react-tailwind";
 import { MdAdd as AddIcon } from "react-icons/md";
 
 import { QueryErrorMessage } from "app/components/error-message";
-import { IconButton } from "app/components/icon-button";
 import { Overlay } from "app/components/overlay";
-import { Pagination } from "app/components/pagination";
 import { useCursorPaging } from "app/hooks/use-cursor-paging";
 import { useTrpcQueryOptions } from "app/hooks/use-trpc-query-options";
 import { queries } from "app/queries";
@@ -66,12 +65,16 @@ export const Users: React.FC = () => {
 				<NoUsersHint h3>
 					Press
 					<Spacer x={0.5} />
-					<IconButton
+					<Button
+						color="primary"
 						href="/users/add"
+						as={Link}
 						title="Add user"
-						bordered
-						icon={<AddIcon size={24} />}
-					/>{" "}
+						variant="bordered"
+						isIconOnly
+					>
+						<AddIcon size={24} />
+					</Button>{" "}
 					<Spacer x={0.5} />
 					to add a user
 				</NoUsersHint>
@@ -80,9 +83,13 @@ export const Users: React.FC = () => {
 	}
 
 	const paginationElement = (
-		<Container display="flex" justify="center">
-			<Pagination {...pagination} />
-		</Container>
+		<Pagination
+			color="primary"
+			size="lg"
+			variant="bordered"
+			className="self-center"
+			{...pagination}
+		/>
 	);
 
 	return (

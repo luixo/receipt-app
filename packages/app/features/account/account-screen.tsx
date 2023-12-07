@@ -1,6 +1,7 @@
 import React from "react";
 
-import { Button, Loading, Spacer } from "@nextui-org/react";
+import { Loading, Spacer } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 import { useQueryClient } from "@tanstack/react-query";
 
 import { QueryErrorMessage } from "app/components/error-message";
@@ -49,13 +50,13 @@ const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 			<ChangePasswordScreen />
 			<Spacer y={2} />
 			<Button
-				auto
-				disabled={logoutMutation.isLoading}
+				isDisabled={logoutMutation.isLoading}
 				onClick={logout}
 				color="warning"
-				css={{ alignSelf: "flex-end" }}
+				isLoading={logoutMutation.isLoading}
+				className="self-end"
 			>
-				{logoutMutation.isLoading ? <Loading /> : "Logout"}
+				Logout
 			</Button>
 		</>
 	);

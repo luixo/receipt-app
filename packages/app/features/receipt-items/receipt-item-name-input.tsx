@@ -1,10 +1,10 @@
 import React from "react";
 
 import { Input, Text, styled } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 import { MdEdit as EditIcon } from "react-icons/md";
 
-import { IconButton } from "app/components/icon-button";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -31,7 +31,8 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 	isLoading,
 	readOnly,
 }) => {
-	const [isEditing, { switchValue: switchEditing }] = useBooleanState();
+	const [isEditing, { switchValue: switchEditing, setFalse: unsetEditing }] =
+		useBooleanState();
 
 	const {
 		bindings,
@@ -51,6 +52,7 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 	const updateName = React.useCallback(
 		(name: string) => {
 			if (name === receiptItem.name) {
+				unsetEditing();
 				return;
 			}
 			updateMutation.mutate({
@@ -58,27 +60,31 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 				update: { type: "name", name },
 			});
 		},
-		[updateMutation, receiptItem.id, receiptItem.name],
+		[updateMutation, receiptItem.id, receiptItem.name, unsetEditing],
 	);
 
 	if (!isEditing) {
 		return (
 			<Wrapper>
-				<Text h4>{receiptItem.name}</Text>
+				<Text h4 css={{ mb: 0 }}>
+					{receiptItem.name}
+				</Text>
 				{!readOnly ? (
-					<IconButton
-						auto
-						light
+					<Button
+						variant="light"
 						onClick={switchEditing}
-						disabled={isLoading}
-						css={{ ml: "$4" }}
+						isDisabled={isLoading}
+						className="ml-1"
+						isIconOnly
 					>
 						<EditIcon size={24} />
-					</IconButton>
+					</Button>
 				) : null}
 			</Wrapper>
 		);
 	}
+
+	const isNameSync = receiptItem.name === getValue();
 
 	return (
 		<Input
@@ -88,16 +94,19 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 			status={inputState.error ? "warning" : undefined}
 			helperColor={inputState.error ? "warning" : "error"}
 			helperText={inputState.error?.message || updateMutation.error?.message}
-			contentRightStyling={updateMutation.isLoading}
+			contentRightStyling={false}
 			contentRight={
-				<IconButton
+				<Button
 					title="Save receipt item name"
-					light
+					variant="light"
 					isLoading={updateMutation.isLoading}
-					disabled={Boolean(inputState.error)}
+					color={isNameSync ? "success" : "warning"}
+					isDisabled={Boolean(inputState.error)}
 					onClick={() => updateName(getValue())}
-					icon={<CheckMark size={24} />}
-				/>
+					isIconOnly
+				>
+					<CheckMark size={24} />
+				</Button>
 			}
 		/>
 	);

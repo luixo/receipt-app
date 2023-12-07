@@ -1,7 +1,8 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Input, Loading, Spacer } from "@nextui-org/react";
+import { Input, Spacer } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -63,13 +64,19 @@ export const LoginScreen: AppPage = () => {
 			/>
 			<Spacer y={1} />
 			<Button
-				disabled={!form.formState.isValid || loginMutation.isLoading}
+				color="primary"
+				isDisabled={!form.formState.isValid || loginMutation.isLoading}
+				isLoading={loginMutation.isLoading}
 				onClick={form.handleSubmit(onSubmit)}
 			>
-				{loginMutation.isLoading ? <Loading /> : "Login"}
+				Login
 			</Button>
 			<Spacer y={2} />
-			<Button disabled={loginMutation.isLoading} onClick={openModal}>
+			<Button
+				color="primary"
+				isDisabled={loginMutation.isLoading}
+				onClick={openModal}
+			>
 				Forgot password?
 			</Button>
 			<ResetPasswordModal isModalOpen={modalOpen} closeModal={closeModal} />

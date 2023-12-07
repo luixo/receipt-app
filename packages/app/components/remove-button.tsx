@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, Spacer } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 import { IoTrashBin as TrashBin } from "react-icons/io5";
 
 import { ConfirmModal } from "app/components/confirm-modal";
@@ -8,10 +8,10 @@ import { ConfirmModal } from "app/components/confirm-modal";
 type Props = {
 	mutation: { isLoading: boolean };
 	onRemove: () => void;
-	children?: string;
+	children?: React.ReactNode;
 	subtitle?: string;
 	noConfirm?: boolean;
-} & React.ComponentProps<typeof Button>;
+} & Omit<React.ComponentProps<typeof Button>, "onClick" | "color">;
 
 export const RemoveButton: React.FC<Props> = ({
 	mutation,
@@ -30,19 +30,14 @@ export const RemoveButton: React.FC<Props> = ({
 	>
 		{({ openModal }) => (
 			<Button
-				auto
 				onClick={noConfirm ? onRemove : openModal}
-				color="error"
+				color="danger"
 				{...props}
-				disabled={props.disabled || mutation.isLoading}
+				isDisabled={props.isDisabled || mutation.isLoading}
+				isLoading={mutation.isLoading}
 			>
-				<TrashBin size={24} />
-				{children ? (
-					<>
-						<Spacer x={0.5} />
-						{children}
-					</>
-				) : null}
+				{mutation.isLoading ? null : <TrashBin size={24} />}
+				{children}
 			</Button>
 		)}
 	</ConfirmModal>

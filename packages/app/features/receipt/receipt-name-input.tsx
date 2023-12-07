@@ -1,9 +1,9 @@
 import React from "react";
 
 import { Input } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 
-import { IconButton } from "app/components/icon-button";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -45,6 +45,7 @@ export const ReceiptNameInput: React.FC<Props> = ({
 	const saveName = React.useCallback(
 		(nextName: string) => {
 			if (receipt.name === nextName) {
+				unsetEditing();
 				return;
 			}
 			updateReceiptMutation.mutate(
@@ -52,8 +53,9 @@ export const ReceiptNameInput: React.FC<Props> = ({
 				{ onSuccess: () => setValue(nextName) },
 			);
 		},
-		[updateReceiptMutation, receipt.id, receipt.name, setValue],
+		[updateReceiptMutation, receipt.id, receipt.name, setValue, unsetEditing],
 	);
+	const isNameSync = receipt.name === getValue();
 
 	return (
 		<Input
@@ -67,16 +69,19 @@ export const ReceiptNameInput: React.FC<Props> = ({
 			helperText={
 				inputState.error?.message || updateReceiptMutation.error?.message
 			}
-			contentRightStyling={updateReceiptMutation.isLoading}
+			contentRightStyling={false}
 			contentRight={
-				<IconButton
+				<Button
 					title="Save receipt name"
-					light
+					variant="light"
 					isLoading={updateReceiptMutation.isLoading}
-					disabled={Boolean(inputState.error)}
+					isDisabled={Boolean(inputState.error)}
 					onClick={() => saveName(getValue())}
-					icon={<CheckMark size={24} />}
-				/>
+					color={isNameSync ? "success" : "warning"}
+					isIconOnly
+				>
+					<CheckMark size={24} />
+				</Button>
 			}
 		/>
 	);

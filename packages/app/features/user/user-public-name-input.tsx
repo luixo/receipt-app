@@ -1,12 +1,13 @@
 import React from "react";
 
-import { Button, Input, styled } from "@nextui-org/react";
+import { Input, Spacer, styled } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 import {
 	IoCheckmarkCircleOutline as CheckMark,
 	IoTrashBin as TrashBin,
 } from "react-icons/io5";
 
-import { IconButton } from "app/components/icon-button";
+import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -24,11 +25,8 @@ type Props = {
 };
 
 export const UserPublicNameInput: React.FC<Props> = ({ user, isLoading }) => {
-	const [showInput, setShowInput] = React.useState(user.publicName !== null);
-	const switchShowInput = React.useCallback(
-		() => setShowInput((prev) => !prev),
-		[setShowInput],
-	);
+	const [showInput, { setTrue: setInput, setFalse: unsetInput }] =
+		useBooleanState(user.publicName !== undefined);
 	const {
 		bindings,
 		state: inputState,
@@ -43,27 +41,42 @@ export const UserPublicNameInput: React.FC<Props> = ({ user, isLoading }) => {
 		useTrpcMutationOptions(mutations.users.update.options),
 	);
 	const savePublicName = React.useCallback(
-		(nextName: string | undefined) =>
+		(nextName: string | undefined) => {
+			if (nextName === undefined && user.publicName === undefined) {
+				unsetInput();
+				return;
+			}
 			updateUserMutation.mutate(
 				{
 					id: user.remoteId,
 					update: { type: "publicName", publicName: nextName },
 				},
-				{ onSuccess: () => setValue(nextName ?? "") },
-			),
-		[updateUserMutation, user.remoteId, setValue],
+				{
+					onSuccess: () => {
+						setValue(nextName ?? "");
+						if (nextName === undefined) {
+							unsetInput();
+						}
+					},
+				},
+			);
+		},
+		[updateUserMutation, user.remoteId, setValue, unsetInput, user.publicName],
 	);
 
 	if (!showInput) {
 		return (
 			<Button
-				disabled={updateUserMutation.isLoading || isLoading}
-				onClick={switchShowInput}
+				color="primary"
+				isDisabled={updateUserMutation.isLoading || isLoading}
+				onClick={setInput}
 			>
 				Add public name
 			</Button>
 		);
 	}
+
+	const isNameSync = user.publicName === getValue();
 
 	return (
 		<Input
@@ -75,31 +88,37 @@ export const UserPublicNameInput: React.FC<Props> = ({ user, isLoading }) => {
 			helperText={
 				inputState.error?.message || updateUserMutation.error?.message
 			}
-			contentRightStyling={updateUserMutation.isLoading}
+			contentRightStyling={false}
 			contentRight={
 				<ButtonsContainer>
-					<IconButton
+					<Button
 						title="Save user public name"
-						light
+						variant="light"
 						isLoading={updateUserMutation.isLoading}
-						disabled={
-							user.publicName === getValue() || Boolean(inputState.error)
+						isDisabled={
+							Boolean(inputState.error) || isNameSync || getValue() === ""
 						}
 						onClick={() => savePublicName(getValue())}
-						icon={<CheckMark size={24} />}
-					/>
-					<IconButton
-						title="Remove user public name"
-						light
-						isLoading={updateUserMutation.isLoading}
-						onClick={
-							user.publicName
-								? () => savePublicName(undefined)
-								: switchShowInput
-						}
-						color="error"
-						icon={<TrashBin size={24} />}
-					/>
+						color={isNameSync ? "success" : "warning"}
+						isIconOnly
+					>
+						<CheckMark size={24} />
+					</Button>
+					{user.publicName === undefined ? null : (
+						<>
+							<Spacer x={0.25} />
+							<Button
+								title="Remove user public name"
+								variant="light"
+								isLoading={updateUserMutation.isLoading}
+								onClick={() => savePublicName(undefined)}
+								color="danger"
+								isIconOnly
+							>
+								<TrashBin size={24} />
+							</Button>
+						</>
+					)}
 				</ButtonsContainer>
 			}
 		/>

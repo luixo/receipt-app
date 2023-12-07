@@ -28,7 +28,7 @@ const UserInner: React.FC<InnerProps> = ({ query }) => {
 			<UserConnectionInput user={user} isLoading={deleteLoading} />
 			<Spacer y={1} />
 			<UserRemoveButton
-				css={{ alignSelf: "flex-end" }}
+				className="self-end"
 				user={user}
 				setLoading={setDeleteLoading}
 			/>

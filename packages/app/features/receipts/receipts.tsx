@@ -1,11 +1,11 @@
 import React from "react";
 
 import { Card, Loading, Spacer, Text, styled } from "@nextui-org/react";
+import { Button, Link } from "@nextui-org/react-tailwind";
 import { MdAdd as AddIcon } from "react-icons/md";
 
 import { QueryErrorMessage } from "app/components/error-message";
 import { Grid } from "app/components/grid";
-import { IconButton } from "app/components/icon-button";
 import { Overlay } from "app/components/overlay";
 import { useCursorPaging } from "app/hooks/use-cursor-paging";
 import { useMatchMediaValue } from "app/hooks/use-match-media-value";
@@ -81,12 +81,16 @@ export const Receipts: React.FC = () => {
 				<NoReceiptsHint h3>
 					Press
 					<Spacer x={0.5} />
-					<IconButton
+					<Button
+						color="primary"
+						as={Link}
 						href="/receipts/add"
 						title="Add receipt"
-						bordered
-						icon={<AddIcon size={24} />}
-					/>
+						variant="bordered"
+						isIconOnly
+					>
+						<AddIcon size={24} />
+					</Button>
 					<Spacer x={0.5} />
 					to add a receipt
 				</NoReceiptsHint>

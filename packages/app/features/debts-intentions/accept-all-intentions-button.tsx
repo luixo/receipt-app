@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 
 import { useRouter } from "app/hooks/use-router";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -28,7 +28,9 @@ export const AcceptAllIntentionsButton: React.FC<Props> = ({ intentions }) => {
 
 	return (
 		<Button
-			disabled={acceptAllMutation.isLoading}
+			color="primary"
+			isDisabled={acceptAllMutation.isLoading}
+			isLoading={acceptAllMutation.isLoading}
 			onClick={() => acceptAllIntentions()}
 			title="Accept all incoming intentions"
 		>

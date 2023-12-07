@@ -1,10 +1,10 @@
 import React from "react";
 
 import { Input, Spacer, Text, styled } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 import { MdEdit as EditIcon } from "react-icons/md";
 
-import { IconButton } from "app/components/icon-button";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useSingleInput } from "app/hooks/use-single-input";
@@ -57,6 +57,7 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 	const updatePrice = React.useCallback(
 		(price: number) => {
 			if (price === receiptItem.price) {
+				unsetEditing();
 				return;
 			}
 			updateMutation.mutate({
@@ -64,7 +65,7 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 				update: { type: "price", price },
 			});
 		},
-		[updateMutation, receiptItem.id, receiptItem.price],
+		[updateMutation, receiptItem.id, receiptItem.price, unsetEditing],
 	);
 	const currency = useFormattedCurrency(currencyCode);
 
@@ -75,21 +76,23 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 					{receiptItem.price} {currency}
 				</Text>
 				{!readOnly ? (
-					<IconButton
-						auto
-						light
+					<Button
+						variant="light"
 						onClick={switchEditing}
-						disabled={isLoading}
-						css={{ p: 0, mx: "$4" }}
+						isDisabled={isLoading}
+						className="mx-1"
+						isIconOnly
 					>
-						<EditIcon size={24} />
-					</IconButton>
+						<EditIcon size={20} />
+					</Button>
 				) : (
 					<Spacer x={0.25} />
 				)}
 			</Wrapper>
 		);
 	}
+
+	const isPriceSync = receiptItem.price === getNumberValue();
 
 	return (
 		<Input
@@ -99,16 +102,19 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 			status={inputState.error ? "warning" : undefined}
 			helperColor={inputState.error ? "warning" : "error"}
 			helperText={inputState.error?.message || updateMutation.error?.message}
-			contentRightStyling={updateMutation.isLoading}
+			contentRightStyling={false}
 			contentRight={
-				<IconButton
+				<Button
 					title="Save receipt item price"
-					light
+					variant="light"
 					isLoading={updateMutation.isLoading}
-					disabled={Boolean(inputState.error)}
+					isDisabled={Boolean(inputState.error)}
+					color={isPriceSync ? "success" : "warning"}
 					onClick={() => updatePrice(getNumberValue())}
-					icon={<CheckMark size={24} />}
-				/>
+					isIconOnly
+				>
+					<CheckMark size={24} />
+				</Button>
 			}
 			bordered
 			width="$28"

@@ -1,7 +1,8 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Input, Loading, Spacer } from "@nextui-org/react";
+import { Input, Spacer } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -93,11 +94,13 @@ export const RegisterScreen: AppPage = () => {
 			/>
 			<Spacer y={1} />
 			<Button
-				disabled={!form.formState.isValid || registerMutation.isLoading}
+				color="primary"
+				isDisabled={!form.formState.isValid || registerMutation.isLoading}
+				isLoading={registerMutation.isLoading}
 				onClick={form.handleSubmit(onSubmit)}
 				type="submit"
 			>
-				{registerMutation.isLoading ? <Loading /> : "Register"}
+				Register
 			</Button>
 		</>
 	);

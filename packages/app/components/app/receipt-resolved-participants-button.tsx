@@ -1,13 +1,13 @@
 import React from "react";
 
 import { Popover, Spacer, Text, styled } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 import {
 	MdHourglassDisabled as CrossWaitIcon,
 	MdHourglassEmpty as WaitIcon,
 } from "react-icons/md";
 
 import { LoadableUser } from "app/components/app/loadable-user";
-import { IconButton } from "app/components/icon-button";
 import { trpc } from "app/trpc";
 import type { ReceiptsId } from "next-app/db/models";
 
@@ -19,11 +19,13 @@ const Participants = styled("div");
 
 type Props = {
 	receiptId: ReceiptsId;
-} & Omit<React.ComponentProps<typeof IconButton>, "onClick" | "color">;
+} & Omit<
+	React.ComponentProps<typeof Button>,
+	"onClick" | "color" | "isIconOnly"
+>;
 
 export const ReceiptResolvedParticipantsButton: React.FC<Props> = ({
 	receiptId,
-	css,
 	...props
 }) => {
 	const [popoverOpen, setPopoverOpen] = React.useState(false);
@@ -41,24 +43,29 @@ export const ReceiptResolvedParticipantsButton: React.FC<Props> = ({
 			placement="left"
 		>
 			<Popover.Trigger>
-				<IconButton
+				<Button
+					variant="light"
 					{...props}
 					color={popoverOpen ? "secondary" : undefined}
 					isLoading={query.isLoading || props.isLoading}
-					disabled={query.status !== "success" || query.data.length === 0}
-					icon={
+					isDisabled={
+						query.status !== "success" ||
+						query.data.length === 0 ||
+						props.isDisabled
+					}
+					isIconOnly
+					startContent={
 						notResolvedParticipants?.length === 0 ? (
 							<WaitIcon size={24} />
 						) : (
 							<CrossWaitIcon size={24} />
 						)
 					}
-					css={{ ...css, minWidth: "$20" }}
 				>
 					{!notResolvedParticipants || notResolvedParticipants.length === 0
 						? null
 						: notResolvedParticipants.length}
-				</IconButton>
+				</Button>
 			</Popover.Trigger>
 			<Popover.Content>
 				<Wrapper>

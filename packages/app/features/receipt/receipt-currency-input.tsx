@@ -1,7 +1,9 @@
 import React from "react";
 
+import { Button } from "@nextui-org/react-tailwind";
+import { MdEdit as EditIcon } from "react-icons/md";
+
 import { CurrenciesPicker } from "app/components/app/currencies-picker";
-import { IconButton } from "app/components/icon-button";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -41,26 +43,19 @@ export const ReceiptCurrencyInput: React.FC<Props> = ({
 
 	return (
 		<>
-			<IconButton
-				auto
-				light
+			<Button
+				variant="light"
 				onClick={openModal}
-				disabled={
+				isDisabled={
 					isLoading ||
 					receipt.role !== "owner" ||
 					Boolean(receipt.lockedTimestamp)
 				}
 				isLoading={updateReceiptMutation.isLoading}
-				css={{
-					p: 0,
-					lineHeight: "$lg",
-					height: "initial",
-					ml: "$2",
-					fontSize: "inherit",
-				}}
+				isIconOnly
 			>
-				{receipt.currencyCode}
-			</IconButton>
+				<EditIcon size={24} />
+			</Button>
 			<CurrenciesPicker
 				onChange={saveCurrency}
 				modalOpen={isModalOpen}

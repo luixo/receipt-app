@@ -1,13 +1,7 @@
 import React from "react";
 
-import {
-	Button,
-	Loading,
-	Modal,
-	Spacer,
-	Text,
-	styled,
-} from "@nextui-org/react";
+import { Loading, Modal, Spacer, Text, styled } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 
 import { useBooleanState } from "app/hooks/use-boolean-state";
 
@@ -58,16 +52,11 @@ export const ConfirmModal: React.FC<Props> = ({
 				</Modal.Header>
 				<Modal.Body css={{ pt: "$4", pb: "$12" }}>
 					<Buttons>
-						<Button
-							auto
-							onClick={onYesClick}
-							disabled={isLoading}
-							color="error"
-						>
+						<Button color="danger" onClick={onYesClick} isDisabled={isLoading}>
 							{isLoading ? <Loading color="currentColor" size="sm" /> : yesText}
 						</Button>
 						<Spacer x={0.5} />
-						<Button auto onClick={closeModal} disabled={isLoading}>
+						<Button color="primary" onClick={closeModal} isDisabled={isLoading}>
 							{noText}
 						</Button>
 					</Buttons>

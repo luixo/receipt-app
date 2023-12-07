@@ -3,7 +3,9 @@ import React from "react";
 import { styled } from "@nextui-org/react";
 
 const Relative = styled("div", {
+	display: "flex",
 	position: "relative",
+	justifyContent: "center",
 });
 
 const Wrapper = styled("div", {

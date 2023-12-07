@@ -1,6 +1,7 @@
 import React from "react";
 
 import { Card, Dropdown, Modal, Spacer, Text, styled } from "@nextui-org/react";
+import { Button, Pagination } from "@nextui-org/react-tailwind";
 import type { Selection } from "@react-types/shared/src/selection";
 import {
 	BsSortNumericDown as SortDownIcon,
@@ -9,9 +10,6 @@ import {
 import { MdFilterAlt as FilterIcon } from "react-icons/md";
 
 import { Grid } from "app/components/grid";
-import { IconButton } from "app/components/icon-button";
-import type { Props as PaginationProps } from "app/components/pagination";
-import { Pagination } from "app/components/pagination";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { queries } from "app/queries";
 
@@ -22,7 +20,7 @@ const Wrapper = styled("div", {
 });
 
 type Props = {
-	pagination: PaginationProps;
+	pagination: React.ComponentProps<typeof Pagination>;
 };
 
 export const ReceiptsPagination: React.FC<Props> = ({ pagination }) => {
@@ -78,29 +76,27 @@ export const ReceiptsPagination: React.FC<Props> = ({ pagination }) => {
 			<Grid.Container justify="space-between">
 				<Grid defaultCol={4} lessMdCol={0} />
 				<Grid defaultCol={4} lessMdCol css={{ justifyContent: "center" }}>
-					<Pagination {...pagination} />
+					<Pagination
+						color="primary"
+						size="lg"
+						variant="bordered"
+						{...pagination}
+					/>
 				</Grid>
 				<Grid defaultCol={4} lessMdCol={2} css={{ justifyContent: "flex-end" }}>
-					<IconButton
-						icon={<FilterIcon size={24} />}
-						onClick={switchFilterModal}
-					/>
+					<Button color="primary" isIconOnly onClick={switchFilterModal}>
+						<FilterIcon size={24} />
+					</Button>
 				</Grid>
 				<Modal
 					open={filterModalOpen}
 					onClose={closeFilterModal}
 					css={{ p: "$10" }}
 				>
-					<IconButton
-						light
-						auto
-						iconLeftCss={{ mr: "$4" }}
-						icon={<SortIcon size={24} />}
-						onClick={sortSelectOnClick}
-						animated={false}
-					>
+					<Button variant="light" onClick={sortSelectOnClick}>
+						<SortIcon size={24} />
 						{orderBy === "date-desc" ? "Newest first" : "Oldest first"}
-					</IconButton>
+					</Button>
 					<Spacer y={1} />
 					<Card.Divider />
 					<Spacer y={0.5} />

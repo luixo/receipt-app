@@ -1,7 +1,8 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Loading, Spacer } from "@nextui-org/react";
+import { Spacer } from "@nextui-org/react";
+import { Button } from "@nextui-org/react-tailwind";
 import { useForm } from "react-hook-form";
 import { createParam } from "solito";
 import { z } from "zod";
@@ -140,10 +141,12 @@ export const AddDebtScreen: AppPage = () => {
 			<DebtNoteInput form={form} isLoading={addMutation.isLoading} />
 			<Spacer y={3} />
 			<Button
+				color="primary"
 				onClick={form.handleSubmit(onSubmit)}
-				disabled={!form.formState.isValid || addMutation.isLoading}
+				isDisabled={!form.formState.isValid || addMutation.isLoading}
+				isLoading={addMutation.isLoading}
 			>
-				{addMutation.isLoading ? <Loading size="sm" /> : "Add debt"}
+				Add debt
 			</Button>
 		</>
 	);

@@ -109,14 +109,19 @@ export const ReceiptParticipant: React.FC<Props> = ({
 							/>
 							<Spacer x={0.5} />
 							<ReceiptParticipantResolvedButton
-								{...(participant.remoteUserId !== receiptSelfUserId
-									? { light: true }
-									: { ghost: true })}
-								css={{ px: "$6", boxSizing: "border-box" }}
+								variant={
+									participant.remoteUserId === receiptSelfUserId
+										? "ghost"
+										: "light"
+								}
 								receiptId={receiptId}
 								userId={participant.remoteUserId}
 								selfUserId={receiptSelfUserId}
-								resolved={participant.resolved}
+								resolved={
+									participant.remoteUserId === receiptSelfUserId
+										? participant.resolved
+										: null
+								}
 							/>
 							{role === "owner" ? (
 								<>
@@ -124,7 +129,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 									<RemoveButton
 										onRemove={removeReceiptParticipant}
 										mutation={removeReceiptParticipantMutation}
-										disabled={!selfAccountId || receiptLocked}
+										isDisabled={!selfAccountId || receiptLocked}
 										subtitle="This will remove participant with all his parts"
 										noConfirm={participant.sum === 0}
 									/>
