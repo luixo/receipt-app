@@ -1,7 +1,9 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Dropdown, Loading, Text } from "@nextui-org/react";
+import { Dropdown, Loading } from "@nextui-org/react";
 
+import { Text } from "app/components/base/text";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import type { TRPCQueryOutput } from "app/trpc";
@@ -69,9 +71,9 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 				{ROLES.filter((pickRole) => pickRole !== participant.role).map(
 					(pickRole) => (
 						<Dropdown.Item key={pickRole}>
-							<Text onClick={() => changeRole(pickRole)}>
-								Set &quot;{pickRole}&quot; role
-							</Text>
+							<View onClick={() => changeRole(pickRole)}>
+								<Text>Set &quot;{pickRole}&quot; role</Text>
+							</View>
 						</Dropdown.Item>
 					),
 				)}

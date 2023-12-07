@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Spacer, Text, styled } from "@nextui-org/react";
+import { Spacer, styled } from "@nextui-org/react";
 import { Button } from "@nextui-org/react-tailwind";
 import {
 	MdOutlineReceipt as ReceiptOffIcon,
@@ -11,6 +11,7 @@ import {
 
 import { DebtSyncStatus } from "app/components/app/debt-sync-status";
 import { LoadableUser } from "app/components/app/loadable-user";
+import { Text } from "app/components/base/text";
 import { Grid } from "app/components/grid";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useMatchMediaValue } from "app/hooks/use-match-media-value";

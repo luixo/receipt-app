@@ -2,6 +2,7 @@ import React from "react";
 
 import { Spacer } from "@nextui-org/react";
 import { Button, Link } from "@nextui-org/react-tailwind";
+import { FaUsers as UsersIcon } from "react-icons/fa";
 import { MdAdd as AddIcon, MdLink as LinkIcon } from "react-icons/md";
 
 import { Badge } from "app/components/badge";
@@ -17,7 +18,7 @@ export const UsersScreen: AppPage = () => {
 	return (
 		<>
 			<Header
-				icon="👨👩"
+				icon={<UsersIcon size={36} />}
 				aside={React.useMemo(
 					() => [
 						<Button

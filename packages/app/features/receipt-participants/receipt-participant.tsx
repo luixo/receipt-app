@@ -1,9 +1,10 @@
 import React from "react";
 
-import { Collapse, Spacer, Text, styled } from "@nextui-org/react";
+import { Collapse, Spacer, styled } from "@nextui-org/react";
 
 import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
 import { User } from "app/components/app/user";
+import { Text } from "app/components/base/text";
 import { RemoveButton } from "app/components/remove-button";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useSelfAccountId } from "app/hooks/use-self-account-id";

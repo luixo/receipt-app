@@ -4,6 +4,7 @@ import { Spacer } from "@nextui-org/react";
 import { Button, Link } from "@nextui-org/react-tailwind";
 import { IoMdMail as InboxIcon } from "react-icons/io";
 import { MdAdd as AddIcon } from "react-icons/md";
+import { PiMoney as DebtIcon } from "react-icons/pi";
 
 import { Badge } from "app/components/badge";
 import { Header } from "app/components/header";
@@ -18,7 +19,7 @@ export const DebtsScreen: AppPage = () => {
 	return (
 		<>
 			<Header
-				icon="💸"
+				icon={<DebtIcon size={36} />}
 				aside={React.useMemo(
 					() => [
 						<Button

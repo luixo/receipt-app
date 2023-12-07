@@ -1,8 +1,9 @@
 import React from "react";
 
-import { Text, styled } from "@nextui-org/react";
+import { styled } from "@nextui-org/react";
 import type { UseFormReturn } from "react-hook-form";
 
+import { Text } from "app/components/base/text";
 import { DateInput } from "app/components/date-input";
 import type { TRPCMutationResult } from "app/trpc";
 

@@ -1,9 +1,10 @@
 import React from "react";
 
-import { Container, Spacer, Text } from "@nextui-org/react";
+import { Container, Spacer } from "@nextui-org/react";
 import { Button } from "@nextui-org/react-tailwind";
 
 import { UsersSuggest } from "app/components/app/users-suggest";
+import { Text } from "app/components/base/text";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import type { TRPCInfiniteQueryOutput, TRPCQueryOutput } from "app/trpc";

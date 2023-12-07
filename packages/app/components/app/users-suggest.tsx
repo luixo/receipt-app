@@ -1,16 +1,10 @@
 import React from "react";
 
 import type { FormElement } from "@nextui-org/react";
-import {
-	Badge,
-	Input,
-	Loading,
-	Popover,
-	Text,
-	styled,
-} from "@nextui-org/react";
+import { Badge, Input, Loading, Popover, styled } from "@nextui-org/react";
 import { Divider } from "@nextui-org/react-tailwind";
 
+import { Text } from "app/components/base/text";
 import { QueryErrorMessage } from "app/components/error-message";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useDebouncedValue } from "app/hooks/use-debounced-value";

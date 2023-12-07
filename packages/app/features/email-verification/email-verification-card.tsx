@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Spacer, Text } from "@nextui-org/react";
+import { Spacer } from "@nextui-org/react";
 import {
 	Button,
 	Card,
@@ -9,6 +9,7 @@ import {
 	Divider,
 } from "@nextui-org/react-tailwind";
 
+import { Text } from "app/components/base/text";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
@@ -28,7 +29,7 @@ export const EmailVerificationCard: React.FC = () => {
 	return (
 		<Card className="min-w-fit self-center" shadow="md">
 				<CardHeader>
-					<Text h3 color="warning">
+					<Text className="text-warning text-center text-2xl">
 						Your email is not verified!
 					</Text>
 				</CardHeader>
@@ -40,7 +41,7 @@ export const EmailVerificationCard: React.FC = () => {
 					</Text>
 					<Spacer y={1} />
 					{resendEmailMutation.status === "success" ? (
-						<Text h3>
+						<Text className="text-center text-2xl">
 							Email successfully sent to {resendEmailMutation.data.email}!
 						</Text>
 					) : (

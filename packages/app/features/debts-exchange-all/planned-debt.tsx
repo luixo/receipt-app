@@ -1,8 +1,9 @@
 import React from "react";
 
-import { Input, Loading, Text, styled } from "@nextui-org/react";
+import { Input, Loading, styled } from "@nextui-org/react";
 import type { UseFormReturn } from "react-hook-form";
 
+import { Text } from "app/components/base/text";
 import { Grid } from "app/components/grid";
 import { useInputController } from "app/hooks/use-input-controller";
 import type { CurrencyCode } from "app/utils/currency";
@@ -63,7 +64,7 @@ export const PlannedDebt: React.FC<Props> = ({
 	return (
 		<GridContainer gap={2} css={{ alignItems: "center" }}>
 			<Grid defaultCol={4} lessSmCol={6}>
-				<Text color={amount >= 0 ? "success" : "error"}>
+				<Text className={amount >= 0 ? "text-success" : "text-danger"}>
 					{selected && ratesLoading ? (
 						<Loading />
 					) : (

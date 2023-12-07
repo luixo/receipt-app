@@ -1,10 +1,11 @@
 import React from "react";
 
-import { Container, Loading, Spacer, Text, styled } from "@nextui-org/react";
+import { Container, Loading, Spacer, styled } from "@nextui-org/react";
 import { Button, Link } from "@nextui-org/react-tailwind";
 import { MdAdd as AddIcon } from "react-icons/md";
 
 import { DebtsGroup } from "app/components/app/debts-group";
+import { Text } from "app/components/base/text";
 import { QueryErrorMessage } from "app/components/error-message";
 import { ShowResolvedDebtsOption } from "app/features/settings/show-resolved-debts-option";
 import { useAggregatedAllDebts } from "app/hooks/use-aggregated-all-debts";
@@ -13,11 +14,6 @@ import { trpc } from "app/trpc";
 import { useShowResolvedDebts } from "next-app/hooks/use-show-resolved-debts";
 
 import { UserDebtsPreview } from "./user-debts-preview";
-
-const NoDebtsHint = styled(Text, {
-	display: "flex",
-	alignItems: "center",
-});
 
 const DebtsHeader = styled("div", {
 	display: "flex",
@@ -47,11 +43,10 @@ const DebtsInner: React.FC<InnerProps> = ({ query }) => {
 				alignItems="center"
 				justify="center"
 			>
-				<Text h2>You have no debts</Text>
-				<Spacer y={0.5} />
-				<NoDebtsHint h3>
+				<Text className="text-4xl font-medium">You have no debts</Text>
+				<Spacer y={1} />
+				<Text className="text-center text-2xl font-medium">
 					Press
-					<Spacer x={0.5} />
 					<Button
 						href="/debts/add"
 						as={Link}
@@ -59,15 +54,15 @@ const DebtsInner: React.FC<InnerProps> = ({ query }) => {
 						title="Add debt"
 						variant="bordered"
 						isIconOnly
+						className="mx-2"
 					>
 						<AddIcon size={24} />
-					</Button>{" "}
-					<Spacer x={0.5} />
+					</Button>
 					to add a debt
-				</NoDebtsHint>
+				</Text>
 				{sums.length !== nonZeroSums.length ? (
 					<>
-						<Spacer y={0.5} />
+						<Spacer y={1} />
 						<ShowResolvedDebtsOption />
 					</>
 				) : null}

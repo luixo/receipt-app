@@ -2,7 +2,10 @@ import React from "react";
 
 import { Spacer } from "@nextui-org/react";
 import { Button, Link } from "@nextui-org/react-tailwind";
-import { MdAdd as AddIcon } from "react-icons/md";
+import {
+	MdAdd as AddIcon,
+	MdOutlineReceipt as ReceiptIcon,
+} from "react-icons/md";
 
 import { Header } from "app/components/header";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
@@ -13,7 +16,7 @@ import { Receipts } from "./receipts";
 export const ReceiptsScreen: AppPage = () => (
 	<>
 		<Header
-			icon="🧾"
+			icon={<ReceiptIcon size={36} />}
 			aside={
 				<Button
 					color="primary"

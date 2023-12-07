@@ -1,9 +1,10 @@
 import React from "react";
 
-import { Loading, Spacer, Text, styled } from "@nextui-org/react";
+import { Loading, Spacer, styled } from "@nextui-org/react";
 import { Button, Divider, Link } from "@nextui-org/react-tailwind";
 import { MdAdd as AddIcon } from "react-icons/md";
 
+import { Text } from "app/components/base/text";
 import { QueryErrorMessage } from "app/components/error-message";
 import { Grid } from "app/components/grid";
 import { Overlay } from "app/components/overlay";
@@ -22,11 +23,6 @@ const Wrapper = styled("div", {
 	flexDirection: "column",
 	alignItems: "center",
 	justifyContent: "center",
-});
-
-const NoReceiptsHint = styled(Text, {
-	display: "flex",
-	alignItems: "center",
 });
 
 type PreviewsProps = {
@@ -76,24 +72,23 @@ export const Receipts: React.FC = () => {
 		}
 		return (
 			<Wrapper>
-				<Text h2>You have no receipts</Text>
+				<Text className="text-4xl font-medium">You have no receipts</Text>
 				<Spacer y={0.5} />
-				<NoReceiptsHint h3>
+				<Text className="text-center text-2xl font-medium">
 					Press
-					<Spacer x={0.5} />
 					<Button
 						color="primary"
 						as={Link}
 						href="/receipts/add"
 						title="Add receipt"
 						variant="bordered"
+						className="mx-2"
 						isIconOnly
 					>
 						<AddIcon size={24} />
 					</Button>
-					<Spacer x={0.5} />
 					to add a receipt
-				</NoReceiptsHint>
+				</Text>
 			</Wrapper>
 		);
 	}
@@ -116,7 +111,9 @@ export const Receipts: React.FC = () => {
 					<Loading size="xl" />
 				) : !totalCount && input.filters ? (
 					<Wrapper>
-						<Text h2>No receipts under given filters</Text>
+						<Text className="text-4xl font-medium">
+							No receipts under given filters
+						</Text>
 					</Wrapper>
 				) : query.data ? (
 					<ReceiptPreviewsList receipts={query.data.items} />

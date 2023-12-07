@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Spacer, Text, styled } from "@nextui-org/react";
+import { Spacer, styled } from "@nextui-org/react";
 import {
 	Card,
 	CardBody,
@@ -12,6 +12,7 @@ import {
 } from "@nextui-org/react-tailwind";
 
 import { ReceiptItemLockedButton } from "app/components/app/receipt-item-locked-button";
+import { Text } from "app/components/base/text";
 import { ErrorMessage } from "app/components/error-message";
 import { RemoveButton } from "app/components/remove-button";
 import { ReceiptItemPart } from "app/features/receipt-item-parts/receipt-item-part";
@@ -188,15 +189,15 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 							<>
 								<Spacer y={1} />
 								<Divider />
-								<Spacer y={1} />
-								<Text h4>Add a user from a list above</Text>
+								<Spacer y={0.5} />
+								<Text className="text-lg">Add a user from a list above</Text>
 							</>
 						)
 					) : (
 						<>
 							<Spacer y={1} />
 							<Divider />
-							<Spacer y={1} />
+							<Spacer y={0.5} />
 							{receiptItem.parts.map((part, index) => {
 								const matchedParticipant = receiptParticipants.find(
 									(participant) => participant.remoteUserId === part.userId,

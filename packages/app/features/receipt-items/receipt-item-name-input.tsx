@@ -1,10 +1,11 @@
 import React from "react";
 
-import { Input, Text, styled } from "@nextui-org/react";
+import { Input, styled } from "@nextui-org/react";
 import { Button } from "@nextui-org/react-tailwind";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 import { MdEdit as EditIcon } from "react-icons/md";
 
+import { Text } from "app/components/base/text";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -66,9 +67,7 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 	if (!isEditing) {
 		return (
 			<Wrapper>
-				<Text h4 css={{ mb: 0 }}>
-					{receiptItem.name}
-				</Text>
+				<Text className="text-xl">{receiptItem.name}</Text>
 				{!readOnly ? (
 					<Button
 						variant="light"

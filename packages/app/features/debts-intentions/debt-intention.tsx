@@ -1,12 +1,13 @@
 import React from "react";
 
-import { Spacer, Text, styled } from "@nextui-org/react";
+import { Spacer, styled } from "@nextui-org/react";
 import { Card, CardBody } from "@nextui-org/react-tailwind";
 import {
 	MdNavigateNext as ArrowIcon,
 	MdSync as SyncIcon,
 } from "react-icons/md";
 
+import { Text } from "app/components/base/text";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useSsrFormat } from "app/hooks/use-ssr-format";
 import type { TRPCQueryOutput } from "app/trpc";
@@ -31,7 +32,9 @@ export const DebtIntention = React.forwardRef<HTMLDivElement, Props>(
 		const selfCurrency = useFormattedCurrency(intention.current?.currencyCode);
 		const intentionDataComponent = (
 			<Wrapper>
-				<Text color={intention.amount >= 0 ? "success" : "error"}>
+				<Text
+					className={intention.amount >= 0 ? "text-success" : "text-danger"}
+				>
 					{Math.abs(intention.amount)} {currency}
 				</Text>
 				<Text>{formatDate(intention.timestamp)}</Text>
@@ -44,7 +47,11 @@ export const DebtIntention = React.forwardRef<HTMLDivElement, Props>(
 						<Wrapper>
 							<Wrapper>
 								<Text
-									color={intention.current.amount >= 0 ? "success" : "error"}
+									className={
+										intention.current.amount >= 0
+											? "text-success"
+											: "text-danger"
+									}
 								>
 									{Math.abs(intention.current.amount)} {selfCurrency}
 								</Text>
@@ -56,9 +63,9 @@ export const DebtIntention = React.forwardRef<HTMLDivElement, Props>(
 					) : (
 						intentionDataComponent
 					)}
-					<Spacer y={0.25} />
+					<Spacer y={1} />
 					<Text>{intention.note}</Text>
-					<Spacer y={0.5} />
+					<Spacer y={1} />
 					<Wrapper css={{ justifyContent: "space-between" }}>
 						<Wrapper>
 							<SyncIcon size={24} />
@@ -66,7 +73,7 @@ export const DebtIntention = React.forwardRef<HTMLDivElement, Props>(
 						</Wrapper>
 						<div className="max-md:hidden">{children}</div>
 					</Wrapper>
-					<div className="self-end md:hidden">{children}</div>
+					<div className="mt-4 self-end md:hidden">{children}</div>
 				</CardBody>
 			</Card>
 		);

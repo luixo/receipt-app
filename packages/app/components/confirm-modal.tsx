@@ -1,8 +1,9 @@
 import React from "react";
 
-import { Loading, Modal, Spacer, Text, styled } from "@nextui-org/react";
+import { Loading, Modal, Spacer, styled } from "@nextui-org/react";
 import { Button } from "@nextui-org/react-tailwind";
 
+import { Text } from "app/components/base/text";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 
 type Props = {
@@ -47,8 +48,10 @@ export const ConfirmModal: React.FC<Props> = ({
 				onClose={closeModal}
 			>
 				<Modal.Header css={{ flexDirection: "column" }}>
-					<Text h3>{confirmText}</Text>
-					{subtitle ? <Text color="warning">{subtitle}</Text> : null}
+					<Text className="text-2xl font-medium">{confirmText}</Text>
+					{subtitle ? (
+						<Text className="text-warning my-2">{subtitle}</Text>
+					) : null}
 				</Modal.Header>
 				<Modal.Body css={{ pt: "$4", pb: "$12" }}>
 					<Buttons>

@@ -1,8 +1,9 @@
 import React from "react";
 
-import { Spacer, Text, styled } from "@nextui-org/react";
+import { Spacer, styled } from "@nextui-org/react";
 import { Divider } from "@nextui-org/react-tailwind";
 
+import { Text } from "app/components/base/text";
 import type { AppPage } from "next-app/types/page";
 
 import { AutoAcceptDebtsOption } from "./auto-accept-debts-option";
@@ -31,7 +32,8 @@ export const SettingsScreen: AppPage = () => (
 		<Spacer y={1} />
 		<Divider />
 		<Spacer y={1} />
-		<Text h2>Settings</Text>
+		<Text className="text-4xl font-medium">Settings</Text>
+		<Spacer y={1} />
 		<Line>
 			<Text>Show user with resolved debts</Text>
 			<Spacer x={1} />

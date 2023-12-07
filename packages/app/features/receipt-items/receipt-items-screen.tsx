@@ -1,7 +1,8 @@
 import React from "react";
 
-import { Collapse, Loading, Spacer, Text, styled } from "@nextui-org/react";
+import { Collapse, Loading, Spacer, styled } from "@nextui-org/react";
 
+import { Text } from "app/components/base/text";
 import { QueryErrorMessage } from "app/components/error-message";
 import { AddReceiptItemController } from "app/features/add-receipt-item/add-receipt-item-controller";
 import { ReceiptParticipants } from "app/features/receipt-participants/receipt-participants";
@@ -100,9 +101,13 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 			))}
 			{data.items.length === 0 ? (
 				<NoReceiptItems>
-					<Text h3>You have no receipt items yet</Text>
+					<Text className="text-2xl font-medium">
+						You have no receipt items yet
+					</Text>
 					<Spacer y={1} />
-					<Text h4>Press a button above to add a receipt item</Text>
+					<Text className="text-xl">
+						Press a button above to add a receipt item
+					</Text>
 				</NoReceiptItems>
 			) : null}
 		</Collapse.Group>

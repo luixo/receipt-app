@@ -1,9 +1,10 @@
 import React from "react";
 
-import { Container, Loading, Spacer, Text, styled } from "@nextui-org/react";
+import { Container, Loading, Spacer } from "@nextui-org/react";
 import { Button, Link, Pagination } from "@nextui-org/react-tailwind";
 import { MdAdd as AddIcon } from "react-icons/md";
 
+import { Text } from "app/components/base/text";
 import { QueryErrorMessage } from "app/components/error-message";
 import { Overlay } from "app/components/overlay";
 import { useCursorPaging } from "app/hooks/use-cursor-paging";
@@ -13,11 +14,6 @@ import type { TRPCQueryInput, TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
 
 import { UserPreview } from "./user-preview";
-
-const NoUsersHint = styled(Text, {
-	display: "flex",
-	alignItems: "center",
-});
 
 type UserPreviews = TRPCQueryOutput<"users.getPaged">["items"];
 
@@ -60,24 +56,22 @@ export const Users: React.FC = () => {
 				alignItems="center"
 				justify="center"
 			>
-				<Text h2>You have no users</Text>
-				<Spacer y={0.5} />
-				<NoUsersHint h3>
+				<Text className="text-4xl font-medium">You have no users</Text>
+				<Text className="text-center text-2xl font-medium">
 					Press
-					<Spacer x={0.5} />
 					<Button
 						color="primary"
 						href="/users/add"
 						as={Link}
 						title="Add user"
 						variant="bordered"
+						className="mx-2"
 						isIconOnly
 					>
 						<AddIcon size={24} />
-					</Button>{" "}
-					<Spacer x={0.5} />
+					</Button>
 					to add a user
-				</NoUsersHint>
+				</Text>
 			</Container>
 		);
 	}

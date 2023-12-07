@@ -1,7 +1,8 @@
 import React from "react";
 
-import { Modal, Text, styled } from "@nextui-org/react";
+import { Modal, styled } from "@nextui-org/react";
 
+import { Text } from "app/components/base/text";
 import { Grid } from "app/components/grid";
 import { useMatchMediaValue } from "app/hooks/use-match-media-value";
 
@@ -82,7 +83,7 @@ export const ReceiptDebtSyncInfoModal: React.FC<Props> = ({
 			title="Receipt sync status"
 		>
 			<Modal.Header>
-				<Text h3>Sync status</Text>
+				<Text className="text-center text-2xl">Sync status</Text>
 			</Modal.Header>
 			<Modal.Body>
 				<Grid.Container>

@@ -1,8 +1,9 @@
 import React from "react";
 
-import { Spacer, Text } from "@nextui-org/react";
+import { Spacer } from "@nextui-org/react";
 import { createParam } from "solito";
 
+import { Text } from "app/components/base/text";
 import { Header } from "app/components/header";
 import type { AppPage } from "next-app/types/page";
 
@@ -21,8 +22,8 @@ export const VoidAccountScreen: AppPage = () => {
 				<VoidAccount token={token} />
 			) : (
 				<>
-					<Text h3>Something went wrong</Text>
-					<Text b>Please verify you got void account link right</Text>
+					<Text className="text-2xl font-medium">Something went wrong</Text>
+					<Text>Please verify you got void account link right</Text>
 				</>
 			)}
 		</>

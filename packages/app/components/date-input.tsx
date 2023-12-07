@@ -1,10 +1,11 @@
 import React from "react";
 
-import { Input, Text } from "@nextui-org/react";
+import { Input } from "@nextui-org/react";
 import { Button } from "@nextui-org/react-tailwind";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 import { z } from "zod";
 
+import { Text } from "app/components/base/text";
 import { Calendar } from "app/components/calendar";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useSsrFormat } from "app/hooks/use-ssr-format";
@@ -54,7 +55,7 @@ export const DateInput: React.FC<Props> = ({
 			disabled={loading || disabled}
 		>
 			{disabled ? (
-				<Text size="$xl">{formatDate(dateValue)}</Text>
+				<Text className="text-xl">{formatDate(dateValue)}</Text>
 			) : (
 				<Input
 					{...bindings}

@@ -1,8 +1,9 @@
 import React from "react";
 
-import { Loading, Text } from "@nextui-org/react";
+import { Loading } from "@nextui-org/react";
 import { Button } from "@nextui-org/react-tailwind";
 
+import { Text } from "app/components/base/text";
 import { ErrorMessage } from "app/components/error-message";
 import { useRouter } from "app/hooks/use-router";
 import type { TRPCMutationResult } from "app/trpc";
@@ -21,8 +22,8 @@ export const ConfirmEmail: React.FC<Props> = ({ token, confirmMutation }) => {
 	if (!token) {
 		return (
 			<>
-				<Text h3>Something went wrong</Text>
-				<Text b>Please verify you got confirm link right</Text>
+				<Text className="text-2xl font-medium">Something went wrong</Text>
+				<Text>Please verify you got confirm link right</Text>
 			</>
 		);
 	}
@@ -37,8 +38,8 @@ export const ConfirmEmail: React.FC<Props> = ({ token, confirmMutation }) => {
 	}
 	return (
 		<>
-			<Text h3>{confirmMutation.data.email}</Text>
-			<Text h4 color="success">
+			<Text className="text-2xl font-medium">{confirmMutation.data.email}</Text>
+			<Text className="text-success text-lg">
 				Email verification successful!
 			</Text>
 			<Button color="primary" onClick={navigateToHomePage}>

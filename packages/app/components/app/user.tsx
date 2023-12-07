@@ -1,8 +1,9 @@
 import React from "react";
 
-import { Image, Text, styled } from "@nextui-org/react";
+import { Image, styled } from "@nextui-org/react";
 import IdenticonJs from "identicon.js";
 
+import { Text } from "app/components/base/text";
 import type { UsersId } from "next-app/db/models";
 
 const Wrapper = styled("div", {
@@ -15,10 +16,6 @@ const Information = styled("div", {
 	flexDirection: "column",
 	justifyContent: "center",
 	marginLeft: "$sm",
-});
-
-const UserName = styled(Text, {
-	fontWeight: "$medium",
 });
 
 const AvatarImage = styled(Image, {
@@ -65,14 +62,10 @@ export const User = React.forwardRef<HTMLDivElement, Props>(
 					src={icon}
 				/>
 				<Information>
-					{/* zero margin because of inherited margin from ChildText */}
-					<UserName css={{ margin: 0 }}>
+					<Text className="font-medium">
 						{user.name + (user.publicName ? ` (${user.publicName})` : "")}
-					</UserName>
-					{/* color set in css because of inherited margin from Text */}
-					<Text small css={{ color: "$accents7", margin: 0 }}>
-						{user.email}
 					</Text>
+					<Text className="text-default-400 text-sm">{user.email}</Text>
 				</Information>
 			</Wrapper>
 		);

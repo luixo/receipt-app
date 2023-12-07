@@ -1,11 +1,12 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Input, Modal, Spacer, Text } from "@nextui-org/react";
+import { Input, Modal, Spacer } from "@nextui-org/react";
 import { Button } from "@nextui-org/react-tailwind";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { Text } from "app/components/base/text";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
@@ -40,7 +41,7 @@ export const ResetPasswordModal: React.FC<Props> = ({
 	return (
 		<Modal open={isModalOpen} onClose={closeModal}>
 			<Modal.Header>
-				<Text h2>Forgot password</Text>
+				<Text className="text-center text-2xl">Forgot password</Text>
 			</Modal.Header>
 			<Modal.Body>
 				{resetPasswordMutation.status === "success" ? (

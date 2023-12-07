@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Dropdown, Modal, Spacer, Text, styled } from "@nextui-org/react";
+import { Dropdown, Modal, Spacer, styled } from "@nextui-org/react";
 import { Button, Divider, Pagination } from "@nextui-org/react-tailwind";
 import type { Selection } from "@react-types/shared/src/selection";
 import {
@@ -9,6 +9,7 @@ import {
 } from "react-icons/bs";
 import { MdFilterAlt as FilterIcon } from "react-icons/md";
 
+import { Text } from "app/components/base/text";
 import { Grid } from "app/components/grid";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { queries } from "app/queries";
@@ -100,7 +101,7 @@ export const ReceiptsPagination: React.FC<Props> = ({ pagination }) => {
 					<Spacer y={1} />
 					<Divider />
 					<Spacer y={0.5} />
-					<Text h3>Filters</Text>
+					<Text className="text-2xl font-medium">Filters</Text>
 					<Spacer y={0.5} />
 					<Dropdown>
 						<Dropdown.Button flat auto>

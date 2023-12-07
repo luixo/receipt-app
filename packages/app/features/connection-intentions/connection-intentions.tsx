@@ -1,18 +1,14 @@
 import React from "react";
 
-import { Container, Loading, Spacer, Text, styled } from "@nextui-org/react";
+import { Container, Loading, Spacer } from "@nextui-org/react";
 
+import { Text } from "app/components/base/text";
 import { QueryErrorMessage } from "app/components/error-message";
 import type { TRPCQuerySuccessResult } from "app/trpc";
 import { trpc } from "app/trpc";
 
 import { InboundConnectionIntention } from "./inbound-connection-intention";
 import { OutboundConnectionIntention } from "./outbound-connection-intention";
-
-const CenteredText = styled(Text, {
-	display: "flex",
-	alignItems: "center",
-});
 
 type Props = {
 	query: TRPCQuerySuccessResult<"accountConnectionIntentions.getAll">;
@@ -27,11 +23,13 @@ const ConnectionIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 				alignItems="center"
 				justify="center"
 			>
-				<Text h2>You have no intention connections</Text>
+				<Text className="text-center text-4xl font-medium">
+					You have no intention connections
+				</Text>
 				<Spacer y={1} />
-				<CenteredText h3>
+				<Text className="text-2xl font-medium">
 					Add a user with an email or add an email to existing user
-				</CenteredText>
+				</Text>
 			</Container>
 		);
 	}
@@ -39,7 +37,9 @@ const ConnectionIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 		<>
 			{data.inbound.length === 0 ? null : (
 				<>
-					<CenteredText h2>Inbound connections</CenteredText>
+					<Text className="text-center text-4xl font-medium">
+						Inbound connections
+					</Text>
 					<Spacer y={0.5} />
 					{data.inbound.map((intention, index) => (
 						<React.Fragment key={intention.account.id}>
@@ -54,7 +54,9 @@ const ConnectionIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 			) : null}
 			{data.outbound.length === 0 ? null : (
 				<>
-					<CenteredText h2>Outbound connections</CenteredText>
+					<Text className="text-center text-4xl font-medium">
+						Outbound connections
+					</Text>
 					<Spacer y={1} />
 					{data.outbound.map((intention, index) => (
 						<React.Fragment key={intention.account.id}>

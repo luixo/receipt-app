@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Popover, Spacer, Text, styled } from "@nextui-org/react";
+import { Popover, Spacer, styled } from "@nextui-org/react";
 import { Button } from "@nextui-org/react-tailwind";
 import {
 	MdHourglassDisabled as CrossWaitIcon,
@@ -8,6 +8,7 @@ import {
 } from "react-icons/md";
 
 import { LoadableUser } from "app/components/app/loadable-user";
+import { Text } from "app/components/base/text";
 import { trpc } from "app/trpc";
 import type { ReceiptsId } from "next-app/db/models";
 
@@ -71,7 +72,7 @@ export const ReceiptResolvedParticipantsButton: React.FC<Props> = ({
 				<Wrapper>
 					{notResolvedParticipants && notResolvedParticipants.length !== 0 ? (
 						<>
-							<Text b>Not resolved participants: </Text>
+							<Text className="font-medium">Not resolved participants: </Text>
 							<Spacer y={1} />
 							<Participants>
 								{notResolvedParticipants.map((participant, index) => (
@@ -95,7 +96,7 @@ export const ReceiptResolvedParticipantsButton: React.FC<Props> = ({
 					) : null}
 					{resolvedParticipants && resolvedParticipants.length !== 0 ? (
 						<>
-							<Text b>Resolved participants: </Text>
+							<Text className="font-medium">Resolved participants: </Text>
 							<Spacer y={1} />
 							<Participants>
 								{resolvedParticipants?.map((participant, index) => (

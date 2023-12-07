@@ -1,7 +1,9 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Checkbox, Spacer, Text } from "@nextui-org/react";
+import { Checkbox, Spacer } from "@nextui-org/react";
 
+import { Text } from "app/components/base/text";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import type { TRPCQueryOutput } from "app/trpc";
 import type { CurrencyCode } from "app/utils/currency";
@@ -23,13 +25,11 @@ export const EmptyItems: React.FC<Props> = ({
 }) => {
 	const currency = useFormattedCurrency(currencyCode);
 	return (
-		<>
-			<Text b h3>
-				Items with no participants
-			</Text>
-			{items.map((item, index) => (
+		<View>
+			<Text className="text-2xl font-medium">Items with no participants</Text>
+			{items.map((item) => (
 				<React.Fragment key={item.id}>
-					{index === 0 ? null : <Spacer y={0.5} />}
+					<Spacer y={1} />
 					<Checkbox
 						isIndeterminate
 						color="warning"
@@ -41,9 +41,8 @@ export const EmptyItems: React.FC<Props> = ({
 							item.quantity * item.price,
 						)} ${currency}`}
 					</Checkbox>
-					{index === items.length - 1 ? <Spacer y={1} /> : null}
 				</React.Fragment>
 			))}
-		</>
+		</View>
 	);
 };

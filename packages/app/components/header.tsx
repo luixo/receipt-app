@@ -1,9 +1,11 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Spacer, Text, styled } from "@nextui-org/react";
+import { Spacer, styled } from "@nextui-org/react";
 import Head from "next/head";
 import { IoMdArrowRoundBack as BackArrow } from "react-icons/io";
 
+import { Text } from "app/components/base/text";
 import { useRouter } from "app/hooks/use-router";
 import { useWindowSizeChange } from "app/hooks/use-window-size-change";
 
@@ -18,17 +20,6 @@ const Wrapper = styled("div", {
 			},
 		},
 	},
-});
-
-const Title = styled(Text, {
-	display: "flex",
-	alignItems: "center",
-});
-
-const Icon = styled("div", {
-	mr: "$4",
-	lineHeight: 0,
-	whiteSpace: "pre",
 });
 
 const Aside = styled("div", {
@@ -50,7 +41,7 @@ type Props = {
 	backHref?: string;
 	icon?: React.ReactNode;
 	aside?: JSX.Element | JSX.Element[];
-} & React.ComponentProps<typeof Text> &
+} & React.ComponentProps<typeof View> &
 	(
 		| {
 				children: Exclude<React.ReactNode, string>;
@@ -98,15 +89,13 @@ export const Header: React.FC<Props> = ({
 			<Head>
 				<title>{`RA - ${textChildren || (children as string)}`}</title>
 			</Head>
-			<Title h2 {...props}>
+			<View className="flex-row items-center" {...props}>
 				{backHref ? (
-					<Icon onClick={back}>
-						<BackArrow />
-					</Icon>
+					<BackArrow className="mr-4" size={36} onClick={back} />
 				) : null}
-				{icon ? <Icon>{icon}</Icon> : null}
-				{children}
-			</Title>
+				{icon ? <View className="mr-2">{icon}</View> : null}
+				<Text className="text-4xl font-medium">{children}</Text>
+			</View>
 			{asideElements ? (
 				<>
 					{verticalLayout ? <Spacer y={1} /> : null}

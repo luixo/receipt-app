@@ -1,9 +1,10 @@
 import React from "react";
 
-import { Container, Loading, Spacer, Text, styled } from "@nextui-org/react";
+import { Container, Loading, Spacer } from "@nextui-org/react";
 import { useRouter } from "next/router";
 
 import { LoadableUser } from "app/components/app/loadable-user";
+import { Text } from "app/components/base/text";
 import { QueryErrorMessage } from "app/components/error-message";
 import { useRefs } from "app/hooks/use-refs";
 import type { TRPCQuerySuccessResult } from "app/trpc";
@@ -12,11 +13,6 @@ import type { UsersId } from "next-app/db/models";
 
 import { AcceptAllIntentionsButton } from "./accept-all-intentions-button";
 import { InboundDebtIntention } from "./inbound-debt-intention";
-
-const CenteredText = styled(Text, {
-	display: "flex",
-	alignItems: "center",
-});
 
 type IntentionsQuery = TRPCQuerySuccessResult<"debts.getIntentions">;
 
@@ -44,9 +40,13 @@ const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 				alignItems="center"
 				justify="center"
 			>
-				<Text h2>You have no incoming sync requests</Text>
+				<Text className="text-center text-4xl font-medium">
+					You have no incoming sync requests
+				</Text>
 				<Spacer y={1} />
-				<CenteredText h3>Ask a friend to create a debt for you ;)</CenteredText>
+				<Text className="text-center text-2xl">
+					Ask a friend to create a debt for you ;)
+				</Text>
 			</Container>
 		);
 	}
@@ -61,8 +61,8 @@ const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 	}, {});
 	return (
 		<>
-			<Text h2>Inbound debts</Text>
-			<Spacer y={0.5} />
+			<Text className="text-center text-4xl font-medium">Inbound debts</Text>
+			<Spacer y={1} />
 			{data.length === 1 ? null : (
 				<>
 					<AcceptAllIntentionsButton intentions={data} />

@@ -1,10 +1,11 @@
 import React from "react";
 
-import { Loading, Spacer, Text, styled } from "@nextui-org/react";
+import { Loading, Spacer, styled } from "@nextui-org/react";
 import { Button } from "@nextui-org/react-tailwind";
-import { MdEdit as EditIcon } from "react-icons/md";
+import { MdEdit as EditIcon , MdOutlineReceipt as ReceiptIcon } from "react-icons/md";
 
 import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
+import { Text } from "app/components/base/text";
 import { QueryErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
 import { ShrinkText } from "app/components/shrink-text";
@@ -75,7 +76,7 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 		<>
 			<Header
 				backHref="/receipts"
-				icon="🧾"
+				icon={<ReceiptIcon size={36} />}
 				aside={
 					isEditing ? undefined : (
 						<ControlsWrapper locked={Boolean(receipt.lockedTimestamp)}>
@@ -130,7 +131,7 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 					<ReceiptDateInput receipt={receipt} isLoading={deleteLoading} />
 					<Spacer y={0.5} />
 					<Sum>
-						<Text css={{ display: "inline-flex", fontSize: "$xl" }}>
+						<Text className="text-2xl">
 							{round(receipt.sum)} {currency}
 						</Text>
 						<Spacer x={0.5} />

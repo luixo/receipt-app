@@ -1,9 +1,10 @@
 import React from "react";
 
-import { Loading, Modal, Text } from "@nextui-org/react";
+import { Loading, Modal } from "@nextui-org/react";
 import { Button, Divider } from "@nextui-org/react-tailwind";
 import type { QueryObserverSuccessResult } from "@tanstack/react-query";
 
+import { Text } from "app/components/base/text";
 import { QueryErrorMessage } from "app/components/error-message";
 import { Grid } from "app/components/grid";
 import type { TRPCError, TRPCQueryOutput, TRPCQueryResult } from "app/trpc";
@@ -119,7 +120,7 @@ export const CurrenciesPicker: React.FC<WrapperProps> = ({
 			width="90%"
 		>
 			<Modal.Header>
-				<Text h3>Please choose currency</Text>
+				<Text className="text-2xl font-medium">Please choose currency</Text>
 			</Modal.Header>
 			<Modal.Body>
 				<CurrenciesPickerLoader

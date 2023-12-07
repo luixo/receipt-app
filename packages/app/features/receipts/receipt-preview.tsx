@@ -1,10 +1,11 @@
 import React from "react";
 
-import { Text, styled } from "@nextui-org/react";
+import { styled } from "@nextui-org/react";
 import { Button, Divider } from "@nextui-org/react-tailwind";
 
 import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
 import { ReceiptResolvedParticipantsButton } from "app/components/app/receipt-resolved-participants-button";
+import { Text } from "app/components/base/text";
 import { Grid } from "app/components/grid";
 import { Link } from "app/components/link";
 import { LockedIcon } from "app/components/locked-icon";
@@ -67,7 +68,7 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 				>
 					<Text>{receipt.name}</Text>
 				</TitleLink>
-				<Text small css={{ color: "$accents7" }}>
+				<Text className="text-default-400 text-xs">
 					{formatDate(receipt.issued)}
 				</Text>
 			</Grid>
@@ -77,7 +78,7 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 				justify="flex-end"
 				css={{ textAlign: "end", ...(overflow ? { pb: 0 } : {}) }}
 			>
-				<Text b>
+				<Text className="font-medium">
 					{receipt.sum} {currency}
 				</Text>
 			</Grid>

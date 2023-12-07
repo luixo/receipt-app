@@ -1,8 +1,9 @@
 import React from "react";
 
-import { Spacer, Text, styled } from "@nextui-org/react";
+import { Spacer, styled } from "@nextui-org/react";
 import { Button } from "@nextui-org/react-tailwind";
 
+import { Text } from "app/components/base/text";
 import { ErrorMessage } from "app/components/error-message";
 import { useRouter } from "app/hooks/use-router";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -34,11 +35,9 @@ export const VoidAccount: React.FC<Props> = ({ token }) => {
 	if (voidMutation.status === "success") {
 		return (
 			<>
-				<Text h3>{voidMutation.data.email}</Text>
+				<Text className="text-2xl font-medium">{voidMutation.data.email}</Text>
 				<Spacer y={0.5} />
-				<Text h4 color="success">
-					Account removed succesfully
-				</Text>
+				<Text className="text-success">Account removed succesfully</Text>
 				<Spacer y={1} />
 				<Button color="primary" onClick={navigateToHomePage}>
 					To home page
@@ -48,7 +47,9 @@ export const VoidAccount: React.FC<Props> = ({ token }) => {
 	}
 	return (
 		<>
-			<Text h3>Are you sure you want to void your account?</Text>
+			<Text className="text-2xl font-medium">
+				Are you sure you want to void your account?
+			</Text>
 			<Spacer y={1} />
 			<Buttons>
 				<Button

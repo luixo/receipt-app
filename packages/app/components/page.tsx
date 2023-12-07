@@ -1,9 +1,10 @@
 import React from "react";
 
-import { Text, styled } from "@nextui-org/react";
+import { styled } from "@nextui-org/react";
 import { useRouter } from "next/router";
 
 import { Badge } from "app/components/badge";
+import { Text } from "app/components/base/text";
 import { Link } from "app/components/link";
 
 const Wrapper = styled("div", {
@@ -75,12 +76,13 @@ const MenuItemComponent: React.FC<MenuElement> = ({
 }) => {
 	const { pathname } = useRouter();
 	const amount = useBadgeAmount();
+	const selected = pathname === href;
 	return (
-		<MenuItem key={href} href={href} selected={pathname === href}>
+		<MenuItem key={href} href={href} selected={selected}>
 			<Badge amount={amount} css={{ minWidth: 40 }}>
 				<Icon size={24} />
 			</Badge>
-			<Text size="$sm" css={{ lineHeight: "$md" }} color="inherit">
+			<Text className={`text-sm leading-8 ${selected ? "text-primary" : ""}`}>
 				{text}
 			</Text>
 		</MenuItem>

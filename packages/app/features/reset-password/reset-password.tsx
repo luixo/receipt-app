@@ -1,11 +1,12 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Input, Loading, Spacer, Text } from "@nextui-org/react";
+import { Input, Loading, Spacer } from "@nextui-org/react";
 import { Button } from "@nextui-org/react-tailwind";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { Text } from "app/components/base/text";
 import { QueryErrorMessage } from "app/components/error-message";
 import { useRouter } from "app/hooks/use-router";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -51,8 +52,8 @@ export const ResetPassword: React.FC<Props> = ({ token, intentionQuery }) => {
 	if (!token) {
 		return (
 			<>
-				<Text h3>Something went wrong</Text>
-				<Text b>
+				<Text className="text-2xl font-medium">Something went wrong</Text>
+				<Text className="font-medium">
 					Please verify you got reset link right or request a new one
 				</Text>
 			</>
@@ -66,7 +67,7 @@ export const ResetPassword: React.FC<Props> = ({ token, intentionQuery }) => {
 	}
 	return (
 		<>
-			<Text h3>{intentionQuery.data.email}</Text>
+			<Text className="text-2xl font-medium">{intentionQuery.data.email}</Text>
 			<Input value={token} label="Token" disabled />
 			<Spacer y={1} />
 			<Input.Password

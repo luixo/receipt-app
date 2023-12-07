@@ -3,6 +3,7 @@ import React from "react";
 import { Loading, Spacer } from "@nextui-org/react";
 import { Button } from "@nextui-org/react-tailwind";
 import { useQueryClient } from "@tanstack/react-query";
+import { FaUser as AccountIcon } from "react-icons/fa";
 
 import { QueryErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
@@ -40,7 +41,7 @@ const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 
 	return (
 		<>
-			<Header icon="👤" textChildren="My account">
+			<Header icon={<AccountIcon size={36} />} textChildren="My account">
 				{query.data.user.name}
 			</Header>
 			<EmailVerificationCard />

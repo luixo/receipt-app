@@ -1,11 +1,13 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Input, Spacer, Text } from "@nextui-org/react";
+import { Input, Spacer } from "@nextui-org/react";
 import { Button } from "@nextui-org/react-tailwind";
 import { FiMinus as MinusIcon, FiPlus as PlusIcon } from "react-icons/fi";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 import { MdEdit as EditIcon } from "react-icons/md";
 
+import { Text } from "app/components/base/text";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -82,7 +84,7 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 
 	const wrap = React.useCallback(
 		(children: React.ReactElement) => (
-			<div style={{ display: "flex" }}>
+			<View className="flex-row items-center">
 				<Button
 					variant="ghost"
 					color="primary"
@@ -105,13 +107,13 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 				>
 					<PlusIcon size={24} />
 				</Button>
-			</div>
+			</View>
 		),
 		[updatePart, itemPart.part, updateMutation.isLoading],
 	);
 
 	const readOnlyComponent = (
-		<Text css={{ px: "$6", display: "flex", alignItems: "center" }}>
+		<Text>
 			{itemPart.part} / {itemParts}
 		</Text>
 	);
@@ -151,7 +153,7 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 					bordered
 					width="$20"
 				/>
-				<Text>/ {itemParts}</Text>
+				<Text className="ml-2">/ {itemParts}</Text>
 			</>,
 		);
 	}
