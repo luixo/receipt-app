@@ -56,30 +56,25 @@ const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 		return acc;
 	}, {});
 	return (
-		<>
+		<View className="gap-4">
 			<Text className="text-center text-4xl font-medium">Inbound debts</Text>
 			{data.length === 1 ? null : (
-				<>
-					<Spacer y={4} />
-					<AcceptAllIntentionsButton intentions={data} />
-				</>
+				<AcceptAllIntentionsButton intentions={data} />
 			)}
 			{Object.entries(intentionsByUser).map(([userId, groupedIntentions]) => (
-				<React.Fragment key={userId}>
-					<Spacer y={4} />
-					<LoadableUser id={userId} />
+				<View className="gap-2" key={userId}>
+					<LoadableUser className="self-start" id={userId} />
+					<View />
 					{groupedIntentions.map((intention) => (
-						<React.Fragment key={intention.id}>
-							<Spacer y={4} />
-							<InboundDebtIntention
-								intention={intention}
-								ref={intentionsRefs.setRef(intention.id)}
-							/>
-						</React.Fragment>
+						<InboundDebtIntention
+							key={intention.id}
+							intention={intention}
+							ref={intentionsRefs.setRef(intention.id)}
+						/>
 					))}
-				</React.Fragment>
+				</View>
 			))}
-		</>
+		</View>
 	);
 };
 

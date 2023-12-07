@@ -1,7 +1,5 @@
 import React from "react";
-
-import { styled } from "@nextui-org/react";
-import { Spacer } from "@nextui-org/react-tailwind";
+import { View } from "react-native";
 
 import { User } from "app/components/app/user";
 import { RemoveButton } from "app/components/remove-button";
@@ -13,23 +11,6 @@ import { convertParticipantToUser } from "app/utils/receipt-item";
 import type { ReceiptItemsId, ReceiptsId } from "next-app/db/models";
 
 import { ReceiptItemPartInput } from "./receipt-item-part-input";
-
-const Wrapper = styled("div", {
-	display: "flex",
-	alignItems: "flex-start",
-	justifyContent: "space-between",
-});
-
-const Body = styled("div", {
-	display: "flex",
-	alignItems: "center",
-	justifyContent: "space-between",
-
-	"@xsMax": {
-		flexDirection: "column",
-		alignItems: "flex-end",
-	},
-});
 
 type ReceiptItem = TRPCQueryOutput<"receiptItems.get">["items"][number];
 type ReceiptParticipant =
@@ -70,9 +51,12 @@ export const ReceiptItemPart: React.FC<Props> = ({
 	);
 
 	return (
-		<Wrapper>
-			<User user={convertParticipantToUser(participant)} />
-			<Body>
+		<View className="flex-col items-start gap-2 md:flex-row">
+			<View className="flex-1 flex-col justify-between gap-2 self-stretch sm:flex-row">
+				<User
+					className="self-start"
+					user={convertParticipantToUser(participant)}
+				/>
 				<ReceiptItemPartInput
 					receiptId={receiptId}
 					receiptItemId={receiptItemId}
@@ -81,17 +65,15 @@ export const ReceiptItemPart: React.FC<Props> = ({
 					readOnly={readOnly}
 					isLoading={isLoading || removeMutation.isLoading}
 				/>
-				{readOnly ? null : (
-					<>
-						<Spacer x={4} y={2} />
-						<RemoveButton
-							onRemove={removeItemPart}
-							mutation={removeMutation}
-							noConfirm
-						/>
-					</>
-				)}
-			</Body>
-		</Wrapper>
+			</View>
+			{readOnly ? null : (
+				<RemoveButton
+					className="self-end"
+					onRemove={removeItemPart}
+					mutation={removeMutation}
+					noConfirm
+				/>
+			)}
+		</View>
 	);
 };

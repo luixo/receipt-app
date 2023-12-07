@@ -25,30 +25,31 @@ export const UserScreen: AppPage = () => {
 		<>
 			<Header
 				backHref="/users"
-				textChildren={
+				title={
 					userQuery.data ? userQuery.data.name : userNameQuery.data || "..."
 				}
-			>
-				<UserTitle
-					user={React.useMemo(
-						() =>
-							userQuery.data
-								? {
-										id: userQuery.data.localId || userQuery.data.remoteId,
-										name: userQuery.data.name,
-										publicName: userQuery.data.publicName,
-										email: userQuery.data.email,
-								  }
-								: {
-										id,
-										name: userNameQuery.data || id,
-										publicName: undefined,
-										email: undefined,
-								  },
-						[id, userNameQuery.data, userQuery.data],
-					)}
-				/>
-			</Header>
+				endContent={
+					<UserTitle
+						user={React.useMemo(
+							() =>
+								userQuery.data
+									? {
+											id: userQuery.data.localId || userQuery.data.remoteId,
+											name: userQuery.data.name,
+											publicName: userQuery.data.publicName,
+											email: userQuery.data.email,
+									  }
+									: {
+											id,
+											name: userNameQuery.data || id,
+											publicName: undefined,
+											email: undefined,
+									  },
+							[id, userNameQuery.data, userQuery.data],
+						)}
+					/>
+				}
+			/>
 			<Spacer y={4} />
 			<User id={id} />
 		</>

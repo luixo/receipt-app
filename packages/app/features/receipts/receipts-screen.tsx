@@ -16,7 +16,7 @@ import { Receipts } from "./receipts";
 export const ReceiptsScreen: AppPage = () => (
 	<>
 		<Header
-			icon={<ReceiptIcon size={36} />}
+			startContent={<ReceiptIcon size={36} />}
 			aside={
 				<>
 					<FilterButton />

@@ -1,7 +1,7 @@
 import React from "react";
+import { View } from "react-native";
 
-import { styled } from "@nextui-org/react";
-import { Button, Spacer, Spinner } from "@nextui-org/react-tailwind";
+import { Button, Spinner } from "@nextui-org/react-tailwind";
 import {
 	MdEdit as EditIcon,
 	MdOutlineReceipt as ReceiptIcon,
@@ -11,10 +11,8 @@ import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-par
 import { Text } from "app/components/base/text";
 import { QueryErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
-import { ShrinkText } from "app/components/shrink-text";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
-import { useMatchMediaValue } from "app/hooks/use-match-media-value";
 import { useTrpcQueryOptions } from "app/hooks/use-trpc-query-options";
 import { queries } from "app/queries";
 import type { TRPCQuerySuccessResult } from "app/trpc";
@@ -30,34 +28,6 @@ import { ReceiptOwner } from "./receipt-owner";
 import { ReceiptOwnerControlButton } from "./receipt-owner-control-button";
 import { ReceiptRemoveButton } from "./receipt-remove-button";
 
-const Body = styled("div", {
-	display: "flex",
-	justifyContent: "space-between",
-	alignItems: "start",
-});
-
-const AlignEndView = styled("div", {
-	alignSelf: "flex-end",
-});
-
-const Sum = styled("div", {
-	display: "flex",
-});
-
-const ControlsWrapper = styled("div", {
-	display: "flex",
-	alignItems: "center",
-	color: "$primary",
-
-	variants: {
-		locked: {
-			true: {
-				color: "$secondary",
-			},
-		},
-	},
-});
-
 type InnerProps = {
 	query: TRPCQuerySuccessResult<"receipts.get">;
 	deleteLoadingState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
@@ -71,18 +41,17 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 
 	const [isEditing, { switchValue: switchEditing, setFalse: unsetEditing }] =
 		useBooleanState();
-	const dataDirection = useMatchMediaValue("row", { lessSm: "column" });
 
 	const currency = useFormattedCurrency(receipt.currencyCode);
 
 	return (
-		<>
+		<View className="gap-4">
 			<Header
 				backHref="/receipts"
-				icon={<ReceiptIcon size={36} />}
+				startContent={<ReceiptIcon size={36} />}
 				aside={
 					isEditing ? undefined : (
-						<ControlsWrapper locked={Boolean(receipt.lockedTimestamp)}>
+						<View className="flex-row gap-2">
 							<ReceiptParticipantResolvedButton
 								variant="ghost"
 								receiptId={receipt.id}
@@ -91,7 +60,6 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 								resolved={receipt.participantResolved}
 								isDisabled={deleteLoading}
 							/>
-							<Spacer x={2} />
 							{receipt.role === "owner" ? (
 								<ReceiptOwnerControlButton
 									receipt={receipt}
@@ -100,60 +68,54 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 							) : (
 								<ReceiptGuestControlButton receipt={receipt} />
 							)}
-						</ControlsWrapper>
+						</View>
 					)
 				}
-				textChildren={`Receipt ${receipt.name}`}
+				title={`Receipt ${receipt.name}`}
+				endContent={
+					<>
+						{isEditing ? (
+							<ReceiptNameInput
+								receipt={receipt}
+								isLoading={deleteLoading}
+								unsetEditing={unsetEditing}
+							/>
+						) : null}
+						{receipt.role === "owner" && !isEditing ? (
+							<Button
+								variant="light"
+								onClick={switchEditing}
+								isDisabled={deleteLoading || Boolean(receipt.lockedTimestamp)}
+								isIconOnly
+							>
+								<EditIcon size={24} />
+							</Button>
+						) : null}
+					</>
+				}
 			>
-				{isEditing && receipt.role === "owner" ? (
-					<ReceiptNameInput
-						receipt={receipt}
-						isLoading={deleteLoading}
-						unsetEditing={unsetEditing}
-					/>
-				) : (
-					<ShrinkText fontSizeMin={16} fontSizeStep={2}>
-						{receipt.name}
-					</ShrinkText>
-				)}
-				{receipt.role === "owner" && !isEditing ? (
-					<Button
-						className="ml-2"
-						variant="light"
-						onClick={switchEditing}
-						isDisabled={deleteLoading || Boolean(receipt.lockedTimestamp)}
-						isIconOnly
-					>
-						<EditIcon size={24} />
-					</Button>
-				) : null}
+				{isEditing ? undefined : receipt.name}
 			</Header>
-			<Spacer y={4} />
-			<Body css={{ flexDirection: dataDirection }}>
-				<div>
+			<View className="flex-row justify-between gap-2">
+				<View className="gap-2">
 					<ReceiptDateInput receipt={receipt} isLoading={deleteLoading} />
-					<Spacer y={2} />
-					<Sum>
+					<View className="flex-row items-center gap-1">
 						<Text className="text-2xl">
 							{round(receipt.sum)} {currency}
 						</Text>
-						<Spacer x={2} />
 						<ReceiptCurrencyInput receipt={receipt} isLoading={deleteLoading} />
-					</Sum>
-				</div>
-				{dataDirection === "column" ? <Spacer y={2} /> : null}
+					</View>
+				</View>
 				<ReceiptOwner receipt={receipt} />
-			</Body>
+			</View>
 			{receipt.role === "owner" ? (
-				<AlignEndView>
-					<Spacer y={4} />
-					<ReceiptRemoveButton
-						receipt={receipt}
-						setLoading={setDeleteLoading}
-					/>
-				</AlignEndView>
+				<ReceiptRemoveButton
+					className="self-end"
+					receipt={receipt}
+					setLoading={setDeleteLoading}
+				/>
 			) : null}
-		</>
+		</View>
 	);
 };
 

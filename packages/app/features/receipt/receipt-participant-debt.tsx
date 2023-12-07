@@ -1,7 +1,6 @@
 import React from "react";
 import { View } from "react-native";
 
-import { styled } from "@nextui-org/react";
 import { Button, Divider, Spacer } from "@nextui-org/react-tailwind";
 import {
 	MdOutlineReceipt as ReceiptOffIcon,
@@ -20,13 +19,6 @@ import type { TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
 import { getReceiptDebtName } from "app/utils/receipt";
 import type { UsersId } from "next-app/db/models";
-
-const SIZE = 36;
-
-const Icon = styled(ZeroIcon, {
-	size: SIZE,
-	color: "$accents3",
-});
 
 export const isDebtInSyncWithReceipt = (
 	receiptDebt: Pick<LockedReceipt, "currencyCode" | "issued" | "id"> & {
@@ -150,11 +142,11 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 				</View>
 				<View className="flex-[2] flex-row max-md:flex-1">
 					{participant.sum === 0 ? (
-						<Icon as={ZeroIcon} />
+						<ZeroIcon size={36} />
 					) : (
 						<>
 							{isReceiptSyncedWithOurDebt ? null : participant.currentDebt ? (
-								<Icon as={ReceiptOffIcon} css={{ color: "$error" }} />
+								<ReceiptOffIcon size={36} className="text-danger" />
 							) : null}
 							{participant.currentDebt ? (
 								<DebtSyncStatus
@@ -162,14 +154,15 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 										lockedTimestamp: participant.currentDebt.lockedTimestamp,
 										their: participant.currentDebt.their,
 									}}
-									size={SIZE}
+									size="lg"
 								/>
 							) : null}
 						</>
 					)}
 				</View>
 				<View className="flex-1">
-					{isReceiptSyncedWithOurDebt && !isUpdating ? null : (
+					{(isReceiptSyncedWithOurDebt && !isUpdating) ||
+					participant.sum === 0 ? null : (
 						<Button
 							title={
 								participant.currentDebt?.their

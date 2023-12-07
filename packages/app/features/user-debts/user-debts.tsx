@@ -1,13 +1,7 @@
 import React from "react";
+import { View } from "react-native";
 
-import { styled } from "@nextui-org/react";
-import {
-	Button,
-	Divider,
-	Link,
-	Spacer,
-	Spinner,
-} from "@nextui-org/react-tailwind";
+import { Button, Divider, Link, Spinner } from "@nextui-org/react-tailwind";
 import { BsCurrencyExchange as ExchangeIcon } from "react-icons/bs";
 import { MdAdd as AddIcon } from "react-icons/md";
 
@@ -25,18 +19,6 @@ import type { UsersId } from "next-app/src/db/models";
 
 import { UserDebtPreview } from "./user-debt-preview";
 
-const DebtsHeader = styled("div", {
-	display: "flex",
-	alignContent: "center",
-	justifyContent: "center",
-	position: "relative",
-});
-
-const ResolvedSwitch = styled("div", {
-	position: "absolute",
-	right: 0,
-});
-
 type InnerProps = {
 	userId: UsersId;
 	query: TRPCQuerySuccessResult<"debts.getUser">;
@@ -53,10 +35,10 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 	}, [query.data, router]);
 	const userQuery = trpc.users.get.useQuery({ id: userId });
 	return (
-		<>
+		<View className="gap-4">
 			<Header
 				backHref="/debts"
-				textChildren={`${
+				title={`${
 					userQuery.status === "success" ? userQuery.data.name : "..."
 				}'s debts`}
 				aside={
@@ -72,42 +54,36 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 						<AddIcon size={24} />
 					</Button>
 				}
-			>
-				<LoadableUser id={userId} />
-			</Header>
-			<Spacer y={4} />
-			<DebtsHeader>
+				endContent={<LoadableUser id={userId} />}
+			/>
+			<View className="flex-row items-center justify-center gap-4 px-16">
 				<DebtsGroup
 					debts={showResolvedDebts ? aggregatedDebts : nonZeroAggregateDebts}
 				/>
 				{nonZeroAggregateDebts.length > 1 ? (
-					<>
-						<Spacer x={4} />
-						<Button
-							color="primary"
-							href={`/debts/user/${userId}/exchange/`}
-							as={Link}
-							variant="bordered"
-							isIconOnly
-						>
-							<ExchangeIcon />
-						</Button>
-					</>
+					<Button
+						color="primary"
+						href={`/debts/user/${userId}/exchange/`}
+						as={Link}
+						variant="bordered"
+						isIconOnly
+					>
+						<ExchangeIcon />
+					</Button>
 				) : null}
 				{aggregatedDebts.length !== nonZeroAggregateDebts.length ? (
-					<ResolvedSwitch>
-						<ShowResolvedDebtsOption />
-					</ResolvedSwitch>
+					<ShowResolvedDebtsOption className="absolute right-0" />
 				) : null}
-			</DebtsHeader>
-			<Spacer y={4} />
-			{query.data.map((debt) => (
-				<React.Fragment key={debt.id}>
-					<Divider />
-					<UserDebtPreview debt={debt} />
-				</React.Fragment>
-			))}
-		</>
+			</View>
+			<View className="gap-1">
+				{query.data.map((debt) => (
+					<React.Fragment key={debt.id}>
+						<Divider />
+						<UserDebtPreview debt={debt} />
+					</React.Fragment>
+				))}
+			</View>
+		</View>
 	);
 };
 

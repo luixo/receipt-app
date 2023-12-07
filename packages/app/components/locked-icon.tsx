@@ -1,6 +1,5 @@
 import React from "react";
 
-import { Tooltip } from "@nextui-org/react-tailwind";
 import {
 	MdOutlineLock as LockIcon,
 	MdOutlineLockOpen as UnlockedIcon,
@@ -11,18 +10,9 @@ type Props = {
 	tooltip?: string;
 } & React.ComponentProps<typeof LockIcon>;
 
-export const LockedIcon: React.FC<Props> = ({ locked, tooltip, ...props }) => {
-	const content = locked ? (
+export const LockedIcon: React.FC<Props> = ({ locked, tooltip, ...props }) =>
+	locked ? (
 		<LockIcon size={24} {...props} />
 	) : (
 		<UnlockedIcon size={24} {...props} />
 	);
-	if (tooltip) {
-		return (
-			<Tooltip content={tooltip} placement="bottom-end">
-				{content}
-			</Tooltip>
-		);
-	}
-	return content;
-};

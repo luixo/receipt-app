@@ -1,16 +1,10 @@
 import React from "react";
 
-import { styled } from "@nextui-org/react";
 import { Button, ButtonGroup } from "@nextui-org/react-tailwind";
 
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { trpc } from "app/trpc";
 import type { Currency, CurrencyCode } from "app/utils/currency";
-
-const Wrapper = styled("div", {
-	display: "flex",
-	justifyContent: "center",
-});
 
 type ButtonProps = {
 	selected: boolean;
@@ -68,23 +62,21 @@ export const CurrenciesGroup: React.FC<Props> = ({
 		!aggregatedDebts.some((debt) => debt.currencyCode === selectedCurrencyCode);
 	const otherCurrency = useFormattedCurrency(selectedCurrencyCode);
 	return (
-		<Wrapper>
-			<ButtonGroup color="primary">
-				{aggregatedDebts.map((debt) => (
-					<CurrencyButton
-						key={debt.currencyCode}
-						selected={selectedCurrencyCode === debt.currencyCode}
-						currencyCode={debt.currencyCode}
-						setSelectedCurrency={setSelectedCurrency}
-					/>
-				))}
-				<Button
-					variant={isSelectedOther ? undefined : "ghost"}
-					onClick={onSelectOther}
-				>
-					{isSelectedOther ? otherCurrency : "Other"}
-				</Button>
-			</ButtonGroup>
-		</Wrapper>
+		<ButtonGroup color="primary">
+			{aggregatedDebts.map((debt) => (
+				<CurrencyButton
+					key={debt.currencyCode}
+					selected={selectedCurrencyCode === debt.currencyCode}
+					currencyCode={debt.currencyCode}
+					setSelectedCurrency={setSelectedCurrency}
+				/>
+			))}
+			<Button
+				variant={isSelectedOther ? undefined : "ghost"}
+				onClick={onSelectOther}
+			>
+				{isSelectedOther ? otherCurrency : "Other"}
+			</Button>
+		</ButtonGroup>
 	);
 };

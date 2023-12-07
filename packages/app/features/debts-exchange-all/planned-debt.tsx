@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Input, Spacer, Spinner } from "@nextui-org/react-tailwind";
+import { Input, Spinner } from "@nextui-org/react-tailwind";
 import type { UseFormReturn } from "react-hook-form";
 
 import { Text } from "app/components/base/text";
@@ -60,7 +60,7 @@ export const PlannedDebt: React.FC<Props> = ({
 	const selected = selectedCurrencyCode === currencyCode;
 	const rate = <>{ratesLoading && !selected ? <Spinner /> : note}</>;
 	return (
-		<>
+		<View className="gap-1">
 			<View className="flex-row gap-4">
 				<View className="flex-1">
 					<Text className={amount >= 0 ? "text-success" : "text-danger"}>
@@ -86,10 +86,7 @@ export const PlannedDebt: React.FC<Props> = ({
 				</View>
 				<View className="flex-1 max-md:hidden">{rate}</View>
 			</View>
-			<View className="md:hidden">
-				<Spacer y={4} />
-				{rate}
-			</View>
-		</>
+			<View className="md:hidden">{rate}</View>
+		</View>
 	);
 };

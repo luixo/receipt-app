@@ -1,7 +1,7 @@
 import React from "react";
+import { View } from "react-native";
 
-import { styled } from "@nextui-org/react";
-import { Spacer, Spinner } from "@nextui-org/react-tailwind";
+import { Spinner } from "@nextui-org/react-tailwind";
 
 import { Text } from "app/components/base/text";
 import { QueryErrorMessage } from "app/components/error-message";
@@ -13,10 +13,6 @@ import type { ReceiptItemsId, ReceiptsId } from "next-app/db/models";
 
 import { EmptyItems } from "./empty-items";
 import { ReceiptItem } from "./receipt-item";
-
-const NoReceiptItems = styled("div", {
-	textAlign: "center",
-});
 
 type InnerProps = {
 	receiptId: ReceiptsId;
@@ -57,16 +53,13 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 		[itemsRef],
 	);
 	return (
-		<>
+		<View className="gap-4">
 			{emptyItems.length === 0 ? null : (
-				<>
-					<EmptyItems
-						items={emptyItems}
-						currencyCode={receiptCurrencyCode}
-						onClick={onEmptyItemClick}
-					/>
-					<Spacer y={4} />
-				</>
+				<EmptyItems
+					items={emptyItems}
+					currencyCode={receiptCurrencyCode}
+					onClick={onEmptyItemClick}
+				/>
 			)}
 			<ReceiptParticipants
 				data={data}
@@ -76,44 +69,37 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 				currencyCode={receiptCurrencyCode}
 				isLoading={isLoading}
 			/>
-			<Spacer y={4} />
 			<AddReceiptItemController
 				receiptId={receiptId}
 				receiptLocked={receiptLocked}
 				isLoading={isLoading}
 			/>
 			{data.items.map((receiptItem) => (
-				<React.Fragment key={receiptItem.id}>
-					<Spacer y={4} />
-					<ReceiptItem
-						receiptId={receiptId}
-						receiptLocked={receiptLocked}
-						receiptItem={receiptItem}
-						receiptParticipants={data.participants}
-						currencyCode={receiptCurrencyCode}
-						role={data.role}
-						isLoading={isLoading}
-						ref={(element) => {
-							itemsRef.current[receiptItem.id] = element;
-						}}
-					/>
-				</React.Fragment>
+				<ReceiptItem
+					key={receiptItem.id}
+					receiptId={receiptId}
+					receiptLocked={receiptLocked}
+					receiptItem={receiptItem}
+					receiptParticipants={data.participants}
+					currencyCode={receiptCurrencyCode}
+					role={data.role}
+					isLoading={isLoading}
+					ref={(element) => {
+						itemsRef.current[receiptItem.id] = element;
+					}}
+				/>
 			))}
 			{data.items.length === 0 ? (
 				<>
-					<Spacer y={4} />
-					<NoReceiptItems>
-						<Text className="text-2xl font-medium">
-							You have no receipt items yet
-						</Text>
-						<Spacer y={4} />
-						<Text className="text-xl">
-							Press a button above to add a receipt item
-						</Text>
-					</NoReceiptItems>
+					<Text className="text-center text-2xl font-medium">
+						You have no receipt items yet
+					</Text>
+					<Text className="text-center text-xl">
+						Press a button above to add a receipt item
+					</Text>
 				</>
 			) : null}
-		</>
+		</View>
 	);
 };
 

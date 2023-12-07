@@ -1,10 +1,9 @@
 import React from "react";
 
-import { Card, CardBody, tv } from "@nextui-org/react-tailwind";
+import { Card, CardBody, Link, tv } from "@nextui-org/react-tailwind";
 
 import { DebtsGroup } from "app/components/app/debts-group";
 import { LoadableUser } from "app/components/app/loadable-user";
-import { Link } from "app/components/link";
 import { useTrpcQueryOptions } from "app/hooks/use-trpc-query-options";
 import { queries } from "app/queries";
 import type { TRPCQueryOutput } from "app/trpc";

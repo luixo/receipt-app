@@ -34,7 +34,7 @@ export const RemoveButton: React.FC<Props> = ({
 				color="danger"
 				{...props}
 				isDisabled={props.isDisabled || mutation.isLoading}
-				isLoading={mutation.isLoading}
+				isLoading={props.isLoading || mutation.isLoading}
 			>
 				{mutation.isLoading ? null : <TrashBin size={24} />}
 				{children}

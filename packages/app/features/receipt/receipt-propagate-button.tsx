@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, Spacer } from "@nextui-org/react-tailwind";
+import { Button } from "@nextui-org/react-tailwind";
 import {
 	MdInfo as InfoIcon,
 	MdSend as SendIcon,
@@ -169,17 +169,14 @@ const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 				</Button>
 			) : null}
 			{desyncedParticipants.length !== 0 ? (
-				<>
-					<Spacer x={2} />
-					<Button
-						onClick={openInfoButtonPopover}
-						color="primary"
-						isIconOnly
-						title="Show sync status"
-					>
-						<InfoIcon size={24} />
-					</Button>
-				</>
+				<Button
+					onClick={openInfoButtonPopover}
+					color="primary"
+					isIconOnly
+					title="Show sync status"
+				>
+					<InfoIcon size={24} />
+				</Button>
 			) : null}
 			<ReceiptDebtSyncInfoModal
 				isOpen={infoPopoverOpen}

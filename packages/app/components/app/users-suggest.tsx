@@ -1,7 +1,6 @@
 import React from "react";
 import { View } from "react-native";
 
-import { styled } from "@nextui-org/react";
 import {
 	Autocomplete,
 	AutocompleteItem,
@@ -19,13 +18,6 @@ import type { UsersId } from "next-app/db/models";
 
 type UsersResponse = TRPCQueryOutput<"users.suggest">;
 type UserItem = UsersResponse["items"][number];
-
-const Wrapper = styled("div", {
-	display: "flex",
-	flexDirection: "column",
-	alignItems: "stretch",
-	justifyContent: "center",
-});
 
 const LIMIT = 5;
 
@@ -134,7 +126,7 @@ export const UsersSuggest: React.FC<Props> = ({
 	});
 
 	return (
-		<Wrapper>
+		<View>
 			{selectedUsers.length === 0 ? null : (
 				<>
 					<View className="flex-row flex-wrap gap-4">
@@ -201,6 +193,6 @@ export const UsersSuggest: React.FC<Props> = ({
 					(null as unknown as CollectionElement<object>)
 				)}
 			</Autocomplete>
-		</Wrapper>
+		</View>
 	);
 };

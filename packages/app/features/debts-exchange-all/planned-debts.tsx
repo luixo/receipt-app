@@ -1,7 +1,7 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Spacer } from "@nextui-org/react-tailwind";
+import { Button } from "@nextui-org/react-tailwind";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
@@ -187,28 +187,19 @@ export const PlannedDebts: React.FC<Props> = ({
 	return (
 		<>
 			{ratesQuery.error ? (
-				<>
-					<ErrorMessage
-						message={ratesQuery.error.message}
-						button={retryButton}
-					/>
-					<Spacer y={4} />
-				</>
+				<ErrorMessage message={ratesQuery.error.message} button={retryButton} />
 			) : null}
-			{debts.map((debt, index) => (
-				<React.Fragment key={debt.currencyCode}>
-					{index === 0 ? null : <Spacer y={4} />}
-					<PlannedDebt
-						selectedCurrencyCode={selectedCurrencyCode}
-						form={form}
-						ratesLoading={ratesQuery.isLoading}
-						currencyCode={debt.currencyCode}
-						amount={debt.amount}
-						note={debt.note}
-					/>
-				</React.Fragment>
+			{debts.map((debt) => (
+				<PlannedDebt
+					key={debt.currencyCode}
+					selectedCurrencyCode={selectedCurrencyCode}
+					form={form}
+					ratesLoading={ratesQuery.isLoading}
+					currencyCode={debt.currencyCode}
+					amount={debt.amount}
+					note={debt.note}
+				/>
 			))}
-			<Spacer y={4} />
 			<Button
 				onClick={addBatch}
 				isDisabled={

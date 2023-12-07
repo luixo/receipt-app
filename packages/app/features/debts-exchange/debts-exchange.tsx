@@ -31,12 +31,11 @@ const DebtsExchangeInner: React.FC<InnerProps> = ({ userId, query }) => {
 		<>
 			<Header
 				backHref={`/debts/user/${userId}`}
-				textChildren={`${
+				title={`${
 					userQuery.status === "success" ? userQuery.data.name : "..."
 				}'s debts`}
-			>
-				<LoadableUser id={userId} />
-			</Header>
+				endContent={<LoadableUser id={userId} />}
+			/>
 			<Spacer y={4} />
 			<DebtsGroup
 				debts={showResolvedDebts ? aggregatedDebts : nonZeroAggregateDebts}

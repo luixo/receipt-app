@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Accordion, AccordionItem, Spacer } from "@nextui-org/react-tailwind";
+import { Accordion, AccordionItem } from "@nextui-org/react-tailwind";
 import { FaUser as UserIcon } from "react-icons/fa";
 
 import { Text } from "app/components/base/text";
@@ -91,10 +91,7 @@ export const ReceiptParticipants: React.FC<Props> = ({
 			}));
 	}, [data, receiptId, sortParticipants]);
 	return (
-		<Accordion
-			variant="shadow"
-			defaultExpandedKeys={data.role === "owner" ? ["participants"] : undefined}
-		>
+		<Accordion variant="shadow">
 			<AccordionItem
 				key="participants"
 				title={
@@ -103,6 +100,7 @@ export const ReceiptParticipants: React.FC<Props> = ({
 						<Text className="ml-2 text-xl">Participants</Text>
 					</View>
 				}
+				textValue="Participants"
 			>
 				{participants.map((participant) => (
 					<ReceiptParticipant
@@ -117,17 +115,15 @@ export const ReceiptParticipants: React.FC<Props> = ({
 					/>
 				))}
 				{data.role !== "owner" ? null : (
-					<>
-						<Spacer y={8} />
-						<AddReceiptParticipantForm
-							disabled={isLoading}
-							receiptId={receiptId}
-							receiptLocked={receiptLocked}
-							filterIds={participants.map(
-								(participant) => participant.remoteUserId,
-							)}
-						/>
-					</>
+					<AddReceiptParticipantForm
+						className="my-4"
+						disabled={isLoading}
+						receiptId={receiptId}
+						receiptLocked={receiptLocked}
+						filterIds={participants.map(
+							(participant) => participant.remoteUserId,
+						)}
+					/>
 				)}
 			</AccordionItem>
 		</Accordion>

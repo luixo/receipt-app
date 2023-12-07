@@ -1,6 +1,7 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Divider, Spacer, Spinner } from "@nextui-org/react-tailwind";
+import { Divider, Spinner } from "@nextui-org/react-tailwind";
 
 import { CurrenciesPicker } from "app/components/app/currencies-picker";
 import { DebtsGroup } from "app/components/app/debts-group";
@@ -55,20 +56,18 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 		}
 	}, [nonZeroAggregateDebts, back]);
 	return (
-		<>
+		<View className="gap-4">
 			<Header
 				backHref={`/debts/user/${userId}/exchange/`}
-				textChildren={`${
+				title={`${
 					userQuery.status === "success" ? userQuery.data.name : "..."
 				}'s debts`}
-			>
-				<LoadableUser id={userId} />
-			</Header>
-			<Spacer y={4} />
+				endContent={<LoadableUser id={userId} />}
+			/>
 			<DebtsGroup
+				className="self-center"
 				debts={showResolvedDebts ? aggregatedDebts : nonZeroAggregateDebts}
 			/>
-			<Spacer y={4} />
 			<CurrenciesGroup
 				selectedCurrencyCode={selectedCurrency?.code}
 				aggregatedDebts={nonZeroAggregateDebts}
@@ -85,9 +84,7 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 			/>
 			{selectedCurrency ? (
 				<>
-					<Spacer y={4} />
 					<Divider />
-					<Spacer y={4} />
 					<PlannedDebts
 						userId={userId}
 						selectedCurrencyCode={selectedCurrency.code}
@@ -96,7 +93,7 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 					/>
 				</>
 			) : null}
-		</>
+		</View>
 	);
 };
 

@@ -40,7 +40,7 @@ const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 
 	return (
 		<>
-			<Header icon={<AccountIcon size={36} />} textChildren="My account">
+			<Header startContent={<AccountIcon size={36} />} title="My account">
 				{query.data.user.name}
 			</Header>
 			<EmailVerificationCard />

@@ -1,4 +1,5 @@
 import React from "react";
+import { View } from "react-native";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Spacer } from "@nextui-org/react-tailwind";
@@ -60,18 +61,15 @@ export const AddReceiptScreen: AppPage = () => {
 	const topCurrenciesQuery = trpc.currency.topReceipts.useQuery();
 
 	return (
-		<>
+		<View className="gap-4">
 			<Header backHref="/receipts">Add receipt</Header>
 			<EmailVerificationCard />
-			<Spacer y={4} />
 			<ReceiptNameInput form={form} query={addReceiptMutation} />
-			<Spacer y={4} />
 			<CurrencyInput
 				form={form}
 				isLoading={addReceiptMutation.isLoading}
 				topCurrenciesQuery={topCurrenciesQuery}
 			/>
-			<Spacer y={4} />
 			<ReceiptDateInput form={form} query={addReceiptMutation} />
 			<Spacer y={4} />
 			<Button
@@ -86,6 +84,6 @@ export const AddReceiptScreen: AppPage = () => {
 			>
 				Add receipt
 			</Button>
-		</>
+		</View>
 	);
 };

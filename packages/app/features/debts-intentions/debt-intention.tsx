@@ -1,7 +1,7 @@
 import React from "react";
+import { View } from "react-native";
 
-import { styled } from "@nextui-org/react";
-import { Card, CardBody, Spacer } from "@nextui-org/react-tailwind";
+import { Card, CardBody } from "@nextui-org/react-tailwind";
 import {
 	MdNavigateNext as ArrowIcon,
 	MdSync as SyncIcon,
@@ -11,12 +11,6 @@ import { Text } from "app/components/base/text";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useSsrFormat } from "app/hooks/use-ssr-format";
 import type { TRPCQueryOutput } from "app/trpc";
-
-const Wrapper = styled("div", {
-	display: "flex",
-	alignItems: "center",
-	gap: "$6",
-});
 
 type Intentions = TRPCQueryOutput<"debts.getIntentions">;
 
@@ -31,21 +25,21 @@ export const DebtIntention = React.forwardRef<HTMLDivElement, Props>(
 		const currency = useFormattedCurrency(intention.currencyCode);
 		const selfCurrency = useFormattedCurrency(intention.current?.currencyCode);
 		const intentionDataComponent = (
-			<Wrapper>
+			<View className="flex-row gap-2">
 				<Text
 					className={intention.amount >= 0 ? "text-success" : "text-danger"}
 				>
 					{Math.abs(intention.amount)} {currency}
 				</Text>
 				<Text>{formatDate(intention.timestamp)}</Text>
-			</Wrapper>
+			</View>
 		);
 		return (
 			<Card ref={ref}>
-				<CardBody>
+				<CardBody className="gap-4">
 					{intention.current ? (
-						<Wrapper>
-							<Wrapper>
+						<View className="flex-row gap-2 max-sm:flex-col">
+							<View className="flex-row gap-2">
 								<Text
 									className={
 										intention.current.amount >= 0
@@ -56,24 +50,22 @@ export const DebtIntention = React.forwardRef<HTMLDivElement, Props>(
 									{Math.abs(intention.current.amount)} {selfCurrency}
 								</Text>
 								<Text>{formatDate(intention.current.timestamp)}</Text>
-							</Wrapper>
+							</View>
 							<ArrowIcon size={24} />
 							{intentionDataComponent}
-						</Wrapper>
+						</View>
 					) : (
 						intentionDataComponent
 					)}
-					<Spacer y={4} />
 					<Text>{intention.note}</Text>
-					<Spacer y={4} />
-					<Wrapper css={{ justifyContent: "space-between" }}>
-						<Wrapper>
+					<View className="flex-row justify-between">
+						<View className="flex-row gap-1">
 							<SyncIcon size={24} />
 							<Text>{formatDateTime(intention.lockedTimestamp)}</Text>
-						</Wrapper>
-						<div className="max-md:hidden">{children}</div>
-					</Wrapper>
-					<div className="mt-4 self-end md:hidden">{children}</div>
+						</View>
+						<View className="max-md:hidden">{children}</View>
+					</View>
+					<View className="self-end md:hidden">{children}</View>
 				</CardBody>
 			</Card>
 		);

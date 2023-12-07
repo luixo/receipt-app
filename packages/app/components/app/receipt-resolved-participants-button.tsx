@@ -1,6 +1,6 @@
 import React from "react";
+import { View } from "react-native";
 
-import { styled } from "@nextui-org/react";
 import {
 	Button,
 	Popover,
@@ -17,12 +17,6 @@ import { LoadableUser } from "app/components/app/loadable-user";
 import { Text } from "app/components/base/text";
 import { trpc } from "app/trpc";
 import type { ReceiptsId } from "next-app/db/models";
-
-const Wrapper = styled("div", {
-	p: "$8",
-});
-
-const Participants = styled("div");
 
 type Props = {
 	receiptId: ReceiptsId;
@@ -75,12 +69,12 @@ export const ReceiptResolvedParticipantsButton: React.FC<Props> = ({
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent>
-				<Wrapper>
+				<View className="p-4">
 					{notResolvedParticipants && notResolvedParticipants.length !== 0 ? (
 						<>
 							<Text className="font-medium">Not resolved participants: </Text>
 							<Spacer y={4} />
-							<Participants>
+							<View className="items-start">
 								{notResolvedParticipants.map((participant, index) => (
 									<React.Fragment
 										key={participant.localUserId || participant.remoteUserId}
@@ -91,7 +85,7 @@ export const ReceiptResolvedParticipantsButton: React.FC<Props> = ({
 										/>
 									</React.Fragment>
 								))}
-							</Participants>
+							</View>
 						</>
 					) : null}
 					{notResolvedParticipants &&
@@ -104,7 +98,7 @@ export const ReceiptResolvedParticipantsButton: React.FC<Props> = ({
 						<>
 							<Text className="font-medium">Resolved participants: </Text>
 							<Spacer y={4} />
-							<Participants>
+							<View className="items-start">
 								{resolvedParticipants?.map((participant, index) => (
 									<React.Fragment
 										key={participant.localUserId || participant.remoteUserId}
@@ -115,10 +109,10 @@ export const ReceiptResolvedParticipantsButton: React.FC<Props> = ({
 										/>
 									</React.Fragment>
 								))}
-							</Participants>
+							</View>
 						</>
 					) : null}
-				</Wrapper>
+				</View>
 			</PopoverContent>
 		</Popover>
 	);

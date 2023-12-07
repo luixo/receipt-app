@@ -10,11 +10,12 @@ import { trpc } from "app/trpc";
 type Props = {
 	receipt: TRPCQueryOutput<"receipts.get">;
 	setLoading: (nextLoading: boolean) => void;
-};
+} & Omit<React.ComponentProps<typeof RemoveButton>, "mutation" | "onRemove">;
 
 export const ReceiptRemoveButton: React.FC<Props> = ({
 	receipt,
 	setLoading,
+	...props
 }) => {
 	const router = useRouter();
 	const removeReceiptMutation = trpc.receipts.remove.useMutation(
@@ -41,6 +42,7 @@ export const ReceiptRemoveButton: React.FC<Props> = ({
 			onRemove={removeReceipt}
 			subtitle="This will remove receipt forever"
 			noConfirm={receipt.sum === 0}
+			{...props}
 		>
 			Remove receipt
 		</RemoveButton>

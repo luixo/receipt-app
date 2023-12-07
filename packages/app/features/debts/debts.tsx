@@ -1,7 +1,6 @@
 import React from "react";
 import { View } from "react-native";
 
-import { styled } from "@nextui-org/react";
 import { Button, Link, Spacer, Spinner } from "@nextui-org/react-tailwind";
 import { MdAdd as AddIcon } from "react-icons/md";
 
@@ -15,18 +14,6 @@ import { trpc } from "app/trpc";
 import { useShowResolvedDebts } from "next-app/hooks/use-show-resolved-debts";
 
 import { UserDebtsPreview } from "./user-debts-preview";
-
-const DebtsHeader = styled("div", {
-	display: "flex",
-	alignItems: "center",
-	justifyContent: "center",
-	position: "relative",
-});
-
-const ResolvedSwitch = styled("div", {
-	position: "absolute",
-	right: 0,
-});
 
 type InnerProps = {
 	query: TRPCQuerySuccessResult<"debts.getByUsers">;
@@ -68,17 +55,17 @@ const DebtsInner: React.FC<InnerProps> = ({ query }) => {
 
 	return (
 		<>
-			<DebtsHeader>
+			<View className="items-center">
 				<DebtsGroup
 					debts={showResolvedDebts ? sums : nonZeroSums}
-					css={{ p: "$4", flexWrap: "wrap", alignItems: "center" }}
+					className="px-12"
 				/>
 				{sums.length !== nonZeroSums.length ? (
-					<ResolvedSwitch>
+					<View className="absolute right-0">
 						<ShowResolvedDebtsOption />
-					</ResolvedSwitch>
+					</View>
 				) : null}
-			</DebtsHeader>
+			</View>
 			<Spacer y={4} />
 			{query.data.map(({ userId, debts }, index) => {
 				const allDebtsResolved = debts.every((debt) => debt.sum === 0);

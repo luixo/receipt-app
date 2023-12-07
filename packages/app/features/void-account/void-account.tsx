@@ -1,7 +1,7 @@
 import React from "react";
+import { View } from "react-native";
 
-import { styled } from "@nextui-org/react";
-import { Button, Spacer } from "@nextui-org/react-tailwind";
+import { Button } from "@nextui-org/react-tailwind";
 
 import { Text } from "app/components/base/text";
 import { ErrorMessage } from "app/components/error-message";
@@ -9,11 +9,6 @@ import { useRouter } from "app/hooks/use-router";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
-
-const Buttons = styled("div", {
-	display: "flex",
-	justifyContent: "center",
-});
 
 type Props = {
 	token: string;
@@ -34,24 +29,21 @@ export const VoidAccount: React.FC<Props> = ({ token }) => {
 	);
 	if (voidMutation.status === "success") {
 		return (
-			<>
+			<View className="gap-4">
 				<Text className="text-2xl font-medium">{voidMutation.data.email}</Text>
-				<Spacer y={2} />
 				<Text className="text-success">Account removed succesfully</Text>
-				<Spacer y={4} />
 				<Button color="primary" onClick={navigateToHomePage}>
 					To home page
 				</Button>
-			</>
+			</View>
 		);
 	}
 	return (
-		<>
+		<View className="gap-4">
 			<Text className="text-2xl font-medium">
 				Are you sure you want to void your account?
 			</Text>
-			<Spacer y={4} />
-			<Buttons>
+			<View className="flex-row gap-2">
 				<Button
 					onClick={voidAccount}
 					isDisabled={voidMutation.isLoading}
@@ -61,7 +53,6 @@ export const VoidAccount: React.FC<Props> = ({ token }) => {
 				>
 					Yes
 				</Button>
-				<Spacer x={2} />
 				<Button
 					color="primary"
 					onClick={navigateToHomePage}
@@ -69,13 +60,10 @@ export const VoidAccount: React.FC<Props> = ({ token }) => {
 				>
 					No
 				</Button>
-			</Buttons>
+			</View>
 			{voidMutation.status === "error" ? (
-				<>
-					<Spacer y={4} />
-					<ErrorMessage message={voidMutation.error.message} />
-				</>
+				<ErrorMessage message={voidMutation.error.message} />
 			) : null}
-		</>
+		</View>
 	);
 };

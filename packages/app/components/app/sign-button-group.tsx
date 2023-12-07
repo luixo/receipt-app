@@ -1,13 +1,9 @@
 import React from "react";
+import { View } from "react-native";
 
-import { styled } from "@nextui-org/react";
 import { Button, Spinner, tv } from "@nextui-org/react-tailwind";
 
 export type Direction = "+" | "-";
-
-const Wrapper = styled("div", {
-	display: "flex",
-});
 
 const buttonClass = tv({
 	base: "flex-1",
@@ -35,7 +31,7 @@ export const SignButtonGroup: React.FC<Props> = ({
 	const setPositive = React.useCallback(() => onUpdate("+"), [onUpdate]);
 	const setNegative = React.useCallback(() => onUpdate("-"), [onUpdate]);
 	return (
-		<Wrapper>
+		<View className="flex-row">
 			<Button
 				onClick={setPositive}
 				variant={direction === "-" ? "bordered" : undefined}
@@ -54,6 +50,6 @@ export const SignButtonGroup: React.FC<Props> = ({
 			>
 				{isLoading ? <Spinner size="sm" /> : "- take"}
 			</Button>
-		</Wrapper>
+		</View>
 	);
 };

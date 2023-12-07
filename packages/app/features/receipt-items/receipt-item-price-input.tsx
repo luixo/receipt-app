@@ -1,6 +1,5 @@
 import React from "react";
 
-import { styled } from "@nextui-org/react";
 import { Button, Input, Spacer } from "@nextui-org/react-tailwind";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 import { MdEdit as EditIcon } from "react-icons/md";
@@ -16,8 +15,6 @@ import { trpc } from "app/trpc";
 import type { CurrencyCode } from "app/utils/currency";
 import { priceSchema } from "app/utils/validation";
 import type { ReceiptsId } from "next-app/db/models";
-
-const Wrapper = styled("div", { display: "flex", alignItems: "center" });
 
 type ReceiptItem = TRPCQueryOutput<"receiptItems.get">["items"][number];
 
@@ -72,7 +69,7 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 
 	if (!isEditing) {
 		return (
-			<Wrapper>
+			<>
 				<Text>
 					{receiptItem.price} {currency}
 				</Text>
@@ -89,7 +86,7 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 				) : (
 					<Spacer x={2} />
 				)}
-			</Wrapper>
+			</>
 		);
 	}
 

@@ -1,11 +1,10 @@
 import React from "react";
 
-import { Button, Link, Spacer } from "@nextui-org/react-tailwind";
+import { Badge, Button, Link, Spacer } from "@nextui-org/react-tailwind";
 import { IoMdMail as InboxIcon } from "react-icons/io";
 import { MdAdd as AddIcon } from "react-icons/md";
 import { PiMoney as DebtIcon } from "react-icons/pi";
 
-import { Badge } from "app/components/badge";
 import { Header } from "app/components/header";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { useDebtsIntentions } from "app/hooks/use-debts-intentions";
@@ -15,10 +14,26 @@ import { Debts } from "./debts";
 
 export const DebtsScreen: AppPage = () => {
 	const inboundDebtsAmount = useDebtsIntentions();
+	const intentionsButton = React.useMemo(
+		() => (
+			<Button
+				key="intentions"
+				href="/debts/intentions"
+				as={Link}
+				color="primary"
+				title="Debts sync intentions"
+				variant="bordered"
+				isIconOnly
+			>
+				<InboxIcon size={24} />
+			</Button>
+		),
+		[],
+	);
 	return (
 		<>
 			<Header
-				icon={<DebtIcon size={36} />}
+				startContent={<DebtIcon size={36} />}
 				aside={React.useMemo(
 					() => [
 						<Button
@@ -32,20 +47,21 @@ export const DebtsScreen: AppPage = () => {
 						>
 							<AddIcon size={24} />
 						</Button>,
-						<Badge amount={inboundDebtsAmount} key="intentions">
-							<Button
-								href="/debts/intentions"
-								as={Link}
-								color="primary"
-								title="Debts sync intentions"
-								variant="bordered"
-								isIconOnly
+						inboundDebtsAmount === 0 ? (
+							intentionsButton
+						) : (
+							<Badge
+								key="intentions"
+								content={inboundDebtsAmount}
+								color="danger"
+								placement="top-right"
+								size="lg"
 							>
-								<InboxIcon size={24} />
-							</Button>
-						</Badge>,
+								{intentionsButton}
+							</Badge>
+						),
 					],
-					[inboundDebtsAmount],
+					[inboundDebtsAmount, intentionsButton],
 				)}
 			>
 				Debts

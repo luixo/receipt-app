@@ -1,18 +1,11 @@
 import React from "react";
 
-import { styled } from "@nextui-org/react";
 import type { UseFormReturn } from "react-hook-form";
 
 import { DateInput } from "app/components/date-input";
 import type { TRPCMutationResult } from "app/trpc";
 
 import type { Form } from "./types";
-
-const Wrapper = styled("div", {
-	display: "flex",
-	gap: "$6",
-	alignItems: "center",
-});
 
 type Props = {
 	form: UseFormReturn<Form>;
@@ -25,14 +18,12 @@ export const ReceiptDateInput: React.FC<Props> = ({ form, query }) => {
 		[form],
 	);
 	return (
-		<Wrapper>
-			<DateInput
-				label="Issued on"
-				timestamp={form.getValues("issued")}
-				isLoading={query.isLoading}
-				onUpdate={onDateUpdate}
-				updateOnChange
-			/>
-		</Wrapper>
+		<DateInput
+			label="Issued on"
+			timestamp={form.getValues("issued")}
+			isLoading={query.isLoading}
+			onUpdate={onDateUpdate}
+			updateOnChange
+		/>
 	);
 };

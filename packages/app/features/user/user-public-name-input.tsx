@@ -1,7 +1,6 @@
 import React from "react";
 
-import { styled } from "@nextui-org/react";
-import { Button, Input, Spacer } from "@nextui-org/react-tailwind";
+import { Button, Input } from "@nextui-org/react-tailwind";
 import {
 	IoCheckmarkCircleOutline as CheckMark,
 	IoTrashBin as TrashBin,
@@ -14,10 +13,6 @@ import { mutations } from "app/mutations";
 import type { TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
 import { userNameSchema } from "app/utils/validation";
-
-const ButtonsContainer = styled("div", {
-	display: "flex",
-});
 
 type Props = {
 	user: TRPCQueryOutput<"users.get">;
@@ -89,7 +84,7 @@ export const UserPublicNameInput: React.FC<Props> = ({ user, isLoading }) => {
 				inputState.error?.message || updateUserMutation.error?.message
 			}
 			endContent={
-				<ButtonsContainer>
+				<>
 					<Button
 						title="Save user public name"
 						variant="light"
@@ -104,21 +99,18 @@ export const UserPublicNameInput: React.FC<Props> = ({ user, isLoading }) => {
 						<CheckMark size={24} />
 					</Button>
 					{user.publicName === undefined ? null : (
-						<>
-							<Spacer x={1} />
-							<Button
-								title="Remove user public name"
-								variant="light"
-								isLoading={updateUserMutation.isLoading}
-								onClick={() => savePublicName(undefined)}
-								color="danger"
-								isIconOnly
-							>
-								<TrashBin size={24} />
-							</Button>
-						</>
+						<Button
+							title="Remove user public name"
+							variant="light"
+							isLoading={updateUserMutation.isLoading}
+							onClick={() => savePublicName(undefined)}
+							color="danger"
+							isIconOnly
+						>
+							<TrashBin size={24} />
+						</Button>
 					)}
-				</ButtonsContainer>
+				</>
 			}
 		/>
 	);

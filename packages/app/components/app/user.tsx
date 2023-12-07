@@ -28,6 +28,7 @@ export const User = React.forwardRef<HTMLDivElement, Props>(
 		return (
 			<RawUser
 				ref={ref}
+				className="text-foreground"
 				{...props}
 				name={user.name + (user.publicName ? ` (${user.publicName})` : "")}
 				description={user.email}

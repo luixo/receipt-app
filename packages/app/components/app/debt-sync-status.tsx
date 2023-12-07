@@ -1,7 +1,7 @@
 import React from "react";
+import { View } from "react-native";
 
-import { styled } from "@nextui-org/react";
-import { Tooltip } from "@nextui-org/react-tailwind";
+import { Tooltip, tv } from "@nextui-org/react-tailwind";
 import {
 	MdKeyboardArrowLeft as IncomingIcon,
 	MdKeyboardArrowRight as OutcomingIcon,
@@ -11,25 +11,15 @@ import {
 
 import type { TRPCQueryOutput } from "app/trpc";
 
-const Wrapper = styled("div", {
-	display: "flex",
-	whiteSpace: "nowrap",
-
+const wrapper = tv({
+	base: "flex-row",
 	variants: {
 		type: {
-			sync: {
-				color: "$success",
-			},
-			unsync: {
-				color: "$warning",
-			},
+			sync: "text-success",
+			unsync: "text-warning",
 		},
 	},
 });
-
-const StyledSyncIcon = styled(SyncIcon);
-
-const DirectionIcon = styled(OutcomingIcon);
 
 type Debt = TRPCQueryOutput<"debts.get">;
 
@@ -58,16 +48,17 @@ const getContent = (
 
 type Props = {
 	debt: Pick<Debt, "lockedTimestamp"> & { their?: TheirDebtPick };
-	size: number;
+	size?: "md" | "lg";
 };
 
 export const DebtSyncStatus: React.FC<Props> = ({
-	size,
+	size = "md",
 	debt: { lockedTimestamp, their },
 }) => {
 	if (!lockedTimestamp) {
 		return null;
 	}
+	const pixelSize = size === "md" ? 24 : 36;
 
 	const isSynced =
 		lockedTimestamp &&
@@ -77,19 +68,25 @@ export const DebtSyncStatus: React.FC<Props> = ({
 			content={getContent(lockedTimestamp, their)}
 			placement="bottom-end"
 		>
-			<Wrapper type={isSynced ? "sync" : "unsync"}>
-				<StyledSyncIcon as={isSynced ? SyncIcon : UnsyncIcon} css={{ size }} />
-				{isSynced || !lockedTimestamp ? null : (
-					<DirectionIcon
-						as={
-							(their?.lockedTimestamp ?? 0) >= lockedTimestamp
-								? IncomingIcon
-								: OutcomingIcon
-						}
-						css={{ size, margin: `0 ${-(size / 4)}px` }}
-					/>
+			<View className={wrapper({ type: isSynced ? "sync" : "unsync" })}>
+				{isSynced ? (
+					<SyncIcon size={pixelSize} />
+				) : (
+					<UnsyncIcon size={pixelSize} />
 				)}
-			</Wrapper>
+				<View
+					className={`absolute ${
+						size === "md" ? "left-[13px]" : "left-[20px]"
+					} top-0`}
+				>
+					{isSynced || !lockedTimestamp ? null : (their?.lockedTimestamp ??
+							0) >= lockedTimestamp ? (
+						<IncomingIcon size={pixelSize} />
+					) : (
+						<OutcomingIcon size={pixelSize} />
+					)}
+				</View>
+			</View>
 		</Tooltip>
 	);
 };

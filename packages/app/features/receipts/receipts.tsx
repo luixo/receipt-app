@@ -1,7 +1,6 @@
 import React from "react";
 import { View } from "react-native";
 
-import { styled } from "@nextui-org/react";
 import {
 	Button,
 	Divider,
@@ -23,13 +22,6 @@ import { trpc } from "app/trpc";
 
 import { ReceiptPreview } from "./receipt-preview";
 
-const Wrapper = styled("div", {
-	display: "flex",
-	flexDirection: "column",
-	alignItems: "center",
-	justifyContent: "center",
-});
-
 type PreviewsProps = {
 	receipts: TRPCQueryOutput<"receipts.getPaged">["items"];
 };
@@ -37,8 +29,12 @@ type PreviewsProps = {
 const ReceiptPreviewsList: React.FC<PreviewsProps> = ({ receipts }) => (
 	<>
 		<View className="flex-row gap-2">
-			<View className="flex-[7] p-2">Receipt</View>
-			<View className="flex-[2] justify-end p-2">Sum</View>
+			<View className="flex-[7] p-2">
+				<Text>Receipt</Text>
+			</View>
+			<View className="flex-[2] p-2">
+				<Text className="self-end">Sum</Text>
+			</View>
 			<View className="flex-[3] p-2 pr-14" />
 		</View>
 		<Divider />
@@ -73,9 +69,10 @@ export const Receipts: React.FC = () => {
 			return <QueryErrorMessage query={query} />;
 		}
 		return (
-			<Wrapper>
-				<Text className="text-4xl font-medium">You have no receipts</Text>
-				<Spacer y={2} />
+			<View className="gap-2">
+				<Text className="text-center text-4xl font-medium">
+					You have no receipts
+				</Text>
 				<Text className="text-center text-2xl font-medium">
 					Press
 					<Button
@@ -91,19 +88,20 @@ export const Receipts: React.FC = () => {
 					</Button>
 					to add a receipt
 				</Text>
-			</Wrapper>
+			</View>
 		);
 	}
 
-	const paginationElement = (
-		<Pagination
-			className="self-center"
-			color="primary"
-			size="lg"
-			variant="bordered"
-			{...pagination}
-		/>
-	);
+	const paginationElement =
+		totalCount === 0 ? null : (
+			<Pagination
+				className="self-center"
+				color="primary"
+				size="lg"
+				variant="bordered"
+				{...pagination}
+			/>
+		);
 
 	return (
 		<>
@@ -120,11 +118,9 @@ export const Receipts: React.FC = () => {
 				{query.status === "loading" ? (
 					<Spinner size="lg" />
 				) : !totalCount && input.filters ? (
-					<Wrapper>
-						<Text className="text-4xl font-medium">
-							No receipts under given filters
-						</Text>
-					</Wrapper>
+					<Text className="text-center text-4xl font-medium">
+						No receipts under given filters
+					</Text>
 				) : query.data ? (
 					<ReceiptPreviewsList receipts={query.data.items} />
 				) : null}

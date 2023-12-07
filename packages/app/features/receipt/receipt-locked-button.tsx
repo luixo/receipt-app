@@ -42,19 +42,18 @@ export const ReceiptLockedButton: React.FC<Props> = ({
 		return `There are ${emptyItems.length} empty items, cannot lock`;
 	}, [receiptItemsQuery.data]);
 	const elements = (
-		<Button
-			variant="ghost"
-			isLoading={updateReceiptMutation.isLoading}
-			isDisabled={isLoading || Boolean(emptyItemsWarning)}
-			onClick={() => switchResolved()}
-			color={locked ? "success" : "warning"}
-			isIconOnly
-		>
-			<LockedIcon
-				locked={locked}
-				tooltip={locked ? "Receipt locked" : "Receipt unlocked"}
-			/>
-		</Button>
+		<Tooltip content={locked ? "Receipt locked" : "Receipt unlocked"}>
+			<Button
+				variant="ghost"
+				isLoading={updateReceiptMutation.isLoading}
+				isDisabled={isLoading || Boolean(emptyItemsWarning)}
+				onClick={() => switchResolved()}
+				color={locked ? "success" : "warning"}
+				isIconOnly
+			>
+				<LockedIcon locked={locked} />
+			</Button>
+		</Tooltip>
 	);
 	if (emptyItemsWarning) {
 		return (

@@ -1,4 +1,5 @@
 import React from "react";
+import { View } from "react-native";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Spacer } from "@nextui-org/react-tailwind";
@@ -109,24 +110,20 @@ export const AddDebtScreen: AppPage = () => {
 	const topCurrenciesQuery = trpc.currency.topDebts.useQuery();
 
 	return (
-		<>
+		<View className="gap-4">
 			<Header backHref="/debts">Add debt</Header>
 			<EmailVerificationCard />
-			<Spacer y={4} />
 			<SignButtonGroup
 				isLoading={addMutation.isLoading}
 				onUpdate={onDirectionUpdate}
 				direction={form.watch("direction")}
 			/>
-			<Spacer y={4} />
 			<DebtAmountInput form={form} isLoading={addMutation.isLoading} />
-			<Spacer y={4} />
 			<CurrencyInput
 				form={form}
 				isLoading={addMutation.isLoading}
 				topCurrenciesQuery={topCurrenciesQuery}
 			/>
-			<Spacer y={4} />
 			<UsersSuggest
 				selected={form.watch("user")}
 				isDisabled={addMutation.isLoading}
@@ -134,11 +131,9 @@ export const AddDebtScreen: AppPage = () => {
 				onUserClick={onUserClick}
 				closeOnSelect
 			/>
-			<Spacer y={4} />
 			<DebtDateInput form={form} isLoading={addMutation.isLoading} />
-			<Spacer y={4} />
 			<DebtNoteInput form={form} isLoading={addMutation.isLoading} />
-			<Spacer y={12} />
+			<Spacer y={4} />
 			<Button
 				color="primary"
 				onClick={form.handleSubmit(onSubmit)}
@@ -147,6 +142,6 @@ export const AddDebtScreen: AppPage = () => {
 			>
 				Add debt
 			</Button>
-		</>
+		</View>
 	);
 };

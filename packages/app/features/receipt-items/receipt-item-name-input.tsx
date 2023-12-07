@@ -1,6 +1,6 @@
 import React from "react";
+import { View } from "react-native";
 
-import { styled } from "@nextui-org/react";
 import { Button, Input } from "@nextui-org/react-tailwind";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 import { MdEdit as EditIcon } from "react-icons/md";
@@ -14,8 +14,6 @@ import type { TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
 import { receiptItemNameSchema } from "app/utils/validation";
 import type { ReceiptsId } from "next-app/db/models";
-
-const Wrapper = styled("div", { display: "flex", alignItems: "center" });
 
 type ReceiptItem = TRPCQueryOutput<"receiptItems.get">["items"][number];
 
@@ -66,7 +64,7 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 
 	if (!isEditing) {
 		return (
-			<Wrapper>
+			<View className="flex-row items-center">
 				<Text className="text-xl">{receiptItem.name}</Text>
 				{!readOnly ? (
 					<Button
@@ -79,7 +77,7 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 						<EditIcon size={24} />
 					</Button>
 				) : null}
-			</Wrapper>
+			</View>
 		);
 	}
 

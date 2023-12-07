@@ -1,7 +1,7 @@
 import React from "react";
+import { View } from "react-native";
 
-import { styled } from "@nextui-org/react";
-import { Accordion, AccordionItem, Spacer } from "@nextui-org/react-tailwind";
+import { Accordion, AccordionItem } from "@nextui-org/react-tailwind";
 
 import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
 import { User } from "app/components/app/user";
@@ -19,24 +19,6 @@ import type { ReceiptItemsId, ReceiptsId, UsersId } from "next-app/db/models";
 import type { Role } from "next-app/handlers/receipts/utils";
 
 import { ReceiptParticipantRoleInput } from "./receipt-participant-role-input";
-
-const Wrapper = styled("div", {
-	display: "flex",
-});
-
-const Body = styled("div", {
-	display: "flex",
-	justifyContent: "space-between",
-
-	"@xsMax": {
-		flexDirection: "column",
-	},
-});
-
-const BodyElement = styled("div", {
-	display: "flex",
-	alignItems: "center",
-});
 
 type Props = {
 	receiptId: ReceiptsId;
@@ -97,25 +79,24 @@ export const ReceiptParticipant: React.FC<Props> = ({
 					indicator:
 						"data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-disabled",
 				}}
+				textValue={participant.name}
 				title={
-					<Wrapper>
-						<Body>
-							<BodyElement>
-								<User
-									className={
-										participant.items.length === 0
-											? "opacity-disabled"
-											: undefined
-									}
-									user={convertParticipantToUser(participant)}
-								/>
-								<Spacer x={4} />
-								<Text>
-									{`${Math.round(participant.sum * 100) / 100} ${currency}`}
-								</Text>
-							</BodyElement>
-							<Spacer x={4} />
-							<BodyElement css={{ alignSelf: "flex-end" }}>
+					<View className="flex-col justify-between gap-4 md:flex-row">
+						<View className="flex-col items-center gap-4 self-start sm:flex-row">
+							<User
+								className={
+									participant.items.length === 0
+										? "opacity-disabled"
+										: undefined
+								}
+								user={convertParticipantToUser(participant)}
+							/>
+							<Text className="self-start">
+								{`${Math.round(participant.sum * 100) / 100} ${currency}`}
+							</Text>
+						</View>
+						<View className="flex-row gap-2 self-end">
+							<View className="flex-row gap-2">
 								<ReceiptParticipantRoleInput
 									receiptId={receiptId}
 									selfUserId={receiptSelfUserId}
@@ -123,7 +104,6 @@ export const ReceiptParticipant: React.FC<Props> = ({
 									isLoading={isLoading}
 									role={role}
 								/>
-								<Spacer x={2} />
 								<ReceiptParticipantResolvedButton
 									variant={
 										participant.remoteUserId === receiptSelfUserId
@@ -139,22 +119,18 @@ export const ReceiptParticipant: React.FC<Props> = ({
 											: null
 									}
 								/>
-								{role === "owner" ? (
-									<>
-										<Spacer x={2} />
-										<RemoveButton
-											onRemove={removeReceiptParticipant}
-											mutation={removeReceiptParticipantMutation}
-											isDisabled={!selfAccountId || receiptLocked}
-											subtitle="This will remove participant with all his parts"
-											noConfirm={participant.sum === 0}
-										/>
-									</>
-								) : null}
-							</BodyElement>
-						</Body>
-						<Spacer x={2} />
-					</Wrapper>
+							</View>
+							{role === "owner" ? (
+								<RemoveButton
+									onRemove={removeReceiptParticipant}
+									mutation={removeReceiptParticipantMutation}
+									isDisabled={!selfAccountId || receiptLocked}
+									subtitle="This will remove participant with all his parts"
+									noConfirm={participant.sum === 0}
+								/>
+							) : null}
+						</View>
+					</View>
 				}
 			>
 				{participant.items.map((item) => (

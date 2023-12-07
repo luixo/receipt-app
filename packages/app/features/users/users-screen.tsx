@@ -1,10 +1,9 @@
 import React from "react";
 
-import { Button, Link, Spacer } from "@nextui-org/react-tailwind";
+import { Badge, Button, Link, Spacer } from "@nextui-org/react-tailwind";
 import { FaUsers as UsersIcon } from "react-icons/fa";
 import { MdAdd as AddIcon, MdLink as LinkIcon } from "react-icons/md";
 
-import { Badge } from "app/components/badge";
 import { Header } from "app/components/header";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { useConnectionIntentions } from "app/hooks/use-connection-intentions";
@@ -14,10 +13,26 @@ import { Users } from "./users";
 
 export const UsersScreen: AppPage = () => {
 	const inboundConnectionsAmount = useConnectionIntentions();
+	const connectionsButton = React.useMemo(
+		() => (
+			<Button
+				key="connections"
+				href="/users/connections"
+				as={Link}
+				color="primary"
+				title="Connection intentions"
+				variant="bordered"
+				isIconOnly
+			>
+				<LinkIcon size={24} />
+			</Button>
+		),
+		[],
+	);
 	return (
 		<>
 			<Header
-				icon={<UsersIcon size={36} />}
+				startContent={<UsersIcon size={36} />}
 				aside={React.useMemo(
 					() => [
 						<Button
@@ -31,20 +46,21 @@ export const UsersScreen: AppPage = () => {
 						>
 							<AddIcon size={24} />
 						</Button>,
-						<Badge amount={inboundConnectionsAmount} key="connections">
-							<Button
-								href="/users/connections"
-								as={Link}
-								color="primary"
-								title="Connection intentions"
-								variant="bordered"
-								isIconOnly
+						inboundConnectionsAmount === 0 ? (
+							connectionsButton
+						) : (
+							<Badge
+								key="connections"
+								content={inboundConnectionsAmount}
+								color="danger"
+								placement="top-right"
+								size="lg"
 							>
-								<LinkIcon size={24} />
-							</Button>
-						</Badge>,
+								{connectionsButton}
+							</Badge>
+						),
 					],
-					[inboundConnectionsAmount],
+					[inboundConnectionsAmount, connectionsButton],
 				)}
 			>
 				Users

@@ -1,13 +1,11 @@
 import React from "react";
 import { View } from "react-native";
 
-import { styled } from "@nextui-org/react";
-import { Button, Divider } from "@nextui-org/react-tailwind";
+import { Button, Divider, Link } from "@nextui-org/react-tailwind";
 
 import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
 import { ReceiptResolvedParticipantsButton } from "app/components/app/receipt-resolved-participants-button";
 import { Text } from "app/components/base/text";
-import { Link } from "app/components/link";
 import { LockedIcon } from "app/components/locked-icon";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useSsrFormat } from "app/hooks/use-ssr-format";
@@ -15,12 +13,6 @@ import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import type { TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
-
-const TitleLink = styled(Link, {
-	display: "flex",
-	flexDirection: "column",
-	width: "100%",
-});
 
 type Props = {
 	receipt: TRPCQueryOutput<"receipts.getPaged">["items"][number];
@@ -40,14 +32,15 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 		});
 	}, [updateReceiptMutation, receipt.id, receiptLocked]);
 	const title = (
-		<>
-			<TitleLink href={`/receipts/${receipt.id}/`} css={{ cursor: "pointer" }}>
-				<Text>{receipt.name}</Text>
-			</TitleLink>
+		<Link
+			className="flex flex-col items-start"
+			href={`/receipts/${receipt.id}/`}
+		>
+			<Text>{receipt.name}</Text>
 			<Text className="text-default-400 text-xs">
 				{formatDate(receipt.issued)}
 			</Text>
-		</>
+		</Link>
 	);
 	const sum = (
 		<Text className="font-medium">
@@ -58,13 +51,19 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 		<>
 			<Divider className="sm:hidden" />
 			<View className="flex-row gap-2 sm:hidden">
-				<View className="flex-[7] p-2">{title}</View>
-				<View className="flex-[2] flex-row justify-end p-2">{sum}</View>
+				<View className="flex-[7] p-2">
+					<Text>{title}</Text>
+				</View>
+				<View className="flex-[2] flex-row justify-end p-2">
+					<Text>{sum}</Text>
+				</View>
 			</View>
 			<View className="mb-2 flex-row gap-2">
-				<View className="flex-[7] p-2 max-sm:hidden">{title}</View>
+				<View className="flex-[7] p-2 max-sm:hidden">
+					<Text>{title}</Text>
+				</View>
 				<View className="flex-[2] flex-row justify-end p-2 max-sm:hidden">
-					{sum}
+					<Text className="self-center">{sum}</Text>
 				</View>
 				<View className="flex-1 flex-row justify-center p-2">
 					{receipt.participantResolved === null ? null : (

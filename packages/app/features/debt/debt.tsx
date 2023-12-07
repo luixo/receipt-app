@@ -1,11 +1,11 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Spacer, Spinner } from "@nextui-org/react-tailwind";
+import { Spinner } from "@nextui-org/react-tailwind";
 
 import { DebtControlButtons } from "app/components/app/debt-control-buttons";
 import { DebtSyncStatus } from "app/components/app/debt-sync-status";
 import { LoadableUser } from "app/components/app/loadable-user";
-import { Text } from "app/components/base/text";
 import { QueryErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
@@ -30,39 +30,28 @@ export const DebtInner: React.FC<InnerProps> = ({ query }) => {
 	const currency = useFormattedCurrency(debt.currencyCode);
 
 	return (
-		<>
+		<View className="gap-4">
 			<Header
 				backHref={`/debts/user/${debt.userId}`}
 				aside={<DebtControlButtons debt={debt} />}
-				textChildren={`${debt.amount} ${currency} debt`}
-			>
-				<>
-					<Text className="text-4xl font-medium">
-						{debt.amount} {currency} debt
-					</Text>
-					<Spacer x={4} />
-					<DebtSyncStatus debt={debt} size={36} />
-					{debt.receiptId ? (
-						<>
-							<Spacer x={4} />
+				endContent={
+					<>
+						<DebtSyncStatus debt={debt} size="lg" />
+						{debt.receiptId ? (
 							<DebtReceiptLink receiptId={debt.receiptId} />
-						</>
-					) : null}
-				</>
+						) : null}
+					</>
+				}
+			>
+				{`${debt.amount} ${currency} debt`}
 			</Header>
-			<Spacer y={4} />
-			<LoadableUser id={debt.userId} />
-			<Spacer y={4} />
+			<LoadableUser className="self-start" id={debt.userId} />
 			<DebtSignButtonGroup debt={debt} disabled={isRemoving} />
-			<Spacer y={4} />
 			<DebtAmountInput debt={debt} isLoading={isRemoving} />
-			<Spacer y={4} />
 			<DebtDateInput debt={debt} isLoading={isRemoving} />
-			<Spacer y={4} />
 			<DebtNoteInput debt={debt} isLoading={isRemoving} />
-			<Spacer y={4} />
 			<DebtRemoveButton debt={debt} setLoading={setRemoving} />
-		</>
+		</View>
 	);
 };
 

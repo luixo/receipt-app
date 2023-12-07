@@ -1,6 +1,5 @@
 import React from "react";
 
-import { styled } from "@nextui-org/react";
 import { Button, Input } from "@nextui-org/react-tailwind";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 
@@ -12,11 +11,6 @@ import { trpc } from "app/trpc";
 import { debtAmountSchema } from "app/utils/validation";
 
 import { DebtCurrencyInput } from "./debt-currency-input";
-
-const Content = styled("div", {
-	display: "flex",
-	alignItems: "center",
-});
 
 type Debt = TRPCQueryOutput<"debts.get">;
 
@@ -69,7 +63,7 @@ export const DebtAmountInput: React.FC<Props> = ({ debt, isLoading }) => {
 			isInvalid={Boolean(inputState.error || updateMutation.error)}
 			errorMessage={inputState.error?.message || updateMutation.error?.message}
 			endContent={
-				<Content>
+				<>
 					<DebtCurrencyInput debt={debt} isLoading={isLoading} />
 					<Button
 						title="Save debt amount"
@@ -82,7 +76,7 @@ export const DebtAmountInput: React.FC<Props> = ({ debt, isLoading }) => {
 					>
 						<CheckMark color="currentColor" size={24} />
 					</Button>
-				</Content>
+				</>
 			}
 			variant="bordered"
 		/>
