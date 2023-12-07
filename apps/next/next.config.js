@@ -15,7 +15,6 @@ const nextConfig = {
 		"react-native",
 		"react-native-web",
 		"solito",
-		"dripsy",
 		"@expo/html-elements",
 		"expo-constants",
 		"expo-modules-core",

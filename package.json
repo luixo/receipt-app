@@ -60,7 +60,6 @@
 		"@sentry/nextjs": "^7.85.0",
 		"@tanstack/react-query": "^4.32.0",
 		"@tanstack/react-query-devtools": "^4.32.0",
-		"dripsy": "^4.3.3",
 		"expo": "^49.0.4",
 		"expo-cli": "^6.3.10",
 		"expo-splash-screen": "^0.20.4",
