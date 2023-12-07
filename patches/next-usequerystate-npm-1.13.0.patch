@@ -1,0 +1,78 @@
+diff --git a/dist/index.d.ts b/dist/index.d.ts
+index ccb14bafe9211c0ac8693a47941ed26b572cd692..a1e10d7a03f1751c75a9c5e7b9c142813fc7f90f 100644
+--- a/dist/index.d.ts
++++ b/dist/index.d.ts
+@@ -1,3 +1,4 @@
++import type { useSearchParams, useRouter } from 'next/navigation';
+ import { P as Parser, a as ParserBuilder, p as parseAsStringEnum, b as parseAsJson, c as parseAsArrayOf, O as Options, N as Nullable } from './parsers-d2c58bed.js';
+ export { H as HistoryOptions, d as createParser, i as parseAsBoolean, h as parseAsFloat, g as parseAsHex, f as parseAsInteger, k as parseAsIsoDateTime, e as parseAsString, j as parseAsTimestamp } from './parsers-d2c58bed.js';
+ import 'react';
+diff --git a/dist/index.js b/dist/index.js
+index d34e8a191be9a2f568357b549698facb14c4e6e6..c6e31441d1117f549e72503b9696d7b4e86bbe6b 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -284,6 +284,12 @@ function patchHistory() {
+     configurable: false
+   });
+ }
++const useRouterWrapped = (useRouterOverride) => {
++  return (useRouterOverride || useRouter)();
++}
++const useSearchParamsWrapped = (useSearchParamsOverride) => {
++  return (useSearchParamsOverride || useSearchParams)();
++}
+ function useQueryState(key, {
+   history: history2 = "replace",
+   shallow = true,
+@@ -292,7 +298,9 @@ function useQueryState(key, {
+   parse = (x) => x,
+   serialize = String,
+   defaultValue = void 0,
+-  startTransition
++  startTransition,
++  useRouter: overridenUseRouter,
++  useSearchParams: overridenUseSearchParams
+ } = {
+   history: "replace",
+   scroll: false,
+@@ -302,8 +310,8 @@ function useQueryState(key, {
+   serialize: String,
+   defaultValue: void 0
+ }) {
+-  const router = useRouter();
+-  const initialSearchParams = useSearchParams();
++  const router = useRouterWrapped(overridenUseRouter);
++  const initialSearchParams = useSearchParamsWrapped(overridenUseSearchParams);
+   const [internalState, setInternalState] = React.useState(() => {
+     const queueValue = getQueuedValue(key);
+     const urlValue = typeof location !== "object" ? (
+@@ -379,11 +387,13 @@ function useQueryStates(keyMap, {
+   scroll = false,
+   shallow = true,
+   throttleMs = FLUSH_RATE_LIMIT_MS,
+-  startTransition
++  startTransition,
++  useRouter: overridenUseRouter,
++  useSearchParams: overridenUseSearchParams
+ } = {}) {
+   const keys = Object.keys(keyMap).join(",");
+-  const router = useRouter();
+-  const initialSearchParams = useSearchParams();
++  const router = useRouterWrapped(overridenUseRouter);
++  const initialSearchParams = useSearchParamsWrapped(overridenUseSearchParams);
+   const [internalState, setInternalState] = React.useState(() => {
+     if (typeof location !== "object") {
+       return parseMap(keyMap, initialSearchParams ?? new URLSearchParams());
+diff --git a/dist/parsers-d2c58bed.d.ts b/dist/parsers-d2c58bed.d.ts
+index c05754f57cc4a8c0d8ffe6960ac60da0b4dfd692..3865ca2a4a86d08d05c1018680073c67820ef238 100644
+--- a/dist/parsers-d2c58bed.d.ts
++++ b/dist/parsers-d2c58bed.d.ts
+@@ -46,6 +46,8 @@ type Options<Shallow = unknown> = {
+      * in the same Options object.
+      */
+     startTransition?: StartTransition<Shallow>;
++    useRouter?: typeof useRouter;
++    useSearchParams?: typeof useSearchParams;
+ };
+ type Nullable<T> = {
+     [K in keyof T]: T[K] | null;

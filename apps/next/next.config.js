@@ -20,7 +20,8 @@ const nextConfig = {
 		"expo-constants",
 		"expo-modules-core",
 	],
-	ignorePages: /\.spec\.tsx?$/,
+	// see patch
+	ignorePages: "\\.spec\\.tsx?$",
 };
 
 const plugins = [

@@ -18,7 +18,7 @@
 		"idb-keyval": "^6.2.1",
 		"identicon.js": "^2.3.3",
 		"next-app": "workspace:*",
-		"next-usequerystate": "^1.7.3",
+		"next-usequerystate": "1.13.0",
 		"react-calendar": "^4.5.0",
 		"react-date-picker": "^10.3.0",
 		"react-hook-form": "^7.45.2",

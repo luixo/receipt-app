@@ -22,7 +22,7 @@
 		"goober": "^2.1.13",
 		"isomorphic-fetch": "^3.0.0",
 		"kysely": "^0.26.1",
-		"next": "^13.4.12",
+		"next": "^14.0.3",
 		"next-http-proxy-middleware": "^1.2.5",
 		"pg": "^8.11.1",
 		"pino": "^8.14.1",
@@ -43,7 +43,7 @@
 		"@types/pg": "^8.10.2",
 		"@types/react-dom": "^18.2.7",
 		"@types/uuid": "^9.0.2",
-		"eslint-config-next": "^13.4.12",
+		"eslint-config-next": "^14.0.3",
 		"vitest": "1.0.0-beta.4"
 	}
 }

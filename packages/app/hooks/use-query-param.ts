@@ -1,5 +1,6 @@
 import React from "react";
 
+import { useRouter, useSearchParams } from "next/navigation";
 import { useQueryState } from "next-usequerystate";
 import { createParam } from "solito";
 import type { Primitive } from "zod";
@@ -24,6 +25,8 @@ export const useQueryParam = <T extends object | Primitive = string>(
 		typeof options.serialize
 	>;
 	const [rawValue, setRawValue] = useQueryState(paramName, {
+		useRouter,
+		useSearchParams,
 		defaultValue:
 			serverSideQueryOffset ||
 			(options.defaultValue === undefined
