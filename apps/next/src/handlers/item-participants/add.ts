@@ -57,8 +57,9 @@ export const procedure = authProcedure
 		}
 		const receiptParticipants = await database
 			.selectFrom("receiptParticipants")
-			.where("receiptId", "=", receipt.id)
-			.where("userId", "in", input.userIds)
+			.where((eb) =>
+				eb("receiptId", "=", receipt.id).and("userId", "in", input.userIds),
+			)
 			.select(["userId"])
 			.execute();
 		if (receiptParticipants.length !== input.userIds.length) {
@@ -79,8 +80,9 @@ export const procedure = authProcedure
 		}
 		const itemParts = await database
 			.selectFrom("itemParticipants")
-			.where("itemId", "=", input.itemId)
-			.where("userId", "in", input.userIds)
+			.where((eb) =>
+				eb("itemId", "=", input.itemId).and("userId", "in", input.userIds),
+			)
 			.select(["part", "userId"])
 			.execute();
 		if (itemParts.length !== 0) {

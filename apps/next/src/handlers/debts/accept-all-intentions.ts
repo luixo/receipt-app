@@ -7,8 +7,13 @@ export const procedure = authProcedure.mutation(async ({ ctx }) => {
 	const { database } = ctx;
 	const debts = await database
 		.selectFrom("users as usersTheir")
-		.where("usersTheir.connectedAccountId", "=", ctx.auth.accountId)
-		.where("usersTheir.ownerAccountId", "<>", ctx.auth.accountId)
+		.where((eb) =>
+			eb("usersTheir.connectedAccountId", "=", ctx.auth.accountId).and(
+				"usersTheir.ownerAccountId",
+				"<>",
+				ctx.auth.accountId,
+			),
+		)
 		.innerJoin("debts as theirDebts", (qb) =>
 			qb.onRef("theirDebts.userId", "=", "usersTheir.id"),
 		)
@@ -23,14 +28,11 @@ export const procedure = authProcedure.mutation(async ({ ctx }) => {
 				),
 		)
 		.where((eb) =>
-			eb.or([
-				eb("selfDebts.id", "is", null),
-				eb(
-					"selfDebts.lockedTimestamp",
-					"<",
-					eb.ref("theirDebts.lockedTimestamp"),
-				),
-			]),
+			eb("selfDebts.id", "is", null).or(
+				"selfDebts.lockedTimestamp",
+				"<",
+				eb.ref("theirDebts.lockedTimestamp"),
+			),
 		)
 		.innerJoin("users as usersMine", (qb) =>
 			qb
@@ -71,8 +73,12 @@ export const procedure = authProcedure.mutation(async ({ ctx }) => {
 						const nextAmount = Number(debt.amount) * -1;
 						const result = await tx
 							.updateTable("debts")
-							.where("id", "=", debt.selfId!)
-							.where("ownerAccountId", "=", ctx.auth.accountId)
+							.where((eb) =>
+								eb.and({
+									id: debt.selfId!,
+									ownerAccountId: ctx.auth.accountId,
+								}),
+							)
 							.set({
 								amount: nextAmount.toString(),
 								currencyCode: debt.currencyCode,

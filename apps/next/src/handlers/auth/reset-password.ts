@@ -17,8 +17,13 @@ export const procedure = unauthProcedure
 		const { database } = ctx;
 		const resetPasswordIntention = await database
 			.selectFrom("resetPasswordIntentions")
-			.where("token", "=", input.token)
-			.where("resetPasswordIntentions.expiresTimestamp", ">", new Date())
+			.where((eb) =>
+				eb("token", "=", input.token).and(
+					"resetPasswordIntentions.expiresTimestamp",
+					">",
+					new Date(),
+				),
+			)
 			.innerJoin("accounts", (qb) =>
 				qb.onRef("accounts.id", "=", "resetPasswordIntentions.accountId"),
 			)

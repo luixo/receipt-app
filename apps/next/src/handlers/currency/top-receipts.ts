@@ -1,5 +1,3 @@
-import { sql } from "kysely";
-
 import { MONTH } from "app/utils/time";
 import {
 	getForeignReceipts,
@@ -31,13 +29,9 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 				),
 		)
 		.selectFrom("mergedReceipts")
-		.select([
-			"currencyCode",
-			// TODO: return `database.fn.sum<string>("count").as("count")`
-			sql`sum(count)`.as("count"),
-		])
+		.select(["currencyCode", (eb) => eb.fn.sum<string>("count").as("count")])
 		.groupBy("currencyCode")
-		.orderBy("count", "desc")
+		.orderBy("count desc")
 		.execute();
 	return topCurrenciesResult;
 });

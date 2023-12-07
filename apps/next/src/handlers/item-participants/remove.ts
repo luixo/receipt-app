@@ -57,8 +57,12 @@ export const procedure = authProcedure
 		}
 		const deleteResult = await database
 			.deleteFrom("itemParticipants")
-			.where("itemId", "=", input.itemId)
-			.where("userId", "=", input.userId)
+			.where((eb) =>
+				eb.and({
+					itemId: input.itemId,
+					userId: input.userId,
+				}),
+			)
 			.returning("itemParticipants.userId")
 			.executeTakeFirst();
 		if (!deleteResult) {

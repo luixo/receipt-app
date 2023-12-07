@@ -17,7 +17,7 @@ const addNullablePublicName = async (db: Database) => {
 const removeNullablePublicName = async (db: Database) => {
 	await db
 		.updateTable("users")
-		.set({ publicName: sql.raw("name").castTo() })
+		.set({ publicName: sql.raw("name").$castTo() })
 		.where("publicName", "=", "name")
 		.execute();
 	await db.schema

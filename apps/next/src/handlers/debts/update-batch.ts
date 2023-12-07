@@ -25,12 +25,13 @@ export const procedure = authProcedure
 
 		const debts = await database
 			.selectFrom("debts")
-			.where(
-				"debts.id",
-				"in",
-				inputs.map((input) => input.id),
+			.where((eb) =>
+				eb(
+					"debts.id",
+					"in",
+					inputs.map((input) => input.id),
+				).and("debts.ownerAccountId", "=", ctx.auth.accountId),
 			)
-			.where("debts.ownerAccountId", "=", ctx.auth.accountId)
 			.innerJoin("users", (qb) =>
 				qb
 					.onRef("users.id", "=", "debts.userId")
@@ -94,8 +95,9 @@ export const procedure = authProcedure
 			await database.transaction().execute((tx) =>
 				Promise.all(
 					autoAcceptedDebts.map(async ({ reverseSetObject, debt }) => {
+						const { foreignAccountId } = debt;
 						/* c8 ignore start */
-						if (!debt.foreignAccountId) {
+						if (!foreignAccountId) {
 							throw new TRPCError({
 								code: "INTERNAL_SERVER_ERROR",
 								message: `Unexpected having "autoAcceptDebts" but not having "accountId"`,
@@ -105,8 +107,9 @@ export const procedure = authProcedure
 						await tx
 							.updateTable("debts")
 							.set(reverseSetObject)
-							.where("id", "=", debt.id)
-							.where("ownerAccountId", "=", debt.foreignAccountId)
+							.where((eb) =>
+								eb.and({ id: debt.id, ownerAccountId: foreignAccountId }),
+							)
 							.executeTakeFirst();
 						if (reverseSetObject.lockedTimestamp !== undefined) {
 							const matchedLockedTimestampObject = lockedTimestampObjects.find(
@@ -121,19 +124,21 @@ export const procedure = authProcedure
 				),
 			);
 		}
-		await database
-			.transaction()
-			.execute((tx) =>
-				Promise.all(
-					setObjectsWithReverse.map(({ setObject, debt }) =>
-						tx
-							.updateTable("debts")
-							.set(setObject)
-							.where("id", "=", debt.id)
-							.where("ownerAccountId", "=", ctx.auth.accountId)
-							.executeTakeFirst(),
-					),
+		await database.transaction().execute((tx) =>
+			Promise.all(
+				setObjectsWithReverse.map(({ setObject, debt }) =>
+					tx
+						.updateTable("debts")
+						.set(setObject)
+						.where((eb) =>
+							eb.and({
+								id: debt.id,
+								ownerAccountId: ctx.auth.accountId,
+							}),
+						)
+						.executeTakeFirst(),
 				),
-			);
+			),
+		);
 		return lockedTimestampObjects;
 	});

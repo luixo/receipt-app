@@ -12,7 +12,7 @@
 		"app": "*",
 		"deep-object-diff": "^1.1.9",
 		"find-free-ports": "^3.1.1",
-		"kysely": "^0.26.1",
+		"kysely": "^0.26.3",
 		"pg": "^8.11.3",
 		"timekeeper": "^2.3.1",
 		"vite-tsconfig-paths": "^4.2.0",

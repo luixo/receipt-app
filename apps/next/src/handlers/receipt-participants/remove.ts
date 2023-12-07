@@ -67,18 +67,24 @@ export const procedure = authProcedure
 		await database.transaction().execute(async (tx) => {
 			await tx
 				.deleteFrom("itemParticipants")
-				.where("userId", "=", input.userId)
-				.where("itemId", "in", (eb) =>
-					eb
-						.selectFrom("receiptItems")
-						.where("receiptId", "=", input.receiptId)
-						.select("id"),
+				.where((eb) =>
+					eb("userId", "=", input.userId).and("itemId", "in", (ebb) =>
+						ebb
+							.selectFrom("receiptItems")
+							.where("receiptId", "=", input.receiptId)
+							.select("id"),
+					),
 				)
+
 				.executeTakeFirst();
 			await tx
 				.deleteFrom("receiptParticipants")
-				.where("userId", "=", input.userId)
-				.where("receiptId", "=", input.receiptId)
+				.where((eb) =>
+					eb.and({
+						receiptId: input.receiptId,
+						userId: input.userId,
+					}),
+				)
 				.executeTakeFirst();
 		});
 	});

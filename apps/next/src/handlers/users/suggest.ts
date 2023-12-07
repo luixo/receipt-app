@@ -101,7 +101,7 @@ export const procedure = authProcedure
 			)
 			.$if(input.input.length >= 3, (qb) =>
 				qb.where(
-					sql`strict_word_similarity(${input.input}, name)`.castTo<number>(),
+					sql`strict_word_similarity(${input.input}, name)`.$castTo<number>(),
 					">=",
 					SIMILARTY_THRESHOLD,
 				),
@@ -116,7 +116,7 @@ export const procedure = authProcedure
 			.$if(input.input.length < 3, (qb) => qb.orderBy("name"))
 			.$if(input.input.length >= 3, (qb) =>
 				qb.orderBy(
-					sql`strict_word_similarity(${input.input}, name)`.castTo(),
+					sql`strict_word_similarity(${input.input}, name)`.$castTo(),
 					"desc",
 				),
 			)

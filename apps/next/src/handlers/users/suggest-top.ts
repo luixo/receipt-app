@@ -69,15 +69,19 @@ export const procedure = authProcedure
 				.with("orderedUsers", (qc) =>
 					qc
 						.selectFrom("users")
-						.where("users.ownerAccountId", "=", ctx.auth.accountId)
-						.where("users.id", "not in", (eb) =>
-							eb
-								.selectFrom("receiptParticipants")
-								.innerJoin("users", (jb) =>
-									jb.onRef("users.id", "=", "receiptParticipants.userId"),
-								)
-								.where("receiptParticipants.receiptId", "=", receiptId)
-								.select("users.id"),
+						.where((eb) =>
+							eb("users.ownerAccountId", "=", ctx.auth.accountId).and(
+								"users.id",
+								"not in",
+								(ebb) =>
+									ebb
+										.selectFrom("receiptParticipants")
+										.innerJoin("users", (jb) =>
+											jb.onRef("users.id", "=", "receiptParticipants.userId"),
+										)
+										.where("receiptParticipants.receiptId", "=", receiptId)
+										.select("users.id"),
+							),
 						)
 						.leftJoin("accounts", (qb) =>
 							qb.onRef("connectedAccountId", "=", "accounts.id"),
@@ -108,7 +112,7 @@ export const procedure = authProcedure
 				)
 				.selectFrom("orderedUsers")
 				.select(["id", "name", "publicName", "accountId", "email"])
-				.orderBy("latestCount", "desc")
+				.orderBy("latestCount desc")
 				.limit(input.limit)
 				.execute();
 
@@ -124,8 +128,13 @@ export const procedure = authProcedure
 		if (input.options.type === "not-connected") {
 			const users = await database
 				.selectFrom("users")
-				.where("users.ownerAccountId", "=", ctx.auth.accountId)
-				.where("users.connectedAccountId", "is", null)
+				.where((eb) =>
+					eb("users.ownerAccountId", "=", ctx.auth.accountId).and(
+						"users.connectedAccountId",
+						"is",
+						null,
+					),
+				)
 				.leftJoin("debts", (qb) =>
 					qb
 						.onRef("debts.userId", "=", "users.id")
@@ -141,8 +150,7 @@ export const procedure = authProcedure
 					database.fn.count<string>("debts.id").as("latestCount"),
 				])
 				.groupBy("users.id")
-				.orderBy("latestCount", "desc")
-				.orderBy("users.id")
+				.orderBy(["latestCount desc", "users.id"])
 				.limit(input.limit)
 				.execute();
 			return {
@@ -155,8 +163,13 @@ export const procedure = authProcedure
 		}
 		const users = await database
 			.selectFrom("users")
-			.where("users.ownerAccountId", "=", ctx.auth.accountId)
-			.where("users.id", "<>", ctx.auth.accountId as UsersId)
+			.where((eb) =>
+				eb("users.ownerAccountId", "=", ctx.auth.accountId).and(
+					"users.id",
+					"<>",
+					ctx.auth.accountId as UsersId,
+				),
+			)
 			.leftJoin("debts", (qb) =>
 				qb
 					.onRef("users.id", "=", "debts.userId")
@@ -178,8 +191,7 @@ export const procedure = authProcedure
 			])
 			.groupBy("users.id")
 			.groupBy("accounts.email")
-			.orderBy("latestCount", "desc")
-			.orderBy("users.id")
+			.orderBy(["latestCount desc", "users.id"])
 			.limit(input.limit)
 			.execute();
 

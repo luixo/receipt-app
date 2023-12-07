@@ -1,5 +1,4 @@
 import { TRPCError } from "@trpc/server";
-import { sql } from "kysely";
 import { z } from "zod";
 
 import { receiptNameSchema } from "app/utils/validation";
@@ -81,11 +80,7 @@ export const procedure = authProcedure
 					qb.onRef("itemParticipants.itemId", "=", "receiptItems.id"),
 				)
 				.groupBy("receiptItems.id")
-				.having(
-					database.fn.sum<string>("itemParticipants.part"),
-					"is",
-					sql`null`,
-				)
+				.having(database.fn.sum<string>("itemParticipants.part"), "is", null)
 				.select("receiptItems.id")
 				.executeTakeFirst();
 			if (emptyItems) {

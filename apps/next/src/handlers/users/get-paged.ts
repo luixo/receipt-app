@@ -13,20 +13,22 @@ export const procedure = authProcedure
 	)
 	.query(async ({ input, ctx }) => {
 		const { database } = ctx;
-		const accountUsers = database
-			.selectFrom("users")
-			.where("users.ownerAccountId", "=", ctx.auth.accountId)
-			// Typesystem doesn't know that we use account id as self user id
-			.where("users.id", "<>", ctx.auth.accountId as UsersId);
+		const accountUsers = database.selectFrom("users").where((eb) =>
+			eb("users.ownerAccountId", "=", ctx.auth.accountId).and(
+				"users.id",
+				"<>",
+				// Typesystem doesn't know that we use account id as self user id;
+				ctx.auth.accountId as UsersId,
+			),
+		);
 		const [users, usersCount] = await Promise.all([
 			accountUsers
 				.leftJoin("accounts", (qb) =>
 					qb.onRef("connectedAccountId", "=", "accounts.id"),
 				)
 				.select(["users.id", "name", "publicName", "accounts.email"])
-				.orderBy("name")
 				// Stable order for users with the same name
-				.orderBy("users.id")
+				.orderBy(["users.name", "users.id"])
 				.offset(input.cursor)
 				.limit(input.limit + 1)
 				.execute(),

@@ -71,8 +71,13 @@ export const authProcedure = unauthProcedure.use(
 				"accounts.email",
 				"sessions.expirationTimestamp",
 			])
-			.where("sessions.sessionId", "=", authToken)
-			.where("sessions.expirationTimestamp", ">", new Date())
+			.where((eb) =>
+				eb("sessions.sessionId", "=", authToken).and(
+					"sessions.expirationTimestamp",
+					">",
+					new Date(),
+				),
+			)
 			.executeTakeFirst();
 		if (!session) {
 			resetAuthCookie(ctx.res);

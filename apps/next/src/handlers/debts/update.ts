@@ -10,8 +10,12 @@ export const procedure = authProcedure
 		const { database } = ctx;
 		const debt = await database
 			.selectFrom("debts")
-			.where("debts.id", "=", input.id)
-			.where("debts.ownerAccountId", "=", ctx.auth.accountId)
+			.where((eb) =>
+				eb.and({
+					"debts.id": input.id,
+					"debts.ownerAccountId": ctx.auth.accountId,
+				}),
+			)
 			.innerJoin("users", (qb) =>
 				qb
 					.onRef("users.id", "=", "debts.userId")
@@ -36,8 +40,9 @@ export const procedure = authProcedure
 		const { setObject, reverseSetObject } = buildSetObjects(input, debt);
 		let reverseLockedTimestampUpdated = false;
 		if (debt.autoAcceptDebts && reverseSetObject) {
+			const { foreignAccountId } = debt;
 			/* c8 ignore start */
-			if (!debt.foreignAccountId) {
+			if (!foreignAccountId) {
 				throw new TRPCError({
 					code: "INTERNAL_SERVER_ERROR",
 					message: `Unexpected having "autoAcceptDebts" but not having "accountId"`,
@@ -47,8 +52,9 @@ export const procedure = authProcedure
 			await database
 				.updateTable("debts")
 				.set(reverseSetObject)
-				.where("id", "=", input.id)
-				.where("ownerAccountId", "=", debt.foreignAccountId)
+				.where((eb) =>
+					eb.and({ id: input.id, ownerAccountId: foreignAccountId }),
+				)
 				.executeTakeFirst();
 			reverseLockedTimestampUpdated =
 				reverseSetObject.lockedTimestamp !== undefined;
@@ -56,8 +62,12 @@ export const procedure = authProcedure
 		await database
 			.updateTable("debts")
 			.set(setObject)
-			.where("id", "=", input.id)
-			.where("ownerAccountId", "=", ctx.auth.accountId)
+			.where((eb) =>
+				eb.and({
+					id: input.id,
+					ownerAccountId: ctx.auth.accountId,
+				}),
+			)
 			.executeTakeFirst();
 		return {
 			// value or null for set object, undefined for not being set

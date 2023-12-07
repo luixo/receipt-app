@@ -19,8 +19,7 @@ export const getReceiptParticipant = <
 > =>
 	database
 		.selectFrom("receiptParticipants")
-		.where("receiptId", "=", receiptId)
-		.where("userId", "=", userId)
+		.where((eb) => eb.and({ receiptId, userId }))
 		.select(selectExpression)
 		.executeTakeFirst();
 
@@ -79,8 +78,7 @@ export const addReceiptParticipants = async (
 	});
 	const receiptParticipants = await database
 		.selectFrom("receiptParticipants")
-		.where("receiptId", "=", receiptId)
-		.where("userId", "in", userIds)
+		.where((eb) => eb("receiptId", "=", receiptId).and("userId", "in", userIds))
 		.select(["userId"])
 		.execute();
 	if (receiptParticipants.length !== 0) {

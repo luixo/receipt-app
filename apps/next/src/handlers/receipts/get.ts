@@ -59,9 +59,16 @@ export const procedure = authProcedure
 				"receipts.id",
 				"receipts.name",
 				"receipts.currencyCode",
-				sql<string>`coalesce(sum("receiptItems".price * "receiptItems".quantity), 0)`.as(
-					"sum",
-				),
+				(eb) =>
+					eb.fn
+						.coalesce(
+							eb.fn.sum(
+								eb("receiptItems.price", "*", eb.ref("receiptItems.quantity")),
+							),
+							sql`0`,
+							// sql.lit(0),
+						)
+						.as("sum"),
 				"receipts.ownerAccountId",
 				"receipts.lockedTimestamp",
 				"receipts.issued",
@@ -115,8 +122,12 @@ export const procedure = authProcedure
 		if (ownerAccountId === ctx.auth.accountId) {
 			const results = await database
 				.selectFrom("debts")
-				.where("debts.receiptId", "=", input.id)
-				.where("debts.ownerAccountId", "=", ctx.auth.accountId)
+				.where((eb) =>
+					eb.and({
+						receiptId: input.id,
+						ownerAccountId: ctx.auth.accountId,
+					}),
+				)
 				.select("debts.id")
 				.orderBy("debts.id")
 				.execute();
@@ -133,8 +144,12 @@ export const procedure = authProcedure
 		}
 		const mineDebt = await database
 			.selectFrom("debts")
-			.where("debts.receiptId", "=", input.id)
-			.where("debts.ownerAccountId", "=", ctx.auth.accountId)
+			.where((eb) =>
+				eb.and({
+					receiptId: input.id,
+					ownerAccountId: ctx.auth.accountId,
+				}),
+			)
 			.select("debts.id")
 			.executeTakeFirst();
 		if (mineDebt) {
@@ -149,8 +164,13 @@ export const procedure = authProcedure
 		}
 		const foreignDebt = await database
 			.selectFrom("debts")
-			.where("debts.receiptId", "=", input.id)
-			.where("debts.ownerAccountId", "<>", ctx.auth.accountId)
+			.where((eb) =>
+				eb("debts.receiptId", "=", input.id).and(
+					"debts.ownerAccountId",
+					"<>",
+					ctx.auth.accountId,
+				),
+			)
 			.innerJoin("users as usersTheir", (qb) =>
 				qb
 					.onRef("usersTheir.id", "=", "debts.userId")

@@ -53,8 +53,9 @@ export const procedure = authProcedure
 		const intention = await database
 			.selectFrom("accountConnectionsIntentions")
 			.select("userId")
-			.where("accountId", "=", account.id)
-			.where("targetAccountId", "=", ctx.auth.accountId)
+			.where((eb) =>
+				eb.and({ accountId: account.id, targetAccountId: ctx.auth.accountId }),
+			)
 			.executeTakeFirst();
 		if (!intention) {
 			throw new TRPCError({
@@ -66,19 +67,25 @@ export const procedure = authProcedure
 			await tx
 				.updateTable("users")
 				.set({ connectedAccountId: ctx.auth.accountId })
-				.where("ownerAccountId", "=", account.id)
-				.where("id", "=", intention.userId)
+				.where((eb) =>
+					eb.and({ ownerAccountId: account.id, id: intention.userId }),
+				)
 				.executeTakeFirst();
 			await tx
 				.updateTable("users")
 				.set({ connectedAccountId: account.id })
-				.where("ownerAccountId", "=", ctx.auth.accountId)
-				.where("id", "=", input.userId)
+				.where((eb) =>
+					eb.and({ ownerAccountId: ctx.auth.accountId, id: input.userId }),
+				)
 				.executeTakeFirst();
 			await tx
 				.deleteFrom("accountConnectionsIntentions")
-				.where("accountId", "=", account.id)
-				.where("targetAccountId", "=", ctx.auth.accountId)
+				.where((eb) =>
+					eb.and({
+						accountId: account.id,
+						targetAccountId: ctx.auth.accountId,
+					}),
+				)
 				.executeTakeFirst();
 		});
 		return { email: account.email };

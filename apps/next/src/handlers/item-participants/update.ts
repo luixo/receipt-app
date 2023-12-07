@@ -63,8 +63,12 @@ export const procedure = authProcedure
 		}
 		const itemParticipant = await database
 			.selectFrom("itemParticipants")
-			.where("itemParticipants.itemId", "=", input.itemId)
-			.where("itemParticipants.userId", "=", input.userId)
+			.where((eb) =>
+				eb.and({
+					itemId: input.itemId,
+					userId: input.userId,
+				}),
+			)
 			.select([])
 			.executeTakeFirst();
 		if (!itemParticipant) {
@@ -82,7 +86,11 @@ export const procedure = authProcedure
 		await database
 			.updateTable("itemParticipants")
 			.set(setObject)
-			.where("userId", "=", input.userId)
-			.where("itemId", "=", input.itemId)
+			.where((eb) =>
+				eb.and({
+					itemId: input.itemId,
+					userId: input.userId,
+				}),
+			)
 			.executeTakeFirst();
 	});

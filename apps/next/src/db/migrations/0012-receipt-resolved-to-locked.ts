@@ -18,8 +18,13 @@ const addLockedTimestampColumn = async (db: Database) => {
 	await db
 		.updateTable("receipts")
 		.set({
-			lockedTimestamp:
-				sql`case when resolved then now() else null end`.castTo<Date>(),
+			lockedTimestamp: db
+				.case()
+				.when("resolved", "=", true)
+				.then(sql`now()`)
+				.else(null)
+				.end()
+				.$castTo<Date>(),
 		})
 		.execute();
 };
@@ -46,7 +51,12 @@ const addResolvedColumn = async (db: Database) => {
 			// Error is expected as column does not exist anymore
 			/* eslint-disable @typescript-eslint/ban-ts-comment */
 			// @ts-expect-error
-			resolved: sql`case when "lockedTimestamp" is not null then true else false end`,
+			resolved: db
+				.case()
+				.when("lockedTimestamp", "is not", null)
+				.then(true)
+				.else(false)
+				.end(),
 			/* eslint-enable @typescript-eslint/ban-ts-comment */
 		} satisfies ReceiptsUpdateObject)
 		.execute();

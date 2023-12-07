@@ -80,8 +80,12 @@ export const procedure = authProcedure
 			// TODO: incorporate reverse user into VALUES clause
 			const reverseUser = await database
 				.selectFrom("users")
-				.where("users.ownerAccountId", "=", foreignAccountId)
-				.where("users.connectedAccountId", "=", ctx.auth.accountId)
+				.where((eb) =>
+					eb.and({
+						ownerAccountId: foreignAccountId,
+						connectedAccountId: ctx.auth.accountId,
+					}),
+				)
 				.select("users.id")
 				.executeTakeFirstOrThrow(
 					/* c8 ignore start */

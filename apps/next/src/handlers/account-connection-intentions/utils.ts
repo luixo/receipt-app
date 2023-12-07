@@ -44,27 +44,43 @@ export const addConnectionIntention = async (
 	const viceVersaIntention = await database
 		.selectFrom("accountConnectionsIntentions")
 		.select("userId")
-		.where("accountId", "=", targetAccount.id)
-		.where("targetAccountId", "=", fromAccountId)
+		.where((eb) =>
+			eb.and({
+				accountId: targetAccount.id,
+				targetAccountId: fromAccountId,
+			}),
+		)
 		.executeTakeFirst();
 	if (viceVersaIntention) {
 		await database.transaction().execute(async (tx) => {
 			await tx
 				.updateTable("users")
 				.set({ connectedAccountId: fromAccountId })
-				.where("ownerAccountId", "=", targetAccount.id)
-				.where("id", "=", viceVersaIntention.userId)
+				.where((eb) =>
+					eb.and({
+						ownerAccountId: targetAccount.id,
+						id: viceVersaIntention.userId,
+					}),
+				)
 				.executeTakeFirst();
 			await tx
 				.updateTable("users")
 				.set({ connectedAccountId: targetAccount.id })
-				.where("ownerAccountId", "=", fromAccountId)
-				.where("id", "=", asUserId)
+				.where((eb) =>
+					eb.and({
+						ownerAccountId: fromAccountId,
+						id: asUserId,
+					}),
+				)
 				.executeTakeFirst();
 			await tx
 				.deleteFrom("accountConnectionsIntentions")
-				.where("accountId", "=", targetAccount.id)
-				.where("targetAccountId", "=", fromAccountId)
+				.where((eb) =>
+					eb.and({
+						accountId: targetAccount.id,
+						targetAccountId: fromAccountId,
+					}),
+				)
 				.executeTakeFirst();
 		});
 		return {
@@ -100,8 +116,12 @@ export const addConnectionIntention = async (
 		) {
 			const existingIntention = await database
 				.selectFrom("accountConnectionsIntentions")
-				.where("accountId", "=", fromAccountId)
-				.where("targetAccountId", "=", targetAccount.id)
+				.where((eb) =>
+					eb.and({
+						accountId: fromAccountId,
+						targetAccountId: targetAccount.id,
+					}),
+				)
 				.select(["userId"])
 				.executeTakeFirstOrThrow();
 			const existingUser = await getUserById(

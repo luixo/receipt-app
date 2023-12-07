@@ -23,10 +23,10 @@ export const down = async (db: Database) => {
 		.expression((eb) =>
 			eb
 				.selectFrom("debts")
-				.where((subEb) =>
-					subEb.and([
-						subEb("lockedTimestamp", "is not", null),
-						subEb(
+				.where((ebb) =>
+					ebb.and([
+						ebb("lockedTimestamp", "is not", null),
+						ebb(
 							"id",
 							"in",
 							eb

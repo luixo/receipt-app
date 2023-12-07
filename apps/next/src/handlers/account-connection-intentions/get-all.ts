@@ -23,10 +23,10 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 			qb.onRef("users.id", "=", "accountConnectionsIntentions.userId"),
 		)
 		.where((eb) =>
-			eb.or([
-				eb("accountId", "=", ctx.auth.accountId),
-				eb("targetAccountId", "=", ctx.auth.accountId),
-			]),
+			eb.or({
+				accountId: ctx.auth.accountId,
+				targetAccountId: ctx.auth.accountId,
+			}),
 		)
 		.select([
 			"accountConnectionsIntentions.accountId",
@@ -36,8 +36,7 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 			"sourceAccounts.email as sourceAccountEmail",
 			"targetAccounts.email as targetAccountEmail",
 		])
-		.orderBy("accountConnectionsIntentions.created", "desc")
-		.orderBy("users.id")
+		.orderBy(["accountConnectionsIntentions.created desc", "users.id"])
 		.execute();
 	return relatedIntentions.reduce<{
 		inbound: {

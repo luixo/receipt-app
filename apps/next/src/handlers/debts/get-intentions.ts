@@ -1,6 +1,3 @@
-import { TRPCError } from "@trpc/server";
-import { sql } from "kysely";
-
 import type { CurrencyCode } from "app/utils/currency";
 import type { DebtsId, ReceiptsId, UsersId } from "next-app/db/models";
 import { authProcedure } from "next-app/handlers/trpc";
@@ -25,8 +22,13 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 	const { database } = ctx;
 	const debts = await database
 		.selectFrom("users")
-		.where("users.connectedAccountId", "=", ctx.auth.accountId)
-		.where("users.ownerAccountId", "<>", ctx.auth.accountId)
+		.where((eb) =>
+			eb("users.connectedAccountId", "=", ctx.auth.accountId).and(
+				"users.ownerAccountId",
+				"<>",
+				ctx.auth.accountId,
+			),
+		)
 		.innerJoin("debts as theirDebts", (qb) =>
 			qb.onRef("theirDebts.userId", "=", "users.id"),
 		)
@@ -42,14 +44,11 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 		)
 		.where("theirDebts.lockedTimestamp", "is not", null)
 		.where((eb) =>
-			eb.or([
-				eb("selfDebts.id", "is", null),
-				eb(
-					"selfDebts.lockedTimestamp",
-					"<",
-					eb.ref("theirDebts.lockedTimestamp"),
-				),
-			]),
+			eb("selfDebts.id", "is", null).or(
+				"selfDebts.lockedTimestamp",
+				"<",
+				eb.ref("theirDebts.lockedTimestamp"),
+			),
 		)
 		.select([
 			"theirDebts.id",
@@ -60,42 +59,30 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 			"theirDebts.currencyCode",
 			"theirDebts.receiptId",
 			"usersMine.id as userId",
-			sql`coalesce("selfDebts".note, "theirDebts".note)`
-				.castTo<string>()
-				.as("note"),
+			(eb) => eb.fn.coalesce("selfDebts.note", "theirDebts.note").as("note"),
 			"selfDebts.amount as selfAmount",
 			"selfDebts.timestamp as selfTimestamp",
 			"selfDebts.currencyCode as selfCurrencyCode",
 		])
-		.orderBy("lockedTimestamp", "desc")
-		.orderBy("id", "desc")
+		.$narrowType<{ lockedTimestamp: Date }>()
+		.orderBy(["theirDebts.lockedTimestamp desc", "theirDebts.id desc"])
 		.execute();
-	return debts.map<InboundIntention>((debt) => {
-		/* c8 ignore start */
-		if (!debt.lockedTimestamp) {
-			throw new TRPCError({
-				code: "INTERNAL_SERVER_ERROR",
-				message: `Locked timestamp does not exist on debt id "${debt.id}" though it was filtered to exist`,
-			});
-		}
-		/* c8 ignore stop */
-		return {
-			id: debt.id,
-			userId: debt.userId,
-			amount: -Number(debt.amount),
-			currencyCode: debt.currencyCode,
-			lockedTimestamp: debt.lockedTimestamp!,
-			timestamp: debt.timestamp,
-			note: debt.note,
-			receiptId: debt.receiptId,
-			current:
-				debt.selfAmount !== null
-					? {
-							amount: Number(debt.selfAmount),
-							timestamp: debt.selfTimestamp!,
-							currencyCode: debt.selfCurrencyCode!,
-					  }
-					: undefined,
-		};
-	});
+	return debts.map<InboundIntention>((debt) => ({
+		id: debt.id,
+		userId: debt.userId,
+		amount: -Number(debt.amount),
+		currencyCode: debt.currencyCode,
+		lockedTimestamp: debt.lockedTimestamp,
+		timestamp: debt.timestamp,
+		note: debt.note,
+		receiptId: debt.receiptId,
+		current:
+			debt.selfAmount !== null
+				? {
+						amount: Number(debt.selfAmount),
+						timestamp: debt.selfTimestamp!,
+						currencyCode: debt.selfCurrencyCode!,
+				  }
+				: undefined,
+	}));
 });

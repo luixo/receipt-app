@@ -32,8 +32,12 @@ export const procedure = authProcedure
 
 		const debts = await database
 			.selectFrom("debts")
-			.where("debts.userId", "=", input.userId)
-			.where("debts.ownerAccountId", "=", ctx.auth.accountId)
+			.where((eb) =>
+				eb.and({
+					"debts.userId": input.userId,
+					"debts.ownerAccountId": ctx.auth.accountId,
+				}),
+			)
 			.leftJoin("debts as theirDebts", (qb) =>
 				qb
 					.onRef("theirDebts.id", "=", "debts.id")
@@ -51,8 +55,7 @@ export const procedure = authProcedure
 				"theirDebts.ownerAccountId as theirOwnerAccountId",
 				"theirDebts.lockedTimestamp as theirLockedTimestamp",
 			])
-			.orderBy("timestamp", "desc")
-			.orderBy("debts.id")
+			.orderBy(["debts.timestamp desc", "debts.id"])
 			.execute();
 
 		return debts.map(

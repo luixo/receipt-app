@@ -39,8 +39,13 @@ export const procedure = unauthProcedure
 		}
 		const currentIntentions = await database
 			.selectFrom("resetPasswordIntentions")
-			.where("resetPasswordIntentions.accountId", "=", account.id)
-			.where("expiresTimestamp", ">", new Date())
+			.where((eb) =>
+				eb("resetPasswordIntentions.accountId", "=", account.id).and(
+					"expiresTimestamp",
+					">",
+					new Date(),
+				),
+			)
 			.select("expiresTimestamp")
 			.execute();
 		if (currentIntentions.length >= MAX_INTENTIONS_AMOUNT) {

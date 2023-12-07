@@ -4,9 +4,6 @@ const addEmailConfirmationField = async (db: Database) => {
 	await db.schema
 		.alterTable("accounts")
 		.addColumn("confirmationToken", "uuid")
-		.execute();
-	await db.schema
-		.alterTable("accounts")
 		.addColumn("confirmationTokenTimestamp", "timestamp")
 		.execute();
 };
@@ -15,9 +12,6 @@ const removeEmailConfirmationField = async (db: Database) => {
 	await db.schema
 		.alterTable("accounts")
 		.dropColumn("confirmationToken")
-		.execute();
-	await db.schema
-		.alterTable("accounts")
 		.dropColumn("confirmationTokenTimestamp")
 		.execute();
 };

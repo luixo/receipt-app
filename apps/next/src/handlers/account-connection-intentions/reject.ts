@@ -15,8 +15,12 @@ export const procedure = authProcedure
 		const intention = await database
 			.selectFrom("accountConnectionsIntentions")
 			.select(["accountId", "targetAccountId"])
-			.where("accountId", "=", input.sourceAccountId)
-			.where("targetAccountId", "=", ctx.auth.accountId)
+			.where((eb) =>
+				eb.and({
+					accountId: input.sourceAccountId,
+					targetAccountId: ctx.auth.accountId,
+				}),
+			)
 			.executeTakeFirst();
 		if (!intention) {
 			throw new TRPCError({
@@ -26,7 +30,11 @@ export const procedure = authProcedure
 		}
 		await database
 			.deleteFrom("accountConnectionsIntentions")
-			.where("accountId", "=", intention.accountId)
-			.where("targetAccountId", "=", intention.targetAccountId)
+			.where((eb) =>
+				eb.and({
+					accountId: intention.accountId,
+					targetAccountId: intention.targetAccountId,
+				}),
+			)
 			.execute();
 	});

@@ -152,8 +152,13 @@ export const procedure = authProcedure
 			// TODO: incorporate reverse user into VALUES clause
 			const reverseAutoAcceptingUsers = await database
 				.selectFrom("users")
-				.where("users.ownerAccountId", "in", autoAcceptingUsersAccountIds)
-				.where("users.connectedAccountId", "=", ctx.auth.accountId)
+				.where((eb) =>
+					eb("users.ownerAccountId", "in", autoAcceptingUsersAccountIds).and(
+						"users.connectedAccountId",
+						"=",
+						ctx.auth.accountId,
+					),
+				)
 				.select(["users.ownerAccountId", "users.id"])
 				.execute();
 			/* c8 ignore start */

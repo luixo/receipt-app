@@ -14,8 +14,13 @@ export const procedure = authProcedure
 		const { database } = ctx;
 		const debt = await database
 			.selectFrom("debts as theirDebts")
-			.where("theirDebts.id", "=", input.id)
-			.where("theirDebts.ownerAccountId", "<>", ctx.auth.accountId)
+			.where((eb) =>
+				eb("theirDebts.id", "=", input.id).and(
+					"theirDebts.ownerAccountId",
+					"<>",
+					ctx.auth.accountId,
+				),
+			)
 			.innerJoin("users", (qb) =>
 				qb
 					.onRef("users.connectedAccountId", "=", "theirDebts.ownerAccountId")
@@ -86,8 +91,12 @@ export const procedure = authProcedure
 		const nextAmount = Number(debt.amount) * -1;
 		const result = await database
 			.updateTable("debts")
-			.where("id", "=", input.id)
-			.where("ownerAccountId", "=", ctx.auth.accountId)
+			.where((eb) =>
+				eb.and({
+					id: input.id,
+					ownerAccountId: ctx.auth.accountId,
+				}),
+			)
 			.set({
 				amount: nextAmount.toString(),
 				currencyCode: debt.currencyCode,

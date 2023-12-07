@@ -6,10 +6,15 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 	const topCurrenciesResult = await database
 		.selectFrom("debts")
 		.select(["currencyCode", database.fn.count<string>("id").as("count")])
-		.where("timestamp", ">", new Date(Date.now() - MONTH))
-		.where("debts.ownerAccountId", "=", ctx.auth.accountId)
+		.where((eb) =>
+			eb("timestamp", ">", new Date(Date.now() - MONTH)).and(
+				"debts.ownerAccountId",
+				"=",
+				ctx.auth.accountId,
+			),
+		)
 		.groupBy("currencyCode")
-		.orderBy("count", "desc")
+		.orderBy("count desc")
 		.execute();
 	return topCurrenciesResult;
 });

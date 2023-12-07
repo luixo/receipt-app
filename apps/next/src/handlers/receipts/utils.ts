@@ -24,8 +24,12 @@ export const getAccessRole = async (
 		.innerJoin("accounts", (jb) =>
 			jb.onRef("accounts.id", "=", "users.connectedAccountId"),
 		)
-		.where("accounts.id", "=", accountId)
-		.where("receiptParticipants.receiptId", "=", receipt.id)
+		.where((eb) =>
+			eb.and({
+				"accounts.id": accountId,
+				receiptId: receipt.id,
+			}),
+		)
 		.select("role")
 		.executeTakeFirst();
 	if (!participant) {
@@ -64,8 +68,13 @@ export const getForeignReceipts = (
 ) =>
 	database
 		.selectFrom("users")
-		.where("users.connectedAccountId", "=", ownerAccountId)
-		.where("users.ownerAccountId", "<>", ownerAccountId)
+		.where((eb) =>
+			eb("users.connectedAccountId", "=", ownerAccountId).and(
+				"users.ownerAccountId",
+				"<>",
+				ownerAccountId,
+			),
+		)
 		.innerJoin("receiptParticipants", (jb) =>
 			jb.onRef("receiptParticipants.userId", "=", "users.id"),
 		)

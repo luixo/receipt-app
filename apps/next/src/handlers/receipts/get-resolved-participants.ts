@@ -58,8 +58,7 @@ export const procedure = authProcedure
 				"usersMine.id as localUserId",
 				"usersTheir.ownerAccountId",
 			])
-			.orderBy("receiptParticipants.userId")
-			.orderBy("usersMine.id")
+			.orderBy(["receiptParticipants.userId", "usersMine.id"])
 			.execute();
 		return participants.map(({ ownerAccountId, ...participant }) => ({
 			...participant,

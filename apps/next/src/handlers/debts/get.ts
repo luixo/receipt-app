@@ -10,8 +10,12 @@ export const procedure = authProcedure
 		const { database } = ctx;
 		const selfDebt = await database
 			.selectFrom("debts")
-			.where("debts.id", "=", input.id)
-			.where("debts.ownerAccountId", "=", ctx.auth.accountId)
+			.where((eb) =>
+				eb.and({
+					"debts.id": input.id,
+					"debts.ownerAccountId": ctx.auth.accountId,
+				}),
+			)
 			.leftJoin("debts as theirDebts", (qb) =>
 				qb
 					.onRef("theirDebts.id", "=", "debts.id")

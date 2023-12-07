@@ -117,7 +117,7 @@ const getReceiptParticipants = async (
 			"usersTheir.name as theirName",
 			"accounts.id as accountId",
 			"accounts.email",
-			sql`role`.castTo<Role>().as("role"),
+			sql`role`.$castTo<Role>().as("role"),
 			"receiptParticipants.resolved",
 			"added",
 		])

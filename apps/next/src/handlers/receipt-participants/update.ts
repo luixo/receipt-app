@@ -92,7 +92,11 @@ export const procedure = authProcedure
 		await database
 			.updateTable("receiptParticipants")
 			.set(setObject)
-			.where("receiptId", "=", input.receiptId)
-			.where("userId", "=", input.userId)
+			.where((eb) =>
+				eb.and({
+					receiptId: input.receiptId,
+					userId: input.userId,
+				}),
+			)
 			.executeTakeFirst();
 	});

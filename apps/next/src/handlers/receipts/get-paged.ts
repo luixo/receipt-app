@@ -44,14 +44,17 @@ export const procedure = authProcedure
 					]);
 					const ownReceiptsBuilder = ownReceipts.select([
 						"receipts.id as receiptId",
-						sql<Role>`'owner'`.as("role"),
+						sql.lit("owner").$castTo<Role>().as("role"),
 						"receipts.name",
 						"receipts.issued",
 						"receipts.currencyCode",
 						"receipts.lockedTimestamp",
 						// We use `userId` = `ownerAccountId` contract
 						// But type system doesn't know about that
-						sql<UsersId>`receipts."ownerAccountId"`.as("remoteUserId"),
+						sql
+							.id("receipts", "ownerAccountId")
+							.$castTo<UsersId>()
+							.as("remoteUserId"),
 					]);
 					if (typeof filters.ownedByMe !== "boolean") {
 						return foreignReceiptsBuilder.union(ownReceiptsBuilder);
@@ -87,9 +90,19 @@ export const procedure = authProcedure
 					"mergedReceipts.lockedTimestamp",
 					"receiptParticipants.resolved as participantResolved",
 					"mergedReceipts.remoteUserId",
-					sql<string>`coalesce(sum("receiptItems".price * "receiptItems".quantity), 0)`.as(
-						"sum",
-					),
+					(eb) =>
+						eb.fn
+							.sum(
+								eb.fn.coalesce(
+									eb(
+										"receiptItems.price",
+										"*",
+										eb.ref("receiptItems.quantity"),
+									),
+									sql`0`,
+								),
+							)
+							.as("sum"),
 				])
 				.groupBy([
 					"mergedReceipts.receiptId",
@@ -125,9 +138,10 @@ export const procedure = authProcedure
 					const foreignReceiptsBuilder = foreignReceipts
 						.select([
 							database.fn.count<string>("receipts.id").as("amount"),
-							sql<boolean | null>`"receiptParticipants"."resolved"`.as(
-								"resolved",
-							),
+							sql
+								.id("receiptParticipants", "resolved")
+								.$castTo<boolean | null>()
+								.as("resolved"),
 							"receipts.lockedTimestamp",
 						])
 						.groupBy([
@@ -143,7 +157,7 @@ export const procedure = authProcedure
 									"=",
 									// We use `userId` = `ownerAccountId` contract
 									// But type system doesn't know about that
-									sql<UsersId>`receipts."ownerAccountId"`,
+									sql.id("receipts", "ownerAccountId").$castTo<UsersId>(),
 								),
 						)
 						.select([
