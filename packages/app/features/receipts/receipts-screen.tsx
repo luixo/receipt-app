@@ -10,6 +10,7 @@ import { Header } from "app/components/header";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import type { AppPage } from "next-app/types/page";
 
+import { FilterButton } from "./filter-button";
 import { Receipts } from "./receipts";
 
 export const ReceiptsScreen: AppPage = () => (
@@ -17,16 +18,20 @@ export const ReceiptsScreen: AppPage = () => (
 		<Header
 			icon={<ReceiptIcon size={36} />}
 			aside={
-				<Button
-					color="primary"
-					href="/receipts/add"
-					as={Link}
-					title="Add receipt"
-					variant="bordered"
-					isIconOnly
-				>
-					<AddIcon size={24} />
-				</Button>
+				<>
+					<FilterButton />
+					<Spacer x={4} />
+					<Button
+						color="primary"
+						href="/receipts/add"
+						as={Link}
+						title="Add receipt"
+						variant="bordered"
+						isIconOnly
+					>
+						<AddIcon size={24} />
+					</Button>
+				</>
 			}
 		>
 			Receipts

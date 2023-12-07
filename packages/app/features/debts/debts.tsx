@@ -1,6 +1,7 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Container, styled } from "@nextui-org/react";
+import { styled } from "@nextui-org/react";
 import { Button, Link, Spacer, Spinner } from "@nextui-org/react-tailwind";
 import { MdAdd as AddIcon } from "react-icons/md";
 
@@ -37,12 +38,7 @@ const DebtsInner: React.FC<InnerProps> = ({ query }) => {
 
 	if (showResolvedDebts ? sums.length === 0 : nonZeroSums.length === 0) {
 		return (
-			<Container
-				display="flex"
-				direction="column"
-				alignItems="center"
-				justify="center"
-			>
+			<View className="m-10 self-center md:max-w-lg">
 				<Text className="text-4xl font-medium">You have no debts</Text>
 				<Spacer y={4} />
 				<Text className="text-center text-2xl font-medium">
@@ -66,7 +62,7 @@ const DebtsInner: React.FC<InnerProps> = ({ query }) => {
 						<ShowResolvedDebtsOption />
 					</>
 				) : null}
-			</Container>
+			</View>
 		);
 	}
 

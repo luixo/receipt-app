@@ -1,23 +1,17 @@
 import React from "react";
 
-import type { SwitchEvent } from "@nextui-org/react";
-import { Switch } from "@nextui-org/react";
+import { Switch } from "@nextui-org/react-tailwind";
 import { FaCreativeCommonsZero as ResolveIcon } from "react-icons/fa";
 
 import { useShowResolvedDebts } from "next-app/hooks/use-show-resolved-debts";
 
 export const ShowResolvedDebtsOption: React.FC = () => {
 	const [showResolvedDebts, setShowResolvedDebts] = useShowResolvedDebts();
-	const onResolvedChange = React.useCallback(
-		(e: SwitchEvent) => setShowResolvedDebts(e.target.checked),
-		[setShowResolvedDebts],
-	);
 	return (
 		<Switch
-			checked={showResolvedDebts}
-			onChange={onResolvedChange}
-			icon={<ResolveIcon />}
-			bordered
+			isSelected={showResolvedDebts}
+			onValueChange={setShowResolvedDebts}
+			thumbIcon={<ResolveIcon />}
 		/>
 	);
 };

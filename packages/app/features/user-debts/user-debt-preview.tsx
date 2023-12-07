@@ -1,8 +1,8 @@
 import React from "react";
+import { View } from "react-native";
 
 import { DebtSyncStatus } from "app/components/app/debt-sync-status";
 import { Text } from "app/components/base/text";
-import { Grid } from "app/components/grid";
 import { Link } from "app/components/link";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useSsrFormat } from "app/hooks/use-ssr-format";
@@ -17,22 +17,19 @@ export const UserDebtPreview: React.FC<Props> = ({ debt }) => {
 	const { formatDate } = useSsrFormat();
 	return (
 		<Link href={`/debts/${debt.id}`} color="text">
-			<Grid.Container gap={2}>
-				<Grid defaultCol={2} lessSmCol={5} lessMdCol={3}>
+			<View className="flex-row gap-2 p-2 max-sm:p-3">
+				<View className="flex-[2]">
 					<Text className={debt.amount >= 0 ? "text-success" : "text-danger"}>
 						{Math.abs(debt.amount)} {currency}
 					</Text>
-				</Grid>
-				<Grid defaultCol={2} lessSmCol={5} lessMdCol={3}>
-					{formatDate(debt.timestamp)}
-				</Grid>
-				<Grid defaultCol={2}>
+				</View>
+				<View className="flex-[2]">{formatDate(debt.timestamp)}</View>
+				<View className="flex-1">
 					<DebtSyncStatus debt={debt} size={24} />
-				</Grid>
-				<Grid defaultCol={6} lessSmCol={12} lessMdCol={4} lessSmCss={{ pt: 0 }}>
-					{debt.note}
-				</Grid>
-			</Grid.Container>
+				</View>
+				<View className="flex-[3] max-sm:hidden">{debt.note}</View>
+			</View>
+			<View className="p-3 pb-5 sm:hidden">{debt.note}</View>
 		</Link>
 	);
 };

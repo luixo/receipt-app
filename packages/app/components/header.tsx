@@ -95,7 +95,9 @@ export const Header: React.FC<Props> = ({
 					<BackArrow className="mr-4" size={36} onClick={back} />
 				) : null}
 				{icon ? <View className="mr-2">{icon}</View> : null}
-				<Text className="text-4xl font-medium">{children}</Text>
+				<Text className="text-4xl font-medium">
+					<View className="flex-row">{children}</View>
+				</Text>
 			</View>
 			{asideElements ? (
 				<>

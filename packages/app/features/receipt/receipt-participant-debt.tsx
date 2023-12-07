@@ -1,7 +1,8 @@
 import React from "react";
+import { View } from "react-native";
 
 import { styled } from "@nextui-org/react";
-import { Button, Spacer } from "@nextui-org/react-tailwind";
+import { Button, Divider, Spacer } from "@nextui-org/react-tailwind";
 import {
 	MdOutlineReceipt as ReceiptOffIcon,
 	MdSend as SendIcon,
@@ -12,7 +13,6 @@ import {
 import { DebtSyncStatus } from "app/components/app/debt-sync-status";
 import { LoadableUser } from "app/components/app/loadable-user";
 import { Text } from "app/components/base/text";
-import { Grid } from "app/components/grid";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -26,14 +26,6 @@ const SIZE = 36;
 const Icon = styled(ZeroIcon, {
 	size: SIZE,
 	color: "$accents3",
-});
-
-const Border = styled("div", {
-	borderBottomColor: "$accents5",
-	borderBottomStyle: "solid",
-	borderBottomWidth: 1,
-	width: "100%",
-	my: "$4",
 });
 
 export const isDebtInSyncWithReceipt = (
@@ -142,63 +134,67 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 		  )
 		: false;
 	const isUpdating = updateMutation.isLoading || addMutation.isLoading;
+	const user = <LoadableUser className="self-start" id={participant.userId} />;
 
 	return (
 		<>
-			<Spacer className="w-full" y={4} />
-			<Grid defaultCol={5.5} lessMdCol={12} css={{ flexDirection: "column" }}>
-				<Border className="md:hidden" />
-				<LoadableUser id={participant.userId} />
-			</Grid>
-			<Grid defaultCol={2.5} lessMdCol={4} css={{ alignItems: "center" }}>
-				<Text>{`${participant.sum} ${currency}`}</Text>
-			</Grid>
-			<Grid defaultCol={2.5} lessMdCol={4}>
-				{participant.sum === 0 ? (
-					<Icon as={ZeroIcon} />
-				) : (
-					<>
-						{isReceiptSyncedWithOurDebt ? null : participant.currentDebt ? (
-							<Icon as={ReceiptOffIcon} css={{ color: "$error" }} />
-						) : null}
-						{participant.currentDebt ? (
-							<DebtSyncStatus
-								debt={{
-									lockedTimestamp: participant.currentDebt.lockedTimestamp,
-									their: participant.currentDebt.their,
-								}}
-								size={SIZE}
-							/>
-						) : null}
-					</>
-				)}
-			</Grid>
-			<Grid defaultCol={1.5} lessMdCol={4}>
-				{isReceiptSyncedWithOurDebt && !isUpdating ? null : (
-					<Button
-						title={
-							participant.currentDebt?.their
-								? "Update debt for user"
-								: "Send debt to a user"
-						}
-						isLoading={isUpdating}
-						isDisabled={isUpdating}
-						isIconOnly
-						color="primary"
-						onClick={() =>
-							participant.currentDebt?.their
-								? updateDebt(participant.currentDebt)
-								: addDebt()
-						}
-					>
-						{participant.currentDebt?.their ? (
-							<SyncIcon size={24} />
-						) : (
-							<SendIcon size={24} />
-						)}
-					</Button>
-				)}
-			</Grid>
+			<Divider className="md:hidden" />
+			<View className="md:hidden">
+				{user}
+				<Spacer y={4} />
+			</View>
+			<View className="flex-row gap-4">
+				<View className="flex-[4] max-md:hidden">{user}</View>
+				<View className="flex-[2] max-md:flex-1">
+					<Text>{`${participant.sum} ${currency}`}</Text>
+				</View>
+				<View className="flex-[2] flex-row max-md:flex-1">
+					{participant.sum === 0 ? (
+						<Icon as={ZeroIcon} />
+					) : (
+						<>
+							{isReceiptSyncedWithOurDebt ? null : participant.currentDebt ? (
+								<Icon as={ReceiptOffIcon} css={{ color: "$error" }} />
+							) : null}
+							{participant.currentDebt ? (
+								<DebtSyncStatus
+									debt={{
+										lockedTimestamp: participant.currentDebt.lockedTimestamp,
+										their: participant.currentDebt.their,
+									}}
+									size={SIZE}
+								/>
+							) : null}
+						</>
+					)}
+				</View>
+				<View className="flex-1">
+					{isReceiptSyncedWithOurDebt && !isUpdating ? null : (
+						<Button
+							title={
+								participant.currentDebt?.their
+									? "Update debt for user"
+									: "Send debt to a user"
+							}
+							isLoading={isUpdating}
+							isDisabled={isUpdating}
+							isIconOnly
+							color="primary"
+							onClick={() =>
+								participant.currentDebt?.their
+									? updateDebt(participant.currentDebt)
+									: addDebt()
+							}
+						>
+							{participant.currentDebt?.their ? (
+								<SyncIcon size={24} />
+							) : (
+								<SendIcon size={24} />
+							)}
+						</Button>
+					)}
+				</View>
+			</View>
 		</>
 	);
 };

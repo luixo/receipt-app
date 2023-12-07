@@ -1,6 +1,6 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Container } from "@nextui-org/react";
 import { Spacer, Spinner } from "@nextui-org/react-tailwind";
 
 import { Text } from "app/components/base/text";
@@ -18,12 +18,7 @@ type Props = {
 const ConnectionIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 	if (data.inbound.length === 0 && data.outbound.length === 0) {
 		return (
-			<Container
-				display="flex"
-				direction="column"
-				alignItems="center"
-				justify="center"
-			>
+			<View className="m-10 self-center md:max-w-lg">
 				<Text className="text-center text-4xl font-medium">
 					You have no intention connections
 				</Text>
@@ -31,7 +26,7 @@ const ConnectionIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 				<Text className="text-2xl font-medium">
 					Add a user with an email or add an email to existing user
 				</Text>
-			</Container>
+			</View>
 		);
 	}
 	return (

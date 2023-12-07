@@ -1,27 +1,9 @@
 import React from "react";
 
-import { Image, styled } from "@nextui-org/react";
+import { User as RawUser } from "@nextui-org/react-tailwind";
 import IdenticonJs from "identicon.js";
 
-import { Text } from "app/components/base/text";
 import type { UsersId } from "next-app/db/models";
-
-const Wrapper = styled("div", {
-	display: "flex",
-	alignItems: "center",
-});
-
-const Information = styled("div", {
-	display: "flex",
-	flexDirection: "column",
-	justifyContent: "center",
-	marginLeft: "$sm",
-});
-
-const AvatarImage = styled(Image, {
-	flexShrink: 0,
-	margin: 0,
-});
 
 const getIdenticon = (hash: string, size: number) =>
 	`data:image/svg+xml;base64,${new IdenticonJs(hash, {
@@ -38,36 +20,27 @@ export type Props = {
 		publicName?: string;
 		email?: string;
 	};
-	avatarSize?: number;
-	onClick?: () => void;
-} & Omit<React.ComponentProps<typeof Wrapper>, "onClick" | "css">;
+} & Omit<React.ComponentProps<typeof RawUser>, "name" | "description">;
 
 export const User = React.forwardRef<HTMLDivElement, Props>(
-	({ user, avatarSize = 40, onClick, ...props }, ref) => {
-		const icon = React.useMemo(
-			() => getIdenticon(user.id, avatarSize),
-			[user.id, avatarSize],
-		);
+	({ user, ...props }, ref) => {
+		const icon = React.useMemo(() => getIdenticon(user.id, 40), [user.id]);
 		return (
-			<Wrapper
-				onClick={onClick}
-				css={onClick ? { cursor: "pointer" } : undefined}
+			<RawUser
 				ref={ref}
 				{...props}
-			>
-				<AvatarImage
-					width={avatarSize}
-					height={avatarSize}
-					alt="Avatar"
-					src={icon}
-				/>
-				<Information>
-					<Text className="font-medium">
-						{user.name + (user.publicName ? ` (${user.publicName})` : "")}
-					</Text>
-					<Text className="text-default-400 text-sm">{user.email}</Text>
-				</Information>
-			</Wrapper>
+				name={user.name + (user.publicName ? ` (${user.publicName})` : "")}
+				description={user.email}
+				avatarProps={{
+					src: icon,
+					radius: "sm",
+					...props.avatarProps,
+					classNames: {
+						base: "bg-transparent",
+						...props.avatarProps?.classNames,
+					},
+				}}
+			/>
 		);
 	},
 );

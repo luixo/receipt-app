@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Collapse, styled } from "@nextui-org/react";
-import { Spacer } from "@nextui-org/react-tailwind";
+import { styled } from "@nextui-org/react";
+import { Accordion, AccordionItem, Spacer } from "@nextui-org/react-tailwind";
 
 import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
 import { User } from "app/components/app/user";
@@ -88,69 +88,84 @@ export const ReceiptParticipant: React.FC<Props> = ({
 	const currency = useFormattedCurrency(currencyCode);
 
 	return (
-		<Collapse
-			disabled={participant.items.length === 0}
-			title={
-				<Wrapper>
-					<Body>
-						<BodyElement>
-							<User user={convertParticipantToUser(participant)} />
+		<Accordion>
+			<AccordionItem
+				key="parts"
+				isDisabled={participant.items.length === 0}
+				classNames={{
+					base: "data-[disabled=true]:pointer-events-auto data-[disabled=true]:opacity-100",
+					indicator:
+						"data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-disabled",
+				}}
+				title={
+					<Wrapper>
+						<Body>
+							<BodyElement>
+								<User
+									className={
+										participant.items.length === 0
+											? "opacity-disabled"
+											: undefined
+									}
+									user={convertParticipantToUser(participant)}
+								/>
+								<Spacer x={4} />
+								<Text>
+									{`${Math.round(participant.sum * 100) / 100} ${currency}`}
+								</Text>
+							</BodyElement>
 							<Spacer x={4} />
-							<Text>
-								{`${Math.round(participant.sum * 100) / 100} ${currency}`}
-							</Text>
-						</BodyElement>
-						<Spacer x={4} />
-						<BodyElement css={{ alignSelf: "flex-end" }}>
-							<ReceiptParticipantRoleInput
-								receiptId={receiptId}
-								selfUserId={receiptSelfUserId}
-								participant={participant}
-								isLoading={isLoading}
-								role={role}
-							/>
-							<Spacer x={2} />
-							<ReceiptParticipantResolvedButton
-								variant={
-									participant.remoteUserId === receiptSelfUserId
-										? "ghost"
-										: "light"
-								}
-								receiptId={receiptId}
-								userId={participant.remoteUserId}
-								selfUserId={receiptSelfUserId}
-								resolved={
-									participant.remoteUserId === receiptSelfUserId
-										? participant.resolved
-										: null
-								}
-							/>
-							{role === "owner" ? (
-								<>
-									<Spacer x={2} />
-									<RemoveButton
-										onRemove={removeReceiptParticipant}
-										mutation={removeReceiptParticipantMutation}
-										isDisabled={!selfAccountId || receiptLocked}
-										subtitle="This will remove participant with all his parts"
-										noConfirm={participant.sum === 0}
-									/>
-								</>
-							) : null}
-						</BodyElement>
-					</Body>
-					<Spacer x={2} />
-				</Wrapper>
-			}
-		>
-			{participant.items.map((item) => (
-				<Text key={item.id}>
-					{item.name} -{" "}
-					{`${Math.round(item.sum * 100) / 100}${
-						item.hasExtra ? "+" : ""
-					} ${currency}`}
-				</Text>
-			))}
-		</Collapse>
+							<BodyElement css={{ alignSelf: "flex-end" }}>
+								<ReceiptParticipantRoleInput
+									receiptId={receiptId}
+									selfUserId={receiptSelfUserId}
+									participant={participant}
+									isLoading={isLoading}
+									role={role}
+								/>
+								<Spacer x={2} />
+								<ReceiptParticipantResolvedButton
+									variant={
+										participant.remoteUserId === receiptSelfUserId
+											? "ghost"
+											: "light"
+									}
+									receiptId={receiptId}
+									userId={participant.remoteUserId}
+									selfUserId={receiptSelfUserId}
+									resolved={
+										participant.remoteUserId === receiptSelfUserId
+											? participant.resolved
+											: null
+									}
+								/>
+								{role === "owner" ? (
+									<>
+										<Spacer x={2} />
+										<RemoveButton
+											onRemove={removeReceiptParticipant}
+											mutation={removeReceiptParticipantMutation}
+											isDisabled={!selfAccountId || receiptLocked}
+											subtitle="This will remove participant with all his parts"
+											noConfirm={participant.sum === 0}
+										/>
+									</>
+								) : null}
+							</BodyElement>
+						</Body>
+						<Spacer x={2} />
+					</Wrapper>
+				}
+			>
+				{participant.items.map((item) => (
+					<Text key={item.id}>
+						{item.name} -{" "}
+						{`${Math.round(item.sum * 100) / 100}${
+							item.hasExtra ? "+" : ""
+						} ${currency}`}
+					</Text>
+				))}
+			</AccordionItem>
+		</Accordion>
 	);
 };

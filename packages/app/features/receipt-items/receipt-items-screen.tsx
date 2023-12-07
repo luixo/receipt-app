@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Collapse, styled } from "@nextui-org/react";
+import { styled } from "@nextui-org/react";
 import { Spacer, Spinner } from "@nextui-org/react-tailwind";
 
 import { Text } from "app/components/base/text";
@@ -57,7 +57,7 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 		[itemsRef],
 	);
 	return (
-		<Collapse.Group accordion={false} divider={false}>
+		<>
 			{emptyItems.length === 0 ? null : (
 				<>
 					<EmptyItems
@@ -113,7 +113,7 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 					</NoReceiptItems>
 				</>
 			) : null}
-		</Collapse.Group>
+		</>
 	);
 };
 

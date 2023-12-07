@@ -27,8 +27,10 @@ export const CurrencyInput = <T extends MinimalForm>({
 	isLoading,
 	topCurrenciesQuery,
 }: Props<T>) => {
-	const [modalOpen, { setFalse: closeModal, setTrue: openModal }] =
-		useBooleanState();
+	const [
+		modalOpen,
+		{ switchValue: switchModalOpen, setFalse: closeModal, setTrue: openModal },
+	] = useBooleanState();
 
 	const onCurrencyChange = React.useCallback(
 		(nextCurrency: z.infer<typeof currencySchema>) => {
@@ -94,7 +96,7 @@ export const CurrencyInput = <T extends MinimalForm>({
 				selectedCurrency={selectedCurrency}
 				onChange={onCurrencyChange}
 				modalOpen={modalOpen}
-				onModalClose={closeModal}
+				switchModalOpen={switchModalOpen}
 				onLoad={onLoad}
 				topCurrenciesQuery={topCurrenciesQuery}
 			/>

@@ -20,8 +20,10 @@ type Props = {
 
 export const DebtCurrencyInput: React.FC<Props> = ({ debt, isLoading }) => {
 	const currency = useFormattedCurrency(debt.currencyCode);
-	const [isModalOpen, { setTrue: openModal, setFalse: closeModal }] =
-		useBooleanState();
+	const [
+		isModalOpen,
+		{ switchValue: switchModalOpen, setTrue: openModal, setFalse: closeModal },
+	] = useBooleanState();
 
 	const updateReceiptMutation = trpc.debts.update.useMutation(
 		useTrpcMutationOptions(mutations.debts.update.options, { context: debt }),
@@ -55,7 +57,7 @@ export const DebtCurrencyInput: React.FC<Props> = ({ debt, isLoading }) => {
 			<CurrenciesPicker
 				onChange={saveCurrency}
 				modalOpen={isModalOpen}
-				onModalClose={closeModal}
+				switchModalOpen={switchModalOpen}
 				topCurrenciesQuery={topCurrenciesQuery}
 			/>
 		</>

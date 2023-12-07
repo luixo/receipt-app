@@ -146,7 +146,7 @@ const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 
 	const [
 		infoPopoverOpen,
-		{ setFalse: closeInfoButtonPopover, setTrue: openInfoButtonPopover },
+		{ switchValue: switchInfoButtonPopover, setTrue: openInfoButtonPopover },
 	] = useBooleanState();
 	return (
 		<>
@@ -183,7 +183,7 @@ const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 			) : null}
 			<ReceiptDebtSyncInfoModal
 				isOpen={infoPopoverOpen}
-				closeModal={closeInfoButtonPopover}
+				switchModalOpen={switchInfoButtonPopover}
 				participants={participants}
 				receipt={receipt}
 			/>

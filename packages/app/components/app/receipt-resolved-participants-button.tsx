@@ -1,7 +1,13 @@
 import React from "react";
 
-import { Popover, styled } from "@nextui-org/react";
-import { Button, Spacer } from "@nextui-org/react-tailwind";
+import { styled } from "@nextui-org/react";
+import {
+	Button,
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+	Spacer,
+} from "@nextui-org/react-tailwind";
 import {
 	MdHourglassDisabled as CrossWaitIcon,
 	MdHourglassEmpty as WaitIcon,
@@ -43,7 +49,7 @@ export const ReceiptResolvedParticipantsButton: React.FC<Props> = ({
 			onOpenChange={setPopoverOpen}
 			placement="left"
 		>
-			<Popover.Trigger>
+			<PopoverTrigger>
 				<Button
 					variant="light"
 					{...props}
@@ -67,8 +73,8 @@ export const ReceiptResolvedParticipantsButton: React.FC<Props> = ({
 						? null
 						: notResolvedParticipants.length}
 				</Button>
-			</Popover.Trigger>
-			<Popover.Content>
+			</PopoverTrigger>
+			<PopoverContent>
 				<Wrapper>
 					{notResolvedParticipants && notResolvedParticipants.length !== 0 ? (
 						<>
@@ -113,7 +119,7 @@ export const ReceiptResolvedParticipantsButton: React.FC<Props> = ({
 						</>
 					) : null}
 				</Wrapper>
-			</Popover.Content>
+			</PopoverContent>
 		</Popover>
 	);
 };

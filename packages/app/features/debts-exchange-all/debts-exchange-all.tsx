@@ -33,8 +33,10 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 	const [selectedCurrency, setSelectedCurrency] = React.useState<
 		Currency | undefined
 	>();
-	const [modalOpen, { setFalse: closeModal, setTrue: openModal }] =
-		useBooleanState();
+	const [
+		modalOpen,
+		{ switchValue: switchModalOpen, setFalse: closeModal, setTrue: openModal },
+	] = useBooleanState();
 	const onSelectModalCurrency = React.useCallback(
 		(currency: Currency) => {
 			setSelectedCurrency(currency);
@@ -77,7 +79,7 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 				selectedCurrency={selectedCurrency}
 				onChange={onSelectModalCurrency}
 				modalOpen={modalOpen}
-				onModalClose={closeModal}
+				switchModalOpen={switchModalOpen}
 				onLoad={noop}
 				topCurrenciesQuery={topCurrenciesQuery}
 			/>

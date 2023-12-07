@@ -1,18 +1,13 @@
 import React from "react";
+import { View } from "react-native";
 
-import { styled } from "@nextui-org/react";
-import { Input, Spinner } from "@nextui-org/react-tailwind";
+import { Input, Spacer, Spinner } from "@nextui-org/react-tailwind";
 import type { UseFormReturn } from "react-hook-form";
 
 import { Text } from "app/components/base/text";
-import { Grid } from "app/components/grid";
 import { useInputController } from "app/hooks/use-input-controller";
 import type { CurrencyCode } from "app/utils/currency";
 import { round } from "app/utils/math";
-
-const GridContainer = styled(Grid.Container, {
-	alignItems: "center",
-});
 
 type InputProps = {
 	currencyCode: CurrencyCode;
@@ -63,33 +58,38 @@ export const PlannedDebt: React.FC<Props> = ({
 	note,
 }) => {
 	const selected = selectedCurrencyCode === currencyCode;
+	const rate = <>{ratesLoading && !selected ? <Spinner /> : note}</>;
 	return (
-		<GridContainer gap={2} css={{ alignItems: "center" }}>
-			<Grid defaultCol={4} lessSmCol={6}>
-				<Text className={amount >= 0 ? "text-success" : "text-danger"}>
-					{selected && ratesLoading ? (
-						<Spinner />
-					) : (
-						`${round(amount)} ${currencyCode}`
+		<>
+			<View className="flex-row gap-4">
+				<View className="flex-1">
+					<Text className={amount >= 0 ? "text-success" : "text-danger"}>
+						{selected && ratesLoading ? (
+							<Spinner />
+						) : (
+							`${round(amount)} ${currencyCode}`
+						)}
+					</Text>
+				</View>
+				<View className="flex-1">
+					{selected ? null : (
+						<RateInput
+							// Reload input on selected currency code change will rerun useInputController
+							// Otherwise the hook will run `register` method which will propagate current value
+							// to the new form key
+							key={selectedCurrencyCode}
+							form={form}
+							selectedCurrencyCode={selectedCurrencyCode}
+							currencyCode={currencyCode}
+						/>
 					)}
-				</Text>
-			</Grid>
-			<Grid defaultCol={4} lessSmCol={6}>
-				{selected ? null : (
-					<RateInput
-						// Reload input on selected currency code change will rerun useInputController
-						// Otherwise the hook will run `register` method which will propagate current value
-						// to the new form key
-						key={selectedCurrencyCode}
-						form={form}
-						selectedCurrencyCode={selectedCurrencyCode}
-						currencyCode={currencyCode}
-					/>
-				)}
-			</Grid>
-			<Grid defaultCol={4} lessSmCol={12} lessMdCss={{ pt: 0 }}>
-				{ratesLoading && !selected ? <Spinner /> : note}
-			</Grid>
-		</GridContainer>
+				</View>
+				<View className="flex-1 max-md:hidden">{rate}</View>
+			</View>
+			<View className="md:hidden">
+				<Spacer y={4} />
+				{rate}
+			</View>
+		</>
 	);
 };

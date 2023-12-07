@@ -1,7 +1,6 @@
 import React from "react";
 
-import { Tooltip } from "@nextui-org/react";
-import { Button } from "@nextui-org/react-tailwind";
+import { Button, Tooltip } from "@nextui-org/react-tailwind";
 
 import { LockedIcon } from "app/components/locked-icon";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -59,7 +58,7 @@ export const ReceiptLockedButton: React.FC<Props> = ({
 	);
 	if (emptyItemsWarning) {
 		return (
-			<Tooltip content={emptyItemsWarning} placement="bottomEnd">
+			<Tooltip content={emptyItemsWarning} placement="bottom-end">
 				{elements}
 			</Tooltip>
 		);

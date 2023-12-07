@@ -5076,6 +5076,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@nextui-org/use-infinite-scroll@npm:^2.1.2":
+  version: 2.1.2
+  resolution: "@nextui-org/use-infinite-scroll@npm:2.1.2"
+  dependencies:
+    "@types/lodash.debounce": ^4.0.7
+    lodash.debounce: ^4.0.8
+  peerDependencies:
+    react: ">=18"
+  checksum: e03bf550a8eeeb60cbcde0fc7f18100284066ccffe8d918589d6a62cc98279721170927d223c585b5785b6c5f760abc5bd123bb28e57e6ed1fb2a66a1c47d81c
+  languageName: node
+  linkType: hard
+
 "@nextui-org/use-is-mobile@npm:2.0.6":
   version: 2.0.6
   resolution: "@nextui-org/use-is-mobile@npm:2.0.6"
@@ -8512,6 +8524,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lodash.debounce@npm:^4.0.7":
+  version: 4.0.9
+  resolution: "@types/lodash.debounce@npm:4.0.9"
+  dependencies:
+    "@types/lodash": "*"
+  checksum: 8183a152e01928e3b97ca773f6ae6038b8695e76493ba8bf6b743ec143948a62294fbc9d49fa4a78b52265b3ba4892ef57534e0c13d04aa0f111671b5a944feb
+  languageName: node
+  linkType: hard
+
 "@types/lodash.memoize@npm:^4.1.7":
   version: 4.1.7
   resolution: "@types/lodash.memoize@npm:4.1.7"
@@ -9656,6 +9677,7 @@ __metadata:
     "@expo/html-elements": ^0.5.1
     "@hookform/resolvers": ^3.1.1
     "@nextui-org/react-tailwind": "npm:@nextui-org/react@2.2.9"
+    "@nextui-org/use-infinite-scroll": ^2.1.2
     "@react-native-picker/picker": ^2.4.10
     "@react-navigation/native": ^6.1.7
     "@react-types/shared": ^3.18.1

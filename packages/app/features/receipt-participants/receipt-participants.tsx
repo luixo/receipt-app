@@ -1,7 +1,10 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Collapse } from "@nextui-org/react";
+import { Accordion, AccordionItem, Spacer } from "@nextui-org/react-tailwind";
+import { FaUser as UserIcon } from "react-icons/fa";
 
+import { Text } from "app/components/base/text";
 import type { TRPCQueryOutput } from "app/trpc";
 import type { CurrencyCode } from "app/utils/currency";
 import {
@@ -88,13 +91,19 @@ export const ReceiptParticipants: React.FC<Props> = ({
 			}));
 	}, [data, receiptId, sortParticipants]);
 	return (
-		<Collapse
-			key={participants.map(({ remoteUserId }) => remoteUserId).join(";")}
-			title="🥸 Participants"
-			shadow
-			expanded={data.role === "owner"}
+		<Accordion
+			variant="shadow"
+			defaultExpandedKeys={data.role === "owner" ? ["participants"] : undefined}
 		>
-			<Collapse.Group>
+			<AccordionItem
+				key="participants"
+				title={
+					<View className="flex-row">
+						<UserIcon size={24} />
+						<Text className="ml-2 text-xl">Participants</Text>
+					</View>
+				}
+			>
 				{participants.map((participant) => (
 					<ReceiptParticipant
 						key={participant.remoteUserId}
@@ -107,17 +116,20 @@ export const ReceiptParticipants: React.FC<Props> = ({
 						isLoading={isLoading}
 					/>
 				))}
-			</Collapse.Group>
-			{data.role !== "owner" ? null : (
-				<AddReceiptParticipantForm
-					disabled={isLoading}
-					receiptId={receiptId}
-					receiptLocked={receiptLocked}
-					filterIds={participants.map(
-						(participant) => participant.remoteUserId,
-					)}
-				/>
-			)}
-		</Collapse>
+				{data.role !== "owner" ? null : (
+					<>
+						<Spacer y={8} />
+						<AddReceiptParticipantForm
+							disabled={isLoading}
+							receiptId={receiptId}
+							receiptLocked={receiptLocked}
+							filterIds={participants.map(
+								(participant) => participant.remoteUserId,
+							)}
+						/>
+					</>
+				)}
+			</AccordionItem>
+		</Accordion>
 	);
 };

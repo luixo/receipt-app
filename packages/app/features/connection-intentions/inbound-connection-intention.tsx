@@ -1,6 +1,5 @@
 import React from "react";
 
-import { Container } from "@nextui-org/react";
 import { Button, Spacer } from "@nextui-org/react-tailwind";
 
 import { UsersSuggest } from "app/components/app/users-suggest";
@@ -53,31 +52,25 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 				closeOnSelect
 			/>
 			<Spacer y={4} />
-			<Container
-				display="flex"
-				direction="column"
-				css={{ p: 0 }}
-				alignItems="flex-end"
+			<Button
+				color="primary"
+				isDisabled={!user || isLoading}
+				onClick={acceptConnection}
+				title={user ? `Connect ${intention.account.email} as ${user.name}` : ""}
 			>
-				<Button
-					color="primary"
-					isDisabled={!user || isLoading}
-					onClick={acceptConnection}
-					title={
-						user ? `Connect ${intention.account.email} as ${user.name}` : ""
-					}
-				>
-					{user ? `Connect "${user.name}"` : "Please choose user above"}
-				</Button>
-				<Spacer y={2} />
-				<Button
-					color="warning"
-					isDisabled={isLoading}
-					onClick={rejectConnection}
-				>
-					Reject connection
-				</Button>
-			</Container>
+				{user
+					? `Connect "${user.name}"`
+					: "Please choose user above to accept intention"}
+			</Button>
+			<Spacer y={2} />
+			<Button
+				color="warning"
+				variant="bordered"
+				isDisabled={isLoading}
+				onClick={rejectConnection}
+			>
+				Reject connection
+			</Button>
 		</>
 	);
 };

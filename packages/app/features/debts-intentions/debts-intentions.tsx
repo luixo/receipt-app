@@ -1,6 +1,6 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Container } from "@nextui-org/react";
 import { Spacer, Spinner } from "@nextui-org/react-tailwind";
 import { useRouter } from "next/router";
 
@@ -35,12 +35,7 @@ const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 	}, [data, router.asPath, intentionsRefs]);
 	if (data.length === 0) {
 		return (
-			<Container
-				display="flex"
-				direction="column"
-				alignItems="center"
-				justify="center"
-			>
+			<View className="m-10 self-center md:max-w-lg">
 				<Text className="text-center text-4xl font-medium">
 					You have no incoming sync requests
 				</Text>
@@ -48,7 +43,7 @@ const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 				<Text className="text-center text-2xl">
 					Ask a friend to create a debt for you ;)
 				</Text>
-			</Container>
+			</View>
 		);
 	}
 	const intentionsByUser = data.reduce<

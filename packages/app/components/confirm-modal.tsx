@@ -1,7 +1,14 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Modal, styled } from "@nextui-org/react";
-import { Button, Spacer } from "@nextui-org/react-tailwind";
+import {
+	Button,
+	Modal,
+	ModalBody,
+	ModalContent,
+	ModalHeader,
+	Spacer,
+} from "@nextui-org/react-tailwind";
 
 import { Text } from "app/components/base/text";
 import { useBooleanState } from "app/hooks/use-boolean-state";
@@ -17,11 +24,6 @@ type Props = {
 	children: (controls: { openModal: () => void }) => React.ReactNode;
 };
 
-const Buttons = styled("div", {
-	display: "flex",
-	justifyContent: "center",
-});
-
 export const ConfirmModal: React.FC<Props> = ({
 	action,
 	title,
@@ -32,8 +34,10 @@ export const ConfirmModal: React.FC<Props> = ({
 	isLoading,
 	children,
 }) => {
-	const [isModalOpen, { setFalse: closeModal, setTrue: openModal }] =
-		useBooleanState();
+	const [
+		isModalOpen,
+		{ switchValue: switchModalOpen, setFalse: closeModal, setTrue: openModal },
+	] = useBooleanState();
 	const onYesClick = React.useCallback(() => {
 		closeModal();
 		action();
@@ -44,31 +48,37 @@ export const ConfirmModal: React.FC<Props> = ({
 			<Modal
 				closeButton
 				aria-label={title}
-				open={isModalOpen}
-				onClose={closeModal}
+				isOpen={isModalOpen}
+				onOpenChange={switchModalOpen}
 			>
-				<Modal.Header css={{ flexDirection: "column" }}>
-					<Text className="text-2xl font-medium">{confirmText}</Text>
-					{subtitle ? (
-						<Text className="text-warning my-2">{subtitle}</Text>
-					) : null}
-				</Modal.Header>
-				<Modal.Body css={{ pt: "$4", pb: "$12" }}>
-					<Buttons>
-						<Button
-							color="danger"
-							onClick={onYesClick}
-							isDisabled={isLoading}
-							isLoading={isLoading}
-						>
-							{yesText}
-						</Button>
-						<Spacer x={2} />
-						<Button color="primary" onClick={closeModal} isDisabled={isLoading}>
-							{noText}
-						</Button>
-					</Buttons>
-				</Modal.Body>
+				<ModalContent>
+					<ModalHeader className="flex-col items-center">
+						<Text className="text-2xl font-medium">{confirmText}</Text>
+						{subtitle ? (
+							<Text className="text-warning my-2">{subtitle}</Text>
+						) : null}
+					</ModalHeader>
+					<ModalBody>
+						<View className="flex-row justify-center">
+							<Button
+								color="danger"
+								onClick={onYesClick}
+								isDisabled={isLoading}
+								isLoading={isLoading}
+							>
+								{yesText}
+							</Button>
+							<Spacer x={2} />
+							<Button
+								color="primary"
+								onClick={closeModal}
+								isDisabled={isLoading}
+							>
+								{noText}
+							</Button>
+						</View>
+					</ModalBody>
+				</ModalContent>
 			</Modal>
 		</>
 	);

@@ -5,6 +5,7 @@ import { Spacer, Spinner } from "@nextui-org/react-tailwind";
 import { DebtControlButtons } from "app/components/app/debt-control-buttons";
 import { DebtSyncStatus } from "app/components/app/debt-sync-status";
 import { LoadableUser } from "app/components/app/loadable-user";
+import { Text } from "app/components/base/text";
 import { QueryErrorMessage } from "app/components/error-message";
 import { Header } from "app/components/header";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
@@ -36,7 +37,9 @@ export const DebtInner: React.FC<InnerProps> = ({ query }) => {
 				textChildren={`${debt.amount} ${currency} debt`}
 			>
 				<>
-					{debt.amount} {currency} debt
+					<Text className="text-4xl font-medium">
+						{debt.amount} {currency} debt
+					</Text>
 					<Spacer x={4} />
 					<DebtSyncStatus debt={debt} size={36} />
 					{debt.receiptId ? (

@@ -1,6 +1,7 @@
 import React from "react";
 
-import { Tooltip, styled } from "@nextui-org/react";
+import { styled } from "@nextui-org/react";
+import { Tooltip } from "@nextui-org/react-tailwind";
 import {
 	MdKeyboardArrowLeft as IncomingIcon,
 	MdKeyboardArrowRight as OutcomingIcon,
@@ -42,10 +43,10 @@ const getContent = (
 		return "Local debt, no sync";
 	}
 	if (!their) {
-		return "Out of sync,\nwe intent to push";
+		return "Out of sync, we intent to push";
 	}
 	if (!their.lockedTimestamp) {
-		return "Out of sync,\nwe intent to sync, but they're not";
+		return "Out of sync, we intent to sync, but they're not";
 	}
 	if (their.lockedTimestamp.valueOf() !== lockedTimestamp.valueOf()) {
 		return `Out of sync, ${
@@ -74,8 +75,7 @@ export const DebtSyncStatus: React.FC<Props> = ({
 	return (
 		<Tooltip
 			content={getContent(lockedTimestamp, their)}
-			css={{ whiteSpace: "pre" }}
-			placement="bottomEnd"
+			placement="bottom-end"
 		>
 			<Wrapper type={isSynced ? "sync" : "unsync"}>
 				<StyledSyncIcon as={isSynced ? SyncIcon : UnsyncIcon} css={{ size }} />

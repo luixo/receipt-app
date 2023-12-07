@@ -20,18 +20,20 @@ export const ReceiptCurrencyInput: React.FC<Props> = ({
 	receipt,
 	isLoading,
 }) => {
-	const [isModalOpen, { setTrue: openModal, setFalse: closeModal }] =
-		useBooleanState();
+	const [
+		isModalOpen,
+		{ switchValue: switchModalOpen, setTrue: openModal, setFalse: closeModal },
+	] = useBooleanState();
 
 	const updateReceiptMutation = trpc.receipts.update.useMutation(
 		useTrpcMutationOptions(mutations.receipts.update.options),
 	);
 	const saveCurrency = React.useCallback(
 		(nextCurrency: Currency) => {
+			closeModal();
 			if (nextCurrency.code === receipt.currencyCode) {
 				return;
 			}
-			closeModal();
 			updateReceiptMutation.mutate({
 				id: receipt.id,
 				update: { type: "currencyCode", currencyCode: nextCurrency!.code },
@@ -59,7 +61,7 @@ export const ReceiptCurrencyInput: React.FC<Props> = ({
 			<CurrenciesPicker
 				onChange={saveCurrency}
 				modalOpen={isModalOpen}
-				onModalClose={closeModal}
+				switchModalOpen={switchModalOpen}
 				topCurrenciesQuery={topCurrenciesQuery}
 			/>
 		</>

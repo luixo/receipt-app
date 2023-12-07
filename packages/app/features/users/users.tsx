@@ -1,6 +1,6 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Container } from "@nextui-org/react";
 import {
 	Button,
 	Link,
@@ -56,12 +56,7 @@ export const Users: React.FC = () => {
 
 	if (!totalCount && query.fetchStatus !== "fetching") {
 		return (
-			<Container
-				display="flex"
-				direction="column"
-				alignItems="center"
-				justify="center"
-			>
+			<View className="m-10 self-center md:max-w-lg">
 				<Text className="text-4xl font-medium">You have no users</Text>
 				<Text className="text-center text-2xl font-medium">
 					Press
@@ -78,7 +73,7 @@ export const Users: React.FC = () => {
 					</Button>
 					to add a user
 				</Text>
-			</Container>
+			</View>
 		);
 	}
 

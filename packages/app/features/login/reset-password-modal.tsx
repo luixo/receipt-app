@@ -1,8 +1,15 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Modal } from "@nextui-org/react";
-import { Button, Input, Spacer } from "@nextui-org/react-tailwind";
+import {
+	Button,
+	Input,
+	Modal,
+	ModalBody,
+	ModalContent,
+	ModalHeader,
+	Spacer,
+} from "@nextui-org/react-tailwind";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -18,12 +25,12 @@ type ResetPasswordForm = {
 
 type Props = {
 	isModalOpen: boolean;
-	closeModal: () => void;
+	switchModalOpen: () => void;
 };
 
 export const ResetPasswordModal: React.FC<Props> = ({
 	isModalOpen,
-	closeModal,
+	switchModalOpen,
 }) => {
 	const form = useForm<ResetPasswordForm>({
 		mode: "onChange",
@@ -39,37 +46,39 @@ export const ResetPasswordModal: React.FC<Props> = ({
 	);
 
 	return (
-		<Modal open={isModalOpen} onClose={closeModal}>
-			<Modal.Header>
-				<Text className="text-center text-2xl">Forgot password</Text>
-			</Modal.Header>
-			<Modal.Body>
-				{resetPasswordMutation.status === "success" ? (
-					<Text>Reset password link was sent to {form.watch("email")}</Text>
-				) : (
-					<>
-						<Input
-							{...form.register("email")}
-							label="Email"
-							labelPlacement="outside"
-							isInvalid={Boolean(form.formState.errors.email)}
-							errorMessage={form.formState.errors.email?.message}
-							isDisabled={resetPasswordMutation.isLoading}
-						/>
-						<Spacer y={2} />
-						<Button
-							color="primary"
-							isDisabled={
-								!form.formState.isValid || resetPasswordMutation.isLoading
-							}
-							isLoading={resetPasswordMutation.isLoading}
-							onClick={form.handleSubmit(onSubmit)}
-						>
-							Send email
-						</Button>
-					</>
-				)}
-			</Modal.Body>
+		<Modal isOpen={isModalOpen} onOpenChange={switchModalOpen}>
+			<ModalContent>
+				<ModalHeader>
+					<Text className="text-center text-2xl">Forgot password</Text>
+				</ModalHeader>
+				<ModalBody>
+					{resetPasswordMutation.status === "success" ? (
+						<Text>Reset password link was sent to {form.watch("email")}</Text>
+					) : (
+						<>
+							<Input
+								{...form.register("email")}
+								label="Email"
+								labelPlacement="outside"
+								isInvalid={Boolean(form.formState.errors.email)}
+								errorMessage={form.formState.errors.email?.message}
+								isDisabled={resetPasswordMutation.isLoading}
+							/>
+							<Spacer y={2} />
+							<Button
+								color="primary"
+								isDisabled={
+									!form.formState.isValid || resetPasswordMutation.isLoading
+								}
+								isLoading={resetPasswordMutation.isLoading}
+								onClick={form.handleSubmit(onSubmit)}
+							>
+								Send email
+							</Button>
+						</>
+					)}
+				</ModalBody>
+			</ModalContent>
 		</Modal>
 	);
 };

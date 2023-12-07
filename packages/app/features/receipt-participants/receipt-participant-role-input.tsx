@@ -1,8 +1,14 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Dropdown } from "@nextui-org/react";
-import { Spinner } from "@nextui-org/react-tailwind";
+import {
+	Button,
+	Dropdown,
+	DropdownItem,
+	DropdownMenu,
+	DropdownTrigger,
+} from "@nextui-org/react-tailwind";
+import { FaChevronDown as ChevronDown } from "react-icons/fa";
 
 import { Text } from "app/components/base/text";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -57,28 +63,30 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 
 	return (
 		<Dropdown>
-			<Dropdown.Button
-				flat
-				size="sm"
-				disabled={isLoading || role !== "owner" || participant.role === "owner"}
-			>
-				{updateParticipantMutation.isLoading ? (
-					<Spinner size="sm" />
-				) : (
-					participant.role
-				)}
-			</Dropdown.Button>
-			<Dropdown.Menu aria-label="Roles" variant="shadow">
+			<DropdownTrigger>
+				<Button
+					variant="flat"
+					size="sm"
+					isDisabled={
+						isLoading || role !== "owner" || participant.role === "owner"
+					}
+					isLoading={updateParticipantMutation.isLoading}
+					startContent={<ChevronDown />}
+				>
+					{participant.role}
+				</Button>
+			</DropdownTrigger>
+			<DropdownMenu aria-label="Roles" variant="shadow">
 				{ROLES.filter((pickRole) => pickRole !== participant.role).map(
 					(pickRole) => (
-						<Dropdown.Item key={pickRole}>
+						<DropdownItem key={pickRole}>
 							<View onClick={() => changeRole(pickRole)}>
 								<Text>Set &quot;{pickRole}&quot; role</Text>
 							</View>
-						</Dropdown.Item>
+						</DropdownItem>
 					),
 				)}
-			</Dropdown.Menu>
+			</DropdownMenu>
 		</Dropdown>
 	);
 };

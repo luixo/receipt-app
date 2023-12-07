@@ -195,16 +195,18 @@ export const PlannedDebts: React.FC<Props> = ({
 					<Spacer y={4} />
 				</>
 			) : null}
-			{debts.map((debt) => (
-				<PlannedDebt
-					key={debt.currencyCode}
-					selectedCurrencyCode={selectedCurrencyCode}
-					form={form}
-					ratesLoading={ratesQuery.isLoading}
-					currencyCode={debt.currencyCode}
-					amount={debt.amount}
-					note={debt.note}
-				/>
+			{debts.map((debt, index) => (
+				<React.Fragment key={debt.currencyCode}>
+					{index === 0 ? null : <Spacer y={4} />}
+					<PlannedDebt
+						selectedCurrencyCode={selectedCurrencyCode}
+						form={form}
+						ratesLoading={ratesQuery.isLoading}
+						currencyCode={debt.currencyCode}
+						amount={debt.amount}
+						note={debt.note}
+					/>
+				</React.Fragment>
 			))}
 			<Spacer y={4} />
 			<Button

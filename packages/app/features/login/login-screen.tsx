@@ -30,7 +30,7 @@ export const LoginScreen: AppPage = () => {
 		),
 	});
 
-	const [modalOpen, { setTrue: openModal, setFalse: closeModal }] =
+	const [modalOpen, { switchValue: switchModalOpen, setTrue: openModal }] =
 		useBooleanState();
 
 	const loginMutation = trpc.auth.login.useMutation(
@@ -81,7 +81,10 @@ export const LoginScreen: AppPage = () => {
 			>
 				Forgot password?
 			</Button>
-			<ResetPasswordModal isModalOpen={modalOpen} closeModal={closeModal} />
+			<ResetPasswordModal
+				isModalOpen={modalOpen}
+				switchModalOpen={switchModalOpen}
+			/>
 		</>
 	);
 };

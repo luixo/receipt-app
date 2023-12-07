@@ -1,10 +1,12 @@
 import React from "react";
+import { View } from "react-native";
 
 import { styled } from "@nextui-org/react";
 import {
 	Button,
 	Divider,
 	Link,
+	Pagination,
 	Spacer,
 	Spinner,
 } from "@nextui-org/react-tailwind";
@@ -12,17 +14,14 @@ import { MdAdd as AddIcon } from "react-icons/md";
 
 import { Text } from "app/components/base/text";
 import { QueryErrorMessage } from "app/components/error-message";
-import { Grid } from "app/components/grid";
 import { Overlay } from "app/components/overlay";
 import { useCursorPaging } from "app/hooks/use-cursor-paging";
-import { useMatchMediaValue } from "app/hooks/use-match-media-value";
 import { useTrpcQueryOptions } from "app/hooks/use-trpc-query-options";
 import { queries } from "app/queries";
 import type { TRPCQueryInput, TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
 
-import { ReceiptPreview, getWidths } from "./receipt-preview";
-import { ReceiptsPagination } from "./receipts-pagination";
+import { ReceiptPreview } from "./receipt-preview";
 
 const Wrapper = styled("div", {
 	display: "flex",
@@ -35,22 +34,19 @@ type PreviewsProps = {
 	receipts: TRPCQueryOutput<"receipts.getPaged">["items"];
 };
 
-const ReceiptPreviewsList: React.FC<PreviewsProps> = ({ receipts }) => {
-	const overflow = useMatchMediaValue(false, { lessSm: true });
-	const [nameWidth, sumWidth] = getWidths(overflow);
-	return (
-		<Grid.Container gap={2}>
-			<Grid defaultCol={nameWidth}>Receipt</Grid>
-			<Grid defaultCol={sumWidth} justify="flex-end">
-				Sum
-			</Grid>
-			<Divider />
-			{receipts.map((receipt) => (
-				<ReceiptPreview key={receipt.id} receipt={receipt} />
-			))}
-		</Grid.Container>
-	);
-};
+const ReceiptPreviewsList: React.FC<PreviewsProps> = ({ receipts }) => (
+	<>
+		<View className="flex-row gap-2">
+			<View className="flex-[7] p-2">Receipt</View>
+			<View className="flex-[2] justify-end p-2">Sum</View>
+			<View className="flex-[3] p-2 pr-14" />
+		</View>
+		<Divider />
+		{receipts.map((receipt) => (
+			<ReceiptPreview key={receipt.id} receipt={receipt} />
+		))}
+	</>
+);
 
 type Input = TRPCQueryInput<"receipts.getPaged">;
 
@@ -99,7 +95,15 @@ export const Receipts: React.FC = () => {
 		);
 	}
 
-	const paginationElement = <ReceiptsPagination pagination={pagination} />;
+	const paginationElement = (
+		<Pagination
+			className="self-center"
+			color="primary"
+			size="lg"
+			variant="bordered"
+			{...pagination}
+		/>
+	);
 
 	return (
 		<>

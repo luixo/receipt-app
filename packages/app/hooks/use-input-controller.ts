@@ -1,6 +1,5 @@
 import React from "react";
 
-import type { FormElement } from "@nextui-org/react";
 import type {
 	FieldPath,
 	FieldValues,
@@ -48,7 +47,7 @@ export const useInputController = <
 		},
 		[form, name, type],
 	);
-	const onChange = React.useMemo<React.ChangeEventHandler<FormElement>>(
+	const onChange = React.useMemo<React.ChangeEventHandler<HTMLInputElement>>(
 		() =>
 			type === "number"
 				? (e) => {

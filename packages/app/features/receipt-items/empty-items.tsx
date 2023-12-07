@@ -1,8 +1,8 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Checkbox } from "@nextui-org/react";
-import { Spacer } from "@nextui-org/react-tailwind";
+import { Checkbox, Spacer } from "@nextui-org/react-tailwind";
+import { FaArrowDown as ArrowDown } from "react-icons/fa";
 
 import { Text } from "app/components/base/text";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
@@ -32,11 +32,10 @@ export const EmptyItems: React.FC<Props> = ({
 				<React.Fragment key={item.id}>
 					<Spacer y={4} />
 					<Checkbox
-						isIndeterminate
 						color="warning"
-						labelColor="warning"
 						isSelected
 						onChange={() => onClick(item.id)}
+						icon={<ArrowDown />}
 					>
 						{`"${item.name}" — ${round(
 							item.quantity * item.price,

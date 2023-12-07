@@ -1,6 +1,11 @@
 import React from "react";
 
-import { Popover, globalCss } from "@nextui-org/react";
+import { globalCss } from "@nextui-org/react";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@nextui-org/react-tailwind";
 import ReactCalendar from "react-calendar";
 
 const calendarStyles = globalCss({
@@ -179,8 +184,10 @@ export const Calendar: React.FC<Props> = ({
 	);
 	return (
 		<Popover isOpen={isOpen} onOpenChange={changeOpen}>
-			<Popover.Trigger>{children}</Popover.Trigger>
-			<Popover.Content>{calendar}</Popover.Content>
+			<PopoverTrigger>{children}</PopoverTrigger>
+			<PopoverContent className="border-foreground border-2 p-0 shadow-md">
+				{calendar}
+			</PopoverContent>
 		</Popover>
 	);
 };

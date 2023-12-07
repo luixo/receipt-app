@@ -1,30 +1,21 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Modal, styled } from "@nextui-org/react";
+import {
+	Divider,
+	Modal,
+	ModalBody,
+	ModalContent,
+	ModalHeader,
+} from "@nextui-org/react-tailwind";
 
 import { Text } from "app/components/base/text";
-import { Grid } from "app/components/grid";
-import { useMatchMediaValue } from "app/hooks/use-match-media-value";
 
 import type {
 	DebtParticipant,
 	LockedReceipt,
 } from "./receipt-participant-debt";
 import { ReceiptParticipantDebt } from "./receipt-participant-debt";
-
-const GridHeader = styled(Grid, {
-	pb: "$4",
-
-	variants: {
-		border: {
-			true: {
-				borderBottomColor: "$accents5",
-				borderBottomStyle: "solid",
-				borderBottomWidth: 1,
-			},
-		},
-	},
-});
 
 const sortParticipants =
 	(receiptLockedTimestamp: Date) =>
@@ -55,18 +46,17 @@ const sortParticipants =
 
 type Props = {
 	isOpen: boolean;
-	closeModal: () => void;
+	switchModalOpen: () => void;
 	receipt: LockedReceipt;
 	participants: DebtParticipant[];
 };
 
 export const ReceiptDebtSyncInfoModal: React.FC<Props> = ({
 	isOpen,
-	closeModal,
+	switchModalOpen,
 	receipt,
 	participants,
 }) => {
-	const showBorder = useMatchMediaValue(true, { lessMd: false });
 	const sortedParticipants = React.useMemo(
 		() => [...participants].sort(sortParticipants(receipt.lockedTimestamp)),
 		[participants, receipt.lockedTimestamp],
@@ -77,28 +67,23 @@ export const ReceiptDebtSyncInfoModal: React.FC<Props> = ({
 	}
 	return (
 		<Modal
-			open={isOpen}
-			onClose={closeModal}
-			width="90%"
+			isOpen={isOpen}
+			onOpenChange={switchModalOpen}
+			className="max-w-3xl"
 			title="Receipt sync status"
 		>
-			<Modal.Header>
-				<Text className="text-center text-2xl">Sync status</Text>
-			</Modal.Header>
-			<Modal.Body>
-				<Grid.Container>
-					<GridHeader border={showBorder} defaultCol={5.5} lessMdCol={0}>
-						User
-					</GridHeader>
-					<GridHeader border={showBorder} defaultCol={2.5} lessMdCol={4}>
-						Amount
-					</GridHeader>
-					<GridHeader border={showBorder} defaultCol={2.5} lessMdCol={4}>
-						Status
-					</GridHeader>
-					<GridHeader border={showBorder} defaultCol={1.5} lessMdCol={4}>
-						Actions
-					</GridHeader>
+			<ModalContent>
+				<ModalHeader>
+					<Text className="text-center text-2xl">Sync status</Text>
+				</ModalHeader>
+				<ModalBody>
+					<View className="flex-row gap-4">
+						<View className="flex-[4] max-md:hidden">User</View>
+						<View className="flex-[2] max-md:flex-1">Amount</View>
+						<View className="flex-[2] max-md:flex-1">Status</View>
+						<View className="flex-1">Actions</View>
+					</View>
+					<Divider className="max-md:hidden" />
 					{sortedParticipants.map((participant) => (
 						<ReceiptParticipantDebt
 							key={participant.userId}
@@ -106,8 +91,8 @@ export const ReceiptDebtSyncInfoModal: React.FC<Props> = ({
 							participant={participant}
 						/>
 					))}
-				</Grid.Container>
-			</Modal.Body>
+				</ModalBody>
+			</ModalContent>
 		</Modal>
 	);
 };
