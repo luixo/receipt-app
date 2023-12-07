@@ -1,7 +1,6 @@
 import React from "react";
 
-import { Loading } from "@nextui-org/react";
-import { Button, Input } from "@nextui-org/react-tailwind";
+import { Button, Input, Spinner } from "@nextui-org/react-tailwind";
 import { IoTrashBin as TrashBinIcon } from "react-icons/io5";
 import { MdLink as LinkIcon, MdLinkOff as UnlinkIcon } from "react-icons/md";
 
@@ -76,7 +75,7 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 
 	if (outboundConnectionIntention === undefined) {
 		if (connectionIntentionsQuery.status === "loading") {
-			return <Loading />;
+			return <Spinner />;
 		}
 		if (connectionIntentionsQuery.status === "error") {
 			return (

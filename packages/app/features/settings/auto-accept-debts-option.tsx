@@ -1,7 +1,8 @@
 import React from "react";
 
 import type { SwitchEvent } from "@nextui-org/react";
-import { Loading, Switch } from "@nextui-org/react";
+import { Switch } from "@nextui-org/react";
+import { Spinner } from "@nextui-org/react-tailwind";
 
 import { ErrorMessage, QueryErrorMessage } from "app/components/error-message";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -26,7 +27,7 @@ export const AutoAcceptDebtsOption: React.FC = () => {
 		[updateSettingsMutation],
 	);
 	if (settingsQuery.status === "loading") {
-		return <Loading />;
+		return <Spinner />;
 	}
 	if (settingsQuery.status === "error") {
 		return <QueryErrorMessage query={settingsQuery} />;
@@ -37,7 +38,7 @@ export const AutoAcceptDebtsOption: React.FC = () => {
 				checked={settingsQuery.data.autoAcceptDebts}
 				onChange={onChange}
 				icon={
-					updateSettingsMutation.isLoading ? <Loading size="xs" /> : undefined
+					updateSettingsMutation.isLoading ? <Spinner size="sm" /> : undefined
 				}
 				bordered
 				disabled={updateSettingsMutation.isLoading}

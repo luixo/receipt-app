@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Loading } from "@nextui-org/react";
+import { Spinner } from "@nextui-org/react-tailwind";
 
 import { User } from "app/components/app/user";
 import { QueryErrorMessage } from "app/components/error-message";
@@ -29,7 +29,7 @@ type Props = Omit<InnerProps, "query"> & {
 export const LoadableUser: React.FC<Props> = ({ id, ...props }) => {
 	const query = trpc.users.get.useQuery({ id });
 	if (query.status === "loading") {
-		return <Loading className={props.className} />;
+		return <Spinner className={props.className} />;
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;

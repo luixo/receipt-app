@@ -1,7 +1,13 @@
 import React from "react";
 
-import { Loading, styled } from "@nextui-org/react";
-import { Button, Divider, Link, Spacer } from "@nextui-org/react-tailwind";
+import { styled } from "@nextui-org/react";
+import {
+	Button,
+	Divider,
+	Link,
+	Spacer,
+	Spinner,
+} from "@nextui-org/react-tailwind";
 import { BsCurrencyExchange as ExchangeIcon } from "react-icons/bs";
 import { MdAdd as AddIcon } from "react-icons/md";
 
@@ -114,7 +120,7 @@ export const UserDebts: React.FC<Props> = ({ userId, ...props }) => {
 		return (
 			<>
 				<Header>{userNameQuery.data || userId}</Header>
-				<Loading />
+				<Spinner />
 			</>
 		);
 	}

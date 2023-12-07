@@ -1,7 +1,13 @@
 import React from "react";
 
-import { Container, Loading } from "@nextui-org/react";
-import { Button, Link, Pagination, Spacer } from "@nextui-org/react-tailwind";
+import { Container } from "@nextui-org/react";
+import {
+	Button,
+	Link,
+	Pagination,
+	Spacer,
+	Spinner,
+} from "@nextui-org/react-tailwind";
 import { MdAdd as AddIcon } from "react-icons/md";
 
 import { Text } from "app/components/base/text";
@@ -92,12 +98,12 @@ export const Users: React.FC = () => {
 			<Spacer y={4} />
 			<Overlay
 				overlay={
-					query.fetchStatus === "fetching" ? <Loading size="xl" /> : undefined
+					query.fetchStatus === "fetching" ? <Spinner size="lg" /> : undefined
 				}
 			>
 				{query.status === "error" ? <QueryErrorMessage query={query} /> : null}
 				{query.status === "loading" ? (
-					<Loading size="xl" />
+					<Spinner size="lg" />
 				) : query.data ? (
 					<UserPreviewsList users={query.data.items} />
 				) : null}

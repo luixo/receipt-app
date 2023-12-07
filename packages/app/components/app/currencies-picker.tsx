@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Loading, Modal } from "@nextui-org/react";
-import { Button, Divider } from "@nextui-org/react-tailwind";
+import { Modal } from "@nextui-org/react";
+import { Button, Divider, Spinner } from "@nextui-org/react-tailwind";
 import type { QueryObserverSuccessResult } from "@tanstack/react-query";
 
 import { Text } from "app/components/base/text";
@@ -71,7 +71,7 @@ type LoaderProps = Omit<InnerProps, "query"> & {
 
 const CurrenciesPickerLoader: React.FC<LoaderProps> = ({ query, ...props }) => {
 	if (query.status === "loading") {
-		return <Loading />;
+		return <Spinner />;
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;

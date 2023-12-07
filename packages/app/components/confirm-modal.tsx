@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Loading, Modal, styled } from "@nextui-org/react";
+import { Modal, styled } from "@nextui-org/react";
 import { Button, Spacer } from "@nextui-org/react-tailwind";
 
 import { Text } from "app/components/base/text";
@@ -55,8 +55,13 @@ export const ConfirmModal: React.FC<Props> = ({
 				</Modal.Header>
 				<Modal.Body css={{ pt: "$4", pb: "$12" }}>
 					<Buttons>
-						<Button color="danger" onClick={onYesClick} isDisabled={isLoading}>
-							{isLoading ? <Loading color="currentColor" size="sm" /> : yesText}
+						<Button
+							color="danger"
+							onClick={onYesClick}
+							isDisabled={isLoading}
+							isLoading={isLoading}
+						>
+							{yesText}
 						</Button>
 						<Spacer x={2} />
 						<Button color="primary" onClick={closeModal} isDisabled={isLoading}>

@@ -1,7 +1,6 @@
 import React from "react";
 
-import { Loading } from "@nextui-org/react";
-import { Spacer } from "@nextui-org/react-tailwind";
+import { Spacer, Spinner } from "@nextui-org/react-tailwind";
 
 import { DebtControlButtons } from "app/components/app/debt-control-buttons";
 import { DebtSyncStatus } from "app/components/app/debt-sync-status";
@@ -74,7 +73,7 @@ export const Debt: React.FC<Props> = ({ id, ...props }) => {
 		return (
 			<>
 				<Header>Debt</Header>
-				<Loading />
+				<Spinner />
 			</>
 		);
 	}

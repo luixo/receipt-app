@@ -1,7 +1,6 @@
 import React from "react";
 
-import { Loading } from "@nextui-org/react";
-import { Spacer } from "@nextui-org/react-tailwind";
+import { Spacer, Spinner } from "@nextui-org/react-tailwind";
 
 import { QueryErrorMessage } from "app/components/error-message";
 import type { TRPCQuerySuccessResult } from "app/trpc";
@@ -44,7 +43,7 @@ type Props = Omit<InnerProps, "query"> & {
 export const User: React.FC<Props> = ({ id, ...props }) => {
 	const query = trpc.users.get.useQuery({ id });
 	if (query.status === "loading") {
-		return <Loading />;
+		return <Spinner />;
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;

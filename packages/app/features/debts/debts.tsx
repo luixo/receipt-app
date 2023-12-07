@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Container, Loading, styled } from "@nextui-org/react";
-import { Button, Link, Spacer } from "@nextui-org/react-tailwind";
+import { Container, styled } from "@nextui-org/react";
+import { Button, Link, Spacer, Spinner } from "@nextui-org/react-tailwind";
 import { MdAdd as AddIcon } from "react-icons/md";
 
 import { DebtsGroup } from "app/components/app/debts-group";
@@ -109,7 +109,7 @@ const DebtsInner: React.FC<InnerProps> = ({ query }) => {
 export const Debts: React.FC = () => {
 	const query = trpc.debts.getByUsers.useQuery();
 	if (query.status === "loading") {
-		return <Loading size="xl" />;
+		return <Spinner size="lg" />;
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;

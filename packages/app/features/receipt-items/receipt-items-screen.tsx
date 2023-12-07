@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Collapse, Loading, styled } from "@nextui-org/react";
-import { Spacer } from "@nextui-org/react-tailwind";
+import { Collapse, styled } from "@nextui-org/react";
+import { Spacer, Spinner } from "@nextui-org/react-tailwind";
 
 import { Text } from "app/components/base/text";
 import { QueryErrorMessage } from "app/components/error-message";
@@ -122,7 +122,7 @@ type Props = Omit<InnerProps, "query">;
 export const ReceiptItems: React.FC<Props> = ({ receiptId, ...props }) => {
 	const query = trpc.receiptItems.get.useQuery({ receiptId });
 	if (query.status === "loading") {
-		return <Loading />;
+		return <Spinner />;
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;

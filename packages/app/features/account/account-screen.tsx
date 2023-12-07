@@ -1,7 +1,6 @@
 import React from "react";
 
-import { Loading } from "@nextui-org/react";
-import { Button, Spacer } from "@nextui-org/react-tailwind";
+import { Button, Spacer, Spinner } from "@nextui-org/react-tailwind";
 import { useQueryClient } from "@tanstack/react-query";
 import { FaUser as AccountIcon } from "react-icons/fa";
 
@@ -66,7 +65,7 @@ const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 export const AccountScreen: AppPage = () => {
 	const query = trpc.account.get.useQuery();
 	if (query.status === "loading") {
-		return <Loading />;
+		return <Spinner />;
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;

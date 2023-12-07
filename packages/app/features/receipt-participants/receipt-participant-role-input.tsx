@@ -1,7 +1,8 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Dropdown, Loading } from "@nextui-org/react";
+import { Dropdown } from "@nextui-org/react";
+import { Spinner } from "@nextui-org/react-tailwind";
 
 import { Text } from "app/components/base/text";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -62,7 +63,7 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 				disabled={isLoading || role !== "owner" || participant.role === "owner"}
 			>
 				{updateParticipantMutation.isLoading ? (
-					<Loading size="xs" />
+					<Spinner size="sm" />
 				) : (
 					participant.role
 				)}

@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Loading, styled } from "@nextui-org/react";
-import { Input } from "@nextui-org/react-tailwind";
+import { styled } from "@nextui-org/react";
+import { Input, Spinner } from "@nextui-org/react-tailwind";
 import type { UseFormReturn } from "react-hook-form";
 
 import { Text } from "app/components/base/text";
@@ -68,7 +68,7 @@ export const PlannedDebt: React.FC<Props> = ({
 			<Grid defaultCol={4} lessSmCol={6}>
 				<Text className={amount >= 0 ? "text-success" : "text-danger"}>
 					{selected && ratesLoading ? (
-						<Loading />
+						<Spinner />
 					) : (
 						`${round(amount)} ${currencyCode}`
 					)}
@@ -88,7 +88,7 @@ export const PlannedDebt: React.FC<Props> = ({
 				)}
 			</Grid>
 			<Grid defaultCol={4} lessSmCol={12} lessMdCss={{ pt: 0 }}>
-				{ratesLoading && !selected ? <Loading /> : note}
+				{ratesLoading && !selected ? <Spinner /> : note}
 			</Grid>
 		</GridContainer>
 	);

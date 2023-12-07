@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Badge, Loading, Popover, styled } from "@nextui-org/react";
-import { Divider, Input, Spacer } from "@nextui-org/react-tailwind";
+import { Badge, Popover, styled } from "@nextui-org/react";
+import { Divider, Input, Spacer, Spinner } from "@nextui-org/react-tailwind";
 
 import { Text } from "app/components/base/text";
 import { QueryErrorMessage } from "app/components/error-message";
@@ -62,7 +62,7 @@ const UsersSuggestDropdown: React.FC<DropdownProps> = ({
 		return <Text>Please type 1 or more chars</Text>;
 	}
 	if (query.status === "loading") {
-		return <Loading size="xs" />;
+		return <Spinner size="sm" />;
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;
@@ -75,7 +75,7 @@ const UsersSuggestDropdown: React.FC<DropdownProps> = ({
 		return (
 			<Buttons>
 				{query.isRefetching ? (
-					<Loading size="xs" />
+					<Spinner size="sm" />
 				) : (
 					<Text>No users found</Text>
 				)}
@@ -96,7 +96,7 @@ const UsersSuggestDropdown: React.FC<DropdownProps> = ({
 					Load more
 				</UserBadge>
 			) : null}
-			{query.isRefetching ? <Loading size="xs" /> : null}
+			{query.isRefetching ? <Spinner size="sm" /> : null}
 		</Buttons>
 	);
 };
@@ -113,7 +113,7 @@ const UsersSuggestTopDropdown: React.FC<TopDropdownProps> = ({
 	onUserClick,
 }) => {
 	if (query.status === "loading") {
-		return <Loading size="xs" />;
+		return <Spinner size="sm" />;
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;

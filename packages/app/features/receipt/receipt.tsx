@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Loading, styled } from "@nextui-org/react";
-import { Button, Spacer } from "@nextui-org/react-tailwind";
+import { styled } from "@nextui-org/react";
+import { Button, Spacer, Spinner } from "@nextui-org/react-tailwind";
 import {
 	MdEdit as EditIcon,
 	MdOutlineReceipt as ReceiptIcon,
@@ -171,7 +171,7 @@ export const Receipt: React.FC<Props> = ({ id, ...props }) => {
 		return (
 			<>
 				<Header>{receiptNameQuery.data || id}</Header>
-				<Loading />
+				<Spinner />
 			</>
 		);
 	}

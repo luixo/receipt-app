@@ -1,7 +1,6 @@
 import React from "react";
 
-import { Loading } from "@nextui-org/react";
-import { Spacer } from "@nextui-org/react-tailwind";
+import { Spacer, Spinner } from "@nextui-org/react-tailwind";
 
 import { Text } from "app/components/base/text";
 import { useRouter } from "app/hooks/use-router";
@@ -16,7 +15,7 @@ export const HomeScreen: AppPage = () => {
 		<>
 			<Text className="text-2xl">Redirecting to receipt tab..</Text>
 			<Spacer y={4} />
-			<Loading size="xl" />
+			<Spinner size="lg" />
 		</>
 	);
 };

@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Loading, styled } from "@nextui-org/react";
-import { Button, tv } from "@nextui-org/react-tailwind";
+import { styled } from "@nextui-org/react";
+import { Button, Spinner, tv } from "@nextui-org/react-tailwind";
 
 export type Direction = "+" | "-";
 
@@ -43,7 +43,7 @@ export const SignButtonGroup: React.FC<Props> = ({
 				color="success"
 				isDisabled={disabled || isLoading}
 			>
-				{isLoading ? <Loading size="xs" /> : "+ give"}
+				{isLoading ? <Spinner size="sm" /> : "+ give"}
 			</Button>
 			<Button
 				onClick={setNegative}
@@ -52,7 +52,7 @@ export const SignButtonGroup: React.FC<Props> = ({
 				color="danger"
 				isDisabled={disabled || isLoading}
 			>
-				{isLoading ? <Loading size="xs" /> : "- take"}
+				{isLoading ? <Spinner size="sm" /> : "- take"}
 			</Button>
 		</Wrapper>
 	);

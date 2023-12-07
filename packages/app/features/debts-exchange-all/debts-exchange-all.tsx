@@ -1,7 +1,6 @@
 import React from "react";
 
-import { Loading } from "@nextui-org/react";
-import { Divider, Spacer } from "@nextui-org/react-tailwind";
+import { Divider, Spacer, Spinner } from "@nextui-org/react-tailwind";
 
 import { CurrenciesPicker } from "app/components/app/currencies-picker";
 import { DebtsGroup } from "app/components/app/debts-group";
@@ -108,7 +107,7 @@ export const DebtsExchangeAll: React.FC<Props> = ({ userId, ...props }) => {
 		return (
 			<>
 				<Header>{userNameQuery.data || userId}</Header>
-				<Loading />
+				<Spinner />
 			</>
 		);
 	}

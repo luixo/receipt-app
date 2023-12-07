@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Loading } from "@nextui-org/react";
+import { Spinner } from "@nextui-org/react-tailwind";
 
 import { User } from "app/components/app/user";
 import { QueryErrorMessage } from "app/components/error-message";
@@ -14,7 +14,7 @@ type Props = {
 export const ReceiptOwner: React.FC<Props> = ({ receipt }) => {
 	const query = trpc.users.get.useQuery({ id: receipt.ownerUserId });
 	if (query.status === "loading") {
-		return <Loading />;
+		return <Spinner />;
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;

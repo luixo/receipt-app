@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Container, Loading } from "@nextui-org/react";
-import { Spacer } from "@nextui-org/react-tailwind";
+import { Container } from "@nextui-org/react";
+import { Spacer, Spinner } from "@nextui-org/react-tailwind";
 
 import { Text } from "app/components/base/text";
 import { QueryErrorMessage } from "app/components/error-message";
@@ -72,7 +72,7 @@ const ConnectionIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 export const ConnectionIntentions: React.FC = () => {
 	const query = trpc.accountConnectionIntentions.getAll.useQuery();
 	if (query.status === "loading") {
-		return <Loading size="xl" />;
+		return <Spinner size="lg" />;
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;

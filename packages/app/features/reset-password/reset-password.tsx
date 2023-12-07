@@ -1,8 +1,7 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loading } from "@nextui-org/react";
-import { Button, Input, Spacer } from "@nextui-org/react-tailwind";
+import { Button, Input, Spacer, Spinner } from "@nextui-org/react-tailwind";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -60,7 +59,7 @@ export const ResetPassword: React.FC<Props> = ({ token, intentionQuery }) => {
 		);
 	}
 	if (intentionQuery.status === "loading") {
-		return <Loading />;
+		return <Spinner />;
 	}
 	if (intentionQuery.status === "error") {
 		return <QueryErrorMessage query={intentionQuery} />;

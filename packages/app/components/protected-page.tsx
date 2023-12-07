@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Loading } from "@nextui-org/react";
+import { Spinner } from "@nextui-org/react-tailwind";
 import {
 	BsReceipt as ReceiptsIcon,
 	BsGearFill as SettingsIcon,
@@ -61,13 +61,13 @@ export const ProtectedPage: React.FC<Props> = ({ children }) => {
 	let element = children;
 	if (accountQuery.status === "error") {
 		if (accountQuery.error.data?.code === "UNAUTHORIZED") {
-			element = <Loading size="xl" />;
+			element = <Spinner size="lg" />;
 		} else {
 			element = <QueryErrorMessage query={accountQuery} />;
 		}
 	}
 	if (accountQuery.status === "loading") {
-		element = <Loading size="xl" />;
+		element = <Spinner size="lg" />;
 	}
 
 	return (

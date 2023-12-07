@@ -1,7 +1,13 @@
 import React from "react";
 
-import { Loading, styled } from "@nextui-org/react";
-import { Button, Divider, Link, Spacer } from "@nextui-org/react-tailwind";
+import { styled } from "@nextui-org/react";
+import {
+	Button,
+	Divider,
+	Link,
+	Spacer,
+	Spinner,
+} from "@nextui-org/react-tailwind";
 import { MdAdd as AddIcon } from "react-icons/md";
 
 import { Text } from "app/components/base/text";
@@ -102,13 +108,13 @@ export const Receipts: React.FC = () => {
 			<Overlay
 				overlay={
 					query.fetchStatus === "fetching" && query.isPreviousData ? (
-						<Loading size="xl" />
+						<Spinner size="lg" />
 					) : undefined
 				}
 			>
 				{query.status === "error" ? <QueryErrorMessage query={query} /> : null}
 				{query.status === "loading" ? (
-					<Loading size="xl" />
+					<Spinner size="lg" />
 				) : !totalCount && input.filters ? (
 					<Wrapper>
 						<Text className="text-4xl font-medium">

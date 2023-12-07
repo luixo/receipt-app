@@ -1,7 +1,6 @@
 import React from "react";
 
-import { Loading } from "@nextui-org/react";
-import { Button } from "@nextui-org/react-tailwind";
+import { Button, Spinner } from "@nextui-org/react-tailwind";
 
 import { Text } from "app/components/base/text";
 import { ErrorMessage } from "app/components/error-message";
@@ -28,7 +27,7 @@ export const ConfirmEmail: React.FC<Props> = ({ token, confirmMutation }) => {
 		);
 	}
 	if (confirmMutation.status === "loading") {
-		return <Loading />;
+		return <Spinner />;
 	}
 	if (confirmMutation.status === "error") {
 		return <ErrorMessage message={confirmMutation.error.message} />;

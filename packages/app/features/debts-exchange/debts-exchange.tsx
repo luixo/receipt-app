@@ -1,7 +1,6 @@
 import React from "react";
 
-import { Loading } from "@nextui-org/react";
-import { Button, Link, Spacer } from "@nextui-org/react-tailwind";
+import { Button, Link, Spacer, Spinner } from "@nextui-org/react-tailwind";
 
 import { DebtsGroup } from "app/components/app/debts-group";
 import { LoadableUser } from "app/components/app/loadable-user";
@@ -73,7 +72,7 @@ export const DebtsExchange: React.FC<Props> = ({ userId, ...props }) => {
 		return (
 			<>
 				<Header>{userNameQuery.data || userId}</Header>
-				<Loading />
+				<Spinner />
 			</>
 		);
 	}
