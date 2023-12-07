@@ -58,7 +58,6 @@
 		"frontend:test": "yarn workspace playwright test"
 	},
 	"dependencies": {
-		"@nextui-org/react": "1.0.0-beta.10",
 		"@sentry/nextjs": "^7.85.0",
 		"@tanstack/react-query": "^4.32.0",
 		"@tanstack/react-query-devtools": "^4.32.0",
@@ -91,7 +90,6 @@
 		"zustand@^4.3.9": "patch:zustand@npm%3A4.3.9#./patches/zustand-npm-4.3.9.patch",
 		"@trpc/next@^10.35.0": "patch:@trpc/next@npm%3A10.35.0#./patches/@trpc-next-npm-10.35.0.patch",
 		"@trpc/server@^10.35.0": "patch:@trpc/server@npm%3A10.35.0#./patches/@trpc-server-npm-10.35.0.patch",
-		"@nextui-org/react@1.0.0-beta.10": "patch:@nextui-org/react@npm%3A1.0.0-beta.10#./patches/@nextui-org-react-npm-1.0.0-beta.10.patch",
 		"next@^14.0.3": "patch:next@npm%3A14.0.3#./patches/next-npm-14.0.3.patch",
 		"react-ssr-prepass@^1.5.0": "patch:react-ssr-prepass@npm%3A1.5.0#./patches/react-ssr-prepass-npm-1.5.0.patch",
 		"next-usequerystate@1.13.0": "patch:next-usequerystate@npm%3A1.13.0#./patches/next-usequerystate-npm-1.13.0.patch"

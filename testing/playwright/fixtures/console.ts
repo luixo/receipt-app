@@ -20,8 +20,6 @@ export const consoleMixin = createMixin<ConsoleMixin>({
 	consoleManager: async ({}, use) => {
 		const flatMessages: string[] = [];
 		const ignored: IgnoredPattern[] = [
-			// see https://github.com/nextui-org/nextui/issues/482
-			"onClick is deprecated, please use onPress",
 			// see https://github.com/adobe/react-spectrum/blob/fb1525eded030ad8ac8ad43d92b893d5a3256567/packages/dev/docs/pages/blog/building-a-button-part-1.mdx#L96
 			"MouseEvent.mozInputSource is deprecated. Use PointerEvent.pointerType instead.",
 		];

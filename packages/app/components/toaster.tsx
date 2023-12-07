@@ -1,29 +1,16 @@
 import React from "react";
+import { View } from "react-native";
 
-import { css } from "@nextui-org/react";
+import { tv } from "@nextui-org/react-tailwind";
 import type { Toast as ToastType } from "react-hot-toast";
 import { Toaster as RawToaster, ToastBar, toast } from "react-hot-toast";
 
-const toaster = css({
-	background: "$backgroundContrast",
-	color: "$text",
-	borderWidth: 2,
-	borderStyle: "solid",
-
+const toaster = tv({
+	base: "text-foreground bg-content4 border-2 border-solid",
 	variants: {
 		type: {
-			success: {
-				borderColor: "$success",
-				"& > div > div > div": {
-					background: "$success",
-				},
-			},
-			error: {
-				borderColor: "$error",
-				"& > div > div > div": {
-					background: "$error",
-				},
-			},
+			success: "border-success",
+			error: "border-danger",
 		},
 	},
 });
@@ -43,9 +30,9 @@ const Toast: React.FC<ToastType> = (toastInstance) => {
 	const { id, position } = toastInstance;
 	const dismiss = React.useCallback(() => toast.dismiss(id), [id]);
 	return (
-		<div onClick={dismiss} aria-hidden>
+		<View onClick={dismiss} aria-hidden>
 			<ToastBar toast={toastInstance} position={position || "top-center"} />
-		</div>
+		</View>
 	);
 };
 
