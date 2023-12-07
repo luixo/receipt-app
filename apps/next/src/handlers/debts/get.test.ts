@@ -166,7 +166,12 @@ describe("debts.get", () => {
 					receiptId: debt.receiptId,
 					amount: Number(debt.amount),
 					lockedTimestamp: debt.lockedTimestamp!,
-					their: { lockedTimestamp: foreignDebt.lockedTimestamp! },
+					their: {
+						lockedTimestamp: foreignDebt.lockedTimestamp!,
+						currencyCode: foreignDebt.currencyCode,
+						timestamp: foreignDebt.timestamp,
+						amount: -Number(foreignDebt.amount),
+					},
 				});
 			});
 
@@ -175,7 +180,7 @@ describe("debts.get", () => {
 				const { id: foreignAccountId } = await insertAccount(ctx);
 				const [{ id: userId }, { id: foreignToSelfUserId }] =
 					await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
-				const [debt] = await insertSyncedDebts(
+				const [debt, foreignDebt] = await insertSyncedDebts(
 					ctx,
 					[accountId, userId, { lockedTimestamp: new Date() }],
 					[
@@ -200,7 +205,12 @@ describe("debts.get", () => {
 					receiptId: debt.receiptId,
 					amount: Number(debt.amount),
 					lockedTimestamp: debt.lockedTimestamp!,
-					their: { lockedTimestamp: undefined },
+					their: {
+						lockedTimestamp: undefined,
+						currencyCode: foreignDebt.currencyCode,
+						timestamp: foreignDebt.timestamp,
+						amount: -Number(foreignDebt.amount),
+					},
 				});
 			});
 		});

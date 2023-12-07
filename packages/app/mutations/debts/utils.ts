@@ -153,7 +153,7 @@ export const updateGet = (
 							timestamp,
 							note,
 							lockedTimestamp,
-							their: { lockedTimestamp },
+							their: { lockedTimestamp, timestamp, amount, currencyCode },
 							receiptId,
 					  }),
 			],
@@ -353,13 +353,28 @@ export const updateLockedTimestamps = (
 			controller.update(userId, debtId, (debt) => ({
 				...debt,
 				lockedTimestamp,
-				their: reverseLockedTimestampUpdated ? { lockedTimestamp } : debt.their,
+				their:
+					reverseLockedTimestampUpdated && debt.their
+						? {
+								amount: debt.amount,
+								currencyCode: debt.currencyCode,
+								timestamp: debt.timestamp,
+								lockedTimestamp,
+						  }
+						: debt.their,
 			})),
 		get: (controller) =>
 			controller.update(debtId, (debt) => ({
 				...debt,
 				lockedTimestamp,
-				their: reverseLockedTimestampUpdated ? { lockedTimestamp } : debt.their,
+				their: reverseLockedTimestampUpdated
+					? {
+							amount: debt.amount,
+							currencyCode: debt.currencyCode,
+							timestamp: debt.timestamp,
+							lockedTimestamp,
+					  }
+					: debt.their,
 			})),
 		getIntentions: (controller) => {
 			if (!lockedTimestamp) {

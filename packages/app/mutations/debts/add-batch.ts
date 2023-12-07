@@ -36,19 +36,27 @@ const createDebts = (
 	{ ids, lockedTimestamp, reverseAcceptedUserIds }: AddBatchResult,
 	updateObjects: TRPCMutationInput<"debts.addBatch">,
 ): DebtSnapshot[] =>
-	updateObjects.map((updateObject, index) => ({
-		id: ids[index]!,
-		amount: updateObject.amount,
-		currencyCode: updateObject.currencyCode,
-		userId: updateObject.userId,
-		timestamp: updateObject.timestamp || new Date(),
-		note: updateObject.note,
-		lockedTimestamp,
-		their: reverseAcceptedUserIds.includes(updateObject.userId)
-			? { lockedTimestamp }
-			: undefined,
-		receiptId: updateObject.receiptId ?? null,
-	}));
+	updateObjects.map((updateObject, index) => {
+		const timestamp = updateObject.timestamp || new Date();
+		return {
+			id: ids[index]!,
+			amount: updateObject.amount,
+			currencyCode: updateObject.currencyCode,
+			userId: updateObject.userId,
+			timestamp,
+			note: updateObject.note,
+			lockedTimestamp,
+			their: reverseAcceptedUserIds.includes(updateObject.userId)
+				? {
+						lockedTimestamp,
+						amount: updateObject.amount,
+						currencyCode: updateObject.currencyCode,
+						timestamp,
+				  }
+				: undefined,
+			receiptId: updateObject.receiptId ?? null,
+		};
+	});
 
 export const options: UseContextedMutationOptions<"debts.addBatch"> = {
 	onSuccess: (controllerContext) => (result, updateObjects) => {

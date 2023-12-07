@@ -27,6 +27,9 @@ export const procedure = authProcedure
 				"debts.lockedTimestamp",
 				"debts.receiptId",
 				"theirDebts.ownerAccountId as theirOwnerAccountId",
+				"theirDebts.amount as theirAmount",
+				"theirDebts.currencyCode as theirCurrencyCode",
+				"theirDebts.timestamp as theirTimestamp",
 				"theirDebts.lockedTimestamp as theirLockedTimestamp",
 			])
 			.executeTakeFirst();
@@ -42,6 +45,9 @@ export const procedure = authProcedure
 			lockedTimestamp,
 			theirOwnerAccountId,
 			theirLockedTimestamp,
+			theirAmount,
+			theirCurrencyCode,
+			theirTimestamp,
 			...debt
 		} = selfDebt;
 
@@ -52,6 +58,9 @@ export const procedure = authProcedure
 			their: theirOwnerAccountId
 				? {
 						lockedTimestamp: theirLockedTimestamp || undefined,
+						amount: -Number(theirAmount!),
+						currencyCode: theirCurrencyCode!,
+						timestamp: theirTimestamp!,
 				  }
 				: undefined,
 		};

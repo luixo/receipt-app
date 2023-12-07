@@ -2,12 +2,14 @@ import React from "react";
 
 import { Spacer } from "@nextui-org/react";
 import {
-	BsEyeFill as SyncIcon,
-	BsEyeSlashFill as UnsyncIcon,
+	BsEyeSlashFill as ShouldNotSyncIcon,
+	BsEyeFill as ShouldSyncIcon,
 } from "react-icons/bs";
+import { MdSync as SyncIcon } from "react-icons/md";
 
 import { ConfirmModal } from "app/components/confirm-modal";
 import { IconButton } from "app/components/icon-button";
+import { DebtIntention } from "app/features/debts-intentions/debt-intention";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import type { TRPCQueryOutput } from "app/trpc";
@@ -29,27 +31,75 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 			update: { locked: !debt.lockedTimestamp },
 		});
 	}, [updateMutation, debt.id, debt.lockedTimestamp]);
-	const updateLocked = React.useCallback(() => {
-		updateMutation.mutate({
-			id: debt.id,
-			update: { locked: true },
-		});
-	}, [updateMutation, debt.id]);
+
+	const intention = React.useMemo(
+		() =>
+			debt.their && debt.their.lockedTimestamp
+				? {
+						id: debt.id,
+						userId: debt.userId,
+						amount: debt.their.amount,
+						currencyCode: debt.their.currencyCode,
+						lockedTimestamp: debt.their.lockedTimestamp,
+						timestamp: debt.their.timestamp,
+						note: debt.note,
+						receiptId: debt.receiptId,
+						current: {
+							amount: debt.amount,
+							currencyCode: debt.currencyCode,
+							timestamp: debt.timestamp,
+						},
+				  }
+				: undefined,
+		[
+			debt.amount,
+			debt.currencyCode,
+			debt.id,
+			debt.note,
+			debt.receiptId,
+			debt.their,
+			debt.timestamp,
+			debt.userId,
+		],
+	);
+	const acceptMutation = trpc.debts.acceptIntention.useMutation(
+		useTrpcMutationOptions(mutations.debts.acceptIntention.options, {
+			context: intention!,
+		}),
+	);
+	const acceptSyncIntention = React.useCallback(() => {
+		if (!intention) {
+			return;
+		}
+		acceptMutation.mutate({ id: intention.id });
+	}, [acceptMutation, intention]);
 
 	return (
 		<>
-			{debt.lockedTimestamp &&
-			debt.their?.lockedTimestamp &&
-			debt.their.lockedTimestamp.valueOf() > debt.lockedTimestamp.valueOf() ? (
+			{intention &&
+			debt.lockedTimestamp &&
+			intention.lockedTimestamp.valueOf() > debt.lockedTimestamp.valueOf() ? (
 				<>
-					<IconButton
+					<ConfirmModal
+						action={acceptSyncIntention}
 						isLoading={updateMutation.isLoading}
-						disabled={updateMutation.isLoading}
-						onClick={updateLocked}
-						ghost
-						color="warning"
-						icon={<SyncIcon size={24} />}
-					/>
+						title="Update debt to a counterparty's version"
+						subtitle={<DebtIntention intention={intention} />}
+						confirmText="Are you sure?"
+					>
+						{({ openModal }) => (
+							<IconButton
+								isLoading={updateMutation.isLoading}
+								disabled={updateMutation.isLoading}
+								onClick={openModal}
+								ghost
+								color="warning"
+								title="Update debt to a counterparty's version"
+								icon={<SyncIcon size={24} />}
+							/>
+						)}
+					</ConfirmModal>
+
 					<Spacer x={0.5} />
 				</>
 			) : null}
@@ -73,9 +123,9 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 						color={debt.lockedTimestamp ? "error" : "success"}
 						icon={
 							debt.lockedTimestamp ? (
-								<UnsyncIcon size={24} />
+								<ShouldNotSyncIcon size={24} />
 							) : (
-								<SyncIcon size={24} />
+								<ShouldSyncIcon size={24} />
 							)
 						}
 					/>

@@ -168,7 +168,12 @@ test.describe("Receipt page", () => {
 					{
 						...firstNotSelfDebt,
 						amount: firstNotSelfDebt.amount + 1,
-						their: { lockedTimestamp: new Date("2020-03-05") },
+						their: {
+							lockedTimestamp: new Date("2020-03-05"),
+							amount: firstNotSelfDebt.amount + 1,
+							currencyCode: firstNotSelfDebt.currencyCode,
+							timestamp: firstNotSelfDebt.timestamp,
+						},
 					},
 				];
 			};

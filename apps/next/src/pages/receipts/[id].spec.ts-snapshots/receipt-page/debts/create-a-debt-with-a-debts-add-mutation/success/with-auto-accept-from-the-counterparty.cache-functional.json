@@ -11,7 +11,10 @@
 					"note": "Receipt \"officiis perferendis officia\"",
 					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
 					"their": {
-						"lockedTimestamp": "2020-01-01T00:00:00.000Z"
+						"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+						"timestamp": "2020-01-01T00:00:00.000Z",
+						"amount": 23999.14,
+						"currencyCode": "KZT"
 					},
 					"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"
 				},

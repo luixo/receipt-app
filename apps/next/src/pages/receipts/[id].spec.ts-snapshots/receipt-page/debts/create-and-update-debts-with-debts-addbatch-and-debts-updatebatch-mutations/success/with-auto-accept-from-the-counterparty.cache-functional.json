@@ -6,6 +6,9 @@
 					"amount": 23999.14,
 					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
 					"their": {
+						"amount": 23999.14,
+						"currencyCode": "KZT",
+						"timestamp": "2020-01-01T00:00:00.000Z",
 						"lockedTimestamp": "2020-01-01T00:00:00.000Z"
 					}
 				},
@@ -23,7 +26,10 @@
 					"note": "Receipt \"officiis perferendis officia\"",
 					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
 					"their": {
-						"lockedTimestamp": "2020-01-01T00:00:00.000Z"
+						"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+						"amount": 24414.05,
+						"currencyCode": "KZT",
+						"timestamp": "2020-01-01T00:00:00.000Z"
 					},
 					"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"
 				},
@@ -50,7 +56,10 @@
 					"note": "Receipt \"officiis perferendis officia\"",
 					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
 					"their": {
-						"lockedTimestamp": "2020-01-01T00:00:00.000Z"
+						"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+						"amount": 96481.98,
+						"currencyCode": "KZT",
+						"timestamp": "2020-01-01T00:00:00.000Z"
 					},
 					"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"
 				},
@@ -77,7 +86,10 @@
 					"note": "Receipt \"officiis perferendis officia\"",
 					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
 					"their": {
-						"lockedTimestamp": "2020-01-01T00:00:00.000Z"
+						"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+						"amount": 2115.27,
+						"currencyCode": "KZT",
+						"timestamp": "2020-01-01T00:00:00.000Z"
 					},
 					"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"
 				},

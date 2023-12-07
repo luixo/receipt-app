@@ -28,17 +28,27 @@ const createUserDebt = (
 const createDebt = (
 	{ id, lockedTimestamp, reverseAccepted }: AddResult,
 	updateObject: TRPCMutationInput<"debts.add">,
-): DebtSnapshot => ({
-	id,
-	amount: updateObject.amount,
-	currencyCode: updateObject.currencyCode,
-	userId: updateObject.userId,
-	timestamp: updateObject.timestamp || new Date(),
-	note: updateObject.note,
-	lockedTimestamp,
-	their: reverseAccepted ? { lockedTimestamp } : undefined,
-	receiptId: updateObject.receiptId ?? null,
-});
+): DebtSnapshot => {
+	const timestamp = updateObject.timestamp || new Date();
+	return {
+		id,
+		amount: updateObject.amount,
+		currencyCode: updateObject.currencyCode,
+		userId: updateObject.userId,
+		timestamp,
+		note: updateObject.note,
+		lockedTimestamp,
+		their: reverseAccepted
+			? {
+					lockedTimestamp,
+					timestamp,
+					amount: updateObject.amount,
+					currencyCode: updateObject.currencyCode,
+			  }
+			: undefined,
+		receiptId: updateObject.receiptId ?? null,
+	};
+};
 
 export const options: UseContextedMutationOptions<"debts.add"> = {
 	onSuccess: (controllerContext) => (result, updateObject) => {

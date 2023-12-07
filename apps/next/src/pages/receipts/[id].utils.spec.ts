@@ -178,6 +178,9 @@ export const test = originalTest.extend<Fixtures>({
 												: faker.datatype.boolean()
 												? faker.date.recent({ days: 1, refDate: new Date() })
 												: undefined,
+											currencyCode,
+											timestamp: issued,
+											amount: participantSum.sum,
 									  }
 									: undefined,
 							};

@@ -32,9 +32,11 @@ const DirectionIcon = styled(OutcomingIcon);
 
 type Debt = TRPCQueryOutput<"debts.get">;
 
+type TheirDebtPick = Pick<NonNullable<Debt["their"]>, "lockedTimestamp">;
+
 const getContent = (
 	lockedTimestamp: Debt["lockedTimestamp"],
-	their: Debt["their"],
+	their?: TheirDebtPick,
 ) => {
 	if (!lockedTimestamp) {
 		return "Local debt, no sync";
@@ -54,7 +56,7 @@ const getContent = (
 };
 
 type Props = {
-	debt: Pick<Debt, "lockedTimestamp" | "their">;
+	debt: Pick<Debt, "lockedTimestamp"> & { their?: TheirDebtPick };
 	size: number;
 };
 
