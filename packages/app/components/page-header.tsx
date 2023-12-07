@@ -1,6 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
+import { H1 } from "@expo/html-elements";
 import Head from "next/head";
 import { IoMdArrowRoundBack as BackArrow } from "react-icons/io";
 
@@ -37,7 +38,9 @@ export const PageHeader: React.FC<Props> = ({
 			<View className="flex-row items-center gap-4" {...props}>
 				{backHref ? <BackArrow size={36} onClick={back} /> : null}
 				{startContent}
-				<Text className="text-4xl font-medium">{children}</Text>
+				<Text Component={H1} className="text-4xl font-medium">
+					{children}
+				</Text>
 				{endContent}
 			</View>
 			<View className="shrink-0 flex-row gap-2 max-sm:self-end">{aside}</View>

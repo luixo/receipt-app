@@ -1,5 +1,6 @@
 import React from "react";
 
+import { H2, H3, H4 } from "@expo/html-elements";
 import { tv } from "@nextui-org/react";
 
 import { Text } from "app/components/base/text";
@@ -20,9 +21,24 @@ type Props = React.PropsWithChildren<{
 }> &
 	Omit<React.ComponentProps<typeof Text>, "children">;
 
+const getComponent = (size: NonNullable<Props["size"]>) => {
+	switch (size) {
+		case "lg":
+			return H2;
+		case "md":
+			return H3;
+		case "sm":
+			return H4;
+	}
+};
+
 export const Header = React.memo<Props>(
 	({ size = "md", children, ...props }) => (
-		<Text {...props} className={wrapper({ size, className: props.className })}>
+		<Text
+			{...props}
+			Component={getComponent(size)}
+			className={wrapper({ size, className: props.className })}
+		>
 			{children}
 		</Text>
 	),

@@ -24,6 +24,7 @@ import {
 } from "app/contexts/ssr-context";
 import type { Props as ProviderProps } from "app/provider";
 import { Provider } from "app/provider";
+import { applyRemaps } from "app/utils/nativewind";
 import { useColorModeCookies } from "next-app/hooks/use-color-mode-cookies";
 import { useHydratedMark } from "next-app/hooks/use-hydrated-mark";
 import { useQueryClientHelper } from "next-app/hooks/use-query-client-helper";
@@ -33,6 +34,8 @@ import { useSSRContextCookies } from "next-app/hooks/use-ssr-context-cookies";
 import type { AppPage } from "next-app/types/page";
 import { trpcNext } from "next-app/utils/trpc";
 import "next-app/global.css";
+
+applyRemaps();
 
 const GlobalHooksComponent: React.FC = () => {
 	useColorModeCookies();
