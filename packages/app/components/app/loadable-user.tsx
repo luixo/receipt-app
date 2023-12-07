@@ -10,11 +10,15 @@ import type { UsersId } from "next-app/db/models";
 
 type InnerProps = {
 	query: TRPCQuerySuccessResult<"users.get">;
-};
+} & Omit<React.ComponentProps<typeof User>, "user">;
 
-export const LoadableUserInner: React.FC<InnerProps> = ({ query }) => (
+export const LoadableUserInner: React.FC<InnerProps> = ({
+	query,
+	...props
+}) => (
 	<User
 		user={{ ...query.data, id: query.data.localId || query.data.remoteId }}
+		{...props}
 	/>
 );
 

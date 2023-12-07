@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Card, Loading, Spacer, styled } from "@nextui-org/react";
-import { Button, Link } from "@nextui-org/react-tailwind";
+import { Loading, Spacer, styled } from "@nextui-org/react";
+import { Button, Divider, Link } from "@nextui-org/react-tailwind";
 import { BsCurrencyExchange as ExchangeIcon } from "react-icons/bs";
 import { MdAdd as AddIcon } from "react-icons/md";
 
@@ -97,7 +97,7 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 			<Spacer y={1} />
 			{query.data.map((debt) => (
 				<React.Fragment key={debt.id}>
-					<Card.Divider />
+					<Divider />
 					<UserDebtPreview debt={debt} />
 				</React.Fragment>
 			))}

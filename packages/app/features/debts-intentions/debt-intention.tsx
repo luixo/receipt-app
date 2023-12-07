@@ -1,13 +1,13 @@
 import React from "react";
 
-import { Card, Spacer, Text, styled } from "@nextui-org/react";
+import { Spacer, Text, styled } from "@nextui-org/react";
+import { Card, CardBody } from "@nextui-org/react-tailwind";
 import {
 	MdNavigateNext as ArrowIcon,
 	MdSync as SyncIcon,
 } from "react-icons/md";
 
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
-import { useMatchMediaValue } from "app/hooks/use-match-media-value";
 import { useSsrFormat } from "app/hooks/use-ssr-format";
 import type { TRPCQueryOutput } from "app/trpc";
 
@@ -29,7 +29,6 @@ export const DebtIntention = React.forwardRef<HTMLDivElement, Props>(
 		const { formatDate, formatDateTime } = useSsrFormat();
 		const currency = useFormattedCurrency(intention.currencyCode);
 		const selfCurrency = useFormattedCurrency(intention.current?.currencyCode);
-		const renderChildrenInline = useMatchMediaValue(true, { lessSm: false });
 		const intentionDataComponent = (
 			<Wrapper>
 				<Text color={intention.amount >= 0 ? "success" : "error"}>
@@ -40,7 +39,7 @@ export const DebtIntention = React.forwardRef<HTMLDivElement, Props>(
 		);
 		return (
 			<Card ref={ref}>
-				<Card.Body>
+				<CardBody>
 					{intention.current ? (
 						<Wrapper>
 							<Wrapper>
@@ -65,10 +64,10 @@ export const DebtIntention = React.forwardRef<HTMLDivElement, Props>(
 							<SyncIcon size={24} />
 							<Text>{formatDateTime(intention.lockedTimestamp)}</Text>
 						</Wrapper>
-						{renderChildrenInline ? children : null}
+						<div className="max-md:hidden">{children}</div>
 					</Wrapper>
-					{renderChildrenInline ? null : children}
-				</Card.Body>
+					<div className="self-end md:hidden">{children}</div>
+				</CardBody>
 			</Card>
 		);
 	},

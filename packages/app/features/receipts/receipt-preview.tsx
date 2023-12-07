@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Card, Text, styled } from "@nextui-org/react";
-import { Button } from "@nextui-org/react-tailwind";
+import { Text, styled } from "@nextui-org/react";
+import { Button, Divider } from "@nextui-org/react-tailwind";
 
 import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
 import { ReceiptResolvedParticipantsButton } from "app/components/app/receipt-resolved-participants-button";
@@ -52,7 +52,7 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 	const [nameWidth, sumWidth, ...buttonsWidth] = getWidths(overflow);
 	return (
 		<>
-			{overflow ? <Card.Divider /> : null}
+			<Divider className="sm:hidden" />
 			<Grid
 				css={{
 					whiteSpace: "pre",

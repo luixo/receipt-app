@@ -43,10 +43,10 @@ export type Props = {
 	};
 	avatarSize?: number;
 	onClick?: () => void;
-};
+} & Omit<React.ComponentProps<typeof Wrapper>, "onClick" | "css">;
 
 export const User = React.forwardRef<HTMLDivElement, Props>(
-	({ user, avatarSize = 40, onClick }, ref) => {
+	({ user, avatarSize = 40, onClick, ...props }, ref) => {
 		const icon = React.useMemo(
 			() => getIdenticon(user.id, avatarSize),
 			[user.id, avatarSize],
@@ -56,6 +56,7 @@ export const User = React.forwardRef<HTMLDivElement, Props>(
 				onClick={onClick}
 				css={onClick ? { cursor: "pointer" } : undefined}
 				ref={ref}
+				{...props}
 			>
 				<AvatarImage
 					width={avatarSize}

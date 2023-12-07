@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Card, Loading, Spacer, Text, styled } from "@nextui-org/react";
-import { Button, Link } from "@nextui-org/react-tailwind";
+import { Loading, Spacer, Text, styled } from "@nextui-org/react";
+import { Button, Divider, Link } from "@nextui-org/react-tailwind";
 import { MdAdd as AddIcon } from "react-icons/md";
 
 import { QueryErrorMessage } from "app/components/error-message";
@@ -42,7 +42,7 @@ const ReceiptPreviewsList: React.FC<PreviewsProps> = ({ receipts }) => {
 			<Grid defaultCol={sumWidth} justify="flex-end">
 				Sum
 			</Grid>
-			<Card.Divider />
+			<Divider />
 			{receipts.map((receipt) => (
 				<ReceiptPreview key={receipt.id} receipt={receipt} />
 			))}

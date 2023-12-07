@@ -1,7 +1,13 @@
 import React from "react";
 
-import { Card, Spacer, Text } from "@nextui-org/react";
-import { Button } from "@nextui-org/react-tailwind";
+import { Spacer, Text } from "@nextui-org/react";
+import {
+	Button,
+	Card,
+	CardBody,
+	CardHeader,
+	Divider,
+} from "@nextui-org/react-tailwind";
 
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -20,15 +26,14 @@ export const EmailVerificationCard: React.FC = () => {
 		return null;
 	}
 	return (
-		<>
-			<Spacer y={1} />
-			<Card css={{ mw: 600, alignSelf: "center" }} variant="shadow">
-				<Card.Header css={{ pb: 0 }}>
+		<Card className="min-w-fit self-center" shadow="md">
+				<CardHeader>
 					<Text h3 color="warning">
 						Your email is not verified!
 					</Text>
-				</Card.Header>
-				<Card.Body>
+				</CardHeader>
+				<Divider />
+				<CardBody>
 					<Text>
 						Until you verify your email, you won&apos;t be able to use most of
 						the app&apos;s features
@@ -48,8 +53,7 @@ export const EmailVerificationCard: React.FC = () => {
 							Resend email
 						</Button>
 					)}
-				</Card.Body>
+				</CardBody>
 			</Card>
-		</>
 	);
 };

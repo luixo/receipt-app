@@ -1,6 +1,7 @@
 import React from "react";
 
 import { Loading, Spacer } from "@nextui-org/react";
+import { Divider } from "@nextui-org/react-tailwind";
 
 import { CurrenciesPicker } from "app/components/app/currencies-picker";
 import { DebtsGroup } from "app/components/app/debts-group";
@@ -73,7 +74,6 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 				setSelectedCurrency={setSelectedCurrency}
 				onSelectOther={openModal}
 			/>
-			<Spacer y={1} />
 			<CurrenciesPicker
 				selectedCurrency={selectedCurrency}
 				onChange={onSelectModalCurrency}
@@ -83,12 +83,17 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 				topCurrenciesQuery={topCurrenciesQuery}
 			/>
 			{selectedCurrency ? (
-				<PlannedDebts
-					userId={userId}
-					selectedCurrencyCode={selectedCurrency.code}
-					aggregatedDebts={nonZeroAggregateDebts}
-					onDone={back}
-				/>
+				<>
+					<Spacer y={1} />
+					<Divider />
+					<Spacer y={1} />
+					<PlannedDebts
+						userId={userId}
+						selectedCurrencyCode={selectedCurrency.code}
+						aggregatedDebts={nonZeroAggregateDebts}
+						onDone={back}
+					/>
+				</>
 			) : null}
 		</>
 	);

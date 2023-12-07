@@ -1,8 +1,15 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Card, Spacer, Text, styled } from "@nextui-org/react";
-import { Chip } from "@nextui-org/react-tailwind";
+import { Spacer, Text, styled } from "@nextui-org/react";
+import {
+	Card,
+	CardBody,
+	CardFooter,
+	CardHeader,
+	Chip,
+	Divider,
+} from "@nextui-org/react-tailwind";
 
 import { ReceiptItemLockedButton } from "app/components/app/receipt-item-locked-button";
 import { ErrorMessage } from "app/components/error-message";
@@ -104,7 +111,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 
 		return (
 			<Card ref={ref}>
-				<Card.Header css={{ justifyContent: "space-between" }}>
+				<CardHeader className="justify-between">
 					<ReceiptItemNameInput
 						receiptId={receiptId}
 						receiptItem={receiptItem}
@@ -117,9 +124,9 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 						locked={receiptItem.locked}
 						isDisabled={role === "viewer"}
 					/>
-				</Card.Header>
-				<Card.Divider />
-				<Card.Body>
+				</CardHeader>
+				<Divider />
+				<CardBody>
 					<Sum>
 						<ReceiptItemPriceInput
 							receiptId={receiptId}
@@ -179,16 +186,16 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 					{receiptItem.parts.length === 0 ? (
 						notAddedParticipants.length === 0 || receiptLocked ? null : (
 							<>
-								<Spacer y={0.5} />
-								<Card.Divider />
-								<Spacer y={0.5} />
+								<Spacer y={1} />
+								<Divider />
+								<Spacer y={1} />
 								<Text h4>Add a user from a list above</Text>
 							</>
 						)
 					) : (
 						<>
 							<Spacer y={1} />
-							<Card.Divider />
+							<Divider />
 							<Spacer y={1} />
 							{receiptItem.parts.map((part, index) => {
 								const matchedParticipant = receiptParticipants.find(
@@ -221,11 +228,11 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 							})}
 						</>
 					)}
-				</Card.Body>
+				</CardBody>
 				{isEditingDisabled ? null : (
 					<>
-						<Card.Divider />
-						<Card.Footer css={{ justifyContent: "flex-end" }}>
+						<Divider />
+						<CardFooter className="justify-end">
 							<RemoveButton
 								onRemove={removeItem}
 								isDisabled={receiptLocked}
@@ -235,7 +242,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 							>
 								Remove item
 							</RemoveButton>
-						</Card.Footer>
+						</CardFooter>
 					</>
 				)}
 			</Card>

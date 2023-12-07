@@ -1,23 +1,21 @@
 import React from "react";
 
-import { Card, Spacer, styled } from "@nextui-org/react";
+import { Card, CardBody, tv } from "@nextui-org/react-tailwind";
 
 import { DebtsGroup } from "app/components/app/debts-group";
 import { LoadableUser } from "app/components/app/loadable-user";
 import { Link } from "app/components/link";
-import { useMatchMediaValue } from "app/hooks/use-match-media-value";
 import { useTrpcQueryOptions } from "app/hooks/use-trpc-query-options";
 import { queries } from "app/queries";
 import type { TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
 import type { UsersId } from "next-app/db/models";
 
-const CardWrapper = styled(Card, {
+const card = tv({
+	base: "flex flex-col items-end justify-between md:flex-row md:items-center",
 	variants: {
 		transparent: {
-			true: {
-				opacity: 0.5,
-			},
+			true: "opacity-50",
 		},
 	},
 });
@@ -37,22 +35,12 @@ export const UserDebtsPreview: React.FC<Props> = ({
 		{ id: userId },
 		useTrpcQueryOptions(queries.users.get.options),
 	);
-	const showHorizontal = useMatchMediaValue(true, { lessMd: false });
 	return (
-		<CardWrapper transparent={transparent}>
-			<Link href={`/debts/user/${userId}`} color="text">
-				<Card.Body
-					css={{
-						flexDirection: showHorizontal ? "row" : "column",
-						alignItems: showHorizontal ? "center" : undefined,
-						justifyContent: "space-between",
-					}}
-				>
-					<LoadableUser id={userId} />
-					<Spacer y={1} />
-					<DebtsGroup debts={debts} />
-				</Card.Body>
-			</Link>
-		</CardWrapper>
+		<Card as={Link} href={`/debts/user/${userId}`}>
+			<CardBody className={card({ transparent })}>
+				<LoadableUser className="mb-4 self-start md:mb-0 md:mr-4" id={userId} />
+				<DebtsGroup debts={debts} />
+			</CardBody>
+		</Card>
 	);
 };

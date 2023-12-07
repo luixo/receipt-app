@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Card, Loading, Modal, Text } from "@nextui-org/react";
-import { Button } from "@nextui-org/react-tailwind";
+import { Loading, Modal, Text } from "@nextui-org/react";
+import { Button, Divider } from "@nextui-org/react-tailwind";
 import type { QueryObserverSuccessResult } from "@tanstack/react-query";
 
 import { QueryErrorMessage } from "app/components/error-message";
@@ -44,7 +44,7 @@ const CurrenciesPickerInner: React.FC<InnerProps> = ({
 		<Grid.Container gap={1}>
 			{list.map((currency, index) => (
 				<React.Fragment key={currency.code}>
-					{index === cutIndex && index ? <Card.Divider y={1} /> : null}
+					{index === cutIndex && index ? <Divider className="my-2" /> : null}
 					<Grid>
 						<Button
 							onClick={() => onChange(currency)}

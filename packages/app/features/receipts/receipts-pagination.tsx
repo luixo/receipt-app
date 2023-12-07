@@ -1,7 +1,7 @@
 import React from "react";
 
-import { Card, Dropdown, Modal, Spacer, Text, styled } from "@nextui-org/react";
-import { Button, Pagination } from "@nextui-org/react-tailwind";
+import { Dropdown, Modal, Spacer, Text, styled } from "@nextui-org/react";
+import { Button, Divider, Pagination } from "@nextui-org/react-tailwind";
 import type { Selection } from "@react-types/shared/src/selection";
 import {
 	BsSortNumericDown as SortDownIcon,
@@ -98,7 +98,7 @@ export const ReceiptsPagination: React.FC<Props> = ({ pagination }) => {
 						{orderBy === "date-desc" ? "Newest first" : "Oldest first"}
 					</Button>
 					<Spacer y={1} />
-					<Card.Divider />
+					<Divider />
 					<Spacer y={0.5} />
 					<Text h3>Filters</Text>
 					<Spacer y={0.5} />

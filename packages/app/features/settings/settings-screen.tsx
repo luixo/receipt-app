@@ -1,6 +1,7 @@
 import React from "react";
 
-import { Card, Spacer, Text, styled } from "@nextui-org/react";
+import { Spacer, Text, styled } from "@nextui-org/react";
+import { Divider } from "@nextui-org/react-tailwind";
 
 import type { AppPage } from "next-app/types/page";
 
@@ -28,7 +29,7 @@ export const SettingsScreen: AppPage = () => (
 	<Wrapper>
 		<ColorModeSettings />
 		<Spacer y={1} />
-		<Card.Divider />
+		<Divider />
 		<Spacer y={1} />
 		<Text h2>Settings</Text>
 		<Line>
@@ -42,7 +43,7 @@ export const SettingsScreen: AppPage = () => (
 			<AutoAcceptDebtsOption />
 		</Line>
 		<Spacer y={1} />
-		<Card.Divider />
+		<Divider />
 		<Spacer y={1} />
 		<RefreshSettings />
 	</Wrapper>

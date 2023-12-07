@@ -3,13 +3,13 @@ import React from "react";
 import type { FormElement } from "@nextui-org/react";
 import {
 	Badge,
-	Card,
 	Input,
 	Loading,
 	Popover,
 	Text,
 	styled,
 } from "@nextui-org/react";
+import { Divider } from "@nextui-org/react-tailwind";
 
 import { QueryErrorMessage } from "app/components/error-message";
 import { useBooleanState } from "app/hooks/use-boolean-state";
@@ -279,7 +279,7 @@ export const UsersSuggest: React.FC<Props> = ({
 								onUserClick={onUserClick}
 								filterIds={filterIds}
 							/>
-							<Card.Divider y={1} />
+							<Divider className="my-2" />
 						</>
 					)}
 					<UsersSuggestDropdown
