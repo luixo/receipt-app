@@ -1,11 +1,11 @@
 import React from "react";
 
-import { Badge, Button, Link, Spacer } from "@nextui-org/react-tailwind";
+import { Badge, Button, Link } from "@nextui-org/react-tailwind";
 import { IoMdMail as InboxIcon } from "react-icons/io";
 import { MdAdd as AddIcon } from "react-icons/md";
 import { PiMoney as DebtIcon } from "react-icons/pi";
 
-import { Header } from "app/components/header";
+import { PageHeader } from "app/components/page-header";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { useDebtsIntentions } from "app/hooks/use-debts-intentions";
 import type { AppPage } from "next-app/types/page";
@@ -32,12 +32,11 @@ export const DebtsScreen: AppPage = () => {
 	);
 	return (
 		<>
-			<Header
+			<PageHeader
 				startContent={<DebtIcon size={36} />}
-				aside={React.useMemo(
-					() => [
+				aside={
+					<>
 						<Button
-							key="add"
 							href="/debts/add"
 							as={Link}
 							color="primary"
@@ -46,12 +45,11 @@ export const DebtsScreen: AppPage = () => {
 							isIconOnly
 						>
 							<AddIcon size={24} />
-						</Button>,
-						inboundDebtsAmount === 0 ? (
+						</Button>
+						{inboundDebtsAmount === 0 ? (
 							intentionsButton
 						) : (
 							<Badge
-								key="intentions"
 								content={inboundDebtsAmount}
 								color="danger"
 								placement="top-right"
@@ -59,15 +57,13 @@ export const DebtsScreen: AppPage = () => {
 							>
 								{intentionsButton}
 							</Badge>
-						),
-					],
-					[inboundDebtsAmount, intentionsButton],
-				)}
+						)}
+					</>
+				}
 			>
 				Debts
-			</Header>
+			</PageHeader>
 			<EmailVerificationCard />
-			<Spacer y={4} />
 			<Debts />
 		</>
 	);

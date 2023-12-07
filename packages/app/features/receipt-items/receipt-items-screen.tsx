@@ -1,17 +1,20 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Spinner } from "@nextui-org/react-tailwind";
+import { Checkbox, Spinner } from "@nextui-org/react-tailwind";
+import { FaArrowDown as ArrowDown } from "react-icons/fa";
 
-import { Text } from "app/components/base/text";
+import { Header } from "app/components/base/header";
+import { EmptyCard } from "app/components/empty-card";
 import { QueryErrorMessage } from "app/components/error-message";
 import { AddReceiptItemController } from "app/features/add-receipt-item/add-receipt-item-controller";
 import { ReceiptParticipants } from "app/features/receipt-participants/receipt-participants";
+import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import type { TRPCQuerySuccessResult } from "app/trpc";
 import { trpc } from "app/trpc";
+import { round } from "app/utils/math";
 import type { ReceiptItemsId, ReceiptsId } from "next-app/db/models";
 
-import { EmptyItems } from "./empty-items";
 import { ReceiptItem } from "./receipt-item";
 
 type InnerProps = {
@@ -34,6 +37,7 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 		receiptQuery.status === "success"
 			? receiptQuery.data.currencyCode
 			: undefined;
+	const currency = useFormattedCurrency(receiptCurrencyCode);
 	const receiptSelfUserId =
 		receiptQuery.status === "success"
 			? receiptQuery.data.selfUserId
@@ -53,13 +57,24 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 		[itemsRef],
 	);
 	return (
-		<View className="gap-4">
+		<>
 			{emptyItems.length === 0 ? null : (
-				<EmptyItems
-					items={emptyItems}
-					currencyCode={receiptCurrencyCode}
-					onClick={onEmptyItemClick}
-				/>
+				<View className="gap-2">
+					<Header size="sm">Items with no participants</Header>
+					{emptyItems.map((item) => (
+						<Checkbox
+							key={item.id}
+							color="warning"
+							isSelected
+							onChange={() => onEmptyItemClick(item.id)}
+							icon={<ArrowDown />}
+						>
+							{`"${item.name}" — ${round(
+								item.quantity * item.price,
+							)} ${currency}`}
+						</Checkbox>
+					))}
+				</View>
 			)}
 			<ReceiptParticipants
 				data={data}
@@ -90,16 +105,11 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 				/>
 			))}
 			{data.items.length === 0 ? (
-				<>
-					<Text className="text-center text-2xl font-medium">
-						You have no receipt items yet
-					</Text>
-					<Text className="text-center text-xl">
-						Press a button above to add a receipt item
-					</Text>
-				</>
+				<EmptyCard title="You have no receipt items yet">
+					Press a button above to add a receipt item
+				</EmptyCard>
 			) : null}
-		</View>
+		</>
 	);
 };
 

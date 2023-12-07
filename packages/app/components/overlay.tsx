@@ -2,12 +2,11 @@ import React from "react";
 import { View } from "react-native";
 
 type Props = {
-	children: React.ReactNode;
 	overlay?: React.ReactNode;
-};
+} & React.ComponentProps<typeof View>;
 
-export const Overlay: React.FC<Props> = ({ children, overlay }) => (
-	<View>
+export const Overlay: React.FC<Props> = ({ children, overlay, ...props }) => (
+	<View {...props}>
 		{children}
 		{overlay ? (
 			<View className="bg-content4 rounded-medium absolute inset-[-10px] z-10 items-center justify-center opacity-30">

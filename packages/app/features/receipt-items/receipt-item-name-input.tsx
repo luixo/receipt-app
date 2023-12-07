@@ -64,14 +64,13 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 
 	if (!isEditing) {
 		return (
-			<View className="flex-row items-center">
+			<View className="flex-row items-center gap-1">
 				<Text className="text-xl">{receiptItem.name}</Text>
 				{!readOnly ? (
 					<Button
 						variant="light"
 						onClick={switchEditing}
 						isDisabled={isLoading}
-						className="ml-1"
 						isIconOnly
 					>
 						<EditIcon size={24} />

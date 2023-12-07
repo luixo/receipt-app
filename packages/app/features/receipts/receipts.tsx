@@ -6,43 +6,22 @@ import {
 	Divider,
 	Link,
 	Pagination,
-	Spacer,
 	Spinner,
 } from "@nextui-org/react-tailwind";
 import { MdAdd as AddIcon } from "react-icons/md";
 
+import { Header } from "app/components/base/header";
 import { Text } from "app/components/base/text";
+import { EmptyCard } from "app/components/empty-card";
 import { QueryErrorMessage } from "app/components/error-message";
 import { Overlay } from "app/components/overlay";
 import { useCursorPaging } from "app/hooks/use-cursor-paging";
 import { useTrpcQueryOptions } from "app/hooks/use-trpc-query-options";
 import { queries } from "app/queries";
-import type { TRPCQueryInput, TRPCQueryOutput } from "app/trpc";
+import type { TRPCQueryInput } from "app/trpc";
 import { trpc } from "app/trpc";
 
 import { ReceiptPreview } from "./receipt-preview";
-
-type PreviewsProps = {
-	receipts: TRPCQueryOutput<"receipts.getPaged">["items"];
-};
-
-const ReceiptPreviewsList: React.FC<PreviewsProps> = ({ receipts }) => (
-	<>
-		<View className="flex-row gap-2">
-			<View className="flex-[7] p-2">
-				<Text>Receipt</Text>
-			</View>
-			<View className="flex-[2] p-2">
-				<Text className="self-end">Sum</Text>
-			</View>
-			<View className="flex-[3] p-2 pr-14" />
-		</View>
-		<Divider />
-		{receipts.map((receipt) => (
-			<ReceiptPreview key={receipt.id} receipt={receipt} />
-		))}
-	</>
-);
 
 type Input = TRPCQueryInput<"receipts.getPaged">;
 
@@ -69,26 +48,21 @@ export const Receipts: React.FC = () => {
 			return <QueryErrorMessage query={query} />;
 		}
 		return (
-			<View className="gap-2">
-				<Text className="text-center text-4xl font-medium">
-					You have no receipts
-				</Text>
-				<Text className="text-center text-2xl font-medium">
-					Press
-					<Button
-						color="primary"
-						as={Link}
-						href="/receipts/add"
-						title="Add receipt"
-						variant="bordered"
-						className="mx-2"
-						isIconOnly
-					>
-						<AddIcon size={24} />
-					</Button>
-					to add a receipt
-				</Text>
-			</View>
+			<EmptyCard title="You have no receipts">
+				Press
+				<Button
+					color="primary"
+					as={Link}
+					href="/receipts/add"
+					title="Add receipt"
+					variant="bordered"
+					className="mx-2"
+					isIconOnly
+				>
+					<AddIcon size={24} />
+				</Button>
+				to add a receipt
+			</EmptyCard>
 		);
 	}
 
@@ -106,8 +80,8 @@ export const Receipts: React.FC = () => {
 	return (
 		<>
 			{paginationElement}
-			<Spacer y={4} />
 			<Overlay
+				className="gap-2"
 				overlay={
 					query.fetchStatus === "fetching" && query.isPreviousData ? (
 						<Spinner size="lg" />
@@ -118,14 +92,30 @@ export const Receipts: React.FC = () => {
 				{query.status === "loading" ? (
 					<Spinner size="lg" />
 				) : !totalCount && input.filters ? (
-					<Text className="text-center text-4xl font-medium">
+					<Header className="text-center">
 						No receipts under given filters
-					</Text>
+					</Header>
 				) : query.data ? (
-					<ReceiptPreviewsList receipts={query.data.items} />
+					<>
+						<View className="flex-row gap-2">
+							<View className="flex-[7] p-2">
+								<Text>Receipt</Text>
+							</View>
+							<View className="flex-[2] p-2">
+								<Text className="self-end">Sum</Text>
+							</View>
+							<View className="flex-[3] p-2 pr-14" />
+						</View>
+						<Divider className="max-sm:hidden" />
+						{query.data.items.map((receipt) => (
+							<React.Fragment key={receipt.id}>
+								<Divider className="sm:hidden" />
+								<ReceiptPreview receipt={receipt} />
+							</React.Fragment>
+						))}
+					</>
 				) : null}
 			</Overlay>
-			<Spacer y={4} />
 			{paginationElement}
 		</>
 	);

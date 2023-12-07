@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 
 import { Divider, Spinner } from "@nextui-org/react-tailwind";
 
@@ -7,7 +6,7 @@ import { CurrenciesPicker } from "app/components/app/currencies-picker";
 import { DebtsGroup } from "app/components/app/debts-group";
 import { LoadableUser } from "app/components/app/loadable-user";
 import { QueryErrorMessage } from "app/components/error-message";
-import { Header } from "app/components/header";
+import { PageHeader } from "app/components/page-header";
 import { useAggregatedDebts } from "app/hooks/use-aggregated-debts";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useRouter } from "app/hooks/use-router";
@@ -56,14 +55,15 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 		}
 	}, [nonZeroAggregateDebts, back]);
 	return (
-		<View className="gap-4">
-			<Header
+		<>
+			<PageHeader
 				backHref={`/debts/user/${userId}/exchange/`}
 				title={`${
 					userQuery.status === "success" ? userQuery.data.name : "..."
 				}'s debts`}
-				endContent={<LoadableUser id={userId} />}
-			/>
+			>
+				<LoadableUser id={userId} />
+			</PageHeader>
 			<DebtsGroup
 				className="self-center"
 				debts={showResolvedDebts ? aggregatedDebts : nonZeroAggregateDebts}
@@ -93,7 +93,7 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 					/>
 				</>
 			) : null}
-		</View>
+		</>
 	);
 };
 
@@ -105,7 +105,7 @@ export const DebtsExchangeAll: React.FC<Props> = ({ userId, ...props }) => {
 	if (query.status === "loading") {
 		return (
 			<>
-				<Header>{userNameQuery.data || userId}</Header>
+				<PageHeader>{userNameQuery.data || userId}</PageHeader>
 				<Spinner />
 			</>
 		);

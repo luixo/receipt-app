@@ -36,11 +36,11 @@ Document.getInitialProps = async (ctx) => {
 		...prevProps,
 		styles: (
 			<>
-				{prevProps.styles}
 				{/* see https://github.com/timolins/react-hot-toast/issues/189#issuecomment-1256797662 */}
 				<style id="_goober">
 					{"/* ! */"} {extractCss()}
 				</style>
+				{prevProps.styles}
 			</>
 		),
 		lastColorMode,

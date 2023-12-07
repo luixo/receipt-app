@@ -8,6 +8,11 @@ import {
 	DropdownMenu,
 	DropdownTrigger,
 } from "@nextui-org/react-tailwind";
+import {
+	AiOutlineUserAdd as EditorIcon,
+	AiOutlineUsergroupAdd as OwnerIcon,
+	AiOutlineUserDelete as ViewerIcon,
+} from "react-icons/ai";
 import { FaChevronDown as ChevronDown } from "react-icons/fa";
 
 import { Text } from "app/components/base/text";
@@ -73,19 +78,28 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 					isLoading={updateParticipantMutation.isLoading}
 					startContent={<ChevronDown />}
 				>
-					{participant.role}
+					{participant.role === "owner" ? (
+						<OwnerIcon size={24} />
+					) : participant.role === "editor" ? (
+						<EditorIcon size={24} />
+					) : (
+						<ViewerIcon size={24} />
+					)}
 				</Button>
 			</DropdownTrigger>
-			<DropdownMenu aria-label="Roles" variant="shadow">
-				{ROLES.filter((pickRole) => pickRole !== participant.role).map(
-					(pickRole) => (
-						<DropdownItem key={pickRole}>
-							<View onClick={() => changeRole(pickRole)}>
-								<Text>Set &quot;{pickRole}&quot; role</Text>
-							</View>
-						</DropdownItem>
-					),
-				)}
+			<DropdownMenu
+				aria-label="Roles"
+				variant="shadow"
+				selectionMode="single"
+				selectedKeys={[participant.role]}
+			>
+				{ROLES.map((pickRole) => (
+					<DropdownItem key={pickRole}>
+						<View onClick={() => changeRole(pickRole)}>
+							<Text>{pickRole}</Text>
+						</View>
+					</DropdownItem>
+				))}
 			</DropdownMenu>
 		</Dropdown>
 	);

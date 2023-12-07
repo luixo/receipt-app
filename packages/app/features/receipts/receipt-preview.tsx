@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Button, Divider, Link } from "@nextui-org/react-tailwind";
+import { Button, Link } from "@nextui-org/react-tailwind";
 
 import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
 import { ReceiptResolvedParticipantsButton } from "app/components/app/receipt-resolved-participants-button";
@@ -48,23 +48,16 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 		</Text>
 	);
 	return (
-		<>
-			<Divider className="sm:hidden" />
+		<View>
 			<View className="flex-row gap-2 sm:hidden">
-				<View className="flex-[7] p-2">
-					<Text>{title}</Text>
-				</View>
-				<View className="flex-[2] flex-row justify-end p-2">
-					<Text>{sum}</Text>
-				</View>
+				<Text className="flex-[7] p-2">{title}</Text>
+				<Text className="flex-[2] flex-row justify-end p-2">{sum}</Text>
 			</View>
-			<View className="mb-2 flex-row gap-2">
-				<View className="flex-[7] p-2 max-sm:hidden">
-					<Text>{title}</Text>
-				</View>
-				<View className="flex-[2] flex-row justify-end p-2 max-sm:hidden">
-					<Text className="self-center">{sum}</Text>
-				</View>
+			<View className="flex-row gap-2">
+				<Text className="flex-[7] p-2 max-sm:hidden">{title}</Text>
+				<Text className="flex-[2] flex-row self-center p-2 text-right max-sm:hidden">
+					{sum}
+				</Text>
 				<View className="flex-1 flex-row justify-center p-2">
 					{receipt.participantResolved === null ? null : (
 						<ReceiptParticipantResolvedButton
@@ -76,22 +69,22 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 						/>
 					)}
 				</View>
-				<View className="flex-1 flex-row justify-center p-2">
-					<Button
-						variant="light"
-						isLoading={updateReceiptMutation.isLoading}
-						isDisabled={receipt.role !== "owner"}
-						color={receiptLocked ? "success" : "warning"}
-						isIconOnly
-						onClick={switchResolved}
-					>
-						<LockedIcon locked={receiptLocked} />
-					</Button>
-				</View>
-				<View className="flex-1 flex-row justify-center p-2">
-					<ReceiptResolvedParticipantsButton receiptId={receipt.id} />
-				</View>
+				<Button
+					className="flex-1 flex-row self-center p-2"
+					variant="light"
+					isLoading={updateReceiptMutation.isLoading}
+					isDisabled={receipt.role !== "owner"}
+					color={receiptLocked ? "success" : "warning"}
+					isIconOnly
+					onClick={switchResolved}
+				>
+					<LockedIcon locked={receiptLocked} />
+				</Button>
+				<ReceiptResolvedParticipantsButton
+					className="flex-1 flex-row self-center p-2"
+					receiptId={receipt.id}
+				/>
 			</View>
-		</>
+		</View>
 	);
 };

@@ -8,11 +8,11 @@ import {
 	ModalBody,
 	ModalContent,
 	ModalHeader,
-	Spacer,
 } from "@nextui-org/react-tailwind";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { Header } from "app/components/base/header";
 import { Text } from "app/components/base/text";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -49,7 +49,7 @@ export const ResetPasswordModal: React.FC<Props> = ({
 		<Modal isOpen={isModalOpen} onOpenChange={switchModalOpen}>
 			<ModalContent>
 				<ModalHeader>
-					<Text className="text-center text-2xl">Forgot password</Text>
+					<Header>Forgot password</Header>
 				</ModalHeader>
 				<ModalBody>
 					{resetPasswordMutation.status === "success" ? (
@@ -64,7 +64,6 @@ export const ResetPasswordModal: React.FC<Props> = ({
 								errorMessage={form.formState.errors.email?.message}
 								isDisabled={resetPasswordMutation.isLoading}
 							/>
-							<Spacer y={2} />
 							<Button
 								color="primary"
 								isDisabled={

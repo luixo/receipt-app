@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 
 import {
 	Button,
@@ -7,10 +6,9 @@ import {
 	ModalBody,
 	ModalContent,
 	ModalHeader,
-	Spacer,
 } from "@nextui-org/react-tailwind";
 
-import { Text } from "app/components/base/text";
+import { Header } from "app/components/base/header";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 
 type Props = {
@@ -53,30 +51,25 @@ export const ConfirmModal: React.FC<Props> = ({
 			>
 				<ModalContent>
 					<ModalHeader className="flex-col items-center">
-						<Text className="text-2xl font-medium">{confirmText}</Text>
+						<Header>{confirmText}</Header>
 						{subtitle ? (
-							<Text className="text-warning my-2">{subtitle}</Text>
+							<Header size="sm" className="text-warning mt-2">
+								{subtitle}
+							</Header>
 						) : null}
 					</ModalHeader>
-					<ModalBody>
-						<View className="flex-row justify-center">
-							<Button
-								color="danger"
-								onClick={onYesClick}
-								isDisabled={isLoading}
-								isLoading={isLoading}
-							>
-								{yesText}
-							</Button>
-							<Spacer x={2} />
-							<Button
-								color="primary"
-								onClick={closeModal}
-								isDisabled={isLoading}
-							>
-								{noText}
-							</Button>
-						</View>
+					<ModalBody className="flex-row justify-center gap-2">
+						<Button
+							color="danger"
+							onClick={onYesClick}
+							isDisabled={isLoading}
+							isLoading={isLoading}
+						>
+							{yesText}
+						</Button>
+						<Button color="primary" onClick={closeModal} isDisabled={isLoading}>
+							{noText}
+						</Button>
 					</ModalBody>
 				</ModalContent>
 			</Modal>

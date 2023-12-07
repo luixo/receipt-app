@@ -51,7 +51,7 @@ export const ReceiptItemPart: React.FC<Props> = ({
 	);
 
 	return (
-		<View className="flex-col items-start gap-2 md:flex-row">
+		<View className="items-start gap-2 md:flex-row md:gap-4">
 			<View className="flex-1 flex-col justify-between gap-2 self-stretch sm:flex-row">
 				<User
 					className="self-start"
@@ -72,6 +72,7 @@ export const ReceiptItemPart: React.FC<Props> = ({
 					onRemove={removeItemPart}
 					mutation={removeMutation}
 					noConfirm
+					isIconOnly
 				/>
 			)}
 		</View>

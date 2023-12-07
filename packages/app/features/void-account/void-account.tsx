@@ -3,7 +3,7 @@ import { View } from "react-native";
 
 import { Button } from "@nextui-org/react-tailwind";
 
-import { Text } from "app/components/base/text";
+import { Header } from "app/components/base/header";
 import { ErrorMessage } from "app/components/error-message";
 import { useRouter } from "app/hooks/use-router";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -29,22 +29,23 @@ export const VoidAccount: React.FC<Props> = ({ token }) => {
 	);
 	if (voidMutation.status === "success") {
 		return (
-			<View className="gap-4">
-				<Text className="text-2xl font-medium">{voidMutation.data.email}</Text>
-				<Text className="text-success">Account removed succesfully</Text>
+			<>
+				<Header>{voidMutation.data.email}</Header>
+				<Header size="sm" className="text-success">
+					Account removed succesfully
+				</Header>
 				<Button color="primary" onClick={navigateToHomePage}>
 					To home page
 				</Button>
-			</View>
+			</>
 		);
 	}
 	return (
-		<View className="gap-4">
-			<Text className="text-2xl font-medium">
-				Are you sure you want to void your account?
-			</Text>
+		<>
+			<Header>Are you sure you want to void your account?</Header>
 			<View className="flex-row gap-2">
 				<Button
+					className="flex-1"
 					onClick={voidAccount}
 					isDisabled={voidMutation.isLoading}
 					isLoading={voidMutation.isLoading}
@@ -54,6 +55,7 @@ export const VoidAccount: React.FC<Props> = ({ token }) => {
 					Yes
 				</Button>
 				<Button
+					className="flex-1"
 					color="primary"
 					onClick={navigateToHomePage}
 					isDisabled={voidMutation.isLoading}
@@ -64,6 +66,6 @@ export const VoidAccount: React.FC<Props> = ({ token }) => {
 			{voidMutation.status === "error" ? (
 				<ErrorMessage message={voidMutation.error.message} />
 			) : null}
-		</View>
+		</>
 	);
 };

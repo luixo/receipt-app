@@ -1,11 +1,11 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Input, Spacer } from "@nextui-org/react-tailwind";
+import { Button, Input } from "@nextui-org/react-tailwind";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { Header } from "app/components/header";
+import { PageHeader } from "app/components/page-header";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useRouter } from "app/hooks/use-router";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -45,7 +45,7 @@ export const LoginScreen: AppPage = () => {
 
 	return (
 		<>
-			<Header>Login</Header>
+			<PageHeader>Login</PageHeader>
 			<Input
 				{...form.register("email")}
 				label="Email"
@@ -54,7 +54,6 @@ export const LoginScreen: AppPage = () => {
 				errorMessage={form.formState.errors.email?.message}
 				isDisabled={loginMutation.isLoading}
 			/>
-			<Spacer y={4} />
 			<Input
 				{...form.register("password")}
 				label="Password"
@@ -64,8 +63,8 @@ export const LoginScreen: AppPage = () => {
 				isDisabled={loginMutation.isLoading}
 				type="password"
 			/>
-			<Spacer y={4} />
 			<Button
+				className="mt-4"
 				color="primary"
 				isDisabled={!form.formState.isValid || loginMutation.isLoading}
 				isLoading={loginMutation.isLoading}
@@ -73,7 +72,6 @@ export const LoginScreen: AppPage = () => {
 			>
 				Login
 			</Button>
-			<Spacer y={8} />
 			<Button
 				color="primary"
 				isDisabled={loginMutation.isLoading}

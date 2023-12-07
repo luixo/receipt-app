@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 
 import { Spinner } from "@nextui-org/react-tailwind";
 
@@ -7,7 +6,7 @@ import { DebtControlButtons } from "app/components/app/debt-control-buttons";
 import { DebtSyncStatus } from "app/components/app/debt-sync-status";
 import { LoadableUser } from "app/components/app/loadable-user";
 import { QueryErrorMessage } from "app/components/error-message";
-import { Header } from "app/components/header";
+import { PageHeader } from "app/components/page-header";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import type { TRPCQuerySuccessResult } from "app/trpc";
 import { trpc } from "app/trpc";
@@ -30,8 +29,8 @@ export const DebtInner: React.FC<InnerProps> = ({ query }) => {
 	const currency = useFormattedCurrency(debt.currencyCode);
 
 	return (
-		<View className="gap-4">
-			<Header
+		<>
+			<PageHeader
 				backHref={`/debts/user/${debt.userId}`}
 				aside={<DebtControlButtons debt={debt} />}
 				endContent={
@@ -44,14 +43,18 @@ export const DebtInner: React.FC<InnerProps> = ({ query }) => {
 				}
 			>
 				{`${debt.amount} ${currency} debt`}
-			</Header>
+			</PageHeader>
 			<LoadableUser className="self-start" id={debt.userId} />
 			<DebtSignButtonGroup debt={debt} disabled={isRemoving} />
 			<DebtAmountInput debt={debt} isLoading={isRemoving} />
 			<DebtDateInput debt={debt} isLoading={isRemoving} />
 			<DebtNoteInput debt={debt} isLoading={isRemoving} />
-			<DebtRemoveButton debt={debt} setLoading={setRemoving} />
-		</View>
+			<DebtRemoveButton
+				className="self-end"
+				debt={debt}
+				setLoading={setRemoving}
+			/>
+		</>
 	);
 };
 
@@ -64,8 +67,8 @@ export const Debt: React.FC<Props> = ({ id, ...props }) => {
 	if (query.status === "loading") {
 		return (
 			<>
-				<Header>Debt</Header>
-				<Spinner />
+				<PageHeader>Debt</PageHeader>
+				<Spinner size="lg" />
 			</>
 		);
 	}

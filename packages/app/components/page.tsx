@@ -57,10 +57,10 @@ type Props = {
 
 export const Page: React.FC<Props> = ({ children, elements }) => (
 	<View className="mx-auto max-w-screen-md p-1 sm:p-4">
-		{children}
+		<View className="gap-4">{children}</View>
 		<View
-			className="bg-background fixed bottom-0 left-0 z-20 w-full flex-row p-2 shadow-lg"
-			data-testid="sticky-menu"
+			className="bg-content1 fixed bottom-0 left-0 z-20 w-full flex-row p-2 shadow-lg"
+			testID="sticky-menu"
 		>
 			<View className="mx-auto max-w-screen-sm flex-1 flex-row">
 				{elements.map((props) => (

@@ -11,7 +11,7 @@ import { trpc } from "app/trpc";
 import type { UsersId } from "next-app/db/models";
 
 const card = tv({
-	base: "flex flex-col items-end justify-between md:flex-row md:items-center",
+	base: "flex flex-col items-end justify-between gap-4 md:flex-row md:items-center",
 	variants: {
 		transparent: {
 			true: "opacity-50",
@@ -37,7 +37,7 @@ export const UserDebtsPreview: React.FC<Props> = ({
 	return (
 		<Card as={Link} href={`/debts/user/${userId}`}>
 			<CardBody className={card({ transparent })}>
-				<LoadableUser className="mb-4 self-start md:mb-0 md:mr-4" id={userId} />
+				<LoadableUser className="self-start" id={userId} />
 				<DebtsGroup debts={debts} />
 			</CardBody>
 		</Card>

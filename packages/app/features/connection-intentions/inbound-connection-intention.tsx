@@ -1,6 +1,7 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Button, Spacer } from "@nextui-org/react-tailwind";
+import { Button } from "@nextui-org/react-tailwind";
 
 import { UsersSuggest } from "app/components/app/users-suggest";
 import { Text } from "app/components/base/text";
@@ -42,16 +43,14 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 	const isLoading =
 		acceptConnectionMutation.isLoading || rejectConnectionMutation.isLoading;
 	return (
-		<>
+		<View className="gap-2">
 			<Text>{intention.account.email}</Text>
-			<Spacer y={2} />
 			<UsersSuggest
 				selected={user}
 				onUserClick={setUser}
 				options={React.useMemo(() => ({ type: "not-connected" }), [])}
 				closeOnSelect
 			/>
-			<Spacer y={4} />
 			<Button
 				color="primary"
 				isDisabled={!user || isLoading}
@@ -62,7 +61,6 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 					? `Connect "${user.name}"`
 					: "Please choose user above to accept intention"}
 			</Button>
-			<Spacer y={2} />
 			<Button
 				color="warning"
 				variant="bordered"
@@ -71,6 +69,6 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 			>
 				Reject connection
 			</Button>
-		</>
+		</View>
 	);
 };

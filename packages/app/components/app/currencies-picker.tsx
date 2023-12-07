@@ -52,7 +52,9 @@ const CurrenciesPickerInner: React.FC<InnerProps> = ({
 		<View className="flex-row flex-wrap gap-2">
 			{list.map((currency, index) => (
 				<React.Fragment key={currency.code}>
-					{index === cutIndex && index ? <Divider className="my-2" /> : null}
+					{index === cutIndex && index !== 0 ? (
+						<Divider className="my-2" />
+					) : null}
 					<Button
 						onClick={() => onChange(currency)}
 						variant="flat"

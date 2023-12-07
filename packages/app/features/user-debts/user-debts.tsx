@@ -8,7 +8,7 @@ import { MdAdd as AddIcon } from "react-icons/md";
 import { DebtsGroup } from "app/components/app/debts-group";
 import { LoadableUser } from "app/components/app/loadable-user";
 import { QueryErrorMessage } from "app/components/error-message";
-import { Header } from "app/components/header";
+import { PageHeader } from "app/components/page-header";
 import { ShowResolvedDebtsOption } from "app/features/settings/show-resolved-debts-option";
 import { useAggregatedDebts } from "app/hooks/use-aggregated-debts";
 import { useRouter } from "app/hooks/use-router";
@@ -35,15 +35,14 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 	}, [query.data, router]);
 	const userQuery = trpc.users.get.useQuery({ id: userId });
 	return (
-		<View className="gap-4">
-			<Header
+		<>
+			<PageHeader
 				backHref="/debts"
 				title={`${
 					userQuery.status === "success" ? userQuery.data.name : "..."
 				}'s debts`}
 				aside={
 					<Button
-						key="add"
 						color="primary"
 						href={`/debts/add?userId=${userId}`}
 						as={Link}
@@ -54,8 +53,9 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 						<AddIcon size={24} />
 					</Button>
 				}
-				endContent={<LoadableUser id={userId} />}
-			/>
+			>
+				<LoadableUser id={userId} />
+			</PageHeader>
 			<View className="flex-row items-center justify-center gap-4 px-16">
 				<DebtsGroup
 					debts={showResolvedDebts ? aggregatedDebts : nonZeroAggregateDebts}
@@ -75,7 +75,7 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 					<ShowResolvedDebtsOption className="absolute right-0" />
 				) : null}
 			</View>
-			<View className="gap-1">
+			<View className="gap-2">
 				{query.data.map((debt) => (
 					<React.Fragment key={debt.id}>
 						<Divider />
@@ -83,7 +83,7 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 					</React.Fragment>
 				))}
 			</View>
-		</View>
+		</>
 	);
 };
 
@@ -95,7 +95,7 @@ export const UserDebts: React.FC<Props> = ({ userId, ...props }) => {
 	if (query.status === "loading") {
 		return (
 			<>
-				<Header>{userNameQuery.data || userId}</Header>
+				<PageHeader>{userNameQuery.data || userId}</PageHeader>
 				<Spinner />
 			</>
 		);

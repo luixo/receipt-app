@@ -62,15 +62,17 @@ export const PlannedDebt: React.FC<Props> = ({
 	return (
 		<View className="gap-1">
 			<View className="flex-row gap-4">
-				<View className="flex-1">
-					<Text className={amount >= 0 ? "text-success" : "text-danger"}>
-						{selected && ratesLoading ? (
-							<Spinner />
-						) : (
-							`${round(amount)} ${currencyCode}`
-						)}
-					</Text>
-				</View>
+				<Text
+					className={`flex-1 self-center ${
+						amount >= 0 ? "text-success" : "text-danger"
+					}`}
+				>
+					{selected && ratesLoading ? (
+						<Spinner />
+					) : (
+						`${round(amount)} ${currencyCode}`
+					)}
+				</Text>
 				<View className="flex-1">
 					{selected ? null : (
 						<RateInput

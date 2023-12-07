@@ -1,10 +1,9 @@
 import React from "react";
 
-import { Spacer } from "@nextui-org/react-tailwind";
 import { createParam } from "solito";
 
 import { User as UserTitle } from "app/components/app/user";
-import { Header } from "app/components/header";
+import { PageHeader } from "app/components/page-header";
 import { trpc } from "app/trpc";
 import type { AppPage } from "next-app/types/page";
 
@@ -23,34 +22,32 @@ export const UserScreen: AppPage = () => {
 
 	return (
 		<>
-			<Header
+			<PageHeader
 				backHref="/users"
 				title={
 					userQuery.data ? userQuery.data.name : userNameQuery.data || "..."
 				}
-				endContent={
-					<UserTitle
-						user={React.useMemo(
-							() =>
-								userQuery.data
-									? {
-											id: userQuery.data.localId || userQuery.data.remoteId,
-											name: userQuery.data.name,
-											publicName: userQuery.data.publicName,
-											email: userQuery.data.email,
-									  }
-									: {
-											id,
-											name: userNameQuery.data || id,
-											publicName: undefined,
-											email: undefined,
-									  },
-							[id, userNameQuery.data, userQuery.data],
-						)}
-					/>
-				}
-			/>
-			<Spacer y={4} />
+			>
+				<UserTitle
+					user={React.useMemo(
+						() =>
+							userQuery.data
+								? {
+										id: userQuery.data.localId || userQuery.data.remoteId,
+										name: userQuery.data.name,
+										publicName: userQuery.data.publicName,
+										email: userQuery.data.email,
+								  }
+								: {
+										id,
+										name: userNameQuery.data || id,
+										publicName: undefined,
+										email: undefined,
+								  },
+						[id, userNameQuery.data, userQuery.data],
+					)}
+				/>
+			</PageHeader>
 			<User id={id} />
 		</>
 	);

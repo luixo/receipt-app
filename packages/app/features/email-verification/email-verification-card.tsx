@@ -6,7 +6,6 @@ import {
 	CardBody,
 	CardHeader,
 	Divider,
-	Spacer,
 } from "@nextui-org/react-tailwind";
 
 import { Text } from "app/components/base/text";
@@ -28,33 +27,32 @@ export const EmailVerificationCard: React.FC = () => {
 	}
 	return (
 		<Card className="min-w-fit self-center" shadow="md">
-				<CardHeader>
-					<Text className="text-warning text-center text-2xl">
-						Your email is not verified!
+			<CardHeader>
+				<Text className="text-warning text-center text-2xl">
+					Your email is not verified!
+				</Text>
+			</CardHeader>
+			<Divider />
+			<CardBody className="gap-4">
+				<Text>
+					Until you verify your email, you won&apos;t be able to use most of the
+					app&apos;s features
+				</Text>
+				{resendEmailMutation.status === "success" ? (
+					<Text className="text-center text-2xl">
+						Email successfully sent to {resendEmailMutation.data.email}!
 					</Text>
-				</CardHeader>
-				<Divider />
-				<CardBody>
-					<Text>
-						Until you verify your email, you won&apos;t be able to use most of
-						the app&apos;s features
-					</Text>
-					<Spacer y={4} />
-					{resendEmailMutation.status === "success" ? (
-						<Text className="text-center text-2xl">
-							Email successfully sent to {resendEmailMutation.data.email}!
-						</Text>
-					) : (
-						<Button
-							color="primary"
-							onClick={resendEmail}
-							isDisabled={resendEmailMutation.isLoading}
-							isLoading={resendEmailMutation.isLoading}
-						>
-							Resend email
-						</Button>
-					)}
-				</CardBody>
-			</Card>
+				) : (
+					<Button
+						color="primary"
+						onClick={resendEmail}
+						isDisabled={resendEmailMutation.isLoading}
+						isLoading={resendEmailMutation.isLoading}
+					>
+						Resend email
+					</Button>
+				)}
+			</CardBody>
+		</Card>
 	);
 };

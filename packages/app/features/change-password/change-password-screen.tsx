@@ -1,7 +1,7 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Input, Spacer } from "@nextui-org/react-tailwind";
+import { Button, Input } from "@nextui-org/react-tailwind";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -72,7 +72,6 @@ export const ChangePasswordScreen: AppPage = () => {
 				errorMessage={form.formState.errors.prevPassword?.message}
 				type="password"
 			/>
-			<Spacer y={4} />
 			<Input
 				{...form.register("password")}
 				label="New password"
@@ -82,7 +81,6 @@ export const ChangePasswordScreen: AppPage = () => {
 				errorMessage={form.formState.errors.password?.message}
 				type="password"
 			/>
-			<Spacer y={4} />
 			<Input
 				{...form.register("passwordRetype")}
 				label="Retype new password"
@@ -92,7 +90,6 @@ export const ChangePasswordScreen: AppPage = () => {
 				errorMessage={form.formState.errors.passwordRetype?.message}
 				type="password"
 			/>
-			<Spacer y={4} />
 			<Button
 				color="primary"
 				isDisabled={!form.formState.isValid || changePasswordMutation.isLoading}

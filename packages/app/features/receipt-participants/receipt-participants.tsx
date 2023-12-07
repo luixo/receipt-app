@@ -95,9 +95,9 @@ export const ReceiptParticipants: React.FC<Props> = ({
 			<AccordionItem
 				key="participants"
 				title={
-					<View className="flex-row">
+					<View className="flex-row gap-2">
 						<UserIcon size={24} />
-						<Text className="ml-2 text-xl">Participants</Text>
+						<Text className="text-xl">Participants</Text>
 					</View>
 				}
 				textValue="Participants"

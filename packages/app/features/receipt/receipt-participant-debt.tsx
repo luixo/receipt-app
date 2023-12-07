@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Button, Divider, Spacer } from "@nextui-org/react-tailwind";
+import { Button, Divider } from "@nextui-org/react-tailwind";
 import {
 	MdOutlineReceipt as ReceiptOffIcon,
 	MdSend as SendIcon,
@@ -131,10 +131,7 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 	return (
 		<>
 			<Divider className="md:hidden" />
-			<View className="md:hidden">
-				{user}
-				<Spacer y={4} />
-			</View>
+			<View className="md:hidden">{user}</View>
 			<View className="flex-row gap-4">
 				<View className="flex-[4] max-md:hidden">{user}</View>
 				<View className="flex-[2] max-md:flex-1">

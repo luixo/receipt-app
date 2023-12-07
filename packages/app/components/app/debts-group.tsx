@@ -32,23 +32,19 @@ const DebtGroupElement: React.FC<DebtElement> = ({ currencyCode, sum }) => {
 	);
 };
 
+const debtGroup = tv({
+	base: "shrink flex-row flex-wrap items-center justify-center gap-2",
+});
+
 type Props = {
 	debts: DebtElement[];
 } & React.ComponentProps<typeof View>;
 
 export const DebtsGroup: React.FC<Props> = ({ debts, className, ...props }) => (
-	<View
-		className={[
-			"shrink flex-row flex-wrap items-center justify-center",
-			className,
-		]
-			.filter(Boolean)
-			.join(" ")}
-		{...props}
-	>
+	<View className={debtGroup({ className })} {...props}>
 		{debts.map(({ currencyCode, sum }, index) => (
 			<React.Fragment key={currencyCode}>
-				{index === 0 ? null : <Text className="mx-2">•</Text>}
+				{index === 0 ? null : <Text>•</Text>}
 				<DebtGroupElement currencyCode={currencyCode} sum={sum} />
 			</React.Fragment>
 		))}

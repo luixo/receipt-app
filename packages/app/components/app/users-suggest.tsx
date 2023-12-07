@@ -5,7 +5,6 @@ import {
 	Autocomplete,
 	AutocompleteItem,
 	AutocompleteSection,
-	Spacer,
 } from "@nextui-org/react-tailwind";
 import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
 import type { CollectionElement } from "@react-types/shared";
@@ -126,16 +125,13 @@ export const UsersSuggest: React.FC<Props> = ({
 	});
 
 	return (
-		<View>
+		<View className="gap-4">
 			{selectedUsers.length === 0 ? null : (
-				<>
-					<View className="flex-row flex-wrap gap-4">
-						{selectedUsers.map((user) => (
-							<User key={user.id} user={user} avatarProps={{ size: "sm" }} />
-						))}
-					</View>
-					<Spacer y={4} />
-				</>
+				<View className="flex-row flex-wrap gap-4">
+					{selectedUsers.map((user) => (
+						<User key={user.id} user={user} avatarProps={{ size: "sm" }} />
+					))}
+				</View>
 			)}
 			<Autocomplete
 				ref={inputRef}

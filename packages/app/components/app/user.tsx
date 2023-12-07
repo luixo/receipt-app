@@ -1,9 +1,16 @@
 import React from "react";
 
-import { User as RawUser } from "@nextui-org/react-tailwind";
+import { User as RawUser, tv } from "@nextui-org/react-tailwind";
 import IdenticonJs from "identicon.js";
 
 import type { UsersId } from "next-app/db/models";
+
+const styles = tv({
+	base: "text-foreground",
+	slots: {
+		avatar: "bg-transparent",
+	},
+});
 
 const getIdenticon = (hash: string, size: number) =>
 	`data:image/svg+xml;base64,${new IdenticonJs(hash, {
@@ -23,22 +30,23 @@ export type Props = {
 } & Omit<React.ComponentProps<typeof RawUser>, "name" | "description">;
 
 export const User = React.forwardRef<HTMLDivElement, Props>(
-	({ user, ...props }, ref) => {
+	({ user, className, avatarProps, ...props }, ref) => {
 		const icon = React.useMemo(() => getIdenticon(user.id, 40), [user.id]);
+		const { base, avatar } = styles();
 		return (
 			<RawUser
 				ref={ref}
-				className="text-foreground"
 				{...props}
+				className={base({ className })}
 				name={user.name + (user.publicName ? ` (${user.publicName})` : "")}
 				description={user.email}
 				avatarProps={{
 					src: icon,
 					radius: "sm",
-					...props.avatarProps,
+					...avatarProps,
 					classNames: {
-						base: "bg-transparent",
-						...props.avatarProps?.classNames,
+						...avatarProps?.classNames,
+						base: avatar({ className: avatarProps?.className }),
 					},
 				}}
 			/>

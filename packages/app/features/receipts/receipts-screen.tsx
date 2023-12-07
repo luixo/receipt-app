@@ -1,12 +1,12 @@
 import React from "react";
 
-import { Button, Link, Spacer } from "@nextui-org/react-tailwind";
+import { Button, Link } from "@nextui-org/react-tailwind";
 import {
 	MdAdd as AddIcon,
 	MdOutlineReceipt as ReceiptIcon,
 } from "react-icons/md";
 
-import { Header } from "app/components/header";
+import { PageHeader } from "app/components/page-header";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import type { AppPage } from "next-app/types/page";
 
@@ -15,12 +15,11 @@ import { Receipts } from "./receipts";
 
 export const ReceiptsScreen: AppPage = () => (
 	<>
-		<Header
+		<PageHeader
 			startContent={<ReceiptIcon size={36} />}
 			aside={
 				<>
 					<FilterButton />
-					<Spacer x={4} />
 					<Button
 						color="primary"
 						href="/receipts/add"
@@ -35,9 +34,8 @@ export const ReceiptsScreen: AppPage = () => (
 			}
 		>
 			Receipts
-		</Header>
+		</PageHeader>
 		<EmailVerificationCard />
-		<Spacer y={4} />
 		<Receipts />
 	</>
 );

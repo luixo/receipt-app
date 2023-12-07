@@ -15,7 +15,7 @@ import type {
 } from "@tanstack/react-query";
 import { IoWarning as WarningIcon } from "react-icons/io5";
 
-import { Text } from "app/components/base/text";
+import { Header } from "app/components/base/header";
 import type { TRPCError } from "app/trpc";
 
 type Props = {
@@ -29,9 +29,9 @@ type Props = {
 export const ErrorMessage: React.FC<Props> = ({ message, button }) => (
 	<Card>
 		<CardHeader>
-			<View className="text-danger flex flex-row">
+			<View className="text-danger flex flex-row gap-2">
 				<WarningIcon size={32} />
-				<Text className="text-danger ml-2 text-2xl">Error</Text>
+				<Header className="text-danger">Error</Header>
 			</View>
 		</CardHeader>
 		<Divider />

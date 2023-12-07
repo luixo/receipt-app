@@ -1,10 +1,10 @@
 import React from "react";
 
-import { Badge, Button, Link, Spacer } from "@nextui-org/react-tailwind";
+import { Badge, Button, Link } from "@nextui-org/react-tailwind";
 import { FaUsers as UsersIcon } from "react-icons/fa";
 import { MdAdd as AddIcon, MdLink as LinkIcon } from "react-icons/md";
 
-import { Header } from "app/components/header";
+import { PageHeader } from "app/components/page-header";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { useConnectionIntentions } from "app/hooks/use-connection-intentions";
 import type { AppPage } from "next-app/types/page";
@@ -31,12 +31,11 @@ export const UsersScreen: AppPage = () => {
 	);
 	return (
 		<>
-			<Header
+			<PageHeader
 				startContent={<UsersIcon size={36} />}
-				aside={React.useMemo(
-					() => [
+				aside={
+					<>
 						<Button
-							key="add"
 							href="/users/add"
 							as={Link}
 							color="primary"
@@ -45,12 +44,11 @@ export const UsersScreen: AppPage = () => {
 							isIconOnly
 						>
 							<AddIcon size={24} />
-						</Button>,
-						inboundConnectionsAmount === 0 ? (
+						</Button>
+						{inboundConnectionsAmount === 0 ? (
 							connectionsButton
 						) : (
 							<Badge
-								key="connections"
 								content={inboundConnectionsAmount}
 								color="danger"
 								placement="top-right"
@@ -58,15 +56,13 @@ export const UsersScreen: AppPage = () => {
 							>
 								{connectionsButton}
 							</Badge>
-						),
-					],
-					[inboundConnectionsAmount, connectionsButton],
-				)}
+						)}
+					</>
+				}
 			>
 				Users
-			</Header>
+			</PageHeader>
 			<EmailVerificationCard />
-			<Spacer y={4} />
 			<Users />
 		</>
 	);

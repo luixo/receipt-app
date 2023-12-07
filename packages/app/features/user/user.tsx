@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Spacer, Spinner } from "@nextui-org/react-tailwind";
+import { Spinner } from "@nextui-org/react-tailwind";
 
 import { QueryErrorMessage } from "app/components/error-message";
 import type { TRPCQuerySuccessResult } from "app/trpc";
@@ -22,11 +22,8 @@ const UserInner: React.FC<InnerProps> = ({ query }) => {
 	return (
 		<>
 			<UserNameInput user={user} isLoading={deleteLoading} />
-			<Spacer y={4} />
 			<UserPublicNameInput user={user} isLoading={deleteLoading} />
-			<Spacer y={4} />
 			<UserConnectionInput user={user} isLoading={deleteLoading} />
-			<Spacer y={4} />
 			<UserRemoveButton
 				className="self-end"
 				user={user}

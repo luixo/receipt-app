@@ -2,7 +2,8 @@ import React from "react";
 
 import { Button, Spinner } from "@nextui-org/react-tailwind";
 
-import { Text } from "app/components/base/text";
+import { Header } from "app/components/base/header";
+import { EmptyCard } from "app/components/empty-card";
 import { ErrorMessage } from "app/components/error-message";
 import { useRouter } from "app/hooks/use-router";
 import type { TRPCMutationResult } from "app/trpc";
@@ -20,14 +21,13 @@ export const ConfirmEmail: React.FC<Props> = ({ token, confirmMutation }) => {
 	);
 	if (!token) {
 		return (
-			<>
-				<Text className="text-2xl font-medium">Something went wrong</Text>
-				<Text>Please verify you got confirm link right</Text>
-			</>
+			<EmptyCard title="Something went wrong">
+				Please verify you got confirm link right
+			</EmptyCard>
 		);
 	}
 	if (confirmMutation.status === "loading") {
-		return <Spinner />;
+		return <Spinner size="lg" />;
 	}
 	if (confirmMutation.status === "error") {
 		return <ErrorMessage message={confirmMutation.error.message} />;
@@ -37,10 +37,8 @@ export const ConfirmEmail: React.FC<Props> = ({ token, confirmMutation }) => {
 	}
 	return (
 		<>
-			<Text className="text-2xl font-medium">{confirmMutation.data.email}</Text>
-			<Text className="text-success text-lg">
-				Email verification successful!
-			</Text>
+			<Header>{confirmMutation.data.email}</Header>
+			<Header size="sm">Email verification successful!</Header>
 			<Button color="primary" onClick={navigateToHomePage}>
 				To home page
 			</Button>

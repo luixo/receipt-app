@@ -7,10 +7,11 @@ import {
 	MdOutlineReceipt as ReceiptIcon,
 } from "react-icons/md";
 
+import { LoadableUser } from "app/components/app/loadable-user";
 import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
 import { Text } from "app/components/base/text";
 import { QueryErrorMessage } from "app/components/error-message";
-import { Header } from "app/components/header";
+import { PageHeader } from "app/components/page-header";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useTrpcQueryOptions } from "app/hooks/use-trpc-query-options";
@@ -24,7 +25,6 @@ import { ReceiptCurrencyInput } from "./receipt-currency-input";
 import { ReceiptDateInput } from "./receipt-date-input";
 import { ReceiptGuestControlButton } from "./receipt-guest-control-button";
 import { ReceiptNameInput } from "./receipt-name-input";
-import { ReceiptOwner } from "./receipt-owner";
 import { ReceiptOwnerControlButton } from "./receipt-owner-control-button";
 import { ReceiptRemoveButton } from "./receipt-remove-button";
 
@@ -45,13 +45,13 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 	const currency = useFormattedCurrency(receipt.currencyCode);
 
 	return (
-		<View className="gap-4">
-			<Header
+		<>
+			<PageHeader
 				backHref="/receipts"
 				startContent={<ReceiptIcon size={36} />}
 				aside={
 					isEditing ? undefined : (
-						<View className="flex-row gap-2">
+						<>
 							<ReceiptParticipantResolvedButton
 								variant="ghost"
 								receiptId={receipt.id}
@@ -68,7 +68,7 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 							) : (
 								<ReceiptGuestControlButton receipt={receipt} />
 							)}
-						</View>
+						</>
 					)
 				}
 				title={`Receipt ${receipt.name}`}
@@ -95,8 +95,8 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 				}
 			>
 				{isEditing ? undefined : receipt.name}
-			</Header>
-			<View className="flex-row justify-between gap-2">
+			</PageHeader>
+			<View className="items-start justify-between gap-2 sm:flex-row">
 				<View className="gap-2">
 					<ReceiptDateInput receipt={receipt} isLoading={deleteLoading} />
 					<View className="flex-row items-center gap-1">
@@ -106,7 +106,7 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 						<ReceiptCurrencyInput receipt={receipt} isLoading={deleteLoading} />
 					</View>
 				</View>
-				<ReceiptOwner receipt={receipt} />
+				<LoadableUser id={receipt.ownerUserId} />
 			</View>
 			{receipt.role === "owner" ? (
 				<ReceiptRemoveButton
@@ -115,7 +115,7 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 					setLoading={setDeleteLoading}
 				/>
 			) : null}
-		</View>
+		</>
 	);
 };
 
@@ -132,8 +132,8 @@ export const Receipt: React.FC<Props> = ({ id, ...props }) => {
 	if (query.status === "loading") {
 		return (
 			<>
-				<Header>{receiptNameQuery.data || id}</Header>
-				<Spinner />
+				<PageHeader>{receiptNameQuery.data || id}</PageHeader>
+				<Spinner size="lg" />
 			</>
 		);
 	}

@@ -6,7 +6,6 @@ import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
-	Spacer,
 } from "@nextui-org/react-tailwind";
 import {
 	MdHourglassDisabled as CrossWaitIcon,
@@ -69,48 +68,28 @@ export const ReceiptResolvedParticipantsButton: React.FC<Props> = ({
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent>
-				<View className="p-4">
+				<View className="gap-6 p-4">
 					{notResolvedParticipants && notResolvedParticipants.length !== 0 ? (
-						<>
+						<View className="items-start gap-2">
 							<Text className="font-medium">Not resolved participants: </Text>
-							<Spacer y={4} />
-							<View className="items-start">
-								{notResolvedParticipants.map((participant, index) => (
-									<React.Fragment
-										key={participant.localUserId || participant.remoteUserId}
-									>
-										{index === 0 ? null : <Spacer y={2} />}
-										<LoadableUser
-											id={participant.localUserId || participant.remoteUserId}
-										/>
-									</React.Fragment>
-								))}
-							</View>
-						</>
-					) : null}
-					{notResolvedParticipants &&
-					notResolvedParticipants.length !== 0 &&
-					resolvedParticipants &&
-					resolvedParticipants.length !== 0 ? (
-						<Spacer y={6} />
+							{notResolvedParticipants.map((participant) => (
+								<LoadableUser
+									key={participant.localUserId || participant.remoteUserId}
+									id={participant.localUserId || participant.remoteUserId}
+								/>
+							))}
+						</View>
 					) : null}
 					{resolvedParticipants && resolvedParticipants.length !== 0 ? (
-						<>
+						<View className="items-start gap-2">
 							<Text className="font-medium">Resolved participants: </Text>
-							<Spacer y={4} />
-							<View className="items-start">
-								{resolvedParticipants?.map((participant, index) => (
-									<React.Fragment
-										key={participant.localUserId || participant.remoteUserId}
-									>
-										{index === 0 ? null : <Spacer y={2} />}
-										<LoadableUser
-											id={participant.localUserId || participant.remoteUserId}
-										/>
-									</React.Fragment>
-								))}
-							</View>
-						</>
+							{resolvedParticipants?.map((participant) => (
+								<LoadableUser
+									key={participant.localUserId || participant.remoteUserId}
+									id={participant.localUserId || participant.remoteUserId}
+								/>
+							))}
+						</View>
 					) : null}
 				</View>
 			</PopoverContent>

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, Spacer } from "@nextui-org/react-tailwind";
+import { Button } from "@nextui-org/react-tailwind";
 import {
 	BsEyeSlashFill as ShouldNotSyncIcon,
 	BsEyeFill as ShouldSyncIcon,
@@ -73,21 +73,21 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 		acceptMutation.mutate({ id: intention.id });
 	}, [acceptMutation, intention]);
 
+	const newLocal = "Update debt to a counterparty's version";
 	return (
 		<>
 			{intention &&
 			debt.lockedTimestamp &&
 			intention.lockedTimestamp.valueOf() > debt.lockedTimestamp.valueOf() ? (
-				<>
-					<ConfirmModal
-						action={acceptSyncIntention}
-						isLoading={updateMutation.isLoading}
-						title="Update debt to a counterparty's version"
-						subtitle={<DebtIntention intention={intention} />}
-						confirmText="Are you sure?"
-					>
-						{({ openModal }) => (
-							<Button
+				<ConfirmModal
+					action={acceptSyncIntention}
+					isLoading={updateMutation.isLoading}
+					title={newLocal}
+					subtitle={<DebtIntention intention={intention} />}
+					confirmText="Are you sure?"
+				>
+					{({ openModal }) => (
+						<Button
 							isLoading={updateMutation.isLoading}
 							isDisabled={updateMutation.isLoading}
 							onClick={openModal}
@@ -97,10 +97,8 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 						>
 							<SyncIcon size={24} />
 						</Button>
-						)}
-					</ConfirmModal>
-					<Spacer x={2} />
-				</>
+					)}
+				</ConfirmModal>
 			) : null}
 			<ConfirmModal
 				action={setLocked}
@@ -124,8 +122,8 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 					>
 						{debt.lockedTimestamp ? (
 							<ShouldNotSyncIcon size={24} />
-							) : (
-								<ShouldSyncIcon size={24} />
+						) : (
+							<ShouldSyncIcon size={24} />
 						)}
 					</Button>
 				)}

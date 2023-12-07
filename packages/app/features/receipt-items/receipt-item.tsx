@@ -8,7 +8,6 @@ import {
 	CardHeader,
 	Chip,
 	Divider,
-	Spacer,
 } from "@nextui-org/react-tailwind";
 
 import { ReceiptItemLockedButton } from "app/components/app/receipt-item-locked-button";
@@ -110,14 +109,13 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 
 		return (
 			<Card ref={ref}>
-				<CardHeader className="justify-between">
+				<CardHeader className="justify-between gap-4">
 					<ReceiptItemNameInput
 						receiptId={receiptId}
 						receiptItem={receiptItem}
 						readOnly={isEditingDisabled || receiptLocked}
 						isLoading={isDeleteLoading}
 					/>
-					<Spacer x={4} />
 					<ReceiptItemLockedButton
 						receiptId={receiptId}
 						receiptItemId={receiptItem.id}
@@ -175,14 +173,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 							))}
 						</View>
 					)}
-					{receiptItem.parts.length === 0 ? (
-						notAddedParticipants.length === 0 || receiptLocked ? null : (
-							<>
-								<Divider />
-								<Text className="text-lg">Add a user from a list above</Text>
-							</>
-						)
-					) : (
+					{receiptItem.parts.length === 0 ? null : (
 						<>
 							<Divider />
 							{receiptItem.parts.map((part) => {
@@ -223,9 +214,8 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 								mutation={removeReceiptItemMutation}
 								subtitle="This will remove item with all participant's parts"
 								noConfirm={receiptItem.parts.length === 0}
-							>
-								Remove item
-							</RemoveButton>
+								isIconOnly
+							/>
 						</CardFooter>
 					</>
 				)}

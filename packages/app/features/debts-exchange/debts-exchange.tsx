@@ -1,11 +1,11 @@
 import React from "react";
 
-import { Button, Link, Spacer, Spinner } from "@nextui-org/react-tailwind";
+import { Button, Link, Spinner } from "@nextui-org/react-tailwind";
 
 import { DebtsGroup } from "app/components/app/debts-group";
 import { LoadableUser } from "app/components/app/loadable-user";
 import { QueryErrorMessage } from "app/components/error-message";
-import { Header } from "app/components/header";
+import { PageHeader } from "app/components/page-header";
 import { useAggregatedDebts } from "app/hooks/use-aggregated-debts";
 import { useRouter } from "app/hooks/use-router";
 import type { TRPCQuerySuccessResult } from "app/trpc";
@@ -29,18 +29,17 @@ const DebtsExchangeInner: React.FC<InnerProps> = ({ userId, query }) => {
 	);
 	return (
 		<>
-			<Header
+			<PageHeader
 				backHref={`/debts/user/${userId}`}
 				title={`${
 					userQuery.status === "success" ? userQuery.data.name : "..."
 				}'s debts`}
-				endContent={<LoadableUser id={userId} />}
-			/>
-			<Spacer y={4} />
+			>
+				<LoadableUser id={userId} />
+			</PageHeader>
 			<DebtsGroup
 				debts={showResolvedDebts ? aggregatedDebts : nonZeroAggregateDebts}
 			/>
-			<Spacer y={4} />
 			<Button
 				color="primary"
 				as={Link}
@@ -49,7 +48,6 @@ const DebtsExchangeInner: React.FC<InnerProps> = ({ userId, query }) => {
 			>
 				Exchange all to one currency
 			</Button>
-			<Spacer y={4} />
 			<Button
 				color="primary"
 				as={Link}
@@ -70,7 +68,7 @@ export const DebtsExchange: React.FC<Props> = ({ userId, ...props }) => {
 	if (query.status === "loading") {
 		return (
 			<>
-				<Header>{userNameQuery.data || userId}</Header>
+				<PageHeader>{userNameQuery.data || userId}</PageHeader>
 				<Spinner />
 			</>
 		);

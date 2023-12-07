@@ -2,7 +2,7 @@ import React from "react";
 
 import { createParam } from "solito";
 
-import { Header } from "app/components/header";
+import { PageHeader } from "app/components/page-header";
 import { trpc } from "app/trpc";
 import type { AppPage } from "next-app/types/page";
 
@@ -19,7 +19,7 @@ export const ResetPasswordScreen: AppPage = () => {
 
 	return (
 		<>
-			<Header>Reset password</Header>
+			<PageHeader>Reset password</PageHeader>
 			<ResetPassword
 				token={token}
 				intentionQuery={resetPasswordIntentionQuery}

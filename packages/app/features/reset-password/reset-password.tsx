@@ -1,11 +1,12 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Input, Spacer, Spinner } from "@nextui-org/react-tailwind";
+import { Button, Input, Spinner } from "@nextui-org/react-tailwind";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { Text } from "app/components/base/text";
+import { Header } from "app/components/base/header";
+import { EmptyCard } from "app/components/empty-card";
 import { QueryErrorMessage } from "app/components/error-message";
 import { useRouter } from "app/hooks/use-router";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -50,25 +51,21 @@ export const ResetPassword: React.FC<Props> = ({ token, intentionQuery }) => {
 
 	if (!token) {
 		return (
-			<>
-				<Text className="text-2xl font-medium">Something went wrong</Text>
-				<Text className="font-medium">
-					Please verify you got reset link right or request a new one
-				</Text>
-			</>
+			<EmptyCard title="Something went wrong">
+				Please verify you got reset link right or request a new one
+			</EmptyCard>
 		);
 	}
 	if (intentionQuery.status === "loading") {
-		return <Spinner />;
+		return <Spinner size="lg" />;
 	}
 	if (intentionQuery.status === "error") {
 		return <QueryErrorMessage query={intentionQuery} />;
 	}
 	return (
 		<>
-			<Text className="text-2xl font-medium">{intentionQuery.data.email}</Text>
+			<Header>{intentionQuery.data.email}</Header>
 			<Input value={token} label="Token" labelPlacement="outside" isReadOnly />
-			<Spacer y={4} />
 			<Input
 				{...form.register("password")}
 				label="New password"
@@ -78,7 +75,6 @@ export const ResetPassword: React.FC<Props> = ({ token, intentionQuery }) => {
 				disabled={changePasswordMutation.isLoading}
 				type="password"
 			/>
-			<Spacer y={4} />
 			<Input
 				{...form.register("passwordRetype")}
 				label="Retype new password"
@@ -88,8 +84,8 @@ export const ResetPassword: React.FC<Props> = ({ token, intentionQuery }) => {
 				disabled={changePasswordMutation.isLoading}
 				type="password"
 			/>
-			<Spacer y={4} />
 			<Button
+				className="mt-4"
 				color="primary"
 				isDisabled={!form.formState.isValid || changePasswordMutation.isLoading}
 				isLoading={changePasswordMutation.isLoading}

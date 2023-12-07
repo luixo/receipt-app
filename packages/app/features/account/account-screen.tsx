@@ -1,11 +1,11 @@
 import React from "react";
 
-import { Button, Spacer, Spinner } from "@nextui-org/react-tailwind";
+import { Button, Spinner } from "@nextui-org/react-tailwind";
 import { useQueryClient } from "@tanstack/react-query";
 import { FaUser as AccountIcon } from "react-icons/fa";
 
 import { QueryErrorMessage } from "app/components/error-message";
-import { Header } from "app/components/header";
+import { PageHeader } from "app/components/page-header";
 import { ChangePasswordScreen } from "app/features/change-password/change-password-screen";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { useRouter } from "app/hooks/use-router";
@@ -40,21 +40,18 @@ const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 
 	return (
 		<>
-			<Header startContent={<AccountIcon size={36} />} title="My account">
+			<PageHeader startContent={<AccountIcon size={36} />} title="My account">
 				{query.data.user.name}
-			</Header>
+			</PageHeader>
 			<EmailVerificationCard />
-			<Spacer y={4} />
 			<AccountNameInput accountQuery={query.data} />
-			<Spacer y={4} />
 			<ChangePasswordScreen />
-			<Spacer y={8} />
 			<Button
+				className="mt-4 self-end"
 				isDisabled={logoutMutation.isLoading}
 				onClick={logout}
 				color="warning"
 				isLoading={logoutMutation.isLoading}
-				className="self-end"
 			>
 				Logout
 			</Button>

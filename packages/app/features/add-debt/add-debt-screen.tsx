@@ -1,8 +1,7 @@
 import React from "react";
-import { View } from "react-native";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Spacer } from "@nextui-org/react-tailwind";
+import { Button } from "@nextui-org/react-tailwind";
 import { useForm } from "react-hook-form";
 import { createParam } from "solito";
 import { z } from "zod";
@@ -11,7 +10,7 @@ import { CurrencyInput } from "app/components/app/currency-input";
 import type { Direction } from "app/components/app/sign-button-group";
 import { SignButtonGroup } from "app/components/app/sign-button-group";
 import { UsersSuggest } from "app/components/app/users-suggest";
-import { Header } from "app/components/header";
+import { PageHeader } from "app/components/page-header";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { useRouter } from "app/hooks/use-router";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -110,8 +109,8 @@ export const AddDebtScreen: AppPage = () => {
 	const topCurrenciesQuery = trpc.currency.topDebts.useQuery();
 
 	return (
-		<View className="gap-4">
-			<Header backHref="/debts">Add debt</Header>
+		<>
+			<PageHeader backHref="/debts">Add debt</PageHeader>
 			<EmailVerificationCard />
 			<SignButtonGroup
 				isLoading={addMutation.isLoading}
@@ -133,8 +132,8 @@ export const AddDebtScreen: AppPage = () => {
 			/>
 			<DebtDateInput form={form} isLoading={addMutation.isLoading} />
 			<DebtNoteInput form={form} isLoading={addMutation.isLoading} />
-			<Spacer y={4} />
 			<Button
+				className="mt-4"
 				color="primary"
 				onClick={form.handleSubmit(onSubmit)}
 				isDisabled={!form.formState.isValid || addMutation.isLoading}
@@ -142,6 +141,6 @@ export const AddDebtScreen: AppPage = () => {
 			>
 				Add debt
 			</Button>
-		</View>
+		</>
 	);
 };

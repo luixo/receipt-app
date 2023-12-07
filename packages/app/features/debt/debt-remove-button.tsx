@@ -12,9 +12,13 @@ type Debt = TRPCQueryOutput<"debts.get">;
 type Props = {
 	debt: Debt;
 	setLoading: (nextLoading: boolean) => void;
-};
+} & Omit<React.ComponentProps<typeof RemoveButton>, "mutation" | "onRemove">;
 
-export const DebtRemoveButton: React.FC<Props> = ({ debt, setLoading }) => {
+export const DebtRemoveButton: React.FC<Props> = ({
+	debt,
+	setLoading,
+	...props
+}) => {
 	const router = useRouter();
 	const removeMutation = trpc.debts.remove.useMutation(
 		useTrpcMutationOptions(mutations.debts.remove.options, {
@@ -37,7 +41,7 @@ export const DebtRemoveButton: React.FC<Props> = ({ debt, setLoading }) => {
 			onRemove={removeDebt}
 			subtitle="This will remove debt forever"
 			noConfirm={debt.amount === 0}
-			className="self-end"
+			{...props}
 		>
 			Remove debt
 		</RemoveButton>

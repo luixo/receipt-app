@@ -3,6 +3,7 @@ import { View } from "react-native";
 
 import { Divider } from "@nextui-org/react-tailwind";
 
+import { Header } from "app/components/base/header";
 import { Text } from "app/components/base/text";
 import type { AppPage } from "next-app/types/page";
 
@@ -12,10 +13,10 @@ import { RefreshSettings } from "./refresh-settings";
 import { ShowResolvedDebtsOption } from "./show-resolved-debts-option";
 
 export const SettingsScreen: AppPage = () => (
-	<View className="items-center gap-4">
+	<>
 		<ColorModeSettings />
 		<Divider />
-		<Text className="text-4xl font-medium">Settings</Text>
+		<Header size="lg">Settings</Header>
 		<View className="flex-row gap-2">
 			<Text>Show user with resolved debts</Text>
 			<ShowResolvedDebtsOption />
@@ -26,5 +27,5 @@ export const SettingsScreen: AppPage = () => (
 		</View>
 		<Divider />
 		<RefreshSettings />
-	</View>
+	</>
 );

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, Input, Spacer } from "@nextui-org/react-tailwind";
+import { Button, Input } from "@nextui-org/react-tailwind";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 import { MdEdit as EditIcon } from "react-icons/md";
 
@@ -83,9 +83,7 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 					>
 						<EditIcon size={20} />
 					</Button>
-				) : (
-					<Spacer x={2} />
-				)}
+				) : null}
 			</>
 		);
 	}

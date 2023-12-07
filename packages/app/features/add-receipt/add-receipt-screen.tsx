@@ -1,13 +1,12 @@
 import React from "react";
-import { View } from "react-native";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Spacer } from "@nextui-org/react-tailwind";
+import { Button } from "@nextui-org/react-tailwind";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { CurrencyInput } from "app/components/app/currency-input";
-import { Header } from "app/components/header";
+import { PageHeader } from "app/components/page-header";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { useRouter } from "app/hooks/use-router";
 import { useSelfAccountId } from "app/hooks/use-self-account-id";
@@ -61,8 +60,8 @@ export const AddReceiptScreen: AppPage = () => {
 	const topCurrenciesQuery = trpc.currency.topReceipts.useQuery();
 
 	return (
-		<View className="gap-4">
-			<Header backHref="/receipts">Add receipt</Header>
+		<>
+			<PageHeader backHref="/receipts">Add receipt</PageHeader>
 			<EmailVerificationCard />
 			<ReceiptNameInput form={form} query={addReceiptMutation} />
 			<CurrencyInput
@@ -71,8 +70,8 @@ export const AddReceiptScreen: AppPage = () => {
 				topCurrenciesQuery={topCurrenciesQuery}
 			/>
 			<ReceiptDateInput form={form} query={addReceiptMutation} />
-			<Spacer y={4} />
 			<Button
+				className="mt-4"
 				color="primary"
 				onClick={form.handleSubmit(onSubmit)}
 				isDisabled={
@@ -84,6 +83,6 @@ export const AddReceiptScreen: AppPage = () => {
 			>
 				Add receipt
 			</Button>
-		</View>
+		</>
 	);
 };

@@ -68,21 +68,25 @@ export const ReceiptParticipant: React.FC<Props> = ({
 		[removeReceiptParticipantMutation, receiptId, participant.remoteUserId],
 	);
 	const currency = useFormattedCurrency(currencyCode);
+	const disabled = participant.items.length === 0;
 
 	return (
 		<Accordion>
 			<AccordionItem
 				key="parts"
-				isDisabled={participant.items.length === 0}
-				classNames={{
-					base: "data-[disabled=true]:pointer-events-auto data-[disabled=true]:opacity-100",
-					indicator:
-						"data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-disabled",
-				}}
+				classNames={
+					disabled
+						? {
+								base: "pointer-events-none",
+								titleWrapper: "pointer-events-auto",
+								indicator: "opacity-disabled",
+						  }
+						: undefined
+				}
 				textValue={participant.name}
 				title={
-					<View className="flex-col justify-between gap-4 md:flex-row">
-						<View className="flex-col items-center gap-4 self-start sm:flex-row">
+					<View className="flex-col justify-between gap-4 min-[600px]:flex-row">
+						<View className="flex-col items-start justify-start gap-4 self-start sm:flex-row sm:items-center">
 							<User
 								className={
 									participant.items.length === 0
@@ -91,12 +95,12 @@ export const ReceiptParticipant: React.FC<Props> = ({
 								}
 								user={convertParticipantToUser(participant)}
 							/>
-							<Text className="self-start">
+							<Text>
 								{`${Math.round(participant.sum * 100) / 100} ${currency}`}
 							</Text>
 						</View>
 						<View className="flex-row gap-2 self-end">
-							<View className="flex-row gap-2">
+							<View className="flex-row items-center gap-2">
 								<ReceiptParticipantRoleInput
 									receiptId={receiptId}
 									selfUserId={receiptSelfUserId}
@@ -127,6 +131,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 									isDisabled={!selfAccountId || receiptLocked}
 									subtitle="This will remove participant with all his parts"
 									noConfirm={participant.sum === 0}
+									isIconOnly
 								/>
 							) : null}
 						</View>

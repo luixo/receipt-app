@@ -67,7 +67,8 @@ export const DateInput: React.FC<Props> = ({
 					endContent={
 						updateOnChange ? (
 							// Bug: https://github.com/nextui-org/nextui/issues/2069
-							<div />
+							// eslint-disable-next-line react/jsx-no-useless-fragment
+							<></>
 						) : (
 							<Button
 								title="Save date"

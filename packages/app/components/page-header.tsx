@@ -1,0 +1,46 @@
+import React from "react";
+import { View } from "react-native";
+
+import Head from "next/head";
+import { IoMdArrowRoundBack as BackArrow } from "react-icons/io";
+
+import { Text } from "app/components/base/text";
+import { useRouter } from "app/hooks/use-router";
+
+type Props = {
+	backHref?: string;
+	aside?: React.ReactNode;
+	startContent?: React.ReactNode;
+	endContent?: React.ReactNode;
+	title?: string;
+} & React.ComponentProps<typeof View>;
+
+export const PageHeader: React.FC<Props> = ({
+	aside,
+	backHref,
+	startContent,
+	endContent,
+	children,
+	title,
+	...props
+}) => {
+	const router = useRouter();
+	const back = React.useCallback(
+		() => router.push(backHref!),
+		[router, backHref],
+	);
+	return (
+		<View className="flex-row justify-between gap-4 max-sm:flex-col">
+			<Head>
+				<title>{`RA - ${title || children?.toString()}`}</title>
+			</Head>
+			<View className="flex-row items-center gap-4" {...props}>
+				{backHref ? <BackArrow size={36} onClick={back} /> : null}
+				{startContent}
+				<Text className="text-4xl font-medium">{children}</Text>
+				{endContent}
+			</View>
+			<View className="shrink-0 flex-row gap-2 max-sm:self-end">{aside}</View>
+		</View>
+	);
+};

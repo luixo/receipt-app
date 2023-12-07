@@ -1,12 +1,13 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Spacer, Spinner } from "@nextui-org/react-tailwind";
+import { Spinner } from "@nextui-org/react-tailwind";
 import { useRouter } from "next/router";
 
 import { LoadableUser } from "app/components/app/loadable-user";
-import { Text } from "app/components/base/text";
+import { EmptyCard } from "app/components/empty-card";
 import { QueryErrorMessage } from "app/components/error-message";
+import { PageHeader } from "app/components/page-header";
 import { useRefs } from "app/hooks/use-refs";
 import type { TRPCQuerySuccessResult } from "app/trpc";
 import { trpc } from "app/trpc";
@@ -35,15 +36,9 @@ const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 	}, [data, router.asPath, intentionsRefs]);
 	if (data.length === 0) {
 		return (
-			<View className="m-10 self-center md:max-w-lg">
-				<Text className="text-center text-4xl font-medium">
-					You have no incoming sync requests
-				</Text>
-				<Spacer y={4} />
-				<Text className="text-center text-2xl">
-					Ask a friend to create a debt for you ;)
-				</Text>
-			</View>
+			<EmptyCard title="You have no incoming sync requests">
+				Ask a friend to create a debt for you ;)
+			</EmptyCard>
 		);
 	}
 	const intentionsByUser = data.reduce<
@@ -56,15 +51,14 @@ const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 		return acc;
 	}, {});
 	return (
-		<View className="gap-4">
-			<Text className="text-center text-4xl font-medium">Inbound debts</Text>
+		<>
+			<PageHeader>Inbound debts</PageHeader>
 			{data.length === 1 ? null : (
 				<AcceptAllIntentionsButton intentions={data} />
 			)}
 			{Object.entries(intentionsByUser).map(([userId, groupedIntentions]) => (
 				<View className="gap-2" key={userId}>
-					<LoadableUser className="self-start" id={userId} />
-					<View />
+					<LoadableUser className="mb-4 self-start" id={userId} />
 					{groupedIntentions.map((intention) => (
 						<InboundDebtIntention
 							key={intention.id}
@@ -74,7 +68,7 @@ const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 					))}
 				</View>
 			))}
-		</View>
+		</>
 	);
 };
 

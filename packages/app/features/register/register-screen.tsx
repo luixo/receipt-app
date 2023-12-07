@@ -1,11 +1,11 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Input, Spacer } from "@nextui-org/react-tailwind";
+import { Button, Input } from "@nextui-org/react-tailwind";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { Header } from "app/components/header";
+import { PageHeader } from "app/components/page-header";
 import { useRouter } from "app/hooks/use-router";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -58,7 +58,7 @@ export const RegisterScreen: AppPage = () => {
 
 	return (
 		<>
-			<Header>Register</Header>
+			<PageHeader>Register</PageHeader>
 			<Input
 				{...form.register("email")}
 				label="Email"
@@ -67,7 +67,6 @@ export const RegisterScreen: AppPage = () => {
 				errorMessage={form.formState.errors.email?.message}
 				isDisabled={registerMutation.isLoading}
 			/>
-			<Spacer y={4} />
 			<Input
 				{...form.register("name")}
 				label="Name"
@@ -77,7 +76,6 @@ export const RegisterScreen: AppPage = () => {
 				errorMessage={form.formState.errors.name?.message}
 				isDisabled={registerMutation.isLoading}
 			/>
-			<Spacer y={4} />
 			<Input
 				{...form.register("password")}
 				label="New password"
@@ -87,7 +85,6 @@ export const RegisterScreen: AppPage = () => {
 				isDisabled={registerMutation.isLoading}
 				type="password"
 			/>
-			<Spacer y={4} />
 			<Input
 				{...form.register("passwordRetype")}
 				label="Retype new password"
@@ -97,8 +94,8 @@ export const RegisterScreen: AppPage = () => {
 				isDisabled={registerMutation.isLoading}
 				type="password"
 			/>
-			<Spacer y={4} />
 			<Button
+				className="mt-4"
 				color="primary"
 				isDisabled={!form.formState.isValid || registerMutation.isLoading}
 				isLoading={registerMutation.isLoading}

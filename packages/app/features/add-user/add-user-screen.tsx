@@ -1,11 +1,11 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Spacer } from "@nextui-org/react-tailwind";
+import { Button } from "@nextui-org/react-tailwind";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { Header } from "app/components/header";
+import { PageHeader } from "app/components/page-header";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { useRouter } from "app/hooks/use-router";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -43,13 +43,10 @@ export const AddUserScreen: AppPage = () => {
 
 	return (
 		<>
-			<Header backHref="/users">Add user</Header>
+			<PageHeader backHref="/users">Add user</PageHeader>
 			<EmailVerificationCard />
-			<Spacer y={4} />
 			<UserNameInput form={form} query={addUserMutation} />
-			<Spacer y={4} />
 			<EmailInput form={form} query={addUserMutation} />
-			<Spacer y={4} />
 			<Button
 				color="primary"
 				onClick={form.handleSubmit(onSubmit)}

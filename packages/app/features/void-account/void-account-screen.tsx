@@ -1,10 +1,9 @@
 import React from "react";
 
-import { Spacer } from "@nextui-org/react-tailwind";
 import { createParam } from "solito";
 
-import { Text } from "app/components/base/text";
-import { Header } from "app/components/header";
+import { EmptyCard } from "app/components/empty-card";
+import { PageHeader } from "app/components/page-header";
 import type { AppPage } from "next-app/types/page";
 
 import { VoidAccount } from "./void-account";
@@ -16,15 +15,13 @@ export const VoidAccountScreen: AppPage = () => {
 
 	return (
 		<>
-			<Header>Void account</Header>
-			<Spacer y={4} />
+			<PageHeader>Void account</PageHeader>
 			{token ? (
 				<VoidAccount token={token} />
 			) : (
-				<>
-					<Text className="text-2xl font-medium">Something went wrong</Text>
-					<Text>Please verify you got void account link right</Text>
-				</>
+				<EmptyCard title="Something went wrong">
+					Please verify you got void account link right
+				</EmptyCard>
 			)}
 		</>
 	);
