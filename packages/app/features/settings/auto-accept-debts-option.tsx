@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Spinner, Switch } from "@nextui-org/react-tailwind";
+import { Spinner, Switch } from "@nextui-org/react";
 
 import { ErrorMessage, QueryErrorMessage } from "app/components/error-message";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";

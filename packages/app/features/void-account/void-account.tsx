@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Button } from "@nextui-org/react-tailwind";
+import { Button } from "@nextui-org/react";
 
 import { Header } from "app/components/base/header";
 import { ErrorMessage } from "app/components/error-message";

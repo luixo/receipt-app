@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button } from "@nextui-org/react-tailwind";
+import { Button } from "@nextui-org/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { FiRefreshCw as RefreshIcon } from "react-icons/fi";
 

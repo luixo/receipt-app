@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, Input } from "@nextui-org/react-tailwind";
+import { Button, Input } from "@nextui-org/react";
 import { MdLinkOff as UnlinkIcon } from "react-icons/md";
 
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { User as RawUser, tv } from "@nextui-org/react-tailwind";
+import { User as RawUser, tv } from "@nextui-org/react";
 import IdenticonJs from "identicon.js";
 
 import type { UsersId } from "next-app/db/models";

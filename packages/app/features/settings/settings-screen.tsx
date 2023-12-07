@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Divider } from "@nextui-org/react-tailwind";
+import { Divider } from "@nextui-org/react";
 
 import { Header } from "app/components/base/header";
 import { Text } from "app/components/base/text";

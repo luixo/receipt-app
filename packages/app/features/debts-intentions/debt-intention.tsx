@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Card, CardBody } from "@nextui-org/react-tailwind";
+import { Card, CardBody } from "@nextui-org/react";
 import {
 	MdNavigateNext as ArrowIcon,
 	MdSync as SyncIcon,

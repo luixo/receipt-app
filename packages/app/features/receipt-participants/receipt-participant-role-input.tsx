@@ -7,7 +7,7 @@ import {
 	DropdownItem,
 	DropdownMenu,
 	DropdownTrigger,
-} from "@nextui-org/react-tailwind";
+} from "@nextui-org/react";
 import {
 	AiOutlineUserAdd as EditorIcon,
 	AiOutlineUsergroupAdd as OwnerIcon,

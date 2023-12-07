@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Button, Spinner, tv } from "@nextui-org/react-tailwind";
+import { Button, Spinner, tv } from "@nextui-org/react";
 
 export type Direction = "+" | "-";
 

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, ButtonGroup } from "@nextui-org/react-tailwind";
+import { Button, ButtonGroup } from "@nextui-org/react";
 
 import { useRouter } from "app/hooks/use-router";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";

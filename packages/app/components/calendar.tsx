@@ -1,10 +1,6 @@
 import React from "react";
 
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@nextui-org/react-tailwind";
+import { Popover, PopoverContent, PopoverTrigger } from "@nextui-org/react";
 import ReactCalendar from "react-calendar";
 
 type Props = {

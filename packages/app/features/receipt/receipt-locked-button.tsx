@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, Tooltip } from "@nextui-org/react-tailwind";
+import { Button, Tooltip } from "@nextui-org/react";
 
 import { LockedIcon } from "app/components/locked-icon";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";

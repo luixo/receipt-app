@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Spinner } from "@nextui-org/react-tailwind";
+import { Spinner } from "@nextui-org/react";
 import { useRouter } from "next/router";
 
 import { LoadableUser } from "app/components/app/loadable-user";

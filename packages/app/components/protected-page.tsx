@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Spinner } from "@nextui-org/react-tailwind";
+import { Spinner } from "@nextui-org/react";
 import {
 	BsReceipt as ReceiptsIcon,
 	BsGearFill as SettingsIcon,

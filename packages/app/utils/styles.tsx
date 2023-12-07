@@ -1,7 +1,7 @@
 import React from "react";
 import * as ReactNative from "react-native";
 
-import { NextUIProvider } from "@nextui-org/react-tailwind";
+import { NextUIProvider } from "@nextui-org/react";
 
 import { ColorModeContext } from "app/contexts/color-mode-context";
 import { useRouter } from "app/hooks/use-router";

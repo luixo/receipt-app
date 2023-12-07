@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Button, Textarea } from "@nextui-org/react-tailwind";
+import { Button, Textarea } from "@nextui-org/react";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 
 import { useSingleInput } from "app/hooks/use-single-input";

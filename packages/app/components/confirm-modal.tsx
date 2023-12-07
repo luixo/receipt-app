@@ -6,7 +6,7 @@ import {
 	ModalBody,
 	ModalContent,
 	ModalHeader,
-} from "@nextui-org/react-tailwind";
+} from "@nextui-org/react";
 
 import { Header } from "app/components/base/header";
 import { useBooleanState } from "app/hooks/use-boolean-state";

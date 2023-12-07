@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Tooltip, tv } from "@nextui-org/react-tailwind";
+import { Tooltip, tv } from "@nextui-org/react";
 import {
 	MdKeyboardArrowLeft as IncomingIcon,
 	MdKeyboardArrowRight as OutcomingIcon,

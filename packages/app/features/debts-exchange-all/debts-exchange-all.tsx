@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Divider, Spinner } from "@nextui-org/react-tailwind";
+import { Divider, Spinner } from "@nextui-org/react";
 
 import { CurrenciesPicker } from "app/components/app/currencies-picker";
 import { DebtsGroup } from "app/components/app/debts-group";

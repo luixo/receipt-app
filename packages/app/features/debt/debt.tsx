@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Spinner } from "@nextui-org/react-tailwind";
+import { Spinner } from "@nextui-org/react";
 
 import { DebtControlButtons } from "app/components/app/debt-control-buttons";
 import { DebtSyncStatus } from "app/components/app/debt-sync-status";

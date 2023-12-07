@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Spinner } from "@nextui-org/react-tailwind";
+import { Spinner } from "@nextui-org/react";
 
 import { Text } from "app/components/base/text";
 import { useRouter } from "app/hooks/use-router";

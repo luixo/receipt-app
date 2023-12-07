@@ -5,7 +5,7 @@ import {
 	Autocomplete,
 	AutocompleteItem,
 	AutocompleteSection,
-} from "@nextui-org/react-tailwind";
+} from "@nextui-org/react";
 import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
 import type { CollectionElement } from "@react-types/shared";
 

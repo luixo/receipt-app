@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Badge, Button, Link } from "@nextui-org/react-tailwind";
+import { Badge, Button, Link } from "@nextui-org/react";
 import { FaUsers as UsersIcon } from "react-icons/fa";
 import { MdAdd as AddIcon, MdLink as LinkIcon } from "react-icons/md";
 

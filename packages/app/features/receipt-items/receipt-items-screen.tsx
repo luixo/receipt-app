@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Checkbox, Spinner } from "@nextui-org/react-tailwind";
+import { Checkbox, Spinner } from "@nextui-org/react";
 import { FaArrowDown as ArrowDown } from "react-icons/fa";
 
 import { Header } from "app/components/base/header";

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Spinner } from "@nextui-org/react-tailwind";
+import { Spinner } from "@nextui-org/react";
 
 import { User } from "app/components/app/user";
 import { QueryErrorMessage } from "app/components/error-message";

@@ -8,7 +8,7 @@ import {
 	CardHeader,
 	Chip,
 	Divider,
-} from "@nextui-org/react-tailwind";
+} from "@nextui-org/react";
 
 import { ReceiptItemLockedButton } from "app/components/app/receipt-item-locked-button";
 import { Text } from "app/components/base/text";

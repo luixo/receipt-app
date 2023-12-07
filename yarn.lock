@@ -4418,7 +4418,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nextui-org/react-tailwind@npm:@nextui-org/react@2.2.9":
+"@nextui-org/react-utils@npm:2.0.10":
+  version: 2.0.10
+  resolution: "@nextui-org/react-utils@npm:2.0.10"
+  dependencies:
+    "@nextui-org/react-rsc-utils": 2.0.10
+    "@nextui-org/shared-utils": 2.0.4
+  peerDependencies:
+    react: ">=18"
+  checksum: de66c732c8eee49543b36a4fe346bb6e50403f4dbd3c845e0cb1c3328c88f35c2c459a187d1b45b1a6fc470c42c1c933d5cfa2ab76e0a0d16db1ad0c2f3c2564
+  languageName: node
+  linkType: hard
+
+"@nextui-org/react@npm:^2.2.9":
   version: 2.2.9
   resolution: "@nextui-org/react@npm:2.2.9"
   dependencies:
@@ -4467,18 +4479,6 @@ __metadata:
     react: ">=18"
     react-dom: ">=18"
   checksum: 0a73e86162f8a59d8fc6d96b728324ce826ac0833e1b002bb7636d25208ed5a42e8861379a00263c253fa91f2caf419c5fda6658f3d02858f290d2bd1b556a5c
-  languageName: node
-  linkType: hard
-
-"@nextui-org/react-utils@npm:2.0.10":
-  version: 2.0.10
-  resolution: "@nextui-org/react-utils@npm:2.0.10"
-  dependencies:
-    "@nextui-org/react-rsc-utils": 2.0.10
-    "@nextui-org/shared-utils": 2.0.4
-  peerDependencies:
-    react: ">=18"
-  checksum: de66c732c8eee49543b36a4fe346bb6e50403f4dbd3c845e0cb1c3328c88f35c2c459a187d1b45b1a6fc470c42c1c933d5cfa2ab76e0a0d16db1ad0c2f3c2564
   languageName: node
   linkType: hard
 
@@ -8680,7 +8680,7 @@ __metadata:
   dependencies:
     "@expo/html-elements": ^0.5.1
     "@hookform/resolvers": ^3.1.1
-    "@nextui-org/react-tailwind": "npm:@nextui-org/react@2.2.9"
+    "@nextui-org/react": ^2.2.9
     "@nextui-org/use-infinite-scroll": ^2.1.2
     "@react-native-picker/picker": ^2.4.10
     "@react-navigation/native": ^6.1.7

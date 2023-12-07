@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Input } from "@nextui-org/react-tailwind";
+import { Input } from "@nextui-org/react";
 import type { UseFormReturn } from "react-hook-form";
 
 import { useInputController } from "app/hooks/use-input-controller";

@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { tv } from "@nextui-org/react-tailwind";
+import { tv } from "@nextui-org/react";
 
 import { Header } from "app/components/base/header";
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Button, Link, Spinner } from "@nextui-org/react-tailwind";
+import { Button, Link, Spinner } from "@nextui-org/react";
 import { MdAdd as AddIcon } from "react-icons/md";
 
 import { DebtsGroup } from "app/components/app/debts-group";

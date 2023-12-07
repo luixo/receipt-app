@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, Spinner } from "@nextui-org/react-tailwind";
+import { Button, Spinner } from "@nextui-org/react";
 
 import { Header } from "app/components/base/header";
 import { EmptyCard } from "app/components/empty-card";

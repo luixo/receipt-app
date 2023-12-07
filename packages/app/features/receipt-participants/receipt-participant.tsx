@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Accordion, AccordionItem } from "@nextui-org/react-tailwind";
+import { Accordion, AccordionItem } from "@nextui-org/react";
 
 import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
 import { User } from "app/components/app/user";

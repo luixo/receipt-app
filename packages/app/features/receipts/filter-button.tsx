@@ -10,7 +10,7 @@ import {
 	Modal,
 	ModalBody,
 	ModalContent,
-} from "@nextui-org/react-tailwind";
+} from "@nextui-org/react";
 import type { Selection } from "@react-types/shared/src/selection";
 import {
 	BsSortNumericDown as SortDownIcon,

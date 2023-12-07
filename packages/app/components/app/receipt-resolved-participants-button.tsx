@@ -6,7 +6,7 @@ import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
-} from "@nextui-org/react-tailwind";
+} from "@nextui-org/react";
 import {
 	MdHourglassDisabled as CrossWaitIcon,
 	MdHourglassEmpty as WaitIcon,

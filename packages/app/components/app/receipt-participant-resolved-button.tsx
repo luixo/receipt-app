@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button } from "@nextui-org/react-tailwind";
+import { Button } from "@nextui-org/react";
 import {
 	MdDoneAll as DoneIcon,
 	MdRemoveDone as UndoneIcon,

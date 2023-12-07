@@ -1,12 +1,6 @@
 import React from "react";
 
-import {
-	Button,
-	Card,
-	CardBody,
-	CardHeader,
-	Divider,
-} from "@nextui-org/react-tailwind";
+import { Button, Card, CardBody, CardHeader, Divider } from "@nextui-org/react";
 
 import { Text } from "app/components/base/text";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";

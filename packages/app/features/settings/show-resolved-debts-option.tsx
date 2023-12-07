@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Switch } from "@nextui-org/react-tailwind";
+import { Switch } from "@nextui-org/react";
 import { FaCreativeCommonsZero as ResolveIcon } from "react-icons/fa";
 
 import { useShowResolvedDebts } from "next-app/hooks/use-show-resolved-debts";

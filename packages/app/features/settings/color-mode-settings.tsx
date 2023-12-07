@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Checkbox, Switch } from "@nextui-org/react-tailwind";
+import { Checkbox, Switch } from "@nextui-org/react";
 import { FiMoon as MoonIcon, FiSun as SunIcon } from "react-icons/fi";
 
 import { Header } from "app/components/base/header";

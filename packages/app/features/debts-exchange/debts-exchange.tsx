@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, Link, Spinner } from "@nextui-org/react-tailwind";
+import { Button, Link, Spinner } from "@nextui-org/react";
 
 import { DebtsGroup } from "app/components/app/debts-group";
 import { LoadableUser } from "app/components/app/loadable-user";

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, Input, Spinner } from "@nextui-org/react-tailwind";
+import { Button, Input, Spinner } from "@nextui-org/react";
 import { IoTrashBin as TrashBinIcon } from "react-icons/io5";
 import { MdLink as LinkIcon, MdLinkOff as UnlinkIcon } from "react-icons/md";
 

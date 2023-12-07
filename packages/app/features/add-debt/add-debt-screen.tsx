@@ -1,7 +1,7 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@nextui-org/react-tailwind";
+import { Button } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { createParam } from "solito";
 import { z } from "zod";

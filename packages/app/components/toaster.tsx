@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { tv } from "@nextui-org/react-tailwind";
+import { tv } from "@nextui-org/react";
 import type { Toast as ToastType } from "react-hot-toast";
 import { Toaster as RawToaster, ToastBar, toast } from "react-hot-toast";
 

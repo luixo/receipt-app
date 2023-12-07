@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Button, Divider, Link, Spinner } from "@nextui-org/react-tailwind";
+import { Button, Divider, Link, Spinner } from "@nextui-org/react";
 import { BsCurrencyExchange as ExchangeIcon } from "react-icons/bs";
 import { MdAdd as AddIcon } from "react-icons/md";
 

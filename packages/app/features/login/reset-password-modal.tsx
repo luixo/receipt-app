@@ -8,7 +8,7 @@ import {
 	ModalBody,
 	ModalContent,
 	ModalHeader,
-} from "@nextui-org/react-tailwind";
+} from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 

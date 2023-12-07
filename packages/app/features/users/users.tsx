@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, Link, Pagination, Spinner } from "@nextui-org/react-tailwind";
+import { Button, Link, Pagination, Spinner } from "@nextui-org/react";
 import { MdAdd as AddIcon } from "react-icons/md";
 
 import { EmptyCard } from "app/components/empty-card";

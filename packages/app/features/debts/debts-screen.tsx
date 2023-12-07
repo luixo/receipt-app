@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Badge, Button, Link } from "@nextui-org/react-tailwind";
+import { Badge, Button, Link } from "@nextui-org/react";
 import { IoMdMail as InboxIcon } from "react-icons/io";
 import { MdAdd as AddIcon } from "react-icons/md";
 import { PiMoney as DebtIcon } from "react-icons/pi";

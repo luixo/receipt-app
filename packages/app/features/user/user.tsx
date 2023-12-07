@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Spinner } from "@nextui-org/react-tailwind";
+import { Spinner } from "@nextui-org/react";
 
 import { QueryErrorMessage } from "app/components/error-message";
 import type { TRPCQuerySuccessResult } from "app/trpc";

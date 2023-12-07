@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button } from "@nextui-org/react-tailwind";
+import { Button } from "@nextui-org/react";
 import {
 	MdLock as LockedIcon,
 	MdLockOpen as UnlockedIcon,

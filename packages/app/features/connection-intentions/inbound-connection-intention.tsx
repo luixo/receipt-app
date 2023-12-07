@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Button } from "@nextui-org/react-tailwind";
+import { Button } from "@nextui-org/react";
 
 import { UsersSuggest } from "app/components/app/users-suggest";
 import { Text } from "app/components/base/text";

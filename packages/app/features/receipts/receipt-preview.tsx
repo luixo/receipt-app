@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Button, Link } from "@nextui-org/react-tailwind";
+import { Button, Link } from "@nextui-org/react";
 
 import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
 import { ReceiptResolvedParticipantsButton } from "app/components/app/receipt-resolved-participants-button";

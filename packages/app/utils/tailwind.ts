@@ -1,4 +1,4 @@
-import { nextui } from "@nextui-org/react-tailwind";
+import { nextui } from "@nextui-org/react";
 // @ts-expect-error Preset has incorrent exports
 import preset from "nativewind/preset";
 import * as path from "node:path";

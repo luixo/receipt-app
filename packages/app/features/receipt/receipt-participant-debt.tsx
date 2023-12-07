@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Button, Divider } from "@nextui-org/react-tailwind";
+import { Button, Divider } from "@nextui-org/react";
 import {
 	MdOutlineReceipt as ReceiptOffIcon,
 	MdSend as SendIcon,

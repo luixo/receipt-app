@@ -1,6 +1,6 @@
 import React from "react";
 
-import type { Pagination } from "@nextui-org/react-tailwind";
+import type { Pagination } from "@nextui-org/react";
 import type { QueryObserverResult } from "@tanstack/react-query";
 
 import { useQueryParam } from "app/hooks/use-query-param";

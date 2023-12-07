@@ -1,6 +1,6 @@
 import React from "react";
 
-import { tv } from "@nextui-org/react-tailwind";
+import { tv } from "@nextui-org/react";
 
 import { Text } from "app/components/base/text";
 

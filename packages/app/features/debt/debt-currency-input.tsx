@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button } from "@nextui-org/react-tailwind";
+import { Button } from "@nextui-org/react";
 
 import { CurrenciesPicker } from "app/components/app/currencies-picker";
 import { useBooleanState } from "app/hooks/use-boolean-state";

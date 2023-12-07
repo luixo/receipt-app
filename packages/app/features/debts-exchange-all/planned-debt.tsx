@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Input, Spinner } from "@nextui-org/react-tailwind";
+import { Input, Spinner } from "@nextui-org/react";
 import type { UseFormReturn } from "react-hook-form";
 
 import { Text } from "app/components/base/text";

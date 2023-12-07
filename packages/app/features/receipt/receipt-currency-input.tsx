@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button } from "@nextui-org/react-tailwind";
+import { Button } from "@nextui-org/react";
 import { MdEdit as EditIcon } from "react-icons/md";
 
 import { CurrenciesPicker } from "app/components/app/currencies-picker";

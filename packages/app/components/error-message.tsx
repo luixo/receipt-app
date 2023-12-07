@@ -8,7 +8,7 @@ import {
 	CardFooter,
 	CardHeader,
 	Divider,
-} from "@nextui-org/react-tailwind";
+} from "@nextui-org/react";
 import type {
 	QueryObserverLoadingErrorResult,
 	QueryObserverRefetchErrorResult,

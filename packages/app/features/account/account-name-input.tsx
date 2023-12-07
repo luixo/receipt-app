@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, Input } from "@nextui-org/react-tailwind";
+import { Button, Input } from "@nextui-org/react";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 
 import { useSingleInput } from "app/hooks/use-single-input";

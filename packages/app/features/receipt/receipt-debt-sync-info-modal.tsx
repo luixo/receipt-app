@@ -7,7 +7,7 @@ import {
 	ModalBody,
 	ModalContent,
 	ModalHeader,
-} from "@nextui-org/react-tailwind";
+} from "@nextui-org/react";
 
 import { Text } from "app/components/base/text";
 

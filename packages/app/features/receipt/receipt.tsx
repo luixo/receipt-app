@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Button, Spinner } from "@nextui-org/react-tailwind";
+import { Button, Spinner } from "@nextui-org/react";
 import {
 	MdEdit as EditIcon,
 	MdOutlineReceipt as ReceiptIcon,

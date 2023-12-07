@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Badge, Link, tv } from "@nextui-org/react-tailwind";
+import { Badge, Link, tv } from "@nextui-org/react";
 import { useRouter } from "next/router";
 
 import { Text } from "app/components/base/text";

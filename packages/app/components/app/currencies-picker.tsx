@@ -9,7 +9,7 @@ import {
 	ModalContent,
 	ModalHeader,
 	Spinner,
-} from "@nextui-org/react-tailwind";
+} from "@nextui-org/react";
 import type { QueryObserverSuccessResult } from "@tanstack/react-query";
 
 import { Text } from "app/components/base/text";

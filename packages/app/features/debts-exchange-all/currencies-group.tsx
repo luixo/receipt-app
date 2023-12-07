@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, ButtonGroup } from "@nextui-org/react-tailwind";
+import { Button, ButtonGroup } from "@nextui-org/react";
 
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { trpc } from "app/trpc";

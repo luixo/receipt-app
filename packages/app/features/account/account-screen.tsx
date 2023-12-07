@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, Spinner } from "@nextui-org/react-tailwind";
+import { Button, Spinner } from "@nextui-org/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { FaUser as AccountIcon } from "react-icons/fa";
 

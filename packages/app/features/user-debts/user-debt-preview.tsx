@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Link } from "@nextui-org/react-tailwind";
+import { Link } from "@nextui-org/react";
 
 import { DebtSyncStatus } from "app/components/app/debt-sync-status";
 import { Text } from "app/components/base/text";

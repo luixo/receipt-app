@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, Link } from "@nextui-org/react-tailwind";
+import { Button, Link } from "@nextui-org/react";
 import {
 	MdAdd as AddIcon,
 	MdOutlineReceipt as ReceiptIcon,

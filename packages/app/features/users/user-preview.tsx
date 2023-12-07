@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Link } from "@nextui-org/react-tailwind";
+import { Link } from "@nextui-org/react";
 
 import { User } from "app/components/app/user";
 import type { TRPCQueryOutput } from "app/trpc";

@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Button, Input } from "@nextui-org/react-tailwind";
+import { Button, Input } from "@nextui-org/react";
 import { FiMinus as MinusIcon, FiPlus as PlusIcon } from "react-icons/fi";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 import { MdEdit as EditIcon } from "react-icons/md";

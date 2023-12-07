@@ -2,7 +2,7 @@ import React from "react";
 import { View } from "react-native";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@nextui-org/react-tailwind";
+import { Button } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 

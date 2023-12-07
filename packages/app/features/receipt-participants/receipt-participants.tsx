@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Accordion, AccordionItem } from "@nextui-org/react-tailwind";
+import { Accordion, AccordionItem } from "@nextui-org/react";
 import { FaUser as UserIcon } from "react-icons/fa";
 
 import { Text } from "app/components/base/text";

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, Input } from "@nextui-org/react-tailwind";
+import { Button, Input } from "@nextui-org/react";
 import type { Path, PathValue, UseFormReturn } from "react-hook-form";
 import { MdEdit as EditIcon } from "react-icons/md";
 import type { z } from "zod";

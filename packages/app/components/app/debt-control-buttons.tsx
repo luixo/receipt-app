@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button } from "@nextui-org/react-tailwind";
+import { Button } from "@nextui-org/react";
 import {
 	BsEyeSlashFill as ShouldNotSyncIcon,
 	BsEyeFill as ShouldSyncIcon,

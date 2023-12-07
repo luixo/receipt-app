@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, Link } from "@nextui-org/react-tailwind";
+import { Button, Link } from "@nextui-org/react";
 import { PiMoney as DebtIcon } from "react-icons/pi";
 
 import type { TRPCQueryOutput } from "app/trpc";
