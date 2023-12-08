@@ -1,10 +1,10 @@
 import React from "react";
 
-import { Button, Input, Loading } from "@nextui-org/react";
+import { Button, Spinner } from "@nextui-org/react";
 import { IoTrashBin as TrashBinIcon } from "react-icons/io5";
 import { MdLink as LinkIcon, MdLinkOff as UnlinkIcon } from "react-icons/md";
 
-import { IconButton } from "app/components/icon-button";
+import { Input } from "app/components/base/input";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -76,35 +76,41 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 
 	if (outboundConnectionIntention === undefined) {
 		if (connectionIntentionsQuery.status === "loading") {
-			return <Loading />;
+			return <Spinner />;
 		}
-		return (
-			<Button color="error" onClick={() => connectionIntentionsQuery.refetch()}>
-				{connectionIntentionsQuery.error?.message}
-			</Button>
-		);
+		if (connectionIntentionsQuery.status === "error") {
+			return (
+				<Button
+					color="danger"
+					onClick={() => connectionIntentionsQuery.refetch()}
+				>
+					{connectionIntentionsQuery.error?.message}
+				</Button>
+			);
+		}
+		return null;
 	}
 
 	if (outboundConnectionIntention) {
-		const mutationError = cancelRequestMutation.error?.message;
 		return (
 			<Input
 				label="Outbound request"
 				value={outboundConnectionIntention.account.email}
-				readOnly
-				helperColor="error"
-				helperText={mutationError}
-				contentRight={
-					<IconButton
+				isReadOnly
+				mutation={cancelRequestMutation}
+				endContent={
+					<Button
 						title="Cancel request"
-						light
+						variant="light"
 						isLoading={cancelRequestMutation.isLoading}
-						color="error"
-						icon={<TrashBinIcon size={24} />}
+						color="danger"
+						isIconOnly
 						onClick={() =>
 							cancelRequest(outboundConnectionIntention.account.id)
 						}
-					/>
+					>
+						<TrashBinIcon size={24} />
+					</Button>
 				}
 			/>
 		);
@@ -112,43 +118,47 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 
 	if (!inputShown) {
 		return (
-			<Button onClick={() => setInputShown(true)} disabled={isLoading}>
+			<Button
+				color="primary"
+				onClick={() => setInputShown(true)}
+				isDisabled={isLoading}
+			>
 				Connect to an account
 			</Button>
 		);
 	}
 
-	const mutationError =
-		connectUserMutation.error?.message || unlinkMutation.error?.message;
 	return (
 		<Input
 			{...bindings}
 			label="Email"
-			disabled={connectUserMutation.isLoading || isLoading}
-			readOnly={Boolean(user.email)}
-			status={inputState.error ? "warning" : undefined}
-			helperColor={inputState.error ? "warning" : "error"}
-			helperText={inputState.error?.message || mutationError}
-			contentRightStyling={connectUserMutation.isLoading}
-			contentRight={
+			mutation={[connectUserMutation, unlinkMutation]}
+			fieldError={inputState.error}
+			isDisabled={isLoading}
+			isReadOnly={Boolean(user.email)}
+			endContent={
 				<>
 					{user.email ? (
-						<IconButton
+						<Button
 							title="Unlink user from email"
-							light
+							variant="light"
 							isLoading={unlinkMutation.isLoading}
-							icon={<UnlinkIcon size={24} />}
+							isIconOnly
 							onClick={unlinkUser}
-						/>
+						>
+							<UnlinkIcon size={24} />
+						</Button>
 					) : (
-						<IconButton
+						<Button
 							title="Link user to email"
-							light
+							variant="light"
 							isLoading={connectUserMutation.isLoading}
-							disabled={Boolean(inputState.error)}
+							isDisabled={Boolean(inputState.error) || getValue().length === 0}
 							onClick={() => connectUser(getValue())}
-							icon={<LinkIcon size={24} />}
-						/>
+							isIconOnly
+						>
+							<LinkIcon size={24} />
+						</Button>
 					)}
 				</>
 			}

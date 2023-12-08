@@ -26,6 +26,7 @@ module.exports = {
 		"airbnb/hooks",
 		"plugin:@next/next/recommended",
 		"prettier",
+		"plugin:tailwindcss/recommended",
 	],
 	parserOptions: {
 		project: true,
@@ -100,6 +101,13 @@ module.exports = {
 		"@typescript-eslint/consistent-type-imports": "error",
 		"sort-imports": ["error", { ignoreDeclarationSort: true }],
 		"@typescript-eslint/no-floating-promises": "error",
+		// Maintained by prettier plugin
+		"tailwindcss/classnames-order": "off",
+		"tailwindcss/enforces-negative-arbitrary-values": "error",
+		"tailwindcss/enforces-shorthand": "error",
+		"tailwindcss/migration-from-tailwind-2": "error",
+		"tailwindcss/no-arbitrary-value": "off",
+		"tailwindcss/no-custom-classname": "error",
 	},
 	overrides: [
 		{
@@ -132,5 +140,26 @@ module.exports = {
 			},
 			files: ["*.js"],
 		},
+		{
+			files: ["apps/next/src/email/**/*"],
+			rules: {
+				"tailwindcss/no-custom-classname": "off",
+			},
+		},
 	],
+	settings: {
+		tailwindcss: {
+			callees: ["tv"],
+			config: "packages/app/tailwind.config.ts",
+			ignoredKeys: ["responsiveVariants"],
+			whitelist: [
+				"text-foreground",
+				"text-primary",
+				"text-warning",
+				"text-danger",
+				"text-success",
+				"text-default-\\d+",
+			],
+		},
+	},
 };

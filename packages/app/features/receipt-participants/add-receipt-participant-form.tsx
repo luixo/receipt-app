@@ -1,7 +1,5 @@
 import React from "react";
 
-import { styled } from "@nextui-org/react";
-
 import { UsersSuggest } from "app/components/app/users-suggest";
 import { useSelfAccountId } from "app/hooks/use-self-account-id";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -10,22 +8,19 @@ import type { TRPCInfiniteQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
 import type { ReceiptsId, UsersId } from "next-app/db/models";
 
-const Wrapper = styled("div", {
-	pb: "$4",
-});
-
 type Props = {
 	receiptId: ReceiptsId;
 	receiptLocked: boolean;
 	disabled: boolean;
 	filterIds: UsersId[];
-};
+} & Omit<React.ComponentProps<typeof UsersSuggest>, "onUserClick" | "options">;
 
 export const AddReceiptParticipantForm: React.FC<Props> = ({
 	receiptId,
 	receiptLocked,
 	disabled,
 	filterIds,
+	...props
 }) => {
 	const [localFilterIds, setLocalFilterIds] = React.useState<UsersId[]>([]);
 	const selfAccountId = useSelfAccountId();
@@ -57,17 +52,16 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 	);
 
 	return (
-		<Wrapper>
-			<UsersSuggest
-				filterIds={[...filterIds, ...localFilterIds]}
-				onUserClick={addParticipants}
-				disabled={disabled || receiptLocked || !selfAccountId}
-				options={React.useMemo(
-					() => ({ type: "not-connected-receipt", receiptId }),
-					[receiptId],
-				)}
-				label="Add participants"
-			/>
-		</Wrapper>
+		<UsersSuggest
+			filterIds={[...filterIds, ...localFilterIds]}
+			onUserClick={addParticipants}
+			isDisabled={disabled || receiptLocked || !selfAccountId}
+			options={React.useMemo(
+				() => ({ type: "not-connected-receipt", receiptId }),
+				[receiptId],
+			)}
+			label="Add participants"
+			{...props}
+		/>
 	);
 };

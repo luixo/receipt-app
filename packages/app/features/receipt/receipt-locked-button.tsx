@@ -1,8 +1,7 @@
 import React from "react";
 
-import { Tooltip } from "@nextui-org/react";
+import { Button, Tooltip } from "@nextui-org/react";
 
-import { IconButton } from "app/components/icon-button";
 import { LockedIcon } from "app/components/locked-icon";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -43,23 +42,22 @@ export const ReceiptLockedButton: React.FC<Props> = ({
 		return `There are ${emptyItems.length} empty items, cannot lock`;
 	}, [receiptItemsQuery.data]);
 	const elements = (
-		<IconButton
-			ghost
-			isLoading={updateReceiptMutation.isLoading}
-			disabled={isLoading || Boolean(emptyItemsWarning)}
-			onClick={() => switchResolved()}
-			color={locked ? "success" : "warning"}
-			icon={
-				<LockedIcon
-					locked={locked}
-					tooltip={locked ? "Receipt locked" : "Receipt unlocked"}
-				/>
-			}
-		/>
+		<Tooltip content={locked ? "Receipt locked" : "Receipt unlocked"}>
+			<Button
+				variant="ghost"
+				isLoading={updateReceiptMutation.isLoading}
+				isDisabled={isLoading || Boolean(emptyItemsWarning)}
+				onClick={() => switchResolved()}
+				color={locked ? "success" : "warning"}
+				isIconOnly
+			>
+				<LockedIcon locked={locked} />
+			</Button>
+		</Tooltip>
 	);
 	if (emptyItemsWarning) {
 		return (
-			<Tooltip content={emptyItemsWarning} placement="bottomEnd">
+			<Tooltip content={emptyItemsWarning} placement="bottom-end">
 				{elements}
 			</Tooltip>
 		);

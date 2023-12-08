@@ -1,12 +1,10 @@
 import React from "react";
 
-import { Button, Input, styled } from "@nextui-org/react";
-import {
-	IoCheckmarkCircleOutline as CheckMark,
-	IoTrashBin as TrashBin,
-} from "react-icons/io5";
+import { Button } from "@nextui-org/react";
+import { IoTrashBin as TrashBin } from "react-icons/io5";
 
-import { IconButton } from "app/components/icon-button";
+import { Input } from "app/components/base/input";
+import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -14,21 +12,14 @@ import type { TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
 import { userNameSchema } from "app/utils/validation";
 
-const ButtonsContainer = styled("div", {
-	display: "flex",
-});
-
 type Props = {
 	user: TRPCQueryOutput<"users.get">;
 	isLoading: boolean;
 };
 
 export const UserPublicNameInput: React.FC<Props> = ({ user, isLoading }) => {
-	const [showInput, setShowInput] = React.useState(user.publicName !== null);
-	const switchShowInput = React.useCallback(
-		() => setShowInput((prev) => !prev),
-		[setShowInput],
-	);
+	const [showInput, { setTrue: setInput, setFalse: unsetInput }] =
+		useBooleanState(user.publicName !== undefined);
 	const {
 		bindings,
 		state: inputState,
@@ -43,22 +34,35 @@ export const UserPublicNameInput: React.FC<Props> = ({ user, isLoading }) => {
 		useTrpcMutationOptions(mutations.users.update.options),
 	);
 	const savePublicName = React.useCallback(
-		(nextName: string | undefined) =>
+		(nextName: string | undefined) => {
+			if (nextName === undefined && user.publicName === undefined) {
+				unsetInput();
+				return;
+			}
 			updateUserMutation.mutate(
 				{
 					id: user.remoteId,
 					update: { type: "publicName", publicName: nextName },
 				},
-				{ onSuccess: () => setValue(nextName ?? "") },
-			),
-		[updateUserMutation, user.remoteId, setValue],
+				{
+					onSuccess: () => {
+						setValue(nextName ?? "");
+						if (nextName === undefined) {
+							unsetInput();
+						}
+					},
+				},
+			);
+		},
+		[updateUserMutation, user.remoteId, setValue, unsetInput, user.publicName],
 	);
 
 	if (!showInput) {
 		return (
 			<Button
-				disabled={updateUserMutation.isLoading || isLoading}
-				onClick={switchShowInput}
+				color="primary"
+				isDisabled={updateUserMutation.isLoading || isLoading}
+				onClick={setInput}
 			>
 				Add public name
 			</Button>
@@ -69,38 +73,27 @@ export const UserPublicNameInput: React.FC<Props> = ({ user, isLoading }) => {
 		<Input
 			{...bindings}
 			label="Public user name"
-			disabled={updateUserMutation.isLoading || isLoading}
-			status={inputState.error ? "warning" : undefined}
-			helperColor={inputState.error ? "warning" : "error"}
-			helperText={
-				inputState.error?.message || updateUserMutation.error?.message
-			}
-			contentRightStyling={updateUserMutation.isLoading}
-			contentRight={
-				<ButtonsContainer>
-					<IconButton
-						title="Save user public name"
-						light
-						isLoading={updateUserMutation.isLoading}
-						disabled={
-							user.publicName === getValue() || Boolean(inputState.error)
-						}
-						onClick={() => savePublicName(getValue())}
-						icon={<CheckMark size={24} />}
-					/>
-					<IconButton
+			mutation={updateUserMutation}
+			fieldError={inputState.error}
+			isDisabled={isLoading}
+			saveProps={{
+				title: "Save user public name",
+				isHidden: user.publicName === getValue(),
+				onClick: () => savePublicName(getValue()),
+			}}
+			endContent={
+				user.publicName === undefined ? null : (
+					<Button
 						title="Remove user public name"
-						light
+						variant="light"
 						isLoading={updateUserMutation.isLoading}
-						onClick={
-							user.publicName
-								? () => savePublicName(undefined)
-								: switchShowInput
-						}
-						color="error"
-						icon={<TrashBin size={24} />}
-					/>
-				</ButtonsContainer>
+						onClick={() => savePublicName(undefined)}
+						color="danger"
+						isIconOnly
+					>
+						<TrashBin size={24} />
+					</Button>
+				)
 			}
 		/>
 	);

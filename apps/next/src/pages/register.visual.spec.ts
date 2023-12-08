@@ -18,7 +18,7 @@ test.describe("Register page - visual", () => {
 		const { password, passwordRetype } = fields;
 		await page
 			.locator("div", { has: passwordRetype, hasNot: password })
-			.locator(".nextui-input-password-icon")
+			.locator("button")
 			.click();
 
 		await expectScreenshotWithSchemes("filled.png");

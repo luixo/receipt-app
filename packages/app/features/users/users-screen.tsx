@@ -1,11 +1,10 @@
 import React from "react";
 
-import { Spacer } from "@nextui-org/react";
+import { Badge, Button, Link } from "@nextui-org/react";
+import { FaUsers as UsersIcon } from "react-icons/fa";
 import { MdAdd as AddIcon, MdLink as LinkIcon } from "react-icons/md";
 
-import { Badge } from "app/components/badge";
-import { Header } from "app/components/header";
-import { IconButton } from "app/components/icon-button";
+import { PageHeader } from "app/components/page-header";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { useConnectionIntentions } from "app/hooks/use-connection-intentions";
 import type { AppPage } from "next-app/types/page";
@@ -14,35 +13,56 @@ import { Users } from "./users";
 
 export const UsersScreen: AppPage = () => {
 	const inboundConnectionsAmount = useConnectionIntentions();
+	const connectionsButton = React.useMemo(
+		() => (
+			<Button
+				key="connections"
+				href="/users/connections"
+				as={Link}
+				color="primary"
+				title="Connection intentions"
+				variant="bordered"
+				isIconOnly
+			>
+				<LinkIcon size={24} />
+			</Button>
+		),
+		[],
+	);
 	return (
 		<>
-			<Header
-				icon="👨👩"
-				aside={React.useMemo(
-					() => [
-						<IconButton
-							key="add"
+			<PageHeader
+				startContent={<UsersIcon size={36} />}
+				aside={
+					<>
+						<Button
 							href="/users/add"
+							as={Link}
+							color="primary"
 							title="Add user"
-							bordered
-							icon={<AddIcon size={24} />}
-						/>,
-						<Badge amount={inboundConnectionsAmount} key="connections">
-							<IconButton
-								href="/users/connections"
-								title="Connection intentions"
-								bordered
-								icon={<LinkIcon size={24} />}
-							/>
-						</Badge>,
-					],
-					[inboundConnectionsAmount],
-				)}
+							variant="bordered"
+							isIconOnly
+						>
+							<AddIcon size={24} />
+						</Button>
+						{inboundConnectionsAmount === 0 ? (
+							connectionsButton
+						) : (
+							<Badge
+								content={inboundConnectionsAmount}
+								color="danger"
+								placement="top-right"
+								size="lg"
+							>
+								{connectionsButton}
+							</Badge>
+						)}
+					</>
+				}
 			>
 				Users
-			</Header>
+			</PageHeader>
 			<EmailVerificationCard />
-			<Spacer y={1} />
 			<Users />
 		</>
 	);

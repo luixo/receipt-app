@@ -1,57 +1,53 @@
 import React from "react";
+import { View } from "react-native";
 
-import { styled } from "@nextui-org/react";
+import { tv } from "@nextui-org/react";
 
+import { Text } from "app/components/base/text";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import type { CurrencyCode } from "app/utils/currency";
 import { round } from "app/utils/math";
 
-const Debts = styled("div", {
-	display: "flex",
-	alignItems: "center",
-	justifyContent: "center",
-});
-
-const Debt = styled("div", {
-	whiteSpace: "nowrap",
-
+const debt = tv({
 	variants: {
 		direction: {
-			out: {
-				color: "$error",
-			},
-			in: {
-				color: "$success",
-			},
+			out: "text-danger",
+			in: "text-success",
 		},
 	},
 });
-
-const Delimiter = styled("span", { mx: "$4" });
 
 type DebtElement = { currencyCode: CurrencyCode; sum: number };
 
 const DebtGroupElement: React.FC<DebtElement> = ({ currencyCode, sum }) => {
 	const currency = useFormattedCurrency(currencyCode);
 	return (
-		<Debt key={currencyCode} direction={sum >= 0 ? "in" : "out"}>
+		<Text
+			numberOfLines={1}
+			key={currencyCode}
+			className={debt({ direction: sum >= 0 ? "in" : "out" })}
+		>
 			{round(Math.abs(sum))} {currency}
-		</Debt>
+		</Text>
 	);
 };
 
+const debtGroup = tv({
+	base: "shrink flex-row flex-wrap items-center justify-center gap-2",
+});
+
 type Props = {
 	debts: DebtElement[];
-} & React.ComponentProps<typeof Debts>;
+} & React.ComponentProps<typeof View>;
 
-export const DebtsGroup: React.FC<Props> = ({ debts, ...props }) => (
-	<Debts {...props}>
+export const DebtsGroup: React.FC<Props> = ({ debts, className, ...props }) => (
+	<View className={debtGroup({ className })} {...props}>
 		{debts.map(({ currencyCode, sum }, index) => (
 			<React.Fragment key={currencyCode}>
-				{index === 0 ? null : <Delimiter>•</Delimiter>}
+				{index === 0 ? null : <Text>•</Text>}
 				<DebtGroupElement currencyCode={currencyCode} sum={sum} />
 			</React.Fragment>
 		))}
 		{debts.length === 0 ? "No debts yet" : null}
-	</Debts>
+	</View>
 );

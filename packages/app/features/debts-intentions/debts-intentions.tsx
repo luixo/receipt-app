@@ -1,10 +1,13 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Container, Loading, Spacer, Text, styled } from "@nextui-org/react";
+import { Spinner } from "@nextui-org/react";
 import { useRouter } from "next/router";
 
 import { LoadableUser } from "app/components/app/loadable-user";
+import { EmptyCard } from "app/components/empty-card";
 import { QueryErrorMessage } from "app/components/error-message";
+import { PageHeader } from "app/components/page-header";
 import { useRefs } from "app/hooks/use-refs";
 import type { TRPCQuerySuccessResult } from "app/trpc";
 import { trpc } from "app/trpc";
@@ -12,11 +15,6 @@ import type { UsersId } from "next-app/db/models";
 
 import { AcceptAllIntentionsButton } from "./accept-all-intentions-button";
 import { InboundDebtIntention } from "./inbound-debt-intention";
-
-const CenteredText = styled(Text, {
-	display: "flex",
-	alignItems: "center",
-});
 
 type IntentionsQuery = TRPCQuerySuccessResult<"debts.getIntentions">;
 
@@ -38,16 +36,9 @@ const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 	}, [data, router.asPath, intentionsRefs]);
 	if (data.length === 0) {
 		return (
-			<Container
-				display="flex"
-				direction="column"
-				alignItems="center"
-				justify="center"
-			>
-				<Text h2>You have no incoming sync requests</Text>
-				<Spacer y={1} />
-				<CenteredText h3>Ask a friend to create a debt for you ;)</CenteredText>
-			</Container>
+			<EmptyCard title="You have no incoming sync requests">
+				Ask a friend to create a debt for you ;)
+			</EmptyCard>
 		);
 	}
 	const intentionsByUser = data.reduce<
@@ -61,31 +52,22 @@ const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 	}, {});
 	return (
 		<>
-			<Text h2>Inbound debts</Text>
-			<Spacer y={0.5} />
+			<PageHeader>Inbound debts</PageHeader>
 			{data.length === 1 ? null : (
-				<>
-					<AcceptAllIntentionsButton intentions={data} />
-					<Spacer y={1} />
-				</>
+				<AcceptAllIntentionsButton intentions={data} />
 			)}
-			{Object.entries(intentionsByUser).map(
-				([userId, groupedIntentions], index) => (
-					<React.Fragment key={userId}>
-						{index === 0 ? null : <Spacer y={1.5} />}
-						<LoadableUser id={userId} />
-						{groupedIntentions.map((intention) => (
-							<React.Fragment key={intention.id}>
-								<Spacer y={1} />
-								<InboundDebtIntention
-									intention={intention}
-									ref={intentionsRefs.setRef(intention.id)}
-								/>
-							</React.Fragment>
-						))}
-					</React.Fragment>
-				),
-			)}
+			{Object.entries(intentionsByUser).map(([userId, groupedIntentions]) => (
+				<View className="gap-2" key={userId}>
+					<LoadableUser className="mb-4 self-start" id={userId} />
+					{groupedIntentions.map((intention) => (
+						<InboundDebtIntention
+							key={intention.id}
+							intention={intention}
+							ref={intentionsRefs.setRef(intention.id)}
+						/>
+					))}
+				</View>
+			))}
 		</>
 	);
 };
@@ -93,7 +75,7 @@ const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 export const DebtIntentions: React.FC = () => {
 	const query = trpc.debts.getIntentions.useQuery();
 	if (query.status === "loading") {
-		return <Loading size="xl" />;
+		return <Spinner size="lg" />;
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;

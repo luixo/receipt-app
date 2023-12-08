@@ -1,7 +1,7 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Loading, Spacer } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { createParam } from "solito";
 import { z } from "zod";
@@ -10,7 +10,7 @@ import { CurrencyInput } from "app/components/app/currency-input";
 import type { Direction } from "app/components/app/sign-button-group";
 import { SignButtonGroup } from "app/components/app/sign-button-group";
 import { UsersSuggest } from "app/components/app/users-suggest";
-import { Header } from "app/components/header";
+import { PageHeader } from "app/components/page-header";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { useRouter } from "app/hooks/use-router";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -110,40 +110,36 @@ export const AddDebtScreen: AppPage = () => {
 
 	return (
 		<>
-			<Header backHref="/debts">Add debt</Header>
+			<PageHeader backHref="/debts">Add debt</PageHeader>
 			<EmailVerificationCard />
-			<Spacer y={1} />
 			<SignButtonGroup
 				isLoading={addMutation.isLoading}
 				onUpdate={onDirectionUpdate}
 				direction={form.watch("direction")}
 			/>
-			<Spacer y={1} />
 			<DebtAmountInput form={form} isLoading={addMutation.isLoading} />
-			<Spacer y={1} />
 			<CurrencyInput
 				form={form}
 				isLoading={addMutation.isLoading}
 				topCurrenciesQuery={topCurrenciesQuery}
 			/>
-			<Spacer y={1} />
 			<UsersSuggest
 				selected={form.watch("user")}
-				disabled={addMutation.isLoading}
+				isDisabled={addMutation.isLoading}
 				options={React.useMemo(() => ({ type: "debts" }), [])}
 				onUserClick={onUserClick}
 				closeOnSelect
 			/>
-			<Spacer y={1} />
 			<DebtDateInput form={form} isLoading={addMutation.isLoading} />
-			<Spacer y={1} />
 			<DebtNoteInput form={form} isLoading={addMutation.isLoading} />
-			<Spacer y={3} />
 			<Button
+				className="mt-4"
+				color="primary"
 				onClick={form.handleSubmit(onSubmit)}
-				disabled={!form.formState.isValid || addMutation.isLoading}
+				isDisabled={!form.formState.isValid || addMutation.isLoading}
+				isLoading={addMutation.isLoading}
 			>
-				{addMutation.isLoading ? <Loading size="sm" /> : "Add debt"}
+				Add debt
 			</Button>
 		</>
 	);

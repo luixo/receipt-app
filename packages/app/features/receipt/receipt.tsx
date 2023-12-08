@@ -1,57 +1,27 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Loading, Spacer, Text, styled } from "@nextui-org/react";
-import { MdEdit as EditIcon } from "react-icons/md";
+import { Spinner } from "@nextui-org/react";
+import { MdOutlineReceipt as ReceiptIcon } from "react-icons/md";
 
+import { LoadableUser } from "app/components/app/loadable-user";
 import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
+import { Text } from "app/components/base/text";
 import { QueryErrorMessage } from "app/components/error-message";
-import { Header } from "app/components/header";
-import { IconButton } from "app/components/icon-button";
-import { ShrinkText } from "app/components/shrink-text";
+import { PageHeader } from "app/components/page-header";
 import { useBooleanState } from "app/hooks/use-boolean-state";
-import { useMatchMediaValue } from "app/hooks/use-match-media-value";
 import { useTrpcQueryOptions } from "app/hooks/use-trpc-query-options";
 import { queries } from "app/queries";
 import type { TRPCQuerySuccessResult } from "app/trpc";
 import { trpc } from "app/trpc";
-import { round } from "app/utils/math";
 import type { ReceiptsId } from "next-app/src/db/models";
 
 import { ReceiptCurrencyInput } from "./receipt-currency-input";
 import { ReceiptDateInput } from "./receipt-date-input";
 import { ReceiptGuestControlButton } from "./receipt-guest-control-button";
 import { ReceiptNameInput } from "./receipt-name-input";
-import { ReceiptOwner } from "./receipt-owner";
 import { ReceiptOwnerControlButton } from "./receipt-owner-control-button";
 import { ReceiptRemoveButton } from "./receipt-remove-button";
-
-const Body = styled("div", {
-	display: "flex",
-	justifyContent: "space-between",
-	alignItems: "start",
-});
-
-const AlignEndView = styled("div", {
-	alignSelf: "flex-end",
-});
-
-const Sum = styled("div", {
-	display: "flex",
-});
-
-const ControlsWrapper = styled("div", {
-	display: "flex",
-	alignItems: "center",
-	color: "$primary",
-
-	variants: {
-		locked: {
-			true: {
-				color: "$secondary",
-			},
-		},
-	},
-});
 
 type InnerProps = {
 	query: TRPCQuerySuccessResult<"receipts.get">;
@@ -66,84 +36,68 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 
 	const [isEditing, { switchValue: switchEditing, setFalse: unsetEditing }] =
 		useBooleanState();
-	const dataDirection = useMatchMediaValue("row", { lessSm: "column" });
+	const disabled =
+		receipt.role !== "owner" ||
+		deleteLoading ||
+		Boolean(receipt.lockedTimestamp);
 
 	return (
 		<>
-			<Header
+			<PageHeader
 				backHref="/receipts"
-				icon="🧾"
+				startContent={<ReceiptIcon size={36} />}
 				aside={
-					isEditing ? undefined : (
-						<ControlsWrapper locked={Boolean(receipt.lockedTimestamp)}>
-							<ReceiptParticipantResolvedButton
-								ghost
-								receiptId={receipt.id}
-								userId={receipt.selfUserId}
-								selfUserId={receipt.selfUserId}
-								resolved={receipt.participantResolved}
-								disabled={deleteLoading}
+					<>
+						<ReceiptParticipantResolvedButton
+							variant="ghost"
+							receiptId={receipt.id}
+							userId={receipt.selfUserId}
+							selfUserId={receipt.selfUserId}
+							resolved={receipt.participantResolved}
+							isDisabled={deleteLoading}
+						/>
+						{receipt.role === "owner" ? (
+							<ReceiptOwnerControlButton
+								receipt={receipt}
+								deleteLoading={deleteLoading}
 							/>
-							<Spacer x={0.5} />
-							{receipt.role === "owner" ? (
-								<ReceiptOwnerControlButton
-									receipt={receipt}
-									deleteLoading={deleteLoading}
-								/>
-							) : (
-								<ReceiptGuestControlButton receipt={receipt} />
-							)}
-						</ControlsWrapper>
-					)
+						) : (
+							<ReceiptGuestControlButton receipt={receipt} />
+						)}
+					</>
 				}
-				textChildren={`Receipt ${receipt.name}`}
+				title={`Receipt ${receipt.name}`}
 			>
-				{isEditing && receipt.role === "owner" ? (
+				{isEditing ? (
 					<ReceiptNameInput
 						receipt={receipt}
 						isLoading={deleteLoading}
 						unsetEditing={unsetEditing}
 					/>
 				) : (
-					<ShrinkText fontSizeMin={16} fontSizeStep={2}>
-						{receipt.name}
-					</ShrinkText>
-				)}
-				{receipt.role === "owner" && !isEditing ? (
-					<IconButton
-						auto
-						light
-						onClick={switchEditing}
-						disabled={deleteLoading || Boolean(receipt.lockedTimestamp)}
-						css={{ ml: "$4" }}
+					<View
+						onClick={disabled ? undefined : switchEditing}
+						className={disabled ? undefined : "cursor-pointer"}
 					>
-						<EditIcon size={24} />
-					</IconButton>
-				) : null}
-			</Header>
-			<Spacer y={1} />
-			<Body css={{ flexDirection: dataDirection }}>
-				<div>
+						<Text className="text-3xl">{receipt.name}</Text>
+					</View>
+				)}
+			</PageHeader>
+			<View className="items-start justify-between gap-2 sm:flex-row">
+				<View className="gap-2">
 					<ReceiptDateInput receipt={receipt} isLoading={deleteLoading} />
-					<Spacer y={0.5} />
-					<Sum>
-						<Text css={{ display: "inline-flex", fontSize: "$xl" }}>
-							{round(receipt.sum)}
-						</Text>
+					<View className="flex-row items-center gap-1">
 						<ReceiptCurrencyInput receipt={receipt} isLoading={deleteLoading} />
-					</Sum>
-				</div>
-				{dataDirection === "column" ? <Spacer y={0.5} /> : null}
-				<ReceiptOwner receipt={receipt} />
-			</Body>
+					</View>
+				</View>
+				<LoadableUser id={receipt.ownerUserId} />
+			</View>
 			{receipt.role === "owner" ? (
-				<AlignEndView>
-					<Spacer y={1} />
-					<ReceiptRemoveButton
-						receipt={receipt}
-						setLoading={setDeleteLoading}
-					/>
-				</AlignEndView>
+				<ReceiptRemoveButton
+					className="self-end"
+					receipt={receipt}
+					setLoading={setDeleteLoading}
+				/>
 			) : null}
 		</>
 	);
@@ -162,8 +116,8 @@ export const Receipt: React.FC<Props> = ({ id, ...props }) => {
 	if (query.status === "loading") {
 		return (
 			<>
-				<Header>{receiptNameQuery.data || id}</Header>
-				<Loading />
+				<PageHeader>{receiptNameQuery.data || id}</PageHeader>
+				<Spinner size="lg" />
 			</>
 		);
 	}

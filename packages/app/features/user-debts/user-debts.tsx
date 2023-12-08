@@ -1,14 +1,14 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Card, Loading, Spacer, styled } from "@nextui-org/react";
+import { Button, Divider, Link, Spinner } from "@nextui-org/react";
 import { BsCurrencyExchange as ExchangeIcon } from "react-icons/bs";
 import { MdAdd as AddIcon } from "react-icons/md";
 
 import { DebtsGroup } from "app/components/app/debts-group";
 import { LoadableUser } from "app/components/app/loadable-user";
 import { QueryErrorMessage } from "app/components/error-message";
-import { Header } from "app/components/header";
-import { IconButton } from "app/components/icon-button";
+import { PageHeader } from "app/components/page-header";
 import { ShowResolvedDebtsOption } from "app/features/settings/show-resolved-debts-option";
 import { useAggregatedDebts } from "app/hooks/use-aggregated-debts";
 import { useRouter } from "app/hooks/use-router";
@@ -18,18 +18,6 @@ import { useShowResolvedDebts } from "next-app/hooks/use-show-resolved-debts";
 import type { UsersId } from "next-app/src/db/models";
 
 import { UserDebtPreview } from "./user-debt-preview";
-
-const DebtsHeader = styled("div", {
-	display: "flex",
-	alignContent: "center",
-	justifyContent: "center",
-	position: "relative",
-});
-
-const ResolvedSwitch = styled("div", {
-	position: "absolute",
-	right: 0,
-});
 
 type InnerProps = {
 	userId: UsersId;
@@ -48,52 +36,53 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 	const userQuery = trpc.users.get.useQuery({ id: userId });
 	return (
 		<>
-			<Header
+			<PageHeader
 				backHref="/debts"
-				textChildren={`${
+				title={`${
 					userQuery.status === "success" ? userQuery.data.name : "..."
 				}'s debts`}
 				aside={
-					<IconButton
-						key="add"
+					<Button
+						color="primary"
 						href={`/debts/add?userId=${userId}`}
+						as={Link}
 						title="Add debt"
-						bordered
-						icon={<AddIcon size={24} />}
-					/>
+						variant="bordered"
+						isIconOnly
+					>
+						<AddIcon size={24} />
+					</Button>
 				}
 			>
 				<LoadableUser id={userId} />
-			</Header>
-			<Spacer y={1} />
-			<DebtsHeader>
+			</PageHeader>
+			<View className="flex-row items-center justify-center gap-4 px-16">
 				<DebtsGroup
 					debts={showResolvedDebts ? aggregatedDebts : nonZeroAggregateDebts}
 				/>
 				{nonZeroAggregateDebts.length > 1 ? (
-					<>
-						<Spacer x={1} />
-						<IconButton
-							href={`/debts/user/${userId}/exchange/`}
-							auto
-							bordered
-							icon={<ExchangeIcon />}
-						/>
-					</>
+					<Button
+						color="primary"
+						href={`/debts/user/${userId}/exchange/`}
+						as={Link}
+						variant="bordered"
+						isIconOnly
+					>
+						<ExchangeIcon />
+					</Button>
 				) : null}
 				{aggregatedDebts.length !== nonZeroAggregateDebts.length ? (
-					<ResolvedSwitch>
-						<ShowResolvedDebtsOption />
-					</ResolvedSwitch>
+					<ShowResolvedDebtsOption className="absolute right-0" />
 				) : null}
-			</DebtsHeader>
-			<Spacer y={1} />
-			{query.data.map((debt) => (
-				<React.Fragment key={debt.id}>
-					<Card.Divider />
-					<UserDebtPreview debt={debt} />
-				</React.Fragment>
-			))}
+			</View>
+			<View className="gap-2">
+				{query.data.map((debt) => (
+					<React.Fragment key={debt.id}>
+						<Divider />
+						<UserDebtPreview debt={debt} />
+					</React.Fragment>
+				))}
+			</View>
 		</>
 	);
 };
@@ -106,8 +95,8 @@ export const UserDebts: React.FC<Props> = ({ userId, ...props }) => {
 	if (query.status === "loading") {
 		return (
 			<>
-				<Header>{userNameQuery.data || userId}</Header>
-				<Loading />
+				<PageHeader>{userNameQuery.data || userId}</PageHeader>
+				<Spinner />
 			</>
 		);
 	}

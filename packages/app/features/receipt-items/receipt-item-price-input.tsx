@@ -1,10 +1,8 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Input, Spacer, Text, styled } from "@nextui-org/react";
-import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
-import { MdEdit as EditIcon } from "react-icons/md";
-
-import { IconButton } from "app/components/icon-button";
+import { Input } from "app/components/base/input";
+import { Text } from "app/components/base/text";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useSingleInput } from "app/hooks/use-single-input";
@@ -15,8 +13,6 @@ import { trpc } from "app/trpc";
 import type { CurrencyCode } from "app/utils/currency";
 import { priceSchema } from "app/utils/validation";
 import type { ReceiptsId } from "next-app/db/models";
-
-const Wrapper = styled("div", { display: "flex", alignItems: "center" });
 
 type ReceiptItem = TRPCQueryOutput<"receiptItems.get">["items"][number];
 
@@ -57,6 +53,7 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 	const updatePrice = React.useCallback(
 		(price: number) => {
 			if (price === receiptItem.price) {
+				unsetEditing();
 				return;
 			}
 			updateMutation.mutate({
@@ -64,30 +61,20 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 				update: { type: "price", price },
 			});
 		},
-		[updateMutation, receiptItem.id, receiptItem.price],
+		[updateMutation, receiptItem.id, receiptItem.price, unsetEditing],
 	);
 	const currency = useFormattedCurrency(currencyCode);
 
 	if (!isEditing) {
 		return (
-			<Wrapper>
+			<View
+				className="cursor-pointer flex-row items-center gap-1"
+				onClick={readOnly || isLoading ? undefined : switchEditing}
+			>
 				<Text>
 					{receiptItem.price} {currency}
 				</Text>
-				{!readOnly ? (
-					<IconButton
-						auto
-						light
-						onClick={switchEditing}
-						disabled={isLoading}
-						css={{ p: 0, mx: "$4" }}
-					>
-						<EditIcon size={24} />
-					</IconButton>
-				) : (
-					<Spacer x={0.25} />
-				)}
-			</Wrapper>
+			</View>
 		);
 	}
 
@@ -95,23 +82,16 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 		<Input
 			{...bindings}
 			aria-label="Receipt item price"
-			disabled={updateMutation.isLoading || isLoading}
-			status={inputState.error ? "warning" : undefined}
-			helperColor={inputState.error ? "warning" : "error"}
-			helperText={inputState.error?.message || updateMutation.error?.message}
-			contentRightStyling={updateMutation.isLoading}
-			contentRight={
-				<IconButton
-					title="Save receipt item price"
-					light
-					isLoading={updateMutation.isLoading}
-					disabled={Boolean(inputState.error)}
-					onClick={() => updatePrice(getNumberValue())}
-					icon={<CheckMark size={24} />}
-				/>
-			}
-			bordered
-			width="$28"
+			className="basis-24"
+			labelPlacement="outside-left"
+			mutation={updateMutation}
+			fieldError={inputState.error}
+			isDisabled={isLoading}
+			saveProps={{
+				title: "Save receipt item price",
+				onClick: () => updatePrice(getNumberValue()),
+			}}
+			variant="bordered"
 		/>
 	);
 };

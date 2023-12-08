@@ -1,8 +1,10 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Button, Container, Spacer, Text } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 
 import { UsersSuggest } from "app/components/app/users-suggest";
+import { Text } from "app/components/base/text";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import type { TRPCInfiniteQueryOutput, TRPCQueryOutput } from "app/trpc";
@@ -41,37 +43,32 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 	const isLoading =
 		acceptConnectionMutation.isLoading || rejectConnectionMutation.isLoading;
 	return (
-		<>
+		<View className="gap-2">
 			<Text>{intention.account.email}</Text>
-			<Spacer y={0.5} />
 			<UsersSuggest
 				selected={user}
 				onUserClick={setUser}
 				options={React.useMemo(() => ({ type: "not-connected" }), [])}
 				closeOnSelect
 			/>
-			<Spacer y={1} />
-			<Container
-				display="flex"
-				direction="column"
-				css={{ p: 0 }}
-				alignItems="flex-end"
+			<Button
+				color="primary"
+				isDisabled={!user || isLoading}
+				onClick={acceptConnection}
+				title={user ? `Connect ${intention.account.email} as ${user.name}` : ""}
 			>
-				<Button
-					auto
-					disabled={!user || isLoading}
-					onClick={acceptConnection}
-					title={
-						user ? `Connect ${intention.account.email} as ${user.name}` : ""
-					}
-				>
-					{user ? `Connect "${user.name}"` : "Please choose user above"}
-				</Button>
-				<Spacer y={0.5} />
-				<Button auto disabled={isLoading} onClick={rejectConnection}>
-					Reject connection
-				</Button>
-			</Container>
-		</>
+				{user
+					? `Connect "${user.name}"`
+					: "Please choose user above to accept intention"}
+			</Button>
+			<Button
+				color="warning"
+				variant="bordered"
+				isDisabled={isLoading}
+				onClick={rejectConnection}
+			>
+				Reject connection
+			</Button>
+		</View>
 	);
 };

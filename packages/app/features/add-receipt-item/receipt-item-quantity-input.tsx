@@ -1,8 +1,8 @@
 import React from "react";
 
-import { Input } from "@nextui-org/react";
 import type { UseFormReturn } from "react-hook-form";
 
+import { Input } from "app/components/base/input";
 import { useInputController } from "app/hooks/use-input-controller";
 
 import type { Form } from "./types";
@@ -25,15 +25,12 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 	return (
 		<Input
 			{...bindings}
-			fullWidth
 			required
 			type="number"
 			min="0"
 			label="Units"
-			disabled={isLoading}
-			status={inputState.error ? "warning" : undefined}
-			helperColor="warning"
-			helperText={inputState.error?.message}
+			isDisabled={isLoading}
+			fieldError={inputState.error}
 		/>
 	);
 };

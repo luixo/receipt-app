@@ -1,7 +1,8 @@
 import React from "react";
+import { View } from "react-native";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Loading, Spacer, styled } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -20,14 +21,6 @@ import { ReceiptItemPriceInput } from "./receipt-item-price-input";
 import { ReceiptItemQuantityInput } from "./receipt-item-quantity-input";
 import type { Form } from "./types";
 
-const Inputs = styled("div", {
-	display: "flex",
-
-	"@xsMax": {
-		flexDirection: "column",
-	},
-});
-
 type Props = {
 	receiptId: ReceiptsId;
 	receiptLocked: boolean;
@@ -39,11 +32,6 @@ export const AddReceiptItemForm: React.FC<Props> = ({
 	receiptLocked,
 	isLoading: isDeleteLoading,
 }) => {
-	const inputsRef = React.useRef<HTMLDivElement>(null);
-	React.useEffect(() => {
-		inputsRef.current?.scrollIntoView();
-	}, [inputsRef]);
-
 	const form = useForm<Form>({
 		mode: "onChange",
 		resolver: zodResolver(
@@ -74,22 +62,21 @@ export const AddReceiptItemForm: React.FC<Props> = ({
 	const isLoading = isDeleteLoading || addMutation.isLoading;
 
 	return (
-		<>
-			<Inputs ref={inputsRef}>
+		<View className="gap-4">
+			<View className="flex-row gap-4">
 				<ReceiptItemNameInput form={form} isLoading={isLoading} />
-				<Spacer x={1} />
 				<ReceiptItemPriceInput form={form} isLoading={isLoading} />
-				<Spacer x={1} />
 				<ReceiptItemQuantityInput form={form} isLoading={isLoading} />
-			</Inputs>
-			<Spacer y={1} />
+			</View>
 			<Button
+				color="primary"
 				onClick={form.handleSubmit(onSubmit)}
-				disabled={!form.formState.isValid || isLoading || receiptLocked}
-				css={{ width: "100%" }}
+				isDisabled={!form.formState.isValid || isLoading || receiptLocked}
+				className="w-full"
+				isLoading={addMutation.isLoading}
 			>
-				{addMutation.isLoading ? <Loading size="xs" /> : "Save"}
+				Save
 			</Button>
-		</>
+		</View>
 	);
 };

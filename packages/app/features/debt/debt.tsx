@@ -1,12 +1,12 @@
 import React from "react";
 
-import { Loading, Spacer } from "@nextui-org/react";
+import { Spinner } from "@nextui-org/react";
 
 import { DebtControlButtons } from "app/components/app/debt-control-buttons";
 import { DebtSyncStatus } from "app/components/app/debt-sync-status";
 import { LoadableUser } from "app/components/app/loadable-user";
 import { QueryErrorMessage } from "app/components/error-message";
-import { Header } from "app/components/header";
+import { PageHeader } from "app/components/page-header";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import type { TRPCQuerySuccessResult } from "app/trpc";
 import { trpc } from "app/trpc";
@@ -30,35 +30,30 @@ export const DebtInner: React.FC<InnerProps> = ({ query }) => {
 
 	return (
 		<>
-			<Header
+			<PageHeader
 				backHref={`/debts/user/${debt.userId}`}
 				aside={<DebtControlButtons debt={debt} />}
-				textChildren={`${debt.amount} ${currency} debt`}
-			>
-				<>
-					{debt.amount} {currency} debt
-					<Spacer x={1} />
-					<DebtSyncStatus debt={debt} size={36} />
-					{debt.receiptId ? (
-						<>
-							<Spacer x={1} />
+				endContent={
+					<>
+						<DebtSyncStatus debt={debt} size="lg" />
+						{debt.receiptId ? (
 							<DebtReceiptLink receiptId={debt.receiptId} />
-						</>
-					) : null}
-				</>
-			</Header>
-			<Spacer y={1} />
-			<LoadableUser id={debt.userId} />
-			<Spacer y={1} />
+						) : null}
+					</>
+				}
+			>
+				{`${debt.amount} ${currency} debt`}
+			</PageHeader>
+			<LoadableUser className="self-start" id={debt.userId} />
 			<DebtSignButtonGroup debt={debt} disabled={isRemoving} />
-			<Spacer y={1} />
 			<DebtAmountInput debt={debt} isLoading={isRemoving} />
-			<Spacer y={1} />
 			<DebtDateInput debt={debt} isLoading={isRemoving} />
-			<Spacer y={1} />
 			<DebtNoteInput debt={debt} isLoading={isRemoving} />
-			<Spacer y={1} />
-			<DebtRemoveButton debt={debt} setLoading={setRemoving} />
+			<DebtRemoveButton
+				className="self-end"
+				debt={debt}
+				setLoading={setRemoving}
+			/>
 		</>
 	);
 };
@@ -72,8 +67,8 @@ export const Debt: React.FC<Props> = ({ id, ...props }) => {
 	if (query.status === "loading") {
 		return (
 			<>
-				<Header>Debt</Header>
-				<Loading />
+				<PageHeader>Debt</PageHeader>
+				<Spinner size="lg" />
 			</>
 		);
 	}

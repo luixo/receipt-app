@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button, Spacer } from "@nextui-org/react";
+import { Button, ButtonGroup } from "@nextui-org/react";
 
 import { useRouter } from "app/hooks/use-router";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -43,27 +43,28 @@ export const InboundDebtIntention = React.forwardRef<HTMLDivElement, Props>(
 		const { isLoading } = acceptMutation;
 		return (
 			<DebtIntention intention={intention} ref={ref}>
-				<Spacer y={0.5} />
-				<Button.Group css={{ alignSelf: "flex-end" }}>
+				<ButtonGroup className="self-end" color="primary">
 					<Button
-						disabled={isLoading}
+						isDisabled={isLoading}
+						isLoading={isLoading}
 						onClick={() => acceptSyncIntention()}
 						title={`Accept debt for ${intention.amount} ${intention.currencyCode}`}
 					>
 						Accept
 					</Button>
 					<Button
-						bordered
-						disabled={isLoading}
+						variant="bordered"
+						isDisabled={isLoading}
+						isLoading={isLoading}
 						onClick={() => acceptSyncIntention(true)}
 						title={`Accept and edit debt for ${intention.amount} ${intention.currencyCode}`}
 					>
 						Accept and edit
 					</Button>
-					<Button disabled bordered>
+					<Button isDisabled variant="bordered">
 						Reject
 					</Button>
-				</Button.Group>
+				</ButtonGroup>
 			</DebtIntention>
 		);
 	},

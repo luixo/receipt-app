@@ -1,10 +1,9 @@
 import React from "react";
 
-import { Spacer } from "@nextui-org/react";
 import { createParam } from "solito";
 
 import { User as UserTitle } from "app/components/app/user";
-import { Header } from "app/components/header";
+import { PageHeader } from "app/components/page-header";
 import { trpc } from "app/trpc";
 import type { AppPage } from "next-app/types/page";
 
@@ -23,9 +22,9 @@ export const UserScreen: AppPage = () => {
 
 	return (
 		<>
-			<Header
+			<PageHeader
 				backHref="/users"
-				textChildren={
+				title={
 					userQuery.data ? userQuery.data.name : userNameQuery.data || "..."
 				}
 			>
@@ -48,8 +47,7 @@ export const UserScreen: AppPage = () => {
 						[id, userNameQuery.data, userQuery.data],
 					)}
 				/>
-			</Header>
-			<Spacer y={1} />
+			</PageHeader>
 			<User id={id} />
 		</>
 	);

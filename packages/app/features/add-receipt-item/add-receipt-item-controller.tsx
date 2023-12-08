@@ -31,12 +31,13 @@ export const AddReceiptItemController: React.FC<Props> = ({
 	}
 	return (
 		<Button
-			bordered
-			disabled={receiptLocked}
-			icon={<AddIcon size={24} />}
+			color="primary"
+			variant="bordered"
+			isDisabled={receiptLocked}
 			onClick={() => setOpen(true)}
-			css={{ margin: "0 auto" }}
+			className="w-full"
 		>
+			<AddIcon size={24} />
 			Item
 		</Button>
 	);

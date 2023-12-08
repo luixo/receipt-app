@@ -1,7 +1,8 @@
 import React from "react";
 
+import { Button } from "@nextui-org/react";
+
 import { CurrenciesPicker } from "app/components/app/currencies-picker";
-import { IconButton } from "app/components/icon-button";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -19,8 +20,10 @@ type Props = {
 
 export const DebtCurrencyInput: React.FC<Props> = ({ debt, isLoading }) => {
 	const currency = useFormattedCurrency(debt.currencyCode);
-	const [isModalOpen, { setTrue: openModal, setFalse: closeModal }] =
-		useBooleanState();
+	const [
+		isModalOpen,
+		{ switchValue: switchModalOpen, setTrue: openModal, setFalse: closeModal },
+	] = useBooleanState();
 
 	const updateReceiptMutation = trpc.debts.update.useMutation(
 		useTrpcMutationOptions(mutations.debts.update.options, { context: debt }),
@@ -42,20 +45,19 @@ export const DebtCurrencyInput: React.FC<Props> = ({ debt, isLoading }) => {
 
 	return (
 		<>
-			<IconButton
-				auto
-				light
+			<Button
+				variant="light"
 				onClick={openModal}
-				disabled={isLoading}
+				isDisabled={isLoading}
 				isLoading={updateReceiptMutation.isLoading}
-				css={{ p: 0 }}
+				isIconOnly
 			>
 				{currency}
-			</IconButton>
+			</Button>
 			<CurrenciesPicker
 				onChange={saveCurrency}
 				modalOpen={isModalOpen}
-				onModalClose={closeModal}
+				switchModalOpen={switchModalOpen}
 				topCurrenciesQuery={topCurrenciesQuery}
 			/>
 		</>

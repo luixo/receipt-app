@@ -1,54 +1,21 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Card, Loading, Spacer, Text, styled } from "@nextui-org/react";
+import { Button, Divider, Link, Pagination, Spinner } from "@nextui-org/react";
 import { MdAdd as AddIcon } from "react-icons/md";
 
+import { Header } from "app/components/base/header";
+import { Text } from "app/components/base/text";
+import { EmptyCard } from "app/components/empty-card";
 import { QueryErrorMessage } from "app/components/error-message";
-import { Grid } from "app/components/grid";
-import { IconButton } from "app/components/icon-button";
 import { Overlay } from "app/components/overlay";
 import { useCursorPaging } from "app/hooks/use-cursor-paging";
-import { useMatchMediaValue } from "app/hooks/use-match-media-value";
 import { useTrpcQueryOptions } from "app/hooks/use-trpc-query-options";
 import { queries } from "app/queries";
-import type { TRPCQueryInput, TRPCQueryOutput } from "app/trpc";
+import type { TRPCQueryInput } from "app/trpc";
 import { trpc } from "app/trpc";
 
-import { ReceiptPreview, getWidths } from "./receipt-preview";
-import { ReceiptsPagination } from "./receipts-pagination";
-
-const Wrapper = styled("div", {
-	display: "flex",
-	flexDirection: "column",
-	alignItems: "center",
-	justifyContent: "center",
-});
-
-const NoReceiptsHint = styled(Text, {
-	display: "flex",
-	alignItems: "center",
-});
-
-type PreviewsProps = {
-	receipts: TRPCQueryOutput<"receipts.getPaged">["items"];
-};
-
-const ReceiptPreviewsList: React.FC<PreviewsProps> = ({ receipts }) => {
-	const overflow = useMatchMediaValue(false, { lessSm: true });
-	const [nameWidth, sumWidth] = getWidths(overflow);
-	return (
-		<Grid.Container gap={2}>
-			<Grid defaultCol={nameWidth}>Receipt</Grid>
-			<Grid defaultCol={sumWidth} justify="flex-end">
-				Sum
-			</Grid>
-			<Card.Divider />
-			{receipts.map((receipt) => (
-				<ReceiptPreview key={receipt.id} receipt={receipt} />
-			))}
-		</Grid.Container>
-	);
-};
+import { ReceiptPreview } from "./receipt-preview";
 
 type Input = TRPCQueryInput<"receipts.getPaged">;
 
@@ -75,50 +42,74 @@ export const Receipts: React.FC = () => {
 			return <QueryErrorMessage query={query} />;
 		}
 		return (
-			<Wrapper>
-				<Text h2>You have no receipts</Text>
-				<Spacer y={0.5} />
-				<NoReceiptsHint h3>
-					Press
-					<Spacer x={0.5} />
-					<IconButton
-						href="/receipts/add"
-						title="Add receipt"
-						bordered
-						icon={<AddIcon size={24} />}
-					/>
-					<Spacer x={0.5} />
-					to add a receipt
-				</NoReceiptsHint>
-			</Wrapper>
+			<EmptyCard title="You have no receipts">
+				Press
+				<Button
+					color="primary"
+					as={Link}
+					href="/receipts/add"
+					title="Add receipt"
+					variant="bordered"
+					className="mx-2"
+					isIconOnly
+				>
+					<AddIcon size={24} />
+				</Button>
+				to add a receipt
+			</EmptyCard>
 		);
 	}
 
-	const paginationElement = <ReceiptsPagination pagination={pagination} />;
+	const paginationElement =
+		totalCount === 0 ? null : (
+			<Pagination
+				className="self-center"
+				color="primary"
+				size="lg"
+				variant="bordered"
+				{...pagination}
+			/>
+		);
 
 	return (
 		<>
 			{paginationElement}
-			<Spacer y={1} />
 			<Overlay
+				className="gap-2"
 				overlay={
 					query.fetchStatus === "fetching" && query.isPreviousData ? (
-						<Loading size="xl" />
+						<Spinner size="lg" />
 					) : undefined
 				}
 			>
 				{query.status === "error" ? <QueryErrorMessage query={query} /> : null}
 				{query.status === "loading" ? (
-					<Loading size="xl" />
+					<Spinner size="lg" />
 				) : !totalCount && input.filters ? (
-					<Wrapper>
-						<Text h2>No receipts under given filters</Text>
-					</Wrapper>
+					<Header className="text-center">
+						No receipts under given filters
+					</Header>
 				) : query.data ? (
-					<ReceiptPreviewsList receipts={query.data.items} />
+					<>
+						<View className="flex-row gap-2">
+							<View className="flex-[7] p-2">
+								<Text>Receipt</Text>
+							</View>
+							<View className="flex-[2] p-2">
+								<Text className="self-end">Sum</Text>
+							</View>
+							<View className="flex-[3] p-2 pr-14" />
+						</View>
+						<Divider className="max-sm:hidden" />
+						{query.data.items.map((receipt) => (
+							<React.Fragment key={receipt.id}>
+								<Divider className="sm:hidden" />
+								<ReceiptPreview receipt={receipt} />
+							</React.Fragment>
+						))}
+					</>
 				) : null}
 			</Overlay>
-			<Spacer y={1} />
 			{paginationElement}
 		</>
 	);

@@ -1,7 +1,6 @@
 import React from "react";
 
-import type { SwitchEvent } from "@nextui-org/react";
-import { Loading, Switch } from "@nextui-org/react";
+import { Spinner, Switch } from "@nextui-org/react";
 
 import { ErrorMessage, QueryErrorMessage } from "app/components/error-message";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -14,10 +13,10 @@ export const AutoAcceptDebtsOption: React.FC = () => {
 		useTrpcMutationOptions(mutations.accountSettings.update.options),
 	);
 	const onChange = React.useCallback(
-		(e: SwitchEvent) =>
+		(nextAutoAccept: boolean) =>
 			updateSettingsMutation.mutate({
 				type: "autoAcceptDebts",
-				value: e.target.checked,
+				value: nextAutoAccept,
 			}),
 		[updateSettingsMutation],
 	);
@@ -26,7 +25,7 @@ export const AutoAcceptDebtsOption: React.FC = () => {
 		[updateSettingsMutation],
 	);
 	if (settingsQuery.status === "loading") {
-		return <Loading />;
+		return <Spinner />;
 	}
 	if (settingsQuery.status === "error") {
 		return <QueryErrorMessage query={settingsQuery} />;
@@ -34,13 +33,12 @@ export const AutoAcceptDebtsOption: React.FC = () => {
 	return (
 		<>
 			<Switch
-				checked={settingsQuery.data.autoAcceptDebts}
-				onChange={onChange}
-				icon={
-					updateSettingsMutation.isLoading ? <Loading size="xs" /> : undefined
+				isSelected={settingsQuery.data.autoAcceptDebts}
+				onValueChange={onChange}
+				thumbIcon={
+					updateSettingsMutation.isLoading ? <Spinner size="sm" /> : undefined
 				}
-				bordered
-				disabled={updateSettingsMutation.isLoading}
+				isDisabled={updateSettingsMutation.isLoading}
 			/>
 			{updateSettingsMutation.status === "error" ? (
 				<ErrorMessage

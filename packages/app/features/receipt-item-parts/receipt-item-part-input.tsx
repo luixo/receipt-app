@@ -1,11 +1,11 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Input, Spacer, Text } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { FiMinus as MinusIcon, FiPlus as PlusIcon } from "react-icons/fi";
-import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
-import { MdEdit as EditIcon } from "react-icons/md";
 
-import { IconButton } from "app/components/icon-button";
+import { Input } from "app/components/base/input";
+import { Text } from "app/components/base/text";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -62,6 +62,7 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 					? partUpdater(itemPart.part)
 					: partUpdater;
 			if (nextPart === itemPart.part) {
+				unsetEditing();
 				return;
 			}
 			updateMutation.mutate({
@@ -70,35 +71,45 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 				update: { type: "part", part: nextPart },
 			});
 		},
-		[updateMutation, receiptItemId, itemPart.userId, itemPart.part],
+		[
+			updateMutation,
+			receiptItemId,
+			itemPart.userId,
+			itemPart.part,
+			unsetEditing,
+		],
 	);
 
 	const wrap = React.useCallback(
 		(children: React.ReactElement) => (
-			<div style={{ display: "flex" }}>
-				<IconButton
-					ghost
+			<View className="flex-row items-center gap-2">
+				<Button
+					variant="ghost"
+					color="primary"
 					isLoading={updateMutation.isLoading}
 					onClick={() => updatePart((prev) => prev - 1)}
-					disabled={itemPart.part <= 1}
-					icon={<MinusIcon size={24} />}
-				/>
-				<Spacer x={0.5} />
+					isDisabled={itemPart.part <= 1}
+					isIconOnly
+				>
+					<MinusIcon size={24} />
+				</Button>
 				{children}
-				<Spacer x={0.5} />
-				<IconButton
-					ghost
+				<Button
+					variant="ghost"
+					color="primary"
 					isLoading={updateMutation.isLoading}
 					onClick={() => updatePart((prev) => prev + 1)}
-					icon={<PlusIcon size={24} />}
-				/>
-			</div>
+					isIconOnly
+				>
+					<PlusIcon size={24} />
+				</Button>
+			</View>
 		),
 		[updatePart, itemPart.part, updateMutation.isLoading],
 	);
 
 	const readOnlyComponent = (
-		<Text css={{ px: "$6", display: "flex", alignItems: "center" }}>
+		<Text>
 			{itemPart.part} / {itemParts}
 		</Text>
 	);
@@ -109,45 +120,33 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 
 	if (isEditing) {
 		return wrap(
-			<>
-				<Input
-					{...bindings}
-					aria-label="Item part"
-					disabled={updateMutation.isLoading || isLoading}
-					status={inputState.error ? "warning" : undefined}
-					helperColor={inputState.error ? "warning" : "error"}
-					helperText={
-						inputState.error?.message || updateMutation.error?.message
-					}
-					contentRightStyling={updateMutation.isLoading}
-					contentRight={
-						<IconButton
-							title="Save item part"
-							light
-							isLoading={updateMutation.isLoading}
-							disabled={Boolean(inputState.error)}
-							onClick={() => updatePart(getNumberValue())}
-							icon={<CheckMark size={24} />}
-						/>
-					}
-					bordered
-					width="$20"
-				/>
-				<Text>/ {itemParts}</Text>
-			</>,
+			<Input
+				{...bindings}
+				className="w-32"
+				aria-label="Item part"
+				mutation={updateMutation}
+				fieldError={inputState.error}
+				isDisabled={isLoading}
+				labelPlacement="outside-left"
+				saveProps={{
+					title: "Save item part",
+					onClick: () => updatePart(getNumberValue()),
+				}}
+				endContent={<Text className="self-center">/ {itemParts}</Text>}
+				variant="bordered"
+			/>,
 		);
 	}
 
 	return wrap(
-		<IconButton
-			auto
-			light
+		<Button
+			variant="light"
 			onClick={switchEditing}
-			disabled={isLoading}
-			css={{ p: 0, width: "$20" }}
-			icon={<EditIcon size={12} />}
+			isDisabled={isLoading}
+			isIconOnly
+			className="min-w-unit-16 w-auto px-2"
 		>
 			{readOnlyComponent}
-		</IconButton>,
+		</Button>,
 	);
 };

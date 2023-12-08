@@ -1,12 +1,12 @@
 import React from "react";
 
-import { Loading, Spacer } from "@nextui-org/react";
+import { Divider, Spinner } from "@nextui-org/react";
 
 import { CurrenciesPicker } from "app/components/app/currencies-picker";
 import { DebtsGroup } from "app/components/app/debts-group";
 import { LoadableUser } from "app/components/app/loadable-user";
 import { QueryErrorMessage } from "app/components/error-message";
-import { Header } from "app/components/header";
+import { PageHeader } from "app/components/page-header";
 import { useAggregatedDebts } from "app/hooks/use-aggregated-debts";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useRouter } from "app/hooks/use-router";
@@ -33,8 +33,10 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 	const [selectedCurrency, setSelectedCurrency] = React.useState<
 		Currency | undefined
 	>();
-	const [modalOpen, { setFalse: closeModal, setTrue: openModal }] =
-		useBooleanState();
+	const [
+		modalOpen,
+		{ switchValue: switchModalOpen, setFalse: closeModal, setTrue: openModal },
+	] = useBooleanState();
 	const onSelectModalCurrency = React.useCallback(
 		(currency: Currency) => {
 			setSelectedCurrency(currency);
@@ -54,41 +56,42 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 	}, [nonZeroAggregateDebts, back]);
 	return (
 		<>
-			<Header
+			<PageHeader
 				backHref={`/debts/user/${userId}/exchange/`}
-				textChildren={`${
+				title={`${
 					userQuery.status === "success" ? userQuery.data.name : "..."
 				}'s debts`}
 			>
 				<LoadableUser id={userId} />
-			</Header>
-			<Spacer y={1} />
+			</PageHeader>
 			<DebtsGroup
+				className="self-center"
 				debts={showResolvedDebts ? aggregatedDebts : nonZeroAggregateDebts}
 			/>
-			<Spacer y={1} />
 			<CurrenciesGroup
 				selectedCurrencyCode={selectedCurrency?.code}
 				aggregatedDebts={nonZeroAggregateDebts}
 				setSelectedCurrency={setSelectedCurrency}
 				onSelectOther={openModal}
 			/>
-			<Spacer y={1} />
 			<CurrenciesPicker
 				selectedCurrency={selectedCurrency}
 				onChange={onSelectModalCurrency}
 				modalOpen={modalOpen}
-				onModalClose={closeModal}
+				switchModalOpen={switchModalOpen}
 				onLoad={noop}
 				topCurrenciesQuery={topCurrenciesQuery}
 			/>
 			{selectedCurrency ? (
-				<PlannedDebts
-					userId={userId}
-					selectedCurrencyCode={selectedCurrency.code}
-					aggregatedDebts={nonZeroAggregateDebts}
-					onDone={back}
-				/>
+				<>
+					<Divider />
+					<PlannedDebts
+						userId={userId}
+						selectedCurrencyCode={selectedCurrency.code}
+						aggregatedDebts={nonZeroAggregateDebts}
+						onDone={back}
+					/>
+				</>
 			) : null}
 		</>
 	);
@@ -102,8 +105,8 @@ export const DebtsExchangeAll: React.FC<Props> = ({ userId, ...props }) => {
 	if (query.status === "loading") {
 		return (
 			<>
-				<Header>{userNameQuery.data || userId}</Header>
-				<Loading />
+				<PageHeader>{userNameQuery.data || userId}</PageHeader>
+				<Spinner />
 			</>
 		);
 	}

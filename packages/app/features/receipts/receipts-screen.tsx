@@ -1,32 +1,41 @@
 import React from "react";
 
-import { Spacer } from "@nextui-org/react";
-import { MdAdd as AddIcon } from "react-icons/md";
+import { Button, Link } from "@nextui-org/react";
+import {
+	MdAdd as AddIcon,
+	MdOutlineReceipt as ReceiptIcon,
+} from "react-icons/md";
 
-import { Header } from "app/components/header";
-import { IconButton } from "app/components/icon-button";
+import { PageHeader } from "app/components/page-header";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import type { AppPage } from "next-app/types/page";
 
+import { FilterButton } from "./filter-button";
 import { Receipts } from "./receipts";
 
 export const ReceiptsScreen: AppPage = () => (
 	<>
-		<Header
-			icon="🧾"
+		<PageHeader
+			startContent={<ReceiptIcon size={36} />}
 			aside={
-				<IconButton
-					href="/receipts/add"
-					title="Add receipt"
-					bordered
-					icon={<AddIcon size={24} />}
-				/>
+				<>
+					<FilterButton />
+					<Button
+						color="primary"
+						href="/receipts/add"
+						as={Link}
+						title="Add receipt"
+						variant="bordered"
+						isIconOnly
+					>
+						<AddIcon size={24} />
+					</Button>
+				</>
 			}
 		>
 			Receipts
-		</Header>
+		</PageHeader>
 		<EmailVerificationCard />
-		<Spacer y={1} />
 		<Receipts />
 	</>
 );

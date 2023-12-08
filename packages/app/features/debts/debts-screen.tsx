@@ -1,12 +1,11 @@
 import React from "react";
 
-import { Spacer } from "@nextui-org/react";
+import { Badge, Button, Link } from "@nextui-org/react";
 import { IoMdMail as InboxIcon } from "react-icons/io";
 import { MdAdd as AddIcon } from "react-icons/md";
+import { PiMoney as DebtIcon } from "react-icons/pi";
 
-import { Badge } from "app/components/badge";
-import { Header } from "app/components/header";
-import { IconButton } from "app/components/icon-button";
+import { PageHeader } from "app/components/page-header";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { useDebtsIntentions } from "app/hooks/use-debts-intentions";
 import type { AppPage } from "next-app/types/page";
@@ -15,35 +14,56 @@ import { Debts } from "./debts";
 
 export const DebtsScreen: AppPage = () => {
 	const inboundDebtsAmount = useDebtsIntentions();
+	const intentionsButton = React.useMemo(
+		() => (
+			<Button
+				key="intentions"
+				href="/debts/intentions"
+				as={Link}
+				color="primary"
+				title="Debts sync intentions"
+				variant="bordered"
+				isIconOnly
+			>
+				<InboxIcon size={24} />
+			</Button>
+		),
+		[],
+	);
 	return (
 		<>
-			<Header
-				icon="💸"
-				aside={React.useMemo(
-					() => [
-						<IconButton
-							key="add"
+			<PageHeader
+				startContent={<DebtIcon size={36} />}
+				aside={
+					<>
+						<Button
 							href="/debts/add"
+							as={Link}
+							color="primary"
 							title="Add debt"
-							bordered
-							icon={<AddIcon size={24} />}
-						/>,
-						<Badge amount={inboundDebtsAmount} key="intentions">
-							<IconButton
-								href="/debts/intentions"
-								title="Debts sync intentions"
-								bordered
-								icon={<InboxIcon size={24} />}
-							/>
-						</Badge>,
-					],
-					[inboundDebtsAmount],
-				)}
+							variant="bordered"
+							isIconOnly
+						>
+							<AddIcon size={24} />
+						</Button>
+						{inboundDebtsAmount === 0 ? (
+							intentionsButton
+						) : (
+							<Badge
+								content={inboundDebtsAmount}
+								color="danger"
+								placement="top-right"
+								size="lg"
+							>
+								{intentionsButton}
+							</Badge>
+						)}
+					</>
+				}
 			>
 				Debts
-			</Header>
+			</PageHeader>
 			<EmailVerificationCard />
-			<Spacer y={1} />
 			<Debts />
 		</>
 	);

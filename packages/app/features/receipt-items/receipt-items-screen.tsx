@@ -1,20 +1,21 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Collapse, Loading, Spacer, Text, styled } from "@nextui-org/react";
+import { Checkbox, Spinner } from "@nextui-org/react";
+import { FaArrowDown as ArrowDown } from "react-icons/fa";
 
+import { Header } from "app/components/base/header";
+import { EmptyCard } from "app/components/empty-card";
 import { QueryErrorMessage } from "app/components/error-message";
 import { AddReceiptItemController } from "app/features/add-receipt-item/add-receipt-item-controller";
 import { ReceiptParticipants } from "app/features/receipt-participants/receipt-participants";
+import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import type { TRPCQuerySuccessResult } from "app/trpc";
 import { trpc } from "app/trpc";
+import { round } from "app/utils/math";
 import type { ReceiptItemsId, ReceiptsId } from "next-app/db/models";
 
-import { EmptyItems } from "./empty-items";
 import { ReceiptItem } from "./receipt-item";
-
-const NoReceiptItems = styled("div", {
-	textAlign: "center",
-});
 
 type InnerProps = {
 	receiptId: ReceiptsId;
@@ -36,6 +37,7 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 		receiptQuery.status === "success"
 			? receiptQuery.data.currencyCode
 			: undefined;
+	const currency = useFormattedCurrency(receiptCurrencyCode);
 	const receiptSelfUserId =
 		receiptQuery.status === "success"
 			? receiptQuery.data.selfUserId
@@ -55,16 +57,24 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 		[itemsRef],
 	);
 	return (
-		<Collapse.Group accordion={false} divider={false}>
+		<>
 			{emptyItems.length === 0 ? null : (
-				<>
-					<EmptyItems
-						items={emptyItems}
-						currencyCode={receiptCurrencyCode}
-						onClick={onEmptyItemClick}
-					/>
-					<Spacer y={1} />
-				</>
+				<View className="gap-2">
+					<Header size="sm">Items with no participants</Header>
+					{emptyItems.map((item) => (
+						<Checkbox
+							key={item.id}
+							color="warning"
+							isSelected
+							onChange={() => onEmptyItemClick(item.id)}
+							icon={<ArrowDown />}
+						>
+							{`"${item.name}" — ${round(
+								item.quantity * item.price,
+							)} ${currency}`}
+						</Checkbox>
+					))}
+				</View>
 			)}
 			<ReceiptParticipants
 				data={data}
@@ -74,38 +84,32 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 				currencyCode={receiptCurrencyCode}
 				isLoading={isLoading}
 			/>
-			<Spacer y={1} />
 			<AddReceiptItemController
 				receiptId={receiptId}
 				receiptLocked={receiptLocked}
 				isLoading={isLoading}
 			/>
-			<Spacer y={1} />
-			{data.items.map((receiptItem, index) => (
-				<React.Fragment key={receiptItem.id}>
-					{index === 0 ? null : <Spacer y={1} />}
-					<ReceiptItem
-						receiptId={receiptId}
-						receiptLocked={receiptLocked}
-						receiptItem={receiptItem}
-						receiptParticipants={data.participants}
-						currencyCode={receiptCurrencyCode}
-						role={data.role}
-						isLoading={isLoading}
-						ref={(element) => {
-							itemsRef.current[receiptItem.id] = element;
-						}}
-					/>
-				</React.Fragment>
+			{data.items.map((receiptItem) => (
+				<ReceiptItem
+					key={receiptItem.id}
+					receiptId={receiptId}
+					receiptLocked={receiptLocked}
+					receiptItem={receiptItem}
+					receiptParticipants={data.participants}
+					currencyCode={receiptCurrencyCode}
+					role={data.role}
+					isLoading={isLoading}
+					ref={(element) => {
+						itemsRef.current[receiptItem.id] = element;
+					}}
+				/>
 			))}
 			{data.items.length === 0 ? (
-				<NoReceiptItems>
-					<Text h3>You have no receipt items yet</Text>
-					<Spacer y={1} />
-					<Text h4>Press a button above to add a receipt item</Text>
-				</NoReceiptItems>
+				<EmptyCard title="You have no receipt items yet">
+					Press a button above to add a receipt item
+				</EmptyCard>
 			) : null}
-		</Collapse.Group>
+		</>
 	);
 };
 
@@ -114,7 +118,7 @@ type Props = Omit<InnerProps, "query">;
 export const ReceiptItems: React.FC<Props> = ({ receiptId, ...props }) => {
 	const query = trpc.receiptItems.get.useQuery({ receiptId });
 	if (query.status === "loading") {
-		return <Loading />;
+		return <Spinner />;
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;

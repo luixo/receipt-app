@@ -1,10 +1,11 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Input, Loading, Spacer } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { Input } from "app/components/base/input";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -54,40 +55,44 @@ export const ChangePasswordScreen: AppPage = () => {
 	);
 
 	if (!changePasswordShown) {
-		return <Button onClick={showChangePassword}>Change password</Button>;
+		return (
+			<Button color="primary" onClick={showChangePassword}>
+				Change password
+			</Button>
+		);
 	}
 
 	return (
 		<>
-			<Input.Password
+			<Input
 				{...form.register("prevPassword")}
 				label="Current password"
-				helperColor="warning"
-				helperText={form.formState.errors.prevPassword?.message}
-				disabled={changePasswordMutation.isLoading}
+				isDisabled={changePasswordMutation.isLoading}
+				mutation={changePasswordMutation}
+				fieldError={form.formState.errors.prevPassword}
+				type="password"
 			/>
-			<Spacer y={1} />
-			<Input.Password
+			<Input
 				{...form.register("password")}
 				label="New password"
-				helperColor="warning"
-				helperText={form.formState.errors.password?.message}
-				disabled={changePasswordMutation.isLoading}
+				isDisabled={changePasswordMutation.isLoading}
+				fieldError={form.formState.errors.password}
+				type="password"
 			/>
-			<Spacer y={1} />
-			<Input.Password
+			<Input
 				{...form.register("passwordRetype")}
 				label="Retype new password"
-				helperColor="warning"
-				helperText={form.formState.errors.passwordRetype?.message}
-				disabled={changePasswordMutation.isLoading}
+				isDisabled={changePasswordMutation.isLoading}
+				fieldError={form.formState.errors.passwordRetype}
+				type="password"
 			/>
-			<Spacer />
 			<Button
-				disabled={!form.formState.isValid || changePasswordMutation.isLoading}
+				color="primary"
+				isDisabled={!form.formState.isValid || changePasswordMutation.isLoading}
+				isLoading={changePasswordMutation.isLoading}
 				onClick={form.handleSubmit(onSubmit)}
 			>
-				{changePasswordMutation.isLoading ? <Loading /> : "Change password"}
+				Change password
 			</Button>
 		</>
 	);

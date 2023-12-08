@@ -1,18 +1,15 @@
 import React from "react";
 
-import { Container, Loading, Spacer, Text, styled } from "@nextui-org/react";
+import { Spinner } from "@nextui-org/react";
 
+import { Header } from "app/components/base/header";
+import { EmptyCard } from "app/components/empty-card";
 import { QueryErrorMessage } from "app/components/error-message";
 import type { TRPCQuerySuccessResult } from "app/trpc";
 import { trpc } from "app/trpc";
 
 import { InboundConnectionIntention } from "./inbound-connection-intention";
 import { OutboundConnectionIntention } from "./outbound-connection-intention";
-
-const CenteredText = styled(Text, {
-	display: "flex",
-	alignItems: "center",
-});
 
 type Props = {
 	query: TRPCQuerySuccessResult<"accountConnectionIntentions.getAll">;
@@ -21,46 +18,32 @@ type Props = {
 const ConnectionIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 	if (data.inbound.length === 0 && data.outbound.length === 0) {
 		return (
-			<Container
-				display="flex"
-				direction="column"
-				alignItems="center"
-				justify="center"
-			>
-				<Text h2>You have no intention connections</Text>
-				<Spacer y={1} />
-				<CenteredText h3>
-					Add a user with an email or add an email to existing user
-				</CenteredText>
-			</Container>
+			<EmptyCard title="You have no intention connections">
+				Add a user with an email or add an email to existing user
+			</EmptyCard>
 		);
 	}
 	return (
 		<>
 			{data.inbound.length === 0 ? null : (
 				<>
-					<CenteredText h2>Inbound connections</CenteredText>
-					<Spacer y={0.5} />
-					{data.inbound.map((intention, index) => (
-						<React.Fragment key={intention.account.id}>
-							{index === 0 ? null : <Spacer y={1.5} />}
-							<InboundConnectionIntention intention={intention} />
-						</React.Fragment>
+					<Header size="lg">Inbound connections</Header>
+					{data.inbound.map((intention) => (
+						<InboundConnectionIntention
+							key={intention.account.id}
+							intention={intention}
+						/>
 					))}
 				</>
 			)}
-			{data.inbound.length !== 0 && data.outbound.length !== 0 ? (
-				<Spacer y={1} />
-			) : null}
 			{data.outbound.length === 0 ? null : (
 				<>
-					<CenteredText h2>Outbound connections</CenteredText>
-					<Spacer y={1} />
-					{data.outbound.map((intention, index) => (
-						<React.Fragment key={intention.account.id}>
-							{index === 0 ? null : <Spacer y={1} />}
-							<OutboundConnectionIntention intention={intention} />
-						</React.Fragment>
+					<Header size="lg">Outbound connections</Header>
+					{data.outbound.map((intention) => (
+						<OutboundConnectionIntention
+							key={intention.account.id}
+							intention={intention}
+						/>
 					))}
 				</>
 			)}
@@ -71,7 +54,7 @@ const ConnectionIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 export const ConnectionIntentions: React.FC = () => {
 	const query = trpc.accountConnectionIntentions.getAll.useQuery();
 	if (query.status === "loading") {
-		return <Loading size="xl" />;
+		return <Spinner size="lg" />;
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;

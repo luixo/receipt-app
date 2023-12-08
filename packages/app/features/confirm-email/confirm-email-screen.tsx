@@ -1,9 +1,8 @@
 import React from "react";
 
-import { Spacer } from "@nextui-org/react";
 import { createParam } from "solito";
 
-import { Header } from "app/components/header";
+import { PageHeader } from "app/components/page-header";
 import { useRouter } from "app/hooks/use-router";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -32,8 +31,7 @@ export const ConfirmEmailScreen: AppPage = () => {
 
 	return (
 		<>
-			<Header>Confirm email</Header>
-			<Spacer y={1} />
+			<PageHeader>Confirm email</PageHeader>
 			<ConfirmEmail token={token} confirmMutation={confirmEmailMutation} />
 		</>
 	);

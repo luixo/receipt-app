@@ -1,10 +1,8 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Input, Spacer, Text, styled } from "@nextui-org/react";
-import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
-import { MdEdit as EditIcon } from "react-icons/md";
-
-import { IconButton } from "app/components/icon-button";
+import { Input } from "app/components/base/input";
+import { Text } from "app/components/base/text";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -13,8 +11,6 @@ import type { TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
 import { quantitySchema } from "app/utils/validation";
 import type { ReceiptsId } from "next-app/db/models";
-
-const Wrapper = styled("div", { display: "flex", alignItems: "center" });
 
 type ReceiptItem = TRPCQueryOutput<"receiptItems.get">["items"][number];
 
@@ -53,6 +49,7 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 	const updateQuantity = React.useCallback(
 		(quantity: number) => {
 			if (quantity === receiptItem.quantity) {
+				unsetEditing();
 				return;
 			}
 			updateMutation.mutate({
@@ -60,28 +57,20 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 				update: { type: "quantity", quantity },
 			});
 		},
-		[updateMutation, receiptItem.id, receiptItem.quantity],
+		[updateMutation, receiptItem.id, receiptItem.quantity, unsetEditing],
 	);
+	const disabled = readOnly || isLoading;
 
 	if (!isEditing) {
 		return (
-			<Wrapper>
-				<Spacer x={0.5} />
+			<View
+				className={`${
+					disabled ? undefined : "cursor-pointer"
+				} flex-row items-center gap-1`}
+				onClick={disabled ? undefined : switchEditing}
+			>
 				<Text>x {receiptItem.quantity} unit</Text>
-				{!readOnly ? (
-					<IconButton
-						auto
-						light
-						onClick={switchEditing}
-						disabled={isLoading}
-						css={{ p: 0, mx: "$4" }}
-					>
-						<EditIcon size={24} />
-					</IconButton>
-				) : (
-					<Spacer x={0.25} />
-				)}
-			</Wrapper>
+			</View>
 		);
 	}
 
@@ -89,23 +78,16 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 		<Input
 			{...bindings}
 			aria-label="Receipt item quantity"
-			disabled={updateMutation.isLoading || isLoading}
-			status={inputState.error ? "warning" : undefined}
-			helperColor={inputState.error ? "warning" : "error"}
-			helperText={inputState.error?.message || updateMutation.error?.message}
-			contentRightStyling={updateMutation.isLoading}
-			contentRight={
-				<IconButton
-					title="Save receipt item quantity"
-					light
-					isLoading={updateMutation.isLoading}
-					disabled={Boolean(inputState.error)}
-					onClick={() => updateQuantity(getNumberValue())}
-					icon={<CheckMark size={24} />}
-				/>
-			}
-			bordered
-			width="$24"
+			mutation={updateMutation}
+			fieldError={inputState.error}
+			isDisabled={isLoading}
+			className="basis-24"
+			labelPlacement="outside-left"
+			saveProps={{
+				title: "Save receipt item quantity",
+				onClick: () => updateQuantity(getNumberValue()),
+			}}
+			variant="bordered"
 		/>
 	);
 };

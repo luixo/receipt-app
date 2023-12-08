@@ -1,9 +1,17 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Card, Spacer, Text, styled } from "@nextui-org/react";
+import {
+	Card,
+	CardBody,
+	CardHeader,
+	Chip,
+	Divider,
+	ScrollShadow,
+} from "@nextui-org/react";
 
 import { ReceiptItemLockedButton } from "app/components/app/receipt-item-locked-button";
-import { ButtonsGroup } from "app/components/buttons-group";
+import { Text } from "app/components/base/text";
 import { ErrorMessage } from "app/components/error-message";
 import { RemoveButton } from "app/components/remove-button";
 import { ReceiptItemPart } from "app/features/receipt-item-parts/receipt-item-part";
@@ -20,8 +28,6 @@ import type { Role } from "next-app/handlers/receipts/utils";
 import { ReceiptItemNameInput } from "./receipt-item-name-input";
 import { ReceiptItemPriceInput } from "./receipt-item-price-input";
 import { ReceiptItemQuantityInput } from "./receipt-item-quantity-input";
-
-const Sum = styled("div", { display: "flex", alignItems: "center" });
 
 type ReceiptItems = TRPCQueryOutput<"receiptItems.get">["items"];
 type ReceiptParticipant =
@@ -75,7 +81,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 			}),
 		);
 		const addParticipant = React.useCallback(
-			(participant: ReceiptParticipant | EveryParticipantTag) => {
+			(participant: ReceiptParticipant | EveryParticipantTag) => () => {
 				if (participant === EVERY_PARTICIPANT_TAG) {
 					addItemPartMutation.mutate({
 						itemId: receiptItem.id,
@@ -103,24 +109,35 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 
 		return (
 			<Card ref={ref}>
-				<Card.Header css={{ justifyContent: "space-between" }}>
+				<CardHeader className="justify-between gap-4">
 					<ReceiptItemNameInput
 						receiptId={receiptId}
 						receiptItem={receiptItem}
 						readOnly={isEditingDisabled || receiptLocked}
 						isLoading={isDeleteLoading}
 					/>
-					<ReceiptItemLockedButton
-						ghost
-						receiptId={receiptId}
-						receiptItemId={receiptItem.id}
-						locked={receiptItem.locked}
-						disabled={role === "viewer"}
-					/>
-				</Card.Header>
-				<Card.Divider />
-				<Card.Body>
-					<Sum>
+					<View className="flex-row gap-4">
+						<ReceiptItemLockedButton
+							receiptId={receiptId}
+							receiptItemId={receiptItem.id}
+							locked={receiptItem.locked}
+							isDisabled={role === "viewer"}
+						/>
+						{isEditingDisabled ? null : (
+							<RemoveButton
+								onRemove={removeItem}
+								isDisabled={receiptLocked}
+								mutation={removeReceiptItemMutation}
+								subtitle="This will remove item with all participant's parts"
+								noConfirm={receiptItem.parts.length === 0}
+								isIconOnly
+							/>
+						)}
+					</View>
+				</CardHeader>
+				<Divider />
+				<CardBody className="gap-2">
+					<View className="flex-row items-center gap-2">
 						<ReceiptItemPriceInput
 							receiptId={receiptId}
 							receiptItem={receiptItem}
@@ -134,108 +151,74 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 							readOnly={isEditingDisabled || receiptLocked}
 							isLoading={isDeleteLoading}
 						/>
-						<Spacer x={0.5} />
 						<Text>
 							= {round(receiptItem.quantity * receiptItem.price)} {currency}
 						</Text>
-					</Sum>
+					</View>
 					{receiptLocked ||
 					isEditingDisabled ||
 					notAddedParticipants.length === 0 ? null : (
-						<>
-							<Spacer y={1} />
-							<ButtonsGroup<ReceiptParticipant | EveryParticipantTag>
-								type="linear"
-								buttons={
-									notAddedParticipants.length === 1
-										? notAddedParticipants
-										: [EVERY_PARTICIPANT_TAG, ...notAddedParticipants]
-								}
-								buttonProps={(button) => ({
-									auto: true,
-									ghost: true,
-									...(button === EVERY_PARTICIPANT_TAG
-										? { color: "secondary" }
-										: undefined),
-								})}
-								extractDetails={(participant) =>
-									participant === EVERY_PARTICIPANT_TAG
-										? {
-												id: EVERY_PARTICIPANT_TAG,
-												name: "Everyone",
-										  }
-										: {
-												id: participant.remoteUserId,
-												name: participant.name,
-										  }
-								}
-								onClick={addParticipant}
-								disabled={receiptLocked}
-							/>
-						</>
+						<ScrollShadow
+							orientation="horizontal"
+							className="flex w-full flex-row gap-1 overflow-x-auto"
+						>
+							{(notAddedParticipants.length === 1
+								? notAddedParticipants
+								: [EVERY_PARTICIPANT_TAG, ...notAddedParticipants]
+							).map((participant) => (
+								<Chip
+									key={
+										participant === EVERY_PARTICIPANT_TAG
+											? participant
+											: participant.remoteUserId
+									}
+									color={
+										participant === EVERY_PARTICIPANT_TAG
+											? "secondary"
+											: "default"
+									}
+									className="cursor-pointer"
+									onClick={addParticipant(participant)}
+									isDisabled={receiptLocked}
+								>
+									{participant === EVERY_PARTICIPANT_TAG
+										? "Everyone"
+										: `+ ${participant.name}`}
+								</Chip>
+							))}
+						</ScrollShadow>
 					)}
-					{receiptItem.parts.length === 0 ? (
-						notAddedParticipants.length === 0 || receiptLocked ? null : (
-							<>
-								<Spacer y={0.5} />
-								<Card.Divider />
-								<Spacer y={0.5} />
-								<Text h4>Add a user from a list above</Text>
-							</>
-						)
-					) : (
+					{receiptItem.parts.length === 0 ? null : (
 						<>
-							<Spacer y={1} />
-							<Card.Divider />
-							<Spacer y={1} />
-							{receiptItem.parts.map((part, index) => {
+							<Divider />
+							{receiptItem.parts.map((part) => {
 								const matchedParticipant = receiptParticipants.find(
 									(participant) => participant.remoteUserId === part.userId,
 								);
 								if (!matchedParticipant) {
 									return (
-										<React.Fragment key={part.userId}>
-											{index === 0 ? null : <Spacer y={0.5} />}
-											<ErrorMessage
-												message={`Part for user id ${part.userId} is orphaned. Please report this to support, include receipt id, receipt item name and mentioned user id`}
-											/>
-										</React.Fragment>
+										<ErrorMessage
+											key={part.userId}
+											message={`Part for user id ${part.userId} is orphaned. Please report this to support, include receipt id, receipt item name and mentioned user id`}
+										/>
 									);
 								}
 								return (
-									<React.Fragment key={part.userId}>
-										{index === 0 ? null : <Spacer y={0.5} />}
-										<ReceiptItemPart
-											receiptId={receiptId}
-											itemPart={part}
-											itemParts={itemParts}
-											participant={matchedParticipant}
-											receiptItemId={receiptItem.id}
-											readOnly={isEditingDisabled || receiptLocked}
-											isLoading={isDeleteLoading}
-										/>
-									</React.Fragment>
+									<ReceiptItemPart
+										key={part.userId}
+										receiptId={receiptId}
+										itemPart={part}
+										itemParts={itemParts}
+										participant={matchedParticipant}
+										receiptItemId={receiptItem.id}
+										readOnly={isEditingDisabled || receiptLocked}
+										isLoading={isDeleteLoading}
+									/>
 								);
 							})}
 						</>
 					)}
-				</Card.Body>
-				{isEditingDisabled ? null : (
-					<>
-						<Card.Divider />
-						<Card.Footer css={{ justifyContent: "flex-end" }}>
-							<RemoveButton
-								onRemove={removeItem}
-								disabled={receiptLocked}
-								mutation={removeReceiptItemMutation}
-								subtitle="This will remove item with all participant's parts"
-								noConfirm={receiptItem.parts.length === 0}
-							>
-								Remove item
-							</RemoveButton>
-						</Card.Footer>
-					</>
-				)}
+				</CardBody>
 			</Card>
 		);
 	},

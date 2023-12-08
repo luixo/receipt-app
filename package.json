@@ -26,10 +26,12 @@
 		"eslint-plugin-jsx-a11y": "^6.7.1",
 		"eslint-plugin-react": "^7.33.0",
 		"eslint-plugin-react-hooks": "^4.6.0",
+		"eslint-plugin-tailwindcss": "^3.13.0",
 		"find-free-ports": "^3.1.1",
 		"lint-staged": "^13.2.3",
 		"pre-commit": "^1.2.2",
 		"prettier": "^3.0.0",
+		"prettier-plugin-tailwindcss": "^0.5.7",
 		"testcontainers": "^8.12.0",
 		"ts-node": "^10.9.1",
 		"turbo": "^1.2.2",
@@ -44,8 +46,8 @@
 		"ios:build": "yarn workspace expo-app ios:update-version && yarn workspace expo-app ios:build",
 		"ios:publish": "yarn workspace expo-app ios:publish",
 		"typecheck": "tsc --noEmit",
-		"format": "prettier --write '**/*.{js,jsx,ts,tsx,json}'",
-		"format:verify": "prettier --check '**/*.{js,jsx,ts,tsx,json}'",
+		"format": "prettier --write '**/*.{js,jsx,ts,tsx,json,css}'",
+		"format:verify": "prettier --check '**/*.{js,jsx,ts,tsx,json,css}'",
 		"lint": "NODE_OPTIONS=\"--max-old-space-size=4096\" eslint . --ext .js,.jsx,.ts,.tsx",
 		"lint:fix": "eslint --fix . --ext .js,.jsx,.ts,.tsx",
 		"db:migrate": "dotenv -c -- yarn workspace scripts db:migrate",
@@ -56,7 +58,6 @@
 		"frontend:test": "yarn workspace playwright test"
 	},
 	"dependencies": {
-		"@nextui-org/react": "1.0.0-beta.10",
 		"@sentry/nextjs": "^7.85.0",
 		"@tanstack/react-query": "^4.32.0",
 		"@tanstack/react-query-devtools": "^4.32.0",
@@ -70,6 +71,7 @@
 		"react-icons": "^4.10.1",
 		"react-native": "^0.72.3",
 		"react-native-web": "^0.19.7",
+		"tailwindcss": "^3.3.5",
 		"zod": "^3.21.4"
 	},
 	"version": "1.0.0",
@@ -88,7 +90,6 @@
 		"zustand@^4.3.9": "patch:zustand@npm%3A4.3.9#./patches/zustand-npm-4.3.9.patch",
 		"@trpc/next@^10.35.0": "patch:@trpc/next@npm%3A10.35.0#./patches/@trpc-next-npm-10.35.0.patch",
 		"@trpc/server@^10.35.0": "patch:@trpc/server@npm%3A10.35.0#./patches/@trpc-server-npm-10.35.0.patch",
-		"@nextui-org/react@1.0.0-beta.10": "patch:@nextui-org/react@npm%3A1.0.0-beta.10#./patches/@nextui-org-react-npm-1.0.0-beta.10.patch",
 		"next@^14.0.3": "patch:next@npm%3A14.0.3#./patches/next-npm-14.0.3.patch",
 		"react-ssr-prepass@^1.5.0": "patch:react-ssr-prepass@npm%3A1.5.0#./patches/react-ssr-prepass-npm-1.5.0.patch",
 		"next-usequerystate@1.13.0": "patch:next-usequerystate@npm%3A1.13.0#./patches/next-usequerystate-npm-1.13.0.patch"

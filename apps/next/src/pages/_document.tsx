@@ -1,6 +1,5 @@
 import * as React from "react";
 
-import { CssBaseline } from "@nextui-org/react";
 import { getCookie } from "cookies-next";
 import { extractCss } from "goober";
 import NextDocument, { Head, Html, Main, NextScript } from "next/document";
@@ -15,11 +14,7 @@ type DocumentProps = {
 class Document extends NextDocument<DocumentProps> {
 	render() {
 		return (
-			<Html
-				className={
-					this.props.lastColorMode === "dark" ? "dark-theme" : "light-theme"
-				}
-			>
+			<Html className={this.props.lastColorMode}>
 				<Head>
 					<meta httpEquiv="X-UA-Compatible" content="IE=edge" />
 				</Head>
@@ -41,12 +36,11 @@ Document.getInitialProps = async (ctx) => {
 		...prevProps,
 		styles: (
 			<>
-				{prevProps.styles}
 				{/* see https://github.com/timolins/react-hot-toast/issues/189#issuecomment-1256797662 */}
 				<style id="_goober">
 					{"/* ! */"} {extractCss()}
 				</style>
-				{CssBaseline.flush()}
+				{prevProps.styles}
 			</>
 		),
 		lastColorMode,

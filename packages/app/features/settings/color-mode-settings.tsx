@@ -1,25 +1,20 @@
 import React from "react";
+import { View } from "react-native";
 
-import type { SwitchEvent } from "@nextui-org/react";
-import { Checkbox, Spacer, Switch, Text, styled } from "@nextui-org/react";
+import { Checkbox, Switch } from "@nextui-org/react";
 import { FiMoon as MoonIcon, FiSun as SunIcon } from "react-icons/fi";
 
+import { Header } from "app/components/base/header";
 import { ColorModeContext } from "app/contexts/color-mode-context";
-
-const Wrapper = styled("div", {
-	width: "100%",
-	display: "flex",
-	justifyContent: "space-evenly",
-});
 
 export const ColorModeSettings: React.FC = () => {
 	const [colorModeConfig, setColorModeConfig] =
 		React.useContext(ColorModeContext);
 	const setColorMode = React.useCallback(
-		(e: SwitchEvent) => {
+		(nextDark: boolean) => {
 			setColorModeConfig((prevConfig) => ({
 				...prevConfig,
-				selected: e.target.checked ? "dark" : "light",
+				selected: nextDark ? "dark" : "light",
 			}));
 		},
 		[setColorModeConfig],
@@ -40,31 +35,36 @@ export const ColorModeSettings: React.FC = () => {
 		},
 		[setColorModeConfig],
 	);
+	const isSelected =
+		colorModeConfig.selected === undefined
+			? Boolean(colorModeConfig.last)
+			: colorModeConfig.selected === "dark";
 	return (
 		<>
-			<Text h2>Color mode</Text>
-			<Spacer y={1} />
-			<Wrapper>
+			<Header size="lg">Color mode</Header>
+			<View className="flex-row gap-4">
 				<Checkbox
 					isSelected={colorModeConfig.selected === undefined}
-					onChange={changeAuto}
-					label="Auto"
+					onValueChange={changeAuto}
 					size="lg"
-				/>
+				>
+					Auto
+				</Checkbox>
 				<Switch
-					checked={
-						colorModeConfig.selected === undefined
-							? Boolean(colorModeConfig.last)
-							: colorModeConfig.selected === "dark"
+					isSelected={isSelected}
+					onValueChange={setColorMode}
+					thumbIcon={
+						isSelected ? (
+							<MoonIcon color="currentColor" />
+						) : (
+							<SunIcon color="currentColor" />
+						)
 					}
-					onChange={setColorMode}
-					disabled={colorModeConfig.selected === undefined}
-					iconOn={<MoonIcon />}
-					iconOff={<SunIcon />}
-					bordered
+					isDisabled={colorModeConfig.selected === undefined}
 					size="lg"
+					classNames={{ thumb: "bg-background" }}
 				/>
-			</Wrapper>
+			</View>
 		</>
 	);
 };

@@ -1,29 +1,31 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Popover, Spacer, Text, styled } from "@nextui-org/react";
+import {
+	Button,
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@nextui-org/react";
 import {
 	MdHourglassDisabled as CrossWaitIcon,
 	MdHourglassEmpty as WaitIcon,
 } from "react-icons/md";
 
 import { LoadableUser } from "app/components/app/loadable-user";
-import { IconButton } from "app/components/icon-button";
+import { Text } from "app/components/base/text";
 import { trpc } from "app/trpc";
 import type { ReceiptsId } from "next-app/db/models";
 
-const Wrapper = styled("div", {
-	p: "$8",
-});
-
-const Participants = styled("div");
-
 type Props = {
 	receiptId: ReceiptsId;
-} & Omit<React.ComponentProps<typeof IconButton>, "onClick" | "color">;
+} & Omit<
+	React.ComponentProps<typeof Button>,
+	"onClick" | "color" | "isIconOnly"
+>;
 
 export const ReceiptResolvedParticipantsButton: React.FC<Props> = ({
 	receiptId,
-	css,
 	...props
 }) => {
 	const [popoverOpen, setPopoverOpen] = React.useState(false);
@@ -40,72 +42,57 @@ export const ReceiptResolvedParticipantsButton: React.FC<Props> = ({
 			onOpenChange={setPopoverOpen}
 			placement="left"
 		>
-			<Popover.Trigger>
-				<IconButton
+			<PopoverTrigger>
+				<Button
+					variant="light"
 					{...props}
 					color={popoverOpen ? "secondary" : undefined}
 					isLoading={query.isLoading || props.isLoading}
-					disabled={query.status !== "success" || query.data.length === 0}
-					icon={
+					isDisabled={
+						query.status !== "success" ||
+						query.data.length === 0 ||
+						props.isDisabled
+					}
+					isIconOnly
+					startContent={
 						notResolvedParticipants?.length === 0 ? (
 							<WaitIcon size={24} />
 						) : (
 							<CrossWaitIcon size={24} />
 						)
 					}
-					css={{ ...css, minWidth: "$20" }}
 				>
 					{!notResolvedParticipants || notResolvedParticipants.length === 0
 						? null
 						: notResolvedParticipants.length}
-				</IconButton>
-			</Popover.Trigger>
-			<Popover.Content>
-				<Wrapper>
+				</Button>
+			</PopoverTrigger>
+			<PopoverContent>
+				<View className="gap-6 p-4">
 					{notResolvedParticipants && notResolvedParticipants.length !== 0 ? (
-						<>
-							<Text b>Not resolved participants: </Text>
-							<Spacer y={1} />
-							<Participants>
-								{notResolvedParticipants.map((participant, index) => (
-									<React.Fragment
-										key={participant.localUserId || participant.remoteUserId}
-									>
-										{index === 0 ? null : <Spacer y={0.5} />}
-										<LoadableUser
-											id={participant.localUserId || participant.remoteUserId}
-										/>
-									</React.Fragment>
-								))}
-							</Participants>
-						</>
-					) : null}
-					{notResolvedParticipants &&
-					notResolvedParticipants.length !== 0 &&
-					resolvedParticipants &&
-					resolvedParticipants.length !== 0 ? (
-						<Spacer y={2} />
+						<View className="items-start gap-2">
+							<Text className="font-medium">Not resolved participants: </Text>
+							{notResolvedParticipants.map((participant) => (
+								<LoadableUser
+									key={participant.localUserId || participant.remoteUserId}
+									id={participant.localUserId || participant.remoteUserId}
+								/>
+							))}
+						</View>
 					) : null}
 					{resolvedParticipants && resolvedParticipants.length !== 0 ? (
-						<>
-							<Text b>Resolved participants: </Text>
-							<Spacer y={1} />
-							<Participants>
-								{resolvedParticipants?.map((participant, index) => (
-									<React.Fragment
-										key={participant.localUserId || participant.remoteUserId}
-									>
-										{index === 0 ? null : <Spacer y={0.5} />}
-										<LoadableUser
-											id={participant.localUserId || participant.remoteUserId}
-										/>
-									</React.Fragment>
-								))}
-							</Participants>
-						</>
+						<View className="items-start gap-2">
+							<Text className="font-medium">Resolved participants: </Text>
+							{resolvedParticipants?.map((participant) => (
+								<LoadableUser
+									key={participant.localUserId || participant.remoteUserId}
+									id={participant.localUserId || participant.remoteUserId}
+								/>
+							))}
+						</View>
 					) : null}
-				</Wrapper>
-			</Popover.Content>
+				</View>
+			</PopoverContent>
 		</Popover>
 	);
 };

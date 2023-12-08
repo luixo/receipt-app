@@ -1,10 +1,11 @@
 import React from "react";
 
-import { Button, Loading, Spacer } from "@nextui-org/react";
+import { Button, Spinner } from "@nextui-org/react";
 import { useQueryClient } from "@tanstack/react-query";
+import { FaUser as AccountIcon } from "react-icons/fa";
 
 import { QueryErrorMessage } from "app/components/error-message";
-import { Header } from "app/components/header";
+import { PageHeader } from "app/components/page-header";
 import { ChangePasswordScreen } from "app/features/change-password/change-password-screen";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { useRouter } from "app/hooks/use-router";
@@ -39,23 +40,20 @@ const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 
 	return (
 		<>
-			<Header icon="👤" textChildren="My account">
+			<PageHeader startContent={<AccountIcon size={36} />} title="My account">
 				{query.data.user.name}
-			</Header>
+			</PageHeader>
 			<EmailVerificationCard />
-			<Spacer y={1} />
 			<AccountNameInput accountQuery={query.data} />
-			<Spacer y={1} />
 			<ChangePasswordScreen />
-			<Spacer y={2} />
 			<Button
-				auto
-				disabled={logoutMutation.isLoading}
+				className="mt-4 self-end"
+				isDisabled={logoutMutation.isLoading}
 				onClick={logout}
 				color="warning"
-				css={{ alignSelf: "flex-end" }}
+				isLoading={logoutMutation.isLoading}
 			>
-				{logoutMutation.isLoading ? <Loading /> : "Logout"}
+				Logout
 			</Button>
 		</>
 	);
@@ -64,7 +62,7 @@ const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 export const AccountScreen: AppPage = () => {
 	const query = trpc.account.get.useQuery();
 	if (query.status === "loading") {
-		return <Loading />;
+		return <Spinner />;
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;

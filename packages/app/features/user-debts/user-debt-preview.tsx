@@ -1,10 +1,10 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Text } from "@nextui-org/react";
+import { Link } from "@nextui-org/react";
 
 import { DebtSyncStatus } from "app/components/app/debt-sync-status";
-import { Grid } from "app/components/grid";
-import { Link } from "app/components/link";
+import { Text } from "app/components/base/text";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useSsrFormat } from "app/hooks/use-ssr-format";
 import type { TRPCQuerySuccessResult } from "app/trpc";
@@ -17,23 +17,26 @@ export const UserDebtPreview: React.FC<Props> = ({ debt }) => {
 	const currency = useFormattedCurrency(debt.currencyCode);
 	const { formatDate } = useSsrFormat();
 	return (
-		<Link href={`/debts/${debt.id}`} color="text">
-			<Grid.Container gap={2}>
-				<Grid defaultCol={2} lessSmCol={5} lessMdCol={3}>
-					<Text color={debt.amount >= 0 ? "success" : "error"}>
+		<Link href={`/debts/${debt.id}`} className="flex flex-col items-stretch">
+			<View className="flex-1 flex-row gap-2 p-2 max-sm:p-3">
+				<View className="flex-[2]">
+					<Text className={debt.amount >= 0 ? "text-success" : "text-danger"}>
 						{Math.abs(debt.amount)} {currency}
 					</Text>
-				</Grid>
-				<Grid defaultCol={2} lessSmCol={5} lessMdCol={3}>
-					{formatDate(debt.timestamp)}
-				</Grid>
-				<Grid defaultCol={2}>
-					<DebtSyncStatus debt={debt} size={24} />
-				</Grid>
-				<Grid defaultCol={6} lessSmCol={12} lessMdCol={4} lessSmCss={{ pt: 0 }}>
-					{debt.note}
-				</Grid>
-			</Grid.Container>
+				</View>
+				<View className="flex-[2]">
+					<Text>{formatDate(debt.timestamp)}</Text>
+				</View>
+				<View className="flex-1">
+					<DebtSyncStatus debt={debt} />
+				</View>
+				<View className="flex-[3] max-sm:hidden">
+					<Text>{debt.note}</Text>
+				</View>
+			</View>
+			<View className="p-3 pb-5 sm:hidden">
+				<Text>{debt.note}</Text>
+			</View>
 		</Link>
 	);
 };

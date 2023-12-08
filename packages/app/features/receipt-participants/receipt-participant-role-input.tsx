@@ -1,7 +1,21 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Dropdown, Loading, Text } from "@nextui-org/react";
+import {
+	Button,
+	Dropdown,
+	DropdownItem,
+	DropdownMenu,
+	DropdownTrigger,
+} from "@nextui-org/react";
+import {
+	AiOutlineUserAdd as EditorIcon,
+	AiOutlineUsergroupAdd as OwnerIcon,
+	AiOutlineUserDelete as ViewerIcon,
+} from "react-icons/ai";
+import { FaChevronDown as ChevronDown } from "react-icons/fa";
 
+import { Text } from "app/components/base/text";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import type { TRPCQueryOutput } from "app/trpc";
@@ -54,28 +68,39 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 
 	return (
 		<Dropdown>
-			<Dropdown.Button
-				flat
-				size="sm"
-				disabled={isLoading || role !== "owner" || participant.role === "owner"}
+			<DropdownTrigger>
+				<Button
+					variant="flat"
+					size="sm"
+					isDisabled={
+						isLoading || role !== "owner" || participant.role === "owner"
+					}
+					isLoading={updateParticipantMutation.isLoading}
+					startContent={<ChevronDown />}
+				>
+					{participant.role === "owner" ? (
+						<OwnerIcon size={24} />
+					) : participant.role === "editor" ? (
+						<EditorIcon size={24} />
+					) : (
+						<ViewerIcon size={24} />
+					)}
+				</Button>
+			</DropdownTrigger>
+			<DropdownMenu
+				aria-label="Roles"
+				variant="shadow"
+				selectionMode="single"
+				selectedKeys={[participant.role]}
 			>
-				{updateParticipantMutation.isLoading ? (
-					<Loading size="xs" />
-				) : (
-					participant.role
-				)}
-			</Dropdown.Button>
-			<Dropdown.Menu aria-label="Roles" variant="shadow">
-				{ROLES.filter((pickRole) => pickRole !== participant.role).map(
-					(pickRole) => (
-						<Dropdown.Item key={pickRole}>
-							<Text onClick={() => changeRole(pickRole)}>
-								Set &quot;{pickRole}&quot; role
-							</Text>
-						</Dropdown.Item>
-					),
-				)}
-			</Dropdown.Menu>
+				{ROLES.map((pickRole) => (
+					<DropdownItem key={pickRole}>
+						<View onClick={() => changeRole(pickRole)}>
+							<Text>{pickRole}</Text>
+						</View>
+					</DropdownItem>
+				))}
+			</DropdownMenu>
 		</Dropdown>
 	);
 };

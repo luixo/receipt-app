@@ -1,9 +1,6 @@
 import React from "react";
 
-import { Input } from "@nextui-org/react";
-import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
-
-import { IconButton } from "app/components/icon-button";
+import { Input } from "app/components/base/input";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -45,6 +42,7 @@ export const ReceiptNameInput: React.FC<Props> = ({
 	const saveName = React.useCallback(
 		(nextName: string) => {
 			if (receipt.name === nextName) {
+				unsetEditing();
 				return;
 			}
 			updateReceiptMutation.mutate(
@@ -52,32 +50,23 @@ export const ReceiptNameInput: React.FC<Props> = ({
 				{ onSuccess: () => setValue(nextName) },
 			);
 		},
-		[updateReceiptMutation, receipt.id, receipt.name, setValue],
+		[updateReceiptMutation, receipt.id, receipt.name, setValue, unsetEditing],
 	);
 
 	return (
 		<Input
 			{...bindings}
 			aria-label="Receipt name"
-			css={{ flex: 1 }}
-			disabled={updateReceiptMutation.isLoading || isLoading}
-			readOnly={receipt.role !== "owner"}
-			status={inputState.error ? "warning" : undefined}
-			helperColor={inputState.error ? "warning" : "error"}
-			helperText={
-				inputState.error?.message || updateReceiptMutation.error?.message
-			}
-			contentRightStyling={updateReceiptMutation.isLoading}
-			contentRight={
-				<IconButton
-					title="Save receipt name"
-					light
-					isLoading={updateReceiptMutation.isLoading}
-					disabled={Boolean(inputState.error)}
-					onClick={() => saveName(getValue())}
-					icon={<CheckMark size={24} />}
-				/>
-			}
+			mutation={updateReceiptMutation}
+			labelPlacement="outside-left"
+			className="basis-36"
+			isDisabled={isLoading}
+			isReadOnly={receipt.role !== "owner"}
+			fieldError={inputState.error}
+			saveProps={{
+				title: "Save receipt name",
+				onClick: () => saveName(getValue()),
+			}}
 		/>
 	);
 };

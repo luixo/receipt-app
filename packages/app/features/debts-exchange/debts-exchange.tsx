@@ -1,11 +1,11 @@
 import React from "react";
 
-import { Button, Loading, Spacer } from "@nextui-org/react";
+import { Button, Link, Spinner } from "@nextui-org/react";
 
 import { DebtsGroup } from "app/components/app/debts-group";
 import { LoadableUser } from "app/components/app/loadable-user";
 import { QueryErrorMessage } from "app/components/error-message";
-import { Header } from "app/components/header";
+import { PageHeader } from "app/components/page-header";
 import { useAggregatedDebts } from "app/hooks/use-aggregated-debts";
 import { useRouter } from "app/hooks/use-router";
 import type { TRPCQuerySuccessResult } from "app/trpc";
@@ -29,24 +29,31 @@ const DebtsExchangeInner: React.FC<InnerProps> = ({ userId, query }) => {
 	);
 	return (
 		<>
-			<Header
+			<PageHeader
 				backHref={`/debts/user/${userId}`}
-				textChildren={`${
+				title={`${
 					userQuery.status === "success" ? userQuery.data.name : "..."
 				}'s debts`}
 			>
 				<LoadableUser id={userId} />
-			</Header>
-			<Spacer y={1} />
+			</PageHeader>
 			<DebtsGroup
 				debts={showResolvedDebts ? aggregatedDebts : nonZeroAggregateDebts}
 			/>
-			<Spacer y={1} />
-			<Button href={`/debts/user/${userId}/exchange/all`} onClick={onAllClick}>
+			<Button
+				color="primary"
+				as={Link}
+				href={`/debts/user/${userId}/exchange/all`}
+				onClick={onAllClick}
+			>
 				Exchange all to one currency
 			</Button>
-			<Spacer y={1} />
-			<Button href={`/debts/user/${userId}/exchange/specific`} disabled>
+			<Button
+				color="primary"
+				as={Link}
+				href={`/debts/user/${userId}/exchange/specific`}
+				isDisabled
+			>
 				Exchange specific currency
 			</Button>
 		</>
@@ -61,8 +68,8 @@ export const DebtsExchange: React.FC<Props> = ({ userId, ...props }) => {
 	if (query.status === "loading") {
 		return (
 			<>
-				<Header>{userNameQuery.data || userId}</Header>
-				<Loading />
+				<PageHeader>{userNameQuery.data || userId}</PageHeader>
+				<Spinner />
 			</>
 		);
 	}

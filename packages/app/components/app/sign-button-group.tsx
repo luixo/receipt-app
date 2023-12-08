@@ -1,15 +1,18 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Button, Loading, styled } from "@nextui-org/react";
+import { Button, Spinner, tv } from "@nextui-org/react";
 
 export type Direction = "+" | "-";
 
-const Wrapper = styled("div", {
-	display: "flex",
-});
-
-const ButtonWrapper = styled(Button, {
-	flex: 1,
+const buttonClass = tv({
+	base: "flex-1",
+	variants: {
+		type: {
+			right: "rounded-l-none",
+			left: "rounded-r-none",
+		},
+	},
 });
 
 type Props = {
@@ -28,25 +31,25 @@ export const SignButtonGroup: React.FC<Props> = ({
 	const setPositive = React.useCallback(() => onUpdate("+"), [onUpdate]);
 	const setNegative = React.useCallback(() => onUpdate("-"), [onUpdate]);
 	return (
-		<Wrapper>
-			<ButtonWrapper
+		<View className="flex-row">
+			<Button
 				onClick={setPositive}
-				bordered={direction === "-"}
-				css={{ flex: 1, bbrr: 0, btrr: 0 }}
+				variant={direction === "-" ? "bordered" : undefined}
+				className={buttonClass({ type: "left" })}
 				color="success"
-				disabled={disabled || isLoading}
+				isDisabled={disabled || isLoading}
 			>
-				{isLoading ? <Loading size="xs" /> : "+ give"}
-			</ButtonWrapper>
-			<ButtonWrapper
+				{isLoading ? <Spinner size="sm" /> : "+ give"}
+			</Button>
+			<Button
 				onClick={setNegative}
-				bordered={direction === "+"}
-				css={{ flex: 1, bblr: 0, btlr: 0 }}
-				color="error"
-				disabled={disabled || isLoading}
+				variant={direction === "+" ? "bordered" : undefined}
+				className={buttonClass({ type: "right" })}
+				color="danger"
+				isDisabled={disabled || isLoading}
 			>
-				{isLoading ? <Loading size="xs" /> : "- take"}
-			</ButtonWrapper>
-		</Wrapper>
+				{isLoading ? <Spinner size="sm" /> : "- take"}
+			</Button>
+		</View>
 	);
 };

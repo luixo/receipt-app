@@ -11,7 +11,8 @@ export const RefreshSettings: React.FC = () => {
 		[queryClient],
 	);
 	return (
-		<Button size="lg" icon={<RefreshIcon />} onClick={refetch} auto>
+		<Button color="primary" onClick={refetch}>
+			<RefreshIcon />
 			Refetch all data
 		</Button>
 	);

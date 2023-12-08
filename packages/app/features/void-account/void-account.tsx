@@ -1,17 +1,14 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Button, Loading, Spacer, Text, styled } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 
+import { Header } from "app/components/base/header";
 import { ErrorMessage } from "app/components/error-message";
 import { useRouter } from "app/hooks/use-router";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
-
-const Buttons = styled("div", {
-	display: "flex",
-	justifyContent: "center",
-});
 
 type Props = {
 	token: string;
@@ -33,13 +30,11 @@ export const VoidAccount: React.FC<Props> = ({ token }) => {
 	if (voidMutation.status === "success") {
 		return (
 			<>
-				<Text h3>{voidMutation.data.email}</Text>
-				<Spacer y={0.5} />
-				<Text h4 color="success">
+				<Header>{voidMutation.data.email}</Header>
+				<Header size="sm" className="text-success">
 					Account removed succesfully
-				</Text>
-				<Spacer y={1} />
-				<Button auto onClick={navigateToHomePage}>
+				</Header>
+				<Button color="primary" onClick={navigateToHomePage}>
 					To home page
 				</Button>
 			</>
@@ -47,31 +42,29 @@ export const VoidAccount: React.FC<Props> = ({ token }) => {
 	}
 	return (
 		<>
-			<Text h3>Are you sure you want to void your account?</Text>
-			<Spacer y={1} />
-			<Buttons>
+			<Header>Are you sure you want to void your account?</Header>
+			<View className="flex-row gap-2">
 				<Button
+					className="flex-1"
 					onClick={voidAccount}
-					disabled={voidMutation.isLoading}
-					color="error"
+					isDisabled={voidMutation.isLoading}
+					isLoading={voidMutation.isLoading}
+					color="danger"
 					type="submit"
 				>
-					{voidMutation.isLoading ? (
-						<Loading color="currentColor" size="sm" />
-					) : (
-						"Yes"
-					)}
+					Yes
 				</Button>
-				<Spacer x={0.5} />
-				<Button onClick={navigateToHomePage} disabled={voidMutation.isLoading}>
+				<Button
+					className="flex-1"
+					color="primary"
+					onClick={navigateToHomePage}
+					isDisabled={voidMutation.isLoading}
+				>
 					No
 				</Button>
-			</Buttons>
+			</View>
 			{voidMutation.status === "error" ? (
-				<>
-					<Spacer y={1} />
-					<ErrorMessage message={voidMutation.error.message} />
-				</>
+				<ErrorMessage message={voidMutation.error.message} />
 			) : null}
 		</>
 	);

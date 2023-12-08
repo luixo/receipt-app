@@ -1,22 +1,22 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Button, Card, Row, Spacer, Text, styled } from "@nextui-org/react";
+import {
+	Button,
+	Card,
+	CardBody,
+	CardFooter,
+	CardHeader,
+	Divider,
+} from "@nextui-org/react";
 import type {
 	QueryObserverLoadingErrorResult,
 	QueryObserverRefetchErrorResult,
 } from "@tanstack/react-query";
 import { IoWarning as WarningIcon } from "react-icons/io5";
 
+import { Header } from "app/components/base/header";
 import type { TRPCError } from "app/trpc";
-
-const Title = styled(Text, {
-	display: "flex",
-	alignItems: "center",
-});
-
-const Message = styled(Text, {
-	whiteSpace: "pre-wrap",
-});
 
 type Props = {
 	message: string;
@@ -27,26 +27,25 @@ type Props = {
 };
 
 export const ErrorMessage: React.FC<Props> = ({ message, button }) => (
-	<Card variant="flat">
-		<Card.Header>
-			<Title h3 color="error">
+	<Card>
+		<CardHeader>
+			<View className="text-danger flex flex-row gap-2">
 				<WarningIcon size={32} />
-				<Spacer x={0.25} />
-				Error
-			</Title>
-		</Card.Header>
-		<Card.Divider />
-		<Card.Body>
-			<Message>{message}</Message>
-		</Card.Body>
+				<Header className="text-danger">Error</Header>
+			</View>
+		</CardHeader>
+		<Divider />
+		<CardBody>
+			<span className="whitespace-pre-wrap">{message}</span>
+		</CardBody>
 		{button ? (
 			<>
-				<Card.Divider />
-				<Card.Footer>
-					<Row justify="flex-end">
-						<Button onClick={button.onClick}>{button.text}</Button>
-					</Row>
-				</Card.Footer>
+				<Divider />
+				<CardFooter className="flex flex-row justify-end">
+					<Button color="primary" onClick={button.onClick}>
+						{button.text}
+					</Button>
+				</CardFooter>
 			</>
 		) : null}
 	</Card>

@@ -1,34 +1,32 @@
 import React from "react";
 
-import { Input, Text } from "@nextui-org/react";
-import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 import { z } from "zod";
 
+import { Input } from "app/components/base/input";
+import { Text } from "app/components/base/text";
 import { Calendar } from "app/components/calendar";
-import { IconButton } from "app/components/icon-button";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useSsrFormat } from "app/hooks/use-ssr-format";
-import type { TRPCError } from "app/trpc";
-import { noop } from "app/utils/utils";
+import type { TRPCMutationResult } from "app/trpc";
 
 type Props = {
 	timestamp: Date;
-	error?: TRPCError | null;
-	loading?: boolean;
-	disabled?: boolean;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	mutation?: TRPCMutationResult<any>;
+	isDisabled?: boolean;
 	label?: string;
 	onUpdate: (nextDate: Date) => void;
 	updateOnChange?: boolean;
-};
+} & React.ComponentProps<typeof Input>;
 
 export const DateInput: React.FC<Props> = ({
 	timestamp,
-	error,
-	loading,
-	disabled,
+	mutation,
+	isDisabled,
 	label,
 	onUpdate,
 	updateOnChange,
+	...props
 }) => {
 	const { formatDate } = useSsrFormat();
 	const { bindings, state, getValue, setValue, form } = useSingleInput({
@@ -50,39 +48,29 @@ export const DateInput: React.FC<Props> = ({
 		<Calendar
 			value={Number.isNaN(dateValue.valueOf()) ? undefined : dateValue}
 			onChange={setValue}
-			disabled={loading || disabled}
+			disabled={mutation?.isLoading || isDisabled}
 		>
-			{disabled ? (
-				<Text size="$xl">{formatDate(dateValue)}</Text>
+			{isDisabled ? (
+				<Text className="text-xl">{formatDate(dateValue)}</Text>
 			) : (
 				<Input
 					{...bindings}
-					onChange={noop}
 					value={formatDate(dateValue)}
 					aria-label={label || "Date"}
 					label={label}
-					disabled={loading}
-					status={state.error ? "warning" : undefined}
-					helperColor={state.error ? "warning" : "error"}
-					helperText={state.error?.message || error?.message}
-					contentRightStyling
-					contentRight={
-						updateOnChange ? null : (
-							<IconButton
-								title="Save date"
-								light
-								isLoading={loading}
-								disabled={Boolean(state.error)}
-								onClick={() => onUpdate(dateValue)}
-								color={
-									dateValue.valueOf() === timestamp.valueOf()
-										? undefined
-										: "warning"
-								}
-								icon={<CheckMark size={24} />}
-							/>
-						)
+					mutation={mutation}
+					fieldError={state.error}
+					saveProps={
+						updateOnChange
+							? undefined
+							: {
+									title: "Save date",
+									isHidden:
+										dateValue.toDateString() === timestamp.toDateString(),
+									onClick: () => onUpdate(dateValue),
+							  }
 					}
+					{...props}
 				/>
 			)}
 		</Calendar>

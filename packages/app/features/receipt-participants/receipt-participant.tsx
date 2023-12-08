@@ -1,9 +1,11 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Collapse, Spacer, Text, styled } from "@nextui-org/react";
+import { Accordion, AccordionItem } from "@nextui-org/react";
 
 import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
 import { User } from "app/components/app/user";
+import { Text } from "app/components/base/text";
 import { RemoveButton } from "app/components/remove-button";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useSelfAccountId } from "app/hooks/use-self-account-id";
@@ -17,24 +19,6 @@ import type { ReceiptItemsId, ReceiptsId, UsersId } from "next-app/db/models";
 import type { Role } from "next-app/handlers/receipts/utils";
 
 import { ReceiptParticipantRoleInput } from "./receipt-participant-role-input";
-
-const Wrapper = styled("div", {
-	display: "flex",
-});
-
-const Body = styled("div", {
-	display: "flex",
-	justifyContent: "space-between",
-
-	"@xsMax": {
-		flexDirection: "column",
-	},
-});
-
-const BodyElement = styled("div", {
-	display: "flex",
-	alignItems: "center",
-});
 
 type Props = {
 	receiptId: ReceiptsId;
@@ -84,66 +68,81 @@ export const ReceiptParticipant: React.FC<Props> = ({
 		[removeReceiptParticipantMutation, receiptId, participant.remoteUserId],
 	);
 	const currency = useFormattedCurrency(currencyCode);
+	const disabled = participant.items.length === 0;
 
 	return (
-		<Collapse
-			disabled={participant.items.length === 0}
-			title={
-				<Wrapper>
-					<Body>
-						<BodyElement>
-							<User user={convertParticipantToUser(participant)} />
-							<Spacer x={1} />
+		<Accordion>
+			<AccordionItem
+				key="parts"
+				classNames={
+					disabled
+						? {
+								base: "pointer-events-none",
+								titleWrapper: "pointer-events-auto",
+								indicator: "opacity-disabled",
+						  }
+						: undefined
+				}
+				textValue={participant.name}
+				title={
+					<View className="flex-col items-start justify-between gap-2 min-[600px]:flex-row">
+						<User
+							className={
+								participant.items.length === 0 ? "opacity-disabled" : undefined
+							}
+							user={convertParticipantToUser(participant)}
+						/>
+						<View className="flex-row items-center justify-between gap-4 self-stretch">
 							<Text>
 								{`${Math.round(participant.sum * 100) / 100} ${currency}`}
 							</Text>
-						</BodyElement>
-						<Spacer x={1} />
-						<BodyElement css={{ alignSelf: "flex-end" }}>
-							<ReceiptParticipantRoleInput
-								receiptId={receiptId}
-								selfUserId={receiptSelfUserId}
-								participant={participant}
-								isLoading={isLoading}
-								role={role}
-							/>
-							<Spacer x={0.5} />
-							<ReceiptParticipantResolvedButton
-								{...(participant.remoteUserId !== receiptSelfUserId
-									? { light: true }
-									: { ghost: true })}
-								css={{ px: "$6", boxSizing: "border-box" }}
-								receiptId={receiptId}
-								userId={participant.remoteUserId}
-								selfUserId={receiptSelfUserId}
-								resolved={participant.resolved}
-							/>
-							{role === "owner" ? (
-								<>
-									<Spacer x={0.5} />
+							<View className="flex-row items-center gap-2">
+								<ReceiptParticipantRoleInput
+									receiptId={receiptId}
+									selfUserId={receiptSelfUserId}
+									participant={participant}
+									isLoading={isLoading}
+									role={role}
+								/>
+								<ReceiptParticipantResolvedButton
+									variant={
+										participant.remoteUserId === receiptSelfUserId
+											? "ghost"
+											: "light"
+									}
+									receiptId={receiptId}
+									userId={participant.remoteUserId}
+									selfUserId={receiptSelfUserId}
+									resolved={
+										participant.remoteUserId === receiptSelfUserId
+											? participant.resolved
+											: null
+									}
+								/>
+								{role === "owner" ? (
 									<RemoveButton
 										onRemove={removeReceiptParticipant}
 										mutation={removeReceiptParticipantMutation}
-										disabled={!selfAccountId || receiptLocked}
+										isDisabled={!selfAccountId || receiptLocked}
 										subtitle="This will remove participant with all his parts"
 										noConfirm={participant.sum === 0}
+										isIconOnly
 									/>
-								</>
-							) : null}
-						</BodyElement>
-					</Body>
-					<Spacer x={0.5} />
-				</Wrapper>
-			}
-		>
-			{participant.items.map((item) => (
-				<Text key={item.id}>
-					{item.name} -{" "}
-					{`${Math.round(item.sum * 100) / 100}${
-						item.hasExtra ? "+" : ""
-					} ${currency}`}
-				</Text>
-			))}
-		</Collapse>
+								) : null}
+							</View>
+						</View>
+					</View>
+				}
+			>
+				{participant.items.map((item) => (
+					<Text key={item.id}>
+						{item.name} -{" "}
+						{`${Math.round(item.sum * 100) / 100}${
+							item.hasExtra ? "+" : ""
+						} ${currency}`}
+					</Text>
+				))}
+			</AccordionItem>
+		</Accordion>
 	);
 };

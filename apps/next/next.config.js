@@ -18,6 +18,8 @@ const nextConfig = {
 		"@expo/html-elements",
 		"expo-constants",
 		"expo-modules-core",
+		"nativewind",
+		"react-native-css-interop",
 	],
 	// see patch
 	ignorePages: "\\.spec\\.tsx?$",

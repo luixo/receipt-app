@@ -1,12 +1,12 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Loading, Spacer } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { CurrencyInput } from "app/components/app/currency-input";
-import { Header } from "app/components/header";
+import { PageHeader } from "app/components/page-header";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { useRouter } from "app/hooks/use-router";
 import { useSelfAccountId } from "app/hooks/use-self-account-id";
@@ -61,28 +61,27 @@ export const AddReceiptScreen: AppPage = () => {
 
 	return (
 		<>
-			<Header backHref="/receipts">Add receipt</Header>
+			<PageHeader backHref="/receipts">Add receipt</PageHeader>
 			<EmailVerificationCard />
-			<Spacer y={1} />
-			<ReceiptNameInput form={form} query={addReceiptMutation} />
-			<Spacer y={1} />
+			<ReceiptNameInput form={form} isLoading={addReceiptMutation.isLoading} />
 			<CurrencyInput
 				form={form}
 				isLoading={addReceiptMutation.isLoading}
 				topCurrenciesQuery={topCurrenciesQuery}
 			/>
-			<Spacer y={1} />
-			<ReceiptDateInput form={form} query={addReceiptMutation} />
-			<Spacer y={1} />
+			<ReceiptDateInput form={form} isLoading={addReceiptMutation.isLoading} />
 			<Button
+				className="mt-4"
+				color="primary"
 				onClick={form.handleSubmit(onSubmit)}
-				disabled={
+				isDisabled={
 					!form.formState.isValid ||
 					addReceiptMutation.isLoading ||
 					!selfAccountId
 				}
+				isLoading={addReceiptMutation.isLoading}
 			>
-				{addReceiptMutation.isLoading ? <Loading size="sm" /> : "Add receipt"}
+				Add receipt
 			</Button>
 		</>
 	);

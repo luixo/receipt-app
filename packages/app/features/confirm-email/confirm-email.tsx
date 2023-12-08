@@ -1,7 +1,9 @@
 import React from "react";
 
-import { Button, Loading, Text } from "@nextui-org/react";
+import { Button, Spinner } from "@nextui-org/react";
 
+import { Header } from "app/components/base/header";
+import { EmptyCard } from "app/components/empty-card";
 import { ErrorMessage } from "app/components/error-message";
 import { useRouter } from "app/hooks/use-router";
 import type { TRPCMutationResult } from "app/trpc";
@@ -19,14 +21,13 @@ export const ConfirmEmail: React.FC<Props> = ({ token, confirmMutation }) => {
 	);
 	if (!token) {
 		return (
-			<>
-				<Text h3>Something went wrong</Text>
-				<Text b>Please verify you got confirm link right</Text>
-			</>
+			<EmptyCard title="Something went wrong">
+				Please verify you got confirm link right
+			</EmptyCard>
 		);
 	}
 	if (confirmMutation.status === "loading") {
-		return <Loading />;
+		return <Spinner size="lg" />;
 	}
 	if (confirmMutation.status === "error") {
 		return <ErrorMessage message={confirmMutation.error.message} />;
@@ -36,11 +37,11 @@ export const ConfirmEmail: React.FC<Props> = ({ token, confirmMutation }) => {
 	}
 	return (
 		<>
-			<Text h3>{confirmMutation.data.email}</Text>
-			<Text h4 color="success">
-				Email verification successful!
-			</Text>
-			<Button onClick={navigateToHomePage}>To home page</Button>
+			<Header>{confirmMutation.data.email}</Header>
+			<Header size="sm">Email verification successful!</Header>
+			<Button color="primary" onClick={navigateToHomePage}>
+				To home page
+			</Button>
 		</>
 	);
 };

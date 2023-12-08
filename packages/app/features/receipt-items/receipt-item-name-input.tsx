@@ -1,10 +1,8 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Input, Text, styled } from "@nextui-org/react";
-import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
-import { MdEdit as EditIcon } from "react-icons/md";
-
-import { IconButton } from "app/components/icon-button";
+import { Input } from "app/components/base/input";
+import { Text } from "app/components/base/text";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -13,8 +11,6 @@ import type { TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
 import { receiptItemNameSchema } from "app/utils/validation";
 import type { ReceiptsId } from "next-app/db/models";
-
-const Wrapper = styled("div", { display: "flex", alignItems: "center" });
 
 type ReceiptItem = TRPCQueryOutput<"receiptItems.get">["items"][number];
 
@@ -31,7 +27,8 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 	isLoading,
 	readOnly,
 }) => {
-	const [isEditing, { switchValue: switchEditing }] = useBooleanState();
+	const [isEditing, { switchValue: switchEditing, setFalse: unsetEditing }] =
+		useBooleanState();
 
 	const {
 		bindings,
@@ -51,6 +48,7 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 	const updateName = React.useCallback(
 		(name: string) => {
 			if (name === receiptItem.name) {
+				unsetEditing();
 				return;
 			}
 			updateMutation.mutate({
@@ -58,25 +56,20 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 				update: { type: "name", name },
 			});
 		},
-		[updateMutation, receiptItem.id, receiptItem.name],
+		[updateMutation, receiptItem.id, receiptItem.name, unsetEditing],
 	);
+	const disabled = readOnly || isLoading;
 
 	if (!isEditing) {
 		return (
-			<Wrapper>
-				<Text h4>{receiptItem.name}</Text>
-				{!readOnly ? (
-					<IconButton
-						auto
-						light
-						onClick={switchEditing}
-						disabled={isLoading}
-						css={{ ml: "$4" }}
-					>
-						<EditIcon size={24} />
-					</IconButton>
-				) : null}
-			</Wrapper>
+			<View
+				className={`${
+					disabled ? undefined : "cursor-pointer"
+				} flex-row items-center gap-1`}
+				onClick={disabled ? undefined : switchEditing}
+			>
+				<Text className="text-xl">{receiptItem.name}</Text>
+			</View>
 		);
 	}
 
@@ -84,21 +77,14 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 		<Input
 			{...bindings}
 			aria-label="Receipt item name"
-			disabled={updateMutation.isLoading || isLoading}
-			status={inputState.error ? "warning" : undefined}
-			helperColor={inputState.error ? "warning" : "error"}
-			helperText={inputState.error?.message || updateMutation.error?.message}
-			contentRightStyling={updateMutation.isLoading}
-			contentRight={
-				<IconButton
-					title="Save receipt item name"
-					light
-					isLoading={updateMutation.isLoading}
-					disabled={Boolean(inputState.error)}
-					onClick={() => updateName(getValue())}
-					icon={<CheckMark size={24} />}
-				/>
-			}
+			mutation={updateMutation}
+			fieldError={inputState.error}
+			isDisabled={isLoading}
+			className="basis-52"
+			saveProps={{
+				title: "Save receipt item name",
+				onClick: () => updateName(getValue()),
+			}}
 		/>
 	);
 };

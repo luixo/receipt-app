@@ -1,8 +1,8 @@
 import React from "react";
 
+import { Button, Link } from "@nextui-org/react";
 import { PiMoney as DebtIcon } from "react-icons/pi";
 
-import { IconButton } from "app/components/icon-button";
 import type { TRPCQueryOutput } from "app/trpc";
 
 type Receipt = TRPCQueryOutput<"receipts.get">;
@@ -20,15 +20,19 @@ export const ReceiptGuestControlButton: React.FC<Props> = ({ receipt }) => {
 	}
 
 	return (
-		<IconButton
+		<Button
 			href={
 				receipt.debt.type === "mine"
 					? `/debts/${receipt.debt.id}`
 					: `/debts/intentions#${receipt.debt.id}`
 			}
+			as={Link}
 			title="Incoming debt"
-			bordered
-			icon={<DebtIcon size={24} />}
-		/>
+			variant="bordered"
+			color="primary"
+			isIconOnly
+		>
+			<DebtIcon size={24} />
+		</Button>
 	);
 };

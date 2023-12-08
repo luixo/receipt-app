@@ -1,12 +1,11 @@
 import React from "react";
 
-import { Button, Input } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import type { Path, PathValue, UseFormReturn } from "react-hook-form";
-import { MdEdit as EditIcon } from "react-icons/md";
 import type { z } from "zod";
 
 import { CurrenciesPicker } from "app/components/app/currencies-picker";
-import { IconButton } from "app/components/icon-button";
+import { Input } from "app/components/base/input";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import type { CurrencyCode } from "app/utils/currency";
 import type { currencySchema } from "app/utils/validation";
@@ -28,8 +27,10 @@ export const CurrencyInput = <T extends MinimalForm>({
 	isLoading,
 	topCurrenciesQuery,
 }: Props<T>) => {
-	const [modalOpen, { setFalse: closeModal, setTrue: openModal }] =
-		useBooleanState();
+	const [
+		modalOpen,
+		{ switchValue: switchModalOpen, setFalse: closeModal, setTrue: openModal },
+	] = useBooleanState();
 
 	const onCurrencyChange = React.useCallback(
 		(nextCurrency: z.infer<typeof currencySchema>) => {
@@ -71,21 +72,17 @@ export const CurrencyInput = <T extends MinimalForm>({
 				<Input
 					value={`${selectedCurrency.name} (${selectedCurrency.code})`}
 					label="Currency"
-					disabled={isLoading}
-					contentRightStyling={false}
-					readOnly
+					isDisabled={isLoading}
+					isReadOnly
 					onClick={openModal}
-					contentRight={
-						<IconButton light auto onClick={openModal}>
-							<EditIcon size={24} />
-						</IconButton>
-					}
+					className={isLoading ? undefined : "cursor-pointer"}
 				/>
 			) : (
 				<Button
+					color="primary"
 					onClick={openModal}
-					disabled={isLoading}
-					css={{ alignSelf: "flex-end" }}
+					isDisabled={isLoading}
+					className="self-end"
 				>
 					Pick currency
 				</Button>
@@ -94,7 +91,7 @@ export const CurrencyInput = <T extends MinimalForm>({
 				selectedCurrency={selectedCurrency}
 				onChange={onCurrencyChange}
 				modalOpen={modalOpen}
-				onModalClose={closeModal}
+				switchModalOpen={switchModalOpen}
 				onLoad={onLoad}
 				topCurrenciesQuery={topCurrenciesQuery}
 			/>

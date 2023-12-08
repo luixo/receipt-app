@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Loading, Spacer } from "@nextui-org/react";
+import { Spinner } from "@nextui-org/react";
 
 import { QueryErrorMessage } from "app/components/error-message";
 import type { TRPCQuerySuccessResult } from "app/trpc";
@@ -22,13 +22,10 @@ const UserInner: React.FC<InnerProps> = ({ query }) => {
 	return (
 		<>
 			<UserNameInput user={user} isLoading={deleteLoading} />
-			<Spacer y={1} />
 			<UserPublicNameInput user={user} isLoading={deleteLoading} />
-			<Spacer y={1} />
 			<UserConnectionInput user={user} isLoading={deleteLoading} />
-			<Spacer y={1} />
 			<UserRemoveButton
-				css={{ alignSelf: "flex-end" }}
+				className="self-end"
 				user={user}
 				setLoading={setDeleteLoading}
 			/>
@@ -43,7 +40,7 @@ type Props = Omit<InnerProps, "query"> & {
 export const User: React.FC<Props> = ({ id, ...props }) => {
 	const query = trpc.users.get.useQuery({ id });
 	if (query.status === "loading") {
-		return <Loading />;
+		return <Spinner />;
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;

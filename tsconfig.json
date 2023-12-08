@@ -4,7 +4,8 @@
 		"strict": true,
 		"strictNullChecks": true,
 		"noUncheckedIndexedAccess": true,
-		"jsx": "react",
+		"jsx": "react-jsx",
+		"jsxImportSource": "nativewind",
 		"module": "esnext",
 		"paths": {
 			"app/*": ["./packages/app/*"],

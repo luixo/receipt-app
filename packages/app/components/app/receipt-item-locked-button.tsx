@@ -1,11 +1,11 @@
 import React from "react";
 
+import { Button } from "@nextui-org/react";
 import {
 	MdLock as LockedIcon,
 	MdLockOpen as UnlockedIcon,
 } from "react-icons/md";
 
-import { IconButton } from "app/components/icon-button";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
@@ -15,13 +15,15 @@ type Props = {
 	receiptId: ReceiptsId;
 	receiptItemId: ReceiptItemsId;
 	locked: boolean;
-} & Omit<React.ComponentProps<typeof IconButton>, "onClick" | "color">;
+} & Omit<
+	React.ComponentProps<typeof Button>,
+	"onClick" | "color" | "variant" | "isIconOnly"
+>;
 
 export const ReceiptItemLockedButton: React.FC<Props> = ({
 	receiptId,
 	receiptItemId,
 	locked,
-	css,
 	...props
 }) => {
 	const updateMutation = trpc.receiptItems.update.useMutation(
@@ -37,13 +39,15 @@ export const ReceiptItemLockedButton: React.FC<Props> = ({
 	}, [updateMutation, receiptItemId, locked]);
 
 	return (
-		<IconButton
+		<Button
 			{...props}
-			isLoading={updateMutation.isLoading || props.isLoading}
 			color={locked ? "success" : "warning"}
+			variant="ghost"
+			isLoading={updateMutation.isLoading || props.isLoading}
 			onClick={switchLocked}
+			isIconOnly
 		>
 			{locked ? <LockedIcon size={24} /> : <UnlockedIcon size={24} />}
-		</IconButton>
+		</Button>
 	);
 };

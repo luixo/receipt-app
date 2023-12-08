@@ -1,11 +1,12 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Input, Loading, Spacer } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { Header } from "app/components/header";
+import { Input } from "app/components/base/input";
+import { PageHeader } from "app/components/page-header";
 import { useRouter } from "app/hooks/use-router";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -58,46 +59,43 @@ export const RegisterScreen: AppPage = () => {
 
 	return (
 		<>
-			<Header>Register</Header>
+			<PageHeader>Register</PageHeader>
 			<Input
 				{...form.register("email")}
 				label="Email"
-				helperColor="warning"
-				helperText={form.formState.errors.email?.message}
-				disabled={registerMutation.isLoading}
+				fieldError={form.formState.errors.email}
+				mutation={registerMutation}
 			/>
-			<Spacer y={1} />
 			<Input
 				{...form.register("name")}
 				label="Name"
 				placeholder="You can change it later"
-				helperColor="warning"
-				helperText={form.formState.errors.name?.message}
-				disabled={registerMutation.isLoading}
+				fieldError={form.formState.errors.name}
+				isDisabled={registerMutation.isLoading}
 			/>
-			<Spacer y={1} />
-			<Input.Password
+			<Input
 				{...form.register("password")}
 				label="New password"
-				helperColor="warning"
-				helperText={form.formState.errors.password?.message}
-				disabled={registerMutation.isLoading}
+				fieldError={form.formState.errors.password}
+				isDisabled={registerMutation.isLoading}
+				type="password"
 			/>
-			<Spacer y={1} />
-			<Input.Password
+			<Input
 				{...form.register("passwordRetype")}
 				label="Retype new password"
-				helperColor="warning"
-				helperText={form.formState.errors.passwordRetype?.message}
-				disabled={registerMutation.isLoading}
+				fieldError={form.formState.errors.passwordRetype}
+				isDisabled={registerMutation.isLoading}
+				type="password"
 			/>
-			<Spacer y={1} />
 			<Button
-				disabled={!form.formState.isValid || registerMutation.isLoading}
+				className="mt-4"
+				color="primary"
+				isDisabled={!form.formState.isValid || registerMutation.isLoading}
+				isLoading={registerMutation.isLoading}
 				onClick={form.handleSubmit(onSubmit)}
 				type="submit"
 			>
-				{registerMutation.isLoading ? <Loading /> : "Register"}
+				Register
 			</Button>
 		</>
 	);

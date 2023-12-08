@@ -1,21 +1,16 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Card, Spacer, Text, styled } from "@nextui-org/react";
+import { Card, CardBody } from "@nextui-org/react";
 import {
 	MdNavigateNext as ArrowIcon,
 	MdSync as SyncIcon,
 } from "react-icons/md";
 
+import { Text } from "app/components/base/text";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
-import { useMatchMediaValue } from "app/hooks/use-match-media-value";
 import { useSsrFormat } from "app/hooks/use-ssr-format";
 import type { TRPCQueryOutput } from "app/trpc";
-
-const Wrapper = styled("div", {
-	display: "flex",
-	alignItems: "center",
-	gap: "$6",
-});
 
 type Intentions = TRPCQueryOutput<"debts.getIntentions">;
 
@@ -29,46 +24,49 @@ export const DebtIntention = React.forwardRef<HTMLDivElement, Props>(
 		const { formatDate, formatDateTime } = useSsrFormat();
 		const currency = useFormattedCurrency(intention.currencyCode);
 		const selfCurrency = useFormattedCurrency(intention.current?.currencyCode);
-		const renderChildrenInline = useMatchMediaValue(true, { lessSm: false });
 		const intentionDataComponent = (
-			<Wrapper>
-				<Text color={intention.amount >= 0 ? "success" : "error"}>
+			<View className="flex-row gap-2">
+				<Text
+					className={intention.amount >= 0 ? "text-success" : "text-danger"}
+				>
 					{Math.abs(intention.amount)} {currency}
 				</Text>
 				<Text>{formatDate(intention.timestamp)}</Text>
-			</Wrapper>
+			</View>
 		);
 		return (
 			<Card ref={ref}>
-				<Card.Body>
+				<CardBody className="gap-4">
 					{intention.current ? (
-						<Wrapper>
-							<Wrapper>
+						<View className="flex-row gap-2 max-sm:flex-col">
+							<View className="flex-row gap-2">
 								<Text
-									color={intention.current.amount >= 0 ? "success" : "error"}
+									className={
+										intention.current.amount >= 0
+											? "text-success"
+											: "text-danger"
+									}
 								>
 									{Math.abs(intention.current.amount)} {selfCurrency}
 								</Text>
 								<Text>{formatDate(intention.current.timestamp)}</Text>
-							</Wrapper>
+							</View>
 							<ArrowIcon size={24} />
 							{intentionDataComponent}
-						</Wrapper>
+						</View>
 					) : (
 						intentionDataComponent
 					)}
-					<Spacer y={0.25} />
 					<Text>{intention.note}</Text>
-					<Spacer y={0.5} />
-					<Wrapper css={{ justifyContent: "space-between" }}>
-						<Wrapper>
+					<View className="flex-row justify-between">
+						<View className="flex-row gap-1">
 							<SyncIcon size={24} />
 							<Text>{formatDateTime(intention.lockedTimestamp)}</Text>
-						</Wrapper>
-						{renderChildrenInline ? children : null}
-					</Wrapper>
-					{renderChildrenInline ? null : children}
-				</Card.Body>
+						</View>
+						<View className="max-md:hidden">{children}</View>
+					</View>
+					<View className="self-end md:hidden">{children}</View>
+				</CardBody>
 			</Card>
 		);
 	},

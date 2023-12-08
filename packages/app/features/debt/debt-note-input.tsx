@@ -1,25 +1,12 @@
 import React from "react";
 
-import { Textarea, styled } from "@nextui-org/react";
-import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
-
-import { IconButton } from "app/components/icon-button";
+import { Input } from "app/components/base/input";
 import { useSingleInput } from "app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import type { TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
 import { debtNoteSchema } from "app/utils/validation";
-
-const Wrapper = styled("div", {
-	position: "relative",
-});
-
-const CornerIcon = styled("div", {
-	position: "absolute",
-	bottom: 0,
-	right: 0,
-});
 
 type Debt = TRPCQueryOutput<"debts.get">;
 
@@ -56,27 +43,17 @@ export const DebtNoteInput: React.FC<Props> = ({ debt, isLoading }) => {
 	);
 
 	return (
-		<Wrapper>
-			<Textarea
-				{...bindings}
-				aria-label="Debt note"
-				fullWidth
-				disabled={updateMutation.isLoading || isLoading}
-				status={inputState.error ? "warning" : undefined}
-				helperColor={inputState.error ? "warning" : "error"}
-				helperText={inputState.error?.message || updateMutation.error?.message}
-			/>
-			<CornerIcon>
-				<IconButton
-					title="Save receipt name"
-					light
-					isLoading={updateMutation.isLoading}
-					disabled={isLoading || Boolean(inputState.error)}
-					onClick={() => saveNote(getValue())}
-					color={getValue() === debt.note ? undefined : "warning"}
-					icon={<CheckMark size={24} />}
-				/>
-			</CornerIcon>
-		</Wrapper>
+		<Input
+			{...bindings}
+			aria-label="Debt note"
+			mutation={updateMutation}
+			fieldError={inputState.error}
+			isDisabled={isLoading}
+			saveProps={{
+				title: "Save debt note",
+				isHidden: debt.note === getValue(),
+				onClick: () => saveNote(getValue()),
+			}}
+		/>
 	);
 };

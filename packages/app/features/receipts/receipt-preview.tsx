@@ -1,35 +1,18 @@
 import React from "react";
+import { View } from "react-native";
 
-import { Card, Text, styled } from "@nextui-org/react";
+import { Button, Link } from "@nextui-org/react";
 
 import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
 import { ReceiptResolvedParticipantsButton } from "app/components/app/receipt-resolved-participants-button";
-import { Grid } from "app/components/grid";
-import { IconButton } from "app/components/icon-button";
-import { Link } from "app/components/link";
+import { Text } from "app/components/base/text";
 import { LockedIcon } from "app/components/locked-icon";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
-import { useMatchMediaValue } from "app/hooks/use-match-media-value";
 import { useSsrFormat } from "app/hooks/use-ssr-format";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import type { TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
-
-const TitleLink = styled(Link, {
-	display: "flex",
-	flexDirection: "column",
-	width: "100%",
-});
-
-export const getWidths = (
-	overflow: boolean,
-): [number, number, number, number, number] => {
-	if (overflow) {
-		return [8, 4, 4, 4, 4];
-	}
-	return [7, 2, 1, 1, 1];
-};
 
 type Props = {
 	receipt: TRPCQueryOutput<"receipts.getPaged">["items"][number];
@@ -48,67 +31,60 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 			update: { type: "locked", locked: !receiptLocked },
 		});
 	}, [updateReceiptMutation, receipt.id, receiptLocked]);
-	const overflow = useMatchMediaValue(false, { lessSm: true });
-	const [nameWidth, sumWidth, ...buttonsWidth] = getWidths(overflow);
+	const title = (
+		<Link
+			className="flex flex-col items-start"
+			href={`/receipts/${receipt.id}/`}
+		>
+			<Text>{receipt.name}</Text>
+			<Text className="text-default-400 text-xs">
+				{formatDate(receipt.issued)}
+			</Text>
+		</Link>
+	);
+	const sum = (
+		<Text className="font-medium">
+			{receipt.sum} {currency}
+		</Text>
+	);
 	return (
-		<>
-			{overflow ? <Card.Divider /> : null}
-			<Grid
-				css={{
-					whiteSpace: "pre",
-					flexDirection: "column",
-					...(overflow ? { pb: 0 } : {}),
-				}}
-				defaultCol={nameWidth}
-			>
-				<TitleLink
-					href={`/receipts/${receipt.id}/`}
-					css={{ cursor: "pointer" }}
-				>
-					<Text>{receipt.name}</Text>
-				</TitleLink>
-				<Text small css={{ color: "$accents7" }}>
-					{formatDate(receipt.issued)}
+		<View>
+			<View className="flex-row gap-2 sm:hidden">
+				<Text className="flex-[7] p-2">{title}</Text>
+				<Text className="flex-[2] flex-row justify-end p-2">{sum}</Text>
+			</View>
+			<View className="flex-row gap-2">
+				<Text className="flex-[7] p-2 max-sm:hidden">{title}</Text>
+				<Text className="flex-[2] flex-row self-center p-2 text-right max-sm:hidden">
+					{sum}
 				</Text>
-			</Grid>
-			<Grid
-				defaultCol={sumWidth}
-				alignItems="center"
-				justify="flex-end"
-				css={{ textAlign: "end", ...(overflow ? { pb: 0 } : {}) }}
-			>
-				<Text b>
-					{receipt.sum} {currency}
-				</Text>
-			</Grid>
-			<Grid defaultCol={buttonsWidth[0]} justify="center" alignItems="center">
-				{receipt.participantResolved === null ? null : (
-					<ReceiptParticipantResolvedButton
-						light
-						receiptId={receipt.id}
-						userId={receipt.remoteUserId}
-						selfUserId={receipt.remoteUserId}
-						resolved={receipt.participantResolved}
-					/>
-				)}
-			</Grid>
-			<Grid defaultCol={buttonsWidth[1]} justify="center" alignItems="center">
-				<IconButton
-					light
+				<View className="flex-1 flex-row justify-center p-2">
+					{receipt.participantResolved === null ? null : (
+						<ReceiptParticipantResolvedButton
+							variant="light"
+							receiptId={receipt.id}
+							userId={receipt.remoteUserId}
+							selfUserId={receipt.remoteUserId}
+							resolved={receipt.participantResolved}
+						/>
+					)}
+				</View>
+				<Button
+					className="flex-1 flex-row self-center p-2"
+					variant="light"
 					isLoading={updateReceiptMutation.isLoading}
-					disabled={receipt.role !== "owner"}
+					isDisabled={receipt.role !== "owner"}
 					color={receiptLocked ? "success" : "warning"}
-					icon={<LockedIcon locked={receiptLocked} />}
+					isIconOnly
 					onClick={switchResolved}
-				/>
-			</Grid>
-			<Grid defaultCol={buttonsWidth[2]} justify="center" alignItems="center">
+				>
+					<LockedIcon locked={receiptLocked} />
+				</Button>
 				<ReceiptResolvedParticipantsButton
-					light
-					css={{ px: 0 }}
+					className="flex-1 flex-row self-center p-2"
 					receiptId={receipt.id}
 				/>
-			</Grid>
-		</>
+			</View>
+		</View>
 	);
 };

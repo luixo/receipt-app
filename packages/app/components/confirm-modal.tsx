@@ -2,13 +2,13 @@ import React from "react";
 
 import {
 	Button,
-	Loading,
 	Modal,
-	Spacer,
-	Text,
-	styled,
+	ModalBody,
+	ModalContent,
+	ModalHeader,
 } from "@nextui-org/react";
 
+import { Header } from "app/components/base/header";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 
 type Props = {
@@ -22,11 +22,6 @@ type Props = {
 	children: (controls: { openModal: () => void }) => React.ReactNode;
 };
 
-const Buttons = styled("div", {
-	display: "flex",
-	justifyContent: "center",
-});
-
 export const ConfirmModal: React.FC<Props> = ({
 	action,
 	title,
@@ -37,8 +32,10 @@ export const ConfirmModal: React.FC<Props> = ({
 	isLoading,
 	children,
 }) => {
-	const [isModalOpen, { setFalse: closeModal, setTrue: openModal }] =
-		useBooleanState();
+	const [
+		isModalOpen,
+		{ switchValue: switchModalOpen, setFalse: closeModal, setTrue: openModal },
+	] = useBooleanState();
 	const onYesClick = React.useCallback(() => {
 		closeModal();
 		action();
@@ -49,29 +46,32 @@ export const ConfirmModal: React.FC<Props> = ({
 			<Modal
 				closeButton
 				aria-label={title}
-				open={isModalOpen}
-				onClose={closeModal}
+				isOpen={isModalOpen}
+				onOpenChange={switchModalOpen}
 			>
-				<Modal.Header css={{ flexDirection: "column" }}>
-					<Text h3>{confirmText}</Text>
-					{subtitle ? <Text color="warning">{subtitle}</Text> : null}
-				</Modal.Header>
-				<Modal.Body css={{ pt: "$4", pb: "$12" }}>
-					<Buttons>
+				<ModalContent>
+					<ModalHeader className="flex-col items-center">
+						<Header>{confirmText}</Header>
+						{subtitle ? (
+							<Header size="sm" className="text-warning mt-2">
+								{subtitle}
+							</Header>
+						) : null}
+					</ModalHeader>
+					<ModalBody className="flex-row justify-center gap-2">
 						<Button
-							auto
+							color="danger"
 							onClick={onYesClick}
-							disabled={isLoading}
-							color="error"
+							isDisabled={isLoading}
+							isLoading={isLoading}
 						>
-							{isLoading ? <Loading color="currentColor" size="sm" /> : yesText}
+							{yesText}
 						</Button>
-						<Spacer x={0.5} />
-						<Button auto onClick={closeModal} disabled={isLoading}>
+						<Button color="primary" onClick={closeModal} isDisabled={isLoading}>
 							{noText}
 						</Button>
-					</Buttons>
-				</Modal.Body>
+					</ModalBody>
+				</ModalContent>
 			</Modal>
 		</>
 	);

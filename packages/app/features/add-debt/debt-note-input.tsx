@@ -1,8 +1,8 @@
 import React from "react";
 
-import { Input } from "@nextui-org/react";
 import type { UseFormReturn } from "react-hook-form";
 
+import { Input } from "app/components/base/input";
 import { useInputController } from "app/hooks/use-input-controller";
 
 import type { Form } from "./types";
@@ -23,10 +23,8 @@ export const DebtNoteInput: React.FC<Props> = ({ form, isLoading }) => {
 			{...bindings}
 			required
 			label="Debt note"
-			disabled={isLoading}
-			status={inputState.error ? "warning" : undefined}
-			helperColor="warning"
-			helperText={inputState.error?.message}
+			isDisabled={isLoading}
+			fieldError={inputState.error}
 		/>
 	);
 };

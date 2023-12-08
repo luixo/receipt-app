@@ -1,10 +1,19 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Input, Loading, Modal, Spacer, Text } from "@nextui-org/react";
+import {
+	Button,
+	Modal,
+	ModalBody,
+	ModalContent,
+	ModalHeader,
+} from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
+import { Header } from "app/components/base/header";
+import { Input } from "app/components/base/input";
+import { Text } from "app/components/base/text";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
@@ -16,12 +25,12 @@ type ResetPasswordForm = {
 
 type Props = {
 	isModalOpen: boolean;
-	closeModal: () => void;
+	switchModalOpen: () => void;
 };
 
 export const ResetPasswordModal: React.FC<Props> = ({
 	isModalOpen,
-	closeModal,
+	switchModalOpen,
 }) => {
 	const form = useForm<ResetPasswordForm>({
 		mode: "onChange",
@@ -37,35 +46,36 @@ export const ResetPasswordModal: React.FC<Props> = ({
 	);
 
 	return (
-		<Modal open={isModalOpen} onClose={closeModal}>
-			<Modal.Header>
-				<Text h2>Forgot password</Text>
-			</Modal.Header>
-			<Modal.Body>
-				{resetPasswordMutation.status === "success" ? (
-					<Text>Reset password link was sent to {form.watch("email")}</Text>
-				) : (
-					<>
-						<Input
-							{...form.register("email")}
-							label="Email"
-							helperColor="warning"
-							helperText={form.formState.errors.email?.message}
-							disabled={resetPasswordMutation.isLoading}
-						/>
-						<Spacer y={0.25} />
-						<Button
-							disabled={
-								!form.formState.isValid || resetPasswordMutation.isLoading
-							}
-							onClick={form.handleSubmit(onSubmit)}
-						>
-							{resetPasswordMutation.isLoading ? <Loading /> : "Send email"}
-						</Button>
-					</>
-				)}
-				<Spacer y={1} />
-			</Modal.Body>
+		<Modal isOpen={isModalOpen} onOpenChange={switchModalOpen}>
+			<ModalContent>
+				<ModalHeader>
+					<Header>Forgot password</Header>
+				</ModalHeader>
+				<ModalBody className="gap-4">
+					{resetPasswordMutation.status === "success" ? (
+						<Text>Reset password link was sent to {form.watch("email")}</Text>
+					) : (
+						<>
+							<Input
+								{...form.register("email")}
+								label="Email"
+								fieldError={form.formState.errors.email}
+								isDisabled={resetPasswordMutation.isLoading}
+							/>
+							<Button
+								color="primary"
+								isDisabled={
+									!form.formState.isValid || resetPasswordMutation.isLoading
+								}
+								isLoading={resetPasswordMutation.isLoading}
+								onClick={form.handleSubmit(onSubmit)}
+							>
+								Send email
+							</Button>
+						</>
+					)}
+				</ModalBody>
+			</ModalContent>
 		</Modal>
 	);
 };

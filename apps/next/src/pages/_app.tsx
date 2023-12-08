@@ -1,6 +1,5 @@
 import React from "react";
 
-import { globalCss } from "@nextui-org/react";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { getCookies } from "cookies-next";
 import type { AppType } from "next/dist/shared/lib/utils";
@@ -25,6 +24,7 @@ import {
 } from "app/contexts/ssr-context";
 import type { Props as ProviderProps } from "app/provider";
 import { Provider } from "app/provider";
+import { applyRemaps } from "app/utils/nativewind";
 import { useColorModeCookies } from "next-app/hooks/use-color-mode-cookies";
 import { useHydratedMark } from "next-app/hooks/use-hydrated-mark";
 import { useQueryClientHelper } from "next-app/hooks/use-query-client-helper";
@@ -33,15 +33,11 @@ import { useSettingsCookies } from "next-app/hooks/use-settings-cookies";
 import { useSSRContextCookies } from "next-app/hooks/use-ssr-context-cookies";
 import type { AppPage } from "next-app/types/page";
 import { trpcNext } from "next-app/utils/trpc";
+import "next-app/global.css";
 
-const globalStyles = globalCss({
-	html: {
-		overflowX: "hidden",
-	},
-});
+applyRemaps();
 
 const GlobalHooksComponent: React.FC = () => {
-	globalStyles();
 	useColorModeCookies();
 	useSettingsCookies();
 	useSSRContextCookies();

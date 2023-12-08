@@ -1,11 +1,11 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Loading, Spacer } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { Header } from "app/components/header";
+import { PageHeader } from "app/components/page-header";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
 import { useRouter } from "app/hooks/use-router";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
@@ -43,18 +43,17 @@ export const AddUserScreen: AppPage = () => {
 
 	return (
 		<>
-			<Header backHref="/users">Add user</Header>
+			<PageHeader backHref="/users">Add user</PageHeader>
 			<EmailVerificationCard />
-			<Spacer y={1} />
-			<UserNameInput form={form} query={addUserMutation} />
-			<Spacer y={1} />
-			<EmailInput form={form} query={addUserMutation} />
-			<Spacer y={1} />
+			<UserNameInput form={form} isLoading={addUserMutation.isLoading} />
+			<EmailInput form={form} isLoading={addUserMutation.isLoading} />
 			<Button
+				color="primary"
 				onClick={form.handleSubmit(onSubmit)}
-				disabled={!form.formState.isValid || addUserMutation.isLoading}
+				isDisabled={!form.formState.isValid || addUserMutation.isLoading}
+				isLoading={addUserMutation.isLoading}
 			>
-				{addUserMutation.isLoading ? <Loading size="sm" /> : "Add user"}
+				Add user
 			</Button>
 		</>
 	);

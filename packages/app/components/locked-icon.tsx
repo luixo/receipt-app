@@ -1,30 +1,18 @@
 import React from "react";
 
-import { Tooltip, styled } from "@nextui-org/react";
 import {
 	MdOutlineLock as LockIcon,
 	MdOutlineLockOpen as UnlockedIcon,
 } from "react-icons/md";
 
-const Wrapper = styled(LockIcon, { size: 24 });
-
 type Props = {
 	locked: boolean;
 	tooltip?: string;
-} & React.ComponentProps<typeof Wrapper>;
+} & React.ComponentProps<typeof LockIcon>;
 
-export const LockedIcon: React.FC<Props> = ({ locked, tooltip, ...props }) => {
-	const content = <Wrapper as={locked ? LockIcon : UnlockedIcon} {...props} />;
-	if (tooltip) {
-		return (
-			<Tooltip
-				content={tooltip}
-				css={{ whiteSpace: "pre" }}
-				placement="bottomEnd"
-			>
-				{content}
-			</Tooltip>
-		);
-	}
-	return content;
-};
+export const LockedIcon: React.FC<Props> = ({ locked, tooltip, ...props }) =>
+	locked ? (
+		<LockIcon size={24} {...props} />
+	) : (
+		<UnlockedIcon size={24} {...props} />
+	);

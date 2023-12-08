@@ -1,41 +1,18 @@
 import React from "react";
 
-import { Container, Loading, Spacer, Text, styled } from "@nextui-org/react";
+import { Button, Link, Pagination, Spinner } from "@nextui-org/react";
 import { MdAdd as AddIcon } from "react-icons/md";
 
+import { EmptyCard } from "app/components/empty-card";
 import { QueryErrorMessage } from "app/components/error-message";
-import { IconButton } from "app/components/icon-button";
 import { Overlay } from "app/components/overlay";
-import { Pagination } from "app/components/pagination";
 import { useCursorPaging } from "app/hooks/use-cursor-paging";
 import { useTrpcQueryOptions } from "app/hooks/use-trpc-query-options";
 import { queries } from "app/queries";
-import type { TRPCQueryInput, TRPCQueryOutput } from "app/trpc";
+import type { TRPCQueryInput } from "app/trpc";
 import { trpc } from "app/trpc";
 
 import { UserPreview } from "./user-preview";
-
-const NoUsersHint = styled(Text, {
-	display: "flex",
-	alignItems: "center",
-});
-
-type UserPreviews = TRPCQueryOutput<"users.getPaged">["items"];
-
-type PreviewsProps = {
-	users: UserPreviews;
-};
-
-const UserPreviewsList: React.FC<PreviewsProps> = ({ users }) => (
-	<>
-		{users.map((user, index) => (
-			<React.Fragment key={user.id}>
-				{index === 0 ? null : <Spacer y={0.5} />}
-				<UserPreview data={user} />
-			</React.Fragment>
-		))}
-	</>
-);
 
 type Input = TRPCQueryInput<"users.getPaged">;
 
@@ -55,53 +32,52 @@ export const Users: React.FC = () => {
 
 	if (!totalCount && query.fetchStatus !== "fetching") {
 		return (
-			<Container
-				display="flex"
-				direction="column"
-				alignItems="center"
-				justify="center"
-			>
-				<Text h2>You have no users</Text>
-				<Spacer y={0.5} />
-				<NoUsersHint h3>
-					Press
-					<Spacer x={0.5} />
-					<IconButton
-						href="/users/add"
-						title="Add user"
-						bordered
-						icon={<AddIcon size={24} />}
-					/>{" "}
-					<Spacer x={0.5} />
-					to add a user
-				</NoUsersHint>
-			</Container>
+			<EmptyCard title="You have no users">
+				Press
+				<Button
+					color="primary"
+					href="/users/add"
+					as={Link}
+					title="Add user"
+					variant="bordered"
+					className="mx-2"
+					isIconOnly
+				>
+					<AddIcon size={24} />
+				</Button>
+				to add a user
+			</EmptyCard>
 		);
 	}
 
 	const paginationElement = (
-		<Container display="flex" justify="center">
-			<Pagination {...pagination} />
-		</Container>
+		<Pagination
+			color="primary"
+			size="lg"
+			variant="bordered"
+			className="self-center"
+			{...pagination}
+		/>
 	);
 
 	return (
 		<>
 			{paginationElement}
-			<Spacer y={1} />
 			<Overlay
+				className="gap-2"
 				overlay={
-					query.fetchStatus === "fetching" ? <Loading size="xl" /> : undefined
+					query.fetchStatus === "fetching" ? <Spinner size="lg" /> : undefined
 				}
 			>
 				{query.status === "error" ? <QueryErrorMessage query={query} /> : null}
 				{query.status === "loading" ? (
-					<Loading size="xl" />
+					<Spinner size="lg" />
 				) : query.data ? (
-					<UserPreviewsList users={query.data.items} />
+					query.data.items.map((user) => (
+						<UserPreview key={user.id} data={user} />
+					))
 				) : null}
 			</Overlay>
-			<Spacer y={1} />
 			{paginationElement}
 		</>
 	);

@@ -1,6 +1,5 @@
 import React from "react";
 
-import { Spacer } from "@nextui-org/react";
 import { createParam } from "solito";
 
 import { ReceiptItems } from "app/features/receipt-items/receipt-items-screen";
@@ -21,7 +20,6 @@ export const ReceiptScreen: AppPage = () => {
 	return (
 		<>
 			<Receipt deleteLoadingState={deleteLoadingState} id={id} />
-			<Spacer y={1} />
 			<ReceiptItems receiptId={id} isLoading={deleteLoadingState[0]} />
 		</>
 	);
