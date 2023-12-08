@@ -85,21 +85,17 @@ export const ReceiptParticipant: React.FC<Props> = ({
 				}
 				textValue={participant.name}
 				title={
-					<View className="flex-col justify-between gap-4 min-[600px]:flex-row">
-						<View className="flex-col items-start justify-start gap-4 self-start sm:flex-row sm:items-center">
-							<User
-								className={
-									participant.items.length === 0
-										? "opacity-disabled"
-										: undefined
-								}
-								user={convertParticipantToUser(participant)}
-							/>
+					<View className="flex-col items-start justify-between gap-2 min-[600px]:flex-row">
+						<User
+							className={
+								participant.items.length === 0 ? "opacity-disabled" : undefined
+							}
+							user={convertParticipantToUser(participant)}
+						/>
+						<View className="flex-row items-center justify-between gap-4 self-stretch">
 							<Text>
 								{`${Math.round(participant.sum * 100) / 100} ${currency}`}
 							</Text>
-						</View>
-						<View className="flex-row gap-2 self-end">
 							<View className="flex-row items-center gap-2">
 								<ReceiptParticipantRoleInput
 									receiptId={receiptId}
@@ -123,17 +119,17 @@ export const ReceiptParticipant: React.FC<Props> = ({
 											: null
 									}
 								/>
+								{role === "owner" ? (
+									<RemoveButton
+										onRemove={removeReceiptParticipant}
+										mutation={removeReceiptParticipantMutation}
+										isDisabled={!selfAccountId || receiptLocked}
+										subtitle="This will remove participant with all his parts"
+										noConfirm={participant.sum === 0}
+										isIconOnly
+									/>
+								) : null}
 							</View>
-							{role === "owner" ? (
-								<RemoveButton
-									onRemove={removeReceiptParticipant}
-									mutation={removeReceiptParticipantMutation}
-									isDisabled={!selfAccountId || receiptLocked}
-									subtitle="This will remove participant with all his parts"
-									noConfirm={participant.sum === 0}
-									isIconOnly
-								/>
-							) : null}
 						</View>
 					</View>
 				}

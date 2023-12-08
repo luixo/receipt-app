@@ -56,7 +56,7 @@ type Props = {
 };
 
 export const Page: React.FC<Props> = ({ children, elements }) => (
-	<View className="mx-auto max-w-screen-md p-1 sm:p-4">
+	<View className="mx-auto max-w-screen-md overflow-x-hidden overflow-y-scroll p-1 sm:p-2 md:p-4">
 		<View className="gap-4">{children}</View>
 		<View
 			className="bg-content1 fixed bottom-0 left-0 z-20 w-full flex-row p-2 shadow-lg"

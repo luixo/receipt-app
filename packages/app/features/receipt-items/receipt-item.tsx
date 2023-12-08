@@ -4,10 +4,10 @@ import { View } from "react-native";
 import {
 	Card,
 	CardBody,
-	CardFooter,
 	CardHeader,
 	Chip,
 	Divider,
+	ScrollShadow,
 } from "@nextui-org/react";
 
 import { ReceiptItemLockedButton } from "app/components/app/receipt-item-locked-button";
@@ -116,12 +116,24 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 						readOnly={isEditingDisabled || receiptLocked}
 						isLoading={isDeleteLoading}
 					/>
-					<ReceiptItemLockedButton
-						receiptId={receiptId}
-						receiptItemId={receiptItem.id}
-						locked={receiptItem.locked}
-						isDisabled={role === "viewer"}
-					/>
+					<View className="flex-row gap-4">
+						<ReceiptItemLockedButton
+							receiptId={receiptId}
+							receiptItemId={receiptItem.id}
+							locked={receiptItem.locked}
+							isDisabled={role === "viewer"}
+						/>
+						{isEditingDisabled ? null : (
+							<RemoveButton
+								onRemove={removeItem}
+								isDisabled={receiptLocked}
+								mutation={removeReceiptItemMutation}
+								subtitle="This will remove item with all participant's parts"
+								noConfirm={receiptItem.parts.length === 0}
+								isIconOnly
+							/>
+						)}
+					</View>
 				</CardHeader>
 				<Divider />
 				<CardBody className="gap-2">
@@ -146,7 +158,10 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 					{receiptLocked ||
 					isEditingDisabled ||
 					notAddedParticipants.length === 0 ? null : (
-						<View className="flex-row gap-1 overflow-x-auto">
+						<ScrollShadow
+							orientation="horizontal"
+							className="flex w-full flex-row gap-1 overflow-x-auto"
+						>
 							{(notAddedParticipants.length === 1
 								? notAddedParticipants
 								: [EVERY_PARTICIPANT_TAG, ...notAddedParticipants]
@@ -171,7 +186,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 										: `+ ${participant.name}`}
 								</Chip>
 							))}
-						</View>
+						</ScrollShadow>
 					)}
 					{receiptItem.parts.length === 0 ? null : (
 						<>
@@ -204,21 +219,6 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 						</>
 					)}
 				</CardBody>
-				{isEditingDisabled ? null : (
-					<>
-						<Divider />
-						<CardFooter className="justify-end">
-							<RemoveButton
-								onRemove={removeItem}
-								isDisabled={receiptLocked}
-								mutation={removeReceiptItemMutation}
-								subtitle="This will remove item with all participant's parts"
-								noConfirm={receiptItem.parts.length === 0}
-								isIconOnly
-							/>
-						</CardFooter>
-					</>
-				)}
 			</Card>
 		);
 	},

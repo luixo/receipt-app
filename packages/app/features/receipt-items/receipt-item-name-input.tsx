@@ -1,9 +1,6 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Button } from "@nextui-org/react";
-import { MdEdit as EditIcon } from "react-icons/md";
-
 import { Input } from "app/components/base/input";
 import { Text } from "app/components/base/text";
 import { useBooleanState } from "app/hooks/use-boolean-state";
@@ -61,21 +58,17 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 		},
 		[updateMutation, receiptItem.id, receiptItem.name, unsetEditing],
 	);
+	const disabled = readOnly || isLoading;
 
 	if (!isEditing) {
 		return (
-			<View className="flex-row items-center gap-1">
+			<View
+				className={`${
+					disabled ? undefined : "cursor-pointer"
+				} flex-row items-center gap-1`}
+				onClick={disabled ? undefined : switchEditing}
+			>
 				<Text className="text-xl">{receiptItem.name}</Text>
-				{!readOnly ? (
-					<Button
-						variant="light"
-						onClick={switchEditing}
-						isDisabled={isLoading}
-						isIconOnly
-					>
-						<EditIcon size={24} />
-					</Button>
-				) : null}
 			</View>
 		);
 	}
@@ -87,9 +80,9 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 			mutation={updateMutation}
 			fieldError={inputState.error}
 			isDisabled={isLoading}
+			className="basis-52"
 			saveProps={{
 				title: "Save receipt item name",
-				isHidden: receiptItem.name === getValue(),
 				onClick: () => updateName(getValue()),
 			}}
 		/>

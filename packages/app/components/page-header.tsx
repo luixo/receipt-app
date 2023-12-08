@@ -31,19 +31,23 @@ export const PageHeader: React.FC<Props> = ({
 		[router, backHref],
 	);
 	return (
-		<View className="flex-row justify-between gap-4 max-sm:flex-col">
+		<>
 			<Head>
 				<title>{`RA - ${title || children?.toString()}`}</title>
 			</Head>
-			<View className="flex-row items-center gap-4" {...props}>
-				{backHref ? <BackArrow size={36} onClick={back} /> : null}
-				{startContent}
-				<Text Component={H1} className="text-4xl font-medium">
-					{children}
-				</Text>
-				{endContent}
+			<View className="flex-row flex-wrap justify-between gap-4">
+				<View className="flex-row items-center gap-4" {...props}>
+					{backHref ? <BackArrow size={36} onClick={back} /> : null}
+					{startContent}
+					<Text Component={H1} className="text-4xl font-medium">
+						{children}
+					</Text>
+					{endContent}
+				</View>
+				<View className="ml-auto shrink-0 flex-row gap-2 self-end">
+					{aside}
+				</View>
 			</View>
-			<View className="shrink-0 flex-row gap-2 max-sm:self-end">{aside}</View>
-		</View>
+		</>
 	);
 };

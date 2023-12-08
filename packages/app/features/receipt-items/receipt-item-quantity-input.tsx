@@ -1,7 +1,5 @@
 import React from "react";
-
-import { Button } from "@nextui-org/react";
-import { MdEdit as EditIcon } from "react-icons/md";
+import { View } from "react-native";
 
 import { Input } from "app/components/base/input";
 import { Text } from "app/components/base/text";
@@ -61,23 +59,18 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 		},
 		[updateMutation, receiptItem.id, receiptItem.quantity, unsetEditing],
 	);
+	const disabled = readOnly || isLoading;
 
 	if (!isEditing) {
 		return (
-			<>
+			<View
+				className={`${
+					disabled ? undefined : "cursor-pointer"
+				} flex-row items-center gap-1`}
+				onClick={disabled ? undefined : switchEditing}
+			>
 				<Text>x {receiptItem.quantity} unit</Text>
-				{!readOnly ? (
-					<Button
-						variant="light"
-						onClick={switchEditing}
-						isDisabled={isLoading}
-						className="mx-1"
-						isIconOnly
-					>
-						<EditIcon size={20} />
-					</Button>
-				) : null}
-			</>
+			</View>
 		);
 	}
 
@@ -88,10 +81,10 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 			mutation={updateMutation}
 			fieldError={inputState.error}
 			isDisabled={isLoading}
-			className="w-28"
+			className="basis-24"
+			labelPlacement="outside-left"
 			saveProps={{
 				title: "Save receipt item quantity",
-				isHidden: receiptItem.quantity === getNumberValue(),
 				onClick: () => updateQuantity(getNumberValue()),
 			}}
 			variant="bordered"

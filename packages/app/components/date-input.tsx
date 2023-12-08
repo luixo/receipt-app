@@ -17,7 +17,7 @@ type Props = {
 	label?: string;
 	onUpdate: (nextDate: Date) => void;
 	updateOnChange?: boolean;
-};
+} & React.ComponentProps<typeof Input>;
 
 export const DateInput: React.FC<Props> = ({
 	timestamp,
@@ -26,6 +26,7 @@ export const DateInput: React.FC<Props> = ({
 	label,
 	onUpdate,
 	updateOnChange,
+	...props
 }) => {
 	const { formatDate } = useSsrFormat();
 	const { bindings, state, getValue, setValue, form } = useSingleInput({
@@ -69,6 +70,7 @@ export const DateInput: React.FC<Props> = ({
 									onClick: () => onUpdate(dateValue),
 							  }
 					}
+					{...props}
 				/>
 			)}
 		</Calendar>

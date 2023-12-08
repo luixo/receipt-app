@@ -51,12 +51,9 @@ export const ReceiptItemPart: React.FC<Props> = ({
 	);
 
 	return (
-		<View className="items-start gap-2 md:flex-row md:gap-4">
-			<View className="flex-1 flex-col justify-between gap-2 self-stretch sm:flex-row">
-				<User
-					className="self-start"
-					user={convertParticipantToUser(participant)}
-				/>
+		<View className="items-start justify-between gap-2 min-[500px]:flex-row sm:gap-4">
+			<User user={convertParticipantToUser(participant)} />
+			<View className="flex-row gap-2 self-end">
 				<ReceiptItemPartInput
 					receiptId={receiptId}
 					receiptItemId={receiptItemId}
@@ -65,16 +62,16 @@ export const ReceiptItemPart: React.FC<Props> = ({
 					readOnly={readOnly}
 					isLoading={isLoading || removeMutation.isLoading}
 				/>
+				{readOnly ? null : (
+					<RemoveButton
+						className="self-end"
+						onRemove={removeItemPart}
+						mutation={removeMutation}
+						noConfirm
+						isIconOnly
+					/>
+				)}
 			</View>
-			{readOnly ? null : (
-				<RemoveButton
-					className="self-end"
-					onRemove={removeItemPart}
-					mutation={removeMutation}
-					noConfirm
-					isIconOnly
-				/>
-			)}
 		</View>
 	);
 };

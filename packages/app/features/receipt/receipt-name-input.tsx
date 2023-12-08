@@ -58,12 +58,13 @@ export const ReceiptNameInput: React.FC<Props> = ({
 			{...bindings}
 			aria-label="Receipt name"
 			mutation={updateReceiptMutation}
+			labelPlacement="outside-left"
+			className="basis-36"
 			isDisabled={isLoading}
 			isReadOnly={receipt.role !== "owner"}
 			fieldError={inputState.error}
 			saveProps={{
 				title: "Save receipt name",
-				isHidden: receipt.name === getValue(),
 				onClick: () => saveName(getValue()),
 			}}
 		/>

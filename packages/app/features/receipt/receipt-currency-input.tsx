@@ -1,15 +1,16 @@
 import React from "react";
-
-import { Button } from "@nextui-org/react";
-import { MdEdit as EditIcon } from "react-icons/md";
+import { View } from "react-native";
 
 import { CurrenciesPicker } from "app/components/app/currencies-picker";
+import { Text } from "app/components/base/text";
 import { useBooleanState } from "app/hooks/use-boolean-state";
+import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import type { TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
 import type { Currency } from "app/utils/currency";
+import { round } from "app/utils/math";
 
 type Props = {
 	receipt: TRPCQueryOutput<"receipts.get">;
@@ -20,6 +21,7 @@ export const ReceiptCurrencyInput: React.FC<Props> = ({
 	receipt,
 	isLoading,
 }) => {
+	const currency = useFormattedCurrency(receipt.currencyCode);
 	const [
 		isModalOpen,
 		{ switchValue: switchModalOpen, setTrue: openModal, setFalse: closeModal },
@@ -42,22 +44,22 @@ export const ReceiptCurrencyInput: React.FC<Props> = ({
 		[updateReceiptMutation, receipt.id, receipt.currencyCode, closeModal],
 	);
 	const topCurrenciesQuery = trpc.currency.topReceipts.useQuery();
+	const disabled =
+		updateReceiptMutation.isLoading ||
+		isLoading ||
+		receipt.role !== "owner" ||
+		Boolean(receipt.lockedTimestamp);
 
 	return (
 		<>
-			<Button
-				variant="light"
-				onClick={openModal}
-				isDisabled={
-					isLoading ||
-					receipt.role !== "owner" ||
-					Boolean(receipt.lockedTimestamp)
-				}
-				isLoading={updateReceiptMutation.isLoading}
-				isIconOnly
+			<View
+				className={disabled ? undefined : "cursor-pointer"}
+				onClick={disabled ? undefined : openModal}
 			>
-				<EditIcon size={24} />
-			</Button>
+				<Text className="text-2xl">
+					{round(receipt.sum)} {currency}
+				</Text>
+			</View>
 			<CurrenciesPicker
 				onChange={saveCurrency}
 				modalOpen={isModalOpen}

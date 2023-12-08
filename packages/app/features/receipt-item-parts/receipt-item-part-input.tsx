@@ -3,7 +3,6 @@ import { View } from "react-native";
 
 import { Button } from "@nextui-org/react";
 import { FiMinus as MinusIcon, FiPlus as PlusIcon } from "react-icons/fi";
-import { MdEdit as EditIcon } from "react-icons/md";
 
 import { Input } from "app/components/base/input";
 import { Text } from "app/components/base/text";
@@ -121,23 +120,21 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 
 	if (isEditing) {
 		return wrap(
-			<>
-				<Input
-					{...bindings}
-					className="w-24"
-					aria-label="Item part"
-					mutation={updateMutation}
-					fieldError={inputState.error}
-					isDisabled={isLoading}
-					saveProps={{
-						title: "Save item part",
-						isHidden: getNumberValue() === itemPart.part,
-						onClick: () => updatePart(getNumberValue()),
-					}}
-					variant="bordered"
-				/>
-				<Text className="ml-2">/ {itemParts}</Text>
-			</>,
+			<Input
+				{...bindings}
+				className="w-32"
+				aria-label="Item part"
+				mutation={updateMutation}
+				fieldError={inputState.error}
+				isDisabled={isLoading}
+				labelPlacement="outside-left"
+				saveProps={{
+					title: "Save item part",
+					onClick: () => updatePart(getNumberValue()),
+				}}
+				endContent={<Text className="self-center">/ {itemParts}</Text>}
+				variant="bordered"
+			/>,
 		);
 	}
 
@@ -146,8 +143,8 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 			variant="light"
 			onClick={switchEditing}
 			isDisabled={isLoading}
-			className="p-0"
-			endContent={<EditIcon size={12} />}
+			isIconOnly
+			className="min-w-unit-16 w-auto px-2"
 		>
 			{readOnlyComponent}
 		</Button>,

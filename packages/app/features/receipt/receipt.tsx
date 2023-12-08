@@ -1,11 +1,8 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Button, Spinner } from "@nextui-org/react";
-import {
-	MdEdit as EditIcon,
-	MdOutlineReceipt as ReceiptIcon,
-} from "react-icons/md";
+import { Spinner } from "@nextui-org/react";
+import { MdOutlineReceipt as ReceiptIcon } from "react-icons/md";
 
 import { LoadableUser } from "app/components/app/loadable-user";
 import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
@@ -13,12 +10,10 @@ import { Text } from "app/components/base/text";
 import { QueryErrorMessage } from "app/components/error-message";
 import { PageHeader } from "app/components/page-header";
 import { useBooleanState } from "app/hooks/use-boolean-state";
-import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useTrpcQueryOptions } from "app/hooks/use-trpc-query-options";
 import { queries } from "app/queries";
 import type { TRPCQuerySuccessResult } from "app/trpc";
 import { trpc } from "app/trpc";
-import { round } from "app/utils/math";
 import type { ReceiptsId } from "next-app/src/db/models";
 
 import { ReceiptCurrencyInput } from "./receipt-currency-input";
@@ -41,8 +36,10 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 
 	const [isEditing, { switchValue: switchEditing, setFalse: unsetEditing }] =
 		useBooleanState();
-
-	const currency = useFormattedCurrency(receipt.currencyCode);
+	const disabled =
+		receipt.role !== "owner" ||
+		deleteLoading ||
+		Boolean(receipt.lockedTimestamp);
 
 	return (
 		<>
@@ -50,59 +47,46 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 				backHref="/receipts"
 				startContent={<ReceiptIcon size={36} />}
 				aside={
-					isEditing ? undefined : (
-						<>
-							<ReceiptParticipantResolvedButton
-								variant="ghost"
-								receiptId={receipt.id}
-								userId={receipt.selfUserId}
-								selfUserId={receipt.selfUserId}
-								resolved={receipt.participantResolved}
-								isDisabled={deleteLoading}
-							/>
-							{receipt.role === "owner" ? (
-								<ReceiptOwnerControlButton
-									receipt={receipt}
-									deleteLoading={deleteLoading}
-								/>
-							) : (
-								<ReceiptGuestControlButton receipt={receipt} />
-							)}
-						</>
-					)
-				}
-				title={`Receipt ${receipt.name}`}
-				endContent={
 					<>
-						{isEditing ? (
-							<ReceiptNameInput
+						<ReceiptParticipantResolvedButton
+							variant="ghost"
+							receiptId={receipt.id}
+							userId={receipt.selfUserId}
+							selfUserId={receipt.selfUserId}
+							resolved={receipt.participantResolved}
+							isDisabled={deleteLoading}
+						/>
+						{receipt.role === "owner" ? (
+							<ReceiptOwnerControlButton
 								receipt={receipt}
-								isLoading={deleteLoading}
-								unsetEditing={unsetEditing}
+								deleteLoading={deleteLoading}
 							/>
-						) : null}
-						{receipt.role === "owner" && !isEditing ? (
-							<Button
-								variant="light"
-								onClick={switchEditing}
-								isDisabled={deleteLoading || Boolean(receipt.lockedTimestamp)}
-								isIconOnly
-							>
-								<EditIcon size={24} />
-							</Button>
-						) : null}
+						) : (
+							<ReceiptGuestControlButton receipt={receipt} />
+						)}
 					</>
 				}
+				title={`Receipt ${receipt.name}`}
 			>
-				{isEditing ? undefined : receipt.name}
+				{isEditing ? (
+					<ReceiptNameInput
+						receipt={receipt}
+						isLoading={deleteLoading}
+						unsetEditing={unsetEditing}
+					/>
+				) : (
+					<View
+						onClick={disabled ? undefined : switchEditing}
+						className={disabled ? undefined : "cursor-pointer"}
+					>
+						<Text className="text-3xl">{receipt.name}</Text>
+					</View>
+				)}
 			</PageHeader>
 			<View className="items-start justify-between gap-2 sm:flex-row">
 				<View className="gap-2">
 					<ReceiptDateInput receipt={receipt} isLoading={deleteLoading} />
 					<View className="flex-row items-center gap-1">
-						<Text className="text-2xl">
-							{round(receipt.sum)} {currency}
-						</Text>
 						<ReceiptCurrencyInput receipt={receipt} isLoading={deleteLoading} />
 					</View>
 				</View>

@@ -34,6 +34,7 @@ export const ReceiptDateInput: React.FC<Props> = ({ receipt, isLoading }) => {
 		<DateInput
 			mutation={updateReceiptMutation}
 			timestamp={receipt.issued}
+			labelPlacement="outside-left"
 			isDisabled={
 				receipt.role !== "owner" ||
 				Boolean(receipt.lockedTimestamp) ||

@@ -27,7 +27,7 @@ type Props = Omit<
 	errorMessage?: React.ReactNode;
 	saveProps?: {
 		title?: string;
-		isHidden: boolean;
+		isHidden?: boolean;
 		onClick: () => void;
 	};
 };

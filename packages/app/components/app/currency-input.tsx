@@ -2,7 +2,6 @@ import React from "react";
 
 import { Button } from "@nextui-org/react";
 import type { Path, PathValue, UseFormReturn } from "react-hook-form";
-import { MdEdit as EditIcon } from "react-icons/md";
 import type { z } from "zod";
 
 import { CurrenciesPicker } from "app/components/app/currencies-picker";
@@ -76,11 +75,7 @@ export const CurrencyInput = <T extends MinimalForm>({
 					isDisabled={isLoading}
 					isReadOnly
 					onClick={openModal}
-					endContent={
-						<Button variant="light" isIconOnly onClick={openModal}>
-							<EditIcon size={24} />
-						</Button>
-					}
+					className={isLoading ? undefined : "cursor-pointer"}
 				/>
 			) : (
 				<Button
