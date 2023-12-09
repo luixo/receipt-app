@@ -23,6 +23,9 @@ const nextConfig = {
 	],
 	// see patch
 	ignorePages: "\\.spec\\.tsx?$",
+	experimental: {
+		optimizeCss: true,
+	},
 };
 
 const plugins = [
