@@ -43,7 +43,7 @@ export const ReceiptParticipantResolvedButton: React.FC<Props> = ({
 	return (
 		<Button
 			{...props}
-			isLoading={updateReceiptMutation.isLoading || props.isLoading}
+			isLoading={updateReceiptMutation.isPending || props.isLoading}
 			isDisabled={
 				resolved === null || props.isDisabled || selfUserId !== userId
 			}

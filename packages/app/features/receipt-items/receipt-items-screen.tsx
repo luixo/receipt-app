@@ -117,7 +117,7 @@ type Props = Omit<InnerProps, "query">;
 
 export const ReceiptItems: React.FC<Props> = ({ receiptId, ...props }) => {
 	const query = trpc.receiptItems.get.useQuery({ receiptId });
-	if (query.status === "loading") {
+	if (query.status === "pending") {
 		return <Spinner />;
 	}
 	if (query.status === "error") {

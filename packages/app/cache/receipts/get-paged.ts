@@ -1,5 +1,5 @@
 import type { QueryClient } from "@tanstack/react-query";
-import { hashQueryKey } from "@tanstack/react-query";
+import { hashKey } from "@tanstack/react-query";
 import { getQueryKey } from "@trpc/react-query";
 
 import * as utils from "app/cache/utils";
@@ -102,7 +102,7 @@ const updatePages = (
 				.filter(({ cursor: _, ...lookupInput }) =>
 					inputsToInvalidate.some(
 						({ cursor: __, ...inputToInvalidate }) =>
-							hashQueryKey([inputToInvalidate]) === hashQueryKey([lookupInput]),
+							hashKey([inputToInvalidate]) === hashKey([lookupInput]),
 					),
 				)
 				.map((input) => {

@@ -75,7 +75,7 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 	);
 
 	if (outboundConnectionIntention === undefined) {
-		if (connectionIntentionsQuery.status === "loading") {
+		if (connectionIntentionsQuery.status === "pending") {
 			return <Spinner />;
 		}
 		if (connectionIntentionsQuery.status === "error") {
@@ -102,7 +102,7 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 					<Button
 						title="Cancel request"
 						variant="light"
-						isLoading={cancelRequestMutation.isLoading}
+						isLoading={cancelRequestMutation.isPending}
 						color="danger"
 						isIconOnly
 						onClick={() =>
@@ -142,7 +142,7 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 						<Button
 							title="Unlink user from email"
 							variant="light"
-							isLoading={unlinkMutation.isLoading}
+							isLoading={unlinkMutation.isPending}
 							isIconOnly
 							onClick={unlinkUser}
 						>
@@ -152,7 +152,7 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 						<Button
 							title="Link user to email"
 							variant="light"
-							isLoading={connectUserMutation.isLoading}
+							isLoading={connectUserMutation.isPending}
 							isDisabled={Boolean(inputState.error) || getValue().length === 0}
 							onClick={() => connectUser(getValue())}
 							isIconOnly

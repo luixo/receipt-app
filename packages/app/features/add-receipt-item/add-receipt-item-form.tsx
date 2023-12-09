@@ -59,7 +59,7 @@ export const AddReceiptItemForm: React.FC<Props> = ({
 		[addMutation, receiptId],
 	);
 
-	const isLoading = isDeleteLoading || addMutation.isLoading;
+	const isLoading = isDeleteLoading || addMutation.isPending;
 
 	return (
 		<View className="gap-4">
@@ -73,7 +73,7 @@ export const AddReceiptItemForm: React.FC<Props> = ({
 				onClick={form.handleSubmit(onSubmit)}
 				isDisabled={!form.formState.isValid || isLoading || receiptLocked}
 				className="w-full"
-				isLoading={addMutation.isLoading}
+				isLoading={addMutation.isPending}
 			>
 				Save
 			</Button>

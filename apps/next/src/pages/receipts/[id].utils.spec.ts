@@ -193,14 +193,6 @@ export const test = originalTest.extend<Fixtures>({
 				api.mock("currency.topReceipts", []);
 				api.mock("users.suggest", { cursor: 0, hasMore: false, items: [] });
 				api.mock("users.suggestTop", { items: [] });
-				api.mock("receipts.getName", (input) => {
-					if (input.id !== consts.receipt.id) {
-						throw new Error(
-							`Unexpected receipt id in "receipts.getName": ${input.id}`,
-						);
-					}
-					return consts.receipt.name;
-				});
 				api.mock("receipts.get", (input) => {
 					if (input.id !== consts.receipt.id) {
 						throw new Error(

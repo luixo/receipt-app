@@ -81,15 +81,15 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 			intention.lockedTimestamp.valueOf() > debt.lockedTimestamp.valueOf() ? (
 				<ConfirmModal
 					action={acceptSyncIntention}
-					isLoading={updateMutation.isLoading}
+					isLoading={updateMutation.isPending}
 					title={newLocal}
 					subtitle={<DebtIntention intention={intention} />}
 					confirmText="Are you sure?"
 				>
 					{({ openModal }) => (
 						<Button
-							isLoading={updateMutation.isLoading}
-							isDisabled={updateMutation.isLoading}
+							isLoading={updateMutation.isPending}
+							isDisabled={updateMutation.isPending}
 							onClick={openModal}
 							variant="ghost"
 							color="warning"
@@ -102,7 +102,7 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 			) : null}
 			<ConfirmModal
 				action={setLocked}
-				isLoading={updateMutation.isLoading}
+				isLoading={updateMutation.isPending}
 				title={debt.lockedTimestamp ? "Unsync debt" : "Sync debt"}
 				subtitle={
 					debt.lockedTimestamp
@@ -113,8 +113,8 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 			>
 				{({ openModal }) => (
 					<Button
-						isLoading={updateMutation.isLoading}
-						isDisabled={updateMutation.isLoading}
+						isLoading={updateMutation.isPending}
+						isDisabled={updateMutation.isPending}
 						onClick={debt.lockedTimestamp ? openModal : setLocked}
 						variant="ghost"
 						color={debt.lockedTimestamp ? "danger" : "success"}

@@ -60,7 +60,7 @@ export const ReceiptItemPart: React.FC<Props> = ({
 					itemPart={itemPart}
 					itemParts={itemParts}
 					readOnly={readOnly}
-					isLoading={isLoading || removeMutation.isLoading}
+					isLoading={isLoading || removeMutation.isPending}
 				/>
 				{readOnly ? null : (
 					<RemoveButton

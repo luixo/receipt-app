@@ -92,7 +92,7 @@ type Props = Omit<InnerProps, "query">;
 export const UserDebts: React.FC<Props> = ({ userId, ...props }) => {
 	const query = trpc.debts.getUser.useQuery({ userId });
 	const userNameQuery = trpc.users.getName.useQuery({ id: userId });
-	if (query.status === "loading") {
+	if (query.status === "pending") {
 		return (
 			<>
 				<PageHeader>{userNameQuery.data || userId}</PageHeader>

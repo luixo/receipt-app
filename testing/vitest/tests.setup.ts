@@ -1,4 +1,4 @@
-import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
+import { createTRPCClient, httpBatchLink } from "@trpc/client";
 import { Pool } from "pg";
 import * as timekeeper from "timekeeper";
 import type { Suite as OriginalSuite } from "vitest";
@@ -12,7 +12,7 @@ import type { appRouter } from "./databases/router";
 import { getLogger } from "./utils/mocks/logger";
 
 const { port, hostname } = inject("routerConfig");
-const client = createTRPCProxyClient<typeof appRouter>({
+const client = createTRPCClient<typeof appRouter>({
 	links: [httpBatchLink({ url: `http://${hostname}:${port}` })],
 });
 

@@ -67,7 +67,7 @@ export const ChangePasswordScreen: AppPage = () => {
 			<Input
 				{...form.register("prevPassword")}
 				label="Current password"
-				isDisabled={changePasswordMutation.isLoading}
+				isDisabled={changePasswordMutation.isPending}
 				mutation={changePasswordMutation}
 				fieldError={form.formState.errors.prevPassword}
 				type="password"
@@ -75,21 +75,21 @@ export const ChangePasswordScreen: AppPage = () => {
 			<Input
 				{...form.register("password")}
 				label="New password"
-				isDisabled={changePasswordMutation.isLoading}
+				isDisabled={changePasswordMutation.isPending}
 				fieldError={form.formState.errors.password}
 				type="password"
 			/>
 			<Input
 				{...form.register("passwordRetype")}
 				label="Retype new password"
-				isDisabled={changePasswordMutation.isLoading}
+				isDisabled={changePasswordMutation.isPending}
 				fieldError={form.formState.errors.passwordRetype}
 				type="password"
 			/>
 			<Button
 				color="primary"
-				isDisabled={!form.formState.isValid || changePasswordMutation.isLoading}
-				isLoading={changePasswordMutation.isLoading}
+				isDisabled={!form.formState.isValid || changePasswordMutation.isPending}
+				isLoading={changePasswordMutation.isPending}
 				onClick={form.handleSubmit(onSubmit)}
 			>
 				Change password

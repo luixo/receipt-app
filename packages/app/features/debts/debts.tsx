@@ -87,7 +87,7 @@ const DebtsInner: React.FC<InnerProps> = ({ query }) => {
 
 export const Debts: React.FC = () => {
 	const query = trpc.debts.getByUsers.useQuery();
-	if (query.status === "loading") {
+	if (query.status === "pending") {
 		return <Spinner size="lg" />;
 	}
 	if (query.status === "error") {

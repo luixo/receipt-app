@@ -50,7 +50,10 @@ export const trpcNext = createTRPCNext<
 	},
 	NextPageContext & { timeoutPromise: Promise<true> }
 >({
-	config: ({ meta: { hasDebug, proxyPort, controllerId }, ctx }) => {
+	config: ({
+		serverSideContext: { hasDebug, proxyPort, controllerId },
+		ctx,
+	}) => {
 		const isBrowser = typeof window !== "undefined";
 		const authToken = ctx?.req ? getCookie(ctx.req, AUTH_COOKIE) : undefined;
 		return {
@@ -95,7 +98,7 @@ export const trpcNext = createTRPCNext<
 			transformer: superjson,
 		};
 	},
-	meta: (ctx) => ({
+	serverSideContext: (ctx) => ({
 		hasDebug: Boolean(ctx.query.debug),
 		proxyPort: Number.isNaN(Number(ctx.query.proxyPort))
 			? undefined
@@ -106,7 +109,7 @@ export const trpcNext = createTRPCNext<
 				: undefined,
 	}),
 	ssr: true,
-	awaitPrespassRender: async ({ queryClient, ctx }) => {
+	awaitPrepassRender: async ({ queryClient, ctx }) => {
 		ctx.timeoutPromise =
 			ctx.timeoutPromise ||
 			new Promise((resolve) => {

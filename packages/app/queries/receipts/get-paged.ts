@@ -1,7 +1,5 @@
-import { cache } from "app/cache";
 import type { SyncQueryParamOptions } from "app/hooks/use-sync-query-param";
 import { useSyncQueryParam } from "app/hooks/use-sync-query-param";
-import type { UseContextedQueryOptions } from "app/hooks/use-trpc-query-options";
 import type { TRPCQueryInput } from "app/trpc";
 import { createStore, updateWithFn } from "app/utils/store";
 import type { Setters } from "app/utils/types";
@@ -102,18 +100,4 @@ export const useSyncQueryParams = () => {
 	useSyncQueryParam(queryOptions.filters.ownedByMe, filters.ownedByMe);
 	useSyncQueryParam(queryOptions.filters.locked, filters.locked);
 	useSyncQueryParam(queryOptions.orderBy, orderBy);
-};
-
-export const options: UseContextedQueryOptions<"receipts.getPaged"> = {
-	onSuccess: (controllerContext) => (data) => {
-		data.items.forEach((receipt) => {
-			cache.receipts.update(controllerContext, {
-				get: undefined,
-				getName: (controller) => controller.upsert(receipt.id, receipt.name),
-				getPaged: undefined,
-				getNonResolvedAmount: undefined,
-				getResolvedParticipants: undefined,
-			});
-		});
-	},
 };

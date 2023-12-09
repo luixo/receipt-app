@@ -53,7 +53,7 @@ const ConnectionIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 
 export const ConnectionIntentions: React.FC = () => {
 	const query = trpc.accountConnectionIntentions.getAll.useQuery();
-	if (query.status === "loading") {
+	if (query.status === "pending") {
 		return <Spinner size="lg" />;
 	}
 	if (query.status === "error") {

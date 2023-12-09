@@ -45,13 +45,13 @@ export const AddUserScreen: AppPage = () => {
 		<>
 			<PageHeader backHref="/users">Add user</PageHeader>
 			<EmailVerificationCard />
-			<UserNameInput form={form} isLoading={addUserMutation.isLoading} />
-			<EmailInput form={form} isLoading={addUserMutation.isLoading} />
+			<UserNameInput form={form} isLoading={addUserMutation.isPending} />
+			<EmailInput form={form} isLoading={addUserMutation.isPending} />
 			<Button
 				color="primary"
 				onClick={form.handleSubmit(onSubmit)}
-				isDisabled={!form.formState.isValid || addUserMutation.isLoading}
-				isLoading={addUserMutation.isLoading}
+				isDisabled={!form.formState.isValid || addUserMutation.isPending}
+				isLoading={addUserMutation.isPending}
 			>
 				Add user
 			</Button>

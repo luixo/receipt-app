@@ -64,7 +64,7 @@ type Props = Omit<InnerProps, "query"> & {
 
 export const Debt: React.FC<Props> = ({ id, ...props }) => {
 	const query = trpc.debts.get.useQuery({ id });
-	if (query.status === "loading") {
+	if (query.status === "pending") {
 		return (
 			<>
 				<PageHeader>Debt</PageHeader>

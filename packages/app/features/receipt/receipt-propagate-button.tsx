@@ -142,7 +142,7 @@ const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 		unsyncedParticipants,
 	]);
 	const isPropagating =
-		addBatchMutation.isLoading || updateBatchMutation.isLoading;
+		addBatchMutation.isPending || updateBatchMutation.isPending;
 
 	const [
 		infoPopoverOpen,
@@ -199,8 +199,8 @@ export const ReceiptPropagateButton: React.FC<Props> = ({
 }) => {
 	const itemsQuery = trpc.receiptItems.get.useQuery({ receiptId: receipt.id });
 	if (
-		queries.some((query) => query.status === "loading") ||
-		itemsQuery.status === "loading"
+		queries.some((query) => query.status === "pending") ||
+		itemsQuery.status === "pending"
 	) {
 		return null;
 	}

@@ -2,6 +2,7 @@ import React from "react";
 import { View } from "react-native";
 
 import { Button, Divider, Link, Pagination, Spinner } from "@nextui-org/react";
+import { keepPreviousData } from "@tanstack/react-query";
 import { MdAdd as AddIcon } from "react-icons/md";
 
 import { Header } from "app/components/base/header";
@@ -10,7 +11,6 @@ import { EmptyCard } from "app/components/empty-card";
 import { QueryErrorMessage } from "app/components/error-message";
 import { Overlay } from "app/components/overlay";
 import { useCursorPaging } from "app/hooks/use-cursor-paging";
-import { useTrpcQueryOptions } from "app/hooks/use-trpc-query-options";
 import { queries } from "app/queries";
 import type { TRPCQueryInput } from "app/trpc";
 import { trpc } from "app/trpc";
@@ -25,10 +25,7 @@ const useReceiptQuery = (
 ) =>
 	trpc.receipts.getPaged.useQuery(
 		{ ...input, cursor },
-		{
-			...useTrpcQueryOptions(queries.receipts.getPaged.options),
-			keepPreviousData: true,
-		},
+		{ placeholderData: keepPreviousData },
 	);
 
 export const Receipts: React.FC = () => {
@@ -77,13 +74,13 @@ export const Receipts: React.FC = () => {
 			<Overlay
 				className="gap-2"
 				overlay={
-					query.fetchStatus === "fetching" && query.isPreviousData ? (
+					query.fetchStatus === "fetching" && query.isPlaceholderData ? (
 						<Spinner size="lg" />
 					) : undefined
 				}
 			>
 				{query.status === "error" ? <QueryErrorMessage query={query} /> : null}
-				{query.status === "loading" ? (
+				{query.status === "pending" ? (
 					<Spinner size="lg" />
 				) : !totalCount && input.filters ? (
 					<Header className="text-center">

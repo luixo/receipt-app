@@ -153,11 +153,6 @@ export const options: UseContextedMutationOptions<"receipts.update"> = {
 					applyPagedUpdate(updateObject.update),
 					getPagedRevert(updateObject.update),
 				),
-			getName: (controller) => {
-				if (updateObject.update.type === "name") {
-					return controller.upsert(updateObject.id, updateObject.update.name);
-				}
-			},
 			getResolvedParticipants: undefined,
 		}),
 	onSuccess: (controllerContext) => (result, updateObject) => {
@@ -173,7 +168,6 @@ export const options: UseContextedMutationOptions<"receipts.update"> = {
 					updateObject.id,
 					applySuccessPagedUpdate(updateObject.update, result),
 				),
-			getName: undefined,
 			getResolvedParticipants: undefined,
 		});
 	},

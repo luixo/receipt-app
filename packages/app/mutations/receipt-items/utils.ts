@@ -28,7 +28,6 @@ export const updateReceiptSum = (
 				sum: nextSum,
 			})),
 		getNonResolvedAmount: undefined,
-		getName: undefined,
 		getResolvedParticipants: undefined,
 	});
 };

@@ -28,7 +28,7 @@ type Props = Omit<InnerProps, "query"> & {
 
 export const LoadableUser: React.FC<Props> = ({ id, ...props }) => {
 	const query = trpc.users.get.useQuery({ id });
-	if (query.status === "loading") {
+	if (query.status === "pending") {
 		return <Spinner className={props.className} />;
 	}
 	if (query.status === "error") {

@@ -12,7 +12,6 @@
 					}
 				},
 				"dataUpdateCount": 1,
-				"dataUpdatedAt": -1,
 				"error": null,
 				"status": "success"
 			}
@@ -26,11 +25,7 @@
 					"count": 0
 				},
 				"dataUpdateCount": 1,
-				"dataUpdatedAt": -1,
 				"error": null,
-				"errorUpdateCount": 0,
-				"errorUpdatedAt": 0,
-				"fetchFailureCount": 0,
 				"fetchMeta": null,
 				"isInvalidated": false,
 				"status": "success",
@@ -47,7 +42,6 @@
 					}
 				},
 				"error": null,
-				"failureCount": 0,
 				"isPaused": false,
 				"status": "success",
 				"variables": {

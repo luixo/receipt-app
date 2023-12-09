@@ -24,6 +24,7 @@ export const createContext = (
 			getHeader: () => "",
 			setHeader: ctx.responseHeaders.add,
 		} as unknown as NextApiResponse,
+		info: { isBatchCall: false, calls: [] },
 	});
 
 export const createAuthContext = (

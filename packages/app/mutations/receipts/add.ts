@@ -45,7 +45,6 @@ export const options: UseContextedMutationOptions<
 						ownerUserId: selfAccountId as UsersId,
 						selfUserId: selfAccountId as UsersId,
 					}),
-				getName: (controller) => controller.upsert(id, variables.name),
 				getNonResolvedAmount: undefined,
 				getResolvedParticipants: (controller) => controller.upsert(id, []),
 			});

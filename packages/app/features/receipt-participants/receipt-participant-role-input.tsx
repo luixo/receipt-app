@@ -75,7 +75,7 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 					isDisabled={
 						isLoading || role !== "owner" || participant.role === "owner"
 					}
-					isLoading={updateParticipantMutation.isLoading}
+					isLoading={updateParticipantMutation.isPending}
 					startContent={<ChevronDown />}
 				>
 					{participant.role === "owner" ? (

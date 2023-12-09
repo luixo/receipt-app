@@ -1,4 +1,4 @@
-import { createTRPCProxyClient, httpLink } from "@trpc/client";
+import { createTRPCClient, httpLink } from "@trpc/client";
 import type { NextApiRequest } from "next";
 import getConfig from "next/config";
 import superjson from "superjson";
@@ -9,7 +9,7 @@ import type { AppRouter } from "next-app/pages/api/trpc/[trpc]";
 const nextConfig = getConfig();
 
 export const getTrpcClient = (req: NextApiRequest) =>
-	createTRPCProxyClient<AppRouter>({
+	createTRPCClient<AppRouter>({
 		links: [
 			httpLink({
 				url: getSsrHost(nextConfig.serverRuntimeConfig?.port ?? 0),

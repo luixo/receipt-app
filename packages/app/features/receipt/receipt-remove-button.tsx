@@ -27,8 +27,8 @@ export const ReceiptRemoveButton: React.FC<Props> = ({
 		}),
 	);
 	React.useEffect(
-		() => setLoading(removeReceiptMutation.isLoading),
-		[removeReceiptMutation.isLoading, setLoading],
+		() => setLoading(removeReceiptMutation.isPending),
+		[removeReceiptMutation.isPending, setLoading],
 	);
 	const removeReceipt = React.useCallback(
 		() => removeReceiptMutation.mutate({ id: receipt.id }),

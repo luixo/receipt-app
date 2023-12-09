@@ -8,7 +8,6 @@ import { z } from "zod";
 import { ErrorMessage } from "app/components/error-message";
 import { useFormattedCurrencies } from "app/hooks/use-formatted-currencies";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
-import { useMountEffect } from "app/hooks/use-mount-effect";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
@@ -143,24 +142,22 @@ export const PlannedDebts: React.FC<Props> = ({
 		},
 		[form, selectedCurrencyCode],
 	);
-	const ratesQuery = trpc.currency.rates.useQuery(
-		{
-			from: selectedCurrencyCode,
-			to: debts
-				.map((debt) => debt.currencyCode)
-				.filter((code) => code !== selectedCurrencyCode),
-		},
-		{ onSuccess: fillRatesData },
-	);
+	const ratesQuery = trpc.currency.rates.useQuery({
+		from: selectedCurrencyCode,
+		to: debts
+			.map((debt) => debt.currencyCode)
+			.filter((code) => code !== selectedCurrencyCode),
+	});
+	React.useEffect(() => {
+		if (ratesQuery.status !== "success") {
+			return;
+		}
+		fillRatesData(ratesQuery.data);
+	}, [ratesQuery.status, ratesQuery.data, fillRatesData]);
 	const retryButton = React.useMemo(
 		() => ({ text: "Refetch rates", onClick: () => ratesQuery.refetch() }),
 		[ratesQuery],
 	);
-	useMountEffect(() => {
-		if (ratesQuery.status === "success") {
-			fillRatesData(ratesQuery.data);
-		}
-	});
 	const addBatchMutation = trpc.debts.addBatch.useMutation(
 		useTrpcMutationOptions(mutations.debts.addBatch.options, {
 			onSuccess: () => onDone(),
@@ -203,13 +200,13 @@ export const PlannedDebts: React.FC<Props> = ({
 			<Button
 				onClick={addBatch}
 				isDisabled={
-					addBatchMutation.isLoading ||
+					addBatchMutation.isPending ||
 					ratesQuery.isLoading ||
 					debts.length > MAX_BATCH_DEBTS ||
 					debts.length < MIN_BATCH_DEBTS ||
 					invalidConvertedDebts.length !== 0
 				}
-				isLoading={addBatchMutation.isLoading || ratesQuery.isLoading}
+				isLoading={addBatchMutation.isPending || ratesQuery.isLoading}
 				color={addBatchMutation.status === "error" ? "danger" : "primary"}
 			>
 				{addBatchMutation.error

@@ -72,7 +72,7 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 				<Button
 					className="flex-1 flex-row self-center p-2"
 					variant="light"
-					isLoading={updateReceiptMutation.isLoading}
+					isLoading={updateReceiptMutation.isPending}
 					isDisabled={receipt.role !== "owner"}
 					color={receiptLocked ? "success" : "warning"}
 					isIconOnly

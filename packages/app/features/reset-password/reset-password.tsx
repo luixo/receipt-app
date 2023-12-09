@@ -57,7 +57,7 @@ export const ResetPassword: React.FC<Props> = ({ token, intentionQuery }) => {
 			</EmptyCard>
 		);
 	}
-	if (intentionQuery.status === "loading") {
+	if (intentionQuery.status === "pending") {
 		return <Spinner size="lg" />;
 	}
 	if (intentionQuery.status === "error") {
@@ -71,21 +71,21 @@ export const ResetPassword: React.FC<Props> = ({ token, intentionQuery }) => {
 				{...form.register("password")}
 				label="New password"
 				fieldError={form.formState.errors.password}
-				disabled={changePasswordMutation.isLoading}
+				disabled={changePasswordMutation.isPending}
 				type="password"
 			/>
 			<Input
 				{...form.register("passwordRetype")}
 				label="Retype new password"
 				fieldError={form.formState.errors.passwordRetype}
-				disabled={changePasswordMutation.isLoading}
+				disabled={changePasswordMutation.isPending}
 				type="password"
 			/>
 			<Button
 				className="mt-4"
 				color="primary"
-				isDisabled={!form.formState.isValid || changePasswordMutation.isLoading}
-				isLoading={changePasswordMutation.isLoading}
+				isDisabled={!form.formState.isValid || changePasswordMutation.isPending}
+				isLoading={changePasswordMutation.isPending}
 				onClick={form.handleSubmit(onSubmit)}
 			>
 				Save password

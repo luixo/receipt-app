@@ -8,6 +8,7 @@ import {
 } from "@nextui-org/react";
 import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
 import type { CollectionElement } from "@react-types/shared";
+import { keepPreviousData } from "@tanstack/react-query";
 
 import { User } from "app/components/app/user";
 import { useDebouncedValue } from "app/hooks/use-debounced-value";
@@ -60,7 +61,7 @@ export const UsersSuggest: React.FC<Props> = ({
 	];
 	const topQuery = trpc.users.suggestTop.useQuery(
 		{ limit: topLimit, options, filterIds },
-		{ keepPreviousData: true },
+		{ placeholderData: keepPreviousData },
 	);
 	const query = trpc.users.suggest.useInfiniteQuery(
 		{ limit, input: debouncedValue, options, filterIds },
@@ -68,7 +69,7 @@ export const UsersSuggest: React.FC<Props> = ({
 			getNextPageParam: (result) =>
 				result.hasMore ? result.cursor + limit : undefined,
 			enabled: queryEnabled,
-			keepPreviousData: true,
+			placeholderData: keepPreviousData,
 		},
 	);
 
@@ -137,7 +138,7 @@ export const UsersSuggest: React.FC<Props> = ({
 				ref={inputRef}
 				inputValue={value}
 				onInputChange={setValue}
-				isLoading={topQuery.status === "loading"}
+				isLoading={topQuery.status === "pending"}
 				label="Select a user"
 				labelPlacement="outside"
 				placeholder="Start typing"

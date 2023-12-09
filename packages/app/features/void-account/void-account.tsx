@@ -47,8 +47,8 @@ export const VoidAccount: React.FC<Props> = ({ token }) => {
 				<Button
 					className="flex-1"
 					onClick={voidAccount}
-					isDisabled={voidMutation.isLoading}
-					isLoading={voidMutation.isLoading}
+					isDisabled={voidMutation.isPending}
+					isLoading={voidMutation.isPending}
 					color="danger"
 					type="submit"
 				>
@@ -58,7 +58,7 @@ export const VoidAccount: React.FC<Props> = ({ token }) => {
 					className="flex-1"
 					color="primary"
 					onClick={navigateToHomePage}
-					isDisabled={voidMutation.isLoading}
+					isDisabled={voidMutation.isPending}
 				>
 					No
 				</Button>

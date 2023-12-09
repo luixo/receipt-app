@@ -44,7 +44,6 @@ export const options: UseContextedMutationOptions<
 										participantResolved: snapshot.participantResolved,
 									}),
 								),
-							getName: undefined,
 							getResolvedParticipants: (controller) =>
 								controller.remove(receiptId, userId),
 							getNonResolvedAmount: (controller) => {

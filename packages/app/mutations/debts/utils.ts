@@ -335,7 +335,6 @@ export const updateReceiptWithOutcomingDebtId = (
 		},
 		getNonResolvedAmount: undefined,
 		getPaged: undefined,
-		getName: undefined,
 		getResolvedParticipants: undefined,
 	});
 };

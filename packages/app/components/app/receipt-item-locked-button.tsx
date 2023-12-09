@@ -43,7 +43,7 @@ export const ReceiptItemLockedButton: React.FC<Props> = ({
 			{...props}
 			color={locked ? "success" : "warning"}
 			variant="ghost"
-			isLoading={updateMutation.isLoading || props.isLoading}
+			isLoading={updateMutation.isPending || props.isLoading}
 			onClick={switchLocked}
 			isIconOnly
 		>

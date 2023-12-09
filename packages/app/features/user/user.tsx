@@ -39,7 +39,7 @@ type Props = Omit<InnerProps, "query"> & {
 
 export const User: React.FC<Props> = ({ id, ...props }) => {
 	const query = trpc.users.get.useQuery({ id });
-	if (query.status === "loading") {
+	if (query.status === "pending") {
 		return <Spinner />;
 	}
 	if (query.status === "error") {

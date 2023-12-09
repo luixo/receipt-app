@@ -51,27 +51,27 @@ export const LoginScreen: AppPage = () => {
 				{...form.register("email")}
 				label="Email"
 				fieldError={form.formState.errors.email}
-				isDisabled={loginMutation.isLoading}
+				isDisabled={loginMutation.isPending}
 			/>
 			<Input
 				{...form.register("password")}
 				label="Password"
 				fieldError={form.formState.errors.password}
-				isDisabled={loginMutation.isLoading}
+				isDisabled={loginMutation.isPending}
 				type="password"
 			/>
 			<Button
 				className="mt-4"
 				color="primary"
-				isDisabled={!form.formState.isValid || loginMutation.isLoading}
-				isLoading={loginMutation.isLoading}
+				isDisabled={!form.formState.isValid || loginMutation.isPending}
+				isLoading={loginMutation.isPending}
 				onClick={form.handleSubmit(onSubmit)}
 			>
 				Login
 			</Button>
 			<Button
 				color="primary"
-				isDisabled={loginMutation.isLoading}
+				isDisabled={loginMutation.isPending}
 				onClick={openModal}
 			>
 				Forgot password?

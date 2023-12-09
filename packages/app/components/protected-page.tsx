@@ -66,7 +66,7 @@ export const ProtectedPage: React.FC<Props> = ({ children }) => {
 			element = <QueryErrorMessage query={accountQuery} />;
 		}
 	}
-	if (accountQuery.status === "loading") {
+	if (accountQuery.status === "pending") {
 		element = <Spinner size="lg" />;
 	}
 

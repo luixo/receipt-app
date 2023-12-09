@@ -3,9 +3,8 @@
 		"auth.register": {
 			"state": {
 				"error": null,
-				"failureCount": 0,
 				"isPaused": false,
-				"status": "loading",
+				"status": "pending",
 				"variables": {
 					"email": "test@mail.ru",
 					"name": "Test name",

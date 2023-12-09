@@ -63,23 +63,23 @@ export const AddReceiptScreen: AppPage = () => {
 		<>
 			<PageHeader backHref="/receipts">Add receipt</PageHeader>
 			<EmailVerificationCard />
-			<ReceiptNameInput form={form} isLoading={addReceiptMutation.isLoading} />
+			<ReceiptNameInput form={form} isLoading={addReceiptMutation.isPending} />
 			<CurrencyInput
 				form={form}
-				isLoading={addReceiptMutation.isLoading}
+				isLoading={addReceiptMutation.isPending}
 				topCurrenciesQuery={topCurrenciesQuery}
 			/>
-			<ReceiptDateInput form={form} isLoading={addReceiptMutation.isLoading} />
+			<ReceiptDateInput form={form} isLoading={addReceiptMutation.isPending} />
 			<Button
 				className="mt-4"
 				color="primary"
 				onClick={form.handleSubmit(onSubmit)}
 				isDisabled={
 					!form.formState.isValid ||
-					addReceiptMutation.isLoading ||
+					addReceiptMutation.isPending ||
 					!selfAccountId
 				}
-				isLoading={addReceiptMutation.isLoading}
+				isLoading={addReceiptMutation.isPending}
 			>
 				Add receipt
 			</Button>

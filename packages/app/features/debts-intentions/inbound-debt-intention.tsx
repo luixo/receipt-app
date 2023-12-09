@@ -40,13 +40,13 @@ export const InboundDebtIntention = React.forwardRef<HTMLDivElement, Props>(
 			[acceptMutation, intention.id, router],
 		);
 
-		const { isLoading } = acceptMutation;
+		const { isPending } = acceptMutation;
 		return (
 			<DebtIntention intention={intention} ref={ref}>
 				<ButtonGroup className="self-end" color="primary">
 					<Button
-						isDisabled={isLoading}
-						isLoading={isLoading}
+						isDisabled={isPending}
+						isLoading={isPending}
 						onClick={() => acceptSyncIntention()}
 						title={`Accept debt for ${intention.amount} ${intention.currencyCode}`}
 					>
@@ -54,8 +54,8 @@ export const InboundDebtIntention = React.forwardRef<HTMLDivElement, Props>(
 					</Button>
 					<Button
 						variant="bordered"
-						isDisabled={isLoading}
-						isLoading={isLoading}
+						isDisabled={isPending}
+						isLoading={isPending}
 						onClick={() => acceptSyncIntention(true)}
 						title={`Accept and edit debt for ${intention.amount} ${intention.currencyCode}`}
 					>

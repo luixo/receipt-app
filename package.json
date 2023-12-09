@@ -59,8 +59,8 @@
 	},
 	"dependencies": {
 		"@sentry/nextjs": "^7.85.0",
-		"@tanstack/react-query": "^4.32.0",
-		"@tanstack/react-query-devtools": "^4.32.0",
+		"@tanstack/react-query": "^5.12.2",
+		"@tanstack/react-query-devtools": "^5.13.3",
 		"expo": "^49.0.4",
 		"expo-cli": "^6.3.10",
 		"expo-splash-screen": "^0.20.4",
@@ -88,8 +88,7 @@
 	"packageManager": "yarn@3.6.2",
 	"resolutions": {
 		"zustand@^4.3.9": "patch:zustand@npm%3A4.3.9#./patches/zustand-npm-4.3.9.patch",
-		"@trpc/next@^10.35.0": "patch:@trpc/next@npm%3A10.35.0#./patches/@trpc-next-npm-10.35.0.patch",
-		"@trpc/server@^10.35.0": "patch:@trpc/server@npm%3A10.35.0#./patches/@trpc-server-npm-10.35.0.patch",
+		"@trpc/next@^11.0.0-alpha-next-2023-11-24-13-58-38.113": "patch:@trpc/next@npm%3A11.0.0-alpha-next-2023-11-24-13-58-38.113#./patches/@trpc-next-npm-11.0.0-alpha-next-2023-11-24-13-58-38.113.patch",
 		"next@^14.0.3": "patch:next@npm%3A14.0.3#./patches/next-npm-14.0.3.patch",
 		"react-ssr-prepass@^1.5.0": "patch:react-ssr-prepass@npm%3A1.5.0#./patches/react-ssr-prepass-npm-1.5.0.patch",
 		"next-usequerystate@1.13.0": "patch:next-usequerystate@npm%3A1.13.0#./patches/next-usequerystate-npm-1.13.0.patch"

@@ -74,7 +74,7 @@ const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 
 export const DebtIntentions: React.FC = () => {
 	const query = trpc.debts.getIntentions.useQuery();
-	if (query.status === "loading") {
+	if (query.status === "pending") {
 		return <Spinner size="lg" />;
 	}
 	if (query.status === "error") {

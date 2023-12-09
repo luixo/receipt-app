@@ -14,9 +14,8 @@
 		"debts.update": {
 			"state": {
 				"error": null,
-				"failureCount": 0,
 				"isPaused": false,
-				"status": "loading",
+				"status": "pending",
 				"variables": {
 					"id": "4eaf7a26-d0ef-4a3c-b034-798a3396d05a",
 					"update": {

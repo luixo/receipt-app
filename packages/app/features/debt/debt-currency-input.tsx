@@ -49,7 +49,7 @@ export const DebtCurrencyInput: React.FC<Props> = ({ debt, isLoading }) => {
 				variant="light"
 				onClick={openModal}
 				isDisabled={isLoading}
-				isLoading={updateReceiptMutation.isLoading}
+				isLoading={updateReceiptMutation.isPending}
 				isIconOnly
 			>
 				{currency}

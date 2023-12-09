@@ -121,7 +121,6 @@ export const options: UseContextedMutationOptions<
 							applyUpdateReceiptPaged(variables.update),
 						);
 					},
-					getName: undefined,
 					getResolvedParticipants: (controller) =>
 						controller.update(
 							variables.receiptId,

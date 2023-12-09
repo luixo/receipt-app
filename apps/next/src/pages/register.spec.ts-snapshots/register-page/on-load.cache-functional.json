@@ -2,8 +2,6 @@
 	"queries": {
 		"account.get": {
 			"state": {
-				"dataUpdateCount": 0,
-				"dataUpdatedAt": 0,
 				"error": {
 					"message": "No token provided - mocked",
 					"data": {
@@ -14,7 +12,6 @@
 					}
 				},
 				"errorUpdateCount": 1,
-				"errorUpdatedAt": -1,
 				"fetchFailureCount": 1,
 				"fetchMeta": null,
 				"isInvalidated": false,

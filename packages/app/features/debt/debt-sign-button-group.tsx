@@ -35,7 +35,7 @@ export const DebtSignButtonGroup: React.FC<Props> = ({ debt, disabled }) => {
 	return (
 		<SignButtonGroup
 			disabled={disabled}
-			isLoading={updateMutation.isLoading}
+			isLoading={updateMutation.isPending}
 			onUpdate={setDirection}
 			direction={debt.amount >= 0 ? "+" : "-"}
 		/>

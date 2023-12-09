@@ -22,6 +22,8 @@ import {
 	SSR_CONTEXT_COOKIE_NAME,
 	getSSRContextData,
 } from "app/contexts/ssr-context";
+import { useBooleanState } from "app/hooks/use-boolean-state";
+import { useMountEffect } from "app/hooks/use-mount-effect";
 import type { Props as ProviderProps } from "app/provider";
 import { Provider } from "app/provider";
 import { applyRemaps } from "app/utils/nativewind";
@@ -57,6 +59,8 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 	const LayoutComponent = (Component as AppPage).public
 		? PublicPage
 		: ProtectedPage;
+	const [isMounted, { setTrue: setMounted }] = useBooleanState();
+	useMountEffect(setMounted);
 	return (
 		<>
 			<Head>
@@ -69,7 +73,8 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 				<link rel="icon" href="/favicon.svg" />
 			</Head>
 			<Provider {...pageProps}>
-				<ReactQueryDevtools />
+				{/* When running with NODE_ENV=test hydration mismatch error appears */}
+				{isMounted ? <ReactQueryDevtools /> : null}
 				<LayoutComponent>
 					<Component />
 				</LayoutComponent>

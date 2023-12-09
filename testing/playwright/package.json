@@ -7,8 +7,8 @@
 	"devDependencies": {
 		"@faker-js/faker": "^8.0.2",
 		"@playwright/test": "^1.39.0",
-		"@trpc/client": "^10.35.0",
-		"@trpc/server": "^10.35.0",
+		"@trpc/client": "^11.0.0-alpha-next-2023-11-24-13-58-38.113",
+		"@trpc/server": "^11.0.0-alpha-next-2023-11-24-13-58-38.113",
 		"app": "*",
 		"async-await-queue": "^2.1.4",
 		"deep-object-diff": "^1.1.9",

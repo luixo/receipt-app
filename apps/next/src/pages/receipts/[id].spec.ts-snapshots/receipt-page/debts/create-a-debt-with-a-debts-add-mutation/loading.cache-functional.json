@@ -3,9 +3,8 @@
 		"debts.add": {
 			"state": {
 				"error": null,
-				"failureCount": 0,
 				"isPaused": false,
-				"status": "loading",
+				"status": "pending",
 				"variables": {
 					"currencyCode": "KZT",
 					"userId": "61cf92e4-ce70-444d-b636-507bb003d1ce",

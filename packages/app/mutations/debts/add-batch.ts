@@ -86,7 +86,6 @@ export const options: UseContextedMutationOptions<"debts.addBatch"> = {
 				},
 				getNonResolvedAmount: undefined,
 				getPaged: undefined,
-				getName: undefined,
 				getResolvedParticipants: undefined,
 			});
 		}

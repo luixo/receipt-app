@@ -86,7 +86,7 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 				<Button
 					variant="ghost"
 					color="primary"
-					isLoading={updateMutation.isLoading}
+					isLoading={updateMutation.isPending}
 					onClick={() => updatePart((prev) => prev - 1)}
 					isDisabled={itemPart.part <= 1}
 					isIconOnly
@@ -97,7 +97,7 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 				<Button
 					variant="ghost"
 					color="primary"
-					isLoading={updateMutation.isLoading}
+					isLoading={updateMutation.isPending}
 					onClick={() => updatePart((prev) => prev + 1)}
 					isIconOnly
 				>
@@ -105,7 +105,7 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 				</Button>
 			</View>
 		),
-		[updatePart, itemPart.part, updateMutation.isLoading],
+		[updatePart, itemPart.part, updateMutation.isPending],
 	);
 
 	const readOnlyComponent = (

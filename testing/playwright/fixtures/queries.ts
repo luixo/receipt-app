@@ -8,11 +8,10 @@ import type {
 import { expect } from "@playwright/test";
 import type { DehydratedState, QueryClient } from "@tanstack/react-query";
 import { type TRPCClientErrorLike } from "@trpc/client";
-import type { QueryKey } from "@trpc/react-query/src/internals/getArrayQueryKey";
 import { diff as objectDiff } from "deep-object-diff";
 import joinImages from "join-images";
 
-import type { TRPCQueryKey } from "app/trpc";
+import type { TRPCQueryInput, TRPCQueryKey } from "app/trpc";
 import type { AppRouter } from "next-app/pages/api/trpc/[trpc]";
 
 import type { ApiManager, ApiMixin, TRPCKey } from "./api";
@@ -100,7 +99,10 @@ const getQueryCache = (page: Page, ignoreKeys: TRPCKey[], timeout: number) =>
 			const redactedQueries = cache.queries
 				.sort((a, b) => a.queryHash.localeCompare(b.queryHash))
 				.map(({ queryHash, queryKey, ...query }) => {
-					const typedQueryKey = queryKey as QueryKey;
+					const typedQueryKey = queryKey as [
+						string[],
+						{ input: TRPCQueryInput<TRPCQueryKey>; type: "query" | "infinite" },
+					];
 					return {
 						...query,
 						queryKey: {
@@ -112,8 +114,21 @@ const getQueryCache = (page: Page, ignoreKeys: TRPCKey[], timeout: number) =>
 							error: flattenError(query.state.error),
 							fetchFailureReason: undefined,
 							// Removing actual dates as they are not stable for snapshots
-							dataUpdatedAt: query.state.dataUpdatedAt ? -1 : 0,
-							errorUpdatedAt: query.state.errorUpdatedAt ? -1 : 0,
+							dataUpdatedAt: undefined,
+							// Count can't go down, so we're diffing undefined -> some value
+							dataUpdateCount:
+								query.state.dataUpdateCount === 0
+									? undefined
+									: query.state.dataUpdateCount,
+							errorUpdatedAt: undefined,
+							errorUpdateCount:
+								query.state.errorUpdateCount === 0
+									? undefined
+									: query.state.errorUpdateCount,
+							fetchFailureCount:
+								query.state.fetchFailureCount === 0
+									? undefined
+									: query.state.fetchFailureCount,
 						},
 					};
 				})
@@ -124,18 +139,24 @@ const getQueryCache = (page: Page, ignoreKeys: TRPCKey[], timeout: number) =>
 			>;
 			const redactedMutations = cache.mutations
 				.map((mutation) => {
-					const mutationKey = mutation.mutationKey as QueryKey;
+					const mutationKey = mutation.mutationKey as [string[]];
 					return {
 						...mutation,
 						mutationKey: {
 							handler: mutationKey[0].join(".") as TRPCKey,
-							input: JSON.stringify(mutationKey[1]?.input),
 						},
 						state: {
 							...mutation.state,
 							context: undefined,
 							error: flattenError(mutation.state.error),
 							failureReason: undefined,
+							// Removing actual dates as they are not stable for snapshots
+							submittedAt: undefined,
+							// Count can't go down, so we're diffing undefined -> some value
+							failureCount:
+								mutation.state.failureCount === 0
+									? undefined
+									: mutation.state.failureCount,
 						},
 					};
 				})
@@ -285,9 +306,9 @@ export const queriesMixin = createMixin<
 						);
 					}
 					const queryCache = window.queryClient.getQueryCache();
-					const matchedQuery = queryCache.findAll([
-						awaitedKeyInner.split("."),
-					])[0];
+					const matchedQuery = queryCache.findAll({
+						queryKey: [awaitedKeyInner.split(".")],
+					})[0];
 					if (
 						matchedQuery &&
 						(matchedQuery.state.status === "success" ||

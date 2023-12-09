@@ -14,8 +14,6 @@ export const useQueryClientHelper = () => {
 		window.getDehydratedCache = async (timeout: number) => {
 			const getData = () =>
 				dehydrate(queryClient, {
-					dehydrateQueries: true,
-					dehydrateMutations: true,
 					shouldDehydrateQuery: alwaysTrue,
 					shouldDehydrateMutation: alwaysTrue,
 				});

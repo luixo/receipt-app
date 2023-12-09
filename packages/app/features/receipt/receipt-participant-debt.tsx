@@ -125,7 +125,7 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 				currentDebt,
 		  )
 		: false;
-	const isUpdating = updateMutation.isLoading || addMutation.isLoading;
+	const isUpdating = updateMutation.isPending || addMutation.isPending;
 	const user = <LoadableUser className="self-start" id={participant.userId} />;
 
 	return (

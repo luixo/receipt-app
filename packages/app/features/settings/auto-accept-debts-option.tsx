@@ -24,7 +24,7 @@ export const AutoAcceptDebtsOption: React.FC = () => {
 		() => ({ text: "Reset", onClick: updateSettingsMutation.reset }),
 		[updateSettingsMutation],
 	);
-	if (settingsQuery.status === "loading") {
+	if (settingsQuery.status === "pending") {
 		return <Spinner />;
 	}
 	if (settingsQuery.status === "error") {
@@ -36,9 +36,9 @@ export const AutoAcceptDebtsOption: React.FC = () => {
 				isSelected={settingsQuery.data.autoAcceptDebts}
 				onValueChange={onChange}
 				thumbIcon={
-					updateSettingsMutation.isLoading ? <Spinner size="sm" /> : undefined
+					updateSettingsMutation.isPending ? <Spinner size="sm" /> : undefined
 				}
-				isDisabled={updateSettingsMutation.isLoading}
+				isDisabled={updateSettingsMutation.isPending}
 			/>
 			{updateSettingsMutation.status === "error" ? (
 				<ErrorMessage

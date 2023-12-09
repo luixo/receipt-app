@@ -41,7 +41,7 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 	}, [rejectConnectionMutation, intention.account.id]);
 
 	const isLoading =
-		acceptConnectionMutation.isLoading || rejectConnectionMutation.isLoading;
+		acceptConnectionMutation.isPending || rejectConnectionMutation.isPending;
 	return (
 		<View className="gap-2">
 			<Text>{intention.account.email}</Text>

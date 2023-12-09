@@ -3,9 +3,8 @@
 		"auth.voidAccount": {
 			"state": {
 				"error": null,
-				"failureCount": 0,
 				"isPaused": false,
-				"status": "loading",
+				"status": "pending",
 				"variables": {
 					"token": "foo"
 				}

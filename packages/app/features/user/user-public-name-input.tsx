@@ -61,7 +61,7 @@ export const UserPublicNameInput: React.FC<Props> = ({ user, isLoading }) => {
 		return (
 			<Button
 				color="primary"
-				isDisabled={updateUserMutation.isLoading || isLoading}
+				isDisabled={updateUserMutation.isPending || isLoading}
 				onClick={setInput}
 			>
 				Add public name
@@ -86,7 +86,7 @@ export const UserPublicNameInput: React.FC<Props> = ({ user, isLoading }) => {
 					<Button
 						title="Remove user public name"
 						variant="light"
-						isLoading={updateUserMutation.isLoading}
+						isLoading={updateUserMutation.isPending}
 						onClick={() => savePublicName(undefined)}
 						color="danger"
 						isIconOnly

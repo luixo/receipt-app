@@ -45,7 +45,7 @@ export const ReceiptLockedButton: React.FC<Props> = ({
 		<Tooltip content={locked ? "Receipt locked" : "Receipt unlocked"}>
 			<Button
 				variant="ghost"
-				isLoading={updateReceiptMutation.isLoading}
+				isLoading={updateReceiptMutation.isPending}
 				isDisabled={isLoading || Boolean(emptyItemsWarning)}
 				onClick={() => switchResolved()}
 				color={locked ? "success" : "warning"}

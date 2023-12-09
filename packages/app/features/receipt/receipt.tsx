@@ -10,8 +10,6 @@ import { Text } from "app/components/base/text";
 import { QueryErrorMessage } from "app/components/error-message";
 import { PageHeader } from "app/components/page-header";
 import { useBooleanState } from "app/hooks/use-boolean-state";
-import { useTrpcQueryOptions } from "app/hooks/use-trpc-query-options";
-import { queries } from "app/queries";
 import type { TRPCQuerySuccessResult } from "app/trpc";
 import { trpc } from "app/trpc";
 import type { ReceiptsId } from "next-app/src/db/models";
@@ -108,15 +106,11 @@ type Props = Omit<InnerProps, "query"> & {
 };
 
 export const Receipt: React.FC<Props> = ({ id, ...props }) => {
-	const query = trpc.receipts.get.useQuery(
-		{ id },
-		useTrpcQueryOptions(queries.receipts.get.options),
-	);
-	const receiptNameQuery = trpc.receipts.getName.useQuery({ id });
-	if (query.status === "loading") {
+	const query = trpc.receipts.get.useQuery({ id });
+	if (query.status === "pending") {
 		return (
 			<>
-				<PageHeader>{receiptNameQuery.data || id}</PageHeader>
+				<PageHeader>{id}</PageHeader>
 				<Spinner size="lg" />
 			</>
 		);

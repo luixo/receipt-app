@@ -28,7 +28,7 @@ export default async (context: GlobalSetupContext) => {
 	return async () => {
 		await caller.teardown();
 		await new Promise<void>((resolve, reject) => {
-			httpServer.server.close((err) => (err ? reject(err) : resolve()));
+			httpServer.close((err) => (err ? reject(err) : resolve()));
 		});
 	};
 };

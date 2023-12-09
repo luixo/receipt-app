@@ -57,7 +57,7 @@ export const Input = React.forwardRef<HTMLInputElement, Props>(
 			: [];
 		const isWarning = Boolean(fieldError);
 		const isError = Boolean(mutations.find(({ error }) => error)) || isInvalid;
-		const isMutationLoading = mutations.some(({ isLoading }) => isLoading);
+		const isMutationLoading = mutations.some(({ isPending }) => isPending);
 		return (
 			<InputRaw
 				// eslint-disable-next-line @typescript-eslint/no-explicit-any

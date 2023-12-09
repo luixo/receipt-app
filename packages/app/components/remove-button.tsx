@@ -6,7 +6,7 @@ import { IoTrashBin as TrashBin } from "react-icons/io5";
 import { ConfirmModal } from "app/components/confirm-modal";
 
 type Props = {
-	mutation: { isLoading: boolean };
+	mutation: { isPending: boolean };
 	onRemove: () => void;
 	children?: React.ReactNode;
 	subtitle?: string;
@@ -23,7 +23,7 @@ export const RemoveButton: React.FC<Props> = ({
 }) => (
 	<ConfirmModal
 		action={onRemove}
-		isLoading={mutation.isLoading}
+		isLoading={mutation.isPending}
 		title="Remove modal"
 		subtitle={subtitle}
 		confirmText="Are you sure?"
@@ -33,10 +33,10 @@ export const RemoveButton: React.FC<Props> = ({
 				onClick={noConfirm ? onRemove : openModal}
 				color="danger"
 				{...props}
-				isDisabled={props.isDisabled || mutation.isLoading}
-				isLoading={props.isLoading || mutation.isLoading}
+				isDisabled={props.isDisabled || mutation.isPending}
+				isLoading={props.isLoading || mutation.isPending}
 			>
-				{mutation.isLoading ? null : <TrashBin size={24} />}
+				{mutation.isPending ? null : <TrashBin size={24} />}
 				{children}
 			</Button>
 		)}

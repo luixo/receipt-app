@@ -77,7 +77,7 @@ type LoaderProps = Omit<InnerProps, "query"> & {
 };
 
 const CurrenciesPickerLoader: React.FC<LoaderProps> = ({ query, ...props }) => {
-	if (query.status === "loading") {
+	if (query.status === "pending") {
 		return <Spinner />;
 	}
 	if (query.status === "error") {

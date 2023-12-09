@@ -100,7 +100,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 		);
 
 		const isDeleteLoading =
-			isReceiptDeleteLoading || removeReceiptItemMutation.isLoading;
+			isReceiptDeleteLoading || removeReceiptItemMutation.isPending;
 		const itemParts = receiptItem.parts.reduce(
 			(acc, itemPart) => acc + itemPart.part,
 			0,

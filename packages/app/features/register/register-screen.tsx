@@ -71,27 +71,27 @@ export const RegisterScreen: AppPage = () => {
 				label="Name"
 				placeholder="You can change it later"
 				fieldError={form.formState.errors.name}
-				isDisabled={registerMutation.isLoading}
+				isDisabled={registerMutation.isPending}
 			/>
 			<Input
 				{...form.register("password")}
 				label="New password"
 				fieldError={form.formState.errors.password}
-				isDisabled={registerMutation.isLoading}
+				isDisabled={registerMutation.isPending}
 				type="password"
 			/>
 			<Input
 				{...form.register("passwordRetype")}
 				label="Retype new password"
 				fieldError={form.formState.errors.passwordRetype}
-				isDisabled={registerMutation.isLoading}
+				isDisabled={registerMutation.isPending}
 				type="password"
 			/>
 			<Button
 				className="mt-4"
 				color="primary"
-				isDisabled={!form.formState.isValid || registerMutation.isLoading}
-				isLoading={registerMutation.isLoading}
+				isDisabled={!form.formState.isValid || registerMutation.isPending}
+				isLoading={registerMutation.isPending}
 				onClick={form.handleSubmit(onSubmit)}
 				type="submit"
 			>

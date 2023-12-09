@@ -10,9 +10,9 @@
 	},
 	"dependencies": {
 		"@expo/next-adapter": "^5.0.2",
-		"@trpc/client": "^10.35.0",
-		"@trpc/next": "^10.35.0",
-		"@trpc/server": "^10.35.0",
+		"@trpc/client": "^11.0.0-alpha-next-2023-11-24-13-58-38.113",
+		"@trpc/next": "^11.0.0-alpha-next-2023-11-24-13-58-38.113",
+		"@trpc/server": "^11.0.0-alpha-next-2023-11-24-13-58-38.113",
 		"@types/react": "^18.2.16",
 		"@upstash/redis": "^1.22.0",
 		"app": "workspace:*",

@@ -1,7 +1,7 @@
 import type { HTTPHeaders } from "@trpc/client";
-import { TRPCClientError, createTRPCProxyClient, httpLink } from "@trpc/client";
+import { TRPCClientError, createTRPCClient, httpLink } from "@trpc/client";
 import { createHTTPServer } from "@trpc/server/adapters/standalone";
-import { type TRPCErrorShape, TRPC_ERROR_CODES_BY_KEY } from "@trpc/server/rpc";
+import { TRPC_ERROR_CODES_BY_KEY } from "@trpc/server/rpc";
 import findFreePorts from "find-free-ports";
 import type { NextApiRequest, NextApiResponse } from "next";
 import superjson from "superjson";
@@ -25,6 +25,7 @@ describe("errors formatting", () => {
 				createContext({
 					req: req as NextApiRequest,
 					res: res as NextApiResponse,
+					info: { isBatchCall: false, calls: [] },
 					...ctx,
 				}),
 		});
@@ -34,7 +35,7 @@ describe("errors formatting", () => {
 		return {
 			destroy: async () => {
 				await new Promise<void>((resolve, reject) => {
-					httpServer.server.close((err) => (err ? reject(err) : resolve()));
+					httpServer.close((err) => (err ? reject(err) : resolve()));
 				});
 			},
 			port,
@@ -42,7 +43,7 @@ describe("errors formatting", () => {
 	};
 
 	const createClient = (port: number, headers: HTTPHeaders) =>
-		createTRPCProxyClient<typeof router>({
+		createTRPCClient<typeof router>({
 			links: [
 				httpLink({
 					url: `http://localhost:${port}`,
@@ -58,7 +59,7 @@ describe("errors formatting", () => {
 		const client = createClient(port, { cookie: "authToken=fake" });
 		const error = await client.account.get.query().catch((e) => e);
 		expect(error).toBeInstanceOf(TRPCClientError);
-		const typedError = error as TRPCClientError<TRPCErrorShape<number>>;
+		const typedError = error as TRPCClientError<typeof router>;
 		expect(typedError.shape?.data.stack).toMatch(
 			/^TRPCError: Session id mismatch\n/,
 		);

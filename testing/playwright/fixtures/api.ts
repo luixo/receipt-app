@@ -1,5 +1,5 @@
 import type { BrowserContext } from "@playwright/test";
-import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
+import { createTRPCClient, httpBatchLink } from "@trpc/client";
 import { TRPCError } from "@trpc/server";
 import { getHTTPStatusCodeFromError } from "@trpc/server/http";
 import {
@@ -386,7 +386,7 @@ export const apiMixin = createMixin<ApiMixin, ApiWorkerMixin>({
 		// eslint-disable-next-line no-empty-pattern
 		async ({}, use) => {
 			const managerPort = process.env.MANAGER_PORT;
-			const client = createTRPCProxyClient<typeof appRouter>({
+			const client = createTRPCClient<typeof appRouter>({
 				links: [httpBatchLink({ url: `http://localhost:${managerPort}` })],
 			});
 			const { port, hash } = await client.lockPort.mutate();

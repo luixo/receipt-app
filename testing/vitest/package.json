@@ -6,8 +6,8 @@
 	},
 	"devDependencies": {
 		"@faker-js/faker": "^8.0.2",
-		"@trpc/client": "^10.35.0",
-		"@trpc/server": "^10.35.0",
+		"@trpc/client": "^11.0.0-alpha-next-2023-11-24-13-58-38.113",
+		"@trpc/server": "^11.0.0-alpha-next-2023-11-24-13-58-38.113",
 		"@vitest/coverage-v8": "^0.34.3",
 		"app": "*",
 		"deep-object-diff": "^1.1.9",

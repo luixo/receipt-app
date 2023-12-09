@@ -48,7 +48,7 @@ export const DateInput: React.FC<Props> = ({
 		<Calendar
 			value={Number.isNaN(dateValue.valueOf()) ? undefined : dateValue}
 			onChange={setValue}
-			disabled={mutation?.isLoading || isDisabled}
+			disabled={mutation?.isPending || isDisabled}
 		>
 			{isDisabled ? (
 				<Text className="text-xl">{formatDate(dateValue)}</Text>

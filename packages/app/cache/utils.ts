@@ -25,7 +25,7 @@ export const getAllInputs = <Key extends TRPCQueryKey>(
 	queryClient: QueryClient,
 	queryKey: QueryKey,
 ) =>
-	(queryClient.getQueriesData(queryKey) as QueryClientData<Key>[]).map(
+	(queryClient.getQueriesData({ queryKey }) as QueryClientData<Key>[]).map(
 		(query) => query[0][1]?.input,
 	) as TRPCQueryInput<Key>[];
 

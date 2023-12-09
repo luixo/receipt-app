@@ -26,7 +26,7 @@ export const ConfirmEmail: React.FC<Props> = ({ token, confirmMutation }) => {
 			</EmptyCard>
 		);
 	}
-	if (confirmMutation.status === "loading") {
+	if (confirmMutation.status === "pending") {
 		return <Spinner size="lg" />;
 	}
 	if (confirmMutation.status === "error") {

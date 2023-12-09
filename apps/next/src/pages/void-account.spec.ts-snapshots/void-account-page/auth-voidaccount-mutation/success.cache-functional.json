@@ -6,7 +6,6 @@
 					"email": "foo@gmail.com"
 				},
 				"error": null,
-				"failureCount": 0,
 				"isPaused": false,
 				"status": "success",
 				"variables": {

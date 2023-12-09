@@ -11,7 +11,7 @@ const globalSetup = async (config: FullConfig) => {
 	await new Promise<void>((resolve) => {
 		httpServer.listen(portManagerPort, "localhost", resolve);
 	});
-	config.metadata.portManagerServer = httpServer.server;
+	config.metadata.portManagerServer = httpServer;
 };
 
 export default globalSetup;

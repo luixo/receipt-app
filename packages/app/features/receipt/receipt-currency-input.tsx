@@ -45,7 +45,7 @@ export const ReceiptCurrencyInput: React.FC<Props> = ({
 	);
 	const topCurrenciesQuery = trpc.currency.topReceipts.useQuery();
 	const disabled =
-		updateReceiptMutation.isLoading ||
+		updateReceiptMutation.isPending ||
 		isLoading ||
 		receipt.role !== "owner" ||
 		Boolean(receipt.lockedTimestamp);

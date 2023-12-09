@@ -113,31 +113,31 @@ export const AddDebtScreen: AppPage = () => {
 			<PageHeader backHref="/debts">Add debt</PageHeader>
 			<EmailVerificationCard />
 			<SignButtonGroup
-				isLoading={addMutation.isLoading}
+				isLoading={addMutation.isPending}
 				onUpdate={onDirectionUpdate}
 				direction={form.watch("direction")}
 			/>
-			<DebtAmountInput form={form} isLoading={addMutation.isLoading} />
+			<DebtAmountInput form={form} isLoading={addMutation.isPending} />
 			<CurrencyInput
 				form={form}
-				isLoading={addMutation.isLoading}
+				isLoading={addMutation.isPending}
 				topCurrenciesQuery={topCurrenciesQuery}
 			/>
 			<UsersSuggest
 				selected={form.watch("user")}
-				isDisabled={addMutation.isLoading}
+				isDisabled={addMutation.isPending}
 				options={React.useMemo(() => ({ type: "debts" }), [])}
 				onUserClick={onUserClick}
 				closeOnSelect
 			/>
-			<DebtDateInput form={form} isLoading={addMutation.isLoading} />
-			<DebtNoteInput form={form} isLoading={addMutation.isLoading} />
+			<DebtDateInput form={form} isLoading={addMutation.isPending} />
+			<DebtNoteInput form={form} isLoading={addMutation.isPending} />
 			<Button
 				className="mt-4"
 				color="primary"
 				onClick={form.handleSubmit(onSubmit)}
-				isDisabled={!form.formState.isValid || addMutation.isLoading}
-				isLoading={addMutation.isLoading}
+				isDisabled={!form.formState.isValid || addMutation.isPending}
+				isLoading={addMutation.isPending}
 			>
 				Add debt
 			</Button>

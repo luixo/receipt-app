@@ -48,10 +48,10 @@ const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 			<ChangePasswordScreen />
 			<Button
 				className="mt-4 self-end"
-				isDisabled={logoutMutation.isLoading}
+				isDisabled={logoutMutation.isPending}
 				onClick={logout}
 				color="warning"
-				isLoading={logoutMutation.isLoading}
+				isLoading={logoutMutation.isPending}
 			>
 				Logout
 			</Button>
@@ -61,7 +61,7 @@ const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 
 export const AccountScreen: AppPage = () => {
 	const query = trpc.account.get.useQuery();
-	if (query.status === "loading") {
+	if (query.status === "pending") {
 		return <Spinner />;
 	}
 	if (query.status === "error") {

@@ -4,8 +4,6 @@ import { Card, CardBody, Link, tv } from "@nextui-org/react";
 
 import { DebtsGroup } from "app/components/app/debts-group";
 import { LoadableUser } from "app/components/app/loadable-user";
-import { useTrpcQueryOptions } from "app/hooks/use-trpc-query-options";
-import { queries } from "app/queries";
 import type { TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
 import type { UsersId } from "next-app/db/models";
@@ -30,10 +28,16 @@ export const UserDebtsPreview: React.FC<Props> = ({
 	userId,
 	transparent,
 }) => {
-	trpc.users.get.useQuery(
-		{ id: userId },
-		useTrpcQueryOptions(queries.users.get.options),
-	);
+	const query = trpc.users.get.useQuery({ id: userId });
+	const utils = trpc.useUtils();
+	React.useEffect(() => {
+		if (query.status !== "success") {
+			return;
+		}
+		if (!utils.users.getName.getData({ id: userId })) {
+			utils.users.getName.setData({ id: userId }, () => query.data.name);
+		}
+	}, [query, utils, userId]);
 	return (
 		<Card as={Link} href={`/debts/user/${userId}`}>
 			<CardBody className={card({ transparent })}>

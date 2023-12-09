@@ -23,7 +23,6 @@
 					"reverseLockedTimestampUpdated": false
 				},
 				"error": null,
-				"failureCount": 0,
 				"isPaused": false,
 				"status": "success",
 				"variables": {

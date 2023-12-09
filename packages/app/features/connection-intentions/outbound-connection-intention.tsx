@@ -34,7 +34,7 @@ export const OutboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 				<Button
 					title="Unlink user from email"
 					variant="light"
-					isLoading={removeConnectionMutation.isLoading}
+					isLoading={removeConnectionMutation.isPending}
 					isIconOnly
 					onClick={removeConnection}
 				>

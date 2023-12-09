@@ -29,8 +29,8 @@ export const AcceptAllIntentionsButton: React.FC<Props> = ({ intentions }) => {
 	return (
 		<Button
 			color="primary"
-			isDisabled={acceptAllMutation.isLoading}
-			isLoading={acceptAllMutation.isLoading}
+			isDisabled={acceptAllMutation.isPending}
+			isLoading={acceptAllMutation.isPending}
 			onClick={() => acceptAllIntentions()}
 			title="Accept all incoming intentions"
 		>

@@ -60,14 +60,14 @@ export const ResetPasswordModal: React.FC<Props> = ({
 								{...form.register("email")}
 								label="Email"
 								fieldError={form.formState.errors.email}
-								isDisabled={resetPasswordMutation.isLoading}
+								isDisabled={resetPasswordMutation.isPending}
 							/>
 							<Button
 								color="primary"
 								isDisabled={
-									!form.formState.isValid || resetPasswordMutation.isLoading
+									!form.formState.isValid || resetPasswordMutation.isPending
 								}
-								isLoading={resetPasswordMutation.isLoading}
+								isLoading={resetPasswordMutation.isPending}
 								onClick={form.handleSubmit(onSubmit)}
 							>
 								Send email

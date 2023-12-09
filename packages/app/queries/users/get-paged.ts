@@ -1,5 +1,3 @@
-import { cache } from "app/cache";
-import type { UseContextedQueryOptions } from "app/hooks/use-trpc-query-options";
 import type { TRPCQueryInput } from "app/trpc";
 import { createStore, updateWithFn } from "app/utils/store";
 import type { Setters } from "app/utils/types";
@@ -21,15 +19,3 @@ export const useStore = () =>
 		inputStore.useStore(({ limit }) => ({ limit })),
 		inputStore.useStore(({ changeLimit }) => ({ changeLimit })),
 	] as const;
-
-export const options: UseContextedQueryOptions<"users.getPaged"> = {
-	onSuccess: (controllerContext) => (data) => {
-		data.items.forEach((user) => {
-			cache.users.update(controllerContext, {
-				get: undefined,
-				getPaged: undefined,
-				getName: (controller) => controller.upsert(user.id, user.name),
-			});
-		});
-	},
-};

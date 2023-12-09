@@ -27,8 +27,8 @@ export const DebtRemoveButton: React.FC<Props> = ({
 		}),
 	);
 	React.useEffect(
-		() => setLoading(removeMutation.isLoading),
-		[removeMutation.isLoading, setLoading],
+		() => setLoading(removeMutation.isPending),
+		[removeMutation.isPending, setLoading],
 	);
 	const removeDebt = React.useCallback(
 		() => removeMutation.mutate({ id: debt.id }),

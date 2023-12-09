@@ -42,7 +42,6 @@ export const options: UseContextedMutationOptions<
 							...item,
 							participantResolved: false,
 						})),
-					getName: undefined,
 					getNonResolvedAmount: (controller) => {
 						if (!result.some((item) => selfAccountId === item.id)) {
 							return;

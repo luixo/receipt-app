@@ -13,7 +13,6 @@ export const options: UseContextedMutationOptions<
 			cache.receipts.updateRevert(controllerContext, {
 				get: (controller) => controller.remove(variables.id),
 				getPaged: (controller) => controller.remove(variables.id),
-				getName: (controller) => controller.remove(variables.id),
 				getResolvedParticipants: (controller) =>
 					controller.invalidate(variables.id),
 				getNonResolvedAmount: (controller) => {
@@ -29,7 +28,6 @@ export const options: UseContextedMutationOptions<
 		cache.receipts.update(controllerContext, {
 			get: undefined,
 			getPaged: (controller) => controller.remove(variables.id),
-			getName: undefined,
 			getResolvedParticipants: undefined,
 			getNonResolvedAmount: undefined,
 		});
