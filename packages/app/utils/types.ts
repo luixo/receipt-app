@@ -99,3 +99,10 @@ export type AddParameters<
 export type Tail<T extends unknown[]> = T extends [unknown, ...infer R]
 	? R
 	: never;
+
+type UndefinedProps<T extends object> = {
+	[K in keyof T as undefined extends T[K] ? K : never]?: T[K];
+};
+
+export type MakeOptional<T extends object> = UndefinedProps<T> &
+	Omit<T, keyof UndefinedProps<T>>;
