@@ -1,7 +1,4 @@
-import type { QueryClientConfig } from "@tanstack/react-query";
 import Constants from "expo-constants";
-
-import { MINUTE } from "app/utils/time";
 
 export const getNativeBaseUrl = () => {
 	const host = Constants.manifest?.extra?.host;
@@ -12,18 +9,6 @@ export const getNativeBaseUrl = () => {
 	}
 	return host;
 };
-
-export const getQueryClientConfig = (): QueryClientConfig => ({
-	defaultOptions: {
-		queries: {
-			retry: false,
-			retryOnMount: false,
-			staleTime: MINUTE,
-			refetchOnWindowFocus: false,
-			refetchOnMount: false,
-		},
-	},
-});
 
 export const TRPC_ENDPOINT = "/api/trpc";
 

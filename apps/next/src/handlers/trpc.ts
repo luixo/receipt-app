@@ -1,6 +1,11 @@
 import { TRPCError, initTRPC } from "@trpc/server";
-import superjson from "superjson";
+import {
+	experimental_createMemoryUploadHandler,
+	experimental_isMultipartFormDataRequest,
+	experimental_parseMultipartFormData,
+} from "@trpc/server/adapters/node-http/content-type/form-data";
 
+import { transformer } from "app/utils/trpc";
 import {
 	SESSION_EXPIRATION_DURATION,
 	SESSION_SHOULD_UPDATE_EVERY,
@@ -17,7 +22,7 @@ import {
 import { getCookie } from "next-app/utils/cookie";
 
 export const t = initTRPC.context<UnauthorizedContext>().create({
-	transformer: superjson,
+	transformer,
 	errorFormatter: (opts) => {
 		const { shape, error } = opts;
 		return { ...shape, message: formatErrorMessage(error, shape.message) };
@@ -111,3 +116,16 @@ export const authProcedure = unauthProcedure.use(
 		});
 	}),
 );
+
+export const multipartMiddlware = t.middleware(async ({ ctx, next }) => {
+	if (!experimental_isMultipartFormDataRequest(ctx.req)) {
+		return next();
+	}
+	return next({
+		getRawInput: () =>
+			experimental_parseMultipartFormData(
+				ctx.req,
+				experimental_createMemoryUploadHandler(),
+			),
+	});
+});

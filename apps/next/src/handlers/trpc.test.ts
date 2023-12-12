@@ -1,5 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { describe, expect } from "vitest";
+import { z } from "zod";
+import * as zfd from "zod-form-data";
 
 import { createAuthContext, createContext } from "@tests/backend/utils/context";
 import { insertAccountWithSession } from "@tests/backend/utils/data";
@@ -12,6 +14,9 @@ import {
 	SESSION_EXPIRATION_DURATION,
 	SESSION_SHOULD_UPDATE_EVERY,
 } from "next-app/handlers/auth/utils";
+import { multipartMiddlware, t } from "next-app/handlers/trpc";
+
+import { getClientServer } from "./utils.test";
 
 import { router } from "./index";
 
@@ -153,6 +158,44 @@ describe("procedures", () => {
 					`authToken=${sessionId}; Path=/; Expires=Fri, 31 Jan 2020 00:00:00 GMT; HttpOnly; SameSite=Strict`,
 				],
 			]);
+		});
+	});
+
+	describe("multipart middleware", () => {
+		test("is in valid", async ({ ctx }) => {
+			const { start, destroy, client } = await getClientServer(
+				ctx,
+				t.router({
+					procedure: t.procedure
+						.use(multipartMiddlware)
+						.input(z.strictObject({ foo: z.string() }))
+						.mutation(({ input }) => input.foo),
+				}),
+			);
+			const validationText = faker.lorem.text();
+			await start();
+			const result = await client.procedure.mutate({ foo: validationText });
+			expect(result).toEqual(validationText);
+			await destroy();
+		});
+
+		test("is valid", async ({ ctx }) => {
+			const { start, destroy, client } = await getClientServer(
+				ctx,
+				t.router({
+					procedure: t.procedure
+						.use(multipartMiddlware)
+						.input(zfd.formData({ foo: zfd.text() }))
+						.mutation(({ input }) => input.foo),
+				}),
+			);
+			const validationText = faker.lorem.text();
+			await start();
+			const formData = new FormData();
+			formData.append("foo", validationText);
+			const result = await client.procedure.mutate(formData);
+			expect(result).toEqual(validationText);
+			await destroy();
 		});
 	});
 });

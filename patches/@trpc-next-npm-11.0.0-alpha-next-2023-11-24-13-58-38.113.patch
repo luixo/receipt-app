@@ -202,7 +202,7 @@ index 864664df912d4739f885904f8f98a9420919ebcf..58340c8c939dcf82e84e77110d82b11d
 -export { createTRPCNext, withTRPC };
 +export { createTRPCNext, waitUntilNoObservers, withTRPC };
 diff --git a/dist/withTRPC.d.ts b/dist/withTRPC.d.ts
-index 2475452b66e29de66c238a01bd64fae26737c1ed..697a83ac8708ab8bf0756d726d269c0fdec37aa3 100644
+index 2475452b66e29de66c238a01bd64fae26737c1ed..25f54bf34828c8a31b3c8a5d2898676ab9b8687b 100644
 --- a/dist/withTRPC.d.ts
 +++ b/dist/withTRPC.d.ts
 @@ -1,3 +1,8 @@
@@ -219,7 +219,7 @@ index 2475452b66e29de66c238a01bd64fae26737c1ed..697a83ac8708ab8bf0756d726d269c0f
      abortOnUnmount?: boolean;
  };
 -interface WithTRPCOptions<TRouter extends AnyRouter> extends CreateTRPCReactOptions<TRouter> {
-+type AwaitPrepassRender<TSSRContext extends NextPageContext = NextPageContext> = (opts: {
++export type AwaitPrepassRender<TSSRContext extends NextPageContext = NextPageContext> = (opts: {
 +    queryClient: QueryClient;
 +    ctx: TSSRContext;
 +}) => Promise<boolean>;
@@ -281,7 +281,7 @@ index 2505bf63e20a8bba7d0c672a5cccef680f821f20..1c6159b2c6a351c2bfa1ed1a55c181e2
    const hooks = createRootHooks<TRouter, TSSRContext>(opts);
  
 diff --git a/src/withTRPC.tsx b/src/withTRPC.tsx
-index 8b87c81b36344f125d5e76dfcec430b1064f766c..f8fda9546d67540b46d4965f5821026b85698129 100644
+index 8b87c81b36344f125d5e76dfcec430b1064f766c..3716cc3c6dc9183338c78da18170c9c9ba9b48d6 100644
 --- a/src/withTRPC.tsx
 +++ b/src/withTRPC.tsx
 @@ -62,29 +62,91 @@ export type WithTRPCConfig<TRouter extends AnyRouter> =
@@ -291,7 +291,7 @@ index 8b87c81b36344f125d5e76dfcec430b1064f766c..f8fda9546d67540b46d4965f5821026b
 -interface WithTRPCOptions<TRouter extends AnyRouter>
 -  extends CreateTRPCReactOptions<TRouter> {
 -  config: (info: { ctx?: NextPageContext }) => WithTRPCConfig<TRouter>;
-+type AwaitPrepassRender<TSSRContext extends NextPageContext = NextPageContext> =
++export type AwaitPrepassRender<TSSRContext extends NextPageContext = NextPageContext> =
 +  (opts: { queryClient: QueryClient; ctx: TSSRContext }) => Promise<boolean>;
 +
 +interface WithTRPCOptions<

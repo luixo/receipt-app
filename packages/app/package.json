@@ -12,6 +12,7 @@
 		"@tanstack/react-query-persist-client": "^5.12.2",
 		"@trpc/client": "^11.0.0-alpha-next-2023-11-24-13-58-38.113",
 		"@trpc/react-query": "^11.0.0-alpha-next-2023-11-24-13-58-38.113",
+		"@trpc/server": "^11.0.0-alpha-next-2023-11-24-13-58-38.113",
 		"app": "workspace:*",
 		"expo-app": "workspace:*",
 		"expo-constants": "^14.4.2",

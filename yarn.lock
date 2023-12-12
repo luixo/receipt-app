@@ -7030,7 +7030,7 @@ __metadata:
 
 "@trpc/next@patch:@trpc/next@npm%3A11.0.0-alpha-next-2023-11-24-13-58-38.113#./patches/@trpc-next-npm-11.0.0-alpha-next-2023-11-24-13-58-38.113.patch::locator=receipt-app%40workspace%3A.":
   version: 11.0.0-alpha-next-2023-11-24-13-58-38.113
-  resolution: "@trpc/next@patch:@trpc/next@npm%3A11.0.0-alpha-next-2023-11-24-13-58-38.113#./patches/@trpc-next-npm-11.0.0-alpha-next-2023-11-24-13-58-38.113.patch::version=11.0.0-alpha-next-2023-11-24-13-58-38.113&hash=3521c8&locator=receipt-app%40workspace%3A."
+  resolution: "@trpc/next@patch:@trpc/next@npm%3A11.0.0-alpha-next-2023-11-24-13-58-38.113#./patches/@trpc-next-npm-11.0.0-alpha-next-2023-11-24-13-58-38.113.patch::version=11.0.0-alpha-next-2023-11-24-13-58-38.113&hash=ce401f&locator=receipt-app%40workspace%3A."
   dependencies:
     react-ssr-prepass: ^1.5.0
   peerDependencies:
@@ -7041,7 +7041,7 @@ __metadata:
     next: "*"
     react: ">=16.8.0"
     react-dom: ">=16.8.0"
-  checksum: 78af346a16f5b95c6c8619d92699242ec8d5c0d3ede6877122eda8aa83791971d05c335ec363c88bb38c08430e14457305b4c02763f5dcfc3a5aefa813a21784
+  checksum: 1cc2ec4496a6331c18b21818f5cd98869fe3de98700c277048053d3abd06edbe5059538ffc127158e8490576cd2097db19557f3a1b4811ec5395d6dca36a5f95
   languageName: node
   linkType: hard
 
@@ -8089,6 +8089,7 @@ __metadata:
     "@tanstack/react-query-persist-client": ^5.12.2
     "@trpc/client": ^11.0.0-alpha-next-2023-11-24-13-58-38.113
     "@trpc/react-query": ^11.0.0-alpha-next-2023-11-24-13-58-38.113
+    "@trpc/server": ^11.0.0-alpha-next-2023-11-24-13-58-38.113
     "@types/identicon.js": ^2.3.1
     "@types/react-calendar": ^4.1.0
     "@types/uuid": ^9.0.2
@@ -16795,6 +16796,7 @@ __metadata:
     uuid: ^9.0.0
     vitest: 1.0.0-beta.4
     zod-error: ^1.5.0
+    zod-form-data: ^2.0.2
   languageName: unknown
   linkType: soft
 
@@ -23086,6 +23088,15 @@ __metadata:
   dependencies:
     zod: ^3.20.2
   checksum: 1ee6f642f3dcabc2a9610d67f1986f94c338bcf38d152e788dafc4703e488fc7624c189c5948649beb566e2d37444cea064afea662924ac2e8504920e7863ded
+  languageName: node
+  linkType: hard
+
+"zod-form-data@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "zod-form-data@npm:2.0.2"
+  peerDependencies:
+    zod: ">= 3.11.0"
+  checksum: 09bc98811ee92cade046670bef28bd636610cda539fa9427379758bfa200a9b11dc4cd807681a01a446c2b13f32d88306d14fc3903af58a545928aa1d7831ec2
   languageName: node
   linkType: hard
 
