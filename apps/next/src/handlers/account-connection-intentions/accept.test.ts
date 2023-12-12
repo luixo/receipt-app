@@ -271,6 +271,7 @@ describe("accountConnectionIntentions.accept", () => {
 				}),
 			);
 			await expect(result).toStrictEqual<typeof result>({
+				id: foreignAccountId,
 				email: foreignEmail,
 			});
 		});

@@ -106,11 +106,17 @@ export const addReceiptParticipants = async (
 		.returning(["added", "userId"])
 		.execute();
 	return usersToAdd.map(([id, role]) => {
-		const userDatum = userData.find((user) => user.id === id)!;
+		const { email, accountId, ...userDatum } = userData.find(
+			(user) => user.id === id,
+		)!;
 		const addedDatum = result.find(({ userId }) => userId === id)!;
 		return {
 			added: addedDatum.added,
 			role: receiptOwnerId === id ? ("owner" as const) : role,
+			account:
+				email === null || accountId === null
+					? undefined
+					: { email, id: accountId },
 			...userDatum,
 		};
 	});

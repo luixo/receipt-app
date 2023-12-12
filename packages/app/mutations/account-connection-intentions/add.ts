@@ -9,8 +9,7 @@ export const options: UseContextedMutationOptions<"accountConnectionIntentions.a
 					get: (controller) => {
 						controller.update(variables.userId, (user) => ({
 							...user,
-							email: variables.email,
-							accountId: result.id,
+							account: result.account,
 						}));
 					},
 					getName: (controller) =>
@@ -18,7 +17,7 @@ export const options: UseContextedMutationOptions<"accountConnectionIntentions.a
 					getPaged: (controller) => {
 						controller.update(variables.userId, (user) => ({
 							...user,
-							email: variables.email,
+							account: result.account,
 						}));
 					},
 				});
@@ -27,8 +26,8 @@ export const options: UseContextedMutationOptions<"accountConnectionIntentions.a
 					getAll: (controller) =>
 						controller.outbound.add({
 							account: {
-								id: result.id,
-								email: variables.email,
+								id: result.account.id,
+								email: result.account.email,
 							},
 							user: {
 								id: variables.userId,

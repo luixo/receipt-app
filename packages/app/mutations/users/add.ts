@@ -12,15 +12,14 @@ export const options: UseContextedMutationOptions<"users.add"> = {
 						localId: id,
 						name: variables.name,
 						publicName: undefined,
-						email: undefined,
-						accountId: null,
+						account: undefined,
 					}),
 				getPaged: (controller) =>
 					controller.add({
 						id,
 						name: variables.name,
 						publicName: undefined,
-						email: undefined,
+						account: undefined,
 					}),
 				getName: (controller) => controller.upsert(id, variables.name),
 			});
@@ -29,8 +28,8 @@ export const options: UseContextedMutationOptions<"users.add"> = {
 					getAll: (controller) =>
 						controller.outbound.add({
 							account: {
-								id: connection.id,
-								email: variables.email!,
+								id: connection.account.id,
+								email: connection.account.email,
 							},
 							user: {
 								id,

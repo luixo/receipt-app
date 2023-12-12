@@ -153,17 +153,25 @@ describe("users.getPaged", () => {
 				cursor: 0,
 				hasMore: true,
 				items: users
-					.map((userObject) => ({
-						id: userObject.id,
-						name: userObject.name,
-						publicName: userObject.publicName,
-						email:
+					.map((userObject) => {
+						const matchedAccount =
 							"connectedAccountId" in userObject
 								? accounts.find(
 										(account) => account.id === userObject.connectedAccountId,
-								  )?.email
+								  )
+								: undefined;
+						return {
+							id: userObject.id,
+							name: userObject.name,
+							publicName: userObject.publicName,
+							account: matchedAccount
+								? {
+										id: matchedAccount.id,
+										email: matchedAccount.email,
+								  }
 								: undefined,
-					}))
+						};
+					})
 					.sort((a, b) => a.name.localeCompare(b.name))
 					.slice(0, limit),
 			});

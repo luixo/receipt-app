@@ -26,7 +26,13 @@ export const procedure = authProcedure
 				.leftJoin("accounts", (qb) =>
 					qb.onRef("connectedAccountId", "=", "accounts.id"),
 				)
-				.select(["users.id", "name", "publicName", "accounts.email"])
+				.select([
+					"users.id",
+					"name",
+					"publicName",
+					"accounts.email",
+					"accounts.id as accountId",
+				])
 				// Stable order for users with the same name
 				.orderBy(["users.name", "users.id"])
 				.offset(input.cursor)
@@ -43,10 +49,13 @@ export const procedure = authProcedure
 			hasMore: users.length === input.limit + 1,
 			items: users
 				.slice(0, input.limit)
-				.map(({ publicName, email, ...user }) => ({
+				.map(({ publicName, email, accountId, ...user }) => ({
 					...user,
 					publicName: publicName === null ? undefined : publicName,
-					email: email == null ? undefined : email,
+					account:
+						accountId === null || email === null
+							? undefined
+							: { id: accountId, email },
 				})),
 		};
 	});

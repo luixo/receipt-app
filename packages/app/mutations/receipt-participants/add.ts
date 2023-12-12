@@ -16,8 +16,7 @@ export const options: UseContextedMutationOptions<
 						controller.add(receiptId, {
 							name: item.name,
 							publicName: item.publicName,
-							accountId: item.accountId,
-							email: item.email,
+							account: item.account,
 							remoteUserId: item.id,
 							role: item.role,
 							resolved: false,

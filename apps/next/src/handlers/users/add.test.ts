@@ -207,13 +207,13 @@ describe("users.add", () => {
 				);
 				const uuidSchema = z.string().uuid();
 				await expect(uuidSchema.safeParse(result.id).success).toBe(true);
-				await expect(uuidSchema.safeParse(result.connection!.id).success).toBe(
-					true,
-				);
 				await expect(result).toStrictEqual<typeof result>({
 					connection: {
 						connected: true,
-						id: result.connection!.id,
+						account: {
+							id: otherAccountId,
+							email: otherEmail,
+						},
 						user: { name: asName },
 					},
 					id: result.id,
@@ -222,7 +222,9 @@ describe("users.add", () => {
 
 			test("doesn't have a vice versa intention", async ({ ctx }) => {
 				// Foreign account
-				const { email: otherEmail } = await insertAccount(ctx);
+				const { email: otherEmail, id: otherAccountId } = await insertAccount(
+					ctx,
+				);
 				// Self account
 				const { sessionId } = await insertAccountWithSession(ctx);
 
@@ -236,13 +238,13 @@ describe("users.add", () => {
 				);
 				const uuidSchema = z.string().uuid();
 				await expect(uuidSchema.safeParse(result.id).success).toBe(true);
-				await expect(uuidSchema.safeParse(result.connection!.id).success).toBe(
-					true,
-				);
 				await expect(result).toStrictEqual<typeof result>({
 					connection: {
 						connected: false,
-						id: result.connection!.id,
+						account: {
+							id: otherAccountId,
+							email: otherEmail,
+						},
 						user: { name: asName },
 					},
 					id: result.id,

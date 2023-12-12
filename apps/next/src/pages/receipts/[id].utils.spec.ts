@@ -110,8 +110,10 @@ export const test = originalTest.extend<Fixtures>({
 					{
 						remoteUserId: consts.account.id as UsersId,
 						publicName: null,
-						accountId: consts.account.id,
-						email: consts.account.email,
+						account: {
+							id: consts.account.id,
+							email: consts.account.email,
+						},
 						role: "owner" as const,
 						resolved: false,
 						added: faker.date.recent({ days: 5, refDate: new Date() }),
@@ -120,8 +122,7 @@ export const test = originalTest.extend<Fixtures>({
 					...users.map((user) => ({
 						remoteUserId: user.id,
 						publicName: null,
-						accountId: null,
-						email: null,
+						account: undefined,
 						role: "editor" as const,
 						resolved: faker.datatype.boolean(),
 						added: faker.date.recent({ days: 5, refDate: new Date() }),
@@ -236,8 +237,10 @@ export const test = originalTest.extend<Fixtures>({
 							remoteId: consts.selfUser.id,
 							name: consts.selfUser.name,
 							publicName: undefined,
-							accountId: consts.account.id,
-							email: consts.account.email,
+							account: {
+								id: consts.account.id,
+								email: consts.account.email,
+							},
 							localId: consts.selfUser.id,
 						};
 					}
@@ -247,8 +250,7 @@ export const test = originalTest.extend<Fixtures>({
 							remoteId: matchedUser.id,
 							name: matchedUser.name,
 							publicName: undefined,
-							accountId: null,
-							email: undefined,
+							account: undefined,
 							localId: matchedUser.id,
 						};
 					}

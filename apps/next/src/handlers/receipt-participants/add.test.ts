@@ -278,28 +278,31 @@ describe("receiptParticipants.add", () => {
 			);
 			const users = [
 				{
-					email,
+					account: {
+						id: accountId,
+						email,
+					},
 					name,
 					publicName: null,
-					accountId,
 					id: selfUserId,
 					added: new Date(),
 					role: "owner" as const,
 				},
 				{
-					email: null,
+					account: undefined,
 					name: user.name,
 					publicName: user.publicName ?? null,
-					accountId: null,
 					id: user.id,
 					added: new Date(),
 					role: "editor" as const,
 				},
 				{
-					email: foreignEmail,
+					account: {
+						email: foreignEmail,
+						id: foreignAccountId,
+					},
 					name: foreignUser.name,
 					publicName: foreignUser.publicName ?? null,
-					accountId: foreignAccountId,
 					id: foreignUser.id,
 					added: new Date(),
 					role: "editor" as const,

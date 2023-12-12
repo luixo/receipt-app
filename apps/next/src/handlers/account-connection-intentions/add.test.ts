@@ -1,6 +1,5 @@
 import { faker } from "@faker-js/faker";
 import { describe, expect } from "vitest";
-import { z } from "zod";
 
 import { createAuthContext } from "@tests/backend/utils/context";
 import {
@@ -254,10 +253,11 @@ describe("accountConnectionIntentions.add", () => {
 					email: otherEmail,
 				}),
 			);
-			const uuidSchema = z.string().uuid();
-			await expect(uuidSchema.safeParse(result.id).success).toBeTruthy();
 			await expect(result).toStrictEqual<typeof result>({
-				id: result.id,
+				account: {
+					id: otherAccountId,
+					email: otherEmail,
+				},
 				connected: true,
 				user: { name: userName },
 			});
@@ -265,7 +265,9 @@ describe("accountConnectionIntentions.add", () => {
 
 		test("account connection intention added", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { email: otherEmail } = await insertAccount(ctx);
+			const { email: otherEmail, id: otherAccountId } = await insertAccount(
+				ctx,
+			);
 
 			const { id: userId, name: userName } = await insertUser(ctx, accountId);
 
@@ -276,10 +278,11 @@ describe("accountConnectionIntentions.add", () => {
 					email: otherEmail,
 				}),
 			);
-			const uuidSchema = z.string().uuid();
-			await expect(uuidSchema.safeParse(result.id).success).toBeTruthy();
 			await expect(result).toStrictEqual<typeof result>({
-				id: result.id,
+				account: {
+					id: otherAccountId,
+					email: otherEmail,
+				},
 				connected: false,
 				user: { name: userName },
 			});

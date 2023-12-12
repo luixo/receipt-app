@@ -84,7 +84,10 @@ export const addConnectionIntention = async (
 				.executeTakeFirst();
 		});
 		return {
-			id: targetAccount.id,
+			account: {
+				id: targetAccount.id,
+				email: toEmail.lowercase,
+			},
 			connected: true,
 			user: {
 				name: user.name,
@@ -102,7 +105,10 @@ export const addConnectionIntention = async (
 			})
 			.executeTakeFirst();
 		return {
-			id: targetAccount.id,
+			account: {
+				id: targetAccount.id,
+				email: toEmail.lowercase,
+			},
 			connected: false,
 			user: {
 				name: user.name,

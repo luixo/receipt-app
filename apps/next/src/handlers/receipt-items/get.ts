@@ -124,9 +124,23 @@ const getReceiptParticipants = async (
 		.orderBy("userId")
 		.execute();
 	return participants.map(
-		({ name, theirName, theirPublicName, ...participant }) => ({
+		({
+			name,
+			theirName,
+			theirPublicName,
+			accountId,
+			email,
+			...participant
+		}) => ({
 			...participant,
 			name: name ?? theirPublicName ?? theirName,
+			account:
+				accountId === null || email === null
+					? undefined
+					: {
+							id: accountId,
+							email,
+					  },
 		}),
 	);
 };
@@ -169,7 +183,7 @@ export const procedure = authProcedure
 		return {
 			role:
 				participants.find(
-					(participant) => participant.accountId === ctx.auth.accountId,
+					(participant) => participant.account?.id === ctx.auth.accountId,
 				)?.role ?? "owner",
 			items,
 			participants,

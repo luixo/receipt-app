@@ -3,7 +3,7 @@ import React from "react";
 import { User as RawUser, tv } from "@nextui-org/react";
 import IdenticonJs from "identicon.js";
 
-import type { UsersId } from "next-app/db/models";
+import type { AccountsId, UsersId } from "next-app/db/models";
 
 const styles = tv({
 	base: "text-foreground",
@@ -25,7 +25,10 @@ export type Props = {
 		id: UsersId;
 		name: string;
 		publicName?: string;
-		email?: string;
+		account?: {
+			id: AccountsId;
+			email: string;
+		};
 	};
 } & Omit<React.ComponentProps<typeof RawUser>, "name" | "description">;
 
@@ -39,7 +42,7 @@ export const User = React.forwardRef<HTMLDivElement, Props>(
 				{...props}
 				className={base({ className })}
 				name={user.name + (user.publicName ? ` (${user.publicName})` : "")}
-				description={user.email}
+				description={user.account?.email}
 				avatarProps={{
 					src: icon,
 					radius: "sm",

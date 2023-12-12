@@ -31,13 +31,16 @@ export const procedure = authProcedure
 				message: `No user found by id "${input.id}".`,
 			});
 		}
-		const { ownerAccountId, publicName, email, ...user } = maybeUser;
+		const { ownerAccountId, publicName, email, accountId, ...user } = maybeUser;
 		if (ownerAccountId === ctx.auth.accountId) {
 			return {
 				...user,
 				publicName: publicName === null ? undefined : publicName,
-				email: email === null ? undefined : email,
 				localId: user.remoteId as UsersId | null,
+				account:
+					email === null || accountId === null
+						? undefined
+						: { id: accountId, email },
 			};
 		}
 		// We allow account fetch foreign users
@@ -117,24 +120,31 @@ export const procedure = authProcedure
 			}
 			/* c8 ignore stop */
 			return {
-				accountId: userResult.accountId,
-				email: userResult.email,
 				name: userResult.name,
 				publicName:
 					userResult.publicName === null ? undefined : userResult.publicName,
 				remoteId: input.id,
+				account: {
+					id: userResult.accountId,
+					email: userResult.email,
+				},
 				localId: userResult.mineId,
 			};
 		}
 		return {
-			accountId: userResult.accountId,
-			email: userResult.email === null ? undefined : userResult.email,
 			name: userResult.theirPublicName || userResult.theirName,
 			publicName:
 				userResult.theirPublicName === null
 					? undefined
 					: userResult.theirPublicName,
 			remoteId: input.id,
+			account:
+				userResult.accountId === null || userResult.email === null
+					? undefined
+					: {
+							id: userResult.accountId,
+							email: userResult.email,
+					  },
 			localId: null as UsersId | null,
 		};
 	});

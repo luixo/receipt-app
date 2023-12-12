@@ -36,13 +36,13 @@ export const UserScreen: AppPage = () => {
 										id: userQuery.data.localId || userQuery.data.remoteId,
 										name: userQuery.data.name,
 										publicName: userQuery.data.publicName,
-										email: userQuery.data.email,
+										account: userQuery.data.account,
 								  }
 								: {
 										id,
 										name: userNameQuery.data || id,
 										publicName: undefined,
-										email: undefined,
+										account: undefined,
 								  },
 						[id, userNameQuery.data, userQuery.data],
 					)}
