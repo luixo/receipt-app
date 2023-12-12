@@ -47,8 +47,8 @@ export const useUserAvatarProps = ({
 }: Props) => {
 	const size = getSize(props.size);
 	const icon = React.useMemo(
-		() => getIdenticon(account?.id || id, size),
-		[id, account?.id, size],
+		() => account?.avatarUrl || getIdenticon(account?.id || id, size),
+		[id, account?.id, account?.avatarUrl, size],
 	);
 	return {
 		src: icon,

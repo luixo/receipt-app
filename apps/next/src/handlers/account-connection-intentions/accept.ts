@@ -88,5 +88,5 @@ export const procedure = authProcedure
 				)
 				.executeTakeFirst();
 		});
-		return { email: account.email, id: account.id };
+		return { email: account.email, id: account.id, avatarUrl: undefined };
 	});

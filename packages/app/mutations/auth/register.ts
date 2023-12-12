@@ -12,7 +12,7 @@ export const options: UseContextedMutationOptions<
 				get: (controller) =>
 					controller.upsert({
 						user: { name },
-						account: { id: account.id, verified: false },
+						account: { id: account.id, verified: false, avatarUrl: undefined },
 					}),
 			}),
 	mutateToastOptions: {

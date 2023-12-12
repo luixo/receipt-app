@@ -140,6 +140,7 @@ const getReceiptParticipants = async (
 					: {
 							id: accountId,
 							email,
+							avatarUrl: undefined,
 					  },
 		}),
 	);

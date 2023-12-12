@@ -47,7 +47,11 @@ type ParticipantUser = Omit<
 	"connectedAccountId"
 > & { connectedAccountId?: AccountsId };
 
-type ParticipantAccount = { id: AccountsId; email: string };
+type ParticipantAccount = {
+	id: AccountsId;
+	email: string;
+	avatarUrl: undefined;
+};
 
 const getParticipants = (
 	participants: Awaited<ReturnType<typeof insertReceiptParticipant>>[],
@@ -79,6 +83,7 @@ const getParticipants = (
 						? {
 								id: foreignMatchedUser.connectedAccountId,
 								email: matchedAccount.email,
+								avatarUrl: undefined,
 						  }
 						: undefined,
 				role: participant.role,
@@ -212,8 +217,8 @@ describe("receiptItems.get", () => {
 						{ ...notConnectedUser, connectedAccountId: undefined },
 					].map((user) => [user, user]),
 					[
-						{ id: accountId, email },
-						{ id: foreignAccountId, email: foreignEmail },
+						{ id: accountId, email, avatarUrl: undefined },
+						{ id: foreignAccountId, email: foreignEmail, avatarUrl: undefined },
 					],
 				),
 			});
@@ -340,9 +345,13 @@ describe("receiptItems.get", () => {
 						[foreignConnectedUser, connectedUser],
 					],
 					[
-						{ id: accountId, email },
-						{ id: foreignAccountId, email: foreignEmail },
-						{ id: connectedAccountId, email: connectedEmail },
+						{ id: accountId, email, avatarUrl: undefined },
+						{ id: foreignAccountId, email: foreignEmail, avatarUrl: undefined },
+						{
+							id: connectedAccountId,
+							email: connectedEmail,
+							avatarUrl: undefined,
+						},
 					],
 				),
 			});

@@ -116,7 +116,7 @@ export const addReceiptParticipants = async (
 			account:
 				email === null || accountId === null
 					? undefined
-					: { email, id: accountId },
+					: { email, id: accountId, avatarUrl: undefined },
 			...userDatum,
 		};
 	});

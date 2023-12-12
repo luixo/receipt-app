@@ -102,6 +102,7 @@ describe("users.get", () => {
 					account: {
 						id: foreignAccountId,
 						email: foreignEmail,
+						avatarUrl: undefined,
 					},
 					localId: userId,
 					name,
@@ -174,6 +175,7 @@ describe("users.get", () => {
 						account: {
 							id: otherAccountId,
 							email: otherEmail,
+							avatarUrl: undefined,
 						},
 						localId: null,
 						name: foreignPublicName || name,
@@ -262,6 +264,7 @@ describe("users.get", () => {
 						account: {
 							id: connectedAccountId,
 							email: connectedEmail,
+							avatarUrl: undefined,
 						},
 						localId: localConnectedUserId,
 						name,
@@ -289,6 +292,7 @@ describe("users.get", () => {
 						account: {
 							id: accountId,
 							email: account.email,
+							avatarUrl: undefined,
 						},
 						localId: userId,
 						name,
@@ -323,6 +327,7 @@ describe("users.get", () => {
 						account: {
 							id: foreignAccountId,
 							email: foreignEmail,
+							avatarUrl: undefined,
 						},
 						localId: foreignUserId,
 						name,

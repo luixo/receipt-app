@@ -19,7 +19,7 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 			/* c8 ignore stop */
 		);
 	return {
-		account: { id, verified: !confirmationToken },
+		account: { id, verified: !confirmationToken, avatarUrl: undefined },
 		user: { name },
 	};
 });

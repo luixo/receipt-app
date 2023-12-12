@@ -55,7 +55,7 @@ export const procedure = authProcedure
 					account:
 						accountId === null || email === null
 							? undefined
-							: { id: accountId, email },
+							: { id: accountId, email, avatarUrl: undefined },
 				})),
 		};
 	});

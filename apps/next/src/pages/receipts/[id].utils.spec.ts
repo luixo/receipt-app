@@ -23,6 +23,7 @@ type MockReceiptResult = {
 	account: {
 		id: AccountsId;
 		email: string;
+		avatarUrl: undefined;
 	};
 	selfUser: {
 		id: UsersId;
@@ -83,6 +84,7 @@ export const test = originalTest.extend<Fixtures>({
 					account: {
 						id: accountId,
 						email: faker.internet.email(),
+						avatarUrl: undefined,
 					},
 					selfUser: {
 						id: accountId as UsersId,
@@ -113,6 +115,7 @@ export const test = originalTest.extend<Fixtures>({
 						account: {
 							id: consts.account.id,
 							email: consts.account.email,
+							avatarUrl: consts.account.avatarUrl,
 						},
 						role: "owner" as const,
 						resolved: false,
@@ -240,6 +243,7 @@ export const test = originalTest.extend<Fixtures>({
 							account: {
 								id: consts.account.id,
 								email: consts.account.email,
+								avatarUrl: consts.account.avatarUrl,
 							},
 							localId: consts.selfUser.id,
 						};
@@ -267,7 +271,11 @@ export const test = originalTest.extend<Fixtures>({
 					});
 				}
 				api.mockUtils.auth({
-					account: { id: consts.account.id, verified: true },
+					account: {
+						id: consts.account.id,
+						verified: true,
+						avatarUrl: consts.account.avatarUrl,
+					},
 					user: { name: consts.selfUser.name },
 				});
 

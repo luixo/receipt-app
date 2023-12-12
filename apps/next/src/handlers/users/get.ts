@@ -40,7 +40,7 @@ export const procedure = authProcedure
 				account:
 					email === null || accountId === null
 						? undefined
-						: { id: accountId, email },
+						: { id: accountId, email, avatarUrl: undefined },
 			};
 		}
 		// We allow account fetch foreign users
@@ -127,6 +127,7 @@ export const procedure = authProcedure
 				account: {
 					id: userResult.accountId,
 					email: userResult.email,
+					avatarUrl: undefined,
 				},
 				localId: userResult.mineId,
 			};
@@ -144,6 +145,7 @@ export const procedure = authProcedure
 					: {
 							id: userResult.accountId,
 							email: userResult.email,
+							avatarUrl: undefined,
 					  },
 			localId: null as UsersId | null,
 		};

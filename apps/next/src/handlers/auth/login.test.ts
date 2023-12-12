@@ -103,7 +103,7 @@ describe("auth.login", () => {
 				caller.procedure({ email, password }),
 			);
 			expect(result).toEqual<typeof result>({
-				account: { id: accountId, verified: true },
+				account: { id: accountId, verified: true, avatarUrl: undefined },
 				user: { name },
 			});
 			const responseHeaders = ctx.responseHeaders.get();
@@ -136,7 +136,7 @@ describe("auth.login", () => {
 			const caller = router.createCaller(context);
 			const result = await caller.procedure({ email, password });
 			expect(result).toEqual<typeof result>({
-				account: { id: accountId, verified: false },
+				account: { id: accountId, verified: false, avatarUrl: undefined },
 				user: { name },
 			});
 		});

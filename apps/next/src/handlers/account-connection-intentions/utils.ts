@@ -87,6 +87,7 @@ export const addConnectionIntention = async (
 			account: {
 				id: targetAccount.id,
 				email: toEmail.lowercase,
+				avatarUrl: undefined,
 			},
 			connected: true,
 			user: {
@@ -108,6 +109,7 @@ export const addConnectionIntention = async (
 			account: {
 				id: targetAccount.id,
 				email: toEmail.lowercase,
+				avatarUrl: undefined,
 			},
 			connected: false,
 			user: {

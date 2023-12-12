@@ -281,6 +281,7 @@ describe("receiptParticipants.add", () => {
 					account: {
 						id: accountId,
 						email,
+						avatarUrl: undefined,
 					},
 					name,
 					publicName: null,
@@ -300,6 +301,7 @@ describe("receiptParticipants.add", () => {
 					account: {
 						email: foreignEmail,
 						id: foreignAccountId,
+						avatarUrl: undefined,
 					},
 					name: foreignUser.name,
 					publicName: foreignUser.publicName ?? null,

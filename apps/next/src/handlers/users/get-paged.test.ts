@@ -168,6 +168,7 @@ describe("users.getPaged", () => {
 								? {
 										id: matchedAccount.id,
 										email: matchedAccount.email,
+										avatarUrl: undefined,
 								  }
 								: undefined,
 						};

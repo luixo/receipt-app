@@ -213,6 +213,7 @@ describe("users.add", () => {
 						account: {
 							id: otherAccountId,
 							email: otherEmail,
+							avatarUrl: undefined,
 						},
 						user: { name: asName },
 					},
@@ -244,6 +245,7 @@ describe("users.add", () => {
 						account: {
 							id: otherAccountId,
 							email: otherEmail,
+							avatarUrl: undefined,
 						},
 						user: { name: asName },
 					},

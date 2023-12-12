@@ -64,6 +64,7 @@ export const procedure = unauthProcedure
 			account: {
 				id: result.accountId,
 				verified: !result.confirmationToken,
+				avatarUrl: undefined,
 			},
 			user: {
 				name: result.name,

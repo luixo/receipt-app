@@ -257,6 +257,7 @@ describe("accountConnectionIntentions.add", () => {
 				account: {
 					id: otherAccountId,
 					email: otherEmail,
+					avatarUrl: undefined,
 				},
 				connected: true,
 				user: { name: userName },
@@ -282,6 +283,7 @@ describe("accountConnectionIntentions.add", () => {
 				account: {
 					id: otherAccountId,
 					email: otherEmail,
+					avatarUrl: undefined,
 				},
 				connected: false,
 				user: { name: userName },
