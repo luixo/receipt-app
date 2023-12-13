@@ -94,7 +94,7 @@ docker run --rm -v ${PWD}:/work/ -w /work/ -it -p 3000:3000 --entrypoint /bin/ba
 corepack enable
 ```
 
-3. (in Docker) Install platform-specific binaries (until `sharp` [utilize](https://github.com/lovell/sharp/issues/3750) `supportedArchitectures` in `.yarnrc.yml`)
+3. (in Docker) Install platform-specific binaries
 
 ```sh
 yarn install
