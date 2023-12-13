@@ -12,6 +12,7 @@ import type { ExchangeRateOptions } from "next-app/providers/exchange-rate";
 import type { Logger } from "next-app/providers/logger";
 import { baseLogger } from "next-app/providers/logger";
 import { getPool } from "next-app/providers/pg";
+import type { S3Options } from "next-app/providers/s3";
 
 type TestContextPicks = Pick<
 	TestContext,
@@ -21,6 +22,7 @@ type TestContextPicks = Pick<
 	emailOptions: EmailOptions;
 	cacheDbOptions: CacheDbOptions;
 	exchangeRateOptions: ExchangeRateOptions;
+	s3Options: S3Options;
 };
 
 export type UnauthorizedContext = {
@@ -60,6 +62,7 @@ const defaultGetEmailOptions = () => {
 };
 const defaultGetCacheDbOptions = () => ({});
 const defaultGetExchangeRateOptions = () => ({});
+const defaultGetS3Options = () => ({});
 const defaultLogger = baseLogger;
 
 export const createContext = (
@@ -73,6 +76,7 @@ export const createContext = (
 	cacheDbOptions: opts.cacheDbOptions || defaultGetCacheDbOptions(),
 	exchangeRateOptions:
 		opts.exchangeRateOptions || defaultGetExchangeRateOptions(),
+	s3Options: opts.s3Options || defaultGetS3Options(),
 	getSalt: opts.getSalt || defaultGetSalt,
 	getUuid: opts.getUuid || defaultGetUuid,
 });

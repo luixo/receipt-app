@@ -13,6 +13,8 @@ import { getExchangeRateOptions } from "@tests/backend/utils/mocks/exchange-rate
 import type { LoggerMock } from "@tests/backend/utils/mocks/logger";
 import type { ResponseHeadersMock } from "@tests/backend/utils/mocks/response-headers";
 import { getResponseHeaders } from "@tests/backend/utils/mocks/response-headers";
+import type { S3OptionsMock } from "@tests/backend/utils/mocks/s3";
+import { getS3Options } from "@tests/backend/utils/mocks/s3";
 import type { Database } from "next-app/db";
 
 type SuiteContext = {
@@ -42,6 +44,7 @@ type MockContext = {
 	responseHeaders: ResponseHeadersMock;
 	cacheDbOptions: CacheDbOptionsMock;
 	exchangeRateOptions: ExchangeRateOptionsMock;
+	s3Options: S3OptionsMock;
 };
 
 export type TestContext = FakerContext & MockContext & SuiteContext;
@@ -69,6 +72,7 @@ export const test = originalTest.extend<TestFixture>({
 			cacheDbOptions: getCacheDbOptions(),
 			responseHeaders: getResponseHeaders(),
 			exchangeRateOptions: getExchangeRateOptions(),
+			s3Options: getS3Options(),
 			getUuid: () => handlerIdFaker.string.uuid(),
 			getSalt: () =>
 				handlerIdFaker.string.hexadecimal({

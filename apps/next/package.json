@@ -9,6 +9,7 @@
 		"lint": "next lint"
 	},
 	"dependencies": {
+		"@aws-sdk/client-s3": "^3.470.0",
 		"@expo/next-adapter": "^5.0.2",
 		"@trpc/client": "^11.0.0-alpha-next-2023-11-24-13-58-38.113",
 		"@trpc/next": "^11.0.0-alpha-next-2023-11-24-13-58-38.113",
