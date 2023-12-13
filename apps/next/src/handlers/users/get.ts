@@ -139,14 +139,7 @@ export const procedure = authProcedure
 					? undefined
 					: userResult.theirPublicName,
 			remoteId: input.id,
-			account:
-				userResult.accountId === null || userResult.email === null
-					? undefined
-					: {
-							id: userResult.accountId,
-							email: userResult.email,
-							avatarUrl: undefined,
-					  },
+			account: undefined,
 			localId: null as UsersId | null,
 		};
 	});

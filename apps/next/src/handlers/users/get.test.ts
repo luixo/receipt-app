@@ -134,9 +134,7 @@ describe("users.get", () => {
 					const { sessionId, accountId, account } =
 						await insertAccountWithSession(ctx);
 					const { id: foreignAccountId } = await insertAccount(ctx);
-					const { id: otherAccountId, email: otherEmail } = await insertAccount(
-						ctx,
-					);
+					const { id: otherAccountId } = await insertAccount(ctx);
 					const { id: receiptId } = await insertReceipt(ctx, foreignAccountId);
 					const caller = router.createCaller(createAuthContext(ctx, sessionId));
 
@@ -172,11 +170,7 @@ describe("users.get", () => {
 
 					const result = await caller.procedure({ id: foreignUserId });
 					expect(result).toStrictEqual<typeof result>({
-						account: {
-							id: otherAccountId,
-							email: otherEmail,
-							avatarUrl: undefined,
-						},
+						account: undefined,
 						localId: null,
 						name: foreignPublicName || name,
 						publicName: foreignPublicName,
