@@ -4,7 +4,6 @@ import { DAY } from "app/utils/time";
 import type { AccountsId, SessionsSessionId } from "next-app/db/models";
 import { generateConfirmEmailEmail } from "next-app/email/utils";
 import type { UnauthorizedContext } from "next-app/handlers/context";
-import type { EmailOptions } from "next-app/providers/email";
 import { getEmailClient } from "next-app/providers/email";
 
 // How long a session should last
@@ -36,21 +35,21 @@ export const createAuthorizationSession = async (
 };
 
 export const sendVerificationEmail = async (
-	emailOptions: EmailOptions,
+	ctx: UnauthorizedContext,
 	email: string,
 	token: string,
 ) => {
-	if (!emailOptions.active) {
+	if (!ctx.emailOptions.active) {
 		throw new TRPCError({
 			code: "FORBIDDEN",
 			message: "Currently email resend is not supported",
 		});
 	}
 	try {
-		await getEmailClient(emailOptions).send({
+		await getEmailClient(ctx).send({
 			address: email,
 			subject: "Confirm email in Receipt App",
-			body: generateConfirmEmailEmail(emailOptions, token),
+			body: generateConfirmEmailEmail(ctx, token),
 		});
 	} catch (e) {
 		throw new TRPCError({

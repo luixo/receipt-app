@@ -62,9 +62,9 @@ export const procedure = unauthProcedure
 				token: uuid,
 			})
 			.executeTakeFirst();
-		await getEmailClient(ctx.emailOptions).send({
+		await getEmailClient(ctx).send({
 			address: input.email.lowercase,
 			subject: "Reset password intention in Receipt App",
-			body: generateResetPasswordEmail(ctx.emailOptions, uuid),
+			body: generateResetPasswordEmail(ctx, uuid),
 		});
 	});

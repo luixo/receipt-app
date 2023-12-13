@@ -2,7 +2,7 @@ import React from "react";
 
 import * as ReactDOMServer from "react-dom/server";
 
-import type { EmailOptions } from "next-app/providers/email";
+import type { UnauthorizedContext } from "next-app/handlers/context";
 
 import { BaseUrlContext } from "./base-url-context";
 import { ConfirmEmailEmail } from "./confirm-email-email";
@@ -34,7 +34,10 @@ const reduceStyles = (styles: NestedStyles): string =>
 		return `${acc} ${selector} {${reduceStyles(style)}}`;
 	}, "");
 
-const generateEmail = (options: EmailOptions, element: React.ReactElement) => {
+const generateEmail = (
+	ctx: UnauthorizedContext,
+	element: React.ReactElement,
+) => {
 	// That's one-time render, we don't care about rerenders
 	// eslint-disable-next-line react/jsx-no-constructed-context-values
 	const stylesMapping: React.ContextType<typeof StylingContext> = {};
@@ -49,7 +52,7 @@ const generateEmail = (options: EmailOptions, element: React.ReactElement) => {
 		</head>
 		<body>${ReactDOMServer.renderToStaticMarkup(
 			<StylingContext.Provider value={stylesMapping}>
-				<BaseUrlContext.Provider value={options.baseUrl}>
+				<BaseUrlContext.Provider value={ctx.emailOptions.baseUrl}>
 					{element}
 				</BaseUrlContext.Provider>
 			</StylingContext.Provider>,
@@ -80,11 +83,11 @@ const generateEmail = (options: EmailOptions, element: React.ReactElement) => {
 };
 
 export const generateResetPasswordEmail = (
-	options: EmailOptions,
+	ctx: UnauthorizedContext,
 	token: string,
-) => generateEmail(options, <ResetPasswordEmail token={token} />);
+) => generateEmail(ctx, <ResetPasswordEmail token={token} />);
 
 export const generateConfirmEmailEmail = (
-	options: EmailOptions,
+	ctx: UnauthorizedContext,
 	token: string,
-) => generateEmail(options, <ConfirmEmailEmail token={token} />);
+) => generateEmail(ctx, <ConfirmEmailEmail token={token} />);

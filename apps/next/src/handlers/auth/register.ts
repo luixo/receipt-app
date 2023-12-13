@@ -42,7 +42,7 @@ export const procedure = unauthProcedure
 		const passwordData = generatePasswordData(ctx, input.password);
 		if (emailServiceActive) {
 			await sendVerificationEmail(
-				ctx.emailOptions,
+				ctx,
 				input.email.lowercase,
 				confirmationToken,
 			);

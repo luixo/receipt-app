@@ -1,5 +1,7 @@
 import * as postmark from "postmark";
 
+import type { UnauthorizedContext } from "next-app/handlers/context";
+
 export type Email = {
 	address: string;
 	subject: string;
@@ -18,9 +20,9 @@ type EmailClient = {
 
 let emailClient: EmailClient;
 
-export const getEmailClient = (options: EmailOptions): EmailClient => {
-	if (options.mock) {
-		return options.mock;
+export const getEmailClient = (ctx: UnauthorizedContext): EmailClient => {
+	if (ctx.emailOptions.mock) {
+		return ctx.emailOptions.mock;
 	}
 	if (emailClient) {
 		return emailClient;
