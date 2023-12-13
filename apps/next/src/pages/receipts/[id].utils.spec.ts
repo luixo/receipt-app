@@ -23,7 +23,7 @@ type MockReceiptResult = {
 	account: {
 		id: AccountsId;
 		email: string;
-		avatarUrl: undefined;
+		avatarUrl: string | undefined;
 	};
 	selfUser: {
 		id: UsersId;

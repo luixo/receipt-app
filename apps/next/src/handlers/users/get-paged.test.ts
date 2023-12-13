@@ -128,7 +128,7 @@ describe("users.getPaged", () => {
 				accountId,
 				firstAccount.id,
 			]);
-			const secondAccount = await insertAccount(ctx);
+			const secondAccount = await insertAccount(ctx, { avatarUrl: null });
 			const [connectedPublicNamedUser] = await insertConnectedUsers(ctx, [
 				{ accountId, publicName: "Bob" },
 				secondAccount.id,
@@ -168,7 +168,7 @@ describe("users.getPaged", () => {
 								? {
 										id: matchedAccount.id,
 										email: matchedAccount.email,
-										avatarUrl: undefined,
+										avatarUrl: matchedAccount.avatarUrl,
 								  }
 								: undefined,
 						};

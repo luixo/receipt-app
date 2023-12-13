@@ -20,6 +20,7 @@ export const procedure = authProcedure
 				"name",
 				"publicName",
 				"ownerAccountId",
+				"accounts.avatarUrl",
 				"accounts.email",
 				"accounts.id as accountId",
 			])
@@ -31,7 +32,8 @@ export const procedure = authProcedure
 				message: `No user found by id "${input.id}".`,
 			});
 		}
-		const { ownerAccountId, publicName, email, accountId, ...user } = maybeUser;
+		const { ownerAccountId, publicName, email, accountId, avatarUrl, ...user } =
+			maybeUser;
 		if (ownerAccountId === ctx.auth.accountId) {
 			return {
 				...user,
@@ -40,7 +42,7 @@ export const procedure = authProcedure
 				account:
 					email === null || accountId === null
 						? undefined
-						: { id: accountId, email, avatarUrl: undefined },
+						: { id: accountId, email, avatarUrl: avatarUrl || undefined },
 			};
 		}
 		// We allow account fetch foreign users
@@ -79,6 +81,7 @@ export const procedure = authProcedure
 				"usersMine.publicName",
 				"accounts.email",
 				"accounts.id as accountId",
+				"accounts.avatarUrl",
 				"usersThem.name as theirName",
 				"usersThem.publicName as theirPublicName",
 			])
@@ -88,6 +91,7 @@ export const procedure = authProcedure
 				"usersMine.publicName",
 				"accounts.email",
 				"accounts.id",
+				"accounts.avatarUrl",
 				"usersThem.name",
 				"usersThem.publicName",
 			])
@@ -127,7 +131,7 @@ export const procedure = authProcedure
 				account: {
 					id: userResult.accountId,
 					email: userResult.email,
-					avatarUrl: undefined,
+					avatarUrl: userResult.avatarUrl || undefined,
 				},
 				localId: userResult.mineId,
 			};

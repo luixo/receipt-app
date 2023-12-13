@@ -95,7 +95,7 @@ describe("auth.login", () => {
 		test("login successful", async ({ ctx }) => {
 			const {
 				accountId,
-				account: { email, password },
+				account: { email, password, avatarUrl },
 				name,
 			} = await insertAccountWithSession(ctx);
 			const caller = router.createCaller(createContext(ctx));
@@ -103,7 +103,7 @@ describe("auth.login", () => {
 				caller.procedure({ email, password }),
 			);
 			expect(result).toEqual<typeof result>({
-				account: { id: accountId, verified: true, avatarUrl: undefined },
+				account: { id: accountId, verified: true, avatarUrl },
 				user: { name },
 			});
 			const responseHeaders = ctx.responseHeaders.get();
@@ -130,7 +130,7 @@ describe("auth.login", () => {
 				account: { email, password },
 				name,
 			} = await insertAccountWithSession(ctx, {
-				account: { confirmation: {} },
+				account: { confirmation: {}, avatarUrl: null },
 			});
 			const context = createContext(ctx);
 			const caller = router.createCaller(context);

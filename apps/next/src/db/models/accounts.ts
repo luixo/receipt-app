@@ -21,6 +21,8 @@ export default interface Accounts {
 	confirmationToken: string | null;
 
 	confirmationTokenTimestamp: Date | null;
+
+	avatarUrl: string | null;
 }
 
 export interface AccountsInitializer {
@@ -40,6 +42,8 @@ export interface AccountsInitializer {
 	confirmationToken?: string | null;
 
 	confirmationTokenTimestamp?: Date | null;
+
+	avatarUrl?: string | null;
 }
 
 export interface AccountsMutator {
@@ -59,4 +63,6 @@ export interface AccountsMutator {
 	confirmationToken?: string | null;
 
 	confirmationTokenTimestamp?: Date | null;
+
+	avatarUrl?: string | null;
 }

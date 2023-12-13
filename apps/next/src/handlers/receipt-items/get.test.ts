@@ -50,7 +50,7 @@ type ParticipantUser = Omit<
 type ParticipantAccount = {
 	id: AccountsId;
 	email: string;
-	avatarUrl: undefined;
+	avatarUrl: string | undefined;
 };
 
 const getParticipants = (
@@ -83,7 +83,7 @@ const getParticipants = (
 						? {
 								id: foreignMatchedUser.connectedAccountId,
 								email: matchedAccount.email,
-								avatarUrl: undefined,
+								avatarUrl: matchedAccount.avatarUrl,
 						  }
 						: undefined,
 				role: participant.role,
@@ -157,12 +157,14 @@ describe("receiptItems.get", () => {
 				accountId,
 				userId: selfUserId,
 				name,
-				account: { email },
+				account: { email, avatarUrl },
 			} = await insertAccountWithSession(ctx);
 			const notConnectedUser = await insertUser(ctx, accountId);
-			const { id: foreignAccountId, email: foreignEmail } = await insertAccount(
-				ctx,
-			);
+			const {
+				id: foreignAccountId,
+				email: foreignEmail,
+				avatarUrl: foreignAvatarUrl,
+			} = await insertAccount(ctx);
 			const [foreignUser] = await insertConnectedUsers(ctx, [
 				accountId,
 				foreignAccountId,
@@ -217,8 +219,12 @@ describe("receiptItems.get", () => {
 						{ ...notConnectedUser, connectedAccountId: undefined },
 					].map((user) => [user, user]),
 					[
-						{ id: accountId, email, avatarUrl: undefined },
-						{ id: foreignAccountId, email: foreignEmail, avatarUrl: undefined },
+						{ id: accountId, email, avatarUrl },
+						{
+							id: foreignAccountId,
+							email: foreignEmail,
+							avatarUrl: foreignAvatarUrl,
+						},
 					],
 				),
 			});
@@ -243,15 +249,16 @@ describe("receiptItems.get", () => {
 				accountId,
 				userId: selfUserId,
 				name,
-				account: { email },
+				account: { email, avatarUrl },
 			} = await insertAccountWithSession(ctx);
 			const { id: connectedAccountId, email: connectedEmail } =
-				await insertAccount(ctx);
+				await insertAccount(ctx, { avatarUrl: null });
 			const {
 				id: foreignAccountId,
 				email: foreignEmail,
 				userId: foreignSelfUserId,
 				name: foreignName,
+				avatarUrl: foreignAvatarUrl,
 			} = await insertAccount(ctx);
 			const notConnectedUser = await insertUser(ctx, foreignAccountId);
 			const [foreignUser, foreignToSelfUser] = await insertConnectedUsers(ctx, [
@@ -345,8 +352,12 @@ describe("receiptItems.get", () => {
 						[foreignConnectedUser, connectedUser],
 					],
 					[
-						{ id: accountId, email, avatarUrl: undefined },
-						{ id: foreignAccountId, email: foreignEmail, avatarUrl: undefined },
+						{ id: accountId, email, avatarUrl },
+						{
+							id: foreignAccountId,
+							email: foreignEmail,
+							avatarUrl: foreignAvatarUrl,
+						},
 						{
 							id: connectedAccountId,
 							email: connectedEmail,

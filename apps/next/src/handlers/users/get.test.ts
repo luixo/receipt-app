@@ -83,10 +83,15 @@ describe("users.get", () => {
 
 	describe("functionality", () => {
 		describe("own user", () => {
-			test("with public name and email", async ({ ctx }) => {
+			test("with public name and connected account with avatar url", async ({
+				ctx,
+			}) => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				const { id: foreignAccountId, email: foreignEmail } =
-					await insertAccount(ctx);
+				const {
+					id: foreignAccountId,
+					email: foreignEmail,
+					avatarUrl: foreignAvatarUrl,
+				} = await insertAccount(ctx);
 				// Verify other users do not interfere
 				await insertUser(ctx, accountId);
 				const [{ id: userId, name, publicName }] = await insertConnectedUsers(
@@ -102,11 +107,36 @@ describe("users.get", () => {
 					account: {
 						id: foreignAccountId,
 						email: foreignEmail,
-						avatarUrl: undefined,
+						avatarUrl: foreignAvatarUrl,
 					},
 					localId: userId,
 					name,
 					publicName,
+					remoteId: userId,
+				});
+			});
+
+			test("with connected account without avatar url", async ({ ctx }) => {
+				const { sessionId, accountId } = await insertAccountWithSession(ctx);
+				const { id: foreignAccountId, email: foreignEmail } =
+					await insertAccount(ctx, { avatarUrl: null });
+				// Verify other users do not interfere
+				await insertUser(ctx, accountId);
+				const [{ id: userId, name }] = await insertConnectedUsers(ctx, [
+					accountId,
+					foreignAccountId,
+				]);
+				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const result = await caller.procedure({ id: userId });
+				expect(result).toStrictEqual<typeof result>({
+					account: {
+						id: foreignAccountId,
+						email: foreignEmail,
+						avatarUrl: undefined,
+					},
+					localId: userId,
+					name,
+					publicName: undefined,
 					remoteId: userId,
 				});
 			});
@@ -224,8 +254,11 @@ describe("users.get", () => {
 
 			describe("connected to a local user", () => {
 				test("as a third-party account", async ({ ctx }) => {
-					const { id: connectedAccountId, email: connectedEmail } =
-						await insertAccount(ctx);
+					const {
+						id: connectedAccountId,
+						email: connectedEmail,
+						avatarUrl: connectedAvatarUrl,
+					} = await insertAccount(ctx);
 					const { sessionId, accountId } = await insertAccountWithSession(ctx);
 					const { id: foreignAccountId } = await insertAccount(ctx);
 
@@ -258,7 +291,7 @@ describe("users.get", () => {
 						account: {
 							id: connectedAccountId,
 							email: connectedEmail,
-							avatarUrl: undefined,
+							avatarUrl: connectedAvatarUrl,
 						},
 						localId: localConnectedUserId,
 						name,
@@ -286,7 +319,7 @@ describe("users.get", () => {
 						account: {
 							id: accountId,
 							email: account.email,
-							avatarUrl: undefined,
+							avatarUrl: account.avatarUrl,
 						},
 						localId: userId,
 						name,
@@ -301,7 +334,7 @@ describe("users.get", () => {
 						id: foreignAccountId,
 						email: foreignEmail,
 						userId: foreignAccountUserId,
-					} = await insertAccount(ctx);
+					} = await insertAccount(ctx, { avatarUrl: null });
 
 					const [
 						{ id: foreignUserId, name, publicName },

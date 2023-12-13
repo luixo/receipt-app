@@ -248,7 +248,7 @@ describe("receiptParticipants.add", () => {
 				sessionId,
 				accountId,
 				userId: selfUserId,
-				account: { email },
+				account: { email, avatarUrl },
 				name,
 			} = await insertAccountWithSession(ctx);
 			const { id: receiptId } = await insertReceipt(ctx, accountId, {
@@ -258,6 +258,7 @@ describe("receiptParticipants.add", () => {
 			const user = await insertUser(ctx, accountId);
 			const { id: foreignAccountId, email: foreignEmail } = await insertAccount(
 				ctx,
+				{ avatarUrl: null },
 			);
 			const [foreignUser, { id: foreignToSelfUserId }] =
 				await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
@@ -278,11 +279,7 @@ describe("receiptParticipants.add", () => {
 			);
 			const users = [
 				{
-					account: {
-						id: accountId,
-						email,
-						avatarUrl: undefined,
-					},
+					account: { id: accountId, email, avatarUrl },
 					name,
 					publicName: null,
 					id: selfUserId,

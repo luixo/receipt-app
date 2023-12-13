@@ -211,9 +211,11 @@ describe("accountConnectionIntentions.accept", () => {
 			const { id: selfToForeignUserId } = await insertUser(ctx, accountId);
 			const { id: selfToOuterUserId } = await insertUser(ctx, accountId);
 
-			const { id: foreignAccountId, email: foreignEmail } = await insertAccount(
-				ctx,
-			);
+			const {
+				id: foreignAccountId,
+				email: foreignEmail,
+				avatarUrl: foreignAvatarUrl,
+			} = await insertAccount(ctx);
 			const { id: foreignToSelfUserId } = await insertUser(
 				ctx,
 				foreignAccountId,
@@ -273,7 +275,40 @@ describe("accountConnectionIntentions.accept", () => {
 			await expect(result).toStrictEqual<typeof result>({
 				id: foreignAccountId,
 				email: foreignEmail,
-				avatarUrl: undefined,
+				avatarUrl: foreignAvatarUrl,
+			});
+		});
+
+		test("empty avatar url is returned", async ({ ctx }) => {
+			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { id: selfToForeignUserId } = await insertUser(ctx, accountId);
+
+			const {
+				id: foreignAccountId,
+				email: foreignEmail,
+				avatarUrl: foreignAvatarUrl,
+			} = await insertAccount(ctx, { avatarUrl: null });
+			const { id: foreignToSelfUserId } = await insertUser(
+				ctx,
+				foreignAccountId,
+			);
+
+			await insertAccountConnectionIntention(
+				ctx,
+				foreignAccountId,
+				accountId,
+				foreignToSelfUserId,
+			);
+
+			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const result = await caller.procedure({
+				userId: selfToForeignUserId,
+				accountId: foreignAccountId,
+			});
+			await expect(result).toStrictEqual<typeof result>({
+				id: foreignAccountId,
+				email: foreignEmail,
+				avatarUrl: foreignAvatarUrl,
 			});
 		});
 	});

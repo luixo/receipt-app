@@ -43,6 +43,7 @@ export const addReceiptParticipants = async (
 			"users.publicName",
 			"accounts.id as accountId",
 			"accounts.email",
+			"accounts.avatarUrl",
 		])
 		.where("users.id", "in", userIds)
 		.execute();
@@ -106,7 +107,7 @@ export const addReceiptParticipants = async (
 		.returning(["added", "userId"])
 		.execute();
 	return usersToAdd.map(([id, role]) => {
-		const { email, accountId, ...userDatum } = userData.find(
+		const { email, accountId, avatarUrl, ...userDatum } = userData.find(
 			(user) => user.id === id,
 		)!;
 		const addedDatum = result.find(({ userId }) => userId === id)!;
@@ -116,7 +117,7 @@ export const addReceiptParticipants = async (
 			account:
 				email === null || accountId === null
 					? undefined
-					: { email, id: accountId, avatarUrl: undefined },
+					: { email, id: accountId, avatarUrl: avatarUrl || undefined },
 			...userDatum,
 		};
 	});

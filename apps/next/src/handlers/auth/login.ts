@@ -26,11 +26,12 @@ export const procedure = unauthProcedure
 			.whereRef("users.id", "=", "users.connectedAccountId")
 			.select([
 				"accounts.id as accountId",
-				"email",
-				"passwordSalt",
-				"passwordHash",
+				"accounts.email",
+				"accounts.passwordSalt",
+				"accounts.passwordHash",
 				"users.name",
-				"confirmationToken",
+				"accounts.confirmationToken",
+				"accounts.avatarUrl",
 			])
 			.executeTakeFirst();
 
@@ -64,7 +65,7 @@ export const procedure = unauthProcedure
 			account: {
 				id: result.accountId,
 				verified: !result.confirmationToken,
-				avatarUrl: undefined,
+				avatarUrl: result.avatarUrl || undefined,
 			},
 			user: {
 				name: result.name,

@@ -117,6 +117,7 @@ const getReceiptParticipants = async (
 			"usersTheir.name as theirName",
 			"accounts.id as accountId",
 			"accounts.email",
+			"accounts.avatarUrl",
 			sql`role`.$castTo<Role>().as("role"),
 			"receiptParticipants.resolved",
 			"added",
@@ -130,6 +131,7 @@ const getReceiptParticipants = async (
 			theirPublicName,
 			accountId,
 			email,
+			avatarUrl,
 			...participant
 		}) => ({
 			...participant,
@@ -140,7 +142,7 @@ const getReceiptParticipants = async (
 					: {
 							id: accountId,
 							email,
-							avatarUrl: undefined,
+							avatarUrl: avatarUrl || undefined,
 					  },
 		}),
 	);

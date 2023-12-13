@@ -5,7 +5,7 @@ exports[`users.update > functionality > name is changed 1`] = `
   "updated": {
     "users": {
       "id:5bbbf9f4-c81f-4157-a501-682568f0b691": {
-        "name": "Denise Rolfson",
+        "name": "Kari Bernier",
       },
     },
   },
@@ -17,7 +17,7 @@ exports[`users.update > functionality > public name is changed 1`] = `
   "updated": {
     "users": {
       "id:69873d27-7822-4273-b5c2-8ee0a2d004d6": {
-        "publicName": "Mike Gleichner",
+        "publicName": "Estelle Hauck MD",
       },
     },
   },

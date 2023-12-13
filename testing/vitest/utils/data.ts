@@ -62,6 +62,7 @@ export const insertUser = async (
 type AccountData = {
 	id?: AccountsId;
 	email?: string;
+	avatarUrl?: string | null;
 	password?: string;
 	confirmation?: {
 		token?: string;
@@ -80,28 +81,38 @@ export const insertAccount = async (
 		{ getSalt: ctx.getTestSalt },
 		password,
 	);
-	const { id, email, confirmationToken, confirmationTokenTimestamp } =
-		await ctx.database
-			.insertInto("accounts")
-			.values({
-				id: data.id || ctx.getTestUuid(),
-				email: (data.email || faker.internet.email()).toLowerCase(),
-				passwordHash,
-				passwordSalt,
-				confirmationToken: data.confirmation
-					? data.confirmation.token || ctx.getTestUuid()
-					: undefined,
-				confirmationTokenTimestamp: data.confirmation
-					? data.confirmation.timestamp || new Date()
-					: undefined,
-			})
-			.returning([
-				"id",
-				"email",
-				"confirmationToken",
-				"confirmationTokenTimestamp",
-			])
-			.executeTakeFirstOrThrow();
+	const {
+		id,
+		email,
+		confirmationToken,
+		confirmationTokenTimestamp,
+		avatarUrl,
+	} = await ctx.database
+		.insertInto("accounts")
+		.values({
+			id: data.id || ctx.getTestUuid(),
+			email: (data.email || faker.internet.email()).toLowerCase(),
+			passwordHash,
+			passwordSalt,
+			confirmationToken: data.confirmation
+				? data.confirmation.token || ctx.getTestUuid()
+				: undefined,
+			confirmationTokenTimestamp: data.confirmation
+				? data.confirmation.timestamp || new Date()
+				: undefined,
+			avatarUrl:
+				data.avatarUrl === null
+					? data.avatarUrl
+					: data.avatarUrl || faker.internet.avatar(),
+		})
+		.returning([
+			"id",
+			"email",
+			"confirmationToken",
+			"confirmationTokenTimestamp",
+			"avatarUrl",
+		])
+		.executeTakeFirstOrThrow();
 	if (data.settings) {
 		await insertAccountSettings(ctx, id, data.settings);
 	}
@@ -125,6 +136,7 @@ export const insertAccount = async (
 		confirmationTokenTimestamp,
 		userId,
 		name,
+		avatarUrl: avatarUrl || undefined,
 	};
 };
 

@@ -16,7 +16,7 @@ export const addConnectionIntention = async (
 ) => {
 	const targetAccount = await database
 		.selectFrom("accounts")
-		.select("id")
+		.select(["id", "avatarUrl"])
 		.where("email", "=", toEmail.lowercase)
 		.executeTakeFirst();
 	if (!targetAccount) {
@@ -87,7 +87,7 @@ export const addConnectionIntention = async (
 			account: {
 				id: targetAccount.id,
 				email: toEmail.lowercase,
-				avatarUrl: undefined,
+				avatarUrl: targetAccount.avatarUrl || undefined,
 			},
 			connected: true,
 			user: {
@@ -109,7 +109,7 @@ export const addConnectionIntention = async (
 			account: {
 				id: targetAccount.id,
 				email: toEmail.lowercase,
-				avatarUrl: undefined,
+				avatarUrl: targetAccount.avatarUrl || undefined,
 			},
 			connected: false,
 			user: {

@@ -183,9 +183,11 @@ describe("users.add", () => {
 		describe("user is added - with email", () => {
 			test("has a vice versa intention", async ({ ctx }) => {
 				// Foreign account
-				const { id: otherAccountId, email: otherEmail } = await insertAccount(
-					ctx,
-				);
+				const {
+					id: otherAccountId,
+					email: otherEmail,
+					avatarUrl: otherAvatarUrl,
+				} = await insertAccount(ctx);
 				const { id: otherUserId } = await insertUser(ctx, otherAccountId);
 				// Self account
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
@@ -213,7 +215,7 @@ describe("users.add", () => {
 						account: {
 							id: otherAccountId,
 							email: otherEmail,
-							avatarUrl: undefined,
+							avatarUrl: otherAvatarUrl,
 						},
 						user: { name: asName },
 					},
@@ -225,6 +227,7 @@ describe("users.add", () => {
 				// Foreign account
 				const { email: otherEmail, id: otherAccountId } = await insertAccount(
 					ctx,
+					{ avatarUrl: null },
 				);
 				// Self account
 				const { sessionId } = await insertAccountWithSession(ctx);

@@ -5,16 +5,16 @@ exports[`debts.updateBatch > functionality > locked as false > counterparty auto
   "updated": {
     "debts": {
       "id:c6921060-1137-45b4-b942-59630a98b84a|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "amount": "569.7900",
-        "currencyCode": "AUD",
+        "amount": "-745.4300",
+        "currencyCode": "HNL",
         "lockedTimestamp": null,
-        "note": "harum porro maxime",
+        "note": "esse necessitatibus voluptatem",
         "receiptId": "b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5",
         "timestamp": "2020-06-01T00:00:00.000Z",
       },
       "id:c6921060-1137-45b4-b942-59630a98b84a|ownerAccountId:b4fba71b-3720-46f4-befe-54e779c889fc": {
-        "amount": "-569.7900",
-        "currencyCode": "AUD",
+        "amount": "745.4300",
+        "currencyCode": "HNL",
         "lockedTimestamp": null,
         "receiptId": "b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5",
         "timestamp": "2020-06-01T00:00:00.000Z",
@@ -51,10 +51,10 @@ exports[`debts.updateBatch > functionality > locked as false > counterparty does
   "updated": {
     "debts": {
       "id:c6921060-1137-45b4-b942-59630a98b84a|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "amount": "569.7900",
-        "currencyCode": "AUD",
+        "amount": "-745.4300",
+        "currencyCode": "HNL",
         "lockedTimestamp": null,
-        "note": "harum porro maxime",
+        "note": "esse necessitatibus voluptatem",
         "receiptId": "b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5",
         "timestamp": "2020-06-01T00:00:00.000Z",
       },
@@ -84,16 +84,16 @@ exports[`debts.updateBatch > functionality > locked as true > counterparty auto-
   "updated": {
     "debts": {
       "id:c6921060-1137-45b4-b942-59630a98b84a|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "amount": "569.7900",
-        "currencyCode": "AUD",
+        "amount": "-745.4300",
+        "currencyCode": "HNL",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "note": "harum porro maxime",
+        "note": "esse necessitatibus voluptatem",
         "receiptId": "b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5",
         "timestamp": "2020-06-01T00:00:00.000Z",
       },
       "id:c6921060-1137-45b4-b942-59630a98b84a|ownerAccountId:b4fba71b-3720-46f4-befe-54e779c889fc": {
-        "amount": "-569.7900",
-        "currencyCode": "AUD",
+        "amount": "745.4300",
+        "currencyCode": "HNL",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
         "receiptId": "b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5",
         "timestamp": "2020-06-01T00:00:00.000Z",
@@ -132,10 +132,10 @@ exports[`debts.updateBatch > functionality > locked as true > counterparty doesn
   "updated": {
     "debts": {
       "id:c6921060-1137-45b4-b942-59630a98b84a|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "amount": "569.7900",
-        "currencyCode": "AUD",
+        "amount": "-745.4300",
+        "currencyCode": "HNL",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "note": "harum porro maxime",
+        "note": "esse necessitatibus voluptatem",
         "receiptId": "b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5",
         "timestamp": "2020-06-01T00:00:00.000Z",
       },
@@ -166,16 +166,16 @@ exports[`debts.updateBatch > functionality > no locked > counterparty auto-accep
   "updated": {
     "debts": {
       "id:c6921060-1137-45b4-b942-59630a98b84a|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "amount": "569.7900",
-        "currencyCode": "AUD",
+        "amount": "-745.4300",
+        "currencyCode": "HNL",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "note": "harum porro maxime",
+        "note": "esse necessitatibus voluptatem",
         "receiptId": "b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5",
         "timestamp": "2020-06-01T00:00:00.000Z",
       },
       "id:c6921060-1137-45b4-b942-59630a98b84a|ownerAccountId:b4fba71b-3720-46f4-befe-54e779c889fc": {
-        "amount": "-569.7900",
-        "currencyCode": "AUD",
+        "amount": "745.4300",
+        "currencyCode": "HNL",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
         "receiptId": "b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5",
         "timestamp": "2020-06-01T00:00:00.000Z",
@@ -212,10 +212,10 @@ exports[`debts.updateBatch > functionality > no locked > counterparty doesn't au
   "updated": {
     "debts": {
       "id:c6921060-1137-45b4-b942-59630a98b84a|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "amount": "569.7900",
-        "currencyCode": "AUD",
+        "amount": "-745.4300",
+        "currencyCode": "HNL",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "note": "harum porro maxime",
+        "note": "esse necessitatibus voluptatem",
         "receiptId": "b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5",
         "timestamp": "2020-06-01T00:00:00.000Z",
       },
@@ -245,14 +245,14 @@ exports[`debts.updateBatch > update multiple debts > with distinctly locking val
   "updated": {
     "debts": {
       "id:b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "note": "cum soluta esse",
+        "note": "assumenda tempora asperiores",
       },
       "id:c6921060-1137-45b4-b942-59630a98b84a|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "amount": "704.5100",
+        "amount": "839.7200",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
       },
       "id:c6921060-1137-45b4-b942-59630a98b84a|ownerAccountId:b4fba71b-3720-46f4-befe-54e779c889fc": {
-        "amount": "-704.5100",
+        "amount": "-839.7200",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
       },
     },
@@ -283,10 +283,10 @@ exports[`debts.updateBatch > update multiple debts > with distinctly locking val
   "updated": {
     "debts": {
       "id:b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "note": "cum soluta esse",
+        "note": "assumenda tempora asperiores",
       },
       "id:c6921060-1137-45b4-b942-59630a98b84a|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "amount": "704.5100",
+        "amount": "839.7200",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
       },
     },
@@ -314,14 +314,14 @@ exports[`debts.updateBatch > update multiple debts > with locking values > count
   "updated": {
     "debts": {
       "id:b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "amount": "-745.4300",
+        "amount": "-270.1800",
       },
       "id:c6921060-1137-45b4-b942-59630a98b84a|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "amount": "704.5100",
+        "amount": "839.7200",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
       },
       "id:c6921060-1137-45b4-b942-59630a98b84a|ownerAccountId:b4fba71b-3720-46f4-befe-54e779c889fc": {
-        "amount": "-704.5100",
+        "amount": "-839.7200",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
       },
     },
@@ -352,10 +352,10 @@ exports[`debts.updateBatch > update multiple debts > with locking values > count
   "updated": {
     "debts": {
       "id:b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "amount": "-745.4300",
+        "amount": "-270.1800",
       },
       "id:c6921060-1137-45b4-b942-59630a98b84a|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "amount": "704.5100",
+        "amount": "839.7200",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
       },
     },
@@ -383,10 +383,10 @@ exports[`debts.updateBatch > update multiple debts > with non-locking values > c
   "updated": {
     "debts": {
       "id:b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "note": "soluta esse necessitatibus",
+        "note": "tempora asperiores impedit",
       },
       "id:c6921060-1137-45b4-b942-59630a98b84a|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "note": "aperiam facilis cum",
+        "note": "odit temporibus assumenda",
       },
     },
   },
@@ -413,10 +413,10 @@ exports[`debts.updateBatch > update multiple debts > with non-locking values > c
   "updated": {
     "debts": {
       "id:b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "note": "soluta esse necessitatibus",
+        "note": "tempora asperiores impedit",
       },
       "id:c6921060-1137-45b4-b942-59630a98b84a|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "note": "aperiam facilis cum",
+        "note": "odit temporibus assumenda",
       },
     },
   },

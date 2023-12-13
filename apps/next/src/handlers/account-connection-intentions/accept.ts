@@ -41,7 +41,7 @@ export const procedure = authProcedure
 		}
 		const account = await database
 			.selectFrom("accounts")
-			.select(["id", "email"])
+			.select(["id", "email", "avatarUrl"])
 			.where("id", "=", input.accountId)
 			.executeTakeFirst();
 		if (!account) {
@@ -88,5 +88,9 @@ export const procedure = authProcedure
 				)
 				.executeTakeFirst();
 		});
-		return { email: account.email, id: account.id, avatarUrl: undefined };
+		return {
+			email: account.email,
+			id: account.id,
+			avatarUrl: account.avatarUrl || undefined,
+		};
 	});

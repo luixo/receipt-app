@@ -5,6 +5,7 @@ exports[`auth.register > functionality > email sent if active 1`] = `
   "added": {
     "accounts": {
       "id:d3e851e7-a827-44d1-9a44-49c2ad7fe2fa": {
+        "avatarUrl": null,
         "confirmationToken": "53660a25-ca9c-4880-b244-d5390017793a",
         "confirmationTokenTimestamp": "2020-01-01T00:00:00.000Z",
         "email": "roberto9@yahoo.com",
@@ -55,6 +56,7 @@ exports[`auth.register > functionality > register successful 1`] = `
   "added": {
     "accounts": {
       "id:cede701c-1498-4975-903f-c38d3105a43d": {
+        "avatarUrl": null,
         "confirmationToken": null,
         "confirmationTokenTimestamp": null,
         "email": "octavia.schuster@hotmail.com",

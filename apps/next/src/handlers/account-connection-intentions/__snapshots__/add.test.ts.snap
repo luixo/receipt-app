@@ -1,34 +1,34 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`accountConnectionIntentions.add > functionality > account connection intention added 1`] = `
+exports[`accountConnectionIntentions.add > functionality > account connection intention added > avatar url exists 1`] = `
 {
   "added": {
     "accountConnectionsIntentions": {
-      "accountId:bee9956a-939c-410e-9ede-373d8d12984a|targetAccountId:03c4e8a7-1cb7-4874-a313-06d8d5862855": {
-        "accountId": "bee9956a-939c-410e-9ede-373d8d12984a",
+      "accountId:e20766cf-a87a-422e-8f74-6693283d8aee|targetAccountId:4fc3d460-cdcc-43f1-8f2d-46948fa296cc": {
+        "accountId": "e20766cf-a87a-422e-8f74-6693283d8aee",
         "created": "2020-01-01T00:00:00.000Z",
-        "targetAccountId": "03c4e8a7-1cb7-4874-a313-06d8d5862855",
-        "userId": "cbaa13f5-0f0b-4c6e-a08f-13ba4484efaf",
+        "targetAccountId": "4fc3d460-cdcc-43f1-8f2d-46948fa296cc",
+        "userId": "9a11d224-0baf-49c1-89f7-73673387cb63",
       },
     },
   },
 }
 `;
 
-exports[`accountConnectionIntentions.add > functionality > account connection intention collapse - has a vice versa intention 1`] = `
+exports[`accountConnectionIntentions.add > functionality > account connection intention collapse - has a vice versa intention > avatar url exists 1`] = `
 {
   "deleted": {
     "accountConnectionsIntentions": {
-      "accountId:f1f00c55-fca6-4317-8bce-7efb4600c278|targetAccountId:45f692a0-cd28-45e3-b3d3-0fa98669c760": undefined,
+      "accountId:4fc3d460-cdcc-43f1-8f2d-46948fa296cc|targetAccountId:e20766cf-a87a-422e-8f74-6693283d8aee": undefined,
     },
   },
   "updated": {
     "users": {
-      "id:51964bec-0be3-46cc-ac58-a1b41f96cd32": {
-        "connectedAccountId": "45f692a0-cd28-45e3-b3d3-0fa98669c760",
+      "id:05723e6e-e916-46aa-886e-b744bb05d6ce": {
+        "connectedAccountId": "4fc3d460-cdcc-43f1-8f2d-46948fa296cc",
       },
-      "id:7e8b2e18-af2d-4dc2-86d0-3ae35a6d08c4": {
-        "connectedAccountId": "f1f00c55-fca6-4317-8bce-7efb4600c278",
+      "id:9a11d224-0baf-49c1-89f7-73673387cb63": {
+        "connectedAccountId": "e20766cf-a87a-422e-8f74-6693283d8aee",
       },
     },
   },

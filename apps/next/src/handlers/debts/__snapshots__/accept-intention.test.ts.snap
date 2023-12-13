@@ -5,12 +5,12 @@ exports[`debts.acceptIntention > functionality > debt is synced - created 1`] = 
   "added": {
     "debts": {
       "id:2c59da16-ee80-4ed3-a62f-291fbfc17b70|ownerAccountId:65cd5b19-b0a7-426c-876e-3a4bef3b17f1": {
-        "amount": "-50.3300",
+        "amount": "-758.6800",
         "created": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "VES",
+        "currencyCode": "BDT",
         "id": "2c59da16-ee80-4ed3-a62f-291fbfc17b70",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "note": "Sed optio eveniet.",
+        "note": "Dignissimos repellat at sed quo quam voluptatum nostrum doloribus perspiciatis.",
         "ownerAccountId": "65cd5b19-b0a7-426c-876e-3a4bef3b17f1",
         "receiptId": "442ab28a-d0c3-4a76-bb51-faa5e93cec17",
         "timestamp": "2020-01-01T00:00:00.000Z",
@@ -26,8 +26,8 @@ exports[`debts.acceptIntention > functionality > debt is synced - updated 1`] = 
   "updated": {
     "debts": {
       "id:592887da-bdb5-43eb-86f0-4f570c986d2d|ownerAccountId:19cb23bc-c128-49c3-a6e8-a65f1e5b750e": {
-        "amount": "333.3700",
-        "currencyCode": "JMD",
+        "amount": "379.9300",
+        "currencyCode": "INR",
         "lockedTimestamp": "2020-06-02T00:00:00.000Z",
         "timestamp": "2020-04-01T00:00:00.000Z",
       },

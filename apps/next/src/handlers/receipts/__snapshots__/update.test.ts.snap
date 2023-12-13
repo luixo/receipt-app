@@ -5,7 +5,7 @@ exports[`receipts.update > functionality > update currency code > locked before 
   "updated": {
     "receipts": {
       "id:65b1d21a-4b9d-4019-a838-fbddad09c2b2": {
-        "currencyCode": "MAD",
+        "currencyCode": "BIF",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
       },
     },
@@ -18,7 +18,7 @@ exports[`receipts.update > functionality > update currency code > unlocked befor
   "updated": {
     "receipts": {
       "id:ce2a0b7b-e615-42b9-be91-214ad04913ba": {
-        "currencyCode": "LTL",
+        "currencyCode": "HNL",
       },
     },
   },
@@ -92,7 +92,7 @@ exports[`receipts.update > functionality > update name > locked before update 1`
   "updated": {
     "receipts": {
       "id:65b1d21a-4b9d-4019-a838-fbddad09c2b2": {
-        "name": "cupiditate asperiores aperiam",
+        "name": "quia soluta accusantium",
       },
     },
   },
@@ -104,7 +104,7 @@ exports[`receipts.update > functionality > update name > unlocked before update 
   "updated": {
     "receipts": {
       "id:ce2a0b7b-e615-42b9-be91-214ad04913ba": {
-        "name": "totam dolores amet",
+        "name": "ipsam aspernatur assumenda",
       },
     },
   },

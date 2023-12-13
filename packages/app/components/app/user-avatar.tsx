@@ -2,7 +2,7 @@ import React from "react";
 
 import { Avatar, tv } from "@nextui-org/react";
 import IdenticonJs from "identicon.js";
-import Image from "next/image";
+import { unstable_getImgProps as getImgProps } from "next/image";
 
 import type { TRPCQueryOutput } from "app/trpc";
 import type { MakeOptional } from "app/utils/types";
@@ -23,7 +23,12 @@ const getIdenticon = (hash: string, size: number) =>
 type Props = {
 	id: UsersId;
 	account?: MakeOptional<
-		NonNullable<TRPCQueryOutput<"users.getPaged">["items"][number]["account"]>
+		Pick<
+			NonNullable<
+				TRPCQueryOutput<"users.getPaged">["items"][number]["account"]
+			>,
+			"id" | "avatarUrl"
+		>
 	>;
 } & React.ComponentProps<typeof Avatar>;
 
@@ -50,13 +55,19 @@ export const useUserAvatarProps = ({
 		() => account?.avatarUrl || getIdenticon(account?.id || id, size),
 		[id, account?.id, account?.avatarUrl, size],
 	);
-	return {
+	const { props: imgProps } = getImgProps({
 		src: icon,
+		alt: "Avatar",
+		width: size,
+		height: size,
+	});
+	return {
+		src: imgProps.src,
+		srcSet: imgProps.srcSet,
 		radius: "sm",
-		ImgComponent: Image,
 		...props,
 		classNames: { ...classNames, base: wrapper({ className }) },
-		imgProps: { width: size, height: size, ...props.imgProps },
+		imgProps,
 	} satisfies React.ComponentProps<typeof Avatar>;
 };
 

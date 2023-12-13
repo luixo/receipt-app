@@ -32,6 +32,7 @@ export const procedure = authProcedure
 					"publicName",
 					"accounts.email",
 					"accounts.id as accountId",
+					"accounts.avatarUrl",
 				])
 				// Stable order for users with the same name
 				.orderBy(["users.name", "users.id"])
@@ -49,13 +50,17 @@ export const procedure = authProcedure
 			hasMore: users.length === input.limit + 1,
 			items: users
 				.slice(0, input.limit)
-				.map(({ publicName, email, accountId, ...user }) => ({
+				.map(({ publicName, email, accountId, avatarUrl, ...user }) => ({
 					...user,
 					publicName: publicName === null ? undefined : publicName,
 					account:
 						accountId === null || email === null
 							? undefined
-							: { id: accountId, email, avatarUrl: undefined },
+							: {
+									id: accountId,
+									email,
+									avatarUrl: avatarUrl || undefined,
+							  },
 				})),
 		};
 	});

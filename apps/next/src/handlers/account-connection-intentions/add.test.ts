@@ -227,66 +227,119 @@ describe("accountConnectionIntentions.add", () => {
 	});
 
 	describe("functionality", () => {
-		test("account connection intention collapse - has a vice versa intention", async ({
-			ctx,
-		}) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: otherAccountId, email: otherEmail } = await insertAccount(
-				ctx,
-			);
-
-			const { id: otherUserId } = await insertUser(ctx, otherAccountId);
-			// Foreign account's intention to connect to self account
-			await insertAccountConnectionIntention(
-				ctx,
-				otherAccountId,
-				accountId,
-				otherUserId,
-			);
-
-			const { id: userId, name: userName } = await insertUser(ctx, accountId);
-
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
-			const result = await expectDatabaseDiffSnapshot(ctx, () =>
-				caller.procedure({
-					userId,
-					email: otherEmail,
-				}),
-			);
-			await expect(result).toStrictEqual<typeof result>({
-				account: {
+		describe("account connection intention collapse - has a vice versa intention", () => {
+			test("avatar url exists", async ({ ctx }) => {
+				const { sessionId, accountId } = await insertAccountWithSession(ctx);
+				const {
 					id: otherAccountId,
 					email: otherEmail,
-					avatarUrl: undefined,
-				},
-				connected: true,
-				user: { name: userName },
+					avatarUrl: otherAvatarUrl,
+				} = await insertAccount(ctx);
+
+				const { id: otherUserId } = await insertUser(ctx, otherAccountId);
+				// Foreign account's intention to connect to self account
+				await insertAccountConnectionIntention(
+					ctx,
+					otherAccountId,
+					accountId,
+					otherUserId,
+				);
+
+				const { id: userId, name: userName } = await insertUser(ctx, accountId);
+
+				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const result = await expectDatabaseDiffSnapshot(ctx, () =>
+					caller.procedure({ userId, email: otherEmail }),
+				);
+				await expect(result).toStrictEqual<typeof result>({
+					account: {
+						id: otherAccountId,
+						email: otherEmail,
+						avatarUrl: otherAvatarUrl,
+					},
+					connected: true,
+					user: { name: userName },
+				});
+			});
+
+			test("avatar url does not exist", async ({ ctx }) => {
+				const { sessionId, accountId } = await insertAccountWithSession(ctx);
+				const { id: otherAccountId, email: otherEmail } = await insertAccount(
+					ctx,
+					{ avatarUrl: null },
+				);
+
+				const { id: otherUserId } = await insertUser(ctx, otherAccountId);
+				// Foreign account's intention to connect to self account
+				await insertAccountConnectionIntention(
+					ctx,
+					otherAccountId,
+					accountId,
+					otherUserId,
+				);
+
+				const { id: userId, name: userName } = await insertUser(ctx, accountId);
+
+				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const result = await caller.procedure({ userId, email: otherEmail });
+				await expect(result).toStrictEqual<typeof result>({
+					account: {
+						id: otherAccountId,
+						email: otherEmail,
+						avatarUrl: undefined,
+					},
+					connected: true,
+					user: { name: userName },
+				});
 			});
 		});
 
-		test("account connection intention added", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { email: otherEmail, id: otherAccountId } = await insertAccount(
-				ctx,
-			);
-
-			const { id: userId, name: userName } = await insertUser(ctx, accountId);
-
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
-			const result = await expectDatabaseDiffSnapshot(ctx, () =>
-				caller.procedure({
-					userId,
+		describe("account connection intention added", () => {
+			test("avatar url exists", async ({ ctx }) => {
+				const { sessionId, accountId } = await insertAccountWithSession(ctx);
+				const {
 					email: otherEmail,
-				}),
-			);
-			await expect(result).toStrictEqual<typeof result>({
-				account: {
 					id: otherAccountId,
-					email: otherEmail,
-					avatarUrl: undefined,
-				},
-				connected: false,
-				user: { name: userName },
+					avatarUrl: otherAvatarUrl,
+				} = await insertAccount(ctx);
+
+				const { id: userId, name: userName } = await insertUser(ctx, accountId);
+
+				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const result = await expectDatabaseDiffSnapshot(ctx, () =>
+					caller.procedure({ userId, email: otherEmail }),
+				);
+				await expect(result).toStrictEqual<typeof result>({
+					account: {
+						id: otherAccountId,
+						email: otherEmail,
+						avatarUrl: otherAvatarUrl,
+					},
+					connected: false,
+					user: { name: userName },
+				});
+			});
+
+			test("avatar url does not exist", async ({ ctx }) => {
+				const { sessionId, accountId } = await insertAccountWithSession(ctx);
+				const { email: otherEmail, id: otherAccountId } = await insertAccount(
+					ctx,
+					{ avatarUrl: null },
+				);
+
+				const { id: userId, name: userName } = await insertUser(ctx, accountId);
+
+				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const result = await caller.procedure({ userId, email: otherEmail });
+				await expect(result).toStrictEqual<typeof result>({
+					account: {
+						id: otherAccountId,
+						email: otherEmail,
+						avatarUrl: undefined,
+					},
+					connected: false,
+					user: { name: userName },
+				});
 			});
 		});
 	});
