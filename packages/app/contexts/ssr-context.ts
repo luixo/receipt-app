@@ -1,43 +1,16 @@
 import * as React from "react";
 
-import { z } from "zod";
-
-export const SSR_CONTEXT_COOKIE_NAME = "ssrContext";
-
-declare global {
-	// eslint-disable-next-line @typescript-eslint/no-namespace
-	namespace Intl {
-		// see https://github.com/microsoft/TypeScript/issues/29129
-		export function getCanonicalLocales(locales: string[]): string[];
-	}
-}
-
-const ssrContextCookieDataSchema = z.strictObject({
-	tzOffset: z.number().int(),
-	locale: z.string().transform((value, ctx) => {
-		try {
-			const locales = Intl.getCanonicalLocales([value]);
-			if (locales.length === 1) {
-				return locales[0]!;
-			}
-		} catch (e) {
-			if (e instanceof TypeError) {
-				return value;
-			}
-		}
-		ctx.addIssue({
-			code: z.ZodIssueCode.custom,
-			message: "Not a valid locale",
-		});
-		return z.NEVER;
-	}),
-});
-
-// Data we save in cookie so returning user will have same timezone/locale on SSR and CSR
-export type SSRContextCookieData = z.infer<typeof ssrContextCookieDataSchema>;
+import {
+	type CookieStates,
+	type CookieValues,
+	getCookieStatesFromValues,
+	schemas,
+} from "app/utils/cookie-data";
+import { noop } from "app/utils/utils";
+import type { getCookies } from "next-app/utils/client-cookies";
 
 // The data above + data we add on each render
-export type SSRContextData = SSRContextCookieData & {
+export type SSRContextData = CookieValues & {
 	// Without this timestamp relative dates might differ on server and client
 	// (e.g. "1 second ago" and "2 seconds ago")
 	// which will cause hydration mismatch warning
@@ -45,37 +18,29 @@ export type SSRContextData = SSRContextCookieData & {
 };
 
 // The data above + flag of whether it's first render
-export type SSRContextType = SSRContextData & {
+export type SSRContextType = Omit<SSRContextData, keyof CookieValues> & {
 	isFirstRender: boolean;
-};
+} & CookieStates;
 
-export const getSSRContextCookieData = () => ({
-	tzOffset: new Date().getTimezoneOffset(),
-	locale: Intl.DateTimeFormat().resolvedOptions().locale,
-});
-
-export const getSSRContextData = (rawCookie?: string) => {
-	let cookieData: Partial<SSRContextCookieData> | undefined;
-	if (rawCookie) {
+export const getSSRContextCookieData = (
+	cookies: ReturnType<typeof getCookies> = {},
+): CookieValues =>
+	Object.entries(schemas).reduce<CookieValues>((acc, [key, schema]) => {
+		let parsedValue = null;
 		try {
-			const validatedData = ssrContextCookieDataSchema.safeParse(
-				JSON.parse(rawCookie),
-			);
-			if (validatedData.success) {
-				cookieData = validatedData.data;
-			}
+			parsedValue = JSON.parse(cookies[key]!);
 		} catch {
-			/* empty */
+			parsedValue = cookies[key]!;
 		}
-	}
-	return {
-		...getSSRContextCookieData(),
-		...cookieData,
-		nowTimestamp: Date.now(),
-	};
-};
+		return { ...acc, [key]: schema.parse(parsedValue) };
+	}, {} as CookieValues);
 
 export const SSRContext = React.createContext<SSRContextType>({
-	...getSSRContextData(),
+	...getCookieStatesFromValues(
+		getSSRContextCookieData(),
+		() => noop,
+		() => noop,
+	),
+	nowTimestamp: Date.now(),
 	isFirstRender: true,
 });

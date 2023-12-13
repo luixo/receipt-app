@@ -44,3 +44,11 @@ export const asFixedSizeArray =
 	<N extends number>() =>
 	<T>(array: T[]) =>
 		array as TupleOf<T, N>;
+
+export const updateSetStateAction = <T>(
+	setStateAction: React.SetStateAction<T>,
+	prevValue: T,
+) =>
+	typeof setStateAction === "function"
+		? (setStateAction as (prevState: T) => T)(prevValue)
+		: setStateAction;

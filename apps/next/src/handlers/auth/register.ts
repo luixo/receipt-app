@@ -9,8 +9,8 @@ import {
 } from "next-app/handlers/auth/utils";
 import { unauthProcedure } from "next-app/handlers/trpc";
 import { emailSchema } from "next-app/handlers/validation";
-import { setAuthCookie } from "next-app/utils/auth-cookie";
 import { generatePasswordData } from "next-app/utils/crypto";
+import { setAuthCookie } from "next-app/utils/server-cookies";
 
 export const procedure = unauthProcedure
 	.input(

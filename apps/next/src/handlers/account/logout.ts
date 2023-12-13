@@ -1,5 +1,5 @@
 import { authProcedure } from "next-app/handlers/trpc";
-import { resetAuthCookie } from "next-app/utils/auth-cookie";
+import { resetAuthCookie } from "next-app/utils/server-cookies";
 
 export const procedure = authProcedure.mutation(async ({ ctx }) => {
 	const { database } = ctx;

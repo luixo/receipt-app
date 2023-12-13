@@ -175,14 +175,7 @@ export const userItemSchema = z.strictObject({
 		.optional(),
 });
 
-export const fallback = <T extends z.Schema<unknown>>(
-	schema: T,
-	value: z.infer<T>,
-): T =>
-	z.any().transform((val) => {
-		const safe = schema.safeParse(val);
-		return safe.success ? safe.data : value;
-	}) as unknown as T;
+export const fallback = <T>(getValue: () => T) => z.any().transform(getValue);
 
 export const MIN_BATCH_DEBTS = 1;
 export const MAX_BATCH_DEBTS = 10;

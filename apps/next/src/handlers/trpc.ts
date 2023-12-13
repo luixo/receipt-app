@@ -16,10 +16,10 @@ import { formatErrorMessage } from "next-app/handlers/errors";
 import { sessionIdSchema } from "next-app/handlers/validation";
 import {
 	AUTH_COOKIE,
+	getCookie,
 	resetAuthCookie,
 	setAuthCookie,
-} from "next-app/utils/auth-cookie";
-import { getCookie } from "next-app/utils/cookie";
+} from "next-app/utils/server-cookies";
 
 export const t = initTRPC.context<UnauthorizedContext>().create({
 	transformer,

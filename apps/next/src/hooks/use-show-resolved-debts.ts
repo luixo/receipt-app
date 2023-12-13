@@ -1,9 +1,9 @@
 import React from "react";
 
-import { SettingsContext } from "app/contexts/settings-context";
+import { useSettings } from "./use-settings";
 
 export const useShowResolvedDebts = () => {
-	const [settings, setSettings] = React.useContext(SettingsContext);
+	const [settings, setSettings] = useSettings();
 	const setShowResolvedDebts = React.useCallback(
 		(showResolvedDebts: boolean) => {
 			setSettings((prevSettings) => ({ ...prevSettings, showResolvedDebts }));

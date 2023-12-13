@@ -2,47 +2,29 @@ import React from "react";
 
 import type { ParsedUrlQuery } from "querystring";
 
-import type { ColorModeConfig } from "app/contexts/color-mode-context";
-import { ColorModeContext } from "app/contexts/color-mode-context";
-import type { Settings } from "app/contexts/settings-context";
-import { SettingsContext } from "app/contexts/settings-context";
-import type { Props as SsrContext } from "app/provider/ssr";
-import { ThemeProvider } from "app/utils/styles";
-
 import { NavigationProvider } from "./navigation";
 import { QueriesProvider } from "./queries";
-import { SSRProvider } from "./ssr";
+import { SSRProvider, type Props as SsrContext } from "./ssr";
 import { StateProvider } from "./state";
+import { ThemeProvider } from "./theme";
 
 export type Props = {
-	colorModeConfig: ColorModeConfig;
-	settings: Settings;
 	query: ParsedUrlQuery;
 	ssrContext: SsrContext;
 };
 
 export const Provider: React.FC<React.PropsWithChildren<Props>> = ({
 	children,
-	colorModeConfig,
-	settings,
 	query,
 	ssrContext,
-}) => {
-	const colorModeState = React.useState(colorModeConfig);
-	const settingsState = React.useState(settings);
-	return (
-		<QueriesProvider>
-			<StateProvider query={query}>
-				<ColorModeContext.Provider value={colorModeState}>
-					<SettingsContext.Provider value={settingsState}>
-						<SSRProvider {...ssrContext}>
-							<ThemeProvider>
-								<NavigationProvider>{children}</NavigationProvider>
-							</ThemeProvider>
-						</SSRProvider>
-					</SettingsContext.Provider>
-				</ColorModeContext.Provider>
-			</StateProvider>
-		</QueriesProvider>
-	);
-};
+}) => (
+	<QueriesProvider>
+		<StateProvider query={query}>
+			<SSRProvider {...ssrContext}>
+				<ThemeProvider>
+					<NavigationProvider>{children}</NavigationProvider>
+				</ThemeProvider>
+			</SSRProvider>
+		</StateProvider>
+	</QueriesProvider>
+);

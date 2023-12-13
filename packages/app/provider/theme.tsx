@@ -3,22 +3,25 @@ import * as ReactNative from "react-native";
 
 import { NextUIProvider } from "@nextui-org/react";
 
-import { ColorModeContext } from "app/contexts/color-mode-context";
+import {
+	useLastColorModeCookie,
+	useSelectedColorModeCookie,
+} from "app/hooks/use-color-modes";
 import { useRouter } from "app/hooks/use-router";
 
 export const ThemeProvider: React.FC<React.PropsWithChildren<object>> = ({
 	children,
 }) => {
-	const [colorModeConfig, setColorModeConfig] =
-		React.useContext(ColorModeContext);
+	const [selectedColorMode] = useSelectedColorModeCookie();
+	const [lastColorMode, setLastColorMode] = useLastColorModeCookie();
 	const colorScheme = ReactNative.useColorScheme();
 	React.useEffect(() => {
 		if (!colorScheme) {
 			return;
 		}
-		setColorModeConfig((prev) => ({ ...prev, last: colorScheme }));
-	}, [colorScheme, setColorModeConfig]);
-	const selectedMode = colorModeConfig.selected || colorModeConfig.last;
+		setLastColorMode(colorScheme);
+	}, [colorScheme, setLastColorMode]);
+	const selectedMode = selectedColorMode || lastColorMode;
 	const sureMode = selectedMode ?? "light";
 	React.useEffect(() => {
 		const html = document.querySelector("html")!;

@@ -11,8 +11,11 @@ import {
 } from "app/utils/trpc";
 import { omitUndefined } from "app/utils/utils";
 import type { AppRouter } from "next-app/pages/api/trpc/[trpc]";
-import { AUTH_COOKIE } from "next-app/utils/auth-cookie";
-import { getCookie, serialize } from "next-app/utils/cookie";
+import {
+	AUTH_COOKIE,
+	getCookie,
+	serialize,
+} from "next-app/utils/server-cookies";
 
 export const trpcNext = createTRPCNext<
 	AppRouter,

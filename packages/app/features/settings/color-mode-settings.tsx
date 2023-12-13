@@ -5,46 +5,39 @@ import { Checkbox, Switch } from "@nextui-org/react";
 import { FiMoon as MoonIcon, FiSun as SunIcon } from "react-icons/fi";
 
 import { Header } from "app/components/base/header";
-import { ColorModeContext } from "app/contexts/color-mode-context";
+import {
+	useLastColorModeCookie,
+	useSelectedColorModeCookie,
+} from "app/hooks/use-color-modes";
 
 export const ColorModeSettings: React.FC = () => {
-	const [colorModeConfig, setColorModeConfig] =
-		React.useContext(ColorModeContext);
+	const [lastColorMode] = useLastColorModeCookie();
+	const [selectedColorMode, setSelectedColorMode, removeSelectedColorMode] =
+		useSelectedColorModeCookie();
 	const setColorMode = React.useCallback(
-		(nextDark: boolean) => {
-			setColorModeConfig((prevConfig) => ({
-				...prevConfig,
-				selected: nextDark ? "dark" : "light",
-			}));
-		},
-		[setColorModeConfig],
+		(nextDark: boolean) => setSelectedColorMode(nextDark ? "dark" : "light"),
+		[setSelectedColorMode],
 	);
 	const changeAuto = React.useCallback(
 		(nextAuto: boolean) => {
-			setColorModeConfig((prevConfig) =>
-				nextAuto
-					? {
-							...prevConfig,
-							selected: undefined,
-					  }
-					: {
-							...prevConfig,
-							selected: prevConfig.last,
-					  },
-			);
+			if (nextAuto) {
+				removeSelectedColorMode();
+			} else {
+				setSelectedColorMode(lastColorMode);
+			}
 		},
-		[setColorModeConfig],
+		[removeSelectedColorMode, setSelectedColorMode, lastColorMode],
 	);
 	const isSelected =
-		colorModeConfig.selected === undefined
-			? Boolean(colorModeConfig.last)
-			: colorModeConfig.selected === "dark";
+		selectedColorMode === undefined
+			? Boolean(lastColorMode)
+			: selectedColorMode === "dark";
 	return (
 		<>
 			<Header size="lg">Color mode</Header>
 			<View className="flex-row gap-4">
 				<Checkbox
-					isSelected={colorModeConfig.selected === undefined}
+					isSelected={selectedColorMode === undefined}
 					onValueChange={changeAuto}
 					size="lg"
 				>
@@ -60,7 +53,7 @@ export const ColorModeSettings: React.FC = () => {
 							<SunIcon color="currentColor" />
 						)
 					}
-					isDisabled={colorModeConfig.selected === undefined}
+					isDisabled={selectedColorMode === undefined}
 					size="lg"
 					classNames={{ thumb: "bg-background" }}
 				/>

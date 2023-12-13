@@ -1,13 +1,17 @@
 import * as React from "react";
 import { AppRegistry } from "react-native";
 
-import { getCookie } from "cookies-next";
 import { extractCss } from "goober";
 import NextDocument, { Head, Html, Main, NextScript } from "next/document";
 
-import type { ColorMode } from "app/contexts/color-mode-context";
-import { LAST_COLOR_MODE_COOKIE_NAME } from "app/contexts/color-mode-context";
+import {
+	type ColorMode,
+	LAST_COLOR_MODE_COOKIE_NAME,
+	SELECTED_COLOR_MODE_COOKIE_NAME,
+} from "app/utils/cookie/color-modes";
+import { schemas } from "app/utils/cookie-data";
 import { NATIVE_STYLESHEET_PRELOAD_ID } from "next-app/hooks/use-remove-preloaded-css";
+import { getCookie } from "next-app/utils/client-cookies";
 
 const getNativeCss = () => {
 	AppRegistry.registerComponent("Main", () => Main);
@@ -36,13 +40,13 @@ const getNativeCss = () => {
 };
 
 type DocumentProps = {
-	lastColorMode: ColorMode;
+	colorMode: ColorMode;
 };
 
 class Document extends NextDocument<DocumentProps> {
 	render() {
 		return (
-			<Html className={this.props.lastColorMode}>
+			<Html className={this.props.colorMode}>
 				<Head>
 					<meta httpEquiv="X-UA-Compatible" content="IE=edge" />
 					{getNativeCss()}
@@ -58,9 +62,13 @@ class Document extends NextDocument<DocumentProps> {
 
 Document.getInitialProps = async (ctx) => {
 	const prevProps = await ctx.defaultGetInitialProps(ctx);
-	const lastColorModeCookie = getCookie(LAST_COLOR_MODE_COOKIE_NAME, ctx);
-	const lastColorMode: ColorMode =
-		lastColorModeCookie === "dark" ? "dark" : "light";
+	const colorMode =
+		schemas[SELECTED_COLOR_MODE_COOKIE_NAME].parse(
+			getCookie(SELECTED_COLOR_MODE_COOKIE_NAME, ctx),
+		) ||
+		schemas[LAST_COLOR_MODE_COOKIE_NAME].parse(
+			getCookie(LAST_COLOR_MODE_COOKIE_NAME, ctx),
+		);
 	return {
 		...prevProps,
 		styles: (
@@ -72,7 +80,7 @@ Document.getInitialProps = async (ctx) => {
 				{prevProps.styles}
 			</>
 		),
-		lastColorMode,
+		colorMode,
 	};
 };
 
