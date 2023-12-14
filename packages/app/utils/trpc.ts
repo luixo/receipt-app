@@ -13,7 +13,7 @@ import {
 	splitLink,
 } from "@trpc/client";
 import type { AwaitPrepassRender } from "@trpc/next";
-import type { AnyRouter } from "@trpc/server";
+import type { AnyRouter, DataTransformer } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
 import type { NextPageContext } from "next";
 import superjson from "superjson";
@@ -120,7 +120,8 @@ export const awaitPrepassRender: AwaitPrepassRender<
 	return Promise.race([prefetchPromise, ctx.timeoutPromise]);
 };
 
-export const transformer = superjson;
+export const transformer: DataTransformer = superjson;
+export type TransformerResult = ReturnType<(typeof transformer)["serialize"]>;
 
 export const getQueryClientConfig = (): QueryClientConfig => ({
 	defaultOptions: {

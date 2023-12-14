@@ -8,8 +8,6 @@ import {
 	TRPC_ERROR_CODES_BY_KEY,
 } from "@trpc/server/rpc";
 import http from "node:http";
-import superjson from "superjson";
-import type { SuperJSONResult } from "superjson/dist/types";
 import { v4 } from "uuid";
 
 import type {
@@ -21,6 +19,8 @@ import type {
 	TRPCQueryOutput,
 } from "app/trpc";
 import type { Currency, CurrencyCode } from "app/utils/currency";
+import type { TransformerResult } from "app/utils/trpc";
+import { transformer } from "app/utils/trpc";
 import type { ControlledPromise } from "app/utils/utils";
 import { createPromise } from "app/utils/utils";
 import { getCurrencies } from "next-app/utils/currency";
@@ -91,10 +91,10 @@ const handleCall = async <K extends TRPCKey>(
 	controller: Controller,
 	type: CallType,
 	name: K,
-	input: SuperJSONResult | undefined,
+	input: TransformerResult | undefined,
 ): Promise<JSONRPC2.ResultResponse | JSONRPC2.ErrorResponse> => {
 	const deserializedInput = (
-		input ? superjson.deserialize(input) : undefined
+		input ? transformer.deserialize(input) : undefined
 	) as QueryOrMutationInput<K>;
 	controller.actions.push([type, name, deserializedInput]);
 	const pausedPromise = controller.paused.get(name);
@@ -108,7 +108,7 @@ const handleCall = async <K extends TRPCKey>(
 	try {
 		return {
 			result: {
-				data: superjson.serialize(
+				data: transformer.serialize(
 					typeof handlerOrData === "function"
 						? // eslint-disable-next-line @typescript-eslint/no-explicit-any
 						  handlerOrData(deserializedInput as any)
@@ -126,7 +126,7 @@ const handleCall = async <K extends TRPCKey>(
 						cause: e,
 				  });
 		return {
-			error: superjson.serialize({
+			error: transformer.serialize({
 				code: TRPC_ERROR_CODES_BY_KEY[trpcError.code],
 				data: {
 					code: trpcError.code,
@@ -155,7 +155,7 @@ const handleRequest = async (
 		"{}";
 	const cleanPathname = url.pathname.replace(API_PREFIX, "");
 	if (isBatch) {
-		const inputs: Record<number, SuperJSONResult> = JSON.parse(
+		const inputs: Record<number, TransformerResult> = JSON.parse(
 			decodeURIComponent(source),
 		);
 		const names = cleanPathname.split(",") as TRPCKey[];
@@ -165,7 +165,7 @@ const handleRequest = async (
 				.map(({ name, input }) => handleCall(controller, type, name, input)),
 		);
 	}
-	const input: SuperJSONResult = JSON.parse(decodeURIComponent(source));
+	const input: TransformerResult = JSON.parse(decodeURIComponent(source));
 	const name = cleanPathname as TRPCKey;
 	return handleCall(controller, type, name, input);
 };
