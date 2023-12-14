@@ -200,16 +200,16 @@ describe("users.getPaged", () => {
 			});
 			expect(firstPage.items.length).toBe(limit);
 			expect(firstPage.hasMore).toBe(true);
-			expect(firstPage.count).toEqual(2 * limit - 1);
-			expect(firstPage.cursor).toEqual(0);
+			expect(firstPage.count).toBe(2 * limit - 1);
+			expect(firstPage.cursor).toBe(0);
 			const secondPage = await caller.procedure({
 				cursor: firstPage.cursor + limit,
 				limit,
 			});
 			expect(secondPage.items.length).toBeLessThan(limit);
 			expect(secondPage.hasMore).toBe(false);
-			expect(secondPage.count).toEqual(2 * limit - 1);
-			expect(secondPage.cursor).toEqual(firstPage.cursor + limit);
+			expect(secondPage.count).toBe(2 * limit - 1);
+			expect(secondPage.cursor).toBe(firstPage.cursor + limit);
 		});
 
 		test("same-named users are ordered by ids", async ({ ctx }) => {

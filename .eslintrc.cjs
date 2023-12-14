@@ -146,6 +146,14 @@ module.exports = {
 				"tailwindcss/no-custom-classname": "off",
 			},
 		},
+		{
+			files: ["testing/vitest/**", "*.test.ts"],
+			plugins: ["vitest"],
+			extends: ["plugin:vitest/recommended"],
+			rules: {
+				"vitest/valid-title": "off",
+			},
+		},
 	],
 	settings: {
 		tailwindcss: {

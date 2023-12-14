@@ -59,7 +59,7 @@ describe("receipts.getNonResolvedAmount", () => {
 
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
-			expect(result).toEqual<typeof result>(0);
+			expect(result).toBe<typeof result>(0);
 		});
 
 		test("return both own and foreign receipt resolved marks", async ({
@@ -104,7 +104,7 @@ describe("receipts.getNonResolvedAmount", () => {
 
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
-			expect(result).toEqual<typeof result>(3);
+			expect(result).toBe<typeof result>(3);
 		});
 	});
 });

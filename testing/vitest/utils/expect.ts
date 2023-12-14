@@ -25,7 +25,7 @@ export const expectTRPCError = async (
 	expect({
 		code: trpcError.code,
 		message: formatErrorMessage(trpcError, trpcError.message),
-	}).toEqual({
+	}).toStrictEqual({
 		code: expectedCode,
 		message: expectedMessage,
 	});

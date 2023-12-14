@@ -56,6 +56,8 @@ export const createStableFaker = (input: string) => {
 	return instance;
 };
 
+// see https://github.com/veritem/eslint-plugin-vitest/issues/281
+// eslint-disable-next-line vitest/expect-expect
 export const test = originalTest.extend<TestFixture>({
 	ctx: async ({ task }, use) => {
 		const { suiteContext } = task.suite.file!;

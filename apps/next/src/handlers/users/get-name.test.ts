@@ -86,7 +86,7 @@ describe("users.getName", () => {
 			const { id: userId, name } = await insertUser(ctx, accountId);
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ id: userId });
-			expect(result).toEqual(name);
+			expect(result).toBe(name);
 		});
 	});
 });

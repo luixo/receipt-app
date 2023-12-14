@@ -155,9 +155,7 @@ const runFunctionalTest = async (
 	const items = modifyItems(
 		receipts.sort((a, b) => b.issued.valueOf() - a.issued.valueOf()),
 	);
-	expect(items.length, "at least one receipt should be tested").toBeGreaterThan(
-		0,
-	);
+	expect(items.length).toBeGreaterThan(0);
 	expect(result).toStrictEqual<typeof result>({
 		count: items.length,
 		cursor: 0,
@@ -333,8 +331,8 @@ describe("receipts.getPaged", () => {
 			});
 			expect(firstPage.items.length).toBe(limit);
 			expect(firstPage.hasMore).toBe(true);
-			expect(firstPage.count).toEqual(count);
-			expect(firstPage.cursor).toEqual(0);
+			expect(firstPage.count).toBe(count);
+			expect(firstPage.cursor).toBe(0);
 			const secondPage = await caller.procedure({
 				cursor: firstPage.cursor + limit,
 				limit,
@@ -342,8 +340,8 @@ describe("receipts.getPaged", () => {
 			});
 			expect(secondPage.items.length).toBeLessThan(limit);
 			expect(secondPage.hasMore).toBe(false);
-			expect(secondPage.count).toEqual(count);
-			expect(secondPage.cursor).toEqual(firstPage.cursor + limit);
+			expect(secondPage.count).toBe(count);
+			expect(secondPage.cursor).toBe(firstPage.cursor + limit);
 		});
 
 		test("orderBy - asc", async ({ ctx }) => {

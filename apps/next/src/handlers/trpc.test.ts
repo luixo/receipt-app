@@ -175,7 +175,7 @@ describe("procedures", () => {
 			const validationText = faker.lorem.text();
 			await start();
 			const result = await client.procedure.mutate({ foo: validationText });
-			expect(result).toEqual(validationText);
+			expect(result).toBe(validationText);
 			await destroy();
 		});
 
@@ -194,7 +194,7 @@ describe("procedures", () => {
 			const formData = new FormData();
 			formData.append("foo", validationText);
 			const result = await client.procedure.mutate(formData);
-			expect(result).toEqual(validationText);
+			expect(result).toBe(validationText);
 			await destroy();
 		});
 	});
