@@ -3,6 +3,10 @@ import type * as React from "react";
 import type { z } from "zod";
 
 import {
+	AVATAR_LAST_MODIFIED_KEY,
+	avatarLastModifiedSchema,
+} from "app/utils/cookie/avatar-last-modified";
+import {
 	LAST_COLOR_MODE_COOKIE_NAME,
 	SELECTED_COLOR_MODE_COOKIE_NAME,
 	lastColorModeSchema,
@@ -30,6 +34,8 @@ export const schemas = {
 	[LAST_COLOR_MODE_COOKIE_NAME]: lastColorModeSchema,
 	// Selected color schema used in this client (if any)
 	[SELECTED_COLOR_MODE_COOKIE_NAME]: selectedColorModeSchema,
+	// lastModified keystamp to update avatar on change
+	[AVATAR_LAST_MODIFIED_KEY]: avatarLastModifiedSchema,
 } satisfies Record<string, z.ZodType>;
 
 export type CookieValues = {

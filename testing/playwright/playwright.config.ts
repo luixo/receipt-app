@@ -116,6 +116,8 @@ export default defineConfig({
 			TZ: "UTC",
 			LC_ALL: "en-US",
 			NODE_ENV: "test",
+			S3_BUCKET: "test-bucket",
+			S3_ENDPOINT: "https://fake-endpoint.org",
 		},
 	},
 	globalSetup: path.resolve(localDir, "./global/setup.ts"),

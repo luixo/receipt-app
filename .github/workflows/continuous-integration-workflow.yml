@@ -83,7 +83,11 @@ jobs:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup-env
       - name: Build frontend
-        run: NODE_ENV=test yarn web:build
+        run: yarn web:build
+        env:
+          NODE_ENV: test
+          S3_BUCKET: test-bucket
+          S3_ENDPOINT: https://fake-endpoint.org
       - name: Run frontend tests
         id: tests
         # see https://github.com/microsoft/playwright/issues/6500

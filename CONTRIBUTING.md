@@ -79,7 +79,7 @@ Visual regression tests are run in a docker image (to be consistent on CI enviro
 0. Prebuild the app locally (you can do that inside Docker image, but it will probably OOM)
 
 ```sh
-NODE_ENV=test yarn web:build
+dotenv -c -- NODE_ENV=test yarn web:build
 ```
 
 1. Run a Playwright docker image with port 3000 exposed and current directory linked as `/work`

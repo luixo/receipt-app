@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { zfd } from "zod-form-data";
 
 import type { CurrencyCode } from "app/utils/currency";
 import type { AccountsId, UsersId } from "next-app/db/models";
@@ -176,6 +177,8 @@ export const userItemSchema = z.strictObject({
 });
 
 export const fallback = <T>(getValue: () => T) => z.any().transform(getValue);
+
+export const avatarFormSchema = zfd.formData({ avatar: zfd.file().optional() });
 
 export const MIN_BATCH_DEBTS = 1;
 export const MAX_BATCH_DEBTS = 10;
