@@ -50,6 +50,6 @@
 		"autoprefixer": "^10.4.16",
 		"critters": "^0.0.20",
 		"eslint-config-next": "^14.0.3",
-		"vitest": "1.0.0-beta.4"
+		"vitest": "1.0.4"
 	}
 }

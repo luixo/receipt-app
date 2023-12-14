@@ -16,6 +16,10 @@ const testConfig: NonNullable<UserConfig["test"]> = {
 	coverage: {
 		all: false,
 		enabled: true,
+		skipFull: true,
+		thresholds: {
+			"100": true,
+		},
 		reporter: ["text", "html", "lcov", "json-summary", "json"],
 		exclude: [
 			...configDefaults.coverage.exclude!,
