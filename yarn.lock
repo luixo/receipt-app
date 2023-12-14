@@ -8403,13 +8403,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/identicon.js@npm:^2.3.1":
-  version: 2.3.1
-  resolution: "@types/identicon.js@npm:2.3.1"
-  checksum: eba22e41cd5105c4593c7f12f9e2c714b995dbd38c71579f4b8933c2ef1958c1510208486da0f3677ebdd51ece501b2618a4712f05efaa2fabe40abfd7b7880a
-  languageName: node
-  linkType: hard
-
 "@types/isomorphic-fetch@npm:^0.0.36":
   version: 0.0.36
   resolution: "@types/isomorphic-fetch@npm:0.0.36"
@@ -9301,16 +9294,15 @@ __metadata:
     "@trpc/client": ^11.0.0-alpha-next-2023-11-24-13-58-38.113
     "@trpc/react-query": ^11.0.0-alpha-next-2023-11-24-13-58-38.113
     "@trpc/server": ^11.0.0-alpha-next-2023-11-24-13-58-38.113
-    "@types/identicon.js": ^2.3.1
     "@types/react-calendar": ^4.1.0
     "@types/uuid": ^9.0.2
     app: "workspace:*"
+    boring-avatars: ^1.10.1
     expo-app: "workspace:*"
     expo-constants: ^14.4.2
     expo-linking: ^6.0.0
     framer-motion: ^10.16.12
     idb-keyval: ^6.2.1
-    identicon.js: ^2.3.3
     nativewind: ^4.0.16
     next-app: "workspace:*"
     next-usequerystate: 1.13.0
@@ -10071,6 +10063,13 @@ __metadata:
   version: 1.0.0
   resolution: "boolbase@npm:1.0.0"
   checksum: 3e25c80ef626c3a3487c73dbfc70ac322ec830666c9ad915d11b701142fab25ec1e63eff2c450c74347acfd2de854ccde865cd79ef4db1683f7c7b046ea43bb0
+  languageName: node
+  linkType: hard
+
+"boring-avatars@npm:^1.10.1":
+  version: 1.10.1
+  resolution: "boring-avatars@npm:1.10.1"
+  checksum: 2f4109d8c007e0eaf62bc191c632da683c814c330803bf978630588d2393f6943d0bc5d5e5d32bfe13e46c940bcff4b860a2bd6bb37d2c5c411a1a8339d40c06
   languageName: node
   linkType: hard
 
@@ -14934,13 +14933,6 @@ __metadata:
   version: 6.2.1
   resolution: "idb-keyval@npm:6.2.1"
   checksum: 7c0836f832096086e99258167740181132a71dd2694c8b8454a4f5ec69114ba6d70983115153306f0b6de1c8d3bad04f67eed3dff8f50c96815b9985d6d78470
-  languageName: node
-  linkType: hard
-
-"identicon.js@npm:^2.3.3":
-  version: 2.3.3
-  resolution: "identicon.js@npm:2.3.3"
-  checksum: 659318e1631c42d7a5c44d5834b90c09356f68c1d06f85e527b2b433c8c6f8adf0f1b32971f3e5014c796bcf25a1a4cf0ca04165712cd776abf8f4159d6dd003
   languageName: node
   linkType: hard
 
