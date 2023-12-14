@@ -8529,15 +8529,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-calendar@npm:^4.1.0":
-  version: 4.1.0
-  resolution: "@types/react-calendar@npm:4.1.0"
-  dependencies:
-    react-calendar: "*"
-  checksum: 1961517393f90c4339c2752ffb25ab2887eff966e9d286e67175b7b26117445f43ee1ee61f6d16c079779e3bdcfd9185968e9d3b352418656bfe0d572f0459d7
-  languageName: node
-  linkType: hard
-
 "@types/react-dom@npm:^18.2.7":
   version: 18.2.7
   resolution: "@types/react-dom@npm:18.2.7"
@@ -9363,10 +9354,10 @@ __metadata:
     "@trpc/client": ^11.0.0-alpha-next-2023-11-24-13-58-38.113
     "@trpc/react-query": ^11.0.0-alpha-next-2023-11-24-13-58-38.113
     "@trpc/server": ^11.0.0-alpha-next-2023-11-24-13-58-38.113
-    "@types/react-calendar": ^4.1.0
     "@types/uuid": ^9.0.2
     app: "workspace:*"
     boring-avatars: ^1.10.1
+    date-fns: ^2.30.0
     expo-app: "workspace:*"
     expo-constants: ^14.4.2
     expo-linking: ^6.0.0
@@ -9375,8 +9366,8 @@ __metadata:
     nativewind: ^4.0.16
     next-app: "workspace:*"
     next-usequerystate: 1.13.0
-    react-calendar: ^4.5.0
     react-date-picker: ^10.3.0
+    react-day-picker: ^8.9.1
     react-easy-crop: ^5.0.3
     react-hook-form: ^7.45.2
     react-hot-toast: ^2.4.1
@@ -11509,7 +11500,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"date-fns@npm:^2.29.1":
+"date-fns@npm:^2.29.1, date-fns@npm:^2.30.0":
   version: 2.30.0
   resolution: "date-fns@npm:2.30.0"
   dependencies:
@@ -20191,7 +20182,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-calendar@npm:*, react-calendar@npm:^4.5.0":
+"react-calendar@npm:^4.5.0":
   version: 4.5.0
   resolution: "react-calendar@npm:4.5.0"
   dependencies:
@@ -20231,6 +20222,16 @@ __metadata:
     "@types/react":
       optional: true
   checksum: cbb3e840200fae4055e36f8ac0f9ce88a5210a677e2b6c3dbc3d171c7a3476aa77d4df0b4c36fdcdf51f38f64b32f6944040662e53bd3f79c372e20a00bb2b60
+  languageName: node
+  linkType: hard
+
+"react-day-picker@npm:^8.9.1":
+  version: 8.9.1
+  resolution: "react-day-picker@npm:8.9.1"
+  peerDependencies:
+    date-fns: ^2.28.0
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+  checksum: 1a609bd3621f66fd93c58635990246c6129e57ea33d05345256bdd561f56035a04b201213a279aa37129dbbe149ae5f0f15259a9d06309910d1c9a6bb6c0eccc
   languageName: node
   linkType: hard
 
