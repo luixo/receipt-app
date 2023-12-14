@@ -1,5 +1,6 @@
 import { t } from "next-app/handlers/trpc";
 
+import { procedure as changeAvatar } from "./change-avatar";
 import { procedure as changeName } from "./change-name";
 import { procedure as changePassword } from "./change-password";
 import { procedure as get } from "./get";
@@ -11,5 +12,6 @@ export const router = t.router({
 	logout,
 	changeName,
 	changePassword,
+	changeAvatar,
 	resendEmail,
 });

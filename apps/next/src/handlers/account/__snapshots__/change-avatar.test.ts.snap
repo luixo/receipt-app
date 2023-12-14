@@ -1,0 +1,25 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`account.changeAvatar > functionality > avatar changes to a given image 1`] = `
+{
+  "updated": {
+    "accounts": {
+      "id:6fbc201e-126e-4834-8710-3c2910e12e39": {
+        "avatarUrl": "https://fake-endpoint.org/test-bucket/avatars/6fbc201e-126e-4834-8710-3c2910e12e39.png",
+      },
+    },
+  },
+}
+`;
+
+exports[`account.changeAvatar > functionality > avatar changes to null 1`] = `
+{
+  "updated": {
+    "accounts": {
+      "id:fd2e5e36-7dd4-49d4-a77f-058e4840222b": {
+        "avatarUrl": null,
+      },
+    },
+  },
+}
+`;
