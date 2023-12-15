@@ -16,6 +16,7 @@ import { MdSync as SyncIcon } from "react-icons/md";
 import { z } from "zod";
 
 import { UserAvatar } from "app/components/app/user-avatar";
+import { FileInput } from "app/components/base/file-input";
 import { Text } from "app/components/base/text";
 import { ConfirmModal } from "app/components/confirm-modal";
 import { SSRContext } from "app/contexts/ssr-context";
@@ -30,6 +31,7 @@ import {
 	convertDataUrlToImageElement,
 	convertFileToDataUrl,
 } from "app/utils/images";
+import { noop } from "app/utils/utils";
 import type { UsersId } from "next-app/db/models";
 
 const MAX_ZOOM = 5;
@@ -101,7 +103,6 @@ export const AccountAvatarInput: React.FC<Props> = ({ account, children }) => {
 			},
 		},
 	});
-	const inputRef = React.useRef<HTMLInputElement>(null);
 
 	const [, setLastModified] =
 		React.useContext(SSRContext)[AVATAR_LAST_MODIFIED_KEY];
@@ -125,14 +126,9 @@ export const AccountAvatarInput: React.FC<Props> = ({ account, children }) => {
 		}),
 	);
 
-	const onChange = React.useCallback<
-		React.ChangeEventHandler<HTMLInputElement>
-	>(
-		async (event) => {
-			if (event.target.files && event.target.files.length > 0) {
-				const file = event.target.files[0]!;
-				form.setValue("avatar", await convertFileToDataUrl(file));
-			}
+	const onFileUpdate = React.useCallback(
+		async (file: File) => {
+			form.setValue("avatar", await convertFileToDataUrl(file));
 		},
 		[form],
 	);
@@ -145,8 +141,9 @@ export const AccountAvatarInput: React.FC<Props> = ({ account, children }) => {
 		async (_area, areaPixels) => form.setValue("croppedArea", areaPixels),
 		[form],
 	);
+	const inputClickRef = React.useRef<() => void>(noop);
 	const onInputButtonClick = React.useCallback(() => {
-		inputRef.current?.click();
+		inputClickRef.current();
 	}, []);
 
 	const submitHandler = React.useCallback<SubmitHandler<Form>>(
@@ -296,12 +293,7 @@ export const AccountAvatarInput: React.FC<Props> = ({ account, children }) => {
 				</>
 			)}
 
-			<input
-				ref={inputRef}
-				className="hidden"
-				onChange={onChange}
-				type="file"
-			/>
+			<FileInput onFileUpdate={onFileUpdate} onClickRef={inputClickRef} />
 		</View>
 	);
 };

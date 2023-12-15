@@ -2,9 +2,9 @@ import React from "react";
 import { View } from "react-native";
 
 import { H1 } from "@expo/html-elements";
-import Head from "next/head";
 import { IoMdArrowRoundBack as BackArrow } from "react-icons/io";
 
+import { PageTitle } from "app/components/base/page-title";
 import { Text } from "app/components/base/text";
 import { useRouter } from "app/hooks/use-router";
 
@@ -32,9 +32,7 @@ export const PageHeader: React.FC<Props> = ({
 	);
 	return (
 		<>
-			<Head>
-				<title>{`RA - ${title || children?.toString()}`}</title>
-			</Head>
+			<PageTitle>{title || children?.toString()}</PageTitle>
 			<View className="flex-row flex-wrap justify-between gap-4">
 				<View className="flex-row items-center gap-4" {...props}>
 					{backHref ? <BackArrow size={36} onClick={back} /> : null}

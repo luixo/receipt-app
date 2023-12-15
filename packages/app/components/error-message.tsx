@@ -16,6 +16,7 @@ import type {
 import { IoWarning as WarningIcon } from "react-icons/io5";
 
 import { Header } from "app/components/base/header";
+import { Text } from "app/components/base/text";
 import type { TRPCError } from "app/trpc";
 
 type Props = {
@@ -36,7 +37,7 @@ export const ErrorMessage: React.FC<Props> = ({ message, button }) => (
 		</CardHeader>
 		<Divider />
 		<CardBody>
-			<span className="whitespace-pre-wrap">{message}</span>
+			<Text className="whitespace-pre-wrap">{message}</Text>
 		</CardBody>
 		{button ? (
 			<>
