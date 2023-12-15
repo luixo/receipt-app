@@ -5,7 +5,7 @@ exports[`account.changeAvatar > functionality > avatar changes to a given image 
   "updated": {
     "accounts": {
       "id:6fbc201e-126e-4834-8710-3c2910e12e39": {
-        "avatarUrl": "https://fake-endpoint.org/test-bucket/avatars/6fbc201e-126e-4834-8710-3c2910e12e39.png",
+        "avatarUrl": "https://fake-endpoint.org/test-bucket/avatars/6fbc201e-126e-4834-8710-3c2910e12e39.png?lastModified=1577836800000",
       },
     },
   },

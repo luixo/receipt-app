@@ -19,13 +19,11 @@ import { UserAvatar } from "app/components/app/user-avatar";
 import { FileInput } from "app/components/base/file-input";
 import { Text } from "app/components/base/text";
 import { ConfirmModal } from "app/components/confirm-modal";
-import { SSRContext } from "app/contexts/ssr-context";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import type { TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
-import { AVATAR_LAST_MODIFIED_KEY } from "app/utils/cookie/avatar-last-modified";
 import {
 	MAX_AVATAR_SIDE_SIZE,
 	convertDataUrlToImageElement,
@@ -104,16 +102,11 @@ export const AccountAvatarInput: React.FC<Props> = ({ account, children }) => {
 		},
 	});
 
-	const [, setLastModified] =
-		React.useContext(SSRContext)[AVATAR_LAST_MODIFIED_KEY];
-
 	const updateAvatarMutation = trpc.account.changeAvatar.useMutation(
 		useTrpcMutationOptions(mutations.account.changeAvatar.options, {
 			onSuccess: () => {
 				disableAvatarEdit();
 				form.reset();
-				const lastModified = Date.now();
-				setLastModified(lastModified);
 			},
 		}),
 	);

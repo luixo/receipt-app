@@ -4,10 +4,8 @@ import { Avatar, tv } from "@nextui-org/react";
 import BoringAvatar from "boring-avatars";
 import { unstable_getImgProps as getImgProps } from "next/image";
 
-import { SSRContext } from "app/contexts/ssr-context";
 import type { TRPCQueryOutput } from "app/trpc";
 import { hslToRgb } from "app/utils/color";
-import { AVATAR_LAST_MODIFIED_KEY } from "app/utils/cookie/avatar-last-modified";
 import type { MakeOptional } from "app/utils/types";
 import type { UsersId } from "next-app/db/models";
 
@@ -53,17 +51,9 @@ export const useUserAvatarProps = ({
 	classNames,
 	...props
 }: Props) => {
-	const { [AVATAR_LAST_MODIFIED_KEY]: lastModifiedState } =
-		React.useContext(SSRContext);
-	const [lastModified] = lastModifiedState;
 	const size = getSize(props.size);
 	const { props: imgProps } = getImgProps({
-		src: account?.avatarUrl
-			? lastModified
-				? // Browser caches avatar and doesn't update on page refresh
-				  `${account.avatarUrl}?lastModified=${lastModified}`
-				: account.avatarUrl
-			: "",
+		src: account?.avatarUrl ?? "",
 		alt: "Avatar",
 		width: size,
 		height: size,

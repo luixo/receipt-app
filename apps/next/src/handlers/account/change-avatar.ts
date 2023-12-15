@@ -67,7 +67,9 @@ export const procedure = authProcedure
 		);
 		const avatarKey = [S3_AVATAR_PREFIX, `${ctx.auth.accountId}.png`].join("/");
 		await s3Client.putObject(avatarKey, validatedImage);
-		const url = [s3Client.endpoint, s3Client.bucket, avatarKey].join("/");
+		const url = `${[s3Client.endpoint, s3Client.bucket, avatarKey].join(
+			"/",
+		)}?lastModified=${Date.now()}`;
 		await database
 			.updateTable("accounts")
 			.set({ avatarUrl: url })

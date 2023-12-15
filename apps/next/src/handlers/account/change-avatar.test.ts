@@ -202,11 +202,11 @@ describe("account.changeAvatar", () => {
 				),
 			);
 			const key = [S3_AVATAR_PREFIX, `${accountId}.png`].join("/");
-			const url = [
+			const url = `${[
 				ctx.s3Options.mock.endpoint,
 				ctx.s3Options.mock.bucket,
 				key,
-			].join("/");
+			].join("/")}?lastModified=${Date.now()}`;
 			expect(result).toEqual({ url });
 			expect(ctx.s3Options.mock.getMessages()).toHaveLength(1);
 			const message = ctx.s3Options.mock.getMessages()[0]!;
