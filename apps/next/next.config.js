@@ -58,5 +58,12 @@ const nextConfig = {
 const plugins = [
 	(config) => withSentryConfig(config, { silent: true }),
 	(config) => withExpo(config),
+	(config) => {
+		if (process.env.ANALYZE_BUNDLE) {
+			// eslint-disable-next-line global-require
+			return require("@next/bundle-analyzer")()(config);
+		}
+		return config;
+	},
 ];
 module.exports = plugins.reduce((acc, plugin) => plugin(acc), nextConfig);

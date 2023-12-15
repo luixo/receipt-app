@@ -41,6 +41,7 @@
 	},
 	"devDependencies": {
 		"@faker-js/faker": "^8.0.2",
+		"@next/bundle-analyzer": "^14.0.4",
 		"@next/eslint-plugin-next": "^13.4.12",
 		"@types/cookie": "^0.5.1",
 		"@types/isomorphic-fetch": "^0.0.36",
