@@ -16,10 +16,10 @@ import { round } from "app/utils/math";
 import {
 	MAX_BATCH_DEBTS,
 	MIN_BATCH_DEBTS,
+	currencyCodeSchema,
 	currencyRateSchema,
 } from "app/utils/validation";
 import type { UsersId } from "next-app/db/models";
-import { currencyCodeSchema } from "next-app/handlers/validation";
 
 import { PlannedDebt } from "./planned-debt";
 
