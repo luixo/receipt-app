@@ -6,8 +6,9 @@ type Props = {
 	children?: string;
 };
 
-export const PageTitle = React.memo<Props>(({ children }) => (
+// add React.memo when https://github.com/vercel/next.js/issues/59655 is resolved
+export const PageTitle: React.FC<Props> = ({ children }) => (
 	<Head>
 		<title>{["RA", children].filter(Boolean).join(" - ")}</title>
 	</Head>
-));
+);
