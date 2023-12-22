@@ -3,7 +3,7 @@ import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
-import { createParam } from "solito";
+import { useRouter, useSearchParams } from "solito/navigation";
 import { z } from "zod";
 
 import { CurrencyInput } from "app/components/app/currency-input";
@@ -12,7 +12,6 @@ import { SignButtonGroup } from "app/components/app/sign-button-group";
 import { UsersSuggest } from "app/components/app/users-suggest";
 import { PageHeader } from "app/components/page-header";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
-import { useRouter } from "app/hooks/use-router";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
@@ -31,10 +30,9 @@ import { DebtDateInput } from "./debt-date-input";
 import { DebtNoteInput } from "./debt-note-input";
 import type { Form } from "./types";
 
-const { useParam } = createParam<{ userId: UsersId }>();
-
 export const AddDebtScreen: AppPage = () => {
-	const [userId] = useParam("userId");
+	const searchParams = useSearchParams<{ userId: UsersId }>();
+	const userId = searchParams?.get("userId");
 	const userQuery = trpc.users.get.useQuery(
 		{ id: userId || "unknown" },
 		{ enabled: Boolean(userId) },

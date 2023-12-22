@@ -1,19 +1,14 @@
 import React from "react";
 
-import { createParam } from "solito";
+import { useParams } from "solito/navigation";
 
 import { ReceiptItems } from "app/features/receipt-items/receipt-items-screen";
 import type { AppPage } from "next-app/types/page";
 
 import { Receipt } from "./receipt";
 
-const { useParam } = createParam<{ id: string }>();
-
 export const ReceiptScreen: AppPage = () => {
-	const [id] = useParam("id");
-	if (!id) {
-		throw new Error("No id in param");
-	}
+	const { id } = useParams<{ id: string }>();
 
 	const deleteLoadingState = React.useState(false);
 

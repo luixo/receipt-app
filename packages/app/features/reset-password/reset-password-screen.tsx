@@ -1,6 +1,6 @@
 import React from "react";
 
-import { createParam } from "solito";
+import { useSearchParams } from "solito/navigation";
 
 import { PageHeader } from "app/components/page-header";
 import { trpc } from "app/trpc";
@@ -8,10 +8,9 @@ import type { AppPage } from "next-app/types/page";
 
 import { ResetPassword } from "./reset-password";
 
-const { useParam } = createParam<{ token: string }>();
-
 export const ResetPasswordScreen: AppPage = () => {
-	const [token] = useParam("token");
+	const searchParams = useSearchParams<{ token: string }>();
+	const token = searchParams?.get("token") ?? undefined;
 	const resetPasswordIntentionQuery = trpc.resetPasswordIntentions.get.useQuery(
 		{ token: token! },
 		{ enabled: Boolean(token) },

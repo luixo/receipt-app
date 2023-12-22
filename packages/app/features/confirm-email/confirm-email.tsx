@@ -1,11 +1,11 @@
 import React from "react";
 
 import { Button, Spinner } from "@nextui-org/react";
+import { Link } from "solito/link";
 
 import { Header } from "app/components/base/header";
 import { EmptyCard } from "app/components/empty-card";
 import { ErrorMessage } from "app/components/error-message";
-import { useRouter } from "app/hooks/use-router";
 import type { TRPCMutationResult } from "app/trpc";
 
 type Props = {
@@ -14,11 +14,6 @@ type Props = {
 };
 
 export const ConfirmEmail: React.FC<Props> = ({ token, confirmMutation }) => {
-	const router = useRouter();
-	const navigateToHomePage = React.useCallback(
-		() => router.replace("/"),
-		[router],
-	);
 	if (!token) {
 		return (
 			<EmptyCard title="Something went wrong">
@@ -37,11 +32,11 @@ export const ConfirmEmail: React.FC<Props> = ({ token, confirmMutation }) => {
 	}
 	return (
 		<>
-			<Header>{confirmMutation.data.email}</Header>
+			<Header>{confirmMutation.data?.email}</Header>
 			<Header size="sm">Email verification successful!</Header>
-			<Button color="primary" onClick={navigateToHomePage}>
-				To home page
-			</Button>
+			<Link href="/">
+				<Button color="primary">To home page</Button>
+			</Link>
 		</>
 	);
 };

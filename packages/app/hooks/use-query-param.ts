@@ -1,13 +1,10 @@
 import React from "react";
 
-import { useRouter, useSearchParams } from "next/navigation";
 import { useQueryState } from "next-usequerystate";
-import { createParam } from "solito";
+import { useRouter, useSearchParams } from "solito/navigation";
 import type { Primitive } from "zod";
 
 import { id } from "app/utils/utils";
-
-const { useParam } = createParam<{ [K in string]: string }>();
 
 export type QueryParamOptions<T extends object | Primitive = string> = {
 	parse?: (input: string | undefined) => T;
@@ -19,7 +16,8 @@ export const useQueryParam = <T extends object | Primitive = string>(
 	paramName: string,
 	options: QueryParamOptions<T>,
 ) => {
-	const [serverSideQueryOffset] = useParam(paramName);
+	const searchParams = useSearchParams<{ [K in string]: string }>();
+	const serverSideQueryOffset = searchParams?.get(paramName) ?? undefined;
 	const parse = (options.parse || id) as NonNullable<typeof options.parse>;
 	const serialize = (options.serialize || id) as NonNullable<
 		typeof options.serialize

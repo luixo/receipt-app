@@ -21897,12 +21897,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"solito@npm:^4.1.3":
+"solito@npm:4.1.3":
   version: 4.1.3
   resolution: "solito@npm:4.1.3"
   dependencies:
     typescript: ^5.0.4
   checksum: 80dd57f953beeb7c8799e3db110b37ae39ee58b12bf99927b134f00af7ccf38f7ddf59d142820a52325dfc34ec78ba0ca8c49ad583d94ea5f7cf201ef971f4ff
+  languageName: node
+  linkType: hard
+
+"solito@patch:solito@npm%3A4.1.3#./patches/solito-npm-4.1.3.patch::locator=receipt-app%40workspace%3A.":
+  version: 4.1.3
+  resolution: "solito@patch:solito@npm%3A4.1.3#./patches/solito-npm-4.1.3.patch::version=4.1.3&hash=aefde2&locator=receipt-app%40workspace%3A."
+  dependencies:
+    typescript: ^5.0.4
+  checksum: aef70c334889ce4a94d281358f5a2ce6bd4e77c5a38c949d544b81e88dfe10c8dd8e767582a90de694c101934114a9837bee86386a6e396664c49cf674b7a4aa
   languageName: node
   linkType: hard
 

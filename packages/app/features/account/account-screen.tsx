@@ -3,12 +3,12 @@ import React from "react";
 import { Button, Spinner } from "@nextui-org/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { FaUser as AccountIcon } from "react-icons/fa";
+import { useRouter } from "solito/navigation";
 
 import { QueryErrorMessage } from "app/components/error-message";
 import { PageHeader } from "app/components/page-header";
 import { ChangePasswordScreen } from "app/features/change-password/change-password-screen";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
-import { useRouter } from "app/hooks/use-router";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import type { TRPCQuerySuccessResult } from "app/trpc";
@@ -30,7 +30,7 @@ const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 		useTrpcMutationOptions(mutations.account.logout.options, {
 			onSuccess: async () => {
 				await queryClient.resetQueries();
-				void router.replace("/");
+				router.replace("/");
 			},
 		}),
 	);

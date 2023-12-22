@@ -3,13 +3,13 @@ import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Spinner } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
+import { useRouter } from "solito/navigation";
 import { z } from "zod";
 
 import { Header } from "app/components/base/header";
 import { Input } from "app/components/base/input";
 import { EmptyCard } from "app/components/empty-card";
 import { QueryErrorMessage } from "app/components/error-message";
-import { useRouter } from "app/hooks/use-router";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import type { TRPCQueryResult } from "app/trpc";

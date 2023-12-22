@@ -1,15 +1,15 @@
 import React from "react";
 
 import { Spinner } from "@nextui-org/react";
+import { useRouter } from "solito/navigation";
 
 import { Text } from "app/components/base/text";
-import { useRouter } from "app/hooks/use-router";
 import type { AppPage } from "next-app/types/page";
 
 export const HomeScreen: AppPage = () => {
 	const router = useRouter();
 	React.useEffect(() => {
-		void router.replace("/receipts");
+		router.replace("/receipts");
 	}, [router]);
 	return (
 		<>

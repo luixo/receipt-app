@@ -7,6 +7,7 @@ import {
 } from "react-icons/bs";
 import { FaUser as AccountIcon, FaUsers as UsersIcon } from "react-icons/fa";
 import { MdAttachMoney as DebtsIcon } from "react-icons/md";
+import { useRouter } from "solito/navigation";
 
 import { QueryErrorMessage } from "app/components/error-message";
 import type { MenuElement } from "app/components/page";
@@ -14,7 +15,6 @@ import { Page } from "app/components/page";
 import { useConnectionIntentions } from "app/hooks/use-connection-intentions";
 import { useDebtsIntentions } from "app/hooks/use-debts-intentions";
 import { useNonResolvedReceipts } from "app/hooks/use-non-resolved-receipts";
-import { useRouter } from "app/hooks/use-router";
 import { trpc } from "app/trpc";
 
 const PROTECTED_ELEMENTS: MenuElement[] = [
@@ -54,7 +54,7 @@ export const ProtectedPage: React.FC<Props> = ({ children }) => {
 			accountQuery.error &&
 			accountQuery.error.data?.code === "UNAUTHORIZED"
 		) {
-			void router.push("/login");
+			router.push("/login");
 		}
 	}, [accountQuery.error, router]);
 

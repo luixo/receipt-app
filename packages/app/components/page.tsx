@@ -2,7 +2,7 @@ import React from "react";
 import { View } from "react-native";
 
 import { Badge, Link, tv } from "@nextui-org/react";
-import { useRouter } from "next/router";
+import { usePathname } from "solito/navigation";
 
 import { Text } from "app/components/base/text";
 
@@ -30,7 +30,7 @@ const MenuItemComponent: React.FC<MenuElement> = ({
 	text,
 	useBadgeAmount = useZero,
 }) => {
-	const { pathname } = useRouter();
+	const pathname = usePathname();
 	const amount = useBadgeAmount();
 	const selected = pathname === href;
 	const icon = <Icon size={24} />;

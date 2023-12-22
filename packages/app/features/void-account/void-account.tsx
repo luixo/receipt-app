@@ -1,11 +1,10 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Button } from "@nextui-org/react";
+import { Button, Link } from "@nextui-org/react";
 
 import { Header } from "app/components/base/header";
 import { ErrorMessage } from "app/components/error-message";
-import { useRouter } from "app/hooks/use-router";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
@@ -15,11 +14,6 @@ type Props = {
 };
 
 export const VoidAccount: React.FC<Props> = ({ token }) => {
-	const router = useRouter();
-	const navigateToHomePage = React.useCallback(
-		() => router.replace("/"),
-		[router],
-	);
 	const voidMutation = trpc.auth.voidAccount.useMutation(
 		useTrpcMutationOptions(mutations.auth.voidAccount.options),
 	);
@@ -34,12 +28,13 @@ export const VoidAccount: React.FC<Props> = ({ token }) => {
 				<Header size="sm" className="text-success">
 					Account removed succesfully
 				</Header>
-				<Button color="primary" onClick={navigateToHomePage}>
+				<Button color="primary" as={Link} href="/">
 					To home page
 				</Button>
 			</>
 		);
 	}
+	const { isPending } = voidMutation;
 	return (
 		<>
 			<Header>Are you sure you want to void your account?</Header>
@@ -47,8 +42,8 @@ export const VoidAccount: React.FC<Props> = ({ token }) => {
 				<Button
 					className="flex-1"
 					onClick={voidAccount}
-					isDisabled={voidMutation.isPending}
-					isLoading={voidMutation.isPending}
+					isDisabled={isPending}
+					isLoading={isPending}
 					color="danger"
 					type="submit"
 				>
@@ -56,9 +51,10 @@ export const VoidAccount: React.FC<Props> = ({ token }) => {
 				</Button>
 				<Button
 					className="flex-1"
+					as={isPending ? undefined : Link}
+					href={isPending ? undefined : "/"}
 					color="primary"
-					onClick={navigateToHomePage}
-					isDisabled={voidMutation.isPending}
+					isDisabled={isPending}
 				>
 					No
 				</Button>

@@ -1,8 +1,8 @@
 import React from "react";
 
 import { Button, ButtonGroup } from "@nextui-org/react";
+import { useRouter } from "solito/navigation";
 
-import { useRouter } from "app/hooks/use-router";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import type { TRPCQueryOutput } from "app/trpc";
@@ -32,7 +32,7 @@ export const InboundDebtIntention = React.forwardRef<HTMLDivElement, Props>(
 							if (!redirectToDebt) {
 								return;
 							}
-							void router.push(`/debts/${intention.id}`);
+							router.push(`/debts/${intention.id}`);
 						},
 					},
 				);

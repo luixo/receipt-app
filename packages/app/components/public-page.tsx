@@ -4,10 +4,10 @@ import {
 	BsPersonCheck as LoginIcon,
 	BsPersonPlusFill as RegisterIcon,
 } from "react-icons/bs";
+import { useRouter } from "solito/navigation";
 
 import type { MenuElement } from "app/components/page";
 import { Page } from "app/components/page";
-import { useRouter } from "app/hooks/use-router";
 import { trpc } from "app/trpc";
 
 const PUBLIC_ELEMENTS: MenuElement[] = [
@@ -32,7 +32,7 @@ export const PublicPage: React.FC<Props> = ({ children }) => {
 	const accountQuery = trpc.account.get.useQuery();
 	React.useEffect(() => {
 		if (accountQuery.status === "success") {
-			void router.replace("/");
+			router.replace("/");
 		}
 	}, [accountQuery.status, router]);
 

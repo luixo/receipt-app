@@ -1,6 +1,6 @@
 import React from "react";
 
-import { createParam } from "solito";
+import { useParams } from "solito/navigation";
 
 import { User as UserTitle } from "app/components/app/user";
 import { PageHeader } from "app/components/page-header";
@@ -9,13 +9,8 @@ import type { AppPage } from "next-app/types/page";
 
 import { User } from "./user";
 
-const { useParam } = createParam<{ id: string }>();
-
 export const UserScreen: AppPage = () => {
-	const [id] = useParam("id");
-	if (!id) {
-		throw new Error("No id in param");
-	}
+	const { id } = useParams<{ id: string }>();
 
 	const userQuery = trpc.users.get.useQuery({ id });
 	const userNameQuery = trpc.users.getName.useQuery({ id });

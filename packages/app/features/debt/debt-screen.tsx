@@ -1,18 +1,77 @@
 import React from "react";
 
-import { createParam } from "solito";
+import { Spinner } from "@nextui-org/react";
+import { useParams } from "solito/navigation";
 
+import { DebtControlButtons } from "app/components/app/debt-control-buttons";
+import { DebtSyncStatus } from "app/components/app/debt-sync-status";
+import { LoadableUser } from "app/components/app/loadable-user";
+import { QueryErrorMessage } from "app/components/error-message";
+import { PageHeader } from "app/components/page-header";
+import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
+import type { TRPCQuerySuccessResult } from "app/trpc";
+import { trpc } from "app/trpc";
 import type { AppPage } from "next-app/types/page";
 
-import { Debt } from "./debt";
+import { DebtAmountInput } from "./debt-amount-input";
+import { DebtDateInput } from "./debt-date-input";
+import { DebtNoteInput } from "./debt-note-input";
+import { DebtReceiptLink } from "./debt-receipt-link";
+import { DebtRemoveButton } from "./debt-remove-button";
+import { DebtSignButtonGroup } from "./debt-sign-button-group";
 
-const { useParam } = createParam<{ id: string }>();
+type InnerProps = {
+	query: TRPCQuerySuccessResult<"debts.get">;
+};
+
+export const DebtInner: React.FC<InnerProps> = ({ query }) => {
+	const debt = query.data;
+	const [isRemoving, setRemoving] = React.useState(false);
+	const currency = useFormattedCurrency(debt.currencyCode);
+
+	return (
+		<>
+			<PageHeader
+				backHref={`/debts/user/${debt.userId}`}
+				aside={<DebtControlButtons debt={debt} />}
+				endContent={
+					<>
+						<DebtSyncStatus debt={debt} size="lg" />
+						{debt.receiptId ? (
+							<DebtReceiptLink receiptId={debt.receiptId} />
+						) : null}
+					</>
+				}
+			>
+				{`${debt.amount} ${currency} debt`}
+			</PageHeader>
+			<LoadableUser className="self-start" id={debt.userId} />
+			<DebtSignButtonGroup debt={debt} disabled={isRemoving} />
+			<DebtAmountInput debt={debt} isLoading={isRemoving} />
+			<DebtDateInput debt={debt} isLoading={isRemoving} />
+			<DebtNoteInput debt={debt} isLoading={isRemoving} />
+			<DebtRemoveButton
+				className="self-end"
+				debt={debt}
+				setLoading={setRemoving}
+			/>
+		</>
+	);
+};
 
 export const DebtScreen: AppPage = () => {
-	const [id] = useParam("id");
-	if (!id) {
-		throw new Error("No id in param");
+	const { id } = useParams<{ id: string }>();
+	const query = trpc.debts.get.useQuery({ id });
+	if (query.status === "pending") {
+		return (
+			<>
+				<PageHeader>Debt</PageHeader>
+				<Spinner size="lg" />
+			</>
+		);
 	}
-
-	return <Debt id={id} />;
+	if (query.status === "error") {
+		return <QueryErrorMessage query={query} />;
+	}
+	return <DebtInner query={query} />;
 };

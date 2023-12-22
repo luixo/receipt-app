@@ -1,0 +1,29 @@
+diff --git a/build/app/navigation/use-update-search-params.js b/build/app/navigation/use-update-search-params.js
+index 539ffcfa923a2064873ecf461023d0ac3d6b09d0..88399a404b4a2ca0da471eb04c40d97b4ae132b4 100644
+--- a/build/app/navigation/use-update-search-params.js
++++ b/build/app/navigation/use-update-search-params.js
+@@ -21,7 +21,8 @@ export default function () {
+             }
+         });
+         const action = router[options?.webBehavior ?? (shouldReplace ? 'replace' : 'push')];
+-        action(`${pathname}?${next.toString()}`);
++        const nextStringified = next.toString();
++        action(`${pathname}${nextStringified ? `?${nextStringified}` : ''}`);
+     }, [router]);
+ }
+ //# sourceMappingURL=use-update-search-params.js.map
+\ No newline at end of file
+diff --git a/src/app/navigation/use-update-search-params.ts b/src/app/navigation/use-update-search-params.ts
+index b0f758b00f91e4f68b0f3224b785aac20470c10a..d5c35c4759f6e173633d4e215df6e71853ce7fe3 100644
+--- a/src/app/navigation/use-update-search-params.ts
++++ b/src/app/navigation/use-update-search-params.ts
+@@ -31,7 +31,8 @@ export default function <
+       const action =
+         router[options?.webBehavior ?? (shouldReplace ? 'replace' : 'push')]
+ 
+-      action(`${pathname}?${next.toString()}`)
++      const nextStringified = next.toString();
++      action(`${pathname}${nextStringified ? `?${nextStringified}` : ''}`);
+     },
+     [router]
+   )

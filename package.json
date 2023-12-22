@@ -88,7 +88,8 @@
 		"@trpc/next@^11.0.0-alpha-next-2023-11-24-13-58-38.113": "patch:@trpc/next@npm%3A11.0.0-alpha-next-2023-11-24-13-58-38.113#./patches/@trpc-next-npm-11.0.0-alpha-next-2023-11-24-13-58-38.113.patch",
 		"next@^14.0.3": "patch:next@npm%3A14.0.3#./patches/next-npm-14.0.3.patch",
 		"react-ssr-prepass@^1.5.0": "patch:react-ssr-prepass@npm%3A1.5.0#./patches/react-ssr-prepass-npm-1.5.0.patch",
-		"next-usequerystate@1.13.0": "patch:next-usequerystate@npm%3A1.13.0#./patches/next-usequerystate-npm-1.13.0.patch"
+		"next-usequerystate@1.13.0": "patch:next-usequerystate@npm%3A1.13.0#./patches/next-usequerystate-npm-1.13.0.patch",
+		"solito@^4.1.3": "patch:solito@npm%3A4.1.3#./patches/solito-npm-4.1.3.patch"
 	},
 	"nextBundleAnalysis": {
 		"budget": 358400,

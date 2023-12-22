@@ -42,6 +42,7 @@ const nextConfig = {
 	ignorePages: "\\.spec\\.tsx?$",
 	experimental: {
 		optimizeCss: true,
+		windowHistorySupport: true,
 	},
 	images: {
 		remotePatterns: [

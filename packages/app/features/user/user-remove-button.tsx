@@ -1,7 +1,8 @@
 import React from "react";
 
+import { useRouter } from "solito/navigation";
+
 import { RemoveButton } from "app/components/remove-button";
-import { useRouter } from "app/hooks/use-router";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import type { TRPCQueryOutput } from "app/trpc";

@@ -4,6 +4,7 @@ import { View } from "react-native";
 import { Button, Divider, Link, Spinner } from "@nextui-org/react";
 import { BsCurrencyExchange as ExchangeIcon } from "react-icons/bs";
 import { MdAdd as AddIcon } from "react-icons/md";
+import { useRouter } from "solito/navigation";
 
 import { DebtsGroup } from "app/components/app/debts-group";
 import { LoadableUser } from "app/components/app/loadable-user";
@@ -11,7 +12,6 @@ import { QueryErrorMessage } from "app/components/error-message";
 import { PageHeader } from "app/components/page-header";
 import { ShowResolvedDebtsOption } from "app/features/settings/show-resolved-debts-option";
 import { useAggregatedDebts } from "app/hooks/use-aggregated-debts";
-import { useRouter } from "app/hooks/use-router";
 import type { TRPCQuerySuccessResult } from "app/trpc";
 import { trpc } from "app/trpc";
 import { useShowResolvedDebts } from "next-app/hooks/use-show-resolved-debts";
@@ -30,7 +30,7 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 	const router = useRouter();
 	React.useEffect(() => {
 		if (query.data.length === 0) {
-			void router.replace("/debts");
+			router.replace("/debts");
 		}
 	}, [query.data, router]);
 	const userQuery = trpc.users.get.useQuery({ id: userId });

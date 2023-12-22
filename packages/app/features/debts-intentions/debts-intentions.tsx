@@ -2,7 +2,7 @@ import React from "react";
 import { View } from "react-native";
 
 import { Spinner } from "@nextui-org/react";
-import { useRouter } from "next/router";
+import { usePathname } from "solito/navigation";
 
 import { LoadableUser } from "app/components/app/loadable-user";
 import { EmptyCard } from "app/components/empty-card";
@@ -24,16 +24,16 @@ type Props = {
 
 const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 	const intentionsRefs = useRefs<HTMLDivElement>();
-	const router = useRouter();
+	const pathname = usePathname() || "";
 	React.useEffect(() => {
-		const hash = router.asPath.split("#")[1];
+		const hash = pathname.split("#")[1];
 		if (hash) {
 			const matchedIntention = data.find((intention) => intention.id === hash);
 			if (matchedIntention && intentionsRefs.current[hash]) {
 				intentionsRefs.current[hash]?.scrollIntoView();
 			}
 		}
-	}, [data, router.asPath, intentionsRefs]);
+	}, [data, pathname, intentionsRefs]);
 	if (data.length === 0) {
 		return (
 			<EmptyCard title="You have no incoming sync requests">

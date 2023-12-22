@@ -10,5 +10,5 @@ type Fixtures = {
 export const test = originalTest.extend<Fixtures>({
 	voidButton: ({ page }, use) => use(page.locator("button[type=submit]")),
 	cancelButton: ({ page }, use) =>
-		use(page.locator("button").filter({ hasText: "No" })),
+		use(page.locator("button").or(page.locator("a")).filter({ hasText: "No" })),
 });
