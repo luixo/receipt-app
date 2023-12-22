@@ -250,5 +250,5 @@ export const convertParticipantToUser = (
 	name: participant.name,
 	// TODO: remove when receipt item participants are also moved to undefined
 	publicName: participant.publicName ?? undefined,
-	account: participant.account,
+	connectedAccount: participant.connectedAccount,
 });

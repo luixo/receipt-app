@@ -169,9 +169,10 @@ export const userItemSchema = z.strictObject({
 	name: userNameSchema,
 	publicName: userNameSchema.optional(),
 	connectedAccount: z
-		.strictObject({
+		.object({
 			id: accountIdSchema,
 			email: z.string().email(),
+			avatarUrl: z.string().optional(),
 		})
 		.optional(),
 });

@@ -279,7 +279,7 @@ describe("receiptParticipants.add", () => {
 			);
 			const users = [
 				{
-					account: { id: accountId, email, avatarUrl },
+					connectedAccount: { id: accountId, email, avatarUrl },
 					name,
 					publicName: null,
 					id: selfUserId,
@@ -287,7 +287,7 @@ describe("receiptParticipants.add", () => {
 					role: "owner" as const,
 				},
 				{
-					account: undefined,
+					connectedAccount: undefined,
 					name: user.name,
 					publicName: user.publicName ?? null,
 					id: user.id,
@@ -295,7 +295,7 @@ describe("receiptParticipants.add", () => {
 					role: "editor" as const,
 				},
 				{
-					account: {
+					connectedAccount: {
 						email: foreignEmail,
 						id: foreignAccountId,
 						avatarUrl: undefined,

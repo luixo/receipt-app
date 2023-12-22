@@ -112,7 +112,7 @@ export const test = originalTest.extend<Fixtures>({
 					{
 						remoteUserId: consts.account.id as UsersId,
 						publicName: null,
-						account: {
+						connectedAccount: {
 							id: consts.account.id,
 							email: consts.account.email,
 							avatarUrl: consts.account.avatarUrl,
@@ -125,7 +125,7 @@ export const test = originalTest.extend<Fixtures>({
 					...users.map((user) => ({
 						remoteUserId: user.id,
 						publicName: null,
-						account: undefined,
+						connectedAccount: undefined,
 						role: "editor" as const,
 						resolved: faker.datatype.boolean(),
 						added: faker.date.recent({ days: 5, refDate: new Date() }),
@@ -240,7 +240,7 @@ export const test = originalTest.extend<Fixtures>({
 							remoteId: consts.selfUser.id,
 							name: consts.selfUser.name,
 							publicName: undefined,
-							account: {
+							connectedAccount: {
 								id: consts.account.id,
 								email: consts.account.email,
 								avatarUrl: consts.account.avatarUrl,
@@ -254,7 +254,7 @@ export const test = originalTest.extend<Fixtures>({
 							remoteId: matchedUser.id,
 							name: matchedUser.name,
 							publicName: undefined,
-							account: undefined,
+							connectedAccount: undefined,
 							localId: matchedUser.id,
 						};
 					}

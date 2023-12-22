@@ -114,7 +114,7 @@ export const addReceiptParticipants = async (
 		return {
 			added: addedDatum.added,
 			role: receiptOwnerId === id ? ("owner" as const) : role,
-			account:
+			connectedAccount:
 				email === null || accountId === null
 					? undefined
 					: { email, id: accountId, avatarUrl: avatarUrl || undefined },

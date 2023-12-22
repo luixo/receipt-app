@@ -104,7 +104,7 @@ describe("users.get", () => {
 				const caller = router.createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({ id: userId });
 				expect(result).toStrictEqual<typeof result>({
-					account: {
+					connectedAccount: {
 						id: foreignAccountId,
 						email: foreignEmail,
 						avatarUrl: foreignAvatarUrl,
@@ -129,7 +129,7 @@ describe("users.get", () => {
 				const caller = router.createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({ id: userId });
 				expect(result).toStrictEqual<typeof result>({
-					account: {
+					connectedAccount: {
 						id: foreignAccountId,
 						email: foreignEmail,
 						avatarUrl: undefined,
@@ -149,7 +149,7 @@ describe("users.get", () => {
 				const caller = router.createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({ id: userId });
 				expect(result).toStrictEqual<typeof result>({
-					account: undefined,
+					connectedAccount: undefined,
 					localId: userId,
 					name,
 					publicName: undefined,
@@ -200,7 +200,7 @@ describe("users.get", () => {
 
 					const result = await caller.procedure({ id: foreignUserId });
 					expect(result).toStrictEqual<typeof result>({
-						account: undefined,
+						connectedAccount: undefined,
 						localId: null,
 						name: foreignPublicName || name,
 						publicName: foreignPublicName,
@@ -243,7 +243,7 @@ describe("users.get", () => {
 
 					const result = await caller.procedure({ id: foreignUserId });
 					expect(result).toStrictEqual<typeof result>({
-						account: undefined,
+						connectedAccount: undefined,
 						localId: null,
 						name,
 						publicName: undefined,
@@ -288,7 +288,7 @@ describe("users.get", () => {
 					const caller = router.createCaller(createAuthContext(ctx, sessionId));
 					const result = await caller.procedure({ id: foreignUserId });
 					expect(result).toStrictEqual<typeof result>({
-						account: {
+						connectedAccount: {
 							id: connectedAccountId,
 							email: connectedEmail,
 							avatarUrl: connectedAvatarUrl,
@@ -316,7 +316,7 @@ describe("users.get", () => {
 					const caller = router.createCaller(createAuthContext(ctx, sessionId));
 					const result = await caller.procedure({ id: foreignSelfUserId });
 					expect(result).toStrictEqual<typeof result>({
-						account: {
+						connectedAccount: {
 							id: accountId,
 							email: account.email,
 							avatarUrl: account.avatarUrl,
@@ -351,7 +351,7 @@ describe("users.get", () => {
 					const caller = router.createCaller(createAuthContext(ctx, sessionId));
 					const result = await caller.procedure({ id: foreignAccountUserId });
 					expect(result).toStrictEqual<typeof result>({
-						account: {
+						connectedAccount: {
 							id: foreignAccountId,
 							email: foreignEmail,
 							avatarUrl: undefined,

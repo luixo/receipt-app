@@ -136,7 +136,7 @@ const getReceiptParticipants = async (
 		}) => ({
 			...participant,
 			name: name ?? theirPublicName ?? theirName,
-			account:
+			connectedAccount:
 				accountId === null || email === null
 					? undefined
 					: {
@@ -186,7 +186,8 @@ export const procedure = authProcedure
 		return {
 			role:
 				participants.find(
-					(participant) => participant.account?.id === ctx.auth.accountId,
+					(participant) =>
+						participant.connectedAccount?.id === ctx.auth.accountId,
 				)?.role ?? "owner",
 			items,
 			participants,

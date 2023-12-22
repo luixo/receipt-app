@@ -81,11 +81,7 @@ export const UsersSuggest: React.FC<Props> = ({
 						user.name.toLowerCase().includes(value.toLowerCase()) ||
 						user.publicName?.toLowerCase().includes(value.toLowerCase())
 				: () => true,
-		)
-		.map(({ connectedAccount, ...user }) => ({
-			...user,
-			email: connectedAccount?.email,
-		}));
+		);
 	const topFetchedUsersIds = topFetchedUsers.map(({ id }) => id);
 
 	const fetchedUsers = (
@@ -93,15 +89,10 @@ export const UsersSuggest: React.FC<Props> = ({
 			(acc, page) => [...acc, ...page.items],
 			[],
 		) ?? []
-	)
-		.filter(
-			(user) =>
-				!filterIds.includes(user.id) && !topFetchedUsersIds.includes(user.id),
-		)
-		.map(({ connectedAccount, ...user }) => ({
-			...user,
-			email: connectedAccount?.email,
-		}));
+	).filter(
+		(user) =>
+			!filterIds.includes(user.id) && !topFetchedUsersIds.includes(user.id),
+	);
 
 	const onSelectionChange = React.useCallback(
 		(key: string | number | null) => {

@@ -77,7 +77,7 @@ export const AddDebtScreen: AppPage = () => {
 				id: user.remoteId,
 				name: user.name,
 				publicName: user.publicName,
-				connectedAccount: user.account,
+				connectedAccount: user.connectedAccount,
 			});
 		}
 	}, [userQuery.data, form]);

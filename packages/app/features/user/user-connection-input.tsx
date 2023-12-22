@@ -46,10 +46,12 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 		getValue,
 		setValue,
 	} = useSingleInput({
-		initialValue: user.account?.email ?? "",
+		initialValue: user.connectedAccount?.email ?? "",
 		schema: emailSchema,
 	});
-	const [inputShown, setInputShown] = React.useState(Boolean(user.account));
+	const [inputShown, setInputShown] = React.useState(
+		Boolean(user.connectedAccount),
+	);
 
 	const cancelRequestMutation =
 		trpc.accountConnectionIntentions.remove.useMutation(
@@ -135,10 +137,10 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 			mutation={[connectUserMutation, unlinkMutation]}
 			fieldError={inputState.error}
 			isDisabled={isLoading}
-			isReadOnly={Boolean(user.account)}
+			isReadOnly={Boolean(user.connectedAccount)}
 			endContent={
 				<>
-					{user.account ? (
+					{user.connectedAccount ? (
 						<Button
 							title="Unlink user from email"
 							variant="light"

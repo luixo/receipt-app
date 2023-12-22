@@ -7,15 +7,21 @@ export const options: UseContextedMutationOptions<"users.unlink"> = {
 			get: (controller) =>
 				controller.update(
 					variables.id,
-					(user) => ({ ...user, account: undefined }),
-					(snapshot) => (user) => ({ ...user, account: snapshot.account }),
+					(user) => ({ ...user, connectedAccount: undefined }),
+					(snapshot) => (user) => ({
+						...user,
+						connectedAccount: snapshot.connectedAccount,
+					}),
 				),
 			getName: undefined,
 			getPaged: (controller) =>
 				controller.update(
 					variables.id,
-					(user) => ({ ...user, account: undefined }),
-					(snapshot) => (user) => ({ ...user, account: snapshot.account }),
+					(user) => ({ ...user, connectedAccount: undefined }),
+					(snapshot) => (user) => ({
+						...user,
+						connectedAccount: snapshot.connectedAccount,
+					}),
 				),
 		}),
 	errorToastOptions: () => (error) => ({

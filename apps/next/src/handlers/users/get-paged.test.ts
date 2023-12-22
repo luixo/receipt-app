@@ -164,7 +164,7 @@ describe("users.getPaged", () => {
 							id: userObject.id,
 							name: userObject.name,
 							publicName: userObject.publicName,
-							account: matchedAccount
+							connectedAccount: matchedAccount
 								? {
 										id: matchedAccount.id,
 										email: matchedAccount.email,

@@ -53,7 +53,7 @@ export const procedure = authProcedure
 				.map(({ publicName, email, accountId, avatarUrl, ...user }) => ({
 					...user,
 					publicName: publicName === null ? undefined : publicName,
-					account:
+					connectedAccount:
 						accountId === null || email === null
 							? undefined
 							: {

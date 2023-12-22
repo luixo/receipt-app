@@ -15,10 +15,10 @@ const wrapper = tv({
 
 type Props = {
 	id: UsersId;
-	account?: MakeOptional<
+	connectedAccount?: MakeOptional<
 		Pick<
 			NonNullable<
-				TRPCQueryOutput<"users.getPaged">["items"][number]["account"]
+				TRPCQueryOutput<"users.getPaged">["items"][number]["connectedAccount"]
 			>,
 			"id" | "avatarUrl"
 		>
@@ -46,14 +46,14 @@ const COLORS = new Array(SECTORS)
 
 export const useUserAvatarProps = ({
 	id,
-	account,
+	connectedAccount,
 	className,
 	classNames,
 	...props
 }: Props) => {
 	const size = getSize(props.size);
 	const { props: imgProps } = getImgProps({
-		src: account?.avatarUrl ?? "",
+		src: connectedAccount?.avatarUrl ?? "",
 		alt: "Avatar",
 		width: size,
 		height: size,
@@ -65,7 +65,7 @@ export const useUserAvatarProps = ({
 		fallback: (
 			<BoringAvatar
 				size={size}
-				name={account?.id || id}
+				name={connectedAccount?.id || id}
 				variant="beam"
 				colors={COLORS}
 			/>

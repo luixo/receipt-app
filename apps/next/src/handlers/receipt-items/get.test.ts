@@ -78,7 +78,7 @@ const getParticipants = (
 					? selfMatchedUser.name
 					: foreignMatchedUser.publicName || foreignMatchedUser.name,
 				publicName: selfMatchedUser?.publicName ?? null,
-				account:
+				connectedAccount:
 					foreignMatchedUser.connectedAccountId && matchedAccount?.email
 						? {
 								id: foreignMatchedUser.connectedAccountId,

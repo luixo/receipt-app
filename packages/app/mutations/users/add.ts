@@ -12,14 +12,14 @@ export const options: UseContextedMutationOptions<"users.add"> = {
 						localId: id,
 						name: variables.name,
 						publicName: undefined,
-						account: undefined,
+						connectedAccount: undefined,
 					}),
 				getPaged: (controller) =>
 					controller.add({
 						id,
 						name: variables.name,
 						publicName: undefined,
-						account: undefined,
+						connectedAccount: undefined,
 					}),
 				getName: (controller) => controller.upsert(id, variables.name),
 			});

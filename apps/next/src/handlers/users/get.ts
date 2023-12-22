@@ -39,7 +39,7 @@ export const procedure = authProcedure
 				...user,
 				publicName: publicName === null ? undefined : publicName,
 				localId: user.remoteId as UsersId | null,
-				account:
+				connectedAccount:
 					email === null || accountId === null
 						? undefined
 						: { id: accountId, email, avatarUrl: avatarUrl || undefined },
@@ -128,7 +128,7 @@ export const procedure = authProcedure
 				publicName:
 					userResult.publicName === null ? undefined : userResult.publicName,
 				remoteId: input.id,
-				account: {
+				connectedAccount: {
 					id: userResult.accountId,
 					email: userResult.email,
 					avatarUrl: userResult.avatarUrl || undefined,
@@ -143,7 +143,7 @@ export const procedure = authProcedure
 					? undefined
 					: userResult.theirPublicName,
 			remoteId: input.id,
-			account: undefined,
+			connectedAccount: undefined,
 			localId: null as UsersId | null,
 		};
 	});
