@@ -7,7 +7,6 @@ import {
 	schemas,
 } from "app/utils/cookie-data";
 import { noop } from "app/utils/utils";
-import type { getCookies } from "next-app/utils/client-cookies";
 
 // The data above + data we add on each render
 export type SSRContextData = CookieValues & {
@@ -23,7 +22,7 @@ export type SSRContextType = Omit<SSRContextData, keyof CookieValues> & {
 } & CookieStates;
 
 export const getSSRContextCookieData = (
-	cookies: ReturnType<typeof getCookies> = {},
+	cookies: Partial<Record<string, string>> = {},
 ): CookieValues =>
 	Object.entries(schemas).reduce<CookieValues>((acc, [key, schema]) => {
 		let parsedValue = null;

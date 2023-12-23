@@ -8,14 +8,13 @@ import findFreePorts from "find-free-ports";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import type { TestContext } from "@tests/backend/utils/test";
-import type { LinkHeaders } from "app/utils/trpc";
 import { getLinks, transformer } from "app/utils/trpc";
 import { createContext } from "next-app/handlers/context";
 
 export const getClientServer = async <R extends AnyRouter>(
 	ctx: TestContext,
 	router: R,
-	headers?: LinkHeaders,
+	headers: Partial<Parameters<typeof getLinks>[1]["headers"]> = {},
 ) => {
 	const port = (await findFreePorts())[0]!;
 	const httpServer = createHTTPServer({
@@ -34,7 +33,16 @@ export const getClientServer = async <R extends AnyRouter>(
 	});
 	return {
 		client: createTRPCClient<R>({
-			links: getLinks(`http://localhost:${port}`, { headers, keepError: true }),
+			links: getLinks(`http://localhost:${port}`, {
+				headers: {
+					debug: undefined,
+					cookie: undefined,
+					"x-controller-id": undefined,
+					"x-proxy-port": undefined,
+					...headers,
+				},
+				keepError: true,
+			}),
 			transformer,
 		} as unknown as CreateTRPCClientOptions<R>),
 		start: () =>

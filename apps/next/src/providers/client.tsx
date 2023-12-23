@@ -1,6 +1,8 @@
 import React from "react";
 
-import { getSSRContextCookieData } from "app/contexts/ssr-context";
+import type { NextParsedUrlQuery } from "next/dist/server/request-meta";
+
+import type { SSRContextData } from "app/contexts/ssr-context";
 import { CookieProvider } from "app/providers/cookie";
 import { NavigationProvider } from "app/providers/navigation";
 import { PersisterProvider } from "app/providers/persist-client";
@@ -12,21 +14,27 @@ import { SSRDataProvider } from "app/providers/ssr-data";
 import { ThemeProvider } from "app/providers/theme";
 import { TrpcProvider } from "app/providers/trpc";
 
-const App: React.FC = () => (
+type Props = {
+	searchParams: NextParsedUrlQuery;
+	ssrData: SSRContextData;
+};
+
+export const ClientProvider: React.FC<React.PropsWithChildren<Props>> = ({
+	children,
+	ssrData,
+	searchParams,
+}) => (
 	<QueryClientProvider>
 		<TrpcProvider>
 			<PersistStorageProvider>
 				<PersisterProvider>
 					<CookieProvider>
-						<SSRDataProvider
-							data={{ ...getSSRContextCookieData(), nowTimestamp: Date.now() }}
-						>
-							{/* TODO: add react native query params */}
-							<SearchParamsProvider searchParams={{}}>
+						<SSRDataProvider data={ssrData}>
+							<SearchParamsProvider searchParams={searchParams}>
 								<ThemeProvider>
-									<QueryDevToolsProvider>
-										<NavigationProvider />
-									</QueryDevToolsProvider>
+									<NavigationProvider>
+										<QueryDevToolsProvider>{children}</QueryDevToolsProvider>
+									</NavigationProvider>
 								</ThemeProvider>
 							</SearchParamsProvider>
 						</SSRDataProvider>
@@ -36,5 +44,3 @@ const App: React.FC = () => (
 		</TrpcProvider>
 	</QueryClientProvider>
 );
-
-export default App;

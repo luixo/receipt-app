@@ -17,7 +17,6 @@ import {
 	TZ_OFFSET_COOKIE_NAME,
 	timezoneOffsetSchema,
 } from "app/utils/cookie/tz-offset";
-import type { getCookies } from "next-app/utils/client-cookies";
 
 export const schemas = {
 	// Syncing timezone on SSR and CSR
@@ -47,7 +46,7 @@ export type CookieStates = {
 };
 
 export const getCookieMappingFromCookies = (
-	cookies: ReturnType<typeof getCookies> = {},
+	cookies: Partial<Record<string, string>> = {},
 ): CookieValues =>
 	Object.entries(schemas).reduce<CookieValues>((acc, [key, schema]) => {
 		let parsedValue = null;

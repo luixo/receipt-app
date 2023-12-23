@@ -1,5 +1,5 @@
 import React from "react";
-import * as ReactNative from "react-native";
+import { useColorScheme } from "react-native";
 
 import { NextUIProvider } from "@nextui-org/react";
 import { useRouter } from "solito/navigation";
@@ -14,7 +14,7 @@ export const ThemeProvider: React.FC<React.PropsWithChildren<object>> = ({
 }) => {
 	const [selectedColorMode] = useSelectedColorModeCookie();
 	const [lastColorMode, setLastColorMode] = useLastColorModeCookie();
-	const colorScheme = ReactNative.useColorScheme();
+	const colorScheme = useColorScheme();
 	React.useEffect(() => {
 		if (!colorScheme) {
 			return;

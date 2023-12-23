@@ -9,7 +9,6 @@ import {
 	getQueryClientConfig,
 	transformer,
 } from "app/utils/trpc";
-import { omitUndefined } from "app/utils/utils";
 import type { AppRouter } from "next-app/pages/api/trpc/[trpc]";
 import {
 	AUTH_COOKIE,
@@ -37,15 +36,16 @@ export const trpcNext = createTRPCNext<
 		const linkUrl = isBrowser
 			? TRPC_ENDPOINT
 			: getSsrHost((getConfig() as NextConfig).serverRuntimeConfig?.port ?? 0);
-		// we omit to  not let stringified "undefined" get passed to the server
-		const headers = omitUndefined({
-			debug: hasDebug ? "true" : undefined,
-			cookie: authToken ? serialize(AUTH_COOKIE, authToken) : undefined,
-			"x-proxy-port": proxyPort ? String(proxyPort) : undefined,
-			"x-controller-id": controllerId,
-		});
 		return {
-			links: getLinks(linkUrl, { useBatch: isBrowser, headers }),
+			links: getLinks(linkUrl, {
+				useBatch: isBrowser,
+				headers: {
+					debug: hasDebug ? "true" : undefined,
+					cookie: authToken ? serialize(AUTH_COOKIE, authToken) : undefined,
+					"x-proxy-port": proxyPort ? String(proxyPort) : undefined,
+					"x-controller-id": controllerId,
+				},
+			}),
 			queryClientConfig: getQueryClientConfig(),
 			transformer,
 		};

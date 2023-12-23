@@ -14,6 +14,8 @@ export const getTrpcClient = (req: NextApiRequest) =>
 			headers: {
 				debug: req.query.debug ? "true" : undefined,
 				cookie: req.headers.cookie,
+				"x-proxy-port": undefined,
+				"x-controller-id": undefined,
 			},
 		}),
 		transformer,

@@ -1,6 +1,7 @@
 import * as React from "react";
 import { AppRegistry } from "react-native";
 
+import { getCookie } from "cookies-next";
 import { extractCss } from "goober";
 import NextDocument, { Head, Html, Main, NextScript } from "next/document";
 
@@ -11,7 +12,6 @@ import {
 } from "app/utils/cookie/color-modes";
 import { schemas } from "app/utils/cookie-data";
 import { NATIVE_STYLESHEET_PRELOAD_ID } from "next-app/hooks/use-remove-preloaded-css";
-import { getCookie } from "next-app/utils/client-cookies";
 
 const getNativeCss = () => {
 	AppRegistry.registerComponent("Main", () => Main);

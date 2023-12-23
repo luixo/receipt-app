@@ -1,14 +1,11 @@
-// on web, we provide trpc context via withTRPC wrapper in _app.tsx
-
 import React from "react";
 
+import { CookieContext } from "app/contexts/cookie-context";
+import type { SSRContextData } from "app/contexts/ssr-context";
 import { SSRContext } from "app/contexts/ssr-context";
 import type { CookieStates } from "app/utils/cookie-data";
 import { getCookieStatesFromValues, schemas } from "app/utils/cookie-data";
 import { updateSetStateAction } from "app/utils/utils";
-import { deleteCookie, setCookie } from "next-app/utils/client-cookies";
-
-import type { Props } from "./index";
 
 type SetValues = {
 	[K in keyof CookieStates]: CookieStates[K][1];
@@ -20,11 +17,15 @@ type DeleteValues = {
 
 type CookieKey = keyof CookieStates;
 
-export const SSRProvider: React.FC<React.PropsWithChildren<Props>> = ({
+export type Props = {
+	data: SSRContextData;
+};
+
+export const SSRDataProvider: React.FC<React.PropsWithChildren<Props>> = ({
 	children,
-	nowTimestamp,
-	...ssrContext
+	data: { nowTimestamp, ...data },
 }) => {
+	const { setCookie, deleteCookie } = React.useContext(CookieContext);
 	const [isMounted, setMounted] = React.useState(false);
 	React.useEffect(() => setMounted(true), []);
 	const [ssrState, setSsrState] = React.useState(
@@ -32,9 +33,9 @@ export const SSRProvider: React.FC<React.PropsWithChildren<Props>> = ({
 			Object.fromEntries(
 				Object.keys(schemas).map((key) => [
 					key,
-					ssrContext[key as keyof typeof schemas],
+					data[key as keyof typeof schemas],
 				]),
-			) as typeof ssrContext,
+			) as typeof data,
 	);
 	const updateValue = React.useCallback(
 		<K extends CookieKey>(key: K) =>
@@ -49,7 +50,7 @@ export const SSRProvider: React.FC<React.PropsWithChildren<Props>> = ({
 					return { ...prevState, [key]: nextState };
 				});
 			},
-		[],
+		[setCookie],
 	);
 	const deleteValue = React.useCallback(
 		<K extends CookieKey>(key: K) =>
@@ -60,7 +61,7 @@ export const SSRProvider: React.FC<React.PropsWithChildren<Props>> = ({
 					return { ...prevState, [key]: schemas[key].parse(undefined) };
 				});
 			},
-		[],
+		[deleteCookie],
 	);
 	const ssrSetValues = React.useMemo(
 		() =>

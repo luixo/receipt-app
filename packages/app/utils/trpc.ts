@@ -1,10 +1,6 @@
 import * as Sentry from "@sentry/nextjs";
 import type { QueryClientConfig } from "@tanstack/react-query";
-import type {
-	HTTPBatchLinkOptions,
-	HTTPLinkOptions,
-	TRPCLink,
-} from "@trpc/client";
+import type { TRPCLink } from "@trpc/client";
 import {
 	TRPCClientError,
 	experimental_formDataLink,
@@ -19,6 +15,7 @@ import type { NextPageContext } from "next";
 import superjson from "superjson";
 
 import { MINUTE, SECOND } from "app/utils/time";
+import { omitUndefined } from "app/utils/utils";
 import type { AppRouter } from "next-app/pages/api/trpc/[trpc]";
 
 const SSR_TIMEOUT = 3 * SECOND;
@@ -41,21 +38,23 @@ const mapError =
 			}),
 		);
 
-export type LinkHeaders = HTTPLinkOptions["headers"] &
-	HTTPBatchLinkOptions["headers"];
+type GetLinksOptions = {
+	useBatch?: boolean;
+	keepError?: boolean;
+	headers: {
+		debug: string | undefined;
+		cookie: string | undefined;
+		"x-proxy-port": string | undefined;
+		"x-controller-id": string | undefined;
+	};
+};
 
 export const getLinks = (
 	url: string,
-	{
-		useBatch,
-		keepError,
-		headers,
-	}: {
-		useBatch?: boolean;
-		keepError?: boolean;
-		headers?: LinkHeaders;
-	} = {},
+	{ useBatch, keepError, headers: rawHeaders }: GetLinksOptions,
 ): TRPCLink<AppRouter>[] => {
+	// we omit to not let stringified "undefined" get passed to the server
+	const headers = omitUndefined(rawHeaders);
 	const splitLinkInstance = splitLink({
 		condition: (op) => op.input instanceof FormData,
 		true: experimental_formDataLink({ url, headers }),
