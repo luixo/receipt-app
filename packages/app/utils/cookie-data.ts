@@ -45,19 +45,6 @@ export type CookieStates = {
 	];
 };
 
-export const getCookieMappingFromCookies = (
-	cookies: Partial<Record<string, string>> = {},
-): CookieValues =>
-	Object.entries(schemas).reduce<CookieValues>((acc, [key, schema]) => {
-		let parsedValue = null;
-		try {
-			parsedValue = JSON.parse(cookies[key]!);
-		} catch {
-			parsedValue = cookies[key]!;
-		}
-		return { ...acc, [key]: schema.parse(parsedValue) };
-	}, {} as CookieValues);
-
 export const getCookieStatesFromValues = (
 	mapping: CookieValues,
 	getDispatch: <K extends keyof CookieValues>(
@@ -75,3 +62,16 @@ export const getCookieStatesFromValues = (
 			],
 		]),
 	) as unknown as CookieStates;
+
+export const getSSRContextCookieData = (
+	cookies: Partial<Record<string, string>> = {},
+): CookieValues =>
+	Object.entries(schemas).reduce<CookieValues>((acc, [key, schema]) => {
+		let parsedValue = null;
+		try {
+			parsedValue = JSON.parse(cookies[key]!);
+		} catch {
+			parsedValue = cookies[key]!;
+		}
+		return { ...acc, [key]: schema.parse(parsedValue) };
+	}, {} as CookieValues);

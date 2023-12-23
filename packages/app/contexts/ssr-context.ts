@@ -4,7 +4,7 @@ import {
 	type CookieStates,
 	type CookieValues,
 	getCookieStatesFromValues,
-	schemas,
+	getSSRContextCookieData,
 } from "app/utils/cookie-data";
 import { noop } from "app/utils/utils";
 
@@ -20,19 +20,6 @@ export type SSRContextData = CookieValues & {
 export type SSRContextType = Omit<SSRContextData, keyof CookieValues> & {
 	isFirstRender: boolean;
 } & CookieStates;
-
-export const getSSRContextCookieData = (
-	cookies: Partial<Record<string, string>> = {},
-): CookieValues =>
-	Object.entries(schemas).reduce<CookieValues>((acc, [key, schema]) => {
-		let parsedValue = null;
-		try {
-			parsedValue = JSON.parse(cookies[key]!);
-		} catch {
-			parsedValue = cookies[key]!;
-		}
-		return { ...acc, [key]: schema.parse(parsedValue) };
-	}, {} as CookieValues);
 
 export const SSRContext = React.createContext<SSRContextType>({
 	...getCookieStatesFromValues(

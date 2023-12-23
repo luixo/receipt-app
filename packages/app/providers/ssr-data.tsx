@@ -17,7 +17,7 @@ type DeleteValues = {
 
 type CookieKey = keyof CookieStates;
 
-export type Props = {
+type Props = {
 	data: SSRContextData;
 };
 

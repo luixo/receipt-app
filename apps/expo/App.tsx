@@ -1,6 +1,5 @@
 import React from "react";
 
-import { getSSRContextCookieData } from "app/contexts/ssr-context";
 import { CookieProvider } from "app/providers/cookie";
 import { NavigationProvider } from "app/providers/navigation";
 import { PersisterProvider } from "app/providers/persist-client";
@@ -11,6 +10,7 @@ import { SearchParamsProvider } from "app/providers/search-params";
 import { SSRDataProvider } from "app/providers/ssr-data";
 import { ThemeProvider } from "app/providers/theme";
 import { TrpcProvider } from "app/providers/trpc";
+import { getSSRContextCookieData } from "app/utils/cookie-data";
 
 const App: React.FC = () => (
 	<QueryClientProvider>
