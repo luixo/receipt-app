@@ -85,7 +85,7 @@ NODE_ENV=test npx dotenv -c -- yarn web:build
 1. Run a Playwright docker image with port 3000 exposed and current directory linked as `/work`
 
 ```sh
-docker run --rm -v ${PWD}:/work/ -w /work/ -it -p 3000:3000 --entrypoint /bin/bash mcr.microsoft.com/playwright:v1.39.0-jammy
+docker run --rm -v ${PWD}:/work/ -w /work/ -it -p 3000:3000 --entrypoint /bin/bash mcr.microsoft.com/playwright:v1.40.1-jammy
 ```
 
 2. (in Docker) Enable yarn v3
@@ -119,7 +119,7 @@ PW_SERVER=true yarn frontend:test --update-snapshots
 Please, build an app on host machine inbefore (step 0 from above).
 
 ```sh
-docker run --rm -v ${PWD}:/work/ -w /work/ -it -p 3000:3000 --entrypoint /bin/bash mcr.microsoft.com/playwright:v1.39.0-jammy -c "corepack enable && yarn install && PW_SERVER=true yarn frontend:test --update-snapshots"
+docker run --rm -v ${PWD}:/work/ -w /work/ -it -p 3000:3000 --entrypoint /bin/bash mcr.microsoft.com/playwright:v1.40.1-jammy -c "corepack enable && yarn install && PW_SERVER=true yarn frontend:test --update-snapshots"
 ```
 
 ### Tests structure
