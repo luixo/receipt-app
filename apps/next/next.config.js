@@ -57,7 +57,9 @@ const nextConfig = {
 };
 
 const plugins = [
-	(config) => withSentryConfig(config, { silent: true }),
+	process.env.NODE_ENV !== "production"
+		? undefined
+		: (config) => withSentryConfig(config, { silent: true }),
 	(config) => withExpo(config),
 	(config) => {
 		if (process.env.ANALYZE_BUNDLE) {
@@ -66,5 +68,5 @@ const plugins = [
 		}
 		return config;
 	},
-];
+].filter(Boolean);
 module.exports = plugins.reduce((acc, plugin) => plugin(acc), nextConfig);
