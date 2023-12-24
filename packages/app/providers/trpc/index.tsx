@@ -17,13 +17,11 @@ export const TrpcProvider: React.FC<React.PropsWithChildren<object>> = ({
 		trpc.createClient({
 			links: getLinks(url, {
 				useBatch: true,
-				// TODO: add headers on react-native environment
-				headers: {
-					debug: undefined,
-					cookie: undefined,
-					"x-proxy-port": undefined,
-					"x-controller-id": undefined,
-				},
+				// TODO: add searchParams on react-native environment
+				searchParams: {},
+				// TODO: add cookies on react-native environment
+				cookies: undefined,
+				source: "native",
 			}),
 			transformer,
 		}),

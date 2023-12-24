@@ -10,56 +10,36 @@ import {
 	transformer,
 } from "app/utils/trpc";
 import type { AppRouter } from "next-app/pages/api/trpc/[trpc]";
-import {
-	AUTH_COOKIE,
-	getCookie,
-	serialize,
-} from "next-app/utils/server-cookies";
+import { getCookies } from "next-app/utils/server-cookies";
 
 export const trpcNext = createTRPCNext<
 	AppRouter,
-	{
-		hasDebug: boolean;
-		// Required to define Playwright test worker for a mock response
-		proxyPort?: number;
-		// Required to define Playwright test id for a mock response
-		controllerId?: string;
-	},
+	{ searchParams: Record<string, string[] | string | undefined> },
 	NextPageContext & { timeoutPromise: Promise<true> }
 >({
-	config: ({
-		serverSideContext: { hasDebug, proxyPort, controllerId },
-		ctx,
-	}) => {
-		const isBrowser = typeof window !== "undefined";
-		const authToken = ctx?.req ? getCookie(ctx.req, AUTH_COOKIE) : undefined;
-		const linkUrl = isBrowser
-			? TRPC_ENDPOINT
-			: getSsrHost((getConfig() as NextConfig).serverRuntimeConfig?.port ?? 0);
-		return {
-			links: getLinks(linkUrl, {
-				useBatch: isBrowser,
-				headers: {
-					debug: hasDebug ? "true" : undefined,
-					cookie: authToken ? serialize(AUTH_COOKIE, authToken) : undefined,
-					"x-proxy-port": proxyPort ? String(proxyPort) : undefined,
-					"x-controller-id": controllerId,
-				},
-			}),
-			queryClientConfig: getQueryClientConfig(),
-			transformer,
-		};
-	},
-	serverSideContext: (ctx) => ({
-		hasDebug: Boolean(ctx.query.debug),
-		proxyPort: Number.isNaN(Number(ctx.query.proxyPort))
-			? undefined
-			: Number(ctx.query.proxyPort),
-		controllerId:
-			typeof ctx.query.controllerId === "string"
-				? ctx.query.controllerId
-				: undefined,
+	config: ({ serverSideContext: { searchParams }, ctx }) => ({
+		links: ctx?.req
+			? getLinks(
+					getSsrHost(
+						(getConfig() as NextConfig).serverRuntimeConfig?.port ?? 0,
+					),
+					{
+						useBatch: false,
+						searchParams,
+						cookies: getCookies(ctx.req),
+						source: "ssr-next",
+					},
+			  )
+			: getLinks(TRPC_ENDPOINT, {
+					useBatch: true,
+					searchParams,
+					cookies: undefined,
+					source: "csr-next",
+			  }),
+		queryClientConfig: getQueryClientConfig(),
+		transformer,
 	}),
+	serverSideContext: (ctx) => ({ searchParams: ctx.query }),
 	ssr: true,
 	awaitPrepassRender,
 });

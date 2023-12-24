@@ -43,7 +43,7 @@ const defaultGetSalt = () => crypto.randomBytes(64).toString("hex");
 const defaultGetUuid = () => v4();
 const defaultGetDatabase = (req: NextApiRequest) =>
 	getDatabase({
-		logger: req.headers.debug
+		logger: req.headers["x-debug"]
 			? baseLogger.child({ url: req.url || "unknown" })
 			: undefined,
 		pool: getPool(),

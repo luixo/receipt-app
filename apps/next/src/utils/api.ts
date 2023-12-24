@@ -5,18 +5,16 @@ import getConfig from "next/config";
 import { getSsrHost } from "app/utils/queries";
 import { getLinks, transformer } from "app/utils/trpc";
 import type { AppRouter } from "next-app/pages/api/trpc/[trpc]";
+import { getCookies } from "next-app/utils/server-cookies";
 
 const nextConfig = getConfig();
 
 export const getTrpcClient = (req: NextApiRequest) =>
 	createTRPCClient<AppRouter>({
 		links: getLinks(getSsrHost(nextConfig.serverRuntimeConfig?.port ?? 0), {
-			headers: {
-				debug: req.query.debug ? "true" : undefined,
-				cookie: req.headers.cookie,
-				"x-proxy-port": undefined,
-				"x-controller-id": undefined,
-			},
+			searchParams: req.query,
+			cookies: getCookies(req),
+			source: "api-next",
 		}),
 		transformer,
 	});

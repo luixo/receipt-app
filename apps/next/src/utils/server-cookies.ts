@@ -1,15 +1,15 @@
 import * as cookie from "cookie";
 import type { IncomingMessage, ServerResponse } from "http";
 
+export const getCookies = (
+	req: IncomingMessage,
+): Partial<Record<string, string>> =>
+	cookie.parse(req.headers.cookie ? String(req.headers.cookie) : "");
+
 export const getCookie = (
 	req: IncomingMessage,
 	cookieName: string,
-): string | undefined => {
-	const parsedCookies = cookie.parse(
-		req.headers.cookie ? String(req.headers.cookie) : "",
-	);
-	return parsedCookies[cookieName];
-};
+): string | undefined => getCookies(req)[cookieName];
 
 export const setCookie = (
 	res: ServerResponse,

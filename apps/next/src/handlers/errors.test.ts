@@ -6,6 +6,7 @@ import { createAuthContext } from "@tests/backend/utils/context";
 import { insertAccountWithSession } from "@tests/backend/utils/data";
 import { expectTRPCError } from "@tests/backend/utils/expect";
 import { test } from "@tests/backend/utils/test";
+import { AUTH_COOKIE } from "next-app/utils/server-cookies";
 
 import { getClientServer } from "./utils.test";
 
@@ -15,7 +16,9 @@ describe("errors formatting", () => {
 	// Covering errorFormatter function
 	test("client error formatter works", async ({ ctx }) => {
 		const { start, destroy, client } = await getClientServer(ctx, router, {
-			cookie: "authToken=fake",
+			cookies: {
+				[AUTH_COOKIE]: "fake",
+			},
 		});
 		await start();
 		const error = await client.account.get.query().catch((e) => e);
