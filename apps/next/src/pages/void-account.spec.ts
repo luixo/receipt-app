@@ -105,7 +105,7 @@ test.describe("Void account page", () => {
 				);
 			});
 			await expect(page).toHaveURL("/void-account?token=foo");
-			await page.getByText("To home page").click();
+			await page.getByText("To login page").click();
 			await expect(page).toHaveURL("/login");
 		});
 
