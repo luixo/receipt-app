@@ -2,15 +2,15 @@
 // Automatically generated. Don't change this file manually.
 
 export type {
-	default as AccountSettings,
-	AccountSettingsInitializer,
-	AccountSettingsMutator,
-} from "./account-settings";
-export type {
 	default as AccountConnectionsIntentions,
 	AccountConnectionsIntentionsInitializer,
 	AccountConnectionsIntentionsMutator,
 } from "./account-connections-intentions";
+export type {
+	default as AccountSettings,
+	AccountSettingsInitializer,
+	AccountSettingsMutator,
+} from "./account-settings";
 export type {
 	default as Accounts,
 	AccountsInitializer,

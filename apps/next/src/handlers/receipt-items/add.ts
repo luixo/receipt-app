@@ -60,6 +60,7 @@ export const procedure = authProcedure
 			});
 		}
 		const id: ReceiptItemsId = ctx.getUuid();
+		const now = new Date();
 		await database
 			.insertInto("receiptItems")
 			.values({
@@ -68,7 +69,8 @@ export const procedure = authProcedure
 				price: input.price.toString(),
 				quantity: input.quantity.toString(),
 				receiptId: input.receiptId,
+				created: now,
 			})
 			.executeTakeFirst();
-		return id;
+		return { id, created: now };
 	});

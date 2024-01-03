@@ -1,19 +1,19 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"8601c66f-5a1a-4958-825b-66e26156872f\"}]": {
+		"debts.get:[{\"id\":\"1a95825b-66e2-4615-8687-2f1c1d3ce5b2\"}]": {
 			"state": {
 				"data": {
-					"id": "8601c66f-5a1a-4958-825b-66e26156872f",
-					"amount": 23999.14,
+					"id": "1a95825b-66e2-4615-8687-2f1c1d3ce5b2",
+					"amount": 11883.07,
 					"currencyCode": "KZT",
-					"userId": "61cf92e4-ce70-444d-b636-507bb003d1ce",
+					"userId": "2e4ce704-4d63-4650-87bb-003d1cedaab4",
 					"timestamp": "2020-01-01T00:00:00.000Z",
 					"note": "Receipt \"officiis perferendis officia\"",
 					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
 					"their": {
 						"lockedTimestamp": "2020-01-01T00:00:00.000Z",
 						"timestamp": "2020-01-01T00:00:00.000Z",
-						"amount": 23999.14,
+						"amount": 11883.07,
 						"currencyCode": "KZT"
 					},
 					"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"
@@ -31,7 +31,7 @@
 				"data": {
 					"debt": {
 						"ids": {
-							"4": "8601c66f-5a1a-4958-825b-66e26156872f"
+							"4": "1a95825b-66e2-4615-8687-2f1c1d3ce5b2"
 						}
 					}
 				},
@@ -43,7 +43,7 @@
 		"debts.add": {
 			"state": {
 				"data": {
-					"id": "8601c66f-5a1a-4958-825b-66e26156872f",
+					"id": "1a95825b-66e2-4615-8687-2f1c1d3ce5b2",
 					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
 					"reverseAccepted": true
 				},
@@ -52,8 +52,8 @@
 				"status": "success",
 				"variables": {
 					"currencyCode": "KZT",
-					"userId": "61cf92e4-ce70-444d-b636-507bb003d1ce",
-					"amount": 23999.14,
+					"userId": "2e4ce704-4d63-4650-87bb-003d1cedaab4",
+					"amount": 11883.07,
 					"timestamp": "2020-01-01T00:00:00.000Z",
 					"note": "Receipt \"officiis perferendis officia\"",
 					"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"

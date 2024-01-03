@@ -20,6 +20,7 @@ export const options: UseContextedMutationOptions<
 						price: variables.price,
 						quantity: variables.quantity,
 						locked: false,
+						created: new Date(),
 						parts: [],
 					}),
 				getReceiptParticipant: undefined,
@@ -29,12 +30,14 @@ export const options: UseContextedMutationOptions<
 		};
 	},
 	onSuccess:
-		(controllerContext, receiptId) => (id, _variables, temporaryId) => {
+		(controllerContext, receiptId) =>
+		({ id, created }, _variables, temporaryId) => {
 			cache.receiptItems.update(controllerContext, {
 				getReceiptItem: (controller) =>
 					controller.update(receiptId, temporaryId!, (item) => ({
 						...item,
 						id,
+						created,
 					})),
 				getReceiptParticipant: undefined,
 				getReceiptItemPart: undefined,

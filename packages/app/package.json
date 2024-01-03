@@ -13,6 +13,7 @@
 		"@trpc/react-query": "^11.0.0-alpha-next-2023-11-24-13-58-38.113",
 		"@trpc/server": "^11.0.0-alpha-next-2023-11-24-13-58-38.113",
 		"app": "workspace:*",
+		"array.prototype.tosorted": "^1.1.2",
 		"boring-avatars": "^1.10.1",
 		"date-fns": "^2.30.0",
 		"expo-app": "workspace:*",

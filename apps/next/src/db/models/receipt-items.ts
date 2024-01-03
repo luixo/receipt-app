@@ -20,6 +20,8 @@ export default interface ReceiptItems {
 	receiptId: ReceiptsId;
 
 	locked: boolean | null;
+
+	created: Date;
 }
 
 export interface ReceiptItemsInitializer {
@@ -37,6 +39,9 @@ export interface ReceiptItemsInitializer {
 
 	/** Default value: false */
 	locked?: boolean | null;
+
+	/** Default value: now() */
+	created?: Date;
 }
 
 export interface ReceiptItemsMutator {
@@ -53,4 +58,6 @@ export interface ReceiptItemsMutator {
 	receiptId?: ReceiptsId;
 
 	locked?: boolean | null;
+
+	created?: Date;
 }

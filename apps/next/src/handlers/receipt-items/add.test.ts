@@ -149,7 +149,11 @@ describe("receiptItems.add", () => {
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure(getValidReceiptItem(receiptId)),
 			);
-			expect(result).toMatch(UUID_REGEX);
+			expect(result.id).toMatch(UUID_REGEX);
+			expect(result).toStrictEqual<typeof result>({
+				id: result.id,
+				created: new Date(),
+			});
 		});
 
 		test("foreign receipt", async ({ ctx }) => {
@@ -172,7 +176,11 @@ describe("receiptItems.add", () => {
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure(getValidReceiptItem(receiptId)),
 			);
-			expect(result).toMatch(UUID_REGEX);
+			expect(result.id).toMatch(UUID_REGEX);
+			expect(result).toStrictEqual<typeof result>({
+				id: result.id,
+				created: new Date(),
+			});
 		});
 	});
 });

@@ -56,6 +56,11 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 		},
 		[itemsRef],
 	);
+	const sortedItems = React.useMemo(
+		() =>
+			data.items.toSorted((a, b) => a.created.valueOf() - b.created.valueOf()),
+		[data.items],
+	);
 	return (
 		<>
 			{emptyItems.length === 0 ? null : (
@@ -89,7 +94,7 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 				receiptLocked={receiptLocked}
 				isLoading={isLoading}
 			/>
-			{data.items.map((receiptItem) => (
+			{sortedItems.map((receiptItem) => (
 				<ReceiptItem
 					key={receiptItem.id}
 					receiptId={receiptId}
@@ -104,7 +109,7 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 					}}
 				/>
 			))}
-			{data.items.length === 0 ? (
+			{sortedItems.length === 0 ? (
 				<EmptyCard title="You have no receipt items yet">
 					Press a button above to add a receipt item
 				</EmptyCard>

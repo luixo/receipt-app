@@ -10,6 +10,7 @@ import { PersistStorageProvider } from "app/providers/persist-storage";
 import { QueryClientProvider } from "app/providers/query-client";
 import { QueryDevToolsProvider } from "app/providers/query-devtools";
 import { SearchParamsProvider } from "app/providers/search-params";
+import { ShimsProvider } from "app/providers/shims";
 import { SSRDataProvider } from "app/providers/ssr-data";
 import { ThemeProvider } from "app/providers/theme";
 import { TrpcProvider } from "app/providers/trpc";
@@ -24,23 +25,25 @@ export const ClientProvider: React.FC<React.PropsWithChildren<Props>> = ({
 	ssrData,
 	searchParams,
 }) => (
-	<QueryClientProvider>
-		<TrpcProvider>
-			<PersistStorageProvider>
-				<PersisterProvider>
-					<CookieProvider>
-						<SSRDataProvider data={ssrData}>
-							<SearchParamsProvider searchParams={searchParams}>
-								<ThemeProvider>
-									<NavigationProvider>
-										<QueryDevToolsProvider>{children}</QueryDevToolsProvider>
-									</NavigationProvider>
-								</ThemeProvider>
-							</SearchParamsProvider>
-						</SSRDataProvider>
-					</CookieProvider>
-				</PersisterProvider>
-			</PersistStorageProvider>
-		</TrpcProvider>
-	</QueryClientProvider>
+	<ShimsProvider>
+		<QueryClientProvider>
+			<TrpcProvider>
+				<PersistStorageProvider>
+					<PersisterProvider>
+						<CookieProvider>
+							<SSRDataProvider data={ssrData}>
+								<SearchParamsProvider searchParams={searchParams}>
+									<ThemeProvider>
+										<NavigationProvider>
+											<QueryDevToolsProvider>{children}</QueryDevToolsProvider>
+										</NavigationProvider>
+									</ThemeProvider>
+								</SearchParamsProvider>
+							</SSRDataProvider>
+						</CookieProvider>
+					</PersisterProvider>
+				</PersistStorageProvider>
+			</TrpcProvider>
+		</QueryClientProvider>
+	</ShimsProvider>
 );

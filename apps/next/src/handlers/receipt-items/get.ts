@@ -26,11 +26,12 @@ const getReceiptItems = async (database: Database, receiptId: ReceiptsId) => {
 			"receiptItems.price",
 			"receiptItems.locked",
 			"receiptItems.quantity",
+			"receiptItems.created",
 			"itemParticipants.userId",
 			"itemParticipants.part",
 		])
 		.where("receiptItems.receiptId", "=", receiptId)
-		.orderBy("receiptItems.id")
+		.orderBy(["receiptItems.created desc", "receiptItems.id"])
 		.execute();
 	return Object.values(
 		items.reduce(
@@ -55,12 +56,10 @@ const getReceiptItems = async (database: Database, receiptId: ReceiptsId) => {
 			},
 			{} as Record<ReceiptItemsId, ReceiptItem>,
 		),
-	)
-		.map(({ parts, ...receiptItem }) => ({
-			...receiptItem,
-			parts: parts.sort((a, b) => a.userId.localeCompare(b.userId)),
-		}))
-		.sort((a, b) => a.name.localeCompare(b.name));
+	).map(({ parts, ...receiptItem }) => ({
+		...receiptItem,
+		parts: parts.sort((a, b) => a.userId.localeCompare(b.userId)),
+	}));
 };
 
 type RawReceiptItem = {
@@ -71,6 +70,7 @@ type RawReceiptItem = {
 	quantity: string;
 	userId: UsersId | null;
 	part: string | null;
+	created: Date;
 };
 
 type ReceiptItem = Omit<

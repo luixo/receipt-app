@@ -1,9 +1,9 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"4eaf7a26-d0ef-4a3c-b034-798a3396d05a\"}]": {
+		"debts.get:[{\"id\":\"efa3c034-798a-4339-96d0-5ad6ca8c5f4b\"}]": {
 			"state": {
 				"data": {
-					"amount": 23999.14,
+					"amount": 11883.07,
 					"lockedTimestamp": "2020-01-01T00:00:00.000Z"
 				},
 				"dataUpdateCount": 5
@@ -21,7 +21,7 @@
 				"data": [
 					{
 						"lockedTimestamp": "2020-01-01T00:00:00.000Z",
-						"debtId": "4eaf7a26-d0ef-4a3c-b034-798a3396d05a",
+						"debtId": "efa3c034-798a-4339-96d0-5ad6ca8c5f4b",
 						"reverseLockedTimestampUpdated": false
 					}
 				],
@@ -30,9 +30,9 @@
 				"status": "success",
 				"variables": [
 					{
-						"id": "4eaf7a26-d0ef-4a3c-b034-798a3396d05a",
+						"id": "efa3c034-798a-4339-96d0-5ad6ca8c5f4b",
 						"update": {
-							"amount": 23999.14,
+							"amount": 11883.07,
 							"currencyCode": "KZT",
 							"timestamp": "2020-01-01T00:00:00.000Z",
 							"locked": true,

@@ -36,7 +36,7 @@
 		"testcontainers": "^8.12.0",
 		"ts-node": "^10.9.1",
 		"turbo": "^1.2.2",
-		"typescript": "^5.1.6"
+		"typescript": "^5.3.3"
 	},
 	"scripts": {
 		"dev": "dotenv -c -- yarn workspace scripts dev",

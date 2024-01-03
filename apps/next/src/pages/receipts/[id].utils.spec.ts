@@ -5,6 +5,7 @@ import { test as originalTest } from "@tests/frontend/fixtures";
 import type { TRPCQueryOutput } from "app/trpc";
 import type { CurrencyCode } from "app/utils/currency";
 import { getParticipantSums } from "app/utils/receipt-item";
+import { MONTH } from "app/utils/time";
 import { id, nonNullishGuard } from "app/utils/utils";
 import type { AccountsId, ReceiptsId, UsersId } from "next-app/db/models";
 import { CURRENCY_CODES } from "next-app/utils/currency";
@@ -99,6 +100,10 @@ export const test = originalTest.extend<Fixtures>({
 						price: Number(faker.finance.amount()),
 						quantity: faker.number.int({ max: 100 }),
 						name: faker.commerce.productName(),
+						created: faker.date.between({
+							from: new Date(Date.now() - MONTH),
+							to: new Date(),
+						}),
 					}),
 				);
 				const users = Array.from(
@@ -139,6 +144,7 @@ export const test = originalTest.extend<Fixtures>({
 						quantity: item.quantity,
 						locked: false,
 						name: item.name,
+						created: item.created,
 						parts: faker.helpers.arrayElements(
 							participants.map((participant) => ({
 								userId: participant.remoteUserId,

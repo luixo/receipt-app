@@ -433,6 +433,7 @@ type ReceiptItemData = {
 	price?: number;
 	quantity?: number;
 	locked?: boolean;
+	created?: Date;
 };
 
 export const insertReceiptItem = async (
@@ -446,7 +447,7 @@ export const insertReceiptItem = async (
 		.executeTakeFirstOrThrow(
 			() => new Error(`Expected to have receipt id ${receiptId} in tests`),
 		);
-	const { id, name, price, quantity, locked } = await ctx.database
+	const { id, name, price, quantity, locked, created } = await ctx.database
 		.insertInto("receiptItems")
 		.values({
 			receiptId,
@@ -460,10 +461,11 @@ export const insertReceiptItem = async (
 				data.quantity ?? faker.number.int({ min: 1, max: 5 })
 			).toString(),
 			locked: data.locked ?? false,
+			created: data.created ?? new Date(),
 		})
-		.returning(["id", "name", "price", "quantity", "locked"])
+		.returning(["id", "name", "price", "quantity", "locked", "created"])
 		.executeTakeFirstOrThrow();
-	return { id, name, price, quantity, locked };
+	return { id, name, price, quantity, locked, created };
 };
 
 type ItemParticipantData = {
