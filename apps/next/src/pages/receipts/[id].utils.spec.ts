@@ -1,4 +1,4 @@
-import { faker } from "@faker-js/faker";
+import type { Faker } from "@faker-js/faker";
 import type { Locator } from "@playwright/test";
 
 import { test as originalTest } from "@tests/frontend/fixtures";
@@ -10,7 +10,7 @@ import { id, nonNullishGuard } from "app/utils/utils";
 import type { AccountsId, ReceiptsId, UsersId } from "next-app/db/models";
 import { CURRENCY_CODES } from "next-app/utils/currency";
 
-export const getRandomCurrencyCode = () =>
+export const getRandomCurrencyCode = (faker: Faker) =>
 	faker.helpers.arrayElement(CURRENCY_CODES);
 
 const getFakeDebtNote = (receiptName: string) =>
@@ -66,12 +66,12 @@ type Fixtures = {
 };
 
 export const test = originalTest.extend<Fixtures>({
-	mockReceipt: ({ api }, use) =>
+	mockReceipt: ({ api, faker }, use) =>
 		use(
 			async ({
 				modifyOutcomingDebts = id,
 				modifyReceiptItems = id,
-				currencyCode = getRandomCurrencyCode(),
+				currencyCode = getRandomCurrencyCode(faker),
 				issued = new Date(),
 				sum = Number(faker.finance.amount()),
 				lockedTimestamp,

@@ -1,4 +1,3 @@
-import { faker } from "@faker-js/faker";
 import { TRPCError } from "@trpc/server";
 
 import { expect } from "@tests/frontend/fixtures";
@@ -54,6 +53,7 @@ test.describe("Receipt page", () => {
 				test("with auto-accept from the counterparty", async ({
 					page,
 					api,
+					faker,
 					sendDebtButton,
 					mockReceipt,
 					openDebtsInfoPanel,
@@ -83,6 +83,7 @@ test.describe("Receipt page", () => {
 				test("without auto-accept from the counterparty", async ({
 					page,
 					api,
+					faker,
 					sendDebtButton,
 					mockReceipt,
 					openDebtsInfoPanel,
@@ -113,6 +114,7 @@ test.describe("Receipt page", () => {
 			test("error", async ({
 				page,
 				api,
+				faker,
 				sendDebtButton,
 				mockReceipt,
 				openDebtsInfoPanel,
@@ -346,6 +348,7 @@ test.describe("Receipt page", () => {
 				test("with auto-accept from the counterparty", async ({
 					page,
 					api,
+					faker,
 					propagateDebtsButton,
 					mockReceipt,
 					verifyToastTexts,
@@ -385,6 +388,7 @@ test.describe("Receipt page", () => {
 				test("without auto-accept from the counterparty", async ({
 					page,
 					api,
+					faker,
 					propagateDebtsButton,
 					mockReceipt,
 					verifyToastTexts,
@@ -424,6 +428,7 @@ test.describe("Receipt page", () => {
 				test("single request", async ({
 					page,
 					api,
+					faker,
 					propagateDebtsButton,
 					mockReceipt,
 					snapshotQueries,
@@ -476,6 +481,7 @@ test.describe("Receipt page", () => {
 				test("both requests", async ({
 					page,
 					api,
+					faker,
 					propagateDebtsButton,
 					mockReceipt,
 					snapshotQueries,
