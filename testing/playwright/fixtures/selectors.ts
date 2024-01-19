@@ -4,7 +4,7 @@ import { createMixin } from "./utils";
 
 type SelectorsMixin = {
 	withLoader: (locator: Locator) => Locator;
-	modal: (title: string) => Locator;
+	modal: (title?: string) => Locator;
 };
 
 export const selectorsMixin = createMixin<SelectorsMixin>({
@@ -16,6 +16,10 @@ export const selectorsMixin = createMixin<SelectorsMixin>({
 		);
 	},
 	modal: async ({ page }, use) => {
-		await use((title) => page.locator(`section[title='${title}']`));
+		await use((title) =>
+			page.locator(
+				`section[role="dialog"]${title ? `[title="${title}"]` : ""}`,
+			),
+		);
 	},
 });
