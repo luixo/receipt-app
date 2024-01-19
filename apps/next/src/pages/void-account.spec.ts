@@ -15,7 +15,9 @@ test.describe("Void account page", () => {
 		}) => {
 			api.mockUtils.noAuth();
 
-			await snapshotQueries(() => page.goto("/void-account"));
+			await snapshotQueries(() => page.goto("/void-account"), {
+				whitelistKeys: "account.get",
+			});
 			await expect(page).toHaveTitle("RA - Void account");
 			await expect(page.locator("h2")).toHaveText("Something went wrong");
 			await expect(voidButton).not.toBeAttached();
@@ -31,7 +33,9 @@ test.describe("Void account page", () => {
 		}) => {
 			api.mockUtils.noAuth();
 
-			await snapshotQueries(() => page.goto("/void-account?token=foo"));
+			await snapshotQueries(() => page.goto("/void-account?token=foo"), {
+				whitelistKeys: "account.get",
+			});
 			await expect(page.locator("h3")).toHaveText(
 				"Are you sure you want to void your account?",
 			);
@@ -62,13 +66,11 @@ test.describe("Void account page", () => {
 			snapshotQueries,
 			withLoader,
 			verifyToastTexts,
-			awaitQuery,
 		}) => {
 			api.mockUtils.noAuth();
 			api.pause("auth.voidAccount");
 
 			await page.goto("/void-account?token=foo");
-			await awaitQuery("account.get");
 
 			await snapshotQueries(async () => {
 				const buttonWithLoader = withLoader(voidButton);
@@ -88,13 +90,11 @@ test.describe("Void account page", () => {
 			voidButton,
 			verifyToastTexts,
 			snapshotQueries,
-			awaitQuery,
 		}) => {
 			api.mockUtils.noAuth();
 			api.mock("auth.voidAccount", { email: "foo@gmail.com" });
 
 			await page.goto("/void-account?token=foo");
-			await awaitQuery("account.get");
 
 			await snapshotQueries(async () => {
 				await voidButton.click();
@@ -115,7 +115,6 @@ test.describe("Void account page", () => {
 			voidButton,
 			snapshotQueries,
 			verifyToastTexts,
-			awaitQuery,
 		}) => {
 			api.mockUtils.noAuth();
 			api.mock("auth.voidAccount", () => {
@@ -126,7 +125,6 @@ test.describe("Void account page", () => {
 			});
 
 			await page.goto("/void-account?token=foo");
-			await awaitQuery("account.get");
 
 			await snapshotQueries(async () => {
 				await voidButton.click();

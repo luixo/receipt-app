@@ -1,7 +1,4 @@
 {
-	"debts.getIntentions": {
-		"clientCalls": 1
-	},
 	"debts.update": {
 		"clientCalls": 1
 	}

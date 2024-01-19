@@ -8,7 +8,9 @@ test.describe("Register page", () => {
 	test("On load", async ({ page, api, registerButton, snapshotQueries }) => {
 		api.mockUtils.noAuth();
 
-		await snapshotQueries(() => page.goto("/register"));
+		await snapshotQueries(() => page.goto("/register"), {
+			whitelistKeys: "account.get",
+		});
 		await expect(page).toHaveTitle("RA - Register");
 		await expect(registerButton).toBeDisabled();
 	});
@@ -67,7 +69,6 @@ test.describe("Register page", () => {
 			verifyToastTexts,
 			snapshotQueries,
 			consoleManager,
-			awaitQuery,
 		}) => {
 			// Remove this ignored pattern when we will explicitly redirect to "/receipts"
 			consoleManager.ignore('Abort fetching component for route: "/"');
@@ -81,12 +82,17 @@ test.describe("Register page", () => {
 			await page.goto("/register");
 			await fillValidFields();
 
-			await snapshotQueries(async () => {
-				await registerButton.click();
-				await verifyToastTexts("Register successful, redirecting..");
-				await expect(page).toHaveURL("/receipts");
-				await awaitQuery("receipts.getPaged");
-			});
+			await snapshotQueries(
+				async () => {
+					await registerButton.click();
+					await verifyToastTexts("Register successful, redirecting..");
+					await expect(page).toHaveURL("/receipts");
+				},
+				{
+					whitelistKeys: "account.get",
+					blacklistKeys: "receipts.getPaged",
+				},
+			);
 		});
 
 		test("error", async ({

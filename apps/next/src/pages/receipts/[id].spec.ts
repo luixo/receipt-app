@@ -322,7 +322,6 @@ test.describe("Receipt page", () => {
 				snapshotQueries,
 				withLoader,
 				verifyToastTexts,
-				awaitQuery,
 			}) => {
 				const { receipt } = await mockReceipt({
 					modifyOutcomingDebts: emptyDebts,
@@ -332,7 +331,6 @@ test.describe("Receipt page", () => {
 				api.pause("debts.updateBatch");
 
 				await page.goto(`/receipts/${receipt.id}`);
-				await awaitQuery("currency.getList");
 
 				await snapshotQueries(async () => {
 					const buttonWithLoader = withLoader(propagateDebtsButton);
@@ -352,7 +350,6 @@ test.describe("Receipt page", () => {
 					mockReceipt,
 					verifyToastTexts,
 					snapshotQueries,
-					awaitQuery,
 				}) => {
 					const { receipt } = await mockReceipt({
 						modifyOutcomingDebts: emptyDebts,
@@ -374,7 +371,6 @@ test.describe("Receipt page", () => {
 					);
 
 					await page.goto(`/receipts/${receipt.id}`);
-					await awaitQuery("currency.getList");
 
 					await snapshotQueries(async () => {
 						await propagateDebtsButton.click();
@@ -393,7 +389,6 @@ test.describe("Receipt page", () => {
 					mockReceipt,
 					verifyToastTexts,
 					snapshotQueries,
-					awaitQuery,
 				}) => {
 					const { receipt } = await mockReceipt({
 						modifyOutcomingDebts: emptyDebts,
@@ -413,7 +408,6 @@ test.describe("Receipt page", () => {
 					);
 
 					await page.goto(`/receipts/${receipt.id}`);
-					await awaitQuery("currency.getList");
 
 					await snapshotQueries(async () => {
 						await propagateDebtsButton.click();
@@ -435,7 +429,6 @@ test.describe("Receipt page", () => {
 					snapshotQueries,
 					verifyToastTexts,
 					clearToasts,
-					awaitQuery,
 				}) => {
 					const { receipt } = await mockReceipt({
 						modifyOutcomingDebts: emptyDebts,
@@ -454,7 +447,6 @@ test.describe("Receipt page", () => {
 					});
 
 					await page.goto(`/receipts/${receipt.id}`);
-					await awaitQuery("currency.getList");
 
 					await snapshotQueries(async () => {
 						await propagateDebtsButton.click();
@@ -489,7 +481,6 @@ test.describe("Receipt page", () => {
 					snapshotQueries,
 					verifyToastTexts,
 					clearToasts,
-					awaitQuery,
 				}) => {
 					const { receipt } = await mockReceipt({
 						modifyOutcomingDebts: emptyDebts,
@@ -509,7 +500,6 @@ test.describe("Receipt page", () => {
 					});
 
 					await page.goto(`/receipts/${receipt.id}`);
-					await awaitQuery("currency.getList");
 
 					await snapshotQueries(async () => {
 						await propagateDebtsButton.click();

@@ -64,9 +64,21 @@ const getSnapshotName = (
 	return [...path, name];
 };
 
-const getQueryCache = (page: Page, ignoreKeys: TRPCKey[], timeout: number) =>
+export type KeysLists = {
+	whitelistKeys: TRPCKey[];
+	blacklistKeys: TRPCKey[];
+};
+
+const shouldIgnoreKey = (key: TRPCKey, keysLists: KeysLists) =>
+	keysLists.blacklistKeys.includes(key) &&
+	!keysLists.whitelistKeys.includes(key);
+
+const getQueryCache = (page: Page, keysLists: KeysLists, timeout: number) =>
 	page.evaluate(
-		async ([ignoreKeysInner, timeoutInner]) => {
+		async ([keysListsInner, timeoutInner]) => {
+			const shouldIgnoreKeyInner = (key: TRPCKey) =>
+				keysListsInner.blacklistKeys.includes(key) &&
+				!keysListsInner.whitelistKeys.includes(key);
 			if (!window.getDehydratedCache) {
 				return { mutations: [], queries: [] };
 			}
@@ -127,7 +139,7 @@ const getQueryCache = (page: Page, ignoreKeys: TRPCKey[], timeout: number) =>
 						},
 					};
 				})
-				.filter((query) => !ignoreKeysInner!.includes(query.queryKey.handler));
+				.filter((query) => !shouldIgnoreKeyInner(query.queryKey.handler));
 			type QueriesRecord = Record<
 				string,
 				Omit<(typeof redactedQueries)[number], "queryKey">
@@ -156,8 +168,7 @@ const getQueryCache = (page: Page, ignoreKeys: TRPCKey[], timeout: number) =>
 					};
 				})
 				.filter(
-					(mutation) =>
-						!ignoreKeysInner!.includes(mutation.mutationKey.handler),
+					(mutation) => !shouldIgnoreKeyInner(mutation.mutationKey.handler),
 				);
 			type MutationsRecord = Record<
 				string,
@@ -190,15 +201,21 @@ const getQueryCache = (page: Page, ignoreKeys: TRPCKey[], timeout: number) =>
 				),
 			};
 		},
-		[ignoreKeys, timeout] as const,
+		[keysLists, timeout] as const,
 	);
 
-const remapActions = (actions: ReturnType<ApiManager["getActions"]>) =>
+const remapActions = (
+	actions: ReturnType<ApiManager["getActions"]>,
+	keysLists: KeysLists,
+) =>
 	Object.fromEntries(
 		Object.entries(
 			actions.reduce<
 				Partial<Record<TRPCKey, { clientCalls?: number; serverCalls?: number }>>
 			>((acc, [type, name]) => {
+				if (shouldIgnoreKey(name, keysLists)) {
+					return acc;
+				}
 				if (!acc[name]) {
 					acc[name] = {};
 				}
@@ -225,11 +242,15 @@ const withNoPlatformPath = (testInfo: TestInfo, fn: () => void) => {
 
 type SnapshotQueryCacheOptions = {
 	name: string;
-	ignoreKeys: TRPCKey[];
 	timeout?: number;
+	addDefaultBlacklist?: boolean;
+	whitelistKeys?: TRPCKey | TRPCKey[];
+	blacklistKeys?: TRPCKey | TRPCKey[];
 };
 
-const DEFAULT_IGNORE_KEYS: TRPCKey[] = [
+export const DEFAULT_BLACKLIST_KEYS: TRPCKey[] = [
+	"account.get",
+	"currency.getList",
 	"receipts.getNonResolvedAmount",
 	"debts.getIntentions",
 	"accountConnectionIntentions.getAll",
@@ -263,15 +284,29 @@ export const queriesMixin = createMixin<
 			async (
 				fn,
 				{
-					ignoreKeys = DEFAULT_IGNORE_KEYS,
+					blacklistKeys = [],
+					whitelistKeys = [],
+					addDefaultBlacklist = true,
 					name,
 					timeout = DEFAULT_AWAIT_QUERY_TIMEOUT,
 				} = {},
 			) => {
+				const blacklistKeysArray = Array.isArray(blacklistKeys)
+					? blacklistKeys
+					: [blacklistKeys];
+				const whitelistKeysArray = Array.isArray(whitelistKeys)
+					? whitelistKeys
+					: [whitelistKeys];
+				const keysLists = {
+					blacklistKeys: addDefaultBlacklist
+						? [...DEFAULT_BLACKLIST_KEYS, ...blacklistKeysArray]
+						: blacklistKeysArray,
+					whitelistKeys: whitelistKeysArray,
+				} satisfies KeysLists;
 				api.clearActions();
-				const prevQueryCache = await getQueryCache(page, ignoreKeys, timeout);
+				const prevQueryCache = await getQueryCache(page, keysLists, timeout);
 				const result = await fn();
-				const nextQueryCache = await getQueryCache(page, ignoreKeys, timeout);
+				const nextQueryCache = await getQueryCache(page, keysLists, timeout);
 				const diff = objectDiff(prevQueryCache, nextQueryCache);
 				withNoPlatformPath(testInfo, () => {
 					expect
@@ -281,7 +316,11 @@ export const queriesMixin = createMixin<
 						);
 					expect
 						.soft(
-							`${JSON.stringify(remapActions(api.getActions()), null, "\t")}\n`,
+							`${JSON.stringify(
+								remapActions(api.getActions(), keysLists),
+								null,
+								"\t",
+							)}\n`,
 						)
 						.toMatchSnapshot(
 							getSnapshotName(testInfo, "queriesIndex", name, "json"),

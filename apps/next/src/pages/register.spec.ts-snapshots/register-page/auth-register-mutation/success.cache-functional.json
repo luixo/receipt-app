@@ -15,22 +15,6 @@
 				"error": null,
 				"status": "success"
 			}
-		},
-		"receipts.getPaged:[{\"limit\":10,\"orderBy\":\"date-desc\",\"cursor\":0}]": {
-			"state": {
-				"data": {
-					"items": [],
-					"hasMore": false,
-					"cursor": -1,
-					"count": 0
-				},
-				"dataUpdateCount": 1,
-				"error": null,
-				"fetchMeta": null,
-				"isInvalidated": false,
-				"status": "success",
-				"fetchStatus": "idle"
-			}
 		}
 	},
 	"mutations": {
