@@ -1,10 +1,5 @@
 import { recase } from "@kristiandupont/recase";
-import type {
-	Expect,
-	Page,
-	PageScreenshotOptions,
-	TestInfo,
-} from "@playwright/test";
+import type { Expect, Page, TestInfo } from "@playwright/test";
 import { expect } from "@playwright/test";
 import type { DehydratedState, QueryClient } from "@tanstack/react-query";
 import { type TRPCClientErrorLike } from "@trpc/client";
@@ -251,7 +246,7 @@ type QueriesMixin = {
 	) => Promise<boolean>;
 	expectScreenshotWithSchemes: (
 		name: string,
-		options?: PageScreenshotOptions &
+		options?: Parameters<Page["stableScreenshot"]>[0] &
 			Parameters<
 				ReturnType<Expect<NonNullable<unknown>>>["toMatchSnapshot"]
 			>[0],

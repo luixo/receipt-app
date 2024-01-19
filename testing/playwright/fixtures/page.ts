@@ -1,4 +1,5 @@
 import type {
+	Locator,
 	Page as OriginalPage,
 	PageScreenshotOptions,
 } from "@playwright/test";
@@ -12,7 +13,10 @@ const STABLE_FRAME_COUNT = 5;
 declare module "@playwright/test" {
 	interface Page {
 		stableScreenshot: (
-			options?: PageScreenshotOptions & { stableDelay?: number },
+			options?: PageScreenshotOptions & {
+				stableDelay?: number;
+				locator?: Locator;
+			},
 		) => Promise<Buffer>;
 	}
 }
@@ -64,6 +68,7 @@ export const pageMixin = createMixin<
 
 		page.stableScreenshot = async ({
 			stableDelay = FRAME_LENGTH * STABLE_FRAME_COUNT,
+			locator,
 			...options
 		} = {}) => {
 			let isTimedOut = false;
@@ -72,6 +77,12 @@ export const pageMixin = createMixin<
 					isTimedOut = true;
 				}, options.timeout);
 			}
+			const getScreenshot = () => {
+				if (locator) {
+					return locator.screenshot(options);
+				}
+				return page.screenshot(options);
+			};
 			let prevBuffer: Buffer;
 			let buffer: Buffer;
 			/* eslint-disable no-await-in-loop */
@@ -82,9 +93,9 @@ export const pageMixin = createMixin<
 				}
 				// @ts-expect-error typescript doesn't recognize buffer as an initialized buffer
 				// even if in second iteration it's initialized
-				prevBuffer = buffer || (await page.screenshot());
+				prevBuffer = buffer || (await getScreenshot());
 				await page.waitForTimeout(stableDelay);
-				buffer = await page.screenshot(options);
+				buffer = await getScreenshot();
 				if (prevBuffer.equals(buffer)) {
 					return buffer;
 				}
