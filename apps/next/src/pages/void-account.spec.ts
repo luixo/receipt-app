@@ -76,7 +76,7 @@ test.describe("Void account page", () => {
 				const buttonWithLoader = withLoader(voidButton);
 				await expect(buttonWithLoader).not.toBeVisible();
 				await voidButton.click();
-				await verifyToastTexts([]);
+				await verifyToastTexts();
 				await expect(voidButton).toBeDisabled();
 				await expect(cancelButton).toBeDisabled();
 				await expect(buttonWithLoader).toBeVisible();
