@@ -7,10 +7,7 @@ import {
 	receiptItemNameSchema,
 } from "app/utils/validation";
 import type { ReceiptItemsId } from "next-app/db/models";
-import {
-	getAccessRole,
-	getReceiptById,
-} from "next-app/handlers/receipts/utils";
+import { getAccessRole } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import { receiptIdSchema } from "next-app/handlers/validation";
 
@@ -25,11 +22,11 @@ export const procedure = authProcedure
 	)
 	.mutation(async ({ input, ctx }) => {
 		const { database } = ctx;
-		const receipt = await getReceiptById(database, input.receiptId, [
-			"ownerAccountId",
-			"id",
-			"lockedTimestamp",
-		]);
+		const receipt = await database
+			.selectFrom("receipts")
+			.select(["ownerAccountId", "id", "lockedTimestamp"])
+			.where("id", "=", input.receiptId)
+			.executeTakeFirst();
 		if (!receipt) {
 			throw new TRPCError({
 				code: "NOT_FOUND",

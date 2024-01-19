@@ -3,7 +3,6 @@ import { z } from "zod";
 
 import { receiptNameSchema } from "app/utils/validation";
 import type { SimpleUpdateObject } from "next-app/db/types";
-import { getReceiptById } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import {
 	currencyCodeSchema,
@@ -32,10 +31,11 @@ export const procedure = authProcedure
 	)
 	.mutation(async ({ input, ctx }): Promise<ReceiptUpdateObject> => {
 		const { database } = ctx;
-		const receipt = await getReceiptById(database, input.id, [
-			"ownerAccountId",
-			"lockedTimestamp",
-		]);
+		const receipt = await database
+			.selectFrom("receipts")
+			.select(["ownerAccountId", "lockedTimestamp"])
+			.where("id", "=", input.id)
+			.executeTakeFirst();
 		if (!receipt) {
 			throw new TRPCError({
 				code: "NOT_FOUND",

@@ -1,9 +1,7 @@
-import type { Selection } from "kysely";
 import type { z } from "zod";
 
-import type { Database, ReceiptsSelectExpression } from "next-app/db";
-import type { AccountsId, ReceiptsId } from "next-app/db/models";
-import type { ReceiptsDatabase } from "next-app/db/types";
+import type { Database } from "next-app/db";
+import type { AccountsId } from "next-app/db/models";
 import { roleSchema } from "next-app/handlers/validation";
 
 export type Role = z.infer<typeof roleSchema>;
@@ -44,17 +42,6 @@ export const getAccessRole = async (
 	/* c8 ignore stop */
 	return parsed.data;
 };
-
-export const getReceiptById = <SE extends ReceiptsSelectExpression<"receipts">>(
-	database: Database,
-	id: ReceiptsId,
-	selectExpression: SE[],
-): Promise<Selection<ReceiptsDatabase, "receipts", SE> | undefined> =>
-	database
-		.selectFrom("receipts")
-		.select(selectExpression)
-		.where("id", "=", id)
-		.executeTakeFirst();
 
 export const getOwnReceipts = (
 	database: Database,

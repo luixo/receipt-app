@@ -1,7 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { getReceiptById } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import { receiptIdSchema } from "next-app/handlers/validation";
 
@@ -13,9 +12,11 @@ export const procedure = authProcedure
 	)
 	.mutation(async ({ input, ctx }) => {
 		const { database } = ctx;
-		const receipt = await getReceiptById(database, input.id, [
-			"ownerAccountId",
-		]);
+		const receipt = await database
+			.selectFrom("receipts")
+			.select("ownerAccountId")
+			.where("id", "=", input.id)
+			.executeTakeFirst();
 		if (!receipt) {
 			throw new TRPCError({
 				code: "NOT_FOUND",

@@ -4,10 +4,7 @@ import { z } from "zod";
 import { MONTH } from "app/utils/time";
 import { userItemSchema } from "app/utils/validation";
 import type { UsersId } from "next-app/db/models";
-import {
-	getAccessRole,
-	getReceiptById,
-} from "next-app/handlers/receipts/utils";
+import { getAccessRole } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import {
 	limitSchema,
@@ -47,10 +44,11 @@ export const procedure = authProcedure
 		const filterIds = input.filterIds || [];
 		if (input.options.type === "not-connected-receipt") {
 			const { receiptId } = input.options;
-			const receipt = await getReceiptById(database, receiptId, [
-				"id",
-				"ownerAccountId",
-			]);
+			const receipt = await database
+				.selectFrom("receipts")
+				.select(["ownerAccountId", "id"])
+				.where("id", "=", receiptId)
+				.executeTakeFirst();
 			if (!receipt) {
 				throw new TRPCError({
 					code: "NOT_FOUND",

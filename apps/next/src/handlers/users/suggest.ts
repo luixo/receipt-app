@@ -3,10 +3,7 @@ import { sql } from "kysely";
 import { z } from "zod";
 
 import { MAX_SUGGEST_LENGTH, userItemSchema } from "app/utils/validation";
-import {
-	getAccessRole,
-	getReceiptById,
-} from "next-app/handlers/receipts/utils";
+import { getAccessRole } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import {
 	limitSchema,
@@ -54,10 +51,11 @@ export const procedure = authProcedure
 		const cursor = input.cursor || 0;
 		if (input.options.type === "not-connected-receipt") {
 			const { receiptId } = input.options;
-			const receipt = await getReceiptById(database, receiptId, [
-				"id",
-				"ownerAccountId",
-			]);
+			const receipt = await database
+				.selectFrom("receipts")
+				.select(["id", "ownerAccountId"])
+				.where("id", "=", receiptId)
+				.executeTakeFirst();
 			if (!receipt) {
 				throw new TRPCError({
 					code: "NOT_FOUND",

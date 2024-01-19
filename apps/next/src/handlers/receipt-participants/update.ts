@@ -3,7 +3,6 @@ import { z } from "zod";
 
 import type { SimpleUpdateObject } from "next-app/db/types";
 import { getReceiptParticipant } from "next-app/handlers/receipt-participants/utils";
-import { getReceiptById } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import { getUserById } from "next-app/handlers/users/utils";
 import {
@@ -28,9 +27,11 @@ export const procedure = authProcedure
 	)
 	.mutation(async ({ input, ctx }) => {
 		const { database } = ctx;
-		const receipt = await getReceiptById(database, input.receiptId, [
-			"ownerAccountId",
-		]);
+		const receipt = await database
+			.selectFrom("receipts")
+			.select("ownerAccountId")
+			.where("id", "=", input.receiptId)
+			.executeTakeFirst();
 		if (!receipt) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
