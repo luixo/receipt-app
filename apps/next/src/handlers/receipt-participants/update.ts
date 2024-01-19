@@ -4,7 +4,6 @@ import { z } from "zod";
 import type { SimpleUpdateObject } from "next-app/db/types";
 import { getReceiptParticipant } from "next-app/handlers/receipt-participants/utils";
 import { authProcedure } from "next-app/handlers/trpc";
-import { getUserById } from "next-app/handlers/users/utils";
 import {
 	assignableRoleSchema,
 	receiptIdSchema,
@@ -38,10 +37,11 @@ export const procedure = authProcedure
 				message: `Receipt "${input.receiptId}" does not exist.`,
 			});
 		}
-		const user = await getUserById(database, input.userId, [
-			"ownerAccountId",
-			"connectedAccountId",
-		]);
+		const user = await database
+			.selectFrom("users")
+			.select(["ownerAccountId", "connectedAccountId"])
+			.where("id", "=", input.userId)
+			.executeTakeFirst();
 		if (!user) {
 			throw new TRPCError({
 				code: "NOT_FOUND",

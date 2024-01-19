@@ -4,7 +4,6 @@ import type { z } from "zod";
 import type { Database } from "next-app/db";
 import { ACCOUNT_CONNECTIONS_INTENTIONS } from "next-app/db/consts";
 import type { AccountsId, UsersId } from "next-app/db/models";
-import { getUserById } from "next-app/handlers/users/utils";
 import type { emailSchema } from "next-app/handlers/validation";
 
 export const addConnectionIntention = async (
@@ -132,11 +131,11 @@ export const addConnectionIntention = async (
 				)
 				.select(["userId"])
 				.executeTakeFirstOrThrow();
-			const existingUser = await getUserById(
-				database,
-				existingIntention.userId,
-				["name"],
-			);
+			const existingUser = await database
+				.selectFrom("users")
+				.select("name")
+				.where("id", "=", existingIntention.userId)
+				.executeTakeFirst();
 			throw new TRPCError({
 				code: "CONFLICT",
 				message: `You already has intention to connect to "${

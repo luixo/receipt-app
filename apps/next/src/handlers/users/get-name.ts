@@ -2,7 +2,6 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { authProcedure } from "next-app/handlers/trpc";
-import { getUserById } from "next-app/handlers/users/utils";
 import { userIdSchema } from "next-app/handlers/validation";
 
 export const procedure = authProcedure
@@ -13,10 +12,11 @@ export const procedure = authProcedure
 	)
 	.query(async ({ input, ctx }) => {
 		const { database } = ctx;
-		const user = await getUserById(database, input.id, [
-			"name",
-			"ownerAccountId",
-		]);
+		const user = await database
+			.selectFrom("users")
+			.select(["name", "ownerAccountId"])
+			.where("id", "=", input.id)
+			.executeTakeFirst();
 		if (!user) {
 			throw new TRPCError({
 				code: "NOT_FOUND",

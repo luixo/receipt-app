@@ -3,7 +3,6 @@ import { z } from "zod";
 
 import { getReceiptParticipant } from "next-app/handlers/receipt-participants/utils";
 import { authProcedure } from "next-app/handlers/trpc";
-import { getUserById } from "next-app/handlers/users/utils";
 import { receiptIdSchema, userIdSchema } from "next-app/handlers/validation";
 
 export const procedure = authProcedure
@@ -32,7 +31,11 @@ export const procedure = authProcedure
 				message: `Not enough rights to remove participant from receipt "${input.receiptId}".`,
 			});
 		}
-		const user = await getUserById(database, input.userId, ["ownerAccountId"]);
+		const user = await database
+			.selectFrom("users")
+			.select("ownerAccountId")
+			.where("id", "=", input.userId)
+			.executeTakeFirst();
 		if (!user) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
