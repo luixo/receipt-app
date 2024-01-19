@@ -36,7 +36,9 @@ export const RemoveButton: React.FC<Props> = ({
 				isDisabled={props.isDisabled || mutation.isPending}
 				isLoading={props.isLoading || mutation.isPending}
 			>
-				{mutation.isPending ? null : <TrashBin size={24} />}
+				{mutation.isPending ? null : (
+					<TrashBin className="shrink-0" size={24} />
+				)}
 				{children}
 			</Button>
 		)}
