@@ -19,7 +19,7 @@ declare global {
 	}
 }
 
-const DEFAULT_AWAIT_QUERY_TIMEOUT = 5000;
+const DEFAULT_AWAIT_CACHE_TIMEOUT = 5000;
 
 type SnapshotNames = {
 	queriesIndex?: number;
@@ -261,8 +261,9 @@ type QueriesMixin = {
 		fn: () => Promise<T>,
 		options?: Partial<SnapshotQueryCacheOptions>,
 	) => Promise<T>;
-	awaitQuery: <T extends TRPCQueryKey>(
+	awaitCacheKey: <T extends TRPCKey>(
 		path: T,
+		type: T extends TRPCQueryKey ? "query" : "mutation",
 		timeout?: number,
 	) => Promise<boolean>;
 	expectScreenshotWithSchemes: (
@@ -288,7 +289,7 @@ export const queriesMixin = createMixin<
 					whitelistKeys = [],
 					addDefaultBlacklist = true,
 					name,
-					timeout = DEFAULT_AWAIT_QUERY_TIMEOUT,
+					timeout = DEFAULT_AWAIT_CACHE_TIMEOUT,
 				} = {},
 			) => {
 				const blacklistKeysArray = Array.isArray(blacklistKeys)
@@ -330,46 +331,77 @@ export const queriesMixin = createMixin<
 			},
 		);
 	},
-	awaitQuery: async ({ page }, use) => {
-		await use((queryKey, timeout = DEFAULT_AWAIT_QUERY_TIMEOUT) =>
+	awaitCacheKey: async ({ page }, use) => {
+		await use((cacheKey, type, timeout = DEFAULT_AWAIT_CACHE_TIMEOUT) =>
 			page.evaluate(
-				([awaitedKeyInner, timeoutInner]) => {
+				async ([cacheKeyInner, typeInner, timeoutInner]) => {
 					if (!window.queryClient) {
-						return Promise.reject(
-							new Error("window.queryClient is not defined yet"),
-						);
+						throw new Error("window.queryClient is not defined yet");
 					}
-					const queryCache = window.queryClient.getQueryCache();
-					const matchedQuery = queryCache.findAll({
-						queryKey: [awaitedKeyInner.split(".")],
+					if (typeInner === "query") {
+						const cache = window.queryClient.getQueryCache();
+						const matchedElement = cache.findAll({
+							queryKey: [cacheKeyInner.split(".")],
+						})[0];
+						if (
+							matchedElement &&
+							(matchedElement.state.status === "success" ||
+								matchedElement.state.status === "error")
+						) {
+							return true;
+						}
+						return new Promise((resolve, reject) => {
+							cache.subscribe((cacheNotifyEvent) => {
+								if (
+									cacheNotifyEvent.query.queryKey[0].join(".") !==
+										cacheKeyInner ||
+									cacheNotifyEvent.type !== "updated"
+								) {
+									return;
+								}
+								if (
+									cacheNotifyEvent.action.type === "success" ||
+									cacheNotifyEvent.action.type === "error"
+								) {
+									resolve(false);
+								}
+							});
+							setTimeout(reject, timeoutInner);
+						});
+					}
+					const cache = window.queryClient.getMutationCache();
+					const matchedElement = cache.findAll({
+						mutationKey: [cacheKeyInner.split(".")],
 					})[0];
 					if (
-						matchedQuery &&
-						(matchedQuery.state.status === "success" ||
-							matchedQuery.state.status === "error")
+						matchedElement &&
+						(matchedElement.state.status === "success" ||
+							matchedElement.state.status === "error")
 					) {
-						return Promise.resolve(true);
+						return true;
 					}
-
 					return new Promise((resolve, reject) => {
-						queryCache.subscribe((queryCacheNotifyEvent) => {
+						cache.subscribe((cacheNotifyEvent) => {
 							if (
-								queryCacheNotifyEvent.query.queryKey[0].join(".") !==
-								awaitedKeyInner
+								(
+									(cacheNotifyEvent.mutation?.options
+										.mutationKey?.[0] as string[]) ?? []
+								).join(".") !== cacheKeyInner ||
+								cacheNotifyEvent.type !== "updated"
 							) {
 								return;
 							}
-							if (queryCacheNotifyEvent.type !== "updated") {
-								return;
-							}
-							if (queryCacheNotifyEvent.action.type === "success") {
+							if (
+								cacheNotifyEvent.action.type === "success" ||
+								cacheNotifyEvent.action.type === "error"
+							) {
 								resolve(false);
 							}
 						});
 						setTimeout(reject, timeoutInner);
 					});
 				},
-				[queryKey, timeout] as const,
+				[cacheKey, type, timeout] as const,
 			),
 		);
 	},
