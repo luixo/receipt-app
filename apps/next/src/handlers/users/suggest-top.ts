@@ -22,6 +22,9 @@ export const procedure = authProcedure
 			filterIds: z.array(userIdSchema).optional(),
 			options: z.discriminatedUnion("type", [
 				z.strictObject({
+					type: z.literal("connected"),
+				}),
+				z.strictObject({
 					type: z.literal("not-connected"),
 				}),
 				z.strictObject({
@@ -125,15 +128,22 @@ export const procedure = authProcedure
 				})),
 			};
 		}
-		if (input.options.type === "not-connected") {
+		if (
+			input.options.type === "not-connected" ||
+			input.options.type === "connected"
+		) {
 			const users = await database
 				.selectFrom("users")
 				.where((eb) =>
-					eb("users.ownerAccountId", "=", ctx.auth.accountId).and(
-						"users.connectedAccountId",
-						"is",
-						null,
-					),
+					eb.and([
+						eb("users.ownerAccountId", "=", ctx.auth.accountId),
+						input.options.type === "connected"
+							? eb("users.connectedAccountId", "<>", ctx.auth.accountId)
+							: eb("users.connectedAccountId", "is", null),
+					]),
+				)
+				.leftJoin("accounts", (qb) =>
+					qb.onRef("accounts.id", "=", "users.connectedAccountId"),
 				)
 				.leftJoin("debts", (qb) =>
 					qb
@@ -148,17 +158,22 @@ export const procedure = authProcedure
 					"users.name",
 					"users.publicName",
 					database.fn.count<string>("debts.id").as("latestCount"),
+					"accounts.id as accountId",
+					"accounts.email",
 				])
-				.groupBy("users.id")
+				.groupBy(["users.id", "accountId", "accounts.email"])
 				.orderBy(["latestCount desc", "users.id"])
 				.limit(input.limit)
 				.execute();
 			return {
-				items: users.map(({ latestCount, publicName, ...user }) => ({
-					publicName: publicName === null ? undefined : publicName,
-					...user,
-					connectedAccount: undefined,
-				})),
+				items: users.map(
+					({ latestCount, publicName, accountId, email, ...user }) => ({
+						publicName: publicName === null ? undefined : publicName,
+						...user,
+						connectedAccount:
+							accountId && email ? { id: accountId, email } : undefined,
+					}),
+				),
 			};
 		}
 		const users = await database

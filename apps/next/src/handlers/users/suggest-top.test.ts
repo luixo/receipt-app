@@ -295,7 +295,7 @@ describe("users.suggestTop", () => {
 			});
 		});
 
-		describe("not connected users", () => {
+		describe("(not) connected users", () => {
 			test("returns top users", async ({ ctx }) => {
 				const { id: otherAccountId } = await insertAccount(ctx);
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
@@ -318,6 +318,45 @@ describe("users.suggestTop", () => {
 					items: mapUserToSuggestResult([user, publicNamedUser], []).sort(
 						(a, b) => a.id.localeCompare(b.id),
 					),
+				});
+			});
+
+			test("returns top connected users", async ({ ctx }) => {
+				const {
+					sessionId,
+					accountId,
+					account: { email },
+				} = await insertAccountWithSession(ctx);
+				const otherAccounts = await Promise.all([
+					insertAccount(ctx),
+					insertAccount(ctx),
+				]);
+
+				// Verify other users don't affect our top users
+				await insertUser(ctx, otherAccounts[0].id);
+
+				await insertUser(ctx, accountId);
+				const connectedUserTuples = await Promise.all(
+					otherAccounts.map((otherAccount, index) =>
+						insertConnectedUsers(ctx, [
+							{
+								accountId,
+								publicName: index === 0 ? undefined : faker.person.fullName(),
+							},
+							otherAccount.id,
+						]),
+					),
+				);
+				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const result = await caller.procedure({
+					limit: 4,
+					options: { type: "connected" },
+				});
+				expect(result).toStrictEqual<typeof result>({
+					items: mapUserToSuggestResult(
+						connectedUserTuples.map(([user]) => user),
+						[{ id: accountId, email }, ...otherAccounts],
+					).sort((a, b) => a.id.localeCompare(b.id)),
 				});
 			});
 

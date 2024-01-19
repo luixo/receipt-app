@@ -26,6 +26,9 @@ export const procedure = authProcedure
 			filterIds: z.array(userIdSchema).optional(),
 			options: z.discriminatedUnion("type", [
 				z.strictObject({
+					type: z.literal("connected"),
+				}),
+				z.strictObject({
 					type: z.literal("not-connected"),
 				}),
 				z.strictObject({
@@ -95,6 +98,9 @@ export const procedure = authProcedure
 			.where("users.ownerAccountId", "=", ctx.auth.accountId)
 			.$if(Boolean(input.options.type === "not-connected"), (qb) =>
 				qb.where("users.connectedAccountId", "is", null),
+			)
+			.$if(Boolean(input.options.type === "connected"), (qb) =>
+				qb.where("users.connectedAccountId", "is not", null),
 			)
 			.$if(input.input.length < 3, (qb) =>
 				qb.where("name", "ilike", `%${input.input}%`),

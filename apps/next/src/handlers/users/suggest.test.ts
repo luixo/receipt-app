@@ -410,6 +410,55 @@ describe("users.suggest", () => {
 			});
 		});
 
+		test("returns matched users with connected account", async ({ ctx }) => {
+			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+
+			const accounts = await Promise.all([
+				insertAccount(ctx),
+				insertAccount(ctx),
+			]);
+
+			await insertUser(ctx, accountId, { name: "Alice from work" });
+			await insertUser(ctx, accountId, {
+				name: "Alice from school",
+				publicName: faker.person.fullName(),
+			});
+			await insertUser(ctx, accountId, { name: "Alice from gym" });
+			const [connectedAlice] = await insertConnectedUsers(ctx, [
+				{ accountId, name: "Connected Alice" },
+				accounts[0].id,
+			]);
+			const [connectedAliceWithPublicName] = await insertConnectedUsers(ctx, [
+				{
+					accountId,
+					name: "Connected Alice with public name",
+					publicName: faker.person.fullName(),
+				},
+				accounts[1].id,
+			]);
+			await insertUser(ctx, accountId, { name: "Bob from work" });
+			await insertConnectedUsers(ctx, [
+				{ accountId, name: "Connected Bob" },
+				accounts[1].id,
+			]);
+			const matchedUsers = [connectedAlice, connectedAliceWithPublicName];
+
+			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const result = await caller.procedure({
+				input: "Alice",
+				limit: 10,
+				options: { type: "connected" },
+			});
+			expect(result).toStrictEqual<typeof result>({
+				items: mapUserToSuggestResult(matchedUsers, accounts).sort((a, b) =>
+					// Users with same similarity are sorted by id
+					a.id.localeCompare(b.id),
+				),
+				cursor: 0,
+				hasMore: false,
+			});
+		});
+
 		test("returns fuzzily matched users", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 
