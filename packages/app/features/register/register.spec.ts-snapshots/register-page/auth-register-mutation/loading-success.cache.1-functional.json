@@ -25,14 +25,7 @@
 						"id": "test"
 					}
 				},
-				"error": null,
-				"isPaused": false,
-				"status": "success",
-				"variables": {
-					"email": "test@mail.ru",
-					"name": "Test name",
-					"password": "strong-password"
-				}
+				"status": "success"
 			}
 		}
 	}

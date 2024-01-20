@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 
 import { expect } from "@tests/frontend/fixtures";
 
-import { test } from "./register.utils.spec";
+import { test } from "./utils.spec";
 
 test.describe("Register page", () => {
 	test("On load", async ({ page, api, registerButton, snapshotQueries }) => {
@@ -29,7 +29,7 @@ test.describe("Register page", () => {
 	});
 
 	test.describe("'auth.register' mutation", () => {
-		test("loading", async ({
+		test("loading / success", async ({
 			page,
 			api,
 			registerButton,
@@ -37,14 +37,21 @@ test.describe("Register page", () => {
 			snapshotQueries,
 			withLoader,
 			verifyToastTexts,
+			consoleManager,
 		}) => {
+			// Remove this ignored pattern when we will explicitly redirect to "/receipts"
+			consoleManager.ignore('Abort fetching component for route: "/"');
 			api.mockUtils.noAuth();
-			api.pause("auth.register");
+			api.mock("auth.register", () => ({ account: { id: "test" } }));
+			// We'll need it when we eventually register
+			api.mockUtils.authAnyPage();
+			api.mockUtils.emptyReceipts();
 
 			await page.goto("/register");
 			await fillValidFields();
 
 			await snapshotQueries(async () => {
+				api.pause("auth.register");
 				const buttonWithLoader = withLoader(registerButton);
 				await expect(buttonWithLoader).not.toBeVisible();
 				await registerButton.click();
@@ -59,32 +66,10 @@ test.describe("Register page", () => {
 				}
 			});
 			await expect(page).toHaveURL("/register");
-		});
-
-		test("success", async ({
-			page,
-			api,
-			registerButton,
-			fillValidFields,
-			verifyToastTexts,
-			snapshotQueries,
-			consoleManager,
-		}) => {
-			// Remove this ignored pattern when we will explicitly redirect to "/receipts"
-			consoleManager.ignore('Abort fetching component for route: "/"');
-			// We'll need it when we eventually register
-			api.mockUtils.authAnyPage();
-			api.mockUtils.emptyReceipts();
-			// Before registration
-			api.mockUtils.noAuth();
-			api.mock("auth.register", () => ({ account: { id: "test" } }));
-
-			await page.goto("/register");
-			await fillValidFields();
 
 			await snapshotQueries(
 				async () => {
-					await registerButton.click();
+					api.unpause("auth.register");
 					await verifyToastTexts("Register successful, redirecting..");
 					await expect(page).toHaveURL("/receipts");
 				},

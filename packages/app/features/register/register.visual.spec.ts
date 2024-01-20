@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
-import { test } from "./register.utils.spec";
+import { test } from "./utils.spec";
 
 test.describe("Register page - visual", () => {
 	test("Regular usage", async ({
