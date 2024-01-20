@@ -117,7 +117,7 @@ module.exports = {
 		...[
 			["apps/next", ["next.config.js", "**/*.test.ts", "**/*.spec.ts"]],
 			["apps/expo"],
-			["packages/app"],
+			["packages/app", ["**/*.spec.ts"]],
 			["scripts", true],
 			["testing/vitest", true],
 			["testing/playwright", true],

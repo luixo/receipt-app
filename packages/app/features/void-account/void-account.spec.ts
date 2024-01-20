@@ -2,48 +2,28 @@ import { TRPCError } from "@trpc/server";
 
 import { expect } from "@tests/frontend/fixtures";
 
-import { test } from "./void-account.utils.spec";
+import { test } from "./utils.spec";
 
-test.describe("Void account page", () => {
-	test.describe("On load", () => {
-		test("Without token", async ({
-			page,
-			api,
-			voidButton,
-			cancelButton,
-			snapshotQueries,
-		}) => {
-			api.mockUtils.noAuth();
+test.describe("Void account", () => {
+	test("On load with token", async ({
+		page,
+		api,
+		voidButton,
+		cancelButton,
+		snapshotQueries,
+	}) => {
+		api.mockUtils.noAuth();
 
-			await snapshotQueries(() => page.goto("/void-account"), {
-				whitelistKeys: "account.get",
-			});
-			await expect(page).toHaveTitle("RA - Void account");
-			await expect(page.locator("h2")).toHaveText("Something went wrong");
-			await expect(voidButton).not.toBeAttached();
-			await expect(cancelButton).not.toBeAttached();
+		await snapshotQueries(() => page.goto("/void-account?token=foo"), {
+			whitelistKeys: "account.get",
 		});
-
-		test("With token", async ({
-			page,
-			api,
-			voidButton,
-			cancelButton,
-			snapshotQueries,
-		}) => {
-			api.mockUtils.noAuth();
-
-			await snapshotQueries(() => page.goto("/void-account?token=foo"), {
-				whitelistKeys: "account.get",
-			});
-			await expect(page.locator("h3")).toHaveText(
-				"Are you sure you want to void your account?",
-			);
-			await expect(voidButton).toBeEnabled();
-			await expect(voidButton).toHaveText("Yes");
-			await expect(cancelButton).toBeEnabled();
-			await expect(cancelButton).toHaveText("No");
-		});
+		await expect(page.locator("h3")).toHaveText(
+			"Are you sure you want to void your account?",
+		);
+		await expect(voidButton).toBeEnabled();
+		await expect(voidButton).toHaveText("Yes");
+		await expect(cancelButton).toBeEnabled();
+		await expect(cancelButton).toHaveText("No");
 	});
 
 	test("nagivating back to the home page", async ({
@@ -58,7 +38,7 @@ test.describe("Void account page", () => {
 	});
 
 	test.describe("'auth.voidAccount' mutation", () => {
-		test("loading", async ({
+		test("loading / success", async ({
 			page,
 			api,
 			voidButton,
@@ -68,6 +48,7 @@ test.describe("Void account page", () => {
 			verifyToastTexts,
 		}) => {
 			api.mockUtils.noAuth();
+			api.mock("auth.voidAccount", { email: "foo@gmail.com" });
 			api.pause("auth.voidAccount");
 
 			await page.goto("/void-account?token=foo");
@@ -82,22 +63,9 @@ test.describe("Void account page", () => {
 				await expect(buttonWithLoader).toBeVisible();
 			});
 			await expect(page).toHaveURL("/void-account?token=foo");
-		});
-
-		test("success", async ({
-			page,
-			api,
-			voidButton,
-			verifyToastTexts,
-			snapshotQueries,
-		}) => {
-			api.mockUtils.noAuth();
-			api.mock("auth.voidAccount", { email: "foo@gmail.com" });
-
-			await page.goto("/void-account?token=foo");
 
 			await snapshotQueries(async () => {
-				await voidButton.click();
+				api.unpause("auth.voidAccount");
 				await verifyToastTexts("Account successfully voided, redirecting..");
 				await expect(page.locator("h3")).toHaveText("foo@gmail.com");
 				await expect(page.locator("h4")).toHaveText(

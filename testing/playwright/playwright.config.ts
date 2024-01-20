@@ -78,7 +78,7 @@ const localDir = path.dirname(url.fileURLToPath(import.meta.url));
 const rootDir = path.join(localDir, "../..");
 
 export default defineConfig({
-	testDir: path.join(rootDir, "apps/next/src"),
+	testDir: rootDir,
 	testMatch: /.*\.spec\.ts/,
 	testIgnore: /.*\.utils\.spec\.ts/,
 	/* Run tests in files in parallel */

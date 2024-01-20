@@ -5,12 +5,7 @@
 				"data": {
 					"email": "foo@gmail.com"
 				},
-				"error": null,
-				"isPaused": false,
-				"status": "success",
-				"variables": {
-					"token": "foo"
-				}
+				"status": "success"
 			}
 		}
 	}
