@@ -63,6 +63,7 @@ type Fixtures = {
 	updateDebtButton: Locator;
 	propagateDebtsButton: Locator;
 	openDebtsInfoPanel: () => Promise<void>;
+	openReceipt: (id: ReceiptsId) => Promise<void>;
 };
 
 export const test = originalTest.extend<Fixtures>({
@@ -302,5 +303,15 @@ export const test = originalTest.extend<Fixtures>({
 		use(async () => {
 			await page.locator("button[title='Show sync status']").click();
 			await modal("Receipt sync status").waitFor();
+		}),
+
+	openReceipt: ({ page, awaitCacheKey }, use) =>
+		use(async (receiptId) => {
+			await page.goto(`/receipts/${receiptId}`);
+			await awaitCacheKey([
+				{ path: "debts.get", type: "query" },
+				{ path: "currency.topReceipts", type: "query" },
+				{ path: "users.get", type: "query" },
+			]);
 		}),
 });

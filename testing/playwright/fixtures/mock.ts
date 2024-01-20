@@ -17,7 +17,7 @@ export const mockMixin = createMixin<MockMixin, MockWorkerMixin>({
 	faker: async ({}, use, testInfo) => {
 		const localFaker = new Faker({ locale: en });
 		// Remove first element as it is a file name
-		setSeed(localFaker, testInfo.titlePath.slice(0, 1).join(" / "));
+		setSeed(localFaker, testInfo.titlePath.slice(1).join(" / "));
 		await use(localFaker);
 	},
 	timekeeper: [

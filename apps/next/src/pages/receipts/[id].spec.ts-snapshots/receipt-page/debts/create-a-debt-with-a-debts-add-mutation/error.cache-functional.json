@@ -15,12 +15,12 @@
 				"isPaused": false,
 				"status": "error",
 				"variables": {
-					"currencyCode": "KZT",
-					"userId": "2e4ce704-4d63-4650-87bb-003d1cedaab4",
-					"amount": 11883.07,
+					"currencyCode": "EGP",
+					"userId": "740d3289-a92e-4812-8ad2-196428d0ab03",
+					"amount": 23878.64,
 					"timestamp": "2020-01-01T00:00:00.000Z",
-					"note": "Receipt \"officiis perferendis officia\"",
-					"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"
+					"note": "Receipt \"maxime voluptas id\"",
+					"receiptId": "be156a49-6afa-4fac-a259-a52b93cc4348"
 				}
 			}
 		}

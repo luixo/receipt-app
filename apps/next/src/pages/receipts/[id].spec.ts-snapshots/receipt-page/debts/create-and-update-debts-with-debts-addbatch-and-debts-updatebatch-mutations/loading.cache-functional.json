@@ -1,9 +1,9 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"efa3c034-798a-4339-96d0-5ad6ca8c5f4b\"}]": {
+		"debts.get:[{\"id\":\"e922b46a-64ae-4dcf-b308-d145bd3581f7\"}]": {
 			"state": {
 				"data": {
-					"amount": 11883.07,
+					"amount": 15099.26,
 					"lockedTimestamp": "2020-01-01T00:00:00.000Z"
 				},
 				"dataUpdateCount": 2
@@ -18,28 +18,44 @@
 				"status": "pending",
 				"variables": [
 					{
-						"note": "Receipt \"officiis perferendis officia\"",
-						"currencyCode": "KZT",
-						"userId": "7b74200e-3c6e-40da-96fa-28a512e05875",
-						"amount": 98244.6,
+						"note": "Receipt \"ipsum placeat ullam\"",
+						"currencyCode": "XAF",
+						"userId": "f6b3ea11-ae49-4fdd-92e8-ac5b1e80d189",
+						"amount": 6590.32,
 						"timestamp": "2020-01-01T00:00:00.000Z",
-						"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"
+						"receiptId": "e6f669c8-6cf4-4006-9692-14b7991532d4"
 					},
 					{
-						"note": "Receipt \"officiis perferendis officia\"",
-						"currencyCode": "KZT",
-						"userId": "f6a141d5-d075-49e7-aa69-21ff09428717",
-						"amount": 11405.14,
+						"note": "Receipt \"ipsum placeat ullam\"",
+						"currencyCode": "XAF",
+						"userId": "4507b980-43a2-46f6-8c5e-5dde36874f8b",
+						"amount": 14683.09,
 						"timestamp": "2020-01-01T00:00:00.000Z",
-						"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"
+						"receiptId": "e6f669c8-6cf4-4006-9692-14b7991532d4"
 					},
 					{
-						"note": "Receipt \"officiis perferendis officia\"",
-						"currencyCode": "KZT",
-						"userId": "f315805a-e07c-46a6-acb9-c825fd15de67",
-						"amount": 1249.5,
+						"note": "Receipt \"ipsum placeat ullam\"",
+						"currencyCode": "XAF",
+						"userId": "6cc49852-f91e-439d-a170-7915f064c8e6",
+						"amount": 624.25,
 						"timestamp": "2020-01-01T00:00:00.000Z",
-						"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"
+						"receiptId": "e6f669c8-6cf4-4006-9692-14b7991532d4"
+					},
+					{
+						"note": "Receipt \"ipsum placeat ullam\"",
+						"currencyCode": "XAF",
+						"userId": "90093008-8699-41ea-988a-00cbd020bea1",
+						"amount": 19354.79,
+						"timestamp": "2020-01-01T00:00:00.000Z",
+						"receiptId": "e6f669c8-6cf4-4006-9692-14b7991532d4"
+					},
+					{
+						"note": "Receipt \"ipsum placeat ullam\"",
+						"currencyCode": "XAF",
+						"userId": "7e8c5532-4343-42c9-b2f9-9ee62322b264",
+						"amount": 20857.25,
+						"timestamp": "2020-01-01T00:00:00.000Z",
+						"receiptId": "e6f669c8-6cf4-4006-9692-14b7991532d4"
 					}
 				]
 			}
@@ -51,13 +67,13 @@
 				"status": "pending",
 				"variables": [
 					{
-						"id": "efa3c034-798a-4339-96d0-5ad6ca8c5f4b",
+						"id": "e922b46a-64ae-4dcf-b308-d145bd3581f7",
 						"update": {
-							"amount": 11883.07,
-							"currencyCode": "KZT",
+							"amount": 15099.26,
+							"currencyCode": "XAF",
 							"timestamp": "2020-01-01T00:00:00.000Z",
 							"locked": true,
-							"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"
+							"receiptId": "e6f669c8-6cf4-4006-9692-14b7991532d4"
 						}
 					}
 				]

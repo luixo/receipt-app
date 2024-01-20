@@ -1,16 +1,16 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"1a95825b-66e2-4615-8687-2f1c1d3ce5b2\"}]": {
+		"debts.get:[{\"id\":\"0ec9fabf-75df-4076-a225-998613a1a41e\"}]": {
 			"state": {
 				"data": {
-					"id": "1a95825b-66e2-4615-8687-2f1c1d3ce5b2",
-					"amount": 11883.07,
-					"currencyCode": "KZT",
-					"userId": "2e4ce704-4d63-4650-87bb-003d1cedaab4",
+					"id": "0ec9fabf-75df-4076-a225-998613a1a41e",
+					"amount": 30084.94,
+					"currencyCode": "SDG",
+					"userId": "11c5062f-0183-4d49-a40e-206a71f3ad09",
 					"timestamp": "2020-01-01T00:00:00.000Z",
-					"note": "Receipt \"officiis perferendis officia\"",
+					"note": "Receipt \"culpa at fugiat\"",
 					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
-					"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"
+					"receiptId": "eb98e330-28c7-490b-952e-619ffdf5f254"
 				},
 				"dataUpdateCount": 1,
 				"error": null,
@@ -20,12 +20,12 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"receipts.get:[{\"id\":\"0092bd1e-03f7-48be-9c4e-dbc610808222\"}]": {
+		"receipts.get:[{\"id\":\"eb98e330-28c7-490b-952e-619ffdf5f254\"}]": {
 			"state": {
 				"data": {
 					"debt": {
 						"ids": {
-							"4": "1a95825b-66e2-4615-8687-2f1c1d3ce5b2"
+							"4": "0ec9fabf-75df-4076-a225-998613a1a41e"
 						}
 					}
 				},
@@ -37,7 +37,7 @@
 		"debts.add": {
 			"state": {
 				"data": {
-					"id": "1a95825b-66e2-4615-8687-2f1c1d3ce5b2",
+					"id": "0ec9fabf-75df-4076-a225-998613a1a41e",
 					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
 					"reverseAccepted": false
 				},
@@ -45,12 +45,12 @@
 				"isPaused": false,
 				"status": "success",
 				"variables": {
-					"currencyCode": "KZT",
-					"userId": "2e4ce704-4d63-4650-87bb-003d1cedaab4",
-					"amount": 11883.07,
+					"currencyCode": "SDG",
+					"userId": "11c5062f-0183-4d49-a40e-206a71f3ad09",
+					"amount": 30084.94,
 					"timestamp": "2020-01-01T00:00:00.000Z",
-					"note": "Receipt \"officiis perferendis officia\"",
-					"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"
+					"note": "Receipt \"culpa at fugiat\"",
+					"receiptId": "eb98e330-28c7-490b-952e-619ffdf5f254"
 				}
 			}
 		}

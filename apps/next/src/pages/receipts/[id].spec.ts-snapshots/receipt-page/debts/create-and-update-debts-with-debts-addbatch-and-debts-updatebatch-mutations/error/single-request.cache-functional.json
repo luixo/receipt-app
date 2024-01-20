@@ -1,16 +1,16 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"1a95825b-66e2-4615-8687-2f1c1d3ce5b2\"}]": {
+		"debts.get:[{\"id\":\"0119f5ff-e63a-4c8e-b56d-3e6a001809eb\"}]": {
 			"state": {
 				"data": {
-					"id": "1a95825b-66e2-4615-8687-2f1c1d3ce5b2",
-					"amount": 98244.6,
-					"currencyCode": "KZT",
-					"userId": "7b74200e-3c6e-40da-96fa-28a512e05875",
+					"id": "0119f5ff-e63a-4c8e-b56d-3e6a001809eb",
+					"amount": 15531.22,
+					"currencyCode": "XAF",
+					"userId": "61ca2d0a-4ce0-4bee-ae73-d01238ffe406",
 					"timestamp": "2020-01-01T00:00:00.000Z",
-					"note": "Receipt \"officiis perferendis officia\"",
+					"note": "Receipt \"ipsa labore cum\"",
 					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
-					"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"
+					"receiptId": "2b90f180-8742-4cf3-8ee6-8cd7b063e5f1"
 				},
 				"dataUpdateCount": 1,
 				"error": null,
@@ -20,17 +20,17 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"debts.get:[{\"id\":\"32524737-9be0-4f85-b10e-88a74806f0e6\"}]": {
+		"debts.get:[{\"id\":\"14ef4483-ef96-49c0-b1d9-96396b4950f8\"}]": {
 			"state": {
 				"data": {
-					"id": "32524737-9be0-4f85-b10e-88a74806f0e6",
-					"amount": 1249.5,
-					"currencyCode": "KZT",
-					"userId": "f315805a-e07c-46a6-acb9-c825fd15de67",
+					"id": "14ef4483-ef96-49c0-b1d9-96396b4950f8",
+					"amount": 66580.24,
+					"currencyCode": "XAF",
+					"userId": "bbc8a59b-f868-44f3-a88f-96081ca83cb5",
 					"timestamp": "2020-01-01T00:00:00.000Z",
-					"note": "Receipt \"officiis perferendis officia\"",
+					"note": "Receipt \"ipsa labore cum\"",
 					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
-					"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"
+					"receiptId": "2b90f180-8742-4cf3-8ee6-8cd7b063e5f1"
 				},
 				"dataUpdateCount": 1,
 				"error": null,
@@ -40,17 +40,17 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"debts.get:[{\"id\":\"5f17df3b-f9e2-4fce-822c-445e2493b5b2\"}]": {
+		"debts.get:[{\"id\":\"5ac6c6f5-3d49-495e-86ad-f839b962be03\"}]": {
 			"state": {
 				"data": {
-					"id": "5f17df3b-f9e2-4fce-822c-445e2493b5b2",
-					"amount": 11405.14,
-					"currencyCode": "KZT",
-					"userId": "f6a141d5-d075-49e7-aa69-21ff09428717",
+					"id": "5ac6c6f5-3d49-495e-86ad-f839b962be03",
+					"amount": 8399.09,
+					"currencyCode": "XAF",
+					"userId": "d00bf98e-73b4-49d1-b492-032d1c9d67c9",
 					"timestamp": "2020-01-01T00:00:00.000Z",
-					"note": "Receipt \"officiis perferendis officia\"",
+					"note": "Receipt \"ipsa labore cum\"",
 					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
-					"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"
+					"receiptId": "2b90f180-8742-4cf3-8ee6-8cd7b063e5f1"
 				},
 				"dataUpdateCount": 1,
 				"error": null,
@@ -60,23 +60,65 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"debts.get:[{\"id\":\"efa3c034-798a-4339-96d0-5ad6ca8c5f4b\"}]": {
+		"debts.get:[{\"id\":\"5b71b14b-1963-4635-8f7e-acef977907e7\"}]": {
+			"state": {
+				"data": {
+					"id": "5b71b14b-1963-4635-8f7e-acef977907e7",
+					"amount": 29178.05,
+					"currencyCode": "XAF",
+					"userId": "60b58d62-f604-4919-9db4-cf0cb5b7f59a",
+					"timestamp": "2020-01-01T00:00:00.000Z",
+					"note": "Receipt \"ipsa labore cum\"",
+					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+					"receiptId": "2b90f180-8742-4cf3-8ee6-8cd7b063e5f1"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"9e73040e-5f32-4284-aa56-e9d0b5e61d62\"}]": {
+			"state": {
+				"data": {
+					"id": "9e73040e-5f32-4284-aa56-e9d0b5e61d62",
+					"amount": 2947.56,
+					"currencyCode": "XAF",
+					"userId": "a3c877af-3112-406d-aa68-dce0cd0f8522",
+					"timestamp": "2020-01-01T00:00:00.000Z",
+					"note": "Receipt \"ipsa labore cum\"",
+					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+					"receiptId": "2b90f180-8742-4cf3-8ee6-8cd7b063e5f1"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"ebcdecfd-3dd4-431d-a89c-1024c4e362e4\"}]": {
 			"state": {
 				"dataUpdateCount": 3
 			}
 		},
-		"receipts.get:[{\"id\":\"0092bd1e-03f7-48be-9c4e-dbc610808222\"}]": {
+		"receipts.get:[{\"id\":\"2b90f180-8742-4cf3-8ee6-8cd7b063e5f1\"}]": {
 			"state": {
 				"data": {
 					"debt": {
 						"ids": {
-							"1": "1a95825b-66e2-4615-8687-2f1c1d3ce5b2",
-							"2": "5f17df3b-f9e2-4fce-822c-445e2493b5b2",
-							"3": "32524737-9be0-4f85-b10e-88a74806f0e6"
+							"1": "9e73040e-5f32-4284-aa56-e9d0b5e61d62",
+							"2": "14ef4483-ef96-49c0-b1d9-96396b4950f8",
+							"3": "0119f5ff-e63a-4c8e-b56d-3e6a001809eb",
+							"4": "5b71b14b-1963-4635-8f7e-acef977907e7",
+							"5": "5ac6c6f5-3d49-495e-86ad-f839b962be03"
 						}
 					}
 				},
-				"dataUpdateCount": 4
+				"dataUpdateCount": 6
 			}
 		}
 	},
@@ -85,9 +127,11 @@
 			"state": {
 				"data": {
 					"ids": [
-						"1a95825b-66e2-4615-8687-2f1c1d3ce5b2",
-						"5f17df3b-f9e2-4fce-822c-445e2493b5b2",
-						"32524737-9be0-4f85-b10e-88a74806f0e6"
+						"9e73040e-5f32-4284-aa56-e9d0b5e61d62",
+						"14ef4483-ef96-49c0-b1d9-96396b4950f8",
+						"0119f5ff-e63a-4c8e-b56d-3e6a001809eb",
+						"5b71b14b-1963-4635-8f7e-acef977907e7",
+						"5ac6c6f5-3d49-495e-86ad-f839b962be03"
 					],
 					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
 					"reverseAcceptedUserIds": []
@@ -97,28 +141,44 @@
 				"status": "success",
 				"variables": [
 					{
-						"note": "Receipt \"officiis perferendis officia\"",
-						"currencyCode": "KZT",
-						"userId": "7b74200e-3c6e-40da-96fa-28a512e05875",
-						"amount": 98244.6,
+						"note": "Receipt \"ipsa labore cum\"",
+						"currencyCode": "XAF",
+						"userId": "a3c877af-3112-406d-aa68-dce0cd0f8522",
+						"amount": 2947.56,
 						"timestamp": "2020-01-01T00:00:00.000Z",
-						"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"
+						"receiptId": "2b90f180-8742-4cf3-8ee6-8cd7b063e5f1"
 					},
 					{
-						"note": "Receipt \"officiis perferendis officia\"",
-						"currencyCode": "KZT",
-						"userId": "f6a141d5-d075-49e7-aa69-21ff09428717",
-						"amount": 11405.14,
+						"note": "Receipt \"ipsa labore cum\"",
+						"currencyCode": "XAF",
+						"userId": "bbc8a59b-f868-44f3-a88f-96081ca83cb5",
+						"amount": 66580.24,
 						"timestamp": "2020-01-01T00:00:00.000Z",
-						"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"
+						"receiptId": "2b90f180-8742-4cf3-8ee6-8cd7b063e5f1"
 					},
 					{
-						"note": "Receipt \"officiis perferendis officia\"",
-						"currencyCode": "KZT",
-						"userId": "f315805a-e07c-46a6-acb9-c825fd15de67",
-						"amount": 1249.5,
+						"note": "Receipt \"ipsa labore cum\"",
+						"currencyCode": "XAF",
+						"userId": "61ca2d0a-4ce0-4bee-ae73-d01238ffe406",
+						"amount": 15531.22,
 						"timestamp": "2020-01-01T00:00:00.000Z",
-						"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"
+						"receiptId": "2b90f180-8742-4cf3-8ee6-8cd7b063e5f1"
+					},
+					{
+						"note": "Receipt \"ipsa labore cum\"",
+						"currencyCode": "XAF",
+						"userId": "60b58d62-f604-4919-9db4-cf0cb5b7f59a",
+						"amount": 29178.05,
+						"timestamp": "2020-01-01T00:00:00.000Z",
+						"receiptId": "2b90f180-8742-4cf3-8ee6-8cd7b063e5f1"
+					},
+					{
+						"note": "Receipt \"ipsa labore cum\"",
+						"currencyCode": "XAF",
+						"userId": "d00bf98e-73b4-49d1-b492-032d1c9d67c9",
+						"amount": 8399.09,
+						"timestamp": "2020-01-01T00:00:00.000Z",
+						"receiptId": "2b90f180-8742-4cf3-8ee6-8cd7b063e5f1"
 					}
 				]
 			}
@@ -139,13 +199,13 @@
 				"status": "error",
 				"variables": [
 					{
-						"id": "efa3c034-798a-4339-96d0-5ad6ca8c5f4b",
+						"id": "ebcdecfd-3dd4-431d-a89c-1024c4e362e4",
 						"update": {
-							"amount": 11883.07,
-							"currencyCode": "KZT",
+							"amount": 35042.01,
+							"currencyCode": "XAF",
 							"timestamp": "2020-01-01T00:00:00.000Z",
 							"locked": true,
-							"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"
+							"receiptId": "2b90f180-8742-4cf3-8ee6-8cd7b063e5f1"
 						}
 					}
 				]

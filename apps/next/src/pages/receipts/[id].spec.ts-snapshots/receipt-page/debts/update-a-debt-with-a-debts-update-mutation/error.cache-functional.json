@@ -1,6 +1,6 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"efa3c034-798a-4339-96d0-5ad6ca8c5f4b\"}]": {
+		"debts.get:[{\"id\":\"a75d5bb2-e63b-4b7f-b078-2a11a99b315f\"}]": {
 			"state": {
 				"dataUpdateCount": 3
 			}
@@ -22,13 +22,13 @@
 				"isPaused": false,
 				"status": "error",
 				"variables": {
-					"id": "efa3c034-798a-4339-96d0-5ad6ca8c5f4b",
+					"id": "a75d5bb2-e63b-4b7f-b078-2a11a99b315f",
 					"update": {
-						"amount": 11883.07,
-						"currencyCode": "KZT",
+						"amount": 14613.07,
+						"currencyCode": "TRY",
 						"timestamp": "2020-01-01T00:00:00.000Z",
 						"locked": true,
-						"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"
+						"receiptId": "1aec5399-d186-423f-a2cb-96970e6b5d82"
 					}
 				}
 			}

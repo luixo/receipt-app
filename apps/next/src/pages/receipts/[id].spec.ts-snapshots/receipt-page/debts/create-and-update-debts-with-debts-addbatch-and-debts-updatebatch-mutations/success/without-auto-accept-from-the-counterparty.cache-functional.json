@@ -1,16 +1,16 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"1a95825b-66e2-4615-8687-2f1c1d3ce5b2\"}]": {
+		"debts.get:[{\"id\":\"2d304299-7acd-46a2-9276-8bf8bb1949e9\"}]": {
 			"state": {
 				"data": {
-					"id": "1a95825b-66e2-4615-8687-2f1c1d3ce5b2",
-					"amount": 98244.6,
-					"currencyCode": "KZT",
-					"userId": "7b74200e-3c6e-40da-96fa-28a512e05875",
+					"id": "2d304299-7acd-46a2-9276-8bf8bb1949e9",
+					"amount": 4572.62,
+					"currencyCode": "BOB",
+					"userId": "15e055df-1220-4a06-93d1-4a56dccdaa01",
 					"timestamp": "2020-01-01T00:00:00.000Z",
-					"note": "Receipt \"officiis perferendis officia\"",
+					"note": "Receipt \"voluptas totam est\"",
 					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
-					"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"
+					"receiptId": "00ad7def-30d8-4920-b097-d1d612a9b24e"
 				},
 				"dataUpdateCount": 1,
 				"error": null,
@@ -20,17 +20,17 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"debts.get:[{\"id\":\"32524737-9be0-4f85-b10e-88a74806f0e6\"}]": {
+		"debts.get:[{\"id\":\"467acac4-ab1e-4612-b94b-a75b52e0f4d9\"}]": {
 			"state": {
 				"data": {
-					"id": "32524737-9be0-4f85-b10e-88a74806f0e6",
-					"amount": 1249.5,
-					"currencyCode": "KZT",
-					"userId": "f315805a-e07c-46a6-acb9-c825fd15de67",
+					"id": "467acac4-ab1e-4612-b94b-a75b52e0f4d9",
+					"amount": 8852.12,
+					"currencyCode": "BOB",
+					"userId": "7059098b-ea81-4077-8149-b01933c6d0c4",
 					"timestamp": "2020-01-01T00:00:00.000Z",
-					"note": "Receipt \"officiis perferendis officia\"",
+					"note": "Receipt \"voluptas totam est\"",
 					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
-					"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"
+					"receiptId": "00ad7def-30d8-4920-b097-d1d612a9b24e"
 				},
 				"dataUpdateCount": 1,
 				"error": null,
@@ -40,17 +40,17 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"debts.get:[{\"id\":\"5f17df3b-f9e2-4fce-822c-445e2493b5b2\"}]": {
+		"debts.get:[{\"id\":\"4f08d93c-8b9e-4520-b098-8c03a0ac7ddf\"}]": {
 			"state": {
 				"data": {
-					"id": "5f17df3b-f9e2-4fce-822c-445e2493b5b2",
-					"amount": 11405.14,
-					"currencyCode": "KZT",
-					"userId": "f6a141d5-d075-49e7-aa69-21ff09428717",
+					"id": "4f08d93c-8b9e-4520-b098-8c03a0ac7ddf",
+					"amount": 38991.84,
+					"currencyCode": "BOB",
+					"userId": "71bbde39-9ef7-4130-b4e7-0ad2beaf4e00",
 					"timestamp": "2020-01-01T00:00:00.000Z",
-					"note": "Receipt \"officiis perferendis officia\"",
+					"note": "Receipt \"voluptas totam est\"",
 					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
-					"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"
+					"receiptId": "00ad7def-30d8-4920-b097-d1d612a9b24e"
 				},
 				"dataUpdateCount": 1,
 				"error": null,
@@ -60,27 +60,69 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"debts.get:[{\"id\":\"efa3c034-798a-4339-96d0-5ad6ca8c5f4b\"}]": {
+		"debts.get:[{\"id\":\"f2e886c8-78bf-415c-aab1-ebdbee70f94f\"}]": {
 			"state": {
 				"data": {
-					"amount": 11883.07,
+					"id": "f2e886c8-78bf-415c-aab1-ebdbee70f94f",
+					"amount": 3447.46,
+					"currencyCode": "BOB",
+					"userId": "dc6aa2e5-a306-4552-94bb-1fdd15fcf009",
+					"timestamp": "2020-01-01T00:00:00.000Z",
+					"note": "Receipt \"voluptas totam est\"",
+					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+					"receiptId": "00ad7def-30d8-4920-b097-d1d612a9b24e"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"f47c20e3-3ece-4cab-a2d1-86a1ea0f5a83\"}]": {
+			"state": {
+				"data": {
+					"id": "f47c20e3-3ece-4cab-a2d1-86a1ea0f5a83",
+					"amount": 28794.38,
+					"currencyCode": "BOB",
+					"userId": "51c48cb6-dd3e-4e15-8535-a615222dddac",
+					"timestamp": "2020-01-01T00:00:00.000Z",
+					"note": "Receipt \"voluptas totam est\"",
+					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+					"receiptId": "00ad7def-30d8-4920-b097-d1d612a9b24e"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"fb05efc0-138a-46bf-8add-c9cf0c60c5e4\"}]": {
+			"state": {
+				"data": {
+					"amount": 46216.65,
 					"lockedTimestamp": "2020-01-01T00:00:00.000Z"
 				},
 				"dataUpdateCount": 3
 			}
 		},
-		"receipts.get:[{\"id\":\"0092bd1e-03f7-48be-9c4e-dbc610808222\"}]": {
+		"receipts.get:[{\"id\":\"00ad7def-30d8-4920-b097-d1d612a9b24e\"}]": {
 			"state": {
 				"data": {
 					"debt": {
 						"ids": {
-							"1": "1a95825b-66e2-4615-8687-2f1c1d3ce5b2",
-							"2": "5f17df3b-f9e2-4fce-822c-445e2493b5b2",
-							"3": "32524737-9be0-4f85-b10e-88a74806f0e6"
+							"1": "f47c20e3-3ece-4cab-a2d1-86a1ea0f5a83",
+							"2": "4f08d93c-8b9e-4520-b098-8c03a0ac7ddf",
+							"3": "f2e886c8-78bf-415c-aab1-ebdbee70f94f",
+							"4": "2d304299-7acd-46a2-9276-8bf8bb1949e9",
+							"5": "467acac4-ab1e-4612-b94b-a75b52e0f4d9"
 						}
 					}
 				},
-				"dataUpdateCount": 5
+				"dataUpdateCount": 7
 			}
 		}
 	},
@@ -89,9 +131,11 @@
 			"state": {
 				"data": {
 					"ids": [
-						"1a95825b-66e2-4615-8687-2f1c1d3ce5b2",
-						"5f17df3b-f9e2-4fce-822c-445e2493b5b2",
-						"32524737-9be0-4f85-b10e-88a74806f0e6"
+						"f47c20e3-3ece-4cab-a2d1-86a1ea0f5a83",
+						"4f08d93c-8b9e-4520-b098-8c03a0ac7ddf",
+						"f2e886c8-78bf-415c-aab1-ebdbee70f94f",
+						"2d304299-7acd-46a2-9276-8bf8bb1949e9",
+						"467acac4-ab1e-4612-b94b-a75b52e0f4d9"
 					],
 					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
 					"reverseAcceptedUserIds": []
@@ -101,28 +145,44 @@
 				"status": "success",
 				"variables": [
 					{
-						"note": "Receipt \"officiis perferendis officia\"",
-						"currencyCode": "KZT",
-						"userId": "7b74200e-3c6e-40da-96fa-28a512e05875",
-						"amount": 98244.6,
+						"note": "Receipt \"voluptas totam est\"",
+						"currencyCode": "BOB",
+						"userId": "51c48cb6-dd3e-4e15-8535-a615222dddac",
+						"amount": 28794.38,
 						"timestamp": "2020-01-01T00:00:00.000Z",
-						"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"
+						"receiptId": "00ad7def-30d8-4920-b097-d1d612a9b24e"
 					},
 					{
-						"note": "Receipt \"officiis perferendis officia\"",
-						"currencyCode": "KZT",
-						"userId": "f6a141d5-d075-49e7-aa69-21ff09428717",
-						"amount": 11405.14,
+						"note": "Receipt \"voluptas totam est\"",
+						"currencyCode": "BOB",
+						"userId": "71bbde39-9ef7-4130-b4e7-0ad2beaf4e00",
+						"amount": 38991.84,
 						"timestamp": "2020-01-01T00:00:00.000Z",
-						"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"
+						"receiptId": "00ad7def-30d8-4920-b097-d1d612a9b24e"
 					},
 					{
-						"note": "Receipt \"officiis perferendis officia\"",
-						"currencyCode": "KZT",
-						"userId": "f315805a-e07c-46a6-acb9-c825fd15de67",
-						"amount": 1249.5,
+						"note": "Receipt \"voluptas totam est\"",
+						"currencyCode": "BOB",
+						"userId": "dc6aa2e5-a306-4552-94bb-1fdd15fcf009",
+						"amount": 3447.46,
 						"timestamp": "2020-01-01T00:00:00.000Z",
-						"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"
+						"receiptId": "00ad7def-30d8-4920-b097-d1d612a9b24e"
+					},
+					{
+						"note": "Receipt \"voluptas totam est\"",
+						"currencyCode": "BOB",
+						"userId": "15e055df-1220-4a06-93d1-4a56dccdaa01",
+						"amount": 4572.62,
+						"timestamp": "2020-01-01T00:00:00.000Z",
+						"receiptId": "00ad7def-30d8-4920-b097-d1d612a9b24e"
+					},
+					{
+						"note": "Receipt \"voluptas totam est\"",
+						"currencyCode": "BOB",
+						"userId": "7059098b-ea81-4077-8149-b01933c6d0c4",
+						"amount": 8852.12,
+						"timestamp": "2020-01-01T00:00:00.000Z",
+						"receiptId": "00ad7def-30d8-4920-b097-d1d612a9b24e"
 					}
 				]
 			}
@@ -132,7 +192,7 @@
 				"data": [
 					{
 						"lockedTimestamp": "2020-01-01T00:00:00.000Z",
-						"debtId": "efa3c034-798a-4339-96d0-5ad6ca8c5f4b",
+						"debtId": "fb05efc0-138a-46bf-8add-c9cf0c60c5e4",
 						"reverseLockedTimestampUpdated": false
 					}
 				],
@@ -141,13 +201,13 @@
 				"status": "success",
 				"variables": [
 					{
-						"id": "efa3c034-798a-4339-96d0-5ad6ca8c5f4b",
+						"id": "fb05efc0-138a-46bf-8add-c9cf0c60c5e4",
 						"update": {
-							"amount": 11883.07,
-							"currencyCode": "KZT",
+							"amount": 46216.65,
+							"currencyCode": "BOB",
 							"timestamp": "2020-01-01T00:00:00.000Z",
 							"locked": true,
-							"receiptId": "0092bd1e-03f7-48be-9c4e-dbc610808222"
+							"receiptId": "00ad7def-30d8-4920-b097-d1d612a9b24e"
 						}
 					}
 				]

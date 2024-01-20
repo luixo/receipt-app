@@ -6,7 +6,7 @@ import { type TRPCClientErrorLike } from "@trpc/client";
 import { diff as objectDiff } from "deep-object-diff";
 import joinImages from "join-images";
 
-import type { TRPCQueryInput, TRPCQueryKey } from "app/trpc";
+import type { TRPCMutationKey, TRPCQueryInput, TRPCQueryKey } from "app/trpc";
 import type { AppRouter } from "next-app/pages/api/trpc/[trpc]";
 
 import type { ApiManager, ApiMixin, TRPCKey } from "./api";
@@ -256,16 +256,22 @@ export const DEFAULT_BLACKLIST_KEYS: TRPCKey[] = [
 	"accountConnectionIntentions.getAll",
 ];
 
+type CacheKey<T extends TRPCKey = TRPCKey> = {
+	path: T;
+	type: T extends TRPCQueryKey ? "query" : "mutation";
+	amount?: number;
+	awaitLoading?: boolean;
+};
+
 type QueriesMixin = {
 	snapshotQueries: <T>(
 		fn: () => Promise<T>,
 		options?: Partial<SnapshotQueryCacheOptions>,
 	) => Promise<T>;
-	awaitCacheKey: <T extends TRPCKey>(
-		path: T,
-		type: T extends TRPCQueryKey ? "query" : "mutation",
+	awaitCacheKey: (
+		keyOrKeys: CacheKey | CacheKey[],
 		timeout?: number,
-	) => Promise<boolean>;
+	) => Promise<boolean[]>;
 	expectScreenshotWithSchemes: (
 		name: string,
 		options?: Parameters<Page["stableScreenshot"]>[0] &
@@ -332,76 +338,126 @@ export const queriesMixin = createMixin<
 		);
 	},
 	awaitCacheKey: async ({ page }, use) => {
-		await use((cacheKey, type, timeout = DEFAULT_AWAIT_CACHE_TIMEOUT) =>
+		await use((cacheKeyOrKeys, timeout = DEFAULT_AWAIT_CACHE_TIMEOUT) =>
 			page.evaluate(
-				async ([cacheKeyInner, typeInner, timeoutInner]) => {
+				async ([cacheKeyOrKeysInner, timeoutInner]) => {
 					if (!window.queryClient) {
 						throw new Error("window.queryClient is not defined yet");
 					}
-					if (typeInner === "query") {
+					const cacheKeysInner = Array.isArray(cacheKeyOrKeysInner)
+						? cacheKeyOrKeysInner
+						: [cacheKeyOrKeysInner];
+					const awaitQueryKey = (
+						cacheKey: TRPCQueryKey,
+						shouldAwaitAmount: boolean,
+						amount = 1,
+					) => {
 						const cache = window.queryClient.getQueryCache();
-						const matchedElement = cache.findAll({
-							queryKey: [cacheKeyInner.split(".")],
-						})[0];
-						if (
-							matchedElement &&
-							(matchedElement.state.status === "success" ||
-								matchedElement.state.status === "error")
-						) {
+						const getAwaitedAmount = () => {
+							const allMatched = cache.findAll({
+								queryKey: [cacheKey.split(".")],
+							});
+							const resolved = allMatched.filter(
+								(element) =>
+									element.state.status === "success" ||
+									element.state.status === "error",
+							);
+							return {
+								resolved: resolved.length,
+								unresolved: allMatched.length - resolved.length,
+							};
+						};
+						const shouldResolve = () => {
+							const awaitedAmount = getAwaitedAmount();
+							if (awaitedAmount.unresolved !== 0 && shouldAwaitAmount) {
+								return false;
+							}
+							return awaitedAmount.resolved >= amount;
+						};
+						if (shouldResolve()) {
 							return true;
 						}
-						return new Promise((resolve, reject) => {
+						return new Promise<boolean>((resolve, reject) => {
 							cache.subscribe((cacheNotifyEvent) => {
 								if (
-									cacheNotifyEvent.query.queryKey[0].join(".") !==
-										cacheKeyInner ||
+									cacheNotifyEvent.query.queryKey[0].join(".") !== cacheKey ||
 									cacheNotifyEvent.type !== "updated"
 								) {
 									return;
 								}
-								if (
-									cacheNotifyEvent.action.type === "success" ||
-									cacheNotifyEvent.action.type === "error"
-								) {
+								if (shouldResolve()) {
 									resolve(false);
 								}
 							});
 							setTimeout(reject, timeoutInner);
 						});
-					}
-					const cache = window.queryClient.getMutationCache();
-					const matchedElement = cache.findAll({
-						mutationKey: [cacheKeyInner.split(".")],
-					})[0];
-					if (
-						matchedElement &&
-						(matchedElement.state.status === "success" ||
-							matchedElement.state.status === "error")
-					) {
-						return true;
-					}
-					return new Promise((resolve, reject) => {
-						cache.subscribe((cacheNotifyEvent) => {
-							if (
-								(
-									(cacheNotifyEvent.mutation?.options
-										.mutationKey?.[0] as string[]) ?? []
-								).join(".") !== cacheKeyInner ||
-								cacheNotifyEvent.type !== "updated"
-							) {
-								return;
+					};
+					const awaitMutationKey = (
+						cacheKey: TRPCMutationKey,
+						shouldAwaitAmount: boolean,
+						amount = 1,
+					) => {
+						const cache = window.queryClient.getMutationCache();
+						const getAwaitedAmount = () => {
+							const allMatched = cache.findAll({
+								mutationKey: [cacheKey.split(".")],
+							});
+							const resolved = allMatched.filter(
+								(element) =>
+									element.state.status === "success" ||
+									element.state.status === "error",
+							);
+							return {
+								resolved: resolved.length,
+								unresolved: allMatched.length - resolved.length,
+							};
+						};
+						const shouldResolve = () => {
+							const awaitedAmount = getAwaitedAmount();
+							if (awaitedAmount.unresolved !== 0 && shouldAwaitAmount) {
+								return false;
 							}
-							if (
-								cacheNotifyEvent.action.type === "success" ||
-								cacheNotifyEvent.action.type === "error"
-							) {
-								resolve(false);
-							}
+							return awaitedAmount.resolved >= amount;
+						};
+						if (shouldResolve()) {
+							return true;
+						}
+						return new Promise<boolean>((resolve, reject) => {
+							cache.subscribe((cacheNotifyEvent) => {
+								if (
+									(
+										(cacheNotifyEvent.mutation?.options
+											.mutationKey?.[0] as string[]) ?? []
+									).join(".") !== cacheKey ||
+									cacheNotifyEvent.type !== "updated"
+								) {
+									return;
+								}
+								if (shouldResolve()) {
+									resolve(false);
+								}
+							});
+							setTimeout(reject, timeoutInner);
 						});
-						setTimeout(reject, timeoutInner);
-					});
+					};
+					return Promise.all(
+						cacheKeysInner.map((cacheKeyInner) => {
+							if (cacheKeyInner.type >= "query") {
+								return awaitQueryKey(
+									cacheKeyInner.path as TRPCQueryKey,
+									cacheKeyInner.awaitLoading ?? true,
+									cacheKeyInner.amount,
+								);
+							}
+							return awaitMutationKey(
+								cacheKeyInner.path as TRPCMutationKey,
+								cacheKeyInner.awaitLoading ?? true,
+								cacheKeyInner.amount,
+							);
+						}),
+					);
 				},
-				[cacheKey, type, timeout] as const,
+				[cacheKeyOrKeys, timeout] as const,
 			),
 		);
 	},

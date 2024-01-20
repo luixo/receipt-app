@@ -21,7 +21,6 @@ test.describe("Receipt page", () => {
 			};
 
 			test("loading", async ({
-				page,
 				api,
 				sendDebtButton,
 				mockReceipt,
@@ -29,6 +28,7 @@ test.describe("Receipt page", () => {
 				snapshotQueries,
 				withLoader,
 				verifyToastTexts,
+				openReceipt,
 			}) => {
 				const { receipt } = await mockReceipt({
 					modifyOutcomingDebts: onlyOneUnsyncedDebt,
@@ -36,7 +36,7 @@ test.describe("Receipt page", () => {
 				});
 				api.pause("debts.add");
 
-				await page.goto(`/receipts/${receipt.id}`);
+				await openReceipt(receipt.id);
 				await openDebtsInfoPanel();
 
 				await snapshotQueries(async () => {
@@ -59,6 +59,7 @@ test.describe("Receipt page", () => {
 					openDebtsInfoPanel,
 					verifyToastTexts,
 					snapshotQueries,
+					openReceipt,
 				}) => {
 					const { receipt } = await mockReceipt({
 						modifyOutcomingDebts: onlyOneUnsyncedDebt,
@@ -70,7 +71,7 @@ test.describe("Receipt page", () => {
 						reverseAccepted: true,
 					}));
 
-					await page.goto(`/receipts/${receipt.id}`);
+					await openReceipt(receipt.id);
 					await openDebtsInfoPanel();
 
 					await snapshotQueries(async () => {
@@ -89,6 +90,7 @@ test.describe("Receipt page", () => {
 					openDebtsInfoPanel,
 					verifyToastTexts,
 					snapshotQueries,
+					openReceipt,
 				}) => {
 					const { receipt } = await mockReceipt({
 						modifyOutcomingDebts: onlyOneUnsyncedDebt,
@@ -100,7 +102,7 @@ test.describe("Receipt page", () => {
 						reverseAccepted: false,
 					}));
 
-					await page.goto(`/receipts/${receipt.id}`);
+					await openReceipt(receipt.id);
 					await openDebtsInfoPanel();
 
 					await snapshotQueries(async () => {
@@ -121,6 +123,7 @@ test.describe("Receipt page", () => {
 				snapshotQueries,
 				verifyToastTexts,
 				clearToasts,
+				openReceipt,
 			}) => {
 				const { receipt } = await mockReceipt({
 					modifyOutcomingDebts: onlyOneUnsyncedDebt,
@@ -133,7 +136,7 @@ test.describe("Receipt page", () => {
 					});
 				});
 
-				await page.goto(`/receipts/${receipt.id}`);
+				await openReceipt(receipt.id);
 				await openDebtsInfoPanel();
 
 				await snapshotQueries(async () => {
@@ -181,7 +184,6 @@ test.describe("Receipt page", () => {
 			};
 
 			test("loading", async ({
-				page,
 				api,
 				updateDebtButton,
 				mockReceipt,
@@ -189,6 +191,7 @@ test.describe("Receipt page", () => {
 				snapshotQueries,
 				withLoader,
 				verifyToastTexts,
+				openReceipt,
 			}) => {
 				const { receipt } = await mockReceipt({
 					modifyOutcomingDebts: singleDebtLockedTimestampMismatch,
@@ -196,7 +199,7 @@ test.describe("Receipt page", () => {
 				});
 				api.pause("debts.update");
 
-				await page.goto(`/receipts/${receipt.id}`);
+				await openReceipt(receipt.id);
 				await openDebtsInfoPanel();
 
 				await snapshotQueries(async () => {
@@ -218,6 +221,7 @@ test.describe("Receipt page", () => {
 					openDebtsInfoPanel,
 					verifyToastTexts,
 					snapshotQueries,
+					openReceipt,
 				}) => {
 					const { receipt } = await mockReceipt({
 						modifyOutcomingDebts: singleDebtLockedTimestampMismatch,
@@ -228,7 +232,7 @@ test.describe("Receipt page", () => {
 						reverseLockedTimestampUpdated: true,
 					}));
 
-					await page.goto(`/receipts/${receipt.id}`);
+					await openReceipt(receipt.id);
 					await openDebtsInfoPanel();
 
 					await snapshotQueries(async () => {
@@ -246,6 +250,7 @@ test.describe("Receipt page", () => {
 					openDebtsInfoPanel,
 					verifyToastTexts,
 					snapshotQueries,
+					openReceipt,
 				}) => {
 					const { receipt } = await mockReceipt({
 						modifyOutcomingDebts: singleDebtLockedTimestampMismatch,
@@ -256,7 +261,7 @@ test.describe("Receipt page", () => {
 						reverseLockedTimestampUpdated: false,
 					}));
 
-					await page.goto(`/receipts/${receipt.id}`);
+					await openReceipt(receipt.id);
 					await openDebtsInfoPanel();
 
 					await snapshotQueries(async () => {
@@ -276,6 +281,7 @@ test.describe("Receipt page", () => {
 				snapshotQueries,
 				verifyToastTexts,
 				clearToasts,
+				openReceipt,
 			}) => {
 				const { receipt } = await mockReceipt({
 					modifyOutcomingDebts: singleDebtLockedTimestampMismatch,
@@ -288,7 +294,7 @@ test.describe("Receipt page", () => {
 					});
 				});
 
-				await page.goto(`/receipts/${receipt.id}`);
+				await openReceipt(receipt.id);
 				await openDebtsInfoPanel();
 
 				await snapshotQueries(async () => {
@@ -317,13 +323,13 @@ test.describe("Receipt page", () => {
 			];
 
 			test("loading", async ({
-				page,
 				api,
 				propagateDebtsButton,
 				mockReceipt,
 				snapshotQueries,
 				withLoader,
 				verifyToastTexts,
+				openReceipt,
 			}) => {
 				const { receipt } = await mockReceipt({
 					modifyOutcomingDebts: emptyDebts,
@@ -332,13 +338,13 @@ test.describe("Receipt page", () => {
 				api.pause("debts.addBatch");
 				api.pause("debts.updateBatch");
 
-				await page.goto(`/receipts/${receipt.id}`);
+				await openReceipt(receipt.id);
 
 				await snapshotQueries(async () => {
 					const buttonWithLoader = withLoader(propagateDebtsButton);
 					await expect(buttonWithLoader).not.toBeVisible();
 					await propagateDebtsButton.click();
-					await verifyToastTexts(["Adding 3 debts..", "Updating debt.."]);
+					await verifyToastTexts([/Adding \d debts../, "Updating debt.."]);
 					await expect(propagateDebtsButton).toBeDisabled();
 					await expect(buttonWithLoader).toBeVisible();
 				});
@@ -353,6 +359,7 @@ test.describe("Receipt page", () => {
 					mockReceipt,
 					verifyToastTexts,
 					snapshotQueries,
+					openReceipt,
 				}) => {
 					const { receipt } = await mockReceipt({
 						modifyOutcomingDebts: emptyDebts,
@@ -373,14 +380,11 @@ test.describe("Receipt page", () => {
 						})),
 					);
 
-					await page.goto(`/receipts/${receipt.id}`);
+					await openReceipt(receipt.id);
 
 					await snapshotQueries(async () => {
 						await propagateDebtsButton.click();
-						await verifyToastTexts([
-							"3 debts added",
-							"Debt updated successfully",
-						]);
+						await verifyToastTexts(["Debt added", "Debt updated successfully"]);
 						await expect(page).toHaveURL(`/receipts/${receipt.id}`);
 					});
 				});
@@ -393,6 +397,7 @@ test.describe("Receipt page", () => {
 					mockReceipt,
 					verifyToastTexts,
 					snapshotQueries,
+					openReceipt,
 				}) => {
 					const { receipt } = await mockReceipt({
 						modifyOutcomingDebts: emptyDebts,
@@ -411,12 +416,12 @@ test.describe("Receipt page", () => {
 						})),
 					);
 
-					await page.goto(`/receipts/${receipt.id}`);
+					await openReceipt(receipt.id);
 
 					await snapshotQueries(async () => {
 						await propagateDebtsButton.click();
 						await verifyToastTexts([
-							"3 debts added",
+							/\d debts added/,
 							"Debt updated successfully",
 						]);
 						await expect(page).toHaveURL(`/receipts/${receipt.id}`);
@@ -434,6 +439,7 @@ test.describe("Receipt page", () => {
 					snapshotQueries,
 					verifyToastTexts,
 					clearToasts,
+					openReceipt,
 				}) => {
 					const { receipt } = await mockReceipt({
 						modifyOutcomingDebts: emptyDebts,
@@ -451,13 +457,13 @@ test.describe("Receipt page", () => {
 						});
 					});
 
-					await page.goto(`/receipts/${receipt.id}`);
+					await openReceipt(receipt.id);
 
 					await snapshotQueries(async () => {
 						await propagateDebtsButton.click();
 						await verifyToastTexts([
 							"Error updating debt: Forbidden to update debts",
-							"3 debts added",
+							/\d debts added/,
 						]);
 					});
 					await expect(page).toHaveURL(`/receipts/${receipt.id}`);
@@ -487,6 +493,7 @@ test.describe("Receipt page", () => {
 					snapshotQueries,
 					verifyToastTexts,
 					clearToasts,
+					openReceipt,
 				}) => {
 					const { receipt } = await mockReceipt({
 						modifyOutcomingDebts: emptyDebts,
@@ -505,12 +512,12 @@ test.describe("Receipt page", () => {
 						});
 					});
 
-					await page.goto(`/receipts/${receipt.id}`);
+					await openReceipt(receipt.id);
 
 					await snapshotQueries(async () => {
 						await propagateDebtsButton.click();
 						await verifyToastTexts([
-							"Error adding 3 debts: Forbidden to add debts",
+							/Error adding \d debts: Forbidden to add debts/,
 							"Error updating debt: Forbidden to update debts",
 						]);
 					});
@@ -532,7 +539,7 @@ test.describe("Receipt page", () => {
 					await clearToasts();
 					await propagateDebtsButton.click();
 					await verifyToastTexts([
-						"3 debts added",
+						/\d debts added/,
 						"Debt updated successfully",
 					]);
 					await expect(page).toHaveURL(`/receipts/${receipt.id}`);
