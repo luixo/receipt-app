@@ -1,28 +1,25 @@
 {
 	"mutations": {
-		"debts.add": {
-			"state": {
-				"error": {
-					"message": "Forbidden to add a debt",
-					"data": {
-						"code": "FORBIDDEN",
-						"httpStatus": 403,
-						"path": "debts.add",
-						"stack": "<redacted>"
+		"debts.add": [
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Forbidden to add a debt"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error",
+					"variables": {
+						"currencyCode": "EGP",
+						"userId": "740d3289-a92e-4812-8ad2-196428d0ab03",
+						"amount": 23878.64,
+						"timestamp": "2020-01-01T00:00:00.000Z",
+						"note": "Receipt \"maxime voluptas id\"",
+						"receiptId": "be156a49-6afa-4fac-a259-a52b93cc4348"
 					}
-				},
-				"failureCount": 1,
-				"isPaused": false,
-				"status": "error",
-				"variables": {
-					"currencyCode": "EGP",
-					"userId": "740d3289-a92e-4812-8ad2-196428d0ab03",
-					"amount": 23878.64,
-					"timestamp": "2020-01-01T00:00:00.000Z",
-					"note": "Receipt \"maxime voluptas id\"",
-					"receiptId": "be156a49-6afa-4fac-a259-a52b93cc4348"
 				}
 			}
-		}
+		]
 	}
 }

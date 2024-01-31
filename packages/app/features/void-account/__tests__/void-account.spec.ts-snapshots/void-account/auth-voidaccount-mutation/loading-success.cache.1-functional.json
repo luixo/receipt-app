@@ -1,11 +1,13 @@
 {
 	"mutations": {
 		"auth.voidAccount": {
-			"state": {
-				"data": {
-					"email": "foo@gmail.com"
-				},
-				"status": "success"
+			"0": {
+				"state": {
+					"data": {
+						"email": "foo@gmail.com"
+					},
+					"status": "success"
+				}
 			}
 		}
 	}

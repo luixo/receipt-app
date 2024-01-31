@@ -16,26 +16,28 @@
 		}
 	},
 	"mutations": {
-		"debts.update": {
-			"state": {
-				"data": {
-					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
-					"reverseLockedTimestampUpdated": false
-				},
-				"error": null,
-				"isPaused": false,
-				"status": "success",
-				"variables": {
-					"id": "d16aec6f-67ab-4152-acae-999b500e1470",
-					"update": {
-						"amount": 9619.55,
-						"currencyCode": "GBP",
-						"timestamp": "2020-01-01T00:00:00.000Z",
-						"locked": true,
-						"receiptId": "86606eb5-dbf6-44fd-95f4-e21a9ec6b3f6"
+		"debts.update": [
+			{
+				"state": {
+					"data": {
+						"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+						"reverseLockedTimestampUpdated": false
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"id": "d16aec6f-67ab-4152-acae-999b500e1470",
+						"update": {
+							"amount": 9619.55,
+							"currencyCode": "GBP",
+							"timestamp": "2020-01-01T00:00:00.000Z",
+							"locked": true,
+							"receiptId": "86606eb5-dbf6-44fd-95f4-e21a9ec6b3f6"
+						}
 					}
 				}
 			}
-		}
+		]
 	}
 }

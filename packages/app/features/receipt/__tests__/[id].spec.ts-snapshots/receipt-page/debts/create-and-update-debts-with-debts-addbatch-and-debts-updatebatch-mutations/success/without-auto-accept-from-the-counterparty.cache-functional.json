@@ -127,91 +127,95 @@
 		}
 	},
 	"mutations": {
-		"debts.addBatch": {
-			"state": {
-				"data": {
-					"ids": [
-						"f47c20e3-3ece-4cab-a2d1-86a1ea0f5a83",
-						"4f08d93c-8b9e-4520-b098-8c03a0ac7ddf",
-						"f2e886c8-78bf-415c-aab1-ebdbee70f94f",
-						"2d304299-7acd-46a2-9276-8bf8bb1949e9",
-						"467acac4-ab1e-4612-b94b-a75b52e0f4d9"
-					],
-					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
-					"reverseAcceptedUserIds": []
-				},
-				"error": null,
-				"isPaused": false,
-				"status": "success",
-				"variables": [
-					{
-						"note": "Receipt \"voluptas totam est\"",
-						"currencyCode": "BOB",
-						"userId": "51c48cb6-dd3e-4e15-8535-a615222dddac",
-						"amount": 28794.38,
-						"timestamp": "2020-01-01T00:00:00.000Z",
-						"receiptId": "00ad7def-30d8-4920-b097-d1d612a9b24e"
-					},
-					{
-						"note": "Receipt \"voluptas totam est\"",
-						"currencyCode": "BOB",
-						"userId": "71bbde39-9ef7-4130-b4e7-0ad2beaf4e00",
-						"amount": 38991.84,
-						"timestamp": "2020-01-01T00:00:00.000Z",
-						"receiptId": "00ad7def-30d8-4920-b097-d1d612a9b24e"
-					},
-					{
-						"note": "Receipt \"voluptas totam est\"",
-						"currencyCode": "BOB",
-						"userId": "dc6aa2e5-a306-4552-94bb-1fdd15fcf009",
-						"amount": 3447.46,
-						"timestamp": "2020-01-01T00:00:00.000Z",
-						"receiptId": "00ad7def-30d8-4920-b097-d1d612a9b24e"
-					},
-					{
-						"note": "Receipt \"voluptas totam est\"",
-						"currencyCode": "BOB",
-						"userId": "15e055df-1220-4a06-93d1-4a56dccdaa01",
-						"amount": 4572.62,
-						"timestamp": "2020-01-01T00:00:00.000Z",
-						"receiptId": "00ad7def-30d8-4920-b097-d1d612a9b24e"
-					},
-					{
-						"note": "Receipt \"voluptas totam est\"",
-						"currencyCode": "BOB",
-						"userId": "7059098b-ea81-4077-8149-b01933c6d0c4",
-						"amount": 8852.12,
-						"timestamp": "2020-01-01T00:00:00.000Z",
-						"receiptId": "00ad7def-30d8-4920-b097-d1d612a9b24e"
-					}
-				]
-			}
-		},
-		"debts.updateBatch": {
-			"state": {
-				"data": [
-					{
+		"debts.addBatch": [
+			{
+				"state": {
+					"data": {
+						"ids": [
+							"f47c20e3-3ece-4cab-a2d1-86a1ea0f5a83",
+							"4f08d93c-8b9e-4520-b098-8c03a0ac7ddf",
+							"f2e886c8-78bf-415c-aab1-ebdbee70f94f",
+							"2d304299-7acd-46a2-9276-8bf8bb1949e9",
+							"467acac4-ab1e-4612-b94b-a75b52e0f4d9"
+						],
 						"lockedTimestamp": "2020-01-01T00:00:00.000Z",
-						"debtId": "fb05efc0-138a-46bf-8add-c9cf0c60c5e4",
-						"reverseLockedTimestampUpdated": false
-					}
-				],
-				"error": null,
-				"isPaused": false,
-				"status": "success",
-				"variables": [
-					{
-						"id": "fb05efc0-138a-46bf-8add-c9cf0c60c5e4",
-						"update": {
-							"amount": 46216.65,
+						"reverseAcceptedUserIds": []
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": [
+						{
+							"note": "Receipt \"voluptas totam est\"",
 							"currencyCode": "BOB",
+							"userId": "51c48cb6-dd3e-4e15-8535-a615222dddac",
+							"amount": 28794.38,
 							"timestamp": "2020-01-01T00:00:00.000Z",
-							"locked": true,
+							"receiptId": "00ad7def-30d8-4920-b097-d1d612a9b24e"
+						},
+						{
+							"note": "Receipt \"voluptas totam est\"",
+							"currencyCode": "BOB",
+							"userId": "71bbde39-9ef7-4130-b4e7-0ad2beaf4e00",
+							"amount": 38991.84,
+							"timestamp": "2020-01-01T00:00:00.000Z",
+							"receiptId": "00ad7def-30d8-4920-b097-d1d612a9b24e"
+						},
+						{
+							"note": "Receipt \"voluptas totam est\"",
+							"currencyCode": "BOB",
+							"userId": "dc6aa2e5-a306-4552-94bb-1fdd15fcf009",
+							"amount": 3447.46,
+							"timestamp": "2020-01-01T00:00:00.000Z",
+							"receiptId": "00ad7def-30d8-4920-b097-d1d612a9b24e"
+						},
+						{
+							"note": "Receipt \"voluptas totam est\"",
+							"currencyCode": "BOB",
+							"userId": "15e055df-1220-4a06-93d1-4a56dccdaa01",
+							"amount": 4572.62,
+							"timestamp": "2020-01-01T00:00:00.000Z",
+							"receiptId": "00ad7def-30d8-4920-b097-d1d612a9b24e"
+						},
+						{
+							"note": "Receipt \"voluptas totam est\"",
+							"currencyCode": "BOB",
+							"userId": "7059098b-ea81-4077-8149-b01933c6d0c4",
+							"amount": 8852.12,
+							"timestamp": "2020-01-01T00:00:00.000Z",
 							"receiptId": "00ad7def-30d8-4920-b097-d1d612a9b24e"
 						}
-					}
-				]
+					]
+				}
 			}
-		}
+		],
+		"debts.updateBatch": [
+			{
+				"state": {
+					"data": [
+						{
+							"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+							"debtId": "fb05efc0-138a-46bf-8add-c9cf0c60c5e4",
+							"reverseLockedTimestampUpdated": false
+						}
+					],
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": [
+						{
+							"id": "fb05efc0-138a-46bf-8add-c9cf0c60c5e4",
+							"update": {
+								"amount": 46216.65,
+								"currencyCode": "BOB",
+								"timestamp": "2020-01-01T00:00:00.000Z",
+								"locked": true,
+								"receiptId": "00ad7def-30d8-4920-b097-d1d612a9b24e"
+							}
+						}
+					]
+				}
+			}
+		]
 	}
 }

@@ -3,13 +3,8 @@
 		"account.get": {
 			"state": {
 				"error": {
-					"message": "No token provided - mocked",
-					"data": {
-						"code": "UNAUTHORIZED",
-						"httpStatus": 401,
-						"path": "account.get",
-						"stack": "<redacted>"
-					}
+					"type": "TRPCError",
+					"message": "No token provided - mocked"
 				},
 				"errorUpdateCount": 1,
 				"fetchFailureCount": 1,

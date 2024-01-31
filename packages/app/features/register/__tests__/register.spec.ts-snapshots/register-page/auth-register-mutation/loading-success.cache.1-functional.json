@@ -19,13 +19,15 @@
 	},
 	"mutations": {
 		"auth.register": {
-			"state": {
-				"data": {
-					"account": {
-						"id": "test"
-					}
-				},
-				"status": "success"
+			"0": {
+				"state": {
+					"data": {
+						"account": {
+							"id": "test"
+						}
+					},
+					"status": "success"
+				}
 			}
 		}
 	}

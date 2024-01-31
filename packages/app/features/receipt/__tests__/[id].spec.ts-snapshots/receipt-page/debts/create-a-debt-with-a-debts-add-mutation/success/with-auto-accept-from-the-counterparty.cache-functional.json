@@ -40,25 +40,27 @@
 		}
 	},
 	"mutations": {
-		"debts.add": {
-			"state": {
-				"data": {
-					"id": "3e7a57bf-2686-4686-b9b5-d567338bdd10",
-					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
-					"reverseAccepted": true
-				},
-				"error": null,
-				"isPaused": false,
-				"status": "success",
-				"variables": {
-					"currencyCode": "CAD",
-					"userId": "b74772de-8867-48bb-85ee-bb584886e996",
-					"amount": 24340.7,
-					"timestamp": "2020-01-01T00:00:00.000Z",
-					"note": "Receipt \"nobis odio tempora\"",
-					"receiptId": "ed1279e9-1372-4d8c-ba3e-57238b360d08"
+		"debts.add": [
+			{
+				"state": {
+					"data": {
+						"id": "3e7a57bf-2686-4686-b9b5-d567338bdd10",
+						"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+						"reverseAccepted": true
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"currencyCode": "CAD",
+						"userId": "b74772de-8867-48bb-85ee-bb584886e996",
+						"amount": 24340.7,
+						"timestamp": "2020-01-01T00:00:00.000Z",
+						"note": "Receipt \"nobis odio tempora\"",
+						"receiptId": "ed1279e9-1372-4d8c-ba3e-57238b360d08"
+					}
 				}
 			}
-		}
+		]
 	}
 }

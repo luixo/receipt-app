@@ -1,19 +1,21 @@
 {
 	"mutations": {
-		"debts.add": {
-			"state": {
-				"error": null,
-				"isPaused": false,
-				"status": "pending",
-				"variables": {
-					"currencyCode": "CRC",
-					"userId": "d41537c4-da68-436a-91f8-be5f72893a17",
-					"amount": 84136.33,
-					"timestamp": "2020-01-01T00:00:00.000Z",
-					"note": "Receipt \"nemo voluptate dolor\"",
-					"receiptId": "b62732f2-6442-4d44-b79e-93d470167ae4"
+		"debts.add": [
+			{
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "pending",
+					"variables": {
+						"currencyCode": "CRC",
+						"userId": "d41537c4-da68-436a-91f8-be5f72893a17",
+						"amount": 84136.33,
+						"timestamp": "2020-01-01T00:00:00.000Z",
+						"note": "Receipt \"nemo voluptate dolor\"",
+						"receiptId": "b62732f2-6442-4d44-b79e-93d470167ae4"
+					}
 				}
 			}
-		}
+		]
 	}
 }

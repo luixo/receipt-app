@@ -1,14 +1,16 @@
 {
 	"mutations": {
-		"auth.voidAccount": {
-			"state": {
-				"error": null,
-				"isPaused": false,
-				"status": "pending",
-				"variables": {
-					"token": "foo"
+		"auth.voidAccount": [
+			{
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "pending",
+					"variables": {
+						"token": "foo"
+					}
 				}
 			}
-		}
+		]
 	}
 }

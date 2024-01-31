@@ -11,22 +11,24 @@
 		}
 	},
 	"mutations": {
-		"debts.update": {
-			"state": {
-				"error": null,
-				"isPaused": false,
-				"status": "pending",
-				"variables": {
-					"id": "e3cb6089-da18-47c2-bde2-725526ac71aa",
-					"update": {
-						"amount": 21144,
-						"currencyCode": "NIO",
-						"timestamp": "2020-01-01T00:00:00.000Z",
-						"locked": true,
-						"receiptId": "95affb00-e841-4955-817b-a800e4b6bad5"
+		"debts.update": [
+			{
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "pending",
+					"variables": {
+						"id": "e3cb6089-da18-47c2-bde2-725526ac71aa",
+						"update": {
+							"amount": 21144,
+							"currencyCode": "NIO",
+							"timestamp": "2020-01-01T00:00:00.000Z",
+							"locked": true,
+							"receiptId": "95affb00-e841-4955-817b-a800e4b6bad5"
+						}
 					}
 				}
 			}
-		}
+		]
 	}
 }

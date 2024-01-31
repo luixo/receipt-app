@@ -1,25 +1,22 @@
 {
 	"mutations": {
-		"auth.register": {
-			"state": {
-				"error": {
-					"message": "Mock \"auth.register\" error",
-					"data": {
-						"code": "CONFLICT",
-						"httpStatus": 409,
-						"path": "auth.register",
-						"stack": "<redacted>"
+		"auth.register": [
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"auth.register\" error"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error",
+					"variables": {
+						"email": "test@mail.ru",
+						"name": "Test name",
+						"password": "strong-password"
 					}
-				},
-				"failureCount": 1,
-				"isPaused": false,
-				"status": "error",
-				"variables": {
-					"email": "test@mail.ru",
-					"name": "Test name",
-					"password": "strong-password"
 				}
 			}
-		}
+		]
 	}
 }

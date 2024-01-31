@@ -1,7 +1,8 @@
 import { recase } from "@kristiandupont/recase";
 import type { Page, TestInfo } from "@playwright/test";
 import { expect } from "@playwright/test";
-import { type TRPCClientErrorLike } from "@trpc/client";
+import type { DehydratedState } from "@tanstack/react-query";
+import type { TRPCClientErrorLike } from "@trpc/client";
 import { diff as objectDiff } from "deep-object-diff";
 
 import type { TRPCMutationKey, TRPCQueryInput, TRPCQueryKey } from "app/trpc";
@@ -55,7 +56,7 @@ const getSnapshotName = (
 	return [...path, name];
 };
 
-export type KeysLists = {
+type KeysLists = {
 	whitelistKeys: TRPCKey[];
 	blacklistKeys: TRPCKey[];
 };
@@ -64,136 +65,134 @@ const shouldIgnoreKey = (key: TRPCKey, keysLists: KeysLists) =>
 	keysLists.blacklistKeys.includes(key) &&
 	!keysLists.whitelistKeys.includes(key);
 
-const getQueryCache = (page: Page, keysLists: KeysLists, timeout: number) =>
+const getQueryCacheFromPage = (page: Page, timeout: number) =>
 	page.evaluate(
-		async ([keysListsInner, timeoutInner]) => {
-			const shouldIgnoreKeyInner = (key: TRPCKey) =>
-				keysListsInner.blacklistKeys.includes(key) &&
-				!keysListsInner.whitelistKeys.includes(key);
+		([timeoutInner]) => {
 			if (!window.getDehydratedCache) {
 				return { mutations: [], queries: [] };
 			}
-			const cache = await window.getDehydratedCache(timeoutInner);
-			const flattenError = (error: unknown) => {
-				if (
-					(error instanceof Error && error.name === "TRPCClientError") ||
-					(typeof error === "object" && error && "shape" in error)
-				) {
-					const trpcError = error as TRPCClientErrorLike<AppRouter>;
-					return {
-						message: trpcError.message,
-						data: trpcError.data
-							? {
-									code: trpcError.data.code,
-									httpStatus: trpcError.data.httpStatus,
-									path: trpcError.data.path,
-									stack: "<redacted>",
-							  }
-							: undefined,
-					};
-				}
-				return error;
-			};
-			const redactedQueries = cache.queries
-				.sort((a, b) => a.queryHash.localeCompare(b.queryHash))
-				.map(({ queryHash, queryKey, ...query }) => {
-					const typedQueryKey = queryKey as [
-						string[],
-						{ input: TRPCQueryInput<TRPCQueryKey>; type: "query" | "infinite" },
-					];
-					return {
-						...query,
-						queryKey: {
-							handler: typedQueryKey[0].join(".") as TRPCKey,
-							input: JSON.stringify(typedQueryKey[1]?.input),
-						},
-						state: {
-							...query.state,
-							error: flattenError(query.state.error),
-							fetchFailureReason: undefined,
-							// Removing actual dates as they are not stable for snapshots
-							dataUpdatedAt: undefined,
-							// Count can't go down, so we're diffing undefined -> some value
-							dataUpdateCount:
-								query.state.dataUpdateCount === 0
-									? undefined
-									: query.state.dataUpdateCount,
-							errorUpdatedAt: undefined,
-							errorUpdateCount:
-								query.state.errorUpdateCount === 0
-									? undefined
-									: query.state.errorUpdateCount,
-							fetchFailureCount:
-								query.state.fetchFailureCount === 0
-									? undefined
-									: query.state.fetchFailureCount,
-						},
-					};
-				})
-				.filter((query) => !shouldIgnoreKeyInner(query.queryKey.handler));
-			type QueriesRecord = Record<
-				string,
-				Omit<(typeof redactedQueries)[number], "queryKey">
-			>;
-			const redactedMutations = cache.mutations
-				.map((mutation) => {
-					const mutationKey = mutation.mutationKey as [string[]];
-					return {
-						...mutation,
-						mutationKey: {
-							handler: mutationKey[0].join(".") as TRPCKey,
-						},
-						state: {
-							...mutation.state,
-							context: undefined,
-							error: flattenError(mutation.state.error),
-							failureReason: undefined,
-							// Removing actual dates as they are not stable for snapshots
-							submittedAt: undefined,
-							// Count can't go down, so we're diffing undefined -> some value
-							failureCount:
-								mutation.state.failureCount === 0
-									? undefined
-									: mutation.state.failureCount,
-						},
-					};
-				})
-				.filter(
-					(mutation) => !shouldIgnoreKeyInner(mutation.mutationKey.handler),
-				);
-			type MutationsRecord = Record<
-				string,
-				Omit<(typeof redactedMutations)[number], "mutationKey">
-			>;
-			const lastMutationIds: Partial<Record<TRPCKey, number>> = {};
-			return {
-				queries: redactedQueries.reduce<QueriesRecord>(
-					(acc, { queryKey, ...query }) => ({
-						...acc,
-						[queryKey.input
-							? `${queryKey.handler}:[${queryKey.input}]`
-							: queryKey.handler]: query,
-					}),
-					{},
-				),
-				mutations: redactedMutations.reduce<MutationsRecord>(
-					(acc, { mutationKey, ...mutation }) => {
-						lastMutationIds[mutationKey.handler] ??= 0;
-						lastMutationIds[mutationKey.handler]! += 1;
-						const lastMutationId = lastMutationIds[mutationKey.handler]!;
-						return {
-							...acc,
-							[lastMutationId === 1
-								? mutationKey.handler
-								: `${mutationKey.handler}[${lastMutationId - 1}]`]: mutation,
-						};
-					},
-					{},
-				),
-			};
+			return window.getDehydratedCache(timeoutInner);
 		},
-		[keysLists, timeout] as const,
+		[timeout] as const,
 	);
+
+const flattenError = (error: unknown) => {
+	if (typeof error === "object" && error && "shape" in error) {
+		const trpcError = error as TRPCClientErrorLike<AppRouter>;
+		return {
+			type: "TRPCError",
+			message: trpcError.message,
+		};
+	}
+	if (typeof error === "string") {
+		const clientErrorMatch = error.match(/TRPCClientError: (.*)\n/);
+		if (clientErrorMatch) {
+			return {
+				type: "TRPCClientError",
+				message: clientErrorMatch[1],
+			};
+		}
+	}
+	return error;
+};
+
+const mapQueries = (queries: DehydratedState["queries"]) =>
+	queries
+		.sort((a, b) => a.queryHash.localeCompare(b.queryHash))
+		.map(({ queryHash, queryKey, ...query }) => ({
+			...query,
+			queryKey: {
+				handler: (queryKey[0] as string[]).join(".") as TRPCKey,
+				input: JSON.stringify(
+					(
+						queryKey[1] as
+							| {
+									input: TRPCQueryInput<TRPCQueryKey>;
+									type: "query" | "infinite";
+							  }
+							| undefined
+					)?.input,
+				),
+			},
+			state: {
+				...query.state,
+				error: flattenError(query.state.error),
+				fetchFailureReason: undefined,
+				// Removing actual dates as they are not stable for snapshots
+				dataUpdatedAt: undefined,
+				// Count can't go down, so we're diffing undefined -> some value
+				dataUpdateCount:
+					query.state.dataUpdateCount === 0
+						? undefined
+						: query.state.dataUpdateCount,
+				errorUpdatedAt: undefined,
+				errorUpdateCount:
+					query.state.errorUpdateCount === 0
+						? undefined
+						: query.state.errorUpdateCount,
+				fetchFailureCount:
+					query.state.fetchFailureCount === 0
+						? undefined
+						: query.state.fetchFailureCount,
+			},
+		}));
+
+const mapMutations = (mutations: DehydratedState["mutations"]) =>
+	mutations.map((mutation) => ({
+		...mutation,
+		mutationKey: {
+			handler: (mutation.mutationKey as [string[]])[0].join(".") as TRPCKey,
+		},
+		state: {
+			...mutation.state,
+			context: undefined,
+			error: flattenError(mutation.state.error),
+			failureReason: undefined,
+			// Removing actual dates as they are not stable for snapshots
+			submittedAt: undefined,
+			// Count can't go down, so we're diffing undefined -> some value
+			failureCount:
+				mutation.state.failureCount === 0
+					? undefined
+					: mutation.state.failureCount,
+		},
+	}));
+
+const getQueryCache = async (
+	page: Page,
+	keysLists: KeysLists,
+	timeout: number,
+) => {
+	const cache = await getQueryCacheFromPage(page, timeout);
+	const redactedQueries = mapQueries(cache.queries).filter(
+		(query) => !shouldIgnoreKey(query.queryKey.handler, keysLists),
+	);
+	const redactedMutations = mapMutations(cache.mutations).filter(
+		(mutation) => !shouldIgnoreKey(mutation.mutationKey.handler, keysLists),
+	);
+	return {
+		queries: redactedQueries.reduce<
+			Record<string, Omit<(typeof redactedQueries)[number], "queryKey">>
+		>(
+			(acc, { queryKey, ...query }) => ({
+				...acc,
+				[queryKey.input
+					? `${queryKey.handler}:[${queryKey.input}]`
+					: queryKey.handler]: query,
+			}),
+			{},
+		),
+		mutations: redactedMutations.reduce<
+			Record<string, Omit<(typeof redactedMutations)[number], "mutationKey">[]>
+		>(
+			(acc, { mutationKey, ...mutation }) => ({
+				...acc,
+				[mutationKey.handler]: [...(acc[mutationKey.handler] ?? []), mutation],
+			}),
+			{},
+		),
+	};
+};
 
 const remapActions = (
 	actions: ReturnType<ApiManager["getActions"]>,

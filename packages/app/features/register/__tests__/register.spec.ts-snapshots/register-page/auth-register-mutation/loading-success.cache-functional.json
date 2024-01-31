@@ -1,16 +1,18 @@
 {
 	"mutations": {
-		"auth.register": {
-			"state": {
-				"error": null,
-				"isPaused": false,
-				"status": "pending",
-				"variables": {
-					"email": "test@mail.ru",
-					"name": "Test name",
-					"password": "strong-password"
+		"auth.register": [
+			{
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "pending",
+					"variables": {
+						"email": "test@mail.ru",
+						"name": "Test name",
+						"password": "strong-password"
+					}
 				}
 			}
-		}
+		]
 	}
 }

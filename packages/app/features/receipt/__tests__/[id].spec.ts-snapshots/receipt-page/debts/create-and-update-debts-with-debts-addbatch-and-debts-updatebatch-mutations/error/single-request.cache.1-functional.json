@@ -16,30 +16,32 @@
 		}
 	},
 	"mutations": {
-		"debts.updateBatch[1]": {
-			"state": {
-				"data": [
-					{
-						"lockedTimestamp": "2020-01-01T00:00:00.000Z",
-						"debtId": "ebcdecfd-3dd4-431d-a89c-1024c4e362e4",
-						"reverseLockedTimestampUpdated": false
-					}
-				],
-				"error": null,
-				"isPaused": false,
-				"status": "success",
-				"variables": [
-					{
-						"id": "ebcdecfd-3dd4-431d-a89c-1024c4e362e4",
-						"update": {
-							"amount": 35042.01,
-							"currencyCode": "XAF",
-							"timestamp": "2020-01-01T00:00:00.000Z",
-							"locked": true,
-							"receiptId": "2b90f180-8742-4cf3-8ee6-8cd7b063e5f1"
+		"debts.updateBatch": {
+			"1": {
+				"state": {
+					"data": [
+						{
+							"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+							"debtId": "ebcdecfd-3dd4-431d-a89c-1024c4e362e4",
+							"reverseLockedTimestampUpdated": false
 						}
-					}
-				]
+					],
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": [
+						{
+							"id": "ebcdecfd-3dd4-431d-a89c-1024c4e362e4",
+							"update": {
+								"amount": 35042.01,
+								"currencyCode": "XAF",
+								"timestamp": "2020-01-01T00:00:00.000Z",
+								"locked": true,
+								"receiptId": "2b90f180-8742-4cf3-8ee6-8cd7b063e5f1"
+							}
+						}
+					]
+				}
 			}
 		}
 	}

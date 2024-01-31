@@ -123,93 +123,92 @@
 		}
 	},
 	"mutations": {
-		"debts.addBatch": {
-			"state": {
-				"data": {
-					"ids": [
-						"9e73040e-5f32-4284-aa56-e9d0b5e61d62",
-						"14ef4483-ef96-49c0-b1d9-96396b4950f8",
-						"0119f5ff-e63a-4c8e-b56d-3e6a001809eb",
-						"5b71b14b-1963-4635-8f7e-acef977907e7",
-						"5ac6c6f5-3d49-495e-86ad-f839b962be03"
-					],
-					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
-					"reverseAcceptedUserIds": []
-				},
-				"error": null,
-				"isPaused": false,
-				"status": "success",
-				"variables": [
-					{
-						"note": "Receipt \"ipsa labore cum\"",
-						"currencyCode": "XAF",
-						"userId": "a3c877af-3112-406d-aa68-dce0cd0f8522",
-						"amount": 2947.56,
-						"timestamp": "2020-01-01T00:00:00.000Z",
-						"receiptId": "2b90f180-8742-4cf3-8ee6-8cd7b063e5f1"
-					},
-					{
-						"note": "Receipt \"ipsa labore cum\"",
-						"currencyCode": "XAF",
-						"userId": "bbc8a59b-f868-44f3-a88f-96081ca83cb5",
-						"amount": 66580.24,
-						"timestamp": "2020-01-01T00:00:00.000Z",
-						"receiptId": "2b90f180-8742-4cf3-8ee6-8cd7b063e5f1"
-					},
-					{
-						"note": "Receipt \"ipsa labore cum\"",
-						"currencyCode": "XAF",
-						"userId": "61ca2d0a-4ce0-4bee-ae73-d01238ffe406",
-						"amount": 15531.22,
-						"timestamp": "2020-01-01T00:00:00.000Z",
-						"receiptId": "2b90f180-8742-4cf3-8ee6-8cd7b063e5f1"
-					},
-					{
-						"note": "Receipt \"ipsa labore cum\"",
-						"currencyCode": "XAF",
-						"userId": "60b58d62-f604-4919-9db4-cf0cb5b7f59a",
-						"amount": 29178.05,
-						"timestamp": "2020-01-01T00:00:00.000Z",
-						"receiptId": "2b90f180-8742-4cf3-8ee6-8cd7b063e5f1"
-					},
-					{
-						"note": "Receipt \"ipsa labore cum\"",
-						"currencyCode": "XAF",
-						"userId": "d00bf98e-73b4-49d1-b492-032d1c9d67c9",
-						"amount": 8399.09,
-						"timestamp": "2020-01-01T00:00:00.000Z",
-						"receiptId": "2b90f180-8742-4cf3-8ee6-8cd7b063e5f1"
-					}
-				]
-			}
-		},
-		"debts.updateBatch": {
-			"state": {
-				"error": {
-					"message": "Forbidden to update debts",
+		"debts.addBatch": [
+			{
+				"state": {
 					"data": {
-						"code": "FORBIDDEN",
-						"httpStatus": 403,
-						"path": "debts.updateBatch",
-						"stack": "<redacted>"
-					}
-				},
-				"failureCount": 1,
-				"isPaused": false,
-				"status": "error",
-				"variables": [
-					{
-						"id": "ebcdecfd-3dd4-431d-a89c-1024c4e362e4",
-						"update": {
-							"amount": 35042.01,
+						"ids": [
+							"9e73040e-5f32-4284-aa56-e9d0b5e61d62",
+							"14ef4483-ef96-49c0-b1d9-96396b4950f8",
+							"0119f5ff-e63a-4c8e-b56d-3e6a001809eb",
+							"5b71b14b-1963-4635-8f7e-acef977907e7",
+							"5ac6c6f5-3d49-495e-86ad-f839b962be03"
+						],
+						"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+						"reverseAcceptedUserIds": []
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": [
+						{
+							"note": "Receipt \"ipsa labore cum\"",
 							"currencyCode": "XAF",
+							"userId": "a3c877af-3112-406d-aa68-dce0cd0f8522",
+							"amount": 2947.56,
 							"timestamp": "2020-01-01T00:00:00.000Z",
-							"locked": true,
+							"receiptId": "2b90f180-8742-4cf3-8ee6-8cd7b063e5f1"
+						},
+						{
+							"note": "Receipt \"ipsa labore cum\"",
+							"currencyCode": "XAF",
+							"userId": "bbc8a59b-f868-44f3-a88f-96081ca83cb5",
+							"amount": 66580.24,
+							"timestamp": "2020-01-01T00:00:00.000Z",
+							"receiptId": "2b90f180-8742-4cf3-8ee6-8cd7b063e5f1"
+						},
+						{
+							"note": "Receipt \"ipsa labore cum\"",
+							"currencyCode": "XAF",
+							"userId": "61ca2d0a-4ce0-4bee-ae73-d01238ffe406",
+							"amount": 15531.22,
+							"timestamp": "2020-01-01T00:00:00.000Z",
+							"receiptId": "2b90f180-8742-4cf3-8ee6-8cd7b063e5f1"
+						},
+						{
+							"note": "Receipt \"ipsa labore cum\"",
+							"currencyCode": "XAF",
+							"userId": "60b58d62-f604-4919-9db4-cf0cb5b7f59a",
+							"amount": 29178.05,
+							"timestamp": "2020-01-01T00:00:00.000Z",
+							"receiptId": "2b90f180-8742-4cf3-8ee6-8cd7b063e5f1"
+						},
+						{
+							"note": "Receipt \"ipsa labore cum\"",
+							"currencyCode": "XAF",
+							"userId": "d00bf98e-73b4-49d1-b492-032d1c9d67c9",
+							"amount": 8399.09,
+							"timestamp": "2020-01-01T00:00:00.000Z",
 							"receiptId": "2b90f180-8742-4cf3-8ee6-8cd7b063e5f1"
 						}
-					}
-				]
+					]
+				}
 			}
-		}
+		],
+		"debts.updateBatch": [
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Forbidden to update debts"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error",
+					"variables": [
+						{
+							"id": "ebcdecfd-3dd4-431d-a89c-1024c4e362e4",
+							"update": {
+								"amount": 35042.01,
+								"currencyCode": "XAF",
+								"timestamp": "2020-01-01T00:00:00.000Z",
+								"locked": true,
+								"receiptId": "2b90f180-8742-4cf3-8ee6-8cd7b063e5f1"
+							}
+						}
+					]
+				}
+			}
+		]
 	}
 }

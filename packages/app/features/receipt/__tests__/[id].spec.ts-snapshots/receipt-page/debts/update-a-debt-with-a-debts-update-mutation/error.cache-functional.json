@@ -7,31 +7,28 @@
 		}
 	},
 	"mutations": {
-		"debts.update": {
-			"state": {
-				"error": {
-					"message": "Forbidden to update a debt",
-					"data": {
-						"code": "FORBIDDEN",
-						"httpStatus": 403,
-						"path": "debts.update",
-						"stack": "<redacted>"
-					}
-				},
-				"failureCount": 1,
-				"isPaused": false,
-				"status": "error",
-				"variables": {
-					"id": "a75d5bb2-e63b-4b7f-b078-2a11a99b315f",
-					"update": {
-						"amount": 14613.07,
-						"currencyCode": "TRY",
-						"timestamp": "2020-01-01T00:00:00.000Z",
-						"locked": true,
-						"receiptId": "1aec5399-d186-423f-a2cb-96970e6b5d82"
+		"debts.update": [
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Forbidden to update a debt"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error",
+					"variables": {
+						"id": "a75d5bb2-e63b-4b7f-b078-2a11a99b315f",
+						"update": {
+							"amount": 14613.07,
+							"currencyCode": "TRY",
+							"timestamp": "2020-01-01T00:00:00.000Z",
+							"locked": true,
+							"receiptId": "1aec5399-d186-423f-a2cb-96970e6b5d82"
+						}
 					}
 				}
 			}
-		}
+		]
 	}
 }

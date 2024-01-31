@@ -55,57 +55,61 @@
 		}
 	},
 	"mutations": {
-		"debts.addBatch": {
-			"state": {
-				"data": {
-					"ids": [
-						"67bfce6e-b483-4ba8-a878-290624425491"
-					],
-					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
-					"reverseAcceptedUserIds": [
-						"e51f90a1-9de4-461d-974b-986d93108558"
-					]
-				},
-				"error": null,
-				"isPaused": false,
-				"status": "success",
-				"variables": [
-					{
-						"note": "Receipt \"vero officia cumque\"",
-						"currencyCode": "JOD",
-						"userId": "e51f90a1-9de4-461d-974b-986d93108558",
-						"amount": 77818.79,
-						"timestamp": "2020-01-01T00:00:00.000Z",
-						"receiptId": "95076543-1567-4164-aee9-f6603f4a75ee"
-					}
-				]
-			}
-		},
-		"debts.updateBatch": {
-			"state": {
-				"data": [
-					{
+		"debts.addBatch": [
+			{
+				"state": {
+					"data": {
+						"ids": [
+							"67bfce6e-b483-4ba8-a878-290624425491"
+						],
 						"lockedTimestamp": "2020-01-01T00:00:00.000Z",
-						"debtId": "71b47ab9-b8ef-44c8-9986-0db8bcf48d34",
-						"reverseLockedTimestampUpdated": true
-					}
-				],
-				"error": null,
-				"isPaused": false,
-				"status": "success",
-				"variables": [
-					{
-						"id": "71b47ab9-b8ef-44c8-9986-0db8bcf48d34",
-						"update": {
-							"amount": 25930.27,
+						"reverseAcceptedUserIds": [
+							"e51f90a1-9de4-461d-974b-986d93108558"
+						]
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": [
+						{
+							"note": "Receipt \"vero officia cumque\"",
 							"currencyCode": "JOD",
+							"userId": "e51f90a1-9de4-461d-974b-986d93108558",
+							"amount": 77818.79,
 							"timestamp": "2020-01-01T00:00:00.000Z",
-							"locked": true,
 							"receiptId": "95076543-1567-4164-aee9-f6603f4a75ee"
 						}
-					}
-				]
+					]
+				}
 			}
-		}
+		],
+		"debts.updateBatch": [
+			{
+				"state": {
+					"data": [
+						{
+							"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+							"debtId": "71b47ab9-b8ef-44c8-9986-0db8bcf48d34",
+							"reverseLockedTimestampUpdated": true
+						}
+					],
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": [
+						{
+							"id": "71b47ab9-b8ef-44c8-9986-0db8bcf48d34",
+							"update": {
+								"amount": 25930.27,
+								"currencyCode": "JOD",
+								"timestamp": "2020-01-01T00:00:00.000Z",
+								"locked": true,
+								"receiptId": "95076543-1567-4164-aee9-f6603f4a75ee"
+							}
+						}
+					]
+				}
+			}
+		]
 	}
 }

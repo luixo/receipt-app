@@ -20,26 +20,28 @@
 		}
 	},
 	"mutations": {
-		"debts.update": {
-			"state": {
-				"data": {
-					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
-					"reverseLockedTimestampUpdated": true
-				},
-				"error": null,
-				"isPaused": false,
-				"status": "success",
-				"variables": {
-					"id": "350e516b-03eb-4efa-9adc-a9a1fd0ba5d9",
-					"update": {
-						"amount": 10324.55,
-						"currencyCode": "LKR",
-						"timestamp": "2020-01-01T00:00:00.000Z",
-						"locked": true,
-						"receiptId": "89328a0e-ac2b-4ed7-8efb-cbec6b13c8ae"
+		"debts.update": [
+			{
+				"state": {
+					"data": {
+						"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+						"reverseLockedTimestampUpdated": true
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"id": "350e516b-03eb-4efa-9adc-a9a1fd0ba5d9",
+						"update": {
+							"amount": 10324.55,
+							"currencyCode": "LKR",
+							"timestamp": "2020-01-01T00:00:00.000Z",
+							"locked": true,
+							"receiptId": "89328a0e-ac2b-4ed7-8efb-cbec6b13c8ae"
+						}
 					}
 				}
 			}
-		}
+		]
 	}
 }

@@ -1,23 +1,20 @@
 {
 	"mutations": {
-		"auth.voidAccount": {
-			"state": {
-				"error": {
-					"message": "Mock \"auth.voidAccount\" error",
-					"data": {
-						"code": "CONFLICT",
-						"httpStatus": 409,
-						"path": "auth.voidAccount",
-						"stack": "<redacted>"
+		"auth.voidAccount": [
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"auth.voidAccount\" error"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error",
+					"variables": {
+						"token": "foo"
 					}
-				},
-				"failureCount": 1,
-				"isPaused": false,
-				"status": "error",
-				"variables": {
-					"token": "foo"
 				}
 			}
-		}
+		]
 	}
 }

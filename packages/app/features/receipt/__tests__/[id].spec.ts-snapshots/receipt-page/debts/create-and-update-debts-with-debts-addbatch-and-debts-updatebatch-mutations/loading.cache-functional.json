@@ -11,73 +11,77 @@
 		}
 	},
 	"mutations": {
-		"debts.addBatch": {
-			"state": {
-				"error": null,
-				"isPaused": false,
-				"status": "pending",
-				"variables": [
-					{
-						"note": "Receipt \"ipsum placeat ullam\"",
-						"currencyCode": "XAF",
-						"userId": "f6b3ea11-ae49-4fdd-92e8-ac5b1e80d189",
-						"amount": 6590.32,
-						"timestamp": "2020-01-01T00:00:00.000Z",
-						"receiptId": "e6f669c8-6cf4-4006-9692-14b7991532d4"
-					},
-					{
-						"note": "Receipt \"ipsum placeat ullam\"",
-						"currencyCode": "XAF",
-						"userId": "4507b980-43a2-46f6-8c5e-5dde36874f8b",
-						"amount": 14683.09,
-						"timestamp": "2020-01-01T00:00:00.000Z",
-						"receiptId": "e6f669c8-6cf4-4006-9692-14b7991532d4"
-					},
-					{
-						"note": "Receipt \"ipsum placeat ullam\"",
-						"currencyCode": "XAF",
-						"userId": "6cc49852-f91e-439d-a170-7915f064c8e6",
-						"amount": 624.25,
-						"timestamp": "2020-01-01T00:00:00.000Z",
-						"receiptId": "e6f669c8-6cf4-4006-9692-14b7991532d4"
-					},
-					{
-						"note": "Receipt \"ipsum placeat ullam\"",
-						"currencyCode": "XAF",
-						"userId": "90093008-8699-41ea-988a-00cbd020bea1",
-						"amount": 19354.79,
-						"timestamp": "2020-01-01T00:00:00.000Z",
-						"receiptId": "e6f669c8-6cf4-4006-9692-14b7991532d4"
-					},
-					{
-						"note": "Receipt \"ipsum placeat ullam\"",
-						"currencyCode": "XAF",
-						"userId": "7e8c5532-4343-42c9-b2f9-9ee62322b264",
-						"amount": 20857.25,
-						"timestamp": "2020-01-01T00:00:00.000Z",
-						"receiptId": "e6f669c8-6cf4-4006-9692-14b7991532d4"
-					}
-				]
-			}
-		},
-		"debts.updateBatch": {
-			"state": {
-				"error": null,
-				"isPaused": false,
-				"status": "pending",
-				"variables": [
-					{
-						"id": "e922b46a-64ae-4dcf-b308-d145bd3581f7",
-						"update": {
-							"amount": 15099.26,
+		"debts.addBatch": [
+			{
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "pending",
+					"variables": [
+						{
+							"note": "Receipt \"ipsum placeat ullam\"",
 							"currencyCode": "XAF",
+							"userId": "f6b3ea11-ae49-4fdd-92e8-ac5b1e80d189",
+							"amount": 6590.32,
 							"timestamp": "2020-01-01T00:00:00.000Z",
-							"locked": true,
+							"receiptId": "e6f669c8-6cf4-4006-9692-14b7991532d4"
+						},
+						{
+							"note": "Receipt \"ipsum placeat ullam\"",
+							"currencyCode": "XAF",
+							"userId": "4507b980-43a2-46f6-8c5e-5dde36874f8b",
+							"amount": 14683.09,
+							"timestamp": "2020-01-01T00:00:00.000Z",
+							"receiptId": "e6f669c8-6cf4-4006-9692-14b7991532d4"
+						},
+						{
+							"note": "Receipt \"ipsum placeat ullam\"",
+							"currencyCode": "XAF",
+							"userId": "6cc49852-f91e-439d-a170-7915f064c8e6",
+							"amount": 624.25,
+							"timestamp": "2020-01-01T00:00:00.000Z",
+							"receiptId": "e6f669c8-6cf4-4006-9692-14b7991532d4"
+						},
+						{
+							"note": "Receipt \"ipsum placeat ullam\"",
+							"currencyCode": "XAF",
+							"userId": "90093008-8699-41ea-988a-00cbd020bea1",
+							"amount": 19354.79,
+							"timestamp": "2020-01-01T00:00:00.000Z",
+							"receiptId": "e6f669c8-6cf4-4006-9692-14b7991532d4"
+						},
+						{
+							"note": "Receipt \"ipsum placeat ullam\"",
+							"currencyCode": "XAF",
+							"userId": "7e8c5532-4343-42c9-b2f9-9ee62322b264",
+							"amount": 20857.25,
+							"timestamp": "2020-01-01T00:00:00.000Z",
 							"receiptId": "e6f669c8-6cf4-4006-9692-14b7991532d4"
 						}
-					}
-				]
+					]
+				}
 			}
-		}
+		],
+		"debts.updateBatch": [
+			{
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "pending",
+					"variables": [
+						{
+							"id": "e922b46a-64ae-4dcf-b308-d145bd3581f7",
+							"update": {
+								"amount": 15099.26,
+								"currencyCode": "XAF",
+								"timestamp": "2020-01-01T00:00:00.000Z",
+								"locked": true,
+								"receiptId": "e6f669c8-6cf4-4006-9692-14b7991532d4"
+							}
+						}
+					]
+				}
+			}
+		]
 	}
 }
