@@ -268,7 +268,13 @@ type QueriesMixin = {
 	snapshotQueries: <T>(
 		fn: () => Promise<T>,
 		options?: Partial<SnapshotQueryCacheOptions>,
-	) => Promise<T>;
+	) => Promise<{
+		result: T;
+		actions: ReturnType<ApiManager["getActions"]>;
+		prevQueryCache: Awaited<ReturnType<typeof getQueryCache>>;
+		nextQueryCache: Awaited<ReturnType<typeof getQueryCache>>;
+		diff: object;
+	}>;
 	awaitCacheKey: (
 		keyOrKeys: CacheKeyOrKey | CacheKeyOrKey[],
 		timeout?: number,
@@ -311,6 +317,7 @@ export const queriesMixin = createMixin<
 				const result = await fn();
 				const nextQueryCache = await getQueryCache(page, keysLists, timeout);
 				const diff = objectDiff(prevQueryCache, nextQueryCache);
+				const actions = api.getActions();
 				const extendedTestInfo = getExtendedTestInfo(testInfo);
 				extendedTestInfo.queriesSnapshotIndex ??= 0;
 				withNoPlatformPath(testInfo, () => {
@@ -325,7 +332,7 @@ export const queriesMixin = createMixin<
 						expect
 							.soft(
 								`${JSON.stringify(
-									remapActions(api.getActions(), keysLists),
+									remapActions(actions, keysLists),
 									null,
 									"\t",
 								)}\n`,
@@ -338,7 +345,13 @@ export const queriesMixin = createMixin<
 				if (!name && !(skipQueries && skipCache)) {
 					extendedTestInfo.queriesSnapshotIndex += 1;
 				}
-				return result;
+				return {
+					result,
+					actions,
+					prevQueryCache,
+					nextQueryCache,
+					diff,
+				};
 			},
 		);
 	},
