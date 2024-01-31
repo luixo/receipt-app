@@ -5,6 +5,7 @@ import { consoleMixin } from "./fixtures/console";
 import { mockMixin } from "./fixtures/mock";
 import { pageMixin } from "./fixtures/page";
 import { queriesMixin } from "./fixtures/queries";
+import { screenshotsMixin } from "./fixtures/screenshots";
 import { selectorsMixin } from "./fixtures/selectors";
 import { toastsMixin } from "./fixtures/toasts";
 import { tooltipMixin } from "./fixtures/tooltip";
@@ -12,7 +13,11 @@ import { tooltipMixin } from "./fixtures/tooltip";
 export const test = queriesMixin(
 	pageMixin(
 		apiMixin(
-			tooltipMixin(toastsMixin(selectorsMixin(consoleMixin(mockMixin(base))))),
+			tooltipMixin(
+				toastsMixin(
+					selectorsMixin(consoleMixin(screenshotsMixin(mockMixin(base)))),
+				),
+			),
 		),
 	),
 );

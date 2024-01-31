@@ -1,9 +1,8 @@
 import { recase } from "@kristiandupont/recase";
-import type { Expect, Page, TestInfo } from "@playwright/test";
+import type { Page, TestInfo } from "@playwright/test";
 import { expect } from "@playwright/test";
 import { type TRPCClientErrorLike } from "@trpc/client";
 import { diff as objectDiff } from "deep-object-diff";
-import joinImages from "join-images";
 
 import type { TRPCMutationKey, TRPCQueryInput, TRPCQueryKey } from "app/trpc";
 import type { AppRouter } from "next-app/pages/api/trpc/[trpc]";
@@ -264,13 +263,6 @@ type QueriesMixin = {
 		keyOrKeys: CacheKey | CacheKey[],
 		timeout?: number,
 	) => Promise<boolean[]>;
-	expectScreenshotWithSchemes: (
-		name: string,
-		options?: Parameters<Page["stableScreenshot"]>[0] &
-			Parameters<
-				ReturnType<Expect<NonNullable<unknown>>>["toMatchSnapshot"]
-			>[0],
-	) => Promise<void>;
 };
 
 export const queriesMixin = createMixin<
@@ -451,45 +443,6 @@ export const queriesMixin = createMixin<
 				},
 				[cacheKeyOrKeys, timeout] as const,
 			),
-		);
-	},
-	expectScreenshotWithSchemes: async ({ page }, use) => {
-		await use(
-			async (
-				name,
-				{
-					maxDiffPixelRatio,
-					maxDiffPixels,
-					threshold,
-					fullPage = true,
-					mask = [page.getByTestId("sticky-menu")],
-					animations = "disabled",
-					...restScreenshotOptions
-				} = {},
-			) => {
-				const screenshotOptions = {
-					fullPage,
-					mask,
-					animations,
-					...restScreenshotOptions,
-				};
-				await page.emulateMedia({ colorScheme: "light" });
-				const lightImage = await page.stableScreenshot(screenshotOptions);
-				await page.emulateMedia({ colorScheme: "dark" });
-				const darkImage = await page.stableScreenshot(screenshotOptions);
-
-				const mergedImage = await joinImages([lightImage, darkImage], {
-					direction: "horizontal",
-					color: "#00ff00",
-				});
-				await expect
-					.soft(await mergedImage.toFormat("png").toBuffer())
-					.toMatchSnapshot(name, {
-						maxDiffPixelRatio,
-						maxDiffPixels,
-						threshold,
-					});
-			},
 		);
 	},
 });
