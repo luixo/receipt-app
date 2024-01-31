@@ -50,21 +50,24 @@ test.describe("Register page", () => {
 			await page.goto("/register");
 			await fillValidFields();
 
-			await snapshotQueries(async () => {
-				api.pause("auth.register");
-				const buttonWithLoader = withLoader(registerButton);
-				await expect(buttonWithLoader).not.toBeVisible();
-				await registerButton.click();
-				await verifyToastTexts("Registering..");
-				await expect(registerButton).toBeDisabled();
-				await expect(buttonWithLoader).toBeVisible();
-				const inputs = await page.locator("input").all();
-				// eslint-disable-next-line no-restricted-syntax
-				for (const input of inputs) {
-					// eslint-disable-next-line no-await-in-loop
-					await expect(input).toBeDisabled();
-				}
-			});
+			await snapshotQueries(
+				async () => {
+					api.pause("auth.register");
+					const buttonWithLoader = withLoader(registerButton);
+					await expect(buttonWithLoader).not.toBeVisible();
+					await registerButton.click();
+					await verifyToastTexts("Registering..");
+					await expect(registerButton).toBeDisabled();
+					await expect(buttonWithLoader).toBeVisible();
+					const inputs = await page.locator("input").all();
+					// eslint-disable-next-line no-restricted-syntax
+					for (const input of inputs) {
+						// eslint-disable-next-line no-await-in-loop
+						await expect(input).toBeDisabled();
+					}
+				},
+				{ name: "loading" },
+			);
 			await expect(page).toHaveURL("/register");
 
 			await snapshotQueries(
@@ -76,6 +79,8 @@ test.describe("Register page", () => {
 				{
 					whitelistKeys: "account.get",
 					blacklistKeys: "receipts.getPaged",
+					skipQueries: true,
+					name: "success",
 				},
 			);
 		});

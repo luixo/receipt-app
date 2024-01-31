@@ -459,13 +459,16 @@ test.describe("Receipt page", () => {
 
 					await openReceipt(receipt.id);
 
-					await snapshotQueries(async () => {
-						await propagateDebtsButton.click();
-						await verifyToastTexts([
-							"Error updating debt: Forbidden to update debts",
-							/\d debts added/,
-						]);
-					});
+					await snapshotQueries(
+						async () => {
+							await propagateDebtsButton.click();
+							await verifyToastTexts([
+								"Error updating debt: Forbidden to update debts",
+								/\d debts added/,
+							]);
+						},
+						{ name: "error" },
+					);
 					await expect(page).toHaveURL(`/receipts/${receipt.id}`);
 
 					// Verify that "debts.updateBatch" works after error is removed
@@ -477,10 +480,13 @@ test.describe("Receipt page", () => {
 						})),
 					);
 					await clearToasts();
-					await snapshotQueries(async () => {
-						await propagateDebtsButton.click();
-						await verifyToastTexts("Debt updated successfully");
-					});
+					await snapshotQueries(
+						async () => {
+							await propagateDebtsButton.click();
+							await verifyToastTexts("Debt updated successfully");
+						},
+						{ name: "success" },
+					);
 					await expect(page).toHaveURL(`/receipts/${receipt.id}`);
 				});
 

@@ -19,27 +19,17 @@ import { createMixin } from "./utils";
 
 const DEFAULT_AWAIT_CACHE_TIMEOUT = 5000;
 
-type SnapshotNames = {
-	queriesIndex?: number;
-	cacheIndex?: number;
+type ExtendedTestInfo = TestInfo & {
+	queriesSnapshotIndex?: number;
 };
-
-const getSnapshotNames = (testInfo: TestInfo): SnapshotNames => {
-	const testInfoExtended = testInfo as TestInfo & {
-		queriesSnapshotNames: SnapshotNames;
-	};
-	testInfoExtended.queriesSnapshotNames ??= {};
-	return testInfoExtended.queriesSnapshotNames as SnapshotNames;
-};
+const getExtendedTestInfo = (testInfo: TestInfo): ExtendedTestInfo =>
+	testInfo as ExtendedTestInfo;
 
 const getSnapshotName = (
-	testInfo: TestInfo,
-	indexKey: keyof SnapshotNames,
+	testInfo: ExtendedTestInfo,
+	key: string,
 	overrideName: string | undefined,
-	extension: string,
 ) => {
-	const snapshotsNames = getSnapshotNames(testInfo);
-	snapshotsNames[indexKey] ??= 0;
 	const path = testInfo.titlePath.slice(1, -1).map((element) =>
 		element
 			.replace(/[^a-zA-Z0-9]/g, "-")
@@ -51,14 +41,13 @@ const getSnapshotName = (
 	);
 	const name = [
 		recase("mixed", "dash")(testInfo.title.replace(/[^a-zA-Z0-9]/g, "-")),
-		indexKey.replace("Index", ""),
+		key,
 		// Removing baseName "0" by .filter(Boolean) is intended
-		overrideName || snapshotsNames[indexKey],
-		extension,
+		overrideName || testInfo.queriesSnapshotIndex,
+		"json",
 	]
 		.filter(Boolean)
 		.join(".");
-	snapshotsNames[indexKey]! += 1;
 	return [...path, name];
 };
 
@@ -242,6 +231,8 @@ type SnapshotQueryCacheOptions = {
 	addDefaultBlacklist?: boolean;
 	whitelistKeys?: TRPCKey | TRPCKey[];
 	blacklistKeys?: TRPCKey | TRPCKey[];
+	skipCache?: boolean;
+	skipQueries?: boolean;
 };
 
 export const DEFAULT_BLACKLIST_KEYS: TRPCKey[] = [
@@ -299,6 +290,8 @@ export const queriesMixin = createMixin<
 					addDefaultBlacklist = true,
 					name,
 					timeout = DEFAULT_AWAIT_CACHE_TIMEOUT,
+					skipCache = false,
+					skipQueries = false,
 				} = {},
 			) => {
 				const blacklistKeysArray = Array.isArray(blacklistKeys)
@@ -318,24 +311,33 @@ export const queriesMixin = createMixin<
 				const result = await fn();
 				const nextQueryCache = await getQueryCache(page, keysLists, timeout);
 				const diff = objectDiff(prevQueryCache, nextQueryCache);
+				const extendedTestInfo = getExtendedTestInfo(testInfo);
+				extendedTestInfo.queriesSnapshotIndex ??= 0;
 				withNoPlatformPath(testInfo, () => {
-					expect
-						.soft(`${JSON.stringify(diff, null, "\t")}\n`)
-						.toMatchSnapshot(
-							getSnapshotName(testInfo, "cacheIndex", name, "json"),
-						);
-					expect
-						.soft(
-							`${JSON.stringify(
-								remapActions(api.getActions(), keysLists),
-								null,
-								"\t",
-							)}\n`,
-						)
-						.toMatchSnapshot(
-							getSnapshotName(testInfo, "queriesIndex", name, "json"),
-						);
+					if (!skipCache) {
+						expect
+							.soft(`${JSON.stringify(diff, null, "\t")}\n`)
+							.toMatchSnapshot(
+								getSnapshotName(extendedTestInfo, "cache", name),
+							);
+					}
+					if (!skipQueries) {
+						expect
+							.soft(
+								`${JSON.stringify(
+									remapActions(api.getActions(), keysLists),
+									null,
+									"\t",
+								)}\n`,
+							)
+							.toMatchSnapshot(
+								getSnapshotName(extendedTestInfo, "queries", name),
+							);
+					}
 				});
+				if (!name && !(skipQueries && skipCache)) {
+					extendedTestInfo.queriesSnapshotIndex += 1;
+				}
 				return result;
 			},
 		);

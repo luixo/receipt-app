@@ -53,25 +53,31 @@ test.describe("Void account", () => {
 
 			await page.goto("/void-account?token=foo");
 
-			await snapshotQueries(async () => {
-				const buttonWithLoader = withLoader(voidButton);
-				await expect(buttonWithLoader).not.toBeVisible();
-				await voidButton.click();
-				await verifyToastTexts();
-				await expect(voidButton).toBeDisabled();
-				await expect(cancelButton).toBeDisabled();
-				await expect(buttonWithLoader).toBeVisible();
-			});
+			await snapshotQueries(
+				async () => {
+					const buttonWithLoader = withLoader(voidButton);
+					await expect(buttonWithLoader).not.toBeVisible();
+					await voidButton.click();
+					await verifyToastTexts();
+					await expect(voidButton).toBeDisabled();
+					await expect(cancelButton).toBeDisabled();
+					await expect(buttonWithLoader).toBeVisible();
+				},
+				{ name: "loading" },
+			);
 			await expect(page).toHaveURL("/void-account?token=foo");
 
-			await snapshotQueries(async () => {
-				api.unpause("auth.voidAccount");
-				await verifyToastTexts("Account successfully voided, redirecting..");
-				await expect(page.locator("h3")).toHaveText("foo@gmail.com");
-				await expect(page.locator("h4")).toHaveText(
-					"Account removed succesfully",
-				);
-			});
+			await snapshotQueries(
+				async () => {
+					api.unpause("auth.voidAccount");
+					await verifyToastTexts("Account successfully voided, redirecting..");
+					await expect(page.locator("h3")).toHaveText("foo@gmail.com");
+					await expect(page.locator("h4")).toHaveText(
+						"Account removed succesfully",
+					);
+				},
+				{ skipQueries: true, name: "success" },
+			);
 			await expect(page).toHaveURL("/void-account?token=foo");
 			await page.getByText("To login page").click();
 			await expect(page).toHaveURL("/login");
