@@ -15,34 +15,61 @@ import type {
 	DebtParticipant,
 	LockedReceipt,
 } from "./receipt-participant-debt";
-import { ReceiptParticipantDebt } from "./receipt-participant-debt";
+import {
+	ReceiptParticipantDebt,
+	isDebtInSyncWithReceipt,
+} from "./receipt-participant-debt";
 
-const sortParticipants =
-	(receiptLockedTimestamp: Date) =>
-	(a: DebtParticipant, b: DebtParticipant): number => {
-		const aLockedTimestamp = a.currentDebt?.their?.lockedTimestamp?.valueOf();
-		const bLockedTimestamp = b.currentDebt?.their?.lockedTimestamp?.valueOf();
-		if (aLockedTimestamp === bLockedTimestamp) {
-			if (a.sum === b.sum) {
-				return b.userId.localeCompare(a.userId);
-			}
-			return b.sum - a.sum;
+const sortParticipantsSameBlock = (
+	a: DebtParticipant,
+	b: DebtParticipant,
+): number => {
+	if (a.sum === b.sum) {
+		return b.userId.localeCompare(a.userId);
+	}
+	return b.sum - a.sum;
+};
+
+type ReceiptPart = Pick<LockedReceipt, "currencyCode" | "issued" | "id">;
+
+const isEmpty = ({ sum }: DebtParticipant) => sum === 0;
+const noDebt = ({ sum, currentDebt }: DebtParticipant) =>
+	sum !== 0 && !currentDebt;
+const isDesynced =
+	(receipt: ReceiptPart) =>
+	({ currentDebt, sum }: DebtParticipant) =>
+		currentDebt
+			? sum !== 0 &&
+			  !isDebtInSyncWithReceipt(
+					{ ...receipt, participantSum: sum },
+					currentDebt,
+			  )
+			: false;
+const isSynced =
+	(receipt: ReceiptPart) =>
+	({ currentDebt, sum }: DebtParticipant) =>
+		currentDebt
+			? sum !== 0 &&
+			  isDebtInSyncWithReceipt(
+					{ ...receipt, participantSum: sum },
+					currentDebt,
+			  )
+			: false;
+
+type SortFn = (a: DebtParticipant, b: DebtParticipant) => number;
+const sortBy =
+	(...sorters: ((participant: DebtParticipant) => boolean)[]): SortFn =>
+	(a, b) => {
+		const aIndex = sorters.findIndex((sorter) => sorter(a));
+		const bIndex = sorters.findIndex((sorter) => sorter(b));
+		if (aIndex === bIndex) {
+			return sortParticipantsSameBlock(a, b);
 		}
-		if (!aLockedTimestamp) {
-			return 1;
-		}
-		if (!bLockedTimestamp) {
-			return -1;
-		}
-		const receiptLockedTimestampValue = receiptLockedTimestamp.valueOf();
-		if (receiptLockedTimestampValue === aLockedTimestamp) {
-			return -1;
-		}
-		if (receiptLockedTimestampValue === bLockedTimestamp) {
-			return 1;
-		}
-		return bLockedTimestamp - aLockedTimestamp;
+		return aIndex - bIndex;
 	};
+
+const sortParticipants = (receipt: ReceiptPart): SortFn =>
+	sortBy(noDebt, isDesynced(receipt), isSynced(receipt), isEmpty);
 
 type Props = {
 	isOpen: boolean;
@@ -58,13 +85,16 @@ export const ReceiptDebtSyncInfoModal: React.FC<Props> = ({
 	participants,
 }) => {
 	const sortedParticipants = React.useMemo(
-		() => [...participants].sort(sortParticipants(receipt.lockedTimestamp)),
-		[participants, receipt.lockedTimestamp],
+		() =>
+			[...participants].sort(
+				sortParticipants({
+					currencyCode: receipt.currencyCode,
+					issued: receipt.issued,
+					id: receipt.id,
+				}),
+			),
+		[participants, receipt.currencyCode, receipt.issued, receipt.id],
 	);
-
-	if (sortedParticipants.length === 0) {
-		return null;
-	}
 	return (
 		<Modal
 			isOpen={isOpen}
