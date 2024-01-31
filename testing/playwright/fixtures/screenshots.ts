@@ -12,6 +12,59 @@ import { createMixin } from "./utils";
 const FRAME_LENGTH = 33;
 const STABLE_FRAME_COUNT = 5;
 
+type BoundingBox = NonNullable<PageScreenshotOptions["clip"]>;
+
+const mergeBoundingBoxes = (
+	bbox1: BoundingBox,
+	bbox2?: BoundingBox,
+): BoundingBox => {
+	if (!bbox2) {
+		return bbox1;
+	}
+	const minX = Math.min(bbox1.x, bbox2.x);
+	const minY = Math.min(bbox1.y, bbox2.y);
+	const maxX = Math.max(bbox1.x + bbox1.width, bbox2.x + bbox2.width);
+	const maxY = Math.max(bbox1.y + bbox1.height, bbox2.y + bbox2.height);
+	return {
+		x: minX,
+		y: minY,
+		width: maxX - minX,
+		height: maxY - minY,
+	};
+};
+
+const mergeClip = async (
+	locators: Locator[],
+	acc?: BoundingBox,
+): Promise<BoundingBox> => {
+	if (locators.length === 0) {
+		return acc || { x: 0, y: 0, width: 0, height: 0 };
+	}
+	const [first, ...rest] = locators;
+	const boundingBox = await first!.boundingBox();
+	if (!boundingBox) {
+		throw new Error(`Expected to have boundingBox for ${String(first)}`);
+	}
+	return mergeClip(rest, mergeBoundingBoxes(boundingBox, acc));
+};
+
+const getScreenshot = async (
+	page: Page,
+	options: PageScreenshotOptions,
+	locator?: Locator | Locator[],
+) => {
+	if (locator) {
+		if (!Array.isArray(locator)) {
+			return locator.screenshot(options);
+		}
+		return page.screenshot({
+			...options,
+			clip: await mergeClip(locator),
+		});
+	}
+	return page.screenshot(options);
+};
+
 const stableScreenshot = async ({
 	page,
 	stableDelay = FRAME_LENGTH * STABLE_FRAME_COUNT,
@@ -20,7 +73,7 @@ const stableScreenshot = async ({
 }: PageScreenshotOptions & {
 	page: Page;
 	stableDelay?: number;
-	locator?: Locator;
+	locator?: Locator | Locator[];
 }): Promise<Buffer> => {
 	let isTimedOut = false;
 	if (options.timeout) {
@@ -28,25 +81,17 @@ const stableScreenshot = async ({
 			isTimedOut = true;
 		}, options.timeout);
 	}
-	const getScreenshot = () => {
-		if (locator) {
-			return locator.screenshot(options);
-		}
-		return page.screenshot(options);
-	};
 	let prevBuffer: Buffer;
-	let buffer: Buffer;
+	let buffer: Buffer | undefined;
 	/* eslint-disable no-await-in-loop */
 	// eslint-disable-next-line no-constant-condition
 	while (true) {
 		if (isTimedOut) {
 			throw new Error("Timeout while waiting for stable screenshot");
 		}
-		// @ts-expect-error typescript doesn't recognize buffer as an initialized buffer
-		// even if in second iteration it's initialized
-		prevBuffer = buffer || (await getScreenshot());
+		prevBuffer = buffer || (await getScreenshot(page, options, locator));
 		await page.waitForTimeout(stableDelay);
-		buffer = await getScreenshot();
+		buffer = await getScreenshot(page, options, locator);
 		if (prevBuffer.equals(buffer)) {
 			return buffer;
 		}
