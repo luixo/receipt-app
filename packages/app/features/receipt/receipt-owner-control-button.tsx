@@ -35,7 +35,6 @@ export const ReceiptOwnerControlButton: React.FC<Props> = ({
 				<ReceiptPropagateButton
 					queries={debtsQueries}
 					receipt={receipt as LockedReceipt}
-					isLoading={deleteLoading}
 				/>
 			) : null}
 		</>

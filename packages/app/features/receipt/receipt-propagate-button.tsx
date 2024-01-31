@@ -31,14 +31,12 @@ type InnerProps = {
 	queries: TRPCQuerySuccessResult<"debts.get">[];
 	itemsQuery: TRPCQuerySuccessResult<"receiptItems.get">;
 	receipt: LockedReceipt;
-	isLoading: boolean;
 };
 
 const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 	queries,
 	itemsQuery,
 	receipt,
-	isLoading,
 }) => {
 	const debts = React.useMemo(
 		() => queries.map((query) => query.data),
@@ -156,7 +154,7 @@ const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 					variant="ghost"
 					title="Propagate debts"
 					isLoading={isPropagating}
-					isDisabled={isLoading || isPropagating}
+					isDisabled={isPropagating}
 					onClick={propagateDebts}
 					color="primary"
 					isIconOnly
