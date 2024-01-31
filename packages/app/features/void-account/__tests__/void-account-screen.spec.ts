@@ -1,6 +1,6 @@
 import { expect } from "@tests/frontend/fixtures";
 
-import { test } from "./utils.spec";
+import { test } from "./utils";
 
 test.describe("Void account screen", () => {
 	test("On load without token", async ({

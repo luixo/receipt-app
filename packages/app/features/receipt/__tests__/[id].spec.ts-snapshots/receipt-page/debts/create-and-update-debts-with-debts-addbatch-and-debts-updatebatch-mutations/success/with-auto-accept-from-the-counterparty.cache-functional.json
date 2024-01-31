@@ -58,9 +58,13 @@
 		"debts.addBatch": {
 			"state": {
 				"data": {
-					"ids": ["67bfce6e-b483-4ba8-a878-290624425491"],
+					"ids": [
+						"67bfce6e-b483-4ba8-a878-290624425491"
+					],
 					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
-					"reverseAcceptedUserIds": ["e51f90a1-9de4-461d-974b-986d93108558"]
+					"reverseAcceptedUserIds": [
+						"e51f90a1-9de4-461d-974b-986d93108558"
+					]
 				},
 				"error": null,
 				"isPaused": false,

@@ -2,8 +2,8 @@ import { TRPCError } from "@trpc/server";
 
 import { expect } from "@tests/frontend/fixtures";
 
-import type { ModifyOutcomingDebts } from "./[id].utils.spec";
-import { test } from "./[id].utils.spec";
+import type { ModifyOutcomingDebts } from "./utils";
+import { test } from "./utils";
 
 test.describe("Receipt page", () => {
 	test.describe("Debts", () => {

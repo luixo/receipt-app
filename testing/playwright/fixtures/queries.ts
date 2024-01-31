@@ -1,7 +1,6 @@
 import { recase } from "@kristiandupont/recase";
 import type { Expect, Page, TestInfo } from "@playwright/test";
 import { expect } from "@playwright/test";
-import type { DehydratedState, QueryClient } from "@tanstack/react-query";
 import { type TRPCClientErrorLike } from "@trpc/client";
 import { diff as objectDiff } from "deep-object-diff";
 import joinImages from "join-images";
@@ -11,13 +10,6 @@ import type { AppRouter } from "next-app/pages/api/trpc/[trpc]";
 
 import type { ApiManager, ApiMixin, TRPCKey } from "./api";
 import { createMixin } from "./utils";
-
-declare global {
-	interface Window {
-		getDehydratedCache: (timeout: number) => Promise<DehydratedState>;
-		queryClient: QueryClient;
-	}
-}
 
 const DEFAULT_AWAIT_CACHE_TIMEOUT = 5000;
 

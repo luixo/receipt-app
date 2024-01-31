@@ -24,6 +24,7 @@ const testConfig: NonNullable<UserConfig["test"]> = {
 		exclude: [
 			...configDefaults.coverage.exclude!,
 			path.resolve(rootPath, "packages/**/*"),
+			path.resolve(rootPath, "__tests__/**/*"),
 			path.resolve(testsRoot, "providers/**/*"),
 			path.resolve(vitestRoot, "**/*"),
 		],

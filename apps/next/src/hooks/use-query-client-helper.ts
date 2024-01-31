@@ -1,8 +1,16 @@
 import React from "react";
 
+import type { DehydratedState, QueryClient } from "@tanstack/react-query";
 import { dehydrate, useQueryClient } from "@tanstack/react-query";
 
 import { alwaysTrue } from "app/utils/utils";
+
+declare global {
+	interface Window {
+		getDehydratedCache: (timeout: number) => Promise<DehydratedState>;
+		queryClient: QueryClient;
+	}
+}
 
 export const useQueryClientHelper = () => {
 	const queryClient = useQueryClient();

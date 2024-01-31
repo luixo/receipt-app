@@ -5,12 +5,6 @@ import { createMixin } from "./utils";
 const TOAST_SELECTOR = ".toaster > div";
 const DEFAULT_WAIT_TOAST_TIMEOUT = 1000;
 
-declare global {
-	interface Window {
-		dismissToasts: () => void;
-	}
-}
-
 type RegExpOrString = string | RegExp;
 
 type ToastsMixin = {

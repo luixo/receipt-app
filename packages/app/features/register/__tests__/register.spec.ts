@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 
 import { expect } from "@tests/frontend/fixtures";
 
-import { test } from "./utils.spec";
+import { test } from "./utils";
 
 test.describe("Register page", () => {
 	test("On load", async ({ page, api, registerButton, snapshotQueries }) => {

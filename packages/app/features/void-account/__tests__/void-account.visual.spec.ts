@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
-import { test } from "./utils.spec";
+import { test } from "./utils";
 
 test.describe("Void account - visual", () => {
 	test("Open with token", async ({

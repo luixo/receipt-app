@@ -5,6 +5,12 @@ import { tv } from "@nextui-org/react";
 import type { Toast as ToastType } from "react-hot-toast";
 import { Toaster as RawToaster, ToastBar, toast } from "react-hot-toast";
 
+declare global {
+	interface Window {
+		dismissToasts: () => void;
+	}
+}
+
 const toaster = tv({
 	base: "text-foreground bg-content4 border-2 border-solid",
 	variants: {

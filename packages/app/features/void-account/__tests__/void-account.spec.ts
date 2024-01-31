@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 
 import { expect } from "@tests/frontend/fixtures";
 
-import { test } from "./utils.spec";
+import { test } from "./utils";
 
 test.describe("Void account", () => {
 	test("On load with token", async ({

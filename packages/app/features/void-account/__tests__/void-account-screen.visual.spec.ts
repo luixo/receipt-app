@@ -1,4 +1,4 @@
-import { test } from "./utils.spec";
+import { test } from "./utils";
 
 test.describe("Void account screen - visual", () => {
 	test("Open without token", async ({
