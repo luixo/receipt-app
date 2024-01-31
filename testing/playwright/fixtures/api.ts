@@ -35,12 +35,12 @@ export type TRPCKey = TRPCQueryKey | TRPCMutationKey;
 
 type QueryHandlers = {
 	[Key in TRPCQueryKey]:
-		| ((input: TRPCQueryInput<Key>) => TRPCQueryOutput<Key>)
+		| ((input: TRPCQueryInput<Key>, call: number) => TRPCQueryOutput<Key>)
 		| TRPCQueryOutput<Key>;
 };
 type MutationHandlers = {
 	[Key in TRPCMutationKey]:
-		| ((input: TRPCMutationInput<Key>) => TRPCMutationOutput<Key>)
+		| ((input: TRPCMutationInput<Key>, call: number) => TRPCMutationOutput<Key>)
 		| TRPCMutationOutput<Key>;
 };
 
@@ -80,6 +80,7 @@ type Action<K extends TRPCKey = TRPCKey> = [
 type Controller = {
 	handlers: Handlers;
 	paused: Map<TRPCKey, ControlledPromise>;
+	calls: Map<TRPCKey, number>;
 	actions: Action[];
 };
 
@@ -110,8 +111,11 @@ const handleCall = async <K extends TRPCKey>(
 			result: {
 				data: transformer.serialize(
 					typeof handlerOrData === "function"
-						? // eslint-disable-next-line @typescript-eslint/no-explicit-any
-						  handlerOrData(deserializedInput as any)
+						? handlerOrData(
+								// eslint-disable-next-line @typescript-eslint/no-explicit-any
+								deserializedInput as any,
+								controller.calls.get(name) || 0,
+						  )
 						: handlerOrData,
 				),
 			},
@@ -137,6 +141,8 @@ const handleCall = async <K extends TRPCKey>(
 				message: trpcError.message,
 			}) as unknown as TRPCErrorShape,
 		};
+	} finally {
+		controller.calls.set(name, (controller.calls.get(name) || 0) + 1);
 	}
 };
 
@@ -241,6 +247,7 @@ const createWorkerManager = async (port: number): Promise<WorkerManager> => {
 				actions: [],
 				handlers: {},
 				paused: new Map(),
+				calls: new Map(),
 			};
 			controllers[id] = controller;
 			return {
