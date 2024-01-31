@@ -31,7 +31,8 @@ export const trpcNext = createTRPCNext<
 					},
 			  )
 			: getLinks(TRPC_ENDPOINT, {
-					useBatch: true,
+					// Don't batch requests when in tests - to evaluate pending / error states separately
+					useBatch: !searchParams.proxyPort,
 					searchParams,
 					cookies: undefined,
 					source: "csr-next",
