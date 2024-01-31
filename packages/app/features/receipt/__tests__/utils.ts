@@ -308,10 +308,6 @@ export const test = originalTest.extend<Fixtures>({
 	openReceipt: ({ page, awaitCacheKey }, use) =>
 		use(async (receiptId) => {
 			await page.goto(`/receipts/${receiptId}`);
-			await awaitCacheKey([
-				{ path: "debts.get", type: "query" },
-				{ path: "currency.topReceipts", type: "query" },
-				{ path: "users.get", type: "query" },
-			]);
+			await awaitCacheKey(["debts.get", "currency.topReceipts", "users.get"]);
 		}),
 });
