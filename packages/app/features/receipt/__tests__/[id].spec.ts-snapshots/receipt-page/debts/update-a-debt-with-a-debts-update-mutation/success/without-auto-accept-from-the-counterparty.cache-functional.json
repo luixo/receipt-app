@@ -1,15 +1,15 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"d16aec6f-67ab-4152-acae-999b500e1470\"}]": {
+		"debts.get:[{\"id\":\"f9230230-4bb4-4e5b-8173-2ac8e0450a57\"}]": {
 			"state": {
 				"data": {
-					"amount": 9619.55,
+					"amount": 29950.89,
 					"lockedTimestamp": "2020-01-01T00:00:00.000Z"
 				},
 				"dataUpdateCount": 2
 			}
 		},
-		"receipts.get:[{\"id\":\"86606eb5-dbf6-44fd-95f4-e21a9ec6b3f6\"}]": {
+		"receipts.get:[{\"id\":\"cfdc4e1d-be50-4e32-8790-67fb787fc3d2\"}]": {
 			"state": {
 				"dataUpdateCount": 1
 			}
@@ -27,13 +27,13 @@
 					"isPaused": false,
 					"status": "success",
 					"variables": {
-						"id": "d16aec6f-67ab-4152-acae-999b500e1470",
+						"id": "f9230230-4bb4-4e5b-8173-2ac8e0450a57",
 						"update": {
-							"amount": 9619.55,
-							"currencyCode": "GBP",
+							"amount": 29950.89,
+							"currencyCode": "JMD",
 							"timestamp": "2020-01-01T00:00:00.000Z",
 							"locked": true,
-							"receiptId": "86606eb5-dbf6-44fd-95f4-e21a9ec6b3f6"
+							"receiptId": "cfdc4e1d-be50-4e32-8790-67fb787fc3d2"
 						}
 					}
 				}

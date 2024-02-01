@@ -1,15 +1,15 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"ebcdecfd-3dd4-431d-a89c-1024c4e362e4\"}]": {
+		"debts.get:[{\"id\":\"b60b58d6-2f60-4491-a9db-4cf0cb5b7f59\"}]": {
 			"state": {
 				"data": {
-					"amount": 35042.01,
+					"amount": 69424.82,
 					"lockedTimestamp": "2020-01-01T00:00:00.000Z"
 				},
 				"dataUpdateCount": 2
 			}
 		},
-		"receipts.get:[{\"id\":\"2b90f180-8742-4cf3-8ee6-8cd7b063e5f1\"}]": {
+		"receipts.get:[{\"id\":\"76155a45-3730-43c3-a77d-78e83e16b534\"}]": {
 			"state": {
 				"dataUpdateCount": 1
 			}
@@ -22,7 +22,7 @@
 					"data": [
 						{
 							"lockedTimestamp": "2020-01-01T00:00:00.000Z",
-							"debtId": "ebcdecfd-3dd4-431d-a89c-1024c4e362e4",
+							"debtId": "b60b58d6-2f60-4491-a9db-4cf0cb5b7f59",
 							"reverseLockedTimestampUpdated": false
 						}
 					],
@@ -31,13 +31,13 @@
 					"status": "success",
 					"variables": [
 						{
-							"id": "ebcdecfd-3dd4-431d-a89c-1024c4e362e4",
+							"id": "b60b58d6-2f60-4491-a9db-4cf0cb5b7f59",
 							"update": {
-								"amount": 35042.01,
-								"currencyCode": "XAF",
+								"amount": 69424.82,
+								"currencyCode": "GEL",
 								"timestamp": "2020-01-01T00:00:00.000Z",
 								"locked": true,
-								"receiptId": "2b90f180-8742-4cf3-8ee6-8cd7b063e5f1"
+								"receiptId": "76155a45-3730-43c3-a77d-78e83e16b534"
 							}
 						}
 					]

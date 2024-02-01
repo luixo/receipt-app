@@ -1,19 +1,18 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"350e516b-03eb-4efa-9adc-a9a1fd0ba5d9\"}]": {
+		"debts.get:[{\"id\":\"ee9654ee-3a96-4aab-b2e4-fce9320f9ed4\"}]": {
 			"state": {
 				"data": {
-					"amount": 10324.55,
+					"amount": 28621.73,
 					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
 					"their": {
-						"amount": 10324.55,
 						"lockedTimestamp": "2020-01-01T00:00:00.000Z"
 					}
 				},
 				"dataUpdateCount": 2
 			}
 		},
-		"receipts.get:[{\"id\":\"89328a0e-ac2b-4ed7-8efb-cbec6b13c8ae\"}]": {
+		"receipts.get:[{\"id\":\"87cf7db5-f3f9-4b0d-beb6-96e4ee9ef171\"}]": {
 			"state": {
 				"dataUpdateCount": 1
 			}
@@ -31,13 +30,13 @@
 					"isPaused": false,
 					"status": "success",
 					"variables": {
-						"id": "350e516b-03eb-4efa-9adc-a9a1fd0ba5d9",
+						"id": "ee9654ee-3a96-4aab-b2e4-fce9320f9ed4",
 						"update": {
-							"amount": 10324.55,
-							"currencyCode": "LKR",
+							"amount": 28621.73,
+							"currencyCode": "CZK",
 							"timestamp": "2020-01-01T00:00:00.000Z",
 							"locked": true,
-							"receiptId": "89328a0e-ac2b-4ed7-8efb-cbec6b13c8ae"
+							"receiptId": "87cf7db5-f3f9-4b0d-beb6-96e4ee9ef171"
 						}
 					}
 				}

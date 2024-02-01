@@ -142,7 +142,7 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 						<ZeroIcon size={36} />
 					) : (
 						<>
-							{isReceiptSyncedWithOurDebt ? null : participant.currentDebt ? (
+							{participant.currentDebt && !isReceiptSyncedWithOurDebt ? (
 								<ReceiptOffIcon size={36} className="text-danger" />
 							) : null}
 							{participant.currentDebt ? (
@@ -158,12 +158,11 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 					)}
 				</View>
 				<View className="flex-1">
-					{(isReceiptSyncedWithOurDebt && !isUpdating) ||
-					participant.sum === 0 ? null : (
+					{isReceiptSyncedWithOurDebt || participant.sum === 0 ? null : (
 						<Button
 							title={
-								participant.currentDebt?.their
-									? "Update debt for user"
+								participant.currentDebt
+									? "Update debt for a user"
 									: "Send debt to a user"
 							}
 							isLoading={isUpdating}
@@ -171,12 +170,12 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 							isIconOnly
 							color="primary"
 							onClick={() =>
-								participant.currentDebt?.their
+								participant.currentDebt
 									? updateDebt(participant.currentDebt)
 									: addDebt()
 							}
 						>
-							{participant.currentDebt?.their ? (
+							{participant.currentDebt ? (
 								<SyncIcon size={24} />
 							) : (
 								<SendIcon size={24} />

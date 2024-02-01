@@ -1,9 +1,9 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"e922b46a-64ae-4dcf-b308-d145bd3581f7\"}]": {
+		"debts.get:[{\"id\":\"5dde3687-4f8b-437e-b9be-46cc49852f91\"}]": {
 			"state": {
 				"data": {
-					"amount": 15099.26,
+					"amount": 39082.68,
 					"lockedTimestamp": "2020-01-01T00:00:00.000Z"
 				},
 				"dataUpdateCount": 1
@@ -19,44 +19,20 @@
 					"status": "pending",
 					"variables": [
 						{
-							"note": "Receipt \"ipsum placeat ullam\"",
-							"currencyCode": "XAF",
-							"userId": "f6b3ea11-ae49-4fdd-92e8-ac5b1e80d189",
-							"amount": 6590.32,
+							"note": "Receipt \"ipsam reiciendis repudiandae\"",
+							"currencyCode": "DOP",
+							"userId": "26df662d-48dd-4a3a-8cf8-a48f28127e28",
+							"amount": 57058.88,
 							"timestamp": "2020-01-01T00:00:00.000Z",
-							"receiptId": "e6f669c8-6cf4-4006-9692-14b7991532d4"
+							"receiptId": "88c87caa-c965-4e5c-944f-bd881df57a76"
 						},
 						{
-							"note": "Receipt \"ipsum placeat ullam\"",
-							"currencyCode": "XAF",
-							"userId": "4507b980-43a2-46f6-8c5e-5dde36874f8b",
-							"amount": 14683.09,
+							"note": "Receipt \"ipsam reiciendis repudiandae\"",
+							"currencyCode": "DOP",
+							"userId": "71cf131e-5e9a-4502-bb53-ac06fea57d31",
+							"amount": 29157.02,
 							"timestamp": "2020-01-01T00:00:00.000Z",
-							"receiptId": "e6f669c8-6cf4-4006-9692-14b7991532d4"
-						},
-						{
-							"note": "Receipt \"ipsum placeat ullam\"",
-							"currencyCode": "XAF",
-							"userId": "6cc49852-f91e-439d-a170-7915f064c8e6",
-							"amount": 624.25,
-							"timestamp": "2020-01-01T00:00:00.000Z",
-							"receiptId": "e6f669c8-6cf4-4006-9692-14b7991532d4"
-						},
-						{
-							"note": "Receipt \"ipsum placeat ullam\"",
-							"currencyCode": "XAF",
-							"userId": "90093008-8699-41ea-988a-00cbd020bea1",
-							"amount": 19354.79,
-							"timestamp": "2020-01-01T00:00:00.000Z",
-							"receiptId": "e6f669c8-6cf4-4006-9692-14b7991532d4"
-						},
-						{
-							"note": "Receipt \"ipsum placeat ullam\"",
-							"currencyCode": "XAF",
-							"userId": "7e8c5532-4343-42c9-b2f9-9ee62322b264",
-							"amount": 20857.25,
-							"timestamp": "2020-01-01T00:00:00.000Z",
-							"receiptId": "e6f669c8-6cf4-4006-9692-14b7991532d4"
+							"receiptId": "88c87caa-c965-4e5c-944f-bd881df57a76"
 						}
 					]
 				}
@@ -70,13 +46,13 @@
 					"status": "pending",
 					"variables": [
 						{
-							"id": "e922b46a-64ae-4dcf-b308-d145bd3581f7",
+							"id": "5dde3687-4f8b-437e-b9be-46cc49852f91",
 							"update": {
-								"amount": 15099.26,
-								"currencyCode": "XAF",
+								"amount": 39082.68,
+								"currencyCode": "DOP",
 								"timestamp": "2020-01-01T00:00:00.000Z",
 								"locked": true,
-								"receiptId": "e6f669c8-6cf4-4006-9692-14b7991532d4"
+								"receiptId": "88c87caa-c965-4e5c-944f-bd881df57a76"
 							}
 						}
 					]

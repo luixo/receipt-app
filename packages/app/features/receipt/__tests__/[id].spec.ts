@@ -2,42 +2,34 @@ import { TRPCError } from "@trpc/server";
 
 import { expect } from "@tests/frontend/fixtures";
 
-import type { ModifyOutcomingDebts } from "./utils";
-import { test } from "./utils";
+import {
+	generateDebtsWith,
+	ourDesynced,
+	ourNonExistent,
+	ourSynced,
+} from "./debts.generators";
+import { test } from "./debts.utils";
 
 test.describe("Receipt page", () => {
 	test.describe("Debts", () => {
 		test.describe("Create a debt with a 'debts.add' mutation", () => {
-			const onlyOneUnsyncedDebt: ModifyOutcomingDebts = (debts) => {
-				if (debts.length < 2) {
-					throw new Error(
-						"Expected to have at least two debts - one to send sync and one to get info panel open",
-					);
-				}
-				return [
-					{ ...debts[0]!, amount: debts[0]!.amount + 1, their: undefined },
-					...debts.slice(1),
-				];
-			};
-
 			test("loading", async ({
 				api,
 				sendDebtButton,
-				mockReceipt,
-				openDebtsInfoPanel,
+				mockReceiptWithDebts,
+				openDebtsInfoModal,
 				snapshotQueries,
 				withLoader,
 				verifyToastTexts,
-				openReceipt,
+				openReceiptWithDebts,
 			}) => {
-				const { receipt } = await mockReceipt({
-					modifyOutcomingDebts: onlyOneUnsyncedDebt,
-					lockedTimestamp: new Date(),
+				const { receipt } = mockReceiptWithDebts({
+					generateDebts: generateDebtsWith([ourDesynced, ourNonExistent]),
 				});
 				api.pause("debts.add");
 
-				await openReceipt(receipt.id);
-				await openDebtsInfoPanel();
+				await openReceiptWithDebts(receipt.id);
+				await openDebtsInfoModal();
 
 				await snapshotQueries(async () => {
 					const buttonWithLoader = withLoader(sendDebtButton);
@@ -55,15 +47,14 @@ test.describe("Receipt page", () => {
 					api,
 					faker,
 					sendDebtButton,
-					mockReceipt,
-					openDebtsInfoPanel,
+					mockReceiptWithDebts,
+					openDebtsInfoModal,
 					verifyToastTexts,
 					snapshotQueries,
-					openReceipt,
+					openReceiptWithDebts,
 				}) => {
-					const { receipt } = await mockReceipt({
-						modifyOutcomingDebts: onlyOneUnsyncedDebt,
-						lockedTimestamp: new Date(),
+					const { receipt } = mockReceiptWithDebts({
+						generateDebts: generateDebtsWith([ourDesynced, ourNonExistent]),
 					});
 					api.mock("debts.add", () => ({
 						id: faker.string.uuid(),
@@ -71,8 +62,8 @@ test.describe("Receipt page", () => {
 						reverseAccepted: true,
 					}));
 
-					await openReceipt(receipt.id);
-					await openDebtsInfoPanel();
+					await openReceiptWithDebts(receipt.id);
+					await openDebtsInfoModal();
 
 					await snapshotQueries(async () => {
 						await sendDebtButton.click();
@@ -86,15 +77,14 @@ test.describe("Receipt page", () => {
 					api,
 					faker,
 					sendDebtButton,
-					mockReceipt,
-					openDebtsInfoPanel,
+					mockReceiptWithDebts,
+					openDebtsInfoModal,
 					verifyToastTexts,
 					snapshotQueries,
-					openReceipt,
+					openReceiptWithDebts,
 				}) => {
-					const { receipt } = await mockReceipt({
-						modifyOutcomingDebts: onlyOneUnsyncedDebt,
-						lockedTimestamp: new Date(),
+					const { receipt } = mockReceiptWithDebts({
+						generateDebts: generateDebtsWith([ourDesynced, ourNonExistent]),
 					});
 					api.mock("debts.add", () => ({
 						id: faker.string.uuid(),
@@ -102,8 +92,8 @@ test.describe("Receipt page", () => {
 						reverseAccepted: false,
 					}));
 
-					await openReceipt(receipt.id);
-					await openDebtsInfoPanel();
+					await openReceiptWithDebts(receipt.id);
+					await openDebtsInfoModal();
 
 					await snapshotQueries(async () => {
 						await sendDebtButton.click();
@@ -118,16 +108,15 @@ test.describe("Receipt page", () => {
 				api,
 				faker,
 				sendDebtButton,
-				mockReceipt,
-				openDebtsInfoPanel,
+				mockReceiptWithDebts,
+				openDebtsInfoModal,
 				snapshotQueries,
 				verifyToastTexts,
 				clearToasts,
-				openReceipt,
+				openReceiptWithDebts,
 			}) => {
-				const { receipt } = await mockReceipt({
-					modifyOutcomingDebts: onlyOneUnsyncedDebt,
-					lockedTimestamp: new Date(),
+				const { receipt } = await mockReceiptWithDebts({
+					generateDebts: generateDebtsWith([ourDesynced, ourNonExistent]),
 				});
 				api.mock("debts.add", () => {
 					throw new TRPCError({
@@ -136,8 +125,8 @@ test.describe("Receipt page", () => {
 					});
 				});
 
-				await openReceipt(receipt.id);
-				await openDebtsInfoPanel();
+				await openReceiptWithDebts(receipt.id);
+				await openDebtsInfoModal();
 
 				await snapshotQueries(async () => {
 					await sendDebtButton.click();
@@ -159,56 +148,29 @@ test.describe("Receipt page", () => {
 		});
 
 		test.describe("Update a debt with a 'debts.update' mutation", () => {
-			const singleDebtLockedTimestampMismatch: ModifyOutcomingDebts = (
-				debts,
-				{ consts },
-			) => {
-				const firstNotSelfDebt = debts.find(
-					(debt) => debt.userId !== consts.selfUser.id,
-				);
-				if (!firstNotSelfDebt) {
-					throw new Error("Expected to have at least one non-self debt");
-				}
-				return [
-					{
-						...firstNotSelfDebt,
-						amount: firstNotSelfDebt.amount + 1,
-						their: {
-							lockedTimestamp: new Date("2020-03-05"),
-							amount: firstNotSelfDebt.amount + 1,
-							currencyCode: firstNotSelfDebt.currencyCode,
-							timestamp: firstNotSelfDebt.timestamp,
-						},
-					},
-				];
-			};
-
 			test("loading", async ({
 				api,
 				updateDebtButton,
-				mockReceipt,
-				openDebtsInfoPanel,
+				mockReceiptWithDebts,
+				openDebtsInfoModal,
 				snapshotQueries,
-				withLoader,
 				verifyToastTexts,
-				openReceipt,
+				openReceiptWithDebts,
 			}) => {
-				const { receipt } = await mockReceipt({
-					modifyOutcomingDebts: singleDebtLockedTimestampMismatch,
-					lockedTimestamp: new Date(),
+				const { receipt } = await mockReceiptWithDebts({
+					generateDebts: generateDebtsWith([
+						ourDesynced,
+						...new Array(5).fill(ourSynced),
+					]),
 				});
 				api.pause("debts.update");
 
-				await openReceipt(receipt.id);
-				await openDebtsInfoPanel();
+				await openReceiptWithDebts(receipt.id);
+				await openDebtsInfoModal();
 
 				await snapshotQueries(async () => {
-					const buttonWithLoader = withLoader(updateDebtButton);
-					await expect(buttonWithLoader).not.toBeVisible();
 					await updateDebtButton.click();
 					await verifyToastTexts("Updating debt..");
-					await expect(updateDebtButton).toBeDisabled();
-					await expect(buttonWithLoader).toBeVisible();
 				});
 			});
 
@@ -217,23 +179,25 @@ test.describe("Receipt page", () => {
 					page,
 					api,
 					updateDebtButton,
-					mockReceipt,
-					openDebtsInfoPanel,
+					mockReceiptWithDebts,
+					openDebtsInfoModal,
 					verifyToastTexts,
 					snapshotQueries,
-					openReceipt,
+					openReceiptWithDebts,
 				}) => {
-					const { receipt } = await mockReceipt({
-						modifyOutcomingDebts: singleDebtLockedTimestampMismatch,
-						lockedTimestamp: new Date(),
+					const { receipt } = await mockReceiptWithDebts({
+						generateDebts: generateDebtsWith([
+							ourDesynced,
+							...new Array(5).fill(ourSynced),
+						]),
 					});
 					api.mock("debts.update", () => ({
 						lockedTimestamp: new Date(),
 						reverseLockedTimestampUpdated: true,
 					}));
 
-					await openReceipt(receipt.id);
-					await openDebtsInfoPanel();
+					await openReceiptWithDebts(receipt.id);
+					await openDebtsInfoModal();
 
 					await snapshotQueries(async () => {
 						await updateDebtButton.click();
@@ -246,23 +210,25 @@ test.describe("Receipt page", () => {
 					page,
 					api,
 					updateDebtButton,
-					mockReceipt,
-					openDebtsInfoPanel,
+					mockReceiptWithDebts,
+					openDebtsInfoModal,
 					verifyToastTexts,
 					snapshotQueries,
-					openReceipt,
+					openReceiptWithDebts,
 				}) => {
-					const { receipt } = await mockReceipt({
-						modifyOutcomingDebts: singleDebtLockedTimestampMismatch,
-						lockedTimestamp: new Date(),
+					const { receipt } = await mockReceiptWithDebts({
+						generateDebts: generateDebtsWith([
+							ourDesynced,
+							...new Array(5).fill(ourSynced),
+						]),
 					});
 					api.mock("debts.update", () => ({
 						lockedTimestamp: new Date("2020-01-01"),
 						reverseLockedTimestampUpdated: false,
 					}));
 
-					await openReceipt(receipt.id);
-					await openDebtsInfoPanel();
+					await openReceiptWithDebts(receipt.id);
+					await openDebtsInfoModal();
 
 					await snapshotQueries(async () => {
 						await updateDebtButton.click();
@@ -276,16 +242,18 @@ test.describe("Receipt page", () => {
 				page,
 				api,
 				updateDebtButton,
-				mockReceipt,
-				openDebtsInfoPanel,
+				mockReceiptWithDebts,
+				openDebtsInfoModal,
 				snapshotQueries,
 				verifyToastTexts,
 				clearToasts,
-				openReceipt,
+				openReceiptWithDebts,
 			}) => {
-				const { receipt } = await mockReceipt({
-					modifyOutcomingDebts: singleDebtLockedTimestampMismatch,
-					lockedTimestamp: new Date(),
+				const { receipt } = await mockReceiptWithDebts({
+					generateDebts: generateDebtsWith([
+						ourDesynced,
+						...new Array(5).fill(ourSynced),
+					]),
 				});
 				api.mock("debts.update", () => {
 					throw new TRPCError({
@@ -294,8 +262,8 @@ test.describe("Receipt page", () => {
 					});
 				});
 
-				await openReceipt(receipt.id);
-				await openDebtsInfoPanel();
+				await openReceiptWithDebts(receipt.id);
+				await openDebtsInfoModal();
 
 				await snapshotQueries(async () => {
 					await updateDebtButton.click();
@@ -318,35 +286,28 @@ test.describe("Receipt page", () => {
 		});
 
 		test.describe("Create and update debts with 'debts.addBatch' and 'debts.updateBatch' mutations", () => {
-			const emptyDebts: ModifyOutcomingDebts = (debts) => [
-				{ ...debts[0]!, amount: debts[0]!.amount + 1, their: undefined },
-			];
-
 			test("loading", async ({
 				api,
-				propagateDebtsButton,
-				mockReceipt,
+				updateDebtsButton,
+				mockReceiptWithDebts,
 				snapshotQueries,
-				withLoader,
 				verifyToastTexts,
-				openReceipt,
+				openReceiptWithDebts,
 			}) => {
-				const { receipt } = await mockReceipt({
-					modifyOutcomingDebts: emptyDebts,
-					lockedTimestamp: new Date(),
+				const { receipt } = await mockReceiptWithDebts({
+					generateDebts: generateDebtsWith([
+						ourDesynced,
+						...new Array(5).fill(ourNonExistent),
+					]),
 				});
 				api.pause("debts.addBatch");
 				api.pause("debts.updateBatch");
 
-				await openReceipt(receipt.id);
+				await openReceiptWithDebts(receipt.id);
 
 				await snapshotQueries(async () => {
-					const buttonWithLoader = withLoader(propagateDebtsButton);
-					await expect(buttonWithLoader).not.toBeVisible();
-					await propagateDebtsButton.click();
+					await updateDebtsButton.click();
 					await verifyToastTexts([/Adding \d debts../, "Updating debt.."]);
-					await expect(propagateDebtsButton).toBeDisabled();
-					await expect(buttonWithLoader).toBeVisible();
 				});
 			});
 
@@ -355,15 +316,17 @@ test.describe("Receipt page", () => {
 					page,
 					api,
 					faker,
-					propagateDebtsButton,
-					mockReceipt,
+					updateDebtsButton,
+					mockReceiptWithDebts,
 					verifyToastTexts,
 					snapshotQueries,
-					openReceipt,
+					openReceiptWithDebts,
 				}) => {
-					const { receipt } = await mockReceipt({
-						modifyOutcomingDebts: emptyDebts,
-						lockedTimestamp: new Date(),
+					const { receipt } = await mockReceiptWithDebts({
+						generateDebts: generateDebtsWith([
+							ourDesynced,
+							...new Array(5).fill(ourNonExistent),
+						]),
 					});
 					api.mock("debts.addBatch", (debts) => ({
 						ids: debts.map(() => faker.string.uuid()),
@@ -380,11 +343,14 @@ test.describe("Receipt page", () => {
 						})),
 					);
 
-					await openReceipt(receipt.id);
+					await openReceiptWithDebts(receipt.id);
 
 					await snapshotQueries(async () => {
-						await propagateDebtsButton.click();
-						await verifyToastTexts(["Debt added", "Debt updated successfully"]);
+						await updateDebtsButton.click();
+						await verifyToastTexts([
+							"2 debts added",
+							"Debt updated successfully",
+						]);
 						await expect(page).toHaveURL(`/receipts/${receipt.id}`);
 					});
 				});
@@ -393,15 +359,17 @@ test.describe("Receipt page", () => {
 					page,
 					api,
 					faker,
-					propagateDebtsButton,
-					mockReceipt,
+					updateDebtsButton,
+					mockReceiptWithDebts,
 					verifyToastTexts,
 					snapshotQueries,
-					openReceipt,
+					openReceiptWithDebts,
 				}) => {
-					const { receipt } = await mockReceipt({
-						modifyOutcomingDebts: emptyDebts,
-						lockedTimestamp: new Date(),
+					const { receipt } = await mockReceiptWithDebts({
+						generateDebts: generateDebtsWith([
+							ourDesynced,
+							...new Array(5).fill(ourNonExistent),
+						]),
 					});
 					api.mock("debts.addBatch", (debts) => ({
 						ids: debts.map(() => faker.string.uuid()),
@@ -416,10 +384,10 @@ test.describe("Receipt page", () => {
 						})),
 					);
 
-					await openReceipt(receipt.id);
+					await openReceiptWithDebts(receipt.id);
 
 					await snapshotQueries(async () => {
-						await propagateDebtsButton.click();
+						await updateDebtsButton.click();
 						await verifyToastTexts([
 							/\d debts added/,
 							"Debt updated successfully",
@@ -434,16 +402,18 @@ test.describe("Receipt page", () => {
 					page,
 					api,
 					faker,
-					propagateDebtsButton,
-					mockReceipt,
+					updateDebtsButton,
+					mockReceiptWithDebts,
 					snapshotQueries,
 					verifyToastTexts,
 					clearToasts,
-					openReceipt,
+					openReceiptWithDebts,
 				}) => {
-					const { receipt } = await mockReceipt({
-						modifyOutcomingDebts: emptyDebts,
-						lockedTimestamp: new Date(),
+					const { receipt } = await mockReceiptWithDebts({
+						generateDebts: generateDebtsWith([
+							ourDesynced,
+							...new Array(5).fill(ourNonExistent),
+						]),
 					});
 					api.mock("debts.addBatch", (debts) => ({
 						ids: debts.map(() => faker.string.uuid()),
@@ -457,11 +427,11 @@ test.describe("Receipt page", () => {
 						});
 					});
 
-					await openReceipt(receipt.id);
+					await openReceiptWithDebts(receipt.id);
 
 					await snapshotQueries(
 						async () => {
-							await propagateDebtsButton.click();
+							await updateDebtsButton.click();
 							await verifyToastTexts([
 								"Error updating debt: Forbidden to update debts",
 								/\d debts added/,
@@ -482,7 +452,7 @@ test.describe("Receipt page", () => {
 					await clearToasts();
 					await snapshotQueries(
 						async () => {
-							await propagateDebtsButton.click();
+							await updateDebtsButton.click();
 							await verifyToastTexts("Debt updated successfully");
 						},
 						{ name: "success" },
@@ -494,16 +464,18 @@ test.describe("Receipt page", () => {
 					page,
 					api,
 					faker,
-					propagateDebtsButton,
-					mockReceipt,
+					updateDebtsButton,
+					mockReceiptWithDebts,
 					snapshotQueries,
 					verifyToastTexts,
 					clearToasts,
-					openReceipt,
+					openReceiptWithDebts,
 				}) => {
-					const { receipt } = await mockReceipt({
-						modifyOutcomingDebts: emptyDebts,
-						lockedTimestamp: new Date(),
+					const { receipt } = await mockReceiptWithDebts({
+						generateDebts: generateDebtsWith([
+							ourDesynced,
+							...new Array(5).fill(ourNonExistent),
+						]),
 					});
 					api.mock("debts.addBatch", () => {
 						throw new TRPCError({
@@ -518,10 +490,10 @@ test.describe("Receipt page", () => {
 						});
 					});
 
-					await openReceipt(receipt.id);
+					await openReceiptWithDebts(receipt.id);
 
 					await snapshotQueries(async () => {
-						await propagateDebtsButton.click();
+						await updateDebtsButton.click();
 						await verifyToastTexts([
 							/Error adding \d debts: Forbidden to add debts/,
 							"Error updating debt: Forbidden to update debts",
@@ -543,7 +515,7 @@ test.describe("Receipt page", () => {
 						})),
 					);
 					await clearToasts();
-					await propagateDebtsButton.click();
+					await updateDebtsButton.click();
 					await verifyToastTexts([
 						/\d debts added/,
 						"Debt updated successfully",

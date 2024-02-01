@@ -7,12 +7,12 @@
 					"isPaused": false,
 					"status": "pending",
 					"variables": {
-						"currencyCode": "CRC",
-						"userId": "d41537c4-da68-436a-91f8-be5f72893a17",
-						"amount": 84136.33,
+						"currencyCode": "IDR",
+						"userId": "04789136-dc6c-436a-8191-93545f4e4b71",
+						"amount": 35557.17,
 						"timestamp": "2020-01-01T00:00:00.000Z",
-						"note": "Receipt \"nemo voluptate dolor\"",
-						"receiptId": "b62732f2-6442-4d44-b79e-93d470167ae4"
+						"note": "Receipt \"repellendus quo dolorum\"",
+						"receiptId": "fb4996f3-c71a-4e2e-a030-77adae80e04d"
 					}
 				}
 			}

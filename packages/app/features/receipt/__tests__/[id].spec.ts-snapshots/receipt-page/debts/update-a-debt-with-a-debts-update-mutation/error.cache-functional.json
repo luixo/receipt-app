@@ -1,6 +1,6 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"a75d5bb2-e63b-4b7f-b078-2a11a99b315f\"}]": {
+		"debts.get:[{\"id\":\"e7c0b708-17f0-44c7-9aa2-3cae713d7fb6\"}]": {
 			"state": {
 				"dataUpdateCount": 2
 			}
@@ -18,13 +18,13 @@
 					"isPaused": false,
 					"status": "error",
 					"variables": {
-						"id": "a75d5bb2-e63b-4b7f-b078-2a11a99b315f",
+						"id": "e7c0b708-17f0-44c7-9aa2-3cae713d7fb6",
 						"update": {
-							"amount": 14613.07,
-							"currencyCode": "TRY",
+							"amount": 17443.61,
+							"currencyCode": "CNY",
 							"timestamp": "2020-01-01T00:00:00.000Z",
 							"locked": true,
-							"receiptId": "1aec5399-d186-423f-a2cb-96970e6b5d82"
+							"receiptId": "27bada75-a3fa-4e52-8594-290ea41496e7"
 						}
 					}
 				}

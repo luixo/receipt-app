@@ -152,7 +152,11 @@ const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 			unsyncedParticipants.length !== 0 ? (
 				<Button
 					variant="ghost"
-					title="Propagate debts"
+					title={
+						desyncedParticipants.length === 0
+							? "Propagate debts"
+							: "Update debts"
+					}
 					isLoading={isPropagating}
 					isDisabled={isPropagating}
 					onClick={propagateDebts}

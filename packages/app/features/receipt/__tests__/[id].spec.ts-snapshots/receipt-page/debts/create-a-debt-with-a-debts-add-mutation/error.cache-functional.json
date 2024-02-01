@@ -11,12 +11,12 @@
 					"isPaused": false,
 					"status": "error",
 					"variables": {
-						"currencyCode": "EGP",
-						"userId": "740d3289-a92e-4812-8ad2-196428d0ab03",
-						"amount": 23878.64,
+						"currencyCode": "OMR",
+						"userId": "500781cf-15b4-40a3-a3d2-4513eade4ba8",
+						"amount": 14269.01,
 						"timestamp": "2020-01-01T00:00:00.000Z",
-						"note": "Receipt \"maxime voluptas id\"",
-						"receiptId": "be156a49-6afa-4fac-a259-a52b93cc4348"
+						"note": "Receipt \"quo dignissimos consectetur\"",
+						"receiptId": "30b5e6de-fdf2-40b8-b06c-d65d475bed3b"
 					}
 				}
 			}

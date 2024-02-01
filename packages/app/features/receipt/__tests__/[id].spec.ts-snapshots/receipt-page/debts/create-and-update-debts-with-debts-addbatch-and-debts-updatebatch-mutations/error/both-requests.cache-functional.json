@@ -1,6 +1,6 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"9a043029-895a-49ce-8101-4cb988aa1e1c\"}]": {
+		"debts.get:[{\"id\":\"42f95c4b-42b9-48ac-ab78-a39892b138c4\"}]": {
 			"state": {
 				"dataUpdateCount": 2
 			}
@@ -19,44 +19,20 @@
 					"status": "error",
 					"variables": [
 						{
-							"note": "Receipt \"sit autem ut\"",
-							"currencyCode": "BZD",
-							"userId": "f68116a3-c740-4f01-ab1c-342f95c4b42b",
-							"amount": 27745.91,
+							"note": "Receipt \"alias nemo odio\"",
+							"currencyCode": "IDR",
+							"userId": "5aa48877-973e-47db-a892-87baec076ff3",
+							"amount": 17647.98,
 							"timestamp": "2020-01-01T00:00:00.000Z",
-							"receiptId": "de6cf435-57c8-4d1a-a97a-914cc0614754"
+							"receiptId": "35a05db6-b484-4ddc-afec-61ef78e845ac"
 						},
 						{
-							"note": "Receipt \"sit autem ut\"",
-							"currencyCode": "BZD",
-							"userId": "8a39892b-138c-44be-8ff8-4668c666cb2e",
-							"amount": 11106.31,
+							"note": "Receipt \"alias nemo odio\"",
+							"currencyCode": "IDR",
+							"userId": "6026093c-4593-4056-b8d7-24b934747e8a",
+							"amount": 24540.47,
 							"timestamp": "2020-01-01T00:00:00.000Z",
-							"receiptId": "de6cf435-57c8-4d1a-a97a-914cc0614754"
-						},
-						{
-							"note": "Receipt \"sit autem ut\"",
-							"currencyCode": "BZD",
-							"userId": "dc90835f-09c7-48cb-aef2-f8a6a2d0e5f7",
-							"amount": 31418.43,
-							"timestamp": "2020-01-01T00:00:00.000Z",
-							"receiptId": "de6cf435-57c8-4d1a-a97a-914cc0614754"
-						},
-						{
-							"note": "Receipt \"sit autem ut\"",
-							"currencyCode": "BZD",
-							"userId": "9f2e6407-234a-4fae-b766-5ed0ac30e1f3",
-							"amount": 5949.04,
-							"timestamp": "2020-01-01T00:00:00.000Z",
-							"receiptId": "de6cf435-57c8-4d1a-a97a-914cc0614754"
-						},
-						{
-							"note": "Receipt \"sit autem ut\"",
-							"currencyCode": "BZD",
-							"userId": "2417df55-7895-4f6a-9f45-a0e7726cb25b",
-							"amount": 8623.17,
-							"timestamp": "2020-01-01T00:00:00.000Z",
-							"receiptId": "de6cf435-57c8-4d1a-a97a-914cc0614754"
+							"receiptId": "35a05db6-b484-4ddc-afec-61ef78e845ac"
 						}
 					]
 				}
@@ -74,13 +50,13 @@
 					"status": "error",
 					"variables": [
 						{
-							"id": "9a043029-895a-49ce-8101-4cb988aa1e1c",
+							"id": "42f95c4b-42b9-48ac-ab78-a39892b138c4",
 							"update": {
-								"amount": 22430.14,
-								"currencyCode": "BZD",
+								"amount": 23855.8,
+								"currencyCode": "IDR",
 								"timestamp": "2020-01-01T00:00:00.000Z",
 								"locked": true,
-								"receiptId": "de6cf435-57c8-4d1a-a97a-914cc0614754"
+								"receiptId": "35a05db6-b484-4ddc-afec-61ef78e845ac"
 							}
 						}
 					]

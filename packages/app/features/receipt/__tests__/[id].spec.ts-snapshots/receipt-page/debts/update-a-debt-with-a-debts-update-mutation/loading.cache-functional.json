@@ -1,9 +1,9 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"e3cb6089-da18-47c2-bde2-725526ac71aa\"}]": {
+		"debts.get:[{\"id\":\"6ac71aac-2fb9-4b9d-a6b7-76981a3163ec\"}]": {
 			"state": {
 				"data": {
-					"amount": 21144,
+					"amount": 53630.33,
 					"lockedTimestamp": "2020-01-01T00:00:00.000Z"
 				},
 				"dataUpdateCount": 1
@@ -18,13 +18,13 @@
 					"isPaused": false,
 					"status": "pending",
 					"variables": {
-						"id": "e3cb6089-da18-47c2-bde2-725526ac71aa",
+						"id": "6ac71aac-2fb9-4b9d-a6b7-76981a3163ec",
 						"update": {
-							"amount": 21144,
-							"currencyCode": "NIO",
+							"amount": 53630.33,
+							"currencyCode": "EUR",
 							"timestamp": "2020-01-01T00:00:00.000Z",
 							"locked": true,
-							"receiptId": "95affb00-e841-4955-817b-a800e4b6bad5"
+							"receiptId": "2ae01463-1a00-49ce-9cb9-6b54fcb31c46"
 						}
 					}
 				}

@@ -1,22 +1,22 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"3e7a57bf-2686-4686-b9b5-d567338bdd10\"}]": {
+		"debts.get:[{\"id\":\"4f0a50ab-676b-4233-8918-af91882d941f\"}]": {
 			"state": {
 				"data": {
-					"id": "3e7a57bf-2686-4686-b9b5-d567338bdd10",
-					"amount": 24340.7,
-					"currencyCode": "CAD",
-					"userId": "b74772de-8867-48bb-85ee-bb584886e996",
+					"id": "4f0a50ab-676b-4233-8918-af91882d941f",
+					"amount": 32255.89,
+					"currencyCode": "DJF",
+					"userId": "6119d401-e172-4f05-bc89-80b3b42f3b7d",
 					"timestamp": "2020-01-01T00:00:00.000Z",
-					"note": "Receipt \"nobis odio tempora\"",
+					"note": "Receipt \"labore eos eligendi\"",
 					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
 					"their": {
 						"lockedTimestamp": "2020-01-01T00:00:00.000Z",
 						"timestamp": "2020-01-01T00:00:00.000Z",
-						"amount": 24340.7,
-						"currencyCode": "CAD"
+						"amount": 32255.89,
+						"currencyCode": "DJF"
 					},
-					"receiptId": "ed1279e9-1372-4d8c-ba3e-57238b360d08"
+					"receiptId": "14db8e51-6b3c-4421-b2fc-c0d748cc2407"
 				},
 				"dataUpdateCount": 1,
 				"error": null,
@@ -26,12 +26,12 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"receipts.get:[{\"id\":\"ed1279e9-1372-4d8c-ba3e-57238b360d08\"}]": {
+		"receipts.get:[{\"id\":\"14db8e51-6b3c-4421-b2fc-c0d748cc2407\"}]": {
 			"state": {
 				"data": {
 					"debt": {
 						"ids": {
-							"2": "3e7a57bf-2686-4686-b9b5-d567338bdd10"
+							"2": "4f0a50ab-676b-4233-8918-af91882d941f"
 						}
 					}
 				},
@@ -44,7 +44,7 @@
 			{
 				"state": {
 					"data": {
-						"id": "3e7a57bf-2686-4686-b9b5-d567338bdd10",
+						"id": "4f0a50ab-676b-4233-8918-af91882d941f",
 						"lockedTimestamp": "2020-01-01T00:00:00.000Z",
 						"reverseAccepted": true
 					},
@@ -52,12 +52,12 @@
 					"isPaused": false,
 					"status": "success",
 					"variables": {
-						"currencyCode": "CAD",
-						"userId": "b74772de-8867-48bb-85ee-bb584886e996",
-						"amount": 24340.7,
+						"currencyCode": "DJF",
+						"userId": "6119d401-e172-4f05-bc89-80b3b42f3b7d",
+						"amount": 32255.89,
 						"timestamp": "2020-01-01T00:00:00.000Z",
-						"note": "Receipt \"nobis odio tempora\"",
-						"receiptId": "ed1279e9-1372-4d8c-ba3e-57238b360d08"
+						"note": "Receipt \"labore eos eligendi\"",
+						"receiptId": "14db8e51-6b3c-4421-b2fc-c0d748cc2407"
 					}
 				}
 			}

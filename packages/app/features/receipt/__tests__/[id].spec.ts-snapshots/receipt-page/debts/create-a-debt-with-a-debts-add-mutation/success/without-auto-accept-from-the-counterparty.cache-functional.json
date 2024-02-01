@@ -1,16 +1,16 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"0ec9fabf-75df-4076-a225-998613a1a41e\"}]": {
+		"debts.get:[{\"id\":\"1955ca15-c866-4cac-9ac5-6d5371f83d22\"}]": {
 			"state": {
 				"data": {
-					"id": "0ec9fabf-75df-4076-a225-998613a1a41e",
-					"amount": 30084.94,
-					"currencyCode": "SDG",
-					"userId": "11c5062f-0183-4d49-a40e-206a71f3ad09",
+					"id": "1955ca15-c866-4cac-9ac5-6d5371f83d22",
+					"amount": 66505.23,
+					"currencyCode": "GEL",
+					"userId": "7d8aa9c3-e6e5-4714-931a-58c42882fb84",
 					"timestamp": "2020-01-01T00:00:00.000Z",
-					"note": "Receipt \"culpa at fugiat\"",
+					"note": "Receipt \"pariatur deserunt suscipit\"",
 					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
-					"receiptId": "eb98e330-28c7-490b-952e-619ffdf5f254"
+					"receiptId": "28b562d1-c008-401a-834a-ee2b5a20a2d5"
 				},
 				"dataUpdateCount": 1,
 				"error": null,
@@ -20,12 +20,12 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"receipts.get:[{\"id\":\"eb98e330-28c7-490b-952e-619ffdf5f254\"}]": {
+		"receipts.get:[{\"id\":\"28b562d1-c008-401a-834a-ee2b5a20a2d5\"}]": {
 			"state": {
 				"data": {
 					"debt": {
 						"ids": {
-							"4": "0ec9fabf-75df-4076-a225-998613a1a41e"
+							"2": "1955ca15-c866-4cac-9ac5-6d5371f83d22"
 						}
 					}
 				},
@@ -38,7 +38,7 @@
 			{
 				"state": {
 					"data": {
-						"id": "0ec9fabf-75df-4076-a225-998613a1a41e",
+						"id": "1955ca15-c866-4cac-9ac5-6d5371f83d22",
 						"lockedTimestamp": "2020-01-01T00:00:00.000Z",
 						"reverseAccepted": false
 					},
@@ -46,12 +46,12 @@
 					"isPaused": false,
 					"status": "success",
 					"variables": {
-						"currencyCode": "SDG",
-						"userId": "11c5062f-0183-4d49-a40e-206a71f3ad09",
-						"amount": 30084.94,
+						"currencyCode": "GEL",
+						"userId": "7d8aa9c3-e6e5-4714-931a-58c42882fb84",
+						"amount": 66505.23,
 						"timestamp": "2020-01-01T00:00:00.000Z",
-						"note": "Receipt \"culpa at fugiat\"",
-						"receiptId": "eb98e330-28c7-490b-952e-619ffdf5f254"
+						"note": "Receipt \"pariatur deserunt suscipit\"",
+						"receiptId": "28b562d1-c008-401a-834a-ee2b5a20a2d5"
 					}
 				}
 			}
