@@ -38,7 +38,7 @@
 						"lockedTimestamp": "2020-01-01T00:00:00.000Z"
 					}
 				},
-				"dataUpdateCount": 3
+				"dataUpdateCount": 2
 			}
 		},
 		"receipts.get:[{\"id\":\"95076543-1567-4164-aee9-f6603f4a75ee\"}]": {
@@ -50,7 +50,7 @@
 						}
 					}
 				},
-				"dataUpdateCount": 3
+				"dataUpdateCount": 2
 			}
 		}
 	},

@@ -18,9 +18,9 @@ export const mapObjectKeys = <Output, T extends Record<string, unknown>>(
 
 export const mapObjectValues = <Output, T extends Record<string, unknown>>(
 	obj: T,
-	mapper: (input: NonNullable<T[keyof T]>) => Output,
+	mapper: (input: NonNullable<T[keyof T]>, key: keyof T) => Output,
 ) =>
 	entries(obj).reduce<Record<keyof T, Output>>(
-		(acc, [key, input]) => ({ ...acc, [key]: mapper(input) }),
+		(acc, [key, input]) => ({ ...acc, [key]: mapper(input, key) }),
 		{} as Record<keyof T, Output>,
 	);

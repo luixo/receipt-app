@@ -2,7 +2,7 @@
 	"queries": {
 		"debts.get:[{\"id\":\"9a043029-895a-49ce-8101-4cb988aa1e1c\"}]": {
 			"state": {
-				"dataUpdateCount": 3
+				"dataUpdateCount": 2
 			}
 		}
 	},

@@ -106,7 +106,7 @@
 					"amount": 46216.65,
 					"lockedTimestamp": "2020-01-01T00:00:00.000Z"
 				},
-				"dataUpdateCount": 3
+				"dataUpdateCount": 2
 			}
 		},
 		"receipts.get:[{\"id\":\"00ad7def-30d8-4920-b097-d1d612a9b24e\"}]": {
@@ -122,7 +122,7 @@
 						}
 					}
 				},
-				"dataUpdateCount": 7
+				"dataUpdateCount": 6
 			}
 		}
 	},

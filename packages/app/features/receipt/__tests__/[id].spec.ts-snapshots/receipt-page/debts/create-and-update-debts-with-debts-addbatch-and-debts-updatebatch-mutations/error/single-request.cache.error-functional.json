@@ -102,7 +102,7 @@
 		},
 		"debts.get:[{\"id\":\"ebcdecfd-3dd4-431d-a89c-1024c4e362e4\"}]": {
 			"state": {
-				"dataUpdateCount": 3
+				"dataUpdateCount": 2
 			}
 		},
 		"receipts.get:[{\"id\":\"2b90f180-8742-4cf3-8ee6-8cd7b063e5f1\"}]": {
@@ -118,7 +118,7 @@
 						}
 					}
 				},
-				"dataUpdateCount": 6
+				"dataUpdateCount": 5
 			}
 		}
 	},

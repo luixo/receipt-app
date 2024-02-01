@@ -8,9 +8,11 @@ import type {
 	AnyRouter,
 	ProcedureRouterRecord,
 } from "@trpc/server";
+import type { DeepPartial } from "@trpc/server/unstableInternalsExport";
 import { diff as objectDiff } from "deep-object-diff";
 
 import type { TRPCMutationKey, TRPCQueryInput, TRPCQueryKey } from "app/trpc";
+import { mapObjectValues } from "app/utils/object";
 import { router } from "next-app/handlers";
 import type { AppRouter } from "next-app/pages/api/trpc/[trpc]";
 
@@ -60,6 +62,27 @@ const shouldIgnoreKey = (key: TRPCKey, keysLists: KeysLists) =>
 	keysLists.blacklistKeys.includes(key) &&
 	!keysLists.whitelistKeys.includes(key);
 
+type QueryKeyObject = {
+	handler: TRPCQueryKey;
+	input: string;
+};
+const getQueryPath = (queryKeyObject: QueryKeyObject) =>
+	queryKeyObject.input
+		? `${queryKeyObject.handler}:[${queryKeyObject.input}]`
+		: queryKeyObject.handler;
+
+type MutationKeyObject = {
+	handler: TRPCMutationKey;
+};
+const getMutationPath = (mutationKeyObject: MutationKeyObject) =>
+	mutationKeyObject.handler;
+
+type QueryCacheOptions = {
+	page: Page;
+	timeout: number;
+	keysLists: KeysLists;
+};
+
 const getQueryCacheFromPage = (page: Page, timeout: number) =>
 	page.evaluate(
 		([timeoutInner]) => {
@@ -97,7 +120,7 @@ const mapQueries = (queries: DehydratedState["queries"]) =>
 		.map(({ queryHash, queryKey, ...query }) => ({
 			...query,
 			queryKey: {
-				handler: (queryKey[0] as string[]).join(".") as TRPCKey,
+				handler: (queryKey[0] as string[]).join(".") as TRPCQueryKey,
 				input: JSON.stringify(
 					(
 						queryKey[1] as
@@ -115,20 +138,7 @@ const mapQueries = (queries: DehydratedState["queries"]) =>
 				fetchFailureReason: undefined,
 				// Removing actual dates as they are not stable for snapshots
 				dataUpdatedAt: undefined,
-				// Count can't go down, so we're diffing undefined -> some value
-				dataUpdateCount:
-					query.state.dataUpdateCount === 0
-						? undefined
-						: query.state.dataUpdateCount,
 				errorUpdatedAt: undefined,
-				errorUpdateCount:
-					query.state.errorUpdateCount === 0
-						? undefined
-						: query.state.errorUpdateCount,
-				fetchFailureCount:
-					query.state.fetchFailureCount === 0
-						? undefined
-						: query.state.fetchFailureCount,
 			},
 		}));
 
@@ -136,7 +146,9 @@ const mapMutations = (mutations: DehydratedState["mutations"]) =>
 	mutations.map((mutation) => ({
 		...mutation,
 		mutationKey: {
-			handler: (mutation.mutationKey as [string[]])[0].join(".") as TRPCKey,
+			handler: (mutation.mutationKey as [string[]])[0].join(
+				".",
+			) as TRPCMutationKey,
 		},
 		state: {
 			...mutation.state,
@@ -145,19 +157,14 @@ const mapMutations = (mutations: DehydratedState["mutations"]) =>
 			failureReason: undefined,
 			// Removing actual dates as they are not stable for snapshots
 			submittedAt: undefined,
-			// Count can't go down, so we're diffing undefined -> some value
-			failureCount:
-				mutation.state.failureCount === 0
-					? undefined
-					: mutation.state.failureCount,
 		},
 	}));
 
-const getQueryCache = async (
-	page: Page,
-	keysLists: KeysLists,
-	timeout: number,
-) => {
+const getQueryCache = async ({
+	page,
+	timeout,
+	keysLists,
+}: QueryCacheOptions) => {
 	const cache = await getQueryCacheFromPage(page, timeout);
 	const redactedQueries = mapQueries(cache.queries).filter(
 		(query) => !shouldIgnoreKey(query.queryKey.handler, keysLists),
@@ -171,9 +178,7 @@ const getQueryCache = async (
 		>(
 			(acc, { queryKey, ...query }) => ({
 				...acc,
-				[queryKey.input
-					? `${queryKey.handler}:[${queryKey.input}]`
-					: queryKey.handler]: query,
+				[getQueryPath(queryKey)]: query,
 			}),
 			{},
 		),
@@ -182,7 +187,10 @@ const getQueryCache = async (
 		>(
 			(acc, { mutationKey, ...mutation }) => ({
 				...acc,
-				[mutationKey.handler]: [...(acc[mutationKey.handler] ?? []), mutation],
+				[getMutationPath(mutationKey)]: [
+					...(acc[getMutationPath(mutationKey)] ?? []),
+					mutation,
+				],
 			}),
 			{},
 		),
@@ -264,6 +272,88 @@ const getProcedure = (
 	);
 };
 
+const getCountFactory = (prevCache: QueryCache, nextCache: QueryCache) => ({
+	getQueryCount: (
+		queryKey: TRPCQueryKey,
+		key: "dataUpdateCount" | "errorUpdateCount" | "fetchFailureCount",
+	) => {
+		const nextCount = nextCache.queries[queryKey]?.state[key] ?? 0;
+		const prevCount = prevCache.queries[queryKey]?.state[key] ?? 0;
+		const diffCount = nextCount - prevCount;
+		return diffCount === 0 ? undefined : diffCount;
+	},
+	getMutationCount: (
+		mutationKey: TRPCMutationKey,
+		index: number,
+		key: "failureCount",
+	) => {
+		const nextCount =
+			nextCache.mutations[mutationKey]?.[index]?.state[key] ?? 0;
+		const prevCount =
+			prevCache.mutations[mutationKey]?.[index]?.state[key] ?? 0;
+		const diffCount = nextCount - prevCount;
+		return diffCount === 0 ? undefined : diffCount;
+	},
+});
+
+type QueryCache = Awaited<ReturnType<typeof getQueryCache>>;
+const getDiff = (prevCache: QueryCache, nextCache: QueryCache) => {
+	const diff = objectDiff(prevCache, nextCache) as DeepPartial<QueryCache>;
+	const { getQueryCount, getMutationCount } = getCountFactory(
+		prevCache,
+		nextCache,
+	);
+	return {
+		queries: diff.queries
+			? mapObjectValues(diff.queries, (query, key) => {
+					if (!query.state) {
+						return query;
+					}
+					const queryKey = key as TRPCQueryKey;
+					return {
+						...query,
+						state: {
+							...query.state,
+							dataUpdateCount: getQueryCount(queryKey, "dataUpdateCount"),
+							errorUpdateCount: getQueryCount(queryKey, "errorUpdateCount"),
+							fetchFailureCount: getQueryCount(queryKey, "fetchFailureCount"),
+						},
+					};
+			  })
+			: undefined,
+		mutations: diff.mutations
+			? mapObjectValues(diff.mutations, (mutations, key) => {
+					const mapMutation = (
+						mutation: (typeof mutations)[number],
+						index: number | string | symbol,
+					) => {
+						if (!mutation!.state) {
+							return mutation;
+						}
+						const mutationKey = key as TRPCMutationKey;
+						return {
+							...mutation,
+							state: {
+								...mutation!.state,
+								failureCount: getMutationCount(
+									mutationKey,
+									Number(index),
+									"failureCount",
+								),
+							},
+						};
+					};
+					if (Array.isArray(mutations)) {
+						return mutations.map(mapMutation);
+					}
+					// Case of diff for a single mutation - array is convert to an object with partial keys
+					// eslint-disable-next-line prefer-object-spread
+					return mapObjectValues(Object.assign({}, mutations), mapMutation);
+			  })
+			: undefined,
+	};
+};
+
 type QueriesMixin = {
 	snapshotQueries: <T>(
 		fn: () => Promise<T>,
@@ -313,10 +403,18 @@ export const queriesMixin = createMixin<
 					whitelistKeys: whitelistKeysArray,
 				} satisfies KeysLists;
 				api.clearActions();
-				const prevQueryCache = await getQueryCache(page, keysLists, timeout);
+				const prevQueryCache = await getQueryCache({
+					page,
+					keysLists,
+					timeout,
+				});
 				const result = await fn();
-				const nextQueryCache = await getQueryCache(page, keysLists, timeout);
-				const diff = objectDiff(prevQueryCache, nextQueryCache);
+				const nextQueryCache = await getQueryCache({
+					page,
+					keysLists,
+					timeout,
+				});
+				const diff = getDiff(prevQueryCache, nextQueryCache);
 				const actions = api.getActions();
 				const extendedTestInfo = getExtendedTestInfo(testInfo);
 				extendedTestInfo.queriesSnapshotIndex ??= 0;
