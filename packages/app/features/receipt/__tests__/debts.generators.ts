@@ -84,3 +84,28 @@ export const ourDesynced: MapDebt = (debt) => ({
 	...debt,
 	amount: debt.amount + 1,
 });
+
+export const theirNonExistent: MapDebt = (debt) => ({
+	...debt,
+	their: undefined,
+});
+
+export const theirSynced: MapDebt = (debt) => ({
+	...debt,
+	their: {
+		lockedTimestamp: debt.lockedTimestamp,
+		currencyCode: debt.currencyCode,
+		timestamp: debt.timestamp,
+		amount: debt.amount,
+	},
+});
+
+export const theirDesynced: MapDebt = (debt) => ({
+	...debt,
+	their: {
+		lockedTimestamp: debt.lockedTimestamp,
+		currencyCode: debt.currencyCode,
+		timestamp: debt.timestamp,
+		amount: debt.amount + 1,
+	},
+});

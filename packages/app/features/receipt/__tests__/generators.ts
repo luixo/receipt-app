@@ -82,6 +82,7 @@ export type GenerateUsers = (opts: {
 	faker: Faker;
 	min?: number;
 	max?: number;
+	amount?: number;
 }) => {
 	id: UsersId;
 	name: string;
@@ -91,9 +92,16 @@ export const defaultGenerateUsers: GenerateUsers = ({
 	faker,
 	min = 3,
 	max = 6,
+	amount = 0,
 }) =>
 	Array.from(
-		{ length: faker.number.int({ min, max: Math.min(min, max) }) },
+		{
+			length:
+				amount ||
+				(min === max
+					? min
+					: faker.number.int({ min, max: Math.max(min, max) })),
+		},
 		() => ({
 			id: faker.string.uuid(),
 			name: faker.person.fullName(),

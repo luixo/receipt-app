@@ -28,7 +28,7 @@ type Props = {
 };
 
 export const ErrorMessage: React.FC<Props> = ({ message, button }) => (
-	<Card>
+	<Card data-testid="error-message">
 		<CardHeader>
 			<View className="text-danger flex flex-row gap-2">
 				<WarningIcon size={32} />

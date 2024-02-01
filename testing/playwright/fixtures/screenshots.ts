@@ -109,6 +109,30 @@ type ScreenshotsMixin = {
 	) => Promise<void>;
 };
 
+const isMenuPoint = (page: Page, position: { x: number; y: number }) =>
+	page.evaluate(
+		([{ x, y }]) => {
+			const element = document.elementFromPoint(x, y);
+			const menu = document.querySelector('[data-testid="sticky-menu"]');
+			return menu === element || menu?.contains(element);
+		},
+		[position] as const,
+	);
+
+const checkActionability = async (page: Page, locator: Locator) => {
+	const bbox = await locator.boundingBox();
+	if (!bbox) {
+		return false;
+	}
+	const menuPoints = await Promise.all([
+		isMenuPoint(page, { x: bbox.x, y: bbox.y }),
+		isMenuPoint(page, { x: bbox.x + bbox.width, y: bbox.y + bbox.height }),
+		isMenuPoint(page, { x: bbox.x, y: bbox.y + bbox.height }),
+		isMenuPoint(page, { x: bbox.x + bbox.width, y: bbox.y }),
+	]);
+	return menuPoints.some(Boolean);
+};
+
 export const screenshotsMixin = createMixin<ScreenshotsMixin>({
 	expectScreenshotWithSchemes: async ({ page }, use) => {
 		await use(
@@ -119,15 +143,21 @@ export const screenshotsMixin = createMixin<ScreenshotsMixin>({
 					maxDiffPixels,
 					threshold,
 					fullPage = true,
-					mask = [page.getByTestId("sticky-menu")],
+					mask = [],
 					animations = "disabled",
 					...restScreenshotOptions
 				} = {},
 			) => {
+				const isMenuActionable = await checkActionability(
+					page,
+					page.getByTestId("sticky-menu"),
+				);
 				const screenshotOptions = {
 					page,
 					fullPage,
-					mask,
+					mask: !isMenuActionable
+						? mask
+						: [...mask, page.getByTestId("sticky-menu")],
 					animations,
 					...restScreenshotOptions,
 				};
