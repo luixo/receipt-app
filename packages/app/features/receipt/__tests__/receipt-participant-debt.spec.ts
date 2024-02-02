@@ -285,7 +285,6 @@ test.describe("Receipt participant debt", () => {
 			mockReceiptWithDebts,
 			openDebtsInfoModal,
 			snapshotQueries,
-			clearToasts,
 			verifyToastTexts,
 			openReceiptWithDebts,
 			awaitCacheKey,
@@ -324,7 +323,6 @@ test.describe("Receipt participant debt", () => {
 				{ name: "1-error" },
 			);
 
-			await clearToasts();
 			api.pause("debts.add");
 			await snapshotQueries(
 				async () => {
@@ -334,7 +332,6 @@ test.describe("Receipt participant debt", () => {
 				{ name: "1-loading" },
 			);
 
-			await clearToasts();
 			api.mock("debts.add", (_, calls) => ({
 				id: faker.string.uuid(),
 				lockedTimestamp: new Date(),
@@ -386,7 +383,6 @@ test.describe("Receipt participant debt", () => {
 			openDebtsInfoModal,
 			snapshotQueries,
 			verifyToastTexts,
-			clearToasts,
 			openReceiptWithDebts,
 			awaitCacheKey,
 		}) => {
@@ -421,7 +417,6 @@ test.describe("Receipt participant debt", () => {
 				{ name: "1-error" },
 			);
 
-			await clearToasts();
 			api.pause("debts.update");
 			await snapshotQueries(
 				async () => {
@@ -431,7 +426,6 @@ test.describe("Receipt participant debt", () => {
 				{ name: "1-loading" },
 			);
 
-			await clearToasts();
 			api.mock("debts.update", (_, calls) => ({
 				lockedTimestamp: new Date(),
 				reverseLockedTimestampUpdated: calls > 1,
@@ -445,7 +439,6 @@ test.describe("Receipt participant debt", () => {
 			);
 			await expect(page).toHaveURL(`/receipts/${receipt.id}`);
 
-			await clearToasts();
 			const { nextQueryCache } = await snapshotQueries(
 				async () => {
 					await updateDebtButton.click();

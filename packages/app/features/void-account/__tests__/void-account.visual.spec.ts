@@ -19,7 +19,6 @@ test.describe("Void account - visual", () => {
 			page,
 			api,
 			voidButton,
-			clearToasts,
 			expectScreenshotWithSchemes,
 		}) => {
 			api.mockUtils.noAuth();
@@ -31,7 +30,6 @@ test.describe("Void account - visual", () => {
 			await expectScreenshotWithSchemes("loading.png");
 
 			api.unpause("auth.voidAccount");
-			await clearToasts({ shouldAwait: true });
 			await expectScreenshotWithSchemes("success.png");
 		});
 
@@ -40,7 +38,6 @@ test.describe("Void account - visual", () => {
 			api,
 			voidButton,
 			expectScreenshotWithSchemes,
-			clearToasts,
 		}) => {
 			api.mockUtils.noAuth();
 			api.mock("auth.voidAccount", () => {
@@ -52,7 +49,6 @@ test.describe("Void account - visual", () => {
 
 			await page.goto("/void-account?token=foo");
 			await voidButton.click();
-			await clearToasts({ shouldAwait: true });
 			await expectScreenshotWithSchemes("error.png");
 		});
 	});
