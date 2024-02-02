@@ -29,6 +29,7 @@ const DEFAULT_AWAIT_CACHE_TIMEOUT = 5000;
 
 type ExtendedTestInfo = TestInfo & {
 	queriesSnapshotIndex?: number;
+	awaitedCacheKeys: Partial<Record<TRPCQueryKey | TRPCMutationKey, number>>;
 };
 const getExtendedTestInfo = (testInfo: TestInfo): ExtendedTestInfo =>
 	testInfo as ExtendedTestInfo;
@@ -280,12 +281,18 @@ export const DEFAULT_BLACKLIST_KEYS: TRPCKey[] = [
 	"accountConnectionIntentions.getAll",
 ];
 
-type CacheKey<T extends TRPCKey = TRPCKey> = {
+type AwaitCacheDescription<T extends TRPCKey = TRPCKey> = {
 	path: T;
 	amount?: number;
-	awaitLoading?: boolean;
 };
-type CacheKeyOrKey<T extends TRPCKey = TRPCKey> = T | CacheKey<T>;
+type AwaitCacheOrKey<T extends TRPCKey = TRPCKey> =
+	| T
+	| AwaitCacheDescription<T>;
+type AwaitCacheObject<T extends TRPCKey = TRPCKey> = {
+	path: T;
+	amount: number;
+	type: "query" | "mutation";
+};
 
 const getProcedure = (
 	currentRouter: AnyRouter & ProcedureRouterRecord,
@@ -395,7 +402,7 @@ type QueriesMixin = {
 		diff: object;
 	}>;
 	awaitCacheKey: (
-		keyOrKeys: CacheKeyOrKey | CacheKeyOrKey[],
+		keyOrKeys: AwaitCacheOrKey | AwaitCacheOrKey[],
 		timeout?: number,
 	) => Promise<boolean[]>;
 };
@@ -482,33 +489,35 @@ export const queriesMixin = createMixin<
 			},
 		);
 	},
-	awaitCacheKey: async ({ page }, use) => {
+	awaitCacheKey: async ({ page }, use, testInfo) => {
+		const extendedTestInfo = getExtendedTestInfo(testInfo);
+		extendedTestInfo.awaitedCacheKeys ??= {};
 		await use((cacheKeyOrKeys, timeout = DEFAULT_AWAIT_CACHE_TIMEOUT) => {
-			const cacheKeys = (
+			const cacheObjects = (
 				Array.isArray(cacheKeyOrKeys) ? cacheKeyOrKeys : [cacheKeyOrKeys]
-			).map((keyOrObject) =>
-				typeof keyOrObject === "string"
-					? ({ path: keyOrObject } satisfies CacheKey)
-					: keyOrObject,
-			);
-			const types = cacheKeys.map(
-				(cacheKey) =>
+			).map<AwaitCacheObject>((keyOrObject) => {
+				const path =
+					typeof keyOrObject === "string" ? keyOrObject : keyOrObject.path;
+				const awaitedAmount =
+					typeof keyOrObject === "string" ? 1 : keyOrObject.amount ?? 1;
+				const prevAmount = extendedTestInfo.awaitedCacheKeys[path] ?? 0;
+				const procedure = getProcedure(
+					router as unknown as AnyRouter & ProcedureRouterRecord,
+					path,
+				);
+				return {
+					path,
+					amount: awaitedAmount + prevAmount,
 					// eslint-disable-next-line no-underscore-dangle
-					getProcedure(
-						router as unknown as AnyRouter & ProcedureRouterRecord,
-						cacheKey.path,
-					)._def.type,
-			);
-			return page.evaluate(
-				async ([cacheKeysInner, typesInner, timeoutInner]) => {
+					type: procedure._def.type === "query" ? "query" : "mutation",
+				};
+			});
+			const result = page.evaluate(
+				async ([cacheObjectsInner, timeoutInner]) => {
 					if (!window.queryClient) {
 						throw new Error("window.queryClient is not defined yet");
 					}
-					const awaitQueryKey = (
-						cacheKey: TRPCQueryKey,
-						awaitLoading = true,
-						amount = 1,
-					) => {
+					const awaitQueryKey = (cacheKey: TRPCQueryKey, amount: number) => {
 						const cache = window.queryClient.getQueryCache();
 						const getAwaitedAmount = () => {
 							const allMatched = cache.findAll({
@@ -526,7 +535,7 @@ export const queriesMixin = createMixin<
 						};
 						const shouldResolve = () => {
 							const awaitedAmount = getAwaitedAmount();
-							if (awaitedAmount.unresolved !== 0 && awaitLoading) {
+							if (awaitedAmount.unresolved !== 0) {
 								return false;
 							}
 							return awaitedAmount.resolved >= amount;
@@ -559,8 +568,7 @@ export const queriesMixin = createMixin<
 					};
 					const awaitMutationKey = (
 						cacheKey: TRPCMutationKey,
-						awaitLoading = true,
-						amount = 1,
+						amount: number,
 					) => {
 						const cache = window.queryClient.getMutationCache();
 						const getAwaitedAmount = () => {
@@ -579,7 +587,7 @@ export const queriesMixin = createMixin<
 						};
 						const shouldResolve = () => {
 							const awaitedAmount = getAwaitedAmount();
-							if (awaitedAmount.unresolved !== 0 && awaitLoading) {
+							if (awaitedAmount.unresolved !== 0) {
 								return false;
 							}
 							return awaitedAmount.resolved >= amount;
@@ -614,24 +622,27 @@ export const queriesMixin = createMixin<
 						});
 					};
 					return Promise.all(
-						cacheKeysInner.map((cacheKeyInner, index) => {
-							if (typesInner[index]! === "query") {
+						cacheObjectsInner.map((cacheObject) => {
+							if (cacheObject.type === "query") {
 								return awaitQueryKey(
-									cacheKeyInner.path as TRPCQueryKey,
-									cacheKeyInner.awaitLoading,
-									cacheKeyInner.amount,
+									cacheObject.path as TRPCQueryKey,
+									cacheObject.amount,
 								);
 							}
 							return awaitMutationKey(
-								cacheKeyInner.path as TRPCMutationKey,
-								cacheKeyInner.awaitLoading,
-								cacheKeyInner.amount,
+								cacheObject.path as TRPCMutationKey,
+								cacheObject.amount,
 							);
 						}),
 					);
 				},
-				[cacheKeys, types, timeout] as const,
+				[cacheObjects, timeout] as const,
 			);
+			cacheObjects.forEach((cacheKey) => {
+				extendedTestInfo.awaitedCacheKeys[cacheKey.path] ??= 0;
+				extendedTestInfo.awaitedCacheKeys[cacheKey.path]! = cacheKey.amount;
+			});
+			return result;
 		});
 	},
 });

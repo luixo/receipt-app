@@ -1,7 +1,7 @@
 {
 	"mutations": {
 		"auth.voidAccount": {
-			"0": {
+			"1": {
 				"state": {
 					"data": {
 						"email": "foo@gmail.com"

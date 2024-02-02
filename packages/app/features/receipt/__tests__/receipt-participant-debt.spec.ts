@@ -319,6 +319,7 @@ test.describe("Receipt participant debt", () => {
 				async () => {
 					await sendDebtButton.first().click();
 					await verifyToastTexts("Error adding debt: Forbidden to add a debt");
+					await awaitCacheKey("debts.add");
 				},
 				{ name: "1-error" },
 			);
@@ -340,6 +341,7 @@ test.describe("Receipt participant debt", () => {
 			await snapshotQueries(
 				async () => {
 					api.unpause("debts.add");
+					await awaitCacheKey("debts.add");
 					await verifyToastTexts("Debt added");
 				},
 				{ name: "1-success" },
@@ -348,8 +350,7 @@ test.describe("Receipt participant debt", () => {
 			const { nextQueryCache } = await snapshotQueries(
 				async () => {
 					await sendDebtButton.click();
-					// [1-error, 1-success, 2-success]
-					await awaitCacheKey({ path: "debts.add", amount: 3 });
+					await awaitCacheKey("debts.add");
 				},
 				{ name: "2-success" },
 			);
@@ -413,6 +414,7 @@ test.describe("Receipt participant debt", () => {
 					await verifyToastTexts(
 						"Error updating debt: Forbidden to update a debt",
 					);
+					await awaitCacheKey("debts.update");
 				},
 				{ name: "1-error" },
 			);
@@ -434,6 +436,7 @@ test.describe("Receipt participant debt", () => {
 				async () => {
 					api.unpause("debts.update");
 					await verifyToastTexts("Debt updated successfully");
+					await awaitCacheKey("debts.update");
 				},
 				{ name: "1-success" },
 			);
@@ -442,8 +445,7 @@ test.describe("Receipt participant debt", () => {
 			const { nextQueryCache } = await snapshotQueries(
 				async () => {
 					await updateDebtButton.click();
-					// [1-error, 1-success, 2-success]
-					await awaitCacheKey({ path: "debts.update", amount: 3 });
+					await awaitCacheKey("debts.update");
 				},
 				{ name: "2-success" },
 			);

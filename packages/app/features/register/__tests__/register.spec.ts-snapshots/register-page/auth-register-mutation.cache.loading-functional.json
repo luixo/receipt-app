@@ -1,16 +1,18 @@
 {
 	"mutations": {
-		"auth.voidAccount": [
-			{
+		"auth.register": {
+			"1": {
 				"state": {
 					"error": null,
 					"isPaused": false,
 					"status": "pending",
 					"variables": {
-						"token": "foo"
+						"email": "test@mail.ru",
+						"name": "Test name",
+						"password": "strong-password"
 					}
 				}
 			}
-		]
+		}
 	}
 }

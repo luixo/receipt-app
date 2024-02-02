@@ -5,10 +5,12 @@ test.describe("Void account screen - visual", () => {
 		api,
 		page,
 		expectScreenshotWithSchemes,
+		clearToasts,
 	}) => {
 		api.mockUtils.noAuth();
 
 		await page.goto("/void-account");
+		await clearToasts();
 		await expectScreenshotWithSchemes("no-token.png");
 	});
 });

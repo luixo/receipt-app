@@ -19,7 +19,7 @@
 	},
 	"mutations": {
 		"auth.register": {
-			"0": {
+			"1": {
 				"state": {
 					"data": {
 						"account": {
