@@ -1,0 +1,34 @@
+{
+	"queries": {
+		"debts.get:[{\"id\":\"e4bd9264-7f9b-49f9-b3c1-a01c9dc2a8e2\"}]": {
+			"state": {
+				"dataUpdateCount": 2
+			}
+		}
+	},
+	"mutations": {
+		"debts.update": [
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Forbidden to update a debt"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error",
+					"variables": {
+						"id": "e4bd9264-7f9b-49f9-b3c1-a01c9dc2a8e2",
+						"update": {
+							"amount": 68932.8,
+							"currencyCode": "LVL",
+							"timestamp": "2020-01-01T00:00:00.000Z",
+							"locked": true,
+							"receiptId": "ae20505d-20bc-4fb8-9fe9-93339ac9e429"
+						}
+					}
+				}
+			}
+		]
+	}
+}

@@ -1,0 +1,25 @@
+{
+	"mutations": {
+		"debts.add": [
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Forbidden to add a debt"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error",
+					"variables": {
+						"currencyCode": "SAR",
+						"userId": "73e6f195-7f6b-428f-bbc8-4af845bcd79d",
+						"amount": 33069.84,
+						"timestamp": "2020-01-01T00:00:00.000Z",
+						"note": "Receipt \"ratione doloribus aspernatur\"",
+						"receiptId": "041aa743-f296-447d-a3a6-08b6f3f56f3c"
+					}
+				}
+			}
+		]
+	}
+}

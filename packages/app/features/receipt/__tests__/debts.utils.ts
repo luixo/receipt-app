@@ -40,6 +40,11 @@ type Fixtures = {
 	debtsInfoModalButton: Locator;
 	debtsInfoModal: Locator;
 	openDebtsInfoModal: () => Promise<void>;
+	closeDebtsInfoModal: () => Promise<void>;
+	participantDebtRow: Locator;
+	participantDebtStatusIcon: Locator;
+	participantDebtAction: Locator;
+	debtSyncStatus: Locator;
 	openReceiptWithDebts: (receiptId: ReceiptsId) => Promise<void>;
 	mockReceiptWithDebts: (
 		options?: Omit<
@@ -72,10 +77,27 @@ export const test = originalTest.extend<Fixtures>({
 
 	debtsInfoModal: ({ modal }, use) => use(modal("Receipt sync status")),
 
+	participantDebtRow: ({ debtsInfoModal }, use) =>
+		use(debtsInfoModal.locator("[data-testid='participant-debt']:visible")),
+
+	participantDebtStatusIcon: ({ debtsInfoModal }, use) =>
+		use(debtsInfoModal.getByTestId("participant-debt-status-icon")),
+
+	participantDebtAction: ({ debtsInfoModal }, use) =>
+		use(debtsInfoModal.getByTestId("participant-debt-action")),
+
+	debtSyncStatus: ({ page }, use) => use(page.getByTestId("debt-sync-status")),
+
 	openDebtsInfoModal: ({ debtsInfoModalButton, debtsInfoModal }, use) =>
 		use(async () => {
 			await debtsInfoModalButton.click();
 			await debtsInfoModal.waitFor();
+		}),
+
+	closeDebtsInfoModal: ({ modalCross, debtsInfoModal }, use) =>
+		use(async () => {
+			await modalCross.click();
+			await debtsInfoModal.waitFor({ state: "detached" });
 		}),
 
 	openReceiptWithDebts: ({ openReceipt, awaitCacheKey }, use) =>

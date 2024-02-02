@@ -68,7 +68,10 @@ export const DebtSyncStatus: React.FC<Props> = ({
 			content={getContent(lockedTimestamp, their)}
 			placement="bottom-end"
 		>
-			<View className={wrapper({ type: isSynced ? "sync" : "unsync" })}>
+			<View
+				className={wrapper({ type: isSynced ? "sync" : "unsync" })}
+				testID="debt-sync-status"
+			>
 				{isSynced ? (
 					<SyncIcon size={pixelSize} />
 				) : (

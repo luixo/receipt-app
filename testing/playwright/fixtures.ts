@@ -8,6 +8,7 @@ import { pageMixin } from "./fixtures/page";
 import { queriesMixin } from "./fixtures/queries";
 import { screenshotsMixin } from "./fixtures/screenshots";
 import { selectorsMixin } from "./fixtures/selectors";
+import { skipMixin } from "./fixtures/skip";
 import { toastsMixin } from "./fixtures/toasts";
 import { tooltipMixin } from "./fixtures/tooltip";
 
@@ -16,7 +17,9 @@ export const test = queriesMixin(
 		apiMixin(
 			tooltipMixin(
 				toastsMixin(
-					selectorsMixin(consoleMixin(screenshotsMixin(mockMixin(base)))),
+					selectorsMixin(
+						consoleMixin(screenshotsMixin(mockMixin(skipMixin(base)))),
+					),
 				),
 			),
 		),

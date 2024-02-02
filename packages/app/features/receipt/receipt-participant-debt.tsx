@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Button, Divider } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import {
 	MdOutlineReceipt as ReceiptOffIcon,
 	MdSend as SendIcon,
@@ -129,21 +129,27 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 	const user = <LoadableUser className="self-start" id={participant.userId} />;
 
 	return (
-		<>
-			<Divider className="md:hidden" />
-			<View className="md:hidden">{user}</View>
+		<View className="flex-col" testID="participant-debt">
+			<View className="mb-3 md:hidden">{user}</View>
 			<View className="flex-row gap-4">
 				<View className="flex-[4] max-md:hidden">{user}</View>
 				<View className="flex-[2] max-md:flex-1">
 					<Text>{`${participant.sum} ${currency}`}</Text>
 				</View>
-				<View className="flex-[2] flex-row max-md:flex-1">
+				<View
+					className="flex-[2] flex-row max-md:flex-1"
+					testID="participant-debt-status-icon"
+				>
 					{participant.sum === 0 ? (
-						<ZeroIcon size={36} />
+						<ZeroIcon data-testid="receipt-zero-icon" size={36} />
 					) : (
 						<>
 							{participant.currentDebt && !isReceiptSyncedWithOurDebt ? (
-								<ReceiptOffIcon size={36} className="text-danger" />
+								<ReceiptOffIcon
+									size={36}
+									className="text-danger"
+									data-testid="receipt-mismatch-icon"
+								/>
 							) : null}
 							{participant.currentDebt ? (
 								<DebtSyncStatus
@@ -157,7 +163,7 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 						</>
 					)}
 				</View>
-				<View className="flex-1">
+				<View className="flex-1" testID="participant-debt-action">
 					{isReceiptSyncedWithOurDebt || participant.sum === 0 ? null : (
 						<Button
 							title={
@@ -184,6 +190,6 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 					)}
 				</View>
 			</View>
-		</>
+		</View>
 	);
 };

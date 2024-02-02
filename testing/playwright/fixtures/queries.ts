@@ -11,7 +11,13 @@ import type {
 import type { DeepPartial } from "@trpc/server/unstableInternalsExport";
 import { diff as objectDiff } from "deep-object-diff";
 
-import type { TRPCMutationKey, TRPCQueryInput, TRPCQueryKey } from "app/trpc";
+import type {
+	TRPCMutationInput,
+	TRPCMutationKey,
+	TRPCMutationOutput,
+	TRPCQueryInput,
+	TRPCQueryKey,
+} from "app/trpc";
 import { mapObjectValues } from "app/utils/object";
 import { router } from "next-app/handlers";
 import type { AppRouter } from "next-app/pages/api/trpc/[trpc]";
@@ -231,6 +237,29 @@ const withNoPlatformPath = (testInfo: TestInfo, fn: () => void) => {
 			.replace(`-${process.platform}`, "");
 	fn();
 	testInfo.snapshotPath = originalSnapshotPath;
+};
+
+export const getMutationsByKey = <T extends TRPCMutationKey>(
+	cache: Awaited<ReturnType<typeof getQueryCache>>,
+	key: T,
+) => {
+	const mutations = cache.mutations[key];
+	if (!mutations) {
+		throw new Error(`Expected to have ${key} in cache`);
+	}
+	return mutations.map((mutation) => {
+		type MutationType = typeof mutation;
+		return mutation as Omit<MutationType, "state"> & {
+			state: Omit<MutationType["state"], "data" | "variables" | "error"> & {
+				data: TRPCMutationOutput<T>;
+				variables: TRPCMutationInput<T>;
+				error: {
+					type: string;
+					message: string;
+				};
+			};
+		};
+	});
 };
 
 type SnapshotQueryCacheOptions = {

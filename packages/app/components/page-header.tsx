@@ -40,7 +40,12 @@ export const PageHeader: React.FC<Props> = ({
 				</Text>
 				{endContent}
 			</View>
-			<View className="ml-auto shrink-0 flex-row gap-2 self-end">{aside}</View>
+			<View
+				className="ml-auto shrink-0 flex-row gap-2 self-end"
+				testID="header-aside"
+			>
+				{aside}
+			</View>
 		</View>
 	</>
 );

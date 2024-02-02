@@ -1,0 +1,166 @@
+{
+	"queries": {
+		"debts.get:[{\"id\":\"36267e27-c679-4922-89bb-2715d346003e\"}]": {
+			"state": {
+				"data": {
+					"id": "36267e27-c679-4922-89bb-2715d346003e",
+					"amount": 37046.71,
+					"currencyCode": "BHD",
+					"userId": "2e6ff2c9-cc0a-4753-9164-1298f16e8ced",
+					"timestamp": "2020-01-01T00:00:00.000Z",
+					"note": "Receipt \"eos magnam magni\"",
+					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+					"their": {
+						"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+						"amount": 37046.71,
+						"currencyCode": "BHD",
+						"timestamp": "2020-01-01T00:00:00.000Z"
+					},
+					"receiptId": "abd0d91d-e902-40ed-8523-efe0c1b88e06"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"797654e9-1a57-4a31-a823-1939fccc4fef\"}]": {
+			"state": {
+				"data": {
+					"amount": 23702.76,
+					"lockedTimestamp": "2020-01-01T00:00:00.000Z"
+				},
+				"dataUpdateCount": 2
+			}
+		},
+		"debts.get:[{\"id\":\"c66c1ca4-a481-49a6-a685-d2e221d8bf1f\"}]": {
+			"state": {
+				"data": {
+					"amount": 21195.6,
+					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+					"their": {
+						"lockedTimestamp": "2020-01-01T00:00:00.000Z"
+					}
+				},
+				"dataUpdateCount": 2
+			}
+		},
+		"debts.get:[{\"id\":\"e1131610-8db2-4da8-978e-5fe0169dc892\"}]": {
+			"state": {
+				"data": {
+					"id": "e1131610-8db2-4da8-978e-5fe0169dc892",
+					"amount": 37266.96,
+					"currencyCode": "BHD",
+					"userId": "41b488d0-90e0-4a9c-8188-d0a2fd1854a2",
+					"timestamp": "2020-01-01T00:00:00.000Z",
+					"note": "Receipt \"eos magnam magni\"",
+					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+					"receiptId": "abd0d91d-e902-40ed-8523-efe0c1b88e06"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"receipts.get:[{\"id\":\"abd0d91d-e902-40ed-8523-efe0c1b88e06\"}]": {
+			"state": {
+				"data": {
+					"debt": {
+						"ids": {
+							"2": "36267e27-c679-4922-89bb-2715d346003e",
+							"3": "e1131610-8db2-4da8-978e-5fe0169dc892"
+						}
+					}
+				},
+				"dataUpdateCount": 4
+			}
+		}
+	},
+	"mutations": {
+		"debts.addBatch": [
+			{
+				"state": {
+					"data": {
+						"ids": [
+							"36267e27-c679-4922-89bb-2715d346003e",
+							"e1131610-8db2-4da8-978e-5fe0169dc892"
+						],
+						"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+						"reverseAcceptedUserIds": [
+							"2e6ff2c9-cc0a-4753-9164-1298f16e8ced"
+						]
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": [
+						{
+							"note": "Receipt \"eos magnam magni\"",
+							"currencyCode": "BHD",
+							"userId": "2e6ff2c9-cc0a-4753-9164-1298f16e8ced",
+							"amount": 37046.71,
+							"timestamp": "2020-01-01T00:00:00.000Z",
+							"receiptId": "abd0d91d-e902-40ed-8523-efe0c1b88e06"
+						},
+						{
+							"note": "Receipt \"eos magnam magni\"",
+							"currencyCode": "BHD",
+							"userId": "41b488d0-90e0-4a9c-8188-d0a2fd1854a2",
+							"amount": 37266.96,
+							"timestamp": "2020-01-01T00:00:00.000Z",
+							"receiptId": "abd0d91d-e902-40ed-8523-efe0c1b88e06"
+						}
+					]
+				}
+			}
+		],
+		"debts.updateBatch": [
+			{
+				"state": {
+					"data": [
+						{
+							"debtId": "c66c1ca4-a481-49a6-a685-d2e221d8bf1f",
+							"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+							"reverseLockedTimestampUpdated": true
+						},
+						{
+							"debtId": "797654e9-1a57-4a31-a823-1939fccc4fef",
+							"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+							"reverseLockedTimestampUpdated": false
+						}
+					],
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": [
+						{
+							"id": "c66c1ca4-a481-49a6-a685-d2e221d8bf1f",
+							"update": {
+								"amount": 21195.6,
+								"currencyCode": "BHD",
+								"timestamp": "2020-01-01T00:00:00.000Z",
+								"locked": true,
+								"receiptId": "abd0d91d-e902-40ed-8523-efe0c1b88e06"
+							}
+						},
+						{
+							"id": "797654e9-1a57-4a31-a823-1939fccc4fef",
+							"update": {
+								"amount": 23702.76,
+								"currencyCode": "BHD",
+								"timestamp": "2020-01-01T00:00:00.000Z",
+								"locked": true,
+								"receiptId": "abd0d91d-e902-40ed-8523-efe0c1b88e06"
+							}
+						}
+					]
+				}
+			}
+		]
+	}
+}

@@ -99,14 +99,14 @@ export const ReceiptDebtSyncInfoModal: React.FC<Props> = ({
 		<Modal
 			isOpen={isOpen}
 			onOpenChange={switchModalOpen}
-			className="max-w-3xl"
+			className="max-h-[calc(100%_-_1rem)] max-w-3xl max-sm:max-h-[calc(100%_-_6rem)]"
 			title="Receipt sync status"
 		>
 			<ModalContent>
 				<ModalHeader>
 					<Text className="text-center text-2xl">Sync status</Text>
 				</ModalHeader>
-				<ModalBody>
+				<ModalBody className="overflow-y-auto">
 					<View className="flex-row gap-4">
 						<View className="flex-[4] max-md:hidden">User</View>
 						<View className="flex-[2] max-md:flex-1">Amount</View>
@@ -115,11 +115,13 @@ export const ReceiptDebtSyncInfoModal: React.FC<Props> = ({
 					</View>
 					<Divider className="max-md:hidden" />
 					{sortedParticipants.map((participant) => (
-						<ReceiptParticipantDebt
-							key={participant.userId}
-							receipt={receipt}
-							participant={participant}
-						/>
+						<React.Fragment key={participant.userId}>
+							<Divider className="md:hidden" />
+							<ReceiptParticipantDebt
+								receipt={receipt}
+								participant={participant}
+							/>
+						</React.Fragment>
 					))}
 				</ModalBody>
 			</ModalContent>

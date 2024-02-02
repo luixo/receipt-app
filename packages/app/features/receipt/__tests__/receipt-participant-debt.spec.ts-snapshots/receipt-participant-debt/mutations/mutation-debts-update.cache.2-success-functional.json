@@ -1,0 +1,46 @@
+{
+	"queries": {
+		"debts.get:[{\"id\":\"09e7d68b-b144-4702-854c-6201e7b4ec9c\"}]": {
+			"state": {
+				"data": {
+					"amount": 59109.49,
+					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+					"their": {
+						"lockedTimestamp": "2020-01-01T00:00:00.000Z"
+					}
+				},
+				"dataUpdateCount": 2
+			}
+		},
+		"receipts.get:[{\"id\":\"ae20505d-20bc-4fb8-9fe9-93339ac9e429\"}]": {
+			"state": {
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"debts.update": {
+			"2": {
+				"state": {
+					"data": {
+						"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+						"reverseLockedTimestampUpdated": true
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"id": "09e7d68b-b144-4702-854c-6201e7b4ec9c",
+						"update": {
+							"amount": 59109.49,
+							"currencyCode": "LVL",
+							"timestamp": "2020-01-01T00:00:00.000Z",
+							"locked": true,
+							"receiptId": "ae20505d-20bc-4fb8-9fe9-93339ac9e429"
+						}
+					}
+				}
+			}
+		}
+	}
+}

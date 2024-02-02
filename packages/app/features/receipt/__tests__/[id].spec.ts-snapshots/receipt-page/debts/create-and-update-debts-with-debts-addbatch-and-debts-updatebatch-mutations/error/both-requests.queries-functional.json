@@ -1,8 +1,0 @@
-{
-	"debts.addBatch": {
-		"clientCalls": 1
-	},
-	"debts.updateBatch": {
-		"clientCalls": 1
-	}
-}

@@ -27,6 +27,7 @@ export const User = React.forwardRef<HTMLDivElement, Props>(
 			<RawUser
 				ref={ref}
 				{...props}
+				data-testid="user"
 				className={wrapper({ className })}
 				name={user.name + (user.publicName ? ` (${user.publicName})` : "")}
 				description={user.connectedAccount?.email}
