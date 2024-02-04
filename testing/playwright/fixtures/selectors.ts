@@ -6,6 +6,7 @@ type SelectorsMixin = {
 	withLoader: (locator: Locator) => Locator;
 	modal: (title?: string) => Locator;
 	modalCross: Locator;
+	user: Locator;
 	errorMessage: (message?: string | RegExp) => Locator;
 };
 
@@ -40,4 +41,5 @@ export const selectorsMixin = createMixin<SelectorsMixin>({
 			return errorMessage;
 		});
 	},
+	user: ({ page }, use) => use(page.getByTestId("user")),
 });

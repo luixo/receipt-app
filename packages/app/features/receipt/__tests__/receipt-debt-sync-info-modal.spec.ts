@@ -9,13 +9,14 @@ test("Sorting", async ({
 	openReceiptWithDebts,
 	openDebtsInfoModal,
 	participantDebtRow,
+	user: userSelector,
 }) => {
 	const { receipt, debts, participants, receiptItemsParts, selfAccount } =
 		mockReceiptWithDebtsForModal();
 	await openReceiptWithDebts(receipt.id);
 	await openDebtsInfoModal();
 	const userNames = await participantDebtRow
-		.getByTestId("user")
+		.locator(userSelector)
 		.locator("span.text-small:visible")
 		.allInnerTexts();
 	const participantSums = getParticipantSums(

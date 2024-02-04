@@ -18,6 +18,7 @@ test("Receipt participant debt", async ({
 	debtSyncStatus,
 	openDebtsInfoModal,
 	expectScreenshotWithSchemes,
+	user,
 }) => {
 	const { receipt } = mockReceiptWithDebts({
 		generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 1 }),
@@ -27,7 +28,7 @@ test("Receipt participant debt", async ({
 	await openDebtsInfoModal();
 	await expectScreenshotWithSchemes("row.png", {
 		locator: participantDebtRow.first(),
-		mask: [debtSyncStatus, participantDebtRow.getByTestId("user")],
+		mask: [debtSyncStatus, participantDebtRow.locator(user)],
 	});
 });
 
