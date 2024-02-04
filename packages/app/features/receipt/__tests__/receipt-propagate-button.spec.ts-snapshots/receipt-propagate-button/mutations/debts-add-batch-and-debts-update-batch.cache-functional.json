@@ -57,6 +57,7 @@
 					"timestamp": "2020-01-01T00:00:00.000Z",
 					"note": "Receipt \"eos magnam magni\"",
 					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+					"their": "<undefined>",
 					"receiptId": "abd0d91d-e902-40ed-8523-efe0c1b88e06"
 				},
 				"dataUpdateCount": 1,

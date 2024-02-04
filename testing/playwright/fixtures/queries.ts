@@ -19,6 +19,7 @@ import type {
 	TRPCQueryKey,
 } from "app/trpc";
 import { mapObjectValues } from "app/utils/object";
+import { omitUndefined } from "app/utils/utils";
 import { router } from "next-app/handlers";
 import type { AppRouter } from "next-app/pages/api/trpc/[trpc]";
 
@@ -339,7 +340,7 @@ const getDiff = (prevCache: QueryCache, nextCache: QueryCache) => {
 		prevCache,
 		nextCache,
 	);
-	return {
+	return omitUndefined({
 		queries: diff.queries
 			? mapObjectValues(diff.queries, (query, key) => {
 					if (!query.state) {
@@ -348,12 +349,12 @@ const getDiff = (prevCache: QueryCache, nextCache: QueryCache) => {
 					const queryKey = key as TRPCQueryKey;
 					return {
 						...query,
-						state: {
+						state: omitUndefined({
 							...query.state,
 							dataUpdateCount: getQueryCount(queryKey, "dataUpdateCount"),
 							errorUpdateCount: getQueryCount(queryKey, "errorUpdateCount"),
 							fetchFailureCount: getQueryCount(queryKey, "fetchFailureCount"),
-						},
+						}),
 					};
 			  })
 			: undefined,
@@ -369,14 +370,14 @@ const getDiff = (prevCache: QueryCache, nextCache: QueryCache) => {
 						const mutationKey = key as TRPCMutationKey;
 						return {
 							...mutation,
-							state: {
+							state: omitUndefined({
 								...mutation!.state,
 								failureCount: getMutationCount(
 									mutationKey,
 									Number(index),
 									"failureCount",
 								),
-							},
+							}),
 						};
 					};
 					if (Array.isArray(mutations)) {
@@ -387,7 +388,7 @@ const getDiff = (prevCache: QueryCache, nextCache: QueryCache) => {
 					return mapObjectValues(Object.assign({}, mutations), mapMutation);
 			  })
 			: undefined,
-	};
+	});
 };
 
 type QueriesMixin = {
@@ -457,7 +458,13 @@ export const queriesMixin = createMixin<
 				withNoPlatformPath(testInfo, () => {
 					if (!skipCache) {
 						expect
-							.soft(`${JSON.stringify(diff, null, "\t")}\n`)
+							.soft(
+								`${JSON.stringify(
+									diff,
+									(_, value) => (value === undefined ? "<undefined>" : value),
+									"\t",
+								)}\n`,
+							)
 							.toMatchSnapshot(
 								getSnapshotName(extendedTestInfo, "cache", name),
 							);
