@@ -1,17 +1,17 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"017cb649-5381-403e-bc73-0ef8650d5628\"}]": {
+		"debts.get:[{\"id\":\"4c4764d3-c20f-4ea8-90fb-b026cf603cc3\"}]": {
 			"state": {
 				"data": {
-					"id": "017cb649-5381-403e-bc73-0ef8650d5628",
-					"amount": 33069.84,
-					"currencyCode": "SAR",
-					"userId": "73e6f195-7f6b-428f-bbc8-4af845bcd79d",
+					"id": "4c4764d3-c20f-4ea8-90fb-b026cf603cc3",
+					"amount": 19554.17,
+					"currencyCode": "KZT",
+					"userId": "ba6c0d3f-b12a-4874-8c35-670f60b22ac9",
 					"timestamp": "2020-01-01T00:00:00.000Z",
-					"note": "Receipt \"ratione doloribus aspernatur\"",
+					"note": "Receipt \"doloremque omnis delectus\"",
 					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
 					"their": "<undefined>",
-					"receiptId": "041aa743-f296-447d-a3a6-08b6f3f56f3c"
+					"receiptId": "38787032-dcd1-49e4-8a8f-302d0d601c07"
 				},
 				"dataUpdateCount": 1,
 				"error": null,
@@ -21,12 +21,12 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"receipts.get:[{\"id\":\"041aa743-f296-447d-a3a6-08b6f3f56f3c\"}]": {
+		"receipts.get:[{\"id\":\"38787032-dcd1-49e4-8a8f-302d0d601c07\"}]": {
 			"state": {
 				"data": {
 					"debt": {
 						"ids": {
-							"1": "017cb649-5381-403e-bc73-0ef8650d5628"
+							"1": "4c4764d3-c20f-4ea8-90fb-b026cf603cc3"
 						}
 					}
 				},
@@ -39,7 +39,7 @@
 			"1": {
 				"state": {
 					"data": {
-						"id": "017cb649-5381-403e-bc73-0ef8650d5628",
+						"id": "4c4764d3-c20f-4ea8-90fb-b026cf603cc3",
 						"lockedTimestamp": "2020-01-01T00:00:00.000Z",
 						"reverseAccepted": false
 					},

@@ -1,9 +1,9 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"e4bd9264-7f9b-49f9-b3c1-a01c9dc2a8e2\"}]": {
+		"debts.get:[{\"id\":\"1ca1f248-af99-4315-9f3d-aae9a547eac8\"}]": {
 			"state": {
 				"data": {
-					"amount": 68932.8,
+					"amount": 14979.11,
 					"lockedTimestamp": "2020-01-01T00:00:00.000Z"
 				},
 				"dataUpdateCount": 1
@@ -18,13 +18,13 @@
 					"isPaused": false,
 					"status": "pending",
 					"variables": {
-						"id": "e4bd9264-7f9b-49f9-b3c1-a01c9dc2a8e2",
+						"id": "1ca1f248-af99-4315-9f3d-aae9a547eac8",
 						"update": {
-							"amount": 68932.8,
-							"currencyCode": "LVL",
+							"amount": 14979.11,
+							"currencyCode": "JOD",
 							"timestamp": "2020-01-01T00:00:00.000Z",
 							"locked": true,
-							"receiptId": "ae20505d-20bc-4fb8-9fe9-93339ac9e429"
+							"receiptId": "da4ff149-7dd7-4f3b-a126-7d12aa16851a"
 						}
 					}
 				}

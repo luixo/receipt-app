@@ -1,22 +1,22 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"d29f3d35-f9ab-4935-934c-607028fd33c4\"}]": {
+		"debts.get:[{\"id\":\"28de5ca5-19f3-4024-818f-2c6878039e40\"}]": {
 			"state": {
 				"data": {
-					"id": "d29f3d35-f9ab-4935-934c-607028fd33c4",
-					"amount": 31922.96,
-					"currencyCode": "SAR",
-					"userId": "22f960b1-bf1e-4346-8057-7fb2f085ba09",
+					"id": "28de5ca5-19f3-4024-818f-2c6878039e40",
+					"amount": 16431.38,
+					"currencyCode": "KZT",
+					"userId": "f0c405a3-fb3f-4cba-b422-3da378da42d4",
 					"timestamp": "2020-01-01T00:00:00.000Z",
-					"note": "Receipt \"ratione doloribus aspernatur\"",
+					"note": "Receipt \"doloremque omnis delectus\"",
 					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
 					"their": {
 						"lockedTimestamp": "2020-01-01T00:00:00.000Z",
 						"timestamp": "2020-01-01T00:00:00.000Z",
-						"amount": 31922.96,
-						"currencyCode": "SAR"
+						"amount": 16431.38,
+						"currencyCode": "KZT"
 					},
-					"receiptId": "041aa743-f296-447d-a3a6-08b6f3f56f3c"
+					"receiptId": "38787032-dcd1-49e4-8a8f-302d0d601c07"
 				},
 				"dataUpdateCount": 1,
 				"error": null,
@@ -26,12 +26,12 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"receipts.get:[{\"id\":\"041aa743-f296-447d-a3a6-08b6f3f56f3c\"}]": {
+		"receipts.get:[{\"id\":\"38787032-dcd1-49e4-8a8f-302d0d601c07\"}]": {
 			"state": {
 				"data": {
 					"debt": {
 						"ids": {
-							"2": "d29f3d35-f9ab-4935-934c-607028fd33c4"
+							"2": "28de5ca5-19f3-4024-818f-2c6878039e40"
 						}
 					}
 				},
@@ -44,7 +44,7 @@
 			"2": {
 				"state": {
 					"data": {
-						"id": "d29f3d35-f9ab-4935-934c-607028fd33c4",
+						"id": "28de5ca5-19f3-4024-818f-2c6878039e40",
 						"lockedTimestamp": "2020-01-01T00:00:00.000Z",
 						"reverseAccepted": true
 					},
@@ -52,12 +52,12 @@
 					"isPaused": false,
 					"status": "success",
 					"variables": {
-						"currencyCode": "SAR",
-						"userId": "22f960b1-bf1e-4346-8057-7fb2f085ba09",
-						"amount": 31922.96,
+						"currencyCode": "KZT",
+						"userId": "f0c405a3-fb3f-4cba-b422-3da378da42d4",
+						"amount": 16431.38,
 						"timestamp": "2020-01-01T00:00:00.000Z",
-						"note": "Receipt \"ratione doloribus aspernatur\"",
-						"receiptId": "041aa743-f296-447d-a3a6-08b6f3f56f3c"
+						"note": "Receipt \"doloremque omnis delectus\"",
+						"receiptId": "38787032-dcd1-49e4-8a8f-302d0d601c07"
 					}
 				}
 			}

@@ -11,12 +11,12 @@
 					"isPaused": false,
 					"status": "error",
 					"variables": {
-						"currencyCode": "SAR",
-						"userId": "73e6f195-7f6b-428f-bbc8-4af845bcd79d",
-						"amount": 33069.84,
+						"currencyCode": "KZT",
+						"userId": "ba6c0d3f-b12a-4874-8c35-670f60b22ac9",
+						"amount": 19554.17,
 						"timestamp": "2020-01-01T00:00:00.000Z",
-						"note": "Receipt \"ratione doloribus aspernatur\"",
-						"receiptId": "041aa743-f296-447d-a3a6-08b6f3f56f3c"
+						"note": "Receipt \"doloremque omnis delectus\"",
+						"receiptId": "38787032-dcd1-49e4-8a8f-302d0d601c07"
 					}
 				}
 			}

@@ -1,9 +1,9 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"09e7d68b-b144-4702-854c-6201e7b4ec9c\"}]": {
+		"debts.get:[{\"id\":\"3d3cd947-f7dd-48ea-b8a4-55e4ba8bbf2b\"}]": {
 			"state": {
 				"data": {
-					"amount": 59109.49,
+					"amount": 10760.56,
 					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
 					"their": {
 						"lockedTimestamp": "2020-01-01T00:00:00.000Z"
@@ -12,7 +12,7 @@
 				"dataUpdateCount": 2
 			}
 		},
-		"receipts.get:[{\"id\":\"ae20505d-20bc-4fb8-9fe9-93339ac9e429\"}]": {
+		"receipts.get:[{\"id\":\"da4ff149-7dd7-4f3b-a126-7d12aa16851a\"}]": {
 			"state": {
 				"dataUpdateCount": 1
 			}
@@ -30,13 +30,13 @@
 					"isPaused": false,
 					"status": "success",
 					"variables": {
-						"id": "09e7d68b-b144-4702-854c-6201e7b4ec9c",
+						"id": "3d3cd947-f7dd-48ea-b8a4-55e4ba8bbf2b",
 						"update": {
-							"amount": 59109.49,
-							"currencyCode": "LVL",
+							"amount": 10760.56,
+							"currencyCode": "JOD",
 							"timestamp": "2020-01-01T00:00:00.000Z",
 							"locked": true,
-							"receiptId": "ae20505d-20bc-4fb8-9fe9-93339ac9e429"
+							"receiptId": "da4ff149-7dd7-4f3b-a126-7d12aa16851a"
 						}
 					}
 				}
