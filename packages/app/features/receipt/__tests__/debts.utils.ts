@@ -77,14 +77,14 @@ export const test = originalTest.extend<Fixtures>({
 
 	debtsInfoModal: ({ modal }, use) => use(modal("Receipt sync status")),
 
-	participantDebtRow: ({ debtsInfoModal }, use) =>
-		use(debtsInfoModal.locator("[data-testid='participant-debt']:visible")),
+	participantDebtRow: ({ page }, use) =>
+		use(page.locator("[data-testid='participant-debt']:visible")),
 
-	participantDebtStatusIcon: ({ debtsInfoModal }, use) =>
-		use(debtsInfoModal.getByTestId("participant-debt-status-icon")),
+	participantDebtStatusIcon: ({ page }, use) =>
+		use(page.getByTestId("participant-debt-status-icon")),
 
-	participantDebtAction: ({ debtsInfoModal }, use) =>
-		use(debtsInfoModal.getByTestId("participant-debt-action")),
+	participantDebtAction: ({ page }, use) =>
+		use(page.getByTestId("participant-debt-action")),
 
 	debtSyncStatus: ({ page }, use) => use(page.getByTestId("debt-sync-status")),
 

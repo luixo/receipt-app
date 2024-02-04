@@ -152,12 +152,27 @@ export const screenshotsMixin = createMixin<ScreenshotsMixin>({
 					page,
 					page.getByTestId("sticky-menu"),
 				);
+				const masks = mask.map((maskElement) => {
+					const locatorElements = Array.isArray(restScreenshotOptions.locator)
+						? restScreenshotOptions.locator
+						: [restScreenshotOptions.locator || page];
+					// We mask only those that are included in our locator
+					return locatorElements.reduce<Locator>(
+						(acc, locatorElement) =>
+							acc.or(
+								"request" in locatorElement
+									? maskElement
+									: locatorElement.locator(maskElement),
+							),
+						page.locator("never"),
+					);
+				});
 				const screenshotOptions = {
 					page,
 					fullPage,
 					mask: !isMenuActionable
-						? mask
-						: [...mask, page.getByTestId("sticky-menu")],
+						? masks
+						: [...masks, page.getByTestId("sticky-menu")],
 					animations,
 					...restScreenshotOptions,
 				};

@@ -28,7 +28,7 @@ test("Receipt participant debt", async ({
 	await openDebtsInfoModal();
 	await expectScreenshotWithSchemes("row.png", {
 		locator: participantDebtRow.first(),
-		mask: [debtSyncStatus, participantDebtRow.locator(user)],
+		mask: [debtSyncStatus, user],
 	});
 });
 
