@@ -33,6 +33,10 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 		receiptQuery.status === "success"
 			? Boolean(receiptQuery.data.lockedTimestamp)
 			: true;
+	const receiptInTransfer =
+		receiptQuery.status === "success"
+			? Boolean(receiptQuery.data.transferIntentionUserId)
+			: true;
 	const receiptCurrencyCode =
 		receiptQuery.status === "success"
 			? receiptQuery.data.currencyCode
@@ -86,6 +90,7 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 				receiptId={receiptId}
 				receiptSelfUserId={receiptSelfUserId}
 				receiptLocked={receiptLocked}
+				receiptInTransfer={receiptInTransfer}
 				currencyCode={receiptCurrencyCode}
 				isLoading={isLoading}
 			/>

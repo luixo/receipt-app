@@ -6,6 +6,7 @@ import * as debts from "./debts";
 import * as itemParticipants from "./item-participants";
 import * as receiptItems from "./receipt-items";
 import * as receiptParticipants from "./receipt-participants";
+import * as receiptTransferIntentions from "./receipt-transfer-intentions";
 import * as receipts from "./receipts";
 import * as resetPasswordIntentions from "./reset-password-intentions";
 import * as users from "./users";
@@ -22,4 +23,5 @@ export const mutations = {
 	account,
 	accountSettings,
 	resetPasswordIntentions,
+	receiptTransferIntentions,
 };

@@ -8,6 +8,8 @@ type SelectorsMixin = {
 	modalCross: Locator;
 	user: Locator;
 	errorMessage: (message?: string | RegExp) => Locator;
+	emptyCard: (message?: string | RegExp) => Locator;
+	backLink: Locator;
 };
 
 export const selectorsMixin = createMixin<SelectorsMixin>({
@@ -42,4 +44,14 @@ export const selectorsMixin = createMixin<SelectorsMixin>({
 		});
 	},
 	user: ({ page }, use) => use(page.getByTestId("user")),
+	emptyCard: async ({ page }, use) => {
+		await use((message) => {
+			const emptyCard = page.getByTestId("empty-card");
+			if (message) {
+				return emptyCard.filter({ has: page.getByText(message) });
+			}
+			return emptyCard;
+		});
+	},
+	backLink: ({ page }, use) => use(page.getByTestId("back-link")),
 });

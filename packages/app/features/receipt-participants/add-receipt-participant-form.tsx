@@ -11,6 +11,7 @@ import type { ReceiptsId, UsersId } from "next-app/db/models";
 type Props = {
 	receiptId: ReceiptsId;
 	receiptLocked: boolean;
+	receiptInTransfer: boolean;
 	disabled: boolean;
 	filterIds: UsersId[];
 } & Omit<React.ComponentProps<typeof UsersSuggest>, "onUserClick" | "options">;
@@ -18,6 +19,7 @@ type Props = {
 export const AddReceiptParticipantForm: React.FC<Props> = ({
 	receiptId,
 	receiptLocked,
+	receiptInTransfer,
 	disabled,
 	filterIds,
 	...props
@@ -55,7 +57,9 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 		<UsersSuggest
 			filterIds={[...filterIds, ...localFilterIds]}
 			onUserClick={addParticipants}
-			isDisabled={disabled || receiptLocked || !selfAccountId}
+			isDisabled={
+				disabled || receiptLocked || receiptInTransfer || !selfAccountId
+			}
 			options={React.useMemo(
 				() => ({ type: "not-connected-receipt", receiptId }),
 				[receiptId],

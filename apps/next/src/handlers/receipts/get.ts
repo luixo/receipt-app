@@ -2,7 +2,9 @@ import { TRPCError } from "@trpc/server";
 import { sql } from "kysely";
 import { z } from "zod";
 
-import type { DebtsId } from "next-app/db/models";
+import { omitUndefined } from "app/utils/utils";
+import type { DebtsId, UsersId } from "next-app/db/models";
+import type { Role } from "next-app/handlers/receipts/utils";
 import { getAccessRole } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import { receiptIdSchema } from "next-app/handlers/validation";
@@ -29,6 +31,15 @@ export const procedure = authProcedure
 		const maybeReceipt = await database
 			.selectFrom("receipts")
 			.where("receipts.id", "=", input.id)
+			.leftJoin("users as usersTransferIntention", (jb) =>
+				jb
+					.on("usersTransferIntention.ownerAccountId", "=", ctx.auth.accountId)
+					.onRef(
+						"usersTransferIntention.connectedAccountId",
+						"=",
+						"receipts.transferIntentionAccountId",
+					),
+			)
 			.innerJoin("users as usersTheir", (jb) =>
 				jb
 					.on("usersTheir.connectedAccountId", "=", ctx.auth.accountId)
@@ -66,7 +77,6 @@ export const procedure = authProcedure
 								eb("receiptItems.price", "*", eb.ref("receiptItems.quantity")),
 							),
 							sql`0`,
-							// sql.lit(0),
 						)
 						.as("sum"),
 				"receipts.ownerAccountId",
@@ -75,12 +85,16 @@ export const procedure = authProcedure
 				"receiptParticipants.resolved as participantResolved",
 				"usersMine.id as ownerUserId",
 				"usersTheir.id as selfUserId",
+				"receipts.transferIntentionAccountId",
+				"usersTransferIntention.id as transferIntentionUserId",
 			])
 			.groupBy([
 				"receipts.id",
 				"receiptParticipants.resolved",
 				"usersMine.id",
 				"usersTheir.id",
+				"receipts.transferIntentionAccountId",
+				"transferIntentionUserId",
 			])
 			.executeTakeFirst();
 		if (!maybeReceipt) {
@@ -89,7 +103,14 @@ export const procedure = authProcedure
 				message: `Receipt "${input.id}" is not found.`,
 			});
 		}
-		const { ownerAccountId, lockedTimestamp, sum, ...receipt } = maybeReceipt;
+		const {
+			ownerAccountId,
+			lockedTimestamp,
+			sum,
+			transferIntentionUserId,
+			transferIntentionAccountId,
+			...receipt
+		} = maybeReceipt;
 		const accessRole = await getAccessRole(
 			database,
 			{ ownerAccountId, id: input.id },
@@ -101,22 +122,42 @@ export const procedure = authProcedure
 				message: `Account "${ctx.auth.email}" has no access to receipt "${receipt.id}"`,
 			});
 		}
-		const common = {
+		if (
+			transferIntentionAccountId &&
+			ownerAccountId === ctx.auth.accountId &&
+			!transferIntentionUserId
+			/* c8 ignore start */
+		) {
+			throw new TRPCError({
+				code: "INTERNAL_SERVER_ERROR",
+				message:
+					"Expected to have transfer user id being an owner of a receipt with transfer intention",
+			});
+		}
+		/* c8 ignore stop */
+		type Receipt = typeof receipt & {
+			sum: number;
+			role: Role;
+			transferIntentionUserId?: UsersId;
+		};
+		const common: Receipt = omitUndefined({
 			...receipt,
 			sum: Number(sum),
 			role: accessRole,
-		};
-		type ReturnValue = typeof common & {
+			transferIntentionUserId:
+				transferIntentionAccountId && ownerAccountId === ctx.auth.accountId
+					? transferIntentionUserId!
+					: undefined,
+		});
+		type ReceiptWithTimestamp = Receipt & {
 			debt?: ReceiptDebt;
 			lockedTimestamp?: Date;
 		};
 		if (!lockedTimestamp) {
-			return common as ReturnValue;
+			return common as ReceiptWithTimestamp;
 		}
-		const commonLockedTimestamp: ReturnValue = {
-			...receipt,
-			sum: Number(sum),
-			role: accessRole,
+		const commonWithTimestamp: ReceiptWithTimestamp = {
+			...common,
 			lockedTimestamp,
 		};
 		if (ownerAccountId === ctx.auth.accountId) {
@@ -133,14 +174,14 @@ export const procedure = authProcedure
 				.execute();
 			if (results.length !== 0) {
 				return {
-					...commonLockedTimestamp,
+					...commonWithTimestamp,
 					debt: {
 						direction: "outcoming",
 						ids: results.map(({ id }) => id),
 					},
-				} satisfies ReturnValue;
+				} satisfies ReceiptWithTimestamp;
 			}
-			return commonLockedTimestamp;
+			return commonWithTimestamp;
 		}
 		const mineDebt = await database
 			.selectFrom("debts")
@@ -154,13 +195,13 @@ export const procedure = authProcedure
 			.executeTakeFirst();
 		if (mineDebt) {
 			return {
-				...commonLockedTimestamp,
+				...commonWithTimestamp,
 				debt: {
 					direction: "incoming",
 					type: "mine",
 					id: mineDebt.id,
 				},
-			} satisfies ReturnValue;
+			} satisfies ReceiptWithTimestamp;
 		}
 		const foreignDebt = await database
 			.selectFrom("debts")
@@ -181,13 +222,13 @@ export const procedure = authProcedure
 			.executeTakeFirst();
 		if (foreignDebt) {
 			return {
-				...commonLockedTimestamp,
+				...commonWithTimestamp,
 				debt: {
 					direction: "incoming",
 					type: "foreign",
 					id: foreignDebt.id,
 				},
-			} satisfies ReturnValue;
+			} satisfies ReceiptWithTimestamp;
 		}
-		return commonLockedTimestamp;
+		return commonWithTimestamp;
 	});

@@ -133,6 +133,23 @@ describe("receiptParticipants.add", () => {
 			);
 		});
 
+		test("receipt has a transfer intention", async ({ ctx }) => {
+			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { id: userId } = await insertUser(ctx, accountId);
+			const { id: foreignAccountId } = await insertAccount(ctx);
+			const { id: receiptId } = await insertReceipt(ctx, accountId, {
+				transferIntentionAccountId: foreignAccountId,
+			});
+
+			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			await expectTRPCError(
+				() =>
+					caller.procedure({ receiptId, userIds: [userId], role: "editor" }),
+				"BAD_REQUEST",
+				`Cannot add participants to receipt "${receiptId}" as it has transfer intention.`,
+			);
+		});
+
 		describe("one of the users", () => {
 			test("does not exist", async ({ ctx }) => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);

@@ -36,6 +36,7 @@ type Fixtures = {
 		receipt: ReturnType<GenerateReceipt>;
 		participants: ReturnType<GenerateReceiptParticipants>;
 		receiptItemsParts: ReturnType<GenerateReceiptItemsParts>;
+		users: ReturnType<GenerateUsers>;
 	};
 	openReceipt: (id: ReceiptsId) => Promise<void>;
 };
@@ -79,6 +80,7 @@ export const test = originalTest.extend<Fixtures>({
 					selfAccount,
 					receiptBase,
 					receiptItemsParts,
+					users,
 				});
 				api.mock("receipts.get", (input) => {
 					if (input.id !== receiptBase.id) {
@@ -120,7 +122,13 @@ export const test = originalTest.extend<Fixtures>({
 							remoteId: matchedUser.id,
 							name: matchedUser.name,
 							publicName: undefined,
-							connectedAccount: undefined,
+							connectedAccount: matchedUser.connectedAccount
+								? {
+										id: matchedUser.connectedAccount.id,
+										email: matchedUser.connectedAccount.email,
+										avatarUrl: matchedUser.connectedAccount.avatarUrl,
+								  }
+								: undefined,
 							localId: matchedUser.id,
 						};
 					}
@@ -142,6 +150,7 @@ export const test = originalTest.extend<Fixtures>({
 					receipt,
 					participants,
 					receiptItemsParts,
+					users,
 				};
 			},
 		),

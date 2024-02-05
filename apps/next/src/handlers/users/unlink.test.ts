@@ -6,6 +6,7 @@ import {
 	insertAccount,
 	insertAccountWithSession,
 	insertConnectedUsers,
+	insertReceipt,
 	insertUser,
 } from "@tests/backend/utils/data";
 import {
@@ -98,6 +99,12 @@ describe("users.unlink", () => {
 				accountId,
 				otherAccountId,
 			]);
+			await insertReceipt(ctx, accountId, {
+				transferIntentionAccountId: otherAccountId,
+			});
+			await insertReceipt(ctx, otherAccountId, {
+				transferIntentionAccountId: accountId,
+			});
 			// Verify other users are not affected
 			await insertUser(ctx, accountId);
 			await insertUser(ctx, otherAccountId);

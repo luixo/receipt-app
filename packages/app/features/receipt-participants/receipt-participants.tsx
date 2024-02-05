@@ -37,6 +37,7 @@ type Props = {
 	receiptId: ReceiptsId;
 	receiptSelfUserId?: UsersId;
 	receiptLocked: boolean;
+	receiptInTransfer: boolean;
 	currencyCode?: CurrencyCode;
 	isLoading: boolean;
 };
@@ -44,6 +45,7 @@ type Props = {
 export const ReceiptParticipants: React.FC<Props> = ({
 	data,
 	receiptLocked,
+	receiptInTransfer,
 	receiptSelfUserId,
 	currencyCode,
 	receiptId,
@@ -120,6 +122,7 @@ export const ReceiptParticipants: React.FC<Props> = ({
 						disabled={isLoading}
 						receiptId={receiptId}
 						receiptLocked={receiptLocked}
+						receiptInTransfer={receiptInTransfer}
 						filterIds={participants.map(
 							(participant) => participant.remoteUserId,
 						)}

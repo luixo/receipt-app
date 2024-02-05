@@ -1,0 +1,11 @@
+{
+	"mutations": {
+		"receiptTransferIntentions.accept": {
+			"1": {
+				"state": {
+					"status": "success"
+				}
+			}
+		}
+	}
+}

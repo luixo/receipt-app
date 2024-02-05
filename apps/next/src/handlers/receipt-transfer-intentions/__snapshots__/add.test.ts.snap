@@ -1,0 +1,13 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`receiptTransferIntentions.add > functionality > transfer intention is added 1`] = `
+{
+  "updated": {
+    "receipts": {
+      "id:a5a9a69e-ad0f-404b-b6de-75bbc69db351": {
+        "transferIntentionAccountId": "e9140e99-b5f6-426f-9023-3ba138cbb448",
+      },
+    },
+  },
+}
+`;

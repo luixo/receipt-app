@@ -21,7 +21,7 @@ export const procedure = authProcedure
 		const { database } = ctx;
 		const receipt = await database
 			.selectFrom("receipts")
-			.select("ownerAccountId")
+			.select(["ownerAccountId", "transferIntentionAccountId"])
 			.where("id", "=", input.receiptId)
 			.executeTakeFirst();
 		if (!receipt) {
@@ -36,6 +36,12 @@ export const procedure = authProcedure
 				message: `Not enough rights to add ${
 					input.userIds.length === 1 ? "participant" : "participants"
 				} to receipt "${input.receiptId}".`,
+			});
+		}
+		if (receipt.transferIntentionAccountId) {
+			throw new TRPCError({
+				code: "BAD_REQUEST",
+				message: `Cannot add participants to receipt "${input.receiptId}" as it has transfer intention.`,
 			});
 		}
 		return addReceiptParticipants(

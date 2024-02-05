@@ -15,7 +15,11 @@ type Props = React.PropsWithChildren<{
 	Omit<React.ComponentProps<typeof View>, "children">;
 
 export const EmptyCard = React.memo<Props>(({ title, children, ...props }) => (
-	<View {...props} className={wrapper({ className: props.className })}>
+	<View
+		{...props}
+		className={wrapper({ className: props.className })}
+		testID="empty-card"
+	>
 		<Header size="lg" className="text-center">
 			{title}
 		</Header>

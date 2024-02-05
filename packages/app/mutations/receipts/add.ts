@@ -26,6 +26,7 @@ export const options: UseContextedMutationOptions<
 						lockedTimestamp: undefined,
 						remoteUserId: selfAccountId as UsersId,
 						sum: 0,
+						transferIntentionUserId: undefined,
 					});
 				},
 				get: (controller) =>

@@ -41,7 +41,8 @@ export const procedure = authProcedure
 				message: `User "${input.id}" is not owned by "${ctx.auth.email}".`,
 			});
 		}
-		if (!user.connectedAccountId) {
+		const { connectedAccountId } = user;
+		if (!connectedAccountId) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
 				message: `User "${input.id}" doesn't have account connected to it.`,
@@ -66,5 +67,17 @@ export const procedure = authProcedure
 				.set({ connectedAccountId: null })
 				.where("id", "=", user.theirUserId)
 				.executeTakeFirst();
+			await tx
+				.updateTable("receipts")
+				.set({ transferIntentionAccountId: null })
+				.where("receipts.ownerAccountId", "=", ctx.auth.accountId)
+				.where("receipts.transferIntentionAccountId", "=", connectedAccountId)
+				.execute();
+			await tx
+				.updateTable("receipts")
+				.set({ transferIntentionAccountId: null })
+				.where("receipts.ownerAccountId", "=", connectedAccountId)
+				.where("receipts.transferIntentionAccountId", "=", ctx.auth.accountId)
+				.execute();
 		});
 	});

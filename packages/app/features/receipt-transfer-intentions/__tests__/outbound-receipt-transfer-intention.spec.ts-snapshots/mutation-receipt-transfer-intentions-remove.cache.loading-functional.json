@@ -1,0 +1,28 @@
+{
+	"queries": {
+		"receiptTransferIntentions.getAll": {
+			"state": {
+				"data": {
+					"outbound": {
+						"1": "<undefined>"
+					}
+				},
+				"dataUpdateCount": 2
+			}
+		}
+	},
+	"mutations": {
+		"receiptTransferIntentions.remove": {
+			"1": {
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "pending",
+					"variables": {
+						"receiptId": "fbca1e31-4670-41d5-8084-d416214fee0b"
+					}
+				}
+			}
+		}
+	}
+}
