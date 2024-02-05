@@ -16,6 +16,7 @@ import { DebtsIntentionsScreen } from "app/features/debts-intentions/debts-inten
 import { HomeScreen } from "app/features/home/home-screen";
 import { LoginScreen } from "app/features/login/login-screen";
 import { ReceiptScreen } from "app/features/receipt/receipt-screen";
+import { ReceiptTransferIntentionsScreen } from "app/features/receipt-transfer-intentions/receipt-transfer-intentions-screen";
 import { ReceiptsScreen } from "app/features/receipts/receipts-screen";
 import { RegisterScreen } from "app/features/register/register-screen";
 import { ResetPasswordScreen } from "app/features/reset-password/reset-password-screen";
@@ -60,6 +61,7 @@ export type AppParamList = {
 	settings: undefined;
 	addDebt: undefined;
 	debtsSyncIntentions: undefined;
+	receiptTransferIntentions: undefined;
 };
 
 const Stack = createNativeStackNavigator<AppParamList>();
@@ -134,6 +136,13 @@ export const NativeNavigation: React.FC = () => (
 			component={ConnectionIntentionsScreen}
 			options={{
 				title: "Connection intentions",
+			}}
+		/>
+		<Stack.Screen
+			name="receiptTransferIntentions"
+			component={ReceiptTransferIntentionsScreen}
+			options={{
+				title: "Receipt transfer intentions",
 			}}
 		/>
 		<Stack.Screen

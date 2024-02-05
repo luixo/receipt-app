@@ -61,7 +61,7 @@ const getSnapshotName = (
 	return [...path, name];
 };
 
-type KeysLists = {
+export type KeysLists = {
 	whitelistKeys: TRPCKey[];
 	blacklistKeys: TRPCKey[];
 };
@@ -280,6 +280,7 @@ export const DEFAULT_BLACKLIST_KEYS: TRPCKey[] = [
 	"receipts.getNonResolvedAmount",
 	"debts.getIntentions",
 	"accountConnectionIntentions.getAll",
+	"receiptTransferIntentions.getAll",
 ];
 
 type AwaitCacheDescription<T extends TRPCKey = TRPCKey> = {

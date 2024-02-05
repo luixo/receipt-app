@@ -1,0 +1,18 @@
+{
+	"queries": {
+		"receiptTransferIntentions.getAll": {
+			"state": {
+				"data": {
+					"inbound": [],
+					"outbound": []
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}

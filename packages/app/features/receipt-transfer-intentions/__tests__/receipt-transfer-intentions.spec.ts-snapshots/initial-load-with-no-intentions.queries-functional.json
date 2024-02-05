@@ -1,0 +1,5 @@
+{
+	"receiptTransferIntentions.getAll": {
+		"serverCalls": 1
+	}
+}

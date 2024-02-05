@@ -20,6 +20,7 @@ import { ReceiptGuestControlButton } from "./receipt-guest-control-button";
 import { ReceiptNameInput } from "./receipt-name-input";
 import { ReceiptOwnerControlButton } from "./receipt-owner-control-button";
 import { ReceiptRemoveButton } from "./receipt-remove-button";
+import { ReceiptTransferModal } from "./receipt-transfer-modal";
 
 type InnerProps = {
 	query: TRPCQuerySuccessResult<"receipts.get">;
@@ -91,11 +92,17 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 				<LoadableUser id={receipt.ownerUserId} />
 			</View>
 			{receipt.role === "owner" ? (
-				<ReceiptRemoveButton
-					className="self-end"
-					receipt={receipt}
-					setLoading={setDeleteLoading}
-				/>
+				<View className="max-xs:flex-col flex-row items-end justify-end gap-2">
+					<ReceiptTransferModal
+						receipt={receipt}
+						deleteLoading={deleteLoading}
+					/>
+					<ReceiptRemoveButton
+						className="self-end"
+						receipt={receipt}
+						setLoading={setDeleteLoading}
+					/>
+				</View>
 			) : null}
 		</>
 	);

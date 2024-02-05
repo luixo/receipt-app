@@ -6,7 +6,10 @@ import type { ReceiptsId } from "next-app/db/models";
 import type { GenerateDebts } from "./debts.generators";
 import { defaultGenerateDebts } from "./debts.generators";
 import type { GenerateReceipt } from "./generators";
-import { defaultGenerateReceipt } from "./generators";
+import {
+	defaultGenerateReceipt,
+	defaultGenerateReceiptBase,
+} from "./generators";
 import { test as originalTest } from "./utils";
 
 type LocalGenerateReceipt = (
@@ -120,7 +123,12 @@ export const test = originalTest.extend<Fixtures>({
 			} = {}) => {
 				const result = mockReceipt({
 					generateSelfAccount,
-					generateReceiptBase,
+					generateReceiptBase:
+						generateReceiptBase ||
+						((opts) => ({
+							...defaultGenerateReceiptBase(opts),
+							lockedTimestamp: new Date(),
+						})),
 					generateUsers,
 					generateReceiptItems,
 					generateReceiptParticipants,
@@ -139,6 +147,7 @@ export const test = originalTest.extend<Fixtures>({
 					selfAccount: result.selfAccount,
 					receiptBase: result.receiptBase,
 					receiptItemsParts: result.receiptItemsParts,
+					users: result.users,
 					debts,
 				});
 				api.mock("receipts.get", (input) => {

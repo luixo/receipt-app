@@ -52,7 +52,6 @@ export const defaultGenerateReceiptBase: GenerateReceiptBase = ({ faker }) => ({
 	currencyCode: getRandomCurrencyCode(faker),
 	issued: new Date(),
 	role: "owner",
-	lockedTimestamp: new Date(),
 });
 
 export type GenerateReceiptItems = (opts: {
@@ -86,6 +85,11 @@ export type GenerateUsers = (opts: {
 }) => {
 	id: UsersId;
 	name: string;
+	connectedAccount?: {
+		id: AccountsId;
+		email: string;
+		avatarUrl?: string;
+	};
 }[];
 
 export const defaultGenerateUsers: GenerateUsers = ({
@@ -173,6 +177,7 @@ export type GenerateReceipt = (opts: {
 	selfAccount: ReturnType<GenerateSelfAccount>;
 	receiptBase: ReturnType<GenerateReceiptBase>;
 	receiptItemsParts: ReturnType<GenerateReceiptItemsParts>;
+	users: ReturnType<GenerateUsers>;
 }) => TRPCQueryOutput<"receipts.get">;
 
 export const defaultGenerateReceipt: GenerateReceipt = ({

@@ -169,6 +169,42 @@ describe("receipts.get", () => {
 					role: "owner",
 				});
 			});
+
+			test("with transfer intention", async ({ ctx }) => {
+				const {
+					sessionId,
+					accountId,
+					userId: selfUserId,
+				} = await insertAccountWithSession(ctx);
+				const { id: foreignAccountId } = await insertAccount(ctx);
+				const receipt = await insertReceipt(ctx, accountId, {
+					lockedTimestamp: new Date(),
+					transferIntentionAccountId: foreignAccountId,
+				});
+				const [foreignUser] = await insertConnectedUsers(ctx, [
+					accountId,
+					foreignAccountId,
+				]);
+
+				// Verify other users do not interfere
+				await insertReceipt(ctx, foreignAccountId);
+
+				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const result = await caller.procedure({ id: receipt.id });
+				expect(result).toStrictEqual<typeof result>({
+					id: receipt.id,
+					name: receipt.name,
+					currencyCode: receipt.currencyCode,
+					issued: receipt.issued,
+					participantResolved: null,
+					ownerUserId: selfUserId,
+					selfUserId,
+					lockedTimestamp: receipt.lockedTimestamp || undefined,
+					sum: 0,
+					role: "owner",
+					transferIntentionUserId: foreignUser.id,
+				});
+			});
 		});
 
 		test("sum is calculated properly", async ({ ctx }) => {

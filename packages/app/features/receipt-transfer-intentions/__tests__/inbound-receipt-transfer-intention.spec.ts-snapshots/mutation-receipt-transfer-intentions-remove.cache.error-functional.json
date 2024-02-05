@@ -1,0 +1,27 @@
+{
+	"queries": {
+		"receiptTransferIntentions.getAll": {
+			"state": {
+				"dataUpdateCount": 3
+			}
+		}
+	},
+	"mutations": {
+		"receiptTransferIntentions.remove": [
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"receiptTransferIntentions.remove\" error"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error",
+					"variables": {
+						"receiptId": "67fa9977-29dc-4b29-8769-ec52ce8e85bd"
+					}
+				}
+			}
+		]
+	}
+}

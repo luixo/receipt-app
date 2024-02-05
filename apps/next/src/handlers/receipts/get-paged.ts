@@ -3,10 +3,7 @@ import { z } from "zod";
 
 import type { UsersId } from "next-app/db/models";
 import type { Role } from "next-app/handlers/receipts/utils";
-import {
-	getForeignReceipts,
-	getOwnReceipts,
-} from "next-app/handlers/receipts/utils";
+import { getForeignReceipts } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import { limitSchema, offsetSchema } from "next-app/handlers/validation";
 
@@ -28,7 +25,9 @@ export const procedure = authProcedure
 	.query(async ({ input: { filters = {}, ...input }, ctx }) => {
 		const { database } = ctx;
 		const foreignReceipts = getForeignReceipts(database, ctx.auth.accountId);
-		const ownReceipts = getOwnReceipts(database, ctx.auth.accountId);
+		const ownReceipts = database
+			.selectFrom("receipts")
+			.where("receipts.ownerAccountId", "=", ctx.auth.accountId);
 
 		const [receipts, receiptsCount] = await Promise.all([
 			database
@@ -41,21 +40,39 @@ export const procedure = authProcedure
 						"receipts.currencyCode",
 						"receipts.lockedTimestamp",
 						"users.id as remoteUserId",
+						sql`cast(null as uuid)`
+							.$castTo<UsersId | null>()
+							.as("transferIntentionUserId"),
 					]);
-					const ownReceiptsBuilder = ownReceipts.select([
-						"receipts.id as receiptId",
-						sql.lit("owner").$castTo<Role>().as("role"),
-						"receipts.name",
-						"receipts.issued",
-						"receipts.currencyCode",
-						"receipts.lockedTimestamp",
-						// We use `userId` = `ownerAccountId` contract
-						// But type system doesn't know about that
-						sql
-							.id("receipts", "ownerAccountId")
-							.$castTo<UsersId>()
-							.as("remoteUserId"),
-					]);
+					const ownReceiptsBuilder = ownReceipts
+						.leftJoin("users as usersTransferIntention", (jb) =>
+							jb
+								.on(
+									"usersTransferIntention.ownerAccountId",
+									"=",
+									ctx.auth.accountId,
+								)
+								.onRef(
+									"usersTransferIntention.connectedAccountId",
+									"=",
+									"receipts.transferIntentionAccountId",
+								),
+						)
+						.select([
+							"receipts.id as receiptId",
+							sql.lit("owner").$castTo<Role>().as("role"),
+							"receipts.name",
+							"receipts.issued",
+							"receipts.currencyCode",
+							"receipts.lockedTimestamp",
+							// We use `userId` = `ownerAccountId` contract
+							// But type system doesn't know about that
+							sql
+								.id("receipts", "ownerAccountId")
+								.$castTo<UsersId>()
+								.as("remoteUserId"),
+							"usersTransferIntention.id as transferIntentionUserId",
+						]);
 					if (typeof filters.ownedByMe !== "boolean") {
 						return foreignReceiptsBuilder.union(ownReceiptsBuilder);
 					}
@@ -90,6 +107,7 @@ export const procedure = authProcedure
 					"mergedReceipts.lockedTimestamp",
 					"receiptParticipants.resolved as participantResolved",
 					"mergedReceipts.remoteUserId",
+					"mergedReceipts.transferIntentionUserId",
 					(eb) =>
 						eb.fn
 							.sum(
@@ -112,6 +130,7 @@ export const procedure = authProcedure
 					"mergedReceipts.currencyCode",
 					"mergedReceipts.lockedTimestamp",
 					"receiptParticipants.resolved",
+					"mergedReceipts.transferIntentionUserId",
 					"mergedReceipts.remoteUserId",
 				])
 				.orderBy(
@@ -121,7 +140,16 @@ export const procedure = authProcedure
 				// Stable order for receipts with the same date
 				.orderBy("mergedReceipts.receiptId")
 				.$if(typeof filters.resolvedByMe === "boolean", (qb) =>
-					qb.where("receiptParticipants.resolved", "=", filters.resolvedByMe!),
+					qb.where((eb) =>
+						eb.or(
+							filters.resolvedByMe === false
+								? [
+										eb("receiptParticipants.resolved", "=", false),
+										eb("receiptParticipants.resolved", "is", null),
+								  ]
+								: [eb("receiptParticipants.resolved", "=", true)],
+						),
+					),
 				)
 				.$if(typeof filters.locked === "boolean", (qb) =>
 					qb.where(
@@ -180,7 +208,16 @@ export const procedure = authProcedure
 				.selectFrom("mergedReceipts")
 				.select(database.fn.sum<string>("amount").as("amount"))
 				.$if(typeof filters.resolvedByMe === "boolean", (qb) =>
-					qb.where("resolved", "=", filters.resolvedByMe!),
+					qb.where((eb) =>
+						eb.or(
+							filters.resolvedByMe === false
+								? [
+										eb("mergedReceipts.resolved", "=", false),
+										eb("mergedReceipts.resolved", "is", null),
+								  ]
+								: [eb("mergedReceipts.resolved", "=", true)],
+						),
+					),
 				)
 				.$if(typeof filters.locked === "boolean", (qb) =>
 					qb.where(
@@ -198,10 +235,13 @@ export const procedure = authProcedure
 			cursor: input.cursor,
 			items: receipts
 				.slice(0, input.limit)
-				.map(({ lockedTimestamp, sum, ...receipt }) => ({
-					...receipt,
-					sum: Number(sum),
-					lockedTimestamp: lockedTimestamp || undefined,
-				})),
+				.map(
+					({ lockedTimestamp, sum, transferIntentionUserId, ...receipt }) => ({
+						...receipt,
+						transferIntentionUserId: transferIntentionUserId || undefined,
+						sum: Number(sum),
+						lockedTimestamp: lockedTimestamp || undefined,
+					}),
+				),
 		};
 	});

@@ -1,0 +1,27 @@
+{
+	"queries": {
+		"receipts.get:[{\"id\":\"75f0807c-1fb2-4341-bf77-49320c905fab\"}]": {
+			"state": {
+				"data": {
+					"transferIntentionUserId": "8081ef77-9566-48e0-8052-a113c51387b6"
+				},
+				"dataUpdateCount": 1
+			}
+		}
+	},
+	"mutations": {
+		"receiptTransferIntentions.add": {
+			"1": {
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "pending",
+					"variables": {
+						"receiptId": "75f0807c-1fb2-4341-bf77-49320c905fab",
+						"targetEmail": "Nora73@yahoo.com"
+					}
+				}
+			}
+		}
+	}
+}
