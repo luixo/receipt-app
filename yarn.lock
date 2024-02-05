@@ -5247,6 +5247,31 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@nextui-org/tooltip@patch:@nextui-org/tooltip@npm%3A2.0.29#./patches/@nextui-org-tooltip-npm-2.0.29.patch::locator=receipt-app%40workspace%3A.":
+  version: 2.0.29
+  resolution: "@nextui-org/tooltip@patch:@nextui-org/tooltip@npm%3A2.0.29#./patches/@nextui-org-tooltip-npm-2.0.29.patch::version=2.0.29&hash=b8bd50&locator=receipt-app%40workspace%3A."
+  dependencies:
+    "@nextui-org/aria-utils": 2.0.15
+    "@nextui-org/framer-transitions": 2.0.15
+    "@nextui-org/react-utils": 2.0.10
+    "@nextui-org/shared-utils": 2.0.4
+    "@react-aria/interactions": ^3.19.1
+    "@react-aria/overlays": ^3.18.1
+    "@react-aria/tooltip": ^3.6.4
+    "@react-aria/utils": ^3.21.1
+    "@react-stately/tooltip": ^3.4.5
+    "@react-types/overlays": ^3.8.3
+    "@react-types/tooltip": ^3.4.5
+  peerDependencies:
+    "@nextui-org/system": ">=2.0.0"
+    "@nextui-org/theme": ">=2.1.0"
+    framer-motion: ">=4.0.0"
+    react: ">=18"
+    react-dom: ">=18"
+  checksum: 2786fa8da9e76cf7b0a55f6d0440995dd88488bd70d62499298921f70dac5c2c8b0e79e7a95b79be013d52186aa41e2edc45178c94523804574a35acf31b9278
+  languageName: node
+  linkType: hard
+
 "@nextui-org/use-aria-accordion@npm:2.0.2":
   version: 2.0.2
   resolution: "@nextui-org/use-aria-accordion@npm:2.0.2"
