@@ -162,7 +162,7 @@ export const AccountAvatarInput: React.FC<Props> = ({ account, children }) => {
 	const avatar = (
 		<UserAvatar
 			id={account.id as UsersId}
-			account={account}
+			connectedAccount={account}
 			onClick={enableAvatarEdit}
 			size="lg"
 			className="cursor-pointer"
