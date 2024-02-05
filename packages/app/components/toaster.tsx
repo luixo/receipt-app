@@ -7,7 +7,7 @@ import { Toaster as RawToaster, ToastBar, toast } from "react-hot-toast";
 
 declare global {
 	interface Window {
-		dismissToasts: () => void;
+		removeToasts: () => void;
 	}
 }
 
@@ -44,7 +44,7 @@ const Toast: React.FC<ToastType> = (toastInstance) => {
 
 export const Toaster: React.FC = () => {
 	React.useEffect(() => {
-		window.dismissToasts = () => toast.dismiss();
+		window.removeToasts = () => toast.remove();
 	}, []);
 	return (
 		<RawToaster

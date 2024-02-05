@@ -58,10 +58,10 @@ export const toastsMixin = createMixin<ToastsMixin>({
 			expect
 				.poll(async () => {
 					await page.evaluate(() => {
-						if (!window.dismissToasts) {
+						if (!window.removeToasts) {
 							return;
 						}
-						window.dismissToasts();
+						window.removeToasts();
 					});
 					return page.locator(TOAST_SELECTOR).count();
 				})
