@@ -1,21 +1,37 @@
+import type { QueryClient } from "@tanstack/react-query";
+import { getQueryKey } from "@trpc/react-query";
+
 import * as utils from "app/cache/utils";
-import type { TRPCQueryOutput, TRPCReactContext } from "app/trpc";
+import { trpc } from "app/trpc";
+import type {
+	TRPCQueryInput,
+	TRPCQueryOutput,
+	TRPCReactContext,
+} from "app/trpc";
 import type { ItemWithIndex } from "app/utils/array";
 import { addToArray, removeFromArray, replaceInArray } from "app/utils/array";
+import { nonNullishGuard } from "app/utils/utils";
 import type { ReceiptsId, UsersId } from "next-app/db/models";
 
 type Controller = TRPCReactContext["receipts"]["getResolvedParticipants"];
 
 type ReceiptParticipants = TRPCQueryOutput<"receipts.getResolvedParticipants">;
 type ReceiptParticipant = ReceiptParticipants[number];
+type Input = TRPCQueryInput<"receipts.getResolvedParticipants">;
+
+const getInputs = (queryClient: QueryClient) =>
+	utils.getAllInputs<"receipts.getResolvedParticipants">(
+		queryClient,
+		getQueryKey(trpc.receipts.getResolvedParticipants),
+	);
 
 const updateItems =
 	(controller: Controller, receiptId: ReceiptsId) =>
 	(updater: utils.UpdateFn<ReceiptParticipants>) =>
 		utils.withRef<ReceiptParticipants | undefined>((ref) => {
 			ref.current = controller.getData({ receiptId });
-			controller.setData({ receiptId }, (amount) =>
-				amount === undefined ? undefined : updater(amount),
+			controller.setData({ receiptId }, (items) =>
+				items === undefined ? undefined : updater(items),
 			);
 		}).current;
 
@@ -30,6 +46,24 @@ const invalidate = (controller: Controller, receiptId: ReceiptsId) =>
 		ref.current = controller.getData({ receiptId });
 		return controller.invalidate({ receiptId });
 	}).current;
+
+const invalidateBy = (
+	controller: Controller,
+	inputs: Input[],
+	filterFn: (participants: ReceiptParticipants) => boolean,
+) => {
+	const prevValues = inputs
+		.map((input) => {
+			const data = controller.getData(input);
+			return data ? ([input, data] as const) : null;
+		})
+		.filter(nonNullishGuard);
+	prevValues
+		.filter(([, value]) => filterFn(value))
+		.forEach(([input]) => {
+			void controller.invalidate(input);
+		});
+};
 
 const add = (
 	controller: Controller,
@@ -60,6 +94,31 @@ const remove = (
 		),
 	).current;
 
+const removeAll = (controller: Controller, inputs: Input[], userId: UsersId) =>
+	utils.withRef<
+		{
+			value: ReceiptParticipant;
+			input: Input;
+			index: number;
+		}[]
+	>((ref) => {
+		inputs.forEach((input) => {
+			updateItems(
+				controller,
+				input.receiptId,
+			)((participants) =>
+				removeFromArray(participants, (participant, index) => {
+					const matched = participant.remoteUserId === userId;
+					if (!matched) {
+						return false;
+					}
+					ref.current.push({ value: participant, input, index });
+					return true;
+				}),
+			);
+		});
+	}, []).current;
+
 const update =
 	(controller: Controller, receiptId: ReceiptsId, userId: UsersId) =>
 	(updater: utils.UpdateFn<ReceiptParticipant>) =>
@@ -77,8 +136,12 @@ const update =
 			),
 		).current;
 
-export const getController = ({ trpcContext }: utils.ControllerContext) => {
+export const getController = ({
+	trpcContext,
+	queryClient,
+}: utils.ControllerContext) => {
 	const controller = trpcContext.receipts.getResolvedParticipants;
+	const inputs = getInputs(queryClient);
 	return {
 		update: (
 			receiptId: ReceiptsId,
@@ -90,13 +153,17 @@ export const getController = ({ trpcContext }: utils.ControllerContext) => {
 		upsert: (receiptId: ReceiptsId, items: ReceiptParticipants) =>
 			upsert(controller, receiptId, items),
 		invalidate: (receiptId: ReceiptsId) => invalidate(controller, receiptId),
+		invalidateBy: (filterFn: (participants: ReceiptParticipants) => boolean) =>
+			invalidateBy(controller, inputs, filterFn),
 	};
 };
 
 export const getRevertController = ({
 	trpcContext,
+	queryClient,
 }: utils.ControllerContext) => {
 	const controller = trpcContext.receipts.getResolvedParticipants;
+	const inputs = getInputs(queryClient);
 	return {
 		update: (
 			receiptId: ReceiptsId,
@@ -118,6 +185,14 @@ export const getRevertController = ({
 			utils.applyWithRevert(
 				() => remove(controller, receiptId, userId),
 				({ item, index }) => add(controller, receiptId, item, index),
+			),
+		removeAll: (userId: UsersId) =>
+			utils.applyWithRevert(
+				() => removeAll(controller, inputs, userId),
+				(prevRefs) =>
+					prevRefs.forEach(({ input, value, index }) =>
+						add(controller, input.receiptId, value, index),
+					),
 			),
 		upsert: (receiptId: ReceiptsId, items: ReceiptParticipants) =>
 			utils.applyWithRevert(

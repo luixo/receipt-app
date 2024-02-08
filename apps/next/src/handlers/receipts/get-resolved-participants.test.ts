@@ -94,12 +94,16 @@ describe("receipts.getResolvedParticipants", () => {
 				accountId,
 				userId: selfUserId,
 			} = await insertAccountWithSession(ctx);
+			const { id: otherAccountId } = await insertAccount(ctx);
 			const { id: receiptId } = await insertReceipt(ctx, accountId);
 			// some users are resolved
 			await insertReceiptParticipant(ctx, receiptId, selfUserId, {
 				resolved: true,
 			});
-			const { id: userId } = await insertUser(ctx, accountId);
+			const [{ id: userId }] = await insertConnectedUsers(ctx, [
+				accountId,
+				otherAccountId,
+			]);
 			await insertReceiptParticipant(ctx, receiptId, userId);
 
 			// Verify other receipts do not interfere
@@ -111,6 +115,9 @@ describe("receipts.getResolvedParticipants", () => {
 				foreignAccountId,
 			);
 			await insertReceiptParticipant(ctx, foreignReceiptId, userId);
+			// Verify not connected users do not show up in resolved participants response
+			const { id: notConnectedUserId } = await insertUser(ctx, accountId);
+			await insertReceiptParticipant(ctx, receiptId, notConnectedUserId);
 
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ receiptId });
@@ -170,6 +177,17 @@ describe("receipts.getResolvedParticipants", () => {
 				ctx,
 				foreignReceiptId,
 				foreignToSelfUserId,
+			);
+
+			// Verify not connected users do not show up in resolved participants response
+			const { id: notConnectedForeignUserId } = await insertUser(
+				ctx,
+				foreignAccountId,
+			);
+			await insertReceiptParticipant(
+				ctx,
+				foreignReceiptId,
+				notConnectedForeignUserId,
 			);
 
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));

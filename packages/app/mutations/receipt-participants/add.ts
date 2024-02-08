@@ -49,6 +49,9 @@ export const options: UseContextedMutationOptions<
 					},
 					getResolvedParticipants: (controller) => {
 						result.forEach((item) => {
+							if (!item.connectedAccount) {
+								return;
+							}
 							controller.add(receiptId, {
 								remoteUserId: item.id,
 								resolved: false,

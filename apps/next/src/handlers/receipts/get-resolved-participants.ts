@@ -41,6 +41,7 @@ export const procedure = authProcedure
 			.innerJoin("users as usersTheir", (jb) =>
 				jb.onRef("usersTheir.id", "=", "receiptParticipants.userId"),
 			)
+			.where("usersTheir.connectedAccountId", "is not", null)
 			.leftJoin("users as usersMine", (jb) =>
 				jb
 					.onRef(
