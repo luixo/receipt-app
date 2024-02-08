@@ -376,7 +376,8 @@ describe("receipts.getPaged", () => {
 					await runFunctionalTest(
 						ctx,
 						(input) => ({ ...input, filters: { resolvedByMe: true } }),
-						(items) => items.filter((receipt) => receipt.participantResolved),
+						(items) =>
+							items.filter((receipt) => receipt.participantResolved === true),
 					);
 				});
 
@@ -384,7 +385,8 @@ describe("receipts.getPaged", () => {
 					await runFunctionalTest(
 						ctx,
 						(input) => ({ ...input, filters: { resolvedByMe: false } }),
-						(items) => items.filter((receipt) => !receipt.participantResolved),
+						(items) =>
+							items.filter((receipt) => receipt.participantResolved === false),
 					);
 				});
 			});

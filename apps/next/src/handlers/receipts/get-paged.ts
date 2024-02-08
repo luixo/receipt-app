@@ -140,15 +140,10 @@ export const procedure = authProcedure
 				// Stable order for receipts with the same date
 				.orderBy("mergedReceipts.receiptId")
 				.$if(typeof filters.resolvedByMe === "boolean", (qb) =>
-					qb.where((eb) =>
-						eb.or(
-							filters.resolvedByMe === false
-								? [
-										eb("receiptParticipants.resolved", "=", false),
-										eb("receiptParticipants.resolved", "is", null),
-								  ]
-								: [eb("receiptParticipants.resolved", "=", true)],
-						),
+					qb.where(
+						"receiptParticipants.resolved",
+						"=",
+						Boolean(filters.resolvedByMe),
 					),
 				)
 				.$if(typeof filters.locked === "boolean", (qb) =>
@@ -208,15 +203,10 @@ export const procedure = authProcedure
 				.selectFrom("mergedReceipts")
 				.select(database.fn.sum<string>("amount").as("amount"))
 				.$if(typeof filters.resolvedByMe === "boolean", (qb) =>
-					qb.where((eb) =>
-						eb.or(
-							filters.resolvedByMe === false
-								? [
-										eb("mergedReceipts.resolved", "=", false),
-										eb("mergedReceipts.resolved", "is", null),
-								  ]
-								: [eb("mergedReceipts.resolved", "=", true)],
-						),
+					qb.where(
+						"mergedReceipts.resolved",
+						"=",
+						Boolean(filters.resolvedByMe),
 					),
 				)
 				.$if(typeof filters.locked === "boolean", (qb) =>
