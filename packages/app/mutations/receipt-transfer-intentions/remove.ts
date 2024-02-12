@@ -22,18 +22,7 @@ export const options: UseContextedMutationOptions<"receiptTransferIntentions.rem
 								}),
 							),
 						getNonResolvedAmount: undefined,
-						getPaged: (controller) =>
-							controller.update(
-								receiptId,
-								(receipt) => ({
-									...receipt,
-									transferIntentionUserId: undefined,
-								}),
-								(snapshot) => (receipt) => ({
-									...receipt,
-									transferIntentionUserId: snapshot.transferIntentionUserId,
-								}),
-							),
+						getPaged: undefined,
 						getResolvedParticipants: undefined,
 					}),
 					cache.receiptTransferIntentions.updateRevert(controllerContext, {

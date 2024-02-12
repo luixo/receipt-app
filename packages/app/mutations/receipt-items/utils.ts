@@ -22,11 +22,7 @@ export const updateReceiptSum = (
 				...receipt,
 				sum: nextSum,
 			})),
-		getPaged: (controller) =>
-			controller.update(receiptId, (receipt) => ({
-				...receipt,
-				sum: nextSum,
-			})),
+		getPaged: undefined,
 		getNonResolvedAmount: undefined,
 		getResolvedParticipants: undefined,
 	});

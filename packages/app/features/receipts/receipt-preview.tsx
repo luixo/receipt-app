@@ -14,11 +14,11 @@ import { mutations } from "app/mutations";
 import type { TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
 
-type Props = {
-	receipt: TRPCQueryOutput<"receipts.getPaged">["items"][number];
+type InnerProps = {
+	receipt: TRPCQueryOutput<"receipts.get">;
 };
 
-export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
+export const ReceiptPreview: React.FC<InnerProps> = ({ receipt }) => {
 	const { formatDate } = useSsrFormat();
 	const currency = useFormattedCurrency(receipt.currencyCode);
 	const updateReceiptMutation = trpc.receipts.update.useMutation(
@@ -63,8 +63,8 @@ export const ReceiptPreview: React.FC<Props> = ({ receipt }) => {
 						<ReceiptParticipantResolvedButton
 							variant="light"
 							receiptId={receipt.id}
-							userId={receipt.remoteUserId}
-							selfUserId={receipt.remoteUserId}
+							userId={receipt.selfUserId}
+							selfUserId={receipt.selfUserId}
 							resolved={receipt.participantResolved}
 						/>
 					)}

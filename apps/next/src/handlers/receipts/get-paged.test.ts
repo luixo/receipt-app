@@ -17,7 +17,7 @@ import {
 } from "@tests/backend/utils/expect";
 import type { TestContext } from "@tests/backend/utils/test";
 import { test } from "@tests/backend/utils/test";
-import type { TRPCQueryInput, TRPCQueryOutput } from "app/trpc";
+import type { TRPCQueryInput } from "app/trpc";
 import { MAX_LIMIT, MAX_OFFSET } from "app/utils/validation";
 import type { UsersId } from "next-app/db/models";
 import { t } from "next-app/handlers/trpc";
@@ -28,7 +28,6 @@ import { getSum } from "./utils.test";
 const router = t.router({ procedure });
 
 type Input = TRPCQueryInput<"receipts.getPaged">;
-type Output = TRPCQueryOutput<"receipts.getPaged">;
 
 const mockData = async (ctx: TestContext) => {
 	const {
@@ -153,10 +152,11 @@ const mockData = async (ctx: TestContext) => {
 	};
 };
 
+type MockReceipt = Awaited<ReturnType<typeof mockData>>["receipts"][number];
 const runFunctionalTest = async (
 	ctx: TestContext,
 	modifyInput: (input: Input) => Input,
-	modifyItems: (items: Output["items"]) => Output["items"],
+	modifyItems: (items: MockReceipt[]) => MockReceipt[],
 ) => {
 	const { sessionId, receipts } = await mockData(ctx);
 
@@ -171,7 +171,7 @@ const runFunctionalTest = async (
 	);
 	const items = modifyItems(
 		receipts.sort((a, b) => b.issued.valueOf() - a.issued.valueOf()),
-	);
+	).map(({ id }) => id);
 	expect(items.length).toBeGreaterThan(0);
 	expect(result).toStrictEqual<typeof result>({
 		count: items.length,

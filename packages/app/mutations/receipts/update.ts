@@ -7,54 +7,7 @@ import type {
 	TRPCQueryOutput,
 } from "app/trpc";
 
-type PagedReceiptSnapshot =
-	TRPCQueryOutput<"receipts.getPaged">["items"][number];
 type ReceiptSnapshot = TRPCQueryOutput<"receipts.get">;
-
-const applyPagedUpdate =
-	(
-		update: TRPCMutationInput<"receipts.update">["update"],
-	): UpdateFn<PagedReceiptSnapshot> =>
-	(item) => {
-		// lockedTimestamp will be overriden in onSuccess
-		const nextLockedTimestamp =
-			item.lockedTimestamp === undefined ? undefined : new Date();
-		switch (update.type) {
-			case "name":
-				return { ...item, name: update.name };
-			case "issued":
-				return { ...item, issued: update.issued };
-			case "locked":
-				return {
-					...item,
-					lockedTimestamp: update.locked ? nextLockedTimestamp : undefined,
-				};
-			case "currencyCode":
-				return {
-					...item,
-					currencyCode: update.currencyCode,
-					lockedTimestamp: nextLockedTimestamp,
-				};
-		}
-	};
-
-const applySuccessPagedUpdate =
-	(
-		update: TRPCMutationInput<"receipts.update">["update"],
-		result: TRPCMutationOutput<"receipts.update">,
-	): UpdateFn<PagedReceiptSnapshot> =>
-	(item) => {
-		switch (update.type) {
-			case "locked":
-			case "currencyCode":
-				return {
-					...item,
-					lockedTimestamp: result.lockedTimestamp || undefined,
-				};
-			default:
-				return item;
-		}
-	};
 
 const applyUpdate =
 	(
@@ -119,24 +72,6 @@ const getRevert =
 		}
 	};
 
-const getPagedRevert =
-	(
-		update: TRPCMutationInput<"receipts.update">["update"],
-	): SnapshotFn<PagedReceiptSnapshot> =>
-	(snapshot) =>
-	(receipt) => {
-		switch (update.type) {
-			case "name":
-				return { ...receipt, name: snapshot.name };
-			case "issued":
-				return { ...receipt, issued: snapshot.issued };
-			case "locked":
-				return { ...receipt, lockedTimestamp: snapshot.lockedTimestamp };
-			case "currencyCode":
-				return { ...receipt, currencyCode: snapshot.currencyCode };
-		}
-	};
-
 export const options: UseContextedMutationOptions<"receipts.update"> = {
 	onMutate: (controllerContext) => (updateObject) =>
 		cache.receipts.updateRevert(controllerContext, {
@@ -147,12 +82,7 @@ export const options: UseContextedMutationOptions<"receipts.update"> = {
 					getRevert(updateObject.update),
 				),
 			getNonResolvedAmount: undefined,
-			getPaged: (controller) =>
-				controller.update(
-					updateObject.id,
-					applyPagedUpdate(updateObject.update),
-					getPagedRevert(updateObject.update),
-				),
+			getPaged: undefined,
 			getResolvedParticipants: undefined,
 		}),
 	onSuccess: (controllerContext) => (result, updateObject) => {
@@ -163,11 +93,7 @@ export const options: UseContextedMutationOptions<"receipts.update"> = {
 					applySuccessUpdate(updateObject.update, result),
 				),
 			getNonResolvedAmount: undefined,
-			getPaged: (controller) =>
-				controller.update(
-					updateObject.id,
-					applySuccessPagedUpdate(updateObject.update, result),
-				),
+			getPaged: undefined,
 			getResolvedParticipants: undefined,
 		});
 	},

@@ -14,18 +14,36 @@ import { createContext } from "next-app/handlers/context";
 export const getClientServer = async <R extends AnyRouter>(
 	ctx: TestContext,
 	router: R,
-	{ cookies }: { cookies?: Record<string, string> } = {},
+	{
+		cookies,
+		useBatch,
+	}: { cookies?: Record<string, string>; useBatch?: boolean } = {},
 ) => {
 	const port = (await findFreePorts())[0]!;
 	const httpServer = createHTTPServer({
 		router,
-		createContext: ({ req, res }) =>
-			createContext({
+		createContext: ({ req, res }) => {
+			const url = new URL(req.url || "", `http://${req.headers.host}`);
+			const isBatchCall = Boolean(url.searchParams.get("batch"));
+			const inputs = (JSON.parse(url.searchParams.get("input")!) ||
+				{}) as Record<number, unknown>;
+			const paths = isBatchCall
+				? decodeURIComponent(url.pathname.slice(1)).split(",")
+				: [url.pathname.slice(1)];
+			return createContext({
 				req: req as NextApiRequest,
 				res: res as NextApiResponse,
-				info: { isBatchCall: false, calls: [] },
+				info: {
+					isBatchCall,
+					calls: paths.map((path, idx) => ({
+						path,
+						type: "query",
+						input: inputs[idx] ?? undefined,
+					})),
+				},
 				...ctx,
-			}),
+			});
+		},
 		experimental_contentTypeHandlers: [
 			nodeHTTPFormDataContentTypeHandler(),
 			nodeHTTPJSONContentTypeHandler(),
@@ -38,6 +56,7 @@ export const getClientServer = async <R extends AnyRouter>(
 				cookies,
 				source: "test",
 				keepError: true,
+				useBatch,
 			}),
 			transformer,
 		} as unknown as CreateTRPCClientOptions<R>),

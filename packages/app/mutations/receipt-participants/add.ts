@@ -36,11 +36,7 @@ export const options: UseContextedMutationOptions<
 							...item,
 							participantResolved: false,
 						})),
-					getPaged: (controller) =>
-						controller.update(receiptId, (item) => ({
-							...item,
-							participantResolved: false,
-						})),
+					getPaged: undefined,
 					getNonResolvedAmount: (controller) => {
 						if (!result.some((item) => selfAccountId === item.id)) {
 							return;

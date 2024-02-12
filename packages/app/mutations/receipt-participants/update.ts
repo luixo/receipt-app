@@ -34,21 +34,6 @@ const getRevert =
 		}
 	};
 
-type PagedReceipt = TRPCQueryOutput<"receipts.getPaged">["items"][number];
-
-const applyUpdateReceiptPaged =
-	(
-		update: TRPCMutationInput<"receiptParticipants.update">["update"],
-	): UpdateFn<PagedReceipt> =>
-	(item) => {
-		switch (update.type) {
-			case "resolved":
-				return { ...item, participantResolved: update.resolved };
-			case "role":
-				return { ...item, role: update.role };
-		}
-	};
-
 type Receipt = TRPCQueryOutput<"receipts.get">;
 
 const applyUpdateReceipt =
@@ -115,12 +100,7 @@ export const options: UseContextedMutationOptions<
 							nextResolved ? prevAmount - 1 : prevAmount + 1,
 						);
 					},
-					getPaged: (controller) => {
-						controller.update(
-							variables.receiptId,
-							applyUpdateReceiptPaged(variables.update),
-						);
-					},
+					getPaged: undefined,
 					getResolvedParticipants: (controller) =>
 						controller.update(
 							variables.receiptId,

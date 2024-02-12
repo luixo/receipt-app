@@ -9,6 +9,13 @@ export const options: UseContextedMutationOptions<"receiptTransferIntentions.acc
 				cache.receiptTransferIntentions.updateRevert(controllerContext, {
 					getAll: (controller) => controller.inbound.remove(receiptId),
 				}),
+		onSuccess: (controllerContext) => () =>
+			cache.receipts.update(controllerContext, {
+				getPaged: (controller) => controller.invalidate(),
+				get: undefined,
+				getNonResolvedAmount: undefined,
+				getResolvedParticipants: undefined,
+			}),
 		successToastOptions: () => () => ({
 			text: `Receipt was successfully accepted`,
 		}),

@@ -32,18 +32,7 @@ export const options: UseContextedMutationOptions<
 										participantResolved: snapshot.participantResolved,
 									}),
 								),
-							getPaged: (controller) =>
-								controller.update(
-									receiptId,
-									(item) => ({
-										...item,
-										participantResolved: null,
-									}),
-									(snapshot) => (item) => ({
-										...item,
-										participantResolved: snapshot.participantResolved,
-									}),
-								),
+							getPaged: undefined,
 							getResolvedParticipants: (controller) =>
 								controller.remove(receiptId, userId),
 							getNonResolvedAmount: (controller) => {

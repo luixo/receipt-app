@@ -10,25 +10,7 @@ export const options: UseContextedMutationOptions<
 		(controllerContext, { selfAccountId }) =>
 		(id, variables) => {
 			cache.receipts.update(controllerContext, {
-				getPaged: (controller) => {
-					controller.add({
-						id,
-						role: "owner",
-						name: variables.name,
-						issued: variables.issued,
-						currencyCode: variables.currencyCode,
-						// Typesystem doesn't know that we use account id as self user id
-						participantResolved: variables.participants?.includes(
-							selfAccountId as UsersId,
-						)
-							? false
-							: null,
-						lockedTimestamp: undefined,
-						remoteUserId: selfAccountId as UsersId,
-						sum: 0,
-						transferIntentionUserId: undefined,
-					});
-				},
+				getPaged: (controller) => controller.invalidate(),
 				get: (controller) =>
 					controller.add({
 						id,

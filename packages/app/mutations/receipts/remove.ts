@@ -24,14 +24,6 @@ export const options: UseContextedMutationOptions<
 					}
 				},
 			}),
-	onSuccess: (controllerContext) => (_result, variables) => {
-		cache.receipts.update(controllerContext, {
-			get: undefined,
-			getPaged: (controller) => controller.remove(variables.id),
-			getResolvedParticipants: undefined,
-			getNonResolvedAmount: undefined,
-		});
-	},
 	mutateToastOptions: {
 		text: "Removing receipt..",
 	},

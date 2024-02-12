@@ -12,8 +12,9 @@ import { QueryErrorMessage } from "app/components/error-message";
 import { Overlay } from "app/components/overlay";
 import { useCursorPaging } from "app/hooks/use-cursor-paging";
 import { queries } from "app/queries";
-import type { TRPCQueryInput } from "app/trpc";
+import type { TRPCQueryErrorResult, TRPCQueryInput } from "app/trpc";
 import { trpc } from "app/trpc";
+import type { ReceiptsId } from "next-app/db/models";
 
 import { ReceiptPreview } from "./receipt-preview";
 
@@ -27,6 +28,39 @@ const useReceiptQuery = (
 		{ ...input, cursor },
 		{ placeholderData: keepPreviousData },
 	);
+
+const ReceiptPreviews: React.FC<{ ids: ReceiptsId[] }> = ({ ids }) => {
+	const receiptQueries = trpc.useQueries((t) =>
+		ids.map((id) => t.receipts.get({ id })),
+	);
+	if (receiptQueries.every((query) => query.status === "pending")) {
+		return <Spinner size="lg" />;
+	}
+	if (receiptQueries.every((query) => query.status === "error")) {
+		return (
+			<QueryErrorMessage
+				query={receiptQueries[0] as TRPCQueryErrorResult<"receipts.get">}
+			/>
+		);
+	}
+
+	return (
+		<>
+			{receiptQueries.map((receiptQuery, index) => (
+				<React.Fragment key={ids[index]}>
+					<Divider className="sm:hidden" />
+					{receiptQuery.status === "pending" ? (
+						<Spinner size="sm" />
+					) : receiptQuery.status === "error" ? (
+						<QueryErrorMessage query={receiptQuery} />
+					) : (
+						<ReceiptPreview receipt={receiptQuery.data} />
+					)}
+				</React.Fragment>
+			))}
+		</>
+	);
+};
 
 export const Receipts: React.FC = () => {
 	const [input] = queries.receipts.getPaged.useStore();
@@ -98,12 +132,7 @@ export const Receipts: React.FC = () => {
 							<View className="flex-[3] p-2 pr-14" />
 						</View>
 						<Divider className="max-sm:hidden" />
-						{query.data.items.map((receipt) => (
-							<React.Fragment key={receipt.id}>
-								<Divider className="sm:hidden" />
-								<ReceiptPreview receipt={receipt} />
-							</React.Fragment>
-						))}
+						<ReceiptPreviews ids={query.data.items} />
 					</>
 				) : null}
 			</Overlay>
