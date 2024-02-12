@@ -13,15 +13,12 @@ export const UserScreen: AppPage = () => {
 	const { id } = useParams<{ id: string }>();
 
 	const userQuery = trpc.users.get.useQuery({ id });
-	const userNameQuery = trpc.users.getName.useQuery({ id });
 
 	return (
 		<>
 			<PageHeader
 				backHref="/users"
-				title={
-					userQuery.data ? userQuery.data.name : userNameQuery.data || "..."
-				}
+				title={userQuery.data ? userQuery.data.name : id}
 			>
 				<UserTitle
 					user={React.useMemo(
@@ -35,11 +32,11 @@ export const UserScreen: AppPage = () => {
 								  }
 								: {
 										id,
-										name: userNameQuery.data || id,
+										name: "...",
 										publicName: undefined,
 										connectedAccount: undefined,
 								  },
-						[id, userNameQuery.data, userQuery.data],
+						[id, userQuery.data],
 					)}
 				/>
 			</PageHeader>

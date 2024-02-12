@@ -21,7 +21,6 @@ export const options: UseContextedMutationOptions<"users.add"> = {
 						publicName: undefined,
 						connectedAccount: undefined,
 					}),
-				getName: (controller) => controller.upsert(id, variables.name),
 			});
 			if (connection && !connection.connected) {
 				cache.accountConnections.update(controllerContext, {

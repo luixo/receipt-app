@@ -16,27 +16,11 @@ import { UserPreview } from "./user-preview";
 
 type Input = TRPCQueryInput<"users.getPaged">;
 
-const useUsersQuery = (
-	input: Omit<Input, "cursor">,
-	cursor: Input["cursor"],
-) => {
-	const query = trpc.users.getPaged.useQuery(
+const useUsersQuery = (input: Omit<Input, "cursor">, cursor: Input["cursor"]) =>
+	trpc.users.getPaged.useQuery(
 		{ ...input, cursor },
 		{ placeholderData: keepPreviousData },
 	);
-	const utils = trpc.useUtils();
-	React.useEffect(() => {
-		if (query.status !== "success") {
-			return;
-		}
-		query.data.items.forEach((user) => {
-			if (!utils.users.getName.getData({ id: user.id })) {
-				utils.users.getName.setData({ id: user.id }, () => user.name);
-			}
-		});
-	}, [query, utils]);
-	return query;
-};
 
 export const Users: React.FC = () => {
 	const [input] = queries.users.getPaged.useStore();

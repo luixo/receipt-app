@@ -5,7 +5,6 @@ import { Card, CardBody, Link, tv } from "@nextui-org/react";
 import { DebtsGroup } from "app/components/app/debts-group";
 import { LoadableUser } from "app/components/app/loadable-user";
 import type { TRPCQueryOutput } from "app/trpc";
-import { trpc } from "app/trpc";
 import type { UsersId } from "next-app/db/models";
 
 const card = tv({
@@ -27,23 +26,11 @@ export const UserDebtsPreview: React.FC<Props> = ({
 	debts,
 	userId,
 	transparent,
-}) => {
-	const query = trpc.users.get.useQuery({ id: userId });
-	const utils = trpc.useUtils();
-	React.useEffect(() => {
-		if (query.status !== "success") {
-			return;
-		}
-		if (!utils.users.getName.getData({ id: userId })) {
-			utils.users.getName.setData({ id: userId }, () => query.data.name);
-		}
-	}, [query, utils, userId]);
-	return (
-		<Card as={Link} href={`/debts/user/${userId}`}>
-			<CardBody className={card({ transparent })}>
-				<LoadableUser id={userId} />
-				<DebtsGroup className="shrink-0" debts={debts} />
-			</CardBody>
-		</Card>
-	);
-};
+}) => (
+	<Card as={Link} href={`/debts/user/${userId}`}>
+		<CardBody className={card({ transparent })}>
+			<LoadableUser id={userId} />
+			<DebtsGroup className="shrink-0" debts={debts} />
+		</CardBody>
+	</Card>
+);

@@ -12,8 +12,6 @@ export const options: UseContextedMutationOptions<"accountConnectionIntentions.a
 							account: result.account,
 						}));
 					},
-					getName: (controller) =>
-						controller.upsert(variables.userId, result.user.name),
 					getPaged: (controller) => {
 						controller.update(variables.userId, (user) => ({
 							...user,

@@ -26,7 +26,6 @@ export const options: UseContextedMutationOptions<"accountConnectionIntentions.a
 				getPaged: (controller) => {
 					controller.update(variables.userId, (user) => ({ ...user, account }));
 				},
-				getName: undefined,
 			});
 			void cache.users.invalidateSuggest(controllerContext);
 		},

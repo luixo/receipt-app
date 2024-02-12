@@ -7,7 +7,6 @@ export const options: UseContextedMutationOptions<"users.remove"> = {
 		({ id }) =>
 			cache.users.updateRevert(controllerContext, {
 				get: (controller) => controller.remove(id),
-				getName: (controller) => controller.remove(id),
 				getPaged: (controller) => controller.remove(id),
 			}),
 	onSuccess: (controllerContext) => () =>

@@ -91,11 +91,12 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 export const UserDebtsScreen: AppPage = () => {
 	const { id: userId } = useParams<{ id: string }>();
 	const query = trpc.debts.getUser.useQuery({ userId });
-	const userNameQuery = trpc.users.getName.useQuery({ id: userId });
 	if (query.status === "pending") {
 		return (
 			<>
-				<PageHeader>{userNameQuery.data || userId}</PageHeader>
+				<PageHeader>
+					<LoadableUser id={userId} />
+				</PageHeader>
 				<Spinner />
 			</>
 		);

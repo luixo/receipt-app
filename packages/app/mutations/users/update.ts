@@ -69,12 +69,6 @@ export const options: UseContextedMutationOptions<"users.update"> = {
 					applyUpdate(updateObject.update),
 					getRevert(updateObject.update),
 				),
-			getName: (controller) => {
-				if (updateObject.update.type !== "name") {
-					return;
-				}
-				return controller.upsert(updateObject.id, updateObject.update.name);
-			},
 			getPaged: (controller) =>
 				controller.update(
 					updateObject.id,

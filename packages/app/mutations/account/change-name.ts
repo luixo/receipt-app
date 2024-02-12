@@ -17,12 +17,6 @@ export const options: UseContextedMutationOptions<
 						(user) => ({ ...user, name: updateObject.name }),
 						(prevUser) => (user) => ({ ...user, name: prevUser.name }),
 					),
-				getName: (controller) =>
-					controller.upsert(
-						// Typesystem doesn't know that we use account id as self user id
-						id as UsersId,
-						updateObject.name,
-					),
 				getPaged: undefined,
 			}),
 	onSuccess: (controllerContext) => (_result, updateObject) => {

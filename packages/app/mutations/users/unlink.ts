@@ -22,7 +22,6 @@ export const options: UseContextedMutationOptions<"users.unlink"> = {
 							connectedAccount: snapshot.connectedAccount,
 						}),
 					),
-				getName: undefined,
 				getPaged: (controller) =>
 					controller.update(
 						variables.id,
