@@ -14,13 +14,7 @@ export const options: UseContextedMutationOptions<"users.add"> = {
 						publicName: undefined,
 						connectedAccount: undefined,
 					}),
-				getPaged: (controller) =>
-					controller.add({
-						id,
-						name: variables.name,
-						publicName: undefined,
-						connectedAccount: undefined,
-					}),
+				getPaged: (controller) => controller.invalidate(),
 			});
 			if (connection && !connection.connected) {
 				cache.accountConnections.update(controllerContext, {

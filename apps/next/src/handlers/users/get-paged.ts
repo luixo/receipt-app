@@ -23,17 +23,7 @@ export const procedure = authProcedure
 		);
 		const [users, usersCount] = await Promise.all([
 			accountUsers
-				.leftJoin("accounts", (qb) =>
-					qb.onRef("connectedAccountId", "=", "accounts.id"),
-				)
-				.select([
-					"users.id",
-					"name",
-					"publicName",
-					"accounts.email",
-					"accounts.id as accountId",
-					"accounts.avatarUrl",
-				])
+				.select("users.id")
 				// Stable order for users with the same name
 				.orderBy(["users.name", "users.id"])
 				.offset(input.cursor)
@@ -48,19 +38,6 @@ export const procedure = authProcedure
 			count: parseInt(usersCount.amount, 10),
 			cursor: input.cursor,
 			hasMore: users.length === input.limit + 1,
-			items: users
-				.slice(0, input.limit)
-				.map(({ publicName, email, accountId, avatarUrl, ...user }) => ({
-					...user,
-					publicName: publicName === null ? undefined : publicName,
-					connectedAccount:
-						accountId === null || email === null
-							? undefined
-							: {
-									id: accountId,
-									email,
-									avatarUrl: avatarUrl || undefined,
-							  },
-				})),
+			items: users.slice(0, input.limit).map(({ id }) => id),
 		};
 	});

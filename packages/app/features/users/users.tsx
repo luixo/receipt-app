@@ -9,8 +9,9 @@ import { QueryErrorMessage } from "app/components/error-message";
 import { Overlay } from "app/components/overlay";
 import { useCursorPaging } from "app/hooks/use-cursor-paging";
 import { queries } from "app/queries";
-import type { TRPCQueryInput } from "app/trpc";
+import type { TRPCQueryErrorResult, TRPCQueryInput } from "app/trpc";
 import { trpc } from "app/trpc";
+import type { UsersId } from "next-app/db/models";
 
 import { UserPreview } from "./user-preview";
 
@@ -21,6 +22,36 @@ const useUsersQuery = (input: Omit<Input, "cursor">, cursor: Input["cursor"]) =>
 		{ ...input, cursor },
 		{ placeholderData: keepPreviousData },
 	);
+
+const UserPreviews: React.FC<{ ids: UsersId[] }> = ({ ids }) => {
+	const userQueries = trpc.useQueries((t) =>
+		ids.map((id) => t.users.get({ id })),
+	);
+	if (userQueries.every((query) => query.status === "pending")) {
+		return <Spinner size="lg" />;
+	}
+	if (userQueries.every((query) => query.status === "error")) {
+		return (
+			<QueryErrorMessage
+				query={userQueries[0] as TRPCQueryErrorResult<"users.get">}
+			/>
+		);
+	}
+
+	return (
+		<>
+			{userQueries.map((userQuery, index) =>
+				userQuery.status === "pending" ? (
+					<Spinner key={ids[index]} size="sm" />
+				) : userQuery.status === "error" ? (
+					<QueryErrorMessage key={ids[index]} query={userQuery} />
+				) : (
+					<UserPreview key={ids[index]} user={userQuery.data} />
+				),
+			)}
+		</>
+	);
+};
 
 export const Users: React.FC = () => {
 	const [input] = queries.users.getPaged.useStore();
@@ -70,9 +101,7 @@ export const Users: React.FC = () => {
 				{query.status === "pending" ? (
 					<Spinner size="lg" />
 				) : query.data ? (
-					query.data.items.map((user) => (
-						<UserPreview key={user.id} data={user} />
-					))
+					<UserPreviews ids={query.data.items} />
 				) : null}
 			</Overlay>
 			{paginationElement}

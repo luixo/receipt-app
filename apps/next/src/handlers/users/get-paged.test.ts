@@ -137,7 +137,6 @@ describe("users.getPaged", () => {
 				name: "Z - last name in a list",
 			});
 
-			const accounts = [firstAccount, secondAccount];
 			const limit = 4;
 			const users = [
 				user,
@@ -153,27 +152,8 @@ describe("users.getPaged", () => {
 				cursor: 0,
 				hasMore: true,
 				items: users
-					.map((userObject) => {
-						const matchedAccount =
-							"connectedAccountId" in userObject
-								? accounts.find(
-										(account) => account.id === userObject.connectedAccountId,
-								  )
-								: undefined;
-						return {
-							id: userObject.id,
-							name: userObject.name,
-							publicName: userObject.publicName,
-							connectedAccount: matchedAccount
-								? {
-										id: matchedAccount.id,
-										email: matchedAccount.email,
-										avatarUrl: matchedAccount.avatarUrl,
-								  }
-								: undefined,
-						};
-					})
 					.sort((a, b) => a.name.localeCompare(b.name))
+					.map(({ id }) => id)
 					.slice(0, limit),
 			});
 		});
@@ -226,9 +206,8 @@ describe("users.getPaged", () => {
 				limit: 5,
 				cursor: 0,
 			});
-			const ids = result.items.map((item) => item.id);
-			const sortedIds = [...ids].sort();
-			expect(ids).toStrictEqual(sortedIds);
+			const sortedIds = [...result.items].sort();
+			expect(result.items).toStrictEqual(sortedIds);
 		});
 	});
 });

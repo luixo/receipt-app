@@ -6,11 +6,11 @@ import { User } from "app/components/app/user";
 import type { TRPCQueryOutput } from "app/trpc";
 
 type Props = {
-	data: TRPCQueryOutput<"users.getPaged">["items"][number];
+	user: TRPCQueryOutput<"users.get">;
 };
 
-export const UserPreview: React.FC<Props> = ({ data: user }) => (
-	<Link href={`/users/${user.id}/`}>
+export const UserPreview: React.FC<Props> = ({ user }) => (
+	<Link href={`/users/${user.remoteId}/`}>
 		<User user={user} />
 	</Link>
 );

@@ -12,12 +12,7 @@ export const options: UseContextedMutationOptions<"accountConnectionIntentions.a
 							account: result.account,
 						}));
 					},
-					getPaged: (controller) => {
-						controller.update(variables.userId, (user) => ({
-							...user,
-							account: result.account,
-						}));
-					},
+					getPaged: undefined,
 				});
 				cache.receipts.update(controllerContext, {
 					get: undefined,

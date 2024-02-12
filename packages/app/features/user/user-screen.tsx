@@ -24,14 +24,10 @@ export const UserScreen: AppPage = () => {
 					user={React.useMemo(
 						() =>
 							userQuery.data
-								? {
-										id: userQuery.data.localId || userQuery.data.remoteId,
-										name: userQuery.data.name,
-										publicName: userQuery.data.publicName,
-										connectedAccount: userQuery.data.connectedAccount,
-								  }
+								? userQuery.data
 								: {
-										id,
+										remoteId: id,
+										localId: null,
 										name: "...",
 										publicName: undefined,
 										connectedAccount: undefined,

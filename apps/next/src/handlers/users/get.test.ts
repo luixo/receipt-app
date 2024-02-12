@@ -62,10 +62,7 @@ describe("users.get", () => {
 
 		test("user is not owned by the account", async ({ ctx }) => {
 			// Self account
-			const {
-				sessionId,
-				account: { email },
-			} = await insertAccountWithSession(ctx);
+			const { sessionId } = await insertAccountWithSession(ctx);
 			// Foreign account
 			const { id: otherAccountId } = await insertAccount(ctx);
 			const { id: foreignUserId } = await insertUser(ctx, otherAccountId);
@@ -75,8 +72,8 @@ describe("users.get", () => {
 					caller.procedure({
 						id: foreignUserId,
 					}),
-				"FORBIDDEN",
-				`User "${foreignUserId}" is not owned by "${email}".`,
+				"NOT_FOUND",
+				`No user found by id "${foreignUserId}".`,
 			);
 		});
 	});
@@ -161,8 +158,7 @@ describe("users.get", () => {
 		describe("foreign user is fetched via connected receipt", () => {
 			describe("not connected to a local user", () => {
 				test("with public name and email", async ({ ctx }) => {
-					const { sessionId, accountId, account } =
-						await insertAccountWithSession(ctx);
+					const { sessionId, accountId } = await insertAccountWithSession(ctx);
 					const { id: foreignAccountId } = await insertAccount(ctx);
 					const { id: otherAccountId } = await insertAccount(ctx);
 					const { id: receiptId } = await insertReceipt(ctx, foreignAccountId);
@@ -191,8 +187,8 @@ describe("users.get", () => {
 					// Verify that we cannot access a user before we are added into the receipt
 					await expectTRPCError(
 						() => caller.procedure({ id: foreignUserId }),
-						"FORBIDDEN",
-						`User "${foreignUserId}" is not owned by "${account.email}".`,
+						"NOT_FOUND",
+						`No user found by id "${foreignUserId}".`,
 					);
 
 					// Adding ourselves into the receipt
@@ -209,8 +205,7 @@ describe("users.get", () => {
 				});
 
 				test("no public name and email", async ({ ctx }) => {
-					const { sessionId, accountId, account } =
-						await insertAccountWithSession(ctx);
+					const { sessionId, accountId } = await insertAccountWithSession(ctx);
 					const { id: foreignAccountId } = await insertAccount(ctx);
 					const { id: receiptId } = await insertReceipt(ctx, foreignAccountId);
 					const caller = router.createCaller(createAuthContext(ctx, sessionId));
@@ -234,8 +229,8 @@ describe("users.get", () => {
 					// Verify that we cannot access a user before we are added into the receipt
 					await expectTRPCError(
 						() => caller.procedure({ id: foreignUserId }),
-						"FORBIDDEN",
-						`User "${foreignUserId}" is not owned by "${account.email}".`,
+						"NOT_FOUND",
+						`No user found by id "${foreignUserId}".`,
 					);
 
 					// Adding ourselves into the receipt

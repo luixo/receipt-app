@@ -121,7 +121,11 @@ export const UsersSuggest: React.FC<Props> = ({
 			{selectedUsers.length === 0 ? null : (
 				<View className="flex-row flex-wrap gap-4">
 					{selectedUsers.map((user) => (
-						<User key={user.id} user={user} avatarProps={{ size: "sm" }} />
+						<User
+							key={user.id}
+							user={{ ...user, remoteId: user.id, localId: null }}
+							avatarProps={{ size: "sm" }}
+						/>
 					))}
 				</View>
 			)}
@@ -160,7 +164,10 @@ export const UsersSuggest: React.FC<Props> = ({
 								className="p-1"
 								textValue={user.name}
 							>
-								<User user={user} avatarProps={{ size: "sm" }} />
+								<User
+									user={{ ...user, remoteId: user.id, localId: null }}
+									avatarProps={{ size: "sm" }}
+								/>
 							</AutocompleteItem>
 						))}
 					</AutocompleteSection>
@@ -173,7 +180,10 @@ export const UsersSuggest: React.FC<Props> = ({
 								className="p-1"
 								textValue={user.name}
 							>
-								<User user={user} avatarProps={{ size: "sm" }} />
+								<User
+									user={{ ...user, remoteId: user.id, localId: null }}
+									avatarProps={{ size: "sm" }}
+								/>
 							</AutocompleteItem>
 						))}
 					</AutocompleteSection>

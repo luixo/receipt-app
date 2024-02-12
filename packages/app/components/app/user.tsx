@@ -8,7 +8,7 @@ import type { MakeOptional } from "app/utils/types";
 
 const wrapper = tv({ base: "text-foreground" });
 
-type UserType = TRPCQueryOutput<"users.getPaged">["items"][number];
+type UserType = TRPCQueryOutput<"users.get">;
 
 export type Props = {
 	user: MakeOptional<
@@ -22,7 +22,11 @@ export type Props = {
 
 export const User = React.forwardRef<HTMLDivElement, Props>(
 	({ user, className, avatarProps: rawAvatarProps, ...props }, ref) => {
-		const avatarProps = useUserAvatarProps({ ...user, ...rawAvatarProps });
+		const avatarProps = useUserAvatarProps({
+			id: user.remoteId,
+			connectedAccount: user.connectedAccount,
+			...rawAvatarProps,
+		});
 		return (
 			<RawUser
 				ref={ref}

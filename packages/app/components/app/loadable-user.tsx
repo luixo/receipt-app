@@ -15,12 +15,7 @@ type InnerProps = {
 export const LoadableUserInner: React.FC<InnerProps> = ({
 	query,
 	...props
-}) => (
-	<User
-		user={{ ...query.data, id: query.data.localId || query.data.remoteId }}
-		{...props}
-	/>
-);
+}) => <User user={query.data} {...props} />;
 
 type Props = Omit<InnerProps, "query"> & {
 	id: UsersId;

@@ -17,9 +17,7 @@ type Props = {
 	id: UsersId;
 	connectedAccount?: MakeOptional<
 		Pick<
-			NonNullable<
-				TRPCQueryOutput<"users.getPaged">["items"][number]["connectedAccount"]
-			>,
+			NonNullable<TRPCQueryOutput<"users.get">["connectedAccount"]>,
 			"id" | "avatarUrl"
 		>
 	>;

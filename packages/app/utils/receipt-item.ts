@@ -246,7 +246,8 @@ export const getParticipantSums = <
 export const convertParticipantToUser = (
 	participant: TRPCQueryOutput<"receiptItems.get">["participants"][number],
 ): UserProps["user"] => ({
-	id: participant.remoteUserId,
+	remoteId: participant.remoteUserId,
+	localId: null,
 	name: participant.name,
 	// TODO: remove when receipt item participants are also moved to undefined
 	publicName: participant.publicName ?? undefined,
