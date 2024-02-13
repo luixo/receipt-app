@@ -198,7 +198,7 @@ const mapReceipt = (
 		});
 	}
 	/* c8 ignore stop */
-	const common = omitUndefined({
+	return omitUndefined({
 		...receiptRest,
 		sum: Number(sum),
 		role: getAccessRole(
@@ -212,25 +212,14 @@ const mapReceipt = (
 			transferIntentionAccountId && ownerAccountId === auth.accountId
 				? transferIntentionUserId!
 				: undefined,
-	});
-	type Receipt = Omit<typeof common, "transferIntentionUserId"> & {
-		debt?: ReturnType<typeof getReceiptDebt>;
-		lockedTimestamp?: Date;
-		transferIntentionUserId?: UsersId;
-	};
-	if (!lockedTimestamp) {
-		return common as Receipt;
-	}
-	return omitUndefined({
-		...common,
-		lockedTimestamp,
+		lockedTimestamp: lockedTimestamp || undefined,
 		debt: getReceiptDebt(
 			debts,
 			ownerAccountId,
 			auth.accountId,
 			receipt.selfUserId,
 		),
-	}) satisfies Receipt;
+	});
 };
 
 type Receipt = ReturnType<typeof mapReceipt>;

@@ -1,3 +1,8 @@
+import type {
+	MakeUndefinedOptional,
+	RemoveCompletelyUndefined,
+} from "app/utils/types";
+
 export const nonNullishGuard = <T>(
 	arg: T,
 ): arg is Exclude<T, null | undefined> => arg !== null && arg !== undefined;
@@ -9,12 +14,10 @@ export const noop = (): undefined => undefined;
 export const id = <T>(x: T): T => x;
 export const alwaysTrue = () => true;
 
-export const omitUndefined = <T extends object>(
-	obj: T,
-): Exclude<T, undefined> =>
+export const omitUndefined = <T extends object>(obj: T) =>
 	Object.fromEntries(
 		Object.entries(obj).filter(([, value]) => value !== undefined),
-	) as Exclude<T, undefined>;
+	) as RemoveCompletelyUndefined<MakeUndefinedOptional<T>>;
 
 export const createPromise = <R, E = unknown>() => {
 	let resolve: ((result: R) => void) | undefined;
