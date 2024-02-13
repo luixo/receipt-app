@@ -184,6 +184,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 										receiptItemId={receiptItem.id}
 										readOnly={isEditingDisabled || receiptLocked}
 										isLoading={isDeleteLoading}
+										isOwner={role === "owner"}
 									/>
 								);
 							})}

@@ -19,6 +19,7 @@ type ReceiptItemParts = ReceiptItem["parts"];
 type Props = {
 	receiptId: ReceiptsId;
 	receiptItemId: ReceiptItemsId;
+	isOwner: boolean;
 	participant: ReceiptParticipant;
 	itemPart: ReceiptItemParts[number];
 	itemParts: number;
@@ -29,6 +30,7 @@ type Props = {
 export const ReceiptItemPart: React.FC<Props> = ({
 	receiptId,
 	receiptItemId,
+	isOwner,
 	itemPart,
 	itemParts,
 	participant,
@@ -51,7 +53,7 @@ export const ReceiptItemPart: React.FC<Props> = ({
 
 	return (
 		<View className="items-start justify-between gap-2 min-[500px]:flex-row sm:gap-4">
-			<LoadableUser id={participant.userId} foreign />
+			<LoadableUser id={participant.userId} foreign={!isOwner} />
 			<View className="flex-row gap-2 self-end">
 				<ReceiptItemPartInput
 					receiptId={receiptId}

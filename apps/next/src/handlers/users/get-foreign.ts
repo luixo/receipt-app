@@ -51,6 +51,7 @@ const fetchUsers = async (
 			"usersThem.id as theirId",
 			"usersThem.name as theirName",
 			"usersThem.publicName as theirPublicName",
+			"usersThem.ownerAccountId",
 		])
 		.groupBy([
 			"usersMine.id",
@@ -62,6 +63,7 @@ const fetchUsers = async (
 			"usersThem.id",
 			"usersThem.name",
 			"usersThem.publicName",
+			"usersThem.ownerAccountId",
 		])
 		.execute();
 
@@ -73,7 +75,29 @@ const getForeignUser = (
 	name: user.theirPublicName || user.theirName,
 });
 
-const mapUser = (user: Awaited<ReturnType<typeof fetchUsers>>[number]) => {
+const mapUser = (
+	{ auth }: AuthorizedContext,
+	user: Awaited<ReturnType<typeof fetchUsers>>[number],
+) => {
+	if (user.ownerAccountId === auth.accountId) {
+		return {
+			id: user.theirId,
+			name: user.theirName,
+			publicName:
+				user.theirPublicName === null ? undefined : user.theirPublicName,
+			connectedAccount: {
+				id: user.accountId,
+				email: user.email,
+				avatarUrl: user.avatarUrl || undefined,
+			} as
+				| {
+						id: AccountsId;
+						email: string;
+						avatarUrl?: string;
+				  }
+				| undefined,
+		};
+	}
 	if (user.mineId && user.mineName && user.email && user.accountId) {
 		return {
 			id: user.mineId,
@@ -107,7 +131,7 @@ const queueUser = queueCallFactory<
 			ctx,
 			inputs.map(({ id }) => id),
 		),
-	async (_ctx, input, users) => {
+	async (ctx, input, users) => {
 		const matchedUser = users.find((user) => user.theirId === input.id);
 		if (!matchedUser) {
 			throw new TRPCError({
@@ -115,7 +139,7 @@ const queueUser = queueCallFactory<
 				message: `No user found by id "${input.id}" or you don't have access to it.`,
 			});
 		}
-		return mapUser(matchedUser);
+		return mapUser(ctx, matchedUser);
 	},
 );
 

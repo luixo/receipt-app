@@ -91,7 +91,7 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 				</View>
 				<LoadableUser
 					id={receipt.ownerUserId}
-					foreign={receipt.selfUserId !== receipt.ownerUserId}
+					foreign={receipt.role !== "owner"}
 				/>
 			</View>
 			{receipt.role === "owner" ? (

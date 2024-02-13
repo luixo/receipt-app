@@ -91,7 +91,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 								participant.items.length === 0 ? "opacity-disabled" : undefined
 							}
 							id={participant.userId}
-							foreign
+							foreign={!isOwner}
 						/>
 						<View className="flex-row items-center justify-between gap-4 self-stretch">
 							<Text>
