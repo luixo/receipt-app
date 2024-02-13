@@ -2,7 +2,7 @@ import React from "react";
 
 import { useParams } from "solito/navigation";
 
-import { User as UserTitle } from "app/components/app/user";
+import { LoadableUser } from "app/components/app/loadable-user";
 import { PageHeader } from "app/components/page-header";
 import { trpc } from "app/trpc";
 import type { AppPage } from "next-app/types/page";
@@ -20,21 +20,7 @@ export const UserScreen: AppPage = () => {
 				backHref="/users"
 				title={userQuery.data ? userQuery.data.name : id}
 			>
-				<UserTitle
-					user={React.useMemo(
-						() =>
-							userQuery.data
-								? userQuery.data
-								: {
-										remoteId: id,
-										localId: null,
-										name: "...",
-										publicName: undefined,
-										connectedAccount: undefined,
-								  },
-						[id, userQuery.data],
-					)}
-				/>
+				<LoadableUser id={id} />
 			</PageHeader>
 			<User id={id} />
 		</>

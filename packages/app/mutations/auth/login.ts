@@ -4,9 +4,13 @@ import type { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-op
 export const options: UseContextedMutationOptions<"auth.login"> = {
 	onSuccess:
 		(controllerContext) =>
-		({ account, user }) =>
+		({ account, user }, variables) =>
 			cache.account.update(controllerContext, {
-				get: (controller) => controller.upsert({ account, user }),
+				get: (controller) =>
+					controller.upsert({
+						account: { ...account, email: variables.email },
+						user,
+					}),
 			}),
 	successToastOptions: {
 		text: "Login successful, redirecting..",

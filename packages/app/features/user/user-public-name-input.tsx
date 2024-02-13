@@ -41,7 +41,7 @@ export const UserPublicNameInput: React.FC<Props> = ({ user, isLoading }) => {
 			}
 			updateUserMutation.mutate(
 				{
-					id: user.remoteId,
+					id: user.id,
 					update: { type: "publicName", publicName: nextName },
 				},
 				{
@@ -54,7 +54,7 @@ export const UserPublicNameInput: React.FC<Props> = ({ user, isLoading }) => {
 				},
 			);
 		},
-		[updateUserMutation, user.remoteId, setValue, unsetInput, user.publicName],
+		[updateUserMutation, user.id, setValue, unsetInput, user.publicName],
 	);
 
 	if (!showInput) {

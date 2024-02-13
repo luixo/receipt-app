@@ -7,12 +7,17 @@ export const options: UseContextedMutationOptions<
 > = {
 	onSuccess:
 		(controllerContext, { name }) =>
-		({ account }) =>
+		({ account }, variables) =>
 			cache.account.update(controllerContext, {
 				get: (controller) =>
 					controller.upsert({
 						user: { name },
-						account: { id: account.id, verified: false, avatarUrl: undefined },
+						account: {
+							id: account.id,
+							email: variables.email,
+							verified: false,
+							avatarUrl: undefined,
+						},
 					}),
 			}),
 	mutateToastOptions: {

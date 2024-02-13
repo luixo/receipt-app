@@ -20,7 +20,7 @@ const update =
 		}).current;
 
 const upsert = (controller: Controller, user: User) =>
-	controller.setData({ id: user.remoteId }, user);
+	controller.setData({ id: user.id }, user);
 
 const remove = (controller: Controller, userId: UsersId) =>
 	utils.withRef<User | undefined>((ref) => {
@@ -56,7 +56,7 @@ export const getRevertController = ({
 		add: (user: User) =>
 			utils.applyWithRevert(
 				() => upsert(controller, user),
-				() => remove(controller, user.remoteId),
+				() => remove(controller, user.id),
 			),
 		remove: (userId: UsersId) =>
 			utils.applyWithRevert(

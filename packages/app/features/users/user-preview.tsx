@@ -10,7 +10,11 @@ type Props = {
 };
 
 export const UserPreview: React.FC<Props> = ({ user }) => (
-	<Link href={`/users/${user.remoteId}/`}>
-		<User user={user} />
+	<Link href={`/users/${user.id}/`}>
+		<User
+			id={user.id}
+			name={user.name}
+			connectedAccount={user.connectedAccount}
+		/>
 	</Link>
 );

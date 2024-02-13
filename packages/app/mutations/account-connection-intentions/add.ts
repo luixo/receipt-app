@@ -6,11 +6,17 @@ export const options: UseContextedMutationOptions<"accountConnectionIntentions.a
 		onSuccess: (controllerContext) => (result, variables) => {
 			if (result.connected) {
 				cache.users.update(controllerContext, {
-					get: (controller) => {
+					get: (controller) =>
 						controller.update(variables.userId, (user) => ({
 							...user,
-							account: result.account,
+							connectedAccount: result.account,
+						})),
+					getForeign: (controller) => {
+						controller.updateOwn(variables.userId, (user) => ({
+							...user,
+							connectedAccount: result.account,
 						}));
+						controller.invalidateForeign();
 					},
 					getPaged: undefined,
 				});

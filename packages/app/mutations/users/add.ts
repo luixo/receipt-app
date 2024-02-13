@@ -8,12 +8,12 @@ export const options: UseContextedMutationOptions<"users.add"> = {
 			cache.users.update(controllerContext, {
 				get: (controller) =>
 					controller.add({
-						remoteId: id,
-						localId: id,
+						id,
 						name: variables.name,
 						publicName: undefined,
 						connectedAccount: undefined,
 					}),
+				getForeign: undefined,
 				getPaged: (controller) => controller.invalidate(),
 			});
 			if (connection && !connection.connected) {

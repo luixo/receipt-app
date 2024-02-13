@@ -76,6 +76,7 @@ export const ReceiptResolvedParticipantsButton: React.FC<Props> = ({
 								<LoadableUser
 									key={participant.localUserId || participant.remoteUserId}
 									id={participant.localUserId || participant.remoteUserId}
+									foreign={!participant.localUserId}
 								/>
 							))}
 						</View>
@@ -87,6 +88,7 @@ export const ReceiptResolvedParticipantsButton: React.FC<Props> = ({
 								<LoadableUser
 									key={participant.localUserId || participant.remoteUserId}
 									id={participant.localUserId || participant.remoteUserId}
+									foreign={!participant.localUserId}
 								/>
 							))}
 						</View>

@@ -1,5 +1,3 @@
-import type { Props as UserProps } from "app/components/app/user";
-import type { TRPCQueryOutput } from "app/trpc";
 import { rotate } from "app/utils/array";
 import { getIndexByString } from "app/utils/hash";
 import {
@@ -242,14 +240,3 @@ export const getParticipantSums = <
 			) / decimalsPower,
 	}));
 };
-
-export const convertParticipantToUser = (
-	participant: TRPCQueryOutput<"receiptItems.get">["participants"][number],
-): UserProps["user"] => ({
-	remoteId: participant.remoteUserId,
-	localId: null,
-	name: participant.name,
-	// TODO: remove when receipt item participants are also moved to undefined
-	publicName: participant.publicName ?? undefined,
-	connectedAccount: participant.connectedAccount,
-});

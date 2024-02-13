@@ -123,7 +123,9 @@ export const UsersSuggest: React.FC<Props> = ({
 					{selectedUsers.map((user) => (
 						<User
 							key={user.id}
-							user={{ ...user, remoteId: user.id, localId: null }}
+							id={user.id}
+							name={user.name}
+							connectedAccount={user.connectedAccount}
 							avatarProps={{ size: "sm" }}
 						/>
 					))}
@@ -165,7 +167,9 @@ export const UsersSuggest: React.FC<Props> = ({
 								textValue={user.name}
 							>
 								<User
-									user={{ ...user, remoteId: user.id, localId: null }}
+									id={user.id}
+									name={user.name}
+									connectedAccount={user.connectedAccount}
 									avatarProps={{ size: "sm" }}
 								/>
 							</AutocompleteItem>
@@ -181,7 +185,9 @@ export const UsersSuggest: React.FC<Props> = ({
 								textValue={user.name}
 							>
 								<User
-									user={{ ...user, remoteId: user.id, localId: null }}
+									id={user.id}
+									name={user.name}
+									connectedAccount={user.connectedAccount}
 									avatarProps={{ size: "sm" }}
 								/>
 							</AutocompleteItem>

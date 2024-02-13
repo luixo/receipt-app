@@ -24,7 +24,7 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 	const outboundConnectionIntention =
 		connectionIntentionsQuery.status === "success"
 			? connectionIntentionsQuery.data.outbound.find(
-					(element) => element.user.id === user.remoteId,
+					(element) => element.user.id === user.id,
 			  ) ?? null
 			: undefined;
 
@@ -34,10 +34,10 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 	const connectUser = React.useCallback(
 		(email: string) =>
 			connectUserMutation.mutate({
-				userId: user.remoteId,
+				userId: user.id,
 				email,
 			}),
-		[connectUserMutation, user.remoteId],
+		[connectUserMutation, user.id],
 	);
 
 	const {
@@ -72,8 +72,8 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 		useTrpcMutationOptions(mutations.users.unlink.options),
 	);
 	const unlinkUser = React.useCallback(
-		() => unlinkMutation.mutate({ id: user.remoteId }),
-		[unlinkMutation, user.remoteId],
+		() => unlinkMutation.mutate({ id: user.id }),
+		[unlinkMutation, user.id],
 	);
 
 	if (outboundConnectionIntention === undefined) {

@@ -89,7 +89,10 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 						<ReceiptCurrencyInput receipt={receipt} isLoading={deleteLoading} />
 					</View>
 				</View>
-				<LoadableUser id={receipt.ownerUserId} />
+				<LoadableUser
+					id={receipt.ownerUserId}
+					foreign={receipt.selfUserId !== receipt.ownerUserId}
+				/>
 			</View>
 			{receipt.role === "owner" ? (
 				<View className="max-xs:flex-col flex-row items-end justify-end gap-2">

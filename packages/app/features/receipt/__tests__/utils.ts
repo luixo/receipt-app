@@ -105,7 +105,7 @@ export const test = originalTest.extend<Fixtures>({
 				api.mock("users.get", (input) => {
 					if (input.id === selfAccount.accountId) {
 						return {
-							remoteId: selfAccount.userId,
+							id: selfAccount.userId,
 							name: selfAccount.name,
 							publicName: undefined,
 							connectedAccount: {
@@ -113,13 +113,12 @@ export const test = originalTest.extend<Fixtures>({
 								email: selfAccount.email,
 								avatarUrl: selfAccount.avatarUrl,
 							},
-							localId: selfAccount.userId,
 						};
 					}
 					const matchedUser = users.find((user) => user.id === input.id);
 					if (matchedUser) {
 						return {
-							remoteId: matchedUser.id,
+							id: matchedUser.id,
 							name: matchedUser.name,
 							publicName: undefined,
 							connectedAccount: matchedUser.connectedAccount
@@ -129,7 +128,6 @@ export const test = originalTest.extend<Fixtures>({
 										avatarUrl: matchedUser.connectedAccount.avatarUrl,
 								  }
 								: undefined,
-							localId: matchedUser.id,
 						};
 					}
 
@@ -138,6 +136,7 @@ export const test = originalTest.extend<Fixtures>({
 				api.mockUtils.auth({
 					account: {
 						id: selfAccount.accountId,
+						email: selfAccount.email,
 						verified: true,
 						avatarUrl: selfAccount.avatarUrl,
 					},

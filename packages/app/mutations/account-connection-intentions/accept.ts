@@ -20,8 +20,17 @@ export const options: UseContextedMutationOptions<"accountConnectionIntentions.a
 				getNonResolvedAmount: undefined,
 			});
 			cache.users.update(controllerContext, {
-				get: (controller) => {
-					controller.update(variables.userId, (user) => ({ ...user, account }));
+				get: (controller) =>
+					controller.update(variables.userId, (user) => ({
+						...user,
+						connectedAccount: account,
+					})),
+				getForeign: (controller) => {
+					controller.updateOwn(variables.userId, (user) => ({
+						...user,
+						connectedAccount: account,
+					}));
+					controller.invalidateForeign();
 				},
 				getPaged: undefined,
 			});

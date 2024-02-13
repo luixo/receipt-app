@@ -6,7 +6,6 @@ import { unstable_getImgProps as getImgProps } from "next/image";
 
 import type { TRPCQueryOutput } from "app/trpc";
 import { hslToRgb } from "app/utils/color";
-import type { MakeOptional } from "app/utils/types";
 import type { UsersId } from "next-app/db/models";
 
 const wrapper = tv({
@@ -15,12 +14,8 @@ const wrapper = tv({
 
 type Props = {
 	id: UsersId;
-	connectedAccount?: MakeOptional<
-		Pick<
-			NonNullable<TRPCQueryOutput<"users.get">["connectedAccount"]>,
-			"id" | "avatarUrl"
-		>
-	>;
+	connectedAccount?: TRPCQueryOutput<"users.get">["connectedAccount"];
+	foreign?: boolean;
 } & React.ComponentProps<typeof Avatar>;
 
 const getSize = (size: React.ComponentProps<typeof Avatar>["size"]) => {
@@ -42,11 +37,25 @@ const COLORS = new Array(SECTORS)
 	.fill(null)
 	.map((_, index) => `#${hslToRgb(index * (DEGREES / SECTORS), 0.7, 0.5)}`);
 
+const BW_LEVELS = 6;
+const EDGE_MARGIN = 0.3;
+const BW_COLORS = new Array(BW_LEVELS + 1)
+	.fill(null)
+	.map(
+		(_, index) =>
+			`#${hslToRgb(
+				0,
+				0,
+				(1 - 2 * EDGE_MARGIN) * (index / BW_LEVELS) + EDGE_MARGIN,
+			)}`,
+	);
+
 export const useUserAvatarProps = ({
 	id,
 	connectedAccount,
 	className,
 	classNames,
+	foreign,
 	...props
 }: Props) => {
 	const size = getSize(props.size);
@@ -65,7 +74,7 @@ export const useUserAvatarProps = ({
 				size={size}
 				name={connectedAccount?.id || id}
 				variant="beam"
-				colors={COLORS}
+				colors={foreign ? BW_COLORS : COLORS}
 			/>
 		),
 		...props,

@@ -2,6 +2,7 @@ import { cache } from "app/cache";
 import type { SnapshotFn, UpdateFn } from "app/cache/utils";
 import type { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import type { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
+import type { UsersId } from "next-app/db/models";
 
 type UserSnapshot = TRPCQueryOutput<"users.get">;
 
@@ -32,6 +33,34 @@ const getRevert =
 		}
 	};
 
+type OwnUserSnapshot = Exclude<
+	TRPCQueryOutput<"users.getForeign">,
+	{ remoteId: UsersId }
+>;
+
+const applyForeignUpdate =
+	(
+		update: TRPCMutationInput<"users.update">["update"],
+	): UpdateFn<OwnUserSnapshot> =>
+	(user) => {
+		if ("remoteId" in user) {
+			return user;
+		}
+		return applyUpdate(update)(user);
+	};
+
+const getForeignRevert =
+	(
+		update: TRPCMutationInput<"users.update">["update"],
+	): SnapshotFn<OwnUserSnapshot> =>
+	(snapshot) =>
+	(user) => {
+		if ("remoteId" in user || "remoteId" in snapshot) {
+			return user;
+		}
+		return getRevert(update)(snapshot)(user);
+	};
+
 export const options: UseContextedMutationOptions<"users.update"> = {
 	onMutate: (controllerContext) => (updateObject) =>
 		cache.users.updateRevert(controllerContext, {
@@ -40,6 +69,12 @@ export const options: UseContextedMutationOptions<"users.update"> = {
 					updateObject.id,
 					applyUpdate(updateObject.update),
 					getRevert(updateObject.update),
+				),
+			getForeign: (controller) =>
+				controller.updateOwn(
+					updateObject.id,
+					applyForeignUpdate(updateObject.update),
+					getForeignRevert(updateObject.update),
 				),
 			getPaged: undefined,
 		}),

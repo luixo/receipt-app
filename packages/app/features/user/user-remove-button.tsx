@@ -32,8 +32,8 @@ export const UserRemoveButton: React.FC<Props> = ({
 		[removeUserMutation.isPending, setLoading],
 	);
 	const removeUser = React.useCallback(
-		() => removeUserMutation.mutate({ id: user.remoteId }),
-		[removeUserMutation, user.remoteId],
+		() => removeUserMutation.mutate({ id: user.id }),
+		[removeUserMutation, user.id],
 	);
 
 	return (

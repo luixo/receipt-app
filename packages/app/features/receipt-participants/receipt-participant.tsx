@@ -14,7 +14,6 @@ import { mutations } from "app/mutations";
 import type { TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
 import type { CurrencyCode } from "app/utils/currency";
-import { convertParticipantToUser } from "app/utils/receipt-item";
 import type { ReceiptItemsId, ReceiptsId, UsersId } from "next-app/db/models";
 import type { Role } from "next-app/handlers/receipts/utils";
 
@@ -90,7 +89,9 @@ export const ReceiptParticipant: React.FC<Props> = ({
 							className={
 								participant.items.length === 0 ? "opacity-disabled" : undefined
 							}
-							user={convertParticipantToUser(participant)}
+							id={participant.remoteUserId}
+							name={participant.name}
+							connectedAccount={participant.connectedAccount}
 						/>
 						<View className="flex-row items-center justify-between gap-4 self-stretch">
 							<Text>

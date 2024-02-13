@@ -71,12 +71,7 @@ export const AddDebtScreen: AppPage = () => {
 	React.useEffect(() => {
 		const user = userQuery.data;
 		if (user && !form.getValues("user")) {
-			form.setValue("user", {
-				id: user.remoteId,
-				name: user.name,
-				publicName: user.publicName,
-				connectedAccount: user.connectedAccount,
-			});
+			form.setValue("user", user);
 		}
 	}, [userQuery.data, form]);
 	const onUserClick = React.useCallback(

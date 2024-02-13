@@ -4,27 +4,34 @@ import { User as RawUser, tv } from "@nextui-org/react";
 
 import { useUserAvatarProps } from "app/components/app/user-avatar";
 import type { TRPCQueryOutput } from "app/trpc";
-import type { MakeOptional } from "app/utils/types";
+import type { UsersId } from "next-app/db/models";
 
 const wrapper = tv({ base: "text-foreground" });
 
-type UserType = TRPCQueryOutput<"users.get">;
-
 export type Props = {
-	user: MakeOptional<
-		Omit<UserType, "connectedAccount"> & {
-			connectedAccount?: MakeOptional<
-				NonNullable<UserType["connectedAccount"]>
-			>;
-		}
-	>;
+	id: UsersId;
+	name: string;
+	connectedAccount?: TRPCQueryOutput<"users.get">["connectedAccount"];
+	foreign?: boolean;
 } & Omit<React.ComponentProps<typeof RawUser>, "name" | "description">;
 
 export const User = React.forwardRef<HTMLDivElement, Props>(
-	({ user, className, avatarProps: rawAvatarProps, ...props }, ref) => {
+	(
+		{
+			id,
+			name,
+			connectedAccount,
+			className,
+			avatarProps: rawAvatarProps,
+			foreign,
+			...props
+		},
+		ref,
+	) => {
 		const avatarProps = useUserAvatarProps({
-			id: user.remoteId,
-			connectedAccount: user.connectedAccount,
+			id,
+			connectedAccount,
+			foreign,
 			...rawAvatarProps,
 		});
 		return (
@@ -33,8 +40,8 @@ export const User = React.forwardRef<HTMLDivElement, Props>(
 				{...props}
 				data-testid="user"
 				className={wrapper({ className })}
-				name={user.name + (user.publicName ? ` (${user.publicName})` : "")}
-				description={user.connectedAccount?.email}
+				name={name}
+				description={connectedAccount?.email}
 				avatarProps={avatarProps}
 			/>
 		);

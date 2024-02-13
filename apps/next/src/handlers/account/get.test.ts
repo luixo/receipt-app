@@ -23,31 +23,38 @@ describe("account.get", () => {
 				sessionId,
 				accountId,
 				name,
-				account: { avatarUrl },
+				account: { avatarUrl, email },
 			} = await insertAccountWithSession(ctx);
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 
 			const account = await caller.procedure();
 
 			expect(account).toStrictEqual<typeof account>({
-				account: { id: accountId, verified: true, avatarUrl },
+				account: { id: accountId, email, verified: true, avatarUrl },
 				user: { name },
 			});
 		});
 
 		test("unverified account", async ({ ctx }) => {
-			const { sessionId, accountId, name } = await insertAccountWithSession(
-				ctx,
-				{
-					account: { confirmation: {}, avatarUrl: null },
-				},
-			);
+			const {
+				sessionId,
+				accountId,
+				name,
+				account: { email },
+			} = await insertAccountWithSession(ctx, {
+				account: { confirmation: {}, avatarUrl: null },
+			});
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 
 			const account = await caller.procedure();
 
 			expect(account).toStrictEqual<typeof account>({
-				account: { id: accountId, verified: false, avatarUrl: undefined },
+				account: {
+					id: accountId,
+					email,
+					verified: false,
+					avatarUrl: undefined,
+				},
 				user: { name },
 			});
 		});

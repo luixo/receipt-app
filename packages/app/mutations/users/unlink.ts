@@ -22,6 +22,7 @@ export const options: UseContextedMutationOptions<"users.unlink"> = {
 							connectedAccount: snapshot.connectedAccount,
 						}),
 					),
+				getForeign: (controller) => controller.removeOwn(variables.id),
 				getPaged: undefined,
 			}),
 			cache.receiptTransferIntentions.updateRevert(controllerContext, {

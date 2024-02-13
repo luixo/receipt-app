@@ -7,7 +7,6 @@ import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import type { TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
-import { convertParticipantToUser } from "app/utils/receipt-item";
 import type { ReceiptItemsId, ReceiptsId } from "next-app/db/models";
 
 import { ReceiptItemPartInput } from "./receipt-item-part-input";
@@ -52,7 +51,11 @@ export const ReceiptItemPart: React.FC<Props> = ({
 
 	return (
 		<View className="items-start justify-between gap-2 min-[500px]:flex-row sm:gap-4">
-			<User user={convertParticipantToUser(participant)} />
+			<User
+				id={participant.remoteUserId}
+				name={participant.name}
+				connectedAccount={participant.connectedAccount}
+			/>
 			<View className="flex-row gap-2 self-end">
 				<ReceiptItemPartInput
 					receiptId={receiptId}

@@ -30,11 +30,11 @@ export const UserNameInput: React.FC<Props> = ({ user, isLoading }) => {
 	const saveName = React.useCallback(
 		(nextName: string) => {
 			updateUserMutation.mutate(
-				{ id: user.remoteId, update: { type: "name", name: nextName } },
+				{ id: user.id, update: { type: "name", name: nextName } },
 				{ onSuccess: () => setValue(nextName) },
 			);
 		},
-		[updateUserMutation, user.remoteId, setValue],
+		[updateUserMutation, user.id, setValue],
 	);
 
 	return (
