@@ -10,6 +10,7 @@ import { RemoveButton } from "app/components/remove-button";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useSelfAccountId } from "app/hooks/use-self-account-id";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { useUserName } from "app/hooks/use-user-name";
 import { mutations } from "app/mutations";
 import type { TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
@@ -68,7 +69,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 	const currency = useFormattedCurrency(currencyCode);
 	const disabled = participant.items.length === 0;
 
-	const userQuery = trpc.users.getForeign.useQuery({ id: participant.userId });
+	const userName = useUserName(participant.userId, isOwner);
 
 	return (
 		<Accordion>
@@ -83,7 +84,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 						  }
 						: undefined
 				}
-				textValue={userQuery.data?.name || "..."}
+				textValue={userName}
 				title={
 					<View className="flex-col items-start justify-between gap-2 min-[600px]:flex-row">
 						<LoadableUser

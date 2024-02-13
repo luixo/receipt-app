@@ -3,6 +3,7 @@ import React from "react";
 import { Chip } from "@nextui-org/react";
 
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { useUserName } from "app/hooks/use-user-name";
 import { mutations } from "app/mutations";
 import type { TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
@@ -16,6 +17,7 @@ export const EVERY_PARTICIPANT_TAG = "__ALL__" as const;
 type Props = {
 	receiptId: ReceiptsId;
 	receiptItemId: ReceiptItemsId;
+	isOwner: boolean;
 	participant: ReceiptParticipant | typeof EVERY_PARTICIPANT_TAG;
 	notAddedParticipantIds: [UsersId, ...UsersId[]];
 	isDisabled: boolean;
@@ -24,6 +26,7 @@ type Props = {
 export const ParticipantChip: React.FC<Props> = ({
 	receiptId,
 	receiptItemId,
+	isOwner,
 	participant,
 	notAddedParticipantIds,
 	isDisabled,
@@ -50,12 +53,9 @@ export const ParticipantChip: React.FC<Props> = ({
 			},
 		[addItemPartMutation, notAddedParticipantIds, receiptItemId],
 	);
-	const userQuery = trpc.users.getForeign.useQuery(
-		{
-			id:
-				participant !== EVERY_PARTICIPANT_TAG ? participant.userId : "unknown",
-		},
-		{ enabled: participant !== EVERY_PARTICIPANT_TAG },
+	const userName = useUserName(
+		participant !== EVERY_PARTICIPANT_TAG ? participant.userId : undefined,
+		isOwner,
 	);
 
 	return (
@@ -65,9 +65,7 @@ export const ParticipantChip: React.FC<Props> = ({
 			onClick={addParticipant(participant)}
 			isDisabled={isDisabled}
 		>
-			{participant === EVERY_PARTICIPANT_TAG
-				? "Everyone"
-				: `+ ${userQuery.data?.name || "..."}`}
+			{participant === EVERY_PARTICIPANT_TAG ? "Everyone" : `+ ${userName}`}
 		</Chip>
 	);
 };

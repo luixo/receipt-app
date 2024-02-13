@@ -149,6 +149,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 									receiptItemId={receiptItem.id}
 									participant={participant}
 									isDisabled={receiptLocked}
+									isOwner={role === "owner"}
 									notAddedParticipantIds={
 										notAddedParticipants.map(({ userId }) => userId) as [
 											UsersId,
