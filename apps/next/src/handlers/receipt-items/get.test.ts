@@ -17,7 +17,6 @@ import {
 	expectUnauthorizedError,
 } from "@tests/backend/utils/expect";
 import { test } from "@tests/backend/utils/test";
-import type { AccountsId } from "next-app/db/models";
 import { t } from "next-app/handlers/trpc";
 
 import { procedure } from "./get";
@@ -50,56 +49,17 @@ const getItems = (
 			return bCreated - aCreated;
 		});
 
-type ParticipantUser = Omit<
-	Awaited<ReturnType<typeof insertUser>>,
-	"connectedAccountId"
-> & { connectedAccountId?: AccountsId };
-
-type ParticipantAccount = {
-	id: AccountsId;
-	email: string;
-	avatarUrl: string | undefined;
-};
-
 const getParticipants = (
 	participants: Awaited<ReturnType<typeof insertReceiptParticipant>>[],
-	users: [ParticipantUser, ParticipantUser?][],
-	accounts: ParticipantAccount[],
 ) =>
 	participants
-		.map((participant) => {
-			const matchedUsers = users.find(
-				([foreignUser]) => foreignUser.id === participant.userId,
-			);
-			if (!matchedUsers) {
-				throw new Error(
-					`Expected to find a matched user for participant ${participant.userId}`,
-				);
-			}
-			const [foreignMatchedUser, selfMatchedUser] = matchedUsers;
-			const matchedAccount = accounts.find(
-				(account) => account.id === foreignMatchedUser.connectedAccountId,
-			);
-			return {
-				remoteUserId: participant.userId,
-				name: selfMatchedUser
-					? selfMatchedUser.name
-					: foreignMatchedUser.publicName || foreignMatchedUser.name,
-				publicName: selfMatchedUser?.publicName ?? null,
-				connectedAccount:
-					foreignMatchedUser.connectedAccountId && matchedAccount?.email
-						? {
-								id: foreignMatchedUser.connectedAccountId,
-								email: matchedAccount.email,
-								avatarUrl: matchedAccount.avatarUrl,
-						  }
-						: undefined,
-				role: participant.role,
-				resolved: participant.resolved,
-				added: participant.added,
-			};
-		})
-		.sort((a, b) => a.remoteUserId.localeCompare(b.remoteUserId));
+		.map((participant) => ({
+			userId: participant.userId,
+			role: participant.role,
+			resolved: participant.resolved,
+			added: participant.added,
+		}))
+		.sort((a, b) => a.userId.localeCompare(b.userId));
 
 describe("receiptItems.get", () => {
 	describe("input verification", () => {
@@ -164,15 +124,9 @@ describe("receiptItems.get", () => {
 				sessionId,
 				accountId,
 				userId: selfUserId,
-				name,
-				account: { email, avatarUrl },
 			} = await insertAccountWithSession(ctx);
 			const notConnectedUser = await insertUser(ctx, accountId);
-			const {
-				id: foreignAccountId,
-				email: foreignEmail,
-				avatarUrl: foreignAvatarUrl,
-			} = await insertAccount(ctx);
+			const { id: foreignAccountId } = await insertAccount(ctx);
 			const [foreignUser] = await insertConnectedUsers(ctx, [
 				accountId,
 				foreignAccountId,
@@ -212,29 +166,12 @@ describe("receiptItems.get", () => {
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ receiptId });
 			expect(result).toStrictEqual<typeof result>({
-				role: "owner",
 				items: getItems(receiptItems, parts),
-				participants: getParticipants(
-					[selfParticipant, foreignParticipant, notConnectedParticipant],
-					[
-						{
-							id: selfUserId,
-							name,
-							publicName: undefined,
-							connectedAccountId: accountId,
-						},
-						{ ...foreignUser },
-						{ ...notConnectedUser, connectedAccountId: undefined },
-					].map((user) => [user, user]),
-					[
-						{ id: accountId, email, avatarUrl },
-						{
-							id: foreignAccountId,
-							email: foreignEmail,
-							avatarUrl: foreignAvatarUrl,
-						},
-					],
-				),
+				participants: getParticipants([
+					selfParticipant,
+					foreignParticipant,
+					notConnectedParticipant,
+				]),
 			});
 		});
 
@@ -245,38 +182,24 @@ describe("receiptItems.get", () => {
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ receiptId });
 			expect(result).toStrictEqual<typeof result>({
-				role: "owner",
 				items: [],
 				participants: [],
 			});
 		});
 
 		test("foreign receipt", async ({ ctx }) => {
-			const {
-				sessionId,
-				accountId,
-				userId: selfUserId,
-				name,
-				account: { email, avatarUrl },
-			} = await insertAccountWithSession(ctx);
-			const { id: connectedAccountId, email: connectedEmail } =
-				await insertAccount(ctx, { avatarUrl: null });
-			const {
-				id: foreignAccountId,
-				email: foreignEmail,
-				userId: foreignSelfUserId,
-				name: foreignName,
-				avatarUrl: foreignAvatarUrl,
-			} = await insertAccount(ctx);
+			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { id: connectedAccountId } = await insertAccount(ctx, {
+				avatarUrl: null,
+			});
+			const { id: foreignAccountId, userId: foreignSelfUserId } =
+				await insertAccount(ctx);
 			const notConnectedUser = await insertUser(ctx, foreignAccountId);
-			const [foreignUser, foreignToSelfUser] = await insertConnectedUsers(ctx, [
-				accountId,
+			const [foreignToSelfUser] = await insertConnectedUsers(ctx, [
 				foreignAccountId,
-			]);
-			const [connectedUser] = await insertConnectedUsers(ctx, [
 				accountId,
-				connectedAccountId,
 			]);
+			await insertConnectedUsers(ctx, [accountId, connectedAccountId]);
 			const [foreignConnectedUser] = await insertConnectedUsers(ctx, [
 				foreignAccountId,
 				connectedAccountId,
@@ -332,51 +255,13 @@ describe("receiptItems.get", () => {
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ receiptId });
 			expect(result).toStrictEqual<typeof result>({
-				role: "viewer",
 				items: getItems(receiptItems, parts),
-				participants: getParticipants(
-					[
-						selfParticipant,
-						foreignParticipant,
-						notConnectedParticipant,
-						connectedParticipant,
-					],
-					[
-						[
-							foreignToSelfUser,
-							{
-								id: selfUserId,
-								name,
-								publicName: undefined,
-								connectedAccountId: accountId,
-							},
-						],
-						[
-							{
-								id: foreignSelfUserId,
-								name: foreignName,
-								publicName: undefined,
-								connectedAccountId: foreignAccountId,
-							},
-							foreignUser,
-						],
-						[{ ...notConnectedUser, connectedAccountId: undefined }],
-						[foreignConnectedUser, connectedUser],
-					],
-					[
-						{ id: accountId, email, avatarUrl },
-						{
-							id: foreignAccountId,
-							email: foreignEmail,
-							avatarUrl: foreignAvatarUrl,
-						},
-						{
-							id: connectedAccountId,
-							email: connectedEmail,
-							avatarUrl: undefined,
-						},
-					],
-				),
+				participants: getParticipants([
+					selfParticipant,
+					foreignParticipant,
+					notConnectedParticipant,
+					connectedParticipant,
+				]),
 			});
 		});
 	});

@@ -31,7 +31,7 @@ export const defaultGenerateDebts: GenerateDebts = ({
 }) =>
 	getParticipantSums(receiptBase.id, receiptItemsParts, participants)
 		.map((participantSum) => {
-			if (participantSum.remoteUserId === selfAccount.userId) {
+			if (participantSum.userId === selfAccount.userId) {
 				return null;
 			}
 			if (participantSum.sum === 0) {
@@ -45,7 +45,7 @@ export const defaultGenerateDebts: GenerateDebts = ({
 				id: faker.string.uuid(),
 				currencyCode: receiptBase.currencyCode,
 				receiptId: receiptBase.id,
-				userId: participantSum.remoteUserId,
+				userId: participantSum.userId,
 				timestamp: receiptBase.issued,
 				note: getFakeDebtNote(receiptBase.name),
 				amount: participantSum.sum,

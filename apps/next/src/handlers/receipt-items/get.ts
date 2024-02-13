@@ -3,12 +3,7 @@ import { sql } from "kysely";
 import { z } from "zod";
 
 import type { Database } from "next-app/db";
-import type {
-	AccountsId,
-	ReceiptItemsId,
-	ReceiptsId,
-	UsersId,
-} from "next-app/db/models";
+import type { ReceiptItemsId, ReceiptsId, UsersId } from "next-app/db/models";
 import type { Role } from "next-app/handlers/receipts/utils";
 import { getAccessRole } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
@@ -89,64 +84,18 @@ type ReceiptItem = Omit<
 const getReceiptParticipants = async (
 	database: Database,
 	receiptId: ReceiptsId,
-	ownerAccountId: AccountsId,
-) => {
-	const participants = await database
+) =>
+	database
 		.selectFrom("receiptParticipants")
 		.where("receiptId", "=", receiptId)
-		.innerJoin("users as usersTheir", (jb) =>
-			jb.onRef("usersTheir.id", "=", "receiptParticipants.userId"),
-		)
-		.leftJoin("users as usersMine", (jb) =>
-			jb
-				.onRef(
-					"usersMine.connectedAccountId",
-					"=",
-					"usersTheir.connectedAccountId",
-				)
-				.on("usersMine.ownerAccountId", "=", ownerAccountId),
-		)
-		.leftJoin("accounts", (qb) =>
-			qb.onRef("usersMine.connectedAccountId", "=", "accounts.id"),
-		)
 		.select([
-			"userId as remoteUserId",
-			"usersMine.publicName",
-			"usersMine.name",
-			"usersTheir.publicName as theirPublicName",
-			"usersTheir.name as theirName",
-			"accounts.id as accountId",
-			"accounts.email",
-			"accounts.avatarUrl",
-			sql`role`.$castTo<Role>().as("role"),
+			"receiptParticipants.userId",
+			sql.id("receiptParticipants", "role").$castTo<Role>().as("role"),
 			"receiptParticipants.resolved",
-			"added",
+			"receiptParticipants.added",
 		])
 		.orderBy("userId")
 		.execute();
-	return participants.map(
-		({
-			name,
-			theirName,
-			theirPublicName,
-			accountId,
-			email,
-			avatarUrl,
-			...participant
-		}) => ({
-			...participant,
-			name: name ?? theirPublicName ?? theirName,
-			connectedAccount:
-				accountId === null || email === null
-					? undefined
-					: {
-							id: accountId,
-							email,
-							avatarUrl: avatarUrl || undefined,
-					  },
-		}),
-	);
-};
 
 export const procedure = authProcedure
 	.input(
@@ -180,15 +129,10 @@ export const procedure = authProcedure
 		}
 		const [items, participants] = await Promise.all([
 			getReceiptItems(database, input.receiptId),
-			getReceiptParticipants(database, input.receiptId, ctx.auth.accountId),
+			getReceiptParticipants(database, input.receiptId),
 		]);
 
 		return {
-			role:
-				participants.find(
-					(participant) =>
-						participant.connectedAccount?.id === ctx.auth.accountId,
-				)?.role ?? "owner",
 			items,
 			participants,
 		};

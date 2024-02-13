@@ -46,6 +46,15 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 		receiptQuery.status === "success"
 			? receiptQuery.data.selfUserId
 			: undefined;
+	const role =
+		receiptQuery.status === "success"
+			? receiptQuery.data.selfUserId === receiptQuery.data.ownerUserId
+				? "owner"
+				: data.participants.find(
+						(participant) =>
+							participant.userId === receiptQuery.data.selfUserId,
+				  )?.role ?? "viewer"
+			: "viewer";
 	const emptyItems = data.items.filter((item) => item.parts.length === 0);
 	const itemsRef = React.useRef<Record<ReceiptItemsId, HTMLDivElement | null>>(
 		{},
@@ -93,6 +102,7 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 				receiptInTransfer={receiptInTransfer}
 				currencyCode={receiptCurrencyCode}
 				isLoading={isLoading}
+				isOwner={role === "owner"}
 			/>
 			<AddReceiptItemController
 				receiptId={receiptId}
@@ -107,7 +117,7 @@ export const ReceiptItemsInner: React.FC<InnerProps> = ({
 					receiptItem={receiptItem}
 					receiptParticipants={data.participants}
 					currencyCode={receiptCurrencyCode}
-					role={data.role}
+					role={role}
 					isLoading={isLoading}
 					ref={(element) => {
 						itemsRef.current[receiptItem.id] = element;

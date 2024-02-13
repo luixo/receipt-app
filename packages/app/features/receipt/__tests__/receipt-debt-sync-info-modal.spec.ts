@@ -11,8 +11,14 @@ test("Sorting", async ({
 	participantDebtRow,
 	user: userSelector,
 }) => {
-	const { receipt, debts, participants, receiptItemsParts, selfAccount } =
-		mockReceiptWithDebtsForModal();
+	const {
+		receipt,
+		debts,
+		participants,
+		users,
+		receiptItemsParts,
+		selfAccount,
+	} = mockReceiptWithDebtsForModal();
 	await openReceiptWithDebts(receipt.id);
 	await openDebtsInfoModal();
 	const userNames = await participantDebtRow
@@ -29,24 +35,24 @@ test("Sorting", async ({
 		name: string;
 		sum: number;
 	};
-	const users = participants.reduce<
+	const usersBlocks = participants.reduce<
 		Record<"synced" | "unsynced" | "desynced" | "empty", User[]>
 	>(
 		(acc, participant) => {
-			if (participant.remoteUserId === selfAccount.userId) {
+			if (participant.userId === selfAccount.userId) {
 				return acc;
 			}
 			const expectedSum =
-				participantSums.find(
-					({ remoteUserId }) => remoteUserId === participant.remoteUserId,
-				)?.sum ?? 0;
+				participantSums.find(({ userId }) => userId === participant.userId)
+					?.sum ?? 0;
+			const matchedUser = users.find((user) => user.id === participant.userId);
 			const getUser = (): User => ({
-				id: participant.remoteUserId,
-				name: participant.name,
+				id: participant.userId,
+				name: matchedUser!.name,
 				sum: expectedSum,
 			});
 			const matchedDebt = debts.find(
-				(debt) => debt.userId === participant.remoteUserId,
+				(debt) => debt.userId === participant.userId,
 			);
 			if (matchedDebt) {
 				// Desyned debts
@@ -68,10 +74,10 @@ test("Sorting", async ({
 			empty: [],
 		},
 	);
-	expect(users.unsynced.length).toBeGreaterThan(0);
-	expect(users.desynced.length).toBeGreaterThan(0);
-	expect(users.synced.length).toBeGreaterThan(0);
-	expect(users.empty.length).toBeGreaterThan(0);
+	expect(usersBlocks.unsynced.length).toBeGreaterThan(0);
+	expect(usersBlocks.desynced.length).toBeGreaterThan(0);
+	expect(usersBlocks.synced.length).toBeGreaterThan(0);
+	expect(usersBlocks.empty.length).toBeGreaterThan(0);
 	const sortInner = (notSortedUsers: User[]): UsersId[] =>
 		notSortedUsers
 			.sort((a, b) =>
@@ -79,9 +85,9 @@ test("Sorting", async ({
 			)
 			.map((user) => user.name);
 	expect(userNames).toEqual([
-		...sortInner(users.unsynced),
-		...sortInner(users.desynced),
-		...sortInner(users.synced),
-		...sortInner(users.empty),
+		...sortInner(usersBlocks.unsynced),
+		...sortInner(usersBlocks.desynced),
+		...sortInner(usersBlocks.synced),
+		...sortInner(usersBlocks.empty),
 	]);
 });

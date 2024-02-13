@@ -152,7 +152,11 @@ describe("receiptParticipants.add", () => {
 
 		describe("one of the users", () => {
 			test("does not exist", async ({ ctx }) => {
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
+				const {
+					sessionId,
+					accountId,
+					account: { email },
+				} = await insertAccountWithSession(ctx);
 				const { id: receiptId } = await insertReceipt(ctx, accountId);
 				const fakeUserId = faker.string.uuid();
 				const anotherFakerUserId = faker.string.uuid();
@@ -166,7 +170,7 @@ describe("receiptParticipants.add", () => {
 							role: "editor",
 						}),
 					"NOT_FOUND",
-					`User "${fakeUserId}" does not exist.`,
+					`User "${fakeUserId}" does not exist or is not owned by "${email}".`,
 				);
 				await expectTRPCError(
 					() =>
@@ -176,7 +180,7 @@ describe("receiptParticipants.add", () => {
 							role: "editor",
 						}),
 					"NOT_FOUND",
-					`Users "${fakeUserId}", "${anotherFakerUserId}" do not exist.`,
+					`Users "${fakeUserId}", "${anotherFakerUserId}" do not exist or are not owned by "${email}".`,
 				);
 			});
 
@@ -202,8 +206,8 @@ describe("receiptParticipants.add", () => {
 							userIds: [foreignUserId],
 							role: "editor",
 						}),
-					"FORBIDDEN",
-					`User "${foreignUserId}" is not owned by "${email}".`,
+					"NOT_FOUND",
+					`User "${foreignUserId}" does not exist or is not owned by "${email}".`,
 				);
 				await expectTRPCError(
 					() =>
@@ -212,8 +216,8 @@ describe("receiptParticipants.add", () => {
 							userIds: [foreignUserId, anotherForeignUserId],
 							role: "editor",
 						}),
-					"FORBIDDEN",
-					`Users "${anotherForeignUserId}", "${foreignUserId}" are not owned by "${email}".`,
+					"NOT_FOUND",
+					`Users "${foreignUserId}", "${anotherForeignUserId}" do not exist or are not owned by "${email}".`,
 				);
 			});
 
@@ -265,18 +269,15 @@ describe("receiptParticipants.add", () => {
 				sessionId,
 				accountId,
 				userId: selfUserId,
-				account: { email, avatarUrl },
-				name,
 			} = await insertAccountWithSession(ctx);
 			const { id: receiptId } = await insertReceipt(ctx, accountId, {
 				// Verify that we can add participant in a locked receipt
 				lockedTimestamp: new Date(),
 			});
 			const user = await insertUser(ctx, accountId);
-			const { id: foreignAccountId, email: foreignEmail } = await insertAccount(
-				ctx,
-				{ avatarUrl: null },
-			);
+			const { id: foreignAccountId } = await insertAccount(ctx, {
+				avatarUrl: null,
+			});
 			const [foreignUser, { id: foreignToSelfUserId }] =
 				await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
 
@@ -296,29 +297,16 @@ describe("receiptParticipants.add", () => {
 			);
 			const users = [
 				{
-					connectedAccount: { id: accountId, email, avatarUrl },
-					name,
-					publicName: null,
 					id: selfUserId,
 					added: new Date(),
 					role: "owner" as const,
 				},
 				{
-					connectedAccount: undefined,
-					name: user.name,
-					publicName: user.publicName ?? null,
 					id: user.id,
 					added: new Date(),
 					role: "editor" as const,
 				},
 				{
-					connectedAccount: {
-						email: foreignEmail,
-						id: foreignAccountId,
-						avatarUrl: undefined,
-					},
-					name: foreignUser.name,
-					publicName: foreignUser.publicName ?? null,
 					id: foreignUser.id,
 					added: new Date(),
 					role: "editor" as const,

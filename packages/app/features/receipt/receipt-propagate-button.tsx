@@ -50,11 +50,9 @@ const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 				itemsQuery.data.participants,
 			)
 				.map((participant) => ({
-					userId: participant.remoteUserId,
+					userId: participant.userId,
 					sum: participant.sum,
-					currentDebt: debts.find(
-						(debt) => debt.userId === participant.remoteUserId,
-					),
+					currentDebt: debts.find((debt) => debt.userId === participant.userId),
 				}))
 				.filter((participant) => participant.userId !== receipt.selfUserId),
 		[itemsQuery.data, receipt.id, debts, receipt.selfUserId],

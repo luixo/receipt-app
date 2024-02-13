@@ -44,7 +44,7 @@ const remove = (
 		updateReceiptParticipants(controller, receiptId, (pariticipants) =>
 			removeFromArray(
 				pariticipants,
-				(participant) => participant.remoteUserId === userId,
+				(participant) => participant.userId === userId,
 				ref,
 			),
 		),
@@ -57,7 +57,7 @@ const update =
 			updateReceiptParticipants(controller, receiptId, (pariticipants) =>
 				replaceInArray(
 					pariticipants,
-					(participant) => participant.remoteUserId === userId,
+					(participant) => participant.userId === userId,
 					updater,
 					ref,
 				),
@@ -99,7 +99,7 @@ export const getRevertController = ({
 		add: (receiptId: ReceiptsId, item: ReceiptParticipant, index = 0) =>
 			utils.applyWithRevert(
 				() => add(controller, receiptId, item, index),
-				() => remove(controller, receiptId, item.remoteUserId),
+				() => remove(controller, receiptId, item.userId),
 			),
 		remove: (receiptId: ReceiptsId, userId: UsersId) =>
 			utils.applyWithRevert(

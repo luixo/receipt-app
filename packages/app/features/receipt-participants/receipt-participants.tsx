@@ -28,8 +28,8 @@ const getSortParticipants = () => (a: Participant, b: Participant) => {
 	if (b.role === "owner") {
 		return 1;
 	}
-	// Sort everyone else by name
-	return a.name.localeCompare(b.name);
+	// Sort everyone else by added timestamp
+	return a.added.valueOf() - b.added.valueOf();
 };
 
 type Props = {
@@ -39,6 +39,7 @@ type Props = {
 	receiptLocked: boolean;
 	receiptInTransfer: boolean;
 	currencyCode?: CurrencyCode;
+	isOwner: boolean;
 	isLoading: boolean;
 };
 
@@ -49,6 +50,7 @@ export const ReceiptParticipants: React.FC<Props> = ({
 	receiptSelfUserId,
 	currencyCode,
 	receiptId,
+	isOwner,
 	isLoading,
 }) => {
 	const sortParticipants = React.useMemo(() => getSortParticipants(), []);
@@ -72,18 +74,14 @@ export const ReceiptParticipants: React.FC<Props> = ({
 				items: items
 					.map((item) => {
 						const sum =
-							item.calculations.sumFlooredByParticipant[
-								participant.remoteUserId
-							];
+							item.calculations.sumFlooredByParticipant[participant.userId];
 						if (!sum) {
 							return null;
 						}
 						return {
 							sum: sum / decimalsPower,
 							hasExtra: Boolean(
-								item.calculations.shortageByParticipant[
-									participant.remoteUserId
-								],
+								item.calculations.shortageByParticipant[participant.userId],
 							),
 							id: item.id,
 							name: item.name,
@@ -106,26 +104,24 @@ export const ReceiptParticipants: React.FC<Props> = ({
 			>
 				{participants.map((participant) => (
 					<ReceiptParticipant
-						key={participant.remoteUserId}
+						key={participant.userId}
 						receiptId={receiptId}
 						receiptLocked={receiptLocked}
 						receiptSelfUserId={receiptSelfUserId}
 						participant={participant}
-						role={data.role}
+						isOwner={isOwner}
 						currencyCode={currencyCode}
 						isLoading={isLoading}
 					/>
 				))}
-				{data.role !== "owner" ? null : (
+				{!isOwner ? null : (
 					<AddReceiptParticipantForm
 						className="my-4"
 						disabled={isLoading}
 						receiptId={receiptId}
 						receiptLocked={receiptLocked}
 						receiptInTransfer={receiptInTransfer}
-						filterIds={participants.map(
-							(participant) => participant.remoteUserId,
-						)}
+						filterIds={participants.map((participant) => participant.userId)}
 					/>
 				)}
 			</AccordionItem>

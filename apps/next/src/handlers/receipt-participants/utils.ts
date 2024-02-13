@@ -33,18 +33,8 @@ export const addReceiptParticipants = async (
 	const userIds = usersToAdd.map(([id]) => id);
 	const users = await database
 		.selectFrom("users")
-		.leftJoin("accounts", (qb) =>
-			qb.onRef("accounts.id", "=", "users.connectedAccountId"),
-		)
-		.select([
-			"users.id",
-			"users.ownerAccountId",
-			"users.name",
-			"users.publicName",
-			"accounts.id as accountId",
-			"accounts.email",
-			"accounts.avatarUrl",
-		])
+		.where("users.ownerAccountId", "=", receiptOwnerId)
+		.select("users.id")
 		.where("users.id", "in", userIds)
 		.execute();
 	if (users.length !== userIds.length) {
@@ -55,28 +45,13 @@ export const addReceiptParticipants = async (
 			code: "NOT_FOUND",
 			message: `${missedUserIds.length === 1 ? "User" : "Users"} ${missedUserIds
 				.map((id) => `"${id}"`)
-				.join(", ")} ${missedUserIds.length === 1 ? "does" : "do"} not exist.`,
-		});
-	}
-	const notOwnedUsers = users.filter(
-		(user) => user.ownerAccountId !== receiptOwnerId,
-	);
-	if (notOwnedUsers.length !== 0) {
-		throw new TRPCError({
-			code: "FORBIDDEN",
-			message: `${notOwnedUsers.length === 1 ? "User" : "Users"} ${notOwnedUsers
-				.map(({ id }) => `"${id}"`)
 				.join(", ")} ${
-				notOwnedUsers.length === 1 ? "is" : "are"
+				missedUserIds.length === 1 ? "does" : "do"
+			} not exist or ${
+				missedUserIds.length === 1 ? "is" : "are"
 			} not owned by "${receiptOwnerEmail}".`,
 		});
 	}
-	const userData = userIds.map((userId) => {
-		const { ownerAccountId: disregardedOwnerAccountId, ...user } = users.find(
-			({ id }) => id === userId,
-		)!;
-		return user;
-	});
 	const receiptParticipants = await database
 		.selectFrom("receiptParticipants")
 		.where((eb) => eb("receiptId", "=", receiptId).and("userId", "in", userIds))
@@ -107,18 +82,11 @@ export const addReceiptParticipants = async (
 		.returning(["added", "userId"])
 		.execute();
 	return usersToAdd.map(([id, role]) => {
-		const { email, accountId, avatarUrl, ...userDatum } = userData.find(
-			(user) => user.id === id,
-		)!;
 		const addedDatum = result.find(({ userId }) => userId === id)!;
 		return {
+			id,
 			added: addedDatum.added,
 			role: receiptOwnerId === id ? ("owner" as const) : role,
-			connectedAccount:
-				email === null || accountId === null
-					? undefined
-					: { email, id: accountId, avatarUrl: avatarUrl || undefined },
-			...userDatum,
 		};
 	});
 };

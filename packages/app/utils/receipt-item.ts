@@ -25,7 +25,7 @@ type ReceiptItem = {
 };
 type ReceiptParticipant = {
 	added: Date;
-	remoteUserId: UsersId;
+	userId: UsersId;
 };
 
 export const getItemCalculations = <T extends string>(
@@ -197,18 +197,18 @@ export const getParticipantSums = <
 	const nonEmptyParticipantIds = rotate(
 		participants
 			.filter((participant) => {
-				const sum = sumFlooredByParticipant[participant.remoteUserId];
+				const sum = sumFlooredByParticipant[participant.userId];
 				return sum && sum >= 0;
 			})
 			.sort((a, b) => a.added.valueOf() - b.added.valueOf()),
 		getIndexByString(receiptId),
 	)
 		.sort((a, b) => {
-			const leftoverA = reimbursedShortages[a.remoteUserId]?.notReimbursed ?? 0;
-			const leftoverB = reimbursedShortages[b.remoteUserId]?.notReimbursed ?? 0;
+			const leftoverA = reimbursedShortages[a.userId]?.notReimbursed ?? 0;
+			const leftoverB = reimbursedShortages[b.userId]?.notReimbursed ?? 0;
 			return leftoverB - leftoverA;
 		})
-		.map(({ remoteUserId }) => remoteUserId);
+		.map(({ userId }) => userId);
 
 	if (leftover > nonEmptyParticipantIds.length) {
 		throw new Error("Unexpected leftover bigger than participants left");
@@ -229,14 +229,14 @@ export const getParticipantSums = <
 		{},
 	);
 
-	return participants.map(({ remoteUserId, ...participant }) => ({
+	return participants.map(({ userId, ...participant }) => ({
 		...participant,
-		remoteUserId,
+		userId,
 		sum:
 			Math.round(
-				(sumFlooredByParticipant[remoteUserId] ?? 0) +
-					(reimbursedShortages[remoteUserId]?.reimbursed ?? 0) +
-					(luckyLeftovers[remoteUserId] ?? 0),
+				(sumFlooredByParticipant[userId] ?? 0) +
+					(reimbursedShortages[userId]?.reimbursed ?? 0) +
+					(luckyLeftovers[userId] ?? 0),
 			) / decimalsPower,
 	}));
 };

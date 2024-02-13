@@ -32,7 +32,7 @@ type Props = {
 	selfUserId?: UsersId;
 	participant: TRPCQueryOutput<"receiptItems.get">["participants"][number];
 	isLoading: boolean;
-	role: Role;
+	isOwner: boolean;
 };
 
 export const ReceiptParticipantRoleInput: React.FC<Props> = ({
@@ -40,7 +40,7 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 	selfUserId,
 	participant,
 	isLoading,
-	role,
+	isOwner,
 }) => {
 	const updateParticipantMutation = trpc.receiptParticipants.update.useMutation(
 		useTrpcMutationOptions(mutations.receiptParticipants.update.options, {
@@ -54,14 +54,14 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 			}
 			updateParticipantMutation.mutate({
 				receiptId,
-				userId: participant.remoteUserId,
+				userId: participant.userId,
 				update: { type: "role", role: nextRole },
 			});
 		},
 		[
 			updateParticipantMutation,
 			receiptId,
-			participant.remoteUserId,
+			participant.userId,
 			participant.role,
 		],
 	);
@@ -72,9 +72,7 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 				<Button
 					variant="flat"
 					size="sm"
-					isDisabled={
-						isLoading || role !== "owner" || participant.role === "owner"
-					}
+					isDisabled={isLoading || !isOwner || participant.role === "owner"}
 					isLoading={updateParticipantMutation.isPending}
 					startContent={<ChevronDown />}
 				>

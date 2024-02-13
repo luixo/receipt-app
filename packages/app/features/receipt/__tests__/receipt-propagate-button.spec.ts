@@ -267,7 +267,7 @@ test.describe("Mutations", () => {
 			participants,
 		);
 		const participantTuples = participantSums.map(
-			(participant) => [participant.remoteUserId, participant.sum] as const,
+			(participant) => [participant.userId, participant.sum] as const,
 		);
 		const addedDebts = addBatchVariables.map(
 			(debt) => [debt.userId, debt.amount] as const,

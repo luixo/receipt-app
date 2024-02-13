@@ -14,10 +14,7 @@ export const options: UseContextedMutationOptions<
 				getReceiptParticipant: (controller) => {
 					result.forEach((item) =>
 						controller.add(receiptId, {
-							name: item.name,
-							publicName: item.publicName,
-							connectedAccount: item.connectedAccount,
-							remoteUserId: item.id,
+							userId: item.id,
 							role: item.role,
 							resolved: false,
 							added: item.added,
@@ -43,18 +40,8 @@ export const options: UseContextedMutationOptions<
 						}
 						controller.update((prev) => prev + 1);
 					},
-					getResolvedParticipants: (controller) => {
-						result.forEach((item) => {
-							if (!item.connectedAccount) {
-								return;
-							}
-							controller.add(receiptId, {
-								remoteUserId: item.id,
-								resolved: false,
-								localUserId: item.id,
-							});
-						});
-					},
+					// TODO: to be fixed with resolved participants calculated from receipt data
+					getResolvedParticipants: undefined,
 				});
 			}
 		},

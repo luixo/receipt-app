@@ -1,5 +1,5 @@
 import { test as originalTest } from "@tests/frontend/fixtures";
-import type { ReceiptsId } from "next-app/db/models";
+import type { ReceiptsId, UsersId } from "next-app/db/models";
 
 import type {
 	GenerateReceipt,
@@ -102,7 +102,7 @@ export const test = originalTest.extend<Fixtures>({
 						participants,
 					};
 				});
-				api.mock("users.get", (input) => {
+				const usersFn = (input: { id: UsersId }) => {
 					if (input.id === selfAccount.accountId) {
 						return {
 							id: selfAccount.userId,
@@ -131,8 +131,12 @@ export const test = originalTest.extend<Fixtures>({
 						};
 					}
 
-					throw new Error(`Unexpected user id in "users.get": ${input.id}`);
-				});
+					throw new Error(
+						`Unexpected user id in "users.get" / "users.getForeign": ${input.id}`,
+					);
+				};
+				api.mock("users.get", usersFn);
+				api.mock("users.getForeign", usersFn);
 				api.mockUtils.auth({
 					account: {
 						id: selfAccount.accountId,

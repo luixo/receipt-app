@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { User } from "app/components/app/user";
+import { LoadableUser } from "app/components/app/loadable-user";
 import { RemoveButton } from "app/components/remove-button";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
@@ -51,11 +51,7 @@ export const ReceiptItemPart: React.FC<Props> = ({
 
 	return (
 		<View className="items-start justify-between gap-2 min-[500px]:flex-row sm:gap-4">
-			<User
-				id={participant.remoteUserId}
-				name={participant.name}
-				connectedAccount={participant.connectedAccount}
-			/>
+			<LoadableUser id={participant.userId} foreign />
 			<View className="flex-row gap-2 self-end">
 				<ReceiptItemPartInput
 					receiptId={receiptId}

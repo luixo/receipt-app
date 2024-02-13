@@ -365,9 +365,8 @@ test.describe("Mutations", () => {
 		).toStrictEqual(
 			addVariablesList.map(
 				(addVariables) =>
-					participantSums.find(
-						({ remoteUserId }) => addVariables.userId === remoteUserId,
-					)?.sum,
+					participantSums.find(({ userId }) => addVariables.userId === userId)
+						?.sum,
 			),
 		);
 	});
@@ -463,7 +462,7 @@ test.describe("Mutations", () => {
 			updateVariablesList.map((updateVariables) => {
 				const matchedDebt = debts.find(({ id }) => id === updateVariables.id);
 				return participantSums.find(
-					({ remoteUserId }) => remoteUserId === matchedDebt?.userId,
+					({ userId }) => userId === matchedDebt?.userId,
 				)?.sum;
 			}),
 		);

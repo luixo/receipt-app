@@ -72,7 +72,11 @@ describe("receipts.add", () => {
 		});
 
 		test("user does not exist", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const {
+				sessionId,
+				accountId,
+				account: { email },
+			} = await insertAccountWithSession(ctx);
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			await insertUser(ctx, accountId);
 			const fakeUserId = faker.string.uuid();
@@ -83,7 +87,7 @@ describe("receipts.add", () => {
 						participants: [fakeUserId],
 					}),
 				"NOT_FOUND",
-				`User "${fakeUserId}" does not exist.`,
+				`User "${fakeUserId}" does not exist or is not owned by "${email}".`,
 			);
 		});
 
@@ -103,8 +107,8 @@ describe("receipts.add", () => {
 						...getValidReceipt(),
 						participants: [foreignUserId],
 					}),
-				"FORBIDDEN",
-				`User "${foreignUserId}" is not owned by "${account.email}".`,
+				"NOT_FOUND",
+				`User "${foreignUserId}" does not exist or is not owned by "${account.email}".`,
 			);
 		});
 	});

@@ -3,8 +3,8 @@ import { View } from "react-native";
 
 import { Accordion, AccordionItem } from "@nextui-org/react";
 
+import { LoadableUser } from "app/components/app/loadable-user";
 import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
-import { User } from "app/components/app/user";
 import { Text } from "app/components/base/text";
 import { RemoveButton } from "app/components/remove-button";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
@@ -15,7 +15,6 @@ import type { TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
 import type { CurrencyCode } from "app/utils/currency";
 import type { ReceiptItemsId, ReceiptsId, UsersId } from "next-app/db/models";
-import type { Role } from "next-app/handlers/receipts/utils";
 
 import { ReceiptParticipantRoleInput } from "./receipt-participant-role-input";
 
@@ -32,7 +31,7 @@ type Props = {
 			name: string;
 		}[];
 	};
-	role: Role;
+	isOwner: boolean;
 	currencyCode?: CurrencyCode;
 	isLoading: boolean;
 };
@@ -42,7 +41,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 	receiptId,
 	receiptSelfUserId,
 	receiptLocked,
-	role,
+	isOwner,
 	currencyCode,
 	isLoading,
 }) => {
@@ -62,12 +61,14 @@ export const ReceiptParticipant: React.FC<Props> = ({
 		() =>
 			removeReceiptParticipantMutation.mutate({
 				receiptId,
-				userId: participant.remoteUserId,
+				userId: participant.userId,
 			}),
-		[removeReceiptParticipantMutation, receiptId, participant.remoteUserId],
+		[removeReceiptParticipantMutation, receiptId, participant.userId],
 	);
 	const currency = useFormattedCurrency(currencyCode);
 	const disabled = participant.items.length === 0;
+
+	const userQuery = trpc.users.getForeign.useQuery({ id: participant.userId });
 
 	return (
 		<Accordion>
@@ -82,16 +83,15 @@ export const ReceiptParticipant: React.FC<Props> = ({
 						  }
 						: undefined
 				}
-				textValue={participant.name}
+				textValue={userQuery.data?.name || "..."}
 				title={
 					<View className="flex-col items-start justify-between gap-2 min-[600px]:flex-row">
-						<User
+						<LoadableUser
 							className={
 								participant.items.length === 0 ? "opacity-disabled" : undefined
 							}
-							id={participant.remoteUserId}
-							name={participant.name}
-							connectedAccount={participant.connectedAccount}
+							id={participant.userId}
+							foreign
 						/>
 						<View className="flex-row items-center justify-between gap-4 self-stretch">
 							<Text>
@@ -103,24 +103,22 @@ export const ReceiptParticipant: React.FC<Props> = ({
 									selfUserId={receiptSelfUserId}
 									participant={participant}
 									isLoading={isLoading}
-									role={role}
+									isOwner={isOwner}
 								/>
 								<ReceiptParticipantResolvedButton
 									variant={
-										participant.remoteUserId === receiptSelfUserId
-											? "ghost"
-											: "light"
+										participant.userId === receiptSelfUserId ? "ghost" : "light"
 									}
 									receiptId={receiptId}
-									userId={participant.remoteUserId}
+									userId={participant.userId}
 									selfUserId={receiptSelfUserId}
 									resolved={
-										participant.remoteUserId === receiptSelfUserId
+										participant.userId === receiptSelfUserId
 											? participant.resolved
 											: null
 									}
 								/>
-								{role === "owner" ? (
+								{isOwner ? (
 									<RemoveButton
 										onRemove={removeReceiptParticipant}
 										mutation={removeReceiptParticipantMutation}

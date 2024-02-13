@@ -5,7 +5,6 @@ import {
 	Card,
 	CardBody,
 	CardHeader,
-	Chip,
 	Divider,
 	ScrollShadow,
 } from "@nextui-org/react";
@@ -25,6 +24,7 @@ import { round } from "app/utils/math";
 import type { ReceiptsId, UsersId } from "next-app/db/models";
 import type { Role } from "next-app/handlers/receipts/utils";
 
+import { EVERY_PARTICIPANT_TAG, ParticipantChip } from "./participant-chip";
 import { ReceiptItemNameInput } from "./receipt-item-name-input";
 import { ReceiptItemPriceInput } from "./receipt-item-price-input";
 import { ReceiptItemQuantityInput } from "./receipt-item-quantity-input";
@@ -32,9 +32,6 @@ import { ReceiptItemQuantityInput } from "./receipt-item-quantity-input";
 type ReceiptItems = TRPCQueryOutput<"receiptItems.get">["items"];
 type ReceiptParticipant =
 	TRPCQueryOutput<"receiptItems.get">["participants"][number];
-
-type EveryParticipantTag = "__ALL__";
-const EVERY_PARTICIPANT_TAG: EveryParticipantTag = "__ALL__";
 
 type Props = {
 	receiptLocked: boolean;
@@ -72,31 +69,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 
 		const addedParticipants = receiptItem.parts.map((part) => part.userId);
 		const notAddedParticipants = receiptParticipants.filter(
-			(participant) => !addedParticipants.includes(participant.remoteUserId),
-		);
-
-		const addItemPartMutation = trpc.itemParticipants.add.useMutation(
-			useTrpcMutationOptions(mutations.itemParticipants.add.options, {
-				context: receiptId,
-			}),
-		);
-		const addParticipant = React.useCallback(
-			(participant: ReceiptParticipant | EveryParticipantTag) => () => {
-				if (participant === EVERY_PARTICIPANT_TAG) {
-					addItemPartMutation.mutate({
-						itemId: receiptItem.id,
-						userIds: notAddedParticipants.map(
-							({ remoteUserId }) => remoteUserId,
-						) as [UsersId, ...UsersId[]],
-					});
-				} else {
-					addItemPartMutation.mutate({
-						itemId: receiptItem.id,
-						userIds: [participant.remoteUserId],
-					});
-				}
-			},
-			[addItemPartMutation, notAddedParticipants, receiptItem.id],
+			(participant) => !addedParticipants.includes(participant.userId),
 		);
 
 		const isDeleteLoading =
@@ -166,25 +139,23 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 								? notAddedParticipants
 								: [EVERY_PARTICIPANT_TAG, ...notAddedParticipants]
 							).map((participant) => (
-								<Chip
+								<ParticipantChip
 									key={
 										participant === EVERY_PARTICIPANT_TAG
 											? participant
-											: participant.remoteUserId
+											: participant.userId
 									}
-									color={
-										participant === EVERY_PARTICIPANT_TAG
-											? "secondary"
-											: "default"
-									}
-									className="cursor-pointer"
-									onClick={addParticipant(participant)}
+									receiptId={receiptId}
+									receiptItemId={receiptItem.id}
+									participant={participant}
 									isDisabled={receiptLocked}
-								>
-									{participant === EVERY_PARTICIPANT_TAG
-										? "Everyone"
-										: `+ ${participant.name}`}
-								</Chip>
+									notAddedParticipantIds={
+										notAddedParticipants.map(({ userId }) => userId) as [
+											UsersId,
+											...UsersId[],
+										]
+									}
+								/>
 							))}
 						</ScrollShadow>
 					)}
@@ -193,7 +164,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 							<Divider />
 							{receiptItem.parts.map((part) => {
 								const matchedParticipant = receiptParticipants.find(
-									(participant) => participant.remoteUserId === part.userId,
+									(participant) => participant.userId === part.userId,
 								);
 								if (!matchedParticipant) {
 									return (

@@ -123,27 +123,17 @@ export const defaultGenerateReceiptParticipants: GenerateReceiptParticipants =
 	({ faker, users, selfAccount, addSelf = true }) =>
 		[
 			...users.map((user) => ({
-				remoteUserId: user.id,
-				publicName: null,
-				connectedAccount: undefined,
+				userId: user.id,
 				role: "editor" as const,
 				resolved: faker.datatype.boolean(),
 				added: faker.date.recent({ days: 5, refDate: new Date() }),
-				name: user.name,
 			})),
 			addSelf
 				? {
-						remoteUserId: selfAccount.userId,
-						publicName: null,
-						connectedAccount: {
-							id: selfAccount.accountId,
-							email: selfAccount.email,
-							avatarUrl: selfAccount.avatarUrl,
-						},
+						userId: selfAccount.userId,
 						role: "owner" as const,
 						resolved: false,
 						added: faker.date.recent({ days: 5, refDate: new Date() }),
-						name: selfAccount.name,
 				  }
 				: undefined,
 		].filter(nonNullishGuard);
@@ -167,7 +157,7 @@ export const defaultGenerateReceiptItemsParts: GenerateReceiptItemsParts = ({
 		name: item.name,
 		created: item.created,
 		parts: participants.map((participant) => ({
-			userId: participant.remoteUserId,
+			userId: participant.userId,
 			part: faker.number.int({ min: 1, max: 3 }),
 		})),
 	}));
