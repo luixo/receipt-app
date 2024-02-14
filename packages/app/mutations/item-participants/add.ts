@@ -1,5 +1,4 @@
 import { cache } from "app/cache";
-import { mergeUpdaterResults } from "app/cache/utils";
 import type { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import type { ReceiptsId } from "next-app/db/models";
 
@@ -8,15 +7,11 @@ export const options: UseContextedMutationOptions<
 	ReceiptsId
 > = {
 	onMutate: (controllerContext, receiptId) => (variables) =>
-		cache.receiptItems.updateRevert(controllerContext, {
-			getReceiptItem: undefined,
-			getReceiptParticipant: undefined,
-			getReceiptItemPart: (controller) =>
-				mergeUpdaterResults(
-					...variables.userIds.map((userId) =>
-						controller.add(receiptId, variables.itemId, { userId, part: 1 }),
-					),
-				),
+		cache.receipts.updateRevert(controllerContext, {
+			get: (controller) =>
+				controller.addItemParts(receiptId, variables.itemId, variables.userIds),
+			getPaged: undefined,
+			getNonResolvedAmount: undefined,
 		}),
 	errorToastOptions: () => (error) => ({
 		text: `Error adding participant(s): ${error.message}`,

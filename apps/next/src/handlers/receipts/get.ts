@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { sql } from "kysely";
+import { jsonArrayFrom } from "kysely/helpers/postgres";
 import { z } from "zod";
 
 import { omitUndefined } from "app/utils/utils";
@@ -13,7 +13,7 @@ import { queueCallFactory } from "next-app/handlers/batch";
 import type { AuthorizedContext } from "next-app/handlers/context";
 import type { Role } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
-import { receiptIdSchema, roleSchema } from "next-app/handlers/validation";
+import { receiptIdSchema } from "next-app/handlers/validation";
 
 const fetchReceipts = async (
 	{ database, auth }: AuthorizedContext,
@@ -36,50 +36,67 @@ const fetchReceipts = async (
 				.on("usersTheir.connectedAccountId", "=", auth.accountId)
 				.onRef("usersTheir.ownerAccountId", "=", "receipts.ownerAccountId"),
 		)
-		.leftJoin("receiptItems", (jb) =>
-			jb.onRef("receiptItems.receiptId", "=", "receipts.id"),
-		)
-		.leftJoin("receiptParticipants", (jb) =>
-			jb
-				.onRef("receiptParticipants.receiptId", "=", "receipts.id")
-				.onRef("receiptParticipants.userId", "=", "usersTheir.id"),
-		)
 		.innerJoin("users as usersMine", (jb) =>
 			jb
 				.onRef("usersMine.ownerAccountId", "=", "usersTheir.connectedAccountId")
 				.onRef("usersMine.connectedAccountId", "=", "receipts.ownerAccountId"),
 		)
-		.select([
+		.select((eb) => [
 			"receipts.id",
 			"receipts.name",
 			"receipts.currencyCode",
-			(eb) =>
-				eb.fn
-					.coalesce(
-						eb.fn.sum(
-							eb("receiptItems.price", "*", eb.ref("receiptItems.quantity")),
-						),
-						sql`0`,
-					)
-					.as("sum"),
 			"receipts.ownerAccountId",
 			"receipts.lockedTimestamp",
 			"receipts.issued",
-			"receiptParticipants.resolved as participantResolved",
-			"receiptParticipants.role as selfRole",
+			"receipts.transferIntentionAccountId",
 			"usersMine.id as ownerUserId",
 			"usersTheir.id as selfUserId",
-			"receipts.transferIntentionAccountId",
 			"usersTransferIntention.id as transferIntentionUserId",
-		])
-		.groupBy([
-			"receipts.id",
-			"receiptParticipants.resolved",
-			"receiptParticipants.role",
-			"usersMine.id",
-			"usersTheir.id",
-			"receipts.transferIntentionAccountId",
-			"transferIntentionUserId",
+			jsonArrayFrom(
+				eb
+					.selectFrom("receiptItems")
+					.select((ebb) => [
+						"receiptItems.id",
+						"receiptItems.name",
+						"receiptItems.price",
+						"receiptItems.quantity",
+						"receiptItems.locked",
+						"receiptItems.created",
+						jsonArrayFrom(
+							ebb
+								.selectFrom("itemParticipants")
+								.select(["itemParticipants.part", "itemParticipants.userId"])
+								.whereRef("itemParticipants.itemId", "=", "receiptItems.id")
+								.orderBy("itemParticipants.userId desc"),
+						).as("parts"),
+					])
+					.whereRef("receiptItems.receiptId", "=", "receipts.id")
+					.orderBy(["receiptItems.created desc", "receiptItems.id"]),
+			).as("items"),
+			jsonArrayFrom(
+				eb
+					.selectFrom("receiptParticipants")
+					.whereRef("receiptParticipants.receiptId", "=", "receipts.id")
+					.innerJoin("users as usersTheir", (jb) =>
+						jb.onRef("usersTheir.id", "=", "receiptParticipants.userId"),
+					)
+					.leftJoin("users as usersMine", (jb) =>
+						jb
+							.onRef(
+								"usersMine.connectedAccountId",
+								"=",
+								"usersTheir.connectedAccountId",
+							)
+							.on("usersMine.ownerAccountId", "=", auth.accountId),
+					)
+					.select([
+						"receiptParticipants.userId",
+						"receiptParticipants.resolved",
+						"receiptParticipants.added",
+						"receiptParticipants.role",
+					])
+					.orderBy("receiptParticipants.userId"),
+			).as("participants"),
 		])
 		.execute();
 
@@ -98,26 +115,6 @@ const fetchDebts = async (
 			"users.id as userId",
 		])
 		.execute();
-
-const getAccessRole = (
-	selfRole: string | null,
-	receiptOwnerAccountId: AccountsId,
-	selfAccountId: AccountsId,
-	selfEmail: string,
-	receiptId: ReceiptsId,
-): Role => {
-	if (receiptOwnerAccountId === selfAccountId) {
-		return "owner" as const;
-	}
-	const parsed = roleSchema.safeParse(selfRole);
-	if (!parsed.success) {
-		throw new TRPCError({
-			code: "FORBIDDEN",
-			message: `Account "${selfEmail}" has no access to receipt "${receiptId}"`,
-		});
-	}
-	return parsed.data;
-};
 
 const getReceiptDebt = (
 	debts: Awaited<ReturnType<typeof fetchDebts>>,
@@ -179,10 +176,10 @@ const mapReceipt = (
 	const {
 		ownerAccountId,
 		lockedTimestamp,
-		sum,
 		transferIntentionUserId,
 		transferIntentionAccountId,
-		selfRole,
+		items,
+		participants,
 		...receiptRest
 	} = receipt;
 	if (
@@ -200,14 +197,24 @@ const mapReceipt = (
 	/* c8 ignore stop */
 	return omitUndefined({
 		...receiptRest,
-		sum: Number(sum),
-		role: getAccessRole(
-			selfRole,
-			ownerAccountId,
-			auth.accountId,
-			auth.email,
-			receipt.id,
-		),
+		items: items.map((item) => ({
+			...item,
+			created: new Date(item.created),
+			locked: Boolean(item.locked),
+			price: Number(item.price),
+			quantity: Number(item.quantity),
+			parts: item.parts
+				.map((part) => ({
+					...part,
+					part: Number(part.part),
+				}))
+				.sort((a, b) => a.userId.localeCompare(b.userId)),
+		})),
+		participants: participants.map((participant) => ({
+			...participant,
+			added: new Date(participant.added),
+			role: participant.role as Role,
+		})),
 		transferIntentionUserId:
 			transferIntentionAccountId && ownerAccountId === auth.accountId
 				? transferIntentionUserId!
@@ -245,6 +252,17 @@ const queueReceipt = queueCallFactory<
 			throw new TRPCError({
 				code: "NOT_FOUND",
 				message: `Receipt "${input.id}" is not found.`,
+			});
+		}
+		if (
+			receipt.ownerUserId !== ctx.auth.accountId &&
+			!receipt.participants.find(
+				(participant) => participant.userId === receipt.selfUserId,
+			)
+		) {
+			throw new TRPCError({
+				code: "FORBIDDEN",
+				message: `Account "${ctx.auth.email}" has no access to receipt "${receipt.id}"`,
 			});
 		}
 		return mapReceipt(

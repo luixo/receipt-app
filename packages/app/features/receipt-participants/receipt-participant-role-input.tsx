@@ -30,7 +30,7 @@ const ROLES: AssignableRole[] = ["editor", "viewer"];
 type Props = {
 	receiptId: ReceiptsId;
 	selfUserId?: UsersId;
-	participant: TRPCQueryOutput<"receiptItems.get">["participants"][number];
+	participant: TRPCQueryOutput<"receipts.get">["participants"][number];
 	isLoading: boolean;
 	isOwner: boolean;
 };

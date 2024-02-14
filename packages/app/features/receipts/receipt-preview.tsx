@@ -13,6 +13,7 @@ import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import type { TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
+import { round } from "app/utils/math";
 
 type InnerProps = {
 	receipt: TRPCQueryOutput<"receipts.get">;
@@ -42,48 +43,61 @@ export const ReceiptPreview: React.FC<InnerProps> = ({ receipt }) => {
 			</Text>
 		</Link>
 	);
-	const sum = (
+	const isOwner = receipt.selfUserId === receipt.ownerUserId;
+	const sum = round(
+		receipt.items.reduce((acc, item) => acc + item.price * item.quantity, 0),
+	);
+	const sumComponent = (
 		<Text className="font-medium">
-			{receipt.sum} {currency}
+			{sum} {currency}
 		</Text>
+	);
+	const selfParticipant = receipt.participants.find(
+		(participant) => participant.userId === receipt.selfUserId,
 	);
 	return (
 		<View>
 			<View className="flex-row gap-2 sm:hidden">
 				<Text className="flex-[7] p-2">{title}</Text>
-				<Text className="flex-[2] flex-row justify-end p-2">{sum}</Text>
+				<Text className="flex-[2] flex-row justify-end p-2">
+					{sumComponent}
+				</Text>
 			</View>
 			<View className="flex-row gap-2">
 				<Text className="flex-[7] p-2 max-sm:hidden">{title}</Text>
 				<Text className="flex-[2] flex-row self-center p-2 text-right max-sm:hidden">
-					{sum}
+					{sumComponent}
 				</Text>
 				<View className="flex-1 flex-row justify-center p-2">
-					{receipt.participantResolved === null ? null : (
+					{selfParticipant ? (
 						<ReceiptParticipantResolvedButton
 							variant="light"
 							receiptId={receipt.id}
 							userId={receipt.selfUserId}
 							selfUserId={receipt.selfUserId}
-							resolved={receipt.participantResolved}
+							resolved={selfParticipant.resolved}
 						/>
-					)}
+					) : null}
 				</View>
 				<Button
 					className="flex-1 flex-row self-center p-2"
 					variant="light"
 					isLoading={updateReceiptMutation.isPending}
-					isDisabled={receipt.role !== "owner"}
+					isDisabled={!isOwner}
 					color={receiptLocked ? "success" : "warning"}
 					isIconOnly
 					onClick={switchResolved}
 				>
 					<LockedIcon locked={receiptLocked} />
 				</Button>
-				<ReceiptResolvedParticipantsButton
-					className="flex-1 flex-row self-center p-2"
-					receiptId={receipt.id}
-				/>
+				{isOwner ? (
+					<ReceiptResolvedParticipantsButton
+						className="flex-1 flex-row self-center p-2"
+						participants={receipt.participants}
+					/>
+				) : (
+					<View className="flex-1 p-2" />
+				)}
 			</View>
 		</View>
 	);

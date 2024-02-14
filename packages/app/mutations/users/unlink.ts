@@ -5,13 +5,6 @@ import type { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-op
 export const options: UseContextedMutationOptions<"users.unlink"> = {
 	onMutate: (controllerContext) => (variables) =>
 		mergeUpdaterResults(
-			cache.receipts.updateRevert(controllerContext, {
-				get: undefined,
-				getPaged: undefined,
-				getResolvedParticipants: (controller) =>
-					controller.removeAll(variables.id),
-				getNonResolvedAmount: undefined,
-			}),
 			cache.users.updateRevert(controllerContext, {
 				get: (controller) =>
 					controller.update(

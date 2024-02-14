@@ -16,7 +16,7 @@ import { partSchema } from "app/utils/validation";
 import type { ReceiptItemsId, ReceiptsId } from "next-app/db/models";
 
 type ReceiptItemPart =
-	TRPCQueryOutput<"receiptItems.get">["items"][number]["parts"][number];
+	TRPCQueryOutput<"receipts.get">["items"][number]["parts"][number];
 
 type Props = {
 	receiptId: ReceiptsId;

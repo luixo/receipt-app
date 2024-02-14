@@ -19,11 +19,10 @@ import type { TestContext } from "@tests/backend/utils/test";
 import { test } from "@tests/backend/utils/test";
 import type { TRPCQueryInput } from "app/trpc";
 import { MAX_LIMIT, MAX_OFFSET } from "app/utils/validation";
-import type { UsersId } from "next-app/db/models";
+import type { AccountsId, UsersId } from "next-app/db/models";
 import { t } from "next-app/handlers/trpc";
 
 import { procedure } from "./get-paged";
-import { getSum } from "./utils.test";
 
 const router = t.router({ procedure });
 
@@ -126,29 +125,25 @@ const mockData = async (ctx: TestContext) => {
 	];
 
 	return {
+		accountId,
 		sessionId,
-		receipts: receipts.map(
-			([[receipt, selfReceiptUserId], participants, items]) => ({
-				id: receipt.id,
-				name: receipt.name,
-				role: receipt.ownerAccountId === accountId ? "owner" : "viewer",
-				currencyCode: receipt.currencyCode,
-				issued: receipt.issued,
-				remoteUserId: selfReceiptUserId,
-				participantResolved:
-					participants.find(
-						(participant) => participant.userId === selfReceiptUserId,
-					)?.resolved ?? null,
-				sum: getSum(items),
-				lockedTimestamp: receipt.lockedTimestamp ?? undefined,
-				transferIntentionUserId: receipt.transferIntentionAccountId
-					? users.find(
-							([, account]) =>
-								account && account.id === receipt.transferIntentionAccountId,
-					  )?.[0].id
-					: undefined,
-			}),
-		),
+		receipts: receipts.map(([[receipt, selfReceiptUserId], participants]) => ({
+			id: receipt.id,
+			name: receipt.name,
+			ownerAccountId: receipt.ownerAccountId,
+			issued: receipt.issued,
+			selfResolved:
+				participants.find(
+					(participant) => participant.userId === selfReceiptUserId,
+				)?.resolved ?? null,
+			lockedTimestamp: receipt.lockedTimestamp ?? undefined,
+			transferIntentionUserId: receipt.transferIntentionAccountId
+				? users.find(
+						([, account]) =>
+							account && account.id === receipt.transferIntentionAccountId,
+				  )?.[0].id
+				: undefined,
+		})),
 	};
 };
 
@@ -156,9 +151,9 @@ type MockReceipt = Awaited<ReturnType<typeof mockData>>["receipts"][number];
 const runFunctionalTest = async (
 	ctx: TestContext,
 	modifyInput: (input: Input) => Input,
-	modifyItems: (items: MockReceipt[]) => MockReceipt[],
+	modifyItems: (items: MockReceipt[], accountId: AccountsId) => MockReceipt[],
 ) => {
-	const { sessionId, receipts } = await mockData(ctx);
+	const { accountId, sessionId, receipts } = await mockData(ctx);
 
 	const limit = 10;
 	const caller = router.createCaller(createAuthContext(ctx, sessionId));
@@ -171,6 +166,7 @@ const runFunctionalTest = async (
 	);
 	const items = modifyItems(
 		receipts.sort((a, b) => b.issued.valueOf() - a.issued.valueOf()),
+		accountId,
 	).map(({ id }) => id);
 	expect(items.length).toBeGreaterThan(0);
 	expect(result).toStrictEqual<typeof result>({
@@ -365,8 +361,8 @@ describe("receipts.getPaged", () => {
 			await runFunctionalTest(
 				ctx,
 				(input) => ({ ...input, orderBy: "date-asc" }),
-				(items) =>
-					items.sort((a, b) => a.issued.valueOf() - b.issued.valueOf()),
+				(receipts) =>
+					receipts.sort((a, b) => a.issued.valueOf() - b.issued.valueOf()),
 			);
 		});
 
@@ -376,8 +372,8 @@ describe("receipts.getPaged", () => {
 					await runFunctionalTest(
 						ctx,
 						(input) => ({ ...input, filters: { resolvedByMe: true } }),
-						(items) =>
-							items.filter((receipt) => receipt.participantResolved === true),
+						(receipts) =>
+							receipts.filter((receipt) => receipt.selfResolved === true),
 					);
 				});
 
@@ -385,8 +381,8 @@ describe("receipts.getPaged", () => {
 					await runFunctionalTest(
 						ctx,
 						(input) => ({ ...input, filters: { resolvedByMe: false } }),
-						(items) =>
-							items.filter((receipt) => receipt.participantResolved === false),
+						(receipts) =>
+							receipts.filter((receipt) => receipt.selfResolved === false),
 					);
 				});
 			});
@@ -396,7 +392,10 @@ describe("receipts.getPaged", () => {
 					await runFunctionalTest(
 						ctx,
 						(input) => ({ ...input, filters: { ownedByMe: true } }),
-						(items) => items.filter((receipt) => receipt.role === "owner"),
+						(receipts, selfAccountId) =>
+							receipts.filter(
+								(receipt) => receipt.ownerAccountId === selfAccountId,
+							),
 					);
 				});
 
@@ -404,7 +403,10 @@ describe("receipts.getPaged", () => {
 					await runFunctionalTest(
 						ctx,
 						(input) => ({ ...input, filters: { ownedByMe: false } }),
-						(items) => items.filter((receipt) => receipt.role !== "owner"),
+						(receipts, selfAccountId) =>
+							receipts.filter(
+								(receipt) => receipt.ownerAccountId !== selfAccountId,
+							),
 					);
 				});
 			});
@@ -414,7 +416,7 @@ describe("receipts.getPaged", () => {
 					await runFunctionalTest(
 						ctx,
 						(input) => ({ ...input, filters: { locked: true } }),
-						(items) => items.filter((receipt) => receipt.lockedTimestamp),
+						(receipts) => receipts.filter((receipt) => receipt.lockedTimestamp),
 					);
 				});
 
@@ -422,7 +424,8 @@ describe("receipts.getPaged", () => {
 					await runFunctionalTest(
 						ctx,
 						(input) => ({ ...input, filters: { locked: false } }),
-						(items) => items.filter((receipt) => !receipt.lockedTimestamp),
+						(receipts) =>
+							receipts.filter((receipt) => !receipt.lockedTimestamp),
 					);
 				});
 			});
@@ -434,12 +437,12 @@ describe("receipts.getPaged", () => {
 						...input,
 						filters: { resolvedByMe: true, locked: true, ownedByMe: true },
 					}),
-					(items) =>
-						items.filter(
+					(receipts, selfAccountId) =>
+						receipts.filter(
 							(receipt) =>
-								receipt.participantResolved &&
+								receipt.selfResolved &&
 								receipt.lockedTimestamp &&
-								receipt.role === "owner",
+								receipt.ownerAccountId === selfAccountId,
 						),
 				);
 			});

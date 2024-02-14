@@ -147,6 +147,7 @@ export const test = originalTest.extend<Fixtures>({
 					selfAccount: result.selfAccount,
 					receiptBase: result.receiptBase,
 					receiptItemsParts: result.receiptItemsParts,
+					receiptParticipants: result.participants,
 					users: result.users,
 					debts,
 				});

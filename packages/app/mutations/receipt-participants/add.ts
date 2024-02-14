@@ -9,11 +9,10 @@ export const options: UseContextedMutationOptions<
 	onSuccess:
 		(controllerContext, { receiptId, selfAccountId }) =>
 		(result) => {
-			cache.receiptItems.update(controllerContext, {
-				getReceiptItem: undefined,
-				getReceiptParticipant: (controller) => {
+			cache.receipts.update(controllerContext, {
+				get: (controller) => {
 					result.forEach((item) =>
-						controller.add(receiptId, {
+						controller.addParticipant(receiptId, {
 							userId: item.id,
 							role: item.role,
 							resolved: false,
@@ -21,18 +20,15 @@ export const options: UseContextedMutationOptions<
 						}),
 					);
 				},
-				getReceiptItemPart: undefined,
+				getPaged: undefined,
+				getNonResolvedAmount: undefined,
 			});
 			const selfParticipating = result.find(
 				(resultItem) => resultItem.role === "owner",
 			);
 			if (selfParticipating) {
 				cache.receipts.update(controllerContext, {
-					get: (controller) =>
-						controller.update(receiptId, (item) => ({
-							...item,
-							participantResolved: false,
-						})),
+					get: undefined,
 					getPaged: undefined,
 					getNonResolvedAmount: (controller) => {
 						if (!result.some((item) => selfAccountId === item.id)) {
@@ -40,8 +36,6 @@ export const options: UseContextedMutationOptions<
 						}
 						controller.update((prev) => prev + 1);
 					},
-					// TODO: to be fixed with resolved participants calculated from receipt data
-					getResolvedParticipants: undefined,
 				});
 			}
 		},

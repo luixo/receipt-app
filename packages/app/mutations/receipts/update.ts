@@ -83,7 +83,6 @@ export const options: UseContextedMutationOptions<"receipts.update"> = {
 				),
 			getNonResolvedAmount: undefined,
 			getPaged: undefined,
-			getResolvedParticipants: undefined,
 		}),
 	onSuccess: (controllerContext) => (result, updateObject) => {
 		cache.receipts.update(controllerContext, {
@@ -94,7 +93,6 @@ export const options: UseContextedMutationOptions<"receipts.update"> = {
 				),
 			getNonResolvedAmount: undefined,
 			getPaged: undefined,
-			getResolvedParticipants: undefined,
 		});
 	},
 	errorToastOptions: () => (error) => ({

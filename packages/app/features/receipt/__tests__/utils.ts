@@ -79,6 +79,7 @@ export const test = originalTest.extend<Fixtures>({
 					faker,
 					selfAccount,
 					receiptBase,
+					receiptParticipants: participants,
 					receiptItemsParts,
 					users,
 				});
@@ -89,18 +90,6 @@ export const test = originalTest.extend<Fixtures>({
 						);
 					}
 					return receipt;
-				});
-				api.mock("receiptItems.get", (input) => {
-					if (input.receiptId !== receiptBase.id) {
-						throw new Error(
-							`Unexpected receipt id in "receiptItems.get": ${input.receiptId}`,
-						);
-					}
-					return {
-						role: "owner",
-						items: receiptItemsParts,
-						participants,
-					};
 				});
 				const usersFn = (input: { id: UsersId }) => {
 					if (input.id === selfAccount.accountId) {

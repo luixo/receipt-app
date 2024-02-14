@@ -18,7 +18,7 @@ import type { ReceiptsId, UsersId } from "next-app/db/models";
 import { AddReceiptParticipantForm } from "./add-receipt-participant-form";
 import { ReceiptParticipant } from "./receipt-participant";
 
-type Participant = TRPCQueryOutput<"receiptItems.get">["participants"][number];
+type Participant = TRPCQueryOutput<"receipts.get">["participants"][number];
 
 const getSortParticipants = () => (a: Participant, b: Participant) => {
 	// Sort first by owner
@@ -33,18 +33,20 @@ const getSortParticipants = () => (a: Participant, b: Participant) => {
 };
 
 type Props = {
-	data: TRPCQueryOutput<"receiptItems.get">;
+	items: TRPCQueryOutput<"receipts.get">["items"];
+	participants: TRPCQueryOutput<"receipts.get">["participants"];
 	receiptId: ReceiptsId;
-	receiptSelfUserId?: UsersId;
+	receiptSelfUserId: UsersId;
 	receiptLocked: boolean;
 	receiptInTransfer: boolean;
-	currencyCode?: CurrencyCode;
+	currencyCode: CurrencyCode;
 	isOwner: boolean;
 	isLoading: boolean;
 };
 
 export const ReceiptParticipants: React.FC<Props> = ({
-	data,
+	items,
+	participants,
 	receiptLocked,
 	receiptInTransfer,
 	receiptSelfUserId,
@@ -54,9 +56,9 @@ export const ReceiptParticipants: React.FC<Props> = ({
 	isLoading,
 }) => {
 	const sortParticipants = React.useMemo(() => getSortParticipants(), []);
-	const participants = React.useMemo(() => {
+	const calculatedParticipants = React.useMemo(() => {
 		const decimalsPower = getDecimalsPower();
-		const items = data.items.map((item) => ({
+		const calculatedItems = items.map((item) => ({
 			calculations: getItemCalculations<UsersId>(
 				item.price * item.quantity,
 				item.parts.reduce(
@@ -67,11 +69,11 @@ export const ReceiptParticipants: React.FC<Props> = ({
 			id: item.id,
 			name: item.name,
 		}));
-		return getParticipantSums(receiptId, data.items, data.participants)
+		return getParticipantSums(receiptId, items, participants)
 			.sort(sortParticipants)
 			.map((participant) => ({
 				...participant,
-				items: items
+				items: calculatedItems
 					.map((item) => {
 						const sum =
 							item.calculations.sumFlooredByParticipant[participant.userId];
@@ -89,7 +91,7 @@ export const ReceiptParticipants: React.FC<Props> = ({
 					})
 					.filter(nonNullishGuard),
 			}));
-	}, [data, receiptId, sortParticipants]);
+	}, [receiptId, items, participants, sortParticipants]);
 	return (
 		<Accordion variant="shadow">
 			<AccordionItem
@@ -102,7 +104,7 @@ export const ReceiptParticipants: React.FC<Props> = ({
 				}
 				textValue="Participants"
 			>
-				{participants.map((participant) => (
+				{calculatedParticipants.map((participant) => (
 					<ReceiptParticipant
 						key={participant.userId}
 						receiptId={receiptId}
@@ -121,7 +123,9 @@ export const ReceiptParticipants: React.FC<Props> = ({
 						receiptId={receiptId}
 						receiptLocked={receiptLocked}
 						receiptInTransfer={receiptInTransfer}
-						filterIds={participants.map((participant) => participant.userId)}
+						filterIds={calculatedParticipants.map(
+							(participant) => participant.userId,
+						)}
 					/>
 				)}
 			</AccordionItem>

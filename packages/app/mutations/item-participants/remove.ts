@@ -7,11 +7,15 @@ export const options: UseContextedMutationOptions<
 	ReceiptsId
 > = {
 	onMutate: (controllerContext, receiptId) => (variables) =>
-		cache.receiptItems.updateRevert(controllerContext, {
-			getReceiptItem: undefined,
-			getReceiptParticipant: undefined,
-			getReceiptItemPart: (controller) =>
-				controller.remove(receiptId, variables.itemId, variables.userId),
+		cache.receipts.updateRevert(controllerContext, {
+			get: (controller) =>
+				controller.removeItemPart(
+					receiptId,
+					variables.itemId,
+					variables.userId,
+				),
+			getPaged: undefined,
+			getNonResolvedAmount: undefined,
 		}),
 	errorToastOptions: () => (error) => ({
 		text: `Error removing participant(s): ${error.message}`,

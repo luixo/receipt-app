@@ -4,19 +4,17 @@ import type { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-op
 export const options: UseContextedMutationOptions<
 	"receipts.remove",
 	{
-		participantResolved: boolean | null;
+		selfResolved: boolean | undefined;
 	}
 > = {
 	onMutate:
-		(controllerContext, { participantResolved }) =>
+		(controllerContext, { selfResolved }) =>
 		(variables) =>
 			cache.receipts.updateRevert(controllerContext, {
 				get: (controller) => controller.remove(variables.id),
 				getPaged: (controller) => controller.remove(variables.id),
-				getResolvedParticipants: (controller) =>
-					controller.invalidate(variables.id),
 				getNonResolvedAmount: (controller) => {
-					if (participantResolved === false) {
+					if (selfResolved === false) {
 						return controller.update(
 							(prev) => prev - 1,
 							() => (prev) => prev + 1,

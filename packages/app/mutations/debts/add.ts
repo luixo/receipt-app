@@ -71,7 +71,6 @@ export const options: UseContextedMutationOptions<"debts.add"> = {
 				},
 				getNonResolvedAmount: undefined,
 				getPaged: undefined,
-				getResolvedParticipants: undefined,
 			});
 		}
 		cache.debts.update(controllerContext, {

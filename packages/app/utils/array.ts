@@ -76,8 +76,8 @@ export const removeFromArray = <T>(
 	return [...array.slice(0, matchedIndex), ...array.slice(matchedIndex + 1)];
 };
 
-export const addToArray = <T>(array: T[], item: T, index: number) => [
-	...array.slice(0, index),
-	item,
-	...array.slice(index),
-];
+export const addToArray = <T>(
+	array: T[],
+	item: T,
+	index: number = array.length - 1,
+) => [...array.slice(0, index), item, ...array.slice(index)];

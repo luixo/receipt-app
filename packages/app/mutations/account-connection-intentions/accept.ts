@@ -8,17 +8,6 @@ export const options: UseContextedMutationOptions<"accountConnectionIntentions.a
 				getAll: (controller) => controller.inbound.remove(variables.accountId),
 			}),
 		onSuccess: (controllerContext) => (account, variables) => {
-			cache.receipts.update(controllerContext, {
-				get: undefined,
-				getPaged: undefined,
-				getResolvedParticipants: (controller) =>
-					controller.invalidateBy((participants) =>
-						participants.some(
-							(participant) => participant.remoteUserId === variables.userId,
-						),
-					),
-				getNonResolvedAmount: undefined,
-			});
 			cache.users.update(controllerContext, {
 				get: (controller) =>
 					controller.update(variables.userId, (user) => ({

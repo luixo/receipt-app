@@ -18,43 +18,6 @@ import { test } from "./debts.utils";
 import { defaultGenerateReceiptItemsParts } from "./generators";
 
 test.describe("Wrapper component", () => {
-	test("'receiptItems.get' pending / error", async ({
-		api,
-		page,
-		mockReceiptWithDebts,
-		propagateDebtsButton,
-		updateDebtsButton,
-		debtsInfoModalButton,
-		errorMessage,
-		openReceipt,
-	}) => {
-		const { receipt } = mockReceiptWithDebts({
-			generateDebts: generateDebtsWith(),
-		});
-
-		api.pause("receiptItems.get");
-		await openReceipt(receipt.id);
-		await expect(propagateDebtsButton).not.toBeAttached();
-		await expect(updateDebtsButton).not.toBeAttached();
-		await expect(debtsInfoModalButton).not.toBeAttached();
-
-		api.mock("receiptItems.get", () => {
-			throw new TRPCError({
-				code: "FORBIDDEN",
-				message: `Mock "receiptItems.get" error`,
-			});
-		});
-		api.unpause("receiptItems.get");
-		await expect(
-			page.getByTestId("header-aside").filter({
-				has: errorMessage(`Mock "receiptItems.get" error`),
-			}),
-		).toBeVisible();
-		await expect(propagateDebtsButton).not.toBeAttached();
-		await expect(updateDebtsButton).not.toBeAttached();
-		await expect(debtsInfoModalButton).not.toBeAttached();
-	});
-
 	test("'debts.get' pending / error", async ({
 		api,
 		mockReceiptWithDebts,
@@ -150,13 +113,11 @@ test.describe("Propagate debts button", () => {
 		openReceiptWithDebts,
 		propagateDebtsButton,
 		updateDebtsButton,
-		awaitCacheKey,
 	}) => {
 		const { receipt } = mockReceiptWithDebts({
 			generateDebts: generateDebtsWith(ourSynced),
 		});
 		await openReceiptWithDebts(receipt.id);
-		await awaitCacheKey("receiptItems.get");
 		await expect(propagateDebtsButton).not.toBeVisible();
 		await expect(updateDebtsButton).not.toBeVisible();
 	});

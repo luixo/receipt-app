@@ -27,20 +27,6 @@ test.describe("Modal is disabled", () => {
 		await expect(transferReceiptButton).toBeDisabled();
 	});
 
-	test("on unknown participants amount", async ({
-		api,
-		page,
-		mockReceipt,
-		transferReceiptButton,
-	}) => {
-		const { receipt } = mockReceipt();
-		api.pause("receiptItems.get");
-
-		await page.goto(`/receipts/${receipt.id}`);
-
-		await expect(transferReceiptButton).toBeDisabled();
-	});
-
 	test("on participants added", async ({
 		page,
 		mockReceipt,

@@ -10,43 +10,23 @@ export const options: UseContextedMutationOptions<
 	onMutate:
 		(controllerContext, { receiptId, selfAccountId, resolvedStatus }) =>
 		({ userId }) =>
-			mergeUpdaterResults(
-				cache.receiptItems.updateRevert(controllerContext, {
-					getReceiptItem: undefined,
-					getReceiptParticipant: (controller) =>
-						controller.remove(receiptId, userId),
-					getReceiptItemPart: (controller) =>
-						controller.removeByUser(receiptId, userId),
-				}),
-				userId === selfAccountId
-					? cache.receipts.updateRevert(controllerContext, {
-							get: (controller) =>
-								controller.update(
-									receiptId,
-									(item) => ({
-										...item,
-										participantResolved: null,
-									}),
-									(snapshot) => (item) => ({
-										...item,
-										participantResolved: snapshot.participantResolved,
-									}),
-								),
-							getPaged: undefined,
-							getResolvedParticipants: (controller) =>
-								controller.remove(receiptId, userId),
-							getNonResolvedAmount: (controller) => {
-								if (userId !== selfAccountId || resolvedStatus) {
-									return;
-								}
-								return controller.update(
-									(prev) => prev - 1,
-									() => (prev) => prev + 1,
-								);
-							},
-					  })
-					: undefined,
-			),
+			cache.receipts.updateRevert(controllerContext, {
+				get: (controller) =>
+					mergeUpdaterResults(
+						controller.removeParticipant(receiptId, userId),
+						controller.removeItemPartsByUser(receiptId, userId),
+					),
+				getPaged: undefined,
+				getNonResolvedAmount: (controller) => {
+					if (userId !== selfAccountId || resolvedStatus) {
+						return;
+					}
+					return controller.update(
+						(prev) => prev - 1,
+						() => (prev) => prev + 1,
+					);
+				},
+			}),
 	errorToastOptions: () => (error) => ({
 		text: `Error removing a participant: ${error.message}`,
 	}),

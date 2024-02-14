@@ -7,21 +7,28 @@ import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
-import type { TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
-import type { Currency } from "app/utils/currency";
-import { round } from "app/utils/math";
+import type { Currency, CurrencyCode } from "app/utils/currency";
+import type { ReceiptsId } from "next-app/db/models";
 
 type Props = {
-	receipt: TRPCQueryOutput<"receipts.get">;
+	receiptId: ReceiptsId;
+	currencyCode: CurrencyCode;
+	isOwner: boolean;
+	receiptLocked: boolean;
+	sum: number;
 	isLoading: boolean;
 };
 
 export const ReceiptCurrencyInput: React.FC<Props> = ({
-	receipt,
+	receiptId,
+	currencyCode,
+	isOwner,
+	receiptLocked,
+	sum,
 	isLoading,
 }) => {
-	const currency = useFormattedCurrency(receipt.currencyCode);
+	const currency = useFormattedCurrency(currencyCode);
 	const [
 		isModalOpen,
 		{ switchValue: switchModalOpen, setTrue: openModal, setFalse: closeModal },
@@ -33,22 +40,19 @@ export const ReceiptCurrencyInput: React.FC<Props> = ({
 	const saveCurrency = React.useCallback(
 		(nextCurrency: Currency) => {
 			closeModal();
-			if (nextCurrency.code === receipt.currencyCode) {
+			if (nextCurrency.code === currencyCode) {
 				return;
 			}
 			updateReceiptMutation.mutate({
-				id: receipt.id,
+				id: receiptId,
 				update: { type: "currencyCode", currencyCode: nextCurrency!.code },
 			});
 		},
-		[updateReceiptMutation, receipt.id, receipt.currencyCode, closeModal],
+		[updateReceiptMutation, receiptId, currencyCode, closeModal],
 	);
 	const topCurrenciesQuery = trpc.currency.topReceipts.useQuery();
 	const disabled =
-		updateReceiptMutation.isPending ||
-		isLoading ||
-		receipt.role !== "owner" ||
-		Boolean(receipt.lockedTimestamp);
+		updateReceiptMutation.isPending || isLoading || !isOwner || receiptLocked;
 
 	return (
 		<>
@@ -57,7 +61,7 @@ export const ReceiptCurrencyInput: React.FC<Props> = ({
 				onClick={disabled ? undefined : openModal}
 			>
 				<Text className="text-2xl">
-					{round(receipt.sum)} {currency}
+					{sum} {currency}
 				</Text>
 			</View>
 			<CurrenciesPicker

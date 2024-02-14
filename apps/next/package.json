@@ -24,7 +24,7 @@
 		"goober": "^2.1.13",
 		"idb-keyval": "^6.2.1",
 		"isomorphic-fetch": "^3.0.0",
-		"kysely": "^0.26.3",
+		"kysely": "^0.27.2",
 		"nativewind": "^4.0.16",
 		"next": "^14.0.3",
 		"next-http-proxy-middleware": "^1.2.5",
