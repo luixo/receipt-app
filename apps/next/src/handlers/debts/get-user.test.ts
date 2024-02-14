@@ -25,7 +25,7 @@ const mapUserDebt = (debt: Awaited<ReturnType<typeof insertDebt>>) => ({
 	timestamp: debt.timestamp,
 	created: debt.created,
 	note: debt.note,
-	receiptId: debt.receiptId,
+	receiptId: debt.receiptId || undefined,
 	amount: Number(debt.amount),
 	lockedTimestamp: debt.lockedTimestamp || undefined,
 	their: undefined,

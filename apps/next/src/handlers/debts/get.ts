@@ -50,6 +50,7 @@ const mapDebt = (debt: Awaited<ReturnType<typeof fetchDebts>>[number]) => {
 		theirAmount,
 		theirCurrencyCode,
 		theirTimestamp,
+		receiptId,
 		...debtRest
 	} = debt;
 
@@ -57,6 +58,7 @@ const mapDebt = (debt: Awaited<ReturnType<typeof fetchDebts>>[number]) => {
 		...debtRest,
 		amount: Number(amount),
 		lockedTimestamp: lockedTimestamp || undefined,
+		receiptId: receiptId || undefined,
 		their: theirOwnerAccountId
 			? {
 					lockedTimestamp: theirLockedTimestamp || undefined,

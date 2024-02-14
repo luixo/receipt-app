@@ -64,9 +64,11 @@ export const procedure = authProcedure
 				lockedTimestamp,
 				theirOwnerAccountId,
 				theirLockedTimestamp,
+				receiptId,
 				...debt
 			}) => ({
 				...debt,
+				receiptId: receiptId || undefined,
 				amount: Number(amount),
 				lockedTimestamp: lockedTimestamp || undefined,
 				their: theirOwnerAccountId

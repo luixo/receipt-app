@@ -22,7 +22,7 @@ const createUserDebt = (
 	note: updateObject.note,
 	lockedTimestamp,
 	their: reverseAccepted ? { lockedTimestamp } : undefined,
-	receiptId: updateObject.receiptId ?? null,
+	receiptId: updateObject.receiptId,
 });
 
 const createDebt = (
@@ -46,7 +46,7 @@ const createDebt = (
 					currencyCode: updateObject.currencyCode,
 			  }
 			: undefined,
-		receiptId: updateObject.receiptId ?? null,
+		receiptId: updateObject.receiptId,
 	};
 };
 

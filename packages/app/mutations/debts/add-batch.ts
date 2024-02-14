@@ -27,7 +27,7 @@ const createUserDebts = (
 			their: reverseAcceptedUserIds.includes(updateObject.userId)
 				? { lockedTimestamp }
 				: undefined,
-			receiptId: updateObject.receiptId ?? null,
+			receiptId: updateObject.receiptId,
 		},
 		updateObject.userId,
 	]);
@@ -54,7 +54,7 @@ const createDebts = (
 						timestamp,
 				  }
 				: undefined,
-			receiptId: updateObject.receiptId ?? null,
+			receiptId: updateObject.receiptId,
 		};
 	});
 

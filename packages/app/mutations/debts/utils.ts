@@ -179,7 +179,7 @@ export type CurrentDebt = {
 	userId: UsersId;
 	amount: number;
 	currencyCode: CurrencyCode;
-	receiptId: ReceiptsId | null;
+	receiptId?: ReceiptsId;
 };
 
 type DebtSum = number;

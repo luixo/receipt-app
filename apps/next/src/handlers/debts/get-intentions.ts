@@ -10,7 +10,7 @@ type InboundIntention = {
 	timestamp: Date;
 	lockedTimestamp: Date;
 	note: string;
-	receiptId: ReceiptsId | null;
+	receiptId?: ReceiptsId;
 	current?: {
 		amount: number;
 		currencyCode: CurrencyCode;
@@ -75,7 +75,7 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 		lockedTimestamp: debt.lockedTimestamp,
 		timestamp: debt.timestamp,
 		note: debt.note,
-		receiptId: debt.receiptId,
+		receiptId: debt.receiptId || undefined,
 		current:
 			debt.selfAmount !== null
 				? {

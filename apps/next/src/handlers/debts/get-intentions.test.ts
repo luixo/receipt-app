@@ -131,7 +131,7 @@ describe("debts.getIntentions", () => {
 						lockedTimestamp: foreignDebtToUpdate.lockedTimestamp!,
 						timestamp: foreignDebtToUpdate.timestamp,
 						note: debtToUpdate.note,
-						receiptId: foreignDebtToUpdate.receiptId,
+						receiptId: foreignDebtToUpdate.receiptId || undefined,
 						current: {
 							amount: Number(debtToUpdate.amount),
 							timestamp: debtToUpdate.timestamp,
@@ -146,7 +146,7 @@ describe("debts.getIntentions", () => {
 						lockedTimestamp: debtToCreate.lockedTimestamp!,
 						timestamp: debtToCreate.timestamp,
 						note: debtToCreate.note,
-						receiptId: debtToCreate.receiptId,
+						receiptId: debtToCreate.receiptId || undefined,
 						current: undefined,
 					},
 				].sort(
