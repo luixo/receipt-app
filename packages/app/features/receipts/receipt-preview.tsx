@@ -1,9 +1,8 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Button, Link } from "@nextui-org/react";
+import { Badge, Button, Link } from "@nextui-org/react";
 
-import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
 import { ReceiptResolvedParticipantsButton } from "app/components/app/receipt-resolved-participants-button";
 import { Text } from "app/components/base/text";
 import { LockedIcon } from "app/components/locked-icon";
@@ -32,12 +31,24 @@ export const ReceiptPreview: React.FC<InnerProps> = ({ receipt }) => {
 			update: { type: "locked", locked: !receiptLocked },
 		});
 	}, [updateReceiptMutation, receipt.id, receiptLocked]);
+	const selfParticipant = receipt.participants.find(
+		(participant) => participant.userId === receipt.selfUserId,
+	);
 	const title = (
 		<Link
 			className="flex flex-col items-start"
 			href={`/receipts/${receipt.id}/`}
 		>
-			<Text>{receipt.name}</Text>
+			<Badge
+				content=""
+				color="danger"
+				placement="top-right"
+				isInvisible={!selfParticipant || selfParticipant.resolved}
+				isDot
+				className="translate-x-full"
+			>
+				<Text>{receipt.name}</Text>
+			</Badge>
 			<Text className="text-default-400 text-xs">
 				{formatDate(receipt.issued)}
 			</Text>
@@ -52,9 +63,6 @@ export const ReceiptPreview: React.FC<InnerProps> = ({ receipt }) => {
 			{sum} {currency}
 		</Text>
 	);
-	const selfParticipant = receipt.participants.find(
-		(participant) => participant.userId === receipt.selfUserId,
-	);
 	return (
 		<View>
 			<View className="flex-row gap-2 sm:hidden">
@@ -68,14 +76,10 @@ export const ReceiptPreview: React.FC<InnerProps> = ({ receipt }) => {
 				<Text className="flex-[2] flex-row self-center p-2 text-right max-sm:hidden">
 					{sumComponent}
 				</Text>
-				<View className="flex-1 flex-row justify-center p-2">
-					{selfParticipant ? (
-						<ReceiptParticipantResolvedButton
-							variant="light"
-							receiptId={receipt.id}
-							userId={receipt.selfUserId}
-							selfUserId={receipt.selfUserId}
-							resolved={selfParticipant.resolved}
+				<View className="flex-1 flex-row self-center p-2">
+					{isOwner ? (
+						<ReceiptResolvedParticipantsButton
+							participants={receipt.participants}
 						/>
 					) : null}
 				</View>
@@ -90,14 +94,6 @@ export const ReceiptPreview: React.FC<InnerProps> = ({ receipt }) => {
 				>
 					<LockedIcon locked={receiptLocked} />
 				</Button>
-				{isOwner ? (
-					<ReceiptResolvedParticipantsButton
-						className="flex-1 flex-row self-center p-2"
-						participants={receipt.participants}
-					/>
-				) : (
-					<View className="flex-1 p-2" />
-				)}
 			</View>
 		</View>
 	);
