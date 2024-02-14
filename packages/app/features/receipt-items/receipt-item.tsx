@@ -5,6 +5,7 @@ import {
 	Card,
 	CardBody,
 	CardHeader,
+	Chip,
 	Divider,
 	ScrollShadow,
 } from "@nextui-org/react";
@@ -24,7 +25,7 @@ import { round } from "app/utils/math";
 import type { ReceiptsId, UsersId } from "next-app/db/models";
 import type { Role } from "next-app/handlers/receipts/utils";
 
-import { EVERY_PARTICIPANT_TAG, ParticipantChip } from "./participant-chip";
+import { ParticipantChip } from "./participant-chip";
 import { ReceiptItemNameInput } from "./receipt-item-name-input";
 import { ReceiptItemPriceInput } from "./receipt-item-price-input";
 import { ReceiptItemQuantityInput } from "./receipt-item-quantity-input";
@@ -71,6 +72,21 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 		const notAddedParticipants = receiptParticipants.filter(
 			(participant) => !addedParticipants.includes(participant.userId),
 		);
+		const notAddedParticipantsIds = notAddedParticipants.map(
+			(participant) => participant.userId,
+		) as [UsersId, ...UsersId[]];
+
+		const addItemPartMutation = trpc.itemParticipants.add.useMutation(
+			useTrpcMutationOptions(mutations.itemParticipants.add.options, {
+				context: receiptId,
+			}),
+		);
+		const addEveryParticipant = React.useCallback(() => {
+			addItemPartMutation.mutate({
+				itemId: receiptItem.id,
+				userIds: notAddedParticipantsIds,
+			});
+		}, [addItemPartMutation, notAddedParticipantsIds, receiptItem.id]);
 
 		const isDeleteLoading =
 			isReceiptDeleteLoading || removeReceiptItemMutation.isPending;
@@ -135,27 +151,24 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 							orientation="horizontal"
 							className="flex w-full flex-row gap-1 overflow-x-auto"
 						>
-							{(notAddedParticipants.length === 1
-								? notAddedParticipants
-								: [EVERY_PARTICIPANT_TAG, ...notAddedParticipants]
-							).map((participant) => (
+							{notAddedParticipants.length > 1 ? (
+								<Chip
+									color="secondary"
+									className="cursor-pointer"
+									onClick={addEveryParticipant}
+									isDisabled={receiptLocked}
+								>
+									Everyone
+								</Chip>
+							) : null}
+							{notAddedParticipants.map((participant) => (
 								<ParticipantChip
-									key={
-										participant === EVERY_PARTICIPANT_TAG
-											? participant
-											: participant.userId
-									}
+									key={participant.userId}
 									receiptId={receiptId}
 									receiptItemId={receiptItem.id}
 									participant={participant}
 									isDisabled={receiptLocked}
 									isOwner={role === "owner"}
-									notAddedParticipantIds={
-										notAddedParticipants.map(({ userId }) => userId) as [
-											UsersId,
-											...UsersId[],
-										]
-									}
 								/>
 							))}
 						</ScrollShadow>

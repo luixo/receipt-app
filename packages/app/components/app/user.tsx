@@ -1,8 +1,8 @@
 import React from "react";
 
-import { User as RawUser, tv } from "@nextui-org/react";
+import { Chip, User as RawUser, tv } from "@nextui-org/react";
 
-import { useUserAvatarProps } from "app/components/app/user-avatar";
+import { UserAvatar, useUserAvatarProps } from "app/components/app/user-avatar";
 import type { TRPCQueryOutput } from "app/trpc";
 import type { UsersId } from "next-app/db/models";
 
@@ -13,6 +13,7 @@ export type Props = {
 	name: string;
 	connectedAccount?: TRPCQueryOutput<"users.get">["connectedAccount"];
 	foreign?: boolean;
+	chip?: boolean | React.ComponentProps<typeof Chip>;
 } & Omit<React.ComponentProps<typeof RawUser>, "name" | "description">;
 
 export const User = React.forwardRef<HTMLDivElement, Props>(
@@ -24,16 +25,32 @@ export const User = React.forwardRef<HTMLDivElement, Props>(
 			className,
 			avatarProps: rawAvatarProps,
 			foreign,
+			chip,
 			...props
 		},
 		ref,
 	) => {
-		const avatarProps = useUserAvatarProps({
+		const avatarInput = {
 			id,
 			connectedAccount,
 			foreign,
 			...rawAvatarProps,
-		});
+		};
+		const avatarProps = useUserAvatarProps(avatarInput);
+		if (chip) {
+			return (
+				<Chip
+					ref={ref}
+					data-testid="user-chip"
+					className={wrapper({ className })}
+					avatar={<UserAvatar size="xs" {...avatarInput} />}
+					onClick={props.onClick}
+					{...(typeof chip === "boolean" ? {} : chip)}
+				>
+					{name}
+				</Chip>
+			);
+		}
 		return (
 			<RawUser
 				ref={ref}

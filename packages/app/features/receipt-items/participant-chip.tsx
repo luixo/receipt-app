@@ -1,25 +1,17 @@
 import React from "react";
 
-import { Chip } from "@nextui-org/react";
-
+import { LoadableUser } from "app/components/app/loadable-user";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { useUserName } from "app/hooks/use-user-name";
 import { mutations } from "app/mutations";
 import type { TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
-import type { ReceiptItemsId, ReceiptsId, UsersId } from "next-app/db/models";
-
-type ReceiptParticipant =
-	TRPCQueryOutput<"receiptItems.get">["participants"][number];
-
-export const EVERY_PARTICIPANT_TAG = "__ALL__" as const;
+import type { ReceiptItemsId, ReceiptsId } from "next-app/db/models";
 
 type Props = {
 	receiptId: ReceiptsId;
 	receiptItemId: ReceiptItemsId;
 	isOwner: boolean;
-	participant: ReceiptParticipant | typeof EVERY_PARTICIPANT_TAG;
-	notAddedParticipantIds: [UsersId, ...UsersId[]];
+	participant: TRPCQueryOutput<"receiptItems.get">["participants"][number];
 	isDisabled: boolean;
 };
 
@@ -28,7 +20,6 @@ export const ParticipantChip: React.FC<Props> = ({
 	receiptItemId,
 	isOwner,
 	participant,
-	notAddedParticipantIds,
 	isDisabled,
 }) => {
 	const addItemPartMutation = trpc.itemParticipants.add.useMutation(
@@ -36,36 +27,20 @@ export const ParticipantChip: React.FC<Props> = ({
 			context: receiptId,
 		}),
 	);
-	const addParticipant = React.useCallback(
-		(addedParticipant: ReceiptParticipant | typeof EVERY_PARTICIPANT_TAG) =>
-			() => {
-				if (addedParticipant === EVERY_PARTICIPANT_TAG) {
-					addItemPartMutation.mutate({
-						itemId: receiptItemId,
-						userIds: notAddedParticipantIds,
-					});
-				} else {
-					addItemPartMutation.mutate({
-						itemId: receiptItemId,
-						userIds: [addedParticipant.userId],
-					});
-				}
-			},
-		[addItemPartMutation, notAddedParticipantIds, receiptItemId],
-	);
-	const userName = useUserName(
-		participant !== EVERY_PARTICIPANT_TAG ? participant.userId : undefined,
-		isOwner,
-	);
+	const addParticipant = React.useCallback(() => {
+		addItemPartMutation.mutate({
+			itemId: receiptItemId,
+			userIds: [participant.userId],
+		});
+	}, [addItemPartMutation, receiptItemId, participant]);
 
 	return (
-		<Chip
-			color={participant === EVERY_PARTICIPANT_TAG ? "secondary" : "default"}
+		<LoadableUser
+			id={participant.userId}
+			foreign={!isOwner}
 			className="cursor-pointer"
-			onClick={addParticipant(participant)}
-			isDisabled={isDisabled}
-		>
-			{participant === EVERY_PARTICIPANT_TAG ? "Everyone" : `+ ${userName}`}
-		</Chip>
+			onClick={addParticipant}
+			chip={{ isDisabled }}
+		/>
 	);
 };

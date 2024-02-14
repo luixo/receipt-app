@@ -12,14 +12,19 @@ const wrapper = tv({
 	base: "shrink-0 bg-transparent",
 });
 
+type OriginalProps = React.ComponentProps<typeof Avatar>;
+
 type Props = {
 	id: UsersId;
 	connectedAccount?: TRPCQueryOutput<"users.get">["connectedAccount"];
 	foreign?: boolean;
-} & React.ComponentProps<typeof Avatar>;
+	size?: OriginalProps["size"] | "xs";
+} & Omit<OriginalProps, "size">;
 
-const getSize = (size: React.ComponentProps<typeof Avatar>["size"]) => {
+const getSize = (size: Props["size"]) => {
 	switch (size) {
+		case "xs":
+			return 20;
 		case "sm":
 			return 32;
 		case "lg":
@@ -78,6 +83,7 @@ export const useUserAvatarProps = ({
 			/>
 		),
 		...props,
+		size: props.size === "xs" ? "sm" : props.size,
 		classNames: { ...classNames, base: wrapper({ className }) },
 		imgProps,
 	} satisfies React.ComponentProps<typeof Avatar>;
