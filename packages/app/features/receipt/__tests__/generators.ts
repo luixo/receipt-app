@@ -2,7 +2,6 @@ import type { Faker } from "@faker-js/faker";
 
 import type { TRPCQueryOutput } from "app/trpc";
 import type { CurrencyCode } from "app/utils/currency";
-import { round } from "app/utils/math";
 import { MONTH } from "app/utils/time";
 import { nonNullishGuard } from "app/utils/utils";
 import type {
@@ -61,6 +60,7 @@ export type GenerateReceiptItems = (opts: {
 	id: ReceiptItemsId;
 	price: number;
 	quantity: number;
+	locked: boolean;
 	name: string;
 	created: Date;
 }[];
@@ -75,6 +75,7 @@ export const defaultGenerateReceiptItems: GenerateReceiptItems = ({ faker }) =>
 			from: new Date(Date.now() - MONTH),
 			to: new Date(),
 		}),
+		locked: false,
 	}));
 
 export type GenerateUsers = (opts: {
@@ -117,7 +118,7 @@ export type GenerateReceiptParticipants = (opts: {
 	selfAccount: ReturnType<GenerateSelfAccount>;
 	users: ReturnType<GenerateUsers>;
 	addSelf?: boolean;
-}) => TRPCQueryOutput<"receiptItems.get">["participants"];
+}) => TRPCQueryOutput<"receipts.get">["participants"];
 
 export const defaultGenerateReceiptParticipants: GenerateReceiptParticipants =
 	({ faker, users, selfAccount, addSelf = true }) =>
@@ -142,7 +143,7 @@ export type GenerateReceiptItemsParts = (opts: {
 	faker: Faker;
 	receiptItems: ReturnType<GenerateReceiptItems>;
 	participants: ReturnType<GenerateReceiptParticipants>;
-}) => TRPCQueryOutput<"receiptItems.get">["items"];
+}) => TRPCQueryOutput<"receipts.get">["items"];
 
 export const defaultGenerateReceiptItemsParts: GenerateReceiptItemsParts = ({
 	faker,
@@ -153,7 +154,7 @@ export const defaultGenerateReceiptItemsParts: GenerateReceiptItemsParts = ({
 		id: item.id,
 		price: item.price,
 		quantity: item.quantity,
-		locked: false,
+		locked: item.locked,
 		name: item.name,
 		created: item.created,
 		parts: participants.map((participant) => ({
@@ -167,6 +168,7 @@ export type GenerateReceipt = (opts: {
 	selfAccount: ReturnType<GenerateSelfAccount>;
 	receiptBase: ReturnType<GenerateReceiptBase>;
 	receiptItemsParts: ReturnType<GenerateReceiptItemsParts>;
+	receiptParticipants: ReturnType<GenerateReceiptParticipants>;
 	users: ReturnType<GenerateUsers>;
 }) => TRPCQueryOutput<"receipts.get">;
 
@@ -174,21 +176,16 @@ export const defaultGenerateReceipt: GenerateReceipt = ({
 	selfAccount,
 	receiptBase,
 	receiptItemsParts,
+	receiptParticipants,
 }) => ({
 	id: receiptBase.id,
 	name: receiptBase.name,
 	currencyCode: receiptBase.currencyCode,
 	issued: receiptBase.issued,
-	participantResolved: false,
 	ownerUserId: selfAccount.userId,
 	selfUserId: selfAccount.userId,
-	sum: round(
-		receiptItemsParts.reduce(
-			(acc, part) => acc + part.price * part.quantity,
-			0,
-		),
-	),
-	role: "owner",
 	lockedTimestamp: receiptBase.lockedTimestamp,
 	debt: undefined,
+	items: receiptItemsParts,
+	participants: receiptParticipants,
 });

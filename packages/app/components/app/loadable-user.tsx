@@ -12,10 +12,7 @@ type InnerProps = {
 	query: TRPCQuerySuccessResult<"users.getForeign">;
 } & Omit<React.ComponentProps<typeof User>, "id" | "name" | "connectedAccount">;
 
-const ForeignLoadableUserInner: React.FC<InnerProps> = ({
-	query,
-	...props
-}) => {
+const LoadableUserInner: React.FC<InnerProps> = ({ query, ...props }) => {
 	if ("remoteId" in query.data) {
 		return (
 			<User
@@ -48,7 +45,7 @@ const OwnLoadableUser: React.FC<DirectionProps> = ({ id, ...props }) => {
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;
 	}
-	return <ForeignLoadableUserInner {...props} query={query} />;
+	return <LoadableUserInner {...props} query={query} />;
 };
 
 const ForeignLoadableUser: React.FC<DirectionProps> = ({ id, ...props }) => {
@@ -59,7 +56,7 @@ const ForeignLoadableUser: React.FC<DirectionProps> = ({ id, ...props }) => {
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;
 	}
-	return <ForeignLoadableUserInner {...props} query={query} />;
+	return <LoadableUserInner {...props} query={query} />;
 };
 
 type Props = DirectionProps & {

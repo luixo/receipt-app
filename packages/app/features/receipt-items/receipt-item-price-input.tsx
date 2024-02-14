@@ -14,7 +14,7 @@ import type { CurrencyCode } from "app/utils/currency";
 import { priceSchema } from "app/utils/validation";
 import type { ReceiptsId } from "next-app/db/models";
 
-type ReceiptItem = TRPCQueryOutput<"receiptItems.get">["items"][number];
+type ReceiptItem = TRPCQueryOutput<"receipts.get">["items"][number];
 
 type Props = {
 	receiptId: ReceiptsId;

@@ -21,6 +21,7 @@ import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { type TRPCQueryOutput, trpc } from "app/trpc";
+import { round } from "app/utils/math";
 
 type Receipt = TRPCQueryOutput<"receipts.get">;
 
@@ -35,14 +36,9 @@ const ReceiptSendTransferIntentionBody: React.FC<{
 		() => ({ type: "connected" as const }),
 		[],
 	);
-	const receiptItemsQuery = trpc.receiptItems.get.useQuery({
-		receiptId: receipt.id,
-	});
-	const nextSum =
-		receiptItemsQuery.data?.items.reduce(
-			(acc, item) => acc + item.price * item.quantity,
-			0,
-		) ?? 0;
+	const nextSum = round(
+		receipt.items.reduce((acc, item) => acc + item.price * item.quantity, 0),
+	);
 	const transferReceiptMutation =
 		trpc.receiptTransferIntentions.add.useMutation(
 			useTrpcMutationOptions(mutations.receiptTransferIntentions.add.options, {
@@ -76,11 +72,7 @@ const ReceiptSendTransferIntentionBody: React.FC<{
 				menuTrigger={selectedUser ? "manual" : undefined}
 			/>
 			<Button
-				isDisabled={
-					transferReceiptMutation.isPending ||
-					!selectedUser ||
-					!receiptItemsQuery.data
-				}
+				isDisabled={transferReceiptMutation.isPending || !selectedUser}
 				isLoading={transferReceiptMutation.isPending}
 				onClick={transferReceipt(
 					selectedUser?.connectedAccount?.email ?? "unknown",
@@ -143,11 +135,7 @@ export const ReceiptTransferModal: React.FC<Props> = ({
 			setFalse: closeTransferModal,
 		},
 	] = useBooleanState();
-	const receiptItemsQuery = trpc.receiptItems.get.useQuery({
-		receiptId: receipt.id,
-	});
-	const hasParticipants =
-		receiptItemsQuery.data?.participants.length !== 0 ?? true;
+	const hasParticipants = receipt.participants.length !== 0;
 	const button = (
 		<Button
 			onClick={openTransferModal}

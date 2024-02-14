@@ -7,20 +7,19 @@ import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
 import { receiptNameSchema } from "app/utils/validation";
 import type { ReceiptsId } from "next-app/db/models";
-import type { Role } from "next-app/handlers/receipts/utils";
 
 type Props = {
-	receipt: {
-		name: string;
-		id: ReceiptsId;
-		role: Role;
-	};
+	receiptId: ReceiptsId;
+	receiptName: string;
+	isOwner: boolean;
 	isLoading: boolean;
 	unsetEditing: () => void;
 };
 
 export const ReceiptNameInput: React.FC<Props> = ({
-	receipt,
+	receiptId,
+	receiptName,
+	isOwner,
 	isLoading,
 	unsetEditing,
 }) => {
@@ -30,7 +29,7 @@ export const ReceiptNameInput: React.FC<Props> = ({
 		getValue,
 		setValue,
 	} = useSingleInput({
-		initialValue: receipt.name,
+		initialValue: receiptName,
 		schema: receiptNameSchema,
 	});
 
@@ -41,16 +40,16 @@ export const ReceiptNameInput: React.FC<Props> = ({
 	);
 	const saveName = React.useCallback(
 		(nextName: string) => {
-			if (receipt.name === nextName) {
+			if (receiptName === nextName) {
 				unsetEditing();
 				return;
 			}
 			updateReceiptMutation.mutate(
-				{ id: receipt.id, update: { type: "name", name: nextName } },
+				{ id: receiptId, update: { type: "name", name: nextName } },
 				{ onSuccess: () => setValue(nextName) },
 			);
 		},
-		[updateReceiptMutation, receipt.id, receipt.name, setValue, unsetEditing],
+		[updateReceiptMutation, receiptId, receiptName, setValue, unsetEditing],
 	);
 
 	return (
@@ -61,7 +60,7 @@ export const ReceiptNameInput: React.FC<Props> = ({
 			labelPlacement="outside-left"
 			className="basis-36"
 			isDisabled={isLoading}
-			isReadOnly={receipt.role !== "owner"}
+			isReadOnly={!isOwner}
 			fieldError={inputState.error}
 			saveProps={{
 				title: "Save receipt name",

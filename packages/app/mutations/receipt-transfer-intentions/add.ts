@@ -35,7 +35,6 @@ export const options: UseContextedMutationOptions<
 						),
 					getNonResolvedAmount: undefined,
 					getPaged: undefined,
-					getResolvedParticipants: undefined,
 				}),
 				cache.receiptTransferIntentions.updateRevert(controllerContext, {
 					getAll: (controller) =>

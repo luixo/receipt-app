@@ -9,9 +9,11 @@ import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-par
 import { Text } from "app/components/base/text";
 import { QueryErrorMessage } from "app/components/error-message";
 import { PageHeader } from "app/components/page-header";
+import { ReceiptItems } from "app/features/receipt-items/receipt-items-screen";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import type { TRPCQuerySuccessResult } from "app/trpc";
 import { trpc } from "app/trpc";
+import { round } from "app/utils/math";
 import type { ReceiptsId } from "next-app/src/db/models";
 
 import { ReceiptCurrencyInput } from "./receipt-currency-input";
@@ -24,21 +26,20 @@ import { ReceiptTransferModal } from "./receipt-transfer-modal";
 
 type InnerProps = {
 	query: TRPCQuerySuccessResult<"receipts.get">;
-	deleteLoadingState: [boolean, React.Dispatch<React.SetStateAction<boolean>>];
 };
 
-export const ReceiptInner: React.FC<InnerProps> = ({
-	query,
-	deleteLoadingState: [deleteLoading, setDeleteLoading],
-}) => {
+export const ReceiptInner: React.FC<InnerProps> = ({ query }) => {
+	const [deleteLoading, setDeleteLoading] = React.useState(false);
 	const receipt = query.data;
 
 	const [isEditing, { switchValue: switchEditing, setFalse: unsetEditing }] =
 		useBooleanState();
+	const isOwner = receipt.selfUserId === receipt.ownerUserId;
 	const disabled =
-		receipt.role !== "owner" ||
-		deleteLoading ||
-		Boolean(receipt.lockedTimestamp);
+		!isOwner || deleteLoading || Boolean(receipt.lockedTimestamp);
+	const sum = round(
+		receipt.items.reduce((acc, item) => acc + item.price * item.quantity, 0),
+	);
 
 	return (
 		<>
@@ -52,10 +53,14 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 							receiptId={receipt.id}
 							userId={receipt.selfUserId}
 							selfUserId={receipt.selfUserId}
-							resolved={receipt.participantResolved}
+							resolved={
+								receipt.participants.find(
+									(participant) => participant.userId === receipt.selfUserId,
+								)?.resolved
+							}
 							isDisabled={deleteLoading}
 						/>
-						{receipt.role === "owner" ? (
+						{isOwner ? (
 							<ReceiptOwnerControlButton
 								receipt={receipt}
 								deleteLoading={deleteLoading}
@@ -69,7 +74,9 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 			>
 				{isEditing ? (
 					<ReceiptNameInput
-						receipt={receipt}
+						receiptId={receipt.id}
+						receiptName={receipt.name}
+						isOwner={isOwner}
 						isLoading={deleteLoading}
 						unsetEditing={unsetEditing}
 					/>
@@ -84,17 +91,27 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 			</PageHeader>
 			<View className="items-start justify-between gap-2 sm:flex-row">
 				<View className="gap-2">
-					<ReceiptDateInput receipt={receipt} isLoading={deleteLoading} />
+					<ReceiptDateInput
+						receiptId={receipt.id}
+						issued={receipt.issued}
+						isOwner={isOwner}
+						receiptLocked={Boolean(receipt.lockedTimestamp)}
+						isLoading={deleteLoading}
+					/>
 					<View className="flex-row items-center gap-1">
-						<ReceiptCurrencyInput receipt={receipt} isLoading={deleteLoading} />
+						<ReceiptCurrencyInput
+							receiptId={receipt.id}
+							currencyCode={receipt.currencyCode}
+							isOwner={isOwner}
+							receiptLocked={Boolean(receipt.lockedTimestamp)}
+							isLoading={deleteLoading}
+							sum={sum}
+						/>
 					</View>
 				</View>
-				<LoadableUser
-					id={receipt.ownerUserId}
-					foreign={receipt.role !== "owner"}
-				/>
+				<LoadableUser id={receipt.ownerUserId} />
 			</View>
-			{receipt.role === "owner" ? (
+			{isOwner ? (
 				<View className="max-xs:flex-col flex-row items-end justify-end gap-2">
 					<ReceiptTransferModal
 						receipt={receipt}
@@ -102,11 +119,16 @@ export const ReceiptInner: React.FC<InnerProps> = ({
 					/>
 					<ReceiptRemoveButton
 						className="self-end"
-						receipt={receipt}
+						receiptId={receipt.id}
+						receiptLocked={Boolean(receipt.lockedTimestamp)}
+						selfUserId={receipt.selfUserId}
+						participants={receipt.participants}
+						isEmpty={receipt.items.length === 0}
 						setLoading={setDeleteLoading}
 					/>
 				</View>
 			) : null}
+			<ReceiptItems receipt={query.data} isLoading={deleteLoading} />
 		</>
 	);
 };

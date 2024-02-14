@@ -29,13 +29,11 @@ import {
 
 type InnerProps = {
 	queries: TRPCQuerySuccessResult<"debts.get">[];
-	itemsQuery: TRPCQuerySuccessResult<"receiptItems.get">;
 	receipt: LockedReceipt;
 };
 
 const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 	queries,
-	itemsQuery,
 	receipt,
 }) => {
 	const debts = React.useMemo(
@@ -44,18 +42,20 @@ const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 	);
 	const participants = React.useMemo(
 		() =>
-			getParticipantSums(
-				receipt.id,
-				itemsQuery.data.items,
-				itemsQuery.data.participants,
-			)
+			getParticipantSums(receipt.id, receipt.items, receipt.participants)
 				.map((participant) => ({
 					userId: participant.userId,
 					sum: participant.sum,
 					currentDebt: debts.find((debt) => debt.userId === participant.userId),
 				}))
 				.filter((participant) => participant.userId !== receipt.selfUserId),
-		[itemsQuery.data, receipt.id, debts, receipt.selfUserId],
+		[
+			receipt.items,
+			receipt.participants,
+			receipt.id,
+			debts,
+			receipt.selfUserId,
+		],
 	);
 
 	const syncableParticipants = React.useMemo(
@@ -197,11 +197,7 @@ export const ReceiptPropagateButton: React.FC<Props> = ({
 	queries,
 	...props
 }) => {
-	const itemsQuery = trpc.receiptItems.get.useQuery({ receiptId: receipt.id });
-	if (
-		queries.some((query) => query.status === "pending") ||
-		itemsQuery.status === "pending"
-	) {
+	if (queries.some((query) => query.status === "pending")) {
 		return null;
 	}
 	const errorQuery = queries.find(
@@ -211,15 +207,11 @@ export const ReceiptPropagateButton: React.FC<Props> = ({
 	if (errorQuery) {
 		return <QueryErrorMessage query={errorQuery} />;
 	}
-	if (itemsQuery.status === "error") {
-		return <QueryErrorMessage query={itemsQuery} />;
-	}
 	return (
 		<ReceiptPropagateButtonInner
 			{...props}
 			receipt={receipt}
 			queries={queries as TRPCQuerySuccessResult<"debts.get">[]}
-			itemsQuery={itemsQuery}
 		/>
 	);
 };

@@ -7,6 +7,7 @@ import {
 	insertAccountWithSession,
 	insertConnectedUsers,
 	insertDebt,
+	insertItemParticipant,
 	insertReceipt,
 	insertReceiptItem,
 	insertReceiptParticipant,
@@ -21,7 +22,44 @@ import { test } from "@tests/backend/utils/test";
 import { t } from "next-app/handlers/trpc";
 
 import { procedure } from "./get";
-import { getSum } from "./utils.test";
+
+const getItems = (
+	items: Awaited<ReturnType<typeof insertReceiptItem>>[],
+	parts: Awaited<ReturnType<typeof insertItemParticipant>>[],
+) =>
+	items
+		.map((item) => ({
+			id: item.id,
+			name: item.name,
+			locked: item.locked ?? false,
+			price: Number(item.price),
+			quantity: Number(item.quantity),
+			created: item.created,
+			parts: parts
+				.filter((part) => part.itemId === item.id)
+				.map((part) => ({ userId: part.userId, part: Number(part.part) }))
+				.sort((a, b) => a.userId.localeCompare(b.userId)),
+		}))
+		.sort((a, b) => {
+			const bCreated = b.created.valueOf();
+			const aCreated = a.created.valueOf();
+			if (aCreated === bCreated) {
+				return a.id.localeCompare(b.id);
+			}
+			return bCreated - aCreated;
+		});
+
+const getParticipants = (
+	participants: Awaited<ReturnType<typeof insertReceiptParticipant>>[],
+) =>
+	participants
+		.map((participant) => ({
+			userId: participant.userId,
+			role: participant.role,
+			resolved: participant.resolved,
+			added: participant.added,
+		}))
+		.sort((a, b) => a.userId.localeCompare(b.userId));
 
 const router = t.router({ procedure });
 
@@ -82,7 +120,7 @@ describe("receipts.get", () => {
 
 	describe("functionality", () => {
 		describe("account is an owner", () => {
-			test("no participation", async ({ ctx }) => {
+			test("empty receipt", async ({ ctx }) => {
 				const {
 					sessionId,
 					accountId,
@@ -101,72 +139,10 @@ describe("receipts.get", () => {
 					name: receipt.name,
 					currencyCode: receipt.currencyCode,
 					issued: receipt.issued,
-					participantResolved: null,
 					ownerUserId: selfUserId,
 					selfUserId,
-					sum: 0,
-					role: "owner",
-				});
-			});
-
-			test("with participation", async ({ ctx }) => {
-				const {
-					sessionId,
-					accountId,
-					userId: selfUserId,
-				} = await insertAccountWithSession(ctx);
-				const receipt = await insertReceipt(ctx, accountId);
-				await insertReceiptParticipant(ctx, receipt.id, selfUserId);
-
-				// Verify other users do not interfere
-				const { id: foreignAccountId } = await insertAccount(ctx);
-				await insertReceipt(ctx, foreignAccountId);
-
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
-				const result = await caller.procedure({ id: receipt.id });
-				expect(result).toStrictEqual<typeof result>({
-					id: receipt.id,
-					name: receipt.name,
-					currencyCode: receipt.currencyCode,
-					issued: receipt.issued,
-					participantResolved: false,
-					ownerUserId: selfUserId,
-					selfUserId,
-					sum: 0,
-					role: "owner",
-				});
-			});
-
-			test("with participation, resolved, locked receipt", async ({ ctx }) => {
-				const {
-					sessionId,
-					accountId,
-					userId: selfUserId,
-				} = await insertAccountWithSession(ctx);
-				const receipt = await insertReceipt(ctx, accountId, {
-					lockedTimestamp: new Date(),
-				});
-				await insertReceiptParticipant(ctx, receipt.id, selfUserId, {
-					resolved: true,
-				});
-
-				// Verify other users do not interfere
-				const { id: foreignAccountId } = await insertAccount(ctx);
-				await insertReceipt(ctx, foreignAccountId);
-
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
-				const result = await caller.procedure({ id: receipt.id });
-				expect(result).toStrictEqual<typeof result>({
-					id: receipt.id,
-					name: receipt.name,
-					currencyCode: receipt.currencyCode,
-					issued: receipt.issued,
-					participantResolved: true,
-					ownerUserId: selfUserId,
-					selfUserId,
-					lockedTimestamp: receipt.lockedTimestamp || undefined,
-					sum: 0,
-					role: "owner",
+					items: [],
+					participants: [],
 				});
 			});
 
@@ -196,36 +172,29 @@ describe("receipts.get", () => {
 					name: receipt.name,
 					currencyCode: receipt.currencyCode,
 					issued: receipt.issued,
-					participantResolved: null,
 					ownerUserId: selfUserId,
 					selfUserId,
 					lockedTimestamp: receipt.lockedTimestamp || undefined,
-					sum: 0,
-					role: "owner",
 					transferIntentionUserId: foreignUser.id,
+					items: [],
+					participants: [],
 				});
 			});
 		});
 
-		test("sum is calculated properly", async ({ ctx }) => {
-			const {
-				sessionId,
-				accountId,
-				userId: selfUserId,
-			} = await insertAccountWithSession(ctx);
-			const receipt = await insertReceipt(ctx, accountId);
-			const receiptItems = await Promise.all(
-				Array.from({ length: 6 }, () => insertReceiptItem(ctx, receipt.id)),
-			);
-
-			// Verify other users do not interfere
+		test("account is a participant", async ({ ctx }) => {
+			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			const { id: foreignAccountId } = await insertAccount(ctx);
-			const { id: anotherReceiptId } = await insertReceipt(
+			const [{ id: foreignUserId }, { id: foreignToSelfUserId }] =
+				await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
+			const receipt = await insertReceipt(ctx, foreignAccountId, {
+				lockedTimestamp: new Date(),
+			});
+			const participant = await insertReceiptParticipant(
 				ctx,
-				foreignAccountId,
+				receipt.id,
+				foreignToSelfUserId,
 			);
-			await insertReceiptItem(ctx, anotherReceiptId);
-			await insertReceiptItem(ctx, anotherReceiptId);
 
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ id: receipt.id });
@@ -234,65 +203,11 @@ describe("receipts.get", () => {
 				name: receipt.name,
 				currencyCode: receipt.currencyCode,
 				issued: receipt.issued,
-				participantResolved: null,
-				ownerUserId: selfUserId,
-				selfUserId,
-				sum: getSum(receiptItems),
-				role: "owner",
-			});
-		});
-
-		describe("account is a participant", () => {
-			test("editor, resolved", async ({ ctx }) => {
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				const { id: foreignAccountId } = await insertAccount(ctx);
-				const [{ id: foreignUserId }, { id: foreignToSelfUserId }] =
-					await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
-				const receipt = await insertReceipt(ctx, foreignAccountId);
-				await insertReceiptParticipant(ctx, receipt.id, foreignToSelfUserId, {
-					resolved: true,
-					role: "editor",
-				});
-
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
-				const result = await caller.procedure({ id: receipt.id });
-				expect(result).toStrictEqual<typeof result>({
-					id: receipt.id,
-					name: receipt.name,
-					currencyCode: receipt.currencyCode,
-					issued: receipt.issued,
-					participantResolved: true,
-					ownerUserId: foreignUserId,
-					selfUserId: foreignToSelfUserId,
-					sum: 0,
-					role: "editor",
-				});
-			});
-
-			test("viewer, not resolved, locked receipt", async ({ ctx }) => {
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				const { id: foreignAccountId } = await insertAccount(ctx);
-				const [{ id: foreignUserId }, { id: foreignToSelfUserId }] =
-					await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
-				const receipt = await insertReceipt(ctx, foreignAccountId, {
-					lockedTimestamp: new Date(),
-				});
-				await insertReceiptParticipant(ctx, receipt.id, foreignToSelfUserId);
-
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
-				const result = await caller.procedure({ id: receipt.id });
-				expect(result).toStrictEqual<typeof result>({
-					id: receipt.id,
-					name: receipt.name,
-					currencyCode: receipt.currencyCode,
-					issued: receipt.issued,
-					participantResolved: false,
-					ownerUserId: foreignUserId,
-					selfUserId: foreignToSelfUserId,
-					lockedTimestamp: receipt.lockedTimestamp || undefined,
-					sum: 0,
-					role: "viewer",
-				});
+				ownerUserId: foreignUserId,
+				selfUserId: foreignToSelfUserId,
+				lockedTimestamp: receipt.lockedTimestamp || undefined,
+				items: [],
+				participants: getParticipants([participant]),
 			});
 		});
 
@@ -302,10 +217,12 @@ describe("receipts.get", () => {
 				const { id: foreignAccountId } = await insertAccount(ctx);
 				const [{ id: foreignUserId }, { id: foreignToSelfUserId }] =
 					await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
-				const receipt = await insertReceipt(ctx, foreignAccountId, {
-					lockedTimestamp: new Date(),
-				});
-				await insertReceiptParticipant(ctx, receipt.id, foreignToSelfUserId);
+				const receipt = await insertReceipt(ctx, foreignAccountId);
+				const participant = await insertReceiptParticipant(
+					ctx,
+					receipt.id,
+					foreignToSelfUserId,
+				);
 				const { id: foreignDebtId } = await insertDebt(
 					ctx,
 					foreignAccountId,
@@ -320,17 +237,15 @@ describe("receipts.get", () => {
 					name: receipt.name,
 					currencyCode: receipt.currencyCode,
 					issued: receipt.issued,
-					participantResolved: false,
 					ownerUserId: foreignUserId,
 					selfUserId: foreignToSelfUserId,
-					lockedTimestamp: receipt.lockedTimestamp || undefined,
-					sum: 0,
-					role: "viewer",
 					debt: {
 						direction: "incoming",
 						type: "foreign",
 						id: foreignDebtId,
 					},
+					items: [],
+					participants: getParticipants([participant]),
 				});
 			});
 
@@ -342,7 +257,11 @@ describe("receipts.get", () => {
 				const receipt = await insertReceipt(ctx, foreignAccountId, {
 					lockedTimestamp: new Date(),
 				});
-				await insertReceiptParticipant(ctx, receipt.id, foreignToSelfUserId);
+				const participant = await insertReceiptParticipant(
+					ctx,
+					receipt.id,
+					foreignToSelfUserId,
+				);
 				const { id: debtId } = await insertDebt(ctx, accountId, foreignUserId, {
 					receiptId: receipt.id,
 				});
@@ -354,17 +273,16 @@ describe("receipts.get", () => {
 					name: receipt.name,
 					currencyCode: receipt.currencyCode,
 					issued: receipt.issued,
-					participantResolved: false,
 					ownerUserId: foreignUserId,
 					selfUserId: foreignToSelfUserId,
 					lockedTimestamp: receipt.lockedTimestamp || undefined,
-					sum: 0,
-					role: "viewer",
 					debt: {
 						direction: "incoming",
 						type: "mine",
 						id: debtId,
 					},
+					items: [],
+					participants: getParticipants([participant]),
 				});
 			});
 
@@ -373,10 +291,12 @@ describe("receipts.get", () => {
 				const { id: foreignAccountId } = await insertAccount(ctx);
 				const [{ id: foreignUserId }, { id: foreignToSelfUserId }] =
 					await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
-				const receipt = await insertReceipt(ctx, foreignAccountId, {
-					lockedTimestamp: new Date(),
-				});
-				await insertReceiptParticipant(ctx, receipt.id, foreignToSelfUserId);
+				const receipt = await insertReceipt(ctx, foreignAccountId);
+				const participant = await insertReceiptParticipant(
+					ctx,
+					receipt.id,
+					foreignToSelfUserId,
+				);
 				const [{ id: debtId }] = await insertSyncedDebts(
 					ctx,
 					[foreignAccountId, foreignToSelfUserId, { receiptId: receipt.id }],
@@ -390,17 +310,15 @@ describe("receipts.get", () => {
 					name: receipt.name,
 					currencyCode: receipt.currencyCode,
 					issued: receipt.issued,
-					participantResolved: false,
 					ownerUserId: foreignUserId,
 					selfUserId: foreignToSelfUserId,
-					lockedTimestamp: receipt.lockedTimestamp || undefined,
-					sum: 0,
-					role: "viewer",
 					debt: {
 						direction: "incoming",
 						type: "mine",
 						id: debtId,
 					},
+					items: [],
+					participants: getParticipants([participant]),
 				});
 			});
 
@@ -410,9 +328,7 @@ describe("receipts.get", () => {
 					accountId,
 					userId: selfUserId,
 				} = await insertAccountWithSession(ctx);
-				const receipt = await insertReceipt(ctx, accountId, {
-					lockedTimestamp: new Date(),
-				});
+				const receipt = await insertReceipt(ctx, accountId);
 				const { id: userId } = await insertUser(ctx, accountId);
 				const { id: anotherUserId } = await insertUser(ctx, accountId);
 				const debts = await Promise.all([
@@ -431,17 +347,185 @@ describe("receipts.get", () => {
 					name: receipt.name,
 					currencyCode: receipt.currencyCode,
 					issued: receipt.issued,
-					participantResolved: null,
 					ownerUserId: selfUserId,
 					selfUserId,
-					lockedTimestamp: receipt.lockedTimestamp || undefined,
-					sum: 0,
-					role: "owner",
 					debt: {
 						direction: "outcoming",
 						ids: debts.map((debt) => debt.id).sort(),
 					},
+					items: [],
+					participants: [],
 				});
+			});
+		});
+	});
+
+	describe("items functionality", () => {
+		test("own receipt", async ({ ctx }) => {
+			const {
+				sessionId,
+				accountId,
+				userId: selfUserId,
+			} = await insertAccountWithSession(ctx);
+			const notConnectedUser = await insertUser(ctx, accountId);
+			const { id: foreignAccountId } = await insertAccount(ctx);
+			const [foreignUser] = await insertConnectedUsers(ctx, [
+				accountId,
+				foreignAccountId,
+			]);
+			const receipt = await insertReceipt(ctx, accountId);
+			const [selfParticipant, foreignParticipant, notConnectedParticipant] =
+				await Promise.all([
+					insertReceiptParticipant(ctx, receipt.id, selfUserId),
+					insertReceiptParticipant(ctx, receipt.id, foreignUser.id),
+					insertReceiptParticipant(ctx, receipt.id, notConnectedUser.id),
+				]);
+			const receiptItems = await Promise.all([
+				// item with multiple participants, with varied parts
+				insertReceiptItem(ctx, receipt.id),
+				// item with 1 participant
+				insertReceiptItem(ctx, receipt.id),
+				// item with no participants
+				insertReceiptItem(ctx, receipt.id),
+			]);
+			const parts = await Promise.all([
+				insertItemParticipant(ctx, receiptItems[0].id, selfParticipant.userId, {
+					part: 2,
+				}),
+				insertItemParticipant(
+					ctx,
+					receiptItems[0].id,
+					foreignParticipant.userId,
+				),
+				insertItemParticipant(ctx, receiptItems[1].id, selfParticipant.userId),
+				insertItemParticipant(
+					ctx,
+					receiptItems[2].id,
+					notConnectedParticipant.userId,
+				),
+			]);
+
+			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const result = await caller.procedure({ id: receipt.id });
+			expect(result).toStrictEqual<typeof result>({
+				id: receipt.id,
+				name: receipt.name,
+				currencyCode: receipt.currencyCode,
+				issued: receipt.issued,
+				ownerUserId: selfUserId,
+				selfUserId,
+				items: getItems(receiptItems, parts),
+				participants: getParticipants([
+					selfParticipant,
+					foreignParticipant,
+					notConnectedParticipant,
+				]),
+			});
+		});
+
+		test("own receipt - no participants", async ({ ctx }) => {
+			const {
+				sessionId,
+				accountId,
+				userId: selfUserId,
+			} = await insertAccountWithSession(ctx);
+			const receipt = await insertReceipt(ctx, accountId);
+
+			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const result = await caller.procedure({ id: receipt.id });
+			expect(result).toStrictEqual<typeof result>({
+				id: receipt.id,
+				name: receipt.name,
+				currencyCode: receipt.currencyCode,
+				issued: receipt.issued,
+				ownerUserId: selfUserId,
+				selfUserId,
+				items: [],
+				participants: [],
+			});
+		});
+
+		test("foreign receipt", async ({ ctx }) => {
+			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { id: connectedAccountId } = await insertAccount(ctx, {
+				avatarUrl: null,
+			});
+			const { id: foreignAccountId, userId: foreignSelfUserId } =
+				await insertAccount(ctx);
+			const notConnectedUser = await insertUser(ctx, foreignAccountId);
+			const [foreignUser, foreignToSelfUser] = await insertConnectedUsers(ctx, [
+				accountId,
+				foreignAccountId,
+			]);
+			await insertConnectedUsers(ctx, [accountId, connectedAccountId]);
+			const [foreignConnectedUser] = await insertConnectedUsers(ctx, [
+				foreignAccountId,
+				connectedAccountId,
+			]);
+			const receipt = await insertReceipt(ctx, foreignAccountId);
+			const [
+				selfParticipant,
+				foreignParticipant,
+				notConnectedParticipant,
+				connectedParticipant,
+			] = await Promise.all([
+				insertReceiptParticipant(ctx, receipt.id, foreignToSelfUser.id, {
+					role: "viewer",
+				}),
+				insertReceiptParticipant(ctx, receipt.id, foreignSelfUserId),
+				insertReceiptParticipant(ctx, receipt.id, notConnectedUser.id),
+				insertReceiptParticipant(ctx, receipt.id, foreignConnectedUser.id),
+			]);
+			const receiptItems = await Promise.all([
+				// item with multiple participants, with varied parts
+				insertReceiptItem(ctx, receipt.id, {
+					created: new Date(Date.now() - 20),
+				}),
+				// item with 1 participant
+				insertReceiptItem(ctx, receipt.id, {
+					created: new Date(Date.now() - 10),
+				}),
+				// item with no participants
+				insertReceiptItem(ctx, receipt.id),
+			]);
+			const parts = await Promise.all([
+				insertItemParticipant(ctx, receiptItems[0].id, selfParticipant.userId, {
+					part: 2,
+				}),
+				insertItemParticipant(
+					ctx,
+					receiptItems[0].id,
+					foreignParticipant.userId,
+				),
+				insertItemParticipant(
+					ctx,
+					receiptItems[0].id,
+					connectedParticipant.userId,
+				),
+				insertItemParticipant(ctx, receiptItems[1].id, selfParticipant.userId),
+				insertItemParticipant(
+					ctx,
+					receiptItems[2].id,
+					notConnectedParticipant.userId,
+				),
+			]);
+
+			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const result = await caller.procedure({ id: receipt.id });
+			expect(result).toStrictEqual<typeof result>({
+				id: receipt.id,
+				name: receipt.name,
+				currencyCode: receipt.currencyCode,
+				issued: receipt.issued,
+				ownerUserId: foreignUser.id,
+				selfUserId: foreignToSelfUser.id,
+				items: getItems(receiptItems, parts),
+				participants: getParticipants([
+					selfParticipant,
+					foreignParticipant,
+					notConnectedParticipant,
+					connectedParticipant,
+				]),
 			});
 		});
 	});

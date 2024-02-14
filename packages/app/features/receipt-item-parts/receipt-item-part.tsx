@@ -11,9 +11,9 @@ import type { ReceiptItemsId, ReceiptsId } from "next-app/db/models";
 
 import { ReceiptItemPartInput } from "./receipt-item-part-input";
 
-type ReceiptItem = TRPCQueryOutput<"receiptItems.get">["items"][number];
+type ReceiptItem = TRPCQueryOutput<"receipts.get">["items"][number];
 type ReceiptParticipant =
-	TRPCQueryOutput<"receiptItems.get">["participants"][number];
+	TRPCQueryOutput<"receipts.get">["participants"][number];
 type ReceiptItemParts = ReceiptItem["parts"];
 
 type Props = {

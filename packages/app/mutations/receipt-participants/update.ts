@@ -5,7 +5,7 @@ import type { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
 import type { UsersId } from "next-app/db/models";
 
 type ReceiptParticipant =
-	TRPCQueryOutput<"receiptItems.get">["participants"][number];
+	TRPCQueryOutput<"receipts.get">["participants"][number];
 
 const applyUpdate =
 	(
@@ -34,63 +34,28 @@ const getRevert =
 		}
 	};
 
-type Receipt = TRPCQueryOutput<"receipts.get">;
-
-const applyUpdateReceipt =
-	(
-		update: TRPCMutationInput<"receiptParticipants.update">["update"],
-	): UpdateFn<Receipt> =>
-	(item) => {
-		switch (update.type) {
-			case "resolved":
-				return { ...item, participantResolved: update.resolved };
-			case "role":
-				return { ...item, role: update.role };
-		}
-	};
-
-type ResolvedParticipant =
-	TRPCQueryOutput<"receipts.getResolvedParticipants">[number];
-
-const applyUpdateResolvedParticipants =
-	(
-		update: TRPCMutationInput<"receiptParticipants.update">["update"],
-	): UpdateFn<ResolvedParticipant> =>
-	(participant) => {
-		switch (update.type) {
-			case "resolved":
-				return { ...participant, resolved: update.resolved };
-			case "role":
-				return participant;
-		}
-	};
-
 export const options: UseContextedMutationOptions<
 	"receiptParticipants.update",
 	{ selfUserId: UsersId }
 > = {
 	onMutate: (controllerContext) => (variables) =>
-		cache.receiptItems.updateRevert(controllerContext, {
-			getReceiptItem: undefined,
-			getReceiptParticipant: (controller) =>
-				controller.update(
+		cache.receipts.updateRevert(controllerContext, {
+			get: (controller) =>
+				controller.updateParticipant(
 					variables.receiptId,
 					variables.userId,
 					applyUpdate(variables.update),
 					getRevert(variables.update),
 				),
-			getReceiptItemPart: undefined,
+			getPaged: undefined,
+			getNonResolvedAmount: undefined,
 		}),
 	onSuccess:
 		(controllerContext, { selfUserId }) =>
 		(_result, variables) => {
 			if (selfUserId === variables.userId) {
 				cache.receipts.update(controllerContext, {
-					get: (controller) =>
-						controller.update(
-							variables.receiptId,
-							applyUpdateReceipt(variables.update),
-						),
+					get: undefined,
 					getNonResolvedAmount: (controller) => {
 						if (variables.update.type !== "resolved") {
 							return;
@@ -101,12 +66,6 @@ export const options: UseContextedMutationOptions<
 						);
 					},
 					getPaged: undefined,
-					getResolvedParticipants: (controller) =>
-						controller.update(
-							variables.receiptId,
-							variables.userId,
-							applyUpdateResolvedParticipants(variables.update),
-						),
 				});
 			}
 		},

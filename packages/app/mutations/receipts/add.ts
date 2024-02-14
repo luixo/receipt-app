@@ -11,25 +11,26 @@ export const options: UseContextedMutationOptions<
 		(id, variables) => {
 			cache.receipts.update(controllerContext, {
 				getPaged: (controller) => controller.invalidate(),
-				get: (controller) =>
+				get: (controller) => {
+					const selfUserId = selfAccountId as UsersId;
 					controller.add({
 						id,
-						role: "owner",
 						name: variables.name,
 						issued: variables.issued,
 						currencyCode: variables.currencyCode,
-						sum: 0,
-						// Typesystem doesn't know that we use account id as self user id
-						participantResolved: variables.participants?.includes(
-							selfAccountId as UsersId,
-						)
-							? false
-							: null,
-						ownerUserId: selfAccountId as UsersId,
-						selfUserId: selfAccountId as UsersId,
-					}),
+						participants:
+							variables.participants?.map((userId) => ({
+								role: userId === selfUserId ? "owner" : "editor",
+								added: new Date(), // We don't care if they don't match with the server
+								userId,
+								resolved: false,
+							})) ?? [],
+						items: [],
+						ownerUserId: selfUserId,
+						selfUserId,
+					});
+				},
 				getNonResolvedAmount: undefined,
-				getResolvedParticipants: (controller) => controller.upsert(id, []),
 			});
 		},
 	mutateToastOptions: () => (variables) => ({

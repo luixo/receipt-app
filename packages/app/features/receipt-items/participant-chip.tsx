@@ -11,7 +11,7 @@ type Props = {
 	receiptId: ReceiptsId;
 	receiptItemId: ReceiptItemsId;
 	isOwner: boolean;
-	participant: TRPCQueryOutput<"receiptItems.get">["participants"][number];
+	participant: TRPCQueryOutput<"receipts.get">["participants"][number];
 	isDisabled: boolean;
 };
 

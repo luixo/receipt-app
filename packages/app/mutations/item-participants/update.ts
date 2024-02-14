@@ -4,7 +4,7 @@ import type { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-op
 import type { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
 import type { ReceiptsId } from "next-app/db/models";
 
-type ReceiptItem = TRPCQueryOutput<"receiptItems.get">["items"][number];
+type ReceiptItem = TRPCQueryOutput<"receipts.get">["items"][number];
 type ReceiptItemPart = ReceiptItem["parts"][number];
 
 const applyUpdate =
@@ -35,17 +35,17 @@ export const options: UseContextedMutationOptions<
 	ReceiptsId
 > = {
 	onMutate: (controllerContext, receiptId) => (variables) =>
-		cache.receiptItems.updateRevert(controllerContext, {
-			getReceiptItem: undefined,
-			getReceiptParticipant: undefined,
-			getReceiptItemPart: (controller) =>
-				controller.update(
+		cache.receipts.updateRevert(controllerContext, {
+			get: (controller) =>
+				controller.updateItemPart(
 					receiptId,
 					variables.itemId,
 					variables.userId,
 					applyUpdate(variables.update),
 					getRevert(variables.update),
 				),
+			getPaged: undefined,
+			getNonResolvedAmount: undefined,
 		}),
 	errorToastOptions: () => (error) => ({
 		text: `Error updating participant(s): ${error.message}`,

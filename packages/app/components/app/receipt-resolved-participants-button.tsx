@@ -14,26 +14,56 @@ import {
 
 import { LoadableUser } from "app/components/app/loadable-user";
 import { Text } from "app/components/base/text";
-import { trpc } from "app/trpc";
-import type { ReceiptsId } from "next-app/db/models";
+import { type TRPCQueryOutput, trpc } from "app/trpc";
+import { nonNullishGuard } from "app/utils/utils";
 
 type Props = {
-	receiptId: ReceiptsId;
+	participants: TRPCQueryOutput<"receipts.get">["participants"];
 } & Omit<
 	React.ComponentProps<typeof Button>,
 	"onClick" | "color" | "isIconOnly"
 >;
 
 export const ReceiptResolvedParticipantsButton: React.FC<Props> = ({
-	receiptId,
+	participants,
 	...props
 }) => {
 	const [popoverOpen, setPopoverOpen] = React.useState(false);
-	const query = trpc.receipts.getResolvedParticipants.useQuery({ receiptId });
-	const notResolvedParticipants = query.data?.filter(
+	const participantQueries = trpc.useQueries((t) =>
+		participants.map((participant) => t.users.get({ id: participant.userId })),
+	);
+	const connectedParticipants = participantQueries
+		.map((participantQuery) => {
+			if (!participantQuery.data?.connectedAccount) {
+				return null;
+			}
+			const matchedParticipant = participants.find(
+				({ userId }) => userId === participantQuery.data?.id,
+			);
+			if (!matchedParticipant) {
+				return null;
+			}
+			return {
+				userId: matchedParticipant.userId!,
+				resolved: matchedParticipant.resolved,
+			};
+		})
+		.filter(nonNullishGuard);
+	if (connectedParticipants.length === 0) {
+		return (
+			<Button
+				variant="light"
+				{...props}
+				isDisabled
+				isIconOnly
+				startContent={<WaitIcon size={24} />}
+			/>
+		);
+	}
+	const notResolvedParticipants = connectedParticipants.filter(
 		(participant) => !participant.resolved,
 	);
-	const resolvedParticipants = query.data?.filter(
+	const resolvedParticipants = connectedParticipants.filter(
 		(participant) => participant.resolved,
 	);
 	return (
@@ -47,12 +77,8 @@ export const ReceiptResolvedParticipantsButton: React.FC<Props> = ({
 					variant="light"
 					{...props}
 					color={popoverOpen ? "secondary" : undefined}
-					isLoading={query.isLoading || props.isLoading}
-					isDisabled={
-						query.status !== "success" ||
-						query.data.length === 0 ||
-						props.isDisabled
-					}
+					isLoading={props.isLoading}
+					isDisabled={props.isDisabled}
 					isIconOnly
 					startContent={
 						notResolvedParticipants?.length === 0 ? (
@@ -74,9 +100,8 @@ export const ReceiptResolvedParticipantsButton: React.FC<Props> = ({
 							<Text className="font-medium">Not resolved participants: </Text>
 							{notResolvedParticipants.map((participant) => (
 								<LoadableUser
-									key={participant.localUserId || participant.remoteUserId}
-									id={participant.localUserId || participant.remoteUserId}
-									foreign={!participant.localUserId}
+									key={participant.userId}
+									id={participant.userId}
 								/>
 							))}
 						</View>
@@ -84,11 +109,10 @@ export const ReceiptResolvedParticipantsButton: React.FC<Props> = ({
 					{resolvedParticipants && resolvedParticipants.length !== 0 ? (
 						<View className="items-start gap-2">
 							<Text className="font-medium">Resolved participants: </Text>
-							{resolvedParticipants?.map((participant) => (
+							{resolvedParticipants.map((participant) => (
 								<LoadableUser
-									key={participant.localUserId || participant.remoteUserId}
-									id={participant.localUserId || participant.remoteUserId}
-									foreign={!participant.localUserId}
+									key={participant.userId}
+									id={participant.userId}
 								/>
 							))}
 						</View>

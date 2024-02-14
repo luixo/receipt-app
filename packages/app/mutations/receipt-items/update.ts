@@ -4,9 +4,7 @@ import type { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-op
 import type { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
 import type { ReceiptsId } from "next-app/db/models";
 
-import { updateReceiptSum } from "./utils";
-
-type ReceiptItem = TRPCQueryOutput<"receiptItems.get">["items"][number];
+type ReceiptItem = TRPCQueryOutput<"receipts.get">["items"][number];
 
 const applyUpdate =
 	(
@@ -48,25 +46,17 @@ export const options: UseContextedMutationOptions<
 	ReceiptsId
 > = {
 	onMutate: (controllerContext, receiptId) => (updateObject) =>
-		cache.receiptItems.updateRevert(controllerContext, {
-			getReceiptItem: (controller) =>
-				controller.update(
+		cache.receipts.updateRevert(controllerContext, {
+			get: (controller) =>
+				controller.updateItem(
 					receiptId,
 					updateObject.id,
 					applyUpdate(updateObject.update),
 					getRevert(updateObject.update),
 				),
-			getReceiptParticipant: undefined,
-			getReceiptItemPart: undefined,
+			getPaged: undefined,
+			getNonResolvedAmount: undefined,
 		}),
-	onSuccess: (controllerContext, receiptId) => (_value, updateObject) => {
-		if (
-			updateObject.update.type === "price" ||
-			updateObject.update.type === "quantity"
-		) {
-			updateReceiptSum(controllerContext, receiptId);
-		}
-	},
 	errorToastOptions: () => (error) => ({
 		text: `Error updating item: ${error.message}`,
 	}),

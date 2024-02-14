@@ -10,12 +10,14 @@ import type { ReceiptsId } from "next-app/db/models";
 
 type Props = {
 	receiptId: ReceiptsId;
+	emptyItemsAmount: number;
 	locked: boolean;
 	isLoading: boolean;
 };
 
 export const ReceiptLockedButton: React.FC<Props> = ({
 	receiptId,
+	emptyItemsAmount,
 	locked,
 	isLoading,
 }) => {
@@ -28,19 +30,12 @@ export const ReceiptLockedButton: React.FC<Props> = ({
 			update: { type: "locked", locked: !locked },
 		});
 	}, [updateReceiptMutation, receiptId, locked]);
-	const receiptItemsQuery = trpc.receiptItems.get.useQuery({ receiptId });
 	const emptyItemsWarning = React.useMemo(() => {
-		if (!receiptItemsQuery.data) {
-			return `Please wait until we verify receipt has no empty items..`;
-		}
-		const emptyItems = receiptItemsQuery.data.items.filter(
-			(item) => item.parts.length === 0,
-		);
-		if (emptyItems.length === 0) {
+		if (emptyItemsAmount === 0) {
 			return;
 		}
-		return `There are ${emptyItems.length} empty items, cannot lock`;
-	}, [receiptItemsQuery.data]);
+		return `There are ${emptyItemsAmount} empty items, cannot lock`;
+	}, [emptyItemsAmount]);
 	const elements = (
 		<Tooltip content={locked ? "Receipt locked" : "Receipt unlocked"}>
 			<Button

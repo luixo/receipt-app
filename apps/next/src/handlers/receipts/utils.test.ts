@@ -2,7 +2,6 @@ import { faker } from "@faker-js/faker";
 import { describe } from "vitest";
 
 import { createAuthContext } from "@tests/backend/utils/context";
-import type { insertReceiptItem } from "@tests/backend/utils/data";
 import { insertAccountWithSession } from "@tests/backend/utils/data";
 import { expectTRPCError } from "@tests/backend/utils/expect";
 import { test } from "@tests/backend/utils/test";
@@ -23,16 +22,6 @@ export const getValidReceipt = () => ({
 	currencyCode: getRandomCurrencyCode(),
 	issued: new Date(),
 });
-
-export const getSum = (
-	items: Awaited<ReturnType<typeof insertReceiptItem>>[],
-) =>
-	Math.round(
-		items.reduce(
-			(acc, item) => acc + Number(item.quantity) * Number(item.price),
-			0,
-		) * 100,
-	) / 100;
 
 export const verifyName = <T>(
 	runProcedure: (context: UnauthorizedContext, name: string) => Promise<T>,

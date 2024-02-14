@@ -3,15 +3,24 @@ import React from "react";
 import { DateInput } from "app/components/date-input";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
-import type { TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
+import type { ReceiptsId } from "next-app/db/models";
 
 type Props = {
-	receipt: TRPCQueryOutput<"receipts.get">;
+	receiptId: ReceiptsId;
+	issued: Date;
+	receiptLocked: boolean;
+	isOwner: boolean;
 	isLoading: boolean;
 };
 
-export const ReceiptDateInput: React.FC<Props> = ({ receipt, isLoading }) => {
+export const ReceiptDateInput: React.FC<Props> = ({
+	receiptId,
+	issued,
+	receiptLocked,
+	isOwner,
+	isLoading,
+}) => {
 	const updateReceiptMutation = trpc.receipts.update.useMutation(
 		useTrpcMutationOptions(mutations.receipts.update.options),
 	);
@@ -19,27 +28,23 @@ export const ReceiptDateInput: React.FC<Props> = ({ receipt, isLoading }) => {
 	const saveDate = React.useCallback(
 		(nextDate: Date) => {
 			// TODO: add date-fns comparison of dates
-			if (nextDate.valueOf() === receipt.issued.valueOf()) {
+			if (nextDate.valueOf() === issued.valueOf()) {
 				return;
 			}
 			updateReceiptMutation.mutate({
-				id: receipt.id,
+				id: receiptId,
 				update: { type: "issued", issued: nextDate },
 			});
 		},
-		[updateReceiptMutation, receipt.id, receipt.issued],
+		[updateReceiptMutation, receiptId, issued],
 	);
 
 	return (
 		<DateInput
 			mutation={updateReceiptMutation}
-			timestamp={receipt.issued}
+			timestamp={issued}
 			labelPlacement="outside-left"
-			isDisabled={
-				receipt.role !== "owner" ||
-				Boolean(receipt.lockedTimestamp) ||
-				isLoading
-			}
+			isDisabled={!isOwner || receiptLocked || isLoading}
 			onUpdate={saveDate}
 		/>
 	);

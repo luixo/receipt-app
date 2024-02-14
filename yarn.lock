@@ -16569,10 +16569,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"kysely@npm:^0.26.3":
-  version: 0.26.3
-  resolution: "kysely@npm:0.26.3"
-  checksum: 2f0efdf31e7dfdbad2bc47780f24416f090f5662ae7256af7a200a75aaee7c7f04ffb29ead60da454a9477385c29e828e0978341f2a2aae97679f074823148b0
+"kysely@npm:^0.27.2":
+  version: 0.27.2
+  resolution: "kysely@npm:0.27.2"
+  checksum: 099dc32e3a0d1c86f2a3bb43cc7657ced0b4b83c7fba42c2fcd309a9316b01673ec1b2d9fbbcd5f90367f4a6583a8be01f55cf819e613310c7f4632059e2b687
   languageName: node
   linkType: hard
 
@@ -18216,7 +18216,7 @@ __metadata:
     goober: ^2.1.13
     idb-keyval: ^6.2.1
     isomorphic-fetch: ^3.0.0
-    kysely: ^0.26.3
+    kysely: ^0.27.2
     nativewind: ^4.0.16
     next: ^14.0.3
     next-http-proxy-middleware: ^1.2.5
@@ -24048,7 +24048,7 @@ __metadata:
     app: "*"
     deep-object-diff: ^1.1.9
     find-free-ports: ^3.1.1
-    kysely: ^0.26.3
+    kysely: ^0.27.2
     pg: ^8.11.3
     timekeeper: ^2.3.1
     vite-tsconfig-paths: ^4.2.0

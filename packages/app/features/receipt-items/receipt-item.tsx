@@ -23,36 +23,31 @@ import { trpc } from "app/trpc";
 import type { CurrencyCode } from "app/utils/currency";
 import { round } from "app/utils/math";
 import type { ReceiptsId, UsersId } from "next-app/db/models";
-import type { Role } from "next-app/handlers/receipts/utils";
 
 import { ParticipantChip } from "./participant-chip";
 import { ReceiptItemNameInput } from "./receipt-item-name-input";
 import { ReceiptItemPriceInput } from "./receipt-item-price-input";
 import { ReceiptItemQuantityInput } from "./receipt-item-quantity-input";
 
-type ReceiptItems = TRPCQueryOutput<"receiptItems.get">["items"];
-type ReceiptParticipant =
-	TRPCQueryOutput<"receiptItems.get">["participants"][number];
-
 type Props = {
-	receiptLocked: boolean;
 	receiptId: ReceiptsId;
-	receiptItem: ReceiptItems[number];
-	receiptParticipants: ReceiptParticipant[];
-	currencyCode?: CurrencyCode;
-	role: Role;
+	item: TRPCQueryOutput<"receipts.get">["items"][number];
+	selfUserId: UsersId;
+	receiptLocked: boolean;
+	currencyCode: CurrencyCode;
+	participants: TRPCQueryOutput<"receipts.get">["participants"];
 	isLoading: boolean;
 };
 
 export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 	(
 		{
-			receiptLocked,
-			receiptItem,
-			receiptParticipants,
 			receiptId,
+			item,
+			selfUserId,
+			receiptLocked,
+			participants,
 			currencyCode,
-			role,
 			isLoading: isReceiptDeleteLoading,
 		},
 		ref,
@@ -64,12 +59,12 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 			}),
 		);
 		const removeItem = React.useCallback(
-			() => removeReceiptItemMutation.mutate({ id: receiptItem.id }),
-			[removeReceiptItemMutation, receiptItem.id],
+			() => removeReceiptItemMutation.mutate({ id: item.id }),
+			[removeReceiptItemMutation, item.id],
 		);
 
-		const addedParticipants = receiptItem.parts.map((part) => part.userId);
-		const notAddedParticipants = receiptParticipants.filter(
+		const addedParticipants = item.parts.map((part) => part.userId);
+		const notAddedParticipants = participants.filter(
 			(participant) => !addedParticipants.includes(participant.userId),
 		);
 		const notAddedParticipantsIds = notAddedParticipants.map(
@@ -83,34 +78,38 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 		);
 		const addEveryParticipant = React.useCallback(() => {
 			addItemPartMutation.mutate({
-				itemId: receiptItem.id,
+				itemId: item.id,
 				userIds: notAddedParticipantsIds,
 			});
-		}, [addItemPartMutation, notAddedParticipantsIds, receiptItem.id]);
+		}, [addItemPartMutation, notAddedParticipantsIds, item.id]);
 
 		const isDeleteLoading =
 			isReceiptDeleteLoading || removeReceiptItemMutation.isPending;
-		const itemParts = receiptItem.parts.reduce(
+		const itemParts = item.parts.reduce(
 			(acc, itemPart) => acc + itemPart.part,
 			0,
 		);
-		const isEditingDisabled = role === "viewer" || receiptItem.locked;
+		const selfRole =
+			participants.find((participant) => participant.userId === selfUserId)
+				?.role ?? "owner";
+		const isOwner = selfRole === "owner";
+		const isEditingDisabled = selfRole === "viewer" || item.locked;
 
 		return (
 			<Card ref={ref}>
 				<CardHeader className="justify-between gap-4">
 					<ReceiptItemNameInput
 						receiptId={receiptId}
-						receiptItem={receiptItem}
+						receiptItem={item}
 						readOnly={isEditingDisabled || receiptLocked}
 						isLoading={isDeleteLoading}
 					/>
 					<View className="flex-row gap-4">
 						<ReceiptItemLockedButton
 							receiptId={receiptId}
-							receiptItemId={receiptItem.id}
-							locked={receiptItem.locked}
-							isDisabled={role === "viewer"}
+							receiptItemId={item.id}
+							locked={item.locked}
+							isDisabled={selfRole === "viewer"}
 						/>
 						{isEditingDisabled ? null : (
 							<RemoveButton
@@ -118,7 +117,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 								isDisabled={receiptLocked}
 								mutation={removeReceiptItemMutation}
 								subtitle="This will remove item with all participant's parts"
-								noConfirm={receiptItem.parts.length === 0}
+								noConfirm={item.parts.length === 0}
 								isIconOnly
 							/>
 						)}
@@ -129,19 +128,19 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 					<View className="flex-row items-center gap-2">
 						<ReceiptItemPriceInput
 							receiptId={receiptId}
-							receiptItem={receiptItem}
+							receiptItem={item}
 							currencyCode={currencyCode}
 							readOnly={isEditingDisabled || receiptLocked}
 							isLoading={isDeleteLoading}
 						/>
 						<ReceiptItemQuantityInput
 							receiptId={receiptId}
-							receiptItem={receiptItem}
+							receiptItem={item}
 							readOnly={isEditingDisabled || receiptLocked}
 							isLoading={isDeleteLoading}
 						/>
 						<Text>
-							= {round(receiptItem.quantity * receiptItem.price)} {currency}
+							= {round(item.quantity * item.price)} {currency}
 						</Text>
 					</View>
 					{receiptLocked ||
@@ -165,19 +164,19 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 								<ParticipantChip
 									key={participant.userId}
 									receiptId={receiptId}
-									receiptItemId={receiptItem.id}
+									receiptItemId={item.id}
 									participant={participant}
 									isDisabled={receiptLocked}
-									isOwner={role === "owner"}
+									isOwner={isOwner}
 								/>
 							))}
 						</ScrollShadow>
 					)}
-					{receiptItem.parts.length === 0 ? null : (
+					{item.parts.length === 0 ? null : (
 						<>
 							<Divider />
-							{receiptItem.parts.map((part) => {
-								const matchedParticipant = receiptParticipants.find(
+							{item.parts.map((part) => {
+								const matchedParticipant = participants.find(
 									(participant) => participant.userId === part.userId,
 								);
 								if (!matchedParticipant) {
@@ -195,10 +194,10 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 										itemPart={part}
 										itemParts={itemParts}
 										participant={matchedParticipant}
-										receiptItemId={receiptItem.id}
+										receiptItemId={item.id}
 										readOnly={isEditingDisabled || receiptLocked}
 										isLoading={isDeleteLoading}
-										isOwner={role === "owner"}
+										isOwner={isOwner}
 									/>
 								);
 							})}

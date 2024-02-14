@@ -15,7 +15,7 @@ type Props = {
 	receiptId: ReceiptsId;
 	userId: UsersId;
 	selfUserId?: UsersId;
-	resolved: boolean | null;
+	resolved: boolean | undefined;
 } & Omit<
 	React.ComponentProps<typeof Button>,
 	"onClick" | "color" | "isIconOnly"
@@ -45,9 +45,11 @@ export const ReceiptParticipantResolvedButton: React.FC<Props> = ({
 			{...props}
 			isLoading={updateReceiptMutation.isPending || props.isLoading}
 			isDisabled={
-				resolved === null || props.isDisabled || selfUserId !== userId
+				resolved === undefined || props.isDisabled || selfUserId !== userId
 			}
-			color={resolved ? "success" : resolved === null ? "default" : "warning"}
+			color={
+				resolved ? "success" : resolved === undefined ? "default" : "warning"
+			}
 			onClick={switchResolved}
 			isIconOnly
 		>

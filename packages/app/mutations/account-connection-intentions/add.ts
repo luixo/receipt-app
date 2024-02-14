@@ -20,17 +20,6 @@ export const options: UseContextedMutationOptions<"accountConnectionIntentions.a
 					},
 					getPaged: undefined,
 				});
-				cache.receipts.update(controllerContext, {
-					get: undefined,
-					getPaged: undefined,
-					getResolvedParticipants: (controller) =>
-						controller.invalidateBy((participants) =>
-							participants.some(
-								(participant) => participant.remoteUserId === variables.userId,
-							),
-						),
-					getNonResolvedAmount: undefined,
-				});
 			} else {
 				cache.accountConnections.update(controllerContext, {
 					getAll: (controller) =>
