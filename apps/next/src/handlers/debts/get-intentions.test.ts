@@ -104,10 +104,6 @@ describe("debts.getIntentions", () => {
 				],
 			);
 			// Created debt
-			const { id: anotherForeignReceiptId } = await insertReceipt(
-				ctx,
-				foreignAccountId,
-			);
 			const debtToCreate = await insertDebt(
 				ctx,
 				foreignAccountId,
@@ -115,7 +111,6 @@ describe("debts.getIntentions", () => {
 				{
 					lockedTimestamp: new Date(),
 					created: new Date("2020-05-01"),
-					receiptId: anotherForeignReceiptId,
 				},
 			);
 
