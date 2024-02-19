@@ -1,77 +1,74 @@
 import type { ResolveOptions } from "@trpc/server/unstableInternalsExport";
+import type { BatchLoadFn, Options } from "dataloader";
+import Dataloader from "dataloader";
 
-import type { ControlledPromise } from "app/utils/utils";
-import { createPromise } from "app/utils/utils";
-import type { UnauthorizedContext } from "next-app/handlers/context";
+import type {
+	AuthorizedContext,
+	UnauthorizedContext,
+} from "next-app/handlers/context";
 import type { t } from "next-app/handlers/trpc";
 
-// This is a homebrew of a https://github.com/graphql/dataloader
-// Probably should be rewritten to use dataloader at some point
+const SCHEDULE_DELAY = 100;
+const CLEAR_CACHE_DELAY = 2000;
 
-type BatchedObject<I, O> = {
-	input: I;
-	promise: ControlledPromise<O>;
+type ResolveOptionsShort<C, I, O> = ResolveOptions<{
+	_config: (typeof t)["_config"];
+	_meta: unknown;
+	_ctx_out: C;
+	_input_in: I;
+	_input_out: I;
+	_output_in: O;
+	_output_out: O;
+}>;
+
+const defaultGetKey = <C extends UnauthorizedContext>(context: C): string => {
+	if ("auth" in context) {
+		return (context as AuthorizedContext).auth.accountId;
+		/* c8 ignore start */
+	}
+	// There are no batched requests with no auth yet
+	return "anonymous";
 };
+/* c8 ignore stop */
 
-export const queueCallFactory = <C extends UnauthorizedContext, I, O, M>(
-	getData: (ctx: C, inputs: I[]) => Promise<M>,
-	getSingleValue: (ctx: C, input: I, values: M) => Promise<O>,
+export const queueCallFactory = <C extends UnauthorizedContext, I, O>(
+	batchLoadFn: (ctx: C) => BatchLoadFn<I, O>,
+	{
+		getKey,
+		...batchOpts
+	}: Options<I, O, string> & {
+		getKey?: (ctx: C) => string;
+	} = {},
 ) => {
-	const batches: Record<string, BatchedObject<I, O>[]> = {};
-	const runCalls = async (
-		ctx: C,
-		batchedObjects: BatchedObject<I, O>[],
-	): Promise<void> => {
-		try {
-			const inputs = batchedObjects.map(({ input }) => input);
-			const results = await getData(ctx, inputs);
-			batchedObjects.forEach(async ({ promise, input }) => {
-				try {
-					const result = await getSingleValue(ctx, input, results);
-					promise.resolve(result);
-				} catch (e) {
-					promise.reject(e);
-				}
-			});
-		} catch (e) {
-			batchedObjects.forEach(({ promise }) => promise.reject(e));
+	const dataloaderStorage: Record<
+		string,
+		{
+			dataloader: Dataloader<I, O, string>;
+			removeTimeoutId: NodeJS.Timeout;
 		}
-	};
-	const runCall = async (ctx: C, input: I) =>
-		getSingleValue(ctx, input, await getData(ctx, [input]));
-	return async (
-		opts: ResolveOptions<{
-			_config: (typeof t)["_config"];
-			_meta: unknown;
-			_ctx_out: C;
-			_input_in: I;
-			_input_out: I;
-			_output_in: O;
-			_output_out: O;
-		}>,
-	): Promise<O> => {
+	> = {};
+	return async (opts: ResolveOptionsShort<C, I, O>): Promise<O> => {
 		const context = opts.ctx as C;
 		const input = opts.input as I;
-		const { batch } = context;
-		if (!batch) {
-			return runCall(context, input);
-		}
-		const samePathCalls = batch.calls.filter(
-			(call) => call.path === (opts as unknown as { path: string }).path,
-		);
-		if (samePathCalls.length === 1) {
-			return runCall(context, input);
-		}
-		if (!batches[batch.id]) {
-			batches[batch.id] = [];
-		}
-		const promise = createPromise<O>();
-		batches[batch.id]!.push({ promise, input });
-		if (batches[batch.id]!.length === samePathCalls.length) {
-			void runCalls(context, batches[batch.id]!).then(() => {
-				delete batches[batch.id];
-			});
-		}
-		return promise.wait();
+		const key = (getKey || defaultGetKey)(context);
+		dataloaderStorage[key] ??= {
+			dataloader: new Dataloader<I, O, string>(
+				(inputs) => batchLoadFn(context)(inputs),
+				{
+					batchScheduleFn: (callback) => setTimeout(callback, SCHEDULE_DELAY),
+					cacheKeyFn: JSON.stringify,
+					// Disable cache on test runs - subsequent calls with different data are happening in tests
+					cache: !context.req.headers["x-test-id"],
+					// Undocumented `opts.path` property
+					name: (opts as unknown as { path: string }).path,
+					...batchOpts,
+				},
+			),
+			removeTimeoutId: setTimeout(() => {
+				delete dataloaderStorage[key];
+			}, CLEAR_CACHE_DELAY),
+		};
+		dataloaderStorage[key]!.removeTimeoutId.refresh();
+		return dataloaderStorage[key]!.dataloader.load(input);
 	};
 };

@@ -44,6 +44,7 @@ type GetLinksOptions = {
 	keepError?: boolean;
 	searchParams: Record<string, string | string[] | undefined>;
 	cookies: Partial<Record<string, string>> | undefined;
+	headers?: Partial<Record<string, string>>;
 	source: // Next.js client-side rendering originated from 'pages' dir
 	| "csr-next"
 		// Next.js server-side rendering originated from 'pages' dir
@@ -58,7 +59,14 @@ type GetLinksOptions = {
 
 export const getLinks = (
 	url: string,
-	{ useBatch, keepError, searchParams, cookies, source }: GetLinksOptions,
+	{
+		useBatch,
+		keepError,
+		searchParams,
+		cookies,
+		source,
+		headers: overrideHeaders,
+	}: GetLinksOptions,
 ): TRPCLink<AppRouter>[] => {
 	const authToken = cookies ? cookies[AUTH_COOKIE] : undefined;
 	// we omit to not let stringified "undefined" get passed to the server
@@ -73,6 +81,7 @@ export const getLinks = (
 				? searchParams.controllerId
 				: undefined,
 		"x-source": source,
+		...overrideHeaders,
 	});
 	const splitLinkInstance = splitLink({
 		condition: (op) => op.input instanceof FormData,

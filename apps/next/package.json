@@ -21,6 +21,7 @@
 		"cookie": "^0.5.0",
 		"cookies-next": "^2.1.2",
 		"currency-list": "^1.0.8",
+		"dataloader": "^2.2.2",
 		"goober": "^2.1.13",
 		"idb-keyval": "^6.2.1",
 		"isomorphic-fetch": "^3.0.0",

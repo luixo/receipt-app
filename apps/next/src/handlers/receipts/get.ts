@@ -230,26 +230,21 @@ const mapReceipt = (
 };
 
 type Receipt = ReturnType<typeof mapReceipt>;
-type DatabaseReceipt = Awaited<ReturnType<typeof fetchReceipts>>[number];
-type DatabaseDebt = Awaited<ReturnType<typeof fetchDebts>>[number];
 
 const queueReceipt = queueCallFactory<
 	AuthorizedContext,
 	{ id: ReceiptsId },
-	Receipt,
-	[DatabaseReceipt[], DatabaseDebt[]]
->(
-	async (ctx, inputs) => {
-		const receiptIds = inputs.map(({ id }) => id);
-		return Promise.all([
-			fetchReceipts(ctx, receiptIds),
-			fetchDebts(ctx, receiptIds),
-		]);
-	},
-	async (ctx, input, [receipts, debts]) => {
+	Receipt
+>((ctx) => async (inputs) => {
+	const receiptIds = inputs.map(({ id }) => id);
+	const [receipts, debts] = await Promise.all([
+		fetchReceipts(ctx, receiptIds),
+		fetchDebts(ctx, receiptIds),
+	]);
+	return inputs.map((input) => {
 		const receipt = receipts.find(({ id }) => id === input.id);
 		if (!receipt) {
-			throw new TRPCError({
+			return new TRPCError({
 				code: "NOT_FOUND",
 				message: `Receipt "${input.id}" is not found.`,
 			});
@@ -260,18 +255,25 @@ const queueReceipt = queueCallFactory<
 				(participant) => participant.userId === receipt.selfUserId,
 			)
 		) {
-			throw new TRPCError({
+			return new TRPCError({
 				code: "FORBIDDEN",
 				message: `Account "${ctx.auth.email}" has no access to receipt "${receipt.id}"`,
 			});
 		}
-		return mapReceipt(
-			ctx.auth,
-			receipt,
-			debts.filter((debt) => debt.receiptId === receipt.id),
-		);
-	},
-);
+		try {
+			const mapped = mapReceipt(
+				ctx.auth,
+				receipt,
+				debts.filter((debt) => debt.receiptId === receipt.id),
+			);
+			return mapped;
+			/* c8 ignore start */
+		} catch (e) {
+			return e as Error;
+		}
+		/* c8 ignore stop */
+	});
+});
 
 export const procedure = authProcedure
 	.input(

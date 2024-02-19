@@ -57,6 +57,9 @@ export const getClientServer = async <R extends AnyRouter>(
 				source: "test",
 				keepError: true,
 				useBatch,
+				headers: {
+					"x-test-id": ctx.task.id,
+				},
 			}),
 			transformer,
 		} as unknown as CreateTRPCClientOptions<R>),

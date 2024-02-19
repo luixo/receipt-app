@@ -101,25 +101,23 @@ const mapUser = (user: Awaited<ReturnType<typeof fetchUsers>>[number]) => {
 const queueUser = queueCallFactory<
 	AuthorizedContext,
 	{ id: UsersId },
-	ReturnType<typeof mapUser>,
-	Awaited<ReturnType<typeof fetchUsers>>
->(
-	async (ctx, inputs) =>
-		fetchUsers(
-			ctx,
-			inputs.map(({ id }) => id),
-		),
-	async (_ctx, input, users) => {
+	ReturnType<typeof mapUser>
+>((ctx) => async (inputs) => {
+	const users = await fetchUsers(
+		ctx,
+		inputs.map(({ id }) => id),
+	);
+	return inputs.map((input) => {
 		const matchedUser = users.find((user) => user.theirId === input.id);
 		if (!matchedUser) {
-			throw new TRPCError({
+			return new TRPCError({
 				code: "NOT_FOUND",
 				message: `No user found by id "${input.id}" or you don't have access to it.`,
 			});
 		}
 		return mapUser(matchedUser);
-	},
-);
+	});
+});
 
 export const procedure = authProcedure
 	.input(z.strictObject({ id: userIdSchema }))

@@ -73,25 +73,23 @@ const mapDebt = (debt: Awaited<ReturnType<typeof fetchDebts>>[number]) => {
 const queueDebt = queueCallFactory<
 	AuthorizedContext,
 	{ id: DebtsId },
-	ReturnType<typeof mapDebt>,
-	Awaited<ReturnType<typeof fetchDebts>>
->(
-	async (ctx, inputs) =>
-		fetchDebts(
-			ctx,
-			inputs.map(({ id }) => id),
-		),
-	async (_ctx, input, debts) => {
+	ReturnType<typeof mapDebt>
+>((ctx) => async (inputs) => {
+	const debts = await fetchDebts(
+		ctx,
+		inputs.map(({ id }) => id),
+	);
+	return inputs.map((input) => {
 		const debt = debts.find(({ id }) => id === input.id);
 		if (!debt) {
-			throw new TRPCError({
+			return new TRPCError({
 				code: "NOT_FOUND",
 				message: `Debt "${input.id}" does not exist or you don't have access to it.`,
 			});
 		}
 		return mapDebt(debt);
-	},
-);
+	});
+});
 
 export const procedure = authProcedure
 	.input(z.strictObject({ id: debtIdSchema }))

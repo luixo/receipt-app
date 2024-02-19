@@ -1,5 +1,4 @@
 import type * as trpcNext from "@trpc/server/adapters/next";
-import type { ProcedureCall } from "@trpc/server/http";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as crypto from "node:crypto";
 import { v4 } from "uuid";
@@ -29,10 +28,6 @@ type TestContextPicks = Pick<
 export type UnauthorizedContext = {
 	req: NextApiRequest;
 	res: NextApiResponse;
-	batch?: {
-		id: string;
-		calls: ProcedureCall[];
-	};
 } & TestContextPicks;
 
 export type AuthorizedContext = UnauthorizedContext & {
@@ -84,8 +79,5 @@ export const createContext = (
 	s3Options: opts.s3Options || defaultGetS3Options(),
 	getSalt: opts.getSalt || defaultGetSalt,
 	getUuid: opts.getUuid || defaultGetUuid,
-	batch: opts.info.isBatchCall
-		? { id: v4(), calls: opts.info.calls }
-		: undefined,
 });
 /* c8 ignore stop */

@@ -1,5 +1,6 @@
 import { Faker, en, faker } from "@faker-js/faker";
 import type { inferProcedureOutput } from "@trpc/server";
+import type { Test } from "vitest";
 import { test as originalTest } from "vitest";
 
 import type { AppRouter } from "@tests/backend/databases/router";
@@ -47,7 +48,14 @@ type MockContext = {
 	s3Options: S3OptionsMock;
 };
 
-export type TestContext = FakerContext & MockContext & SuiteContext;
+type MetaContext = {
+	task: Test;
+};
+
+export type TestContext = FakerContext &
+	MockContext &
+	SuiteContext &
+	MetaContext;
 export type TestFixture = { ctx: TestContext };
 
 export const createStableFaker = (input: string) => {
@@ -89,6 +97,7 @@ export const test = originalTest.extend<TestFixture>({
 					casing: "lower",
 					prefix: "",
 				}),
+			task,
 			...suiteContext,
 		});
 	},

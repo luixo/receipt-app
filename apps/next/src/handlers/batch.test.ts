@@ -52,19 +52,28 @@ const mapElement = (rawElement: RawElement): Element => {
 const queueElement = queueCallFactory<
 	UnauthorizedContext,
 	Input,
-	ReturnType<typeof mapElement>,
-	Awaited<ReturnType<typeof getElements>>
+	ReturnType<typeof mapElement>
 >(
-	async (_ctx, inputs) => {
+	() => async (inputs) => {
 		const elements = await getElements(inputs.map((input) => input.id));
-		return elements;
+		return Promise.all(
+			inputs.map(async (input) => {
+				const element = elements.find(({ id }) => id === input.id);
+				if (!element) {
+					return new Error("Missing element error");
+				}
+				try {
+					const result = await mapElement(element);
+					return result;
+				} catch (e) {
+					return e as Error;
+				}
+			}),
+		);
 	},
-	async (_ctx, input, elements) => {
-		const element = elements.find(({ id }) => id === input.id);
-		if (!element) {
-			throw new Error("Missing element error");
-		}
-		return mapElement(element);
+	{
+		getKey: (ctx) =>
+			(ctx.req.headers["x-test-id"] as string | undefined) || "unknown",
 	},
 );
 
