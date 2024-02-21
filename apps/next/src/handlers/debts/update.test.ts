@@ -57,6 +57,7 @@ const updateDescribes = (
 		);
 		const [{ id: userId }, { id: foreignToSelfUserId }] =
 			await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
+		const { id: receiptId } = await insertReceipt(ctx, accountId);
 		const [{ id: debtId }] = await insertSyncedDebts(
 			ctx,
 			[
@@ -73,7 +74,6 @@ const updateDescribes = (
 		const { id: foreignUserId } = await insertUser(ctx, foreignAccountId);
 		await insertDebt(ctx, accountId, userId);
 		await insertDebt(ctx, foreignAccountId, foreignUserId);
-		const { id: receiptId } = await insertReceipt(ctx, accountId);
 
 		const caller = router.createCaller(createAuthContext(ctx, sessionId));
 		const result = await expectDatabaseDiffSnapshot(ctx, () =>
