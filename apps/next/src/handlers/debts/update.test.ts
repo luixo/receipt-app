@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { describe, expect } from "vitest";
+import { assert, describe, expect } from "vitest";
 
 import { createAuthContext } from "@tests/backend/utils/context";
 import {
@@ -19,13 +19,15 @@ import {
 import type { TestContext } from "@tests/backend/utils/test";
 import { test } from "@tests/backend/utils/test";
 import type { TRPCMutationInput } from "app/trpc";
-import type { ReceiptsId } from "next-app/db/models";
+import { pick } from "app/utils/utils";
+import type { DebtsId, ReceiptsId } from "next-app/db/models";
 import { t } from "next-app/handlers/trpc";
 
 import { procedure } from "./update";
 import {
 	getRandomAmount,
 	getRandomCurrencyCode,
+	syncedProps,
 	verifyAmount,
 	verifyCurrencyCode,
 	verifyNote,
@@ -45,10 +47,12 @@ const updateDescribes = (
 		ctx,
 		lockedBefore,
 		counterPartyAccepts,
+		counterPartyExists,
 	}: {
 		ctx: TestContext;
 		lockedBefore: boolean;
 		counterPartyAccepts: boolean;
+		counterPartyExists: boolean;
 	}) => {
 		const { sessionId, accountId } = await insertAccountWithSession(ctx);
 		const { id: foreignAccountId } = await insertAccount(
@@ -58,15 +62,31 @@ const updateDescribes = (
 		const [{ id: userId }, { id: foreignToSelfUserId }] =
 			await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
 		const { id: receiptId } = await insertReceipt(ctx, accountId);
-		const [{ id: debtId }] = await insertSyncedDebts(
-			ctx,
-			[
+		let debtId: DebtsId;
+		if (counterPartyExists) {
+			const [syncedDebt] = await insertSyncedDebts(
+				ctx,
+				[
+					accountId,
+					userId,
+					lockedBefore
+						? { lockedTimestamp: new Date("2021-01-01") }
+						: undefined,
+				],
+				[foreignAccountId, foreignToSelfUserId],
+			);
+			debtId = syncedDebt.id;
+		} else {
+			const unsyncedDebt = await insertDebt(
+				ctx,
 				accountId,
 				userId,
-				lockedBefore ? { lockedTimestamp: new Date("2021-01-01") } : undefined,
-			],
-			[foreignAccountId, foreignToSelfUserId],
-		);
+				lockedBefore
+					? { lockedTimestamp: new Date("2021-01-01"), receiptId }
+					: { receiptId },
+			);
+			debtId = unsyncedDebt.id;
+		}
 
 		// Verify unrelated data doesn't affect the result
 		await insertUser(ctx, accountId);
@@ -74,18 +94,28 @@ const updateDescribes = (
 		const { id: foreignUserId } = await insertUser(ctx, foreignAccountId);
 		await insertDebt(ctx, accountId, userId);
 		await insertDebt(ctx, foreignAccountId, foreignUserId);
+		const { id: newReceiptId } = await insertReceipt(ctx, accountId);
 
 		const caller = router.createCaller(createAuthContext(ctx, sessionId));
 		const result = await expectDatabaseDiffSnapshot(ctx, () =>
-			caller.procedure({ id: debtId, update: getUpdate({ receiptId }) }),
+			caller.procedure({
+				id: debtId,
+				update: getUpdate({ receiptId: newReceiptId }),
+			}),
 		);
 		const nextLockedTimestamp = getNextTimestamp(lockedBefore);
 		const reverseLockedTimestampUpdated =
-			nextLockedTimestamp !== undefined && counterPartyAccepts;
+			(nextLockedTimestamp !== undefined && counterPartyAccepts) ||
+			!counterPartyExists;
 		expect(result).toStrictEqual<typeof result>({
 			lockedTimestamp: nextLockedTimestamp,
 			reverseLockedTimestampUpdated,
 		});
+		return {
+			debtId,
+			selfAccountId: accountId,
+			foreignAccountId,
+		};
 	};
 
 	const lockedStateTests = ({
@@ -94,11 +124,53 @@ const updateDescribes = (
 		counterPartyAccepts: boolean;
 	}) => {
 		test("locked before update", async ({ ctx }) => {
-			await runTest({ ctx, lockedBefore: true, counterPartyAccepts });
+			await runTest({
+				ctx,
+				lockedBefore: true,
+				counterPartyAccepts,
+				counterPartyExists: true,
+			});
 		});
 		test("unlocked before update", async ({ ctx }) => {
-			await runTest({ ctx, lockedBefore: false, counterPartyAccepts });
+			await runTest({
+				ctx,
+				lockedBefore: false,
+				counterPartyAccepts,
+				counterPartyExists: true,
+			});
 		});
+		if (counterPartyAccepts) {
+			test("debt didn't exist beforehand", async ({ ctx }) => {
+				const { debtId, selfAccountId, foreignAccountId } = await runTest({
+					ctx,
+					lockedBefore: false,
+					counterPartyAccepts,
+					counterPartyExists: false,
+				});
+				const debts = await ctx.database
+					.selectFrom("debts")
+					.where((eb) => eb.and({ id: debtId }))
+					.selectAll()
+					.execute();
+
+				const selfDebt = debts.find(
+					(debt) => debt.ownerAccountId === selfAccountId,
+				);
+				assert(selfDebt, "Self debt does not exist");
+				const pickedSelfDebt = pick(selfDebt, syncedProps);
+
+				const foreignDebt = debts.find(
+					(debt) => debt.ownerAccountId === foreignAccountId,
+				);
+				assert(foreignDebt, "Foreign debt does not exist");
+				const pickedForeignDebt = pick(foreignDebt, syncedProps);
+
+				expect(pickedSelfDebt).toStrictEqual<typeof pickedSelfDebt>({
+					...pickedForeignDebt,
+					amount: (-pickedForeignDebt.amount).toFixed(4),
+				});
+			});
+		}
 	};
 
 	describe("counterparty doesn't auto-accept", () => {

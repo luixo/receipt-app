@@ -1,11 +1,14 @@
 import { TRPCError } from "@trpc/server";
 
-import type { NonNullableField } from "app/utils/types";
 import { MAX_BATCH_DEBTS, MIN_BATCH_DEBTS } from "app/utils/validation";
 import type { DebtsId } from "next-app/db/models";
 import { authProcedure } from "next-app/handlers/trpc";
 
-import { buildSetObjects, updateDebtSchema } from "./utils";
+import {
+	buildSetObjects,
+	updateDebtSchema,
+	upsertAutoAcceptedDebts,
+} from "./utils";
 
 export const procedure = authProcedure
 	.input(
@@ -40,12 +43,23 @@ export const procedure = authProcedure
 			.leftJoin("accountSettings", (qb) =>
 				qb.onRef("users.connectedAccountId", "=", "accountSettings.accountId"),
 			)
+			.leftJoin("users as usersTheir", (qb) =>
+				qb
+					.onRef("usersTheir.connectedAccountId", "=", "debts.ownerAccountId")
+					.onRef("usersTheir.ownerAccountId", "=", "accountSettings.accountId"),
+			)
 			.select([
 				"debts.id",
 				"debts.userId",
 				"debts.lockedTimestamp",
+				"debts.note",
+				"debts.currencyCode",
+				"debts.amount",
+				"debts.timestamp",
+				"debts.receiptId",
 				"accountSettings.accountId as foreignAccountId",
 				"accountSettings.autoAcceptDebts",
+				"usersTheir.id as theirUserId",
 			])
 			.execute();
 		const debtIds = debts.map((debt) => debt.id);
@@ -83,46 +97,55 @@ export const procedure = authProcedure
 					obj.lockedTimestamp !== undefined,
 			);
 
-		type DebtWithReverseSetObject = NonNullableField<
-			(typeof setObjectsWithReverse)[number],
-			"reverseSetObject"
-		>;
-		const autoAcceptedDebts = setObjectsWithReverse.filter(
-			(setObject): setObject is DebtWithReverseSetObject =>
-				Boolean(setObject.debt.autoAcceptDebts && setObject.reverseSetObject),
+		const autoAcceptedDebts = setObjectsWithReverse.filter((setObject) =>
+			Boolean(setObject.debt.autoAcceptDebts),
 		);
 		if (autoAcceptedDebts.length !== 0) {
-			await database.transaction().execute((tx) =>
-				Promise.all(
-					autoAcceptedDebts.map(async ({ reverseSetObject, debt }) => {
-						const { foreignAccountId } = debt;
-						/* c8 ignore start */
-						if (!foreignAccountId) {
-							throw new TRPCError({
-								code: "INTERNAL_SERVER_ERROR",
-								message: `Unexpected having "autoAcceptDebts" but not having "accountId"`,
-							});
-						}
-						/* c8 ignore stop */
-						await tx
-							.updateTable("debts")
-							.set(reverseSetObject)
-							.where((eb) =>
-								eb.and({ id: debt.id, ownerAccountId: foreignAccountId }),
-							)
-							.executeTakeFirst();
-						if (reverseSetObject.lockedTimestamp !== undefined) {
-							const matchedLockedTimestampObject = lockedTimestampObjects.find(
-								({ debtId }) => debtId === debt.id,
-							);
-							if (matchedLockedTimestampObject) {
-								matchedLockedTimestampObject.reverseLockedTimestampUpdated =
-									true;
-							}
-						}
-					}),
-				),
+			const { newDebts } = await upsertAutoAcceptedDebts(
+				database,
+				autoAcceptedDebts.map(({ setObject, reverseSetObject, debt }) => {
+					/* c8 ignore start */
+					if (!debt.foreignAccountId) {
+						throw new TRPCError({
+							code: "INTERNAL_SERVER_ERROR",
+							message: `Unexpected having "autoAcceptDebts" but not having "accountId"`,
+						});
+					}
+					if (!debt.theirUserId) {
+						throw new TRPCError({
+							code: "INTERNAL_SERVER_ERROR",
+							message: `Unexpected having "autoAcceptDebts" but not having "theirUserId"`,
+						});
+					}
+					/* c8 ignore stop */
+					return {
+						id: debt.id,
+						ownerAccountId: debt.foreignAccountId,
+						userId: debt.theirUserId,
+						currencyCode: debt.currencyCode,
+						amount: (-debt.amount).toString(),
+						timestamp: debt.timestamp,
+						lockedTimestamp: debt.lockedTimestamp,
+						receiptId: debt.receiptId,
+						created: new Date(),
+						...reverseSetObject,
+						// In case debt doesn't exist - we need to set a new note, not the old one
+						note: setObject.note || debt.note,
+						isNew: false,
+					};
+				}),
 			);
+			autoAcceptedDebts.forEach(({ reverseSetObject, debt }) => {
+				const matchedNewDebt = newDebts.find(({ id }) => id === debt.id);
+				if (matchedNewDebt || reverseSetObject?.lockedTimestamp !== undefined) {
+					const matchedLockedTimestampObject = lockedTimestampObjects.find(
+						({ debtId }) => debtId === debt.id,
+					);
+					if (matchedLockedTimestampObject) {
+						matchedLockedTimestampObject.reverseLockedTimestampUpdated = true;
+					}
+				}
+			});
 		}
 		await database.transaction().execute((tx) =>
 			Promise.all(

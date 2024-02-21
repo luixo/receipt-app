@@ -1,32 +1,62 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`debts.add > functionality > debt is added - auto-accepted by the counterparty 1`] = `
+exports[`debts.add > functionality > auto-accepted by the counterparty > counterparty's debt did exist before - picked by receipt id & owner account id 1`] = `
 {
   "added": {
     "debts": {
-      "id:3424ffbe-bc14-40fb-8e8d-7d2c68121b4e|ownerAccountId:02592c5a-d836-40e8-9345-b251bdda0526": {
-        "amount": "112.7900",
+      "id:35bb1455-b8ca-4d6d-ba56-308eac4324b9|ownerAccountId:fb0eb5b6-cded-4b5c-88e3-d59a6ab3a8b3": {
+        "amount": "728.7300",
         "created": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "BYN",
-        "id": "3424ffbe-bc14-40fb-8e8d-7d2c68121b4e",
+        "currencyCode": "XAF",
+        "id": "35bb1455-b8ca-4d6d-ba56-308eac4324b9",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "note": "tempore quas dolorum",
-        "ownerAccountId": "02592c5a-d836-40e8-9345-b251bdda0526",
-        "receiptId": "63c30bc1-acda-410a-868d-9bb9fdf197c2",
+        "note": "facere ratione ex",
+        "ownerAccountId": "fb0eb5b6-cded-4b5c-88e3-d59a6ab3a8b3",
+        "receiptId": "0635be98-a6b6-43a7-9ca3-6040268d4d50",
         "timestamp": "2020-01-01T00:00:00.000Z",
-        "userId": "060ccc77-ab57-45d8-bf83-e0a7782b8f59",
+        "userId": "2369ad67-daa7-49d4-ae45-6d934b6f05dc",
       },
-      "id:3424ffbe-bc14-40fb-8e8d-7d2c68121b4e|ownerAccountId:717ebb74-e1d8-49a9-942e-c563dc983b51": {
-        "amount": "-112.7900",
-        "created": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "BYN",
-        "id": "3424ffbe-bc14-40fb-8e8d-7d2c68121b4e",
+    },
+  },
+  "updated": {
+    "debts": {
+      "id:35bb1455-b8ca-4d6d-ba56-308eac4324b9|ownerAccountId:4d438a86-07a3-4aa7-8891-0ce85b8b4d99": {
+        "amount": "-728.7300",
+        "currencyCode": "XAF",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "note": "tempore quas dolorum",
-        "ownerAccountId": "717ebb74-e1d8-49a9-942e-c563dc983b51",
-        "receiptId": "63c30bc1-acda-410a-868d-9bb9fdf197c2",
+      },
+    },
+  },
+}
+`;
+
+exports[`debts.add > functionality > auto-accepted by the counterparty > counterparty's debt didn't exist before 1`] = `
+{
+  "added": {
+    "debts": {
+      "id:cbf1eae9-e256-4e70-9dcd-0f00d54812c7|ownerAccountId:7ebc4d99-cd07-4ece-9c4c-2ea67aaa8784": {
+        "amount": "23.3400",
+        "created": "2020-01-01T00:00:00.000Z",
+        "currencyCode": "BND",
+        "id": "cbf1eae9-e256-4e70-9dcd-0f00d54812c7",
+        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+        "note": "voluptate unde mollitia",
+        "ownerAccountId": "7ebc4d99-cd07-4ece-9c4c-2ea67aaa8784",
+        "receiptId": "65e321a1-ee4b-432e-ae4b-27c8f867c81b",
         "timestamp": "2020-01-01T00:00:00.000Z",
-        "userId": "6681fb0d-8f49-4d42-b639-12931004de48",
+        "userId": "c007da31-42d2-4a5b-af2b-66ae582e96c4",
+      },
+      "id:cbf1eae9-e256-4e70-9dcd-0f00d54812c7|ownerAccountId:a078d07c-73dd-4db8-8d1f-4c7ae7a017f9": {
+        "amount": "-23.3400",
+        "created": "2020-01-01T00:00:00.000Z",
+        "currencyCode": "BND",
+        "id": "cbf1eae9-e256-4e70-9dcd-0f00d54812c7",
+        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+        "note": "voluptate unde mollitia",
+        "ownerAccountId": "a078d07c-73dd-4db8-8d1f-4c7ae7a017f9",
+        "receiptId": "65e321a1-ee4b-432e-ae4b-27c8f867c81b",
+        "timestamp": "2020-01-01T00:00:00.000Z",
+        "userId": "b3cc019d-5200-4802-912f-4f0bcf39124b",
       },
     },
   },

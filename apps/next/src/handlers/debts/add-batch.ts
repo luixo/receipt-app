@@ -17,7 +17,10 @@ import {
 	userIdSchema,
 } from "next-app/handlers/validation";
 
-import { withOwnerReceiptUserConstraint } from "./utils";
+import {
+	upsertAutoAcceptedDebts,
+	withOwnerReceiptUserConstraint,
+} from "./utils";
 
 const extractError = (e: unknown) => {
 	/* c8 ignore start */
@@ -74,21 +77,27 @@ export const procedure = authProcedure
 		const ids: DebtsId[] = debts.map(() => ctx.getUuid());
 		const { database } = ctx;
 		const userIds = [...new Set(debts.map(({ userId }) => userId))];
-		const users = await database
+		const results = await database
 			.selectFrom("users")
 			.leftJoin("accountSettings", (qb) =>
 				qb.onRef("users.connectedAccountId", "=", "accountSettings.accountId"),
 			)
+			.leftJoin("users as usersTheir", (qb) =>
+				qb
+					.onRef("usersTheir.ownerAccountId", "=", "accountSettings.accountId")
+					.on("usersTheir.connectedAccountId", "=", ctx.auth.accountId),
+			)
 			.select([
 				"users.id",
+				"usersTheir.id as theirUserId",
 				"users.ownerAccountId as selfAccountId",
 				"accountSettings.accountId as foreignAccountId",
 				"accountSettings.autoAcceptDebts",
 			])
 			.where("users.id", "in", userIds)
 			.execute();
-		if (users.length !== userIds.length) {
-			const foundUserIds = users.map((user) => user.id);
+		if (results.length !== userIds.length) {
+			const foundUserIds = results.map((user) => user.id);
 			const missingUserIds = userIds.filter(
 				(requestedUserId) => !foundUserIds.includes(requestedUserId),
 			);
@@ -101,7 +110,7 @@ export const procedure = authProcedure
 				} not exist.`,
 			});
 		}
-		const foreignUsers = users.filter(
+		const foreignUsers = results.filter(
 			({ selfAccountId }) => selfAccountId !== ctx.auth.accountId,
 		);
 		if (foreignUsers.length !== 0) {
@@ -118,16 +127,17 @@ export const procedure = authProcedure
 				} not owned by "${ctx.auth.email}".`,
 			});
 		}
-		const hasSelfUser = users.some((user) => user.id === user.selfAccountId);
+		const hasSelfUser = results.some((user) => user.id === user.selfAccountId);
 		if (hasSelfUser) {
 			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Cannot add debts for yourself.`,
 			});
 		}
-		const autoAcceptingUsers = users.filter((user) => user.autoAcceptDebts);
+		const autoAcceptingUsers = results.filter((user) => user.autoAcceptDebts);
 		const lockedTimestamp = new Date();
 		let reverseAcceptedUserIds: UsersId[] = [];
+		let reverseData: { debtId?: DebtsId }[] = [];
 		const commonParts = debts.map((debt, index) => ({
 			id: ids[index]!,
 			note: debt.note,
@@ -138,72 +148,65 @@ export const procedure = authProcedure
 			receiptId: debt.receiptId,
 		}));
 		if (autoAcceptingUsers.length !== 0) {
-			const autoAcceptingUsersAccountIds = autoAcceptingUsers
-				.map((user) => user.foreignAccountId)
+			const autoAcceptingResults = autoAcceptingUsers
+				.map((user) =>
+					user.foreignAccountId && user.theirUserId
+						? {
+								foreignAccountId: user.foreignAccountId,
+								theirUserId: user.theirUserId,
+								/* c8 ignore next 2 */
+						  }
+						: null,
+				)
 				.filter(nonNullishGuard);
 			/* c8 ignore start */
-			if (autoAcceptingUsersAccountIds.length !== autoAcceptingUsers.length) {
+			if (autoAcceptingResults.length !== autoAcceptingUsers.length) {
 				throw new TRPCError({
 					code: "INTERNAL_SERVER_ERROR",
 					message: `Unexpected having "autoAcceptDebts" but not having "accountId"`,
 				});
 			}
 			/* c8 ignore stop */
-			// TODO: incorporate reverse user into VALUES clause
-			const reverseAutoAcceptingUsers = await database
-				.selectFrom("users")
-				.where((eb) =>
-					eb("users.ownerAccountId", "in", autoAcceptingUsersAccountIds).and(
-						"users.connectedAccountId",
-						"=",
-						ctx.auth.accountId,
-					),
-				)
-				.select(["users.ownerAccountId", "users.id"])
-				.execute();
-			/* c8 ignore start */
-			if (
-				reverseAutoAcceptingUsers.length !== autoAcceptingUsersAccountIds.length
-			) {
-				throw new TRPCError({
-					code: "INTERNAL_SERVER_ERROR",
-					message: `Unexpected having "autoAcceptDebts" but not having reverse user "id"`,
-				});
-			}
-			/* c8 ignore stop */
-			await withOwnerReceiptUserConstraint(
-				() =>
-					database
-						.insertInto("debts")
-						.values(
-							commonParts
-								.map((commonPart, index) => {
-									const matchedDebt = debts[index]!;
-									const matchedUser = users.find(
-										(user) => matchedDebt.userId === user.id,
-									)!;
-									const matchedReverseUser = reverseAutoAcceptingUsers.find(
-										(reverseUser) =>
-											reverseUser.ownerAccountId ===
-											matchedUser.foreignAccountId,
-									);
-									if (!matchedReverseUser) {
-										return null;
-									}
-									return {
-										...commonPart,
-										ownerAccountId: matchedReverseUser.ownerAccountId,
-										userId: matchedReverseUser.id,
-										amount: (-debts[index]!.amount).toString(),
-									};
-								})
-								.filter(nonNullishGuard),
-						)
-						.executeTakeFirst(),
-				extractError,
+			const { updatedDebts } = await upsertAutoAcceptedDebts(
+				database,
+				commonParts
+					.map((commonPart, index) => {
+						const matchedDebt = debts[index]!;
+						const matchedResult = results.find(
+							(user) => matchedDebt.userId === user.id,
+						)!;
+						const matchedAutoAcceptingResult = autoAcceptingResults.find(
+							(autoAcceptingResult) =>
+								autoAcceptingResult.foreignAccountId ===
+								matchedResult.foreignAccountId,
+						);
+						if (!matchedAutoAcceptingResult) {
+							return null;
+						}
+						return {
+							...commonPart,
+							ownerAccountId: matchedAutoAcceptingResult.foreignAccountId,
+							userId: matchedAutoAcceptingResult.theirUserId,
+							amount: (-debts[index]!.amount).toString(),
+							isNew: true,
+						};
+					})
+					.filter(nonNullishGuard),
 			);
+			reverseData = commonParts.map((commonPart) => {
+				const matchedUpdatedDebt = updatedDebts.find(
+					(debt) => debt?.receiptId === commonPart.receiptId,
+				);
+				if (!matchedUpdatedDebt) {
+					return {};
+				}
+				return { debtId: matchedUpdatedDebt.id };
+			});
 			reverseAcceptedUserIds = autoAcceptingUsers.map((user) => user.id);
 		}
+		const validatedIds = commonParts.map(
+			(commonPart, index) => reverseData[index]?.debtId || commonPart.id,
+		);
 		await withOwnerReceiptUserConstraint(
 			() =>
 				database
@@ -211,6 +214,7 @@ export const procedure = authProcedure
 					.values(
 						commonParts.map((commonPart, index) => ({
 							...commonPart,
+							id: validatedIds[index]!,
 							ownerAccountId: ctx.auth.accountId,
 							userId: debts[index]!.userId,
 							amount: debts[index]!.amount.toString(),
@@ -219,5 +223,5 @@ export const procedure = authProcedure
 					.execute(),
 			extractError,
 		);
-		return { ids, lockedTimestamp, reverseAcceptedUserIds };
+		return { ids: validatedIds, lockedTimestamp, reverseAcceptedUserIds };
 	});

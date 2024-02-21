@@ -2,7 +2,11 @@ import { TRPCError } from "@trpc/server";
 
 import { authProcedure } from "next-app/handlers/trpc";
 
-import { buildSetObjects, updateDebtSchema } from "./utils";
+import {
+	buildSetObjects,
+	updateDebtSchema,
+	upsertAutoAcceptedDebts,
+} from "./utils";
 
 export const procedure = authProcedure
 	.input(updateDebtSchema)
@@ -24,10 +28,21 @@ export const procedure = authProcedure
 			.leftJoin("accountSettings", (qb) =>
 				qb.onRef("users.connectedAccountId", "=", "accountSettings.accountId"),
 			)
+			.leftJoin("users as usersTheir", (qb) =>
+				qb
+					.onRef("usersTheir.connectedAccountId", "=", "debts.ownerAccountId")
+					.onRef("usersTheir.ownerAccountId", "=", "accountSettings.accountId"),
+			)
 			.select([
 				"debts.lockedTimestamp",
+				"debts.note",
+				"debts.currencyCode",
+				"debts.amount",
+				"debts.timestamp",
+				"debts.receiptId",
 				"accountSettings.accountId as foreignAccountId",
 				"accountSettings.autoAcceptDebts",
+				"usersTheir.id as theirUserId",
 			])
 			.executeTakeFirst();
 		if (!debt) {
@@ -39,7 +54,7 @@ export const procedure = authProcedure
 
 		const { setObject, reverseSetObject } = buildSetObjects(input, debt);
 		let reverseLockedTimestampUpdated = false;
-		if (debt.autoAcceptDebts && reverseSetObject) {
+		if (debt.autoAcceptDebts) {
 			const { foreignAccountId } = debt;
 			/* c8 ignore start */
 			if (!foreignAccountId) {
@@ -48,16 +63,33 @@ export const procedure = authProcedure
 					message: `Unexpected having "autoAcceptDebts" but not having "accountId"`,
 				});
 			}
+			if (!debt.theirUserId) {
+				throw new TRPCError({
+					code: "INTERNAL_SERVER_ERROR",
+					message: `Unexpected having "autoAcceptDebts" but not having "theirUserId"`,
+				});
+			}
 			/* c8 ignore stop */
-			await database
-				.updateTable("debts")
-				.set(reverseSetObject)
-				.where((eb) =>
-					eb.and({ id: input.id, ownerAccountId: foreignAccountId }),
-				)
-				.executeTakeFirst();
+			const { newDebts } = await upsertAutoAcceptedDebts(database, [
+				{
+					id: input.id,
+					ownerAccountId: foreignAccountId,
+					userId: debt.theirUserId,
+					currencyCode: debt.currencyCode,
+					amount: (-debt.amount).toString(),
+					timestamp: debt.timestamp,
+					lockedTimestamp: debt.lockedTimestamp,
+					receiptId: debt.receiptId,
+					created: new Date(),
+					...reverseSetObject,
+					// In case debt doesn't exist - we need to set a new note, not the old one
+					note: setObject.note || debt.note,
+					isNew: false,
+				},
+			]);
+			const isNewDebt = newDebts.some(({ id }) => id === input.id);
 			reverseLockedTimestampUpdated =
-				reverseSetObject.lockedTimestamp !== undefined;
+				isNewDebt || reverseSetObject?.lockedTimestamp !== undefined;
 		}
 		await database
 			.updateTable("debts")

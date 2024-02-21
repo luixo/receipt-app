@@ -27,6 +27,15 @@ export const getValidDebt = (userId: UsersId = faker.string.uuid()) => ({
 	amount: Number(faker.finance.amount()) * (faker.datatype.boolean() ? 1 : -1),
 });
 
+export const syncedProps = [
+	"amount",
+	"currencyCode",
+	"id",
+	"lockedTimestamp",
+	"receiptId",
+	"timestamp",
+] as const;
+
 export const verifyAmount = <T>(
 	runProcedure: (context: UnauthorizedContext, amount: number) => Promise<T>,
 	prefix: string,

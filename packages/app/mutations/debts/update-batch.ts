@@ -16,9 +16,12 @@ import {
 	updateReceiptWithOutcomingDebtId,
 } from "./utils";
 
-type CurrenDebtWithId = CurrentDebt & { id: DebtsId };
+type CurrentDebtWithId = CurrentDebt & { id: DebtsId };
 
-const getMatchedDebtOrThrow = (debts: CurrenDebtWithId[], matchId: DebtsId) => {
+const getMatchedDebtOrThrow = (
+	debts: CurrentDebtWithId[],
+	matchId: DebtsId,
+) => {
 	const matchedDebt = debts.find((debt) => debt.id === matchId);
 	if (!matchedDebt) {
 		throw new Error(
@@ -30,7 +33,7 @@ const getMatchedDebtOrThrow = (debts: CurrenDebtWithId[], matchId: DebtsId) => {
 
 export const options: UseContextedMutationOptions<
 	"debts.updateBatch",
-	CurrenDebtWithId[]
+	CurrentDebtWithId[]
 > = {
 	onMutate: (controllerContext, currDebts) => (updateObjects) =>
 		cache.debts.updateRevert(controllerContext, {

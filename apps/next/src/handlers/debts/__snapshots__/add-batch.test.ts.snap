@@ -207,6 +207,84 @@ exports[`debts.addBatch > functionality > debts are added - some are auto-accept
 }
 `;
 
+exports[`debts.addBatch > functionality > debts are added - some auto-accepting accounts already had debts picked by the same receipt id 1`] = `
+{
+  "added": {
+    "debts": {
+      "id:0ba917b6-717a-406b-ad0e-a6aa7bf9a09b|ownerAccountId:f898a5a2-a569-41ef-9118-c32c948a3f2d": {
+        "amount": "-471.9000",
+        "created": "2020-01-01T00:00:00.000Z",
+        "currencyCode": "AED",
+        "id": "0ba917b6-717a-406b-ad0e-a6aa7bf9a09b",
+        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+        "note": "tenetur omnis corporis",
+        "ownerAccountId": "f898a5a2-a569-41ef-9118-c32c948a3f2d",
+        "receiptId": "4b8cd5c2-155f-45f2-97a4-01d0cf38bc3a",
+        "timestamp": "2020-01-01T00:00:00.000Z",
+        "userId": "bcf0e69e-43d8-4a1f-ada1-2ff03627e068",
+      },
+      "id:6197d2e8-8562-41c3-b710-430358ee255c|ownerAccountId:c2e8b738-71f5-4ff2-832b-88deabe96f43": {
+        "amount": "562.5200",
+        "created": "2020-01-01T00:00:00.000Z",
+        "currencyCode": "NAD",
+        "id": "6197d2e8-8562-41c3-b710-430358ee255c",
+        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+        "note": "aperiam quia velit",
+        "ownerAccountId": "c2e8b738-71f5-4ff2-832b-88deabe96f43",
+        "receiptId": null,
+        "timestamp": "2020-01-01T00:00:00.000Z",
+        "userId": "32c62e6e-4c6b-4a8f-9cd6-c4dc62c8bced",
+      },
+      "id:6197d2e8-8562-41c3-b710-430358ee255c|ownerAccountId:f898a5a2-a569-41ef-9118-c32c948a3f2d": {
+        "amount": "-562.5200",
+        "created": "2020-01-01T00:00:00.000Z",
+        "currencyCode": "NAD",
+        "id": "6197d2e8-8562-41c3-b710-430358ee255c",
+        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+        "note": "aperiam quia velit",
+        "ownerAccountId": "f898a5a2-a569-41ef-9118-c32c948a3f2d",
+        "receiptId": null,
+        "timestamp": "2020-01-01T00:00:00.000Z",
+        "userId": "bcf0e69e-43d8-4a1f-ada1-2ff03627e068",
+      },
+      "id:ce2061de-1eca-433e-b6f4-7f95e7802399|ownerAccountId:c2e8b738-71f5-4ff2-832b-88deabe96f43": {
+        "amount": "-479.4000",
+        "created": "2020-01-01T00:00:00.000Z",
+        "currencyCode": "CNY",
+        "id": "ce2061de-1eca-433e-b6f4-7f95e7802399",
+        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+        "note": "nesciunt magnam voluptatibus",
+        "ownerAccountId": "c2e8b738-71f5-4ff2-832b-88deabe96f43",
+        "receiptId": null,
+        "timestamp": "2020-01-01T00:00:00.000Z",
+        "userId": "32c62e6e-4c6b-4a8f-9cd6-c4dc62c8bced",
+      },
+      "id:ce2061de-1eca-433e-b6f4-7f95e7802399|ownerAccountId:f898a5a2-a569-41ef-9118-c32c948a3f2d": {
+        "amount": "479.4000",
+        "created": "2020-01-01T00:00:00.000Z",
+        "currencyCode": "CNY",
+        "id": "ce2061de-1eca-433e-b6f4-7f95e7802399",
+        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+        "note": "nesciunt magnam voluptatibus",
+        "ownerAccountId": "f898a5a2-a569-41ef-9118-c32c948a3f2d",
+        "receiptId": null,
+        "timestamp": "2020-01-01T00:00:00.000Z",
+        "userId": "bcf0e69e-43d8-4a1f-ada1-2ff03627e068",
+      },
+    },
+  },
+  "updated": {
+    "debts": {
+      "id:0ba917b6-717a-406b-ad0e-a6aa7bf9a09b|ownerAccountId:c2e8b738-71f5-4ff2-832b-88deabe96f43": {
+        "amount": "471.9000",
+        "currencyCode": "AED",
+        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+      },
+    },
+  },
+}
+`;
+
 exports[`debts.addBatch > functionality > debts are added - user-provided timestamp 1`] = `
 {
   "added": {
