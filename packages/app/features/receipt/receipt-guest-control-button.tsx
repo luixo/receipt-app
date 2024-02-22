@@ -22,7 +22,7 @@ export const ReceiptGuestControlButton: React.FC<Props> = ({ receipt }) => {
 	return (
 		<Button
 			href={
-				receipt.debt.type === "mine"
+				receipt.debt.hasMine
 					? `/debts/${receipt.debt.id}`
 					: `/debts/intentions#${receipt.debt.id}`
 			}

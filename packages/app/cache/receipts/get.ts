@@ -1,5 +1,13 @@
+import type { QueryClient } from "@tanstack/react-query";
+import { getQueryKey } from "@trpc/react-query";
+
 import * as utils from "app/cache/utils";
-import type { TRPCQueryOutput, TRPCReactContext } from "app/trpc";
+import {
+	type TRPCQueryInput,
+	type TRPCQueryOutput,
+	type TRPCReactContext,
+	trpc,
+} from "app/trpc";
 import type { ItemWithIndex } from "app/utils/array";
 import { addToArray, removeFromArray, replaceInArray } from "app/utils/array";
 import type { ReceiptItemsId, ReceiptsId, UsersId } from "next-app/db/models";
@@ -15,6 +23,14 @@ type ReceiptItemPart = ReceiptItemParts[number];
 
 type ReceiptParticipants = Receipt["participants"];
 type ReceiptParticipant = ReceiptParticipants[number];
+
+type Input = TRPCQueryInput<"receipts.get">;
+
+const getPagedInputs = (queryClient: QueryClient) =>
+	utils.getAllInputs<"receipts.get">(
+		queryClient,
+		getQueryKey(trpc.receipts.get),
+	);
 
 const upsert = (controller: Controller, receipt: Receipt) =>
 	controller.setData({ id: receipt.id }, receipt);
@@ -37,6 +53,22 @@ const update =
 				return updater(receipt);
 			});
 		}).current;
+
+const updateAll =
+	(controller: Controller, inputs: Input[]) =>
+	(updater: utils.UpdateFn<Receipt>) =>
+		inputs.forEach((input) => {
+			controller.setData(input, (receipt) => {
+				if (!receipt) {
+					return;
+				}
+				const updatedReceipt = updater(receipt);
+				if (updatedReceipt === receipt) {
+					return;
+				}
+				return updatedReceipt;
+			});
+		});
 
 const updateItems =
 	(controller: Controller, receiptId: ReceiptsId) =>
@@ -239,11 +271,17 @@ const removeParticipant = (
 		),
 	).current;
 
-export const getController = ({ trpcContext }: utils.ControllerContext) => {
+export const getController = ({
+	trpcContext,
+	queryClient,
+}: utils.ControllerContext) => {
 	const controller = trpcContext.receipts.get;
+	const inputs = getPagedInputs(queryClient);
 	return {
 		update: (receiptId: ReceiptsId, updater: utils.UpdateFn<Receipt>) =>
 			update(controller, receiptId)(updater),
+		updateAll: (updater: utils.UpdateFn<Receipt>) =>
+			updateAll(controller, inputs)(updater),
 		add: (receipt: Receipt) => upsert(controller, receipt),
 		remove: (receiptId: ReceiptsId) => {
 			remove(controller, receiptId);

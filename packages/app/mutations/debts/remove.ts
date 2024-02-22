@@ -24,6 +24,39 @@ export const options: UseContextedMutationOptions<
 			getIntentions: undefined,
 		}),
 	onSuccess: (controllerContext, currDebt) => (result, updateObject) => {
+		cache.receipts.update(controllerContext, {
+			get: (controller) =>
+				controller.updateAll((receipt) => {
+					if (!receipt.debt) {
+						return receipt;
+					}
+					if (receipt.debt.direction === "incoming") {
+						if (receipt.debt.id === updateObject.id) {
+							return {
+								...receipt,
+								debt: receipt.debt.hasForeign
+									? { ...receipt.debt, hasForeign: true, hasMine: false }
+									: {
+											...receipt.debt,
+											hasForeign: false,
+											hasMine: false,
+											id: undefined,
+									  },
+							};
+						}
+					} else if (receipt.debt.direction === "outcoming") {
+						if (receipt.debt.ids.includes(updateObject.id)) {
+							const nextIds = receipt.debt.ids.filter(
+								(id) => id !== updateObject.id,
+							);
+							return { ...receipt, debt: { ...receipt.debt, ids: nextIds } };
+						}
+					}
+					return receipt;
+				}),
+			getPaged: undefined,
+			getNonResolvedAmount: undefined,
+		});
 		cache.debts.update(controllerContext, {
 			getByUsers: undefined,
 			getUser: undefined,

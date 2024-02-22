@@ -185,7 +185,10 @@ export const defaultGenerateReceipt: GenerateReceipt = ({
 	ownerUserId: selfAccount.userId,
 	selfUserId: selfAccount.userId,
 	lockedTimestamp: receiptBase.lockedTimestamp,
-	debt: undefined,
+	debt: {
+		direction: "outcoming",
+		ids: [],
+	},
 	items: receiptItemsParts,
 	participants: receiptParticipants,
 });

@@ -122,50 +122,56 @@ const getReceiptDebt = (
 	selfAccountId: AccountsId,
 	receiptSelfUserId: UsersId,
 ):
-	| {
+	| ({
 			direction: "incoming";
-			type: "mine" | "foreign";
-			id: DebtsId;
-	  }
+	  } & (
+			| { id: DebtsId; hasMine: true; hasForeign: boolean }
+			| { id: DebtsId; hasMine: false; hasForeign: true }
+			| { id: undefined; hasMine: false; hasForeign: false }
+	  ))
 	| {
 			direction: "outcoming";
 			ids: DebtsId[];
-	  }
-	| undefined => {
+	  } => {
 	if (receiptOwnerAccountId === selfAccountId) {
 		const outcomingDebtIds = debts
 			.filter((debt) => debt.ownerAccountId === selfAccountId)
 			.sort((a, b) => a.debtId.localeCompare(b.debtId))
 			.map((debt) => debt.debtId);
-		if (outcomingDebtIds.length !== 0) {
-			return {
-				direction: "outcoming",
-				ids: outcomingDebtIds,
-			};
-		}
-		return;
+		return {
+			direction: "outcoming",
+			ids: outcomingDebtIds,
+		};
 	}
 	const mineDebtId = debts.find((debt) => debt.ownerAccountId === selfAccountId)
 		?.debtId;
-	if (mineDebtId) {
-		return {
-			direction: "incoming",
-			type: "mine",
-			id: mineDebtId,
-		};
-	}
 	const foreignDebtId = debts.find(
 		(debt) =>
 			debt.ownerAccountId !== selfAccountId &&
 			debt.userId === receiptSelfUserId,
 	)?.debtId;
+	if (mineDebtId) {
+		return {
+			direction: "incoming",
+			id: mineDebtId,
+			hasMine: true,
+			hasForeign: Boolean(foreignDebtId),
+		};
+	}
 	if (foreignDebtId) {
 		return {
 			direction: "incoming",
-			type: "foreign",
 			id: foreignDebtId,
+			hasMine: false,
+			hasForeign: true,
 		};
 	}
+	return {
+		direction: "incoming",
+		id: undefined,
+		hasMine: false,
+		hasForeign: false,
+	};
 };
 
 const mapReceipt = (

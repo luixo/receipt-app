@@ -19,7 +19,7 @@ export const ReceiptOwnerControlButton: React.FC<Props> = ({
 	deleteLoading,
 }) => {
 	const debtIds =
-		receipt.debt?.direction === "outcoming" ? receipt.debt.ids : [];
+		receipt.debt.direction === "outcoming" ? receipt.debt.ids : [];
 	const debtsQueries = trpc.useQueries((t) =>
 		debtIds.map((id) => t.debts.get({ id })),
 	);

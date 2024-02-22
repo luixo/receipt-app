@@ -325,7 +325,7 @@ export const updateReceiptWithOutcomingDebtId = (
 				debt: {
 					direction: "outcoming",
 					ids:
-						receipt.debt?.direction === "outcoming"
+						receipt.debt.direction === "outcoming"
 							? receipt.debt.ids.includes(debtId)
 								? receipt.debt.ids
 								: [...receipt.debt.ids, debtId]

@@ -143,6 +143,7 @@ describe("receipts.get", () => {
 					selfUserId,
 					items: [],
 					participants: [],
+					debt: { direction: "outcoming", ids: [] },
 				});
 			});
 
@@ -178,6 +179,7 @@ describe("receipts.get", () => {
 					transferIntentionUserId: foreignUser.id,
 					items: [],
 					participants: [],
+					debt: { direction: "outcoming", ids: [] },
 				});
 			});
 		});
@@ -208,6 +210,12 @@ describe("receipts.get", () => {
 				lockedTimestamp: receipt.lockedTimestamp || undefined,
 				items: [],
 				participants: getParticipants([participant]),
+				debt: {
+					direction: "incoming",
+					hasMine: false,
+					hasForeign: false,
+					id: undefined,
+				},
 			});
 		});
 
@@ -241,7 +249,8 @@ describe("receipts.get", () => {
 					selfUserId: foreignToSelfUserId,
 					debt: {
 						direction: "incoming",
-						type: "foreign",
+						hasMine: false,
+						hasForeign: true,
 						id: foreignDebtId,
 					},
 					items: [],
@@ -278,7 +287,8 @@ describe("receipts.get", () => {
 					lockedTimestamp: receipt.lockedTimestamp || undefined,
 					debt: {
 						direction: "incoming",
-						type: "mine",
+						hasMine: true,
+						hasForeign: false,
 						id: debtId,
 					},
 					items: [],
@@ -314,7 +324,8 @@ describe("receipts.get", () => {
 					selfUserId: foreignToSelfUserId,
 					debt: {
 						direction: "incoming",
-						type: "mine",
+						hasMine: true,
+						hasForeign: true,
 						id: debtId,
 					},
 					items: [],
@@ -420,6 +431,7 @@ describe("receipts.get", () => {
 					foreignParticipant,
 					notConnectedParticipant,
 				]),
+				debt: { direction: "outcoming", ids: [] },
 			});
 		});
 
@@ -442,6 +454,7 @@ describe("receipts.get", () => {
 				selfUserId,
 				items: [],
 				participants: [],
+				debt: { direction: "outcoming", ids: [] },
 			});
 		});
 
@@ -526,6 +539,12 @@ describe("receipts.get", () => {
 					notConnectedParticipant,
 					connectedParticipant,
 				]),
+				debt: {
+					direction: "incoming",
+					hasMine: false,
+					hasForeign: false,
+					id: undefined,
+				},
 			});
 		});
 	});

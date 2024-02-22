@@ -28,6 +28,7 @@ export const options: UseContextedMutationOptions<
 						items: [],
 						ownerUserId: selfUserId,
 						selfUserId,
+						debt: { direction: "outcoming", ids: [] },
 					});
 				},
 				getNonResolvedAmount: undefined,

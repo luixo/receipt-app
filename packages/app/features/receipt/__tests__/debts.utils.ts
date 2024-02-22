@@ -22,13 +22,10 @@ const localDefaultGenerateReceipt: LocalGenerateReceipt = ({
 	const generatedReceipt = defaultGenerateReceipt(opts);
 	return {
 		...generatedReceipt,
-		debt:
-			generatedReceipt.lockedTimestamp && debts && debts.length !== 0
-				? {
-						direction: "outcoming",
-						ids: debts.map((debt) => debt.id),
-				  }
-				: undefined,
+		debt: {
+			direction: "outcoming",
+			ids: debts.map((debt) => debt.id),
+		},
 	};
 };
 

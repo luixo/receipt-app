@@ -61,7 +61,7 @@ export const options: UseContextedMutationOptions<"debts.add"> = {
 						debt: {
 							direction: "outcoming",
 							ids:
-								receipt.debt?.direction === "outcoming"
+								receipt.debt.direction === "outcoming"
 									? receipt.debt.ids.includes(result.id)
 										? receipt.debt.ids
 										: [...receipt.debt.ids, result.id]
