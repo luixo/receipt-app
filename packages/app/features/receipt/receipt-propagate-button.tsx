@@ -86,50 +86,74 @@ const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 			),
 		[syncableParticipants, receipt],
 	);
-	const addBatchMutation = trpc.debts.addBatch.useMutation(
-		useTrpcMutationOptions(mutations.debts.addBatch.options),
+
+	const addMutations = participants.map(() =>
+		trpc.debts.add.useMutation(
+			// eslint-disable-next-line react-hooks/rules-of-hooks
+			useTrpcMutationOptions(mutations.debts.add.options),
+		),
 	);
-	const updateBatchMutation = trpc.debts.updateBatch.useMutation(
-		useTrpcMutationOptions(mutations.debts.updateBatch.options, {
-			context: desyncedParticipants.map(({ currentDebt, userId }) => ({
-				id: currentDebt.id,
-				userId,
-				amount: currentDebt.amount,
-				currencyCode: currentDebt.currencyCode,
-				receiptId: currentDebt.receiptId,
-			})),
-		}),
-	);
+	const updateMutations = participants.map(({ currentDebt, userId }) => {
+		const matchedDesyncedParticipant = desyncedParticipants.find(
+			(participant) => participant.userId === userId,
+		);
+		return trpc.debts.update.useMutation(
+			// eslint-disable-next-line react-hooks/rules-of-hooks
+			useTrpcMutationOptions(mutations.debts.update.options, {
+				context: matchedDesyncedParticipant
+					? {
+							userId,
+							amount: matchedDesyncedParticipant.currentDebt.amount,
+							currencyCode: matchedDesyncedParticipant.currentDebt.currencyCode,
+							receiptId: matchedDesyncedParticipant.currentDebt.receiptId,
+					  }
+					: {
+							userId,
+							amount: currentDebt?.amount ?? 0,
+							currencyCode: currentDebt?.currencyCode ?? "unknown",
+							receiptId: currentDebt?.receiptId,
+					  },
+			}),
+		);
+	});
+
 	const propagateDebts = React.useCallback(() => {
-		if (unsyncedParticipants.length !== 0) {
-			addBatchMutation.mutate(
-				unsyncedParticipants.map((participant) => ({
-					note: getReceiptDebtName(receipt.name),
-					currencyCode: receipt.currencyCode,
-					userId: participant.userId,
+		unsyncedParticipants.forEach((participant) => {
+			const participantIndex = participants.indexOf(participant);
+			const matchedMutation = addMutations[participantIndex];
+			if (!matchedMutation) {
+				return;
+			}
+			matchedMutation.mutate({
+				note: getReceiptDebtName(receipt.name),
+				currencyCode: receipt.currencyCode,
+				userId: participant.userId,
+				amount: participant.sum,
+				timestamp: receipt.issued,
+				receiptId: receipt.id,
+			});
+		});
+		desyncedParticipants.forEach((participant) => {
+			const participantIndex = participants.indexOf(participant);
+			const matchedMutation = updateMutations[participantIndex];
+			if (!matchedMutation) {
+				return;
+			}
+			matchedMutation.mutate({
+				id: participant.currentDebt.id,
+				update: {
 					amount: participant.sum,
+					currencyCode: receipt.currencyCode,
 					timestamp: receipt.issued,
+					locked: true,
 					receiptId: receipt.id,
-				})),
-			);
-		}
-		if (desyncedParticipants.length !== 0) {
-			updateBatchMutation.mutate(
-				desyncedParticipants.map((participant) => ({
-					id: participant.currentDebt.id,
-					update: {
-						amount: participant.sum,
-						currencyCode: receipt.currencyCode,
-						timestamp: receipt.issued,
-						locked: true,
-						receiptId: receipt.id,
-					},
-				})),
-			);
-		}
+				},
+			});
+		});
 	}, [
-		addBatchMutation,
-		updateBatchMutation,
+		participants,
+		addMutations,
+		updateMutations,
 		receipt.id,
 		receipt.currencyCode,
 		receipt.issued,
@@ -138,7 +162,8 @@ const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 		unsyncedParticipants,
 	]);
 	const isPropagating =
-		addBatchMutation.isPending || updateBatchMutation.isPending;
+		addMutations.some((mutation) => mutation.isPending) ||
+		updateMutations.some((mutation) => mutation.isPending);
 
 	const [
 		infoPopoverOpen,

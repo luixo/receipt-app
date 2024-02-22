@@ -189,6 +189,153 @@ describe("debts.add", () => {
 			});
 		});
 
+		describe("multiple debts", () => {
+			test("some are auto-accepted by the counterparty", async ({ ctx }) => {
+				const { sessionId, accountId } = await insertAccountWithSession(ctx);
+				const { id: acceptingForeignAccountId } = await insertAccount(ctx, {
+					settings: { autoAcceptDebts: true },
+				});
+				const { id: anotherAcceptingForeignAccountId } = await insertAccount(
+					ctx,
+					{ settings: { autoAcceptDebts: true } },
+				);
+				const { id: otherForeignAccountId } = await insertAccount(ctx);
+
+				const [{ id: acceptingUserId }] = await insertConnectedUsers(ctx, [
+					accountId,
+					acceptingForeignAccountId,
+				]);
+				const [{ id: anotherAcceptingUserId }] = await insertConnectedUsers(
+					ctx,
+					[accountId, anotherAcceptingForeignAccountId],
+				);
+				const [{ id: otherUserId }] = await insertConnectedUsers(ctx, [
+					accountId,
+					otherForeignAccountId,
+				]);
+				const { id: receiptId } = await insertReceipt(ctx, accountId);
+
+				// Verify unrelated data doesn't affect the result
+				await insertUser(ctx, accountId);
+				await insertAccountSettings(ctx, accountId, { autoAcceptDebts: true });
+				await insertUser(ctx, acceptingForeignAccountId);
+				await insertUser(ctx, anotherAcceptingForeignAccountId);
+
+				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const results = await expectDatabaseDiffSnapshot(ctx, () =>
+					Promise.all([
+						caller.procedure({ ...getValidDebt(acceptingUserId), receiptId }),
+						caller.procedure(getValidDebt(acceptingUserId)),
+						caller.procedure(getValidDebt(anotherAcceptingUserId)),
+						caller.procedure(getValidDebt(otherUserId)),
+					]),
+				);
+				expect(results).toHaveLength(4);
+				results
+					.map(({ id }) => id)
+					.every((id) => expect(id).toMatch(UUID_REGEX));
+				expect(results).toStrictEqual<typeof results>(
+					results.map(({ id }, index) => ({
+						id,
+						lockedTimestamp: new Date(),
+						// see Promise.all - accepting users are 0, 1 and 2 indexes
+						reverseAccepted: index <= 2,
+					})) as typeof results,
+				);
+			});
+
+			test("for the same auto-accepting account", async ({ ctx }) => {
+				const { sessionId, accountId } = await insertAccountWithSession(ctx);
+				const { id: acceptingForeignAccountId } = await insertAccount(ctx, {
+					settings: { autoAcceptDebts: true },
+				});
+
+				const [{ id: acceptingUserId }] = await insertConnectedUsers(ctx, [
+					accountId,
+					acceptingForeignAccountId,
+				]);
+
+				// Verify unrelated data doesn't affect the result
+				await insertUser(ctx, accountId);
+				await insertAccountSettings(ctx, accountId, { autoAcceptDebts: true });
+				await insertUser(ctx, acceptingForeignAccountId);
+
+				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const results = await expectDatabaseDiffSnapshot(ctx, () =>
+					Promise.all([
+						caller.procedure(getValidDebt(acceptingUserId)),
+						caller.procedure(getValidDebt(acceptingUserId)),
+						caller.procedure(getValidDebt(acceptingUserId)),
+					]),
+				);
+				expect(results).toHaveLength(3);
+				results
+					.map(({ id }) => id)
+					.every((id) => expect(id).toMatch(UUID_REGEX));
+				expect(results).toStrictEqual<typeof results>(
+					results.map(({ id }) => ({
+						id,
+						lockedTimestamp: new Date(),
+						// see Promise.all - all users are accepting
+						reverseAccepted: true,
+					})) as typeof results,
+				);
+			});
+
+			test("some auto-accepting accounts already had debts picked by the same receipt id", async ({
+				ctx,
+			}) => {
+				const { sessionId, accountId } = await insertAccountWithSession(ctx);
+				const { id: acceptingForeignAccountId } = await insertAccount(ctx, {
+					settings: { autoAcceptDebts: true },
+				});
+
+				const [{ id: acceptingUserId }, { id: selfUserId }] =
+					await insertConnectedUsers(ctx, [
+						accountId,
+						acceptingForeignAccountId,
+					]);
+
+				const { id: receiptId } = await insertReceipt(
+					ctx,
+					acceptingForeignAccountId,
+				);
+				const { id: counterpartyId } = await insertDebt(
+					ctx,
+					acceptingForeignAccountId,
+					selfUserId,
+					{ receiptId },
+				);
+
+				// Verify unrelated data doesn't affect the result
+				await insertUser(ctx, accountId);
+				await insertAccountSettings(ctx, accountId, { autoAcceptDebts: true });
+				await insertUser(ctx, acceptingForeignAccountId);
+
+				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const results = await expectDatabaseDiffSnapshot(ctx, () =>
+					Promise.all([
+						caller.procedure({ ...getValidDebt(acceptingUserId), receiptId }),
+						caller.procedure(getValidDebt(acceptingUserId)),
+						caller.procedure(getValidDebt(acceptingUserId)),
+					]),
+				);
+				expect(results).toHaveLength(3);
+				results
+					.map(({ id }) => id)
+					.every((id) => expect(id).toMatch(UUID_REGEX));
+				expect(results).toStrictEqual<typeof results>(
+					results.map(({ id }) => ({
+						id,
+						lockedTimestamp: new Date(),
+						// see Promise.all - all users are accepting
+						reverseAccepted: true,
+					})) as typeof results,
+				);
+				expect(results[0].id).toEqual(counterpartyId);
+			});
+		});
+
 		describe("auto-accepted by the counterparty", () => {
 			test("counterparty's debt didn't exist before", async ({ ctx }) => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);

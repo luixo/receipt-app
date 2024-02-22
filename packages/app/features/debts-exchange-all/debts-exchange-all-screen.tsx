@@ -87,6 +87,11 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 				<>
 					<Divider />
 					<PlannedDebts
+						key={
+							nonZeroAggregateDebts.filter(
+								(debt) => debt.currencyCode !== selectedCurrency.code,
+							).length
+						}
 						userId={userId}
 						selectedCurrencyCode={selectedCurrency.code}
 						aggregatedDebts={nonZeroAggregateDebts}

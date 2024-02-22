@@ -9,7 +9,7 @@ test("Receipt debt sync info modal", async ({
 	expectScreenshotWithSchemes,
 }) => {
 	const { receipt } = mockReceiptWithDebtsForModal();
-	await openReceiptWithDebts(receipt.id);
+	await openReceiptWithDebts(receipt);
 	await openDebtsInfoModal();
 	await expectScreenshotWithSchemes("modal.png", {
 		locator: debtsInfoModal,

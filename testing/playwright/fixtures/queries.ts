@@ -563,15 +563,24 @@ export const queriesMixin = createMixin<
 									resolve(false);
 								}
 							});
-							setTimeout(
-								() =>
-									reject(
-										new Error(
-											`Query await for "${cacheKey}" failed after ${timeoutInner}`,
-										),
+							setTimeout(() => {
+								const lastAmounts = getAwaitedAmount();
+								reject(
+									new Error(
+										`Query await for "${cacheKey}" failed after ${timeoutInner}${
+											amount > 1
+												? `, expected ${amount} entries, got ${
+														lastAmounts.resolved
+												  } entries${
+														lastAmounts.unresolved
+															? ` (and ${lastAmounts.unresolved} entries)`
+															: ""
+												  }`
+												: ""
+										}`,
 									),
-								timeoutInner,
-							);
+								);
+							}, timeoutInner);
 						});
 					};
 					const awaitMutationKey = (
@@ -618,15 +627,24 @@ export const queriesMixin = createMixin<
 									resolve(false);
 								}
 							});
-							setTimeout(
-								() =>
-									reject(
-										new Error(
-											`Mutation await for "${cacheKey}" failed after ${timeoutInner}`,
-										),
+							setTimeout(() => {
+								const lastAmounts = getAwaitedAmount();
+								reject(
+									new Error(
+										`Mutation await for "${cacheKey}" failed after ${timeoutInner}${
+											amount > 1
+												? `, expected ${amount} entries, got ${
+														lastAmounts.resolved
+												  } entries${
+														lastAmounts.unresolved
+															? ` (and ${lastAmounts.unresolved} entries)`
+															: ""
+												  }`
+												: ""
+										}`,
 									),
-								timeoutInner,
-							);
+								);
+							}, timeoutInner);
 						});
 					};
 					return Promise.all(

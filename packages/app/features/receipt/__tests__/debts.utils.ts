@@ -1,7 +1,6 @@
 import type { Locator } from "@playwright/test";
 
 import type { ExtractFixture } from "@tests/frontend/fixtures";
-import type { ReceiptsId } from "next-app/db/models";
 
 import type { GenerateDebts } from "./debts.generators";
 import { defaultGenerateDebts } from "./debts.generators";
@@ -48,7 +47,9 @@ type Fixtures = {
 	participantDebtStatusIcon: Locator;
 	participantDebtAction: Locator;
 	debtSyncStatus: Locator;
-	openReceiptWithDebts: (receiptId: ReceiptsId) => Promise<void>;
+	openReceiptWithDebts: (
+		receipt: ReturnType<LocalGenerateReceipt>,
+	) => Promise<void>;
 	mockReceiptWithDebts: (
 		options?: Omit<
 			NonNullable<Parameters<MockReceipt>[0]>,
@@ -104,9 +105,14 @@ export const test = originalTest.extend<Fixtures>({
 		}),
 
 	openReceiptWithDebts: ({ openReceipt, awaitCacheKey }, use) =>
-		use(async (receiptId) => {
-			await openReceipt(receiptId);
-			await awaitCacheKey("debts.get");
+		use(async (receipt) => {
+			await openReceipt(receipt.id);
+			const debtsAmount = !receipt.debt
+				? 0
+				: receipt.debt.direction === "outcoming"
+				? receipt.debt.ids.length
+				: 1;
+			await awaitCacheKey({ path: "debts.get", amount: debtsAmount });
 		}),
 
 	mockReceiptWithDebts: ({ api, faker, mockReceipt }, use) =>

@@ -13,12 +13,8 @@ import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
 import type { CurrencyCode } from "app/utils/currency";
 import { round } from "app/utils/math";
-import {
-	MAX_BATCH_DEBTS,
-	MIN_BATCH_DEBTS,
-	currencyCodeSchema,
-	currencyRateSchema,
-} from "app/utils/validation";
+import { nonNullishGuard } from "app/utils/utils";
+import { currencyCodeSchema, currencyRateSchema } from "app/utils/validation";
 import type { UsersId } from "next-app/db/models";
 
 import { PlannedDebt } from "./planned-debt";
@@ -158,28 +154,41 @@ export const PlannedDebts: React.FC<Props> = ({
 		() => ({ text: "Refetch rates", onClick: () => ratesQuery.refetch() }),
 		[ratesQuery],
 	);
-	const addBatchMutation = trpc.debts.addBatch.useMutation(
-		useTrpcMutationOptions(mutations.debts.addBatch.options, {
-			onSuccess: () => onDone(),
-		}),
+	const addMutations = debts.map(() =>
+		trpc.debts.add.useMutation(
+			// eslint-disable-next-line react-hooks/rules-of-hooks
+			useTrpcMutationOptions(mutations.debts.add.options),
+		),
 	);
-	const addBatch = React.useCallback(
+	const isEveryMutationSuccessful = addMutations.every(
+		(mutation) => mutation.status === "success",
+	);
+	React.useEffect(() => {
+		if (isEveryMutationSuccessful) {
+			onDone();
+		}
+	}, [isEveryMutationSuccessful, onDone]);
+	const addAll = React.useCallback(
 		() =>
-			addBatchMutation.mutate(
-				debts.map((debt, index) => ({
+			debts.map((debt, index) =>
+				addMutations[index]!.mutate({
 					note: debt.note,
 					currencyCode: debt.currencyCode,
 					userId,
 					amount: debt.amount,
 					timestamp: new Date(Date.now() + index),
-				})),
+				}),
 			),
-		[addBatchMutation, debts, userId],
+		[addMutations, debts, userId],
 	);
 	const invalidConvertedDebts = convertedDebts.filter(
 		(debt) =>
 			debt.sum === 0 || Number.isNaN(debt.sum) || !Number.isFinite(debt.sum),
 	);
+	const mutationPending = addMutations.some((mutation) => mutation.isPending);
+	const mutationError = addMutations
+		.map((mutation) => mutation.error)
+		.find(nonNullishGuard);
 
 	return (
 		<>
@@ -198,27 +207,21 @@ export const PlannedDebts: React.FC<Props> = ({
 				/>
 			))}
 			<Button
-				onClick={addBatch}
+				onClick={addAll}
 				isDisabled={
-					addBatchMutation.isPending ||
+					mutationPending ||
 					ratesQuery.isLoading ||
-					debts.length > MAX_BATCH_DEBTS ||
-					debts.length < MIN_BATCH_DEBTS ||
 					invalidConvertedDebts.length !== 0
 				}
-				isLoading={addBatchMutation.isPending || ratesQuery.isLoading}
-				color={addBatchMutation.status === "error" ? "danger" : "primary"}
+				isLoading={mutationPending || ratesQuery.isLoading}
+				color={mutationError ? "danger" : "primary"}
 			>
-				{addBatchMutation.error
-					? addBatchMutation.error.message
+				{mutationError
+					? mutationError.message
 					: invalidConvertedDebts.length !== 0
 					? `${invalidConvertedDebts
 							.map((debt) => debt.currencyCode)
 							.join(", ")} debt(s) are invalid`
-					: debts.length > MAX_BATCH_DEBTS
-					? `Cannot send more than ${MAX_BATCH_DEBTS} simultaneously`
-					: debts.length < MIN_BATCH_DEBTS
-					? `Cannot send less than ${MIN_BATCH_DEBTS} simultaneously`
 					: "Send debts"}
 			</Button>
 		</>

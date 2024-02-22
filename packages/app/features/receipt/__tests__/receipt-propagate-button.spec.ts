@@ -61,7 +61,7 @@ test.describe("Propagate debts button", () => {
 		const { receipt } = mockReceiptWithDebts({
 			generateDebts: generateDebtsWith(ourDesynced, theirSynced),
 		});
-		await openReceiptWithDebts(receipt.id);
+		await openReceiptWithDebts(receipt);
 		await expect(propagateDebtsButton).not.toBeVisible();
 		await expect(updateDebtsButton).toBeVisible();
 	});
@@ -75,7 +75,7 @@ test.describe("Propagate debts button", () => {
 		const { receipt } = mockReceiptWithDebts({
 			generateDebts: generateDebtsWith(ourSynced, theirDesynced),
 		});
-		await openReceiptWithDebts(receipt.id);
+		await openReceiptWithDebts(receipt);
 		await expect(propagateDebtsButton).not.toBeVisible();
 		await expect(updateDebtsButton).not.toBeVisible();
 	});
@@ -103,7 +103,7 @@ test.describe("Propagate debts button", () => {
 		const { receipt } = mockReceiptWithDebts({
 			generateDebts: generateDebtsWith([ourDesynced, ourNonExistent]),
 		});
-		await openReceiptWithDebts(receipt.id);
+		await openReceiptWithDebts(receipt);
 		await expect(propagateDebtsButton).not.toBeVisible();
 		await expect(updateDebtsButton).toBeVisible();
 	});
@@ -117,7 +117,7 @@ test.describe("Propagate debts button", () => {
 		const { receipt } = mockReceiptWithDebts({
 			generateDebts: generateDebtsWith(ourSynced),
 		});
-		await openReceiptWithDebts(receipt.id);
+		await openReceiptWithDebts(receipt);
 		await expect(propagateDebtsButton).not.toBeVisible();
 		await expect(updateDebtsButton).not.toBeVisible();
 	});
@@ -132,7 +132,7 @@ test.describe("Open debts info modal button", () => {
 		const { receipt } = mockReceiptWithDebts({
 			generateDebts: generateDebtsWith(ourDesynced),
 		});
-		await openReceiptWithDebts(receipt.id);
+		await openReceiptWithDebts(receipt);
 		await expect(debtsInfoModalButton).toBeVisible();
 	});
 
@@ -144,7 +144,7 @@ test.describe("Open debts info modal button", () => {
 		const { receipt } = mockReceiptWithDebts({
 			generateDebts: generateDebtsWith(ourSynced, theirNonExistent),
 		});
-		await openReceiptWithDebts(receipt.id);
+		await openReceiptWithDebts(receipt);
 		await expect(debtsInfoModalButton).not.toBeVisible();
 	});
 
@@ -156,13 +156,13 @@ test.describe("Open debts info modal button", () => {
 		const { receipt } = mockReceiptWithDebts({
 			generateDebts: generateDebtsWith(ourDesynced, theirNonExistent),
 		});
-		await openReceiptWithDebts(receipt.id);
+		await openReceiptWithDebts(receipt);
 		await openDebtsInfoModal();
 	});
 });
 
 test.describe("Mutations", () => {
-	test("'debts.addBatch' and 'debts.updateBatch'", async ({
+	test("'debts.add' and 'debts.update'", async ({
 		api,
 		faker,
 		updateDebtsButton,
@@ -181,46 +181,46 @@ test.describe("Mutations", () => {
 						participants: opts.participants.slice(1),
 					}),
 			});
-		api.mock("debts.addBatch", (addedDebts) => ({
-			ids: addedDebts.map(
-				(addedDebt) =>
-					debts.find((debt) => debt.userId === addedDebt.userId)?.id ||
-					faker.string.uuid(),
-			),
+		api.mock("debts.add", (addedDebt) => ({
+			id:
+				debts.find((debt) => debt.userId === addedDebt.userId)?.id ||
+				faker.string.uuid(),
 			lockedTimestamp: new Date(),
-			reverseAcceptedUserIds: [
-				...new Set(
-					addedDebts
-						.map((debt, index) => (index % 2 === 0 ? debt.userId : undefined))
-						.filter(nonNullishGuard),
-				),
-			],
+			reverseAccepted:
+				addedDebt.userId
+					.split("")
+					.reduce((acc, c) => acc + c.charCodeAt(0), 0) %
+					2 ===
+				0,
 		}));
-		api.mock("debts.updateBatch", (updatedDebts) =>
-			updatedDebts.map((debt, index) => ({
-				debtId: debt.id,
-				lockedTimestamp: new Date(),
-				reverseLockedTimestampUpdated: index % 2 === 0,
-			})),
-		);
+		api.mock("debts.update", (updatedDebt) => ({
+			lockedTimestamp: new Date(),
+			reverseLockedTimestampUpdated:
+				updatedDebt.id.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0) %
+					2 ===
+				0,
+		}));
 
-		await openReceiptWithDebts(receipt.id);
+		await openReceiptWithDebts(receipt);
 		const { nextQueryCache } = await snapshotQueries(async () => {
 			await updateDebtsButton.click();
-			await awaitCacheKey(["debts.addBatch", "debts.updateBatch"]);
+			await awaitCacheKey([
+				{ path: "debts.add", amount: 3 },
+				{ path: "debts.update", amount: 2 },
+			]);
 		});
-		const addBatchVariables = getMutationsByKey(
+		const addMutationsVariables = getMutationsByKey(
 			nextQueryCache,
-			"debts.addBatch",
-		)[0]!.state.variables;
-		const updateBatchVariables = getMutationsByKey(
+			"debts.add",
+		).map((mutation) => mutation.state.variables);
+		const updateMutationsVariables = getMutationsByKey(
 			nextQueryCache,
-			"debts.updateBatch",
-		)[0]!.state.variables;
+			"debts.update",
+		).map((mutation) => mutation.state.variables);
 		// Added debts & updated debts & self debt should be less than participants
 		// Because at least one participant has zero sum
 		expect(participants.length).toBeGreaterThan(
-			addBatchVariables.length + updateBatchVariables.length + 1,
+			addMutationsVariables.length + updateMutationsVariables.length + 1,
 		);
 		const participantSums = getParticipantSums(
 			receipt.id,
@@ -230,7 +230,7 @@ test.describe("Mutations", () => {
 		const participantTuples = participantSums.map(
 			(participant) => [participant.userId, participant.sum] as const,
 		);
-		const addedDebts = addBatchVariables.map(
+		const addedDebts = addMutationsVariables.map(
 			(debt) => [debt.userId, debt.amount] as const,
 		);
 		// Validate sums of added debts match expected
@@ -244,7 +244,7 @@ test.describe("Mutations", () => {
 				)
 				.filter(nonNullishGuard),
 		);
-		const updatedDebts = updateBatchVariables.map(
+		const updatedDebts = updateMutationsVariables.map(
 			(debt) => [debt.id, debt.update.amount] as const,
 		);
 		// Validate sums of updated debts match expected

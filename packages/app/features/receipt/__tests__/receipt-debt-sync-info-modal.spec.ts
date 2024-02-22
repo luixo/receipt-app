@@ -19,7 +19,7 @@ test("Sorting", async ({
 		receiptItemsParts,
 		selfAccount,
 	} = mockReceiptWithDebtsForModal();
-	await openReceiptWithDebts(receipt.id);
+	await openReceiptWithDebts(receipt);
 	await openDebtsInfoModal();
 	const userNames = await participantDebtRow
 		.locator(userSelector)

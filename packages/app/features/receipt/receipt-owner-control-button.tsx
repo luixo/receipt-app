@@ -37,6 +37,11 @@ export const ReceiptOwnerControlButton: React.FC<Props> = ({
 			/>
 			{receipt.lockedTimestamp ? (
 				<ReceiptPropagateButton
+					key={
+						receipt.participants.filter(
+							(participant) => participant.userId !== receipt.selfUserId,
+						).length
+					}
 					queries={debtsQueries}
 					receipt={receipt as LockedReceipt}
 				/>

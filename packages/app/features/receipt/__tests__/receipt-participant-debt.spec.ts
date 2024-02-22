@@ -41,7 +41,7 @@ test("Debt sum is 0", async ({
 				participants: opts.participants.slice(1),
 			}),
 	});
-	await openReceiptWithDebts(receipt.id);
+	await openReceiptWithDebts(receipt);
 	await openDebtsInfoModal();
 	await expect(participantDebtRow).toHaveCount(2);
 	const rowMatch = participantDebtRow.filter({ has: zeroSumIcon });
@@ -71,7 +71,7 @@ test("Debt is unsynced", async ({
 		generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 2 }),
 		generateDebts: generateDebtsWith([ourDesynced, ourNonExistent]),
 	});
-	await openReceiptWithDebts(receipt.id);
+	await openReceiptWithDebts(receipt);
 	await openDebtsInfoModal();
 	await expect(participantDebtRow).toHaveCount(2);
 	const rowMatch = participantDebtRow.filter({ has: sendDebtButton });
@@ -110,7 +110,7 @@ test("Debt is synced", async ({
 		generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 2 }),
 		generateDebts: generateDebtsWith([ourDesynced, ourSynced]),
 	});
-	await openReceiptWithDebts(receipt.id);
+	await openReceiptWithDebts(receipt);
 	await openDebtsInfoModal();
 	await expect(participantDebtRow).toHaveCount(2);
 	const rowMatch = participantDebtRow.filter({ hasNot: updateDebtButton });
@@ -144,7 +144,7 @@ test.describe("Debt is desynced", () => {
 				theirSynced,
 			]),
 		});
-		await openReceiptWithDebts(receipt.id);
+		await openReceiptWithDebts(receipt);
 		await openDebtsInfoModal();
 		await expect(participantDebtRow).toHaveCount(2);
 		await expect(zeroSumIcon).not.toBeVisible();
@@ -180,7 +180,7 @@ test.describe("Debt is desynced", () => {
 				amount: debt.amount + 1,
 			})),
 		});
-		await openReceiptWithDebts(receipt.id);
+		await openReceiptWithDebts(receipt);
 		await openDebtsInfoModal();
 		await expect(participantDebtRow).toHaveCount(1);
 		await expect(zeroSumIcon).not.toBeVisible();
@@ -208,7 +208,7 @@ test.describe("Debt is desynced", () => {
 				receiptId: `a${debt.receiptId!.slice(1)}`,
 			})),
 		});
-		await openReceiptWithDebts(receipt.id);
+		await openReceiptWithDebts(receipt);
 		await openDebtsInfoModal();
 		await expect(participantDebtRow).toHaveCount(1);
 		await expect(zeroSumIcon).not.toBeVisible();
@@ -236,7 +236,7 @@ test.describe("Debt is desynced", () => {
 				currencyCode: "USD",
 			})),
 		});
-		await openReceiptWithDebts(receipt.id);
+		await openReceiptWithDebts(receipt);
 		await openDebtsInfoModal();
 		await expect(participantDebtRow).toHaveCount(1);
 		await expect(zeroSumIcon).not.toBeVisible();
@@ -264,7 +264,7 @@ test.describe("Debt is desynced", () => {
 				timestamp: new Date(debt.timestamp!.valueOf() - DAY),
 			})),
 		});
-		await openReceiptWithDebts(receipt.id);
+		await openReceiptWithDebts(receipt);
 		await openDebtsInfoModal();
 		await expect(participantDebtRow).toHaveCount(1);
 		await expect(zeroSumIcon).not.toBeVisible();
@@ -303,7 +303,7 @@ test.describe("Mutations", () => {
 			]),
 		});
 
-		await openReceiptWithDebts(receipt.id);
+		await openReceiptWithDebts(receipt);
 		await openDebtsInfoModal();
 
 		api.mock("debts.add", () => {
@@ -394,7 +394,7 @@ test.describe("Mutations", () => {
 				generateDebts: generateDebtsWith(ourDesynced),
 			});
 
-		await openReceiptWithDebts(receipt.id);
+		await openReceiptWithDebts(receipt);
 		await openDebtsInfoModal();
 
 		api.mock("debts.update", () => {

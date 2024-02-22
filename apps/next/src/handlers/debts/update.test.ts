@@ -18,9 +18,9 @@ import {
 } from "@tests/backend/utils/expect";
 import type { TestContext } from "@tests/backend/utils/test";
 import { test } from "@tests/backend/utils/test";
-import type { TRPCMutationInput } from "app/trpc";
-import { pick } from "app/utils/utils";
-import type { DebtsId, ReceiptsId } from "next-app/db/models";
+import type { TRPCMutationInput, TRPCMutationOutput } from "app/trpc";
+import { id, pick } from "app/utils/utils";
+import type { AccountsId, UsersId } from "next-app/db/models";
 import { t } from "next-app/handlers/trpc";
 
 import { procedure } from "./update";
@@ -37,56 +37,88 @@ import {
 
 const router = t.router({ procedure });
 
-const updateDescribes = (
-	getUpdate: (opts: {
-		receiptId: ReceiptsId;
-	}) => TRPCMutationInput<"debts.update">["update"],
-	getNextTimestamp: (lockedBefore: boolean) => Date | null | undefined,
-) => {
-	const runTest = async ({
-		ctx,
-		lockedBefore,
-		counterPartyAccepts,
-		counterPartyExists,
-	}: {
-		ctx: TestContext;
-		lockedBefore: boolean;
-		counterPartyAccepts: boolean;
-		counterPartyExists: boolean;
-	}) => {
-		const { sessionId, accountId } = await insertAccountWithSession(ctx);
-		const { id: foreignAccountId } = await insertAccount(
-			ctx,
-			counterPartyAccepts ? { settings: { autoAcceptDebts: true } } : undefined,
-		);
-		const [{ id: userId }, { id: foreignToSelfUserId }] =
-			await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
-		const { id: receiptId } = await insertReceipt(ctx, accountId);
-		let debtId: DebtsId;
-		if (counterPartyExists) {
-			const [syncedDebt] = await insertSyncedDebts(
+type GetData = (opts: {
+	ctx: TestContext;
+	counterParty: "accept" | "no-accept" | "accept-no-exist";
+	selfAccountId: AccountsId;
+	target: {
+		accountId: AccountsId;
+		userId: UsersId;
+		meUserId: UsersId;
+	};
+	lockedBefore: boolean;
+}) => Promise<{
+	updates: TRPCMutationInput<"debts.update">[];
+	results: TRPCMutationOutput<"debts.update">[];
+}>;
+const insertDefaultDebt = async ({
+	ctx,
+	counterParty,
+	selfAccountId,
+	target,
+	lockedBefore,
+}: Parameters<GetData>[0]) => {
+	if (counterParty !== "accept-no-exist") {
+		return (
+			await insertSyncedDebts(
 				ctx,
 				[
-					accountId,
-					userId,
+					selfAccountId,
+					target.userId,
 					lockedBefore
 						? { lockedTimestamp: new Date("2021-01-01") }
 						: undefined,
 				],
-				[foreignAccountId, foreignToSelfUserId],
-			);
-			debtId = syncedDebt.id;
-		} else {
-			const unsyncedDebt = await insertDebt(
-				ctx,
-				accountId,
-				userId,
-				lockedBefore
-					? { lockedTimestamp: new Date("2021-01-01"), receiptId }
-					: { receiptId },
-			);
-			debtId = unsyncedDebt.id;
-		}
+				[target.accountId, target.meUserId],
+			)
+		)[0];
+	}
+	return insertDebt(
+		ctx,
+		selfAccountId,
+		target.userId,
+		lockedBefore ? { lockedTimestamp: new Date("2021-01-01") } : undefined,
+	);
+};
+
+type GetResult = (opts: {
+	debt: Awaited<ReturnType<typeof insertDebt>>;
+	counterParty: Parameters<GetData>[0]["counterParty"];
+	overrideTimestamp?: (
+		lockedTimestamp: TRPCMutationOutput<"debts.update">["lockedTimestamp"],
+	) => TRPCMutationOutput<"debts.update">["lockedTimestamp"];
+}) => TRPCMutationOutput<"debts.update">;
+const getDefaultGetResult: GetResult = ({
+	debt,
+	counterParty,
+	overrideTimestamp,
+}) => {
+	const nextLockedTimestamp = (overrideTimestamp || id)(
+		debt.lockedTimestamp ? new Date() : undefined,
+	);
+	return {
+		lockedTimestamp: nextLockedTimestamp,
+		reverseLockedTimestampUpdated:
+			counterParty === "accept-no-exist" ||
+			(nextLockedTimestamp !== undefined && counterParty === "accept"),
+	};
+};
+
+const updateDescribes = (getData: GetData) => {
+	const runTest = async ({
+		ctx,
+		lockedBefore,
+		counterParty,
+	}: Pick<Parameters<GetData>[0], "ctx" | "lockedBefore" | "counterParty">) => {
+		const { sessionId, accountId } = await insertAccountWithSession(ctx);
+		const { id: foreignAccountId } = await insertAccount(
+			ctx,
+			counterParty === "accept" || counterParty === "accept-no-exist"
+				? { settings: { autoAcceptDebts: true } }
+				: undefined,
+		);
+		const [{ id: userId }, { id: foreignToSelfUserId }] =
+			await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
 
 		// Verify unrelated data doesn't affect the result
 		await insertUser(ctx, accountId);
@@ -94,91 +126,91 @@ const updateDescribes = (
 		const { id: foreignUserId } = await insertUser(ctx, foreignAccountId);
 		await insertDebt(ctx, accountId, userId);
 		await insertDebt(ctx, foreignAccountId, foreignUserId);
-		const { id: newReceiptId } = await insertReceipt(ctx, accountId);
+
+		const { updates, results: expectedResults } = await getData({
+			ctx,
+			counterParty,
+			selfAccountId: accountId,
+			target: {
+				accountId: foreignAccountId,
+				userId,
+				meUserId: foreignToSelfUserId,
+			},
+			lockedBefore,
+		});
 
 		const caller = router.createCaller(createAuthContext(ctx, sessionId));
-		const result = await expectDatabaseDiffSnapshot(ctx, () =>
-			caller.procedure({
-				id: debtId,
-				update: getUpdate({ receiptId: newReceiptId }),
-			}),
+		const results = await expectDatabaseDiffSnapshot(ctx, () =>
+			Promise.all(updates.map((update) => caller.procedure(update))),
 		);
-		const nextLockedTimestamp = getNextTimestamp(lockedBefore);
-		const reverseLockedTimestampUpdated =
-			(nextLockedTimestamp !== undefined && counterPartyAccepts) ||
-			!counterPartyExists;
-		expect(result).toStrictEqual<typeof result>({
-			lockedTimestamp: nextLockedTimestamp,
-			reverseLockedTimestampUpdated,
-		});
+		expect(results).toStrictEqual<typeof results>(expectedResults);
 		return {
-			debtId,
+			debtIds: updates.map((update) => update.id),
 			selfAccountId: accountId,
 			foreignAccountId,
 		};
 	};
 
 	const lockedStateTests = ({
-		counterPartyAccepts,
-	}: {
-		counterPartyAccepts: boolean;
-	}) => {
+		counterParty,
+	}: Pick<Parameters<GetData>[0], "counterParty">) => {
 		test("locked before update", async ({ ctx }) => {
 			await runTest({
 				ctx,
 				lockedBefore: true,
-				counterPartyAccepts,
-				counterPartyExists: true,
+				counterParty,
 			});
 		});
 		test("unlocked before update", async ({ ctx }) => {
 			await runTest({
 				ctx,
 				lockedBefore: false,
-				counterPartyAccepts,
-				counterPartyExists: true,
+				counterParty,
 			});
 		});
-		if (counterPartyAccepts) {
+		if (counterParty === "accept") {
 			test("debt didn't exist beforehand", async ({ ctx }) => {
-				const { debtId, selfAccountId, foreignAccountId } = await runTest({
+				const { debtIds, selfAccountId, foreignAccountId } = await runTest({
 					ctx,
 					lockedBefore: false,
-					counterPartyAccepts,
-					counterPartyExists: false,
+					counterParty: "accept-no-exist",
 				});
 				const debts = await ctx.database
 					.selectFrom("debts")
-					.where((eb) => eb.and({ id: debtId }))
+					.where("debts.id", "in", debtIds)
 					.selectAll()
 					.execute();
 
-				const selfDebt = debts.find(
-					(debt) => debt.ownerAccountId === selfAccountId,
-				);
-				assert(selfDebt, "Self debt does not exist");
-				const pickedSelfDebt = pick(selfDebt, syncedProps);
+				debtIds.forEach((debtId) => {
+					const selfDebt = debts.find(
+						(debt) =>
+							debt.id === debtId && debt.ownerAccountId === selfAccountId,
+					);
+					assert(selfDebt, "Self debt does not exist");
+					const pickedSelfDebt = pick(selfDebt, syncedProps);
 
-				const foreignDebt = debts.find(
-					(debt) => debt.ownerAccountId === foreignAccountId,
-				);
-				assert(foreignDebt, "Foreign debt does not exist");
-				const pickedForeignDebt = pick(foreignDebt, syncedProps);
+					const foreignDebt = debts.find(
+						(debt) =>
+							debt.id === debtId && debt.ownerAccountId === foreignAccountId,
+					);
+					assert(foreignDebt, "Foreign debt does not exist");
+					const pickedForeignDebt = pick(foreignDebt, syncedProps);
 
-				expect(pickedSelfDebt).toStrictEqual<typeof pickedSelfDebt>({
-					...pickedForeignDebt,
-					amount: (-pickedForeignDebt.amount).toFixed(4),
+					expect(pickedSelfDebt).toStrictEqual<typeof pickedSelfDebt>({
+						...pickedForeignDebt,
+						amount: (-pickedForeignDebt.amount).toFixed(4),
+					});
 				});
 			});
 		}
 	};
 
 	describe("counterparty doesn't auto-accept", () => {
-		lockedStateTests({ counterPartyAccepts: false });
+		lockedStateTests({ counterParty: "no-accept" });
 	});
 
 	describe("counterparty auto-accepts", () => {
-		lockedStateTests({ counterPartyAccepts: true });
+		lockedStateTests({ counterParty: "accept" });
 	});
 };
 
@@ -328,94 +360,346 @@ describe("debts.update", () => {
 
 	describe("functionality", () => {
 		describe("update amount", () => {
-			updateDescribes(
-				() => ({ amount: getRandomAmount() }),
-				(lockedBefore) => (lockedBefore ? new Date() : undefined),
-			);
+			updateDescribes(async (opts) => {
+				const debt = await insertDefaultDebt(opts);
+				return {
+					updates: [
+						{
+							id: debt.id,
+							update: {
+								amount: getRandomAmount(),
+							},
+						},
+					],
+					results: [
+						getDefaultGetResult({ debt, counterParty: opts.counterParty }),
+					],
+				};
+			});
 		});
 
 		describe("update timestamp", () => {
-			updateDescribes(
-				() => ({ timestamp: new Date("2020-06-01") }),
-				(lockedBefore) => (lockedBefore ? new Date() : undefined),
-			);
+			updateDescribes(async (opts) => {
+				const debt = await insertDefaultDebt(opts);
+				return {
+					updates: [
+						{
+							id: debt.id,
+							update: {
+								timestamp: new Date("2020-06-01"),
+							},
+						},
+					],
+					results: [
+						getDefaultGetResult({ debt, counterParty: opts.counterParty }),
+					],
+				};
+			});
 		});
 
 		describe("update note", () => {
-			updateDescribes(
-				() => ({ note: faker.lorem.words() }),
-				() => undefined,
-			);
+			updateDescribes(async (opts) => {
+				const debt = await insertDefaultDebt(opts);
+				return {
+					updates: [
+						{
+							id: debt.id,
+							update: {
+								note: faker.lorem.words(),
+							},
+						},
+					],
+					results: [
+						getDefaultGetResult({
+							debt,
+							counterParty: opts.counterParty,
+							overrideTimestamp: () => undefined,
+						}),
+					],
+				};
+			});
 		});
 
 		describe("update currency code", () => {
-			updateDescribes(
-				() => ({ currencyCode: getRandomCurrencyCode() }),
-				(lockedBefore) => (lockedBefore ? new Date() : undefined),
-			);
+			updateDescribes(async (opts) => {
+				const debt = await insertDefaultDebt(opts);
+				return {
+					updates: [
+						{
+							id: debt.id,
+							update: {
+								currencyCode: getRandomCurrencyCode(),
+							},
+						},
+					],
+					results: [
+						getDefaultGetResult({ debt, counterParty: opts.counterParty }),
+					],
+				};
+			});
 		});
 
 		describe("update receipt id", () => {
-			updateDescribes(
-				({ receiptId }) => ({ receiptId }),
-				() => undefined,
-			);
+			updateDescribes(async (opts) => {
+				const debt = await insertDefaultDebt(opts);
+				const { id: receiptId } = await insertReceipt(
+					opts.ctx,
+					opts.selfAccountId,
+				);
+				return {
+					updates: [
+						{
+							id: debt.id,
+							update: {
+								receiptId,
+							},
+						},
+					],
+					results: [
+						getDefaultGetResult({
+							debt,
+							counterParty: opts.counterParty,
+							overrideTimestamp: () => undefined,
+						}),
+					],
+				};
+			});
 		});
 
 		describe("update locked - true", () => {
-			updateDescribes(
-				() => ({ locked: true }),
-				() => new Date(),
-			);
+			updateDescribes(async (opts) => {
+				const debt = await insertDefaultDebt(opts);
+				return {
+					updates: [
+						{
+							id: debt.id,
+							update: {
+								locked: true,
+							},
+						},
+					],
+					results: [
+						getDefaultGetResult({
+							debt,
+							counterParty: opts.counterParty,
+							overrideTimestamp: () => new Date(),
+						}),
+					],
+				};
+			});
 		});
 
 		describe("update locked - false", () => {
-			updateDescribes(
-				() => ({ locked: false }),
-				() => null,
-			);
+			updateDescribes(async (opts) => {
+				const debt = await insertDefaultDebt(opts);
+				return {
+					updates: [
+						{
+							id: debt.id,
+							update: {
+								locked: false,
+							},
+						},
+					],
+					results: [
+						getDefaultGetResult({
+							debt,
+							counterParty: opts.counterParty,
+							overrideTimestamp: () => null,
+						}),
+					],
+				};
+			});
 		});
 
-		describe("update multiple", () => {
+		describe("update multiple properties", () => {
 			describe("no locked", () => {
-				updateDescribes(
-					({ receiptId }) => ({
-						amount: getRandomAmount(),
-						timestamp: new Date("2020-06-01"),
-						note: faker.lorem.words(),
-						currencyCode: getRandomCurrencyCode(),
-						receiptId,
-					}),
-					(lockedBefore) => (lockedBefore ? new Date() : undefined),
-				);
+				updateDescribes(async (opts) => {
+					const debt = await insertDefaultDebt(opts);
+					const { id: receiptId } = await insertReceipt(
+						opts.ctx,
+						opts.selfAccountId,
+					);
+					return {
+						updates: [
+							{
+								id: debt.id,
+								update: {
+									amount: getRandomAmount(),
+									timestamp: new Date("2020-06-01"),
+									note: faker.lorem.words(),
+									currencyCode: getRandomCurrencyCode(),
+									receiptId,
+								},
+							},
+						],
+						results: [
+							getDefaultGetResult({ debt, counterParty: opts.counterParty }),
+						],
+					};
+				});
 			});
 
 			describe("locked as true", () => {
-				updateDescribes(
-					({ receiptId }) => ({
-						amount: getRandomAmount(),
-						timestamp: new Date("2020-06-01"),
-						note: faker.lorem.words(),
-						currencyCode: getRandomCurrencyCode(),
-						receiptId,
-						locked: true,
-					}),
-					() => new Date(),
-				);
+				updateDescribes(async (opts) => {
+					const debt = await insertDefaultDebt(opts);
+					const { id: receiptId } = await insertReceipt(
+						opts.ctx,
+						opts.selfAccountId,
+					);
+					return {
+						updates: [
+							{
+								id: debt.id,
+								update: {
+									amount: getRandomAmount(),
+									timestamp: new Date("2020-06-01"),
+									note: faker.lorem.words(),
+									currencyCode: getRandomCurrencyCode(),
+									receiptId,
+									locked: true,
+								},
+							},
+						],
+						results: [
+							getDefaultGetResult({
+								debt,
+								counterParty: opts.counterParty,
+								overrideTimestamp: () => new Date(),
+							}),
+						],
+					};
+				});
 			});
 
 			describe("locked as false", () => {
-				updateDescribes(
-					({ receiptId }) => ({
-						amount: getRandomAmount(),
-						timestamp: new Date("2020-06-01"),
-						note: faker.lorem.words(),
-						currencyCode: getRandomCurrencyCode(),
-						receiptId,
-						locked: false,
-					}),
-					() => null,
-				);
+				updateDescribes(async (opts) => {
+					const debt = await insertDefaultDebt(opts);
+					const { id: receiptId } = await insertReceipt(
+						opts.ctx,
+						opts.selfAccountId,
+					);
+					return {
+						updates: [
+							{
+								id: debt.id,
+								update: {
+									amount: getRandomAmount(),
+									timestamp: new Date("2020-06-01"),
+									note: faker.lorem.words(),
+									currencyCode: getRandomCurrencyCode(),
+									receiptId,
+									locked: false,
+								},
+							},
+						],
+						results: [
+							getDefaultGetResult({
+								debt,
+								counterParty: opts.counterParty,
+								overrideTimestamp: () => null,
+							}),
+						],
+					};
+				});
+			});
+		});
+
+		describe("update multiple debts", () => {
+			describe("with non-locking values", () => {
+				updateDescribes(async (opts) => {
+					const debt = await insertDefaultDebt(opts);
+					const anotherDebt = await insertDebt(
+						opts.ctx,
+						opts.selfAccountId,
+						opts.target.userId,
+					);
+					return {
+						updates: [
+							{ id: debt.id, update: { note: faker.lorem.words() } },
+							{ id: anotherDebt.id, update: { note: faker.lorem.words() } },
+						],
+						results: [
+							getDefaultGetResult({
+								debt,
+								counterParty: opts.counterParty,
+								overrideTimestamp: () => undefined,
+							}),
+							getDefaultGetResult({
+								debt: anotherDebt,
+								// Another debt is not synchronized with the counterparty hence it always does not exist
+								counterParty:
+									opts.counterParty === "accept"
+										? "accept-no-exist"
+										: opts.counterParty,
+								overrideTimestamp: () => undefined,
+							}),
+						],
+					};
+				});
+			});
+
+			describe("with locking values", () => {
+				updateDescribes(async (opts) => {
+					const debt = await insertDefaultDebt(opts);
+					const anotherDebt = await insertDebt(
+						opts.ctx,
+						opts.selfAccountId,
+						opts.target.userId,
+					);
+					return {
+						updates: [
+							{ id: debt.id, update: { amount: getRandomAmount() } },
+							{ id: anotherDebt.id, update: { amount: getRandomAmount() } },
+						],
+						results: [
+							getDefaultGetResult({
+								debt,
+								counterParty: opts.counterParty,
+							}),
+							getDefaultGetResult({
+								debt: anotherDebt,
+								// Another debt is not synchronized with the counterparty hence it always does not exist
+								counterParty:
+									opts.counterParty === "accept"
+										? "accept-no-exist"
+										: opts.counterParty,
+							}),
+						],
+					};
+				});
+			});
+
+			describe("with distinctly locking values", () => {
+				updateDescribes(async (opts) => {
+					const debt = await insertDefaultDebt(opts);
+					const anotherDebt = await insertDebt(
+						opts.ctx,
+						opts.selfAccountId,
+						opts.target.userId,
+					);
+					return {
+						updates: [
+							{ id: debt.id, update: { amount: getRandomAmount() } },
+							{ id: anotherDebt.id, update: { note: faker.lorem.words() } },
+						],
+						results: [
+							getDefaultGetResult({
+								debt,
+								counterParty: opts.counterParty,
+							}),
+							getDefaultGetResult({
+								debt: anotherDebt,
+								// Another debt is not synchronized with the counterparty hence it always does not exist
+								counterParty:
+									opts.counterParty === "accept"
+										? "accept-no-exist"
+										: opts.counterParty,
+								overrideTimestamp: () => undefined,
+							}),
+						],
+					};
+				});
 			});
 		});
 	});
