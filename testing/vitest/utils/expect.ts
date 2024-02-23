@@ -9,6 +9,22 @@ import { test } from "@tests/backend/utils/test";
 import type { UnauthorizedContext } from "next-app/handlers/context";
 import { formatErrorMessage } from "next-app/handlers/errors";
 
+export const expectLocalTRPCError = (
+	error: Error,
+	expectedCode: TRPC_ERROR_CODE_KEY,
+	expectedMessage: string,
+) => {
+	expect(error).toBeInstanceOf(TRPCError);
+	const trpcError = error as TRPCError;
+	expect({
+		code: trpcError.code,
+		message: formatErrorMessage(trpcError, trpcError.message),
+	}).toStrictEqual({
+		code: expectedCode,
+		message: expectedMessage,
+	});
+};
+
 export const expectTRPCError = async (
 	fn: () => Promise<unknown>,
 	expectedCode: TRPC_ERROR_CODE_KEY,

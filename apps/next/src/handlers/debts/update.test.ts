@@ -13,6 +13,7 @@ import {
 } from "@tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
+	expectLocalTRPCError,
 	expectTRPCError,
 	expectUnauthorizedError,
 } from "@tests/backend/utils/expect";
@@ -704,6 +705,53 @@ describe("debts.update", () => {
 						],
 					};
 				});
+			});
+
+			test("partially with errors", async ({ ctx }) => {
+				const {
+					sessionId,
+					accountId,
+					account: { email },
+				} = await insertAccountWithSession(ctx);
+				const { id: foreignAccountId } = await insertAccount(ctx, {
+					settings: { autoAcceptDebts: true },
+				});
+				const [{ id: acceptingUserId }] = await insertConnectedUsers(ctx, [
+					accountId,
+					foreignAccountId,
+				]);
+
+				const debt = await insertDebt(ctx, accountId, acceptingUserId);
+				const fakeDebtId = faker.string.uuid();
+
+				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const results = await runSequentially(
+					[
+						() =>
+							caller.procedure({
+								id: debt.id,
+								update: { amount: getRandomAmount() },
+							}),
+						() =>
+							caller
+								.procedure({
+									id: fakeDebtId,
+									update: { amount: getRandomAmount() },
+								})
+								.catch((e) => e),
+					],
+					10,
+				);
+				expect(results).toHaveLength(2);
+				expect(results[0]).toStrictEqual<(typeof results)[0]>({
+					lockedTimestamp: undefined,
+					reverseLockedTimestampUpdated: true,
+				});
+				expectLocalTRPCError(
+					results[1],
+					"NOT_FOUND",
+					`Debt "${fakeDebtId}" does not exist on account "${email}".`,
+				);
 			});
 		});
 	});

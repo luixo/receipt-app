@@ -53,5 +53,11 @@ describe("errors formatting", () => {
 			"BAD_REQUEST",
 			`Zod error\n\nAt "name": Minimal length for user name is 1`,
 		);
+		await expectTRPCError(
+			// @ts-expect-error Type misuse for testing purposes
+			() => caller.users.add(12),
+			"BAD_REQUEST",
+			`Zod error\n\nAt "<root>": Expected object, received number`,
+		);
 	});
 });

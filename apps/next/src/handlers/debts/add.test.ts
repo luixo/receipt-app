@@ -14,6 +14,7 @@ import {
 } from "@tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
+	expectLocalTRPCError,
 	expectTRPCError,
 	expectUnauthorizedError,
 } from "@tests/backend/utils/expect";
@@ -351,6 +352,40 @@ describe("debts.add", () => {
 					})) as typeof results,
 				);
 				expect(results[0].id).toEqual(counterpartyId);
+			});
+
+			test("partially with errors", async ({ ctx }) => {
+				const { sessionId, accountId } = await insertAccountWithSession(ctx);
+				const { id: foreignAccountId } = await insertAccount(ctx, {
+					settings: { autoAcceptDebts: true },
+				});
+
+				const fakeUserId = faker.string.uuid();
+				const [{ id: acceptingUserId }] = await insertConnectedUsers(ctx, [
+					accountId,
+					foreignAccountId,
+				]);
+
+				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const results = await runSequentially(
+					[
+						() => caller.procedure(getValidDebt(acceptingUserId)),
+						() => caller.procedure(getValidDebt(fakeUserId)).catch((e) => e),
+					],
+					10,
+				);
+				expect(results).toHaveLength(2);
+				expect(results[0].id).toMatch(UUID_REGEX);
+				expect(results[0]).toStrictEqual<(typeof results)[0]>({
+					id: results[0].id,
+					lockedTimestamp: new Date(),
+					reverseAccepted: true,
+				});
+				expectLocalTRPCError(
+					results[1],
+					"NOT_FOUND",
+					`User "${fakeUserId}" does not exist.`,
+				);
 			});
 		});
 
