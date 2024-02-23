@@ -27,6 +27,11 @@ export const pick = <T extends { [s: string]: unknown }, K extends keyof T>(
 		Object.entries(obj).filter(([key]) => keys.includes(key as K)),
 	) as Pick<T, K>;
 
+export const wait = (ms: number) =>
+	new Promise((resolve) => {
+		setTimeout(resolve, ms);
+	});
+
 export const createPromise = <R, E = unknown>() => {
 	let resolve: ((result: R) => void) | undefined;
 	let reject: ((reason?: E) => void) | undefined;

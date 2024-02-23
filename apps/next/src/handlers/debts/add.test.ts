@@ -24,6 +24,7 @@ import { UUID_REGEX } from "next-app/handlers/validation";
 import { procedure } from "./add";
 import {
 	getValidDebt,
+	runSequentially,
 	verifyAmount,
 	verifyCurrencyCode,
 	verifyNote,
@@ -223,12 +224,19 @@ describe("debts.add", () => {
 
 				const caller = router.createCaller(createAuthContext(ctx, sessionId));
 				const results = await expectDatabaseDiffSnapshot(ctx, () =>
-					Promise.all([
-						caller.procedure({ ...getValidDebt(acceptingUserId), receiptId }),
-						caller.procedure(getValidDebt(acceptingUserId)),
-						caller.procedure(getValidDebt(anotherAcceptingUserId)),
-						caller.procedure(getValidDebt(otherUserId)),
-					]),
+					runSequentially(
+						[
+							() =>
+								caller.procedure({
+									...getValidDebt(acceptingUserId),
+									receiptId,
+								}),
+							() => caller.procedure(getValidDebt(acceptingUserId)),
+							() => caller.procedure(getValidDebt(anotherAcceptingUserId)),
+							() => caller.procedure(getValidDebt(otherUserId)),
+						],
+						10,
+					),
 				);
 				expect(results).toHaveLength(4);
 				results
@@ -262,11 +270,14 @@ describe("debts.add", () => {
 
 				const caller = router.createCaller(createAuthContext(ctx, sessionId));
 				const results = await expectDatabaseDiffSnapshot(ctx, () =>
-					Promise.all([
-						caller.procedure(getValidDebt(acceptingUserId)),
-						caller.procedure(getValidDebt(acceptingUserId)),
-						caller.procedure(getValidDebt(acceptingUserId)),
-					]),
+					runSequentially(
+						[
+							() => caller.procedure(getValidDebt(acceptingUserId)),
+							() => caller.procedure(getValidDebt(acceptingUserId)),
+							() => caller.procedure(getValidDebt(acceptingUserId)),
+						],
+						10,
+					),
 				);
 				expect(results).toHaveLength(3);
 				results
@@ -314,11 +325,18 @@ describe("debts.add", () => {
 
 				const caller = router.createCaller(createAuthContext(ctx, sessionId));
 				const results = await expectDatabaseDiffSnapshot(ctx, () =>
-					Promise.all([
-						caller.procedure({ ...getValidDebt(acceptingUserId), receiptId }),
-						caller.procedure(getValidDebt(acceptingUserId)),
-						caller.procedure(getValidDebt(acceptingUserId)),
-					]),
+					runSequentially(
+						[
+							() =>
+								caller.procedure({
+									...getValidDebt(acceptingUserId),
+									receiptId,
+								}),
+							() => caller.procedure(getValidDebt(acceptingUserId)),
+							() => caller.procedure(getValidDebt(acceptingUserId)),
+						],
+						10,
+					),
 				);
 				expect(results).toHaveLength(3);
 				results

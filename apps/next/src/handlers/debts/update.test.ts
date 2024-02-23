@@ -27,6 +27,7 @@ import { procedure } from "./update";
 import {
 	getRandomAmount,
 	getRandomCurrencyCode,
+	runSequentially,
 	syncedProps,
 	verifyAmount,
 	verifyCurrencyCode,
@@ -141,7 +142,10 @@ const updateDescribes = (getData: GetData) => {
 
 		const caller = router.createCaller(createAuthContext(ctx, sessionId));
 		const results = await expectDatabaseDiffSnapshot(ctx, () =>
-			Promise.all(updates.map((update) => caller.procedure(update))),
+			runSequentially(
+				updates.map((update) => () => caller.procedure(update)),
+				10,
+			),
 		);
 		expect(results).toStrictEqual<typeof results>(expectedResults);
 		return {
