@@ -60,7 +60,7 @@ test.describe("Modal", () => {
 				})),
 			generateReceiptParticipants: () => [],
 		});
-		api.mock("users.suggestTop", { items: users });
+		api.mock("users.suggestTop", { items: users.map(({ id }) => id) });
 		await page.goto(`/receipts/${receipt.id}`);
 		await transferReceiptButton.click();
 		const transferModal = modal();

@@ -10,21 +10,18 @@ import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
 import type { CollectionElement } from "@react-types/shared";
 import { keepPreviousData } from "@tanstack/react-query";
 
-import { User } from "app/components/app/user";
+import { LoadableUser } from "app/components/app/loadable-user";
 import { useDebouncedValue } from "app/hooks/use-debounced-value";
-import type { TRPCQueryInput, TRPCQueryOutput } from "app/trpc";
+import type { TRPCQueryInput } from "app/trpc";
 import { trpc } from "app/trpc";
 import type { UsersId } from "next-app/db/models";
-
-type UsersResponse = TRPCQueryOutput<"users.suggest">;
-type UserItem = UsersResponse["items"][number];
 
 const LIMIT = 5;
 
 type Props = {
-	selected?: UserItem | UserItem[];
+	selected?: UsersId | UsersId[];
 	throttledMs?: number;
-	onUserClick: (user: UserItem) => void;
+	onUserClick: (user: UsersId) => void;
 	limit?: number;
 	topLimit?: number;
 	filterIds?: UsersId[];
@@ -50,15 +47,12 @@ export const UsersSuggest: React.FC<Props> = ({
 	const [value, setValue] = React.useState("");
 	const debouncedValue = useDebouncedValue(value, throttledMs);
 	const queryEnabled = debouncedValue.length >= 1;
-	const selectedUsers = Array.isArray(selected)
+	const selectedUserIds = Array.isArray(selected)
 		? selected
 		: selected
 		? [selected]
 		: [];
-	const filterIds = [
-		...(outerFilterIds || []),
-		...selectedUsers.map((user) => user.id),
-	];
+	const filterIds = [...(outerFilterIds || []), ...selectedUserIds];
 	const topQuery = trpc.users.suggestTop.useQuery(
 		{ limit: topLimit, options, filterIds },
 		{ placeholderData: keepPreviousData },
@@ -73,25 +67,39 @@ export const UsersSuggest: React.FC<Props> = ({
 		},
 	);
 
-	const topFetchedUsers = (topQuery.data?.items ?? [])
-		.filter((user) => !filterIds.includes(user.id))
-		.filter(
-			queryEnabled
-				? (user) =>
-						user.name.toLowerCase().includes(value.toLowerCase()) ||
-						user.publicName?.toLowerCase().includes(value.toLowerCase())
-				: () => true,
-		);
-	const topFetchedUsersIds = topFetchedUsers.map(({ id }) => id);
+	const topFetchedUserIds = React.useMemo(
+		() => topQuery.data?.items ?? [],
+		[topQuery.data],
+	);
+	const topFetchedUserQueries = trpc.useQueries((t) =>
+		topFetchedUserIds.map((userId) => t.users.get({ id: userId })),
+	);
+	const filteredTopFetchedUserIds = React.useMemo(
+		() =>
+			topFetchedUserIds.filter((_userId, index) => {
+				const topFetchedUserQuery = topFetchedUserQueries[index]!;
+				if (topFetchedUserQuery.status !== "success" || !queryEnabled) {
+					return true;
+				}
+				const user = topFetchedUserQuery.data;
+				// Only show top users that match current input value
+				return (
+					user.name.toLowerCase().includes(value.toLowerCase()) ||
+					user.publicName?.toLowerCase().includes(value.toLowerCase())
+				);
+			}),
+		[queryEnabled, topFetchedUserIds, topFetchedUserQueries, value],
+	);
 
-	const fetchedUsers = (
-		query.data?.pages.reduce<UserItem[]>(
+	const fetchedUserIds = (
+		query.data?.pages.reduce<UsersId[]>(
 			(acc, page) => [...acc, ...page.items],
 			[],
 		) ?? []
 	).filter(
-		(user) =>
-			!filterIds.includes(user.id) && !topFetchedUsersIds.includes(user.id),
+		(userId) =>
+			!filterIds.includes(userId) &&
+			!filteredTopFetchedUserIds.includes(userId),
 	);
 
 	const onSelectionChange = React.useCallback(
@@ -100,13 +108,13 @@ export const UsersSuggest: React.FC<Props> = ({
 				return;
 			}
 			const matchedUser =
-				topFetchedUsers.find((user) => user.id === key) ||
-				fetchedUsers.find((user) => user.id === key);
+				filteredTopFetchedUserIds.find((userId) => userId === key) ||
+				fetchedUserIds.find((userId) => userId === key);
 			if (matchedUser) {
 				onUserClick(matchedUser);
 			}
 		},
-		[topFetchedUsers, fetchedUsers, onUserClick],
+		[filteredTopFetchedUserIds, fetchedUserIds, onUserClick],
 	);
 
 	const [, scrollerRef] = useInfiniteScroll({
@@ -118,14 +126,12 @@ export const UsersSuggest: React.FC<Props> = ({
 
 	return (
 		<View className="gap-4">
-			{selectedUsers.length === 0 ? null : (
+			{selectedUserIds.length === 0 ? null : (
 				<View className="flex-row flex-wrap gap-4">
-					{selectedUsers.map((user) => (
-						<User
-							key={user.id}
-							id={user.id}
-							name={user.name}
-							connectedAccount={user.connectedAccount}
+					{selectedUserIds.map((userId) => (
+						<LoadableUser
+							key={userId}
+							id={userId}
 							avatarProps={{ size: "sm" }}
 						/>
 					))}
@@ -142,7 +148,7 @@ export const UsersSuggest: React.FC<Props> = ({
 				variant="bordered"
 				scrollRef={scrollerRef}
 				items={[]}
-				selectedKey={selectedUsers[0]?.id ?? null}
+				selectedKey={selectedUserIds[0] ?? null}
 				onSelectionChange={onSelectionChange}
 				clearButtonProps={{
 					onClick: () => setValue(""),
@@ -153,43 +159,25 @@ export const UsersSuggest: React.FC<Props> = ({
 				}}
 				{...props}
 			>
-				{topFetchedUsers.length === 0 ? (
+				{filteredTopFetchedUserIds.length === 0 ? (
 					(null as unknown as CollectionElement<object>)
 				) : (
 					<AutocompleteSection
-						showDivider={queryEnabled && fetchedUsers.length !== 0}
+						showDivider={queryEnabled && fetchedUserIds.length !== 0}
 						title="Recently used"
 					>
-						{topFetchedUsers.map((user) => (
-							<AutocompleteItem
-								key={user.id}
-								className="p-1"
-								textValue={user.name}
-							>
-								<User
-									id={user.id}
-									name={user.name}
-									connectedAccount={user.connectedAccount}
-									avatarProps={{ size: "sm" }}
-								/>
+						{filteredTopFetchedUserIds.map((userId) => (
+							<AutocompleteItem key={userId} className="p-1" textValue={userId}>
+								<LoadableUser id={userId} avatarProps={{ size: "sm" }} />
 							</AutocompleteItem>
 						))}
 					</AutocompleteSection>
 				)}
-				{queryEnabled && fetchedUsers.length !== 0 ? (
+				{queryEnabled && fetchedUserIds.length !== 0 ? (
 					<AutocompleteSection title="Lookup">
-						{fetchedUsers.map((user) => (
-							<AutocompleteItem
-								key={user.id}
-								className="p-1"
-								textValue={user.name}
-							>
-								<User
-									id={user.id}
-									name={user.name}
-									connectedAccount={user.connectedAccount}
-									avatarProps={{ size: "sm" }}
-								/>
+						{fetchedUserIds.map((userId) => (
+							<AutocompleteItem key={userId} className="p-1" textValue={userId}>
+								<LoadableUser id={userId} avatarProps={{ size: "sm" }} />
 							</AutocompleteItem>
 						))}
 					</AutocompleteSection>

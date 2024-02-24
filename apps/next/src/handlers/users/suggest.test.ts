@@ -23,7 +23,6 @@ import {
 import { t } from "next-app/handlers/trpc";
 
 import { procedure } from "./suggest";
-import { mapUserToSuggestResult } from "./utils.test";
 
 const router = t.router({ procedure });
 
@@ -266,10 +265,7 @@ describe("users.suggest", () => {
 				options: { type: "debts" },
 			});
 			expect(result).toStrictEqual<typeof result>({
-				items: mapUserToSuggestResult(matchedUsers, accounts).sort((a, b) =>
-					// Users with same similarity are sorted by id
-					a.id.localeCompare(b.id),
-				),
+				items: matchedUsers.map(({ id }) => id).sort(),
 				cursor: 0,
 				hasMore: false,
 			});
@@ -292,10 +288,10 @@ describe("users.suggest", () => {
 				options: { type: "debts" },
 			});
 			expect(result).toStrictEqual<typeof result>({
-				items: mapUserToSuggestResult(matchedUsers, []).sort((a, b) =>
-					// Shorter requests are sorted by name, not by similarity
-					a.name.localeCompare(b.name),
-				),
+				// Shorter requests are sorted by name, not by similarity
+				items: matchedUsers
+					.sort((a, b) => a.name.localeCompare(b.name))
+					.map(({ id }) => id),
 				cursor: 0,
 				hasMore: false,
 			});
@@ -359,10 +355,7 @@ describe("users.suggest", () => {
 				options: { type: "not-connected-receipt", receiptId },
 			});
 			expect(result).toStrictEqual<typeof result>({
-				items: mapUserToSuggestResult(matchedUsers, accounts).sort((a, b) =>
-					// Users with same similarity are sorted by id
-					a.id.localeCompare(b.id),
-				),
+				items: matchedUsers.map(({ id }) => id).sort(),
 				cursor: 0,
 				hasMore: false,
 			});
@@ -401,10 +394,7 @@ describe("users.suggest", () => {
 				options: { type: "not-connected" },
 			});
 			expect(result).toStrictEqual<typeof result>({
-				items: mapUserToSuggestResult(matchedUsers, accounts).sort((a, b) =>
-					// Users with same similarity are sorted by id
-					a.id.localeCompare(b.id),
-				),
+				items: matchedUsers.map(({ id }) => id).sort(),
 				cursor: 0,
 				hasMore: false,
 			});
@@ -450,10 +440,7 @@ describe("users.suggest", () => {
 				options: { type: "connected" },
 			});
 			expect(result).toStrictEqual<typeof result>({
-				items: mapUserToSuggestResult(matchedUsers, accounts).sort((a, b) =>
-					// Users with same similarity are sorted by id
-					a.id.localeCompare(b.id),
-				),
+				items: matchedUsers.map(({ id }) => id).sort(),
 				cursor: 0,
 				hasMore: false,
 			});
@@ -481,7 +468,7 @@ describe("users.suggest", () => {
 			});
 			expect(result).toStrictEqual({
 				// Order of matched users is important - they are sorted by fuzziness
-				items: mapUserToSuggestResult(matchedUsers, []),
+				items: matchedUsers.map(({ id }) => id),
 				cursor: 0,
 				hasMore: false,
 			});
@@ -551,10 +538,7 @@ describe("users.suggest", () => {
 				options: { type: "debts" },
 			});
 			expect(result).toStrictEqual<typeof result>({
-				items: mapUserToSuggestResult(matchedUsers, accounts).sort((a, b) =>
-					// Users with same similarity are sorted by id
-					a.id.localeCompare(b.id),
-				),
+				items: matchedUsers.map(({ id }) => id).sort(),
 				cursor: 0,
 				hasMore: false,
 			});

@@ -21,7 +21,6 @@ import { MAX_LIMIT } from "app/utils/validation";
 import { t } from "next-app/handlers/trpc";
 
 import { procedure } from "./suggest-top";
-import { mapUserToSuggestResult } from "./utils.test";
 
 const router = t.router({ procedure });
 
@@ -161,7 +160,6 @@ describe("users.suggestTop", () => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 
 				const secondAccount = await insertAccount(ctx);
-				const accounts = [otherAccount, secondAccount];
 
 				// Verify other users don't affect our top users
 				await insertUser(ctx, otherAccount.id);
@@ -185,10 +183,14 @@ describe("users.suggestTop", () => {
 					options: { type: "debts" },
 				});
 				expect(result).toStrictEqual<typeof result>({
-					items: mapUserToSuggestResult(
-						[user, connectedUser, connectedPublicNamedUser, publicNamedUser],
-						accounts,
-					).sort((a, b) => a.id.localeCompare(b.id)),
+					items: [
+						user,
+						connectedUser,
+						connectedPublicNamedUser,
+						publicNamedUser,
+					]
+						.map(({ id }) => id)
+						.sort(),
 				});
 			});
 
@@ -225,7 +227,7 @@ describe("users.suggestTop", () => {
 					limit: 5,
 					options: { type: "debts" },
 				});
-				expect(result.items.map((item) => item.id)).toStrictEqual([
+				expect(result.items).toStrictEqual([
 					threeDebtsUserId,
 					twoDebtsUserId,
 					oneDebtUserId,
@@ -288,10 +290,7 @@ describe("users.suggestTop", () => {
 					limit: 10,
 					options: { type: "debts" },
 				});
-				expect(result.items.map((item) => item.id)).toStrictEqual([
-					newDebtsUserId,
-					oldDebtsUserId,
-				]);
+				expect(result.items).toStrictEqual([newDebtsUserId, oldDebtsUserId]);
 			});
 		});
 
@@ -315,18 +314,12 @@ describe("users.suggestTop", () => {
 					options: { type: "not-connected" },
 				});
 				expect(result).toStrictEqual<typeof result>({
-					items: mapUserToSuggestResult([user, publicNamedUser], []).sort(
-						(a, b) => a.id.localeCompare(b.id),
-					),
+					items: [user, publicNamedUser].map(({ id }) => id).sort(),
 				});
 			});
 
 			test("returns top connected users", async ({ ctx }) => {
-				const {
-					sessionId,
-					accountId,
-					account: { email },
-				} = await insertAccountWithSession(ctx);
+				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				const otherAccounts = await Promise.all([
 					insertAccount(ctx),
 					insertAccount(ctx),
@@ -353,10 +346,7 @@ describe("users.suggestTop", () => {
 					options: { type: "connected" },
 				});
 				expect(result).toStrictEqual<typeof result>({
-					items: mapUserToSuggestResult(
-						connectedUserTuples.map(([user]) => user),
-						[{ id: accountId, email }, ...otherAccounts],
-					).sort((a, b) => a.id.localeCompare(b.id)),
+					items: connectedUserTuples.map(([user]) => user.id).sort(),
 				});
 			});
 
@@ -395,7 +385,7 @@ describe("users.suggestTop", () => {
 					limit: 4,
 					options: { type: "not-connected" },
 				});
-				expect(result.items.map((item) => item.id)).toStrictEqual([
+				expect(result.items).toStrictEqual([
 					threeDebtsUserId,
 					oneDebtUserId,
 					zeroDebtsUserId,
@@ -465,10 +455,7 @@ describe("users.suggestTop", () => {
 					limit: 10,
 					options: { type: "not-connected" },
 				});
-				expect(result.items.map((item) => item.id)).toStrictEqual([
-					newDebtsUserId,
-					oldDebtsUserId,
-				]);
+				expect(result.items).toStrictEqual([newDebtsUserId, oldDebtsUserId]);
 			});
 		});
 
@@ -481,7 +468,6 @@ describe("users.suggestTop", () => {
 					accountId,
 					userId: selfUserId,
 					name,
-					account,
 				} = await insertAccountWithSession(ctx);
 				const { id: receiptId } = await insertReceipt(ctx, accountId);
 
@@ -512,10 +498,6 @@ describe("users.suggestTop", () => {
 					publicName: undefined,
 					connectedAccountId: accountId,
 				};
-				const selfAccount = {
-					id: accountId,
-					email: account.email,
-				};
 
 				const caller = router.createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
@@ -523,10 +505,9 @@ describe("users.suggestTop", () => {
 					options: { type: "not-connected-receipt", receiptId },
 				});
 				expect(result).toStrictEqual<typeof result>({
-					items: mapUserToSuggestResult(
-						[user, publicNamedUser, connectedUser, selfUser],
-						[selfAccount, firstOtherAccount, secondOtherAccount],
-					).sort((a, b) => a.id.localeCompare(b.id)),
+					items: [user, publicNamedUser, connectedUser, selfUser]
+						.map(({ id }) => id)
+						.sort(),
 				});
 			});
 
@@ -587,7 +568,7 @@ describe("users.suggestTop", () => {
 						receiptId: otherReceiptId,
 					},
 				});
-				expect(result.items.map((item) => item.id)).toStrictEqual([
+				expect(result.items).toStrictEqual([
 					threeReceiptsUserId,
 					twoReceiptsUserId,
 					oneReceiptUserId,
@@ -679,7 +660,7 @@ describe("users.suggestTop", () => {
 						receiptId: otherReceiptId,
 					},
 				});
-				expect(result.items.map((item) => item.id)).toStrictEqual([
+				expect(result.items).toStrictEqual([
 					newReceiptsUserId,
 					oldReceiptsUserId,
 				]);

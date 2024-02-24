@@ -109,7 +109,7 @@ test("Mutation 'receiptTransferIntentions.add' mutation", async ({
 			})),
 		generateReceiptParticipants: () => [],
 	});
-	api.mock("users.suggestTop", { items: users });
+	api.mock("users.suggestTop", { items: users.map(({ id }) => id) });
 	api.mock("receiptTransferIntentions.add", () => {
 		throw new TRPCError({
 			code: "BAD_REQUEST",

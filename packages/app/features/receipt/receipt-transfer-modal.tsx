@@ -22,6 +22,7 @@ import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { type TRPCQueryOutput, trpc } from "app/trpc";
 import { round } from "app/utils/math";
+import type { UsersId } from "next-app/db/models";
 
 type Receipt = TRPCQueryOutput<"receipts.get">;
 
@@ -29,9 +30,7 @@ const ReceiptSendTransferIntentionBody: React.FC<{
 	receipt: Receipt;
 	closeModal: () => void;
 }> = ({ receipt, closeModal }) => {
-	const [selectedUser, setSelectedUser] = React.useState<
-		TRPCQueryOutput<"users.suggest">["items"][number] | undefined
-	>();
+	const [selectedUserId, setSelectedUserId] = React.useState<UsersId>();
 	const suggestOptions = React.useMemo(
 		() => ({ type: "connected" as const }),
 		[],
@@ -49,7 +48,7 @@ const ReceiptSendTransferIntentionBody: React.FC<{
 						currencyCode: receipt.currencyCode,
 						sum: nextSum,
 					},
-					targetUserId: selectedUser?.id ?? "unknown",
+					targetUserId: selectedUserId ?? "unknown",
 				},
 				onMutate: closeModal,
 			}),
@@ -62,20 +61,24 @@ const ReceiptSendTransferIntentionBody: React.FC<{
 			}),
 		[transferReceiptMutation, receipt.id],
 	);
+	const userQuery = trpc.users.get.useQuery(
+		{ id: selectedUserId || "unknown" },
+		{ enabled: Boolean(selectedUserId) },
+	);
 	return (
 		<>
 			<UsersSuggest
-				selected={selectedUser}
-				onUserClick={setSelectedUser}
+				selected={selectedUserId}
+				onUserClick={setSelectedUserId}
 				options={suggestOptions}
 				label="Transfer to"
-				menuTrigger={selectedUser ? "manual" : undefined}
+				menuTrigger={selectedUserId ? "manual" : undefined}
 			/>
 			<Button
-				isDisabled={transferReceiptMutation.isPending || !selectedUser}
+				isDisabled={transferReceiptMutation.isPending || !selectedUserId}
 				isLoading={transferReceiptMutation.isPending}
 				onClick={transferReceipt(
-					selectedUser?.connectedAccount?.email ?? "unknown",
+					userQuery.data?.connectedAccount?.email ?? "unknown",
 				)}
 				color="primary"
 				title="Send receipt transfer request"

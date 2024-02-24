@@ -163,20 +163,6 @@ export const currencyRateSchema = createNumberSchema("Currency rate", {
 export const userIdSchema = z.string().uuid().refine<UsersId>(flavored);
 export const accountIdSchema = z.string().uuid().refine<AccountsId>(flavored);
 
-// TRPCInfiniteQueryOutput<"users.suggest">["items"][number]
-export const userItemSchema = z.strictObject({
-	id: userIdSchema,
-	name: userNameSchema,
-	publicName: userNameSchema.optional(),
-	connectedAccount: z
-		.object({
-			id: accountIdSchema,
-			email: z.string().email(),
-			avatarUrl: z.string().optional(),
-		})
-		.optional(),
-});
-
 export const fallback = <T>(getValue: () => T) => z.any().transform(getValue);
 
 export const avatarFormSchema = zfd.formData({ avatar: zfd.file().optional() });

@@ -4,7 +4,6 @@ import { UsersSuggest } from "app/components/app/users-suggest";
 import { useSelfAccountId } from "app/hooks/use-self-account-id";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
-import type { TRPCInfiniteQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
 import type { ReceiptsId, UsersId } from "next-app/db/models";
 
@@ -42,12 +41,10 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 	);
 
 	const addParticipants = React.useCallback(
-		async (
-			participant: TRPCInfiniteQueryOutput<"users.suggest">["items"][number],
-		) =>
+		async (userId: UsersId) =>
 			addMutation.mutate({
 				receiptId,
-				userIds: [participant.id],
+				userIds: [userId],
 				role: "editor",
 			}),
 		[addMutation, receiptId],

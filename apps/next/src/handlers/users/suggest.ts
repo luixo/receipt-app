@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { sql } from "kysely";
 import { z } from "zod";
 
-import { MAX_SUGGEST_LENGTH, userItemSchema } from "app/utils/validation";
+import { MAX_SUGGEST_LENGTH } from "app/utils/validation";
 import { getAccessRole } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
 import {
@@ -40,7 +40,7 @@ export const procedure = authProcedure
 	)
 	.output(
 		z.strictObject({
-			items: z.array(userItemSchema),
+			items: z.array(userIdSchema),
 			hasMore: z.boolean(),
 			cursor: z.number(),
 		}),
@@ -87,9 +87,6 @@ export const procedure = authProcedure
 		}
 		const fuzzyMathedUsers = await database
 			.selectFrom("users")
-			.leftJoin("accounts", (qb) =>
-				qb.onRef("connectedAccountId", "=", "accounts.id"),
-			)
 			.$if(filterIds.length !== 0, (qb) =>
 				qb.where("users.id", "not in", filterIds),
 			)
@@ -110,13 +107,7 @@ export const procedure = authProcedure
 					SIMILARTY_THRESHOLD,
 				),
 			)
-			.select([
-				"users.id",
-				"name",
-				"publicName",
-				"accounts.email",
-				"connectedAccountId as accountId",
-			])
+			.select(["users.id"])
 			.$if(input.input.length < 3, (qb) => qb.orderBy("name"))
 			.$if(input.input.length >= 3, (qb) =>
 				qb.orderBy(
@@ -129,17 +120,10 @@ export const procedure = authProcedure
 			.offset(cursor)
 			.limit(input.limit + 1)
 			.execute();
-		const mappedUsers = fuzzyMathedUsers.map(
-			({ accountId, email, publicName, ...user }) => ({
-				...user,
-				publicName: publicName === null ? undefined : publicName,
-				connectedAccount:
-					accountId && email ? { id: accountId, email } : undefined,
-			}),
-		);
+		const mappedUserIds = fuzzyMathedUsers.map(({ id }) => id);
 		return {
 			cursor,
-			hasMore: mappedUsers.length === input.limit + 1,
-			items: mappedUsers.slice(0, input.limit),
+			hasMore: mappedUserIds.length === input.limit + 1,
+			items: mappedUserIds.slice(0, input.limit),
 		};
 	});

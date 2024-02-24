@@ -20,7 +20,7 @@ import {
 	currencySchema,
 	debtAmountSchema,
 	debtNoteSchema,
-	userItemSchema,
+	userIdSchema,
 } from "app/utils/validation";
 import type { UsersId } from "next-app/src/db/models";
 import type { AppPage } from "next-app/types/page";
@@ -33,10 +33,6 @@ import type { Form } from "./types";
 export const AddDebtScreen: AppPage = () => {
 	const searchParams = useSearchParams<{ userId: UsersId }>();
 	const userId = searchParams?.get("userId");
-	const userQuery = trpc.users.get.useQuery(
-		{ id: userId || "unknown" },
-		{ enabled: Boolean(userId) },
-	);
 
 	const router = useRouter();
 
@@ -54,7 +50,7 @@ export const AddDebtScreen: AppPage = () => {
 				amount: z.preprocess(Number, debtAmountSchema),
 				direction: z.union([z.literal("-"), z.literal("+")]),
 				currency: currencySchema,
-				user: userItemSchema,
+				userId: userIdSchema,
 				note: debtNoteSchema,
 				timestamp: z.date(),
 			}),
@@ -63,19 +59,14 @@ export const AddDebtScreen: AppPage = () => {
 			note: "",
 			direction: "+",
 			timestamp: getToday(),
+			userId: userId || undefined,
 			// TODO: figure out how to put a default value to a number-typed field
 			// Removing this will result in error of uncontrolled field becoming controlled field
 			amount: "" as unknown as number,
 		},
 	});
-	React.useEffect(() => {
-		const user = userQuery.data;
-		if (user && !form.getValues("user")) {
-			form.setValue("user", user);
-		}
-	}, [userQuery.data, form]);
 	const onUserClick = React.useCallback(
-		(user: z.infer<typeof userItemSchema>) => form.setValue("user", user),
+		(nextUserId: UsersId) => form.setValue("userId", nextUserId),
 		[form],
 	);
 	const onDirectionUpdate = React.useCallback(
@@ -87,7 +78,7 @@ export const AddDebtScreen: AppPage = () => {
 			addMutation.mutate({
 				note: values.note,
 				currencyCode: values.currency.code,
-				userId: values.user.id,
+				userId: values.userId,
 				amount: values.amount * (values.direction === "+" ? 1 : -1),
 				timestamp: values.timestamp,
 			}),
@@ -111,7 +102,7 @@ export const AddDebtScreen: AppPage = () => {
 				topCurrenciesQuery={topCurrenciesQuery}
 			/>
 			<UsersSuggest
-				selected={form.watch("user")}
+				selected={form.watch("userId")}
 				isDisabled={addMutation.isPending}
 				options={React.useMemo(() => ({ type: "debts" }), [])}
 				onUserClick={onUserClick}

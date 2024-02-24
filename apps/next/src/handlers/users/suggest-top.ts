@@ -2,7 +2,6 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { MONTH } from "app/utils/time";
-import { userItemSchema } from "app/utils/validation";
 import type { UsersId } from "next-app/db/models";
 import { getAccessRole } from "next-app/handlers/receipts/utils";
 import { authProcedure } from "next-app/handlers/trpc";
@@ -34,11 +33,7 @@ export const procedure = authProcedure
 			]),
 		}),
 	)
-	.output(
-		z.strictObject({
-			items: z.array(userItemSchema),
-		}),
-	)
+	.output(z.strictObject({ items: z.array(userIdSchema) }))
 	.query(async ({ input, ctx }) => {
 		const { database } = ctx;
 		const filterIds = input.filterIds || [];
@@ -84,9 +79,6 @@ export const procedure = authProcedure
 										.select("users.id"),
 							),
 						)
-						.leftJoin("accounts", (qb) =>
-							qb.onRef("connectedAccountId", "=", "accounts.id"),
-						)
 						.$if(filterIds.length !== 0, (qb) =>
 							qb.where("users.id", "not in", filterIds),
 						)
@@ -102,28 +94,18 @@ export const procedure = authProcedure
 						.select([
 							"users.id",
 							database.fn.count<string>("receipts.id").as("latestCount"),
-							"users.name",
-							"users.publicName",
-							"users.connectedAccountId as accountId",
-							"accounts.email",
 						])
 						.groupBy("users.id")
-						.groupBy("accounts.email")
 						.orderBy("users.id"),
 				)
 				.selectFrom("orderedUsers")
-				.select(["id", "name", "publicName", "accountId", "email"])
+				.select(["id"])
 				.orderBy("latestCount desc")
 				.limit(input.limit)
 				.execute();
 
 			return {
-				items: users.map(({ accountId, email, publicName, ...user }) => ({
-					...user,
-					publicName: publicName === null ? undefined : publicName,
-					connectedAccount:
-						accountId && email ? { id: accountId, email } : undefined,
-				})),
+				items: users.map(({ id }) => id),
 			};
 		}
 		if (
@@ -140,9 +122,6 @@ export const procedure = authProcedure
 							: eb("users.connectedAccountId", "is", null),
 					]),
 				)
-				.leftJoin("accounts", (qb) =>
-					qb.onRef("accounts.id", "=", "users.connectedAccountId"),
-				)
 				.leftJoin("debts", (qb) =>
 					qb
 						.onRef("debts.userId", "=", "users.id")
@@ -153,26 +132,13 @@ export const procedure = authProcedure
 				)
 				.select([
 					"users.id",
-					"users.name",
-					"users.publicName",
 					database.fn.count<string>("debts.id").as("latestCount"),
-					"accounts.id as accountId",
-					"accounts.email",
 				])
-				.groupBy(["users.id", "accountId", "accounts.email"])
+				.groupBy(["users.id"])
 				.orderBy(["latestCount desc", "users.id"])
 				.limit(input.limit)
 				.execute();
-			return {
-				items: users.map(
-					({ latestCount, publicName, accountId, email, ...user }) => ({
-						publicName: publicName === null ? undefined : publicName,
-						...user,
-						connectedAccount:
-							accountId && email ? { id: accountId, email } : undefined,
-					}),
-				),
-			};
+			return { items: users.map(({ id }) => id) };
 		}
 		const users = await database
 			.selectFrom("users")
@@ -188,34 +154,17 @@ export const procedure = authProcedure
 					.onRef("users.id", "=", "debts.userId")
 					.on("debts.timestamp", ">", new Date(Date.now() - MONTH)),
 			)
-			.leftJoin("accounts", (qb) =>
-				qb.onRef("connectedAccountId", "=", "accounts.id"),
-			)
 			.$if(filterIds.length !== 0, (qb) =>
 				qb.where("users.id", "not in", filterIds),
 			)
 			.select([
 				"users.id",
-				"users.name",
-				"users.publicName",
-				"users.connectedAccountId as accountId",
-				"accounts.email",
 				database.fn.count<string>("debts.id").as("latestCount"),
 			])
 			.groupBy("users.id")
-			.groupBy("accounts.email")
 			.orderBy(["latestCount desc", "users.id"])
 			.limit(input.limit)
 			.execute();
 
-		return {
-			items: users.map(
-				({ latestCount, accountId, email, publicName, ...user }) => ({
-					...user,
-					publicName: publicName === null ? undefined : publicName,
-					connectedAccount:
-						accountId && email ? { id: accountId, email } : undefined,
-				}),
-			),
-		};
+		return { items: users.map(({ id }) => id) };
 	});
