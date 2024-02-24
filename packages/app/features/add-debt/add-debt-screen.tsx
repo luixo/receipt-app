@@ -66,7 +66,8 @@ export const AddDebtScreen: AppPage = () => {
 		},
 	});
 	const onUserClick = React.useCallback(
-		(nextUserId: UsersId) => form.setValue("userId", nextUserId),
+		(nextUserId: UsersId) =>
+			form.setValue("userId", nextUserId, { shouldValidate: true }),
 		[form],
 	);
 	const onDirectionUpdate = React.useCallback(

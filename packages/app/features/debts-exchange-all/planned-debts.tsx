@@ -132,6 +132,7 @@ export const PlannedDebts: React.FC<Props> = ({
 					form.setValue(
 						`${selectedCurrencyCode}.${key}` as `${CurrencyCode}.${CurrencyCode}`,
 						value,
+						{ shouldValidate: true },
 					);
 				}
 			});

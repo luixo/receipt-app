@@ -13,7 +13,7 @@ type Props = {
 
 export const ReceiptDateInput: React.FC<Props> = ({ form, isLoading }) => {
 	const onDateUpdate = React.useCallback(
-		(date: Date) => form.setValue("issued", date),
+		(date: Date) => form.setValue("issued", date, { shouldValidate: true }),
 		[form],
 	);
 	return (

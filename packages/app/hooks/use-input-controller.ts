@@ -40,9 +40,10 @@ export const useInputController = <
 				form.setValue(
 					name,
 					formatIsoDate(nextValue as Date) as PathValue<Form, FieldName>,
+					{ shouldValidate: true },
 				);
 			} else {
-				form.setValue(name, nextValue);
+				form.setValue(name, nextValue, { shouldValidate: true });
 			}
 		},
 		[form, name, type],

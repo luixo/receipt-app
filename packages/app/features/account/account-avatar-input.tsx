@@ -121,7 +121,9 @@ export const AccountAvatarInput: React.FC<Props> = ({ account, children }) => {
 
 	const onFileUpdate = React.useCallback(
 		async (file: File) => {
-			form.setValue("avatar", await convertFileToDataUrl(file));
+			form.setValue("avatar", await convertFileToDataUrl(file), {
+				shouldValidate: true,
+			});
 		},
 		[form],
 	);
