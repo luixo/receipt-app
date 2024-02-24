@@ -1,5 +1,7 @@
 import type { Faker } from "@faker-js/faker";
 
+import type { Amount } from "@tests/frontend/utils/generators";
+import { generateAmount } from "@tests/frontend/utils/generators";
 import type { TRPCQueryOutput } from "app/trpc";
 import type { CurrencyCode } from "app/utils/currency";
 import { MONTH } from "app/utils/time";
@@ -78,12 +80,7 @@ export const defaultGenerateReceiptItems: GenerateReceiptItems = ({ faker }) =>
 		locked: false,
 	}));
 
-export type GenerateUsers = (opts: {
-	faker: Faker;
-	min?: number;
-	max?: number;
-	amount?: number;
-}) => {
+export type GenerateUsers = (opts: { faker: Faker; amount?: Amount }) => {
 	id: UsersId;
 	name: string;
 	connectedAccount?: {
@@ -95,23 +92,12 @@ export type GenerateUsers = (opts: {
 
 export const defaultGenerateUsers: GenerateUsers = ({
 	faker,
-	min = 3,
-	max = 6,
-	amount = 0,
+	amount = { min: 3, max: 6 },
 }) =>
-	Array.from(
-		{
-			length:
-				amount ||
-				(min === max
-					? min
-					: faker.number.int({ min, max: Math.max(min, max) })),
-		},
-		() => ({
-			id: faker.string.uuid(),
-			name: faker.person.fullName(),
-		}),
-	);
+	Array.from({ length: generateAmount(faker, amount) }, () => ({
+		id: faker.string.uuid(),
+		name: faker.person.fullName(),
+	}));
 
 export type GenerateReceiptParticipants = (opts: {
 	faker: Faker;

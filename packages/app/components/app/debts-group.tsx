@@ -25,6 +25,7 @@ const DebtGroupElement: React.FC<DebtElement> = ({ currencyCode, sum }) => {
 		<Text
 			numberOfLines={1}
 			key={currencyCode}
+			testID="debts-group-element"
 			className={debt({ direction: sum >= 0 ? "in" : "out" })}
 		>
 			{round(Math.abs(sum))} {currency}
@@ -41,7 +42,7 @@ type Props = {
 } & React.ComponentProps<typeof View>;
 
 export const DebtsGroup: React.FC<Props> = ({ debts, className, ...props }) => (
-	<View className={debtGroup({ className })} {...props}>
+	<View className={debtGroup({ className })} testID="debts-group" {...props}>
 		{debts.map(({ currencyCode, sum }, index) => (
 			<React.Fragment key={currencyCode}>
 				{index === 0 ? null : <Text>•</Text>}

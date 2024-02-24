@@ -2,6 +2,7 @@ import type { TestFixture } from "@playwright/test";
 import { test as base, expect } from "@playwright/test";
 
 import { apiMixin } from "./fixtures/api";
+import { browserMixin } from "./fixtures/browser";
 import { consoleMixin } from "./fixtures/console";
 import { mockMixin } from "./fixtures/mock";
 import { pageMixin } from "./fixtures/page";
@@ -18,7 +19,9 @@ export const test = queriesMixin(
 			tooltipMixin(
 				toastsMixin(
 					selectorsMixin(
-						consoleMixin(screenshotsMixin(mockMixin(skipMixin(base)))),
+						browserMixin(
+							consoleMixin(screenshotsMixin(mockMixin(skipMixin(base)))),
+						),
 					),
 				),
 			),

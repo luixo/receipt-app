@@ -3,6 +3,7 @@ import type { Locator } from "@playwright/test";
 import { createMixin } from "./utils";
 
 type SelectorsMixin = {
+	loader: Locator;
 	withLoader: (locator: Locator) => Locator;
 	modal: (title?: string) => Locator;
 	modalCross: Locator;
@@ -13,11 +14,9 @@ type SelectorsMixin = {
 };
 
 export const selectorsMixin = createMixin<SelectorsMixin>({
-	withLoader: async ({ page }, use) => {
+	withLoader: async ({ loader }, use) => {
 		await use((locator) =>
-			locator.filter({
-				has: page.locator('[aria-label="Loading"]'),
-			}),
+			locator ? locator.filter({ has: loader }) : loader,
 		);
 	},
 	modal: async ({ page }, use) => {
@@ -43,6 +42,7 @@ export const selectorsMixin = createMixin<SelectorsMixin>({
 			return errorMessage;
 		});
 	},
+	loader: ({ page }, use) => use(page.locator('[aria-label="Loading"]')),
 	user: ({ page }, use) => use(page.getByTestId("user")),
 	emptyCard: async ({ page }, use) => {
 		await use((message) => {
