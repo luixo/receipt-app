@@ -3,20 +3,67 @@ import React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
+import type { UseFormReturn } from "react-hook-form";
 import { useRouter } from "solito/navigation";
 import { z } from "zod";
 
+import { Input } from "app/components/base/input";
 import { PageHeader } from "app/components/page-header";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
+import { useInputController } from "app/hooks/use-input-controller";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
 import { emailSchema, userNameSchema } from "app/utils/validation";
 import type { AppPage } from "next-app/types/page";
 
-import { EmailInput } from "./email-input";
-import type { Form } from "./types";
-import { UserNameInput } from "./user-name-input";
+type EmailProps = {
+	form: UseFormReturn<Form>;
+	isLoading: boolean;
+};
+
+const EmailInput: React.FC<EmailProps> = ({ form, isLoading }) => {
+	const { bindings, state: inputState } = useInputController({
+		name: "email",
+		form,
+	});
+
+	return (
+		<Input
+			{...bindings}
+			label="Email"
+			isDisabled={isLoading}
+			fieldError={inputState.error}
+		/>
+	);
+};
+
+type NameProps = {
+	form: UseFormReturn<Form>;
+	isLoading: boolean;
+};
+
+const UserNameInput: React.FC<NameProps> = ({ form, isLoading }) => {
+	const { bindings, state: inputState } = useInputController({
+		name: "name",
+		form,
+	});
+
+	return (
+		<Input
+			{...bindings}
+			required
+			label="User name"
+			isDisabled={isLoading}
+			fieldError={inputState.error}
+		/>
+	);
+};
+
+type Form = {
+	name: string;
+	email?: string;
+};
 
 export const AddUserScreen: AppPage = () => {
 	const router = useRouter();

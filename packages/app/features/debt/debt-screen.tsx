@@ -1,24 +1,314 @@
 import React from "react";
 
-import { Spinner } from "@nextui-org/react";
-import { useParams } from "solito/navigation";
+import { Button, Link, Spinner } from "@nextui-org/react";
+import { MdOutlineReceipt as ReceiptIcon } from "react-icons/md";
+import { useParams, useRouter } from "solito/navigation";
 
+import { CurrenciesPicker } from "app/components/app/currencies-picker";
 import { DebtControlButtons } from "app/components/app/debt-control-buttons";
 import { DebtSyncStatus } from "app/components/app/debt-sync-status";
 import { LoadableUser } from "app/components/app/loadable-user";
+import { SignButtonGroup } from "app/components/app/sign-button-group";
+import { Input } from "app/components/base/input";
+import { DateInput } from "app/components/date-input";
 import { QueryErrorMessage } from "app/components/error-message";
 import { PageHeader } from "app/components/page-header";
+import { RemoveButton } from "app/components/remove-button";
+import { useBooleanState } from "app/hooks/use-boolean-state";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
-import type { TRPCQuerySuccessResult } from "app/trpc";
+import { useSingleInput } from "app/hooks/use-single-input";
+import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { mutations } from "app/mutations";
+import type { TRPCQueryOutput, TRPCQuerySuccessResult } from "app/trpc";
 import { trpc } from "app/trpc";
+import type { CurrencyCode } from "app/utils/currency";
+import { debtAmountSchema, debtNoteSchema } from "app/utils/validation";
+import type { ReceiptsId } from "next-app/db/models";
 import type { AppPage } from "next-app/types/page";
 
-import { DebtAmountInput } from "./debt-amount-input";
-import { DebtDateInput } from "./debt-date-input";
-import { DebtNoteInput } from "./debt-note-input";
-import { DebtReceiptLink } from "./debt-receipt-link";
-import { DebtRemoveButton } from "./debt-remove-button";
-import { DebtSignButtonGroup } from "./debt-sign-button-group";
+type Debt = TRPCQueryOutput<"debts.get">;
+
+type CurrencyProps = {
+	debt: Debt;
+	isLoading: boolean;
+};
+
+const DebtCurrencyInput: React.FC<CurrencyProps> = ({ debt, isLoading }) => {
+	const currency = useFormattedCurrency(debt.currencyCode);
+	const [
+		isModalOpen,
+		{ switchValue: switchModalOpen, setTrue: openModal, setFalse: closeModal },
+	] = useBooleanState();
+
+	const updateReceiptMutation = trpc.debts.update.useMutation(
+		useTrpcMutationOptions(mutations.debts.update.options, { context: debt }),
+	);
+	const saveCurrencyCode = React.useCallback(
+		(nextCurrencyCode: CurrencyCode) => {
+			if (nextCurrencyCode === debt.currencyCode) {
+				return;
+			}
+			closeModal();
+			updateReceiptMutation.mutate({
+				id: debt.id,
+				update: { currencyCode: nextCurrencyCode },
+			});
+		},
+		[updateReceiptMutation, debt.id, debt.currencyCode, closeModal],
+	);
+	const topCurrenciesQuery = trpc.currency.topDebts.useQuery();
+
+	return (
+		<>
+			<Button
+				variant="light"
+				onClick={openModal}
+				isDisabled={isLoading}
+				isLoading={updateReceiptMutation.isPending}
+				isIconOnly
+			>
+				{currency}
+			</Button>
+			<CurrenciesPicker
+				onChange={saveCurrencyCode}
+				modalOpen={isModalOpen}
+				switchModalOpen={switchModalOpen}
+				topCurrenciesQuery={topCurrenciesQuery}
+			/>
+		</>
+	);
+};
+
+type AmountProps = {
+	debt: Debt;
+	isLoading: boolean;
+};
+
+const DebtAmountInput: React.FC<AmountProps> = ({ debt, isLoading }) => {
+	const absoluteAmount = Math.abs(debt.amount);
+	const {
+		bindings,
+		state: inputState,
+		getNumberValue,
+		setValue,
+	} = useSingleInput({
+		initialValue: absoluteAmount,
+		schema: debtAmountSchema,
+		type: "number",
+	});
+	React.useEffect(
+		() => setValue(Math.abs(debt.amount)),
+		[debt.amount, setValue],
+	);
+
+	const updateMutation = trpc.debts.update.useMutation(
+		useTrpcMutationOptions(mutations.debts.update.options, { context: debt }),
+	);
+	const updateAmount = React.useCallback(
+		async (amount: number) => {
+			if (amount !== absoluteAmount) {
+				const currentSign = debt.amount >= 0 ? 1 : -1;
+				updateMutation.mutate({
+					id: debt.id,
+					update: { amount: amount * currentSign },
+				});
+			}
+		},
+		[updateMutation, debt.id, debt.amount, absoluteAmount],
+	);
+
+	return (
+		<Input
+			{...bindings}
+			value={bindings.value.toString()}
+			aria-label="Debt amount"
+			mutation={updateMutation}
+			fieldError={inputState.error}
+			isDisabled={isLoading}
+			saveProps={{
+				title: "Save debt amount",
+				isHidden: absoluteAmount === getNumberValue(),
+				onClick: () => updateAmount(getNumberValue()),
+			}}
+			endContent={<DebtCurrencyInput debt={debt} isLoading={isLoading} />}
+			variant="bordered"
+		/>
+	);
+};
+
+type DateProps = {
+	debt: Debt;
+	isLoading: boolean;
+};
+
+const DebtDateInput: React.FC<DateProps> = ({ debt, isLoading }) => {
+	const updateMutation = trpc.debts.update.useMutation(
+		useTrpcMutationOptions(mutations.debts.update.options, { context: debt }),
+	);
+
+	const saveDate = React.useCallback(
+		(nextDate: Date) => {
+			// TODO: add date-fns comparison of dates
+			if (nextDate.valueOf() === debt.timestamp.valueOf()) {
+				return;
+			}
+			updateMutation.mutate({
+				id: debt.id,
+				update: { timestamp: nextDate },
+			});
+		},
+		[updateMutation, debt.id, debt.timestamp],
+	);
+
+	return (
+		<DateInput
+			mutation={updateMutation}
+			timestamp={debt.timestamp}
+			isDisabled={isLoading}
+			onUpdate={saveDate}
+		/>
+	);
+};
+
+type NoteProps = {
+	debt: Debt;
+	isLoading: boolean;
+};
+
+const DebtNoteInput: React.FC<NoteProps> = ({ debt, isLoading }) => {
+	const {
+		bindings,
+		state: inputState,
+		getValue,
+		setValue,
+	} = useSingleInput({
+		initialValue: debt.note,
+		schema: debtNoteSchema,
+	});
+
+	const updateMutation = trpc.debts.update.useMutation(
+		useTrpcMutationOptions(mutations.debts.update.options, { context: debt }),
+	);
+	const saveNote = React.useCallback(
+		(nextNote: string) => {
+			if (debt.note === nextNote) {
+				return;
+			}
+			updateMutation.mutate(
+				{ id: debt.id, update: { note: nextNote } },
+				{ onSuccess: () => setValue(nextNote) },
+			);
+		},
+		[updateMutation, debt.id, debt.note, setValue],
+	);
+
+	return (
+		<Input
+			{...bindings}
+			aria-label="Debt note"
+			mutation={updateMutation}
+			fieldError={inputState.error}
+			isDisabled={isLoading}
+			saveProps={{
+				title: "Save debt note",
+				isHidden: debt.note === getValue(),
+				onClick: () => saveNote(getValue()),
+			}}
+		/>
+	);
+};
+
+type LinkProps = {
+	receiptId: ReceiptsId;
+};
+
+const DebtReceiptLink: React.FC<LinkProps> = ({ receiptId }) => (
+	<Button
+		as={Link}
+		href={`/receipts/${receiptId}`}
+		variant="bordered"
+		color="success"
+		isIconOnly
+	>
+		<ReceiptIcon size={24} />
+	</Button>
+);
+
+type RemoveButtonProps = {
+	debt: Debt;
+	setLoading: (nextLoading: boolean) => void;
+} & Omit<React.ComponentProps<typeof RemoveButton>, "mutation" | "onRemove">;
+
+const DebtRemoveButton: React.FC<RemoveButtonProps> = ({
+	debt,
+	setLoading,
+	...props
+}) => {
+	const router = useRouter();
+	const removeMutation = trpc.debts.remove.useMutation(
+		useTrpcMutationOptions(mutations.debts.remove.options, {
+			context: debt,
+			onSuccess: () => router.replace(`/debts/user/${debt.userId}`),
+		}),
+	);
+	React.useEffect(
+		() => setLoading(removeMutation.isPending),
+		[removeMutation.isPending, setLoading],
+	);
+	const removeDebt = React.useCallback(
+		() => removeMutation.mutate({ id: debt.id }),
+		[removeMutation, debt.id],
+	);
+
+	return (
+		<RemoveButton
+			mutation={removeMutation}
+			onRemove={removeDebt}
+			subtitle="This will remove debt forever"
+			noConfirm={debt.amount === 0}
+			{...props}
+		>
+			Remove debt
+		</RemoveButton>
+	);
+};
+
+type SignGroupProps = {
+	debt: Debt;
+	disabled: boolean;
+};
+
+export const DebtSignButtonGroup: React.FC<SignGroupProps> = ({
+	debt,
+	disabled,
+}) => {
+	const updateMutation = trpc.debts.update.useMutation(
+		useTrpcMutationOptions(mutations.debts.update.options, { context: debt }),
+	);
+	const setDirection = React.useCallback(
+		(direction: "+" | "-") => {
+			if (
+				(direction === "+" && debt.amount >= 0) ||
+				(direction === "-" && debt.amount < 0)
+			) {
+				return;
+			}
+			return updateMutation.mutate({
+				id: debt.id,
+				update: { amount: debt.amount * -1 },
+			});
+		},
+		[updateMutation, debt.id, debt.amount],
+	);
+	return (
+		<SignButtonGroup
+			disabled={disabled}
+			isLoading={updateMutation.isPending}
+			onUpdate={setDirection}
+			direction={debt.amount >= 0 ? "+" : "-"}
+		/>
+	);
+};
 
 type InnerProps = {
 	query: TRPCQuerySuccessResult<"debts.get">;

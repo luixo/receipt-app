@@ -4,8 +4,11 @@ import { View } from "react-native";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
+import type { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 
+import { Input } from "app/components/base/input";
+import { useInputController } from "app/hooks/use-input-controller";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
@@ -16,10 +19,87 @@ import {
 } from "app/utils/validation";
 import type { ReceiptsId } from "next-app/db/models";
 
-import { ReceiptItemNameInput } from "./receipt-item-name-input";
-import { ReceiptItemPriceInput } from "./receipt-item-price-input";
-import { ReceiptItemQuantityInput } from "./receipt-item-quantity-input";
-import type { Form } from "./types";
+type NameProps = {
+	form: UseFormReturn<Form>;
+	isLoading: boolean;
+};
+
+const ReceiptItemNameInput: React.FC<NameProps> = ({ form, isLoading }) => {
+	const { bindings, state: inputState } = useInputController({
+		form,
+		name: "name",
+	});
+
+	return (
+		<Input
+			{...bindings}
+			required
+			label="Item name"
+			isDisabled={isLoading}
+			fieldError={inputState.error}
+			autoFocus
+		/>
+	);
+};
+
+type PriceProps = {
+	form: UseFormReturn<Form>;
+	isLoading: boolean;
+};
+
+const ReceiptItemPriceInput: React.FC<PriceProps> = ({ form, isLoading }) => {
+	const { bindings, state: inputState } = useInputController({
+		form,
+		name: "price",
+		type: "number",
+	});
+
+	return (
+		<Input
+			{...bindings}
+			required
+			type="number"
+			min="0"
+			label="Price per unit"
+			isDisabled={isLoading}
+			fieldError={inputState.error}
+		/>
+	);
+};
+
+type QuantityProps = {
+	form: UseFormReturn<Form>;
+	isLoading: boolean;
+};
+
+const ReceiptItemQuantityInput: React.FC<QuantityProps> = ({
+	form,
+	isLoading,
+}) => {
+	const { bindings, state: inputState } = useInputController({
+		form,
+		name: "quantity",
+		type: "number",
+	});
+
+	return (
+		<Input
+			{...bindings}
+			required
+			type="number"
+			min="0"
+			label="Units"
+			isDisabled={isLoading}
+			fieldError={inputState.error}
+		/>
+	);
+};
+
+type Form = {
+	name: string;
+	price: number;
+	quantity: number;
+};
 
 type Props = {
 	receiptId: ReceiptsId;

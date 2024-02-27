@@ -1,13 +1,18 @@
 import React from "react";
+import { View } from "react-native";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@nextui-org/react";
+import { Button, Spinner } from "@nextui-org/react";
+import type { UseFormReturn } from "react-hook-form";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
+import { Input } from "app/components/base/input";
+import { Text } from "app/components/base/text";
 import { ErrorMessage } from "app/components/error-message";
 import { useFormattedCurrencies } from "app/hooks/use-formatted-currencies";
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
+import { useInputController } from "app/hooks/use-input-controller";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
@@ -16,8 +21,6 @@ import { round } from "app/utils/math";
 import { nonNullishGuard } from "app/utils/utils";
 import { currencyCodeSchema, currencyRateSchema } from "app/utils/validation";
 import type { UsersId } from "next-app/db/models";
-
-import { PlannedDebt } from "./planned-debt";
 
 const getDefaultValues = (
 	selectedCurrencyCode: CurrencyCode,
@@ -38,6 +41,87 @@ const getDefaultValues = (
 		Object.entries(currentRates).filter(([, value]) => value !== undefined),
 	),
 });
+
+type InputProps = {
+	currencyCode: CurrencyCode;
+} & Pick<DebtProps, "selectedCurrencyCode" | "form">;
+
+const RateInput: React.FC<InputProps> = ({
+	selectedCurrencyCode,
+	currencyCode,
+	form,
+}) => {
+	const { bindings, state: inputState } = useInputController({
+		form,
+		name: `${selectedCurrencyCode}.${currencyCode}` as `${CurrencyCode}.${CurrencyCode}`,
+		type: "number",
+		defaultValue: 0,
+	});
+	return (
+		<Input
+			key={`${selectedCurrencyCode}.${currencyCode}`}
+			{...bindings}
+			aria-label={currencyCode}
+			required
+			type="number"
+			min="0"
+			fieldError={inputState.error}
+		/>
+	);
+};
+
+type DebtProps = {
+	selectedCurrencyCode: CurrencyCode;
+	form: UseFormReturn<Record<CurrencyCode, Record<CurrencyCode, number>>>;
+	ratesLoading: boolean;
+	currencyCode: CurrencyCode;
+	amount: number;
+	note: string;
+};
+
+const PlannedDebt: React.FC<DebtProps> = ({
+	selectedCurrencyCode,
+	form,
+	ratesLoading,
+	amount,
+	currencyCode,
+	note,
+}) => {
+	const selected = selectedCurrencyCode === currencyCode;
+	const rate = <>{ratesLoading && !selected ? <Spinner /> : note}</>;
+	return (
+		<View className="gap-1">
+			<View className="flex-row gap-4">
+				<Text
+					className={`flex-1 self-center ${
+						amount >= 0 ? "text-success" : "text-danger"
+					}`}
+				>
+					{selected && ratesLoading ? (
+						<Spinner />
+					) : (
+						`${round(amount)} ${currencyCode}`
+					)}
+				</Text>
+				<View className="flex-1">
+					{selected ? null : (
+						<RateInput
+							// Reload input on selected currency code change will rerun useInputController
+							// Otherwise the hook will run `register` method which will propagate current value
+							// to the new form key
+							key={selectedCurrencyCode}
+							form={form}
+							selectedCurrencyCode={selectedCurrencyCode}
+							currencyCode={currencyCode}
+						/>
+					)}
+				</View>
+				<View className="flex-1 max-md:hidden">{rate}</View>
+			</View>
+			<View className="md:hidden">{rate}</View>
+		</View>
+	);
+};
 
 type Props = {
 	aggregatedDebts: { currencyCode: CurrencyCode; sum: number }[];

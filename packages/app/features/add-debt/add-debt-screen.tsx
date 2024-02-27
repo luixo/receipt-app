@@ -2,19 +2,26 @@ import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@nextui-org/react";
+import type { UseFormReturn } from "react-hook-form";
 import { useForm } from "react-hook-form";
 import { useRouter, useSearchParams } from "solito/navigation";
 import { z } from "zod";
 
 import { CurrencyInput } from "app/components/app/currency-input";
-import type { Direction } from "app/components/app/sign-button-group";
-import { SignButtonGroup } from "app/components/app/sign-button-group";
+import {
+	type Direction,
+	SignButtonGroup,
+} from "app/components/app/sign-button-group";
 import { UsersSuggest } from "app/components/app/users-suggest";
+import { Input } from "app/components/base/input";
+import { DateInput } from "app/components/date-input";
 import { PageHeader } from "app/components/page-header";
 import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
+import { useInputController } from "app/hooks/use-input-controller";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
+import type { CurrencyCode } from "app/utils/currency";
 import { getToday } from "app/utils/date";
 import {
 	currencyCodeSchema,
@@ -25,10 +32,81 @@ import {
 import type { UsersId } from "next-app/src/db/models";
 import type { AppPage } from "next-app/types/page";
 
-import { DebtAmountInput } from "./debt-amount-input";
-import { DebtDateInput } from "./debt-date-input";
-import { DebtNoteInput } from "./debt-note-input";
-import type { Form } from "./types";
+type Form = {
+	amount: number;
+	direction: Direction;
+	currencyCode: CurrencyCode;
+	userId: UsersId;
+	note: string;
+	timestamp: Date;
+};
+
+type NoteProps = {
+	form: UseFormReturn<Form>;
+	isLoading: boolean;
+};
+
+const DebtNoteInput: React.FC<NoteProps> = ({ form, isLoading }) => {
+	const { bindings, state: inputState } = useInputController({
+		name: "note",
+		form,
+	});
+
+	return (
+		<Input
+			{...bindings}
+			required
+			label="Debt note"
+			isDisabled={isLoading}
+			fieldError={inputState.error}
+		/>
+	);
+};
+
+type DateProps = {
+	form: UseFormReturn<Form>;
+	isLoading: boolean;
+};
+
+const DebtDateInput: React.FC<DateProps> = ({ form, isLoading }) => {
+	const onDateUpdate = React.useCallback(
+		(date: Date) => form.setValue("timestamp", date, { shouldValidate: true }),
+		[form],
+	);
+	return (
+		<DateInput
+			timestamp={form.getValues("timestamp")}
+			isDisabled={isLoading}
+			onUpdate={onDateUpdate}
+			updateOnChange
+		/>
+	);
+};
+
+type AmountProps = {
+	form: UseFormReturn<Form>;
+	isLoading: boolean;
+};
+
+const DebtAmountInput: React.FC<AmountProps> = ({ form, isLoading }) => {
+	const { bindings, state: inputState } = useInputController({
+		form,
+		name: "amount",
+		type: "number",
+	});
+
+	return (
+		<Input
+			{...bindings}
+			required
+			type="number"
+			min="0"
+			label="Amount"
+			isDisabled={isLoading}
+			fieldError={inputState.error}
+		/>
+	);
+};
 
 export const AddDebtScreen: AppPage = () => {
 	const searchParams = useSearchParams<{ userId: UsersId }>();
