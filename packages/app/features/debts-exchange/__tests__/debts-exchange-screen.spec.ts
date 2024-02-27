@@ -8,7 +8,7 @@ import { defaultGenerateDebts } from "./generators";
 import { test } from "./utils";
 
 test.describe("Wrapper component", () => {
-	test("'users.getUser' pending / error", async ({
+	test("'debts.getUser' pending / error", async ({
 		api,
 		errorMessage,
 		loader,
