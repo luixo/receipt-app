@@ -8,7 +8,7 @@ import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
 import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
-import type { Currency, CurrencyCode } from "app/utils/currency";
+import type { CurrencyCode } from "app/utils/currency";
 import type { ReceiptsId } from "next-app/db/models";
 
 type Props = {
@@ -28,7 +28,7 @@ export const ReceiptCurrencyInput: React.FC<Props> = ({
 	sum,
 	isLoading,
 }) => {
-	const currency = useFormattedCurrency(currencyCode);
+	const formattedCurrencyCode = useFormattedCurrency(currencyCode);
 	const [
 		isModalOpen,
 		{ switchValue: switchModalOpen, setTrue: openModal, setFalse: closeModal },
@@ -38,14 +38,14 @@ export const ReceiptCurrencyInput: React.FC<Props> = ({
 		useTrpcMutationOptions(mutations.receipts.update.options),
 	);
 	const saveCurrency = React.useCallback(
-		(nextCurrency: Currency) => {
+		(nextCurrencyCode: CurrencyCode) => {
 			closeModal();
-			if (nextCurrency.code === currencyCode) {
+			if (nextCurrencyCode === currencyCode) {
 				return;
 			}
 			updateReceiptMutation.mutate({
 				id: receiptId,
-				update: { type: "currencyCode", currencyCode: nextCurrency!.code },
+				update: { type: "currencyCode", currencyCode: nextCurrencyCode },
 			});
 		},
 		[updateReceiptMutation, receiptId, currencyCode, closeModal],
@@ -61,7 +61,7 @@ export const ReceiptCurrencyInput: React.FC<Props> = ({
 				onClick={disabled ? undefined : openModal}
 			>
 				<Text className="text-2xl">
-					{sum} {currency}
+					{sum} {formattedCurrencyCode}
 				</Text>
 			</View>
 			<CurrenciesPicker

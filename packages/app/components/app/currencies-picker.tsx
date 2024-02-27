@@ -10,30 +10,26 @@ import {
 	ModalHeader,
 	Spinner,
 } from "@nextui-org/react";
-import type { QueryObserverSuccessResult } from "@tanstack/react-query";
 
 import { Text } from "app/components/base/text";
 import { QueryErrorMessage } from "app/components/error-message";
-import type { TRPCError, TRPCQueryOutput, TRPCQueryResult } from "app/trpc";
+import type { TRPCQueryResult } from "app/trpc";
 import { trpc } from "app/trpc";
-import type { CurrencyCode } from "app/utils/currency";
+import { type CurrencyCode, renderCurrencyName } from "app/utils/currency";
 import { MONTH } from "app/utils/time";
 
-type CurrencyList = TRPCQueryOutput<"currency.getList">;
-type CurrencyListItem = CurrencyList[number];
-
-type InnerProps = {
-	query: QueryObserverSuccessResult<CurrencyList, TRPCError>;
-	selectedCurrency?: CurrencyListItem;
-	onChange: (nextCurrency: CurrencyListItem) => void;
+type LoaderProps = {
+	query: TRPCQueryResult<"currency.getList">;
+	selectedCurrencyCode?: CurrencyCode;
+	onChange: (nextCurrencyCode: CurrencyCode) => void;
 	topCurrenciesQuery:
 		| TRPCQueryResult<"currency.topDebts">
 		| TRPCQueryResult<"currency.topReceipts">;
 };
 
-const CurrenciesPickerInner: React.FC<InnerProps> = ({
+const CurrenciesPickerLoader: React.FC<LoaderProps> = ({
 	query,
-	selectedCurrency,
+	selectedCurrencyCode,
 	onChange,
 	topCurrenciesQuery,
 }) => {
@@ -42,29 +38,35 @@ const CurrenciesPickerInner: React.FC<InnerProps> = ({
 			? topCurrenciesQuery.data.map(({ currencyCode }) => currencyCode)
 			: undefined;
 	const cutIndex = topCurrencyCodes ? topCurrencyCodes.length : 0;
-	const list = topCurrencyCodes
-		? query.data.sort(
-				(a, b) =>
-					topCurrencyCodes.indexOf(b.code) - topCurrencyCodes.indexOf(a.code),
-		  )
-		: query.data;
+	const codes = query.data ? query.data.map(({ code }) => code) : undefined;
+	const renderedCodes = topCurrencyCodes
+		? codes
+			? codes.sort(
+					(a, b) => topCurrencyCodes.indexOf(b) - topCurrencyCodes.indexOf(a),
+			  )
+			: topCurrencyCodes
+		: codes || [];
 	return (
 		<View className="flex-row flex-wrap gap-2">
-			{list.map((currency, index) => (
-				<React.Fragment key={currency.code}>
+			{renderedCodes.map((currencyCode, index) => (
+				<React.Fragment key={currencyCode}>
 					{index === cutIndex && index !== 0 ? (
 						<Divider className="my-2" />
 					) : null}
 					<Button
-						onClick={() => onChange(currency)}
+						onClick={() => onChange(currencyCode)}
 						variant="flat"
 						color={
-							currency.code === selectedCurrency?.code ? "success" : "primary"
+							currencyCode === selectedCurrencyCode ? "success" : "primary"
 						}
+						title={currencyCode}
 					>
-						{`${currency.name} (${currency.code}${
-							currency.code === currency.symbol ? "" : ` / ${currency.symbol}`
-						})`}
+						{renderCurrencyName(
+							currencyCode,
+							query.data
+								? query.data.find(({ code }) => code === currencyCode)
+								: undefined,
+						)}
 					</Button>
 				</React.Fragment>
 			))}
@@ -72,25 +74,11 @@ const CurrenciesPickerInner: React.FC<InnerProps> = ({
 	);
 };
 
-type LoaderProps = Omit<InnerProps, "query"> & {
-	query: TRPCQueryResult<"currency.getList">;
-};
-
-const CurrenciesPickerLoader: React.FC<LoaderProps> = ({ query, ...props }) => {
-	if (query.status === "pending") {
-		return <Spinner />;
-	}
-	if (query.status === "error") {
-		return <QueryErrorMessage query={query} />;
-	}
-	return <CurrenciesPickerInner {...props} query={query} />;
-};
-
 type WrapperProps = Omit<LoaderProps, "query"> & {
 	modalOpen: boolean;
 	switchModalOpen: (open: boolean) => void;
 	onLoad?: (
-		currencies: CurrencyListItem[],
+		currencyCodes: CurrencyCode[],
 		topCurrencyCodes: CurrencyCode[],
 	) => void;
 };
@@ -113,14 +101,14 @@ export const CurrenciesPicker: React.FC<WrapperProps> = ({
 			topCurrenciesQuery.status === "success"
 		) {
 			onLoad(
-				query.data,
+				query.data.map(({ code }) => code),
 				topCurrenciesQuery.data.map(({ currencyCode }) => currencyCode),
 			);
 		}
 	}, [onLoad, query, topCurrenciesQuery]);
 	return (
 		<Modal
-			aria-label="Currency picker"
+			aria-label="Currencies picker"
 			isOpen={modalOpen}
 			onOpenChange={switchModalOpen}
 			scrollBehavior="inside"
@@ -136,6 +124,11 @@ export const CurrenciesPicker: React.FC<WrapperProps> = ({
 						topCurrenciesQuery={topCurrenciesQuery}
 						{...props}
 					/>
+					{query.status === "pending" ? (
+						<Spinner />
+					) : query.status === "error" ? (
+						<QueryErrorMessage query={query} />
+					) : null}
 				</ModalBody>
 			</ModalContent>
 		</Modal>

@@ -7,11 +7,12 @@ import type { z } from "zod";
 import { CurrenciesPicker } from "app/components/app/currencies-picker";
 import { Input } from "app/components/base/input";
 import { useBooleanState } from "app/hooks/use-boolean-state";
+import { trpc } from "app/trpc";
 import type { CurrencyCode } from "app/utils/currency";
-import type { currencySchema } from "app/utils/validation";
+import type { currencyCodeSchema } from "app/utils/validation";
 
 type MinimalForm = {
-	currency: z.infer<typeof currencySchema>;
+	currencyCode: z.infer<typeof currencyCodeSchema>;
 };
 
 type Props<T extends MinimalForm> = {
@@ -33,44 +34,67 @@ export const CurrencyInput = <T extends MinimalForm>({
 	] = useBooleanState();
 
 	const onCurrencyChange = React.useCallback(
-		(nextCurrency: z.infer<typeof currencySchema>) => {
+		(nextCurrencyCode: z.infer<typeof currencyCodeSchema>) => {
 			closeModal();
 			form.setValue(
-				"currency" as Path<T>,
-				nextCurrency as PathValue<T, Path<T>>,
+				"currencyCode" as Path<T>,
+				nextCurrencyCode as PathValue<T, Path<T>>,
 				{ shouldValidate: true },
 			);
 		},
 		[form, closeModal],
 	);
 
-	const selectedCurrency = form.watch("currency" as Path<T> & "currency");
+	const selectedCurrencyCode = form.watch(
+		"currencyCode" as Path<T> & "currencyCode",
+	);
 
 	const onLoad = React.useCallback(
 		(
-			currencies: z.infer<typeof currencySchema>[],
+			currencyCodes: z.infer<typeof currencyCodeSchema>[],
 			topCurrencyCodes: CurrencyCode[],
 		) => {
-			if (!selectedCurrency) {
+			if (!selectedCurrencyCode) {
 				const matchedTopCurrencyCode = topCurrencyCodes
 					.map((topCurrencyCode) =>
-						currencies.find((currency) => currency.code === topCurrencyCode),
+						currencyCodes.find(
+							(currencyCode) => currencyCode === topCurrencyCode,
+						),
 					)
 					.find(Boolean);
-				const nextSelectedCurrency = matchedTopCurrencyCode || currencies[0];
-				if (nextSelectedCurrency) {
-					onCurrencyChange(nextSelectedCurrency);
+				const nextSelectedCurrencyCode =
+					matchedTopCurrencyCode || currencyCodes[0];
+				if (nextSelectedCurrencyCode) {
+					onCurrencyChange(nextSelectedCurrencyCode);
 				}
 			}
 		},
-		[onCurrencyChange, selectedCurrency],
+		[onCurrencyChange, selectedCurrencyCode],
+	);
+
+	const currenciesListQuery = trpc.currency.getList.useQuery(
+		{ locale: "en" },
+		{ trpc: { ssr: false } },
+	);
+	const selectedCurrency = React.useMemo(
+		() =>
+			currenciesListQuery.data
+				? currenciesListQuery.data.find(
+						(currency) => currency.code === selectedCurrencyCode,
+				  )
+				: undefined,
+		[currenciesListQuery.data, selectedCurrencyCode],
 	);
 
 	return (
 		<>
-			{selectedCurrency ? (
+			{selectedCurrencyCode ? (
 				<Input
-					value={`${selectedCurrency.name} (${selectedCurrency.code})`}
+					value={
+						selectedCurrency
+							? `${selectedCurrency.name} (${selectedCurrency.code})`
+							: selectedCurrencyCode
+					}
 					label="Currency"
 					isDisabled={isLoading}
 					isReadOnly
@@ -88,7 +112,7 @@ export const CurrencyInput = <T extends MinimalForm>({
 				</Button>
 			)}
 			<CurrenciesPicker
-				selectedCurrency={selectedCurrency}
+				selectedCurrencyCode={selectedCurrencyCode}
 				onChange={onCurrencyChange}
 				modalOpen={modalOpen}
 				switchModalOpen={switchModalOpen}

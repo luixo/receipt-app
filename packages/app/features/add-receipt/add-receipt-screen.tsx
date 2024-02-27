@@ -14,7 +14,7 @@ import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
 import { getToday } from "app/utils/date";
-import { currencySchema, receiptNameSchema } from "app/utils/validation";
+import { currencyCodeSchema, receiptNameSchema } from "app/utils/validation";
 import type { AppPage } from "next-app/types/page";
 
 import { ReceiptDateInput } from "./receipt-date-input";
@@ -39,7 +39,7 @@ export const AddReceiptScreen: AppPage = () => {
 		resolver: zodResolver(
 			z.object({
 				name: receiptNameSchema,
-				currency: currencySchema,
+				currencyCode: currencyCodeSchema,
 				issued: z.date(),
 			}),
 		),
@@ -52,7 +52,7 @@ export const AddReceiptScreen: AppPage = () => {
 		(values: Form) =>
 			addReceiptMutation.mutate({
 				name: values.name,
-				currencyCode: values.currency.code,
+				currencyCode: values.currencyCode,
 				issued: values.issued,
 			}),
 		[addReceiptMutation],

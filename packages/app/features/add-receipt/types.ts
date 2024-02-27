@@ -1,7 +1,7 @@
-import type { Currency } from "app/utils/currency";
+import type { CurrencyCode } from "app/utils/currency";
 
 export type Form = {
 	name: string;
-	currency: Currency;
+	currencyCode: CurrencyCode;
 	issued: Date;
 };

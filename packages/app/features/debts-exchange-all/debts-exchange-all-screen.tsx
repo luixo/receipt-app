@@ -12,7 +12,7 @@ import { useAggregatedDebts } from "app/hooks/use-aggregated-debts";
 import { useBooleanState } from "app/hooks/use-boolean-state";
 import type { TRPCQuerySuccessResult } from "app/trpc";
 import { trpc } from "app/trpc";
-import type { Currency } from "app/utils/currency";
+import type { CurrencyCode } from "app/utils/currency";
 import { noop } from "app/utils/utils";
 import { useShowResolvedDebts } from "next-app/hooks/use-show-resolved-debts";
 import type { UsersId } from "next-app/src/db/models";
@@ -31,16 +31,16 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 	const [aggregatedDebts, nonZeroAggregateDebts] = useAggregatedDebts(query);
 	const userQuery = trpc.users.get.useQuery({ id: userId });
 	const topCurrenciesQuery = trpc.currency.topDebts.useQuery();
-	const [selectedCurrency, setSelectedCurrency] = React.useState<
-		Currency | undefined
+	const [selectedCurrencyCode, setSelectedCurrencyCode] = React.useState<
+		CurrencyCode | undefined
 	>();
 	const [
 		modalOpen,
 		{ switchValue: switchModalOpen, setFalse: closeModal, setTrue: openModal },
 	] = useBooleanState();
-	const onSelectModalCurrency = React.useCallback(
-		(currency: Currency) => {
-			setSelectedCurrency(currency);
+	const onSelectModalCurrencyCode = React.useCallback(
+		(currencyCode: CurrencyCode) => {
+			setSelectedCurrencyCode(currencyCode);
 			closeModal();
 		},
 		[closeModal],
@@ -70,30 +70,30 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 				debts={showResolvedDebts ? aggregatedDebts : nonZeroAggregateDebts}
 			/>
 			<CurrenciesGroup
-				selectedCurrencyCode={selectedCurrency?.code}
+				selectedCurrencyCode={selectedCurrencyCode}
 				aggregatedDebts={nonZeroAggregateDebts}
-				setSelectedCurrency={setSelectedCurrency}
+				setSelectedCurrencyCode={setSelectedCurrencyCode}
 				onSelectOther={openModal}
 			/>
 			<CurrenciesPicker
-				selectedCurrency={selectedCurrency}
-				onChange={onSelectModalCurrency}
+				selectedCurrencyCode={selectedCurrencyCode}
+				onChange={onSelectModalCurrencyCode}
 				modalOpen={modalOpen}
 				switchModalOpen={switchModalOpen}
 				onLoad={noop}
 				topCurrenciesQuery={topCurrenciesQuery}
 			/>
-			{selectedCurrency ? (
+			{selectedCurrencyCode ? (
 				<>
 					<Divider />
 					<PlannedDebts
 						key={
 							nonZeroAggregateDebts.filter(
-								(debt) => debt.currencyCode !== selectedCurrency.code,
+								(debt) => debt.currencyCode !== selectedCurrencyCode,
 							).length
 						}
 						userId={userId}
-						selectedCurrencyCode={selectedCurrency.code}
+						selectedCurrencyCode={selectedCurrencyCode}
 						aggregatedDebts={nonZeroAggregateDebts}
 						onDone={back}
 					/>

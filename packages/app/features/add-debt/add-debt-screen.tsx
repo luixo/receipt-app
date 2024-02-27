@@ -17,7 +17,7 @@ import { mutations } from "app/mutations";
 import { trpc } from "app/trpc";
 import { getToday } from "app/utils/date";
 import {
-	currencySchema,
+	currencyCodeSchema,
 	debtAmountSchema,
 	debtNoteSchema,
 	userIdSchema,
@@ -49,7 +49,7 @@ export const AddDebtScreen: AppPage = () => {
 			z.object({
 				amount: z.preprocess(Number, debtAmountSchema),
 				direction: z.union([z.literal("-"), z.literal("+")]),
-				currency: currencySchema,
+				currencyCode: currencyCodeSchema,
 				userId: userIdSchema,
 				note: debtNoteSchema,
 				timestamp: z.date(),
@@ -78,7 +78,7 @@ export const AddDebtScreen: AppPage = () => {
 		(values: Form) =>
 			addMutation.mutate({
 				note: values.note,
-				currencyCode: values.currency.code,
+				currencyCode: values.currencyCode,
 				userId: values.userId,
 				amount: values.amount * (values.direction === "+" ? 1 : -1),
 				timestamp: values.timestamp,

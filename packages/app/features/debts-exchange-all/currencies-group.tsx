@@ -3,44 +3,26 @@ import React from "react";
 import { Button, ButtonGroup } from "@nextui-org/react";
 
 import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
-import { trpc } from "app/trpc";
-import type { Currency, CurrencyCode } from "app/utils/currency";
+import type { CurrencyCode } from "app/utils/currency";
 
 type ButtonProps = {
 	selected: boolean;
 	currencyCode: CurrencyCode;
-	setSelectedCurrency: (currency: Currency) => void;
+	setSelectedCurrencyCode: (currencyCode: CurrencyCode) => void;
 };
 
 const CurrencyButton: React.FC<ButtonProps> = ({
 	selected,
 	currencyCode,
-	setSelectedCurrency,
+	setSelectedCurrencyCode,
 }) => {
-	const currenciesListQuery = trpc.currency.getList.useQuery(
-		{ locale: "en" },
-		{ trpc: { ssr: false } },
-	);
 	const select = React.useCallback(() => {
-		if (currenciesListQuery.status !== "success") {
-			return;
-		}
-		const matchedCurrency = currenciesListQuery.data.find(
-			(currency) => currency.code === currencyCode,
-		);
-		if (!matchedCurrency) {
-			return;
-		}
-		setSelectedCurrency(matchedCurrency);
-	}, [setSelectedCurrency, currenciesListQuery, currencyCode]);
-	const currency = useFormattedCurrency(currencyCode);
+		setSelectedCurrencyCode(currencyCode);
+	}, [setSelectedCurrencyCode, currencyCode]);
+	const formattedCurrency = useFormattedCurrency(currencyCode);
 	return (
-		<Button
-			variant={selected ? undefined : "ghost"}
-			onClick={select}
-			isDisabled={currenciesListQuery.status !== "success"}
-		>
-			{currency}
+		<Button variant={selected ? undefined : "ghost"} onClick={select}>
+			{formattedCurrency}
 		</Button>
 	);
 };
@@ -49,12 +31,12 @@ type Props = {
 	selectedCurrencyCode?: CurrencyCode;
 	aggregatedDebts: { currencyCode: CurrencyCode; sum: number }[];
 	onSelectOther: () => void;
-} & Pick<ButtonProps, "setSelectedCurrency">;
+} & Pick<ButtonProps, "setSelectedCurrencyCode">;
 
 export const CurrenciesGroup: React.FC<Props> = ({
 	selectedCurrencyCode,
 	aggregatedDebts,
-	setSelectedCurrency,
+	setSelectedCurrencyCode,
 	onSelectOther,
 }) => {
 	const isSelectedOther =
@@ -62,13 +44,13 @@ export const CurrenciesGroup: React.FC<Props> = ({
 		!aggregatedDebts.some((debt) => debt.currencyCode === selectedCurrencyCode);
 	const otherCurrency = useFormattedCurrency(selectedCurrencyCode);
 	return (
-		<ButtonGroup color="primary">
+		<ButtonGroup color="primary" className="flex-wrap">
 			{aggregatedDebts.map((debt) => (
 				<CurrencyButton
 					key={debt.currencyCode}
 					selected={selectedCurrencyCode === debt.currencyCode}
 					currencyCode={debt.currencyCode}
-					setSelectedCurrency={setSelectedCurrency}
+					setSelectedCurrencyCode={setSelectedCurrencyCode}
 				/>
 			))}
 			<Button

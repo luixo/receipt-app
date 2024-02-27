@@ -9,7 +9,7 @@ import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
 import { mutations } from "app/mutations";
 import type { TRPCQueryOutput } from "app/trpc";
 import { trpc } from "app/trpc";
-import type { Currency } from "app/utils/currency";
+import type { CurrencyCode } from "app/utils/currency";
 
 type Debt = TRPCQueryOutput<"debts.get">;
 
@@ -28,15 +28,15 @@ export const DebtCurrencyInput: React.FC<Props> = ({ debt, isLoading }) => {
 	const updateReceiptMutation = trpc.debts.update.useMutation(
 		useTrpcMutationOptions(mutations.debts.update.options, { context: debt }),
 	);
-	const saveCurrency = React.useCallback(
-		(nextCurrency: Currency) => {
-			if (nextCurrency.code === debt.currencyCode) {
+	const saveCurrencyCode = React.useCallback(
+		(nextCurrencyCode: CurrencyCode) => {
+			if (nextCurrencyCode === debt.currencyCode) {
 				return;
 			}
 			closeModal();
 			updateReceiptMutation.mutate({
 				id: debt.id,
-				update: { currencyCode: nextCurrency!.code },
+				update: { currencyCode: nextCurrencyCode },
 			});
 		},
 		[updateReceiptMutation, debt.id, debt.currencyCode, closeModal],
@@ -55,7 +55,7 @@ export const DebtCurrencyInput: React.FC<Props> = ({ debt, isLoading }) => {
 				{currency}
 			</Button>
 			<CurrenciesPicker
-				onChange={saveCurrency}
+				onChange={saveCurrencyCode}
 				modalOpen={isModalOpen}
 				switchModalOpen={switchModalOpen}
 				topCurrenciesQuery={topCurrenciesQuery}
