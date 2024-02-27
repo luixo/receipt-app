@@ -3,16 +3,16 @@ import { View } from "react-native";
 
 import { Badge, Button, Link } from "@nextui-org/react";
 
-import { ReceiptResolvedParticipantsButton } from "app/components/app/receipt-resolved-participants-button";
-import { Text } from "app/components/base/text";
-import { LockedIcon } from "app/components/locked-icon";
-import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
-import { useSsrFormat } from "app/hooks/use-ssr-format";
-import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { mutations } from "app/mutations";
-import type { TRPCQueryOutput } from "app/trpc";
-import { trpc } from "app/trpc";
-import { round } from "app/utils/math";
+import { ReceiptResolvedParticipantsButton } from "~app/components/app/receipt-resolved-participants-button";
+import { Text } from "~app/components/base/text";
+import { LockedIcon } from "~app/components/locked-icon";
+import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
+import { useSsrFormat } from "~app/hooks/use-ssr-format";
+import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import { mutations } from "~app/mutations";
+import type { TRPCQueryOutput } from "~app/trpc";
+import { trpc } from "~app/trpc";
+import { round } from "~app/utils/math";
 
 type InnerProps = {
 	receipt: TRPCQueryOutput<"receipts.get">;

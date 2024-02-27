@@ -4,17 +4,17 @@ import { Button, Spinner } from "@nextui-org/react";
 import { IoTrashBin as TrashBin } from "react-icons/io5";
 import { useRouter } from "solito/navigation";
 
-import { Input } from "app/components/base/input";
-import { QueryErrorMessage } from "app/components/error-message";
-import { RemoveButton } from "app/components/remove-button";
-import { useBooleanState } from "app/hooks/use-boolean-state";
-import { useSingleInput } from "app/hooks/use-single-input";
-import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { mutations } from "app/mutations";
-import type { TRPCQueryOutput, TRPCQuerySuccessResult } from "app/trpc";
-import { trpc } from "app/trpc";
-import { userNameSchema } from "app/utils/validation";
-import type { UsersId } from "next-app/db/models";
+import { Input } from "~app/components/base/input";
+import { QueryErrorMessage } from "~app/components/error-message";
+import { RemoveButton } from "~app/components/remove-button";
+import { useBooleanState } from "~app/hooks/use-boolean-state";
+import { useSingleInput } from "~app/hooks/use-single-input";
+import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import { mutations } from "~app/mutations";
+import type { TRPCQueryOutput, TRPCQuerySuccessResult } from "~app/trpc";
+import { trpc } from "~app/trpc";
+import { userNameSchema } from "~app/utils/validation";
+import type { UsersId } from "~web/db/models";
 
 import { UserConnectionInput } from "./user-connection-input";
 

@@ -6,15 +6,15 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "solito/navigation";
 import { z } from "zod";
 
-import { Header } from "app/components/base/header";
-import { Input } from "app/components/base/input";
-import { EmptyCard } from "app/components/empty-card";
-import { QueryErrorMessage } from "app/components/error-message";
-import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { mutations } from "app/mutations";
-import type { TRPCQueryResult } from "app/trpc";
-import { trpc } from "app/trpc";
-import { passwordSchema } from "app/utils/validation";
+import { Header } from "~app/components/base/header";
+import { Input } from "~app/components/base/input";
+import { EmptyCard } from "~app/components/empty-card";
+import { QueryErrorMessage } from "~app/components/error-message";
+import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import { mutations } from "~app/mutations";
+import type { TRPCQueryResult } from "~app/trpc";
+import { trpc } from "~app/trpc";
+import { passwordSchema } from "~app/utils/validation";
 
 type ChangePasswordForm = {
 	password: string;

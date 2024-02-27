@@ -1,5 +1,5 @@
-import type { AddParameters } from "app/utils/types";
-import type { ExchangeRateOptions } from "next-app/providers/exchange-rate";
+import type { AddParameters } from "~app/utils/types";
+import type { ExchangeRateOptions } from "~web/providers/exchange-rate";
 
 export type ExchangeRateOptionsMock = ExchangeRateOptions & {
 	broken: boolean;

@@ -26,8 +26,8 @@ import type {
 	FlattenObject,
 	SplitStringByComma,
 	UnionToIntersection,
-} from "app/utils/types";
-import type { AppRouter } from "next-app/pages/api/trpc/[trpc]";
+} from "~app/utils/types";
+import type { AppRouter } from "~web/pages/api/trpc/[trpc]";
 
 type TypeKey = "queries" | "mutations";
 

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { fallback } from "app/utils/validation";
+import { fallback } from "~app/utils/validation";
 
 declare global {
 	// eslint-disable-next-line @typescript-eslint/no-namespace

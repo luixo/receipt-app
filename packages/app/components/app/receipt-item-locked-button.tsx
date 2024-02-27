@@ -6,10 +6,10 @@ import {
 	MdLockOpen as UnlockedIcon,
 } from "react-icons/md";
 
-import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { mutations } from "app/mutations";
-import { trpc } from "app/trpc";
-import type { ReceiptItemsId, ReceiptsId } from "next-app/db/models";
+import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import { mutations } from "~app/mutations";
+import { trpc } from "~app/trpc";
+import type { ReceiptItemsId, ReceiptsId } from "~web/db/models";
 
 type Props = {
 	receiptId: ReceiptsId;

@@ -1,7 +1,7 @@
 import React from "react";
 
-import { CookieContext } from "app/contexts/cookie-context";
-import { nextCookieContext } from "next-app/utils/client-cookies";
+import { CookieContext } from "~app/contexts/cookie-context";
+import { nextCookieContext } from "~web/utils/client-cookies";
 
 import type { Props } from "./index";
 

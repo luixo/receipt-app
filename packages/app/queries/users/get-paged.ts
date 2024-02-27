@@ -1,6 +1,6 @@
-import type { TRPCQueryInput } from "app/trpc";
-import { createStore, updateWithFn } from "app/utils/store";
-import type { Setters } from "app/utils/types";
+import type { TRPCQueryInput } from "~app/trpc";
+import { createStore, updateWithFn } from "~app/utils/store";
+import type { Setters } from "~app/utils/types";
 
 type Input = TRPCQueryInput<"users.getPaged">;
 

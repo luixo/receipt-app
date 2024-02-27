@@ -1,10 +1,10 @@
-import { cache } from "app/cache";
-import type { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { cache } from "~app/cache";
+import type { UseContextedMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type {
 	TRPCMutationInput,
 	TRPCMutationOutput,
 	TRPCQueryOutput,
-} from "app/trpc";
+} from "~app/trpc";
 
 type DebtUserSnapshot = TRPCQueryOutput<"debts.getUser">[number];
 type DebtSnapshot = TRPCQueryOutput<"debts.get">;

@@ -1,9 +1,9 @@
 import { faker } from "@faker-js/faker";
 
-import type { TestContext } from "@tests/backend/utils/test";
-import type { CurrencyCode } from "app/utils/currency";
-import { YEAR } from "app/utils/time";
-import { asFixedSizeArray, id as idFn } from "app/utils/utils";
+import type { CurrencyCode } from "~app/utils/currency";
+import { YEAR } from "~app/utils/time";
+import { asFixedSizeArray, id as idFn } from "~app/utils/utils";
+import type { TestContext } from "~tests/backend/utils/test";
 import type {
 	AccountsId,
 	DebtsId,
@@ -11,9 +11,9 @@ import type {
 	ReceiptsId,
 	SessionsSessionId,
 	UsersId,
-} from "next-app/db/models";
-import type { Role } from "next-app/handlers/receipts/utils";
-import { generatePasswordData } from "next-app/utils/crypto";
+} from "~web/db/models";
+import type { Role } from "~web/handlers/receipts/utils";
+import { generatePasswordData } from "~web/utils/crypto";
 
 type AccountSettingsData = {
 	autoAcceptDebts: boolean;

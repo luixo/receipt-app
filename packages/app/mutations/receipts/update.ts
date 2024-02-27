@@ -1,11 +1,11 @@
-import { cache } from "app/cache";
-import type { SnapshotFn, UpdateFn } from "app/cache/utils";
-import type { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { cache } from "~app/cache";
+import type { SnapshotFn, UpdateFn } from "~app/cache/utils";
+import type { UseContextedMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type {
 	TRPCMutationInput,
 	TRPCMutationOutput,
 	TRPCQueryOutput,
-} from "app/trpc";
+} from "~app/trpc";
 
 type ReceiptSnapshot = TRPCQueryOutput<"receipts.get">;
 

@@ -1,5 +1,5 @@
-import * as utils from "app/cache/utils";
-import type { TRPCQueryOutput, TRPCReactContext } from "app/trpc";
+import * as utils from "~app/cache/utils";
+import type { TRPCQueryOutput, TRPCReactContext } from "~app/trpc";
 
 type Controller = TRPCReactContext["account"]["get"];
 

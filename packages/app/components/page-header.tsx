@@ -5,8 +5,8 @@ import { H1 } from "@expo/html-elements";
 import { IoMdArrowRoundBack as BackArrow } from "react-icons/io";
 import { Link } from "solito/link";
 
-import { PageTitle } from "app/components/base/page-title";
-import { Text } from "app/components/base/text";
+import { PageTitle } from "~app/components/base/page-title";
+import { Text } from "~app/components/base/text";
 
 type Props = {
 	backHref?: string;

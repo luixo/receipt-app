@@ -1,13 +1,13 @@
 import React from "react";
 import { View } from "react-native";
 
-import { LoadableUser } from "app/components/app/loadable-user";
-import { RemoveButton } from "app/components/remove-button";
-import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { mutations } from "app/mutations";
-import type { TRPCQueryOutput } from "app/trpc";
-import { trpc } from "app/trpc";
-import type { ReceiptItemsId, ReceiptsId } from "next-app/db/models";
+import { LoadableUser } from "~app/components/app/loadable-user";
+import { RemoveButton } from "~app/components/remove-button";
+import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import { mutations } from "~app/mutations";
+import type { TRPCQueryOutput } from "~app/trpc";
+import { trpc } from "~app/trpc";
+import type { ReceiptItemsId, ReceiptsId } from "~web/db/models";
 
 import { ReceiptItemPartInput } from "./receipt-item-part-input";
 

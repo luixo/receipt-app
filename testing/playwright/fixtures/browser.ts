@@ -1,4 +1,4 @@
-import type { CookieValues } from "app/utils/cookie-data";
+import type { CookieValues } from "~app/utils/cookie-data";
 
 import { createMixin } from "./utils";
 

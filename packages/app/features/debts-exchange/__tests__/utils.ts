@@ -1,9 +1,9 @@
 import type { Locator } from "@playwright/test";
 
-import { test as originalTest } from "@tests/frontend/fixtures";
-import type { Fixtures as DebtsGroupFixtures } from "app/components/app/__tests__/debts-group.utils";
-import { withFixtures as withDebtsGroupFixtures } from "app/components/app/__tests__/debts-group.utils";
-import type { UsersId } from "next-app/db/models";
+import type { Fixtures as DebtsGroupFixtures } from "~app/components/app/__tests__/debts-group.utils";
+import { withFixtures as withDebtsGroupFixtures } from "~app/components/app/__tests__/debts-group.utils";
+import { test as originalTest } from "~tests/frontend/fixtures";
+import type { UsersId } from "~web/db/models";
 
 import type { GenerateDebts, GenerateUser } from "./generators";
 import { defaultGenerateDebts, defaultGenerateUser } from "./generators";

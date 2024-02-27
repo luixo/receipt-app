@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { fallback } from "app/utils/validation";
+import { fallback } from "~app/utils/validation";
 
 export const LAST_COLOR_MODE_COOKIE_NAME = "receipt_lastColorMode";
 export const SELECTED_COLOR_MODE_COOKIE_NAME = "receipt_selectedColorMode";

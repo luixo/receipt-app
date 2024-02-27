@@ -1,6 +1,6 @@
 import type { Locator } from "@playwright/test";
 
-import { createMixin } from "@tests/frontend/fixtures/utils";
+import { createMixin } from "~tests/frontend/fixtures/utils";
 
 export type Fixtures = {
 	debtsGroup: Locator;

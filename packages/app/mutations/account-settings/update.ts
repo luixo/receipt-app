@@ -1,5 +1,5 @@
-import { cache } from "app/cache";
-import type { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
+import { cache } from "~app/cache";
+import type { UseContextedMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 
 export const options: UseContextedMutationOptions<"accountSettings.update"> = {
 	onMutate: (controllerContext) => (variables) =>

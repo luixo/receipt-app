@@ -9,8 +9,8 @@ import {
 } from "react-icons/bs";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 
-import { useBooleanState } from "app/hooks/use-boolean-state";
-import type { TRPCMutationResult } from "app/trpc";
+import { useBooleanState } from "~app/hooks/use-boolean-state";
+import type { TRPCMutationResult } from "~app/trpc";
 
 const input = tv({
 	base: "",

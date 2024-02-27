@@ -1,7 +1,6 @@
 .history
-apps/next/.next
-apps/next/.expo
-apps/expo/.expo
+apps/web/.next
+apps/mobile/.expo
 ios/
 android/
 **/*-snapshots/**/*.json

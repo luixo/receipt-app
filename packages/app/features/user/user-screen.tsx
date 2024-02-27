@@ -2,10 +2,10 @@ import React from "react";
 
 import { useParams } from "solito/navigation";
 
-import { LoadableUser } from "app/components/app/loadable-user";
-import { PageHeader } from "app/components/page-header";
-import { trpc } from "app/trpc";
-import type { AppPage } from "next-app/types/page";
+import { LoadableUser } from "~app/components/app/loadable-user";
+import { PageHeader } from "~app/components/page-header";
+import { trpc } from "~app/trpc";
+import type { AppPage } from "~web/types/page";
 
 import { User } from "./user";
 

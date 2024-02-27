@@ -1,4 +1,4 @@
-import * as utils from "app/cache/utils";
+import * as utils from "~app/cache/utils";
 
 import * as get from "./get";
 import * as getForeign from "./get-foreign";

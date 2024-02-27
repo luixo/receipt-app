@@ -4,15 +4,15 @@ import type { MutationOptions } from "@tanstack/react-query";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 
-import type { ControllerContext } from "app/cache/utils";
+import type { ControllerContext } from "~app/cache/utils";
 import type {
 	TRPCError,
 	TRPCMutationInput,
 	TRPCMutationKey,
 	TRPCMutationOutput,
-} from "app/trpc";
-import { trpc } from "app/trpc";
-import type { Exact, MaybeAddElementToArray } from "app/utils/types";
+} from "~app/trpc";
+import { trpc } from "~app/trpc";
+import type { Exact, MaybeAddElementToArray } from "~app/utils/types";
 
 export type TRPCMutationOptions<
 	Path extends TRPCMutationKey,

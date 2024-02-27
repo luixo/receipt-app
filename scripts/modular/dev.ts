@@ -22,15 +22,15 @@ const main = async () => {
 	const result = concurrently([
 		{
 			name: "expo",
-			command: "yarn workspace expo-app dev",
+			command: "yarn workspace @ra/mobile dev",
 			env: {
 				BACKEND_HOST: host,
 			},
 			prefixColor: "blue",
 		},
 		{
-			name: "next",
-			command: "yarn workspace next-app dev",
+			name: "web",
+			command: "yarn workspace @ra/web dev",
 			env: {
 				PORT: port,
 			},

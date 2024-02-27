@@ -3,11 +3,11 @@ import { View } from "react-native";
 
 import { Button } from "@nextui-org/react";
 
-import { LoadableUser } from "app/components/app/loadable-user";
-import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { mutations } from "app/mutations";
-import type { TRPCQueryOutput } from "app/trpc";
-import { trpc } from "app/trpc";
+import { LoadableUser } from "~app/components/app/loadable-user";
+import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import { mutations } from "~app/mutations";
+import type { TRPCQueryOutput } from "~app/trpc";
+import { trpc } from "~app/trpc";
 
 import { ReceiptSnippet } from "./receipt-snippet";
 

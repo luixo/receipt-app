@@ -2,7 +2,7 @@ import React from "react";
 
 import { useRouter } from "solito/navigation";
 
-import { trpc } from "app/trpc";
+import { trpc } from "~app/trpc";
 
 export const AuthEffect: React.FC = () => {
 	const router = useRouter();

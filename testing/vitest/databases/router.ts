@@ -5,9 +5,9 @@ import type { StartedTestContainer } from "testcontainers";
 import { GenericContainer } from "testcontainers";
 import { z } from "zod";
 
-import { getDatabase } from "next-app/db";
-import { migrate } from "next-app/db/migration";
-import type { ReceiptsDatabase } from "next-app/db/types";
+import { getDatabase } from "~web/db";
+import { migrate } from "~web/db/migration";
+import type { ReceiptsDatabase } from "~web/db/types";
 
 import type { ConnectionData } from "./connection";
 import { makeConnectionString } from "./connection";

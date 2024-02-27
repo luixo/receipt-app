@@ -1,12 +1,12 @@
 import React from "react";
 
-import { Input } from "app/components/base/input";
-import { useSingleInput } from "app/hooks/use-single-input";
-import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { mutations } from "app/mutations";
-import { trpc } from "app/trpc";
-import { receiptNameSchema } from "app/utils/validation";
-import type { ReceiptsId } from "next-app/db/models";
+import { Input } from "~app/components/base/input";
+import { useSingleInput } from "~app/hooks/use-single-input";
+import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import { mutations } from "~app/mutations";
+import { trpc } from "~app/trpc";
+import { receiptNameSchema } from "~app/utils/validation";
+import type { ReceiptsId } from "~web/db/models";
 
 type Props = {
 	receiptId: ReceiptsId;

@@ -2,8 +2,8 @@ import React from "react";
 
 import { useRouter } from "solito/navigation";
 
-import { QueryErrorMessage } from "app/components/error-message";
-import { trpc } from "app/trpc";
+import { QueryErrorMessage } from "~app/components/error-message";
+import { trpc } from "~app/trpc";
 
 export const NoAuthEffect: React.FC = () => {
 	const router = useRouter();

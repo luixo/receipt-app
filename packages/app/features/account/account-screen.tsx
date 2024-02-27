@@ -5,18 +5,18 @@ import { useQueryClient } from "@tanstack/react-query";
 import { FaUser as AccountIcon } from "react-icons/fa";
 import { useRouter } from "solito/navigation";
 
-import { Input } from "app/components/base/input";
-import { QueryErrorMessage } from "app/components/error-message";
-import { PageHeader } from "app/components/page-header";
-import { ChangePasswordScreen } from "app/features/change-password/change-password-screen";
-import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
-import { useSingleInput } from "app/hooks/use-single-input";
-import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { mutations } from "app/mutations";
-import type { TRPCQueryOutput, TRPCQuerySuccessResult } from "app/trpc";
-import { trpc } from "app/trpc";
-import { userNameSchema } from "app/utils/validation";
-import type { AppPage } from "next-app/types/page";
+import { Input } from "~app/components/base/input";
+import { QueryErrorMessage } from "~app/components/error-message";
+import { PageHeader } from "~app/components/page-header";
+import { ChangePasswordScreen } from "~app/features/change-password/change-password-screen";
+import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
+import { useSingleInput } from "~app/hooks/use-single-input";
+import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import { mutations } from "~app/mutations";
+import type { TRPCQueryOutput, TRPCQuerySuccessResult } from "~app/trpc";
+import { trpc } from "~app/trpc";
+import { userNameSchema } from "~app/utils/validation";
+import type { AppPage } from "~web/types/page";
 
 import { AccountAvatarInput } from "./account-avatar-input";
 

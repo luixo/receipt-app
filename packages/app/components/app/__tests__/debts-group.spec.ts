@@ -1,8 +1,8 @@
 import { TRPCError } from "@trpc/server";
 
-import { expect } from "@tests/frontend/fixtures";
-import { defaultGenerateDebts } from "app/features/debts-exchange/__tests__/generators";
-import { test } from "app/features/debts-exchange/__tests__/utils";
+import { defaultGenerateDebts } from "~app/features/debts-exchange/__tests__/generators";
+import { test } from "~app/features/debts-exchange/__tests__/utils";
+import { expect } from "~tests/frontend/fixtures";
 
 test("'currency.getList' pending / error", async ({
 	api,

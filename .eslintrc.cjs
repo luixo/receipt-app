@@ -45,7 +45,7 @@ module.exports = {
 		],
 		"no-void": ["error", { allowAsStatement: true }],
 		"react/require-default-props": "off",
-		"@next/next/no-html-link-for-pages": ["warn", "./apps/next/src/pages"],
+		"@next/next/no-html-link-for-pages": ["warn", "./apps/web/src/pages"],
 		// Typescript version of default-case below
 		"default-case": "off",
 		"@typescript-eslint/switch-exhaustiveness-check": "error",
@@ -74,20 +74,15 @@ module.exports = {
 						position: "before",
 					},
 					{
-						pattern: "{next-app,@tests,app}/**",
+						pattern: "~*/**",
 						group: "internal",
 						position: "before",
 					},
 				],
-				pathGroupsExcludedImportTypes: [
-					"react",
-					"react-native",
-					"app",
-					"next-app",
-					"@tests",
-				],
+				pathGroupsExcludedImportTypes: ["react", "react-native", "~*/**"],
 			},
 		],
+		"import/extensions": "off",
 		"no-console": "error",
 		"no-alert": "error",
 		"react-hooks/exhaustive-deps": [
@@ -115,8 +110,8 @@ module.exports = {
 			rules: { "no-console": "off" },
 		},
 		...[
-			["apps/next", ["next.config.js", "**/*.test.ts", "**/*.spec.ts"]],
-			["apps/expo"],
+			["apps/web", ["next.config.js", "**/*.test.ts", "**/*.spec.ts"]],
+			["apps/mobile"],
 			["packages/app", ["**/*.spec.ts"]],
 			["scripts", true],
 			["testing/vitest", true],
@@ -141,7 +136,7 @@ module.exports = {
 			files: ["*.js"],
 		},
 		{
-			files: ["apps/next/src/email/**/*"],
+			files: ["apps/web/src/email/**/*"],
 			rules: {
 				"tailwindcss/no-custom-classname": "off",
 			},
@@ -158,7 +153,7 @@ module.exports = {
 	settings: {
 		tailwindcss: {
 			callees: ["tv"],
-			config: "packages/app/tailwind.config.ts",
+			config: "apps/web/tailwind.config.ts",
 			ignoredKeys: ["responsiveVariants"],
 			whitelist: [
 				"text-foreground",

@@ -1,5 +1,5 @@
-import { test as originalTest } from "@tests/frontend/fixtures";
-import type { ReceiptsId, UsersId } from "next-app/db/models";
+import { test as originalTest } from "~tests/frontend/fixtures";
+import type { ReceiptsId, UsersId } from "~web/db/models";
 
 import type {
 	GenerateReceipt,

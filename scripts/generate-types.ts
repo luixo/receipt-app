@@ -1,5 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
+
 import { recase } from "@kristiandupont/recase";
 import type { TableColumn } from "extract-pg-schema";
 import { generateIndexFile, processDatabase } from "kanel";
@@ -14,7 +15,7 @@ const run = async () => {
 		if (!process.env.DATABASE_URL) {
 			throw new Error("Expected to have process.env.DATABASE_URL variable!");
 		}
-		const outputPath = path.join(__dirname, "../apps/next/src/db/models");
+		const outputPath = path.join(__dirname, "../apps/web/src/db/models");
 		await processDatabase({
 			connection: process.env.DATABASE_URL,
 			outputPath,

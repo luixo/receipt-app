@@ -2,11 +2,11 @@ import React from "react";
 
 import { useRouter, useSearchParams } from "solito/navigation";
 
-import { PageHeader } from "app/components/page-header";
-import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { mutations } from "app/mutations";
-import { trpc } from "app/trpc";
-import type { AppPage } from "next-app/types/page";
+import { PageHeader } from "~app/components/page-header";
+import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import { mutations } from "~app/mutations";
+import { trpc } from "~app/trpc";
+import type { AppPage } from "~web/types/page";
 
 import { ConfirmEmail } from "./confirm-email";
 

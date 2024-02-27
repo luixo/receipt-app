@@ -4,14 +4,14 @@ import { View } from "react-native";
 import { Spinner } from "@nextui-org/react";
 import { usePathname } from "solito/navigation";
 
-import { LoadableUser } from "app/components/app/loadable-user";
-import { EmptyCard } from "app/components/empty-card";
-import { QueryErrorMessage } from "app/components/error-message";
-import { PageHeader } from "app/components/page-header";
-import { useRefs } from "app/hooks/use-refs";
-import type { TRPCQuerySuccessResult } from "app/trpc";
-import { trpc } from "app/trpc";
-import type { UsersId } from "next-app/db/models";
+import { LoadableUser } from "~app/components/app/loadable-user";
+import { EmptyCard } from "~app/components/empty-card";
+import { QueryErrorMessage } from "~app/components/error-message";
+import { PageHeader } from "~app/components/page-header";
+import { useRefs } from "~app/hooks/use-refs";
+import type { TRPCQuerySuccessResult } from "~app/trpc";
+import { trpc } from "~app/trpc";
+import type { UsersId } from "~web/db/models";
 
 import { AcceptAllIntentionsButton } from "./accept-all-intentions-button";
 import { InboundDebtIntention } from "./inbound-debt-intention";

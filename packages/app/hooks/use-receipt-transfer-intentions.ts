@@ -1,4 +1,4 @@
-import { trpc } from "app/trpc";
+import { trpc } from "~app/trpc";
 
 export const useReceiptTransfersIntentions = () => {
 	const intentions = trpc.receiptTransferIntentions.getAll.useQuery();

@@ -3,8 +3,8 @@ import React from "react";
 import type { Pagination } from "@nextui-org/react";
 import type { QueryObserverResult } from "@tanstack/react-query";
 
-import { useQueryParam } from "app/hooks/use-query-param";
-import type { TRPCError } from "app/trpc";
+import { useQueryParam } from "~app/hooks/use-query-param";
+import type { TRPCError } from "~app/trpc";
 
 type CursorPagingResult<T extends { count: number }> = {
 	pagination: React.ComponentProps<typeof Pagination>;

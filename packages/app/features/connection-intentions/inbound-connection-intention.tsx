@@ -3,13 +3,13 @@ import { View } from "react-native";
 
 import { Button } from "@nextui-org/react";
 
-import { UsersSuggest } from "app/components/app/users-suggest";
-import { Text } from "app/components/base/text";
-import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { mutations } from "app/mutations";
-import type { TRPCQueryOutput } from "app/trpc";
-import { trpc } from "app/trpc";
-import type { UsersId } from "next-app/db/models";
+import { UsersSuggest } from "~app/components/app/users-suggest";
+import { Text } from "~app/components/base/text";
+import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import { mutations } from "~app/mutations";
+import type { TRPCQueryOutput } from "~app/trpc";
+import { trpc } from "~app/trpc";
+import type { UsersId } from "~web/db/models";
 
 type Props = {
 	intention: TRPCQueryOutput<"accountConnectionIntentions.getAll">["inbound"][number];

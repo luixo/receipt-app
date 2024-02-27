@@ -6,10 +6,10 @@ import {
 	MdRemoveDone as UndoneIcon,
 } from "react-icons/md";
 
-import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { mutations } from "app/mutations";
-import { trpc } from "app/trpc";
-import type { ReceiptsId, UsersId } from "next-app/db/models";
+import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import { mutations } from "~app/mutations";
+import { trpc } from "~app/trpc";
+import type { ReceiptsId, UsersId } from "~web/db/models";
 
 type Props = {
 	receiptId: ReceiptsId;

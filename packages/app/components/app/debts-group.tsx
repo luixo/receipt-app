@@ -3,10 +3,10 @@ import { View } from "react-native";
 
 import { tv } from "@nextui-org/react";
 
-import { Text } from "app/components/base/text";
-import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
-import type { CurrencyCode } from "app/utils/currency";
-import { round } from "app/utils/math";
+import { Text } from "~app/components/base/text";
+import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
+import type { CurrencyCode } from "~app/utils/currency";
+import { round } from "~app/utils/math";
 
 const debt = tv({
 	variants: {

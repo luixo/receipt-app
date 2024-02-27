@@ -1,8 +1,8 @@
 import { z } from "zod";
 import { zfd } from "zod-form-data";
 
-import type { CurrencyCode } from "app/utils/currency";
-import type { AccountsId, UsersId } from "next-app/db/models";
+import type { CurrencyCode } from "~app/utils/currency";
+import type { AccountsId, UsersId } from "~web/db/models";
 
 const getLengthMessage = (
 	amount: number,

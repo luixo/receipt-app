@@ -1,5 +1,5 @@
 {
-	"name": "vitest",
+	"name": "@ra/vitest",
 	"type": "module",
 	"scripts": {
 		"test": "TZ=GMT NODE_OPTIONS='--loader tsx --no-warnings' vitest"

@@ -1,10 +1,10 @@
 import type { Faker } from "@faker-js/faker";
 
-import type { Amount } from "@tests/frontend/utils/generators";
-import { generateAmount } from "@tests/frontend/utils/generators";
-import type { TRPCQueryOutput } from "app/trpc";
-import type { AccountsId, UsersId } from "next-app/db/models";
-import { CURRENCY_CODES } from "next-app/utils/currency";
+import type { TRPCQueryOutput } from "~app/trpc";
+import { generateAmount } from "~tests/frontend/utils/generators";
+import type { Amount } from "~tests/frontend/utils/generators";
+import type { AccountsId, UsersId } from "~web/db/models";
+import { CURRENCY_CODES } from "~web/utils/currency";
 
 export type GenerateSelfAccount = (opts: { faker: Faker }) => {
 	accountId: AccountsId;

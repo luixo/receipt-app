@@ -6,17 +6,17 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "solito/navigation";
 import { z } from "zod";
 
-import { Input } from "app/components/base/input";
-import { PageHeader } from "app/components/page-header";
-import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { mutations } from "app/mutations";
-import { trpc } from "app/trpc";
+import { Input } from "~app/components/base/input";
+import { PageHeader } from "~app/components/page-header";
+import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import { mutations } from "~app/mutations";
+import { trpc } from "~app/trpc";
 import {
 	emailSchema,
 	passwordSchema,
 	userNameSchema,
-} from "app/utils/validation";
-import type { AppPage } from "next-app/types/page";
+} from "~app/utils/validation";
+import type { AppPage } from "~web/types/page";
 
 type RegistrationForm = {
 	email: string;

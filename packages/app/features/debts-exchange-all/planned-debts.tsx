@@ -7,20 +7,20 @@ import type { UseFormReturn } from "react-hook-form";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 
-import { Input } from "app/components/base/input";
-import { Text } from "app/components/base/text";
-import { ErrorMessage } from "app/components/error-message";
-import { useFormattedCurrencies } from "app/hooks/use-formatted-currencies";
-import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
-import { useInputController } from "app/hooks/use-input-controller";
-import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { mutations } from "app/mutations";
-import { trpc } from "app/trpc";
-import type { CurrencyCode } from "app/utils/currency";
-import { round } from "app/utils/math";
-import { nonNullishGuard } from "app/utils/utils";
-import { currencyCodeSchema, currencyRateSchema } from "app/utils/validation";
-import type { UsersId } from "next-app/db/models";
+import { Input } from "~app/components/base/input";
+import { Text } from "~app/components/base/text";
+import { ErrorMessage } from "~app/components/error-message";
+import { useFormattedCurrencies } from "~app/hooks/use-formatted-currencies";
+import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
+import { useInputController } from "~app/hooks/use-input-controller";
+import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import { mutations } from "~app/mutations";
+import { trpc } from "~app/trpc";
+import type { CurrencyCode } from "~app/utils/currency";
+import { round } from "~app/utils/math";
+import { nonNullishGuard } from "~app/utils/utils";
+import { currencyCodeSchema, currencyRateSchema } from "~app/utils/validation";
+import type { UsersId } from "~web/db/models";
 
 const getDefaultValues = (
 	selectedCurrencyCode: CurrencyCode,

@@ -1,12 +1,15 @@
 import * as React from "react";
 
-import { SSRContext } from "app/contexts/ssr-context";
-import { LOCALE_COOKIE_NAME, getDateTimeLocale } from "app/utils/cookie/locale";
+import { SSRContext } from "~app/contexts/ssr-context";
+import {
+	LOCALE_COOKIE_NAME,
+	getDateTimeLocale,
+} from "~app/utils/cookie/locale";
 import {
 	TZ_OFFSET_COOKIE_NAME,
 	getTimezoneOffset,
-} from "app/utils/cookie/tz-offset";
-import { MINUTE } from "app/utils/time";
+} from "~app/utils/cookie/tz-offset";
+import { MINUTE } from "~app/utils/time";
 
 export const useSsrFormat = () => {
 	const {

@@ -17,13 +17,13 @@ import type {
 	TRPCQueryInput,
 	TRPCQueryKey,
 	TRPCQueryOutput,
-} from "app/trpc";
-import type { Currency, CurrencyCode } from "app/utils/currency";
-import type { TransformerResult } from "app/utils/trpc";
-import { transformer } from "app/utils/trpc";
-import type { ControlledPromise } from "app/utils/utils";
-import { createPromise } from "app/utils/utils";
-import { getCurrencies } from "next-app/utils/currency";
+} from "~app/trpc";
+import type { Currency, CurrencyCode } from "~app/utils/currency";
+import type { TransformerResult } from "~app/utils/trpc";
+import { transformer } from "~app/utils/trpc";
+import type { ControlledPromise } from "~app/utils/utils";
+import { createPromise } from "~app/utils/utils";
+import { getCurrencies } from "~web/utils/currency";
 
 import type { appRouter } from "../global/router";
 

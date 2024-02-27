@@ -1,14 +1,14 @@
 import type { QueryClient } from "@tanstack/react-query";
 import { getQueryKey } from "@trpc/react-query";
 
-import * as utils from "app/cache/utils";
-import { trpc } from "app/trpc";
+import * as utils from "~app/cache/utils";
+import { trpc } from "~app/trpc";
 import type {
 	TRPCQueryInput,
 	TRPCQueryOutput,
 	TRPCReactContext,
-} from "app/trpc";
-import type { UsersId } from "next-app/db/models";
+} from "~app/trpc";
+import type { UsersId } from "~web/db/models";
 
 type Controller = TRPCReactContext["users"]["getForeign"];
 

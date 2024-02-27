@@ -1,4 +1,4 @@
-import * as utils from "app/cache/utils";
+import * as utils from "~app/cache/utils";
 
 import * as getAll from "./get-all";
 

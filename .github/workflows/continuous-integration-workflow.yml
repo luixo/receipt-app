@@ -51,27 +51,27 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup-env
-      - name: Build Next.js
+      - name: Build web app
         run: yarn web:build
         env:
           NODE_ENV: test
           S3_BUCKET: test-bucket
           S3_ENDPOINT: https://fake-endpoint.org
           ANALYZE_BUNDLE: true
-      - name: Upload Next.js build dir
+      - name: Upload web build dir
         uses: actions/upload-artifact@v3
         with:
-          name: nextjs-build
+          name: web-build
           path: |
-            apps/next/.next
-            !apps/next/.next/cache/**
+            apps/web/.next
+            !apps/web/.next/cache/**
             !*.map
           retention-days: 0
       - name: Upload bundle analyzer results
         uses: actions/upload-artifact@v3
         with:
           name: bundle-analyzer
-          path: apps/next/.next/analyze
+          path: apps/web/.next/analyze
 
   backend-test:
     name: Backend tests
@@ -111,11 +111,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup-env
-      - name: Fetch Next.js build
+      - name: Fetch web build
         uses: actions/download-artifact@v3
         with:
-          name: nextjs-build
-          path: apps/next/.next
+          name: web-build
+          path: apps/web/.next
       - name: Run frontend tests
         id: tests
         # see https://github.com/microsoft/playwright/issues/6500
@@ -153,16 +153,16 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: ./.github/actions/setup-env
-      - name: Fetch Next.js build
+      - name: Fetch web build
         uses: actions/download-artifact@v3
         with:
-          name: nextjs-build
-          path: apps/next/.next
+          name: web-build
+          path: apps/web/.next
       - name: Analyze bundle sizes
         uses: transferwise/actions-next-bundle-analyzer@master
         with:
           # Filename of the workflow this step is defined in
           workflow-id: continuous-integration-workflow.yml
-          working-directory: /apps/next
+          working-directory: /apps/web
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

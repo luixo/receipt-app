@@ -2,8 +2,8 @@ import React from "react";
 
 import { Button, ButtonGroup } from "@nextui-org/react";
 
-import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
-import type { CurrencyCode } from "app/utils/currency";
+import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
+import type { CurrencyCode } from "~app/utils/currency";
 
 type ButtonProps = {
 	selected: boolean;

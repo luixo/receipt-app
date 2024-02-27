@@ -2,8 +2,9 @@ import React from "react";
 
 import type { LinkingOptions } from "@react-navigation/native";
 import { NavigationContainer } from "@react-navigation/native";
-import type { AppParamList } from "expo-app/navigation";
 import * as Linking from "expo-linking";
+
+import type { AppParamList } from "~mobile/navigation";
 
 export const NavigationProvider: React.FC<React.PropsWithChildren<object>> = ({
 	children,

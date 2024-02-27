@@ -1,4 +1,4 @@
-import { trpc } from "app/trpc";
+import { trpc } from "~app/trpc";
 
 export const useConnectionIntentions = () => {
 	const connections = trpc.accountConnectionIntentions.getAll.useQuery(

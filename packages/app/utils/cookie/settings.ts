@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { fallback } from "app/utils/validation";
+import { fallback } from "~app/utils/validation";
 
 export const SETTINGS_COOKIE_NAME = "receipt_settings";
 

@@ -4,16 +4,16 @@ import { View } from "react-native";
 import { Accordion, AccordionItem } from "@nextui-org/react";
 import { FaUser as UserIcon } from "react-icons/fa";
 
-import { Text } from "app/components/base/text";
-import type { TRPCQueryOutput } from "app/trpc";
-import type { CurrencyCode } from "app/utils/currency";
+import { Text } from "~app/components/base/text";
+import type { TRPCQueryOutput } from "~app/trpc";
+import type { CurrencyCode } from "~app/utils/currency";
 import {
 	getDecimalsPower,
 	getItemCalculations,
 	getParticipantSums,
-} from "app/utils/receipt-item";
-import { nonNullishGuard } from "app/utils/utils";
-import type { ReceiptsId, UsersId } from "next-app/db/models";
+} from "~app/utils/receipt-item";
+import { nonNullishGuard } from "~app/utils/utils";
+import type { ReceiptsId, UsersId } from "~web/db/models";
 
 import { AddReceiptParticipantForm } from "./add-receipt-participant-form";
 import { ReceiptParticipant } from "./receipt-participant";

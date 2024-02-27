@@ -1,16 +1,12 @@
-import { rotate } from "app/utils/array";
-import { getIndexByString } from "app/utils/hash";
+import { rotate } from "~app/utils/array";
+import { getIndexByString } from "~app/utils/hash";
 import {
 	entries,
 	mapObjectKeys,
 	mapObjectValues,
 	values,
-} from "app/utils/object";
-import type {
-	ReceiptItemsId,
-	ReceiptsId,
-	UsersId,
-} from "next-app/src/db/models";
+} from "~app/utils/object";
+import type { ReceiptItemsId, ReceiptsId, UsersId } from "~web/db/models";
 
 export const getDecimalsPower = (decimalDigits = 2) => 10 ** decimalDigits;
 

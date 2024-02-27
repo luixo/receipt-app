@@ -4,10 +4,10 @@ import { Badge, Button, Link } from "@nextui-org/react";
 import { FaUsers as UsersIcon } from "react-icons/fa";
 import { MdAdd as AddIcon, MdLink as LinkIcon } from "react-icons/md";
 
-import { PageHeader } from "app/components/page-header";
-import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
-import { useConnectionIntentions } from "app/hooks/use-connection-intentions";
-import type { AppPage } from "next-app/types/page";
+import { PageHeader } from "~app/components/page-header";
+import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
+import { useConnectionIntentions } from "~app/hooks/use-connection-intentions";
+import type { AppPage } from "~web/types/page";
 
 import { Users } from "./users";
 

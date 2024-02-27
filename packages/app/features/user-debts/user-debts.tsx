@@ -6,16 +6,16 @@ import { BsCurrencyExchange as ExchangeIcon } from "react-icons/bs";
 import { MdAdd as AddIcon } from "react-icons/md";
 import { useRouter } from "solito/navigation";
 
-import { DebtsGroup } from "app/components/app/debts-group";
-import { LoadableUser } from "app/components/app/loadable-user";
-import { QueryErrorMessage } from "app/components/error-message";
-import { PageHeader } from "app/components/page-header";
-import { ShowResolvedDebtsOption } from "app/features/settings/show-resolved-debts-option";
-import { useAggregatedDebts } from "app/hooks/use-aggregated-debts";
-import type { TRPCQuerySuccessResult } from "app/trpc";
-import { trpc } from "app/trpc";
-import { useShowResolvedDebts } from "next-app/hooks/use-show-resolved-debts";
-import type { UsersId } from "next-app/src/db/models";
+import { DebtsGroup } from "~app/components/app/debts-group";
+import { LoadableUser } from "~app/components/app/loadable-user";
+import { QueryErrorMessage } from "~app/components/error-message";
+import { PageHeader } from "~app/components/page-header";
+import { ShowResolvedDebtsOption } from "~app/features/settings/show-resolved-debts-option";
+import { useAggregatedDebts } from "~app/hooks/use-aggregated-debts";
+import type { TRPCQuerySuccessResult } from "~app/trpc";
+import { trpc } from "~app/trpc";
+import type { UsersId } from "~web/db/models";
+import { useShowResolvedDebts } from "~web/hooks/use-show-resolved-debts";
 
 import { UserDebtPreview } from "./user-debt-preview";
 

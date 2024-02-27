@@ -7,12 +7,12 @@ import {
 } from "react-icons/bs";
 import { MdSync as SyncIcon } from "react-icons/md";
 
-import { ConfirmModal } from "app/components/confirm-modal";
-import { DebtIntention } from "app/features/debts-intentions/debt-intention";
-import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { mutations } from "app/mutations";
-import type { TRPCQueryOutput } from "app/trpc";
-import { trpc } from "app/trpc";
+import { ConfirmModal } from "~app/components/confirm-modal";
+import { DebtIntention } from "~app/features/debts-intentions/debt-intention";
+import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import { mutations } from "~app/mutations";
+import type { TRPCQueryOutput } from "~app/trpc";
+import { trpc } from "~app/trpc";
 
 type Debt = TRPCQueryOutput<"debts.get">;
 

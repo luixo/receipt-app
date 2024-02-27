@@ -8,10 +8,11 @@
 		"jsxImportSource": "nativewind",
 		"module": "esnext",
 		"paths": {
-			"app/*": ["./packages/app/*"],
-			"next-app/*": ["./apps/next/src/*"],
-			"@tests/backend/*": ["./testing/vitest/*"],
-			"@tests/frontend/*": ["./testing/playwright/*"]
+			"~app/*": ["./packages/app/*"],
+			"~web/*": ["./apps/web/src/*"],
+			"~mobile/*": ["./apps/mobile/*"],
+			"~tests/backend/*": ["./testing/vitest/*"],
+			"~tests/frontend/*": ["./testing/playwright/*"]
 		}
 	},
 	"include": ["**/*"],

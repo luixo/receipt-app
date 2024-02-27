@@ -1,16 +1,16 @@
 import type { QueryClient } from "@tanstack/react-query";
 import { getQueryKey } from "@trpc/react-query";
 
-import * as utils from "app/cache/utils";
+import * as utils from "~app/cache/utils";
 import {
 	type TRPCQueryInput,
 	type TRPCQueryOutput,
 	type TRPCReactContext,
 	trpc,
-} from "app/trpc";
-import type { ItemWithIndex } from "app/utils/array";
-import { addToArray, removeFromArray, replaceInArray } from "app/utils/array";
-import type { ReceiptItemsId, ReceiptsId, UsersId } from "next-app/db/models";
+} from "~app/trpc";
+import type { ItemWithIndex } from "~app/utils/array";
+import { addToArray, removeFromArray, replaceInArray } from "~app/utils/array";
+import type { ReceiptItemsId, ReceiptsId, UsersId } from "~web/db/models";
 
 type Controller = TRPCReactContext["receipts"]["get"];
 

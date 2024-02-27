@@ -1,0 +1,26 @@
+{
+	"name": "@ra/mobile",
+	"main": "index.js",
+	"version": "1.0.0",
+	"private": true,
+	"dependencies": {
+		"@react-navigation/native-stack": "^6.9.17",
+		"dotenv": "^16.3.1",
+		"eas-cli": "^5.9.1",
+		"expo": "^49.0.21",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0"
+	},
+	"devDependencies": {
+		"@babel/core": "^7.23.5",
+		"@types/react": "^18.2.16"
+	},
+	"scripts": {
+		"dev": "expo start",
+		"android:dev": "expo run:android",
+		"ios:dev": "expo run:ios",
+		"ios:update-version": "yarn workspace @ra/scripts expo:update-ios-version",
+		"ios:build": "eas build -p=ios",
+		"ios:publish": "eas submit --platform ios"
+	}
+}

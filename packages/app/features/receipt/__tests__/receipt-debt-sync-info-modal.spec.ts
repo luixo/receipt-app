@@ -1,6 +1,6 @@
-import { expect } from "@tests/frontend/fixtures";
-import { getParticipantSums } from "app/utils/receipt-item";
-import type { UsersId } from "next-app/db/models";
+import { getParticipantSums } from "~app/utils/receipt-item";
+import { expect } from "~tests/frontend/fixtures";
+import type { UsersId } from "~web/db/models";
 
 import { test } from "./receipt-debt-sync-info-modal.utils";
 

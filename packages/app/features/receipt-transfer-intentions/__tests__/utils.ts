@@ -1,8 +1,8 @@
 import type { Locator } from "@playwright/test";
 
-import { test as originalTest } from "@tests/frontend/fixtures";
-import type { KeysLists } from "@tests/frontend/fixtures/queries";
-import { DEFAULT_BLACKLIST_KEYS } from "@tests/frontend/fixtures/queries";
+import { test as originalTest } from "~tests/frontend/fixtures";
+import type { KeysLists } from "~tests/frontend/fixtures/queries";
+import { DEFAULT_BLACKLIST_KEYS } from "~tests/frontend/fixtures/queries";
 
 import type {
 	GenerateSelfAccount,

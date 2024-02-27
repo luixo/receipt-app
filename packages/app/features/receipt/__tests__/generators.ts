@@ -1,18 +1,18 @@
 import type { Faker } from "@faker-js/faker";
 
-import type { Amount } from "@tests/frontend/utils/generators";
-import { generateAmount } from "@tests/frontend/utils/generators";
-import type { TRPCQueryOutput } from "app/trpc";
-import type { CurrencyCode } from "app/utils/currency";
-import { MONTH } from "app/utils/time";
-import { nonNullishGuard } from "app/utils/utils";
+import type { TRPCQueryOutput } from "~app/trpc";
+import type { CurrencyCode } from "~app/utils/currency";
+import { MONTH } from "~app/utils/time";
+import { nonNullishGuard } from "~app/utils/utils";
+import { generateAmount } from "~tests/frontend/utils/generators";
+import type { Amount } from "~tests/frontend/utils/generators";
 import type {
 	AccountsId,
 	ReceiptItemsId,
 	ReceiptsId,
 	UsersId,
-} from "next-app/db/models";
-import { CURRENCY_CODES } from "next-app/utils/currency";
+} from "~web/db/models";
+import { CURRENCY_CODES } from "~web/utils/currency";
 
 const getRandomCurrencyCode = (faker: Faker) =>
 	faker.helpers.arrayElement(CURRENCY_CODES);

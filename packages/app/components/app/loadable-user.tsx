@@ -2,11 +2,11 @@ import React from "react";
 
 import { Spinner } from "@nextui-org/react";
 
-import { User } from "app/components/app/user";
-import { QueryErrorMessage } from "app/components/error-message";
-import type { TRPCQuerySuccessResult } from "app/trpc";
-import { trpc } from "app/trpc";
-import type { UsersId } from "next-app/db/models";
+import { User } from "~app/components/app/user";
+import { QueryErrorMessage } from "~app/components/error-message";
+import type { TRPCQuerySuccessResult } from "~app/trpc";
+import { trpc } from "~app/trpc";
+import type { UsersId } from "~web/db/models";
 
 type InnerProps = {
 	query: TRPCQuerySuccessResult<"users.getForeign">;

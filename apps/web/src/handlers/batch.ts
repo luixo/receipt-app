@@ -1,0 +1,74 @@
+import type { ResolveOptions } from "@trpc/server/unstableInternalsExport";
+import type { BatchLoadFn, Options } from "dataloader";
+import Dataloader from "dataloader";
+
+import type {
+	AuthorizedContext,
+	UnauthorizedContext,
+} from "~web/handlers/context";
+import type { t } from "~web/handlers/trpc";
+
+const SCHEDULE_DELAY = 100;
+const CLEAR_CACHE_DELAY = 2000;
+
+type ResolveOptionsShort<C, I, O> = ResolveOptions<{
+	_config: (typeof t)["_config"];
+	_meta: unknown;
+	_ctx_out: C;
+	_input_in: I;
+	_input_out: I;
+	_output_in: O;
+	_output_out: O;
+}>;
+
+const defaultGetKey = <C extends UnauthorizedContext>(context: C): string => {
+	if ("auth" in context) {
+		return (context as AuthorizedContext).auth.accountId;
+		/* c8 ignore start */
+	}
+	// There are no batched requests with no auth yet
+	return "anonymous";
+};
+/* c8 ignore stop */
+
+export const queueCallFactory = <C extends UnauthorizedContext, I, O>(
+	batchLoadFn: (ctx: C) => BatchLoadFn<I, O>,
+	{
+		getKey,
+		...batchOpts
+	}: Options<I, O, string> & {
+		getKey?: (ctx: C) => string;
+	} = {},
+) => {
+	const dataloaderStorage: Record<
+		string,
+		{
+			dataloader: Dataloader<I, O, string>;
+			removeTimeoutId: NodeJS.Timeout;
+		}
+	> = {};
+	return async (opts: ResolveOptionsShort<C, I, O>): Promise<O> => {
+		const context = opts.ctx as C;
+		const input = opts.input as I;
+		const key = (getKey || defaultGetKey)(context);
+		dataloaderStorage[key] ??= {
+			dataloader: new Dataloader<I, O, string>(
+				(inputs) => batchLoadFn(context)(inputs),
+				{
+					batchScheduleFn: (callback) => setTimeout(callback, SCHEDULE_DELAY),
+					cacheKeyFn: JSON.stringify,
+					// Disable cache on test runs - subsequent calls with different data are happening in tests
+					cache: !context.req.headers["x-test-id"],
+					// Undocumented `opts.path` property
+					name: (opts as unknown as { path: string }).path,
+					...batchOpts,
+				},
+			),
+			removeTimeoutId: setTimeout(() => {
+				delete dataloaderStorage[key];
+			}, CLEAR_CACHE_DELAY),
+		};
+		dataloaderStorage[key]!.removeTimeoutId.refresh();
+		return dataloaderStorage[key]!.dataloader.load(input);
+	};
+};

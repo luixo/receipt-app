@@ -1,6 +1,6 @@
 import type { Locator } from "@playwright/test";
 
-import type { ExtractFixture } from "@tests/frontend/fixtures";
+import type { ExtractFixture } from "~tests/frontend/fixtures";
 
 import type { GenerateDebts } from "./debts.generators";
 import { defaultGenerateDebts } from "./debts.generators";

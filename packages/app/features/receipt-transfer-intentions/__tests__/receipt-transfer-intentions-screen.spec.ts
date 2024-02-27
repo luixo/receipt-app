@@ -1,4 +1,4 @@
-import { expect } from "@tests/frontend/fixtures";
+import { expect } from "~tests/frontend/fixtures";
 
 import { defaultGenerateTransferIntentions } from "./generators";
 import { test } from "./utils";

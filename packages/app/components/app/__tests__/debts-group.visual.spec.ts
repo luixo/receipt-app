@@ -1,5 +1,5 @@
-import { defaultGenerateDebts } from "app/features/debts-exchange/__tests__/generators";
-import { test } from "app/features/debts-exchange/__tests__/utils";
+import { defaultGenerateDebts } from "~app/features/debts-exchange/__tests__/generators";
+import { test } from "~app/features/debts-exchange/__tests__/utils";
 
 test("No debts", async ({
 	openDebtsExchangeScreen,

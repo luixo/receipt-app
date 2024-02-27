@@ -1,11 +1,11 @@
 import React from "react";
 
-import { CookieContext } from "app/contexts/cookie-context";
-import type { SSRContextData } from "app/contexts/ssr-context";
-import { SSRContext } from "app/contexts/ssr-context";
-import type { CookieStates } from "app/utils/cookie-data";
-import { getCookieStatesFromValues, schemas } from "app/utils/cookie-data";
-import { updateSetStateAction } from "app/utils/utils";
+import { CookieContext } from "~app/contexts/cookie-context";
+import type { SSRContextData } from "~app/contexts/ssr-context";
+import { SSRContext } from "~app/contexts/ssr-context";
+import type { CookieStates } from "~app/utils/cookie-data";
+import { getCookieStatesFromValues, schemas } from "~app/utils/cookie-data";
+import { updateSetStateAction } from "~app/utils/utils";
 
 type SetValues = {
 	[K in keyof CookieStates]: CookieStates[K][1];

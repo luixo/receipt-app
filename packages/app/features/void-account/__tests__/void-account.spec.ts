@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
-import { expect } from "@tests/frontend/fixtures";
+import { expect } from "~tests/frontend/fixtures";
 
 import { test } from "./utils";
 

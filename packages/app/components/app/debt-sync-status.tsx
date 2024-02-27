@@ -9,7 +9,7 @@ import {
 	MdSyncProblem as UnsyncIcon,
 } from "react-icons/md";
 
-import type { TRPCQueryOutput } from "app/trpc";
+import type { TRPCQueryOutput } from "~app/trpc";
 
 const wrapper = tv({
 	base: "flex-row",

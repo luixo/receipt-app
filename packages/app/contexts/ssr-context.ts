@@ -5,8 +5,8 @@ import {
 	type CookieValues,
 	getCookieStatesFromValues,
 	getSSRContextCookieData,
-} from "app/utils/cookie-data";
-import { noop } from "app/utils/utils";
+} from "~app/utils/cookie-data";
+import { noop } from "~app/utils/utils";
 
 // The data above + data we add on each render
 export type SSRContextData = CookieValues & {

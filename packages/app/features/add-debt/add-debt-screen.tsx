@@ -7,30 +7,30 @@ import { useForm } from "react-hook-form";
 import { useRouter, useSearchParams } from "solito/navigation";
 import { z } from "zod";
 
-import { CurrencyInput } from "app/components/app/currency-input";
+import { CurrencyInput } from "~app/components/app/currency-input";
 import {
 	type Direction,
 	SignButtonGroup,
-} from "app/components/app/sign-button-group";
-import { UsersSuggest } from "app/components/app/users-suggest";
-import { Input } from "app/components/base/input";
-import { DateInput } from "app/components/date-input";
-import { PageHeader } from "app/components/page-header";
-import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
-import { useInputController } from "app/hooks/use-input-controller";
-import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { mutations } from "app/mutations";
-import { trpc } from "app/trpc";
-import type { CurrencyCode } from "app/utils/currency";
-import { getToday } from "app/utils/date";
+} from "~app/components/app/sign-button-group";
+import { UsersSuggest } from "~app/components/app/users-suggest";
+import { Input } from "~app/components/base/input";
+import { DateInput } from "~app/components/date-input";
+import { PageHeader } from "~app/components/page-header";
+import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
+import { useInputController } from "~app/hooks/use-input-controller";
+import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import { mutations } from "~app/mutations";
+import { trpc } from "~app/trpc";
+import type { CurrencyCode } from "~app/utils/currency";
+import { getToday } from "~app/utils/date";
 import {
 	currencyCodeSchema,
 	debtAmountSchema,
 	debtNoteSchema,
 	userIdSchema,
-} from "app/utils/validation";
-import type { UsersId } from "next-app/src/db/models";
-import type { AppPage } from "next-app/types/page";
+} from "~app/utils/validation";
+import type { UsersId } from "~web/db/models";
+import type { AppPage } from "~web/types/page";
 
 type Form = {
 	amount: number;

@@ -14,10 +14,10 @@ import { observable } from "@trpc/server/observable";
 import type { NextPageContext } from "next";
 import superjson from "superjson";
 
-import { MINUTE, SECOND } from "app/utils/time";
-import { omitUndefined } from "app/utils/utils";
-import type { AppRouter } from "next-app/pages/api/trpc/[trpc]";
-import { AUTH_COOKIE, serialize } from "next-app/utils/server-cookies";
+import { MINUTE, SECOND } from "~app/utils/time";
+import { omitUndefined } from "~app/utils/utils";
+import type { AppRouter } from "~web/pages/api/trpc/[trpc]";
+import { AUTH_COOKIE, serialize } from "~web/utils/server-cookies";
 
 const SSR_TIMEOUT = 3 * SECOND;
 

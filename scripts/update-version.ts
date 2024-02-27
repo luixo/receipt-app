@@ -22,7 +22,9 @@ const updateVersionNumbers = (input: string): string => {
 
 const main = async () => {
 	console.log("Updating dynamic app buildNumber");
-	const sourceFile = project.addSourceFileAtPath("../apps/expo/app.config.ts");
+	const sourceFile = project.addSourceFileAtPath(
+		"../apps/mobile/app.config.ts",
+	);
 	sourceFile
 		.getExportAssignmentOrThrow(() => true)
 		.transform((control) => {

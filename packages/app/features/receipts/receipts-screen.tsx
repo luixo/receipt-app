@@ -7,10 +7,10 @@ import {
 	MdOutlineReceipt as ReceiptIcon,
 } from "react-icons/md";
 
-import { PageHeader } from "app/components/page-header";
-import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
-import { useReceiptTransfersIntentions } from "app/hooks/use-receipt-transfer-intentions";
-import type { AppPage } from "next-app/types/page";
+import { PageHeader } from "~app/components/page-header";
+import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
+import { useReceiptTransfersIntentions } from "~app/hooks/use-receipt-transfer-intentions";
+import type { AppPage } from "~web/types/page";
 
 import { FilterButton } from "./filter-button";
 import { Receipts } from "./receipts";

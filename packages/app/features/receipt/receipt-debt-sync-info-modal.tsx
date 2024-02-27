@@ -9,7 +9,7 @@ import {
 	ModalHeader,
 } from "@nextui-org/react";
 
-import { Text } from "app/components/base/text";
+import { Text } from "~app/components/base/text";
 
 import type {
 	DebtParticipant,

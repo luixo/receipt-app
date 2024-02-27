@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
-import { expect } from "@tests/frontend/fixtures";
-import { SETTINGS_COOKIE_NAME } from "app/utils/cookie/settings";
+import { SETTINGS_COOKIE_NAME } from "~app/utils/cookie/settings";
+import { expect } from "~tests/frontend/fixtures";
 
 import type { GenerateDebts } from "./generators";
 import { defaultGenerateDebts } from "./generators";

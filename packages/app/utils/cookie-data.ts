@@ -7,16 +7,16 @@ import {
 	SELECTED_COLOR_MODE_COOKIE_NAME,
 	lastColorModeSchema,
 	selectedColorModeSchema,
-} from "app/utils/cookie/color-modes";
-import { LOCALE_COOKIE_NAME, dateLocaleSchema } from "app/utils/cookie/locale";
+} from "~app/utils/cookie/color-modes";
+import { LOCALE_COOKIE_NAME, dateLocaleSchema } from "~app/utils/cookie/locale";
 import {
 	SETTINGS_COOKIE_NAME,
 	settingsSchema,
-} from "app/utils/cookie/settings";
+} from "~app/utils/cookie/settings";
 import {
 	TZ_OFFSET_COOKIE_NAME,
 	timezoneOffsetSchema,
-} from "app/utils/cookie/tz-offset";
+} from "~app/utils/cookie/tz-offset";
 
 export const schemas = {
 	// Syncing timezone on SSR and CSR

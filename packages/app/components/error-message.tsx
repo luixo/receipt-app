@@ -15,9 +15,9 @@ import type {
 } from "@tanstack/react-query";
 import { IoWarning as WarningIcon } from "react-icons/io5";
 
-import { Header } from "app/components/base/header";
-import { Text } from "app/components/base/text";
-import type { TRPCError } from "app/trpc";
+import { Header } from "~app/components/base/header";
+import { Text } from "~app/components/base/text";
+import type { TRPCError } from "~app/trpc";
 
 type Props = {
 	message: string;

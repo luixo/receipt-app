@@ -39,24 +39,24 @@
 		"typescript": "^5.3.3"
 	},
 	"scripts": {
-		"dev": "dotenv -c -- yarn workspace scripts dev",
-		"native:dev": "yarn workspace expo-app dev",
-		"web:dev": "yarn workspace next-app dev",
-		"web:build": "yarn workspace next-app build",
-		"web:start": "yarn workspace next-app start",
-		"ios:build": "yarn workspace expo-app ios:update-version && yarn workspace expo-app ios:build",
-		"ios:publish": "yarn workspace expo-app ios:publish",
+		"dev": "dotenv -c -- yarn workspace @ra/scripts dev",
+		"native:dev": "yarn workspace @ra/mobile dev",
+		"web:dev": "yarn workspace @ra/web dev",
+		"web:build": "yarn workspace @ra/web build",
+		"web:start": "yarn workspace @ra/web start",
+		"ios:build": "yarn workspace @ra/mobile ios:update-version && yarn workspace @ra/mobile ios:build",
+		"ios:publish": "yarn workspace @ra/mobile ios:publish",
 		"typecheck": "tsc --noEmit",
 		"format": "prettier --write '**/*.{js,jsx,ts,tsx,json,css}'",
 		"format:verify": "prettier --check '**/*.{js,jsx,ts,tsx,json,css}'",
 		"lint": "NODE_OPTIONS=\"--max-old-space-size=4096\" eslint . --ext .js,.jsx,.ts,.tsx",
 		"lint:fix": "eslint --fix . --ext .js,.jsx,.ts,.tsx",
-		"db:migrate": "dotenv -c -- yarn workspace scripts db:migrate",
-		"db:migrate:production": "dotenv -c production -- yarn workspace scripts db:migrate",
-		"db:generate-types": "dotenv -c -- yarn workspace scripts db:generate-types && yarn lint:fix && yarn format",
+		"db:migrate": "dotenv -c -- yarn workspace @ra/scripts db:migrate",
+		"db:migrate:production": "dotenv -c production -- yarn workspace @ra/scripts db:migrate",
+		"db:generate-types": "dotenv -c -- yarn workspace @ra/scripts db:generate-types && yarn lint:fix && yarn format",
 		"lint-staged": "lint-staged",
-		"backend:test": "yarn workspace vitest test",
-		"frontend:test": "yarn workspace playwright test"
+		"backend:test": "yarn workspace @ra/vitest test",
+		"frontend:test": "yarn workspace @ra/playwright test"
 	},
 	"dependencies": {
 		"@sentry/nextjs": "^7.85.0",
@@ -97,6 +97,6 @@
 		"budgetPercentIncreaseRed": 5,
 		"minimumChangeThreshold": 0,
 		"showDetails": true,
-		"buildOutputDirectory": "apps/next/.next"
+		"buildOutputDirectory": "apps/web/.next"
 	}
 }

@@ -1,8 +1,8 @@
-import { cache } from "app/cache";
-import { mergeUpdaterResults } from "app/cache/utils";
-import type { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import type { CurrencyCode } from "app/utils/currency";
-import type { UsersId } from "next-app/db/models";
+import { cache } from "~app/cache";
+import { mergeUpdaterResults } from "~app/cache/utils";
+import type { UseContextedMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import type { CurrencyCode } from "~app/utils/currency";
+import type { UsersId } from "~web/db/models";
 
 export const options: UseContextedMutationOptions<
 	"receiptTransferIntentions.add",

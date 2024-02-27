@@ -4,7 +4,7 @@ import { useQueryState } from "next-usequerystate";
 import { useRouter, useSearchParams } from "solito/navigation";
 import type { Primitive } from "zod";
 
-import { id } from "app/utils/utils";
+import { id } from "~app/utils/utils";
 
 export type QueryParamOptions<T extends object | Primitive = string> = {
 	parse?: (input: string | undefined) => T;

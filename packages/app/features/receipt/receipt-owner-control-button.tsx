@@ -1,7 +1,7 @@
 import React from "react";
 
-import type { TRPCQueryOutput } from "app/trpc";
-import { trpc } from "app/trpc";
+import type { TRPCQueryOutput } from "~app/trpc";
+import { trpc } from "~app/trpc";
 
 import { ReceiptLockedButton } from "./receipt-locked-button";
 import type { LockedReceipt } from "./receipt-participant-debt";

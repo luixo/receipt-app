@@ -1,4 +1,4 @@
-import { trpc } from "app/trpc";
+import { trpc } from "~app/trpc";
 
 export const useNonResolvedReceipts = () => {
 	const intentions = trpc.receipts.getNonResolvedAmount.useQuery(undefined, {

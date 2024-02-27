@@ -7,19 +7,19 @@ import {
 	MdSync as SyncIcon,
 } from "react-icons/md";
 
-import { QueryErrorMessage } from "app/components/error-message";
-import { useBooleanState } from "app/hooks/use-boolean-state";
-import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { mutations } from "app/mutations";
+import { QueryErrorMessage } from "~app/components/error-message";
+import { useBooleanState } from "~app/hooks/use-boolean-state";
+import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import { mutations } from "~app/mutations";
 import type {
 	TRPCQueryErrorResult,
 	TRPCQueryResult,
 	TRPCQuerySuccessResult,
-} from "app/trpc";
-import { trpc } from "app/trpc";
-import { getReceiptDebtName } from "app/utils/receipt";
-import { getParticipantSums } from "app/utils/receipt-item";
-import type { NonNullableField } from "app/utils/types";
+} from "~app/trpc";
+import { trpc } from "~app/trpc";
+import { getReceiptDebtName } from "~app/utils/receipt";
+import { getParticipantSums } from "~app/utils/receipt-item";
+import type { NonNullableField } from "~app/utils/types";
 
 import { ReceiptDebtSyncInfoModal } from "./receipt-debt-sync-info-modal";
 import {

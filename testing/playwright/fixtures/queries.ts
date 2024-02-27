@@ -17,11 +17,11 @@ import type {
 	TRPCMutationOutput,
 	TRPCQueryInput,
 	TRPCQueryKey,
-} from "app/trpc";
-import { mapObjectValues } from "app/utils/object";
-import { omitUndefined } from "app/utils/utils";
-import { router } from "next-app/handlers";
-import type { AppRouter } from "next-app/pages/api/trpc/[trpc]";
+} from "~app/trpc";
+import { mapObjectValues } from "~app/utils/object";
+import { omitUndefined } from "~app/utils/utils";
+import { router } from "~web/handlers";
+import type { AppRouter } from "~web/pages/api/trpc/[trpc]";
 
 import type { ApiManager, ApiMixin, TRPCKey } from "./api";
 import { createMixin } from "./utils";

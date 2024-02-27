@@ -2,9 +2,9 @@ import React from "react";
 
 import { useSearchParams } from "solito/navigation";
 
-import { PageHeader } from "app/components/page-header";
-import { trpc } from "app/trpc";
-import type { AppPage } from "next-app/types/page";
+import { PageHeader } from "~app/components/page-header";
+import { trpc } from "~app/trpc";
+import type { AppPage } from "~web/types/page";
 
 import { ResetPassword } from "./reset-password";
 

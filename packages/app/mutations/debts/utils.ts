@@ -1,14 +1,14 @@
-import { cache } from "app/cache";
-import { mergeUpdaterResults } from "app/cache/utils";
+import { cache } from "~app/cache";
+import { mergeUpdaterResults } from "~app/cache/utils";
 import type {
 	ControllerContext,
 	SnapshotFn,
 	UpdateFn,
 	UpdaterRevertResult,
-} from "app/cache/utils";
-import type { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
-import type { CurrencyCode } from "app/utils/currency";
-import type { DebtsId, ReceiptsId, UsersId } from "next-app/db/models";
+} from "~app/cache/utils";
+import type { TRPCMutationInput, TRPCQueryOutput } from "~app/trpc";
+import type { CurrencyCode } from "~app/utils/currency";
+import type { DebtsId, ReceiptsId, UsersId } from "~web/db/models";
 
 export type Intention = TRPCQueryOutput<"debts.getIntentions">[number];
 

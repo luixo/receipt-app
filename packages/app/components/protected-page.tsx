@@ -7,13 +7,13 @@ import {
 import { FaUser as AccountIcon, FaUsers as UsersIcon } from "react-icons/fa";
 import { MdAttachMoney as DebtsIcon } from "react-icons/md";
 
-import { NoAuthEffect } from "app/components/app/no-auth-effect";
-import type { MenuElement } from "app/components/page";
-import { Page } from "app/components/page";
-import { useConnectionIntentions } from "app/hooks/use-connection-intentions";
-import { useDebtsIntentions } from "app/hooks/use-debts-intentions";
-import { useNonResolvedReceipts } from "app/hooks/use-non-resolved-receipts";
-import { useReceiptTransfersIntentions } from "app/hooks/use-receipt-transfer-intentions";
+import { NoAuthEffect } from "~app/components/app/no-auth-effect";
+import type { MenuElement } from "~app/components/page";
+import { Page } from "~app/components/page";
+import { useConnectionIntentions } from "~app/hooks/use-connection-intentions";
+import { useDebtsIntentions } from "~app/hooks/use-debts-intentions";
+import { useNonResolvedReceipts } from "~app/hooks/use-non-resolved-receipts";
+import { useReceiptTransfersIntentions } from "~app/hooks/use-receipt-transfer-intentions";
 
 const useReceiptsNotificatons = () => {
 	const nonResolvedReceipts = useNonResolvedReceipts();

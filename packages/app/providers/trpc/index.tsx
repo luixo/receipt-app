@@ -3,9 +3,9 @@ import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { createTRPCReact } from "@trpc/react-query";
 
-import { TRPC_ENDPOINT, getNativeBaseUrl } from "app/utils/queries";
-import { getLinks, transformer } from "app/utils/trpc";
-import type { AppRouter } from "next-app/pages/api/trpc/[trpc]";
+import { TRPC_ENDPOINT, getNativeBaseUrl } from "~app/utils/queries";
+import { getLinks, transformer } from "~app/utils/trpc";
+import type { AppRouter } from "~web/pages/api/trpc/[trpc]";
 
 export const TrpcProvider: React.FC<React.PropsWithChildren<object>> = ({
 	children,

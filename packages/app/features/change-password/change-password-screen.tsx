@@ -5,13 +5,13 @@ import { Button } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { Input } from "app/components/base/input";
-import { useBooleanState } from "app/hooks/use-boolean-state";
-import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { mutations } from "app/mutations";
-import { trpc } from "app/trpc";
-import { passwordSchema } from "app/utils/validation";
-import type { AppPage } from "next-app/types/page";
+import { Input } from "~app/components/base/input";
+import { useBooleanState } from "~app/hooks/use-boolean-state";
+import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import { mutations } from "~app/mutations";
+import { trpc } from "~app/trpc";
+import { passwordSchema } from "~app/utils/validation";
+import type { AppPage } from "~web/types/page";
 
 type Form = {
 	prevPassword: string;

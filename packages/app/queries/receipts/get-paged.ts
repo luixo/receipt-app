@@ -1,8 +1,8 @@
-import type { SyncQueryParamOptions } from "app/hooks/use-sync-query-param";
-import { useSyncQueryParam } from "app/hooks/use-sync-query-param";
-import type { TRPCQueryInput } from "app/trpc";
-import { createStore, updateWithFn } from "app/utils/store";
-import type { Setters } from "app/utils/types";
+import type { SyncQueryParamOptions } from "~app/hooks/use-sync-query-param";
+import { useSyncQueryParam } from "~app/hooks/use-sync-query-param";
+import type { TRPCQueryInput } from "~app/trpc";
+import { createStore, updateWithFn } from "~app/utils/store";
+import type { Setters } from "~app/utils/types";
 
 type Input = TRPCQueryInput<"receipts.getPaged">;
 

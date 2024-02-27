@@ -7,7 +7,7 @@ import { useRouter } from "solito/navigation";
 import {
 	useLastColorModeCookie,
 	useSelectedColorModeCookie,
-} from "app/hooks/use-color-modes";
+} from "~app/hooks/use-color-modes";
 
 export const ThemeProvider: React.FC<React.PropsWithChildren<object>> = ({
 	children,

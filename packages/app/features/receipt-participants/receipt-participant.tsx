@@ -3,19 +3,19 @@ import { View } from "react-native";
 
 import { Accordion, AccordionItem } from "@nextui-org/react";
 
-import { LoadableUser } from "app/components/app/loadable-user";
-import { ReceiptParticipantResolvedButton } from "app/components/app/receipt-participant-resolved-button";
-import { Text } from "app/components/base/text";
-import { RemoveButton } from "app/components/remove-button";
-import { useFormattedCurrency } from "app/hooks/use-formatted-currency";
-import { useSelfAccountId } from "app/hooks/use-self-account-id";
-import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { mutations } from "app/mutations";
-import type { TRPCQueryOutput } from "app/trpc";
-import { trpc } from "app/trpc";
-import type { CurrencyCode } from "app/utils/currency";
-import { round } from "app/utils/math";
-import type { ReceiptItemsId, ReceiptsId, UsersId } from "next-app/db/models";
+import { LoadableUser } from "~app/components/app/loadable-user";
+import { ReceiptParticipantResolvedButton } from "~app/components/app/receipt-participant-resolved-button";
+import { Text } from "~app/components/base/text";
+import { RemoveButton } from "~app/components/remove-button";
+import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
+import { useSelfAccountId } from "~app/hooks/use-self-account-id";
+import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import { mutations } from "~app/mutations";
+import type { TRPCQueryOutput } from "~app/trpc";
+import { trpc } from "~app/trpc";
+import type { CurrencyCode } from "~app/utils/currency";
+import { round } from "~app/utils/math";
+import type { ReceiptItemsId, ReceiptsId, UsersId } from "~web/db/models";
 
 import { ReceiptParticipantRoleInput } from "./receipt-participant-role-input";
 

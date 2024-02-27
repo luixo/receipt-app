@@ -1,7 +1,7 @@
 import { Pool } from "pg";
 
-import { getDatabase } from "next-app/db";
-import { migrate } from "next-app/db/migration";
+import { getDatabase } from "~web/db";
+import { migrate } from "~web/db/migration";
 
 const isValidTarget = (
 	maybeTarget = "",

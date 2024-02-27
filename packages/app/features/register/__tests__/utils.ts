@@ -1,6 +1,6 @@
 import type { Locator } from "@playwright/test";
 
-import { test as originalTest } from "@tests/frontend/fixtures";
+import { test as originalTest } from "~tests/frontend/fixtures";
 
 type Fields = {
 	email: Locator;

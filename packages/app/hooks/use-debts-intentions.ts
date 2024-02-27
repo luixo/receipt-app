@@ -1,4 +1,4 @@
-import { trpc } from "app/trpc";
+import { trpc } from "~app/trpc";
 
 export const useDebtsIntentions = () => {
 	const intentions = trpc.debts.getIntentions.useQuery(undefined, {

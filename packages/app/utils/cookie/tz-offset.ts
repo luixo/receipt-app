@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { fallback } from "app/utils/validation";
+import { fallback } from "~app/utils/validation";
 
 export const TZ_OFFSET_COOKIE_NAME = "ssrContext:tzOffset";
 

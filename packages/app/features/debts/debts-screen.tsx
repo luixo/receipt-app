@@ -5,10 +5,10 @@ import { IoMdMail as InboxIcon } from "react-icons/io";
 import { MdAdd as AddIcon } from "react-icons/md";
 import { PiMoney as DebtIcon } from "react-icons/pi";
 
-import { PageHeader } from "app/components/page-header";
-import { EmailVerificationCard } from "app/features/email-verification/email-verification-card";
-import { useDebtsIntentions } from "app/hooks/use-debts-intentions";
-import type { AppPage } from "next-app/types/page";
+import { PageHeader } from "~app/components/page-header";
+import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
+import { useDebtsIntentions } from "~app/hooks/use-debts-intentions";
+import type { AppPage } from "~web/types/page";
 
 import { Debts } from "./debts";
 

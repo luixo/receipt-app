@@ -4,8 +4,8 @@ import type {
 	UpstashResponse,
 } from "@upstash/redis/nodejs";
 
-import type { KeysMatching } from "app/utils/types";
-import type { CacheDbOptions } from "next-app/providers/cache-db";
+import type { KeysMatching } from "~app/utils/types";
+import type { CacheDbOptions } from "~web/providers/cache-db";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type RedisFunctionKey = KeysMatching<Redis, (...args: any) => any>;

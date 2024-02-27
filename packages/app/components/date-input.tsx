@@ -2,12 +2,12 @@ import React from "react";
 
 import { z } from "zod";
 
-import { Input } from "app/components/base/input";
-import { Text } from "app/components/base/text";
-import { Calendar } from "app/components/calendar";
-import { useSingleInput } from "app/hooks/use-single-input";
-import { useSsrFormat } from "app/hooks/use-ssr-format";
-import type { TRPCMutationResult } from "app/trpc";
+import { Input } from "~app/components/base/input";
+import { Text } from "~app/components/base/text";
+import { Calendar } from "~app/components/calendar";
+import { useSingleInput } from "~app/hooks/use-single-input";
+import { useSsrFormat } from "~app/hooks/use-ssr-format";
+import type { TRPCMutationResult } from "~app/trpc";
 
 type Props = {
 	timestamp: Date;

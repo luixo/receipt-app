@@ -1,16 +1,16 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Input } from "app/components/base/input";
-import { Text } from "app/components/base/text";
-import { useBooleanState } from "app/hooks/use-boolean-state";
-import { useSingleInput } from "app/hooks/use-single-input";
-import { useTrpcMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import { mutations } from "app/mutations";
-import type { TRPCQueryOutput } from "app/trpc";
-import { trpc } from "app/trpc";
-import { quantitySchema } from "app/utils/validation";
-import type { ReceiptsId } from "next-app/db/models";
+import { Input } from "~app/components/base/input";
+import { Text } from "~app/components/base/text";
+import { useBooleanState } from "~app/hooks/use-boolean-state";
+import { useSingleInput } from "~app/hooks/use-single-input";
+import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import { mutations } from "~app/mutations";
+import type { TRPCQueryOutput } from "~app/trpc";
+import { trpc } from "~app/trpc";
+import { quantitySchema } from "~app/utils/validation";
+import type { ReceiptsId } from "~web/db/models";
 
 type ReceiptItem = TRPCQueryOutput<"receipts.get">["items"][number];
 

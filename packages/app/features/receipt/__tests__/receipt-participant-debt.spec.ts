@@ -1,9 +1,9 @@
 import { TRPCError } from "@trpc/server";
 
-import { expect } from "@tests/frontend/fixtures";
-import { getMutationsByKey } from "@tests/frontend/fixtures/queries";
-import { getParticipantSums } from "app/utils/receipt-item";
-import { DAY } from "app/utils/time";
+import { getParticipantSums } from "~app/utils/receipt-item";
+import { DAY } from "~app/utils/time";
+import { expect } from "~tests/frontend/fixtures";
+import { getMutationsByKey } from "~tests/frontend/fixtures/queries";
 
 import {
 	generateDebtsWith,

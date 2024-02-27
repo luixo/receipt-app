@@ -5,7 +5,7 @@ import {
 	QueryClientProvider as RawQueryClientProvider,
 } from "@tanstack/react-query";
 
-import { getQueryClientConfig } from "app/utils/trpc";
+import { getQueryClientConfig } from "~app/utils/trpc";
 
 export const QueryClientProvider: React.FC<React.PropsWithChildren<object>> = ({
 	children,

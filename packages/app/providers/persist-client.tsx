@@ -3,9 +3,9 @@ import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 
-import { PersistStorageContext } from "app/contexts/persist-storage-context";
-import type { TRPCQuery, TRPCQueryKey, TRPCSplitQueryKey } from "app/trpc";
-import { MONTH } from "app/utils/time";
+import { PersistStorageContext } from "~app/contexts/persist-storage-context";
+import type { TRPCQuery, TRPCQueryKey, TRPCSplitQueryKey } from "~app/trpc";
+import { MONTH } from "~app/utils/time";
 
 const isKeyEqual = <K1 extends TRPCSplitQueryKey, K2 extends TRPCSplitQueryKey>(
 	keyA: K1,

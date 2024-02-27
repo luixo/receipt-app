@@ -1,8 +1,8 @@
-import { cache } from "app/cache";
-import type { SnapshotFn, UpdateFn } from "app/cache/utils";
-import type { UseContextedMutationOptions } from "app/hooks/use-trpc-mutation-options";
-import type { TRPCMutationInput, TRPCQueryOutput } from "app/trpc";
-import type { UsersId } from "next-app/db/models";
+import { cache } from "~app/cache";
+import type { SnapshotFn, UpdateFn } from "~app/cache/utils";
+import type { UseContextedMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import type { TRPCMutationInput, TRPCQueryOutput } from "~app/trpc";
+import type { UsersId } from "~web/db/models";
 
 type UserSnapshot = TRPCQueryOutput<"users.get">;
 

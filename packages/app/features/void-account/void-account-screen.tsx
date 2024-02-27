@@ -2,9 +2,9 @@ import React from "react";
 
 import { useSearchParams } from "solito/navigation";
 
-import { EmptyCard } from "app/components/empty-card";
-import { PageHeader } from "app/components/page-header";
-import type { AppPage } from "next-app/types/page";
+import { EmptyCard } from "~app/components/empty-card";
+import { PageHeader } from "~app/components/page-header";
+import type { AppPage } from "~web/types/page";
 
 import { VoidAccount } from "./void-account";
 

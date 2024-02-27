@@ -1,6 +1,6 @@
-import * as utils from "app/cache/utils";
-import type { TRPCQueryOutput, TRPCReactContext } from "app/trpc";
-import type { DebtsId } from "next-app/db/models";
+import * as utils from "~app/cache/utils";
+import type { TRPCQueryOutput, TRPCReactContext } from "~app/trpc";
+import type { DebtsId } from "~web/db/models";
 
 type Controller = TRPCReactContext["debts"]["get"];
 

@@ -4,7 +4,7 @@ import type { UserConfig } from "vitest/config";
 import { configDefaults, defineConfig } from "vitest/config";
 
 export const rootPath = path.resolve(__dirname, "../..");
-export const testsRoot = path.resolve(rootPath, "apps/next/src");
+export const testsRoot = path.resolve(rootPath, "apps/web/src");
 const vitestRoot = path.resolve(rootPath, "testing/vitest");
 
 const testConfig: NonNullable<UserConfig["test"]> = {

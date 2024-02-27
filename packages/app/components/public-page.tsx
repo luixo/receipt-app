@@ -5,9 +5,9 @@ import {
 	BsPersonPlusFill as RegisterIcon,
 } from "react-icons/bs";
 
-import { AuthEffect } from "app/components/app/auth-effect";
-import type { MenuElement } from "app/components/page";
-import { Page } from "app/components/page";
+import { AuthEffect } from "~app/components/app/auth-effect";
+import type { MenuElement } from "~app/components/page";
+import { Page } from "~app/components/page";
 
 const PUBLIC_ELEMENTS: MenuElement[] = [
 	{

@@ -19,9 +19,9 @@ import {
 import { FaChevronDown as ChevronDown } from "react-icons/fa";
 import { MdFilterAlt as FilterIcon } from "react-icons/md";
 
-import { Text } from "app/components/base/text";
-import { useBooleanState } from "app/hooks/use-boolean-state";
-import { queries } from "app/queries";
+import { Text } from "~app/components/base/text";
+import { useBooleanState } from "~app/hooks/use-boolean-state";
+import { queries } from "~app/queries";
 
 export const FilterButton: React.FC = () => {
 	const [{ orderBy, filters = {} }, { changeOrderBy, changeFilters }] =

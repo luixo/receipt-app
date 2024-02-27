@@ -8,8 +8,8 @@ import type {
 	TRPCQueryOutput,
 	TRPCReactContext,
 	TRPCSplitQueryKey,
-} from "app/trpc";
-import { nonNullishGuard } from "app/utils/utils";
+} from "~app/trpc";
+import { nonNullishGuard } from "~app/utils/utils";
 
 type QueryClientData<Key extends TRPCQueryKey> = [
 	[
