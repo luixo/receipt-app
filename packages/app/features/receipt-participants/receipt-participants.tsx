@@ -11,8 +11,8 @@ import {
 	getItemCalculations,
 	getParticipantSums,
 } from "~app/utils/receipt-item";
-import { nonNullishGuard } from "~app/utils/utils";
 import { Text } from "~components";
+import { nonNullishGuard } from "~utils";
 import type { ReceiptsId, UsersId } from "~web/db/models";
 
 import { AddReceiptParticipantForm } from "./add-receipt-participant-form";

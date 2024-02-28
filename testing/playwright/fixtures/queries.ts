@@ -18,8 +18,7 @@ import type {
 	TRPCQueryInput,
 	TRPCQueryKey,
 } from "~app/trpc";
-import { mapObjectValues } from "~app/utils/object";
-import { omitUndefined } from "~app/utils/utils";
+import { mapObjectValues, omitUndefined } from "~utils";
 import { router } from "~web/handlers";
 import type { AppRouter } from "~web/pages/api/trpc/[trpc]";
 

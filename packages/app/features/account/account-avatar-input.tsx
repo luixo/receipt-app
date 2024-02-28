@@ -22,13 +22,13 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { mutations } from "~app/mutations";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
+import { FileInput, Text } from "~components";
 import {
 	MAX_AVATAR_SIDE_SIZE,
 	convertDataUrlToImageElement,
 	convertFileToDataUrl,
-} from "~app/utils/images";
-import { noop } from "~app/utils/utils";
-import { FileInput, Text } from "~components";
+	noop,
+} from "~utils";
 import type { UsersId } from "~web/db/models";
 
 const MAX_ZOOM = 5;

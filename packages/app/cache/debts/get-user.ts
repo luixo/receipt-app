@@ -1,12 +1,12 @@
 import * as utils from "~app/cache/utils";
 import type { TRPCQueryOutput, TRPCReactContext } from "~app/trpc";
-import type { ItemWithIndex } from "~app/utils/array";
+import type { ItemWithIndex } from "~utils";
 import {
 	addToArray,
 	isSameOrder,
 	removeFromArray,
 	replaceInArray,
-} from "~app/utils/array";
+} from "~utils";
 import type { DebtsId, UsersId } from "~web/db/models";
 
 type Controller = TRPCReactContext["debts"]["getUser"];

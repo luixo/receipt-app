@@ -4,7 +4,7 @@ import type {
 	UpstashResponse,
 } from "@upstash/redis/nodejs";
 
-import type { KeysMatching } from "~app/utils/types";
+import type { KeysMatching } from "~utils";
 import type { CacheDbOptions } from "~web/providers/cache-db";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

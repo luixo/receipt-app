@@ -12,8 +12,8 @@ import { ReceiptItems } from "~app/features/receipt-items/receipt-items-screen";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import { round } from "~app/utils/math";
 import { Text } from "~components";
+import { round } from "~utils";
 import type { ReceiptsId } from "~web/db/models";
 
 import { ReceiptCurrencyInput } from "./receipt-currency-input";

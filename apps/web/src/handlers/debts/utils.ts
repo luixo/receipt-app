@@ -1,4 +1,4 @@
-import { nonNullishGuard } from "~app/utils/utils";
+import { nonNullishGuard } from "~utils";
 import type { Database } from "~web/db";
 import type { DebtsId } from "~web/db/models";
 import type { SimpleInsertObject } from "~web/db/types";

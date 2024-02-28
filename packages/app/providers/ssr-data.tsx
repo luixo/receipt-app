@@ -5,7 +5,7 @@ import type { SSRContextData } from "~app/contexts/ssr-context";
 import { SSRContext } from "~app/contexts/ssr-context";
 import type { CookieStates } from "~app/utils/cookie-data";
 import { getCookieStatesFromValues, schemas } from "~app/utils/cookie-data";
-import { updateSetStateAction } from "~app/utils/utils";
+import { updateSetStateAction } from "~utils";
 
 type SetValues = {
 	[K in keyof CookieStates]: CookieStates[K][1];

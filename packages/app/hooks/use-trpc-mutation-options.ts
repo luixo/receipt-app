@@ -12,7 +12,7 @@ import type {
 	TRPCMutationOutput,
 } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import type { Exact, MaybeAddElementToArray } from "~app/utils/types";
+import type { Exact, MaybeAddElementToArray } from "~utils";
 
 export type TRPCMutationOptions<
 	Path extends TRPCMutationKey,

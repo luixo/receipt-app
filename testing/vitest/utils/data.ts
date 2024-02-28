@@ -1,9 +1,8 @@
 import { faker } from "@faker-js/faker";
 
 import type { CurrencyCode } from "~app/utils/currency";
-import { YEAR } from "~app/utils/time";
-import { asFixedSizeArray, id as idFn } from "~app/utils/utils";
 import type { TestContext } from "~tests/backend/utils/test";
+import { YEAR, asFixedSizeArray, id as idFn } from "~utils";
 import type {
 	AccountsId,
 	DebtsId,

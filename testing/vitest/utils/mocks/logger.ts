@@ -1,6 +1,6 @@
 import type { Level, pino } from "pino";
 
-import type { Tail } from "~app/utils/types";
+import type { Tail } from "~utils";
 
 type LevelWithSilent = Level | "silent";
 

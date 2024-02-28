@@ -15,8 +15,8 @@ import { QueryErrorMessage } from "~app/components/error-message";
 import type { TRPCQueryResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { type CurrencyCode, renderCurrencyName } from "~app/utils/currency";
-import { MONTH } from "~app/utils/time";
 import { Text } from "~components";
+import { MONTH } from "~utils";
 
 type LoaderProps = {
 	query: TRPCQueryResult<"currency.getList">;

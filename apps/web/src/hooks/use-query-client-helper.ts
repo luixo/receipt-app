@@ -3,7 +3,7 @@ import React from "react";
 import type { DehydratedState, QueryClient } from "@tanstack/react-query";
 import { dehydrate, useQueryClient } from "@tanstack/react-query";
 
-import { alwaysTrue } from "~app/utils/utils";
+import { alwaysTrue } from "~utils";
 
 declare global {
 	interface Window {

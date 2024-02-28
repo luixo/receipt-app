@@ -2,8 +2,8 @@ import { TRPCClientError } from "@trpc/client";
 import { describe, expect } from "vitest";
 import { z } from "zod";
 
-import { nonNullishGuard } from "~app/utils/utils";
 import { test } from "~tests/backend/utils/test";
+import { nonNullishGuard } from "~utils";
 import type { UnauthorizedContext } from "~web/handlers/context";
 import { t, unauthProcedure } from "~web/handlers/trpc";
 

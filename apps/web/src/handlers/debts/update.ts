@@ -1,8 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { nonNullishGuard, omitUndefined } from "~app/utils/utils";
 import { debtAmountSchema, debtNoteSchema } from "~app/utils/validation";
+import { nonNullishGuard, omitUndefined } from "~utils";
 import type { SimpleUpdateObject } from "~web/db/types";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";

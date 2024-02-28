@@ -21,8 +21,8 @@ import type {
 import type { Currency, CurrencyCode } from "~app/utils/currency";
 import type { TransformerResult } from "~app/utils/trpc";
 import { transformer } from "~app/utils/trpc";
-import type { ControlledPromise } from "~app/utils/utils";
-import { createPromise } from "~app/utils/utils";
+import type { ControlledPromise } from "~utils";
+import { createPromise } from "~utils";
 import { getCurrencies } from "~web/utils/currency";
 
 import type { appRouter } from "../global/router";

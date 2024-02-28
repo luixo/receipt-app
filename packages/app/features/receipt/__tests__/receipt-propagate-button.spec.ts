@@ -1,9 +1,9 @@
 import { TRPCError } from "@trpc/server";
 
 import { getParticipantSums } from "~app/utils/receipt-item";
-import { nonNullishGuard } from "~app/utils/utils";
 import { expect } from "~tests/frontend/fixtures";
 import { getMutationsByKey } from "~tests/frontend/fixtures/queries";
+import { nonNullishGuard } from "~utils";
 
 import {
 	generateDebtsWith,

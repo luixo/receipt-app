@@ -8,8 +8,8 @@ import {
 	type TRPCReactContext,
 	trpc,
 } from "~app/trpc";
-import type { ItemWithIndex } from "~app/utils/array";
-import { addToArray, removeFromArray, replaceInArray } from "~app/utils/array";
+import type { ItemWithIndex } from "~utils";
+import { addToArray, removeFromArray, replaceInArray } from "~utils";
 import type { ReceiptItemsId, ReceiptsId, UsersId } from "~web/db/models";
 
 type Controller = TRPCReactContext["receipts"]["get"];

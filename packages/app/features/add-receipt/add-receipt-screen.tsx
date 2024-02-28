@@ -17,9 +17,9 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { mutations } from "~app/mutations";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
-import { getToday } from "~app/utils/date";
 import { currencyCodeSchema, receiptNameSchema } from "~app/utils/validation";
 import { Input } from "~components";
+import { getToday } from "~utils";
 import type { AppPage } from "~web/types/page";
 
 type DateProps = {

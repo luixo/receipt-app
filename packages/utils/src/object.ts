@@ -1,3 +1,5 @@
+import type { MakeUndefinedOptional, RemoveCompletelyUndefined } from "./types";
+
 export const keys = <T extends Record<string, unknown>>(obj: T): (keyof T)[] =>
 	Object.keys(obj);
 
@@ -24,3 +26,16 @@ export const mapObjectValues = <Output, T extends Record<string, unknown>>(
 		(acc, [key, input]) => ({ ...acc, [key]: mapper(input, key) }),
 		{} as Record<keyof T, Output>,
 	);
+
+export const omitUndefined = <T extends object>(obj: T) =>
+	Object.fromEntries(
+		Object.entries(obj).filter(([, value]) => value !== undefined),
+	) as RemoveCompletelyUndefined<MakeUndefinedOptional<T>>;
+
+export const pick = <T extends { [s: string]: unknown }, K extends keyof T>(
+	obj: T,
+	objKeys: K[] | readonly K[],
+): Pick<T, K> =>
+	Object.fromEntries(
+		Object.entries(obj).filter(([key]) => objKeys.includes(key as K)),
+	) as Pick<T, K>;

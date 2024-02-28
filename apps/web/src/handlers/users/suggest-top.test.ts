@@ -1,7 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { describe, expect } from "vitest";
 
-import { MONTH } from "~app/utils/time";
 import { MAX_LIMIT } from "~app/utils/validation";
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
@@ -18,6 +17,7 @@ import {
 	expectUnauthorizedError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
+import { MONTH } from "~utils";
 import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./suggest-top";

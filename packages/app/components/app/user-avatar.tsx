@@ -5,7 +5,7 @@ import BoringAvatar from "boring-avatars";
 import { unstable_getImgProps as getImgProps } from "next/image";
 
 import type { TRPCQueryOutput } from "~app/trpc";
-import { hslToRgb } from "~app/utils/color";
+import { hslToRgb } from "~utils";
 import type { UsersId } from "~web/db/models";
 
 const wrapper = tv({

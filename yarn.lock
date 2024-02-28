@@ -5829,6 +5829,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@ra/utils@workspace:packages/utils":
+  version: 0.0.0-use.local
+  resolution: "@ra/utils@workspace:packages/utils"
+  languageName: unknown
+  linkType: soft
+
 "@ra/vitest@workspace:testing/vitest":
   version: 0.0.0-use.local
   resolution: "@ra/vitest@workspace:testing/vitest"

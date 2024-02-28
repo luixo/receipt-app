@@ -2,7 +2,7 @@ import type { Faker } from "@faker-js/faker";
 
 import type { TRPCQueryOutput } from "~app/trpc";
 import { getParticipantSums } from "~app/utils/receipt-item";
-import { nonNullishGuard } from "~app/utils/utils";
+import { nonNullishGuard } from "~utils";
 
 import type {
 	GenerateReceiptBase,

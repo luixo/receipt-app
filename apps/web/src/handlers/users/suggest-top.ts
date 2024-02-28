@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { MONTH } from "~app/utils/time";
+import { MONTH } from "~utils";
 import type { UsersId } from "~web/db/models";
 import { getAccessRole } from "~web/handlers/receipts/utils";
 import { authProcedure } from "~web/handlers/trpc";

@@ -2,10 +2,9 @@ import type { Faker } from "@faker-js/faker";
 
 import type { TRPCQueryOutput } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
-import { MONTH } from "~app/utils/time";
-import { nonNullishGuard } from "~app/utils/utils";
 import { generateAmount } from "~tests/frontend/utils/generators";
 import type { Amount } from "~tests/frontend/utils/generators";
+import { MONTH, nonNullishGuard } from "~utils";
 import type {
 	AccountsId,
 	ReceiptItemsId,

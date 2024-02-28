@@ -1,7 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { describe, expect } from "vitest";
 
-import { MINUTE } from "~app/utils/time";
 import {
 	MAX_PASSWORD_LENGTH,
 	MIN_PASSWORD_LENGTH,
@@ -16,6 +15,7 @@ import {
 	expectTRPCError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
+import { MINUTE } from "~utils";
 import { t } from "~web/handlers/trpc";
 import { getHash } from "~web/utils/crypto";
 

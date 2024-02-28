@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { useInputController } from "~app/hooks/use-input-controller";
-import { formatIsoDate } from "~app/utils/date";
+import { formatIsoDate } from "~utils";
 
 type Form<T> = {
 	value: T;

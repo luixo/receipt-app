@@ -10,6 +10,7 @@
 		"paths": {
 			"~app/*": ["./packages/app/*"],
 			"~components": ["./packages/components/src"],
+			"~utils": ["./packages/utils/src"],
 			"~web/*": ["./apps/web/src/*"],
 			"~mobile/*": ["./apps/mobile/*"],
 			"~tests/backend/*": ["./testing/vitest/*"],

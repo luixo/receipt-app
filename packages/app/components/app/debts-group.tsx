@@ -5,8 +5,8 @@ import { tv } from "@nextui-org/react";
 
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import type { CurrencyCode } from "~app/utils/currency";
-import { round } from "~app/utils/math";
 import { Text } from "~components";
+import { round } from "~utils";
 
 const debt = tv({
 	variants: {

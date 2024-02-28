@@ -20,8 +20,8 @@ import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { mutations } from "~app/mutations";
 import { type TRPCQueryOutput, trpc } from "~app/trpc";
-import { round } from "~app/utils/math";
 import { Text } from "~components";
+import { round } from "~utils";
 import type { UsersId } from "~web/db/models";
 
 type Receipt = TRPCQueryOutput<"receipts.get">;

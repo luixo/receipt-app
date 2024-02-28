@@ -14,8 +14,8 @@ import {
 
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { type TRPCQueryOutput, trpc } from "~app/trpc";
-import { nonNullishGuard } from "~app/utils/utils";
 import { Text } from "~components";
+import { nonNullishGuard } from "~utils";
 
 type Props = {
 	participants: TRPCQueryOutput<"receipts.get">["participants"];

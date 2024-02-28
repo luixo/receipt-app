@@ -19,7 +19,7 @@ import type {
 import { trpc } from "~app/trpc";
 import { getReceiptDebtName } from "~app/utils/receipt";
 import { getParticipantSums } from "~app/utils/receipt-item";
-import type { NonNullableField } from "~app/utils/types";
+import type { NonNullableField } from "~utils";
 
 import { ReceiptDebtSyncInfoModal } from "./receipt-debt-sync-info-modal";
 import {

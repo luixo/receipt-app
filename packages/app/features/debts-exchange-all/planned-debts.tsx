@@ -15,10 +15,9 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { mutations } from "~app/mutations";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
-import { round } from "~app/utils/math";
-import { nonNullishGuard } from "~app/utils/utils";
 import { currencyCodeSchema, currencyRateSchema } from "~app/utils/validation";
 import { Input, Text } from "~components";
+import { nonNullishGuard, round } from "~utils";
 import type { UsersId } from "~web/db/models";
 
 const getDefaultValues = (

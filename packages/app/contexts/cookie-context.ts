@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { noop } from "~app/utils/utils";
+import { noop } from "~utils";
 
 type SetCookieOptions = {
 	maxAge?: number;

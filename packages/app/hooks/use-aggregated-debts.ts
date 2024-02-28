@@ -2,7 +2,7 @@ import React from "react";
 
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
-import { round } from "~app/utils/math";
+import { round } from "~utils";
 
 export const useAggregatedDebts = (
 	query: TRPCQuerySuccessResult<"debts.getUser">,

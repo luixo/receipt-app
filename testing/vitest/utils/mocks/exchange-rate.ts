@@ -1,4 +1,4 @@
-import type { AddParameters } from "~app/utils/types";
+import type { AddParameters } from "~utils";
 import type { ExchangeRateOptions } from "~web/providers/exchange-rate";
 
 export type ExchangeRateOptionsMock = ExchangeRateOptions & {

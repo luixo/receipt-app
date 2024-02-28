@@ -3,7 +3,7 @@ import React from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@nextui-org/react";
 import { DayPicker } from "react-day-picker";
 
-import { MINUTE } from "~app/utils/time";
+import { MINUTE } from "~utils";
 
 const classNames: NonNullable<DayPickerProps["classNames"]> = {
 	root: "flex max-w-full max-h-full bg-background p-4 rounded-large items-center h-80",

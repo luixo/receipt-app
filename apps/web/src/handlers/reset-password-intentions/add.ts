@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { DAY } from "~app/utils/time";
+import { DAY } from "~utils";
 import { generateResetPasswordEmail } from "~web/email/utils";
 import { unauthProcedure } from "~web/handlers/trpc";
 import { MAX_INTENTIONS_AMOUNT, emailSchema } from "~web/handlers/validation";

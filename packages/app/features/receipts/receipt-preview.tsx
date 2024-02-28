@@ -11,8 +11,8 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { mutations } from "~app/mutations";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import { round } from "~app/utils/math";
 import { Text } from "~components";
+import { round } from "~utils";
 
 type InnerProps = {
 	receipt: TRPCQueryOutput<"receipts.get">;

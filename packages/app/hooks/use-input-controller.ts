@@ -8,7 +8,7 @@ import type {
 } from "react-hook-form";
 import { useController } from "react-hook-form";
 
-import { formatIsoDate } from "~app/utils/date";
+import { formatIsoDate } from "~utils";
 
 export type InputControllerOptions<
 	Form extends FieldValues = FieldValues,

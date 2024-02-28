@@ -1,7 +1,6 @@
 import Sharp from "sharp";
 import { describe, expect } from "vitest";
 
-import { MAX_AVATAR_BYTESIZE, MAX_AVATAR_SIDE_SIZE } from "~app/utils/images";
 import { createAuthContext } from "~tests/backend/utils/context";
 import { insertAccountWithSession } from "~tests/backend/utils/data";
 import {
@@ -10,6 +9,7 @@ import {
 	expectUnauthorizedError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
+import { MAX_AVATAR_BYTESIZE, MAX_AVATAR_SIDE_SIZE } from "~utils";
 import { t } from "~web/handlers/trpc";
 
 import { S3_AVATAR_PREFIX, procedure } from "./change-avatar";

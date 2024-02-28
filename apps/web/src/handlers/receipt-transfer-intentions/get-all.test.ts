@@ -1,7 +1,6 @@
 import type { inferProcedureOutput } from "@trpc/server";
 import { describe, expect } from "vitest";
 
-import { MONTH } from "~app/utils/time";
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
 	insertAccount,
@@ -12,6 +11,7 @@ import {
 } from "~tests/backend/utils/data";
 import { expectUnauthorizedError } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
+import { MONTH } from "~utils";
 import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./get-all";

@@ -1,7 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { describe, expect } from "vitest";
 
-import { MINUTE } from "~app/utils/time";
 import { createAuthContext } from "~tests/backend/utils/context";
 import { insertAccountWithSession } from "~tests/backend/utils/data";
 import {
@@ -11,6 +10,7 @@ import {
 } from "~tests/backend/utils/expect";
 import type { TestContext } from "~tests/backend/utils/test";
 import { test } from "~tests/backend/utils/test";
+import { MINUTE } from "~utils";
 import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./resend-email";

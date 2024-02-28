@@ -1,3 +1,5 @@
+import type { TupleOf } from "./types";
+
 export const rotate = <T>(array: T[], by: number): T[] => {
 	const byConstrained = by % array.length;
 	return array
@@ -81,3 +83,8 @@ export const addToArray = <T>(
 	item: T,
 	index: number = array.length - 1,
 ) => [...array.slice(0, index), item, ...array.slice(index)];
+
+export const asFixedSizeArray =
+	<N extends number>() =>
+	<T>(array: T[]) =>
+		array as TupleOf<T, N>;

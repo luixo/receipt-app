@@ -10,7 +10,7 @@ import type {
 import { createStore as createZustandStore, useStore } from "zustand";
 
 import type { UpdateFn } from "~app/cache/utils";
-import type { ParametersExceptFirst } from "~app/utils/types";
+import type { ParametersExceptFirst } from "~utils";
 
 export type ParsedQuery = Partial<Record<string, string>>;
 
