@@ -2,13 +2,13 @@ import React from "react";
 import { View } from "react-native";
 
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
-import { Text } from "~app/components/base/text";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { mutations } from "~app/mutations";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
+import { Text } from "~components";
 import type { ReceiptsId } from "~web/db/models";
 
 type Props = {

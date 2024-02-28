@@ -16,8 +16,6 @@ import { MdSync as SyncIcon } from "react-icons/md";
 import { z } from "zod";
 
 import { UserAvatar } from "~app/components/app/user-avatar";
-import { FileInput } from "~app/components/base/file-input";
-import { Text } from "~app/components/base/text";
 import { ConfirmModal } from "~app/components/confirm-modal";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
@@ -30,6 +28,7 @@ import {
 	convertFileToDataUrl,
 } from "~app/utils/images";
 import { noop } from "~app/utils/utils";
+import { FileInput, Text } from "~components";
 import type { UsersId } from "~web/db/models";
 
 const MAX_ZOOM = 5;

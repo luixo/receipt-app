@@ -3,7 +3,7 @@ import React from "react";
 import { H2, H3, H4 } from "@expo/html-elements";
 import { tv } from "@nextui-org/react";
 
-import { Text } from "~app/components/base/text";
+import { Text } from "~components";
 
 const wrapper = tv({
 	base: "font-medium",
@@ -43,3 +43,5 @@ export const Header = React.memo<Props>(
 		</Text>
 	),
 );
+
+export { H1, H2, H3, H4 } from "@expo/html-elements";

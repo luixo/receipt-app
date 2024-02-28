@@ -15,11 +15,11 @@ import {
 } from "react-icons/ai";
 import { FaChevronDown as ChevronDown } from "react-icons/fa";
 
-import { Text } from "~app/components/base/text";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { mutations } from "~app/mutations";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
+import { Text } from "~components";
 import type { ReceiptsId, UsersId } from "~web/db/models";
 import type { Role } from "~web/handlers/receipts/utils";
 

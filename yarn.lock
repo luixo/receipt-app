@@ -5738,7 +5738,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ra/app@workspace:packages/app"
   dependencies:
-    "@expo/html-elements": ^0.5.1
     "@hookform/resolvers": ^3.1.1
     "@nextui-org/react": ^2.2.9
     "@nextui-org/use-infinite-scroll": ^2.1.2
@@ -5758,7 +5757,6 @@ __metadata:
     nativewind: ^4.0.16
     next-usequerystate: 1.13.0
     react-date-picker: ^10.3.0
-    react-day-picker: ^8.9.1
     react-easy-crop: ^5.0.3
     react-hook-form: ^7.45.2
     react-hot-toast: ^2.4.1
@@ -5767,6 +5765,17 @@ __metadata:
     uuid: ^9.0.0
     zod-form-data: ^2.0.2
     zustand: ^4.3.9
+  languageName: unknown
+  linkType: soft
+
+"@ra/components@workspace:packages/components":
+  version: 0.0.0-use.local
+  resolution: "@ra/components@workspace:packages/components"
+  dependencies:
+    "@expo/html-elements": ^0.5.1
+    "@nextui-org/react": ^2.2.9
+    react-day-picker: ^8.9.1
+    react-icons: ^4.10.1
   languageName: unknown
   linkType: soft
 

@@ -1,4 +1,16 @@
 {
 	"extends": "../../tsconfig",
-	"include": ["rnw-env.d.ts", "nativewind-env.d.ts", "**/*.ts", "**/*.tsx"]
+	"include": [
+		"rnw-env.d.ts",
+		"nativewind-env.d.ts",
+		"**/*.ts",
+		"**/*.tsx",
+		"../components/src/file-input.tsx",
+		"../components/src/header.tsx",
+		"../components/src/input.tsx",
+		"../components/src/page-title.tsx",
+		"../components/src/text.tsx",
+		"../components/src/calendar.tsx",
+		"../components/src/overlay.tsx"
+	]
 }

@@ -4,8 +4,6 @@ import { View } from "react-native";
 import { Button } from "@nextui-org/react";
 import { FiMinus as MinusIcon, FiPlus as PlusIcon } from "react-icons/fi";
 
-import { Input } from "~app/components/base/input";
-import { Text } from "~app/components/base/text";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useSingleInput } from "~app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
@@ -13,6 +11,7 @@ import { mutations } from "~app/mutations";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { partSchema } from "~app/utils/validation";
+import { Input, Text } from "~components";
 import type { ReceiptItemsId, ReceiptsId } from "~web/db/models";
 
 type ReceiptItemPart =

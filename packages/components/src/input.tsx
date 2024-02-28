@@ -9,7 +9,6 @@ import {
 } from "react-icons/bs";
 import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 
-import { useBooleanState } from "~app/hooks/use-boolean-state";
 import type { TRPCMutationResult } from "~app/trpc";
 
 const input = tv({
@@ -49,7 +48,11 @@ export const Input = React.forwardRef<HTMLInputElement, Props>(
 		},
 		ref,
 	) => {
-		const [isVisible, { switchValue }] = useBooleanState(false);
+		const [isVisible, setVisible] = React.useState(false);
+		const switchValue = React.useCallback(
+			() => setVisible((prev) => !prev),
+			[],
+		);
 		const mutations = Array.isArray(mutation)
 			? mutation
 			: mutation

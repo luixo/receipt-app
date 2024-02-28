@@ -8,8 +8,8 @@ import {
 	ModalHeader,
 } from "@nextui-org/react";
 
-import { Header } from "~app/components/base/header";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
+import { Header } from "~components";
 
 type Props = {
 	action: () => void;

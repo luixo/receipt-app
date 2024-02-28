@@ -1,12 +1,18 @@
 import React from "react";
 import { View } from "react-native";
 
-import { H1 } from "@expo/html-elements";
+import Head from "next/head";
 import { IoMdArrowRoundBack as BackArrow } from "react-icons/io";
 import { Link } from "solito/link";
 
-import { PageTitle } from "~app/components/base/page-title";
-import { Text } from "~app/components/base/text";
+import { H1, Text } from "~components";
+
+// add React.memo when https://github.com/vercel/next.js/issues/59655 is resolved
+const PageTitle: React.FC<{ children?: string }> = ({ children }) => (
+	<Head>
+		<title>{["RA", children].filter(Boolean).join(" - ")}</title>
+	</Head>
+);
 
 type Props = {
 	backHref?: string;

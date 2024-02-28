@@ -7,7 +7,6 @@ import { useForm } from "react-hook-form";
 import type { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 
-import { Input } from "~app/components/base/input";
 import { useInputController } from "~app/hooks/use-input-controller";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { mutations } from "~app/mutations";
@@ -17,6 +16,7 @@ import {
 	quantitySchema,
 	receiptItemNameSchema,
 } from "~app/utils/validation";
+import { Input } from "~components";
 import type { ReceiptsId } from "~web/db/models";
 
 type NameProps = {

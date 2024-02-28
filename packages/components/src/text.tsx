@@ -1,7 +1,7 @@
 import React from "react";
 import { Text as RawText } from "react-native";
 
-import type { TextProps } from "@expo/html-elements/build/primitives/Text";
+import type { Span } from "@expo/html-elements";
 import { tv } from "@nextui-org/react";
 
 const text = tv({
@@ -9,7 +9,7 @@ const text = tv({
 });
 
 type RawTextProps = Omit<
-	React.ComponentProps<typeof RawText> & TextProps,
+	React.ComponentProps<typeof RawText> & React.ComponentProps<typeof Span>,
 	"style" | "accessibilityRole"
 >;
 

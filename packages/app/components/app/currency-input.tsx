@@ -5,11 +5,11 @@ import type { Path, PathValue, UseFormReturn } from "react-hook-form";
 import type { z } from "zod";
 
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
-import { Input } from "~app/components/base/input";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import type { currencyCodeSchema } from "~app/utils/validation";
+import { Input } from "~components";
 
 type MinimalForm = {
 	currencyCode: z.infer<typeof currencyCodeSchema>;

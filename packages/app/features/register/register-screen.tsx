@@ -6,7 +6,6 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "solito/navigation";
 import { z } from "zod";
 
-import { Input } from "~app/components/base/input";
 import { PageHeader } from "~app/components/page-header";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { mutations } from "~app/mutations";
@@ -16,6 +15,7 @@ import {
 	passwordSchema,
 	userNameSchema,
 } from "~app/utils/validation";
+import { Input } from "~components";
 import type { AppPage } from "~web/types/page";
 
 type RegistrationForm = {

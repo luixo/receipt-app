@@ -4,13 +4,13 @@ import { View } from "react-native";
 import { Checkbox } from "@nextui-org/react";
 import { FaArrowDown as ArrowDown } from "react-icons/fa";
 
-import { Header } from "~app/components/base/header";
 import { EmptyCard } from "~app/components/empty-card";
 import { AddReceiptItemController } from "~app/features/add-receipt-item/add-receipt-item-controller";
 import { ReceiptParticipants } from "~app/features/receipt-participants/receipt-participants";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { round } from "~app/utils/math";
+import { Header } from "~components";
 import type { ReceiptItemsId } from "~web/db/models";
 
 import { ReceiptItem } from "./receipt-item";

@@ -4,13 +4,13 @@ import { Button, Spinner } from "@nextui-org/react";
 import { IoTrashBin as TrashBinIcon } from "react-icons/io5";
 import { MdLink as LinkIcon, MdLinkOff as UnlinkIcon } from "react-icons/md";
 
-import { Input } from "~app/components/base/input";
 import { useSingleInput } from "~app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { mutations } from "~app/mutations";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { emailSchema } from "~app/utils/validation";
+import { Input } from "~components";
 import type { AccountsId } from "~web/db/models";
 
 type Props = {

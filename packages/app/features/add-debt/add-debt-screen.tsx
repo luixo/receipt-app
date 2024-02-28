@@ -13,7 +13,6 @@ import {
 	SignButtonGroup,
 } from "~app/components/app/sign-button-group";
 import { UsersSuggest } from "~app/components/app/users-suggest";
-import { Input } from "~app/components/base/input";
 import { DateInput } from "~app/components/date-input";
 import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
@@ -29,6 +28,7 @@ import {
 	debtNoteSchema,
 	userIdSchema,
 } from "~app/utils/validation";
+import { Input } from "~components";
 import type { UsersId } from "~web/db/models";
 import type { AppPage } from "~web/types/page";
 

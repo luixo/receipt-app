@@ -7,10 +7,10 @@ import {
 	MdSync as SyncIcon,
 } from "react-icons/md";
 
-import { Text } from "~app/components/base/text";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import { useSsrFormat } from "~app/hooks/use-ssr-format";
 import type { TRPCQueryOutput } from "~app/trpc";
+import { Text } from "~components";
 
 type Intentions = TRPCQueryOutput<"debts.getIntentions">;
 

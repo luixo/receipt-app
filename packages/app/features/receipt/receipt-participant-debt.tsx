@@ -11,13 +11,13 @@ import {
 
 import { DebtSyncStatus } from "~app/components/app/debt-sync-status";
 import { LoadableUser } from "~app/components/app/loadable-user";
-import { Text } from "~app/components/base/text";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { mutations } from "~app/mutations";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { getReceiptDebtName } from "~app/utils/receipt";
+import { Text } from "~components";
 import type { UsersId } from "~web/db/models";
 
 export const isDebtInSyncWithReceipt = (

@@ -74,12 +74,12 @@ module.exports = {
 						position: "before",
 					},
 					{
-						pattern: "~*/**",
+						pattern: "{~*/**,~*}",
 						group: "internal",
 						position: "before",
 					},
 				],
-				pathGroupsExcludedImportTypes: ["react", "react-native", "~*/**"],
+				pathGroupsExcludedImportTypes: ["react", "react-native", "{~*/**,~*}"],
 			},
 		],
 		"import/extensions": "off",
@@ -112,6 +112,7 @@ module.exports = {
 		...[
 			["apps/web", ["next.config.js", "**/*.test.ts", "**/*.spec.ts"]],
 			["apps/mobile"],
+			["packages/components"],
 			["packages/app", ["**/*.spec.ts"]],
 			["scripts", true],
 			["testing/vitest", true],

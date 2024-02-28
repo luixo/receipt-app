@@ -3,7 +3,7 @@ import { View } from "react-native";
 
 import { tv } from "@nextui-org/react";
 
-import { Header } from "~app/components/base/header";
+import { Header } from "~components";
 
 const wrapper = tv({
 	base: "m-10 gap-4 self-center md:max-w-lg",

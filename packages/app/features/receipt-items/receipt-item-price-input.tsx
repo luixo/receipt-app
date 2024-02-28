@@ -1,8 +1,6 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Input } from "~app/components/base/input";
-import { Text } from "~app/components/base/text";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import { useSingleInput } from "~app/hooks/use-single-input";
@@ -12,6 +10,7 @@ import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import { priceSchema } from "~app/utils/validation";
+import { Input, Text } from "~components";
 import type { ReceiptsId } from "~web/db/models";
 
 type ReceiptItem = TRPCQueryOutput<"receipts.get">["items"][number];

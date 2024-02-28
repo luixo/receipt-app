@@ -4,7 +4,6 @@ import { Button, Spinner } from "@nextui-org/react";
 import { IoTrashBin as TrashBin } from "react-icons/io5";
 import { useRouter } from "solito/navigation";
 
-import { Input } from "~app/components/base/input";
 import { QueryErrorMessage } from "~app/components/error-message";
 import { RemoveButton } from "~app/components/remove-button";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
@@ -14,6 +13,7 @@ import { mutations } from "~app/mutations";
 import type { TRPCQueryOutput, TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { userNameSchema } from "~app/utils/validation";
+import { Input } from "~components";
 import type { UsersId } from "~web/db/models";
 
 import { UserConnectionInput } from "./user-connection-input";

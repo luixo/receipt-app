@@ -3,11 +3,11 @@ import { View } from "react-native";
 
 import { Spinner } from "@nextui-org/react";
 
-import { Header } from "~app/components/base/header";
 import { EmptyCard } from "~app/components/empty-card";
 import { QueryErrorMessage } from "~app/components/error-message";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
+import { Header } from "~components";
 
 import { InboundReceiptTransferIntention } from "./inbound-receipt-transfer-intention";
 import { OutboundReceiptTransferIntention } from "./outbound-receipt-transfer-intention";

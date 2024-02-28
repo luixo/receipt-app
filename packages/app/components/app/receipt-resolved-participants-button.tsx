@@ -13,9 +13,9 @@ import {
 } from "react-icons/md";
 
 import { LoadableUser } from "~app/components/app/loadable-user";
-import { Text } from "~app/components/base/text";
 import { type TRPCQueryOutput, trpc } from "~app/trpc";
 import { nonNullishGuard } from "~app/utils/utils";
+import { Text } from "~components";
 
 type Props = {
 	participants: TRPCQueryOutput<"receipts.get">["participants"];

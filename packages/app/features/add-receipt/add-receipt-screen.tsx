@@ -8,7 +8,6 @@ import { useRouter } from "solito/navigation";
 import { z } from "zod";
 
 import { CurrencyInput } from "~app/components/app/currency-input";
-import { Input } from "~app/components/base/input";
 import { DateInput } from "~app/components/date-input";
 import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
@@ -20,6 +19,7 @@ import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import { getToday } from "~app/utils/date";
 import { currencyCodeSchema, receiptNameSchema } from "~app/utils/validation";
+import { Input } from "~components";
 import type { AppPage } from "~web/types/page";
 
 type DateProps = {

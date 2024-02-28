@@ -11,13 +11,11 @@ import {
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { Header } from "~app/components/base/header";
-import { Input } from "~app/components/base/input";
-import { Text } from "~app/components/base/text";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { mutations } from "~app/mutations";
 import { trpc } from "~app/trpc";
 import { emailSchema } from "~app/utils/validation";
+import { Header, Input, Text } from "~components";
 
 type ResetPasswordForm = {
 	email: string;

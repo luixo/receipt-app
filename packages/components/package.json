@@ -1,0 +1,12 @@
+{
+	"version": "0.0.0",
+	"name": "@ra/components",
+	"main": "src/index.ts",
+	"dependencies": {
+		"@expo/html-elements": "^0.5.1",
+		"@nextui-org/react": "^2.2.9",
+		"react-day-picker": "^8.9.1",
+		"react-icons": "^4.10.1"
+	},
+	"sideEffects": false
+}

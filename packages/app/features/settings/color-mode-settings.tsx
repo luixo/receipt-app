@@ -4,11 +4,11 @@ import { View } from "react-native";
 import { Checkbox, Switch } from "@nextui-org/react";
 import { FiMoon as MoonIcon, FiSun as SunIcon } from "react-icons/fi";
 
-import { Header } from "~app/components/base/header";
 import {
 	useLastColorModeCookie,
 	useSelectedColorModeCookie,
 } from "~app/hooks/use-color-modes";
+import { Header } from "~components";
 
 export const ColorModeSettings: React.FC = () => {
 	const [lastColorMode] = useLastColorModeCookie();

@@ -11,7 +11,6 @@ import {
 } from "@nextui-org/react";
 
 import { ReceiptItemLockedButton } from "~app/components/app/receipt-item-locked-button";
-import { Text } from "~app/components/base/text";
 import { ErrorMessage } from "~app/components/error-message";
 import { RemoveButton } from "~app/components/remove-button";
 import { ReceiptItemPart } from "~app/features/receipt-item-parts/receipt-item-part";
@@ -22,6 +21,7 @@ import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import { round } from "~app/utils/math";
+import { Text } from "~components";
 import type { ReceiptsId, UsersId } from "~web/db/models";
 
 import { ParticipantChip } from "./participant-chip";

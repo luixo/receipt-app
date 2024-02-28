@@ -1,5 +1,6 @@
-import { H1, H2, H3, H4 } from "@expo/html-elements";
 import { remapProps } from "nativewind";
+
+import { H1, H2, H3, H4 } from "~components";
 
 let applied = false;
 export const applyRemaps = () => {

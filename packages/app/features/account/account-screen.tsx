@@ -5,7 +5,6 @@ import { useQueryClient } from "@tanstack/react-query";
 import { FaUser as AccountIcon } from "react-icons/fa";
 import { useRouter } from "solito/navigation";
 
-import { Input } from "~app/components/base/input";
 import { QueryErrorMessage } from "~app/components/error-message";
 import { PageHeader } from "~app/components/page-header";
 import { ChangePasswordScreen } from "~app/features/change-password/change-password-screen";
@@ -16,6 +15,7 @@ import { mutations } from "~app/mutations";
 import type { TRPCQueryOutput, TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { userNameSchema } from "~app/utils/validation";
+import { Input } from "~components";
 import type { AppPage } from "~web/types/page";
 
 import { AccountAvatarInput } from "./account-avatar-input";

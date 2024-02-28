@@ -16,12 +16,12 @@ import {
 
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { UsersSuggest } from "~app/components/app/users-suggest";
-import { Text } from "~app/components/base/text";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { mutations } from "~app/mutations";
 import { type TRPCQueryOutput, trpc } from "~app/trpc";
 import { round } from "~app/utils/math";
+import { Text } from "~components";
 import type { UsersId } from "~web/db/models";
 
 type Receipt = TRPCQueryOutput<"receipts.get">;

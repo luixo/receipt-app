@@ -6,7 +6,6 @@ import { MdOutlineReceipt as ReceiptIcon } from "react-icons/md";
 
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { ReceiptParticipantResolvedButton } from "~app/components/app/receipt-participant-resolved-button";
-import { Text } from "~app/components/base/text";
 import { QueryErrorMessage } from "~app/components/error-message";
 import { PageHeader } from "~app/components/page-header";
 import { ReceiptItems } from "~app/features/receipt-items/receipt-items-screen";
@@ -14,6 +13,7 @@ import { useBooleanState } from "~app/hooks/use-boolean-state";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { round } from "~app/utils/math";
+import { Text } from "~components";
 import type { ReceiptsId } from "~web/db/models";
 
 import { ReceiptCurrencyInput } from "./receipt-currency-input";

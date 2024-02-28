@@ -9,6 +9,7 @@
 		"module": "esnext",
 		"paths": {
 			"~app/*": ["./packages/app/*"],
+			"~components": ["./packages/components/src"],
 			"~web/*": ["./apps/web/src/*"],
 			"~mobile/*": ["./apps/mobile/*"],
 			"~tests/backend/*": ["./testing/vitest/*"],

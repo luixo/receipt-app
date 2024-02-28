@@ -9,7 +9,6 @@ import { DebtControlButtons } from "~app/components/app/debt-control-buttons";
 import { DebtSyncStatus } from "~app/components/app/debt-sync-status";
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { SignButtonGroup } from "~app/components/app/sign-button-group";
-import { Input } from "~app/components/base/input";
 import { DateInput } from "~app/components/date-input";
 import { QueryErrorMessage } from "~app/components/error-message";
 import { PageHeader } from "~app/components/page-header";
@@ -23,6 +22,7 @@ import type { TRPCQueryOutput, TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import { debtAmountSchema, debtNoteSchema } from "~app/utils/validation";
+import { Input } from "~components";
 import type { ReceiptsId } from "~web/db/models";
 import type { AppPage } from "~web/types/page";
 
