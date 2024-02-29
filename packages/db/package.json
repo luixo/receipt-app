@@ -14,7 +14,7 @@
 	"devDependencies": {
 		"extract-pg-schema": "^4.1.0",
 		"kanel": "^3.4.1",
-		"tsx": "^3.12.7",
+		"tsx": "^4.7.1",
 		"vitest": "^1.2.2"
 	}
 }

@@ -14,6 +14,7 @@ declare module "vitest" {
 }
 
 export default async (context: GlobalSetupContext) => {
+	process.env.TZ = "GMT";
 	const routerConfig = {
 		port: (await findFreePorts())[0]!,
 		hostname: "localhost",
