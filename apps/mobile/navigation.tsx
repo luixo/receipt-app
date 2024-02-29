@@ -1,6 +1,9 @@
 import React from "react";
 
+import type { LinkingOptions } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import * as Linking from "expo-linking";
 
 import { AccountScreen } from "~app/features/account/account-screen";
 import { AddDebtScreen } from "~app/features/add-debt/add-debt-screen";
@@ -64,163 +67,220 @@ export type AppParamList = {
 	receiptTransferIntentions: undefined;
 };
 
+const NavigationProvider: React.FC<React.PropsWithChildren<object>> = ({
+	children,
+}) => {
+	const navigationTheme = React.useMemo(
+		() => ({
+			dark: false,
+			colors: {
+				primary: "unknown",
+				background: "unknown",
+				card: "unknown",
+				text: "unknown",
+				border: "unknown",
+				notification: "unknown",
+			},
+		}),
+		[],
+	);
+	const linking = React.useMemo<LinkingOptions<AppParamList>>(
+		() => ({
+			prefixes: [Linking.createURL("/")],
+			config: {
+				initialRouteName: "home",
+				screens: {
+					home: "",
+					login: "login/",
+					register: "register/",
+					account: "account/",
+					receipts: "receipts/",
+					receipt: "receipts/:id",
+					addReceipt: "receipts/add",
+					users: "users/",
+					user: "users/:id",
+					addUser: "users/add",
+					userConnectionIntentions: "users/connections",
+					receiptTransferIntentions: "receipts/transfer-intentions",
+					changePassword: "account/change-password",
+					resetPassword: "reset-password/",
+					debts: "debts/",
+					userDebts: "debts/user/:userId",
+					debt: "debts/:id",
+					settings: "settings/",
+					addDebt: "debts/add",
+					debtsSyncIntentions: "debts/intentions",
+				},
+			},
+		}),
+		[],
+	);
+	return (
+		<NavigationContainer linking={linking} theme={navigationTheme}>
+			{children}
+		</NavigationContainer>
+	);
+};
+
 const Stack = createNativeStackNavigator<AppParamList>();
 
 export const NativeNavigation: React.FC = () => (
-	<Stack.Navigator>
-		<Stack.Screen
-			name="home"
-			component={HomeScreen}
-			options={{
-				title: "Home",
-			}}
-		/>
-		<Stack.Screen
-			name="register"
-			component={RegisterScreen}
-			options={{
-				title: "Register",
-			}}
-		/>
-		<Stack.Screen
-			name="login"
-			component={LoginScreen}
-			options={{
-				title: "Login",
-			}}
-		/>
-		<Stack.Screen
-			name="account"
-			component={AccountScreen}
-			options={{
-				title: "Account",
-			}}
-		/>
-		<Stack.Screen
-			name="receipts"
-			component={ReceiptsScreen}
-			options={{
-				title: "Receipts",
-			}}
-		/>
-		<Stack.Screen
-			name="receipt"
-			component={ReceiptScreen}
-			options={{
-				title: "Receipt",
-			}}
-		/>
-		<Stack.Screen
-			name="users"
-			component={UsersScreen}
-			options={{
-				title: "Users",
-			}}
-		/>
-		<Stack.Screen
-			name="user"
-			component={UserScreen}
-			options={{
-				title: "User",
-			}}
-		/>
-		<Stack.Screen
-			name="addUser"
-			component={AddUserScreen}
-			options={{
-				title: "Add user",
-			}}
-		/>
-		<Stack.Screen
-			name="userConnectionIntentions"
-			component={ConnectionIntentionsScreen}
-			options={{
-				title: "Connection intentions",
-			}}
-		/>
-		<Stack.Screen
-			name="receiptTransferIntentions"
-			component={ReceiptTransferIntentionsScreen}
-			options={{
-				title: "Receipt transfer intentions",
-			}}
-		/>
-		<Stack.Screen
-			name="changePassword"
-			component={ChangePasswordScreen}
-			options={{
-				title: "Change password",
-			}}
-		/>
-		<Stack.Screen
-			name="addReceipt"
-			component={AddReceiptScreen}
-			options={{
-				title: "Add receipt",
-			}}
-		/>
-		<Stack.Screen
-			name="resetPassword"
-			component={ResetPasswordScreen}
-			options={{
-				title: "Reset password",
-			}}
-		/>
-		<Stack.Screen
-			name="debts"
-			component={DebtsScreen}
-			options={{
-				title: "Debts",
-			}}
-		/>
-		<Stack.Screen
-			name="userDebts"
-			component={UserDebtsScreen}
-			options={{
-				title: "User debts",
-			}}
-		/>
-		<Stack.Screen
-			name="debtsExchange"
-			component={DebtsExchangeScreen}
-			options={{
-				title: "Debts exchange",
-			}}
-		/>
-		<Stack.Screen
-			name="debtsExchangeAll"
-			component={DebtsExchangeAllScreen}
-			options={{
-				title: "Debts exchange / All",
-			}}
-		/>
-		<Stack.Screen
-			name="debt"
-			component={DebtScreen}
-			options={{
-				title: "Debt",
-			}}
-		/>
-		<Stack.Screen
-			name="settings"
-			component={SettingsScreen}
-			options={{
-				title: "Settings",
-			}}
-		/>
-		<Stack.Screen
-			name="addDebt"
-			component={AddDebtScreen}
-			options={{
-				title: "Add debt",
-			}}
-		/>
-		<Stack.Screen
-			name="debtsSyncIntentions"
-			component={DebtsIntentionsScreen}
-			options={{
-				title: "Debts sync intentions",
-			}}
-		/>
-	</Stack.Navigator>
+	<NavigationProvider>
+		<Stack.Navigator>
+			<Stack.Screen
+				name="home"
+				component={HomeScreen}
+				options={{
+					title: "Home",
+				}}
+			/>
+			<Stack.Screen
+				name="register"
+				component={RegisterScreen}
+				options={{
+					title: "Register",
+				}}
+			/>
+			<Stack.Screen
+				name="login"
+				component={LoginScreen}
+				options={{
+					title: "Login",
+				}}
+			/>
+			<Stack.Screen
+				name="account"
+				component={AccountScreen}
+				options={{
+					title: "Account",
+				}}
+			/>
+			<Stack.Screen
+				name="receipts"
+				component={ReceiptsScreen}
+				options={{
+					title: "Receipts",
+				}}
+			/>
+			<Stack.Screen
+				name="receipt"
+				component={ReceiptScreen}
+				options={{
+					title: "Receipt",
+				}}
+			/>
+			<Stack.Screen
+				name="users"
+				component={UsersScreen}
+				options={{
+					title: "Users",
+				}}
+			/>
+			<Stack.Screen
+				name="user"
+				component={UserScreen}
+				options={{
+					title: "User",
+				}}
+			/>
+			<Stack.Screen
+				name="addUser"
+				component={AddUserScreen}
+				options={{
+					title: "Add user",
+				}}
+			/>
+			<Stack.Screen
+				name="userConnectionIntentions"
+				component={ConnectionIntentionsScreen}
+				options={{
+					title: "Connection intentions",
+				}}
+			/>
+			<Stack.Screen
+				name="receiptTransferIntentions"
+				component={ReceiptTransferIntentionsScreen}
+				options={{
+					title: "Receipt transfer intentions",
+				}}
+			/>
+			<Stack.Screen
+				name="changePassword"
+				component={ChangePasswordScreen}
+				options={{
+					title: "Change password",
+				}}
+			/>
+			<Stack.Screen
+				name="addReceipt"
+				component={AddReceiptScreen}
+				options={{
+					title: "Add receipt",
+				}}
+			/>
+			<Stack.Screen
+				name="resetPassword"
+				component={ResetPasswordScreen}
+				options={{
+					title: "Reset password",
+				}}
+			/>
+			<Stack.Screen
+				name="debts"
+				component={DebtsScreen}
+				options={{
+					title: "Debts",
+				}}
+			/>
+			<Stack.Screen
+				name="userDebts"
+				component={UserDebtsScreen}
+				options={{
+					title: "User debts",
+				}}
+			/>
+			<Stack.Screen
+				name="debtsExchange"
+				component={DebtsExchangeScreen}
+				options={{
+					title: "Debts exchange",
+				}}
+			/>
+			<Stack.Screen
+				name="debtsExchangeAll"
+				component={DebtsExchangeAllScreen}
+				options={{
+					title: "Debts exchange / All",
+				}}
+			/>
+			<Stack.Screen
+				name="debt"
+				component={DebtScreen}
+				options={{
+					title: "Debt",
+				}}
+			/>
+			<Stack.Screen
+				name="settings"
+				component={SettingsScreen}
+				options={{
+					title: "Settings",
+				}}
+			/>
+			<Stack.Screen
+				name="addDebt"
+				component={AddDebtScreen}
+				options={{
+					title: "Add debt",
+				}}
+			/>
+			<Stack.Screen
+				name="debtsSyncIntentions"
+				component={DebtsIntentionsScreen}
+				options={{
+					title: "Debts sync intentions",
+				}}
+			/>
+		</Stack.Navigator>
+	</NavigationProvider>
 );

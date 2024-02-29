@@ -1,7 +1,6 @@
 import React from "react";
 
 import { CookieProvider } from "~app/providers/cookie";
-import { NavigationProvider } from "~app/providers/navigation";
 import { PersisterProvider } from "~app/providers/persist-client";
 import { PersistStorageProvider } from "~app/providers/persist-storage";
 import { QueryClientProvider } from "~app/providers/query-client";
@@ -13,7 +12,9 @@ import { ThemeProvider } from "~app/providers/theme";
 import { TrpcProvider } from "~app/providers/trpc";
 import { getSSRContextCookieData } from "~app/utils/cookie-data";
 
-const App: React.FC = () => (
+import { NativeNavigation } from "./navigation";
+
+const Provider: React.FC<React.PropsWithChildren> = ({ children }) => (
 	<ShimsProvider>
 		<QueryClientProvider>
 			<TrpcProvider>
@@ -29,9 +30,7 @@ const App: React.FC = () => (
 								{/* TODO: add react native query params */}
 								<SearchParamsProvider searchParams={{}}>
 									<ThemeProvider>
-										<QueryDevToolsProvider>
-											<NavigationProvider />
-										</QueryDevToolsProvider>
+										<QueryDevToolsProvider>{children}</QueryDevToolsProvider>
 									</ThemeProvider>
 								</SearchParamsProvider>
 							</SSRDataProvider>
@@ -41,6 +40,12 @@ const App: React.FC = () => (
 			</TrpcProvider>
 		</QueryClientProvider>
 	</ShimsProvider>
+);
+
+const App: React.FC = () => (
+	<Provider>
+		<NativeNavigation />
+	</Provider>
 );
 
 export default App;
