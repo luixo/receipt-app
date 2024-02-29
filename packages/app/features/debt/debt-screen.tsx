@@ -1,7 +1,5 @@
 import React from "react";
 
-import { Button, Link, Spinner } from "@nextui-org/react";
-import { MdOutlineReceipt as ReceiptIcon } from "react-icons/md";
 import { useParams, useRouter } from "solito/navigation";
 
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
@@ -21,7 +19,8 @@ import type { TRPCQueryOutput, TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import { debtAmountSchema, debtNoteSchema } from "~app/utils/validation";
-import { Input } from "~components";
+import { Button, Input, Link, Spinner } from "~components";
+import { ReceiptIcon } from "~components/icons";
 import * as mutations from "~mutations";
 import type { ReceiptsId } from "~web/db/models";
 import type { AppPage } from "~web/types/page";

@@ -2,7 +2,6 @@ import React from "react";
 import { View } from "react-native";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Spinner } from "@nextui-org/react";
 import type { UseFormReturn } from "react-hook-form";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
@@ -15,7 +14,7 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import { currencyCodeSchema, currencyRateSchema } from "~app/utils/validation";
-import { Input, Text } from "~components";
+import { Button, Input, Spinner, Text } from "~components";
 import * as mutations from "~mutations";
 import { nonNullishGuard, round } from "~utils";
 import type { UsersId } from "~web/db/models";

@@ -1,11 +1,6 @@
 import React from "react";
 import { View } from "react-native";
 
-import {
-	Autocomplete,
-	AutocompleteItem,
-	AutocompleteSection,
-} from "@nextui-org/react";
 import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
 import type { CollectionElement } from "@react-types/shared";
 import { keepPreviousData } from "@tanstack/react-query";
@@ -14,6 +9,11 @@ import { LoadableUser } from "~app/components/app/loadable-user";
 import { useDebouncedValue } from "~app/hooks/use-debounced-value";
 import type { TRPCQueryInput } from "~app/trpc";
 import { trpc } from "~app/trpc";
+import {
+	Autocomplete,
+	AutocompleteItem,
+	AutocompleteSection,
+} from "~components";
 import type { UsersId } from "~web/db/models";
 
 const LIMIT = 5;

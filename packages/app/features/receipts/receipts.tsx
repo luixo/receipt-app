@@ -1,16 +1,24 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Button, Divider, Link, Pagination, Spinner } from "@nextui-org/react";
 import { keepPreviousData } from "@tanstack/react-query";
-import { MdAdd as AddIcon } from "react-icons/md";
 
 import { EmptyCard } from "~app/components/empty-card";
 import { QueryErrorMessage } from "~app/components/error-message";
 import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import type { TRPCQueryErrorResult, TRPCQueryInput } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import { Header, Overlay, Text } from "~components";
+import {
+	Button,
+	Divider,
+	Header,
+	Link,
+	Overlay,
+	Pagination,
+	Spinner,
+	Text,
+} from "~components";
+import { AddIcon } from "~components/icons";
 import * as queries from "~queries";
 import type { ReceiptsId } from "~web/db/models";
 

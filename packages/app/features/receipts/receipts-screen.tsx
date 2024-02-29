@@ -1,15 +1,10 @@
 import React from "react";
 
-import { Badge, Button, Link } from "@nextui-org/react";
-import { IoMdMail as InboxIcon } from "react-icons/io";
-import {
-	MdAdd as AddIcon,
-	MdOutlineReceipt as ReceiptIcon,
-} from "react-icons/md";
-
 import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
 import { useReceiptTransfersIntentions } from "~app/hooks/use-receipt-transfer-intentions";
+import { Badge, Button, Link } from "~components";
+import { AddIcon, InboxIcon, ReceiptIcon } from "~components/icons";
 import type { AppPage } from "~web/types/page";
 
 import { FilterButton } from "./filter-button";

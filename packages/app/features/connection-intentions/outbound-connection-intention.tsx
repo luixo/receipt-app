@@ -1,12 +1,10 @@
 import React from "react";
 
-import { Button } from "@nextui-org/react";
-import { MdLinkOff as UnlinkIcon } from "react-icons/md";
-
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import { Input } from "~components";
+import { Button, Input } from "~components";
+import { UnlinkIcon } from "~components/icons";
 import * as mutations from "~mutations";
 
 type Props = {

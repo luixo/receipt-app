@@ -1,12 +1,10 @@
 import React from "react";
 
-import { Spinner } from "@nextui-org/react";
-
 import { EmptyCard } from "~app/components/empty-card";
 import { QueryErrorMessage } from "~app/components/error-message";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import { Header } from "~components";
+import { Header, Spinner } from "~components";
 
 import { InboundConnectionIntention } from "./inbound-connection-intention";
 import { OutboundConnectionIntention } from "./outbound-connection-intention";

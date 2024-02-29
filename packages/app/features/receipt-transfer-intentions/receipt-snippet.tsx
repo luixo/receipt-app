@@ -1,11 +1,10 @@
 import React from "react";
 
-import { MdOutlineReceipt as ReceiptIcon } from "react-icons/md";
-
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import { useSsrFormat } from "~app/hooks/use-ssr-format";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { Text } from "~components";
+import { ReceiptIcon } from "~components/icons";
 
 type Props = {
 	receipt: TRPCQueryOutput<"receiptTransferIntentions.getAll">["inbound"][number]["receipt"];

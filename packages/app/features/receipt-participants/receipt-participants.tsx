@@ -1,9 +1,6 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Accordion, AccordionItem } from "@nextui-org/react";
-import { FaUser as UserIcon } from "react-icons/fa";
-
 import type { TRPCQueryOutput } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import {
@@ -11,7 +8,8 @@ import {
 	getItemCalculations,
 	getParticipantSums,
 } from "~app/utils/receipt-item";
-import { Text } from "~components";
+import { Accordion, AccordionItem, Text } from "~components";
+import { UserIcon } from "~components/icons";
 import { nonNullishGuard } from "~utils";
 import type { ReceiptsId, UsersId } from "~web/db/models";
 

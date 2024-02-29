@@ -1,7 +1,6 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -9,7 +8,7 @@ import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
 import { passwordSchema } from "~app/utils/validation";
-import { Input } from "~components";
+import { Button, Input } from "~components";
 import * as mutations from "~mutations";
 import type { AppPage } from "~web/types/page";
 

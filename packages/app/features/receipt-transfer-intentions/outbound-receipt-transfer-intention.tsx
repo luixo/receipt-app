@@ -1,12 +1,11 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Button } from "@nextui-org/react";
-
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
+import { Button } from "~components";
 import * as mutations from "~mutations";
 
 import { ReceiptSnippet } from "./receipt-snippet";

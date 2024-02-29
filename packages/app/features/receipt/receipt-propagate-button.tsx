@@ -1,12 +1,5 @@
 import React from "react";
 
-import { Button } from "@nextui-org/react";
-import {
-	MdInfo as InfoIcon,
-	MdSend as SendIcon,
-	MdSync as SyncIcon,
-} from "react-icons/md";
-
 import { QueryErrorMessage } from "~app/components/error-message";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
@@ -18,6 +11,8 @@ import type {
 import { trpc } from "~app/trpc";
 import { getReceiptDebtName } from "~app/utils/receipt";
 import { getParticipantSums } from "~app/utils/receipt-item";
+import { Button } from "~components";
+import { InfoIcon, SendIcon, SyncIcon } from "~components/icons";
 import * as mutations from "~mutations";
 import type { NonNullableField } from "~utils";
 

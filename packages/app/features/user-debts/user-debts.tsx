@@ -1,9 +1,6 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Button, Divider, Link, Spinner } from "@nextui-org/react";
-import { BsCurrencyExchange as ExchangeIcon } from "react-icons/bs";
-import { MdAdd as AddIcon } from "react-icons/md";
 import { useRouter } from "solito/navigation";
 
 import { DebtsGroup } from "~app/components/app/debts-group";
@@ -14,6 +11,8 @@ import { ShowResolvedDebtsOption } from "~app/features/settings/show-resolved-de
 import { useAggregatedDebts } from "~app/hooks/use-aggregated-debts";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
+import { Button, Divider, Link, Spinner } from "~components";
+import { AddIcon, ExchangeIcon } from "~components/icons";
 import type { UsersId } from "~web/db/models";
 import { useShowResolvedDebts } from "~web/hooks/use-show-resolved-debts";
 

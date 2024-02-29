@@ -1,13 +1,9 @@
 import React from "react";
 
-import {
-	BsPersonCheck as LoginIcon,
-	BsPersonPlusFill as RegisterIcon,
-} from "react-icons/bs";
-
 import { AuthEffect } from "~app/components/app/auth-effect";
 import type { MenuElement } from "~app/components/page";
 import { Page } from "~app/components/page";
+import { LoginIcon, RegisterIcon } from "~components/icons";
 
 const PUBLIC_ELEMENTS: MenuElement[] = [
 	{

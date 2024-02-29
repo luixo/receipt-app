@@ -1,9 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Divider } from "@nextui-org/react";
-
-import { Header, Text } from "~components";
+import { Divider, Header, Text } from "~components";
 import type { AppPage } from "~web/types/page";
 
 import { AutoAcceptDebtsOption } from "./auto-accept-debts-option";

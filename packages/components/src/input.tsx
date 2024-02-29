@@ -1,15 +1,13 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Button, Input as InputRaw, tv } from "@nextui-org/react";
+import { Input as InputRaw } from "@nextui-org/react";
 import type { FieldError } from "react-hook-form";
-import {
-	BsEyeFill as EyeIcon,
-	BsEyeSlashFill as EyeSlashIcon,
-} from "react-icons/bs";
-import { IoCheckmarkCircleOutline as CheckMark } from "react-icons/io5";
 
 import type { TRPCMutationResult } from "~app/trpc";
+import { CheckMark, EyeIcon, EyeSlashIcon } from "~components/icons";
+
+import { Button, tv } from "./nextui";
 
 const input = tv({
 	base: "",

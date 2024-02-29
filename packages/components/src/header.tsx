@@ -3,7 +3,7 @@ import React from "react";
 import { H2, H3, H4 } from "@expo/html-elements";
 import { tv } from "@nextui-org/react";
 
-import { Text } from "~components";
+import { Text } from "./text";
 
 const wrapper = tv({
 	base: "font-medium",

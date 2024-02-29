@@ -2,7 +2,6 @@ import React from "react";
 import { View } from "react-native";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import type { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
@@ -15,7 +14,7 @@ import {
 	quantitySchema,
 	receiptItemNameSchema,
 } from "~app/utils/validation";
-import { Input } from "~components";
+import { Button, Input } from "~components";
 import * as mutations from "~mutations";
 import type { ReceiptsId } from "~web/db/models";
 

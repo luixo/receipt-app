@@ -1,6 +1,10 @@
 import React from "react";
 import { View } from "react-native";
 
+import { QueryErrorMessage } from "~app/components/error-message";
+import type { TRPCQueryResult } from "~app/trpc";
+import { trpc } from "~app/trpc";
+import { type CurrencyCode, renderCurrencyName } from "~app/utils/currency";
 import {
 	Button,
 	Divider,
@@ -9,13 +13,8 @@ import {
 	ModalContent,
 	ModalHeader,
 	Spinner,
-} from "@nextui-org/react";
-
-import { QueryErrorMessage } from "~app/components/error-message";
-import type { TRPCQueryResult } from "~app/trpc";
-import { trpc } from "~app/trpc";
-import { type CurrencyCode, renderCurrencyName } from "~app/utils/currency";
-import { Text } from "~components";
+	Text,
+} from "~components";
 import { MONTH } from "~utils";
 
 type LoaderProps = {

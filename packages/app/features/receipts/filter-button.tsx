@@ -1,5 +1,8 @@
 import React from "react";
 
+import type { Selection } from "@react-types/shared/src/selection";
+
+import { useBooleanState } from "~app/hooks/use-boolean-state";
 import {
 	Button,
 	Divider,
@@ -10,17 +13,14 @@ import {
 	Modal,
 	ModalBody,
 	ModalContent,
-} from "@nextui-org/react";
-import type { Selection } from "@react-types/shared/src/selection";
+	Text,
+} from "~components";
 import {
-	BsSortNumericDown as SortDownIcon,
-	BsSortNumericUp as SortUpIcon,
-} from "react-icons/bs";
-import { FaChevronDown as ChevronDown } from "react-icons/fa";
-import { MdFilterAlt as FilterIcon } from "react-icons/md";
-
-import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { Text } from "~components";
+	ChevronDown,
+	FilterIcon,
+	SortDownIcon,
+	SortUpIcon,
+} from "~components/icons";
 import * as queries from "~queries";
 
 export const FilterButton: React.FC = () => {

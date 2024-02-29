@@ -1,13 +1,11 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Button } from "@nextui-org/react";
-
 import { UsersSuggest } from "~app/components/app/users-suggest";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import { Text } from "~components";
+import { Button, Text } from "~components";
 import * as mutations from "~mutations";
 import type { UsersId } from "~web/db/models";
 

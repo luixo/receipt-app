@@ -1,13 +1,11 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Link } from "@nextui-org/react";
-
 import { DebtSyncStatus } from "~app/components/app/debt-sync-status";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import { useSsrFormat } from "~app/hooks/use-ssr-format";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
-import { Text } from "~components";
+import { Link, Text } from "~components";
 
 type Props = {
 	debt: TRPCQuerySuccessResult<"debts.getUser">["data"][number];

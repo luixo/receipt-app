@@ -1,8 +1,7 @@
 import React from "react";
 
-import { Button } from "@nextui-org/react";
-import { MdAdd as AddIcon } from "react-icons/md";
-
+import { Button } from "~components";
+import { AddIcon } from "~components/icons";
 import type { ReceiptsId } from "~web/db/models";
 
 import { AddReceiptItemForm } from "./add-receipt-item-form";

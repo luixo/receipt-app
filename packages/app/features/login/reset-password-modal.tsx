@@ -1,20 +1,22 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-	Button,
-	Modal,
-	ModalBody,
-	ModalContent,
-	ModalHeader,
-} from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
 import { emailSchema } from "~app/utils/validation";
-import { Header, Input, Text } from "~components";
+import {
+	Button,
+	Header,
+	Input,
+	Modal,
+	ModalBody,
+	ModalContent,
+	ModalHeader,
+	Text,
+} from "~components";
 import * as mutations from "~mutations";
 
 type ResetPasswordForm = {

@@ -1,9 +1,6 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Button, Link, Spinner } from "@nextui-org/react";
-import { MdAdd as AddIcon } from "react-icons/md";
-
 import { DebtsGroup } from "~app/components/app/debts-group";
 import { EmptyCard } from "~app/components/empty-card";
 import { QueryErrorMessage } from "~app/components/error-message";
@@ -11,6 +8,8 @@ import { ShowResolvedDebtsOption } from "~app/features/settings/show-resolved-de
 import { useAggregatedAllDebts } from "~app/hooks/use-aggregated-all-debts";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
+import { Button, Link, Spinner } from "~components";
+import { AddIcon } from "~components/icons";
 import { useShowResolvedDebts } from "~web/hooks/use-show-resolved-debts";
 
 import { UserDebtsPreview } from "./user-debts-preview";

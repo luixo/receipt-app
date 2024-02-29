@@ -1,9 +1,6 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Spinner } from "@nextui-org/react";
-import { MdOutlineReceipt as ReceiptIcon } from "react-icons/md";
-
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { ReceiptParticipantResolvedButton } from "~app/components/app/receipt-participant-resolved-button";
 import { QueryErrorMessage } from "~app/components/error-message";
@@ -12,7 +9,8 @@ import { ReceiptItems } from "~app/features/receipt-items/receipt-items-screen";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import { Text } from "~components";
+import { Spinner, Text } from "~components";
+import { ReceiptIcon } from "~components/icons";
 import { round } from "~utils";
 import type { ReceiptsId } from "~web/db/models";
 

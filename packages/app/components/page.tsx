@@ -1,10 +1,9 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Badge, Link, tv } from "@nextui-org/react";
 import { usePathname } from "solito/navigation";
 
-import { Text } from "~components";
+import { Badge, Link, Text, tv } from "~components";
 
 export type MenuElement = {
 	Icon: React.FC<{ size: number }>;

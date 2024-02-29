@@ -1,7 +1,5 @@
 import React from "react";
 
-import { Button, Spinner } from "@nextui-org/react";
-import { IoTrashBin as TrashBin } from "react-icons/io5";
 import { useRouter } from "solito/navigation";
 
 import { QueryErrorMessage } from "~app/components/error-message";
@@ -12,7 +10,8 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput, TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { userNameSchema } from "~app/utils/validation";
-import { Input } from "~components";
+import { Button, Input, Spinner } from "~components";
+import { TrashBin } from "~components/icons";
 import * as mutations from "~mutations";
 import type { UsersId } from "~web/db/models";
 

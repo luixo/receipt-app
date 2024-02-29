@@ -1,20 +1,16 @@
 import React from "react";
 import { View } from "react-native";
 
+import { LoadableUser } from "~app/components/app/loadable-user";
+import { type TRPCQueryOutput, trpc } from "~app/trpc";
 import {
 	Button,
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
-} from "@nextui-org/react";
-import {
-	MdHourglassDisabled as CrossWaitIcon,
-	MdHourglassEmpty as WaitIcon,
-} from "react-icons/md";
-
-import { LoadableUser } from "~app/components/app/loadable-user";
-import { type TRPCQueryOutput, trpc } from "~app/trpc";
-import { Text } from "~components";
+	Text,
+} from "~components";
+import { CrossWaitIcon, WaitIcon } from "~components/icons";
 import { nonNullishGuard } from "~utils";
 
 type Props = {

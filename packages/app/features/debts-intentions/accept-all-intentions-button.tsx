@@ -1,11 +1,11 @@
 import React from "react";
 
-import { Button } from "@nextui-org/react";
 import { useRouter } from "solito/navigation";
 
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
+import { Button } from "~components";
 import * as mutations from "~mutations";
 
 type Props = {

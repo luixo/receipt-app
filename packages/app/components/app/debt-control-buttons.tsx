@@ -1,17 +1,12 @@
 import React from "react";
 
-import { Button } from "@nextui-org/react";
-import {
-	BsEyeSlashFill as ShouldNotSyncIcon,
-	BsEyeFill as ShouldSyncIcon,
-} from "react-icons/bs";
-import { MdSync as SyncIcon } from "react-icons/md";
-
 import { ConfirmModal } from "~app/components/confirm-modal";
 import { DebtIntention } from "~app/features/debts-intentions/debt-intention";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
+import { Button } from "~components";
+import { EyeIcon, EyeSlashIcon, SyncIcon } from "~components/icons";
 import * as mutations from "~mutations";
 
 type Debt = TRPCQueryOutput<"debts.get">;
@@ -121,9 +116,9 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 						isIconOnly
 					>
 						{debt.lockedTimestamp ? (
-							<ShouldNotSyncIcon size={24} />
+							<EyeSlashIcon size={24} />
 						) : (
-							<ShouldSyncIcon size={24} />
+							<EyeIcon size={24} />
 						)}
 					</Button>
 				)}

@@ -2,17 +2,10 @@ import React from "react";
 import { View } from "react-native";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Card, CardBody, Slider } from "@nextui-org/react";
 import type { Area, Point } from "react-easy-crop";
 import Cropper from "react-easy-crop";
 import type { SubmitHandler } from "react-hook-form";
 import { useForm } from "react-hook-form";
-import {
-	IoCheckmarkCircleOutline as CheckMark,
-	IoClose as CloseIcon,
-	IoTrashBin as TrashBinIcon,
-} from "react-icons/io5";
-import { MdSync as SyncIcon } from "react-icons/md";
 import { z } from "zod";
 
 import { UserAvatar } from "~app/components/app/user-avatar";
@@ -21,7 +14,13 @@ import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import { FileInput, Text } from "~components";
+import { Button, Card, CardBody, FileInput, Slider, Text } from "~components";
+import {
+	CheckMark,
+	CloseIcon,
+	SyncIcon,
+	TrashBinIcon,
+} from "~components/icons";
 import * as mutations from "~mutations";
 import {
 	MAX_AVATAR_SIDE_SIZE,

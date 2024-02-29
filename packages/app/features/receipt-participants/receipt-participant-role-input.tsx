@@ -1,24 +1,23 @@
 import React from "react";
 import { View } from "react-native";
 
+import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import type { TRPCQueryOutput } from "~app/trpc";
+import { trpc } from "~app/trpc";
 import {
 	Button,
 	Dropdown,
 	DropdownItem,
 	DropdownMenu,
 	DropdownTrigger,
-} from "@nextui-org/react";
+	Text,
+} from "~components";
 import {
-	AiOutlineUserAdd as EditorIcon,
-	AiOutlineUsergroupAdd as OwnerIcon,
-	AiOutlineUserDelete as ViewerIcon,
-} from "react-icons/ai";
-import { FaChevronDown as ChevronDown } from "react-icons/fa";
-
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { TRPCQueryOutput } from "~app/trpc";
-import { trpc } from "~app/trpc";
-import { Text } from "~components";
+	ChevronDown,
+	EditorIcon,
+	OwnerIcon,
+	ViewerIcon,
+} from "~components/icons";
 import * as mutations from "~mutations";
 import type { ReceiptsId, UsersId } from "~web/db/models";
 import type { Role } from "~web/handlers/receipts/utils";

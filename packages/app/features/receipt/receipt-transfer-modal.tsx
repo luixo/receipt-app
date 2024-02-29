@@ -1,25 +1,21 @@
 import React from "react";
 import { View } from "react-native";
 
+import { LoadableUser } from "~app/components/app/loadable-user";
+import { UsersSuggest } from "~app/components/app/users-suggest";
+import { useBooleanState } from "~app/hooks/use-boolean-state";
+import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import { type TRPCQueryOutput, trpc } from "~app/trpc";
 import {
 	Button,
 	Modal,
 	ModalBody,
 	ModalContent,
 	ModalHeader,
+	Text,
 	Tooltip,
-} from "@nextui-org/react";
-import {
-	MdInfoOutline as InfoIcon,
-	MdOutlineNorthEast as TransferIcon,
-} from "react-icons/md";
-
-import { LoadableUser } from "~app/components/app/loadable-user";
-import { UsersSuggest } from "~app/components/app/users-suggest";
-import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { type TRPCQueryOutput, trpc } from "~app/trpc";
-import { Text } from "~components";
+} from "~components";
+import { InfoOutlineIcon, TransferIcon } from "~components/icons";
 import * as mutations from "~mutations";
 import { round } from "~utils";
 import type { UsersId } from "~web/db/models";
@@ -150,7 +146,7 @@ export const ReceiptTransferModal: React.FC<Props> = ({
 			title="Transfer receipt modal"
 		>
 			{receipt.transferIntentionUserId ? (
-				<InfoIcon className="shrink-0" size={24} />
+				<InfoOutlineIcon className="shrink-0" size={24} />
 			) : (
 				<TransferIcon className="shrink-0" size={24} />
 			)}

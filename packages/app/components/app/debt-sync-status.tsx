@@ -1,15 +1,14 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Tooltip, tv } from "@nextui-org/react";
-import {
-	MdKeyboardArrowLeft as IncomingIcon,
-	MdKeyboardArrowRight as OutcomingIcon,
-	MdSync as SyncIcon,
-	MdSyncProblem as UnsyncIcon,
-} from "react-icons/md";
-
 import type { TRPCQueryOutput } from "~app/trpc";
+import { Tooltip, tv } from "~components";
+import {
+	IncomingIcon,
+	OutcomingIcon,
+	SyncIcon,
+	UnsyncIcon,
+} from "~components/icons";
 
 const wrapper = tv({
 	base: "flex-row",

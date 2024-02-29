@@ -1,6 +1,5 @@
 import React from "react";
 
-import { Button, Link, Spinner } from "@nextui-org/react";
 import { useParams } from "solito/navigation";
 
 import { DebtsGroup } from "~app/components/app/debts-group";
@@ -10,6 +9,7 @@ import { PageHeader } from "~app/components/page-header";
 import { useAggregatedDebts } from "~app/hooks/use-aggregated-debts";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
+import { Button, Link, Spinner } from "~components";
 import type { UsersId } from "~web/db/models";
 import { useShowResolvedDebts } from "~web/hooks/use-show-resolved-debts";
 import type { AppPage } from "~web/types/page";

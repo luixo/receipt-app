@@ -1,8 +1,9 @@
 import React from "react";
 
-import { Button } from "@nextui-org/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { FiRefreshCw as RefreshIcon } from "react-icons/fi";
+
+import { Button } from "~components";
+import { RefreshIcon } from "~components/icons";
 
 export const RefreshSettings: React.FC = () => {
 	const queryClient = useQueryClient();

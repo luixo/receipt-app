@@ -1,12 +1,11 @@
 import React from "react";
 
-import { Button, Spinner } from "@nextui-org/react";
 import { Link } from "solito/link";
 
 import { EmptyCard } from "~app/components/empty-card";
 import { ErrorMessage } from "~app/components/error-message";
 import type { TRPCMutationResult } from "~app/trpc";
-import { Header } from "~components";
+import { Button, Header, Spinner } from "~components";
 
 type Props = {
 	token?: string;

@@ -1,10 +1,9 @@
 import React from "react";
 
-import { Button, Tooltip } from "@nextui-org/react";
-
 import { LockedIcon } from "~app/components/locked-icon";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
+import { Button, Tooltip } from "~components";
 import * as mutations from "~mutations";
 import type { ReceiptsId } from "~web/db/models";
 

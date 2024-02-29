@@ -1,9 +1,8 @@
 import React from "react";
 
-import { Button } from "@nextui-org/react";
-import { IoTrashBin as TrashBin } from "react-icons/io5";
-
 import { ConfirmModal } from "~app/components/confirm-modal";
+import { Button } from "~components";
+import { TrashBin } from "~components/icons";
 
 type Props = {
 	mutation: { isPending: boolean };

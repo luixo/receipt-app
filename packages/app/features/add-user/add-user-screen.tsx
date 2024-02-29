@@ -1,7 +1,6 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import type { UseFormReturn } from "react-hook-form";
 import { useRouter } from "solito/navigation";
@@ -13,7 +12,7 @@ import { useInputController } from "~app/hooks/use-input-controller";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
 import { emailSchema, userNameSchema } from "~app/utils/validation";
-import { Input } from "~components";
+import { Button, Input } from "~components";
 import * as mutations from "~mutations";
 import type { AppPage } from "~web/types/page";
 

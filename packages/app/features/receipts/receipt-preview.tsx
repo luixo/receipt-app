@@ -1,8 +1,6 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Badge, Button, Link } from "@nextui-org/react";
-
 import { ReceiptResolvedParticipantsButton } from "~app/components/app/receipt-resolved-participants-button";
 import { LockedIcon } from "~app/components/locked-icon";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
@@ -10,7 +8,7 @@ import { useSsrFormat } from "~app/hooks/use-ssr-format";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import { Text } from "~components";
+import { Badge, Button, Link, Text } from "~components";
 import * as mutations from "~mutations";
 import { round } from "~utils";
 

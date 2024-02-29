@@ -1,6 +1,5 @@
 import React from "react";
 
-import { Divider, Spinner } from "@nextui-org/react";
 import { useParams, useRouter } from "solito/navigation";
 
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
@@ -13,6 +12,7 @@ import { useBooleanState } from "~app/hooks/use-boolean-state";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
+import { Divider, Spinner } from "~components";
 import { noop } from "~utils";
 import type { UsersId } from "~web/db/models";
 import { useShowResolvedDebts } from "~web/hooks/use-show-resolved-debts";

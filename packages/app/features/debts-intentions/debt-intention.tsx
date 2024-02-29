@@ -1,16 +1,11 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Card, CardBody } from "@nextui-org/react";
-import {
-	MdNavigateNext as ArrowIcon,
-	MdSync as SyncIcon,
-} from "react-icons/md";
-
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import { useSsrFormat } from "~app/hooks/use-ssr-format";
 import type { TRPCQueryOutput } from "~app/trpc";
-import { Text } from "~components";
+import { Card, CardBody, Text } from "~components";
+import { ArrowIcon, SyncIcon } from "~components/icons";
 
 type Intentions = TRPCQueryOutput<"debts.getIntentions">;
 

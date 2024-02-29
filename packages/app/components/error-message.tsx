@@ -1,6 +1,12 @@
 import React from "react";
 import { View } from "react-native";
 
+import type {
+	QueryObserverLoadingErrorResult,
+	QueryObserverRefetchErrorResult,
+} from "@tanstack/react-query";
+
+import type { TRPCError } from "~app/trpc";
 import {
 	Button,
 	Card,
@@ -8,15 +14,10 @@ import {
 	CardFooter,
 	CardHeader,
 	Divider,
-} from "@nextui-org/react";
-import type {
-	QueryObserverLoadingErrorResult,
-	QueryObserverRefetchErrorResult,
-} from "@tanstack/react-query";
-import { IoWarning as WarningIcon } from "react-icons/io5";
-
-import type { TRPCError } from "~app/trpc";
-import { Header, Text } from "~components";
+	Header,
+	Text,
+} from "~components";
+import { WarningIcon } from "~components/icons";
 
 type Props = {
 	message: string;

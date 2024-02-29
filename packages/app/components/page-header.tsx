@@ -2,10 +2,10 @@ import React from "react";
 import { View } from "react-native";
 
 import Head from "next/head";
-import { IoMdArrowRoundBack as BackArrow } from "react-icons/io";
 import { Link } from "solito/link";
 
 import { H1, Text } from "~components";
+import { BackArrow } from "~components/icons";
 
 // add React.memo when https://github.com/vercel/next.js/issues/59655 is resolved
 const PageTitle: React.FC<{ children?: string }> = ({ children }) => (

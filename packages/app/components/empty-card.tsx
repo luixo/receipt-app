@@ -1,9 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { tv } from "@nextui-org/react";
-
-import { Header } from "~components";
+import { Header, tv } from "~components";
 
 const wrapper = tv({
 	base: "m-10 gap-4 self-center md:max-w-lg",

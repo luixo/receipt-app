@@ -1,13 +1,9 @@
 import React from "react";
 
-import { Button } from "@nextui-org/react";
-import {
-	MdDoneAll as DoneIcon,
-	MdRemoveDone as UndoneIcon,
-} from "react-icons/md";
-
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
+import { Button } from "~components";
+import { DoneIcon, UndoneIcon } from "~components/icons";
 import * as mutations from "~mutations";
 import type { ReceiptsId, UsersId } from "~web/db/models";
 

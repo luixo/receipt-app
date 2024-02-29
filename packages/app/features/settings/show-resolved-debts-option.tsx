@@ -1,8 +1,7 @@
 import React from "react";
 
-import { Switch } from "@nextui-org/react";
-import { FaCreativeCommonsZero as ResolveIcon } from "react-icons/fa";
-
+import { Switch } from "~components";
+import { ResolveIcon } from "~components/icons";
 import { useShowResolvedDebts } from "~web/hooks/use-show-resolved-debts";
 
 export const ShowResolvedDebtsOption: React.FC<

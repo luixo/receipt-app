@@ -1,7 +1,6 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "solito/navigation";
 import { z } from "zod";
@@ -14,7 +13,7 @@ import {
 	passwordSchema,
 	userNameSchema,
 } from "~app/utils/validation";
-import { Input } from "~components";
+import { Button, Input } from "~components";
 import * as mutations from "~mutations";
 import type { AppPage } from "~web/types/page";
 

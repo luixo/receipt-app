@@ -1,15 +1,14 @@
 import React from "react";
 
+import { useBooleanState } from "~app/hooks/use-boolean-state";
 import {
 	Button,
+	Header,
 	Modal,
 	ModalBody,
 	ModalContent,
 	ModalHeader,
-} from "@nextui-org/react";
-
-import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { Header } from "~components";
+} from "~components";
 
 type Props = {
 	action: () => void;

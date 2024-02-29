@@ -1,12 +1,11 @@
 import React from "react";
 
-import { Chip, User as RawUser, tv } from "@nextui-org/react";
-
 import {
 	UserAvatar,
 	useUserAvatarProps,
 } from "~app/components/app/user-avatar";
 import type { TRPCQueryOutput } from "~app/trpc";
+import { Chip, User as RawUser, tv } from "~components";
 import type { UsersId } from "~web/db/models";
 
 const wrapper = tv({ base: "text-foreground" });

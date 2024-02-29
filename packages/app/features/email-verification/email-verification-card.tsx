@@ -1,10 +1,8 @@
 import React from "react";
 
-import { Button, Card, CardBody, CardHeader, Divider } from "@nextui-org/react";
-
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
-import { Text } from "~components";
+import { Button, Card, CardBody, CardHeader, Divider, Text } from "~components";
 import * as mutations from "~mutations";
 
 export const EmailVerificationCard: React.FC = () => {

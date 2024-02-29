@@ -1,13 +1,13 @@
 import React from "react";
 import { useColorScheme } from "react-native";
 
-import { NextUIProvider } from "@nextui-org/react";
 import { useRouter } from "solito/navigation";
 
 import {
 	useLastColorModeCookie,
 	useSelectedColorModeCookie,
 } from "~app/hooks/use-color-modes";
+import { NextUIProvider } from "~components";
 
 export const ThemeProvider: React.FC<React.PropsWithChildren<object>> = ({
 	children,

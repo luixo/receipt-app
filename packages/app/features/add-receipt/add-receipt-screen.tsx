@@ -1,7 +1,6 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@nextui-org/react";
 import { useForm } from "react-hook-form";
 import type { UseFormReturn } from "react-hook-form";
 import { useRouter } from "solito/navigation";
@@ -17,7 +16,7 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import { currencyCodeSchema, receiptNameSchema } from "~app/utils/validation";
-import { Input } from "~components";
+import { Button, Input } from "~components";
 import * as mutations from "~mutations";
 import { getToday } from "~utils";
 import type { AppPage } from "~web/types/page";

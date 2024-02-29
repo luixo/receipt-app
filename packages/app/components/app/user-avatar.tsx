@@ -1,10 +1,10 @@
 import React from "react";
 
-import { Avatar, tv } from "@nextui-org/react";
 import BoringAvatar from "boring-avatars";
 import { unstable_getImgProps as getImgProps } from "next/image";
 
 import type { TRPCQueryOutput } from "~app/trpc";
+import { Avatar, tv } from "~components";
 import { hslToRgb } from "~utils";
 import type { UsersId } from "~web/db/models";
 

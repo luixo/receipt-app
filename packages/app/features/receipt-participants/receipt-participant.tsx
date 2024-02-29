@@ -1,8 +1,6 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Accordion, AccordionItem } from "@nextui-org/react";
-
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { ReceiptParticipantResolvedButton } from "~app/components/app/receipt-participant-resolved-button";
 import { RemoveButton } from "~app/components/remove-button";
@@ -12,7 +10,7 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
-import { Text } from "~components";
+import { Accordion, AccordionItem, Text } from "~components";
 import * as mutations from "~mutations";
 import { round } from "~utils";
 import type { ReceiptItemsId, ReceiptsId, UsersId } from "~web/db/models";

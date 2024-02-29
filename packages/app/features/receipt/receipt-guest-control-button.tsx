@@ -1,9 +1,8 @@
 import React from "react";
 
-import { Button, Link } from "@nextui-org/react";
-import { PiMoney as DebtIcon } from "react-icons/pi";
-
 import type { TRPCQueryOutput } from "~app/trpc";
+import { Button, Link } from "~components";
+import { DebtIcon } from "~components/icons";
 
 type Receipt = TRPCQueryOutput<"receipts.get">;
 

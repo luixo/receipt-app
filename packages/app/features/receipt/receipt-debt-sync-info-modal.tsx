@@ -7,9 +7,8 @@ import {
 	ModalBody,
 	ModalContent,
 	ModalHeader,
-} from "@nextui-org/react";
-
-import { Text } from "~components";
+	Text,
+} from "~components";
 
 import type {
 	DebtParticipant,

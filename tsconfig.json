@@ -10,6 +10,7 @@
 		"paths": {
 			"~app/*": ["./packages/app/*"],
 			"~components": ["./packages/components/src"],
+			"~components/icons": ["./packages/components/src/icons"],
 			"~utils": ["./packages/utils/src"],
 			"~mutations": ["./packages/mutations/src"],
 			"~queries": ["./packages/queries/src"],

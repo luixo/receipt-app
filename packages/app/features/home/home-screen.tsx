@@ -1,9 +1,8 @@
 import React from "react";
 
-import { Spinner } from "@nextui-org/react";
 import { useRouter } from "solito/navigation";
 
-import { Text } from "~components";
+import { Spinner, Text } from "~components";
 import type { AppPage } from "~web/types/page";
 
 export const HomeScreen: AppPage = () => {

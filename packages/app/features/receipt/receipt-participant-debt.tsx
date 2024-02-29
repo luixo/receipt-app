@@ -1,14 +1,6 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Button } from "@nextui-org/react";
-import {
-	MdOutlineReceipt as ReceiptOffIcon,
-	MdSend as SendIcon,
-	MdSync as SyncIcon,
-	MdExposureZero as ZeroIcon,
-} from "react-icons/md";
-
 import { DebtSyncStatus } from "~app/components/app/debt-sync-status";
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
@@ -16,7 +8,8 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { getReceiptDebtName } from "~app/utils/receipt";
-import { Text } from "~components";
+import { Button, Text } from "~components";
+import { ReceiptIcon, SendIcon, SyncIcon, ZeroIcon } from "~components/icons";
 import * as mutations from "~mutations";
 import type { UsersId } from "~web/db/models";
 
@@ -145,7 +138,7 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 					) : (
 						<>
 							{participant.currentDebt && !isReceiptSyncedWithOurDebt ? (
-								<ReceiptOffIcon
+								<ReceiptIcon
 									size={36}
 									className="text-danger"
 									data-testid="receipt-mismatch-icon"

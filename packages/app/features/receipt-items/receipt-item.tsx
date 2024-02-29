@@ -1,15 +1,6 @@
 import React from "react";
 import { View } from "react-native";
 
-import {
-	Card,
-	CardBody,
-	CardHeader,
-	Chip,
-	Divider,
-	ScrollShadow,
-} from "@nextui-org/react";
-
 import { ReceiptItemLockedButton } from "~app/components/app/receipt-item-locked-button";
 import { ErrorMessage } from "~app/components/error-message";
 import { RemoveButton } from "~app/components/remove-button";
@@ -19,7 +10,15 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
-import { Text } from "~components";
+import {
+	Card,
+	CardBody,
+	CardHeader,
+	Chip,
+	Divider,
+	ScrollShadow,
+	Text,
+} from "~components";
 import * as mutations from "~mutations";
 import { round } from "~utils";
 import type { ReceiptsId, UsersId } from "~web/db/models";
