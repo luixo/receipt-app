@@ -11,8 +11,8 @@ import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { Spinner, Text } from "~components";
 import { ReceiptIcon } from "~components/icons";
+import type { ReceiptsId } from "~db";
 import { round } from "~utils";
-import type { ReceiptsId } from "~web/db/models";
 
 import { ReceiptCurrencyInput } from "./receipt-currency-input";
 import { ReceiptDateInput } from "./receipt-date-input";

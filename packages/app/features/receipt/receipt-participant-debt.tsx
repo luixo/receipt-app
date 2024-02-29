@@ -10,8 +10,8 @@ import { trpc } from "~app/trpc";
 import { getReceiptDebtName } from "~app/utils/receipt";
 import { Button, Text } from "~components";
 import { ReceiptIcon, SendIcon, SyncIcon, ZeroIcon } from "~components/icons";
+import type { UsersId } from "~db";
 import * as mutations from "~mutations";
-import type { UsersId } from "~web/db/models";
 
 export const isDebtInSyncWithReceipt = (
 	receiptDebt: Pick<LockedReceipt, "currencyCode" | "issued" | "id"> & {

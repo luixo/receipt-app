@@ -1,8 +1,7 @@
 import type { UpdateObject } from "kysely";
 import { sql } from "kysely";
 
-import type { Database } from "..";
-import type { ReceiptsDatabase } from "../types";
+import type { Database, ReceiptsDatabase } from "~db";
 
 type ReceiptsUpdateObject = UpdateObject<
 	ReceiptsDatabase,

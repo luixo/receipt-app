@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import type { SimpleUpdateObject } from "~web/db/types";
+import type { SimpleUpdateObject } from "~db";
 import { getReceiptParticipant } from "~web/handlers/receipt-participants/utils";
 import { authProcedure } from "~web/handlers/trpc";
 import {

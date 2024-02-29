@@ -26,9 +26,9 @@ import {
 	userIdSchema,
 } from "~app/utils/validation";
 import { Button, Input } from "~components";
+import type { UsersId } from "~db";
 import * as mutations from "~mutations";
 import { getToday } from "~utils";
-import type { UsersId } from "~web/db/models";
 import type { AppPage } from "~web/types/page";
 
 type Form = {

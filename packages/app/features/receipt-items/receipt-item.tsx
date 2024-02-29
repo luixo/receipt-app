@@ -19,9 +19,9 @@ import {
 	ScrollShadow,
 	Text,
 } from "~components";
+import type { ReceiptsId, UsersId } from "~db";
 import * as mutations from "~mutations";
 import { round } from "~utils";
-import type { ReceiptsId, UsersId } from "~web/db/models";
 
 import { ParticipantChip } from "./participant-chip";
 import { ReceiptItemNameInput } from "./receipt-item-name-input";

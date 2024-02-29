@@ -6,8 +6,8 @@ import { RemoveButton } from "~app/components/remove-button";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
+import type { ReceiptsId, UsersId } from "~db";
 import * as mutations from "~mutations";
-import type { ReceiptsId, UsersId } from "~web/db/models";
 
 type Props = {
 	receiptId: ReceiptsId;

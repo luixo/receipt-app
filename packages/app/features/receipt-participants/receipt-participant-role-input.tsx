@@ -18,8 +18,8 @@ import {
 	OwnerIcon,
 	ViewerIcon,
 } from "~components/icons";
+import type { ReceiptsId, UsersId } from "~db";
 import * as mutations from "~mutations";
-import type { ReceiptsId, UsersId } from "~web/db/models";
 import type { Role } from "~web/handlers/receipts/utils";
 
 export type AssignableRole = Exclude<Role, "owner">;

@@ -1,7 +1,7 @@
 import { Pool } from "pg";
 
-import { getDatabase } from "~web/db";
-import { migrate } from "~web/db/migration";
+import { getDatabase } from "~db";
+import { migrate } from "~db/migration/index";
 
 const isValidTarget = (
 	maybeTarget = "",

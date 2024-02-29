@@ -5778,6 +5778,19 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@ra/db@workspace:packages/db":
+  version: 0.0.0-use.local
+  resolution: "@ra/db@workspace:packages/db"
+  dependencies:
+    extract-pg-schema: ^4.1.0
+    kanel: ^3.4.1
+    kysely: ^0.27.2
+    pg: ^8.11.3
+    tsx: ^3.12.7
+    vitest: ^1.2.2
+  languageName: unknown
+  linkType: soft
+
 "@ra/mobile@workspace:apps/mobile":
   version: 0.0.0-use.local
   resolution: "@ra/mobile@workspace:apps/mobile"
@@ -5835,11 +5848,8 @@ __metadata:
   resolution: "@ra/scripts@workspace:scripts"
   dependencies:
     concurrently: ^7.1.0
-    extract-pg-schema: ^4.1.0
     get-port: ^6.1.2
-    kanel: ^3.4.1
     ngrok: ^4.3.1
-    pg: ^8.11.3
     ts-morph: ^14.0.0
     tsx: ^3.12.7
   languageName: unknown

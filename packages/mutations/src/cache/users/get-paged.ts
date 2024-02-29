@@ -2,8 +2,8 @@ import type { QueryClient } from "@tanstack/react-query";
 import { getQueryKey } from "@trpc/react-query";
 
 import type { TRPCQueryInput, TRPCReact, TRPCReactContext } from "~app/trpc";
+import type { UsersId } from "~db";
 import { addToArray, id } from "~utils";
-import type { UsersId } from "~web/db/models";
 
 import type { ControllerContext } from "../../types";
 import { applyWithRevert, getAllInputs, withRef } from "../utils";

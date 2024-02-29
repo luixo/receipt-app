@@ -1,8 +1,6 @@
 import { sql } from "kysely";
 
-import { tableWithSchema } from "~web/db/utils";
-
-import type { Database } from "..";
+import type { Database } from "~db";
 import {
 	ACCOUNTS,
 	ITEM_PARTICIPANTS,
@@ -10,7 +8,7 @@ import {
 	RECEIPT_ITEMS,
 	RECEIPT_PARTICIPANTS,
 	SESSIONS,
-} from "../consts";
+} from "~db";
 
 const camelcaseAccountsTable = async (db: Database) => {
 	await db.schema.dropIndex("accounts_email_index").execute();
@@ -103,12 +101,7 @@ const camelcaseItemParticipantsTable = async (db: Database) => {
 		.execute();
 	await sql
 		.raw(
-			`ALTER TABLE ${tableWithSchema(
-				db,
-				"itemParticipants",
-			)} RENAME CONSTRAINT "itemParticipants_pk" TO "${
-				ITEM_PARTICIPANTS.CONSTRAINTS.ITEM_ID_USER_ID_PAIR
-			}"`,
+			`ALTER TABLE "itemParticipants" RENAME CONSTRAINT "itemParticipants_pk" TO "${ITEM_PARTICIPANTS.CONSTRAINTS.ITEM_ID_USER_ID_PAIR}"`,
 		)
 		.execute(db);
 	await db.schema
@@ -126,12 +119,7 @@ const uncamelcaseItemParticipantsTable = async (db: Database) => {
 		.execute();
 	await sql
 		.raw(
-			`ALTER TABLE ${tableWithSchema(
-				db,
-				"itemParticipants",
-			)} RENAME CONSTRAINT "${
-				ITEM_PARTICIPANTS.CONSTRAINTS.ITEM_ID_USER_ID_PAIR
-			}" TO "itemParticipants_pk"`,
+			`ALTER TABLE "itemParticipants" RENAME CONSTRAINT "${ITEM_PARTICIPANTS.CONSTRAINTS.ITEM_ID_USER_ID_PAIR}" TO "itemParticipants_pk"`,
 		)
 		.execute(db);
 	await db.schema

@@ -1,9 +1,9 @@
 import type { Faker } from "@faker-js/faker";
 
 import type { TRPCQueryOutput } from "~app/trpc";
+import type { AccountsId, UsersId } from "~db";
 import { generateAmount } from "~tests/frontend/utils/generators";
 import type { Amount } from "~tests/frontend/utils/generators";
-import type { AccountsId, UsersId } from "~web/db/models";
 import { CURRENCY_CODES } from "~web/utils/currency";
 
 const getRandomCurrencyCode = (faker: Faker) =>

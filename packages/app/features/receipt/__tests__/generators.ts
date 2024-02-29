@@ -2,15 +2,10 @@ import type { Faker } from "@faker-js/faker";
 
 import type { TRPCQueryOutput } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
+import type { AccountsId, ReceiptItemsId, ReceiptsId, UsersId } from "~db";
 import { generateAmount } from "~tests/frontend/utils/generators";
 import type { Amount } from "~tests/frontend/utils/generators";
 import { MONTH, nonNullishGuard } from "~utils";
-import type {
-	AccountsId,
-	ReceiptItemsId,
-	ReceiptsId,
-	UsersId,
-} from "~web/db/models";
 import { CURRENCY_CODES } from "~web/utils/currency";
 
 const getRandomCurrencyCode = (faker: Faker) =>

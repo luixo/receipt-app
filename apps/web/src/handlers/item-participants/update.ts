@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { partSchema } from "~app/utils/validation";
-import type { SimpleUpdateObject } from "~web/db/types";
+import type { SimpleUpdateObject } from "~db";
 import { getAccessRole } from "~web/handlers/receipts/utils";
 import { authProcedure } from "~web/handlers/trpc";
 import { receiptItemIdSchema, userIdSchema } from "~web/handlers/validation";

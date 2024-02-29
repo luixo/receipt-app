@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import type { SimpleUpdateObject } from "~web/db/types";
+import type { SimpleUpdateObject } from "~db";
 import { authProcedure } from "~web/handlers/trpc";
 
 import { DEFAULT_ACCOUNT_SETTINGS } from "./get";

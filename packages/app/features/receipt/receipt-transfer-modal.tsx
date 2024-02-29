@@ -16,9 +16,9 @@ import {
 	Tooltip,
 } from "~components";
 import { InfoOutlineIcon, TransferIcon } from "~components/icons";
+import type { UsersId } from "~db";
 import * as mutations from "~mutations";
 import { round } from "~utils";
-import type { UsersId } from "~web/db/models";
 
 type Receipt = TRPCQueryOutput<"receipts.get">;
 

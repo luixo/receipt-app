@@ -3,6 +3,7 @@ import type { inferProcedureOutput } from "@trpc/server";
 import type { Test } from "vitest";
 import { test as originalTest } from "vitest";
 
+import type { Database } from "~db";
 import type { AppRouter } from "~tests/backend/databases/router";
 import { setSeed } from "~tests/backend/utils/faker";
 import type { CacheDbOptionsMock } from "~tests/backend/utils/mocks/cache-db";
@@ -16,7 +17,6 @@ import type { ResponseHeadersMock } from "~tests/backend/utils/mocks/response-he
 import { getResponseHeaders } from "~tests/backend/utils/mocks/response-headers";
 import type { S3OptionsMock } from "~tests/backend/utils/mocks/s3";
 import { getS3Options } from "~tests/backend/utils/mocks/s3";
-import type { Database } from "~web/db";
 
 type SuiteContext = {
 	logger: LoggerMock;

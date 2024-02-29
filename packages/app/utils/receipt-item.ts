@@ -1,3 +1,4 @@
+import type { ReceiptItemsId, ReceiptsId, UsersId } from "~db";
 import {
 	entries,
 	getIndexByString,
@@ -6,7 +7,6 @@ import {
 	rotate,
 	values,
 } from "~utils";
-import type { ReceiptItemsId, ReceiptsId, UsersId } from "~web/db/models";
 
 export const getDecimalsPower = (decimalDigits = 2) => 10 ** decimalDigits;
 

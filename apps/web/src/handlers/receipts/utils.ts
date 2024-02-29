@@ -1,7 +1,6 @@
 import type { z } from "zod";
 
-import type { Database } from "~web/db";
-import type { AccountsId } from "~web/db/models";
+import type { AccountsId, Database } from "~db";
 import { roleSchema } from "~web/handlers/validation";
 
 export type Role = z.infer<typeof roleSchema>;

@@ -7,9 +7,9 @@ import type {
 	TRPCReact,
 	TRPCReactContext,
 } from "~app/trpc";
+import type { ReceiptItemsId, ReceiptsId, UsersId } from "~db";
 import type { ItemWithIndex } from "~utils";
 import { addToArray, removeFromArray, replaceInArray } from "~utils";
-import type { ReceiptItemsId, ReceiptsId, UsersId } from "~web/db/models";
 
 import type { ControllerContext, SnapshotFn, UpdateFn } from "../../types";
 import {

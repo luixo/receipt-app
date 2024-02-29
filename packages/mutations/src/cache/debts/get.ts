@@ -1,5 +1,5 @@
 import type { TRPCQueryOutput, TRPCReactContext } from "~app/trpc";
-import type { DebtsId } from "~web/db/models";
+import type { DebtsId } from "~db";
 
 import type { ControllerContext, SnapshotFn, UpdateFn } from "../../types";
 import { applyUpdateFnWithRevert, applyWithRevert, withRef } from "../utils";

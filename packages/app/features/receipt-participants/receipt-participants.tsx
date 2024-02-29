@@ -10,8 +10,8 @@ import {
 } from "~app/utils/receipt-item";
 import { Accordion, AccordionItem, Text } from "~components";
 import { UserIcon } from "~components/icons";
+import type { ReceiptsId, UsersId } from "~db";
 import { nonNullishGuard } from "~utils";
-import type { ReceiptsId, UsersId } from "~web/db/models";
 
 import { AddReceiptParticipantForm } from "./add-receipt-participant-form";
 import { ReceiptParticipant } from "./receipt-participant";

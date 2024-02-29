@@ -1,5 +1,5 @@
 import type { CurrencyCode } from "~app/utils/currency";
-import type { DebtsId, ReceiptsId, UsersId } from "~web/db/models";
+import type { DebtsId, ReceiptsId, UsersId } from "~db";
 import { authProcedure } from "~web/handlers/trpc";
 
 type InboundIntention = {

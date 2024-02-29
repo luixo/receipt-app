@@ -9,8 +9,8 @@ import { trpc } from "~app/trpc";
 import { partSchema } from "~app/utils/validation";
 import { Button, Input, Text } from "~components";
 import { MinusIcon, PlusIcon } from "~components/icons";
+import type { ReceiptItemsId, ReceiptsId } from "~db";
 import * as mutations from "~mutations";
-import type { ReceiptItemsId, ReceiptsId } from "~web/db/models";
 
 type ReceiptItemPart =
 	TRPCQueryOutput<"receipts.get">["items"][number]["parts"][number];

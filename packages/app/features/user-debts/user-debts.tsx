@@ -13,7 +13,7 @@ import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { Button, Divider, Link, Spinner } from "~components";
 import { AddIcon, ExchangeIcon } from "~components/icons";
-import type { UsersId } from "~web/db/models";
+import type { UsersId } from "~db";
 import { useShowResolvedDebts } from "~web/hooks/use-show-resolved-debts";
 
 import { UserDebtPreview } from "./user-debt-preview";

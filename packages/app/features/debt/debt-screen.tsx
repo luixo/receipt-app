@@ -21,8 +21,8 @@ import type { CurrencyCode } from "~app/utils/currency";
 import { debtAmountSchema, debtNoteSchema } from "~app/utils/validation";
 import { Button, Input, Link, Spinner } from "~components";
 import { ReceiptIcon } from "~components/icons";
+import type { ReceiptsId } from "~db";
 import * as mutations from "~mutations";
-import type { ReceiptsId } from "~web/db/models";
 import type { AppPage } from "~web/types/page";
 
 type Debt = TRPCQueryOutput<"debts.get">;

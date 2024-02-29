@@ -1,5 +1,5 @@
+import type { ReceiptsId, UsersId } from "~db";
 import { test as originalTest } from "~tests/frontend/fixtures";
-import type { ReceiptsId, UsersId } from "~web/db/models";
 
 import type {
 	GenerateReceipt,

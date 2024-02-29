@@ -5,11 +5,11 @@ import {
 	MAX_RECEIPT_ITEM_NAME_LENGTH,
 	MIN_RECEIPT_ITEM_NAME_LENGTH,
 } from "~app/utils/validation";
+import type { ReceiptItemsId } from "~db";
 import { createAuthContext } from "~tests/backend/utils/context";
 import { insertAccountWithSession } from "~tests/backend/utils/data";
 import { expectTRPCError } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import type { ReceiptItemsId } from "~web/db/models";
 import type { UnauthorizedContext } from "~web/handlers/context";
 
 export const getValidReceiptItem = (receiptId = faker.string.uuid()) => ({

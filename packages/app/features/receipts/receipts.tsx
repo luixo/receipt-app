@@ -19,8 +19,8 @@ import {
 	Text,
 } from "~components";
 import { AddIcon } from "~components/icons";
+import type { ReceiptsId } from "~db";
 import * as queries from "~queries";
-import type { ReceiptsId } from "~web/db/models";
 
 import { ReceiptPreview } from "./receipt-preview";
 

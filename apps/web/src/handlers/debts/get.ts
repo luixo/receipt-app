@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import type { DebtsId } from "~web/db/models";
+import type { DebtsId } from "~db";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import { authProcedure } from "~web/handlers/trpc";

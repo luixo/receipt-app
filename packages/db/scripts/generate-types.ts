@@ -1,6 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-
 import { recase } from "@kristiandupont/recase";
 import type { TableColumn } from "extract-pg-schema";
 import { generateIndexFile, processDatabase } from "kanel";

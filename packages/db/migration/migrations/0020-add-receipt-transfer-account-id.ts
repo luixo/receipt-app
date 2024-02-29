@@ -1,4 +1,4 @@
-import type { Database } from "..";
+import type { Database } from "~db";
 
 const addReceiptTransferIntentionAccountId = async (db: Database) => {
 	await db.schema

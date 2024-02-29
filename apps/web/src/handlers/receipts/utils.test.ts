@@ -6,11 +6,11 @@ import {
 	MAX_RECEIPT_NAME_LENGTH,
 	MIN_RECEIPT_NAME_LENGTH,
 } from "~app/utils/validation";
+import type { ReceiptsId } from "~db";
 import { createAuthContext } from "~tests/backend/utils/context";
 import { insertAccountWithSession } from "~tests/backend/utils/data";
 import { expectTRPCError } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import type { ReceiptsId } from "~web/db/models";
 import type { UnauthorizedContext } from "~web/handlers/context";
 import { CURRENCY_CODES } from "~web/utils/currency";
 

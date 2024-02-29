@@ -1,5 +1,5 @@
-import type { Database } from "..";
-import { RESET_PASSWORD_INTENTIONS } from "../consts";
+import type { Database } from "~db";
+import { RESET_PASSWORD_INTENTIONS } from "~db";
 
 const addResetPasswordIntentionsTable = async (db: Database) => {
 	await db.schema

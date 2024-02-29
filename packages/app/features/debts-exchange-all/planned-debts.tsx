@@ -15,9 +15,9 @@ import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import { currencyCodeSchema, currencyRateSchema } from "~app/utils/validation";
 import { Button, Input, Spinner, Text } from "~components";
+import type { UsersId } from "~db";
 import * as mutations from "~mutations";
 import { nonNullishGuard, round } from "~utils";
-import type { UsersId } from "~web/db/models";
 
 const getDefaultValues = (
 	selectedCurrencyCode: CurrencyCode,

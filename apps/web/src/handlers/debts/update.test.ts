@@ -2,6 +2,7 @@ import { faker } from "@faker-js/faker";
 import { assert, describe, expect } from "vitest";
 
 import type { TRPCMutationInput, TRPCMutationOutput } from "~app/trpc";
+import type { AccountsId, UsersId } from "~db";
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
 	insertAccount,
@@ -21,7 +22,6 @@ import {
 import type { TestContext } from "~tests/backend/utils/test";
 import { test } from "~tests/backend/utils/test";
 import { id, pick } from "~utils";
-import type { AccountsId, UsersId } from "~web/db/models";
 import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./update";

@@ -4,7 +4,7 @@ import { DebtsGroup } from "~app/components/app/debts-group";
 import { LoadableUser } from "~app/components/app/loadable-user";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { Card, CardBody, Link, tv } from "~components";
-import type { UsersId } from "~web/db/models";
+import type { UsersId } from "~db";
 
 const card = tv({
 	base: "flex flex-row flex-wrap items-end justify-between gap-4 md:flex-row md:items-center",

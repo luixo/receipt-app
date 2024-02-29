@@ -1,4 +1,4 @@
-import type { AccountsId, UsersId } from "~web/db/models";
+import type { AccountsId, UsersId } from "~db";
 
 import * as cache from "../cache";
 import type { UseContextedMutationOptions } from "../context";

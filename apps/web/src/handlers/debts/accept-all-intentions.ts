@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
-import type { DebtsId } from "~web/db/models";
+import type { DebtsId } from "~db";
 import { authProcedure } from "~web/handlers/trpc";
 
 export const procedure = authProcedure.mutation(async ({ ctx }) => {

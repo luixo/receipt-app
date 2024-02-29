@@ -1,6 +1,6 @@
 import { sql } from "kysely";
 
-import type { Database } from "..";
+import type { Database } from "~db";
 
 const addReceiptItemCreatedTimestamp = async (db: Database) => {
 	await db.schema

@@ -11,9 +11,9 @@ import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import { Accordion, AccordionItem, Text } from "~components";
+import type { ReceiptItemsId, ReceiptsId, UsersId } from "~db";
 import * as mutations from "~mutations";
 import { round } from "~utils";
-import type { ReceiptItemsId, ReceiptsId, UsersId } from "~web/db/models";
 
 import { ReceiptParticipantRoleInput } from "./receipt-participant-role-input";
 

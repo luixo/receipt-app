@@ -1,4 +1,4 @@
-import type { Database } from "..";
+import type { Database } from "~db";
 
 const addEmailConfirmationField = async (db: Database) => {
 	await db.schema

@@ -106,7 +106,7 @@ module.exports = {
 	},
 	overrides: [
 		{
-			files: ["scripts/**/*"],
+			files: ["**/scripts/**/*"],
 			rules: { "no-console": "off" },
 		},
 		...[
@@ -115,6 +115,7 @@ module.exports = {
 			["packages/components"],
 			["packages/mutations"],
 			["packages/queries"],
+			["packages/db", ["scripts/**/*", "**/*.test.ts"]],
 			["packages/app", ["**/*.spec.ts"]],
 			["scripts", true],
 			["testing/vitest", true],

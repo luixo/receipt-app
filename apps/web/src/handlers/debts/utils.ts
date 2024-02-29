@@ -1,7 +1,5 @@
+import type { Database, DebtsId, SimpleInsertObject } from "~db";
 import { nonNullishGuard } from "~utils";
-import type { Database } from "~web/db";
-import type { DebtsId } from "~web/db/models";
-import type { SimpleInsertObject } from "~web/db/types";
 
 export const upsertAutoAcceptedDebts = async (
 	database: Database,

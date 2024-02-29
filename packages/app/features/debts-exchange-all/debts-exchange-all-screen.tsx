@@ -13,8 +13,8 @@ import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import { Divider, Spinner } from "~components";
+import type { UsersId } from "~db";
 import { noop } from "~utils";
-import type { UsersId } from "~web/db/models";
 import { useShowResolvedDebts } from "~web/hooks/use-show-resolved-debts";
 import type { AppPage } from "~web/types/page";
 

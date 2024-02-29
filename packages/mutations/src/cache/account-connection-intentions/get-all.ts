@@ -1,7 +1,7 @@
 import type { TRPCQueryOutput, TRPCReactContext } from "~app/trpc";
+import type { AccountsId } from "~db";
 import type { ItemWithIndex } from "~utils";
 import { addToArray, removeFromArray, replaceInArray } from "~utils";
-import type { AccountsId } from "~web/db/models";
 
 import type { ControllerContext, SnapshotFn, UpdateFn } from "../../types";
 import { applyUpdateFnWithRevert, applyWithRevert, withRef } from "../utils";

@@ -1,6 +1,6 @@
 import type { TRPCMutationInput, TRPCQueryOutput } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
-import type { DebtsId, ReceiptsId, UsersId } from "~web/db/models";
+import type { DebtsId, ReceiptsId, UsersId } from "~db";
 
 import * as cache from "../cache";
 import type {

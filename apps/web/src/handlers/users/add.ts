@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { userNameSchema } from "~app/utils/validation";
-import type { UsersId } from "~web/db/models";
+import type { UsersId } from "~db";
 import { addConnectionIntention } from "~web/handlers/account-connection-intentions/utils";
 import { authProcedure } from "~web/handlers/trpc";
 import { emailSchema } from "~web/handlers/validation";

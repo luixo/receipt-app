@@ -1,9 +1,9 @@
+import type { Database } from "~db";
+
 import {
 	createDebtsSyncIntentionsTable,
 	removeDebtsSyncIntentionsTable,
-} from "~web/db/migrations/0011-debt-timestamp-lock";
-
-import type { Database } from "..";
+} from "./0011-debt-timestamp-lock";
 
 export const up = async (db: Database) => {
 	await removeDebtsSyncIntentionsTable(db);

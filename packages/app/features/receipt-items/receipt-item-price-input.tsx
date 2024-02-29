@@ -10,8 +10,8 @@ import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import { priceSchema } from "~app/utils/validation";
 import { Input, Text } from "~components";
+import type { ReceiptsId } from "~db";
 import * as mutations from "~mutations";
-import type { ReceiptsId } from "~web/db/models";
 
 type ReceiptItem = TRPCQueryOutput<"receipts.get">["items"][number];
 

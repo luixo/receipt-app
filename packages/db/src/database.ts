@@ -1,15 +1,9 @@
-import type { LogEvent, SelectExpression } from "kysely";
+import type { LogEvent } from "kysely";
 import { Kysely, PostgresDialect } from "kysely";
 import type { Pool } from "pg";
-
-import type { Logger } from "~web/providers/logger";
+import type { Logger } from "pino";
 
 import type { ReceiptsDatabase } from "./types";
-
-export type ReceiptsSelectExpression<TB extends keyof ReceiptsDatabase> =
-	SelectExpression<ReceiptsDatabase, TB>;
-
-export type Database = Kysely<ReceiptsDatabase>;
 
 const getLogger = (logger: Logger) => (logEvent: LogEvent) => {
 	const common = {

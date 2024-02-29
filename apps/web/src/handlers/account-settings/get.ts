@@ -1,4 +1,4 @@
-import type { ReceiptsDatabase } from "~web/db/types";
+import type { ReceiptsDatabase } from "~db";
 import { authProcedure } from "~web/handlers/trpc";
 
 type SettingsKey = Omit<ReceiptsDatabase["accountSettings"], "accountId">;

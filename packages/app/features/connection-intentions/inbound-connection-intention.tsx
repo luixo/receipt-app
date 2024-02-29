@@ -6,8 +6,8 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { Button, Text } from "~components";
+import type { UsersId } from "~db";
 import * as mutations from "~mutations";
-import type { UsersId } from "~web/db/models";
 
 type Props = {
 	intention: TRPCQueryOutput<"accountConnectionIntentions.getAll">["inbound"][number];

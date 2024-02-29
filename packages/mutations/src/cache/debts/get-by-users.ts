@@ -1,7 +1,7 @@
 import type { TRPCQueryOutput, TRPCReactContext } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
+import type { UsersId } from "~db";
 import { upsertInArray } from "~utils";
-import type { UsersId } from "~web/db/models";
 
 import type { ControllerContext, SnapshotFn, UpdateFn } from "../../types";
 import { applyUpdateFnWithRevert, withRef } from "../utils";

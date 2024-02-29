@@ -3,15 +3,16 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import type { UserConfig } from "vitest/config";
 import { configDefaults, defineConfig } from "vitest/config";
 
-export const rootPath = path.resolve(__dirname, "../..");
-export const testsRoot = path.resolve(rootPath, "apps/web/src");
+const rootPath = path.resolve(__dirname, "../..");
 const vitestRoot = path.resolve(rootPath, "testing/vitest");
+
+const packagesToCover = ["db"];
 
 const testConfig: NonNullable<UserConfig["test"]> = {
 	root: rootPath,
 	globalSetup: path.resolve(vitestRoot, "./global.setup.ts"),
 	setupFiles: path.resolve(vitestRoot, "./tests.setup.ts"),
-	include: [path.resolve(testsRoot, "**/*.test.ts")],
+	include: [path.resolve(rootPath, "**/*.test.ts")],
 	exclude: [...configDefaults.exclude, "**/utils.test.ts"],
 	coverage: {
 		all: false,
@@ -22,10 +23,13 @@ const testConfig: NonNullable<UserConfig["test"]> = {
 		},
 		reporter: ["text", "html", "lcov", "json-summary", "json"],
 		exclude: [
-			...configDefaults.coverage.exclude!,
-			path.resolve(rootPath, "packages/**/*"),
+			...(configDefaults.coverage.exclude || []),
+			path.resolve(
+				rootPath,
+				`packages/*[!{${packagesToCover.join("|")}}]/**/*`,
+			),
 			path.resolve(rootPath, "__tests__/**/*"),
-			path.resolve(testsRoot, "providers/**/*"),
+			path.resolve(rootPath, "apps/web/src/providers/**/*"),
 			path.resolve(vitestRoot, "**/*"),
 		],
 		allowExternal: true,

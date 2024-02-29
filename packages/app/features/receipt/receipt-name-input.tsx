@@ -5,8 +5,8 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
 import { receiptNameSchema } from "~app/utils/validation";
 import { Input } from "~components";
+import type { ReceiptsId } from "~db";
 import * as mutations from "~mutations";
-import type { ReceiptsId } from "~web/db/models";
 
 type Props = {
 	receiptId: ReceiptsId;

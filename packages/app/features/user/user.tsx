@@ -12,8 +12,8 @@ import { trpc } from "~app/trpc";
 import { userNameSchema } from "~app/utils/validation";
 import { Button, Input, Spinner } from "~components";
 import { TrashBin } from "~components/icons";
+import type { UsersId } from "~db";
 import * as mutations from "~mutations";
-import type { UsersId } from "~web/db/models";
 
 import { UserConnectionInput } from "./user-connection-input";
 

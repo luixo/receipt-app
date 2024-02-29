@@ -1,9 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import type { z } from "zod";
 
-import type { Database } from "~web/db";
-import { ACCOUNT_CONNECTIONS_INTENTIONS } from "~web/db/consts";
-import type { AccountsId, UsersId } from "~web/db/models";
+import { ACCOUNT_CONNECTIONS_INTENTIONS } from "~db";
+import type { AccountsId, Database, UsersId } from "~db";
 import type { emailSchema } from "~web/handlers/validation";
 
 export const addConnectionIntention = async (

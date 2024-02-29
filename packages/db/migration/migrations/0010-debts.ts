@@ -1,5 +1,5 @@
-import type { Database } from "..";
-import { DEBTS } from "../consts";
+import type { Database } from "~db";
+import { DEBTS } from "~db";
 
 const createDebtsTable = async (db: Database) => {
 	await db.schema

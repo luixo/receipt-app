@@ -15,8 +15,8 @@ import {
 	receiptItemNameSchema,
 } from "~app/utils/validation";
 import { Button, Input } from "~components";
+import type { ReceiptsId } from "~db";
 import * as mutations from "~mutations";
-import type { ReceiptsId } from "~web/db/models";
 
 type NameProps = {
 	form: UseFormReturn<Form>;

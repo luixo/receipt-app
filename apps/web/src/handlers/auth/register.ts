@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { passwordSchema, userNameSchema } from "~app/utils/validation";
-import type { AccountsId, UsersId } from "~web/db/models";
+import type { AccountsId, UsersId } from "~db";
 import {
 	createAuthorizationSession,
 	sendVerificationEmail,

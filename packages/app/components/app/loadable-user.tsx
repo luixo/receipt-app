@@ -5,7 +5,7 @@ import { QueryErrorMessage } from "~app/components/error-message";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { Spinner } from "~components";
-import type { UsersId } from "~web/db/models";
+import type { UsersId } from "~db";
 
 type InnerProps = {
 	query: TRPCQuerySuccessResult<"users.getForeign">;

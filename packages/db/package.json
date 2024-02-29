@@ -1,0 +1,20 @@
+{
+	"version": "0.0.0",
+	"name": "@ra/db",
+	"main": "src/index.ts",
+	"sideEffects": false,
+	"scripts": {
+		"db:migrate": "tsx scripts/migrate.ts",
+		"db:generate-types": "tsx scripts/generate-types.ts"
+	},
+	"dependencies": {
+		"kysely": "^0.27.2",
+		"pg": "^8.11.3"
+	},
+	"devDependencies": {
+		"extract-pg-schema": "^4.1.0",
+		"kanel": "^3.4.1",
+		"tsx": "^3.12.7",
+		"vitest": "^1.2.2"
+	}
+}

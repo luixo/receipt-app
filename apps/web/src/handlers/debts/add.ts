@@ -3,9 +3,9 @@ import type { DatabaseError } from "pg";
 import { z } from "zod";
 
 import { debtAmountSchema, debtNoteSchema } from "~app/utils/validation";
+import { DEBTS } from "~db";
+import type { DebtsId } from "~db";
 import { nonNullishGuard } from "~utils";
-import { DEBTS } from "~web/db/consts";
-import type { DebtsId } from "~web/db/models";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import { authProcedure } from "~web/handlers/trpc";

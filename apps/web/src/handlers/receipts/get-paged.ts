@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { sql } from "kysely";
 import { z } from "zod";
 
-import type { UsersId } from "~web/db/models";
+import type { UsersId } from "~db";
 import { getForeignReceipts } from "~web/handlers/receipts/utils";
 import { authProcedure } from "~web/handlers/trpc";
 import { limitSchema, offsetSchema } from "~web/handlers/validation";

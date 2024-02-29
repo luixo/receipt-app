@@ -11,7 +11,7 @@ import { useRefs } from "~app/hooks/use-refs";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { Spinner } from "~components";
-import type { UsersId } from "~web/db/models";
+import type { UsersId } from "~db";
 
 import { AcceptAllIntentionsButton } from "./accept-all-intentions-button";
 import { InboundDebtIntention } from "./inbound-debt-intention";

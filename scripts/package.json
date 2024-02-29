@@ -4,17 +4,12 @@
 	"private": true,
 	"scripts": {
 		"dev": "tsx modular/dev.ts",
-		"db:migrate": "tsx migrate.ts",
-		"db:generate-types": "tsx generate-types.ts",
 		"expo:update-ios-version": "tsx update-version.ts"
 	},
 	"devDependencies": {
 		"concurrently": "^7.1.0",
-		"extract-pg-schema": "^4.1.0",
 		"get-port": "^6.1.2",
-		"kanel": "^3.4.1",
 		"ngrok": "^4.3.1",
-		"pg": "^8.11.3",
 		"ts-morph": "^14.0.0",
 		"tsx": "^3.12.7"
 	}

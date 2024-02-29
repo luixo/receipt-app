@@ -21,6 +21,7 @@ import {
 	SyncIcon,
 	TrashBinIcon,
 } from "~components/icons";
+import type { UsersId } from "~db";
 import * as mutations from "~mutations";
 import {
 	MAX_AVATAR_SIDE_SIZE,
@@ -28,7 +29,6 @@ import {
 	convertFileToDataUrl,
 	noop,
 } from "~utils";
-import type { UsersId } from "~web/db/models";
 
 const MAX_ZOOM = 5;
 

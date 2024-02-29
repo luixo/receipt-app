@@ -9,8 +9,8 @@ import type { TRPCQueryErrorResult, TRPCQueryInput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { Button, Link, Overlay, Pagination, Spinner } from "~components";
 import { AddIcon } from "~components/icons";
+import type { UsersId } from "~db";
 import * as queries from "~queries";
-import type { UsersId } from "~web/db/models";
 
 import { UserPreview } from "./user-preview";
 

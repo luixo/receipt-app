@@ -4,8 +4,8 @@ import * as timekeeper from "timekeeper";
 import type { Suite as OriginalSuite } from "vitest";
 import { beforeAll, beforeEach, inject } from "vitest";
 
+import { getDatabase } from "~db";
 import { SECOND } from "~utils";
-import { getDatabase } from "~web/db";
 
 import { makeConnectionString } from "./databases/connection";
 import type { appRouter } from "./databases/router";
