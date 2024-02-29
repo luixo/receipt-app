@@ -127,7 +127,8 @@ export const Receipts: React.FC = () => {
 							<View className="flex-[2] p-2">
 								<Text className="self-end">Sum</Text>
 							</View>
-							<View className="flex-[3] p-2 pr-14" />
+							<View className="flex-1 p-2 max-sm:hidden" />
+							<View className="flex-1 p-2 max-sm:hidden" />
 						</View>
 						<Divider className="max-sm:hidden" />
 						<ReceiptPreviews ids={query.data.items} />

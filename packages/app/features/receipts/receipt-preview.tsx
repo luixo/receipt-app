@@ -67,16 +67,14 @@ export const ReceiptPreview: React.FC<InnerProps> = ({ receipt }) => {
 		<View>
 			<View className="flex-row gap-2 sm:hidden">
 				<Text className="flex-[7] p-2">{title}</Text>
-				<Text className="flex-[2] flex-row justify-end p-2">
-					{sumComponent}
-				</Text>
+				<Text className="flex-[2] flex-row p-2 text-right">{sumComponent}</Text>
 			</View>
 			<View className="flex-row gap-2">
 				<Text className="flex-[7] p-2 max-sm:hidden">{title}</Text>
 				<Text className="flex-[2] flex-row self-center p-2 text-right max-sm:hidden">
 					{sumComponent}
 				</Text>
-				<View className="flex-1 flex-row self-center p-2">
+				<View className="flex-1 flex-row justify-center self-center p-2">
 					{isOwner ? (
 						<ReceiptResolvedParticipantsButton
 							participants={receipt.participants}
