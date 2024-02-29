@@ -65,6 +65,8 @@ type TRPCMutationValues = UnionToIntersection<
 
 export const trpc = createTRPCReact<AppRouter>();
 
+export type TRPCReact = typeof trpc;
+
 export type TRPCReactContext = ReturnType<(typeof trpc)["useContext"]>;
 
 export type TRPCError = TRPCClientErrorLike<AppRouter>;

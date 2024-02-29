@@ -8,10 +8,10 @@ import { LockedIcon } from "~app/components/locked-icon";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import { useSsrFormat } from "~app/hooks/use-ssr-format";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { mutations } from "~app/mutations";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { Text } from "~components";
+import * as mutations from "~mutations";
 import { round } from "~utils";
 
 type InnerProps = {

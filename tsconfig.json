@@ -11,6 +11,8 @@
 			"~app/*": ["./packages/app/*"],
 			"~components": ["./packages/components/src"],
 			"~utils": ["./packages/utils/src"],
+			"~mutations": ["./packages/mutations/src"],
+			"~queries": ["./packages/queries/src"],
 			"~web/*": ["./apps/web/src/*"],
 			"~mobile/*": ["./apps/mobile/*"],
 			"~tests/backend/*": ["./testing/vitest/*"],

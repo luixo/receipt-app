@@ -9,7 +9,6 @@ import { z } from "zod";
 
 import { useInputController } from "~app/hooks/use-input-controller";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { mutations } from "~app/mutations";
 import { trpc } from "~app/trpc";
 import {
 	priceSchema,
@@ -17,6 +16,7 @@ import {
 	receiptItemNameSchema,
 } from "~app/utils/validation";
 import { Input } from "~components";
+import * as mutations from "~mutations";
 import type { ReceiptsId } from "~web/db/models";
 
 type NameProps = {

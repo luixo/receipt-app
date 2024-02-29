@@ -5,10 +5,10 @@ import { CurrenciesPicker } from "~app/components/app/currencies-picker";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { mutations } from "~app/mutations";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import { Text } from "~components";
+import * as mutations from "~mutations";
 import type { ReceiptsId } from "~web/db/models";
 
 type Props = {

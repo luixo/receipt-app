@@ -1,0 +1,9 @@
+{
+	"version": "0.0.0",
+	"name": "@ra/queries",
+	"main": "src/index.ts",
+	"sideEffects": false,
+	"dependencies": {
+		"zustand": "^4.3.9"
+	}
+}

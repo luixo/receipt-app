@@ -12,11 +12,11 @@ import { useFormattedCurrencies } from "~app/hooks/use-formatted-currencies";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import { useInputController } from "~app/hooks/use-input-controller";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { mutations } from "~app/mutations";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import { currencyCodeSchema, currencyRateSchema } from "~app/utils/validation";
 import { Input, Text } from "~components";
+import * as mutations from "~mutations";
 import { nonNullishGuard, round } from "~utils";
 import type { UsersId } from "~web/db/models";
 

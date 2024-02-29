@@ -14,11 +14,11 @@ import { EmailVerificationCard } from "~app/features/email-verification/email-ve
 import { useInputController } from "~app/hooks/use-input-controller";
 import { useSelfAccountId } from "~app/hooks/use-self-account-id";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { mutations } from "~app/mutations";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import { currencyCodeSchema, receiptNameSchema } from "~app/utils/validation";
 import { Input } from "~components";
+import * as mutations from "~mutations";
 import { getToday } from "~utils";
 import type { AppPage } from "~web/types/page";
 

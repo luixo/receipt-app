@@ -11,11 +11,11 @@ import { ChangePasswordScreen } from "~app/features/change-password/change-passw
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
 import { useSingleInput } from "~app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { mutations } from "~app/mutations";
 import type { TRPCQueryOutput, TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { userNameSchema } from "~app/utils/validation";
 import { Input } from "~components";
+import * as mutations from "~mutations";
 import type { AppPage } from "~web/types/page";
 
 import { AccountAvatarInput } from "./account-avatar-input";

@@ -8,7 +8,6 @@ import { z } from "zod";
 
 import { PageHeader } from "~app/components/page-header";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { mutations } from "~app/mutations";
 import { trpc } from "~app/trpc";
 import {
 	emailSchema,
@@ -16,6 +15,7 @@ import {
 	userNameSchema,
 } from "~app/utils/validation";
 import { Input } from "~components";
+import * as mutations from "~mutations";
 import type { AppPage } from "~web/types/page";
 
 type RegistrationForm = {

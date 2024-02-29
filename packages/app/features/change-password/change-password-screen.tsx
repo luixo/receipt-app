@@ -7,10 +7,10 @@ import { z } from "zod";
 
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { mutations } from "~app/mutations";
 import { trpc } from "~app/trpc";
 import { passwordSchema } from "~app/utils/validation";
 import { Input } from "~components";
+import * as mutations from "~mutations";
 import type { AppPage } from "~web/types/page";
 
 type Form = {

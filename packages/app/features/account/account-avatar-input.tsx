@@ -19,10 +19,10 @@ import { UserAvatar } from "~app/components/app/user-avatar";
 import { ConfirmModal } from "~app/components/confirm-modal";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { mutations } from "~app/mutations";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { FileInput, Text } from "~components";
+import * as mutations from "~mutations";
 import {
 	MAX_AVATAR_SIDE_SIZE,
 	convertDataUrlToImageElement,

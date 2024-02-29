@@ -1,0 +1,10 @@
+{
+	"version": "0.0.0",
+	"name": "@ra/mutations",
+	"main": "src/index.ts",
+	"sideEffects": false,
+	"dependencies": {
+		"@tanstack/react-query": "^5.12.2",
+		"@trpc/react-query": "^11.0.0-alpha-next-2023-11-24-13-58-38.113"
+	}
+}

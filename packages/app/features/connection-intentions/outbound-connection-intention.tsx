@@ -4,10 +4,10 @@ import { Button } from "@nextui-org/react";
 import { MdLinkOff as UnlinkIcon } from "react-icons/md";
 
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { mutations } from "~app/mutations";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { Input } from "~components";
+import * as mutations from "~mutations";
 
 type Props = {
 	intention: TRPCQueryOutput<"accountConnectionIntentions.getAll">["outbound"][number];

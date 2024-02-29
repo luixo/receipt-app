@@ -4,8 +4,8 @@ import { useRouter, useSearchParams } from "solito/navigation";
 
 import { PageHeader } from "~app/components/page-header";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { mutations } from "~app/mutations";
 import { trpc } from "~app/trpc";
+import * as mutations from "~mutations";
 import type { AppPage } from "~web/types/page";
 
 import { ConfirmEmail } from "./confirm-email";

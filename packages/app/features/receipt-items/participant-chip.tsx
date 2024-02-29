@@ -2,9 +2,9 @@ import React from "react";
 
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { mutations } from "~app/mutations";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
+import * as mutations from "~mutations";
 import type { ReceiptItemsId, ReceiptsId } from "~web/db/models";
 
 type Props = {

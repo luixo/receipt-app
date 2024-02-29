@@ -5764,7 +5764,6 @@ __metadata:
     superjson: ^1.13.1
     uuid: ^9.0.0
     zod-form-data: ^2.0.2
-    zustand: ^4.3.9
   languageName: unknown
   linkType: soft
 
@@ -5794,6 +5793,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@ra/mutations@workspace:packages/mutations":
+  version: 0.0.0-use.local
+  resolution: "@ra/mutations@workspace:packages/mutations"
+  dependencies:
+    "@tanstack/react-query": ^5.12.2
+    "@trpc/react-query": ^11.0.0-alpha-next-2023-11-24-13-58-38.113
+  languageName: unknown
+  linkType: soft
+
 "@ra/playwright@workspace:testing/playwright":
   version: 0.0.0-use.local
   resolution: "@ra/playwright@workspace:testing/playwright"
@@ -5811,6 +5819,14 @@ __metadata:
     superjson: ^1.13.1
     timekeeper: ^2.3.1
     uuid: ^9.0.0
+  languageName: unknown
+  linkType: soft
+
+"@ra/queries@workspace:packages/queries":
+  version: 0.0.0-use.local
+  resolution: "@ra/queries@workspace:packages/queries"
+  dependencies:
+    zustand: ^4.3.9
   languageName: unknown
   linkType: soft
 

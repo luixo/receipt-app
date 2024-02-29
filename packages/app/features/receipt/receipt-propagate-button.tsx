@@ -10,7 +10,6 @@ import {
 import { QueryErrorMessage } from "~app/components/error-message";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { mutations } from "~app/mutations";
 import type {
 	TRPCQueryErrorResult,
 	TRPCQueryResult,
@@ -19,6 +18,7 @@ import type {
 import { trpc } from "~app/trpc";
 import { getReceiptDebtName } from "~app/utils/receipt";
 import { getParticipantSums } from "~app/utils/receipt-item";
+import * as mutations from "~mutations";
 import type { NonNullableField } from "~utils";
 
 import { ReceiptDebtSyncInfoModal } from "./receipt-debt-sync-info-modal";

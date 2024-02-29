@@ -7,11 +7,11 @@ import { FiMinus as MinusIcon, FiPlus as PlusIcon } from "react-icons/fi";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useSingleInput } from "~app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { mutations } from "~app/mutations";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { partSchema } from "~app/utils/validation";
 import { Input, Text } from "~components";
+import * as mutations from "~mutations";
 import type { ReceiptItemsId, ReceiptsId } from "~web/db/models";
 
 type ReceiptItemPart =

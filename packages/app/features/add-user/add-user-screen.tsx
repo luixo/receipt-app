@@ -11,10 +11,10 @@ import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
 import { useInputController } from "~app/hooks/use-input-controller";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { mutations } from "~app/mutations";
 import { trpc } from "~app/trpc";
 import { emailSchema, userNameSchema } from "~app/utils/validation";
 import { Input } from "~components";
+import * as mutations from "~mutations";
 import type { AppPage } from "~web/types/page";
 
 type EmailProps = {

@@ -17,12 +17,12 @@ import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import { useSingleInput } from "~app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { mutations } from "~app/mutations";
 import type { TRPCQueryOutput, TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import { debtAmountSchema, debtNoteSchema } from "~app/utils/validation";
 import { Input } from "~components";
+import * as mutations from "~mutations";
 import type { ReceiptsId } from "~web/db/models";
 import type { AppPage } from "~web/types/page";
 

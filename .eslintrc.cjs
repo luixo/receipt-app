@@ -113,6 +113,8 @@ module.exports = {
 			["apps/web", ["next.config.js", "**/*.test.ts", "**/*.spec.ts"]],
 			["apps/mobile"],
 			["packages/components"],
+			["packages/mutations"],
+			["packages/queries"],
 			["packages/app", ["**/*.spec.ts"]],
 			["scripts", true],
 			["testing/vitest", true],

@@ -18,9 +18,9 @@ import { LoadableUser } from "~app/components/app/loadable-user";
 import { UsersSuggest } from "~app/components/app/users-suggest";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { mutations } from "~app/mutations";
 import { type TRPCQueryOutput, trpc } from "~app/trpc";
 import { Text } from "~components";
+import * as mutations from "~mutations";
 import { round } from "~utils";
 import type { UsersId } from "~web/db/models";
 

@@ -3,23 +3,7 @@
 	"include": [
 		"rnw-env.d.ts",
 		"nativewind-env.d.ts",
-		"**/*.ts",
-		"**/*.tsx",
-		"../components/src/file-input.tsx",
-		"../components/src/header.tsx",
-		"../components/src/input.tsx",
-		"../components/src/page-title.tsx",
-		"../components/src/text.tsx",
-		"../components/src/calendar.tsx",
-		"../components/src/overlay.tsx",
-		"../utils/src/color.ts",
-		"../utils/src/array.ts",
-		"../utils/src/date.ts",
-		"../utils/src/hash.ts",
-		"../utils/src/images.ts",
-		"../utils/src/math.ts",
-		"../utils/src/object.ts",
-		"../utils/src/time.ts",
-		"../utils/src/misc.ts"
+		"../**/*.ts",
+		"../**/*.tsx"
 	]
 }

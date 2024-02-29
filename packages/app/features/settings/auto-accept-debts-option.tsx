@@ -4,8 +4,8 @@ import { Spinner, Switch } from "@nextui-org/react";
 
 import { ErrorMessage, QueryErrorMessage } from "~app/components/error-message";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { mutations } from "~app/mutations";
 import { trpc } from "~app/trpc";
+import * as mutations from "~mutations";
 
 export const AutoAcceptDebtsOption: React.FC = () => {
 	const settingsQuery = trpc.accountSettings.get.useQuery();

@@ -18,7 +18,6 @@ import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
 import { useInputController } from "~app/hooks/use-input-controller";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { mutations } from "~app/mutations";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import {
@@ -28,6 +27,7 @@ import {
 	userIdSchema,
 } from "~app/utils/validation";
 import { Input } from "~components";
+import * as mutations from "~mutations";
 import { getToday } from "~utils";
 import type { UsersId } from "~web/db/models";
 import type { AppPage } from "~web/types/page";

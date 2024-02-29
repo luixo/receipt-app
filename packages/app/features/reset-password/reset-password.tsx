@@ -9,11 +9,11 @@ import { z } from "zod";
 import { EmptyCard } from "~app/components/empty-card";
 import { QueryErrorMessage } from "~app/components/error-message";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { mutations } from "~app/mutations";
 import type { TRPCQueryResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { passwordSchema } from "~app/utils/validation";
 import { Header, Input } from "~components";
+import * as mutations from "~mutations";
 
 type ChangePasswordForm = {
 	password: string;

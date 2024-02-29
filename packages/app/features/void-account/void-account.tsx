@@ -5,9 +5,9 @@ import { Button, Link } from "@nextui-org/react";
 
 import { ErrorMessage } from "~app/components/error-message";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { mutations } from "~app/mutations";
 import { trpc } from "~app/trpc";
 import { Header } from "~components";
+import * as mutations from "~mutations";
 
 type Props = {
 	token: string;
