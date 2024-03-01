@@ -1,9 +1,9 @@
 import React from "react";
 
 import { useQueryClient } from "@tanstack/react-query";
+import type { Persister } from "@tanstack/react-query-persist-client";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 
-import { PersistStorageContext } from "~app/contexts/persist-storage-context";
 import type { TRPCQuery, TRPCQueryKey, TRPCSplitQueryKey } from "~app/trpc";
 import { MONTH } from "~utils";
 
@@ -18,21 +18,17 @@ const PERSISTED_QUERIES: Readonly<TRPCSplitQueryKey>[] = [
 	["currency", "getList"],
 ];
 
-export const PersisterProvider: React.FC<React.PropsWithChildren<object>> = ({
-	children,
-}) => {
-	const persistStorageContext = React.useContext(PersistStorageContext);
-	if (!persistStorageContext) {
-		throw new Error(
-			"Expected to have PersistStorageContext available in PersisterProvider",
-		);
-	}
+export const PersisterProvider: React.FC<
+	React.PropsWithChildren<{
+		persister: Persister;
+	}>
+> = ({ persister, children }) => {
 	const queryClient = useQueryClient();
 	const persistOptions = React.useMemo<
 		React.ComponentProps<typeof PersistQueryClientProvider>["persistOptions"]
 	>(
 		() => ({
-			persister: persistStorageContext.persister,
+			persister,
 			maxAge: MONTH,
 			dehydrateOptions: {
 				shouldDehydrateQuery: (query) => {
@@ -43,7 +39,7 @@ export const PersisterProvider: React.FC<React.PropsWithChildren<object>> = ({
 				},
 			},
 		}),
-		[persistStorageContext.persister],
+		[persister],
 	);
 	return (
 		<PersistQueryClientProvider

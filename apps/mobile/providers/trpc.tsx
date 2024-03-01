@@ -3,24 +3,30 @@ import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { createTRPCReact } from "@trpc/react-query";
 
-import { TRPC_ENDPOINT, getNativeBaseUrl } from "~app/utils/queries";
+import { TRPC_ENDPOINT } from "~app/utils/queries";
+import type { SearchParams } from "~app/utils/trpc";
 import { getLinks, transformer } from "~app/utils/trpc";
 import type { AppRouter } from "~web/pages/api/trpc/[trpc]";
 
-export const TrpcProvider: React.FC<React.PropsWithChildren<object>> = ({
+type Props = {
+	searchParams: SearchParams;
+	baseUrl: string;
+};
+
+export const TRPCProvider: React.FC<React.PropsWithChildren<Props>> = ({
 	children,
+	searchParams,
+	baseUrl,
 }) => {
 	const [trpc] = React.useState(() => createTRPCReact<AppRouter>());
 	const queryClient = useQueryClient();
-	const url = `${getNativeBaseUrl()}${TRPC_ENDPOINT}`;
 	const [trpcClient] = React.useState(() =>
 		trpc.createClient({
-			links: getLinks(url, {
+			links: getLinks(`${baseUrl}${TRPC_ENDPOINT}`, {
 				useBatch: true,
-				// TODO: add searchParams on react-native environment
-				searchParams: {},
-				// TODO: add cookies on react-native environment
-				cookies: undefined,
+				searchParams,
+				// There is no simple way to get native cookies, and we basically don't need it
+				cookies: {},
 				source: "native",
 				captureError: () => "native-not-implemented",
 			}),

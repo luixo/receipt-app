@@ -9,14 +9,18 @@ import { ProtectedPage } from "~app/components/protected-page";
 import { PublicPage } from "~app/components/public-page";
 import { Toaster } from "~app/components/toaster";
 import { useRemoveTestQueryParams } from "~app/hooks/use-remove-test-query-params";
+import { Provider } from "~app/providers/index";
 import { getSSRContextCookieData } from "~app/utils/cookie-data";
 import { applyRemaps } from "~app/utils/nativewind";
 import { useHydratedMark } from "~web/hooks/use-hydrated-mark";
 import { useLocalCookies } from "~web/hooks/use-local-cookies";
 import { useQueryClientHelper } from "~web/hooks/use-query-client-helper";
 import { useRemovePreloadedCss } from "~web/hooks/use-remove-preloaded-css";
-import { ClientProvider } from "~web/providers/client";
+import { QueryDevToolsProvider } from "~web/providers/client/query-devtools";
+import { ThemeProvider } from "~web/providers/client/theme";
 import type { AppPage } from "~web/types/page";
+import { nextCookieContext } from "~web/utils/client-cookies";
+import { webPersister } from "~web/utils/persister";
 import { trpcNext } from "~web/utils/trpc";
 import "~web/global.css";
 
@@ -31,7 +35,10 @@ const GlobalHooksComponent: React.FC = () => {
 	return null;
 };
 
-type PageProps = React.ComponentProps<typeof ClientProvider>;
+type PageProps = Omit<
+	React.ComponentProps<typeof Provider>,
+	"cookiesContext" | "persister"
+>;
 
 declare module "next/app" {
 	interface AppInitialProps {
@@ -54,13 +61,21 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 				/>
 				<link rel="icon" href="/favicon.svg" />
 			</Head>
-			<ClientProvider {...pageProps}>
-				<LayoutComponent>
-					<Component />
-				</LayoutComponent>
-				<GlobalHooksComponent />
-				<Toaster />
-			</ClientProvider>
+			<Provider
+				{...pageProps}
+				cookiesContext={nextCookieContext}
+				persister={webPersister}
+			>
+				<ThemeProvider>
+					<QueryDevToolsProvider>
+						<LayoutComponent>
+							<Component />
+						</LayoutComponent>
+						<GlobalHooksComponent />
+						<Toaster />
+					</QueryDevToolsProvider>
+				</ThemeProvider>
+			</Provider>
 		</>
 	);
 };
@@ -69,8 +84,8 @@ MyApp.getInitialProps = async ({ ctx, router }) => {
 	const cookies = getCookies(ctx);
 	const pageProps: PageProps = {
 		searchParams: router.query,
-		ssrData: {
-			...getSSRContextCookieData(cookies),
+		cookiesData: {
+			values: getSSRContextCookieData(cookies),
 			nowTimestamp: Date.now(),
 		},
 	};

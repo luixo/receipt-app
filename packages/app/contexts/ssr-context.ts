@@ -9,7 +9,8 @@ import {
 import { noop } from "~utils";
 
 // The data above + data we add on each render
-export type SSRContextData = CookieValues & {
+export type SSRContextData = {
+	values?: CookieValues;
 	// Without this timestamp relative dates might differ on server and client
 	// (e.g. "1 second ago" and "2 seconds ago")
 	// which will cause hydration mismatch warning

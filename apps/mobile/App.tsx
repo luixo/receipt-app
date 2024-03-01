@@ -1,51 +1,44 @@
 import React from "react";
 
-import { CookieProvider } from "~app/providers/cookie";
-import { PersisterProvider } from "~app/providers/persist-client";
-import { PersistStorageProvider } from "~app/providers/persist-storage";
-import { QueryClientProvider } from "~app/providers/query-client";
-import { QueryDevToolsProvider } from "~app/providers/query-devtools";
-import { SearchParamsProvider } from "~app/providers/search-params";
-import { ShimsProvider } from "~app/providers/shims";
-import { SSRDataProvider } from "~app/providers/ssr-data";
-import { ThemeProvider } from "~app/providers/theme";
-import { TrpcProvider } from "~app/providers/trpc";
-import { getSSRContextCookieData } from "~app/utils/cookie-data";
+import { Provider } from "~app/providers/index";
+import { useBaseUrl } from "~mobile/hooks/use-base-url";
+import { useCookieData } from "~mobile/hooks/use-cookie-data";
+import { useSearchParams } from "~mobile/hooks/use-search-params";
+import { QueryClientProvider } from "~mobile/providers/query-client";
+import { QueryDevToolsProvider } from "~mobile/providers/query-devtools";
+import { ThemeProvider } from "~mobile/providers/theme";
+import { TRPCProvider } from "~mobile/providers/trpc";
+import { mobileCookieContext } from "~mobile/utils/cookie-storage";
+import { mobilePersister } from "~mobile/utils/persister";
 
 import { NativeNavigation } from "./navigation";
 
-const Provider: React.FC<React.PropsWithChildren> = ({ children }) => (
-	<ShimsProvider>
+const ClientProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
+	const baseUrl = useBaseUrl();
+	const cookieData = useCookieData();
+	const searchParams = useSearchParams();
+	return (
 		<QueryClientProvider>
-			<TrpcProvider>
-				<PersistStorageProvider>
-					<PersisterProvider>
-						<CookieProvider>
-							<SSRDataProvider
-								data={{
-									...getSSRContextCookieData(),
-									nowTimestamp: Date.now(),
-								}}
-							>
-								{/* TODO: add react native query params */}
-								<SearchParamsProvider searchParams={{}}>
-									<ThemeProvider>
-										<QueryDevToolsProvider>{children}</QueryDevToolsProvider>
-									</ThemeProvider>
-								</SearchParamsProvider>
-							</SSRDataProvider>
-						</CookieProvider>
-					</PersisterProvider>
-				</PersistStorageProvider>
-			</TrpcProvider>
+			<Provider
+				searchParams={searchParams}
+				cookiesContext={mobileCookieContext}
+				cookiesData={cookieData}
+				persister={mobilePersister}
+			>
+				<TRPCProvider baseUrl={baseUrl} searchParams={searchParams}>
+					<ThemeProvider>
+						<QueryDevToolsProvider>{children}</QueryDevToolsProvider>
+					</ThemeProvider>
+				</TRPCProvider>
+			</Provider>
 		</QueryClientProvider>
-	</ShimsProvider>
-);
+	);
+};
 
 const App: React.FC = () => (
-	<Provider>
+	<ClientProvider>
 		<NativeNavigation />
-	</Provider>
+	</ClientProvider>
 );
 
 export default App;

@@ -1,11 +1,22 @@
 import React from "react";
 
-import { CookieContext } from "~app/contexts/cookie-context";
 import type { SSRContextData } from "~app/contexts/ssr-context";
 import { SSRContext } from "~app/contexts/ssr-context";
-import type { CookieStates } from "~app/utils/cookie-data";
-import { getCookieStatesFromValues, schemas } from "~app/utils/cookie-data";
+import type { CookieStates, CookieValues } from "~app/utils/cookie-data";
+import {
+	getCookieStatesFromValues,
+	getSSRContextCookieData,
+	schemas,
+} from "~app/utils/cookie-data";
 import { updateSetStateAction } from "~utils";
+
+const resolveState = (values: CookieValues) =>
+	Object.fromEntries(
+		Object.keys(schemas).map((key) => [
+			key,
+			values[key as keyof typeof schemas],
+		]),
+	) as typeof values;
 
 type SetValues = {
 	[K in keyof CookieStates]: CookieStates[K][1];
@@ -17,30 +28,45 @@ type DeleteValues = {
 
 type CookieKey = keyof CookieStates;
 
+type SetCookieOptions = {
+	maxAge?: number;
+};
+
+export type CookieContext = {
+	setCookie: <T>(key: string, value: T, options?: SetCookieOptions) => void;
+	deleteCookie: (key: string) => void;
+};
+
 type Props = {
 	data: SSRContextData;
+	context: CookieContext;
 };
 
 export const SSRDataProvider: React.FC<React.PropsWithChildren<Props>> = ({
 	children,
-	data: { nowTimestamp, ...data },
+	data: { nowTimestamp, values },
+	context,
 }) => {
-	const { setCookie, deleteCookie } = React.useContext(CookieContext);
+	const { setCookie, deleteCookie } = context;
 	const [isMounted, setMounted] = React.useState(false);
 	React.useEffect(() => setMounted(true), []);
-	const [ssrState, setSsrState] = React.useState(
-		() =>
-			Object.fromEntries(
-				Object.keys(schemas).map((key) => [
-					key,
-					data[key as keyof typeof schemas],
-				]),
-			) as typeof data,
+	const [ssrState, setSsrState] = React.useState(() =>
+		values ? resolveState(values) : undefined,
 	);
+	React.useEffect(() => {
+		if (!ssrState && values) {
+			setSsrState(resolveState(values));
+		}
+	}, [values, ssrState]);
 	const updateValue = React.useCallback(
 		<K extends CookieKey>(key: K) =>
-			(setStateAction: React.SetStateAction<(typeof ssrState)[K]>) => {
+			(
+				setStateAction: React.SetStateAction<NonNullable<typeof ssrState>[K]>,
+			) => {
 				setSsrState((prevState) => {
+					if (!prevState) {
+						return prevState;
+					}
 					const nextState = updateSetStateAction(
 						setStateAction,
 						prevState[key],
@@ -56,6 +82,9 @@ export const SSRDataProvider: React.FC<React.PropsWithChildren<Props>> = ({
 		<K extends CookieKey>(key: K) =>
 			() => {
 				setSsrState((prevState) => {
+					if (!prevState) {
+						return prevState;
+					}
 					// Removing a cookie and updating local state in the same time
 					deleteCookie(key);
 					return { ...prevState, [key]: schemas[key].parse(undefined) };
@@ -86,7 +115,7 @@ export const SSRDataProvider: React.FC<React.PropsWithChildren<Props>> = ({
 	const ssrStates = React.useMemo(
 		() =>
 			getCookieStatesFromValues(
-				ssrState,
+				ssrState || getSSRContextCookieData(),
 				(key) => ssrSetValues[key],
 				(key) => ssrDeleteValues[key],
 			),

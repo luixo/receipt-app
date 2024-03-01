@@ -37,12 +37,16 @@ const mapError =
 			}),
 		);
 
+export type SearchParams = Record<string, string | string[] | undefined>;
+export type Cookies = Partial<Record<string, string>>;
+export type Headers = Partial<Record<string, string>>;
+
 export type GetLinksOptions = {
 	useBatch?: boolean;
 	keepError?: boolean;
-	searchParams: Record<string, string | string[] | undefined>;
-	cookies: Partial<Record<string, string>> | undefined;
-	headers?: Partial<Record<string, string>>;
+	searchParams: SearchParams;
+	cookies: Cookies | undefined;
+	headers?: Headers;
 	captureError: (error: TRPCClientError<AppRouter>) => string;
 	source: // Next.js client-side rendering originated from 'pages' dir
 	| "csr-next"

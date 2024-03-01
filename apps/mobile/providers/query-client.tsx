@@ -7,7 +7,7 @@ import {
 
 import { getQueryClientConfig } from "~app/utils/trpc";
 
-export const QueryClientProvider: React.FC<React.PropsWithChildren<object>> = ({
+export const QueryClientProvider: React.FC<React.PropsWithChildren> = ({
 	children,
 }) => {
 	const [queryClient] = React.useState(

@@ -13,7 +13,6 @@
 		"array.prototype.tosorted": "^1.1.2",
 		"boring-avatars": "^1.10.1",
 		"date-fns": "^2.30.0",
-		"expo-constants": "^14.4.2",
 		"framer-motion": "^10.16.12",
 		"nativewind": "^4.0.16",
 		"next-usequerystate": "1.13.0",

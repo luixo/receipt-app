@@ -1,15 +1,3 @@
-import Constants from "expo-constants";
-
-export const getNativeBaseUrl = () => {
-	const host = Constants.manifest?.extra?.host;
-	if (!host) {
-		throw new Error(
-			"Expected to have BACKEND_HOST environment variable in extra specification in app.config.ts",
-		);
-	}
-	return host;
-};
-
 export const TRPC_ENDPOINT = "/api/trpc";
 
 export const getSsrHost = (serverPort: number) => {
