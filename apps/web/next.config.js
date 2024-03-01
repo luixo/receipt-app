@@ -1,5 +1,3 @@
-// TODO: put back when getting back to Expo
-
 const { withExpo } = require("@expo/next-adapter");
 const { withSentryConfig } = require("@sentry/nextjs");
 const { URL } = require("url");
@@ -34,7 +32,6 @@ const nextConfig = {
 		"react-native-web",
 		"solito",
 		"@expo/html-elements",
-		"expo-constants",
 		"expo-modules-core",
 		"nativewind",
 		"react-native-css-interop",

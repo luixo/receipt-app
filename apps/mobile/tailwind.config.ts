@@ -1,3 +1,4 @@
+import { platformSelect } from "nativewind/theme";
 import path from "node:path";
 
 // see https://github.com/tailwindlabs/tailwindcss/issues/11097
@@ -7,14 +8,19 @@ import { getConfig } from "../../packages/app/utils/tailwind";
 const rootPath = path.join(__dirname, "../..");
 
 const config = getConfig({
-	content: [
-		path.join(rootPath, "packages/**/*.{ts,tsx}"),
-		path.join(
-			rootPath,
-			"node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
-		),
-		path.join(rootPath, "apps/web/src/pages/**/*.{ts,tsx}"),
-	],
+	content: [path.join(rootPath, "packages/**/*.{ts,tsx}")],
+	theme: {
+		extend: {
+			fontFamily: {
+				example: ["ExampleFontFamily"],
+				system: platformSelect({
+					ios: "Georgia",
+					android: "sans-serif",
+					default: "ui-sans-serif",
+				}),
+			},
+		},
+	},
 });
 
 export default config;

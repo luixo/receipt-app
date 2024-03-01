@@ -1,9 +1,12 @@
 import React from "react";
 
+import { Stack, useGlobalSearchParams } from "expo-router";
+
+import "~web/global.css";
+
 import { Provider } from "~app/providers/index";
 import { useBaseUrl } from "~mobile/hooks/use-base-url";
 import { useCookieData } from "~mobile/hooks/use-cookie-data";
-import { useSearchParams } from "~mobile/hooks/use-search-params";
 import { QueryClientProvider } from "~mobile/providers/query-client";
 import { QueryDevToolsProvider } from "~mobile/providers/query-devtools";
 import { ThemeProvider } from "~mobile/providers/theme";
@@ -11,12 +14,10 @@ import { TRPCProvider } from "~mobile/providers/trpc";
 import { mobileCookieContext } from "~mobile/utils/cookie-storage";
 import { mobilePersister } from "~mobile/utils/persister";
 
-import { NativeNavigation } from "./navigation";
-
 const ClientProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 	const baseUrl = useBaseUrl();
 	const cookieData = useCookieData();
-	const searchParams = useSearchParams();
+	const searchParams = useGlobalSearchParams();
 	return (
 		<QueryClientProvider>
 			<Provider
@@ -37,7 +38,7 @@ const ClientProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 
 const App: React.FC = () => (
 	<ClientProvider>
-		<NativeNavigation />
+		<Stack />
 	</ClientProvider>
 );
 

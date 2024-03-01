@@ -3,7 +3,6 @@ export default {
 		name: "receipt-app",
 		slug: "receipt-app",
 		version: "1.0.0",
-		sdkVersion: "44.0.0",
 		scheme: "receipt-app",
 		platforms: ["ios", "android"],
 		icon: "app-icon.png",
@@ -17,5 +16,7 @@ export default {
 		extra: {
 			host: process.env.BACKEND_HOST,
 		},
+		plugins: ["expo-router"],
+		userInterfaceStyle: "automatic",
 	},
 };

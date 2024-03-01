@@ -1,24 +1,15 @@
 import { nextui } from "@nextui-org/react";
 // @ts-expect-error Preset has incorrent exports
 import preset from "nativewind/preset";
-import * as path from "node:path";
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { withTV } from "tailwind-variants/transformer";
 import type { Config } from "tailwindcss";
 
-export const getConfig: (content: string[]) => Config = (content) =>
+export const getConfig: (config: Config) => Config = (config) =>
 	withTV({
 		darkMode: "class",
-		presets: [preset],
-		plugins: [nextui({ prefix: "nextui-modern" })],
-		content: [
-			path.join(
-				__dirname,
-				"../../../",
-				"node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
-			),
-			...content,
-		],
+		presets: [preset, ...(config.presets || [])],
+		plugins: [nextui({ prefix: "nextui-modern" }), ...(config.plugins || [])],
 		theme: {
 			screens: {
 				xs: "320px",
@@ -27,5 +18,7 @@ export const getConfig: (content: string[]) => Config = (content) =>
 				lg: "1024px",
 				xl: "1240px",
 			},
+			...(config.theme || {}),
 		},
+		...config,
 	});
