@@ -2,8 +2,9 @@
 	"name": "@ra/scripts",
 	"version": "0.0.0",
 	"private": true,
+	"type": "module",
 	"scripts": {
-		"dev": "tsx modular/dev.ts",
+		"dev": "tsx dev.ts",
 		"expo:update-ios-version": "tsx update-version.ts"
 	},
 	"devDependencies": {
