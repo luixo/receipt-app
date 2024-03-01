@@ -6,6 +6,7 @@ import { createAuthContext } from "~tests/backend/utils/context";
 import { insertAccountWithSession } from "~tests/backend/utils/data";
 import { expectTRPCError } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
+import type { AppRouter } from "~web/pages/api/trpc/[trpc]";
 import { AUTH_COOKIE } from "~web/utils/server-cookies";
 
 import { getClientServer } from "./utils.test";
@@ -60,4 +61,27 @@ describe("errors formatting", () => {
 			`Zod error\n\nAt "<root>": Expected object, received number`,
 		);
 	});
+});
+
+test("error is captured", async ({ ctx }) => {
+	const { start, destroy, client } = await getClientServer(ctx, router, {
+		captureError: (error) => {
+			ctx.logger.warn(`Captured error: "${error.message}"`);
+			return "transaction-id";
+		},
+		cookies: {
+			[AUTH_COOKIE]: "fake",
+		},
+	});
+	await start();
+	const error: TRPCClientError<AppRouter> = await client.account.get
+		.query()
+		.catch((e) => e);
+	expect(error.message).toBe(
+		'Internal server error\nError fingerprint "transaction-id"',
+	);
+	expect(ctx.logger.getMessages()).toEqual([
+		['Captured error: "Session id mismatch"'],
+	]);
+	await destroy();
 });

@@ -22,6 +22,7 @@ export const TrpcProvider: React.FC<React.PropsWithChildren<object>> = ({
 				// TODO: add cookies on react-native environment
 				cookies: undefined,
 				source: "native",
+				captureError: () => "native-not-implemented",
 			}),
 			transformer,
 		}),

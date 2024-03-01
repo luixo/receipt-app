@@ -6,6 +6,7 @@ import { getSsrHost } from "~app/utils/queries";
 import { getLinks, transformer } from "~app/utils/trpc";
 import type { AppRouter } from "~web/pages/api/trpc/[trpc]";
 import { getCookies } from "~web/utils/server-cookies";
+import { captureSentryError } from "~web/utils/trpc";
 
 const nextConfig = getConfig();
 
@@ -15,6 +16,7 @@ export const getTrpcClient = (req: NextApiRequest) =>
 			searchParams: req.query,
 			cookies: getCookies(req),
 			source: "api-next",
+			captureError: captureSentryError,
 		}),
 		transformer,
 	});

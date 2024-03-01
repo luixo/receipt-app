@@ -1,4 +1,3 @@
-import * as Sentry from "@sentry/nextjs";
 import type { QueryClientConfig } from "@tanstack/react-query";
 import type { TRPCLink } from "@trpc/client";
 import {
@@ -38,12 +37,13 @@ const mapError =
 			}),
 		);
 
-type GetLinksOptions = {
+export type GetLinksOptions = {
 	useBatch?: boolean;
 	keepError?: boolean;
 	searchParams: Record<string, string | string[] | undefined>;
 	cookies: Partial<Record<string, string>> | undefined;
 	headers?: Partial<Record<string, string>>;
+	captureError: (error: TRPCClientError<AppRouter>) => string;
 	source: // Next.js client-side rendering originated from 'pages' dir
 	| "csr-next"
 		// Next.js server-side rendering originated from 'pages' dir
@@ -64,6 +64,7 @@ export const getLinks = (
 		searchParams,
 		cookies,
 		source,
+		captureError,
 		headers: overrideHeaders,
 	}: GetLinksOptions,
 ): TRPCLink<AppRouter>[] => {
@@ -98,10 +99,7 @@ export const getLinks = (
 					error.meta?.response instanceof Response &&
 					error.meta.response.status !== 200
 				) {
-					const transactionId = Math.random().toString(36).slice(2, 9);
-					Sentry.captureException(error, {
-						tags: { transaction_id: transactionId },
-					});
+					const transactionId = captureError(error);
 					return TRPCClientError.from(
 						new Error(
 							`Internal server error\nError fingerprint "${transactionId}"`,

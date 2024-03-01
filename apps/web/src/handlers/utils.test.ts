@@ -7,6 +7,7 @@ import { createHTTPServer } from "@trpc/server/adapters/standalone";
 import findFreePorts from "find-free-ports";
 import type { NextApiRequest, NextApiResponse } from "next";
 
+import type { GetLinksOptions } from "~app/utils/trpc";
 import { getLinks, transformer } from "~app/utils/trpc";
 import type { TestContext } from "~tests/backend/utils/test";
 import { createContext } from "~web/handlers/context";
@@ -15,9 +16,14 @@ export const getClientServer = async <R extends AnyRouter>(
 	ctx: TestContext,
 	router: R,
 	{
+		captureError,
 		cookies,
 		useBatch,
-	}: { cookies?: Record<string, string>; useBatch?: boolean } = {},
+	}: {
+		captureError?: GetLinksOptions["captureError"];
+		cookies?: Record<string, string>;
+		useBatch?: boolean;
+	} = {},
 ) => {
 	const port = (await findFreePorts())[0]!;
 	const httpServer = createHTTPServer({
@@ -55,11 +61,12 @@ export const getClientServer = async <R extends AnyRouter>(
 				searchParams: {},
 				cookies,
 				source: "test",
-				keepError: true,
+				keepError: !captureError,
 				useBatch,
 				headers: {
 					"x-test-id": ctx.task.id,
 				},
+				captureError: captureError || (() => "unknown"),
 			}),
 			transformer,
 		} as unknown as CreateTRPCClientOptions<R>),
