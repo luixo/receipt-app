@@ -7,9 +7,8 @@
 		"expo:update-ios-version": "tsx update-version.ts"
 	},
 	"devDependencies": {
-		"concurrently": "^7.1.0",
-		"get-port": "^6.1.2",
-		"ngrok": "^4.3.1",
+		"concurrently": "^8.2.2",
+		"ngrok": "^5.0.0-beta.2",
 		"ts-morph": "^14.0.0",
 		"tsx": "^4.7.1"
 	}

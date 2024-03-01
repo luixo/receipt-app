@@ -1,42 +1,43 @@
 import concurrently from "concurrently";
-import getPort, { portNumbers } from "get-port";
-import ngrok from "ngrok";
+import { findFreePorts } from "find-free-ports";
+import { connect } from "ngrok";
 
 const main = async () => {
-	const port = await getPort({
-		port: portNumbers(3000, 3100),
-	});
+	const port = (await findFreePorts(1, { startPort: 3000 }))[0]!;
 	let host = "localhost";
 	const ngrokAuthToken = process.env.NGROK_AUTH_TOKEN;
 	if (!ngrokAuthToken) {
 		console.warn("No NGROK_AUTH_TOKEN environment variable provided!");
 		console.warn("You will not be able to connect to backend on mobile");
 	} else {
-		host = await ngrok.connect({
+		host = await connect({
 			addr: port,
 			region: "eu",
 			authtoken: ngrokAuthToken,
 		});
 		console.log(`Ngrok host started: ${host} at port ${port}`);
 	}
-	const result = concurrently([
-		{
-			name: "expo",
-			command: "yarn workspace @ra/mobile dev",
-			env: {
-				BACKEND_HOST: host,
+	const result = concurrently(
+		[
+			{
+				name: "expo",
+				command: "yarn workspace @ra/mobile dev",
+				env: {
+					BACKEND_HOST: host,
+				},
+				prefixColor: "blue",
 			},
-			prefixColor: "blue",
-		},
-		{
-			name: "web",
-			command: "yarn workspace @ra/web dev",
-			env: {
-				PORT: port,
+			{
+				name: "web",
+				command: "yarn workspace @ra/web dev",
+				env: {
+					PORT: port,
+				},
+				prefixColor: "green",
 			},
-			prefixColor: "green",
-		},
-	]);
+		],
+		{ raw: true },
+	);
 	process.on("SIGINT", () => {
 		console.log("Shutting down..");
 		result.commands.forEach((command) => {
