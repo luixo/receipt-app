@@ -1,4 +1,5 @@
 import path from "node:path";
+import tsconfigPaths from "vite-tsconfig-paths";
 import { configDefaults, defineConfig } from "vitest/config";
 import "sharp";
 
@@ -6,7 +7,9 @@ const rootPath = __dirname;
 const vitestRoot = path.resolve(rootPath, "testing/vitest");
 
 export default defineConfig({
+	plugins: [tsconfigPaths()],
 	test: {
+		globalSetup: path.resolve(vitestRoot, "./global.setup.ts"),
 		coverage: {
 			all: false,
 			enabled: true,
