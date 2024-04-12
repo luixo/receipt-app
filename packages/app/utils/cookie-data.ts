@@ -17,6 +17,7 @@ import {
 	TZ_OFFSET_COOKIE_NAME,
 	timezoneOffsetSchema,
 } from "~app/utils/cookie/tz-offset";
+import type { Cookies } from "~app/utils/cookies";
 
 export const schemas = {
 	// Syncing timezone on SSR and CSR
@@ -63,9 +64,7 @@ export const getCookieStatesFromValues = (
 		]),
 	) as unknown as CookieStates;
 
-export const getSSRContextCookieData = (
-	cookies: Partial<Record<string, string>> = {},
-): CookieValues =>
+export const getSSRContextCookieData = (cookies: Cookies = {}): CookieValues =>
 	Object.entries(schemas).reduce<CookieValues>((acc, [key, schema]) => {
 		let parsedValue = null;
 		try {

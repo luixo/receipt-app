@@ -7,7 +7,7 @@ import { insertAccountWithSession } from "~tests/backend/utils/data";
 import { expectTRPCError } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
 import type { AppRouter } from "~web/pages/api/trpc/[trpc]";
-import { AUTH_COOKIE } from "~web/utils/server-cookies";
+import { AUTH_COOKIE, serializeCookieHeader } from "~web/utils/server-cookies";
 
 import { getClientServer } from "./utils.test";
 
@@ -17,8 +17,8 @@ describe("errors formatting", () => {
 	// Covering errorFormatter function
 	test("client error formatter works", async ({ ctx }) => {
 		const { start, destroy, client } = await getClientServer(ctx, router, {
-			cookies: {
-				[AUTH_COOKIE]: "fake",
+			headers: {
+				cookie: serializeCookieHeader({ [AUTH_COOKIE]: "fake" }),
 			},
 		});
 		await start();
@@ -69,8 +69,8 @@ test("error is captured", async ({ ctx }) => {
 			ctx.logger.warn(`Captured error: "${error.message}"`);
 			return "transaction-id";
 		},
-		cookies: {
-			[AUTH_COOKIE]: "fake",
+		headers: {
+			cookie: serializeCookieHeader({ [AUTH_COOKIE]: "fake" }),
 		},
 	});
 	await start();

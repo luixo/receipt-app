@@ -12,7 +12,11 @@ import {
 	transformer,
 } from "~app/utils/trpc";
 import type { AppRouter } from "~web/pages/api/trpc/[trpc]";
-import { getCookies } from "~web/utils/server-cookies";
+import {
+	AUTH_COOKIE,
+	getCookies,
+	serializeCookieHeader,
+} from "~web/utils/server-cookies";
 
 export const captureSentryError: GetLinksOptions["captureError"] = (error) => {
 	const transactionId = Math.random().toString(36).slice(2, 9);
@@ -36,7 +40,9 @@ export const trpcNext = createTRPCNext<
 					{
 						useBatch: false,
 						searchParams,
-						cookies: getCookies(ctx.req),
+						headers: {
+							cookie: serializeCookieHeader(getCookies(ctx.req), [AUTH_COOKIE]),
+						},
 						source: "ssr-next",
 						captureError: captureSentryError,
 					},
@@ -45,7 +51,6 @@ export const trpcNext = createTRPCNext<
 					// Don't batch requests when in tests - to evaluate pending / error states separately
 					useBatch: !searchParams.proxyPort,
 					searchParams,
-					cookies: undefined,
 					source: "csr-next",
 					captureError: captureSentryError,
 			  }),

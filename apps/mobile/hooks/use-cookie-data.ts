@@ -1,7 +1,7 @@
 import React from "react";
 
 import { getSSRContextCookieData } from "~app/utils/cookie-data";
-import type { Cookies } from "~app/utils/trpc";
+import type { Cookies } from "~app/utils/cookies";
 import { getCookieContext } from "~mobile/utils/cookie-storage";
 
 export const useCookieData = () => {

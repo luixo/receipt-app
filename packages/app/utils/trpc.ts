@@ -15,7 +15,6 @@ import superjson from "superjson";
 
 import { MINUTE, SECOND, omitUndefined } from "~utils";
 import type { AppRouter } from "~web/pages/api/trpc/[trpc]";
-import { AUTH_COOKIE, serialize } from "~web/utils/server-cookies";
 
 const SSR_TIMEOUT = 3 * SECOND;
 
@@ -38,14 +37,12 @@ const mapError =
 		);
 
 export type SearchParams = Record<string, string | string[] | undefined>;
-export type Cookies = Partial<Record<string, string>>;
 export type Headers = Partial<Record<string, string>>;
 
 export type GetLinksOptions = {
 	useBatch?: boolean;
 	keepError?: boolean;
 	searchParams: SearchParams;
-	cookies: Cookies | undefined;
 	headers?: Headers;
 	captureError: (error: TRPCClientError<AppRouter>) => string;
 	source: // Next.js client-side rendering originated from 'pages' dir
@@ -66,16 +63,13 @@ export const getLinks = (
 		useBatch,
 		keepError,
 		searchParams,
-		cookies,
 		source,
 		captureError,
 		headers: overrideHeaders,
 	}: GetLinksOptions,
 ): TRPCLink<AppRouter>[] => {
-	const authToken = cookies ? cookies[AUTH_COOKIE] : undefined;
 	// we omit to not let stringified "undefined" get passed to the server
 	const headers = omitUndefined({
-		cookie: authToken ? serialize(AUTH_COOKIE, authToken) : undefined,
 		"x-debug": searchParams.debug ? "true" : undefined,
 		"x-proxy-port": Number.isNaN(Number(searchParams.proxyPort))
 			? undefined

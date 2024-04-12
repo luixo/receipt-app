@@ -25,8 +25,6 @@ export const TRPCProvider: React.FC<React.PropsWithChildren<Props>> = ({
 			links: getLinks(`${baseUrl}${TRPC_ENDPOINT}`, {
 				useBatch: true,
 				searchParams,
-				// There is no simple way to get native cookies, and we basically don't need it
-				cookies: {},
 				source: "native",
 				captureError: () => "native-not-implemented",
 			}),

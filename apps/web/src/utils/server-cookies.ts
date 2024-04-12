@@ -1,6 +1,8 @@
 import * as cookie from "cookie";
 import type { IncomingMessage, ServerResponse } from "http";
 
+import type { Cookies } from "~app/utils/cookies";
+
 export const getCookies = (
 	req: IncomingMessage,
 ): Partial<Record<string, string>> =>
@@ -41,5 +43,16 @@ export const setAuthCookie = (
 
 export const resetAuthCookie = (res: ServerResponse) =>
 	setAuthCookie(res, "", new Date());
+
+export const serializeCookieHeader = (
+	cookies: Cookies,
+	pick?: string[],
+): string => {
+	let entries = Object.entries(cookies);
+	if (pick) {
+		entries = entries.filter(([key]) => pick.includes(key));
+	}
+	return entries.map(([key, value]) => cookie.serialize(key, value!)).join(";");
+};
 
 export * from "cookie";
