@@ -2,7 +2,7 @@ import React from "react";
 
 import { Stack, useGlobalSearchParams } from "expo-router";
 
-import "~web/global.css";
+import "~app/global.css";
 
 import { Provider } from "~app/providers/index";
 import { useBaseUrl } from "~mobile/hooks/use-base-url";

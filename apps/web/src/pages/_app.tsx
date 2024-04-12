@@ -22,7 +22,7 @@ import { ThemeProvider } from "~web/providers/client/theme";
 import { nextCookieContext } from "~web/utils/client-cookies";
 import { webPersister } from "~web/utils/persister";
 import { trpcNext } from "~web/utils/trpc";
-import "~web/global.css";
+import "~app/global.css";
 
 applyRemaps();
 
