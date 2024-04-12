@@ -5,14 +5,13 @@ import { nodeHTTPJSONContentTypeHandler } from "@trpc/server/adapters/node-http/
 import type { NextApiHandler } from "next";
 import httpProxyMiddleware from "next-http-proxy-middleware";
 
+import type { AppRouter } from "~app/trpc";
 import { router } from "~web/handlers";
 import type {
 	AuthorizedContext,
 	UnauthorizedContext,
 } from "~web/handlers/context";
 import { createContext } from "~web/handlers/context";
-
-export type AppRouter = typeof router;
 
 const sentryDsn = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
 if (sentryDsn) {

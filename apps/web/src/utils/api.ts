@@ -2,9 +2,9 @@ import { createTRPCClient } from "@trpc/client";
 import type { NextApiRequest } from "next";
 import getConfig from "next/config";
 
+import type { AppRouter } from "~app/trpc";
 import { getSsrHost } from "~app/utils/queries";
 import { getLinks, transformer } from "~app/utils/trpc";
-import type { AppRouter } from "~web/pages/api/trpc/[trpc]";
 import {
 	AUTH_COOKIE,
 	getCookies,

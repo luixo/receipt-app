@@ -13,8 +13,8 @@ import { observable } from "@trpc/server/observable";
 import type { NextPageContext } from "next";
 import superjson from "superjson";
 
+import type { AppRouter } from "~app/trpc";
 import { MINUTE, SECOND, omitUndefined } from "~utils";
-import type { AppRouter } from "~web/pages/api/trpc/[trpc]";
 
 const SSR_TIMEOUT = 3 * SECOND;
 

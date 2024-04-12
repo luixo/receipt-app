@@ -3,10 +3,10 @@ import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { createTRPCReact } from "@trpc/react-query";
 
+import type { AppRouter } from "~app/trpc";
 import { TRPC_ENDPOINT } from "~app/utils/queries";
 import type { SearchParams } from "~app/utils/trpc";
 import { getLinks, transformer } from "~app/utils/trpc";
-import type { AppRouter } from "~web/pages/api/trpc/[trpc]";
 
 type Props = {
 	searchParams: SearchParams;

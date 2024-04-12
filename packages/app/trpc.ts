@@ -27,7 +27,9 @@ import type {
 	SplitStringByComma,
 	UnionToIntersection,
 } from "~utils";
-import type { AppRouter } from "~web/pages/api/trpc/[trpc]";
+import type { router } from "~web/handlers";
+
+export type AppRouter = typeof router;
 
 type TypeKey = "queries" | "mutations";
 

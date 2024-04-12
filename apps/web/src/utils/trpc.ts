@@ -3,6 +3,7 @@ import { createTRPCNext } from "@trpc/next";
 import type { NextConfig, NextPageContext } from "next";
 import getConfig from "next/config";
 
+import type { AppRouter } from "~app/trpc";
 import { TRPC_ENDPOINT, getSsrHost } from "~app/utils/queries";
 import type { GetLinksOptions } from "~app/utils/trpc";
 import {
@@ -11,7 +12,6 @@ import {
 	getQueryClientConfig,
 	transformer,
 } from "~app/utils/trpc";
-import type { AppRouter } from "~web/pages/api/trpc/[trpc]";
 import {
 	AUTH_COOKIE,
 	getCookies,

@@ -12,6 +12,7 @@ import type { DeepPartial } from "@trpc/server/unstableInternalsExport";
 import { diff as objectDiff } from "deep-object-diff";
 
 import type {
+	AppRouter,
 	TRPCMutationInput,
 	TRPCMutationKey,
 	TRPCMutationOutput,
@@ -20,7 +21,6 @@ import type {
 } from "~app/trpc";
 import { mapObjectValues, omitUndefined } from "~utils";
 import { router } from "~web/handlers";
-import type { AppRouter } from "~web/pages/api/trpc/[trpc]";
 
 import type { ApiManager, ApiMixin, TRPCKey } from "./api";
 import { createMixin } from "./utils";
