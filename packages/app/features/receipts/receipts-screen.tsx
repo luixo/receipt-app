@@ -5,7 +5,7 @@ import { EmailVerificationCard } from "~app/features/email-verification/email-ve
 import { useReceiptTransfersIntentions } from "~app/hooks/use-receipt-transfer-intentions";
 import { Badge, Button, Link } from "~components";
 import { AddIcon, InboxIcon, ReceiptIcon } from "~components/icons";
-import type { AppPage } from "~web/types/page";
+import type { AppPage } from "~utils";
 
 import { FilterButton } from "./filter-button";
 import { Receipts } from "./receipts";

@@ -11,3 +11,4 @@ export * from "./react";
 export * from "./string";
 export * from "./time";
 export * from "./types";
+export * from "./next";

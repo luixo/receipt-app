@@ -15,7 +15,7 @@ import { userNameSchema } from "~app/utils/validation";
 import { Button, Input, Spinner } from "~components";
 import { AccountIcon } from "~components/icons";
 import * as mutations from "~mutations";
-import type { AppPage } from "~web/types/page";
+import type { AppPage } from "~utils";
 
 import { AccountAvatarInput } from "./account-avatar-input";
 

@@ -2,7 +2,7 @@ import React from "react";
 import { View } from "react-native";
 
 import { Divider, Header, Text } from "~components";
-import type { AppPage } from "~web/types/page";
+import type { AppPage } from "~utils";
 
 import { AutoAcceptDebtsOption } from "./auto-accept-debts-option";
 import { ColorModeSettings } from "./color-mode-settings";

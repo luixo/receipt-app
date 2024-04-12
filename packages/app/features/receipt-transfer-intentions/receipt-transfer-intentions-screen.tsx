@@ -2,7 +2,7 @@ import React from "react";
 
 import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
-import type { AppPage } from "~web/types/page";
+import type { AppPage } from "~utils";
 
 import { ReceiptTransferIntentions } from "./receipt-transfer-intentions";
 

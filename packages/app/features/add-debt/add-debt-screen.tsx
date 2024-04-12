@@ -29,7 +29,7 @@ import { Button, Input } from "~components";
 import type { UsersId } from "~db";
 import * as mutations from "~mutations";
 import { getToday } from "~utils";
-import type { AppPage } from "~web/types/page";
+import type { AppPage } from "~utils";
 
 type Form = {
 	amount: number;

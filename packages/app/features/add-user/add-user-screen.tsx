@@ -14,7 +14,7 @@ import { trpc } from "~app/trpc";
 import { emailSchema, userNameSchema } from "~app/utils/validation";
 import { Button, Input } from "~components";
 import * as mutations from "~mutations";
-import type { AppPage } from "~web/types/page";
+import type { AppPage } from "~utils";
 
 type EmailProps = {
 	form: UseFormReturn<Form>;

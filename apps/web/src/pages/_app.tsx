@@ -12,13 +12,13 @@ import { useRemoveTestQueryParams } from "~app/hooks/use-remove-test-query-param
 import { Provider } from "~app/providers/index";
 import { getSSRContextCookieData } from "~app/utils/cookie-data";
 import { applyRemaps } from "~app/utils/nativewind";
+import type { AppPage } from "~utils";
 import { useHydratedMark } from "~web/hooks/use-hydrated-mark";
 import { useLocalCookies } from "~web/hooks/use-local-cookies";
 import { useQueryClientHelper } from "~web/hooks/use-query-client-helper";
 import { useRemovePreloadedCss } from "~web/hooks/use-remove-preloaded-css";
 import { QueryDevToolsProvider } from "~web/providers/client/query-devtools";
 import { ThemeProvider } from "~web/providers/client/theme";
-import type { AppPage } from "~web/types/page";
 import { nextCookieContext } from "~web/utils/client-cookies";
 import { webPersister } from "~web/utils/persister";
 import { trpcNext } from "~web/utils/trpc";

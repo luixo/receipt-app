@@ -15,8 +15,8 @@ import type { CurrencyCode } from "~app/utils/currency";
 import { Divider, Spinner } from "~components";
 import type { UsersId } from "~db";
 import { noop } from "~utils";
+import type { AppPage } from "~utils";
 import { useShowResolvedDebts } from "~web/hooks/use-show-resolved-debts";
-import type { AppPage } from "~web/types/page";
 
 import { CurrenciesGroup } from "./currencies-group";
 import { PlannedDebts } from "./planned-debts";

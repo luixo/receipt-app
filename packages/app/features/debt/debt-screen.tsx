@@ -23,7 +23,7 @@ import { Button, Input, Link, Spinner } from "~components";
 import { ReceiptIcon } from "~components/icons";
 import type { ReceiptsId } from "~db";
 import * as mutations from "~mutations";
-import type { AppPage } from "~web/types/page";
+import type { AppPage } from "~utils";
 
 type Debt = TRPCQueryOutput<"debts.get">;
 

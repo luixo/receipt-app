@@ -19,7 +19,7 @@ import { currencyCodeSchema, receiptNameSchema } from "~app/utils/validation";
 import { Button, Input } from "~components";
 import * as mutations from "~mutations";
 import { getToday } from "~utils";
-import type { AppPage } from "~web/types/page";
+import type { AppPage } from "~utils";
 
 type DateProps = {
 	form: UseFormReturn<Form>;

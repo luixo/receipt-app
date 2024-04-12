@@ -5,7 +5,7 @@ import { EmailVerificationCard } from "~app/features/email-verification/email-ve
 import { useDebtsIntentions } from "~app/hooks/use-debts-intentions";
 import { Badge, Button, Link } from "~components";
 import { AddIcon, DebtIcon, InboxIcon } from "~components/icons";
-import type { AppPage } from "~web/types/page";
+import type { AppPage } from "~utils";
 
 import { Debts } from "./debts";
 
