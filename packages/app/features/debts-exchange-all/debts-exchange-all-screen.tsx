@@ -9,6 +9,7 @@ import { QueryErrorMessage } from "~app/components/error-message";
 import { PageHeader } from "~app/components/page-header";
 import { useAggregatedDebts } from "~app/hooks/use-aggregated-debts";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
+import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
@@ -16,7 +17,6 @@ import { Divider, Spinner } from "~components";
 import type { UsersId } from "~db";
 import { noop } from "~utils";
 import type { AppPage } from "~utils";
-import { useShowResolvedDebts } from "~web/hooks/use-show-resolved-debts";
 
 import { CurrenciesGroup } from "./currencies-group";
 import { PlannedDebts } from "./planned-debts";

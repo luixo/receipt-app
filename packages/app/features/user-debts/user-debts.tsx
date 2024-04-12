@@ -9,12 +9,12 @@ import { QueryErrorMessage } from "~app/components/error-message";
 import { PageHeader } from "~app/components/page-header";
 import { ShowResolvedDebtsOption } from "~app/features/settings/show-resolved-debts-option";
 import { useAggregatedDebts } from "~app/hooks/use-aggregated-debts";
+import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { Button, Divider, Link, Spinner } from "~components";
 import { AddIcon, ExchangeIcon } from "~components/icons";
 import type { UsersId } from "~db";
-import { useShowResolvedDebts } from "~web/hooks/use-show-resolved-debts";
 
 import { UserDebtPreview } from "./user-debt-preview";
 
