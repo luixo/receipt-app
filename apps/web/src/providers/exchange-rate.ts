@@ -1,3 +1,4 @@
+import type { Redis } from "@upstash/redis/nodejs";
 import Dataloader from "dataloader";
 import fetch from "isomorphic-fetch";
 import { z } from "zod";
@@ -190,11 +191,18 @@ export const getExchangeRates = async (
 	fromCode: CurrencyCode,
 	toCodes: CurrencyCode[],
 ): Promise<Record<CurrencyCode, number>> => {
-	const cacheDatabase = getCacheDatabase(ctx);
+	let cacheDatabase: Redis | null = null;
+	try {
+		cacheDatabase = await getCacheDatabase(ctx);
+	} catch {
+		/* empty */
+	}
 	const rates = await Promise.all(
 		toCodes.map(async (toCode) => {
 			const cacheKey = getKey(fromCode, toCode);
-			const cachedRate = await cacheDatabase.get<number>(cacheKey);
+			const cachedRate = cacheDatabase
+				? await cacheDatabase.get<number>(cacheKey)
+				: null;
 			if (cachedRate) {
 				return cachedRate;
 			}
@@ -204,7 +212,7 @@ export const getExchangeRates = async (
 						fromCode,
 						toCode,
 				  }));
-			cacheDatabase.setex(cacheKey, CACHE_TTL, fetchedRate).catch((e) => {
+			cacheDatabase?.setex(cacheKey, CACHE_TTL, fetchedRate).catch((e) => {
 				// Failing on this action doesn't matter much
 				ctx.logger.warn("Cache DB setex action failed", e);
 			});

@@ -66,6 +66,24 @@ describe("currency.rates", () => {
 
 	describe("functionality", () => {
 		describe("cache db throws", () => {
+			test(`on ping request`, async ({ ctx }) => {
+				const dbMock = ctx.cacheDbOptions.mock!;
+				dbMock.setResponder("ping", async () => {
+					throw new Error("Pong error");
+				});
+				const { sessionId } = await insertAccountWithSession(ctx);
+				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				// Throwing on ping doesn't affect flow as cache may be skipped
+				await caller.procedure({ from: "USD", to: ["EUR"] });
+				expect(dbMock.getMessages()).toHaveLength(1);
+				const message = dbMock.getMessages()[0]!;
+				expect(message).toStrictEqual<typeof message>([
+					"ping",
+					[],
+					{ error: "Error: Pong error" },
+				]);
+			});
+
 			test(`on get request`, async ({ ctx }) => {
 				const dbMock = ctx.cacheDbOptions.mock!;
 				dbMock.setResponder("get", async () => {
@@ -140,7 +158,8 @@ describe("currency.rates", () => {
 					),
 				);
 				const dbMessages = dbMock.getMessages();
-				expect(dbMessages).toStrictEqual<typeof dbMessages>([
+				// Removing ping message
+				expect(dbMessages.slice(1)).toStrictEqual<typeof dbMessages>([
 					...currenciesTo.map<(typeof dbMessages)[number]>((currencyTo) => [
 						"get",
 						[`${currencyFrom}->${currencyTo}`],
@@ -182,7 +201,8 @@ describe("currency.rates", () => {
 					),
 				);
 				const dbMessages = dbMock.getMessages();
-				expect(dbMessages).toStrictEqual<typeof dbMessages>([
+				// Removing ping message
+				expect(dbMessages.slice(1)).toStrictEqual<typeof dbMessages>([
 					...currenciesTo.map<(typeof dbMessages)[number]>((currencyTo) => [
 						"get",
 						[`${currencyFrom}->${currencyTo}`],
@@ -231,7 +251,8 @@ describe("currency.rates", () => {
 					),
 				);
 				const dbMessages = dbMock.getMessages();
-				expect(dbMessages).toStrictEqual<typeof dbMessages>([
+				// Removing ping message
+				expect(dbMessages.slice(1)).toStrictEqual<typeof dbMessages>([
 					...currenciesTo.map<(typeof dbMessages)[number]>((currencyTo) => [
 						"get",
 						[`${currencyFrom}->${currencyTo}`],

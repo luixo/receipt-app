@@ -30,6 +30,7 @@ export const getCacheDbOptions = (): CacheDbOptionsMock => {
 		) => ReturnType<Redis[RedisFunctionKey]>
 	> = {};
 	let innerBroken = false;
+	responders.ping = async () => "pong";
 	return {
 		get broken() {
 			return innerBroken;
