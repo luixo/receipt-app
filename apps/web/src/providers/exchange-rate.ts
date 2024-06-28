@@ -15,30 +15,51 @@ export type ExchangeRateOptions = {
 
 type ExchangeRateInput = { fromCode: CurrencyCode; toCode: CurrencyCode };
 
-// see https://github.com/fawazahmed0/currency-api
-const CDN_BASE_URL = `https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/`;
+// see https://github.com/fawazahmed0/exchange-api
+const CDN_MAIN_BASE_URL = `https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/{fromCode}.min.json`;
+// see https://github.com/fawazahmed0/exchange-api/blob/main/README.md#additional-fallback-url-on-cloudflare
+const CDN_BACKUP_BASE_URL = `https://latest.currency-api.pages.dev/v1/currencies/{fromCode}.min.json`;
 
-const fetchCDNRate = async ({ fromCode, toCode }: ExchangeRateInput) => {
-	const fromCodeLower = fromCode.toLowerCase();
-	const toCodeLower = toCode.toLowerCase();
-	const response = await fetch(
-		`${CDN_BASE_URL}latest/currencies/${fromCodeLower}/${toCodeLower}.min.json`,
-	);
-	if (response.status !== 200) {
-		throw new Error(`Response to exchange rate request is ${response.status}`);
-	}
-	const json = await response.json();
-	const parsedJson = z
-		.object({
-			date: z.string().regex(/\d{4}-\d{2}-\d{2}/),
-			[toCodeLower]: z.number(),
-		})
-		.safeParse(json);
-	if (!parsedJson.success) {
-		throw parsedJson.error;
-	}
-	return Number((parsedJson.data[toCodeLower] as number).toFixed(6));
-};
+const fetchCDNRate =
+	(baseUrl: string) =>
+	async (fromCode: CurrencyCode, toCodes: CurrencyCode[]) => {
+		const fromCodeLower = fromCode.toLowerCase();
+		const toCodesLower = toCodes.map((code) => code.toLowerCase()) as [
+			string,
+			...string[],
+		];
+		const response = await fetch(baseUrl.replace("{fromCode}", fromCodeLower));
+		if (response.status !== 200) {
+			throw new Error(
+				`Response to exchange rate request is ${response.status}`,
+			);
+		}
+		const json = await response.json();
+		const keysSchema = z.enum(toCodesLower);
+		const parsedJson = z
+			.object({
+				date: z.string().regex(/\d{4}-\d{2}-\d{2}/),
+				[fromCodeLower]: z
+					.record(keysSchema, z.number())
+					.refine(
+						(obj): obj is typeof obj extends Partial<infer R> ? R : never =>
+							keysSchema.options.every((key) => obj[key] != null),
+					),
+			})
+			.safeParse(json);
+		if (!parsedJson.success) {
+			throw parsedJson.error;
+		}
+		return toCodesLower.map((toCodeLower) =>
+			Number(
+				(
+					(parsedJson.data[fromCodeLower] as Record<string, number>)[
+						toCodeLower
+					] as number
+				).toFixed(6),
+			),
+		);
+	};
 
 // see https://www.exchangerate-api.com/docs/standard-requests
 const ERA_BASE_URL = "https://v6.exchangerate-api.com/v6/";
@@ -162,7 +183,8 @@ const exchangeRateDataloader = new Dataloader<
 >(
 	async (inputs) => {
 		const result = await fetchPipeline([
-			() => Promise.all(inputs.map(fetchCDNRate)),
+			() => fetchWithBatches(inputs, fetchCDNRate(CDN_MAIN_BASE_URL)),
+			() => fetchWithBatches(inputs, fetchCDNRate(CDN_BACKUP_BASE_URL)),
 			() => fetchWithBatches(inputs, fetchERARate),
 		]);
 		if (typeof result[0] === "number") {
