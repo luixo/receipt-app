@@ -14,12 +14,14 @@ import { router as receiptsRouter } from "./receipts/index";
 import { router as resetPasswordIntentionsRouter } from "./reset-password-intentions/index";
 import { router as sessionsRouter } from "./sessions/index";
 import { router as usersRouter } from "./users/index";
+import { router as utilsRouter } from "./utils/index";
 
 export const router = t.router({
 	// No auth
 	sessions: sessionsRouter,
 	auth: authRouter,
 	resetPasswordIntentions: resetPasswordIntentionsRouter,
+	utils: utilsRouter,
 	// Auth
 	account: accountRouter,
 	accountSettings: accountSettingsRouter,
