@@ -9,30 +9,41 @@ import { applyUpdateFnWithRevert, withRef } from "../utils";
 type Controller = TRPCReactContext["debts"]["getByUsers"];
 
 type AllDebts = TRPCQueryOutput<"debts.getByUsers">;
-type Debts = AllDebts[number]["debts"];
+type UserDebts = AllDebts[number];
+type Debts = UserDebts["debts"];
 type Debt = Debts[number];
 
-const updateUserDebts = (
+const updateUser = (
 	controller: Controller,
 	userId: UsersId,
-	updater: (debts: Debts) => Debts,
+	updater: UpdateFn<UserDebts>,
 ) =>
 	controller.setData(undefined, (prevData) =>
 		prevData
 			? upsertInArray<(typeof prevData)[number]>(
 					prevData,
 					(debtsEntry) => debtsEntry.userId === userId,
-					(user) => {
-						const nextDebts = updater(user.debts);
-						if (nextDebts === user.debts) {
-							return user;
-						}
-						return { ...user, debts: nextDebts };
-					},
+					updater,
 					{ userId, debts: [] },
 			  ).filter((userDebts) => userDebts.debts.length !== 0)
 			: undefined,
 	);
+
+const updateUserDebts = (
+	controller: Controller,
+	userId: UsersId,
+	updater: UpdateFn<Debts>,
+) =>
+	withRef<Debts | undefined>((ref) => {
+		updateUser(controller, userId, (user) => {
+			const nextDebts = updater(user.debts);
+			if (nextDebts === user.debts) {
+				return user;
+			}
+			ref.current = nextDebts;
+			return { ...user, debts: nextDebts };
+		});
+	}).current;
 
 const updateCurrencyDebts =
 	(controller: Controller, userId: UsersId, currencyCode: CurrencyCode) =>
@@ -60,7 +71,7 @@ const invalidate = (controller: Controller) => () => controller.invalidate();
 export const getController = ({ trpcContext }: ControllerContext) => {
 	const controller = trpcContext.debts.getByUsers;
 	return {
-		update: (
+		updateCurrency: (
 			userId: UsersId,
 			currencyCode: CurrencyCode,
 			updater: UpdateFn<number>,
@@ -72,7 +83,7 @@ export const getController = ({ trpcContext }: ControllerContext) => {
 export const getRevertController = ({ trpcContext }: ControllerContext) => {
 	const controller = trpcContext.debts.getByUsers;
 	return {
-		update: (
+		updateCurrency: (
 			userId: UsersId,
 			currencyCode: CurrencyCode,
 			updater: UpdateFn<number>,

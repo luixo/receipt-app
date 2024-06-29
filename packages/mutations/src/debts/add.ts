@@ -76,7 +76,7 @@ export const options: UseContextedMutationOptions<"debts.add"> = {
 		}
 		cache.debts.update(controllerContext, {
 			getByUsers: (controller) =>
-				controller.update(
+				controller.updateCurrency(
 					updateObject.userId,
 					updateObject.currencyCode,
 					(sum) => sum + updateObject.amount,

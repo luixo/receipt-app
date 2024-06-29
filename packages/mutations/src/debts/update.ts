@@ -19,7 +19,7 @@ export const options: UseContextedMutationOptions<"debts.update", CurrentDebt> =
 		onMutate: (controllerContext, currDebt) => (updateObject) =>
 			cache.debts.updateRevert(controllerContext, {
 				getByUsers: (controller) =>
-					controller.update(
+					controller.updateCurrency(
 						currDebt.userId,
 						currDebt.currencyCode,
 						applySumUpdate(currDebt.amount, updateObject.update),

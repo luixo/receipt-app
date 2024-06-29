@@ -27,14 +27,14 @@ export const updateGetByUsers = (
 			(acc, { current, userId, amount, currencyCode }) => [
 				...acc,
 				current
-					? controller.update(
+					? controller.updateCurrency(
 							userId,
 							current.currencyCode,
 							(sum) => sum - current.amount,
 							(snapshot) => () => snapshot,
 					  )
 					: undefined,
-				controller.update(
+				controller.updateCurrency(
 					userId,
 					currencyCode,
 					(sum) => sum + amount,
