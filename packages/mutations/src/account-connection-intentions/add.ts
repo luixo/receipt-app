@@ -1,25 +1,17 @@
 import * as cache from "../cache";
 import type { UseContextedMutationOptions } from "../context";
 
+import { updateUserConnected } from "./utils";
+
 export const options: UseContextedMutationOptions<"accountConnectionIntentions.add"> =
 	{
 		onSuccess: (controllerContext) => (result, variables) => {
 			if (result.connected) {
-				cache.users.update(controllerContext, {
-					get: (controller) =>
-						controller.update(variables.userId, (user) => ({
-							...user,
-							connectedAccount: result.account,
-						})),
-					getForeign: (controller) => {
-						controller.updateOwn(variables.userId, (user) => ({
-							...user,
-							connectedAccount: result.account,
-						}));
-						controller.invalidateForeign();
-					},
-					getPaged: undefined,
-				});
+				updateUserConnected(
+					controllerContext,
+					variables.userId,
+					result.account,
+				);
 			} else {
 				cache.accountConnections.update(controllerContext, {
 					getAll: (controller) =>
