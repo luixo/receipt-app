@@ -63,7 +63,7 @@ export const options: UseContextedMutationOptions<"debts.update", CurrentDebt> =
 			}
 			updateLockedTimestamps(
 				controllerContext,
-				currDebt.userId,
+				currDebt,
 				updateObject.id,
 				result.lockedTimestamp || undefined,
 				result.reverseLockedTimestampUpdated,

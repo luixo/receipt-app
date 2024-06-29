@@ -342,7 +342,7 @@ export const updateReceiptWithOutcomingDebtId = (
 
 export const updateLockedTimestamps = (
 	controllerContext: ControllerContext,
-	userId: UsersId,
+	currDebt: CurrentDebt,
 	debtId: DebtsId,
 	lockedTimestamp: Date | undefined,
 	reverseLockedTimestampUpdated: boolean,
@@ -350,7 +350,7 @@ export const updateLockedTimestamps = (
 	cache.debts.update(controllerContext, {
 		getByUsers: undefined,
 		getUser: (controller) =>
-			controller.update(userId, debtId, (debt) => ({
+			controller.update(currDebt.userId, debtId, (debt) => ({
 				...debt,
 				lockedTimestamp,
 				their:

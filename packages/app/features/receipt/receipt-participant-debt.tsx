@@ -53,16 +53,13 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 		useTrpcMutationOptions(mutations.debts.update.options, {
 			context: participant.currentDebt
 				? {
+						...participant.currentDebt,
 						userId: participant.userId,
-						amount: participant.currentDebt.amount,
-						currencyCode: participant.currentDebt.currencyCode,
-						receiptId: receipt.id,
 				  }
 				: {
 						userId: participant.userId,
 						amount: 0,
 						currencyCode: "unknown",
-						receiptId: receipt.id,
 				  },
 		}),
 	);

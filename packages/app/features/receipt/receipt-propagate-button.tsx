@@ -96,17 +96,11 @@ const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 			// eslint-disable-next-line react-hooks/rules-of-hooks
 			useTrpcMutationOptions(mutations.debts.update.options, {
 				context: matchedDesyncedParticipant
-					? {
-							userId,
-							amount: matchedDesyncedParticipant.currentDebt.amount,
-							currencyCode: matchedDesyncedParticipant.currentDebt.currencyCode,
-							receiptId: matchedDesyncedParticipant.currentDebt.receiptId,
-					  }
+					? matchedDesyncedParticipant.currentDebt
 					: {
 							userId,
 							amount: currentDebt?.amount ?? 0,
 							currencyCode: currentDebt?.currencyCode ?? "unknown",
-							receiptId: currentDebt?.receiptId,
 					  },
 			}),
 		);
