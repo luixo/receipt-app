@@ -8,11 +8,11 @@ export const options: UseContextedMutationOptions<"accountSettings.update"> = {
 				controller.update(
 					(prevSettings) => ({
 						...prevSettings,
-						autoAcceptDebts: variables.value,
+						manualAcceptDebts: variables.value,
 					}),
 					(prevSettings) => (settings) => ({
 						...settings,
-						autoAcceptDebts: prevSettings.autoAcceptDebts,
+						manualAcceptDebts: prevSettings.manualAcceptDebts,
 					}),
 				),
 		}),

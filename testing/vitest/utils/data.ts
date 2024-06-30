@@ -15,7 +15,7 @@ import type { Role } from "~web/handlers/receipts/utils";
 import { generatePasswordData } from "~web/utils/crypto";
 
 type AccountSettingsData = {
-	autoAcceptDebts: boolean;
+	manualAcceptDebts: boolean;
 };
 
 export const insertAccountSettings = async (
@@ -27,7 +27,7 @@ export const insertAccountSettings = async (
 		.insertInto("accountSettings")
 		.values({
 			accountId,
-			autoAcceptDebts: data.autoAcceptDebts,
+			manualAcceptDebts: data.manualAcceptDebts,
 		})
 		.executeTakeFirstOrThrow();
 };

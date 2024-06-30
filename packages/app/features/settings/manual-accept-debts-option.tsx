@@ -6,7 +6,7 @@ import { trpc } from "~app/trpc";
 import { Spinner, Switch } from "~components";
 import * as mutations from "~mutations";
 
-export const AutoAcceptDebtsOption: React.FC = () => {
+export const ManualAcceptDebtsOption: React.FC = () => {
 	const settingsQuery = trpc.accountSettings.get.useQuery();
 	const updateSettingsMutation = trpc.accountSettings.update.useMutation(
 		useTrpcMutationOptions(mutations.accountSettings.update.options),
@@ -14,7 +14,7 @@ export const AutoAcceptDebtsOption: React.FC = () => {
 	const onChange = React.useCallback(
 		(nextAutoAccept: boolean) =>
 			updateSettingsMutation.mutate({
-				type: "autoAcceptDebts",
+				type: "manualAcceptDebts",
 				value: nextAutoAccept,
 			}),
 		[updateSettingsMutation],
@@ -32,7 +32,7 @@ export const AutoAcceptDebtsOption: React.FC = () => {
 	return (
 		<>
 			<Switch
-				isSelected={settingsQuery.data.autoAcceptDebts}
+				isSelected={settingsQuery.data.manualAcceptDebts}
 				onValueChange={onChange}
 				thumbIcon={
 					updateSettingsMutation.isPending ? <Spinner size="sm" /> : undefined

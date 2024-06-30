@@ -41,7 +41,7 @@ const router = t.router({ procedure });
 
 type GetData = (opts: {
 	ctx: TestContext;
-	counterParty: "accept" | "no-accept" | "accept-no-exist";
+	counterParty: "auto-accept" | "manual-accept" | "auto-accept-no-exist";
 	selfAccountId: AccountsId;
 	target: {
 		accountId: AccountsId;
@@ -60,7 +60,7 @@ const insertDefaultDebt = async ({
 	target,
 	lockedBefore,
 }: Parameters<GetData>[0]) => {
-	if (counterParty !== "accept-no-exist") {
+	if (counterParty !== "auto-accept-no-exist") {
 		return (
 			await insertSyncedDebts(
 				ctx,
@@ -101,8 +101,8 @@ const getDefaultGetResult: GetResult = ({
 	return {
 		lockedTimestamp: nextLockedTimestamp,
 		reverseLockedTimestampUpdated:
-			counterParty === "accept-no-exist" ||
-			(nextLockedTimestamp !== undefined && counterParty === "accept"),
+			counterParty === "auto-accept-no-exist" ||
+			(nextLockedTimestamp !== undefined && counterParty === "auto-accept"),
 	};
 };
 
@@ -115,9 +115,9 @@ const updateDescribes = (getData: GetData) => {
 		const { sessionId, accountId } = await insertAccountWithSession(ctx);
 		const { id: foreignAccountId } = await insertAccount(
 			ctx,
-			counterParty === "accept" || counterParty === "accept-no-exist"
-				? { settings: { autoAcceptDebts: true } }
-				: undefined,
+			counterParty === "auto-accept" || counterParty === "auto-accept-no-exist"
+				? undefined
+				: { settings: { manualAcceptDebts: true } },
 		);
 		const [{ id: userId }, { id: foreignToSelfUserId }] =
 			await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
@@ -173,12 +173,12 @@ const updateDescribes = (getData: GetData) => {
 				counterParty,
 			});
 		});
-		if (counterParty === "accept") {
+		if (counterParty === "auto-accept") {
 			test("debt didn't exist beforehand", async ({ ctx }) => {
 				const { debtIds, selfAccountId, foreignAccountId } = await runTest({
 					ctx,
 					lockedBefore: false,
-					counterParty: "accept-no-exist",
+					counterParty: "auto-accept-no-exist",
 				});
 				const debts = await ctx.database
 					.selectFrom("debts")
@@ -210,12 +210,12 @@ const updateDescribes = (getData: GetData) => {
 		}
 	};
 
-	describe("counterparty doesn't auto-accept", () => {
-		lockedStateTests({ counterParty: "no-accept" });
+	describe("counterparty accepts manually", () => {
+		lockedStateTests({ counterParty: "manual-accept" });
 	});
 
 	describe("counterparty auto-accepts", () => {
-		lockedStateTests({ counterParty: "accept" });
+		lockedStateTests({ counterParty: "auto-accept" });
 	});
 };
 
@@ -634,8 +634,8 @@ describe("debts.update", () => {
 								debt: anotherDebt,
 								// Another debt is not synchronized with the counterparty hence it always does not exist
 								counterParty:
-									opts.counterParty === "accept"
-										? "accept-no-exist"
+									opts.counterParty === "auto-accept"
+										? "auto-accept-no-exist"
 										: opts.counterParty,
 								overrideTimestamp: () => undefined,
 							}),
@@ -666,8 +666,8 @@ describe("debts.update", () => {
 								debt: anotherDebt,
 								// Another debt is not synchronized with the counterparty hence it always does not exist
 								counterParty:
-									opts.counterParty === "accept"
-										? "accept-no-exist"
+									opts.counterParty === "auto-accept"
+										? "auto-accept-no-exist"
 										: opts.counterParty,
 							}),
 						],
@@ -697,8 +697,8 @@ describe("debts.update", () => {
 								debt: anotherDebt,
 								// Another debt is not synchronized with the counterparty hence it always does not exist
 								counterParty:
-									opts.counterParty === "accept"
-										? "accept-no-exist"
+									opts.counterParty === "auto-accept"
+										? "auto-accept-no-exist"
 										: opts.counterParty,
 								overrideTimestamp: () => undefined,
 							}),
@@ -713,9 +713,7 @@ describe("debts.update", () => {
 					accountId,
 					account: { email },
 				} = await insertAccountWithSession(ctx);
-				const { id: foreignAccountId } = await insertAccount(ctx, {
-					settings: { autoAcceptDebts: true },
-				});
+				const { id: foreignAccountId } = await insertAccount(ctx);
 				const [{ id: acceptingUserId }] = await insertConnectedUsers(ctx, [
 					accountId,
 					foreignAccountId,

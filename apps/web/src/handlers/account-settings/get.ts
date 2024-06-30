@@ -7,14 +7,14 @@ type Settings = {
 };
 
 export const DEFAULT_ACCOUNT_SETTINGS: Settings = {
-	autoAcceptDebts: false,
+	manualAcceptDebts: false,
 };
 
 export const procedure = authProcedure.query(async ({ ctx }) => {
 	const { database } = ctx;
 	const account = await database
 		.selectFrom("accountSettings")
-		.select(["accountSettings.autoAcceptDebts"])
+		.select(["accountSettings.manualAcceptDebts"])
 		.where("accountSettings.accountId", "=", ctx.auth.accountId)
 		.executeTakeFirst();
 	return account || DEFAULT_ACCOUNT_SETTINGS;

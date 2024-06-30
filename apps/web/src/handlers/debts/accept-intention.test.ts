@@ -170,7 +170,7 @@ describe("debts.acceptIntention", () => {
 
 			// Verify unrelated data doesn't affect the result
 			await insertUser(ctx, accountId);
-			await insertAccountSettings(ctx, accountId, { autoAcceptDebts: true });
+			await insertAccountSettings(ctx, accountId, { manualAcceptDebts: true });
 			const { id: anotherForeignUserId } = await insertUser(
 				ctx,
 				foreignAccountId,

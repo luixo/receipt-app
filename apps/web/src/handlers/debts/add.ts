@@ -69,15 +69,15 @@ const getResults = async (
 		)
 		.leftJoin("users as usersTheir", (qb) =>
 			qb
-				.onRef("usersTheir.ownerAccountId", "=", "accountSettings.accountId")
+				.onRef("usersTheir.ownerAccountId", "=", "users.connectedAccountId")
 				.on("usersTheir.connectedAccountId", "=", ctx.auth.accountId),
 		)
 		.select([
 			"users.id as userId",
 			"users.ownerAccountId as selfAccountId",
+			"users.connectedAccountId as foreignAccountId",
 			"usersTheir.id as theirUserId",
-			"accountSettings.accountId as foreignAccountId",
-			"accountSettings.autoAcceptDebts",
+			"accountSettings.manualAcceptDebts",
 		])
 		.where("users.id", "in", userIds)
 		.execute();
@@ -111,32 +111,29 @@ const addAutoAcceptingDebts = async (
 	results: Awaited<ReturnType<typeof getResults>>,
 	sharedData: ReturnType<typeof getSharedDebtData>,
 ) => {
-	const autoAcceptingResults = results.filter((user) => user.autoAcceptDebts);
-	if (autoAcceptingResults.length === 0) {
+	const autoAcceptingData = results
+		.map((user) => {
+			if (
+				user.foreignAccountId &&
+				user.theirUserId &&
+				!user.manualAcceptDebts
+			) {
+				return {
+					foreignAccountId: user.foreignAccountId,
+					theirUserId: user.theirUserId,
+					userId: user.userId,
+					/* c8 ignore next 2 */
+				};
+			}
+			return null;
+		})
+		.filter(nonNullishGuard);
+	if (autoAcceptingData.length === 0) {
 		return {
 			reverseIds: [],
 			acceptedUserIds: [],
 		};
 	}
-	const autoAcceptingData = autoAcceptingResults
-		.map((user) =>
-			user.foreignAccountId && user.theirUserId
-				? {
-						foreignAccountId: user.foreignAccountId,
-						theirUserId: user.theirUserId,
-						/* c8 ignore next 2 */
-				  }
-				: null,
-		)
-		.filter(nonNullishGuard);
-	/* c8 ignore start */
-	if (autoAcceptingData.length !== autoAcceptingResults.length) {
-		throw new TRPCError({
-			code: "INTERNAL_SERVER_ERROR",
-			message: `Unexpected having "autoAcceptDebts" but not having "accountId"`,
-		});
-	}
-	/* c8 ignore stop */
 	const { updatedDebts } = await upsertAutoAcceptedDebts(
 		ctx.database,
 		sharedData
@@ -179,7 +176,7 @@ const addAutoAcceptingDebts = async (
 			}
 			return matchedUpdatedDebt.id;
 		}),
-		acceptedUserIds: autoAcceptingResults.map((result) => result.userId),
+		acceptedUserIds: autoAcceptingData.map((result) => result.userId),
 	};
 };
 

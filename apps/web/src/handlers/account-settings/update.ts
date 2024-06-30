@@ -11,7 +11,7 @@ export const procedure = authProcedure
 	.input(
 		z.discriminatedUnion("type", [
 			z.strictObject({
-				type: z.literal("autoAcceptDebts"),
+				type: z.literal("manualAcceptDebts"),
 				value: z.boolean(),
 			}),
 		]),
@@ -20,8 +20,8 @@ export const procedure = authProcedure
 		const { database } = ctx;
 		const updateObject: SettingsUpdateObject = {};
 		switch (input.type) {
-			case "autoAcceptDebts":
-				updateObject.autoAcceptDebts = input.value;
+			case "manualAcceptDebts":
+				updateObject.manualAcceptDebts = input.value;
 		}
 		const existingSettings = await database
 			.selectFrom("accountSettings")

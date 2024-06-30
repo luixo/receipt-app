@@ -21,12 +21,12 @@ describe("accountSettings.update", () => {
 		expectUnauthorizedError((context) =>
 			router
 				.createCaller(context)
-				.procedure({ type: "autoAcceptDebts", value: true }),
+				.procedure({ type: "manualAcceptDebts", value: true }),
 		);
 	});
 
 	describe("functionality", () => {
-		describe("autoAcceptDebts", () => {
+		describe("manualAcceptDebts", () => {
 			test("settings not found - updated with default-like", async ({
 				ctx,
 			}) => {
@@ -35,7 +35,7 @@ describe("accountSettings.update", () => {
 				const { sessionId } = await insertAccountWithSession(ctx);
 				const caller = router.createCaller(createAuthContext(ctx, sessionId));
 				await expectDatabaseDiffSnapshot(ctx, () =>
-					caller.procedure({ type: "autoAcceptDebts", value: false }),
+					caller.procedure({ type: "manualAcceptDebts", value: false }),
 				);
 			});
 
@@ -47,7 +47,7 @@ describe("accountSettings.update", () => {
 				const { sessionId } = await insertAccountWithSession(ctx);
 				const caller = router.createCaller(createAuthContext(ctx, sessionId));
 				await expectDatabaseDiffSnapshot(ctx, () =>
-					caller.procedure({ type: "autoAcceptDebts", value: true }),
+					caller.procedure({ type: "manualAcceptDebts", value: true }),
 				);
 			});
 
@@ -55,11 +55,11 @@ describe("accountSettings.update", () => {
 				// Verifying other accounts are not affected
 				await insertAccount(ctx);
 				const { sessionId } = await insertAccountWithSession(ctx, {
-					account: { settings: { autoAcceptDebts: true } },
+					account: { settings: { manualAcceptDebts: true } },
 				});
 				const caller = router.createCaller(createAuthContext(ctx, sessionId));
 				await expectDatabaseDiffSnapshot(ctx, () =>
-					caller.procedure({ type: "autoAcceptDebts", value: false }),
+					caller.procedure({ type: "manualAcceptDebts", value: false }),
 				);
 			});
 		});

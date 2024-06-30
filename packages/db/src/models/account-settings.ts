@@ -6,17 +6,17 @@ import type { AccountsId } from "./accounts";
 export default interface AccountSettings {
 	accountId: AccountsId;
 
-	autoAcceptDebts: boolean;
+	manualAcceptDebts: boolean;
 }
 
 export interface AccountSettingsInitializer {
 	accountId: AccountsId;
 
-	autoAcceptDebts: boolean;
+	manualAcceptDebts: boolean;
 }
 
 export interface AccountSettingsMutator {
 	accountId?: AccountsId;
 
-	autoAcceptDebts?: boolean;
+	manualAcceptDebts?: boolean;
 }

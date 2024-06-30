@@ -106,7 +106,7 @@ const fetchDebts = async (
 		.leftJoin("users as usersTheir", (qb) =>
 			qb
 				.onRef("usersTheir.connectedAccountId", "=", "debts.ownerAccountId")
-				.onRef("usersTheir.ownerAccountId", "=", "accountSettings.accountId"),
+				.onRef("usersTheir.ownerAccountId", "=", "users.connectedAccountId"),
 		)
 		.select([
 			"debts.id",
@@ -117,8 +117,8 @@ const fetchDebts = async (
 			"debts.amount",
 			"debts.timestamp",
 			"debts.receiptId",
-			"accountSettings.accountId as foreignAccountId",
-			"accountSettings.autoAcceptDebts",
+			"users.connectedAccountId as foreignAccountId",
+			"accountSettings.manualAcceptDebts",
 			"usersTheir.id as theirUserId",
 		])
 		.execute();
@@ -139,46 +139,42 @@ const updateAutoAcceptingDebts = async (
 	ctx: AuthorizedContext,
 	sharedData: ReturnType<typeof getSharedDebtData>,
 ) => {
-	const autoAcceptedData = sharedData.filter(
-		(sharedDatum): sharedDatum is NonNullable<typeof sharedDatum> =>
-			Boolean(sharedDatum?.debt.autoAcceptDebts),
-	);
+	const autoAcceptedData = sharedData
+		.map((sharedDatum) => {
+			if (!sharedDatum) {
+				return null;
+			}
+			const { debt, setObject, reverseSetObject } = sharedDatum;
+			if (
+				!debt.manualAcceptDebts &&
+				debt.foreignAccountId &&
+				debt.theirUserId
+			) {
+				return {
+					id: debt.id,
+					ownerAccountId: debt.foreignAccountId,
+					userId: debt.theirUserId,
+					currencyCode: debt.currencyCode,
+					amount: (-debt.amount).toString(),
+					timestamp: debt.timestamp,
+					lockedTimestamp: debt.lockedTimestamp,
+					receiptId: debt.receiptId,
+					created: new Date(),
+					...reverseSetObject,
+					// In case debt doesn't exist - we need to set a new note, not the old one
+					note: setObject.note || debt.note,
+					isNew: false,
+				};
+			}
+			return null;
+		})
+		.filter(nonNullishGuard);
 	if (autoAcceptedData.length === 0) {
 		return [];
 	}
 	const { newDebts } = await upsertAutoAcceptedDebts(
 		ctx.database,
-		autoAcceptedData.map(({ setObject, reverseSetObject, debt }) => {
-			/* c8 ignore start */
-			if (!debt.foreignAccountId) {
-				throw new TRPCError({
-					code: "INTERNAL_SERVER_ERROR",
-					message: `Unexpected having "autoAcceptDebts" but not having "accountId"`,
-				});
-			}
-			if (!debt.theirUserId) {
-				throw new TRPCError({
-					code: "INTERNAL_SERVER_ERROR",
-					message: `Unexpected having "autoAcceptDebts" but not having "theirUserId"`,
-				});
-			}
-			/* c8 ignore stop */
-			return {
-				id: debt.id,
-				ownerAccountId: debt.foreignAccountId,
-				userId: debt.theirUserId,
-				currencyCode: debt.currencyCode,
-				amount: (-debt.amount).toString(),
-				timestamp: debt.timestamp,
-				lockedTimestamp: debt.lockedTimestamp,
-				receiptId: debt.receiptId,
-				created: new Date(),
-				...reverseSetObject,
-				// In case debt doesn't exist - we need to set a new note, not the old one
-				note: setObject.note || debt.note,
-				isNew: false,
-			};
-		}),
+		autoAcceptedData,
 	);
 	return sharedData
 		.map((sharedDatum) => {

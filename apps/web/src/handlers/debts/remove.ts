@@ -28,7 +28,7 @@ export const procedure = authProcedure
 			.leftJoin("accountSettings", (qb) =>
 				qb.onRef("users.connectedAccountId", "=", "accountSettings.accountId"),
 			)
-			.select(["accountSettings.autoAcceptDebts"])
+			.select(["accountSettings.manualAcceptDebts"])
 			.executeTakeFirst();
 		if (!debt) {
 			throw new TRPCError({
@@ -36,7 +36,7 @@ export const procedure = authProcedure
 				message: `No debt found by id "${input.id}" on account "${ctx.auth.email}"`,
 			});
 		}
-		const reverseRemoved = Boolean(debt.autoAcceptDebts);
+		const reverseRemoved = !debt.manualAcceptDebts;
 		const deleteResult = await database
 			.deleteFrom("debts")
 			.where("id", "=", input.id)

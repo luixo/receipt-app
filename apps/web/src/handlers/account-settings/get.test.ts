@@ -23,29 +23,29 @@ describe("accountSettings.get", () => {
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
 			await expect(result).toStrictEqual<typeof result>({
-				autoAcceptDebts: false,
+				manualAcceptDebts: false,
 			});
 		});
 
 		test("settings found - default", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx, {
-				account: { settings: { autoAcceptDebts: false } },
+				account: { settings: { manualAcceptDebts: false } },
 			});
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
 			await expect(result).toStrictEqual<typeof result>({
-				autoAcceptDebts: false,
+				manualAcceptDebts: false,
 			});
 		});
 
 		test("settings found - changed", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx, {
-				account: { settings: { autoAcceptDebts: true } },
+				account: { settings: { manualAcceptDebts: true } },
 			});
 			const caller = router.createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
 			await expect(result).toStrictEqual<typeof result>({
-				autoAcceptDebts: true,
+				manualAcceptDebts: true,
 			});
 		});
 	});

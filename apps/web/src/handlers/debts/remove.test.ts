@@ -89,7 +89,9 @@ describe("debts.remove", () => {
 	describe("functionality", () => {
 		test("not auto-accepted by counterparty", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: foreignAccountId } = await insertAccount(ctx);
+			const { id: foreignAccountId } = await insertAccount(ctx, {
+				settings: { manualAcceptDebts: true },
+			});
 			const [{ id: userId }, { id: foreignToSelfUserId }] =
 				await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
 			const [{ id: debtId }] = await insertSyncedDebts(
@@ -100,7 +102,7 @@ describe("debts.remove", () => {
 
 			// Verify unrelated data doesn't affect the result
 			await insertUser(ctx, accountId);
-			await insertAccountSettings(ctx, accountId, { autoAcceptDebts: true });
+			await insertAccountSettings(ctx, accountId, { manualAcceptDebts: true });
 			const { id: foreignUserId } = await insertUser(ctx, foreignAccountId);
 			await insertDebt(ctx, accountId, userId);
 			await insertDebt(ctx, foreignAccountId, foreignUserId);
@@ -115,23 +117,23 @@ describe("debts.remove", () => {
 		describe("auto-accepted by counterparty", () => {
 			test("debt exists", async ({ ctx }) => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				const { id: acceptingAccountId } = await insertAccount(ctx, {
-					settings: { autoAcceptDebts: true },
-				});
-				const [{ id: acceptingUserId }, { id: acceptingToSelfUserId }] =
-					await insertConnectedUsers(ctx, [accountId, acceptingAccountId]);
+				const { id: foreignAccountId } = await insertAccount(ctx);
+				const [{ id: foreignUserId }, { id: foreignToSelfUserId }] =
+					await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
 				const [{ id: debtId }] = await insertSyncedDebts(
 					ctx,
-					[accountId, acceptingUserId],
-					[acceptingAccountId, acceptingToSelfUserId],
+					[accountId, foreignUserId],
+					[foreignAccountId, foreignToSelfUserId],
 				);
 
 				// Verify unrelated data doesn't affect the result
 				await insertUser(ctx, accountId);
-				await insertAccountSettings(ctx, accountId, { autoAcceptDebts: true });
-				await insertUser(ctx, acceptingAccountId);
-				await insertDebt(ctx, accountId, acceptingUserId);
-				await insertDebt(ctx, acceptingAccountId, acceptingToSelfUserId);
+				await insertAccountSettings(ctx, accountId, {
+					manualAcceptDebts: true,
+				});
+				await insertUser(ctx, foreignAccountId);
+				await insertDebt(ctx, accountId, foreignUserId);
+				await insertDebt(ctx, foreignAccountId, foreignToSelfUserId);
 
 				const caller = router.createCaller(createAuthContext(ctx, sessionId));
 				const result = await expectDatabaseDiffSnapshot(ctx, () =>
@@ -142,19 +144,19 @@ describe("debts.remove", () => {
 
 			test("debt does not exist", async ({ ctx }) => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				const { id: acceptingAccountId } = await insertAccount(ctx, {
-					settings: { autoAcceptDebts: true },
-				});
-				const [{ id: acceptingUserId }, { id: acceptingToSelfUserId }] =
-					await insertConnectedUsers(ctx, [accountId, acceptingAccountId]);
-				const debt = await insertDebt(ctx, accountId, acceptingUserId);
+				const { id: foreignAccountId } = await insertAccount(ctx);
+				const [{ id: foreignUserId }, { id: foreignToSelfUserId }] =
+					await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
+				const debt = await insertDebt(ctx, accountId, foreignUserId);
 
 				// Verify unrelated data doesn't affect the result
 				await insertUser(ctx, accountId);
-				await insertAccountSettings(ctx, accountId, { autoAcceptDebts: true });
-				await insertUser(ctx, acceptingAccountId);
-				await insertDebt(ctx, accountId, acceptingUserId);
-				await insertDebt(ctx, acceptingAccountId, acceptingToSelfUserId);
+				await insertAccountSettings(ctx, accountId, {
+					manualAcceptDebts: true,
+				});
+				await insertUser(ctx, foreignAccountId);
+				await insertDebt(ctx, accountId, foreignUserId);
+				await insertDebt(ctx, foreignAccountId, foreignToSelfUserId);
 
 				const caller = router.createCaller(createAuthContext(ctx, sessionId));
 				const result = await expectDatabaseDiffSnapshot(ctx, () =>
