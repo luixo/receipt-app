@@ -30,20 +30,23 @@ export const UserDebtsPreview: React.FC<Props> = ({
 	unsyncedDebtsAmount,
 }) => {
 	const userQuery = trpc.users.get.useQuery({ id: userId });
+	const accountSettingsQuery = trpc.accountSettings.get.useQuery();
 	return (
 		<Card as={Link} href={`/debts/user/${userId}`}>
 			<CardBody className={card({ transparent })}>
 				<LoadableUser id={userId} />
 				<div className="flex items-center justify-center gap-2">
-					{userQuery.status === "success" && userQuery.data.connectedAccount ? (
+					{userQuery.status === "success" &&
+					userQuery.data.connectedAccount &&
+					accountSettingsQuery.status === "success" ? (
 						unsyncedDebtsAmount === 0 ? (
-							<SyncIcon size={24} className="text-success" />
+							accountSettingsQuery.data.manualAcceptDebts ? (
+								<SyncIcon size={24} className="text-success" />
+							) : null
 						) : (
 							<UnsyncIcon size={24} className="text-warning" />
 						)
-					) : (
-						""
-					)}
+					) : null}
 					<DebtsGroup className="shrink-0" debts={debts} />
 				</div>
 			</CardBody>
