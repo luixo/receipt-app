@@ -12,7 +12,7 @@ const run = async () => {
 		if (!process.env.DATABASE_URL) {
 			throw new Error("Expected to have process.env.DATABASE_URL variable!");
 		}
-		const outputPath = path.join(__dirname, "../apps/web/src/db/models");
+		const outputPath = path.join(__dirname, "../src/models");
 		await processDatabase({
 			connection: process.env.DATABASE_URL,
 			outputPath,
@@ -75,7 +75,7 @@ const run = async () => {
 						!lines.some((line) => line.includes("type CurrencyCode"))
 					) {
 						prepended.push(
-							"import type { CurrencyCode } from 'app/utils/currency';",
+							"import type { CurrencyCode } from '~app/utils/currency';",
 						);
 					}
 					if (

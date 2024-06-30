@@ -59,7 +59,7 @@
 		"lint:fix": "eslint --fix . --ext .js,.jsx,.ts,.tsx",
 		"db:migrate": "dotenv -c -- yarn workspace @ra/db db:migrate",
 		"db:migrate:production": "dotenv -c production -- yarn workspace @ra/db db:migrate",
-		"db:generate-types": "dotenv -c -- yarn workspace @ra/scripts db:generate-types && yarn lint:fix && yarn format",
+		"db:generate-types": "dotenv -c -- yarn workspace @ra/db db:generate-types && yarn lint:fix && yarn format",
 		"lint-staged": "lint-staged",
 		"backend:test": "NODE_OPTIONS='--import tsx' vitest",
 		"frontend:test": "yarn workspace @ra/playwright test"
