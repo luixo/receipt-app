@@ -59,7 +59,16 @@ export const options: UseContextedMutationOptions<
 			getNonResolvedAmount: undefined,
 		});
 		cache.debts.update(controllerContext, {
-			getByUsers: undefined,
+			getByUsers:
+				currDebt.lockedTimestamp &&
+				currDebt.their?.lockedTimestamp?.valueOf() ===
+					currDebt.lockedTimestamp.valueOf()
+					? undefined
+					: (controller) =>
+							controller.updateUnsyncedDebts(
+								currDebt.userId,
+								(amount) => amount - 1,
+							),
 			getUser: undefined,
 			get: (controller) => controller.remove(updateObject.id),
 			getIntentions: (controller) => {

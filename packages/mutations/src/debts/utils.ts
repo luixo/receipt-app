@@ -182,6 +182,10 @@ export type CurrentDebt = {
 	amount: number;
 	currencyCode: CurrencyCode;
 	receiptId?: ReceiptsId;
+	lockedTimestamp?: Date | undefined;
+	their?: {
+		lockedTimestamp: Date | undefined;
+	};
 };
 
 type DebtSum = number;
@@ -348,7 +352,28 @@ export const updateLockedTimestamps = (
 	reverseLockedTimestampUpdated: boolean,
 ) => {
 	cache.debts.update(controllerContext, {
-		getByUsers: undefined,
+		getByUsers: (controller) => {
+			if (lockedTimestamp === undefined) {
+				if (
+					currDebt.lockedTimestamp !== undefined &&
+					!(
+						currDebt.lockedTimestamp.valueOf() ===
+						currDebt.their?.lockedTimestamp?.valueOf()
+					)
+				) {
+					// We turned off syncing by setting lockedTimestamp to null
+					// Hence previously unsynced debt does not count now
+					controller.updateUnsyncedDebts(
+						currDebt.userId,
+						(amount) => amount - 1,
+					);
+				}
+			} else if (!reverseLockedTimestampUpdated) {
+				// We updated something meaninful (lockedTimestamp changed) and reverse was not accepted
+				// Hence previously synced debt is now unsynced
+				controller.updateUnsyncedDebts(currDebt.userId, (amount) => amount + 1);
+			}
+		},
 		getUser: (controller) =>
 			controller.update(currDebt.userId, debtId, (debt) => ({
 				...debt,

@@ -105,10 +105,12 @@ describe("debts.getByUsers", () => {
 					{
 						userId: user.id,
 						debts: mapUserDebts(userDebts),
+						unsyncedDebtsAmount: 1,
 					},
 					{
 						userId: anotherUser.id,
 						debts: mapUserDebts(anotherUserDebts),
+						unsyncedDebtsAmount: 0,
 					},
 				].sort((a, b) => {
 					const aUser = users.find((lookupUser) => a.userId === lookupUser.id);
@@ -122,6 +124,179 @@ describe("debts.getByUsers", () => {
 					return aUser.name.localeCompare(bUser.name);
 				}),
 			);
+		});
+
+		describe("unsynced amount of debts", () => {
+			describe("synced debts", () => {
+				test("debt with empty lockedTimestamp", async ({ ctx }) => {
+					const { sessionId, accountId } = await insertAccountWithSession(ctx);
+					const { id: foreignAccountId } = await insertAccount(ctx);
+					const [user, { id: foreignToSelfUserId }] =
+						await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
+					const [unsyncedDebt] = await insertSyncedDebts(
+						ctx,
+						[accountId, user.id],
+						[
+							foreignAccountId,
+							foreignToSelfUserId,
+							// De-syncing debt
+							(debt) => ({ ...debt, lockedTimestamp: new Date() }),
+						],
+					);
+					const caller = router.createCaller(createAuthContext(ctx, sessionId));
+					const result = await caller.procedure();
+					expect(result).toStrictEqual<typeof result>([
+						{
+							userId: user.id,
+							debts: mapUserDebts([unsyncedDebt]),
+							unsyncedDebtsAmount: 0,
+						},
+					]);
+				});
+
+				test("debt with synced lockedTimestamp", async ({ ctx }) => {
+					const { sessionId, accountId } = await insertAccountWithSession(ctx);
+					const { id: foreignAccountId } = await insertAccount(ctx);
+					const [user, { id: foreignToSelfUserId }] =
+						await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
+					const [syncedDebt] = await insertSyncedDebts(
+						ctx,
+						[accountId, user.id, { lockedTimestamp: new Date() }],
+						[foreignAccountId, foreignToSelfUserId],
+					);
+					const caller = router.createCaller(createAuthContext(ctx, sessionId));
+					const result = await caller.procedure();
+					expect(result).toStrictEqual<typeof result>([
+						{
+							userId: user.id,
+							debts: mapUserDebts([syncedDebt]),
+							unsyncedDebtsAmount: 0,
+						},
+					]);
+				});
+
+				test("user counterparty is not connected", async ({ ctx }) => {
+					const { sessionId, accountId } = await insertAccountWithSession(ctx);
+					const { id: userId } = await insertUser(ctx, accountId);
+					const localDebt = await insertDebt(ctx, accountId, userId, {
+						lockedTimestamp: new Date(),
+					});
+					const caller = router.createCaller(createAuthContext(ctx, sessionId));
+					const result = await caller.procedure();
+					expect(result).toStrictEqual<typeof result>([
+						{
+							userId,
+							debts: mapUserDebts([localDebt]),
+							unsyncedDebtsAmount: 0,
+						},
+					]);
+				});
+			});
+
+			describe("unsynced debts", () => {
+				test("debt with no foreign counterparty", async ({ ctx }) => {
+					const { sessionId, accountId } = await insertAccountWithSession(ctx);
+					const { id: foreignAccountId } = await insertAccount(ctx);
+					const [user] = await insertConnectedUsers(ctx, [
+						accountId,
+						foreignAccountId,
+					]);
+					const localDebt = await insertDebt(ctx, accountId, user.id, {
+						lockedTimestamp: new Date(),
+					});
+					const caller = router.createCaller(createAuthContext(ctx, sessionId));
+					const result = await caller.procedure();
+					expect(result).toStrictEqual<typeof result>([
+						{
+							userId: user.id,
+							debts: mapUserDebts([localDebt]),
+							unsyncedDebtsAmount: 1,
+						},
+					]);
+				});
+
+				test("debt with a different lockedTimestamp", async ({ ctx }) => {
+					const { sessionId, accountId } = await insertAccountWithSession(ctx);
+					const { id: foreignAccountId } = await insertAccount(ctx);
+					const [user, { id: foreignToSelfUserId }] =
+						await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
+					const [desyncedDebt] = await insertSyncedDebts(
+						ctx,
+						[accountId, user.id, { lockedTimestamp: new Date() }],
+						[
+							foreignAccountId,
+							foreignToSelfUserId,
+							// De-syncing debt
+							(debt) => ({
+								...debt,
+								lockedTimestamp: new Date(debt.lockedTimestamp!.valueOf() + 1),
+							}),
+						],
+					);
+					const caller = router.createCaller(createAuthContext(ctx, sessionId));
+					const result = await caller.procedure();
+					expect(result).toStrictEqual<typeof result>([
+						{
+							userId: user.id,
+							debts: mapUserDebts([desyncedDebt]),
+							unsyncedDebtsAmount: 1,
+						},
+					]);
+				});
+
+				test("multiple debts", async ({ ctx }) => {
+					const { sessionId, accountId } = await insertAccountWithSession(ctx);
+					const { id: foreignAccountId } = await insertAccount(ctx);
+					const [user, { id: foreignToSelfUserId }] =
+						await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
+					const unsyncedDebts = await Promise.all([
+						insertDebt(ctx, accountId, user.id, {
+							lockedTimestamp: new Date(),
+						}),
+						insertDebt(ctx, accountId, user.id, {
+							lockedTimestamp: new Date(),
+						}),
+						insertSyncedDebts(
+							ctx,
+							[accountId, user.id, { lockedTimestamp: new Date() }],
+							[
+								foreignAccountId,
+								foreignToSelfUserId,
+								// De-syncing debt
+								(debt) => ({
+									...debt,
+									lockedTimestamp: new Date(
+										debt.lockedTimestamp!.valueOf() + 1,
+									),
+								}),
+							],
+						),
+					]);
+					// Synced debts
+					await Promise.all([
+						insertSyncedDebts(
+							ctx,
+							[accountId, user.id, { lockedTimestamp: new Date() }],
+							[foreignAccountId, foreignToSelfUserId],
+						),
+						insertSyncedDebts(
+							ctx,
+							[accountId, user.id],
+							[
+								foreignAccountId,
+								foreignToSelfUserId,
+								// De-syncing debt
+								(debt) => ({ ...debt, lockedTimestamp: new Date() }),
+							],
+						),
+					]);
+					const caller = router.createCaller(createAuthContext(ctx, sessionId));
+					const result = await caller.procedure();
+					expect(result[0]?.unsyncedDebtsAmount).toBe<number>(
+						unsyncedDebts.length,
+					);
+				});
+			});
 		});
 	});
 });

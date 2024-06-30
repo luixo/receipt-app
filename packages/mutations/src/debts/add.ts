@@ -75,12 +75,19 @@ export const options: UseContextedMutationOptions<"debts.add"> = {
 			});
 		}
 		cache.debts.update(controllerContext, {
-			getByUsers: (controller) =>
+			getByUsers: (controller) => {
 				controller.updateCurrency(
 					updateObject.userId,
 					updateObject.currencyCode,
 					(sum) => sum + updateObject.amount,
-				),
+				);
+				if (!result.reverseAccepted) {
+					controller.updateUnsyncedDebts(
+						updateObject.userId,
+						(amount) => amount + 1,
+					);
+				}
+			},
 			getUser: (controller) =>
 				controller.add(
 					updateObject.userId,
