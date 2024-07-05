@@ -62,6 +62,14 @@ Snapshots should preferably be used to verify DB diffs, but not call results.
 
 Frontend tests only cover the UI layer (all data is mocked).
 
+### Install playwright browsers
+
+To run tests locally you need to install Playwright browsers:
+
+```sh
+npx playwright install
+```
+
 ### Functional tests
 
 To run (functional) frontend tests:
