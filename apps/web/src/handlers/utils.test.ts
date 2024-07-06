@@ -72,7 +72,7 @@ export const getClientServer = async <R extends AnyRouter>(
 		} as unknown as CreateTRPCClientOptions<R>),
 		start: () =>
 			new Promise<void>((resolve) => {
-				httpServer.listen(port, "localhost", resolve);
+				httpServer.listen(port, resolve);
 			}),
 		destroy: async () => {
 			await new Promise<void>((resolve, reject) => {

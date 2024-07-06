@@ -11,9 +11,9 @@ import { makeConnectionString } from "./databases/connection";
 import type { appRouter } from "./databases/router";
 import { getLogger } from "./utils/mocks/logger";
 
-const { port, hostname } = inject("routerConfig");
+const { port } = inject("routerConfig");
 const client = createTRPCClient<typeof appRouter>({
-	links: [httpBatchLink({ url: `http://${hostname}:${port}` })],
+	links: [httpBatchLink({ url: `http://localhost:${port}` })],
 });
 
 beforeAll(async (suite) => {

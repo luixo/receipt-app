@@ -228,7 +228,7 @@ const createWorkerManager = async (port: number): Promise<WorkerManager> => {
 		getPort: () => port,
 		start: async () => {
 			await new Promise<void>((resolve) => {
-				server.listen(port, "localhost", resolve);
+				server.listen(port, resolve);
 			});
 			return async () => {
 				await new Promise<void>((resolve, reject) => {

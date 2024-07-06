@@ -9,7 +9,7 @@ const globalSetup = async (config: FullConfig) => {
 	process.env.MANAGER_PORT = portManagerPort.toString();
 	const httpServer = createHTTPServer({ router: appRouter });
 	await new Promise<void>((resolve) => {
-		httpServer.listen(portManagerPort, "localhost", resolve);
+		httpServer.listen(portManagerPort, resolve);
 	});
 	config.metadata.portManagerServer = httpServer;
 };

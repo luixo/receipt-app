@@ -8,7 +8,6 @@ declare module "vitest" {
 	interface ProvidedContext {
 		routerConfig: {
 			port: number;
-			hostname: string;
 		};
 	}
 }
@@ -17,12 +16,11 @@ export default async (context: GlobalSetupContext) => {
 	process.env.TZ = "GMT";
 	const routerConfig = {
 		port: (await findFreePorts())[0]!,
-		hostname: "localhost",
 	};
 	context.provide("routerConfig", routerConfig);
 	const httpServer = createHTTPServer({ router: appRouter });
 	await new Promise<void>((resolve) => {
-		httpServer.listen(routerConfig.port, routerConfig.hostname, resolve);
+		httpServer.listen(routerConfig.port, resolve);
 	});
 	const caller = appRouter.createCaller({});
 	await caller.setup({ maxDatabases: context.config.maxConcurrency });
