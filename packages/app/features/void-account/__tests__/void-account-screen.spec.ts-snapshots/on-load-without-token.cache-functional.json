@@ -3,7 +3,7 @@
 		"account.get": {
 			"state": {
 				"error": {
-					"type": "TRPCError",
+					"type": "TRPCClientError",
 					"message": "No token provided - mocked"
 				},
 				"errorUpdateCount": 1,

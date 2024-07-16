@@ -21,7 +21,7 @@ import { QueryDevToolsProvider } from "~web/providers/client/query-devtools";
 import { ThemeProvider } from "~web/providers/client/theme";
 import { nextCookieContext } from "~web/utils/client-cookies";
 import { webPersister } from "~web/utils/persister";
-import { trpcNext } from "~web/utils/trpc";
+import { useLinks } from "~web/utils/trpc";
 import "~app/global.css";
 
 applyRemaps();
@@ -37,7 +37,7 @@ const GlobalHooksComponent: React.FC = () => {
 
 type PageProps = Omit<
 	React.ComponentProps<typeof Provider>,
-	"cookiesContext" | "persister"
+	"cookiesContext" | "persister" | "links"
 >;
 
 declare module "next/app" {
@@ -50,6 +50,9 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 	const LayoutComponent = (Component as AppPage).public
 		? PublicPage
 		: ProtectedPage;
+	// A bug in next.js
+	const props = pageProps as PageProps;
+	const links = useLinks(props.searchParams);
 	return (
 		<>
 			<Head>
@@ -62,7 +65,8 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 				<link rel="icon" href="/favicon.svg" />
 			</Head>
 			<Provider
-				{...pageProps}
+				{...props}
+				links={links}
 				cookiesContext={nextCookieContext}
 				persister={webPersister}
 			>
@@ -92,4 +96,4 @@ MyApp.getInitialProps = async ({ ctx, router }) => {
 	return { pageProps };
 };
 
-export default trpcNext.withTRPC(MyApp);
+export default MyApp;

@@ -7,16 +7,12 @@ import {
 	httpLink,
 	splitLink,
 } from "@trpc/client";
-import type { AwaitPrepassRender } from "@trpc/next";
 import type { AnyRouter, DataTransformer } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
-import type { NextPageContext } from "next";
 import superjson from "superjson";
 
 import type { AppRouter } from "~app/trpc";
-import { MINUTE, SECOND, omitUndefined } from "~utils";
-
-const SSR_TIMEOUT = 3 * SECOND;
+import { MINUTE, omitUndefined } from "~utils";
 
 type UnexpectedErrorLinkOptions<Router extends AnyRouter> = {
 	mapper: (error: TRPCClientError<Router>) => TRPCClientError<Router>;
@@ -47,8 +43,6 @@ export type GetLinksOptions = {
 	captureError: (error: TRPCClientError<AppRouter>) => string;
 	source: // Next.js client-side rendering originated from 'pages' dir
 	| "csr-next"
-		// Next.js server-side rendering originated from 'pages' dir
-		| "ssr-next"
 		// React Native environment (Expo)
 		| "native"
 		// Originated from artificial testing environment
@@ -110,36 +104,6 @@ export const getLinks = (
 		}),
 		splitLinkInstance,
 	];
-};
-
-export const awaitPrepassRender: AwaitPrepassRender<
-	NextPageContext & {
-		timeoutPromise: Promise<boolean>;
-	}
-> = async ({ queryClient, ctx }) => {
-	ctx.timeoutPromise =
-		ctx.timeoutPromise ||
-		new Promise((resolve) => {
-			setTimeout(() => {
-				void queryClient.cancelQueries();
-				// true for "SSR render is resolved"
-				resolve(true);
-			}, SSR_TIMEOUT);
-		});
-	if (!queryClient.isFetching()) {
-		return true;
-	}
-
-	const prefetchPromise = new Promise<false>((resolve) => {
-		const unsub = queryClient.getQueryCache().subscribe((event) => {
-			if (event.query.getObserversCount() === 0) {
-				// false for "SSR render is not resolved, need another render pass"
-				resolve(false);
-				unsub();
-			}
-		});
-	});
-	return Promise.race([prefetchPromise, ctx.timeoutPromise]);
 };
 
 export const transformer: DataTransformer = superjson;

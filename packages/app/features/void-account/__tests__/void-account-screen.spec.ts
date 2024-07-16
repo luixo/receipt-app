@@ -8,12 +8,19 @@ test("On load without token", async ({
 	voidButton,
 	cancelButton,
 	snapshotQueries,
+	awaitCacheKey,
 }) => {
 	api.mockUtils.noAuth();
 
-	await snapshotQueries(() => page.goto("/void-account"), {
-		whitelistKeys: "account.get",
-	});
+	await snapshotQueries(
+		async () => {
+			await page.goto("/void-account");
+			await awaitCacheKey("account.get");
+		},
+		{
+			whitelistKeys: "account.get",
+		},
+	);
 	await expect(page).toHaveTitle("RA - Void account");
 	await expect(page.locator("h2")).toHaveText("Something went wrong");
 	await expect(voidButton).not.toBeAttached();

@@ -43,12 +43,13 @@ test("Initial load with no intentions", async ({
 	emptyCardTransfers,
 	snapshotQueries,
 	mockIntentions,
+	awaitCacheKey,
 }) => {
 	mockIntentions();
-	await snapshotQueries(
-		() => page.goto("/receipts/transfer-intentions"),
-		keysLists,
-	);
+	await snapshotQueries(async () => {
+		await page.goto("/receipts/transfer-intentions");
+		await awaitCacheKey("receiptTransferIntentions.getAll");
+	}, keysLists);
 	await expect(emptyCardTransfers).toBeAttached();
 });
 
@@ -57,6 +58,7 @@ test("Initial load with intentions", async ({
 	keysLists,
 	mockIntentions,
 	snapshotQueries,
+	awaitCacheKey,
 }) => {
 	mockIntentions({
 		generateTransferIntentions: (opts) =>
@@ -67,8 +69,8 @@ test("Initial load with intentions", async ({
 			}),
 	});
 
-	await snapshotQueries(
-		() => page.goto("/receipts/transfer-intentions"),
-		keysLists,
-	);
+	await snapshotQueries(async () => {
+		await page.goto("/receipts/transfer-intentions");
+		await awaitCacheKey("receiptTransferIntentions.getAll");
+	}, keysLists);
 });

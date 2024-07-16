@@ -4,12 +4,24 @@ import { expect } from "~tests/frontend/fixtures";
 
 import { test } from "./utils";
 
-test("On load", async ({ page, api, registerButton, snapshotQueries }) => {
+test("On load", async ({
+	page,
+	api,
+	registerButton,
+	snapshotQueries,
+	awaitCacheKey,
+}) => {
 	api.mockUtils.noAuth();
 
-	await snapshotQueries(() => page.goto("/register"), {
-		whitelistKeys: "account.get",
-	});
+	await snapshotQueries(
+		async () => {
+			await page.goto("/register");
+			await awaitCacheKey("account.get");
+		},
+		{
+			whitelistKeys: "account.get",
+		},
+	);
 	await expect(page).toHaveTitle("RA - Register");
 	await expect(registerButton).toBeDisabled();
 });
