@@ -35,7 +35,7 @@
 		"pre-commit": "^1.2.2",
 		"prettier": "^3.0.0",
 		"prettier-plugin-tailwindcss": "^0.5.7",
-		"sharp": "^0.32.6",
+		"sharp": "^0.33.4",
 		"testcontainers": "^8.12.0",
 		"ts-node": "^10.9.1",
 		"tsx": "^4.7.1",

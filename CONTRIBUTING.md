@@ -102,13 +102,7 @@ docker run --rm -v ${PWD}:/work/ -w /work/ -it -p 3000:3000 --entrypoint /bin/ba
 corepack enable
 ```
 
-3. (in Docker) Install platform-specific binaries (until `sharp` [utilize](https://github.com/lovell/sharp/issues/3750) `supportedArchitectures` in `.yarnrc.yml`)
-
-```sh
-yarn install
-```
-
-4a. (in Docker) Run tests
+3a. (in Docker) Run tests
 
 ```sh
 PW_SERVER=true yarn frontend:test
@@ -116,7 +110,7 @@ PW_SERVER=true yarn frontend:test
 
 `PW_SERVER` env variable indicates Playwright should run web server itself.
 
-4b. (in Docker) Run tests and update snapshots with current results
+3b. (in Docker) Run tests and update snapshots with current results
 
 ```sh
 PW_SERVER=true yarn frontend:test --update-snapshots
@@ -127,7 +121,7 @@ PW_SERVER=true yarn frontend:test --update-snapshots
 Please, build an app on host machine inbefore (step 0 from above).
 
 ```sh
-docker run --rm -v ${PWD}:/work/ -w /work/ -it -p 3000:3000 --entrypoint /bin/bash mcr.microsoft.com/playwright:v1.40.1-jammy -c "corepack enable && yarn install && PW_SERVER=true yarn frontend:test --update-snapshots"
+docker run --rm -v ${PWD}:/work/ -w /work/ -it -p 3000:3000 --entrypoint /bin/bash mcr.microsoft.com/playwright:v1.40.1-jammy -c "corepack enable && PW_SERVER=true yarn frontend:test --update-snapshots"
 ```
 
 ### Tests structure
