@@ -1,6 +1,7 @@
 import path from "node:path";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { configDefaults, defineConfig } from "vitest/config";
+import "sharp";
 
 const rootPath = __dirname;
 const vitestRoot = path.resolve(rootPath, "testing/vitest");
