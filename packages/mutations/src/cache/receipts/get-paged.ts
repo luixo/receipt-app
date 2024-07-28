@@ -1,14 +1,14 @@
 import type { QueryClient } from "@tanstack/react-query";
 import { getQueryKey } from "@trpc/react-query";
 
-import type { TRPCQueryInput, TRPCReact, TRPCReactContext } from "~app/trpc";
+import type { TRPCQueryInput, TRPCReact, TRPCReactUtils } from "~app/trpc";
 import type { ReceiptsId } from "~db";
 import { addToArray, id } from "~utils";
 
 import type { ControllerContext } from "../../types";
 import { applyWithRevert, getAllInputs, withRef } from "../utils";
 
-type Controller = TRPCReactContext["receipts"]["getPaged"];
+type Controller = TRPCReactUtils["receipts"]["getPaged"];
 
 type Input = TRPCQueryInput<"receipts.getPaged">;
 

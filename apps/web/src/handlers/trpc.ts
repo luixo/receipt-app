@@ -1,9 +1,4 @@
 import { TRPCError, initTRPC } from "@trpc/server";
-import {
-	experimental_createMemoryUploadHandler,
-	experimental_isMultipartFormDataRequest,
-	experimental_parseMultipartFormData,
-} from "@trpc/server/adapters/node-http/content-type/form-data";
 
 import { transformer } from "~app/utils/trpc";
 import {
@@ -116,16 +111,3 @@ export const authProcedure = unauthProcedure.use(
 		});
 	}),
 );
-
-export const multipartMiddlware = t.middleware(async ({ ctx, next }) => {
-	if (!experimental_isMultipartFormDataRequest(ctx.req)) {
-		return next();
-	}
-	return next({
-		getRawInput: () =>
-			experimental_parseMultipartFormData(
-				ctx.req,
-				experimental_createMemoryUploadHandler(),
-			),
-	});
-});

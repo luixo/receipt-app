@@ -1,10 +1,10 @@
-import type { TRPCQueryOutput, TRPCReactContext } from "~app/trpc";
+import type { TRPCQueryOutput, TRPCReactUtils } from "~app/trpc";
 import type { UsersId } from "~db";
 
 import type { ControllerContext, SnapshotFn, UpdateFn } from "../../types";
 import { applyUpdateFnWithRevert, applyWithRevert, withRef } from "../utils";
 
-type Controller = TRPCReactContext["users"]["get"];
+type Controller = TRPCReactUtils["users"]["get"];
 
 type User = TRPCQueryOutput<"users.get">;
 

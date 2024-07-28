@@ -1,4 +1,4 @@
-import type { TRPCQueryOutput, TRPCReactContext } from "~app/trpc";
+import type { TRPCQueryOutput, TRPCReactUtils } from "~app/trpc";
 import type { ReceiptsId } from "~db";
 import type { ItemWithIndex } from "~utils";
 import { addToArray, removeFromArray, replaceInArray } from "~utils";
@@ -6,7 +6,7 @@ import { addToArray, removeFromArray, replaceInArray } from "~utils";
 import type { ControllerContext, SnapshotFn, UpdateFn } from "../../types";
 import { applyUpdateFnWithRevert, applyWithRevert, withRef } from "../utils";
 
-type Controller = TRPCReactContext["receiptTransferIntentions"]["getAll"];
+type Controller = TRPCReactUtils["receiptTransferIntentions"]["getAll"];
 
 type Intentions = TRPCQueryOutput<"receiptTransferIntentions.getAll">;
 type InboundIntention = Intentions["inbound"][number];

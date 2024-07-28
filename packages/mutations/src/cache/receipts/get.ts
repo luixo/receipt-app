@@ -5,7 +5,7 @@ import type {
 	TRPCQueryInput,
 	TRPCQueryOutput,
 	TRPCReact,
-	TRPCReactContext,
+	TRPCReactUtils,
 } from "~app/trpc";
 import type { ReceiptItemsId, ReceiptsId, UsersId } from "~db";
 import type { ItemWithIndex } from "~utils";
@@ -19,7 +19,7 @@ import {
 	withRef,
 } from "../utils";
 
-type Controller = TRPCReactContext["receipts"]["get"];
+type Controller = TRPCReactUtils["receipts"]["get"];
 
 type Receipt = TRPCQueryOutput<"receipts.get">;
 

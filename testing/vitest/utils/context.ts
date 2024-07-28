@@ -24,7 +24,14 @@ export const createContext = (
 			getHeader: () => "",
 			setHeader: ctx.responseHeaders.add,
 		} as unknown as NextApiResponse,
-		info: { isBatchCall: false, calls: [] },
+		info: {
+			accept: "application/jsonl",
+			type: "query",
+			isBatchCall: false,
+			calls: [],
+			connectionParams: null,
+			signal: new AbortController().signal,
+		},
 	});
 
 export const createAuthContext = (

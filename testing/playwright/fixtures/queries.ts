@@ -3,12 +3,11 @@ import type { Page, TestInfo } from "@playwright/test";
 import { expect } from "@playwright/test";
 import type { DehydratedState } from "@tanstack/react-query";
 import type { TRPCClientErrorLike } from "@trpc/client";
+import type { AnyTRPCProcedure, AnyTRPCRouter } from "@trpc/server";
 import type {
-	AnyProcedure,
-	AnyRouter,
-	ProcedureRouterRecord,
-} from "@trpc/server";
-import type { DeepPartial } from "@trpc/server/unstableInternalsExport";
+	DeepPartial,
+	RouterRecord,
+} from "@trpc/server/unstable-core-do-not-import";
 import { diff as objectDiff } from "deep-object-diff";
 
 import type {
@@ -296,15 +295,15 @@ type AwaitCacheObject<T extends TRPCKey = TRPCKey> = {
 };
 
 const getProcedure = (
-	currentRouter: AnyRouter & ProcedureRouterRecord,
+	currentRouter: AnyTRPCRouter & RouterRecord,
 	path: string,
-): AnyProcedure => {
+): AnyTRPCProcedure => {
 	const [first, ...rest] = path.split(".");
 	if (rest.length === 0) {
-		return currentRouter[first!] as AnyProcedure;
+		return currentRouter[first!] as AnyTRPCProcedure;
 	}
 	return getProcedure(
-		currentRouter[first!] as AnyRouter & ProcedureRouterRecord,
+		currentRouter[first!] as AnyTRPCRouter & RouterRecord,
 		rest.join("."),
 	);
 };
@@ -509,7 +508,7 @@ export const queriesMixin = createMixin<
 					typeof keyOrObject === "string" ? 1 : keyOrObject.amount ?? 1;
 				const prevAmount = extendedTestInfo.awaitedCacheKeys[path] ?? 0;
 				const procedure = getProcedure(
-					router as unknown as AnyRouter & ProcedureRouterRecord,
+					router as unknown as AnyTRPCRouter & RouterRecord,
 					path,
 				);
 				return {

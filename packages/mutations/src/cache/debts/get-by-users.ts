@@ -1,4 +1,4 @@
-import type { TRPCQueryOutput, TRPCReactContext } from "~app/trpc";
+import type { TRPCQueryOutput, TRPCReactUtils } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import type { UsersId } from "~db";
 import { upsertInArray } from "~utils";
@@ -6,7 +6,7 @@ import { upsertInArray } from "~utils";
 import type { ControllerContext, SnapshotFn, UpdateFn } from "../../types";
 import { applyUpdateFnWithRevert, withRef } from "../utils";
 
-type Controller = TRPCReactContext["debts"]["getByUsers"];
+type Controller = TRPCReactUtils["debts"]["getByUsers"];
 
 type AllDebts = TRPCQueryOutput<"debts.getByUsers">;
 type UserDebts = AllDebts[number];

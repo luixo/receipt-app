@@ -136,7 +136,7 @@ export const useTrpcMutationOptions = <
 						? successToastOptions?.(...getToastArgs(internalContext!))(
 								result,
 								vars,
-								lifecycleContext,
+								lifecycleContext!,
 						  )
 						: successToastOptions;
 				if (toastOptions) {
@@ -144,12 +144,12 @@ export const useTrpcMutationOptions = <
 				} else {
 					toast.dismiss(toastId);
 				}
-				onSuccess?.(result, vars, lifecycleContext);
+				onSuccess?.(result, vars, lifecycleContext!);
 				finalizeFn?.();
 				return onSuccessTrpc?.(...getTrpcArgs(internalContext!))(
 					result,
 					vars,
-					lifecycleContext,
+					lifecycleContext!,
 				);
 			},
 			onSettled: (result, error, vars, internalContext) => {

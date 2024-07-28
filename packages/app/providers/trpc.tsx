@@ -5,7 +5,6 @@ import type { TRPCLink } from "@trpc/react-query";
 import { createTRPCReact } from "@trpc/react-query";
 
 import type { AppRouter } from "~app/trpc";
-import { transformer } from "~app/utils/trpc";
 
 type Props = {
 	links: TRPCLink<AppRouter>[];
@@ -17,9 +16,7 @@ export const TRPCProvider: React.FC<React.PropsWithChildren<Props>> = ({
 }) => {
 	const [trpc] = React.useState(() => createTRPCReact<AppRouter>());
 	const queryClient = useQueryClient();
-	const [trpcClient] = React.useState(() =>
-		trpc.createClient({ links, transformer }),
-	);
+	const [trpcClient] = React.useState(() => trpc.createClient({ links }));
 	return (
 		<trpc.Provider client={trpcClient} queryClient={queryClient}>
 			{children}

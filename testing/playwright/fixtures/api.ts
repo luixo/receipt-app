@@ -1,5 +1,5 @@
 import type { BrowserContext } from "@playwright/test";
-import { createTRPCClient, httpBatchLink } from "@trpc/client";
+import { createTRPCClient, unstable_httpBatchStreamLink } from "@trpc/client";
 import { TRPCError } from "@trpc/server";
 import { getHTTPStatusCodeFromError } from "@trpc/server/http";
 import {
@@ -398,7 +398,11 @@ export const apiMixin = createMixin<ApiMixin, ApiWorkerMixin>({
 		async ({}, use) => {
 			const managerPort = process.env.MANAGER_PORT;
 			const client = createTRPCClient<typeof appRouter>({
-				links: [httpBatchLink({ url: `http://localhost:${managerPort}` })],
+				links: [
+					unstable_httpBatchStreamLink({
+						url: `http://localhost:${managerPort}`,
+					}),
+				],
 			});
 			const { port, hash } = await client.lockPort.mutate();
 			const workerManager = await createWorkerManager(port);

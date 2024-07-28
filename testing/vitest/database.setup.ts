@@ -1,4 +1,4 @@
-import { createTRPCClient, httpBatchLink } from "@trpc/client";
+import { createTRPCClient, unstable_httpBatchStreamLink } from "@trpc/client";
 import { Pool } from "pg";
 import * as timekeeper from "timekeeper";
 import type { Suite as OriginalSuite } from "vitest";
@@ -13,7 +13,7 @@ import { getLogger } from "./utils/mocks/logger";
 
 const { port } = inject("routerConfig");
 const client = createTRPCClient<typeof appRouter>({
-	links: [httpBatchLink({ url: `http://localhost:${port}` })],
+	links: [unstable_httpBatchStreamLink({ url: `http://localhost:${port}` })],
 });
 
 beforeAll(async (suite) => {

@@ -11,15 +11,13 @@ import type { TRPCClientErrorLike } from "@trpc/react-query";
 import { createTRPCReact } from "@trpc/react-query";
 import type { UtilsLike } from "@trpc/react-query/shared";
 import type {
-	AnyMutationProcedure,
-	AnyProcedure,
-	AnyQueryProcedure,
-} from "@trpc/server/dist/core/procedure";
-import type { AnyRouter, ProcedureRecord } from "@trpc/server/dist/core/router";
-import type {
+	AnyTRPCMutationProcedure,
+	AnyTRPCProcedure,
+	AnyTRPCQueryProcedure,
+	AnyTRPCRouter,
 	inferProcedureInput,
 	inferProcedureOutput,
-} from "@trpc/server/dist/core/types";
+} from "@trpc/server";
 
 import type {
 	ExtractObjectByPath,
@@ -34,33 +32,33 @@ export type AppRouter = typeof router;
 type TypeKey = "queries" | "mutations";
 
 type ProceduresValues<
-	Router extends AnyRouter,
+	Router extends AnyTRPCRouter,
 	Type extends TypeKey,
 	Procedures extends
 		Router["_def"]["procedures"] = Router["_def"]["procedures"],
 	ProcedureKeys extends keyof Procedures = keyof Procedures,
 > = {
-	[K in ProcedureKeys]: Procedures[K] extends AnyRouter
-		? ProceduresValues<Procedures[K], Type>
-		: Type extends "queries"
-		? Procedures[K] extends AnyQueryProcedure
+	[K in ProcedureKeys]: Procedures[K] extends AnyTRPCQueryProcedure
+		? Type extends "queries"
 			? Procedures[K]
 			: never
-		: Procedures[K] extends AnyMutationProcedure
-		? Procedures[K]
-		: never;
+		: Procedures[K] extends AnyTRPCMutationProcedure
+		? Type extends "mutations"
+			? Procedures[K]
+			: never
+		: ProceduresValues<Procedures[K], Type, Procedures[K]>;
 };
 
 type QueriesProcedureValues = ProceduresValues<AppRouter, "queries">;
 
 type TRPCQueryValues = UnionToIntersection<
-	FlattenObject<AnyProcedure, QueriesProcedureValues>
+	FlattenObject<AnyTRPCProcedure, QueriesProcedureValues>
 >;
 
 type MutationsProcedureValues = ProceduresValues<AppRouter, "mutations">;
 
 type TRPCMutationValues = UnionToIntersection<
-	FlattenObject<AnyProcedure, MutationsProcedureValues>
+	FlattenObject<AnyTRPCProcedure, MutationsProcedureValues>
 >;
 
 // anything router-specific goes below
@@ -69,15 +67,16 @@ export const trpc = createTRPCReact<AppRouter>();
 
 export type TRPCReact = typeof trpc;
 
-export type TRPCReactContext = ReturnType<(typeof trpc)["useContext"]>;
+export type TRPCReactUtils = ReturnType<(typeof trpc)["useUtils"]>;
 
 export type TRPCError = TRPCClientErrorLike<AppRouter>;
 
-type TRPCInfiniteQueryValues<P extends ProcedureRecord> = {
-	[K in keyof P as inferProcedureInput<P[K]> extends { cursor?: unknown }
-		? K
-		: never]: P[K];
-};
+type TRPCInfiniteQueryValues<P extends Record<string, AnyTRPCQueryProcedure>> =
+	{
+		[K in keyof P as inferProcedureInput<P[K]> extends { cursor?: unknown }
+			? K
+			: never]: P[K];
+	};
 
 export type TRPCQueryKey = keyof TRPCQueryValues & string;
 

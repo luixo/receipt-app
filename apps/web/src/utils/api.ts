@@ -4,7 +4,7 @@ import getConfig from "next/config";
 
 import type { AppRouter } from "~app/trpc";
 import { getSsrHost } from "~app/utils/queries";
-import { getLinks, transformer } from "~app/utils/trpc";
+import { getLinks } from "~app/utils/trpc";
 import {
 	AUTH_COOKIE,
 	getCookies,
@@ -24,5 +24,4 @@ export const getTrpcClient = (req: NextApiRequest) =>
 			source: "api-next",
 			captureError: captureSentryError,
 		}),
-		transformer,
 	});

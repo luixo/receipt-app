@@ -3,7 +3,7 @@ import Sharp from "sharp";
 
 import { avatarFormSchema } from "~app/utils/validation";
 import { MAX_AVATAR_BYTESIZE, MAX_AVATAR_SIDE_SIZE } from "~utils";
-import { authProcedure, multipartMiddlware } from "~web/handlers/trpc";
+import { authProcedure } from "~web/handlers/trpc";
 import { getS3Client } from "~web/providers/s3";
 
 export const S3_AVATAR_PREFIX = "avatars";
@@ -49,7 +49,6 @@ const validateImage = async (image: Buffer) => {
 };
 
 export const procedure = authProcedure
-	.use(multipartMiddlware)
 	.input(avatarFormSchema)
 	.mutation(async ({ input, ctx }) => {
 		const { database } = ctx;

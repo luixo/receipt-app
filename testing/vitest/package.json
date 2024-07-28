@@ -3,8 +3,8 @@
 	"type": "module",
 	"devDependencies": {
 		"@faker-js/faker": "^8.0.2",
-		"@trpc/client": "^11.0.0-alpha-next-2023-11-24-13-58-38.113",
-		"@trpc/server": "^11.0.0-alpha-next-2023-11-24-13-58-38.113",
+		"@trpc/client": "^11.0.0-rc.461",
+		"@trpc/server": "^11.0.0-rc.461",
 		"deep-object-diff": "^1.1.9",
 		"find-free-ports": "^3.1.1",
 		"kysely": "^0.27.2",

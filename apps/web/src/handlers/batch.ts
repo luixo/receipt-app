@@ -1,4 +1,8 @@
-import type { ResolveOptions } from "@trpc/server/unstableInternalsExport";
+import type {
+	MaybePromise,
+	ProcedureResolverOptions,
+	UnsetMarker,
+} from "@trpc/server/unstable-core-do-not-import";
 import type { BatchLoadFn, Options } from "dataloader";
 import Dataloader from "dataloader";
 
@@ -6,20 +10,36 @@ import type {
 	AuthorizedContext,
 	UnauthorizedContext,
 } from "~web/handlers/context";
-import type { t } from "~web/handlers/trpc";
 
 const SCHEDULE_DELAY = 100;
 const CLEAR_CACHE_DELAY = 2000;
 
-type ResolveOptionsShort<C, I, O> = ResolveOptions<{
-	_config: (typeof t)["_config"];
-	_meta: unknown;
-	_ctx_out: C;
-	_input_in: I;
-	_input_out: I;
-	_output_in: O;
-	_output_out: O;
-}>;
+type DefaultValue<TValue, TFallback> = TValue extends UnsetMarker
+	? TFallback
+	: TValue;
+
+type ProcedureResolver<
+	TContext,
+	TMeta,
+	TContextOverrides,
+	TInputOut,
+	TOutputParserIn,
+	$Output,
+> = (
+	opts: ProcedureResolverOptions<TContext, TMeta, TContextOverrides, TInputOut>,
+) => MaybePromise<
+	// If an output parser is defined, we need to return what the parser expects, otherwise we return the inferred type
+	DefaultValue<TOutputParserIn, $Output>
+>;
+
+type ProcedureResolverShort<C, I, O> = ProcedureResolver<
+	C,
+	unknown,
+	object,
+	I,
+	UnsetMarker,
+	O
+>;
 
 const defaultGetKey = <C extends UnauthorizedContext>(context: C): string => {
 	if ("auth" in context) {
@@ -39,7 +59,7 @@ export const queueCallFactory = <C extends UnauthorizedContext, I, O>(
 	}: Options<I, O, string> & {
 		getKey?: (ctx: C) => string;
 	} = {},
-) => {
+): ProcedureResolverShort<C, I, O> => {
 	const dataloaderStorage: Record<
 		string,
 		{
@@ -47,9 +67,8 @@ export const queueCallFactory = <C extends UnauthorizedContext, I, O>(
 			removeTimeoutId: NodeJS.Timeout;
 		}
 	> = {};
-	return async (opts: ResolveOptionsShort<C, I, O>): Promise<O> => {
+	return async (opts) => {
 		const context = opts.ctx as C;
-		const input = opts.input as I;
 		const key = (getKey || defaultGetKey)(context);
 		dataloaderStorage[key] ??= {
 			dataloader: new Dataloader<I, O, string>(
@@ -69,6 +88,6 @@ export const queueCallFactory = <C extends UnauthorizedContext, I, O>(
 			}, CLEAR_CACHE_DELAY),
 		};
 		dataloaderStorage[key]!.removeTimeoutId.refresh();
-		return dataloaderStorage[key]!.dataloader.load(input);
+		return dataloaderStorage[key]!.dataloader.load(opts.input as I);
 	};
 };

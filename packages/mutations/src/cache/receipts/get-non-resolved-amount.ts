@@ -1,9 +1,9 @@
-import type { TRPCQueryOutput, TRPCReactContext } from "~app/trpc";
+import type { TRPCQueryOutput, TRPCReactUtils } from "~app/trpc";
 
 import type { ControllerContext, SnapshotFn, UpdateFn } from "../../types";
 import { applyUpdateFnWithRevert, withRef } from "../utils";
 
-type Controller = TRPCReactContext["receipts"]["getNonResolvedAmount"];
+type Controller = TRPCReactUtils["receipts"]["getNonResolvedAmount"];
 
 type Amount = TRPCQueryOutput<"receipts.getNonResolvedAmount">;
 

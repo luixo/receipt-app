@@ -1,8 +1,8 @@
-import type { TRPCReactContext } from "~app/trpc";
+import type { TRPCReactUtils } from "~app/trpc";
 
 import type { ControllerContext } from "../../types";
 
-type Controller = TRPCReactContext["users"]["suggest"];
+type Controller = TRPCReactUtils["users"]["suggest"];
 
 const invalidate = (controller: Controller) => controller.invalidate();
 

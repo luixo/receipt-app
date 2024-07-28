@@ -2,24 +2,26 @@ import type { QueryClientConfig } from "@tanstack/react-query";
 import type { TRPCLink } from "@trpc/client";
 import {
 	TRPCClientError,
-	experimental_formDataLink,
-	httpBatchLink,
 	httpLink,
 	splitLink,
+	unstable_httpBatchStreamLink,
 } from "@trpc/client";
-import type { AnyRouter, DataTransformer } from "@trpc/server";
+import type { AnyTRPCRouter } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
 import superjson from "superjson";
 
 import type { AppRouter } from "~app/trpc";
 import { MINUTE, omitUndefined } from "~utils";
 
-type UnexpectedErrorLinkOptions<Router extends AnyRouter> = {
+export const transformer = superjson;
+export type TransformerResult = ReturnType<(typeof transformer)["serialize"]>;
+
+type UnexpectedErrorLinkOptions<Router extends AnyTRPCRouter> = {
 	mapper: (error: TRPCClientError<Router>) => TRPCClientError<Router>;
 };
 
 const mapError =
-	<Router extends AnyRouter>({
+	<Router extends AnyTRPCRouter>({
 		mapper,
 	}: UnexpectedErrorLinkOptions<Router>): TRPCLink<Router> =>
 	() =>
@@ -77,8 +79,12 @@ export const getLinks = (
 	});
 	const splitLinkInstance = splitLink({
 		condition: (op) => op.input instanceof FormData,
-		true: experimental_formDataLink({ url, headers }),
-		false: (useBatch ? httpBatchLink : httpLink)({ url, headers }),
+		true: httpLink({ url, headers }),
+		false: (useBatch ? unstable_httpBatchStreamLink : httpLink)({
+			url,
+			headers,
+			transformer,
+		}),
 	});
 	if (keepError) {
 		return [splitLinkInstance];
@@ -105,9 +111,6 @@ export const getLinks = (
 		splitLinkInstance,
 	];
 };
-
-export const transformer: DataTransformer = superjson;
-export type TransformerResult = ReturnType<(typeof transformer)["serialize"]>;
 
 export const getQueryClientConfig = (): QueryClientConfig => ({
 	defaultOptions: {

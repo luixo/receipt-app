@@ -1,6 +1,6 @@
 import type { QueryClient } from "@tanstack/react-query";
 
-import type { TRPCReact, TRPCReactContext } from "~app/trpc";
+import type { TRPCReact, TRPCReactUtils } from "~app/trpc";
 
 type EmptyFn = () => void;
 
@@ -18,7 +18,7 @@ export type UpdaterRevertResult = {
 };
 
 export type ControllerContext = {
-	trpcContext: TRPCReactContext;
+	trpcContext: TRPCReactUtils;
 	queryClient: QueryClient;
 	trpc: TRPCReact;
 };

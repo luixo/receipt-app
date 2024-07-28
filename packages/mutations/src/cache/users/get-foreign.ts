@@ -5,7 +5,7 @@ import type {
 	TRPCQueryInput,
 	TRPCQueryOutput,
 	TRPCReact,
-	TRPCReactContext,
+	TRPCReactUtils,
 } from "~app/trpc";
 import type { UsersId } from "~db";
 
@@ -17,7 +17,7 @@ import {
 	withRef,
 } from "../utils";
 
-type Controller = TRPCReactContext["users"]["getForeign"];
+type Controller = TRPCReactUtils["users"]["getForeign"];
 
 type Input = TRPCQueryInput<"users.getForeign">;
 
