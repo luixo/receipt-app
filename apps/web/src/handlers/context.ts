@@ -1,11 +1,12 @@
+import type { inferProcedureBuilderResolverOptions } from "@trpc/server";
 import type * as trpcNext from "@trpc/server/adapters/next";
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as crypto from "node:crypto";
 import { v4 } from "uuid";
 
 import { getDatabase } from "~db";
-import type { AccountsId } from "~db";
 import type { TestContext } from "~tests/backend/utils/test";
+import type { authProcedure } from "~web/handlers/trpc";
 import type { CacheDbOptions } from "~web/providers/cache-db";
 import type { EmailOptions } from "~web/providers/email";
 import type { ExchangeRateOptions } from "~web/providers/exchange-rate";
@@ -30,13 +31,9 @@ export type UnauthorizedContext = {
 	res: NextApiResponse;
 } & TestContextPicks;
 
-export type AuthorizedContext = UnauthorizedContext & {
-	auth: {
-		sessionId: string;
-		accountId: AccountsId;
-		email: string;
-	};
-};
+export type AuthorizedContext = inferProcedureBuilderResolverOptions<
+	typeof authProcedure
+>["ctx"];
 
 /* c8 ignore start */
 const defaultGetSalt = () => crypto.randomBytes(64).toString("hex");

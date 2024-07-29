@@ -25,7 +25,7 @@ export const t = initTRPC.context<UnauthorizedContext>().create({
 });
 
 export const unauthProcedure = t.procedure.use(
-	t.middleware(async ({ ctx, type, path, next }) => {
+	async ({ ctx, type, path, next }) => {
 		const start = Date.now();
 		const result = await next();
 		const duration = Date.now() - start;
@@ -41,73 +41,71 @@ export const unauthProcedure = t.procedure.use(
 		}
 
 		return result;
-	}),
+	},
 );
 
-export const authProcedure = unauthProcedure.use(
-	t.middleware(async ({ ctx, next }) => {
-		const authToken = getCookie(ctx.req, AUTH_COOKIE);
-		if (typeof authToken !== "string" || !authToken) {
-			throw new TRPCError({
-				code: "UNAUTHORIZED",
-				message: "No token provided",
-			});
-		}
-		const uuidVerification = sessionIdSchema.safeParse(authToken);
-		if (!uuidVerification.success) {
-			throw new TRPCError({
-				code: "UNAUTHORIZED",
-				message: "Session id mismatch",
-			});
-		}
-		const { database } = ctx;
-		const session = await database
-			.selectFrom("sessions")
-			.innerJoin("accounts", (qb) =>
-				qb.onRef("accounts.id", "=", "sessions.accountId"),
-			)
-			.select([
-				"sessions.accountId",
-				"accounts.email",
-				"sessions.expirationTimestamp",
-			])
-			.where((eb) =>
-				eb("sessions.sessionId", "=", authToken).and(
-					"sessions.expirationTimestamp",
-					">",
-					new Date(),
-				),
-			)
-			.executeTakeFirst();
-		if (!session) {
-			resetAuthCookie(ctx.res);
-			throw new TRPCError({
-				code: "UNAUTHORIZED",
-				message: "Session id mismatch",
-			});
-		}
-		if (
-			session.expirationTimestamp.valueOf() - Date.now() <
-			SESSION_EXPIRATION_DURATION - SESSION_SHOULD_UPDATE_EVERY
-		) {
-			const nextExpirationTimestamp = getExpirationDate();
-			void database
-				.updateTable("sessions")
-				.set({ expirationTimestamp: nextExpirationTimestamp })
-				.where("sessionId", "=", authToken)
-				.executeTakeFirst();
-			setAuthCookie(ctx.res, authToken, nextExpirationTimestamp);
-		}
-		return next({
-			ctx: {
-				...ctx,
-				logger: ctx.logger.child({ accountId: session.accountId }),
-				auth: {
-					sessionId: authToken,
-					accountId: session.accountId,
-					email: session.email,
-				},
-			},
+export const authProcedure = unauthProcedure.use(async ({ ctx, next }) => {
+	const authToken = getCookie(ctx.req, AUTH_COOKIE);
+	if (typeof authToken !== "string" || !authToken) {
+		throw new TRPCError({
+			code: "UNAUTHORIZED",
+			message: "No token provided",
 		});
-	}),
-);
+	}
+	const uuidVerification = sessionIdSchema.safeParse(authToken);
+	if (!uuidVerification.success) {
+		throw new TRPCError({
+			code: "UNAUTHORIZED",
+			message: "Session id mismatch",
+		});
+	}
+	const { database } = ctx;
+	const session = await database
+		.selectFrom("sessions")
+		.innerJoin("accounts", (qb) =>
+			qb.onRef("accounts.id", "=", "sessions.accountId"),
+		)
+		.select([
+			"sessions.accountId",
+			"accounts.email",
+			"sessions.expirationTimestamp",
+		])
+		.where((eb) =>
+			eb("sessions.sessionId", "=", authToken).and(
+				"sessions.expirationTimestamp",
+				">",
+				new Date(),
+			),
+		)
+		.executeTakeFirst();
+	if (!session) {
+		resetAuthCookie(ctx.res);
+		throw new TRPCError({
+			code: "UNAUTHORIZED",
+			message: "Session id mismatch",
+		});
+	}
+	if (
+		session.expirationTimestamp.valueOf() - Date.now() <
+		SESSION_EXPIRATION_DURATION - SESSION_SHOULD_UPDATE_EVERY
+	) {
+		const nextExpirationTimestamp = getExpirationDate();
+		void database
+			.updateTable("sessions")
+			.set({ expirationTimestamp: nextExpirationTimestamp })
+			.where("sessionId", "=", authToken)
+			.executeTakeFirst();
+		setAuthCookie(ctx.res, authToken, nextExpirationTimestamp);
+	}
+	return next({
+		ctx: {
+			...ctx,
+			logger: ctx.logger.child({ accountId: session.accountId }),
+			auth: {
+				sessionId: authToken,
+				accountId: session.accountId,
+				email: session.email,
+			},
+		},
+	});
+});
