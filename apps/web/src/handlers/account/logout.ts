@@ -5,7 +5,7 @@ export const procedure = authProcedure.mutation(async ({ ctx }) => {
 	const { database } = ctx;
 	await database
 		.deleteFrom("sessions")
-		.where("sessionId", "=", ctx.auth.sessionId)
+		.where("sessionId", "=", ctx.authToken)
 		.executeTakeFirst();
 	resetAuthCookie(ctx.res);
 });

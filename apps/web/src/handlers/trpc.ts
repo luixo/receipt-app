@@ -102,10 +102,10 @@ export const authProcedure = unauthProcedure.use(async ({ ctx, next }) => {
 			...ctx,
 			logger: ctx.logger.child({ accountId: session.accountId }),
 			auth: {
-				sessionId: authToken,
 				accountId: session.accountId,
 				email: session.email,
 			},
+			authToken,
 		},
 	});
 });
