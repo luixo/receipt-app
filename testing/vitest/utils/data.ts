@@ -69,6 +69,7 @@ type AccountData = {
 	};
 	settings?: AccountSettingsData;
 	user?: Pick<UserData, "name">;
+	role?: string;
 };
 
 export const insertAccount = async (
@@ -103,6 +104,7 @@ export const insertAccount = async (
 				data.avatarUrl === null
 					? data.avatarUrl
 					: data.avatarUrl || faker.internet.avatar(),
+			role: data.role,
 		})
 		.returning([
 			"id",

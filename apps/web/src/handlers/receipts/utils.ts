@@ -27,7 +27,7 @@ export const getAccessRole = async (
 				receiptId: receipt.id,
 			}),
 		)
-		.select("role")
+		.select("receiptParticipants.role")
 		.executeTakeFirst();
 	if (!participant) {
 		return;

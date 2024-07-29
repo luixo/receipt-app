@@ -77,6 +77,7 @@ export const test = originalTest.extend<Fixtures>({
 						email: selfAccount.email,
 						verified: true,
 						avatarUrl: selfAccount.avatarUrl,
+						role: undefined,
 					},
 					user: { name: selfAccount.name },
 				});

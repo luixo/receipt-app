@@ -17,6 +17,7 @@ export const options: UseContextedMutationOptions<
 							email: variables.email,
 							verified: false,
 							avatarUrl: undefined,
+							role: undefined,
 						},
 					}),
 			}),

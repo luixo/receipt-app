@@ -29,6 +29,7 @@ export const procedure = unauthProcedure
 				"accounts.email",
 				"accounts.passwordSalt",
 				"accounts.passwordHash",
+				"accounts.role",
 				"users.name",
 				"accounts.confirmationToken",
 				"accounts.avatarUrl",
@@ -66,6 +67,7 @@ export const procedure = unauthProcedure
 				id: result.accountId,
 				verified: !result.confirmationToken,
 				avatarUrl: result.avatarUrl || undefined,
+				role: result.role ?? undefined,
 			},
 			user: {
 				name: result.name,

@@ -34,6 +34,7 @@ export const test = withDebtsGroupFixtures(
 						email: faker.internet.email(),
 						verified: true,
 						avatarUrl: undefined,
+						role: undefined,
 					},
 					user: { name: faker.person.firstName() },
 				});

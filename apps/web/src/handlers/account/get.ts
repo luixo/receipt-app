@@ -4,7 +4,7 @@ import { authProcedure } from "~web/handlers/trpc";
 
 export const procedure = authProcedure.query(async ({ ctx }) => {
 	const { database } = ctx;
-	const { confirmationToken, id, name, avatarUrl, email } = await database
+	const { confirmationToken, id, name, avatarUrl, email, role } = await database
 		.selectFrom("accounts")
 		.innerJoin("users", (jb) => jb.onRef("users.id", "=", "accounts.id"))
 		.select([
@@ -13,6 +13,7 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 			"accounts.confirmationToken",
 			"accounts.avatarUrl",
 			"accounts.email",
+			"accounts.role",
 		])
 		.where("accounts.id", "=", ctx.auth.accountId)
 		.executeTakeFirstOrThrow(
@@ -30,6 +31,7 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 			email,
 			verified: !confirmationToken,
 			avatarUrl: avatarUrl || undefined,
+			role: role ?? undefined,
 		},
 		user: { name },
 	};

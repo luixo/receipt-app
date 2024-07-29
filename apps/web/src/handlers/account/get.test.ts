@@ -30,7 +30,13 @@ describe("account.get", () => {
 			const account = await caller.procedure();
 
 			expect(account).toStrictEqual<typeof account>({
-				account: { id: accountId, email, verified: true, avatarUrl },
+				account: {
+					id: accountId,
+					email,
+					verified: true,
+					avatarUrl,
+					role: undefined,
+				},
 				user: { name },
 			});
 		});
@@ -54,6 +60,30 @@ describe("account.get", () => {
 					email,
 					verified: false,
 					avatarUrl: undefined,
+					role: undefined,
+				},
+				user: { name },
+			});
+		});
+
+		test("account with role", async ({ ctx }) => {
+			const {
+				sessionId,
+				accountId,
+				name,
+				account: { avatarUrl, email },
+			} = await insertAccountWithSession(ctx, { account: { role: "role" } });
+			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+
+			const account = await caller.procedure();
+
+			expect(account).toStrictEqual<typeof account>({
+				account: {
+					id: accountId,
+					email,
+					verified: true,
+					avatarUrl,
+					role: "role",
 				},
 				user: { name },
 			});
