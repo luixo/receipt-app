@@ -1,12 +1,12 @@
 import React from "react";
 
-import type { NextParsedUrlQuery } from "next/dist/server/request-meta";
-
+import type { SearchParamsContextType } from "~app/contexts/search-params-context";
+import { SearchParamsContext } from "~app/contexts/search-params-context";
 import type { ParsedQuery } from "~queries";
 import { receipts, users } from "~queries";
 
 type Props = {
-	searchParams: NextParsedUrlQuery;
+	searchParams: SearchParamsContextType;
 };
 
 export const SearchParamsProvider: React.FC<React.PropsWithChildren<Props>> = ({
@@ -23,13 +23,13 @@ export const SearchParamsProvider: React.FC<React.PropsWithChildren<Props>> = ({
 		{},
 	);
 	return (
-		<>
+		<SearchParamsContext.Provider value={searchParams}>
 			{[receipts.getPaged.inputStore, users.getPaged.inputStore].reduce(
 				(acc, { Provider }) => (
 					<Provider parsedQuery={parsedSearchParams}>{acc}</Provider>
 				),
 				children,
 			)}
-		</>
+		</SearchParamsContext.Provider>
 	);
 };
