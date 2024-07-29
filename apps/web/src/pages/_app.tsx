@@ -40,16 +40,10 @@ type PageProps = Omit<
 	"cookiesContext" | "persister" | "links"
 >;
 
-declare module "next/app" {
-	interface AppInitialProps {
-		pageProps: PageProps;
-	}
-}
-
 const MyApp: AppType = ({ Component, pageProps }) => {
-	const LayoutComponent = (Component as AppPage).public
-		? PublicPage
-		: ProtectedPage;
+	// we don't use other Next.js types
+	const PageComponent = Component as AppPage;
+	const LayoutComponent = PageComponent.public ? PublicPage : ProtectedPage;
 	// A bug in next.js
 	const props = pageProps as PageProps;
 	const links = useLinks(props.searchParams);
@@ -73,7 +67,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 				<ThemeProvider>
 					<QueryDevToolsProvider>
 						<LayoutComponent>
-							<Component />
+							<PageComponent />
 						</LayoutComponent>
 						<GlobalHooksComponent />
 						<Toaster />
