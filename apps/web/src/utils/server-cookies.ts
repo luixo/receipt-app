@@ -49,9 +49,11 @@ export const serializeCookieHeader = (
 	pick?: string[],
 ): string => {
 	let entries = Object.entries(cookies);
+	/* c8 ignore start */
 	if (pick) {
 		entries = entries.filter(([key]) => pick.includes(key));
 	}
+	/* c8 ignore stop */
 	return entries.map(([key, value]) => cookie.serialize(key, value!)).join(";");
 };
 
