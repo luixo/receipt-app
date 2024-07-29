@@ -1,5 +1,10 @@
 import { TRPCError, initTRPC } from "@trpc/server";
+import type { IncomingMessage } from "node:http";
 
+import {
+	PRETEND_USER_COOKIE_NAME,
+	pretendUserSchema,
+} from "~app/utils/cookie/pretend-user";
 import { transformer } from "~app/utils/trpc";
 import {
 	SESSION_EXPIRATION_DURATION,
@@ -12,6 +17,7 @@ import { sessionIdSchema } from "~web/handlers/validation";
 import {
 	AUTH_COOKIE,
 	getCookie,
+	getCookies,
 	resetAuthCookie,
 	setAuthCookie,
 } from "~web/utils/server-cookies";
@@ -44,6 +50,18 @@ export const unauthProcedure = t.procedure.use(
 	},
 );
 
+const getPretendAccountEmail = (req: IncomingMessage): string | undefined => {
+	if (req.headers["x-keep-real-auth"]) {
+		return;
+	}
+	const pretendUserString = getCookies(req)[PRETEND_USER_COOKIE_NAME];
+	if (!pretendUserString) {
+		return;
+	}
+	const user = pretendUserSchema.parse(JSON.parse(pretendUserString));
+	return user.email;
+};
+
 export const authProcedure = unauthProcedure.use(async ({ ctx, next }) => {
 	const authToken = getCookie(ctx.req, AUTH_COOKIE);
 	if (typeof authToken !== "string" || !authToken) {
@@ -68,6 +86,7 @@ export const authProcedure = unauthProcedure.use(async ({ ctx, next }) => {
 		.select([
 			"sessions.accountId",
 			"accounts.email",
+			"accounts.role",
 			"sessions.expirationTimestamp",
 		])
 		.where((eb) =>
@@ -97,15 +116,31 @@ export const authProcedure = unauthProcedure.use(async ({ ctx, next }) => {
 			.executeTakeFirst();
 		setAuthCookie(ctx.res, authToken, nextExpirationTimestamp);
 	}
+	let auth = {
+		accountId: session.accountId,
+		email: session.email,
+	};
+	const pretendAccountEmail = getPretendAccountEmail(ctx.req);
+	if (pretendAccountEmail && session.role === "admin") {
+		const pretendAccount = await database
+			.selectFrom("accounts")
+			.where("accounts.email", "=", pretendAccountEmail)
+			.select(["accounts.id", "accounts.email"])
+			.executeTakeFirst();
+		if (pretendAccount) {
+			auth = {
+				accountId: pretendAccount.id,
+				email: pretendAccount.email,
+			};
+		}
+	}
 	return next({
 		ctx: {
 			...ctx,
 			logger: ctx.logger.child({ accountId: session.accountId }),
-			auth: {
-				accountId: session.accountId,
-				email: session.email,
-			},
+			auth,
 			authToken,
+			role: session.role ?? undefined,
 		},
 	});
 });

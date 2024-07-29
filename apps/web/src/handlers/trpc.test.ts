@@ -1,8 +1,12 @@
 import { faker } from "@faker-js/faker";
 import { describe, expect } from "vitest";
 
+import { PRETEND_USER_COOKIE_NAME } from "~app/utils/cookie/pretend-user";
 import { createAuthContext, createContext } from "~tests/backend/utils/context";
-import { insertAccountWithSession } from "~tests/backend/utils/data";
+import {
+	insertAccount,
+	insertAccountWithSession,
+} from "~tests/backend/utils/data";
 import {
 	expectDatabaseDiffSnapshot,
 	expectTRPCError,
@@ -153,6 +157,89 @@ describe("procedures", () => {
 					`authToken=${sessionId}; Path=/; Expires=Fri, 31 Jan 2020 00:00:00 GMT; HttpOnly; SameSite=Strict`,
 				],
 			]);
+		});
+
+		describe("pretend user", () => {
+			describe("context is regular", () => {
+				test("with non-admin role", async ({ ctx }) => {
+					const { sessionId, accountId } = await insertAccountWithSession(ctx);
+					const caller = router.createCaller(createAuthContext(ctx, sessionId));
+					const { account } = await caller.account.get();
+					expect(account.id).toEqual(accountId);
+				});
+
+				test("with email not found", async ({ ctx }) => {
+					const { sessionId, accountId } = await insertAccountWithSession(ctx, {
+						account: { role: "admin" },
+					});
+					const caller = router.createCaller(
+						createAuthContext(ctx, sessionId, {
+							headers: {
+								cookie: `${PRETEND_USER_COOKIE_NAME}=${JSON.stringify({
+									email: "not@found.com",
+								})}`,
+							},
+						}),
+					);
+					const { account } = await caller.account.get();
+					expect(account.id).toEqual(accountId);
+				});
+
+				test("with magic header", async ({ ctx }) => {
+					const { sessionId, accountId } = await insertAccountWithSession(ctx, {
+						account: { role: "admin" },
+					});
+					const foreignAccount = await insertAccount(ctx);
+					const caller = router.createCaller(
+						createAuthContext(ctx, sessionId, {
+							headers: {
+								cookie: `${PRETEND_USER_COOKIE_NAME}=${JSON.stringify({
+									email: foreignAccount.email,
+								})}`,
+								"x-keep-real-auth": "true",
+							},
+						}),
+					);
+					const { account } = await caller.account.get();
+					expect(account.id).toEqual(accountId);
+				});
+
+				test("with malformed cookie", async ({ ctx }) => {
+					const { sessionId, accountId } = await insertAccountWithSession(ctx, {
+						account: { role: "admin" },
+					});
+					const foreignAccount = await insertAccount(ctx);
+					const caller = router.createCaller(
+						createAuthContext(ctx, sessionId, {
+							headers: {
+								cookie: `${PRETEND_USER_COOKIE_NAME}=${JSON.stringify({
+									email2: foreignAccount.email,
+								})}`,
+							},
+						}),
+					);
+					const { account } = await caller.account.get();
+					expect(account.id).toEqual(accountId);
+				});
+			});
+
+			test("context is swapped", async ({ ctx }) => {
+				const { sessionId } = await insertAccountWithSession(ctx, {
+					account: { role: "admin" },
+				});
+				const foreignAccount = await insertAccount(ctx);
+				const caller = router.createCaller(
+					createAuthContext(ctx, sessionId, {
+						headers: {
+							cookie: `${PRETEND_USER_COOKIE_NAME}=${JSON.stringify({
+								email: foreignAccount.email,
+							})}`,
+						},
+					}),
+				);
+				const { account } = await caller.account.get();
+				expect(account.id).toEqual(foreignAccount.id);
+			});
 		});
 	});
 });

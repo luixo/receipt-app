@@ -10,9 +10,13 @@ export type MenuElement = {
 	text: string;
 	href: string;
 	useBadgeAmount?: () => number;
+	useShow?: () => boolean;
+	// eslint-disable-next-line react/no-unused-prop-types
+	ItemWrapper?: React.FC<React.PropsWithChildren>;
 };
 
 const useZero = () => 0;
+const useTrue = () => true;
 
 const link = tv({
 	base: "text-foreground flex flex-1 flex-col items-center justify-center",
@@ -28,9 +32,14 @@ const MenuItemComponent: React.FC<MenuElement> = ({
 	href,
 	text,
 	useBadgeAmount = useZero,
+	useShow = useTrue,
 }) => {
 	const pathname = usePathname();
 	const amount = useBadgeAmount();
+	const show = useShow();
+	if (!show) {
+		return null;
+	}
 	const selected = pathname === href;
 	const icon = <Icon size={24} />;
 	return (
@@ -62,9 +71,13 @@ export const Page: React.FC<Props> = ({ children, elements }) => (
 			testID="sticky-menu"
 		>
 			<View className="mx-auto max-w-screen-sm flex-1 flex-row">
-				{elements.map((props) => (
-					<MenuItemComponent key={props.href} {...props} />
-				))}
+				{elements.map(({ ItemWrapper, ...props }) => {
+					const element = <MenuItemComponent key={props.href} {...props} />;
+					if (ItemWrapper) {
+						return <ItemWrapper key={props.href}>{element}</ItemWrapper>;
+					}
+					return element;
+				})}
 			</View>
 		</View>
 		{/* Placeholder for page content not to get under the menu */}

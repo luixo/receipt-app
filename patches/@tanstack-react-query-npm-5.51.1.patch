@@ -1,0 +1,61 @@
+# see https://github.com/TanStack/query/issues/5458
+diff --git a/build/legacy/useBaseQuery.cjs b/build/legacy/useBaseQuery.cjs
+index 5644a519f07e406d667cce238b03bfa37ada9a7e..643ec7a8af6b04fa27e936b0f811deb291db8b70 100644
+--- a/build/legacy/useBaseQuery.cjs
++++ b/build/legacy/useBaseQuery.cjs
+@@ -68,6 +68,7 @@ function useBaseQuery(options, Observer, queryClient) {
+       defaultedOptions
+     )
+   );
++  observer.setClient(client);
+   const result = observer.getOptimisticResult(defaultedOptions);
+   React.useSyncExternalStore(
+     React.useCallback(
+diff --git a/build/legacy/useBaseQuery.js b/build/legacy/useBaseQuery.js
+index 05be8616fd0ee453a5f1b9abb04d2e76a14b3017..088b5be2e6bbb5f67f69d1c7d3a9ecc3d16686f9 100644
+--- a/build/legacy/useBaseQuery.js
++++ b/build/legacy/useBaseQuery.js
+@@ -39,6 +39,7 @@ function useBaseQuery(options, Observer, queryClient) {
+       defaultedOptions
+     )
+   );
++  observer.setClient(client)
+   const result = observer.getOptimisticResult(defaultedOptions);
+   React.useSyncExternalStore(
+     React.useCallback(
+diff --git a/build/modern/useBaseQuery.cjs b/build/modern/useBaseQuery.cjs
+index d4dc5d0e0b49b96e31883e72c4668d699e966ba5..bd2f32766373b61eb7a4dfc9132b58ae24a500a8 100644
+--- a/build/modern/useBaseQuery.cjs
++++ b/build/modern/useBaseQuery.cjs
+@@ -66,6 +66,7 @@ function useBaseQuery(options, Observer, queryClient) {
+       defaultedOptions
+     )
+   );
++  observer.setClient(client)
+   const result = observer.getOptimisticResult(defaultedOptions);
+   React.useSyncExternalStore(
+     React.useCallback(
+diff --git a/build/modern/useBaseQuery.js b/build/modern/useBaseQuery.js
+index 15e7cb4deb47d5c42c2762d2e7665968c47c1263..81dd734341825f1227fd51b6309f863b0be9d491 100644
+--- a/build/modern/useBaseQuery.js
++++ b/build/modern/useBaseQuery.js
+@@ -37,6 +37,7 @@ function useBaseQuery(options, Observer, queryClient) {
+       defaultedOptions
+     )
+   );
++  observer.setClient(client);
+   const result = observer.getOptimisticResult(defaultedOptions);
+   React.useSyncExternalStore(
+     React.useCallback(
+diff --git a/src/useBaseQuery.ts b/src/useBaseQuery.ts
+index c70230a7b6f80d51d9b08cb12a681e584da3ecc8..b2029370277444a5a5dab6b704e8010fd46788ae 100644
+--- a/src/useBaseQuery.ts
++++ b/src/useBaseQuery.ts
+@@ -70,6 +70,7 @@ export function useBaseQuery<
+         defaultedOptions,
+       ),
+   )
++  observer.setClient(client)
+ 
+   const result = observer.getOptimisticResult(defaultedOptions)
+ 

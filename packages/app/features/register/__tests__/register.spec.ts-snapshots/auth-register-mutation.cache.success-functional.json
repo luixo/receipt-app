@@ -10,7 +10,8 @@
 						"id": "test",
 						"email": "test@mail.ru",
 						"verified": false,
-						"avatarUrl": "<undefined>"
+						"avatarUrl": "<undefined>",
+						"role": "<undefined>"
 					}
 				},
 				"dataUpdateCount": 1,

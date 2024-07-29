@@ -36,4 +36,6 @@ export {
 	CardFooter,
 	CardHeader,
 	User,
+	Tabs,
+	Tab,
 } from "@nextui-org/react";

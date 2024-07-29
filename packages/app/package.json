@@ -21,7 +21,8 @@
 		"solito": "^4.1.3",
 		"superjson": "^1.13.1",
 		"uuid": "^9.0.0",
-		"zod-form-data": "^2.0.2"
+		"zod-form-data": "^2.0.2",
+		"zustand": "^4.3.9"
 	},
 	"devDependencies": {
 		"@react-types/shared": "^3.18.1",

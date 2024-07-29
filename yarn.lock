@@ -6342,6 +6342,7 @@ __metadata:
     superjson: ^1.13.1
     uuid: ^9.0.0
     zod-form-data: ^2.0.2
+    zustand: ^4.3.9
   languageName: unknown
   linkType: soft
 
@@ -9598,6 +9599,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tanstack/query-core@patch:@tanstack/query-core@npm%3A5.51.1#./patches/@tanstack-query-core-npm-5.51.1.patch::locator=receipt-app%40workspace%3A.":
+  version: 5.51.1
+  resolution: "@tanstack/query-core@patch:@tanstack/query-core@npm%3A5.51.1#./patches/@tanstack-query-core-npm-5.51.1.patch::version=5.51.1&hash=fbd7db&locator=receipt-app%40workspace%3A."
+  checksum: e0317be5f331db21aaf901b5787fd3a5f7f109516165d4fb9d26c5bc88814179b587c08d83a9f6f694fb2bff4494cc0e046b2e5836ff2b3d4e02606280357959
+  languageName: node
+  linkType: hard
+
 "@tanstack/query-devtools@npm:5.51.1":
   version: 5.51.1
   resolution: "@tanstack/query-devtools@npm:5.51.1"
@@ -9638,7 +9646,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/react-query@npm:^5.51.1":
+"@tanstack/react-query@npm:5.51.1":
   version: 5.51.1
   resolution: "@tanstack/react-query@npm:5.51.1"
   dependencies:
@@ -9646,6 +9654,17 @@ __metadata:
   peerDependencies:
     react: ^18.0.0
   checksum: fbf5b69499ecba40ee31a354ede7c4932d43999a2184da43d5725f5f7688251f43ba131650aa2d2e44d18a1b768d37c9354e386ea7bdfeccb4ce52999ee4a5cc
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-query@patch:@tanstack/react-query@npm%3A5.51.1#./patches/@tanstack-react-query-npm-5.51.1.patch::locator=receipt-app%40workspace%3A.":
+  version: 5.51.1
+  resolution: "@tanstack/react-query@patch:@tanstack/react-query@npm%3A5.51.1#./patches/@tanstack-react-query-npm-5.51.1.patch::version=5.51.1&hash=1b6361&locator=receipt-app%40workspace%3A."
+  dependencies:
+    "@tanstack/query-core": 5.51.1
+  peerDependencies:
+    react: ^18.0.0
+  checksum: 9d8e07cf9e6027af689ed9646d0271cb0275d11965deb4758375369a6f93b2af866dd4212a632336c80545f4d4c9d7dd076d08b1224f1c7502674079a47f76a5
   languageName: node
   linkType: hard
 

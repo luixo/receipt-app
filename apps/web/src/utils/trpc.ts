@@ -14,15 +14,19 @@ export const captureSentryError: GetLinksOptions["captureError"] = (error) => {
 	return transactionId;
 };
 
-export const useLinks = (searchParams: SearchParams) => {
-	const [links] = React.useState(() =>
-		getLinks(TRPC_ENDPOINT, {
-			// Don't batch requests when in tests - to evaluate pending / error states separately
-			useBatch: !searchParams.proxyPort,
-			searchParams,
-			source: "csr-next",
-			captureError: captureSentryError,
-		}),
+export const useLinks = (
+	searchParams: SearchParams,
+	options: Omit<Partial<GetLinksOptions>, "searchParams"> = {},
+) =>
+	React.useMemo(
+		() =>
+			getLinks(TRPC_ENDPOINT, {
+				// Don't batch requests when in tests - to evaluate pending / error states separately
+				useBatch: !searchParams.proxyPort,
+				searchParams,
+				source: "csr-next",
+				captureError: captureSentryError,
+				...options,
+			}),
+		[options, searchParams],
 	);
-	return links;
-};

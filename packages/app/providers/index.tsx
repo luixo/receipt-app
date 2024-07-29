@@ -5,6 +5,7 @@ import type { TRPCLink } from "@trpc/client";
 import type { NextParsedUrlQuery } from "next/dist/server/request-meta";
 
 import type { SSRContextData } from "~app/contexts/ssr-context";
+import { usePretendUserClientKey } from "~app/hooks/use-pretend-user-client-key";
 import type { AppRouter } from "~app/trpc";
 
 import { PersisterProvider } from "./persist-client";
@@ -31,7 +32,7 @@ export const Provider: React.FC<React.PropsWithChildren<Props>> = ({
 	links,
 }) => (
 	<SSRDataProvider data={cookiesData} context={cookiesContext}>
-		<QueryProvider links={links}>
+		<QueryProvider links={links} useQueryClientKey={usePretendUserClientKey}>
 			<ShimsProvider>
 				<PersisterProvider persister={persister}>
 					<SearchParamsProvider searchParams={searchParams}>

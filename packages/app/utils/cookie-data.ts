@@ -10,6 +10,10 @@ import {
 } from "~app/utils/cookie/color-modes";
 import { LOCALE_COOKIE_NAME, dateLocaleSchema } from "~app/utils/cookie/locale";
 import {
+	PRETEND_USER_COOKIE_NAME,
+	pretendUserSchema,
+} from "~app/utils/cookie/pretend-user";
+import {
 	SETTINGS_COOKIE_NAME,
 	settingsSchema,
 } from "~app/utils/cookie/settings";
@@ -30,6 +34,8 @@ export const schemas = {
 	[LAST_COLOR_MODE_COOKIE_NAME]: lastColorModeSchema,
 	// Selected color schema used in this client (if any)
 	[SELECTED_COLOR_MODE_COOKIE_NAME]: selectedColorModeSchema,
+	// Pretend user
+	[PRETEND_USER_COOKIE_NAME]: pretendUserSchema,
 } satisfies Record<string, z.ZodType>;
 
 export type CookieValues = {

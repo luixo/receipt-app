@@ -41,9 +41,12 @@ export const createAuthContext = (
 ) =>
 	createContext(ctx, {
 		headers: {
-			cookie: `authToken=${sessionId}`,
 			"x-test-id": ctx.task.id,
 			...headers,
+			cookie: [
+				`authToken=${sessionId}`,
+				...(headers?.cookie?.split(";") || []),
+			].join(";"),
 		},
 		...options,
 	});

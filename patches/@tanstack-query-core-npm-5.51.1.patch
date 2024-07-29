@@ -1,0 +1,76 @@
+# see https://github.com/TanStack/query/issues/5458
+diff --git a/build/legacy/queryObserver.cjs b/build/legacy/queryObserver.cjs
+index fb9d647aa71e0ab7ee321d6eaecb9f8b649f6e01..ef1099a538d1b8a7c588997f96f3cc57319bb366 100644
+--- a/build/legacy/queryObserver.cjs
++++ b/build/legacy/queryObserver.cjs
+@@ -53,6 +53,7 @@ var import_query = require("./query.cjs");
+ var _client, _currentQuery, _currentQueryInitialState, _currentResult, _currentResultState, _currentResultOptions, _selectError, _selectFn, _selectResult, _lastQueryWithDefinedData, _staleTimeoutId, _refetchIntervalId, _currentRefetchInterval, _trackedProps, _executeFetch, executeFetch_fn, _updateStaleTimeout, updateStaleTimeout_fn, _computeRefetchInterval, computeRefetchInterval_fn, _updateRefetchInterval, updateRefetchInterval_fn, _updateTimers, updateTimers_fn, _clearStaleTimeout, clearStaleTimeout_fn, _clearRefetchInterval, clearRefetchInterval_fn, _updateQuery, updateQuery_fn, _notify, notify_fn;
+ var QueryObserver = class extends import_subscribable.Subscribable {
+   constructor(client, options) {
++    console.log('legacy cjs');
+     super();
+     this.options = options;
+     __privateAdd(this, _executeFetch);
+diff --git a/build/legacy/queryObserver.js b/build/legacy/queryObserver.js
+index 41e444d3d2344c3c5a9a8a1af11754ad66775114..d400764f888f9605dcfcf5fef6fe3ba25c598749 100644
+--- a/build/legacy/queryObserver.js
++++ b/build/legacy/queryObserver.js
+@@ -23,6 +23,7 @@ import { fetchState } from "./query.js";
+ var _client, _currentQuery, _currentQueryInitialState, _currentResult, _currentResultState, _currentResultOptions, _selectError, _selectFn, _selectResult, _lastQueryWithDefinedData, _staleTimeoutId, _refetchIntervalId, _currentRefetchInterval, _trackedProps, _executeFetch, executeFetch_fn, _updateStaleTimeout, updateStaleTimeout_fn, _computeRefetchInterval, computeRefetchInterval_fn, _updateRefetchInterval, updateRefetchInterval_fn, _updateTimers, updateTimers_fn, _clearStaleTimeout, clearStaleTimeout_fn, _clearRefetchInterval, clearRefetchInterval_fn, _updateQuery, updateQuery_fn, _notify, notify_fn;
+ var QueryObserver = class extends Subscribable {
+   constructor(client, options) {
++    console.log('legacy js');
+     super();
+     this.options = options;
+     __privateAdd(this, _executeFetch);
+diff --git a/build/modern/queryObserver.cjs b/build/modern/queryObserver.cjs
+index a138ab4a15772abbb917ab5adec23364e9ddbc3c..b901b949ebee8bf28e282090fcbd9c80f3656d44 100644
+--- a/build/modern/queryObserver.cjs
++++ b/build/modern/queryObserver.cjs
+@@ -30,6 +30,7 @@ var import_subscribable = require("./subscribable.cjs");
+ var import_query = require("./query.cjs");
+ var QueryObserver = class extends import_subscribable.Subscribable {
+   constructor(client, options) {
++    console.log('modern cjs');
+     super();
+     this.options = options;
+     this.#client = client;
+@@ -92,6 +93,9 @@ var QueryObserver = class extends import_subscribable.Subscribable {
+     this.#clearRefetchInterval();
+     this.#currentQuery.removeObserver(this);
+   }
++  setClient(client) {
++    this.#client = client;
++  }
+   setOptions(options, notifyOptions) {
+     const prevOptions = this.options;
+     const prevQuery = this.#currentQuery;
+diff --git a/build/modern/queryObserver.js b/build/modern/queryObserver.js
+index a92e302c82497ee7e24d7dbe59c48f4c5dc56bc5..5a3eacd3d346bce11d9e3cce6b7a25fcc880aa50 100644
+--- a/build/modern/queryObserver.js
++++ b/build/modern/queryObserver.js
+@@ -77,6 +77,9 @@ var QueryObserver = class extends Subscribable {
+     this.#clearRefetchInterval();
+     this.#currentQuery.removeObserver(this);
+   }
++  setClient(client) {
++    this.#client = client;
++  }
+   setOptions(options, notifyOptions) {
+     const prevOptions = this.options;
+     const prevQuery = this.#currentQuery;
+diff --git a/src/queryObserver.ts b/src/queryObserver.ts
+index 0a73184241a56b596912ab566a2294f236ff7d95..15b364e6ac9a96ab4ddb28b95d88ec8e3e54ac14 100644
+--- a/src/queryObserver.ts
++++ b/src/queryObserver.ts
+@@ -133,6 +133,10 @@ export class QueryObserver<
+     this.#currentQuery.removeObserver(this)
+   }
+ 
++  setClient(client: QueryClient): void {
++    this.#client = client
++  }
++
+   setOptions(
+     options: QueryObserverOptions<
+       TQueryFnData,
