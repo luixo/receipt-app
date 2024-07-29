@@ -6,6 +6,7 @@ import {
 	splitLink,
 	unstable_httpBatchStreamLink,
 } from "@trpc/client";
+import { createTRPCReact } from "@trpc/react-query";
 import type { AnyTRPCRouter } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
 import superjson from "superjson";
@@ -123,3 +124,5 @@ export const getQueryClientConfig = (): QueryClientConfig => ({
 		},
 	},
 });
+
+export const trpcReact = createTRPCReact<AppRouter>();

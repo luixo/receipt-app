@@ -8,12 +8,11 @@ import type { SSRContextData } from "~app/contexts/ssr-context";
 import type { AppRouter } from "~app/trpc";
 
 import { PersisterProvider } from "./persist-client";
-import { QueryClientProvider } from "./query-client";
+import { QueryProvider } from "./query";
 import { SearchParamsProvider } from "./search-params";
 import { ShimsProvider } from "./shims";
 import type { CookieContext } from "./ssr-data";
 import { SSRDataProvider } from "./ssr-data";
-import { TRPCProvider } from "./trpc";
 
 type Props = {
 	searchParams: NextParsedUrlQuery;
@@ -31,15 +30,15 @@ export const Provider: React.FC<React.PropsWithChildren<Props>> = ({
 	persister,
 	links,
 }) => (
-	<QueryClientProvider>
-		<ShimsProvider>
-			<PersisterProvider persister={persister}>
-				<SSRDataProvider data={cookiesData} context={cookiesContext}>
+	<SSRDataProvider data={cookiesData} context={cookiesContext}>
+		<QueryProvider links={links}>
+			<ShimsProvider>
+				<PersisterProvider persister={persister}>
 					<SearchParamsProvider searchParams={searchParams}>
-						<TRPCProvider links={links}>{children}</TRPCProvider>
+						{children}
 					</SearchParamsProvider>
-				</SSRDataProvider>
-			</PersisterProvider>
-		</ShimsProvider>
-	</QueryClientProvider>
+				</PersisterProvider>
+			</ShimsProvider>
+		</QueryProvider>
+	</SSRDataProvider>
 );
