@@ -3,6 +3,7 @@ import { t } from "~web/handlers/trpc";
 import { router as accountRouter } from "./account/index";
 import { router as accountConnectionIntentionsRouter } from "./account-connection-intentions/index";
 import { router as accountSettingsRouter } from "./account-settings/index";
+import { router as adminRouter } from "./admin/index";
 import { router as authRouter } from "./auth/index";
 import { router as currencyRouter } from "./currency/index";
 import { router as debtsRouter } from "./debts/index";
@@ -34,4 +35,6 @@ export const router = t.router({
 	accountConnectionIntentions: accountConnectionIntentionsRouter,
 	debts: debtsRouter,
 	receiptTransferIntentions: receiptTransferIntentionsRouter,
+	// Admin
+	admin: adminRouter,
 });

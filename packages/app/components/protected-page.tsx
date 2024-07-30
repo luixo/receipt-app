@@ -1,6 +1,9 @@
 import React from "react";
 
-import { AdminWrapper } from "~app/components/app/admin-wrapper";
+import {
+	AdminWrapper,
+	AdminWrapperWithEffect,
+} from "~app/components/app/admin-wrapper";
 import { NoAuthEffect } from "~app/components/app/no-auth-effect";
 import type { MenuElement } from "~app/components/page";
 import { Page } from "~app/components/page";
@@ -57,6 +60,7 @@ export const PROTECTED_ELEMENTS: MenuElement[] = [
 		href: "/admin",
 		text: "Admin",
 		useShow: useShowAdmin,
+		PageWrapper: AdminWrapperWithEffect,
 		ItemWrapper: AdminWrapper,
 	},
 ];

@@ -144,3 +144,13 @@ export const authProcedure = unauthProcedure.use(async ({ ctx, next }) => {
 		},
 	});
 });
+
+export const adminProcedure = authProcedure.use(async ({ ctx, next }) => {
+	if (ctx.role !== "admin") {
+		throw new TRPCError({
+			code: "UNAUTHORIZED",
+			message: "Admin procedure is available only if you're an admin",
+		});
+	}
+	return next();
+});

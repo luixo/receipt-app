@@ -242,4 +242,27 @@ describe("procedures", () => {
 			});
 		});
 	});
+
+	describe("admin procedure", () => {
+		test("user is not admin", async ({ ctx }) => {
+			const { sessionId } = await insertAccountWithSession(ctx, {
+				account: { role: "foo" },
+			});
+			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			await expectTRPCError(
+				() => caller.admin.accounts(),
+				"UNAUTHORIZED",
+				"Admin procedure is available only if you're an admin",
+			);
+		});
+
+		test("user is admin", async ({ ctx }) => {
+			const { sessionId } = await insertAccountWithSession(ctx, {
+				account: { role: "admin" },
+			});
+			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const accounts = await caller.admin.accounts();
+			expect(accounts.length).toBe(0);
+		});
+	});
 });

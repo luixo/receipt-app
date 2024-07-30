@@ -13,6 +13,8 @@ export type MenuElement = {
 	useShow?: () => boolean;
 	// eslint-disable-next-line react/no-unused-prop-types
 	ItemWrapper?: React.FC<React.PropsWithChildren>;
+	// eslint-disable-next-line react/no-unused-prop-types
+	PageWrapper?: React.FC<React.PropsWithChildren>;
 };
 
 const useZero = () => 0;
@@ -63,24 +65,30 @@ type Props = {
 	elements: MenuElement[];
 };
 
-export const Page: React.FC<Props> = ({ children, elements }) => (
-	<View className="mx-auto max-w-screen-md overflow-x-hidden overflow-y-scroll p-1 sm:p-2 md:p-4">
-		<View className="gap-4">{children}</View>
-		<View
-			className="bg-content1 fixed bottom-0 left-0 z-20 w-full flex-row p-2 shadow-lg"
-			testID="sticky-menu"
-		>
-			<View className="mx-auto max-w-screen-sm flex-1 flex-row">
-				{elements.map(({ ItemWrapper, ...props }) => {
-					const element = <MenuItemComponent key={props.href} {...props} />;
-					if (ItemWrapper) {
-						return <ItemWrapper key={props.href}>{element}</ItemWrapper>;
-					}
-					return element;
-				})}
+export const Page: React.FC<Props> = ({ children, elements }) => {
+	const pathname = usePathname();
+	const PageWrapper = elements.find((element) => element.href === pathname)
+		?.PageWrapper;
+	const slot = <View className="gap-4">{children}</View>;
+	return (
+		<View className="mx-auto max-w-screen-md overflow-x-hidden overflow-y-scroll p-1 sm:p-2 md:p-4">
+			{PageWrapper ? <PageWrapper>{slot}</PageWrapper> : slot}
+			<View
+				className="bg-content1 fixed bottom-0 left-0 z-20 w-full flex-row p-2 shadow-lg"
+				testID="sticky-menu"
+			>
+				<View className="mx-auto max-w-screen-sm flex-1 flex-row">
+					{elements.map(({ ItemWrapper, ...props }) => {
+						const element = <MenuItemComponent key={props.href} {...props} />;
+						if (ItemWrapper) {
+							return <ItemWrapper key={props.href}>{element}</ItemWrapper>;
+						}
+						return element;
+					})}
+				</View>
 			</View>
+			{/* Placeholder for page content not to get under the menu */}
+			<View className="h-[72px]" />
 		</View>
-		{/* Placeholder for page content not to get under the menu */}
-		<View className="h-[72px]" />
-	</View>
-);
+	);
+};
