@@ -8,19 +8,17 @@ import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./get";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("accountSettings.get", () => {
 	describe("input verification", () => {
-		expectUnauthorizedError((context) =>
-			router.createCaller(context).procedure(),
-		);
+		expectUnauthorizedError((context) => createCaller(context).procedure());
 	});
 
 	describe("functionality", () => {
 		test("settings not found - default returned", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
 			await expect(result).toStrictEqual<typeof result>({
 				manualAcceptDebts: false,
@@ -31,7 +29,7 @@ describe("accountSettings.get", () => {
 			const { sessionId } = await insertAccountWithSession(ctx, {
 				account: { settings: { manualAcceptDebts: false } },
 			});
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
 			await expect(result).toStrictEqual<typeof result>({
 				manualAcceptDebts: false,
@@ -42,7 +40,7 @@ describe("accountSettings.get", () => {
 			const { sessionId } = await insertAccountWithSession(ctx, {
 				account: { settings: { manualAcceptDebts: true } },
 			});
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
 			await expect(result).toStrictEqual<typeof result>({
 				manualAcceptDebts: true,

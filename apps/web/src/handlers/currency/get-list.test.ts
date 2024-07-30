@@ -11,17 +11,17 @@ import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./get-list";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("currency.getList", () => {
 	describe("input verification", () => {
 		expectUnauthorizedError((context) =>
-			router.createCaller(context).procedure({ locale: "en" }),
+			createCaller(context).procedure({ locale: "en" }),
 		);
 
 		test("invalid locale", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ locale: "foo" }),
 				"BAD_REQUEST",
@@ -33,7 +33,7 @@ describe("currency.getList", () => {
 	describe("functionality", () => {
 		test(`list returned in "en" locale`, async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ locale: "en" });
 			expect(result).toMatchSnapshot();
 		});

@@ -20,12 +20,12 @@ import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./accept";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("receiptTransferIntentions.accept", () => {
 	describe("input verification", () => {
 		expectUnauthorizedError((context) =>
-			router.createCaller(context).procedure({
+			createCaller(context).procedure({
 				receiptId: faker.string.uuid(),
 			}),
 		);
@@ -34,7 +34,7 @@ describe("receiptTransferIntentions.accept", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -51,7 +51,7 @@ describe("receiptTransferIntentions.accept", () => {
 			await insertReceipt(ctx, accountId);
 			const fakeReceiptId = faker.string.uuid();
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ receiptId: fakeReceiptId }),
 				"NOT_FOUND",
@@ -64,7 +64,7 @@ describe("receiptTransferIntentions.accept", () => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				const { id: receiptId } = await insertReceipt(ctx, accountId);
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ receiptId }),
 					"NOT_FOUND",
@@ -80,7 +80,7 @@ describe("receiptTransferIntentions.accept", () => {
 					foreignAccountId,
 				);
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ receiptId: foreignReceiptId }),
 					"NOT_FOUND",
@@ -101,7 +101,7 @@ describe("receiptTransferIntentions.accept", () => {
 				{ transferIntentionAccountId: anotherAccountId },
 			);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ receiptId: foreignReceiptId }),
 				"NOT_FOUND",
@@ -129,7 +129,7 @@ describe("receiptTransferIntentions.accept", () => {
 				transferIntentionAccountId: accountId,
 			});
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ receiptId: foreignReceiptId }),
 			);

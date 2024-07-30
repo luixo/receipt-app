@@ -12,13 +12,11 @@ import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./accounts";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("admin.accounts", () => {
 	describe("input verification", () => {
-		expectUnauthorizedError((context) =>
-			router.createCaller(context).procedure(),
-		);
+		expectUnauthorizedError((context) => createCaller(context).procedure());
 	});
 
 	describe("functionality", () => {
@@ -33,7 +31,7 @@ describe("admin.accounts", () => {
 				connectedAccount.id,
 			]);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const accounts = await caller.procedure();
 
 			expect(accounts).toStrictEqual<typeof accounts>(

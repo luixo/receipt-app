@@ -16,13 +16,13 @@ import { MAX_INTENTIONS_AMOUNT } from "~web/handlers/validation";
 
 import { procedure } from "./add";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("resetPasswordIntentions.add", () => {
 	describe("input verification", () => {
 		describe("email", () => {
 			test("invalid", async ({ ctx }) => {
-				const caller = router.createCaller(createContext(ctx));
+				const caller = createCaller(createContext(ctx));
 				await expectTRPCError(
 					() => caller.procedure({ email: "invalid@@mail.org" }),
 					"BAD_REQUEST",
@@ -32,7 +32,7 @@ describe("resetPasswordIntentions.add", () => {
 		});
 
 		test("email doesn't exist", async ({ ctx }) => {
-			const caller = router.createCaller(createContext(ctx));
+			const caller = createCaller(createContext(ctx));
 			const email = faker.internet.email();
 			await expectTRPCError(
 				() => caller.procedure({ email }),
@@ -42,7 +42,7 @@ describe("resetPasswordIntentions.add", () => {
 		});
 
 		test("too many reset intentions", async ({ ctx }) => {
-			const caller = router.createCaller(createContext(ctx));
+			const caller = createCaller(createContext(ctx));
 			const {
 				accountId,
 				account: { email },
@@ -66,7 +66,7 @@ describe("resetPasswordIntentions.add", () => {
 			const {
 				account: { email },
 			} = await insertAccountWithSession(ctx);
-			const caller = router.createCaller(createContext(ctx));
+			const caller = createCaller(createContext(ctx));
 
 			await expectTRPCError(
 				() => caller.procedure({ email }),
@@ -80,7 +80,7 @@ describe("resetPasswordIntentions.add", () => {
 			const {
 				account: { email },
 			} = await insertAccountWithSession(ctx);
-			const caller = router.createCaller(createContext(ctx));
+			const caller = createCaller(createContext(ctx));
 
 			await expectTRPCError(
 				() => caller.procedure({ email }),
@@ -94,7 +94,7 @@ describe("resetPasswordIntentions.add", () => {
 				accountId,
 				account: { email },
 			} = await insertAccountWithSession(ctx);
-			const caller = router.createCaller(createContext(ctx));
+			const caller = createCaller(createContext(ctx));
 
 			// Verify we can add an intention even if we already have one
 			await insertResetPasswordIntention(ctx, accountId);

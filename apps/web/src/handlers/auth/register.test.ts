@@ -19,13 +19,13 @@ import { UUID_REGEX } from "~web/handlers/validation";
 
 import { procedure } from "./register";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("auth.register", () => {
 	describe("input verification", () => {
 		describe("email", () => {
 			test("invalid", async ({ ctx }) => {
-				const caller = router.createCaller(createContext(ctx));
+				const caller = createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -41,7 +41,7 @@ describe("auth.register", () => {
 
 		describe("password", () => {
 			test("minimal length", async ({ ctx }) => {
-				const caller = router.createCaller(createContext(ctx));
+				const caller = createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -55,7 +55,7 @@ describe("auth.register", () => {
 			});
 
 			test("maximum length", async ({ ctx }) => {
-				const caller = router.createCaller(createContext(ctx));
+				const caller = createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -71,7 +71,7 @@ describe("auth.register", () => {
 
 		describe("name", () => {
 			test("minimal length", async ({ ctx }) => {
-				const caller = router.createCaller(createContext(ctx));
+				const caller = createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -85,7 +85,7 @@ describe("auth.register", () => {
 			});
 
 			test("maximum length", async ({ ctx }) => {
-				const caller = router.createCaller(createContext(ctx));
+				const caller = createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -100,7 +100,7 @@ describe("auth.register", () => {
 		});
 
 		test("email already exist", async ({ ctx }) => {
-			const caller = router.createCaller(createContext(ctx));
+			const caller = createCaller(createContext(ctx));
 			const {
 				account: { email: existingEmail },
 			} = await insertAccountWithSession(ctx);
@@ -120,7 +120,7 @@ describe("auth.register", () => {
 	describe("functionality", () => {
 		test("register successful", async ({ ctx }) => {
 			ctx.emailOptions.active = false;
-			const caller = router.createCaller(createContext(ctx));
+			const caller = createCaller(createContext(ctx));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({
 					email: faker.internet.email(),
@@ -152,7 +152,7 @@ describe("auth.register", () => {
 
 		test("email sent if active", async ({ ctx }) => {
 			const email = faker.internet.email();
-			const caller = router.createCaller(createContext(ctx));
+			const caller = createCaller(createContext(ctx));
 			await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({
 					email,
@@ -173,7 +173,7 @@ describe("auth.register", () => {
 		test("email reports error if broken", async ({ ctx }) => {
 			ctx.emailOptions.broken = true;
 			const context = createContext(ctx);
-			const caller = router.createCaller(context);
+			const caller = createCaller(context);
 			await expectTRPCError(
 				() =>
 					caller.procedure({

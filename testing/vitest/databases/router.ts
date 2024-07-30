@@ -39,7 +39,8 @@ const ORDERS: {
 	users: "id",
 };
 
-const { router, procedure, middleware } = initTRPC.create();
+const { router, procedure, middleware, createCallerFactory } =
+	initTRPC.create();
 
 let runningInstance:
 	| {
@@ -217,3 +218,5 @@ export const appRouter = router({
 });
 
 export type AppRouter = typeof appRouter;
+
+export const createCaller = createCallerFactory(appRouter);

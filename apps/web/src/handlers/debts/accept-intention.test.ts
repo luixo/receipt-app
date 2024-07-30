@@ -24,18 +24,18 @@ import { t } from "~web/handlers/trpc";
 import { procedure } from "./accept-intention";
 import { getRandomCurrencyCode } from "./utils.test";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("debts.acceptIntention", () => {
 	describe("input verification", () => {
 		expectUnauthorizedError((context) =>
-			router.createCaller(context).procedure({ id: faker.string.uuid() }),
+			createCaller(context).procedure({ id: faker.string.uuid() }),
 		);
 
 		describe("id", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ id: "not-a-valid-uuid" }),
 					"BAD_REQUEST",
@@ -52,7 +52,7 @@ describe("debts.acceptIntention", () => {
 			await insertDebt(ctx, accountId, userId);
 
 			const fakeDebtId = faker.string.uuid();
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ id: fakeDebtId }),
 				"NOT_FOUND",
@@ -79,7 +79,7 @@ describe("debts.acceptIntention", () => {
 			await insertDebt(ctx, accountId, userId);
 			await insertDebt(ctx, accountId, foreignToSelfUserId);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ id: debtId }),
 				"FORBIDDEN",
@@ -106,7 +106,7 @@ describe("debts.acceptIntention", () => {
 			await insertDebt(ctx, accountId, userId);
 			await insertDebt(ctx, accountId, foreignToSelfUserId);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ id: debtId }),
 				"FORBIDDEN",
@@ -138,7 +138,7 @@ describe("debts.acceptIntention", () => {
 			await insertDebt(ctx, accountId, userId);
 			await insertDebt(ctx, accountId, foreignToSelfUserId);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ id: debtId }),
 				"FORBIDDEN",
@@ -178,7 +178,7 @@ describe("debts.acceptIntention", () => {
 			await insertDebt(ctx, accountId, userId);
 			await insertDebt(ctx, foreignAccountId, anotherForeignUserId);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ id: foreignDebtId }),
 			);
@@ -222,7 +222,7 @@ describe("debts.acceptIntention", () => {
 			await insertDebt(ctx, accountId, userId);
 			await insertDebt(ctx, foreignAccountId, anotherForeignUserId);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ id: debt.id }),
 			);

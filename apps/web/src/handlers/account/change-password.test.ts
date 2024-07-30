@@ -17,14 +17,12 @@ import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./change-password";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("account.changePassword", () => {
 	describe("input verification", () => {
 		expectUnauthorizedError((context) =>
-			router
-				.createCaller(context)
-				.procedure({ prevPassword: "", password: "" }),
+			createCaller(context).procedure({ prevPassword: "", password: "" }),
 		);
 
 		const types = ["password", "prevPassword"] as const;
@@ -33,7 +31,7 @@ describe("account.changePassword", () => {
 			describe(type, () => {
 				test("minimal length", async ({ ctx }) => {
 					const { sessionId } = await insertAccountWithSession(ctx);
-					const caller = router.createCaller(createAuthContext(ctx, sessionId));
+					const caller = createCaller(createAuthContext(ctx, sessionId));
 					await expectTRPCError(
 						() =>
 							caller.procedure({
@@ -47,7 +45,7 @@ describe("account.changePassword", () => {
 
 				test("maximum length", async ({ ctx }) => {
 					const { sessionId } = await insertAccountWithSession(ctx);
-					const caller = router.createCaller(createAuthContext(ctx, sessionId));
+					const caller = createCaller(createAuthContext(ctx, sessionId));
 					await expectTRPCError(
 						() =>
 							caller.procedure({
@@ -70,7 +68,7 @@ describe("account.changePassword", () => {
 			} = await insertAccountWithSession(ctx, {
 				account: { password: currentPassword },
 			});
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -92,7 +90,7 @@ describe("account.changePassword", () => {
 			const { sessionId } = await insertAccountWithSession(ctx, {
 				account: { password: currentPassword },
 			});
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 
 			await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({

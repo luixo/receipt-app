@@ -38,18 +38,18 @@ const mapSyncedDebt = ([debt, syncedDebt]: Awaited<
 	their: { lockedTimestamp: syncedDebt.lockedTimestamp || undefined },
 });
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("debts.getUser", () => {
 	describe("input verification", () => {
 		expectUnauthorizedError((context) =>
-			router.createCaller(context).procedure({ userId: faker.string.uuid() }),
+			createCaller(context).procedure({ userId: faker.string.uuid() }),
 		);
 
 		describe("userId", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ userId: "not-a-valid-uuid" }),
 					"BAD_REQUEST",
@@ -64,7 +64,7 @@ describe("debts.getUser", () => {
 			// Verifying adding other users doesn't affect the error
 			await insertUser(ctx, accountId);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const fakerUserId = faker.string.uuid();
 			await expectTRPCError(
 				() => caller.procedure({ userId: fakerUserId }),
@@ -83,7 +83,7 @@ describe("debts.getUser", () => {
 			const { id: otherAccountId } = await insertAccount(ctx);
 			const { id: foreignUserId } = await insertUser(ctx, otherAccountId);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ userId: foreignUserId }),
 				"FORBIDDEN",
@@ -101,7 +101,7 @@ describe("debts.getUser", () => {
 
 			await insertDebt(ctx, foreignAccountId, foreignToSelfUserId);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ userId });
 			expect(result).toStrictEqual<typeof result>([]);
 		});
@@ -168,7 +168,7 @@ describe("debts.getUser", () => {
 			const { id: foreignUserId } = await insertUser(ctx, foreignAccountId);
 			await insertDebt(ctx, foreignAccountId, foreignUserId);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ userId });
 			expect(result).toStrictEqual<typeof result>(
 				[...userDebts.map(mapUserDebt), ...syncedDebts.map(mapSyncedDebt)].sort(

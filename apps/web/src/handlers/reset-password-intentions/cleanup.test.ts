@@ -12,7 +12,7 @@ import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./cleanup";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("resetPasswordIntentions.cleanup", () => {
 	describe("functionality", () => {
@@ -30,7 +30,7 @@ describe("resetPasswordIntentions.cleanup", () => {
 				// long expired intention
 				expiresTimestamp: new Date(Date.now() - YEAR),
 			});
-			const caller = router.createCaller(createContext(ctx));
+			const caller = createCaller(createContext(ctx));
 			await expectDatabaseDiffSnapshot(ctx, () => caller.procedure());
 		});
 	});

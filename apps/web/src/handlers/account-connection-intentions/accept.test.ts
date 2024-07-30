@@ -19,12 +19,12 @@ import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./accept";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("accountConnectionIntentions.accept", () => {
 	describe("input verification", () => {
 		expectUnauthorizedError((context) =>
-			router.createCaller(context).procedure({
+			createCaller(context).procedure({
 				userId: faker.string.uuid(),
 				accountId: faker.string.uuid(),
 			}),
@@ -33,7 +33,7 @@ describe("accountConnectionIntentions.accept", () => {
 		describe("userId", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -49,7 +49,7 @@ describe("accountConnectionIntentions.accept", () => {
 		describe("accountId", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -64,7 +64,7 @@ describe("accountConnectionIntentions.accept", () => {
 
 		test("user does not exist", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const fakeUserId = faker.string.uuid();
 			await expectTRPCError(
 				() =>
@@ -86,7 +86,7 @@ describe("accountConnectionIntentions.accept", () => {
 			const { id: foreignAccountId } = await insertAccount(ctx);
 			const { id: foreignUserId } = await insertUser(ctx, foreignAccountId);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -108,7 +108,7 @@ describe("accountConnectionIntentions.accept", () => {
 				foreignAccountId,
 			]);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -128,7 +128,7 @@ describe("accountConnectionIntentions.accept", () => {
 			await insertAccount(ctx);
 
 			const fakeAccountId = faker.string.uuid();
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -192,7 +192,7 @@ describe("accountConnectionIntentions.accept", () => {
 				outerToForeignUserId,
 			);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -265,7 +265,7 @@ describe("accountConnectionIntentions.accept", () => {
 				outerToForeignUserId,
 			);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({
 					userId: selfToForeignUserId,
@@ -300,7 +300,7 @@ describe("accountConnectionIntentions.accept", () => {
 				foreignToSelfUserId,
 			);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({
 				userId: selfToForeignUserId,
 				accountId: foreignAccountId,

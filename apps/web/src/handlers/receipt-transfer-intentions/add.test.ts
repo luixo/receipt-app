@@ -20,12 +20,12 @@ import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./add";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("receiptTransferIntentions.add", () => {
 	describe("input verification", () => {
 		expectUnauthorizedError((context) =>
-			router.createCaller(context).procedure({
+			createCaller(context).procedure({
 				targetEmail: faker.internet.email(),
 				receiptId: faker.string.uuid(),
 			}),
@@ -35,7 +35,7 @@ describe("receiptTransferIntentions.add", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -52,7 +52,7 @@ describe("receiptTransferIntentions.add", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -75,7 +75,7 @@ describe("receiptTransferIntentions.add", () => {
 			await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
 			const { id: receiptId } = await insertReceipt(ctx, accountId);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -93,7 +93,7 @@ describe("receiptTransferIntentions.add", () => {
 				const { id: receiptId } = await insertReceipt(ctx, accountId);
 				const fakeEmail = faker.internet.email();
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -110,7 +110,7 @@ describe("receiptTransferIntentions.add", () => {
 				const { id: receiptId } = await insertReceipt(ctx, accountId);
 				const { email } = await insertAccount(ctx);
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -131,7 +131,7 @@ describe("receiptTransferIntentions.add", () => {
 			await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
 			const fakeReceiptId = faker.string.uuid();
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -165,7 +165,7 @@ describe("receiptTransferIntentions.add", () => {
 			// Own receipts don't interfere with this error
 			await insertReceipt(ctx, accountId);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -187,7 +187,7 @@ describe("receiptTransferIntentions.add", () => {
 				const { id: receiptId } = await insertReceipt(ctx, accountId);
 				await insertReceiptParticipant(ctx, receiptId, foreignUserId);
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -208,7 +208,7 @@ describe("receiptTransferIntentions.add", () => {
 				const { id: receiptId } = await insertReceipt(ctx, accountId);
 				await insertReceiptParticipant(ctx, receiptId, userId);
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -231,7 +231,7 @@ describe("receiptTransferIntentions.add", () => {
 				lockedTimestamp: new Date(),
 			});
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -256,7 +256,7 @@ describe("receiptTransferIntentions.add", () => {
 				transferIntentionAccountId: foreignAccountId,
 			});
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -283,7 +283,7 @@ describe("receiptTransferIntentions.add", () => {
 			const { id: anotherUserId } = await insertUser(ctx, accountId);
 			await insertReceiptParticipant(ctx, anotherReceiptId, anotherUserId);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({
 					targetEmail: foreignEmail,

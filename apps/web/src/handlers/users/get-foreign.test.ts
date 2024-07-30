@@ -19,12 +19,12 @@ import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./get-foreign";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("users.getForeign", () => {
 	describe("input verification", () => {
 		expectUnauthorizedError((context) =>
-			router.createCaller(context).procedure({
+			createCaller(context).procedure({
 				id: faker.string.uuid(),
 			}),
 		);
@@ -32,7 +32,7 @@ describe("users.getForeign", () => {
 		describe("id", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -48,7 +48,7 @@ describe("users.getForeign", () => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			// Verifying adding other users doesn't affect the error
 			await insertUser(ctx, accountId);
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const nonExistentUserId = faker.string.uuid();
 			await expectTRPCError(
 				() =>
@@ -66,7 +66,7 @@ describe("users.getForeign", () => {
 			// Foreign account
 			const { id: otherAccountId } = await insertAccount(ctx);
 			const { id: foreignUserId } = await insertUser(ctx, otherAccountId);
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -82,7 +82,7 @@ describe("users.getForeign", () => {
 			// Verify other users do not interfere
 			await insertUser(ctx, accountId);
 			const { id: userId } = await insertUser(ctx, accountId);
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ id: userId }),
 				"NOT_FOUND",
@@ -98,7 +98,7 @@ describe("users.getForeign", () => {
 				const { id: foreignAccountId } = await insertAccount(ctx);
 				const { id: otherAccountId } = await insertAccount(ctx);
 				const { id: receiptId } = await insertReceipt(ctx, foreignAccountId);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 
 				// Verify other users do not interfere
 				const { id: otherUserId } = await insertUser(ctx, accountId);
@@ -156,7 +156,7 @@ describe("users.getForeign", () => {
 				await insertReceiptParticipant(ctx, receiptId, foreignSelfUserId);
 				await insertReceiptParticipant(ctx, receiptId, foreignUserId);
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 
 				const result = await caller.procedure({
 					id: foreignUserId,
@@ -201,7 +201,7 @@ describe("users.getForeign", () => {
 				// Verify other receipt participants do not interfere
 				await insertReceiptParticipant(ctx, receiptId, otherUserId);
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({ id: foreignUserId });
 				expect(result).toStrictEqual<typeof result>({
 					id: localConnectedUserId,
@@ -228,7 +228,7 @@ describe("users.getForeign", () => {
 				const { id: receiptId } = await insertReceipt(ctx, foreignAccountId);
 				await insertReceiptParticipant(ctx, receiptId, foreignSelfUserId);
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({ id: foreignSelfUserId });
 				expect(result).toStrictEqual<typeof result>({
 					id: userId,
@@ -262,7 +262,7 @@ describe("users.getForeign", () => {
 				await insertReceiptParticipant(ctx, receiptId, foreignAccountUserId);
 				await insertReceiptParticipant(ctx, receiptId, foreignSelfUserId);
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({ id: foreignAccountUserId });
 				expect(result).toStrictEqual<typeof result>({
 					id: foreignUserId,

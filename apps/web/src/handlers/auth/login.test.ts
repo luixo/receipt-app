@@ -16,13 +16,13 @@ import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./login";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("auth.login", () => {
 	describe("input verification", () => {
 		describe("email", () => {
 			test("invalid", async ({ ctx }) => {
-				const caller = router.createCaller(createContext(ctx));
+				const caller = createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -37,7 +37,7 @@ describe("auth.login", () => {
 
 		describe("password", () => {
 			test("minimal length", async ({ ctx }) => {
-				const caller = router.createCaller(createContext(ctx));
+				const caller = createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -50,7 +50,7 @@ describe("auth.login", () => {
 			});
 
 			test("maximum length", async ({ ctx }) => {
-				const caller = router.createCaller(createContext(ctx));
+				const caller = createCaller(createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -64,7 +64,7 @@ describe("auth.login", () => {
 		});
 
 		test("account not found", async ({ ctx }) => {
-			const caller = router.createCaller(createContext(ctx));
+			const caller = createCaller(createContext(ctx));
 			const email = faker.internet.email();
 			await expectTRPCError(
 				() =>
@@ -81,7 +81,7 @@ describe("auth.login", () => {
 			const {
 				account: { email, password },
 			} = await insertAccountWithSession(ctx);
-			const caller = router.createCaller(createContext(ctx));
+			const caller = createCaller(createContext(ctx));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -101,7 +101,7 @@ describe("auth.login", () => {
 				account: { email, password, avatarUrl },
 				name,
 			} = await insertAccountWithSession(ctx);
-			const caller = router.createCaller(createContext(ctx));
+			const caller = createCaller(createContext(ctx));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ email, password }),
 			);
@@ -136,7 +136,7 @@ describe("auth.login", () => {
 				account: { confirmation: {}, avatarUrl: null },
 			});
 			const context = createContext(ctx);
-			const caller = router.createCaller(context);
+			const caller = createCaller(context);
 			const result = await caller.procedure({ email, password });
 			expect(result).toEqual<typeof result>({
 				account: {
@@ -154,7 +154,7 @@ describe("auth.login", () => {
 				account: { email, password },
 			} = await insertAccountWithSession(ctx);
 			const context = createContext(ctx);
-			const caller = router.createCaller(context);
+			const caller = createCaller(context);
 			await caller.procedure({ email: email.toUpperCase(), password });
 		});
 	});

@@ -22,12 +22,12 @@ import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./add";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("itemParticipants.add", () => {
 	describe("input verification", () => {
 		expectUnauthorizedError((context) =>
-			router.createCaller(context).procedure({
+			createCaller(context).procedure({
 				itemId: faker.string.uuid(),
 				userIds: [faker.string.uuid()],
 			}),
@@ -36,7 +36,7 @@ describe("itemParticipants.add", () => {
 		describe("itemId", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -52,7 +52,7 @@ describe("itemParticipants.add", () => {
 		describe("userIds", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -67,7 +67,7 @@ describe("itemParticipants.add", () => {
 
 		test("receipt item does not exist", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const { id: receiptId } = await insertReceipt(ctx, accountId);
 			await insertReceiptItem(ctx, receiptId);
 			const fakeReceiptItemId = faker.string.uuid();
@@ -106,7 +106,7 @@ describe("itemParticipants.add", () => {
 				foreignReceiptId,
 			);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -126,7 +126,7 @@ describe("itemParticipants.add", () => {
 				const fakeUserId = faker.string.uuid();
 				const anotherFakeUserId = faker.string.uuid();
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -153,7 +153,7 @@ describe("itemParticipants.add", () => {
 				const { id: receiptItemId } = await insertReceiptItem(ctx, receiptId);
 				const { id: userId } = await insertUser(ctx, accountId);
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -190,7 +190,7 @@ describe("itemParticipants.add", () => {
 					anotherParticipantUserId,
 				);
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -223,7 +223,7 @@ describe("itemParticipants.add", () => {
 			const { id: receiptItemId } = await insertReceiptItem(ctx, receiptId);
 			await insertReceiptParticipant(ctx, receiptId, participantUserId);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -271,7 +271,7 @@ describe("itemParticipants.add", () => {
 			);
 			await insertReceiptItem(ctx, foreignReceiptId);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({
 					itemId: receiptItemId,

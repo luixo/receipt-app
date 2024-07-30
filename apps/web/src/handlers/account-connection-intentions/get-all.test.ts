@@ -13,13 +13,11 @@ import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./get-all";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("accountConnectionIntentions.getAll", () => {
 	describe("input verification", () => {
-		expectUnauthorizedError((context) =>
-			router.createCaller(context).procedure(),
-		);
+		expectUnauthorizedError((context) => createCaller(context).procedure());
 	});
 
 	describe("functionality", () => {
@@ -39,7 +37,7 @@ describe("accountConnectionIntentions.getAll", () => {
 				firstToSecondUserId,
 			);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
 			await expect(result).toStrictEqual<typeof result>({
 				inbound: [],
@@ -110,7 +108,7 @@ describe("accountConnectionIntentions.getAll", () => {
 				inboundToOutboundUserId,
 			);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
 			await expect(result).toStrictEqual<typeof result>({
 				inbound: [

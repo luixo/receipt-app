@@ -18,12 +18,12 @@ import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./get-paged";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("users.getPaged", () => {
 	describe("input verification", () => {
 		expectUnauthorizedError((context) =>
-			router.createCaller(context).procedure({
+			createCaller(context).procedure({
 				limit: 1,
 				cursor: 0,
 			}),
@@ -32,7 +32,7 @@ describe("users.getPaged", () => {
 		describe("limit", () => {
 			test("is <= 0", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ cursor: 0, limit: 0 }),
 					"BAD_REQUEST",
@@ -42,7 +42,7 @@ describe("users.getPaged", () => {
 
 			test("is too big", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ cursor: 0, limit: MAX_LIMIT + 1 }),
 					"BAD_REQUEST",
@@ -52,7 +52,7 @@ describe("users.getPaged", () => {
 
 			test("is fractional", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ cursor: 0, limit: faker.number.float() }),
 					"BAD_REQUEST",
@@ -64,7 +64,7 @@ describe("users.getPaged", () => {
 		describe("cursor", () => {
 			test("is < 0", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ cursor: -1, limit: 1 }),
 					"BAD_REQUEST",
@@ -74,7 +74,7 @@ describe("users.getPaged", () => {
 
 			test("is too big", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ cursor: MAX_OFFSET + 1, limit: 1 }),
 					"BAD_REQUEST",
@@ -84,7 +84,7 @@ describe("users.getPaged", () => {
 
 			test("is fractional", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ cursor: faker.number.float(), limit: 1 }),
 					"BAD_REQUEST",
@@ -102,7 +102,7 @@ describe("users.getPaged", () => {
 			// Verify other users do not interfere
 			await insertUser(ctx, otherAccountId);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ limit: 3, cursor: 0 });
 			expect(result).toStrictEqual<typeof result>({
 				count: 0,
@@ -145,7 +145,7 @@ describe("users.getPaged", () => {
 				connectedPublicNamedUser,
 				extraUser,
 			];
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ limit, cursor: 0 });
 			expect(result).toStrictEqual<typeof result>({
 				count: users.length,
@@ -173,7 +173,7 @@ describe("users.getPaged", () => {
 				}),
 			);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const firstPage = await caller.procedure({
 				limit,
 				cursor: 0,
@@ -201,7 +201,7 @@ describe("users.getPaged", () => {
 			await insertUser(ctx, accountId, { name: "Alice" });
 			await insertUser(ctx, accountId, { name: "Alice" });
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({
 				limit: 5,
 				cursor: 0,

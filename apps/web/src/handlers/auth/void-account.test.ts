@@ -13,13 +13,13 @@ import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./void-account";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("auth.voidAccount", () => {
 	describe("input verification", () => {
 		describe("token", () => {
 			test("invalid", async ({ ctx }) => {
-				const caller = router.createCaller(createContext(ctx));
+				const caller = createCaller(createContext(ctx));
 				await expectTRPCError(
 					() => caller.procedure({ token: "invalid-uuid" }),
 					"BAD_REQUEST",
@@ -29,7 +29,7 @@ describe("auth.voidAccount", () => {
 		});
 
 		test("no confirmation token exists", async ({ ctx }) => {
-			const caller = router.createCaller(createContext(ctx));
+			const caller = createCaller(createContext(ctx));
 			const confirmationToken = faker.string.uuid();
 			// Verify that not every not verified account counts
 			await insertAccountWithSession(ctx);
@@ -57,7 +57,7 @@ describe("auth.voidAccount", () => {
 				account: { confirmation: {} },
 			});
 			const context = createContext(ctx);
-			const caller = router.createCaller(context);
+			const caller = createCaller(context);
 			assert(
 				confirmationToken,
 				"Confirmation token should exist on creation of test account",

@@ -30,7 +30,7 @@ import {
 	verifyReceiptId,
 } from "./utils.test";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 const updateDescribes = (
 	getUpdate: () => TRPCMutationInput<"receipts.update">["update"],
@@ -67,7 +67,7 @@ const updateDescribes = (
 		await insertReceiptParticipant(ctx, foreignReceiptId, foreignUserId);
 		await insertReceiptItem(ctx, foreignReceiptId);
 
-		const caller = router.createCaller(createAuthContext(ctx, sessionId));
+		const caller = createCaller(createAuthContext(ctx, sessionId));
 		const result = await expectDatabaseDiffSnapshot(ctx, () =>
 			caller.procedure({ id: receiptId, update: getUpdate() }),
 		);
@@ -89,7 +89,7 @@ const updateDescribes = (
 describe("receipts.update", () => {
 	describe("input verification", () => {
 		expectUnauthorizedError((context) =>
-			router.createCaller(context).procedure({
+			createCaller(context).procedure({
 				id: faker.string.uuid(),
 				update: { type: "name", name: faker.lorem.words() },
 			}),
@@ -97,7 +97,7 @@ describe("receipts.update", () => {
 
 		verifyReceiptId(
 			(context, receiptId) =>
-				router.createCaller(context).procedure({
+				createCaller(context).procedure({
 					id: receiptId,
 					update: { type: "name", name: faker.lorem.words() },
 				}),
@@ -106,7 +106,7 @@ describe("receipts.update", () => {
 
 		verifyName(
 			(context, name) =>
-				router.createCaller(context).procedure({
+				createCaller(context).procedure({
 					id: faker.string.uuid(),
 					update: { type: "name", name },
 				}),
@@ -115,7 +115,7 @@ describe("receipts.update", () => {
 
 		verifyIssued(
 			(context, issued) =>
-				router.createCaller(context).procedure({
+				createCaller(context).procedure({
 					id: faker.string.uuid(),
 					update: { type: "issued", issued },
 				}),
@@ -124,7 +124,7 @@ describe("receipts.update", () => {
 
 		verifyCurrencyCode(
 			(context, currencyCode) =>
-				router.createCaller(context).procedure({
+				createCaller(context).procedure({
 					id: faker.string.uuid(),
 					update: { type: "currencyCode", currencyCode },
 				}),
@@ -137,7 +137,7 @@ describe("receipts.update", () => {
 			// Verifying adding other receipts doesn't affect the error
 			await insertReceipt(ctx, accountId);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const nonExistentReceiptId = faker.string.uuid();
 			await expectTRPCError(
 				() =>
@@ -164,7 +164,7 @@ describe("receipts.update", () => {
 			// Verifying adding other receipts doesn't affect the error
 			await insertReceipt(ctx, accountId);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -186,7 +186,7 @@ describe("receipts.update", () => {
 			// Verifying adding other receipts doesn't affect the error
 			await insertReceipt(ctx, accountId);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({

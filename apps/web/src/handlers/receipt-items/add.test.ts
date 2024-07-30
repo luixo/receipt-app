@@ -26,41 +26,35 @@ import {
 	verifyQuantity,
 } from "./utils.test";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("receiptItems.add", () => {
 	describe("input verification", () => {
 		expectUnauthorizedError((context) =>
-			router.createCaller(context).procedure(getValidReceiptItem()),
+			createCaller(context).procedure(getValidReceiptItem()),
 		);
 
 		verifyName(
 			(context, name) =>
-				router
-					.createCaller(context)
-					.procedure({ ...getValidReceiptItem(), name }),
+				createCaller(context).procedure({ ...getValidReceiptItem(), name }),
 			"",
 		);
 
 		verifyPrice(
 			(context, price) =>
-				router
-					.createCaller(context)
-					.procedure({ ...getValidReceiptItem(), price }),
+				createCaller(context).procedure({ ...getValidReceiptItem(), price }),
 			"",
 		);
 
 		verifyQuantity(
 			(context, quantity) =>
-				router
-					.createCaller(context)
-					.procedure({ ...getValidReceiptItem(), quantity }),
+				createCaller(context).procedure({ ...getValidReceiptItem(), quantity }),
 			"",
 		);
 
 		test("receipt does not exist", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await insertReceipt(ctx, accountId);
 			const fakeReceiptId = faker.string.uuid();
 			await expectTRPCError(
@@ -82,7 +76,7 @@ describe("receiptItems.add", () => {
 				foreignAccountId,
 			);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure(getValidReceiptItem(foreignReceiptId)),
 				"FORBIDDEN",
@@ -112,7 +106,7 @@ describe("receiptItems.add", () => {
 				{ role: "viewer" },
 			);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure(getValidReceiptItem(foreignReceiptId)),
 				"FORBIDDEN",
@@ -126,7 +120,7 @@ describe("receiptItems.add", () => {
 				lockedTimestamp: new Date(),
 			});
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure(getValidReceiptItem(receiptId)),
 				"FORBIDDEN",
@@ -145,7 +139,7 @@ describe("receiptItems.add", () => {
 			const { id: foreignAccountId } = await insertAccount(ctx);
 			await insertReceipt(ctx, foreignAccountId);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure(getValidReceiptItem(receiptId)),
 			);
@@ -172,7 +166,7 @@ describe("receiptItems.add", () => {
 			await insertReceipt(ctx, accountId);
 			await insertReceipt(ctx, foreignAccountId);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure(getValidReceiptItem(receiptId)),
 			);

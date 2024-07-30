@@ -37,7 +37,7 @@ import {
 	verifyTimestamp,
 } from "./utils.test";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 type GetData = (opts: {
 	ctx: TestContext;
@@ -141,7 +141,7 @@ const updateDescribes = (getData: GetData) => {
 			lockedBefore,
 		});
 
-		const caller = router.createCaller(createAuthContext(ctx, sessionId));
+		const caller = createCaller(createAuthContext(ctx, sessionId));
 		const results = await expectDatabaseDiffSnapshot(ctx, () =>
 			runSequentially(
 				updates.map((update) => () => caller.procedure(update)),
@@ -222,7 +222,7 @@ const updateDescribes = (getData: GetData) => {
 describe("debts.update", () => {
 	describe("input verification", () => {
 		expectUnauthorizedError((context) =>
-			router.createCaller(context).procedure({
+			createCaller(context).procedure({
 				id: faker.string.uuid(),
 				update: { amount: getRandomAmount() },
 			}),
@@ -231,7 +231,7 @@ describe("debts.update", () => {
 		describe("id", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -249,7 +249,7 @@ describe("debts.update", () => {
 		describe("update", () => {
 			test("should have at least one key", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -264,7 +264,7 @@ describe("debts.update", () => {
 
 		verifyAmount(
 			(context, amount) =>
-				router.createCaller(context).procedure({
+				createCaller(context).procedure({
 					id: faker.string.uuid(),
 					update: { amount },
 				}),
@@ -273,7 +273,7 @@ describe("debts.update", () => {
 
 		verifyNote(
 			(context, note) =>
-				router.createCaller(context).procedure({
+				createCaller(context).procedure({
 					id: faker.string.uuid(),
 					update: { note },
 				}),
@@ -282,7 +282,7 @@ describe("debts.update", () => {
 
 		verifyCurrencyCode(
 			(context, currencyCode) =>
-				router.createCaller(context).procedure({
+				createCaller(context).procedure({
 					id: faker.string.uuid(),
 					update: { currencyCode },
 				}),
@@ -291,7 +291,7 @@ describe("debts.update", () => {
 
 		verifyTimestamp(
 			(context, timestamp) =>
-				router.createCaller(context).procedure({
+				createCaller(context).procedure({
 					id: faker.string.uuid(),
 					update: { timestamp },
 				}),
@@ -300,7 +300,7 @@ describe("debts.update", () => {
 
 		verifyReceiptId(
 			(context, receiptId) =>
-				router.createCaller(context).procedure({
+				createCaller(context).procedure({
 					id: faker.string.uuid(),
 					update: { receiptId },
 				}),
@@ -319,7 +319,7 @@ describe("debts.update", () => {
 			await insertDebt(ctx, accountId, userId);
 
 			const fakeDebtId = faker.string.uuid();
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -350,7 +350,7 @@ describe("debts.update", () => {
 			const { id: userId } = await insertUser(ctx, accountId);
 			await insertDebt(ctx, accountId, userId);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -722,7 +722,7 @@ describe("debts.update", () => {
 				const debt = await insertDebt(ctx, accountId, acceptingUserId);
 				const fakeDebtId = faker.string.uuid();
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const results = await runSequentially(
 					[
 						() =>

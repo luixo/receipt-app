@@ -8,13 +8,11 @@ import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./get";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("account.get", () => {
 	describe("input verification", () => {
-		expectUnauthorizedError((context) =>
-			router.createCaller(context).procedure(),
-		);
+		expectUnauthorizedError((context) => createCaller(context).procedure());
 	});
 
 	describe("functionality", () => {
@@ -25,7 +23,7 @@ describe("account.get", () => {
 				name,
 				account: { avatarUrl, email },
 			} = await insertAccountWithSession(ctx);
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 
 			const account = await caller.procedure();
 
@@ -50,7 +48,7 @@ describe("account.get", () => {
 			} = await insertAccountWithSession(ctx, {
 				account: { confirmation: {}, avatarUrl: null },
 			});
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 
 			const account = await caller.procedure();
 
@@ -73,7 +71,7 @@ describe("account.get", () => {
 				name,
 				account: { avatarUrl, email },
 			} = await insertAccountWithSession(ctx, { account: { role: "role" } });
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 
 			const account = await caller.procedure();
 

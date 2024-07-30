@@ -24,7 +24,7 @@ import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./get-paged";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 type Input = TRPCQueryInput<"receipts.getPaged">;
 
@@ -156,7 +156,7 @@ const runFunctionalTest = async (
 	const { accountId, sessionId, receipts } = await mockData(ctx);
 
 	const limit = 10;
-	const caller = router.createCaller(createAuthContext(ctx, sessionId));
+	const caller = createCaller(createAuthContext(ctx, sessionId));
 	const result = await caller.procedure(
 		modifyInput({
 			limit,
@@ -180,7 +180,7 @@ const runFunctionalTest = async (
 describe("receipts.getPaged", () => {
 	describe("input verification", () => {
 		expectUnauthorizedError((context) =>
-			router.createCaller(context).procedure({
+			createCaller(context).procedure({
 				limit: 1,
 				cursor: 0,
 				orderBy: "date-desc",
@@ -190,7 +190,7 @@ describe("receipts.getPaged", () => {
 		describe("limit", () => {
 			test("is <= 0", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ cursor: 0, limit: 0, orderBy: "date-desc" }),
 					"BAD_REQUEST",
@@ -200,7 +200,7 @@ describe("receipts.getPaged", () => {
 
 			test("is too big", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -215,7 +215,7 @@ describe("receipts.getPaged", () => {
 
 			test("is fractional", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -232,7 +232,7 @@ describe("receipts.getPaged", () => {
 		describe("cursor", () => {
 			test("is < 0", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({ cursor: -1, limit: 1, orderBy: "date-desc" }),
@@ -243,7 +243,7 @@ describe("receipts.getPaged", () => {
 
 			test("is too big", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -258,7 +258,7 @@ describe("receipts.getPaged", () => {
 
 			test("is fractional", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -275,7 +275,7 @@ describe("receipts.getPaged", () => {
 		describe("orderBy", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -298,7 +298,7 @@ describe("receipts.getPaged", () => {
 			// Verify other receipts do not interfere
 			await insertReceipt(ctx, otherAccountId);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({
 				limit: 3,
 				cursor: 0,
@@ -336,7 +336,7 @@ describe("receipts.getPaged", () => {
 				}),
 			);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const firstPage = await caller.procedure({
 				limit,
 				cursor: 0,

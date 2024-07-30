@@ -30,13 +30,11 @@ const mapUserDebts = (debts: Awaited<ReturnType<typeof insertDebt>>[]) =>
 		.map(([currencyCode, sum]) => ({ currencyCode, sum }))
 		.sort((a, b) => a.currencyCode.localeCompare(b.currencyCode));
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("debts.getByUsers", () => {
 	describe("input verification", () => {
-		expectUnauthorizedError((context) =>
-			router.createCaller(context).procedure(),
-		);
+		expectUnauthorizedError((context) => createCaller(context).procedure());
 	});
 
 	describe("functionality", () => {
@@ -50,7 +48,7 @@ describe("debts.getByUsers", () => {
 
 			await insertDebt(ctx, foreignAccountId, foreignToSelfUserId);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
 			expect(result).toStrictEqual<typeof result>([]);
 		});
@@ -98,7 +96,7 @@ describe("debts.getByUsers", () => {
 			const { id: foreignUserId } = await insertUser(ctx, foreignAccountId);
 			await insertDebt(ctx, foreignAccountId, foreignUserId);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
 			expect(result).toStrictEqual<typeof result>(
 				[
@@ -143,7 +141,7 @@ describe("debts.getByUsers", () => {
 							(debt) => ({ ...debt, lockedTimestamp: new Date() }),
 						],
 					);
-					const caller = router.createCaller(createAuthContext(ctx, sessionId));
+					const caller = createCaller(createAuthContext(ctx, sessionId));
 					const result = await caller.procedure();
 					expect(result).toStrictEqual<typeof result>([
 						{
@@ -164,7 +162,7 @@ describe("debts.getByUsers", () => {
 						[accountId, user.id, { lockedTimestamp: new Date() }],
 						[foreignAccountId, foreignToSelfUserId],
 					);
-					const caller = router.createCaller(createAuthContext(ctx, sessionId));
+					const caller = createCaller(createAuthContext(ctx, sessionId));
 					const result = await caller.procedure();
 					expect(result).toStrictEqual<typeof result>([
 						{
@@ -181,7 +179,7 @@ describe("debts.getByUsers", () => {
 					const localDebt = await insertDebt(ctx, accountId, userId, {
 						lockedTimestamp: new Date(),
 					});
-					const caller = router.createCaller(createAuthContext(ctx, sessionId));
+					const caller = createCaller(createAuthContext(ctx, sessionId));
 					const result = await caller.procedure();
 					expect(result).toStrictEqual<typeof result>([
 						{
@@ -204,7 +202,7 @@ describe("debts.getByUsers", () => {
 					const localDebt = await insertDebt(ctx, accountId, user.id, {
 						lockedTimestamp: new Date(),
 					});
-					const caller = router.createCaller(createAuthContext(ctx, sessionId));
+					const caller = createCaller(createAuthContext(ctx, sessionId));
 					const result = await caller.procedure();
 					expect(result).toStrictEqual<typeof result>([
 						{
@@ -233,7 +231,7 @@ describe("debts.getByUsers", () => {
 							}),
 						],
 					);
-					const caller = router.createCaller(createAuthContext(ctx, sessionId));
+					const caller = createCaller(createAuthContext(ctx, sessionId));
 					const result = await caller.procedure();
 					expect(result).toStrictEqual<typeof result>([
 						{
@@ -290,7 +288,7 @@ describe("debts.getByUsers", () => {
 							],
 						),
 					]);
-					const caller = router.createCaller(createAuthContext(ctx, sessionId));
+					const caller = createCaller(createAuthContext(ctx, sessionId));
 					const result = await caller.procedure();
 					expect(result[0]?.unsyncedDebtsAmount).toBe<number>(
 						unsyncedDebts.length,

@@ -6,13 +6,13 @@ import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./ping-cache";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("utils.pingCache", () => {
 	describe("functionality", () => {
 		test("cache database ping sent", async ({ ctx }) => {
 			const dbMock = ctx.cacheDbOptions.mock!;
-			const caller = router.createCaller(createContext(ctx));
+			const caller = createCaller(createContext(ctx));
 			await caller.procedure();
 			const dbMessages = dbMock.getMessages();
 			// Removing ping message

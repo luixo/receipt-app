@@ -7,11 +7,14 @@ import { createAuthContext } from "~tests/backend/utils/context";
 import { insertAccountWithSession } from "~tests/backend/utils/data";
 import { expectTRPCError } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
+import { t } from "~web/handlers/trpc";
 import { AUTH_COOKIE, serializeCookieHeader } from "~web/utils/server-cookies";
 
 import { getClientServer } from "./utils.test";
 
 import { router } from "./index";
+
+const createCaller = t.createCallerFactory(router);
 
 describe("errors formatting", () => {
 	// Covering errorFormatter function
@@ -43,7 +46,7 @@ describe("errors formatting", () => {
 
 	test("zod error formatting", async ({ ctx }) => {
 		const { sessionId } = await insertAccountWithSession(ctx);
-		const caller = router.createCaller(createAuthContext(ctx, sessionId));
+		const caller = createCaller(createAuthContext(ctx, sessionId));
 		await expectTRPCError(
 			() => caller.users.add({ name: "", publicName: "" }),
 			"BAD_REQUEST",

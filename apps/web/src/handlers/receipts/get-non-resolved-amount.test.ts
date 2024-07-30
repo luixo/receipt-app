@@ -14,13 +14,11 @@ import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./get-non-resolved-amount";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("receipts.getNonResolvedAmount", () => {
 	describe("input verification", () => {
-		expectUnauthorizedError((context) =>
-			router.createCaller(context).procedure(),
-		);
+		expectUnauthorizedError((context) => createCaller(context).procedure());
 	});
 
 	describe("functionality", () => {
@@ -57,7 +55,7 @@ describe("receipts.getNonResolvedAmount", () => {
 			await insertReceipt(ctx, accountId);
 			await insertReceipt(ctx, foreignAccountId);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
 			expect(result).toBe<typeof result>(0);
 		});
@@ -102,7 +100,7 @@ describe("receipts.getNonResolvedAmount", () => {
 			await insertReceipt(ctx, accountId);
 			await insertReceipt(ctx, foreignAccountId);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
 			expect(result).toBe<typeof result>(3);
 		});

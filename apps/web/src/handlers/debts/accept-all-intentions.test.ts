@@ -22,13 +22,11 @@ import { t } from "~web/handlers/trpc";
 import { procedure } from "./accept-all-intentions";
 import { getRandomCurrencyCode } from "./utils.test";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("debts.acceptAllIntentions", () => {
 	describe("input verification", () => {
-		expectUnauthorizedError((context) =>
-			router.createCaller(context).procedure(),
-		);
+		expectUnauthorizedError((context) => createCaller(context).procedure());
 
 		test("no intentions to accept", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
@@ -54,7 +52,7 @@ describe("debts.acceptAllIntentions", () => {
 			// No intention to sync from their side
 			await insertDebt(ctx, foreignAccountId, foreignToSelfUserId);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure(),
 				"BAD_REQUEST",
@@ -126,7 +124,7 @@ describe("debts.acceptAllIntentions", () => {
 				},
 			);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure(),
 			);

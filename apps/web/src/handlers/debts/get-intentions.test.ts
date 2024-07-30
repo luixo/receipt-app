@@ -18,13 +18,11 @@ import { t } from "~web/handlers/trpc";
 import { procedure } from "./get-intentions";
 import { getRandomCurrencyCode } from "./utils.test";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("debts.getIntentions", () => {
 	describe("input verification", () => {
-		expectUnauthorizedError((context) =>
-			router.createCaller(context).procedure(),
-		);
+		expectUnauthorizedError((context) => createCaller(context).procedure());
 	});
 
 	describe("functionality", () => {
@@ -52,7 +50,7 @@ describe("debts.getIntentions", () => {
 			// No intention to sync from their side
 			await insertDebt(ctx, foreignAccountId, foreignToSelfUserId);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
 			expect(result).toStrictEqual<typeof result>([]);
 		});
@@ -114,7 +112,7 @@ describe("debts.getIntentions", () => {
 				},
 			);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
 			expect(result).toStrictEqual<typeof result>(
 				[

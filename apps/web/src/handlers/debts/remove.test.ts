@@ -21,18 +21,18 @@ import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./remove";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("debts.remove", () => {
 	describe("input verification", () => {
 		expectUnauthorizedError((context) =>
-			router.createCaller(context).procedure({ id: faker.string.uuid() }),
+			createCaller(context).procedure({ id: faker.string.uuid() }),
 		);
 
 		describe("id", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ id: "not-a-valid-uuid" }),
 					"BAD_REQUEST",
@@ -51,7 +51,7 @@ describe("debts.remove", () => {
 			// Verify that other debts don't affect the result
 			await insertDebt(ctx, accountId, userId);
 			const fakeDebtId = faker.string.uuid();
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ id: fakeDebtId }),
 				"NOT_FOUND",
@@ -77,7 +77,7 @@ describe("debts.remove", () => {
 				foreignUserId,
 			);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ id: debtId }),
 				"NOT_FOUND",
@@ -107,7 +107,7 @@ describe("debts.remove", () => {
 			await insertDebt(ctx, accountId, userId);
 			await insertDebt(ctx, foreignAccountId, foreignUserId);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ id: debtId }),
 			);
@@ -135,7 +135,7 @@ describe("debts.remove", () => {
 				await insertDebt(ctx, accountId, foreignUserId);
 				await insertDebt(ctx, foreignAccountId, foreignToSelfUserId);
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await expectDatabaseDiffSnapshot(ctx, () =>
 					caller.procedure({ id: debtId }),
 				);
@@ -158,7 +158,7 @@ describe("debts.remove", () => {
 				await insertDebt(ctx, accountId, foreignUserId);
 				await insertDebt(ctx, foreignAccountId, foreignToSelfUserId);
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await expectDatabaseDiffSnapshot(ctx, () =>
 					caller.procedure({ id: debt.id }),
 				);

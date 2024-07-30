@@ -23,12 +23,12 @@ import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./remove";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("users.remove", () => {
 	describe("input verification", () => {
 		expectUnauthorizedError((context) =>
-			router.createCaller(context).procedure({
+			createCaller(context).procedure({
 				id: faker.string.uuid(),
 			}),
 		);
@@ -36,7 +36,7 @@ describe("users.remove", () => {
 		describe("id", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -52,7 +52,7 @@ describe("users.remove", () => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			// Verifying adding other users doesn't affect the error
 			await insertUser(ctx, accountId);
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const nonExistentUserId = faker.string.uuid();
 			await expectTRPCError(
 				() =>
@@ -73,7 +73,7 @@ describe("users.remove", () => {
 			// Foreign account
 			const { id: otherAccountId } = await insertAccount(ctx);
 			const { id: foreignUserId } = await insertUser(ctx, otherAccountId);
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -131,7 +131,7 @@ describe("users.remove", () => {
 			// Verify other user debts are not affected
 			await insertDebt(ctx, accountId, otherUserId);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ id: userId }),
 			);

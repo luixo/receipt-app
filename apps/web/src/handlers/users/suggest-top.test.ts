@@ -22,12 +22,12 @@ import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./suggest-top";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("users.suggestTop", () => {
 	describe("input verification", () => {
 		expectUnauthorizedError((context) =>
-			router.createCaller(context).procedure({
+			createCaller(context).procedure({
 				limit: 1,
 				options: { type: "debts" },
 			}),
@@ -36,7 +36,7 @@ describe("users.suggestTop", () => {
 		describe("limit", () => {
 			test("is <= 0", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -50,7 +50,7 @@ describe("users.suggestTop", () => {
 
 			test("is too big", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -64,7 +64,7 @@ describe("users.suggestTop", () => {
 
 			test("is fractional", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -80,7 +80,7 @@ describe("users.suggestTop", () => {
 		describe("filtered ids", () => {
 			test("has non-uuid values", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -97,7 +97,7 @@ describe("users.suggestTop", () => {
 		describe("non-connected receipt id", () => {
 			test("has non-uuid value", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -118,7 +118,7 @@ describe("users.suggestTop", () => {
 			// Verifying adding other receipts don't affect the error
 			await insertReceipt(ctx, accountId);
 			const nonExistentReceiptId = faker.string.uuid();
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -137,7 +137,7 @@ describe("users.suggestTop", () => {
 			const { sessionId } = await insertAccountWithSession(ctx);
 			const { id: otherAccountId } = await insertAccount(ctx);
 			const { id: receiptId } = await insertReceipt(ctx, otherAccountId);
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -177,7 +177,7 @@ describe("users.suggestTop", () => {
 					secondAccount.id,
 				]);
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
 					limit: 4,
 					options: { type: "debts" },
@@ -222,7 +222,7 @@ describe("users.suggestTop", () => {
 				await insertDebt(ctx, accountId, threeDebtsUserId);
 				await insertDebt(ctx, accountId, threeDebtsUserId);
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
 					limit: 5,
 					options: { type: "debts" },
@@ -239,7 +239,7 @@ describe("users.suggestTop", () => {
 			test("returns users with no debts", async ({ ctx }) => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				await insertUser(ctx, accountId);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
 					limit: 10,
 					options: { type: "debts" },
@@ -253,7 +253,7 @@ describe("users.suggestTop", () => {
 				await insertUser(ctx, accountId);
 				await insertUser(ctx, accountId);
 				const limit = 2;
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
 					limit,
 					options: { type: "debts" },
@@ -265,7 +265,7 @@ describe("users.suggestTop", () => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				await insertUser(ctx, accountId);
 				const { id: ignoredUserId } = await insertUser(ctx, accountId);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
 					limit: 10,
 					filterIds: [ignoredUserId],
@@ -285,7 +285,7 @@ describe("users.suggestTop", () => {
 					timestamp: new Date(Date.now() - MONTH - MONTH),
 				});
 				await insertDebt(ctx, accountId, newDebtsUserId);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
 					limit: 10,
 					options: { type: "debts" },
@@ -308,7 +308,7 @@ describe("users.suggestTop", () => {
 				});
 				await insertConnectedUsers(ctx, [accountId, otherAccountId]);
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
 					limit: 4,
 					options: { type: "not-connected" },
@@ -340,7 +340,7 @@ describe("users.suggestTop", () => {
 						]),
 					),
 				);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
 					limit: 4,
 					options: { type: "connected" },
@@ -380,7 +380,7 @@ describe("users.suggestTop", () => {
 					id: faker.string.uuid().replace(/^./g, "f"),
 				});
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
 					limit: 4,
 					options: { type: "not-connected" },
@@ -399,7 +399,7 @@ describe("users.suggestTop", () => {
 				await insertUser(ctx, accountId);
 				await insertUser(ctx, accountId);
 				const limit = 2;
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
 					limit,
 					options: { type: "not-connected" },
@@ -410,7 +410,7 @@ describe("users.suggestTop", () => {
 			test("returns users with no debts", async ({ ctx }) => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				await insertUser(ctx, accountId);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
 					limit: 10,
 					options: { type: "not-connected" },
@@ -422,7 +422,7 @@ describe("users.suggestTop", () => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				await insertUser(ctx, accountId);
 				const { id: ignoredUserId } = await insertUser(ctx, accountId);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
 					limit: 10,
 					filterIds: [ignoredUserId],
@@ -450,7 +450,7 @@ describe("users.suggestTop", () => {
 				await insertDebt(ctx, accountId, connectedUserId);
 				await insertDebt(ctx, accountId, connectedUserId);
 				await insertDebt(ctx, accountId, connectedUserId);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
 					limit: 10,
 					options: { type: "not-connected" },
@@ -499,7 +499,7 @@ describe("users.suggestTop", () => {
 					connectedAccountId: accountId,
 				};
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
 					limit: 4,
 					options: { type: "not-connected-receipt", receiptId },
@@ -560,7 +560,7 @@ describe("users.suggestTop", () => {
 
 				const { id: otherReceiptId } = await insertReceipt(ctx, accountId);
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
 					limit: 5,
 					options: {
@@ -584,7 +584,7 @@ describe("users.suggestTop", () => {
 				await insertUser(ctx, accountId);
 				const { id: receiptId } = await insertReceipt(ctx, accountId);
 				const limit = 2;
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
 					limit,
 					options: {
@@ -605,7 +605,7 @@ describe("users.suggestTop", () => {
 				} = await insertAccountWithSession(ctx);
 				await insertUser(ctx, accountId);
 				const { id: otherReceiptId } = await insertReceipt(ctx, accountId);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
 					limit: 10,
 					filterIds: [selfUserId],
@@ -651,7 +651,7 @@ describe("users.suggestTop", () => {
 				);
 
 				const { id: otherReceiptId } = await insertReceipt(ctx, accountId);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
 					limit: 10,
 					filterIds: [selfUserId],

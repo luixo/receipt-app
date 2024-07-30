@@ -24,18 +24,18 @@ import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./add";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("users.add", () => {
 	describe("input verification", () => {
 		expectUnauthorizedError((context) =>
-			router.createCaller(context).procedure({ name: faker.person.fullName() }),
+			createCaller(context).procedure({ name: faker.person.fullName() }),
 		);
 
 		describe("email", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -52,7 +52,7 @@ describe("users.add", () => {
 			describe(field, () => {
 				test("minimal length", async ({ ctx }) => {
 					const { sessionId } = await insertAccountWithSession(ctx);
-					const caller = router.createCaller(createAuthContext(ctx, sessionId));
+					const caller = createCaller(createAuthContext(ctx, sessionId));
 					await expectTRPCError(
 						() =>
 							caller.procedure({
@@ -66,7 +66,7 @@ describe("users.add", () => {
 
 				test("maximum length", async ({ ctx }) => {
 					const { sessionId } = await insertAccountWithSession(ctx);
-					const caller = router.createCaller(createAuthContext(ctx, sessionId));
+					const caller = createCaller(createAuthContext(ctx, sessionId));
 					await expectTRPCError(
 						() =>
 							caller.procedure({
@@ -82,7 +82,7 @@ describe("users.add", () => {
 
 		test("target email is not registered", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const fakeEmail = "non-existent@mail.org";
 			await expectTRPCError(
 				() =>
@@ -109,7 +109,7 @@ describe("users.add", () => {
 					accountId,
 					otherAccountId,
 				]);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -137,7 +137,7 @@ describe("users.add", () => {
 					userId,
 				);
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -161,7 +161,7 @@ describe("users.add", () => {
 			await insertAccount(ctx);
 
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 
 			await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ name: faker.person.fullName() }),
@@ -173,7 +173,7 @@ describe("users.add", () => {
 			await insertAccount(ctx);
 
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 
 			await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({
@@ -203,7 +203,7 @@ describe("users.add", () => {
 				);
 
 				const asName = faker.person.fullName();
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await expectDatabaseDiffSnapshot(ctx, () =>
 					caller.procedure({
 						name: asName,
@@ -236,7 +236,7 @@ describe("users.add", () => {
 				const { sessionId } = await insertAccountWithSession(ctx);
 
 				const asName = faker.person.fullName();
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await expectDatabaseDiffSnapshot(ctx, () =>
 					caller.procedure({
 						name: asName,

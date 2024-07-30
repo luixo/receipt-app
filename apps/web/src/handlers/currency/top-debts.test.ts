@@ -13,13 +13,11 @@ import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./top-debts";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("currency.rates", () => {
 	describe("input verification", () => {
-		expectUnauthorizedError((context) =>
-			router.createCaller(context).procedure(),
-		);
+		expectUnauthorizedError((context) => createCaller(context).procedure());
 	});
 
 	describe("functionality", () => {
@@ -29,7 +27,7 @@ describe("currency.rates", () => {
 			await insertDebt(ctx, otherAccountId, userId, { currencyCode: "USD" });
 			await insertDebt(ctx, otherAccountId, userId, { currencyCode: "USD" });
 			await insertDebt(ctx, otherAccountId, userId, { currencyCode: "EUR" });
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
 			expect(result).toEqual<typeof result>([]);
 		});
@@ -53,7 +51,7 @@ describe("currency.rates", () => {
 					}),
 				),
 			);
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
 			expect(result).toStrictEqual<typeof result>([
 				{

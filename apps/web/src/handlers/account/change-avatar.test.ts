@@ -14,7 +14,7 @@ import { t } from "~web/handlers/trpc";
 
 import { S3_AVATAR_PREFIX, procedure } from "./change-avatar";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 const getFormData = (bits?: BlobPart[]) => {
 	const formData = new FormData();
@@ -66,13 +66,13 @@ const generateFormWithImage = async (
 describe("account.changeAvatar", () => {
 	describe("input verification", () => {
 		expectUnauthorizedError((context) =>
-			router.createCaller(context).procedure(getFormData([])),
+			createCaller(context).procedure(getFormData([])),
 		);
 
 		describe("avatar", () => {
 			test("is too big in bytes", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					async () =>
 						caller.procedure(
@@ -89,7 +89,7 @@ describe("account.changeAvatar", () => {
 
 			test("is too tall", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					async () =>
 						caller.procedure(
@@ -105,7 +105,7 @@ describe("account.changeAvatar", () => {
 
 			test("is too wide", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					async () =>
 						caller.procedure(
@@ -121,7 +121,7 @@ describe("account.changeAvatar", () => {
 
 			test("is not square", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					async () =>
 						caller.procedure(
@@ -139,7 +139,7 @@ describe("account.changeAvatar", () => {
 
 			test("is not of allowed format", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					async () =>
 						caller.procedure(
@@ -158,7 +158,7 @@ describe("account.changeAvatar", () => {
 		test("provider broken", async ({ ctx }) => {
 			ctx.s3Options.broken = true;
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				async () =>
 					caller.procedure(
@@ -178,7 +178,7 @@ describe("account.changeAvatar", () => {
 			// Verifying other users are not affected
 			await insertAccountWithSession(ctx);
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure(getFormData()),
@@ -191,7 +191,7 @@ describe("account.changeAvatar", () => {
 			// Verifying other users are not affected
 			await insertAccountWithSession(ctx);
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 
 			const result = await expectDatabaseDiffSnapshot(ctx, async () =>
 				caller.procedure(
@@ -222,7 +222,7 @@ describe("account.changeAvatar", () => {
 			// Verifying other users are not affected
 			await insertAccountWithSession(ctx);
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 
 			await caller.procedure(
 				await generateFormWithImage(MAX_AVATAR_SIDE_SIZE, MAX_AVATAR_SIDE_SIZE),

@@ -15,20 +15,18 @@ import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./resend-email";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("account.resendEmail", () => {
 	describe("input verification", () => {
-		expectUnauthorizedError((context) =>
-			router.createCaller(context).procedure(),
-		);
+		expectUnauthorizedError((context) => createCaller(context).procedure());
 
 		test("account is already verified", async ({ ctx }) => {
 			const {
 				sessionId,
 				account: { email },
 			} = await insertAccountWithSession(ctx);
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure(),
 				"BAD_REQUEST",
@@ -50,7 +48,7 @@ describe("account.resendEmail", () => {
 					},
 				},
 			});
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure(),
 				"BAD_REQUEST",
@@ -79,7 +77,7 @@ describe("account.resendEmail", () => {
 		test("email is not resent - service is disabled", async ({ ctx }) => {
 			ctx.emailOptions.active = false;
 			const { sessionId } = await insertReadyForEmailAccount(ctx);
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure(),
 				"FORBIDDEN",
@@ -92,7 +90,7 @@ describe("account.resendEmail", () => {
 		}) => {
 			ctx.emailOptions.broken = true;
 			const { sessionId } = await insertReadyForEmailAccount(ctx);
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure(),
 				"INTERNAL_SERVER_ERROR",
@@ -106,7 +104,7 @@ describe("account.resendEmail", () => {
 			await insertAccountWithSession(ctx);
 			await insertReadyForEmailAccount(ctx);
 			const { sessionId, email } = await insertReadyForEmailAccount(ctx);
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const { email: returnEmail } = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure(),
 			);

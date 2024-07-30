@@ -20,12 +20,12 @@ import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./remove";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("receiptTransferIntentions.remove", () => {
 	describe("input verification", () => {
 		expectUnauthorizedError((context) =>
-			router.createCaller(context).procedure({
+			createCaller(context).procedure({
 				receiptId: faker.string.uuid(),
 			}),
 		);
@@ -34,7 +34,7 @@ describe("receiptTransferIntentions.remove", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -51,7 +51,7 @@ describe("receiptTransferIntentions.remove", () => {
 			await insertReceipt(ctx, accountId);
 			const fakeReceiptId = faker.string.uuid();
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ receiptId: fakeReceiptId }),
 				"NOT_FOUND",
@@ -64,7 +64,7 @@ describe("receiptTransferIntentions.remove", () => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				const { id: receiptId } = await insertReceipt(ctx, accountId);
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ receiptId }),
 					"NOT_FOUND",
@@ -82,7 +82,7 @@ describe("receiptTransferIntentions.remove", () => {
 					{ transferIntentionAccountId: anotherAccountId },
 				);
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ receiptId: foreignReceiptId }),
 					"BAD_REQUEST",
@@ -103,7 +103,7 @@ describe("receiptTransferIntentions.remove", () => {
 				{ transferIntentionAccountId: anotherAccountId },
 			);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ receiptId: foreignReceiptId }),
 				"BAD_REQUEST",
@@ -129,7 +129,7 @@ describe("receiptTransferIntentions.remove", () => {
 				transferIntentionAccountId: accountId,
 			});
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ receiptId }),
 			);
@@ -156,7 +156,7 @@ describe("receiptTransferIntentions.remove", () => {
 				transferIntentionAccountId: accountId,
 			});
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ receiptId: foreignReceiptId }),
 			);

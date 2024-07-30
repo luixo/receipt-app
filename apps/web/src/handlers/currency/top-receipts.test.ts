@@ -15,13 +15,11 @@ import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./top-receipts";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("currency.rates", () => {
 	describe("input verification", () => {
-		expectUnauthorizedError((context) =>
-			router.createCaller(context).procedure(),
-		);
+		expectUnauthorizedError((context) => createCaller(context).procedure());
 	});
 
 	describe("functionality", () => {
@@ -33,7 +31,7 @@ describe("currency.rates", () => {
 			});
 			const { id: userId } = await insertUser(ctx, otherAccountId);
 			await insertReceiptParticipant(ctx, receiptId, userId);
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
 			expect(result).toEqual<typeof result>([]);
 		});
@@ -88,7 +86,7 @@ describe("currency.rates", () => {
 				foreignUserId,
 			);
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
 			expect(result).toStrictEqual<typeof result>([
 				{

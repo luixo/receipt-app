@@ -20,12 +20,12 @@ import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./update";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("receiptParticipants.update", () => {
 	describe("input verification", () => {
 		expectUnauthorizedError((context) =>
-			router.createCaller(context).procedure({
+			createCaller(context).procedure({
 				receiptId: faker.string.uuid(),
 				userId: faker.string.uuid(),
 				update: { type: "role", role: "viewer" },
@@ -35,7 +35,7 @@ describe("receiptParticipants.update", () => {
 		describe("receiptId", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -52,7 +52,7 @@ describe("receiptParticipants.update", () => {
 		describe("userId", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -68,7 +68,7 @@ describe("receiptParticipants.update", () => {
 
 		test("receipt does not exist", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await insertReceipt(ctx, accountId);
 			const fakeReceiptId = faker.string.uuid();
 			await expectTRPCError(
@@ -89,7 +89,7 @@ describe("receiptParticipants.update", () => {
 				const { id: receiptId } = await insertReceipt(ctx, accountId);
 				const fakeUserId = faker.string.uuid();
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -109,7 +109,7 @@ describe("receiptParticipants.update", () => {
 				const { id: notParticipantUserId } = await insertUser(ctx, accountId);
 				const { id: receiptId } = await insertReceipt(ctx, accountId);
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -133,7 +133,7 @@ describe("receiptParticipants.update", () => {
 				const { id: receiptId } = await insertReceipt(ctx, accountId);
 				await insertReceiptParticipant(ctx, receiptId, selfUserId);
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -166,7 +166,7 @@ describe("receiptParticipants.update", () => {
 					{ role: "editor" },
 				);
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -196,7 +196,7 @@ describe("receiptParticipants.update", () => {
 				]);
 				await insertReceiptParticipant(ctx, receiptId, foreignUserId);
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -233,7 +233,7 @@ describe("receiptParticipants.update", () => {
 				// Verify unrelated data doesn't affect the result
 				await insertReceiptParticipant(ctx, receiptId, selfUserId);
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectDatabaseDiffSnapshot(ctx, () =>
 					caller.procedure({
 						receiptId,
@@ -267,7 +267,7 @@ describe("receiptParticipants.update", () => {
 				// Verify unrelated data doesn't affect the result
 				await insertReceiptParticipant(ctx, receiptId, selfUserId);
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectDatabaseDiffSnapshot(ctx, () =>
 					caller.procedure({
 						receiptId,
@@ -299,7 +299,7 @@ describe("receiptParticipants.update", () => {
 					resolved: true,
 				});
 
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectDatabaseDiffSnapshot(ctx, () =>
 					caller.procedure({
 						receiptId,

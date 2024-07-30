@@ -11,13 +11,11 @@ import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./logout";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("account.logout", () => {
 	describe("input verification", () => {
-		expectUnauthorizedError((context) =>
-			router.createCaller(context).procedure(),
-		);
+		expectUnauthorizedError((context) => createCaller(context).procedure());
 	});
 
 	describe("functionality", () => {
@@ -26,7 +24,7 @@ describe("account.logout", () => {
 			await insertAccountWithSession(ctx);
 			const { sessionId } = await insertAccountWithSession(ctx);
 			const context = createAuthContext(ctx, sessionId);
-			const caller = router.createCaller(context);
+			const caller = createCaller(context);
 			await expectDatabaseDiffSnapshot(ctx, () => caller.procedure());
 			const responseHeaders = ctx.responseHeaders.get();
 			expect(responseHeaders).toStrictEqual<typeof responseHeaders>([

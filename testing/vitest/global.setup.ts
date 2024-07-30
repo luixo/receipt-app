@@ -2,7 +2,7 @@ import { createHTTPServer } from "@trpc/server/adapters/standalone";
 import findFreePorts from "find-free-ports";
 import type { GlobalSetupContext } from "vitest/node";
 
-import { appRouter } from "./databases/router";
+import { appRouter, createCaller } from "./databases/router";
 
 declare module "vitest" {
 	interface ProvidedContext {
@@ -22,7 +22,7 @@ export default async (context: GlobalSetupContext) => {
 	await new Promise<void>((resolve) => {
 		httpServer.listen(routerConfig.port, resolve);
 	});
-	const caller = appRouter.createCaller({});
+	const caller = createCaller({});
 	await caller.setup({ maxDatabases: context.config.maxConcurrency });
 	return async () => {
 		await caller.teardown();

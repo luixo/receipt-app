@@ -13,7 +13,7 @@ import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./cleanup";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("sessions.cleanup", () => {
 	describe("functionality", () => {
@@ -33,7 +33,7 @@ describe("sessions.cleanup", () => {
 				// long expired session
 				expirationTimestamp: new Date(Date.now() - YEAR),
 			});
-			const caller = router.createCaller(createContext(ctx));
+			const caller = createCaller(createContext(ctx));
 			await expectDatabaseDiffSnapshot(ctx, () => caller.procedure());
 		});
 	});

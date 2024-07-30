@@ -17,18 +17,18 @@ import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./change-name";
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("account.changeName", () => {
 	describe("input verification", () => {
 		expectUnauthorizedError((context) =>
-			router.createCaller(context).procedure({ name: "" }),
+			createCaller(context).procedure({ name: "" }),
 		);
 
 		describe("user name", () => {
 			test("minimal length", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -41,7 +41,7 @@ describe("account.changeName", () => {
 
 			test("maximum length", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = router.createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -59,7 +59,7 @@ describe("account.changeName", () => {
 			// Verifying other users are not affected
 			await insertAccountWithSession(ctx);
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 
 			await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ name: faker.person.firstName() }),

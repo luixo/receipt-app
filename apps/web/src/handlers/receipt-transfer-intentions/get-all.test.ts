@@ -38,13 +38,11 @@ const sumItems = (items: Awaited<ReturnType<typeof insertReceiptItem>>[]) =>
 		0,
 	);
 
-const router = t.router({ procedure });
+const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 describe("receiptTransferIntentions.getAll", () => {
 	describe("input verification", () => {
-		expectUnauthorizedError((context) =>
-			router.createCaller(context).procedure(),
-		);
+		expectUnauthorizedError((context) => createCaller(context).procedure());
 	});
 
 	describe("functionality", () => {
@@ -58,7 +56,7 @@ describe("receiptTransferIntentions.getAll", () => {
 				transferIntentionAccountId: anotherAccountId,
 			});
 
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
 			await expect(result).toStrictEqual<typeof result>({
 				inbound: [],
@@ -126,7 +124,7 @@ describe("receiptTransferIntentions.getAll", () => {
 			});
 
 			// Verifying
-			const caller = router.createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
 			await expect(result).toStrictEqual<typeof result>({
 				inbound: [
