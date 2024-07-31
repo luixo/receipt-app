@@ -36,11 +36,8 @@ const nextConfig = {
 		"nativewind",
 		"react-native-css-interop",
 	],
-	// see patch
-	ignorePages: "\\.spec\\.tsx?$",
 	experimental: {
 		optimizeCss: true,
-		windowHistorySupport: true,
 	},
 	images: {
 		remotePatterns: [
