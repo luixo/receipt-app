@@ -15,6 +15,6 @@
 		"extract-pg-schema": "^4.1.0",
 		"kanel": "^3.4.1",
 		"tsx": "^4.7.1",
-		"vitest": "^1.2.2"
+		"vitest": "^2.0.4"
 	}
 }

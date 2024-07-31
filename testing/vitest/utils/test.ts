@@ -18,7 +18,7 @@ import { getResponseHeaders } from "~tests/backend/utils/mocks/response-headers"
 import type { S3OptionsMock } from "~tests/backend/utils/mocks/s3";
 import { getS3Options } from "~tests/backend/utils/mocks/s3";
 
-type SuiteContext = {
+type FileContext = {
 	logger: LoggerMock;
 	database: Database;
 	dumpDatabase: () => Promise<inferProcedureOutput<AppRouter["dumpDatabase"]>>;
@@ -29,7 +29,7 @@ type SuiteContext = {
 
 declare module "vitest" {
 	interface Suite {
-		suiteContext: SuiteContext;
+		fileContext: FileContext;
 	}
 }
 
@@ -54,7 +54,7 @@ type MetaContext = {
 
 export type TestContext = FakerContext &
 	MockContext &
-	SuiteContext &
+	FileContext &
 	MetaContext;
 export type TestFixture = { ctx: TestContext };
 
@@ -68,8 +68,8 @@ export const createStableFaker = (input: string) => {
 // eslint-disable-next-line vitest/expect-expect
 export const test = originalTest.extend<TestFixture>({
 	ctx: async ({ task }, use) => {
-		const { suiteContext } = task.suite.file!;
-		suiteContext.logger.resetMessages();
+		const { fileContext } = task.file;
+		fileContext.logger.resetMessages();
 		// Stable faker to generate uuid / salt on handler side
 		const handlerIdFaker = createStableFaker(task.name);
 		// Stable faker to generate uuid / salt on tests side
@@ -98,7 +98,7 @@ export const test = originalTest.extend<TestFixture>({
 					prefix: "",
 				}),
 			task,
-			...suiteContext,
+			...fileContext,
 		});
 	},
 });

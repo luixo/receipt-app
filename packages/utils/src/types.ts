@@ -118,3 +118,5 @@ type InnerTupleOf<
 	N extends number,
 	R extends unknown[],
 > = R["length"] extends N ? R : InnerTupleOf<T, N, [T, ...R]>;
+
+export type Writeable<T> = { -readonly [P in keyof T]: T[P] };

@@ -1,10 +1,10 @@
 import { createTRPCClient, unstable_httpBatchStreamLink } from "@trpc/client";
 import { Pool } from "pg";
 import * as timekeeper from "timekeeper";
-import type { Suite as OriginalSuite } from "vitest";
 import { beforeAll, beforeEach, inject } from "vitest";
 
 import { getDatabase } from "~db";
+import type { Writeable } from "~utils";
 import { SECOND } from "~utils";
 
 import { makeConnectionString } from "./databases/connection";
@@ -16,7 +16,7 @@ const client = createTRPCClient<typeof appRouter>({
 	links: [unstable_httpBatchStreamLink({ url: `http://localhost:${port}` })],
 });
 
-beforeAll(async (suite) => {
+beforeAll(async (fileOrSuite) => {
 	const { databaseName, connectionData } = await client.lockDatabase.mutate();
 	const logger = getLogger();
 	const database = getDatabase({
@@ -25,12 +25,17 @@ beforeAll(async (suite) => {
 			connectionString: makeConnectionString(connectionData, databaseName),
 		}),
 	});
-	(suite as OriginalSuite).suiteContext = {
-		logger,
-		database,
-		dumpDatabase: () => client.dumpDatabase.mutate({ databaseName }),
-		truncateDatabase: () => client.truncateDatabase.mutate({ databaseName }),
-	};
+	if ("filepath" in fileOrSuite) {
+		// Metadata is not serializable though `file` reference stays on the run
+		// see https://vitest.dev/advanced/metadata
+		const file = fileOrSuite as Writeable<typeof fileOrSuite>;
+		file.fileContext = {
+			logger,
+			database,
+			dumpDatabase: () => client.dumpDatabase.mutate({ databaseName }),
+			truncateDatabase: () => client.truncateDatabase.mutate({ databaseName }),
+		};
+	}
 	return async () => {
 		await database.destroy();
 		await client.releaseDatabase.mutate({ databaseName });
@@ -41,6 +46,6 @@ beforeEach(async ({ task }) => {
 	timekeeper.freeze(new Date("2020-01-01"));
 	return async () => {
 		timekeeper.reset();
-		await task.suite.file!.suiteContext.truncateDatabase();
+		await task.file.fileContext.truncateDatabase();
 	};
 });
