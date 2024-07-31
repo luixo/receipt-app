@@ -70,6 +70,22 @@ To run tests locally you need to install Playwright browsers:
 npx playwright install
 ```
 
+### Prebuild app locally
+
+```sh
+NODE_ENV=test npx dotenv -c -- yarn web:build
+```
+
+#### Testing in development with HMR
+
+Alternatively to prebuild, you can run tests against dev environment.
+There might be light discrepancy for functional tests.
+Visual regression tests will fail on screenshots (different platforms have significant difference in those).
+
+```sh
+NODE_ENV=test yarn dev
+```
+
 ### Functional tests
 
 To run (functional) frontend tests:
@@ -83,12 +99,6 @@ yarn frontend:test --project functional
 Visual regression tests are run in a docker image (to be consistent on CI environments).
 
 #### Step by step
-
-0. Prebuild the app locally (you can do that inside Docker image, but it will probably OOM)
-
-```sh
-NODE_ENV=test npx dotenv -c -- yarn web:build
-```
 
 1. Run a Playwright docker image with port 3000 exposed and current directory linked as `/work`
 
