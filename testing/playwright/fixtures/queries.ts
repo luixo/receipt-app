@@ -230,6 +230,7 @@ const remapActions = (
 	);
 
 const withNoPlatformPath = (testInfo: TestInfo, fn: () => void) => {
+	/* eslint-disable-next-line @typescript-eslint/unbound-method */
 	const originalSnapshotPath = testInfo.snapshotPath;
 	testInfo.snapshotPath = (...snapshotPath) =>
 		originalSnapshotPath

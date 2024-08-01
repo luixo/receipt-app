@@ -11,9 +11,7 @@ export type MenuElement = {
 	href: string;
 	useBadgeAmount?: () => number;
 	useShow?: () => boolean;
-	// eslint-disable-next-line react/no-unused-prop-types
 	ItemWrapper?: React.FC<React.PropsWithChildren>;
-	// eslint-disable-next-line react/no-unused-prop-types
 	PageWrapper?: React.FC<React.PropsWithChildren>;
 };
 

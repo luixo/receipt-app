@@ -84,7 +84,6 @@ const stableScreenshot = async ({
 	let prevBuffer: Buffer;
 	let buffer: Buffer | undefined;
 	/* eslint-disable no-await-in-loop */
-	// eslint-disable-next-line no-constant-condition
 	while (true) {
 		if (isTimedOut) {
 			throw new Error("Timeout while waiting for stable screenshot");

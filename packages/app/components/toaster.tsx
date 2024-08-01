@@ -7,6 +7,8 @@ import { Toaster as RawToaster, ToastBar, toast } from "react-hot-toast";
 import { tv } from "~components";
 
 declare global {
+	// external interface extension
+	// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 	interface Window {
 		removeToasts: () => void;
 	}

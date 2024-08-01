@@ -1,7 +1,6 @@
 import { nextui } from "@nextui-org/react";
 // @ts-expect-error Preset has incorrent exports
 import preset from "nativewind/preset";
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { withTV } from "tailwind-variants/transformer";
 import type { Config } from "tailwindcss";
 

@@ -38,8 +38,6 @@ const generateEmail = (
 	ctx: UnauthorizedContext,
 	element: React.ReactElement,
 ) => {
-	// That's one-time render, we don't care about rerenders
-	// eslint-disable-next-line react/jsx-no-constructed-context-values
 	const stylesMapping: React.ContextType<typeof StylingContext> = {};
 	const markup = `
 	<!doctype html lang="en">

@@ -5,6 +5,8 @@ import type { GlobalSetupContext } from "vitest/node";
 import { appRouter, createCaller } from "./databases/router";
 
 declare module "vitest" {
+	// external interface extension
+	// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 	interface ProvidedContext {
 		routerConfig: {
 			port: number;

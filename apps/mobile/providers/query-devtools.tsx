@@ -6,14 +6,19 @@ export const QueryDevToolsProvider: React.FC<
 	React.PropsWithChildren<object>
 > = ({ children }) => {
 	const queryClient = useQueryClient();
-	React.useEffect(() => {
+	const injectDevTools = React.useCallback(async () => {
 		if (__DEV__) {
-			// eslint-disable-next-line import/no-extraneous-dependencies
-			import("react-query-native-devtools")
-				.then(({ addPlugin }) => addPlugin({ queryClient }))
+			try {
+				const { addPlugin } = await import("react-query-native-devtools");
+				addPlugin({ queryClient });
+			} catch (e) {
 				// eslint-disable-next-line no-console
-				.catch(console.warn);
+				console.warn(e);
+			}
 		}
 	}, [queryClient]);
+	React.useEffect(() => {
+		void injectDevTools();
+	}, [injectDevTools]);
 	return <>{children}</>;
 };

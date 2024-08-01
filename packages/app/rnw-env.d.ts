@@ -1,6 +1,8 @@
 // override react-native types with react-native-web types
 import "react-native";
 
+// external interface extension
+/* eslint-disable @typescript-eslint/consistent-type-definitions */
 declare module "react-native" {
 	interface PressableStateCallbackType {
 		hovered?: boolean;
@@ -29,3 +31,4 @@ declare module "react-native" {
 		onClick?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
 	}
 }
+/* eslint-enable @typescript-eslint/consistent-type-definitions */

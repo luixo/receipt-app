@@ -44,6 +44,8 @@ jobs:
       - uses: ./.github/actions/setup-env
       - name: Run linter
         run: yarn lint
+        env:
+          NODE_OPTIONS: "--max-old-space-size=4096"
 
   build:
     name: Build

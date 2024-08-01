@@ -6,6 +6,8 @@ import { dehydrate, useQueryClient } from "@tanstack/react-query";
 import { alwaysTrue } from "~utils";
 
 declare global {
+	// external interface extension
+	// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 	interface Window {
 		getDehydratedCache: (timeout: number) => Promise<DehydratedState>;
 		queryClient: QueryClient;
