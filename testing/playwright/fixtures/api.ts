@@ -23,7 +23,7 @@ import type { TransformerResult } from "~app/utils/trpc";
 import { transformer } from "~app/utils/trpc";
 import type { ControlledPromise } from "~utils";
 import { createPromise } from "~utils";
-import { getCurrencies } from "~web/utils/currency";
+import { getCurrencies } from "~utils/currency-data";
 
 import type { appRouter } from "../global/router";
 

@@ -2,5 +2,8 @@
 	"version": "0.0.0",
 	"name": "@ra/utils",
 	"main": "src/index.ts",
-	"sideEffects": false
+	"sideEffects": false,
+	"dependencies": {
+		"currency-list": "^1.0.8"
+	}
 }

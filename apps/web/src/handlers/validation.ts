@@ -9,7 +9,7 @@ import type {
 	SessionsSessionId,
 	UsersId,
 } from "~db";
-import { isCurrencyCode } from "~web/utils/currency";
+import { isCurrencyCode } from "~utils/currency-data";
 
 export const offsetSchema = z.number().int().gte(0).max(MAX_OFFSET);
 export const limitSchema = z.number().int().gt(0).max(MAX_LIMIT);

@@ -4,7 +4,7 @@ import type { TRPCQueryOutput } from "~app/trpc";
 import type { AccountsId, UsersId } from "~db";
 import { generateAmount } from "~tests/frontend/utils/generators";
 import type { Amount } from "~tests/frontend/utils/generators";
-import { CURRENCY_CODES } from "~web/utils/currency";
+import { CURRENCY_CODES } from "~utils/currency-data";
 
 export type GenerateSelfAccount = (opts: { faker: Faker }) => {
 	accountId: AccountsId;

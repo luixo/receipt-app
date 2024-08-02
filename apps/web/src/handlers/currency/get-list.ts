@@ -2,9 +2,9 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import type { CurrencyCode } from "~app/utils/currency";
+import { getCurrencies } from "~utils/currency-data";
 import { authProcedure } from "~web/handlers/trpc";
 import { localeSchema } from "~web/handlers/validation";
-import { getCurrencies } from "~web/utils/currency";
 
 export const procedure = authProcedure
 	.input(
