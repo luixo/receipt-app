@@ -11,6 +11,10 @@
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.470.0",
 		"@expo/next-adapter": "^5.0.2",
+		"@ra/app": "workspace:*",
+		"@ra/components": "workspace:*",
+		"@ra/db": "workspace:*",
+		"@ra/utils": "workspace:*",
 		"@tanstack/query-async-storage-persister": "^5.51.1",
 		"@trpc/client": "^11.0.0-rc.461",
 		"@trpc/next": "^11.0.0-rc.461",
@@ -44,6 +48,8 @@
 	"devDependencies": {
 		"@faker-js/faker": "^8.0.2",
 		"@next/bundle-analyzer": "^14.0.4",
+		"@ra/playwright": "workspace:*",
+		"@ra/vitest": "workspace:*",
 		"@types/cookie": "^0.5.1",
 		"@types/isomorphic-fetch": "^0.0.36",
 		"@types/node": "20.4.4",

@@ -3,6 +3,10 @@
 	"type": "module",
 	"devDependencies": {
 		"@faker-js/faker": "^8.0.2",
+		"@ra/db": "workspace:*",
+		"@ra/test-utils": "workspace:*",
+		"@ra/utils": "workspace:*",
+		"@ra/web": "workspace:*",
 		"@trpc/client": "^11.0.0-rc.461",
 		"@trpc/server": "^11.0.0-rc.461",
 		"deep-object-diff": "^1.1.9",

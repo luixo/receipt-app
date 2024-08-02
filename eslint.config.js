@@ -1,20 +1,20 @@
 import { fixupPluginRules } from "@eslint/compat";
 import { FlatCompat } from "@eslint/eslintrc";
 import js from "@eslint/js";
-import prettierConfig from "eslint-config-prettier";
-import importPlugin from "eslint-plugin-import";
-import jsxAccessibilityPlugin from "eslint-plugin-jsx-a11y";
+import nextJsPlugin from "@next/eslint-plugin-next";
 import airbnbConfig from "eslint-config-airbnb";
 import airbnbHooksConfig from "eslint-config-airbnb/hooks";
 import airbnbTypescriptConfig from "eslint-config-airbnb-typescript";
+import prettierConfig from "eslint-config-prettier";
+import importPlugin from "eslint-plugin-import";
+import jsxAccessibilityPlugin from "eslint-plugin-jsx-a11y";
 import reactPlugin from "eslint-plugin-react";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
-import nextJsPlugin from "@next/eslint-plugin-next";
 import tailwindPlugin from "eslint-plugin-tailwindcss";
 import vitestPlugin from "eslint-plugin-vitest";
 import globals from "globals";
-import ts from "typescript-eslint";
 import path from "node:path";
+import ts from "typescript-eslint";
 
 const getExtraneousDependenciesConfig = (
 	packageJsonDir = "",
@@ -55,7 +55,10 @@ const overridenRules = {
 	// Custom devDependencies
 	"import/no-extraneous-dependencies": [
 		"error",
-		getExtraneousDependenciesConfig(undefined, ["vitest.config.ts"]),
+		getExtraneousDependenciesConfig(undefined, [
+			"vitest.config.ts",
+			"eslint.config.js",
+		]),
 	],
 	// Custom order
 	"import/order": [
@@ -178,13 +181,6 @@ const temporaryDisabledRules = {
 	"@typescript-eslint/restrict-plus-operands": "off",
 	"@typescript-eslint/restrict-template-expressions": "off",
 	"@typescript-eslint/use-unknown-in-catch-callback-variable": "off",
-	"import/default": "off",
-	"import/export": "off",
-	"import/namespace": "off",
-	"import/no-extraneous-dependencies": "off",
-	"import/no-named-as-default-member": "off",
-	"import/no-named-as-default": "off",
-	"import/order": "off",
 	"jsx-a11y/no-autofocus": "off",
 };
 
@@ -281,13 +277,17 @@ export default ts.config(
 	{ rules: overridenRules },
 	{ rules: disabledRules },
 	...[
-		["apps/web", ["next.config.js", "**/*.test.ts", "**/*.spec.ts"]],
+		[
+			"apps/web",
+			["next.config.js", "vitest.config.ts", "**/*.test.ts", "**/*.spec.ts"],
+		],
 		["apps/mobile"],
 		["packages/components"],
 		["packages/mutations"],
 		["packages/queries"],
-		["packages/db", ["scripts/**/*", "**/*.test.ts"]],
-		["packages/app", ["**/*.spec.ts"]],
+		["packages/utils"],
+		["packages/db", ["scripts/**/*", "**/*.test.ts", "vitest.config.ts"]],
+		["packages/app", ["**/*.spec.ts", "**/__tests__/**"]],
 		["scripts", true],
 		["testing/vitest", true],
 		["testing/playwright", true],

@@ -4,6 +4,8 @@
 	"main": "src/index.ts",
 	"sideEffects": false,
 	"dependencies": {
+		"@ra/app": "workspace:*",
+		"@ra/utils": "workspace:*",
 		"zustand": "^4.3.9"
 	}
 }

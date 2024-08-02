@@ -9,6 +9,7 @@ export const QueryDevToolsProvider: React.FC<
 	const injectDevTools = React.useCallback(async () => {
 		if (__DEV__) {
 			try {
+				// eslint-disable-next-line import/no-extraneous-dependencies
 				const { addPlugin } = await import("react-query-native-devtools");
 				addPlugin({ queryClient });
 			} catch (e) {

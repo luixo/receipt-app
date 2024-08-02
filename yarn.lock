@@ -3564,7 +3564,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/js@npm:9.8.0":
+"@eslint/js@npm:9.8.0, @eslint/js@npm:^9.8.0":
   version: 9.8.0
   resolution: "@eslint/js@npm:9.8.0"
   checksum: 8b6e809127edea3bf5b5b3c01ae75290afe5044f950642445a50cb4b86c153ad1512fc417d3cb7b79eb7cd0ce06acd858946b6497ea912750aa54de609064f63
@@ -6195,6 +6195,11 @@ __metadata:
     "@hookform/resolvers": ^3.1.1
     "@nextui-org/react": ^2.2.9
     "@nextui-org/use-infinite-scroll": ^2.1.2
+    "@ra/components": "workspace:*"
+    "@ra/mutations": "workspace:*"
+    "@ra/playwright": "workspace:*"
+    "@ra/queries": "workspace:*"
+    "@ra/utils": "workspace:*"
     "@react-types/shared": ^3.18.1
     "@tanstack/react-query-persist-client": ^5.51.1
     "@trpc/client": ^11.0.0-rc.461
@@ -6211,18 +6216,20 @@ __metadata:
     react-hot-toast: ^2.4.1
     solito: ^4.1.3
     superjson: ^1.13.1
+    tailwind-variants: ^0.2.1
     uuid: ^9.0.0
     zod-form-data: ^2.0.2
     zustand: ^4.3.9
   languageName: unknown
   linkType: soft
 
-"@ra/components@workspace:packages/components":
+"@ra/components@workspace:*, @ra/components@workspace:packages/components":
   version: 0.0.0-use.local
   resolution: "@ra/components@workspace:packages/components"
   dependencies:
     "@expo/html-elements": ^0.5.1
     "@nextui-org/react": ^2.2.9
+    "@ra/utils": "workspace:*"
     date-fns: ^3.3.1
     framer-motion: ^10.16.12
     react-day-picker: ^8.9.1
@@ -6230,10 +6237,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ra/db@workspace:packages/db":
+"@ra/db@workspace:*, @ra/db@workspace:packages/db":
   version: 0.0.0-use.local
   resolution: "@ra/db@workspace:packages/db"
   dependencies:
+    "@ra/vitest": "workspace:*"
     extract-pg-schema: ^4.1.0
     kanel: ^3.4.1
     kysely: ^0.27.2
@@ -6278,21 +6286,26 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ra/mutations@workspace:packages/mutations":
+"@ra/mutations@workspace:*, @ra/mutations@workspace:packages/mutations":
   version: 0.0.0-use.local
   resolution: "@ra/mutations@workspace:packages/mutations"
   dependencies:
+    "@ra/utils": "workspace:*"
     "@tanstack/react-query": ^5.51.1
     "@trpc/react-query": ^11.0.0-rc.461
   languageName: unknown
   linkType: soft
 
-"@ra/playwright@workspace:testing/playwright":
+"@ra/playwright@workspace:*, @ra/playwright@workspace:testing/playwright":
   version: 0.0.0-use.local
   resolution: "@ra/playwright@workspace:testing/playwright"
   dependencies:
     "@faker-js/faker": ^8.0.2
     "@playwright/test": ^1.40.1
+    "@ra/app": "workspace:*"
+    "@ra/test-utils": "workspace:*"
+    "@ra/utils": "workspace:*"
+    "@ra/web": "workspace:*"
     "@trpc/client": ^11.0.0-rc.461
     "@trpc/server": ^11.0.0-rc.461
     async-await-queue: ^2.1.4
@@ -6306,10 +6319,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ra/queries@workspace:packages/queries":
+"@ra/queries@workspace:*, @ra/queries@workspace:packages/queries":
   version: 0.0.0-use.local
   resolution: "@ra/queries@workspace:packages/queries"
   dependencies:
+    "@ra/app": "workspace:*"
+    "@ra/utils": "workspace:*"
     zustand: ^4.3.9
   languageName: unknown
   linkType: soft
@@ -6325,17 +6340,29 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ra/utils@workspace:packages/utils":
+"@ra/test-utils@workspace:*, @ra/test-utils@workspace:testing/utils":
   version: 0.0.0-use.local
-  resolution: "@ra/utils@workspace:packages/utils"
+  resolution: "@ra/test-utils@workspace:testing/utils"
   languageName: unknown
   linkType: soft
 
-"@ra/vitest@workspace:testing/vitest":
+"@ra/utils@workspace:*, @ra/utils@workspace:packages/utils":
+  version: 0.0.0-use.local
+  resolution: "@ra/utils@workspace:packages/utils"
+  dependencies:
+    currency-list: ^1.0.8
+  languageName: unknown
+  linkType: soft
+
+"@ra/vitest@workspace:*, @ra/vitest@workspace:testing/vitest":
   version: 0.0.0-use.local
   resolution: "@ra/vitest@workspace:testing/vitest"
   dependencies:
     "@faker-js/faker": ^8.0.2
+    "@ra/db": "workspace:*"
+    "@ra/test-utils": "workspace:*"
+    "@ra/utils": "workspace:*"
+    "@ra/web": "workspace:*"
     "@trpc/client": ^11.0.0-rc.461
     "@trpc/server": ^11.0.0-rc.461
     deep-object-diff: ^1.1.9
@@ -6348,7 +6375,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@ra/web@workspace:apps/web":
+"@ra/web@workspace:*, @ra/web@workspace:apps/web":
   version: 0.0.0-use.local
   resolution: "@ra/web@workspace:apps/web"
   dependencies:
@@ -6356,6 +6383,12 @@ __metadata:
     "@expo/next-adapter": ^5.0.2
     "@faker-js/faker": ^8.0.2
     "@next/bundle-analyzer": ^14.0.4
+    "@ra/app": "workspace:*"
+    "@ra/components": "workspace:*"
+    "@ra/db": "workspace:*"
+    "@ra/playwright": "workspace:*"
+    "@ra/utils": "workspace:*"
+    "@ra/vitest": "workspace:*"
     "@tanstack/query-async-storage-persister": ^5.51.1
     "@trpc/client": ^11.0.0-rc.461
     "@trpc/next": ^11.0.0-rc.461
@@ -6372,7 +6405,6 @@ __metadata:
     cookie: ^0.5.0
     cookies-next: ^2.1.2
     critters: ^0.0.20
-    currency-list: ^1.0.8
     dataloader: ^2.2.2
     goober: ^2.1.13
     idb-keyval: ^6.2.1
@@ -22214,6 +22246,7 @@ __metadata:
     "@babel/core": ^7.23.5
     "@eslint/compat": ^1.1.1
     "@eslint/eslintrc": ^3.1.0
+    "@eslint/js": ^9.8.0
     "@kristiandupont/recase": ^1.1.2
     "@next/eslint-plugin-next": ^14.2.5
     "@sentry/nextjs": ^8.9.2
@@ -24201,6 +24234,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tailwind-merge@npm:^2.2.0":
+  version: 2.4.0
+  resolution: "tailwind-merge@npm:2.4.0"
+  checksum: 442ab18af754eb90a1c730289b10a5df89ec8f197b4783bd31651fffc06ac06dbe7a8f491c2e133c906d6ab466170a5fc1f45aa2d22874e47706acf9d8b0cfe5
+  languageName: node
+  linkType: hard
+
 "tailwind-variants@npm:^0.1.18":
   version: 0.1.18
   resolution: "tailwind-variants@npm:0.1.18"
@@ -24209,6 +24249,17 @@ __metadata:
   peerDependencies:
     tailwindcss: "*"
   checksum: 417f1673c47ff1e231248a726eadf6d934a8ba85b01692f083c682a7be8d276de52a22169025cfaaf1d382dcabc7170b98bd8d9fd6b9007eec6f9ab869aca2e4
+  languageName: node
+  linkType: hard
+
+"tailwind-variants@npm:^0.2.1":
+  version: 0.2.1
+  resolution: "tailwind-variants@npm:0.2.1"
+  dependencies:
+    tailwind-merge: ^2.2.0
+  peerDependencies:
+    tailwindcss: "*"
+  checksum: 39086c633399032fed3923c44980a05183e27179f64bcb945f05ca6efec9bae283a371502ae34c9cb5740b195ef3967aab23cdf79fe2cf87be8fa2f19fb38a03
   languageName: node
   linkType: hard
 

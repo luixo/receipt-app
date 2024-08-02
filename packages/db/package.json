@@ -12,6 +12,7 @@
 		"pg": "^8.11.3"
 	},
 	"devDependencies": {
+		"@ra/vitest": "workspace:*",
 		"extract-pg-schema": "^4.1.0",
 		"kanel": "^3.4.1",
 		"tsx": "^4.7.1",
