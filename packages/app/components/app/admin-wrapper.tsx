@@ -3,11 +3,11 @@ import React from "react";
 import { useRouter } from "solito/navigation";
 
 import { QueryErrorMessage } from "~app/components/error-message";
+import { LinksContext, LinksContextType } from "~app/contexts/links-context";
 import { SELF_QUERY_CLIENT_KEY } from "~app/contexts/query-clients-context";
 import { SearchParamsContext } from "~app/contexts/search-params-context";
 import { QueryProvider } from "~app/providers/query";
 import { trpc } from "~app/trpc";
-import { useLinks } from "~web/utils/trpc";
 
 const NoAdminEffect: React.FC = () => {
 	const router = useRouter();
@@ -30,12 +30,18 @@ export const AdminWrapper: React.FC<React.PropsWithChildren> = ({
 	children,
 }) => {
 	const searchParams = React.useContext(SearchParamsContext);
-	const links = useLinks(searchParams, {
-		headers: { "x-keep-real-auth": "true" },
-	});
+	const baseLinksContext = React.useContext(LinksContext);
+	const linksContext = React.useMemo<LinksContextType>(
+		() => ({
+			...baseLinksContext,
+			searchParams,
+			headers: { ...baseLinksContext.headers, "x-keep-real-auth": "true" },
+		}),
+		[baseLinksContext, searchParams],
+	);
 	return (
 		<QueryProvider
-			links={links}
+			linksContext={linksContext}
 			useQueryClientKey={() => SELF_QUERY_CLIENT_KEY}
 		>
 			{children}

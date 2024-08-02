@@ -16,8 +16,8 @@ const nextConfig = getConfig();
 
 export const getTrpcClient = (req: NextApiRequest) =>
 	createTRPCClient<AppRouter>({
-		links: getLinks(getSsrHost(nextConfig.serverRuntimeConfig?.port ?? 0), {
-			searchParams: req.query,
+		links: getLinks(req.query, {
+			url: getSsrHost(nextConfig.serverRuntimeConfig?.port ?? 0),
 			headers: {
 				cookie: serializeCookieHeader(getCookies(req), [AUTH_COOKIE]),
 			},

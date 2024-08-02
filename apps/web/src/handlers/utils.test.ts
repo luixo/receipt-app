@@ -57,17 +57,20 @@ export const getClientServer = async <R extends AnyTRPCRouter>(
 	});
 	return {
 		client: createTRPCClient<R>({
-			links: getLinks(`http://localhost:${port}`, {
-				searchParams: {},
-				source: "test",
-				keepError: !captureError,
-				useBatch,
-				headers: {
-					"x-test-id": ctx.task.id,
-					...headers,
+			links: getLinks(
+				{},
+				{
+					url: `http://localhost:${port}`,
+					source: "test",
+					keepError: !captureError,
+					useBatch,
+					headers: {
+						"x-test-id": ctx.task.id,
+						...headers,
+					},
+					captureError: captureError || (() => "unknown"),
 				},
-				captureError: captureError || (() => "unknown"),
-			}),
+			),
 			transformer,
 		} as unknown as CreateTRPCClientOptions<R>),
 		start: () =>

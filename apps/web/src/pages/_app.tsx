@@ -8,6 +8,8 @@ import "raf/polyfill";
 import { ProtectedPage } from "~app/components/protected-page";
 import { PublicPage } from "~app/components/public-page";
 import { Toaster } from "~app/components/toaster";
+import { LinksContext, LinksContextType } from "~app/contexts/links-context";
+import { usePretendUserClientKey } from "~app/hooks/use-pretend-user-client-key";
 import { useRemoveTestQueryParams } from "~app/hooks/use-remove-test-query-params";
 import { Provider } from "~app/providers/index";
 import { getSSRContextCookieData } from "~app/utils/cookie-data";
@@ -21,7 +23,7 @@ import { QueryDevToolsProvider } from "~web/providers/client/query-devtools";
 import { ThemeProvider } from "~web/providers/client/theme";
 import { nextCookieContext } from "~web/utils/client-cookies";
 import { webPersister } from "~web/utils/persister";
-import { useLinks } from "~web/utils/trpc";
+import { captureSentryError } from "~web/utils/trpc";
 import "~app/global.css";
 
 applyRemaps();
@@ -37,7 +39,7 @@ const GlobalHooksComponent: React.FC = () => {
 
 type PageProps = Omit<
 	React.ComponentProps<typeof Provider>,
-	"cookiesContext" | "persister" | "links"
+	"cookiesContext" | "persister" | "linksContext" | "useQueryClientKey"
 >;
 
 const MyApp: AppType = ({ Component, pageProps }) => {
@@ -46,7 +48,17 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 	const LayoutComponent = PageComponent.public ? PublicPage : ProtectedPage;
 	// A bug in next.js
 	const props = pageProps as PageProps;
-	const links = useLinks(props.searchParams);
+	const baseLinksContext = React.useContext(LinksContext);
+	const linksContext = React.useMemo<LinksContextType>(
+		() => ({
+			url: baseLinksContext.url,
+			// Don't batch requests when in tests - to evaluate pending / error states separately
+			useBatch: !props.searchParams.proxyPort,
+			source: "csr-next",
+			captureError: captureSentryError,
+		}),
+		[baseLinksContext.url, props.searchParams.proxyPort],
+	);
 	return (
 		<>
 			<Head>
@@ -59,10 +71,12 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 				<link rel="icon" href="/favicon.svg" />
 			</Head>
 			<Provider
-				{...props}
-				links={links}
+				cookiesData={props.cookiesData}
+				linksContext={linksContext}
+				searchParams={props.searchParams}
 				cookiesContext={nextCookieContext}
 				persister={webPersister}
+				useQueryClientKey={usePretendUserClientKey}
 			>
 				<ThemeProvider>
 					<QueryDevToolsProvider>

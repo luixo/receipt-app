@@ -1,12 +1,11 @@
 import React from "react";
 
 import type { Persister } from "@tanstack/react-query-persist-client";
-import type { TRPCLink } from "@trpc/client";
 import type { NextParsedUrlQuery } from "next/dist/server/request-meta";
 
+import { LinksContextType } from "~app/contexts/links-context";
+import { QueryClientsRecord } from "~app/contexts/query-clients-context";
 import type { SSRContextData } from "~app/contexts/ssr-context";
-import { usePretendUserClientKey } from "~app/hooks/use-pretend-user-client-key";
-import type { AppRouter } from "~app/trpc";
 
 import { PersisterProvider } from "./persist-client";
 import { QueryProvider } from "./query";
@@ -20,7 +19,8 @@ type Props = {
 	cookiesContext: CookieContext;
 	cookiesData: SSRContextData;
 	persister: Persister;
-	links: TRPCLink<AppRouter>[];
+	linksContext: LinksContextType;
+	useQueryClientKey: () => keyof QueryClientsRecord | undefined;
 };
 
 export const Provider: React.FC<React.PropsWithChildren<Props>> = ({
@@ -29,17 +29,21 @@ export const Provider: React.FC<React.PropsWithChildren<Props>> = ({
 	cookiesData,
 	searchParams,
 	persister,
-	links,
+	linksContext,
+	useQueryClientKey,
 }) => (
-	<SSRDataProvider data={cookiesData} context={cookiesContext}>
-		<QueryProvider links={links} useQueryClientKey={usePretendUserClientKey}>
-			<ShimsProvider>
-				<PersisterProvider persister={persister}>
-					<SearchParamsProvider searchParams={searchParams}>
+	<SearchParamsProvider searchParams={searchParams}>
+		<SSRDataProvider data={cookiesData} context={cookiesContext}>
+			<QueryProvider
+				linksContext={linksContext}
+				useQueryClientKey={useQueryClientKey}
+			>
+				<ShimsProvider>
+					<PersisterProvider persister={persister}>
 						{children}
-					</SearchParamsProvider>
-				</PersisterProvider>
-			</ShimsProvider>
-		</QueryProvider>
-	</SSRDataProvider>
+					</PersisterProvider>
+				</ShimsProvider>
+			</QueryProvider>
+		</SSRDataProvider>
+	</SearchParamsProvider>
 );

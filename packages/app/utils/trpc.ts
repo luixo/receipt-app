@@ -39,9 +39,9 @@ export type SearchParams = Record<string, string | string[] | undefined>;
 export type Headers = Partial<Record<string, string>>;
 
 export type GetLinksOptions = {
+	url: string;
 	useBatch?: boolean;
 	keepError?: boolean;
-	searchParams: SearchParams;
 	headers?: Headers;
 	captureError: (error: TRPCClientError<AppRouter>) => string;
 	source: // Next.js client-side rendering originated from 'pages' dir
@@ -51,15 +51,17 @@ export type GetLinksOptions = {
 		// Originated from artificial testing environment
 		| "test"
 		// Next.js api call from server-side code (probably, api handler call)
-		| "api-next";
+		| "api-next"
+		// Default unset value in context
+		| "unset";
 };
 
 export const getLinks = (
-	url: string,
+	searchParams: SearchParams,
 	{
+		url,
 		useBatch,
 		keepError,
-		searchParams,
 		source,
 		captureError,
 		headers: overrideHeaders,
