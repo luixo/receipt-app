@@ -142,6 +142,9 @@ const disabledRules = {
 	"import/prefer-default-export": "off",
 	// Maintained by prettier plugin
 	"tailwindcss/classnames-order": "off",
+	// `(object | undefined) || number` is assumed incorrect by this rule
+	// it should be `(object | undefined) ?? number`
+	"@typescript-eslint/prefer-nullish-coalescing": "off",
 };
 
 const temporaryDisabledRules = {
@@ -172,7 +175,6 @@ const temporaryDisabledRules = {
 	"@typescript-eslint/no-unused-vars": "off",
 	"@typescript-eslint/non-nullable-type-assertion-style": "off",
 	"@typescript-eslint/prefer-find": "off",
-	"@typescript-eslint/prefer-nullish-coalescing": "off",
 	"@typescript-eslint/prefer-optional-chain": "off",
 	"@typescript-eslint/prefer-promise-reject-errors": "off",
 	"@typescript-eslint/prefer-reduce-type-parameter": "off",
