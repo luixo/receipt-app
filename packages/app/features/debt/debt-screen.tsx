@@ -104,7 +104,7 @@ const DebtAmountInput: React.FC<AmountProps> = ({ debt, isLoading }) => {
 		useTrpcMutationOptions(mutations.debts.update.options, { context: debt }),
 	);
 	const updateAmount = React.useCallback(
-		async (amount: number) => {
+		(amount: number) => {
 			if (amount !== absoluteAmount) {
 				const currentSign = debt.amount >= 0 ? 1 : -1;
 				updateMutation.mutate({

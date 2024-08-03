@@ -101,6 +101,16 @@ const overridenRules = {
 		"error",
 		{ allowConstantLoopConditions: true },
 	],
+	// We want to pass `() => Promise<void>` to a prop / arg expecting `() => void`
+	"@typescript-eslint/no-misused-promises": [
+		"error",
+		{
+			checksVoidReturn: {
+				arguments: false,
+				attributes: false,
+			},
+		},
+	],
 
 	// Airbnb forces them to be functional components
 	"react/function-component-definition": [
@@ -167,7 +177,6 @@ const temporaryDisabledRules = {
 	"@typescript-eslint/no-dynamic-delete": "off",
 	"@typescript-eslint/no-invalid-void-type": "off",
 	"@typescript-eslint/no-meaningless-void-operator": "off",
-	"@typescript-eslint/no-misused-promises": "off",
 	"@typescript-eslint/no-redundant-type-constituents": "off",
 	"@typescript-eslint/no-require-imports": "off",
 	"@typescript-eslint/no-unused-vars": "off",

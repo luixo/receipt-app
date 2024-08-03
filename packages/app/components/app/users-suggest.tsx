@@ -124,7 +124,9 @@ export const UsersSuggest: React.FC<Props> = ({
 		hasMore: query.hasNextPage,
 		isEnabled: queryEnabled,
 		shouldUseLoader: false,
-		onLoadMore: query.fetchNextPage,
+		onLoadMore: () => {
+			void query.fetchNextPage();
+		},
 	});
 
 	return (
