@@ -1,5 +1,4 @@
 import { TRPCError } from "@trpc/server";
-import assert from "node:assert";
 import type { DatabaseError } from "pg";
 import { z } from "zod";
 

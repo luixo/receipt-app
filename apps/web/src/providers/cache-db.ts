@@ -40,7 +40,7 @@ export const getCacheDatabase = async (
 	try {
 		await database.ping();
 		return database;
-	} catch (e) {
+	} catch {
 		throw new Error(`Cache DB did not response to ping`);
 	}
 };

@@ -37,6 +37,11 @@ const compat = new FlatCompat({
 	allConfig: js.configs.all,
 });
 
+const compatAirbnbConfigs = compat.config(airbnbConfig).map(withoutPlugins);
+const originalNoUnusedVars = compatAirbnbConfigs
+	.map((config) => config.rules?.["no-unused-vars"])
+	.find(Boolean);
+
 const overridenRules = {
 	// We assign `ref.current` a lot
 	"no-param-reassign": [
@@ -111,6 +116,11 @@ const overridenRules = {
 			},
 		},
 	],
+	// We need to use React
+	"@typescript-eslint/no-unused-vars": [
+		"error",
+		{ ...originalNoUnusedVars[1], varsIgnorePattern: "React" },
+	],
 
 	// Airbnb forces them to be functional components
 	"react/function-component-definition": [
@@ -179,7 +189,6 @@ const temporaryDisabledRules = {
 	"@typescript-eslint/no-meaningless-void-operator": "off",
 	"@typescript-eslint/no-redundant-type-constituents": "off",
 	"@typescript-eslint/no-require-imports": "off",
-	"@typescript-eslint/no-unused-vars": "off",
 	"@typescript-eslint/non-nullable-type-assertion-style": "off",
 	"@typescript-eslint/prefer-find": "off",
 	"@typescript-eslint/prefer-optional-chain": "off",

@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { assert, describe } from "vitest";
+import { describe } from "vitest";
 
 import {
 	MAX_PASSWORD_LENGTH,

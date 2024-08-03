@@ -1,5 +1,4 @@
 import { TRPCError } from "@trpc/server";
-import assert from "node:assert";
 import { z } from "zod";
 
 import { debtAmountSchema, debtNoteSchema } from "~app/utils/validation";
@@ -255,7 +254,7 @@ const queueUpdateDebt = queueCallFactory<
 		updatedDebtsWithErrors,
 	);
 	await updateDebts(ctx, updatedDebtsWithErrors);
-	return updatedDebtsWithErrors.map((updatedDebtOrError, index) => {
+	return updatedDebtsWithErrors.map((updatedDebtOrError) => {
 		if (isError(updatedDebtOrError)) {
 			return updatedDebtOrError;
 		}
