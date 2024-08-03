@@ -22,7 +22,7 @@ const convertStylesToString = (styles: AugmentedProperies): string =>
 				`${key.replace(
 					/[A-Z]/g,
 					(match) => `-${match.toLowerCase()}`,
-				)}:${value};`,
+				)}:${String(value)};`,
 		)
 		.join("");
 

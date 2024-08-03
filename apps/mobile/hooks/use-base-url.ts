@@ -4,7 +4,7 @@ import Constants from "expo-constants";
 
 export const useBaseUrl = () => {
 	const [baseUrl] = React.useState(() => {
-		const envBaseUrl = Constants.expoConfig?.extra?.host;
+		const envBaseUrl = Constants.expoConfig?.extra?.host as string;
 		if (!envBaseUrl) {
 			/* eslint-disable no-console */
 			console.warn(

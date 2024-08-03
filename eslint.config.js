@@ -86,10 +86,14 @@ const overridenRules = {
 		},
 	],
 
-	// these 3 are off by default
+	// These 2 are off by default
 	"@typescript-eslint/switch-exhaustiveness-check": "error",
-	"@typescript-eslint/restrict-template-expressions": "error",
 	"@typescript-eslint/consistent-type-imports": "error",
+	// We want to allow `Amount ${amount}` to be used
+	"@typescript-eslint/restrict-template-expressions": [
+		"error",
+		{ allowNumber: true },
+	],
 	// Default option is `interface`
 	"@typescript-eslint/consistent-type-definitions": ["error", "type"],
 
@@ -180,7 +184,6 @@ const temporaryDisabledRules = {
 	"@typescript-eslint/prefer-regexp-exec": "off",
 	"@typescript-eslint/require-await": "off",
 	"@typescript-eslint/restrict-plus-operands": "off",
-	"@typescript-eslint/restrict-template-expressions": "off",
 	"@typescript-eslint/use-unknown-in-catch-callback-variable": "off",
 	"jsx-a11y/no-autofocus": "off",
 };
