@@ -41,11 +41,12 @@ const extractError = (e: unknown) => {
 	}
 	/* c8 ignore stop */
 	const typedMessage = e as DatabaseError;
-	// We checked for detail above
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-	const detailMatch = typedMessage.detail!.match(
-		/\("ownerAccountId", "receiptId", "userId"\)=\([a-z0-9-]+, ([a-z0-9-]+), ([a-z0-9-]+)\) already exists/,
-	);
+	const detailMatch =
+		/\("ownerAccountId", "receiptId", "userId"\)=\([a-z0-9-]+, ([a-z0-9-]+), ([a-z0-9-]+)\) already exists/.exec(
+			// We checked for detail above
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			typedMessage.detail!,
+		);
 	/* c8 ignore start */
 	if (!detailMatch) {
 		throw new TRPCError({
@@ -54,8 +55,9 @@ const extractError = (e: unknown) => {
 		});
 	}
 	/* c8 ignore stop */
-	const [, receiptId, userId] = detailMatch as [string, string, string];
-	return { receiptId, userId };
+	const [, receiptId, userId] = detailMatch;
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	return { receiptId: receiptId!, userId: userId! };
 };
 
 const getUsers = async (

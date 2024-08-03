@@ -215,7 +215,7 @@ export const PlannedDebts: React.FC<Props> = ({
 		(data: Record<CurrencyCode, number>) => {
 			const currentRates = form.getValues()[selectedCurrencyCode];
 			entries(data).forEach(([key, value]) => {
-				if (!currentRates || !currentRates[key]) {
+				if (!currentRates?.[key]) {
 					form.setValue(`${selectedCurrencyCode}.${key}`, value, {
 						shouldValidate: true,
 					});

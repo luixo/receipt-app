@@ -72,7 +72,7 @@ const generateEmail = (
 			});
 			return acc;
 		},
-		{} as NestedStyles,
+		{},
 	);
 	return markup.replace(
 		STYLE_REPLACER,

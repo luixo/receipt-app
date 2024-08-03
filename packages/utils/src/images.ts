@@ -13,7 +13,9 @@ export const convertDataUrlToImageElement = (url: string) =>
 	new Promise<HTMLImageElement>((resolve, reject) => {
 		const image = new Image();
 		image.addEventListener("load", () => resolve(image));
-		image.addEventListener("error", (error) => reject(error));
+		image.addEventListener("error", (error) =>
+			reject(new Error(String(error))),
+		);
 		image.src = url;
 	});
 

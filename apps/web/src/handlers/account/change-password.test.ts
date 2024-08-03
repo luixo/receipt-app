@@ -27,7 +27,7 @@ describe("account.changePassword", () => {
 
 		const types = ["password", "prevPassword"] as const;
 		types.forEach((type) => {
-			const otherType = types.filter((lookupType) => lookupType !== type)[0];
+			const otherType = types.find((lookupType) => lookupType !== type);
 			describe(type, () => {
 				test("minimal length", async ({ ctx }) => {
 					const { sessionId } = await insertAccountWithSession(ctx);

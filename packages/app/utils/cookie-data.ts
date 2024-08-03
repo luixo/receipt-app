@@ -1,6 +1,6 @@
 import type * as React from "react";
 
-import { entries, mapValues } from "remeda";
+import { entries, fromEntries, mapValues } from "remeda";
 import type { z } from "zod";
 
 import {
@@ -67,12 +67,14 @@ export const getCookieStatesFromValues = (
 	]) as CookieStates;
 
 export const getSSRContextCookieData = (cookies: Cookies = {}): CookieValues =>
-	entries(schemas).reduce<CookieValues>((acc, [key, schema]) => {
-		let parsedValue: unknown = null;
-		try {
-			parsedValue = JSON.parse(cookies[key] || "");
-		} catch {
-			parsedValue = cookies[key];
-		}
-		return { ...acc, [key]: schema.parse(parsedValue) };
-	}, {} as CookieValues);
+	fromEntries(
+		entries(schemas).map(([key, schema]) => {
+			let parsedValue: unknown = null;
+			try {
+				parsedValue = JSON.parse(cookies[key] || "");
+			} catch {
+				parsedValue = cookies[key];
+			}
+			return [key, schema.parse(parsedValue)];
+		}),
+	) as CookieValues;

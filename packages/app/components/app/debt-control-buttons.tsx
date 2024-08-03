@@ -28,7 +28,7 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 
 	const intention = React.useMemo(
 		() =>
-			debt.their && debt.their.lockedTimestamp
+			debt.their?.lockedTimestamp
 				? {
 						id: debt.id,
 						userId: debt.userId,

@@ -112,7 +112,7 @@ const flattenError = (error: unknown) => {
 		};
 	}
 	if (typeof error === "string") {
-		const clientErrorMatch = error.match(/TRPCClientError: (.*)\n/);
+		const clientErrorMatch = /TRPCClientError: (.*)\n/.exec(error);
 		if (clientErrorMatch) {
 			return {
 				type: "TRPCClientError",
