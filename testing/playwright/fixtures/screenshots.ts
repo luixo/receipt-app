@@ -107,9 +107,7 @@ type ScreenshotsMixin = {
 	expectScreenshotWithSchemes: (
 		name: string,
 		options?: Omit<Parameters<typeof stableScreenshot>[0], "page"> &
-			Parameters<
-				ReturnType<Expect<NonNullable<unknown>>>["toMatchSnapshot"]
-			>[0],
+			Parameters<ReturnType<Expect>["toMatchSnapshot"]>[0],
 	) => Promise<void>;
 };
 

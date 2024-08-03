@@ -28,7 +28,7 @@ declare module "react-native" {
 			rel: "noreferrer";
 			target?: "_blank";
 		};
-		onClick?: (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => void;
+		onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
 	}
 }
 /* eslint-enable @typescript-eslint/consistent-type-definitions */

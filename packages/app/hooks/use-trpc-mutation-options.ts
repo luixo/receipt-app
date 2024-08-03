@@ -14,12 +14,12 @@ import type {
 import type { Exact, MaybeAddElementToArray } from "~utils";
 
 const getToastArgs = <OC>(
-	internalContext: Pick<InternalContext<OC, unknown>, "outerContext">,
+	internalContext: Pick<InternalContext<OC>, "outerContext">,
 ) => [internalContext.outerContext] as MaybeAddElementToArray<[], OC>;
 
 const getTrpcArgs = <OC>(
 	internalContext: Pick<
-		InternalContext<OC, unknown>,
+		InternalContext<OC>,
 		"controllerContext" | "outerContext"
 	>,
 ) =>
@@ -68,7 +68,6 @@ export const useTrpcMutationOptions = <
 	} = options || {};
 	const trpcContext = trpc.useContext();
 	const queryClient = useQueryClient();
-	/* eslint-disable @typescript-eslint/no-non-null-assertion */
 	return React.useMemo(
 		() => ({
 			onMutate: async (...args) => {
@@ -77,6 +76,8 @@ export const useTrpcMutationOptions = <
 					"controllerContext" | "outerContext"
 				> = {
 					controllerContext: { queryClient, trpcContext, trpc },
+					// We're sure outerContext exists here (if needed)
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					outerContext: pinnedOuterContext!,
 				};
 				let toastId: string | undefined;
@@ -100,14 +101,17 @@ export const useTrpcMutationOptions = <
 				};
 			},
 			onError: (error, vars, internalContext) => {
+				// We're sure `internalContext` exists here
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				const sureInternalContext = internalContext!;
 				const {
 					toastId,
 					context: lifecycleContext,
 					revertFn,
-				} = internalContext!;
+				} = sureInternalContext;
 				const toastOptions =
 					typeof errorToastOptions === "function"
-						? errorToastOptions(...getToastArgs(internalContext!))(
+						? errorToastOptions(...getToastArgs(sureInternalContext))(
 								error,
 								vars,
 								lifecycleContext,
@@ -116,7 +120,7 @@ export const useTrpcMutationOptions = <
 				toast.error(toastOptions.text, { id: toastId });
 				onError?.(error, vars, lifecycleContext);
 				revertFn?.();
-				return onErrorTrpc?.(...getTrpcArgs(internalContext!))(
+				return onErrorTrpc?.(...getTrpcArgs(sureInternalContext))(
 					error,
 					vars,
 					lifecycleContext,
@@ -127,13 +131,16 @@ export const useTrpcMutationOptions = <
 					toastId,
 					context: lifecycleContext,
 					finalizeFn,
-				} = internalContext!;
+				} = internalContext;
+				// We're sure `lifecycleContext` exists here
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				const sureLifecycleContext = lifecycleContext!;
 				const toastOptions =
 					typeof successToastOptions === "function"
-						? successToastOptions(...getToastArgs(internalContext!))(
+						? successToastOptions(...getToastArgs(internalContext))(
 								result,
 								vars,
-								lifecycleContext!,
+								sureLifecycleContext,
 						  )
 						: successToastOptions;
 				if (toastOptions) {
@@ -141,18 +148,21 @@ export const useTrpcMutationOptions = <
 				} else {
 					toast.dismiss(toastId);
 				}
-				onSuccess?.(result, vars, lifecycleContext!);
+				onSuccess?.(result, vars, sureLifecycleContext);
 				finalizeFn?.();
-				return onSuccessTrpc?.(...getTrpcArgs(internalContext!))(
+				return onSuccessTrpc?.(...getTrpcArgs(internalContext))(
 					result,
 					vars,
-					lifecycleContext!,
+					sureLifecycleContext,
 				);
 			},
 			onSettled: (result, error, vars, internalContext) => {
-				const { context: lifecycleContext } = internalContext!;
+				// We're sure `internalContext` exists here
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				const sureInternalContext = internalContext!;
+				const { context: lifecycleContext } = sureInternalContext;
 				onSettled?.(result, error, vars, lifecycleContext);
-				return onSettledTrpc?.(...getTrpcArgs(internalContext!))(
+				return onSettledTrpc?.(...getTrpcArgs(sureInternalContext))(
 					result,
 					error,
 					vars,
@@ -179,5 +189,4 @@ export const useTrpcMutationOptions = <
 			rest,
 		],
 	);
-	/* eslint-enable @typescript-eslint/no-non-null-assertion */
 };

@@ -150,7 +150,7 @@ export const AccountAvatarInput: React.FC<Props> = ({ account, children }) => {
 			const formData = new FormData();
 			const croppedCanvas = await getCroppedCanvas(avatar, croppedArea);
 			const croppedBlob = await new Promise<File>((resolve) => {
-				const type = "image/png" as const;
+				const type = "image/png";
 				croppedCanvas.toBlob(
 					// It is not clear in which case `file` in `null`
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion

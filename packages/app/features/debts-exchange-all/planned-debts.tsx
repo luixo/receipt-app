@@ -50,7 +50,7 @@ const RateInput: React.FC<InputProps> = ({
 }) => {
 	const { bindings, state: inputState } = useInputController({
 		form,
-		name: `${selectedCurrencyCode}.${currencyCode}` as `${CurrencyCode}.${CurrencyCode}`,
+		name: `${selectedCurrencyCode}.${currencyCode}`,
 		type: "number",
 		defaultValue: 0,
 	});

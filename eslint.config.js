@@ -154,6 +154,9 @@ const disabledRules = {
 	// `(object | undefined) || number` is assumed incorrect by this rule
 	// it should be `(object | undefined) ?? number`
 	"@typescript-eslint/prefer-nullish-coalescing": "off",
+	// Rule emits false positives on `const fn = <T>(value: T) => {...}`
+	// see https://github.com/typescript-eslint/typescript-eslint/issues/9667
+	"@typescript-eslint/no-unnecessary-type-parameters": "off",
 };
 
 const temporaryDisabledRules = {
@@ -167,10 +170,6 @@ const temporaryDisabledRules = {
 	"@typescript-eslint/no-misused-promises": "off",
 	"@typescript-eslint/no-redundant-type-constituents": "off",
 	"@typescript-eslint/no-require-imports": "off",
-	"@typescript-eslint/no-unnecessary-template-expression": "off",
-	"@typescript-eslint/no-unnecessary-type-arguments": "off",
-	"@typescript-eslint/no-unnecessary-type-assertion": "off",
-	"@typescript-eslint/no-unnecessary-type-parameters": "off",
 	"@typescript-eslint/no-unsafe-argument": "off",
 	"@typescript-eslint/no-unsafe-assignment": "off",
 	"@typescript-eslint/no-unsafe-call": "off",
