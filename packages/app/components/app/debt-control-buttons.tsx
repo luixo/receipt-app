@@ -58,6 +58,7 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 	);
 	const acceptMutation = trpc.debts.acceptIntention.useMutation(
 		useTrpcMutationOptions(mutations.debts.acceptIntention.options, {
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			context: intention!,
 		}),
 	);

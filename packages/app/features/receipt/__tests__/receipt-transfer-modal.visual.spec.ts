@@ -1,3 +1,5 @@
+import assert from "node:assert";
+
 import { defaultGenerateReceipt, defaultGenerateUsers } from "./generators";
 import { test } from "./receipt-transfer-modal.utils.spec";
 
@@ -26,10 +28,14 @@ test.describe("Modal button", () => {
 	}, testInfo) => {
 		skip(testInfo, "only-smallest");
 		const { receipt } = mockReceipt({
-			generateReceipt: (opts) => ({
-				...defaultGenerateReceipt(opts),
-				transferIntentionUserId: opts.users[0]!.id,
-			}),
+			generateReceipt: (opts) => {
+				const firstUser = opts.users[0];
+				assert(firstUser);
+				return {
+					...defaultGenerateReceipt(opts),
+					transferIntentionUserId: firstUser.id,
+				};
+			},
 		});
 		await page.goto(`/receipts/${receipt.id}`);
 		await expectScreenshotWithSchemes("button/intention.png", {
@@ -83,10 +89,14 @@ test.describe("Modal", () => {
 		user,
 	}) => {
 		const { receipt } = mockReceipt({
-			generateReceipt: (opts) => ({
-				...defaultGenerateReceipt(opts),
-				transferIntentionUserId: opts.users[0]!.id,
-			}),
+			generateReceipt: (opts) => {
+				const firstUser = opts.users[0];
+				assert(firstUser);
+				return {
+					...defaultGenerateReceipt(opts),
+					transferIntentionUserId: firstUser.id,
+				};
+			},
 			generateReceiptParticipants: () => [],
 		});
 		await page.goto(`/receipts/${receipt.id}`);

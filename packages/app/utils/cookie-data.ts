@@ -72,11 +72,11 @@ export const getCookieStatesFromValues = (
 
 export const getSSRContextCookieData = (cookies: Cookies = {}): CookieValues =>
 	Object.entries(schemas).reduce<CookieValues>((acc, [key, schema]) => {
-		let parsedValue = null;
+		let parsedValue: unknown = null;
 		try {
-			parsedValue = JSON.parse(cookies[key]!);
+			parsedValue = JSON.parse(cookies[key] || "");
 		} catch {
-			parsedValue = cookies[key]!;
+			parsedValue = cookies[key];
 		}
 		return { ...acc, [key]: schema.parse(parsedValue) };
 	}, {} as CookieValues);

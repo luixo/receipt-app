@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
 import type { DebtsId } from "~db";
+import { NonNullableField } from "~utils";
 import { authProcedure } from "~web/handlers/trpc";
 
 export const procedure = authProcedure.mutation(async ({ ctx }) => {
@@ -62,8 +63,13 @@ export const procedure = authProcedure.mutation(async ({ ctx }) => {
 			message: `Expected to have at least one debt to accept.`,
 		});
 	}
-	const debtsToUpdate = debts.filter((debt) => debt.selfId !== null);
-	const debtsToCreate = debts.filter((debt) => !debtsToUpdate.includes(debt));
+	const debtsToUpdate = debts.filter(
+		(debt): debt is NonNullableField<typeof debt, "selfId"> =>
+			debt.selfId !== null,
+	);
+	const debtsToCreate = debts.filter(
+		(debt) => !debtsToUpdate.includes(debt as (typeof debtsToUpdate)[number]),
+	);
 	const debtsResult: { created: Date; id: DebtsId }[] = [];
 	if (debtsToUpdate.length !== 0) {
 		debtsResult.push(
@@ -75,7 +81,7 @@ export const procedure = authProcedure.mutation(async ({ ctx }) => {
 							.updateTable("debts")
 							.where((eb) =>
 								eb.and({
-									id: debt.selfId!,
+									id: debt.selfId,
 									ownerAccountId: ctx.auth.accountId,
 								}),
 							)

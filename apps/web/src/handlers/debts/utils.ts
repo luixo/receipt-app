@@ -52,11 +52,10 @@ export const upsertAutoAcceptedDebts = async (
 		}),
 	);
 	const existentDebts = debts
-		.map((nextDebt, index) =>
-			counterpartyDebts[index]
-				? ([nextDebt, counterpartyDebts[index]!] as const)
-				: null,
-		)
+		.map((nextDebt, index) => {
+			const counterpartyDebt = counterpartyDebts[index];
+			return counterpartyDebt ? ([nextDebt, counterpartyDebt] as const) : null;
+		})
 		.filter(nonNullishGuard);
 	const nonExistentDebts = debts
 		.map((nextDebt, index) => (counterpartyDebts[index] ? null : nextDebt))

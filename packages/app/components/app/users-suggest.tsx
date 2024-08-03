@@ -77,7 +77,10 @@ export const UsersSuggest: React.FC<Props> = ({
 	const filteredTopFetchedUserIds = React.useMemo(
 		() =>
 			topFetchedUserIds.filter((_userId, index) => {
-				const topFetchedUserQuery = topFetchedUserQueries[index]!;
+				const topFetchedUserQuery = topFetchedUserQueries[index];
+				if (!topFetchedUserQuery) {
+					return false;
+				}
 				if (topFetchedUserQuery.status !== "success" || !queryEnabled) {
 					return true;
 				}

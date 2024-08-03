@@ -171,7 +171,7 @@ export const PlannedDebts: React.FC<Props> = ({
 			}));
 		}
 		return convertedFromDebts.map((debt) => {
-			const selectedRate = selectedRates[debt.currencyCode]!;
+			const selectedRate = selectedRates[debt.currencyCode];
 			return {
 				sum: selectedRate ? round(debt.sum / selectedRate) : 0,
 				currencyCode: debt.currencyCode,
@@ -180,6 +180,8 @@ export const PlannedDebts: React.FC<Props> = ({
 	}, [convertedFromDebts, selectedRates]);
 	const debts = React.useMemo(() => {
 		const debtsToConvert = convertedFromDebts.map((debt, index) => {
+			// `convertedFromDebts` is mapped from `convertedDebts`
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			const convertedSumRaw = convertedDebts[index]!.sum;
 			const convertedSum = convertedSumRaw === Infinity ? "∞" : convertedSumRaw;
 			return {
@@ -253,6 +255,8 @@ export const PlannedDebts: React.FC<Props> = ({
 	const addAll = React.useCallback(
 		() =>
 			debts.map((debt, index) =>
+				// `debts` is mapped from `addMutations`
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				addMutations[index]!.mutate({
 					note: debt.note,
 					currencyCode: debt.currencyCode,

@@ -19,11 +19,8 @@ import { procedure } from "./get-by-users";
 const mapUserDebts = (debts: Awaited<ReturnType<typeof insertDebt>>[]) =>
 	Object.entries(
 		debts.reduce<Record<CurrencyCode, number>>((acc, debt) => {
-			if (!acc[debt.currencyCode]) {
-				acc[debt.currencyCode] = 0;
-			}
-			acc[debt.currencyCode] += Number(debt.amount);
-			acc[debt.currencyCode] = Number(acc[debt.currencyCode]!.toFixed(2));
+			const amount = (acc[debt.currencyCode] ?? 0) + Number(debt.amount);
+			acc[debt.currencyCode] = Number(amount.toFixed(2));
 			return acc;
 		}, {}),
 	)
@@ -227,6 +224,8 @@ describe("debts.getByUsers", () => {
 							// De-syncing debt
 							(debt) => ({
 								...debt,
+								// We just set `lockedTimestamp`
+								// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 								lockedTimestamp: new Date(debt.lockedTimestamp!.valueOf() + 1),
 							}),
 						],
@@ -264,6 +263,8 @@ describe("debts.getByUsers", () => {
 								(debt) => ({
 									...debt,
 									lockedTimestamp: new Date(
+										// We just set `lockedTimestamp`
+										// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 										debt.lockedTimestamp!.valueOf() + 1,
 									),
 								}),

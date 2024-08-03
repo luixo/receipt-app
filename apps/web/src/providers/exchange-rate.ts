@@ -120,12 +120,11 @@ const fetchWithBatches = async (
 ) => {
 	const batches = inputs.reduce<Record<CurrencyCode, CurrencyCode[]>>(
 		(acc, input) => {
-			if (!acc[input.fromCode]) {
-				acc[input.fromCode] = [];
+			const batch = acc[input.fromCode] || [];
+			if (!batch.includes(input.toCode)) {
+				batch.push(input.toCode);
 			}
-			if (!acc[input.fromCode]!.includes(input.toCode)) {
-				acc[input.fromCode]!.push(input.toCode);
-			}
+			acc[input.fromCode] = batch;
 			return acc;
 		},
 		{},
@@ -135,10 +134,16 @@ const fetchWithBatches = async (
 			const batchResult = await fetcher(fromCode, toCodes);
 			return {
 				fromCode,
-				toRates: toCodes.map((toCode, index) => ({
-					code: toCode,
-					rate: batchResult[index]!,
-				})),
+				toRates: toCodes.map((toCode, index) => {
+					const toRate = batchResult[index];
+					if (toRate === undefined) {
+						throw new Error("Expected length to match in response");
+					}
+					return {
+						code: toCode,
+						rate: toRate,
+					};
+				}),
 			};
 		}),
 	);
@@ -226,7 +231,7 @@ export const getExchangeRates = async (
 				? await cacheDatabase.get<number>(cacheKey)
 				: null;
 			if (cachedRate) {
-				return cachedRate;
+				return { toCode, rate: cachedRate };
 			}
 			const fetchedRate = await (ctx.exchangeRateOptions.mock
 				? ctx.exchangeRateOptions.mock.fn(fromCode, toCode)
@@ -238,11 +243,11 @@ export const getExchangeRates = async (
 				// Failing on this action doesn't matter much
 				ctx.logger.warn("Cache DB setex action failed", e);
 			});
-			return fetchedRate;
+			return { toCode, rate: fetchedRate };
 		}),
 	);
-	return toCodes.reduce<Record<CurrencyCode, number>>(
-		(acc, toCode, index) => ({ ...acc, [toCode]: rates[index]! }),
+	return rates.reduce<Record<CurrencyCode, number>>(
+		(acc, { toCode, rate }) => ({ ...acc, [toCode]: rate }),
 		{},
 	);
 };

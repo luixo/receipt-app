@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import assert from "node:assert";
 
 import { defaultGenerateDebts } from "~app/features/debts-exchange/__tests__/generators";
 import { test } from "~app/features/debts-exchange/__tests__/utils";
@@ -16,7 +17,8 @@ test("'currency.getList' pending / error", async ({
 	const { user } = mockDebts({
 		generateDebts: (opts) => {
 			const [debt] = defaultGenerateDebts(opts);
-			return [{ ...debt!, currencyCode: "USD", amount: 100 }];
+			assert(debt);
+			return [{ ...debt, currencyCode: "USD", amount: 100 }];
 		},
 	});
 	await openDebtsExchangeScreen(user.id);
@@ -45,9 +47,10 @@ test("Rounding", async ({
 	const { user } = mockDebts({
 		generateDebts: (opts) => {
 			const [debt] = defaultGenerateDebts(opts);
+			assert(debt);
 			return [
-				{ ...debt!, currencyCode: "USD", amount: 1.234 },
-				{ ...debt!, currencyCode: "EUR", amount: 1.235 },
+				{ ...debt, currencyCode: "USD", amount: 1.234 },
+				{ ...debt, currencyCode: "EUR", amount: 1.235 },
 			];
 		},
 	});

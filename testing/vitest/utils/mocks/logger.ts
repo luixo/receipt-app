@@ -58,9 +58,13 @@ export const getLogger = (
 	);
 	return {
 		get level() {
-			return Object.entries(LEVELS).find(
+			const matchedLevel = Object.entries(LEVELS).find(
 				([, levelValue]) => innerLevel === levelValue,
-			)![0];
+			);
+			if (!matchedLevel) {
+				throw new Error(`Unexpected inner level ${innerLevel}`);
+			}
+			return matchedLevel[0];
 		},
 		set level(value) {
 			innerLevel = LEVELS[value as LevelWithSilent];

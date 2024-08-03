@@ -167,7 +167,7 @@ const handleRequest = async (
 		const names = cleanPathname.split(",") as TRPCKey[];
 		return Promise.all(
 			names
-				.map((name, index) => ({ name, input: inputs[index]! }))
+				.map((name, index) => ({ name, input: inputs[index] }))
 				.map(({ name, input }) => handleCall(controller, type, name, input)),
 		);
 	}
@@ -253,9 +253,7 @@ const createWorkerManager = async (port: number): Promise<WorkerManager> => {
 			return {
 				controller,
 				cleanup: async () => {
-					controllers[id]!.paused.forEach((promise) =>
-						promise.reject(CLEANUP_MARK),
-					);
+					controller.paused.forEach((promise) => promise.reject(CLEANUP_MARK));
 					delete controllers[id];
 				},
 			};
@@ -274,7 +272,7 @@ const createApiManager = async (
 		const url = new URL(request.url());
 		try {
 			const response = await handleRequest(
-				controller!,
+				controller,
 				"client",
 				url.searchParams.has("batch"),
 				url,

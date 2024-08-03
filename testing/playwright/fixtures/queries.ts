@@ -9,6 +9,7 @@ import type {
 	RouterRecord,
 } from "@trpc/server/unstable-core-do-not-import";
 import { diff as objectDiff } from "deep-object-diff";
+import assert from "node:assert";
 
 import type {
 	AppRouter,
@@ -18,7 +19,7 @@ import type {
 	TRPCQueryInput,
 	TRPCQueryKey,
 } from "~app/trpc";
-import { mapObjectValues, omitUndefined } from "~utils";
+import { mapObjectValues, nonNullishGuard, omitUndefined } from "~utils";
 import { router } from "~web/handlers";
 
 import type { ApiManager, ApiMixin, TRPCKey } from "./api";
@@ -203,29 +204,28 @@ const getQueryCache = async ({
 	};
 };
 
+type KeyCalls = { clientCalls?: number; serverCalls?: number };
+
 const remapActions = (
 	actions: ReturnType<ApiManager["getActions"]>,
 	keysLists: KeysLists,
 ) =>
 	Object.fromEntries(
 		Object.entries(
-			actions.reduce<
-				Partial<Record<TRPCKey, { clientCalls?: number; serverCalls?: number }>>
-			>((acc, [type, name]) => {
-				if (shouldIgnoreKey(name, keysLists)) {
+			actions.reduce<Partial<Record<TRPCKey, KeyCalls>>>(
+				(acc, [type, name]) => {
+					if (shouldIgnoreKey(name, keysLists)) {
+						return acc;
+					}
+					const keyCalls: KeyCalls = acc[name] || {};
+					const callType: keyof KeyCalls =
+						type === "client" ? "clientCalls" : "serverCalls";
+					keyCalls[callType] = (keyCalls[callType] || 0) + 1;
+					acc[name] = keyCalls;
 					return acc;
-				}
-				if (!acc[name]) {
-					acc[name] = {};
-				}
-				const callType =
-					type === "client"
-						? ("clientCalls" as const)
-						: ("serverCalls" as const);
-				acc[name]![callType] ??= 0;
-				acc[name]![callType]! += 1;
-				return acc;
-			}, {}),
+				},
+				{},
+			),
 		).sort(([aKey], [bKey]) => aKey.localeCompare(bKey)),
 	);
 
@@ -300,11 +300,12 @@ const getProcedure = (
 	path: string,
 ): AnyTRPCProcedure => {
 	const [first, ...rest] = path.split(".");
+	assert(first);
 	if (rest.length === 0) {
-		return currentRouter[first!] as AnyTRPCProcedure;
+		return currentRouter[first] as AnyTRPCProcedure;
 	}
 	return getProcedure(
-		currentRouter[first!] as AnyTRPCRouter & RouterRecord,
+		currentRouter[first] as AnyTRPCRouter & RouterRecord,
 		rest.join("."),
 	);
 };
@@ -361,17 +362,17 @@ const getDiff = (prevCache: QueryCache, nextCache: QueryCache) => {
 		mutations: diff.mutations
 			? mapObjectValues(diff.mutations, (mutations, key) => {
 					const mapMutation = (
-						mutation: (typeof mutations)[number],
+						mutation: NonNullable<(typeof mutations)[number]>,
 						index: number | string | symbol,
 					) => {
-						if (!mutation!.state) {
+						if (!mutation.state) {
 							return mutation;
 						}
 						const mutationKey = key as TRPCMutationKey;
 						return {
 							...mutation,
 							state: omitUndefined({
-								...mutation!.state,
+								...mutation.state,
 								failureCount: getMutationCount(
 									mutationKey,
 									Number(index),
@@ -381,7 +382,7 @@ const getDiff = (prevCache: QueryCache, nextCache: QueryCache) => {
 						};
 					};
 					if (Array.isArray(mutations)) {
-						return mutations.map(mapMutation);
+						return mutations.filter(nonNullishGuard).map(mapMutation);
 					}
 					// Case of diff for a single mutation - array is convert to an object with partial keys
 					// eslint-disable-next-line prefer-object-spread
@@ -665,7 +666,7 @@ export const queriesMixin = createMixin<
 			);
 			cacheObjects.forEach((cacheKey) => {
 				extendedTestInfo.awaitedCacheKeys[cacheKey.path] ??= 0;
-				extendedTestInfo.awaitedCacheKeys[cacheKey.path]! = cacheKey.amount;
+				extendedTestInfo.awaitedCacheKeys[cacheKey.path] = cacheKey.amount;
 			});
 			return result;
 		});

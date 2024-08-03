@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { describe } from "vitest";
+import { assert, describe } from "vitest";
 
 import {
 	MAX_PASSWORD_LENGTH,
@@ -27,7 +27,7 @@ describe("account.changePassword", () => {
 
 		const types = ["password", "prevPassword"] as const;
 		types.forEach((type) => {
-			const otherType = types.filter((lookupType) => lookupType !== type)[0]!;
+			const otherType = types.filter((lookupType) => lookupType !== type)[0];
 			describe(type, () => {
 				test("minimal length", async ({ ctx }) => {
 					const { sessionId } = await insertAccountWithSession(ctx);

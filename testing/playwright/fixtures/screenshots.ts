@@ -6,6 +6,7 @@ import type {
 } from "@playwright/test";
 import { expect } from "@playwright/test";
 import joinImages from "join-images";
+import assert from "node:assert";
 
 import { createMixin } from "./utils";
 
@@ -41,7 +42,8 @@ const mergeClip = async (
 		return acc || { x: 0, y: 0, width: 0, height: 0 };
 	}
 	const [first, ...rest] = locators;
-	const boundingBox = await first!.boundingBox();
+	assert(first);
+	const boundingBox = await first.boundingBox();
 	if (!boundingBox) {
 		throw new Error(`Expected to have boundingBox for ${String(first)}`);
 	}

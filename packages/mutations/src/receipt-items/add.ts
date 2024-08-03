@@ -33,7 +33,7 @@ export const options: UseContextedMutationOptions<
 		({ id, created }, _variables, temporaryId) => {
 			cache.receipts.update(controllerContext, {
 				get: (controller) =>
-					controller.updateItem(receiptId, temporaryId!, (item) => ({
+					controller.updateItem(receiptId, temporaryId, (item) => ({
 						...item,
 						id,
 						created,

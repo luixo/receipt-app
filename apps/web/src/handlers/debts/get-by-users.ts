@@ -61,6 +61,8 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 		if (!acc.has(userId)) {
 			acc.set(userId, { name, items: [] });
 		}
+		// We just set user object
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		acc.get(userId)!.items.push({ currencyCode, sum: Number(sum) });
 		return acc;
 	}, new Map());

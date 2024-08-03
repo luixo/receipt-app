@@ -4,6 +4,7 @@ import type { AnyTRPCRouter } from "@trpc/server";
 import { createHTTPServer } from "@trpc/server/adapters/standalone";
 import findFreePorts from "find-free-ports";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { assert } from "vitest";
 
 import type { GetLinksOptions, Headers } from "~app/utils/trpc";
 import { getLinks, transformer } from "~app/utils/trpc";
@@ -23,14 +24,16 @@ export const getClientServer = async <R extends AnyTRPCRouter>(
 		useBatch?: boolean;
 	} = {},
 ) => {
-	const port = (await findFreePorts())[0]!;
+	const port = (await findFreePorts())[0];
+	assert(port);
 	const httpServer = createHTTPServer({
 		router,
 		createContext: ({ req, res }) => {
 			const url = new URL(req.url || "", `http://${req.headers.host}`);
 			const isBatchCall = Boolean(url.searchParams.get("batch"));
-			const inputs = (JSON.parse(url.searchParams.get("input")!) ||
-				{}) as Record<number, unknown>;
+			const input = url.searchParams.get("input");
+			assert(input, "expected to have input in searchParam");
+			const inputs = (JSON.parse(input) || {}) as Record<number, unknown>;
 			const paths = isBatchCall
 				? decodeURIComponent(url.pathname.slice(1)).split(",")
 				: [url.pathname.slice(1)];

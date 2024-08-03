@@ -69,10 +69,12 @@ export const defaultGenerateTransferIntentions: GenerateTransferIntentions = ({
 }) => ({
 	inbound: new Array(inboundAmount).fill(null).map((_, index) => ({
 		receipt: generateReceiptBase(faker),
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		userId: users[index % users.length]!.id,
 	})),
 	outbound: new Array(outboundAmount).fill(null).map((_, index) => ({
 		receipt: generateReceiptBase(faker),
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		userId: users[index % users.length]!.id,
 	})),
 });

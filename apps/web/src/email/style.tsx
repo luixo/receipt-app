@@ -5,15 +5,22 @@ import { StylingContext } from "./styling-context";
 
 type Props = {
 	selector: string;
-	styles?: AugmentedProperies;
-	media?: Record<string, AugmentedProperies>;
-};
+} & (
+	| {
+			styles: AugmentedProperies;
+			media?: Record<string, AugmentedProperies>;
+	  }
+	| {
+			media: Record<string, AugmentedProperies>;
+	  }
+);
 
-export const Style: React.FC<Props> = ({ selector, styles, media }) => {
+export const Style: React.FC<Props> = ({ selector, ...props }) => {
 	const mapping = React.useContext(StylingContext);
 	if (mapping[selector]) {
 		return null;
 	}
-	mapping[selector] = { default: styles, ...media };
+	mapping[selector] =
+		"styles" in props ? { default: props.styles, ...props.media } : props.media;
 	return null;
 };

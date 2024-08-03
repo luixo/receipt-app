@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import assert from "node:assert";
 
 import { expect } from "~tests/frontend/fixtures";
 
@@ -174,10 +175,11 @@ test("Mutation 'receiptTransferIntentions.remove'", async ({
 	const { receipt } = mockReceipt({
 		generateReceiptParticipants: () => [],
 		generateUsers: (opts) => {
-			const users = defaultGenerateUsers(opts);
+			const [firstUser, ...users] = defaultGenerateUsers(opts);
+			assert(firstUser);
 			return [
 				{
-					...users[0]!,
+					...firstUser,
 					connectedAccount: {
 						id: opts.faker.string.uuid(),
 						email: opts.faker.internet.email(),

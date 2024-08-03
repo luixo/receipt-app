@@ -44,10 +44,9 @@ const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 	const intentionsByUser = data.reduce<
 		Record<UsersId, IntentionsQuery["data"]>
 	>((acc, intention) => {
-		if (!acc[intention.userId]) {
-			acc[intention.userId] = [];
-		}
-		acc[intention.userId]!.push(intention);
+		const intentions = acc[intention.userId] || [];
+		intentions.push(intention);
+		acc[intention.userId] = intentions;
 		return acc;
 	}, {});
 	return (

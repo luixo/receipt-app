@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import assert from "node:assert";
 
 import { SETTINGS_COOKIE_NAME } from "~app/utils/cookie/settings";
 import { expect } from "~tests/frontend/fixtures";
@@ -78,16 +79,19 @@ test.describe("Showed debts depending on 'show resolved debts' option", () => {
 			...opts,
 			amount: 3,
 		});
+		assert(firstDebt);
+		assert(secondDebt);
+		assert(thirdDebt);
 		return [
-			{ ...firstDebt!, amount: 10 },
+			{ ...firstDebt, amount: 10 },
 			{
-				...secondDebt!,
-				currencyCode: firstDebt!.currencyCode,
+				...secondDebt,
+				currencyCode: firstDebt.currencyCode,
 				amount: -10,
 			},
 			{
-				...thirdDebt!,
-				currencyCode: firstDebt!.currencyCode === "USD" ? "EUR" : "USD",
+				...thirdDebt,
+				currencyCode: firstDebt.currencyCode === "USD" ? "EUR" : "USD",
 				amount: 10,
 			},
 		];

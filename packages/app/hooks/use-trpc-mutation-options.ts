@@ -68,6 +68,7 @@ export const useTrpcMutationOptions = <
 	} = options || {};
 	const trpcContext = trpc.useContext();
 	const queryClient = useQueryClient();
+	/* eslint-disable @typescript-eslint/no-non-null-assertion */
 	return React.useMemo(
 		() => ({
 			onMutate: async (...args) => {
@@ -182,4 +183,5 @@ export const useTrpcMutationOptions = <
 			rest,
 		],
 	);
+	/* eslint-enable @typescript-eslint/no-non-null-assertion */
 };

@@ -1,9 +1,11 @@
 import concurrently from "concurrently";
 import { findFreePorts } from "find-free-ports";
 import { connect } from "ngrok";
+import assert from "node:assert";
 
 const main = async () => {
-	const port = (await findFreePorts(1, { startPort: 3000 }))[0]!;
+	const port = (await findFreePorts(1, { startPort: 3000 }))[0];
+	assert(port);
 	let host = "localhost";
 	const ngrokAuthToken = process.env.NGROK_AUTH_TOKEN;
 	if (!ngrokAuthToken) {

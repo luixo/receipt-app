@@ -11,7 +11,7 @@ const createCaller = t.createCallerFactory(t.router({ procedure }));
 describe("utils.pingCache", () => {
 	describe("functionality", () => {
 		test("cache database ping sent", async ({ ctx }) => {
-			const dbMock = ctx.cacheDbOptions.mock!;
+			const dbMock = ctx.cacheDbOptions.mock;
 			const caller = createCaller(createContext(ctx));
 			await caller.procedure();
 			const dbMessages = dbMock.getMessages();

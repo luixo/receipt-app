@@ -217,8 +217,10 @@ const mapReceipt = (
 			role: participant.role as Role,
 		})),
 		transferIntentionUserId:
-			transferIntentionAccountId && ownerAccountId === auth.accountId
-				? transferIntentionUserId!
+			transferIntentionAccountId !== null &&
+			transferIntentionUserId !== null &&
+			ownerAccountId === auth.accountId
+				? transferIntentionUserId
 				: undefined,
 		lockedTimestamp: lockedTimestamp || undefined,
 		debt: getReceiptDebt(

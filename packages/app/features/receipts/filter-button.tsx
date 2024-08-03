@@ -41,7 +41,7 @@ export const FilterButton: React.FC = () => {
 			if (selection === "all") {
 				return;
 			}
-			const key = [...selection.values()][0]!;
+			const key = [...selection.values()][0];
 			switch (key) {
 				case "true":
 					changeFilters((prev) => ({ ...prev, [filterKey]: true }));

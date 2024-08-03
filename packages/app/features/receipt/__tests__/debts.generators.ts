@@ -69,9 +69,12 @@ export const generateDebtsWith =
 	(opts) =>
 		mapperSets.reduce((acc, mapperSet) => {
 			if (Array.isArray(mapperSet)) {
-				return acc
-					.map((debt, index) => mapperSet[index % mapperSet.length]!(debt))
-					.filter(nonNullishGuard);
+				return (
+					acc
+						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+						.map((debt, index) => mapperSet[index % mapperSet.length]!(debt))
+						.filter(nonNullishGuard)
+				);
 			}
 			return acc.map(mapperSet).filter(nonNullishGuard);
 		}, defaultGenerateDebts(opts));

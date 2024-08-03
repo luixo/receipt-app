@@ -158,7 +158,6 @@ const temporaryDisabledRules = {
 	"@typescript-eslint/no-invalid-void-type": "off",
 	"@typescript-eslint/no-meaningless-void-operator": "off",
 	"@typescript-eslint/no-misused-promises": "off",
-	"@typescript-eslint/no-non-null-assertion": "off",
 	"@typescript-eslint/no-redundant-type-constituents": "off",
 	"@typescript-eslint/no-require-imports": "off",
 	"@typescript-eslint/no-unnecessary-condition": "off",

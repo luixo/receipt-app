@@ -72,11 +72,13 @@ export const migrate = async ({
 		return {
 			ok: false,
 			error,
-			results: results!,
+			results: results || [],
 		};
 	}
 	return {
 		ok: true,
+		// According to docs results always exist if there's no error
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		results: results!,
 	};
 };

@@ -30,11 +30,20 @@ export const options: UseContextedMutationOptions<
 			getUser: (controller) =>
 				updateGetUserSuccess(
 					controller,
-					intentions.map((intention) => ({
-						...intention,
-						created: createdResult.find(({ id }) => id === intention.id)!
-							.created,
-					})),
+					intentions.map((intention) => {
+						const matchedCreatedResult = createdResult.find(
+							({ id }) => id === intention.id,
+						);
+						if (!matchedCreatedResult) {
+							throw new Error(
+								`Expected to have matched created result for intention ${intention.id}`,
+							);
+						}
+						return {
+							...intention,
+							created: matchedCreatedResult.created,
+						};
+					}),
 				),
 			get: undefined,
 			getIntentions: undefined,

@@ -1,5 +1,5 @@
 import { TRPCClientError } from "@trpc/client";
-import { describe, expect } from "vitest";
+import { assert, describe, expect } from "vitest";
 import { z } from "zod";
 
 import { test } from "~tests/backend/utils/test";
@@ -174,8 +174,10 @@ describe("batching", () => {
 			const typedErrors = errors.map(
 				(error) => error as TRPCClientError<typeof router>,
 			);
-			expect(typedErrors[0]!.shape?.message).toMatch("Failed getElements call");
-			expect(typedErrors[1]!.shape?.message).toMatch("Failed getElements call");
+			assert(typedErrors[0]);
+			expect(typedErrors[0].shape?.message).toMatch("Failed getElements call");
+			assert(typedErrors[1]);
+			expect(typedErrors[1].shape?.message).toMatch("Failed getElements call");
 			await destroy();
 		});
 

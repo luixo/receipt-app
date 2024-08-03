@@ -18,6 +18,7 @@ export const FileInput: React.FC<Props> = ({ onClickRef, onFileUpdate }) => {
 	>(
 		async (event) => {
 			if (event.target.files && event.target.files.length > 0) {
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				const file = event.target.files[0]!;
 				onFileUpdate?.(file);
 			}

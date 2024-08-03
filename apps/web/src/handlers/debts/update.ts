@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import assert from "node:assert";
 import { z } from "zod";
 
 import { debtAmountSchema, debtNoteSchema } from "~app/utils/validation";
@@ -123,28 +124,38 @@ const fetchDebts = async (
 		])
 		.execute();
 
-const getSharedDebtData = (
-	debts: Awaited<ReturnType<typeof fetchDebts>>,
-	updatesWithErrors: (z.infer<typeof updateDebtSchema> | TRPCError)[],
+const isError = <T>(input: T | TRPCError): input is TRPCError =>
+	input instanceof TRPCError;
+
+type Debt = Awaited<ReturnType<typeof fetchDebts>>[number];
+
+const getUpdatedDebtsWithErrors = (
+	updatesWithErrors: (
+		| {
+				update: z.infer<typeof updateDebtSchema>;
+				debt: Debt;
+		  }
+		| TRPCError
+	)[],
 ) =>
-	updatesWithErrors.map((maybeUpdate) => {
-		if (maybeUpdate instanceof Error) {
-			return null;
+	updatesWithErrors.map((updateOrError) => {
+		if (isError(updateOrError)) {
+			return updateOrError;
 		}
-		const matchedDebt = debts.find((debt) => debt.id === maybeUpdate.id)!;
-		return { ...buildSetObjects(maybeUpdate, matchedDebt), debt: matchedDebt };
+		const { debt, update } = updateOrError;
+		return { ...buildSetObjects(update, debt), debt };
 	});
 
 const updateAutoAcceptingDebts = async (
 	ctx: AuthorizedContext,
-	sharedData: ReturnType<typeof getSharedDebtData>,
+	updatedDebtsWithErrors: ReturnType<typeof getUpdatedDebtsWithErrors>,
 ) => {
-	const autoAcceptedData = sharedData
-		.map((sharedDatum) => {
-			if (!sharedDatum) {
+	const autoAcceptedData = updatedDebtsWithErrors
+		.map((updatedDebtOrError) => {
+			if (isError(updatedDebtOrError)) {
 				return null;
 			}
-			const { debt, setObject, reverseSetObject } = sharedDatum;
+			const { debt, setObject, reverseSetObject } = updatedDebtOrError;
 			if (
 				!debt.manualAcceptDebts &&
 				debt.foreignAccountId &&
@@ -176,36 +187,36 @@ const updateAutoAcceptingDebts = async (
 		ctx.database,
 		autoAcceptedData,
 	);
-	return sharedData
-		.map((sharedDatum) => {
+	return updatedDebtsWithErrors
+		.map((updatedDebtOrError) => {
 			if (
-				!sharedDatum ||
-				(sharedDatum.reverseSetObject?.lockedTimestamp === undefined &&
-					!newDebts.some((debt) => sharedDatum.debt.id === debt.id))
+				isError(updatedDebtOrError) ||
+				(updatedDebtOrError.reverseSetObject?.lockedTimestamp === undefined &&
+					!newDebts.some((debt) => updatedDebtOrError.debt.id === debt.id))
 			) {
 				return;
 			}
-			return sharedDatum.debt.id;
+			return updatedDebtOrError.debt.id;
 		})
 		.filter(nonNullishGuard);
 };
 
 const updateDebts = async (
 	ctx: AuthorizedContext,
-	sharedData: ReturnType<typeof getSharedDebtData>,
+	updatedDebtsWithErrors: ReturnType<typeof getUpdatedDebtsWithErrors>,
 ) =>
 	ctx.database.transaction().execute((tx) =>
 		Promise.all(
-			sharedData.map((sharedDatum) => {
-				if (!sharedDatum) {
+			updatedDebtsWithErrors.map((updatedDebtOrError) => {
+				if (isError(updatedDebtOrError)) {
 					return null;
 				}
 				return tx
 					.updateTable("debts")
-					.set(sharedDatum.setObject)
+					.set(updatedDebtOrError.setObject)
 					.where((eb) =>
 						eb.and({
-							id: sharedDatum.debt.id,
+							id: updatedDebtOrError.debt.id,
 							ownerAccountId: ctx.auth.accountId,
 						}),
 					)
@@ -224,7 +235,7 @@ const queueUpdateDebt = queueCallFactory<
 	}
 >((ctx) => async (updates) => {
 	const debts = await fetchDebts(ctx, updates);
-	const maybeUpdates = updates.map((update) => {
+	const updatesWithErrors = updates.map((update) => {
 		const matchedDebt = debts.find((debt) => debt.id === update.id);
 		if (!matchedDebt) {
 			return new TRPCError({
@@ -232,26 +243,26 @@ const queueUpdateDebt = queueCallFactory<
 				message: `Debt "${update.id}" does not exist on account "${ctx.auth.email}".`,
 			});
 		}
-		return update;
+		return { update, debt: matchedDebt };
 	});
-	const errors = maybeUpdates.filter(
-		(maybeDebt): maybeDebt is TRPCError => maybeDebt instanceof Error,
-	);
-	if (maybeUpdates.length === errors.length) {
+	const errors = updatesWithErrors.filter(isError);
+	if (updatesWithErrors.length === errors.length) {
 		return errors;
 	}
-	const sharedData = getSharedDebtData(debts, maybeUpdates);
-	const updatedDebtIds = await updateAutoAcceptingDebts(ctx, sharedData);
-	await updateDebts(ctx, sharedData);
-	return maybeUpdates.map((maybeUpdate, index) => {
-		if (maybeUpdate instanceof Error) {
-			return maybeUpdate;
+	const updatedDebtsWithErrors = getUpdatedDebtsWithErrors(updatesWithErrors);
+	const updatedDebtIds = await updateAutoAcceptingDebts(
+		ctx,
+		updatedDebtsWithErrors,
+	);
+	await updateDebts(ctx, updatedDebtsWithErrors);
+	return updatedDebtsWithErrors.map((updatedDebtOrError, index) => {
+		if (isError(updatedDebtOrError)) {
+			return updatedDebtOrError;
 		}
-		const sharedDatum = sharedData[index]!;
 		return {
-			lockedTimestamp: sharedDatum.setObject.lockedTimestamp,
+			lockedTimestamp: updatedDebtOrError.setObject.lockedTimestamp,
 			reverseLockedTimestampUpdated: updatedDebtIds.includes(
-				sharedDatum.debt.id,
+				updatedDebtOrError.debt.id,
 			),
 		};
 	});

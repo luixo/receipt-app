@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { describe, expect } from "vitest";
+import { assert, describe, expect } from "vitest";
 
 import { createContext } from "~tests/backend/utils/context";
 import {
@@ -100,7 +100,8 @@ describe("resetPasswordIntentions.add", () => {
 			await insertResetPasswordIntention(ctx, accountId);
 			await expectDatabaseDiffSnapshot(ctx, () => caller.procedure({ email }));
 			expect(ctx.emailOptions.mock.getMessages()).toHaveLength(1);
-			const message = ctx.emailOptions.mock.getMessages()[0]!;
+			const message = ctx.emailOptions.mock.getMessages()[0];
+			assert(message);
 			expect(message).toStrictEqual<typeof message>({
 				address: email.toLowerCase(),
 				body: message.body,

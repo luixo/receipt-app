@@ -121,6 +121,8 @@ describe("debts.getIntentions", () => {
 						userId,
 						amount: -Number(foreignDebtToUpdate.amount),
 						currencyCode: foreignDebtToUpdate.currencyCode,
+						// We just set `locketTimestamp`
+						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 						lockedTimestamp: foreignDebtToUpdate.lockedTimestamp!,
 						timestamp: foreignDebtToUpdate.timestamp,
 						note: debtToUpdate.note,
@@ -136,6 +138,8 @@ describe("debts.getIntentions", () => {
 						userId,
 						amount: -Number(debtToCreate.amount),
 						currencyCode: debtToCreate.currencyCode,
+						// We just set `locketTimestamp`
+						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 						lockedTimestamp: debtToCreate.lockedTimestamp!,
 						timestamp: debtToCreate.timestamp,
 						note: debtToCreate.note,

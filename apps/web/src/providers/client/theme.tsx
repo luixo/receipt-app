@@ -24,7 +24,10 @@ export const ThemeProvider: React.FC<React.PropsWithChildren<object>> = ({
 	const selectedMode = selectedColorMode || lastColorMode;
 	const sureMode = selectedMode ?? "light";
 	React.useEffect(() => {
-		const html = document.querySelector("html")!;
+		const html = document.querySelector("html");
+		if (!html) {
+			return;
+		}
 		html.setAttribute("data-theme", sureMode);
 		html.classList.add(sureMode);
 		html.classList.remove(sureMode === "dark" ? "light" : "dark");

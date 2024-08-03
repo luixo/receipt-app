@@ -1,5 +1,5 @@
 import Sharp from "sharp";
-import { describe, expect } from "vitest";
+import { assert, describe, expect } from "vitest";
 
 import { createAuthContext } from "~tests/backend/utils/context";
 import { insertAccountWithSession } from "~tests/backend/utils/data";
@@ -209,7 +209,8 @@ describe("account.changeAvatar", () => {
 			].join("/")}?lastModified=${Date.now()}`;
 			expect(result).toEqual({ url });
 			expect(ctx.s3Options.mock.getMessages()).toHaveLength(1);
-			const message = ctx.s3Options.mock.getMessages()[0]!;
+			const message = ctx.s3Options.mock.getMessages()[0];
+			assert(message);
 			expect(message.objectLength).toBeGreaterThan(1000);
 			expect(message.objectLength).toBeLessThan(5000);
 			expect(message).toStrictEqual<typeof message>({
@@ -234,8 +235,11 @@ describe("account.changeAvatar", () => {
 					{ exif: { IFD0: { Copyright: "Anything" } } },
 				),
 			);
-			const getObjectLength = (index: number) =>
-				ctx.s3Options.mock.getMessages()[index]!.objectLength;
+			const getObjectLength = (index: number) => {
+				const message = ctx.s3Options.mock.getMessages()[index];
+				assert(message);
+				return message.objectLength;
+			};
 			expect(getObjectLength(0)).toEqual(getObjectLength(1));
 		});
 	});

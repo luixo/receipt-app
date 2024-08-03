@@ -59,14 +59,18 @@ const mapDebt = (debt: Awaited<ReturnType<typeof fetchDebts>>[number]) => {
 		amount: Number(amount),
 		lockedTimestamp: lockedTimestamp || undefined,
 		receiptId: receiptId || undefined,
-		their: theirOwnerAccountId
-			? {
-					lockedTimestamp: theirLockedTimestamp || undefined,
-					amount: -Number(theirAmount!),
-					currencyCode: theirCurrencyCode!,
-					timestamp: theirTimestamp!,
-			  }
-			: undefined,
+		their:
+			theirOwnerAccountId !== null &&
+			theirAmount !== null &&
+			theirCurrencyCode !== null &&
+			theirTimestamp !== null
+				? {
+						lockedTimestamp: theirLockedTimestamp || undefined,
+						amount: -Number(theirAmount),
+						currencyCode: theirCurrencyCode,
+						timestamp: theirTimestamp,
+				  }
+				: undefined,
 	};
 };
 

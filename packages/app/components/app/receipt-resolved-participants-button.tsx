@@ -40,7 +40,7 @@ export const ReceiptResolvedParticipantsButton: React.FC<Props> = ({
 				return null;
 			}
 			return {
-				userId: matchedParticipant.userId!,
+				userId: matchedParticipant.userId,
 				resolved: matchedParticipant.resolved,
 			};
 		})

@@ -8,11 +8,5 @@ export type AugmentedProperies = React.CSSProperties & {
 };
 
 export const StylingContext = React.createContext<
-	Record<
-		string,
-		{
-			default: AugmentedProperies | undefined;
-			[key: string]: AugmentedProperies | undefined;
-		}
-	>
+	Record<string, Record<string, AugmentedProperies>>
 >({});

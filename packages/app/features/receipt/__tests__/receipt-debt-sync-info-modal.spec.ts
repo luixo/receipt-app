@@ -1,3 +1,5 @@
+import assert from "node:assert";
+
 import { getParticipantSums } from "~app/utils/receipt-item";
 import type { UsersId } from "~db";
 import { expect } from "~tests/frontend/fixtures";
@@ -46,9 +48,10 @@ test("Sorting", async ({
 				participantSums.find(({ userId }) => userId === participant.userId)
 					?.sum ?? 0;
 			const matchedUser = users.find((user) => user.id === participant.userId);
+			assert(matchedUser);
 			const getUser = (): User => ({
 				id: participant.userId,
-				name: matchedUser!.name,
+				name: matchedUser.name,
 				sum: expectedSum,
 			});
 			const matchedDebt = debts.find(

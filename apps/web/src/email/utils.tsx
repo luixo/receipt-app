@@ -66,9 +66,8 @@ const generateEmail = (
 				if (!acc[mediaKey]) {
 					acc[mediaKey] = {};
 				}
-				(acc[mediaKey] as NestedStyles)[selector] = convertStylesToString(
-					mediaStyles!,
-				);
+				(acc[mediaKey] as NestedStyles)[selector] =
+					convertStylesToString(mediaStyles);
 			});
 			return acc;
 		},

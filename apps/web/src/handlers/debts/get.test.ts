@@ -103,6 +103,8 @@ describe("debts.get", () => {
 				note: debt.note,
 				receiptId: debt.receiptId || undefined,
 				amount: Number(debt.amount),
+				// We just set `lockedTimestamp`
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				lockedTimestamp: debt.lockedTimestamp!,
 				their: undefined,
 			});
@@ -165,8 +167,12 @@ describe("debts.get", () => {
 					note: debt.note,
 					receiptId: debt.receiptId || undefined,
 					amount: Number(debt.amount),
+					// We just set `lockedTimestamp`
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					lockedTimestamp: debt.lockedTimestamp!,
 					their: {
+						// We just set `lockedTimestamp`
+						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 						lockedTimestamp: foreignDebt.lockedTimestamp!,
 						currencyCode: foreignDebt.currencyCode,
 						timestamp: foreignDebt.timestamp,
@@ -204,6 +210,8 @@ describe("debts.get", () => {
 					note: debt.note,
 					receiptId: debt.receiptId || undefined,
 					amount: Number(debt.amount),
+					// We just set `lockedTimestamp`
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					lockedTimestamp: debt.lockedTimestamp!,
 					their: {
 						lockedTimestamp: undefined,

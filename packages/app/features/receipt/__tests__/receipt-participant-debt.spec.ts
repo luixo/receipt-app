@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import assert from "node:assert";
 
 import { getParticipantSums } from "~app/utils/receipt-item";
 import { expect } from "~tests/frontend/fixtures";
@@ -203,10 +204,14 @@ test.describe("Debt is desynced", () => {
 	}) => {
 		const { receipt } = mockReceiptWithDebts({
 			generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 1 }),
-			generateDebts: generateDebtsWith((debt) => ({
-				...debt,
-				receiptId: `a${debt.receiptId!.slice(1)}`,
-			})),
+			generateDebts: generateDebtsWith((debt) => {
+				const { receiptId } = debt;
+				assert(receiptId);
+				return {
+					...debt,
+					receiptId: `a${receiptId.slice(1)}`,
+				};
+			}),
 		});
 		await openReceiptWithDebts(receipt);
 		await openDebtsInfoModal();
@@ -259,10 +264,13 @@ test.describe("Debt is desynced", () => {
 	}) => {
 		const { receipt } = mockReceiptWithDebts({
 			generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 1 }),
-			generateDebts: generateDebtsWith((debt) => ({
-				...debt,
-				timestamp: new Date(debt.timestamp!.valueOf() - DAY),
-			})),
+			generateDebts: generateDebtsWith((debt) => {
+				assert(debt.timestamp);
+				return {
+					...debt,
+					timestamp: new Date(debt.timestamp.valueOf() - DAY),
+				};
+			}),
 		});
 		await openReceiptWithDebts(receipt);
 		await openDebtsInfoModal();

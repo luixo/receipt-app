@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import assert from "node:assert";
 import type { DatabaseError } from "pg";
 import { z } from "zod";
 
@@ -41,6 +42,8 @@ const extractError = (e: unknown) => {
 	}
 	/* c8 ignore stop */
 	const typedMessage = e as DatabaseError;
+	// We checked for detail above
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const detailMatch = typedMessage.detail!.match(
 		/\("ownerAccountId", "receiptId", "userId"\)=\([a-z0-9-]+, ([a-z0-9-]+), ([a-z0-9-]+)\) already exists/,
 	);
@@ -52,11 +55,11 @@ const extractError = (e: unknown) => {
 		});
 	}
 	/* c8 ignore stop */
-	const [, receiptId, userId] = detailMatch;
-	return { receiptId: receiptId!, userId: userId! };
+	const [, receiptId, userId] = detailMatch as [string, string, string];
+	return { receiptId, userId };
 };
 
-const getResults = async (
+const getUsers = async (
 	ctx: AuthorizedContext,
 	debts: readonly z.infer<typeof addDebtSchema>[],
 ) => {
@@ -83,36 +86,52 @@ const getResults = async (
 		.execute();
 };
 
-const getSharedDebtData = (
+const isError = <T>(input: T | TRPCError): input is TRPCError =>
+	input instanceof TRPCError;
+
+type User = Awaited<ReturnType<typeof getUsers>>[number];
+
+const getDataDebtsWithErrors = (
 	ctx: AuthorizedContext,
-	debtsWithErrors: readonly (z.infer<typeof addDebtSchema> | TRPCError)[],
+	debtsWithErrors: readonly (
+		| {
+				debt: z.infer<typeof addDebtSchema>;
+				user: User;
+		  }
+		| TRPCError
+	)[],
 	lockedTimestamp: Date,
 ) =>
-	debtsWithErrors.map((maybeDebt) => {
-		if (maybeDebt instanceof Error) {
-			return null;
+	debtsWithErrors.map((debtOrError) => {
+		if (debtOrError instanceof Error) {
+			return debtOrError;
 		}
+		const { debt, user } = debtOrError;
 		return {
-			debt: maybeDebt,
+			debt,
+			user,
 			data: {
 				id: ctx.getUuid(),
-				note: maybeDebt.note,
-				currencyCode: maybeDebt.currencyCode,
+				note: debt.note,
+				currencyCode: debt.currencyCode,
 				created: new Date(),
-				timestamp: maybeDebt.timestamp || new Date(),
+				timestamp: debt.timestamp || new Date(),
 				lockedTimestamp,
-				receiptId: maybeDebt.receiptId,
+				receiptId: debt.receiptId,
 			},
 		};
 	});
 
 const addAutoAcceptingDebts = async (
 	ctx: AuthorizedContext,
-	results: Awaited<ReturnType<typeof getResults>>,
-	sharedData: ReturnType<typeof getSharedDebtData>,
+	dataDebtsWithErrors: ReturnType<typeof getDataDebtsWithErrors>,
 ) => {
-	const autoAcceptingData = results
-		.map((user) => {
+	const autoAcceptingData = dataDebtsWithErrors
+		.map((dataDebtOrErrors) => {
+			if (isError(dataDebtOrErrors)) {
+				return null;
+			}
+			const { user } = dataDebtOrErrors;
 			if (
 				user.foreignAccountId &&
 				user.theirUserId &&
@@ -136,19 +155,15 @@ const addAutoAcceptingDebts = async (
 	}
 	const { updatedDebts } = await upsertAutoAcceptedDebts(
 		ctx.database,
-		sharedData
-			.map((sharedDatum) => {
-				if (!sharedDatum) {
+		dataDebtsWithErrors
+			.map((dataDebtOrError) => {
+				if (isError(dataDebtOrError)) {
 					return null;
 				}
-				const { debt, data } = sharedDatum;
-				const matchedResult = results.find(
-					(result) => debt.userId === result.userId,
-				)!;
+				const { debt, data, user } = dataDebtOrError;
 				const matchedAutoAcceptingResult = autoAcceptingData.find(
 					(autoAcceptingResult) =>
-						autoAcceptingResult.foreignAccountId ===
-						matchedResult.foreignAccountId,
+						autoAcceptingResult.foreignAccountId === user.foreignAccountId,
 				);
 				if (!matchedAutoAcceptingResult) {
 					return null;
@@ -164,12 +179,12 @@ const addAutoAcceptingDebts = async (
 			.filter(nonNullishGuard),
 	);
 	return {
-		reverseIds: sharedData.map((sharedDatum) => {
-			if (!sharedDatum) {
+		reverseIds: dataDebtsWithErrors.map((dataDebtOrError) => {
+			if (isError(dataDebtOrError)) {
 				return;
 			}
 			const matchedUpdatedDebt = updatedDebts.find(
-				(debt) => debt?.receiptId === sharedDatum.data.receiptId,
+				(debt) => debt?.receiptId === dataDebtOrError.data.receiptId,
 			);
 			if (!matchedUpdatedDebt) {
 				return;
@@ -180,24 +195,32 @@ const addAutoAcceptingDebts = async (
 	};
 };
 
+type DataDebtOrError = NonNullable<
+	ReturnType<typeof getDataDebtsWithErrors>[number]
+>;
+
 const addDebts = async (
 	ctx: AuthorizedContext,
-	sharedData: ReturnType<typeof getSharedDebtData>,
-	validatedIds: DebtsId[],
+	dataDebtsWithErrors: (
+		| TRPCError
+		| (Exclude<DataDebtOrError, TRPCError> & {
+				validatedId: DebtsId;
+		  })
+	)[],
 ) => {
 	try {
 		await ctx.database
 			.insertInto("debts")
 			.values(
-				sharedData
-					.map((sharedDatum, index) => {
-						if (!sharedDatum) {
+				dataDebtsWithErrors
+					.map((dataDebtOrError) => {
+						if (isError(dataDebtOrError)) {
 							return null;
 						}
-						const { debt, data } = sharedDatum;
+						const { debt, data, validatedId } = dataDebtOrError;
 						return {
 							...data,
-							id: validatedIds[index]!,
+							id: validatedId,
 							ownerAccountId: ctx.auth.accountId,
 							userId: debt.userId,
 							amount: debt.amount.toString(),
@@ -232,57 +255,62 @@ const queueAddDebt = queueCallFactory<
 		reverseAccepted: boolean;
 	}
 >((ctx) => async (debts) => {
-	const results = await getResults(ctx, debts);
-	const maybeDebts = debts.map((debt) => {
-		const matchedResult = results.find(
-			(result) => result.userId === debt.userId,
-		);
-		if (!matchedResult) {
+	const users = await getUsers(ctx, debts);
+	const debtsOrErrors = debts.map((debt) => {
+		const matchedUser = users.find((result) => result.userId === debt.userId);
+		if (!matchedUser) {
 			return new TRPCError({
 				code: "NOT_FOUND",
 				message: `User "${debt.userId}" does not exist.`,
 			});
 		}
-		if (matchedResult.selfAccountId !== ctx.auth.accountId) {
+		if (matchedUser.selfAccountId !== ctx.auth.accountId) {
 			return new TRPCError({
 				code: "FORBIDDEN",
 				message: `User "${debt.userId}" is not owned by "${ctx.auth.email}".`,
 			});
 		}
-		if (debt.userId === matchedResult.selfAccountId) {
+		if (debt.userId === matchedUser.selfAccountId) {
 			return new TRPCError({
 				code: "FORBIDDEN",
 				message: `Cannot add a debt for yourself.`,
 			});
 		}
-		return debt;
+		return { debt, user: matchedUser };
 	});
-	const errors = maybeDebts.filter(
-		(maybeDebt): maybeDebt is TRPCError => maybeDebt instanceof Error,
-	);
-	if (maybeDebts.length === errors.length) {
+	const errors = debtsOrErrors.filter(isError);
+	if (debtsOrErrors.length === errors.length) {
 		return errors;
 	}
 	const lockedTimestamp = new Date();
-	const sharedData = getSharedDebtData(ctx, maybeDebts, lockedTimestamp);
+	const dataDebtsWithErrors = getDataDebtsWithErrors(
+		ctx,
+		debtsOrErrors,
+		lockedTimestamp,
+	);
 	const { reverseIds, acceptedUserIds } = await addAutoAcceptingDebts(
 		ctx,
-		results,
-		sharedData,
+		dataDebtsWithErrors,
 	);
-	const validatedIds = sharedData.map((sharedDatum, index) =>
-		sharedDatum ? reverseIds[index] || sharedDatum.data.id : "never",
+	const validatedDataDebtsWithErrors = dataDebtsWithErrors.map(
+		(dataDebtOrError, index) =>
+			!isError(dataDebtOrError)
+				? {
+						...dataDebtOrError,
+						validatedId: reverseIds[index] || dataDebtOrError.data.id,
+				  }
+				: dataDebtOrError,
 	);
-	await addDebts(ctx, sharedData, validatedIds);
+	await addDebts(ctx, validatedDataDebtsWithErrors);
 
-	return maybeDebts.map((maybeDebt, index) => {
-		if (maybeDebt instanceof Error) {
-			return maybeDebt;
+	return validatedDataDebtsWithErrors.map((dataDebtOrError) => {
+		if (isError(dataDebtOrError)) {
+			return dataDebtOrError;
 		}
 		return {
-			id: validatedIds[index]!,
+			id: dataDebtOrError.validatedId,
 			lockedTimestamp,
-			reverseAccepted: acceptedUserIds.includes(maybeDebt.userId),
+			reverseAccepted: acceptedUserIds.includes(dataDebtOrError.debt.userId),
 		};
 	});
 });

@@ -77,11 +77,13 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 		note: debt.note,
 		receiptId: debt.receiptId || undefined,
 		current:
-			debt.selfAmount !== null
+			debt.selfAmount !== null &&
+			debt.selfTimestamp !== null &&
+			debt.selfCurrencyCode !== null
 				? {
 						amount: Number(debt.selfAmount),
-						timestamp: debt.selfTimestamp!,
-						currencyCode: debt.selfCurrencyCode!,
+						timestamp: debt.selfTimestamp,
+						currencyCode: debt.selfCurrencyCode,
 				  }
 				: undefined,
 	}));

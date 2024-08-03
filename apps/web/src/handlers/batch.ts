@@ -70,7 +70,7 @@ export const queueCallFactory = <C extends UnauthorizedContext, I, O>(
 	return async (opts) => {
 		const context = opts.ctx as C;
 		const key = (getKey || defaultGetKey)(context);
-		dataloaderStorage[key] ??= {
+		const dataloaderObject = dataloaderStorage[key] || {
 			dataloader: new Dataloader<I, O, string>(
 				(inputs) => batchLoadFn(context)(inputs),
 				{
@@ -87,7 +87,8 @@ export const queueCallFactory = <C extends UnauthorizedContext, I, O>(
 				delete dataloaderStorage[key];
 			}, CLEAR_CACHE_DELAY),
 		};
-		dataloaderStorage[key]!.removeTimeoutId.refresh();
-		return dataloaderStorage[key]!.dataloader.load(opts.input as I);
+		dataloaderStorage[key] = dataloaderObject;
+		dataloaderObject.removeTimeoutId.refresh();
+		return dataloaderObject.dataloader.load(opts.input as I);
 	};
 };

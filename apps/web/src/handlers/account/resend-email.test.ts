@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { describe, expect } from "vitest";
+import { assert, describe, expect } from "vitest";
 
 import { createAuthContext } from "~tests/backend/utils/context";
 import { insertAccountWithSession } from "~tests/backend/utils/data";
@@ -110,7 +110,8 @@ describe("account.resendEmail", () => {
 			);
 			expect(returnEmail).toBe(email);
 			expect(ctx.emailOptions.mock.getMessages()).toHaveLength(1);
-			const message = ctx.emailOptions.mock.getMessages()[0]!;
+			const message = ctx.emailOptions.mock.getMessages()[0];
+			assert(message);
 			expect(message).toStrictEqual<typeof message>({
 				address: email.toLowerCase(),
 				body: message.body,

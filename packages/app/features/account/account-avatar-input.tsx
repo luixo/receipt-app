@@ -35,7 +35,10 @@ const MAX_ZOOM = 5;
 const getCroppedCanvas = async (imageSrc: string, pixelCrop: Area) => {
 	const image = await convertDataUrlToImageElement(imageSrc);
 	const canvas = document.createElement("canvas");
-	const ctx = canvas.getContext("2d")!;
+	const ctx = canvas.getContext("2d");
+	if (!ctx) {
+		throw new Error("Expected to get 2d context for canvas");
+	}
 
 	canvas.width = image.width;
 	canvas.height = image.height;
@@ -43,7 +46,10 @@ const getCroppedCanvas = async (imageSrc: string, pixelCrop: Area) => {
 	ctx.drawImage(image, 0, 0);
 
 	const croppedCanvas = document.createElement("canvas");
-	const croppedCtx = croppedCanvas.getContext("2d")!;
+	const croppedCtx = croppedCanvas.getContext("2d");
+	if (!croppedCtx) {
+		throw new Error("Expected to get 2d context for cropped canvas");
+	}
 
 	const constrainedWidth = Math.min(pixelCrop.width, MAX_AVATAR_SIDE_SIZE);
 	const constrainedHeight = Math.min(pixelCrop.height, MAX_AVATAR_SIDE_SIZE);
@@ -146,6 +152,8 @@ export const AccountAvatarInput: React.FC<Props> = ({ account, children }) => {
 			const croppedBlob = await new Promise<File>((resolve) => {
 				const type = "image/png" as const;
 				croppedCanvas.toBlob(
+					// It is not clear in which case `file` in `null`
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					(file) => resolve(new File([file!], "avatar.png", { type })),
 					type,
 				);

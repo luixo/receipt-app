@@ -134,12 +134,10 @@ export const addConnectionIntention = async (
 				.selectFrom("users")
 				.select("name")
 				.where("id", "=", existingIntention.userId)
-				.executeTakeFirst();
+				.executeTakeFirstOrThrow();
 			throw new TRPCError({
 				code: "CONFLICT",
-				message: `You already has intention to connect to "${
-					toEmail.original
-				}" as user "${existingUser!.name}".`,
+				message: `You already has intention to connect to "${toEmail.original}" as user "${existingUser.name}".`,
 			});
 		}
 		if (

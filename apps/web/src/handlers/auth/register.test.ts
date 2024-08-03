@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { describe, expect } from "vitest";
+import { assert, describe, expect } from "vitest";
 
 import {
 	MAX_PASSWORD_LENGTH,
@@ -136,12 +136,15 @@ describe("auth.register", () => {
 			const setCookieTuple = responseHeaders.find(
 				([key]) => key === "set-cookie",
 			);
-			expect(setCookieTuple).toBeTruthy();
-			const tokenMatch = setCookieTuple![1]!
+			assert(
+				setCookieTuple,
+				"Header 'set-cookie' has to be set in the response",
+			);
+			const tokenMatch = setCookieTuple[1]
 				.toString()
 				.match(/authToken=([^;]+)/);
-			expect(tokenMatch).toBeTruthy();
-			const token = tokenMatch![1]!;
+			assert(tokenMatch, "Cookie 'authToken' should be present");
+			const token = tokenMatch[1];
 			expect(responseHeaders).toStrictEqual<typeof responseHeaders>([
 				[
 					"set-cookie",
@@ -161,7 +164,8 @@ describe("auth.register", () => {
 				}),
 			);
 			expect(ctx.emailOptions.mock.getMessages()).toHaveLength(1);
-			const message = ctx.emailOptions.mock.getMessages()[0]!;
+			const message = ctx.emailOptions.mock.getMessages()[0];
+			assert(message);
 			expect(message).toStrictEqual<typeof message>({
 				address: email.toLowerCase(),
 				body: message.body,

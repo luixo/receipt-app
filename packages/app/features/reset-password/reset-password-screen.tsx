@@ -12,7 +12,7 @@ export const ResetPasswordScreen: AppPage = () => {
 	const searchParams = useSearchParams<{ token: string }>();
 	const token = searchParams?.get("token") ?? undefined;
 	const resetPasswordIntentionQuery = trpc.resetPasswordIntentions.get.useQuery(
-		{ token: token! },
+		{ token: token || "no-token" },
 		{ enabled: Boolean(token) },
 	);
 

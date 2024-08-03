@@ -23,7 +23,7 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 	const acceptConnection = React.useCallback(() => {
 		acceptConnectionMutation.mutate({
 			accountId: intention.account.id,
-			userId: userId!,
+			userId: userId || "unset user id",
 		});
 	}, [acceptConnectionMutation, intention.account.id, userId]);
 

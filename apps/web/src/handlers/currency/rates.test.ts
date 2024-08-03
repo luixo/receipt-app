@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { describe, expect } from "vitest";
+import { assert, describe, expect } from "vitest";
 
 import { createAuthContext } from "~tests/backend/utils/context";
 import { insertAccountWithSession } from "~tests/backend/utils/data";
@@ -67,7 +67,7 @@ describe("currency.rates", () => {
 	describe("functionality", () => {
 		describe("cache db throws", () => {
 			test(`on ping request`, async ({ ctx }) => {
-				const dbMock = ctx.cacheDbOptions.mock!;
+				const dbMock = ctx.cacheDbOptions.mock;
 				dbMock.setResponder("ping", async () => {
 					throw new Error("Pong error");
 				});
@@ -76,7 +76,7 @@ describe("currency.rates", () => {
 				// Throwing on ping doesn't affect flow as cache may be skipped
 				await caller.procedure({ from: "USD", to: ["EUR"] });
 				expect(dbMock.getMessages()).toHaveLength(1);
-				const message = dbMock.getMessages()[0]!;
+				const message = dbMock.getMessages()[0];
 				expect(message).toStrictEqual<typeof message>([
 					"ping",
 					[],
@@ -85,7 +85,7 @@ describe("currency.rates", () => {
 			});
 
 			test(`on get request`, async ({ ctx }) => {
-				const dbMock = ctx.cacheDbOptions.mock!;
+				const dbMock = ctx.cacheDbOptions.mock;
 				dbMock.setResponder("get", async () => {
 					throw new Error('Throw on "get" request');
 				});
@@ -99,7 +99,7 @@ describe("currency.rates", () => {
 			});
 
 			test(`on setex request`, async ({ ctx }) => {
-				const dbMock = ctx.cacheDbOptions.mock!;
+				const dbMock = ctx.cacheDbOptions.mock;
 				dbMock.setResponder("get", async () => null);
 				dbMock.setResponder("setex", async () => {
 					throw new Error('Throw on "setex" request');
@@ -118,7 +118,7 @@ describe("currency.rates", () => {
 			};
 
 			test("exchange rate provider throws", async ({ ctx }) => {
-				const dbMock = ctx.cacheDbOptions.mock!;
+				const dbMock = ctx.cacheDbOptions.mock;
 				respondAsEmptyCache(dbMock);
 				ctx.exchangeRateOptions.mock.addInterceptor(() => {
 					throw new Error("Generic exchange rate mock error");
@@ -137,7 +137,7 @@ describe("currency.rates", () => {
 			});
 
 			test("exchange rate returned", async ({ ctx }) => {
-				const dbMock = ctx.cacheDbOptions.mock!;
+				const dbMock = ctx.cacheDbOptions.mock;
 				respondAsEmptyCache(dbMock);
 				ctx.exchangeRateOptions.mock.addInterceptor(async () => getFakeRate());
 				const { sessionId } = await insertAccountWithSession(ctx);
@@ -176,7 +176,7 @@ describe("currency.rates", () => {
 
 		describe("cache has partial data", () => {
 			test(`exchange rate returned`, async ({ ctx }) => {
-				const dbMock = ctx.cacheDbOptions.mock!;
+				const dbMock = ctx.cacheDbOptions.mock;
 				const currencyInCache = "EUR";
 				const fakeRate = getFakeRate();
 				dbMock.setResponder("get", async (key) =>
@@ -223,7 +223,7 @@ describe("currency.rates", () => {
 			test(`exchange rate returned`, async ({ ctx }) => {
 				const currencyFrom = "USD";
 				const currenciesTo = ["EUR", "MOP", "VND"];
-				const dbMock = ctx.cacheDbOptions.mock!;
+				const dbMock = ctx.cacheDbOptions.mock;
 				const fakeRates = currenciesTo.reduce<Record<string, number>>(
 					(acc, currencyTo) => ({
 						...acc,
@@ -232,7 +232,8 @@ describe("currency.rates", () => {
 					{},
 				);
 				dbMock.setResponder("get", async (key) => {
-					const currencyTo = key.split("->")[1]!;
+					const currencyTo = key.split("->")[1];
+					assert(currencyTo, "Expected to have format 'USD->EUR' in key");
 					return fakeRates[currencyTo];
 				});
 				const { sessionId } = await insertAccountWithSession(ctx);
@@ -263,7 +264,7 @@ describe("currency.rates", () => {
 		});
 
 		test(`currencyCode casing is ignored`, async ({ ctx }) => {
-			const dbMock = ctx.cacheDbOptions.mock!;
+			const dbMock = ctx.cacheDbOptions.mock;
 			dbMock.setResponder("get", async () => getFakeRate());
 			const { sessionId } = await insertAccountWithSession(ctx);
 			const caller = createCaller(createAuthContext(ctx, sessionId));

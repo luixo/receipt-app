@@ -128,6 +128,8 @@ describe("debts.acceptIntention", () => {
 					(originalDebt) => ({
 						...originalDebt,
 						lockedTimestamp: new Date(
+							// We just set `lockedTimestamp`
+							// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 							originalDebt.lockedTimestamp!.valueOf() - MINUTE,
 						),
 					}),

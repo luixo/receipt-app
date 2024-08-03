@@ -14,14 +14,14 @@ const getProxyUrl = (url: string, api: ApiMixin["api"]) => {
 
 const fakeBrowserDate = async (page: OriginalPage) => {
 	const localMockedTimestamp = new Date().valueOf();
-	await page.evaluate(
+	await page.evaluate<void, [number]>(
 		([mockedTimestamp]) => {
-			Date.now = () => mockedTimestamp!;
+			Date.now = () => mockedTimestamp;
 			// eslint-disable-next-line no-global-assign
 			Date = class extends Date {
 				constructor(...args: Parameters<DateConstructor>) {
 					if (args.length === 0) {
-						super(mockedTimestamp!);
+						super(mockedTimestamp);
 					} else {
 						super(...args);
 					}
