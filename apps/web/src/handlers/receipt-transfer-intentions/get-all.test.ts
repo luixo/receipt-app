@@ -58,7 +58,7 @@ describe("receiptTransferIntentions.getAll", () => {
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
-			await expect(result).toStrictEqual<typeof result>({
+			expect(result).toStrictEqual<typeof result>({
 				inbound: [],
 				outbound: [],
 			});
@@ -126,7 +126,7 @@ describe("receiptTransferIntentions.getAll", () => {
 			// Verifying
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
-			await expect(result).toStrictEqual<typeof result>({
+			expect(result).toStrictEqual<typeof result>({
 				inbound: [
 					{
 						userId: inboundAccountUser.id,

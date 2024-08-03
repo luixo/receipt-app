@@ -6,7 +6,7 @@ type CookieManager = {
 	addCookie: <K extends keyof CookieValues>(
 		name: K,
 		value: CookieValues[K],
-	) => void;
+	) => Promise<void>;
 };
 
 type BrowserMixin = {

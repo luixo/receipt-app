@@ -251,7 +251,7 @@ describe("accountConnectionIntentions.add", () => {
 				const result = await expectDatabaseDiffSnapshot(ctx, () =>
 					caller.procedure({ userId, email: otherEmail }),
 				);
-				await expect(result).toStrictEqual<typeof result>({
+				expect(result).toStrictEqual<typeof result>({
 					account: {
 						id: otherAccountId,
 						email: otherEmail,
@@ -282,7 +282,7 @@ describe("accountConnectionIntentions.add", () => {
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({ userId, email: otherEmail });
-				await expect(result).toStrictEqual<typeof result>({
+				expect(result).toStrictEqual<typeof result>({
 					account: {
 						id: otherAccountId,
 						email: otherEmail,
@@ -309,7 +309,7 @@ describe("accountConnectionIntentions.add", () => {
 				const result = await expectDatabaseDiffSnapshot(ctx, () =>
 					caller.procedure({ userId, email: otherEmail }),
 				);
-				await expect(result).toStrictEqual<typeof result>({
+				expect(result).toStrictEqual<typeof result>({
 					account: {
 						id: otherAccountId,
 						email: otherEmail,
@@ -331,7 +331,7 @@ describe("accountConnectionIntentions.add", () => {
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({ userId, email: otherEmail });
-				await expect(result).toStrictEqual<typeof result>({
+				expect(result).toStrictEqual<typeof result>({
 					account: {
 						id: otherAccountId,
 						email: otherEmail,

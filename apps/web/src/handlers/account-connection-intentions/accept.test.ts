@@ -272,7 +272,7 @@ describe("accountConnectionIntentions.accept", () => {
 					accountId: foreignAccountId,
 				}),
 			);
-			await expect(result).toStrictEqual<typeof result>({
+			expect(result).toStrictEqual<typeof result>({
 				id: foreignAccountId,
 				email: foreignEmail,
 				avatarUrl: foreignAvatarUrl,
@@ -305,7 +305,7 @@ describe("accountConnectionIntentions.accept", () => {
 				userId: selfToForeignUserId,
 				accountId: foreignAccountId,
 			});
-			await expect(result).toStrictEqual<typeof result>({
+			expect(result).toStrictEqual<typeof result>({
 				id: foreignAccountId,
 				email: foreignEmail,
 				avatarUrl: foreignAvatarUrl,

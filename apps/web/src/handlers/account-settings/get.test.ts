@@ -20,7 +20,7 @@ describe("accountSettings.get", () => {
 			const { sessionId } = await insertAccountWithSession(ctx);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
-			await expect(result).toStrictEqual<typeof result>({
+			expect(result).toStrictEqual<typeof result>({
 				manualAcceptDebts: false,
 			});
 		});
@@ -31,7 +31,7 @@ describe("accountSettings.get", () => {
 			});
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
-			await expect(result).toStrictEqual<typeof result>({
+			expect(result).toStrictEqual<typeof result>({
 				manualAcceptDebts: false,
 			});
 		});
@@ -42,7 +42,7 @@ describe("accountSettings.get", () => {
 			});
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
-			await expect(result).toStrictEqual<typeof result>({
+			expect(result).toStrictEqual<typeof result>({
 				manualAcceptDebts: true,
 			});
 		});

@@ -189,7 +189,7 @@ export const screenshotsMixin = createMixin<ScreenshotsMixin>({
 					direction: "horizontal",
 					color: "#00ff00",
 				});
-				await expect
+				expect
 					.soft(await mergedImage.toFormat("png").toBuffer())
 					.toMatchSnapshot(name, {
 						maxDiffPixelRatio,

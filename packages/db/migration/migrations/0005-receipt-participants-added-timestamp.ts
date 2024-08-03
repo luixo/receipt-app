@@ -22,7 +22,10 @@ const addReceiptParticipantsAddedTimestampColumn = async (db: Database) => {
 };
 
 const removeReceiptParticipantsAddedTimestampColumn = async (db: Database) => {
-	await db.schema.alterTable("receiptParticipants").dropColumn("added");
+	await db.schema
+		.alterTable("receiptParticipants")
+		.dropColumn("added")
+		.execute();
 };
 
 export const up = async (db: Database) => {

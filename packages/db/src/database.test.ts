@@ -7,18 +7,18 @@ describe("database", () => {
 	test("SQL error logger works", async ({ ctx }) => {
 		await expect(() => sql`SELECT foo`.execute(ctx.database)).rejects.toThrow();
 		const loggedMessages = ctx.logger.getMessages();
-		await expect(loggedMessages).toHaveLength(1);
+		expect(loggedMessages).toHaveLength(1);
 		assert(loggedMessages[0]);
-		await expect(loggedMessages[0]).toHaveLength(1);
+		expect(loggedMessages[0]).toHaveLength(1);
 		assert(loggedMessages[0][0]);
-		await expect(loggedMessages[0][0]).toHaveProperty("duration");
+		expect(loggedMessages[0][0]).toHaveProperty("duration");
 		type MessageType = { duration: number; sql: string; error: Error };
 		const typedMessage = loggedMessages[0][0] as MessageType;
-		await expect(typedMessage.duration).toBeTypeOf("number");
-		await expect(typedMessage.error.toString()).toBe(
+		expect(typedMessage.duration).toBeTypeOf("number");
+		expect(typedMessage.error.toString()).toBe(
 			'error: column "foo" does not exist',
 		);
-		await expect(typedMessage).toStrictEqual<typeof typedMessage>({
+		expect(typedMessage).toStrictEqual<typeof typedMessage>({
 			duration: typedMessage.duration,
 			error: typedMessage.error,
 			sql: "SELECT foo",

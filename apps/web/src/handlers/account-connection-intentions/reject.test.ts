@@ -183,7 +183,7 @@ describe("accountConnectionIntentions.reject", () => {
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ sourceAccountId: foreignAccountId }),
 			);
-			await expect(result).toBeUndefined();
+			expect(result).toBeUndefined();
 		});
 	});
 });

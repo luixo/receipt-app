@@ -39,7 +39,7 @@ describe("accountConnectionIntentions.getAll", () => {
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
-			await expect(result).toStrictEqual<typeof result>({
+			expect(result).toStrictEqual<typeof result>({
 				inbound: [],
 				outbound: [],
 			});
@@ -110,7 +110,7 @@ describe("accountConnectionIntentions.getAll", () => {
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
-			await expect(result).toStrictEqual<typeof result>({
+			expect(result).toStrictEqual<typeof result>({
 				inbound: [
 					{ account: { id: inboundAccountId, email: inboundEmail } },
 					{

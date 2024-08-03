@@ -211,8 +211,8 @@ describe("users.add", () => {
 					}),
 				);
 				const uuidSchema = z.string().uuid();
-				await expect(uuidSchema.safeParse(result.id).success).toBe(true);
-				await expect(result).toStrictEqual<typeof result>({
+				expect(uuidSchema.safeParse(result.id).success).toBe(true);
+				expect(result).toStrictEqual<typeof result>({
 					connection: {
 						connected: true,
 						account: {
@@ -244,8 +244,8 @@ describe("users.add", () => {
 					}),
 				);
 				const uuidSchema = z.string().uuid();
-				await expect(uuidSchema.safeParse(result.id).success).toBe(true);
-				await expect(result).toStrictEqual<typeof result>({
+				expect(uuidSchema.safeParse(result.id).success).toBe(true);
+				expect(result).toStrictEqual<typeof result>({
 					connection: {
 						connected: false,
 						account: {

@@ -56,20 +56,18 @@ const queueElement = queueCallFactory<
 >(
 	() => async (inputs) => {
 		const elements = await getElements(inputs.map((input) => input.id));
-		return Promise.all(
-			inputs.map(async (input) => {
-				const element = elements.find(({ id }) => id === input.id);
-				if (!element) {
-					return new Error("Missing element error");
-				}
-				try {
-					const result = await mapElement(element);
-					return result;
-				} catch (e) {
-					return e as Error;
-				}
-			}),
-		);
+		return inputs.map((input) => {
+			const element = elements.find(({ id }) => id === input.id);
+			if (!element) {
+				return new Error("Missing element error");
+			}
+			try {
+				const result = mapElement(element);
+				return result;
+			} catch (e) {
+				return e as Error;
+			}
+		});
 	},
 	{
 		getKey: (ctx) =>

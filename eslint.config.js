@@ -158,7 +158,6 @@ const disabledRules = {
 
 const temporaryDisabledRules = {
 	"@typescript-eslint/array-type": "off",
-	"@typescript-eslint/await-thenable": "off",
 	"@typescript-eslint/consistent-indexed-object-style": "off",
 	"@typescript-eslint/no-confusing-non-null-assertion": "off",
 	"@typescript-eslint/no-confusing-void-expression": "off",

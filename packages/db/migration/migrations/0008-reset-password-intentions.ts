@@ -15,7 +15,6 @@ const addResetPasswordIntentionsTable = async (db: Database) => {
 		.addColumn("expiresTimestamp", "timestamp", (cb) => cb.notNull())
 		.addColumn("token", "uuid", (cb) => cb.notNull())
 		.execute();
-	await db.schema;
 	await db.schema
 		.createIndex(RESET_PASSWORD_INTENTIONS.INDEXES.ACCOUNT_ID)
 		.on("resetPasswordIntentions")
