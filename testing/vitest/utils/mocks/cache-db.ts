@@ -49,9 +49,9 @@ export const getCacheDbOptions = (): CacheDbOptionsMock => {
 					let returnValue: UpstashResponse<T>;
 					try {
 						returnValue = {
-							result: await responder(
+							result: (await responder(
 								...(values as Parameters<typeof responder>),
-							),
+							)) as T,
 						};
 					} catch (error) {
 						returnValue = { error: String(error) };

@@ -9,7 +9,9 @@ export const webPersister: Persister = createAsyncStoragePersister({
 			: {
 					setItem: set,
 					getItem: (key) =>
-						get(key).then((value) => (value === undefined ? null : value)),
+						get<string>(key).then((value) =>
+							value === undefined ? null : value,
+						),
 					removeItem: del,
 			  },
 });

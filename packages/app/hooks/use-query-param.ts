@@ -43,7 +43,7 @@ export const useQueryParam = <T extends object | Primitive = string>(
 			if (typeof valueOrUpdater === "function") {
 				// We can't use update function of `setRawValue`
 				// as `rawValue` is not updated when it's been set to null
-				void setRawValue(serialize(valueOrUpdater(parsedValue)));
+				void setRawValue(serialize(valueOrUpdater(parsedValue) as T));
 			} else {
 				void setRawValue(serialize(valueOrUpdater));
 			}

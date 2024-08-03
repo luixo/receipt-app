@@ -13,15 +13,22 @@ import {
 import { schemas } from "~app/utils/cookie-data";
 import { NATIVE_STYLESHEET_PRELOAD_ID } from "~web/hooks/use-remove-preloaded-css";
 
+type NativeWebAppRegistry = typeof AppRegistry & {
+	getApplication: (name: string) => {
+		getStyleElement: () => React.ReactElement<{
+			dangerouslySetInnerHTML: { __html: string };
+			id: string;
+		}>;
+	};
+};
+
 const getNativeCss = () => {
 	AppRegistry.registerComponent("Main", () => Main);
 	// see https://github.com/necolas/react-native-web/issues/832#issuecomment-1229676492
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	const { getStyleElement } = (AppRegistry as any).getApplication("Main");
-	const style = getStyleElement() as React.ReactElement<{
-		dangerouslySetInnerHTML: { __html: string };
-		id: string;
-	}>;
+	const { getStyleElement } = (
+		AppRegistry as NativeWebAppRegistry
+	).getApplication("Main");
+	const style = getStyleElement();
 	return {
 		...style,
 		props: {

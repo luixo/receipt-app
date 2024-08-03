@@ -166,7 +166,7 @@ const updateAutoAcceptingDebts = async (
 					ownerAccountId: debt.foreignAccountId,
 					userId: debt.theirUserId,
 					currencyCode: debt.currencyCode,
-					amount: (-debt.amount).toString(),
+					amount: (-Number(debt.amount)).toString(),
 					timestamp: debt.timestamp,
 					lockedTimestamp: debt.lockedTimestamp,
 					receiptId: debt.receiptId,

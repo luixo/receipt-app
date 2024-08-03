@@ -17,7 +17,7 @@ const useSetLocalCookie = <T extends keyof CookieValues>(
 	getValue: () => CookieValues[T],
 ) => {
 	const [, setValue] = React.useContext(SSRContext)[key];
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
 	useMountEffect(() => setValue(getValue() as any));
 };
 

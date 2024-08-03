@@ -338,7 +338,7 @@ export const insertSyncedDebts = async (
 		{
 			id: debt.id,
 			currencyCode: debt.currencyCode,
-			amount: -debt.amount,
+			amount: -Number(debt.amount),
 			timestamp: debt.timestamp,
 			created: debt.created,
 			note: debt.note,

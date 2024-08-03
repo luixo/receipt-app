@@ -39,7 +39,7 @@ class ESMFileMigrationProvider implements MigrationProvider {
 		for (const fileName of files) {
 			const importPath = path.join(resolvedPath, fileName);
 			// eslint-disable-next-line no-await-in-loop
-			const migration = await import(importPath);
+			const migration = (await import(importPath)) as Migration;
 			const migrationKey = fileName.substring(0, fileName.lastIndexOf("."));
 			migrations[migrationKey] = migration;
 		}

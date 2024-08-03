@@ -7,13 +7,20 @@ import { getConfig } from "../../packages/app/utils/tailwind";
 
 const rootPath = path.join(__dirname, "../..");
 
+// Remove `as` when `nativewind/theme` is typed
+const safePlatformSelect = platformSelect as <
+	T extends Record<string, unknown>,
+>(
+	input: T,
+) => T[keyof T];
+
 const config = getConfig({
 	content: [path.join(rootPath, "packages/**/*.{ts,tsx}")],
 	theme: {
 		extend: {
 			fontFamily: {
 				example: ["ExampleFontFamily"],
-				system: platformSelect({
+				system: safePlatformSelect({
 					ios: "Georgia",
 					android: "sans-serif",
 					default: "ui-sans-serif",

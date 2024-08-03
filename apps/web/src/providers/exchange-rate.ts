@@ -34,7 +34,7 @@ const fetchCDNRate =
 				`Response to exchange rate request is ${response.status}`,
 			);
 		}
-		const json = await response.json();
+		const json: unknown = await response.json();
 		const keysSchema = z.enum(toCodesLower);
 		const parsedJson = z
 			.object({
@@ -79,7 +79,7 @@ const fetchERARate = async (
 	if (response.status !== 200) {
 		throw new Error(`Response to exchange rate request is ${response.status}`);
 	}
-	const json = await response.json();
+	const json: unknown = await response.json();
 	const parsedJson = z
 		.discriminatedUnion("result", [
 			z.object({

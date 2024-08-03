@@ -112,7 +112,7 @@ const handleCall = async <K extends TRPCKey>(
 				data: transformer.serialize(
 					typeof handlerOrData === "function"
 						? handlerOrData(
-								// eslint-disable-next-line @typescript-eslint/no-explicit-any
+								// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
 								deserializedInput as any,
 								controller.calls.get(name) || 0,
 						  )
@@ -161,9 +161,10 @@ const handleRequest = async (
 		"{}";
 	const cleanPathname = url.pathname.replace(API_PREFIX, "");
 	if (isBatch) {
-		const inputs: Record<number, TransformerResult> = JSON.parse(
-			decodeURIComponent(source),
-		);
+		const inputs = JSON.parse(decodeURIComponent(source)) as Record<
+			number,
+			TransformerResult
+		>;
 		const names = cleanPathname.split(",") as TRPCKey[];
 		return Promise.all(
 			names
@@ -171,7 +172,7 @@ const handleRequest = async (
 				.map(({ name, input }) => handleCall(controller, type, name, input)),
 		);
 	}
-	const input: TransformerResult = JSON.parse(decodeURIComponent(source));
+	const input = JSON.parse(decodeURIComponent(source)) as TransformerResult;
 	const name = cleanPathname as TRPCKey;
 	return handleCall(controller, type, name, input);
 };

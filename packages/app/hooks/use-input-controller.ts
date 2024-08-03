@@ -63,7 +63,12 @@ export const useInputController = <
 	return {
 		bindings: type === "number" ? { ...field, onChange } : field,
 		state: fieldState,
-		getValue: React.useCallback(() => form.watch(name), [form, name]),
+		getValue: React.useCallback(
+			// Type seems to be inferred incorrectly
+			// eslint-disable-next-line @typescript-eslint/no-unsafe-return
+			() => form.watch(name),
+			[form, name],
+		),
 		getNumberValue: React.useCallback(
 			() => Number(form.watch(name)),
 			[form, name],

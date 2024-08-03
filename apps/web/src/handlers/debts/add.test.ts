@@ -366,8 +366,9 @@ describe("debts.add", () => {
 					lockedTimestamp: new Date(),
 					reverseAccepted: true,
 				});
+				expect(results[1]).toBeInstanceOf(Error);
 				expectLocalTRPCError(
-					results[1],
+					results[1] as Error,
 					"NOT_FOUND",
 					`User "${fakeUserId}" does not exist.`,
 				);

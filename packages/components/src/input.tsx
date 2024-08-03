@@ -61,8 +61,7 @@ export const Input = React.forwardRef<HTMLInputElement, Props>(
 		const isMutationLoading = mutations.some(({ isPending }) => isPending);
 		return (
 			<InputRaw
-				// eslint-disable-next-line @typescript-eslint/no-explicit-any
-				ref={ref as any}
+				ref={ref}
 				{...props}
 				value={value?.toString()}
 				isDisabled={isMutationLoading || isDisabled}

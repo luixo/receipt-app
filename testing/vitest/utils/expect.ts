@@ -70,7 +70,7 @@ export const expectDatabaseDiffSnapshot = async <T>(
 	const snapshotAfter = await ctx.dumpDatabase();
 	const diff = Object.fromEntries(
 		Object.entries(detailedDiff(snapshotBefore, snapshotAfter))
-			.filter(([, diffs]) => Object.keys(diffs).length !== 0)
+			.filter(([, diffs]) => Object.keys(diffs as object).length !== 0)
 			.map(([detailedDiffKey, diffs]) => [
 				detailedDiffKey,
 				Object.fromEntries(

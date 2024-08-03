@@ -472,7 +472,8 @@ export const queriesMixin = createMixin<
 							.soft(
 								`${JSON.stringify(
 									diff,
-									(_, value) => (value === undefined ? "<undefined>" : value),
+									(_, value: unknown) =>
+										value === undefined ? "<undefined>" : value,
 									"\t",
 								)}\n`,
 							)

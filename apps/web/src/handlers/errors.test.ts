@@ -77,14 +77,17 @@ test("error is captured", async ({ ctx }) => {
 		},
 	});
 	await start();
-	const error: TRPCClientError<AppRouter> = await client.account.get
-		.query()
-		.catch((e) => e);
-	expect(error.message).toBe(
-		'Internal server error\nError fingerprint "transaction-id"',
-	);
-	expect(ctx.logger.getMessages()).toEqual([
-		['Captured error: "Session id mismatch"'],
-	]);
-	await destroy();
+	try {
+		await client.account.get.query();
+		throw new Error("Expected not to get here");
+	} catch (error) {
+		expect(error).toBeInstanceOf(TRPCClientError);
+		expect((error as TRPCClientError<AppRouter>).message).toBe(
+			'Internal server error\nError fingerprint "transaction-id"',
+		);
+		expect(ctx.logger.getMessages()).toEqual([
+			['Captured error: "Session id mismatch"'],
+		]);
+		await destroy();
+	}
 });

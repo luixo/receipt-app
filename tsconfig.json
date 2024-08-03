@@ -4,6 +4,7 @@
 		"strict": true,
 		"strictNullChecks": true,
 		"noUncheckedIndexedAccess": true,
+		"useUnknownInCatchVariables": true,
 		"jsx": "react-jsx",
 		"jsxImportSource": "nativewind",
 		"module": "esnext",
