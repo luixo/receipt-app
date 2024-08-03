@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import type { SearchParamsContextType } from "~app/contexts/search-params-context";
 import { SearchParamsContext } from "~app/contexts/search-params-context";

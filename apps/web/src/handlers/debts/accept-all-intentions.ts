@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
 import type { DebtsId } from "~db";
-import { NonNullableField } from "~utils";
+import type { NonNullableField } from "~utils";
 import { authProcedure } from "~web/handlers/trpc";
 
 export const procedure = authProcedure.mutation(async ({ ctx }) => {

@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import { keepPreviousData } from "@tanstack/react-query";
 

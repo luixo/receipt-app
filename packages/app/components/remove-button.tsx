@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import { ConfirmModal } from "~app/components/confirm-modal";
 import { Button } from "~components";

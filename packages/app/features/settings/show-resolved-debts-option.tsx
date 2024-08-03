@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import { Switch } from "~components";

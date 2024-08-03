@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import BoringAvatar from "boring-avatars";
 import { getImageProps } from "next/image";

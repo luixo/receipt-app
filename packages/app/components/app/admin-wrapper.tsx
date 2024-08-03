@@ -3,7 +3,8 @@ import React from "react";
 import { useRouter } from "solito/navigation";
 
 import { QueryErrorMessage } from "~app/components/error-message";
-import { LinksContext, LinksContextType } from "~app/contexts/links-context";
+import type { LinksContextType } from "~app/contexts/links-context";
+import { LinksContext } from "~app/contexts/links-context";
 import { SELF_QUERY_CLIENT_KEY } from "~app/contexts/query-clients-context";
 import { SearchParamsContext } from "~app/contexts/search-params-context";
 import { QueryProvider } from "~app/providers/query";

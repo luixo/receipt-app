@@ -2,7 +2,7 @@ import React from "react";
 
 import { QueryClientProvider as RawQueryClientProvider } from "@tanstack/react-query";
 
-import { LinksContextType } from "~app/contexts/links-context";
+import type { LinksContextType } from "~app/contexts/links-context";
 import type { QueryClientsRecord } from "~app/contexts/query-clients-context";
 import {
 	SELF_QUERY_CLIENT_KEY,

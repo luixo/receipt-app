@@ -4,7 +4,8 @@ import { Stack, useGlobalSearchParams } from "expo-router";
 
 import "~app/global.css";
 
-import { LinksContext, LinksContextType } from "~app/contexts/links-context";
+import type { LinksContextType } from "~app/contexts/links-context";
+import { LinksContext } from "~app/contexts/links-context";
 import { SELF_QUERY_CLIENT_KEY } from "~app/contexts/query-clients-context";
 import { Provider } from "~app/providers/index";
 import { useBaseUrl } from "~mobile/hooks/use-base-url";

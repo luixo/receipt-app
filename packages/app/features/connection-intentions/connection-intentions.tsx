@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import { EmptyCard } from "~app/components/empty-card";
 import { QueryErrorMessage } from "~app/components/error-message";

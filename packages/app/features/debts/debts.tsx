@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import { View } from "react-native";
 
 import { DebtsGroup } from "~app/components/app/debts-group";

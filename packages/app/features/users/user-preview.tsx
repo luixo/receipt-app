@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import { User } from "~app/components/app/user";
 import type { TRPCQueryOutput } from "~app/trpc";

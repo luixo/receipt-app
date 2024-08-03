@@ -1,4 +1,4 @@
-import * as React from "react";
+import type * as React from "react";
 import { AppRegistry } from "react-native";
 
 import { getCookie } from "cookies-next";

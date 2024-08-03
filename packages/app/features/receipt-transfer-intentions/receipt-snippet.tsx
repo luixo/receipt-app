@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import { useSsrFormat } from "~app/hooks/use-ssr-format";

@@ -160,7 +160,6 @@ const temporaryDisabledRules = {
 	"@typescript-eslint/array-type": "off",
 	"@typescript-eslint/await-thenable": "off",
 	"@typescript-eslint/consistent-indexed-object-style": "off",
-	"@typescript-eslint/consistent-type-imports": "off",
 	"@typescript-eslint/no-confusing-non-null-assertion": "off",
 	"@typescript-eslint/no-confusing-void-expression": "off",
 	"@typescript-eslint/no-dynamic-delete": "off",
@@ -338,6 +337,13 @@ export default ts.config(
 		rules: {
 			...vitestPlugin.configs.recommended.rules,
 			"vitest/valid-title": "off",
+		},
+	},
+	{
+		files: ["apps/web/src/email/*"],
+		rules: {
+			// see https://github.com/typescript-eslint/typescript-eslint/issues/8324
+			"@typescript-eslint/consistent-type-imports": "off",
 		},
 	},
 	{

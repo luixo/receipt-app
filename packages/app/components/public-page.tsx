@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import { AuthEffect } from "~app/components/app/auth-effect";
 import type { MenuElement } from "~app/components/page";

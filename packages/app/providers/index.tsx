@@ -1,10 +1,10 @@
-import React from "react";
+import type React from "react";
 
 import type { Persister } from "@tanstack/react-query-persist-client";
 import type { NextParsedUrlQuery } from "next/dist/server/request-meta";
 
-import { LinksContextType } from "~app/contexts/links-context";
-import { QueryClientsRecord } from "~app/contexts/query-clients-context";
+import type { LinksContextType } from "~app/contexts/links-context";
+import type { QueryClientsRecord } from "~app/contexts/query-clients-context";
 import type { SSRContextData } from "~app/contexts/ssr-context";
 
 import { PersisterProvider } from "./persist-client";
