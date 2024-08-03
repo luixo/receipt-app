@@ -1,5 +1,6 @@
 import type * as React from "react";
 
+import { entries, mapValues } from "remeda";
 import type { z } from "zod";
 
 import {
@@ -59,19 +60,14 @@ export const getCookieStatesFromValues = (
 	) => React.Dispatch<React.SetStateAction<CookieValues[K]>>,
 	getRemove: <K extends keyof CookieValues>(key: K) => () => void,
 ): CookieStates =>
-	Object.fromEntries(
-		Object.entries(mapping).map(([key, value]) => [
-			key,
-			[
-				value,
-				getDispatch(key as keyof CookieValues),
-				getRemove(key as keyof CookieValues),
-			],
-		]),
-	) as unknown as CookieStates;
+	mapValues(mapping, (value, key) => [
+		value,
+		getDispatch(key),
+		getRemove(key),
+	]) as CookieStates;
 
 export const getSSRContextCookieData = (cookies: Cookies = {}): CookieValues =>
-	Object.entries(schemas).reduce<CookieValues>((acc, [key, schema]) => {
+	entries(schemas).reduce<CookieValues>((acc, [key, schema]) => {
 		let parsedValue: unknown = null;
 		try {
 			parsedValue = JSON.parse(cookies[key] || "");

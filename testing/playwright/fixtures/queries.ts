@@ -10,6 +10,7 @@ import type {
 } from "@trpc/server/unstable-core-do-not-import";
 import { diff as objectDiff } from "deep-object-diff";
 import assert from "node:assert";
+import { entries, fromEntries, isNonNullish, mapValues, omitBy } from "remeda";
 
 import type {
 	AppRouter,
@@ -21,7 +22,6 @@ import type {
 	TRPCSplitMutationKey,
 	TRPCSplitQueryKey,
 } from "~app/trpc";
-import { mapObjectValues, nonNullishGuard, omitUndefined } from "~utils";
 import { router } from "~web/handlers";
 
 import type { ApiManager, ApiMixin, TRPCKey } from "./api";
@@ -220,8 +220,8 @@ const remapActions = (
 	actions: ReturnType<ApiManager["getActions"]>,
 	keysLists: KeysLists,
 ) =>
-	Object.fromEntries(
-		Object.entries(
+	fromEntries(
+		entries(
 			actions.reduce<Partial<Record<TRPCKey, KeyCalls>>>(
 				(acc, [type, name]) => {
 					if (shouldIgnoreKey(name, keysLists)) {
@@ -351,55 +351,67 @@ const getDiff = (prevCache: QueryCache, nextCache: QueryCache) => {
 		prevCache,
 		nextCache,
 	);
-	return omitUndefined({
-		queries: diff.queries
-			? mapObjectValues(diff.queries, (query, key) => {
-					if (!query.state) {
-						return query;
-					}
-					const queryKey = key as TRPCQueryKey;
-					return {
-						...query,
-						state: omitUndefined({
-							...query.state,
-							dataUpdateCount: getQueryCount(queryKey, "dataUpdateCount"),
-							errorUpdateCount: getQueryCount(queryKey, "errorUpdateCount"),
-							fetchFailureCount: getQueryCount(queryKey, "fetchFailureCount"),
-						}),
-					};
-			  })
-			: undefined,
-		mutations: diff.mutations
-			? mapObjectValues(diff.mutations, (mutations, key) => {
-					const mapMutation = (
-						mutation: NonNullable<(typeof mutations)[number]>,
-						index: number | string | symbol,
-					) => {
-						if (!mutation.state) {
-							return mutation;
+	return omitBy(
+		{
+			queries: diff.queries
+				? mapValues(diff.queries, (query, key) => {
+						if (!query?.state) {
+							return query;
 						}
-						const mutationKey = key as TRPCMutationKey;
+						const queryKey = key as TRPCQueryKey;
 						return {
-							...mutation,
-							state: omitUndefined({
-								...mutation.state,
-								failureCount: getMutationCount(
-									mutationKey,
-									Number(index),
-									"failureCount",
-								),
-							}),
+							...query,
+							state: omitBy(
+								{
+									...query.state,
+									dataUpdateCount: getQueryCount(queryKey, "dataUpdateCount"),
+									errorUpdateCount: getQueryCount(queryKey, "errorUpdateCount"),
+									fetchFailureCount: getQueryCount(
+										queryKey,
+										"fetchFailureCount",
+									),
+								},
+								(value) => value === undefined,
+							),
 						};
-					};
-					if (Array.isArray(mutations)) {
-						return mutations.filter(nonNullishGuard).map(mapMutation);
-					}
-					// Case of diff for a single mutation - array is convert to an object with partial keys
-					// eslint-disable-next-line prefer-object-spread
-					return mapObjectValues(Object.assign({}, mutations), mapMutation);
-			  })
-			: undefined,
-	});
+				  })
+				: undefined,
+			mutations: diff.mutations
+				? mapValues(diff.mutations, (mutations, key) => {
+						const mapMutation = (
+							mutation: NonNullable<NonNullable<typeof mutations>[number]>,
+							index: number | string | symbol,
+						) => {
+							if (!mutation.state) {
+								return mutation;
+							}
+							const mutationKey = key as TRPCMutationKey;
+							return {
+								...mutation,
+								state: omitBy(
+									{
+										...mutation.state,
+										failureCount: getMutationCount(
+											mutationKey,
+											Number(index),
+											"failureCount",
+										),
+									},
+									(value) => value === undefined,
+								),
+							};
+						};
+						if (Array.isArray(mutations)) {
+							return mutations.filter(isNonNullish).map(mapMutation);
+						}
+						// Case of diff for a single mutation - array is convert to an object with partial keys
+						// eslint-disable-next-line prefer-object-spread
+						return mapValues(Object.assign({}, mutations), mapMutation);
+				  })
+				: undefined,
+		},
+		(value) => value === undefined,
+	);
 };
 
 type QueriesMixin = {

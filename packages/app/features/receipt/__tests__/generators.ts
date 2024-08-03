@@ -1,11 +1,12 @@
 import type { Faker } from "@faker-js/faker";
+import { isNonNullish } from "remeda";
 
 import type { TRPCQueryOutput } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import type { AccountsId, ReceiptItemsId, ReceiptsId, UsersId } from "~db";
 import { generateAmount } from "~tests/frontend/utils/generators";
 import type { Amount } from "~tests/frontend/utils/generators";
-import { MONTH, nonNullishGuard } from "~utils";
+import { MONTH } from "~utils";
 import { CURRENCY_CODES } from "~utils/currency-data";
 
 const getRandomCurrencyCode = (faker: Faker) =>
@@ -117,7 +118,7 @@ export const defaultGenerateReceiptParticipants: GenerateReceiptParticipants =
 						added: faker.date.recent({ days: 5, refDate: new Date() }),
 				  }
 				: undefined,
-		].filter(nonNullishGuard);
+		].filter(isNonNullish);
 
 export type GenerateReceiptItemsParts = (opts: {
 	faker: Faker;
@@ -171,4 +172,5 @@ export const defaultGenerateReceipt: GenerateReceipt = ({
 	},
 	items: receiptItemsParts,
 	participants: receiptParticipants,
+	transferIntentionUserId: undefined,
 });

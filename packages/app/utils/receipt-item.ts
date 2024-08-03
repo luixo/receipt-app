@@ -1,12 +1,7 @@
+import { entries, mapValues, values } from "remeda";
+
 import type { ReceiptItemsId, ReceiptsId, UsersId } from "~db";
-import {
-	entries,
-	getIndexByString,
-	mapObjectKeys,
-	mapObjectValues,
-	rotate,
-	values,
-} from "~utils";
+import { getIndexByString, rotate } from "~utils";
 
 export const getDecimalsPower = (decimalDigits = 2) => 10 ** decimalDigits;
 
@@ -24,15 +19,15 @@ type ReceiptParticipant = {
 	userId: UsersId;
 };
 
-export const getItemCalculations = <T extends string>(
+export const getItemCalculations = (
 	itemSum: number,
-	parts: Record<T, number>,
+	parts: Record<string, number>,
 	decimalDigits = 2,
 ) => {
 	const decimalsPower = getDecimalsPower(decimalDigits);
 	const sumRounded = Math.round(itemSum * decimalsPower);
 	const partsAmount = values(parts).reduce((acc, part) => acc + part, 0);
-	const sumByUser = mapObjectValues(
+	const sumByUser = mapValues(
 		parts,
 		(part) => (part / partsAmount) * sumRounded,
 	);
@@ -41,14 +36,9 @@ export const getItemCalculations = <T extends string>(
 		0,
 	);
 	return {
-		sumFlooredByParticipant: mapObjectKeys(parts, (id) =>
-			Math.floor(sumByUser[id]),
-		),
+		sumFlooredByParticipant: mapValues(sumByUser, (sum) => Math.floor(sum)),
 		leftover: sumRounded - sumTotal,
-		shortageByParticipant: mapObjectKeys(
-			parts,
-			(id) => sumByUser[id] - Math.floor(sumByUser[id]),
-		),
+		shortageByParticipant: mapValues(sumByUser, (sum) => sum - Math.floor(sum)),
 	};
 };
 
@@ -136,7 +126,7 @@ export const getParticipantSums = <
 	} = items
 		.filter((item) => item.parts.length !== 0)
 		.map((item) =>
-			getItemCalculations<UsersId>(
+			getItemCalculations(
 				item.price * item.quantity,
 				item.parts.reduce(
 					(acc, { userId, part }) => ({ ...acc, [userId]: part }),
@@ -174,16 +164,19 @@ export const getParticipantSums = <
 			},
 		);
 
-	const reimbursedShortages = mapObjectValues(
-		shortageByParticipant,
-		(shortage) => {
-			const integer = Math.trunc(shortage);
-			return {
-				reimbursed: integer,
-				notReimbursed: shortage - integer,
-			};
-		},
-	);
+	const reimbursedShortages = mapValues(shortageByParticipant, (shortage) => {
+		const integer = Math.trunc(shortage);
+		return {
+			reimbursed: integer,
+			notReimbursed: shortage - integer,
+		};
+	}) as Record<
+		UsersId,
+		{
+			reimbursed: number;
+			notReimbursed: number;
+		}
+	>;
 	const totalReimbursedShortage = values(reimbursedShortages).reduce(
 		(acc, { reimbursed }) => acc + reimbursed,
 		0,

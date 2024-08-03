@@ -1,9 +1,9 @@
 import { TRPCError } from "@trpc/server";
+import { isNonNullish, keys, omitBy } from "remeda";
 import { z } from "zod";
 
 import { debtAmountSchema, debtNoteSchema } from "~app/utils/validation";
 import type { SimpleUpdateObject } from "~db";
-import { nonNullishGuard, omitUndefined } from "~utils";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import { authProcedure } from "~web/handlers/trpc";
@@ -28,7 +28,7 @@ const updateDebtSchema = z.strictObject({
 		})
 		.partial()
 		.refine(
-			(obj) => Object.keys(obj).length !== 0,
+			(obj) => keys(obj).length !== 0,
 			"Update object has to have at least one key to update",
 		),
 });
@@ -44,22 +44,25 @@ const buildSetObjects = (
 	input: z.infer<typeof updateDebtSchema>,
 	debt: { lockedTimestamp: Date | null },
 ) => {
-	const setObject: DebtUpdateObject = omitUndefined<DebtUpdateObject>({
-		amount: input.update.amount?.toString(),
-		timestamp: input.update.timestamp,
-		note: input.update.note,
-		currencyCode: input.update.currencyCode,
-		receiptId: input.update.receiptId,
-		lockedTimestamp:
-			input.update.locked === undefined
-				? debt.lockedTimestamp === null
-					? undefined
-					: new Date()
-				: input.update.locked
-				? new Date()
-				: null,
-	});
-	const keysToUpdateLockedTimestamp = Object.keys(input.update).filter(
+	const setObject: DebtUpdateObject = omitBy(
+		{
+			amount: input.update.amount?.toString(),
+			timestamp: input.update.timestamp,
+			note: input.update.note,
+			currencyCode: input.update.currencyCode,
+			receiptId: input.update.receiptId,
+			lockedTimestamp:
+				input.update.locked === undefined
+					? debt.lockedTimestamp === null
+						? undefined
+						: new Date()
+					: input.update.locked
+					? new Date()
+					: null,
+		},
+		(value) => value === undefined,
+	);
+	const keysToUpdateLockedTimestamp = keys(input.update).filter(
 		(key) =>
 			!KEYS_NOT_UPDATE_LOCKED_TIMESTAMP.includes(key as keyof DebtUpdateObject),
 	);
@@ -67,18 +70,21 @@ const buildSetObjects = (
 		// don't update lockedTimestamp if we updated keys that don't require lockedTimestamp update
 		delete setObject.lockedTimestamp;
 	}
-	const reverseSetObject = omitUndefined({
-		...setObject,
-		note: undefined,
-		amount:
-			input.update.amount === undefined
-				? undefined
-				: (-input.update.amount).toString(),
-	});
+	const reverseSetObject = omitBy(
+		{
+			...setObject,
+			note: undefined,
+			amount:
+				input.update.amount === undefined
+					? undefined
+					: (-input.update.amount).toString(),
+		},
+		(value) => value === undefined,
+	);
 	return {
 		setObject,
 		reverseSetObject:
-			Object.keys(reverseSetObject).length === 0 ? undefined : reverseSetObject,
+			keys(reverseSetObject).length === 0 ? undefined : reverseSetObject,
 	};
 };
 
@@ -178,7 +184,7 @@ const updateAutoAcceptingDebts = async (
 			}
 			return null;
 		})
-		.filter(nonNullishGuard);
+		.filter(isNonNullish);
 	if (autoAcceptedData.length === 0) {
 		return [];
 	}
@@ -197,7 +203,7 @@ const updateAutoAcceptingDebts = async (
 			}
 			return updatedDebtOrError.debt.id;
 		})
-		.filter(nonNullishGuard);
+		.filter(isNonNullish);
 };
 
 const updateDebts = async (

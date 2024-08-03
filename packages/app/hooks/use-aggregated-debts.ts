@@ -1,5 +1,7 @@
 import React from "react";
 
+import { entries } from "remeda";
+
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import { round } from "~utils";
@@ -10,7 +12,7 @@ export const useAggregatedDebts = (
 	const debts = query.data;
 	const aggregatedDebts = React.useMemo(
 		() =>
-			Object.entries(
+			entries(
 				debts.reduce<Record<CurrencyCode, number>>((acc, debt) => {
 					if (!acc[debt.currencyCode]) {
 						acc[debt.currencyCode] = 0;
@@ -18,10 +20,7 @@ export const useAggregatedDebts = (
 					acc[debt.currencyCode] += debt.amount;
 					return acc;
 				}, {}),
-			).map(([currencyCode, sum]) => ({
-				currencyCode: currencyCode as CurrencyCode,
-				sum: round(sum),
-			})),
+			).map(([currencyCode, sum]) => ({ currencyCode, sum: round(sum) })),
 		[debts],
 	);
 	return [

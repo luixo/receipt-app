@@ -1,8 +1,8 @@
 import type { Faker } from "@faker-js/faker";
+import { isNonNullish } from "remeda";
 
 import type { TRPCQueryOutput } from "~app/trpc";
 import { getParticipantSums } from "~app/utils/receipt-item";
-import { nonNullishGuard } from "~utils";
 
 import type {
 	GenerateReceiptBase,
@@ -58,7 +58,7 @@ export const defaultGenerateDebts: GenerateDebts = ({
 				},
 			};
 		})
-		.filter(nonNullishGuard);
+		.filter(isNonNullish);
 
 type MapDebt = (
 	debt: ReturnType<GenerateDebts>[number],
@@ -73,10 +73,10 @@ export const generateDebtsWith =
 					acc
 						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 						.map((debt, index) => mapperSet[index % mapperSet.length]!(debt))
-						.filter(nonNullishGuard)
+						.filter(isNonNullish)
 				);
 			}
-			return acc.map(mapperSet).filter(nonNullishGuard);
+			return acc.map(mapperSet).filter(isNonNullish);
 		}, defaultGenerateDebts(opts));
 
 export const ourNonExistent: MapDebt = () => undefined;

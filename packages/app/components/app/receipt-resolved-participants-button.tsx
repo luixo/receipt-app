@@ -1,6 +1,8 @@
 import React from "react";
 import { View } from "react-native";
 
+import { isNonNullish } from "remeda";
+
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { type TRPCQueryOutput, trpc } from "~app/trpc";
 import {
@@ -11,7 +13,6 @@ import {
 	Text,
 } from "~components";
 import { CrossWaitIcon, WaitIcon } from "~components/icons";
-import { nonNullishGuard } from "~utils";
 
 type Props = {
 	participants: TRPCQueryOutput<"receipts.get">["participants"];
@@ -44,7 +45,7 @@ export const ReceiptResolvedParticipantsButton: React.FC<Props> = ({
 				resolved: matchedParticipant.resolved,
 			};
 		})
-		.filter(nonNullishGuard);
+		.filter(isNonNullish);
 	if (connectedParticipants.length === 0) {
 		return (
 			<Button

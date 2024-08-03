@@ -8,6 +8,7 @@ import {
 	TRPC_ERROR_CODES_BY_KEY,
 } from "@trpc/server/rpc";
 import http from "node:http";
+import { entries } from "remeda";
 import { v4 } from "uuid";
 
 import type {
@@ -353,7 +354,7 @@ const getMockUtils = (api: ApiManager) => {
 					currencies ||
 					// 'en' locale definitely exist
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-					Object.entries(getCurrencies("en")!).map(([code, currency]) => ({
+					entries(getCurrencies("en")!).map(([code, currency]) => ({
 						code: code as CurrencyCode,
 						name: currency.name_plural,
 						symbol: currency.symbol_native,

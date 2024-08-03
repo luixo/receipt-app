@@ -9,10 +9,11 @@ import {
 import { createTRPCReact } from "@trpc/react-query";
 import type { AnyTRPCRouter } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
+import { omitBy } from "remeda";
 import superjson from "superjson";
 
 import type { AppRouter } from "~app/trpc";
-import { MINUTE, omitUndefined } from "~utils";
+import { MINUTE } from "~utils";
 
 export const transformer = superjson;
 export type TransformerResult = ReturnType<(typeof transformer)["serialize"]>;
@@ -68,18 +69,21 @@ export const getLinks = (
 	}: GetLinksOptions,
 ): TRPCLink<AppRouter>[] => {
 	// we omit to not let stringified "undefined" get passed to the server
-	const headers = omitUndefined({
-		"x-debug": searchParams.debug ? "true" : undefined,
-		"x-proxy-port": Number.isNaN(Number(searchParams.proxyPort))
-			? undefined
-			: Number(searchParams.proxyPort).toString(),
-		"x-controller-id":
-			typeof searchParams.controllerId === "string"
-				? searchParams.controllerId
-				: undefined,
-		"x-source": source,
-		...overrideHeaders,
-	});
+	const headers = omitBy(
+		{
+			"x-debug": searchParams.debug ? "true" : undefined,
+			"x-proxy-port": Number.isNaN(Number(searchParams.proxyPort))
+				? undefined
+				: Number(searchParams.proxyPort).toString(),
+			"x-controller-id":
+				typeof searchParams.controllerId === "string"
+					? searchParams.controllerId
+					: undefined,
+			"x-source": source,
+			...overrideHeaders,
+		},
+		(value) => value === undefined,
+	);
 	const splitLinkInstance = splitLink({
 		condition: (op) => op.input instanceof FormData,
 		true: httpLink({ url, headers }),

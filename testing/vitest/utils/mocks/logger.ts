@@ -1,4 +1,5 @@
 import type { Level, pino } from "pino";
+import { entries, keys, mapValues } from "remeda";
 
 import type { Tail } from "~utils";
 
@@ -36,29 +37,22 @@ export type LoggerMock = pino.Logger & {
 	getMessages: () => Tail<Message>[];
 	resetMessages: () => void;
 };
-type LevelLoggers = Record<LevelWithSilent, pino.LogFn>;
 export const getLogger = (
 	bindings: pino.Bindings = {},
 	messagesHandler: MessagesHandler = createMessagesHandler(),
 ): LoggerMock => {
 	// see https://github.com/pinojs/pino/blob/master/docs/api.md#optionslevel-string
 	let innerLevel: number = LEVELS.info;
-	const levels = Object.entries(LEVELS).reduce<LevelLoggers>(
-		(acc, [levelKey, levelValue]) => ({
-			...acc,
-			[levelKey]: (...args: unknown[]) => {
-				const values: Message = [levelValue, ...args];
-				if (Object.keys(bindings).length !== 0) {
-					values.splice(1, 0, bindings);
-				}
-				messagesHandler.addMessage(values);
-			},
-		}),
-		{} as LevelLoggers,
-	);
+	const levels = mapValues(LEVELS, (levelValue) => (...args: unknown[]) => {
+		const values: Message = [levelValue, ...args];
+		if (keys(bindings).length !== 0) {
+			values.splice(1, 0, bindings);
+		}
+		messagesHandler.addMessage(values);
+	});
 	return {
 		get level() {
-			const matchedLevel = Object.entries(LEVELS).find(
+			const matchedLevel = entries(LEVELS).find(
 				([, levelValue]) => innerLevel === levelValue,
 			);
 			if (!matchedLevel) {
@@ -67,7 +61,7 @@ export const getLogger = (
 			return matchedLevel[0];
 		},
 		set level(value) {
-			innerLevel = LEVELS[value as LevelWithSilent];
+			innerLevel = LEVELS[value];
 		},
 		...levels,
 		getMessages: () =>

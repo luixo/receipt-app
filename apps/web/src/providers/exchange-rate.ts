@@ -1,6 +1,7 @@
 import type { Redis } from "@upstash/redis/nodejs";
 import Dataloader from "dataloader";
 import fetch from "isomorphic-fetch";
+import { entries } from "remeda";
 import { z } from "zod";
 
 import type { CurrencyCode } from "~app/utils/currency";
@@ -130,7 +131,7 @@ const fetchWithBatches = async (
 		{},
 	);
 	const batchResults = await Promise.all(
-		Object.entries(batches).map(async ([fromCode, toCodes]) => {
+		entries(batches).map(async ([fromCode, toCodes]) => {
 			const batchResult = await fetcher(fromCode, toCodes);
 			return {
 				fromCode,

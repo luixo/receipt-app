@@ -1,4 +1,5 @@
 import { faker } from "@faker-js/faker";
+import { identity } from "remeda";
 
 import type { CurrencyCode } from "~app/utils/currency";
 import type {
@@ -10,9 +11,11 @@ import type {
 	UsersId,
 } from "~db";
 import type { TestContext } from "~tests/backend/utils/test";
-import { YEAR, asFixedSizeArray, id as idFn } from "~utils";
+import { YEAR, asFixedSizeArray } from "~utils";
 import type { Role } from "~web/handlers/receipts/utils";
 import { generatePasswordData } from "~web/utils/crypto";
+
+const idFn = identity();
 
 type AccountSettingsData = {
 	manualAcceptDebts: boolean;

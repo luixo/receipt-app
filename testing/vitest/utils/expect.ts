@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import type { TRPC_ERROR_CODE_KEY } from "@trpc/server/rpc";
 import { detailedDiff } from "deep-object-diff";
+import { entries, fromEntries, keys, omitBy } from "remeda";
 import { expect } from "vitest";
 
 import { createContext } from "~tests/backend/utils/context";
@@ -68,15 +69,14 @@ export const expectDatabaseDiffSnapshot = async <T>(
 	const snapshotBefore = await ctx.dumpDatabase();
 	const result = await fn();
 	const snapshotAfter = await ctx.dumpDatabase();
-	const diff = Object.fromEntries(
-		Object.entries(detailedDiff(snapshotBefore, snapshotAfter))
-			.filter(([, diffs]) => Object.keys(diffs as object).length !== 0)
+	const diff = fromEntries(
+		entries(detailedDiff(snapshotBefore, snapshotAfter))
+			.filter(([, diffs]) => keys(diffs).length !== 0)
 			.map(([detailedDiffKey, diffs]) => [
 				detailedDiffKey,
-				Object.fromEntries(
-					Object.entries(
-						diffs as Record<string, Record<string, unknown>>,
-					).filter(([, tableValues]) => Object.keys(tableValues).length !== 0),
+				omitBy(
+					diffs as Record<string, Record<string, unknown>>,
+					(tableValues) => keys(tableValues).length === 0,
 				),
 			]),
 	);

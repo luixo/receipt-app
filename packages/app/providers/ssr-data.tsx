@@ -1,5 +1,7 @@
 import React from "react";
 
+import { fromEntries, keys } from "remeda";
+
 import type { SSRContextData } from "~app/contexts/ssr-context";
 import { SSRContext } from "~app/contexts/ssr-context";
 import type { CookieStates, CookieValues } from "~app/utils/cookie-data";
@@ -11,12 +13,7 @@ import {
 import { updateSetStateAction } from "~utils";
 
 const resolveState = (values: CookieValues) =>
-	Object.fromEntries(
-		Object.keys(schemas).map((key) => [
-			key,
-			values[key as keyof typeof schemas],
-		]),
-	) as typeof values;
+	fromEntries(keys(schemas).map((key) => [key, values[key]])) as CookieValues;
 
 type SetValues = {
 	[K in keyof CookieStates]: CookieStates[K][1];
@@ -50,8 +47,8 @@ export const SSRDataProvider: React.FC<React.PropsWithChildren<Props>> = ({
 	const { setCookie, deleteCookie } = context;
 	const [isMounted, setMounted] = React.useState(false);
 	React.useEffect(() => setMounted(true), []);
-	const [ssrState, setSsrState] = React.useState(() =>
-		values ? resolveState(values) : undefined,
+	const [ssrState, setSsrState] = React.useState<CookieValues | undefined>(
+		() => (values ? resolveState(values) : undefined),
 	);
 	React.useEffect(() => {
 		if (!ssrState && values) {
@@ -92,23 +89,17 @@ export const SSRDataProvider: React.FC<React.PropsWithChildren<Props>> = ({
 			},
 		[deleteCookie],
 	);
-	const ssrSetValues = React.useMemo(
+	const ssrSetValues = React.useMemo<SetValues>(
 		() =>
-			Object.fromEntries(
-				Object.keys(schemas).map((key) => [
-					key as CookieKey,
-					updateValue(key as CookieKey),
-				]),
+			fromEntries(
+				keys(schemas).map((key) => [key, updateValue(key)]),
 			) as SetValues,
 		[updateValue],
 	);
 	const ssrDeleteValues = React.useMemo<DeleteValues>(
 		() =>
-			Object.fromEntries(
-				Object.keys(schemas).map((key) => [
-					key as CookieKey,
-					deleteValue(key as CookieKey),
-				]),
+			fromEntries(
+				keys(schemas).map((key) => [key, deleteValue(key)]),
 			) as DeleteValues,
 		[deleteValue],
 	);

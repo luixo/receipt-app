@@ -1,6 +1,8 @@
 import React from "react";
 import { View } from "react-native";
 
+import { isNonNullish } from "remeda";
+
 import type { TRPCQueryOutput } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import {
@@ -11,7 +13,6 @@ import {
 import { Accordion, AccordionItem, Text } from "~components";
 import { UserIcon } from "~components/icons";
 import type { ReceiptsId, UsersId } from "~db";
-import { nonNullishGuard } from "~utils";
 
 import { AddReceiptParticipantForm } from "./add-receipt-participant-form";
 import { ReceiptParticipant } from "./receipt-participant";
@@ -57,7 +58,7 @@ export const ReceiptParticipants: React.FC<Props> = ({
 	const calculatedParticipants = React.useMemo(() => {
 		const decimalsPower = getDecimalsPower();
 		const calculatedItems = items.map((item) => ({
-			calculations: getItemCalculations<UsersId>(
+			calculations: getItemCalculations(
 				item.price * item.quantity,
 				item.parts.reduce(
 					(acc, { userId, part }) => ({ ...acc, [userId]: part }),
@@ -87,7 +88,7 @@ export const ReceiptParticipants: React.FC<Props> = ({
 							name: item.name,
 						};
 					})
-					.filter(nonNullishGuard),
+					.filter(isNonNullish),
 			}));
 	}, [receiptId, items, participants, sortParticipants]);
 	return (

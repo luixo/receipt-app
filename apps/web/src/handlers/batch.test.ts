@@ -1,9 +1,9 @@
 import { TRPCClientError } from "@trpc/client";
+import { isNonNullish } from "remeda";
 import { assert, describe, expect } from "vitest";
 import { z } from "zod";
 
 import { test } from "~tests/backend/utils/test";
-import { nonNullishGuard } from "~utils";
 import type { UnauthorizedContext } from "~web/handlers/context";
 import { t, unauthProcedure } from "~web/handlers/trpc";
 
@@ -35,7 +35,7 @@ const getElements = async (ids: string[]): Promise<RawElement[]> => {
 			}
 			return { id, value: id };
 		})
-		.filter(nonNullishGuard)
+		.filter(isNonNullish)
 		.toReversed();
 };
 

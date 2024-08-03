@@ -1,5 +1,6 @@
+import { isNonNullish } from "remeda";
+
 import type { Database, DebtsId, SimpleInsertObject } from "~db";
-import { nonNullishGuard } from "~utils";
 
 export const upsertAutoAcceptedDebts = async (
 	database: Database,
@@ -56,10 +57,10 @@ export const upsertAutoAcceptedDebts = async (
 			const counterpartyDebt = counterpartyDebts[index];
 			return counterpartyDebt ? ([nextDebt, counterpartyDebt] as const) : null;
 		})
-		.filter(nonNullishGuard);
+		.filter(isNonNullish);
 	const nonExistentDebts = debts
 		.map((nextDebt, index) => (counterpartyDebts[index] ? null : nextDebt))
-		.filter(nonNullishGuard);
+		.filter(isNonNullish);
 	const [newDebts, ...updatedDebts] = await Promise.all([
 		nonExistentDebts.length === 0
 			? ([] as { id: DebtsId }[])

@@ -144,6 +144,8 @@ describe("receipts.get", () => {
 					items: [],
 					participants: [],
 					debt: { direction: "outcoming", ids: [] },
+					transferIntentionUserId: undefined,
+					lockedTimestamp: undefined,
 				});
 			});
 
@@ -216,6 +218,7 @@ describe("receipts.get", () => {
 					hasForeign: false,
 					id: undefined,
 				},
+				transferIntentionUserId: undefined,
 			});
 		});
 
@@ -255,6 +258,8 @@ describe("receipts.get", () => {
 					},
 					items: [],
 					participants: getParticipants([participant]),
+					transferIntentionUserId: undefined,
+					lockedTimestamp: undefined,
 				});
 			});
 
@@ -293,6 +298,7 @@ describe("receipts.get", () => {
 					},
 					items: [],
 					participants: getParticipants([participant]),
+					transferIntentionUserId: undefined,
 				});
 			});
 
@@ -330,6 +336,8 @@ describe("receipts.get", () => {
 					},
 					items: [],
 					participants: getParticipants([participant]),
+					transferIntentionUserId: undefined,
+					lockedTimestamp: undefined,
 				});
 			});
 
@@ -366,6 +374,8 @@ describe("receipts.get", () => {
 					},
 					items: [],
 					participants: [],
+					transferIntentionUserId: undefined,
+					lockedTimestamp: undefined,
 				});
 			});
 		});
@@ -432,6 +442,8 @@ describe("receipts.get", () => {
 					notConnectedParticipant,
 				]),
 				debt: { direction: "outcoming", ids: [] },
+				transferIntentionUserId: undefined,
+				lockedTimestamp: undefined,
 			});
 		});
 
@@ -455,6 +467,8 @@ describe("receipts.get", () => {
 				items: [],
 				participants: [],
 				debt: { direction: "outcoming", ids: [] },
+				transferIntentionUserId: undefined,
+				lockedTimestamp: undefined,
 			});
 		});
 
@@ -545,6 +559,8 @@ describe("receipts.get", () => {
 					hasForeign: false,
 					id: undefined,
 				},
+				transferIntentionUserId: undefined,
+				lockedTimestamp: undefined,
 			});
 		});
 	});

@@ -1,3 +1,5 @@
+import { values } from "remeda";
+
 import type { TRPCQueryInput } from "~app/trpc";
 import { updateSetStateAction } from "~utils";
 
@@ -37,7 +39,7 @@ const getFilters = (
 		!filters ||
 		// Enabling `exactOptionalPropertyTypes` in tsconfig fixes that
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-		Object.values(filters).filter((value) => value !== undefined).length === 0
+		values(filters).filter((value) => value !== undefined).length === 0
 	) {
 		return;
 	}

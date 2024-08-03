@@ -1,6 +1,7 @@
 import type React from "react";
 
 import type { QueryClient, QueryKey } from "@tanstack/react-query";
+import { entries } from "remeda";
 
 import type {
 	TRPCQueryInput,
@@ -123,7 +124,7 @@ export const getUpdaters = <
 		},
 	) =>
 		mergeUpdaterResults(
-			...Object.entries(input).map(([key, { getRevertController }]) => {
+			...entries(input).map(([key, { getRevertController }]) => {
 				const updater = options[key];
 				if (!updater) {
 					return;
@@ -142,7 +143,7 @@ export const getUpdaters = <
 			[K in keyof T]: UpdateOption<T[K]> | undefined;
 		},
 	) => {
-		Object.entries(input).forEach(([key, { getController }]) => {
+		entries(input).forEach(([key, { getController }]) => {
 			const updater = options[key];
 			if (!updater) {
 				return;

@@ -1,5 +1,6 @@
 import * as cookie from "cookie";
 import type { IncomingMessage, ServerResponse } from "http";
+import { entries } from "remeda";
 
 import type { Cookies } from "~app/utils/cookies";
 
@@ -48,13 +49,13 @@ export const serializeCookieHeader = (
 	cookies: Cookies,
 	pick?: string[],
 ): string => {
-	let entries = Object.entries(cookies);
+	let cookieEntries = entries(cookies);
 	/* c8 ignore start */
 	if (pick) {
-		entries = entries.filter(([key]) => pick.includes(key));
+		cookieEntries = cookieEntries.filter(([key]) => pick.includes(key));
 	}
 	/* c8 ignore stop */
-	return entries
+	return cookieEntries
 		.filter((entry): entry is [string, string] => Boolean(entry[1]))
 		.map(([key, value]) => cookie.serialize(key, value))
 		.join(";");

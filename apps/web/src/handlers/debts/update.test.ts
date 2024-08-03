@@ -1,4 +1,5 @@
 import { faker } from "@faker-js/faker";
+import { identity, pick } from "remeda";
 import { assert, describe, expect } from "vitest";
 
 import type { TRPCMutationInput, TRPCMutationOutput } from "~app/trpc";
@@ -21,7 +22,6 @@ import {
 } from "~tests/backend/utils/expect";
 import type { TestContext } from "~tests/backend/utils/test";
 import { test } from "~tests/backend/utils/test";
-import { id, pick } from "~utils";
 import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./update";
@@ -95,7 +95,7 @@ const getDefaultGetResult: GetResult = ({
 	counterParty,
 	overrideTimestamp,
 }) => {
-	const nextLockedTimestamp = (overrideTimestamp || id)(
+	const nextLockedTimestamp = (overrideTimestamp || identity())(
 		debt.lockedTimestamp ? new Date() : undefined,
 	);
 	return {

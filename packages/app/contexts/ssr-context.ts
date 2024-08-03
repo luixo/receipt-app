@@ -1,12 +1,13 @@
 import * as React from "react";
 
+import { doNothing } from "remeda";
+
 import {
 	type CookieStates,
 	type CookieValues,
 	getCookieStatesFromValues,
 	getSSRContextCookieData,
 } from "~app/utils/cookie-data";
-import { noop } from "~utils";
 
 // The data above + data we add on each render
 export type SSRContextData = {
@@ -25,8 +26,8 @@ export type SSRContextType = Omit<SSRContextData, keyof CookieValues> & {
 export const SSRContext = React.createContext<SSRContextType>({
 	...getCookieStatesFromValues(
 		getSSRContextCookieData(),
-		() => noop,
-		() => noop,
+		() => doNothing,
+		() => doNothing,
 	),
 	nowTimestamp: Date.now(),
 	isFirstRender: true,

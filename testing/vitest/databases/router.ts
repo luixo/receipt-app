@@ -1,6 +1,7 @@
 import { initTRPC } from "@trpc/server";
 import { Kysely, PostgresDialect, sql } from "kysely";
 import { Pool } from "pg";
+import { keys } from "remeda";
 import type { StartedTestContainer } from "testcontainers";
 import { GenericContainer } from "testcontainers";
 import { z } from "zod";
@@ -156,30 +157,28 @@ export const appRouter = router({
 				}),
 			});
 			const dump = await Promise.all(
-				(Object.keys(ORDERS) as (keyof typeof ORDERS)[]).map(
-					async (tableName) => {
-						const orderOrOrders = ORDERS[tableName];
-						const orders = Array.isArray(orderOrOrders)
-							? orderOrOrders
-							: [orderOrOrders];
-						const data = await database
-							.selectFrom(tableName)
-							.selectAll()
-							.execute();
-						return {
-							tableName,
-							data: data.reduce(
-								(dataAcc, element) => ({
-									...dataAcc,
-									[orders
-										.map((column) => `${column}:${String(element[column])}`)
-										.join("|")]: element,
-								}),
-								{},
-							),
-						};
-					},
-				),
+				keys(ORDERS).map(async (tableName) => {
+					const orderOrOrders = ORDERS[tableName];
+					const orders = Array.isArray(orderOrOrders)
+						? orderOrOrders
+						: [orderOrOrders];
+					const data = await database
+						.selectFrom(tableName)
+						.selectAll()
+						.execute();
+					return {
+						tableName,
+						data: data.reduce(
+							(dataAcc, element) => ({
+								...dataAcc,
+								[orders
+									.map((column) => `${column}:${String(element[column])}`)
+									.join("|")]: element,
+							}),
+							{},
+						),
+					};
+				}),
 			);
 			await database.destroy();
 			return dump.reduce(
@@ -204,7 +203,7 @@ export const appRouter = router({
 				() => database.destroy(),
 				async () => {
 					await sql`TRUNCATE ${sql.join(
-						Object.keys(ORDERS).map((table) => sql.table(table)),
+						keys(ORDERS).map((table) => sql.table(table)),
 						sql`,`,
 					)} RESTART IDENTITY`.execute(database);
 				},

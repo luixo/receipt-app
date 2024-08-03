@@ -4,8 +4,6 @@ export * from "./date";
 export * from "./hash";
 export * from "./images";
 export * from "./math";
-export * from "./misc";
-export * from "./object";
 export * from "./promise";
 export * from "./react";
 export * from "./string";

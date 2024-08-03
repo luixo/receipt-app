@@ -1,6 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
+import { entries } from "remeda";
 import { usePathname } from "solito/navigation";
 
 import { LoadableUser } from "~app/components/app/loadable-user";
@@ -55,7 +56,7 @@ const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 			{data.length === 1 ? null : (
 				<AcceptAllIntentionsButton intentions={data} />
 			)}
-			{Object.entries(intentionsByUser).map(([userId, groupedIntentions]) => (
+			{entries(intentionsByUser).map(([userId, groupedIntentions]) => (
 				<View className="gap-2" key={userId}>
 					<LoadableUser className="mb-4 self-start" id={userId} />
 					{groupedIntentions.map((intention) => (

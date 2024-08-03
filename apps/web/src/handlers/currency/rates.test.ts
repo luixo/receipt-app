@@ -1,4 +1,5 @@
 import { faker } from "@faker-js/faker";
+import { keys } from "remeda";
 import { assert, describe, expect } from "vitest";
 
 import { createAuthContext } from "~tests/backend/utils/context";
@@ -148,7 +149,7 @@ describe("currency.rates", () => {
 					from: currencyFrom,
 					to: currenciesTo,
 				});
-				expect(Object.keys(result).sort()).toStrictEqual<typeof currenciesTo>(
+				expect(keys(result).sort()).toStrictEqual<typeof currenciesTo>(
 					[...currenciesTo].sort(),
 				);
 				expect(result).toStrictEqual<typeof result>(
@@ -191,7 +192,7 @@ describe("currency.rates", () => {
 					from: currencyFrom,
 					to: currenciesTo,
 				});
-				expect(Object.keys(result).sort()).toStrictEqual<typeof currenciesTo>(
+				expect(keys(result).sort()).toStrictEqual<typeof currenciesTo>(
 					[...currenciesTo].sort(),
 				);
 				expect(result).toStrictEqual<typeof result>(
@@ -242,7 +243,7 @@ describe("currency.rates", () => {
 					from: currencyFrom,
 					to: currenciesTo,
 				});
-				expect(Object.keys(result).sort()).toStrictEqual<typeof currenciesTo>(
+				expect(keys(result).sort()).toStrictEqual<typeof currenciesTo>(
 					[...currenciesTo].sort(),
 				);
 				expect(result).toStrictEqual<typeof result>(
@@ -274,7 +275,7 @@ describe("currency.rates", () => {
 				from: currencyFrom,
 				to: currenciesTo,
 			});
-			expect(Object.keys(result).sort()).toStrictEqual<typeof currenciesTo>(
+			expect(keys(result).sort()).toStrictEqual<typeof currenciesTo>(
 				[...currenciesTo].map((code) => code.toUpperCase()).sort(),
 			);
 		});

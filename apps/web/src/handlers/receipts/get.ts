@@ -3,7 +3,6 @@ import { jsonArrayFrom } from "kysely/helpers/postgres";
 import { z } from "zod";
 
 import type { AccountsId, DebtsId, ReceiptsId, UsersId } from "~db";
-import { omitUndefined } from "~utils";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import type { Role } from "~web/handlers/receipts/utils";
@@ -196,7 +195,7 @@ const mapReceipt = (
 		});
 	}
 	/* c8 ignore stop */
-	return omitUndefined({
+	return {
 		...receiptRest,
 		items: items.map((item) => ({
 			...item,
@@ -229,7 +228,7 @@ const mapReceipt = (
 			auth.accountId,
 			receipt.selfUserId,
 		),
-	});
+	};
 };
 
 type Receipt = ReturnType<typeof mapReceipt>;

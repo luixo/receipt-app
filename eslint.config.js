@@ -41,6 +41,9 @@ const compatAirbnbConfigs = compat.config(airbnbConfig).map(withoutPlugins);
 const originalNoUnusedVars = compatAirbnbConfigs
 	.map((config) => config.rules?.["no-unused-vars"])
 	.find(Boolean);
+const originalRestrictedSyntax = compatAirbnbConfigs
+	.map((config) => config.rules?.["no-restricted-syntax"])
+	.find(Boolean);
 
 const overridenRules = {
 	// We assign `ref.current` a lot
@@ -56,6 +59,32 @@ const overridenRules = {
 	"no-alert": "error",
 	// `void foo` is a mark of deliberately floating promise
 	"no-void": ["error", { allowAsStatement: true }],
+	"no-restricted-syntax": [
+		...originalRestrictedSyntax,
+		{
+			selector: "MemberExpression[object.name='Object'][property.name='keys']",
+			message:
+				"Use strongly typed function `keys` from `remeda` package instead.",
+		},
+		{
+			selector:
+				"MemberExpression[object.name='Object'][property.name='values']",
+			message:
+				"Use strongly typed function `values` from `remeda` package instead.",
+		},
+		{
+			selector:
+				"MemberExpression[object.name='Object'][property.name='entries']",
+			message:
+				"Use strongly typed function `entries` (or `mapValues`) from `remeda` package instead.",
+		},
+		{
+			selector:
+				"MemberExpression[object.name='Object'][property.name='fromEntries']",
+			message:
+				"Use strongly typed function `fromEntries` (or `mapValues`) from `remeda` package instead.",
+		},
+	],
 
 	// Custom devDependencies
 	"import/no-extraneous-dependencies": [

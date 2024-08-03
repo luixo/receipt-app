@@ -1,6 +1,7 @@
 import React from "react";
 
 import * as ReactDOMServer from "react-dom/server";
+import { entries } from "remeda";
 
 import type { UnauthorizedContext } from "~web/handlers/context";
 
@@ -16,7 +17,7 @@ type NestedStyles = { [key: string]: NestedStylesOrString };
 type NestedStylesOrString = string | NestedStyles;
 
 const convertStylesToString = (styles: AugmentedProperies): string =>
-	Object.entries(styles)
+	entries(styles)
 		.map(
 			([key, value]) =>
 				`${key.replace(
@@ -27,7 +28,7 @@ const convertStylesToString = (styles: AugmentedProperies): string =>
 		.join("");
 
 const reduceStyles = (styles: NestedStyles): string =>
-	Object.entries(styles).reduce((acc, [selector, style]) => {
+	entries(styles).reduce((acc, [selector, style]) => {
 		if (typeof style === "string") {
 			return `${acc} ${selector} {${style}}`;
 		}
@@ -57,12 +58,12 @@ const generateEmail = (
 		)}
 		</body>
 	</html>`;
-	const nestedStyles = Object.entries(stylesMapping).reduce<NestedStyles>(
+	const nestedStyles = entries(stylesMapping).reduce<NestedStyles>(
 		(acc: NestedStyles, [selector, { default: styles, ...mediaObject }]) => {
 			if (styles) {
 				acc[selector] = convertStylesToString(styles);
 			}
-			Object.entries(mediaObject).forEach(([mediaKey, mediaStyles]) => {
+			entries(mediaObject).forEach(([mediaKey, mediaStyles]) => {
 				if (!acc[mediaKey]) {
 					acc[mediaKey] = {};
 				}

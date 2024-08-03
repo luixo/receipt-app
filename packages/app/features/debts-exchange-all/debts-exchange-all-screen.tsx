@@ -1,5 +1,6 @@
 import React from "react";
 
+import { doNothing } from "remeda";
 import { useParams, useRouter } from "solito/navigation";
 
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
@@ -15,7 +16,6 @@ import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import { Divider, Spinner } from "~components";
 import type { UsersId } from "~db";
-import { noop } from "~utils";
 import type { AppPage } from "~utils";
 
 import { CurrenciesGroup } from "./currencies-group";
@@ -80,7 +80,7 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 				onChange={onSelectModalCurrencyCode}
 				modalOpen={modalOpen}
 				switchModalOpen={switchModalOpen}
-				onLoad={noop}
+				onLoad={doNothing}
 				topCurrenciesQuery={topCurrenciesQuery}
 			/>
 			{selectedCurrencyCode ? (

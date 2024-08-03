@@ -1,3 +1,4 @@
+import { entries } from "remeda";
 import { describe, expect } from "vitest";
 
 import type { CurrencyCode } from "~app/utils/currency";
@@ -17,7 +18,7 @@ import { t } from "~web/handlers/trpc";
 import { procedure } from "./get-by-users";
 
 const mapUserDebts = (debts: Awaited<ReturnType<typeof insertDebt>>[]) =>
-	Object.entries(
+	entries(
 		debts.reduce<Record<CurrencyCode, number>>((acc, debt) => {
 			const amount = (acc[debt.currencyCode] ?? 0) + Number(debt.amount);
 			acc[debt.currencyCode] = Number(amount.toFixed(2));

@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { entries } from "remeda";
 import { z } from "zod";
 
 import type { CurrencyCode } from "~app/utils/currency";
@@ -20,7 +21,7 @@ export const procedure = authProcedure
 				message: `Locale "${input.locale}" is invalid.`,
 			});
 		}
-		return Object.entries(currencies).map(([code, currency]) => ({
+		return entries(currencies).map(([code, currency]) => ({
 			code: code as CurrencyCode,
 			name: currency.name_plural,
 			symbol: currency.symbol_native,

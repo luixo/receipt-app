@@ -1,9 +1,9 @@
 import { TRPCError } from "@trpc/server";
+import { isNonNullish } from "remeda";
 
 import { getParticipantSums } from "~app/utils/receipt-item";
 import { expect } from "~tests/frontend/fixtures";
 import { getMutationsByKey } from "~tests/frontend/fixtures/queries";
-import { nonNullishGuard } from "~utils";
 
 import {
 	generateDebtsWith,
@@ -242,7 +242,7 @@ test.describe("Mutations", () => {
 							([participantId]) => userId === participantId,
 						)?.[1],
 				)
-				.filter(nonNullishGuard),
+				.filter(isNonNullish),
 		);
 		const updatedDebts = updateMutationsVariables.map(
 			(debt) => [debt.id, debt.update.amount] as const,

@@ -1,11 +1,11 @@
 import { TRPCError } from "@trpc/server";
 import type { DatabaseError } from "pg";
+import { isNonNullish } from "remeda";
 import { z } from "zod";
 
 import { debtAmountSchema, debtNoteSchema } from "~app/utils/validation";
 import { DEBTS } from "~db";
 import type { DebtsId } from "~db";
-import { nonNullishGuard } from "~utils";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import { authProcedure } from "~web/handlers/trpc";
@@ -145,7 +145,7 @@ const addAutoAcceptingDebts = async (
 			}
 			return null;
 		})
-		.filter(nonNullishGuard);
+		.filter(isNonNullish);
 	if (autoAcceptingData.length === 0) {
 		return {
 			reverseIds: [],
@@ -175,7 +175,7 @@ const addAutoAcceptingDebts = async (
 					isNew: true,
 				};
 			})
-			.filter(nonNullishGuard),
+			.filter(isNonNullish),
 	);
 	return {
 		reverseIds: dataDebtsWithErrors.map((dataDebtOrError) => {
@@ -225,7 +225,7 @@ const addDebts = async (
 							amount: debt.amount.toString(),
 						};
 					})
-					.filter(nonNullishGuard),
+					.filter(isNonNullish),
 			)
 			.execute();
 	} catch (e) {

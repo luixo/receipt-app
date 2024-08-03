@@ -3,8 +3,6 @@ import React from "react";
 import type { DehydratedState, QueryClient } from "@tanstack/react-query";
 import { dehydrate, useQueryClient } from "@tanstack/react-query";
 
-import { alwaysTrue } from "~utils";
-
 declare global {
 	// external interface extension
 	// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
@@ -24,8 +22,8 @@ export const useQueryClientHelper = () => {
 		window.getDehydratedCache = async (timeout: number) => {
 			const getData = () =>
 				dehydrate(queryClient, {
-					shouldDehydrateQuery: alwaysTrue,
-					shouldDehydrateMutation: alwaysTrue,
+					shouldDehydrateQuery: () => true,
+					shouldDehydrateMutation: () => true,
 				});
 			return new Promise((resolve, reject) => {
 				if (!window.queryClient) {

@@ -1,8 +1,9 @@
 import type React from "react";
 
+import { mapValues } from "remeda";
+
 import type { SearchParamsContextType } from "~app/contexts/search-params-context";
 import { SearchParamsContext } from "~app/contexts/search-params-context";
-import type { ParsedQuery } from "~queries";
 import { receipts, users } from "~queries";
 
 type Props = {
@@ -13,14 +14,8 @@ export const SearchParamsProvider: React.FC<React.PropsWithChildren<Props>> = ({
 	searchParams,
 	children,
 }) => {
-	const parsedSearchParams = Object.entries(searchParams).reduce<ParsedQuery>(
-		(acc, [name, valueOrValues]) => {
-			acc[name] = Array.isArray(valueOrValues)
-				? valueOrValues.at(-1)
-				: valueOrValues;
-			return acc;
-		},
-		{},
+	const parsedSearchParams = mapValues(searchParams, (valueOrValues) =>
+		Array.isArray(valueOrValues) ? valueOrValues.at(-1) : valueOrValues,
 	);
 	return (
 		<SearchParamsContext.Provider value={searchParams}>

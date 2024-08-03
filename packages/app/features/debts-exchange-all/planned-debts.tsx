@@ -4,6 +4,7 @@ import { View } from "react-native";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { UseFormReturn } from "react-hook-form";
 import { useForm, useWatch } from "react-hook-form";
+import { entries, isNonNullish, omitBy } from "remeda";
 import { z } from "zod";
 
 import { ErrorMessage } from "~app/components/error-message";
@@ -17,7 +18,7 @@ import { currencyCodeSchema, currencyRateSchema } from "~app/utils/validation";
 import { Button, Input, Spinner, Text } from "~components";
 import type { UsersId } from "~db";
 import * as mutations from "~mutations";
-import { nonNullishGuard, round } from "~utils";
+import { round } from "~utils";
 
 const getDefaultValues = (
 	selectedCurrencyCode: CurrencyCode,
@@ -34,9 +35,7 @@ const getDefaultValues = (
 				  },
 		{},
 	),
-	...Object.fromEntries(
-		Object.entries(currentRates).filter(([, value]) => value !== undefined),
-	),
+	...omitBy(currentRates, (value) => value === undefined),
 });
 
 type InputProps = {
@@ -215,13 +214,11 @@ export const PlannedDebts: React.FC<Props> = ({
 	const fillRatesData = React.useCallback(
 		(data: Record<CurrencyCode, number>) => {
 			const currentRates = form.getValues()[selectedCurrencyCode];
-			Object.entries(data).forEach(([key, value]) => {
+			entries(data).forEach(([key, value]) => {
 				if (!currentRates || !currentRates[key]) {
-					form.setValue(
-						`${selectedCurrencyCode}.${key}` as `${CurrencyCode}.${CurrencyCode}`,
-						value,
-						{ shouldValidate: true },
-					);
+					form.setValue(`${selectedCurrencyCode}.${key}`, value, {
+						shouldValidate: true,
+					});
 				}
 			});
 		},
@@ -279,7 +276,7 @@ export const PlannedDebts: React.FC<Props> = ({
 	const mutationPending = addMutations.some((mutation) => mutation.isPending);
 	const mutationError = addMutations
 		.map((mutation) => mutation.error)
-		.find(nonNullishGuard);
+		.find(isNonNullish);
 
 	return (
 		<>

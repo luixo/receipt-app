@@ -1,16 +1,17 @@
 import React from "react";
 
 import { useQueryState } from "next-usequerystate";
+import { identity } from "remeda";
 import { useRouter, useSearchParams } from "solito/navigation";
 import type { Primitive } from "zod";
-
-import { id } from "~utils";
 
 export type QueryParamOptions<T extends object | Primitive = string> = {
 	parse?: (input: string | undefined) => T;
 	serialize?: (input: T) => string | null;
 	defaultValue?: T;
 };
+
+const id = identity();
 
 export const useQueryParam = <T extends object | Primitive = string>(
 	paramName: string,

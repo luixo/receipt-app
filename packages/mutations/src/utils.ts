@@ -1,22 +1,22 @@
-import { nonNullishGuard } from "~utils";
+import { isNonNullish } from "remeda";
 
 import type { UpdaterRevertResult } from "./types";
 
 export const mergeUpdaterResults = (
 	...results: (UpdaterRevertResult | undefined)[]
 ): UpdaterRevertResult => {
-	const filteredResults = results.filter(nonNullishGuard);
+	const filteredResults = results.filter(isNonNullish);
 	return {
 		revertFn: () => {
 			filteredResults
 				.map(({ revertFn }) => revertFn)
-				.filter(nonNullishGuard)
+				.filter(isNonNullish)
 				.forEach((fn) => fn());
 		},
 		finalizeFn: () => {
 			filteredResults
 				.map(({ finalizeFn }) => finalizeFn)
-				.filter(nonNullishGuard)
+				.filter(isNonNullish)
 				.forEach((fn) => fn());
 		},
 	};

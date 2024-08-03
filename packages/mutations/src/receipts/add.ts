@@ -30,6 +30,8 @@ export const options: UseContextedMutationOptions<
 						ownerUserId: selfUserId,
 						selfUserId,
 						debt: { direction: "outcoming", ids: [] },
+						transferIntentionUserId: undefined,
+						lockedTimestamp: undefined,
 					});
 				},
 				getNonResolvedAmount: undefined,

@@ -1,4 +1,4 @@
-import { noop } from "~utils/misc";
+import { doNothing } from "remeda";
 
 export const wait = (ms: number) =>
 	new Promise((resolve) => {
@@ -6,8 +6,8 @@ export const wait = (ms: number) =>
 	});
 
 export const createPromise = <R, E = unknown>() => {
-	let resolve: (result: R) => void = noop;
-	let reject: (reason?: E) => void = noop;
+	let resolve: (result: R) => void = doNothing;
+	let reject: (reason?: E) => void = doNothing;
 	const promise = new Promise<R>((resolveFn, rejectFn) => {
 		resolve = resolveFn;
 		reject = rejectFn;

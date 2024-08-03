@@ -6,6 +6,7 @@ import type { Area, Point } from "react-easy-crop";
 import Cropper from "react-easy-crop";
 import type { SubmitHandler } from "react-hook-form";
 import { useForm } from "react-hook-form";
+import { doNothing } from "remeda";
 import { z } from "zod";
 
 import { UserAvatar } from "~app/components/app/user-avatar";
@@ -27,7 +28,6 @@ import {
 	MAX_AVATAR_SIDE_SIZE,
 	convertDataUrlToImageElement,
 	convertFileToDataUrl,
-	noop,
 } from "~utils";
 
 const MAX_ZOOM = 5;
@@ -140,7 +140,7 @@ export const AccountAvatarInput: React.FC<Props> = ({ account, children }) => {
 		async (_area, areaPixels) => form.setValue("croppedArea", areaPixels),
 		[form],
 	);
-	const inputClickRef = React.useRef<() => void>(noop);
+	const inputClickRef = React.useRef<() => void>(doNothing);
 	const onInputButtonClick = React.useCallback(() => {
 		inputClickRef.current();
 	}, []);
