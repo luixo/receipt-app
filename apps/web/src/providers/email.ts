@@ -18,7 +18,7 @@ type EmailClient = {
 	send: (email: Email) => Promise<void>;
 };
 
-let emailClient: EmailClient;
+let emailClient: EmailClient | undefined;
 
 export const getEmailClient = (ctx: UnauthorizedContext): EmailClient => {
 	if (ctx.emailOptions.mock) {

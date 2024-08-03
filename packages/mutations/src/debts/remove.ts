@@ -28,10 +28,10 @@ export const options: UseContextedMutationOptions<
 		cache.receipts.update(controllerContext, {
 			get: (controller) =>
 				controller.updateAll((receipt) => {
-					if (!receipt.debt) {
-						return receipt;
-					}
 					if (receipt.debt.direction === "incoming") {
+						if (!receipt.debt.id) {
+							return receipt;
+						}
 						if (receipt.debt.id === updateObject.id) {
 							return {
 								...receipt,
@@ -45,13 +45,13 @@ export const options: UseContextedMutationOptions<
 									  },
 							};
 						}
-					} else if (receipt.debt.direction === "outcoming") {
-						if (receipt.debt.ids.includes(updateObject.id)) {
-							const nextIds = receipt.debt.ids.filter(
-								(id) => id !== updateObject.id,
-							);
-							return { ...receipt, debt: { ...receipt.debt, ids: nextIds } };
-						}
+						return receipt;
+					}
+					if (receipt.debt.ids.includes(updateObject.id)) {
+						const nextIds = receipt.debt.ids.filter(
+							(id) => id !== updateObject.id,
+						);
+						return { ...receipt, debt: { ...receipt.debt, ids: nextIds } };
 					}
 					return receipt;
 				}),

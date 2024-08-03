@@ -24,7 +24,7 @@ export const getS3Parts = () => {
 	return { s3Endpoint, s3Bucket };
 };
 
-let s3Client: S3Client;
+let s3Client: S3Client | undefined;
 
 export const getS3Client = (ctx: UnauthorizedContext): S3Client => {
 	if (ctx.s3Options.mock) {

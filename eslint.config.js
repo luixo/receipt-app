@@ -96,6 +96,11 @@ const overridenRules = {
 	],
 	// Default option is `interface`
 	"@typescript-eslint/consistent-type-definitions": ["error", "type"],
+	// Allowing `while(true)`
+	"@typescript-eslint/no-unnecessary-condition": [
+		"error",
+		{ allowConstantLoopConditions: true },
+	],
 
 	// Airbnb forces them to be functional components
 	"react/function-component-definition": [
@@ -164,7 +169,6 @@ const temporaryDisabledRules = {
 	"@typescript-eslint/no-misused-promises": "off",
 	"@typescript-eslint/no-redundant-type-constituents": "off",
 	"@typescript-eslint/no-require-imports": "off",
-	"@typescript-eslint/no-unnecessary-condition": "off",
 	"@typescript-eslint/no-unnecessary-template-expression": "off",
 	"@typescript-eslint/no-unnecessary-type-arguments": "off",
 	"@typescript-eslint/no-unnecessary-type-assertion": "off",

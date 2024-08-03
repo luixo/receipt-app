@@ -150,6 +150,9 @@ export type TRPCInfiniteQuerySuccessResult<
 
 export type TRPCMutationKey = keyof TRPCMutationValues;
 
+export type TRPCSplitMutationKey<K extends TRPCMutationKey = TRPCMutationKey> =
+	SplitStringByComma<K> & string[];
+
 export type TRPCMutationInput<Path extends TRPCMutationKey> =
 	inferProcedureInput<TRPCMutationValues[Path]>;
 

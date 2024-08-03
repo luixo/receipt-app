@@ -18,6 +18,8 @@ import type {
 	TRPCMutationOutput,
 	TRPCQueryInput,
 	TRPCQueryKey,
+	TRPCSplitMutationKey,
+	TRPCSplitQueryKey,
 } from "~app/trpc";
 import { mapObjectValues, nonNullishGuard, omitUndefined } from "~utils";
 import { router } from "~web/handlers";
@@ -29,7 +31,7 @@ const DEFAULT_AWAIT_CACHE_TIMEOUT = 5000;
 
 type ExtendedTestInfo = TestInfo & {
 	queriesSnapshotIndex?: number;
-	awaitedCacheKeys: Partial<Record<TRPCQueryKey | TRPCMutationKey, number>>;
+	awaitedCacheKeys?: Partial<Record<TRPCQueryKey | TRPCMutationKey, number>>;
 };
 const getExtendedTestInfo = (testInfo: TestInfo): ExtendedTestInfo =>
 	testInfo as ExtendedTestInfo;
@@ -121,51 +123,59 @@ const flattenError = (error: unknown) => {
 	return error;
 };
 
+type RawQueryKey = [
+	TRPCSplitQueryKey,
+	(
+		| {
+				input: TRPCQueryInput<TRPCQueryKey>;
+				type: "query" | "infinite";
+		  }
+		| undefined
+	),
+];
+
 const mapQueries = (queries: DehydratedState["queries"]) =>
 	queries
 		.sort((a, b) => a.queryHash.localeCompare(b.queryHash))
-		.map(({ queryHash, queryKey, ...query }) => ({
-			...query,
-			queryKey: {
-				handler: (queryKey[0] as string[]).join(".") as TRPCQueryKey,
-				input: JSON.stringify(
-					(
-						queryKey[1] as
-							| {
-									input: TRPCQueryInput<TRPCQueryKey>;
-									type: "query" | "infinite";
-							  }
-							| undefined
-					)?.input,
-				),
-			},
-			state: {
-				...query.state,
-				error: flattenError(query.state.error),
-				fetchFailureReason: undefined,
-				// Removing actual dates as they are not stable for snapshots
-				dataUpdatedAt: undefined,
-				errorUpdatedAt: undefined,
-			},
-		}));
+		.map(({ queryHash, queryKey, ...query }) => {
+			const typedQueryKey = queryKey as RawQueryKey;
+			return {
+				...query,
+				queryKey: {
+					handler: typedQueryKey[0].join(".") as TRPCQueryKey,
+					input: JSON.stringify(typedQueryKey[1]?.input),
+				},
+				state: {
+					...query.state,
+					error: flattenError(query.state.error),
+					fetchFailureReason: undefined,
+					// Removing actual dates as they are not stable for snapshots
+					dataUpdatedAt: undefined,
+					errorUpdatedAt: undefined,
+				},
+			};
+		});
+
+type RawMutationKey = [TRPCSplitMutationKey];
 
 const mapMutations = (mutations: DehydratedState["mutations"]) =>
-	mutations.map((mutation) => ({
-		...mutation,
-		mutationKey: {
-			handler: (mutation.mutationKey as [string[]])[0].join(
-				".",
-			) as TRPCMutationKey,
-		},
-		state: {
-			...mutation.state,
-			context: undefined,
-			error: flattenError(mutation.state.error),
-			failureReason: undefined,
-			// Removing actual dates as they are not stable for snapshots
-			submittedAt: undefined,
-		},
-	}));
+	mutations.map((mutation) => {
+		const typedMutationKey = mutation.mutationKey as RawMutationKey;
+		return {
+			...mutation,
+			mutationKey: {
+				handler: typedMutationKey[0].join(".") as TRPCMutationKey,
+			},
+			state: {
+				...mutation.state,
+				context: undefined,
+				error: flattenError(mutation.state.error),
+				failureReason: undefined,
+				// Removing actual dates as they are not stable for snapshots
+				submittedAt: undefined,
+			},
+		};
+	});
 
 const getQueryCache = async ({
 	page,
@@ -499,7 +509,8 @@ export const queriesMixin = createMixin<
 	},
 	awaitCacheKey: async ({ page }, use, testInfo) => {
 		const extendedTestInfo = getExtendedTestInfo(testInfo);
-		extendedTestInfo.awaitedCacheKeys ??= {};
+		const awaitedCacheKeys = extendedTestInfo.awaitedCacheKeys || {};
+		extendedTestInfo.awaitedCacheKeys = awaitedCacheKeys;
 		await use((cacheKeyOrKeys, timeout = DEFAULT_AWAIT_CACHE_TIMEOUT) => {
 			const cacheObjects = (
 				Array.isArray(cacheKeyOrKeys) ? cacheKeyOrKeys : [cacheKeyOrKeys]
@@ -508,7 +519,7 @@ export const queriesMixin = createMixin<
 					typeof keyOrObject === "string" ? keyOrObject : keyOrObject.path;
 				const awaitedAmount =
 					typeof keyOrObject === "string" ? 1 : keyOrObject.amount ?? 1;
-				const prevAmount = extendedTestInfo.awaitedCacheKeys[path] ?? 0;
+				const prevAmount = awaitedCacheKeys[path] ?? 0;
 				const procedure = getProcedure(
 					router as unknown as AnyTRPCRouter & RouterRecord,
 					path,
@@ -522,11 +533,12 @@ export const queriesMixin = createMixin<
 			});
 			const result = page.evaluate(
 				async ([cacheObjectsInner, timeoutInner]) => {
-					if (!window.queryClient) {
+					const { queryClient } = window;
+					if (!queryClient) {
 						throw new Error("window.queryClient is not defined yet");
 					}
 					const awaitQueryKey = (cacheKey: TRPCQueryKey, amount: number) => {
-						const cache = window.queryClient.getQueryCache();
+						const cache = queryClient.getQueryCache();
 						const getAwaitedAmount = () => {
 							const allMatched = cache.findAll({
 								queryKey: [cacheKey.split(".")],
@@ -553,8 +565,9 @@ export const queriesMixin = createMixin<
 						}
 						return new Promise<boolean>((resolve, reject) => {
 							cache.subscribe((cacheNotifyEvent) => {
+								const queryKey = cacheNotifyEvent.query.queryKey as RawQueryKey;
 								if (
-									cacheNotifyEvent.query.queryKey[0].join(".") !== cacheKey ||
+									queryKey[0].join(".") !== cacheKey ||
 									cacheNotifyEvent.type !== "updated"
 								) {
 									return;
@@ -587,7 +600,7 @@ export const queriesMixin = createMixin<
 						cacheKey: TRPCMutationKey,
 						amount: number,
 					) => {
-						const cache = window.queryClient.getMutationCache();
+						const cache = queryClient.getMutationCache();
 						const getAwaitedAmount = () => {
 							const allMatched = cache.findAll({
 								mutationKey: [cacheKey.split(".")],
@@ -614,11 +627,10 @@ export const queriesMixin = createMixin<
 						}
 						return new Promise<boolean>((resolve, reject) => {
 							cache.subscribe((cacheNotifyEvent) => {
+								const mutationKey = cacheNotifyEvent.mutation?.options
+									.mutationKey as RawMutationKey | undefined;
 								if (
-									(
-										(cacheNotifyEvent.mutation?.options
-											.mutationKey?.[0] as string[]) ?? []
-									).join(".") !== cacheKey ||
+									(mutationKey?.[0] ?? []).join(".") !== cacheKey ||
 									cacheNotifyEvent.type !== "updated"
 								) {
 									return;
@@ -665,8 +677,8 @@ export const queriesMixin = createMixin<
 				[cacheObjects, timeout] as const,
 			);
 			cacheObjects.forEach((cacheKey) => {
-				extendedTestInfo.awaitedCacheKeys[cacheKey.path] ??= 0;
-				extendedTestInfo.awaitedCacheKeys[cacheKey.path] = cacheKey.amount;
+				awaitedCacheKeys[cacheKey.path] ??= 0;
+				awaitedCacheKeys[cacheKey.path] = cacheKey.amount;
 			});
 			return result;
 		});

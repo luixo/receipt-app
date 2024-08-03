@@ -350,7 +350,9 @@ const getMockUtils = (api: ApiManager) => {
 				"currency.getList",
 				() =>
 					currencies ||
-					Object.entries(getCurrencies("en")).map(([code, currency]) => ({
+					// 'en' locale definitely exist
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					Object.entries(getCurrencies("en")!).map(([code, currency]) => ({
 						code: code as CurrencyCode,
 						name: currency.name_plural,
 						symbol: currency.symbol_native,

@@ -60,7 +60,6 @@ export const DebtSyncStatus: React.FC<Props> = ({
 	const pixelSize = size === "md" ? 24 : 36;
 
 	const isSynced =
-		lockedTimestamp &&
 		their?.lockedTimestamp?.valueOf() === lockedTimestamp.valueOf();
 	return (
 		<Tooltip
@@ -81,8 +80,8 @@ export const DebtSyncStatus: React.FC<Props> = ({
 						size === "md" ? "left-[13px]" : "left-[20px]"
 					} top-0`}
 				>
-					{isSynced || !lockedTimestamp ? null : (their?.lockedTimestamp ??
-							0) >= lockedTimestamp ? (
+					{isSynced ? null : (their?.lockedTimestamp ?? 0) >=
+					  lockedTimestamp ? (
 						<IncomingIcon size={pixelSize} />
 					) : (
 						<OutcomingIcon size={pixelSize} />

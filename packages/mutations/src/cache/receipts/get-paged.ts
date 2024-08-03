@@ -61,13 +61,11 @@ const remove = (
 					if (removedIndex === -1) {
 						return;
 					}
-					if (ref) {
-						ref.current = {
-							input,
-							receiptId,
-							index: removedIndex,
-						};
-					}
+					ref.current = {
+						input,
+						receiptId,
+						index: removedIndex,
+					};
 					return {
 						...result,
 						items: [

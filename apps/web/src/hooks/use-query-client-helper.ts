@@ -9,8 +9,8 @@ declare global {
 	// external interface extension
 	// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 	interface Window {
-		getDehydratedCache: (timeout: number) => Promise<DehydratedState>;
-		queryClient: QueryClient;
+		getDehydratedCache?: (timeout: number) => Promise<DehydratedState>;
+		queryClient?: QueryClient;
 	}
 }
 
@@ -28,8 +28,14 @@ export const useQueryClientHelper = () => {
 					shouldDehydrateMutation: alwaysTrue,
 				});
 			return new Promise((resolve, reject) => {
+				if (!window.queryClient) {
+					return;
+				}
 				if (queryClient.isFetching()) {
 					const unsub = window.queryClient.getQueryCache().subscribe(() => {
+						if (!window.queryClient) {
+							return;
+						}
 						if (!window.queryClient.isFetching()) {
 							resolve(getData());
 							unsub();

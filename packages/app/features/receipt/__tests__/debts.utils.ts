@@ -104,11 +104,12 @@ export const test = originalTest.extend<Fixtures>({
 	openReceiptWithDebts: ({ openReceipt, awaitCacheKey }, use) =>
 		use(async (receipt) => {
 			await openReceipt(receipt.id);
-			const debtsAmount = !receipt.debt
-				? 0
-				: receipt.debt.direction === "outcoming"
-				? receipt.debt.ids.length
-				: 1;
+			const debtsAmount =
+				receipt.debt.direction === "outcoming"
+					? receipt.debt.ids.length
+					: !receipt.debt.id
+					? 0
+					: 1;
 			await awaitCacheKey({ path: "debts.get", amount: debtsAmount });
 		}),
 

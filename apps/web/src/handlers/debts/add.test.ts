@@ -235,7 +235,7 @@ describe("debts.add", () => {
 				expect(results).toHaveLength(4);
 				results
 					.map(({ id }) => id)
-					.every((id) => expect(id).toMatch(UUID_REGEX));
+					.forEach((id) => expect(id).toMatch(UUID_REGEX));
 				expect(results).toStrictEqual<typeof results>(
 					results.map(({ id }, index) => ({
 						id,
@@ -276,7 +276,7 @@ describe("debts.add", () => {
 				expect(results).toHaveLength(3);
 				results
 					.map(({ id }) => id)
-					.every((id) => expect(id).toMatch(UUID_REGEX));
+					.forEach((id) => expect(id).toMatch(UUID_REGEX));
 				expect(results).toStrictEqual<typeof results>(
 					results.map(({ id }) => ({
 						id,
@@ -329,7 +329,7 @@ describe("debts.add", () => {
 				expect(results).toHaveLength(3);
 				results
 					.map(({ id }) => id)
-					.every((id) => expect(id).toMatch(UUID_REGEX));
+					.forEach((id) => expect(id).toMatch(UUID_REGEX));
 				expect(results).toStrictEqual<typeof results>(
 					results.map(({ id }) => ({
 						id,

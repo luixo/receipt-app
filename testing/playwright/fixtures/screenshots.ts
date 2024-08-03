@@ -87,6 +87,9 @@ const stableScreenshot = async ({
 	let buffer: Buffer | undefined;
 	/* eslint-disable no-await-in-loop */
 	while (true) {
+		// see https://github.com/microsoft/TypeScript/issues/9998
+		// "bad behavior on locals" section
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (isTimedOut) {
 			throw new Error("Timeout while waiting for stable screenshot");
 		}

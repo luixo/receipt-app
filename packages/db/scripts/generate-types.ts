@@ -30,13 +30,11 @@ const run = async () => {
 				let typeOverride: string | undefined;
 				const property = rawProperty as TableColumn;
 				const comments = property.comment ? [property.comment] : [];
-				if (property.indices) {
-					comments.push(
-						...property.indices.map(({ name, isPrimary }) =>
-							isPrimary ? `Primary key. Index: ${name}` : `Index: ${name}`,
-						),
-					);
-				}
+				comments.push(
+					...property.indices.map(({ name, isPrimary }) =>
+						isPrimary ? `Primary key. Index: ${name}` : `Index: ${name}`,
+					),
+				);
 				if (property.defaultValue && generateFor === "initializer") {
 					comments.push(`Default value: ${property.defaultValue}`);
 				}

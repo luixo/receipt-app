@@ -11,11 +11,14 @@ type Props = {
 };
 
 export const ReceiptGuestControlButton: React.FC<Props> = ({ receipt }) => {
-	if (!receipt.debt || !receipt.lockedTimestamp) {
+	if (!receipt.lockedTimestamp) {
 		return null;
 	}
 	if (receipt.debt.direction === "outcoming") {
 		throw new Error("Unexpected owner control button with outcoming debt");
+	}
+	if (!receipt.debt.id) {
+		return null;
 	}
 
 	return (

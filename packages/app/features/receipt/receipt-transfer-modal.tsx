@@ -196,11 +196,7 @@ export const ReceiptTransferModal: React.FC<Props> = ({
 			</Modal>
 			{hasParticipants ? (
 				<Tooltip
-					content={
-						hasParticipants
-							? "You can only transfer a receipt with no participants in it"
-							: undefined
-					}
+					content="You can only transfer a receipt with no participants in it"
 					placement="bottom-end"
 				>
 					<span>{button}</span>

@@ -54,13 +54,11 @@ const remove = (controller: Controller, inputs: Input[], userId: UsersId) =>
 					if (removedIndex === -1) {
 						return;
 					}
-					if (ref) {
-						ref.current = {
-							input,
-							userId,
-							index: removedIndex,
-						};
-					}
+					ref.current = {
+						input,
+						userId,
+						index: removedIndex,
+					};
 					return {
 						...result,
 						items: [

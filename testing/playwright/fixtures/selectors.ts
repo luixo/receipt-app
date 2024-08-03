@@ -15,9 +15,7 @@ type SelectorsMixin = {
 
 export const selectorsMixin = createMixin<SelectorsMixin>({
 	withLoader: async ({ loader }, use) => {
-		await use((locator) =>
-			locator ? locator.filter({ has: loader }) : loader,
-		);
+		await use((locator) => locator.filter({ has: loader }));
 	},
 	modal: async ({ page }, use) => {
 		await use((title) =>

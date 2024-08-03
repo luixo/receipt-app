@@ -48,26 +48,29 @@ export const procedure = authProcedure
 				message: `User "${input.userId}" does not exist.`,
 			});
 		}
-		if (input.update.type === "role") {
-			if (receipt.ownerAccountId !== ctx.auth.accountId) {
-				throw new TRPCError({
-					code: "FORBIDDEN",
-					message: `Only receipt owner can modify user receipt role.`,
-				});
-			}
-			if (input.userId === ctx.auth.accountId) {
-				throw new TRPCError({
-					code: "BAD_REQUEST",
-					message: `Cannot modify your own receipt role.`,
-				});
-			}
-		} else if (input.update.type === "resolved") {
-			if (user.connectedAccountId !== ctx.auth.accountId) {
-				throw new TRPCError({
-					code: "FORBIDDEN",
-					message: `You can modify only your own "resolved" status.`,
-				});
-			}
+		switch (input.update.type) {
+			case "role":
+				if (receipt.ownerAccountId !== ctx.auth.accountId) {
+					throw new TRPCError({
+						code: "FORBIDDEN",
+						message: `Only receipt owner can modify user receipt role.`,
+					});
+				}
+				if (input.userId === ctx.auth.accountId) {
+					throw new TRPCError({
+						code: "BAD_REQUEST",
+						message: `Cannot modify your own receipt role.`,
+					});
+				}
+				break;
+			case "resolved":
+				if (user.connectedAccountId !== ctx.auth.accountId) {
+					throw new TRPCError({
+						code: "FORBIDDEN",
+						message: `You can modify only your own "resolved" status.`,
+					});
+				}
+				break;
 		}
 		const receiptParticipant = await getReceiptParticipant(
 			database,

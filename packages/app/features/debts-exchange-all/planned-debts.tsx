@@ -69,7 +69,9 @@ const RateInput: React.FC<InputProps> = ({
 
 type DebtProps = {
 	selectedCurrencyCode: CurrencyCode;
-	form: UseFormReturn<Record<CurrencyCode, Record<CurrencyCode, number>>>;
+	form: UseFormReturn<
+		Partial<Record<CurrencyCode, Record<CurrencyCode, number>>>
+	>;
 	ratesLoading: boolean;
 	currencyCode: CurrencyCode;
 	amount: number;
@@ -133,7 +135,9 @@ export const PlannedDebts: React.FC<Props> = ({
 	userId,
 	onDone,
 }) => {
-	const form = useForm<Record<CurrencyCode, Record<CurrencyCode, number>>>({
+	const form = useForm<
+		Partial<Record<CurrencyCode, Record<CurrencyCode, number>>>
+	>({
 		mode: "onChange",
 		resolver: zodResolver(
 			z.record(
@@ -159,7 +163,8 @@ export const PlannedDebts: React.FC<Props> = ({
 		convertedFromDebts.map((debt) => debt.currencyCode),
 	);
 	const selectedCurrency = useFormattedCurrency(selectedCurrencyCode);
-	const selectedRates = useWatch({
+	// Extending the type because `selectedCurrencyCode`
+	const selectedRates: Record<CurrencyCode, number> | undefined = useWatch({
 		control: form.control,
 		name: selectedCurrencyCode as `${string & CurrencyCode}`,
 	});

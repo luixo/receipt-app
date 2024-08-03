@@ -7,10 +7,17 @@ import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client
 import type { TRPCQuery, TRPCQueryKey, TRPCSplitQueryKey } from "~app/trpc";
 import { MONTH } from "~utils";
 
-const isKeyEqual = <K1 extends TRPCSplitQueryKey, K2 extends TRPCSplitQueryKey>(
+const isKeyEqual = <
+	T1 extends TRPCQueryKey,
+	K1 extends TRPCSplitQueryKey<T1>,
+	T2 extends TRPCQueryKey,
+	K2 extends TRPCSplitQueryKey<T2>,
+>(
 	keyA: K1,
 	keyB: K2,
 ) =>
+	// Let's keep it in case deeper routing ever happens
+	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 	keyA.length === keyB.length &&
 	keyA.every((element, index) => element === keyB[index]);
 

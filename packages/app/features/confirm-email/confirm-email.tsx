@@ -31,7 +31,7 @@ export const ConfirmEmail: React.FC<Props> = ({ token, confirmMutation }) => {
 	}
 	return (
 		<>
-			<Header>{confirmMutation.data?.email}</Header>
+			<Header>{confirmMutation.data.email}</Header>
 			<Header size="sm">Email verification successful!</Header>
 			<Link href="/">
 				<Button color="primary">To home page</Button>

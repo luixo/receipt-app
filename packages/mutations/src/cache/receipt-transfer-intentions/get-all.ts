@@ -31,9 +31,7 @@ const updateIntentions =
 				if (nextIntentions === prevIntentions) {
 					return intentions;
 				}
-				if (ref) {
-					ref.current = prevIntentions;
-				}
+				ref.current = prevIntentions;
 				return { ...intentions, [direction]: nextIntentions };
 			}),
 		).current;

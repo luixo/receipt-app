@@ -1,6 +1,6 @@
 import { Pool } from "pg";
 
-let sharedPool: Pool;
+let sharedPool: Pool | undefined;
 export const getPool = () => {
 	if (sharedPool) {
 		return sharedPool;

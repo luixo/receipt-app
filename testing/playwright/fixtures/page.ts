@@ -20,6 +20,8 @@ const fakeBrowserDate = async (page: OriginalPage) => {
 			// eslint-disable-next-line no-global-assign
 			Date = class extends Date {
 				constructor(...args: Parameters<DateConstructor>) {
+					// see https://github.com/microsoft/TypeScript/issues/32164
+					// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 					if (args.length === 0) {
 						super(mockedTimestamp);
 					} else {

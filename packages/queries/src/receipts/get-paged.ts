@@ -35,6 +35,8 @@ const getFilters = (
 ): CursorlessInput["filters"] => {
 	if (
 		!filters ||
+		// Enabling `exactOptionalPropertyTypes` in tsconfig fixes that
+		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		Object.values(filters).filter((value) => value !== undefined).length === 0
 	) {
 		return;

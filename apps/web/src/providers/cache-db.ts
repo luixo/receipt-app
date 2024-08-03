@@ -7,7 +7,7 @@ export type CacheDbOptions = {
 	mock?: Requester;
 };
 
-let redisInstance: Redis;
+let redisInstance: Redis | undefined;
 
 const getDatabase = (ctx: UnauthorizedContext): Redis => {
 	if (ctx.cacheDbOptions.mock) {

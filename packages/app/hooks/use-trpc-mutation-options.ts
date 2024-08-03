@@ -113,11 +113,7 @@ export const useTrpcMutationOptions = <
 								lifecycleContext,
 						  )
 						: errorToastOptions;
-				if (toastOptions) {
-					toast.error(toastOptions.text, { id: toastId });
-				} else {
-					toast.dismiss(toastId);
-				}
+				toast.error(toastOptions.text, { id: toastId });
 				onError?.(error, vars, lifecycleContext);
 				revertFn?.();
 				return onErrorTrpc?.(...getTrpcArgs(internalContext!))(
@@ -134,7 +130,7 @@ export const useTrpcMutationOptions = <
 				} = internalContext!;
 				const toastOptions =
 					typeof successToastOptions === "function"
-						? successToastOptions?.(...getToastArgs(internalContext!))(
+						? successToastOptions(...getToastArgs(internalContext!))(
 								result,
 								vars,
 								lifecycleContext!,

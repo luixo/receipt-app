@@ -10,7 +10,7 @@ declare global {
 	// external interface extension
 	// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 	interface Window {
-		removeToasts: () => void;
+		removeToasts?: () => void;
 	}
 }
 

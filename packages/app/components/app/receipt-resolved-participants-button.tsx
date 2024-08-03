@@ -34,7 +34,7 @@ export const ReceiptResolvedParticipantsButton: React.FC<Props> = ({
 				return null;
 			}
 			const matchedParticipant = participants.find(
-				({ userId }) => userId === participantQuery.data?.id,
+				({ userId }) => userId === participantQuery.data.id,
 			);
 			if (!matchedParticipant) {
 				return null;
@@ -77,21 +77,21 @@ export const ReceiptResolvedParticipantsButton: React.FC<Props> = ({
 					isDisabled={props.isDisabled}
 					isIconOnly
 					startContent={
-						notResolvedParticipants?.length === 0 ? (
+						notResolvedParticipants.length === 0 ? (
 							<WaitIcon size={24} />
 						) : (
 							<CrossWaitIcon size={24} />
 						)
 					}
 				>
-					{!notResolvedParticipants || notResolvedParticipants.length === 0
+					{notResolvedParticipants.length === 0
 						? null
 						: notResolvedParticipants.length}
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent>
 				<View className="gap-6 p-4">
-					{notResolvedParticipants && notResolvedParticipants.length !== 0 ? (
+					{notResolvedParticipants.length !== 0 ? (
 						<View className="items-start gap-2">
 							<Text className="font-medium">Not resolved participants: </Text>
 							{notResolvedParticipants.map((participant) => (
@@ -102,7 +102,7 @@ export const ReceiptResolvedParticipantsButton: React.FC<Props> = ({
 							))}
 						</View>
 					) : null}
-					{resolvedParticipants && resolvedParticipants.length !== 0 ? (
+					{resolvedParticipants.length !== 0 ? (
 						<View className="items-start gap-2">
 							<Text className="font-medium">Resolved participants: </Text>
 							{resolvedParticipants.map((participant) => (

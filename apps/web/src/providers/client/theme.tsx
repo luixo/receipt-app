@@ -22,16 +22,15 @@ export const ThemeProvider: React.FC<React.PropsWithChildren<object>> = ({
 		setLastColorMode(colorScheme);
 	}, [colorScheme, setLastColorMode]);
 	const selectedMode = selectedColorMode || lastColorMode;
-	const sureMode = selectedMode ?? "light";
 	React.useEffect(() => {
 		const html = document.querySelector("html");
 		if (!html) {
 			return;
 		}
-		html.setAttribute("data-theme", sureMode);
-		html.classList.add(sureMode);
-		html.classList.remove(sureMode === "dark" ? "light" : "dark");
-	}, [sureMode]);
+		html.setAttribute("data-theme", selectedMode);
+		html.classList.add(selectedMode);
+		html.classList.remove(selectedMode === "dark" ? "light" : "dark");
+	}, [selectedMode]);
 	const router = useRouter();
 	return <NextUIProvider navigate={router.push}>{children}</NextUIProvider>;
 };

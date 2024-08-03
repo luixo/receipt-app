@@ -83,7 +83,7 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 					color="danger"
 					onClick={() => connectionIntentionsQuery.refetch()}
 				>
-					{connectionIntentionsQuery.error?.message}
+					{connectionIntentionsQuery.error.message}
 				</Button>
 			);
 		}
