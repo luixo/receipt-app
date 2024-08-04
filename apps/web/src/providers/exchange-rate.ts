@@ -53,11 +53,11 @@ const fetchCDNRate =
 		}
 		return toCodesLower.map((toCodeLower) =>
 			Number(
-				(
-					(parsedJson.data[fromCodeLower] as Record<string, number>)[
-						toCodeLower
-					] as number
-				).toFixed(6),
+				// We just verified it exists
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				(parsedJson.data[fromCodeLower] as Record<string, number>)[
+					toCodeLower
+				]!.toFixed(6),
 			),
 		);
 	};

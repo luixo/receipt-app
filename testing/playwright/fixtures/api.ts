@@ -95,9 +95,9 @@ const handleCall = async <K extends TRPCKey>(
 	name: K,
 	input: TransformerResult | undefined,
 ): Promise<JSONRPC2.ResultResponse | JSONRPC2.ErrorResponse> => {
-	const deserializedInput = (
-		input ? transformer.deserialize(input) : undefined
-	) as QueryOrMutationInput<K>;
+	const deserializedInput: QueryOrMutationInput<K> = input
+		? transformer.deserialize(input)
+		: (undefined as QueryOrMutationInput<K>);
 	controller.actions.push([type, name, deserializedInput]);
 	const pausedPromise = controller.paused.get(name);
 	if (pausedPromise) {
@@ -183,7 +183,7 @@ const createWorkerManager = async (port: number): Promise<WorkerManager> => {
 	const server = http.createServer(async (req, res) => {
 		let body = "";
 		const jsonPromise = new Promise<string>((resolve) => {
-			req.on("data", (chunk) => {
+			req.on("data", (chunk: string) => {
 				body += chunk;
 			});
 			res.on("end", () => {

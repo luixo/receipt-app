@@ -7,7 +7,7 @@ import type {
 	TestType,
 } from "@playwright/test";
 
-type KeyValue = { [key: string]: unknown };
+type KeyValue = Record<string, unknown>;
 
 type WithDefaultFixture<T> = PlaywrightTestArgs & PlaywrightTestOptions & T;
 type WithDefaultWorkerFixture<T> = PlaywrightWorkerArgs &

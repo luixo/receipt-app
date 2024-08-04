@@ -206,23 +206,15 @@ const disabledRules = {
 	// Rule emits false positives on `const fn = <T>(value: T) => {...}`
 	// see https://github.com/typescript-eslint/typescript-eslint/issues/9667
 	"@typescript-eslint/no-unnecessary-type-parameters": "off",
-};
-
-const temporaryDisabledRules = {
-	"@typescript-eslint/array-type": "off",
-	"@typescript-eslint/consistent-indexed-object-style": "off",
-	"@typescript-eslint/no-confusing-non-null-assertion": "off",
+	// We enjoy confusing fellow developers with void expressions
+	// Mainly used for:
+	// - returning `void` from a function, assigning that to a value and validating value is undefined
+	// - shorthanding functions returns that don't matter (because they're void)
 	"@typescript-eslint/no-confusing-void-expression": "off",
+	// That's a weird thing to forbid
 	"@typescript-eslint/no-dynamic-delete": "off",
+	// We use a few `void` types around
 	"@typescript-eslint/no-invalid-void-type": "off",
-	"@typescript-eslint/no-meaningless-void-operator": "off",
-	"@typescript-eslint/no-redundant-type-constituents": "off",
-	"@typescript-eslint/no-require-imports": "off",
-	"@typescript-eslint/non-nullable-type-assertion-style": "off",
-	"@typescript-eslint/require-await": "off",
-	"@typescript-eslint/restrict-plus-operands": "off",
-	"@typescript-eslint/use-unknown-in-catch-callback-variable": "off",
-	"jsx-a11y/no-autofocus": "off",
 };
 
 export default ts.config(
@@ -341,7 +333,6 @@ export default ts.config(
 			],
 		},
 	})),
-	{ rules: temporaryDisabledRules },
 	{
 		files: ["**/*.{js,jsx}"],
 		...ts.configs.disableTypeChecked,
@@ -378,6 +369,13 @@ export default ts.config(
 		rules: {
 			// see https://github.com/typescript-eslint/typescript-eslint/issues/8324
 			"@typescript-eslint/consistent-type-imports": "off",
+		},
+	},
+	{
+		files: ["apps/mobile/metro.config.js", "apps/web/next.config.js"],
+		rules: {
+			// We still have some CJS files in the project
+			"@typescript-eslint/no-require-imports": "off",
 		},
 	},
 	{

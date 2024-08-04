@@ -1,4 +1,4 @@
-type HeaderValue = number | string | ReadonlyArray<string>;
+type HeaderValue = number | string | readonly string[];
 export type HeaderTuple = [name: string, value: HeaderValue];
 
 export type ResponseHeadersMock = {

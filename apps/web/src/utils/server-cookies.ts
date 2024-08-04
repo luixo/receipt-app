@@ -23,7 +23,8 @@ export const setCookie = (
 	const setCookieHeader = res.getHeader("set-cookie") || "";
 	res.setHeader(
 		"set-cookie",
-		setCookieHeader + cookie.serialize(cookieName, cookieValue, opts),
+		setCookieHeader.toString() +
+			cookie.serialize(cookieName, cookieValue, opts),
 	);
 };
 

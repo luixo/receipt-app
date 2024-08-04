@@ -15,7 +15,7 @@ export const NoAuthEffect: React.FC = () => {
 			accountQuery.error &&
 			accountQuery.error.data?.code === "UNAUTHORIZED"
 		) {
-			void router.push("/login");
+			router.push("/login");
 		}
 	}, [accountQuery.error, router]);
 	if (accountQuery.status === "error") {

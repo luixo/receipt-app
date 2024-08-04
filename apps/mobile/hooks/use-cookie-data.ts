@@ -7,7 +7,7 @@ import { getCookieContext } from "~mobile/utils/cookie-storage";
 export const useCookieData = () => {
 	const [cookies, setCookies] = React.useState<Cookies>();
 	React.useEffect(() => {
-		// eslint-disable-next-line no-console
+		// eslint-disable-next-line no-console, @typescript-eslint/use-unknown-in-catch-callback-variable
 		getCookieContext().then(setCookies).catch(console.warn);
 	}, []);
 	const [nowTimestamp] = React.useState(() => Date.now());

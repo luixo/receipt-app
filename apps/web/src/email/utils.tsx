@@ -13,6 +13,8 @@ import { StylingContext } from "./styling-context";
 
 const STYLE_REPLACER = "__style_replacer__";
 
+// see https://github.com/microsoft/TypeScript/pull/57293
+// eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
 type NestedStyles = { [key: string]: NestedStylesOrString };
 type NestedStylesOrString = string | NestedStyles;
 

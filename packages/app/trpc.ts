@@ -78,7 +78,7 @@ type TRPCInfiniteQueryValues<P extends Record<string, AnyTRPCQueryProcedure>> =
 			: never]: P[K];
 	};
 
-export type TRPCQueryKey = keyof TRPCQueryValues & string;
+export type TRPCQueryKey = keyof TRPCQueryValues;
 
 export type TRPCSplitQueryKey<K extends TRPCQueryKey = TRPCQueryKey> =
 	SplitStringByComma<K> & string[];
