@@ -2,9 +2,9 @@ import type { QueryClientConfig } from "@tanstack/react-query";
 import type { TRPCLink } from "@trpc/client";
 import {
 	TRPCClientError,
+	unstable_httpBatchStreamLink as httpBatchStreamLink,
 	httpLink,
 	splitLink,
-	unstable_httpBatchStreamLink,
 } from "@trpc/client";
 import { createTRPCReact } from "@trpc/react-query";
 import type { AnyTRPCRouter } from "@trpc/server";
@@ -87,7 +87,7 @@ export const getLinks = (
 	const splitLinkInstance = splitLink({
 		condition: (op) => op.input instanceof FormData,
 		true: httpLink({ url, headers }),
-		false: (useBatch ? unstable_httpBatchStreamLink : httpLink)({
+		false: (useBatch ? httpBatchStreamLink : httpLink)({
 			url,
 			headers,
 			transformer,
