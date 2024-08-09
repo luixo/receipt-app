@@ -98,8 +98,8 @@ const invalidate = (controller: Controller) => () =>
 		return controller.invalidate();
 	}).current;
 
-export const getController = ({ trpcContext }: ControllerContext) => {
-	const controller = trpcContext.debts.getIntentions;
+export const getController = ({ trpcUtils }: ControllerContext) => {
+	const controller = trpcUtils.debts.getIntentions;
 	return {
 		update: update(controller),
 		add: add(controller),
@@ -108,8 +108,8 @@ export const getController = ({ trpcContext }: ControllerContext) => {
 	};
 };
 
-export const getRevertController = ({ trpcContext }: ControllerContext) => {
-	const controller = trpcContext.debts.getIntentions;
+export const getRevertController = ({ trpcUtils }: ControllerContext) => {
+	const controller = trpcUtils.debts.getIntentions;
 	return {
 		update: updateRevert(controller),
 		add: addRevert(controller),

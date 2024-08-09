@@ -25,16 +25,16 @@ const update =
 			});
 		}).current;
 
-export const getController = ({ trpcContext }: ControllerContext) => {
-	const controller = trpcContext.accountSettings.get;
+export const getController = ({ trpcUtils }: ControllerContext) => {
+	const controller = trpcUtils.accountSettings.get;
 	return {
 		update: (updater: UpdateFn<AccountSettings>) => update(controller)(updater),
 		upsert: (account: AccountSettings) => upsert(controller, account),
 	};
 };
 
-export const getRevertController = ({ trpcContext }: ControllerContext) => {
-	const controller = trpcContext.accountSettings.get;
+export const getRevertController = ({ trpcUtils }: ControllerContext) => {
+	const controller = trpcUtils.accountSettings.get;
 	return {
 		update: (
 			updater: UpdateFn<AccountSettings>,

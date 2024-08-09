@@ -29,8 +29,8 @@ const remove = (controller: Controller, userId: UsersId) =>
 		return controller.invalidate({ id: userId });
 	}).current;
 
-export const getController = ({ trpcContext }: ControllerContext) => {
-	const controller = trpcContext.users.get;
+export const getController = ({ trpcUtils }: ControllerContext) => {
+	const controller = trpcUtils.users.get;
 	return {
 		update: (userId: UsersId, updater: UpdateFn<User>) =>
 			update(controller, userId)(updater),
@@ -39,8 +39,8 @@ export const getController = ({ trpcContext }: ControllerContext) => {
 	};
 };
 
-export const getRevertController = ({ trpcContext }: ControllerContext) => {
-	const controller = trpcContext.users.get;
+export const getRevertController = ({ trpcUtils }: ControllerContext) => {
+	const controller = trpcUtils.users.get;
 	return {
 		update: (
 			userId: UsersId,

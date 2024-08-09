@@ -29,8 +29,8 @@ E.g.: while updating a debt, we need to know what the previous debt was.
 There is `lifecycleContext` which represents data passed as the result of mutation to success / error fns.
 E.g.: while adding a debt, we created a random id for it, on success we need to find that debt and replace the id to a proper one.
 
-There is `controllerContext` which is the object with `queryClient` and `trpcContext` included.
-E.g.: while updating a user, we need `trpcContext` to optimistically update that user's data in the query cache.
+There is `controllerContext` which is the object with `queryClient` and `trpcUtils` included.
+E.g.: while updating a user, we need `trpcUtils` to optimistically update that user's data in the query cache.
 
 There is `internalContext` which is the actual lifecycle context object that is passed around.
 It includes `controllerContext`, `outerContext`, `lifecycleContext`

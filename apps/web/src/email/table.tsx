@@ -2,7 +2,7 @@ import React from "react";
 
 import { Style } from "./style";
 
-type ElementProps<K extends keyof JSX.IntrinsicElements> = {
+type ElementProps<K extends keyof React.JSX.IntrinsicElements> = {
 	children: React.ReactNode;
 } & React.ComponentProps<K>;
 

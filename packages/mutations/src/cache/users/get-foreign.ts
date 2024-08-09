@@ -81,11 +81,11 @@ const invalidateForeign = (controller: Controller, inputs: Input[]) => {
 };
 
 export const getController = ({
-	trpcContext,
+	trpcUtils,
 	queryClient,
 	trpc,
 }: ControllerContext) => {
-	const controller = trpcContext.users.getForeign;
+	const controller = trpcUtils.users.getForeign;
 	const inputs = getInputs(trpc, queryClient);
 	return {
 		updateOwn: (userId: UsersId, updater: UpdateFn<OwnUser>) =>
@@ -94,8 +94,8 @@ export const getController = ({
 	};
 };
 
-export const getRevertController = ({ trpcContext }: ControllerContext) => {
-	const controller = trpcContext.users.getForeign;
+export const getRevertController = ({ trpcUtils }: ControllerContext) => {
+	const controller = trpcUtils.users.getForeign;
 	return {
 		updateOwn: (
 			userId: UsersId,

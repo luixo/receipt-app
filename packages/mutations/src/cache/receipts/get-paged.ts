@@ -81,11 +81,11 @@ const remove = (
 	);
 
 export const getController = ({
-	trpcContext,
+	trpcUtils,
 	queryClient,
 	trpc,
 }: ControllerContext) => {
-	const controller = trpcContext.receipts.getPaged;
+	const controller = trpcUtils.receipts.getPaged;
 	const inputs = getPagedInputs(trpc, queryClient);
 	return {
 		invalidate: () => invalidate(controller, inputs),
@@ -93,11 +93,11 @@ export const getController = ({
 };
 
 export const getRevertController = ({
-	trpcContext,
+	trpcUtils,
 	queryClient,
 	trpc,
 }: ControllerContext) => {
-	const controller = trpcContext.receipts.getPaged;
+	const controller = trpcUtils.receipts.getPaged;
 	const inputs = getPagedInputs(trpc, queryClient);
 	return {
 		remove: (receiptId: ReceiptsId) =>

@@ -144,8 +144,8 @@ const add =
 	(intention: IntentionMapping[D], index?: number) =>
 		addIntention(controller, direction, intention, index);
 
-export const getController = ({ trpcContext }: ControllerContext) => {
-	const controller = trpcContext.receiptTransferIntentions.getAll;
+export const getController = ({ trpcUtils }: ControllerContext) => {
+	const controller = trpcUtils.receiptTransferIntentions.getAll;
 	return {
 		inbound: {
 			updateAll: updateIntentions(controller, "inbound"),
@@ -162,8 +162,8 @@ export const getController = ({ trpcContext }: ControllerContext) => {
 	};
 };
 
-export const getRevertController = ({ trpcContext }: ControllerContext) => {
-	const controller = trpcContext.receiptTransferIntentions.getAll;
+export const getRevertController = ({ trpcUtils }: ControllerContext) => {
+	const controller = trpcUtils.receiptTransferIntentions.getAll;
 	return {
 		inbound: {
 			updateAll: updateIntentionsRevert(controller, "inbound"),

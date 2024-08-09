@@ -275,11 +275,11 @@ const removeParticipant = (
 	).current;
 
 export const getController = ({
-	trpcContext,
+	trpcUtils,
 	queryClient,
 	trpc,
 }: ControllerContext) => {
-	const controller = trpcContext.receipts.get;
+	const controller = trpcUtils.receipts.get;
 	const inputs = getPagedInputs(trpc, queryClient);
 	return {
 		update: (receiptId: ReceiptsId, updater: UpdateFn<Receipt>) =>
@@ -300,8 +300,8 @@ export const getController = ({
 	};
 };
 
-export const getRevertController = ({ trpcContext }: ControllerContext) => {
-	const controller = trpcContext.receipts.get;
+export const getRevertController = ({ trpcUtils }: ControllerContext) => {
+	const controller = trpcUtils.receipts.get;
 	return {
 		add: (receipt: Receipt) =>
 			applyWithRevert(

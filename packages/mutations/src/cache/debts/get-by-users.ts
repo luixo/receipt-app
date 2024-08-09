@@ -84,8 +84,8 @@ const updateUnsyncedDebts =
 
 const invalidate = (controller: Controller) => () => controller.invalidate();
 
-export const getController = ({ trpcContext }: ControllerContext) => {
-	const controller = trpcContext.debts.getByUsers;
+export const getController = ({ trpcUtils }: ControllerContext) => {
+	const controller = trpcUtils.debts.getByUsers;
 	return {
 		updateUnsyncedDebts: (userId: UsersId, updater: UpdateFn<number>) =>
 			updateUnsyncedDebts(controller, userId)(updater),
@@ -98,8 +98,8 @@ export const getController = ({ trpcContext }: ControllerContext) => {
 	};
 };
 
-export const getRevertController = ({ trpcContext }: ControllerContext) => {
-	const controller = trpcContext.debts.getByUsers;
+export const getRevertController = ({ trpcUtils }: ControllerContext) => {
+	const controller = trpcUtils.debts.getByUsers;
 	return {
 		updateCurrency: (
 			userId: UsersId,

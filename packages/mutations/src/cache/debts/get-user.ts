@@ -61,8 +61,8 @@ const add = (
 	updateDebts(controller, userId, (debts) => addToArray(debts, debt, index));
 };
 
-export const getController = ({ trpcContext }: ControllerContext) => {
-	const controller = trpcContext.debts.getUser;
+export const getController = ({ trpcUtils }: ControllerContext) => {
+	const controller = trpcUtils.debts.getUser;
 	return {
 		update: (userId: UsersId, debtId: DebtsId, updater: UpdateFn<Debt>) =>
 			update(controller, userId, debtId)(updater),
@@ -72,8 +72,8 @@ export const getController = ({ trpcContext }: ControllerContext) => {
 	};
 };
 
-export const getRevertController = ({ trpcContext }: ControllerContext) => {
-	const controller = trpcContext.debts.getUser;
+export const getRevertController = ({ trpcUtils }: ControllerContext) => {
+	const controller = trpcUtils.debts.getUser;
 	return {
 		update: (
 			userId: UsersId,

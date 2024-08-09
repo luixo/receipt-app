@@ -18,7 +18,7 @@ export type UpdaterRevertResult = {
 };
 
 export type ControllerContext = {
-	trpcContext: TRPCReactUtils;
+	trpcUtils: TRPCReactUtils;
 	queryClient: QueryClient;
 	trpc: TRPCReact;
 };

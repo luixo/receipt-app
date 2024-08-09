@@ -6,6 +6,7 @@ import airbnbConfig from "eslint-config-airbnb";
 import airbnbHooksConfig from "eslint-config-airbnb/hooks";
 import airbnbTypescriptConfig from "eslint-config-airbnb-typescript";
 import prettierConfig from "eslint-config-prettier";
+import deprecationPlugin from "eslint-plugin-deprecation";
 import importPlugin from "eslint-plugin-import";
 import jsxAccessibilityPlugin from "eslint-plugin-jsx-a11y";
 import reactPlugin from "eslint-plugin-react";
@@ -237,6 +238,8 @@ export default ts.config(
 			"react-hooks": fixupPluginRules(reactHooksPlugin),
 			// remove fixupPluginRules on resolution: https://github.com/vercel/next.js/issues/64409
 			"@next/next": fixupPluginRules(nextJsPlugin),
+			// remove fixupPluginRules on resolution: https://github.com/gund/eslint-plugin-deprecation/issues/78
+			deprecation: fixupPluginRules(deprecationPlugin),
 		},
 		settings: {
 			"import/resolver": {
@@ -279,6 +282,8 @@ export default ts.config(
 	prettierConfig,
 	...ts.configs.strictTypeChecked,
 	...ts.configs.stylisticTypeChecked,
+	// remove compat on resolution: https://github.com/gund/eslint-plugin-deprecation/issues/78
+	...compat.config(deprecationPlugin.configs.recommended).map(withoutPlugins),
 	// remove compat on resolution: https://github.com/airbnb/javascript/issues/2804
 	...compat
 		.config(airbnbTypescriptConfig)
@@ -336,6 +341,11 @@ export default ts.config(
 	{
 		files: ["**/*.{js,jsx}"],
 		...ts.configs.disableTypeChecked,
+		rules: {
+			// remove compat on resolution: https://github.com/gund/eslint-plugin-deprecation/issues/78
+			"deprecation/deprecation": "off",
+			...ts.configs.disableTypeChecked.rules,
+		},
 	},
 	{
 		files: ["**/scripts/**/*"],

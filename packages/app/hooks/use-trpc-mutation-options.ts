@@ -66,7 +66,7 @@ export const useTrpcMutationOptions = <
 		onSuccess,
 		...rest
 	} = options || {};
-	const trpcContext = trpc.useContext();
+	const trpcUtils = trpc.useUtils();
 	const queryClient = useQueryClient();
 	return React.useMemo(
 		() => ({
@@ -75,7 +75,7 @@ export const useTrpcMutationOptions = <
 					InternalContext<OuterContext, LifecycleContext>,
 					"controllerContext" | "outerContext"
 				> = {
-					controllerContext: { queryClient, trpcContext, trpc },
+					controllerContext: { queryClient, trpcUtils, trpc },
 					// We're sure outerContext exists here (if needed)
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					outerContext: pinnedOuterContext!,
@@ -172,7 +172,7 @@ export const useTrpcMutationOptions = <
 			...rest,
 		}),
 		[
-			trpcContext,
+			trpcUtils,
 			queryClient,
 			pinnedOuterContext,
 			onMutate,

@@ -15,15 +15,15 @@ const update = (controller: Controller) => (updater: UpdateFn<Amount>) =>
 		);
 	}).current;
 
-export const getController = ({ trpcContext }: ControllerContext) => {
-	const controller = trpcContext.receipts.getNonResolvedAmount;
+export const getController = ({ trpcUtils }: ControllerContext) => {
+	const controller = trpcUtils.receipts.getNonResolvedAmount;
 	return {
 		update: (updater: UpdateFn<Amount>) => update(controller)(updater),
 	};
 };
 
-export const getRevertController = ({ trpcContext }: ControllerContext) => {
-	const controller = trpcContext.receipts.getNonResolvedAmount;
+export const getRevertController = ({ trpcUtils }: ControllerContext) => {
+	const controller = trpcUtils.receipts.getNonResolvedAmount;
 	return {
 		update: (updater: UpdateFn<Amount>, revertUpdater: SnapshotFn<Amount>) =>
 			applyUpdateFnWithRevert(update(controller), updater, revertUpdater),

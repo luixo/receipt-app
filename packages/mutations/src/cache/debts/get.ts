@@ -29,8 +29,8 @@ const remove = (controller: Controller, debtId: DebtsId) =>
 		return controller.invalidate({ id: debtId });
 	}).current;
 
-export const getController = ({ trpcContext }: ControllerContext) => {
-	const controller = trpcContext.debts.get;
+export const getController = ({ trpcUtils }: ControllerContext) => {
+	const controller = trpcUtils.debts.get;
 	return {
 		update: (debtId: DebtsId, updater: UpdateFn<Debt>) =>
 			update(controller, debtId)(updater),
@@ -41,8 +41,8 @@ export const getController = ({ trpcContext }: ControllerContext) => {
 	};
 };
 
-export const getRevertController = ({ trpcContext }: ControllerContext) => {
-	const controller = trpcContext.debts.get;
+export const getRevertController = ({ trpcUtils }: ControllerContext) => {
+	const controller = trpcUtils.debts.get;
 	return {
 		update: (
 			debtId: DebtsId,
