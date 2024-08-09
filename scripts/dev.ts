@@ -4,7 +4,8 @@ import { connect } from "ngrok";
 import assert from "node:assert";
 
 const main = async () => {
-	const port = (await findFreePorts(1, { startPort: 3000 }))[0];
+	// remove after closed: https://github.com/samvv/node-find-free-ports/issues/19
+	const port = (await findFreePorts(1, { startPort: 3000, jobCount: 1 }))[0];
 	assert(port);
 	let host = "localhost";
 	const ngrokAuthToken = process.env.NGROK_AUTH_TOKEN;
