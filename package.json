@@ -54,7 +54,7 @@
 	"scripts": {
 		"dev": "dotenv -c -- yarn workspace @ra/scripts dev",
 		"native:dev": "yarn workspace @ra/mobile dev",
-		"web:dev": "yarn workspace @ra/web dev",
+		"web:dev": "dotenv -c -- yarn workspace @ra/web dev",
 		"web:build": "yarn workspace @ra/web build",
 		"web:start": "yarn workspace @ra/web start",
 		"ios:build": "yarn workspace @ra/mobile ios:update-version && yarn workspace @ra/mobile ios:build",
