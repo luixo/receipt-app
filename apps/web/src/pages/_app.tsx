@@ -2,6 +2,7 @@ import React from "react";
 
 import { getCookies } from "cookies-next";
 import type { AppType } from "next/dist/shared/lib/utils";
+import { Inter } from "next/font/google";
 import Head from "next/head";
 import "raf/polyfill";
 
@@ -16,6 +17,7 @@ import { Provider } from "~app/providers/index";
 import { getSSRContextCookieData } from "~app/utils/cookie-data";
 import { applyRemaps } from "~app/utils/nativewind";
 import type { AppPage } from "~utils";
+import { useHtmlFont } from "~web/hooks/use-html-font";
 import { useHydratedMark } from "~web/hooks/use-hydrated-mark";
 import { useLocalCookies } from "~web/hooks/use-local-cookies";
 import { useQueryClientHelper } from "~web/hooks/use-query-client-helper";
@@ -37,6 +39,25 @@ const GlobalHooksComponent: React.FC = () => {
 	useRemovePreloadedCss();
 	return null;
 };
+
+const font = Inter({
+	variable: "--font-sans",
+	adjustFontFallback: true,
+	display: "swap",
+	fallback: [
+		"ui-sans-serif",
+		"system-ui",
+		"sans-serif",
+		'"Apple Color Emoji"',
+		'"Segoe UI Emoji"',
+		'"Segoe UI Symbol"',
+		'"Noto Color Emoji"',
+	],
+	preload: true,
+	style: "normal",
+	subsets: ["cyrillic", "greek", "latin"],
+	weight: ["400", "500", "700"],
+});
 
 type PageProps = Omit<
 	React.ComponentProps<typeof Provider>,
@@ -60,6 +81,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 		}),
 		[baseLinksContext.url, props.searchParams.proxyPort],
 	);
+	useHtmlFont(font.variable);
 	return (
 		<>
 			<Head>
@@ -71,24 +93,26 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 				/>
 				<link rel="icon" href="/favicon.svg" />
 			</Head>
-			<Provider
-				cookiesData={props.cookiesData}
-				linksContext={linksContext}
-				searchParams={props.searchParams}
-				cookiesContext={nextCookieContext}
-				persister={webPersister}
-				useQueryClientKey={usePretendUserClientKey}
-			>
-				<ThemeProvider>
-					<QueryDevToolsProvider>
-						<LayoutComponent>
-							<PageComponent />
-						</LayoutComponent>
-						<GlobalHooksComponent />
-						<Toaster />
-					</QueryDevToolsProvider>
-				</ThemeProvider>
-			</Provider>
+			<main className={`${font.variable} font-sans`}>
+				<Provider
+					cookiesData={props.cookiesData}
+					linksContext={linksContext}
+					searchParams={props.searchParams}
+					cookiesContext={nextCookieContext}
+					persister={webPersister}
+					useQueryClientKey={usePretendUserClientKey}
+				>
+					<ThemeProvider>
+						<QueryDevToolsProvider>
+							<LayoutComponent>
+								<PageComponent />
+							</LayoutComponent>
+							<GlobalHooksComponent />
+							<Toaster />
+						</QueryDevToolsProvider>
+					</ThemeProvider>
+				</Provider>
+			</main>
 		</>
 	);
 };

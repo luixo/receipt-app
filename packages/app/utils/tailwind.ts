@@ -17,6 +17,9 @@ export const getConfig: (config: Config) => Config = (config) =>
 				lg: "1024px",
 				xl: "1240px",
 			},
+			fontFamily: {
+				sans: "var(--font-sans)",
+			},
 			...(config.theme || {}),
 		},
 		...config,
