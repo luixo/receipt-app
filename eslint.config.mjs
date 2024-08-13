@@ -92,7 +92,7 @@ const overridenRules = {
 		"error",
 		getExtraneousDependenciesConfig(undefined, [
 			"vitest.config.ts",
-			"eslint.config.js",
+			"eslint.config.mjs",
 		]),
 	],
 	// Custom order
@@ -339,7 +339,7 @@ export default ts.config(
 		},
 	})),
 	{
-		files: ["**/*.{js,jsx}"],
+		files: ["**/*.{mjs,js,jsx}"],
 		...ts.configs.disableTypeChecked,
 		rules: {
 			// remove compat on resolution: https://github.com/gund/eslint-plugin-deprecation/issues/78

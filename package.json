@@ -1,7 +1,6 @@
 {
 	"name": "receipt-app",
 	"private": true,
-	"type": "module",
 	"workspaces": [
 		"apps/*",
 		"packages/*",
