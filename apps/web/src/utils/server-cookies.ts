@@ -2,6 +2,7 @@ import * as cookie from "cookie";
 import type { IncomingMessage, ServerResponse } from "http";
 import { entries } from "remeda";
 
+import { AUTH_COOKIE } from "~app/utils/auth";
 import type { Cookies } from "~app/utils/cookies";
 
 export const getCookies = (
@@ -27,8 +28,6 @@ export const setCookie = (
 			cookie.serialize(cookieName, cookieValue, opts),
 	);
 };
-
-export const AUTH_COOKIE = "authToken";
 
 export const setAuthCookie = (
 	res: ServerResponse,

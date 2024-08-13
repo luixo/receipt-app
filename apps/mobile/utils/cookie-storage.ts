@@ -1,10 +1,10 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import type { CookieContext } from "~app/providers/ssr-data";
+import type { CookieContextType } from "~app/contexts/cookie-context";
 import type { Cookies } from "~app/utils/cookies";
 
 const COOKIE_PREFIX = "__cookie:";
-export const mobileCookieContext: CookieContext = {
+export const mobileCookieContext: CookieContextType = {
 	setCookie: (key, value) => {
 		void AsyncStorage.setItem(`${COOKIE_PREFIX}${key}`, JSON.stringify(value));
 	},

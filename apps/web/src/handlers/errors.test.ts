@@ -3,12 +3,13 @@ import { TRPC_ERROR_CODES_BY_KEY } from "@trpc/server/rpc";
 import { describe, expect } from "vitest";
 
 import type { AppRouter } from "~app/trpc";
+import { AUTH_COOKIE } from "~app/utils/auth";
 import { createAuthContext } from "~tests/backend/utils/context";
 import { insertAccountWithSession } from "~tests/backend/utils/data";
 import { expectTRPCError } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
 import { t } from "~web/handlers/trpc";
-import { AUTH_COOKIE, serializeCookieHeader } from "~web/utils/server-cookies";
+import { serializeCookieHeader } from "~web/utils/server-cookies";
 
 import { getClientServer } from "./utils.test";
 

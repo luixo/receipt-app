@@ -2,6 +2,7 @@ import React from "react";
 
 import { fromEntries, keys } from "remeda";
 
+import { CookieContext } from "~app/contexts/cookie-context";
 import type { SSRContextData } from "~app/contexts/ssr-context";
 import { SSRContext } from "~app/contexts/ssr-context";
 import type { CookieStates, CookieValues } from "~app/utils/cookie-data";
@@ -25,26 +26,15 @@ type DeleteValues = {
 
 type CookieKey = keyof CookieStates;
 
-type SetCookieOptions = {
-	maxAge?: number;
-};
-
-export type CookieContext = {
-	setCookie: <T>(key: string, value: T, options?: SetCookieOptions) => void;
-	deleteCookie: (key: string) => void;
-};
-
 type Props = {
 	data: SSRContextData;
-	context: CookieContext;
 };
 
 export const SSRDataProvider: React.FC<React.PropsWithChildren<Props>> = ({
 	children,
 	data: { nowTimestamp, values },
-	context,
 }) => {
-	const { setCookie, deleteCookie } = context;
+	const { setCookie, deleteCookie } = React.useContext(CookieContext);
 	const [isMounted, setMounted] = React.useState(false);
 	React.useEffect(() => setMounted(true), []);
 	const [ssrState, setSsrState] = React.useState<CookieValues | undefined>(

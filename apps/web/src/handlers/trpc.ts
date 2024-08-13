@@ -1,6 +1,7 @@
 import { TRPCError, initTRPC } from "@trpc/server";
 import type { IncomingMessage } from "node:http";
 
+import { AUTH_COOKIE } from "~app/utils/auth";
 import {
 	PRETEND_USER_COOKIE_NAME,
 	pretendUserSchema,
@@ -15,10 +16,8 @@ import type { UnauthorizedContext } from "~web/handlers/context";
 import { formatErrorMessage } from "~web/handlers/errors";
 import { sessionIdSchema } from "~web/handlers/validation";
 import {
-	AUTH_COOKIE,
 	getCookie,
 	getCookies,
-	resetAuthCookie,
 	setAuthCookie,
 } from "~web/utils/server-cookies";
 
@@ -98,7 +97,6 @@ export const authProcedure = unauthProcedure.use(async ({ ctx, next }) => {
 		)
 		.executeTakeFirst();
 	if (!session) {
-		resetAuthCookie(ctx.res);
 		throw new TRPCError({
 			code: "UNAUTHORIZED",
 			message: "Session id mismatch",

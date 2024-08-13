@@ -4,12 +4,9 @@ import getConfig from "next/config";
 
 import { DEFAULT_TRPC_ENDPOINT } from "~app/contexts/links-context";
 import type { AppRouter } from "~app/trpc";
+import { AUTH_COOKIE } from "~app/utils/auth";
 import { getLinks } from "~app/utils/trpc";
-import {
-	AUTH_COOKIE,
-	getCookies,
-	serializeCookieHeader,
-} from "~web/utils/server-cookies";
+import { getCookies, serializeCookieHeader } from "~web/utils/server-cookies";
 import { captureSentryError } from "~web/utils/trpc";
 
 export const getSsrHost = (endpoint: string) => {
