@@ -11,7 +11,7 @@ export const NoAuthEffect: React.FC = () => {
 	const { deleteCookie } = React.useContext(CookieContext);
 	const router = useRouter();
 	const accountQuery = trpc.account.get.useQuery(undefined, {
-		retry: (_count, error) => error.data?.code !== "UNAUTHORIZED",
+		retry: (count, error) => count < 2 && error.data?.code !== "UNAUTHORIZED",
 	});
 	React.useEffect(() => {
 		if (
