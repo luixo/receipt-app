@@ -1,5 +1,6 @@
+import { AUTH_COOKIE } from "~app/utils/auth";
 import { authProcedure } from "~web/handlers/trpc";
-import { resetAuthCookie } from "~web/utils/server-cookies";
+import { setCookie } from "~web/utils/cookies";
 
 export const procedure = authProcedure.mutation(async ({ ctx }) => {
 	const { database } = ctx;
@@ -7,5 +8,5 @@ export const procedure = authProcedure.mutation(async ({ ctx }) => {
 		.deleteFrom("sessions")
 		.where("sessionId", "=", ctx.authToken)
 		.executeTakeFirst();
-	resetAuthCookie(ctx.res);
+	setCookie(ctx.res, AUTH_COOKIE, "", { expires: new Date() });
 });

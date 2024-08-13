@@ -15,11 +15,7 @@ import {
 import type { UnauthorizedContext } from "~web/handlers/context";
 import { formatErrorMessage } from "~web/handlers/errors";
 import { sessionIdSchema } from "~web/handlers/validation";
-import {
-	getCookie,
-	getCookies,
-	setAuthCookie,
-} from "~web/utils/server-cookies";
+import { getCookie, setCookie } from "~web/utils/cookies";
 
 export const t = initTRPC.context<UnauthorizedContext>().create({
 	transformer,
@@ -53,7 +49,7 @@ const getPretendAccountEmail = (req: IncomingMessage): string | undefined => {
 	if (req.headers["x-keep-real-auth"]) {
 		return;
 	}
-	const pretendUserString = getCookies(req)[PRETEND_USER_COOKIE_NAME];
+	const pretendUserString = getCookie(req, PRETEND_USER_COOKIE_NAME);
 	if (!pretendUserString) {
 		return;
 	}
@@ -112,7 +108,9 @@ export const authProcedure = unauthProcedure.use(async ({ ctx, next }) => {
 			.set({ expirationTimestamp: nextExpirationTimestamp })
 			.where("sessionId", "=", authToken)
 			.executeTakeFirst();
-		setAuthCookie(ctx.res, authToken, nextExpirationTimestamp);
+		setCookie(ctx.res, AUTH_COOKIE, authToken, {
+			expires: nextExpirationTimestamp,
+		});
 	}
 	let auth = {
 		accountId: session.accountId,

@@ -22,7 +22,7 @@ import { useQueryClientHelper } from "~web/hooks/use-query-client-helper";
 import { useRemovePreloadedCss } from "~web/hooks/use-remove-preloaded-css";
 import { QueryDevToolsProvider } from "~web/providers/client/query-devtools";
 import { ThemeProvider } from "~web/providers/client/theme";
-import { nextCookieContext } from "~web/utils/client-cookies";
+import { nextCookieContext } from "~web/utils/next-cookies";
 import { webPersister } from "~web/utils/persister";
 import { captureSentryError } from "~web/utils/trpc";
 import "~app/global.css";

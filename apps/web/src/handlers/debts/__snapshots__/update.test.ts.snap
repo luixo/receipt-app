@@ -855,6 +855,23 @@ exports[`debts.update > functionality > update multiple properties > locked as t
 }
 `;
 
+exports[`debts.update > functionality > update multiple properties > locked as true > counterparty accepts manually > locked before update 2`] = `
+{
+  "updated": {
+    "debts": {
+      "id:dab8bf0d-e0d7-493c-8680-13c64847a876|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
+        "amount": "-459.5300",
+        "currencyCode": "PLN",
+        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+        "note": "necessitatibus voluptatem nemo",
+        "receiptId": "b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5",
+        "timestamp": "2020-06-01T00:00:00.000Z",
+      },
+    },
+  },
+}
+`;
+
 exports[`debts.update > functionality > update multiple properties > locked as true > counterparty accepts manually > unlocked before update 1`] = `
 {
   "updated": {

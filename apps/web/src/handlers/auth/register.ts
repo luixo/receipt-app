@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
+import { AUTH_COOKIE } from "~app/utils/auth";
 import { passwordSchema, userNameSchema } from "~app/utils/validation";
 import type { AccountsId, UsersId } from "~db";
 import {
@@ -9,8 +10,8 @@ import {
 } from "~web/handlers/auth/utils";
 import { unauthProcedure } from "~web/handlers/trpc";
 import { emailSchema } from "~web/handlers/validation";
+import { setCookie } from "~web/utils/cookies";
 import { generatePasswordData } from "~web/utils/crypto";
-import { setAuthCookie } from "~web/utils/server-cookies";
 
 export const procedure = unauthProcedure
 	.input(
@@ -77,7 +78,7 @@ export const procedure = unauthProcedure
 		ctx.logger.debug(
 			`Registration of account "${input.email.original}" succeed.`,
 		);
-		setAuthCookie(ctx.res, authToken, expirationDate);
+		setCookie(ctx.res, AUTH_COOKIE, authToken, { expires: expirationDate });
 		return {
 			account: { id },
 		};
