@@ -7,7 +7,8 @@ export const options: UseContextedMutationOptions<
 > = {
 	onSuccess:
 		(controllerContext, { name }) =>
-		({ account }, variables) =>
+		async ({ account }, variables) => {
+			await controllerContext.trpcUtils.invalidate();
 			cache.account.update(controllerContext, {
 				get: (controller) =>
 					controller.upsert({
@@ -20,7 +21,8 @@ export const options: UseContextedMutationOptions<
 							role: undefined,
 						},
 					}),
-			}),
+			});
+		},
 	mutateToastOptions: {
 		text: "Registering..",
 	},
