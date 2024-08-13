@@ -9,6 +9,7 @@ import { PageHeader } from "~app/components/page-header";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
+import { noBatchContext } from "~app/utils/trpc";
 import { emailSchema, passwordSchema } from "~app/utils/validation";
 import { Button, Input } from "~components";
 import * as mutations from "~mutations";
@@ -36,6 +37,7 @@ export const LoginScreen: AppPage = () => {
 	const loginMutation = trpc.auth.login.useMutation(
 		useTrpcMutationOptions(mutations.auth.login.options, {
 			onSuccess: () => router.replace("/"),
+			trpc: { context: noBatchContext },
 		}),
 	);
 	const onSubmit = React.useCallback(

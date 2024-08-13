@@ -8,6 +8,7 @@ import { z } from "zod";
 import { PageHeader } from "~app/components/page-header";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
+import { noBatchContext } from "~app/utils/trpc";
 import {
 	emailSchema,
 	passwordSchema,
@@ -44,6 +45,7 @@ export const RegisterScreen: AppPage = () => {
 				name: form.watch("name"),
 			},
 			onSuccess: () => router.replace("/"),
+			trpc: { context: noBatchContext },
 		}),
 	);
 	const onSubmit = React.useCallback(

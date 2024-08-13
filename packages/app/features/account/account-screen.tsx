@@ -11,6 +11,7 @@ import { useSingleInput } from "~app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput, TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
+import { noBatchContext } from "~app/utils/trpc";
 import { userNameSchema } from "~app/utils/validation";
 import { Button, Input, Spinner } from "~components";
 import { AccountIcon } from "~components/icons";
@@ -81,6 +82,7 @@ const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 				await queryClient.resetQueries();
 				router.replace("/");
 			},
+			trpc: { context: noBatchContext },
 		}),
 	);
 	const logout = React.useCallback(

@@ -36,6 +36,15 @@ const mapError =
 			}),
 		);
 
+declare module "@trpc/client" {
+	// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+	interface OperationContext {
+		batch: symbol;
+	}
+}
+
+export const noBatchContext = { batch: Symbol("no-batch") };
+
 export type SearchParams = Record<string, string | string[] | undefined>;
 export type Headers = Partial<Record<string, string>>;
 
@@ -87,10 +96,11 @@ export const getLinks = (
 	const splitLinkInstance = splitLink({
 		condition: (op) => op.input instanceof FormData,
 		true: httpLink({ url, headers }),
-		false: (useBatch ? httpBatchStreamLink : httpLink)({
-			url,
-			headers,
-			transformer,
+		false: splitLink({
+			condition: (op) =>
+				Boolean(useBatch && op.context.batch !== noBatchContext.batch),
+			true: httpBatchStreamLink({ url, headers, transformer }),
+			false: httpLink({ url, headers, transformer }),
 		}),
 	});
 	if (keepError) {

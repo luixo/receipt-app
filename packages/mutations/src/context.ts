@@ -1,4 +1,4 @@
-import type { MutationOptions } from "@tanstack/react-query";
+import type { UseTRPCMutationOptions } from "@trpc/react-query/shared";
 
 import type {
 	TRPCError,
@@ -13,10 +13,10 @@ import type { ControllerContext } from "./types";
 export type TRPCMutationOptions<
 	Path extends TRPCMutationKey,
 	LifecycleContext = unknown,
-> = MutationOptions<
-	TRPCMutationOutput<Path>,
-	TRPCError,
+> = UseTRPCMutationOptions<
 	TRPCMutationInput<Path>,
+	TRPCError,
+	TRPCMutationOutput<Path>,
 	LifecycleContext
 >;
 
