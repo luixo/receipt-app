@@ -1,8 +1,8 @@
 import type React from "react";
 
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
-import { Switch } from "~components";
 import { ResolveIcon } from "~components/icons";
+import { Switch } from "~components/switch";
 
 export const ShowResolvedDebtsOption: React.FC<
 	React.ComponentProps<typeof Switch>

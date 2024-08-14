@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Popover, PopoverContent, PopoverTrigger } from "@nextui-org/react";
+import { Popover, PopoverContent, PopoverTrigger } from "@nextui-org/popover";
 import { DayPicker } from "react-day-picker";
 
 import { MINUTE } from "~utils/time";

@@ -8,7 +8,8 @@ import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
 import { passwordSchema } from "~app/utils/validation";
-import { Button, Input } from "~components";
+import { Button } from "~components/button";
+import { Input } from "~components/input";
 import { options as accountChangePasswordOptions } from "~mutations/account/change-password";
 import type { AppPage } from "~utils/next";
 

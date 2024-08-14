@@ -15,13 +15,17 @@ import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import { Button, Card, CardBody, FileInput, Slider, Text } from "~components";
+import { Button } from "~components/button";
+import { Card, CardBody } from "~components/card";
+import { FileInput } from "~components/file-input";
 import {
 	CheckMark,
 	CloseIcon,
 	SyncIcon,
 	TrashBinIcon,
 } from "~components/icons";
+import { Slider } from "~components/slider";
+import { Text } from "~components/text";
 import type { UsersId } from "~db/models";
 import { options as accountChangeAvatarOptions } from "~mutations/account/change-avatar";
 import {

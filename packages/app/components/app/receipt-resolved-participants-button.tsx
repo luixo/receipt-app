@@ -5,14 +5,10 @@ import { isNonNullish } from "remeda";
 
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { type TRPCQueryOutput, trpc } from "~app/trpc";
-import {
-	Button,
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-	Text,
-} from "~components";
+import { Button } from "~components/button";
 import { CrossWaitIcon, WaitIcon } from "~components/icons";
+import { Popover, PopoverContent, PopoverTrigger } from "~components/popover";
+import { Text } from "~components/text";
 
 type Props = {
 	participants: TRPCQueryOutput<"receipts.get">["participants"];

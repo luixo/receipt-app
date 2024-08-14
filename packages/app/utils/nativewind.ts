@@ -1,6 +1,6 @@
 import { remapProps } from "nativewind";
 
-import { H1, H2, H3, H4 } from "~components";
+import { H1, H2, H3, H4 } from "~components/header";
 
 let applied = false;
 export const applyRemaps = () => {

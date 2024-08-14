@@ -5,7 +5,9 @@ import {
 	useUserAvatarProps,
 } from "~app/components/app/user-avatar";
 import type { TRPCQueryOutput } from "~app/trpc";
-import { Chip, User as RawUser, tv } from "~components";
+import { Chip } from "~components/chip";
+import { User as RawUser } from "~components/user";
+import { tv } from "~components/utils";
 import type { UsersId } from "~db/models";
 
 const wrapper = tv({ base: "text-foreground" });

@@ -8,7 +8,10 @@ import { useSsrFormat } from "~app/hooks/use-ssr-format";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import { Badge, Button, Link, Text } from "~components";
+import { Badge } from "~components/badge";
+import { Button } from "~components/button";
+import { Link } from "~components/link";
+import { Text } from "~components/text";
 import { options as receiptsUpdateOptions } from "~mutations/receipts/update";
 import { round } from "~utils/math";
 

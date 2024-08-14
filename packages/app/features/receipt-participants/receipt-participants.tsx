@@ -10,8 +10,9 @@ import {
 	getItemCalculations,
 	getParticipantSums,
 } from "~app/utils/receipt-item";
-import { Accordion, AccordionItem, Text } from "~components";
+import { Accordion, AccordionItem } from "~components/accordion";
 import { UserIcon } from "~components/icons";
+import { Text } from "~components/text";
 import type { ReceiptsId, UsersId } from "~db/models";
 
 import { AddReceiptParticipantForm } from "./add-receipt-participant-form";

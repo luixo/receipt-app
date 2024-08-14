@@ -3,7 +3,8 @@ import React from "react";
 import { LockedIcon } from "~app/components/locked-icon";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
-import { Button, Tooltip } from "~components";
+import { Button } from "~components/button";
+import { Tooltip } from "~components/tooltip";
 import type { ReceiptsId } from "~db/models";
 import { options as receiptsUpdateOptions } from "~mutations/receipts/update";
 

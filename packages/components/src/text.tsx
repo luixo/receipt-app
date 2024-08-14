@@ -2,7 +2,8 @@ import React from "react";
 import { Text as RawText } from "react-native";
 
 import type { Span } from "@expo/html-elements";
-import { tv } from "@nextui-org/react";
+
+import { tv } from "./utils";
 
 const text = tv({
 	base: "text-foreground m-0 font-sans text-base font-normal leading-6",

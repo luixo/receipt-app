@@ -10,15 +10,11 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
-import {
-	Card,
-	CardBody,
-	CardHeader,
-	Chip,
-	Divider,
-	ScrollShadow,
-	Text,
-} from "~components";
+import { Card, CardBody, CardHeader } from "~components/card";
+import { Chip } from "~components/chip";
+import { Divider } from "~components/divider";
+import { ScrollShadow } from "~components/scroll-shadow";
+import { Text } from "~components/text";
 import type { ReceiptsId, UsersId } from "~db/models";
 import { options as itemParticipantsAddOptions } from "~mutations/item-participants/add";
 import { options as receiptItemsRemoveOptions } from "~mutations/receipt-items/remove";

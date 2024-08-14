@@ -11,7 +11,8 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
 import { noBatchContext } from "~app/utils/trpc";
 import { emailSchema, passwordSchema } from "~app/utils/validation";
-import { Button, Input } from "~components";
+import { Button } from "~components/button";
+import { Input } from "~components/input";
 import { options as authLoginOptions } from "~mutations/auth/login";
 import type { AppPage } from "~utils/next";
 

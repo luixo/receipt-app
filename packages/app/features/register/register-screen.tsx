@@ -14,7 +14,8 @@ import {
 	passwordSchema,
 	userNameSchema,
 } from "~app/utils/validation";
-import { Button, Input } from "~components";
+import { Button } from "~components/button";
+import { Input } from "~components/input";
 import { options as authRegisterOptions } from "~mutations/auth/register";
 import type { AppPage } from "~utils/next";
 

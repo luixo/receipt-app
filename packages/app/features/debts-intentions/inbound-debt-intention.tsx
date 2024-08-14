@@ -5,7 +5,7 @@ import { useRouter } from "solito/navigation";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import { Button, ButtonGroup } from "~components";
+import { Button, ButtonGroup } from "~components/button";
 import { options as debtsAcceptIntentionOptions } from "~mutations/debts/accept-intention";
 
 import { DebtIntention } from "./debt-intention";

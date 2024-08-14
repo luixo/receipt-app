@@ -5,16 +5,11 @@ import { QueryErrorMessage } from "~app/components/error-message";
 import type { TRPCQueryResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { type CurrencyCode, renderCurrencyName } from "~app/utils/currency";
-import {
-	Button,
-	Divider,
-	Modal,
-	ModalBody,
-	ModalContent,
-	ModalHeader,
-	Spinner,
-	Text,
-} from "~components";
+import { Button } from "~components/button";
+import { Divider } from "~components/divider";
+import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
+import { Spinner } from "~components/spinner";
+import { Text } from "~components/text";
 import { MONTH } from "~utils/time";
 
 type LoaderProps = {

@@ -7,20 +7,13 @@ import { SSRContext } from "~app/contexts/ssr-context";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { PRETEND_USER_COOKIE_NAME } from "~app/utils/cookie/pretend-user";
-import {
-	Button,
-	Card,
-	CardBody,
-	Divider,
-	Header,
-	Modal,
-	ModalBody,
-	ModalContent,
-	ModalHeader,
-	Spinner,
-	Tab,
-	Tabs,
-} from "~components";
+import { Button } from "~components/button";
+import { Card, CardBody } from "~components/card";
+import { Divider } from "~components/divider";
+import { Header } from "~components/header";
+import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
+import { Spinner } from "~components/spinner";
+import { Tab, Tabs } from "~components/tabs";
 import type { UsersId } from "~db/models";
 import type { AppPage } from "~utils/next";
 

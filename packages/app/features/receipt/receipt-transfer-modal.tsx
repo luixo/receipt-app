@@ -6,16 +6,11 @@ import { UsersSuggest } from "~app/components/app/users-suggest";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { type TRPCQueryOutput, trpc } from "~app/trpc";
-import {
-	Button,
-	Modal,
-	ModalBody,
-	ModalContent,
-	ModalHeader,
-	Text,
-	Tooltip,
-} from "~components";
+import { Button } from "~components/button";
 import { InfoOutlineIcon, TransferIcon } from "~components/icons";
+import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
+import { Text } from "~components/text";
+import { Tooltip } from "~components/tooltip";
 import type { UsersId } from "~db/models";
 import { options as receiptTransferIntentionsAddOptions } from "~mutations/receipt-transfer-intentions/add";
 import { options as receiptTransferIntentionsRemoveOptions } from "~mutations/receipt-transfer-intentions/remove";

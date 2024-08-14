@@ -7,8 +7,12 @@ import { QueryErrorMessage } from "~app/components/error-message";
 import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import type { TRPCQueryErrorResult, TRPCQueryInput } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import { Button, Link, Overlay, Pagination, Spinner } from "~components";
+import { Button } from "~components/button";
 import { AddIcon } from "~components/icons";
+import { Link } from "~components/link";
+import { Overlay } from "~components/overlay";
+import { Pagination } from "~components/pagination";
+import { Spinner } from "~components/spinner";
 import type { UsersId } from "~db/models";
 import { useStore as useUsersGetPagedStore } from "~queries/users/get-paged";
 

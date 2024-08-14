@@ -9,8 +9,9 @@ import { ReceiptItems } from "~app/features/receipt-items/receipt-items-screen";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import { Spinner, Text } from "~components";
 import { ReceiptIcon } from "~components/icons";
+import { Spinner } from "~components/spinner";
+import { Text } from "~components/text";
 import type { ReceiptsId } from "~db/models";
 import { round } from "~utils/math";
 

@@ -2,7 +2,7 @@ import type React from "react";
 
 import { User } from "~app/components/app/user";
 import type { TRPCQueryOutput } from "~app/trpc";
-import { Link } from "~components";
+import { Link } from "~components/link";
 
 type Props = {
 	user: TRPCQueryOutput<"users.get">;

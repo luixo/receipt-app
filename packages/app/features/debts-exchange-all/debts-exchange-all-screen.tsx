@@ -14,7 +14,8 @@ import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
-import { Divider, Spinner } from "~components";
+import { Divider } from "~components/divider";
+import { Spinner } from "~components/spinner";
 import type { UsersId } from "~db/models";
 import type { AppPage } from "~utils/next";
 

@@ -4,7 +4,7 @@ import { useSingleInput } from "~app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
 import { receiptNameSchema } from "~app/utils/validation";
-import { Input } from "~components";
+import { Input } from "~components/input";
 import type { ReceiptsId } from "~db/models";
 import { options as receiptsUpdateOptions } from "~mutations/receipts/update";
 

@@ -1,14 +1,9 @@
 import React from "react";
 import { View } from "react-native";
 
-import {
-	Divider,
-	Modal,
-	ModalBody,
-	ModalContent,
-	ModalHeader,
-	Text,
-} from "~components";
+import { Divider } from "~components/divider";
+import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
+import { Text } from "~components/text";
 
 import type {
 	DebtParticipant,

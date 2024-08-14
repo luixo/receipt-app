@@ -1,7 +1,8 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Header, tv } from "~components";
+import { Header } from "~components/header";
+import { tv } from "~components/utils";
 
 const wrapper = tv({
 	base: "m-10 gap-4 self-center md:max-w-lg",

@@ -5,7 +5,9 @@ import { z } from "zod";
 import { useSingleInput } from "~app/hooks/use-single-input";
 import { useSsrFormat } from "~app/hooks/use-ssr-format";
 import type { TRPCMutationResult } from "~app/trpc";
-import { Calendar, Input, Text } from "~components";
+import { Calendar } from "~components/calendar";
+import { Input } from "~components/input";
+import { Text } from "~components/text";
 
 type Props = {
 	timestamp: Date;

@@ -4,8 +4,9 @@ import { View } from "react-native";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import { useSsrFormat } from "~app/hooks/use-ssr-format";
 import type { TRPCQueryOutput } from "~app/trpc";
-import { Card, CardBody, Text } from "~components";
+import { Card, CardBody } from "~components/card";
 import { ArrowIcon, SyncIcon } from "~components/icons";
+import { Text } from "~components/text";
 
 type Intentions = TRPCQueryOutput<"debts.getIntentions">;
 

@@ -2,7 +2,7 @@ import React from "react";
 
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
-import { Button } from "~components";
+import { Button } from "~components/button";
 import { LockedIcon, UnlockedIcon } from "~components/icons";
 import type { ReceiptItemsId, ReceiptsId } from "~db/models";
 import { options as receiptItemsUpdateOptions } from "~mutations/receipt-items/update";

@@ -7,8 +7,10 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { partSchema } from "~app/utils/validation";
-import { Button, Input, Text } from "~components";
+import { Button } from "~components/button";
 import { MinusIcon, PlusIcon } from "~components/icons";
+import { Input } from "~components/input";
+import { Text } from "~components/text";
 import type { ReceiptItemsId, ReceiptsId } from "~db/models";
 import { options as itemParticipantsUpdateOptions } from "~mutations/item-participants/update";
 

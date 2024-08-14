@@ -7,17 +7,12 @@ import type {
 } from "@tanstack/react-query";
 
 import type { TRPCError } from "~app/trpc";
-import {
-	Button,
-	Card,
-	CardBody,
-	CardFooter,
-	CardHeader,
-	Divider,
-	Header,
-	Text,
-} from "~components";
+import { Button } from "~components/button";
+import { Card, CardBody, CardFooter, CardHeader } from "~components/card";
+import { Divider } from "~components/divider";
+import { Header } from "~components/header";
 import { WarningIcon } from "~components/icons";
+import { Text } from "~components/text";
 
 type Props = {
 	message: string;

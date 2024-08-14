@@ -4,7 +4,7 @@ import { User } from "~app/components/app/user";
 import { QueryErrorMessage } from "~app/components/error-message";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import { Spinner } from "~components";
+import { Spinner } from "~components/spinner";
 import type { UsersId } from "~db/models";
 
 type InnerProps = {

@@ -2,7 +2,10 @@ import React from "react";
 
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
-import { Button, Card, CardBody, CardHeader, Divider, Text } from "~components";
+import { Button } from "~components/button";
+import { Card, CardBody, CardHeader } from "~components/card";
+import { Divider } from "~components/divider";
+import { Text } from "~components/text";
 import { options as accountResendEmailOptions } from "~mutations/account/resend-email";
 
 export const EmailVerificationCard: React.FC = () => {

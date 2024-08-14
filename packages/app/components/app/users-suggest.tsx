@@ -13,7 +13,7 @@ import {
 	Autocomplete,
 	AutocompleteItem,
 	AutocompleteSection,
-} from "~components";
+} from "~components/autocomplete";
 import type { UsersId } from "~db/models";
 
 const LIMIT = 5;

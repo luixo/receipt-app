@@ -9,7 +9,8 @@ import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import { priceSchema } from "~app/utils/validation";
-import { Input, Text } from "~components";
+import { Input } from "~components/input";
+import { Text } from "~components/text";
 import type { ReceiptsId } from "~db/models";
 import { options as receiptItemsUpdateOptions } from "~mutations/receipt-items/update";
 

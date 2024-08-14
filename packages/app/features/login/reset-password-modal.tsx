@@ -7,16 +7,11 @@ import { z } from "zod";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
 import { emailSchema } from "~app/utils/validation";
-import {
-	Button,
-	Header,
-	Input,
-	Modal,
-	ModalBody,
-	ModalContent,
-	ModalHeader,
-	Text,
-} from "~components";
+import { Button } from "~components/button";
+import { Header } from "~components/header";
+import { Input } from "~components/input";
+import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
+import { Text } from "~components/text";
 import { options as resetPasswordIntentionsAddOptions } from "~mutations/reset-password-intentions/add";
 
 type ResetPasswordForm = {

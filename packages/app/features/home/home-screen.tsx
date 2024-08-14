@@ -2,7 +2,8 @@ import React from "react";
 
 import { useRouter } from "solito/navigation";
 
-import { Spinner, Text } from "~components";
+import { Spinner } from "~components/spinner";
+import { Text } from "~components/text";
 import type { AppPage } from "~utils/next";
 
 export const HomeScreen: AppPage = () => {

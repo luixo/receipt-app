@@ -1,8 +1,9 @@
 import type React from "react";
 
 import type { TRPCQueryOutput } from "~app/trpc";
-import { Button, Link } from "~components";
+import { Button } from "~components/button";
 import { DebtIcon } from "~components/icons";
+import { Link } from "~components/link";
 
 type Receipt = TRPCQueryOutput<"receipts.get">;
 

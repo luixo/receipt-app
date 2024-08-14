@@ -11,7 +11,7 @@ import { PageHeader } from "~app/components/page-header";
 import { useRefs } from "~app/hooks/use-refs";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import { Spinner } from "~components";
+import { Spinner } from "~components/spinner";
 import type { UsersId } from "~db/models";
 
 import { AcceptAllIntentionsButton } from "./accept-all-intentions-button";

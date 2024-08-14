@@ -5,7 +5,7 @@ import { LoadableUser } from "~app/components/app/loadable-user";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import { Button } from "~components";
+import { Button } from "~components/button";
 import { options as receiptTransferIntentionsAcceptOptions } from "~mutations/receipt-transfer-intentions/accept";
 import { options as receiptTransferIntentionsRemoveOptions } from "~mutations/receipt-transfer-intentions/remove";
 

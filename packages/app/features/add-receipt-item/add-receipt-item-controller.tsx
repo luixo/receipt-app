@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Button } from "~components";
+import { Button } from "~components/button";
 import { AddIcon } from "~components/icons";
 import type { ReceiptsId } from "~db/models";
 

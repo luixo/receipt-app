@@ -12,7 +12,8 @@ import { useInputController } from "~app/hooks/use-input-controller";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
 import { emailSchema, userNameSchema } from "~app/utils/validation";
-import { Button, Input } from "~components";
+import { Button } from "~components/button";
+import { Input } from "~components/input";
 import { options as usersAddOptions } from "~mutations/users/add";
 import type { AppPage } from "~utils/next";
 

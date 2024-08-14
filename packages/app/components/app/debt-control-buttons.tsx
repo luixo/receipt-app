@@ -5,7 +5,7 @@ import { DebtIntention } from "~app/features/debts-intentions/debt-intention";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import { Button } from "~components";
+import { Button } from "~components/button";
 import { EyeIcon, EyeSlashIcon, SyncIcon } from "~components/icons";
 import { options as debtsAcceptIntentionOptions } from "~mutations/debts/accept-intention";
 import { options as debtsUpdateOptions } from "~mutations/debts/update";

@@ -8,7 +8,8 @@ import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import type { currencyCodeSchema } from "~app/utils/validation";
-import { Button, Input } from "~components";
+import { Button } from "~components/button";
+import { Input } from "~components/input";
 
 type MinimalForm = {
 	currencyCode: z.infer<typeof currencyCodeSchema>;

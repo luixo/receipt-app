@@ -3,7 +3,10 @@ import { View } from "react-native";
 
 import { usePathname } from "solito/navigation";
 
-import { Badge, Link, Text, tv } from "~components";
+import { Badge } from "~components/badge";
+import { Link } from "~components/link";
+import { Text } from "~components/text";
+import { tv } from "~components/utils";
 
 export type MenuElement = {
 	Icon: React.FC<{ size: number }>;

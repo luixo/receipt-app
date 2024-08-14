@@ -3,8 +3,10 @@ import React from "react";
 import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
 import { useConnectionIntentions } from "~app/hooks/use-connection-intentions";
-import { Badge, Button, Link } from "~components";
+import { Badge } from "~components/badge";
+import { Button } from "~components/button";
 import { AddIcon, LinkIcon, UsersIcon } from "~components/icons";
+import { Link } from "~components/link";
 import type { AppPage } from "~utils/next";
 
 import { Users } from "./users";

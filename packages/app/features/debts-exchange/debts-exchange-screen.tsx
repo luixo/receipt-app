@@ -10,7 +10,9 @@ import { useAggregatedDebts } from "~app/hooks/use-aggregated-debts";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import { Button, Link, Spinner } from "~components";
+import { Button } from "~components/button";
+import { Link } from "~components/link";
+import { Spinner } from "~components/spinner";
 import type { UsersId } from "~db/models";
 import type { AppPage } from "~utils/next";
 

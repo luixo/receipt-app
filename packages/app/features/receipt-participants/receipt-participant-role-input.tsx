@@ -4,20 +4,20 @@ import { View } from "react-native";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
+import { Button } from "~components/button";
 import {
-	Button,
 	Dropdown,
 	DropdownItem,
 	DropdownMenu,
 	DropdownTrigger,
-	Text,
-} from "~components";
+} from "~components/dropdown";
 import {
 	ChevronDown,
 	EditorIcon,
 	OwnerIcon,
 	ViewerIcon,
 } from "~components/icons";
+import { Text } from "~components/text";
 import type { ReceiptsId, UsersId } from "~db/models";
 import { options as receiptParticipantsUpdateOptions } from "~mutations/receipt-participants/update";
 import type { Role } from "~web/handlers/receipts/utils";

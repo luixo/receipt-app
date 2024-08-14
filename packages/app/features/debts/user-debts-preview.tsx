@@ -3,8 +3,10 @@ import type React from "react";
 import { DebtsGroup } from "~app/components/app/debts-group";
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { type TRPCQueryOutput, trpc } from "~app/trpc";
-import { Card, CardBody, Link, tv } from "~components";
+import { Card, CardBody } from "~components/card";
 import { SyncIcon, UnsyncIcon } from "~components/icons";
+import { Link } from "~components/link";
+import { tv } from "~components/utils";
 import type { UsersId } from "~db/models";
 
 const card = tv({

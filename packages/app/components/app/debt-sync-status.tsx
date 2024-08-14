@@ -2,13 +2,14 @@ import type React from "react";
 import { View } from "react-native";
 
 import type { TRPCQueryOutput } from "~app/trpc";
-import { Tooltip, tv } from "~components";
 import {
 	IncomingIcon,
 	OutcomingIcon,
 	SyncIcon,
 	UnsyncIcon,
 } from "~components/icons";
+import { Tooltip } from "~components/tooltip";
+import { tv } from "~components/utils";
 
 const wrapper = tv({
 	base: "flex-row",

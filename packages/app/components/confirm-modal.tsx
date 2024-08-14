@@ -1,14 +1,9 @@
 import React from "react";
 
 import { useBooleanState } from "~app/hooks/use-boolean-state";
-import {
-	Button,
-	Header,
-	Modal,
-	ModalBody,
-	ModalContent,
-	ModalHeader,
-} from "~components";
+import { Button } from "~components/button";
+import { Header } from "~components/header";
+import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
 
 type Props = {
 	action: () => void;

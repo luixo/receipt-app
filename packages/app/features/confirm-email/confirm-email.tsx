@@ -5,7 +5,9 @@ import { Link } from "solito/link";
 import { EmptyCard } from "~app/components/empty-card";
 import { ErrorMessage } from "~app/components/error-message";
 import type { TRPCMutationResult } from "~app/trpc";
-import { Button, Header, Spinner } from "~components";
+import { Button } from "~components/button";
+import { Header } from "~components/header";
+import { Spinner } from "~components/spinner";
 
 type Props = {
 	token?: string;

@@ -9,8 +9,10 @@ import { useAggregatedAllDebts } from "~app/hooks/use-aggregated-all-debts";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import { Button, Link, Spinner } from "~components";
+import { Button } from "~components/button";
 import { AddIcon } from "~components/icons";
+import { Link } from "~components/link";
+import { Spinner } from "~components/spinner";
 
 import { UserDebtsPreview } from "./user-debts-preview";
 

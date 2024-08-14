@@ -11,7 +11,7 @@ import type {
 import { trpc } from "~app/trpc";
 import { getReceiptDebtName } from "~app/utils/receipt";
 import { getParticipantSums } from "~app/utils/receipt-item";
-import { Button } from "~components";
+import { Button } from "~components/button";
 import { InfoIcon, SendIcon, SyncIcon } from "~components/icons";
 import { options as debtsAddOptions } from "~mutations/debts/add";
 import { options as debtsUpdateOptions } from "~mutations/debts/update";

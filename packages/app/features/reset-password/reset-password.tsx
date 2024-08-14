@@ -11,7 +11,10 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { passwordSchema } from "~app/utils/validation";
-import { Button, Header, Input, Spinner } from "~components";
+import { Button } from "~components/button";
+import { Header } from "~components/header";
+import { Input } from "~components/input";
+import { Spinner } from "~components/spinner";
 import { options as authResetPasswordOptions } from "~mutations/auth/reset-password";
 
 type ChangePasswordForm = {

@@ -1,7 +1,9 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Button, Spinner, tv } from "~components";
+import { Button } from "~components/button";
+import { Spinner } from "~components/spinner";
+import { tv } from "~components/utils";
 
 export type Direction = "+" | "-";
 

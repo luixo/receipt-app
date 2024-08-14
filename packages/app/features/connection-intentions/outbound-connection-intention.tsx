@@ -3,8 +3,9 @@ import React from "react";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import { Button, Input } from "~components";
+import { Button } from "~components/button";
 import { UnlinkIcon } from "~components/icons";
+import { Input } from "~components/input";
 import { options as accountConnectionsRemoveOptions } from "~mutations/account-connection-intentions/remove";
 
 type Props = {

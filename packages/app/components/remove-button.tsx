@@ -1,7 +1,7 @@
 import type React from "react";
 
 import { ConfirmModal } from "~app/components/confirm-modal";
-import { Button } from "~components";
+import { Button } from "~components/button";
 import { TrashBin } from "~components/icons";
 
 type Props = {

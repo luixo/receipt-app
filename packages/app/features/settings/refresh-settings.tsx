@@ -2,7 +2,7 @@ import React from "react";
 
 import { useQueryClient } from "@tanstack/react-query";
 
-import { Button } from "~components";
+import { Button } from "~components/button";
 import { RefreshIcon } from "~components/icons";
 
 export const RefreshSettings: React.FC = () => {

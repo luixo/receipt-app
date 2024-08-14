@@ -3,24 +3,22 @@ import React from "react";
 import type { Selection } from "@react-types/shared/src/selection";
 
 import { useBooleanState } from "~app/hooks/use-boolean-state";
+import { Button } from "~components/button";
+import { Divider } from "~components/divider";
 import {
-	Button,
-	Divider,
 	Dropdown,
 	DropdownItem,
 	DropdownMenu,
 	DropdownTrigger,
-	Modal,
-	ModalBody,
-	ModalContent,
-	Text,
-} from "~components";
+} from "~components/dropdown";
 import {
 	ChevronDown,
 	FilterIcon,
 	SortDownIcon,
 	SortUpIcon,
 } from "~components/icons";
+import { Modal, ModalBody, ModalContent } from "~components/modal";
+import { Text } from "~components/text";
 import { useStore as useReceiptsGetPagedStore } from "~queries/receipts/get-paged";
 
 export const FilterButton: React.FC = () => {

@@ -4,7 +4,9 @@ import { View } from "react-native";
 import { ErrorMessage } from "~app/components/error-message";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
-import { Button, Header, Link } from "~components";
+import { Button } from "~components/button";
+import { Header } from "~components/header";
+import { Link } from "~components/link";
 import { options as authVoidAccountOptions } from "~mutations/auth/void-account";
 
 type Props = {

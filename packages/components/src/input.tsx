@@ -1,13 +1,14 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Input as InputRaw } from "@nextui-org/react";
+import { Input as InputRaw } from "@nextui-org/input";
 import type { FieldError } from "react-hook-form";
 
 import type { TRPCMutationResult } from "~app/trpc";
 import { CheckMark, EyeIcon, EyeSlashIcon } from "~components/icons";
 
-import { Button, tv } from "./nextui";
+import { Button } from "./button";
+import { tv } from "./utils";
 
 const input = tv({
 	base: "",

@@ -14,7 +14,8 @@ import {
 	quantitySchema,
 	receiptItemNameSchema,
 } from "~app/utils/validation";
-import { Button, Input } from "~components";
+import { Button } from "~components/button";
+import { Input } from "~components/input";
 import type { ReceiptsId } from "~db/models";
 import { options as receiptItemsAddOptions } from "~mutations/receipt-items/add";
 

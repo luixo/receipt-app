@@ -25,7 +25,8 @@ import {
 	debtNoteSchema,
 	userIdSchema,
 } from "~app/utils/validation";
-import { Button, Input } from "~components";
+import { Button } from "~components/button";
+import { Input } from "~components/input";
 import type { UsersId } from "~db/models";
 import { options as debtsAddOptions } from "~mutations/debts/add";
 import { getToday } from "~utils/date";

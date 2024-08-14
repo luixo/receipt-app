@@ -140,6 +140,10 @@ const overridenRules = {
 				message: `Prefer renaming '${actual.toString()}' to '${expected}'`,
 			})),
 		),
+		{
+			selector: "ExportAllDeclaration",
+			message: "Do not use barrel export, prefer named export",
+		},
 	],
 
 	// Custom devDependencies
@@ -393,6 +397,12 @@ export default ts.config(
 			],
 		},
 	})),
+	{
+		files: [`packages/components/src/*`],
+		rules: {
+			"import/no-extraneous-dependencies": ["off"],
+		},
+	},
 	{
 		files: ["**/*.{mjs,js,jsx}"],
 		...ts.configs.disableTypeChecked,

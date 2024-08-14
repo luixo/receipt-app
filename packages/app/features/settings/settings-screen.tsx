@@ -1,7 +1,9 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Divider, Header, Text } from "~components";
+import { Divider } from "~components/divider";
+import { Header } from "~components/header";
+import { Text } from "~components/text";
 import type { AppPage } from "~utils/next";
 
 import { ColorModeSettings } from "./color-mode-settings";

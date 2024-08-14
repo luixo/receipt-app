@@ -4,7 +4,8 @@ import { EmptyCard } from "~app/components/empty-card";
 import { QueryErrorMessage } from "~app/components/error-message";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import { Header, Spinner } from "~components";
+import { Header } from "~components/header";
+import { Spinner } from "~components/spinner";
 
 import { InboundConnectionIntention } from "./inbound-connection-intention";
 import { OutboundConnectionIntention } from "./outbound-connection-intention";

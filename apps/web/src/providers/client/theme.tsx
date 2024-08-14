@@ -7,7 +7,7 @@ import {
 	useLastColorModeCookie,
 	useSelectedColorModeCookie,
 } from "~app/hooks/use-color-modes";
-import { NextUIProvider } from "~components";
+import { NextUIProvider } from "~components/utils";
 
 export const ThemeProvider: React.FC<React.PropsWithChildren<object>> = ({
 	children,

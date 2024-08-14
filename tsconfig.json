@@ -10,8 +10,7 @@
 		"module": "esnext",
 		"paths": {
 			"~app/*": ["./packages/app/*"],
-			"~components": ["./packages/components/src"],
-			"~components/icons": ["./packages/components/src/icons"],
+			"~components/*": ["./packages/components/src/*"],
 			"~utils/*": ["./packages/utils/src/*"],
 			"~db/*": ["./packages/db/src/*"],
 			"~db/migration/*": ["./packages/db/migration/*"],

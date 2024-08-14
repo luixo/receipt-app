@@ -8,17 +8,15 @@ import { QueryErrorMessage } from "~app/components/error-message";
 import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import type { TRPCQueryErrorResult, TRPCQueryInput } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import {
-	Button,
-	Divider,
-	Header,
-	Link,
-	Overlay,
-	Pagination,
-	Spinner,
-	Text,
-} from "~components";
+import { Button } from "~components/button";
+import { Divider } from "~components/divider";
+import { Header } from "~components/header";
 import { AddIcon } from "~components/icons";
+import { Link } from "~components/link";
+import { Overlay } from "~components/overlay";
+import { Pagination } from "~components/pagination";
+import { Spinner } from "~components/spinner";
+import { Text } from "~components/text";
 import type { ReceiptsId } from "~db/models";
 import {
 	useStore as useReceiptsGetPagedStore,
