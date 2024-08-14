@@ -6,8 +6,8 @@ import type { CurrencyCode } from "~app/utils/currency";
 import type { AccountsId, ReceiptItemsId, ReceiptsId, UsersId } from "~db";
 import { generateAmount } from "~tests/frontend/utils/generators";
 import type { Amount } from "~tests/frontend/utils/generators";
-import { MONTH } from "~utils";
 import { CURRENCY_CODES } from "~utils/currency-data";
+import { MONTH } from "~utils/time";
 
 const getRandomCurrencyCode = (faker: Faker) =>
 	faker.helpers.arrayElement(CURRENCY_CODES);

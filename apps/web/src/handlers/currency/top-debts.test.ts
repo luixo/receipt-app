@@ -8,7 +8,7 @@ import {
 } from "~tests/backend/utils/data";
 import { expectUnauthorizedError } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { MONTH } from "~utils";
+import { MONTH } from "~utils/time";
 import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./top-debts";

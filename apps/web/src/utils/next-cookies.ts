@@ -1,7 +1,7 @@
 import * as cookieNext from "cookies-next";
 
 import type { CookieContextType } from "~app/contexts/cookie-context";
-import { YEAR } from "~utils";
+import { YEAR } from "~utils/time";
 
 export const nextCookieContext: CookieContextType = {
 	setCookie: (key, value, { maxAge = YEAR } = {}) => {

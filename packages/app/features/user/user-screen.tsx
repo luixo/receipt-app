@@ -5,7 +5,7 @@ import { useParams } from "solito/navigation";
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { PageHeader } from "~app/components/page-header";
 import { trpc } from "~app/trpc";
-import type { AppPage } from "~utils";
+import type { AppPage } from "~utils/next";
 
 import { User } from "./user";
 

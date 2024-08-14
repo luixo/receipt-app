@@ -7,8 +7,8 @@ import * as timekeeper from "timekeeper";
 import { beforeAll, beforeEach, inject } from "vitest";
 
 import { getDatabase } from "~db";
-import type { Writeable } from "~utils";
-import { SECOND } from "~utils";
+import { SECOND } from "~utils/time";
+import type { Writeable } from "~utils/types";
 
 import { makeConnectionString } from "./databases/connection";
 import type { appRouter } from "./databases/router";

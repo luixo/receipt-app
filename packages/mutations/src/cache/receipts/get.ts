@@ -8,8 +8,8 @@ import type {
 	TRPCReactUtils,
 } from "~app/trpc";
 import type { ReceiptItemsId, ReceiptsId, UsersId } from "~db";
-import type { ItemWithIndex } from "~utils";
-import { addToArray, removeFromArray, replaceInArray } from "~utils";
+import type { ItemWithIndex } from "~utils/array";
+import { addToArray, removeFromArray, replaceInArray } from "~utils/array";
 
 import type { ControllerContext, SnapshotFn, UpdateFn } from "../../types";
 import {

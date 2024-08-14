@@ -11,7 +11,7 @@ import {
 	getSSRContextCookieData,
 	schemas,
 } from "~app/utils/cookie-data";
-import { updateSetStateAction } from "~utils";
+import { updateSetStateAction } from "~utils/react";
 
 const resolveState = (values: CookieValues) =>
 	fromEntries(keys(schemas).map((key) => [key, values[key]])) as CookieValues;

@@ -10,7 +10,7 @@ import { trpc } from "~app/trpc";
 import { passwordSchema } from "~app/utils/validation";
 import { Button, Input } from "~components";
 import * as mutations from "~mutations";
-import type { AppPage } from "~utils";
+import type { AppPage } from "~utils/next";
 
 type Form = {
 	prevPassword: string;

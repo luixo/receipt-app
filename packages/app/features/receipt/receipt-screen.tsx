@@ -2,7 +2,7 @@ import React from "react";
 
 import { useParams } from "solito/navigation";
 
-import type { AppPage } from "~utils";
+import type { AppPage } from "~utils/next";
 
 import { Receipt } from "./receipt";
 

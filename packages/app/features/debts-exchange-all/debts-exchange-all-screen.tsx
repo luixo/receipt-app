@@ -16,7 +16,7 @@ import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import { Divider, Spinner } from "~components";
 import type { UsersId } from "~db";
-import type { AppPage } from "~utils";
+import type { AppPage } from "~utils/next";
 
 import { CurrenciesGroup } from "./currencies-group";
 import { PlannedDebts } from "./planned-debts";

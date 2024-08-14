@@ -4,7 +4,7 @@ import { useSearchParams } from "solito/navigation";
 
 import { EmptyCard } from "~app/components/empty-card";
 import { PageHeader } from "~app/components/page-header";
-import type { AppPage } from "~utils";
+import type { AppPage } from "~utils/next";
 
 import { VoidAccount } from "./void-account";
 

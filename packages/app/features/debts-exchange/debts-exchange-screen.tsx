@@ -12,7 +12,7 @@ import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { Button, Link, Spinner } from "~components";
 import type { UsersId } from "~db";
-import type { AppPage } from "~utils";
+import type { AppPage } from "~utils/next";
 
 type InnerProps = {
 	userId: UsersId;

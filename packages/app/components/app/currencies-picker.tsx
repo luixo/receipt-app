@@ -15,7 +15,7 @@ import {
 	Spinner,
 	Text,
 } from "~components";
-import { MONTH } from "~utils";
+import { MONTH } from "~utils/time";
 
 type LoaderProps = {
 	query: TRPCQueryResult<"currency.getList">;

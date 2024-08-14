@@ -16,7 +16,7 @@ import { useRemoveTestQueryParams } from "~app/hooks/use-remove-test-query-param
 import { Provider } from "~app/providers/index";
 import { getSSRContextCookieData } from "~app/utils/cookie-data";
 import { applyRemaps } from "~app/utils/nativewind";
-import type { AppPage } from "~utils";
+import type { AppPage } from "~utils/next";
 import { useHtmlFont } from "~web/hooks/use-html-font";
 import { useHydratedMark } from "~web/hooks/use-hydrated-mark";
 import { useLocalCookies } from "~web/hooks/use-local-cookies";

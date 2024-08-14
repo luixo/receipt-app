@@ -18,8 +18,8 @@ import type { CurrencyCode } from "~app/utils/currency";
 import { currencyCodeSchema, receiptNameSchema } from "~app/utils/validation";
 import { Button, Input } from "~components";
 import * as mutations from "~mutations";
-import { getToday } from "~utils";
-import type { AppPage } from "~utils";
+import { getToday } from "~utils/date";
+import type { AppPage } from "~utils/next";
 
 type DateProps = {
 	form: UseFormReturn<Form>;

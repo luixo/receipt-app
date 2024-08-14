@@ -15,7 +15,7 @@ import { trpc } from "~app/trpc";
 import { Button, Divider, Link, Spinner } from "~components";
 import { AddIcon, ExchangeIcon } from "~components/icons";
 import type { UsersId } from "~db";
-import type { AppPage } from "~utils";
+import type { AppPage } from "~utils/next";
 
 import { UserDebtPreview } from "./user-debt-preview";
 

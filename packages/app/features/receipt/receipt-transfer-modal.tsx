@@ -18,7 +18,7 @@ import {
 import { InfoOutlineIcon, TransferIcon } from "~components/icons";
 import type { UsersId } from "~db";
 import * as mutations from "~mutations";
-import { round } from "~utils";
+import { round } from "~utils/math";
 
 type Receipt = TRPCQueryOutput<"receipts.get">;
 

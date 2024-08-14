@@ -7,7 +7,7 @@ import {
 } from "~tests/backend/utils/data";
 import { expectDatabaseDiffSnapshot } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { MINUTE, YEAR } from "~utils";
+import { MINUTE, YEAR } from "~utils/time";
 import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./cleanup";

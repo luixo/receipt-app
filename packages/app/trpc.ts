@@ -24,7 +24,7 @@ import type {
 	FlattenObject,
 	SplitStringByComma,
 	UnionToIntersection,
-} from "~utils";
+} from "~utils/types";
 import type { router } from "~web/handlers";
 
 export type AppRouter = typeof router;

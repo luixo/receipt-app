@@ -5,7 +5,7 @@ import { EmailVerificationCard } from "~app/features/email-verification/email-ve
 import { useConnectionIntentions } from "~app/hooks/use-connection-intentions";
 import { Badge, Button, Link } from "~components";
 import { AddIcon, LinkIcon, UsersIcon } from "~components/icons";
-import type { AppPage } from "~utils";
+import type { AppPage } from "~utils/next";
 
 import { Users } from "./users";
 

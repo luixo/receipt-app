@@ -5,7 +5,7 @@ import type { Persister } from "@tanstack/react-query-persist-client";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 
 import type { TRPCQuery, TRPCQueryKey, TRPCSplitQueryKey } from "~app/trpc";
-import { MONTH } from "~utils";
+import { MONTH } from "~utils/time";
 
 const isKeyEqual = <
 	T1 extends TRPCQueryKey,

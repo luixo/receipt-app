@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import Sharp from "sharp";
 
 import { avatarFormSchema } from "~app/utils/validation";
-import { MAX_AVATAR_BYTESIZE, MAX_AVATAR_SIDE_SIZE } from "~utils";
+import { MAX_AVATAR_BYTESIZE, MAX_AVATAR_SIDE_SIZE } from "~utils/images";
 import { authProcedure } from "~web/handlers/trpc";
 import { getS3Client } from "~web/providers/s3";
 

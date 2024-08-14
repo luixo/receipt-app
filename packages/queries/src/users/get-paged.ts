@@ -1,5 +1,5 @@
 import type { TRPCQueryInput } from "~app/trpc";
-import { updateSetStateAction } from "~utils";
+import { updateSetStateAction } from "~utils/react";
 
 import { createStore } from "../store";
 import type { Setters } from "../types";

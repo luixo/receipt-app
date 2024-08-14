@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
-import { HOUR } from "~utils";
+import { HOUR } from "~utils/time";
 import { sendVerificationEmail } from "~web/handlers/auth/utils";
 import { authProcedure } from "~web/handlers/trpc";
 

@@ -11,8 +11,8 @@ import { createAuthContext } from "~tests/backend/utils/context";
 import { insertAccountWithSession } from "~tests/backend/utils/data";
 import { expectTRPCError } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { wait } from "~utils";
 import { CURRENCY_CODES } from "~utils/currency-data";
+import { wait } from "~utils/promise";
 import type { UnauthorizedContext } from "~web/handlers/context";
 
 export const getRandomCurrencyCode = () =>

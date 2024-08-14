@@ -11,7 +11,7 @@ import type {
 	TRPCMutationOptions,
 	UseContextedMutationOptions,
 } from "~mutations";
-import type { Exact, MaybeAddElementToArray } from "~utils";
+import type { Exact, MaybeAddElementToArray } from "~utils/types";
 
 const getToastArgs = <OC>(
 	internalContext: Pick<InternalContext<OC>, "outerContext">,

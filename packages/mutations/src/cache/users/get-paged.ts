@@ -4,7 +4,7 @@ import { identity } from "remeda";
 
 import type { TRPCQueryInput, TRPCReact, TRPCReactUtils } from "~app/trpc";
 import type { UsersId } from "~db";
-import { addToArray } from "~utils";
+import { addToArray } from "~utils/array";
 
 import type { ControllerContext } from "../../types";
 import { applyWithRevert, getAllInputs, withRef } from "../utils";

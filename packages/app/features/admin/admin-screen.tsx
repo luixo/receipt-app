@@ -22,7 +22,7 @@ import {
 	Tabs,
 } from "~components";
 import type { UsersId } from "~db";
-import type { AppPage } from "~utils";
+import type { AppPage } from "~utils/next";
 
 type ModalProps = {
 	isModalOpen: boolean;

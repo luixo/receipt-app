@@ -1,12 +1,12 @@
 import type { TRPCQueryOutput, TRPCReactUtils } from "~app/trpc";
 import type { DebtsId, UsersId } from "~db";
-import type { ItemWithIndex } from "~utils";
+import type { ItemWithIndex } from "~utils/array";
 import {
 	addToArray,
 	isSameOrder,
 	removeFromArray,
 	replaceInArray,
-} from "~utils";
+} from "~utils/array";
 
 import type { ControllerContext, SnapshotFn, UpdateFn } from "../../types";
 import { applyUpdateFnWithRevert, applyWithRevert, withRef } from "../utils";

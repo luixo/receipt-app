@@ -28,7 +28,7 @@ import {
 	MAX_AVATAR_SIDE_SIZE,
 	convertDataUrlToImageElement,
 	convertFileToDataUrl,
-} from "~utils";
+} from "~utils/images";
 
 const MAX_ZOOM = 5;
 

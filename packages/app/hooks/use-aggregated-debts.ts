@@ -4,7 +4,7 @@ import { entries } from "remeda";
 
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
-import { round } from "~utils";
+import { round } from "~utils/math";
 
 export const useAggregatedDebts = (
 	query: TRPCQuerySuccessResult<"debts.getUser">,

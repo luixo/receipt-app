@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
 import type { AccountsId, SessionsSessionId } from "~db";
-import { DAY } from "~utils";
+import { DAY } from "~utils/time";
 import { generateConfirmEmailEmail } from "~web/email/utils";
 import type { UnauthorizedContext } from "~web/handlers/context";
 import { getEmailClient } from "~web/providers/email";

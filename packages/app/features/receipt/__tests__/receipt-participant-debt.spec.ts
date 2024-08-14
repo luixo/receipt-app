@@ -4,7 +4,7 @@ import assert from "node:assert";
 import { getParticipantSums } from "~app/utils/receipt-item";
 import { expect } from "~tests/frontend/fixtures";
 import { getMutationsByKey } from "~tests/frontend/fixtures/queries";
-import { DAY } from "~utils";
+import { DAY } from "~utils/time";
 
 import {
 	generateDebtsWith,

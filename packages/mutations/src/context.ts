@@ -6,7 +6,7 @@ import type {
 	TRPCMutationKey,
 	TRPCMutationOutput,
 } from "~app/trpc";
-import type { MaybeAddElementToArray } from "~utils";
+import type { MaybeAddElementToArray } from "~utils/types";
 
 import type { ControllerContext } from "./types";
 

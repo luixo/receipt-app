@@ -16,7 +16,7 @@ import {
 } from "~app/utils/validation";
 import { Button, Input } from "~components";
 import * as mutations from "~mutations";
-import type { AppPage } from "~utils";
+import type { AppPage } from "~utils/next";
 
 type RegistrationForm = {
 	email: string;

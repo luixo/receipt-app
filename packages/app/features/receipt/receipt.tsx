@@ -12,7 +12,7 @@ import { trpc } from "~app/trpc";
 import { Spinner, Text } from "~components";
 import { ReceiptIcon } from "~components/icons";
 import type { ReceiptsId } from "~db";
-import { round } from "~utils";
+import { round } from "~utils/math";
 
 import { ReceiptCurrencyInput } from "./receipt-currency-input";
 import { ReceiptDateInput } from "./receipt-date-input";

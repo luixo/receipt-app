@@ -12,7 +12,6 @@
 			"~app/*": ["./packages/app/*"],
 			"~components": ["./packages/components/src"],
 			"~components/icons": ["./packages/components/src/icons"],
-			"~utils": ["./packages/utils/src"],
 			"~utils/*": ["./packages/utils/src/*"],
 			"~db": ["./packages/db/src"],
 			"~db/migration/*": ["./packages/db/migration/*"],

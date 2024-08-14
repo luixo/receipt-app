@@ -10,7 +10,7 @@ import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { Badge, Button, Link, Text } from "~components";
 import * as mutations from "~mutations";
-import { round } from "~utils";
+import { round } from "~utils/math";
 
 type InnerProps = {
 	receipt: TRPCQueryOutput<"receipts.get">;

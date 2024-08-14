@@ -13,7 +13,7 @@ import { omitBy } from "remeda";
 import superjson from "superjson";
 
 import type { AppRouter } from "~app/trpc";
-import { MINUTE } from "~utils";
+import { MINUTE } from "~utils/time";
 
 export const transformer = superjson;
 export type TransformerResult = ReturnType<(typeof transformer)["serialize"]>;

@@ -21,7 +21,7 @@ import {
 } from "~components";
 import type { ReceiptsId, UsersId } from "~db";
 import * as mutations from "~mutations";
-import { round } from "~utils";
+import { round } from "~utils/math";
 
 import { ParticipantChip } from "./participant-chip";
 import { ReceiptItemNameInput } from "./receipt-item-name-input";

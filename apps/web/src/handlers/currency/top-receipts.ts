@@ -1,4 +1,4 @@
-import { MONTH } from "~utils";
+import { MONTH } from "~utils/time";
 import {
 	getForeignReceipts,
 	getOwnReceipts,

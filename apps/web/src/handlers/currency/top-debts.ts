@@ -1,4 +1,4 @@
-import { MONTH } from "~utils";
+import { MONTH } from "~utils/time";
 import { authProcedure } from "~web/handlers/trpc";
 
 export const procedure = authProcedure.query(async ({ ctx }) => {

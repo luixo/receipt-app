@@ -10,7 +10,7 @@ import {
 } from "~tests/backend/utils/expect";
 import type { TestContext } from "~tests/backend/utils/test";
 import { test } from "~tests/backend/utils/test";
-import { MINUTE } from "~utils";
+import { MINUTE } from "~utils/time";
 import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./resend-email";

@@ -6,7 +6,7 @@ import { PageHeader } from "~app/components/page-header";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
 import * as mutations from "~mutations";
-import type { AppPage } from "~utils";
+import type { AppPage } from "~utils/next";
 
 import { ConfirmEmail } from "./confirm-email";
 

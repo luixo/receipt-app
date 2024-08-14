@@ -9,7 +9,7 @@ import type {
 } from "zustand";
 import { createStore as createZustandStore, useStore } from "zustand";
 
-import type { ParametersExceptFirst } from "~utils";
+import type { ParametersExceptFirst } from "~utils/types";
 
 import type { ParsedQuery } from "./types";
 

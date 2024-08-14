@@ -28,8 +28,8 @@ import {
 import { Button, Input } from "~components";
 import type { UsersId } from "~db";
 import * as mutations from "~mutations";
-import { getToday } from "~utils";
-import type { AppPage } from "~utils";
+import { getToday } from "~utils/date";
+import type { AppPage } from "~utils/next";
 
 type Form = {
 	amount: number;

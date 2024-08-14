@@ -18,7 +18,7 @@ import { currencyCodeSchema, currencyRateSchema } from "~app/utils/validation";
 import { Button, Input, Spinner, Text } from "~components";
 import type { UsersId } from "~db";
 import * as mutations from "~mutations";
-import { round } from "~utils";
+import { round } from "~utils/math";
 
 const getDefaultValues = (
 	selectedCurrencyCode: CurrencyCode,

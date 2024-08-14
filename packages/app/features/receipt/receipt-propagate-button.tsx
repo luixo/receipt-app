@@ -14,7 +14,7 @@ import { getParticipantSums } from "~app/utils/receipt-item";
 import { Button } from "~components";
 import { InfoIcon, SendIcon, SyncIcon } from "~components/icons";
 import * as mutations from "~mutations";
-import type { NonNullableField } from "~utils";
+import type { NonNullableField } from "~utils/types";
 
 import { ReceiptDebtSyncInfoModal } from "./receipt-debt-sync-info-modal";
 import {

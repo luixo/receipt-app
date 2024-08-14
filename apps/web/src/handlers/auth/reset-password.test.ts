@@ -15,7 +15,7 @@ import {
 	expectTRPCError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { MINUTE } from "~utils";
+import { MINUTE } from "~utils/time";
 import { t } from "~web/handlers/trpc";
 import { getHash } from "~web/utils/crypto";
 

@@ -1,7 +1,8 @@
 import { entries, mapValues, values } from "remeda";
 
 import type { ReceiptItemsId, ReceiptsId, UsersId } from "~db";
-import { getIndexByString, rotate } from "~utils";
+import { rotate } from "~utils/array";
+import { getIndexByString } from "~utils/hash";
 
 export const getDecimalsPower = (decimalDigits = 2) => 10 ** decimalDigits;
 

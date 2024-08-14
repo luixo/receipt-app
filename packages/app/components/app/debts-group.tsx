@@ -4,7 +4,7 @@ import { View } from "react-native";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import type { CurrencyCode } from "~app/utils/currency";
 import { Text, tv } from "~components";
-import { round } from "~utils";
+import { round } from "~utils/math";
 
 const debt = tv({
 	variants: {

@@ -9,7 +9,7 @@ import {
 	TZ_OFFSET_COOKIE_NAME,
 	getTimezoneOffset,
 } from "~app/utils/cookie/tz-offset";
-import { MINUTE } from "~utils";
+import { MINUTE } from "~utils/time";
 
 export const useSsrFormat = () => {
 	const {

@@ -3,7 +3,7 @@ import React from "react";
 import { useRouter } from "solito/navigation";
 
 import { Spinner, Text } from "~components";
-import type { AppPage } from "~utils";
+import type { AppPage } from "~utils/next";
 
 export const HomeScreen: AppPage = () => {
 	const router = useRouter();

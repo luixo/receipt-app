@@ -4,7 +4,7 @@ import { useSearchParams } from "solito/navigation";
 
 import { PageHeader } from "~app/components/page-header";
 import { trpc } from "~app/trpc";
-import type { AppPage } from "~utils";
+import type { AppPage } from "~utils/next";
 
 import { ResetPassword } from "./reset-password";
 

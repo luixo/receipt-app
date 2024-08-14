@@ -11,7 +11,8 @@ import type {
 	UsersId,
 } from "~db";
 import type { TestContext } from "~tests/backend/utils/test";
-import { YEAR, asFixedSizeArray } from "~utils";
+import { asFixedSizeArray } from "~utils/array";
+import { YEAR } from "~utils/time";
 import type { Role } from "~web/handlers/receipts/utils";
 import { generatePasswordData } from "~web/utils/crypto";
 
