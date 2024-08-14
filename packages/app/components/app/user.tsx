@@ -6,7 +6,7 @@ import {
 } from "~app/components/app/user-avatar";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { Chip, User as RawUser, tv } from "~components";
-import type { UsersId } from "~db";
+import type { UsersId } from "~db/models";
 
 const wrapper = tv({ base: "text-foreground" });
 

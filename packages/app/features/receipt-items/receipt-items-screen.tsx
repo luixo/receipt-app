@@ -8,7 +8,7 @@ import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { Checkbox, Header } from "~components";
 import { ArrowDown } from "~components/icons";
-import type { ReceiptItemsId } from "~db";
+import type { ReceiptItemsId } from "~db/models";
 import { round } from "~utils/math";
 
 import { ReceiptItem } from "./receipt-item";

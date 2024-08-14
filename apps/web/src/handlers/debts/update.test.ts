@@ -3,7 +3,7 @@ import { identity, pick } from "remeda";
 import { assert, describe, expect } from "vitest";
 
 import type { TRPCMutationInput, TRPCMutationOutput } from "~app/trpc";
-import type { AccountsId, UsersId } from "~db";
+import type { AccountsId, UsersId } from "~db/models";
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
 	insertAccount,

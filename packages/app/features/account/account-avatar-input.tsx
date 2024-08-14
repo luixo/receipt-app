@@ -22,7 +22,7 @@ import {
 	SyncIcon,
 	TrashBinIcon,
 } from "~components/icons";
-import type { UsersId } from "~db";
+import type { UsersId } from "~db/models";
 import * as mutations from "~mutations";
 import {
 	MAX_AVATAR_SIDE_SIZE,

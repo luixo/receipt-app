@@ -1,4 +1,4 @@
-import type { Database } from "~db";
+import type { Database } from "~db/types";
 
 const addRoleColumn = async (db: Database) => {
 	await db.schema.alterTable("accounts").addColumn("role", "text").execute();

@@ -12,7 +12,7 @@ import {
 } from "~app/utils/receipt-item";
 import { Accordion, AccordionItem, Text } from "~components";
 import { UserIcon } from "~components/icons";
-import type { ReceiptsId, UsersId } from "~db";
+import type { ReceiptsId, UsersId } from "~db/models";
 
 import { AddReceiptParticipantForm } from "./add-receipt-participant-form";
 import { ReceiptParticipant } from "./receipt-participant";

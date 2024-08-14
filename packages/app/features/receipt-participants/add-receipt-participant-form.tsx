@@ -4,7 +4,7 @@ import { UsersSuggest } from "~app/components/app/users-suggest";
 import { useSelfAccountId } from "~app/hooks/use-self-account-id";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
-import type { ReceiptsId, UsersId } from "~db";
+import type { ReceiptsId, UsersId } from "~db/models";
 import * as mutations from "~mutations";
 
 type Props = {

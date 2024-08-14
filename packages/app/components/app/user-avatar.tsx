@@ -5,7 +5,7 @@ import { getImageProps } from "next/image";
 
 import type { TRPCQueryOutput } from "~app/trpc";
 import { Avatar, tv } from "~components";
-import type { UsersId } from "~db";
+import type { UsersId } from "~db/models";
 import { hslToRgb } from "~utils/color";
 
 const wrapper = tv({

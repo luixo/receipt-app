@@ -1,6 +1,6 @@
 import { Pool } from "pg";
 
-import { getDatabase } from "~db";
+import { getDatabase } from "~db/database";
 import { migrate } from "~db/migration/index";
 
 const isValidTarget = (

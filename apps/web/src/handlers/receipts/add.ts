@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { receiptNameSchema } from "~app/utils/validation";
-import type { ReceiptsId } from "~db";
+import type { ReceiptsId } from "~db/models";
 import { addReceiptParticipants } from "~web/handlers/receipt-participants/utils";
 import { authProcedure } from "~web/handlers/trpc";
 import { currencyCodeSchema, userIdSchema } from "~web/handlers/validation";

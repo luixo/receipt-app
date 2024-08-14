@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import type { UsersId } from "~db";
+import type { UsersId } from "~db/models";
 import { authProcedure } from "~web/handlers/trpc";
 import { limitSchema, offsetSchema } from "~web/handlers/validation";
 

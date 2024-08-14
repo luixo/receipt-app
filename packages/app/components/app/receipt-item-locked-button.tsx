@@ -4,7 +4,7 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
 import { Button } from "~components";
 import { LockedIcon, UnlockedIcon } from "~components/icons";
-import type { ReceiptItemsId, ReceiptsId } from "~db";
+import type { ReceiptItemsId, ReceiptsId } from "~db/models";
 import * as mutations from "~mutations";
 
 type Props = {

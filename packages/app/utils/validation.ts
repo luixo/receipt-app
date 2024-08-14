@@ -2,7 +2,7 @@ import { z } from "zod";
 import { zfd } from "zod-form-data";
 
 import type { CurrencyCode } from "~app/utils/currency";
-import type { AccountsId, UsersId } from "~db";
+import type { AccountsId, UsersId } from "~db/models";
 
 const getLengthMessage = (
 	amount: number,

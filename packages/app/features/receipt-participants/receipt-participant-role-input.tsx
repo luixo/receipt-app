@@ -18,7 +18,7 @@ import {
 	OwnerIcon,
 	ViewerIcon,
 } from "~components/icons";
-import type { ReceiptsId, UsersId } from "~db";
+import type { ReceiptsId, UsersId } from "~db/models";
 import * as mutations from "~mutations";
 import type { Role } from "~web/handlers/receipts/utils";
 

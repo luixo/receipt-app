@@ -1,5 +1,5 @@
 import type { TRPCQueryOutput, TRPCReactUtils } from "~app/trpc";
-import type { AccountsId } from "~db";
+import type { AccountsId } from "~db/models";
 import type { ItemWithIndex } from "~utils/array";
 import { addToArray, removeFromArray, replaceInArray } from "~utils/array";
 

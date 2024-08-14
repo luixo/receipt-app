@@ -1,5 +1,5 @@
-import type { Database } from "~db";
-import { DEBTS_SYNC_INTENTIONS } from "~db";
+import { DEBTS_SYNC_INTENTIONS } from "~db/consts";
+import type { Database } from "~db/types";
 
 export const createDebtsSyncIntentionsTable = async (db: Database) => {
 	await db.schema

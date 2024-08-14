@@ -4,7 +4,7 @@ import { Migrator } from "kysely";
 import * as url from "node:url";
 import * as path from "path";
 
-import type { Database } from "~db";
+import type { Database } from "~db/types";
 
 type MigrateOptions = {
 	database: Database;

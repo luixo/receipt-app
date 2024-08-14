@@ -3,7 +3,7 @@ import { isNonNullish, keys, omitBy } from "remeda";
 import { z } from "zod";
 
 import { debtAmountSchema, debtNoteSchema } from "~app/utils/validation";
-import type { SimpleUpdateObject } from "~db";
+import type { SimpleUpdateObject } from "~db/types";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import { authProcedure } from "~web/handlers/trpc";

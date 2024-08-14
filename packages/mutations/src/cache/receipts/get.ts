@@ -7,7 +7,7 @@ import type {
 	TRPCReact,
 	TRPCReactUtils,
 } from "~app/trpc";
-import type { ReceiptItemsId, ReceiptsId, UsersId } from "~db";
+import type { ReceiptItemsId, ReceiptsId, UsersId } from "~db/models";
 import type { ItemWithIndex } from "~utils/array";
 import { addToArray, removeFromArray, replaceInArray } from "~utils/array";
 

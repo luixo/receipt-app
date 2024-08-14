@@ -10,7 +10,7 @@ import { trpc } from "~app/trpc";
 import { getReceiptDebtName } from "~app/utils/receipt";
 import { Button, Text } from "~components";
 import { ReceiptIcon, SendIcon, SyncIcon, ZeroIcon } from "~components/icons";
-import type { UsersId } from "~db";
+import type { UsersId } from "~db/models";
 import * as mutations from "~mutations";
 
 export const isDebtInSyncWithReceipt = (

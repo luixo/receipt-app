@@ -3,7 +3,7 @@ import type { inferProcedureOutput } from "@trpc/server";
 import type { Test } from "vitest";
 import { test as originalTest } from "vitest";
 
-import type { Database } from "~db";
+import type { Database } from "~db/types";
 import type { AppRouter } from "~tests/backend/databases/router";
 import type { CacheDbOptionsMock } from "~tests/backend/utils/mocks/cache-db";
 import { getCacheDbOptions } from "~tests/backend/utils/mocks/cache-db";

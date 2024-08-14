@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import type { IncomingHttpHeaders } from "node:http";
 
-import type { SessionsSessionId } from "~db";
+import type { SessionsSessionId } from "~db/models";
 import type { TestContext } from "~tests/backend/utils/test";
 import type { UnauthorizedContext } from "~web/handlers/context";
 import { createContext as createContextRaw } from "~web/handlers/context";

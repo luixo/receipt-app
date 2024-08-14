@@ -4,7 +4,7 @@ import { LoadableUser } from "~app/components/app/loadable-user";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import type { ReceiptItemsId, ReceiptsId } from "~db";
+import type { ReceiptItemsId, ReceiptsId } from "~db/models";
 import * as mutations from "~mutations";
 
 type Props = {

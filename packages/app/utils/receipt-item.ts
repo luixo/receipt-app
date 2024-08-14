@@ -1,6 +1,6 @@
 import { entries, mapValues, values } from "remeda";
 
-import type { ReceiptItemsId, ReceiptsId, UsersId } from "~db";
+import type { ReceiptItemsId, ReceiptsId, UsersId } from "~db/models";
 import { rotate } from "~utils/array";
 import { getIndexByString } from "~utils/hash";
 

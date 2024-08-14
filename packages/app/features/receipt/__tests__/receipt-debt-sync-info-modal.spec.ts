@@ -1,7 +1,7 @@
 import assert from "node:assert";
 
 import { getParticipantSums } from "~app/utils/receipt-item";
-import type { UsersId } from "~db";
+import type { UsersId } from "~db/models";
 import { expect } from "~tests/frontend/fixtures";
 
 import { test } from "./receipt-debt-sync-info-modal.utils";

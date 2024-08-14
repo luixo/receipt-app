@@ -9,7 +9,7 @@ import type {
 	ReceiptsId,
 	SessionsSessionId,
 	UsersId,
-} from "~db";
+} from "~db/models";
 import type { TestContext } from "~tests/backend/utils/test";
 import { asFixedSizeArray } from "~utils/array";
 import { YEAR } from "~utils/time";

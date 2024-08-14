@@ -3,7 +3,7 @@ import { describe, expect } from "vitest";
 
 import type { TRPCQueryInput } from "~app/trpc";
 import { MAX_LIMIT, MAX_OFFSET } from "~app/utils/validation";
-import type { AccountsId, UsersId } from "~db";
+import type { AccountsId, UsersId } from "~db/models";
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
 	insertAccount,

@@ -16,7 +16,7 @@ import {
 	Tooltip,
 } from "~components";
 import { InfoOutlineIcon, TransferIcon } from "~components/icons";
-import type { UsersId } from "~db";
+import type { UsersId } from "~db/models";
 import * as mutations from "~mutations";
 import { round } from "~utils/math";
 

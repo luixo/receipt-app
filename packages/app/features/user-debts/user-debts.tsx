@@ -14,7 +14,7 @@ import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { Button, Divider, Link, Spinner } from "~components";
 import { AddIcon, ExchangeIcon } from "~components/icons";
-import type { UsersId } from "~db";
+import type { UsersId } from "~db/models";
 
 import { UserDebtPreview } from "./user-debt-preview";
 

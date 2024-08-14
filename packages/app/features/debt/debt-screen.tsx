@@ -21,7 +21,7 @@ import type { CurrencyCode } from "~app/utils/currency";
 import { debtAmountSchema, debtNoteSchema } from "~app/utils/validation";
 import { Button, Input, Link, Spinner } from "~components";
 import { ReceiptIcon } from "~components/icons";
-import type { ReceiptsId } from "~db";
+import type { ReceiptsId } from "~db/models";
 import * as mutations from "~mutations";
 import type { AppPage } from "~utils/next";
 

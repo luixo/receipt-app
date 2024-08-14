@@ -7,7 +7,7 @@ import { trpc } from "~app/trpc";
 import { emailSchema } from "~app/utils/validation";
 import { Button, Input, Spinner } from "~components";
 import { LinkIcon, TrashBinIcon, UnlinkIcon } from "~components/icons";
-import type { AccountsId } from "~db";
+import type { AccountsId } from "~db/models";
 import * as mutations from "~mutations";
 
 type Props = {

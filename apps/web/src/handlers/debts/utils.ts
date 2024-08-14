@@ -1,6 +1,7 @@
 import { isNonNullish } from "remeda";
 
-import type { Database, DebtsId, SimpleInsertObject } from "~db";
+import type { DebtsId } from "~db/models";
+import type { Database, SimpleInsertObject } from "~db/types";
 
 export const upsertAutoAcceptedDebts = async (
 	database: Database,

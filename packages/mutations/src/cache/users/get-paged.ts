@@ -3,7 +3,7 @@ import { getQueryKey } from "@trpc/react-query";
 import { identity } from "remeda";
 
 import type { TRPCQueryInput, TRPCReact, TRPCReactUtils } from "~app/trpc";
-import type { UsersId } from "~db";
+import type { UsersId } from "~db/models";
 import { addToArray } from "~utils/array";
 
 import type { ControllerContext } from "../../types";

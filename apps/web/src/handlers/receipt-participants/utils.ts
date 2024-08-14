@@ -2,14 +2,12 @@ import { TRPCError } from "@trpc/server";
 import type { Selection } from "kysely";
 import type { z } from "zod";
 
+import type { AccountsId, ReceiptsId, UsersId } from "~db/models";
 import type {
-	AccountsId,
 	Database,
 	ReceiptsDatabase,
-	ReceiptsId,
 	ReceiptsSelectExpression,
-	UsersId,
-} from "~db";
+} from "~db/types";
 import type { assignableRoleSchema } from "~web/handlers/validation";
 
 export const getReceiptParticipant = <

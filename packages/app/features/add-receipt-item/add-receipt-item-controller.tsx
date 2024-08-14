@@ -2,7 +2,7 @@ import React from "react";
 
 import { Button } from "~components";
 import { AddIcon } from "~components/icons";
-import type { ReceiptsId } from "~db";
+import type { ReceiptsId } from "~db/models";
 
 import { AddReceiptItemForm } from "./add-receipt-item-form";
 

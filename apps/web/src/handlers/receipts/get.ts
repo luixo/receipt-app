@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
 import { z } from "zod";
 
-import type { AccountsId, DebtsId, ReceiptsId, UsersId } from "~db";
+import type { AccountsId, DebtsId, ReceiptsId, UsersId } from "~db/models";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import type { Role } from "~web/handlers/receipts/utils";

@@ -4,8 +4,8 @@ import { isNonNullish } from "remeda";
 import { z } from "zod";
 
 import { debtAmountSchema, debtNoteSchema } from "~app/utils/validation";
-import { DEBTS } from "~db";
-import type { DebtsId } from "~db";
+import { DEBTS } from "~db/consts";
+import type { DebtsId } from "~db/models";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import { authProcedure } from "~web/handlers/trpc";

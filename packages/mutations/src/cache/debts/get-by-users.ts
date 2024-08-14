@@ -1,6 +1,6 @@
 import type { TRPCQueryOutput, TRPCReactUtils } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
-import type { UsersId } from "~db";
+import type { UsersId } from "~db/models";
 import { upsertInArray } from "~utils/array";
 
 import type { ControllerContext, SnapshotFn, UpdateFn } from "../../types";

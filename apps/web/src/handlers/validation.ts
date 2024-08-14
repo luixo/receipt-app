@@ -8,7 +8,7 @@ import type {
 	ReceiptsId,
 	SessionsSessionId,
 	UsersId,
-} from "~db";
+} from "~db/models";
 import { isCurrencyCode } from "~utils/currency-data";
 
 export const offsetSchema = z.number().int().gte(0).max(MAX_OFFSET);

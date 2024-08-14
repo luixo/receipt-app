@@ -1,5 +1,5 @@
 import type { TRPCQueryOutput, TRPCReactUtils } from "~app/trpc";
-import type { DebtsId, UsersId } from "~db";
+import type { DebtsId, UsersId } from "~db/models";
 import type { ItemWithIndex } from "~utils/array";
 import {
 	addToArray,

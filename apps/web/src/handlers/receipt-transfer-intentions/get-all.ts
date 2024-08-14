@@ -1,7 +1,7 @@
 import { sql } from "kysely";
 
 import type { CurrencyCode } from "~app/utils/currency";
-import type { ReceiptsId, UsersId } from "~db";
+import type { ReceiptsId, UsersId } from "~db/models";
 import { authProcedure } from "~web/handlers/trpc";
 
 type ReceiptLocal = {

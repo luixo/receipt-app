@@ -3,7 +3,12 @@ import { isNonNullish } from "remeda";
 
 import type { TRPCQueryOutput } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
-import type { AccountsId, ReceiptItemsId, ReceiptsId, UsersId } from "~db";
+import type {
+	AccountsId,
+	ReceiptItemsId,
+	ReceiptsId,
+	UsersId,
+} from "~db/models";
 import { generateAmount } from "~tests/frontend/utils/generators";
 import type { Amount } from "~tests/frontend/utils/generators";
 import { CURRENCY_CODES } from "~utils/currency-data";

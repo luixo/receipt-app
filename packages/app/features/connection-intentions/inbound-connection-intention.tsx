@@ -6,7 +6,7 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { Button, Text } from "~components";
-import type { UsersId } from "~db";
+import type { UsersId } from "~db/models";
 import * as mutations from "~mutations";
 
 type Props = {

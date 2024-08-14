@@ -7,7 +7,7 @@ import type {
 	TRPCReact,
 	TRPCReactUtils,
 } from "~app/trpc";
-import type { UsersId } from "~db";
+import type { UsersId } from "~db/models";
 
 import type { ControllerContext, SnapshotFn, UpdateFn } from "../../types";
 import {

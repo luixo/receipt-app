@@ -16,7 +16,7 @@ import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import { currencyCodeSchema, currencyRateSchema } from "~app/utils/validation";
 import { Button, Input, Spinner, Text } from "~components";
-import type { UsersId } from "~db";
+import type { UsersId } from "~db/models";
 import * as mutations from "~mutations";
 import { round } from "~utils/math";
 

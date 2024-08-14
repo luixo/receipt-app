@@ -6,7 +6,7 @@ import { Pool } from "pg";
 import * as timekeeper from "timekeeper";
 import { beforeAll, beforeEach, inject } from "vitest";
 
-import { getDatabase } from "~db";
+import { getDatabase } from "~db/database";
 import { SECOND } from "~utils/time";
 import type { Writeable } from "~utils/types";
 

@@ -1,5 +1,5 @@
-import type { Database } from "~db";
-import { USERS } from "~db";
+import { USERS } from "~db/consts";
+import type { Database } from "~db/types";
 
 const addUsersOwnerAccountIdIndex = async (db: Database) => {
 	await db.schema

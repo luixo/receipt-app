@@ -1,4 +1,4 @@
-import type { ReceiptsId, UsersId } from "~db";
+import type { ReceiptsId, UsersId } from "~db/models";
 import { test as originalTest } from "~tests/frontend/fixtures";
 
 import type {

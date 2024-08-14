@@ -6,7 +6,7 @@ import {
 	quantitySchema,
 	receiptItemNameSchema,
 } from "~app/utils/validation";
-import type { SimpleUpdateObject } from "~db";
+import type { SimpleUpdateObject } from "~db/types";
 import { getAccessRole } from "~web/handlers/receipts/utils";
 import { authProcedure } from "~web/handlers/trpc";
 import { receiptItemIdSchema } from "~web/handlers/validation";

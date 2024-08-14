@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { userNameSchema } from "~app/utils/validation";
-import type { UsersId } from "~db";
+import type { UsersId } from "~db/models";
 import { authProcedure } from "~web/handlers/trpc";
 
 export const procedure = authProcedure

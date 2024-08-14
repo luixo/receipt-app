@@ -5,7 +5,7 @@ import { LoadableUser } from "~app/components/app/loadable-user";
 import { type TRPCQueryOutput, trpc } from "~app/trpc";
 import { Card, CardBody, Link, tv } from "~components";
 import { SyncIcon, UnsyncIcon } from "~components/icons";
-import type { UsersId } from "~db";
+import type { UsersId } from "~db/models";
 
 const card = tv({
 	base: "flex flex-row flex-wrap items-end justify-between gap-4 md:flex-row md:items-center",

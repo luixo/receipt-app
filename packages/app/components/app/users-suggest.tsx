@@ -14,7 +14,7 @@ import {
 	AutocompleteItem,
 	AutocompleteSection,
 } from "~components";
-import type { UsersId } from "~db";
+import type { UsersId } from "~db/models";
 
 const LIMIT = 5;
 

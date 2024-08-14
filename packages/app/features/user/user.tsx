@@ -12,7 +12,7 @@ import { trpc } from "~app/trpc";
 import { userNameSchema } from "~app/utils/validation";
 import { Button, Input, Spinner } from "~components";
 import { TrashBin } from "~components/icons";
-import type { UsersId } from "~db";
+import type { UsersId } from "~db/models";
 import * as mutations from "~mutations";
 
 import { UserConnectionInput } from "./user-connection-input";

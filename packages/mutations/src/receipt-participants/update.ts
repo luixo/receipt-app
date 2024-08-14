@@ -1,5 +1,5 @@
 import type { TRPCMutationInput, TRPCQueryOutput } from "~app/trpc";
-import type { UsersId } from "~db";
+import type { UsersId } from "~db/models";
 
 import * as cache from "../cache";
 import type { UseContextedMutationOptions } from "../context";

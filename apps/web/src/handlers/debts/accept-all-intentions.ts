@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
-import type { DebtsId } from "~db";
+import type { DebtsId } from "~db/models";
 import type { NonNullableField } from "~utils/types";
 import { authProcedure } from "~web/handlers/trpc";
 

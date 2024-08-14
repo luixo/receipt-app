@@ -3,7 +3,7 @@ import React from "react";
 import { DateInput } from "~app/components/date-input";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
-import type { ReceiptsId } from "~db";
+import type { ReceiptsId } from "~db/models";
 import * as mutations from "~mutations";
 
 type Props = {

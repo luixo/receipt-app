@@ -1,5 +1,5 @@
-import type { Database } from "~db";
-import { SESSIONS } from "~db";
+import { SESSIONS } from "~db/consts";
+import type { Database } from "~db/types";
 
 const addSessionsAccountIdIndex = async (db: Database) => {
 	await db.schema.dropIndex(SESSIONS.INDEXES.SESSION_ID).execute();

@@ -4,7 +4,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import * as crypto from "node:crypto";
 import { v4 } from "uuid";
 
-import { getDatabase } from "~db";
+import { getDatabase } from "~db/database";
 import type { TestContext } from "~tests/backend/utils/test";
 import type { authProcedure } from "~web/handlers/trpc";
 import type { CacheDbOptions } from "~web/providers/cache-db";

@@ -8,7 +8,7 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import { Text } from "~components";
-import type { ReceiptsId } from "~db";
+import type { ReceiptsId } from "~db/models";
 import * as mutations from "~mutations";
 
 type Props = {

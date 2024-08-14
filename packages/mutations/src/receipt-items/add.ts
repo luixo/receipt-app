@@ -1,4 +1,4 @@
-import type { ReceiptItemsId, ReceiptsId } from "~db";
+import type { ReceiptItemsId, ReceiptsId } from "~db/models";
 
 import * as cache from "../cache";
 import type { UseContextedMutationOptions } from "../context";

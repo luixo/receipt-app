@@ -3,7 +3,7 @@ import { z } from "zod";
 
 import { AUTH_COOKIE } from "~app/utils/auth";
 import { passwordSchema, userNameSchema } from "~app/utils/validation";
-import type { AccountsId, UsersId } from "~db";
+import type { AccountsId, UsersId } from "~db/models";
 import {
 	createAuthorizationSession,
 	sendVerificationEmail,

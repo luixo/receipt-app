@@ -19,7 +19,7 @@ import {
 	ScrollShadow,
 	Text,
 } from "~components";
-import type { ReceiptsId, UsersId } from "~db";
+import type { ReceiptsId, UsersId } from "~db/models";
 import * as mutations from "~mutations";
 import { round } from "~utils/math";
 

@@ -5,7 +5,7 @@ import {
 	MAX_RECEIPT_ITEM_NAME_LENGTH,
 	MIN_RECEIPT_ITEM_NAME_LENGTH,
 } from "~app/utils/validation";
-import type { ReceiptItemsId } from "~db";
+import type { ReceiptItemsId } from "~db/models";
 import { createAuthContext } from "~tests/backend/utils/context";
 import { insertAccountWithSession } from "~tests/backend/utils/data";
 import { expectTRPCError } from "~tests/backend/utils/expect";

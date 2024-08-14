@@ -1,5 +1,5 @@
 import type { CurrencyCode } from "~app/utils/currency";
-import type { UsersId } from "~db";
+import type { UsersId } from "~db/models";
 import { authProcedure } from "~web/handlers/trpc";
 
 export const procedure = authProcedure.query(async ({ ctx }) => {

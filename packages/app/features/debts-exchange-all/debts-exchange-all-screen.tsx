@@ -15,7 +15,7 @@ import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import { Divider, Spinner } from "~components";
-import type { UsersId } from "~db";
+import type { UsersId } from "~db/models";
 import type { AppPage } from "~utils/next";
 
 import { CurrenciesGroup } from "./currencies-group";

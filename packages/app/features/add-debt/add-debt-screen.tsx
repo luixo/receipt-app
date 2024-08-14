@@ -26,7 +26,7 @@ import {
 	userIdSchema,
 } from "~app/utils/validation";
 import { Button, Input } from "~components";
-import type { UsersId } from "~db";
+import type { UsersId } from "~db/models";
 import * as mutations from "~mutations";
 import { getToday } from "~utils/date";
 import type { AppPage } from "~utils/next";

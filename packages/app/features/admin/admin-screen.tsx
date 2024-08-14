@@ -21,7 +21,7 @@ import {
 	Tab,
 	Tabs,
 } from "~components";
-import type { UsersId } from "~db";
+import type { UsersId } from "~db/models";
 import type { AppPage } from "~utils/next";
 
 type ModalProps = {

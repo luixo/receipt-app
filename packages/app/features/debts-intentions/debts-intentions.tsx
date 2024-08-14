@@ -12,7 +12,7 @@ import { useRefs } from "~app/hooks/use-refs";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { Spinner } from "~components";
-import type { UsersId } from "~db";
+import type { UsersId } from "~db/models";
 
 import { AcceptAllIntentionsButton } from "./accept-all-intentions-button";
 import { InboundDebtIntention } from "./inbound-debt-intention";
