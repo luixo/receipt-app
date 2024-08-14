@@ -1,4 +1,4 @@
-import type { TestFixture } from "@playwright/test";
+import type { TestType } from "@playwright/test";
 import { test as base, expect } from "@playwright/test";
 
 import { apiMixin } from "./fixtures/api";
@@ -30,8 +30,12 @@ export const test = queriesMixin(
 );
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-export type ExtractFixture<F extends TestFixture<unknown, any>> =
-	F extends TestFixture<infer R, any> ? R : never;
+export type ExtractFixture<F extends TestType<any, any>> = F extends TestType<
+	infer R,
+	infer W
+>
+	? R & W
+	: never;
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
 export { expect };

@@ -71,7 +71,7 @@ const functionalProject: Project = {
 		...COMMON_USE,
 		...devices["Desktop Chrome"],
 	},
-	testMatch: /.*(?<!visual)\.spec\.ts/,
+	testMatch: /.*(?<!visual|utils)\.spec\.ts/,
 };
 
 const localDir = path.dirname(url.fileURLToPath(import.meta.url));

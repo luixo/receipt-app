@@ -6,7 +6,7 @@
 	},
 	"devDependencies": {
 		"@faker-js/faker": "^8.0.2",
-		"@playwright/test": "^1.40.1",
+		"@playwright/test": "^1.46.0",
 		"@ra/app": "workspace:*",
 		"@ra/test-utils": "workspace:*",
 		"@ra/utils": "workspace:*",
@@ -16,7 +16,7 @@
 		"async-await-queue": "^2.1.4",
 		"deep-object-diff": "^1.1.9",
 		"join-images": "^1.1.5",
-		"playwright": "^1.40.1",
+		"playwright": "^1.46.0",
 		"sharp": "^0.32.6",
 		"superjson": "^1.13.1",
 		"timekeeper": "^2.3.1",

@@ -104,21 +104,12 @@ const getQueryCacheFromPage = (page: Page, timeout: number) =>
 	);
 
 const flattenError = (error: unknown) => {
-	if (typeof error === "object" && error && "shape" in error) {
-		const trpcError = error as TRPCClientErrorLike<AppRouter>;
+	if (typeof error === "object" && error && "message" in error) {
+		const clientLikeError = error as TRPCClientErrorLike<AppRouter>;
 		return {
-			type: "TRPCError",
-			message: trpcError.message,
+			type: "TRPCClientError",
+			message: clientLikeError.message,
 		};
-	}
-	if (typeof error === "string") {
-		const clientErrorMatch = /TRPCClientError: (.*)\n/.exec(error);
-		if (clientErrorMatch) {
-			return {
-				type: "TRPCClientError",
-				message: clientErrorMatch[1],
-			};
-		}
 	}
 	return error;
 };
@@ -244,7 +235,7 @@ const withNoPlatformPath = (testInfo: TestInfo, fn: () => void) => {
 	const originalSnapshotPath = testInfo.snapshotPath;
 	testInfo.snapshotPath = (...snapshotPath) =>
 		originalSnapshotPath
-			.apply(testInfo, snapshotPath)
+			.call(testInfo, ...snapshotPath)
 			.replace(`-${process.platform}`, "");
 	fn();
 	testInfo.snapshotPath = originalSnapshotPath;

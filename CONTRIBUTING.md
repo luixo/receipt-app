@@ -103,19 +103,19 @@ Visual regression tests are run in a docker image (to be consistent on CI enviro
 1. Run a Playwright docker image with port 3000 exposed and current directory linked as `/work`
 
 ```sh
-docker run --rm -v ${PWD}:/work/ -w /work/ -it -p 3000:3000 --entrypoint /bin/bash mcr.microsoft.com/playwright:v1.40.1-jammy
+docker run --rm -v ${PWD}:/work/ -w /work/ -it -p 3000:3000 --entrypoint /bin/bash mcr.microsoft.com/playwright:v1.46.0-jammy
 ```
 
-2. (in Docker) Enable yarn v3
+2. (in Docker) Install platform-specific binaries (until `sharp` [utilize](https://github.com/lovell/sharp/issues/3750) `supportedArchitectures` in `.yarnrc.yml`)
+
+```sh
+corepack yarn
+```
+
+3. (in Docker) Enable corepack
 
 ```sh
 corepack enable
-```
-
-3. (in Docker) Install platform-specific binaries (until `sharp` [utilize](https://github.com/lovell/sharp/issues/3750) `supportedArchitectures` in `.yarnrc.yml`)
-
-```sh
-yarn install
 ```
 
 4a. (in Docker) Run tests
@@ -137,7 +137,7 @@ PW_SERVER=true yarn frontend:test --update-snapshots
 Please, build an app on host machine inbefore (step 0 from above).
 
 ```sh
-docker run --rm -v ${PWD}:/work/ -w /work/ -it -p 3000:3000 --entrypoint /bin/bash mcr.microsoft.com/playwright:v1.40.1-jammy -c "corepack enable && yarn install && PW_SERVER=true yarn frontend:test --update-snapshots"
+docker run --rm -v ${PWD}:/work/ -w /work/ -it -p 3000:3000 --entrypoint /bin/bash mcr.microsoft.com/playwright:v1.46.0-jammy -c "corepack yarn && corepack enable && PW_SERVER=true yarn frontend:test --update-snapshots"
 ```
 
 ### Tests structure
