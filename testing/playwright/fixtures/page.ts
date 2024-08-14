@@ -47,6 +47,10 @@ export const pageMixin = createMixin<
 			const result = await originalGoto(getProxyUrl(url, api), options);
 			await fakeBrowserDate(page);
 			await page.locator("hydrated").waitFor({ state: "attached" });
+			// Remove rounding for dialogs to make screenshots more stable
+			await page.addStyleTag({
+				content: '[role="dialog"] { border-radius: 0 !important }',
+			});
 			return result;
 		};
 
