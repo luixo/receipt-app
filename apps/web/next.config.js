@@ -21,9 +21,6 @@ const s3Parts = getS3Parts();
 /** @type {import('next').NextConfig} */
 const nextConfig = {
 	reactStrictMode: true,
-	serverRuntimeConfig: {
-		port: process.env.PORT,
-	},
 	eslint: {
 		ignoreDuringBuilds: true,
 	},

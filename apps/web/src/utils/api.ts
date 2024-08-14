@@ -1,6 +1,5 @@
 import { createTRPCClient } from "@trpc/client";
-import type { NextApiRequest, NextConfig } from "next";
-import getConfig from "next/config";
+import type { NextApiRequest } from "next";
 
 import { DEFAULT_TRPC_ENDPOINT } from "~app/contexts/links-context";
 import type { AppRouter } from "~app/trpc";
@@ -10,12 +9,18 @@ import { getCookie } from "~web/utils/cookies";
 import { captureSentryError } from "~web/utils/trpc";
 
 export const getSsrHost = (endpoint: string) => {
-	const nextConfig = getConfig() as NextConfig;
-	const ssrPort =
-		(nextConfig.serverRuntimeConfig?.port as number | undefined) ?? 0;
-	const host = process.env.VERCEL_URL || `localhost:${ssrPort}`;
-	const secure = Boolean(process.env.VERCEL_URL);
-	return `http${secure ? "s" : ""}://${host}${endpoint}`;
+	const url = new URL("http://localhost");
+	if (process.env.VERCEL_URL) {
+		url.host = process.env.VERCEL_URL;
+		url.protocol = "https:";
+	} else {
+		const port = Number.parseInt(process.env.PORT || "", 10);
+		if (!Number.isNaN(port)) {
+			url.port = port.toString();
+		}
+	}
+	url.pathname = endpoint;
+	return url.toString();
 };
 
 const pickAuthCookie = (req: NextApiRequest) => {
