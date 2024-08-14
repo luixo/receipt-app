@@ -100,10 +100,12 @@ Visual regression tests are run in a docker image (to be consistent on CI enviro
 
 #### Step by step
 
-1. Run a Playwright docker image with port 3000 exposed and current directory linked as `/work`
+1. Run a Playwright docker image with host network exposed and current directory linked as `/work`
+
+NB: To expose host network on MacOS and Windows you [need](https://docs.docker.com/engine/network/tutorials/host/#prerequisites) to enable it manually in Docker settings.
 
 ```sh
-docker run --rm -v ${PWD}:/work/ -w /work/ -it -p 3000:3000 --entrypoint /bin/bash mcr.microsoft.com/playwright:v1.46.0-jammy
+docker run --rm -v ${PWD}:/work/ -w /work/ -it --network host --entrypoint /bin/bash mcr.microsoft.com/playwright:v1.46.0-jammy
 ```
 
 2. (in Docker) Install platform-specific binaries (until `sharp` [utilize](https://github.com/lovell/sharp/issues/3750) `supportedArchitectures` in `.yarnrc.yml`)
@@ -137,7 +139,7 @@ PW_SERVER=true yarn frontend:test --update-snapshots
 Please, build an app on host machine inbefore (step 0 from above).
 
 ```sh
-docker run --rm -v ${PWD}:/work/ -w /work/ -it -p 3000:3000 --entrypoint /bin/bash mcr.microsoft.com/playwright:v1.46.0-jammy -c "corepack yarn && corepack enable && PW_SERVER=true yarn frontend:test --update-snapshots"
+docker run --rm -v ${PWD}:/work/ -w /work/ -it --network host --entrypoint /bin/bash mcr.microsoft.com/playwright:v1.46.0-jammy -c "corepack yarn && corepack enable && PW_SERVER=true yarn frontend:test --update-snapshots"
 ```
 
 ### Tests structure
