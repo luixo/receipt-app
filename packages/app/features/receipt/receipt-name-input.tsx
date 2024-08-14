@@ -6,7 +6,7 @@ import { trpc } from "~app/trpc";
 import { receiptNameSchema } from "~app/utils/validation";
 import { Input } from "~components";
 import type { ReceiptsId } from "~db/models";
-import * as mutations from "~mutations";
+import { options as receiptsUpdateOptions } from "~mutations/receipts/update";
 
 type Props = {
 	receiptId: ReceiptsId;
@@ -34,7 +34,7 @@ export const ReceiptNameInput: React.FC<Props> = ({
 	});
 
 	const updateReceiptMutation = trpc.receipts.update.useMutation(
-		useTrpcMutationOptions(mutations.receipts.update.options, {
+		useTrpcMutationOptions(receiptsUpdateOptions, {
 			onSuccess: unsetEditing,
 		}),
 	);

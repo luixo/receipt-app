@@ -5,7 +5,7 @@ import { trpc } from "~app/trpc";
 import { Button } from "~components";
 import { DoneIcon, UndoneIcon } from "~components/icons";
 import type { ReceiptsId, UsersId } from "~db/models";
-import * as mutations from "~mutations";
+import { options as receiptParticipantsUpdateOptions } from "~mutations/receipt-participants/update";
 
 type Props = {
 	receiptId: ReceiptsId;
@@ -25,7 +25,7 @@ export const ReceiptParticipantResolvedButton: React.FC<Props> = ({
 	...props
 }) => {
 	const updateReceiptMutation = trpc.receiptParticipants.update.useMutation(
-		useTrpcMutationOptions(mutations.receiptParticipants.update.options, {
+		useTrpcMutationOptions(receiptParticipantsUpdateOptions, {
 			context: { selfUserId: selfUserId || "unknown" },
 		}),
 	);

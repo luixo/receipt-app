@@ -1,7 +1,10 @@
 import type { TRPCMutationInput, TRPCQueryOutput } from "~app/trpc";
 import type { UsersId } from "~db/models";
 
-import * as cache from "../cache";
+import {
+	invalidateSuggest as invalidateSuggestUsers,
+	updateRevert as updateRevertUsers,
+} from "../cache/users";
 import type { UseContextedMutationOptions } from "../context";
 import type { SnapshotFn, UpdateFn } from "../types";
 
@@ -64,7 +67,7 @@ const getForeignRevert =
 
 export const options: UseContextedMutationOptions<"users.update"> = {
 	onMutate: (controllerContext) => (updateObject) =>
-		cache.users.updateRevert(controllerContext, {
+		updateRevertUsers(controllerContext, {
 			get: (controller) =>
 				controller.update(
 					updateObject.id,
@@ -80,7 +83,7 @@ export const options: UseContextedMutationOptions<"users.update"> = {
 			getPaged: undefined,
 		}),
 	onSuccess: (controllerContext) => () =>
-		cache.users.invalidateSuggest(controllerContext),
+		invalidateSuggestUsers(controllerContext),
 	errorToastOptions: () => (error) => ({
 		text: `Error updating user: ${error.message}`,
 	}),

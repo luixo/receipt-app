@@ -10,7 +10,7 @@ import { partSchema } from "~app/utils/validation";
 import { Button, Input, Text } from "~components";
 import { MinusIcon, PlusIcon } from "~components/icons";
 import type { ReceiptItemsId, ReceiptsId } from "~db/models";
-import * as mutations from "~mutations";
+import { options as itemParticipantsUpdateOptions } from "~mutations/item-participants/update";
 
 type ReceiptItemPart =
 	TRPCQueryOutput<"receipts.get">["items"][number]["parts"][number];
@@ -46,7 +46,7 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 	});
 
 	const updateMutation = trpc.itemParticipants.update.useMutation(
-		useTrpcMutationOptions(mutations.itemParticipants.update.options, {
+		useTrpcMutationOptions(itemParticipantsUpdateOptions, {
 			context: receiptId,
 			onSuccess: unsetEditing,
 		}),

@@ -4,7 +4,10 @@ import type {
 	TRPCQueryOutput,
 } from "~app/trpc";
 
-import * as cache from "../cache";
+import {
+	update as updateReceipts,
+	updateRevert as updateRevertReceipts,
+} from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
 import type { SnapshotFn, UpdateFn } from "../types";
 
@@ -75,7 +78,7 @@ const getRevert =
 
 export const options: UseContextedMutationOptions<"receipts.update"> = {
 	onMutate: (controllerContext) => (updateObject) =>
-		cache.receipts.updateRevert(controllerContext, {
+		updateRevertReceipts(controllerContext, {
 			get: (controller) =>
 				controller.update(
 					updateObject.id,
@@ -86,7 +89,7 @@ export const options: UseContextedMutationOptions<"receipts.update"> = {
 			getPaged: undefined,
 		}),
 	onSuccess: (controllerContext) => (result, updateObject) => {
-		cache.receipts.update(controllerContext, {
+		updateReceipts(controllerContext, {
 			get: (controller) =>
 				controller.update(
 					updateObject.id,

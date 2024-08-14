@@ -21,11 +21,11 @@ import {
 	SortDownIcon,
 	SortUpIcon,
 } from "~components/icons";
-import * as queries from "~queries";
+import { useStore as useReceiptsGetPagedStore } from "~queries/receipts/get-paged";
 
 export const FilterButton: React.FC = () => {
 	const [{ orderBy, filters = {} }, { changeOrderBy, changeFilters }] =
-		queries.receipts.getPaged.useStore();
+		useReceiptsGetPagedStore();
 
 	const [filterModalOpen, { switchValue: switchFilterModal }] =
 		useBooleanState(false);

@@ -1,4 +1,7 @@
-import * as cache from "../cache";
+import {
+	update as updateDebts,
+	updateRevert as updateRevertDebts,
+} from "../cache/debts";
 import type { UseContextedMutationOptions } from "../context";
 import { mergeUpdaterResults } from "../utils";
 
@@ -15,7 +18,7 @@ export const options: UseContextedMutationOptions<
 	Intention[]
 > = {
 	onMutate: (controllerContext, intentions) => () =>
-		cache.debts.updateRevert(controllerContext, {
+		updateRevertDebts(controllerContext, {
 			getByUsers: (controller) => updateGetByUsers(controller, intentions),
 			getUser: (controller) => updateGetUser(controller, intentions),
 			get: (controller) => updateGet(controller, intentions),
@@ -25,7 +28,7 @@ export const options: UseContextedMutationOptions<
 				),
 		}),
 	onSuccess: (controllerContext, intentions) => (createdResult) => {
-		cache.debts.update(controllerContext, {
+		updateDebts(controllerContext, {
 			getByUsers: undefined,
 			getUser: (controller) =>
 				updateGetUserSuccess(

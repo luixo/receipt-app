@@ -1,10 +1,10 @@
-import * as cache from "../cache";
+import { updateRevert as updateRevertAccountConnections } from "../cache/account-connection-intentions";
 import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<"accountConnectionIntentions.remove"> =
 	{
 		onMutate: (controllerContext) => (variables) =>
-			cache.accountConnections.updateRevert(controllerContext, {
+			updateRevertAccountConnections(controllerContext, {
 				getAll: (controller) =>
 					controller.outbound.remove(variables.targetAccountId),
 			}),

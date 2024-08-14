@@ -5,7 +5,7 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
 import { Button, Tooltip } from "~components";
 import type { ReceiptsId } from "~db/models";
-import * as mutations from "~mutations";
+import { options as receiptsUpdateOptions } from "~mutations/receipts/update";
 
 type Props = {
 	receiptId: ReceiptsId;
@@ -21,7 +21,7 @@ export const ReceiptLockedButton: React.FC<Props> = ({
 	isLoading,
 }) => {
 	const updateReceiptMutation = trpc.receipts.update.useMutation(
-		useTrpcMutationOptions(mutations.receipts.update.options),
+		useTrpcMutationOptions(receiptsUpdateOptions),
 	);
 	const switchResolved = React.useCallback(() => {
 		updateReceiptMutation.mutate({

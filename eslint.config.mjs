@@ -46,6 +46,53 @@ const originalRestrictedSyntax = compatAirbnbConfigs
 	.map((config) => config.rules?.["no-restricted-syntax"])
 	.find(Boolean);
 
+const restrictedImports = [
+	{
+		// see https://eslint.org/docs/latest/extend/selectors#known-issues
+		from: "~mutations\\u002F.*",
+		imports: [
+			{
+				actual: "options",
+				expected: "<router><Procedure>Options",
+			},
+		],
+	},
+	{
+		from: "~mutations\\u002Fcache\\u002F.*",
+		imports: [
+			{
+				actual: "update",
+				expected: "update<Router>",
+			},
+			{
+				actual: "updateRevert",
+				expected: "updateRevert<Router>",
+			},
+			{
+				actual: /invalidate.*/,
+				expected: "invalidate*<Router>",
+			},
+		],
+	},
+	{
+		from: "~queries\\u002F.*",
+		imports: [
+			{
+				actual: "useStore",
+				expected: "use<Router><Procedure>Store",
+			},
+			{
+				actual: "useSyncQueryParams",
+				expected: "use<router><Procedure>SyncQueryParams",
+			},
+			{
+				actual: "inputStore",
+				expected: "<router><Procedure>InputStore",
+			},
+		],
+	},
+];
+
 const overridenRules = {
 	// We assign `ref.current` a lot
 	"no-param-reassign": [
@@ -85,6 +132,14 @@ const overridenRules = {
 			message:
 				"Use strongly typed function `fromEntries` (or `mapValues`) from `remeda` package instead.",
 		},
+		...restrictedImports.flatMap(({ from, imports }) =>
+			imports.map(({ actual, expected }) => ({
+				selector: `ImportDeclaration[source.value=/${from}/] > ImportSpecifier[local.name=${
+					actual instanceof RegExp ? `/${actual.source}/` : `'${actual}'`
+				}]`,
+				message: `Prefer renaming '${actual.toString()}' to '${expected}'`,
+			})),
+		),
 	],
 
 	// Custom devDependencies

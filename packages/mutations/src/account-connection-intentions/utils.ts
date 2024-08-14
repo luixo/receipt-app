@@ -1,7 +1,11 @@
 import type { TRPCMutationOutput } from "~app/trpc";
 import type { UsersId } from "~db/models";
 
-import * as cache from "../cache";
+import { update as updateDebts } from "../cache/debts";
+import {
+	invalidateSuggest as invalidateSuggestUsers,
+	update as updateUsers,
+} from "../cache/users";
 import type { ControllerContext } from "../types";
 
 export const updateUserConnected = (
@@ -9,7 +13,7 @@ export const updateUserConnected = (
 	userId: UsersId,
 	account: TRPCMutationOutput<"accountConnectionIntentions.add">["account"],
 ) => {
-	cache.users.update(controllerContext, {
+	updateUsers(controllerContext, {
 		get: (controller) =>
 			controller.update(userId, (user) => ({
 				...user,
@@ -24,8 +28,8 @@ export const updateUserConnected = (
 		},
 		getPaged: undefined,
 	});
-	void cache.users.invalidateSuggest(controllerContext);
-	cache.debts.update(controllerContext, {
+	void invalidateSuggestUsers(controllerContext);
+	updateDebts(controllerContext, {
 		get: undefined,
 		getUser: undefined,
 		getByUsers: undefined,

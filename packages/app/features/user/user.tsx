@@ -13,7 +13,8 @@ import { userNameSchema } from "~app/utils/validation";
 import { Button, Input, Spinner } from "~components";
 import { TrashBin } from "~components/icons";
 import type { UsersId } from "~db/models";
-import * as mutations from "~mutations";
+import { options as usersRemoveOptions } from "~mutations/users/remove";
+import { options as usersUpdateOptions } from "~mutations/users/update";
 
 import { UserConnectionInput } from "./user-connection-input";
 
@@ -34,7 +35,7 @@ const UserNameInput: React.FC<NameProps> = ({ user, isLoading }) => {
 	});
 
 	const updateUserMutation = trpc.users.update.useMutation(
-		useTrpcMutationOptions(mutations.users.update.options),
+		useTrpcMutationOptions(usersUpdateOptions),
 	);
 	const saveName = React.useCallback(
 		(nextName: string) => {
@@ -84,7 +85,7 @@ const UserPublicNameInput: React.FC<PublicNameProps> = ({
 	});
 
 	const updateUserMutation = trpc.users.update.useMutation(
-		useTrpcMutationOptions(mutations.users.update.options),
+		useTrpcMutationOptions(usersUpdateOptions),
 	);
 	const savePublicName = React.useCallback(
 		(nextName: string | undefined) => {
@@ -167,7 +168,7 @@ const UserRemoveButton: React.FC<RemoveProps> = ({
 }) => {
 	const router = useRouter();
 	const removeUserMutation = trpc.users.remove.useMutation(
-		useTrpcMutationOptions(mutations.users.remove.options, {
+		useTrpcMutationOptions(usersRemoveOptions, {
 			onSuccess: () => router.replace("/users"),
 		}),
 	);

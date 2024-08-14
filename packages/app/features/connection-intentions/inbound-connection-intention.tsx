@@ -7,7 +7,8 @@ import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { Button, Text } from "~components";
 import type { UsersId } from "~db/models";
-import * as mutations from "~mutations";
+import { options as accountConnectionsAcceptOptions } from "~mutations/account-connection-intentions/accept";
+import { options as accountConnectionsRejectOptions } from "~mutations/account-connection-intentions/reject";
 
 type Props = {
 	intention: TRPCQueryOutput<"accountConnectionIntentions.getAll">["inbound"][number];
@@ -18,7 +19,7 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 
 	const acceptConnectionMutation =
 		trpc.accountConnectionIntentions.accept.useMutation(
-			useTrpcMutationOptions(mutations.accountConnections.accept.options),
+			useTrpcMutationOptions(accountConnectionsAcceptOptions),
 		);
 	const acceptConnection = React.useCallback(() => {
 		acceptConnectionMutation.mutate({
@@ -29,7 +30,7 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 
 	const rejectConnectionMutation =
 		trpc.accountConnectionIntentions.reject.useMutation(
-			useTrpcMutationOptions(mutations.accountConnections.reject.options),
+			useTrpcMutationOptions(accountConnectionsRejectOptions),
 		);
 	const rejectConnection = React.useCallback(() => {
 		rejectConnectionMutation.mutate({

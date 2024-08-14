@@ -5,7 +5,7 @@ import { useSelfAccountId } from "~app/hooks/use-self-account-id";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
 import type { ReceiptsId, UsersId } from "~db/models";
-import * as mutations from "~mutations";
+import { options as receiptParticipantsAddOptions } from "~mutations/receipt-participants/add";
 
 type Props = {
 	receiptId: ReceiptsId;
@@ -26,7 +26,7 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 	const [localFilterIds, setLocalFilterIds] = React.useState<UsersId[]>([]);
 	const selfAccountId = useSelfAccountId();
 	const addMutation = trpc.receiptParticipants.add.useMutation(
-		useTrpcMutationOptions(mutations.receiptParticipants.add.options, {
+		useTrpcMutationOptions(receiptParticipantsAddOptions, {
 			context: {
 				receiptId,
 				selfAccountId: selfAccountId || "unknown",

@@ -17,7 +17,7 @@ import {
 	ModalHeader,
 	Text,
 } from "~components";
-import * as mutations from "~mutations";
+import { options as resetPasswordIntentionsAddOptions } from "~mutations/reset-password-intentions/add";
 
 type ResetPasswordForm = {
 	email: string;
@@ -38,7 +38,7 @@ export const ResetPasswordModal: React.FC<Props> = ({
 	});
 
 	const resetPasswordMutation = trpc.resetPasswordIntentions.add.useMutation(
-		useTrpcMutationOptions(mutations.resetPasswordIntentions.add.options),
+		useTrpcMutationOptions(resetPasswordIntentionsAddOptions),
 	);
 	const onSubmit = React.useCallback(
 		(data: ResetPasswordForm) => resetPasswordMutation.mutate(data),

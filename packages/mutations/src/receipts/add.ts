@@ -1,6 +1,6 @@
 import type { AccountsId, UsersId } from "~db/models";
 
-import * as cache from "../cache";
+import { update as updateReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<
@@ -10,7 +10,7 @@ export const options: UseContextedMutationOptions<
 	onSuccess:
 		(controllerContext, { selfAccountId }) =>
 		(id, variables) => {
-			cache.receipts.update(controllerContext, {
+			updateReceipts(controllerContext, {
 				getPaged: (controller) => controller.invalidate(),
 				get: (controller) => {
 					const selfUserId = selfAccountId as UsersId;

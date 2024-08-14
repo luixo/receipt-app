@@ -1,4 +1,5 @@
-import * as cache from "../cache";
+import { updateRevert as updateRevertReceiptTransferIntentions } from "../cache/receipt-transfer-intentions";
+import { update as updateReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<"receiptTransferIntentions.accept"> =
@@ -6,11 +7,11 @@ export const options: UseContextedMutationOptions<"receiptTransferIntentions.acc
 		onMutate:
 			(controllerContext) =>
 			({ receiptId }) =>
-				cache.receiptTransferIntentions.updateRevert(controllerContext, {
+				updateRevertReceiptTransferIntentions(controllerContext, {
 					getAll: (controller) => controller.inbound.remove(receiptId),
 				}),
 		onSuccess: (controllerContext) => () =>
-			cache.receipts.update(controllerContext, {
+			updateReceipts(controllerContext, {
 				getPaged: (controller) => controller.invalidate(),
 				get: undefined,
 				getNonResolvedAmount: undefined,

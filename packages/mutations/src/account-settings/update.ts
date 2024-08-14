@@ -1,9 +1,9 @@
-import * as cache from "../cache";
+import { updateRevert as updateRevertAccountSettings } from "../cache/account-settings";
 import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<"accountSettings.update"> = {
 	onMutate: (controllerContext) => (variables) =>
-		cache.accountSettings.updateRevert(controllerContext, {
+		updateRevertAccountSettings(controllerContext, {
 			get: (controller) =>
 				controller.update(
 					(prevSettings) => ({

@@ -2,7 +2,9 @@ import type { TRPCMutationInput, TRPCQueryOutput } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import type { DebtsId, ReceiptsId, UsersId } from "~db/models";
 
-import * as cache from "../cache";
+import type { updateRevert as updateRevertDebts } from "../cache/debts";
+import { update as updateDebts } from "../cache/debts";
+import { update as updateReceipts } from "../cache/receipts";
 import type {
 	ControllerContext,
 	SnapshotFn,
@@ -16,9 +18,7 @@ export default Intention;
 
 export const updateGetByUsers = (
 	controller: Parameters<
-		NonNullable<
-			Parameters<(typeof cache)["debts"]["updateRevert"]>[1]["getByUsers"]
-		>
+		NonNullable<Parameters<typeof updateRevertDebts>[1]["getByUsers"]>
 	>[0],
 	intentions: Intention[],
 ) =>
@@ -47,9 +47,7 @@ export const updateGetByUsers = (
 
 export const updateGetUser = (
 	controller: Parameters<
-		NonNullable<
-			Parameters<(typeof cache)["debts"]["updateRevert"]>[1]["getUser"]
-		>
+		NonNullable<Parameters<typeof updateRevertDebts>[1]["getUser"]>
 	>[0],
 	intentions: Intention[],
 ) =>
@@ -108,7 +106,7 @@ export const updateGetUser = (
 
 export const updateGet = (
 	controller: Parameters<
-		NonNullable<Parameters<(typeof cache)["debts"]["updateRevert"]>[1]["get"]>
+		NonNullable<Parameters<typeof updateRevertDebts>[1]["get"]>
 	>[0],
 	intentions: Intention[],
 ) =>
@@ -165,7 +163,7 @@ export const updateGet = (
 
 export const updateGetUserSuccess = (
 	controller: Parameters<
-		NonNullable<Parameters<(typeof cache)["debts"]["update"]>[1]["getUser"]>
+		NonNullable<Parameters<typeof updateDebts>[1]["getUser"]>
 	>[0],
 	intentions: (Intention & { created: Date })[],
 ) => {
@@ -324,7 +322,7 @@ export const updateReceiptWithOutcomingDebtId = (
 	receiptId: ReceiptsId,
 	debtId: DebtsId,
 ) => {
-	cache.receipts.update(controllerContext, {
+	updateReceipts(controllerContext, {
 		get: (controller) => {
 			controller.update(receiptId, (receipt) => ({
 				...receipt,
@@ -351,7 +349,7 @@ export const updateLockedTimestamps = (
 	lockedTimestamp: Date | undefined,
 	reverseLockedTimestampUpdated: boolean,
 ) => {
-	cache.debts.update(controllerContext, {
+	updateDebts(controllerContext, {
 		getByUsers: (controller) => {
 			if (lockedTimestamp === undefined) {
 				if (

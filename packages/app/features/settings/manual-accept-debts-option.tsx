@@ -4,12 +4,12 @@ import { ErrorMessage, QueryErrorMessage } from "~app/components/error-message";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
 import { Spinner, Switch } from "~components";
-import * as mutations from "~mutations";
+import { options as accountSettingsUpdateOptions } from "~mutations/account-settings/update";
 
 export const ManualAcceptDebtsOption: React.FC = () => {
 	const settingsQuery = trpc.accountSettings.get.useQuery();
 	const updateSettingsMutation = trpc.accountSettings.update.useMutation(
-		useTrpcMutationOptions(mutations.accountSettings.update.options),
+		useTrpcMutationOptions(accountSettingsUpdateOptions),
 	);
 	const onChange = React.useCallback(
 		(nextAutoAccept: boolean) =>

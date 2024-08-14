@@ -7,7 +7,7 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import type { ReceiptsId, UsersId } from "~db/models";
-import * as mutations from "~mutations";
+import { options as receiptsRemoveOptions } from "~mutations/receipts/remove";
 
 type Props = {
 	receiptId: ReceiptsId;
@@ -32,7 +32,7 @@ export const ReceiptRemoveButton: React.FC<Props> = ({
 		(participant) => participant.userId === selfUserId,
 	)?.resolved;
 	const removeReceiptMutation = trpc.receipts.remove.useMutation(
-		useTrpcMutationOptions(mutations.receipts.remove.options, {
+		useTrpcMutationOptions(receiptsRemoveOptions, {
 			context: { selfResolved },
 			onSuccess: () => router.replace("/receipts"),
 		}),

@@ -14,7 +14,8 @@ import { noBatchContext } from "~app/utils/trpc";
 import { userNameSchema } from "~app/utils/validation";
 import { Button, Input, Spinner } from "~components";
 import { AccountIcon } from "~components/icons";
-import * as mutations from "~mutations";
+import { options as accountChangeNameOptions } from "~mutations/account/change-name";
+import { options as accountLogoutOptions } from "~mutations/account/logout";
 import type { AppPage } from "~utils/next";
 
 import { AccountAvatarInput } from "./account-avatar-input";
@@ -35,7 +36,7 @@ const AccountNameInput: React.FC<NameProps> = ({ accountQuery }) => {
 	});
 
 	const updateNameMutation = trpc.account.changeName.useMutation(
-		useTrpcMutationOptions(mutations.account.changeName.options, {
+		useTrpcMutationOptions(accountChangeNameOptions, {
 			context: { id: accountQuery.account.id },
 		}),
 	);
@@ -75,7 +76,7 @@ const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 	const router = useRouter();
 
 	const logoutMutation = trpc.account.logout.useMutation(
-		useTrpcMutationOptions(mutations.account.logout.options, {
+		useTrpcMutationOptions(accountLogoutOptions, {
 			onSuccess: () => router.replace("/"),
 			trpc: { context: noBatchContext },
 		}),

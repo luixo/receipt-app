@@ -5,7 +5,7 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import type { ReceiptItemsId, ReceiptsId } from "~db/models";
-import * as mutations from "~mutations";
+import { options as itemParticipantsAddOptions } from "~mutations/item-participants/add";
 
 type Props = {
 	receiptId: ReceiptsId;
@@ -23,7 +23,7 @@ export const ParticipantChip: React.FC<Props> = ({
 	isDisabled,
 }) => {
 	const addItemPartMutation = trpc.itemParticipants.add.useMutation(
-		useTrpcMutationOptions(mutations.itemParticipants.add.options, {
+		useTrpcMutationOptions(itemParticipantsAddOptions, {
 			context: receiptId,
 		}),
 	);

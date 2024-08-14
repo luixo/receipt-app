@@ -12,7 +12,7 @@ import type { TRPCQueryResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { passwordSchema } from "~app/utils/validation";
 import { Button, Header, Input, Spinner } from "~components";
-import * as mutations from "~mutations";
+import { options as authResetPasswordOptions } from "~mutations/auth/reset-password";
 
 type ChangePasswordForm = {
 	password: string;
@@ -34,7 +34,7 @@ export const ResetPassword: React.FC<Props> = ({ token, intentionQuery }) => {
 	});
 
 	const changePasswordMutation = trpc.auth.resetPassword.useMutation(
-		useTrpcMutationOptions(mutations.auth.resetPassword.options, {
+		useTrpcMutationOptions(authResetPasswordOptions, {
 			onSuccess: () => router.replace("/login"),
 		}),
 	);

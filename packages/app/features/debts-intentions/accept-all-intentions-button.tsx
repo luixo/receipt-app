@@ -6,7 +6,7 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { Button } from "~components";
-import * as mutations from "~mutations";
+import { options as debtsAcceptAllIntentionsOptions } from "~mutations/debts/accept-all-intentions";
 
 type Props = {
 	intentions: TRPCQueryOutput<"debts.getIntentions">;
@@ -16,7 +16,7 @@ export const AcceptAllIntentionsButton: React.FC<Props> = ({ intentions }) => {
 	const router = useRouter();
 
 	const acceptAllMutation = trpc.debts.acceptAllIntentions.useMutation(
-		useTrpcMutationOptions(mutations.debts.acceptAllIntentions.options, {
+		useTrpcMutationOptions(debtsAcceptAllIntentionsOptions, {
 			context: intentions,
 		}),
 	);

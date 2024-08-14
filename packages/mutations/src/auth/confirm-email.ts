@@ -1,9 +1,9 @@
-import * as cache from "../cache";
+import { update as updateAccount } from "../cache/account";
 import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<"auth.confirmEmail"> = {
 	onSuccess: (controllerContext) => () =>
-		cache.account.update(controllerContext, {
+		updateAccount(controllerContext, {
 			get: (controller) => {
 				controller.update((account) => ({ ...account, verified: true }));
 			},

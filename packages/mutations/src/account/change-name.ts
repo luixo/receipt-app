@@ -1,6 +1,10 @@
 import type { AccountsId, UsersId } from "~db/models";
 
-import * as cache from "../cache";
+import { update as updateAccount } from "../cache/account";
+import {
+	invalidateSuggest as invalidateSuggestUsers,
+	updateRevert as updateRevertUsers,
+} from "../cache/users";
 import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<
@@ -10,7 +14,7 @@ export const options: UseContextedMutationOptions<
 	onMutate:
 		(controllerContext, { id }) =>
 		(updateObject) =>
-			cache.users.updateRevert(controllerContext, {
+			updateRevertUsers(controllerContext, {
 				get: (controller) =>
 					controller.update(
 						// Typesystem doesn't know that we use account id as self user id
@@ -28,7 +32,7 @@ export const options: UseContextedMutationOptions<
 				getPaged: undefined,
 			}),
 	onSuccess: (controllerContext) => (_result, updateObject) => {
-		cache.account.update(controllerContext, {
+		updateAccount(controllerContext, {
 			get: (controller) => {
 				controller.update((account) => ({
 					...account,
@@ -39,7 +43,7 @@ export const options: UseContextedMutationOptions<
 				}));
 			},
 		});
-		void cache.users.invalidateSuggest(controllerContext);
+		void invalidateSuggestUsers(controllerContext);
 	},
 	errorToastOptions: () => (error) => ({
 		text: `Error updating your name: ${error.message}`,

@@ -5,7 +5,7 @@ import { trpc } from "~app/trpc";
 import { Button } from "~components";
 import { LockedIcon, UnlockedIcon } from "~components/icons";
 import type { ReceiptItemsId, ReceiptsId } from "~db/models";
-import * as mutations from "~mutations";
+import { options as receiptItemsUpdateOptions } from "~mutations/receipt-items/update";
 
 type Props = {
 	receiptId: ReceiptsId;
@@ -23,7 +23,7 @@ export const ReceiptItemLockedButton: React.FC<Props> = ({
 	...props
 }) => {
 	const updateMutation = trpc.receiptItems.update.useMutation(
-		useTrpcMutationOptions(mutations.receiptItems.update.options, {
+		useTrpcMutationOptions(receiptItemsUpdateOptions, {
 			context: receiptId,
 		}),
 	);

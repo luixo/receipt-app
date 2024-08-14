@@ -9,7 +9,7 @@ import { trpc } from "~app/trpc";
 import { quantitySchema } from "~app/utils/validation";
 import { Input, Text } from "~components";
 import type { ReceiptsId } from "~db/models";
-import * as mutations from "~mutations";
+import { options as receiptItemsUpdateOptions } from "~mutations/receipt-items/update";
 
 type ReceiptItem = TRPCQueryOutput<"receipts.get">["items"][number];
 
@@ -40,7 +40,7 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 	});
 
 	const updateMutation = trpc.receiptItems.update.useMutation(
-		useTrpcMutationOptions(mutations.receiptItems.update.options, {
+		useTrpcMutationOptions(receiptItemsUpdateOptions, {
 			context: receiptId,
 			onSuccess: unsetEditing,
 		}),

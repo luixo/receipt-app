@@ -1,6 +1,10 @@
 import type { TRPCQueryOutput } from "~app/trpc";
 
-import * as cache from "../cache";
+import {
+	update as updateDebts,
+	updateRevert as updateRevertDebts,
+} from "../cache/debts";
+import { update as updateReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<
@@ -8,7 +12,7 @@ export const options: UseContextedMutationOptions<
 	TRPCQueryOutput<"debts.get">
 > = {
 	onMutate: (controllerContext, currDebt) => (updateObject) =>
-		cache.debts.updateRevert(controllerContext, {
+		updateRevertDebts(controllerContext, {
 			getByUsers: (controller) =>
 				controller.updateCurrency(
 					currDebt.userId,
@@ -25,7 +29,7 @@ export const options: UseContextedMutationOptions<
 			getIntentions: undefined,
 		}),
 	onSuccess: (controllerContext, currDebt) => (result, updateObject) => {
-		cache.receipts.update(controllerContext, {
+		updateReceipts(controllerContext, {
 			get: (controller) =>
 				controller.updateAll((receipt) => {
 					if (receipt.debt.direction === "incoming") {
@@ -58,7 +62,7 @@ export const options: UseContextedMutationOptions<
 			getPaged: undefined,
 			getNonResolvedAmount: undefined,
 		});
-		cache.debts.update(controllerContext, {
+		updateDebts(controllerContext, {
 			getByUsers:
 				currDebt.lockedTimestamp &&
 				currDebt.their?.lockedTimestamp?.valueOf() ===

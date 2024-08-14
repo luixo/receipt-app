@@ -16,7 +16,7 @@ import {
 } from "~app/utils/validation";
 import { Button, Input } from "~components";
 import type { ReceiptsId } from "~db/models";
-import * as mutations from "~mutations";
+import { options as receiptItemsAddOptions } from "~mutations/receipt-items/add";
 
 type NameProps = {
 	form: UseFormReturn<Form>;
@@ -128,7 +128,7 @@ export const AddReceiptItemForm: React.FC<Props> = ({
 		},
 	});
 	const addMutation = trpc.receiptItems.add.useMutation(
-		useTrpcMutationOptions(mutations.receiptItems.add.options, {
+		useTrpcMutationOptions(receiptItemsAddOptions, {
 			context: receiptId,
 			onSuccess: () => form.reset(),
 		}),

@@ -9,7 +9,7 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { Badge, Button, Link, Text } from "~components";
-import * as mutations from "~mutations";
+import { options as receiptsUpdateOptions } from "~mutations/receipts/update";
 import { round } from "~utils/math";
 
 type InnerProps = {
@@ -20,7 +20,7 @@ export const ReceiptPreview: React.FC<InnerProps> = ({ receipt }) => {
 	const { formatDate } = useSsrFormat();
 	const currency = useFormattedCurrency(receipt.currencyCode);
 	const updateReceiptMutation = trpc.receipts.update.useMutation(
-		useTrpcMutationOptions(mutations.receipts.update.options),
+		useTrpcMutationOptions(receiptsUpdateOptions),
 	);
 	const receiptLocked = Boolean(receipt.lockedTimestamp);
 	const switchResolved = React.useCallback(() => {

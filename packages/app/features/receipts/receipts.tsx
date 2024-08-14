@@ -20,7 +20,10 @@ import {
 } from "~components";
 import { AddIcon } from "~components/icons";
 import type { ReceiptsId } from "~db/models";
-import * as queries from "~queries";
+import {
+	useStore as useReceiptsGetPagedStore,
+	useSyncQueryParams as useReceiptsGetPagedSyncQueryParams,
+} from "~queries/receipts/get-paged";
 
 import { ReceiptPreview } from "./receipt-preview";
 
@@ -69,8 +72,8 @@ const ReceiptPreviews: React.FC<{ ids: ReceiptsId[] }> = ({ ids }) => {
 };
 
 export const Receipts: React.FC = () => {
-	const [input] = queries.receipts.getPaged.useStore();
-	queries.receipts.getPaged.useSyncQueryParams();
+	const [input] = useReceiptsGetPagedStore();
+	useReceiptsGetPagedSyncQueryParams();
 	const cursorPaging = useCursorPaging(useReceiptQuery, input, "offset");
 	const { totalCount, query, pagination } = cursorPaging;
 

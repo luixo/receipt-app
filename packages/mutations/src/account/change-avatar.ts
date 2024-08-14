@@ -1,9 +1,9 @@
-import * as cache from "../cache";
+import { update as updateAccount } from "../cache/account";
 import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<"account.changeAvatar"> = {
 	onSuccess: (controllerContext) => (result) => {
-		cache.account.update(controllerContext, {
+		updateAccount(controllerContext, {
 			get: (controller) => {
 				controller.update((data) => ({
 					...data,

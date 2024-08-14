@@ -4,7 +4,8 @@ import { mapValues } from "remeda";
 
 import type { SearchParamsContextType } from "~app/contexts/search-params-context";
 import { SearchParamsContext } from "~app/contexts/search-params-context";
-import { receipts, users } from "~queries";
+import { inputStore as receiptsGetPagedInputStore } from "~queries/receipts/get-paged";
+import { inputStore as usersGetPagedInputStore } from "~queries/users/get-paged";
 
 type Props = {
 	searchParams: SearchParamsContextType;
@@ -19,7 +20,7 @@ export const SearchParamsProvider: React.FC<React.PropsWithChildren<Props>> = ({
 	);
 	return (
 		<SearchParamsContext.Provider value={searchParams}>
-			{[receipts.getPaged.inputStore, users.getPaged.inputStore].reduce(
+			{[receiptsGetPagedInputStore, usersGetPagedInputStore].reduce(
 				(acc, { Provider }) => (
 					<Provider parsedQuery={parsedSearchParams}>{acc}</Provider>
 				),

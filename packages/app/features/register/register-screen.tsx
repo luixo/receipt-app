@@ -15,7 +15,7 @@ import {
 	userNameSchema,
 } from "~app/utils/validation";
 import { Button, Input } from "~components";
-import * as mutations from "~mutations";
+import { options as authRegisterOptions } from "~mutations/auth/register";
 import type { AppPage } from "~utils/next";
 
 type RegistrationForm = {
@@ -40,7 +40,7 @@ export const RegisterScreen: AppPage = () => {
 	});
 
 	const registerMutation = trpc.auth.register.useMutation(
-		useTrpcMutationOptions(mutations.auth.register.options, {
+		useTrpcMutationOptions(authRegisterOptions, {
 			context: {
 				name: form.watch("name"),
 			},

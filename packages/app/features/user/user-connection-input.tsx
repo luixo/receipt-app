@@ -8,7 +8,9 @@ import { emailSchema } from "~app/utils/validation";
 import { Button, Input, Spinner } from "~components";
 import { LinkIcon, TrashBinIcon, UnlinkIcon } from "~components/icons";
 import type { AccountsId } from "~db/models";
-import * as mutations from "~mutations";
+import { options as accountConnectionsAddOptions } from "~mutations/account-connection-intentions/add";
+import { options as accountConnectionsRemoveOptions } from "~mutations/account-connection-intentions/remove";
+import { options as usersUnlinkOptions } from "~mutations/users/unlink";
 
 type Props = {
 	user: TRPCQueryOutput<"users.get">;
@@ -26,7 +28,7 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 			: undefined;
 
 	const connectUserMutation = trpc.accountConnectionIntentions.add.useMutation(
-		useTrpcMutationOptions(mutations.accountConnections.add.options),
+		useTrpcMutationOptions(accountConnectionsAddOptions),
 	);
 	const connectUser = React.useCallback(
 		(email: string) =>
@@ -52,7 +54,7 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 
 	const cancelRequestMutation =
 		trpc.accountConnectionIntentions.remove.useMutation(
-			useTrpcMutationOptions(mutations.accountConnections.remove.options, {
+			useTrpcMutationOptions(accountConnectionsRemoveOptions, {
 				onSuccess: () => {
 					setValue("");
 					setInputShown(false);
@@ -66,7 +68,7 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 	);
 
 	const unlinkMutation = trpc.users.unlink.useMutation(
-		useTrpcMutationOptions(mutations.users.unlink.options),
+		useTrpcMutationOptions(usersUnlinkOptions),
 	);
 	const unlinkUser = React.useCallback(
 		() => unlinkMutation.mutate({ id: user.id }),

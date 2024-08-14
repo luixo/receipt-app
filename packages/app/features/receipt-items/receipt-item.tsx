@@ -20,7 +20,8 @@ import {
 	Text,
 } from "~components";
 import type { ReceiptsId, UsersId } from "~db/models";
-import * as mutations from "~mutations";
+import { options as itemParticipantsAddOptions } from "~mutations/item-participants/add";
+import { options as receiptItemsRemoveOptions } from "~mutations/receipt-items/remove";
 import { round } from "~utils/math";
 
 import { ParticipantChip } from "./participant-chip";
@@ -53,7 +54,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 	) => {
 		const currency = useFormattedCurrency(currencyCode);
 		const removeReceiptItemMutation = trpc.receiptItems.remove.useMutation(
-			useTrpcMutationOptions(mutations.receiptItems.remove.options, {
+			useTrpcMutationOptions(receiptItemsRemoveOptions, {
 				context: receiptId,
 			}),
 		);
@@ -71,7 +72,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 		) as [UsersId, ...UsersId[]];
 
 		const addItemPartMutation = trpc.itemParticipants.add.useMutation(
-			useTrpcMutationOptions(mutations.itemParticipants.add.options, {
+			useTrpcMutationOptions(itemParticipantsAddOptions, {
 				context: receiptId,
 			}),
 		);

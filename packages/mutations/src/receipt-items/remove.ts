@@ -1,6 +1,6 @@
 import type { ReceiptsId } from "~db/models";
 
-import * as cache from "../cache";
+import { updateRevert as updateRevertReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<
@@ -10,7 +10,7 @@ export const options: UseContextedMutationOptions<
 	onMutate:
 		(controllerContext, receiptId) =>
 		({ id: removedId }) =>
-			cache.receipts.updateRevert(controllerContext, {
+			updateRevertReceipts(controllerContext, {
 				get: (controller) => controller.removeItem(receiptId, removedId),
 				getPaged: undefined,
 				getNonResolvedAmount: undefined,

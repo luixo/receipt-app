@@ -6,11 +6,11 @@ import { toast } from "react-hot-toast";
 import type { TRPCMutationKey } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import type {
-	ControllerContext,
 	InternalContext,
 	TRPCMutationOptions,
 	UseContextedMutationOptions,
-} from "~mutations";
+} from "~mutations/context";
+import type { ControllerContext } from "~mutations/types";
 import type { Exact, MaybeAddElementToArray } from "~utils/types";
 
 const getToastArgs = <OC>(

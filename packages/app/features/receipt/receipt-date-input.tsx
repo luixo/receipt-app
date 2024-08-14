@@ -4,7 +4,7 @@ import { DateInput } from "~app/components/date-input";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
 import type { ReceiptsId } from "~db/models";
-import * as mutations from "~mutations";
+import { options as receiptsUpdateOptions } from "~mutations/receipts/update";
 
 type Props = {
 	receiptId: ReceiptsId;
@@ -22,7 +22,7 @@ export const ReceiptDateInput: React.FC<Props> = ({
 	isLoading,
 }) => {
 	const updateReceiptMutation = trpc.receipts.update.useMutation(
-		useTrpcMutationOptions(mutations.receipts.update.options),
+		useTrpcMutationOptions(receiptsUpdateOptions),
 	);
 
 	const saveDate = React.useCallback(

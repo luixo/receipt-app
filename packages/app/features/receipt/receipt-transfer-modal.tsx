@@ -17,7 +17,8 @@ import {
 } from "~components";
 import { InfoOutlineIcon, TransferIcon } from "~components/icons";
 import type { UsersId } from "~db/models";
-import * as mutations from "~mutations";
+import { options as receiptTransferIntentionsAddOptions } from "~mutations/receipt-transfer-intentions/add";
+import { options as receiptTransferIntentionsRemoveOptions } from "~mutations/receipt-transfer-intentions/remove";
 import { round } from "~utils/math";
 
 type Receipt = TRPCQueryOutput<"receipts.get">;
@@ -36,7 +37,7 @@ const ReceiptSendTransferIntentionBody: React.FC<{
 	);
 	const transferReceiptMutation =
 		trpc.receiptTransferIntentions.add.useMutation(
-			useTrpcMutationOptions(mutations.receiptTransferIntentions.add.options, {
+			useTrpcMutationOptions(receiptTransferIntentionsAddOptions, {
 				context: {
 					receipt: {
 						name: receipt.name,
@@ -91,10 +92,9 @@ const ReceiptTransferStatusBody: React.FC<{
 }> = ({ receipt, closeModal }) => {
 	const cancelTransferReceiptMutation =
 		trpc.receiptTransferIntentions.remove.useMutation(
-			useTrpcMutationOptions(
-				mutations.receiptTransferIntentions.remove.options,
-				{ onMutate: closeModal },
-			),
+			useTrpcMutationOptions(receiptTransferIntentionsRemoveOptions, {
+				onMutate: closeModal,
+			}),
 		);
 	const cancelTransferReceipt = React.useCallback(
 		() =>

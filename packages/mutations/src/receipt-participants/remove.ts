@@ -1,6 +1,6 @@
 import type { AccountsId, ReceiptsId } from "~db/models";
 
-import * as cache from "../cache";
+import { updateRevert as updateRevertReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
 import { mergeUpdaterResults } from "../utils";
 
@@ -11,7 +11,7 @@ export const options: UseContextedMutationOptions<
 	onMutate:
 		(controllerContext, { receiptId, selfAccountId, resolvedStatus }) =>
 		({ userId }) =>
-			cache.receipts.updateRevert(controllerContext, {
+			updateRevertReceipts(controllerContext, {
 				get: (controller) =>
 					mergeUpdaterResults(
 						controller.removeParticipant(receiptId, userId),

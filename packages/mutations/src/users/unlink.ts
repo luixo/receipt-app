@@ -1,11 +1,12 @@
-import * as cache from "../cache";
+import { updateRevert as updateRevertReceiptTransferIntentions } from "../cache/receipt-transfer-intentions";
+import { updateRevert as updateRevertUsers } from "../cache/users";
 import type { UseContextedMutationOptions } from "../context";
 import { mergeUpdaterResults } from "../utils";
 
 export const options: UseContextedMutationOptions<"users.unlink"> = {
 	onMutate: (controllerContext) => (variables) =>
 		mergeUpdaterResults(
-			cache.users.updateRevert(controllerContext, {
+			updateRevertUsers(controllerContext, {
 				get: (controller) =>
 					controller.update(
 						variables.id,
@@ -18,7 +19,7 @@ export const options: UseContextedMutationOptions<"users.unlink"> = {
 				getForeign: (controller) => controller.removeOwn(variables.id),
 				getPaged: undefined,
 			}),
-			cache.receiptTransferIntentions.updateRevert(controllerContext, {
+			updateRevertReceiptTransferIntentions(controllerContext, {
 				getAll: (controller) =>
 					mergeUpdaterResults(
 						controller.outbound.updateAll(

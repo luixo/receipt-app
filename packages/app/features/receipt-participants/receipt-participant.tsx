@@ -12,7 +12,7 @@ import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import { Accordion, AccordionItem, Text } from "~components";
 import type { ReceiptItemsId, ReceiptsId, UsersId } from "~db/models";
-import * as mutations from "~mutations";
+import { options as receiptParticipantsRemoveOptions } from "~mutations/receipt-participants/remove";
 import { round } from "~utils/math";
 
 import { ReceiptParticipantRoleInput } from "./receipt-participant-role-input";
@@ -48,7 +48,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 
 	const removeReceiptParticipantMutation =
 		trpc.receiptParticipants.remove.useMutation(
-			useTrpcMutationOptions(mutations.receiptParticipants.remove.options, {
+			useTrpcMutationOptions(receiptParticipantsRemoveOptions, {
 				context: {
 					receiptId,
 					selfAccountId: selfAccountId || "unknown",

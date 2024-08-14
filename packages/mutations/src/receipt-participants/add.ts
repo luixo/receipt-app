@@ -1,6 +1,6 @@
 import type { AccountsId, ReceiptsId } from "~db/models";
 
-import * as cache from "../cache";
+import { update as updateReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<
@@ -10,7 +10,7 @@ export const options: UseContextedMutationOptions<
 	onSuccess:
 		(controllerContext, { receiptId, selfAccountId }) =>
 		(result) => {
-			cache.receipts.update(controllerContext, {
+			updateReceipts(controllerContext, {
 				get: (controller) => {
 					result.forEach((item) =>
 						controller.addParticipant(receiptId, {
@@ -28,7 +28,7 @@ export const options: UseContextedMutationOptions<
 				(resultItem) => resultItem.role === "owner",
 			);
 			if (selfParticipating) {
-				cache.receipts.update(controllerContext, {
+				updateReceipts(controllerContext, {
 					get: undefined,
 					getPaged: undefined,
 					getNonResolvedAmount: (controller) => {

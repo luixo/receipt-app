@@ -1,7 +1,7 @@
 import type { TRPCMutationInput, TRPCQueryOutput } from "~app/trpc";
 import type { ReceiptsId } from "~db/models";
 
-import * as cache from "../cache";
+import { updateRevert as updateRevertReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
 import type { SnapshotFn, UpdateFn } from "../types";
 
@@ -36,7 +36,7 @@ export const options: UseContextedMutationOptions<
 	ReceiptsId
 > = {
 	onMutate: (controllerContext, receiptId) => (variables) =>
-		cache.receipts.updateRevert(controllerContext, {
+		updateRevertReceipts(controllerContext, {
 			get: (controller) =>
 				controller.updateItemPart(
 					receiptId,

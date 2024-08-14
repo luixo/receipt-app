@@ -23,7 +23,7 @@ import {
 	TrashBinIcon,
 } from "~components/icons";
 import type { UsersId } from "~db/models";
-import * as mutations from "~mutations";
+import { options as accountChangeAvatarOptions } from "~mutations/account/change-avatar";
 import {
 	MAX_AVATAR_SIDE_SIZE,
 	convertDataUrlToImageElement,
@@ -107,7 +107,7 @@ export const AccountAvatarInput: React.FC<Props> = ({ account, children }) => {
 	});
 
 	const updateAvatarMutation = trpc.account.changeAvatar.useMutation(
-		useTrpcMutationOptions(mutations.account.changeAvatar.options, {
+		useTrpcMutationOptions(accountChangeAvatarOptions, {
 			onSuccess: () => {
 				disableAvatarEdit();
 				form.reset();
@@ -115,7 +115,7 @@ export const AccountAvatarInput: React.FC<Props> = ({ account, children }) => {
 		}),
 	);
 	const removeAvatarMutation = trpc.account.changeAvatar.useMutation(
-		useTrpcMutationOptions(mutations.account.changeAvatar.options, {
+		useTrpcMutationOptions(accountChangeAvatarOptions, {
 			onSuccess: () => {
 				disableAvatarEdit();
 				form.reset();

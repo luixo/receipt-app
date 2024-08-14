@@ -3,12 +3,12 @@ import React from "react";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
 import { Button, Card, CardBody, CardHeader, Divider, Text } from "~components";
-import * as mutations from "~mutations";
+import { options as accountResendEmailOptions } from "~mutations/account/resend-email";
 
 export const EmailVerificationCard: React.FC = () => {
 	const accountQuery = trpc.account.get.useQuery();
 	const resendEmailMutation = trpc.account.resendEmail.useMutation(
-		useTrpcMutationOptions(mutations.account.resendEmail.options),
+		useTrpcMutationOptions(accountResendEmailOptions),
 	);
 	const resendEmail = React.useCallback(
 		() => resendEmailMutation.mutate(),

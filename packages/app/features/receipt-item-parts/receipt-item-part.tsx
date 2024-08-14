@@ -7,7 +7,7 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import type { ReceiptItemsId, ReceiptsId } from "~db/models";
-import * as mutations from "~mutations";
+import { options as itemParticipantsRemoveOptions } from "~mutations/item-participants/remove";
 
 import { ReceiptItemPartInput } from "./receipt-item-part-input";
 
@@ -38,7 +38,7 @@ export const ReceiptItemPart: React.FC<Props> = ({
 	isLoading,
 }) => {
 	const removeMutation = trpc.itemParticipants.remove.useMutation(
-		useTrpcMutationOptions(mutations.itemParticipants.remove.options, {
+		useTrpcMutationOptions(itemParticipantsRemoveOptions, {
 			context: receiptId,
 		}),
 	);

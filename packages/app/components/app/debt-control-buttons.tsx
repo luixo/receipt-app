@@ -7,7 +7,8 @@ import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { Button } from "~components";
 import { EyeIcon, EyeSlashIcon, SyncIcon } from "~components/icons";
-import * as mutations from "~mutations";
+import { options as debtsAcceptIntentionOptions } from "~mutations/debts/accept-intention";
+import { options as debtsUpdateOptions } from "~mutations/debts/update";
 
 type Debt = TRPCQueryOutput<"debts.get">;
 
@@ -17,7 +18,7 @@ type Props = {
 
 export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 	const updateMutation = trpc.debts.update.useMutation(
-		useTrpcMutationOptions(mutations.debts.update.options, { context: debt }),
+		useTrpcMutationOptions(debtsUpdateOptions, { context: debt }),
 	);
 	const setLocked = React.useCallback(() => {
 		updateMutation.mutate({
@@ -57,7 +58,7 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 		],
 	);
 	const acceptMutation = trpc.debts.acceptIntention.useMutation(
-		useTrpcMutationOptions(mutations.debts.acceptIntention.options, {
+		useTrpcMutationOptions(debtsAcceptIntentionOptions, {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			context: intention!,
 		}),

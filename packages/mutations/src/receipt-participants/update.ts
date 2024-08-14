@@ -1,7 +1,10 @@
 import type { TRPCMutationInput, TRPCQueryOutput } from "~app/trpc";
 import type { UsersId } from "~db/models";
 
-import * as cache from "../cache";
+import {
+	update as updateReceipts,
+	updateRevert as updateRevertReceipts,
+} from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
 import type { SnapshotFn, UpdateFn } from "../types";
 
@@ -40,7 +43,7 @@ export const options: UseContextedMutationOptions<
 	{ selfUserId: UsersId }
 > = {
 	onMutate: (controllerContext) => (variables) =>
-		cache.receipts.updateRevert(controllerContext, {
+		updateRevertReceipts(controllerContext, {
 			get: (controller) =>
 				controller.updateParticipant(
 					variables.receiptId,
@@ -55,7 +58,7 @@ export const options: UseContextedMutationOptions<
 		(controllerContext, { selfUserId }) =>
 		(_result, variables) => {
 			if (selfUserId === variables.userId) {
-				cache.receipts.update(controllerContext, {
+				updateReceipts(controllerContext, {
 					get: undefined,
 					getNonResolvedAmount: (controller) => {
 						if (variables.update.type !== "resolved") {

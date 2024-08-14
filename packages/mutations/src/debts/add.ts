@@ -4,7 +4,8 @@ import type {
 	TRPCQueryOutput,
 } from "~app/trpc";
 
-import * as cache from "../cache";
+import { update as updateDebts } from "../cache/debts";
+import { update as updateReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
 
 type DebtUserSnapshot = TRPCQueryOutput<"debts.getUser">[number];
@@ -55,7 +56,7 @@ export const options: UseContextedMutationOptions<"debts.add"> = {
 	onSuccess: (controllerContext) => (result, updateObject) => {
 		const { receiptId } = updateObject;
 		if (receiptId) {
-			cache.receipts.update(controllerContext, {
+			updateReceipts(controllerContext, {
 				get: (controller) => {
 					controller.update(receiptId, (receipt) => ({
 						...receipt,
@@ -74,7 +75,7 @@ export const options: UseContextedMutationOptions<"debts.add"> = {
 				getPaged: undefined,
 			});
 		}
-		cache.debts.update(controllerContext, {
+		updateDebts(controllerContext, {
 			getByUsers: (controller) => {
 				controller.updateCurrency(
 					updateObject.userId,

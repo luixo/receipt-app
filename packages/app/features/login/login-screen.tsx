@@ -12,7 +12,7 @@ import { trpc } from "~app/trpc";
 import { noBatchContext } from "~app/utils/trpc";
 import { emailSchema, passwordSchema } from "~app/utils/validation";
 import { Button, Input } from "~components";
-import * as mutations from "~mutations";
+import { options as authLoginOptions } from "~mutations/auth/login";
 import type { AppPage } from "~utils/next";
 
 import { ResetPasswordModal } from "./reset-password-modal";
@@ -35,7 +35,7 @@ export const LoginScreen: AppPage = () => {
 		useBooleanState();
 
 	const loginMutation = trpc.auth.login.useMutation(
-		useTrpcMutationOptions(mutations.auth.login.options, {
+		useTrpcMutationOptions(authLoginOptions, {
 			onSuccess: () => router.replace("/"),
 			trpc: { context: noBatchContext },
 		}),

@@ -17,7 +17,7 @@ import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import { currencyCodeSchema, receiptNameSchema } from "~app/utils/validation";
 import { Button, Input } from "~components";
-import * as mutations from "~mutations";
+import { options as receiptsAddOptions } from "~mutations/receipts/add";
 import { getToday } from "~utils/date";
 import type { AppPage } from "~utils/next";
 
@@ -75,7 +75,7 @@ export const AddReceiptScreen: AppPage = () => {
 	const selfAccountId = useSelfAccountId();
 
 	const addReceiptMutation = trpc.receipts.add.useMutation(
-		useTrpcMutationOptions(mutations.receipts.add.options, {
+		useTrpcMutationOptions(receiptsAddOptions, {
 			context: {
 				selfAccountId: selfAccountId || "unknown",
 			},

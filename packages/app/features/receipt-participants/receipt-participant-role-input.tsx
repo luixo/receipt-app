@@ -19,7 +19,7 @@ import {
 	ViewerIcon,
 } from "~components/icons";
 import type { ReceiptsId, UsersId } from "~db/models";
-import * as mutations from "~mutations";
+import { options as receiptParticipantsUpdateOptions } from "~mutations/receipt-participants/update";
 import type { Role } from "~web/handlers/receipts/utils";
 
 export type AssignableRole = Exclude<Role, "owner">;
@@ -42,7 +42,7 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 	isOwner,
 }) => {
 	const updateParticipantMutation = trpc.receiptParticipants.update.useMutation(
-		useTrpcMutationOptions(mutations.receiptParticipants.update.options, {
+		useTrpcMutationOptions(receiptParticipantsUpdateOptions, {
 			context: { selfUserId: selfUserId || "unknown" },
 		}),
 	);

@@ -5,7 +5,7 @@ import { ErrorMessage } from "~app/components/error-message";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
 import { Button, Header, Link } from "~components";
-import * as mutations from "~mutations";
+import { options as authVoidAccountOptions } from "~mutations/auth/void-account";
 
 type Props = {
 	token: string;
@@ -13,7 +13,7 @@ type Props = {
 
 export const VoidAccount: React.FC<Props> = ({ token }) => {
 	const voidMutation = trpc.auth.voidAccount.useMutation(
-		useTrpcMutationOptions(mutations.auth.voidAccount.options),
+		useTrpcMutationOptions(authVoidAccountOptions),
 	);
 	const voidAccount = React.useCallback(
 		() => voidMutation.mutate({ token }),

@@ -11,7 +11,8 @@ import { getReceiptDebtName } from "~app/utils/receipt";
 import { Button, Text } from "~components";
 import { ReceiptIcon, SendIcon, SyncIcon, ZeroIcon } from "~components/icons";
 import type { UsersId } from "~db/models";
-import * as mutations from "~mutations";
+import { options as debtsAddOptions } from "~mutations/debts/add";
+import { options as debtsUpdateOptions } from "~mutations/debts/update";
 
 export const isDebtInSyncWithReceipt = (
 	receiptDebt: Pick<LockedReceipt, "currencyCode" | "issued" | "id"> & {
@@ -50,7 +51,7 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 	const currency = useFormattedCurrency(receipt.currencyCode);
 
 	const updateMutation = trpc.debts.update.useMutation(
-		useTrpcMutationOptions(mutations.debts.update.options, {
+		useTrpcMutationOptions(debtsUpdateOptions, {
 			context: participant.currentDebt
 				? {
 						...participant.currentDebt,
@@ -85,7 +86,7 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 	);
 
 	const addMutation = trpc.debts.add.useMutation(
-		useTrpcMutationOptions(mutations.debts.add.options),
+		useTrpcMutationOptions(debtsAddOptions),
 	);
 	const addDebt = React.useCallback(
 		() =>

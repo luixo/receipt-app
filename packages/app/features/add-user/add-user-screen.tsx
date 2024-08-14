@@ -13,7 +13,7 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
 import { emailSchema, userNameSchema } from "~app/utils/validation";
 import { Button, Input } from "~components";
-import * as mutations from "~mutations";
+import { options as usersAddOptions } from "~mutations/users/add";
 import type { AppPage } from "~utils/next";
 
 type EmailProps = {
@@ -68,7 +68,7 @@ export const AddUserScreen: AppPage = () => {
 	const router = useRouter();
 
 	const addUserMutation = trpc.users.add.useMutation(
-		useTrpcMutationOptions(mutations.users.add.options, {
+		useTrpcMutationOptions(usersAddOptions, {
 			onSuccess: ({ id }) => router.replace(`/users/${id}`),
 		}),
 	);

@@ -27,7 +27,7 @@ import {
 } from "~app/utils/validation";
 import { Button, Input } from "~components";
 import type { UsersId } from "~db/models";
-import * as mutations from "~mutations";
+import { options as debtsAddOptions } from "~mutations/debts/add";
 import { getToday } from "~utils/date";
 import type { AppPage } from "~utils/next";
 
@@ -114,7 +114,7 @@ export const AddDebtScreen: AppPage = () => {
 	const router = useRouter();
 
 	const addMutation = trpc.debts.add.useMutation(
-		useTrpcMutationOptions(mutations.debts.add.options, {
+		useTrpcMutationOptions(debtsAddOptions, {
 			onSuccess: ({ id }) => router.replace(`/debts/${id}`),
 		}),
 	);

@@ -1,4 +1,4 @@
-import * as cache from "../cache";
+import { update as updateAccountConnections } from "../cache/account-connection-intentions";
 import type { UseContextedMutationOptions } from "../context";
 
 import { updateUserConnected } from "./utils";
@@ -13,7 +13,7 @@ export const options: UseContextedMutationOptions<"accountConnectionIntentions.a
 					result.account,
 				);
 			} else {
-				cache.accountConnections.update(controllerContext, {
+				updateAccountConnections(controllerContext, {
 					getAll: (controller) =>
 						controller.outbound.add({
 							account: {

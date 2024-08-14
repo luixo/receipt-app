@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "solito/navigation";
 import { PageHeader } from "~app/components/page-header";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
-import * as mutations from "~mutations";
+import { options as authConfirmEmailOptions } from "~mutations/auth/confirm-email";
 import type { AppPage } from "~utils/next";
 
 import { ConfirmEmail } from "./confirm-email";
@@ -15,7 +15,7 @@ export const ConfirmEmailScreen: AppPage = () => {
 	const searchParams = useSearchParams<{ token: string }>();
 	const token = searchParams?.get("token") ?? undefined;
 	const confirmEmailMutation = trpc.auth.confirmEmail.useMutation(
-		useTrpcMutationOptions(mutations.auth.confirmEmail.options, {
+		useTrpcMutationOptions(authConfirmEmailOptions, {
 			onSuccess: () => router.replace("/"),
 		}),
 	);

@@ -9,7 +9,7 @@ import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import { Text } from "~components";
 import type { ReceiptsId } from "~db/models";
-import * as mutations from "~mutations";
+import { options as receiptsUpdateOptions } from "~mutations/receipts/update";
 
 type Props = {
 	receiptId: ReceiptsId;
@@ -35,7 +35,7 @@ export const ReceiptCurrencyInput: React.FC<Props> = ({
 	] = useBooleanState();
 
 	const updateReceiptMutation = trpc.receipts.update.useMutation(
-		useTrpcMutationOptions(mutations.receipts.update.options),
+		useTrpcMutationOptions(receiptsUpdateOptions),
 	);
 	const saveCurrency = React.useCallback(
 		(nextCurrencyCode: CurrencyCode) => {

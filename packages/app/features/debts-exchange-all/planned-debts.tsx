@@ -17,7 +17,7 @@ import type { CurrencyCode } from "~app/utils/currency";
 import { currencyCodeSchema, currencyRateSchema } from "~app/utils/validation";
 import { Button, Input, Spinner, Text } from "~components";
 import type { UsersId } from "~db/models";
-import * as mutations from "~mutations";
+import { options as debtsAddOptions } from "~mutations/debts/add";
 import { round } from "~utils/math";
 
 const getDefaultValues = (
@@ -243,7 +243,7 @@ export const PlannedDebts: React.FC<Props> = ({
 	const addMutations = debts.map(() =>
 		trpc.debts.add.useMutation(
 			// eslint-disable-next-line react-hooks/rules-of-hooks
-			useTrpcMutationOptions(mutations.debts.add.options),
+			useTrpcMutationOptions(debtsAddOptions),
 		),
 	);
 	const isEveryMutationSuccessful = addMutations.every(

@@ -9,7 +9,7 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
 import { passwordSchema } from "~app/utils/validation";
 import { Button, Input } from "~components";
-import * as mutations from "~mutations";
+import { options as accountChangePasswordOptions } from "~mutations/account/change-password";
 import type { AppPage } from "~utils/next";
 
 type Form = {
@@ -42,7 +42,7 @@ export const ChangePasswordScreen: AppPage = () => {
 	});
 
 	const changePasswordMutation = trpc.account.changePassword.useMutation(
-		useTrpcMutationOptions(mutations.account.changePassword.options),
+		useTrpcMutationOptions(accountChangePasswordOptions),
 	);
 	const onSubmit = React.useCallback(
 		(data: Form) =>

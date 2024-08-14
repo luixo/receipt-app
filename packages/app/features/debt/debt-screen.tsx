@@ -22,7 +22,8 @@ import { debtAmountSchema, debtNoteSchema } from "~app/utils/validation";
 import { Button, Input, Link, Spinner } from "~components";
 import { ReceiptIcon } from "~components/icons";
 import type { ReceiptsId } from "~db/models";
-import * as mutations from "~mutations";
+import { options as debtsRemoveOptions } from "~mutations/debts/remove";
+import { options as debtsUpdateOptions } from "~mutations/debts/update";
 import type { AppPage } from "~utils/next";
 
 type Debt = TRPCQueryOutput<"debts.get">;
@@ -40,7 +41,7 @@ const DebtCurrencyInput: React.FC<CurrencyProps> = ({ debt, isLoading }) => {
 	] = useBooleanState();
 
 	const updateReceiptMutation = trpc.debts.update.useMutation(
-		useTrpcMutationOptions(mutations.debts.update.options, { context: debt }),
+		useTrpcMutationOptions(debtsUpdateOptions, { context: debt }),
 	);
 	const saveCurrencyCode = React.useCallback(
 		(nextCurrencyCode: CurrencyCode) => {
@@ -101,7 +102,7 @@ const DebtAmountInput: React.FC<AmountProps> = ({ debt, isLoading }) => {
 	);
 
 	const updateMutation = trpc.debts.update.useMutation(
-		useTrpcMutationOptions(mutations.debts.update.options, { context: debt }),
+		useTrpcMutationOptions(debtsUpdateOptions, { context: debt }),
 	);
 	const updateAmount = React.useCallback(
 		(amount: number) => {
@@ -142,7 +143,7 @@ type DateProps = {
 
 const DebtDateInput: React.FC<DateProps> = ({ debt, isLoading }) => {
 	const updateMutation = trpc.debts.update.useMutation(
-		useTrpcMutationOptions(mutations.debts.update.options, { context: debt }),
+		useTrpcMutationOptions(debtsUpdateOptions, { context: debt }),
 	);
 
 	const saveDate = React.useCallback(
@@ -186,7 +187,7 @@ const DebtNoteInput: React.FC<NoteProps> = ({ debt, isLoading }) => {
 	});
 
 	const updateMutation = trpc.debts.update.useMutation(
-		useTrpcMutationOptions(mutations.debts.update.options, { context: debt }),
+		useTrpcMutationOptions(debtsUpdateOptions, { context: debt }),
 	);
 	const saveNote = React.useCallback(
 		(nextNote: string) => {
@@ -245,7 +246,7 @@ const DebtRemoveButton: React.FC<RemoveButtonProps> = ({
 }) => {
 	const router = useRouter();
 	const removeMutation = trpc.debts.remove.useMutation(
-		useTrpcMutationOptions(mutations.debts.remove.options, {
+		useTrpcMutationOptions(debtsRemoveOptions, {
 			context: debt,
 			onSuccess: () => router.replace(`/debts/user/${debt.userId}`),
 		}),
@@ -282,7 +283,7 @@ export const DebtSignButtonGroup: React.FC<SignGroupProps> = ({
 	disabled,
 }) => {
 	const updateMutation = trpc.debts.update.useMutation(
-		useTrpcMutationOptions(mutations.debts.update.options, { context: debt }),
+		useTrpcMutationOptions(debtsUpdateOptions, { context: debt }),
 	);
 	const setDirection = React.useCallback(
 		(direction: "+" | "-") => {

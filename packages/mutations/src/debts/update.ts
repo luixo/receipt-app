@@ -1,4 +1,4 @@
-import * as cache from "../cache";
+import { updateRevert as updateRevertDebts } from "../cache/debts";
 import type { UseContextedMutationOptions } from "../context";
 
 import type { CurrentDebt } from "./utils";
@@ -17,7 +17,7 @@ import {
 export const options: UseContextedMutationOptions<"debts.update", CurrentDebt> =
 	{
 		onMutate: (controllerContext, currDebt) => (updateObject) =>
-			cache.debts.updateRevert(controllerContext, {
+			updateRevertDebts(controllerContext, {
 				getByUsers: (controller) =>
 					controller.updateCurrency(
 						currDebt.userId,

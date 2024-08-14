@@ -13,7 +13,8 @@ import { getReceiptDebtName } from "~app/utils/receipt";
 import { getParticipantSums } from "~app/utils/receipt-item";
 import { Button } from "~components";
 import { InfoIcon, SendIcon, SyncIcon } from "~components/icons";
-import * as mutations from "~mutations";
+import { options as debtsAddOptions } from "~mutations/debts/add";
+import { options as debtsUpdateOptions } from "~mutations/debts/update";
 import type { NonNullableField } from "~utils/types";
 
 import { ReceiptDebtSyncInfoModal } from "./receipt-debt-sync-info-modal";
@@ -85,7 +86,7 @@ const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 	const addMutations = participants.map(() =>
 		trpc.debts.add.useMutation(
 			// eslint-disable-next-line react-hooks/rules-of-hooks
-			useTrpcMutationOptions(mutations.debts.add.options),
+			useTrpcMutationOptions(debtsAddOptions),
 		),
 	);
 	const updateMutations = participants.map(({ currentDebt, userId }) => {
@@ -94,7 +95,7 @@ const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 		);
 		return trpc.debts.update.useMutation(
 			// eslint-disable-next-line react-hooks/rules-of-hooks
-			useTrpcMutationOptions(mutations.debts.update.options, {
+			useTrpcMutationOptions(debtsUpdateOptions, {
 				context: matchedDesyncedParticipant
 					? matchedDesyncedParticipant.currentDebt
 					: {

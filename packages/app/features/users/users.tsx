@@ -10,7 +10,7 @@ import { trpc } from "~app/trpc";
 import { Button, Link, Overlay, Pagination, Spinner } from "~components";
 import { AddIcon } from "~components/icons";
 import type { UsersId } from "~db/models";
-import * as queries from "~queries";
+import { useStore as useUsersGetPagedStore } from "~queries/users/get-paged";
 
 import { UserPreview } from "./user-preview";
 
@@ -53,7 +53,7 @@ const UserPreviews: React.FC<{ ids: UsersId[] }> = ({ ids }) => {
 };
 
 export const Users: React.FC = () => {
-	const [input] = queries.users.getPaged.useStore();
+	const [input] = useUsersGetPagedStore();
 	const cursorPaging = useCursorPaging(useUsersQuery, input, "offset");
 	const { totalCount, pagination, query } = cursorPaging;
 

@@ -1,4 +1,4 @@
-import * as cache from "../cache";
+import { update as updateAccount } from "../cache/account";
 import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<
@@ -9,7 +9,7 @@ export const options: UseContextedMutationOptions<
 		(controllerContext, { name }) =>
 		async ({ account }, variables) => {
 			await controllerContext.trpcUtils.invalidate();
-			cache.account.update(controllerContext, {
+			updateAccount(controllerContext, {
 				get: (controller) =>
 					controller.upsert({
 						user: { name },

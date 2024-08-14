@@ -6,7 +6,8 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { Button } from "~components";
-import * as mutations from "~mutations";
+import { options as receiptTransferIntentionsAcceptOptions } from "~mutations/receipt-transfer-intentions/accept";
+import { options as receiptTransferIntentionsRemoveOptions } from "~mutations/receipt-transfer-intentions/remove";
 
 import { ReceiptSnippet } from "./receipt-snippet";
 
@@ -19,9 +20,7 @@ export const InboundReceiptTransferIntention: React.FC<Props> = ({
 }) => {
 	const acceptTransferMutation =
 		trpc.receiptTransferIntentions.accept.useMutation(
-			useTrpcMutationOptions(
-				mutations.receiptTransferIntentions.accept.options,
-			),
+			useTrpcMutationOptions(receiptTransferIntentionsAcceptOptions),
 		);
 	const acceptTransfer = React.useCallback(() => {
 		acceptTransferMutation.mutate({
@@ -31,9 +30,7 @@ export const InboundReceiptTransferIntention: React.FC<Props> = ({
 
 	const rejectTransferMutation =
 		trpc.receiptTransferIntentions.remove.useMutation(
-			useTrpcMutationOptions(
-				mutations.receiptTransferIntentions.remove.options,
-			),
+			useTrpcMutationOptions(receiptTransferIntentionsRemoveOptions),
 		);
 	const rejectTransfer = React.useCallback(() => {
 		rejectTransferMutation.mutate({
