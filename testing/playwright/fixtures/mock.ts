@@ -1,7 +1,7 @@
 import { Faker, en } from "@faker-js/faker";
 import { freeze as freezeTime, reset as resetTime } from "timekeeper";
 
-import { setSeed } from "~tests/utils";
+import { setSeed } from "~tests/utils/faker";
 
 import { createMixin } from "./utils";
 

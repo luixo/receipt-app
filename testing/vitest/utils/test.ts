@@ -16,7 +16,7 @@ import type { ResponseHeadersMock } from "~tests/backend/utils/mocks/response-he
 import { getResponseHeaders } from "~tests/backend/utils/mocks/response-headers";
 import type { S3OptionsMock } from "~tests/backend/utils/mocks/s3";
 import { getS3Options } from "~tests/backend/utils/mocks/s3";
-import { setSeed } from "~tests/utils";
+import { setSeed } from "~tests/utils/faker";
 
 type FileContext = {
 	logger: LoggerMock;

@@ -21,7 +21,7 @@
 			"~mobile/*": ["./apps/mobile/*"],
 			"~tests/backend/*": ["./testing/vitest/*"],
 			"~tests/frontend/*": ["./testing/playwright/*"],
-			"~tests/utils": ["./testing/utils/src"]
+			"~tests/utils/*": ["./testing/utils/src/*"]
 		}
 	},
 	"include": ["**/*"],
