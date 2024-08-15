@@ -1,13 +1,11 @@
 import type { Locator } from "@playwright/test";
-import { expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
-import { createMixin } from "./utils";
-
-type TooltipMixin = {
+type TooltipFixtures = {
 	expectTooltip: (locator: Locator, expectedText: string) => Promise<void>;
 };
 
-export const tooltipMixin = createMixin<TooltipMixin>({
+export const tooltipFixtures = test.extend<TooltipFixtures>({
 	expectTooltip: async ({ page }, use) =>
 		use(async (locator, expectedText) => {
 			// see https://github.com/adobe/react-spectrum/issues/5701

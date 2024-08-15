@@ -1,8 +1,7 @@
 import type { Locator } from "@playwright/test";
+import { test } from "@playwright/test";
 
-import { createMixin } from "./utils";
-
-type SelectorsMixin = {
+type SelectorsFixtures = {
 	loader: Locator;
 	withLoader: (locator: Locator) => Locator;
 	modal: (title?: string) => Locator;
@@ -13,7 +12,7 @@ type SelectorsMixin = {
 	backLink: Locator;
 };
 
-export const selectorsMixin = createMixin<SelectorsMixin>({
+export const selectorsFixtures = test.extend<SelectorsFixtures>({
 	withLoader: async ({ loader }, use) => {
 		await use((locator) => locator.filter({ has: loader }));
 	},

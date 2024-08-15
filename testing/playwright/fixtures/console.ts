@@ -1,6 +1,4 @@
-import { type ConsoleMessage, expect } from "@playwright/test";
-
-import { createMixin } from "./utils";
+import { type ConsoleMessage, expect, test } from "@playwright/test";
 
 type IgnoredPattern = string | RegExp;
 
@@ -10,12 +8,12 @@ type ConsoleManager = {
 	ignore: (pattern: IgnoredPattern) => void;
 };
 
-type ConsoleMixin = {
+type ConsoleFixtures = {
 	consoleManager: ConsoleManager;
 	autoVerifyNoConsoleMessages: void;
 };
 
-export const consoleMixin = createMixin<ConsoleMixin>({
+export const consoleFixtures = test.extend<ConsoleFixtures>({
 	// eslint-disable-next-line no-empty-pattern
 	consoleManager: async ({}, use) => {
 		const flatMessages: string[] = [];

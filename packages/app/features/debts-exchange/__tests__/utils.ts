@@ -1,7 +1,7 @@
-import type { Locator } from "@playwright/test";
+import { type Locator, mergeTests } from "@playwright/test";
 
 import type { Fixtures as DebtsGroupFixtures } from "~app/components/app/__tests__/debts-group.utils";
-import { withFixtures as withDebtsGroupFixtures } from "~app/components/app/__tests__/debts-group.utils";
+import { debtsGroupFixture } from "~app/components/app/__tests__/debts-group.utils";
 import type { UsersId } from "~db/models";
 import { test as originalTest } from "~tests/frontend/fixtures";
 
@@ -24,7 +24,8 @@ type Fixtures = DebtsGroupFixtures & {
 	exchangeSpecificButton: Locator;
 };
 
-export const test = withDebtsGroupFixtures(
+export const test = mergeTests(
+	debtsGroupFixture,
 	originalTest.extend<Fixtures>({
 		mockBase: ({ api, faker }, use) =>
 			use(({ generateUser = defaultGenerateUser } = {}) => {

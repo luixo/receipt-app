@@ -1,13 +1,11 @@
-import type { Locator } from "@playwright/test";
-
-import { createMixin } from "~tests/frontend/fixtures/utils";
+import { type Locator, test } from "@playwright/test";
 
 export type Fixtures = {
 	debtsGroup: Locator;
 	debtsGroupElement: Locator;
 };
 
-export const withFixtures = createMixin<Fixtures>({
+export const debtsGroupFixture = test.extend<Fixtures>({
 	debtsGroup: ({ page }, use) => use(page.getByTestId("debts-group")),
 	debtsGroupElement: ({ page }, use) =>
 		use(page.getByTestId("debts-group-element")),

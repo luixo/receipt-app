@@ -1,15 +1,13 @@
 import type { TestInfo } from "@playwright/test";
 import { test } from "@playwright/test";
 
-import { createMixin } from "./utils";
-
 type Criteria = "only-smallest";
 
-type SkipMixin = {
+type SkipFixtures = {
 	skip: (testInfo: TestInfo, criteria: Criteria) => void;
 };
 
-export const skipMixin = createMixin<SkipMixin>({
+export const skipFixtures = test.extend<SkipFixtures>({
 	// eslint-disable-next-line no-empty-pattern
 	skip: async ({}, use) =>
 		use((testInfo, criteria) => {

@@ -1,13 +1,11 @@
-import { expect } from "@playwright/test";
-
-import { createMixin } from "./utils";
+import { expect, test } from "@playwright/test";
 
 const TOAST_SELECTOR = ".toaster > div";
 const DEFAULT_WAIT_TOAST_TIMEOUT = 1000;
 
 type RegExpOrString = string | RegExp;
 
-type ToastsMixin = {
+type ToastsFixtures = {
 	verifyToastTexts: (
 		textOrTexts?: RegExpOrString | RegExpOrString[],
 		timeout?: number,
@@ -15,7 +13,7 @@ type ToastsMixin = {
 	clearToasts: () => Promise<void>;
 };
 
-export const toastsMixin = createMixin<ToastsMixin>({
+export const toastsFixtures = test.extend<ToastsFixtures>({
 	verifyToastTexts: async ({ page, clearToasts }, use) => {
 		// Every toast is shown for at least 1 second
 		await use(

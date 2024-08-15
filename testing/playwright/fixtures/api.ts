@@ -1,4 +1,5 @@
 import type { BrowserContext } from "@playwright/test";
+import { test } from "@playwright/test";
 import {
 	createTRPCClient,
 	unstable_httpBatchStreamLink as httpBatchStreamLink,
@@ -30,8 +31,6 @@ import type { ControlledPromise } from "~utils/promise";
 import { createPromise } from "~utils/promise";
 
 import type { appRouter } from "../global/router";
-
-import { createMixin } from "./utils";
 
 const CLEANUP_MARK = "__CLEANUP_MARK__";
 
@@ -376,17 +375,17 @@ const getMockUtils = (api: ApiManager) => {
 	};
 };
 
-export type ApiMixin = {
+type ApiFixtures = {
 	api: ApiManager & {
 		mockUtils: ReturnType<typeof getMockUtils>;
 	};
 };
 
-type ApiWorkerMixin = {
+type ApiWorkerFixture = {
 	globalApiManager: WorkerManager;
 };
 
-export const apiMixin = createMixin<ApiMixin, ApiWorkerMixin>({
+export const apiFixtures = test.extend<ApiFixtures, ApiWorkerFixture>({
 	api: [
 		async ({ globalApiManager, context }, use) => {
 			const { cleanup, ...api } = await createApiManager(

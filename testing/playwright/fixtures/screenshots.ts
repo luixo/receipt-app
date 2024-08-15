@@ -4,11 +4,9 @@ import type {
 	Page,
 	PageScreenshotOptions,
 } from "@playwright/test";
-import { expect } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 import joinImages from "join-images";
 import assert from "node:assert";
-
-import { createMixin } from "./utils";
 
 const FRAME_LENGTH = 33;
 const STABLE_FRAME_COUNT = 5;
@@ -103,7 +101,7 @@ const stableScreenshot = async ({
 	/* eslint-enable no-await-in-loop */
 };
 
-type ScreenshotsMixin = {
+type ScreenshotsFixtures = {
 	expectScreenshotWithSchemes: (
 		name: string,
 		options?: Omit<Parameters<typeof stableScreenshot>[0], "page"> &
@@ -135,7 +133,7 @@ const checkActionability = async (page: Page, locator: Locator) => {
 	return menuPoints.some(Boolean);
 };
 
-export const screenshotsMixin = createMixin<ScreenshotsMixin>({
+export const screenshotsFixtures = test.extend<ScreenshotsFixtures>({
 	expectScreenshotWithSchemes: async ({ page }, use) => {
 		await use(
 			async (

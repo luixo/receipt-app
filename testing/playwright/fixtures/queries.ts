@@ -24,8 +24,7 @@ import type {
 } from "~app/trpc";
 import { router } from "~web/handlers";
 
-import type { ApiManager, ApiMixin, TRPCKey } from "./api";
-import { createMixin } from "./utils";
+import { type ApiManager, type TRPCKey, apiFixtures as test } from "./api";
 
 const DEFAULT_AWAIT_CACHE_TIMEOUT = 5000;
 
@@ -405,7 +404,7 @@ const getDiff = (prevCache: QueryCache, nextCache: QueryCache) => {
 	);
 };
 
-type QueriesMixin = {
+type QueriesFixtures = {
 	snapshotQueries: <T>(
 		fn: () => Promise<T>,
 		options?: Partial<SnapshotQueryCacheOptions>,
@@ -422,11 +421,7 @@ type QueriesMixin = {
 	) => Promise<boolean[]>;
 };
 
-export const queriesMixin = createMixin<
-	QueriesMixin,
-	NonNullable<unknown>,
-	ApiMixin
->({
+export const queriesFixtures = test.extend<QueriesFixtures>({
 	snapshotQueries: async ({ page, api }, use, testInfo) => {
 		await use(
 			async (

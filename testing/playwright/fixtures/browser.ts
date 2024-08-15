@@ -1,6 +1,6 @@
-import type { CookieValues } from "~app/utils/cookie-data";
+import { test } from "@playwright/test";
 
-import { createMixin } from "./utils";
+import type { CookieValues } from "~app/utils/cookie-data";
 
 type CookieManager = {
 	addCookie: <K extends keyof CookieValues>(
@@ -9,11 +9,11 @@ type CookieManager = {
 	) => Promise<void>;
 };
 
-type BrowserMixin = {
+type BrowserFixtures = {
 	cookieManager: CookieManager;
 };
 
-export const browserMixin = createMixin<BrowserMixin>({
+export const browserFixtures = test.extend<BrowserFixtures>({
 	cookieManager: async ({ page, baseURL }, use) => {
 		const browserContext = page.context();
 		await use({

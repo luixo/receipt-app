@@ -1,4 +1,4 @@
-import type { ExtractFixture } from "~tests/frontend/fixtures";
+import type { ExtractFixture } from "~tests/frontend/types";
 
 import {
 	generateDebtsWith,

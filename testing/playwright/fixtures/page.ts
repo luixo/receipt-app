@@ -1,9 +1,12 @@
-import type { Page as OriginalPage } from "@playwright/test";
+import type { Page as OriginalPage, Page } from "@playwright/test";
 
-import type { ApiMixin } from "./api";
-import { createMixin } from "./utils";
+import type { ExtractFixture } from "~tests/frontend/types";
 
-const getProxyUrl = (url: string, api: ApiMixin["api"]) => {
+import { apiFixtures as test } from "./api";
+
+type ExtendedPageFixtures = { page: Page };
+
+const getProxyUrl = (url: string, api: ExtractFixture<typeof test>["api"]) => {
 	const { port, controllerId } = api.getConnection();
 	const baseUrl = "http://localhost";
 	const urlObject = new URL(url, baseUrl);
@@ -34,11 +37,7 @@ const fakeBrowserDate = async (page: OriginalPage) => {
 	);
 };
 
-export const pageMixin = createMixin<
-	NonNullable<unknown>,
-	NonNullable<unknown>,
-	ApiMixin
->({
+export const pageFixtures = test.extend<ExtendedPageFixtures>({
 	page: async ({ page, api }, use) => {
 		await page.emulateMedia({ colorScheme: "light" });
 

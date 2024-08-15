@@ -1,41 +1,30 @@
-import type { TestType } from "@playwright/test";
-import { test as base, expect } from "@playwright/test";
+import { test as base, expect, mergeTests } from "@playwright/test";
 
-import { apiMixin } from "./fixtures/api";
-import { browserMixin } from "./fixtures/browser";
-import { consoleMixin } from "./fixtures/console";
-import { mockMixin } from "./fixtures/mock";
-import { pageMixin } from "./fixtures/page";
-import { queriesMixin } from "./fixtures/queries";
-import { screenshotsMixin } from "./fixtures/screenshots";
-import { selectorsMixin } from "./fixtures/selectors";
-import { skipMixin } from "./fixtures/skip";
-import { toastsMixin } from "./fixtures/toasts";
-import { tooltipMixin } from "./fixtures/tooltip";
+import { apiFixtures } from "./fixtures/api";
+import { browserFixtures } from "./fixtures/browser";
+import { consoleFixtures } from "./fixtures/console";
+import { mockFixtures } from "./fixtures/mock";
+import { pageFixtures } from "./fixtures/page";
+import { queriesFixtures } from "./fixtures/queries";
+import { screenshotsFixtures } from "./fixtures/screenshots";
+import { selectorsFixtures } from "./fixtures/selectors";
+import { skipFixtures } from "./fixtures/skip";
+import { toastsFixtures } from "./fixtures/toasts";
+import { tooltipFixtures } from "./fixtures/tooltip";
 
-export const test = queriesMixin(
-	pageMixin(
-		apiMixin(
-			tooltipMixin(
-				toastsMixin(
-					selectorsMixin(
-						browserMixin(
-							consoleMixin(screenshotsMixin(mockMixin(skipMixin(base)))),
-						),
-					),
-				),
-			),
-		),
-	),
+export const test = mergeTests(
+	base,
+	skipFixtures,
+	mockFixtures,
+	tooltipFixtures,
+	screenshotsFixtures,
+	consoleFixtures,
+	browserFixtures,
+	selectorsFixtures,
+	toastsFixtures,
+	apiFixtures,
+	pageFixtures,
+	queriesFixtures,
 );
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
-export type ExtractFixture<F extends TestType<any, any>> = F extends TestType<
-	infer R,
-	infer W
->
-	? R & W
-	: never;
-/* eslint-enable @typescript-eslint/no-explicit-any */
 
 export { expect };
