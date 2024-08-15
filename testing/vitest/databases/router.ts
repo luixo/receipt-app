@@ -70,10 +70,12 @@ export const appRouter = router({
 			const container = new GenericContainer("postgres")
 				.withTmpFs({ [POSTGRES_TEMP_DIR]: "rw" })
 				.withExposedPorts(POSTGRES_PORT)
-				.withEnv("POSTGRES_USER", POSTGRES_USER)
-				.withEnv("POSTGRES_PASSWORD", POSTGRES_PASSWORD)
-				.withEnv("POSTGRES_DB", POSTGRES_TEMPLATE_DATABASE)
-				.withEnv("PGDATA", POSTGRES_TEMP_DIR);
+				.withEnvironment({
+					POSTGRES_USER,
+					POSTGRES_PASSWORD,
+					POSTGRES_DB: POSTGRES_TEMPLATE_DATABASE,
+					PGDATA: POSTGRES_TEMP_DIR,
+				});
 			const runningContainer = await container.start();
 			const connectionData = {
 				host: POSTGRES_HOST,
