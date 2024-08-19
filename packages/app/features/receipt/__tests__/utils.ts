@@ -1,24 +1,23 @@
 import type { ReceiptsId, UsersId } from "~db/models";
 import { test as originalTest } from "~tests/frontend/fixtures";
-
+import type { GenerateSelfAccount } from "~tests/frontend/generators/accounts";
+import { defaultGenerateSelfAccount } from "~tests/frontend/generators/accounts";
 import type {
 	GenerateReceipt,
 	GenerateReceiptBase,
 	GenerateReceiptItems,
 	GenerateReceiptItemsParts,
 	GenerateReceiptParticipants,
-	GenerateSelfAccount,
-	GenerateUsers,
-} from "./generators";
+} from "~tests/frontend/generators/receipts";
 import {
 	defaultGenerateReceipt,
 	defaultGenerateReceiptBase,
 	defaultGenerateReceiptItems,
 	defaultGenerateReceiptItemsParts,
 	defaultGenerateReceiptParticipants,
-	defaultGenerateSelfAccount,
-	defaultGenerateUsers,
-} from "./generators";
+} from "~tests/frontend/generators/receipts";
+import type { GenerateUsers } from "~tests/frontend/generators/users";
+import { defaultGenerateUsers } from "~tests/frontend/generators/users";
 
 type Fixtures = {
 	mockBase: () => void;

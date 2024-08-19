@@ -1,18 +1,20 @@
 import type { Locator } from "@playwright/test";
 
-import type { ExtractFixture } from "~tests/frontend/types";
-
-import type { GenerateDebts } from "./debts.generators";
-import { defaultGenerateDebts } from "./debts.generators";
-import type { GenerateReceipt } from "./generators";
+import type { GenerateDebtsFromReceipt } from "~tests/frontend/generators/debts";
+import { defaultGenerateDebtsFromReceipt } from "~tests/frontend/generators/debts";
+import type { GenerateReceipt } from "~tests/frontend/generators/receipts";
 import {
 	defaultGenerateReceipt,
 	defaultGenerateReceiptBase,
-} from "./generators";
+} from "~tests/frontend/generators/receipts";
+import type { ExtractFixture } from "~tests/frontend/types";
+
 import { test as originalTest } from "./utils";
 
 type LocalGenerateReceipt = (
-	opts: Parameters<GenerateReceipt>[0] & { debts: ReturnType<GenerateDebts> },
+	opts: Parameters<GenerateReceipt>[0] & {
+		debts: ReturnType<GenerateDebtsFromReceipt>;
+	},
 ) => ReturnType<GenerateReceipt>;
 
 const localDefaultGenerateReceipt: LocalGenerateReceipt = ({
@@ -52,11 +54,11 @@ type Fixtures = {
 			NonNullable<Parameters<MockReceipt>[0]>,
 			"generateReceipt"
 		> & {
-			generateDebts?: GenerateDebts;
+			generateDebts?: GenerateDebtsFromReceipt;
 			generateReceipt?: LocalGenerateReceipt;
 		},
 	) => ReturnType<MockReceipt> & {
-		debts: ReturnType<GenerateDebts>;
+		debts: ReturnType<GenerateDebtsFromReceipt>;
 	};
 };
 
@@ -122,7 +124,7 @@ export const test = originalTest.extend<Fixtures>({
 				generateReceiptItems,
 				generateReceiptParticipants,
 				generateReceiptItemsParts,
-				generateDebts = defaultGenerateDebts,
+				generateDebts = defaultGenerateDebtsFromReceipt,
 				generateReceipt = localDefaultGenerateReceipt,
 			} = {}) => {
 				const result = mockReceipt({

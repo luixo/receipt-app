@@ -1,10 +1,11 @@
 import {
-	generateDebtsWith,
+	generateDebtsMapped,
 	ourDesynced,
 	ourNonExistent,
-} from "./debts.generators";
+} from "~tests/frontend/generators/receipts";
+import { defaultGenerateUsers } from "~tests/frontend/generators/users";
+
 import { test } from "./debts.utils";
-import { defaultGenerateUsers } from "./generators";
 
 test("Propagate & modal info buttons", async ({
 	api,
@@ -23,7 +24,7 @@ test("Propagate & modal info buttons", async ({
 	skip(testInfo, "only-smallest");
 	const { receipt } = mockReceiptWithDebts({
 		generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 2 }),
-		generateDebts: generateDebtsWith([ourDesynced, ourNonExistent]),
+		generateDebts: generateDebtsMapped([ourDesynced, ourNonExistent]),
 	});
 	await openReceipt(receipt.id);
 	await expectScreenshotWithSchemes("buttons.png", {

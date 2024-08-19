@@ -1,4 +1,5 @@
-import { defaultGenerateTransferIntentions } from "./generators";
+import { defaultGenerateTransferIntentions } from "~tests/frontend/generators/receipt-transfer-intentions";
+
 import { test } from "./utils";
 
 test("Inbound intention", async ({

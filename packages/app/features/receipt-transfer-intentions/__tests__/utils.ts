@@ -3,17 +3,18 @@ import type { Locator } from "@playwright/test";
 import { test as originalTest } from "~tests/frontend/fixtures";
 import type { KeysLists } from "~tests/frontend/fixtures/queries";
 import { DEFAULT_BLACKLIST_KEYS } from "~tests/frontend/fixtures/queries";
-
-import type {
-	GenerateSelfAccount,
-	GenerateTransferIntentions,
-	GenerateUsers,
-} from "./generators";
 import {
+	type GenerateSelfAccount,
 	defaultGenerateSelfAccount,
+} from "~tests/frontend/generators/accounts";
+import {
+	type GenerateTransferIntentions,
 	defaultGenerateTransferIntentions,
+} from "~tests/frontend/generators/receipt-transfer-intentions";
+import {
+	type GenerateUsers,
 	defaultGenerateUsers,
-} from "./generators";
+} from "~tests/frontend/generators/users";
 
 type Fixtures = {
 	acceptButton: Locator;
@@ -102,7 +103,7 @@ export const test = originalTest.extend<Fixtures>({
 							publicName: undefined,
 							connectedAccount: matchedUser.connectedAccount
 								? {
-										id: matchedUser.connectedAccount.accountId,
+										id: matchedUser.connectedAccount.id,
 										email: matchedUser.connectedAccount.email,
 										avatarUrl: matchedUser.connectedAccount.avatarUrl,
 								  }

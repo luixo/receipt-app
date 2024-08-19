@@ -1,16 +1,14 @@
-import type { ExtractFixture } from "~tests/frontend/types";
-
 import {
-	generateDebtsWith,
+	defaultGenerateReceiptItemsParts,
+	generateDebtsMapped,
 	ourDesynced,
 	ourNonExistent,
 	ourSynced,
-} from "./debts.generators";
+} from "~tests/frontend/generators/receipts";
+import { defaultGenerateUsers } from "~tests/frontend/generators/users";
+import type { ExtractFixture } from "~tests/frontend/types";
+
 import { test as originalTest } from "./debts.utils";
-import {
-	defaultGenerateReceiptItemsParts,
-	defaultGenerateUsers,
-} from "./generators";
 
 type Fixture = {
 	mockReceiptWithDebtsForModal: () => ReturnType<
@@ -29,7 +27,7 @@ export const test = originalTest.extend<Fixture>({
 						...opts,
 						participants: opts.participants.slice(1),
 					}),
-				generateDebts: generateDebtsWith([
+				generateDebts: generateDebtsMapped([
 					ourNonExistent,
 					ourDesynced,
 					ourSynced,

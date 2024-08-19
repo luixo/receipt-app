@@ -4,20 +4,18 @@ import assert from "node:assert";
 import { getParticipantSums } from "~app/utils/receipt-item";
 import { expect } from "~tests/frontend/fixtures";
 import { getMutationsByKey } from "~tests/frontend/fixtures/queries";
-import { DAY } from "~utils/time";
-
 import {
-	generateDebtsWith,
+	defaultGenerateReceiptItemsParts,
+	generateDebtsMapped,
 	ourDesynced,
 	ourNonExistent,
 	ourSynced,
 	theirDesynced,
 	theirSynced,
-} from "./debts.generators";
-import {
-	defaultGenerateReceiptItemsParts,
-	defaultGenerateUsers,
-} from "./generators";
+} from "~tests/frontend/generators/receipts";
+import { defaultGenerateUsers } from "~tests/frontend/generators/users";
+import { DAY } from "~utils/time";
+
 import { test } from "./receipt-participant-debt.utils";
 
 test("Debt sum is 0", async ({
@@ -34,7 +32,7 @@ test("Debt sum is 0", async ({
 	const { receipt } = mockReceiptWithDebts({
 		// We need at least 1 desynced user to open a modal
 		generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 2 }),
-		generateDebts: generateDebtsWith(ourDesynced),
+		generateDebts: generateDebtsMapped(ourDesynced),
 		generateReceiptItemsParts: (opts) =>
 			// Creating a 0 sum participant
 			defaultGenerateReceiptItemsParts({
@@ -70,7 +68,7 @@ test("Debt is unsynced", async ({
 	const { receipt } = mockReceiptWithDebts({
 		// We need at least 1 desynced user to open a modal
 		generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 2 }),
-		generateDebts: generateDebtsWith([ourDesynced, ourNonExistent]),
+		generateDebts: generateDebtsMapped([ourDesynced, ourNonExistent]),
 	});
 	await openReceiptWithDebts(receipt);
 	await openDebtsInfoModal();
@@ -109,7 +107,7 @@ test("Debt is synced", async ({
 	const { receipt } = mockReceiptWithDebts({
 		// We need at least 1 desynced user to open a modal
 		generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 2 }),
-		generateDebts: generateDebtsWith([ourDesynced, ourSynced]),
+		generateDebts: generateDebtsMapped([ourDesynced, ourSynced]),
 	});
 	await openReceiptWithDebts(receipt);
 	await openDebtsInfoModal();
@@ -140,7 +138,7 @@ test.describe("Debt is desynced", () => {
 		const { receipt } = mockReceiptWithDebts({
 			// We validate 2 desynced debt: one with their desynced debt, and with their synced debt
 			generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 2 }),
-			generateDebts: generateDebtsWith(ourDesynced, [
+			generateDebts: generateDebtsMapped(ourDesynced, [
 				theirDesynced,
 				theirSynced,
 			]),
@@ -176,7 +174,7 @@ test.describe("Debt is desynced", () => {
 	}) => {
 		const { receipt } = mockReceiptWithDebts({
 			generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 1 }),
-			generateDebts: generateDebtsWith((debt) => ({
+			generateDebts: generateDebtsMapped((debt) => ({
 				...debt,
 				amount: debt.amount + 1,
 			})),
@@ -204,7 +202,7 @@ test.describe("Debt is desynced", () => {
 	}) => {
 		const { receipt } = mockReceiptWithDebts({
 			generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 1 }),
-			generateDebts: generateDebtsWith((debt) => {
+			generateDebts: generateDebtsMapped((debt) => {
 				const { receiptId } = debt;
 				assert(receiptId);
 				return {
@@ -236,7 +234,7 @@ test.describe("Debt is desynced", () => {
 	}) => {
 		const { receipt } = mockReceiptWithDebts({
 			generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 1 }),
-			generateDebts: generateDebtsWith((debt) => ({
+			generateDebts: generateDebtsMapped((debt) => ({
 				...debt,
 				currencyCode: "USD",
 			})),
@@ -264,7 +262,7 @@ test.describe("Debt is desynced", () => {
 	}) => {
 		const { receipt } = mockReceiptWithDebts({
 			generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 1 }),
-			generateDebts: generateDebtsWith((debt) => {
+			generateDebts: generateDebtsMapped((debt) => {
 				assert(debt.timestamp);
 				return {
 					...debt,
@@ -304,7 +302,7 @@ test.describe("Mutations", () => {
 					...opts,
 					participants: opts.participants.slice(1),
 				}),
-			generateDebts: generateDebtsWith([
+			generateDebts: generateDebtsMapped([
 				ourNonExistent,
 				ourNonExistent,
 				ourDesynced,
@@ -399,7 +397,7 @@ test.describe("Mutations", () => {
 						...opts,
 						participants: opts.participants.slice(1),
 					}),
-				generateDebts: generateDebtsWith(ourDesynced),
+				generateDebts: generateDebtsMapped(ourDesynced),
 			});
 
 		await openReceiptWithDebts(receipt);

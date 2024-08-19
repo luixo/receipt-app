@@ -1,6 +1,6 @@
 import { expect } from "~tests/frontend/fixtures";
+import { defaultGenerateTransferIntentions } from "~tests/frontend/generators/receipt-transfer-intentions";
 
-import { defaultGenerateTransferIntentions } from "./generators";
 import { test } from "./utils";
 
 test("Screen", async ({ page, api, backLink, mockIntentions }) => {

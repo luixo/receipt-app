@@ -1,5 +1,5 @@
-import { defaultGenerateDebts } from "~app/features/debts-exchange/__tests__/generators";
 import { test } from "~app/features/debts-exchange/__tests__/utils";
+import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
 
 test("No debts", async ({
 	openDebtsExchangeScreen,
@@ -23,7 +23,7 @@ test("Single group", async ({
 	debtsGroup,
 }) => {
 	const { user } = mockDebts({
-		generateDebts: (opts) => defaultGenerateDebts(opts).slice(0, 1),
+		generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 1 }),
 	});
 	await openDebtsExchangeScreen(user.id);
 	await expectScreenshotWithSchemes("single.png", {

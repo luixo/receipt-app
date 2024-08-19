@@ -3,9 +3,9 @@ import assert from "node:assert";
 
 import { SETTINGS_COOKIE_NAME } from "~app/utils/cookie/settings";
 import { expect } from "~tests/frontend/fixtures";
+import type { GenerateDebts } from "~tests/frontend/generators/debts";
+import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
 
-import type { GenerateDebts } from "./generators";
-import { defaultGenerateDebts } from "./generators";
 import { test } from "./utils";
 
 test.describe("Wrapper component", () => {

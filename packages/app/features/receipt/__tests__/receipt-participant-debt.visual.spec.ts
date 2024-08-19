@@ -1,14 +1,13 @@
 import {
-	generateDebtsWith,
+	defaultGenerateReceiptItemsParts,
+	generateDebtsMapped,
 	ourDesynced,
 	ourNonExistent,
 	theirDesynced,
 	theirSynced,
-} from "./debts.generators";
-import {
-	defaultGenerateReceiptItemsParts,
-	defaultGenerateUsers,
-} from "./generators";
+} from "~tests/frontend/generators/receipts";
+import { defaultGenerateUsers } from "~tests/frontend/generators/users";
+
 import { test } from "./receipt-participant-debt.utils";
 
 test("Receipt participant debt", async ({
@@ -22,7 +21,7 @@ test("Receipt participant debt", async ({
 }) => {
 	const { receipt } = mockReceiptWithDebts({
 		generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 1 }),
-		generateDebts: generateDebtsWith(ourDesynced),
+		generateDebts: generateDebtsMapped(ourDesynced),
 	});
 	await openReceipt(receipt.id);
 	await openDebtsInfoModal();
@@ -45,7 +44,10 @@ test("Status icon", async ({
 	const { receipt } = mockReceiptWithDebts({
 		// We need at least 1 desynced user to open a modal
 		generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 3 }),
-		generateDebts: generateDebtsWith(ourDesynced, [theirDesynced, theirSynced]),
+		generateDebts: generateDebtsMapped(ourDesynced, [
+			theirDesynced,
+			theirSynced,
+		]),
 		generateReceiptItemsParts: (opts) =>
 			// Creating a 0 sum participant
 			defaultGenerateReceiptItemsParts({
@@ -80,7 +82,7 @@ test("Actions", async ({
 	skip(testInfo, "only-smallest");
 	const { receipt } = mockReceiptWithDebts({
 		generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 2 }),
-		generateDebts: generateDebtsWith([ourDesynced, ourNonExistent]),
+		generateDebts: generateDebtsMapped([ourDesynced, ourNonExistent]),
 	});
 	await openReceipt(receipt.id);
 	await openDebtsInfoModal();

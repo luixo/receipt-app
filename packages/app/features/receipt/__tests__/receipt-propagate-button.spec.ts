@@ -4,18 +4,18 @@ import { isNonNullish } from "remeda";
 import { getParticipantSums } from "~app/utils/receipt-item";
 import { expect } from "~tests/frontend/fixtures";
 import { getMutationsByKey } from "~tests/frontend/fixtures/queries";
-
 import {
-	generateDebtsWith,
+	defaultGenerateReceiptItemsParts,
+	generateDebtsMapped,
 	ourDesynced,
 	ourNonExistent,
 	ourSynced,
 	theirDesynced,
 	theirNonExistent,
 	theirSynced,
-} from "./debts.generators";
+} from "~tests/frontend/generators/receipts";
+
 import { test } from "./debts.utils";
-import { defaultGenerateReceiptItemsParts } from "./generators";
 
 test.describe("Wrapper component", () => {
 	test("'debts.get' pending / error", async ({
@@ -28,7 +28,7 @@ test.describe("Wrapper component", () => {
 		openReceipt,
 	}) => {
 		const { receipt } = mockReceiptWithDebts({
-			generateDebts: generateDebtsWith(),
+			generateDebts: generateDebtsMapped(),
 		});
 
 		api.pause("debts.get");
@@ -59,7 +59,7 @@ test.describe("Propagate debts button", () => {
 		updateDebtsButton,
 	}) => {
 		const { receipt } = mockReceiptWithDebts({
-			generateDebts: generateDebtsWith(ourDesynced, theirSynced),
+			generateDebts: generateDebtsMapped(ourDesynced, theirSynced),
 		});
 		await openReceiptWithDebts(receipt);
 		await expect(propagateDebtsButton).not.toBeVisible();
@@ -73,7 +73,7 @@ test.describe("Propagate debts button", () => {
 		updateDebtsButton,
 	}) => {
 		const { receipt } = mockReceiptWithDebts({
-			generateDebts: generateDebtsWith(ourSynced, theirDesynced),
+			generateDebts: generateDebtsMapped(ourSynced, theirDesynced),
 		});
 		await openReceiptWithDebts(receipt);
 		await expect(propagateDebtsButton).not.toBeVisible();
@@ -87,7 +87,7 @@ test.describe("Propagate debts button", () => {
 		updateDebtsButton,
 	}) => {
 		const { receipt } = mockReceiptWithDebts({
-			generateDebts: generateDebtsWith(ourNonExistent),
+			generateDebts: generateDebtsMapped(ourNonExistent),
 		});
 		await openReceipt(receipt.id);
 		await expect(propagateDebtsButton).toBeVisible();
@@ -101,7 +101,7 @@ test.describe("Propagate debts button", () => {
 		updateDebtsButton,
 	}) => {
 		const { receipt } = mockReceiptWithDebts({
-			generateDebts: generateDebtsWith([ourDesynced, ourNonExistent]),
+			generateDebts: generateDebtsMapped([ourDesynced, ourNonExistent]),
 		});
 		await openReceiptWithDebts(receipt);
 		await expect(propagateDebtsButton).not.toBeVisible();
@@ -115,7 +115,7 @@ test.describe("Propagate debts button", () => {
 		updateDebtsButton,
 	}) => {
 		const { receipt } = mockReceiptWithDebts({
-			generateDebts: generateDebtsWith(ourSynced),
+			generateDebts: generateDebtsMapped(ourSynced),
 		});
 		await openReceiptWithDebts(receipt);
 		await expect(propagateDebtsButton).not.toBeVisible();
@@ -130,7 +130,7 @@ test.describe("Open debts info modal button", () => {
 		debtsInfoModalButton,
 	}) => {
 		const { receipt } = mockReceiptWithDebts({
-			generateDebts: generateDebtsWith(ourDesynced),
+			generateDebts: generateDebtsMapped(ourDesynced),
 		});
 		await openReceiptWithDebts(receipt);
 		await expect(debtsInfoModalButton).toBeVisible();
@@ -142,7 +142,7 @@ test.describe("Open debts info modal button", () => {
 		debtsInfoModalButton,
 	}) => {
 		const { receipt } = mockReceiptWithDebts({
-			generateDebts: generateDebtsWith(ourSynced, theirNonExistent),
+			generateDebts: generateDebtsMapped(ourSynced, theirNonExistent),
 		});
 		await openReceiptWithDebts(receipt);
 		await expect(debtsInfoModalButton).not.toBeVisible();
@@ -154,7 +154,7 @@ test.describe("Open debts info modal button", () => {
 		openDebtsInfoModal,
 	}) => {
 		const { receipt } = mockReceiptWithDebts({
-			generateDebts: generateDebtsWith(ourDesynced, theirNonExistent),
+			generateDebts: generateDebtsMapped(ourDesynced, theirNonExistent),
 		});
 		await openReceiptWithDebts(receipt);
 		await openDebtsInfoModal();
@@ -173,7 +173,7 @@ test.describe("Mutations", () => {
 	}) => {
 		const { receipt, debts, participants, receiptItemsParts } =
 			mockReceiptWithDebts({
-				generateDebts: generateDebtsWith([ourNonExistent, ourDesynced]),
+				generateDebts: generateDebtsMapped([ourNonExistent, ourDesynced]),
 				generateReceiptItemsParts: (opts) =>
 					defaultGenerateReceiptItemsParts({
 						...opts,

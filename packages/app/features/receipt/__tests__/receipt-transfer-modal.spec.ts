@@ -2,13 +2,13 @@ import { TRPCError } from "@trpc/server";
 import assert from "node:assert";
 
 import { expect } from "~tests/frontend/fixtures";
-
 import {
 	defaultGenerateReceipt,
 	defaultGenerateReceiptBase,
 	defaultGenerateReceiptParticipants,
-	defaultGenerateUsers,
-} from "./generators";
+} from "~tests/frontend/generators/receipts";
+import { defaultGenerateUsers } from "~tests/frontend/generators/users";
+
 import { test } from "./receipt-transfer-modal.utils.spec";
 
 test.describe("Modal is disabled", () => {

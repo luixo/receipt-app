@@ -4,17 +4,22 @@ import type { Fixtures as DebtsGroupFixtures } from "~app/components/app/__tests
 import { debtsGroupFixture } from "~app/components/app/__tests__/debts-group.utils";
 import type { UsersId } from "~db/models";
 import { test as originalTest } from "~tests/frontend/fixtures";
-
-import type { GenerateDebts, GenerateUser } from "./generators";
-import { defaultGenerateDebts, defaultGenerateUser } from "./generators";
+import {
+	type GenerateDebts,
+	defaultGenerateDebts,
+} from "~tests/frontend/generators/debts";
+import {
+	type GenerateUsers,
+	defaultGenerateUsers,
+} from "~tests/frontend/generators/users";
 
 type Fixtures = DebtsGroupFixtures & {
-	mockBase: (options?: { generateUser?: GenerateUser }) => {
-		user: ReturnType<GenerateUser>;
+	mockBase: () => {
+		user: ReturnType<GenerateUsers>[number];
 	};
 	mockDebts: (options?: { generateDebts?: GenerateDebts }) => {
 		debts: ReturnType<GenerateDebts>;
-		user: ReturnType<GenerateUser>;
+		user: ReturnType<GenerateUsers>[number];
 	};
 	openDebtsExchangeScreen: (
 		userId: UsersId,
@@ -28,7 +33,7 @@ export const test = mergeTests(
 	debtsGroupFixture,
 	originalTest.extend<Fixtures>({
 		mockBase: ({ api, faker }, use) =>
-			use(({ generateUser = defaultGenerateUser } = {}) => {
+			use(() => {
 				api.mockUtils.auth({
 					account: {
 						id: faker.string.uuid(),
@@ -40,14 +45,15 @@ export const test = mergeTests(
 					user: { name: faker.person.firstName() },
 				});
 				api.mockUtils.currencyList();
-				const user = generateUser({ faker });
+				const [user] = defaultGenerateUsers({ faker, amount: 1 });
 				api.mock("users.get", user);
-				return { user };
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				return { user: user! };
 			}),
 		mockDebts: ({ api, faker, mockBase }, use) =>
 			use(({ generateDebts = defaultGenerateDebts } = {}) => {
 				const { user } = mockBase();
-				const debts = generateDebts({ faker });
+				const debts = generateDebts({ faker, amount: { min: 3, max: 6 } });
 				api.mock("debts.getUser", debts);
 				return { debts, user };
 			}),

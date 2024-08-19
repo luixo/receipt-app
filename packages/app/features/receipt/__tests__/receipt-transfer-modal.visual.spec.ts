@@ -1,6 +1,8 @@
 import assert from "node:assert";
 
-import { defaultGenerateReceipt, defaultGenerateUsers } from "./generators";
+import { defaultGenerateReceipt } from "~tests/frontend/generators/receipts";
+import { defaultGenerateUsers } from "~tests/frontend/generators/users";
+
 import { test } from "./receipt-transfer-modal.utils.spec";
 
 test.describe("Modal button", () => {
