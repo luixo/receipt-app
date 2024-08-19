@@ -1,7 +1,6 @@
 import { type Locator, mergeTests } from "@playwright/test";
 
-import type { Fixtures as DebtsGroupFixtures } from "~app/components/app/__tests__/debts-group.utils";
-import { debtsGroupFixture } from "~app/components/app/__tests__/debts-group.utils";
+import { test as debtsGroupFixture } from "~app/components/app/__tests__/debts-group.utils";
 import type { UsersId } from "~db/models";
 import { test as originalTest } from "~tests/frontend/fixtures";
 import {
@@ -13,7 +12,7 @@ import {
 	defaultGenerateUsers,
 } from "~tests/frontend/generators/users";
 
-type Fixtures = DebtsGroupFixtures & {
+type Fixtures = {
 	mockBase: () => {
 		user: ReturnType<GenerateUsers>[number];
 	};
@@ -30,7 +29,6 @@ type Fixtures = DebtsGroupFixtures & {
 };
 
 export const test = mergeTests(
-	debtsGroupFixture,
 	originalTest.extend<Fixtures>({
 		mockBase: ({ api, faker }, use) =>
 			use(() => {
@@ -73,4 +71,5 @@ export const test = mergeTests(
 		exchangeSpecificButton: ({ page }, use) =>
 			use(page.locator("a[role='button'][title='Exchange specific currency']")),
 	}),
+	debtsGroupFixture,
 );

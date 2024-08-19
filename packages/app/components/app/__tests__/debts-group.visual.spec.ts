@@ -1,5 +1,11 @@
-import { test } from "~app/features/debts-exchange/__tests__/utils";
+import { mergeTests } from "@playwright/test";
+
+import { test as originalTest } from "~app/features/debts-exchange/__tests__/utils";
 import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
+
+import { test as localFixture } from "./debts-group.utils";
+
+const test = mergeTests(originalTest, localFixture);
 
 test("No debts", async ({
 	openDebtsExchangeScreen,

@@ -3,7 +3,7 @@ import assert from "node:assert";
 import { defaultGenerateReceipt } from "~tests/frontend/generators/receipts";
 import { defaultGenerateUsers } from "~tests/frontend/generators/users";
 
-import { test } from "./receipt-transfer-modal.utils.spec";
+import { test } from "./receipt-transfer-modal.utils";
 
 test.describe("Modal button", () => {
 	test("Intention does not exist", async ({

@@ -1,9 +1,14 @@
+import { mergeTests } from "@playwright/test";
 import { TRPCError } from "@trpc/server";
 import assert from "node:assert";
 
-import { test } from "~app/features/debts-exchange/__tests__/utils";
+import { test as originalTest } from "~app/features/debts-exchange/__tests__/utils";
 import { expect } from "~tests/frontend/fixtures";
 import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
+
+import { test as localFixture } from "./debts-group.utils";
+
+const test = mergeTests(originalTest, localFixture);
 
 test("'currency.getList' pending / error", async ({
 	api,
