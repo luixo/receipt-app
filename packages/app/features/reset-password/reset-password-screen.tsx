@@ -2,8 +2,8 @@ import React from "react";
 
 import { useSearchParams } from "solito/navigation";
 
+import { EmptyCard } from "~app/components/empty-card";
 import { PageHeader } from "~app/components/page-header";
-import { trpc } from "~app/trpc";
 import type { AppPage } from "~utils/next";
 
 import { ResetPassword } from "./reset-password";
@@ -11,18 +11,17 @@ import { ResetPassword } from "./reset-password";
 export const ResetPasswordScreen: AppPage = () => {
 	const searchParams = useSearchParams<{ token: string }>();
 	const token = searchParams?.get("token") ?? undefined;
-	const resetPasswordIntentionQuery = trpc.resetPasswordIntentions.get.useQuery(
-		{ token: token || "no-token" },
-		{ enabled: Boolean(token) },
-	);
 
 	return (
 		<>
 			<PageHeader>Reset password</PageHeader>
-			<ResetPassword
-				token={token}
-				intentionQuery={resetPasswordIntentionQuery}
-			/>
+			{token ? (
+				<ResetPassword token={token} />
+			) : (
+				<EmptyCard title="Something went wrong">
+					Please verify you got reset link right or request a new one
+				</EmptyCard>
+			)}
 		</>
 	);
 };

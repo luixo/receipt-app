@@ -5,10 +5,8 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "solito/navigation";
 import { z } from "zod";
 
-import { EmptyCard } from "~app/components/empty-card";
 import { QueryErrorMessage } from "~app/components/error-message";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { TRPCQueryResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { passwordSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
@@ -23,12 +21,12 @@ type ChangePasswordForm = {
 };
 
 type Props = {
-	token?: string;
-	intentionQuery: TRPCQueryResult<"resetPasswordIntentions.get">;
+	token: string;
 };
 
-export const ResetPassword: React.FC<Props> = ({ token, intentionQuery }) => {
+export const ResetPassword: React.FC<Props> = ({ token }) => {
 	const router = useRouter();
+	const intentionQuery = trpc.resetPasswordIntentions.get.useQuery({ token });
 	const form = useForm<ChangePasswordForm>({
 		mode: "onChange",
 		resolver: zodResolver(
@@ -42,22 +40,11 @@ export const ResetPassword: React.FC<Props> = ({ token, intentionQuery }) => {
 		}),
 	);
 	const onSubmit = React.useCallback(
-		({ password }: ChangePasswordForm) => {
-			if (!token) {
-				return;
-			}
-			changePasswordMutation.mutate({ password, token });
-		},
+		({ password }: ChangePasswordForm) =>
+			changePasswordMutation.mutate({ password, token }),
 		[changePasswordMutation, token],
 	);
 
-	if (!token) {
-		return (
-			<EmptyCard title="Something went wrong">
-				Please verify you got reset link right or request a new one
-			</EmptyCard>
-		);
-	}
 	if (intentionQuery.status === "pending") {
 		return <Spinner size="lg" />;
 	}
