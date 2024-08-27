@@ -128,7 +128,7 @@ test("Mutation 'receiptTransferIntentions.add' mutation", async ({
 	await snapshotQueries(
 		async () => {
 			await sendTransferButton.click();
-			await awaitCacheKey("receiptTransferIntentions.add");
+			await awaitCacheKey("receiptTransferIntentions.add", { errored: 1 });
 			await verifyToastTexts(
 				'Error transferring receipt: Mock "receiptTransferIntentions.add" error',
 			);
@@ -212,7 +212,7 @@ test("Mutation 'receiptTransferIntentions.remove'", async ({
 	await snapshotQueries(
 		async () => {
 			await cancelTransferButton.click();
-			await awaitCacheKey("receiptTransferIntentions.remove");
+			await awaitCacheKey("receiptTransferIntentions.remove", { errored: 1 });
 			await verifyToastTexts(
 				'Error removing receipt transfer intention: Mock "receiptTransferIntentions.remove" error',
 			);

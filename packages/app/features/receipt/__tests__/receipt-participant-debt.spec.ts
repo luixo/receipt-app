@@ -330,7 +330,7 @@ test.describe("Mutations", () => {
 			async () => {
 				await sendDebtButton.first().click();
 				await verifyToastTexts("Error adding debt: Forbidden to add a debt");
-				await awaitCacheKey("debts.add");
+				await awaitCacheKey("debts.add", { errored: 1 });
 			},
 			{ name: "1-error" },
 		);
@@ -426,7 +426,7 @@ test.describe("Mutations", () => {
 				await verifyToastTexts(
 					"Error updating debt: Forbidden to update a debt",
 				);
-				await awaitCacheKey("debts.update");
+				await awaitCacheKey("debts.update", { errored: 1 });
 			},
 			{ name: "1-error" },
 		);

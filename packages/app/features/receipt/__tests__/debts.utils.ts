@@ -110,9 +110,9 @@ export const test = originalTest.extend<Fixtures>({
 				receipt.debt.direction === "outcoming"
 					? receipt.debt.ids.length
 					: !receipt.debt.id
-					? 0
+					? undefined
 					: 1;
-			await awaitCacheKey({ path: "debts.get", amount: debtsAmount });
+			await awaitCacheKey("debts.get", debtsAmount || undefined);
 		}),
 
 	mockReceiptWithDebts: ({ api, faker, mockReceipt }, use) =>

@@ -17,7 +17,7 @@ test("On load with token", async ({
 	await snapshotQueries(
 		async () => {
 			await page.goto("/void-account?token=foo");
-			await awaitCacheKey("account.get");
+			await awaitCacheKey("account.get", { errored: 1 });
 		},
 		{
 			whitelistKeys: "account.get",
@@ -68,7 +68,7 @@ test("'auth.voidAccount' mutation", async ({
 		await verifyToastTexts(
 			`Error voiding account: Mock "auth.voidAccount" error`,
 		);
-		await awaitCacheKey("auth.voidAccount");
+		await awaitCacheKey("auth.voidAccount", { errored: 1 });
 	});
 	await expect(page).toHaveURL("/void-account?token=foo");
 

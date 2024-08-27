@@ -1,7 +1,7 @@
 import { recase } from "@kristiandupont/recase";
 import type { Page, TestInfo } from "@playwright/test";
 import { expect } from "@playwright/test";
-import type { DehydratedState } from "@tanstack/react-query";
+import type { DehydratedState, Mutation, Query } from "@tanstack/react-query";
 import type { TRPCClientErrorLike } from "@trpc/client";
 import type { AnyTRPCProcedure, AnyTRPCRouter } from "@trpc/server";
 import type {
@@ -30,7 +30,9 @@ const DEFAULT_AWAIT_CACHE_TIMEOUT = 5000;
 
 type ExtendedTestInfo = TestInfo & {
 	queriesSnapshotIndex?: number;
-	awaitedCacheKeys?: Partial<Record<TRPCQueryKey | TRPCMutationKey, number>>;
+	awaitedCacheKeys?: Partial<
+		Record<TRPCQueryKey | TRPCMutationKey, ActualAwaitAmounts>
+	>;
 };
 const getExtendedTestInfo = (testInfo: TestInfo): ExtendedTestInfo =>
 	testInfo as ExtendedTestInfo;
@@ -282,17 +284,52 @@ export const DEFAULT_BLACKLIST_KEYS: TRPCKey[] = [
 	"receiptTransferIntentions.getAll",
 ];
 
-type AwaitCacheDescription<T extends TRPCKey = TRPCKey> = {
-	path: T;
-	amount?: number;
+type AmountsWith<T> = { succeed: T; errored: T };
+type RangeAwaitAmount = { min: number; max: number };
+type ActualAwaitAmounts = AmountsWith<number>;
+type ExpectedAwaitAmounts = AmountsWith<RangeAwaitAmount>;
+type AwaitCacheKeyAmount =
+	| number
+	| Partial<RangeAwaitAmount>
+	| Partial<AmountsWith<number | Partial<RangeAwaitAmount>>>;
+
+const getAmountElement = (
+	element?: number | Partial<RangeAwaitAmount>,
+): RangeAwaitAmount => {
+	if (!element) {
+		return { min: 0, max: Infinity };
+	}
+	if (typeof element === "number") {
+		return { min: element, max: element };
+	}
+	return {
+		min: element.min ?? 0,
+		max: element.min ?? Infinity,
+	};
 };
-type AwaitCacheOrKey<T extends TRPCKey = TRPCKey> =
-	| T
-	| AwaitCacheDescription<T>;
-type AwaitCacheObject<T extends TRPCKey = TRPCKey> = {
-	path: T;
-	amount: number;
-	type: "query" | "mutation";
+
+const getAmount = (
+	amount: AwaitCacheKeyAmount = { min: 1, max: Infinity },
+): ExpectedAwaitAmounts => {
+	if (typeof amount === "number") {
+		return {
+			succeed: { min: amount, max: amount },
+			errored: { min: 0, max: Infinity },
+		};
+	}
+	if ("min" in amount || "max" in amount) {
+		return {
+			succeed: amount as RangeAwaitAmount,
+			errored: { min: 0, max: Infinity },
+		};
+	}
+	const typedAmount = amount as Partial<
+		AmountsWith<number | Partial<RangeAwaitAmount>>
+	>;
+	return {
+		succeed: getAmountElement(typedAmount.succeed),
+		errored: getAmountElement(typedAmount.errored),
+	};
 };
 
 const getProcedure = (
@@ -415,10 +452,11 @@ type QueriesFixtures = {
 		nextQueryCache: Awaited<ReturnType<typeof getQueryCache>>;
 		diff: object;
 	}>;
-	awaitCacheKey: (
-		keyOrKeys: AwaitCacheOrKey | AwaitCacheOrKey[],
+	awaitCacheKey: <K extends TRPCKey>(
+		key: K,
+		amount?: AwaitCacheKeyAmount,
 		timeout?: number,
-	) => Promise<boolean[]>;
+	) => Promise<void>;
 };
 
 export const queriesFixtures = test.extend<QueriesFixtures>({
@@ -510,176 +548,191 @@ export const queriesFixtures = test.extend<QueriesFixtures>({
 		const extendedTestInfo = getExtendedTestInfo(testInfo);
 		const awaitedCacheKeys = extendedTestInfo.awaitedCacheKeys || {};
 		extendedTestInfo.awaitedCacheKeys = awaitedCacheKeys;
-		await use((cacheKeyOrKeys, timeout = DEFAULT_AWAIT_CACHE_TIMEOUT) => {
-			const cacheObjects = (
-				Array.isArray(cacheKeyOrKeys) ? cacheKeyOrKeys : [cacheKeyOrKeys]
-			).map<AwaitCacheObject>((keyOrObject) => {
-				const path =
-					typeof keyOrObject === "string" ? keyOrObject : keyOrObject.path;
-				const awaitedAmount =
-					typeof keyOrObject === "string" ? 1 : keyOrObject.amount ?? 1;
-				const prevAmount = awaitedCacheKeys[path] ?? 0;
-				const procedure = getProcedure(
-					router as unknown as AnyTRPCRouter & RouterRecord,
-					path,
-				);
-				return {
-					path,
-					amount: awaitedAmount + prevAmount,
-					// eslint-disable-next-line no-underscore-dangle
-					type: procedure._def.type === "query" ? "query" : "mutation",
-				};
-			});
-			const result = page.evaluate(
-				async ([cacheObjectsInner, timeoutInner]) => {
+		await use(async (path, amount, timeout = DEFAULT_AWAIT_CACHE_TIMEOUT) => {
+			const procedure = getProcedure(
+				router as unknown as AnyTRPCRouter & RouterRecord,
+				path,
+			);
+			const nextAmounts = await page.evaluate(
+				async ([
+					pathInner,
+					prevAmountsInner,
+					expectedAmountsInner,
+					typeInner,
+					timeoutInner,
+				]) => {
 					const { queryClient } = window;
 					if (!queryClient) {
 						throw new Error("window.queryClient is not defined yet");
 					}
-					const awaitQueryKey = (cacheKey: TRPCQueryKey, amount: number) => {
-						const cache = queryClient.getQueryCache();
-						const getAwaitedAmount = () => {
-							const allMatched = cache.findAll({
-								queryKey: [cacheKey.split(".")],
-							});
-							const resolved = allMatched.filter(
-								(element) =>
-									element.state.status === "success" ||
-									element.state.status === "error",
+					const getActualFactory =
+						(getMatched: () => Query[] | Mutation[]) => () => {
+							const matched = getMatched();
+							const succeed = matched.filter(
+								(element) => element.state.status === "success",
+							);
+							const errored = matched.filter(
+								(element) => element.state.status === "error",
 							);
 							return {
-								resolved: resolved.length,
-								unresolved: allMatched.length - resolved.length,
+								succeed: succeed.length,
+								errored: errored.length,
+								unresolved: matched.length - errored.length - succeed.length,
 							};
 						};
-						const shouldResolve = () => {
-							const awaitedAmount = getAwaitedAmount();
-							if (awaitedAmount.unresolved !== 0) {
-								return false;
-							}
-							return awaitedAmount.resolved >= amount;
-						};
-						if (shouldResolve()) {
-							return true;
+					const formatExpectedRange = (expected: RangeAwaitAmount) => {
+						if (expected.min === expected.max) {
+							return `${expected.max}`;
 						}
-						return new Promise<boolean>((resolve, reject) => {
-							cache.subscribe((cacheNotifyEvent) => {
-								const queryKey = cacheNotifyEvent.query.queryKey as RawQueryKey;
-								if (
-									queryKey[0].join(".") !== cacheKey ||
-									cacheNotifyEvent.type !== "updated"
-								) {
-									return;
-								}
-								if (shouldResolve()) {
-									resolve(false);
+						if (expected.max === Infinity) {
+							return `${expected.min}+`;
+						}
+						return `${expected.min}-${expected.max}`;
+					};
+					const isResolved = (
+						actualAmounts: ActualAwaitAmounts & { unresolved: number },
+						prevAmounts: ActualAwaitAmounts,
+						expectedAmounts: ExpectedAwaitAmounts,
+					) => {
+						if (actualAmounts.unresolved !== 0) {
+							return false;
+						}
+						const accountedAmounts = {
+							errored: actualAmounts.errored - prevAmounts.errored,
+							succeed: actualAmounts.succeed - prevAmounts.succeed,
+						};
+						return (
+							accountedAmounts.errored >= expectedAmounts.errored.min &&
+							accountedAmounts.errored <= expectedAmounts.errored.max &&
+							accountedAmounts.succeed >= expectedAmounts.succeed.min &&
+							accountedAmounts.succeed <= expectedAmounts.succeed.max
+						);
+					};
+					const awaitKey = async (
+						name: string,
+						key: string,
+						prevAmounts: ActualAwaitAmounts,
+						expectedAmounts: ExpectedAwaitAmounts,
+						getElements: () => Query[] | Mutation[],
+						subscribeCache: (resolve: () => void) => () => void,
+					) => {
+						const getActual = getActualFactory(getElements);
+						const immediateActual = getActual();
+						if (isResolved(immediateActual, prevAmounts, expectedAmounts)) {
+							return immediateActual;
+						}
+						return new Promise<ActualAwaitAmounts>((resolve, reject) => {
+							const unsubscribe = subscribeCache(() => {
+								const actual = getActual();
+								if (isResolved(actual, prevAmounts, expectedAmounts)) {
+									resolve(actual);
 								}
 							});
 							setTimeout(() => {
-								const lastAmounts = getAwaitedAmount();
+								const { succeed, errored, unresolved } = getActual();
+								unsubscribe();
 								reject(
 									new Error(
-										`Query await for "${cacheKey}" failed after ${timeoutInner}${
-											amount > 1
-												? `, expected ${amount} entries, got ${
-														lastAmounts.resolved
-												  } entries${
-														lastAmounts.unresolved
-															? ` (and ${lastAmounts.unresolved} entries)`
-															: ""
-												  }`
-												: ""
-										}`,
+										`${name} await for "${key}" failed after ${timeoutInner}\n${[
+											`Succeed entries: expected ${formatExpectedRange(
+												expectedAmounts.succeed,
+											)}, got ${succeed}`,
+											expectedAmounts.errored.min !== 0
+												? `Erorred entries: expected ${formatExpectedRange(
+														expectedAmounts.errored,
+												  )}, got ${errored}`
+												: undefined,
+											unresolved !== 0
+												? `${unresolved} unresolved entries`
+												: undefined,
+										]
+											.filter(Boolean)
+											.join("; ")}`,
 									),
 								);
 							}, timeoutInner);
 						});
+					};
+					const awaitQueryKey = (
+						cacheKey: TRPCQueryKey,
+						prevAmounts: ActualAwaitAmounts,
+						expectedAmounts: ExpectedAwaitAmounts,
+					): Promise<ActualAwaitAmounts> => {
+						const cache = queryClient.getQueryCache();
+						return awaitKey(
+							"Query",
+							cacheKey,
+							prevAmounts,
+							expectedAmounts,
+							() => cache.findAll({ queryKey: [cacheKey.split(".")] }),
+							(resolve) =>
+								cache.subscribe((cacheNotifyEvent) => {
+									const queryKey = cacheNotifyEvent.query
+										.queryKey as RawQueryKey;
+									if (
+										queryKey[0].join(".") !== cacheKey ||
+										cacheNotifyEvent.type !== "updated"
+									) {
+										return;
+									}
+									resolve();
+								}),
+						);
 					};
 					const awaitMutationKey = (
 						cacheKey: TRPCMutationKey,
-						amount: number,
+						prevAmounts: ActualAwaitAmounts,
+						expectedAmounts: ExpectedAwaitAmounts,
 					) => {
 						const cache = queryClient.getMutationCache();
-						const getAwaitedAmount = () => {
-							const allMatched = cache.findAll({
-								mutationKey: [cacheKey.split(".")],
-							});
-							const resolved = allMatched.filter(
-								(element) =>
-									element.state.status === "success" ||
-									element.state.status === "error",
-							);
-							return {
-								resolved: resolved.length,
-								unresolved: allMatched.length - resolved.length,
-							};
-						};
-						const shouldResolve = () => {
-							const awaitedAmount = getAwaitedAmount();
-							if (awaitedAmount.unresolved !== 0) {
-								return false;
-							}
-							return awaitedAmount.resolved >= amount;
-						};
-						if (shouldResolve()) {
-							return true;
-						}
-						return new Promise<boolean>((resolve, reject) => {
-							cache.subscribe((cacheNotifyEvent) => {
-								const mutationKey = cacheNotifyEvent.mutation?.options
-									.mutationKey as RawMutationKey | undefined;
-								if (
-									(mutationKey?.[0] ?? []).join(".") !== cacheKey ||
-									cacheNotifyEvent.type !== "updated"
-								) {
-									return;
-								}
-								if (shouldResolve()) {
-									resolve(false);
-								}
-							});
-							setTimeout(() => {
-								const lastAmounts = getAwaitedAmount();
-								reject(
-									new Error(
-										`Mutation await for "${cacheKey}" failed after ${timeoutInner}${
-											amount > 1
-												? `, expected ${amount} entries, got ${
-														lastAmounts.resolved
-												  } entries${
-														lastAmounts.unresolved
-															? ` (and ${lastAmounts.unresolved} entries)`
-															: ""
-												  }`
-												: ""
-										}`,
-									),
-								);
-							}, timeoutInner);
-						});
+						return awaitKey(
+							"Mutation",
+							cacheKey,
+							prevAmounts,
+							expectedAmounts,
+							() => cache.findAll({ mutationKey: [cacheKey.split(".")] }),
+							(resolve) =>
+								cache.subscribe((cacheNotifyEvent) => {
+									const mutationKey = cacheNotifyEvent.mutation?.options
+										.mutationKey as RawMutationKey | undefined;
+									if (
+										(mutationKey?.[0] ?? []).join(".") !== cacheKey ||
+										cacheNotifyEvent.type !== "updated"
+									) {
+										return;
+									}
+									resolve();
+								}),
+						);
 					};
-					return Promise.all(
-						cacheObjectsInner.map((cacheObject) => {
-							if (cacheObject.type === "query") {
-								return awaitQueryKey(
-									cacheObject.path as TRPCQueryKey,
-									cacheObject.amount,
-								);
-							}
-							return awaitMutationKey(
-								cacheObject.path as TRPCMutationKey,
-								cacheObject.amount,
+					switch (typeInner) {
+						case "query":
+							return awaitQueryKey(
+								pathInner as TRPCQueryKey,
+								prevAmountsInner,
+								expectedAmountsInner,
 							);
-						}),
-					);
+						case "mutation":
+							return awaitMutationKey(
+								pathInner as TRPCMutationKey,
+								prevAmountsInner,
+								expectedAmountsInner,
+							);
+					}
 				},
-				[cacheObjects, timeout] as const,
+				[
+					path,
+					awaitedCacheKeys[path] ?? {
+						succeed: 0,
+						errored: 0,
+					},
+					getAmount(amount),
+					// eslint-disable-next-line no-underscore-dangle
+					procedure._def.type === "query" ? "query" : "mutation",
+					timeout,
+				] as const,
 			);
-			cacheObjects.forEach((cacheKey) => {
-				awaitedCacheKeys[cacheKey.path] ??= 0;
-				awaitedCacheKeys[cacheKey.path] = cacheKey.amount;
-			});
-			return result;
+			awaitedCacheKeys[path] = nextAmounts;
 		});
 	},
 });

@@ -205,10 +205,8 @@ test.describe("Mutations", () => {
 		await openReceiptWithDebts(receipt);
 		const { nextQueryCache } = await snapshotQueries(async () => {
 			await updateDebtsButton.click();
-			await awaitCacheKey([
-				{ path: "debts.add", amount: 3 },
-				{ path: "debts.update", amount: 2 },
-			]);
+			await awaitCacheKey("debts.add", 3);
+			await awaitCacheKey("debts.update", 2);
 		});
 		const addMutationsVariables = getMutationsByKey(
 			nextQueryCache,

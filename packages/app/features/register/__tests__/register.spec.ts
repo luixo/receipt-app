@@ -16,7 +16,7 @@ test("On load", async ({
 	await snapshotQueries(
 		async () => {
 			await page.goto("/register");
-			await awaitCacheKey("account.get");
+			await awaitCacheKey("account.get", { errored: 1 });
 		},
 		{
 			whitelistKeys: "account.get",
@@ -66,7 +66,7 @@ test("'auth.register' mutation", async ({
 	await fillValidFields();
 	await snapshotQueries(async () => {
 		await registerButton.click();
-		await awaitCacheKey("auth.register");
+		await awaitCacheKey("auth.register", { errored: 1 });
 		await verifyToastTexts(`Mock "auth.register" error`);
 	});
 	await expect(page).toHaveURL("/register");

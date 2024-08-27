@@ -33,7 +33,7 @@ test("Mutation 'receiptTransferIntentions.accept'", async ({
 	await snapshotQueries(
 		async () => {
 			await acceptButton.last().click();
-			await awaitCacheKey("receiptTransferIntentions.accept");
+			await awaitCacheKey("receiptTransferIntentions.accept", { errored: 1 });
 			await verifyToastTexts(
 				'Error accepting receipt: Mock "receiptTransferIntentions.accept" error',
 			);
@@ -94,7 +94,7 @@ test("Mutation 'receiptTransferIntentions.remove'", async ({
 	await snapshotQueries(
 		async () => {
 			await rejectButton.last().click();
-			await awaitCacheKey("receiptTransferIntentions.remove");
+			await awaitCacheKey("receiptTransferIntentions.remove", { errored: 1 });
 			await verifyToastTexts(
 				'Error removing receipt transfer intention: Mock "receiptTransferIntentions.remove" error',
 			);

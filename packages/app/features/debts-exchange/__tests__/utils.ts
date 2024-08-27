@@ -62,7 +62,8 @@ export const test = mergeTests(
 			use(async (userId, { awaitCache = true } = {}) => {
 				await page.goto(`/debts/user/${userId}/exchange/`);
 				if (awaitCache) {
-					await awaitCacheKey(["users.get", "debts.getUser"]);
+					await awaitCacheKey("users.get");
+					await awaitCacheKey("debts.getUser");
 				}
 			}),
 

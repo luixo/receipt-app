@@ -33,7 +33,7 @@ test("Mutation'receiptTransferIntentions.remove'", async ({
 	await snapshotQueries(
 		async () => {
 			await removeButton.last().click();
-			await awaitCacheKey("receiptTransferIntentions.remove");
+			await awaitCacheKey("receiptTransferIntentions.remove", { errored: 1 });
 			await verifyToastTexts(
 				'Error removing receipt transfer intention: Mock "receiptTransferIntentions.remove" error',
 			);

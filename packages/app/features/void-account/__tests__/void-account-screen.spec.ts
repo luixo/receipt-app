@@ -15,7 +15,7 @@ test("On load without token", async ({
 	await snapshotQueries(
 		async () => {
 			await page.goto("/void-account");
-			await awaitCacheKey("account.get");
+			await awaitCacheKey("account.get", { errored: 1 });
 		},
 		{
 			whitelistKeys: "account.get",

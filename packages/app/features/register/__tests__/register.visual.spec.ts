@@ -43,9 +43,9 @@ test("'auth.register' mutation", async ({
 	await page.goto("/register");
 	await fillValidFields();
 	await registerButton.click();
-	await awaitCacheKey("auth.register");
+	await awaitCacheKey("auth.register", { errored: 1 });
 
-	// TODO: Figure out what error should look like on register actino
+	// TODO: Figure out what error should look like on register action
 	// await expectScreenshotWithSchemes("error.png");
 
 	const registerPause = api.createPause();
