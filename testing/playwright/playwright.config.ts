@@ -117,6 +117,7 @@ export default defineConfig({
 			NODE_ENV: "test",
 			S3_BUCKET: "test-bucket",
 			S3_ENDPOINT: "https://fake-endpoint.org",
+			PORT: PORT.toString(),
 		},
 	},
 	globalSetup: path.resolve(localDir, "./global/setup.ts"),
