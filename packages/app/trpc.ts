@@ -3,13 +3,15 @@ import type {
 	InvalidateQueryFilters,
 	Query,
 	SetDataOptions,
-	UseInfiniteQueryResult,
-	UseMutationResult,
-	UseQueryResult,
 } from "@tanstack/react-query";
 import type { TRPCClientErrorLike } from "@trpc/react-query";
 import { createTRPCReact } from "@trpc/react-query";
-import type { UtilsLike } from "@trpc/react-query/shared";
+import type {
+	UseTRPCInfiniteQueryResult,
+	UseTRPCMutationResult,
+	UseTRPCQueryResult,
+	UtilsLike,
+} from "@trpc/react-query/shared";
 import type {
 	AnyTRPCMutationProcedure,
 	AnyTRPCProcedure,
@@ -91,7 +93,7 @@ export type TRPCQueryOutput<Path extends TRPCQueryKey> = inferProcedureOutput<
 	TRPCQueryValues[Path]
 >;
 
-export type TRPCQueryResult<Path extends TRPCQueryKey> = UseQueryResult<
+export type TRPCQueryResult<Path extends TRPCQueryKey> = UseTRPCQueryResult<
 	TRPCQueryOutput<Path>,
 	TRPCError
 >;
@@ -141,7 +143,11 @@ export type TRPCInfiniteQueryCursor<Path extends TRPCInfiniteQueryKey> =
 		: never;
 
 export type TRPCInfiniteQueryResult<Path extends TRPCQueryKey> =
-	UseInfiniteQueryResult<TRPCQueryOutput<Path>, TRPCError>;
+	UseTRPCInfiniteQueryResult<
+		TRPCQueryOutput<Path>,
+		TRPCError,
+		TRPCQueryInput<Path>
+	>;
 
 export type TRPCInfiniteQuerySuccessResult<
 	Path extends TRPCInfiniteQueryKey,
@@ -160,10 +166,11 @@ export type TRPCMutationOutput<Path extends TRPCMutationKey> =
 	inferProcedureOutput<TRPCMutationValues[Path]>;
 
 export type TRPCMutationResult<Path extends TRPCMutationKey> =
-	UseMutationResult<
+	UseTRPCMutationResult<
 		TRPCMutationOutput<Path>,
 		TRPCError,
-		TRPCMutationInput<Path>
+		TRPCMutationInput<Path>,
+		unknown
 	>;
 
 export type InvalidateArgs = [InvalidateQueryFilters?, InvalidateOptions?];
