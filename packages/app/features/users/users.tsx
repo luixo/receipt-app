@@ -2,6 +2,7 @@ import type React from "react";
 
 import { keepPreviousData } from "@tanstack/react-query";
 
+import { SkeletonUser } from "~app/components/app/user";
 import { EmptyCard } from "~app/components/empty-card";
 import { QueryErrorMessage } from "~app/components/error-message";
 import { useCursorPaging } from "~app/hooks/use-cursor-paging";
@@ -45,7 +46,7 @@ const UserPreviews: React.FC<{ ids: UsersId[] }> = ({ ids }) => {
 		<>
 			{userQueries.map((userQuery, index) =>
 				userQuery.status === "pending" ? (
-					<Spinner key={ids[index]} size="sm" />
+					<SkeletonUser key={ids[index]} className="self-start" />
 				) : userQuery.status === "error" ? (
 					<QueryErrorMessage key={ids[index]} query={userQuery} />
 				) : (

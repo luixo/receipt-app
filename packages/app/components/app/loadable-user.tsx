@@ -1,10 +1,9 @@
 import type React from "react";
 
-import { User } from "~app/components/app/user";
+import { SkeletonUser, User } from "~app/components/app/user";
 import { QueryErrorMessage } from "~app/components/error-message";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import { Spinner } from "~components/spinner";
 import type { UsersId } from "~db/models";
 
 type InnerProps = {
@@ -39,7 +38,7 @@ type DirectionProps = Omit<InnerProps, "query"> & {
 const OwnLoadableUser: React.FC<DirectionProps> = ({ id, ...props }) => {
 	const query = trpc.users.get.useQuery({ id });
 	if (query.status === "pending") {
-		return <Spinner className={props.className} />;
+		return <SkeletonUser {...props} />;
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;
@@ -50,7 +49,7 @@ const OwnLoadableUser: React.FC<DirectionProps> = ({ id, ...props }) => {
 const ForeignLoadableUser: React.FC<DirectionProps> = ({ id, ...props }) => {
 	const query = trpc.users.getForeign.useQuery({ id });
 	if (query.status === "pending") {
-		return <Spinner className={props.className} />;
+		return <SkeletonUser {...props} />;
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;
