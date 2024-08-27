@@ -53,7 +53,11 @@ export const test = mergeTests(
 		mockDebts: ({ api, faker, mockBase }, use) =>
 			use(({ generateDebts = defaultGenerateDebts } = {}) => {
 				const { user } = mockBase();
-				const debts = generateDebts({ faker, amount: { min: 3, max: 6 } });
+				const debts = generateDebts({
+					faker,
+					amount: { min: 3, max: 6 },
+					userId: user.id,
+				});
 				api.mock("debts.getUser", debts);
 				return { debts, user };
 			}),

@@ -2,6 +2,7 @@ import { isNonNullish } from "remeda";
 
 import type { TRPCQueryOutput } from "~app/trpc";
 import { getParticipantSums } from "~app/utils/receipt-item";
+import type { UsersId } from "~db/models";
 
 import type { GenerateSelfAccount } from "./accounts";
 import type {
@@ -13,12 +14,14 @@ import { generateAmount, generateCurrencyCode } from "./utils";
 import type { GeneratorFnWithAmount, GeneratorFnWithFaker } from "./utils";
 
 export type GenerateDebts = GeneratorFnWithAmount<
-	TRPCQueryOutput<"debts.getUser">[number]
+	TRPCQueryOutput<"debts.getUser">[number],
+	{ userId: UsersId }
 >;
 
 export const defaultGenerateDebts = ({
 	faker,
 	amount = { min: 3, max: 6 },
+	userId,
 }: Parameters<GenerateDebts>[0]): ReturnType<GenerateDebts> =>
 	generateAmount(faker, amount, () => ({
 		id: faker.string.uuid(),
@@ -33,6 +36,7 @@ export const defaultGenerateDebts = ({
 		amount: faker.number.float({ min: -10000, max: 10000, precision: 0.01 }),
 		lockedTimestamp: faker.datatype.boolean() ? new Date() : undefined,
 		their: undefined,
+		userId,
 	}));
 
 export type GenerateDebtsFromReceipt = GeneratorFnWithFaker<
