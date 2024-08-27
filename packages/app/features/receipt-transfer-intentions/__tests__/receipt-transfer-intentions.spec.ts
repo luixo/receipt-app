@@ -16,19 +16,20 @@ test("Initial load 'receiptTransferIntentions.getAll' pending / error", async ({
 }) => {
 	mockIntentions();
 
-	api.pause("receiptTransferIntentions.getAll");
-	await page.goto("/receipts/transfer-intentions");
-	await expect(inboundIntention).not.toBeAttached();
-	await expect(outboundIntention).not.toBeAttached();
-	await expect(emptyCardTransfers).not.toBeAttached();
-
-	api.mock("receiptTransferIntentions.getAll", () => {
+	const receiptTransferIntentionsPause = api.createPause();
+	api.mock("receiptTransferIntentions.getAll", async () => {
+		await receiptTransferIntentionsPause.wait();
 		throw new TRPCError({
 			code: "FORBIDDEN",
 			message: `Mock "receiptTransferIntentions.getAll" error`,
 		});
 	});
-	api.unpause("receiptTransferIntentions.getAll");
+	await page.goto("/receipts/transfer-intentions");
+	await expect(inboundIntention).not.toBeAttached();
+	await expect(outboundIntention).not.toBeAttached();
+	await expect(emptyCardTransfers).not.toBeAttached();
+
+	receiptTransferIntentionsPause.resolve();
 	await expect(
 		errorMessage(`Mock "receiptTransferIntentions.getAll" error`),
 	).toBeVisible();

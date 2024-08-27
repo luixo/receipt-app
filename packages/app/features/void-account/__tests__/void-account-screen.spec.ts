@@ -10,7 +10,7 @@ test("On load without token", async ({
 	snapshotQueries,
 	awaitCacheKey,
 }) => {
-	api.mockUtils.noAuth();
+	api.mockUtils.noAccount();
 
 	await snapshotQueries(
 		async () => {

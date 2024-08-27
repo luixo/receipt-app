@@ -6,7 +6,7 @@ test("Open without token", async ({
 	expectScreenshotWithSchemes,
 	clearToasts,
 }) => {
-	api.mockUtils.noAuth();
+	api.mockUtils.noAccount();
 
 	await page.goto("/void-account");
 	await clearToasts();

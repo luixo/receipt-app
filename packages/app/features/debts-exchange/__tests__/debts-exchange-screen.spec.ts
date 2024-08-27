@@ -20,8 +20,15 @@ test.describe("Wrapper component", () => {
 		exchangeSpecificButton,
 		awaitCacheKey,
 	}) => {
-		api.pause("debts.getUser");
 		const { user } = mockBase();
+		const userDebtsPause = api.createPause();
+		api.mock("debts.getUser", async () => {
+			await userDebtsPause.wait();
+			throw new TRPCError({
+				code: "FORBIDDEN",
+				message: `Mock "debts.getUser" error`,
+			});
+		});
 		await openDebtsExchangeScreen(user.id, { awaitCache: false });
 		await awaitCacheKey("users.get");
 
@@ -30,13 +37,7 @@ test.describe("Wrapper component", () => {
 		await expect(exchangeAllToOneButton).not.toBeAttached();
 		await expect(exchangeSpecificButton).not.toBeAttached();
 
-		api.mock("debts.getUser", () => {
-			throw new TRPCError({
-				code: "FORBIDDEN",
-				message: `Mock "debts.getUser" error`,
-			});
-		});
-		api.unpause("debts.getUser");
+		userDebtsPause.resolve();
 		await expect(errorMessage(`Mock "debts.getUser" error`)).toBeVisible();
 		await expect(exchangeAllToOneButton).not.toBeAttached();
 		await expect(exchangeSpecificButton).not.toBeAttached();
@@ -52,10 +53,14 @@ test.describe("Header", () => {
 		page,
 	}) => {
 		const { user } = mockDebts();
-		api.pause("users.get");
+		const userPause = api.createPause();
+		api.mock("users.get", async ({ next }) => {
+			await userPause.wait();
+			return next();
+		});
 		await openDebtsExchangeScreen(user.id, { awaitCache: false });
 		await expect(page).toHaveTitle("RA - ...'s debts");
-		api.unpause("users.get");
+		userPause.resolve();
 		await awaitCacheKey("users.get");
 		await expect(page).toHaveTitle(`RA - ${user.name}'s debts`);
 	});

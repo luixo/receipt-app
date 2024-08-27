@@ -9,7 +9,7 @@ test("Regular usage", async ({
 	fillValidFields,
 	expectScreenshotWithSchemes,
 }) => {
-	api.mockUtils.noAuth();
+	api.mockUtils.noAccount();
 
 	await page.goto("/register");
 	await expectScreenshotWithSchemes("empty.png");
@@ -32,7 +32,7 @@ test("'auth.register' mutation", async ({
 	awaitCacheKey,
 	clearToasts,
 }) => {
-	api.mockUtils.noAuth();
+	api.mockUtils.noAccount();
 	api.mock("auth.register", () => {
 		throw new TRPCError({
 			code: "CONFLICT",
@@ -48,7 +48,11 @@ test("'auth.register' mutation", async ({
 	// TODO: Figure out what error should look like on register actino
 	// await expectScreenshotWithSchemes("error.png");
 
-	api.pause("auth.register");
+	const registerPause = api.createPause();
+	api.mock("auth.register", async ({ next }) => {
+		await registerPause.wait();
+		return next();
+	});
 	await registerButton.click();
 
 	await clearToasts();
@@ -61,7 +65,7 @@ test("Errors in fields", async ({
 	fillInvalidFields,
 	expectScreenshotWithSchemes,
 }) => {
-	api.mockUtils.noAuth();
+	api.mockUtils.noAccount();
 
 	await page.goto("/register");
 	await fillInvalidFields();

@@ -31,19 +31,20 @@ test.describe("Wrapper component", () => {
 			generateDebts: generateDebtsMapped(),
 		});
 
-		api.pause("debts.get");
-		await openReceipt(receipt.id);
-		await expect(propagateDebtsButton).not.toBeAttached();
-		await expect(updateDebtsButton).not.toBeAttached();
-		await expect(debtsInfoModalButton).not.toBeAttached();
-
-		api.mock("debts.get", () => {
+		const debtsGetPause = api.createPause();
+		api.mock("debts.get", async () => {
+			await debtsGetPause.wait();
 			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Mock "debts.get" error`,
 			});
 		});
-		api.unpause("debts.get");
+		await openReceipt(receipt.id);
+		await expect(propagateDebtsButton).not.toBeAttached();
+		await expect(updateDebtsButton).not.toBeAttached();
+		await expect(debtsInfoModalButton).not.toBeAttached();
+
+		debtsGetPause.resolve();
 		await expect(errorMessage(`Mock "debts.get" error`)).toBeVisible();
 		await expect(propagateDebtsButton).not.toBeAttached();
 		await expect(updateDebtsButton).not.toBeAttached();
@@ -181,7 +182,7 @@ test.describe("Mutations", () => {
 						participants: opts.participants.slice(1),
 					}),
 			});
-		api.mock("debts.add", (addedDebt) => ({
+		api.mock("debts.add", ({ input: addedDebt }) => ({
 			id:
 				debts.find((debt) => debt.userId === addedDebt.userId)?.id ||
 				faker.string.uuid(),
@@ -193,7 +194,7 @@ test.describe("Mutations", () => {
 					2 ===
 				0,
 		}));
-		api.mock("debts.update", (updatedDebt) => ({
+		api.mock("debts.update", ({ input: updatedDebt }) => ({
 			lockedTimestamp: new Date(),
 			reverseLockedTimestampUpdated:
 				updatedDebt.id.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0) %

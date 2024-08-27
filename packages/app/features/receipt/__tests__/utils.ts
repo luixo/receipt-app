@@ -82,7 +82,7 @@ export const test = originalTest.extend<Fixtures>({
 					receiptItemsParts,
 					users,
 				});
-				api.mock("receipts.get", (input) => {
+				api.mock("receipts.get", ({ input }) => {
 					if (input.id !== receiptBase.id) {
 						throw new Error(
 							`Unexpected receipt id in "receipts.get": ${input.id}`,
@@ -90,7 +90,7 @@ export const test = originalTest.extend<Fixtures>({
 					}
 					return receipt;
 				});
-				const usersFn = (input: { id: UsersId }) => {
+				const usersFn = ({ input }: { input: { id: UsersId } }) => {
 					if (input.id === selfAccount.accountId) {
 						return {
 							id: selfAccount.userId,
@@ -125,7 +125,8 @@ export const test = originalTest.extend<Fixtures>({
 				};
 				api.mock("users.get", usersFn);
 				api.mock("users.getForeign", usersFn);
-				api.mockUtils.auth({
+				api.mockUtils.authPage();
+				api.mock("account.get", {
 					account: {
 						id: selfAccount.accountId,
 						email: selfAccount.email,

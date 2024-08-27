@@ -42,7 +42,10 @@ test("Mutation 'receiptTransferIntentions.accept'", async ({
 	);
 	await expect(inboundIntention).toHaveCount(2);
 
-	api.pause("receiptTransferIntentions.accept");
+	const receiptTransferIntentionAcceptPause = api.createPause();
+	api.mock("receiptTransferIntentions.accept", async () => {
+		await receiptTransferIntentionAcceptPause.wait();
+	});
 	await snapshotQueries(
 		async () => {
 			await acceptButton.last().click();
@@ -52,10 +55,9 @@ test("Mutation 'receiptTransferIntentions.accept'", async ({
 	);
 	await expect(inboundIntention).toHaveCount(1);
 
-	api.mock("receiptTransferIntentions.accept", () => undefined);
 	await snapshotQueries(
 		async () => {
-			api.unpause("receiptTransferIntentions.accept");
+			receiptTransferIntentionAcceptPause.resolve();
 			await awaitCacheKey("receiptTransferIntentions.accept");
 			await verifyToastTexts("Receipt was successfully accepted");
 		},
@@ -101,7 +103,10 @@ test("Mutation 'receiptTransferIntentions.remove'", async ({
 	);
 	await expect(inboundIntention).toHaveCount(2);
 
-	api.pause("receiptTransferIntentions.remove");
+	const receiptTransferIntentionRemovePause = api.createPause();
+	api.mock("receiptTransferIntentions.remove", async () => {
+		await receiptTransferIntentionRemovePause.wait();
+	});
 	await snapshotQueries(
 		async () => {
 			await rejectButton.last().click();
@@ -111,10 +116,9 @@ test("Mutation 'receiptTransferIntentions.remove'", async ({
 	);
 	await expect(inboundIntention).toHaveCount(1);
 
-	api.mock("receiptTransferIntentions.remove", () => undefined);
 	await snapshotQueries(
 		async () => {
-			api.unpause("receiptTransferIntentions.remove");
+			receiptTransferIntentionRemovePause.resolve();
 			await awaitCacheKey("receiptTransferIntentions.remove");
 			await verifyToastTexts();
 		},

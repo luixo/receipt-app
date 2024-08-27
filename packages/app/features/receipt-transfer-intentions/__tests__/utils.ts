@@ -72,7 +72,8 @@ export const test = originalTest.extend<Fixtures>({
 				const selfAccount = generateSelfAccount({ faker });
 				const users = generateUsers({ faker });
 				const transferIntentions = generateTransferIntentions({ faker, users });
-				api.mockUtils.auth({
+				api.mockUtils.authPage();
+				api.mock("account.get", {
 					account: {
 						id: selfAccount.accountId,
 						email: selfAccount.email,
@@ -82,7 +83,7 @@ export const test = originalTest.extend<Fixtures>({
 					},
 					user: { name: selfAccount.name },
 				});
-				api.mock("users.get", (input) => {
+				api.mock("users.get", ({ input }) => {
 					if (input.id === selfAccount.accountId) {
 						return {
 							id: selfAccount.userId,

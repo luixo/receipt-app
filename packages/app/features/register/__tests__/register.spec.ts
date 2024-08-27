@@ -11,7 +11,7 @@ test("On load", async ({
 	snapshotQueries,
 	awaitCacheKey,
 }) => {
-	api.mockUtils.noAuth();
+	api.mockUtils.noAccount();
 
 	await snapshotQueries(
 		async () => {
@@ -32,7 +32,7 @@ test("Invalid form disables submit button", async ({
 	registerButton,
 	fillInvalidFields,
 }) => {
-	api.mockUtils.noAuth();
+	api.mockUtils.noAccount();
 
 	await page.goto("/register");
 	await fillInvalidFields();
@@ -52,8 +52,8 @@ test("'auth.register' mutation", async ({
 }) => {
 	// Remove this ignored pattern when we will explicitly redirect to "/receipts"
 	consoleManager.ignore('Abort fetching component for route: "/"');
-	api.mockUtils.noAuth();
-	api.mockUtils.authAnyPage();
+	api.mockUtils.noAccount();
+	api.mockUtils.authPage();
 	api.mockUtils.emptyReceipts();
 	api.mock("auth.register", () => {
 		throw new TRPCError({
@@ -71,7 +71,11 @@ test("'auth.register' mutation", async ({
 	});
 	await expect(page).toHaveURL("/register");
 
-	api.pause("auth.register");
+	const registerPause = api.createPause();
+	api.mock("auth.register", async () => {
+		await registerPause.wait();
+		return { account: { id: "test" } };
+	});
 	const buttonWithLoader = withLoader(registerButton);
 	await expect(buttonWithLoader).not.toBeVisible();
 	await snapshotQueries(
@@ -90,10 +94,9 @@ test("'auth.register' mutation", async ({
 		await expect(input).toBeDisabled();
 	}
 
-	api.mock("auth.register", () => ({ account: { id: "test" } }));
 	await snapshotQueries(
 		async () => {
-			api.unpause("auth.register");
+			registerPause.resolve();
 			await awaitCacheKey("auth.register");
 			await verifyToastTexts("Register successful, redirecting..");
 		},

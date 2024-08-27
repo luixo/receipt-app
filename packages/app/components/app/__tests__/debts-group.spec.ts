@@ -18,7 +18,6 @@ test("'currency.getList' pending / error", async ({
 	exchangeSpecificButton,
 	debtsGroupElement,
 }) => {
-	api.pause("currency.getList");
 	const { user } = mockDebts({
 		generateDebts: (opts) => {
 			const [debt] = defaultGenerateDebts(opts);
@@ -26,19 +25,21 @@ test("'currency.getList' pending / error", async ({
 			return [{ ...debt, currencyCode: "USD", amount: 100 }];
 		},
 	});
+	const currencyListPause = api.createPause();
+	api.mock("currency.getList", async () => {
+		await currencyListPause.wait();
+		throw new TRPCError({
+			code: "FORBIDDEN",
+			message: `Mock "currency.getList" error`,
+		});
+	});
 	await openDebtsExchangeScreen(user.id);
 
 	await expect(exchangeAllToOneButton).toBeVisible();
 	await expect(exchangeSpecificButton).toBeVisible();
 	await expect(debtsGroupElement).toHaveText("100 USD");
 
-	api.mock("currency.getList", () => {
-		throw new TRPCError({
-			code: "FORBIDDEN",
-			message: `Mock "currency.getList" error`,
-		});
-	});
-	api.unpause("currency.getList");
+	currencyListPause.resolve();
 	await expect(exchangeAllToOneButton).toBeVisible();
 	await expect(exchangeSpecificButton).toBeVisible();
 	await expect(debtsGroupElement).toHaveText("100 USD");

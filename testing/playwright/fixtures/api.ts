@@ -11,6 +11,7 @@ import {
 	type TRPCErrorShape,
 	TRPC_ERROR_CODES_BY_KEY,
 } from "@trpc/server/rpc";
+import type { MaybePromise } from "@trpc/server/unstable-core-do-not-import";
 import http from "node:http";
 import { entries } from "remeda";
 import { v4 } from "uuid";
@@ -36,17 +37,6 @@ const CLEANUP_MARK = "__CLEANUP_MARK__";
 
 export type TRPCKey = TRPCQueryKey | TRPCMutationKey;
 
-type QueryHandlers = {
-	[Key in TRPCQueryKey]:
-		| ((input: TRPCQueryInput<Key>, call: number) => TRPCQueryOutput<Key>)
-		| TRPCQueryOutput<Key>;
-};
-type MutationHandlers = {
-	[Key in TRPCMutationKey]:
-		| ((input: TRPCMutationInput<Key>, call: number) => TRPCMutationOutput<Key>)
-		| TRPCMutationOutput<Key>;
-};
-
 type CleanupFn = () => Promise<void>;
 
 type QueryOrMutationInput<K extends TRPCKey> = K extends TRPCQueryKey
@@ -54,6 +44,24 @@ type QueryOrMutationInput<K extends TRPCKey> = K extends TRPCQueryKey
 	: K extends TRPCMutationKey
 	? TRPCMutationInput<K>
 	: void;
+
+type QueryOrMutationOutput<K extends TRPCKey> = K extends TRPCQueryKey
+	? TRPCQueryOutput<K>
+	: K extends TRPCMutationKey
+	? TRPCMutationOutput<K>
+	: void;
+
+type QueryOrMutationHandlerOptions<K extends TRPCKey> = {
+	input: QueryOrMutationInput<K>;
+	calls: number;
+	next: () => MaybePromise<QueryOrMutationOutput<K>>;
+};
+
+type QueryOrMutationHandler<K extends TRPCKey> =
+	| ((
+			opts: QueryOrMutationHandlerOptions<K>,
+	  ) => MaybePromise<QueryOrMutationOutput<K>>)
+	| MaybePromise<QueryOrMutationOutput<K>>;
 
 type WorkerManager = {
 	getPort: () => number;
@@ -66,14 +74,22 @@ type WorkerManager = {
 
 export type ApiManager = {
 	getConnection: () => { port: number; controllerId: string };
-	mock: <K extends TRPCKey>(key: K, handler: Handlers[K]) => void;
-	pause: <K extends TRPCKey>(key: K) => void;
-	unpause: <K extends TRPCKey>(key: K) => void;
+	mock: <K extends TRPCKey>(
+		key: K,
+		handler: NonNullable<Handlers[K]>[number],
+	) => () => void;
+	createPause: () => ControlledPromise;
 	getActions: () => Action[];
 	clearActions: () => void;
 };
 
-type Handlers = Partial<QueryHandlers & MutationHandlers>;
+type Handlers = Partial<
+	{
+		[Key in TRPCQueryKey]: QueryOrMutationHandler<Key>[];
+	} & {
+		[Key in TRPCMutationKey]: QueryOrMutationHandler<Key>[];
+	}
+>;
 type Action<K extends TRPCKey = TRPCKey> = [
 	type: CallType,
 	name: K,
@@ -82,7 +98,7 @@ type Action<K extends TRPCKey = TRPCKey> = [
 
 type Controller = {
 	handlers: Handlers;
-	paused: Map<TRPCKey, ControlledPromise>;
+	paused: ControlledPromise[];
 	calls: Map<TRPCKey, number>;
 	actions: Action[];
 };
@@ -90,6 +106,38 @@ type Controller = {
 type CallType = "server" | "client";
 
 const API_PREFIX = "/api/trpc/";
+
+const getHandlersResponse = <K extends TRPCKey>(
+	key: K,
+	handlers: NonNullable<Handlers[K]>,
+	input: QueryOrMutationInput<K>,
+	calls: number,
+) => {
+	if (handlers.length === 0) {
+		throw new Error(`No handler for ${key}`);
+	}
+	const returnAtIndex = (
+		index: number,
+	): MaybePromise<QueryOrMutationOutput<K>> => {
+		const handler = handlers[index] as QueryOrMutationHandler<K>;
+		if (typeof handler === "function") {
+			return handler({
+				input,
+				calls,
+				next: () => {
+					if (index === 0) {
+						throw new Error(
+							"Illegal next() invocation, no middleware function below!",
+						);
+					}
+					return returnAtIndex(index - 1);
+				},
+			});
+		}
+		return handler;
+	};
+	return returnAtIndex(handlers.length - 1);
+};
 
 const handleCall = async <K extends TRPCKey>(
 	controller: Controller,
@@ -101,26 +149,17 @@ const handleCall = async <K extends TRPCKey>(
 		? transformer.deserialize(input)
 		: (undefined as QueryOrMutationInput<K>);
 	controller.actions.push([type, name, deserializedInput]);
-	const pausedPromise = controller.paused.get(name);
-	if (pausedPromise) {
-		await pausedPromise.wait();
-	}
-	const handlerOrData = controller.handlers[name];
-	if (!handlerOrData) {
-		throw new Error(`No handler for ${name}`);
-	}
 	try {
+		const handlers = controller.handlers[name] || [];
+		const response = await getHandlersResponse(
+			name,
+			handlers,
+			deserializedInput,
+			controller.calls.get(name) || 0,
+		);
 		return {
 			result: {
-				data: transformer.serialize(
-					typeof handlerOrData === "function"
-						? handlerOrData(
-								// eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument
-								deserializedInput as any,
-								controller.calls.get(name) || 0,
-						  )
-						: handlerOrData,
-				),
+				data: transformer.serialize(response),
 			},
 		};
 	} catch (e) {
@@ -250,14 +289,16 @@ const createWorkerManager = async (port: number): Promise<WorkerManager> => {
 			const controller: Controller = {
 				actions: [],
 				handlers: {},
-				paused: new Map(),
+				paused: [],
 				calls: new Map(),
 			};
 			controllers[id] = controller;
 			return {
 				controller,
 				cleanup: async () => {
-					controller.paused.forEach((promise) => promise.reject(CLEANUP_MARK));
+					controller.paused.forEach((controllerPromise) => {
+						controllerPromise.reject(CLEANUP_MARK);
+					});
 					delete controllers[id];
 				},
 			};
@@ -294,20 +335,22 @@ const createApiManager = async (
 	});
 	return {
 		mock: (key, handler) => {
-			controller.handlers[key] = handler;
+			const handlers =
+				controller.handlers[key] || ([] as NonNullable<Handlers[typeof key]>);
+			// @ts-expect-error: A very complex type to represent
+			handlers.push(handler);
+			controller.handlers[key] = handlers;
+			return () => {
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				controller.handlers[key] = controller.handlers[key]!.filter(
+					(lookupHandler) => lookupHandler !== handler,
+				) as (typeof controller)["handlers"][typeof key];
+			};
 		},
-		pause: (key) => {
-			if (controller.paused.has(key)) {
-				return;
-			}
-			controller.paused.set(key, createPromise());
-		},
-		unpause: (key) => {
-			const pausedPromise = controller.paused.get(key);
-			if (pausedPromise) {
-				pausedPromise.resolve();
-				controller.paused.delete(key);
-			}
+		createPause: () => {
+			const promise = createPromise<void>();
+			controller.paused.push(promise);
+			return promise;
 		},
 		getActions: () => controller.actions,
 		clearActions: () => {
@@ -321,59 +364,46 @@ const createApiManager = async (
 	};
 };
 
-type Account = TRPCQueryOutput<"account.get">;
-
-const getMockUtils = (api: ApiManager) => {
-	const authAnyPage = () => {
-		api.mock("receipts.getNonResolvedAmount", () => 0);
-		api.mock("debts.getIntentions", () => []);
-		api.mock("accountConnectionIntentions.getAll", () => ({
-			inbound: [],
-			outbound: [],
-		}));
-		api.mock("receiptTransferIntentions.getAll", () => ({
-			inbound: [],
-			outbound: [],
-		}));
-	};
-	return {
-		noAuth: () => {
-			api.mock("account.get", () => {
-				throw new TRPCError({
-					code: "UNAUTHORIZED",
-					message: "No token provided - mocked",
-				});
+const getMockUtils = (api: ApiManager) => ({
+	noAccount: () =>
+		api.mock("account.get", () => {
+			throw new TRPCError({
+				code: "UNAUTHORIZED",
+				message: "No token provided - mocked",
 			});
-		},
-		auth: (account: Account | (() => Account)) => {
-			api.mock("account.get", account);
-			authAnyPage();
-		},
-		currencyList: (currencies?: Currency[]) => {
-			api.mock(
-				"currency.getList",
-				() =>
-					currencies ||
-					// 'en' locale definitely exist
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-					entries(getCurrencies("en")!).map(([code, currency]) => ({
-						code: code as CurrencyCode,
-						name: currency.name_plural,
-						symbol: currency.symbol_native,
-					})),
-			);
-		},
-		authAnyPage,
-		emptyReceipts: () => {
-			api.mock("receipts.getPaged", () => ({
-				items: [],
-				hasMore: false,
-				cursor: -1,
-				count: 0,
-			}));
-		},
-	};
-};
+		}),
+	authPage: () => [
+		api.mock("receipts.getNonResolvedAmount", 0),
+		api.mock("debts.getIntentions", []),
+		api.mock("accountConnectionIntentions.getAll", {
+			inbound: [],
+			outbound: [],
+		}),
+		api.mock("receiptTransferIntentions.getAll", {
+			inbound: [],
+			outbound: [],
+		}),
+	],
+	currencyList: (currencies?: Currency[]) =>
+		api.mock(
+			"currency.getList",
+			currencies ||
+				// 'en' locale definitely exist
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				entries(getCurrencies("en")!).map(([code, currency]) => ({
+					code: code as CurrencyCode,
+					name: currency.name_plural,
+					symbol: currency.symbol_native,
+				})),
+		),
+	emptyReceipts: () =>
+		api.mock("receipts.getPaged", {
+			items: [],
+			hasMore: false,
+			cursor: -1,
+			count: 0,
+		}),
+});
 
 type ApiFixtures = {
 	api: ApiManager & {

@@ -32,7 +32,8 @@ export const test = mergeTests(
 	originalTest.extend<Fixtures>({
 		mockBase: ({ api, faker }, use) =>
 			use(() => {
-				api.mockUtils.auth({
+				api.mockUtils.authPage();
+				api.mock("account.get", {
 					account: {
 						id: faker.string.uuid(),
 						email: faker.internet.email(),
@@ -44,9 +45,10 @@ export const test = mergeTests(
 				});
 				api.mockUtils.currencyList();
 				const [user] = defaultGenerateUsers({ faker, amount: 1 });
-				api.mock("users.get", user);
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-				return { user: user! };
+				const sureUser = user!;
+				api.mock("users.get", sureUser);
+				return { user: sureUser };
 			}),
 		mockDebts: ({ api, faker, mockBase }, use) =>
 			use(({ generateDebts = defaultGenerateDebts } = {}) => {

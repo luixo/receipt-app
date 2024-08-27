@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { test } from "./utils";
 
 test("Open with token", async ({ api, page, expectScreenshotWithSchemes }) => {
-	api.mockUtils.noAuth();
+	api.mockUtils.noAccount();
 
 	await page.goto("/void-account?token=foo");
 	await expectScreenshotWithSchemes("token.png");
@@ -17,7 +17,7 @@ test(`"auth.voidAccount" mutation`, async ({
 	awaitCacheKey,
 	clearToasts,
 }) => {
-	api.mockUtils.noAuth();
+	api.mockUtils.noAccount();
 	api.mock("auth.voidAccount", () => {
 		throw new TRPCError({
 			code: "CONFLICT",
@@ -31,13 +31,15 @@ test(`"auth.voidAccount" mutation`, async ({
 	await clearToasts();
 	await expectScreenshotWithSchemes("error.png");
 
-	api.pause("auth.voidAccount");
+	const voidAccountPause = api.createPause();
+	api.mock("auth.voidAccount", async () => {
+		await voidAccountPause.wait();
+		return { email: "foo@gmail.com" };
+	});
 	await voidButton.click();
 	await clearToasts();
 	await expectScreenshotWithSchemes("loading.png");
-
-	api.mock("auth.voidAccount", { email: "foo@gmail.com" });
-	api.unpause("auth.voidAccount");
+	voidAccountPause.resolve();
 	await awaitCacheKey("auth.voidAccount");
 	await clearToasts();
 	await expectScreenshotWithSchemes("success.png");

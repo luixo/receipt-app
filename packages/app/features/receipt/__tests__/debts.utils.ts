@@ -157,7 +157,7 @@ export const test = originalTest.extend<Fixtures>({
 					users: result.users,
 					debts,
 				});
-				api.mock("receipts.get", (input) => {
+				api.mock("receipts.get", ({ input }) => {
 					if (input.id !== receipt.id) {
 						throw new Error(
 							`Unexpected receipt id in "receipts.get": ${input.id}`,
@@ -166,7 +166,7 @@ export const test = originalTest.extend<Fixtures>({
 					return receipt;
 				});
 				if (debts.length !== 0) {
-					api.mock("debts.get", (input) => {
+					api.mock("debts.get", ({ input }) => {
 						const outcomingDebt = debts.find((debt) => debt.id === input.id);
 						if (!outcomingDebt) {
 							throw new Error(`Unexpected user id in "debts.get": ${input.id}`);

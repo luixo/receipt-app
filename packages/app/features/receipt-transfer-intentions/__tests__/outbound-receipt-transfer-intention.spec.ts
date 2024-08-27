@@ -42,7 +42,10 @@ test("Mutation'receiptTransferIntentions.remove'", async ({
 	);
 	await expect(outboundIntention).toHaveCount(2);
 
-	api.pause("receiptTransferIntentions.remove");
+	const receiptTransferIntentionRemovePause = api.createPause();
+	api.mock("receiptTransferIntentions.remove", async () => {
+		await receiptTransferIntentionRemovePause.wait();
+	});
 	await snapshotQueries(
 		async () => {
 			await removeButton.last().click();
@@ -52,10 +55,9 @@ test("Mutation'receiptTransferIntentions.remove'", async ({
 	);
 	await expect(outboundIntention).toHaveCount(1);
 
-	api.mock("receiptTransferIntentions.remove", () => undefined);
 	await snapshotQueries(
 		async () => {
-			api.unpause("receiptTransferIntentions.remove");
+			receiptTransferIntentionRemovePause.resolve();
 			await awaitCacheKey("receiptTransferIntentions.remove");
 			await verifyToastTexts();
 		},

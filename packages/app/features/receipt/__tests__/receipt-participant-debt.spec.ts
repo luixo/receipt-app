@@ -79,7 +79,11 @@ test("Debt is unsynced", async ({
 	await expect(rowMatch.locator(receiptMismatchIcon)).not.toBeVisible();
 	await expect(rowMatch.locator(debtSyncStatus)).not.toBeVisible();
 	await expect(rowMatch.locator(updateDebtButton)).not.toBeVisible();
-	api.pause("debts.add");
+	const debtsAddPause = api.createPause();
+	api.mock("debts.add", async ({ next }) => {
+		await debtsAddPause.wait();
+		return next();
+	});
 	await snapshotQueries(
 		async () => {
 			const sendButtonMatch = rowMatch.locator(sendDebtButton);
@@ -151,7 +155,11 @@ test.describe("Debt is desynced", () => {
 		await expect(debtSyncStatus).toHaveCount(2);
 		await expect(updateDebtButton).toHaveCount(2);
 		await expect(sendDebtButton).not.toBeVisible();
-		api.pause("debts.update");
+		const debtsUpdatePause = api.createPause();
+		api.mock("debts.update", async ({ next }) => {
+			await debtsUpdatePause.wait();
+			return next();
+		});
 		await snapshotQueries(
 			async () => {
 				await updateDebtButton.first().click();
@@ -327,7 +335,15 @@ test.describe("Mutations", () => {
 			{ name: "1-error" },
 		);
 
-		api.pause("debts.add");
+		const debtsAddPause = api.createPause();
+		api.mock("debts.add", async ({ calls }) => {
+			await debtsAddPause.wait();
+			return {
+				id: faker.string.uuid(),
+				lockedTimestamp: new Date(),
+				reverseAccepted: calls > 1,
+			};
+		});
 		await snapshotQueries(
 			async () => {
 				await sendDebtButton.first().click();
@@ -336,14 +352,9 @@ test.describe("Mutations", () => {
 			{ name: "1-loading" },
 		);
 
-		api.mock("debts.add", (_, calls) => ({
-			id: faker.string.uuid(),
-			lockedTimestamp: new Date(),
-			reverseAccepted: calls > 1,
-		}));
 		await snapshotQueries(
 			async () => {
-				api.unpause("debts.add");
+				debtsAddPause.resolve();
 				await awaitCacheKey("debts.add");
 				await verifyToastTexts("Debt added");
 			},
@@ -420,7 +431,14 @@ test.describe("Mutations", () => {
 			{ name: "1-error" },
 		);
 
-		api.pause("debts.update");
+		const debtsUpdatePause = api.createPause();
+		api.mock("debts.update", async ({ calls }) => {
+			await debtsUpdatePause.wait();
+			return {
+				lockedTimestamp: new Date(),
+				reverseLockedTimestampUpdated: calls > 1,
+			};
+		});
 		await snapshotQueries(
 			async () => {
 				await updateDebtButton.first().click();
@@ -429,13 +447,9 @@ test.describe("Mutations", () => {
 			{ name: "1-loading" },
 		);
 
-		api.mock("debts.update", (_, calls) => ({
-			lockedTimestamp: new Date(),
-			reverseLockedTimestampUpdated: calls > 1,
-		}));
 		await snapshotQueries(
 			async () => {
-				api.unpause("debts.update");
+				debtsUpdatePause.resolve();
 				await verifyToastTexts("Debt updated successfully");
 				await awaitCacheKey("debts.update");
 			},

@@ -12,7 +12,7 @@ test("On load with token", async ({
 	snapshotQueries,
 	awaitCacheKey,
 }) => {
-	api.mockUtils.noAuth();
+	api.mockUtils.noAccount();
 
 	await snapshotQueries(
 		async () => {
@@ -37,7 +37,7 @@ test("nagivating back to the home page", async ({
 	api,
 	cancelButton,
 }) => {
-	api.mockUtils.noAuth();
+	api.mockUtils.noAccount();
 	await page.goto("/void-account?token=foo");
 	await cancelButton.click();
 	await expect(page).toHaveURL("/login");
@@ -53,7 +53,7 @@ test("'auth.voidAccount' mutation", async ({
 	withLoader,
 	cancelButton,
 }) => {
-	api.mockUtils.noAuth();
+	api.mockUtils.noAccount();
 	api.mock("auth.voidAccount", () => {
 		throw new TRPCError({
 			code: "CONFLICT",
@@ -72,7 +72,11 @@ test("'auth.voidAccount' mutation", async ({
 	});
 	await expect(page).toHaveURL("/void-account?token=foo");
 
-	api.pause("auth.voidAccount");
+	const voidAccountPause = api.createPause();
+	api.mock("auth.voidAccount", async () => {
+		await voidAccountPause.wait();
+		return { email: "foo@gmail.com" };
+	});
 	const buttonWithLoader = withLoader(voidButton);
 	await expect(buttonWithLoader).not.toBeVisible();
 	await snapshotQueries(
@@ -87,10 +91,9 @@ test("'auth.voidAccount' mutation", async ({
 	);
 	await expect(page).toHaveURL("/void-account?token=foo");
 
-	api.mock("auth.voidAccount", { email: "foo@gmail.com" });
 	await snapshotQueries(
 		async () => {
-			api.unpause("auth.voidAccount");
+			voidAccountPause.resolve();
 			await verifyToastTexts("Account successfully voided, redirecting..");
 			await awaitCacheKey("auth.voidAccount");
 		},

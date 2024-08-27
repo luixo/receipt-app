@@ -19,7 +19,11 @@ test.describe("Modal is disabled", () => {
 		transferReceiptButton,
 	}) => {
 		const { receipt } = mockReceipt();
-		api.pause("receipts.remove");
+		const receiptsRemovePause = api.createPause();
+		api.mock("receipts.remove", async ({ next }) => {
+			await receiptsRemovePause.wait();
+			return next();
+		});
 
 		await page.goto(`/receipts/${receipt.id}`);
 		await page.getByText("Remove receipt").click();
@@ -133,7 +137,10 @@ test("Mutation 'receiptTransferIntentions.add' mutation", async ({
 	);
 	await expect(modal()).toBeHidden();
 
-	api.pause("receiptTransferIntentions.add");
+	const receiptTransferIntentionAddPause = api.createPause();
+	api.mock("receiptTransferIntentions.add", async () => {
+		await receiptTransferIntentionAddPause.wait();
+	});
 	await transferReceiptButton.click();
 	await selectSuggestUser();
 	await snapshotQueries(
@@ -145,10 +152,9 @@ test("Mutation 'receiptTransferIntentions.add' mutation", async ({
 	);
 	await expect(modal()).toBeHidden();
 
-	api.mock("receiptTransferIntentions.add", () => undefined);
 	await snapshotQueries(
 		async () => {
-			api.unpause("receiptTransferIntentions.add");
+			receiptTransferIntentionAddPause.resolve();
 			await awaitCacheKey("receiptTransferIntentions.add");
 			await verifyToastTexts(
 				`Receipt transfer intention was sent to "${users.find(
@@ -216,7 +222,10 @@ test("Mutation 'receiptTransferIntentions.remove'", async ({
 	await expect(modal()).toBeHidden();
 
 	await transferReceiptButton.click();
-	api.pause("receiptTransferIntentions.remove");
+	const receiptTransferIntentionRemovePause = api.createPause();
+	api.mock("receiptTransferIntentions.remove", async () => {
+		await receiptTransferIntentionRemovePause.wait();
+	});
 	await snapshotQueries(
 		async () => {
 			await cancelTransferButton.click();
@@ -226,10 +235,9 @@ test("Mutation 'receiptTransferIntentions.remove'", async ({
 	);
 	await expect(modal()).toBeHidden();
 
-	api.mock("receiptTransferIntentions.remove", () => undefined);
 	await snapshotQueries(
 		async () => {
-			api.unpause("receiptTransferIntentions.remove");
+			receiptTransferIntentionRemovePause.resolve();
 			await awaitCacheKey("receiptTransferIntentions.remove");
 			await verifyToastTexts();
 		},
