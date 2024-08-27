@@ -50,9 +50,13 @@ export const ErrorMessage: React.FC<Props> = ({ message, button }) => (
 type QueryObserverErrorResult =
 	| QueryObserverLoadingErrorResult<unknown, TRPCError>
 	| QueryObserverRefetchErrorResult<unknown, TRPCError>;
+type PickedQueryObserverErrorResult = Pick<
+	QueryObserverErrorResult,
+	"refetch" | "error"
+>;
 
 type QueryProps = {
-	query: Pick<QueryObserverErrorResult, "refetch" | "error">;
+	query: PickedQueryObserverErrorResult;
 };
 
 export const QueryErrorMessage: React.FC<QueryProps> = ({ query }) => {
@@ -64,6 +68,31 @@ export const QueryErrorMessage: React.FC<QueryProps> = ({ query }) => {
 				[refetch],
 			)}
 			message={query.error.message}
+		/>
+	);
+};
+
+type GroupedQueryProps = {
+	queries: [
+		PickedQueryObserverErrorResult,
+		...PickedQueryObserverErrorResult[],
+	];
+};
+
+export const GroupedQueryErrorMessage: React.FC<GroupedQueryProps> = ({
+	queries,
+}) => {
+	const refetch = React.useCallback(
+		() => queries.forEach((query) => query.refetch()),
+		[queries],
+	);
+	return (
+		<ErrorMessage
+			button={React.useMemo(
+				() => ({ text: "Refetch", onClick: refetch }),
+				[refetch],
+			)}
+			message={queries[0].error.message}
 		/>
 	);
 };
