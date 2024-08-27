@@ -36,6 +36,7 @@ export const procedure = authProcedure
 					type: z.literal("debts"),
 				}),
 			]),
+			direction: z.enum(["forward", "backward"]),
 		}),
 	)
 	.output(

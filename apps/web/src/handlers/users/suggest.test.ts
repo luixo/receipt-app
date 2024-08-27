@@ -33,6 +33,7 @@ describe("users.suggest", () => {
 				input: faker.string.alpha(),
 				limit: 1,
 				options: { type: "debts" },
+				direction: "forward",
 			}),
 		);
 
@@ -46,6 +47,7 @@ describe("users.suggest", () => {
 							input: "a".repeat(MAX_SUGGEST_LENGTH + 1),
 							limit: 1,
 							options: { type: "debts" },
+							direction: "forward",
 						}),
 					"BAD_REQUEST",
 					`Zod error\n\nAt "input": String must contain at most 255 character(s)`,
@@ -63,6 +65,7 @@ describe("users.suggest", () => {
 							input: faker.string.alpha(),
 							limit: 0,
 							options: { type: "debts" },
+							direction: "forward",
 						}),
 					"BAD_REQUEST",
 					`Zod error\n\nAt "limit": Number must be greater than 0`,
@@ -78,6 +81,7 @@ describe("users.suggest", () => {
 							input: faker.string.alpha(),
 							limit: MAX_LIMIT + 1,
 							options: { type: "debts" },
+							direction: "forward",
 						}),
 					"BAD_REQUEST",
 					`Zod error\n\nAt "limit": Number must be less than or equal to 100`,
@@ -93,6 +97,7 @@ describe("users.suggest", () => {
 							input: faker.string.alpha(),
 							limit: faker.number.float(),
 							options: { type: "debts" },
+							direction: "forward",
 						}),
 					"BAD_REQUEST",
 					`Zod error\n\nAt "limit": Expected integer, received float`,
@@ -111,6 +116,7 @@ describe("users.suggest", () => {
 							limit: 1,
 							cursor: -1,
 							options: { type: "debts" },
+							direction: "forward",
 						}),
 					"BAD_REQUEST",
 					`Zod error\n\nAt "cursor": Number must be greater than or equal to 0`,
@@ -127,6 +133,7 @@ describe("users.suggest", () => {
 							limit: 1,
 							cursor: MAX_OFFSET + 1,
 							options: { type: "debts" },
+							direction: "forward",
 						}),
 					"BAD_REQUEST",
 					`Zod error\n\nAt "cursor": Number must be less than or equal to 10000`,
@@ -143,6 +150,7 @@ describe("users.suggest", () => {
 							limit: 1,
 							cursor: faker.number.float(),
 							options: { type: "debts" },
+							direction: "forward",
 						}),
 					"BAD_REQUEST",
 					`Zod error\n\nAt "cursor": Expected integer, received float`,
@@ -161,6 +169,7 @@ describe("users.suggest", () => {
 							limit: 1,
 							filterIds: [faker.string.alpha()],
 							options: { type: "debts" },
+							direction: "forward",
 						}),
 					"BAD_REQUEST",
 					`Zod error\n\nAt "filterIds[0]": Invalid uuid`,
@@ -181,6 +190,7 @@ describe("users.suggest", () => {
 								type: "not-connected-receipt",
 								receiptId: faker.string.alpha(),
 							},
+							direction: "forward",
 						}),
 					"BAD_REQUEST",
 					`Zod error\n\nAt "options.receiptId": Invalid uuid`,
@@ -203,6 +213,7 @@ describe("users.suggest", () => {
 							type: "not-connected-receipt",
 							receiptId: nonExistentReceiptId,
 						},
+						direction: "forward",
 					}),
 				"NOT_FOUND",
 				`Receipt "${nonExistentReceiptId}" does not exist.`,
@@ -223,6 +234,7 @@ describe("users.suggest", () => {
 							type: "not-connected-receipt",
 							receiptId,
 						},
+						direction: "forward",
 					}),
 				"FORBIDDEN",
 				`Not enough rights to view receipt "${receiptId}".`,
@@ -263,6 +275,7 @@ describe("users.suggest", () => {
 				input: "Alice",
 				limit: 10,
 				options: { type: "debts" },
+				direction: "forward",
 			});
 			expect(result).toStrictEqual<typeof result>({
 				items: matchedUsers.map(({ id }) => id).sort(),
@@ -286,6 +299,7 @@ describe("users.suggest", () => {
 				input: "Al",
 				limit: 10,
 				options: { type: "debts" },
+				direction: "forward",
 			});
 			expect(result).toStrictEqual<typeof result>({
 				// Shorter requests are sorted by name, not by similarity
@@ -304,6 +318,7 @@ describe("users.suggest", () => {
 				input: "Alice",
 				limit: 10,
 				options: { type: "debts" },
+				direction: "forward",
 			});
 			expect(result).toStrictEqual<typeof result>({
 				items: [],
@@ -353,6 +368,7 @@ describe("users.suggest", () => {
 				limit: 10,
 				filterIds: [filteredUserId],
 				options: { type: "not-connected-receipt", receiptId },
+				direction: "forward",
 			});
 			expect(result).toStrictEqual<typeof result>({
 				items: matchedUsers.map(({ id }) => id).sort(),
@@ -392,6 +408,7 @@ describe("users.suggest", () => {
 				input: "Alice",
 				limit: 10,
 				options: { type: "not-connected" },
+				direction: "forward",
 			});
 			expect(result).toStrictEqual<typeof result>({
 				items: matchedUsers.map(({ id }) => id).sort(),
@@ -438,6 +455,7 @@ describe("users.suggest", () => {
 				input: "Alice",
 				limit: 10,
 				options: { type: "connected" },
+				direction: "forward",
 			});
 			expect(result).toStrictEqual<typeof result>({
 				items: matchedUsers.map(({ id }) => id).sort(),
@@ -465,6 +483,7 @@ describe("users.suggest", () => {
 				input: "Alice",
 				limit: 10,
 				options: { type: "debts" },
+				direction: "forward",
 			});
 			expect(result).toStrictEqual({
 				// Order of matched users is important - they are sorted by fuzziness
@@ -494,6 +513,7 @@ describe("users.suggest", () => {
 				input: "Alice",
 				limit,
 				options: { type: "debts" },
+				direction: "forward",
 			});
 			expect(firstPage.items.length).toBe(limit);
 			expect(firstPage.cursor).toBe(0);
@@ -503,6 +523,7 @@ describe("users.suggest", () => {
 				cursor: firstPage.cursor + limit,
 				limit,
 				options: { type: "debts" },
+				direction: "forward",
 			});
 			expect(secondPage.items.length).toBeLessThan(limit);
 			expect(secondPage.cursor).toBe(limit);
@@ -536,6 +557,7 @@ describe("users.suggest", () => {
 				limit: 10,
 				filterIds: [filteredUserId],
 				options: { type: "debts" },
+				direction: "forward",
 			});
 			expect(result).toStrictEqual<typeof result>({
 				items: matchedUsers.map(({ id }) => id).sort(),
