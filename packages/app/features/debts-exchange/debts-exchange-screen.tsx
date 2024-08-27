@@ -18,12 +18,17 @@ import type { AppPage } from "~utils/next";
 
 type InnerProps = {
 	userId: UsersId;
-	query: TRPCQuerySuccessResult<"debts.getUser">;
+	query: TRPCQuerySuccessResult<"debts.getIdsByUser">;
 };
 
 const DebtsExchangeInner: React.FC<InnerProps> = ({ userId, query }) => {
 	const [showResolvedDebts] = useShowResolvedDebts();
-	const [aggregatedDebts, nonZeroAggregateDebts] = useAggregatedDebts(query);
+	const [
+		aggregatedDebts,
+		nonZeroAggregatedDebts,
+		aggregatedDebtsLoading,
+		aggregatedDebtsErrorQueries,
+	] = useAggregatedDebts(query);
 	const userQuery = trpc.users.get.useQuery({ id: userId });
 	return (
 		<>
@@ -36,7 +41,9 @@ const DebtsExchangeInner: React.FC<InnerProps> = ({ userId, query }) => {
 				<LoadableUser id={userId} />
 			</PageHeader>
 			<DebtsGroup
-				debts={showResolvedDebts ? aggregatedDebts : nonZeroAggregateDebts}
+				isLoading={aggregatedDebtsLoading}
+				errorQueries={aggregatedDebtsErrorQueries}
+				debts={showResolvedDebts ? aggregatedDebts : nonZeroAggregatedDebts}
 			/>
 			<Button
 				color="primary"
@@ -61,7 +68,7 @@ const DebtsExchangeInner: React.FC<InnerProps> = ({ userId, query }) => {
 
 export const DebtsExchangeScreen: AppPage = () => {
 	const { id: userId } = useParams<{ id: string }>();
-	const query = trpc.debts.getUser.useQuery({ userId });
+	const query = trpc.debts.getIdsByUser.useQuery({ userId });
 	if (query.status === "pending") {
 		return (
 			<>

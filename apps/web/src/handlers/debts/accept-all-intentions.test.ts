@@ -90,7 +90,7 @@ describe("debts.acceptAllIntentions", () => {
 				ctx,
 				foreignAccountId,
 			);
-			const [debtToUpdate] = await insertSyncedDebts(
+			await insertSyncedDebts(
 				ctx,
 				[accountId, userId, { lockedTimestamp: new Date("2020-06-01") }],
 				[
@@ -113,31 +113,17 @@ describe("debts.acceptAllIntentions", () => {
 				ctx,
 				foreignAccountId,
 			);
-			const debtToCreate = await insertDebt(
-				ctx,
-				foreignAccountId,
-				foreignToSelfUserId,
-				{
-					lockedTimestamp: new Date(),
-					created: new Date("2020-05-01"),
-					receiptId: anotherForeignReceiptId,
-				},
-			);
+			await insertDebt(ctx, foreignAccountId, foreignToSelfUserId, {
+				lockedTimestamp: new Date(),
+				created: new Date("2020-05-01"),
+				receiptId: anotherForeignReceiptId,
+			});
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure(),
 			);
-			expect(result).toStrictEqual<typeof result>([
-				{
-					id: debtToUpdate.id,
-					created: debtToUpdate.created,
-				},
-				{
-					id: debtToCreate.id,
-					created: new Date(),
-				},
-			]);
+			expect(result).toStrictEqual<typeof result>(undefined);
 		});
 	});
 });

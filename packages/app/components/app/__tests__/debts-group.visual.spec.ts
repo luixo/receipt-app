@@ -1,14 +1,15 @@
 import { mergeTests } from "@playwright/test";
+import { TRPCError } from "@trpc/server";
 
-import { test as originalTest } from "~app/features/debts-exchange/__tests__/utils";
+import { test as debtsTest } from "~app/features/debts/__tests__/utils";
 import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
 
-import { test as localFixture } from "./debts-group.utils";
+import { test as debtsGroupFixture } from "./debts-group.utils";
 
-const test = mergeTests(originalTest, localFixture);
+const test = mergeTests(debtsTest, debtsGroupFixture);
 
 test("No debts", async ({
-	openDebtsExchangeScreen,
+	openUserDebtsScreen,
 	expectScreenshotWithSchemes,
 	mockDebts,
 	debtsGroup,
@@ -16,14 +17,14 @@ test("No debts", async ({
 	const { user } = mockDebts({
 		generateDebts: () => [],
 	});
-	await openDebtsExchangeScreen(user.id);
+	await openUserDebtsScreen(user.id);
 	await expectScreenshotWithSchemes("empty.png", {
 		locator: debtsGroup,
 	});
 });
 
 test("Single group", async ({
-	openDebtsExchangeScreen,
+	openUserDebtsScreen,
 	expectScreenshotWithSchemes,
 	mockDebts,
 	debtsGroup,
@@ -31,23 +32,55 @@ test("Single group", async ({
 	const { user } = mockDebts({
 		generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 1 }),
 	});
-	await openDebtsExchangeScreen(user.id);
+	await openUserDebtsScreen(user.id, { awaitDebts: 1 });
 	await expectScreenshotWithSchemes("single.png", {
 		locator: debtsGroup,
 	});
 });
 
 test("Multiple groups with different directions", async ({
-	openDebtsExchangeScreen,
+	openUserDebtsScreen,
 	expectScreenshotWithSchemes,
 	mockDebts,
 	debtsGroup,
 }) => {
+	const AMOUNT = 20;
 	const { user } = mockDebts({
-		generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 20 }),
+		generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: AMOUNT }),
 	});
-	await openDebtsExchangeScreen(user.id);
+	await openUserDebtsScreen(user.id, { awaitDebts: AMOUNT });
 	await expectScreenshotWithSchemes("multiple.png", {
+		locator: debtsGroup,
+	});
+});
+
+test("External query status", async ({
+	api,
+	mockDebts,
+	openUserDebtsScreen,
+	debtsGroup,
+	expectScreenshotWithSchemes,
+}) => {
+	const { user, debts } = mockDebts({
+		generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 3 }),
+	});
+	const debtPause = api.createPause();
+	api.mock("debts.get", async ({ input: { id }, next }) => {
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		if (id === debts[0]!.id) {
+			await debtPause.wait();
+		}
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		if (id === debts[1]!.id) {
+			throw new TRPCError({
+				code: "FORBIDDEN",
+				message: `Mock "debts.get" error`,
+			});
+		}
+		return next();
+	});
+	await openUserDebtsScreen(user.id);
+	await expectScreenshotWithSchemes("external-status.png", {
 		locator: debtsGroup,
 	});
 });

@@ -1,15 +1,19 @@
+import { mergeTests } from "@playwright/test";
 import { TRPCError } from "@trpc/server";
 import assert from "node:assert";
 
+import { test as debtsGroupFixture } from "~app/components/app/__tests__/debts-group.utils";
 import { SETTINGS_COOKIE_NAME } from "~app/utils/cookie/settings";
 import { expect } from "~tests/frontend/fixtures";
 import type { GenerateDebts } from "~tests/frontend/generators/debts";
 import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
 
-import { test } from "./utils";
+import { test as localTest } from "./utils";
+
+const test = mergeTests(localTest, debtsGroupFixture);
 
 test.describe("Wrapper component", () => {
-	test("'debts.getUser' pending / error", async ({
+	test("'debts.getIdsByUser' pending / error", async ({
 		api,
 		errorMessage,
 		loader,
@@ -21,12 +25,12 @@ test.describe("Wrapper component", () => {
 		awaitCacheKey,
 	}) => {
 		const { user } = mockBase();
-		const userDebtsPause = api.createPause();
-		api.mock("debts.getUser", async () => {
-			await userDebtsPause.wait();
+		const userDebtsIdsPause = api.createPause();
+		api.mock("debts.getIdsByUser", async () => {
+			await userDebtsIdsPause.wait();
 			throw new TRPCError({
 				code: "FORBIDDEN",
-				message: `Mock "debts.getUser" error`,
+				message: `Mock "debts.getIdsByUser" error`,
 			});
 		});
 		await openDebtsExchangeScreen(user.id, { awaitCache: false });
@@ -37,8 +41,8 @@ test.describe("Wrapper component", () => {
 		await expect(exchangeAllToOneButton).not.toBeAttached();
 		await expect(exchangeSpecificButton).not.toBeAttached();
 
-		userDebtsPause.resolve();
-		await expect(errorMessage(`Mock "debts.getUser" error`)).toBeVisible();
+		userDebtsIdsPause.resolve();
+		await expect(errorMessage(`Mock "debts.getIdsByUser" error`)).toBeVisible();
 		await expect(exchangeAllToOneButton).not.toBeAttached();
 		await expect(exchangeSpecificButton).not.toBeAttached();
 	});
@@ -108,13 +112,13 @@ test.describe("Showed debts depending on 'show resolved debts' option", () => {
 		cookieManager,
 		debtsGroupElement,
 	}) => {
-		const { user } = mockDebts({
+		const { user, debts } = mockDebts({
 			generateDebts: generateDebtsWithEmpty,
 		});
 		await cookieManager.addCookie(SETTINGS_COOKIE_NAME, {
 			showResolvedDebts: true,
 		});
-		await openDebtsExchangeScreen(user.id);
+		await openDebtsExchangeScreen(user.id, { awaitDebts: debts.length });
 		await expect(debtsGroupElement).toHaveCount(2);
 	});
 
@@ -124,13 +128,13 @@ test.describe("Showed debts depending on 'show resolved debts' option", () => {
 		cookieManager,
 		debtsGroupElement,
 	}) => {
-		const { user } = mockDebts({
+		const { user, debts } = mockDebts({
 			generateDebts: generateDebtsWithEmpty,
 		});
 		await cookieManager.addCookie(SETTINGS_COOKIE_NAME, {
 			showResolvedDebts: false,
 		});
-		await openDebtsExchangeScreen(user.id);
+		await openDebtsExchangeScreen(user.id, { awaitDebts: debts.length });
 		await expect(debtsGroupElement).toHaveCount(1);
 	});
 });

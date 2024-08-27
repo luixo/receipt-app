@@ -14,7 +14,7 @@ import { generateAmount, generateCurrencyCode } from "./utils";
 import type { GeneratorFnWithAmount, GeneratorFnWithFaker } from "./utils";
 
 export type GenerateDebts = GeneratorFnWithAmount<
-	TRPCQueryOutput<"debts.getUser">[number],
+	TRPCQueryOutput<"debts.get">,
 	{ userId: UsersId }
 >;
 

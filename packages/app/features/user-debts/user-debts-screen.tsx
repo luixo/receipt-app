@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { useParams, useRouter } from "solito/navigation";
+import { useParams } from "solito/navigation";
 
 import { DebtsGroup } from "~app/components/app/debts-group";
 import { LoadableUser } from "~app/components/app/loadable-user";
@@ -24,18 +24,17 @@ import { UserDebtPreview } from "./user-debt-preview";
 
 type InnerProps = {
 	userId: UsersId;
-	query: TRPCQuerySuccessResult<"debts.getUser">;
+	query: TRPCQuerySuccessResult<"debts.getIdsByUser">;
 };
 
 export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 	const [showResolvedDebts] = useShowResolvedDebts();
-	const [aggregatedDebts, nonZeroAggregateDebts] = useAggregatedDebts(query);
-	const router = useRouter();
-	React.useEffect(() => {
-		if (query.data.length === 0) {
-			router.replace("/debts");
-		}
-	}, [query.data, router]);
+	const [
+		aggregatedDebts,
+		nonZeroAggregatedDebts,
+		aggregatedDebtsLoading,
+		aggregatedDebtsErrorQueries,
+	] = useAggregatedDebts(query);
 	const userQuery = trpc.users.get.useQuery({ id: userId });
 	return (
 		<>
@@ -61,9 +60,11 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 			</PageHeader>
 			<View className="flex-row items-center justify-center gap-4 px-16">
 				<DebtsGroup
-					debts={showResolvedDebts ? aggregatedDebts : nonZeroAggregateDebts}
+					isLoading={aggregatedDebtsLoading}
+					errorQueries={aggregatedDebtsErrorQueries}
+					debts={showResolvedDebts ? aggregatedDebts : nonZeroAggregatedDebts}
 				/>
-				{nonZeroAggregateDebts.length > 1 ? (
+				{nonZeroAggregatedDebts.length > 1 ? (
 					<Button
 						color="primary"
 						href={`/debts/user/${userId}/exchange/`}
@@ -74,7 +75,7 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 						<ExchangeIcon />
 					</Button>
 				) : null}
-				{aggregatedDebts.length !== nonZeroAggregateDebts.length ? (
+				{aggregatedDebts.length !== nonZeroAggregatedDebts.length ? (
 					<ShowResolvedDebtsOption className="absolute right-0" />
 				) : null}
 			</View>
@@ -82,7 +83,7 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 				{query.data.map((debt) => (
 					<React.Fragment key={debt.id}>
 						<Divider />
-						<UserDebtPreview debt={debt} />
+						<UserDebtPreview debtId={debt.id} />
 					</React.Fragment>
 				))}
 			</View>
@@ -92,7 +93,7 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 
 export const UserDebtsScreen: AppPage = () => {
 	const { id: userId } = useParams<{ id: string }>();
-	const query = trpc.debts.getUser.useQuery({ userId });
+	const query = trpc.debts.getIdsByUser.useQuery({ userId });
 	if (query.status === "pending") {
 		return (
 			<>

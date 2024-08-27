@@ -1,36 +1,31 @@
-import { type Locator } from "@playwright/test";
 import { TRPCError } from "@trpc/server";
+import { entries } from "remeda";
 
+import type { CurrencyCode } from "~app/utils/currency";
 import type { UsersId } from "~db/models";
 import { test as originalTest } from "~tests/frontend/fixtures";
-import {
-	type GenerateDebts,
-	defaultGenerateDebts,
-} from "~tests/frontend/generators/debts";
-import {
-	type GenerateUsers,
-	defaultGenerateUsers,
-} from "~tests/frontend/generators/users";
+import type { GenerateDebts } from "~tests/frontend/generators/debts";
+import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
+import type { GenerateUsers } from "~tests/frontend/generators/users";
+import { defaultGenerateUsers } from "~tests/frontend/generators/users";
 
 type Fixtures = {
-	mockBase: () => {
+	mockBase: (options?: { generateUsers?: GenerateUsers }) => {
 		user: ReturnType<GenerateUsers>[number];
 	};
 	mockDebts: (options?: { generateDebts?: GenerateDebts }) => {
 		debts: ReturnType<GenerateDebts>;
 		user: ReturnType<GenerateUsers>[number];
 	};
-	openDebtsExchangeScreen: (
+	openUserDebtsScreen: (
 		userId: UsersId,
 		options?: { awaitCache?: boolean; awaitDebts?: number },
 	) => Promise<void>;
-	exchangeAllToOneButton: Locator;
-	exchangeSpecificButton: Locator;
 };
 
 export const test = originalTest.extend<Fixtures>({
 	mockBase: ({ api, faker }, use) =>
-		use(() => {
+		use(({ generateUsers = defaultGenerateUsers } = {}) => {
 			api.mockUtils.authPage();
 			api.mock("account.get", {
 				account: {
@@ -43,20 +38,40 @@ export const test = originalTest.extend<Fixtures>({
 				user: { name: faker.person.firstName() },
 			});
 			api.mockUtils.currencyList();
-			const [user] = defaultGenerateUsers({ faker, amount: 1 });
+			const users = generateUsers({ faker });
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			const sureUser = user!;
-			api.mock("users.get", sureUser);
-			return { user: sureUser };
+			const debtUser = users[0]!;
+			api.mock("users.get", ({ input: { id: lookupId } }) => {
+				const matchedUser = users.find(({ id }) => id === lookupId);
+				if (!matchedUser) {
+					throw new TRPCError({
+						code: "NOT_FOUND",
+						message: `Expected to have user id "${lookupId}", but none found`,
+					});
+				}
+				return matchedUser;
+			});
+			return { user: debtUser };
 		}),
 	mockDebts: ({ api, faker, mockBase }, use) =>
 		use(({ generateDebts = defaultGenerateDebts } = {}) => {
 			const { user } = mockBase();
-			const debts = generateDebts({
-				faker,
-				amount: { min: 3, max: 6 },
-				userId: user.id,
-			});
+			const debts = generateDebts({ faker, userId: user.id });
+			api.mock("debts.getByUsers", [
+				{
+					userId: user.id,
+					unsyncedDebtsAmount: 0,
+					debts: entries(
+						debts.reduce<Record<CurrencyCode, number>>(
+							(acc, { currencyCode, amount }) => ({
+								...acc,
+								[currencyCode]: (acc[currencyCode] || 0) + amount,
+							}),
+							{},
+						),
+					).map(([currencyCode, sum]) => ({ currencyCode, sum })),
+				},
+			]);
 			api.mock(
 				"debts.getIdsByUser",
 				debts.map(({ id, timestamp }) => ({ id, timestamp })),
@@ -69,14 +84,14 @@ export const test = originalTest.extend<Fixtures>({
 						message: `Expected to have debt id "${lookupId}", but none found`,
 					});
 				}
-				return { ...matchedDebt, userId: user.id };
+				return matchedDebt;
 			});
 			return { debts, user };
 		}),
 
-	openDebtsExchangeScreen: ({ page, awaitCacheKey }, use) =>
-		use(async (userId, { awaitCache = true, awaitDebts } = {}) => {
-			await page.goto(`/debts/user/${userId}/exchange/`);
+	openUserDebtsScreen: ({ page, awaitCacheKey }, use) =>
+		use(async (userId, { awaitCache = true, awaitDebts = 0 } = {}) => {
+			await page.goto(`/debts/user/${userId}/`);
 			if (awaitCache) {
 				await awaitCacheKey("users.get");
 				await awaitCacheKey("debts.getIdsByUser");
@@ -85,9 +100,4 @@ export const test = originalTest.extend<Fixtures>({
 				await awaitCacheKey("debts.get", awaitDebts);
 			}
 		}),
-
-	exchangeAllToOneButton: ({ page }, use) =>
-		use(page.locator("a[role='button'][title='Exchange all to one currency']")),
-	exchangeSpecificButton: ({ page }, use) =>
-		use(page.locator("a[role='button'][title='Exchange specific currency']")),
 });

@@ -31,7 +31,7 @@ export const updateUserConnected = (
 	void invalidateSuggestUsers(controllerContext);
 	updateDebts(controllerContext, {
 		get: undefined,
-		getUser: undefined,
+		getIdsByUser: undefined,
 		getByUsers: undefined,
 		// A newly connected account may have new intentions for us
 		getIntentions: (controller) => controller.invalidate(),

@@ -24,12 +24,17 @@ import { PlannedDebts } from "./planned-debts";
 
 type InnerProps = {
 	userId: UsersId;
-	query: TRPCQuerySuccessResult<"debts.getUser">;
+	query: TRPCQuerySuccessResult<"debts.getIdsByUser">;
 };
 
 const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 	const [showResolvedDebts] = useShowResolvedDebts();
-	const [aggregatedDebts, nonZeroAggregateDebts] = useAggregatedDebts(query);
+	const [
+		aggregatedDebts,
+		nonZeroAggregatedDebts,
+		aggregatedDebtsLoading,
+		aggregatedDebtsErrorQueries,
+	] = useAggregatedDebts(query);
 	const userQuery = trpc.users.get.useQuery({ id: userId });
 	const topCurrenciesQuery = trpc.currency.topDebts.useQuery();
 	const [selectedCurrencyCode, setSelectedCurrencyCode] = React.useState<
@@ -52,10 +57,10 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 		[router, userId],
 	);
 	React.useEffect(() => {
-		if (nonZeroAggregateDebts.length <= 1) {
+		if (nonZeroAggregatedDebts.length <= 1 && !aggregatedDebtsLoading) {
 			back();
 		}
-	}, [nonZeroAggregateDebts, back]);
+	}, [nonZeroAggregatedDebts, aggregatedDebtsLoading, back]);
 	return (
 		<>
 			<PageHeader
@@ -68,11 +73,14 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 			</PageHeader>
 			<DebtsGroup
 				className="self-center"
-				debts={showResolvedDebts ? aggregatedDebts : nonZeroAggregateDebts}
+				isLoading={aggregatedDebtsLoading}
+				errorQueries={aggregatedDebtsErrorQueries}
+				debts={showResolvedDebts ? aggregatedDebts : nonZeroAggregatedDebts}
 			/>
 			<CurrenciesGroup
 				selectedCurrencyCode={selectedCurrencyCode}
-				aggregatedDebts={nonZeroAggregateDebts}
+				isLoading={aggregatedDebtsLoading}
+				aggregatedDebts={nonZeroAggregatedDebts}
 				setSelectedCurrencyCode={setSelectedCurrencyCode}
 				onSelectOther={openModal}
 			/>
@@ -84,18 +92,18 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 				onLoad={doNothing}
 				topCurrenciesQuery={topCurrenciesQuery}
 			/>
-			{selectedCurrencyCode ? (
+			{selectedCurrencyCode && !aggregatedDebtsLoading ? (
 				<>
 					<Divider />
 					<PlannedDebts
 						key={
-							nonZeroAggregateDebts.filter(
+							nonZeroAggregatedDebts.filter(
 								(debt) => debt.currencyCode !== selectedCurrencyCode,
 							).length
 						}
 						userId={userId}
 						selectedCurrencyCode={selectedCurrencyCode}
-						aggregatedDebts={nonZeroAggregateDebts}
+						aggregatedDebts={nonZeroAggregatedDebts}
 						onDone={back}
 					/>
 				</>
@@ -106,7 +114,7 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 
 export const DebtsExchangeAllScreen: AppPage = () => {
 	const { id: userId } = useParams<{ id: string }>();
-	const query = trpc.debts.getUser.useQuery({ userId });
+	const query = trpc.debts.getIdsByUser.useQuery({ userId });
 	if (query.status === "pending") {
 		return (
 			<>

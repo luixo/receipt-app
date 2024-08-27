@@ -8,23 +8,16 @@ import { update as updateDebts } from "../cache/debts";
 import { update as updateReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
 
-type DebtUserSnapshot = TRPCQueryOutput<"debts.getUser">[number];
+type DebtIdByUserSnapshot = TRPCQueryOutput<"debts.getIdsByUser">[number];
 type DebtSnapshot = TRPCQueryOutput<"debts.get">;
 type AddResult = TRPCMutationOutput<"debts.add">;
 
-const createUserDebt = (
-	{ id, lockedTimestamp, reverseAccepted }: AddResult,
+const createByUserIdDebt = (
+	{ id }: AddResult,
 	updateObject: TRPCMutationInput<"debts.add">,
-): DebtUserSnapshot => ({
+): DebtIdByUserSnapshot => ({
 	id,
-	amount: updateObject.amount,
-	currencyCode: updateObject.currencyCode,
-	created: new Date(),
 	timestamp: updateObject.timestamp || new Date(),
-	note: updateObject.note,
-	lockedTimestamp,
-	their: reverseAccepted ? { lockedTimestamp } : undefined,
-	receiptId: updateObject.receiptId,
 });
 
 const createDebt = (
@@ -89,10 +82,10 @@ export const options: UseContextedMutationOptions<"debts.add"> = {
 					);
 				}
 			},
-			getUser: (controller) =>
+			getIdsByUser: (controller) =>
 				controller.add(
 					updateObject.userId,
-					createUserDebt(result, updateObject),
+					createByUserIdDebt(result, updateObject),
 				),
 			get: (controller) => controller.add(createDebt(result, updateObject)),
 			getIntentions: undefined,

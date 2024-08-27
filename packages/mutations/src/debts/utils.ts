@@ -45,59 +45,38 @@ export const updateGetByUsers = (
 		),
 	);
 
-export const updateGetUser = (
+export const updateGetByUserId = (
 	controller: Parameters<
-		NonNullable<Parameters<typeof updateRevertDebts>[1]["getUser"]>
+		NonNullable<Parameters<typeof updateRevertDebts>[1]["getIdsByUser"]>
 	>[0],
 	intentions: Intention[],
 ) =>
 	mergeUpdaterResults(
 		...intentions.reduce<(UpdaterRevertResult | undefined)[]>(
-			(
-				acc,
-				{
-					id,
-					current,
-					userId,
-					amount,
-					currencyCode,
-					timestamp,
-					lockedTimestamp,
-					note,
-					receiptId,
-				},
-			) => [
+			(acc, { id, current, userId, timestamp }) => [
 				...acc,
 				current
 					? controller.update(
 							userId,
 							id,
-							(debt) => ({
-								...debt,
-								currencyCode,
-								amount,
-								timestamp,
-								lockedTimestamp,
-							}),
-							(snapshot) => (debt) => ({
-								...debt,
-								currencyCode: snapshot.currencyCode,
-								amount: snapshot.amount,
-								timestamp: snapshot.timestamp,
-								lockedTimestamp: snapshot.lockedTimestamp,
-							}),
+							(debt) =>
+								timestamp === debt.timestamp
+									? debt
+									: {
+											...debt,
+											timestamp,
+									  },
+							(snapshot) => (debt) =>
+								snapshot.timestamp === debt.timestamp
+									? debt
+									: {
+											...debt,
+											timestamp: snapshot.timestamp,
+									  },
 					  )
 					: controller.add(userId, {
 							id,
-							currencyCode,
-							amount,
 							timestamp,
-							// Will be overriden on onSuccess
-							created: new Date(),
-							note,
-							lockedTimestamp,
-							their: { lockedTimestamp },
-							receiptId,
 					  }),
 			],
 			[],
@@ -161,20 +140,6 @@ export const updateGet = (
 		),
 	);
 
-export const updateGetUserSuccess = (
-	controller: Parameters<
-		NonNullable<Parameters<typeof updateDebts>[1]["getUser"]>
-	>[0],
-	intentions: (Intention & { created: Date })[],
-) => {
-	intentions.forEach(({ id, userId, current, created }) => {
-		if (!current) {
-			return;
-		}
-		controller.update(userId, id, (debt) => ({ ...debt, created }));
-	});
-};
-
 export type CurrentDebt = {
 	userId: UsersId;
 	amount: number;
@@ -187,7 +152,7 @@ export type CurrentDebt = {
 };
 
 type DebtSum = number;
-type DebtUserSnapshot = TRPCQueryOutput<"debts.getUser">[number];
+type DebtByUserIdSnapshot = TRPCQueryOutput<"debts.getIdsByUser">[number];
 type DebtSnapshot = TRPCQueryOutput<"debts.get">;
 type DebtUpdateObject = TRPCMutationInput<"debts.update">["update"];
 
@@ -212,27 +177,13 @@ export const applySumUpdate =
 		return sum;
 	};
 
-export const applyUserUpdate =
-	(update: DebtUpdateObject): UpdateFn<DebtUserSnapshot> =>
+export const applyByUserIdUpdate =
+	(update: DebtUpdateObject): UpdateFn<DebtByUserIdSnapshot> =>
 	(debt) => {
-		const nextDebt = { ...debt };
-		if (update.amount !== undefined) {
-			nextDebt.amount = update.amount;
-		}
 		if (update.timestamp !== undefined) {
-			nextDebt.timestamp = update.timestamp;
+			return { ...debt, timestamp: update.timestamp };
 		}
-		if (update.currencyCode !== undefined) {
-			nextDebt.currencyCode = update.currencyCode;
-		}
-		if (update.note !== undefined) {
-			nextDebt.note = update.note;
-		}
-		const nextLockedTimestamp = getNextLockedTimestamp(update);
-		if (nextLockedTimestamp !== null) {
-			nextDebt.lockedTimestamp = nextLockedTimestamp;
-		}
-		return nextDebt;
+		return debt;
 	};
 
 export const applyUpdate =
@@ -269,28 +220,14 @@ export const getSumRevert =
 		return currentSum;
 	};
 
-export const getUserRevert =
-	(update: DebtUpdateObject): SnapshotFn<DebtUserSnapshot> =>
+export const getByUserIdRevert =
+	(update: DebtUpdateObject): SnapshotFn<DebtByUserIdSnapshot> =>
 	(snapshot) =>
 	(debt) => {
-		const revertDebt = { ...debt };
-		if (update.amount !== undefined) {
-			revertDebt.amount = snapshot.amount;
-		}
 		if (update.timestamp !== undefined) {
-			revertDebt.timestamp = snapshot.timestamp;
+			return { ...debt, timestamp: snapshot.timestamp };
 		}
-		if (update.currencyCode !== undefined) {
-			revertDebt.currencyCode = snapshot.currencyCode;
-		}
-		if (update.note !== undefined) {
-			revertDebt.note = snapshot.note;
-		}
-		const nextLockedTimestamp = getNextLockedTimestamp(update);
-		if (nextLockedTimestamp !== null) {
-			revertDebt.lockedTimestamp = snapshot.lockedTimestamp;
-		}
-		return revertDebt;
+		return debt;
 	};
 
 export const getRevert =
@@ -372,20 +309,7 @@ export const updateLockedTimestamps = (
 				controller.updateUnsyncedDebts(currDebt.userId, (amount) => amount + 1);
 			}
 		},
-		getUser: (controller) =>
-			controller.update(currDebt.userId, debtId, (debt) => ({
-				...debt,
-				lockedTimestamp,
-				their:
-					reverseLockedTimestampUpdated && debt.their
-						? {
-								amount: debt.amount,
-								currencyCode: debt.currencyCode,
-								timestamp: debt.timestamp,
-								lockedTimestamp,
-						  }
-						: debt.their,
-			})),
+		getIdsByUser: undefined,
 		get: (controller) =>
 			controller.update(debtId, (debt) => ({
 				...debt,

@@ -11,9 +11,9 @@ import {
 import type { ControllerContext, SnapshotFn, UpdateFn } from "../../types";
 import { applyUpdateFnWithRevert, applyWithRevert, withRef } from "../utils";
 
-type Controller = TRPCReactUtils["debts"]["getUser"];
+type Controller = TRPCReactUtils["debts"]["getIdsByUser"];
 
-type Debts = TRPCQueryOutput<"debts.getUser">;
+type Debts = TRPCQueryOutput<"debts.getIdsByUser">;
 type Debt = Debts[number];
 
 const sortByTimestamp = (a: Debt, b: Debt) =>
@@ -62,7 +62,7 @@ const add = (
 };
 
 export const getController = ({ trpcUtils }: ControllerContext) => {
-	const controller = trpcUtils.debts.getUser;
+	const controller = trpcUtils.debts.getIdsByUser;
 	return {
 		update: (userId: UsersId, debtId: DebtsId, updater: UpdateFn<Debt>) =>
 			update(controller, userId, debtId)(updater),
@@ -73,7 +73,7 @@ export const getController = ({ trpcUtils }: ControllerContext) => {
 };
 
 export const getRevertController = ({ trpcUtils }: ControllerContext) => {
-	const controller = trpcUtils.debts.getUser;
+	const controller = trpcUtils.debts.getIdsByUser;
 	return {
 		update: (
 			userId: UsersId,

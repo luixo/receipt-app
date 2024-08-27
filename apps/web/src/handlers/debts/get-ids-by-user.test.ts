@@ -17,30 +17,16 @@ import {
 import { test } from "~tests/backend/utils/test";
 import { t } from "~web/handlers/trpc";
 
-import { procedure } from "./get-user";
+import { procedure } from "./get-ids-by-user";
 
-const mapUserDebt = (debt: Awaited<ReturnType<typeof insertDebt>>) => ({
+const mapDebt = (debt: Awaited<ReturnType<typeof insertDebt>>) => ({
 	id: debt.id,
-	currencyCode: debt.currencyCode,
 	timestamp: debt.timestamp,
-	created: debt.created,
-	note: debt.note,
-	receiptId: debt.receiptId || undefined,
-	amount: Number(debt.amount),
-	lockedTimestamp: debt.lockedTimestamp || undefined,
-	their: undefined,
-});
-
-const mapSyncedDebt = ([debt, syncedDebt]: Awaited<
-	ReturnType<typeof insertSyncedDebts>
->) => ({
-	...mapUserDebt(debt),
-	their: { lockedTimestamp: syncedDebt.lockedTimestamp || undefined },
 });
 
 const createCaller = t.createCallerFactory(t.router({ procedure }));
 
-describe("debts.getUser", () => {
+describe("debts.getIdsByUser", () => {
 	describe("input verification", () => {
 		expectUnauthorizedError((context) =>
 			createCaller(context).procedure({ userId: faker.string.uuid() }),
@@ -171,15 +157,16 @@ describe("debts.getUser", () => {
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ userId });
 			expect(result).toStrictEqual<typeof result>(
-				[...userDebts.map(mapUserDebt), ...syncedDebts.map(mapSyncedDebt)].sort(
-					(a, b) => {
-						const timestampSort = a.timestamp.valueOf() - b.timestamp.valueOf();
-						if (timestampSort !== 0) {
-							return timestampSort;
-						}
-						return a.id.localeCompare(b.id);
-					},
-				),
+				[
+					...userDebts.map(mapDebt),
+					...syncedDebts.map(([ours]) => mapDebt(ours)),
+				].sort((a, b) => {
+					const timestampSort = a.timestamp.valueOf() - b.timestamp.valueOf();
+					if (timestampSort !== 0) {
+						return timestampSort;
+					}
+					return a.id.localeCompare(b.id);
+				}),
 			);
 		});
 	});

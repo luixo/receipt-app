@@ -20,7 +20,7 @@ export const options: UseContextedMutationOptions<
 					(sum) => sum - currDebt.amount,
 					() => (sum) => sum + currDebt.amount,
 				),
-			getUser: (controller) =>
+			getIdsByUser: (controller) =>
 				controller.remove(currDebt.userId, updateObject.id),
 			// We remove the debt from everywhere else
 			// but it's own page
@@ -73,7 +73,7 @@ export const options: UseContextedMutationOptions<
 								currDebt.userId,
 								(amount) => amount - 1,
 							),
-			getUser: undefined,
+			getIdsByUser: undefined,
 			get: (controller) => controller.remove(updateObject.id),
 			getIntentions: (controller) => {
 				if (!currDebt.their?.lockedTimestamp || result.reverseRemoved) {

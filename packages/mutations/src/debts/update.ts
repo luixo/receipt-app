@@ -3,13 +3,13 @@ import type { UseContextedMutationOptions } from "../context";
 
 import type { CurrentDebt } from "./utils";
 import {
+	applyByUserIdUpdate,
 	applySumUpdate,
 	applyUpdate,
-	applyUserUpdate,
+	getByUserIdRevert,
 	getNextLockedTimestamp,
 	getRevert,
 	getSumRevert,
-	getUserRevert,
 	updateLockedTimestamps,
 	updateReceiptWithOutcomingDebtId,
 } from "./utils";
@@ -25,12 +25,12 @@ export const options: UseContextedMutationOptions<"debts.update", CurrentDebt> =
 						applySumUpdate(currDebt.amount, updateObject.update),
 						getSumRevert(currDebt.amount, updateObject.update),
 					),
-				getUser: (controller) =>
+				getIdsByUser: (controller) =>
 					controller.update(
 						currDebt.userId,
 						updateObject.id,
-						applyUserUpdate(updateObject.update),
-						getUserRevert(updateObject.update),
+						applyByUserIdUpdate(updateObject.update),
+						getByUserIdRevert(updateObject.update),
 					),
 				get: (controller) =>
 					controller.update(

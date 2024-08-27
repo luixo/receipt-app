@@ -38,44 +38,9 @@ export const procedure = authProcedure
 					"debts.ownerAccountId": ctx.auth.accountId,
 				}),
 			)
-			.leftJoin("debts as theirDebts", (qb) =>
-				qb
-					.onRef("theirDebts.id", "=", "debts.id")
-					.onRef("theirDebts.ownerAccountId", "<>", "debts.ownerAccountId"),
-			)
-			.select([
-				"debts.id",
-				"debts.currencyCode",
-				"debts.amount",
-				"debts.timestamp",
-				"debts.created",
-				"debts.note",
-				"debts.lockedTimestamp",
-				"debts.receiptId",
-				"theirDebts.ownerAccountId as theirOwnerAccountId",
-				"theirDebts.lockedTimestamp as theirLockedTimestamp",
-			])
+			.select(["debts.timestamp", "debts.id"])
 			.orderBy(["debts.timestamp desc", "debts.id"])
 			.execute();
 
-		return debts.map(
-			({
-				amount,
-				lockedTimestamp,
-				theirOwnerAccountId,
-				theirLockedTimestamp,
-				receiptId,
-				...debt
-			}) => ({
-				...debt,
-				receiptId: receiptId || undefined,
-				amount: Number(amount),
-				lockedTimestamp: lockedTimestamp || undefined,
-				their: theirOwnerAccountId
-					? {
-							lockedTimestamp: theirLockedTimestamp || undefined,
-					  }
-					: undefined,
-			}),
-		);
+		return debts;
 	});
