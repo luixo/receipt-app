@@ -36,6 +36,7 @@
 		"eslint-plugin-vitest": "^0.5.4",
 		"expo-router": "^3.4.7",
 		"find-free-ports": "^3.1.1",
+		"glob": "^11.0.0",
 		"globals": "^15.8.0",
 		"lint-staged": "^15.2.7",
 		"pre-commit": "^1.2.2",
@@ -102,7 +103,9 @@
 		"solito@^4.1.3": "patch:solito@npm%3A4.1.3#./patches/solito-npm-4.1.3.patch",
 		"@nextui-org/tooltip@2.0.29": "patch:@nextui-org/tooltip@npm%3A2.0.29#./patches/@nextui-org-tooltip-npm-2.0.29.patch",
 		"@tanstack/query-core@5.51.1": "patch:@tanstack/query-core@npm%3A5.51.1#./patches/@tanstack-query-core-npm-5.51.1.patch",
-		"@tanstack/react-query@^5.51.1": "patch:@tanstack/react-query@npm%3A5.51.1#./patches/@tanstack-react-query-npm-5.51.1.patch"
+		"@tanstack/react-query@^5.51.1": "patch:@tanstack/react-query@npm%3A5.51.1#./patches/@tanstack-react-query-npm-5.51.1.patch",
+		"@bgotink/playwright-coverage@^0.2.1": "patch:@bgotink/playwright-coverage@npm%3A0.2.1#./patches/@bgotink-playwright-coverage-npm-0.2.1.patch",
+		"v8-to-istanbul@^9.1.0": "patch:v8-to-istanbul@npm%3A9.1.0#./patches/v8-to-istanbul-npm-9.1.0.patch"
 	},
 	"nextBundleAnalysis": {
 		"budget": 358400,
