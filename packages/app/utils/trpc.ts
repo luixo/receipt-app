@@ -99,7 +99,13 @@ export const getLinks = (
 		false: splitLink({
 			condition: (op) =>
 				Boolean(useBatch && op.context.batch !== noBatchContext.batch),
-			true: httpBatchStreamLink({ url, headers, transformer }),
+			true: httpBatchStreamLink({
+				url,
+				headers,
+				transformer,
+				// Experimentally: 15k is ok
+				maxURLLength: 14000,
+			}),
 			false: httpLink({ url, headers, transformer }),
 		}),
 	});
