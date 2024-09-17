@@ -11,7 +11,7 @@ export const useFormattedCurrencies = (currencyCodes: CurrencyCode[]) => {
 				(currencyCode) =>
 					currenciesListQuery.data.find(
 						(element) => element.code === currencyCode,
-					)?.symbol,
+					)?.symbol ?? currencyCode,
 		  )
 		: currencyCodes;
 };

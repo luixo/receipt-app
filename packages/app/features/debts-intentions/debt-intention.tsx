@@ -19,7 +19,9 @@ export const DebtIntention = React.forwardRef<HTMLDivElement, Props>(
 	({ intention, children }, ref) => {
 		const { formatDate, formatDateTime } = useSsrFormat();
 		const currency = useFormattedCurrency(intention.currencyCode);
-		const selfCurrency = useFormattedCurrency(intention.current?.currencyCode);
+		const selfCurrency = useFormattedCurrency(
+			intention.current?.currencyCode || "USD",
+		);
 		const intentionDataComponent = (
 			<View className="flex-row gap-2">
 				<Text

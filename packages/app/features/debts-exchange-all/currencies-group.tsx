@@ -44,7 +44,7 @@ export const CurrenciesGroup: React.FC<Props> = ({
 		selectedCurrencyCode !== undefined &&
 		!isLoading &&
 		!aggregatedDebts.some((debt) => debt.currencyCode === selectedCurrencyCode);
-	const otherCurrency = useFormattedCurrency(selectedCurrencyCode);
+	const otherCurrency = useFormattedCurrency(selectedCurrencyCode || "USD");
 	return (
 		<ButtonGroup color="primary" className="flex-wrap">
 			{aggregatedDebts.map((debt) => (

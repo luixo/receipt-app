@@ -20,7 +20,7 @@ type Props = {
 	receiptId: ReceiptsId;
 	receiptItem: ReceiptItem;
 	readOnly?: boolean;
-	currencyCode?: CurrencyCode;
+	currencyCode: CurrencyCode;
 	isLoading: boolean;
 };
 
