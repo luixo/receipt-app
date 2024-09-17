@@ -31,7 +31,7 @@ const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 		if (hash) {
 			const matchedIntention = data.find((intention) => intention.id === hash);
 			if (matchedIntention && intentionsRefs.current[hash]) {
-				intentionsRefs.current[hash]?.scrollIntoView();
+				intentionsRefs.current[hash].scrollIntoView();
 			}
 		}
 	}, [data, pathname, intentionsRefs]);

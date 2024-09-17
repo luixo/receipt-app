@@ -12,6 +12,8 @@ export const skipFixtures = test.extend<SkipFixtures>({
 	skip: async ({}, use) =>
 		use((testInfo, criteria) => {
 			switch (criteria) {
+				// We want this to blow up in case we add more cases
+				// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 				case "only-smallest":
 					test.skip(
 						testInfo.project.name !== "320-safari",

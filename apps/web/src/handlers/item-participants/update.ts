@@ -76,6 +76,8 @@ export const procedure = authProcedure
 		}
 		let setObject: SimpleUpdateObject<"itemParticipants"> = {};
 		switch (input.update.type) {
+			// We want this to blow up in case we add more cases
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 			case "part":
 				setObject = { part: input.update.part.toString() };
 				break;

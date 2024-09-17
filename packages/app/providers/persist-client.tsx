@@ -13,8 +13,8 @@ const isKeyEqual = <
 	T2 extends TRPCQueryKey,
 	K2 extends TRPCSplitQueryKey<T2>,
 >(
-	keyA: K1,
-	keyB: K2,
+	keyA: Readonly<K1>,
+	keyB: Readonly<K2>,
 ) =>
 	// Let's keep it in case deeper routing ever happens
 	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

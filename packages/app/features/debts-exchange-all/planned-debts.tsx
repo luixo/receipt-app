@@ -54,7 +54,8 @@ const RateInput: React.FC<InputProps> = ({
 		form,
 		name: `${selectedCurrencyCode}.${currencyCode}`,
 		type: "number",
-		defaultValue: 0,
+		// see https://github.com/react-hook-form/react-hook-form/issues/12259
+		defaultValue: 0 as unknown as undefined,
 	});
 	return (
 		<Input
@@ -219,7 +220,8 @@ export const PlannedDebts: React.FC<Props> = ({
 			const currentRates = form.getValues()[selectedCurrencyCode];
 			entries(data).forEach(([key, value]) => {
 				if (!currentRates?.[key]) {
-					form.setValue(`${selectedCurrencyCode}.${key}`, value, {
+					// see https://github.com/react-hook-form/react-hook-form/issues/12259
+					form.setValue(`${selectedCurrencyCode}.${key}`, value as never, {
 						shouldValidate: true,
 					});
 				}

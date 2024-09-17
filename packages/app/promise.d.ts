@@ -7,9 +7,6 @@ interface Promise<T> {
 	 * @returns A Promise for the completion of the callback.
 	 */
 	catch<TResult = never>(
-		onrejected?:
-			| ((reason: unknown) => TResult | PromiseLike<TResult>)
-			| undefined
-			| null,
+		onrejected?: ((reason: unknown) => TResult | PromiseLike<TResult>) | null,
 	): Promise<T | TResult>;
 }

@@ -20,6 +20,8 @@ export const procedure = authProcedure
 		const { database } = ctx;
 		const updateObject: SettingsUpdateObject = {};
 		switch (input.type) {
+			// We want this to blow up in case we add more cases
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 			case "manualAcceptDebts":
 				updateObject.manualAcceptDebts = input.value;
 		}
