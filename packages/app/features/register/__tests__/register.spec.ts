@@ -73,7 +73,7 @@ test("'auth.register' mutation", async ({
 
 	const registerPause = api.createPause();
 	api.mock("auth.register", async () => {
-		await registerPause.wait();
+		await registerPause.promise;
 		return { account: { id: "test" } };
 	});
 	const buttonWithLoader = withLoader(registerButton);

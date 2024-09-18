@@ -27,7 +27,7 @@ test.describe("'currency.getList'", () => {
 		});
 		const currencyListPause = api.createPause();
 		api.mock("currency.getList", async ({ next }) => {
-			await currencyListPause.wait();
+			await currencyListPause.promise;
 			return next();
 		});
 		await openUserDebtsScreen(user.id);
@@ -74,7 +74,7 @@ test.describe("external query status", () => {
 			if (id === debts[0]!.id) {
 				return next();
 			}
-			await debtPause.wait();
+			await debtPause.promise;
 			return next();
 		});
 		await openUserDebtsScreen(user.id);

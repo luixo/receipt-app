@@ -28,8 +28,6 @@ import type { Currency, CurrencyCode } from "~app/utils/currency";
 import type { TransformerResult } from "~app/utils/trpc";
 import { transformer } from "~app/utils/trpc";
 import { getCurrencies } from "~utils/currency-data";
-import type { ControlledPromise } from "~utils/promise";
-import { createPromise } from "~utils/promise";
 
 import type { appRouter } from "../global/router";
 
@@ -78,7 +76,7 @@ export type ApiManager = {
 		key: K,
 		handler: NonNullable<Handlers[K]>[number],
 	) => () => void;
-	createPause: () => ControlledPromise;
+	createPause: () => PromiseWithResolvers<void>;
 	getActions: () => Action[];
 	clearActions: () => void;
 };
@@ -98,7 +96,7 @@ type Action<K extends TRPCKey = TRPCKey> = [
 
 type Controller = {
 	handlers: Handlers;
-	paused: ControlledPromise[];
+	paused: PromiseWithResolvers<void>[];
 	calls: Map<TRPCKey, number>;
 	actions: Action[];
 };
@@ -348,7 +346,7 @@ const createApiManager = async (
 			};
 		},
 		createPause: () => {
-			const promise = createPromise<void>();
+			const promise = Promise.withResolvers<void>();
 			controller.paused.push(promise);
 			return promise;
 		},

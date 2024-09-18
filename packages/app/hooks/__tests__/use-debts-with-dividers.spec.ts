@@ -47,7 +47,7 @@ test("'debts.get' pending / error", async ({
 	api.mock("debts.get", async ({ input: { id }, next }) => {
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		if (id === debts[0]!.id) {
-			await debtPause.wait();
+			await debtPause.promise;
 		}
 		return next();
 	});

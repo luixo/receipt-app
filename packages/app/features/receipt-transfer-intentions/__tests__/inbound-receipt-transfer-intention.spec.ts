@@ -44,7 +44,7 @@ test("Mutation 'receiptTransferIntentions.accept'", async ({
 
 	const receiptTransferIntentionAcceptPause = api.createPause();
 	api.mock("receiptTransferIntentions.accept", async () => {
-		await receiptTransferIntentionAcceptPause.wait();
+		await receiptTransferIntentionAcceptPause.promise;
 	});
 	await snapshotQueries(
 		async () => {
@@ -105,7 +105,7 @@ test("Mutation 'receiptTransferIntentions.remove'", async ({
 
 	const receiptTransferIntentionRemovePause = api.createPause();
 	api.mock("receiptTransferIntentions.remove", async () => {
-		await receiptTransferIntentionRemovePause.wait();
+		await receiptTransferIntentionRemovePause.promise;
 	});
 	await snapshotQueries(
 		async () => {

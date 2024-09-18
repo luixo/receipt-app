@@ -27,7 +27,7 @@ test.describe("Wrapper component", () => {
 		const { user } = mockBase();
 		const userDebtsIdsPause = api.createPause();
 		api.mock("debts.getIdsByUser", async () => {
-			await userDebtsIdsPause.wait();
+			await userDebtsIdsPause.promise;
 			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Mock "debts.getIdsByUser" error`,
@@ -59,7 +59,7 @@ test.describe("Header", () => {
 		const { user } = mockDebts();
 		const userPause = api.createPause();
 		api.mock("users.get", async ({ next }) => {
-			await userPause.wait();
+			await userPause.promise;
 			return next();
 		});
 		await openDebtsExchangeScreen(user.id, { awaitCache: false });

@@ -18,7 +18,7 @@ test("Initial load 'receiptTransferIntentions.getAll' pending / error", async ({
 
 	const receiptTransferIntentionsPause = api.createPause();
 	api.mock("receiptTransferIntentions.getAll", async () => {
-		await receiptTransferIntentionsPause.wait();
+		await receiptTransferIntentionsPause.promise;
 		throw new TRPCError({
 			code: "FORBIDDEN",
 			message: `Mock "receiptTransferIntentions.getAll" error`,

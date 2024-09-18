@@ -33,7 +33,7 @@ test(`"auth.voidAccount" mutation`, async ({
 
 	const voidAccountPause = api.createPause();
 	api.mock("auth.voidAccount", async () => {
-		await voidAccountPause.wait();
+		await voidAccountPause.promise;
 		return { email: "foo@gmail.com" };
 	});
 	await voidButton.click();

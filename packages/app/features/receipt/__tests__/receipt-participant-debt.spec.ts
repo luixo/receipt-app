@@ -81,7 +81,7 @@ test("Debt is unsynced", async ({
 	await expect(rowMatch.locator(updateDebtButton)).not.toBeVisible();
 	const debtsAddPause = api.createPause();
 	api.mock("debts.add", async ({ next }) => {
-		await debtsAddPause.wait();
+		await debtsAddPause.promise;
 		return next();
 	});
 	await snapshotQueries(
@@ -157,7 +157,7 @@ test.describe("Debt is desynced", () => {
 		await expect(sendDebtButton).not.toBeVisible();
 		const debtsUpdatePause = api.createPause();
 		api.mock("debts.update", async ({ next }) => {
-			await debtsUpdatePause.wait();
+			await debtsUpdatePause.promise;
 			return next();
 		});
 		await snapshotQueries(
@@ -337,7 +337,7 @@ test.describe("Mutations", () => {
 
 		const debtsAddPause = api.createPause();
 		api.mock("debts.add", async ({ calls }) => {
-			await debtsAddPause.wait();
+			await debtsAddPause.promise;
 			return {
 				id: faker.string.uuid(),
 				lockedTimestamp: new Date(),
@@ -433,7 +433,7 @@ test.describe("Mutations", () => {
 
 		const debtsUpdatePause = api.createPause();
 		api.mock("debts.update", async ({ calls }) => {
-			await debtsUpdatePause.wait();
+			await debtsUpdatePause.promise;
 			return {
 				lockedTimestamp: new Date(),
 				reverseLockedTimestampUpdated: calls > 1,

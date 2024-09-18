@@ -33,7 +33,7 @@ test.describe("Wrapper component", () => {
 
 		const debtsGetPause = api.createPause();
 		api.mock("debts.get", async () => {
-			await debtsGetPause.wait();
+			await debtsGetPause.promise;
 			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Mock "debts.get" error`,

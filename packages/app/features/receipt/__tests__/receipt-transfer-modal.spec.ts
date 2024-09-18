@@ -21,7 +21,7 @@ test.describe("Modal is disabled", () => {
 		const { receipt } = mockReceipt();
 		const receiptsRemovePause = api.createPause();
 		api.mock("receipts.remove", async ({ next }) => {
-			await receiptsRemovePause.wait();
+			await receiptsRemovePause.promise;
 			return next();
 		});
 
@@ -139,7 +139,7 @@ test("Mutation 'receiptTransferIntentions.add' mutation", async ({
 
 	const receiptTransferIntentionAddPause = api.createPause();
 	api.mock("receiptTransferIntentions.add", async () => {
-		await receiptTransferIntentionAddPause.wait();
+		await receiptTransferIntentionAddPause.promise;
 	});
 	await transferReceiptButton.click();
 	await selectSuggestUser();
@@ -224,7 +224,7 @@ test("Mutation 'receiptTransferIntentions.remove'", async ({
 	await transferReceiptButton.click();
 	const receiptTransferIntentionRemovePause = api.createPause();
 	api.mock("receiptTransferIntentions.remove", async () => {
-		await receiptTransferIntentionRemovePause.wait();
+		await receiptTransferIntentionRemovePause.promise;
 	});
 	await snapshotQueries(
 		async () => {
