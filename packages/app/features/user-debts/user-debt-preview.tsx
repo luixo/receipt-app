@@ -47,7 +47,10 @@ const UserDebtPreviewInner: React.FC<InnerProps> = ({ query }) => {
 		<Link href={`/debts/${debt.id}`}>
 			<UserDebtPreviewShape
 				amount={
-					<Text className={debt.amount >= 0 ? "text-success" : "text-danger"}>
+					<Text
+						className={debt.amount >= 0 ? "text-success" : "text-danger"}
+						testID="preview-debt-amount"
+					>
 						{Math.abs(debt.amount)} {currency}
 					</Text>
 				}

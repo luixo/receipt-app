@@ -8,7 +8,10 @@ import { LoadableUser } from "~app/components/app/loadable-user";
 import { QueryErrorMessage } from "~app/components/error-message";
 import { PageHeader } from "~app/components/page-header";
 import { ShowResolvedDebtsOption } from "~app/features/settings/show-resolved-debts-option";
+import { EvenDebtsDivider } from "~app/features/user-debts/even-debts-divider";
 import { useAggregatedDebts } from "~app/hooks/use-aggregated-debts";
+import { useDebtsWithDividers } from "~app/hooks/use-debts-with-dividers";
+import { useDividers } from "~app/hooks/use-dividers";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
@@ -28,14 +31,34 @@ type InnerProps = {
 };
 
 export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
-	const [showResolvedDebts] = useShowResolvedDebts();
+	const [showResolvedDebts, setShowResolvedDebts] = useShowResolvedDebts();
+	const enableShowResolvedDebts = React.useCallback(
+		() => setShowResolvedDebts(true),
+		[setShowResolvedDebts],
+	);
 	const [
 		aggregatedDebts,
 		nonZeroAggregatedDebts,
 		aggregatedDebtsLoading,
 		aggregatedDebtsErrorQueries,
 	] = useAggregatedDebts(query);
+	const debtIds = query.data.map((debt) => debt.id);
+	const debtsQueries = trpc.useQueries((t) =>
+		debtIds.map((debtId) => t.debts.get({ id: debtId })),
+	);
+	const successDebtsQueries = debtsQueries.filter(
+		(debtQuery) => debtQuery.status === "success",
+	);
 	const userQuery = trpc.users.get.useQuery({ id: userId });
+	const allSuccessQueries = React.useMemo(
+		() =>
+			successDebtsQueries.length === debtsQueries.length
+				? successDebtsQueries.map((successfulQuery) => successfulQuery.data)
+				: [],
+		[debtsQueries.length, successDebtsQueries],
+	);
+	const dividers = useDividers(allSuccessQueries, aggregatedDebts);
+	const debts = useDebtsWithDividers(debtIds, allSuccessQueries, dividers);
 	return (
 		<>
 			<PageHeader
@@ -80,13 +103,30 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 				) : null}
 			</View>
 			<View className="gap-2">
-				{query.data.map((debt) => (
+				{debts.map((debt) => (
 					<React.Fragment key={debt.id}>
+						{debt.dividerCurrencyCode ? (
+							<>
+								<Divider />
+								<EvenDebtsDivider currencyCode={debt.dividerCurrencyCode} />
+							</>
+						) : null}
 						<Divider />
 						<UserDebtPreview debtId={debt.id} />
 					</React.Fragment>
 				))}
 			</View>
+			{showResolvedDebts || dividers.length === 0 ? null : (
+				<View className="flex items-center">
+					<Button
+						variant="bordered"
+						color="primary"
+						onClick={enableShowResolvedDebts}
+					>
+						Show resolved debts
+					</Button>
+				</View>
+			)}
 		</>
 	);
 };
