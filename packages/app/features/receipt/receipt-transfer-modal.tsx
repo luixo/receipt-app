@@ -1,6 +1,8 @@
 import React from "react";
 import { View } from "react-native";
 
+import { skipToken } from "@tanstack/react-query";
+
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { UsersSuggest } from "~app/components/app/users-suggest";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
@@ -54,8 +56,7 @@ const ReceiptSendTransferIntentionBody: React.FC<{
 		[transferReceiptMutation, receipt.id],
 	);
 	const userQuery = trpc.users.get.useQuery(
-		{ id: selectedUserId || "unknown" },
-		{ enabled: Boolean(selectedUserId) },
+		selectedUserId ? { id: selectedUserId } : skipToken,
 	);
 	return (
 		<>

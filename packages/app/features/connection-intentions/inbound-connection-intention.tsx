@@ -1,6 +1,8 @@
 import React from "react";
 import { View } from "react-native";
 
+import { skipToken } from "@tanstack/react-query";
+
 import { UsersSuggest } from "~app/components/app/users-suggest";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
@@ -40,8 +42,7 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 	}, [rejectConnectionMutation, intention.account.id]);
 
 	const userQuery = trpc.users.get.useQuery(
-		{ id: userId || "unknown" },
-		{ enabled: Boolean(userId) },
+		userId ? { id: userId } : skipToken,
 	);
 
 	const isLoading =
