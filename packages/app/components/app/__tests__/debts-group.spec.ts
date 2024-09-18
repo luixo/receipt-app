@@ -5,6 +5,7 @@ import assert from "node:assert";
 import { test as debtsTest } from "~app/features/debts/__tests__/utils";
 import { expect } from "~tests/frontend/fixtures";
 import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
+import { getCurrencySymbol } from "~utils/currency-data";
 
 import { test as debtsGroupFixture } from "./debts-group.utils";
 
@@ -170,6 +171,10 @@ test("Rounding", async ({
 	});
 	await openUserDebtsScreen(user.id, { awaitDebts: 2 });
 
-	await expect(debtsGroupElement.first()).toHaveText("1.23 $");
-	await expect(debtsGroupElement.last()).toHaveText("1.24 €");
+	await expect(debtsGroupElement.first()).toHaveText(
+		`1.23 ${getCurrencySymbol("USD")}`,
+	);
+	await expect(debtsGroupElement.last()).toHaveText(
+		`1.24 ${getCurrencySymbol("EUR")}`,
+	);
 });
