@@ -98,7 +98,8 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 						<ExchangeIcon />
 					</Button>
 				) : null}
-				{aggregatedDebts.length !== nonZeroAggregatedDebts.length ? (
+				{aggregatedDebts.length !== nonZeroAggregatedDebts.length ||
+				dividers.length !== 0 ? (
 					<ShowResolvedDebtsOption className="absolute right-0" />
 				) : null}
 			</View>
