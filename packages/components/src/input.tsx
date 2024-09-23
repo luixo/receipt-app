@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Input as InputRaw } from "@nextui-org/input";
+import { Input as InputRaw, Textarea } from "@nextui-org/input";
 import type { FieldError } from "react-hook-form";
 
 import type { TRPCMutationResult } from "~app/trpc";
@@ -10,13 +10,11 @@ import { CheckMark, EyeIcon, EyeSlashIcon } from "~components/icons";
 import { Button } from "./button";
 import { tv } from "./utils";
 
-const input = tv({
-	base: "",
-});
+const input = tv({});
 
 type Props = Omit<
-	React.ComponentProps<typeof InputRaw>,
-	"value" | "errorMessage"
+	React.ComponentProps<typeof InputRaw | typeof Textarea>,
+	"value" | "errorMessage" | "ref"
 > & {
 	fieldError?: FieldError;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -28,9 +26,13 @@ type Props = Omit<
 		isHidden?: boolean;
 		onClick: () => void;
 	};
+	multiline?: boolean;
 };
 
-export const Input = React.forwardRef<HTMLInputElement, Props>(
+export const Input = React.forwardRef<
+	HTMLInputElement & HTMLTextAreaElement,
+	Props
+>(
 	(
 		{
 			className,
@@ -43,6 +45,7 @@ export const Input = React.forwardRef<HTMLInputElement, Props>(
 			type,
 			endContent,
 			saveProps,
+			multiline,
 			...props
 		},
 		ref,
@@ -60,8 +63,9 @@ export const Input = React.forwardRef<HTMLInputElement, Props>(
 		const isWarning = Boolean(fieldError);
 		const isError = Boolean(mutations.find(({ error }) => error)) || isInvalid;
 		const isMutationLoading = mutations.some(({ isPending }) => isPending);
+		const Component = multiline ? Textarea : InputRaw;
 		return (
-			<InputRaw
+			<Component
 				ref={ref}
 				{...props}
 				value={value?.toString()}

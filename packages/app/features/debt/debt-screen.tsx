@@ -217,6 +217,7 @@ const DebtNoteInput: React.FC<NoteProps> = ({ debt, isLoading }) => {
 				isHidden: debt.note === getValue(),
 				onClick: () => saveNote(getValue()),
 			}}
+			multiline
 		/>
 	);
 };
