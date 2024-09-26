@@ -4,27 +4,24 @@ import { expect } from "~tests/frontend/fixtures";
 
 import { test } from "./utils";
 
-test("On load", async ({
-	page,
-	api,
-	registerButton,
-	snapshotQueries,
-	awaitCacheKey,
-}) => {
-	api.mockUtils.noAccount();
+test.extend({ collectCoverage: true })(
+	"On load",
+	async ({ page, api, registerButton, snapshotQueries, awaitCacheKey }) => {
+		api.mockUtils.noAccount();
 
-	await snapshotQueries(
-		async () => {
-			await page.goto("/register");
-			await awaitCacheKey("account.get", { errored: 1 });
-		},
-		{
-			whitelistKeys: "account.get",
-		},
-	);
-	await expect(page).toHaveTitle("RA - Register");
-	await expect(registerButton).toBeDisabled();
-});
+		await snapshotQueries(
+			async () => {
+				await page.goto("/register");
+				await awaitCacheKey("account.get", { errored: 1 });
+			},
+			{
+				whitelistKeys: "account.get",
+			},
+		);
+		await expect(page).toHaveTitle("RA - Register");
+		await expect(registerButton).toBeDisabled();
+	},
+);
 
 test("Invalid form disables submit button", async ({
 	page,
