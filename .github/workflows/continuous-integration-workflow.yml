@@ -113,6 +113,11 @@ jobs:
     name: Frontend tests
     runs-on: ubuntu-latest
     needs: build
+    strategy:
+      fail-fast: false
+      matrix:
+        shardIndex: [1, 2, 3, 4]
+        shardTotal: [4]
     container:
       image: mcr.microsoft.com/playwright:v1.46.0-jammy
     outputs:
@@ -128,13 +133,36 @@ jobs:
       - name: Run frontend tests
         id: tests
         # see https://github.com/microsoft/playwright/issues/6500
-        run: HOME=/root yarn frontend:test
-      - name: Upload Playwright report
+        run: HOME=/root yarn frontend:test --shard=${{ matrix.shardIndex }}/${{ matrix.shardTotal }}
+      - name: Upload Playwright report chunks
         uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: playwright-report
-          path: testing/playwright/playwright-report/
+          name: blob-report-${{ matrix.shardIndex }}
+          path: testing/playwright/blob-report
+          retention-days: 1
+
+  merge-reports:
+    name: Merge Playwright reports
+    if: ${{ !cancelled() }}
+    needs: frontend-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-env
+      - name: Download blob reports from GitHub Actions Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: all-blob-reports
+          pattern: blob-report-*
+          merge-multiple: true
+      - name: Merge into HTML Report
+        run: npx playwright merge-reports --reporter html ./all-blob-reports
+      - name: Upload HTML report
+        uses: actions/upload-artifact@v4
+        with:
+          name: html-report-attempt-${{ github.run_attempt }}
+          path: playwright-report
           retention-days: 30
           if-no-files-found: error
 
