@@ -6,7 +6,7 @@ exports[`debts.acceptIntention > functionality > debt is synced - created 1`] = 
     "debts": {
       "id:2c59da16-ee80-4ed3-a62f-291fbfc17b70|ownerAccountId:65cd5b19-b0a7-426c-876e-3a4bef3b17f1": {
         "amount": "-758.6800",
-        "created": "2020-01-01T00:00:00.000Z",
+        "createdAt": "2020-01-01T00:00:00.000Z",
         "currencyCode": "BDT",
         "id": "2c59da16-ee80-4ed3-a62f-291fbfc17b70",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",

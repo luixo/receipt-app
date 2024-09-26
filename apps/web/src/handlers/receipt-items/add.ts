@@ -66,8 +66,8 @@ export const procedure = authProcedure
 				price: input.price.toString(),
 				quantity: input.quantity.toString(),
 				receiptId: input.receiptId,
-				created: now,
+				createdAt: now,
 			})
 			.executeTakeFirst();
-		return { id, created: now };
+		return { id, createdAt: now };
 	});

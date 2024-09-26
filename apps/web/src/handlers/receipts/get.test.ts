@@ -34,19 +34,19 @@ const getItems = (
 			locked: item.locked ?? false,
 			price: Number(item.price),
 			quantity: Number(item.quantity),
-			created: item.created,
+			createdAt: item.createdAt,
 			parts: parts
 				.filter((part) => part.itemId === item.id)
 				.map((part) => ({ userId: part.userId, part: Number(part.part) }))
 				.sort((a, b) => a.userId.localeCompare(b.userId)),
 		}))
 		.sort((a, b) => {
-			const bCreated = b.created.valueOf();
-			const aCreated = a.created.valueOf();
-			if (aCreated === bCreated) {
+			const bCreatedAt = b.createdAt.valueOf();
+			const aCreatedAt = a.createdAt.valueOf();
+			if (aCreatedAt === bCreatedAt) {
 				return a.id.localeCompare(b.id);
 			}
-			return bCreated - aCreated;
+			return bCreatedAt - aCreatedAt;
 		});
 
 const getParticipants = (
@@ -57,7 +57,7 @@ const getParticipants = (
 			userId: participant.userId,
 			role: participant.role,
 			resolved: participant.resolved,
-			added: participant.added,
+			createdAt: participant.createdAt,
 		}))
 		.sort((a, b) => a.userId.localeCompare(b.userId));
 
@@ -506,11 +506,11 @@ describe("receipts.get", () => {
 			const receiptItems = await Promise.all([
 				// item with multiple participants, with varied parts
 				insertReceiptItem(ctx, receipt.id, {
-					created: new Date(Date.now() - 20),
+					createdAt: new Date(Date.now() - 20),
 				}),
 				// item with 1 participant
 				insertReceiptItem(ctx, receipt.id, {
-					created: new Date(Date.now() - 10),
+					createdAt: new Date(Date.now() - 10),
 				}),
 				// item with no participants
 				insertReceiptItem(ctx, receipt.id),

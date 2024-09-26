@@ -101,7 +101,7 @@ describe("debts.acceptAllIntentions", () => {
 						currencyCode: getRandomCurrencyCode(),
 						amount: faker.finance.amount(),
 						timestamp: new Date("2020-04-01"),
-						created: new Date("2020-05-01"),
+						createdAt: new Date("2020-05-01"),
 						note: faker.lorem.words(),
 						lockedTimestamp: new Date("2020-06-02"),
 						receiptId: foreignReceiptId,
@@ -115,7 +115,7 @@ describe("debts.acceptAllIntentions", () => {
 			);
 			await insertDebt(ctx, foreignAccountId, foreignToSelfUserId, {
 				lockedTimestamp: new Date(),
-				created: new Date("2020-05-01"),
+				createdAt: new Date("2020-05-01"),
 				receiptId: anotherForeignReceiptId,
 			});
 

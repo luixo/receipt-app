@@ -110,7 +110,7 @@ export const procedure = authProcedure.mutation(async ({ ctx }) => {
 							currencyCode: debt.currencyCode,
 							amount: nextAmount.toString(),
 							timestamp: debt.timestamp,
-							created: createdTimestamp,
+							createdAt: createdTimestamp,
 							note: debt.note,
 							lockedTimestamp: debt.lockedTimestamp,
 							receiptId: debt.receiptId,

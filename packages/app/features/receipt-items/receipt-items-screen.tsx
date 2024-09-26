@@ -40,7 +40,7 @@ export const ReceiptItems: React.FC<InnerProps> = ({ receipt, isLoading }) => {
 	const sortedItems = React.useMemo(
 		() =>
 			receipt.items.toSorted(
-				(a, b) => a.created.valueOf() - b.created.valueOf(),
+				(a, b) => a.createdAt.valueOf() - b.createdAt.valueOf(),
 			),
 		[receipt.items],
 	);

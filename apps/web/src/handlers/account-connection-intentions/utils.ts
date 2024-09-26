@@ -101,7 +101,7 @@ export const addConnectionIntention = async (
 				accountId: fromAccountId,
 				targetAccountId: targetAccount.id,
 				userId: asUserId,
-				created: new Date(),
+				createdAt: new Date(),
 			})
 			.executeTakeFirst();
 		return {

@@ -5,7 +5,7 @@
 				"data": {
 					"id": "0c41c087-b23f-4358-a409-f7939ff279bf",
 					"currencyCode": "EGP",
-					"created": "2020-01-01T00:00:00.000Z",
+					"createdAt": "2020-01-01T00:00:00.000Z",
 					"timestamp": "2019-12-09T12:02:22.085Z",
 					"note": "placeat soluta molestiae dolorum",
 					"receiptId": "<undefined>",
@@ -25,7 +25,7 @@
 				"data": {
 					"id": "9253e9d0-b212-4357-a96f-3ff7503bf14d",
 					"currencyCode": "COP",
-					"created": "2020-01-01T00:00:00.000Z",
+					"createdAt": "2020-01-01T00:00:00.000Z",
 					"timestamp": "2019-12-30T12:14:48.561Z",
 					"note": "distinctio ipsam fugit reiciendis",
 					"receiptId": "<undefined>",

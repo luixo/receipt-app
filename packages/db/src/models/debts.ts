@@ -33,7 +33,7 @@ export default interface Debts {
 
 	timestamp: Date;
 
-	created: Date;
+	createdAt: Date;
 
 	note: string;
 
@@ -66,7 +66,7 @@ export interface DebtsInitializer {
 
 	timestamp: Date;
 
-	created: Date;
+	createdAt: Date;
 
 	note: string;
 
@@ -99,7 +99,7 @@ export interface DebtsMutator {
 
 	timestamp?: Date;
 
-	created?: Date;
+	createdAt?: Date;
 
 	note?: string;
 

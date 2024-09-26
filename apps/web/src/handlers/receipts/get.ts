@@ -55,7 +55,7 @@ const fetchReceipts = async (
 						"receiptItems.price",
 						"receiptItems.quantity",
 						"receiptItems.locked",
-						"receiptItems.created",
+						"receiptItems.createdAt",
 						jsonArrayFrom(
 							ebb
 								.selectFrom("itemParticipants")
@@ -65,7 +65,7 @@ const fetchReceipts = async (
 						).as("parts"),
 					])
 					.whereRef("receiptItems.receiptId", "=", "receipts.id")
-					.orderBy(["receiptItems.created desc", "receiptItems.id"]),
+					.orderBy(["receiptItems.createdAt desc", "receiptItems.id"]),
 			).as("items"),
 			jsonArrayFrom(
 				eb
@@ -86,7 +86,7 @@ const fetchReceipts = async (
 					.select([
 						"receiptParticipants.userId",
 						"receiptParticipants.resolved",
-						"receiptParticipants.added",
+						"receiptParticipants.createdAt",
 						"receiptParticipants.role",
 					])
 					.orderBy("receiptParticipants.userId"),
@@ -199,7 +199,7 @@ const mapReceipt = (
 		...receiptRest,
 		items: items.map((item) => ({
 			...item,
-			created: new Date(item.created),
+			createdAt: new Date(item.createdAt),
 			locked: Boolean(item.locked),
 			price: Number(item.price),
 			quantity: Number(item.quantity),
@@ -212,7 +212,7 @@ const mapReceipt = (
 		})),
 		participants: participants.map((participant) => ({
 			...participant,
-			added: new Date(participant.added),
+			createdAt: new Date(participant.createdAt),
 			role: participant.role as Role,
 		})),
 		transferIntentionUserId:

@@ -298,17 +298,17 @@ describe("receiptParticipants.add", () => {
 			const users = [
 				{
 					id: selfUserId,
-					added: new Date(),
+					createdAt: new Date(),
 					role: "owner" as const,
 				},
 				{
 					id: user.id,
-					added: new Date(),
+					createdAt: new Date(),
 					role: "editor" as const,
 				},
 				{
 					id: foreignUser.id,
-					added: new Date(),
+					createdAt: new Date(),
 					role: "editor" as const,
 				},
 			];

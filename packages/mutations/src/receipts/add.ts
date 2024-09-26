@@ -22,7 +22,7 @@ export const options: UseContextedMutationOptions<
 						participants:
 							variables.participants?.map((userId) => ({
 								role: userId === selfUserId ? "owner" : "editor",
-								added: new Date(), // We don't care if they don't match with the server
+								createdAt: new Date(), // We don't care if they don't match with the server
 								userId,
 								resolved: false,
 							})) ?? [],

@@ -175,7 +175,7 @@ const updateAutoAcceptingDebts = async (
 					timestamp: debt.timestamp,
 					lockedTimestamp: debt.lockedTimestamp,
 					receiptId: debt.receiptId,
-					created: new Date(),
+					createdAt: new Date(),
 					...reverseSetObject,
 					// In case debt doesn't exist - we need to set a new note, not the old one
 					note: setObject.note || debt.note,

@@ -21,7 +21,7 @@ export default interface AccountConnectionsIntentions {
 	/** Index: accountConnectionsIntentions:accountUser:userPair */
 	userId: UsersId;
 
-	created: Date;
+	createdAt: Date;
 }
 
 export interface AccountConnectionsIntentionsInitializer {
@@ -41,7 +41,7 @@ export interface AccountConnectionsIntentionsInitializer {
 	/** Index: accountConnectionsIntentions:accountUser:userPair */
 	userId: UsersId;
 
-	created: Date;
+	createdAt: Date;
 }
 
 export interface AccountConnectionsIntentionsMutator {
@@ -61,5 +61,5 @@ export interface AccountConnectionsIntentionsMutator {
 	/** Index: accountConnectionsIntentions:accountUser:userPair */
 	userId?: UsersId;
 
-	created?: Date;
+	createdAt?: Date;
 }

@@ -6,7 +6,7 @@ exports[`accountConnectionIntentions.add > functionality > account connection in
     "accountConnectionsIntentions": {
       "accountId:e20766cf-a87a-422e-8f74-6693283d8aee|targetAccountId:4fc3d460-cdcc-43f1-8f2d-46948fa296cc": {
         "accountId": "e20766cf-a87a-422e-8f74-6693283d8aee",
-        "created": "2020-01-01T00:00:00.000Z",
+        "createdAt": "2020-01-01T00:00:00.000Z",
         "targetAccountId": "4fc3d460-cdcc-43f1-8f2d-46948fa296cc",
         "userId": "9a11d224-0baf-49c1-89f7-73673387cb63",
       },

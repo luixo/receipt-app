@@ -146,7 +146,7 @@ describe("receiptItems.add", () => {
 			expect(result.id).toMatch(UUID_REGEX);
 			expect(result).toStrictEqual<typeof result>({
 				id: result.id,
-				created: new Date(),
+				createdAt: new Date(),
 			});
 		});
 
@@ -173,7 +173,7 @@ describe("receiptItems.add", () => {
 			expect(result.id).toMatch(UUID_REGEX);
 			expect(result).toStrictEqual<typeof result>({
 				id: result.id,
-				created: new Date(),
+				createdAt: new Date(),
 			});
 		});
 	});

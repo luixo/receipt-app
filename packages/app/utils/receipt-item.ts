@@ -16,7 +16,7 @@ type ReceiptItem = {
 	}[];
 };
 type ReceiptParticipant = {
-	added: Date;
+	createdAt: Date;
 	userId: UsersId;
 };
 
@@ -190,7 +190,7 @@ export const getParticipantSums = <
 				const sum = sumFlooredByParticipant[participant.userId];
 				return sum && sum >= 0;
 			})
-			.sort((a, b) => a.added.valueOf() - b.added.valueOf()),
+			.sort((a, b) => a.createdAt.valueOf() - b.createdAt.valueOf()),
 		getIndexByString(receiptId),
 	)
 		.sort((a, b) => {

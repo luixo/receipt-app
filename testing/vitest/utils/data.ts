@@ -262,7 +262,7 @@ type DebtData = {
 	currencyCode?: CurrencyCode;
 	amount?: number;
 	timestamp?: Date;
-	created?: Date;
+	createdAt?: Date;
 	note?: string;
 	lockedTimestamp?: Date;
 	receiptId?: ReceiptsId;
@@ -279,7 +279,7 @@ export const insertDebt = async (
 		currencyCode,
 		amount,
 		timestamp,
-		created,
+		createdAt,
 		note,
 		lockedTimestamp,
 		receiptId,
@@ -294,7 +294,7 @@ export const insertDebt = async (
 				data.amount?.toString() ??
 				(faker.datatype.boolean() ? "" : "-") + faker.finance.amount(),
 			timestamp: data.timestamp ?? new Date(),
-			created: data.created ?? new Date(),
+			createdAt: data.createdAt ?? new Date(),
 			note: data.note ?? faker.lorem.sentence(),
 			lockedTimestamp: data.lockedTimestamp ?? null,
 			receiptId: data.receiptId ?? null,
@@ -304,7 +304,7 @@ export const insertDebt = async (
 			"currencyCode",
 			"amount",
 			"timestamp",
-			"created",
+			"createdAt",
 			"note",
 			"lockedTimestamp",
 			"receiptId",
@@ -315,7 +315,7 @@ export const insertDebt = async (
 		currencyCode,
 		amount,
 		timestamp,
-		created,
+		createdAt,
 		note,
 		lockedTimestamp,
 		receiptId,
@@ -344,7 +344,7 @@ export const insertSyncedDebts = async (
 			currencyCode: debt.currencyCode,
 			amount: -Number(debt.amount),
 			timestamp: debt.timestamp,
-			created: debt.created,
+			createdAt: debt.createdAt,
 			note: debt.note,
 			lockedTimestamp: debt.lockedTimestamp || undefined,
 			receiptId: debt.receiptId || undefined,
@@ -357,7 +357,7 @@ type ReceiptData = {
 	id?: ReceiptsId;
 	currencyCode?: CurrencyCode;
 	name?: string;
-	created?: Date;
+	createdAt?: Date;
 	issued?: Date;
 	lockedTimestamp?: Date;
 	transferIntentionAccountId?: AccountsId;
@@ -372,7 +372,7 @@ export const insertReceipt = async (
 		id,
 		currencyCode,
 		name,
-		created,
+		createdAt,
 		issued,
 		lockedTimestamp,
 		transferIntentionAccountId,
@@ -383,7 +383,7 @@ export const insertReceipt = async (
 			ownerAccountId,
 			name: data.name ?? faker.lorem.words(2),
 			currencyCode: data.currencyCode || faker.finance.currencyCode(),
-			created: data.created ?? new Date(),
+			createdAt: data.createdAt ?? new Date(),
 			issued: data.issued ?? new Date(),
 			lockedTimestamp: data.lockedTimestamp ?? null,
 			transferIntentionAccountId: data.transferIntentionAccountId,
@@ -392,7 +392,7 @@ export const insertReceipt = async (
 			"id",
 			"currencyCode",
 			"name",
-			"created",
+			"createdAt",
 			"issued",
 			"lockedTimestamp",
 			"transferIntentionAccountId",
@@ -402,7 +402,7 @@ export const insertReceipt = async (
 		id,
 		currencyCode,
 		name,
-		created,
+		createdAt,
 		issued,
 		lockedTimestamp,
 		ownerAccountId,
@@ -413,7 +413,7 @@ export const insertReceipt = async (
 type ReceiptParticipantData = {
 	resolved?: boolean;
 	role?: Exclude<Role, "owner">;
-	added?: Date;
+	createdAt?: Date;
 };
 
 export const insertReceiptParticipant = async (
@@ -429,18 +429,18 @@ export const insertReceiptParticipant = async (
 		.executeTakeFirstOrThrow(
 			() => new Error(`Expected to have receipt id ${receiptId} in tests`),
 		);
-	const { added, resolved, role } = await ctx.database
+	const { createdAt, resolved, role } = await ctx.database
 		.insertInto("receiptParticipants")
 		.values({
 			receiptId,
 			userId,
 			role: userId === ownerAccountId ? "owner" : data.role ?? "viewer",
 			resolved: data.resolved ?? false,
-			added: data.added ?? new Date(),
+			createdAt: data.createdAt ?? new Date(),
 		})
-		.returning(["added", "resolved", "role"])
+		.returning(["createdAt", "resolved", "role"])
 		.executeTakeFirstOrThrow();
-	return { added, userId, resolved, role: role as Role };
+	return { createdAt, userId, resolved, role: role as Role };
 };
 
 type ReceiptItemData = {
@@ -449,7 +449,7 @@ type ReceiptItemData = {
 	price?: number;
 	quantity?: number;
 	locked?: boolean;
-	created?: Date;
+	createdAt?: Date;
 };
 
 export const insertReceiptItem = async (
@@ -463,7 +463,7 @@ export const insertReceiptItem = async (
 		.executeTakeFirstOrThrow(
 			() => new Error(`Expected to have receipt id ${receiptId} in tests`),
 		);
-	const { id, name, price, quantity, locked, created } = await ctx.database
+	const { id, name, price, quantity, locked, createdAt } = await ctx.database
 		.insertInto("receiptItems")
 		.values({
 			receiptId,
@@ -477,11 +477,11 @@ export const insertReceiptItem = async (
 				data.quantity ?? faker.number.int({ min: 1, max: 5 })
 			).toString(),
 			locked: data.locked ?? false,
-			created: data.created ?? new Date(),
+			createdAt: data.createdAt ?? new Date(),
 		})
-		.returning(["id", "name", "price", "quantity", "locked", "created"])
+		.returning(["id", "name", "price", "quantity", "locked", "createdAt"])
 		.executeTakeFirstOrThrow();
-	return { id, name, price, quantity, locked, created };
+	return { id, name, price, quantity, locked, createdAt };
 };
 
 type ItemParticipantData = {
@@ -513,7 +513,7 @@ export const insertItemParticipant = async (
 };
 
 type AccountConnectionIntentionData = {
-	created?: Date;
+	createdAt?: Date;
 };
 
 export const insertAccountConnectionIntention = async (
@@ -529,7 +529,7 @@ export const insertAccountConnectionIntention = async (
 			accountId,
 			targetAccountId,
 			userId,
-			created: data.created ?? new Date(),
+			createdAt: data.createdAt ?? new Date(),
 		})
 		.executeTakeFirstOrThrow();
 };

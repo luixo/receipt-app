@@ -115,7 +115,7 @@ const getDataDebtsWithErrors = (
 				id: ctx.getUuid(),
 				note: debt.note,
 				currencyCode: debt.currencyCode,
-				created: new Date(),
+				createdAt: new Date(),
 				timestamp: debt.timestamp || new Date(),
 				lockedTimestamp,
 				receiptId: debt.receiptId,

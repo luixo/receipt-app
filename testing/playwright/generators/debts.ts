@@ -26,7 +26,7 @@ export const defaultGenerateDebts = ({
 	generateAmount(faker, amount, () => ({
 		id: faker.string.uuid(),
 		currencyCode: generateCurrencyCode(faker),
-		created: new Date(),
+		createdAt: new Date(),
 		timestamp: faker.date.recent({
 			days: 30,
 			refDate: new Date(),

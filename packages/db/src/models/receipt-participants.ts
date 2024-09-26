@@ -15,7 +15,7 @@ export default interface ReceiptParticipants {
 
 	resolved: boolean;
 
-	added: Date;
+	createdAt: Date;
 }
 
 export interface ReceiptParticipantsInitializer {
@@ -31,7 +31,7 @@ export interface ReceiptParticipantsInitializer {
 	resolved?: boolean;
 
 	/** Default value: now() */
-	added?: Date;
+	createdAt?: Date;
 }
 
 export interface ReceiptParticipantsMutator {
@@ -45,5 +45,5 @@ export interface ReceiptParticipantsMutator {
 
 	resolved?: boolean;
 
-	added?: Date;
+	createdAt?: Date;
 }

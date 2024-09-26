@@ -17,7 +17,7 @@ export const options: UseContextedMutationOptions<
 							userId: item.id,
 							role: item.role,
 							resolved: false,
-							added: item.added,
+							createdAt: item.createdAt,
 						}),
 					);
 				},

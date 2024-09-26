@@ -16,7 +16,7 @@ export default interface Receipts {
 
 	currencyCode: CurrencyCode;
 
-	created: Date;
+	createdAt: Date;
 
 	/** Index: receipts:ownerAccountId:index */
 	ownerAccountId: AccountsId;
@@ -36,7 +36,7 @@ export interface ReceiptsInitializer {
 
 	currencyCode: CurrencyCode;
 
-	created: Date;
+	createdAt: Date;
 
 	/** Index: receipts:ownerAccountId:index */
 	ownerAccountId: AccountsId;
@@ -56,7 +56,7 @@ export interface ReceiptsMutator {
 
 	currencyCode?: CurrencyCode;
 
-	created?: Date;
+	createdAt?: Date;
 
 	/** Index: receipts:ownerAccountId:index */
 	ownerAccountId?: AccountsId;

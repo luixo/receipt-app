@@ -79,17 +79,17 @@ export const addReceiptParticipants = async (
 				receiptId,
 				userId: id,
 				role: receiptOwnerId === id ? "owner" : role,
-				added: new Date(),
+				createdAt: new Date(),
 			})),
 		)
-		.returning(["added", "userId"])
+		.returning(["createdAt", "userId"])
 		.execute();
 	return usersToAdd.map(([id, role]) => {
 		const addedDatum = result.find(({ userId }) => userId === id);
 		return {
 			id,
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			added: addedDatum!.added,
+			createdAt: addedDatum!.createdAt,
 			role: receiptOwnerId === id ? ("owner" as const) : role,
 		};
 	});

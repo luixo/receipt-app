@@ -38,7 +38,7 @@ export type GenerateReceiptItems = GeneratorFnWithFaker<
 		quantity: number;
 		locked: boolean;
 		name: string;
-		created: Date;
+		createdAt: Date;
 	}[],
 	{ selfAccount: ReturnType<GenerateSelfAccount> }
 >;
@@ -49,7 +49,7 @@ export const defaultGenerateReceiptItems: GenerateReceiptItems = ({ faker }) =>
 		price: Number(faker.finance.amount()),
 		quantity: faker.number.int({ max: 100 }),
 		name: faker.commerce.productName(),
-		created: faker.date.between({
+		createdAt: faker.date.between({
 			from: new Date(Date.now() - MONTH),
 			to: new Date(),
 		}),
@@ -72,14 +72,14 @@ export const defaultGenerateReceiptParticipants: GenerateReceiptParticipants =
 				userId: user.id,
 				role: "editor" as const,
 				resolved: faker.datatype.boolean(),
-				added: faker.date.recent({ days: 5, refDate: new Date() }),
+				createdAt: faker.date.recent({ days: 5, refDate: new Date() }),
 			})),
 			addSelf
 				? {
 						userId: selfAccount.userId,
 						role: "owner" as const,
 						resolved: false,
-						added: faker.date.recent({ days: 5, refDate: new Date() }),
+						createdAt: faker.date.recent({ days: 5, refDate: new Date() }),
 				  }
 				: undefined,
 		].filter(isNonNullish);
@@ -103,7 +103,7 @@ export const defaultGenerateReceiptItemsParts: GenerateReceiptItemsParts = ({
 		quantity: item.quantity,
 		locked: item.locked,
 		name: item.name,
-		created: item.created,
+		createdAt: item.createdAt,
 		parts: participants.map((participant) => ({
 			userId: participant.userId,
 			part: faker.number.int({ min: 1, max: 3 }),

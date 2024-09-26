@@ -68,13 +68,13 @@ export const procedure = authProcedure
 					currencyCode: debt.currencyCode,
 					amount: nextAmount.toString(),
 					timestamp: debt.timestamp,
-					created: createdTimestamp,
+					createdAt: createdTimestamp,
 					note: debt.note,
 					lockedTimestamp: debt.lockedTimestamp,
 					receiptId: debt.receiptId,
 				})
 				.execute();
-			return { created: createdTimestamp };
+			return { createdAt: createdTimestamp };
 		}
 		if (!debt.selfLockedTimestamp) {
 			throw new TRPCError({
@@ -103,8 +103,8 @@ export const procedure = authProcedure
 				timestamp: debt.timestamp,
 				lockedTimestamp: debt.lockedTimestamp,
 			})
-			.returning("debts.created")
+			.returning("debts.createdAt")
 			.executeTakeFirstOrThrow();
 
-		return { created: result.created };
+		return { createdAt: result.createdAt };
 	});

@@ -28,8 +28,8 @@ const getSortParticipants = () => (a: Participant, b: Participant) => {
 	if (b.role === "owner") {
 		return 1;
 	}
-	// Sort everyone else by added timestamp
-	return a.added.valueOf() - b.added.valueOf();
+	// Sort everyone else by createdAt timestamp
+	return a.createdAt.valueOf() - b.createdAt.valueOf();
 };
 
 type Props = {

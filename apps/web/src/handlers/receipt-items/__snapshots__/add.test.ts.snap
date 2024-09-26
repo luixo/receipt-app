@@ -5,7 +5,7 @@ exports[`receiptItems.add > functionality > foreign receipt 1`] = `
   "added": {
     "receiptItems": {
       "id:3ed660de-52d8-4423-aa79-fcb1ce767e1b": {
-        "created": "2020-01-01T00:00:00.000Z",
+        "createdAt": "2020-01-01T00:00:00.000Z",
         "id": "3ed660de-52d8-4423-aa79-fcb1ce767e1b",
         "locked": false,
         "name": "perspiciatis dignissimos rerum",
@@ -23,7 +23,7 @@ exports[`receiptItems.add > functionality > own receipt 1`] = `
   "added": {
     "receiptItems": {
       "id:28cfeae0-3076-4054-a67e-d3566e5a782e": {
-        "created": "2020-01-01T00:00:00.000Z",
+        "createdAt": "2020-01-01T00:00:00.000Z",
         "id": "28cfeae0-3076-4054-a67e-d3566e5a782e",
         "locked": false,
         "name": "suscipit harum soluta",

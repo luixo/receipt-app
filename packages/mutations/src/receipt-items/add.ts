@@ -22,7 +22,7 @@ export const options: UseContextedMutationOptions<
 						price: variables.price,
 						quantity: variables.quantity,
 						locked: false,
-						created: new Date(),
+						createdAt: new Date(),
 						parts: [],
 					}),
 				getPaged: undefined,
@@ -33,13 +33,13 @@ export const options: UseContextedMutationOptions<
 	},
 	onSuccess:
 		(controllerContext, receiptId) =>
-		({ id, created }, _variables, temporaryId) => {
+		({ id, createdAt }, _variables, temporaryId) => {
 			updateReceipts(controllerContext, {
 				get: (controller) =>
 					controller.updateItem(receiptId, temporaryId, (item) => ({
 						...item,
 						id,
-						created,
+						createdAt,
 					})),
 				getPaged: undefined,
 				getNonResolvedAmount: undefined,

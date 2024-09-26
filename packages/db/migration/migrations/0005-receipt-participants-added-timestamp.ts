@@ -10,6 +10,7 @@ const addReceiptParticipantsAddedTimestampColumn = async (db: Database) => {
 	await db
 		.updateTable("receiptParticipants")
 		.set({
+			// @ts-expect-error: Database schema has changed
 			added: sql<Date>`receipts.created + random() * interval '1 hour'`,
 		})
 		.from("receipts")

@@ -31,7 +31,7 @@ exports[`debts.update > functionality > update amount > counterparty auto-accept
     "debts": {
       "id:ac5dc383-b972-4f25-92d5-cfd8bb6ea75a|ownerAccountId:b5f98bfa-72f8-4789-ab64-3c4038d9536b": {
         "amount": "-823.6900",
-        "created": "2020-01-01T00:00:00.000Z",
+        "createdAt": "2020-01-01T00:00:00.000Z",
         "currencyCode": "XPF",
         "id": "ac5dc383-b972-4f25-92d5-cfd8bb6ea75a",
         "lockedTimestamp": null,
@@ -116,7 +116,7 @@ exports[`debts.update > functionality > update currency code > counterparty auto
     "debts": {
       "id:ac5dc383-b972-4f25-92d5-cfd8bb6ea75a|ownerAccountId:b5f98bfa-72f8-4789-ab64-3c4038d9536b": {
         "amount": "-523.1100",
-        "created": "2020-01-01T00:00:00.000Z",
+        "createdAt": "2020-01-01T00:00:00.000Z",
         "currencyCode": "HKD",
         "id": "ac5dc383-b972-4f25-92d5-cfd8bb6ea75a",
         "lockedTimestamp": null,
@@ -190,7 +190,7 @@ exports[`debts.update > functionality > update locked - false > counterparty aut
     "debts": {
       "id:ac5dc383-b972-4f25-92d5-cfd8bb6ea75a|ownerAccountId:b5f98bfa-72f8-4789-ab64-3c4038d9536b": {
         "amount": "-523.1100",
-        "created": "2020-01-01T00:00:00.000Z",
+        "createdAt": "2020-01-01T00:00:00.000Z",
         "currencyCode": "XPF",
         "id": "ac5dc383-b972-4f25-92d5-cfd8bb6ea75a",
         "lockedTimestamp": null,
@@ -252,7 +252,7 @@ exports[`debts.update > functionality > update locked - true > counterparty auto
     "debts": {
       "id:ac5dc383-b972-4f25-92d5-cfd8bb6ea75a|ownerAccountId:b5f98bfa-72f8-4789-ab64-3c4038d9536b": {
         "amount": "-523.1100",
-        "created": "2020-01-01T00:00:00.000Z",
+        "createdAt": "2020-01-01T00:00:00.000Z",
         "currencyCode": "XPF",
         "id": "ac5dc383-b972-4f25-92d5-cfd8bb6ea75a",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
@@ -341,7 +341,7 @@ exports[`debts.update > functionality > update multiple debts > with distinctly 
     "debts": {
       "id:5697f64e-794a-4534-874c-283e2334b4c9|ownerAccountId:b5f98bfa-72f8-4789-ab64-3c4038d9536b": {
         "amount": "630.8100",
-        "created": "2020-01-01T00:00:00.000Z",
+        "createdAt": "2020-01-01T00:00:00.000Z",
         "currencyCode": "ILS",
         "id": "5697f64e-794a-4534-874c-283e2334b4c9",
         "lockedTimestamp": null,
@@ -353,7 +353,7 @@ exports[`debts.update > functionality > update multiple debts > with distinctly 
       },
       "id:ac5dc383-b972-4f25-92d5-cfd8bb6ea75a|ownerAccountId:b5f98bfa-72f8-4789-ab64-3c4038d9536b": {
         "amount": "963.6000",
-        "created": "2020-01-01T00:00:00.000Z",
+        "createdAt": "2020-01-01T00:00:00.000Z",
         "currencyCode": "XPF",
         "id": "ac5dc383-b972-4f25-92d5-cfd8bb6ea75a",
         "lockedTimestamp": null,
@@ -384,7 +384,7 @@ exports[`debts.update > functionality > update multiple debts > with distinctly 
     "debts": {
       "id:b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5|ownerAccountId:b4fba71b-3720-46f4-befe-54e779c889fc": {
         "amount": "739.1300",
-        "created": "2020-01-01T00:00:00.000Z",
+        "createdAt": "2020-01-01T00:00:00.000Z",
         "currencyCode": "AUD",
         "id": "b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5",
         "lockedTimestamp": null,
@@ -420,7 +420,7 @@ exports[`debts.update > functionality > update multiple debts > with distinctly 
     "debts": {
       "id:697ea37b-9f1b-40f4-9661-9f0e19b2a033|ownerAccountId:32bcb6f1-76a9-4892-a8c2-9e755afa6fe7": {
         "amount": "-473.8300",
-        "created": "2020-01-01T00:00:00.000Z",
+        "createdAt": "2020-01-01T00:00:00.000Z",
         "currencyCode": "AWG",
         "id": "697ea37b-9f1b-40f4-9661-9f0e19b2a033",
         "lockedTimestamp": null,
@@ -485,7 +485,7 @@ exports[`debts.update > functionality > update multiple debts > with locking val
     "debts": {
       "id:5697f64e-794a-4534-874c-283e2334b4c9|ownerAccountId:b5f98bfa-72f8-4789-ab64-3c4038d9536b": {
         "amount": "-438.5800",
-        "created": "2020-01-01T00:00:00.000Z",
+        "createdAt": "2020-01-01T00:00:00.000Z",
         "currencyCode": "ILS",
         "id": "5697f64e-794a-4534-874c-283e2334b4c9",
         "lockedTimestamp": null,
@@ -497,7 +497,7 @@ exports[`debts.update > functionality > update multiple debts > with locking val
       },
       "id:ac5dc383-b972-4f25-92d5-cfd8bb6ea75a|ownerAccountId:b5f98bfa-72f8-4789-ab64-3c4038d9536b": {
         "amount": "963.6000",
-        "created": "2020-01-01T00:00:00.000Z",
+        "createdAt": "2020-01-01T00:00:00.000Z",
         "currencyCode": "XPF",
         "id": "ac5dc383-b972-4f25-92d5-cfd8bb6ea75a",
         "lockedTimestamp": null,
@@ -528,7 +528,7 @@ exports[`debts.update > functionality > update multiple debts > with locking val
     "debts": {
       "id:b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5|ownerAccountId:b4fba71b-3720-46f4-befe-54e779c889fc": {
         "amount": "-989.7800",
-        "created": "2020-01-01T00:00:00.000Z",
+        "createdAt": "2020-01-01T00:00:00.000Z",
         "currencyCode": "AUD",
         "id": "b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5",
         "lockedTimestamp": null,
@@ -564,7 +564,7 @@ exports[`debts.update > functionality > update multiple debts > with locking val
     "debts": {
       "id:697ea37b-9f1b-40f4-9661-9f0e19b2a033|ownerAccountId:32bcb6f1-76a9-4892-a8c2-9e755afa6fe7": {
         "amount": "-200.3900",
-        "created": "2020-01-01T00:00:00.000Z",
+        "createdAt": "2020-01-01T00:00:00.000Z",
         "currencyCode": "AWG",
         "id": "697ea37b-9f1b-40f4-9661-9f0e19b2a033",
         "lockedTimestamp": null,
@@ -628,7 +628,7 @@ exports[`debts.update > functionality > update multiple debts > with non-locking
     "debts": {
       "id:5697f64e-794a-4534-874c-283e2334b4c9|ownerAccountId:b5f98bfa-72f8-4789-ab64-3c4038d9536b": {
         "amount": "630.8100",
-        "created": "2020-01-01T00:00:00.000Z",
+        "createdAt": "2020-01-01T00:00:00.000Z",
         "currencyCode": "ILS",
         "id": "5697f64e-794a-4534-874c-283e2334b4c9",
         "lockedTimestamp": null,
@@ -640,7 +640,7 @@ exports[`debts.update > functionality > update multiple debts > with non-locking
       },
       "id:ac5dc383-b972-4f25-92d5-cfd8bb6ea75a|ownerAccountId:b5f98bfa-72f8-4789-ab64-3c4038d9536b": {
         "amount": "-523.1100",
-        "created": "2020-01-01T00:00:00.000Z",
+        "createdAt": "2020-01-01T00:00:00.000Z",
         "currencyCode": "XPF",
         "id": "ac5dc383-b972-4f25-92d5-cfd8bb6ea75a",
         "lockedTimestamp": null,
@@ -671,7 +671,7 @@ exports[`debts.update > functionality > update multiple debts > with non-locking
     "debts": {
       "id:b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5|ownerAccountId:b4fba71b-3720-46f4-befe-54e779c889fc": {
         "amount": "739.1300",
-        "created": "2020-01-01T00:00:00.000Z",
+        "createdAt": "2020-01-01T00:00:00.000Z",
         "currencyCode": "AUD",
         "id": "b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5",
         "lockedTimestamp": null,
@@ -702,7 +702,7 @@ exports[`debts.update > functionality > update multiple debts > with non-locking
     "debts": {
       "id:697ea37b-9f1b-40f4-9661-9f0e19b2a033|ownerAccountId:32bcb6f1-76a9-4892-a8c2-9e755afa6fe7": {
         "amount": "-473.8300",
-        "created": "2020-01-01T00:00:00.000Z",
+        "createdAt": "2020-01-01T00:00:00.000Z",
         "currencyCode": "AWG",
         "id": "697ea37b-9f1b-40f4-9661-9f0e19b2a033",
         "lockedTimestamp": null,
@@ -766,7 +766,7 @@ exports[`debts.update > functionality > update multiple properties > locked as f
     "debts": {
       "id:ac5dc383-b972-4f25-92d5-cfd8bb6ea75a|ownerAccountId:b5f98bfa-72f8-4789-ab64-3c4038d9536b": {
         "amount": "-620.0900",
-        "created": "2020-01-01T00:00:00.000Z",
+        "createdAt": "2020-01-01T00:00:00.000Z",
         "currencyCode": "IRR",
         "id": "ac5dc383-b972-4f25-92d5-cfd8bb6ea75a",
         "lockedTimestamp": null,
@@ -895,7 +895,7 @@ exports[`debts.update > functionality > update multiple properties > locked as t
     "debts": {
       "id:ac5dc383-b972-4f25-92d5-cfd8bb6ea75a|ownerAccountId:b5f98bfa-72f8-4789-ab64-3c4038d9536b": {
         "amount": "-620.0900",
-        "created": "2020-01-01T00:00:00.000Z",
+        "createdAt": "2020-01-01T00:00:00.000Z",
         "currencyCode": "IRR",
         "id": "ac5dc383-b972-4f25-92d5-cfd8bb6ea75a",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
@@ -1009,7 +1009,7 @@ exports[`debts.update > functionality > update multiple properties > no locked >
     "debts": {
       "id:ac5dc383-b972-4f25-92d5-cfd8bb6ea75a|ownerAccountId:b5f98bfa-72f8-4789-ab64-3c4038d9536b": {
         "amount": "-620.0900",
-        "created": "2020-01-01T00:00:00.000Z",
+        "createdAt": "2020-01-01T00:00:00.000Z",
         "currencyCode": "IRR",
         "id": "ac5dc383-b972-4f25-92d5-cfd8bb6ea75a",
         "lockedTimestamp": null,
@@ -1111,7 +1111,7 @@ exports[`debts.update > functionality > update note > counterparty auto-accepts 
     "debts": {
       "id:ac5dc383-b972-4f25-92d5-cfd8bb6ea75a|ownerAccountId:b5f98bfa-72f8-4789-ab64-3c4038d9536b": {
         "amount": "-523.1100",
-        "created": "2020-01-01T00:00:00.000Z",
+        "createdAt": "2020-01-01T00:00:00.000Z",
         "currencyCode": "XPF",
         "id": "ac5dc383-b972-4f25-92d5-cfd8bb6ea75a",
         "lockedTimestamp": null,
@@ -1187,7 +1187,7 @@ exports[`debts.update > functionality > update receipt id > counterparty auto-ac
     "debts": {
       "id:ac5dc383-b972-4f25-92d5-cfd8bb6ea75a|ownerAccountId:b5f98bfa-72f8-4789-ab64-3c4038d9536b": {
         "amount": "-523.1100",
-        "created": "2020-01-01T00:00:00.000Z",
+        "createdAt": "2020-01-01T00:00:00.000Z",
         "currencyCode": "XPF",
         "id": "ac5dc383-b972-4f25-92d5-cfd8bb6ea75a",
         "lockedTimestamp": null,
@@ -1270,7 +1270,7 @@ exports[`debts.update > functionality > update timestamp > counterparty auto-acc
     "debts": {
       "id:ac5dc383-b972-4f25-92d5-cfd8bb6ea75a|ownerAccountId:b5f98bfa-72f8-4789-ab64-3c4038d9536b": {
         "amount": "-523.1100",
-        "created": "2020-01-01T00:00:00.000Z",
+        "createdAt": "2020-01-01T00:00:00.000Z",
         "currencyCode": "XPF",
         "id": "ac5dc383-b972-4f25-92d5-cfd8bb6ea75a",
         "lockedTimestamp": null,

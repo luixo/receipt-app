@@ -42,7 +42,7 @@ exports[`users.add > functionality > user is added - with email > doesn't have a
     "accountConnectionsIntentions": {
       "accountId:29c912b8-219f-426a-b3d2-67fca04d4210|targetAccountId:e137d89d-f6d2-4cb1-829e-fa58ed8d7ec1": {
         "accountId": "29c912b8-219f-426a-b3d2-67fca04d4210",
-        "created": "2020-01-01T00:00:00.000Z",
+        "createdAt": "2020-01-01T00:00:00.000Z",
         "targetAccountId": "e137d89d-f6d2-4cb1-829e-fa58ed8d7ec1",
         "userId": "0fb185c3-c540-4168-a8bf-956c8ce3cbb5",
       },

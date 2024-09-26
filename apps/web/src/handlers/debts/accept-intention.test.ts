@@ -165,7 +165,7 @@ describe("debts.acceptIntention", () => {
 				foreignToSelfUserId,
 				{
 					lockedTimestamp: new Date(),
-					created: new Date("2020-05-01"),
+					createdAt: new Date("2020-05-01"),
 					receiptId: foreignReceiptId,
 				},
 			);
@@ -184,7 +184,7 @@ describe("debts.acceptIntention", () => {
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ id: foreignDebtId }),
 			);
-			expect(result).toStrictEqual<typeof result>({ created: new Date() });
+			expect(result).toStrictEqual<typeof result>({ createdAt: new Date() });
 		});
 
 		test("debt is synced - updated", async ({ ctx }) => {
@@ -207,7 +207,7 @@ describe("debts.acceptIntention", () => {
 						currencyCode: getRandomCurrencyCode(),
 						amount: faker.finance.amount(),
 						timestamp: new Date("2020-04-01"),
-						created: new Date("2020-05-01"),
+						createdAt: new Date("2020-05-01"),
 						note: faker.lorem.words(),
 						lockedTimestamp: new Date("2020-06-02"),
 						receiptId: foreignReceiptId,
@@ -228,7 +228,9 @@ describe("debts.acceptIntention", () => {
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ id: debt.id }),
 			);
-			expect(result).toStrictEqual<typeof result>({ created: debt.created });
+			expect(result).toStrictEqual<typeof result>({
+				createdAt: debt.createdAt,
+			});
 		});
 	});
 });

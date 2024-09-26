@@ -25,7 +25,7 @@ export const procedure = authProcedure
 					id,
 					name: input.name,
 					currencyCode: input.currencyCode,
-					created: new Date(),
+					createdAt: new Date(),
 					issued: input.issued,
 					ownerAccountId: ctx.auth.accountId,
 				})
