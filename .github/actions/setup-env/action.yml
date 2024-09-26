@@ -2,19 +2,15 @@ name: Setup node with .nvmrc
 runs:
   using: composite
   steps:
-    - name: Install jq
-      # Only install jq if not present
-      run: command -v jq &> /dev/null || (apt-get update && apt-get install -y jq)
-      shell: bash
     - name: Get ngrok version
       id: ngrok-version
       # Outputs something like 1.0.0
       run: |
-        VERSION=$(cat scripts/package.json| jq -r .devDependencies.ngrok | cut -c 2-)
+        VERSION=$(npm pkg --prefix scripts get devDependencies.ngrok | cut -d '"' -f 2)
         echo "version=$VERSION" >> $GITHUB_OUTPUT
       shell: bash
     - name: Cache ngrok module
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       env:
         cache-name: cache-ngrok-module
       with:
@@ -22,15 +18,14 @@ runs:
         path: ~/.ngrok
         key: ${{ runner.os }}-${{ env.cache-name }}-${{ steps.ngrok-version.outputs.version }}
         restore-keys: ${{ runner.os }}-${{ env.cache-name }}-${{ steps.ngrok-version.outputs.version }}
-    - uses: actions/setup-node@v3
-      with:
-        node-version-file: .nvmrc
     - name: Enable Corepack
       run: corepack enable
       shell: bash
-    - uses: actions/setup-node@v3
+    - name: Setup Node.json
+      uses: actions/setup-node@v4
       with:
+        node-version-file: .nvmrc
         cache: "yarn"
     - name: Install dependencies
-      run: corepack yarn install --immutable
+      run: yarn install --immutable
       shell: bash
