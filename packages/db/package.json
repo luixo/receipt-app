@@ -5,7 +5,8 @@
 	"sideEffects": false,
 	"scripts": {
 		"db:migrate": "tsx scripts/migrate.ts",
-		"db:generate-types": "tsx scripts/generate-types.ts"
+		"foo": "yarn run -T format",
+		"db:generate-types": "tsx scripts/generate-types.ts && yarn lint:fix packages/db && yarn run -T format"
 	},
 	"dependencies": {
 		"kysely": "^0.27.2",
