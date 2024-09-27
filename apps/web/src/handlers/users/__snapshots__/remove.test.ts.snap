@@ -22,8 +22,12 @@ exports[`users.remove > functionality > user is removed 1`] = `
   },
   "updated": {
     "receipts": {
+      "id:18ffb6ec-b75d-42f5-b460-4f63d202b401": {
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
       "id:41330bce-1d2b-4a80-b006-3068f8faee0d": {
         "lockedTimestamp": null,
+        "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },
   },

@@ -22,6 +22,10 @@ export default interface Users {
 	acceptReceipts: boolean;
 
 	connectedAccountId: AccountsId | null;
+
+	createdAt: Date;
+
+	updatedAt: Date;
 }
 
 export interface UsersInitializer {
@@ -42,6 +46,12 @@ export interface UsersInitializer {
 	acceptReceipts?: boolean;
 
 	connectedAccountId?: AccountsId | null;
+
+	/** Default value: CURRENT_TIMESTAMP */
+	createdAt?: Date;
+
+	/** Default value: CURRENT_TIMESTAMP */
+	updatedAt?: Date;
 }
 
 export interface UsersMutator {
@@ -60,4 +70,8 @@ export interface UsersMutator {
 	acceptReceipts?: boolean;
 
 	connectedAccountId?: AccountsId | null;
+
+	createdAt?: Date;
+
+	updatedAt?: Date;
 }

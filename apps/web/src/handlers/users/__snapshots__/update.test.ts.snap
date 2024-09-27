@@ -6,6 +6,7 @@ exports[`users.update > functionality > name is changed 1`] = `
     "users": {
       "id:5bbbf9f4-c81f-4157-a501-682568f0b691": {
         "name": "Kari Bernier",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },
   },
@@ -18,6 +19,7 @@ exports[`users.update > functionality > public name is changed 1`] = `
     "users": {
       "id:69873d27-7822-4273-b5c2-8ee0a2d004d6": {
         "publicName": "Estelle Hauck MD",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },
   },
@@ -30,6 +32,7 @@ exports[`users.update > functionality > public name is changed to undefined 1`] 
     "users": {
       "id:f92f2993-628f-46db-b161-808fbb113989": {
         "publicName": null,
+        "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },
   },

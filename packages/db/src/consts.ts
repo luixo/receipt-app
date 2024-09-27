@@ -1,6 +1,11 @@
+import { sql } from "kysely";
+
 export const ACCOUNTS = {
 	INDEXES: {
 		EMAIL: "accounts:email:index",
+	},
+	TRIGGERS: {
+		UPDATE_TIMESTAMP: "accounts:updateTimestamp",
 	},
 } as const;
 
@@ -15,17 +20,26 @@ export const USERS = {
 	INDEXES: {
 		OWNER_ACCOUNT_ID: "users:ownerAccountId:index",
 	},
+	TRIGGERS: {
+		UPDATE_TIMESTAMP: "users:updateTimestamp",
+	},
 } as const;
 
 export const RECEIPTS = {
 	INDEXES: {
 		OWNER_ACCOUNT_ID: "receipts:ownerAccountId:index",
 	},
+	TRIGGERS: {
+		UPDATE_TIMESTAMP: "receipts:updateTimestamp",
+	},
 } as const;
 
 export const RECEIPT_ITEMS = {
 	INDEXES: {
 		RECEIPT_ID: "receiptItems:receiptId:index",
+	},
+	TRIGGERS: {
+		UPDATE_TIMESTAMP: "receiptItems:updateTimestamp",
 	},
 } as const;
 
@@ -36,12 +50,18 @@ export const ITEM_PARTICIPANTS = {
 	CONSTRAINTS: {
 		ITEM_ID_USER_ID_PAIR: "itemParticipants:itemId-userId:primaryKey",
 	},
+	TRIGGERS: {
+		UPDATE_TIMESTAMP: "itemParticipants:updateTimestamp",
+	},
 } as const;
 
 export const RECEIPT_PARTICIPANTS = {
 	INDEXES: {
 		RECEIPT_ID: "receiptParticipants:receiptId:index",
 		USER_ID: "receiptParticipants:userId:index",
+	},
+	TRIGGERS: {
+		UPDATE_TIMESTAMP: "receiptParticipants:updateTimestamp",
 	},
 } as const;
 
@@ -54,11 +74,23 @@ export const ACCOUNT_CONNECTIONS_INTENTIONS = {
 		ACCOUNT_PAIR: "accountConnectionsIntentions:accounts:accountPair",
 		USER_PAIR: "accountConnectionsIntentions:accountUser:userPair",
 	},
+	TRIGGERS: {
+		UPDATE_TIMESTAMP: "accountConnectionsIntentions:updateTimestamp",
+	},
+} as const;
+
+export const ACCOUNT_SETTINGS = {
+	TRIGGERS: {
+		UPDATE_TIMESTAMP: "accountSettings:updateTimestamp",
+	},
 } as const;
 
 export const RESET_PASSWORD_INTENTIONS = {
 	INDEXES: {
 		ACCOUNT_ID: "resetPasswordIntentions:accountId:index",
+	},
+	TRIGGERS: {
+		UPDATE_TIMESTAMP: "resetPasswordIntentions:updateTimestamp",
 	},
 } as const;
 
@@ -72,6 +104,9 @@ export const DEBTS = {
 		OWNER_ID_RECEIPT_ID_USER_ID_TUPLE:
 			"debtsSyncIntentions:ownerAccountId:receiptId:userId:tuple",
 	},
+	TRIGGERS: {
+		UPDATE_TIMESTAMP: "debts:updateTimestamp",
+	},
 } as const;
 
 export const DEBTS_SYNC_INTENTIONS = {
@@ -79,4 +114,17 @@ export const DEBTS_SYNC_INTENTIONS = {
 		OWNER_ACCOUNT_ID: "debtsSyncIntentions:ownerAccountId:index",
 		DEBT_ID: "debtsSyncIntentions:debtId:index",
 	},
+	TRIGGERS: {
+		UPDATE_TIMESTAMP: "debtsSyncIntentions:updateTimestamp",
+	},
 } as const;
+
+export const FUNCTIONS = {
+	UPDATE_TIMESTAMP_COLUMN: "updateTimestampColumn",
+} as const;
+
+export const CURRENT_TIMESTAMP =
+	process.env.NODE_ENV === "test"
+		? /* c8 ignore next 2 */
+		  sql`TO_TIMESTAMP('2020/01/01', 'YYYY/MM/DD')`
+		: sql`CURRENT_TIMESTAMP`;

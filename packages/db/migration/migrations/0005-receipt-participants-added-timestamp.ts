@@ -1,11 +1,12 @@
 import { sql } from "kysely";
 
+import { CURRENT_TIMESTAMP } from "~db/consts";
 import type { Database } from "~db/types";
 
 const addReceiptParticipantsAddedTimestampColumn = async (db: Database) => {
 	await db.schema
 		.alterTable("receiptParticipants")
-		.addColumn("added", "timestamp", (cb) => cb.defaultTo(sql`now()`))
+		.addColumn("added", "timestamp", (cb) => cb.defaultTo(CURRENT_TIMESTAMP))
 		.execute();
 	await db
 		.updateTable("receiptParticipants")

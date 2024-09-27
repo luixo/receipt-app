@@ -6,6 +6,7 @@ exports[`receiptTransferIntentions.add > functionality > transfer intention is a
     "receipts": {
       "id:a5a9a69e-ad0f-404b-b6de-75bbc69db351": {
         "transferIntentionAccountId": "e9140e99-b5f6-426f-9023-3ba138cbb448",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },
   },

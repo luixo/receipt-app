@@ -10,6 +10,10 @@ export default interface ResetPasswordIntentions {
 	expiresTimestamp: Date;
 
 	token: string;
+
+	createdAt: Date;
+
+	updatedAt: Date;
 }
 
 export interface ResetPasswordIntentionsInitializer {
@@ -19,6 +23,12 @@ export interface ResetPasswordIntentionsInitializer {
 	expiresTimestamp: Date;
 
 	token: string;
+
+	/** Default value: CURRENT_TIMESTAMP */
+	createdAt?: Date;
+
+	/** Default value: CURRENT_TIMESTAMP */
+	updatedAt?: Date;
 }
 
 export interface ResetPasswordIntentionsMutator {
@@ -28,4 +38,8 @@ export interface ResetPasswordIntentionsMutator {
 	expiresTimestamp?: Date;
 
 	token?: string;
+
+	createdAt?: Date;
+
+	updatedAt?: Date;
 }

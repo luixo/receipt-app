@@ -6,6 +6,7 @@ exports[`auth.login > functionality > login successful 1`] = `
     "sessions": {
       "sessionId:3a5a4d2e-cde5-4132-9be0-c13d55fb2b6c": {
         "accountId": "5acba26a-7c4b-4340-9aa6-0a1942365f2e",
+        "createdAt": "2020-01-01T00:00:00.000Z",
         "expirationTimestamp": "2020-01-31T00:00:00.000Z",
         "sessionId": "3a5a4d2e-cde5-4132-9be0-c13d55fb2b6c",
       },

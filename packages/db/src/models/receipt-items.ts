@@ -22,6 +22,8 @@ export default interface ReceiptItems {
 	locked: boolean | null;
 
 	createdAt: Date;
+
+	updatedAt: Date;
 }
 
 export interface ReceiptItemsInitializer {
@@ -42,6 +44,9 @@ export interface ReceiptItemsInitializer {
 
 	/** Default value: now() */
 	createdAt?: Date;
+
+	/** Default value: CURRENT_TIMESTAMP */
+	updatedAt?: Date;
 }
 
 export interface ReceiptItemsMutator {
@@ -60,4 +65,6 @@ export interface ReceiptItemsMutator {
 	locked?: boolean | null;
 
 	createdAt?: Date;
+
+	updatedAt?: Date;
 }

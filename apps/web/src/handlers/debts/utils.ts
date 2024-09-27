@@ -2,10 +2,13 @@ import { isNonNullish } from "remeda";
 
 import type { DebtsId } from "~db/models";
 import type { Database, SimpleInsertObject } from "~db/types";
+import type { MakeUndefinedOptional } from "~utils/types";
 
 export const upsertAutoAcceptedDebts = async (
 	database: Database,
-	debts: (SimpleInsertObject<"debts"> & { isNew: boolean })[],
+	debts: (MakeUndefinedOptional<SimpleInsertObject<"debts">> & {
+		isNew: boolean;
+	})[],
 ) => {
 	const fetchedDebts = await database
 		.selectFrom("debts")

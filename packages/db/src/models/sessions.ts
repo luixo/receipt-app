@@ -14,6 +14,8 @@ export default interface Sessions {
 	accountId: AccountsId;
 
 	expirationTimestamp: Date;
+
+	createdAt: Date;
 }
 
 export interface SessionsInitializer {
@@ -24,6 +26,9 @@ export interface SessionsInitializer {
 	accountId: AccountsId;
 
 	expirationTimestamp: Date;
+
+	/** Default value: CURRENT_TIMESTAMP */
+	createdAt?: Date;
 }
 
 export interface SessionsMutator {
@@ -34,4 +39,6 @@ export interface SessionsMutator {
 	accountId?: AccountsId;
 
 	expirationTimestamp?: Date;
+
+	createdAt?: Date;
 }

@@ -97,10 +97,10 @@ export const appRouter = router({
 				() => database.destroy(),
 				async () => {
 					const migrationResult = await migrate({ target: "latest", database });
-					await database.destroy();
 					if (!migrationResult.ok) {
 						throw migrationResult.error;
 					}
+					await database.destroy();
 				},
 			);
 

@@ -25,6 +25,10 @@ export default interface Accounts {
 	avatarUrl: string | null;
 
 	role: string | null;
+
+	createdAt: Date;
+
+	updatedAt: Date;
 }
 
 export interface AccountsInitializer {
@@ -48,6 +52,12 @@ export interface AccountsInitializer {
 	avatarUrl?: string | null;
 
 	role?: string | null;
+
+	/** Default value: CURRENT_TIMESTAMP */
+	createdAt?: Date;
+
+	/** Default value: CURRENT_TIMESTAMP */
+	updatedAt?: Date;
 }
 
 export interface AccountsMutator {
@@ -71,4 +81,8 @@ export interface AccountsMutator {
 	avatarUrl?: string | null;
 
 	role?: string | null;
+
+	createdAt?: Date;
+
+	updatedAt?: Date;
 }

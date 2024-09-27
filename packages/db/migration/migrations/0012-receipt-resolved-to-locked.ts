@@ -1,6 +1,6 @@
 import type { UpdateObject } from "kysely";
-import { sql } from "kysely";
 
+import { CURRENT_TIMESTAMP } from "~db/consts";
 import type { Database, ReceiptsDatabase } from "~db/types";
 
 type ReceiptsUpdateObject = UpdateObject<
@@ -20,7 +20,7 @@ const addLockedTimestampColumn = async (db: Database) => {
 			lockedTimestamp: db
 				.case()
 				.when("resolved", "=", true)
-				.then(sql`now()`)
+				.then(CURRENT_TIMESTAMP)
 				.else(null)
 				.end()
 				.$castTo<Date>(),

@@ -7,6 +7,7 @@ exports[`receipts.update > functionality > update currency code > locked before 
       "id:65b1d21a-4b9d-4019-a838-fbddad09c2b2": {
         "currencyCode": "BIF",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },
   },
@@ -19,6 +20,7 @@ exports[`receipts.update > functionality > update currency code > unlocked befor
     "receipts": {
       "id:ce2a0b7b-e615-42b9-be91-214ad04913ba": {
         "currencyCode": "HNL",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },
   },
@@ -31,6 +33,7 @@ exports[`receipts.update > functionality > update issued > locked before update 
     "receipts": {
       "id:65b1d21a-4b9d-4019-a838-fbddad09c2b2": {
         "issued": "2020-06-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },
   },
@@ -43,6 +46,7 @@ exports[`receipts.update > functionality > update issued > unlocked before updat
     "receipts": {
       "id:ce2a0b7b-e615-42b9-be91-214ad04913ba": {
         "issued": "2020-06-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },
   },
@@ -55,13 +59,24 @@ exports[`receipts.update > functionality > update locked - false > locked before
     "receipts": {
       "id:65b1d21a-4b9d-4019-a838-fbddad09c2b2": {
         "lockedTimestamp": null,
+        "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },
   },
 }
 `;
 
-exports[`receipts.update > functionality > update locked - false > unlocked before update 1`] = `{}`;
+exports[`receipts.update > functionality > update locked - false > unlocked before update 1`] = `
+{
+  "updated": {
+    "receipts": {
+      "id:ce2a0b7b-e615-42b9-be91-214ad04913ba": {
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
 
 exports[`receipts.update > functionality > update locked - true > locked before update 1`] = `
 {
@@ -69,6 +84,7 @@ exports[`receipts.update > functionality > update locked - true > locked before 
     "receipts": {
       "id:65b1d21a-4b9d-4019-a838-fbddad09c2b2": {
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },
   },
@@ -81,6 +97,7 @@ exports[`receipts.update > functionality > update locked - true > unlocked befor
     "receipts": {
       "id:ce2a0b7b-e615-42b9-be91-214ad04913ba": {
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },
   },
@@ -93,6 +110,7 @@ exports[`receipts.update > functionality > update name > locked before update 1`
     "receipts": {
       "id:65b1d21a-4b9d-4019-a838-fbddad09c2b2": {
         "name": "quia soluta accusantium",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },
   },
@@ -105,6 +123,7 @@ exports[`receipts.update > functionality > update name > unlocked before update 
     "receipts": {
       "id:ce2a0b7b-e615-42b9-be91-214ad04913ba": {
         "name": "ipsam aspernatur assumenda",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },
   },

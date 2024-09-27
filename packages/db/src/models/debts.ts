@@ -41,6 +41,8 @@ export default interface Debts {
 
 	/** Index: debtsSyncIntentions:ownerAccountId:receiptId:userId:tuple */
 	receiptId: ReceiptsId | null;
+
+	updatedAt: Date;
 }
 
 export interface DebtsInitializer {
@@ -74,6 +76,9 @@ export interface DebtsInitializer {
 
 	/** Index: debtsSyncIntentions:ownerAccountId:receiptId:userId:tuple */
 	receiptId?: ReceiptsId | null;
+
+	/** Default value: CURRENT_TIMESTAMP */
+	updatedAt?: Date;
 }
 
 export interface DebtsMutator {
@@ -107,4 +112,6 @@ export interface DebtsMutator {
 
 	/** Index: debtsSyncIntentions:ownerAccountId:receiptId:userId:tuple */
 	receiptId?: ReceiptsId | null;
+
+	updatedAt?: Date;
 }

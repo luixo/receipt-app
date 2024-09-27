@@ -6,6 +6,7 @@ exports[`itemParticipants.update > functionality > updates item participant part
     "itemParticipants": {
       "itemId:0d023123-650f-4526-97c7-f99c29223492|userId:e0ab553e-facc-4efc-978a-7e9d9242f1a0": {
         "part": "58.00",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },
   },

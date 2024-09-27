@@ -8,6 +8,7 @@ exports[`accountConnectionIntentions.add > functionality > account connection in
         "accountId": "e20766cf-a87a-422e-8f74-6693283d8aee",
         "createdAt": "2020-01-01T00:00:00.000Z",
         "targetAccountId": "4fc3d460-cdcc-43f1-8f2d-46948fa296cc",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
         "userId": "9a11d224-0baf-49c1-89f7-73673387cb63",
       },
     },
@@ -26,9 +27,11 @@ exports[`accountConnectionIntentions.add > functionality > account connection in
     "users": {
       "id:05723e6e-e916-46aa-886e-b744bb05d6ce": {
         "connectedAccountId": "4fc3d460-cdcc-43f1-8f2d-46948fa296cc",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
       },
       "id:9a11d224-0baf-49c1-89f7-73673387cb63": {
         "connectedAccountId": "e20766cf-a87a-422e-8f74-6693283d8aee",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },
   },

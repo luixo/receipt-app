@@ -15,6 +15,10 @@ export default interface ItemParticipants {
 	userId: UsersId;
 
 	part: string;
+
+	createdAt: Date;
+
+	updatedAt: Date;
 }
 
 export interface ItemParticipantsInitializer {
@@ -28,6 +32,12 @@ export interface ItemParticipantsInitializer {
 	userId: UsersId;
 
 	part: string;
+
+	/** Default value: CURRENT_TIMESTAMP */
+	createdAt?: Date;
+
+	/** Default value: CURRENT_TIMESTAMP */
+	updatedAt?: Date;
 }
 
 export interface ItemParticipantsMutator {
@@ -41,4 +51,8 @@ export interface ItemParticipantsMutator {
 	userId?: UsersId;
 
 	part?: string;
+
+	createdAt?: Date;
+
+	updatedAt?: Date;
 }

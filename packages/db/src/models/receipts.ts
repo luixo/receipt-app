@@ -26,6 +26,8 @@ export default interface Receipts {
 	lockedTimestamp: Date | null;
 
 	transferIntentionAccountId: AccountsId | null;
+
+	updatedAt: Date;
 }
 
 export interface ReceiptsInitializer {
@@ -46,6 +48,9 @@ export interface ReceiptsInitializer {
 	lockedTimestamp?: Date | null;
 
 	transferIntentionAccountId?: AccountsId | null;
+
+	/** Default value: CURRENT_TIMESTAMP */
+	updatedAt?: Date;
 }
 
 export interface ReceiptsMutator {
@@ -66,4 +71,6 @@ export interface ReceiptsMutator {
 	lockedTimestamp?: Date | null;
 
 	transferIntentionAccountId?: AccountsId | null;
+
+	updatedAt?: Date;
 }

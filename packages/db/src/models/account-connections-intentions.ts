@@ -22,6 +22,8 @@ export default interface AccountConnectionsIntentions {
 	userId: UsersId;
 
 	createdAt: Date;
+
+	updatedAt: Date;
 }
 
 export interface AccountConnectionsIntentionsInitializer {
@@ -42,6 +44,9 @@ export interface AccountConnectionsIntentionsInitializer {
 	userId: UsersId;
 
 	createdAt: Date;
+
+	/** Default value: CURRENT_TIMESTAMP */
+	updatedAt?: Date;
 }
 
 export interface AccountConnectionsIntentionsMutator {
@@ -62,4 +67,6 @@ export interface AccountConnectionsIntentionsMutator {
 	userId?: UsersId;
 
 	createdAt?: Date;
+
+	updatedAt?: Date;
 }
