@@ -17,7 +17,7 @@ export const procedure = authProcedure.mutation(async ({ ctx }) => {
 		.innerJoin("debts as theirDebts", (qb) =>
 			qb.onRef("theirDebts.userId", "=", "usersTheir.id"),
 		)
-		.where("theirDebts.lockedTimestamp", "is not", null)
+		.where("theirDebts.id", "is not", null)
 		.leftJoin("debts as selfDebts", (qb) =>
 			qb
 				.onRef("theirDebts.id", "=", "selfDebts.id")

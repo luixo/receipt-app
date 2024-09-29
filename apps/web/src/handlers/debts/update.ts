@@ -23,7 +23,6 @@ const updateDebtSchema = z.strictObject({
 			timestamp: z.date(),
 			note: debtNoteSchema,
 			currencyCode: currencyCodeSchema,
-			locked: z.boolean(),
 			receiptId: receiptIdSchema.optional(),
 		})
 		.partial()
@@ -40,10 +39,7 @@ const KEYS_NOT_UPDATE_LOCKED_TIMESTAMP: (keyof DebtUpdateObject)[] = [
 	"receiptId",
 ];
 
-const buildSetObjects = (
-	input: z.infer<typeof updateDebtSchema>,
-	debt: { lockedTimestamp: Date | null },
-) => {
+const buildSetObjects = (input: z.infer<typeof updateDebtSchema>) => {
 	const setObject: DebtUpdateObject = omitBy(
 		{
 			amount: input.update.amount?.toString(),
@@ -51,20 +47,12 @@ const buildSetObjects = (
 			note: input.update.note,
 			currencyCode: input.update.currencyCode,
 			receiptId: input.update.receiptId,
-			lockedTimestamp:
-				input.update.locked === undefined
-					? debt.lockedTimestamp === null
-						? undefined
-						: new Date()
-					: input.update.locked
-					? new Date()
-					: null,
+			lockedTimestamp: new Date(),
 		},
 		(value) => value === undefined,
 	);
 	const keysToUpdateLockedTimestamp = keys(input.update).filter(
-		(key) =>
-			!KEYS_NOT_UPDATE_LOCKED_TIMESTAMP.includes(key as keyof DebtUpdateObject),
+		(key) => !KEYS_NOT_UPDATE_LOCKED_TIMESTAMP.includes(key),
 	);
 	if (keysToUpdateLockedTimestamp.length === 0) {
 		// don't update lockedTimestamp if we updated keys that don't require lockedTimestamp update
@@ -133,27 +121,13 @@ const isError = <T>(input: T | TRPCError): input is TRPCError =>
 	input instanceof TRPCError;
 
 type Debt = Awaited<ReturnType<typeof fetchDebts>>[number];
-
-const getUpdatedDebtsWithErrors = (
-	updatesWithErrors: (
-		| {
-				update: z.infer<typeof updateDebtSchema>;
-				debt: Debt;
-		  }
-		| TRPCError
-	)[],
-) =>
-	updatesWithErrors.map((updateOrError) => {
-		if (isError(updateOrError)) {
-			return updateOrError;
-		}
-		const { debt, update } = updateOrError;
-		return { ...buildSetObjects(update, debt), debt };
-	});
+type UpdateWithDebt = ReturnType<typeof buildSetObjects> & {
+	debt: Debt;
+};
 
 const updateAutoAcceptingDebts = async (
 	ctx: AuthorizedContext,
-	updatedDebtsWithErrors: ReturnType<typeof getUpdatedDebtsWithErrors>,
+	updatedDebtsWithErrors: (UpdateWithDebt | TRPCError)[],
 ) => {
 	const autoAcceptedData = updatedDebtsWithErrors
 		.map((updatedDebtOrError) => {
@@ -208,7 +182,7 @@ const updateAutoAcceptingDebts = async (
 
 const updateDebts = async (
 	ctx: AuthorizedContext,
-	updatedDebtsWithErrors: ReturnType<typeof getUpdatedDebtsWithErrors>,
+	updatedDebtsWithErrors: (UpdateWithDebt | TRPCError)[],
 ) =>
 	ctx.database.transaction().execute((tx) =>
 		Promise.all(
@@ -234,8 +208,7 @@ const queueUpdateDebt = queueCallFactory<
 	AuthorizedContext,
 	z.infer<typeof updateDebtSchema>,
 	{
-		// value or null for set object, undefined for not being set
-		lockedTimestamp: Date | null | undefined;
+		lockedTimestamp?: Date;
 		reverseLockedTimestampUpdated: boolean;
 	}
 >((ctx) => async (updates) => {
@@ -248,19 +221,15 @@ const queueUpdateDebt = queueCallFactory<
 				message: `Debt "${update.id}" does not exist on account "${ctx.auth.email}".`,
 			});
 		}
-		return { update, debt: matchedDebt };
+		return { ...buildSetObjects(update), debt: matchedDebt };
 	});
 	const errors = updatesWithErrors.filter(isError);
 	if (updatesWithErrors.length === errors.length) {
 		return errors;
 	}
-	const updatedDebtsWithErrors = getUpdatedDebtsWithErrors(updatesWithErrors);
-	const updatedDebtIds = await updateAutoAcceptingDebts(
-		ctx,
-		updatedDebtsWithErrors,
-	);
-	await updateDebts(ctx, updatedDebtsWithErrors);
-	return updatedDebtsWithErrors.map((updatedDebtOrError) => {
+	const updatedDebtIds = await updateAutoAcceptingDebts(ctx, updatesWithErrors);
+	await updateDebts(ctx, updatesWithErrors);
+	return updatesWithErrors.map((updatedDebtOrError) => {
 		if (isError(updatedDebtOrError)) {
 			return updatedDebtOrError;
 		}

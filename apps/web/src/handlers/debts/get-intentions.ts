@@ -1,5 +1,6 @@
 import type { CurrencyCode } from "~app/utils/currency";
-import type { DebtsId, ReceiptsId, UsersId } from "~db/models";
+import type { Debts, DebtsId, ReceiptsId, UsersId } from "~db/models";
+import type { MappedNullableObject } from "~utils/types";
 import { authProcedure } from "~web/handlers/trpc";
 
 type InboundIntention = {
@@ -42,7 +43,7 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 				.onRef("usersMine.connectedAccountId", "=", "theirDebts.ownerAccountId")
 				.onRef("usersMine.ownerAccountId", "=", "users.connectedAccountId"),
 		)
-		.where("theirDebts.lockedTimestamp", "is not", null)
+		.where("theirDebts.id", "is not", null)
 		.where((eb) =>
 			eb("selfDebts.id", "is", null).or(
 				"selfDebts.lockedTimestamp",
@@ -64,8 +65,17 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 			"selfDebts.timestamp as selfTimestamp",
 			"selfDebts.currencyCode as selfCurrencyCode",
 		])
-		.$narrowType<{ lockedTimestamp: Date }>()
 		.orderBy(["theirDebts.lockedTimestamp desc", "theirDebts.id desc"])
+		.$narrowType<
+			MappedNullableObject<
+				Debts,
+				{
+					selfAmount: "amount";
+					selfTimestamp: "timestamp";
+					selfCurrencyCode: "currencyCode";
+				}
+			>
+		>()
 		.execute();
 	return debts.map<InboundIntention>((debt) => ({
 		id: debt.id,
@@ -76,15 +86,12 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 		timestamp: debt.timestamp,
 		note: debt.note,
 		receiptId: debt.receiptId || undefined,
-		current:
-			debt.selfAmount !== null &&
-			debt.selfTimestamp !== null &&
-			debt.selfCurrencyCode !== null
-				? {
-						amount: Number(debt.selfAmount),
-						timestamp: debt.selfTimestamp,
-						currencyCode: debt.selfCurrencyCode,
-				  }
-				: undefined,
+		current: debt.selfAmount
+			? {
+					amount: Number(debt.selfAmount),
+					timestamp: debt.selfTimestamp,
+					currencyCode: debt.selfCurrencyCode,
+			  }
+			: undefined,
 	}));
 });

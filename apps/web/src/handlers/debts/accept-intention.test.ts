@@ -60,7 +60,7 @@ describe("debts.acceptIntention", () => {
 			);
 		});
 
-		test("our debt is not intended to be in sync", async ({ ctx }) => {
+		test("attempt to accept an old debt", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			const { id: foreignAccountId } = await insertAccount(ctx);
 			const [{ id: userId }, { id: foreignToSelfUserId }] =
@@ -71,66 +71,10 @@ describe("debts.acceptIntention", () => {
 				[
 					foreignAccountId,
 					foreignToSelfUserId,
-					(originalDebt) => ({ ...originalDebt, lockedTimestamp: new Date() }),
-				],
-			);
-
-			// Verify that other debts don't affect the result
-			await insertDebt(ctx, accountId, userId);
-			await insertDebt(ctx, accountId, foreignToSelfUserId);
-
-			const caller = createCaller(createAuthContext(ctx, sessionId));
-			await expectTRPCError(
-				() => caller.procedure({ id: debtId }),
-				"FORBIDDEN",
-				`Debt "${debtId}" is not expected to be in sync.`,
-			);
-		});
-
-		test("counterparty debt is not intended to be in sync", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: foreignAccountId } = await insertAccount(ctx);
-			const [{ id: userId }, { id: foreignToSelfUserId }] =
-				await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
-			const [{ id: debtId }] = await insertSyncedDebts(
-				ctx,
-				[accountId, userId, { lockedTimestamp: new Date("2020-06-01") }],
-				[
-					foreignAccountId,
-					foreignToSelfUserId,
-					(originalDebt) => ({ ...originalDebt, lockedTimestamp: null }),
-				],
-			);
-
-			// Verify that other debts don't affect the result
-			await insertDebt(ctx, accountId, userId);
-			await insertDebt(ctx, accountId, foreignToSelfUserId);
-
-			const caller = createCaller(createAuthContext(ctx, sessionId));
-			await expectTRPCError(
-				() => caller.procedure({ id: debtId }),
-				"FORBIDDEN",
-				`Counterparty debt "${debtId}" is not expected to be in sync.`,
-			);
-		});
-
-		test("attempt to accept an old debt", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: foreignAccountId } = await insertAccount(ctx);
-			const [{ id: userId }, { id: foreignToSelfUserId }] =
-				await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
-			const [{ id: debtId }] = await insertSyncedDebts(
-				ctx,
-				[accountId, userId, { lockedTimestamp: new Date() }],
-				[
-					foreignAccountId,
-					foreignToSelfUserId,
 					(originalDebt) => ({
 						...originalDebt,
 						lockedTimestamp: new Date(
-							// We just set `lockedTimestamp`
-							// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-							originalDebt.lockedTimestamp!.valueOf() - MINUTE,
+							originalDebt.lockedTimestamp.valueOf() - MINUTE,
 						),
 					}),
 				],
@@ -164,7 +108,6 @@ describe("debts.acceptIntention", () => {
 				foreignAccountId,
 				foreignToSelfUserId,
 				{
-					lockedTimestamp: new Date(),
 					createdAt: new Date("2020-05-01"),
 					receiptId: foreignReceiptId,
 				},

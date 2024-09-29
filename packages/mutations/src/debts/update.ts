@@ -56,16 +56,11 @@ export const options: UseContextedMutationOptions<"debts.update", CurrentDebt> =
 					updateObject.id,
 				);
 			}
-			// lockedTimestamp is undefined (in contrary to being null)
-			// hence we didn't update it in this transaction and we should update nothing in cache
-			if (result.lockedTimestamp === undefined) {
-				return;
-			}
 			updateLockedTimestamps(
 				controllerContext,
 				currDebt,
 				updateObject.id,
-				result.lockedTimestamp || undefined,
+				result.lockedTimestamp,
 				result.reverseLockedTimestampUpdated,
 			);
 		},

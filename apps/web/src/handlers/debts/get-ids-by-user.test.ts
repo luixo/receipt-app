@@ -106,29 +106,8 @@ describe("debts.getIdsByUser", () => {
 				),
 				insertSyncedDebts(
 					ctx,
-					[accountId, userId, { lockedTimestamp: new Date() }],
+					[accountId, userId],
 					[foreignAccountId, foreignToSelfUserId],
-				),
-				insertSyncedDebts(
-					ctx,
-					[accountId, userId, { lockedTimestamp: new Date() }],
-					[
-						foreignAccountId,
-						foreignToSelfUserId,
-						(originalDebt) => ({ ...originalDebt, lockedTimestamp: null }),
-					],
-				),
-				insertSyncedDebts(
-					ctx,
-					[accountId, userId, { lockedTimestamp: new Date() }],
-					[
-						foreignAccountId,
-						foreignToSelfUserId,
-						(originalDebt) => ({
-							...originalDebt,
-							lockedTimestamp: new Date("2020-06-01"),
-						}),
-					],
 				),
 				insertSyncedDebts(
 					ctx,
@@ -138,14 +117,14 @@ describe("debts.getIdsByUser", () => {
 						foreignToSelfUserId,
 						(originalDebt) => ({
 							...originalDebt,
-							lockedTimestamp: new Date(),
+							lockedTimestamp: new Date("2020-06-01"),
 						}),
 					],
 				),
 			]);
 			const userDebts = await Promise.all([
 				insertDebt(ctx, accountId, userId),
-				insertDebt(ctx, accountId, userId, { lockedTimestamp: new Date() }),
+				insertDebt(ctx, accountId, userId),
 			]);
 
 			// Verify other users and accounts don't affect the result

@@ -111,3 +111,18 @@ type InnerTupleOf<
 > = R["length"] extends N ? R : InnerTupleOf<T, N, [T, ...R]>;
 
 export type Writeable<T> = { -readonly [P in keyof T]: T[P] };
+
+type NullableObject<T> =
+	| {
+			[K in keyof T]: T[K];
+	  }
+	| {
+			[K in keyof T]: null;
+	  };
+
+export type MappedNullableObject<
+	T,
+	KeyMapping extends Record<string, keyof T>,
+> = NullableObject<{
+	[K in keyof KeyMapping]: T[KeyMapping[K]];
+}>;

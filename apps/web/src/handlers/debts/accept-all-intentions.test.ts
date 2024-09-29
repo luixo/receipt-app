@@ -37,7 +37,7 @@ describe("debts.acceptAllIntentions", () => {
 			// An outdated intention
 			await insertSyncedDebts(
 				ctx,
-				[accountId, userId, { lockedTimestamp: new Date() }],
+				[accountId, userId],
 				[
 					foreignAccountId,
 					foreignToSelfUserId,
@@ -47,10 +47,8 @@ describe("debts.acceptAllIntentions", () => {
 					}),
 				],
 			);
-			// No intention to sync from our side
+			// An intention to sync from our side
 			await insertDebt(ctx, accountId, userId);
-			// No intention to sync from their side
-			await insertDebt(ctx, foreignAccountId, foreignToSelfUserId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
@@ -71,7 +69,7 @@ describe("debts.acceptAllIntentions", () => {
 			// An outdated intention
 			await insertSyncedDebts(
 				ctx,
-				[accountId, userId, { lockedTimestamp: new Date() }],
+				[accountId, userId],
 				[
 					foreignAccountId,
 					foreignToSelfUserId,
@@ -81,9 +79,7 @@ describe("debts.acceptAllIntentions", () => {
 					}),
 				],
 			);
-			// No intention to sync from our side
-			await insertDebt(ctx, accountId, userId);
-			// No intention to sync from their side
+			// An intention to sync from their side
 			await insertDebt(ctx, foreignAccountId, foreignToSelfUserId);
 			// Updated debt
 			const { id: foreignReceiptId } = await insertReceipt(
@@ -114,7 +110,6 @@ describe("debts.acceptAllIntentions", () => {
 				foreignAccountId,
 			);
 			await insertDebt(ctx, foreignAccountId, foreignToSelfUserId, {
-				lockedTimestamp: new Date(),
 				createdAt: new Date("2020-05-01"),
 				receiptId: anotherForeignReceiptId,
 			});

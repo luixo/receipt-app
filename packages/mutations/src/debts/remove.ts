@@ -64,9 +64,8 @@ export const options: UseContextedMutationOptions<
 		});
 		updateDebts(controllerContext, {
 			getByUsers:
-				currDebt.lockedTimestamp &&
-				currDebt.their?.lockedTimestamp?.valueOf() ===
-					currDebt.lockedTimestamp.valueOf()
+				currDebt.their?.lockedTimestamp.valueOf() ===
+				currDebt.lockedTimestamp.valueOf()
 					? undefined
 					: (controller) =>
 							controller.updateUnsyncedDebts(
@@ -81,7 +80,7 @@ export const options: UseContextedMutationOptions<
 				}
 				if (
 					currDebt.their.lockedTimestamp.valueOf() ===
-					currDebt.lockedTimestamp?.valueOf()
+					currDebt.lockedTimestamp.valueOf()
 				) {
 					controller.add({
 						id: currDebt.id,

@@ -1,6 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
+import type { Debts } from "~db/models";
+import type { MappedNullableObject } from "~utils/types";
 import { authProcedure } from "~web/handlers/trpc";
 import { debtIdSchema } from "~web/handlers/validation";
 
@@ -43,17 +45,20 @@ export const procedure = authProcedure
 				"selfDebts.lockedTimestamp as selfLockedTimestamp",
 				"users.id as foreignUserId",
 			])
+			.$narrowType<
+				MappedNullableObject<
+					Debts,
+					{
+						selfLockedTimestamp: "lockedTimestamp";
+						selfId: "id";
+					}
+				>
+			>()
 			.executeTakeFirst();
 		if (!debt) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
 				message: `Intention for debt "${input.id}" is not found.`,
-			});
-		}
-		if (!debt.lockedTimestamp) {
-			throw new TRPCError({
-				code: "FORBIDDEN",
-				message: `Counterparty debt "${input.id}" is not expected to be in sync.`,
 			});
 		}
 		if (!debt.selfId) {
@@ -75,12 +80,6 @@ export const procedure = authProcedure
 				})
 				.execute();
 			return { createdAt: createdTimestamp };
-		}
-		if (!debt.selfLockedTimestamp) {
-			throw new TRPCError({
-				code: "FORBIDDEN",
-				message: `Debt "${input.id}" is not expected to be in sync.`,
-			});
 		}
 		if (debt.selfLockedTimestamp.valueOf() > debt.lockedTimestamp.valueOf()) {
 			throw new TRPCError({

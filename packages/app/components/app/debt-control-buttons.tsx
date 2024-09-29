@@ -6,9 +6,8 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { Button } from "~components/button";
-import { EyeIcon, EyeSlashIcon, SyncIcon } from "~components/icons";
+import { SyncIcon } from "~components/icons";
 import { options as debtsAcceptIntentionOptions } from "~mutations/debts/accept-intention";
-import { options as debtsUpdateOptions } from "~mutations/debts/update";
 
 type Debt = TRPCQueryOutput<"debts.get">;
 
@@ -17,16 +16,6 @@ type Props = {
 };
 
 export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
-	const updateMutation = trpc.debts.update.useMutation(
-		useTrpcMutationOptions(debtsUpdateOptions, { context: debt }),
-	);
-	const setLocked = React.useCallback(() => {
-		updateMutation.mutate({
-			id: debt.id,
-			update: { locked: !debt.lockedTimestamp },
-		});
-	}, [updateMutation, debt.id, debt.lockedTimestamp]);
-
 	const intention = React.useMemo(
 		() =>
 			debt.their?.lockedTimestamp
@@ -70,23 +59,18 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 		acceptMutation.mutate({ id: intention.id });
 	}, [acceptMutation, intention]);
 
-	const newLocal = "Update debt to a counterparty's version";
 	return (
 		<>
 			{intention &&
-			debt.lockedTimestamp &&
 			intention.lockedTimestamp.valueOf() > debt.lockedTimestamp.valueOf() ? (
 				<ConfirmModal
 					action={acceptSyncIntention}
-					isLoading={updateMutation.isPending}
-					title={newLocal}
+					title="Update debt to a counterparty's version"
 					subtitle={<DebtIntention intention={intention} />}
 					confirmText="Are you sure?"
 				>
 					{({ openModal }) => (
 						<Button
-							isLoading={updateMutation.isPending}
-							isDisabled={updateMutation.isPending}
 							onClick={openModal}
 							variant="ghost"
 							color="warning"
@@ -97,34 +81,6 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 					)}
 				</ConfirmModal>
 			) : null}
-			<ConfirmModal
-				action={setLocked}
-				isLoading={updateMutation.isPending}
-				title={debt.lockedTimestamp ? "Unsync debt" : "Sync debt"}
-				subtitle={
-					debt.lockedTimestamp
-						? "Debt will stop syncing with the counterparty"
-						: "Debt will start syncing with the counterparty"
-				}
-				confirmText="Are you sure?"
-			>
-				{({ openModal }) => (
-					<Button
-						isLoading={updateMutation.isPending}
-						isDisabled={updateMutation.isPending}
-						onClick={debt.lockedTimestamp ? openModal : setLocked}
-						variant="ghost"
-						color={debt.lockedTimestamp ? "danger" : "success"}
-						isIconOnly
-					>
-						{debt.lockedTimestamp ? (
-							<EyeSlashIcon size={24} />
-						) : (
-							<EyeIcon size={24} />
-						)}
-					</Button>
-				)}
-			</ConfirmModal>
 		</>
 	);
 };

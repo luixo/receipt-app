@@ -37,7 +37,7 @@ export default interface Debts {
 
 	note: string;
 
-	lockedTimestamp: Date | null;
+	lockedTimestamp: Date;
 
 	/** Index: debtsSyncIntentions:ownerAccountId:receiptId:userId:tuple */
 	receiptId: ReceiptsId | null;
@@ -72,7 +72,7 @@ export interface DebtsInitializer {
 
 	note: string;
 
-	lockedTimestamp?: Date | null;
+	lockedTimestamp: Date;
 
 	/** Index: debtsSyncIntentions:ownerAccountId:receiptId:userId:tuple */
 	receiptId?: ReceiptsId | null;
@@ -108,7 +108,7 @@ export interface DebtsMutator {
 
 	note?: string;
 
-	lockedTimestamp?: Date | null;
+	lockedTimestamp?: Date;
 
 	/** Index: debtsSyncIntentions:ownerAccountId:receiptId:userId:tuple */
 	receiptId?: ReceiptsId | null;

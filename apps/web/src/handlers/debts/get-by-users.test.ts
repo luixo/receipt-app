@@ -60,20 +60,13 @@ describe("debts.getByUsers", () => {
 			);
 			const [syncedDebt] = await insertSyncedDebts(
 				ctx,
-				[
-					accountId,
-					user.id,
-					{ lockedTimestamp: new Date(), currencyCode: "USD" },
-				],
+				[accountId, user.id, { currencyCode: "USD" }],
 				[foreignAccountId, foreignToSelfUserId],
 			);
 			const userDebts = await Promise.all([
 				syncedDebt,
 				insertDebt(ctx, accountId, user.id, { currencyCode: "USD" }),
-				insertDebt(ctx, accountId, user.id, {
-					currencyCode: "EUR",
-					lockedTimestamp: new Date(),
-				}),
+				insertDebt(ctx, accountId, user.id, { currencyCode: "EUR" }),
 			]);
 
 			const anotherUser = await insertUser(ctx, accountId);
@@ -101,7 +94,7 @@ describe("debts.getByUsers", () => {
 					{
 						userId: user.id,
 						debts: mapUserDebts(userDebts),
-						unsyncedDebtsAmount: 1,
+						unsyncedDebtsAmount: 2,
 					},
 					{
 						userId: anotherUser.id,
@@ -124,40 +117,14 @@ describe("debts.getByUsers", () => {
 
 		describe("unsynced amount of debts", () => {
 			describe("synced debts", () => {
-				test("debt with empty lockedTimestamp", async ({ ctx }) => {
-					const { sessionId, accountId } = await insertAccountWithSession(ctx);
-					const { id: foreignAccountId } = await insertAccount(ctx);
-					const [user, { id: foreignToSelfUserId }] =
-						await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
-					const [unsyncedDebt] = await insertSyncedDebts(
-						ctx,
-						[accountId, user.id],
-						[
-							foreignAccountId,
-							foreignToSelfUserId,
-							// De-syncing debt
-							(debt) => ({ ...debt, lockedTimestamp: new Date() }),
-						],
-					);
-					const caller = createCaller(createAuthContext(ctx, sessionId));
-					const result = await caller.procedure();
-					expect(result).toStrictEqual<typeof result>([
-						{
-							userId: user.id,
-							debts: mapUserDebts([unsyncedDebt]),
-							unsyncedDebtsAmount: 0,
-						},
-					]);
-				});
-
-				test("debt with synced lockedTimestamp", async ({ ctx }) => {
+				test("synced debt", async ({ ctx }) => {
 					const { sessionId, accountId } = await insertAccountWithSession(ctx);
 					const { id: foreignAccountId } = await insertAccount(ctx);
 					const [user, { id: foreignToSelfUserId }] =
 						await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
 					const [syncedDebt] = await insertSyncedDebts(
 						ctx,
-						[accountId, user.id, { lockedTimestamp: new Date() }],
+						[accountId, user.id],
 						[foreignAccountId, foreignToSelfUserId],
 					);
 					const caller = createCaller(createAuthContext(ctx, sessionId));
@@ -174,9 +141,7 @@ describe("debts.getByUsers", () => {
 				test("user counterparty is not connected", async ({ ctx }) => {
 					const { sessionId, accountId } = await insertAccountWithSession(ctx);
 					const { id: userId } = await insertUser(ctx, accountId);
-					const localDebt = await insertDebt(ctx, accountId, userId, {
-						lockedTimestamp: new Date(),
-					});
+					const localDebt = await insertDebt(ctx, accountId, userId);
 					const caller = createCaller(createAuthContext(ctx, sessionId));
 					const result = await caller.procedure();
 					expect(result).toStrictEqual<typeof result>([
@@ -197,9 +162,7 @@ describe("debts.getByUsers", () => {
 						accountId,
 						foreignAccountId,
 					]);
-					const localDebt = await insertDebt(ctx, accountId, user.id, {
-						lockedTimestamp: new Date(),
-					});
+					const localDebt = await insertDebt(ctx, accountId, user.id);
 					const caller = createCaller(createAuthContext(ctx, sessionId));
 					const result = await caller.procedure();
 					expect(result).toStrictEqual<typeof result>([
@@ -218,16 +181,14 @@ describe("debts.getByUsers", () => {
 						await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
 					const [desyncedDebt] = await insertSyncedDebts(
 						ctx,
-						[accountId, user.id, { lockedTimestamp: new Date() }],
+						[accountId, user.id],
 						[
 							foreignAccountId,
 							foreignToSelfUserId,
 							// De-syncing debt
 							(debt) => ({
 								...debt,
-								// We just set `lockedTimestamp`
-								// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-								lockedTimestamp: new Date(debt.lockedTimestamp!.valueOf() + 1),
+								lockedTimestamp: new Date(debt.lockedTimestamp.valueOf() + 1),
 							}),
 						],
 					);
@@ -248,37 +209,8 @@ describe("debts.getByUsers", () => {
 					const [user, { id: foreignToSelfUserId }] =
 						await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
 					const unsyncedDebts = await Promise.all([
-						insertDebt(ctx, accountId, user.id, {
-							lockedTimestamp: new Date(),
-						}),
-						insertDebt(ctx, accountId, user.id, {
-							lockedTimestamp: new Date(),
-						}),
-						insertSyncedDebts(
-							ctx,
-							[accountId, user.id, { lockedTimestamp: new Date() }],
-							[
-								foreignAccountId,
-								foreignToSelfUserId,
-								// De-syncing debt
-								(debt) => ({
-									...debt,
-									lockedTimestamp: new Date(
-										// We just set `lockedTimestamp`
-										// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-										debt.lockedTimestamp!.valueOf() + 1,
-									),
-								}),
-							],
-						),
-					]);
-					// Synced debts
-					await Promise.all([
-						insertSyncedDebts(
-							ctx,
-							[accountId, user.id, { lockedTimestamp: new Date() }],
-							[foreignAccountId, foreignToSelfUserId],
-						),
+						insertDebt(ctx, accountId, user.id),
+						insertDebt(ctx, accountId, user.id),
 						insertSyncedDebts(
 							ctx,
 							[accountId, user.id],
@@ -286,10 +218,19 @@ describe("debts.getByUsers", () => {
 								foreignAccountId,
 								foreignToSelfUserId,
 								// De-syncing debt
-								(debt) => ({ ...debt, lockedTimestamp: new Date() }),
+								(debt) => ({
+									...debt,
+									lockedTimestamp: new Date(debt.lockedTimestamp.valueOf() + 1),
+								}),
 							],
 						),
 					]);
+					// Synced debt
+					await insertSyncedDebts(
+						ctx,
+						[accountId, user.id],
+						[foreignAccountId, foreignToSelfUserId],
+					);
 					const caller = createCaller(createAuthContext(ctx, sessionId));
 					const result = await caller.procedure();
 					expect(result[0]?.unsyncedDebtsAmount).toBe<number>(

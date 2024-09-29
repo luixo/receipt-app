@@ -159,12 +159,8 @@ type DebtUpdateObject = TRPCMutationInput<"debts.update">["update"];
 export const getNextLockedTimestamp = (update: DebtUpdateObject) =>
 	update.amount !== undefined ||
 	update.timestamp !== undefined ||
-	update.currencyCode !== undefined ||
-	update.locked === true
-		? // lockedTimestamp will be overriden in onSuccess
-		  new Date()
-		: update.locked === false
-		? null
+	update.currencyCode !== undefined
+		? new Date()
 		: undefined;
 
 export const applySumUpdate =
@@ -203,7 +199,7 @@ export const applyUpdate =
 			nextDebt.note = update.note;
 		}
 		const nextLockedTimestamp = getNextLockedTimestamp(update);
-		if (nextLockedTimestamp !== null) {
+		if (nextLockedTimestamp) {
 			nextDebt.lockedTimestamp = nextLockedTimestamp;
 		}
 		return nextDebt;
@@ -248,7 +244,7 @@ export const getRevert =
 			revertDebt.note = snapshot.note;
 		}
 		const nextLockedTimestamp = getNextLockedTimestamp(update);
-		if (nextLockedTimestamp !== null) {
+		if (nextLockedTimestamp) {
 			revertDebt.lockedTimestamp = snapshot.lockedTimestamp;
 		}
 		return revertDebt;
@@ -288,45 +284,28 @@ export const updateLockedTimestamps = (
 ) => {
 	updateDebts(controllerContext, {
 		getByUsers: (controller) => {
-			if (lockedTimestamp === undefined) {
-				if (
-					currDebt.lockedTimestamp !== undefined &&
-					!(
-						currDebt.lockedTimestamp.valueOf() ===
-						currDebt.their?.lockedTimestamp?.valueOf()
-					)
-				) {
-					// We turned off syncing by setting lockedTimestamp to null
-					// Hence previously unsynced debt does not count now
-					controller.updateUnsyncedDebts(
-						currDebt.userId,
-						(amount) => amount - 1,
-					);
-				}
-			} else if (!reverseLockedTimestampUpdated) {
+			if (!reverseLockedTimestampUpdated) {
 				// We updated something meaninful (lockedTimestamp changed) and reverse was not accepted
 				// Hence previously synced debt is now unsynced
 				controller.updateUnsyncedDebts(currDebt.userId, (amount) => amount + 1);
 			}
 		},
 		getIdsByUser: undefined,
-		get: (controller) =>
+		get: (controller) => {
 			controller.update(debtId, (debt) => ({
 				...debt,
-				lockedTimestamp,
+				lockedTimestamp: lockedTimestamp || debt.lockedTimestamp,
 				their: reverseLockedTimestampUpdated
 					? {
 							amount: debt.amount,
 							currencyCode: debt.currencyCode,
 							timestamp: debt.timestamp,
-							lockedTimestamp,
+							lockedTimestamp: lockedTimestamp || debt.lockedTimestamp,
 					  }
 					: debt.their,
-			})),
+			}));
+		},
 		getIntentions: (controller) => {
-			if (!lockedTimestamp) {
-				return;
-			}
 			// It seems like it doesn't work
 			// because whenever we update lockedTimestmap it is more fresh than counteryparty's
 			// hence we never get intentions actually updated here

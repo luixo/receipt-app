@@ -73,7 +73,6 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 					amount: participant.sum,
 					currencyCode: receipt.currencyCode,
 					timestamp: receipt.issued,
-					locked: true,
 					receiptId: receipt.id,
 				},
 			}),

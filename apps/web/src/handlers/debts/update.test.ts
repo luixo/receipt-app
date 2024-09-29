@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { identity, pick } from "remeda";
+import { pick } from "remeda";
 import { assert, describe, expect } from "vitest";
 
 import type { TRPCMutationInput, TRPCMutationOutput } from "~app/trpc";
@@ -84,20 +84,17 @@ const insertDefaultDebt = async ({
 };
 
 type GetResult = (opts: {
-	debt: Awaited<ReturnType<typeof insertDebt>>;
 	counterParty: Parameters<GetData>[0]["counterParty"];
-	overrideTimestamp?: (
-		lockedTimestamp: TRPCMutationOutput<"debts.update">["lockedTimestamp"],
-	) => TRPCMutationOutput<"debts.update">["lockedTimestamp"];
+	overrideTimestamp?:
+		| TRPCMutationOutput<"debts.update">["lockedTimestamp"]
+		| null;
 }) => TRPCMutationOutput<"debts.update">;
 const getDefaultGetResult: GetResult = ({
-	debt,
-	counterParty,
 	overrideTimestamp,
+	counterParty,
 }) => {
-	const nextLockedTimestamp = (overrideTimestamp || identity())(
-		debt.lockedTimestamp ? new Date() : undefined,
-	);
+	const nextLockedTimestamp =
+		overrideTimestamp === null ? undefined : new Date();
 	return {
 		lockedTimestamp: nextLockedTimestamp,
 		reverseLockedTimestampUpdated:
@@ -376,9 +373,7 @@ describe("debts.update", () => {
 							},
 						},
 					],
-					results: [
-						getDefaultGetResult({ debt, counterParty: opts.counterParty }),
-					],
+					results: [getDefaultGetResult({ counterParty: opts.counterParty })],
 				};
 			});
 		});
@@ -395,9 +390,7 @@ describe("debts.update", () => {
 							},
 						},
 					],
-					results: [
-						getDefaultGetResult({ debt, counterParty: opts.counterParty }),
-					],
+					results: [getDefaultGetResult({ counterParty: opts.counterParty })],
 				};
 			});
 		});
@@ -416,9 +409,8 @@ describe("debts.update", () => {
 					],
 					results: [
 						getDefaultGetResult({
-							debt,
 							counterParty: opts.counterParty,
-							overrideTimestamp: () => undefined,
+							overrideTimestamp: null,
 						}),
 					],
 				};
@@ -437,9 +429,7 @@ describe("debts.update", () => {
 							},
 						},
 					],
-					results: [
-						getDefaultGetResult({ debt, counterParty: opts.counterParty }),
-					],
+					results: [getDefaultGetResult({ counterParty: opts.counterParty })],
 				};
 			});
 		});
@@ -462,55 +452,8 @@ describe("debts.update", () => {
 					],
 					results: [
 						getDefaultGetResult({
-							debt,
 							counterParty: opts.counterParty,
-							overrideTimestamp: () => undefined,
-						}),
-					],
-				};
-			});
-		});
-
-		describe("update locked - true", () => {
-			updateDescribes(async (opts) => {
-				const debt = await insertDefaultDebt(opts);
-				return {
-					updates: [
-						{
-							id: debt.id,
-							update: {
-								locked: true,
-							},
-						},
-					],
-					results: [
-						getDefaultGetResult({
-							debt,
-							counterParty: opts.counterParty,
-							overrideTimestamp: () => new Date(),
-						}),
-					],
-				};
-			});
-		});
-
-		describe("update locked - false", () => {
-			updateDescribes(async (opts) => {
-				const debt = await insertDefaultDebt(opts);
-				return {
-					updates: [
-						{
-							id: debt.id,
-							update: {
-								locked: false,
-							},
-						},
-					],
-					results: [
-						getDefaultGetResult({
-							debt,
-							counterParty: opts.counterParty,
-							overrideTimestamp: () => null,
+							overrideTimestamp: null,
 						}),
 					],
 				};
@@ -518,95 +461,27 @@ describe("debts.update", () => {
 		});
 
 		describe("update multiple properties", () => {
-			describe("no locked", () => {
-				updateDescribes(async (opts) => {
-					const debt = await insertDefaultDebt(opts);
-					const { id: receiptId } = await insertReceipt(
-						opts.ctx,
-						opts.selfAccountId,
-					);
-					return {
-						updates: [
-							{
-								id: debt.id,
-								update: {
-									amount: getRandomAmount(),
-									timestamp: new Date("2020-06-01"),
-									note: faker.lorem.words(),
-									currencyCode: getRandomCurrencyCode(),
-									receiptId,
-								},
+			updateDescribes(async (opts) => {
+				const debt = await insertDefaultDebt(opts);
+				const { id: receiptId } = await insertReceipt(
+					opts.ctx,
+					opts.selfAccountId,
+				);
+				return {
+					updates: [
+						{
+							id: debt.id,
+							update: {
+								amount: getRandomAmount(),
+								timestamp: new Date("2020-06-01"),
+								note: faker.lorem.words(),
+								currencyCode: getRandomCurrencyCode(),
+								receiptId,
 							},
-						],
-						results: [
-							getDefaultGetResult({ debt, counterParty: opts.counterParty }),
-						],
-					};
-				});
-			});
-
-			describe("locked as true", () => {
-				updateDescribes(async (opts) => {
-					const debt = await insertDefaultDebt(opts);
-					const { id: receiptId } = await insertReceipt(
-						opts.ctx,
-						opts.selfAccountId,
-					);
-					return {
-						updates: [
-							{
-								id: debt.id,
-								update: {
-									amount: getRandomAmount(),
-									timestamp: new Date("2020-06-01"),
-									note: faker.lorem.words(),
-									currencyCode: getRandomCurrencyCode(),
-									receiptId,
-									locked: true,
-								},
-							},
-						],
-						results: [
-							getDefaultGetResult({
-								debt,
-								counterParty: opts.counterParty,
-								overrideTimestamp: () => new Date(),
-							}),
-						],
-					};
-				});
-			});
-
-			describe("locked as false", () => {
-				updateDescribes(async (opts) => {
-					const debt = await insertDefaultDebt(opts);
-					const { id: receiptId } = await insertReceipt(
-						opts.ctx,
-						opts.selfAccountId,
-					);
-					return {
-						updates: [
-							{
-								id: debt.id,
-								update: {
-									amount: getRandomAmount(),
-									timestamp: new Date("2020-06-01"),
-									note: faker.lorem.words(),
-									currencyCode: getRandomCurrencyCode(),
-									receiptId,
-									locked: false,
-								},
-							},
-						],
-						results: [
-							getDefaultGetResult({
-								debt,
-								counterParty: opts.counterParty,
-								overrideTimestamp: () => null,
-							}),
-						],
-					};
-				});
+						},
+					],
+					results: [getDefaultGetResult({ counterParty: opts.counterParty })],
+				};
 			});
 		});
 
@@ -626,18 +501,16 @@ describe("debts.update", () => {
 						],
 						results: [
 							getDefaultGetResult({
-								debt,
 								counterParty: opts.counterParty,
-								overrideTimestamp: () => undefined,
+								overrideTimestamp: null,
 							}),
 							getDefaultGetResult({
-								debt: anotherDebt,
 								// Another debt is not synchronized with the counterparty hence it always does not exist
 								counterParty:
 									opts.counterParty === "auto-accept"
 										? "auto-accept-no-exist"
 										: opts.counterParty,
-								overrideTimestamp: () => undefined,
+								overrideTimestamp: null,
 							}),
 						],
 					};
@@ -659,11 +532,9 @@ describe("debts.update", () => {
 						],
 						results: [
 							getDefaultGetResult({
-								debt,
 								counterParty: opts.counterParty,
 							}),
 							getDefaultGetResult({
-								debt: anotherDebt,
 								// Another debt is not synchronized with the counterparty hence it always does not exist
 								counterParty:
 									opts.counterParty === "auto-accept"
@@ -690,17 +561,15 @@ describe("debts.update", () => {
 						],
 						results: [
 							getDefaultGetResult({
-								debt,
 								counterParty: opts.counterParty,
 							}),
 							getDefaultGetResult({
-								debt: anotherDebt,
 								// Another debt is not synchronized with the counterparty hence it always does not exist
 								counterParty:
 									opts.counterParty === "auto-accept"
 										? "auto-accept-no-exist"
 										: opts.counterParty,
-								overrideTimestamp: () => undefined,
+								overrideTimestamp: null,
 							}),
 						],
 					};
@@ -742,7 +611,7 @@ describe("debts.update", () => {
 				);
 				expect(results).toHaveLength(2);
 				expect(results[0]).toStrictEqual<(typeof results)[0]>({
-					lockedTimestamp: undefined,
+					lockedTimestamp: new Date(),
 					reverseLockedTimestampUpdated: true,
 				});
 				expect(results[1]).toBeInstanceOf(Error);

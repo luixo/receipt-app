@@ -24,7 +24,6 @@ exports[`debts.add > functionality > auto-accepted by the counterparty > counter
       "id:35bb1455-b8ca-4d6d-ba56-308eac4324b9|ownerAccountId:4d438a86-07a3-4aa7-8891-0ce85b8b4d99": {
         "amount": "-728.7300",
         "currencyCode": "XAF",
-        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },
@@ -374,7 +373,6 @@ exports[`debts.add > functionality > multiple debts > some auto-accepting accoun
       "id:7d52f29b-a938-4327-86e2-5f5535b93921|ownerAccountId:c8d05008-38e2-4291-8da0-1599b04cfc31": {
         "amount": "-102.0700",
         "currencyCode": "PKR",
-        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },

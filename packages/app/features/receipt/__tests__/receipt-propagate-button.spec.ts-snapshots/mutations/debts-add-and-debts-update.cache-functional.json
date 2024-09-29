@@ -180,7 +180,6 @@
 							"amount": 21991.95,
 							"currencyCode": "MMK",
 							"timestamp": "2020-01-01T00:00:00.000Z",
-							"locked": true,
 							"receiptId": "4962d0d3-c77b-4ab8-9be5-cd1f56483923"
 						}
 					}
@@ -201,7 +200,6 @@
 							"amount": 23468.4,
 							"currencyCode": "MMK",
 							"timestamp": "2020-01-01T00:00:00.000Z",
-							"locked": true,
 							"receiptId": "4962d0d3-c77b-4ab8-9be5-cd1f56483923"
 						}
 					}

@@ -29,14 +29,8 @@ const getContent = (
 	lockedTimestamp: Debt["lockedTimestamp"],
 	their?: TheirDebtPick,
 ) => {
-	if (!lockedTimestamp) {
-		return "Local debt, no sync";
-	}
 	if (!their) {
 		return "Out of sync, we intent to push";
-	}
-	if (!their.lockedTimestamp) {
-		return "Out of sync, we intent to sync, but they're not";
 	}
 	if (their.lockedTimestamp.valueOf() !== lockedTimestamp.valueOf()) {
 		return `Out of sync, ${
@@ -55,13 +49,10 @@ export const DebtSyncStatus: React.FC<Props> = ({
 	size = "md",
 	debt: { lockedTimestamp, their },
 }) => {
-	if (!lockedTimestamp) {
-		return null;
-	}
 	const pixelSize = size === "md" ? 24 : 36;
 
 	const isSynced =
-		their?.lockedTimestamp?.valueOf() === lockedTimestamp.valueOf();
+		their?.lockedTimestamp.valueOf() === lockedTimestamp.valueOf();
 	return (
 		<Tooltip
 			content={getContent(lockedTimestamp, their)}

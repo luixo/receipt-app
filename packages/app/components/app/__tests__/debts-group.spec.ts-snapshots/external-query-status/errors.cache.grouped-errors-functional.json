@@ -1,16 +1,16 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"0c41c087-b23f-4358-a409-f7939ff279bf\"}]": {
+		"debts.get:[{\"id\":\"0d9253e9-d0b2-4123-9579-6f3ff7503bf1\"}]": {
 			"state": {
 				"data": {
-					"id": "0c41c087-b23f-4358-a409-f7939ff279bf",
-					"currencyCode": "EGP",
+					"id": "0d9253e9-d0b2-4123-9579-6f3ff7503bf1",
+					"currencyCode": "CHF",
 					"createdAt": "2020-01-01T00:00:00.000Z",
-					"timestamp": "2019-12-09T12:02:22.085Z",
-					"note": "placeat soluta molestiae dolorum",
+					"timestamp": "2019-12-10T15:26:05.068Z",
+					"note": "dolorem eaque distinctio ipsam",
 					"receiptId": "<undefined>",
-					"amount": -9855.82,
-					"lockedTimestamp": "<undefined>",
+					"amount": -7034.79,
+					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
 					"their": "<undefined>",
 					"userId": "1ae1509f-6920-409e-89d1-2335b5ec817d"
 				},
@@ -20,17 +20,17 @@
 				"status": "success"
 			}
 		},
-		"debts.get:[{\"id\":\"9253e9d0-b212-4357-a96f-3ff7503bf14d\"}]": {
+		"debts.get:[{\"id\":\"60c41c08-7b23-4f35-b840-9f7939ff279b\"}]": {
 			"state": {
 				"data": {
-					"id": "9253e9d0-b212-4357-a96f-3ff7503bf14d",
-					"currencyCode": "COP",
+					"id": "60c41c08-7b23-4f35-b840-9f7939ff279b",
+					"currencyCode": "MYR",
 					"createdAt": "2020-01-01T00:00:00.000Z",
-					"timestamp": "2019-12-30T12:14:48.561Z",
-					"note": "distinctio ipsam fugit reiciendis",
+					"timestamp": "2019-12-23T04:50:48.463Z",
+					"note": "nobis placeat soluta molestiae",
 					"receiptId": "<undefined>",
-					"amount": -9603.74,
-					"lockedTimestamp": "<undefined>",
+					"amount": 3612.3,
+					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
 					"their": "<undefined>",
 					"userId": "1ae1509f-6920-409e-89d1-2335b5ec817d"
 				},

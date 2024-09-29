@@ -34,7 +34,7 @@ export const defaultGenerateDebts = ({
 		note: faker.lorem.words(4),
 		receiptId: undefined,
 		amount: faker.number.float({ min: -10000, max: 10000, precision: 0.01 }),
-		lockedTimestamp: faker.datatype.boolean() ? new Date() : undefined,
+		lockedTimestamp: new Date(),
 		their: undefined,
 		userId,
 	}));

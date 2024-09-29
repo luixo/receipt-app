@@ -85,34 +85,6 @@ describe("debts.get", () => {
 		test("debt is fetched", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			const { id: userId } = await insertUser(ctx, accountId);
-			const debt = await insertDebt(ctx, accountId, userId, {
-				lockedTimestamp: new Date(),
-			});
-
-			// Verify other users do not interfere
-			const { id: otherUserId } = await insertUser(ctx, accountId);
-			await insertDebt(ctx, accountId, otherUserId);
-
-			const caller = createCaller(createAuthContext(ctx, sessionId));
-			const result = await caller.procedure({ id: debt.id });
-			expect(result).toStrictEqual<typeof result>({
-				id: debt.id,
-				userId,
-				currencyCode: debt.currencyCode,
-				timestamp: debt.timestamp,
-				note: debt.note,
-				receiptId: debt.receiptId || undefined,
-				amount: Number(debt.amount),
-				// We just set `lockedTimestamp`
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-				lockedTimestamp: debt.lockedTimestamp!,
-				their: undefined,
-			});
-		});
-
-		test("debt is fetched - no sync intended", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: userId } = await insertUser(ctx, accountId);
 			const debt = await insertDebt(ctx, accountId, userId);
 
 			// Verify other users do not interfere
@@ -129,7 +101,7 @@ describe("debts.get", () => {
 				note: debt.note,
 				receiptId: debt.receiptId || undefined,
 				amount: Number(debt.amount),
-				lockedTimestamp: undefined,
+				lockedTimestamp: debt.lockedTimestamp,
 				their: undefined,
 			});
 		});
@@ -142,7 +114,7 @@ describe("debts.get", () => {
 					await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
 				const [debt, foreignDebt] = await insertSyncedDebts(
 					ctx,
-					[accountId, userId, { lockedTimestamp: new Date() }],
+					[accountId, userId],
 					[
 						foreignAccountId,
 						foreignToSelfUserId,
@@ -167,54 +139,9 @@ describe("debts.get", () => {
 					note: debt.note,
 					receiptId: debt.receiptId || undefined,
 					amount: Number(debt.amount),
-					// We just set `lockedTimestamp`
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-					lockedTimestamp: debt.lockedTimestamp!,
+					lockedTimestamp: debt.lockedTimestamp,
 					their: {
-						// We just set `lockedTimestamp`
-						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-						lockedTimestamp: foreignDebt.lockedTimestamp!,
-						currencyCode: foreignDebt.currencyCode,
-						timestamp: foreignDebt.timestamp,
-						amount: -Number(foreignDebt.amount),
-					},
-				});
-			});
-
-			test("foreign sync not intended", async ({ ctx }) => {
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				const { id: foreignAccountId } = await insertAccount(ctx);
-				const [{ id: userId }, { id: foreignToSelfUserId }] =
-					await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
-				const [debt, foreignDebt] = await insertSyncedDebts(
-					ctx,
-					[accountId, userId, { lockedTimestamp: new Date() }],
-					[
-						foreignAccountId,
-						foreignToSelfUserId,
-						(originalDebt) => ({ ...originalDebt, lockedTimestamp: null }),
-					],
-				);
-
-				// Verify other users do not interfere
-				const { id: otherUserId } = await insertUser(ctx, accountId);
-				await insertDebt(ctx, accountId, otherUserId);
-
-				const caller = createCaller(createAuthContext(ctx, sessionId));
-				const result = await caller.procedure({ id: debt.id });
-				expect(result).toStrictEqual<typeof result>({
-					id: debt.id,
-					userId,
-					currencyCode: debt.currencyCode,
-					timestamp: debt.timestamp,
-					note: debt.note,
-					receiptId: debt.receiptId || undefined,
-					amount: Number(debt.amount),
-					// We just set `lockedTimestamp`
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-					lockedTimestamp: debt.lockedTimestamp!,
-					their: {
-						lockedTimestamp: undefined,
+						lockedTimestamp: foreignDebt.lockedTimestamp,
 						currencyCode: foreignDebt.currencyCode,
 						timestamp: foreignDebt.timestamp,
 						amount: -Number(foreignDebt.amount),

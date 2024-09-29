@@ -22,7 +22,6 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 		database
 			.selectFrom("debts")
 			.where("debts.ownerAccountId", "=", ctx.auth.accountId)
-			.where("debts.lockedTimestamp", "is not", null)
 			.innerJoin("users", (qb) =>
 				qb
 					.onRef("users.id", "=", "debts.userId")

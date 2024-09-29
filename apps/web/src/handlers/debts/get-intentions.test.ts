@@ -35,7 +35,7 @@ describe("debts.getIntentions", () => {
 			// An outdated intention
 			await insertSyncedDebts(
 				ctx,
-				[accountId, userId, { lockedTimestamp: new Date() }],
+				[accountId, userId],
 				[
 					foreignAccountId,
 					foreignToSelfUserId,
@@ -45,10 +45,8 @@ describe("debts.getIntentions", () => {
 					}),
 				],
 			);
-			// No intention to sync from our side
+			// Our debt
 			await insertDebt(ctx, accountId, userId);
-			// No intention to sync from their side
-			await insertDebt(ctx, foreignAccountId, foreignToSelfUserId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
@@ -64,7 +62,7 @@ describe("debts.getIntentions", () => {
 			// An outdated intention
 			await insertSyncedDebts(
 				ctx,
-				[accountId, userId, { lockedTimestamp: new Date() }],
+				[accountId, userId],
 				[
 					foreignAccountId,
 					foreignToSelfUserId,
@@ -74,10 +72,8 @@ describe("debts.getIntentions", () => {
 					}),
 				],
 			);
-			// No intention to sync from our side
+			// Our debt
 			await insertDebt(ctx, accountId, userId);
-			// No intention to sync from their side
-			await insertDebt(ctx, foreignAccountId, foreignToSelfUserId);
 			// Updated debt
 			const { id: foreignReceiptId } = await insertReceipt(
 				ctx,
@@ -107,7 +103,6 @@ describe("debts.getIntentions", () => {
 				foreignAccountId,
 				foreignToSelfUserId,
 				{
-					lockedTimestamp: new Date(),
 					createdAt: new Date("2020-05-01"),
 				},
 			);
@@ -121,9 +116,7 @@ describe("debts.getIntentions", () => {
 						userId,
 						amount: -Number(foreignDebtToUpdate.amount),
 						currencyCode: foreignDebtToUpdate.currencyCode,
-						// We just set `locketTimestamp`
-						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-						lockedTimestamp: foreignDebtToUpdate.lockedTimestamp!,
+						lockedTimestamp: foreignDebtToUpdate.lockedTimestamp,
 						timestamp: foreignDebtToUpdate.timestamp,
 						note: debtToUpdate.note,
 						receiptId: foreignDebtToUpdate.receiptId || undefined,
@@ -138,9 +131,7 @@ describe("debts.getIntentions", () => {
 						userId,
 						amount: -Number(debtToCreate.amount),
 						currencyCode: debtToCreate.currencyCode,
-						// We just set `locketTimestamp`
-						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-						lockedTimestamp: debtToCreate.lockedTimestamp!,
+						lockedTimestamp: debtToCreate.lockedTimestamp,
 						timestamp: debtToCreate.timestamp,
 						note: debtToCreate.note,
 						receiptId: debtToCreate.receiptId || undefined,

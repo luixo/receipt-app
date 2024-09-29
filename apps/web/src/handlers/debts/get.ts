@@ -1,7 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import type { DebtsId } from "~db/models";
+import type { Debts, DebtsId } from "~db/models";
+import type { MappedNullableObject } from "~utils/types";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import { authProcedure } from "~web/handlers/trpc";
@@ -39,6 +40,18 @@ const fetchDebts = async (
 			"theirDebts.timestamp as theirTimestamp",
 			"theirDebts.lockedTimestamp as theirLockedTimestamp",
 		])
+		.$narrowType<
+			MappedNullableObject<
+				Debts,
+				{
+					theirOwnerAccountId: "ownerAccountId";
+					theirAmount: "amount";
+					theirCurrencyCode: "currencyCode";
+					theirTimestamp: "timestamp";
+					theirLockedTimestamp: "lockedTimestamp";
+				}
+			>
+		>()
 		.execute();
 
 const mapDebt = (debt: Awaited<ReturnType<typeof fetchDebts>>[number]) => {
@@ -57,20 +70,16 @@ const mapDebt = (debt: Awaited<ReturnType<typeof fetchDebts>>[number]) => {
 	return {
 		...debtRest,
 		amount: Number(amount),
-		lockedTimestamp: lockedTimestamp || undefined,
+		lockedTimestamp,
 		receiptId: receiptId || undefined,
-		their:
-			theirOwnerAccountId !== null &&
-			theirAmount !== null &&
-			theirCurrencyCode !== null &&
-			theirTimestamp !== null
-				? {
-						lockedTimestamp: theirLockedTimestamp || undefined,
-						amount: -Number(theirAmount),
-						currencyCode: theirCurrencyCode,
-						timestamp: theirTimestamp,
-				  }
-				: undefined,
+		their: theirOwnerAccountId
+			? {
+					lockedTimestamp: theirLockedTimestamp,
+					amount: -Number(theirAmount),
+					currencyCode: theirCurrencyCode,
+					timestamp: theirTimestamp,
+			  }
+			: undefined,
 	};
 };
 

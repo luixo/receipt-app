@@ -296,7 +296,7 @@ export const insertDebt = async (
 			timestamp: data.timestamp ?? new Date(),
 			createdAt: data.createdAt ?? new Date(),
 			note: data.note ?? faker.lorem.sentence(),
-			lockedTimestamp: data.lockedTimestamp ?? null,
+			lockedTimestamp: data.lockedTimestamp ?? new Date(),
 			receiptId: data.receiptId ?? null,
 		})
 		.returning([
@@ -346,7 +346,7 @@ export const insertSyncedDebts = async (
 			timestamp: debt.timestamp,
 			createdAt: debt.createdAt,
 			note: debt.note,
-			lockedTimestamp: debt.lockedTimestamp || undefined,
+			lockedTimestamp: debt.lockedTimestamp,
 			receiptId: debt.receiptId || undefined,
 		},
 	);
