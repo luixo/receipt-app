@@ -313,7 +313,7 @@ export const insertDebt = async (
 	return {
 		id,
 		currencyCode,
-		amount,
+		amount: Number(amount),
 		timestamp,
 		createdAt,
 		note,
