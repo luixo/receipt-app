@@ -182,15 +182,8 @@ describe("debts.getByUsers", () => {
 					const [desyncedDebt] = await insertSyncedDebts(
 						ctx,
 						[accountId, user.id],
-						[
-							foreignAccountId,
-							foreignToSelfUserId,
-							// De-syncing debt
-							(debt) => ({
-								...debt,
-								lockedTimestamp: new Date(debt.lockedTimestamp.valueOf() + 1),
-							}),
-						],
+						[foreignAccountId, foreignToSelfUserId],
+						{ ahead: "their" },
 					);
 					const caller = createCaller(createAuthContext(ctx, sessionId));
 					const result = await caller.procedure();
@@ -214,15 +207,8 @@ describe("debts.getByUsers", () => {
 						insertSyncedDebts(
 							ctx,
 							[accountId, user.id],
-							[
-								foreignAccountId,
-								foreignToSelfUserId,
-								// De-syncing debt
-								(debt) => ({
-									...debt,
-									lockedTimestamp: new Date(debt.lockedTimestamp.valueOf() + 1),
-								}),
-							],
+							[foreignAccountId, foreignToSelfUserId],
+							{ ahead: "their" },
 						),
 					]);
 					// Synced debt

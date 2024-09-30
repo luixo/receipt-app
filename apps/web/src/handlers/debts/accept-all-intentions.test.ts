@@ -16,7 +16,6 @@ import {
 	expectUnauthorizedError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { MINUTE } from "~utils/time";
 import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./accept-all-intentions";
@@ -38,14 +37,8 @@ describe("debts.acceptAllIntentions", () => {
 			await insertSyncedDebts(
 				ctx,
 				[accountId, userId],
-				[
-					foreignAccountId,
-					foreignToSelfUserId,
-					(originalDebt) => ({
-						...originalDebt,
-						lockedTimestamp: new Date(new Date().valueOf() - MINUTE),
-					}),
-				],
+				[foreignAccountId, foreignToSelfUserId],
+				{ ahead: "our" },
 			);
 			// An intention to sync from our side
 			await insertDebt(ctx, accountId, userId);
@@ -70,14 +63,8 @@ describe("debts.acceptAllIntentions", () => {
 			await insertSyncedDebts(
 				ctx,
 				[accountId, userId],
-				[
-					foreignAccountId,
-					foreignToSelfUserId,
-					(originalDebt) => ({
-						...originalDebt,
-						lockedTimestamp: new Date(new Date().valueOf() - MINUTE),
-					}),
-				],
+				[foreignAccountId, foreignToSelfUserId],
+				{ ahead: "our" },
 			);
 			// An intention to sync from their side
 			await insertDebt(ctx, foreignAccountId, foreignToSelfUserId);
@@ -88,21 +75,20 @@ describe("debts.acceptAllIntentions", () => {
 			);
 			await insertSyncedDebts(
 				ctx,
-				[accountId, userId, { lockedTimestamp: new Date("2020-06-01") }],
-				[
-					foreignAccountId,
-					foreignToSelfUserId,
-					(originalDebt) => ({
-						id: originalDebt.id,
+				[accountId, userId],
+				[foreignAccountId, foreignToSelfUserId],
+				{
+					fn: (originalDebt) => ({
+						...originalDebt,
 						currencyCode: getRandomCurrencyCode(),
 						amount: Number(faker.finance.amount()),
 						timestamp: new Date("2020-04-01"),
 						createdAt: new Date("2020-05-01"),
 						note: faker.lorem.words(),
-						lockedTimestamp: new Date("2020-06-02"),
 						receiptId: foreignReceiptId,
 					}),
-				],
+					ahead: "their",
+				},
 			);
 			// Created debt
 			const { id: anotherForeignReceiptId } = await insertReceipt(

@@ -112,14 +112,8 @@ describe("debts.getIdsByUser", () => {
 				insertSyncedDebts(
 					ctx,
 					[accountId, userId],
-					[
-						foreignAccountId,
-						foreignToSelfUserId,
-						(originalDebt) => ({
-							...originalDebt,
-							lockedTimestamp: new Date("2020-06-01"),
-						}),
-					],
+					[foreignAccountId, foreignToSelfUserId],
+					{ ahead: "their" },
 				),
 			]);
 			const userDebts = await Promise.all([

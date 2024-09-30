@@ -115,14 +115,8 @@ describe("debts.get", () => {
 				const [debt, foreignDebt] = await insertSyncedDebts(
 					ctx,
 					[accountId, userId],
-					[
-						foreignAccountId,
-						foreignToSelfUserId,
-						(originalDebt) => ({
-							...originalDebt,
-							lockedTimestamp: new Date("2020-06-01"),
-						}),
-					],
+					[foreignAccountId, foreignToSelfUserId],
+					{ ahead: "their" },
 				);
 
 				// Verify other users do not interfere

@@ -12,7 +12,6 @@ import {
 } from "~tests/backend/utils/data";
 import { expectUnauthorizedError } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { MINUTE } from "~utils/time";
 import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./get-intentions";
@@ -36,14 +35,8 @@ describe("debts.getIntentions", () => {
 			await insertSyncedDebts(
 				ctx,
 				[accountId, userId],
-				[
-					foreignAccountId,
-					foreignToSelfUserId,
-					(originalDebt) => ({
-						...originalDebt,
-						lockedTimestamp: new Date(new Date().valueOf() - MINUTE),
-					}),
-				],
+				[foreignAccountId, foreignToSelfUserId],
+				{ ahead: "our" },
 			);
 			// Our debt
 			await insertDebt(ctx, accountId, userId);
@@ -63,14 +56,8 @@ describe("debts.getIntentions", () => {
 			await insertSyncedDebts(
 				ctx,
 				[accountId, userId],
-				[
-					foreignAccountId,
-					foreignToSelfUserId,
-					(originalDebt) => ({
-						...originalDebt,
-						lockedTimestamp: new Date(new Date().valueOf() - MINUTE),
-					}),
-				],
+				[foreignAccountId, foreignToSelfUserId],
+				{ ahead: "our" },
 			);
 			// Our debt
 			await insertDebt(ctx, accountId, userId);
@@ -82,20 +69,19 @@ describe("debts.getIntentions", () => {
 			const [debtToUpdate, foreignDebtToUpdate] = await insertSyncedDebts(
 				ctx,
 				[accountId, userId, { lockedTimestamp: new Date("2020-06-01") }],
-				[
-					foreignAccountId,
-					foreignToSelfUserId,
-					(originalDebt) => ({
-						id: originalDebt.id,
+				[foreignAccountId, foreignToSelfUserId],
+				{
+					ahead: "their",
+					fn: (originalDebt) => ({
+						...originalDebt,
 						currencyCode: getRandomCurrencyCode(),
 						amount: Number(faker.finance.amount()),
 						timestamp: new Date("2020-04-01"),
 						createdAt: new Date("2020-05-01"),
 						note: faker.lorem.words(),
-						lockedTimestamp: new Date("2020-06-02"),
 						receiptId: foreignReceiptId,
 					}),
-				],
+				},
 			);
 			// Created debt
 			const debtToCreate = await insertDebt(

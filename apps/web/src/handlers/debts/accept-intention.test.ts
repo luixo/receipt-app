@@ -18,7 +18,6 @@ import {
 	expectUnauthorizedError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { MINUTE } from "~utils/time";
 import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./accept-intention";
@@ -68,16 +67,8 @@ describe("debts.acceptIntention", () => {
 			const [{ id: debtId }] = await insertSyncedDebts(
 				ctx,
 				[accountId, userId],
-				[
-					foreignAccountId,
-					foreignToSelfUserId,
-					(originalDebt) => ({
-						...originalDebt,
-						lockedTimestamp: new Date(
-							originalDebt.lockedTimestamp.valueOf() - MINUTE,
-						),
-					}),
-				],
+				[foreignAccountId, foreignToSelfUserId],
+				{ ahead: "our" },
 			);
 
 			// Verify that other debts don't affect the result
@@ -141,21 +132,20 @@ describe("debts.acceptIntention", () => {
 			);
 			const [debt] = await insertSyncedDebts(
 				ctx,
-				[accountId, userId, { lockedTimestamp: new Date("2020-06-01") }],
-				[
-					foreignAccountId,
-					foreignToSelfUserId,
-					(originalDebt) => ({
-						id: originalDebt.id,
+				[accountId, userId],
+				[foreignAccountId, foreignToSelfUserId],
+				{
+					fn: (originalDebt) => ({
+						...originalDebt,
 						currencyCode: getRandomCurrencyCode(),
 						amount: Number(faker.finance.amount()),
 						timestamp: new Date("2020-04-01"),
 						createdAt: new Date("2020-05-01"),
 						note: faker.lorem.words(),
-						lockedTimestamp: new Date("2020-06-02"),
 						receiptId: foreignReceiptId,
 					}),
-				],
+					ahead: "their",
+				},
 			);
 
 			// Verify unrelated data doesn't affect the result
