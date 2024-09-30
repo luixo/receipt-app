@@ -1,6 +1,8 @@
 import React from "react";
 import { View } from "react-native";
 
+import { skipToken } from "@tanstack/react-query";
+
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { ReceiptParticipantResolvedButton } from "~app/components/app/receipt-participant-resolved-button";
 import { RemoveButton } from "~app/components/remove-button";
@@ -50,11 +52,13 @@ export const ReceiptParticipant: React.FC<Props> = ({
 	const removeReceiptParticipantMutation =
 		trpc.receiptParticipants.remove.useMutation(
 			useTrpcMutationOptions(receiptParticipantsRemoveOptions, {
-				context: {
-					receiptId,
-					selfAccountId: selfAccountId || "unknown",
-					resolvedStatus: participant.resolved,
-				},
+				context: selfAccountId
+					? {
+							receiptId,
+							selfAccountId,
+							resolvedStatus: participant.resolved,
+					  }
+					: skipToken,
 			}),
 		);
 	const removeReceiptParticipant = React.useCallback(

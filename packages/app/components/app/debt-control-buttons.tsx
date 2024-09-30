@@ -1,5 +1,7 @@
 import React from "react";
 
+import { skipToken } from "@tanstack/react-query";
+
 import { ConfirmModal } from "~app/components/confirm-modal";
 import { DebtIntention } from "~app/features/debts-intentions/debt-intention";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
@@ -48,8 +50,7 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 	);
 	const acceptMutation = trpc.debts.acceptIntention.useMutation(
 		useTrpcMutationOptions(debtsAcceptIntentionOptions, {
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			context: intention!,
+			context: intention ?? skipToken,
 		}),
 	);
 	const acceptSyncIntention = React.useCallback(() => {

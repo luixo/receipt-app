@@ -1,6 +1,7 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { skipToken } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import type { UseFormReturn } from "react-hook-form";
 import { useRouter } from "solito/navigation";
@@ -77,9 +78,7 @@ export const AddReceiptScreen: AppPage = () => {
 
 	const addReceiptMutation = trpc.receipts.add.useMutation(
 		useTrpcMutationOptions(receiptsAddOptions, {
-			context: {
-				selfAccountId: selfAccountId || "unknown",
-			},
+			context: selfAccountId ? { selfAccountId } : skipToken,
 			onSuccess: (id) => router.replace(`/receipts/${id}`),
 		}),
 	);

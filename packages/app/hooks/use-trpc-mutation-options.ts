@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useQueryClient } from "@tanstack/react-query";
+import { skipToken, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 
 import type { TRPCMutationKey } from "~app/trpc";
@@ -47,10 +47,12 @@ export const useTrpcMutationOptions = <
 	]: MaybeAddElementToArray<
 		[UseContextedMutationOptions<Path, OuterContext, LifecycleContext>],
 		Exact<OuterContext, undefined> extends never
-			? TRPCMutationOptions<Path, LifecycleContext> & { context: OuterContext }
+			? TRPCMutationOptions<Path, LifecycleContext> & {
+					context: OuterContext | typeof skipToken;
+			  }
 			:
 					| (TRPCMutationOptions<Path, LifecycleContext> & {
-							context?: OuterContext;
+							context?: OuterContext | typeof skipToken;
 					  })
 					| undefined
 	>
@@ -71,6 +73,13 @@ export const useTrpcMutationOptions = <
 	return React.useMemo(
 		() => ({
 			onMutate: async (...args) => {
+				if (pinnedOuterContext === skipToken) {
+					throw new Error(
+						`Expected to have context in "${JSON.stringify(
+							rest.mutationKey,
+						)}" mutation, got skipToken`,
+					);
+				}
 				const partialInternalContext: Pick<
 					InternalContext<OuterContext, LifecycleContext>,
 					"controllerContext" | "outerContext"

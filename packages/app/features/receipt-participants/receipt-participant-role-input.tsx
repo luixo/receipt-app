@@ -1,6 +1,8 @@
 import React from "react";
 import { View } from "react-native";
 
+import { skipToken } from "@tanstack/react-query";
+
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
@@ -43,7 +45,7 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 }) => {
 	const updateParticipantMutation = trpc.receiptParticipants.update.useMutation(
 		useTrpcMutationOptions(receiptParticipantsUpdateOptions, {
-			context: { selfUserId: selfUserId || "unknown" },
+			context: selfUserId ? { selfUserId } : skipToken,
 		}),
 	);
 	const changeRole = React.useCallback(
@@ -71,7 +73,9 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 				<Button
 					variant="flat"
 					size="sm"
-					isDisabled={isLoading || !isOwner || participant.role === "owner"}
+					isDisabled={
+						isLoading || !isOwner || participant.role === "owner" || !selfUserId
+					}
 					isLoading={updateParticipantMutation.isPending}
 					startContent={<ChevronDown />}
 				>

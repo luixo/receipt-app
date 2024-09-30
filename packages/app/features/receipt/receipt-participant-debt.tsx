@@ -1,6 +1,8 @@
 import React from "react";
 import { View } from "react-native";
 
+import { skipToken } from "@tanstack/react-query";
+
 import { DebtSyncStatus } from "~app/components/app/debt-sync-status";
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
@@ -58,11 +60,7 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 						...participant.currentDebt,
 						userId: participant.userId,
 				  }
-				: {
-						userId: participant.userId,
-						amount: 0,
-						currencyCode: "unknown",
-				  },
+				: skipToken,
 		}),
 	);
 	const updateDebt = React.useCallback(

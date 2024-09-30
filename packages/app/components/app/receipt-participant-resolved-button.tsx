@@ -1,5 +1,7 @@
 import React from "react";
 
+import { skipToken } from "@tanstack/react-query";
+
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
 import { Button } from "~components/button";
@@ -26,7 +28,7 @@ export const ReceiptParticipantResolvedButton: React.FC<Props> = ({
 }) => {
 	const updateReceiptMutation = trpc.receiptParticipants.update.useMutation(
 		useTrpcMutationOptions(receiptParticipantsUpdateOptions, {
-			context: { selfUserId: selfUserId || "unknown" },
+			context: selfUserId ? { selfUserId } : skipToken,
 		}),
 	);
 	const switchResolved = React.useCallback(() => {

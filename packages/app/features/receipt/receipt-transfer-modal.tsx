@@ -35,15 +35,17 @@ const ReceiptSendTransferIntentionBody: React.FC<{
 	const transferReceiptMutation =
 		trpc.receiptTransferIntentions.add.useMutation(
 			useTrpcMutationOptions(receiptTransferIntentionsAddOptions, {
-				context: {
-					receipt: {
-						name: receipt.name,
-						issued: receipt.issued,
-						currencyCode: receipt.currencyCode,
-						sum: nextSum,
-					},
-					targetUserId: selectedUserId ?? "unknown",
-				},
+				context: selectedUserId
+					? {
+							receipt: {
+								name: receipt.name,
+								issued: receipt.issued,
+								currencyCode: receipt.currencyCode,
+								sum: nextSum,
+							},
+							targetUserId: selectedUserId,
+					  }
+					: skipToken,
 				onMutate: closeModal,
 			}),
 		);

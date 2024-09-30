@@ -1,5 +1,7 @@
 import React from "react";
 
+import { skipToken } from "@tanstack/react-query";
+
 import { QueryErrorMessage } from "~app/components/error-message";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
@@ -89,20 +91,14 @@ const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 			useTrpcMutationOptions(debtsAddOptions),
 		),
 	);
-	const updateMutations = participants.map(({ currentDebt, userId }) => {
+	const updateMutations = participants.map(({ userId }) => {
 		const matchedDesyncedParticipant = desyncedParticipants.find(
 			(participant) => participant.userId === userId,
 		);
 		return trpc.debts.update.useMutation(
 			// eslint-disable-next-line react-hooks/rules-of-hooks
 			useTrpcMutationOptions(debtsUpdateOptions, {
-				context: matchedDesyncedParticipant
-					? matchedDesyncedParticipant.currentDebt
-					: {
-							userId,
-							amount: currentDebt?.amount ?? 0,
-							currencyCode: currentDebt?.currencyCode ?? "unknown",
-					  },
+				context: matchedDesyncedParticipant?.currentDebt || skipToken,
 			}),
 		);
 	});

@@ -1,5 +1,7 @@
 import React from "react";
 
+import { skipToken } from "@tanstack/react-query";
+
 import { UsersSuggest } from "~app/components/app/users-suggest";
 import { useSelfAccountId } from "~app/hooks/use-self-account-id";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
@@ -27,10 +29,7 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 	const selfAccountId = useSelfAccountId();
 	const addMutation = trpc.receiptParticipants.add.useMutation(
 		useTrpcMutationOptions(receiptParticipantsAddOptions, {
-			context: {
-				receiptId,
-				selfAccountId: selfAccountId || "unknown",
-			},
+			context: selfAccountId ? { receiptId, selfAccountId } : skipToken,
 			onMutate: (vars) =>
 				setLocalFilterIds((prevIds) => [...prevIds, ...vars.userIds]),
 			onSettled: (_res, _err, vars) =>
