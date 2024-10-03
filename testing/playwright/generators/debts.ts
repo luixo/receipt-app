@@ -64,10 +64,7 @@ export const defaultGenerateDebtsFromReceipt: GenerateDebtsFromReceipt = ({
 			if (participantSum.sum === 0) {
 				return null;
 			}
-			const debtLockedTimestamp = faker.date.recent({
-				days: 1,
-				refDate: new Date(),
-			});
+			const debtLockedTimestamp = new Date(Date.now() - 1000);
 			return {
 				id: faker.string.uuid(),
 				currencyCode: receiptBase.currencyCode,

@@ -153,66 +153,57 @@ const updateDescribes = (getData: GetData) => {
 		};
 	};
 
-	const lockedStateTests = ({
-		counterParty,
-	}: Pick<Parameters<GetData>[0], "counterParty">) => {
-		test("locked before update", async ({ ctx }) => {
-			await runTest({
-				ctx,
-				lockedBefore: true,
-				counterParty,
-			});
-		});
-		test("unlocked before update", async ({ ctx }) => {
-			await runTest({
-				ctx,
-				lockedBefore: false,
-				counterParty,
-			});
-		});
-		if (counterParty === "auto-accept") {
-			test("debt didn't exist beforehand", async ({ ctx }) => {
-				const { debtIds, selfAccountId, foreignAccountId } = await runTest({
-					ctx,
-					lockedBefore: false,
-					counterParty: "auto-accept-no-exist",
-				});
-				const debts = await ctx.database
-					.selectFrom("debts")
-					.where("debts.id", "in", debtIds)
-					.selectAll()
-					.execute();
-
-				debtIds.forEach((debtId) => {
-					const selfDebt = debts.find(
-						(debt) =>
-							debt.id === debtId && debt.ownerAccountId === selfAccountId,
-					);
-					assert(selfDebt, "Self debt does not exist");
-					const pickedSelfDebt = pick(selfDebt, syncedProps);
-
-					const foreignDebt = debts.find(
-						(debt) =>
-							debt.id === debtId && debt.ownerAccountId === foreignAccountId,
-					);
-					assert(foreignDebt, "Foreign debt does not exist");
-					const pickedForeignDebt = pick(foreignDebt, syncedProps);
-
-					expect(pickedSelfDebt).toStrictEqual<typeof pickedSelfDebt>({
-						...pickedForeignDebt,
-						amount: (-Number(pickedForeignDebt.amount)).toFixed(4),
-					});
-				});
-			});
-		}
-	};
-
-	describe("counterparty accepts manually", () => {
-		lockedStateTests({ counterParty: "manual-accept" });
+	test("counterparty accepts manually - locked before update", async ({
+		ctx,
+	}) => {
+		await runTest({ ctx, lockedBefore: true, counterParty: "manual-accept" });
 	});
+	test("counterparty accepts manually - unlocked before update", async ({
+		ctx,
+	}) => {
+		await runTest({ ctx, lockedBefore: false, counterParty: "manual-accept" });
+	});
+	test("counterparty auto-accepts - locked before update", async ({ ctx }) => {
+		await runTest({ ctx, lockedBefore: true, counterParty: "auto-accept" });
+	});
+	test("counterparty auto-accepts - unlocked before update", async ({
+		ctx,
+	}) => {
+		await runTest({ ctx, lockedBefore: false, counterParty: "auto-accept" });
+	});
+	test("counterparty auto-accepts - unlocked before update - debt didn't exist beforehand", async ({
+		ctx,
+	}) => {
+		const { debtIds, selfAccountId, foreignAccountId } = await runTest({
+			ctx,
+			lockedBefore: false,
+			counterParty: "auto-accept-no-exist",
+		});
+		const debts = await ctx.database
+			.selectFrom("debts")
+			.where("debts.id", "in", debtIds)
+			.selectAll()
+			.execute();
 
-	describe("counterparty auto-accepts", () => {
-		lockedStateTests({ counterParty: "auto-accept" });
+		debtIds.forEach((debtId) => {
+			const selfDebt = debts.find(
+				(debt) => debt.id === debtId && debt.ownerAccountId === selfAccountId,
+			);
+			assert(selfDebt, "Self debt does not exist");
+			const pickedSelfDebt = pick(selfDebt, syncedProps);
+
+			const foreignDebt = debts.find(
+				(debt) =>
+					debt.id === debtId && debt.ownerAccountId === foreignAccountId,
+			);
+			assert(foreignDebt, "Foreign debt does not exist");
+			const pickedForeignDebt = pick(foreignDebt, syncedProps);
+
+			expect(pickedSelfDebt).toStrictEqual<typeof pickedSelfDebt>({
+				...pickedForeignDebt,
+				amount: (-Number(pickedForeignDebt.amount)).toFixed(4),
+			});
+		});
 	});
 };
 

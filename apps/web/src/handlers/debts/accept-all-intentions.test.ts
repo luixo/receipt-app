@@ -81,7 +81,7 @@ describe("debts.acceptAllIntentions", () => {
 					fn: (originalDebt) => ({
 						...originalDebt,
 						currencyCode: getRandomCurrencyCode(),
-						amount: Number(faker.finance.amount()),
+						amount: originalDebt.amount + 1,
 						timestamp: new Date("2020-04-01"),
 						createdAt: new Date("2020-05-01"),
 						note: faker.lorem.words(),

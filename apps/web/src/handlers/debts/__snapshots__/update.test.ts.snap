@@ -1,11 +1,11 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`debts.update > functionality > update amount > counterparty accepts manually > locked before update 1`] = `
+exports[`debts.update > functionality > update amount > counterparty accepts manually - locked before update 1`] = `
 {
   "updated": {
     "debts": {
-      "id:dab8bf0d-e0d7-493c-8680-13c64847a876|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "amount": "704.5100",
+      "id:1b877c48-f80d-44c8-9f8b-1fd440fa3e9f|ownerAccountId:1006c6c7-0289-4abb-80f5-010e8b13c7f0": {
+        "amount": "363.6100",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
@@ -14,12 +14,12 @@ exports[`debts.update > functionality > update amount > counterparty accepts man
 }
 `;
 
-exports[`debts.update > functionality > update amount > counterparty accepts manually > unlocked before update 1`] = `
+exports[`debts.update > functionality > update amount > counterparty accepts manually - unlocked before update 1`] = `
 {
   "updated": {
     "debts": {
-      "id:0cc3460c-e06f-41e1-9274-3c44d81defa6|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
-        "amount": "395.6600",
+      "id:8a1930b7-d3a8-4664-af1c-e2f5f31f1e5f|ownerAccountId:bbb07632-d2ba-47c3-9c05-a1d6bab2c268": {
+        "amount": "682.5500",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },
@@ -27,48 +27,48 @@ exports[`debts.update > functionality > update amount > counterparty accepts man
 }
 `;
 
-exports[`debts.update > functionality > update amount > counterparty auto-accepts > debt didn't exist beforehand 1`] = `
+exports[`debts.update > functionality > update amount > counterparty auto-accepts - locked before update 1`] = `
+{
+  "updated": {
+    "debts": {
+      "id:d441fa4e-baf9-4b0f-bce2-a61ee4301e7e|ownerAccountId:9d79dbf9-82dd-4a91-85b2-b02f432e6b1b": {
+        "amount": "52.9200",
+        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+      "id:d441fa4e-baf9-4b0f-bce2-a61ee4301e7e|ownerAccountId:a28c5d18-b801-44a4-8e6d-a85590a4e2ef": {
+        "amount": "-52.9200",
+        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`debts.update > functionality > update amount > counterparty auto-accepts - unlocked before update - debt didn't exist beforehand 1`] = `
 {
   "added": {
     "debts": {
-      "id:ac5dc383-b972-4f25-92d5-cfd8bb6ea75a|ownerAccountId:b5f98bfa-72f8-4789-ab64-3c4038d9536b": {
-        "amount": "-823.6900",
+      "id:65fb0221-cc6c-4881-81ed-6443b8e65890|ownerAccountId:3feab8f7-b5e9-4cd5-bf77-2ff074957f5e": {
+        "amount": "-691.7600",
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "XPF",
-        "id": "ac5dc383-b972-4f25-92d5-cfd8bb6ea75a",
+        "currencyCode": "SBD",
+        "id": "65fb0221-cc6c-4881-81ed-6443b8e65890",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "note": "Qui distinctio consequatur id delectus harum consequatur voluptatem id.",
-        "ownerAccountId": "b5f98bfa-72f8-4789-ab64-3c4038d9536b",
+        "note": "Iste eos illo.",
+        "ownerAccountId": "3feab8f7-b5e9-4cd5-bf77-2ff074957f5e",
         "receiptId": null,
         "timestamp": "2020-01-01T00:00:00.000Z",
         "updatedAt": "2020-01-01T00:00:00.000Z",
-        "userId": "1d208f1a-a330-418a-943e-539bca90dae0",
+        "userId": "0271d91f-0a07-4c89-b281-e00e6d50478e",
       },
     },
   },
   "updated": {
     "debts": {
-      "id:ac5dc383-b972-4f25-92d5-cfd8bb6ea75a|ownerAccountId:a70c3c7d-6c9a-4189-b65e-84061c3d1a7a": {
-        "amount": "823.6900",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`debts.update > functionality > update amount > counterparty auto-accepts > locked before update 1`] = `
-{
-  "updated": {
-    "debts": {
-      "id:dab8bf0d-e0d7-493c-8680-13c64847a876|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "amount": "704.5100",
-        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-      "id:dab8bf0d-e0d7-493c-8680-13c64847a876|ownerAccountId:b4fba71b-3720-46f4-befe-54e779c889fc": {
-        "amount": "-704.5100",
-        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+      "id:65fb0221-cc6c-4881-81ed-6443b8e65890|ownerAccountId:8b7bdcea-ec7b-4a8f-a4dc-aacbc4e65ec4": {
+        "amount": "691.7600",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },
@@ -76,16 +76,16 @@ exports[`debts.update > functionality > update amount > counterparty auto-accept
 }
 `;
 
-exports[`debts.update > functionality > update amount > counterparty auto-accepts > unlocked before update 1`] = `
+exports[`debts.update > functionality > update amount > counterparty auto-accepts - unlocked before update 1`] = `
 {
   "updated": {
     "debts": {
-      "id:0cc3460c-e06f-41e1-9274-3c44d81defa6|ownerAccountId:32bcb6f1-76a9-4892-a8c2-9e755afa6fe7": {
-        "amount": "-395.6600",
+      "id:639310ca-e901-42df-b1b1-f31435f2fe65|ownerAccountId:6e9bf3f1-d853-4a3a-9c42-41f3ebede181": {
+        "amount": "-969.6200",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
-      "id:0cc3460c-e06f-41e1-9274-3c44d81defa6|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
-        "amount": "395.6600",
+      "id:639310ca-e901-42df-b1b1-f31435f2fe65|ownerAccountId:da268eaa-e1f1-4fb5-8257-cc01bdb1c867": {
+        "amount": "969.6200",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },
@@ -93,12 +93,12 @@ exports[`debts.update > functionality > update amount > counterparty auto-accept
 }
 `;
 
-exports[`debts.update > functionality > update currency code > counterparty accepts manually > locked before update 1`] = `
+exports[`debts.update > functionality > update currency code > counterparty accepts manually - locked before update 1`] = `
 {
   "updated": {
     "debts": {
-      "id:dab8bf0d-e0d7-493c-8680-13c64847a876|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "currencyCode": "AUD",
+      "id:1b877c48-f80d-44c8-9f8b-1fd440fa3e9f|ownerAccountId:1006c6c7-0289-4abb-80f5-010e8b13c7f0": {
+        "currencyCode": "ERN",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
@@ -107,12 +107,12 @@ exports[`debts.update > functionality > update currency code > counterparty acce
 }
 `;
 
-exports[`debts.update > functionality > update currency code > counterparty accepts manually > unlocked before update 1`] = `
+exports[`debts.update > functionality > update currency code > counterparty accepts manually - unlocked before update 1`] = `
 {
   "updated": {
     "debts": {
-      "id:0cc3460c-e06f-41e1-9274-3c44d81defa6|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
-        "currencyCode": "AZN",
+      "id:8a1930b7-d3a8-4664-af1c-e2f5f31f1e5f|ownerAccountId:bbb07632-d2ba-47c3-9c05-a1d6bab2c268": {
+        "currencyCode": "BYN",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },
@@ -120,29 +120,48 @@ exports[`debts.update > functionality > update currency code > counterparty acce
 }
 `;
 
-exports[`debts.update > functionality > update currency code > counterparty auto-accepts > debt didn't exist beforehand 1`] = `
+exports[`debts.update > functionality > update currency code > counterparty auto-accepts - locked before update 1`] = `
+{
+  "updated": {
+    "debts": {
+      "id:d441fa4e-baf9-4b0f-bce2-a61ee4301e7e|ownerAccountId:9d79dbf9-82dd-4a91-85b2-b02f432e6b1b": {
+        "currencyCode": "RON",
+        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+      "id:d441fa4e-baf9-4b0f-bce2-a61ee4301e7e|ownerAccountId:a28c5d18-b801-44a4-8e6d-a85590a4e2ef": {
+        "currencyCode": "RON",
+        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`debts.update > functionality > update currency code > counterparty auto-accepts - unlocked before update - debt didn't exist beforehand 1`] = `
 {
   "added": {
     "debts": {
-      "id:ac5dc383-b972-4f25-92d5-cfd8bb6ea75a|ownerAccountId:b5f98bfa-72f8-4789-ab64-3c4038d9536b": {
-        "amount": "-523.1100",
+      "id:65fb0221-cc6c-4881-81ed-6443b8e65890|ownerAccountId:3feab8f7-b5e9-4cd5-bf77-2ff074957f5e": {
+        "amount": "614.5700",
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "HKD",
-        "id": "ac5dc383-b972-4f25-92d5-cfd8bb6ea75a",
+        "currencyCode": "EGP",
+        "id": "65fb0221-cc6c-4881-81ed-6443b8e65890",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "note": "Qui distinctio consequatur id delectus harum consequatur voluptatem id.",
-        "ownerAccountId": "b5f98bfa-72f8-4789-ab64-3c4038d9536b",
+        "note": "Iste eos illo.",
+        "ownerAccountId": "3feab8f7-b5e9-4cd5-bf77-2ff074957f5e",
         "receiptId": null,
         "timestamp": "2020-01-01T00:00:00.000Z",
         "updatedAt": "2020-01-01T00:00:00.000Z",
-        "userId": "1d208f1a-a330-418a-943e-539bca90dae0",
+        "userId": "0271d91f-0a07-4c89-b281-e00e6d50478e",
       },
     },
   },
   "updated": {
     "debts": {
-      "id:ac5dc383-b972-4f25-92d5-cfd8bb6ea75a|ownerAccountId:a70c3c7d-6c9a-4189-b65e-84061c3d1a7a": {
-        "currencyCode": "HKD",
+      "id:65fb0221-cc6c-4881-81ed-6443b8e65890|ownerAccountId:8b7bdcea-ec7b-4a8f-a4dc-aacbc4e65ec4": {
+        "currencyCode": "EGP",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },
@@ -150,18 +169,34 @@ exports[`debts.update > functionality > update currency code > counterparty auto
 }
 `;
 
-exports[`debts.update > functionality > update currency code > counterparty auto-accepts > locked before update 1`] = `
+exports[`debts.update > functionality > update currency code > counterparty auto-accepts - unlocked before update 1`] = `
 {
   "updated": {
     "debts": {
-      "id:dab8bf0d-e0d7-493c-8680-13c64847a876|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "currencyCode": "AUD",
+      "id:639310ca-e901-42df-b1b1-f31435f2fe65|ownerAccountId:6e9bf3f1-d853-4a3a-9c42-41f3ebede181": {
+        "currencyCode": "MKD",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+      "id:639310ca-e901-42df-b1b1-f31435f2fe65|ownerAccountId:da268eaa-e1f1-4fb5-8257-cc01bdb1c867": {
+        "currencyCode": "MKD",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`debts.update > functionality > update multiple debts > with distinctly locking values > counterparty accepts manually - locked before update 1`] = `
+{
+  "updated": {
+    "debts": {
+      "id:1b877c48-f80d-44c8-9f8b-1fd440fa3e9f|ownerAccountId:1006c6c7-0289-4abb-80f5-010e8b13c7f0": {
+        "amount": "-646.8500",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
-      "id:dab8bf0d-e0d7-493c-8680-13c64847a876|ownerAccountId:b4fba71b-3720-46f4-befe-54e779c889fc": {
-        "currencyCode": "AUD",
-        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+      "id:3c8cbda3-b94a-48cd-bb27-a46162f27b20|ownerAccountId:1006c6c7-0289-4abb-80f5-010e8b13c7f0": {
+        "note": "occaecati dicta aut",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },
@@ -169,34 +204,16 @@ exports[`debts.update > functionality > update currency code > counterparty auto
 }
 `;
 
-exports[`debts.update > functionality > update currency code > counterparty auto-accepts > unlocked before update 1`] = `
+exports[`debts.update > functionality > update multiple debts > with distinctly locking values > counterparty accepts manually - unlocked before update 1`] = `
 {
   "updated": {
     "debts": {
-      "id:0cc3460c-e06f-41e1-9274-3c44d81defa6|ownerAccountId:32bcb6f1-76a9-4892-a8c2-9e755afa6fe7": {
-        "currencyCode": "AZN",
+      "id:8a1930b7-d3a8-4664-af1c-e2f5f31f1e5f|ownerAccountId:bbb07632-d2ba-47c3-9c05-a1d6bab2c268": {
+        "amount": "-563.4700",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
-      "id:0cc3460c-e06f-41e1-9274-3c44d81defa6|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
-        "currencyCode": "AZN",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`debts.update > functionality > update multiple debts > with distinctly locking values > counterparty accepts manually > locked before update 1`] = `
-{
-  "updated": {
-    "debts": {
-      "id:b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "note": "tempora asperiores impedit",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-      "id:dab8bf0d-e0d7-493c-8680-13c64847a876|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "amount": "-828.9800",
-        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+      "id:93402053-c109-4099-8b9f-c3dbc4ce7f8c|ownerAccountId:bbb07632-d2ba-47c3-9c05-a1d6bab2c268": {
+        "note": "aliquid voluptatibus suscipit",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },
@@ -204,63 +221,39 @@ exports[`debts.update > functionality > update multiple debts > with distinctly 
 }
 `;
 
-exports[`debts.update > functionality > update multiple debts > with distinctly locking values > counterparty accepts manually > unlocked before update 1`] = `
-{
-  "updated": {
-    "debts": {
-      "id:0cc3460c-e06f-41e1-9274-3c44d81defa6|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
-        "amount": "390.9500",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-      "id:697ea37b-9f1b-40f4-9661-9f0e19b2a033|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
-        "note": "amet nesciunt assumenda",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`debts.update > functionality > update multiple debts > with distinctly locking values > counterparty auto-accepts > debt didn't exist beforehand 1`] = `
+exports[`debts.update > functionality > update multiple debts > with distinctly locking values > counterparty auto-accepts - locked before update 1`] = `
 {
   "added": {
     "debts": {
-      "id:5697f64e-794a-4534-874c-283e2334b4c9|ownerAccountId:b5f98bfa-72f8-4789-ab64-3c4038d9536b": {
-        "amount": "630.8100",
+      "id:b9a14e4a-af31-471b-84cf-c7cd593cf832|ownerAccountId:9d79dbf9-82dd-4a91-85b2-b02f432e6b1b": {
+        "amount": "-304.5700",
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "ILS",
-        "id": "5697f64e-794a-4534-874c-283e2334b4c9",
+        "currencyCode": "SBD",
+        "id": "b9a14e4a-af31-471b-84cf-c7cd593cf832",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "note": "ea iure sunt",
-        "ownerAccountId": "b5f98bfa-72f8-4789-ab64-3c4038d9536b",
+        "note": "consequatur autem et",
+        "ownerAccountId": "9d79dbf9-82dd-4a91-85b2-b02f432e6b1b",
         "receiptId": null,
         "timestamp": "2020-01-01T00:00:00.000Z",
         "updatedAt": "2020-01-01T00:00:00.000Z",
-        "userId": "1d208f1a-a330-418a-943e-539bca90dae0",
-      },
-      "id:ac5dc383-b972-4f25-92d5-cfd8bb6ea75a|ownerAccountId:b5f98bfa-72f8-4789-ab64-3c4038d9536b": {
-        "amount": "963.6000",
-        "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "XPF",
-        "id": "ac5dc383-b972-4f25-92d5-cfd8bb6ea75a",
-        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "note": "Qui distinctio consequatur id delectus harum consequatur voluptatem id.",
-        "ownerAccountId": "b5f98bfa-72f8-4789-ab64-3c4038d9536b",
-        "receiptId": null,
-        "timestamp": "2020-01-01T00:00:00.000Z",
-        "updatedAt": "2020-01-01T00:00:00.000Z",
-        "userId": "1d208f1a-a330-418a-943e-539bca90dae0",
+        "userId": "b09cbcf4-f713-4d41-ba99-e5673ff116e6",
       },
     },
   },
   "updated": {
     "debts": {
-      "id:5697f64e-794a-4534-874c-283e2334b4c9|ownerAccountId:a70c3c7d-6c9a-4189-b65e-84061c3d1a7a": {
-        "note": "ea iure sunt",
+      "id:b9a14e4a-af31-471b-84cf-c7cd593cf832|ownerAccountId:a28c5d18-b801-44a4-8e6d-a85590a4e2ef": {
+        "note": "consequatur autem et",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
-      "id:ac5dc383-b972-4f25-92d5-cfd8bb6ea75a|ownerAccountId:a70c3c7d-6c9a-4189-b65e-84061c3d1a7a": {
-        "amount": "-963.6000",
+      "id:d441fa4e-baf9-4b0f-bce2-a61ee4301e7e|ownerAccountId:9d79dbf9-82dd-4a91-85b2-b02f432e6b1b": {
+        "amount": "-354.7600",
+        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+      "id:d441fa4e-baf9-4b0f-bce2-a61ee4301e7e|ownerAccountId:a28c5d18-b801-44a4-8e6d-a85590a4e2ef": {
+        "amount": "354.7600",
+        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },
@@ -268,39 +261,46 @@ exports[`debts.update > functionality > update multiple debts > with distinctly 
 }
 `;
 
-exports[`debts.update > functionality > update multiple debts > with distinctly locking values > counterparty auto-accepts > locked before update 1`] = `
+exports[`debts.update > functionality > update multiple debts > with distinctly locking values > counterparty auto-accepts - unlocked before update - debt didn't exist beforehand 1`] = `
 {
   "added": {
     "debts": {
-      "id:b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5|ownerAccountId:b4fba71b-3720-46f4-befe-54e779c889fc": {
-        "amount": "739.1300",
+      "id:65fb0221-cc6c-4881-81ed-6443b8e65890|ownerAccountId:3feab8f7-b5e9-4cd5-bf77-2ff074957f5e": {
+        "amount": "453.7600",
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "AUD",
-        "id": "b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5",
+        "currencyCode": "SBD",
+        "id": "65fb0221-cc6c-4881-81ed-6443b8e65890",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "note": "tempora asperiores impedit",
-        "ownerAccountId": "b4fba71b-3720-46f4-befe-54e779c889fc",
+        "note": "Iste eos illo.",
+        "ownerAccountId": "3feab8f7-b5e9-4cd5-bf77-2ff074957f5e",
         "receiptId": null,
         "timestamp": "2020-01-01T00:00:00.000Z",
         "updatedAt": "2020-01-01T00:00:00.000Z",
-        "userId": "2d1fed05-9774-484e-bf14-e6249527e4e3",
+        "userId": "0271d91f-0a07-4c89-b281-e00e6d50478e",
+      },
+      "id:ce49bb83-6e41-489f-b77e-4612978e1ea6|ownerAccountId:3feab8f7-b5e9-4cd5-bf77-2ff074957f5e": {
+        "amount": "926.1000",
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "currencyCode": "GBP",
+        "id": "ce49bb83-6e41-489f-b77e-4612978e1ea6",
+        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+        "note": "libero nisi error",
+        "ownerAccountId": "3feab8f7-b5e9-4cd5-bf77-2ff074957f5e",
+        "receiptId": null,
+        "timestamp": "2020-01-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "0271d91f-0a07-4c89-b281-e00e6d50478e",
       },
     },
   },
   "updated": {
     "debts": {
-      "id:b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "note": "tempora asperiores impedit",
+      "id:65fb0221-cc6c-4881-81ed-6443b8e65890|ownerAccountId:8b7bdcea-ec7b-4a8f-a4dc-aacbc4e65ec4": {
+        "amount": "-453.7600",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
-      "id:dab8bf0d-e0d7-493c-8680-13c64847a876|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "amount": "-828.9800",
-        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-      "id:dab8bf0d-e0d7-493c-8680-13c64847a876|ownerAccountId:b4fba71b-3720-46f4-befe-54e779c889fc": {
-        "amount": "828.9800",
-        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+      "id:ce49bb83-6e41-489f-b77e-4612978e1ea6|ownerAccountId:8b7bdcea-ec7b-4a8f-a4dc-aacbc4e65ec4": {
+        "note": "libero nisi error",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },
@@ -308,527 +308,37 @@ exports[`debts.update > functionality > update multiple debts > with distinctly 
 }
 `;
 
-exports[`debts.update > functionality > update multiple debts > with distinctly locking values > counterparty auto-accepts > unlocked before update 1`] = `
+exports[`debts.update > functionality > update multiple debts > with distinctly locking values > counterparty auto-accepts - unlocked before update 1`] = `
 {
   "added": {
     "debts": {
-      "id:697ea37b-9f1b-40f4-9661-9f0e19b2a033|ownerAccountId:32bcb6f1-76a9-4892-a8c2-9e755afa6fe7": {
-        "amount": "-473.8300",
+      "id:026d5fda-fd8f-4164-8535-4999e802b3ca|ownerAccountId:da268eaa-e1f1-4fb5-8257-cc01bdb1c867": {
+        "amount": "789.5900",
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "AWG",
-        "id": "697ea37b-9f1b-40f4-9661-9f0e19b2a033",
-        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "note": "amet nesciunt assumenda",
-        "ownerAccountId": "32bcb6f1-76a9-4892-a8c2-9e755afa6fe7",
-        "receiptId": null,
-        "timestamp": "2020-01-01T00:00:00.000Z",
-        "updatedAt": "2020-01-01T00:00:00.000Z",
-        "userId": "86a63627-74ee-4db4-8a79-0cf83f6da8c5",
-      },
-    },
-  },
-  "updated": {
-    "debts": {
-      "id:0cc3460c-e06f-41e1-9274-3c44d81defa6|ownerAccountId:32bcb6f1-76a9-4892-a8c2-9e755afa6fe7": {
-        "amount": "-390.9500",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-      "id:0cc3460c-e06f-41e1-9274-3c44d81defa6|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
-        "amount": "390.9500",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-      "id:697ea37b-9f1b-40f4-9661-9f0e19b2a033|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
-        "note": "amet nesciunt assumenda",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`debts.update > functionality > update multiple debts > with locking values > counterparty accepts manually > locked before update 1`] = `
-{
-  "updated": {
-    "debts": {
-      "id:b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "amount": "989.7800",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-      "id:dab8bf0d-e0d7-493c-8680-13c64847a876|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "amount": "-828.9800",
-        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`debts.update > functionality > update multiple debts > with locking values > counterparty accepts manually > unlocked before update 1`] = `
-{
-  "updated": {
-    "debts": {
-      "id:0cc3460c-e06f-41e1-9274-3c44d81defa6|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
-        "amount": "390.9500",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-      "id:697ea37b-9f1b-40f4-9661-9f0e19b2a033|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
-        "amount": "200.3900",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`debts.update > functionality > update multiple debts > with locking values > counterparty auto-accepts > debt didn't exist beforehand 1`] = `
-{
-  "added": {
-    "debts": {
-      "id:5697f64e-794a-4534-874c-283e2334b4c9|ownerAccountId:b5f98bfa-72f8-4789-ab64-3c4038d9536b": {
-        "amount": "-438.5800",
-        "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "ILS",
-        "id": "5697f64e-794a-4534-874c-283e2334b4c9",
-        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "note": "Natus quae ipsa quo autem.",
-        "ownerAccountId": "b5f98bfa-72f8-4789-ab64-3c4038d9536b",
-        "receiptId": null,
-        "timestamp": "2020-01-01T00:00:00.000Z",
-        "updatedAt": "2020-01-01T00:00:00.000Z",
-        "userId": "1d208f1a-a330-418a-943e-539bca90dae0",
-      },
-      "id:ac5dc383-b972-4f25-92d5-cfd8bb6ea75a|ownerAccountId:b5f98bfa-72f8-4789-ab64-3c4038d9536b": {
-        "amount": "963.6000",
-        "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "XPF",
-        "id": "ac5dc383-b972-4f25-92d5-cfd8bb6ea75a",
-        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "note": "Qui distinctio consequatur id delectus harum consequatur voluptatem id.",
-        "ownerAccountId": "b5f98bfa-72f8-4789-ab64-3c4038d9536b",
-        "receiptId": null,
-        "timestamp": "2020-01-01T00:00:00.000Z",
-        "updatedAt": "2020-01-01T00:00:00.000Z",
-        "userId": "1d208f1a-a330-418a-943e-539bca90dae0",
-      },
-    },
-  },
-  "updated": {
-    "debts": {
-      "id:5697f64e-794a-4534-874c-283e2334b4c9|ownerAccountId:a70c3c7d-6c9a-4189-b65e-84061c3d1a7a": {
-        "amount": "438.5800",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-      "id:ac5dc383-b972-4f25-92d5-cfd8bb6ea75a|ownerAccountId:a70c3c7d-6c9a-4189-b65e-84061c3d1a7a": {
-        "amount": "-963.6000",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`debts.update > functionality > update multiple debts > with locking values > counterparty auto-accepts > locked before update 1`] = `
-{
-  "added": {
-    "debts": {
-      "id:b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5|ownerAccountId:b4fba71b-3720-46f4-befe-54e779c889fc": {
-        "amount": "-989.7800",
-        "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "AUD",
-        "id": "b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5",
-        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "note": "Esse necessitatibus voluptatem nemo distinctio facere amet odit.",
-        "ownerAccountId": "b4fba71b-3720-46f4-befe-54e779c889fc",
-        "receiptId": null,
-        "timestamp": "2020-01-01T00:00:00.000Z",
-        "updatedAt": "2020-01-01T00:00:00.000Z",
-        "userId": "2d1fed05-9774-484e-bf14-e6249527e4e3",
-      },
-    },
-  },
-  "updated": {
-    "debts": {
-      "id:b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "amount": "989.7800",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-      "id:dab8bf0d-e0d7-493c-8680-13c64847a876|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "amount": "-828.9800",
-        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-      "id:dab8bf0d-e0d7-493c-8680-13c64847a876|ownerAccountId:b4fba71b-3720-46f4-befe-54e779c889fc": {
-        "amount": "828.9800",
-        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`debts.update > functionality > update multiple debts > with locking values > counterparty auto-accepts > unlocked before update 1`] = `
-{
-  "added": {
-    "debts": {
-      "id:697ea37b-9f1b-40f4-9661-9f0e19b2a033|ownerAccountId:32bcb6f1-76a9-4892-a8c2-9e755afa6fe7": {
-        "amount": "-200.3900",
-        "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "AWG",
-        "id": "697ea37b-9f1b-40f4-9661-9f0e19b2a033",
-        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "note": "Labore dolorum provident deleniti atque architecto error dignissimos aliquam.",
-        "ownerAccountId": "32bcb6f1-76a9-4892-a8c2-9e755afa6fe7",
-        "receiptId": null,
-        "timestamp": "2020-01-01T00:00:00.000Z",
-        "updatedAt": "2020-01-01T00:00:00.000Z",
-        "userId": "86a63627-74ee-4db4-8a79-0cf83f6da8c5",
-      },
-    },
-  },
-  "updated": {
-    "debts": {
-      "id:0cc3460c-e06f-41e1-9274-3c44d81defa6|ownerAccountId:32bcb6f1-76a9-4892-a8c2-9e755afa6fe7": {
-        "amount": "-390.9500",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-      "id:0cc3460c-e06f-41e1-9274-3c44d81defa6|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
-        "amount": "390.9500",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-      "id:697ea37b-9f1b-40f4-9661-9f0e19b2a033|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
-        "amount": "200.3900",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`debts.update > functionality > update multiple debts > with non-locking values > counterparty accepts manually > locked before update 1`] = `
-{
-  "updated": {
-    "debts": {
-      "id:b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "note": "asperiores impedit doloremque",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-      "id:dab8bf0d-e0d7-493c-8680-13c64847a876|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "note": "temporibus assumenda tempora",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`debts.update > functionality > update multiple debts > with non-locking values > counterparty accepts manually > unlocked before update 1`] = `
-{
-  "updated": {
-    "debts": {
-      "id:0cc3460c-e06f-41e1-9274-3c44d81defa6|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
-        "note": "quam nisi amet",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-      "id:697ea37b-9f1b-40f4-9661-9f0e19b2a033|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
-        "note": "nesciunt assumenda perspiciatis",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`debts.update > functionality > update multiple debts > with non-locking values > counterparty auto-accepts > debt didn't exist beforehand 1`] = `
-{
-  "added": {
-    "debts": {
-      "id:5697f64e-794a-4534-874c-283e2334b4c9|ownerAccountId:b5f98bfa-72f8-4789-ab64-3c4038d9536b": {
-        "amount": "630.8100",
-        "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "ILS",
-        "id": "5697f64e-794a-4534-874c-283e2334b4c9",
-        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "note": "iure sunt saepe",
-        "ownerAccountId": "b5f98bfa-72f8-4789-ab64-3c4038d9536b",
-        "receiptId": null,
-        "timestamp": "2020-01-01T00:00:00.000Z",
-        "updatedAt": "2020-01-01T00:00:00.000Z",
-        "userId": "1d208f1a-a330-418a-943e-539bca90dae0",
-      },
-      "id:ac5dc383-b972-4f25-92d5-cfd8bb6ea75a|ownerAccountId:b5f98bfa-72f8-4789-ab64-3c4038d9536b": {
-        "amount": "-523.1100",
-        "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "XPF",
-        "id": "ac5dc383-b972-4f25-92d5-cfd8bb6ea75a",
-        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "note": "soluta delectus ea",
-        "ownerAccountId": "b5f98bfa-72f8-4789-ab64-3c4038d9536b",
-        "receiptId": null,
-        "timestamp": "2020-01-01T00:00:00.000Z",
-        "updatedAt": "2020-01-01T00:00:00.000Z",
-        "userId": "1d208f1a-a330-418a-943e-539bca90dae0",
-      },
-    },
-  },
-  "updated": {
-    "debts": {
-      "id:5697f64e-794a-4534-874c-283e2334b4c9|ownerAccountId:a70c3c7d-6c9a-4189-b65e-84061c3d1a7a": {
-        "note": "iure sunt saepe",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-      "id:ac5dc383-b972-4f25-92d5-cfd8bb6ea75a|ownerAccountId:a70c3c7d-6c9a-4189-b65e-84061c3d1a7a": {
-        "note": "soluta delectus ea",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`debts.update > functionality > update multiple debts > with non-locking values > counterparty auto-accepts > locked before update 1`] = `
-{
-  "added": {
-    "debts": {
-      "id:b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5|ownerAccountId:b4fba71b-3720-46f4-befe-54e779c889fc": {
-        "amount": "739.1300",
-        "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "AUD",
-        "id": "b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5",
-        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "note": "asperiores impedit doloremque",
-        "ownerAccountId": "b4fba71b-3720-46f4-befe-54e779c889fc",
-        "receiptId": null,
-        "timestamp": "2020-01-01T00:00:00.000Z",
-        "updatedAt": "2020-01-01T00:00:00.000Z",
-        "userId": "2d1fed05-9774-484e-bf14-e6249527e4e3",
-      },
-    },
-  },
-  "updated": {
-    "debts": {
-      "id:b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "note": "asperiores impedit doloremque",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-      "id:dab8bf0d-e0d7-493c-8680-13c64847a876|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "note": "temporibus assumenda tempora",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-      "id:dab8bf0d-e0d7-493c-8680-13c64847a876|ownerAccountId:b4fba71b-3720-46f4-befe-54e779c889fc": {
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`debts.update > functionality > update multiple debts > with non-locking values > counterparty auto-accepts > unlocked before update 1`] = `
-{
-  "added": {
-    "debts": {
-      "id:697ea37b-9f1b-40f4-9661-9f0e19b2a033|ownerAccountId:32bcb6f1-76a9-4892-a8c2-9e755afa6fe7": {
-        "amount": "-473.8300",
-        "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "AWG",
-        "id": "697ea37b-9f1b-40f4-9661-9f0e19b2a033",
-        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "note": "nesciunt assumenda perspiciatis",
-        "ownerAccountId": "32bcb6f1-76a9-4892-a8c2-9e755afa6fe7",
-        "receiptId": null,
-        "timestamp": "2020-01-01T00:00:00.000Z",
-        "updatedAt": "2020-01-01T00:00:00.000Z",
-        "userId": "86a63627-74ee-4db4-8a79-0cf83f6da8c5",
-      },
-    },
-  },
-  "updated": {
-    "debts": {
-      "id:0cc3460c-e06f-41e1-9274-3c44d81defa6|ownerAccountId:32bcb6f1-76a9-4892-a8c2-9e755afa6fe7": {
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-      "id:0cc3460c-e06f-41e1-9274-3c44d81defa6|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
-        "note": "quam nisi amet",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-      "id:697ea37b-9f1b-40f4-9661-9f0e19b2a033|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
-        "note": "nesciunt assumenda perspiciatis",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`debts.update > functionality > update multiple properties > counterparty accepts manually > locked before update 1`] = `
-{
-  "updated": {
-    "debts": {
-      "id:dab8bf0d-e0d7-493c-8680-13c64847a876|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "amount": "-459.5300",
-        "currencyCode": "PLN",
-        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "note": "necessitatibus voluptatem nemo",
-        "receiptId": "b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5",
-        "timestamp": "2020-06-01T00:00:00.000Z",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`debts.update > functionality > update multiple properties > counterparty accepts manually > unlocked before update 1`] = `
-{
-  "updated": {
-    "debts": {
-      "id:0cc3460c-e06f-41e1-9274-3c44d81defa6|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
-        "amount": "-288.7400",
         "currencyCode": "MGA",
-        "note": "dolorum provident deleniti",
-        "receiptId": "697ea37b-9f1b-40f4-9661-9f0e19b2a033",
-        "timestamp": "2020-06-01T00:00:00.000Z",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`debts.update > functionality > update multiple properties > counterparty auto-accepts > debt didn't exist beforehand 1`] = `
-{
-  "added": {
-    "debts": {
-      "id:ac5dc383-b972-4f25-92d5-cfd8bb6ea75a|ownerAccountId:b5f98bfa-72f8-4789-ab64-3c4038d9536b": {
-        "amount": "-620.0900",
-        "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "IRR",
-        "id": "ac5dc383-b972-4f25-92d5-cfd8bb6ea75a",
+        "id": "026d5fda-fd8f-4164-8535-4999e802b3ca",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "note": "quae ipsa quo",
-        "ownerAccountId": "b5f98bfa-72f8-4789-ab64-3c4038d9536b",
-        "receiptId": "5697f64e-794a-4534-874c-283e2334b4c9",
-        "timestamp": "2020-06-01T00:00:00.000Z",
-        "updatedAt": "2020-01-01T00:00:00.000Z",
-        "userId": "1d208f1a-a330-418a-943e-539bca90dae0",
-      },
-    },
-  },
-  "updated": {
-    "debts": {
-      "id:ac5dc383-b972-4f25-92d5-cfd8bb6ea75a|ownerAccountId:a70c3c7d-6c9a-4189-b65e-84061c3d1a7a": {
-        "amount": "620.0900",
-        "currencyCode": "IRR",
-        "note": "quae ipsa quo",
-        "receiptId": "5697f64e-794a-4534-874c-283e2334b4c9",
-        "timestamp": "2020-06-01T00:00:00.000Z",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`debts.update > functionality > update multiple properties > counterparty auto-accepts > locked before update 1`] = `
-{
-  "updated": {
-    "debts": {
-      "id:dab8bf0d-e0d7-493c-8680-13c64847a876|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "amount": "-459.5300",
-        "currencyCode": "PLN",
-        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "note": "necessitatibus voluptatem nemo",
-        "receiptId": "b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5",
-        "timestamp": "2020-06-01T00:00:00.000Z",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-      "id:dab8bf0d-e0d7-493c-8680-13c64847a876|ownerAccountId:b4fba71b-3720-46f4-befe-54e779c889fc": {
-        "amount": "459.5300",
-        "currencyCode": "PLN",
-        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "receiptId": "b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5",
-        "timestamp": "2020-06-01T00:00:00.000Z",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`debts.update > functionality > update multiple properties > counterparty auto-accepts > unlocked before update 1`] = `
-{
-  "updated": {
-    "debts": {
-      "id:0cc3460c-e06f-41e1-9274-3c44d81defa6|ownerAccountId:32bcb6f1-76a9-4892-a8c2-9e755afa6fe7": {
-        "amount": "288.7400",
-        "currencyCode": "MGA",
-        "receiptId": "697ea37b-9f1b-40f4-9661-9f0e19b2a033",
-        "timestamp": "2020-06-01T00:00:00.000Z",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-      "id:0cc3460c-e06f-41e1-9274-3c44d81defa6|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
-        "amount": "-288.7400",
-        "currencyCode": "MGA",
-        "note": "dolorum provident deleniti",
-        "receiptId": "697ea37b-9f1b-40f4-9661-9f0e19b2a033",
-        "timestamp": "2020-06-01T00:00:00.000Z",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`debts.update > functionality > update note > counterparty accepts manually > locked before update 1`] = `
-{
-  "updated": {
-    "debts": {
-      "id:dab8bf0d-e0d7-493c-8680-13c64847a876|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "note": "aperiam facilis cum",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`debts.update > functionality > update note > counterparty accepts manually > unlocked before update 1`] = `
-{
-  "updated": {
-    "debts": {
-      "id:0cc3460c-e06f-41e1-9274-3c44d81defa6|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
-        "note": "eaque aliquid molestiae",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`debts.update > functionality > update note > counterparty auto-accepts > debt didn't exist beforehand 1`] = `
-{
-  "added": {
-    "debts": {
-      "id:ac5dc383-b972-4f25-92d5-cfd8bb6ea75a|ownerAccountId:b5f98bfa-72f8-4789-ab64-3c4038d9536b": {
-        "amount": "-523.1100",
-        "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "XPF",
-        "id": "ac5dc383-b972-4f25-92d5-cfd8bb6ea75a",
-        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "note": "ipsam possimus similique",
-        "ownerAccountId": "b5f98bfa-72f8-4789-ab64-3c4038d9536b",
+        "note": "similique autem reprehenderit",
+        "ownerAccountId": "da268eaa-e1f1-4fb5-8257-cc01bdb1c867",
         "receiptId": null,
         "timestamp": "2020-01-01T00:00:00.000Z",
         "updatedAt": "2020-01-01T00:00:00.000Z",
-        "userId": "1d208f1a-a330-418a-943e-539bca90dae0",
+        "userId": "4a26a8d4-f3af-424d-b516-11d4a4abc4e6",
       },
     },
   },
   "updated": {
     "debts": {
-      "id:ac5dc383-b972-4f25-92d5-cfd8bb6ea75a|ownerAccountId:a70c3c7d-6c9a-4189-b65e-84061c3d1a7a": {
-        "note": "ipsam possimus similique",
+      "id:026d5fda-fd8f-4164-8535-4999e802b3ca|ownerAccountId:6e9bf3f1-d853-4a3a-9c42-41f3ebede181": {
+        "note": "similique autem reprehenderit",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+      "id:639310ca-e901-42df-b1b1-f31435f2fe65|ownerAccountId:6e9bf3f1-d853-4a3a-9c42-41f3ebede181": {
+        "amount": "290.9700",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+      "id:639310ca-e901-42df-b1b1-f31435f2fe65|ownerAccountId:da268eaa-e1f1-4fb5-8257-cc01bdb1c867": {
+        "amount": "-290.9700",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },
@@ -836,15 +346,17 @@ exports[`debts.update > functionality > update note > counterparty auto-accepts 
 }
 `;
 
-exports[`debts.update > functionality > update note > counterparty auto-accepts > locked before update 1`] = `
+exports[`debts.update > functionality > update multiple debts > with locking values > counterparty accepts manually - locked before update 1`] = `
 {
   "updated": {
     "debts": {
-      "id:dab8bf0d-e0d7-493c-8680-13c64847a876|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "note": "aperiam facilis cum",
+      "id:1b877c48-f80d-44c8-9f8b-1fd440fa3e9f|ownerAccountId:1006c6c7-0289-4abb-80f5-010e8b13c7f0": {
+        "amount": "-646.8500",
+        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
-      "id:dab8bf0d-e0d7-493c-8680-13c64847a876|ownerAccountId:b4fba71b-3720-46f4-befe-54e779c889fc": {
+      "id:3c8cbda3-b94a-48cd-bb27-a46162f27b20|ownerAccountId:1006c6c7-0289-4abb-80f5-010e8b13c7f0": {
+        "amount": "-120.7000",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },
@@ -852,28 +364,16 @@ exports[`debts.update > functionality > update note > counterparty auto-accepts 
 }
 `;
 
-exports[`debts.update > functionality > update note > counterparty auto-accepts > unlocked before update 1`] = `
+exports[`debts.update > functionality > update multiple debts > with locking values > counterparty accepts manually - unlocked before update 1`] = `
 {
   "updated": {
     "debts": {
-      "id:0cc3460c-e06f-41e1-9274-3c44d81defa6|ownerAccountId:32bcb6f1-76a9-4892-a8c2-9e755afa6fe7": {
+      "id:8a1930b7-d3a8-4664-af1c-e2f5f31f1e5f|ownerAccountId:bbb07632-d2ba-47c3-9c05-a1d6bab2c268": {
+        "amount": "-563.4700",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
-      "id:0cc3460c-e06f-41e1-9274-3c44d81defa6|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
-        "note": "eaque aliquid molestiae",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`debts.update > functionality > update receipt id > counterparty accepts manually > locked before update 1`] = `
-{
-  "updated": {
-    "debts": {
-      "id:dab8bf0d-e0d7-493c-8680-13c64847a876|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "receiptId": "b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5",
+      "id:93402053-c109-4099-8b9f-c3dbc4ce7f8c|ownerAccountId:bbb07632-d2ba-47c3-9c05-a1d6bab2c268": {
+        "amount": "976.4700",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },
@@ -881,90 +381,39 @@ exports[`debts.update > functionality > update receipt id > counterparty accepts
 }
 `;
 
-exports[`debts.update > functionality > update receipt id > counterparty accepts manually > unlocked before update 1`] = `
-{
-  "updated": {
-    "debts": {
-      "id:0cc3460c-e06f-41e1-9274-3c44d81defa6|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
-        "receiptId": "697ea37b-9f1b-40f4-9661-9f0e19b2a033",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`debts.update > functionality > update receipt id > counterparty auto-accepts > debt didn't exist beforehand 1`] = `
+exports[`debts.update > functionality > update multiple debts > with locking values > counterparty auto-accepts - locked before update 1`] = `
 {
   "added": {
     "debts": {
-      "id:ac5dc383-b972-4f25-92d5-cfd8bb6ea75a|ownerAccountId:b5f98bfa-72f8-4789-ab64-3c4038d9536b": {
-        "amount": "-523.1100",
+      "id:b9a14e4a-af31-471b-84cf-c7cd593cf832|ownerAccountId:9d79dbf9-82dd-4a91-85b2-b02f432e6b1b": {
+        "amount": "-418.2200",
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "XPF",
-        "id": "ac5dc383-b972-4f25-92d5-cfd8bb6ea75a",
+        "currencyCode": "SBD",
+        "id": "b9a14e4a-af31-471b-84cf-c7cd593cf832",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "note": "Qui distinctio consequatur id delectus harum consequatur voluptatem id.",
-        "ownerAccountId": "b5f98bfa-72f8-4789-ab64-3c4038d9536b",
-        "receiptId": "5697f64e-794a-4534-874c-283e2334b4c9",
+        "note": "Impedit ad iste inventore.",
+        "ownerAccountId": "9d79dbf9-82dd-4a91-85b2-b02f432e6b1b",
+        "receiptId": null,
         "timestamp": "2020-01-01T00:00:00.000Z",
         "updatedAt": "2020-01-01T00:00:00.000Z",
-        "userId": "1d208f1a-a330-418a-943e-539bca90dae0",
+        "userId": "b09cbcf4-f713-4d41-ba99-e5673ff116e6",
       },
     },
   },
   "updated": {
     "debts": {
-      "id:ac5dc383-b972-4f25-92d5-cfd8bb6ea75a|ownerAccountId:a70c3c7d-6c9a-4189-b65e-84061c3d1a7a": {
-        "receiptId": "5697f64e-794a-4534-874c-283e2334b4c9",
+      "id:b9a14e4a-af31-471b-84cf-c7cd593cf832|ownerAccountId:a28c5d18-b801-44a4-8e6d-a85590a4e2ef": {
+        "amount": "418.2200",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
-    },
-  },
-}
-`;
-
-exports[`debts.update > functionality > update receipt id > counterparty auto-accepts > locked before update 1`] = `
-{
-  "updated": {
-    "debts": {
-      "id:dab8bf0d-e0d7-493c-8680-13c64847a876|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "receiptId": "b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-      "id:dab8bf0d-e0d7-493c-8680-13c64847a876|ownerAccountId:b4fba71b-3720-46f4-befe-54e779c889fc": {
-        "receiptId": "b9f660e6-c1bc-45dd-a44f-3d97cdd5e2f5",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`debts.update > functionality > update receipt id > counterparty auto-accepts > unlocked before update 1`] = `
-{
-  "updated": {
-    "debts": {
-      "id:0cc3460c-e06f-41e1-9274-3c44d81defa6|ownerAccountId:32bcb6f1-76a9-4892-a8c2-9e755afa6fe7": {
-        "receiptId": "697ea37b-9f1b-40f4-9661-9f0e19b2a033",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-      "id:0cc3460c-e06f-41e1-9274-3c44d81defa6|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
-        "receiptId": "697ea37b-9f1b-40f4-9661-9f0e19b2a033",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`debts.update > functionality > update timestamp > counterparty accepts manually > locked before update 1`] = `
-{
-  "updated": {
-    "debts": {
-      "id:dab8bf0d-e0d7-493c-8680-13c64847a876|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
+      "id:d441fa4e-baf9-4b0f-bce2-a61ee4301e7e|ownerAccountId:9d79dbf9-82dd-4a91-85b2-b02f432e6b1b": {
+        "amount": "-354.7600",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "timestamp": "2020-06-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+      "id:d441fa4e-baf9-4b0f-bce2-a61ee4301e7e|ownerAccountId:a28c5d18-b801-44a4-8e6d-a85590a4e2ef": {
+        "amount": "354.7600",
+        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },
@@ -972,60 +421,611 @@ exports[`debts.update > functionality > update timestamp > counterparty accepts 
 }
 `;
 
-exports[`debts.update > functionality > update timestamp > counterparty accepts manually > unlocked before update 1`] = `
-{
-  "updated": {
-    "debts": {
-      "id:0cc3460c-e06f-41e1-9274-3c44d81defa6|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
-        "timestamp": "2020-06-01T00:00:00.000Z",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`debts.update > functionality > update timestamp > counterparty auto-accepts > debt didn't exist beforehand 1`] = `
+exports[`debts.update > functionality > update multiple debts > with locking values > counterparty auto-accepts - unlocked before update - debt didn't exist beforehand 1`] = `
 {
   "added": {
     "debts": {
-      "id:ac5dc383-b972-4f25-92d5-cfd8bb6ea75a|ownerAccountId:b5f98bfa-72f8-4789-ab64-3c4038d9536b": {
-        "amount": "-523.1100",
+      "id:65fb0221-cc6c-4881-81ed-6443b8e65890|ownerAccountId:3feab8f7-b5e9-4cd5-bf77-2ff074957f5e": {
+        "amount": "453.7600",
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "XPF",
-        "id": "ac5dc383-b972-4f25-92d5-cfd8bb6ea75a",
+        "currencyCode": "SBD",
+        "id": "65fb0221-cc6c-4881-81ed-6443b8e65890",
         "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "note": "Qui distinctio consequatur id delectus harum consequatur voluptatem id.",
-        "ownerAccountId": "b5f98bfa-72f8-4789-ab64-3c4038d9536b",
+        "note": "Iste eos illo.",
+        "ownerAccountId": "3feab8f7-b5e9-4cd5-bf77-2ff074957f5e",
+        "receiptId": null,
+        "timestamp": "2020-01-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "0271d91f-0a07-4c89-b281-e00e6d50478e",
+      },
+      "id:ce49bb83-6e41-489f-b77e-4612978e1ea6|ownerAccountId:3feab8f7-b5e9-4cd5-bf77-2ff074957f5e": {
+        "amount": "390.2700",
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "currencyCode": "GBP",
+        "id": "ce49bb83-6e41-489f-b77e-4612978e1ea6",
+        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+        "note": "Quod aperiam ea ullam nulla voluptate consectetur doloribus.",
+        "ownerAccountId": "3feab8f7-b5e9-4cd5-bf77-2ff074957f5e",
+        "receiptId": null,
+        "timestamp": "2020-01-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "0271d91f-0a07-4c89-b281-e00e6d50478e",
+      },
+    },
+  },
+  "updated": {
+    "debts": {
+      "id:65fb0221-cc6c-4881-81ed-6443b8e65890|ownerAccountId:8b7bdcea-ec7b-4a8f-a4dc-aacbc4e65ec4": {
+        "amount": "-453.7600",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+      "id:ce49bb83-6e41-489f-b77e-4612978e1ea6|ownerAccountId:8b7bdcea-ec7b-4a8f-a4dc-aacbc4e65ec4": {
+        "amount": "-390.2700",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`debts.update > functionality > update multiple debts > with locking values > counterparty auto-accepts - unlocked before update 1`] = `
+{
+  "added": {
+    "debts": {
+      "id:026d5fda-fd8f-4164-8535-4999e802b3ca|ownerAccountId:da268eaa-e1f1-4fb5-8257-cc01bdb1c867": {
+        "amount": "418.6500",
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "currencyCode": "MGA",
+        "id": "026d5fda-fd8f-4164-8535-4999e802b3ca",
+        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+        "note": "Molestias et consequuntur atque.",
+        "ownerAccountId": "da268eaa-e1f1-4fb5-8257-cc01bdb1c867",
+        "receiptId": null,
+        "timestamp": "2020-01-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "4a26a8d4-f3af-424d-b516-11d4a4abc4e6",
+      },
+    },
+  },
+  "updated": {
+    "debts": {
+      "id:026d5fda-fd8f-4164-8535-4999e802b3ca|ownerAccountId:6e9bf3f1-d853-4a3a-9c42-41f3ebede181": {
+        "amount": "-418.6500",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+      "id:639310ca-e901-42df-b1b1-f31435f2fe65|ownerAccountId:6e9bf3f1-d853-4a3a-9c42-41f3ebede181": {
+        "amount": "290.9700",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+      "id:639310ca-e901-42df-b1b1-f31435f2fe65|ownerAccountId:da268eaa-e1f1-4fb5-8257-cc01bdb1c867": {
+        "amount": "-290.9700",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`debts.update > functionality > update multiple debts > with non-locking values > counterparty accepts manually - locked before update 1`] = `
+{
+  "updated": {
+    "debts": {
+      "id:1b877c48-f80d-44c8-9f8b-1fd440fa3e9f|ownerAccountId:1006c6c7-0289-4abb-80f5-010e8b13c7f0": {
+        "note": "porro deserunt occaecati",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+      "id:3c8cbda3-b94a-48cd-bb27-a46162f27b20|ownerAccountId:1006c6c7-0289-4abb-80f5-010e8b13c7f0": {
+        "note": "dicta aut porro",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`debts.update > functionality > update multiple debts > with non-locking values > counterparty accepts manually - unlocked before update 1`] = `
+{
+  "updated": {
+    "debts": {
+      "id:8a1930b7-d3a8-4664-af1c-e2f5f31f1e5f|ownerAccountId:bbb07632-d2ba-47c3-9c05-a1d6bab2c268": {
+        "note": "perspiciatis molestias aliquid",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+      "id:93402053-c109-4099-8b9f-c3dbc4ce7f8c|ownerAccountId:bbb07632-d2ba-47c3-9c05-a1d6bab2c268": {
+        "note": "voluptatibus suscipit sit",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`debts.update > functionality > update multiple debts > with non-locking values > counterparty auto-accepts - locked before update 1`] = `
+{
+  "added": {
+    "debts": {
+      "id:b9a14e4a-af31-471b-84cf-c7cd593cf832|ownerAccountId:9d79dbf9-82dd-4a91-85b2-b02f432e6b1b": {
+        "amount": "-304.5700",
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "currencyCode": "SBD",
+        "id": "b9a14e4a-af31-471b-84cf-c7cd593cf832",
+        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+        "note": "autem et quae",
+        "ownerAccountId": "9d79dbf9-82dd-4a91-85b2-b02f432e6b1b",
+        "receiptId": null,
+        "timestamp": "2020-01-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "b09cbcf4-f713-4d41-ba99-e5673ff116e6",
+      },
+    },
+  },
+  "updated": {
+    "debts": {
+      "id:b9a14e4a-af31-471b-84cf-c7cd593cf832|ownerAccountId:a28c5d18-b801-44a4-8e6d-a85590a4e2ef": {
+        "note": "autem et quae",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+      "id:d441fa4e-baf9-4b0f-bce2-a61ee4301e7e|ownerAccountId:9d79dbf9-82dd-4a91-85b2-b02f432e6b1b": {
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+      "id:d441fa4e-baf9-4b0f-bce2-a61ee4301e7e|ownerAccountId:a28c5d18-b801-44a4-8e6d-a85590a4e2ef": {
+        "note": "aspernatur ullam consequatur",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`debts.update > functionality > update multiple debts > with non-locking values > counterparty auto-accepts - unlocked before update - debt didn't exist beforehand 1`] = `
+{
+  "added": {
+    "debts": {
+      "id:65fb0221-cc6c-4881-81ed-6443b8e65890|ownerAccountId:3feab8f7-b5e9-4cd5-bf77-2ff074957f5e": {
+        "amount": "614.5700",
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "currencyCode": "SBD",
+        "id": "65fb0221-cc6c-4881-81ed-6443b8e65890",
+        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+        "note": "corrupti voluptate libero",
+        "ownerAccountId": "3feab8f7-b5e9-4cd5-bf77-2ff074957f5e",
+        "receiptId": null,
+        "timestamp": "2020-01-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "0271d91f-0a07-4c89-b281-e00e6d50478e",
+      },
+      "id:ce49bb83-6e41-489f-b77e-4612978e1ea6|ownerAccountId:3feab8f7-b5e9-4cd5-bf77-2ff074957f5e": {
+        "amount": "926.1000",
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "currencyCode": "GBP",
+        "id": "ce49bb83-6e41-489f-b77e-4612978e1ea6",
+        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+        "note": "nisi error tempora",
+        "ownerAccountId": "3feab8f7-b5e9-4cd5-bf77-2ff074957f5e",
+        "receiptId": null,
+        "timestamp": "2020-01-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "0271d91f-0a07-4c89-b281-e00e6d50478e",
+      },
+    },
+  },
+  "updated": {
+    "debts": {
+      "id:65fb0221-cc6c-4881-81ed-6443b8e65890|ownerAccountId:8b7bdcea-ec7b-4a8f-a4dc-aacbc4e65ec4": {
+        "note": "corrupti voluptate libero",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+      "id:ce49bb83-6e41-489f-b77e-4612978e1ea6|ownerAccountId:8b7bdcea-ec7b-4a8f-a4dc-aacbc4e65ec4": {
+        "note": "nisi error tempora",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`debts.update > functionality > update multiple debts > with non-locking values > counterparty auto-accepts - unlocked before update 1`] = `
+{
+  "added": {
+    "debts": {
+      "id:026d5fda-fd8f-4164-8535-4999e802b3ca|ownerAccountId:da268eaa-e1f1-4fb5-8257-cc01bdb1c867": {
+        "amount": "789.5900",
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "currencyCode": "MGA",
+        "id": "026d5fda-fd8f-4164-8535-4999e802b3ca",
+        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+        "note": "autem reprehenderit deserunt",
+        "ownerAccountId": "da268eaa-e1f1-4fb5-8257-cc01bdb1c867",
+        "receiptId": null,
+        "timestamp": "2020-01-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "4a26a8d4-f3af-424d-b516-11d4a4abc4e6",
+      },
+    },
+  },
+  "updated": {
+    "debts": {
+      "id:026d5fda-fd8f-4164-8535-4999e802b3ca|ownerAccountId:6e9bf3f1-d853-4a3a-9c42-41f3ebede181": {
+        "note": "autem reprehenderit deserunt",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+      "id:639310ca-e901-42df-b1b1-f31435f2fe65|ownerAccountId:6e9bf3f1-d853-4a3a-9c42-41f3ebede181": {
+        "note": "eius labore similique",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+      "id:639310ca-e901-42df-b1b1-f31435f2fe65|ownerAccountId:da268eaa-e1f1-4fb5-8257-cc01bdb1c867": {
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`debts.update > functionality > update multiple properties > counterparty accepts manually - locked before update 1`] = `
+{
+  "updated": {
+    "debts": {
+      "id:1b877c48-f80d-44c8-9f8b-1fd440fa3e9f|ownerAccountId:1006c6c7-0289-4abb-80f5-010e8b13c7f0": {
+        "amount": "317.8900",
+        "currencyCode": "RUB",
+        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+        "note": "corporis corporis necessitatibus",
+        "receiptId": "3c8cbda3-b94a-48cd-bb27-a46162f27b20",
+        "timestamp": "2020-06-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`debts.update > functionality > update multiple properties > counterparty accepts manually - unlocked before update 1`] = `
+{
+  "updated": {
+    "debts": {
+      "id:8a1930b7-d3a8-4664-af1c-e2f5f31f1e5f|ownerAccountId:bbb07632-d2ba-47c3-9c05-a1d6bab2c268": {
+        "amount": "-120.8900",
+        "currencyCode": "KES",
+        "note": "quibusdam unde maiores",
+        "receiptId": "93402053-c109-4099-8b9f-c3dbc4ce7f8c",
+        "timestamp": "2020-06-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`debts.update > functionality > update multiple properties > counterparty auto-accepts - locked before update 1`] = `
+{
+  "updated": {
+    "debts": {
+      "id:d441fa4e-baf9-4b0f-bce2-a61ee4301e7e|ownerAccountId:9d79dbf9-82dd-4a91-85b2-b02f432e6b1b": {
+        "amount": "-773.8300",
+        "currencyCode": "BND",
+        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+        "receiptId": "b9a14e4a-af31-471b-84cf-c7cd593cf832",
+        "timestamp": "2020-06-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+      "id:d441fa4e-baf9-4b0f-bce2-a61ee4301e7e|ownerAccountId:a28c5d18-b801-44a4-8e6d-a85590a4e2ef": {
+        "amount": "773.8300",
+        "currencyCode": "BND",
+        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+        "note": "ad iste inventore",
+        "receiptId": "b9a14e4a-af31-471b-84cf-c7cd593cf832",
+        "timestamp": "2020-06-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`debts.update > functionality > update multiple properties > counterparty auto-accepts - unlocked before update - debt didn't exist beforehand 1`] = `
+{
+  "added": {
+    "debts": {
+      "id:65fb0221-cc6c-4881-81ed-6443b8e65890|ownerAccountId:3feab8f7-b5e9-4cd5-bf77-2ff074957f5e": {
+        "amount": "799.4400",
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "currencyCode": "THB",
+        "id": "65fb0221-cc6c-4881-81ed-6443b8e65890",
+        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+        "note": "aperiam ea ullam",
+        "ownerAccountId": "3feab8f7-b5e9-4cd5-bf77-2ff074957f5e",
+        "receiptId": "ce49bb83-6e41-489f-b77e-4612978e1ea6",
+        "timestamp": "2020-06-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "0271d91f-0a07-4c89-b281-e00e6d50478e",
+      },
+    },
+  },
+  "updated": {
+    "debts": {
+      "id:65fb0221-cc6c-4881-81ed-6443b8e65890|ownerAccountId:8b7bdcea-ec7b-4a8f-a4dc-aacbc4e65ec4": {
+        "amount": "-799.4400",
+        "currencyCode": "THB",
+        "note": "aperiam ea ullam",
+        "receiptId": "ce49bb83-6e41-489f-b77e-4612978e1ea6",
+        "timestamp": "2020-06-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`debts.update > functionality > update multiple properties > counterparty auto-accepts - unlocked before update 1`] = `
+{
+  "updated": {
+    "debts": {
+      "id:639310ca-e901-42df-b1b1-f31435f2fe65|ownerAccountId:6e9bf3f1-d853-4a3a-9c42-41f3ebede181": {
+        "amount": "565.3300",
+        "currencyCode": "CZK",
+        "note": "et consequuntur atque",
+        "receiptId": "026d5fda-fd8f-4164-8535-4999e802b3ca",
+        "timestamp": "2020-06-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+      "id:639310ca-e901-42df-b1b1-f31435f2fe65|ownerAccountId:da268eaa-e1f1-4fb5-8257-cc01bdb1c867": {
+        "amount": "-565.3300",
+        "currencyCode": "CZK",
+        "receiptId": "026d5fda-fd8f-4164-8535-4999e802b3ca",
+        "timestamp": "2020-06-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`debts.update > functionality > update note > counterparty accepts manually - locked before update 1`] = `
+{
+  "updated": {
+    "debts": {
+      "id:1b877c48-f80d-44c8-9f8b-1fd440fa3e9f|ownerAccountId:1006c6c7-0289-4abb-80f5-010e8b13c7f0": {
+        "note": "magnam nemo dolore",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`debts.update > functionality > update note > counterparty accepts manually - unlocked before update 1`] = `
+{
+  "updated": {
+    "debts": {
+      "id:8a1930b7-d3a8-4664-af1c-e2f5f31f1e5f|ownerAccountId:bbb07632-d2ba-47c3-9c05-a1d6bab2c268": {
+        "note": "inventore fuga amet",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`debts.update > functionality > update note > counterparty auto-accepts - locked before update 1`] = `
+{
+  "updated": {
+    "debts": {
+      "id:d441fa4e-baf9-4b0f-bce2-a61ee4301e7e|ownerAccountId:9d79dbf9-82dd-4a91-85b2-b02f432e6b1b": {
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+      "id:d441fa4e-baf9-4b0f-bce2-a61ee4301e7e|ownerAccountId:a28c5d18-b801-44a4-8e6d-a85590a4e2ef": {
+        "note": "tempore eaque aliquam",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`debts.update > functionality > update note > counterparty auto-accepts - unlocked before update - debt didn't exist beforehand 1`] = `
+{
+  "added": {
+    "debts": {
+      "id:65fb0221-cc6c-4881-81ed-6443b8e65890|ownerAccountId:3feab8f7-b5e9-4cd5-bf77-2ff074957f5e": {
+        "amount": "614.5700",
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "currencyCode": "SBD",
+        "id": "65fb0221-cc6c-4881-81ed-6443b8e65890",
+        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+        "note": "labore harum recusandae",
+        "ownerAccountId": "3feab8f7-b5e9-4cd5-bf77-2ff074957f5e",
+        "receiptId": null,
+        "timestamp": "2020-01-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "0271d91f-0a07-4c89-b281-e00e6d50478e",
+      },
+    },
+  },
+  "updated": {
+    "debts": {
+      "id:65fb0221-cc6c-4881-81ed-6443b8e65890|ownerAccountId:8b7bdcea-ec7b-4a8f-a4dc-aacbc4e65ec4": {
+        "note": "labore harum recusandae",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`debts.update > functionality > update note > counterparty auto-accepts - unlocked before update 1`] = `
+{
+  "updated": {
+    "debts": {
+      "id:639310ca-e901-42df-b1b1-f31435f2fe65|ownerAccountId:6e9bf3f1-d853-4a3a-9c42-41f3ebede181": {
+        "note": "deleniti reiciendis quisquam",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+      "id:639310ca-e901-42df-b1b1-f31435f2fe65|ownerAccountId:da268eaa-e1f1-4fb5-8257-cc01bdb1c867": {
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`debts.update > functionality > update receipt id > counterparty accepts manually - locked before update 1`] = `
+{
+  "updated": {
+    "debts": {
+      "id:1b877c48-f80d-44c8-9f8b-1fd440fa3e9f|ownerAccountId:1006c6c7-0289-4abb-80f5-010e8b13c7f0": {
+        "receiptId": "3c8cbda3-b94a-48cd-bb27-a46162f27b20",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`debts.update > functionality > update receipt id > counterparty accepts manually - unlocked before update 1`] = `
+{
+  "updated": {
+    "debts": {
+      "id:8a1930b7-d3a8-4664-af1c-e2f5f31f1e5f|ownerAccountId:bbb07632-d2ba-47c3-9c05-a1d6bab2c268": {
+        "receiptId": "93402053-c109-4099-8b9f-c3dbc4ce7f8c",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`debts.update > functionality > update receipt id > counterparty auto-accepts - locked before update 1`] = `
+{
+  "updated": {
+    "debts": {
+      "id:d441fa4e-baf9-4b0f-bce2-a61ee4301e7e|ownerAccountId:9d79dbf9-82dd-4a91-85b2-b02f432e6b1b": {
+        "receiptId": "b9a14e4a-af31-471b-84cf-c7cd593cf832",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+      "id:d441fa4e-baf9-4b0f-bce2-a61ee4301e7e|ownerAccountId:a28c5d18-b801-44a4-8e6d-a85590a4e2ef": {
+        "receiptId": "b9a14e4a-af31-471b-84cf-c7cd593cf832",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`debts.update > functionality > update receipt id > counterparty auto-accepts - unlocked before update - debt didn't exist beforehand 1`] = `
+{
+  "added": {
+    "debts": {
+      "id:65fb0221-cc6c-4881-81ed-6443b8e65890|ownerAccountId:3feab8f7-b5e9-4cd5-bf77-2ff074957f5e": {
+        "amount": "614.5700",
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "currencyCode": "SBD",
+        "id": "65fb0221-cc6c-4881-81ed-6443b8e65890",
+        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+        "note": "Iste eos illo.",
+        "ownerAccountId": "3feab8f7-b5e9-4cd5-bf77-2ff074957f5e",
+        "receiptId": "ce49bb83-6e41-489f-b77e-4612978e1ea6",
+        "timestamp": "2020-01-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "0271d91f-0a07-4c89-b281-e00e6d50478e",
+      },
+    },
+  },
+  "updated": {
+    "debts": {
+      "id:65fb0221-cc6c-4881-81ed-6443b8e65890|ownerAccountId:8b7bdcea-ec7b-4a8f-a4dc-aacbc4e65ec4": {
+        "receiptId": "ce49bb83-6e41-489f-b77e-4612978e1ea6",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`debts.update > functionality > update receipt id > counterparty auto-accepts - unlocked before update 1`] = `
+{
+  "updated": {
+    "debts": {
+      "id:639310ca-e901-42df-b1b1-f31435f2fe65|ownerAccountId:6e9bf3f1-d853-4a3a-9c42-41f3ebede181": {
+        "receiptId": "026d5fda-fd8f-4164-8535-4999e802b3ca",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+      "id:639310ca-e901-42df-b1b1-f31435f2fe65|ownerAccountId:da268eaa-e1f1-4fb5-8257-cc01bdb1c867": {
+        "receiptId": "026d5fda-fd8f-4164-8535-4999e802b3ca",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`debts.update > functionality > update timestamp > counterparty accepts manually - locked before update 1`] = `
+{
+  "updated": {
+    "debts": {
+      "id:1b877c48-f80d-44c8-9f8b-1fd440fa3e9f|ownerAccountId:1006c6c7-0289-4abb-80f5-010e8b13c7f0": {
+        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+        "timestamp": "2020-06-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`debts.update > functionality > update timestamp > counterparty accepts manually - unlocked before update 1`] = `
+{
+  "updated": {
+    "debts": {
+      "id:8a1930b7-d3a8-4664-af1c-e2f5f31f1e5f|ownerAccountId:bbb07632-d2ba-47c3-9c05-a1d6bab2c268": {
+        "timestamp": "2020-06-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`debts.update > functionality > update timestamp > counterparty auto-accepts - locked before update 1`] = `
+{
+  "updated": {
+    "debts": {
+      "id:d441fa4e-baf9-4b0f-bce2-a61ee4301e7e|ownerAccountId:9d79dbf9-82dd-4a91-85b2-b02f432e6b1b": {
+        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+        "timestamp": "2020-06-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+      "id:d441fa4e-baf9-4b0f-bce2-a61ee4301e7e|ownerAccountId:a28c5d18-b801-44a4-8e6d-a85590a4e2ef": {
+        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+        "timestamp": "2020-06-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`debts.update > functionality > update timestamp > counterparty auto-accepts - unlocked before update - debt didn't exist beforehand 1`] = `
+{
+  "added": {
+    "debts": {
+      "id:65fb0221-cc6c-4881-81ed-6443b8e65890|ownerAccountId:3feab8f7-b5e9-4cd5-bf77-2ff074957f5e": {
+        "amount": "614.5700",
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "currencyCode": "SBD",
+        "id": "65fb0221-cc6c-4881-81ed-6443b8e65890",
+        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+        "note": "Iste eos illo.",
+        "ownerAccountId": "3feab8f7-b5e9-4cd5-bf77-2ff074957f5e",
         "receiptId": null,
         "timestamp": "2020-06-01T00:00:00.000Z",
         "updatedAt": "2020-01-01T00:00:00.000Z",
-        "userId": "1d208f1a-a330-418a-943e-539bca90dae0",
+        "userId": "0271d91f-0a07-4c89-b281-e00e6d50478e",
       },
     },
   },
   "updated": {
     "debts": {
-      "id:ac5dc383-b972-4f25-92d5-cfd8bb6ea75a|ownerAccountId:a70c3c7d-6c9a-4189-b65e-84061c3d1a7a": {
-        "timestamp": "2020-06-01T00:00:00.000Z",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`debts.update > functionality > update timestamp > counterparty auto-accepts > locked before update 1`] = `
-{
-  "updated": {
-    "debts": {
-      "id:dab8bf0d-e0d7-493c-8680-13c64847a876|ownerAccountId:16881856-073a-4f5f-84e4-969b374cba81": {
-        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "timestamp": "2020-06-01T00:00:00.000Z",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-      "id:dab8bf0d-e0d7-493c-8680-13c64847a876|ownerAccountId:b4fba71b-3720-46f4-befe-54e779c889fc": {
-        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+      "id:65fb0221-cc6c-4881-81ed-6443b8e65890|ownerAccountId:8b7bdcea-ec7b-4a8f-a4dc-aacbc4e65ec4": {
         "timestamp": "2020-06-01T00:00:00.000Z",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
@@ -1034,15 +1034,15 @@ exports[`debts.update > functionality > update timestamp > counterparty auto-acc
 }
 `;
 
-exports[`debts.update > functionality > update timestamp > counterparty auto-accepts > unlocked before update 1`] = `
+exports[`debts.update > functionality > update timestamp > counterparty auto-accepts - unlocked before update 1`] = `
 {
   "updated": {
     "debts": {
-      "id:0cc3460c-e06f-41e1-9274-3c44d81defa6|ownerAccountId:32bcb6f1-76a9-4892-a8c2-9e755afa6fe7": {
+      "id:639310ca-e901-42df-b1b1-f31435f2fe65|ownerAccountId:6e9bf3f1-d853-4a3a-9c42-41f3ebede181": {
         "timestamp": "2020-06-01T00:00:00.000Z",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
-      "id:0cc3460c-e06f-41e1-9274-3c44d81defa6|ownerAccountId:d8fbc0b6-dd9d-415a-ad00-7f2fbb3a992b": {
+      "id:639310ca-e901-42df-b1b1-f31435f2fe65|ownerAccountId:da268eaa-e1f1-4fb5-8257-cc01bdb1c867": {
         "timestamp": "2020-06-01T00:00:00.000Z",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },

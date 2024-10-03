@@ -1,6 +1,6 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"1ca1f248-af99-4315-9f3d-aae9a547eac8\"}]": {
+		"debts.get:[{\"id\":\"51ca1f24-8af9-4931-a5f3-daae9a547eac\"}]": {
 			"state": {
 				"dataUpdateCount": 2
 			}
@@ -18,7 +18,7 @@
 					"isPaused": false,
 					"status": "error",
 					"variables": {
-						"id": "1ca1f248-af99-4315-9f3d-aae9a547eac8",
+						"id": "51ca1f24-8af9-4931-a5f3-daae9a547eac",
 						"update": {
 							"amount": 14979.11,
 							"currencyCode": "JOD",

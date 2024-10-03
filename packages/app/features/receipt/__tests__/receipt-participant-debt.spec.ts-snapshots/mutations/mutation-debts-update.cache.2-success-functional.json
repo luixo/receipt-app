@@ -1,6 +1,6 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"3d3cd947-f7dd-48ea-b8a4-55e4ba8bbf2b\"}]": {
+		"debts.get:[{\"id\":\"5a3d3cd9-47f7-4dd8-8ea8-a455e4ba8bbf\"}]": {
 			"state": {
 				"data": {
 					"amount": 10760.56,
@@ -30,7 +30,7 @@
 					"isPaused": false,
 					"status": "success",
 					"variables": {
-						"id": "3d3cd947-f7dd-48ea-b8a4-55e4ba8bbf2b",
+						"id": "5a3d3cd9-47f7-4dd8-8ea8-a455e4ba8bbf",
 						"update": {
 							"amount": 10760.56,
 							"currencyCode": "JOD",

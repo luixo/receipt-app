@@ -1,9 +1,9 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"4c4764d3-c20f-4ea8-90fb-b026cf603cc3\"}]": {
+		"debts.get:[{\"id\":\"3424c476-4d3c-420f-bea8-0fbb026cf603\"}]": {
 			"state": {
 				"data": {
-					"id": "4c4764d3-c20f-4ea8-90fb-b026cf603cc3",
+					"id": "3424c476-4d3c-420f-bea8-0fbb026cf603",
 					"amount": 19554.17,
 					"currencyCode": "KZT",
 					"userId": "ba6c0d3f-b12a-4874-8c35-670f60b22ac9",
@@ -26,7 +26,7 @@
 				"data": {
 					"debt": {
 						"ids": {
-							"1": "4c4764d3-c20f-4ea8-90fb-b026cf603cc3"
+							"1": "3424c476-4d3c-420f-bea8-0fbb026cf603"
 						}
 					}
 				},
@@ -39,7 +39,7 @@
 			"1": {
 				"state": {
 					"data": {
-						"id": "4c4764d3-c20f-4ea8-90fb-b026cf603cc3",
+						"id": "3424c476-4d3c-420f-bea8-0fbb026cf603",
 						"lockedTimestamp": "2020-01-01T00:00:00.000Z",
 						"reverseAccepted": false
 					},
