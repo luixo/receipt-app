@@ -20,13 +20,13 @@ type Props = {
 export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 	const intention = React.useMemo(
 		() =>
-			debt.their?.lockedTimestamp
+			debt.their
 				? {
 						id: debt.id,
 						userId: debt.userId,
 						amount: debt.their.amount,
 						currencyCode: debt.their.currencyCode,
-						lockedTimestamp: debt.their.lockedTimestamp,
+						updatedAt: debt.their.updatedAt,
 						timestamp: debt.their.timestamp,
 						note: debt.note,
 						receiptId: debt.receiptId,
@@ -62,8 +62,7 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 
 	return (
 		<>
-			{intention &&
-			intention.lockedTimestamp.valueOf() > debt.lockedTimestamp.valueOf() ? (
+			{intention && intention.updatedAt.valueOf() > debt.updatedAt.valueOf() ? (
 				<ConfirmModal
 					action={acceptSyncIntention}
 					title="Update debt to a counterparty's version"

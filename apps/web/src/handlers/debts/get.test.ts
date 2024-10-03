@@ -101,7 +101,7 @@ describe("debts.get", () => {
 				note: debt.note,
 				receiptId: debt.receiptId || undefined,
 				amount: Number(debt.amount),
-				lockedTimestamp: debt.lockedTimestamp,
+				updatedAt: debt.updatedAt,
 				their: undefined,
 			});
 		});
@@ -116,7 +116,13 @@ describe("debts.get", () => {
 					ctx,
 					[accountId, userId],
 					[foreignAccountId, foreignToSelfUserId],
-					{ ahead: "their" },
+					{
+						ahead: "their",
+						fn: (originalDebt) => ({
+							...originalDebt,
+							amount: originalDebt.amount + 1,
+						}),
+					},
 				);
 
 				// Verify other users do not interfere
@@ -133,9 +139,9 @@ describe("debts.get", () => {
 					note: debt.note,
 					receiptId: debt.receiptId || undefined,
 					amount: Number(debt.amount),
-					lockedTimestamp: debt.lockedTimestamp,
+					updatedAt: debt.updatedAt,
 					their: {
-						lockedTimestamp: foreignDebt.lockedTimestamp,
+						updatedAt: foreignDebt.updatedAt,
 						currencyCode: foreignDebt.currencyCode,
 						timestamp: foreignDebt.timestamp,
 						amount: -Number(foreignDebt.amount),

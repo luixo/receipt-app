@@ -1,4 +1,7 @@
-import { updateRevert as updateRevertDebts } from "../cache/debts";
+import {
+	update as updateDebts,
+	updateRevert as updateRevertDebts,
+} from "../cache/debts";
 import type { UseContextedMutationOptions } from "../context";
 import { mergeUpdaterResults } from "../utils";
 
@@ -18,6 +21,27 @@ export const options: UseContextedMutationOptions<
 				mergeUpdaterResults(
 					...intentions.map(({ id }) => controller.remove(id)),
 				),
+		}),
+	onSuccess: (controllerContext, intentions) => (results) =>
+		updateDebts(controllerContext, {
+			getByUsers: undefined,
+			getIdsByUser: undefined,
+			get: (controller) => {
+				intentions.forEach((intention) => {
+					const matchedResult = results.find(
+						(result) => result.id === intention.id,
+					);
+					if (!matchedResult) {
+						// Could be that intention is cached while the debt is already resolved
+						return;
+					}
+					controller.update(matchedResult.id, (debt) => ({
+						...debt,
+						updatedAt: matchedResult.updatedAt,
+					}));
+				});
+			},
+			getIntentions: undefined,
 		}),
 	mutateToastOptions: {
 		text: `Accepting all debts..`,

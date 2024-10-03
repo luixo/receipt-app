@@ -11,6 +11,7 @@ import type {
 	TRPCQuerySuccessResult,
 } from "~app/trpc";
 import { trpc } from "~app/trpc";
+import { isDebtInSyncWithReceipt } from "~app/utils/debts";
 import { getReceiptDebtName } from "~app/utils/receipt";
 import { getParticipantSums } from "~app/utils/receipt-item";
 import { Button } from "~components/button";
@@ -20,10 +21,7 @@ import { options as debtsUpdateOptions } from "~mutations/debts/update";
 import type { NonNullableField } from "~utils/types";
 
 import { ReceiptDebtSyncInfoModal } from "./receipt-debt-sync-info-modal";
-import {
-	type LockedReceipt,
-	isDebtInSyncWithReceipt,
-} from "./receipt-participant-debt";
+import { type LockedReceipt } from "./receipt-participant-debt";
 
 type InnerProps = {
 	queries: TRPCQuerySuccessResult<"debts.get">[];

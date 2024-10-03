@@ -10,7 +10,7 @@
 					"note": "dolorem eaque distinctio ipsam",
 					"receiptId": "<undefined>",
 					"amount": -7034.79,
-					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+					"updatedAt": "2020-01-01T00:00:00.000Z",
 					"their": "<undefined>",
 					"userId": "1ae1509f-6920-409e-89d1-2335b5ec817d"
 				},
@@ -30,7 +30,7 @@
 					"note": "nobis placeat soluta molestiae",
 					"receiptId": "<undefined>",
 					"amount": 3612.3,
-					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+					"updatedAt": "2020-01-01T00:00:00.000Z",
 					"their": "<undefined>",
 					"userId": "1ae1509f-6920-409e-89d1-2335b5ec817d"
 				},

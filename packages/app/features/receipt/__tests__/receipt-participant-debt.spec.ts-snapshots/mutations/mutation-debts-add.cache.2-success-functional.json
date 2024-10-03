@@ -9,12 +9,12 @@
 					"userId": "f0c405a3-fb3f-4cba-b422-3da378da42d4",
 					"timestamp": "2020-01-01T00:00:00.000Z",
 					"note": "Receipt \"doloremque omnis delectus\"",
-					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+					"updatedAt": "2020-01-01T00:00:00.000Z",
 					"their": {
-						"lockedTimestamp": "2020-01-01T00:00:00.000Z",
 						"timestamp": "2020-01-01T00:00:00.000Z",
 						"amount": 16431.38,
-						"currencyCode": "KZT"
+						"currencyCode": "KZT",
+						"updatedAt": "2020-01-01T00:00:00.000Z"
 					},
 					"receiptId": "38787032-dcd1-49e4-8a8f-302d0d601c07"
 				},
@@ -45,7 +45,7 @@
 				"state": {
 					"data": {
 						"id": "c3428de5-ca51-49f3-b024-18f2c6878039",
-						"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+						"updatedAt": "2020-01-01T00:00:00.000Z",
 						"reverseAccepted": true
 					},
 					"error": null,

@@ -3,11 +3,7 @@
 		"debts.get:[{\"id\":\"07733e64-7f56-45f9-90f5-103ffa92c1f5\"}]": {
 			"state": {
 				"data": {
-					"amount": 21991.95,
-					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
-					"their": {
-						"lockedTimestamp": "2020-01-01T00:00:00.000Z"
-					}
+					"amount": 21991.95
 				},
 				"dataUpdateCount": 2
 			}
@@ -15,11 +11,7 @@
 		"debts.get:[{\"id\":\"07e7ddd9-1243-4c7d-a9fc-eb40a5380b32\"}]": {
 			"state": {
 				"data": {
-					"amount": 23468.4,
-					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
-					"their": {
-						"lockedTimestamp": "2020-01-01T00:00:00.000Z"
-					}
+					"amount": 23468.4
 				},
 				"dataUpdateCount": 2
 			}
@@ -33,7 +25,7 @@
 					"userId": "872cc16e-764a-4eb7-ba6f-866948bf9d5d",
 					"timestamp": "2020-01-01T00:00:00.000Z",
 					"note": "Receipt \"saepe sit consequatur\"",
-					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+					"updatedAt": "2020-01-01T00:00:00.000Z",
 					"their": "<undefined>",
 					"receiptId": "4962d0d3-c77b-4ab8-9be5-cd1f56483923"
 				},
@@ -54,12 +46,12 @@
 					"userId": "eb1503ff-07f9-4699-abc4-124e29e7f26a",
 					"timestamp": "2020-01-01T00:00:00.000Z",
 					"note": "Receipt \"saepe sit consequatur\"",
-					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+					"updatedAt": "2020-01-01T00:00:00.000Z",
 					"their": {
-						"lockedTimestamp": "2020-01-01T00:00:00.000Z",
 						"timestamp": "2020-01-01T00:00:00.000Z",
 						"amount": 17762.87,
-						"currencyCode": "MMK"
+						"currencyCode": "MMK",
+						"updatedAt": "2020-01-01T00:00:00.000Z"
 					},
 					"receiptId": "4962d0d3-c77b-4ab8-9be5-cd1f56483923"
 				},
@@ -80,7 +72,7 @@
 					"userId": "e35da5d3-ac68-488f-b602-57c4c849a06a",
 					"timestamp": "2020-01-01T00:00:00.000Z",
 					"note": "Receipt \"saepe sit consequatur\"",
-					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+					"updatedAt": "2020-01-01T00:00:00.000Z",
 					"their": "<undefined>",
 					"receiptId": "4962d0d3-c77b-4ab8-9be5-cd1f56483923"
 				},
@@ -113,7 +105,7 @@
 				"state": {
 					"data": {
 						"id": "9728996e-c591-4803-a118-eddeb634f2b6",
-						"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+						"updatedAt": "2020-01-01T00:00:00.000Z",
 						"reverseAccepted": true
 					},
 					"error": null,
@@ -133,7 +125,7 @@
 				"state": {
 					"data": {
 						"id": "204972f1-f894-4b30-84f7-7fa8e52a4288",
-						"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+						"updatedAt": "2020-01-01T00:00:00.000Z",
 						"reverseAccepted": false
 					},
 					"error": null,
@@ -153,7 +145,7 @@
 				"state": {
 					"data": {
 						"id": "f2d9bd3c-c837-4655-b3f5-66f4c8601cdc",
-						"lockedTimestamp": "2020-01-01T00:00:00.000Z",
+						"updatedAt": "2020-01-01T00:00:00.000Z",
 						"reverseAccepted": false
 					},
 					"error": null,
@@ -174,8 +166,8 @@
 			{
 				"state": {
 					"data": {
-						"lockedTimestamp": "2020-01-01T00:00:00.000Z",
-						"reverseLockedTimestampUpdated": true
+						"updatedAt": "2020-01-01T00:00:00.000Z",
+						"reverseUpdated": true
 					},
 					"error": null,
 					"isPaused": false,
@@ -194,8 +186,8 @@
 			{
 				"state": {
 					"data": {
-						"lockedTimestamp": "2020-01-01T00:00:00.000Z",
-						"reverseLockedTimestampUpdated": true
+						"updatedAt": "2020-01-01T00:00:00.000Z",
+						"reverseUpdated": true
 					},
 					"error": null,
 					"isPaused": false,

@@ -179,7 +179,7 @@ export const theirNonExistent: MapDebt = (debt) => ({
 export const theirSynced: MapDebt = (debt) => ({
 	...debt,
 	their: {
-		lockedTimestamp: debt.lockedTimestamp,
+		updatedAt: new Date(debt.updatedAt.valueOf() + 1),
 		currencyCode: debt.currencyCode,
 		timestamp: debt.timestamp,
 		amount: debt.amount,
@@ -189,7 +189,7 @@ export const theirSynced: MapDebt = (debt) => ({
 export const theirDesynced: MapDebt = (debt) => ({
 	...debt,
 	their: {
-		lockedTimestamp: debt.lockedTimestamp,
+		updatedAt: new Date(debt.updatedAt.valueOf() + 1),
 		currencyCode: debt.currencyCode,
 		timestamp: debt.timestamp,
 		amount: debt.amount + 1,

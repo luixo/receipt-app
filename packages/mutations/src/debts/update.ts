@@ -7,11 +7,10 @@ import {
 	applySumUpdate,
 	applyUpdate,
 	getByUserIdRevert,
-	getNextLockedTimestamp,
 	getRevert,
 	getSumRevert,
-	updateLockedTimestamps,
 	updateReceiptWithOutcomingDebtId,
+	updateUpdatedAt,
 } from "./utils";
 
 export const options: UseContextedMutationOptions<"debts.update", CurrentDebt> =
@@ -38,15 +37,7 @@ export const options: UseContextedMutationOptions<"debts.update", CurrentDebt> =
 						applyUpdate(updateObject.update),
 						getRevert(updateObject.update),
 					),
-				getIntentions: (controller) => {
-					const nextLockedTimestamp = getNextLockedTimestamp(
-						updateObject.update,
-					);
-					if (!nextLockedTimestamp) {
-						return;
-					}
-					return controller.remove(updateObject.id);
-				},
+				getIntentions: undefined,
 			}),
 		onSuccess: (controllerContext, currDebt) => (result, updateObject) => {
 			if (currDebt.receiptId) {
@@ -56,12 +47,12 @@ export const options: UseContextedMutationOptions<"debts.update", CurrentDebt> =
 					updateObject.id,
 				);
 			}
-			updateLockedTimestamps(
+			updateUpdatedAt(
 				controllerContext,
 				currDebt,
 				updateObject.id,
-				result.lockedTimestamp,
-				result.reverseLockedTimestampUpdated,
+				result.updatedAt,
+				result.reverseUpdated,
 			);
 		},
 		mutateToastOptions: { text: "Updating debt.." },

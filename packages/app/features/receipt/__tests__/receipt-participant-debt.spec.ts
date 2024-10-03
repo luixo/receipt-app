@@ -340,7 +340,7 @@ test.describe("Mutations", () => {
 			await debtsAddPause.promise;
 			return {
 				id: faker.string.uuid(),
-				lockedTimestamp: new Date(),
+				updatedAt: new Date(),
 				reverseAccepted: calls > 1,
 			};
 		});
@@ -435,8 +435,8 @@ test.describe("Mutations", () => {
 		api.mock("debts.update", async ({ calls }) => {
 			await debtsUpdatePause.promise;
 			return {
-				lockedTimestamp: new Date(),
-				reverseLockedTimestampUpdated: calls > 1,
+				updatedAt: new Date(),
+				reverseUpdated: calls > 1,
 			};
 		});
 		await snapshotQueries(

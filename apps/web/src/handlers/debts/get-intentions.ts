@@ -9,7 +9,7 @@ type InboundIntention = {
 	currencyCode: CurrencyCode;
 	amount: number;
 	timestamp: Date;
-	lockedTimestamp: Date;
+	updatedAt: Date;
 	note: string;
 	receiptId?: ReceiptsId;
 	current?: {
@@ -43,19 +43,27 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 				.onRef("usersMine.connectedAccountId", "=", "theirDebts.ownerAccountId")
 				.onRef("usersMine.ownerAccountId", "=", "users.connectedAccountId"),
 		)
-		.where("theirDebts.id", "is not", null)
 		.where((eb) =>
-			eb("selfDebts.id", "is", null).or(
-				"selfDebts.lockedTimestamp",
-				"<",
-				eb.ref("theirDebts.lockedTimestamp"),
-			),
+			eb.or([
+				eb("selfDebts.id", "is", null),
+				eb
+					.or([
+						eb("selfDebts.amount", "<>", eb.neg(eb.ref("theirDebts.amount"))),
+						eb(
+							"selfDebts.currencyCode",
+							"<>",
+							eb.ref("theirDebts.currencyCode"),
+						),
+						eb("selfDebts.timestamp", "<>", eb.ref("theirDebts.timestamp")),
+					])
+					.and(eb("selfDebts.updatedAt", "<", eb.ref("theirDebts.updatedAt"))),
+			]),
 		)
 		.select([
 			"theirDebts.id",
 			"theirDebts.ownerAccountId",
 			"theirDebts.timestamp",
-			"theirDebts.lockedTimestamp",
+			"theirDebts.updatedAt",
 			"theirDebts.amount",
 			"theirDebts.currencyCode",
 			"theirDebts.receiptId",
@@ -65,7 +73,7 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 			"selfDebts.timestamp as selfTimestamp",
 			"selfDebts.currencyCode as selfCurrencyCode",
 		])
-		.orderBy(["theirDebts.lockedTimestamp desc", "theirDebts.id desc"])
+		.orderBy(["theirDebts.updatedAt desc", "theirDebts.id desc"])
 		.$narrowType<
 			MappedNullableObject<
 				Debts,
@@ -82,7 +90,7 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 		userId: debt.userId,
 		amount: -Number(debt.amount),
 		currencyCode: debt.currencyCode,
-		lockedTimestamp: debt.lockedTimestamp,
+		updatedAt: debt.updatedAt,
 		timestamp: debt.timestamp,
 		note: debt.note,
 		receiptId: debt.receiptId || undefined,

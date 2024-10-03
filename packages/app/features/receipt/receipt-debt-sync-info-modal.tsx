@@ -1,6 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
+import { isDebtInSyncWithReceipt } from "~app/utils/debts";
 import { Divider } from "~components/divider";
 import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
 import { Text } from "~components/text";
@@ -9,10 +10,7 @@ import type {
 	DebtParticipant,
 	LockedReceipt,
 } from "./receipt-participant-debt";
-import {
-	ReceiptParticipantDebt,
-	isDebtInSyncWithReceipt,
-} from "./receipt-participant-debt";
+import { ReceiptParticipantDebt } from "./receipt-participant-debt";
 
 const sortParticipantsSameBlock = (
 	a: DebtParticipant,

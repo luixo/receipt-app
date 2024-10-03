@@ -22,6 +22,7 @@ import {
 } from "~tests/backend/utils/expect";
 import type { TestContext } from "~tests/backend/utils/test";
 import { test } from "~tests/backend/utils/test";
+import { MINUTE } from "~utils/time";
 import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./update";
@@ -48,7 +49,6 @@ type GetData = (opts: {
 		userId: UsersId;
 		meUserId: UsersId;
 	};
-	lockedBefore: boolean;
 }) => Promise<{
 	updates: TRPCMutationInput<"debts.update">[];
 	results: TRPCMutationOutput<"debts.update">[];
@@ -58,57 +58,38 @@ const insertDefaultDebt = async ({
 	counterParty,
 	selfAccountId,
 	target,
-	lockedBefore,
 }: Parameters<GetData>[0]) => {
 	if (counterParty !== "auto-accept-no-exist") {
 		return (
 			await insertSyncedDebts(
 				ctx,
-				[
-					selfAccountId,
-					target.userId,
-					lockedBefore
-						? { lockedTimestamp: new Date("2021-01-01") }
-						: undefined,
-				],
+				[selfAccountId, target.userId],
 				[target.accountId, target.meUserId],
 			)
 		)[0];
 	}
-	return insertDebt(
-		ctx,
-		selfAccountId,
-		target.userId,
-		lockedBefore ? { lockedTimestamp: new Date("2021-01-01") } : undefined,
-	);
+	return insertDebt(ctx, selfAccountId, target.userId);
 };
 
 type GetResult = (opts: {
+	reverseUpdatedOverride?: boolean;
 	counterParty: Parameters<GetData>[0]["counterParty"];
-	overrideTimestamp?:
-		| TRPCMutationOutput<"debts.update">["lockedTimestamp"]
-		| null;
 }) => TRPCMutationOutput<"debts.update">;
 const getDefaultGetResult: GetResult = ({
-	overrideTimestamp,
 	counterParty,
-}) => {
-	const nextLockedTimestamp =
-		overrideTimestamp === null ? undefined : new Date();
-	return {
-		lockedTimestamp: nextLockedTimestamp,
-		reverseLockedTimestampUpdated:
-			counterParty === "auto-accept-no-exist" ||
-			(nextLockedTimestamp !== undefined && counterParty === "auto-accept"),
-	};
-};
+	reverseUpdatedOverride,
+}) => ({
+	updatedAt: new Date(new Date().valueOf() + MINUTE),
+	reverseUpdated:
+		counterParty === "auto-accept-no-exist" ||
+		(reverseUpdatedOverride ?? counterParty === "auto-accept"),
+});
 
 const updateDescribes = (getData: GetData) => {
 	const runTest = async ({
 		ctx,
-		lockedBefore,
 		counterParty,
-	}: Pick<Parameters<GetData>[0], "ctx" | "lockedBefore" | "counterParty">) => {
+	}: Pick<Parameters<GetData>[0], "ctx" | "counterParty">) => {
 		const { sessionId, accountId } = await insertAccountWithSession(ctx);
 		const { id: foreignAccountId } = await insertAccount(
 			ctx,
@@ -135,7 +116,6 @@ const updateDescribes = (getData: GetData) => {
 				userId,
 				meUserId: foreignToSelfUserId,
 			},
-			lockedBefore,
 		});
 
 		const caller = createCaller(createAuthContext(ctx, sessionId));
@@ -153,30 +133,21 @@ const updateDescribes = (getData: GetData) => {
 		};
 	};
 
-	test("counterparty accepts manually - locked before update", async ({
+	test("counterparty accepts manually", async ({ ctx }) => {
+		await runTest({ ctx, counterParty: "manual-accept" });
+	});
+
+	test("counterparty auto-accepts - debt existed beforehand", async ({
 		ctx,
 	}) => {
-		await runTest({ ctx, lockedBefore: true, counterParty: "manual-accept" });
+		await runTest({ ctx, counterParty: "auto-accept" });
 	});
-	test("counterparty accepts manually - unlocked before update", async ({
-		ctx,
-	}) => {
-		await runTest({ ctx, lockedBefore: false, counterParty: "manual-accept" });
-	});
-	test("counterparty auto-accepts - locked before update", async ({ ctx }) => {
-		await runTest({ ctx, lockedBefore: true, counterParty: "auto-accept" });
-	});
-	test("counterparty auto-accepts - unlocked before update", async ({
-		ctx,
-	}) => {
-		await runTest({ ctx, lockedBefore: false, counterParty: "auto-accept" });
-	});
-	test("counterparty auto-accepts - unlocked before update - debt didn't exist beforehand", async ({
+
+	test("counterparty auto-accepts - debt didn't exist beforehand", async ({
 		ctx,
 	}) => {
 		const { debtIds, selfAccountId, foreignAccountId } = await runTest({
 			ctx,
-			lockedBefore: false,
 			counterParty: "auto-accept-no-exist",
 		});
 		const debts = await ctx.database
@@ -401,7 +372,7 @@ describe("debts.update", () => {
 					results: [
 						getDefaultGetResult({
 							counterParty: opts.counterParty,
-							overrideTimestamp: null,
+							reverseUpdatedOverride: false,
 						}),
 					],
 				};
@@ -441,12 +412,7 @@ describe("debts.update", () => {
 							},
 						},
 					],
-					results: [
-						getDefaultGetResult({
-							counterParty: opts.counterParty,
-							overrideTimestamp: null,
-						}),
-					],
+					results: [getDefaultGetResult({ counterParty: opts.counterParty })],
 				};
 			});
 		});
@@ -493,15 +459,15 @@ describe("debts.update", () => {
 						results: [
 							getDefaultGetResult({
 								counterParty: opts.counterParty,
-								overrideTimestamp: null,
+								reverseUpdatedOverride: false,
 							}),
 							getDefaultGetResult({
+								reverseUpdatedOverride: false,
 								// Another debt is not synchronized with the counterparty hence it always does not exist
 								counterParty:
 									opts.counterParty === "auto-accept"
 										? "auto-accept-no-exist"
 										: opts.counterParty,
-								overrideTimestamp: null,
 							}),
 						],
 					};
@@ -555,12 +521,12 @@ describe("debts.update", () => {
 								counterParty: opts.counterParty,
 							}),
 							getDefaultGetResult({
+								reverseUpdatedOverride: false,
 								// Another debt is not synchronized with the counterparty hence it always does not exist
 								counterParty:
 									opts.counterParty === "auto-accept"
 										? "auto-accept-no-exist"
 										: opts.counterParty,
-								overrideTimestamp: null,
 							}),
 						],
 					};
@@ -601,10 +567,9 @@ describe("debts.update", () => {
 					10,
 				);
 				expect(results).toHaveLength(2);
-				expect(results[0]).toStrictEqual<(typeof results)[0]>({
-					lockedTimestamp: new Date(),
-					reverseLockedTimestampUpdated: true,
-				});
+				expect(results[0]).toStrictEqual<(typeof results)[0]>(
+					getDefaultGetResult({ counterParty: "auto-accept" }),
+				);
 				expect(results[1]).toBeInstanceOf(Error);
 				expectLocalTRPCError(
 					results[1] as Error,

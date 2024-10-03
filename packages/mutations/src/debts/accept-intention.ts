@@ -1,4 +1,7 @@
-import { updateRevert as updateRevertDebts } from "../cache/debts";
+import {
+	update as updateDebts,
+	updateRevert as updateRevertDebts,
+} from "../cache/debts";
 import type { UseContextedMutationOptions } from "../context";
 
 import type Intention from "./utils";
@@ -14,6 +17,17 @@ export const options: UseContextedMutationOptions<
 			getIdsByUser: (controller) => updateGetByUserId(controller, [intention]),
 			get: (controller) => updateGet(controller, [intention]),
 			getIntentions: (controller) => controller.remove(intention.id),
+		}),
+	onSuccess: (controllerContext, intention) => (data) =>
+		updateDebts(controllerContext, {
+			getByUsers: undefined,
+			getIdsByUser: undefined,
+			get: (controller) =>
+				controller.update(intention.id, (debt) => ({
+					...debt,
+					updatedAt: data.updatedAt,
+				})),
+			getIntentions: undefined,
 		}),
 	mutateToastOptions: {
 		text: `Accepting debt..`,

@@ -3,6 +3,7 @@ import { isNonNullish, keys, omitBy } from "remeda";
 import { z } from "zod";
 
 import { debtAmountSchema, debtNoteSchema } from "~app/utils/validation";
+import type { DebtsId } from "~db/models";
 import type { SimpleUpdateObject } from "~db/types";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
@@ -34,11 +35,6 @@ const updateDebtSchema = z.strictObject({
 
 type DebtUpdateObject = SimpleUpdateObject<"debts">;
 
-const KEYS_NOT_UPDATE_LOCKED_TIMESTAMP: (keyof DebtUpdateObject)[] = [
-	"note",
-	"receiptId",
-];
-
 const buildSetObjects = (input: z.infer<typeof updateDebtSchema>) => {
 	const setObject: DebtUpdateObject = omitBy(
 		{
@@ -47,17 +43,9 @@ const buildSetObjects = (input: z.infer<typeof updateDebtSchema>) => {
 			note: input.update.note,
 			currencyCode: input.update.currencyCode,
 			receiptId: input.update.receiptId,
-			lockedTimestamp: new Date(),
 		},
 		(value) => value === undefined,
 	);
-	const keysToUpdateLockedTimestamp = keys(input.update).filter(
-		(key) => !KEYS_NOT_UPDATE_LOCKED_TIMESTAMP.includes(key),
-	);
-	if (keysToUpdateLockedTimestamp.length === 0) {
-		// don't update lockedTimestamp if we updated keys that don't require lockedTimestamp update
-		delete setObject.lockedTimestamp;
-	}
 	const reverseSetObject = omitBy(
 		{
 			...setObject,
@@ -105,7 +93,7 @@ const fetchDebts = async (
 		.select([
 			"debts.id",
 			"debts.userId",
-			"debts.lockedTimestamp",
+			"debts.updatedAt",
 			"debts.note",
 			"debts.currencyCode",
 			"debts.amount",
@@ -147,7 +135,6 @@ const updateAutoAcceptingDebts = async (
 					currencyCode: debt.currencyCode,
 					amount: (-Number(debt.amount)).toString(),
 					timestamp: debt.timestamp,
-					lockedTimestamp: debt.lockedTimestamp,
 					receiptId: debt.receiptId,
 					createdAt: new Date(),
 					...reverseSetObject,
@@ -168,14 +155,16 @@ const updateAutoAcceptingDebts = async (
 	);
 	return updatedDebtsWithErrors
 		.map((updatedDebtOrError) => {
-			if (
-				isError(updatedDebtOrError) ||
-				(updatedDebtOrError.reverseSetObject?.lockedTimestamp === undefined &&
-					!newDebts.some((debt) => updatedDebtOrError.debt.id === debt.id))
-			) {
+			if (isError(updatedDebtOrError)) {
 				return;
 			}
-			return updatedDebtOrError.debt.id;
+			const newDebtAdded = newDebts.some(
+				(debt) => updatedDebtOrError.debt.id === debt.id,
+			);
+			if (updatedDebtOrError.reverseSetObject || newDebtAdded) {
+				return updatedDebtOrError.debt.id;
+			}
+			return undefined;
 		})
 		.filter(isNonNullish);
 };
@@ -183,14 +172,15 @@ const updateAutoAcceptingDebts = async (
 const updateDebts = async (
 	ctx: AuthorizedContext,
 	updatedDebtsWithErrors: (UpdateWithDebt | TRPCError)[],
+	updatedDebtIds: DebtsId[],
 ) =>
 	ctx.database.transaction().execute((tx) =>
 		Promise.all(
-			updatedDebtsWithErrors.map((updatedDebtOrError) => {
+			updatedDebtsWithErrors.map(async (updatedDebtOrError) => {
 				if (isError(updatedDebtOrError)) {
-					return null;
+					return updatedDebtOrError;
 				}
-				return tx
+				const { id, updatedAt } = await tx
 					.updateTable("debts")
 					.set(updatedDebtOrError.setObject)
 					.where((eb) =>
@@ -199,7 +189,12 @@ const updateDebts = async (
 							ownerAccountId: ctx.auth.accountId,
 						}),
 					)
-					.executeTakeFirst();
+					.returning(["debts.id", "debts.updatedAt"])
+					.executeTakeFirstOrThrow();
+				return {
+					updatedAt,
+					reverseUpdated: updatedDebtIds.includes(id),
+				};
 			}),
 		),
 	);
@@ -208,8 +203,8 @@ const queueUpdateDebt = queueCallFactory<
 	AuthorizedContext,
 	z.infer<typeof updateDebtSchema>,
 	{
-		lockedTimestamp?: Date;
-		reverseLockedTimestampUpdated: boolean;
+		updatedAt: Date;
+		reverseUpdated: boolean;
 	}
 >((ctx) => async (updates) => {
 	const debts = await fetchDebts(ctx, updates);
@@ -228,18 +223,7 @@ const queueUpdateDebt = queueCallFactory<
 		return errors;
 	}
 	const updatedDebtIds = await updateAutoAcceptingDebts(ctx, updatesWithErrors);
-	await updateDebts(ctx, updatesWithErrors);
-	return updatesWithErrors.map((updatedDebtOrError) => {
-		if (isError(updatedDebtOrError)) {
-			return updatedDebtOrError;
-		}
-		return {
-			lockedTimestamp: updatedDebtOrError.setObject.lockedTimestamp,
-			reverseLockedTimestampUpdated: updatedDebtIds.includes(
-				updatedDebtOrError.debt.id,
-			),
-		};
-	});
+	return updateDebts(ctx, updatesWithErrors, updatedDebtIds);
 });
 
 export const procedure = authProcedure

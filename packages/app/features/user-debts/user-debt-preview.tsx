@@ -55,7 +55,7 @@ const UserDebtPreviewInner: React.FC<InnerProps> = ({ query }) => {
 					</Text>
 				}
 				timestamp={<Text>{formatDate(debt.timestamp)}</Text>}
-				synced={<DebtSyncStatus debt={debt} />}
+				synced={<DebtSyncStatus debt={debt} theirDebt={debt.their} />}
 				note={<Text>{debt.note}</Text>}
 			/>
 		</Link>

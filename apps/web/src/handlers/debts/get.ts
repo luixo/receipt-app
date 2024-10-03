@@ -32,13 +32,13 @@ const fetchDebts = async (
 			"debts.note",
 			"debts.timestamp",
 			"debts.userId",
-			"debts.lockedTimestamp",
+			"debts.updatedAt",
 			"debts.receiptId",
 			"theirDebts.ownerAccountId as theirOwnerAccountId",
 			"theirDebts.amount as theirAmount",
 			"theirDebts.currencyCode as theirCurrencyCode",
 			"theirDebts.timestamp as theirTimestamp",
-			"theirDebts.lockedTimestamp as theirLockedTimestamp",
+			"theirDebts.updatedAt as theirUpdatedAt",
 		])
 		.$narrowType<
 			MappedNullableObject<
@@ -48,7 +48,7 @@ const fetchDebts = async (
 					theirAmount: "amount";
 					theirCurrencyCode: "currencyCode";
 					theirTimestamp: "timestamp";
-					theirLockedTimestamp: "lockedTimestamp";
+					theirUpdatedAt: "updatedAt";
 				}
 			>
 		>()
@@ -57,9 +57,9 @@ const fetchDebts = async (
 const mapDebt = (debt: Awaited<ReturnType<typeof fetchDebts>>[number]) => {
 	const {
 		amount,
-		lockedTimestamp,
+		updatedAt,
 		theirOwnerAccountId,
-		theirLockedTimestamp,
+		theirUpdatedAt,
 		theirAmount,
 		theirCurrencyCode,
 		theirTimestamp,
@@ -70,11 +70,11 @@ const mapDebt = (debt: Awaited<ReturnType<typeof fetchDebts>>[number]) => {
 	return {
 		...debtRest,
 		amount: Number(amount),
-		lockedTimestamp,
+		updatedAt,
 		receiptId: receiptId || undefined,
 		their: theirOwnerAccountId
 			? {
-					lockedTimestamp: theirLockedTimestamp,
+					updatedAt: theirUpdatedAt,
 					amount: -Number(theirAmount),
 					currencyCode: theirCurrencyCode,
 					timestamp: theirTimestamp,

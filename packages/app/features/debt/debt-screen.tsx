@@ -18,6 +18,7 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput, TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
+import { areDebtsSynced } from "~app/utils/debts";
 import { debtAmountSchema, debtNoteSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { ReceiptIcon } from "~components/icons";
@@ -251,7 +252,10 @@ const DebtRemoveButton: React.FC<RemoveButtonProps> = ({
 	const router = useRouter();
 	const removeMutation = trpc.debts.remove.useMutation(
 		useTrpcMutationOptions(debtsRemoveOptions, {
-			context: debt,
+			context: {
+				debt,
+				areDebtsSynced: debt.their ? areDebtsSynced(debt, debt.their) : false,
+			},
 			onSuccess: () => router.replace(`/debts/user/${debt.userId}`),
 		}),
 	);
@@ -330,7 +334,7 @@ export const DebtInner: React.FC<InnerProps> = ({ query }) => {
 				aside={<DebtControlButtons debt={debt} />}
 				endContent={
 					<>
-						<DebtSyncStatus debt={debt} size="lg" />
+						<DebtSyncStatus debt={debt} theirDebt={debt.their} size="lg" />
 						{debt.receiptId ? (
 							<DebtReceiptLink receiptId={debt.receiptId} />
 						) : null}

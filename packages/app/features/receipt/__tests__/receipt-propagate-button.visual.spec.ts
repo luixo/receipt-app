@@ -32,8 +32,8 @@ test("Propagate & modal info buttons", async ({
 	});
 	await openDebtsInfoModal();
 	api.mock("debts.update", {
-		lockedTimestamp: new Date(),
-		reverseLockedTimestampUpdated: true,
+		updatedAt: new Date(),
+		reverseUpdated: true,
 	});
 	await updateDebtButton.click();
 	await closeDebtsInfoModal();

@@ -155,7 +155,7 @@ describe("debts.add", () => {
 			expect(result.id).toMatch(UUID_REGEX);
 			expect(result).toStrictEqual<typeof result>({
 				id: result.id,
-				lockedTimestamp: new Date(),
+				updatedAt: new Date(),
 				reverseAccepted: false,
 			});
 		});
@@ -180,7 +180,7 @@ describe("debts.add", () => {
 			expect(result.id).toMatch(UUID_REGEX);
 			expect(result).toStrictEqual<typeof result>({
 				id: result.id,
-				lockedTimestamp: new Date(),
+				updatedAt: new Date(),
 				reverseAccepted: false,
 			});
 		});
@@ -239,7 +239,7 @@ describe("debts.add", () => {
 				expect(results).toStrictEqual<typeof results>(
 					results.map(({ id }, index) => ({
 						id,
-						lockedTimestamp: new Date(),
+						updatedAt: new Date(),
 						// see Promise.all - accepting users are 0, 1 and 2 indexes
 						reverseAccepted: index <= 2,
 					})) as typeof results,
@@ -280,7 +280,7 @@ describe("debts.add", () => {
 				expect(results).toStrictEqual<typeof results>(
 					results.map(({ id }) => ({
 						id,
-						lockedTimestamp: new Date(),
+						updatedAt: new Date(),
 						// see Promise.all - all users are accepting
 						reverseAccepted: true,
 					})) as typeof results,
@@ -333,7 +333,7 @@ describe("debts.add", () => {
 				expect(results).toStrictEqual<typeof results>(
 					results.map(({ id }) => ({
 						id,
-						lockedTimestamp: new Date(),
+						updatedAt: new Date(),
 						// see Promise.all - all users are accepting
 						reverseAccepted: true,
 					})) as typeof results,
@@ -363,7 +363,7 @@ describe("debts.add", () => {
 				expect(results[0].id).toMatch(UUID_REGEX);
 				expect(results[0]).toStrictEqual<(typeof results)[0]>({
 					id: results[0].id,
-					lockedTimestamp: new Date(),
+					updatedAt: new Date(),
 					reverseAccepted: true,
 				});
 				expect(results[1]).toBeInstanceOf(Error);
@@ -399,7 +399,7 @@ describe("debts.add", () => {
 				expect(result.id).toMatch(UUID_REGEX);
 				expect(result).toStrictEqual<typeof result>({
 					id: result.id,
-					lockedTimestamp: new Date(),
+					updatedAt: new Date(),
 					reverseAccepted: true,
 				});
 			});
@@ -435,7 +435,7 @@ describe("debts.add", () => {
 				expect(result.id).toMatch(UUID_REGEX);
 				expect(result).toStrictEqual<typeof result>({
 					id: result.id,
-					lockedTimestamp: new Date(),
+					updatedAt: new Date(),
 					reverseAccepted: true,
 				});
 				expect(result.id).toEqual(counterpartyId);

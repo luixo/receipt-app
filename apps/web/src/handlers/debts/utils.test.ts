@@ -45,7 +45,6 @@ export const syncedProps = [
 	"amount",
 	"currencyCode",
 	"id",
-	"lockedTimestamp",
 	"receiptId",
 	"timestamp",
 ] as const;
