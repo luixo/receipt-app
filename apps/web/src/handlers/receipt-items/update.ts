@@ -25,7 +25,6 @@ export const procedure = authProcedure
 					type: z.literal("quantity"),
 					quantity: quantitySchema,
 				}),
-				z.strictObject({ type: z.literal("locked"), locked: z.boolean() }),
 			]),
 		}),
 	)
@@ -49,9 +48,7 @@ export const procedure = authProcedure
 				message: `Receipt item "${input.id}" is not found.`,
 			});
 		}
-		// We can update lock status of an item while the receipt is locked
-		// it doesn't affect the receipt
-		if (receiptItem.lockedTimestamp && input.update.type !== "locked") {
+		if (receiptItem.lockedTimestamp) {
 			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Receipt "${receiptItem.receiptId}" cannot be updated while locked.`,
@@ -84,9 +81,6 @@ export const procedure = authProcedure
 				break;
 			case "quantity":
 				setObject = { quantity: input.update.quantity.toString() };
-				break;
-			case "locked":
-				setObject = { locked: input.update.locked };
 				break;
 		}
 		await database

@@ -36,7 +36,6 @@ export type GenerateReceiptItems = GeneratorFnWithFaker<
 		id: ReceiptItemsId;
 		price: number;
 		quantity: number;
-		locked: boolean;
 		name: string;
 		createdAt: Date;
 	}[],
@@ -53,7 +52,6 @@ export const defaultGenerateReceiptItems: GenerateReceiptItems = ({ faker }) =>
 			from: new Date(Date.now() - MONTH),
 			to: new Date(),
 		}),
-		locked: false,
 	}));
 
 export type GenerateReceiptParticipants = GeneratorFnWithFaker<
@@ -101,7 +99,6 @@ export const defaultGenerateReceiptItemsParts: GenerateReceiptItemsParts = ({
 		id: item.id,
 		price: item.price,
 		quantity: item.quantity,
-		locked: item.locked,
 		name: item.name,
 		createdAt: item.createdAt,
 		parts: participants.map((participant) => ({

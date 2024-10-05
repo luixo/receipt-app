@@ -34,15 +34,10 @@ const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 const runTests = (
 	getUpdate: () => TRPCMutationInput<"receiptItems.update">["update"],
-	lockedBefore = false,
 ) => {
 	const runTest = async (ctx: TestContext, type: "own" | "foreign") => {
 		const { sessionId, accountId } = await insertAccountWithSession(ctx);
-		const { id: receiptId } = await insertReceipt(
-			ctx,
-			accountId,
-			lockedBefore ? { lockedTimestamp: new Date("2020-06-01") } : undefined,
-		);
+		const { id: receiptId } = await insertReceipt(ctx, accountId);
 		const { id: userId } = await insertUser(ctx, accountId);
 		const { id: receiptItemId } = await insertReceiptItem(ctx, receiptId);
 		await insertReceiptParticipant(ctx, receiptId, userId);
@@ -251,10 +246,6 @@ describe("receiptItems.update", () => {
 				type: "quantity",
 				quantity: faker.number.int({ max: 100 }),
 			}));
-		});
-
-		describe("update locked", () => {
-			runTests(() => ({ type: "locked", locked: true }), true);
 		});
 	});
 });

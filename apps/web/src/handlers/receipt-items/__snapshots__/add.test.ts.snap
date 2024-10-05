@@ -7,7 +7,6 @@ exports[`receiptItems.add > functionality > foreign receipt 1`] = `
       "id:3ed660de-52d8-4423-aa79-fcb1ce767e1b": {
         "createdAt": "2020-01-01T00:00:00.000Z",
         "id": "3ed660de-52d8-4423-aa79-fcb1ce767e1b",
-        "locked": false,
         "name": "perspiciatis dignissimos rerum",
         "price": "462.9900",
         "quantity": "82.0000",
@@ -26,7 +25,6 @@ exports[`receiptItems.add > functionality > own receipt 1`] = `
       "id:28cfeae0-3076-4054-a67e-d3566e5a782e": {
         "createdAt": "2020-01-01T00:00:00.000Z",
         "id": "28cfeae0-3076-4054-a67e-d3566e5a782e",
-        "locked": false,
         "name": "suscipit harum soluta",
         "price": "495.4000",
         "quantity": "13.0000",

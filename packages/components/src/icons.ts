@@ -4,7 +4,6 @@ export {
 	MdKeyboardArrowLeft as IncomingIcon,
 	MdKeyboardArrowRight as OutcomingIcon,
 	MdLock as LockedIcon,
-	MdLockOpen as UnlockedIcon,
 	MdDoneAll as DoneIcon,
 	MdRemoveDone as UndoneIcon,
 	MdHourglassDisabled as CrossWaitIcon,

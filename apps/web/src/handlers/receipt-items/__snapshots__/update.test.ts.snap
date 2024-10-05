@@ -1,31 +1,5 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`receiptItems.update > functionality > update locked > foreign 1`] = `
-{
-  "updated": {
-    "receiptItems": {
-      "id:f6ddac04-d233-4e5a-926c-680d1eeae1d5": {
-        "locked": true,
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`receiptItems.update > functionality > update locked > own 1`] = `
-{
-  "updated": {
-    "receiptItems": {
-      "id:11dfa3bf-8270-4233-8644-efa2066d2e0b": {
-        "locked": true,
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
 exports[`receiptItems.update > functionality > update name > foreign 1`] = `
 {
   "updated": {
