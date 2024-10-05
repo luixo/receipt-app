@@ -3,11 +3,7 @@
 		"debts.get:[{\"id\":\"5a3d3cd9-47f7-4dd8-8ea8-a455e4ba8bbf\"}]": {
 			"state": {
 				"data": {
-					"amount": 10760.56,
-					"lockedTimestamp": "2020-01-01T00:00:00.000Z",
-					"their": {
-						"lockedTimestamp": "2020-01-01T00:00:00.000Z"
-					}
+					"amount": 10760.56
 				},
 				"dataUpdateCount": 2
 			}
@@ -23,8 +19,8 @@
 			"2": {
 				"state": {
 					"data": {
-						"lockedTimestamp": "2020-01-01T00:00:00.000Z",
-						"reverseLockedTimestampUpdated": true
+						"updatedAt": "2020-01-01T00:00:00.000Z",
+						"reverseUpdated": true
 					},
 					"error": null,
 					"isPaused": false,

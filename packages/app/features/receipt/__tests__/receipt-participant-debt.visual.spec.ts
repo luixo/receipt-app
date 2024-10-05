@@ -3,7 +3,6 @@ import {
 	generateDebtsMapped,
 	ourDesynced,
 	ourNonExistent,
-	theirDesynced,
 	theirSynced,
 } from "~tests/frontend/generators/receipts";
 import { defaultGenerateUsers } from "~tests/frontend/generators/users";
@@ -43,11 +42,8 @@ test("Status icon", async ({
 	skip(testInfo, "only-smallest");
 	const { receipt } = mockReceiptWithDebts({
 		// We need at least 1 desynced user to open a modal
-		generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 3 }),
-		generateDebts: generateDebtsMapped(ourDesynced, [
-			theirDesynced,
-			theirSynced,
-		]),
+		generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 2 }),
+		generateDebts: generateDebtsMapped(ourDesynced, theirSynced),
 		generateReceiptItemsParts: (opts) =>
 			// Creating a 0 sum participant
 			defaultGenerateReceiptItemsParts({
@@ -61,12 +57,8 @@ test("Status icon", async ({
 		locator: participantDebtStatusIcon.nth(0),
 		mask: [debtSyncStatus],
 	});
-	await expectScreenshotWithSchemes("status-icon/mismatch.png", {
-		locator: participantDebtStatusIcon.nth(1),
-		mask: [debtSyncStatus],
-	});
 	await expectScreenshotWithSchemes("status-icon/zero-sum.png", {
-		locator: participantDebtStatusIcon.nth(2),
+		locator: participantDebtStatusIcon.nth(1),
 		mask: [debtSyncStatus],
 	});
 });

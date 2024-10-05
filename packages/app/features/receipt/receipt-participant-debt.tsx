@@ -9,6 +9,7 @@ import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
+import { isDebtInSyncWithReceipt } from "~app/utils/debts";
 import { getReceiptDebtName } from "~app/utils/receipt";
 import { Button } from "~components/button";
 import { ReceiptIcon, SendIcon, SyncIcon, ZeroIcon } from "~components/icons";
@@ -16,20 +17,6 @@ import { Text } from "~components/text";
 import type { UsersId } from "~db/models";
 import { options as debtsAddOptions } from "~mutations/debts/add";
 import { options as debtsUpdateOptions } from "~mutations/debts/update";
-
-export const isDebtInSyncWithReceipt = (
-	receiptDebt: Pick<LockedReceipt, "currencyCode" | "issued" | "id"> & {
-		participantSum: number;
-	},
-	debt: Pick<
-		NonNullable<DebtParticipant["currentDebt"]>,
-		"currencyCode" | "amount" | "timestamp" | "receiptId"
-	>,
-) =>
-	receiptDebt.currencyCode === debt.currencyCode &&
-	receiptDebt.participantSum === debt.amount &&
-	receiptDebt.issued.valueOf() === debt.timestamp.valueOf() &&
-	receiptDebt.id === debt.receiptId;
 
 export type DebtParticipant = {
 	userId: UsersId;
@@ -142,10 +129,8 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 							) : null}
 							{participant.currentDebt ? (
 								<DebtSyncStatus
-									debt={{
-										lockedTimestamp: participant.currentDebt.lockedTimestamp,
-										their: participant.currentDebt.their,
-									}}
+									debt={participant.currentDebt}
+									theirDebt={participant.currentDebt.their}
 									size="lg"
 								/>
 							) : null}

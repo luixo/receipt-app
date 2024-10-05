@@ -21,7 +21,7 @@ const createByUserIdDebt = (
 });
 
 const createDebt = (
-	{ id, lockedTimestamp, reverseAccepted }: AddResult,
+	{ id, updatedAt, reverseAccepted }: AddResult,
 	updateObject: TRPCMutationInput<"debts.add">,
 ): DebtSnapshot => {
 	const timestamp = updateObject.timestamp || new Date();
@@ -32,13 +32,13 @@ const createDebt = (
 		userId: updateObject.userId,
 		timestamp,
 		note: updateObject.note,
-		lockedTimestamp,
+		updatedAt,
 		their: reverseAccepted
 			? {
-					lockedTimestamp,
 					timestamp,
 					amount: updateObject.amount,
 					currencyCode: updateObject.currencyCode,
+					updatedAt,
 			  }
 			: undefined,
 		receiptId: updateObject.receiptId,

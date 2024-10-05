@@ -186,7 +186,7 @@ test.describe("Mutations", () => {
 			id:
 				debts.find((debt) => debt.userId === addedDebt.userId)?.id ||
 				faker.string.uuid(),
-			lockedTimestamp: new Date(),
+			updatedAt: new Date(),
 			reverseAccepted:
 				addedDebt.userId
 					.split("")
@@ -195,8 +195,8 @@ test.describe("Mutations", () => {
 				0,
 		}));
 		api.mock("debts.update", ({ input: updatedDebt }) => ({
-			lockedTimestamp: new Date(),
-			reverseLockedTimestampUpdated:
+			updatedAt: new Date(),
+			reverseUpdated:
 				updatedDebt.id.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0) %
 					2 ===
 				0,

@@ -81,7 +81,6 @@ export const upsertAutoAcceptedDebts = async (
 					timestamp: nextDebt.timestamp,
 					currencyCode: nextDebt.currencyCode,
 					receiptId: nextDebt.receiptId,
-					lockedTimestamp: nextDebt.lockedTimestamp,
 				})
 				.where((eb) =>
 					eb.and({

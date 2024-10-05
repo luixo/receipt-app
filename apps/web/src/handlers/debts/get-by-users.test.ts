@@ -1,4 +1,4 @@
-import { entries } from "remeda";
+import { entries, isNonNullish } from "remeda";
 import { describe, expect } from "vitest";
 
 import type { CurrencyCode } from "~app/utils/currency";
@@ -67,6 +67,7 @@ describe("debts.getByUsers", () => {
 				syncedDebt,
 				insertDebt(ctx, accountId, user.id, { currencyCode: "USD" }),
 				insertDebt(ctx, accountId, user.id, { currencyCode: "EUR" }),
+				insertDebt(ctx, foreignAccountId, foreignToSelfUserId).then(() => null),
 			]);
 
 			const anotherUser = await insertUser(ctx, accountId);
@@ -74,10 +75,6 @@ describe("debts.getByUsers", () => {
 				insertDebt(ctx, accountId, anotherUser.id, { currencyCode: "USD" }),
 				insertDebt(ctx, accountId, anotherUser.id, { currencyCode: "USD" }),
 				insertDebt(ctx, accountId, anotherUser.id, { currencyCode: "EUR" }),
-				insertDebt(ctx, accountId, anotherUser.id, {
-					currencyCode: "EUR",
-					lockedTimestamp: new Date(),
-				}),
 				insertDebt(ctx, accountId, anotherUser.id, { currencyCode: "GEL" }),
 			]);
 
@@ -93,8 +90,8 @@ describe("debts.getByUsers", () => {
 				[
 					{
 						userId: user.id,
-						debts: mapUserDebts(userDebts),
-						unsyncedDebtsAmount: 2,
+						debts: mapUserDebts(userDebts.filter(isNonNullish)),
+						unsyncedDebtsAmount: 3,
 					},
 					{
 						userId: anotherUser.id,
@@ -117,7 +114,7 @@ describe("debts.getByUsers", () => {
 
 		describe("unsynced amount of debts", () => {
 			describe("synced debts", () => {
-				test("synced debt", async ({ ctx }) => {
+				test("user counterparty is connected", async ({ ctx }) => {
 					const { sessionId, accountId } = await insertAccountWithSession(ctx);
 					const { id: foreignAccountId } = await insertAccount(ctx);
 					const [user, { id: foreignToSelfUserId }] =
@@ -174,7 +171,7 @@ describe("debts.getByUsers", () => {
 					]);
 				});
 
-				test("debt with a different lockedTimestamp", async ({ ctx }) => {
+				test("desynced debt", async ({ ctx }) => {
 					const { sessionId, accountId } = await insertAccountWithSession(ctx);
 					const { id: foreignAccountId } = await insertAccount(ctx);
 					const [user, { id: foreignToSelfUserId }] =
@@ -183,7 +180,13 @@ describe("debts.getByUsers", () => {
 						ctx,
 						[accountId, user.id],
 						[foreignAccountId, foreignToSelfUserId],
-						{ ahead: "their" },
+						{
+							ahead: "their",
+							fn: (originalDebt) => ({
+								...originalDebt,
+								amount: originalDebt.amount + 1,
+							}),
+						},
 					);
 					const caller = createCaller(createAuthContext(ctx, sessionId));
 					const result = await caller.procedure();
@@ -208,7 +211,13 @@ describe("debts.getByUsers", () => {
 							ctx,
 							[accountId, user.id],
 							[foreignAccountId, foreignToSelfUserId],
-							{ ahead: "their" },
+							{
+								ahead: "their",
+								fn: (originalDebt) => ({
+									...originalDebt,
+									amount: originalDebt.amount + 1,
+								}),
+							},
 						),
 					]);
 					// Synced debt

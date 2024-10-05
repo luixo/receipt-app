@@ -11,7 +11,7 @@ import type {
 } from "~db/models";
 import type { TestContext } from "~tests/backend/utils/test";
 import { asFixedSizeArray } from "~utils/array";
-import { MINUTE, YEAR } from "~utils/time";
+import { YEAR } from "~utils/time";
 import type { Role } from "~web/handlers/receipts/utils";
 import { generatePasswordData } from "~web/utils/crypto";
 
@@ -261,7 +261,6 @@ type DebtData = {
 	timestamp?: Date;
 	createdAt?: Date;
 	note?: string;
-	lockedTimestamp?: Date;
 	receiptId?: ReceiptsId;
 };
 
@@ -278,7 +277,7 @@ export const insertDebt = async (
 		timestamp,
 		createdAt,
 		note,
-		lockedTimestamp,
+		updatedAt,
 		receiptId,
 	} = await ctx.database
 		.insertInto("debts")
@@ -293,7 +292,6 @@ export const insertDebt = async (
 			timestamp: data.timestamp ?? new Date(),
 			createdAt: data.createdAt ?? new Date(),
 			note: data.note ?? faker.lorem.sentence(),
-			lockedTimestamp: data.lockedTimestamp ?? new Date(),
 			receiptId: data.receiptId ?? null,
 		})
 		.returning([
@@ -303,7 +301,7 @@ export const insertDebt = async (
 			"timestamp",
 			"createdAt",
 			"note",
-			"lockedTimestamp",
+			"updatedAt",
 			"receiptId",
 		])
 		.executeTakeFirstOrThrow();
@@ -314,7 +312,7 @@ export const insertDebt = async (
 		timestamp,
 		createdAt,
 		note,
-		lockedTimestamp,
+		updatedAt,
 		receiptId,
 	};
 };
@@ -324,22 +322,22 @@ const updateDebt = async (
 	ownerAccountId: AccountsId,
 	debtId: DebtsId,
 ) => {
-	const foreignDebt = await ctx.database
+	const debt = await ctx.database
 		.selectFrom("debts")
 		.where((eb) =>
 			eb.and([
-				eb("debts.ownerAccountId", "<>", ownerAccountId),
+				eb("debts.ownerAccountId", "=", ownerAccountId),
 				eb("debts.id", "=", debtId),
 			]),
 		)
-		.select("debts.lockedTimestamp")
+		.select("debts.note")
 		.executeTakeFirst();
-	if (!foreignDebt) {
+	if (!debt) {
 		throw new Error(
-			`Expected to update debt id "${debtId}" of a counterparty of "${ownerAccountId}", but find none.`,
+			`Expected to update debt id "${debtId}" of account id "${ownerAccountId}", but find none.`,
 		);
 	}
-	const { lockedTimestamp } = await ctx.database
+	const { updatedAt } = await ctx.database
 		.updateTable("debts")
 		.where((eb) =>
 			eb.and([
@@ -347,18 +345,13 @@ const updateDebt = async (
 				eb("debts.id", "=", debtId),
 			]),
 		)
-		.set({
-			lockedTimestamp: new Date(foreignDebt.lockedTimestamp.valueOf() + MINUTE),
-		})
-		.returning("debts.lockedTimestamp")
+		.set({ note: debt.note })
+		.returning("debts.updatedAt")
 		.executeTakeFirstOrThrow();
-	return { lockedTimestamp };
+	return { updatedAt };
 };
 
-type ReturnDebtData = Omit<
-	Awaited<ReturnType<typeof insertDebt>>,
-	"lockedTimestamp"
->;
+type ReturnDebtData = Awaited<ReturnType<typeof insertDebt>>;
 
 export const insertSyncedDebts = async (
 	ctx: TestContext,
@@ -369,13 +362,7 @@ export const insertSyncedDebts = async (
 		ahead?: "our" | "their";
 	},
 ) => {
-	// eslint-disable-next-line prefer-const
-	let { lockedTimestamp, ...originalDebt } = await insertDebt(
-		ctx,
-		ownerAccountId,
-		userId,
-		data,
-	);
+	const originalDebt = await insertDebt(ctx, ownerAccountId, userId, data);
 	const reverseDebtObject = desync?.fn ? desync.fn(originalDebt) : originalDebt;
 	const reverseDebt = await insertDebt(
 		ctx,
@@ -388,34 +375,32 @@ export const insertSyncedDebts = async (
 			timestamp: reverseDebtObject.timestamp,
 			createdAt: reverseDebtObject.createdAt,
 			note: reverseDebtObject.note,
-			lockedTimestamp,
 			receiptId: reverseDebtObject.receiptId || undefined,
 		},
 	);
-
 	switch (desync?.ahead) {
 		case "our": {
-			const { lockedTimestamp: selfLockedTimestamp } = await updateDebt(
+			const { updatedAt: selfUpdatedAt } = await updateDebt(
 				ctx,
 				ownerAccountId,
-				reverseDebtObject.id,
+				reverseDebt.id,
 			);
-			lockedTimestamp = selfLockedTimestamp;
+			originalDebt.updatedAt = selfUpdatedAt;
 			break;
 		}
 		case "their": {
-			const { lockedTimestamp: reverseLockedTimestamp } = await updateDebt(
+			const { updatedAt: reverseUpdatedAt } = await updateDebt(
 				ctx,
 				foreignOwnerAccountId,
 				reverseDebt.id,
 			);
-			reverseDebt.lockedTimestamp = reverseLockedTimestamp;
+			reverseDebt.updatedAt = reverseUpdatedAt;
 			break;
 		}
 		default:
 			break;
 	}
-	return [{ lockedTimestamp, ...originalDebt }, reverseDebt] as const;
+	return [originalDebt, reverseDebt] as const;
 };
 
 type ReceiptData = {

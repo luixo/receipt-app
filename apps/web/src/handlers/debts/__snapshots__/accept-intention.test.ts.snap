@@ -1,35 +1,48 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`debts.acceptIntention > functionality > debt is synced - created 1`] = `
+exports[`debts.acceptIntention > functionality > debt did not exist on our account beforehand 1`] = `
 {
   "added": {
     "debts": {
-      "id:2c59da16-ee80-4ed3-a62f-291fbfc17b70|ownerAccountId:65cd5b19-b0a7-426c-876e-3a4bef3b17f1": {
-        "amount": "-758.6800",
+      "id:a960195d-11ac-43b2-a920-8102435cdb2a|ownerAccountId:3f15eacc-f005-4bf0-b89b-358bb3828e10": {
+        "amount": "565.6400",
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "BDT",
-        "id": "2c59da16-ee80-4ed3-a62f-291fbfc17b70",
-        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "note": "Dignissimos repellat at sed quo quam voluptatum nostrum doloribus perspiciatis.",
-        "ownerAccountId": "65cd5b19-b0a7-426c-876e-3a4bef3b17f1",
-        "receiptId": "442ab28a-d0c3-4a76-bb51-faa5e93cec17",
+        "currencyCode": "TRY",
+        "id": "a960195d-11ac-43b2-a920-8102435cdb2a",
+        "note": "Ab dignissimos officia officia necessitatibus possimus.",
+        "ownerAccountId": "3f15eacc-f005-4bf0-b89b-358bb3828e10",
+        "receiptId": "ac86f88f-66a0-4e9a-8d77-7839add6d227",
         "timestamp": "2020-01-01T00:00:00.000Z",
         "updatedAt": "2020-01-01T00:00:00.000Z",
-        "userId": "dc0d920f-d9d2-41fa-be3d-cb499782b796",
+        "userId": "6d1a0999-ecd2-4c13-a06a-e18d2e71aca9",
       },
     },
   },
 }
 `;
 
-exports[`debts.acceptIntention > functionality > debt is synced - updated 1`] = `
+exports[`debts.acceptIntention > functionality > debt existed on our account beforehand - our updatedAt ahead 1`] = `
 {
   "updated": {
     "debts": {
-      "id:592887da-bdb5-43eb-86f0-4f570c986d2d|ownerAccountId:19cb23bc-c128-49c3-a6e8-a65f1e5b750e": {
-        "amount": "881.1200",
-        "currencyCode": "INR",
-        "lockedTimestamp": "2020-01-01T00:01:00.000Z",
+      "id:d71020d8-553b-45ce-8cd2-4df1d0057053|ownerAccountId:19787db4-b092-4be9-8721-93f366e58985": {
+        "amount": "741.2200",
+        "currencyCode": "BRL",
+        "timestamp": "2020-04-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:02:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`debts.acceptIntention > functionality > debt existed on our account beforehand - their updatedAt ahead 1`] = `
+{
+  "updated": {
+    "debts": {
+      "id:c0dfa818-bdd7-49f1-90ae-638adbe4238b|ownerAccountId:d3eb30cd-68d2-40cf-8e44-17cce47ac32c": {
+        "amount": "644.7300",
+        "currencyCode": "CVE",
         "timestamp": "2020-04-01T00:00:00.000Z",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },

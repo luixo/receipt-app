@@ -3,8 +3,7 @@
 		"debts.get:[{\"id\":\"51ca1f24-8af9-4931-a5f3-daae9a547eac\"}]": {
 			"state": {
 				"data": {
-					"amount": 14979.11,
-					"lockedTimestamp": "2020-01-01T00:00:00.000Z"
+					"amount": 14979.11
 				},
 				"dataUpdateCount": 1
 			}

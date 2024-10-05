@@ -59,7 +59,7 @@ export const DebtIntention = React.forwardRef<HTMLDivElement, Props>(
 					<View className="flex-row justify-between">
 						<View className="flex-row gap-1">
 							<SyncIcon size={24} />
-							<Text>{formatDateTime(intention.lockedTimestamp)}</Text>
+							<Text>{formatDateTime(intention.updatedAt)}</Text>
 						</View>
 						<View className="max-md:hidden">{children}</View>
 					</View>

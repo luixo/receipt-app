@@ -9,7 +9,6 @@ exports[`debts.acceptAllIntentions > functionality > debts are synced 1`] = `
         "createdAt": "2020-01-01T00:00:00.000Z",
         "currencyCode": "DOP",
         "id": "2ee764bb-d73e-4ac3-9edd-c93acc77fefb",
-        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
         "note": "Deserunt odit illum qui odit.",
         "ownerAccountId": "49833966-c16f-4eb9-a0c0-318c6a73279f",
         "receiptId": null,
@@ -22,7 +21,6 @@ exports[`debts.acceptAllIntentions > functionality > debts are synced 1`] = `
         "createdAt": "2020-01-01T00:00:00.000Z",
         "currencyCode": "FJD",
         "id": "72d7ec08-0e0e-417b-ab70-06dbab5c1f6a",
-        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
         "note": "Eveniet repellendus nam quisquam tempora soluta ducimus minus.",
         "ownerAccountId": "49833966-c16f-4eb9-a0c0-318c6a73279f",
         "receiptId": "051e068b-a996-4014-842a-c9964f794711",
@@ -37,7 +35,6 @@ exports[`debts.acceptAllIntentions > functionality > debts are synced 1`] = `
       "id:b225a43c-6f3d-47fd-99ff-2cf9650a5f02|ownerAccountId:49833966-c16f-4eb9-a0c0-318c6a73279f": {
         "amount": "-178.0100",
         "currencyCode": "EGP",
-        "lockedTimestamp": "2020-01-01T00:01:00.000Z",
         "timestamp": "2020-04-01T00:00:00.000Z",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },

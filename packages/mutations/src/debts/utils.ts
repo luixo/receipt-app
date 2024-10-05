@@ -88,8 +88,9 @@ export const updateGet = (
 		NonNullable<Parameters<typeof updateRevertDebts>[1]["get"]>
 	>[0],
 	intentions: Intention[],
-) =>
-	mergeUpdaterResults(
+) => {
+	const updatedAt = new Date();
+	return mergeUpdaterResults(
 		...intentions.reduce<(UpdaterRevertResult | undefined)[]>(
 			(
 				acc,
@@ -100,7 +101,7 @@ export const updateGet = (
 					currencyCode,
 					amount,
 					timestamp,
-					lockedTimestamp,
+					updatedAt: theirUpdatedAt,
 					note,
 					receiptId,
 				},
@@ -114,14 +115,14 @@ export const updateGet = (
 								currencyCode,
 								amount,
 								timestamp,
-								lockedTimestamp,
+								updatedAt,
 							}),
 							(snapshot) => (debt) => ({
 								...debt,
 								currencyCode: snapshot.currencyCode,
 								amount: snapshot.amount,
 								timestamp: snapshot.timestamp,
-								lockedTimestamp: snapshot.lockedTimestamp,
+								updatedAt: snapshot.updatedAt,
 							}),
 					  )
 					: controller.add({
@@ -131,23 +132,29 @@ export const updateGet = (
 							amount,
 							timestamp,
 							note,
-							lockedTimestamp,
-							their: { lockedTimestamp, timestamp, amount, currencyCode },
+							updatedAt,
+							their: {
+								updatedAt: theirUpdatedAt,
+								timestamp,
+								amount,
+								currencyCode,
+							},
 							receiptId,
 					  }),
 			],
 			[],
 		),
 	);
+};
 
 export type CurrentDebt = {
 	userId: UsersId;
 	amount: number;
 	currencyCode: CurrencyCode;
 	receiptId?: ReceiptsId;
-	lockedTimestamp?: Date | undefined;
+	updatedAt: Date;
 	their?: {
-		lockedTimestamp: Date | undefined;
+		updatedAt: Date;
 	};
 };
 
@@ -156,12 +163,12 @@ type DebtByUserIdSnapshot = TRPCQueryOutput<"debts.getIdsByUser">[number];
 type DebtSnapshot = TRPCQueryOutput<"debts.get">;
 type DebtUpdateObject = TRPCMutationInput<"debts.update">["update"];
 
-export const getNextLockedTimestamp = (update: DebtUpdateObject) =>
-	update.amount !== undefined ||
-	update.timestamp !== undefined ||
-	update.currencyCode !== undefined
-		? new Date()
-		: undefined;
+const isUpdateSyncable = (update: DebtUpdateObject) =>
+	Boolean(
+		update.amount !== undefined ||
+			update.timestamp !== undefined ||
+			update.currencyCode !== undefined,
+	);
 
 export const applySumUpdate =
 	(prevAmount: number, update: DebtUpdateObject): UpdateFn<DebtSum> =>
@@ -198,9 +205,9 @@ export const applyUpdate =
 		if (update.note !== undefined) {
 			nextDebt.note = update.note;
 		}
-		const nextLockedTimestamp = getNextLockedTimestamp(update);
-		if (nextLockedTimestamp) {
-			nextDebt.lockedTimestamp = nextLockedTimestamp;
+		const updateSyncable = isUpdateSyncable(update);
+		if (updateSyncable) {
+			nextDebt.updatedAt = new Date();
 		}
 		return nextDebt;
 	};
@@ -243,9 +250,9 @@ export const getRevert =
 		if (update.note !== undefined) {
 			revertDebt.note = snapshot.note;
 		}
-		const nextLockedTimestamp = getNextLockedTimestamp(update);
-		if (nextLockedTimestamp) {
-			revertDebt.lockedTimestamp = snapshot.lockedTimestamp;
+		const wasUpdateSyncable = isUpdateSyncable(update);
+		if (wasUpdateSyncable) {
+			revertDebt.updatedAt = snapshot.updatedAt;
 		}
 		return revertDebt;
 	};
@@ -275,17 +282,17 @@ export const updateReceiptWithOutcomingDebtId = (
 	});
 };
 
-export const updateLockedTimestamps = (
+export const updateUpdatedAt = (
 	controllerContext: ControllerContext,
 	currDebt: CurrentDebt,
 	debtId: DebtsId,
-	lockedTimestamp: Date | undefined,
-	reverseLockedTimestampUpdated: boolean,
+	updatedAt: Date | undefined,
+	reverseUpdated: boolean,
 ) => {
 	updateDebts(controllerContext, {
 		getByUsers: (controller) => {
-			if (!reverseLockedTimestampUpdated) {
-				// We updated something meaninful (lockedTimestamp changed) and reverse was not accepted
+			if (!reverseUpdated) {
+				// We updated something meaninful and reverse was not accepted
 				// Hence previously synced debt is now unsynced
 				controller.updateUnsyncedDebts(currDebt.userId, (amount) => amount + 1);
 			}
@@ -294,13 +301,13 @@ export const updateLockedTimestamps = (
 		get: (controller) => {
 			controller.update(debtId, (debt) => ({
 				...debt,
-				lockedTimestamp: lockedTimestamp || debt.lockedTimestamp,
-				their: reverseLockedTimestampUpdated
+				updatedAt: updatedAt || debt.updatedAt,
+				their: reverseUpdated
 					? {
 							amount: debt.amount,
 							currencyCode: debt.currencyCode,
 							timestamp: debt.timestamp,
-							lockedTimestamp: lockedTimestamp || debt.lockedTimestamp,
+							updatedAt: updatedAt || debt.updatedAt,
 					  }
 					: debt.their,
 			}));

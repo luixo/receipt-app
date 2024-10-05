@@ -114,5 +114,6 @@ export const getRevertController = ({ trpcUtils }: ControllerContext) => {
 		update: updateRevert(controller),
 		add: addRevert(controller),
 		remove: removeRevert(controller),
+		invalidate: invalidate(controller),
 	};
 };

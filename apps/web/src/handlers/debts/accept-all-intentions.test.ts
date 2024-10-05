@@ -33,12 +33,18 @@ describe("debts.acceptAllIntentions", () => {
 			const [{ id: userId }, { id: foreignToSelfUserId }] =
 				await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
 
-			// An outdated intention
+			// An unsynced debt waiting for foreign actor to accept
 			await insertSyncedDebts(
 				ctx,
 				[accountId, userId],
 				[foreignAccountId, foreignToSelfUserId],
-				{ ahead: "our" },
+				{
+					ahead: "our",
+					fn: (originalDebt) => ({
+						...originalDebt,
+						amount: originalDebt.amount + 1,
+					}),
+				},
 			);
 			// An intention to sync from our side
 			await insertDebt(ctx, accountId, userId);
@@ -59,21 +65,31 @@ describe("debts.acceptAllIntentions", () => {
 			const [{ id: userId }, { id: foreignToSelfUserId }] =
 				await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
 
-			// An outdated intention
+			// An unsynced debt waiting for foreign actor to accept
 			await insertSyncedDebts(
 				ctx,
 				[accountId, userId],
 				[foreignAccountId, foreignToSelfUserId],
-				{ ahead: "our" },
+				{
+					ahead: "our",
+					fn: (originalDebt) => ({
+						...originalDebt,
+						amount: originalDebt.amount + 1,
+					}),
+				},
 			);
 			// An intention to sync from their side
-			await insertDebt(ctx, foreignAccountId, foreignToSelfUserId);
-			// Updated debt
+			const newForeignDebt = await insertDebt(
+				ctx,
+				foreignAccountId,
+				foreignToSelfUserId,
+			);
+			// An unsynced debt waiting for us to accept
 			const { id: foreignReceiptId } = await insertReceipt(
 				ctx,
 				foreignAccountId,
 			);
-			await insertSyncedDebts(
+			const [, unsyncedForeignDebt] = await insertSyncedDebts(
 				ctx,
 				[accountId, userId],
 				[foreignAccountId, foreignToSelfUserId],
@@ -95,16 +111,29 @@ describe("debts.acceptAllIntentions", () => {
 				ctx,
 				foreignAccountId,
 			);
-			await insertDebt(ctx, foreignAccountId, foreignToSelfUserId, {
-				createdAt: new Date("2020-05-01"),
-				receiptId: anotherForeignReceiptId,
-			});
+			const receiptForeignDebt = await insertDebt(
+				ctx,
+				foreignAccountId,
+				foreignToSelfUserId,
+				{
+					createdAt: new Date("2020-05-01"),
+					receiptId: anotherForeignReceiptId,
+				},
+			);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure(),
 			);
-			expect(result).toStrictEqual<typeof result>(undefined);
+			expect(result).toStrictEqual<typeof result>(
+				[newForeignDebt, unsyncedForeignDebt, receiptForeignDebt]
+					.sort(
+						(a, b) =>
+							a.updatedAt.valueOf() - b.updatedAt.valueOf() ||
+							a.id.localeCompare(b.id),
+					)
+					.map((debt) => ({ id: debt.id, updatedAt: debt.updatedAt })),
+			);
 		});
 	});
 });

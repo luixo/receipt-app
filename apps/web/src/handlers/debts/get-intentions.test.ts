@@ -31,12 +31,18 @@ describe("debts.getIntentions", () => {
 			const [{ id: userId }, { id: foreignToSelfUserId }] =
 				await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
 
-			// An outdated intention
+			// An unsynced debt waiting for foreign actor to accept
 			await insertSyncedDebts(
 				ctx,
 				[accountId, userId],
 				[foreignAccountId, foreignToSelfUserId],
-				{ ahead: "our" },
+				{
+					ahead: "our",
+					fn: (originalDebt) => ({
+						...originalDebt,
+						amount: originalDebt.amount + 1,
+					}),
+				},
 			);
 			// Our debt
 			await insertDebt(ctx, accountId, userId);
@@ -52,23 +58,29 @@ describe("debts.getIntentions", () => {
 			const [{ id: userId }, { id: foreignToSelfUserId }] =
 				await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
 
-			// An outdated intention
+			// An unsynced debt waiting for foreign actor to accept
 			await insertSyncedDebts(
 				ctx,
 				[accountId, userId],
 				[foreignAccountId, foreignToSelfUserId],
-				{ ahead: "our" },
+				{
+					ahead: "our",
+					fn: (originalDebt) => ({
+						...originalDebt,
+						amount: originalDebt.amount + 1,
+					}),
+				},
 			);
 			// Our debt
 			await insertDebt(ctx, accountId, userId);
-			// Updated debt
+			// An unsynced debt waiting for us to accept
 			const { id: foreignReceiptId } = await insertReceipt(
 				ctx,
 				foreignAccountId,
 			);
 			const [debtToUpdate, foreignDebtToUpdate] = await insertSyncedDebts(
 				ctx,
-				[accountId, userId, { lockedTimestamp: new Date("2020-06-01") }],
+				[accountId, userId],
 				[foreignAccountId, foreignToSelfUserId],
 				{
 					ahead: "their",
@@ -102,7 +114,7 @@ describe("debts.getIntentions", () => {
 						userId,
 						amount: -Number(foreignDebtToUpdate.amount),
 						currencyCode: foreignDebtToUpdate.currencyCode,
-						lockedTimestamp: foreignDebtToUpdate.lockedTimestamp,
+						updatedAt: foreignDebtToUpdate.updatedAt,
 						timestamp: foreignDebtToUpdate.timestamp,
 						note: debtToUpdate.note,
 						receiptId: foreignDebtToUpdate.receiptId || undefined,
@@ -117,15 +129,13 @@ describe("debts.getIntentions", () => {
 						userId,
 						amount: -Number(debtToCreate.amount),
 						currencyCode: debtToCreate.currencyCode,
-						lockedTimestamp: debtToCreate.lockedTimestamp,
+						updatedAt: debtToCreate.updatedAt,
 						timestamp: debtToCreate.timestamp,
 						note: debtToCreate.note,
 						receiptId: debtToCreate.receiptId || undefined,
 						current: undefined,
 					},
-				].sort(
-					(a, b) => b.lockedTimestamp.valueOf() - a.lockedTimestamp.valueOf(),
-				),
+				].sort((a, b) => b.updatedAt.valueOf() - a.updatedAt.valueOf()),
 			);
 		});
 	});

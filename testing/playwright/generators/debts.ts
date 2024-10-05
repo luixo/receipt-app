@@ -34,7 +34,7 @@ export const defaultGenerateDebts = ({
 		note: faker.lorem.words(4),
 		receiptId: undefined,
 		amount: faker.number.float({ min: -10000, max: 10000, precision: 0.01 }),
-		lockedTimestamp: new Date(),
+		updatedAt: new Date(),
 		their: undefined,
 		userId,
 	}));
@@ -64,7 +64,6 @@ export const defaultGenerateDebtsFromReceipt: GenerateDebtsFromReceipt = ({
 			if (participantSum.sum === 0) {
 				return null;
 			}
-			const debtLockedTimestamp = new Date(Date.now() - 1000);
 			return {
 				id: faker.string.uuid(),
 				currencyCode: receiptBase.currencyCode,
@@ -73,9 +72,9 @@ export const defaultGenerateDebtsFromReceipt: GenerateDebtsFromReceipt = ({
 				timestamp: receiptBase.issued,
 				note: `Fake receipt "${receiptBase.name}"`,
 				amount: participantSum.sum,
-				lockedTimestamp: debtLockedTimestamp,
+				updatedAt: new Date(),
 				their: {
-					lockedTimestamp: debtLockedTimestamp,
+					updatedAt: new Date(),
 					currencyCode: receiptBase.currencyCode,
 					timestamp: receiptBase.issued,
 					amount: participantSum.sum,

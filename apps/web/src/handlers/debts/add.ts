@@ -5,7 +5,7 @@ import { z } from "zod";
 
 import { debtAmountSchema, debtNoteSchema } from "~app/utils/validation";
 import { DEBTS } from "~db/consts";
-import type { DebtsId } from "~db/models";
+import type { DebtsId, UsersId } from "~db/models";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import { authProcedure } from "~web/handlers/trpc";
@@ -101,7 +101,6 @@ const getDataDebtsWithErrors = (
 		  }
 		| TRPCError
 	)[],
-	lockedTimestamp: Date,
 ) =>
 	debtsWithErrors.map((debtOrError) => {
 		if (debtOrError instanceof Error) {
@@ -117,7 +116,6 @@ const getDataDebtsWithErrors = (
 				currencyCode: debt.currencyCode,
 				createdAt: new Date(),
 				timestamp: debt.timestamp || new Date(),
-				lockedTimestamp,
 				receiptId: debt.receiptId,
 			},
 		};
@@ -208,9 +206,10 @@ const addDebts = async (
 				validatedId: DebtsId;
 		  })
 	)[],
+	acceptedUserIds: UsersId[],
 ) => {
 	try {
-		await ctx.database
+		const values = await ctx.database
 			.insertInto("debts")
 			.values(
 				dataDebtsWithErrors
@@ -229,7 +228,23 @@ const addDebts = async (
 					})
 					.filter(isNonNullish),
 			)
+			.returning(["debts.id", "debts.updatedAt", "debts.userId"])
 			.execute();
+		return dataDebtsWithErrors.map((debtOrError) => {
+			if (isError(debtOrError)) {
+				return debtOrError;
+			}
+			// We just added these value, should be returned in `values` variable
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			const { id, updatedAt, userId } = values.find(
+				({ id: lookupId }) => lookupId === debtOrError.validatedId,
+			)!;
+			return {
+				id,
+				updatedAt,
+				reverseAccepted: acceptedUserIds.includes(userId),
+			};
+		});
 	} catch (e) {
 		// Could be like `duplicate key value violates unique constraint "..."`
 		const message = String(e);
@@ -252,7 +267,7 @@ const queueAddDebt = queueCallFactory<
 	z.infer<typeof addDebtSchema>,
 	{
 		id: DebtsId;
-		lockedTimestamp: Date;
+		updatedAt: Date;
 		reverseAccepted: boolean;
 	}
 >((ctx) => async (debts) => {
@@ -283,12 +298,7 @@ const queueAddDebt = queueCallFactory<
 	if (debtsOrErrors.length === errors.length) {
 		return errors;
 	}
-	const lockedTimestamp = new Date();
-	const dataDebtsWithErrors = getDataDebtsWithErrors(
-		ctx,
-		debtsOrErrors,
-		lockedTimestamp,
-	);
+	const dataDebtsWithErrors = getDataDebtsWithErrors(ctx, debtsOrErrors);
 	const { reverseIds, acceptedUserIds } = await addAutoAcceptingDebts(
 		ctx,
 		dataDebtsWithErrors,
@@ -302,18 +312,7 @@ const queueAddDebt = queueCallFactory<
 				  }
 				: dataDebtOrError,
 	);
-	await addDebts(ctx, validatedDataDebtsWithErrors);
-
-	return validatedDataDebtsWithErrors.map((dataDebtOrError) => {
-		if (isError(dataDebtOrError)) {
-			return dataDebtOrError;
-		}
-		return {
-			id: dataDebtOrError.validatedId,
-			lockedTimestamp,
-			reverseAccepted: acceptedUserIds.includes(dataDebtOrError.debt.userId),
-		};
-	});
+	return addDebts(ctx, validatedDataDebtsWithErrors, acceptedUserIds);
 });
 
 export const procedure = authProcedure

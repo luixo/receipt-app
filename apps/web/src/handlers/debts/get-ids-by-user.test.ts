@@ -113,7 +113,13 @@ describe("debts.getIdsByUser", () => {
 					ctx,
 					[accountId, userId],
 					[foreignAccountId, foreignToSelfUserId],
-					{ ahead: "their" },
+					{
+						ahead: "their",
+						fn: (originalDebt) => ({
+							...originalDebt,
+							amount: originalDebt.amount + 1,
+						}),
+					},
 				),
 			]);
 			const userDebts = await Promise.all([

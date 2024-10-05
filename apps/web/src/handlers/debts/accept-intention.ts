@@ -1,8 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import type { Debts } from "~db/models";
-import type { MappedNullableObject } from "~utils/types";
 import { authProcedure } from "~web/handlers/trpc";
 import { debtIdSchema } from "~web/handlers/validation";
 
@@ -35,25 +33,15 @@ export const procedure = authProcedure
 			)
 			.select([
 				"theirDebts.ownerAccountId",
-				"theirDebts.lockedTimestamp",
+				"theirDebts.updatedAt",
 				"theirDebts.amount",
 				"theirDebts.note",
 				"theirDebts.timestamp",
 				"theirDebts.currencyCode",
 				"theirDebts.receiptId",
 				"selfDebts.id as selfId",
-				"selfDebts.lockedTimestamp as selfLockedTimestamp",
 				"users.id as foreignUserId",
 			])
-			.$narrowType<
-				MappedNullableObject<
-					Debts,
-					{
-						selfLockedTimestamp: "lockedTimestamp";
-						selfId: "id";
-					}
-				>
-			>()
 			.executeTakeFirst();
 		if (!debt) {
 			throw new TRPCError({
@@ -62,9 +50,8 @@ export const procedure = authProcedure
 			});
 		}
 		if (!debt.selfId) {
-			const createdTimestamp = new Date();
 			const nextAmount = Number(debt.amount) * -1;
-			await database
+			const { updatedAt } = await database
 				.insertInto("debts")
 				.values({
 					id: input.id,
@@ -73,22 +60,16 @@ export const procedure = authProcedure
 					currencyCode: debt.currencyCode,
 					amount: nextAmount.toString(),
 					timestamp: debt.timestamp,
-					createdAt: createdTimestamp,
+					createdAt: new Date(),
 					note: debt.note,
-					lockedTimestamp: debt.lockedTimestamp,
 					receiptId: debt.receiptId,
 				})
-				.execute();
-			return { createdAt: createdTimestamp };
-		}
-		if (debt.selfLockedTimestamp.valueOf() > debt.lockedTimestamp.valueOf()) {
-			throw new TRPCError({
-				code: "FORBIDDEN",
-				message: `The counterparty is intended to accept debt "${input.id}" as our timestamp is more fresh.`,
-			});
+				.returning(["debts.updatedAt"])
+				.executeTakeFirstOrThrow();
+			return { updatedAt };
 		}
 		const nextAmount = Number(debt.amount) * -1;
-		const result = await database
+		const { updatedAt } = await database
 			.updateTable("debts")
 			.where((eb) =>
 				eb.and({
@@ -100,10 +81,9 @@ export const procedure = authProcedure
 				amount: nextAmount.toString(),
 				currencyCode: debt.currencyCode,
 				timestamp: debt.timestamp,
-				lockedTimestamp: debt.lockedTimestamp,
 			})
-			.returning("debts.createdAt")
+			.returning(["debts.updatedAt"])
 			.executeTakeFirstOrThrow();
 
-		return { createdAt: result.createdAt };
+		return { updatedAt };
 	});
