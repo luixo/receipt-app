@@ -31,7 +31,6 @@ const getItems = (
 		.map((item) => ({
 			id: item.id,
 			name: item.name,
-			locked: item.locked ?? false,
 			price: Number(item.price),
 			quantity: Number(item.quantity),
 			createdAt: item.createdAt,

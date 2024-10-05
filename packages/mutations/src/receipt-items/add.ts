@@ -21,7 +21,6 @@ export const options: UseContextedMutationOptions<
 						name: variables.name,
 						price: variables.price,
 						quantity: variables.quantity,
-						locked: false,
 						createdAt: new Date(),
 						parts: [],
 					}),

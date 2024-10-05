@@ -19,8 +19,6 @@ const applyUpdate =
 				return { ...item, price: update.price };
 			case "quantity":
 				return { ...item, quantity: update.quantity };
-			case "locked":
-				return { ...item, locked: update.locked };
 		}
 	};
 
@@ -37,8 +35,6 @@ const getRevert =
 				return { ...item, price: snapshot.price };
 			case "quantity":
 				return { ...item, quantity: snapshot.quantity };
-			case "locked":
-				return { ...item, locked: snapshot.locked };
 		}
 	};
 

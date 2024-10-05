@@ -1,7 +1,6 @@
 import React from "react";
 import { View } from "react-native";
 
-import { ReceiptItemLockedButton } from "~app/components/app/receipt-item-locked-button";
 import { ErrorMessage } from "~app/components/error-message";
 import { RemoveButton } from "~app/components/remove-button";
 import { ReceiptItemPart } from "~app/features/receipt-item-parts/receipt-item-part";
@@ -89,7 +88,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 			participants.find((participant) => participant.userId === selfUserId)
 				?.role ?? "owner";
 		const isOwner = selfRole === "owner";
-		const isEditingDisabled = selfRole === "viewer" || item.locked;
+		const isEditingDisabled = selfRole === "viewer";
 
 		return (
 			<Card ref={ref}>
@@ -100,24 +99,16 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 						readOnly={isEditingDisabled || receiptLocked}
 						isLoading={isDeleteLoading}
 					/>
-					<View className="flex-row gap-4">
-						<ReceiptItemLockedButton
-							receiptId={receiptId}
-							receiptItemId={item.id}
-							locked={item.locked}
-							isDisabled={selfRole === "viewer"}
+					{isEditingDisabled ? null : (
+						<RemoveButton
+							onRemove={removeItem}
+							isDisabled={receiptLocked}
+							mutation={removeReceiptItemMutation}
+							subtitle="This will remove item with all participant's parts"
+							noConfirm={item.parts.length === 0}
+							isIconOnly
 						/>
-						{isEditingDisabled ? null : (
-							<RemoveButton
-								onRemove={removeItem}
-								isDisabled={receiptLocked}
-								mutation={removeReceiptItemMutation}
-								subtitle="This will remove item with all participant's parts"
-								noConfirm={item.parts.length === 0}
-								isIconOnly
-							/>
-						)}
-					</View>
+					)}
 				</CardHeader>
 				<Divider />
 				<CardBody className="gap-2">

@@ -54,7 +54,6 @@ const fetchReceipts = async (
 						"receiptItems.name",
 						"receiptItems.price",
 						"receiptItems.quantity",
-						"receiptItems.locked",
 						"receiptItems.createdAt",
 						jsonArrayFrom(
 							ebb
@@ -200,7 +199,6 @@ const mapReceipt = (
 		items: items.map((item) => ({
 			...item,
 			createdAt: new Date(item.createdAt),
-			locked: Boolean(item.locked),
 			price: Number(item.price),
 			quantity: Number(item.quantity),
 			parts: item.parts
