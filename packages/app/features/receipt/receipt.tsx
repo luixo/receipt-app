@@ -18,8 +18,8 @@ import { ReceiptCurrencyInput } from "./receipt-currency-input";
 import { ReceiptDateInput } from "./receipt-date-input";
 import { ReceiptGuestControlButton } from "./receipt-guest-control-button";
 import { ReceiptNameInput } from "./receipt-name-input";
-import { ReceiptOwnerControlButton } from "./receipt-owner-control-button";
 import { ReceiptRemoveButton } from "./receipt-remove-button";
+import { ReceiptSyncButton } from "./receipt-sync-button";
 import { ReceiptTransferModal } from "./receipt-transfer-modal";
 
 type InnerProps = {
@@ -33,8 +33,7 @@ export const ReceiptInner: React.FC<InnerProps> = ({ query }) => {
 	const [isEditing, { switchValue: switchEditing, setFalse: unsetEditing }] =
 		useBooleanState();
 	const isOwner = receipt.selfUserId === receipt.ownerUserId;
-	const disabled =
-		!isOwner || deleteLoading || Boolean(receipt.lockedTimestamp);
+	const disabled = !isOwner || deleteLoading;
 
 	return (
 		<>
@@ -55,9 +54,15 @@ export const ReceiptInner: React.FC<InnerProps> = ({ query }) => {
 							isDisabled={deleteLoading}
 						/>
 						{isOwner ? (
-							<ReceiptOwnerControlButton
+							<ReceiptSyncButton
+								key={
+									// This is required for stability of the hooks in the component
+									receipt.participants.filter(
+										(participant) => participant.userId !== receipt.selfUserId,
+									).length
+								}
 								receipt={receipt}
-								deleteLoading={deleteLoading}
+								isLoading={deleteLoading}
 							/>
 						) : (
 							<ReceiptGuestControlButton receipt={receipt} />

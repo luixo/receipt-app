@@ -144,7 +144,6 @@ describe("receipts.get", () => {
 					participants: [],
 					debt: { direction: "outcoming", ids: [] },
 					transferIntentionUserId: undefined,
-					lockedTimestamp: undefined,
 				});
 			});
 
@@ -156,7 +155,6 @@ describe("receipts.get", () => {
 				} = await insertAccountWithSession(ctx);
 				const { id: foreignAccountId } = await insertAccount(ctx);
 				const receipt = await insertReceipt(ctx, accountId, {
-					lockedTimestamp: new Date(),
 					transferIntentionAccountId: foreignAccountId,
 				});
 				const [foreignUser] = await insertConnectedUsers(ctx, [
@@ -176,7 +174,6 @@ describe("receipts.get", () => {
 					issued: receipt.issued,
 					ownerUserId: selfUserId,
 					selfUserId,
-					lockedTimestamp: receipt.lockedTimestamp || undefined,
 					transferIntentionUserId: foreignUser.id,
 					items: [],
 					participants: [],
@@ -190,9 +187,7 @@ describe("receipts.get", () => {
 			const { id: foreignAccountId } = await insertAccount(ctx);
 			const [{ id: foreignUserId }, { id: foreignToSelfUserId }] =
 				await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
-			const receipt = await insertReceipt(ctx, foreignAccountId, {
-				lockedTimestamp: new Date(),
-			});
+			const receipt = await insertReceipt(ctx, foreignAccountId);
 			const participant = await insertReceiptParticipant(
 				ctx,
 				receipt.id,
@@ -208,7 +203,6 @@ describe("receipts.get", () => {
 				issued: receipt.issued,
 				ownerUserId: foreignUserId,
 				selfUserId: foreignToSelfUserId,
-				lockedTimestamp: receipt.lockedTimestamp || undefined,
 				items: [],
 				participants: getParticipants([participant]),
 				debt: {
@@ -258,7 +252,6 @@ describe("receipts.get", () => {
 					items: [],
 					participants: getParticipants([participant]),
 					transferIntentionUserId: undefined,
-					lockedTimestamp: undefined,
 				});
 			});
 
@@ -267,9 +260,7 @@ describe("receipts.get", () => {
 				const { id: foreignAccountId } = await insertAccount(ctx);
 				const [{ id: foreignUserId }, { id: foreignToSelfUserId }] =
 					await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
-				const receipt = await insertReceipt(ctx, foreignAccountId, {
-					lockedTimestamp: new Date(),
-				});
+				const receipt = await insertReceipt(ctx, foreignAccountId);
 				const participant = await insertReceiptParticipant(
 					ctx,
 					receipt.id,
@@ -288,7 +279,6 @@ describe("receipts.get", () => {
 					issued: receipt.issued,
 					ownerUserId: foreignUserId,
 					selfUserId: foreignToSelfUserId,
-					lockedTimestamp: receipt.lockedTimestamp || undefined,
 					debt: {
 						direction: "incoming",
 						hasMine: true,
@@ -336,7 +326,6 @@ describe("receipts.get", () => {
 					items: [],
 					participants: getParticipants([participant]),
 					transferIntentionUserId: undefined,
-					lockedTimestamp: undefined,
 				});
 			});
 
@@ -374,7 +363,6 @@ describe("receipts.get", () => {
 					items: [],
 					participants: [],
 					transferIntentionUserId: undefined,
-					lockedTimestamp: undefined,
 				});
 			});
 		});
@@ -442,7 +430,6 @@ describe("receipts.get", () => {
 				]),
 				debt: { direction: "outcoming", ids: [] },
 				transferIntentionUserId: undefined,
-				lockedTimestamp: undefined,
 			});
 		});
 
@@ -467,7 +454,6 @@ describe("receipts.get", () => {
 				participants: [],
 				debt: { direction: "outcoming", ids: [] },
 				transferIntentionUserId: undefined,
-				lockedTimestamp: undefined,
 			});
 		});
 
@@ -559,7 +545,6 @@ describe("receipts.get", () => {
 					id: undefined,
 				},
 				transferIntentionUserId: undefined,
-				lockedTimestamp: undefined,
 			});
 		});
 	});

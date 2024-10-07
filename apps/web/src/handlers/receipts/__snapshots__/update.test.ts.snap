@@ -1,12 +1,11 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`receipts.update > functionality > update currency code > locked before update 1`] = `
+exports[`receipts.update > functionality > update currency code 1`] = `
 {
   "updated": {
     "receipts": {
-      "id:65b1d21a-4b9d-4019-a838-fbddad09c2b2": {
-        "currencyCode": "BIF",
-        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
+      "id:f1becfdb-af87-4219-a543-ad411d7da19a": {
+        "currencyCode": "JMD",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },
@@ -14,24 +13,11 @@ exports[`receipts.update > functionality > update currency code > locked before 
 }
 `;
 
-exports[`receipts.update > functionality > update currency code > unlocked before update 1`] = `
+exports[`receipts.update > functionality > update issued 1`] = `
 {
   "updated": {
     "receipts": {
-      "id:ce2a0b7b-e615-42b9-be91-214ad04913ba": {
-        "currencyCode": "HNL",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`receipts.update > functionality > update issued > locked before update 1`] = `
-{
-  "updated": {
-    "receipts": {
-      "id:65b1d21a-4b9d-4019-a838-fbddad09c2b2": {
+      "id:a9cf95b8-ac8a-4624-912b-de8fc0eb9637": {
         "issued": "2020-06-01T00:00:00.000Z",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
@@ -40,89 +26,12 @@ exports[`receipts.update > functionality > update issued > locked before update 
 }
 `;
 
-exports[`receipts.update > functionality > update issued > unlocked before update 1`] = `
+exports[`receipts.update > functionality > update name 1`] = `
 {
   "updated": {
     "receipts": {
-      "id:ce2a0b7b-e615-42b9-be91-214ad04913ba": {
-        "issued": "2020-06-01T00:00:00.000Z",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`receipts.update > functionality > update locked - false > locked before update 1`] = `
-{
-  "updated": {
-    "receipts": {
-      "id:65b1d21a-4b9d-4019-a838-fbddad09c2b2": {
-        "lockedTimestamp": null,
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`receipts.update > functionality > update locked - false > unlocked before update 1`] = `
-{
-  "updated": {
-    "receipts": {
-      "id:ce2a0b7b-e615-42b9-be91-214ad04913ba": {
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`receipts.update > functionality > update locked - true > locked before update 1`] = `
-{
-  "updated": {
-    "receipts": {
-      "id:65b1d21a-4b9d-4019-a838-fbddad09c2b2": {
-        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`receipts.update > functionality > update locked - true > unlocked before update 1`] = `
-{
-  "updated": {
-    "receipts": {
-      "id:ce2a0b7b-e615-42b9-be91-214ad04913ba": {
-        "lockedTimestamp": "2020-01-01T00:00:00.000Z",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`receipts.update > functionality > update name > locked before update 1`] = `
-{
-  "updated": {
-    "receipts": {
-      "id:65b1d21a-4b9d-4019-a838-fbddad09c2b2": {
-        "name": "quia soluta accusantium",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`receipts.update > functionality > update name > unlocked before update 1`] = `
-{
-  "updated": {
-    "receipts": {
-      "id:ce2a0b7b-e615-42b9-be91-214ad04913ba": {
-        "name": "ipsam aspernatur assumenda",
+      "id:1bbf158c-dec0-45e5-aeb8-29abfd829956": {
+        "name": "illo eius vitae",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },

@@ -62,10 +62,6 @@ export const FilterButton: React.FC = () => {
 		(selection: Selection) => onFilterSelectionChange("ownedByMe", selection),
 		[onFilterSelectionChange],
 	);
-	const onLockedFilterSelectionChange = React.useCallback(
-		(selection: Selection) => onFilterSelectionChange("locked", selection),
-		[onFilterSelectionChange],
-	);
 
 	return (
 		<>
@@ -133,32 +129,6 @@ export const FilterButton: React.FC = () => {
 								<DropdownItem key="undefined">Owned by anybody</DropdownItem>
 								<DropdownItem key="true">Owned by me</DropdownItem>
 								<DropdownItem key="false">Owned not by me</DropdownItem>
-							</DropdownMenu>
-						</Dropdown>
-						<Dropdown>
-							<DropdownTrigger>
-								<Button
-									color="primary"
-									variant="flat"
-									startContent={<ChevronDown />}
-								>
-									{filters.locked === undefined
-										? "Locked status - off"
-										: filters.locked
-										? "Only locked"
-										: "Only unlocked"}
-								</Button>
-							</DropdownTrigger>
-							<DropdownMenu
-								aria-label="Locked filter"
-								disallowEmptySelection
-								selectionMode="single"
-								selectedKeys={new Set([String(filters.locked)])}
-								onSelectionChange={onLockedFilterSelectionChange}
-							>
-								<DropdownItem key="undefined">Any locked status</DropdownItem>
-								<DropdownItem key="true">Only locked</DropdownItem>
-								<DropdownItem key="false">Only unlocked</DropdownItem>
 							</DropdownMenu>
 						</Dropdown>
 					</ModalBody>

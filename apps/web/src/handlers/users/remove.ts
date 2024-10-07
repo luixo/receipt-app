@@ -29,33 +29,8 @@ export const procedure = authProcedure
 				message: `User "${input.id}" is not owned by "${ctx.auth.email}".`,
 			});
 		}
-		await database.transaction().execute(async (tx) => {
-			const receipts = await tx
-				.selectFrom("receipts")
-				.innerJoin(
-					"receiptParticipants",
-					"receiptParticipants.receiptId",
-					"receipts.id",
-				)
-				.where("receiptParticipants.userId", "=", input.id)
-				.select("id")
-				.execute();
-			if (receipts.length !== 0) {
-				await tx
-					.updateTable("receipts")
-					.where(
-						"id",
-						"in",
-						receipts.map(({ id }) => id),
-					)
-					.set({
-						lockedTimestamp: null,
-					})
-					.execute();
-			}
-			await tx
-				.deleteFrom("users")
-				.where("id", "=", input.id)
-				.executeTakeFirst();
-		});
+		await database
+			.deleteFrom("users")
+			.where("id", "=", input.id)
+			.executeTakeFirst();
 	});

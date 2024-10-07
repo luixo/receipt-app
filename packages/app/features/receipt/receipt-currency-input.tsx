@@ -47,8 +47,7 @@ export const ReceiptCurrencyInput: React.FC<Props> = ({
 	const disabled =
 		updateReceiptMutation.isPending ||
 		isLoading ||
-		receipt.ownerUserId !== receipt.selfUserId ||
-		Boolean(receipt.lockedTimestamp);
+		receipt.ownerUserId !== receipt.selfUserId;
 	const sum = round(
 		receipt.items.reduce((acc, item) => acc + item.price * item.quantity, 0),
 	);

@@ -5,11 +5,7 @@ import { skipToken } from "@tanstack/react-query";
 import { QueryErrorMessage } from "~app/components/error-message";
 import { useParticipants } from "~app/hooks/use-participants";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type {
-	TRPCQueryErrorResult,
-	TRPCQueryOutput,
-	TRPCQueryResult,
-} from "~app/trpc";
+import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { getReceiptDebtName } from "~app/utils/receipt";
 import { Button } from "~components/button";
@@ -150,22 +146,18 @@ const ReceiptSyncButtonInner: React.FC<InnerProps> = ({
 	);
 };
 
-type Props = Omit<InnerProps, "itemsQuery"> & {
-	queries: TRPCQueryResult<"debts.get">[];
-};
+type Props = Omit<InnerProps, "itemsQuery">;
 
-export const ReceiptSyncButton: React.FC<Props> = ({
-	receipt,
-	queries,
-	...props
-}) => {
+export const ReceiptSyncButton: React.FC<Props> = ({ receipt, ...props }) => {
+	const debtIds =
+		receipt.debt.direction === "outcoming" ? receipt.debt.ids : [];
+	const queries = trpc.useQueries((t) =>
+		debtIds.map((id) => t.debts.get({ id })),
+	);
 	if (queries.some((query) => query.status === "pending")) {
 		return null;
 	}
-	const errorQuery = queries.find(
-		(query): query is TRPCQueryErrorResult<"debts.get"> =>
-			query.status === "error",
-	);
+	const errorQuery = queries.find((query) => query.status === "error");
 	if (errorQuery) {
 		return <QueryErrorMessage query={errorQuery} />;
 	}

@@ -270,10 +270,7 @@ describe("receiptParticipants.add", () => {
 				accountId,
 				userId: selfUserId,
 			} = await insertAccountWithSession(ctx);
-			const { id: receiptId } = await insertReceipt(ctx, accountId, {
-				// Verify that we can add participant in a locked receipt
-				lockedTimestamp: new Date(),
-			});
+			const { id: receiptId } = await insertReceipt(ctx, accountId);
 			const user = await insertUser(ctx, accountId);
 			const { id: foreignAccountId } = await insertAccount(ctx, {
 				avatarUrl: null,

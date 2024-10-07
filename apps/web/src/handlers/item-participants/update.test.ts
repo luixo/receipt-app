@@ -186,30 +186,6 @@ describe("itemParticipants.update", () => {
 			);
 		});
 
-		test("receipt is locked", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			await insertReceipt(ctx, accountId);
-
-			const { id: userId } = await insertUser(ctx, accountId);
-			const { id: receiptId } = await insertReceipt(ctx, accountId, {
-				lockedTimestamp: new Date(),
-			});
-			const { id: receiptItemId } = await insertReceiptItem(ctx, receiptId);
-			await insertReceiptParticipant(ctx, receiptId, userId);
-
-			const caller = createCaller(createAuthContext(ctx, sessionId));
-			await expectTRPCError(
-				() =>
-					caller.procedure({
-						itemId: receiptItemId,
-						userId,
-						update: { type: "part", part: 1 },
-					}),
-				"FORBIDDEN",
-				`Receipt "${receiptId}" cannot be updated while locked.`,
-			);
-		});
-
 		test("item part does not exist", async ({ ctx }) => {
 			const {
 				sessionId,

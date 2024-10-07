@@ -65,11 +65,7 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 		return (
 			<View
 				className="cursor-pointer flex-row items-center gap-1"
-				onClick={
-					readOnly || Boolean(receipt.lockedTimestamp) || isLoading
-						? undefined
-						: switchEditing
-				}
+				onClick={readOnly || isLoading ? undefined : switchEditing}
 			>
 				<Text>
 					{item.price} {currency}

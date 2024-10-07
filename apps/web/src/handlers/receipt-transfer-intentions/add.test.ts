@@ -221,28 +221,6 @@ describe("receiptTransferIntentions.add", () => {
 			});
 		});
 
-		test("receipt is locked", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: foreignAccountId, email: foreignEmail } = await insertAccount(
-				ctx,
-			);
-			await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
-			const { id: receiptId } = await insertReceipt(ctx, accountId, {
-				lockedTimestamp: new Date(),
-			});
-
-			const caller = createCaller(createAuthContext(ctx, sessionId));
-			await expectTRPCError(
-				() =>
-					caller.procedure({
-						targetEmail: foreignEmail,
-						receiptId,
-					}),
-				"BAD_REQUEST",
-				`Cannot send receipt transfer intention while receipt is locked.`,
-			);
-		});
-
 		test("receipt already has a transfer intention", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			const { id: foreignAccountId, email: foreignEmail } = await insertAccount(

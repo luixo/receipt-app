@@ -40,7 +40,6 @@ const fetchReceipts = async (
 			"receipts.name",
 			"receipts.currencyCode",
 			"receipts.ownerAccountId",
-			"receipts.lockedTimestamp",
 			"receipts.issued",
 			"receipts.transferIntentionAccountId",
 			"usersMine.id as ownerUserId",
@@ -174,7 +173,6 @@ const mapReceipt = (
 ) => {
 	const {
 		ownerAccountId,
-		lockedTimestamp,
 		transferIntentionUserId,
 		transferIntentionAccountId,
 		items,
@@ -219,7 +217,6 @@ const mapReceipt = (
 			ownerAccountId === auth.accountId
 				? transferIntentionUserId
 				: undefined,
-		lockedTimestamp: lockedTimestamp || undefined,
 		debt: getReceiptDebt(
 			debts,
 			ownerAccountId,

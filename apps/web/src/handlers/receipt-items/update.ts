@@ -35,23 +35,13 @@ export const procedure = authProcedure
 			.innerJoin("receipts", (qb) =>
 				qb.onRef("receipts.id", "=", "receiptItems.receiptId"),
 			)
-			.select([
-				"receipts.id as receiptId",
-				"receipts.ownerAccountId",
-				"receipts.lockedTimestamp",
-			])
+			.select(["receipts.id as receiptId", "receipts.ownerAccountId"])
 			.where("receiptItems.id", "=", input.id)
 			.executeTakeFirst();
 		if (!receiptItem) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
 				message: `Receipt item "${input.id}" is not found.`,
-			});
-		}
-		if (receiptItem.lockedTimestamp) {
-			throw new TRPCError({
-				code: "FORBIDDEN",
-				message: `Receipt "${receiptItem.receiptId}" cannot be updated while locked.`,
 			});
 		}
 		const accessRole = await getAccessRole(

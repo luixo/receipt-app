@@ -14,17 +14,16 @@ export const down = async (db: Database) => {
 	// A poor attempt to restore intentions from less data that we used to have
 	await db
 		// Errors are expected as table does not exist anymore
-		/* eslint-disable @typescript-eslint/ban-ts-comment */
-		// @ts-expect-error
+		// @ts-expect-error Error is expected as table does not exist anymore
 		.insertInto("debtsSyncIntentions")
-		// @ts-expect-error
+		// @ts-expect-error Error is expected as column does not exist anymore
 		.columns(["debtId", "ownerAccountId", "lockedTimestamp"])
-		/* eslint-enable @typescript-eslint/ban-ts-comment */
 		.expression((eb) =>
 			eb
 				.selectFrom("debts")
 				.where((ebb) =>
 					ebb.and([
+						// @ts-expect-error Error is expected as column does not exist anymore
 						ebb("lockedTimestamp", "is not", null),
 						ebb(
 							"id",
@@ -37,6 +36,7 @@ export const down = async (db: Database) => {
 						),
 					]),
 				)
+				// @ts-expect-error Error is expected as column does not exist anymore
 				.select(["id as debtId", "ownerAccountId", "lockedTimestamp"]),
 		)
 		.execute();

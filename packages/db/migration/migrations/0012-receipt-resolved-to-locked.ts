@@ -17,6 +17,7 @@ const addLockedTimestampColumn = async (db: Database) => {
 	await db
 		.updateTable("receipts")
 		.set({
+			// @ts-expect-error Error is expected as column does not exist anymore
 			lockedTimestamp: db
 				.case()
 				.when("resolved", "=", true)
@@ -52,6 +53,7 @@ const addResolvedColumn = async (db: Database) => {
 			// @ts-expect-error
 			resolved: db
 				.case()
+				// @ts-expect-error Error is expected as column does not exist anymore
 				.when("lockedTimestamp", "is not", null)
 				.then(true)
 				.else(false)

@@ -90,7 +90,7 @@ export const test = originalTest.extend<Fixtures>({
 		use(
 			({
 				generateSelfAccount,
-				generateReceiptBase,
+				generateReceiptBase = defaultGenerateReceiptBase,
 				generateUsers,
 				generateReceiptItems,
 				generateReceiptParticipants,
@@ -100,12 +100,7 @@ export const test = originalTest.extend<Fixtures>({
 			} = {}) => {
 				const result = mockReceipt({
 					generateSelfAccount,
-					generateReceiptBase:
-						generateReceiptBase ||
-						((opts) => ({
-							...defaultGenerateReceiptBase(opts),
-							lockedTimestamp: new Date(),
-						})),
+					generateReceiptBase,
 					generateUsers,
 					generateReceiptItems,
 					generateReceiptParticipants,

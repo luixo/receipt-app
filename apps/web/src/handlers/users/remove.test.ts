@@ -100,31 +100,20 @@ describe("users.remove", () => {
 				userId,
 			);
 
-			const { id: lockedReceiptId } = await insertReceipt(ctx, accountId, {
-				// Verify locked receipt gets unlocked on user removal
-				lockedTimestamp: new Date(),
-			});
-			// Verify receipt participant is removed from a receipt on user removal
-			await insertReceiptParticipant(ctx, lockedReceiptId, userId);
-			// Verify other users in the receipt are not affected
-			await insertReceiptParticipant(ctx, lockedReceiptId, otherUserId);
-
-			// Verify unlocked receipt is not affected
-			const { id: unlockedReceiptId } = await insertReceipt(ctx, accountId);
-			await insertReceiptParticipant(ctx, unlockedReceiptId, userId);
-			const { id: itemId } = await insertReceiptItem(ctx, unlockedReceiptId);
+			// Verify receipt is not affected
+			const { id: receiptId } = await insertReceipt(ctx, accountId);
+			await insertReceiptParticipant(ctx, receiptId, userId);
+			const { id: itemId } = await insertReceiptItem(ctx, receiptId);
 			// Verify item participant is removed from an item on user removal
 			await insertItemParticipant(ctx, itemId, userId);
 			// Verify other users in the receipt are not affected
-			await insertReceiptParticipant(ctx, unlockedReceiptId, otherUserId);
+			await insertReceiptParticipant(ctx, receiptId, otherUserId);
 			await insertItemParticipant(ctx, itemId, otherUserId);
 
 			// Verify receipt with user not participating is not affected
-			const { id: otherLockedReceiptId } = await insertReceipt(ctx, accountId, {
-				lockedTimestamp: new Date(),
-			});
+			const { id: otherReceiptId } = await insertReceipt(ctx, accountId);
 			// Verify other users in other receipts are not affected
-			await insertReceiptParticipant(ctx, otherLockedReceiptId, otherUserId);
+			await insertReceiptParticipant(ctx, otherReceiptId, otherUserId);
 
 			// Verify user debt is removed on user removal
 			await insertDebt(ctx, accountId, userId);
