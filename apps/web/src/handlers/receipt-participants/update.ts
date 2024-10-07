@@ -20,7 +20,6 @@ export const procedure = authProcedure
 					type: z.literal("role"),
 					role: assignableRoleSchema,
 				}),
-				z.strictObject({ type: z.literal("resolved"), resolved: z.boolean() }),
 			]),
 		}),
 	)
@@ -49,6 +48,8 @@ export const procedure = authProcedure
 			});
 		}
 		switch (input.update.type) {
+			// We want this to blow up in case we add more cases
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 			case "role":
 				if (receipt.ownerAccountId !== ctx.auth.accountId) {
 					throw new TRPCError({
@@ -60,14 +61,6 @@ export const procedure = authProcedure
 					throw new TRPCError({
 						code: "BAD_REQUEST",
 						message: `Cannot modify your own receipt role.`,
-					});
-				}
-				break;
-			case "resolved":
-				if (user.connectedAccountId !== ctx.auth.accountId) {
-					throw new TRPCError({
-						code: "FORBIDDEN",
-						message: `You can modify only your own "resolved" status.`,
 					});
 				}
 				break;
@@ -86,11 +79,10 @@ export const procedure = authProcedure
 		}
 		let setObject: SimpleUpdateObject<"receiptParticipants"> = {};
 		switch (input.update.type) {
+			// We want this to blow up in case we add more cases
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 			case "role":
 				setObject = { role: input.update.role };
-				break;
-			case "resolved":
-				setObject = { resolved: input.update.resolved };
 				break;
 		}
 		await database

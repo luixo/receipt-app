@@ -24,7 +24,6 @@ export const options: UseContextedMutationOptions<
 								role: userId === selfUserId ? "owner" : "editor",
 								createdAt: new Date(), // We don't care if they don't match with the server
 								userId,
-								resolved: false,
 							})) ?? [],
 						items: [],
 						ownerUserId: selfUserId,
@@ -33,7 +32,6 @@ export const options: UseContextedMutationOptions<
 						transferIntentionUserId: undefined,
 					});
 				},
-				getNonResolvedAmount: undefined,
 			});
 		},
 	mutateToastOptions: () => (variables) => ({

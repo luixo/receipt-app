@@ -456,7 +456,6 @@ export const insertReceipt = async (
 };
 
 type ReceiptParticipantData = {
-	resolved?: boolean;
 	role?: Exclude<Role, "owner">;
 	createdAt?: Date;
 };
@@ -474,18 +473,17 @@ export const insertReceiptParticipant = async (
 		.executeTakeFirstOrThrow(
 			() => new Error(`Expected to have receipt id ${receiptId} in tests`),
 		);
-	const { createdAt, resolved, role } = await ctx.database
+	const { createdAt, role } = await ctx.database
 		.insertInto("receiptParticipants")
 		.values({
 			receiptId,
 			userId,
 			role: userId === ownerAccountId ? "owner" : data.role ?? "viewer",
-			resolved: data.resolved ?? false,
 			createdAt: data.createdAt ?? new Date(),
 		})
-		.returning(["createdAt", "resolved", "role"])
+		.returning(["createdAt", "role"])
 		.executeTakeFirstOrThrow();
-	return { createdAt, userId, resolved, role: role as Role };
+	return { createdAt, userId, role: role as Role };
 };
 
 type ReceiptItemData = {

@@ -3,7 +3,7 @@ import { describe, expect } from "vitest";
 
 import type { TRPCQueryInput } from "~app/trpc";
 import { MAX_LIMIT, MAX_OFFSET } from "~app/utils/validation";
-import type { AccountsId, UsersId } from "~db/models";
+import type { AccountsId } from "~db/models";
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
 	insertAccount,
@@ -43,12 +43,12 @@ const mockData = async (ctx: TestContext) => {
 	const selfReceipt = await insertReceipt(ctx, accountId, {
 		issued: new Date("2020-01-06"),
 	});
-	const selfReceiptParticipants = await Promise.all([
-		insertReceiptParticipant(ctx, selfReceipt.id, selfUserId, {
-			resolved: true,
-		}),
+	// selfReceiptParticipants
+	await Promise.all([
+		insertReceiptParticipant(ctx, selfReceipt.id, selfUserId),
 	]);
-	const selfReceiptItems = await Promise.all([
+	// selfReceiptItems
+	await Promise.all([
 		insertReceiptItem(ctx, selfReceipt.id),
 		insertReceiptItem(ctx, selfReceipt.id),
 		insertReceiptItem(ctx, selfReceipt.id),
@@ -57,11 +57,10 @@ const mockData = async (ctx: TestContext) => {
 		issued: new Date("2020-02-06"),
 	});
 	const user = await insertUser(ctx, accountId);
-	const otherSelfReceiptParticipants = await Promise.all([
+	// otherSelfReceiptParticipants
+	await Promise.all([
 		insertReceiptParticipant(ctx, otherSelfReceipt.id, selfUserId),
-		insertReceiptParticipant(ctx, otherSelfReceipt.id, user.id, {
-			resolved: true,
-		}),
+		insertReceiptParticipant(ctx, otherSelfReceipt.id, user.id),
 	]);
 	const selfTransferReceipt = await insertReceipt(ctx, accountId, {
 		transferIntentionAccountId: foreignAccount.id,
@@ -74,11 +73,13 @@ const mockData = async (ctx: TestContext) => {
 	const foreignReceipt = await insertReceipt(ctx, foreignAccount.id, {
 		issued: new Date("2020-03-06"),
 	});
-	const foreignReceiptParticipants = await Promise.all([
+	// foreignReceiptParticipants
+	await Promise.all([
 		insertReceiptParticipant(ctx, foreignReceipt.id, foreignAccount.userId),
 		insertReceiptParticipant(ctx, foreignReceipt.id, foreignToSelfUser.id),
 	]);
-	const foreignReceiptItems = await Promise.all([
+	// foreignReceiptItems
+	await Promise.all([
 		insertReceiptItem(ctx, foreignReceipt.id),
 		insertReceiptItem(ctx, foreignReceipt.id),
 		insertReceiptItem(ctx, foreignReceipt.id),
@@ -86,33 +87,23 @@ const mockData = async (ctx: TestContext) => {
 	const otherForeignReceipt = await insertReceipt(ctx, foreignAccount.id, {
 		issued: new Date("2020-04-06"),
 	});
-	const otherForeignReceiptParticipants = await Promise.all([
+	// otherForeignReceiptParticipants
+	await Promise.all([
 		insertReceiptParticipant(ctx, otherForeignReceipt.id, foreignToSelfUser.id),
 	]);
-	const otherForeignReceiptItems = await Promise.all([
+	// otherForeignReceiptItems
+	await Promise.all([
 		insertReceiptItem(ctx, otherForeignReceipt.id),
 		insertReceiptItem(ctx, otherForeignReceipt.id),
 		insertReceiptItem(ctx, otherForeignReceipt.id),
 	]);
 
-	const receipts: [
-		[Awaited<ReturnType<typeof insertReceipt>>, UsersId],
-		Awaited<ReturnType<typeof insertReceiptParticipant>>[],
-		Awaited<ReturnType<typeof insertReceiptItem>>[],
-	][] = [
-		[[selfReceipt, selfUserId], selfReceiptParticipants, selfReceiptItems],
-		[[otherSelfReceipt, selfUserId], otherSelfReceiptParticipants, []],
-		[
-			[foreignReceipt, foreignToSelfUser.id],
-			foreignReceiptParticipants,
-			foreignReceiptItems,
-		],
-		[
-			[otherForeignReceipt, foreignToSelfUser.id],
-			otherForeignReceiptParticipants,
-			otherForeignReceiptItems,
-		],
-		[[selfTransferReceipt, selfUserId], [], []],
+	const receipts: Awaited<ReturnType<typeof insertReceipt>>[] = [
+		selfReceipt,
+		otherSelfReceipt,
+		foreignReceipt,
+		otherForeignReceipt,
+		selfTransferReceipt,
 	];
 
 	const users: [
@@ -126,15 +117,11 @@ const mockData = async (ctx: TestContext) => {
 	return {
 		accountId,
 		sessionId,
-		receipts: receipts.map(([[receipt, selfReceiptUserId], participants]) => ({
+		receipts: receipts.map((receipt) => ({
 			id: receipt.id,
 			name: receipt.name,
 			ownerAccountId: receipt.ownerAccountId,
 			issued: receipt.issued,
-			selfResolved:
-				participants.find(
-					(participant) => participant.userId === selfReceiptUserId,
-				)?.resolved ?? null,
 			transferIntentionUserId: receipt.transferIntentionAccountId
 				? users.find(
 						([, account]) =>
@@ -365,26 +352,6 @@ describe("receipts.getPaged", () => {
 		});
 
 		describe("filters", () => {
-			describe("resolved by me", () => {
-				test("true", async ({ ctx }) => {
-					await runFunctionalTest(
-						ctx,
-						(input) => ({ ...input, filters: { resolvedByMe: true } }),
-						(receipts) =>
-							receipts.filter((receipt) => receipt.selfResolved === true),
-					);
-				});
-
-				test("false", async ({ ctx }) => {
-					await runFunctionalTest(
-						ctx,
-						(input) => ({ ...input, filters: { resolvedByMe: false } }),
-						(receipts) =>
-							receipts.filter((receipt) => receipt.selfResolved === false),
-					);
-				});
-			});
-
 			describe("owned by me", () => {
 				test("true", async ({ ctx }) => {
 					await runFunctionalTest(
@@ -407,22 +374,6 @@ describe("receipts.getPaged", () => {
 							),
 					);
 				});
-			});
-
-			test("all", async ({ ctx }) => {
-				await runFunctionalTest(
-					ctx,
-					(input) => ({
-						...input,
-						filters: { resolvedByMe: true, ownedByMe: true },
-					}),
-					(receipts, selfAccountId) =>
-						receipts.filter(
-							(receipt) =>
-								receipt.selfResolved &&
-								receipt.ownerAccountId === selfAccountId,
-						),
-				);
 			});
 		});
 	});
