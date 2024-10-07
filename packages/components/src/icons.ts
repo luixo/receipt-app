@@ -25,6 +25,7 @@ export {
 	MdOutlineNorthEast as TransferIcon,
 	MdFilterAlt as FilterIcon,
 	MdOutlineAdminPanelSettings as AdminIcon,
+	MdKey as KeyIcon,
 } from "react-icons/md";
 export {
 	BsReceipt as ReceiptsIcon,

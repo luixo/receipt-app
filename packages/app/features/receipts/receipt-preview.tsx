@@ -10,6 +10,7 @@ import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { Badge } from "~components/badge";
 import { Button } from "~components/button";
+import { KeyIcon } from "~components/icons";
 import { Link } from "~components/link";
 import { Text } from "~components/text";
 import { options as receiptsUpdateOptions } from "~mutations/receipts/update";
@@ -35,6 +36,7 @@ export const ReceiptPreview: React.FC<InnerProps> = ({ receipt }) => {
 	const selfParticipant = receipt.participants.find(
 		(participant) => participant.userId === receipt.selfUserId,
 	);
+	const isOwner = receipt.selfUserId === receipt.ownerUserId;
 	const title = (
 		<Link
 			className="flex flex-col items-start"
@@ -49,13 +51,13 @@ export const ReceiptPreview: React.FC<InnerProps> = ({ receipt }) => {
 				className="translate-x-full"
 			>
 				<Text>{receipt.name}</Text>
+				{isOwner ? <KeyIcon size={12} /> : null}
 			</Badge>
 			<Text className="text-default-400 text-xs">
 				{formatDate(receipt.issued)}
 			</Text>
 		</Link>
 	);
-	const isOwner = receipt.selfUserId === receipt.ownerUserId;
 	const sum = round(
 		receipt.items.reduce((acc, item) => acc + item.price * item.quantity, 0),
 	);
