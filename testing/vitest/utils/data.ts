@@ -409,7 +409,6 @@ type ReceiptData = {
 	name?: string;
 	createdAt?: Date;
 	issued?: Date;
-	lockedTimestamp?: Date;
 	transferIntentionAccountId?: AccountsId;
 };
 
@@ -424,7 +423,6 @@ export const insertReceipt = async (
 		name,
 		createdAt,
 		issued,
-		lockedTimestamp,
 		transferIntentionAccountId,
 	} = await ctx.database
 		.insertInto("receipts")
@@ -435,7 +433,6 @@ export const insertReceipt = async (
 			currencyCode: data.currencyCode || faker.finance.currencyCode(),
 			createdAt: data.createdAt ?? new Date(),
 			issued: data.issued ?? new Date(),
-			lockedTimestamp: data.lockedTimestamp ?? null,
 			transferIntentionAccountId: data.transferIntentionAccountId,
 		})
 		.returning([
@@ -444,7 +441,6 @@ export const insertReceipt = async (
 			"name",
 			"createdAt",
 			"issued",
-			"lockedTimestamp",
 			"transferIntentionAccountId",
 		])
 		.executeTakeFirstOrThrow();
@@ -454,7 +450,6 @@ export const insertReceipt = async (
 		name,
 		createdAt,
 		issued,
-		lockedTimestamp,
 		ownerAccountId,
 		transferIntentionAccountId,
 	};

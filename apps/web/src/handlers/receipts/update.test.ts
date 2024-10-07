@@ -32,58 +32,34 @@ import {
 
 const createCaller = t.createCallerFactory(t.router({ procedure }));
 
-const updateDescribes = (
+const runTest = async (
+	ctx: TestContext,
 	getUpdate: () => TRPCMutationInput<"receipts.update">["update"],
-	isLockedTimestampUpdated: (lockedBefore: boolean) => boolean,
-	getNextTimestamp: () => Date | undefined = () => new Date(),
 ) => {
-	const runTest = async ({
-		ctx,
-		lockedBefore,
-	}: {
-		ctx: TestContext;
-		lockedBefore: boolean;
-	}) => {
-		const { sessionId, accountId } = await insertAccountWithSession(ctx);
-		const { id: receiptId } = await insertReceipt(
-			ctx,
-			accountId,
-			lockedBefore ? { lockedTimestamp: new Date("2020-06-01") } : undefined,
-		);
-		const { id: userId } = await insertUser(ctx, accountId);
-		const { id: receiptItemId } = await insertReceiptItem(ctx, receiptId);
-		await insertReceiptParticipant(ctx, receiptId, userId);
-		await insertItemParticipant(ctx, receiptItemId, userId);
+	const { sessionId, accountId } = await insertAccountWithSession(ctx);
+	const { id: receiptId } = await insertReceipt(ctx, accountId);
+	const { id: userId } = await insertUser(ctx, accountId);
+	const { id: receiptItemId } = await insertReceiptItem(ctx, receiptId);
+	await insertReceiptParticipant(ctx, receiptId, userId);
+	await insertItemParticipant(ctx, receiptItemId, userId);
 
-		// Verify unrelated data doesn't affect the result
-		const { id: anotherUserId } = await insertUser(ctx, accountId);
-		const { id: anotherReceiptId } = await insertReceipt(ctx, accountId);
-		await insertReceiptParticipant(ctx, anotherReceiptId, anotherUserId);
-		await insertReceiptItem(ctx, anotherReceiptId);
+	// Verify unrelated data doesn't affect the result
+	const { id: anotherUserId } = await insertUser(ctx, accountId);
+	const { id: anotherReceiptId } = await insertReceipt(ctx, accountId);
+	await insertReceiptParticipant(ctx, anotherReceiptId, anotherUserId);
+	await insertReceiptItem(ctx, anotherReceiptId);
 
-		const { id: foreignAccountId } = await insertAccount(ctx);
-		const { id: foreignUserId } = await insertUser(ctx, foreignAccountId);
-		const { id: foreignReceiptId } = await insertReceipt(ctx, foreignAccountId);
-		await insertReceiptParticipant(ctx, foreignReceiptId, foreignUserId);
-		await insertReceiptItem(ctx, foreignReceiptId);
+	const { id: foreignAccountId } = await insertAccount(ctx);
+	const { id: foreignUserId } = await insertUser(ctx, foreignAccountId);
+	const { id: foreignReceiptId } = await insertReceipt(ctx, foreignAccountId);
+	await insertReceiptParticipant(ctx, foreignReceiptId, foreignUserId);
+	await insertReceiptItem(ctx, foreignReceiptId);
 
-		const caller = createCaller(createAuthContext(ctx, sessionId));
-		const result = await expectDatabaseDiffSnapshot(ctx, () =>
-			caller.procedure({ id: receiptId, update: getUpdate() }),
-		);
-		expect(result).toStrictEqual<typeof result>(
-			isLockedTimestampUpdated(lockedBefore)
-				? { lockedTimestamp: getNextTimestamp() }
-				: {},
-		);
-	};
-
-	test("locked before update", async ({ ctx }) => {
-		await runTest({ ctx, lockedBefore: true });
-	});
-	test("unlocked before update", async ({ ctx }) => {
-		await runTest({ ctx, lockedBefore: false });
-	});
+	const caller = createCaller(createAuthContext(ctx, sessionId));
+	const result = await expectDatabaseDiffSnapshot(ctx, () =>
+		caller.procedure({ id: receiptId, update: getUpdate() }),
+	);
+	expect(result).toStrictEqual<typeof result>(undefined);
 };
 
 describe("receipts.update", () => {
@@ -175,65 +151,25 @@ describe("receipts.update", () => {
 				`Receipt "${foreignReceiptId}" is not owned by "${email}".`,
 			);
 		});
-
-		test("receipt cannot be locked with items with no participants", async ({
-			ctx,
-		}) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: receiptId } = await insertReceipt(ctx, accountId);
-			await insertReceiptItem(ctx, receiptId);
-
-			// Verifying adding other receipts doesn't affect the error
-			await insertReceipt(ctx, accountId);
-
-			const caller = createCaller(createAuthContext(ctx, sessionId));
-			await expectTRPCError(
-				() =>
-					caller.procedure({
-						id: receiptId,
-						update: { type: "locked", locked: true },
-					}),
-				"FORBIDDEN",
-				`Receipt "${receiptId}" has items with no participants.`,
-			);
-		});
 	});
 
 	describe("functionality", () => {
-		describe("update name", () => {
-			updateDescribes(
-				() => ({ type: "name", name: faker.lorem.words() }),
-				() => false,
-			);
+		test("update name", async ({ ctx }) => {
+			await runTest(ctx, () => ({ type: "name", name: faker.lorem.words() }));
 		});
 
-		describe("update issued", () => {
-			updateDescribes(
-				() => ({ type: "issued", issued: new Date("2020-06-01") }),
-				() => false,
-			);
+		test("update issued", async ({ ctx }) => {
+			await runTest(ctx, () => ({
+				type: "issued",
+				issued: new Date("2020-06-01"),
+			}));
 		});
 
-		describe("update currency code", () => {
-			updateDescribes(
-				() => ({ type: "currencyCode", currencyCode: getRandomCurrencyCode() }),
-				(lockedBefore) => lockedBefore,
-			);
-		});
-
-		describe("update locked - true", () => {
-			updateDescribes(
-				() => ({ type: "locked", locked: true }),
-				() => true,
-			);
-		});
-
-		describe("update locked - false", () => {
-			updateDescribes(
-				() => ({ type: "locked", locked: false }),
-				() => true,
-				() => undefined,
-			);
+		test("update currency code", async ({ ctx }) => {
+			await runTest(ctx, () => ({
+				type: "currencyCode",
+				currencyCode: getRandomCurrencyCode(),
+			}));
 		});
 	});
 });

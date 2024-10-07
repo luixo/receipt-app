@@ -149,11 +149,7 @@ export const AddReceiptItemForm: React.FC<Props> = ({
 			<Button
 				color="primary"
 				onClick={form.handleSubmit(onSubmit)}
-				isDisabled={
-					!form.formState.isValid ||
-					isLoading ||
-					Boolean(receipt.lockedTimestamp)
-				}
+				isDisabled={!form.formState.isValid || isLoading}
 				className="w-full"
 				isLoading={addMutation.isPending}
 			>

@@ -24,7 +24,7 @@ export const procedure = authProcedure
 		const { database } = ctx;
 		const receipt = await database
 			.selectFrom("receipts")
-			.select(["ownerAccountId", "id", "lockedTimestamp"])
+			.select(["ownerAccountId", "id"])
 			.where("id", "=", input.receiptId)
 			.executeTakeFirst();
 		if (!receipt) {
@@ -48,12 +48,6 @@ export const procedure = authProcedure
 			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Receipt "${receipt.id}" is not allowed to be modified by "${ctx.auth.email}" with role "${accessRole}"`,
-			});
-		}
-		if (receipt.lockedTimestamp) {
-			throw new TRPCError({
-				code: "FORBIDDEN",
-				message: `Receipt "${input.receiptId}" cannot be updated while locked.`,
 			});
 		}
 		const id: ReceiptItemsId = ctx.getUuid();

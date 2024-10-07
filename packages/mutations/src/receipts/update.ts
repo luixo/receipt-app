@@ -1,13 +1,6 @@
-import type {
-	TRPCMutationInput,
-	TRPCMutationOutput,
-	TRPCQueryOutput,
-} from "~app/trpc";
+import type { TRPCMutationInput, TRPCQueryOutput } from "~app/trpc";
 
-import {
-	update as updateReceipts,
-	updateRevert as updateRevertReceipts,
-} from "../cache/receipts";
+import { updateRevert as updateRevertReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
 import type { SnapshotFn, UpdateFn } from "../types";
 
@@ -18,43 +11,13 @@ const applyUpdate =
 		update: TRPCMutationInput<"receipts.update">["update"],
 	): UpdateFn<ReceiptSnapshot> =>
 	(item) => {
-		// lockedTimestamp will be overriden in onSuccess
-		const nextLockedTimestamp =
-			item.lockedTimestamp === undefined ? undefined : new Date();
 		switch (update.type) {
 			case "name":
 				return { ...item, name: update.name };
 			case "issued":
 				return { ...item, issued: update.issued };
-			case "locked":
-				return {
-					...item,
-					lockedTimestamp: update.locked ? nextLockedTimestamp : undefined,
-				};
 			case "currencyCode":
-				return {
-					...item,
-					currencyCode: update.currencyCode,
-					lockedTimestamp: nextLockedTimestamp,
-				};
-		}
-	};
-
-const applySuccessUpdate =
-	(
-		update: TRPCMutationInput<"receipts.update">["update"],
-		result: TRPCMutationOutput<"receipts.update">,
-	): UpdateFn<ReceiptSnapshot> =>
-	(item) => {
-		switch (update.type) {
-			case "currencyCode":
-			case "locked":
-				return {
-					...item,
-					lockedTimestamp: result.lockedTimestamp || undefined,
-				};
-			default:
-				return item;
+				return { ...item, currencyCode: update.currencyCode };
 		}
 	};
 
@@ -69,8 +32,6 @@ const getRevert =
 				return { ...receipt, name: snapshot.name };
 			case "issued":
 				return { ...receipt, issued: snapshot.issued };
-			case "locked":
-				return { ...receipt, lockedTimestamp: snapshot.lockedTimestamp };
 			case "currencyCode":
 				return { ...receipt, currencyCode: snapshot.currencyCode };
 		}
@@ -88,17 +49,6 @@ export const options: UseContextedMutationOptions<"receipts.update"> = {
 			getNonResolvedAmount: undefined,
 			getPaged: undefined,
 		}),
-	onSuccess: (controllerContext) => (result, updateObject) => {
-		updateReceipts(controllerContext, {
-			get: (controller) =>
-				controller.update(
-					updateObject.id,
-					applySuccessUpdate(updateObject.update, result),
-				),
-			getNonResolvedAmount: undefined,
-			getPaged: undefined,
-		});
-	},
 	errorToastOptions: () => (error) => ({
 		text: `Error updating receipt: ${error.message}`,
 	}),

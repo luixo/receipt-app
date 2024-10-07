@@ -41,7 +41,6 @@ const mockData = async (ctx: TestContext) => {
 
 	// Self receipts
 	const selfReceipt = await insertReceipt(ctx, accountId, {
-		lockedTimestamp: new Date(),
 		issued: new Date("2020-01-06"),
 	});
 	const selfReceiptParticipants = await Promise.all([
@@ -136,7 +135,6 @@ const mockData = async (ctx: TestContext) => {
 				participants.find(
 					(participant) => participant.userId === selfReceiptUserId,
 				)?.resolved ?? null,
-			lockedTimestamp: receipt.lockedTimestamp ?? undefined,
 			transferIntentionUserId: receipt.transferIntentionAccountId
 				? users.find(
 						([, account]) =>
@@ -411,37 +409,17 @@ describe("receipts.getPaged", () => {
 				});
 			});
 
-			describe("locked", () => {
-				test("true", async ({ ctx }) => {
-					await runFunctionalTest(
-						ctx,
-						(input) => ({ ...input, filters: { locked: true } }),
-						(receipts) => receipts.filter((receipt) => receipt.lockedTimestamp),
-					);
-				});
-
-				test("false", async ({ ctx }) => {
-					await runFunctionalTest(
-						ctx,
-						(input) => ({ ...input, filters: { locked: false } }),
-						(receipts) =>
-							receipts.filter((receipt) => !receipt.lockedTimestamp),
-					);
-				});
-			});
-
 			test("all", async ({ ctx }) => {
 				await runFunctionalTest(
 					ctx,
 					(input) => ({
 						...input,
-						filters: { resolvedByMe: true, locked: true, ownedByMe: true },
+						filters: { resolvedByMe: true, ownedByMe: true },
 					}),
 					(receipts, selfAccountId) =>
 						receipts.filter(
 							(receipt) =>
 								receipt.selfResolved &&
-								receipt.lockedTimestamp &&
 								receipt.ownerAccountId === selfAccountId,
 						),
 				);

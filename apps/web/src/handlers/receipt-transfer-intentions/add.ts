@@ -60,7 +60,6 @@ export const procedure = authProcedure
 			)
 			.select([
 				"receipts.ownerAccountId",
-				"receipts.lockedTimestamp",
 				"receipts.transferIntentionAccountId",
 				"receiptParticipants.userId",
 				"usersParticipation.name as userName",
@@ -77,12 +76,6 @@ export const procedure = authProcedure
 			throw new TRPCError({
 				code: "BAD_REQUEST",
 				message: `Cannot send receipt transfer intention while having user "${receiptUser.userName}" added to it.`,
-			});
-		}
-		if (receiptUser.lockedTimestamp) {
-			throw new TRPCError({
-				code: "BAD_REQUEST",
-				message: `Cannot send receipt transfer intention while receipt is locked.`,
 			});
 		}
 		if (receiptUser.transferIntentionAccountId) {

@@ -29,7 +29,7 @@ export const ReceiptItemPart: React.FC<Props> = ({
 	item,
 	participant,
 	receipt,
-	readOnly: rawReadOnly,
+	readOnly,
 	isLoading,
 }) => {
 	const removeMutation = trpc.itemParticipants.remove.useMutation(
@@ -45,7 +45,6 @@ export const ReceiptItemPart: React.FC<Props> = ({
 			}),
 		[removeMutation, item.id, part.userId],
 	);
-	const readOnly = rawReadOnly || Boolean(receipt.lockedTimestamp);
 
 	return (
 		<View className="items-start justify-between gap-2 min-[500px]:flex-row sm:gap-4">

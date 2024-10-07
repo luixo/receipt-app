@@ -83,10 +83,6 @@ export const ReceiptParticipantActions: React.FC<Props> = ({
 	const isUpdating = updateMutation.isPending || addMutation.isPending;
 	const { currentDebt } = participant;
 
-	if (!receipt.lockedTimestamp) {
-		return null;
-	}
-
 	return (
 		<View className="flex flex-row items-center gap-3 empty:hidden">
 			{participant.sum === 0 ? (

@@ -18,7 +18,6 @@ export type GenerateReceiptBase = GeneratorFnWithFaker<
 		name: string;
 		currencyCode: CurrencyCode;
 		issued: Date;
-		lockedTimestamp?: Date;
 	},
 	{ selfAccount: ReturnType<GenerateSelfAccount> }
 >;
@@ -130,7 +129,6 @@ export const defaultGenerateReceipt: GenerateReceipt = ({
 	issued: receiptBase.issued,
 	ownerUserId: selfAccount.userId,
 	selfUserId: selfAccount.userId,
-	lockedTimestamp: receiptBase.lockedTimestamp,
 	debt: {
 		direction: "outcoming",
 		ids: [],

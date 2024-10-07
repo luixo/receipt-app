@@ -31,7 +31,6 @@ export const options: UseContextedMutationOptions<
 						selfUserId,
 						debt: { direction: "outcoming", ids: [] },
 						transferIntentionUserId: undefined,
-						lockedTimestamp: undefined,
 					});
 				},
 				getNonResolvedAmount: undefined,

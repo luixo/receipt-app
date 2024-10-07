@@ -53,9 +53,7 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 			filterIds={[...filterIds, ...localFilterIds]}
 			onUserClick={addParticipants}
 			isDisabled={
-				disabled ||
-				Boolean(receipt.lockedTimestamp || receipt.transferIntentionUserId) ||
-				!selfAccountId
+				disabled || Boolean(receipt.transferIntentionUserId) || !selfAccountId
 			}
 			options={React.useMemo(
 				() => ({ type: "not-connected-receipt", receiptId: receipt.id }),

@@ -17,7 +17,6 @@ export const procedure = authProcedure
 				.strictObject({
 					resolvedByMe: z.boolean().optional(),
 					ownedByMe: z.boolean().optional(),
-					locked: z.boolean().optional(),
 				})
 				.optional(),
 		}),
@@ -39,13 +38,8 @@ export const procedure = authProcedure
 							.id("receiptParticipants", "resolved")
 							.$castTo<boolean | null>()
 							.as("resolved"),
-						"receipts.lockedTimestamp",
 					])
-					.groupBy([
-						"receipts.id",
-						"receipts.lockedTimestamp",
-						"receiptParticipants.resolved",
-					]);
+					.groupBy(["receipts.id", "receiptParticipants.resolved"]);
 				const ownReceiptsBuilder = ownReceipts
 					.leftJoin("receiptParticipants", (jb) =>
 						jb.onRef("receiptParticipants.receiptId", "=", "receipts.id").onRef(
@@ -60,13 +54,8 @@ export const procedure = authProcedure
 						"receipts.id",
 						"receipts.issued",
 						"receiptParticipants.resolved",
-						"receipts.lockedTimestamp",
 					])
-					.groupBy([
-						"receipts.id",
-						"receipts.lockedTimestamp",
-						"receiptParticipants.resolved",
-					]);
+					.groupBy(["receipts.id", "receiptParticipants.resolved"]);
 				if (typeof filters.ownedByMe !== "boolean") {
 					return foreignReceiptsBuilder.union(ownReceiptsBuilder);
 				}
@@ -78,13 +67,6 @@ export const procedure = authProcedure
 			.selectFrom("mergedReceipts")
 			.$if(typeof filters.resolvedByMe === "boolean", (qb) =>
 				qb.where("mergedReceipts.resolved", "=", Boolean(filters.resolvedByMe)),
-			)
-			.$if(typeof filters.locked === "boolean", (qb) =>
-				qb.where(
-					"mergedReceipts.lockedTimestamp",
-					filters.locked ? "is not" : "is",
-					null,
-				),
 			);
 
 		const [receiptIds, receiptsCount] = await Promise.all([

@@ -76,13 +76,12 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 					<ReceiptItemNameInput
 						receipt={receipt}
 						item={item}
-						readOnly={isEditingDisabled || Boolean(receipt.lockedTimestamp)}
+						readOnly={isEditingDisabled}
 						isLoading={isDeleteLoading}
 					/>
 					{isEditingDisabled ? null : (
 						<RemoveButton
 							onRemove={removeItem}
-							isDisabled={Boolean(receipt.lockedTimestamp)}
 							mutation={removeReceiptItemMutation}
 							subtitle="This will remove item with all participant's parts"
 							noConfirm={item.parts.length === 0}
@@ -109,9 +108,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 							= {round(item.quantity * item.price)} {currency}
 						</Text>
 					</View>
-					{receipt.lockedTimestamp ||
-					isEditingDisabled ||
-					notAddedParticipants.length === 0 ? null : (
+					{isEditingDisabled || notAddedParticipants.length === 0 ? null : (
 						<ScrollShadow
 							orientation="horizontal"
 							className="flex w-full flex-row gap-1 overflow-x-auto"

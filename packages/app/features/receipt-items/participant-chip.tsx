@@ -35,7 +35,7 @@ export const ParticipantChip: React.FC<Props> = ({
 			foreign={receipt.ownerUserId !== receipt.selfUserId}
 			className="cursor-pointer"
 			onClick={addParticipant}
-			chip={{ isDisabled: Boolean(receipt.lockedTimestamp) }}
+			chip
 		/>
 	);
 };

@@ -11,7 +11,7 @@ import { Link } from "~components/link";
 import { Text } from "~components/text";
 import { round } from "~utils/math";
 
-import { ReceiptPreviewLockedButton } from "./receipt-preview-locked-button";
+import { ReceiptPreviewSyncIcon } from "./receipt-preview-sync-icon";
 
 type InnerProps = {
 	receipt: TRPCQueryOutput<"receipts.get">;
@@ -72,7 +72,7 @@ export const ReceiptPreview: React.FC<InnerProps> = ({ receipt }) => {
 					) : null}
 				</View>
 				<View className="flex-1 flex-row self-center p-2">
-					<ReceiptPreviewLockedButton receipt={receipt} />
+					<ReceiptPreviewSyncIcon receipt={receipt} />
 				</View>
 			</View>
 		</View>

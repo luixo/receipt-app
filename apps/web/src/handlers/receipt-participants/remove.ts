@@ -16,7 +16,7 @@ export const procedure = authProcedure
 		const { database } = ctx;
 		const receipt = await database
 			.selectFrom("receipts")
-			.select(["ownerAccountId", "lockedTimestamp"])
+			.select(["ownerAccountId"])
 			.where("id", "=", input.receiptId)
 			.executeTakeFirst();
 		if (!receipt) {
@@ -60,13 +60,6 @@ export const procedure = authProcedure
 				message: `User "${input.userId}" does not participate in receipt "${input.receiptId}".`,
 			});
 		}
-		if (receipt.lockedTimestamp) {
-			throw new TRPCError({
-				code: "FORBIDDEN",
-				message: `Receipt "${input.receiptId}" cannot be updated while locked.`,
-			});
-		}
-
 		await database.transaction().execute(async (tx) => {
 			await tx
 				.deleteFrom("itemParticipants")

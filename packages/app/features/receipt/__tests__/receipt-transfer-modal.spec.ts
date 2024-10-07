@@ -4,7 +4,6 @@ import assert from "node:assert";
 import { expect } from "~tests/frontend/fixtures";
 import {
 	defaultGenerateReceipt,
-	defaultGenerateReceiptBase,
 	defaultGenerateReceiptParticipants,
 } from "~tests/frontend/generators/receipts";
 import { defaultGenerateUsers } from "~tests/frontend/generators/users";
@@ -55,23 +54,6 @@ test.describe("Modal is disabled", () => {
 			page.locator("span", { has: transferReceiptButton }),
 			"You can only transfer a receipt with no participants in it",
 		);
-	});
-
-	test("if receipt is locked", async ({
-		page,
-		mockReceipt,
-		transferReceiptButton,
-	}) => {
-		const { receipt } = mockReceipt({
-			generateReceiptBase: (opts) => ({
-				...defaultGenerateReceiptBase(opts),
-				lockedTimestamp: new Date(),
-			}),
-		});
-
-		await page.goto(`/receipts/${receipt.id}`);
-
-		await expect(transferReceiptButton).toBeDisabled();
 	});
 });
 

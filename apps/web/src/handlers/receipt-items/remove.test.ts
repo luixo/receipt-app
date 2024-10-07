@@ -105,21 +105,6 @@ describe("receiptItems.remove", () => {
 				`Receipt "${foreignReceiptId}" is not allowed to be modified by "${account.email}" with role "viewer"`,
 			);
 		});
-
-		test("receipt is locked", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: receiptId } = await insertReceipt(ctx, accountId, {
-				lockedTimestamp: new Date(),
-			});
-			const { id: receiptItemId } = await insertReceiptItem(ctx, receiptId);
-
-			const caller = createCaller(createAuthContext(ctx, sessionId));
-			await expectTRPCError(
-				() => caller.procedure({ id: receiptItemId }),
-				"FORBIDDEN",
-				`Receipt "${receiptId}" cannot be updated while locked.`,
-			);
-		});
 	});
 
 	describe("functionality", () => {

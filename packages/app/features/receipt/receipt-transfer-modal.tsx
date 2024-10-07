@@ -138,9 +138,7 @@ export const ReceiptTransferModal: React.FC<Props> = ({
 			onClick={openTransferModal}
 			color="primary"
 			variant="bordered"
-			isDisabled={
-				deleteLoading || hasParticipants || Boolean(receipt.lockedTimestamp)
-			}
+			isDisabled={deleteLoading || hasParticipants}
 			title="Transfer receipt modal"
 		>
 			{receipt.transferIntentionUserId ? (

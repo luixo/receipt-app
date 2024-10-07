@@ -211,29 +211,6 @@ describe("itemParticipants.add", () => {
 				);
 			});
 		});
-
-		test("receipt is locked", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			await insertReceipt(ctx, accountId);
-
-			const { id: participantUserId } = await insertUser(ctx, accountId);
-			const { id: receiptId } = await insertReceipt(ctx, accountId, {
-				lockedTimestamp: new Date(),
-			});
-			const { id: receiptItemId } = await insertReceiptItem(ctx, receiptId);
-			await insertReceiptParticipant(ctx, receiptId, participantUserId);
-
-			const caller = createCaller(createAuthContext(ctx, sessionId));
-			await expectTRPCError(
-				() =>
-					caller.procedure({
-						itemId: receiptItemId,
-						userIds: [participantUserId],
-					}),
-				"FORBIDDEN",
-				`Receipt "${receiptId}" cannot be updated while locked.`,
-			);
-		});
 	});
 
 	describe("functionality", () => {

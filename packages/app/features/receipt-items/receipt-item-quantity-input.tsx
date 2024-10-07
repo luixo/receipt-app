@@ -58,7 +58,7 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 		},
 		[updateMutation, item.id, item.quantity, unsetEditing],
 	);
-	const disabled = readOnly || Boolean(receipt.lockedTimestamp) || isLoading;
+	const disabled = readOnly || isLoading;
 
 	if (!isEditing) {
 		return (

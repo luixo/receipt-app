@@ -3,15 +3,10 @@ export {
 	MdSyncProblem as UnsyncIcon,
 	MdKeyboardArrowLeft as IncomingIcon,
 	MdKeyboardArrowRight as OutcomingIcon,
-	MdLock as LockedIcon,
 	MdDoneAll as DoneIcon,
 	MdRemoveDone as UndoneIcon,
 	MdHourglassDisabled as CrossWaitIcon,
 	MdHourglassEmpty as WaitIcon,
-	// verify two locked icons
-	MdOutlineLock as LockedOutlineIcon,
-	// verify two unlocked icons
-	MdOutlineLockOpen as UnlockedOutlineIcon,
 	MdAttachMoney as DebtsIcon,
 	MdAdd as AddIcon,
 	MdLink as LinkIcon,

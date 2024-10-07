@@ -24,7 +24,6 @@ export const AddReceiptItemController: React.FC<Props> = ({
 		<Button
 			color="primary"
 			variant="bordered"
-			isDisabled={Boolean(receipt.lockedTimestamp)}
 			onClick={() => setOpen(true)}
 			className="w-full"
 		>
