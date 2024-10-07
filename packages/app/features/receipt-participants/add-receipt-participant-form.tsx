@@ -5,22 +5,19 @@ import { skipToken } from "@tanstack/react-query";
 import { UsersSuggest } from "~app/components/app/users-suggest";
 import { useSelfAccountId } from "~app/hooks/use-self-account-id";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import type { ReceiptsId, UsersId } from "~db/models";
+import type { UsersId } from "~db/models";
 import { options as receiptParticipantsAddOptions } from "~mutations/receipt-participants/add";
 
 type Props = {
-	receiptId: ReceiptsId;
-	receiptLocked: boolean;
-	receiptInTransfer: boolean;
+	receipt: TRPCQueryOutput<"receipts.get">;
 	disabled: boolean;
 	filterIds: UsersId[];
 } & Omit<React.ComponentProps<typeof UsersSuggest>, "onUserClick" | "options">;
 
 export const AddReceiptParticipantForm: React.FC<Props> = ({
-	receiptId,
-	receiptLocked,
-	receiptInTransfer,
+	receipt,
 	disabled,
 	filterIds,
 	...props
@@ -29,7 +26,9 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 	const selfAccountId = useSelfAccountId();
 	const addMutation = trpc.receiptParticipants.add.useMutation(
 		useTrpcMutationOptions(receiptParticipantsAddOptions, {
-			context: selfAccountId ? { receiptId, selfAccountId } : skipToken,
+			context: selfAccountId
+				? { receiptId: receipt.id, selfAccountId }
+				: skipToken,
 			onMutate: (vars) =>
 				setLocalFilterIds((prevIds) => [...prevIds, ...vars.userIds]),
 			onSettled: (_res, _err, vars) =>
@@ -42,11 +41,11 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 	const addParticipants = React.useCallback(
 		async (userId: UsersId) =>
 			addMutation.mutate({
-				receiptId,
+				receiptId: receipt.id,
 				userIds: [userId],
 				role: "editor",
 			}),
-		[addMutation, receiptId],
+		[addMutation, receipt.id],
 	);
 
 	return (
@@ -54,11 +53,13 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 			filterIds={[...filterIds, ...localFilterIds]}
 			onUserClick={addParticipants}
 			isDisabled={
-				disabled || receiptLocked || receiptInTransfer || !selfAccountId
+				disabled ||
+				Boolean(receipt.lockedTimestamp || receipt.transferIntentionUserId) ||
+				!selfAccountId
 			}
 			options={React.useMemo(
-				() => ({ type: "not-connected-receipt", receiptId }),
-				[receiptId],
+				() => ({ type: "not-connected-receipt", receiptId: receipt.id }),
+				[receipt.id],
 			)}
 			label="Add participants"
 			{...props}

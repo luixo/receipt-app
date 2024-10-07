@@ -1,8 +1,6 @@
 import React from "react";
 import { View } from "react-native";
 
-import { skipToken } from "@tanstack/react-query";
-
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
@@ -20,7 +18,6 @@ import {
 	ViewerIcon,
 } from "~components/icons";
 import { Text } from "~components/text";
-import type { ReceiptsId, UsersId } from "~db/models";
 import { options as receiptParticipantsUpdateOptions } from "~mutations/receipt-participants/update";
 import type { Role } from "~web/handlers/receipts/utils";
 
@@ -29,23 +26,19 @@ export type AssignableRole = Exclude<Role, "owner">;
 const ROLES: AssignableRole[] = ["editor", "viewer"];
 
 type Props = {
-	receiptId: ReceiptsId;
-	selfUserId?: UsersId;
 	participant: TRPCQueryOutput<"receipts.get">["participants"][number];
+	receipt: TRPCQueryOutput<"receipts.get">;
 	isLoading: boolean;
-	isOwner: boolean;
 };
 
 export const ReceiptParticipantRoleInput: React.FC<Props> = ({
-	receiptId,
-	selfUserId,
 	participant,
+	receipt,
 	isLoading,
-	isOwner,
 }) => {
 	const updateParticipantMutation = trpc.receiptParticipants.update.useMutation(
 		useTrpcMutationOptions(receiptParticipantsUpdateOptions, {
-			context: selfUserId ? { selfUserId } : skipToken,
+			context: { selfUserId: receipt.selfUserId },
 		}),
 	);
 	const changeRole = React.useCallback(
@@ -54,14 +47,14 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 				return;
 			}
 			updateParticipantMutation.mutate({
-				receiptId,
+				receiptId: receipt.id,
 				userId: participant.userId,
 				update: { type: "role", role: nextRole },
 			});
 		},
 		[
 			updateParticipantMutation,
-			receiptId,
+			receipt.id,
 			participant.userId,
 			participant.role,
 		],
@@ -74,7 +67,9 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 					variant="flat"
 					size="sm"
 					isDisabled={
-						isLoading || !isOwner || participant.role === "owner" || !selfUserId
+						isLoading ||
+						receipt.ownerUserId !== receipt.selfUserId ||
+						participant.role === "owner"
 					}
 					isLoading={updateParticipantMutation.isPending}
 					startContent={<ChevronDown />}

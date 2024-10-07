@@ -8,13 +8,12 @@ import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import type { CurrencyCode } from "~app/utils/currency";
 import { Card, CardBody, CardHeader } from "~components/card";
 import { Chip } from "~components/chip";
 import { Divider } from "~components/divider";
 import { ScrollShadow } from "~components/scroll-shadow";
 import { Text } from "~components/text";
-import type { ReceiptsId, UsersId } from "~db/models";
+import type { UsersId } from "~db/models";
 import { options as itemParticipantsAddOptions } from "~mutations/item-participants/add";
 import { options as receiptItemsRemoveOptions } from "~mutations/receipt-items/remove";
 import { round } from "~utils/math";
@@ -25,32 +24,17 @@ import { ReceiptItemPriceInput } from "./receipt-item-price-input";
 import { ReceiptItemQuantityInput } from "./receipt-item-quantity-input";
 
 type Props = {
-	receiptId: ReceiptsId;
 	item: TRPCQueryOutput<"receipts.get">["items"][number];
-	selfUserId: UsersId;
-	receiptLocked: boolean;
-	currencyCode: CurrencyCode;
-	participants: TRPCQueryOutput<"receipts.get">["participants"];
+	receipt: TRPCQueryOutput<"receipts.get">;
 	isLoading: boolean;
 };
 
 export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
-	(
-		{
-			receiptId,
-			item,
-			selfUserId,
-			receiptLocked,
-			participants,
-			currencyCode,
-			isLoading: isReceiptDeleteLoading,
-		},
-		ref,
-	) => {
-		const currency = useFormattedCurrency(currencyCode);
+	({ item, receipt, isLoading: isReceiptDeleteLoading }, ref) => {
+		const currency = useFormattedCurrency(receipt.currencyCode);
 		const removeReceiptItemMutation = trpc.receiptItems.remove.useMutation(
 			useTrpcMutationOptions(receiptItemsRemoveOptions, {
-				context: receiptId,
+				context: receipt.id,
 			}),
 		);
 		const removeItem = React.useCallback(
@@ -59,7 +43,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 		);
 
 		const addedParticipants = item.parts.map((part) => part.userId);
-		const notAddedParticipants = participants.filter(
+		const notAddedParticipants = receipt.participants.filter(
 			(participant) => !addedParticipants.includes(participant.userId),
 		);
 		const notAddedParticipantsIds = notAddedParticipants.map(
@@ -68,7 +52,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 
 		const addItemPartMutation = trpc.itemParticipants.add.useMutation(
 			useTrpcMutationOptions(itemParticipantsAddOptions, {
-				context: receiptId,
+				context: receipt.id,
 			}),
 		);
 		const addEveryParticipant = React.useCallback(() => {
@@ -80,29 +64,25 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 
 		const isDeleteLoading =
 			isReceiptDeleteLoading || removeReceiptItemMutation.isPending;
-		const itemParts = item.parts.reduce(
-			(acc, itemPart) => acc + itemPart.part,
-			0,
-		);
 		const selfRole =
-			participants.find((participant) => participant.userId === selfUserId)
-				?.role ?? "owner";
-		const isOwner = selfRole === "owner";
+			receipt.participants.find(
+				(participant) => participant.userId === receipt.selfUserId,
+			)?.role ?? "owner";
 		const isEditingDisabled = selfRole === "viewer";
 
 		return (
 			<Card ref={ref}>
 				<CardHeader className="justify-between gap-4">
 					<ReceiptItemNameInput
-						receiptId={receiptId}
-						receiptItem={item}
-						readOnly={isEditingDisabled || receiptLocked}
+						receipt={receipt}
+						item={item}
+						readOnly={isEditingDisabled || Boolean(receipt.lockedTimestamp)}
 						isLoading={isDeleteLoading}
 					/>
 					{isEditingDisabled ? null : (
 						<RemoveButton
 							onRemove={removeItem}
-							isDisabled={receiptLocked}
+							isDisabled={Boolean(receipt.lockedTimestamp)}
 							mutation={removeReceiptItemMutation}
 							subtitle="This will remove item with all participant's parts"
 							noConfirm={item.parts.length === 0}
@@ -114,23 +94,22 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 				<CardBody className="gap-2">
 					<View className="flex-row items-center gap-2">
 						<ReceiptItemPriceInput
-							receiptId={receiptId}
-							receiptItem={item}
-							currencyCode={currencyCode}
-							readOnly={isEditingDisabled || receiptLocked}
+							item={item}
+							receipt={receipt}
+							readOnly={isEditingDisabled}
 							isLoading={isDeleteLoading}
 						/>
 						<ReceiptItemQuantityInput
-							receiptId={receiptId}
-							receiptItem={item}
-							readOnly={isEditingDisabled || receiptLocked}
+							item={item}
+							receipt={receipt}
+							readOnly={isEditingDisabled}
 							isLoading={isDeleteLoading}
 						/>
 						<Text>
 							= {round(item.quantity * item.price)} {currency}
 						</Text>
 					</View>
-					{receiptLocked ||
+					{receipt.lockedTimestamp ||
 					isEditingDisabled ||
 					notAddedParticipants.length === 0 ? null : (
 						<ScrollShadow
@@ -142,7 +121,6 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 									color="secondary"
 									className="cursor-pointer"
 									onClick={addEveryParticipant}
-									isDisabled={receiptLocked}
 								>
 									Everyone
 								</Chip>
@@ -150,11 +128,9 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 							{notAddedParticipants.map((participant) => (
 								<ParticipantChip
 									key={participant.userId}
-									receiptId={receiptId}
-									receiptItemId={item.id}
+									item={item}
+									receipt={receipt}
 									participant={participant}
-									isDisabled={receiptLocked}
-									isOwner={isOwner}
 								/>
 							))}
 						</ScrollShadow>
@@ -163,7 +139,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 						<>
 							<Divider />
 							{item.parts.map((part) => {
-								const matchedParticipant = participants.find(
+								const matchedParticipant = receipt.participants.find(
 									(participant) => participant.userId === part.userId,
 								);
 								if (!matchedParticipant) {
@@ -177,14 +153,12 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 								return (
 									<ReceiptItemPart
 										key={part.userId}
-										receiptId={receiptId}
-										itemPart={part}
-										itemParts={itemParts}
+										part={part}
+										item={item}
 										participant={matchedParticipant}
-										receiptItemId={item.id}
-										readOnly={isEditingDisabled || receiptLocked}
+										receipt={receipt}
+										readOnly={isEditingDisabled}
 										isLoading={isDeleteLoading}
-										isOwner={isOwner}
 									/>
 								);
 							})}

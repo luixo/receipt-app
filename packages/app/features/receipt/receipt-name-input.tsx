@@ -2,24 +2,20 @@ import React from "react";
 
 import { useSingleInput } from "~app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { receiptNameSchema } from "~app/utils/validation";
 import { Input } from "~components/input";
-import type { ReceiptsId } from "~db/models";
 import { options as receiptsUpdateOptions } from "~mutations/receipts/update";
 
 type Props = {
-	receiptId: ReceiptsId;
-	receiptName: string;
-	isOwner: boolean;
+	receipt: TRPCQueryOutput<"receipts.get">;
 	isLoading: boolean;
 	unsetEditing: () => void;
 };
 
 export const ReceiptNameInput: React.FC<Props> = ({
-	receiptId,
-	receiptName,
-	isOwner,
+	receipt,
 	isLoading,
 	unsetEditing,
 }) => {
@@ -29,7 +25,7 @@ export const ReceiptNameInput: React.FC<Props> = ({
 		getValue,
 		setValue,
 	} = useSingleInput({
-		initialValue: receiptName,
+		initialValue: receipt.name,
 		schema: receiptNameSchema,
 	});
 
@@ -40,16 +36,16 @@ export const ReceiptNameInput: React.FC<Props> = ({
 	);
 	const saveName = React.useCallback(
 		(nextName: string) => {
-			if (receiptName === nextName) {
+			if (receipt.name === nextName) {
 				unsetEditing();
 				return;
 			}
 			updateReceiptMutation.mutate(
-				{ id: receiptId, update: { type: "name", name: nextName } },
+				{ id: receipt.id, update: { type: "name", name: nextName } },
 				{ onSuccess: () => setValue(nextName) },
 			);
 		},
-		[updateReceiptMutation, receiptId, receiptName, setValue, unsetEditing],
+		[updateReceiptMutation, receipt.id, receipt.name, setValue, unsetEditing],
 	);
 
 	return (
@@ -60,7 +56,7 @@ export const ReceiptNameInput: React.FC<Props> = ({
 			labelPlacement="outside-left"
 			className="basis-36"
 			isDisabled={isLoading}
-			isReadOnly={!isOwner}
+			isReadOnly={receipt.ownerUserId !== receipt.selfUserId}
 			fieldError={inputState.error}
 			saveProps={{
 				title: "Save receipt name",

@@ -2,23 +2,19 @@ import React from "react";
 
 import { LockedIcon } from "~app/components/locked-icon";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { Button } from "~components/button";
 import { Tooltip } from "~components/tooltip";
-import type { ReceiptsId } from "~db/models";
 import { options as receiptsUpdateOptions } from "~mutations/receipts/update";
 
 type Props = {
-	receiptId: ReceiptsId;
-	emptyItemsAmount: number;
-	locked: boolean;
+	receipt: TRPCQueryOutput<"receipts.get">;
 	isLoading: boolean;
 };
 
 export const ReceiptLockedButton: React.FC<Props> = ({
-	receiptId,
-	emptyItemsAmount,
-	locked,
+	receipt,
 	isLoading,
 }) => {
 	const updateReceiptMutation = trpc.receipts.update.useMutation(
@@ -26,10 +22,14 @@ export const ReceiptLockedButton: React.FC<Props> = ({
 	);
 	const switchResolved = React.useCallback(() => {
 		updateReceiptMutation.mutate({
-			id: receiptId,
-			update: { type: "locked", locked: !locked },
+			id: receipt.id,
+			update: { type: "locked", locked: !receipt.lockedTimestamp },
 		});
-	}, [updateReceiptMutation, receiptId, locked]);
+	}, [updateReceiptMutation, receipt.id, receipt.lockedTimestamp]);
+
+	const emptyItemsAmount = receipt.items.filter(
+		(item) => item.parts.length === 0,
+	).length;
 	const emptyItemsWarning = React.useMemo(() => {
 		if (emptyItemsAmount === 0) {
 			return;
@@ -37,16 +37,18 @@ export const ReceiptLockedButton: React.FC<Props> = ({
 		return `There are ${emptyItemsAmount} empty items, cannot lock`;
 	}, [emptyItemsAmount]);
 	const elements = (
-		<Tooltip content={locked ? "Receipt locked" : "Receipt unlocked"}>
+		<Tooltip
+			content={receipt.lockedTimestamp ? "Receipt locked" : "Receipt unlocked"}
+		>
 			<Button
 				variant="ghost"
 				isLoading={updateReceiptMutation.isPending}
 				isDisabled={isLoading || Boolean(emptyItemsWarning)}
 				onClick={() => switchResolved()}
-				color={locked ? "success" : "warning"}
+				color={receipt.lockedTimestamp ? "success" : "warning"}
 				isIconOnly
 			>
-				<LockedIcon locked={locked} />
+				<LockedIcon locked={Boolean(receipt.lockedTimestamp)} />
 			</Button>
 		</Tooltip>
 	);

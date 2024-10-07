@@ -9,21 +9,20 @@ import { trpc } from "~app/trpc";
 import { receiptItemNameSchema } from "~app/utils/validation";
 import { Input } from "~components/input";
 import { Text } from "~components/text";
-import type { ReceiptsId } from "~db/models";
 import { options as receiptItemsUpdateOptions } from "~mutations/receipt-items/update";
 
 type ReceiptItem = TRPCQueryOutput<"receipts.get">["items"][number];
 
 type Props = {
-	receiptId: ReceiptsId;
-	receiptItem: ReceiptItem;
+	item: ReceiptItem;
+	receipt: TRPCQueryOutput<"receipts.get">;
 	readOnly?: boolean;
 	isLoading: boolean;
 };
 
 export const ReceiptItemNameInput: React.FC<Props> = ({
-	receiptId,
-	receiptItem,
+	item,
+	receipt,
 	isLoading,
 	readOnly,
 }) => {
@@ -35,28 +34,28 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 		state: inputState,
 		getValue,
 	} = useSingleInput({
-		initialValue: receiptItem.name,
+		initialValue: item.name,
 		schema: receiptItemNameSchema,
 	});
 
 	const updateMutation = trpc.receiptItems.update.useMutation(
 		useTrpcMutationOptions(receiptItemsUpdateOptions, {
-			context: receiptId,
+			context: receipt.id,
 			onSuccess: switchEditing,
 		}),
 	);
 	const updateName = React.useCallback(
 		(name: string) => {
-			if (name === receiptItem.name) {
+			if (name === item.name) {
 				unsetEditing();
 				return;
 			}
 			updateMutation.mutate({
-				id: receiptItem.id,
+				id: item.id,
 				update: { type: "name", name },
 			});
 		},
-		[updateMutation, receiptItem.id, receiptItem.name, unsetEditing],
+		[updateMutation, item.id, item.name, unsetEditing],
 	);
 	const disabled = readOnly || isLoading;
 
@@ -68,7 +67,7 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 				} flex-row items-center gap-1`}
 				onClick={disabled ? undefined : switchEditing}
 			>
-				<Text className="text-xl">{receiptItem.name}</Text>
+				<Text className="text-xl">{item.name}</Text>
 			</View>
 		);
 	}

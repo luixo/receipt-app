@@ -9,21 +9,20 @@ import { trpc } from "~app/trpc";
 import { quantitySchema } from "~app/utils/validation";
 import { Input } from "~components/input";
 import { Text } from "~components/text";
-import type { ReceiptsId } from "~db/models";
 import { options as receiptItemsUpdateOptions } from "~mutations/receipt-items/update";
 
 type ReceiptItem = TRPCQueryOutput<"receipts.get">["items"][number];
 
 type Props = {
-	receiptId: ReceiptsId;
-	receiptItem: ReceiptItem;
+	item: ReceiptItem;
+	receipt: TRPCQueryOutput<"receipts.get">;
 	readOnly?: boolean;
 	isLoading: boolean;
 };
 
 export const ReceiptItemQuantityInput: React.FC<Props> = ({
-	receiptId,
-	receiptItem,
+	item,
+	receipt,
 	isLoading,
 	readOnly,
 }) => {
@@ -35,31 +34,31 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 		state: inputState,
 		getNumberValue,
 	} = useSingleInput({
-		initialValue: receiptItem.quantity,
+		initialValue: item.quantity,
 		schema: quantitySchema,
 		type: "number",
 	});
 
 	const updateMutation = trpc.receiptItems.update.useMutation(
 		useTrpcMutationOptions(receiptItemsUpdateOptions, {
-			context: receiptId,
+			context: receipt.id,
 			onSuccess: unsetEditing,
 		}),
 	);
 	const updateQuantity = React.useCallback(
 		(quantity: number) => {
-			if (quantity === receiptItem.quantity) {
+			if (quantity === item.quantity) {
 				unsetEditing();
 				return;
 			}
 			updateMutation.mutate({
-				id: receiptItem.id,
+				id: item.id,
 				update: { type: "quantity", quantity },
 			});
 		},
-		[updateMutation, receiptItem.id, receiptItem.quantity, unsetEditing],
+		[updateMutation, item.id, item.quantity, unsetEditing],
 	);
-	const disabled = readOnly || isLoading;
+	const disabled = readOnly || Boolean(receipt.lockedTimestamp) || isLoading;
 
 	if (!isEditing) {
 		return (
@@ -69,7 +68,7 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 				} flex-row items-center gap-1`}
 				onClick={disabled ? undefined : switchEditing}
 			>
-				<Text>x {receiptItem.quantity} unit</Text>
+				<Text>x {item.quantity} unit</Text>
 			</View>
 		);
 	}

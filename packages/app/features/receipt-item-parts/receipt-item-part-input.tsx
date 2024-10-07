@@ -11,26 +11,24 @@ import { Button } from "~components/button";
 import { MinusIcon, PlusIcon } from "~components/icons";
 import { Input } from "~components/input";
 import { Text } from "~components/text";
-import type { ReceiptItemsId, ReceiptsId } from "~db/models";
 import { options as itemParticipantsUpdateOptions } from "~mutations/item-participants/update";
 
-type ReceiptItemPart =
-	TRPCQueryOutput<"receipts.get">["items"][number]["parts"][number];
+type Receipt = TRPCQueryOutput<"receipts.get">;
+type ReceiptItem = Receipt["items"][number];
+type ReceiptItemParts = ReceiptItem["parts"];
 
 type Props = {
-	receiptId: ReceiptsId;
-	receiptItemId: ReceiptItemsId;
-	itemPart: ReceiptItemPart;
-	itemParts: number;
+	part: ReceiptItemParts[number];
+	item: ReceiptItem;
+	receipt: Receipt;
 	readOnly?: boolean;
 	isLoading: boolean;
 };
 
 export const ReceiptItemPartInput: React.FC<Props> = ({
-	receiptId,
-	receiptItemId,
-	itemPart,
-	itemParts,
+	part,
+	item,
+	receipt,
 	isLoading,
 	readOnly,
 }) => {
@@ -42,14 +40,14 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 		state: inputState,
 		getNumberValue,
 	} = useSingleInput({
-		initialValue: itemPart.part,
+		initialValue: part.part,
 		schema: partSchema,
 		type: "number",
 	});
 
 	const updateMutation = trpc.itemParticipants.update.useMutation(
 		useTrpcMutationOptions(itemParticipantsUpdateOptions, {
-			context: receiptId,
+			context: receipt.id,
 			onSuccess: unsetEditing,
 		}),
 	);
@@ -58,25 +56,19 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 		(partUpdater: number | ((prev: number) => number)) => {
 			const nextPart =
 				typeof partUpdater === "function"
-					? partUpdater(itemPart.part)
+					? partUpdater(part.part)
 					: partUpdater;
-			if (nextPart === itemPart.part) {
+			if (nextPart === part.part) {
 				unsetEditing();
 				return;
 			}
 			updateMutation.mutate({
-				itemId: receiptItemId,
-				userId: itemPart.userId,
+				itemId: item.id,
+				userId: part.userId,
 				update: { type: "part", part: nextPart },
 			});
 		},
-		[
-			updateMutation,
-			receiptItemId,
-			itemPart.userId,
-			itemPart.part,
-			unsetEditing,
-		],
+		[part.part, part.userId, updateMutation, item.id, unsetEditing],
 	);
 
 	const wrap = React.useCallback(
@@ -87,7 +79,7 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 					color="primary"
 					isLoading={updateMutation.isPending}
 					onClick={() => updatePart((prev) => prev - 1)}
-					isDisabled={itemPart.part <= 1}
+					isDisabled={part.part <= 1}
 					isIconOnly
 				>
 					<MinusIcon size={24} />
@@ -104,12 +96,17 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 				</Button>
 			</View>
 		),
-		[updatePart, itemPart.part, updateMutation.isPending],
+		[updatePart, part.part, updateMutation.isPending],
+	);
+
+	const totalParts = item.parts.reduce(
+		(acc, itemPart) => acc + itemPart.part,
+		0,
 	);
 
 	const readOnlyComponent = (
 		<Text>
-			{itemPart.part} / {itemParts}
+			{part.part} / {totalParts}
 		</Text>
 	);
 
@@ -131,7 +128,7 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 					title: "Save item part",
 					onClick: () => updatePart(getNumberValue()),
 				}}
-				endContent={<Text className="self-center">/ {itemParts}</Text>}
+				endContent={<Text className="self-center">/ {totalParts}</Text>}
 				variant="bordered"
 			/>,
 		);

@@ -8,6 +8,7 @@ import { z } from "zod";
 
 import { useInputController } from "~app/hooks/use-input-controller";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import {
 	priceSchema,
@@ -16,7 +17,6 @@ import {
 } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { Input } from "~components/input";
-import type { ReceiptsId } from "~db/models";
 import { options as receiptItemsAddOptions } from "~mutations/receipt-items/add";
 
 type NameProps = {
@@ -102,14 +102,12 @@ type Form = {
 };
 
 type Props = {
-	receiptId: ReceiptsId;
-	receiptLocked: boolean;
+	receipt: TRPCQueryOutput<"receipts.get">;
 	isLoading: boolean;
 };
 
 export const AddReceiptItemForm: React.FC<Props> = ({
-	receiptId,
-	receiptLocked,
+	receipt,
 	isLoading: isDeleteLoading,
 }) => {
 	const form = useForm<Form>({
@@ -130,13 +128,13 @@ export const AddReceiptItemForm: React.FC<Props> = ({
 	});
 	const addMutation = trpc.receiptItems.add.useMutation(
 		useTrpcMutationOptions(receiptItemsAddOptions, {
-			context: receiptId,
+			context: receipt.id,
 			onSuccess: () => form.reset(),
 		}),
 	);
 	const onSubmit = React.useCallback(
-		(values: Form) => addMutation.mutate({ ...values, receiptId }),
-		[addMutation, receiptId],
+		(values: Form) => addMutation.mutate({ ...values, receiptId: receipt.id }),
+		[addMutation, receipt.id],
 	);
 
 	const isLoading = isDeleteLoading || addMutation.isPending;
@@ -151,7 +149,11 @@ export const AddReceiptItemForm: React.FC<Props> = ({
 			<Button
 				color="primary"
 				onClick={form.handleSubmit(onSubmit)}
-				isDisabled={!form.formState.isValid || isLoading || receiptLocked}
+				isDisabled={
+					!form.formState.isValid ||
+					isLoading ||
+					Boolean(receipt.lockedTimestamp)
+				}
 				className="w-full"
 				isLoading={addMutation.isPending}
 			>

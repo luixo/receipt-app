@@ -23,18 +23,10 @@ export const ReceiptOwnerControlButton: React.FC<Props> = ({
 	const debtsQueries = trpc.useQueries((t) =>
 		debtIds.map((id) => t.debts.get({ id })),
 	);
-	const emptyItemsAmount = receipt.items.filter(
-		(item) => item.parts.length === 0,
-	).length;
 
 	return (
 		<>
-			<ReceiptLockedButton
-				receiptId={receipt.id}
-				emptyItemsAmount={emptyItemsAmount}
-				locked={Boolean(receipt.lockedTimestamp)}
-				isLoading={deleteLoading}
-			/>
+			<ReceiptLockedButton receipt={receipt} isLoading={deleteLoading} />
 			{receipt.lockedTimestamp ? (
 				<ReceiptPropagateButton
 					key={

@@ -11,19 +11,15 @@ import { useSelfAccountId } from "~app/hooks/use-self-account-id";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import type { CurrencyCode } from "~app/utils/currency";
 import { Accordion, AccordionItem } from "~components/accordion";
 import { Text } from "~components/text";
-import type { ReceiptItemsId, ReceiptsId, UsersId } from "~db/models";
+import type { ReceiptItemsId } from "~db/models";
 import { options as receiptParticipantsRemoveOptions } from "~mutations/receipt-participants/remove";
 import { round } from "~utils/math";
 
 import { ReceiptParticipantRoleInput } from "./receipt-participant-role-input";
 
 type Props = {
-	receiptId: ReceiptsId;
-	receiptSelfUserId: UsersId;
-	receiptLocked: boolean;
 	participant: TRPCQueryOutput<"receipts.get">["participants"][number] & {
 		sum: number;
 		items: {
@@ -33,18 +29,13 @@ type Props = {
 			name: string;
 		}[];
 	};
-	isOwner: boolean;
-	currencyCode: CurrencyCode;
+	receipt: TRPCQueryOutput<"receipts.get">;
 	isLoading: boolean;
 };
 
 export const ReceiptParticipant: React.FC<Props> = ({
 	participant,
-	receiptId,
-	receiptSelfUserId,
-	receiptLocked,
-	isOwner,
-	currencyCode,
+	receipt,
 	isLoading,
 }) => {
 	const selfAccountId = useSelfAccountId();
@@ -54,7 +45,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 			useTrpcMutationOptions(receiptParticipantsRemoveOptions, {
 				context: selfAccountId
 					? {
-							receiptId,
+							receiptId: receipt.id,
 							selfAccountId,
 							resolvedStatus: participant.resolved,
 					  }
@@ -64,13 +55,14 @@ export const ReceiptParticipant: React.FC<Props> = ({
 	const removeReceiptParticipant = React.useCallback(
 		() =>
 			removeReceiptParticipantMutation.mutate({
-				receiptId,
+				receiptId: receipt.id,
 				userId: participant.userId,
 			}),
-		[removeReceiptParticipantMutation, receiptId, participant.userId],
+		[removeReceiptParticipantMutation, receipt.id, participant.userId],
 	);
-	const currency = useFormattedCurrency(currencyCode);
+	const currency = useFormattedCurrency(receipt.currencyCode);
 	const disabled = participant.items.length === 0;
+	const isOwner = receipt.ownerUserId === receipt.selfUserId;
 
 	return (
 		<Accordion>
@@ -99,30 +91,27 @@ export const ReceiptParticipant: React.FC<Props> = ({
 							<Text>{`${round(participant.sum)} ${currency}`}</Text>
 							<View className="flex-row items-center gap-2">
 								<ReceiptParticipantRoleInput
-									receiptId={receiptId}
-									selfUserId={receiptSelfUserId}
 									participant={participant}
+									receipt={receipt}
 									isLoading={isLoading}
-									isOwner={isOwner}
 								/>
 								<ReceiptParticipantResolvedButton
 									variant={
-										participant.userId === receiptSelfUserId ? "ghost" : "light"
+										participant.userId === receipt.selfUserId
+											? "ghost"
+											: "light"
 									}
-									receiptId={receiptId}
 									userId={participant.userId}
-									selfUserId={receiptSelfUserId}
-									resolved={
-										participant.userId === receiptSelfUserId
-											? participant.resolved
-											: undefined
-									}
+									resolved={participant.resolved}
+									receipt={receipt}
 								/>
 								{isOwner ? (
 									<RemoveButton
 										onRemove={removeReceiptParticipant}
 										mutation={removeReceiptParticipantMutation}
-										isDisabled={!selfAccountId || receiptLocked}
+										isDisabled={
+											!selfAccountId || Boolean(receipt.lockedTimestamp)
+										}
 										subtitle="This will remove participant with all his parts"
 										noConfirm={participant.sum === 0}
 										isIconOnly

@@ -13,7 +13,6 @@ import { ReceiptIcon } from "~components/icons";
 import { Spinner } from "~components/spinner";
 import { Text } from "~components/text";
 import type { ReceiptsId } from "~db/models";
-import { round } from "~utils/math";
 
 import { ReceiptCurrencyInput } from "./receipt-currency-input";
 import { ReceiptDateInput } from "./receipt-date-input";
@@ -36,9 +35,6 @@ export const ReceiptInner: React.FC<InnerProps> = ({ query }) => {
 	const isOwner = receipt.selfUserId === receipt.ownerUserId;
 	const disabled =
 		!isOwner || deleteLoading || Boolean(receipt.lockedTimestamp);
-	const sum = round(
-		receipt.items.reduce((acc, item) => acc + item.price * item.quantity, 0),
-	);
 
 	return (
 		<>
@@ -49,14 +45,13 @@ export const ReceiptInner: React.FC<InnerProps> = ({ query }) => {
 					<>
 						<ReceiptParticipantResolvedButton
 							variant="ghost"
-							receiptId={receipt.id}
+							receipt={receipt}
 							userId={receipt.selfUserId}
-							selfUserId={receipt.selfUserId}
-							resolved={
+							resolved={Boolean(
 								receipt.participants.find(
 									(participant) => participant.userId === receipt.selfUserId,
-								)?.resolved
-							}
+								)?.resolved,
+							)}
 							isDisabled={deleteLoading}
 						/>
 						{isOwner ? (
@@ -73,9 +68,7 @@ export const ReceiptInner: React.FC<InnerProps> = ({ query }) => {
 			>
 				{isEditing ? (
 					<ReceiptNameInput
-						receiptId={receipt.id}
-						receiptName={receipt.name}
-						isOwner={isOwner}
+						receipt={receipt}
 						isLoading={deleteLoading}
 						unsetEditing={unsetEditing}
 					/>
@@ -90,22 +83,9 @@ export const ReceiptInner: React.FC<InnerProps> = ({ query }) => {
 			</PageHeader>
 			<View className="items-start justify-between gap-2 sm:flex-row">
 				<View className="gap-2">
-					<ReceiptDateInput
-						receiptId={receipt.id}
-						issued={receipt.issued}
-						isOwner={isOwner}
-						receiptLocked={Boolean(receipt.lockedTimestamp)}
-						isLoading={deleteLoading}
-					/>
+					<ReceiptDateInput receipt={receipt} isLoading={deleteLoading} />
 					<View className="flex-row items-center gap-1">
-						<ReceiptCurrencyInput
-							receiptId={receipt.id}
-							currencyCode={receipt.currencyCode}
-							isOwner={isOwner}
-							receiptLocked={Boolean(receipt.lockedTimestamp)}
-							isLoading={deleteLoading}
-							sum={sum}
-						/>
+						<ReceiptCurrencyInput receipt={receipt} isLoading={deleteLoading} />
 					</View>
 				</View>
 				<LoadableUser id={receipt.ownerUserId} />
@@ -118,16 +98,12 @@ export const ReceiptInner: React.FC<InnerProps> = ({ query }) => {
 					/>
 					<ReceiptRemoveButton
 						className="self-end"
-						receiptId={receipt.id}
-						receiptLocked={Boolean(receipt.lockedTimestamp)}
-						selfUserId={receipt.selfUserId}
-						participants={receipt.participants}
-						isEmpty={receipt.items.length === 0}
+						receipt={receipt}
 						setLoading={setDeleteLoading}
 					/>
 				</View>
 			) : null}
-			<ReceiptItems receipt={query.data} isLoading={deleteLoading} />
+			<ReceiptItems receipt={receipt} isLoading={deleteLoading} />
 		</>
 	);
 };

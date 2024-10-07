@@ -7,28 +7,24 @@ import { useSingleInput } from "~app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import type { CurrencyCode } from "~app/utils/currency";
 import { priceSchema } from "~app/utils/validation";
 import { Input } from "~components/input";
 import { Text } from "~components/text";
-import type { ReceiptsId } from "~db/models";
 import { options as receiptItemsUpdateOptions } from "~mutations/receipt-items/update";
 
 type ReceiptItem = TRPCQueryOutput<"receipts.get">["items"][number];
 
 type Props = {
-	receiptId: ReceiptsId;
-	receiptItem: ReceiptItem;
+	item: ReceiptItem;
+	receipt: TRPCQueryOutput<"receipts.get">;
 	readOnly?: boolean;
-	currencyCode: CurrencyCode;
 	isLoading: boolean;
 };
 
 export const ReceiptItemPriceInput: React.FC<Props> = ({
-	receiptId,
-	receiptItem,
+	item,
+	receipt,
 	isLoading,
-	currencyCode,
 	readOnly,
 }) => {
 	const [isEditing, { switchValue: switchEditing, setFalse: unsetEditing }] =
@@ -39,40 +35,44 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 		state: inputState,
 		getNumberValue,
 	} = useSingleInput({
-		initialValue: receiptItem.price,
+		initialValue: item.price,
 		schema: priceSchema,
 		type: "number",
 	});
 
 	const updateMutation = trpc.receiptItems.update.useMutation(
 		useTrpcMutationOptions(receiptItemsUpdateOptions, {
-			context: receiptId,
+			context: receipt.id,
 			onSuccess: unsetEditing,
 		}),
 	);
 	const updatePrice = React.useCallback(
 		(price: number) => {
-			if (price === receiptItem.price) {
+			if (price === item.price) {
 				unsetEditing();
 				return;
 			}
 			updateMutation.mutate({
-				id: receiptItem.id,
+				id: item.id,
 				update: { type: "price", price },
 			});
 		},
-		[updateMutation, receiptItem.id, receiptItem.price, unsetEditing],
+		[updateMutation, item.id, item.price, unsetEditing],
 	);
-	const currency = useFormattedCurrency(currencyCode);
+	const currency = useFormattedCurrency(receipt.currencyCode);
 
 	if (!isEditing) {
 		return (
 			<View
 				className="cursor-pointer flex-row items-center gap-1"
-				onClick={readOnly || isLoading ? undefined : switchEditing}
+				onClick={
+					readOnly || Boolean(receipt.lockedTimestamp) || isLoading
+						? undefined
+						: switchEditing
+				}
 			>
 				<Text>
-					{receiptItem.price} {currency}
+					{item.price} {currency}
 				</Text>
 			</View>
 		);

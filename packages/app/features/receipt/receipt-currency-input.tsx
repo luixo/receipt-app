@@ -5,30 +5,23 @@ import { CurrenciesPicker } from "~app/components/app/currencies-picker";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import { Text } from "~components/text";
-import type { ReceiptsId } from "~db/models";
 import { options as receiptsUpdateOptions } from "~mutations/receipts/update";
+import { round } from "~utils/math";
 
 type Props = {
-	receiptId: ReceiptsId;
-	currencyCode: CurrencyCode;
-	isOwner: boolean;
-	receiptLocked: boolean;
-	sum: number;
+	receipt: TRPCQueryOutput<"receipts.get">;
 	isLoading: boolean;
 };
 
 export const ReceiptCurrencyInput: React.FC<Props> = ({
-	receiptId,
-	currencyCode,
-	isOwner,
-	receiptLocked,
-	sum,
+	receipt,
 	isLoading,
 }) => {
-	const formattedCurrencyCode = useFormattedCurrency(currencyCode);
+	const formattedCurrencyCode = useFormattedCurrency(receipt.currencyCode);
 	const [
 		isModalOpen,
 		{ switchValue: switchModalOpen, setTrue: openModal, setFalse: closeModal },
@@ -40,19 +33,25 @@ export const ReceiptCurrencyInput: React.FC<Props> = ({
 	const saveCurrency = React.useCallback(
 		(nextCurrencyCode: CurrencyCode) => {
 			closeModal();
-			if (nextCurrencyCode === currencyCode) {
+			if (nextCurrencyCode === receipt.currencyCode) {
 				return;
 			}
 			updateReceiptMutation.mutate({
-				id: receiptId,
+				id: receipt.id,
 				update: { type: "currencyCode", currencyCode: nextCurrencyCode },
 			});
 		},
-		[updateReceiptMutation, receiptId, currencyCode, closeModal],
+		[updateReceiptMutation, receipt.id, receipt.currencyCode, closeModal],
 	);
 	const topCurrenciesQuery = trpc.currency.topReceipts.useQuery();
 	const disabled =
-		updateReceiptMutation.isPending || isLoading || !isOwner || receiptLocked;
+		updateReceiptMutation.isPending ||
+		isLoading ||
+		receipt.ownerUserId !== receipt.selfUserId ||
+		Boolean(receipt.lockedTimestamp);
+	const sum = round(
+		receipt.items.reduce((acc, item) => acc + item.price * item.quantity, 0),
+	);
 
 	return (
 		<>

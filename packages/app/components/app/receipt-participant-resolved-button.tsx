@@ -1,53 +1,49 @@
 import React from "react";
 
-import { skipToken } from "@tanstack/react-query";
-
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { Button } from "~components/button";
 import { DoneIcon, UndoneIcon } from "~components/icons";
-import type { ReceiptsId, UsersId } from "~db/models";
+import type { UsersId } from "~db/models";
 import { options as receiptParticipantsUpdateOptions } from "~mutations/receipt-participants/update";
 
 type Props = {
-	receiptId: ReceiptsId;
 	userId: UsersId;
-	selfUserId?: UsersId;
-	resolved: boolean | undefined;
+	resolved: boolean;
+	receipt: TRPCQueryOutput<"receipts.get">;
 } & Omit<
 	React.ComponentProps<typeof Button>,
 	"onClick" | "color" | "isIconOnly"
 >;
 
 export const ReceiptParticipantResolvedButton: React.FC<Props> = ({
-	receiptId,
 	userId,
-	selfUserId,
 	resolved,
+	receipt,
 	...props
 }) => {
+	const selfParticipant = userId === receipt.selfUserId;
 	const updateReceiptMutation = trpc.receiptParticipants.update.useMutation(
 		useTrpcMutationOptions(receiptParticipantsUpdateOptions, {
-			context: selfUserId ? { selfUserId } : skipToken,
+			context: { selfUserId: receipt.selfUserId },
 		}),
 	);
 	const switchResolved = React.useCallback(() => {
 		updateReceiptMutation.mutate({
-			receiptId,
+			receiptId: receipt.id,
 			userId,
 			update: { type: "resolved", resolved: !resolved },
 		});
-	}, [updateReceiptMutation, receiptId, userId, resolved]);
+	}, [updateReceiptMutation, receipt.id, userId, resolved]);
 	return (
 		<Button
 			{...props}
 			isLoading={updateReceiptMutation.isPending || props.isLoading}
 			isDisabled={
-				resolved === undefined || props.isDisabled || selfUserId !== userId
+				!selfParticipant || props.isDisabled || receipt.selfUserId !== userId
 			}
-			color={
-				resolved ? "success" : resolved === undefined ? "default" : "warning"
-			}
+			color={resolved ? "success" : !selfParticipant ? "default" : "warning"}
 			onClick={switchResolved}
 			isIconOnly
 		>

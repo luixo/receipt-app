@@ -4,7 +4,6 @@ import { View } from "react-native";
 import { isNonNullish } from "remeda";
 
 import type { TRPCQueryOutput } from "~app/trpc";
-import type { CurrencyCode } from "~app/utils/currency";
 import {
 	getDecimalsPower,
 	getItemCalculations,
@@ -13,7 +12,6 @@ import {
 import { Accordion, AccordionItem } from "~components/accordion";
 import { UserIcon } from "~components/icons";
 import { Text } from "~components/text";
-import type { ReceiptsId, UsersId } from "~db/models";
 
 import { AddReceiptParticipantForm } from "./add-receipt-participant-form";
 import { ReceiptParticipant } from "./receipt-participant";
@@ -33,32 +31,18 @@ const getSortParticipants = () => (a: Participant, b: Participant) => {
 };
 
 type Props = {
-	items: TRPCQueryOutput<"receipts.get">["items"];
-	participants: TRPCQueryOutput<"receipts.get">["participants"];
-	receiptId: ReceiptsId;
-	receiptSelfUserId: UsersId;
-	receiptLocked: boolean;
-	receiptInTransfer: boolean;
-	currencyCode: CurrencyCode;
-	isOwner: boolean;
+	receipt: TRPCQueryOutput<"receipts.get">;
 	isLoading: boolean;
 };
 
 export const ReceiptParticipants: React.FC<Props> = ({
-	items,
-	participants,
-	receiptLocked,
-	receiptInTransfer,
-	receiptSelfUserId,
-	currencyCode,
-	receiptId,
-	isOwner,
+	receipt,
 	isLoading,
 }) => {
 	const sortParticipants = React.useMemo(() => getSortParticipants(), []);
 	const calculatedParticipants = React.useMemo(() => {
 		const decimalsPower = getDecimalsPower();
-		const calculatedItems = items.map((item) => ({
+		const calculatedItems = receipt.items.map((item) => ({
 			calculations: getItemCalculations(
 				item.price * item.quantity,
 				item.parts.reduce(
@@ -69,7 +53,7 @@ export const ReceiptParticipants: React.FC<Props> = ({
 			id: item.id,
 			name: item.name,
 		}));
-		return getParticipantSums(receiptId, items, participants)
+		return getParticipantSums(receipt.id, receipt.items, receipt.participants)
 			.sort(sortParticipants)
 			.map((participant) => ({
 				...participant,
@@ -91,7 +75,7 @@ export const ReceiptParticipants: React.FC<Props> = ({
 					})
 					.filter(isNonNullish),
 			}));
-	}, [receiptId, items, participants, sortParticipants]);
+	}, [receipt.id, receipt.items, receipt.participants, sortParticipants]);
 	return (
 		<Accordion variant="shadow">
 			<AccordionItem
@@ -107,27 +91,21 @@ export const ReceiptParticipants: React.FC<Props> = ({
 				{calculatedParticipants.map((participant) => (
 					<ReceiptParticipant
 						key={participant.userId}
-						receiptId={receiptId}
-						receiptLocked={receiptLocked}
-						receiptSelfUserId={receiptSelfUserId}
 						participant={participant}
-						isOwner={isOwner}
-						currencyCode={currencyCode}
+						receipt={receipt}
 						isLoading={isLoading}
 					/>
 				))}
-				{!isOwner ? null : (
+				{receipt.ownerUserId === receipt.selfUserId ? (
 					<AddReceiptParticipantForm
 						className="my-4"
 						disabled={isLoading}
-						receiptId={receiptId}
-						receiptLocked={receiptLocked}
-						receiptInTransfer={receiptInTransfer}
+						receipt={receipt}
 						filterIds={calculatedParticipants.map(
 							(participant) => participant.userId,
 						)}
 					/>
-				)}
+				) : null}
 			</AccordionItem>
 		</Accordion>
 	);

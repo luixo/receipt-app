@@ -4,43 +4,38 @@ import { LoadableUser } from "~app/components/app/loadable-user";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import type { ReceiptItemsId, ReceiptsId } from "~db/models";
 import { options as itemParticipantsAddOptions } from "~mutations/item-participants/add";
 
 type Props = {
-	receiptId: ReceiptsId;
-	receiptItemId: ReceiptItemsId;
-	isOwner: boolean;
+	item: TRPCQueryOutput<"receipts.get">["items"][number];
 	participant: TRPCQueryOutput<"receipts.get">["participants"][number];
-	isDisabled: boolean;
+	receipt: TRPCQueryOutput<"receipts.get">;
 };
 
 export const ParticipantChip: React.FC<Props> = ({
-	receiptId,
-	receiptItemId,
-	isOwner,
+	item,
 	participant,
-	isDisabled,
+	receipt,
 }) => {
 	const addItemPartMutation = trpc.itemParticipants.add.useMutation(
 		useTrpcMutationOptions(itemParticipantsAddOptions, {
-			context: receiptId,
+			context: receipt.id,
 		}),
 	);
 	const addParticipant = React.useCallback(() => {
 		addItemPartMutation.mutate({
-			itemId: receiptItemId,
+			itemId: item.id,
 			userIds: [participant.userId],
 		});
-	}, [addItemPartMutation, receiptItemId, participant]);
+	}, [addItemPartMutation, item.id, participant.userId]);
 
 	return (
 		<LoadableUser
 			id={participant.userId}
-			foreign={!isOwner}
+			foreign={receipt.ownerUserId !== receipt.selfUserId}
 			className="cursor-pointer"
 			onClick={addParticipant}
-			chip={{ isDisabled }}
+			chip={{ isDisabled: Boolean(receipt.lockedTimestamp) }}
 		/>
 	);
 };
