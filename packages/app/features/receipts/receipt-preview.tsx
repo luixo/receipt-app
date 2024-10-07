@@ -1,20 +1,17 @@
-import React from "react";
+import type React from "react";
 import { View } from "react-native";
 
 import { ReceiptResolvedParticipantsButton } from "~app/components/app/receipt-resolved-participants-button";
-import { LockedIcon } from "~app/components/locked-icon";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import { useSsrFormat } from "~app/hooks/use-ssr-format";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
-import { trpc } from "~app/trpc";
 import { Badge } from "~components/badge";
-import { Button } from "~components/button";
 import { KeyIcon } from "~components/icons";
 import { Link } from "~components/link";
 import { Text } from "~components/text";
-import { options as receiptsUpdateOptions } from "~mutations/receipts/update";
 import { round } from "~utils/math";
+
+import { ReceiptPreviewLockedButton } from "./receipt-preview-locked-button";
 
 type InnerProps = {
 	receipt: TRPCQueryOutput<"receipts.get">;
@@ -23,16 +20,6 @@ type InnerProps = {
 export const ReceiptPreview: React.FC<InnerProps> = ({ receipt }) => {
 	const { formatDate } = useSsrFormat();
 	const currency = useFormattedCurrency(receipt.currencyCode);
-	const updateReceiptMutation = trpc.receipts.update.useMutation(
-		useTrpcMutationOptions(receiptsUpdateOptions),
-	);
-	const receiptLocked = Boolean(receipt.lockedTimestamp);
-	const switchResolved = React.useCallback(() => {
-		updateReceiptMutation.mutate({
-			id: receipt.id,
-			update: { type: "locked", locked: !receiptLocked },
-		});
-	}, [updateReceiptMutation, receipt.id, receiptLocked]);
 	const selfParticipant = receipt.participants.find(
 		(participant) => participant.userId === receipt.selfUserId,
 	);
@@ -84,17 +71,9 @@ export const ReceiptPreview: React.FC<InnerProps> = ({ receipt }) => {
 						/>
 					) : null}
 				</View>
-				<Button
-					className="flex-1 flex-row self-center p-2"
-					variant="light"
-					isLoading={updateReceiptMutation.isPending}
-					isDisabled={!isOwner}
-					color={receiptLocked ? "success" : "warning"}
-					isIconOnly
-					onClick={switchResolved}
-				>
-					<LockedIcon locked={receiptLocked} />
-				</Button>
+				<View className="flex-1 flex-row self-center p-2">
+					<ReceiptPreviewLockedButton receipt={receipt} />
+				</View>
 			</View>
 		</View>
 	);
