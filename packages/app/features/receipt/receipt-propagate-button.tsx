@@ -4,84 +4,26 @@ import { skipToken } from "@tanstack/react-query";
 
 import { QueryErrorMessage } from "~app/components/error-message";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
+import { useParticipants } from "~app/hooks/use-participants";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type {
-	TRPCQueryErrorResult,
-	TRPCQueryResult,
-	TRPCQuerySuccessResult,
-} from "~app/trpc";
+import type { TRPCQueryErrorResult, TRPCQueryResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import { isDebtInSyncWithReceipt } from "~app/utils/debts";
 import { getReceiptDebtName } from "~app/utils/receipt";
-import { getParticipantSums } from "~app/utils/receipt-item";
 import { Button } from "~components/button";
 import { InfoIcon, SendIcon, SyncIcon } from "~components/icons";
 import { options as debtsAddOptions } from "~mutations/debts/add";
 import { options as debtsUpdateOptions } from "~mutations/debts/update";
-import type { NonNullableField } from "~utils/types";
 
 import { ReceiptDebtSyncInfoModal } from "./receipt-debt-sync-info-modal";
 import { type LockedReceipt } from "./receipt-participant-debt";
 
 type InnerProps = {
-	queries: TRPCQuerySuccessResult<"debts.get">[];
 	receipt: LockedReceipt;
 };
 
-const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
-	queries,
-	receipt,
-}) => {
-	const debts = React.useMemo(
-		() => queries.map((query) => query.data),
-		[queries],
-	);
-	const participants = React.useMemo(
-		() =>
-			getParticipantSums(receipt.id, receipt.items, receipt.participants)
-				.map((participant) => ({
-					userId: participant.userId,
-					sum: participant.sum,
-					currentDebt: debts.find((debt) => debt.userId === participant.userId),
-				}))
-				.filter((participant) => participant.userId !== receipt.selfUserId),
-		[
-			receipt.items,
-			receipt.participants,
-			receipt.id,
-			debts,
-			receipt.selfUserId,
-		],
-	);
-
-	const syncableParticipants = React.useMemo(
-		() => participants.filter(({ sum }) => sum !== 0),
-		[participants],
-	);
-	// Debts not being created yet
-	const unsyncedParticipants = React.useMemo(
-		() => syncableParticipants.filter(({ currentDebt }) => !currentDebt),
-		[syncableParticipants],
-	);
-	// Debts being de-synced from the receipt
-	const desyncedParticipants = React.useMemo(
-		() =>
-			syncableParticipants.filter(
-				(
-					participant,
-				): participant is NonNullableField<
-					typeof participant,
-					"currentDebt"
-				> =>
-					participant.currentDebt
-						? !isDebtInSyncWithReceipt(
-								{ ...receipt, participantSum: participant.sum },
-								participant.currentDebt,
-						  )
-						: false,
-			),
-		[syncableParticipants, receipt],
-	);
+const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({ receipt }) => {
+	const { participants, desyncedParticipants, nonCreatedParticipants } =
+		useParticipants(receipt);
 
 	const addMutations = participants.map(() =>
 		trpc.debts.add.useMutation(
@@ -102,7 +44,7 @@ const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 	});
 
 	const propagateDebts = React.useCallback(() => {
-		unsyncedParticipants.forEach((participant) => {
+		nonCreatedParticipants.forEach((participant) => {
 			const participantIndex = participants.indexOf(participant);
 			const matchedMutation = addMutations[participantIndex];
 			if (!matchedMutation) {
@@ -134,15 +76,15 @@ const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 			});
 		});
 	}, [
+		nonCreatedParticipants,
+		desyncedParticipants,
 		participants,
 		addMutations,
-		updateMutations,
-		receipt.id,
+		receipt.name,
 		receipt.currencyCode,
 		receipt.issued,
-		receipt.name,
-		desyncedParticipants,
-		unsyncedParticipants,
+		receipt.id,
+		updateMutations,
 	]);
 	const isPropagating =
 		addMutations.some((mutation) => mutation.isPending) ||
@@ -155,7 +97,7 @@ const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({
 	return (
 		<>
 			{desyncedParticipants.length !== 0 ||
-			unsyncedParticipants.length !== 0 ? (
+			nonCreatedParticipants.length !== 0 ? (
 				<Button
 					variant="ghost"
 					title={
@@ -215,11 +157,5 @@ export const ReceiptPropagateButton: React.FC<Props> = ({
 	if (errorQuery) {
 		return <QueryErrorMessage query={errorQuery} />;
 	}
-	return (
-		<ReceiptPropagateButtonInner
-			{...props}
-			receipt={receipt}
-			queries={queries as TRPCQuerySuccessResult<"debts.get">[]}
-		/>
-	);
+	return <ReceiptPropagateButtonInner {...props} receipt={receipt} />;
 };

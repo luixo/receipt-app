@@ -7,28 +7,20 @@ import { LoadableUser } from "~app/components/app/loadable-user";
 import { ReceiptParticipantResolvedButton } from "~app/components/app/receipt-participant-resolved-button";
 import { RemoveButton } from "~app/components/remove-button";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
+import type { Participant } from "~app/hooks/use-participants";
 import { useSelfAccountId } from "~app/hooks/use-self-account-id";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { Accordion, AccordionItem } from "~components/accordion";
 import { Text } from "~components/text";
-import type { ReceiptItemsId } from "~db/models";
 import { options as receiptParticipantsRemoveOptions } from "~mutations/receipt-participants/remove";
 import { round } from "~utils/math";
 
 import { ReceiptParticipantRoleInput } from "./receipt-participant-role-input";
 
 type Props = {
-	participant: TRPCQueryOutput<"receipts.get">["participants"][number] & {
-		sum: number;
-		items: {
-			sum: number;
-			id: ReceiptItemsId;
-			hasExtra: boolean;
-			name: string;
-		}[];
-	};
+	participant: Participant;
 	receipt: TRPCQueryOutput<"receipts.get">;
 	isLoading: boolean;
 };

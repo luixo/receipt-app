@@ -1,6 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
+import type { Participant } from "~app/hooks/use-participants";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
@@ -26,7 +27,7 @@ export type AssignableRole = Exclude<Role, "owner">;
 const ROLES: AssignableRole[] = ["editor", "viewer"];
 
 type Props = {
-	participant: TRPCQueryOutput<"receipts.get">["participants"][number];
+	participant: Participant;
 	receipt: TRPCQueryOutput<"receipts.get">;
 	isLoading: boolean;
 };

@@ -1,21 +1,16 @@
 import React from "react";
 import { View } from "react-native";
 
+import type { Participant } from "~app/hooks/use-participants";
 import { isDebtInSyncWithReceipt } from "~app/utils/debts";
 import { Divider } from "~components/divider";
 import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
 import { Text } from "~components/text";
 
-import type {
-	DebtParticipant,
-	LockedReceipt,
-} from "./receipt-participant-debt";
+import type { LockedReceipt } from "./receipt-participant-debt";
 import { ReceiptParticipantDebt } from "./receipt-participant-debt";
 
-const sortParticipantsSameBlock = (
-	a: DebtParticipant,
-	b: DebtParticipant,
-): number => {
+const sortParticipantsSameBlock = (a: Participant, b: Participant): number => {
 	if (a.sum === b.sum) {
 		return b.userId.localeCompare(a.userId);
 	}
@@ -24,12 +19,11 @@ const sortParticipantsSameBlock = (
 
 type ReceiptPart = Pick<LockedReceipt, "currencyCode" | "issued" | "id">;
 
-const isEmpty = ({ sum }: DebtParticipant) => sum === 0;
-const noDebt = ({ sum, currentDebt }: DebtParticipant) =>
-	sum !== 0 && !currentDebt;
+const isEmpty = ({ sum }: Participant) => sum === 0;
+const noDebt = ({ sum, currentDebt }: Participant) => sum !== 0 && !currentDebt;
 const isDesynced =
 	(receipt: ReceiptPart) =>
-	({ currentDebt, sum }: DebtParticipant) =>
+	({ currentDebt, sum }: Participant) =>
 		currentDebt
 			? sum !== 0 &&
 			  !isDebtInSyncWithReceipt(
@@ -39,7 +33,7 @@ const isDesynced =
 			: false;
 const isSynced =
 	(receipt: ReceiptPart) =>
-	({ currentDebt, sum }: DebtParticipant) =>
+	({ currentDebt, sum }: Participant) =>
 		currentDebt
 			? sum !== 0 &&
 			  isDebtInSyncWithReceipt(
@@ -48,9 +42,9 @@ const isSynced =
 			  )
 			: false;
 
-type SortFn = (a: DebtParticipant, b: DebtParticipant) => number;
+type SortFn = (a: Participant, b: Participant) => number;
 const sortBy =
-	(...sorters: ((participant: DebtParticipant) => boolean)[]): SortFn =>
+	(...sorters: ((participant: Participant) => boolean)[]): SortFn =>
 	(a, b) => {
 		const aIndex = sorters.findIndex((sorter) => sorter(a));
 		const bIndex = sorters.findIndex((sorter) => sorter(b));
@@ -67,7 +61,7 @@ type Props = {
 	isOpen: boolean;
 	switchModalOpen: () => void;
 	receipt: LockedReceipt;
-	participants: DebtParticipant[];
+	participants: Participant[];
 };
 
 export const ReceiptDebtSyncInfoModal: React.FC<Props> = ({

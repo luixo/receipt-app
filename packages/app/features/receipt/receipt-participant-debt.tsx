@@ -6,6 +6,7 @@ import { skipToken } from "@tanstack/react-query";
 import { DebtSyncStatus } from "~app/components/app/debt-sync-status";
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
+import type { Participant } from "~app/hooks/use-participants";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
@@ -14,15 +15,8 @@ import { getReceiptDebtName } from "~app/utils/receipt";
 import { Button } from "~components/button";
 import { ReceiptIcon, SendIcon, SyncIcon, ZeroIcon } from "~components/icons";
 import { Text } from "~components/text";
-import type { UsersId } from "~db/models";
 import { options as debtsAddOptions } from "~mutations/debts/add";
 import { options as debtsUpdateOptions } from "~mutations/debts/update";
-
-export type DebtParticipant = {
-	userId: UsersId;
-	sum: number;
-	currentDebt?: TRPCQueryOutput<"debts.get">;
-};
 
 export type LockedReceipt = Omit<
 	TRPCQueryOutput<"receipts.get">,
@@ -31,7 +25,7 @@ export type LockedReceipt = Omit<
 
 type Props = {
 	receipt: LockedReceipt;
-	participant: DebtParticipant;
+	participant: Participant;
 };
 
 export const ReceiptParticipantDebt: React.FC<Props> = ({
@@ -51,7 +45,7 @@ export const ReceiptParticipantDebt: React.FC<Props> = ({
 		}),
 	);
 	const updateDebt = React.useCallback(
-		(currentDebt: NonNullable<DebtParticipant["currentDebt"]>) =>
+		(currentDebt: NonNullable<Participant["currentDebt"]>) =>
 			updateMutation.mutate({
 				id: currentDebt.id,
 				update: {
