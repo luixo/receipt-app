@@ -46,7 +46,6 @@ export const options: UseContextedMutationOptions<"receipts.update"> = {
 					applyUpdate(updateObject.update),
 					getRevert(updateObject.update),
 				),
-			getNonResolvedAmount: undefined,
 			getPaged: undefined,
 		}),
 	errorToastOptions: () => (error) => ({

@@ -13,8 +13,6 @@ export default interface ReceiptParticipants {
 
 	role: string;
 
-	resolved: boolean;
-
 	createdAt: Date;
 
 	updatedAt: Date;
@@ -28,9 +26,6 @@ export interface ReceiptParticipantsInitializer {
 	userId: UsersId;
 
 	role: string;
-
-	/** Default value: false */
-	resolved?: boolean;
 
 	/** Default value: now() */
 	createdAt?: Date;
@@ -47,8 +42,6 @@ export interface ReceiptParticipantsMutator {
 	userId?: UsersId;
 
 	role?: string;
-
-	resolved?: boolean;
 
 	createdAt?: Date;
 

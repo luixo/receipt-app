@@ -7,7 +7,6 @@ exports[`receipts.add > functionality > receipt is added - with users 1`] = `
       "receiptId:23345cd5-9763-4f6c-950c-0d92511f1e71|userId:19dc7ddc-bbdb-4896-bd92-2deed2136929": {
         "createdAt": "2020-01-01T00:00:00.000Z",
         "receiptId": "23345cd5-9763-4f6c-950c-0d92511f1e71",
-        "resolved": false,
         "role": "owner",
         "updatedAt": "2020-01-01T00:00:00.000Z",
         "userId": "19dc7ddc-bbdb-4896-bd92-2deed2136929",
@@ -15,7 +14,6 @@ exports[`receipts.add > functionality > receipt is added - with users 1`] = `
       "receiptId:23345cd5-9763-4f6c-950c-0d92511f1e71|userId:be70a9a6-7d78-45ed-ba31-8b5daefdb497": {
         "createdAt": "2020-01-01T00:00:00.000Z",
         "receiptId": "23345cd5-9763-4f6c-950c-0d92511f1e71",
-        "resolved": false,
         "role": "editor",
         "updatedAt": "2020-01-01T00:00:00.000Z",
         "userId": "be70a9a6-7d78-45ed-ba31-8b5daefdb497",

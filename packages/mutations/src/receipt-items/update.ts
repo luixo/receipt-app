@@ -52,7 +52,6 @@ export const options: UseContextedMutationOptions<
 					getRevert(updateObject.update),
 				),
 			getPaged: undefined,
-			getNonResolvedAmount: undefined,
 		}),
 	errorToastOptions: () => (error) => ({
 		text: `Error updating item: ${error.message}`,

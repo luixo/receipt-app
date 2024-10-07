@@ -130,13 +130,12 @@ export const Receipts: React.FC = () => {
 				) : query.data ? (
 					<>
 						<View className="flex-row gap-2">
-							<View className="flex-[7] p-2">
+							<View className="flex-[8] p-2">
 								<Text>Receipt</Text>
 							</View>
 							<View className="flex-[2] p-2">
 								<Text className="self-end">Sum</Text>
 							</View>
-							<View className="flex-1 p-2 max-sm:hidden" />
 							<View className="flex-1 p-2 max-sm:hidden" />
 						</View>
 						<Divider className="max-sm:hidden" />

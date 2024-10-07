@@ -68,14 +68,12 @@ export const defaultGenerateReceiptParticipants: GenerateReceiptParticipants =
 			...users.map((user) => ({
 				userId: user.id,
 				role: "editor" as const,
-				resolved: faker.datatype.boolean(),
 				createdAt: faker.date.recent({ days: 5, refDate: new Date() }),
 			})),
 			addSelf
 				? {
 						userId: selfAccount.userId,
 						role: "owner" as const,
-						resolved: false,
 						createdAt: faker.date.recent({ days: 5, refDate: new Date() }),
 				  }
 				: undefined,

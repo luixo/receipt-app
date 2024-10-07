@@ -277,7 +277,6 @@ export const updateReceiptWithOutcomingDebtId = (
 				},
 			}));
 		},
-		getNonResolvedAmount: undefined,
 		getPaged: undefined,
 	});
 };

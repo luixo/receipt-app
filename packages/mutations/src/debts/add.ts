@@ -64,7 +64,6 @@ export const options: UseContextedMutationOptions<"debts.add"> = {
 						},
 					}));
 				},
-				getNonResolvedAmount: undefined,
 				getPaged: undefined,
 			});
 		}

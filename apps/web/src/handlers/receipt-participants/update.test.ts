@@ -179,36 +179,6 @@ describe("receiptParticipants.update", () => {
 				);
 			});
 		});
-
-		describe("resolved", () => {
-			test("cannot be updated for anyone but yourself", async ({ ctx }) => {
-				const {
-					sessionId,
-					accountId,
-					userId: selfUserId,
-				} = await insertAccountWithSession(ctx);
-				const { id: receiptId } = await insertReceipt(ctx, accountId);
-				await insertReceiptParticipant(ctx, receiptId, selfUserId);
-				const { id: foreignAccountId } = await insertAccount(ctx);
-				const [{ id: foreignUserId }] = await insertConnectedUsers(ctx, [
-					accountId,
-					foreignAccountId,
-				]);
-				await insertReceiptParticipant(ctx, receiptId, foreignUserId);
-
-				const caller = createCaller(createAuthContext(ctx, sessionId));
-				await expectTRPCError(
-					() =>
-						caller.procedure({
-							receiptId,
-							userId: foreignUserId,
-							update: { type: "resolved", resolved: true },
-						}),
-					"FORBIDDEN",
-					`You can modify only your own "resolved" status.`,
-				);
-			});
-		});
 	});
 
 	describe("functionality", () => {
@@ -227,7 +197,6 @@ describe("receiptParticipants.update", () => {
 				]);
 				await insertReceiptParticipant(ctx, receiptId, foreignUserId, {
 					role: "editor",
-					resolved: true,
 				});
 
 				// Verify unrelated data doesn't affect the result
@@ -239,72 +208,6 @@ describe("receiptParticipants.update", () => {
 						receiptId,
 						userId: foreignUserId,
 						update: { type: "role", role: "viewer" },
-					}),
-				);
-			});
-		});
-
-		describe("update resolved", () => {
-			test("in an own receipt", async ({ ctx }) => {
-				const {
-					sessionId,
-					accountId,
-					userId: selfUserId,
-				} = await insertAccountWithSession(ctx);
-				const { id: foreignAccountId } = await insertAccount(ctx);
-				const { id: receiptId } = await insertReceipt(ctx, accountId);
-				const [{ id: foreignUserId }] = await insertConnectedUsers(ctx, [
-					accountId,
-					foreignAccountId,
-				]);
-				await insertReceiptParticipant(ctx, receiptId, selfUserId, {
-					resolved: true,
-				});
-				await insertReceiptParticipant(ctx, receiptId, foreignUserId, {
-					resolved: true,
-				});
-
-				// Verify unrelated data doesn't affect the result
-				await insertReceiptParticipant(ctx, receiptId, selfUserId);
-
-				const caller = createCaller(createAuthContext(ctx, sessionId));
-				await expectDatabaseDiffSnapshot(ctx, () =>
-					caller.procedure({
-						receiptId,
-						userId: selfUserId,
-						update: { type: "resolved", resolved: false },
-					}),
-				);
-			});
-
-			test("in a foreign receipt", async ({ ctx }) => {
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				const { id: foreignAccountId, userId: foreignSelfUserId } =
-					await insertAccount(ctx);
-				const { id: foreignUserId } = await insertUser(ctx, foreignAccountId);
-				const { id: receiptId } = await insertReceipt(ctx, foreignAccountId);
-				const [{ id: foreignToSelfUserId }] = await insertConnectedUsers(ctx, [
-					foreignAccountId,
-					accountId,
-				]);
-				await insertReceiptParticipant(ctx, receiptId, foreignToSelfUserId, {
-					resolved: true,
-				});
-				await insertReceiptParticipant(ctx, receiptId, foreignSelfUserId, {
-					resolved: true,
-				});
-
-				// Verify unrelated data doesn't affect the result
-				await insertReceiptParticipant(ctx, receiptId, foreignUserId, {
-					resolved: true,
-				});
-
-				const caller = createCaller(createAuthContext(ctx, sessionId));
-				await expectDatabaseDiffSnapshot(ctx, () =>
-					caller.procedure({
-						receiptId,
-						userId: foreignToSelfUserId,
-						update: { type: "resolved", resolved: false },
 					}),
 				);
 			});

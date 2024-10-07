@@ -14,7 +14,6 @@ export const options: UseContextedMutationOptions<"receiptTransferIntentions.acc
 			updateReceipts(controllerContext, {
 				getPaged: (controller) => controller.invalidate(),
 				get: undefined,
-				getNonResolvedAmount: undefined,
 			}),
 		successToastOptions: () => () => ({
 			text: `Receipt was successfully accepted`,

@@ -53,11 +53,6 @@ export const FilterButton: React.FC = () => {
 		},
 		[changeFilters],
 	);
-	const onResolvedFilterSelectionChange = React.useCallback(
-		(selection: Selection) =>
-			onFilterSelectionChange("resolvedByMe", selection),
-		[onFilterSelectionChange],
-	);
 	const onOwnedFilterSelectionChange = React.useCallback(
 		(selection: Selection) => onFilterSelectionChange("ownedByMe", selection),
 		[onFilterSelectionChange],
@@ -77,34 +72,6 @@ export const FilterButton: React.FC = () => {
 						</Button>
 						<Divider />
 						<Text className="text-2xl font-medium">Filters</Text>
-						<Dropdown>
-							<DropdownTrigger>
-								<Button
-									color="primary"
-									variant="flat"
-									startContent={<ChevronDown />}
-								>
-									{filters.resolvedByMe === undefined
-										? "Any resolved by me status"
-										: filters.resolvedByMe
-										? "Only resolved by me"
-										: "Only non-resolved by me"}
-								</Button>
-							</DropdownTrigger>
-							<DropdownMenu
-								aria-label="Resolved by me filter"
-								disallowEmptySelection
-								selectionMode="single"
-								selectedKeys={new Set([String(filters.resolvedByMe)])}
-								onSelectionChange={onResolvedFilterSelectionChange}
-							>
-								<DropdownItem key="undefined">
-									Any resolved by me status
-								</DropdownItem>
-								<DropdownItem key="true">Only resolved</DropdownItem>
-								<DropdownItem key="false">Only non-resolved</DropdownItem>
-							</DropdownMenu>
-						</Dropdown>
 						<Dropdown>
 							<DropdownTrigger>
 								<Button

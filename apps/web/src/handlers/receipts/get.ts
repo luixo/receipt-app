@@ -83,7 +83,6 @@ const fetchReceipts = async (
 					)
 					.select([
 						"receiptParticipants.userId",
-						"receiptParticipants.resolved",
 						"receiptParticipants.createdAt",
 						"receiptParticipants.role",
 					])

@@ -2,7 +2,6 @@ import React from "react";
 import { View } from "react-native";
 
 import { LoadableUser } from "~app/components/app/loadable-user";
-import { ReceiptParticipantResolvedButton } from "~app/components/app/receipt-participant-resolved-button";
 import { QueryErrorMessage } from "~app/components/error-message";
 import { PageHeader } from "~app/components/page-header";
 import { ReceiptItems } from "~app/features/receipt-items/receipt-items-screen";
@@ -41,33 +40,20 @@ export const ReceiptInner: React.FC<InnerProps> = ({ query }) => {
 				backHref="/receipts"
 				startContent={<ReceiptIcon size={36} />}
 				aside={
-					<>
-						<ReceiptParticipantResolvedButton
-							variant="ghost"
+					isOwner ? (
+						<ReceiptSyncButton
+							key={
+								// This is required for stability of the hooks in the component
+								receipt.participants.filter(
+									(participant) => participant.userId !== receipt.selfUserId,
+								).length
+							}
 							receipt={receipt}
-							userId={receipt.selfUserId}
-							resolved={Boolean(
-								receipt.participants.find(
-									(participant) => participant.userId === receipt.selfUserId,
-								)?.resolved,
-							)}
-							isDisabled={deleteLoading}
+							isLoading={deleteLoading}
 						/>
-						{isOwner ? (
-							<ReceiptSyncButton
-								key={
-									// This is required for stability of the hooks in the component
-									receipt.participants.filter(
-										(participant) => participant.userId !== receipt.selfUserId,
-									).length
-								}
-								receipt={receipt}
-								isLoading={deleteLoading}
-							/>
-						) : (
-							<ReceiptGuestControlButton receipt={receipt} />
-						)}
-					</>
+					) : (
+						<ReceiptGuestControlButton receipt={receipt} />
+					)
 				}
 				title={`Receipt ${receipt.name}`}
 			>

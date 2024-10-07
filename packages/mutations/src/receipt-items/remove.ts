@@ -13,7 +13,6 @@ export const options: UseContextedMutationOptions<
 			updateRevertReceipts(controllerContext, {
 				get: (controller) => controller.removeItem(receiptId, removedId),
 				getPaged: undefined,
-				getNonResolvedAmount: undefined,
 			}),
 	errorToastOptions: () => (error) => ({
 		text: `Error removing item: ${error.message}`,

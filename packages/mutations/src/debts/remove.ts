@@ -64,7 +64,6 @@ export const options: UseContextedMutationOptions<
 						return receipt;
 					}),
 				getPaged: undefined,
-				getNonResolvedAmount: undefined,
 			});
 			updateDebts(controllerContext, {
 				getByUsers: areDebtsSynced

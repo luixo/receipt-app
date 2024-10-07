@@ -49,7 +49,6 @@ const getFilters = (
 const queryOptions = {
 	orderBy: orderByQueryOptions,
 	filters: {
-		resolvedByMe: getOptionalBooleanOptions("filters.resolvedByMe"),
 		ownedByMe: getOptionalBooleanOptions("filters.ownedByMe"),
 	},
 };
@@ -76,9 +75,6 @@ export const inputStore = createStore<
 	(query) => ({
 		orderBy: queryOptions.orderBy.parse(query[queryOptions.orderBy.param]),
 		filters: getFilters({
-			resolvedByMe: queryOptions.filters.resolvedByMe.parse(
-				query[queryOptions.filters.resolvedByMe.param],
-			),
 			ownedByMe: queryOptions.filters.ownedByMe.parse(
 				query[queryOptions.filters.ownedByMe.param],
 			),
@@ -102,7 +98,6 @@ export const useStore = () =>
 
 export const useSyncQueryParams = () => {
 	const [{ orderBy, filters = {} }] = useStore();
-	useSyncQueryParam(queryOptions.filters.resolvedByMe, filters.resolvedByMe);
 	useSyncQueryParam(queryOptions.filters.ownedByMe, filters.ownedByMe);
 	useSyncQueryParam(queryOptions.orderBy, orderBy);
 };

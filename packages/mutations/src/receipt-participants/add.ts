@@ -1,14 +1,14 @@
-import type { AccountsId, ReceiptsId } from "~db/models";
+import type { ReceiptsId } from "~db/models";
 
 import { update as updateReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<
 	"receiptParticipants.add",
-	{ receiptId: ReceiptsId; selfAccountId: AccountsId }
+	{ receiptId: ReceiptsId }
 > = {
 	onSuccess:
-		(controllerContext, { receiptId, selfAccountId }) =>
+		(controllerContext, { receiptId }) =>
 		(result) => {
 			updateReceipts(controllerContext, {
 				get: (controller) => {
@@ -16,13 +16,11 @@ export const options: UseContextedMutationOptions<
 						controller.addParticipant(receiptId, {
 							userId: item.id,
 							role: item.role,
-							resolved: false,
 							createdAt: item.createdAt,
 						}),
 					);
 				},
 				getPaged: undefined,
-				getNonResolvedAmount: undefined,
 			});
 			const selfParticipating = result.find(
 				(resultItem) => resultItem.role === "owner",
@@ -31,12 +29,6 @@ export const options: UseContextedMutationOptions<
 				updateReceipts(controllerContext, {
 					get: undefined,
 					getPaged: undefined,
-					getNonResolvedAmount: (controller) => {
-						if (!result.some((item) => selfAccountId === item.id)) {
-							return;
-						}
-						controller.update((prev) => prev + 1);
-					},
 				});
 			}
 		},

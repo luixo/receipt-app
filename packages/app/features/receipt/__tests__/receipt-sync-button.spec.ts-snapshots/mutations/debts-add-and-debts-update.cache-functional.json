@@ -1,32 +1,29 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"07733e64-7f56-45f9-90f5-103ffa92c1f5\"}]": {
+		"debts.get:[{\"id\":\"179e4a07-e7dd-4d91-8243-c7d9fceb40a5\"}]": {
 			"state": {
 				"data": {
-					"amount": 21991.95
+					"amount": 28828.02
 				},
 				"dataUpdateCount": 2
 			}
 		},
-		"debts.get:[{\"id\":\"07e7ddd9-1243-4c7d-a9fc-eb40a5380b32\"}]": {
+		"debts.get:[{\"id\":\"4f2b6a20-4972-4f1f-8894-b304f77fa8e5\"}]": {
 			"state": {
 				"data": {
-					"amount": 23468.4
-				},
-				"dataUpdateCount": 2
-			}
-		},
-		"debts.get:[{\"id\":\"204972f1-f894-4b30-84f7-7fa8e52a4288\"}]": {
-			"state": {
-				"data": {
-					"id": "204972f1-f894-4b30-84f7-7fa8e52a4288",
-					"amount": 25788.71,
+					"id": "4f2b6a20-4972-4f1f-8894-b304f77fa8e5",
+					"amount": 16649.12,
 					"currencyCode": "MMK",
-					"userId": "872cc16e-764a-4eb7-ba6f-866948bf9d5d",
+					"userId": "eb1503ff-07f9-4699-abc4-124e29e7f26a",
 					"timestamp": "2020-01-01T00:00:00.000Z",
 					"note": "Receipt \"saepe sit consequatur\"",
 					"updatedAt": "2020-01-01T00:00:00.000Z",
-					"their": "<undefined>",
+					"their": {
+						"timestamp": "2020-01-01T00:00:00.000Z",
+						"amount": 16649.12,
+						"currencyCode": "MMK",
+						"updatedAt": "2020-01-01T00:00:00.000Z"
+					},
 					"receiptId": "4962d0d3-c77b-4ab8-9be5-cd1f56483923"
 				},
 				"dataUpdateCount": 1,
@@ -37,11 +34,11 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"debts.get:[{\"id\":\"9728996e-c591-4803-a118-eddeb634f2b6\"}]": {
+		"debts.get:[{\"id\":\"a42881f2-d9bd-43cc-9837-6553f566f4c8\"}]": {
 			"state": {
 				"data": {
-					"id": "9728996e-c591-4803-a118-eddeb634f2b6",
-					"amount": 26600.08,
+					"id": "a42881f2-d9bd-43cc-9837-6553f566f4c8",
+					"amount": 25958.51,
 					"currencyCode": "MMK",
 					"userId": "e35da5d3-ac68-488f-b602-57c4c849a06a",
 					"timestamp": "2020-01-01T00:00:00.000Z",
@@ -58,22 +55,25 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"debts.get:[{\"id\":\"f2d9bd3c-c837-4655-b3f5-66f4c8601cdc\"}]": {
+		"debts.get:[{\"id\":\"ba7bc507-733e-4647-af56-5f90f5103ffa\"}]": {
 			"state": {
 				"data": {
-					"id": "f2d9bd3c-c837-4655-b3f5-66f4c8601cdc",
-					"amount": 17762.87,
+					"amount": 20674.25
+				},
+				"dataUpdateCount": 2
+			}
+		},
+		"debts.get:[{\"id\":\"ed6af597-2899-46ec-8591-803118eddeb6\"}]": {
+			"state": {
+				"data": {
+					"id": "ed6af597-2899-46ec-8591-803118eddeb6",
+					"amount": 23992.99,
 					"currencyCode": "MMK",
-					"userId": "eb1503ff-07f9-4699-abc4-124e29e7f26a",
+					"userId": "872cc16e-764a-4eb7-ba6f-866948bf9d5d",
 					"timestamp": "2020-01-01T00:00:00.000Z",
 					"note": "Receipt \"saepe sit consequatur\"",
 					"updatedAt": "2020-01-01T00:00:00.000Z",
-					"their": {
-						"timestamp": "2020-01-01T00:00:00.000Z",
-						"amount": 17762.87,
-						"currencyCode": "MMK",
-						"updatedAt": "2020-01-01T00:00:00.000Z"
-					},
+					"their": "<undefined>",
 					"receiptId": "4962d0d3-c77b-4ab8-9be5-cd1f56483923"
 				},
 				"dataUpdateCount": 1,
@@ -89,9 +89,9 @@
 				"data": {
 					"debt": {
 						"ids": {
-							"2": "9728996e-c591-4803-a118-eddeb634f2b6",
-							"3": "204972f1-f894-4b30-84f7-7fa8e52a4288",
-							"4": "f2d9bd3c-c837-4655-b3f5-66f4c8601cdc"
+							"2": "ed6af597-2899-46ec-8591-803118eddeb6",
+							"3": "4f2b6a20-4972-4f1f-8894-b304f77fa8e5",
+							"4": "a42881f2-d9bd-43cc-9837-6553f566f4c8"
 						}
 					}
 				},
@@ -104,27 +104,7 @@
 			{
 				"state": {
 					"data": {
-						"id": "9728996e-c591-4803-a118-eddeb634f2b6",
-						"updatedAt": "2020-01-01T00:00:00.000Z",
-						"reverseAccepted": false
-					},
-					"error": null,
-					"isPaused": false,
-					"status": "success",
-					"variables": {
-						"note": "Receipt \"saepe sit consequatur\"",
-						"currencyCode": "MMK",
-						"userId": "e35da5d3-ac68-488f-b602-57c4c849a06a",
-						"amount": 26600.08,
-						"timestamp": "2020-01-01T00:00:00.000Z",
-						"receiptId": "4962d0d3-c77b-4ab8-9be5-cd1f56483923"
-					}
-				}
-			},
-			{
-				"state": {
-					"data": {
-						"id": "204972f1-f894-4b30-84f7-7fa8e52a4288",
+						"id": "ed6af597-2899-46ec-8591-803118eddeb6",
 						"updatedAt": "2020-01-01T00:00:00.000Z",
 						"reverseAccepted": false
 					},
@@ -135,7 +115,7 @@
 						"note": "Receipt \"saepe sit consequatur\"",
 						"currencyCode": "MMK",
 						"userId": "872cc16e-764a-4eb7-ba6f-866948bf9d5d",
-						"amount": 25788.71,
+						"amount": 23992.99,
 						"timestamp": "2020-01-01T00:00:00.000Z",
 						"receiptId": "4962d0d3-c77b-4ab8-9be5-cd1f56483923"
 					}
@@ -144,7 +124,7 @@
 			{
 				"state": {
 					"data": {
-						"id": "f2d9bd3c-c837-4655-b3f5-66f4c8601cdc",
+						"id": "4f2b6a20-4972-4f1f-8894-b304f77fa8e5",
 						"updatedAt": "2020-01-01T00:00:00.000Z",
 						"reverseAccepted": true
 					},
@@ -155,7 +135,27 @@
 						"note": "Receipt \"saepe sit consequatur\"",
 						"currencyCode": "MMK",
 						"userId": "eb1503ff-07f9-4699-abc4-124e29e7f26a",
-						"amount": 17762.87,
+						"amount": 16649.12,
+						"timestamp": "2020-01-01T00:00:00.000Z",
+						"receiptId": "4962d0d3-c77b-4ab8-9be5-cd1f56483923"
+					}
+				}
+			},
+			{
+				"state": {
+					"data": {
+						"id": "a42881f2-d9bd-43cc-9837-6553f566f4c8",
+						"updatedAt": "2020-01-01T00:00:00.000Z",
+						"reverseAccepted": false
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"note": "Receipt \"saepe sit consequatur\"",
+						"currencyCode": "MMK",
+						"userId": "e35da5d3-ac68-488f-b602-57c4c849a06a",
+						"amount": 25958.51,
 						"timestamp": "2020-01-01T00:00:00.000Z",
 						"receiptId": "4962d0d3-c77b-4ab8-9be5-cd1f56483923"
 					}
@@ -173,9 +173,9 @@
 					"isPaused": false,
 					"status": "success",
 					"variables": {
-						"id": "07e7ddd9-1243-4c7d-a9fc-eb40a5380b32",
+						"id": "179e4a07-e7dd-4d91-8243-c7d9fceb40a5",
 						"update": {
-							"amount": 23468.4,
+							"amount": 28828.02,
 							"currencyCode": "MMK",
 							"timestamp": "2020-01-01T00:00:00.000Z",
 							"receiptId": "4962d0d3-c77b-4ab8-9be5-cd1f56483923"
@@ -193,9 +193,9 @@
 					"isPaused": false,
 					"status": "success",
 					"variables": {
-						"id": "07733e64-7f56-45f9-90f5-103ffa92c1f5",
+						"id": "ba7bc507-733e-4647-af56-5f90f5103ffa",
 						"update": {
-							"amount": 21991.95,
+							"amount": 20674.25,
 							"currencyCode": "MMK",
 							"timestamp": "2020-01-01T00:00:00.000Z",
 							"receiptId": "4962d0d3-c77b-4ab8-9be5-cd1f56483923"

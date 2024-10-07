@@ -22,7 +22,6 @@ export const options: UseContextedMutationOptions<"receiptTransferIntentions.rem
 									transferIntentionUserId: snapshot.transferIntentionUserId,
 								}),
 							),
-						getNonResolvedAmount: undefined,
 						getPaged: undefined,
 					}),
 					updateRevertReceiptTransferIntentions(controllerContext, {

@@ -1,27 +1,12 @@
 import { updateRevert as updateRevertReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
 
-export const options: UseContextedMutationOptions<
-	"receipts.remove",
-	{
-		selfResolved: boolean | undefined;
-	}
-> = {
-	onMutate:
-		(controllerContext, { selfResolved }) =>
-		(variables) =>
-			updateRevertReceipts(controllerContext, {
-				get: (controller) => controller.remove(variables.id),
-				getPaged: (controller) => controller.remove(variables.id),
-				getNonResolvedAmount: (controller) => {
-					if (selfResolved === false) {
-						return controller.update(
-							(prev) => prev - 1,
-							() => (prev) => prev + 1,
-						);
-					}
-				},
-			}),
+export const options: UseContextedMutationOptions<"receipts.remove"> = {
+	onMutate: (controllerContext) => (variables) =>
+		updateRevertReceipts(controllerContext, {
+			get: (controller) => controller.remove(variables.id),
+			getPaged: (controller) => controller.remove(variables.id),
+		}),
 	mutateToastOptions: {
 		text: "Removing receipt..",
 	},

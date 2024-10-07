@@ -1,10 +1,7 @@
 import type { TRPCMutationInput, TRPCQueryOutput } from "~app/trpc";
 import type { UsersId } from "~db/models";
 
-import {
-	update as updateReceipts,
-	updateRevert as updateRevertReceipts,
-} from "../cache/receipts";
+import { updateRevert as updateRevertReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
 import type { SnapshotFn, UpdateFn } from "../types";
 
@@ -17,10 +14,10 @@ const applyUpdate =
 	): UpdateFn<ReceiptParticipant> =>
 	(item) => {
 		switch (update.type) {
+			// We want this to blow up in case we add more cases
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 			case "role":
 				return { ...item, role: update.role };
-			case "resolved":
-				return { ...item, resolved: update.resolved };
 		}
 	};
 
@@ -31,10 +28,10 @@ const getRevert =
 	(snapshot) =>
 	(item) => {
 		switch (update.type) {
+			// We want this to blow up in case we add more cases
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 			case "role":
 				return { ...item, role: snapshot.role };
-			case "resolved":
-				return { ...item, resolved: snapshot.resolved };
 		}
 	};
 
@@ -52,27 +49,7 @@ export const options: UseContextedMutationOptions<
 					getRevert(variables.update),
 				),
 			getPaged: undefined,
-			getNonResolvedAmount: undefined,
 		}),
-	onSuccess:
-		(controllerContext, { selfUserId }) =>
-		(_result, variables) => {
-			if (selfUserId === variables.userId) {
-				updateReceipts(controllerContext, {
-					get: undefined,
-					getNonResolvedAmount: (controller) => {
-						if (variables.update.type !== "resolved") {
-							return;
-						}
-						const nextResolved = variables.update.resolved;
-						controller.update((prevAmount) =>
-							nextResolved ? prevAmount - 1 : prevAmount + 1,
-						);
-					},
-					getPaged: undefined,
-				});
-			}
-		},
 	errorToastOptions: () => (error) => ({
 		text: `Error updating a participant: ${error.message}`,
 	}),

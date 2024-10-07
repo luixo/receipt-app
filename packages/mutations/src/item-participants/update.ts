@@ -50,7 +50,6 @@ export const options: UseContextedMutationOptions<
 					getRevert(variables.update),
 				),
 			getPaged: undefined,
-			getNonResolvedAmount: undefined,
 		}),
 	errorToastOptions: () => (error) => ({
 		text: `Error updating participant(s): ${error.message}`,

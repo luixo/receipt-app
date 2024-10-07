@@ -25,7 +25,6 @@ export const options: UseContextedMutationOptions<
 						parts: [],
 					}),
 				getPaged: undefined,
-				getNonResolvedAmount: undefined,
 			}),
 			context: temporaryId,
 		};
@@ -41,7 +40,6 @@ export const options: UseContextedMutationOptions<
 						createdAt,
 					})),
 				getPaged: undefined,
-				getNonResolvedAmount: undefined,
 			});
 		},
 	errorToastOptions: () => (error, variables) => ({
