@@ -11,7 +11,6 @@ import {
 	ourNonExistent,
 	ourSynced,
 	theirDesynced,
-	theirNonExistent,
 	theirSynced,
 } from "~tests/frontend/generators/receipts";
 
@@ -23,7 +22,6 @@ test.describe("Wrapper component", () => {
 		mockReceiptWithDebts,
 		propagateDebtsButton,
 		updateDebtsButton,
-		debtsInfoModalButton,
 		errorMessage,
 		openReceipt,
 	}) => {
@@ -42,18 +40,16 @@ test.describe("Wrapper component", () => {
 		await openReceipt(receipt.id);
 		await expect(propagateDebtsButton).not.toBeAttached();
 		await expect(updateDebtsButton).not.toBeAttached();
-		await expect(debtsInfoModalButton).not.toBeAttached();
 
 		debtsGetPause.resolve();
 		await expect(errorMessage(`Mock "debts.get" error`)).toBeVisible();
 		await expect(propagateDebtsButton).not.toBeAttached();
 		await expect(updateDebtsButton).not.toBeAttached();
-		await expect(debtsInfoModalButton).not.toBeAttached();
 	});
 });
 
 test.describe("Propagate debts button", () => {
-	test("Only desynced debts", async ({
+	test("Our debts desynced w/ receipt, their debts synced w/ ours", async ({
 		mockReceiptWithDebts,
 		openReceiptWithDebts,
 		propagateDebtsButton,
@@ -67,7 +63,7 @@ test.describe("Propagate debts button", () => {
 		await expect(updateDebtsButton).toBeVisible();
 	});
 
-	test("Only dismatched their debts", async ({
+	test("Our debts synced w/ receipt, their debts desynced w/ ours", async ({
 		mockReceiptWithDebts,
 		openReceiptWithDebts,
 		propagateDebtsButton,
@@ -81,7 +77,7 @@ test.describe("Propagate debts button", () => {
 		await expect(updateDebtsButton).not.toBeVisible();
 	});
 
-	test("Only non-existent debts", async ({
+	test("Our debts don't exist", async ({
 		mockReceiptWithDebts,
 		openReceipt,
 		propagateDebtsButton,
@@ -95,7 +91,7 @@ test.describe("Propagate debts button", () => {
 		await expect(updateDebtsButton).not.toBeVisible();
 	});
 
-	test("Both non-existent and desynced debts", async ({
+	test("Some debts desynced w/ receipt, some debts don't exist", async ({
 		mockReceiptWithDebts,
 		openReceiptWithDebts,
 		propagateDebtsButton,
@@ -109,7 +105,7 @@ test.describe("Propagate debts button", () => {
 		await expect(updateDebtsButton).toBeVisible();
 	});
 
-	test("Every participant is synced", async ({
+	test("Our debts are synced w/ receipts, their debts are synced w/ ours", async ({
 		mockReceiptWithDebts,
 		openReceiptWithDebts,
 		propagateDebtsButton,
@@ -121,44 +117,6 @@ test.describe("Propagate debts button", () => {
 		await openReceiptWithDebts(receipt);
 		await expect(propagateDebtsButton).not.toBeVisible();
 		await expect(updateDebtsButton).not.toBeVisible();
-	});
-});
-
-test.describe("Open debts info modal button", () => {
-	test("All participants are desynced", async ({
-		mockReceiptWithDebts,
-		openReceiptWithDebts,
-		debtsInfoModalButton,
-	}) => {
-		const { receipt } = mockReceiptWithDebts({
-			generateDebts: generateDebtsMapped(ourDesynced),
-		});
-		await openReceiptWithDebts(receipt);
-		await expect(debtsInfoModalButton).toBeVisible();
-	});
-
-	test("Desynced participants do not exist", async ({
-		mockReceiptWithDebts,
-		openReceiptWithDebts,
-		debtsInfoModalButton,
-	}) => {
-		const { receipt } = mockReceiptWithDebts({
-			generateDebts: generateDebtsMapped(ourSynced, theirNonExistent),
-		});
-		await openReceiptWithDebts(receipt);
-		await expect(debtsInfoModalButton).not.toBeVisible();
-	});
-
-	test("Opens a modal", async ({
-		mockReceiptWithDebts,
-		openReceiptWithDebts,
-		openDebtsInfoModal,
-	}) => {
-		const { receipt } = mockReceiptWithDebts({
-			generateDebts: generateDebtsMapped(ourDesynced, theirNonExistent),
-		});
-		await openReceiptWithDebts(receipt);
-		await openDebtsInfoModal();
 	});
 });
 

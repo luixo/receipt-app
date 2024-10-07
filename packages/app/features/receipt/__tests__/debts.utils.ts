@@ -38,13 +38,7 @@ type Fixtures = {
 	updateDebtButton: Locator;
 	propagateDebtsButton: Locator;
 	updateDebtsButton: Locator;
-	debtsInfoModalButton: Locator;
-	debtsInfoModal: Locator;
-	openDebtsInfoModal: () => Promise<void>;
-	closeDebtsInfoModal: () => Promise<void>;
-	participantDebtRow: Locator;
-	participantDebtStatusIcon: Locator;
-	participantDebtAction: Locator;
+	syncedDebtsButton: Locator;
 	debtSyncStatus: Locator;
 	openReceiptWithDebts: (
 		receipt: ReturnType<LocalGenerateReceipt>,
@@ -75,33 +69,10 @@ export const test = originalTest.extend<Fixtures>({
 	updateDebtsButton: ({ page }, use) =>
 		use(page.locator("button[title='Update debts']")),
 
-	debtsInfoModalButton: ({ page }, use) =>
-		use(page.locator("button[title='Show sync status']")),
-
-	debtsInfoModal: ({ modal }, use) => use(modal("Receipt sync status")),
-
-	participantDebtRow: ({ page }, use) =>
-		use(page.locator("[data-testid='participant-debt']:visible")),
-
-	participantDebtStatusIcon: ({ page }, use) =>
-		use(page.getByTestId("participant-debt-status-icon")),
-
-	participantDebtAction: ({ page }, use) =>
-		use(page.getByTestId("participant-debt-action")),
+	syncedDebtsButton: ({ page }, use) =>
+		use(page.locator("button[title='Synced']")),
 
 	debtSyncStatus: ({ page }, use) => use(page.getByTestId("debt-sync-status")),
-
-	openDebtsInfoModal: ({ debtsInfoModalButton, debtsInfoModal }, use) =>
-		use(async () => {
-			await debtsInfoModalButton.click();
-			await debtsInfoModal.waitFor();
-		}),
-
-	closeDebtsInfoModal: ({ modalCross, debtsInfoModal }, use) =>
-		use(async () => {
-			await modalCross.click();
-			await debtsInfoModal.waitFor({ state: "detached" });
-		}),
 
 	openReceiptWithDebts: ({ openReceipt, awaitCacheKey }, use) =>
 		use(async (receipt) => {

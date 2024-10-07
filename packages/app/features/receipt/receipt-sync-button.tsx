@@ -3,30 +3,36 @@ import React from "react";
 import { skipToken } from "@tanstack/react-query";
 
 import { QueryErrorMessage } from "~app/components/error-message";
-import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useParticipants } from "~app/hooks/use-participants";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { TRPCQueryErrorResult, TRPCQueryResult } from "~app/trpc";
+import type {
+	TRPCQueryErrorResult,
+	TRPCQueryOutput,
+	TRPCQueryResult,
+} from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { getReceiptDebtName } from "~app/utils/receipt";
 import { Button } from "~components/button";
-import { InfoIcon, SendIcon, SyncIcon } from "~components/icons";
+import { SendIcon, SyncIcon, UnsyncIcon } from "~components/icons";
+import { Tooltip } from "~components/tooltip";
 import { options as debtsAddOptions } from "~mutations/debts/add";
 import { options as debtsUpdateOptions } from "~mutations/debts/update";
 
-import { ReceiptDebtSyncInfoModal } from "./receipt-debt-sync-info-modal";
-import { type LockedReceipt } from "./receipt-participant-debt";
-
 type InnerProps = {
-	receipt: LockedReceipt;
+	receipt: TRPCQueryOutput<"receipts.get">;
+	isLoading: boolean;
 };
 
-const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({ receipt }) => {
+const ReceiptSyncButtonInner: React.FC<InnerProps> = ({
+	receipt,
+	isLoading,
+}) => {
 	const { participants, desyncedParticipants, nonCreatedParticipants } =
 		useParticipants(receipt);
 
 	const addMutations = participants.map(() =>
 		trpc.debts.add.useMutation(
+			// This is stable due to `key` based on participants ids in the upper component
 			// eslint-disable-next-line react-hooks/rules-of-hooks
 			useTrpcMutationOptions(debtsAddOptions),
 		),
@@ -36,6 +42,7 @@ const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({ receipt }) => {
 			(participant) => participant.userId === userId,
 		);
 		return trpc.debts.update.useMutation(
+			// This is stable due to `key` based on participants ids in the upper component
 			// eslint-disable-next-line react-hooks/rules-of-hooks
 			useTrpcMutationOptions(debtsUpdateOptions, {
 				context: matchedDesyncedParticipant?.currentDebt || skipToken,
@@ -76,73 +83,78 @@ const ReceiptPropagateButtonInner: React.FC<InnerProps> = ({ receipt }) => {
 			});
 		});
 	}, [
-		nonCreatedParticipants,
-		desyncedParticipants,
 		participants,
 		addMutations,
-		receipt.name,
+		updateMutations,
+		receipt.id,
 		receipt.currencyCode,
 		receipt.issued,
-		receipt.id,
-		updateMutations,
+		receipt.name,
+		desyncedParticipants,
+		nonCreatedParticipants,
 	]);
 	const isPropagating =
 		addMutations.some((mutation) => mutation.isPending) ||
 		updateMutations.some((mutation) => mutation.isPending);
 
-	const [
-		infoPopoverOpen,
-		{ switchValue: switchInfoButtonPopover, setTrue: openInfoButtonPopover },
-	] = useBooleanState();
+	const emptyItemsAmount = receipt.items.filter(
+		(item) => item.parts.length === 0,
+	).length;
+	const emptyItemsWarning = React.useMemo(() => {
+		if (emptyItemsAmount === 0) {
+			return;
+		}
+		return `There are ${emptyItemsAmount} empty items, cannot lock`;
+	}, [emptyItemsAmount]);
+	const hasDesyncedParticipants = desyncedParticipants.length !== 0;
+	const hasNonCreatedParticipants = nonCreatedParticipants.length !== 0;
+	const button =
+		hasDesyncedParticipants || hasNonCreatedParticipants ? (
+			<Button
+				variant="ghost"
+				title={hasDesyncedParticipants ? "Update debts" : "Propagate debts"}
+				isLoading={isPropagating}
+				isDisabled={isPropagating || Boolean(emptyItemsWarning) || isLoading}
+				onClick={propagateDebts}
+				color="primary"
+				isIconOnly
+			>
+				{hasDesyncedParticipants ? (
+					<SyncIcon size={24} />
+				) : (
+					<SendIcon size={24} />
+				)}
+			</Button>
+		) : (
+			<Button
+				variant="flat"
+				title="Synced"
+				isDisabled
+				color={emptyItemsAmount !== 0 ? "warning" : "success"}
+				isIconOnly
+			>
+				{emptyItemsAmount !== 0 ? (
+					<UnsyncIcon size={24} />
+				) : (
+					<SyncIcon size={24} />
+				)}
+			</Button>
+		);
+	if (!emptyItemsWarning) {
+		return button;
+	}
 	return (
-		<>
-			{desyncedParticipants.length !== 0 ||
-			nonCreatedParticipants.length !== 0 ? (
-				<Button
-					variant="ghost"
-					title={
-						desyncedParticipants.length === 0
-							? "Propagate debts"
-							: "Update debts"
-					}
-					isLoading={isPropagating}
-					isDisabled={isPropagating}
-					onClick={propagateDebts}
-					color="primary"
-					isIconOnly
-				>
-					{desyncedParticipants.length === 0 ? (
-						<SendIcon size={24} />
-					) : (
-						<SyncIcon size={24} />
-					)}
-				</Button>
-			) : null}
-			{desyncedParticipants.length !== 0 ? (
-				<Button
-					onClick={openInfoButtonPopover}
-					color="primary"
-					isIconOnly
-					title="Show sync status"
-				>
-					<InfoIcon size={24} />
-				</Button>
-			) : null}
-			<ReceiptDebtSyncInfoModal
-				isOpen={infoPopoverOpen}
-				switchModalOpen={switchInfoButtonPopover}
-				participants={participants}
-				receipt={receipt}
-			/>
-		</>
+		<Tooltip content={emptyItemsWarning} placement="bottom-end">
+			{button}
+		</Tooltip>
 	);
 };
 
-type Props = Omit<InnerProps, "queries" | "itemsQuery"> & {
+type Props = Omit<InnerProps, "itemsQuery"> & {
 	queries: TRPCQueryResult<"debts.get">[];
 };
 
-export const ReceiptPropagateButton: React.FC<Props> = ({
+export const ReceiptSyncButton: React.FC<Props> = ({
 	receipt,
 	queries,
 	...props
@@ -157,5 +169,5 @@ export const ReceiptPropagateButton: React.FC<Props> = ({
 	if (errorQuery) {
 		return <QueryErrorMessage query={errorQuery} />;
 	}
-	return <ReceiptPropagateButtonInner {...props} receipt={receipt} />;
+	return <ReceiptSyncButtonInner {...props} receipt={receipt} />;
 };

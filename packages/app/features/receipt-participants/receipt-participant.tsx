@@ -17,7 +17,57 @@ import { Text } from "~components/text";
 import { options as receiptParticipantsRemoveOptions } from "~mutations/receipt-participants/remove";
 import { round } from "~utils/math";
 
+import { ReceiptParticipantActions } from "./receipt-participant-actions";
 import { ReceiptParticipantRoleInput } from "./receipt-participant-role-input";
+
+const getParticipantColorCode = (
+	participant: Participant,
+	receipt: TRPCQueryOutput<"receipts.get">,
+	hasConnectedAccount: boolean,
+) => {
+	const isOwner = receipt.selfUserId === receipt.ownerUserId;
+	const isSelfParticipant = participant.userId === receipt.selfUserId;
+	if (!isOwner && !isSelfParticipant) {
+		// We don't have data on foreign debts with a foreign receipt
+		return;
+	}
+	if (isOwner && isSelfParticipant) {
+		// We don't have debt for ourselves
+		return;
+	}
+	if (!receipt.lockedTimestamp) {
+		// We don't care about debts until receipt is locked
+		return;
+	}
+	if (participant.sum === 0) {
+		return;
+	}
+	if (participant.currentDebt === null) {
+		// We're waiting for all debts to load
+		return;
+	}
+	if (!participant.currentDebt) {
+		// No debt has been propagated
+		return "text-warning";
+	}
+	if (participant.currentDebt.amount !== participant.sum) {
+		// Our debt is desynced from the receipt
+		return "text-danger";
+	}
+	if (!hasConnectedAccount) {
+		// Debt is not syncable
+		return;
+	}
+	if (!participant.currentDebt.their) {
+		// Our debts exists, their does not
+		return "text-warning";
+	}
+	if (participant.currentDebt.amount !== participant.currentDebt.their.amount) {
+		// Our debt is desynced from their debt
+		return "text-warning";
+	}
+	// In sync
+};
 
 type Props = {
 	participant: Participant;
@@ -31,6 +81,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 	isLoading,
 }) => {
 	const selfAccountId = useSelfAccountId();
+	const userQuery = trpc.users.get.useQuery({ id: participant.userId });
 
 	const removeReceiptParticipantMutation =
 		trpc.receiptParticipants.remove.useMutation(
@@ -80,7 +131,24 @@ export const ReceiptParticipant: React.FC<Props> = ({
 							foreign={!isOwner}
 						/>
 						<View className="flex-row items-center justify-between gap-4 self-stretch">
-							<Text>{`${round(participant.sum)} ${currency}`}</Text>
+							<Text
+								className={getParticipantColorCode(
+									participant,
+									receipt,
+									Boolean(userQuery.data?.connectedAccount),
+								)}
+							>
+								{`${round(participant.sum)} ${currency}`}
+								{participant.currentDebt
+									? (receipt.ownerUserId !== receipt.selfUserId ? -1 : 1) *
+											participant.currentDebt.amount !==
+									  participant.sum
+										? ` (synced as ${round(
+												participant.currentDebt.amount,
+										  )} ${currency})`
+										: undefined
+									: null}
+							</Text>
 							<View className="flex-row items-center gap-2">
 								<ReceiptParticipantRoleInput
 									participant={participant}
@@ -114,12 +182,22 @@ export const ReceiptParticipant: React.FC<Props> = ({
 					</View>
 				}
 			>
-				{participant.items.map((item) => (
-					<Text key={item.id}>
-						{item.name} -{" "}
-						{`${round(item.sum)}${item.hasExtra ? "+" : ""} ${currency}`}
-					</Text>
-				))}
+				<View className="flex gap-4">
+					{isOwner ? (
+						<ReceiptParticipantActions
+							participant={participant}
+							receipt={receipt}
+						/>
+					) : null}
+					<View>
+						{participant.items.map((item) => (
+							<Text key={item.id}>
+								{item.name} -{" "}
+								{`${round(item.sum)}${item.hasExtra ? "+" : ""} ${currency}`}
+							</Text>
+						))}
+					</View>
+				</View>
 			</AccordionItem>
 		</Accordion>
 	);

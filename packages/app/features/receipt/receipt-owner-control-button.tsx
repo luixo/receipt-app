@@ -4,8 +4,7 @@ import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 
 import { ReceiptLockedButton } from "./receipt-locked-button";
-import type { LockedReceipt } from "./receipt-participant-debt";
-import { ReceiptPropagateButton } from "./receipt-propagate-button";
+import { ReceiptSyncButton } from "./receipt-sync-button";
 
 type Receipt = TRPCQueryOutput<"receipts.get">;
 
@@ -28,14 +27,15 @@ export const ReceiptOwnerControlButton: React.FC<Props> = ({
 		<>
 			<ReceiptLockedButton receipt={receipt} isLoading={deleteLoading} />
 			{receipt.lockedTimestamp ? (
-				<ReceiptPropagateButton
+				<ReceiptSyncButton
 					key={
 						receipt.participants.filter(
 							(participant) => participant.userId !== receipt.selfUserId,
 						).length
 					}
 					queries={debtsQueries}
-					receipt={receipt as LockedReceipt}
+					isLoading={deleteLoading}
+					receipt={receipt}
 				/>
 			) : null}
 		</>
