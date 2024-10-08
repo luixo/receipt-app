@@ -20,6 +20,8 @@ const s3Parts = getS3Parts();
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+	// see https://github.com/vercel/next.js/issues/70938
+	swcMinify: false,
 	reactStrictMode: true,
 	eslint: {
 		ignoreDuringBuilds: true,

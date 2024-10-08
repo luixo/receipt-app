@@ -1,30 +1,5 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`receiptParticipants.update > functionality > update resolved > in a foreign receipt 1`] = `
-{
-  "updated": {
-    "receiptParticipants": {
-      "receiptId:4f1de7be-0faf-41c1-b1c8-ee3a1bfd3a15|userId:a65ef047-bb8f-457b-9e2b-64869a0fe5fb": {
-        "resolved": false,
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`receiptParticipants.update > functionality > update resolved > in an own receipt 1`] = `
-{
-  "updated": {
-    "receiptParticipants": {
-      "receiptId:54f4531b-3780-4280-b274-f67d711dda7c|userId:aaff189b-afe1-4389-aac8-0457cde0436b": {
-        "updatedAt": "2020-01-01T00:01:00.000Z",
-      },
-    },
-  },
-}
-`;
-
 exports[`receiptParticipants.update > functionality > update role > for another user 1`] = `
 {
   "updated": {

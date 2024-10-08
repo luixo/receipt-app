@@ -230,7 +230,6 @@ describe("itemParticipants.update", () => {
 			]);
 			await insertReceiptParticipant(ctx, receiptId, foreignUserId, {
 				role: "editor",
-				resolved: true,
 			});
 			await insertItemParticipant(ctx, receiptItemId, foreignUserId);
 
@@ -238,7 +237,6 @@ describe("itemParticipants.update", () => {
 			await insertReceiptItem(ctx, receiptId);
 			await insertReceiptParticipant(ctx, receiptId, selfUserId, {
 				role: "editor",
-				resolved: true,
 			});
 			await insertItemParticipant(ctx, receiptItemId, selfUserId);
 

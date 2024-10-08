@@ -16,7 +16,6 @@ export const options: UseContextedMutationOptions<
 					variables.userId,
 				),
 			getPaged: undefined,
-			getNonResolvedAmount: undefined,
 		}),
 	errorToastOptions: () => (error) => ({
 		text: `Error removing participant(s): ${error.message}`,

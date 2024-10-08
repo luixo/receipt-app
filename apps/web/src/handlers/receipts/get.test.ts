@@ -55,7 +55,6 @@ const getParticipants = (
 		.map((participant) => ({
 			userId: participant.userId,
 			role: participant.role,
-			resolved: participant.resolved,
 			createdAt: participant.createdAt,
 		}))
 		.sort((a, b) => a.userId.localeCompare(b.userId));

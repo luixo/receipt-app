@@ -12,7 +12,6 @@ export const options: UseContextedMutationOptions<
 			get: (controller) =>
 				controller.addItemParts(receiptId, variables.itemId, variables.userIds),
 			getPaged: undefined,
-			getNonResolvedAmount: undefined,
 		}),
 	errorToastOptions: () => (error) => ({
 		text: `Error adding participant(s): ${error.message}`,

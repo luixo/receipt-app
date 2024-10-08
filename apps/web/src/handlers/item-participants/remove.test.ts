@@ -149,7 +149,6 @@ describe("itemParticipants.remove", () => {
 			const { id: userId } = await insertUser(ctx, accountId);
 			const { id: anotherUserId } = await insertUser(ctx, accountId);
 			await insertReceiptParticipant(ctx, receiptId, userId, {
-				resolved: true,
 				role: "editor",
 			});
 			await insertReceiptParticipant(ctx, receiptId, anotherUserId);

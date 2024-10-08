@@ -1,10 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { skipToken } from "@tanstack/react-query";
-
 import { LoadableUser } from "~app/components/app/loadable-user";
-import { ReceiptParticipantResolvedButton } from "~app/components/app/receipt-participant-resolved-button";
 import { RemoveButton } from "~app/components/remove-button";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import type { Participant } from "~app/hooks/use-participants";
@@ -81,13 +78,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 	const removeReceiptParticipantMutation =
 		trpc.receiptParticipants.remove.useMutation(
 			useTrpcMutationOptions(receiptParticipantsRemoveOptions, {
-				context: selfAccountId
-					? {
-							receiptId: receipt.id,
-							selfAccountId,
-							resolvedStatus: participant.resolved,
-					  }
-					: skipToken,
+				context: { receiptId: receipt.id },
 			}),
 		);
 	const removeReceiptParticipant = React.useCallback(
@@ -149,16 +140,6 @@ export const ReceiptParticipant: React.FC<Props> = ({
 									participant={participant}
 									receipt={receipt}
 									isLoading={isLoading}
-								/>
-								<ReceiptParticipantResolvedButton
-									variant={
-										participant.userId === receipt.selfUserId
-											? "ghost"
-											: "light"
-									}
-									userId={participant.userId}
-									resolved={participant.resolved}
-									receipt={receipt}
 								/>
 								{isOwner ? (
 									<RemoveButton
