@@ -10,11 +10,13 @@ export const getFormattedCurrency = (
 		return {
 			symbol: matchedCurrency.symbol,
 			name: matchedCurrency.name,
+			code: currencyCode,
 		};
 	}
 	return {
 		symbol: currencyCode,
 		name: currencyCode,
+		code: currencyCode,
 	};
 };
 

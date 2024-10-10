@@ -5,7 +5,7 @@ import type { z } from "zod";
 
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { useCurrencies } from "~app/hooks/use-currencies";
+import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import type { CurrencyCode } from "~app/utils/currency";
 import type { currencyCodeSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
@@ -72,25 +72,16 @@ export const CurrencyInput = <T extends MinimalForm>({
 		[onCurrencyChange, selectedCurrencyCode],
 	);
 
-	const currenciesListQuery = useCurrencies();
-	const selectedCurrency = React.useMemo(
-		() =>
-			currenciesListQuery.data
-				? currenciesListQuery.data.find(
-						(currency) => currency.code === selectedCurrencyCode,
-				  )
-				: undefined,
-		[currenciesListQuery.data, selectedCurrencyCode],
-	);
+	const formattedCurrency = useFormattedCurrency(selectedCurrencyCode);
 
 	return (
 		<>
 			{selectedCurrencyCode ? (
 				<Input
 					value={
-						selectedCurrency
-							? `${selectedCurrency.name} (${selectedCurrency.code})`
-							: selectedCurrencyCode
+						formattedCurrency.code === formattedCurrency.name
+							? formattedCurrency.code
+							: `${formattedCurrency.name} (${formattedCurrency.code})`
 					}
 					label="Currency"
 					isDisabled={isLoading}

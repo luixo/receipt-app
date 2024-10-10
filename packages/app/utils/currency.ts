@@ -7,13 +7,3 @@ export type CurrencyCode = string & {
 };
 
 export type Currency = z.infer<typeof currencySchema>;
-
-export const renderCurrencyName = (
-	currencyCode: CurrencyCode,
-	currency?: Currency,
-) =>
-	currency
-		? `${currency.name} (${currencyCode}${
-				currencyCode === currency.symbol ? "" : ` / ${currency.symbol}`
-		  })`
-		: currencyCode;

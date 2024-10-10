@@ -3,8 +3,9 @@ import { View } from "react-native";
 
 import { QueryErrorMessage } from "~app/components/error-message";
 import { useCurrencies } from "~app/hooks/use-currencies";
+import { useFormattedCurrencies } from "~app/hooks/use-formatted-currency";
 import type { TRPCQueryResult } from "~app/trpc";
-import { type CurrencyCode, renderCurrencyName } from "~app/utils/currency";
+import { type CurrencyCode } from "~app/utils/currency";
 import { Button } from "~components/button";
 import { Divider } from "~components/divider";
 import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
@@ -32,34 +33,31 @@ const CurrenciesPickerLoader: React.FC<LoaderProps> = ({
 			: undefined;
 	const cutIndex = topCurrencyCodes ? topCurrencyCodes.length : 0;
 	const codes = query.data ? query.data.map(({ code }) => code) : undefined;
-	const renderedCodes = topCurrencyCodes
-		? codes
-			? codes.sort(
-					(a, b) => topCurrencyCodes.indexOf(b) - topCurrencyCodes.indexOf(a),
-			  )
-			: topCurrencyCodes
-		: codes || [];
+	const formattedCurrencies = useFormattedCurrencies(
+		topCurrencyCodes
+			? codes
+				? codes.sort(
+						(a, b) => topCurrencyCodes.indexOf(b) - topCurrencyCodes.indexOf(a),
+				  )
+				: topCurrencyCodes
+			: codes || [],
+	);
 	return (
 		<View className="flex-row flex-wrap gap-2">
-			{renderedCodes.map((currencyCode, index) => (
-				<React.Fragment key={currencyCode}>
+			{formattedCurrencies.map(({ code, symbol, name }, index) => (
+				<React.Fragment key={code}>
 					{index === cutIndex && index !== 0 ? (
 						<Divider className="my-2" />
 					) : null}
 					<Button
-						onClick={() => onChange(currencyCode)}
+						onClick={() => onChange(code)}
 						variant="flat"
-						color={
-							currencyCode === selectedCurrencyCode ? "success" : "primary"
-						}
-						title={currencyCode}
+						color={code === selectedCurrencyCode ? "success" : "primary"}
+						title={symbol}
 					>
-						{renderCurrencyName(
-							currencyCode,
-							query.data
-								? query.data.find(({ code }) => code === currencyCode)
-								: undefined,
-						)}
+						{name === code && symbol === code
+							? code
+							: `${name} (${code}${code === symbol ? "" : ` / ${symbol}`})`}
 					</Button>
 				</React.Fragment>
 			))}
