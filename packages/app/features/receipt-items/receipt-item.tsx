@@ -105,7 +105,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 							isLoading={isDeleteLoading}
 						/>
 						<Text>
-							= {round(item.quantity * item.price)} {currency}
+							= {round(item.quantity * item.price)} {currency.symbol}
 						</Text>
 					</View>
 					{isEditingDisabled || notAddedParticipants.length === 0 ? null : (

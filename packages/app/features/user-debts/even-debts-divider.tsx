@@ -17,7 +17,7 @@ export const EvenDebtsDivider: React.FC<Props> = ({ currencyCode }) => {
 			testID="even-debts-divider"
 		>
 			<CheckMark size={24} className="text-success" />
-			Even on {currency}
+			Even on {currency.symbol}
 		</View>
 	);
 };

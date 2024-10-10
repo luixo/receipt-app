@@ -5,7 +5,7 @@ import type { z } from "zod";
 
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { trpc } from "~app/trpc";
+import { useCurrencies } from "~app/hooks/use-currencies";
 import type { CurrencyCode } from "~app/utils/currency";
 import type { currencyCodeSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
@@ -72,10 +72,7 @@ export const CurrencyInput = <T extends MinimalForm>({
 		[onCurrencyChange, selectedCurrencyCode],
 	);
 
-	const currenciesListQuery = trpc.currency.getList.useQuery(
-		{ locale: "en" },
-		{ trpc: { ssr: false } },
-	);
+	const currenciesListQuery = useCurrencies();
 	const selectedCurrency = React.useMemo(
 		() =>
 			currenciesListQuery.data

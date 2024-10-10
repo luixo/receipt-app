@@ -21,7 +21,7 @@ const CurrencyButton: React.FC<ButtonProps> = ({
 	const formattedCurrency = useFormattedCurrency(currencyCode);
 	return (
 		<Button variant={selected ? undefined : "ghost"} onClick={select}>
-			{formattedCurrency}
+			{formattedCurrency.symbol}
 		</Button>
 	);
 };
@@ -59,7 +59,7 @@ export const CurrenciesGroup: React.FC<Props> = ({
 				variant={isSelectedOther ? undefined : "ghost"}
 				onClick={onSelectOther}
 			>
-				{isSelectedOther ? otherCurrency : "Other"}
+				{isSelectedOther ? otherCurrency.symbol : "Other"}
 			</Button>
 		</ButtonGroup>
 	);

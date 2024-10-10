@@ -16,9 +16,9 @@ export const ReceiptSnippet: React.FC<Props> = ({ receipt }) => {
 	return (
 		<Text testID="receipt-snippet">
 			<ReceiptIcon className="mr-1 inline" size={24} />
-			{`"${receipt.name}" (sum ${
-				receipt.sum
-			} ${currency}) issued on ${formatDate(receipt.issued)}`}
+			{`"${receipt.name}" (sum ${receipt.sum} ${
+				currency.symbol
+			}) issued on ${formatDate(receipt.issued)}`}
 		</Text>
 	);
 };

@@ -51,7 +51,7 @@ const UserDebtPreviewInner: React.FC<InnerProps> = ({ query }) => {
 						className={debt.amount >= 0 ? "text-success" : "text-danger"}
 						testID="preview-debt-amount"
 					>
-						{Math.abs(debt.amount)} {currency}
+						{Math.abs(debt.amount)} {currency.symbol}
 					</Text>
 				}
 				timestamp={<Text>{formatDate(debt.timestamp)}</Text>}

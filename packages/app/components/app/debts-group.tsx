@@ -32,7 +32,7 @@ const DebtGroupElement: React.FC<DebtElement> = ({ currencyCode, sum }) => {
 			testID="debts-group-element"
 			className={debt({ direction: sum >= 0 ? "in" : "out" })}
 		>
-			{round(Math.abs(sum))} {currency}
+			{round(Math.abs(sum))} {currency.symbol}
 		</Text>
 	);
 };

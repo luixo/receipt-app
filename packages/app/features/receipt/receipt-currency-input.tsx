@@ -59,7 +59,7 @@ export const ReceiptCurrencyInput: React.FC<Props> = ({
 				onClick={disabled ? undefined : openModal}
 			>
 				<Text className="text-2xl">
-					{sum} {formattedCurrencyCode}
+					{sum} {formattedCurrencyCode.symbol}
 				</Text>
 			</View>
 			<CurrenciesPicker

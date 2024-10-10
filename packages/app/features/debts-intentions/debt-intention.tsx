@@ -27,7 +27,7 @@ export const DebtIntention = React.forwardRef<HTMLDivElement, Props>(
 				<Text
 					className={intention.amount >= 0 ? "text-success" : "text-danger"}
 				>
-					{Math.abs(intention.amount)} {currency}
+					{Math.abs(intention.amount)} {currency.symbol}
 				</Text>
 				<Text>{formatDate(intention.timestamp)}</Text>
 			</View>
@@ -45,7 +45,7 @@ export const DebtIntention = React.forwardRef<HTMLDivElement, Props>(
 											: "text-danger"
 									}
 								>
-									{Math.abs(intention.current.amount)} {selfCurrency}
+									{Math.abs(intention.current.amount)} {selfCurrency.symbol}
 								</Text>
 								<Text>{formatDate(intention.current.timestamp)}</Text>
 							</View>

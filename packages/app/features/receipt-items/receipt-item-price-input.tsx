@@ -68,7 +68,7 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 				onClick={readOnly || isLoading ? undefined : switchEditing}
 			>
 				<Text>
-					{item.price} {currency}
+					{item.price} {currency.symbol}
 				</Text>
 			</View>
 		);

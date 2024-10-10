@@ -124,14 +124,14 @@ export const ReceiptParticipant: React.FC<Props> = ({
 									Boolean(userQuery.data?.connectedAccount),
 								)}
 							>
-								{`${round(participant.sum)} ${currency}`}
+								{`${round(participant.sum)} ${currency.symbol}`}
 								{participant.currentDebt
 									? (receipt.ownerUserId !== receipt.selfUserId ? -1 : 1) *
 											participant.currentDebt.amount !==
 									  participant.sum
-										? ` (synced as ${round(
-												participant.currentDebt.amount,
-										  )} ${currency})`
+										? ` (synced as ${round(participant.currentDebt.amount)} ${
+												currency.symbol
+										  })`
 										: undefined
 									: null}
 							</Text>
@@ -167,7 +167,9 @@ export const ReceiptParticipant: React.FC<Props> = ({
 						{participant.items.map((item) => (
 							<Text key={item.id}>
 								{item.name} -{" "}
-								{`${round(item.sum)}${item.hasExtra ? "+" : ""} ${currency}`}
+								{`${round(item.sum)}${item.hasExtra ? "+" : ""} ${
+									currency.symbol
+								}`}
 							</Text>
 						))}
 					</View>

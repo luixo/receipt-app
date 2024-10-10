@@ -41,7 +41,7 @@ export const ReceiptPreview: React.FC<InnerProps> = ({ receipt }) => {
 	);
 	const sumComponent = (
 		<Text className="font-medium">
-			{sum} {currency}
+			{sum} {currency.symbol}
 		</Text>
 	);
 	return (

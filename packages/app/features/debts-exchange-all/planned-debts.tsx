@@ -8,8 +8,10 @@ import { entries, isNonNullish, omitBy } from "remeda";
 import { z } from "zod";
 
 import { ErrorMessage } from "~app/components/error-message";
-import { useFormattedCurrencies } from "~app/hooks/use-formatted-currencies";
-import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
+import {
+	useFormattedCurrencies,
+	useFormattedCurrency,
+} from "~app/hooks/use-formatted-currency";
 import { useInputController } from "~app/hooks/use-input-controller";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
@@ -195,7 +197,7 @@ export const PlannedDebts: React.FC<Props> = ({
 			return {
 				amount: -debt.sum,
 				currencyCode: debt.currencyCode,
-				note: `Converted to ${convertedSum} ${selectedCurrency}`,
+				note: `Converted to ${convertedSum} ${selectedCurrency.symbol}`,
 			};
 		});
 		return [
@@ -204,7 +206,8 @@ export const PlannedDebts: React.FC<Props> = ({
 				amount: convertedDebts.reduce((acc, debt) => acc + debt.sum, 0),
 				currencyCode: selectedCurrencyCode,
 				note: `Converted from ${debtsToConvert
-					.map(({ amount }, index) => `${amount} ${currencies[index]}`)
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					.map(({ amount }, index) => `${amount} ${currencies[index]!.symbol}`)
 					.join(", ")}`,
 			},
 		];

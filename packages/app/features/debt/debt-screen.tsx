@@ -71,7 +71,7 @@ const DebtCurrencyInput: React.FC<CurrencyProps> = ({ debt, isLoading }) => {
 				isLoading={updateReceiptMutation.isPending}
 				isIconOnly
 			>
-				{currency}
+				{currency.symbol}
 			</Button>
 			<CurrenciesPicker
 				onChange={saveCurrencyCode}
@@ -341,7 +341,7 @@ export const DebtInner: React.FC<InnerProps> = ({ query }) => {
 					</>
 				}
 			>
-				{`${debt.amount} ${currency} debt`}
+				{`${debt.amount} ${currency.symbol} debt`}
 			</PageHeader>
 			<LoadableUser className="self-start" id={debt.userId} />
 			<DebtSignButtonGroup debt={debt} disabled={isRemoving} />
