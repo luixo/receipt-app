@@ -41,7 +41,11 @@ export const useParticipants = (receipt: TRPCQueryOutput<"receipts.get">) => {
 	const isOwner = receipt.ownerUserId === receipt.selfUserId;
 	const participants = React.useMemo(() => {
 		const debts = debtsQueries
-			.filter((debtQuery) => debtQuery.status === "success")
+			.filter(
+				(debtQuery) =>
+					debtQuery.status === "success" || debtQuery.status === "error",
+			)
+			// Data is empty in case of debt not found (incoming debt, not yet accepted)
 			.map((debt) => debt.data);
 		const awaitingDebts = debts.length !== getDebtIds(receipt).length;
 		const calculatedItems = receipt.items.map((item) => ({
@@ -79,10 +83,12 @@ export const useParticipants = (receipt: TRPCQueryOutput<"receipts.get">) => {
 				currentDebt: awaitingDebts
 					? null
 					: debts.find((debt) =>
-							isOwner
-								? debt.userId === participant.userId
-								: debt.userId === receipt.ownerUserId &&
-								  participant.userId === receipt.selfUserId,
+							debt
+								? isOwner
+									? debt.userId === participant.userId
+									: debt.userId === receipt.ownerUserId &&
+									  participant.userId === receipt.selfUserId
+								: false,
 					  ),
 			}));
 	}, [debtsQueries, isOwner, receipt]);
@@ -102,8 +108,17 @@ export const useParticipants = (receipt: TRPCQueryOutput<"receipts.get">) => {
 		[isOwner, participants, receipt.selfUserId],
 	);
 	// Debts not created yet
+	const loadingParticipants = React.useMemo(
+		() =>
+			syncableParticipants.filter(({ currentDebt }) => currentDebt === null),
+		[syncableParticipants],
+	);
+	// Debts not created yet
 	const nonCreatedParticipants = React.useMemo(
-		() => syncableParticipants.filter(({ currentDebt }) => !currentDebt),
+		() =>
+			syncableParticipants.filter(
+				({ currentDebt }) => currentDebt === undefined,
+			),
 		[syncableParticipants],
 	);
 	// Debts that are already created
@@ -113,9 +128,9 @@ export const useParticipants = (receipt: TRPCQueryOutput<"receipts.get">) => {
 				(
 					participant,
 				): participant is NonNullableField<typeof participant, "currentDebt"> =>
-					!nonCreatedParticipants.includes(participant),
+					Boolean(participant.currentDebt),
 			),
-		[syncableParticipants, nonCreatedParticipants],
+		[syncableParticipants],
 	);
 	// Debts being de-synced from the receipt
 	const desyncedParticipants = React.useMemo(
@@ -123,7 +138,11 @@ export const useParticipants = (receipt: TRPCQueryOutput<"receipts.get">) => {
 			createdParticipants.filter(
 				({ currentDebt, sum }) =>
 					!isDebtInSyncWithReceipt(
-						{ ...receipt, participantSum: sum },
+						{
+							...receipt,
+							participantSum:
+								receipt.debt.direction === "outcoming" ? sum : -sum,
+						},
 						currentDebt,
 					),
 			),
@@ -140,6 +159,7 @@ export const useParticipants = (receipt: TRPCQueryOutput<"receipts.get">) => {
 	return {
 		participants,
 		syncableParticipants,
+		loadingParticipants,
 		createdParticipants,
 		nonCreatedParticipants,
 		desyncedParticipants,
