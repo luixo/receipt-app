@@ -4,6 +4,7 @@ import { useParticipants } from "~app/hooks/use-participants";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { Button } from "~components/button";
 import { SyncIcon, UnsyncIcon } from "~components/icons";
+import { Spinner } from "~components/spinner";
 
 type Props = {
 	receipt: TRPCQueryOutput<"receipts.get">;
@@ -14,6 +15,7 @@ export const ReceiptPreviewSyncIcon: React.FC<Props> = ({ receipt }) => {
 		participants,
 		syncableParticipants,
 		desyncedParticipants,
+		loadingParticipants,
 		nonCreatedParticipants,
 	} = useParticipants(receipt);
 	const notSynced =
@@ -45,6 +47,13 @@ export const ReceiptPreviewSyncIcon: React.FC<Props> = ({ receipt }) => {
 	if (!syncableParticipants.includes(selfParticipant)) {
 		return null;
 	}
+	if (loadingParticipants.includes(selfParticipant)) {
+		return (
+			<Button variant="light" isDisabled isIconOnly>
+				<Spinner size="sm" />
+			</Button>
+		);
+	}
 	if (nonCreatedParticipants.includes(selfParticipant)) {
 		return (
 			<Button variant="light" isDisabled isIconOnly color="warning">
@@ -65,7 +74,7 @@ export const ReceiptPreviewSyncIcon: React.FC<Props> = ({ receipt }) => {
 	}
 	return (
 		<Button variant="light" isDisabled isIconOnly color="success">
-			<SyncIcon size={32} />
+			<SyncIcon size={24} />
 		</Button>
 	);
 };
