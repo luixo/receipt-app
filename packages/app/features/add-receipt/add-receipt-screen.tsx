@@ -1,7 +1,6 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { skipToken } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import type { UseFormReturn } from "react-hook-form";
 import { useRouter } from "solito/navigation";
@@ -12,13 +11,13 @@ import { DateInput } from "~app/components/date-input";
 import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
 import { useInputController } from "~app/hooks/use-input-controller";
-import { useSelfAccountId } from "~app/hooks/use-self-account-id";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import { currencyCodeSchema, receiptNameSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { Input } from "~components/input";
+import type { AccountsId } from "~db/models";
 import { options as receiptsAddOptions } from "~mutations/receipts/add";
 import { getToday } from "~utils/date";
 import type { AppPage } from "~utils/next";
@@ -74,11 +73,13 @@ type Form = {
 
 export const AddReceiptScreen: AppPage = () => {
 	const router = useRouter();
-	const selfAccountId = useSelfAccountId();
+	const selfAccountId =
+		trpc.account.get.useQuery().data?.account.id ??
+		("unknown-account-id" as AccountsId);
 
 	const addReceiptMutation = trpc.receipts.add.useMutation(
 		useTrpcMutationOptions(receiptsAddOptions, {
-			context: selfAccountId ? { selfAccountId } : skipToken,
+			context: { selfAccountId },
 			onSuccess: (id) => router.replace(`/receipts/${id}`),
 		}),
 	);
@@ -123,11 +124,7 @@ export const AddReceiptScreen: AppPage = () => {
 				className="mt-4"
 				color="primary"
 				onClick={form.handleSubmit(onSubmit)}
-				isDisabled={
-					!form.formState.isValid ||
-					addReceiptMutation.isPending ||
-					!selfAccountId
-				}
+				isDisabled={!form.formState.isValid || addReceiptMutation.isPending}
 				isLoading={addReceiptMutation.isPending}
 			>
 				Add receipt

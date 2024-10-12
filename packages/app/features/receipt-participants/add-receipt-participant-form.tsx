@@ -1,7 +1,6 @@
 import React from "react";
 
 import { UsersSuggest } from "~app/components/app/users-suggest";
-import { useSelfAccountId } from "~app/hooks/use-self-account-id";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
@@ -21,7 +20,6 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 	...props
 }) => {
 	const [localFilterIds, setLocalFilterIds] = React.useState<UsersId[]>([]);
-	const selfAccountId = useSelfAccountId();
 	const addMutation = trpc.receiptParticipants.add.useMutation(
 		useTrpcMutationOptions(receiptParticipantsAddOptions, {
 			context: { receiptId: receipt.id },
@@ -48,9 +46,7 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 		<UsersSuggest
 			filterIds={[...filterIds, ...localFilterIds]}
 			onUserClick={addParticipants}
-			isDisabled={
-				disabled || Boolean(receipt.transferIntentionUserId) || !selfAccountId
-			}
+			isDisabled={disabled || Boolean(receipt.transferIntentionUserId)}
 			options={React.useMemo(
 				() => ({ type: "not-connected-receipt", receiptId: receipt.id }),
 				[receipt.id],

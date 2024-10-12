@@ -5,7 +5,6 @@ import { LoadableUser } from "~app/components/app/loadable-user";
 import { RemoveButton } from "~app/components/remove-button";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import type { Participant } from "~app/hooks/use-participants";
-import { useSelfAccountId } from "~app/hooks/use-self-account-id";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { type TRPCQueryOutput, trpc } from "~app/trpc";
 import { Accordion, AccordionItem } from "~components/accordion";
@@ -72,7 +71,6 @@ export const ReceiptParticipant: React.FC<Props> = ({
 	receipt,
 	isLoading,
 }) => {
-	const selfAccountId = useSelfAccountId();
 	const userQuery = trpc.users.get.useQuery({ id: participant.userId });
 
 	const removeReceiptParticipantMutation =
@@ -145,7 +143,6 @@ export const ReceiptParticipant: React.FC<Props> = ({
 									<RemoveButton
 										onRemove={removeReceiptParticipant}
 										mutation={removeReceiptParticipantMutation}
-										isDisabled={!selfAccountId}
 										subtitle="This will remove participant with all his parts"
 										noConfirm={participant.sum === 0}
 										isIconOnly
