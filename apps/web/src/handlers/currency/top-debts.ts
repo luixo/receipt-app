@@ -16,5 +16,8 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 		.groupBy("currencyCode")
 		.orderBy("count desc")
 		.execute();
-	return topCurrenciesResult;
+	return topCurrenciesResult.map(({ currencyCode, count }) => ({
+		currencyCode,
+		count: Number(count),
+	}));
 });

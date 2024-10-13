@@ -90,15 +90,15 @@ describe("currency.rates", () => {
 			const result = await caller.procedure();
 			expect(result).toStrictEqual<typeof result>([
 				{
-					count: "2",
+					count: 2,
 					currencyCode: "GEL",
 				},
 				{
-					count: "1",
+					count: 1,
 					currencyCode: "AMD",
 				},
 				{
-					count: "1",
+					count: 1,
 					currencyCode: "USD",
 				},
 			]);
