@@ -1,6 +1,11 @@
 import React from "react";
 
-import type { Path, PathValue, UseFormReturn } from "react-hook-form";
+import {
+	Controller,
+	type Path,
+	type PathValue,
+	type UseFormReturn,
+} from "react-hook-form";
 import type { z } from "zod";
 
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
@@ -28,6 +33,7 @@ export const CurrencyInput = <T extends MinimalForm>({
 	isLoading,
 	topCurrenciesQuery,
 }: Props<T>) => {
+	const typedPath = "currencyCode" as Path<T> & "currencyCode";
 	const [
 		modalOpen,
 		{ switchValue: switchModalOpen, setFalse: closeModal, setTrue: openModal },
@@ -36,18 +42,14 @@ export const CurrencyInput = <T extends MinimalForm>({
 	const onCurrencyChange = React.useCallback(
 		(nextCurrencyCode: z.infer<typeof currencyCodeSchema>) => {
 			closeModal();
-			form.setValue(
-				"currencyCode" as Path<T>,
-				nextCurrencyCode as PathValue<T, Path<T>>,
-				{ shouldValidate: true },
-			);
+			form.setValue(typedPath, nextCurrencyCode as PathValue<T, Path<T>>, {
+				shouldValidate: true,
+			});
 		},
 		[form, closeModal],
 	);
 
-	const selectedCurrencyCode = form.watch(
-		"currencyCode" as Path<T> & "currencyCode",
-	);
+	const selectedCurrencyCode = form.watch(typedPath);
 
 	const onLoad = React.useCallback(
 		(
@@ -77,17 +79,25 @@ export const CurrencyInput = <T extends MinimalForm>({
 	return (
 		<>
 			{selectedCurrencyCode ? (
-				<Input
-					value={
-						formattedCurrency.code === formattedCurrency.name
-							? formattedCurrency.code
-							: `${formattedCurrency.name} (${formattedCurrency.code})`
-					}
-					label="Currency"
-					isDisabled={isLoading}
-					isReadOnly
-					onClick={openModal}
-					className={isLoading ? undefined : "cursor-pointer"}
+				<Controller
+					name={typedPath}
+					control={form.control}
+					render={({ field }) => (
+						<Input
+							{...field}
+							value={
+								formattedCurrency.code === formattedCurrency.name
+									? formattedCurrency.code
+									: `${formattedCurrency.name} (${formattedCurrency.code})`
+							}
+							label="Currency"
+							name="currency"
+							isDisabled={isLoading}
+							isReadOnly
+							onClick={openModal}
+							className={isLoading ? undefined : "cursor-pointer"}
+						/>
+					)}
 				/>
 			) : (
 				<Button

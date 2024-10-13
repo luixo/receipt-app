@@ -11,7 +11,7 @@ export const getCurrencies = (locale = DEFAULT_LOCALE) =>
 	currencyList.getAll(locale) as
 		| Record<CurrencyCode, CurrencyDescription>
 		| undefined;
-export const getCurrencySymbol = (
+export const getCurrency = (
 	currencyCode: CurrencyCode,
 	locale = DEFAULT_LOCALE,
 ) => {
@@ -23,7 +23,11 @@ export const getCurrencySymbol = (
 	if (!currency) {
 		throw new Error(`Currency ${currencyCode} does not exist in currencies`);
 	}
-	return currency.symbol_native;
+	return currency;
 };
+export const getCurrencySymbol = (
+	currencyCode: CurrencyCode,
+	locale = DEFAULT_LOCALE,
+) => getCurrency(currencyCode, locale).symbol_native;
 export const isCurrencyCode = (input: string): input is CurrencyCode =>
 	CURRENCY_CODES.includes(input);

@@ -53,7 +53,8 @@ const CurrenciesPickerLoader: React.FC<LoaderProps> = ({
 						onClick={() => onChange(code)}
 						variant="flat"
 						color={code === selectedCurrencyCode ? "success" : "primary"}
-						title={symbol}
+						title={code}
+						data-testid="currency-button"
 					>
 						{name === code && symbol === code
 							? code
@@ -101,6 +102,7 @@ export const CurrenciesPicker: React.FC<WrapperProps> = ({
 			onOpenChange={switchModalOpen}
 			scrollBehavior="inside"
 			classNames={{ base: "mb-24 sm:mb-32 max-w-xl" }}
+			data-testid="currencies-picker"
 		>
 			<ModalContent>
 				<ModalHeader>
