@@ -39,6 +39,7 @@ const ReceiptDateInput: React.FC<DateProps> = ({ form, isLoading }) => {
 			isDisabled={isLoading}
 			onUpdate={onDateUpdate}
 			updateOnChange
+			name="issued-date"
 		/>
 	);
 };
@@ -61,6 +62,7 @@ const ReceiptNameInput: React.FC<NameProps> = ({ form, isLoading }) => {
 			label="Receipt name"
 			isDisabled={isLoading}
 			fieldError={inputState.error}
+			name="name"
 		/>
 	);
 };
@@ -126,6 +128,7 @@ export const AddReceiptScreen: AppPage = () => {
 				onClick={form.handleSubmit(onSubmit)}
 				isDisabled={!form.formState.isValid || addReceiptMutation.isPending}
 				isLoading={addReceiptMutation.isPending}
+				type="submit"
 			>
 				Add receipt
 			</Button>

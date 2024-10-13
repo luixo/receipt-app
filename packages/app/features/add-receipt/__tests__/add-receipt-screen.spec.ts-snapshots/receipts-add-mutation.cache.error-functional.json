@@ -1,0 +1,22 @@
+{
+	"mutations": {
+		"receipts.add": [
+			{
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"receipts.add\" error"
+					},
+					"failureCount": 1,
+					"isPaused": false,
+					"status": "error",
+					"variables": {
+						"name": "doloribus ex vel",
+						"currencyCode": "USD",
+						"issued": "2020-01-31T00:00:00.000Z"
+					}
+				}
+			}
+		]
+	}
+}

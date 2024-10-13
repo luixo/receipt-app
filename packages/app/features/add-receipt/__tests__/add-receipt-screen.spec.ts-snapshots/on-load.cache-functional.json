@@ -1,0 +1,36 @@
+{
+	"queries": {
+		"currency.topReceipts": {
+			"state": {
+				"data": [
+					{
+						"currencyCode": "GEL",
+						"count": 27
+					},
+					{
+						"currencyCode": "ZWL",
+						"count": 30
+					},
+					{
+						"currencyCode": "RWF",
+						"count": 65
+					},
+					{
+						"currencyCode": "MYR",
+						"count": 67
+					},
+					{
+						"currencyCode": "CRC",
+						"count": 84
+					}
+				],
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	}
+}
