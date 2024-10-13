@@ -17,7 +17,7 @@ const getProxyUrl = (url: string, api: ExtractFixture<typeof test>["api"]) => {
 
 const fakeBrowserDate = async (page: OriginalPage) => {
 	const localMockedTimestamp = new Date().valueOf();
-	await page.evaluate<void, [number]>(
+	await page.addInitScript<[number]>(
 		([mockedTimestamp]) => {
 			Date.now = () => mockedTimestamp;
 			// eslint-disable-next-line no-global-assign
@@ -43,8 +43,8 @@ export const pageFixtures = test.extend<ExtendedPageFixtures>({
 
 		const originalGoto = page.goto.bind(page);
 		page.goto = async (url, options) => {
-			const result = await originalGoto(getProxyUrl(url, api), options);
 			await fakeBrowserDate(page);
+			const result = await originalGoto(getProxyUrl(url, api), options);
 			await page.locator("hydrated").waitFor({ state: "attached" });
 			// Remove rounding for dialogs to make screenshots more stable
 			await page.addStyleTag({
