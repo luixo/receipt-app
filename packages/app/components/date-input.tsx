@@ -1,4 +1,5 @@
 import React from "react";
+import { View } from "react-native";
 
 import { z } from "zod";
 
@@ -7,7 +8,6 @@ import { useSsrFormat } from "~app/hooks/use-ssr-format";
 import type { TRPCMutationResult } from "~app/trpc";
 import { Calendar } from "~components/calendar";
 import { Input } from "~components/input";
-import { Text } from "~components/text";
 
 type Props = {
 	timestamp: Date;
@@ -50,9 +50,7 @@ export const DateInput: React.FC<Props> = ({
 			onChange={setValue}
 			disabled={mutation?.isPending || isDisabled}
 		>
-			{isDisabled ? (
-				<Text className="text-xl">{formatDate(dateValue)}</Text>
-			) : (
+			<View>
 				<Input
 					{...bindings}
 					value={formatDate(dateValue)}
@@ -70,9 +68,11 @@ export const DateInput: React.FC<Props> = ({
 									onClick: () => onUpdate(dateValue),
 							  }
 					}
+					type="text"
+					isDisabled={isDisabled}
 					{...props}
 				/>
-			)}
+			</View>
 		</Calendar>
 	);
 };
