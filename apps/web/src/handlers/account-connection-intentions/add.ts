@@ -3,6 +3,7 @@ import { entries } from "remeda";
 import { z } from "zod";
 
 import type { AccountsId } from "~db/models";
+import type { BatchLoadContextFn } from "~web/handlers/batch";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import { authProcedure } from "~web/handlers/trpc";
@@ -344,97 +345,92 @@ type IntentionOutput = {
 	};
 };
 
-export const batchFn =
-	(ctx: AuthorizedContext) =>
-	async (
-		inputs: readonly z.infer<typeof addConnectionIntentionSchema>[],
-	): Promise<(IntentionOutput | TRPCError)[]> => {
-		const duplicatedEmails = getDuplicates(
-			inputs,
-			(intention) => intention.email.lowercase,
-		);
-		if (duplicatedEmails.length !== 0) {
-			throw new TRPCError({
-				code: "CONFLICT",
-				message: `Expected to have unique emails, got repeating emails: ${duplicatedEmails
-					.map(([email, count]) => `"${email}" (${count} times)`)
-					.join(", ")}.`,
-			});
-		}
-		const duplicatedUserIds = getDuplicates(
-			inputs,
-			(intention) => intention.userId,
-		);
-		if (duplicatedUserIds.length !== 0) {
-			throw new TRPCError({
-				code: "CONFLICT",
-				message: `Expected to have unique user ids, got repeating: ${duplicatedUserIds
-					.map(([userId, count]) => `"${userId}" (${count} times)`)
-					.join(", ")}.`,
-			});
-		}
-		const data = await getData(ctx, inputs);
-		const intentionsOrErrors = getIntentionsOrErrors(ctx, inputs, data);
-		const intentions = intentionsOrErrors.filter(
-			(
-				intentionOrError,
-			): intentionOrError is Exclude<typeof intentionOrError, TRPCError> =>
-				!(intentionOrError instanceof TRPCError),
-		);
-		const directIntentions = intentions.filter(
-			(intention): intention is Extract<typeof intention, { type: "direct" }> =>
-				intention.type === "direct",
-		);
-		const viceVersaIntentions = intentions.filter(
-			(
-				intention,
-			): intention is Extract<typeof intention, { type: "vice-versa" }> =>
-				intention.type === "vice-versa",
-		);
-		await Promise.all([
-			insertDirectIntentions(ctx, directIntentions),
-			insertViceVersaIntentions(ctx, viceVersaIntentions),
-		]);
-		return intentionsOrErrors.map((intentionOrError) => {
-			if (intentionOrError instanceof TRPCError) {
-				return intentionOrError;
-			}
-			const matchedDirectIntention = directIntentions.find(
-				({ targetAccount }) =>
-					targetAccount.id === intentionOrError.targetAccount.id,
-			);
-			const matchedViceVersaIntention = viceVersaIntentions.find(
-				({ targetAccount }) =>
-					targetAccount.id === intentionOrError.targetAccount.id,
-			);
-			/* c8 ignore start */
-			if (!matchedViceVersaIntention && !matchedDirectIntention) {
-				return new TRPCError({
-					code: "INTERNAL_SERVER_ERROR",
-					message: `Expected to have an intention in either direct or vice-versa connection list.`,
-				});
-			}
-			/* c8 ignore stop */
-			return {
-				account: {
-					id: intentionOrError.targetAccount.id,
-					email: intentionOrError.targetAccount.email,
-					avatarUrl: intentionOrError.targetAccount.avatarUrl || undefined,
-				},
-				connected: Boolean(matchedViceVersaIntention),
-				user: {
-					name: intentionOrError.asUser.name,
-				},
-			};
-		});
-	};
-
-const queueAddConnectionIntenion = queueCallFactory<
+export const batchFn: BatchLoadContextFn<
 	AuthorizedContext,
 	z.infer<typeof addConnectionIntentionSchema>,
-	IntentionOutput
->(batchFn);
+	IntentionOutput,
+	TRPCError
+> = (ctx) => async (inputs) => {
+	const duplicatedEmails = getDuplicates(
+		inputs,
+		(intention) => intention.email.lowercase,
+	);
+	if (duplicatedEmails.length !== 0) {
+		throw new TRPCError({
+			code: "CONFLICT",
+			message: `Expected to have unique emails, got repeating emails: ${duplicatedEmails
+				.map(([email, count]) => `"${email}" (${count} times)`)
+				.join(", ")}.`,
+		});
+	}
+	const duplicatedUserIds = getDuplicates(
+		inputs,
+		(intention) => intention.userId,
+	);
+	if (duplicatedUserIds.length !== 0) {
+		throw new TRPCError({
+			code: "CONFLICT",
+			message: `Expected to have unique user ids, got repeating: ${duplicatedUserIds
+				.map(([userId, count]) => `"${userId}" (${count} times)`)
+				.join(", ")}.`,
+		});
+	}
+	const data = await getData(ctx, inputs);
+	const intentionsOrErrors = getIntentionsOrErrors(ctx, inputs, data);
+	const intentions = intentionsOrErrors.filter(
+		(
+			intentionOrError,
+		): intentionOrError is Exclude<typeof intentionOrError, TRPCError> =>
+			!(intentionOrError instanceof TRPCError),
+	);
+	const directIntentions = intentions.filter(
+		(intention): intention is Extract<typeof intention, { type: "direct" }> =>
+			intention.type === "direct",
+	);
+	const viceVersaIntentions = intentions.filter(
+		(
+			intention,
+		): intention is Extract<typeof intention, { type: "vice-versa" }> =>
+			intention.type === "vice-versa",
+	);
+	await Promise.all([
+		insertDirectIntentions(ctx, directIntentions),
+		insertViceVersaIntentions(ctx, viceVersaIntentions),
+	]);
+	return intentionsOrErrors.map((intentionOrError) => {
+		if (intentionOrError instanceof TRPCError) {
+			return intentionOrError;
+		}
+		const matchedDirectIntention = directIntentions.find(
+			({ targetAccount }) =>
+				targetAccount.id === intentionOrError.targetAccount.id,
+		);
+		const matchedViceVersaIntention = viceVersaIntentions.find(
+			({ targetAccount }) =>
+				targetAccount.id === intentionOrError.targetAccount.id,
+		);
+		/* c8 ignore start */
+		if (!matchedViceVersaIntention && !matchedDirectIntention) {
+			return new TRPCError({
+				code: "INTERNAL_SERVER_ERROR",
+				message: `Expected to have an intention in either direct or vice-versa connection list.`,
+			});
+		}
+		/* c8 ignore stop */
+		return {
+			account: {
+				id: intentionOrError.targetAccount.id,
+				email: intentionOrError.targetAccount.email,
+				avatarUrl: intentionOrError.targetAccount.avatarUrl || undefined,
+			},
+			connected: Boolean(matchedViceVersaIntention),
+			user: {
+				name: intentionOrError.asUser.name,
+			},
+		};
+	});
+};
 
 export const procedure = authProcedure
 	.input(addConnectionIntentionSchema)
-	.mutation(queueAddConnectionIntenion);
+	.mutation(queueCallFactory(batchFn));

@@ -3,7 +3,7 @@ import type {
 	ProcedureResolverOptions,
 	UnsetMarker,
 } from "@trpc/server/unstable-core-do-not-import";
-import type { BatchLoadFn, Options } from "dataloader";
+import type { Options } from "dataloader";
 import Dataloader from "dataloader";
 
 import type {
@@ -51,8 +51,20 @@ const defaultGetKey = <C extends UnauthorizedContext>(context: C): string => {
 };
 /* c8 ignore stop */
 
-export const queueCallFactory = <C extends UnauthorizedContext, I, O>(
-	batchLoadFn: (ctx: C) => BatchLoadFn<I, O>,
+export type BatchLoadContextFn<
+	C extends UnauthorizedContext,
+	I,
+	O,
+	E extends Error = Error,
+> = (ctx: C) => (keys: readonly I[]) => PromiseLike<ArrayLike<O | E>>;
+
+export const queueCallFactory = <
+	C extends UnauthorizedContext,
+	I,
+	O,
+	E extends Error = Error,
+>(
+	batchLoadFn: BatchLoadContextFn<C, I, O, E>,
 	{
 		getKey,
 		...batchOpts
