@@ -1,10 +1,11 @@
 import { faker } from "@faker-js/faker";
+import { TRPCError } from "@trpc/server";
 import { describe, expect } from "vitest";
-import { z } from "zod";
 
 import {
 	MAX_USERNAME_LENGTH,
 	MIN_USERNAME_LENGTH,
+	userIdSchema,
 } from "~app/utils/validation";
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
@@ -20,6 +21,7 @@ import {
 	expectUnauthorizedError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
+import { runSequentially } from "~web/handlers/debts/utils.test";
 import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./add";
@@ -148,10 +150,34 @@ describe("users.add", () => {
 					`You already has intention to connect to "${otherEmail}" as user "${userName}".`,
 				);
 			});
+		});
 
-			test.skip("user intention already exists", async () => {
-				// This will only happen on adding an intention on already existing user
+		test("mixed success and fail", async ({ ctx }) => {
+			const { sessionId } = await insertAccountWithSession(ctx);
+			const caller = createCaller(createAuthContext(ctx, sessionId));
+
+			const results = await expectDatabaseDiffSnapshot(ctx, () =>
+				runSequentially(
+					[
+						() => caller.procedure({ name: faker.person.fullName() }),
+						() =>
+							caller
+								.procedure({
+									name: faker.person.fullName(),
+									email: "invalid@@mail.org",
+								})
+								.catch((e) => e),
+					],
+					10,
+				),
+			);
+
+			expect(userIdSchema.safeParse(results[0].id).success).toBe(true);
+			expect(results[0]).toStrictEqual<(typeof results)[0]>({
+				id: results[0].id,
+				connection: undefined,
 			});
+			expect(results[1]).toBeInstanceOf(TRPCError);
 		});
 	});
 
@@ -163,9 +189,14 @@ describe("users.add", () => {
 			const { sessionId } = await insertAccountWithSession(ctx);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 
-			await expectDatabaseDiffSnapshot(ctx, () =>
+			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ name: faker.person.fullName() }),
 			);
+			expect(userIdSchema.safeParse(result.id).success).toBe(true);
+			expect(result).toStrictEqual<typeof result>({
+				id: result.id,
+				connection: undefined,
+			});
 		});
 
 		test("user is added - public name, no email", async ({ ctx }) => {
@@ -175,12 +206,17 @@ describe("users.add", () => {
 			const { sessionId } = await insertAccountWithSession(ctx);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 
-			await expectDatabaseDiffSnapshot(ctx, () =>
+			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({
 					name: faker.person.fullName(),
 					publicName: faker.person.fullName(),
 				}),
 			);
+			expect(userIdSchema.safeParse(result.id).success).toBe(true);
+			expect(result).toStrictEqual<typeof result>({
+				id: result.id,
+				connection: undefined,
+			});
 		});
 
 		describe("user is added - with email", () => {
@@ -210,8 +246,7 @@ describe("users.add", () => {
 						email: otherEmail,
 					}),
 				);
-				const uuidSchema = z.string().uuid();
-				expect(uuidSchema.safeParse(result.id).success).toBe(true);
+				expect(userIdSchema.safeParse(result.id).success).toBe(true);
 				expect(result).toStrictEqual<typeof result>({
 					connection: {
 						connected: true,
@@ -243,8 +278,7 @@ describe("users.add", () => {
 						email: otherEmail,
 					}),
 				);
-				const uuidSchema = z.string().uuid();
-				expect(uuidSchema.safeParse(result.id).success).toBe(true);
+				expect(userIdSchema.safeParse(result.id).success).toBe(true);
 				expect(result).toStrictEqual<typeof result>({
 					connection: {
 						connected: false,
@@ -258,6 +292,74 @@ describe("users.add", () => {
 					id: result.id,
 				});
 			});
+		});
+
+		test("multiple users added", async ({ ctx }) => {
+			// Self account
+			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+
+			// Direct intention foreign account
+			const { email: anotherEmail, id: anotherAccountId } = await insertAccount(
+				ctx,
+				{ avatarUrl: null },
+			);
+
+			// Vice versa intention foreign account
+			const { id: otherAccountId, email: otherEmail } = await insertAccount(
+				ctx,
+				{ avatarUrl: null },
+			);
+			const { id: otherUserId } = await insertUser(ctx, otherAccountId);
+			// Foreign account's intention to connect to self account
+			await insertAccountConnectionIntention(
+				ctx,
+				otherAccountId,
+				accountId,
+				otherUserId,
+			);
+
+			const asName = faker.person.fullName();
+			const anotherAsName = faker.person.fullName();
+
+			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const results = await runSequentially(
+				[
+					() => caller.procedure({ name: faker.person.fullName() }),
+					() => caller.procedure({ name: asName, email: otherEmail }),
+					() => caller.procedure({ name: anotherAsName, email: anotherEmail }),
+				],
+				10,
+			);
+			results.forEach((result) => {
+				expect(userIdSchema.safeParse(result.id).success).toBe(true);
+			});
+			expect(results).toStrictEqual<typeof results>([
+				{ id: results[0].id, connection: undefined },
+				{
+					connection: {
+						connected: true,
+						account: {
+							id: otherAccountId,
+							email: otherEmail,
+							avatarUrl: undefined,
+						},
+						user: { name: asName },
+					},
+					id: results[1].id,
+				},
+				{
+					connection: {
+						connected: false,
+						account: {
+							id: anotherAccountId,
+							email: anotherEmail,
+							avatarUrl: undefined,
+						},
+						user: { name: anotherAsName },
+					},
+					id: results[2].id,
+				},
+			]);
 		});
 	});
 });

@@ -37,3 +37,19 @@ exports[`accountConnectionIntentions.add > functionality > account connection in
   },
 }
 `;
+
+exports[`accountConnectionIntentions.add > input verification > multiple intentions > mixed success and fail 1`] = `
+{
+  "added": {
+    "accountConnectionsIntentions": {
+      "accountId:f69c89cc-b28f-49ab-8c7b-635f1f9b819c|targetAccountId:25b2a1ea-1061-45bb-96a1-84d2ed1dc4d9": {
+        "accountId": "f69c89cc-b28f-49ab-8c7b-635f1f9b819c",
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "targetAccountId": "25b2a1ea-1061-45bb-96a1-84d2ed1dc4d9",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "20566048-adf0-457d-936e-ecfb1d719980",
+      },
+    },
+  },
+}
+`;

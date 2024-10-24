@@ -101,3 +101,23 @@ exports[`users.add > functionality > user is added - with email > has a vice ver
   },
 }
 `;
+
+exports[`users.add > input verification > mixed success and fail 1`] = `
+{
+  "added": {
+    "users": {
+      "id:beb192ca-6815-4215-ac1f-ca9aa502c53b": {
+        "acceptReceipts": false,
+        "connectedAccountId": null,
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "exposeReceipts": false,
+        "id": "beb192ca-6815-4215-ac1f-ca9aa502c53b",
+        "name": "Rosemary Schiller",
+        "ownerAccountId": "f69c89cc-b28f-49ab-8c7b-635f1f9b819c",
+        "publicName": null,
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+      },
+    },
+  },
+}
+`;

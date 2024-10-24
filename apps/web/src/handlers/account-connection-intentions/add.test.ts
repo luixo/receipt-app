@@ -1,4 +1,5 @@
 import { faker } from "@faker-js/faker";
+import { TRPCError } from "@trpc/server";
 import { describe, expect } from "vitest";
 
 import { createAuthContext } from "~tests/backend/utils/context";
@@ -15,6 +16,7 @@ import {
 	expectUnauthorizedError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
+import { runSequentially } from "~web/handlers/debts/utils.test";
 import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./add";
@@ -224,6 +226,98 @@ describe("accountConnectionIntentions.add", () => {
 				);
 			});
 		});
+
+		describe("multiple intentions", () => {
+			test("duplicate emails", async ({ ctx }) => {
+				const { sessionId, accountId } = await insertAccountWithSession(ctx);
+				const caller = createCaller(createAuthContext(ctx, sessionId));
+
+				const { email: otherEmail } = await insertAccount(ctx);
+
+				const { id: userId } = await insertUser(ctx, accountId);
+				const { id: anotherUserId } = await insertUser(ctx, accountId);
+
+				await expectTRPCError(
+					() =>
+						runSequentially(
+							[
+								() => caller.procedure({ userId, email: otherEmail }),
+								() =>
+									caller.procedure({
+										userId: anotherUserId,
+										email: otherEmail,
+									}),
+							],
+							10,
+						),
+					"CONFLICT",
+					`Expected to have unique emails, got repeating emails: "${otherEmail}" (2 times).`,
+				);
+			});
+
+			test("duplicate user ids", async ({ ctx }) => {
+				const { sessionId, accountId } = await insertAccountWithSession(ctx);
+				const caller = createCaller(createAuthContext(ctx, sessionId));
+
+				const { email: otherEmail } = await insertAccount(ctx);
+				const { email: anotherEmail } = await insertAccount(ctx);
+
+				const { id: userId } = await insertUser(ctx, accountId);
+
+				await expectTRPCError(
+					() =>
+						runSequentially(
+							[
+								() => caller.procedure({ userId, email: otherEmail }),
+								() => caller.procedure({ userId, email: anotherEmail }),
+							],
+							10,
+						),
+					"CONFLICT",
+					`Expected to have unique user ids, got repeating: "${userId}" (2 times).`,
+				);
+			});
+
+			test("mixed success and fail", async ({ ctx }) => {
+				const { sessionId, accountId } = await insertAccountWithSession(ctx);
+				const caller = createCaller(createAuthContext(ctx, sessionId));
+
+				const {
+					email: otherEmail,
+					id: otherAccountId,
+					avatarUrl: otherAvatarUrl,
+				} = await insertAccount(ctx);
+
+				const { id: userId, name: userName } = await insertUser(ctx, accountId);
+
+				const results = await expectDatabaseDiffSnapshot(ctx, () =>
+					runSequentially(
+						[
+							() => caller.procedure({ userId, email: otherEmail }),
+							() =>
+								caller
+									.procedure({
+										userId: "not a valid uuid",
+										email: faker.internet.email(),
+									})
+									.catch((e) => e),
+						],
+						10,
+					),
+				);
+
+				expect(results[0]).toStrictEqual<(typeof results)[0]>({
+					account: {
+						id: otherAccountId,
+						email: otherEmail,
+						avatarUrl: otherAvatarUrl,
+					},
+					connected: false,
+					user: { name: userName },
+				});
+				expect(results[1]).toBeInstanceOf(TRPCError);
+			});
+		});
 	});
 
 	describe("functionality", () => {
@@ -341,6 +435,66 @@ describe("accountConnectionIntentions.add", () => {
 					user: { name: userName },
 				});
 			});
+		});
+
+		test("multiple intentions", async ({ ctx }) => {
+			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+
+			const { id: otherAccountId, email: otherEmail } = await insertAccount(
+				ctx,
+				{ avatarUrl: null },
+			);
+
+			const { id: otherUserId } = await insertUser(ctx, otherAccountId);
+			// Foreign account's intention to connect to self account
+			await insertAccountConnectionIntention(
+				ctx,
+				otherAccountId,
+				accountId,
+				otherUserId,
+			);
+
+			const { id: userId, name: userName } = await insertUser(ctx, accountId);
+
+			const { email: anotherEmail, id: anotherAccountId } = await insertAccount(
+				ctx,
+				{ avatarUrl: null },
+			);
+
+			const { id: anotherUserId, name: anotherUserName } = await insertUser(
+				ctx,
+				accountId,
+			);
+
+			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const results = await runSequentially(
+				[
+					() => caller.procedure({ userId, email: otherEmail }),
+					() =>
+						caller.procedure({ userId: anotherUserId, email: anotherEmail }),
+				],
+				10,
+			);
+			expect(results).toStrictEqual<typeof results>([
+				{
+					account: {
+						id: otherAccountId,
+						email: otherEmail,
+						avatarUrl: undefined,
+					},
+					connected: true,
+					user: { name: userName },
+				},
+				{
+					account: {
+						id: anotherAccountId,
+						email: anotherEmail,
+						avatarUrl: undefined,
+					},
+					connected: false,
+					user: { name: anotherUserName },
+				},
+			]);
 		});
 	});
 });
