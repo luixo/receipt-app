@@ -37,7 +37,7 @@ export interface ReceiptItemsInitializer {
 	/** Index: receiptItems:receiptId:index */
 	receiptId: ReceiptsId;
 
-	/** Default value: now() */
+	/** Default value: CURRENT_TIMESTAMP */
 	createdAt?: Date;
 
 	/** Default value: CURRENT_TIMESTAMP */

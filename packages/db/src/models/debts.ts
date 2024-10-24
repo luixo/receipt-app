@@ -15,15 +15,15 @@ export default interface Debts {
 	id: DebtsId;
 
 	/**
-	 * Index: debts:ownerAccountId:index
 	 * Primary key. Index: debts:ownerAccountId:debtId:pair
+	 * Index: debts:ownerAccountId:index
 	 * Index: debtsSyncIntentions:ownerAccountId:receiptId:userId:tuple
 	 */
 	ownerAccountId: AccountsId;
 
 	/**
-	 * Index: debtsSyncIntentions:ownerAccountId:receiptId:userId:tuple
 	 * Index: debts:userId:index
+	 * Index: debtsSyncIntentions:ownerAccountId:receiptId:userId:tuple
 	 */
 	userId: UsersId;
 
@@ -48,15 +48,15 @@ export interface DebtsInitializer {
 	id: DebtsId;
 
 	/**
-	 * Index: debts:ownerAccountId:index
 	 * Primary key. Index: debts:ownerAccountId:debtId:pair
+	 * Index: debts:ownerAccountId:index
 	 * Index: debtsSyncIntentions:ownerAccountId:receiptId:userId:tuple
 	 */
 	ownerAccountId: AccountsId;
 
 	/**
-	 * Index: debtsSyncIntentions:ownerAccountId:receiptId:userId:tuple
 	 * Index: debts:userId:index
+	 * Index: debtsSyncIntentions:ownerAccountId:receiptId:userId:tuple
 	 */
 	userId: UsersId;
 
@@ -82,15 +82,15 @@ export interface DebtsMutator {
 	id?: DebtsId;
 
 	/**
-	 * Index: debts:ownerAccountId:index
 	 * Primary key. Index: debts:ownerAccountId:debtId:pair
+	 * Index: debts:ownerAccountId:index
 	 * Index: debtsSyncIntentions:ownerAccountId:receiptId:userId:tuple
 	 */
 	ownerAccountId?: AccountsId;
 
 	/**
-	 * Index: debtsSyncIntentions:ownerAccountId:receiptId:userId:tuple
 	 * Index: debts:userId:index
+	 * Index: debtsSyncIntentions:ownerAccountId:receiptId:userId:tuple
 	 */
 	userId?: UsersId;
 

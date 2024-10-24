@@ -7,7 +7,7 @@ import type { AccountsId } from "./accounts";
 export type SessionsSessionId = string & { __flavor?: "sessions" };
 
 export default interface Sessions {
-	/** Primary key. Index: authorization_pk */
+	/** Primary key. Index: sessions_pkey */
 	sessionId: SessionsSessionId;
 
 	/** Index: sessions:accountId:index */
@@ -19,7 +19,7 @@ export default interface Sessions {
 }
 
 export interface SessionsInitializer {
-	/** Primary key. Index: authorization_pk */
+	/** Primary key. Index: sessions_pkey */
 	sessionId: SessionsSessionId;
 
 	/** Index: sessions:accountId:index */
@@ -32,7 +32,7 @@ export interface SessionsInitializer {
 }
 
 export interface SessionsMutator {
-	/** Primary key. Index: authorization_pk */
+	/** Primary key. Index: sessions_pkey */
 	sessionId?: SessionsSessionId;
 
 	/** Index: sessions:accountId:index */

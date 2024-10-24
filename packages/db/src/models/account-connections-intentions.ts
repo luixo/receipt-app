@@ -6,8 +6,8 @@ import type { UsersId } from "./users";
 
 export default interface AccountConnectionsIntentions {
 	/**
-	 * Index: accountConnectionsIntentions:accountUser:userPair
 	 * Primary key. Index: accountConnectionsIntentions:accounts:accountPair
+	 * Index: accountConnectionsIntentions:accountUser:userPair
 	 * Index: accountConnectionsIntentions:accountId:index
 	 */
 	accountId: AccountsId;
@@ -28,8 +28,8 @@ export default interface AccountConnectionsIntentions {
 
 export interface AccountConnectionsIntentionsInitializer {
 	/**
-	 * Index: accountConnectionsIntentions:accountUser:userPair
 	 * Primary key. Index: accountConnectionsIntentions:accounts:accountPair
+	 * Index: accountConnectionsIntentions:accountUser:userPair
 	 * Index: accountConnectionsIntentions:accountId:index
 	 */
 	accountId: AccountsId;
@@ -51,8 +51,8 @@ export interface AccountConnectionsIntentionsInitializer {
 
 export interface AccountConnectionsIntentionsMutator {
 	/**
-	 * Index: accountConnectionsIntentions:accountUser:userPair
 	 * Primary key. Index: accountConnectionsIntentions:accounts:accountPair
+	 * Index: accountConnectionsIntentions:accountUser:userPair
 	 * Index: accountConnectionsIntentions:accountId:index
 	 */
 	accountId?: AccountsId;

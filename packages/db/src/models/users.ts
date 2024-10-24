@@ -12,10 +12,10 @@ export default interface Users {
 
 	name: string;
 
+	publicName: string | null;
+
 	/** Index: users:ownerAccountId:index */
 	ownerAccountId: AccountsId;
-
-	publicName: string | null;
 
 	exposeReceipts: boolean;
 
@@ -34,10 +34,10 @@ export interface UsersInitializer {
 
 	name: string;
 
+	publicName?: string | null;
+
 	/** Index: users:ownerAccountId:index */
 	ownerAccountId: AccountsId;
-
-	publicName?: string | null;
 
 	/** Default value: false */
 	exposeReceipts?: boolean;
@@ -60,10 +60,10 @@ export interface UsersMutator {
 
 	name?: string;
 
+	publicName?: string | null;
+
 	/** Index: users:ownerAccountId:index */
 	ownerAccountId?: AccountsId;
-
-	publicName?: string | null;
 
 	exposeReceipts?: boolean;
 

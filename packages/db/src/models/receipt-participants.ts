@@ -27,7 +27,7 @@ export interface ReceiptParticipantsInitializer {
 
 	role: string;
 
-	/** Default value: now() */
+	/** Default value: CURRENT_TIMESTAMP */
 	createdAt?: Date;
 
 	/** Default value: CURRENT_TIMESTAMP */

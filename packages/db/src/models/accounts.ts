@@ -9,7 +9,7 @@ export default interface Accounts {
 	id: AccountsId;
 
 	/**
-	 * Index: accounts_pk
+	 * Index: accounts_email_key
 	 * Index: accounts:email:index
 	 */
 	email: string;
@@ -36,7 +36,7 @@ export interface AccountsInitializer {
 	id: AccountsId;
 
 	/**
-	 * Index: accounts_pk
+	 * Index: accounts_email_key
 	 * Index: accounts:email:index
 	 */
 	email: string;
@@ -65,7 +65,7 @@ export interface AccountsMutator {
 	id?: AccountsId;
 
 	/**
-	 * Index: accounts_pk
+	 * Index: accounts_email_key
 	 * Index: accounts:email:index
 	 */
 	email?: string;
