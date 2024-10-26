@@ -1,5 +1,4 @@
 import { TRPCError } from "@trpc/server";
-import { entries } from "remeda";
 import { z } from "zod";
 
 import type { AccountsId } from "~db/models";
@@ -8,6 +7,7 @@ import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import { authProcedure } from "~web/handlers/trpc";
 import { emailSchema, userIdSchema } from "~web/handlers/validation";
+import { getDuplicates } from "~web/utils/batch";
 
 const addConnectionIntentionSchema = z.strictObject({
 	userId: userIdSchema,
@@ -319,19 +319,6 @@ const insertDirectIntentions = async (
 		)
 		.execute();
 };
-
-const getDuplicates = <T, K extends string>(
-	array: readonly T[],
-	getKey: (item: T) => K,
-) =>
-	entries(
-		array
-			.map(getKey)
-			.reduce<Partial<Record<string, number>>>(
-				(acc, element) => ({ ...acc, [element]: (acc[element] ?? 0) + 1 }),
-				{},
-			),
-	).filter(([, value]) => value !== 1);
 
 type IntentionOutput = {
 	account: {

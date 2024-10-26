@@ -56,9 +56,12 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 			}),
 		);
 		const addEveryParticipant = React.useCallback(() => {
-			addItemPartMutation.mutate({
-				itemId: item.id,
-				userIds: notAddedParticipantsIds,
+			notAddedParticipantsIds.forEach((participantId) => {
+				addItemPartMutation.mutate({
+					itemId: item.id,
+					userId: participantId,
+					part: 1,
+				});
 			});
 		}, [addItemPartMutation, notAddedParticipantsIds, item.id]);
 

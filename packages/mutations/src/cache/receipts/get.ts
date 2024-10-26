@@ -203,17 +203,6 @@ const addItemPart =
 			itemId,
 		)((parts) => addToArray(parts, itemPart, index));
 
-const addItemParts =
-	(controller: Controller, receiptId: ReceiptsId, itemId: ReceiptItemsId) =>
-	(itemParts: ReceiptItemPart[]) =>
-		updateItemParts(
-			controller,
-			receiptId,
-			itemId,
-		)((parts) =>
-			itemParts.reduce((acc, itemPart) => addToArray(acc, itemPart), parts),
-		);
-
 const updateParticipants =
 	(controller: Controller, receiptId: ReceiptsId) =>
 	(updater: UpdateFn<ReceiptParticipants>) =>
@@ -367,22 +356,15 @@ export const getRevertController = ({ trpcUtils }: ControllerContext) => {
 				updater,
 				revertUpdater,
 			),
-		addItemParts: (
+		addItemPart: (
 			receiptId: ReceiptsId,
 			itemId: ReceiptItemsId,
-			userIds: UsersId[],
+			userId: UsersId,
+			part: number,
 		) =>
 			applyWithRevert(
-				() =>
-					addItemParts(
-						controller,
-						receiptId,
-						itemId,
-					)(userIds.map((userId) => ({ userId, part: 1 }))),
-				() =>
-					userIds.forEach((userId) =>
-						removeItemPart(controller, receiptId, itemId, userId),
-					),
+				() => addItemPart(controller, receiptId, itemId)({ userId, part }),
+				() => removeItemPart(controller, receiptId, itemId, userId),
 			),
 		removeItemPart: (
 			receiptId: ReceiptsId,

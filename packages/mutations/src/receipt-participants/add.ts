@@ -1,31 +1,27 @@
-import type { ReceiptsId } from "~db/models";
+import type { AccountsId, ReceiptsId, UsersId } from "~db/models";
 
 import { update as updateReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<
 	"receiptParticipants.add",
-	{ receiptId: ReceiptsId }
+	{ receiptId: ReceiptsId; selfAccountId: AccountsId }
 > = {
 	onSuccess:
-		(controllerContext, { receiptId }) =>
-		(result) => {
+		(controllerContext, { receiptId, selfAccountId }) =>
+		(result, variables) => {
+			const selfUserId = selfAccountId as UsersId;
 			updateReceipts(controllerContext, {
 				get: (controller) => {
-					result.forEach((item) =>
-						controller.addParticipant(receiptId, {
-							userId: item.id,
-							role: item.role,
-							createdAt: item.createdAt,
-						}),
-					);
+					controller.addParticipant(receiptId, {
+						userId: variables.userId,
+						role: variables.userId === selfUserId ? "owner" : variables.role,
+						createdAt: result.createdAt,
+					});
 				},
 				getPaged: undefined,
 			});
-			const selfParticipating = result.find(
-				(resultItem) => resultItem.role === "owner",
-			);
-			if (selfParticipating) {
+			if (variables.userId === selfUserId) {
 				updateReceipts(controllerContext, {
 					get: undefined,
 					getPaged: undefined,

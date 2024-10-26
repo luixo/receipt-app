@@ -1,32 +1,16 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`receipts.add > functionality > receipt is added - with users 1`] = `
+exports[`receipts.add > functionality > empty receipt 1`] = `
 {
   "added": {
-    "receiptParticipants": {
-      "receiptId:23345cd5-9763-4f6c-950c-0d92511f1e71|userId:19dc7ddc-bbdb-4896-bd92-2deed2136929": {
-        "createdAt": "2020-01-01T00:00:00.000Z",
-        "receiptId": "23345cd5-9763-4f6c-950c-0d92511f1e71",
-        "role": "owner",
-        "updatedAt": "2020-01-01T00:00:00.000Z",
-        "userId": "19dc7ddc-bbdb-4896-bd92-2deed2136929",
-      },
-      "receiptId:23345cd5-9763-4f6c-950c-0d92511f1e71|userId:be70a9a6-7d78-45ed-ba31-8b5daefdb497": {
-        "createdAt": "2020-01-01T00:00:00.000Z",
-        "receiptId": "23345cd5-9763-4f6c-950c-0d92511f1e71",
-        "role": "editor",
-        "updatedAt": "2020-01-01T00:00:00.000Z",
-        "userId": "be70a9a6-7d78-45ed-ba31-8b5daefdb497",
-      },
-    },
     "receipts": {
-      "id:23345cd5-9763-4f6c-950c-0d92511f1e71": {
+      "id:7979c6e5-2b27-4ce5-96e8-ff8aa881a2f7": {
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "AUD",
-        "id": "23345cd5-9763-4f6c-950c-0d92511f1e71",
+        "currencyCode": "ALL",
+        "id": "7979c6e5-2b27-4ce5-96e8-ff8aa881a2f7",
         "issued": "2020-01-01T00:00:00.000Z",
-        "name": "illo eius quo",
-        "ownerAccountId": "19dc7ddc-bbdb-4896-bd92-2deed2136929",
+        "name": "aliquid aperiam repellat",
+        "ownerAccountId": "6b205b96-3e1f-4d5e-af8d-63a5fe2f9fca",
         "transferIntentionAccountId": null,
         "updatedAt": "2020-01-01T00:00:00.000Z",
       },
@@ -35,17 +19,245 @@ exports[`receipts.add > functionality > receipt is added - with users 1`] = `
 }
 `;
 
-exports[`receipts.add > functionality > receipt is added 1`] = `
+exports[`receipts.add > functionality > receipt with items 1`] = `
+{
+  "added": {
+    "receiptItems": {
+      "id:2e0d96cf-3d4a-411e-973c-0c702045027f": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "id": "2e0d96cf-3d4a-411e-973c-0c702045027f",
+        "name": "dolorum quia sed",
+        "price": "952.1200",
+        "quantity": "75.0000",
+        "receiptId": "8ad217d2-aa1a-4140-83d3-b377ed516d54",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+      },
+      "id:915c4d1c-d97c-4299-aa11-0ec105bd3ba6": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "id": "915c4d1c-d97c-4299-aa11-0ec105bd3ba6",
+        "name": "libero fugit at",
+        "price": "719.5500",
+        "quantity": "91.0000",
+        "receiptId": "8ad217d2-aa1a-4140-83d3-b377ed516d54",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+      },
+    },
+    "receipts": {
+      "id:8ad217d2-aa1a-4140-83d3-b377ed516d54": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "currencyCode": "BYN",
+        "id": "8ad217d2-aa1a-4140-83d3-b377ed516d54",
+        "issued": "2020-01-01T00:00:00.000Z",
+        "name": "optio incidunt ab",
+        "ownerAccountId": "073a60e9-c5c0-4a5b-a2db-ec411ba2025e",
+        "transferIntentionAccountId": null,
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`receipts.add > functionality > receipt with participants 1`] = `
+{
+  "added": {
+    "receiptParticipants": {
+      "receiptId:80dbdf69-5ddf-4c78-bdec-93f7ed0000a1|userId:ee0798e0-559e-4bf0-8d89-a07af856aa2f": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "receiptId": "80dbdf69-5ddf-4c78-bdec-93f7ed0000a1",
+        "role": "editor",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "ee0798e0-559e-4bf0-8d89-a07af856aa2f",
+      },
+      "receiptId:80dbdf69-5ddf-4c78-bdec-93f7ed0000a1|userId:f2fab689-ac19-474e-b15b-c90bb158b1a3": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "receiptId": "80dbdf69-5ddf-4c78-bdec-93f7ed0000a1",
+        "role": "owner",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "f2fab689-ac19-474e-b15b-c90bb158b1a3",
+      },
+    },
+    "receipts": {
+      "id:80dbdf69-5ddf-4c78-bdec-93f7ed0000a1": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "currencyCode": "TND",
+        "id": "80dbdf69-5ddf-4c78-bdec-93f7ed0000a1",
+        "issued": "2020-01-01T00:00:00.000Z",
+        "name": "atque assumenda delectus",
+        "ownerAccountId": "f2fab689-ac19-474e-b15b-c90bb158b1a3",
+        "transferIntentionAccountId": null,
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`receipts.add > functionality > receipt with parts 1`] = `
+{
+  "added": {
+    "itemParticipants": {
+      "itemId:86a8e520-fa6a-4ae9-a430-03ca41c2e306|userId:27bd7f4f-0731-48d5-9671-0e38b6c00340": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "itemId": "86a8e520-fa6a-4ae9-a430-03ca41c2e306",
+        "part": "1.00",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "27bd7f4f-0731-48d5-9671-0e38b6c00340",
+      },
+      "itemId:86a8e520-fa6a-4ae9-a430-03ca41c2e306|userId:49e44edc-03e5-457f-97ff-8f3c744ae3ca": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "itemId": "86a8e520-fa6a-4ae9-a430-03ca41c2e306",
+        "part": "2.00",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "49e44edc-03e5-457f-97ff-8f3c744ae3ca",
+      },
+    },
+    "receiptItems": {
+      "id:17eba96f-5477-453f-9ab6-d8c749b062f4": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "id": "17eba96f-5477-453f-9ab6-d8c749b062f4",
+        "name": "tempora corporis suscipit",
+        "price": "837.8200",
+        "quantity": "78.0000",
+        "receiptId": "a9412870-b89d-4190-8f15-d871055ec1df",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+      },
+      "id:86a8e520-fa6a-4ae9-a430-03ca41c2e306": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "id": "86a8e520-fa6a-4ae9-a430-03ca41c2e306",
+        "name": "enim nihil delectus",
+        "price": "457.6900",
+        "quantity": "98.0000",
+        "receiptId": "a9412870-b89d-4190-8f15-d871055ec1df",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+      },
+    },
+    "receiptParticipants": {
+      "receiptId:a9412870-b89d-4190-8f15-d871055ec1df|userId:27bd7f4f-0731-48d5-9671-0e38b6c00340": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "receiptId": "a9412870-b89d-4190-8f15-d871055ec1df",
+        "role": "editor",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "27bd7f4f-0731-48d5-9671-0e38b6c00340",
+      },
+      "receiptId:a9412870-b89d-4190-8f15-d871055ec1df|userId:49e44edc-03e5-457f-97ff-8f3c744ae3ca": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "receiptId": "a9412870-b89d-4190-8f15-d871055ec1df",
+        "role": "owner",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "49e44edc-03e5-457f-97ff-8f3c744ae3ca",
+      },
+    },
+    "receipts": {
+      "id:a9412870-b89d-4190-8f15-d871055ec1df": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "currencyCode": "XAF",
+        "id": "a9412870-b89d-4190-8f15-d871055ec1df",
+        "issued": "2020-01-01T00:00:00.000Z",
+        "name": "a quos doloribus",
+        "ownerAccountId": "49e44edc-03e5-457f-97ff-8f3c744ae3ca",
+        "transferIntentionAccountId": null,
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`receipts.add > input verification > inner fails > participants errors 1`] = `
+{
+  "added": {
+    "receiptParticipants": {
+      "receiptId:0d0a1c9d-0e31-4aaf-a938-5bbb48f68c23|userId:33496ed5-33b3-4363-a5b6-557410cc9942": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "receiptId": "0d0a1c9d-0e31-4aaf-a938-5bbb48f68c23",
+        "role": "owner",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "33496ed5-33b3-4363-a5b6-557410cc9942",
+      },
+    },
+    "receipts": {
+      "id:0d0a1c9d-0e31-4aaf-a938-5bbb48f68c23": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "currencyCode": "UZS",
+        "id": "0d0a1c9d-0e31-4aaf-a938-5bbb48f68c23",
+        "issued": "2020-01-01T00:00:00.000Z",
+        "name": "veniam nostrum eveniet",
+        "ownerAccountId": "33496ed5-33b3-4363-a5b6-557410cc9942",
+        "transferIntentionAccountId": null,
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`receipts.add > input verification > inner fails > parts fail 1`] = `
+{
+  "added": {
+    "receiptItems": {
+      "id:4e6d672f-3068-471f-9e1e-fb3f012905f6": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "id": "4e6d672f-3068-471f-9e1e-fb3f012905f6",
+        "name": "similique reiciendis accusamus",
+        "price": "463.3700",
+        "quantity": "93.0000",
+        "receiptId": "c6b85976-66a4-4988-9ace-f80f2b804f3b",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+      },
+      "id:8deeb3fe-76fa-42d2-b6c4-bb7ff4f3695c": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "id": "8deeb3fe-76fa-42d2-b6c4-bb7ff4f3695c",
+        "name": "eveniet nihil officia",
+        "price": "302.8800",
+        "quantity": "69.0000",
+        "receiptId": "c6b85976-66a4-4988-9ace-f80f2b804f3b",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+      },
+    },
+    "receiptParticipants": {
+      "receiptId:c6b85976-66a4-4988-9ace-f80f2b804f3b|userId:8bdead09-0a75-4aaf-b189-0f5148aa2d4a": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "receiptId": "c6b85976-66a4-4988-9ace-f80f2b804f3b",
+        "role": "owner",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "8bdead09-0a75-4aaf-b189-0f5148aa2d4a",
+      },
+      "receiptId:c6b85976-66a4-4988-9ace-f80f2b804f3b|userId:8d3e7a4a-483a-45b5-9032-425ca67954cd": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "receiptId": "c6b85976-66a4-4988-9ace-f80f2b804f3b",
+        "role": "editor",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "8d3e7a4a-483a-45b5-9032-425ca67954cd",
+      },
+    },
+    "receipts": {
+      "id:c6b85976-66a4-4988-9ace-f80f2b804f3b": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "currencyCode": "NGN",
+        "id": "c6b85976-66a4-4988-9ace-f80f2b804f3b",
+        "issued": "2020-01-01T00:00:00.000Z",
+        "name": "non atque amet",
+        "ownerAccountId": "8bdead09-0a75-4aaf-b189-0f5148aa2d4a",
+        "transferIntentionAccountId": null,
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`receipts.add > input verification > mixed success and fail 1`] = `
 {
   "added": {
     "receipts": {
-      "id:2d658309-93f9-4fee-bd0f-a1abdb942283": {
+      "id:beb192ca-6815-4215-ac1f-ca9aa502c53b": {
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "YER",
-        "id": "2d658309-93f9-4fee-bd0f-a1abdb942283",
+        "currencyCode": "ZAR",
+        "id": "beb192ca-6815-4215-ac1f-ca9aa502c53b",
         "issued": "2020-01-01T00:00:00.000Z",
-        "name": "ullam nesciunt veritatis",
-        "ownerAccountId": "ba8bebfc-741c-49a8-b07f-2a80c4e34146",
+        "name": "aperiam ex nisi",
+        "ownerAccountId": "f69c89cc-b28f-49ab-8c7b-635f1f9b819c",
         "transferIntentionAccountId": null,
         "updatedAt": "2020-01-01T00:00:00.000Z",
       },

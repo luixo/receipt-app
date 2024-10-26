@@ -4,7 +4,7 @@ import { UsersSuggest } from "~app/components/app/users-suggest";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import type { UsersId } from "~db/models";
+import type { AccountsId, UsersId } from "~db/models";
 import { options as receiptParticipantsAddOptions } from "~mutations/receipt-participants/add";
 
 type Props = {
@@ -20,14 +20,17 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 	...props
 }) => {
 	const [localFilterIds, setLocalFilterIds] = React.useState<UsersId[]>([]);
+	const selfAccountId =
+		trpc.account.get.useQuery().data?.account.id ??
+		("unknown-account-id" as AccountsId);
 	const addMutation = trpc.receiptParticipants.add.useMutation(
 		useTrpcMutationOptions(receiptParticipantsAddOptions, {
-			context: { receiptId: receipt.id },
+			context: { receiptId: receipt.id, selfAccountId },
 			onMutate: (vars) =>
-				setLocalFilterIds((prevIds) => [...prevIds, ...vars.userIds]),
+				setLocalFilterIds((prevIds) => [...prevIds, vars.userId]),
 			onSettled: (_res, _err, vars) =>
 				setLocalFilterIds((prevIds) =>
-					prevIds.filter((id) => !vars.userIds.includes(id)),
+					prevIds.filter((id) => id !== vars.userId),
 				),
 		}),
 	);
@@ -36,7 +39,7 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 		async (userId: UsersId) =>
 			addMutation.mutate({
 				receiptId: receipt.id,
-				userIds: [userId],
+				userId,
 				role: "editor",
 			}),
 		[addMutation, receipt.id],

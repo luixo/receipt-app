@@ -1,4 +1,5 @@
 import { faker } from "@faker-js/faker";
+import { TRPCError } from "@trpc/server";
 import { describe, expect } from "vitest";
 
 import { createAuthContext } from "~tests/backend/utils/context";
@@ -15,6 +16,7 @@ import {
 	expectUnauthorizedError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
+import { runSequentially } from "~web/handlers/debts/utils.test";
 import { t } from "~web/handlers/trpc";
 import { UUID_REGEX } from "~web/handlers/validation";
 
@@ -113,54 +115,88 @@ describe("receiptItems.add", () => {
 				`Receipt "${foreignReceiptId}" is not allowed to be modified by "${account.email}" with role "viewer"`,
 			);
 		});
+
+		test("mixed success and fail", async ({ ctx }) => {
+			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+
+			const { id: receiptId } = await insertReceipt(ctx, accountId);
+			const fakeReceiptId = faker.string.uuid();
+
+			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const results = await expectDatabaseDiffSnapshot(ctx, () =>
+				runSequentially(
+					[
+						() => caller.procedure(getValidReceiptItem(receiptId)),
+						() =>
+							caller
+								.procedure(getValidReceiptItem(fakeReceiptId))
+								.catch((e) => e),
+					],
+					10,
+				),
+			);
+
+			expect(results[0]).toStrictEqual<(typeof results)[0]>({
+				id: results[0].id,
+				createdAt: new Date(),
+			});
+			expect(results[1]).toBeInstanceOf(TRPCError);
+		});
 	});
 
 	describe("functionality", () => {
-		test("own receipt", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: receiptId } = await insertReceipt(ctx, accountId);
-
-			// Verify unrelated data doesn't affect the result
-			await insertReceipt(ctx, accountId);
-			const { id: foreignAccountId } = await insertAccount(ctx);
-			await insertReceipt(ctx, foreignAccountId);
-
-			const caller = createCaller(createAuthContext(ctx, sessionId));
-			const result = await expectDatabaseDiffSnapshot(ctx, () =>
-				caller.procedure(getValidReceiptItem(receiptId)),
-			);
-			expect(result.id).toMatch(UUID_REGEX);
-			expect(result).toStrictEqual<typeof result>({
-				id: result.id,
-				createdAt: new Date(),
-			});
-		});
-
-		test("foreign receipt", async ({ ctx }) => {
+		test("items are added", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			const { id: foreignAccountId } = await insertAccount(ctx);
 			const [{ id: foreignToSelfUserId }] = await insertConnectedUsers(ctx, [
 				foreignAccountId,
 				accountId,
 			]);
-			const { id: receiptId } = await insertReceipt(ctx, foreignAccountId);
-			await insertReceiptParticipant(ctx, receiptId, foreignToSelfUserId, {
-				role: "editor",
-			});
+
+			const { id: receiptId } = await insertReceipt(ctx, accountId);
+			const { id: foreignReceiptId } = await insertReceipt(
+				ctx,
+				foreignAccountId,
+			);
+			await insertReceiptParticipant(
+				ctx,
+				foreignReceiptId,
+				foreignToSelfUserId,
+				{ role: "editor" },
+			);
 
 			// Verify unrelated data doesn't affect the result
 			await insertReceipt(ctx, accountId);
 			await insertReceipt(ctx, foreignAccountId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
-			const result = await expectDatabaseDiffSnapshot(ctx, () =>
-				caller.procedure(getValidReceiptItem(receiptId)),
+			const results = await expectDatabaseDiffSnapshot(ctx, () =>
+				runSequentially(
+					[
+						() => caller.procedure(getValidReceiptItem(receiptId)),
+						() => caller.procedure(getValidReceiptItem(receiptId)),
+						() => caller.procedure(getValidReceiptItem(foreignReceiptId)),
+					],
+					10,
+				),
 			);
-			expect(result.id).toMatch(UUID_REGEX);
-			expect(result).toStrictEqual<typeof result>({
-				id: result.id,
-				createdAt: new Date(),
+			results.forEach((result) => {
+				expect(result.id).toMatch(UUID_REGEX);
 			});
+			expect(results).toStrictEqual<typeof results>([
+				{
+					id: results[0].id,
+					createdAt: new Date(),
+				},
+				{
+					id: results[1].id,
+					createdAt: new Date(),
+				},
+				{
+					id: results[2].id,
+					createdAt: new Date(),
+				},
+			]);
 		});
 	});
 });

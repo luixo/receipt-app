@@ -9,23 +9,51 @@ export const options: UseContextedMutationOptions<
 > = {
 	onSuccess:
 		(controllerContext, { selfAccountId }) =>
-		(id, variables) => {
+		(result, variables) => {
 			updateReceipts(controllerContext, {
 				getPaged: (controller) => controller.invalidate(),
 				get: (controller) => {
 					const selfUserId = selfAccountId as UsersId;
 					controller.add({
-						id,
+						id: result.id,
 						name: variables.name,
 						issued: variables.issued,
 						currencyCode: variables.currencyCode,
 						participants:
-							variables.participants?.map((userId) => ({
-								role: userId === selfUserId ? "owner" : "editor",
-								createdAt: new Date(), // We don't care if they don't match with the server
-								userId,
-							})) ?? [],
-						items: [],
+							variables.participants?.map(({ userId, role }, index) => {
+								const matchedResult = result.participants[index];
+								if (!matchedResult) {
+									throw new Error(
+										`Expected to have item index ${index} returned from receipt creation.`,
+									);
+								}
+								return {
+									role: userId === selfUserId ? "owner" : role,
+									createdAt: matchedResult.createdAt,
+									userId,
+								};
+							}) ?? [],
+						items:
+							variables.items?.map((item, index) => {
+								const matchedResult = result.items[index];
+								if (!matchedResult) {
+									throw new Error(
+										`Expected to have item index ${index} returned from receipt creation.`,
+									);
+								}
+								return {
+									id: matchedResult.id,
+									createdAt: matchedResult.createdAt,
+									name: item.name,
+									price: item.price,
+									quantity: item.quantity,
+									parts:
+										item.parts?.map((part) => ({
+											userId: part.userId,
+											part: part.part,
+										})) ?? [],
+								};
+							}) ?? [],
 						ownerUserId: selfUserId,
 						selfUserId,
 						debt: { direction: "outcoming", ids: [] },

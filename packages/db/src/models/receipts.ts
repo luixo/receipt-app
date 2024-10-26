@@ -36,7 +36,8 @@ export interface ReceiptsInitializer {
 
 	currencyCode: CurrencyCode;
 
-	createdAt: Date;
+	/** Default value: CURRENT_TIMESTAMP */
+	createdAt?: Date;
 
 	/** Index: receipts:ownerAccountId:index */
 	ownerAccountId: AccountsId;

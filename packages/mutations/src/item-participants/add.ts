@@ -10,7 +10,12 @@ export const options: UseContextedMutationOptions<
 	onMutate: (controllerContext, receiptId) => (variables) =>
 		updateRevertReceipts(controllerContext, {
 			get: (controller) =>
-				controller.addItemParts(receiptId, variables.itemId, variables.userIds),
+				controller.addItemPart(
+					receiptId,
+					variables.itemId,
+					variables.userId,
+					variables.part,
+				),
 			getPaged: undefined,
 		}),
 	errorToastOptions: () => (error) => ({

@@ -29,7 +29,7 @@ export const expectLocalTRPCError = (
 export const expectTRPCError = async (
 	fn: () => Promise<unknown>,
 	expectedCode: TRPC_ERROR_CODE_KEY,
-	expectedMessage: string,
+	expectedMessage: string | RegExp,
 ) => {
 	let error;
 	try {
@@ -39,13 +39,13 @@ export const expectTRPCError = async (
 	}
 	expect(error).toBeInstanceOf(TRPCError);
 	const trpcError = error as TRPCError;
-	expect({
-		code: trpcError.code,
-		message: formatErrorMessage(trpcError, trpcError.message),
-	}).toStrictEqual({
-		code: expectedCode,
-		message: expectedMessage,
-	});
+	const formattedMessage = formatErrorMessage(trpcError, trpcError.message);
+	expect(trpcError.code).toStrictEqual<typeof trpcError.code>(expectedCode);
+	if (typeof expectedMessage === "string") {
+		expect(formattedMessage).toStrictEqual<string>(expectedMessage);
+	} else {
+		expect(formattedMessage).toMatch(expectedMessage);
+	}
 };
 
 export const expectUnauthorizedError = (

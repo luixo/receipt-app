@@ -1,96 +1,190 @@
 import { TRPCError } from "@trpc/server";
+import { unique } from "remeda";
 import { z } from "zod";
 
-import { getAccessRole } from "~web/handlers/receipts/utils";
+import { partSchema } from "~app/utils/validation";
+import type { BatchLoadContextFn } from "~web/handlers/batch";
+import { queueCallFactory } from "~web/handlers/batch";
+import type { AuthorizedContext } from "~web/handlers/context";
 import { authProcedure } from "~web/handlers/trpc";
-import { receiptItemIdSchema, userIdSchema } from "~web/handlers/validation";
+import {
+	receiptItemIdSchema,
+	roleSchema,
+	userIdSchema,
+} from "~web/handlers/validation";
+import { getDuplicates } from "~web/utils/batch";
 
-export const procedure = authProcedure
-	.input(
-		z.strictObject({
-			itemId: receiptItemIdSchema,
-			userIds: z.array(userIdSchema).nonempty(),
-		}),
-	)
-	.mutation(async ({ input, ctx }) => {
-		const { database } = ctx;
-		const receipt = await database
+export const addPartSchema = z.strictObject({
+	itemId: receiptItemIdSchema,
+	userId: userIdSchema,
+	part: partSchema,
+});
+
+const getData = async (
+	ctx: AuthorizedContext,
+	participants: readonly z.infer<typeof addPartSchema>[],
+) => {
+	const [receiptParticipants, receiptItems] = await Promise.all([
+		ctx.database
+			.selectFrom("receiptParticipants")
+			.where(
+				"receiptParticipants.userId",
+				"in",
+				unique(participants.map((participant) => participant.userId)),
+			)
+			.innerJoin("receipts", (qb) =>
+				qb.onRef("receipts.id", "=", "receiptParticipants.receiptId"),
+			)
+			.leftJoin("itemParticipants", (qb) =>
+				qb.onRef("itemParticipants.userId", "=", "receiptParticipants.userId"),
+			)
+			.select(["receiptParticipants.userId", "itemParticipants.part"])
+			.execute(),
+		ctx.database
 			.selectFrom("receiptItems")
-			.where("receiptItems.id", "=", input.itemId)
+			.where(
+				"receiptItems.id",
+				"in",
+				unique(participants.map((participant) => participant.itemId)),
+			)
 			.innerJoin("receipts", (qb) =>
 				qb.onRef("receipts.id", "=", "receiptItems.receiptId"),
 			)
-			.innerJoin("accounts", (qb) =>
-				qb.onRef("accounts.id", "=", "receipts.ownerAccountId"),
+			.leftJoin("receiptParticipants", (jb) =>
+				jb.onRef("receipts.id", "=", "receiptParticipants.receiptId"),
 			)
-			.select(["receipts.id", "receipts.ownerAccountId"])
-			.executeTakeFirst();
-		if (!receipt) {
-			throw new TRPCError({
-				code: "NOT_FOUND",
-				message: `Receipt item "${input.itemId}" does not exist.`,
-			});
-		}
-		const accessRole = await getAccessRole(
-			database,
-			receipt,
-			ctx.auth.accountId,
+			.leftJoin("users", (jb) =>
+				jb.onRef("users.id", "=", "receiptParticipants.userId"),
+			)
+			.leftJoin("accounts", (jb) =>
+				jb
+					.onRef("accounts.id", "=", "users.connectedAccountId")
+					.on("accounts.id", "=", ctx.auth.accountId),
+			)
+			.groupBy([
+				"receipts.ownerAccountId",
+				"receipts.id",
+				"receiptParticipants.role",
+				"receiptItems.id",
+			])
+			.select([
+				"receipts.ownerAccountId",
+				"receipts.id as receiptId",
+				"receiptParticipants.role",
+				"receiptItems.id as itemId",
+			])
+			.execute(),
+	]);
+	return { receiptParticipants, receiptItems };
+};
+
+const getParticipantsOrErrors = (
+	ctx: AuthorizedContext,
+	participants: readonly z.infer<typeof addPartSchema>[],
+	{ receiptItems, receiptParticipants }: Awaited<ReturnType<typeof getData>>,
+) =>
+	participants.map((participant) => {
+		const matchedReceiptItem = receiptItems.find(
+			(receiptItem) => receiptItem.itemId === participant.itemId,
 		);
-		if (accessRole !== "owner" && accessRole !== "editor") {
-			throw new TRPCError({
-				code: "FORBIDDEN",
-				message: `Not enough rights to add item to receipt "${receipt.id}".`,
+		if (!matchedReceiptItem) {
+			return new TRPCError({
+				code: "NOT_FOUND",
+				message: `Receipt item "${participant.itemId}" does not exist.`,
 			});
 		}
-		const receiptParticipants = await database
-			.selectFrom("receiptParticipants")
-			.where((eb) =>
-				eb("receiptId", "=", receipt.id).and("userId", "in", input.userIds),
-			)
-			.select(["userId"])
-			.execute();
-		if (receiptParticipants.length !== input.userIds.length) {
-			const participatingUserIds = receiptParticipants.map(
-				({ userId }) => userId,
-			);
-			const notParticipatingUsers = input.userIds.filter(
-				(id) => !participatingUserIds.includes(id),
-			);
-			throw new TRPCError({
+		if (matchedReceiptItem.ownerAccountId !== ctx.auth.accountId) {
+			const parsed = roleSchema.safeParse(matchedReceiptItem.role);
+			if (!parsed.success) {
+				return new TRPCError({
+					code: "PRECONDITION_FAILED",
+					message: `User "${participant.userId}" doesn't participate in receipt "${matchedReceiptItem.receiptId}".`,
+				});
+			}
+			const accessRole = parsed.data;
+			if (accessRole !== "owner" && accessRole !== "editor") {
+				return new TRPCError({
+					code: "FORBIDDEN",
+					message: `Not enough rights to add item to receipt "${matchedReceiptItem.receiptId}".`,
+				});
+			}
+		}
+		const matchedUser = receiptParticipants.find(
+			(receiptParticipant) => receiptParticipant.userId === participant.userId,
+		);
+		if (!matchedUser) {
+			return new TRPCError({
 				code: "PRECONDITION_FAILED",
-				message: `${
-					notParticipatingUsers.length === 1 ? "User" : "Users"
-				} ${notParticipatingUsers.map((id) => `"${id}"`).join(", ")} ${
-					notParticipatingUsers.length === 1 ? "doesn't" : "don't"
-				} participate in receipt "${receipt.id}".`,
+				message: `User "${participant.userId}" doesn't participate in receipt "${matchedReceiptItem.receiptId}".`,
 			});
 		}
-		const itemParts = await database
-			.selectFrom("itemParticipants")
-			.where((eb) =>
-				eb("itemId", "=", input.itemId).and("userId", "in", input.userIds),
-			)
-			.select(["part", "userId"])
-			.execute();
-		if (itemParts.length !== 0) {
-			const userWithParts = itemParts.map(({ userId }) => userId);
-			throw new TRPCError({
+		if (matchedUser.part !== null) {
+			return new TRPCError({
 				code: "CONFLICT",
-				message: `${
-					userWithParts.length === 1 ? "User" : "Users"
-				} ${userWithParts.map((id) => `"${id}"`).join(", ")} already ${
-					userWithParts.length === 1 ? "has" : "have"
-				} a part in item "${input.itemId}".`,
+				message: `User "${participant.userId}" already has a part in item "${matchedReceiptItem.itemId}".`,
 			});
 		}
-		await database
-			.insertInto("itemParticipants")
-			.values(
-				input.userIds.map((userId) => ({
-					userId,
-					itemId: input.itemId,
-					part: "1",
-				})),
-			)
-			.execute();
+		return {
+			userId: participant.userId,
+			itemId: participant.itemId,
+			part: participant.part.toString(),
+		};
 	});
+
+const insertParticipants = async (
+	ctx: AuthorizedContext,
+	participants: Exclude<
+		ReturnType<typeof getParticipantsOrErrors>[number],
+		TRPCError
+	>[],
+) => {
+	if (participants.length === 0) {
+		return;
+	}
+	await ctx.database
+		.insertInto("itemParticipants")
+		.values(participants)
+		.execute();
+};
+
+export const batchFn: BatchLoadContextFn<
+	AuthorizedContext,
+	z.infer<typeof addPartSchema>,
+	void,
+	TRPCError
+> = (ctx) => async (inputs) => {
+	const duplicatedTuples = getDuplicates(
+		inputs,
+		({ itemId, userId }) => [itemId, userId] as const,
+	);
+	if (duplicatedTuples.length !== 0) {
+		throw new TRPCError({
+			code: "CONFLICT",
+			message: `Expected to have unique pair of item id and user id, got repeating pairs: ${duplicatedTuples
+				.map(
+					([[itemId, userId], count]) =>
+						`item "${itemId}" / user "${userId}" (${count} times)`,
+				)
+				.join(", ")}.`,
+		});
+	}
+	const data = await getData(ctx, inputs);
+	const participantsOrErrors = getParticipantsOrErrors(ctx, inputs, data);
+	await insertParticipants(
+		ctx,
+		participantsOrErrors.filter(
+			(participant): participant is Exclude<typeof participant, TRPCError> =>
+				!(participant instanceof TRPCError),
+		),
+	);
+	return participantsOrErrors.map((itemOrError) => {
+		if (itemOrError instanceof TRPCError) {
+			return itemOrError;
+		}
+		return undefined;
+	});
+};
+
+export const procedure = authProcedure
+	.input(addPartSchema)
+	.mutation(queueCallFactory(batchFn));

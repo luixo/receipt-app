@@ -82,7 +82,7 @@ export const AddReceiptScreen: AppPage = () => {
 	const addReceiptMutation = trpc.receipts.add.useMutation(
 		useTrpcMutationOptions(receiptsAddOptions, {
 			context: { selfAccountId },
-			onSuccess: (id) => router.replace(`/receipts/${id}`),
+			onSuccess: ({ id }) => router.replace(`/receipts/${id}`),
 		}),
 	);
 

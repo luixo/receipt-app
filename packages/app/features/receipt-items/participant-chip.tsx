@@ -25,7 +25,8 @@ export const ParticipantChip: React.FC<Props> = ({
 	const addParticipant = React.useCallback(() => {
 		addItemPartMutation.mutate({
 			itemId: item.id,
-			userIds: [participant.userId],
+			userId: participant.userId,
+			part: 1,
 		});
 	}, [addItemPartMutation, item.id, participant.userId]);
 

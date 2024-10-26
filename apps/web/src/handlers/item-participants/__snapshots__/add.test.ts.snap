@@ -1,29 +1,66 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`itemParticipants.add > functionality > item participants are added 1`] = `
+exports[`itemParticipants.add > functionality > multiple participants are added to multiple items in multiple receipts 1`] = `
 {
   "added": {
     "itemParticipants": {
-      "itemId:3338c60b-0751-441e-aae7-99eee5777257|userId:4260c12c-9b4c-4223-8308-3fd8abc833ee": {
+      "itemId:b1cb4fa4-33a9-4ade-b37c-9ac4807089a6|userId:10cd7f43-0849-427f-ab30-5b69fa29e124": {
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "itemId": "3338c60b-0751-441e-aae7-99eee5777257",
-        "part": "1.00",
+        "itemId": "b1cb4fa4-33a9-4ade-b37c-9ac4807089a6",
+        "part": "3.00",
         "updatedAt": "2020-01-01T00:00:00.000Z",
-        "userId": "4260c12c-9b4c-4223-8308-3fd8abc833ee",
+        "userId": "10cd7f43-0849-427f-ab30-5b69fa29e124",
       },
-      "itemId:3338c60b-0751-441e-aae7-99eee5777257|userId:ab289ed9-9ec6-451b-b51e-e0ab4d11ea83": {
+      "itemId:b1cb4fa4-33a9-4ade-b37c-9ac4807089a6|userId:a8fc2847-c92a-488d-847e-13f4c265a44a": {
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "itemId": "3338c60b-0751-441e-aae7-99eee5777257",
-        "part": "1.00",
+        "itemId": "b1cb4fa4-33a9-4ade-b37c-9ac4807089a6",
+        "part": "0.10",
         "updatedAt": "2020-01-01T00:00:00.000Z",
-        "userId": "ab289ed9-9ec6-451b-b51e-e0ab4d11ea83",
+        "userId": "a8fc2847-c92a-488d-847e-13f4c265a44a",
       },
-      "itemId:3338c60b-0751-441e-aae7-99eee5777257|userId:da4aab66-e6d2-4b2c-8bd1-fce0621c02c0": {
+      "itemId:b1cb4fa4-33a9-4ade-b37c-9ac4807089a6|userId:b4055fe5-a860-45e2-9850-e42f5d3bc3b3": {
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "itemId": "3338c60b-0751-441e-aae7-99eee5777257",
+        "itemId": "b1cb4fa4-33a9-4ade-b37c-9ac4807089a6",
         "part": "1.00",
         "updatedAt": "2020-01-01T00:00:00.000Z",
-        "userId": "da4aab66-e6d2-4b2c-8bd1-fce0621c02c0",
+        "userId": "b4055fe5-a860-45e2-9850-e42f5d3bc3b3",
+      },
+      "itemId:c8d1bc94-199a-485e-af79-1266d2b14240|userId:3330c54e-15ff-48fd-96d9-13432509c131": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "itemId": "c8d1bc94-199a-485e-af79-1266d2b14240",
+        "part": "1.00",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "3330c54e-15ff-48fd-96d9-13432509c131",
+      },
+      "itemId:dc4d9a9c-b750-4337-ac16-8fca58af8093|userId:10cd7f43-0849-427f-ab30-5b69fa29e124": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "itemId": "dc4d9a9c-b750-4337-ac16-8fca58af8093",
+        "part": "2.00",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "10cd7f43-0849-427f-ab30-5b69fa29e124",
+      },
+      "itemId:dc4d9a9c-b750-4337-ac16-8fca58af8093|userId:b4055fe5-a860-45e2-9850-e42f5d3bc3b3": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "itemId": "dc4d9a9c-b750-4337-ac16-8fca58af8093",
+        "part": "1.00",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "b4055fe5-a860-45e2-9850-e42f5d3bc3b3",
+      },
+    },
+  },
+}
+`;
+
+exports[`itemParticipants.add > input verification > multiple participants > mixed success and fail 1`] = `
+{
+  "added": {
+    "itemParticipants": {
+      "itemId:597a7157-9b1d-4f32-b9ae-e2e76cd97b3b|userId:12801bd6-206a-430b-b010-ab8d0919eb48": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "itemId": "597a7157-9b1d-4f32-b9ae-e2e76cd97b3b",
+        "part": "1.00",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "12801bd6-206a-430b-b010-ab8d0919eb48",
       },
     },
   },

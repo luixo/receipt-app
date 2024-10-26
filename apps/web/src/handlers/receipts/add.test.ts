@@ -1,10 +1,15 @@
 import { faker } from "@faker-js/faker";
+import { TRPCError } from "@trpc/server";
 import { describe, expect } from "vitest";
+import type { z } from "zod";
 
+import { MIN_RECEIPT_ITEM_NAME_LENGTH } from "~app/utils/validation";
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
 	insertAccount,
 	insertAccountWithSession,
+	insertReceipt,
+	insertReceiptItem,
 	insertUser,
 } from "~tests/backend/utils/data";
 import {
@@ -13,9 +18,12 @@ import {
 	expectUnauthorizedError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
+import { runSequentially } from "~web/handlers/debts/utils.test";
+import { getValidReceiptItem } from "~web/handlers/receipt-items/utils.test";
 import { t } from "~web/handlers/trpc";
 import { UUID_REGEX } from "~web/handlers/validation";
 
+import type { addReceiptSchema as schema } from "./add";
 import { procedure } from "./add";
 import {
 	getValidReceipt,
@@ -23,6 +31,13 @@ import {
 	verifyIssued,
 	verifyName,
 } from "./utils.test";
+
+type Input = z.infer<typeof schema>;
+
+const getValidReceiptItemNoReceiptId = () => {
+	const { receiptId, ...item } = getValidReceiptItem();
+	return item;
+};
 
 const createCaller = t.createCallerFactory(t.router({ procedure }));
 
@@ -59,20 +74,41 @@ describe("receipts.add", () => {
 					() =>
 						caller.procedure({
 							...getValidReceipt(),
-							participants: [faker.string.uuid(), invalidUuid],
+							participants: [
+								{ userId: faker.string.uuid(), role: "editor" },
+								{ userId: invalidUuid, role: "editor" },
+							],
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "participants[1]": Invalid uuid`,
+					`Zod error\n\nAt "participants[1].userId": Invalid uuid`,
+				);
+			});
+		});
+
+		describe("items", () => {
+			test("invalid uuid", async ({ ctx }) => {
+				const { sessionId } = await insertAccountWithSession(ctx);
+				const caller = createCaller(createAuthContext(ctx, sessionId));
+				await expectTRPCError(
+					() =>
+						caller.procedure({
+							...getValidReceipt(),
+							items: [
+								getValidReceiptItemNoReceiptId(),
+								{
+									...getValidReceiptItemNoReceiptId(),
+									name: "a".repeat(MIN_RECEIPT_ITEM_NAME_LENGTH - 1),
+								},
+							],
+						}),
+					"BAD_REQUEST",
+					`Zod error\n\nAt "items[1].name": Minimal length for receipt item name is ${MIN_RECEIPT_ITEM_NAME_LENGTH}`,
 				);
 			});
 		});
 
 		test("user does not exist", async ({ ctx }) => {
-			const {
-				sessionId,
-				accountId,
-				account: { email },
-			} = await insertAccountWithSession(ctx);
+			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await insertUser(ctx, accountId);
 			const fakeUserId = faker.string.uuid();
@@ -80,17 +116,15 @@ describe("receipts.add", () => {
 				() =>
 					caller.procedure({
 						...getValidReceipt(),
-						participants: [fakeUserId],
+						participants: [{ userId: fakeUserId, role: "editor" }],
 					}),
 				"NOT_FOUND",
-				`User "${fakeUserId}" does not exist or is not owned by "${email}".`,
+				`User "${fakeUserId}" does not exist or is not owned by you.`,
 			);
 		});
 
 		test("user is not owned by an account", async ({ ctx }) => {
-			const { sessionId, accountId, account } = await insertAccountWithSession(
-				ctx,
-			);
+			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			await insertUser(ctx, accountId);
 
 			const { id: foreignAccountId } = await insertAccount(ctx);
@@ -101,16 +135,114 @@ describe("receipts.add", () => {
 				() =>
 					caller.procedure({
 						...getValidReceipt(),
-						participants: [foreignUserId],
+						participants: [{ userId: foreignUserId, role: "editor" }],
 					}),
 				"NOT_FOUND",
-				`User "${foreignUserId}" does not exist or is not owned by "${account.email}".`,
+				`User "${foreignUserId}" does not exist or is not owned by you.`,
 			);
+		});
+
+		test("mixed success and fail", async ({ ctx }) => {
+			const { sessionId } = await insertAccountWithSession(ctx);
+
+			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const results = await expectDatabaseDiffSnapshot(ctx, () =>
+				runSequentially(
+					[
+						() => caller.procedure(getValidReceipt()),
+						() =>
+							caller
+								.procedure({ ...getValidReceipt(), name: "a" })
+								.catch((e) => e),
+					],
+					10,
+				),
+			);
+
+			expect(results[0]).toStrictEqual<(typeof results)[0]>({
+				id: results[0].id,
+				participants: [],
+				items: [],
+			});
+			expect(results[1]).toBeInstanceOf(TRPCError);
+		});
+
+		describe("inner fails", () => {
+			test("participants errors", async ({ ctx }) => {
+				const { sessionId, userId: selfUserId } =
+					await insertAccountWithSession(ctx);
+
+				const fakeUserId = faker.string.uuid();
+				const anotherFakeUserId = faker.string.uuid();
+				const participants: NonNullable<Input["participants"]> = [
+					{ userId: fakeUserId, role: "editor" },
+					{ userId: anotherFakeUserId, role: "editor" },
+					{ userId: selfUserId, role: "editor" },
+				];
+
+				const caller = createCaller(createAuthContext(ctx, sessionId));
+				await expectDatabaseDiffSnapshot(ctx, () =>
+					expectTRPCError(
+						() => caller.procedure({ ...getValidReceipt(), participants }),
+						"NOT_FOUND",
+						`User "${fakeUserId}" does not exist or is not owned by you. (+1 errors)`,
+					),
+				);
+			});
+
+			test("parts fail", async ({ ctx }) => {
+				const {
+					sessionId,
+					accountId,
+					userId: selfUserId,
+				} = await insertAccountWithSession(ctx);
+				const { id: userId } = await insertUser(ctx, accountId);
+
+				// Verify unrelated data doesn't affect the result
+				await insertUser(ctx, accountId);
+				const { id: foreignAccountId } = await insertAccount(ctx);
+				await insertUser(ctx, foreignAccountId);
+				const { id: receiptId } = await insertReceipt(ctx, accountId);
+				await insertReceiptItem(ctx, receiptId);
+
+				const participants: NonNullable<Input["participants"]> = [
+					{ userId, role: "editor" },
+					{ userId: selfUserId, role: "editor" },
+				];
+				const fakeUserIds = participants.map(() => faker.string.uuid());
+				const receiptItems: NonNullable<Input["items"]> = [
+					getValidReceiptItemNoReceiptId(),
+					{
+						...getValidReceiptItemNoReceiptId(),
+						parts: participants.map((_participant, index) => ({
+							// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+							userId: fakeUserIds[index]!,
+							part: index + 1,
+						})),
+					},
+				];
+
+				const caller = createCaller(createAuthContext(ctx, sessionId));
+				await expectDatabaseDiffSnapshot(ctx, () =>
+					expectTRPCError(
+						() =>
+							caller.procedure({
+								...getValidReceipt(),
+								items: receiptItems,
+								participants,
+							}),
+						"PRECONDITION_FAILED",
+						new RegExp(
+							`User "${fakeUserIds[0]}" doesn't participate in receipt "[a-fA-F0-9-]{36}". \\(\\+1 errors\\)`,
+						),
+					),
+				);
+			});
 		});
 	});
 
 	describe("functionality", () => {
-		test("receipt is added", async ({ ctx }) => {
+		test("empty receipt", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 
 			// Verify unrelated data doesn't affect the result
@@ -122,10 +254,15 @@ describe("receipts.add", () => {
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure(getValidReceipt()),
 			);
-			expect(result).toMatch(UUID_REGEX);
+			expect(result.id).toMatch(UUID_REGEX);
+			expect(result).toStrictEqual<typeof result>({
+				id: result.id,
+				participants: [],
+				items: [],
+			});
 		});
 
-		test("receipt is added - with users", async ({ ctx }) => {
+		test("receipt with participants", async ({ ctx }) => {
 			const {
 				sessionId,
 				accountId,
@@ -138,14 +275,108 @@ describe("receipts.add", () => {
 			const { id: foreignAccountId } = await insertAccount(ctx);
 			await insertUser(ctx, foreignAccountId);
 
+			const participants: NonNullable<Input["participants"]> = [
+				{ userId, role: "editor" },
+				{ userId: selfUserId, role: "editor" },
+			];
+
+			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const result = await expectDatabaseDiffSnapshot(ctx, () =>
+				caller.procedure({ ...getValidReceipt(), participants }),
+			);
+			expect(result.id).toMatch(UUID_REGEX);
+			expect(result).toStrictEqual<typeof result>({
+				id: result.id,
+				participants: participants.map(() => ({ createdAt: new Date() })),
+				items: [],
+			});
+		});
+
+		test("receipt with items", async ({ ctx }) => {
+			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+
+			// Verify unrelated data doesn't affect the result
+			await insertUser(ctx, accountId);
+			const { id: foreignAccountId } = await insertAccount(ctx);
+			await insertUser(ctx, foreignAccountId);
+			const { id: receiptId } = await insertReceipt(ctx, accountId);
+			await insertReceiptItem(ctx, receiptId);
+
+			const receiptItems: NonNullable<Input["items"]> = [
+				getValidReceiptItemNoReceiptId(),
+				getValidReceiptItemNoReceiptId(),
+			];
+
+			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const result = await expectDatabaseDiffSnapshot(ctx, () =>
+				caller.procedure({ ...getValidReceipt(), items: receiptItems }),
+			);
+			expect(result.id).toMatch(UUID_REGEX);
+			result.items.forEach((item) => {
+				expect(item.id).toMatch(UUID_REGEX);
+			});
+			expect(result).toStrictEqual<typeof result>({
+				id: result.id,
+				participants: [],
+				items: receiptItems.map((_item, index) => ({
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					id: result.items[index]!.id,
+					createdAt: new Date(),
+				})),
+			});
+		});
+
+		test("receipt with parts", async ({ ctx }) => {
+			const {
+				sessionId,
+				accountId,
+				userId: selfUserId,
+			} = await insertAccountWithSession(ctx);
+			const { id: userId } = await insertUser(ctx, accountId);
+
+			// Verify unrelated data doesn't affect the result
+			await insertUser(ctx, accountId);
+			const { id: foreignAccountId } = await insertAccount(ctx);
+			await insertUser(ctx, foreignAccountId);
+			const { id: receiptId } = await insertReceipt(ctx, accountId);
+			await insertReceiptItem(ctx, receiptId);
+
+			const participants: NonNullable<Input["participants"]> = [
+				{ userId, role: "editor" },
+				{ userId: selfUserId, role: "editor" },
+			];
+			const receiptItems: NonNullable<Input["items"]> = [
+				getValidReceiptItemNoReceiptId(),
+				{
+					...getValidReceiptItemNoReceiptId(),
+					parts: participants.map((participant, index) => ({
+						userId: participant.userId,
+						part: index + 1,
+					})),
+				},
+			];
+
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({
 					...getValidReceipt(),
-					participants: [userId, selfUserId],
+					items: receiptItems,
+					participants,
 				}),
 			);
-			expect(result).toMatch(UUID_REGEX);
+			expect(result.id).toMatch(UUID_REGEX);
+			result.items.forEach((item) => {
+				expect(item.id).toMatch(UUID_REGEX);
+			});
+			expect(result).toStrictEqual<typeof result>({
+				id: result.id,
+				participants: participants.map(() => ({ createdAt: new Date() })),
+				items: receiptItems.map((_item, index) => ({
+					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+					id: result.items[index]!.id,
+					createdAt: new Date(),
+				})),
+			});
 		});
 	});
 });
