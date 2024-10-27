@@ -40,7 +40,9 @@ export const expectTRPCError = async (
 	expect(error).toBeInstanceOf(TRPCError);
 	const trpcError = error as TRPCError;
 	const formattedMessage = formatErrorMessage(trpcError, trpcError.message);
-	expect(trpcError.code).toStrictEqual<typeof trpcError.code>(expectedCode);
+	expect
+		.soft(trpcError.code)
+		.toStrictEqual<typeof trpcError.code>(expectedCode);
 	if (typeof expectedMessage === "string") {
 		expect(formattedMessage).toStrictEqual<string>(expectedMessage);
 	} else {

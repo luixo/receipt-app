@@ -1,6 +1,6 @@
 import { isNonNullish } from "remeda";
 
-import type { DebtsId } from "~db/models";
+import type { DebtsId, UsersId } from "~db/models";
 import type { Database, SimpleInsertObject } from "~db/types";
 import type { MakeUndefinedOptional } from "~utils/types";
 
@@ -10,6 +10,9 @@ export const upsertAutoAcceptedDebts = async (
 		isNew: boolean;
 	})[],
 ) => {
+	if (debts.length === 0) {
+		return { newDebts: [], updatedDebts: [] };
+	}
 	const fetchedDebts = await database
 		.selectFrom("debts")
 		.where((eb) =>
@@ -30,7 +33,6 @@ export const upsertAutoAcceptedDebts = async (
 				),
 			),
 		)
-
 		.select([
 			"debts.id",
 			"debts.ownerAccountId",
@@ -67,11 +69,11 @@ export const upsertAutoAcceptedDebts = async (
 		.filter(isNonNullish);
 	const [newDebts, ...updatedDebts] = await Promise.all([
 		nonExistentDebts.length === 0
-			? ([] as { id: DebtsId }[])
+			? ([] as { id: DebtsId; userId: UsersId }[])
 			: database
 					.insertInto("debts")
 					.values(nonExistentDebts.map(({ isNew, ...debt }) => debt))
-					.returning(["debts.id"])
+					.returning(["debts.id", "debts.userId"])
 					.execute(),
 		...existentDebts.map(([nextDebt, currentDebt]) =>
 			database
@@ -89,8 +91,8 @@ export const upsertAutoAcceptedDebts = async (
 						userId: currentDebt.userId,
 					}),
 				)
-				.returning(["debts.id", "debts.receiptId"])
-				.executeTakeFirst(),
+				.returning(["debts.id", "debts.receiptId", "debts.userId"])
+				.executeTakeFirstOrThrow(),
 		),
 	]);
 	return { newDebts, updatedDebts };

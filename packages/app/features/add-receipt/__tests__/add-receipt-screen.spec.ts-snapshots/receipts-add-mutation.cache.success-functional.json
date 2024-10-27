@@ -30,7 +30,11 @@
 		"receipts.add": {
 			"1": {
 				"state": {
-					"data": "f6f7bc30-88b4-4f59-a2a3-8ffbb2b88b3d",
+					"data": {
+						"id": "f6f7bc30-88b4-4f59-a2a3-8ffbb2b88b3d",
+						"participants": [],
+						"items": []
+					},
 					"status": "success"
 				}
 			}

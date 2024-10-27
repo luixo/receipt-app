@@ -3,7 +3,6 @@ import { isNonNullish, keys, omitBy } from "remeda";
 import { z } from "zod";
 
 import { debtAmountSchema, debtNoteSchema } from "~app/utils/validation";
-import type { DebtsId } from "~db/models";
 import type { SimpleUpdateObject } from "~db/types";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
@@ -59,8 +58,7 @@ const buildSetObjects = (input: z.infer<typeof updateDebtSchema>) => {
 	);
 	return {
 		setObject,
-		reverseSetObject:
-			keys(reverseSetObject).length === 0 ? undefined : reverseSetObject,
+		reverseSetObject,
 	};
 };
 
@@ -105,24 +103,52 @@ const fetchDebts = async (
 		])
 		.execute();
 
-const isError = <T>(input: T | TRPCError): input is TRPCError =>
-	input instanceof TRPCError;
-
 type Debt = Awaited<ReturnType<typeof fetchDebts>>[number];
 type UpdateWithDebt = ReturnType<typeof buildSetObjects> & {
 	debt: Debt;
 };
 
+const mergeSetObjects = (
+	setObjectA: DebtUpdateObject,
+	setObjectB: DebtUpdateObject,
+): DebtUpdateObject => ({ ...setObjectA, ...setObjectB });
+
+const mergeReverseSetObjects = (
+	setObjectA: Partial<DebtUpdateObject>,
+	setObjectB: Partial<DebtUpdateObject>,
+): Partial<DebtUpdateObject> => ({ ...setObjectA, ...setObjectB });
+
+const mergeUpdates = (debtsToUpdate: UpdateWithDebt[]): UpdateWithDebt[] =>
+	debtsToUpdate.reduce<UpdateWithDebt[]>((acc, debtToUpdate) => {
+		const previousDebt = acc.find(
+			({ debt }) => debt.id === debtToUpdate.debt.id,
+		);
+		if (!previousDebt) {
+			return [...acc, debtToUpdate];
+		}
+		return [
+			...acc.filter(({ debt }) => debt.id !== debtToUpdate.debt.id),
+			{
+				debt: debtToUpdate.debt,
+				setObject: mergeSetObjects(
+					debtToUpdate.setObject,
+					previousDebt.setObject,
+				),
+				reverseSetObject: mergeReverseSetObjects(
+					debtToUpdate.reverseSetObject,
+					previousDebt.reverseSetObject,
+				),
+			},
+		];
+	}, []);
+
 const updateAutoAcceptingDebts = async (
 	ctx: AuthorizedContext,
-	updatedDebtsWithErrors: (UpdateWithDebt | TRPCError)[],
+	debtsToUpdate: UpdateWithDebt[],
 ) => {
-	const autoAcceptedData = updatedDebtsWithErrors
-		.map((updatedDebtOrError) => {
-			if (isError(updatedDebtOrError)) {
-				return null;
-			}
-			const { debt, setObject, reverseSetObject } = updatedDebtOrError;
+	const autoAcceptedData = debtsToUpdate
+		.map((debtToUpdate) => {
+			const { debt, setObject, reverseSetObject } = debtToUpdate;
 			if (
 				!debt.manualAcceptDebts &&
 				debt.foreignAccountId &&
@@ -153,16 +179,13 @@ const updateAutoAcceptingDebts = async (
 		ctx.database,
 		autoAcceptedData,
 	);
-	return updatedDebtsWithErrors
-		.map((updatedDebtOrError) => {
-			if (isError(updatedDebtOrError)) {
-				return;
-			}
+	return debtsToUpdate
+		.map((debtToUpdate) => {
 			const newDebtAdded = newDebts.some(
-				(debt) => updatedDebtOrError.debt.id === debt.id,
+				(debt) => debtToUpdate.debt.id === debt.id,
 			);
-			if (updatedDebtOrError.reverseSetObject || newDebtAdded) {
-				return updatedDebtOrError.debt.id;
+			if (keys(debtToUpdate.reverseSetObject).length !== 0 || newDebtAdded) {
+				return debtToUpdate.debt.id;
 			}
 			return undefined;
 		})
@@ -171,33 +194,34 @@ const updateAutoAcceptingDebts = async (
 
 const updateDebts = async (
 	ctx: AuthorizedContext,
-	updatedDebtsWithErrors: (UpdateWithDebt | TRPCError)[],
-	updatedDebtIds: DebtsId[],
-) =>
-	ctx.database.transaction().execute((tx) =>
+	debtsToUpdate: UpdateWithDebt[],
+) => {
+	if (debtsToUpdate.length === 0) {
+		return [];
+	}
+	const results = await ctx.database.transaction().execute((tx) =>
 		Promise.all(
-			updatedDebtsWithErrors.map(async (updatedDebtOrError) => {
-				if (isError(updatedDebtOrError)) {
-					return updatedDebtOrError;
-				}
+			debtsToUpdate.map(async (debtToUpdate) => {
 				const { id, updatedAt } = await tx
 					.updateTable("debts")
-					.set(updatedDebtOrError.setObject)
+					.set(debtToUpdate.setObject)
 					.where((eb) =>
 						eb.and({
-							id: updatedDebtOrError.debt.id,
+							id: debtToUpdate.debt.id,
 							ownerAccountId: ctx.auth.accountId,
 						}),
 					)
 					.returning(["debts.id", "debts.updatedAt"])
 					.executeTakeFirstOrThrow();
 				return {
+					id,
 					updatedAt,
-					reverseUpdated: updatedDebtIds.includes(id),
 				};
 			}),
 		),
 	);
+	return results;
+};
 
 const queueUpdateDebt = queueCallFactory<
 	AuthorizedContext,
@@ -208,7 +232,7 @@ const queueUpdateDebt = queueCallFactory<
 	}
 >((ctx) => async (updates) => {
 	const debts = await fetchDebts(ctx, updates);
-	const updatesWithErrors = updates.map((update) => {
+	const updatesOrErrors = updates.map((update) => {
 		const matchedDebt = debts.find((debt) => debt.id === update.id);
 		if (!matchedDebt) {
 			return new TRPCError({
@@ -218,12 +242,37 @@ const queueUpdateDebt = queueCallFactory<
 		}
 		return { ...buildSetObjects(update), debt: matchedDebt };
 	});
-	const errors = updatesWithErrors.filter(isError);
-	if (updatesWithErrors.length === errors.length) {
-		return errors;
-	}
-	const updatedDebtIds = await updateAutoAcceptingDebts(ctx, updatesWithErrors);
-	return updateDebts(ctx, updatesWithErrors, updatedDebtIds);
+	const debtsToUpdate = updatesOrErrors.filter(
+		(
+			updateOrError,
+		): updateOrError is Exclude<typeof updateOrError, TRPCError> =>
+			!(updateOrError instanceof TRPCError),
+	);
+	const mergedDebts = mergeUpdates(debtsToUpdate);
+	const [reverseUpdatedDebtsIds, updatedDebts] = await Promise.all([
+		updateAutoAcceptingDebts(ctx, mergedDebts),
+		updateDebts(ctx, mergedDebts),
+	]);
+	return updatesOrErrors.map((updateOrError) => {
+		if (updateOrError instanceof TRPCError) {
+			return updateOrError;
+		}
+		const matchedDebt = updatedDebts.find(
+			(debt) => debt.id === updateOrError.debt.id,
+		);
+		/* c8 ignore start */
+		if (!matchedDebt) {
+			return new TRPCError({
+				code: "INTERNAL_SERVER_ERROR",
+				message: `Expected to have an updated debt id "${updateOrError.debt.id}".`,
+			});
+		}
+		/* c8 ignore stop */
+		return {
+			updatedAt: matchedDebt.updatedAt,
+			reverseUpdated: reverseUpdatedDebtsIds.includes(updateOrError.debt.id),
+		};
+	});
 });
 
 export const procedure = authProcedure

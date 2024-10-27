@@ -1,4 +1,5 @@
 import { faker } from "@faker-js/faker";
+import { TRPCError } from "@trpc/server";
 import { describe, expect } from "vitest";
 
 import { createAuthContext } from "~tests/backend/utils/context";
@@ -135,6 +136,30 @@ describe("debts.add", () => {
 				`There is already a debt for user "${userId}" in receipt "${receiptId}".`,
 			);
 		});
+
+		test("mixed success and fail", async ({ ctx }) => {
+			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { id: userId } = await insertUser(ctx, accountId);
+			const fakeUserId = faker.string.uuid();
+
+			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const results = await expectDatabaseDiffSnapshot(ctx, () =>
+				runSequentially(
+					[
+						() => caller.procedure(getValidDebt(userId)),
+						() => caller.procedure(getValidDebt(fakeUserId)).catch((e) => e),
+					],
+					10,
+				),
+			);
+
+			expect(results[0]).toStrictEqual<(typeof results)[0]>({
+				id: results[0].id,
+				updatedAt: new Date(),
+				reverseAccepted: false,
+			});
+			expect(results[1]).toBeInstanceOf(TRPCError);
+		});
 	});
 
 	describe("functionality", () => {
@@ -221,10 +246,7 @@ describe("debts.add", () => {
 					runSequentially(
 						[
 							() =>
-								caller.procedure({
-									...getValidDebt(foreignUserId),
-									receiptId,
-								}),
+								caller.procedure({ ...getValidDebt(foreignUserId), receiptId }),
 							() => caller.procedure(getValidDebt(foreignUserId)),
 							() => caller.procedure(getValidDebt(anotherForeignUserId)),
 							() => caller.procedure(getValidDebt(nonAcceptingUserId)),

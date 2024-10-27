@@ -488,6 +488,69 @@ exports[`debts.update > functionality > update multiple properties > counterpart
 }
 `;
 
+exports[`debts.update > functionality > update multiple properties with multiple requests > counterparty accepts manually 1`] = `
+{
+  "updated": {
+    "debts": {
+      "id:176b7525-1010-47ca-b021-5468f89479dc|ownerAccountId:357cefed-020c-4f2a-8a20-69a485873b05": {
+        "amount": "-777.8600",
+        "timestamp": "2020-06-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`debts.update > functionality > update multiple properties with multiple requests > counterparty auto-accepts - debt didn't exist beforehand 1`] = `
+{
+  "added": {
+    "debts": {
+      "id:26443bc4-be00-4b29-8e25-a2a02d528edb|ownerAccountId:2183d9a8-8002-44c6-ac3b-f84ad9eba49b": {
+        "amount": "-452.7300",
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "currencyCode": "BRL",
+        "id": "26443bc4-be00-4b29-8e25-a2a02d528edb",
+        "note": "Fugit a nihil placeat vel sit aperiam eum dignissimos placeat.",
+        "ownerAccountId": "2183d9a8-8002-44c6-ac3b-f84ad9eba49b",
+        "receiptId": null,
+        "timestamp": "2020-06-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "23964f67-319a-46b7-802c-32f7af698334",
+      },
+    },
+  },
+  "updated": {
+    "debts": {
+      "id:26443bc4-be00-4b29-8e25-a2a02d528edb|ownerAccountId:2d3de677-5844-4b0e-a36b-48718c65f8c8": {
+        "amount": "452.7300",
+        "timestamp": "2020-06-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`debts.update > functionality > update multiple properties with multiple requests > counterparty auto-accepts - debt existed beforehand 1`] = `
+{
+  "updated": {
+    "debts": {
+      "id:86cc3ab5-1baf-425c-ae2c-4488a4b986d1|ownerAccountId:4c35cbb8-2406-4347-86f7-ba5933c76dfc": {
+        "amount": "-768.1100",
+        "timestamp": "2020-06-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+      "id:86cc3ab5-1baf-425c-ae2c-4488a4b986d1|ownerAccountId:4de94a07-9f2d-4495-b3be-e5973cc40050": {
+        "amount": "768.1100",
+        "timestamp": "2020-06-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
+
 exports[`debts.update > functionality > update note > counterparty accepts manually 1`] = `
 {
   "updated": {
@@ -657,6 +720,19 @@ exports[`debts.update > functionality > update timestamp > counterparty auto-acc
       },
       "id:86cc3ab5-1baf-425c-ae2c-4488a4b986d1|ownerAccountId:4de94a07-9f2d-4495-b3be-e5973cc40050": {
         "timestamp": "2020-06-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`debts.update > input verification > mixed success and fail 1`] = `
+{
+  "updated": {
+    "debts": {
+      "id:597a7157-9b1d-4f32-b9ae-e2e76cd97b3b|ownerAccountId:f69c89cc-b28f-49ab-8c7b-635f1f9b819c": {
+        "amount": "-47.6300",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },

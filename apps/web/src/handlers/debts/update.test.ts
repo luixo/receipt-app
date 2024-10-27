@@ -1,4 +1,5 @@
 import { faker } from "@faker-js/faker";
+import { TRPCError } from "@trpc/server";
 import { pick } from "remeda";
 import { assert, describe, expect } from "vitest";
 
@@ -320,6 +321,39 @@ describe("debts.update", () => {
 				`Debt "${debtId}" does not exist on account "${email}".`,
 			);
 		});
+
+		test("mixed success and fail", async ({ ctx }) => {
+			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { id: userId } = await insertUser(ctx, accountId);
+			const debt = await insertDebt(ctx, accountId, userId);
+
+			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const results = await expectDatabaseDiffSnapshot(ctx, () =>
+				runSequentially(
+					[
+						() =>
+							caller.procedure({
+								id: debt.id,
+								update: { amount: getRandomAmount() },
+							}),
+						() =>
+							caller
+								.procedure({
+									id: "not-a-valid-uuid",
+									update: { amount: getRandomAmount() },
+								})
+								.catch((e) => e),
+					],
+					10,
+				),
+			);
+
+			expect(results[0]).toStrictEqual<(typeof results)[0]>({
+				updatedAt: new Date(new Date().valueOf() + MINUTE),
+				reverseUpdated: false,
+			});
+			expect(results[1]).toBeInstanceOf(TRPCError);
+		});
 	});
 
 	describe("functionality", () => {
@@ -438,6 +472,22 @@ describe("debts.update", () => {
 						},
 					],
 					results: [getDefaultGetResult({ counterParty: opts.counterParty })],
+				};
+			});
+		});
+
+		describe("update multiple properties with multiple requests", () => {
+			updateDescribes(async (opts) => {
+				const debt = await insertDefaultDebt(opts);
+				return {
+					updates: [
+						{ id: debt.id, update: { amount: getRandomAmount() } },
+						{ id: debt.id, update: { timestamp: new Date("2020-06-01") } },
+					],
+					results: [
+						getDefaultGetResult({ counterParty: opts.counterParty }),
+						getDefaultGetResult({ counterParty: opts.counterParty }),
+					],
 				};
 			});
 		});
