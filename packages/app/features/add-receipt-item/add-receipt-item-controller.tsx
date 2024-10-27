@@ -8,17 +8,17 @@ import { AddReceiptItemForm } from "./add-receipt-item-form";
 
 type Props = {
 	receipt: TRPCQueryOutput<"receipts.get">;
-	isLoading: boolean;
+	isDisabled: boolean;
 };
 
 export const AddReceiptItemController: React.FC<Props> = ({
 	receipt,
-	isLoading,
+	isDisabled,
 }) => {
 	const [isOpen, setOpen] = React.useState(false);
 
 	if (isOpen) {
-		return <AddReceiptItemForm receipt={receipt} isLoading={isLoading} />;
+		return <AddReceiptItemForm receipt={receipt} isDisabled={isDisabled} />;
 	}
 	return (
 		<Button

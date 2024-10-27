@@ -17,13 +17,13 @@ type Props = {
 	item: ReceiptItem;
 	receipt: TRPCQueryOutput<"receipts.get">;
 	readOnly?: boolean;
-	isLoading: boolean;
+	isDisabled: boolean;
 };
 
 export const ReceiptItemNameInput: React.FC<Props> = ({
 	item,
 	receipt,
-	isLoading,
+	isDisabled: isExternalDisabled,
 	readOnly,
 }) => {
 	const [isEditing, { switchValue: switchEditing, setFalse: unsetEditing }] =
@@ -57,7 +57,7 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 		},
 		[updateMutation, item.id, item.name, unsetEditing],
 	);
-	const disabled = readOnly || isLoading;
+	const disabled = readOnly || isExternalDisabled;
 
 	if (!isEditing) {
 		return (
@@ -78,7 +78,7 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 			aria-label="Receipt item name"
 			mutation={updateMutation}
 			fieldError={inputState.error}
-			isDisabled={isLoading}
+			isDisabled={isExternalDisabled}
 			className="basis-52"
 			saveProps={{
 				title: "Save receipt item name",

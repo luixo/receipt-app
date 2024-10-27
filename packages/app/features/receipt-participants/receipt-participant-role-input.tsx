@@ -29,13 +29,13 @@ const ROLES: AssignableRole[] = ["editor", "viewer"];
 type Props = {
 	participant: Participant;
 	receipt: TRPCQueryOutput<"receipts.get">;
-	isLoading: boolean;
+	isDisabled: boolean;
 };
 
 export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 	participant,
 	receipt,
-	isLoading,
+	isDisabled,
 }) => {
 	const updateParticipantMutation = trpc.receiptParticipants.update.useMutation(
 		useTrpcMutationOptions(receiptParticipantsUpdateOptions, {
@@ -68,7 +68,7 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 					variant="flat"
 					size="sm"
 					isDisabled={
-						isLoading ||
+						isDisabled ||
 						receipt.ownerUserId !== receipt.selfUserId ||
 						participant.role === "owner"
 					}

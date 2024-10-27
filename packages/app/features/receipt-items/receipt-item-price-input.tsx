@@ -18,13 +18,13 @@ type Props = {
 	item: ReceiptItem;
 	receipt: TRPCQueryOutput<"receipts.get">;
 	readOnly?: boolean;
-	isLoading: boolean;
+	isDisabled: boolean;
 };
 
 export const ReceiptItemPriceInput: React.FC<Props> = ({
 	item,
 	receipt,
-	isLoading,
+	isDisabled: isExternalDisabled,
 	readOnly,
 }) => {
 	const [isEditing, { switchValue: switchEditing, setFalse: unsetEditing }] =
@@ -65,7 +65,7 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 		return (
 			<View
 				className="cursor-pointer flex-row items-center gap-1"
-				onClick={readOnly || isLoading ? undefined : switchEditing}
+				onClick={readOnly || isExternalDisabled ? undefined : switchEditing}
 			>
 				<Text>
 					{item.price} {currency.symbol}
@@ -82,7 +82,7 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 			labelPlacement="outside-left"
 			mutation={updateMutation}
 			fieldError={inputState.error}
-			isDisabled={isLoading}
+			isDisabled={isExternalDisabled}
 			saveProps={{
 				title: "Save receipt item price",
 				onClick: () => updatePrice(getNumberValue()),

@@ -22,14 +22,14 @@ type Props = {
 	item: ReceiptItem;
 	receipt: Receipt;
 	readOnly?: boolean;
-	isLoading: boolean;
+	isDisabled: boolean;
 };
 
 export const ReceiptItemPartInput: React.FC<Props> = ({
 	part,
 	item,
 	receipt,
-	isLoading,
+	isDisabled,
 	readOnly,
 }) => {
 	const [isEditing, { switchValue: switchEditing, setFalse: unsetEditing }] =
@@ -122,7 +122,7 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 				aria-label="Item part"
 				mutation={updateMutation}
 				fieldError={inputState.error}
-				isDisabled={isLoading}
+				isDisabled={isDisabled}
 				labelPlacement="outside-left"
 				saveProps={{
 					title: "Save item part",
@@ -138,7 +138,7 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 		<Button
 			variant="light"
 			onClick={switchEditing}
-			isDisabled={isLoading}
+			isDisabled={isDisabled}
 			isIconOnly
 			className="min-w-unit-16 w-auto px-2"
 		>

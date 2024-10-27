@@ -94,7 +94,7 @@ export const ReceiptInner: React.FC<InnerProps> = ({ query }) => {
 					/>
 				</View>
 			) : null}
-			<ReceiptItems receipt={receipt} isLoading={deleteLoading} />
+			<ReceiptItems receipt={receipt} isDisabled={deleteLoading} />
 		</>
 	);
 };

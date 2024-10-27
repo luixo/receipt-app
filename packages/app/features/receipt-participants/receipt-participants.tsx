@@ -12,12 +12,12 @@ import { ReceiptParticipant } from "./receipt-participant";
 
 type Props = {
 	receipt: TRPCQueryOutput<"receipts.get">;
-	isLoading: boolean;
+	isDisabled: boolean;
 };
 
 export const ReceiptParticipants: React.FC<Props> = ({
 	receipt,
-	isLoading,
+	isDisabled,
 }) => {
 	const { participants } = useParticipants(receipt);
 	return (
@@ -37,13 +37,13 @@ export const ReceiptParticipants: React.FC<Props> = ({
 						key={participant.userId}
 						participant={participant}
 						receipt={receipt}
-						isLoading={isLoading}
+						isDisabled={isDisabled}
 					/>
 				))}
 				{receipt.ownerUserId === receipt.selfUserId ? (
 					<AddReceiptParticipantForm
 						className="my-4"
-						disabled={isLoading}
+						disabled={isDisabled}
 						receipt={receipt}
 						filterIds={participants.map((participant) => participant.userId)}
 					/>

@@ -21,10 +21,10 @@ import { options as receiptItemsAddOptions } from "~mutations/receipt-items/add"
 
 type NameProps = {
 	form: UseFormReturn<Form>;
-	isLoading: boolean;
+	isDisabled: boolean;
 };
 
-const ReceiptItemNameInput: React.FC<NameProps> = ({ form, isLoading }) => {
+const ReceiptItemNameInput: React.FC<NameProps> = ({ form, isDisabled }) => {
 	const { bindings, state: inputState } = useInputController({
 		form,
 		name: "name",
@@ -35,7 +35,7 @@ const ReceiptItemNameInput: React.FC<NameProps> = ({ form, isLoading }) => {
 			{...bindings}
 			required
 			label="Item name"
-			isDisabled={isLoading}
+			isDisabled={isDisabled}
 			fieldError={inputState.error}
 			autoFocus
 		/>
@@ -44,10 +44,10 @@ const ReceiptItemNameInput: React.FC<NameProps> = ({ form, isLoading }) => {
 
 type PriceProps = {
 	form: UseFormReturn<Form>;
-	isLoading: boolean;
+	isDisabled: boolean;
 };
 
-const ReceiptItemPriceInput: React.FC<PriceProps> = ({ form, isLoading }) => {
+const ReceiptItemPriceInput: React.FC<PriceProps> = ({ form, isDisabled }) => {
 	const { bindings, state: inputState } = useInputController({
 		form,
 		name: "price",
@@ -61,7 +61,7 @@ const ReceiptItemPriceInput: React.FC<PriceProps> = ({ form, isLoading }) => {
 			type="number"
 			min="0"
 			label="Price per unit"
-			isDisabled={isLoading}
+			isDisabled={isDisabled}
 			fieldError={inputState.error}
 		/>
 	);
@@ -69,12 +69,12 @@ const ReceiptItemPriceInput: React.FC<PriceProps> = ({ form, isLoading }) => {
 
 type QuantityProps = {
 	form: UseFormReturn<Form>;
-	isLoading: boolean;
+	isDisabled: boolean;
 };
 
 const ReceiptItemQuantityInput: React.FC<QuantityProps> = ({
 	form,
-	isLoading,
+	isDisabled,
 }) => {
 	const { bindings, state: inputState } = useInputController({
 		form,
@@ -89,7 +89,7 @@ const ReceiptItemQuantityInput: React.FC<QuantityProps> = ({
 			type="number"
 			min="0"
 			label="Units"
-			isDisabled={isLoading}
+			isDisabled={isDisabled}
 			fieldError={inputState.error}
 		/>
 	);
@@ -103,12 +103,12 @@ type Form = {
 
 type Props = {
 	receipt: TRPCQueryOutput<"receipts.get">;
-	isLoading: boolean;
+	isDisabled: boolean;
 };
 
 export const AddReceiptItemForm: React.FC<Props> = ({
 	receipt,
-	isLoading: isDeleteLoading,
+	isDisabled: isExternalDisabled,
 }) => {
 	const form = useForm<Form>({
 		mode: "onChange",
@@ -137,19 +137,19 @@ export const AddReceiptItemForm: React.FC<Props> = ({
 		[addMutation, receipt.id],
 	);
 
-	const isLoading = isDeleteLoading || addMutation.isPending;
+	const isDisabled = isExternalDisabled || addMutation.isPending;
 
 	return (
 		<View className="gap-4">
 			<View className="flex-row gap-4">
-				<ReceiptItemNameInput form={form} isLoading={isLoading} />
-				<ReceiptItemPriceInput form={form} isLoading={isLoading} />
-				<ReceiptItemQuantityInput form={form} isLoading={isLoading} />
+				<ReceiptItemNameInput form={form} isDisabled={isDisabled} />
+				<ReceiptItemPriceInput form={form} isDisabled={isDisabled} />
+				<ReceiptItemQuantityInput form={form} isDisabled={isDisabled} />
 			</View>
 			<Button
 				color="primary"
 				onClick={form.handleSubmit(onSubmit)}
-				isDisabled={!form.formState.isValid || isLoading}
+				isDisabled={!form.formState.isValid || isDisabled}
 				className="w-full"
 				isLoading={addMutation.isPending}
 			>

@@ -11,10 +11,10 @@ import { ReceiptItem } from "./receipt-item";
 
 type InnerProps = {
 	receipt: TRPCQueryOutput<"receipts.get">;
-	isLoading: boolean;
+	isDisabled: boolean;
 };
 
-export const ReceiptItems: React.FC<InnerProps> = ({ receipt, isLoading }) => {
+export const ReceiptItems: React.FC<InnerProps> = ({ receipt, isDisabled }) => {
 	const itemsRef = React.useRef<Record<ReceiptItemsId, HTMLDivElement | null>>(
 		{},
 	);
@@ -28,14 +28,14 @@ export const ReceiptItems: React.FC<InnerProps> = ({ receipt, isLoading }) => {
 	return (
 		<>
 			<ReceiptEmptyItems receipt={receipt} itemsRef={itemsRef} />
-			<ReceiptParticipants receipt={receipt} isLoading={isLoading} />
-			<AddReceiptItemController receipt={receipt} isLoading={isLoading} />
+			<ReceiptParticipants receipt={receipt} isDisabled={isDisabled} />
+			<AddReceiptItemController receipt={receipt} isDisabled={isDisabled} />
 			{sortedItems.map((item) => (
 				<ReceiptItem
 					key={item.id}
 					item={item}
 					receipt={receipt}
-					isLoading={isLoading}
+					isDisabled={isDisabled}
 					ref={(element) => {
 						itemsRef.current[item.id] = element;
 					}}

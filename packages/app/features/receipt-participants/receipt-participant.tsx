@@ -63,13 +63,13 @@ const getParticipantColorCode = (
 type Props = {
 	participant: Participant;
 	receipt: TRPCQueryOutput<"receipts.get">;
-	isLoading: boolean;
+	isDisabled: boolean;
 };
 
 export const ReceiptParticipant: React.FC<Props> = ({
 	participant,
 	receipt,
-	isLoading,
+	isDisabled,
 }) => {
 	const userQuery = trpc.users.get.useQuery({ id: participant.userId });
 
@@ -137,7 +137,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 								<ReceiptParticipantRoleInput
 									participant={participant}
 									receipt={receipt}
-									isLoading={isLoading}
+									isDisabled={isDisabled}
 								/>
 								{isOwner ? (
 									<RemoveButton

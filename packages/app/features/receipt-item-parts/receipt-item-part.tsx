@@ -21,7 +21,7 @@ type Props = {
 	participant: ReceiptParticipant;
 	receipt: Receipt;
 	readOnly?: boolean;
-	isLoading: boolean;
+	isDisabled: boolean;
 };
 
 export const ReceiptItemPart: React.FC<Props> = ({
@@ -30,7 +30,7 @@ export const ReceiptItemPart: React.FC<Props> = ({
 	participant,
 	receipt,
 	readOnly,
-	isLoading,
+	isDisabled: isExternalDisabled,
 }) => {
 	const removeMutation = trpc.itemParticipants.remove.useMutation(
 		useTrpcMutationOptions(itemParticipantsRemoveOptions, {
@@ -58,7 +58,7 @@ export const ReceiptItemPart: React.FC<Props> = ({
 					item={item}
 					receipt={receipt}
 					readOnly={readOnly}
-					isLoading={isLoading || removeMutation.isPending}
+					isDisabled={isExternalDisabled || removeMutation.isPending}
 				/>
 				{readOnly ? null : (
 					<RemoveButton

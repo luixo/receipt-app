@@ -26,11 +26,11 @@ import { ReceiptItemQuantityInput } from "./receipt-item-quantity-input";
 type Props = {
 	item: TRPCQueryOutput<"receipts.get">["items"][number];
 	receipt: TRPCQueryOutput<"receipts.get">;
-	isLoading: boolean;
+	isDisabled: boolean;
 };
 
 export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
-	({ item, receipt, isLoading: isReceiptDeleteLoading }, ref) => {
+	({ item, receipt, isDisabled: isExternalDisabled }, ref) => {
 		const currency = useFormattedCurrency(receipt.currencyCode);
 		const removeReceiptItemMutation = trpc.receiptItems.remove.useMutation(
 			useTrpcMutationOptions(receiptItemsRemoveOptions, {
@@ -65,8 +65,8 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 			});
 		}, [addItemPartMutation, notAddedParticipantsIds, item.id]);
 
-		const isDeleteLoading =
-			isReceiptDeleteLoading || removeReceiptItemMutation.isPending;
+		const isDisabled =
+			isExternalDisabled || removeReceiptItemMutation.isPending;
 		const selfRole =
 			receipt.participants.find(
 				(participant) => participant.userId === receipt.selfUserId,
@@ -80,7 +80,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 						receipt={receipt}
 						item={item}
 						readOnly={isEditingDisabled}
-						isLoading={isDeleteLoading}
+						isDisabled={isDisabled}
 					/>
 					{isEditingDisabled ? null : (
 						<RemoveButton
@@ -99,13 +99,13 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 							item={item}
 							receipt={receipt}
 							readOnly={isEditingDisabled}
-							isLoading={isDeleteLoading}
+							isDisabled={isDisabled}
 						/>
 						<ReceiptItemQuantityInput
 							item={item}
 							receipt={receipt}
 							readOnly={isEditingDisabled}
-							isLoading={isDeleteLoading}
+							isDisabled={isDisabled}
 						/>
 						<Text>
 							= {round(item.quantity * item.price)} {currency.symbol}
@@ -158,7 +158,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 										participant={matchedParticipant}
 										receipt={receipt}
 										readOnly={isEditingDisabled}
-										isLoading={isDeleteLoading}
+										isDisabled={isDisabled}
 									/>
 								);
 							})}
