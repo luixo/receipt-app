@@ -24,7 +24,7 @@ const getData = async (
 	ctx: AuthorizedContext,
 	participants: readonly z.infer<typeof addPartSchema>[],
 ) => {
-	const [receiptParticipants, receiptItems] = await Promise.all([
+	const [receiptParticipants, receiptItems, itemParts] = await Promise.all([
 		ctx.database
 			.selectFrom("receiptParticipants")
 			.where(
@@ -35,10 +35,7 @@ const getData = async (
 			.innerJoin("receipts", (qb) =>
 				qb.onRef("receipts.id", "=", "receiptParticipants.receiptId"),
 			)
-			.leftJoin("itemParticipants", (qb) =>
-				qb.onRef("itemParticipants.userId", "=", "receiptParticipants.userId"),
-			)
-			.select(["receiptParticipants.userId", "itemParticipants.part"])
+			.select(["receiptParticipants.userId"])
 			.execute(),
 		ctx.database
 			.selectFrom("receiptItems")
@@ -74,14 +71,36 @@ const getData = async (
 				"receiptItems.id as itemId",
 			])
 			.execute(),
+		ctx.database
+			.selectFrom("itemParticipants")
+			.where((eb) =>
+				eb.or(
+					participants.map(({ itemId, userId }) =>
+						eb.and({
+							"itemParticipants.itemId": itemId,
+							"itemParticipants.userId": userId,
+						}),
+					),
+				),
+			)
+			.select([
+				"itemParticipants.part",
+				"itemParticipants.userId",
+				"itemParticipants.itemId",
+			])
+			.execute(),
 	]);
-	return { receiptParticipants, receiptItems };
+	return { receiptParticipants, receiptItems, itemParts };
 };
 
 const getParticipantsOrErrors = (
 	ctx: AuthorizedContext,
 	participants: readonly z.infer<typeof addPartSchema>[],
-	{ receiptItems, receiptParticipants }: Awaited<ReturnType<typeof getData>>,
+	{
+		receiptItems,
+		receiptParticipants,
+		itemParts,
+	}: Awaited<ReturnType<typeof getData>>,
 ) =>
 	participants.map((participant) => {
 		const matchedReceiptItem = receiptItems.find(
@@ -109,6 +128,16 @@ const getParticipantsOrErrors = (
 				});
 			}
 		}
+		const matchedPart = itemParts.find(
+			({ userId, itemId }) =>
+				userId === participant.userId && itemId === participant.itemId,
+		);
+		if (matchedPart) {
+			return new TRPCError({
+				code: "CONFLICT",
+				message: `User "${participant.userId}" already has a part in item "${matchedReceiptItem.itemId}".`,
+			});
+		}
 		const matchedUser = receiptParticipants.find(
 			(receiptParticipant) => receiptParticipant.userId === participant.userId,
 		);
@@ -116,12 +145,6 @@ const getParticipantsOrErrors = (
 			return new TRPCError({
 				code: "PRECONDITION_FAILED",
 				message: `User "${participant.userId}" doesn't participate in receipt "${matchedReceiptItem.receiptId}".`,
-			});
-		}
-		if (matchedUser.part !== null) {
-			return new TRPCError({
-				code: "CONFLICT",
-				message: `User "${participant.userId}" already has a part in item "${matchedReceiptItem.itemId}".`,
 			});
 		}
 		return {

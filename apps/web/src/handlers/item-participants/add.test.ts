@@ -392,6 +392,7 @@ describe("itemParticipants.add", () => {
 				foreignToSelfUser.id,
 			);
 			await insertReceiptItem(ctx, anotherForeignReceiptId);
+			await insertItemParticipant(ctx, anotherReceiptItemId, user.id);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectDatabaseDiffSnapshot(ctx, () =>
