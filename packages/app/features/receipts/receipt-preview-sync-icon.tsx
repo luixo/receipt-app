@@ -17,10 +17,20 @@ export const ReceiptPreviewSyncIcon: React.FC<Props> = ({ receipt }) => {
 		desyncedParticipants,
 		loadingParticipants,
 		nonCreatedParticipants,
+		syncedParticipants,
 	} = useParticipants(receipt);
-	const notSynced =
-		desyncedParticipants.length !== 0 || nonCreatedParticipants.length !== 0;
 	if (receipt.selfUserId === receipt.ownerUserId) {
+		if (receipt.items.length === 0) {
+			return null;
+		}
+		const hasNonDistributedItems = receipt.items.some(
+			(item) => item.parts.length === 0,
+		);
+		const noParticipants = participants.length === 0;
+		const someParticipantsNotSynced =
+			syncableParticipants.length !== syncedParticipants.length;
+		const notSynced =
+			hasNonDistributedItems || noParticipants || someParticipantsNotSynced;
 		return (
 			<Button
 				variant="light"
@@ -28,7 +38,9 @@ export const ReceiptPreviewSyncIcon: React.FC<Props> = ({ receipt }) => {
 				isIconOnly
 				color={notSynced ? "warning" : "success"}
 			>
-				{syncableParticipants.length === 0 ? null : notSynced ? (
+				{loadingParticipants.length !== 0 ? (
+					<Spinner size="sm" />
+				) : notSynced ? (
 					<UnsyncIcon size={24} />
 				) : (
 					<SyncIcon size={24} />
