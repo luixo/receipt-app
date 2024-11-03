@@ -1,3 +1,4 @@
+import { faker } from "@faker-js/faker";
 import type { CreateTRPCClientOptions } from "@trpc/client";
 import { createTRPCClient } from "@trpc/client";
 import type { AnyTRPCRouter } from "@trpc/server";
@@ -6,10 +7,15 @@ import findFreePorts from "find-free-ports";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { assert } from "vitest";
 
+import type { CurrencyCode } from "~app/utils/currency";
 import type { GetLinksOptions, Headers } from "~app/utils/trpc";
 import { getLinks, transformer } from "~app/utils/trpc";
 import type { TestContext } from "~tests/backend/utils/test";
+import { CURRENCY_CODES } from "~utils/currency-data";
 import { createContext } from "~web/handlers/context";
+
+export const getRandomCurrencyCode = (): CurrencyCode =>
+	faker.helpers.arrayElement(CURRENCY_CODES);
 
 export const getClientServer = async <R extends AnyTRPCRouter>(
 	ctx: TestContext,

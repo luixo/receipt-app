@@ -6,6 +6,7 @@ import { router as accountSettingsRouter } from "./account-settings/index";
 import { router as adminRouter } from "./admin/index";
 import { router as authRouter } from "./auth/index";
 import { router as currencyRouter } from "./currency/index";
+import { router as debtIntentionsRouter } from "./debt-intentions/index";
 import { router as debtsRouter } from "./debts/index";
 import { router as itemParticipantsRouter } from "./item-participants/index";
 import { router as receiptItemsRouter } from "./receipt-items/index";
@@ -34,6 +35,7 @@ export const router = t.router({
 	itemParticipants: itemParticipantsRouter,
 	accountConnectionIntentions: accountConnectionIntentionsRouter,
 	debts: debtsRouter,
+	debtIntentions: debtIntentionsRouter,
 	receiptTransferIntentions: receiptTransferIntentionsRouter,
 	// Admin
 	admin: adminRouter,

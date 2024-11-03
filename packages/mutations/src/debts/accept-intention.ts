@@ -8,7 +8,7 @@ import type Intention from "./utils";
 import { updateGet, updateGetByUserId, updateGetByUsers } from "./utils";
 
 export const options: UseContextedMutationOptions<
-	"debts.acceptIntention",
+	"debtIntentions.accept",
 	Intention
 > = {
 	onMutate: (controllerContext, intention) => () =>

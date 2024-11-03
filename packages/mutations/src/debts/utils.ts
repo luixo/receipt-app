@@ -13,7 +13,7 @@ import type {
 } from "../types";
 import { mergeUpdaterResults } from "../utils";
 
-type Intention = TRPCQueryOutput<"debts.getIntentions">[number];
+type Intention = TRPCQueryOutput<"debtIntentions.getAll">[number];
 export default Intention;
 
 export const updateGetByUsers = (

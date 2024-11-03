@@ -6,9 +6,9 @@ import { addToArray, removeFromArray, replaceInArray } from "~utils/array";
 import type { ControllerContext, SnapshotFn, UpdateFn } from "../../types";
 import { applyUpdateFnWithRevert, applyWithRevert, withRef } from "../utils";
 
-type Controller = TRPCReactUtils["debts"]["getIntentions"];
+type Controller = TRPCReactUtils["debtIntentions"]["getAll"];
 
-type DebtsIntentions = TRPCQueryOutput<"debts.getIntentions">;
+type DebtsIntentions = TRPCQueryOutput<"debtIntentions.getAll">;
 type Intention = DebtsIntentions[number];
 
 const updateIntentions = (
@@ -99,7 +99,7 @@ const invalidate = (controller: Controller) => () =>
 	}).current;
 
 export const getController = ({ trpcUtils }: ControllerContext) => {
-	const controller = trpcUtils.debts.getIntentions;
+	const controller = trpcUtils.debtIntentions.getAll;
 	return {
 		update: update(controller),
 		add: add(controller),
@@ -109,7 +109,7 @@ export const getController = ({ trpcUtils }: ControllerContext) => {
 };
 
 export const getRevertController = ({ trpcUtils }: ControllerContext) => {
-	const controller = trpcUtils.debts.getIntentions;
+	const controller = trpcUtils.debtIntentions.getAll;
 	return {
 		update: updateRevert(controller),
 		add: addRevert(controller),

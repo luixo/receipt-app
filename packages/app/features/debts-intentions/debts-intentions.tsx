@@ -17,7 +17,7 @@ import type { UsersId } from "~db/models";
 import { AcceptAllIntentionsButton } from "./accept-all-intentions-button";
 import { InboundDebtIntention } from "./inbound-debt-intention";
 
-type IntentionsQuery = TRPCQuerySuccessResult<"debts.getIntentions">;
+type IntentionsQuery = TRPCQuerySuccessResult<"debtIntentions.getAll">;
 
 type Props = {
 	query: IntentionsQuery;
@@ -73,7 +73,7 @@ const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 };
 
 export const DebtIntentions: React.FC = () => {
-	const query = trpc.debts.getIntentions.useQuery();
+	const query = trpc.debtIntentions.getAll.useQuery();
 	if (query.status === "pending") {
 		return <Spinner size="lg" />;
 	}

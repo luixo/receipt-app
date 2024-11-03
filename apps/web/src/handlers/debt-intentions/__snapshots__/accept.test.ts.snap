@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`debts.acceptIntention > functionality > debt did not exist on our account beforehand 1`] = `
+exports[`debtIntentions.accept > functionality > debt did not exist on our account beforehand 1`] = `
 {
   "added": {
     "debts": {
@@ -21,7 +21,7 @@ exports[`debts.acceptIntention > functionality > debt did not exist on our accou
 }
 `;
 
-exports[`debts.acceptIntention > functionality > debt existed on our account beforehand - our updatedAt ahead 1`] = `
+exports[`debtIntentions.accept > functionality > debt existed on our account beforehand - our updatedAt ahead 1`] = `
 {
   "updated": {
     "debts": {
@@ -36,7 +36,7 @@ exports[`debts.acceptIntention > functionality > debt existed on our account bef
 }
 `;
 
-exports[`debts.acceptIntention > functionality > debt existed on our account beforehand - their updatedAt ahead 1`] = `
+exports[`debtIntentions.accept > functionality > debt existed on our account beforehand - their updatedAt ahead 1`] = `
 {
   "updated": {
     "debts": {

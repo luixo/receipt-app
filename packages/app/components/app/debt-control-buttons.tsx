@@ -48,7 +48,7 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 			debt.userId,
 		],
 	);
-	const acceptMutation = trpc.debts.acceptIntention.useMutation(
+	const acceptMutation = trpc.debtIntentions.accept.useMutation(
 		useTrpcMutationOptions(debtsAcceptIntentionOptions, {
 			context: intention ?? skipToken,
 		}),

@@ -20,13 +20,13 @@ import {
 import { test } from "~tests/backend/utils/test";
 import { MINUTE } from "~utils/time";
 import { t } from "~web/handlers/trpc";
+import { getRandomCurrencyCode } from "~web/handlers/utils.test";
 
-import { procedure } from "./accept-intention";
-import { getRandomCurrencyCode } from "./utils.test";
+import { procedure } from "./accept";
 
 const createCaller = t.createCallerFactory(t.router({ procedure }));
 
-describe("debts.acceptIntention", () => {
+describe("debtIntentions.accept", () => {
 	describe("input verification", () => {
 		expectUnauthorizedError((context) =>
 			createCaller(context).procedure({ id: faker.string.uuid() }),

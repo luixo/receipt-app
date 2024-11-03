@@ -25,11 +25,11 @@ import type { TestContext } from "~tests/backend/utils/test";
 import { test } from "~tests/backend/utils/test";
 import { MINUTE } from "~utils/time";
 import { t } from "~web/handlers/trpc";
+import { getRandomCurrencyCode } from "~web/handlers/utils.test";
 
 import { procedure } from "./update";
 import {
 	getRandomAmount,
-	getRandomCurrencyCode,
 	runSequentially,
 	syncedProps,
 	verifyAmount,

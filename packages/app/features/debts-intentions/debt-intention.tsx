@@ -8,7 +8,7 @@ import { Card, CardBody } from "~components/card";
 import { ArrowIcon, SyncIcon } from "~components/icons";
 import { Text } from "~components/text";
 
-type Intentions = TRPCQueryOutput<"debts.getIntentions">;
+type Intentions = TRPCQueryOutput<"debtIntentions.getAll">;
 
 type Props = {
 	intention: Intentions[number];

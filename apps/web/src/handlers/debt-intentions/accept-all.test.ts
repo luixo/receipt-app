@@ -17,13 +17,13 @@ import {
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
 import { t } from "~web/handlers/trpc";
+import { getRandomCurrencyCode } from "~web/handlers/utils.test";
 
-import { procedure } from "./accept-all-intentions";
-import { getRandomCurrencyCode } from "./utils.test";
+import { procedure } from "./accept-all";
 
 const createCaller = t.createCallerFactory(t.router({ procedure }));
 
-describe("debts.acceptAllIntentions", () => {
+describe("debtIntentions.acceptAll", () => {
 	describe("input verification", () => {
 		expectUnauthorizedError((context) => createCaller(context).procedure());
 

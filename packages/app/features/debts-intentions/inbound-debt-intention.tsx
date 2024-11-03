@@ -11,14 +11,14 @@ import { options as debtsAcceptIntentionOptions } from "~mutations/debts/accept-
 import { DebtIntention } from "./debt-intention";
 
 type Props = {
-	intention: TRPCQueryOutput<"debts.getIntentions">[number];
+	intention: TRPCQueryOutput<"debtIntentions.getAll">[number];
 };
 
 export const InboundDebtIntention = React.forwardRef<HTMLDivElement, Props>(
 	({ intention }, ref) => {
 		const router = useRouter();
 
-		const acceptMutation = trpc.debts.acceptIntention.useMutation(
+		const acceptMutation = trpc.debtIntentions.accept.useMutation(
 			useTrpcMutationOptions(debtsAcceptIntentionOptions, {
 				context: intention,
 			}),

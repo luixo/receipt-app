@@ -9,13 +9,13 @@ import { Button } from "~components/button";
 import { options as debtsAcceptAllIntentionsOptions } from "~mutations/debts/accept-all-intentions";
 
 type Props = {
-	intentions: TRPCQueryOutput<"debts.getIntentions">;
+	intentions: TRPCQueryOutput<"debtIntentions.getAll">;
 };
 
 export const AcceptAllIntentionsButton: React.FC<Props> = ({ intentions }) => {
 	const router = useRouter();
 
-	const acceptAllMutation = trpc.debts.acceptAllIntentions.useMutation(
+	const acceptAllMutation = trpc.debtIntentions.acceptAll.useMutation(
 		useTrpcMutationOptions(debtsAcceptAllIntentionsOptions, {
 			context: intentions,
 		}),

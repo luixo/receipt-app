@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`debts.acceptAllIntentions > functionality > debts are synced 1`] = `
+exports[`debtIntentions.acceptAll > functionality > debts are synced 1`] = `
 {
   "added": {
     "debts": {

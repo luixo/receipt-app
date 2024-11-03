@@ -371,7 +371,7 @@ const getMockUtils = (api: ApiManager) => ({
 			});
 		}),
 	authPage: () => [
-		api.mock("debts.getIntentions", []),
+		api.mock("debtIntentions.getAll", []),
 		api.mock("accountConnectionIntentions.getAll", {
 			inbound: [],
 			outbound: [],

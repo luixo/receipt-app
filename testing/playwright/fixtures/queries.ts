@@ -278,7 +278,7 @@ type SnapshotQueryCacheOptions = {
 export const DEFAULT_BLACKLIST_KEYS: TRPCKey[] = [
 	"account.get",
 	"currency.getList",
-	"debts.getIntentions",
+	"debtIntentions.getAll",
 	"accountConnectionIntentions.getAll",
 	"receiptTransferIntentions.getAll",
 ];

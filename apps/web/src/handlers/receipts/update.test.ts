@@ -20,10 +20,10 @@ import {
 import type { TestContext } from "~tests/backend/utils/test";
 import { test } from "~tests/backend/utils/test";
 import { t } from "~web/handlers/trpc";
+import { getRandomCurrencyCode } from "~web/handlers/utils.test";
 
 import { procedure } from "./update";
 import {
-	getRandomCurrencyCode,
 	verifyCurrencyCode,
 	verifyIssued,
 	verifyName,
