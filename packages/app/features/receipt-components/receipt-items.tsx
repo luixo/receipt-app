@@ -1,6 +1,5 @@
 import React from "react";
 
-import { EmptyCard } from "~app/components/empty-card";
 import type { ReceiptItemsId } from "~db/models";
 
 import { AddReceiptItemController } from "./add-receipt-item-controller";
@@ -9,7 +8,7 @@ import { ReceiptEmptyItems } from "./receipt-empty-items";
 import { ReceiptItem } from "./receipt-item";
 
 export const ReceiptItems: React.FC = () => {
-	const { items } = useReceiptContext();
+	const { items, emptyReceiptElement } = useReceiptContext();
 	const itemsRef = React.useRef<Record<ReceiptItemsId, HTMLDivElement | null>>(
 		{},
 	);
@@ -23,9 +22,7 @@ export const ReceiptItems: React.FC = () => {
 		return (
 			<>
 				{addItemComponent}
-				<EmptyCard title="You have no receipt items yet">
-					Press a button above to add a receipt item
-				</EmptyCard>
+				{emptyReceiptElement}
 			</>
 		);
 	}

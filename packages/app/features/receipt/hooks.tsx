@@ -1,9 +1,10 @@
 import React from "react";
 
+import { EmptyCard } from "~app/components/empty-card";
 import type { Item, Participant } from "~app/features/receipt-components/state";
 import { useParticipants } from "~app/hooks/use-participants";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { TRPCQueryOutput } from "~app/trpc";
+import type { TRPCQueryInput, TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import type { EmptyMutateOptions } from "~app/utils/queries";
@@ -236,6 +237,7 @@ export type ReceiptContext = {
 	receiptId: ReceiptsId;
 	currencyCode: CurrencyCode;
 	selfUserId: UsersId;
+	ownerUserId: UsersId;
 
 	receiptDisabled: boolean;
 	participantsDisabled: boolean;
@@ -246,6 +248,8 @@ export type ReceiptContext = {
 	renderParticipantActions: (
 		participant: ReturnType<typeof useParticipants>["participants"][number],
 	) => React.ReactNode;
+	getUsersSuggestOptions: () => TRPCQueryInput<"users.suggest">["options"];
+	emptyReceiptElement: React.ReactNode;
 };
 
 export const useGetReceiptContext = (
@@ -257,11 +261,21 @@ export const useGetReceiptContext = (
 	return {
 		receiptId: receipt.id,
 		selfUserId: receipt.selfUserId,
+		ownerUserId: receipt.ownerUserId,
 		currencyCode: receipt.currencyCode,
 		receiptDisabled,
 		participantsDisabled: Boolean(receipt.transferIntentionUserId),
 		items: receipt.items,
 		participants,
 		renderParticipantActions,
+		getUsersSuggestOptions: () => ({
+			type: "not-connected-receipt",
+			receiptId: receipt.id,
+		}),
+		emptyReceiptElement: (
+			<EmptyCard title="You have no receipt items yet">
+				Press a button above to add a receipt item
+			</EmptyCard>
+		),
 	};
 };

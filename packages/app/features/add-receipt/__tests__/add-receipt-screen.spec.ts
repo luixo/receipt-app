@@ -129,7 +129,7 @@ test("'receipts.add' mutation", async ({
 			await awaitCacheKey("receipts.add");
 			await verifyToastTexts(`Receipt "${receiptName}" added`);
 		},
-		{ name: "success" },
+		{ name: "success", blacklistKeys: "users.get" },
 	);
 	await expect(page).toHaveURL(`/receipts/${receiptId}`);
 });

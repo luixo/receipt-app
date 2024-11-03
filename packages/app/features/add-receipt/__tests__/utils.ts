@@ -1,4 +1,5 @@
 import type { Locator } from "@playwright/test";
+import { TRPCError } from "@trpc/server";
 
 import type { TRPCQueryOutput } from "~app/trpc";
 import { test as originalTest } from "~tests/frontend/fixtures";
@@ -43,7 +44,15 @@ export const test = originalTest.extend<Fixtures>({
 			const [user] = defaultGenerateUsers({ faker, amount: 1 });
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			const sureUser = user!;
-			api.mock("users.get", sureUser);
+			api.mock("users.get", ({ input }) => {
+				if (input.id !== sureUser.id) {
+					throw new TRPCError({
+						code: "NOT_FOUND",
+						message: `User id "${input.id}" does not exist.`,
+					});
+				}
+				return sureUser;
+			});
 			return { user: sureUser, currencies: topCurrencies };
 		}),
 

@@ -13,7 +13,9 @@
 					"variables": {
 						"name": "doloribus ex vel",
 						"currencyCode": "USD",
-						"issued": "2020-01-31T00:00:00.000Z"
+						"issued": "2020-01-31T00:00:00.000Z",
+						"items": [],
+						"participants": []
 					}
 				}
 			}

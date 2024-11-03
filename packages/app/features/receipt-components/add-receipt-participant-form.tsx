@@ -13,7 +13,7 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 	filterIds,
 	...props
 }) => {
-	const { receiptId, receiptDisabled, participantsDisabled } =
+	const { receiptDisabled, participantsDisabled, getUsersSuggestOptions } =
 		useReceiptContext();
 	const { addParticipant } = useActionsHooksContext();
 	const [localFilterIds, setLocalFilterIds] = React.useState<UsersId[]>([]);
@@ -35,8 +35,8 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 			onUserClick={addParticipants}
 			isDisabled={receiptDisabled || participantsDisabled}
 			options={React.useMemo(
-				() => ({ type: "not-connected-receipt", receiptId }),
-				[receiptId],
+				() => getUsersSuggestOptions(),
+				[getUsersSuggestOptions],
 			)}
 			label="Add participants"
 			{...props}
