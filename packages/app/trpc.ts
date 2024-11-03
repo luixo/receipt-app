@@ -1,11 +1,14 @@
 import type {
 	InvalidateOptions,
 	InvalidateQueryFilters,
+	Mutation,
+	MutationState,
 	Query,
 	SetDataOptions,
 } from "@tanstack/react-query";
 import type { TRPCClientErrorLike } from "@trpc/react-query";
 import { createTRPCReact } from "@trpc/react-query";
+import type { DecoratedMutation } from "@trpc/react-query/dist/createTRPCReact";
 import type {
 	UseTRPCInfiniteQueryResult,
 	UseTRPCMutationResult,
@@ -68,6 +71,14 @@ type TRPCMutationValues = UnionToIntersection<
 export const trpc = createTRPCReact<AppRouter>();
 
 export type TRPCReact = typeof trpc;
+
+export type TRPCDecoratedMutations = UnionToIntersection<
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	FlattenObject<DecoratedMutation<any>, TRPCReact>
+>;
+
+export type TRPCDecoratedMutation<Path extends TRPCMutationKey> =
+	TRPCDecoratedMutations[Path];
 
 export type TRPCReactUtils = ReturnType<(typeof trpc)["useUtils"]>;
 
@@ -172,6 +183,18 @@ export type TRPCMutationResult<Path extends TRPCMutationKey> =
 		TRPCMutationInput<Path>,
 		unknown
 	>;
+
+export type TRPCMutation<Path extends TRPCMutationKey> = Mutation<
+	TRPCMutationOutput<Path>,
+	TRPCError,
+	TRPCMutationInput<Path>
+>;
+
+export type TRPCMutationState<Path extends TRPCMutationKey> = MutationState<
+	TRPCMutationOutput<Path>,
+	TRPCError,
+	TRPCMutationInput<Path>
+>;
 
 export type InvalidateArgs = [InvalidateQueryFilters?, InvalidateOptions?];
 export type UpdateArgs = [SetDataOptions?];

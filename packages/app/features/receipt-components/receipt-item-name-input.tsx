@@ -3,14 +3,13 @@ import { View } from "react-native";
 
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useSingleInput } from "~app/hooks/use-single-input";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import { trpc } from "~app/trpc";
 import { receiptItemNameSchema } from "~app/utils/validation";
 import { Input } from "~components/input";
 import { Text } from "~components/text";
-import { options as receiptItemsUpdateOptions } from "~mutations/receipt-items/update";
 
-import { useReceiptContext } from "./context";
+import { useActionsHooksContext, useReceiptContext } from "./context";
 import { useCanEdit } from "./hooks";
 import type { Item } from "./state";
 
@@ -23,8 +22,9 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 	item,
 	isDisabled: isExternalDisabled,
 }) => {
-	const { receiptId, receiptDisabled } = useReceiptContext();
+	const { receiptDisabled } = useReceiptContext();
 	const canEdit = useCanEdit();
+	const { updateItemName } = useActionsHooksContext();
 	const [isEditing, { switchValue: switchEditing, setFalse: unsetEditing }] =
 		useBooleanState();
 
@@ -37,11 +37,9 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 		schema: receiptItemNameSchema,
 	});
 
-	const updateMutation = trpc.receiptItems.update.useMutation(
-		useTrpcMutationOptions(receiptItemsUpdateOptions, {
-			context: receiptId,
-			onSuccess: switchEditing,
-		}),
+	const updateMutationState = useTrpcMutationState<"receiptItems.update">(
+		trpc.receiptItems.update,
+		(vars) => vars.update.type === "name" && vars.id === item.id,
 	);
 	const updateName = React.useCallback(
 		(name: string) => {
@@ -49,12 +47,9 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 				unsetEditing();
 				return;
 			}
-			updateMutation.mutate({
-				id: item.id,
-				update: { type: "name", name },
-			});
+			updateItemName(item.id, name, { onSuccess: switchEditing });
 		},
-		[updateMutation, item.id, item.name, unsetEditing],
+		[item.name, item.id, updateItemName, switchEditing, unsetEditing],
 	);
 	const isDisabled = !canEdit || receiptDisabled || isExternalDisabled;
 
@@ -75,7 +70,7 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 		<Input
 			{...bindings}
 			aria-label="Receipt item name"
-			mutation={updateMutation}
+			mutation={updateMutationState}
 			fieldError={inputState.error}
 			isDisabled={isDisabled}
 			className="basis-52"

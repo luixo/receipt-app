@@ -3,14 +3,13 @@ import { View } from "react-native";
 
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useSingleInput } from "~app/hooks/use-single-input";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import { trpc } from "~app/trpc";
 import { quantitySchema } from "~app/utils/validation";
 import { Input } from "~components/input";
 import { Text } from "~components/text";
-import { options as receiptItemsUpdateOptions } from "~mutations/receipt-items/update";
 
-import { useReceiptContext } from "./context";
+import { useActionsHooksContext, useReceiptContext } from "./context";
 import { useCanEdit } from "./hooks";
 import type { Item } from "./state";
 
@@ -23,7 +22,8 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 	item,
 	isDisabled: isExternalDisabled,
 }) => {
-	const { receiptDisabled, receiptId } = useReceiptContext();
+	const { receiptDisabled } = useReceiptContext();
+	const { updateItemQuantity } = useActionsHooksContext();
 	const canEdit = useCanEdit();
 	const [isEditing, { switchValue: switchEditing, setFalse: unsetEditing }] =
 		useBooleanState();
@@ -38,11 +38,9 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 		type: "number",
 	});
 
-	const updateMutation = trpc.receiptItems.update.useMutation(
-		useTrpcMutationOptions(receiptItemsUpdateOptions, {
-			context: receiptId,
-			onSuccess: unsetEditing,
-		}),
+	const updateMutationState = useTrpcMutationState<"receiptItems.update">(
+		trpc.receiptItems.update,
+		(vars) => vars.update.type === "quantity" && vars.id === item.id,
 	);
 	const updateQuantity = React.useCallback(
 		(quantity: number) => {
@@ -50,12 +48,9 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 				unsetEditing();
 				return;
 			}
-			updateMutation.mutate({
-				id: item.id,
-				update: { type: "quantity", quantity },
-			});
+			updateItemQuantity(item.id, quantity, { onSuccess: unsetEditing });
 		},
-		[updateMutation, item.id, item.quantity, unsetEditing],
+		[item.quantity, item.id, updateItemQuantity, unsetEditing],
 	);
 	const isDisabled = !canEdit || receiptDisabled || isExternalDisabled;
 
@@ -76,7 +71,7 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 		<Input
 			{...bindings}
 			aria-label="Receipt item quantity"
-			mutation={updateMutation}
+			mutation={updateMutationState}
 			fieldError={inputState.error}
 			isDisabled={isDisabled}
 			className="basis-24"

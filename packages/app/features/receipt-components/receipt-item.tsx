@@ -4,19 +4,16 @@ import { View } from "react-native";
 import { ErrorMessage } from "~app/components/error-message";
 import { RemoveButton } from "~app/components/remove-button";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import { trpc } from "~app/trpc";
 import { Card, CardBody, CardHeader } from "~components/card";
 import { Chip } from "~components/chip";
 import { Divider } from "~components/divider";
 import { ScrollShadow } from "~components/scroll-shadow";
 import { Text } from "~components/text";
-import type { UsersId } from "~db/models";
-import { options as itemParticipantsAddOptions } from "~mutations/item-participants/add";
-import { options as receiptItemsRemoveOptions } from "~mutations/receipt-items/remove";
 import { round } from "~utils/math";
 
-import { useReceiptContext } from "./context";
+import { useActionsHooksContext, useReceiptContext } from "./context";
 import { useCanEdit } from "./hooks";
 import { ReceiptItemNameInput } from "./receipt-item-name-input";
 import { ReceiptItemPart } from "./receipt-item-part";
@@ -31,42 +28,28 @@ type Props = {
 
 export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 	({ item }, ref) => {
-		const { receiptId, currencyCode, participants } = useReceiptContext();
+		const { currencyCode, participants } = useReceiptContext();
+		const { addItemPart, removeItem } = useActionsHooksContext();
 		const canEdit = useCanEdit();
 		const currency = useFormattedCurrency(currencyCode);
-		const removeReceiptItemMutation = trpc.receiptItems.remove.useMutation(
-			useTrpcMutationOptions(receiptItemsRemoveOptions, {
-				context: receiptId,
-			}),
-		);
-		const removeItem = React.useCallback(
-			() => removeReceiptItemMutation.mutate({ id: item.id }),
-			[removeReceiptItemMutation, item.id],
-		);
-		const isRemovalPending = removeReceiptItemMutation.status === "pending";
 
-		const addedParticipants = item.parts.map((part) => part.userId);
-		const notAddedParticipants = participants.filter(
-			(participant) => !addedParticipants.includes(participant.userId),
+		const removeItemMutationState = useTrpcMutationState<"receiptItems.remove">(
+			trpc.receiptItems.remove,
+			(vars) => vars.id === item.id,
 		);
-		const notAddedParticipantsIds = notAddedParticipants.map(
-			(participant) => participant.userId,
-		) as [UsersId, ...UsersId[]];
+		const isRemovalPending = removeItemMutationState?.status === "pending";
 
-		const addItemPartMutation = trpc.itemParticipants.add.useMutation(
-			useTrpcMutationOptions(itemParticipantsAddOptions, {
-				context: receiptId,
-			}),
-		);
-		const addEveryParticipant = React.useCallback(() => {
-			notAddedParticipantsIds.forEach((participantId) => {
-				addItemPartMutation.mutate({
-					itemId: item.id,
-					userId: participantId,
-					part: 1,
-				});
+		const notAddedParticipants = React.useMemo(() => {
+			const addedParticipants = item.parts.map((part) => part.userId);
+			return participants.filter(
+				(participant) => !addedParticipants.includes(participant.userId),
+			);
+		}, [item.parts, participants]);
+		const onAddEveryItemParticipant = React.useCallback(() => {
+			notAddedParticipants.forEach((participant) => {
+				addItemPart(item.id, participant.userId, 1);
 			});
-		}, [addItemPartMutation, notAddedParticipantsIds, item.id]);
+		}, [addItemPart, item.id, notAddedParticipants]);
 
 		return (
 			<Card ref={ref}>
@@ -74,8 +57,8 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 					<ReceiptItemNameInput item={item} isDisabled={isRemovalPending} />
 					{!canEdit ? null : (
 						<RemoveButton
-							onRemove={removeItem}
-							mutation={removeReceiptItemMutation}
+							onRemove={() => removeItem(item.id)}
+							mutation={{ isPending: isRemovalPending }}
 							subtitle="This will remove item with all participant's parts"
 							noConfirm={item.parts.length === 0}
 							isIconOnly
@@ -103,7 +86,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 								<Chip
 									color="secondary"
 									className="cursor-pointer"
-									onClick={addEveryParticipant}
+									onClick={onAddEveryItemParticipant}
 								>
 									Everyone
 								</Chip>

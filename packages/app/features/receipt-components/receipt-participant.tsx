@@ -4,18 +4,16 @@ import { View } from "react-native";
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { RemoveButton } from "~app/components/remove-button";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
-import type { Participant } from "~app/hooks/use-participants";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import { trpc } from "~app/trpc";
 import { Accordion, AccordionItem } from "~components/accordion";
 import { Text } from "~components/text";
-import { options as receiptParticipantsRemoveOptions } from "~mutations/receipt-participants/remove";
 import { round } from "~utils/math";
 
-import { useReceiptContext } from "./context";
+import { useActionsHooksContext, useReceiptContext } from "./context";
 import { useIsOwner } from "./hooks";
-import { ReceiptParticipantActions } from "./receipt-participant-actions";
 import { ReceiptParticipantRoleInput } from "./receipt-participant-role-input";
+import type { Participant } from "./state";
 
 const getParticipantColorCode = (
 	participant: Participant,
@@ -66,24 +64,22 @@ type Props = {
 };
 
 export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
-	const { receiptId, currencyCode, selfUserId } = useReceiptContext();
+	const { receiptId, currencyCode, selfUserId, renderParticipantActions } =
+		useReceiptContext();
+	const { removeParticipant } = useActionsHooksContext();
 	const isOwner = useIsOwner();
 	const userQuery = trpc.users.get.useQuery({ id: participant.userId });
 
-	const removeReceiptParticipantMutation =
-		trpc.receiptParticipants.remove.useMutation(
-			useTrpcMutationOptions(receiptParticipantsRemoveOptions, {
-				context: { receiptId },
-			}),
+	const removeParticipantMutationState =
+		useTrpcMutationState<"receiptParticipants.remove">(
+			trpc.receiptParticipants.remove,
+			(vars) =>
+				vars.receiptId === receiptId && vars.userId === participant.userId,
 		);
-	const removeReceiptParticipant = React.useCallback(
-		() =>
-			removeReceiptParticipantMutation.mutate({
-				receiptId,
-				userId: participant.userId,
-			}),
-		[removeReceiptParticipantMutation, receiptId, participant.userId],
-	);
+	const isPending = removeParticipantMutationState?.status === "pending";
+	const removeReceiptParticipant = React.useCallback(() => {
+		removeParticipant(participant.userId);
+	}, [participant.userId, removeParticipant]);
 	const currency = useFormattedCurrency(currencyCode);
 	const disabled = participant.items.length === 0;
 
@@ -134,7 +130,7 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 								{isOwner ? (
 									<RemoveButton
 										onRemove={removeReceiptParticipant}
-										mutation={removeReceiptParticipantMutation}
+										mutation={{ isPending }}
 										subtitle="This will remove participant with all his parts"
 										noConfirm={participant.sum === 0}
 										isIconOnly
@@ -146,9 +142,7 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 				}
 			>
 				<View className="flex gap-4">
-					{isOwner ? (
-						<ReceiptParticipantActions participant={participant} />
-					) : null}
+					{renderParticipantActions(participant)}
 					<View>
 						{participant.items.map((item) => (
 							<Text key={item.id}>

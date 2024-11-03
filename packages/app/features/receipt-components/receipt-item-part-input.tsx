@@ -3,16 +3,15 @@ import { View } from "react-native";
 
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useSingleInput } from "~app/hooks/use-single-input";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import { trpc } from "~app/trpc";
 import { partSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { MinusIcon, PlusIcon } from "~components/icons";
 import { Input } from "~components/input";
 import { Text } from "~components/text";
-import { options as itemParticipantsUpdateOptions } from "~mutations/item-participants/update";
 
-import { useReceiptContext } from "./context";
+import { useActionsHooksContext, useReceiptContext } from "./context";
 import { useCanEdit } from "./hooks";
 import type { Item } from "./state";
 
@@ -27,7 +26,8 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 	item,
 	isDisabled: isExternalDisabled,
 }) => {
-	const { receiptId, receiptDisabled } = useReceiptContext();
+	const { updateItemPart } = useActionsHooksContext();
+	const { receiptDisabled } = useReceiptContext();
 	const canEdit = useCanEdit();
 	const [isEditing, { switchValue: switchEditing, setFalse: unsetEditing }] =
 		useBooleanState();
@@ -41,13 +41,11 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 		schema: partSchema,
 		type: "number",
 	});
-
-	const updateMutation = trpc.itemParticipants.update.useMutation(
-		useTrpcMutationOptions(itemParticipantsUpdateOptions, {
-			context: receiptId,
-			onSuccess: unsetEditing,
-		}),
+	const updateMutationState = useTrpcMutationState<"itemParticipants.update">(
+		trpc.itemParticipants.update,
+		(vars) => vars.userId === part.userId && vars.itemId === item.id,
 	);
+	const isPending = updateMutationState?.status === "pending";
 
 	const updatePart = React.useCallback(
 		(partUpdater: number | ((prev: number) => number)) => {
@@ -59,13 +57,11 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 				unsetEditing();
 				return;
 			}
-			updateMutation.mutate({
-				itemId: item.id,
-				userId: part.userId,
-				update: { type: "part", part: nextPart },
+			updateItemPart(item.id, part.userId, nextPart, {
+				onSuccess: unsetEditing,
 			});
 		},
-		[part.part, part.userId, updateMutation, item.id, unsetEditing],
+		[part.part, part.userId, updateItemPart, item.id, unsetEditing],
 	);
 
 	const wrap = React.useCallback(
@@ -74,7 +70,7 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 				<Button
 					variant="ghost"
 					color="primary"
-					isLoading={updateMutation.isPending}
+					isLoading={isPending}
 					onClick={() => updatePart((prev) => prev - 1)}
 					isDisabled={part.part <= 1}
 					isIconOnly
@@ -85,7 +81,7 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 				<Button
 					variant="ghost"
 					color="primary"
-					isLoading={updateMutation.isPending}
+					isLoading={isPending}
 					onClick={() => updatePart((prev) => prev + 1)}
 					isIconOnly
 				>
@@ -93,7 +89,7 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 				</Button>
 			</View>
 		),
-		[updatePart, part.part, updateMutation.isPending],
+		[updatePart, part.part, isPending],
 	);
 
 	const totalParts = item.parts.reduce(
@@ -119,7 +115,7 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 				{...bindings}
 				className="w-32"
 				aria-label="Item part"
-				mutation={updateMutation}
+				mutation={updateMutationState}
 				fieldError={inputState.error}
 				isDisabled={isDisabled}
 				labelPlacement="outside-left"

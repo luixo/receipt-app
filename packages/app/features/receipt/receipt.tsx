@@ -13,11 +13,12 @@ import { Spinner } from "~components/spinner";
 import { Text } from "~components/text";
 import type { ReceiptsId } from "~db/models";
 
-import { useGetReceiptContext } from "./hooks";
+import { useActionHooks, useGetReceiptContext } from "./hooks";
 import { ReceiptCurrencyInput } from "./receipt-currency-input";
 import { ReceiptDateInput } from "./receipt-date-input";
 import { ReceiptGuestControlButton } from "./receipt-guest-control-button";
 import { ReceiptNameInput } from "./receipt-name-input";
+import { ReceiptParticipantActions } from "./receipt-participant-actions";
 import { ReceiptRemoveButton } from "./receipt-remove-button";
 import { ReceiptSyncButton } from "./receipt-sync-button";
 import { ReceiptTransferModal } from "./receipt-transfer-modal";
@@ -34,7 +35,18 @@ export const ReceiptInner: React.FC<InnerProps> = ({ query }) => {
 		useBooleanState();
 	const isOwner = receipt.selfUserId === receipt.ownerUserId;
 	const disabled = !isOwner || deleteLoading;
-	const receiptContext = useGetReceiptContext(receipt, deleteLoading);
+	const actionsHooksContext = useActionHooks(receipt);
+	const receiptContext = useGetReceiptContext(
+		receipt,
+		deleteLoading,
+		(participant) =>
+			isOwner ? (
+				<ReceiptParticipantActions
+					participant={participant}
+					receipt={receipt}
+				/>
+			) : null,
+	);
 
 	return (
 		<>
@@ -96,7 +108,10 @@ export const ReceiptInner: React.FC<InnerProps> = ({ query }) => {
 					/>
 				</View>
 			) : null}
-			<ReceiptComponents receipt={receiptContext} />
+			<ReceiptComponents
+				receipt={receiptContext}
+				actionsHooks={actionsHooksContext}
+			/>
 		</>
 	);
 };

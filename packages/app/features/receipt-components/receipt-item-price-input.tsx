@@ -4,14 +4,13 @@ import { View } from "react-native";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import { useSingleInput } from "~app/hooks/use-single-input";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import { trpc } from "~app/trpc";
 import { priceSchema } from "~app/utils/validation";
 import { Input } from "~components/input";
 import { Text } from "~components/text";
-import { options as receiptItemsUpdateOptions } from "~mutations/receipt-items/update";
 
-import { useReceiptContext } from "./context";
+import { useActionsHooksContext, useReceiptContext } from "./context";
 import { useCanEdit } from "./hooks";
 import type { Item } from "./state";
 
@@ -24,8 +23,9 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 	item,
 	isDisabled: isExternalDisabled,
 }) => {
-	const { receiptId, currencyCode, receiptDisabled } = useReceiptContext();
+	const { currencyCode, receiptDisabled } = useReceiptContext();
 	const canEdit = useCanEdit();
+	const { updateItemPrice } = useActionsHooksContext();
 	const [isEditing, { switchValue: switchEditing, setFalse: unsetEditing }] =
 		useBooleanState();
 
@@ -39,11 +39,9 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 		type: "number",
 	});
 
-	const updateMutation = trpc.receiptItems.update.useMutation(
-		useTrpcMutationOptions(receiptItemsUpdateOptions, {
-			context: receiptId,
-			onSuccess: unsetEditing,
-		}),
+	const updateMutationState = useTrpcMutationState<"receiptItems.update">(
+		trpc.receiptItems.update,
+		(vars) => vars.update.type === "price" && vars.id === item.id,
 	);
 	const updatePrice = React.useCallback(
 		(price: number) => {
@@ -51,12 +49,9 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 				unsetEditing();
 				return;
 			}
-			updateMutation.mutate({
-				id: item.id,
-				update: { type: "price", price },
-			});
+			updateItemPrice(item.id, price, { onSuccess: unsetEditing });
 		},
-		[updateMutation, item.id, item.price, unsetEditing],
+		[item.id, item.price, unsetEditing, updateItemPrice],
 	);
 	const currency = useFormattedCurrency(currencyCode);
 	const isDisabled = !canEdit || isExternalDisabled || receiptDisabled;
@@ -82,7 +77,7 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 			aria-label="Receipt item price"
 			className="basis-24"
 			labelPlacement="outside-left"
-			mutation={updateMutation}
+			mutation={updateMutationState}
 			fieldError={inputState.error}
 			isDisabled={isDisabled}
 			saveProps={{

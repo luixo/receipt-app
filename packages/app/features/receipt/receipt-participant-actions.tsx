@@ -6,6 +6,7 @@ import { skipToken } from "@tanstack/react-query";
 import { DebtSyncStatus } from "~app/components/app/debt-sync-status";
 import type { Participant } from "~app/hooks/use-participants";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { areDebtsSynced } from "~app/utils/debts";
 import { getReceiptDebtName } from "~app/utils/receipt";
@@ -14,19 +15,15 @@ import { SendIcon, SyncIcon, ZeroIcon } from "~components/icons";
 import { options as debtsAddOptions } from "~mutations/debts/add";
 import { options as debtsUpdateOptions } from "~mutations/debts/update";
 
-import { useReceiptContext } from "./context";
-
 type Props = {
+	receipt: TRPCQueryOutput<"receipts.get">;
 	participant: Participant;
 };
 
-export const ReceiptParticipantActions: React.FC<Props> = ({ participant }) => {
-	const {
-		currencyCode,
-		issued,
-		receiptId,
-		name: receiptName,
-	} = useReceiptContext();
+export const ReceiptParticipantActions: React.FC<Props> = ({
+	receipt,
+	participant,
+}) => {
 	const userQuery = trpc.users.get.useQuery({ id: participant.userId });
 
 	const updateMutation = trpc.debts.update.useMutation(
@@ -45,12 +42,18 @@ export const ReceiptParticipantActions: React.FC<Props> = ({ participant }) => {
 				id: currentDebt.id,
 				update: {
 					amount: participant.sum,
-					currencyCode,
-					timestamp: issued,
-					receiptId,
+					currencyCode: receipt.currencyCode,
+					timestamp: receipt.issued,
+					receiptId: receipt.id,
 				},
 			}),
-		[updateMutation, participant.sum, currencyCode, issued, receiptId],
+		[
+			updateMutation,
+			participant.sum,
+			receipt.currencyCode,
+			receipt.issued,
+			receipt.id,
+		],
 	);
 
 	const addMutation = trpc.debts.add.useMutation(
@@ -59,21 +62,21 @@ export const ReceiptParticipantActions: React.FC<Props> = ({ participant }) => {
 	const addDebt = React.useCallback(
 		() =>
 			addMutation.mutate({
-				currencyCode,
+				currencyCode: receipt.currencyCode,
 				userId: participant.userId,
 				amount: participant.sum,
-				timestamp: issued,
-				note: getReceiptDebtName(receiptName),
-				receiptId,
+				timestamp: receipt.issued,
+				note: getReceiptDebtName(receipt.name),
+				receiptId: receipt.id,
 			}),
 		[
 			addMutation,
 			participant.sum,
-			currencyCode,
-			issued,
-			receiptName,
+			receipt.currencyCode,
+			receipt.issued,
+			receipt.name,
 			participant.userId,
-			receiptId,
+			receipt.id,
 		],
 	);
 

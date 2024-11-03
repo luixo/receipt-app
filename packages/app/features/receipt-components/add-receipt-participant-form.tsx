@@ -1,12 +1,9 @@
 import React from "react";
 
 import { UsersSuggest } from "~app/components/app/users-suggest";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { trpc } from "~app/trpc";
-import type { AccountsId, UsersId } from "~db/models";
-import { options as receiptParticipantsAddOptions } from "~mutations/receipt-participants/add";
+import type { UsersId } from "~db/models";
 
-import { useReceiptContext } from "./context";
+import { useActionsHooksContext, useReceiptContext } from "./context";
 
 type Props = {
 	filterIds: UsersId[];
@@ -18,26 +15,18 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 }) => {
 	const { receiptId, receiptDisabled, participantsDisabled } =
 		useReceiptContext();
+	const { addParticipant } = useActionsHooksContext();
 	const [localFilterIds, setLocalFilterIds] = React.useState<UsersId[]>([]);
-	const selfAccountId =
-		trpc.account.get.useQuery().data?.account.id ??
-		("unknown-account-id" as AccountsId);
-	const addMutation = trpc.receiptParticipants.add.useMutation(
-		useTrpcMutationOptions(receiptParticipantsAddOptions, {
-			context: { receiptId, selfAccountId },
-			onMutate: (vars) =>
-				setLocalFilterIds((prevIds) => [...prevIds, vars.userId]),
-			onSettled: (_res, _err, vars) =>
-				setLocalFilterIds((prevIds) =>
-					prevIds.filter((id) => id !== vars.userId),
-				),
-		}),
-	);
 
 	const addParticipants = React.useCallback(
-		(userId: UsersId) =>
-			addMutation.mutate({ receiptId, userId, role: "editor" }),
-		[addMutation, receiptId],
+		(userId: UsersId) => {
+			setLocalFilterIds((prevIds) => [...prevIds, userId]);
+			addParticipant(userId, "editor", {
+				onSettled: () =>
+					setLocalFilterIds((prevIds) => prevIds.filter((id) => id !== userId)),
+			});
+		},
+		[addParticipant],
 	);
 
 	return (

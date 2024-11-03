@@ -3,11 +3,10 @@ import { View } from "react-native";
 
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { RemoveButton } from "~app/components/remove-button";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import { trpc } from "~app/trpc";
-import { options as itemParticipantsRemoveOptions } from "~mutations/item-participants/remove";
 
-import { useReceiptContext } from "./context";
+import { useActionsHooksContext } from "./context";
 import { useCanEdit, useIsOwner } from "./hooks";
 import { ReceiptItemPartInput } from "./receipt-item-part-input";
 import type { Item, Participant } from "./state";
@@ -25,23 +24,19 @@ export const ReceiptItemPart: React.FC<Props> = ({
 	participant,
 	isDisabled: isExternalDisabled,
 }) => {
-	const { receiptId } = useReceiptContext();
+	const { removeItemPart: removeItemPartMutation } = useActionsHooksContext();
 	const canEdit = useCanEdit();
 	const isOwner = useIsOwner();
-	const removeMutation = trpc.itemParticipants.remove.useMutation(
-		useTrpcMutationOptions(itemParticipantsRemoveOptions, {
-			context: receiptId,
-		}),
+	const removeMutationState = useTrpcMutationState<"itemParticipants.remove">(
+		trpc.itemParticipants.remove,
+		(vars) => vars.userId === part.userId && vars.itemId === item.id,
 	);
+	const isPending = removeMutationState?.status === "pending";
 	const removeItemPart = React.useCallback(
-		() =>
-			removeMutation.mutate({
-				itemId: item.id,
-				userId: part.userId,
-			}),
-		[removeMutation, item.id, part.userId],
+		() => removeItemPartMutation(item.id, part.userId),
+		[removeItemPartMutation, item.id, part.userId],
 	);
-	const isDisabled = isExternalDisabled || removeMutation.isPending;
+	const isDisabled = isExternalDisabled || isPending;
 
 	return (
 		<View className="items-start justify-between gap-2 min-[500px]:flex-row sm:gap-4">
@@ -52,7 +47,7 @@ export const ReceiptItemPart: React.FC<Props> = ({
 					<RemoveButton
 						className="self-end"
 						onRemove={removeItemPart}
-						mutation={removeMutation}
+						mutation={{ isPending }}
 						noConfirm
 						isIconOnly
 					/>

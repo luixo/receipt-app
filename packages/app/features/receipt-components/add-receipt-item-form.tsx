@@ -7,7 +7,7 @@ import type { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
 
 import { useInputController } from "~app/hooks/use-input-controller";
-import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import { trpc } from "~app/trpc";
 import {
 	priceSchema,
@@ -16,9 +16,8 @@ import {
 } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { Input } from "~components/input";
-import { options as receiptItemsAddOptions } from "~mutations/receipt-items/add";
 
-import { useReceiptContext } from "./context";
+import { useActionsHooksContext, useReceiptContext } from "./context";
 
 type NameProps = {
 	form: UseFormReturn<Form>;
@@ -120,18 +119,22 @@ export const AddReceiptItemForm: React.FC = () => {
 			quantity: 1,
 		},
 	});
-	const addMutation = trpc.receiptItems.add.useMutation(
-		useTrpcMutationOptions(receiptItemsAddOptions, {
-			context: receiptId,
-			onSuccess: () => form.reset(),
-		}),
+	const { addItem } = useActionsHooksContext();
+	const addItemMutationState = useTrpcMutationState<"receiptItems.add">(
+		trpc.receiptItems.add,
+		(vars) => vars.receiptId === receiptId,
 	);
+	const isPending = addItemMutationState?.status === "pending";
 	const onSubmit = React.useCallback(
-		(values: Form) => addMutation.mutate({ ...values, receiptId }),
-		[addMutation, receiptId],
+		(values: Form) => {
+			addItem(values.name, values.price, values.quantity, {
+				onSuccess: () => form.reset(),
+			});
+		},
+		[addItem, form],
 	);
 
-	const isDisabled = receiptDisabled || addMutation.isPending;
+	const isDisabled = receiptDisabled || isPending;
 
 	return (
 		<View className="gap-4">
@@ -145,7 +148,7 @@ export const AddReceiptItemForm: React.FC = () => {
 				onClick={form.handleSubmit(onSubmit)}
 				isDisabled={!form.formState.isValid || isDisabled}
 				className="w-full"
-				isLoading={addMutation.isPending}
+				isLoading={isPending}
 			>
 				Save
 			</Button>
