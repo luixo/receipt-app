@@ -1,25 +1,18 @@
 import type React from "react";
 import { View } from "react-native";
 
-import { useParticipants } from "~app/hooks/use-participants";
-import type { TRPCQueryOutput } from "~app/trpc";
 import { Accordion, AccordionItem } from "~components/accordion";
 import { UserIcon } from "~components/icons";
 import { Text } from "~components/text";
 
 import { AddReceiptParticipantForm } from "./add-receipt-participant-form";
+import { useReceiptContext } from "./context";
+import { useIsOwner } from "./hooks";
 import { ReceiptParticipant } from "./receipt-participant";
 
-type Props = {
-	receipt: TRPCQueryOutput<"receipts.get">;
-	isDisabled: boolean;
-};
-
-export const ReceiptParticipants: React.FC<Props> = ({
-	receipt,
-	isDisabled,
-}) => {
-	const { participants } = useParticipants(receipt);
+export const ReceiptParticipants: React.FC = () => {
+	const { participants } = useReceiptContext();
+	const isOwner = useIsOwner();
 	return (
 		<Accordion variant="shadow">
 			<AccordionItem
@@ -36,15 +29,11 @@ export const ReceiptParticipants: React.FC<Props> = ({
 					<ReceiptParticipant
 						key={participant.userId}
 						participant={participant}
-						receipt={receipt}
-						isDisabled={isDisabled}
 					/>
 				))}
-				{receipt.ownerUserId === receipt.selfUserId ? (
+				{isOwner ? (
 					<AddReceiptParticipantForm
 						className="my-4"
-						disabled={isDisabled}
-						receipt={receipt}
 						filterIds={participants.map((participant) => participant.userId)}
 					/>
 				) : null}

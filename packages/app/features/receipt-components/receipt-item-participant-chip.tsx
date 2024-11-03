@@ -2,24 +2,27 @@ import React from "react";
 
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { options as itemParticipantsAddOptions } from "~mutations/item-participants/add";
 
+import { useReceiptContext } from "./context";
+import { useIsOwner } from "./hooks";
+import type { Item, Participant } from "./state";
+
 type Props = {
-	item: TRPCQueryOutput<"receipts.get">["items"][number];
-	participant: TRPCQueryOutput<"receipts.get">["participants"][number];
-	receipt: TRPCQueryOutput<"receipts.get">;
+	item: Item;
+	participant: Participant;
 };
 
 export const ReceiptItemParticipantChip: React.FC<Props> = ({
 	item,
 	participant,
-	receipt,
 }) => {
+	const { receiptId } = useReceiptContext();
+	const isOwner = useIsOwner();
 	const addItemPartMutation = trpc.itemParticipants.add.useMutation(
 		useTrpcMutationOptions(itemParticipantsAddOptions, {
-			context: receipt.id,
+			context: receiptId,
 		}),
 	);
 	const addParticipant = React.useCallback(() => {
@@ -33,7 +36,7 @@ export const ReceiptItemParticipantChip: React.FC<Props> = ({
 	return (
 		<LoadableUser
 			id={participant.userId}
-			foreign={receipt.ownerUserId !== receipt.selfUserId}
+			foreign={!isOwner}
 			className="cursor-pointer"
 			onClick={addParticipant}
 			chip

@@ -8,7 +8,6 @@ import { z } from "zod";
 
 import { useInputController } from "~app/hooks/use-input-controller";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import {
 	priceSchema,
@@ -18,6 +17,8 @@ import {
 import { Button } from "~components/button";
 import { Input } from "~components/input";
 import { options as receiptItemsAddOptions } from "~mutations/receipt-items/add";
+
+import { useReceiptContext } from "./context";
 
 type NameProps = {
 	form: UseFormReturn<Form>;
@@ -101,15 +102,8 @@ type Form = {
 	quantity: number;
 };
 
-type Props = {
-	receipt: TRPCQueryOutput<"receipts.get">;
-	isDisabled: boolean;
-};
-
-export const AddReceiptItemForm: React.FC<Props> = ({
-	receipt,
-	isDisabled: isExternalDisabled,
-}) => {
+export const AddReceiptItemForm: React.FC = () => {
+	const { receiptId, receiptDisabled } = useReceiptContext();
 	const form = useForm<Form>({
 		mode: "onChange",
 		resolver: zodResolver(
@@ -128,16 +122,16 @@ export const AddReceiptItemForm: React.FC<Props> = ({
 	});
 	const addMutation = trpc.receiptItems.add.useMutation(
 		useTrpcMutationOptions(receiptItemsAddOptions, {
-			context: receipt.id,
+			context: receiptId,
 			onSuccess: () => form.reset(),
 		}),
 	);
 	const onSubmit = React.useCallback(
-		(values: Form) => addMutation.mutate({ ...values, receiptId: receipt.id }),
-		[addMutation, receipt.id],
+		(values: Form) => addMutation.mutate({ ...values, receiptId }),
+		[addMutation, receiptId],
 	);
 
-	const isDisabled = isExternalDisabled || addMutation.isPending;
+	const isDisabled = receiptDisabled || addMutation.isPending;
 
 	return (
 		<View className="gap-4">

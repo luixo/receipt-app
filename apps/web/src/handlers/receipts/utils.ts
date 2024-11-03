@@ -2,9 +2,11 @@ import type { z } from "zod";
 
 import type { AccountsId } from "~db/models";
 import type { Database } from "~db/types";
+import type { assignableRoleSchema } from "~web/handlers/validation";
 import { roleSchema } from "~web/handlers/validation";
 
 export type Role = z.infer<typeof roleSchema>;
+export type AssignableRole = z.infer<typeof assignableRoleSchema>;
 
 export const getAccessRole = async (
 	database: Database,

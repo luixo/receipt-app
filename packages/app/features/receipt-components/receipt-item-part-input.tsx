@@ -4,7 +4,6 @@ import { View } from "react-native";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useSingleInput } from "~app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { partSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
@@ -13,25 +12,23 @@ import { Input } from "~components/input";
 import { Text } from "~components/text";
 import { options as itemParticipantsUpdateOptions } from "~mutations/item-participants/update";
 
-type Receipt = TRPCQueryOutput<"receipts.get">;
-type ReceiptItem = Receipt["items"][number];
-type ReceiptItemParts = ReceiptItem["parts"];
+import { useReceiptContext } from "./context";
+import { useCanEdit } from "./hooks";
+import type { Item } from "./state";
 
 type Props = {
-	part: ReceiptItemParts[number];
-	item: ReceiptItem;
-	receipt: Receipt;
-	readOnly?: boolean;
+	part: Item["parts"][number];
+	item: Item;
 	isDisabled: boolean;
 };
 
 export const ReceiptItemPartInput: React.FC<Props> = ({
 	part,
 	item,
-	receipt,
-	isDisabled,
-	readOnly,
+	isDisabled: isExternalDisabled,
 }) => {
+	const { receiptId, receiptDisabled } = useReceiptContext();
+	const canEdit = useCanEdit();
 	const [isEditing, { switchValue: switchEditing, setFalse: unsetEditing }] =
 		useBooleanState();
 
@@ -47,7 +44,7 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 
 	const updateMutation = trpc.itemParticipants.update.useMutation(
 		useTrpcMutationOptions(itemParticipantsUpdateOptions, {
-			context: receipt.id,
+			context: receiptId,
 			onSuccess: unsetEditing,
 		}),
 	);
@@ -110,9 +107,11 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 		</Text>
 	);
 
-	if (readOnly) {
+	if (!canEdit) {
 		return readOnlyComponent;
 	}
+
+	const isDisabled = isExternalDisabled || receiptDisabled;
 
 	if (isEditing) {
 		return wrap(

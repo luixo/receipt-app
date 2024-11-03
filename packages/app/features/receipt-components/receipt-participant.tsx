@@ -6,22 +6,23 @@ import { RemoveButton } from "~app/components/remove-button";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import type { Participant } from "~app/hooks/use-participants";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { type TRPCQueryOutput, trpc } from "~app/trpc";
+import { trpc } from "~app/trpc";
 import { Accordion, AccordionItem } from "~components/accordion";
 import { Text } from "~components/text";
 import { options as receiptParticipantsRemoveOptions } from "~mutations/receipt-participants/remove";
 import { round } from "~utils/math";
 
+import { useReceiptContext } from "./context";
+import { useIsOwner } from "./hooks";
 import { ReceiptParticipantActions } from "./receipt-participant-actions";
 import { ReceiptParticipantRoleInput } from "./receipt-participant-role-input";
 
 const getParticipantColorCode = (
 	participant: Participant,
-	receipt: TRPCQueryOutput<"receipts.get">,
 	hasConnectedAccount: boolean,
+	isOwner: boolean,
+	isSelfParticipant: boolean,
 ) => {
-	const isOwner = receipt.selfUserId === receipt.ownerUserId;
-	const isSelfParticipant = participant.userId === receipt.selfUserId;
 	if (!isOwner && !isSelfParticipant) {
 		// We don't have data on foreign debts with a foreign receipt
 		return;
@@ -62,34 +63,29 @@ const getParticipantColorCode = (
 
 type Props = {
 	participant: Participant;
-	receipt: TRPCQueryOutput<"receipts.get">;
-	isDisabled: boolean;
 };
 
-export const ReceiptParticipant: React.FC<Props> = ({
-	participant,
-	receipt,
-	isDisabled,
-}) => {
+export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
+	const { receiptId, currencyCode, selfUserId } = useReceiptContext();
+	const isOwner = useIsOwner();
 	const userQuery = trpc.users.get.useQuery({ id: participant.userId });
 
 	const removeReceiptParticipantMutation =
 		trpc.receiptParticipants.remove.useMutation(
 			useTrpcMutationOptions(receiptParticipantsRemoveOptions, {
-				context: { receiptId: receipt.id },
+				context: { receiptId },
 			}),
 		);
 	const removeReceiptParticipant = React.useCallback(
 		() =>
 			removeReceiptParticipantMutation.mutate({
-				receiptId: receipt.id,
+				receiptId,
 				userId: participant.userId,
 			}),
-		[removeReceiptParticipantMutation, receipt.id, participant.userId],
+		[removeReceiptParticipantMutation, receiptId, participant.userId],
 	);
-	const currency = useFormattedCurrency(receipt.currencyCode);
+	const currency = useFormattedCurrency(currencyCode);
 	const disabled = participant.items.length === 0;
-	const isOwner = receipt.ownerUserId === receipt.selfUserId;
 
 	return (
 		<Accordion>
@@ -118,14 +114,14 @@ export const ReceiptParticipant: React.FC<Props> = ({
 							<Text
 								className={getParticipantColorCode(
 									participant,
-									receipt,
 									Boolean(userQuery.data?.connectedAccount),
+									isOwner,
+									participant.userId === selfUserId,
 								)}
 							>
 								{`${round(participant.sum)} ${currency.symbol}`}
 								{participant.currentDebt
-									? (receipt.ownerUserId !== receipt.selfUserId ? -1 : 1) *
-											participant.currentDebt.amount !==
+									? (isOwner ? 1 : -1) * participant.currentDebt.amount !==
 									  participant.sum
 										? ` (synced as ${round(participant.currentDebt.amount)} ${
 												currency.symbol
@@ -134,11 +130,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 									: null}
 							</Text>
 							<View className="flex-row items-center gap-2">
-								<ReceiptParticipantRoleInput
-									participant={participant}
-									receipt={receipt}
-									isDisabled={isDisabled}
-								/>
+								<ReceiptParticipantRoleInput participant={participant} />
 								{isOwner ? (
 									<RemoveButton
 										onRemove={removeReceiptParticipant}
@@ -155,10 +147,7 @@ export const ReceiptParticipant: React.FC<Props> = ({
 			>
 				<View className="flex gap-4">
 					{isOwner ? (
-						<ReceiptParticipantActions
-							participant={participant}
-							receipt={receipt}
-						/>
+						<ReceiptParticipantActions participant={participant} />
 					) : null}
 					<View>
 						{participant.items.map((item) => (

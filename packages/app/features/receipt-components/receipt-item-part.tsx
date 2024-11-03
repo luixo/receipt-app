@@ -4,23 +4,18 @@ import { View } from "react-native";
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { RemoveButton } from "~app/components/remove-button";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { options as itemParticipantsRemoveOptions } from "~mutations/item-participants/remove";
 
+import { useReceiptContext } from "./context";
+import { useCanEdit, useIsOwner } from "./hooks";
 import { ReceiptItemPartInput } from "./receipt-item-part-input";
-
-type Receipt = TRPCQueryOutput<"receipts.get">;
-type ReceiptItem = Receipt["items"][number];
-type ReceiptParticipant = Receipt["participants"][number];
-type ReceiptItemParts = ReceiptItem["parts"];
+import type { Item, Participant } from "./state";
 
 type Props = {
-	part: ReceiptItemParts[number];
-	item: ReceiptItem;
-	participant: ReceiptParticipant;
-	receipt: Receipt;
-	readOnly?: boolean;
+	part: Item["parts"][number];
+	item: Item;
+	participant: Participant;
 	isDisabled: boolean;
 };
 
@@ -28,13 +23,14 @@ export const ReceiptItemPart: React.FC<Props> = ({
 	part,
 	item,
 	participant,
-	receipt,
-	readOnly,
 	isDisabled: isExternalDisabled,
 }) => {
+	const { receiptId } = useReceiptContext();
+	const canEdit = useCanEdit();
+	const isOwner = useIsOwner();
 	const removeMutation = trpc.itemParticipants.remove.useMutation(
 		useTrpcMutationOptions(itemParticipantsRemoveOptions, {
-			context: receipt.id,
+			context: receiptId,
 		}),
 	);
 	const removeItemPart = React.useCallback(
@@ -45,22 +41,14 @@ export const ReceiptItemPart: React.FC<Props> = ({
 			}),
 		[removeMutation, item.id, part.userId],
 	);
+	const isDisabled = isExternalDisabled || removeMutation.isPending;
 
 	return (
 		<View className="items-start justify-between gap-2 min-[500px]:flex-row sm:gap-4">
-			<LoadableUser
-				id={participant.userId}
-				foreign={receipt.ownerUserId !== receipt.selfUserId}
-			/>
+			<LoadableUser id={participant.userId} foreign={!isOwner} />
 			<View className="flex-row gap-2 self-end">
-				<ReceiptItemPartInput
-					part={part}
-					item={item}
-					receipt={receipt}
-					readOnly={readOnly}
-					isDisabled={isExternalDisabled || removeMutation.isPending}
-				/>
-				{readOnly ? null : (
+				<ReceiptItemPartInput part={part} item={item} isDisabled={isDisabled} />
+				{!canEdit ? null : (
 					<RemoveButton
 						className="self-end"
 						onRemove={removeItemPart}

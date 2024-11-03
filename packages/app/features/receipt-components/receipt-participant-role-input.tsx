@@ -1,9 +1,10 @@
 import React from "react";
 import { View } from "react-native";
 
+import { keys } from "remeda";
+
 import type { Participant } from "~app/hooks/use-participants";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { Button } from "~components/button";
 import {
@@ -20,26 +21,25 @@ import {
 } from "~components/icons";
 import { Text } from "~components/text";
 import { options as receiptParticipantsUpdateOptions } from "~mutations/receipt-participants/update";
-import type { Role } from "~web/handlers/receipts/utils";
+import type { AssignableRole } from "~web/handlers/receipts/utils";
 
-export type AssignableRole = Exclude<Role, "owner">;
+import { useReceiptContext } from "./context";
+import { useIsOwner } from "./hooks";
 
-const ROLES: AssignableRole[] = ["editor", "viewer"];
+const ROLES: Record<AssignableRole, true> = { editor: true, viewer: true };
 
 type Props = {
 	participant: Participant;
-	receipt: TRPCQueryOutput<"receipts.get">;
-	isDisabled: boolean;
 };
 
 export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 	participant,
-	receipt,
-	isDisabled,
 }) => {
+	const { selfUserId, receiptId, receiptDisabled } = useReceiptContext();
+	const isOwner = useIsOwner();
 	const updateParticipantMutation = trpc.receiptParticipants.update.useMutation(
 		useTrpcMutationOptions(receiptParticipantsUpdateOptions, {
-			context: { selfUserId: receipt.selfUserId },
+			context: { selfUserId },
 		}),
 	);
 	const changeRole = React.useCallback(
@@ -48,14 +48,14 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 				return;
 			}
 			updateParticipantMutation.mutate({
-				receiptId: receipt.id,
+				receiptId,
 				userId: participant.userId,
 				update: { type: "role", role: nextRole },
 			});
 		},
 		[
 			updateParticipantMutation,
-			receipt.id,
+			receiptId,
 			participant.userId,
 			participant.role,
 		],
@@ -68,9 +68,7 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 					variant="flat"
 					size="sm"
 					isDisabled={
-						isDisabled ||
-						receipt.ownerUserId !== receipt.selfUserId ||
-						participant.role === "owner"
+						receiptDisabled || !isOwner || participant.role === "owner"
 					}
 					isLoading={updateParticipantMutation.isPending}
 					startContent={<ChevronDown />}
@@ -90,7 +88,7 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 				selectionMode="single"
 				selectedKeys={[participant.role]}
 			>
-				{ROLES.map((pickRole) => (
+				{keys(ROLES).map((pickRole) => (
 					<DropdownItem key={pickRole}>
 						<View onClick={() => changeRole(pickRole)}>
 							<Text>{pickRole}</Text>

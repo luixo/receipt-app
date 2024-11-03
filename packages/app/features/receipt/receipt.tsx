@@ -13,6 +13,7 @@ import { Spinner } from "~components/spinner";
 import { Text } from "~components/text";
 import type { ReceiptsId } from "~db/models";
 
+import { useGetReceiptContext } from "./hooks";
 import { ReceiptCurrencyInput } from "./receipt-currency-input";
 import { ReceiptDateInput } from "./receipt-date-input";
 import { ReceiptGuestControlButton } from "./receipt-guest-control-button";
@@ -33,6 +34,7 @@ export const ReceiptInner: React.FC<InnerProps> = ({ query }) => {
 		useBooleanState();
 	const isOwner = receipt.selfUserId === receipt.ownerUserId;
 	const disabled = !isOwner || deleteLoading;
+	const receiptContext = useGetReceiptContext(receipt, deleteLoading);
 
 	return (
 		<>
@@ -94,7 +96,7 @@ export const ReceiptInner: React.FC<InnerProps> = ({ query }) => {
 					/>
 				</View>
 			) : null}
-			<ReceiptComponents receipt={receipt} isDisabled={deleteLoading} />
+			<ReceiptComponents receipt={receiptContext} />
 		</>
 	);
 };

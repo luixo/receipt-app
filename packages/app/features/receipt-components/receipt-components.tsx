@@ -1,21 +1,18 @@
 import type React from "react";
 
-import type { TRPCQueryOutput } from "~app/trpc";
+import type { ReceiptContext } from "~app/features/receipt-components/context";
+import { receiptContext } from "~app/features/receipt-components/context";
 
 import { ReceiptItems } from "./receipt-items";
 import { ReceiptParticipants } from "./receipt-participants";
 
-type InnerProps = {
-	receipt: TRPCQueryOutput<"receipts.get">;
-	isDisabled: boolean;
+type Props = {
+	receipt: ReceiptContext;
 };
 
-export const ReceiptComponents: React.FC<InnerProps> = ({
-	receipt,
-	isDisabled,
-}) => (
-	<>
-		<ReceiptParticipants receipt={receipt} isDisabled={isDisabled} />
-		<ReceiptItems receipt={receipt} isDisabled={isDisabled} />
-	</>
+export const ReceiptComponents: React.FC<Props> = ({ receipt }) => (
+	<receiptContext.Provider value={receipt}>
+		<ReceiptParticipants />
+		<ReceiptItems />
+	</receiptContext.Provider>
 );

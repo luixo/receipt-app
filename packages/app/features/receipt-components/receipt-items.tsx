@@ -1,33 +1,25 @@
 import React from "react";
 
 import { EmptyCard } from "~app/components/empty-card";
-import type { TRPCQueryOutput } from "~app/trpc";
 import type { ReceiptItemsId } from "~db/models";
 
 import { AddReceiptItemController } from "./add-receipt-item-controller";
+import { useReceiptContext } from "./context";
 import { ReceiptEmptyItems } from "./receipt-empty-items";
 import { ReceiptItem } from "./receipt-item";
 
-type InnerProps = {
-	receipt: TRPCQueryOutput<"receipts.get">;
-	isDisabled: boolean;
-};
-
-export const ReceiptItems: React.FC<InnerProps> = ({ receipt, isDisabled }) => {
+export const ReceiptItems: React.FC = () => {
+	const { items } = useReceiptContext();
 	const itemsRef = React.useRef<Record<ReceiptItemsId, HTMLDivElement | null>>(
 		{},
 	);
 	const sortedItems = React.useMemo(
 		() =>
-			receipt.items.toSorted(
-				(a, b) => a.createdAt.valueOf() - b.createdAt.valueOf(),
-			),
-		[receipt.items],
+			items.toSorted((a, b) => a.createdAt.valueOf() - b.createdAt.valueOf()),
+		[items],
 	);
-	const addItemComponent = (
-		<AddReceiptItemController receipt={receipt} isDisabled={isDisabled} />
-	);
-	if (receipt.items.length === 0) {
+	const addItemComponent = <AddReceiptItemController />;
+	if (items.length === 0) {
 		return (
 			<>
 				{addItemComponent}
@@ -40,13 +32,11 @@ export const ReceiptItems: React.FC<InnerProps> = ({ receipt, isDisabled }) => {
 	return (
 		<>
 			{addItemComponent}
-			<ReceiptEmptyItems receipt={receipt} itemsRef={itemsRef} />
+			<ReceiptEmptyItems itemsRef={itemsRef} />
 			{sortedItems.map((item) => (
 				<ReceiptItem
 					key={item.id}
 					item={item}
-					receipt={receipt}
-					isDisabled={isDisabled}
 					ref={(element) => {
 						itemsRef.current[item.id] = element;
 					}}

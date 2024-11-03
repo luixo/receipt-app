@@ -5,28 +5,27 @@ import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import { useSingleInput } from "~app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { priceSchema } from "~app/utils/validation";
 import { Input } from "~components/input";
 import { Text } from "~components/text";
 import { options as receiptItemsUpdateOptions } from "~mutations/receipt-items/update";
 
-type ReceiptItem = TRPCQueryOutput<"receipts.get">["items"][number];
+import { useReceiptContext } from "./context";
+import { useCanEdit } from "./hooks";
+import type { Item } from "./state";
 
 type Props = {
-	item: ReceiptItem;
-	receipt: TRPCQueryOutput<"receipts.get">;
-	readOnly?: boolean;
+	item: Item;
 	isDisabled: boolean;
 };
 
 export const ReceiptItemPriceInput: React.FC<Props> = ({
 	item,
-	receipt,
 	isDisabled: isExternalDisabled,
-	readOnly,
 }) => {
+	const { receiptId, currencyCode, receiptDisabled } = useReceiptContext();
+	const canEdit = useCanEdit();
 	const [isEditing, { switchValue: switchEditing, setFalse: unsetEditing }] =
 		useBooleanState();
 
@@ -42,7 +41,7 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 
 	const updateMutation = trpc.receiptItems.update.useMutation(
 		useTrpcMutationOptions(receiptItemsUpdateOptions, {
-			context: receipt.id,
+			context: receiptId,
 			onSuccess: unsetEditing,
 		}),
 	);
@@ -59,13 +58,16 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 		},
 		[updateMutation, item.id, item.price, unsetEditing],
 	);
-	const currency = useFormattedCurrency(receipt.currencyCode);
+	const currency = useFormattedCurrency(currencyCode);
+	const isDisabled = !canEdit || isExternalDisabled || receiptDisabled;
 
 	if (!isEditing) {
 		return (
 			<View
-				className="cursor-pointer flex-row items-center gap-1"
-				onClick={readOnly || isExternalDisabled ? undefined : switchEditing}
+				className={`${
+					isDisabled ? undefined : "cursor-pointer"
+				} flex-row items-center gap-1`}
+				onClick={isDisabled ? undefined : switchEditing}
 			>
 				<Text>
 					{item.price} {currency.symbol}
@@ -82,7 +84,7 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 			labelPlacement="outside-left"
 			mutation={updateMutation}
 			fieldError={inputState.error}
-			isDisabled={isExternalDisabled}
+			isDisabled={isDisabled}
 			saveProps={{
 				title: "Save receipt item price",
 				onClick: () => updatePrice(getNumberValue()),

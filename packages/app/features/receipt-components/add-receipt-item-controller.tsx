@@ -1,24 +1,17 @@
 import React from "react";
 
-import type { TRPCQueryOutput } from "~app/trpc";
 import { Button } from "~components/button";
 import { AddIcon } from "~components/icons";
 
 import { AddReceiptItemForm } from "./add-receipt-item-form";
+import { useReceiptContext } from "./context";
 
-type Props = {
-	receipt: TRPCQueryOutput<"receipts.get">;
-	isDisabled: boolean;
-};
-
-export const AddReceiptItemController: React.FC<Props> = ({
-	receipt,
-	isDisabled,
-}) => {
+export const AddReceiptItemController: React.FC = () => {
+	const { receiptDisabled } = useReceiptContext();
 	const [isOpen, setOpen] = React.useState(false);
 
 	if (isOpen) {
-		return <AddReceiptItemForm receipt={receipt} isDisabled={isDisabled} />;
+		return <AddReceiptItemForm />;
 	}
 	return (
 		<Button
@@ -26,6 +19,7 @@ export const AddReceiptItemController: React.FC<Props> = ({
 			variant="bordered"
 			onClick={() => setOpen(true)}
 			className="w-full"
+			disabled={receiptDisabled}
 		>
 			<AddIcon size={24} />
 			Item

@@ -4,28 +4,27 @@ import { View } from "react-native";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useSingleInput } from "~app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { quantitySchema } from "~app/utils/validation";
 import { Input } from "~components/input";
 import { Text } from "~components/text";
 import { options as receiptItemsUpdateOptions } from "~mutations/receipt-items/update";
 
-type ReceiptItem = TRPCQueryOutput<"receipts.get">["items"][number];
+import { useReceiptContext } from "./context";
+import { useCanEdit } from "./hooks";
+import type { Item } from "./state";
 
 type Props = {
-	item: ReceiptItem;
-	receipt: TRPCQueryOutput<"receipts.get">;
-	readOnly?: boolean;
+	item: Item;
 	isDisabled: boolean;
 };
 
 export const ReceiptItemQuantityInput: React.FC<Props> = ({
 	item,
-	receipt,
 	isDisabled: isExternalDisabled,
-	readOnly,
 }) => {
+	const { receiptDisabled, receiptId } = useReceiptContext();
+	const canEdit = useCanEdit();
 	const [isEditing, { switchValue: switchEditing, setFalse: unsetEditing }] =
 		useBooleanState();
 
@@ -41,7 +40,7 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 
 	const updateMutation = trpc.receiptItems.update.useMutation(
 		useTrpcMutationOptions(receiptItemsUpdateOptions, {
-			context: receipt.id,
+			context: receiptId,
 			onSuccess: unsetEditing,
 		}),
 	);
@@ -58,15 +57,15 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 		},
 		[updateMutation, item.id, item.quantity, unsetEditing],
 	);
-	const disabled = readOnly || isExternalDisabled;
+	const isDisabled = !canEdit || receiptDisabled || isExternalDisabled;
 
 	if (!isEditing) {
 		return (
 			<View
 				className={`${
-					disabled ? undefined : "cursor-pointer"
+					isDisabled ? undefined : "cursor-pointer"
 				} flex-row items-center gap-1`}
-				onClick={disabled ? undefined : switchEditing}
+				onClick={isDisabled ? undefined : switchEditing}
 			>
 				<Text>x {item.quantity} unit</Text>
 			</View>
@@ -79,7 +78,7 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 			aria-label="Receipt item quantity"
 			mutation={updateMutation}
 			fieldError={inputState.error}
-			isDisabled={isExternalDisabled}
+			isDisabled={isDisabled}
 			className="basis-24"
 			labelPlacement="outside-left"
 			saveProps={{
