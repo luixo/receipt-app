@@ -1,11 +1,10 @@
 import React from "react";
 
 import { EmptyCard } from "~app/components/empty-card";
-import { AddReceiptItemController } from "~app/features/add-receipt-item/add-receipt-item-controller";
-import { ReceiptParticipants } from "~app/features/receipt-participants/receipt-participants";
 import type { TRPCQueryOutput } from "~app/trpc";
 import type { ReceiptItemsId } from "~db/models";
 
+import { AddReceiptItemController } from "./add-receipt-item-controller";
 import { ReceiptEmptyItems } from "./receipt-empty-items";
 import { ReceiptItem } from "./receipt-item";
 
@@ -25,11 +24,23 @@ export const ReceiptItems: React.FC<InnerProps> = ({ receipt, isDisabled }) => {
 			),
 		[receipt.items],
 	);
+	const addItemComponent = (
+		<AddReceiptItemController receipt={receipt} isDisabled={isDisabled} />
+	);
+	if (receipt.items.length === 0) {
+		return (
+			<>
+				{addItemComponent}
+				<EmptyCard title="You have no receipt items yet">
+					Press a button above to add a receipt item
+				</EmptyCard>
+			</>
+		);
+	}
 	return (
 		<>
+			{addItemComponent}
 			<ReceiptEmptyItems receipt={receipt} itemsRef={itemsRef} />
-			<ReceiptParticipants receipt={receipt} isDisabled={isDisabled} />
-			<AddReceiptItemController receipt={receipt} isDisabled={isDisabled} />
 			{sortedItems.map((item) => (
 				<ReceiptItem
 					key={item.id}
@@ -41,11 +52,6 @@ export const ReceiptItems: React.FC<InnerProps> = ({ receipt, isDisabled }) => {
 					}}
 				/>
 			))}
-			{sortedItems.length === 0 ? (
-				<EmptyCard title="You have no receipt items yet">
-					Press a button above to add a receipt item
-				</EmptyCard>
-			) : null}
 		</>
 	);
 };

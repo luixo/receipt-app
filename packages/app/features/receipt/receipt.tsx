@@ -4,7 +4,7 @@ import { View } from "react-native";
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { QueryErrorMessage } from "~app/components/error-message";
 import { PageHeader } from "~app/components/page-header";
-import { ReceiptItems } from "~app/features/receipt-items/receipt-items-screen";
+import { ReceiptComponents } from "~app/features/receipt-components/receipt-components";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
@@ -94,7 +94,7 @@ export const ReceiptInner: React.FC<InnerProps> = ({ query }) => {
 					/>
 				</View>
 			) : null}
-			<ReceiptItems receipt={receipt} isDisabled={deleteLoading} />
+			<ReceiptComponents receipt={receipt} isDisabled={deleteLoading} />
 		</>
 	);
 };

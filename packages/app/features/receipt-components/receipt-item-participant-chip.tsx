@@ -12,7 +12,7 @@ type Props = {
 	receipt: TRPCQueryOutput<"receipts.get">;
 };
 
-export const ParticipantChip: React.FC<Props> = ({
+export const ReceiptItemParticipantChip: React.FC<Props> = ({
 	item,
 	participant,
 	receipt,

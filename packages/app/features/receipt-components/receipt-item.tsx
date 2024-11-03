@@ -3,7 +3,6 @@ import { View } from "react-native";
 
 import { ErrorMessage } from "~app/components/error-message";
 import { RemoveButton } from "~app/components/remove-button";
-import { ReceiptItemPart } from "~app/features/receipt-item-parts/receipt-item-part";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
@@ -18,8 +17,9 @@ import { options as itemParticipantsAddOptions } from "~mutations/item-participa
 import { options as receiptItemsRemoveOptions } from "~mutations/receipt-items/remove";
 import { round } from "~utils/math";
 
-import { ParticipantChip } from "./participant-chip";
 import { ReceiptItemNameInput } from "./receipt-item-name-input";
+import { ReceiptItemPart } from "./receipt-item-part";
+import { ReceiptItemParticipantChip } from "./receipt-item-participant-chip";
 import { ReceiptItemPriceInput } from "./receipt-item-price-input";
 import { ReceiptItemQuantityInput } from "./receipt-item-quantity-input";
 
@@ -126,7 +126,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 								</Chip>
 							) : null}
 							{notAddedParticipants.map((participant) => (
-								<ParticipantChip
+								<ReceiptItemParticipantChip
 									key={participant.userId}
 									item={item}
 									receipt={receipt}
