@@ -331,6 +331,7 @@ const updateDebt = async (
 			]),
 		)
 		.select("debts.note")
+		.limit(1)
 		.executeTakeFirst();
 	if (!debt) {
 		throw new Error(

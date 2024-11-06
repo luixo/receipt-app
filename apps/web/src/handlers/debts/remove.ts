@@ -29,6 +29,7 @@ export const procedure = authProcedure
 				qb.onRef("users.connectedAccountId", "=", "accountSettings.accountId"),
 			)
 			.select(["accountSettings.manualAcceptDebts"])
+			.limit(1)
 			.executeTakeFirst();
 		if (!debt) {
 			throw new TRPCError({

@@ -22,6 +22,7 @@ export const procedure = authProcedure
 				"receipts.transferIntentionAccountId",
 				"receipts.ownerAccountId",
 			])
+			.limit(1)
 			.executeTakeFirst();
 		if (!receiptTransfer) {
 			throw new TRPCError({

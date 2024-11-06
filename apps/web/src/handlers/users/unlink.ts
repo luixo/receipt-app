@@ -28,6 +28,7 @@ export const procedure = authProcedure
 				"accounts.id as connectedAccountId",
 				"usersTheir.id as theirUserId",
 			])
+			.limit(1)
 			.executeTakeFirst();
 		if (!user) {
 			throw new TRPCError({

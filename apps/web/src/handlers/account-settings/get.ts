@@ -19,6 +19,7 @@ export const procedure = authProcedure.query(async ({ ctx }) => {
 		.selectFrom("accountSettings")
 		.select(["accountSettings.manualAcceptDebts"])
 		.where("accountSettings.accountId", "=", ctx.auth.accountId)
+		.limit(1)
 		.executeTakeFirst();
 	return account || DEFAULT_ACCOUNT_SETTINGS;
 });

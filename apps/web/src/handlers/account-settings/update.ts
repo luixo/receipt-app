@@ -28,6 +28,7 @@ export const procedure = authProcedure
 		const existingSettings = await database
 			.selectFrom("accountSettings")
 			.where("accountSettings.accountId", "=", ctx.auth.accountId)
+			.limit(1)
 			.executeTakeFirst();
 		if (!existingSettings) {
 			await database

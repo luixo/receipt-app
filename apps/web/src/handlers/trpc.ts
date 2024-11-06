@@ -91,6 +91,7 @@ export const authProcedure = unauthProcedure.use(async ({ ctx, next }) => {
 				new Date(),
 			),
 		)
+		.limit(1)
 		.executeTakeFirst();
 	if (!session) {
 		throw new TRPCError({
@@ -122,6 +123,7 @@ export const authProcedure = unauthProcedure.use(async ({ ctx, next }) => {
 			.selectFrom("accounts")
 			.where("accounts.email", "=", pretendAccountEmail)
 			.select(["accounts.id", "accounts.email"])
+			.limit(1)
 			.executeTakeFirst();
 		if (pretendAccount) {
 			auth = {

@@ -28,6 +28,7 @@ export const procedure = authProcedure
 					.onRef("users.connectedAccountId", "=", "accounts.id"),
 			)
 			.select(["users.id as userId", "accounts.id"])
+			.limit(1)
 			.executeTakeFirst();
 		if (!accountUserResult) {
 			throw new TRPCError({
@@ -65,6 +66,7 @@ export const procedure = authProcedure
 				"usersParticipation.name as userName",
 				"usersTransfer.name as userTransferName",
 			])
+			.limit(1)
 			.executeTakeFirst();
 		if (!receiptUser) {
 			throw new TRPCError({

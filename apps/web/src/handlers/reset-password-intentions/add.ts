@@ -19,6 +19,7 @@ export const procedure = unauthProcedure
 			.selectFrom("accounts")
 			.select("id")
 			.where("email", "=", input.email.lowercase)
+			.limit(1)
 			.executeTakeFirst();
 		if (!account) {
 			throw new TRPCError({

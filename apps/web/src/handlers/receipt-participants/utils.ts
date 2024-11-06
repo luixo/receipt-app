@@ -21,4 +21,5 @@ export const getReceiptParticipant = <
 		.selectFrom("receiptParticipants")
 		.where((eb) => eb.and({ receiptId, userId }))
 		.select(selectExpression)
+		.limit(1)
 		.executeTakeFirst();

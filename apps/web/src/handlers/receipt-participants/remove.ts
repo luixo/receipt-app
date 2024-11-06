@@ -18,6 +18,7 @@ export const procedure = authProcedure
 			.selectFrom("receipts")
 			.select(["ownerAccountId"])
 			.where("id", "=", input.receiptId)
+			.limit(1)
 			.executeTakeFirst();
 		if (!receipt) {
 			throw new TRPCError({
@@ -35,6 +36,7 @@ export const procedure = authProcedure
 			.selectFrom("users")
 			.select("ownerAccountId")
 			.where("id", "=", input.userId)
+			.limit(1)
 			.executeTakeFirst();
 		if (!user) {
 			throw new TRPCError({

@@ -21,6 +21,7 @@ export const procedure = authProcedure
 					targetAccountId: input.targetAccountId,
 				}),
 			)
+			.limit(1)
 			.executeTakeFirst();
 		if (!intention) {
 			throw new TRPCError({

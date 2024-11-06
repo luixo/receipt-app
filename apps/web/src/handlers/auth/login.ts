@@ -35,6 +35,7 @@ export const procedure = unauthProcedure
 				"accounts.confirmationToken",
 				"accounts.avatarUrl",
 			])
+			.limit(1)
 			.executeTakeFirst();
 
 		if (!result) {

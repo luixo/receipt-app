@@ -20,6 +20,7 @@ export const procedure = authProcedure
 			)
 			.select(["users.id", "accounts.email", "users.ownerAccountId"])
 			.where("users.id", "=", input.userId)
+			.limit(1)
 			.executeTakeFirst();
 		if (!user) {
 			throw new TRPCError({
@@ -43,6 +44,7 @@ export const procedure = authProcedure
 			.selectFrom("accounts")
 			.select(["id", "email", "avatarUrl"])
 			.where("id", "=", input.accountId)
+			.limit(1)
 			.executeTakeFirst();
 		if (!account) {
 			throw new TRPCError({
@@ -56,6 +58,7 @@ export const procedure = authProcedure
 			.where((eb) =>
 				eb.and({ accountId: account.id, targetAccountId: ctx.auth.accountId }),
 			)
+			.limit(1)
 			.executeTakeFirst();
 		if (!intention) {
 			throw new TRPCError({

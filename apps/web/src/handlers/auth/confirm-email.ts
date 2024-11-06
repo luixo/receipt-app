@@ -16,6 +16,7 @@ export const procedure = unauthProcedure
 			.selectFrom("accounts")
 			.select(["id", "email"])
 			.where("confirmationToken", "=", input.token)
+			.limit(1)
 			.executeTakeFirst();
 		if (!account) {
 			throw new TRPCError({

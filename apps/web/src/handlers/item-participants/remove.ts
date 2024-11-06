@@ -24,6 +24,7 @@ export const procedure = authProcedure
 				qb.onRef("accounts.id", "=", "receipts.ownerAccountId"),
 			)
 			.select(["receipts.id", "receipts.ownerAccountId"])
+			.limit(1)
 			.executeTakeFirst();
 		if (!receipt) {
 			throw new TRPCError({

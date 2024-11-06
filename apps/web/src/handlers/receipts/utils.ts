@@ -31,6 +31,7 @@ export const getAccessRole = async (
 			}),
 		)
 		.select("receiptParticipants.role")
+		.limit(1)
 		.executeTakeFirst();
 	if (!participant) {
 		return;

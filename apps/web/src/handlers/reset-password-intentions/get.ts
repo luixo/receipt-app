@@ -21,6 +21,7 @@ export const procedure = unauthProcedure
 				qb.onRef("accounts.id", "=", "resetPasswordIntentions.accountId"),
 			)
 			.select("email")
+			.limit(1)
 			.executeTakeFirst();
 		if (!resetPasswordIntention) {
 			throw new TRPCError({

@@ -20,6 +20,7 @@ export const procedure = authProcedure
 				),
 			)
 			.select("users.id as userId")
+			.limit(1)
 			.executeTakeFirst();
 		if (!accountUserResult) {
 			throw new TRPCError({

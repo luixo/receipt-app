@@ -27,6 +27,7 @@ export const procedure = unauthProcedure
 			.selectFrom("accounts")
 			.select([])
 			.where("email", "=", input.email.lowercase)
+			.limit(1)
 			.executeTakeFirst();
 		if (account) {
 			ctx.logger.debug(

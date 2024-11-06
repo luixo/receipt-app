@@ -31,6 +31,7 @@ export const procedure = authProcedure
 			.selectFrom("receipts")
 			.select(["ownerAccountId"])
 			.where("id", "=", input.id)
+			.limit(1)
 			.executeTakeFirst();
 		if (!receipt) {
 			throw new TRPCError({
