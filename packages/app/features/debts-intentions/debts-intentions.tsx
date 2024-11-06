@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { entries } from "remeda";
+import { entries, mapValues } from "remeda";
 import { usePathname } from "solito/navigation";
 
 import { LoadableUser } from "~app/components/app/loadable-user";
@@ -19,6 +19,12 @@ import { InboundDebtIntention } from "./inbound-debt-intention";
 
 type IntentionsQuery = TRPCQuerySuccessResult<"debtIntentions.getAll">;
 
+const getLatestIntention = (intentions: IntentionsQuery["data"]) =>
+	intentions.reduce(
+		(acc, intention) => Math.max(acc, intention.timestamp.valueOf()),
+		-1,
+	);
+
 type Props = {
 	query: IntentionsQuery;
 };
@@ -35,6 +41,28 @@ const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 			}
 		}
 	}, [data, pathname, intentionsRefs]);
+	const sortedIntentionsByUser = React.useMemo(() => {
+		const intentionsByUser = data.reduce<
+			Record<UsersId, IntentionsQuery["data"]>
+		>((acc, intention) => {
+			const intentions = acc[intention.userId] || [];
+			intentions.push(intention);
+			acc[intention.userId] = intentions;
+			return acc;
+		}, {});
+		return entries(
+			mapValues(intentionsByUser, (intentions) =>
+				intentions.sort(
+					(intentionA, intentionB) =>
+						intentionA.timestamp.valueOf() - intentionB.timestamp.valueOf(),
+				),
+			),
+		).sort(
+			([, groupedIntentionsA], [, groupedIntentionsB]) =>
+				getLatestIntention(groupedIntentionsA) -
+				getLatestIntention(groupedIntentionsB),
+		);
+	}, [data]);
 	if (data.length === 0) {
 		return (
 			<EmptyCard title="You have no incoming sync requests">
@@ -42,14 +70,6 @@ const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 			</EmptyCard>
 		);
 	}
-	const intentionsByUser = data.reduce<
-		Record<UsersId, IntentionsQuery["data"]>
-	>((acc, intention) => {
-		const intentions = acc[intention.userId] || [];
-		intentions.push(intention);
-		acc[intention.userId] = intentions;
-		return acc;
-	}, {});
 	return (
 		<>
 			<PageHeader>Inbound debts</PageHeader>
@@ -59,10 +79,10 @@ const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 					intentions={data}
 				/>
 			)}
-			{entries(intentionsByUser).map(([userId, groupedIntentions]) => (
+			{sortedIntentionsByUser.map(([userId, userIntentions]) => (
 				<View className="gap-2" key={userId}>
 					<LoadableUser className="mb-4 self-start" id={userId} />
-					{groupedIntentions.map((intention) => (
+					{userIntentions.map((intention) => (
 						<InboundDebtIntention
 							key={intention.id}
 							intention={intention}
