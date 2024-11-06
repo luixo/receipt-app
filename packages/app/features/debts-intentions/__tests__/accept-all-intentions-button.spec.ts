@@ -122,7 +122,10 @@ test("'debtIntentions.accept' pending / error", async ({
 					.map(() => "Debt accepted successfully"),
 			);
 		},
-		{ name: "success", blacklistKeys: "debts.getByUsers" },
+		{
+			name: "success",
+			blacklistKeys: ["debts.getByUsers", "accountSettings.get"],
+		},
 	);
 
 	await expect(page).toHaveURL("/debts");
