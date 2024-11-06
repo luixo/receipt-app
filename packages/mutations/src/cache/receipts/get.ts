@@ -107,7 +107,7 @@ const updateAllItems =
 						return items;
 					}
 					ref.current.push(...updatedItems);
-					return { ...items, items: nextItems };
+					return nextItems;
 				}),
 			[],
 		).current;
