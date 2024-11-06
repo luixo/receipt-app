@@ -611,6 +611,18 @@ export const queriesFixtures = test.extend<QueriesFixtures>({
 							}
 							return `${expected.min}-${expected.max}`;
 						};
+						const getAccountedAmounts = (
+							actualAmounts: ActualAwaitAmounts & { unresolved: number },
+							prevAmounts: ActualAwaitAmounts,
+							options: AwaitOptions,
+						) => ({
+							errored:
+								actualAmounts.errored -
+								(options.total ? 0 : prevAmounts.errored),
+							succeed:
+								actualAmounts.succeed -
+								(options.total ? 0 : prevAmounts.succeed),
+						});
 						const isResolved = (
 							actualAmounts: ActualAwaitAmounts & { unresolved: number },
 							prevAmounts: ActualAwaitAmounts,
@@ -620,14 +632,11 @@ export const queriesFixtures = test.extend<QueriesFixtures>({
 							if (actualAmounts.unresolved !== 0 && options.awaitLoading) {
 								return false;
 							}
-							const accountedAmounts = {
-								errored:
-									actualAmounts.errored -
-									(options.total ? 0 : prevAmounts.errored),
-								succeed:
-									actualAmounts.succeed -
-									(options.total ? 0 : prevAmounts.succeed),
-							};
+							const accountedAmounts = getAccountedAmounts(
+								actualAmounts,
+								prevAmounts,
+								options,
+							);
 							return (
 								accountedAmounts.errored >= expectedAmounts.errored.min &&
 								accountedAmounts.errored <= expectedAmounts.errored.max &&
@@ -666,21 +675,26 @@ export const queriesFixtures = test.extend<QueriesFixtures>({
 									}
 								});
 								setTimeout(() => {
-									const { succeed, errored, unresolved } = getActual();
+									const actual = getActual();
+									const accountedAmounts = getAccountedAmounts(
+										actual,
+										prevAmounts,
+										options,
+									);
 									unsubscribe();
 									reject(
 										new Error(
 											`${name} await for "${key}" failed after ${timeoutInner}\n${[
 												`Succeed entries: expected ${formatExpectedRange(
 													expectedAmounts.succeed,
-												)}, got ${succeed}`,
+												)}, got ${accountedAmounts.succeed}`,
 												expectedAmounts.errored.min !== 0
 													? `Errored entries: expected ${formatExpectedRange(
 															expectedAmounts.errored,
-													  )}, got ${errored}`
+													  )}, got ${accountedAmounts.errored}`
 													: undefined,
-												options.awaitLoading && unresolved !== 0
-													? `${unresolved} unresolved entries`
+												options.awaitLoading && actual.unresolved !== 0
+													? `${actual.unresolved} unresolved entries`
 													: undefined,
 											]
 												.filter(Boolean)

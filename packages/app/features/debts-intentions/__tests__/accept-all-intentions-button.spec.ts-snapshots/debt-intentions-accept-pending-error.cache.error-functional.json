@@ -1,0 +1,26 @@
+{
+	"mutations": {
+		"debtIntentions.accept": {
+			"0": {
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"debtIntentions.accept\" error"
+					},
+					"failureCount": 1,
+					"status": "error"
+				}
+			},
+			"1": {
+				"state": {
+					"error": {
+						"type": "TRPCClientError",
+						"message": "Mock \"debtIntentions.accept\" error"
+					},
+					"failureCount": 1,
+					"status": "error"
+				}
+			}
+		}
+	}
+}

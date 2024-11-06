@@ -1,0 +1,236 @@
+{
+	"queries": {
+		"debts.get:[{\"id\":\"29027d6b-8d77-48d8-8a9e-6d0718727a7d\"}]": {
+			"state": {
+				"data": {
+					"id": "29027d6b-8d77-48d8-8a9e-6d0718727a7d",
+					"userId": "e9776fcf-334d-4787-bbe6-211ec1c6da4a",
+					"currencyCode": "GTQ",
+					"amount": -4028.61,
+					"timestamp": "2019-12-05T09:33:58.939Z",
+					"note": "debitis placeat eos tempore",
+					"updatedAt": "2020-01-01T00:00:00.000Z",
+					"their": {
+						"updatedAt": "2020-01-01T00:00:00.000Z",
+						"timestamp": "2019-12-05T09:33:58.939Z",
+						"amount": -4028.61,
+						"currencyCode": "GTQ"
+					},
+					"receiptId": "<undefined>"
+				},
+				"dataUpdateCount": 2,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"4a8e11e6-3924-4379-8a5a-6763d87f4f78\"}]": {
+			"state": {
+				"data": {
+					"id": "4a8e11e6-3924-4379-8a5a-6763d87f4f78",
+					"userId": "e9776fcf-334d-4787-bbe6-211ec1c6da4a",
+					"currencyCode": "UZS",
+					"amount": 8393.97,
+					"timestamp": "2019-12-16T04:25:00.657Z",
+					"note": "eum occaecati sunt tenetur",
+					"updatedAt": "2020-01-01T00:00:00.000Z",
+					"their": {
+						"updatedAt": "2020-01-01T00:00:00.000Z",
+						"timestamp": "2019-12-16T04:25:00.657Z",
+						"amount": 8393.97,
+						"currencyCode": "UZS"
+					},
+					"receiptId": "<undefined>"
+				},
+				"dataUpdateCount": 2,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"5bff6764-0560-492e-8100-5bfe72b338c1\"}]": {
+			"state": {
+				"data": {
+					"id": "5bff6764-0560-492e-8100-5bfe72b338c1",
+					"userId": "e9776fcf-334d-4787-bbe6-211ec1c6da4a",
+					"currencyCode": "CNY",
+					"amount": -438.09,
+					"timestamp": "2019-12-02T09:15:47.878Z",
+					"note": "delectus harum harum eveniet",
+					"updatedAt": "2020-01-01T00:00:00.000Z",
+					"their": {
+						"updatedAt": "2020-01-01T00:00:00.000Z",
+						"timestamp": "2019-12-02T09:15:47.878Z",
+						"amount": -438.09,
+						"currencyCode": "CNY"
+					},
+					"receiptId": "<undefined>"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"7ccc2a59-ead3-4b63-ba60-abd3723d617c\"}]": {
+			"state": {
+				"data": {
+					"id": "7ccc2a59-ead3-4b63-ba60-abd3723d617c",
+					"userId": "e9776fcf-334d-4787-bbe6-211ec1c6da4a",
+					"currencyCode": "BWP",
+					"amount": -3830.41,
+					"timestamp": "2019-12-05T19:31:00.570Z",
+					"note": "molestiae perspiciatis architecto dolore",
+					"updatedAt": "2020-01-01T00:00:00.000Z",
+					"their": {
+						"updatedAt": "2020-01-01T00:00:00.000Z",
+						"timestamp": "2019-12-05T19:31:00.570Z",
+						"amount": -3830.41,
+						"currencyCode": "BWP"
+					},
+					"receiptId": "<undefined>"
+				},
+				"dataUpdateCount": 2,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"9967a8aa-34c5-4c92-a26e-8fa5beaab02d\"}]": {
+			"state": {
+				"data": {
+					"id": "9967a8aa-34c5-4c92-a26e-8fa5beaab02d",
+					"userId": "e9776fcf-334d-4787-bbe6-211ec1c6da4a",
+					"currencyCode": "BGN",
+					"amount": -6388.94,
+					"timestamp": "2019-12-04T19:02:29.787Z",
+					"note": "doloremque reiciendis dolores saepe",
+					"updatedAt": "2020-01-01T00:00:00.000Z",
+					"their": {
+						"updatedAt": "2020-01-01T00:00:00.000Z",
+						"timestamp": "2019-12-04T19:02:29.787Z",
+						"amount": -6388.94,
+						"currencyCode": "BGN"
+					},
+					"receiptId": "<undefined>"
+				},
+				"dataUpdateCount": 1,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"fbc12933-5247-4d2e-a447-3723fdb3a086\"}]": {
+			"state": {
+				"data": {
+					"id": "fbc12933-5247-4d2e-a447-3723fdb3a086",
+					"userId": "e9776fcf-334d-4787-bbe6-211ec1c6da4a",
+					"currencyCode": "BRL",
+					"amount": 1404.72,
+					"timestamp": "2019-12-18T22:26:51.296Z",
+					"note": "omnis nam nobis aliquid",
+					"updatedAt": "2020-01-01T00:00:00.000Z",
+					"their": {
+						"updatedAt": "2020-01-01T00:00:00.000Z",
+						"timestamp": "2019-12-18T22:26:51.296Z",
+						"amount": 1404.72,
+						"currencyCode": "BRL"
+					},
+					"receiptId": "<undefined>"
+				},
+				"dataUpdateCount": 2,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		}
+	},
+	"mutations": {
+		"debtIntentions.accept": [
+			{
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "pending",
+					"variables": {
+						"id": "5bff6764-0560-492e-8100-5bfe72b338c1"
+					}
+				}
+			},
+			{
+				"state": {
+					"error": null,
+					"isPaused": false,
+					"status": "pending",
+					"variables": {
+						"id": "9967a8aa-34c5-4c92-a26e-8fa5beaab02d"
+					}
+				}
+			},
+			{
+				"state": {
+					"data": {
+						"updatedAt": "2020-01-01T00:00:00.000Z"
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"id": "29027d6b-8d77-48d8-8a9e-6d0718727a7d"
+					}
+				}
+			},
+			{
+				"state": {
+					"data": {
+						"updatedAt": "2020-01-01T00:00:00.000Z"
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"id": "4a8e11e6-3924-4379-8a5a-6763d87f4f78"
+					}
+				}
+			},
+			{
+				"state": {
+					"data": {
+						"updatedAt": "2020-01-01T00:00:00.000Z"
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"id": "fbc12933-5247-4d2e-a447-3723fdb3a086"
+					}
+				}
+			},
+			{
+				"state": {
+					"data": {
+						"updatedAt": "2020-01-01T00:00:00.000Z"
+					},
+					"error": null,
+					"isPaused": false,
+					"status": "success",
+					"variables": {
+						"id": "7ccc2a59-ead3-4b63-ba60-abd3723d617c"
+					}
+				}
+			}
+		]
+	}
+}

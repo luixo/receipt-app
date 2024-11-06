@@ -50,3 +50,61 @@ exports[`debtIntentions.accept > functionality > debt existed on our account bef
   },
 }
 `;
+
+exports[`debtIntentions.accept > functionality > multiple different debts with multiple users 1`] = `
+{
+  "added": {
+    "debts": {
+      "id:43bf5ea5-77b1-409d-a63b-ed62c3c8fcc5|ownerAccountId:fafeb023-e645-46f7-9047-36240d7da0f9": {
+        "amount": "-818.6200",
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "currencyCode": "PLN",
+        "id": "43bf5ea5-77b1-409d-a63b-ed62c3c8fcc5",
+        "note": "Sit explicabo repellat pariatur.",
+        "ownerAccountId": "fafeb023-e645-46f7-9047-36240d7da0f9",
+        "receiptId": null,
+        "timestamp": "2020-01-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "02f30387-7df1-4ac5-8f74-8591c280e791",
+      },
+    },
+  },
+  "updated": {
+    "debts": {
+      "id:7e41d833-50a1-4aa3-9d39-9241a1eaa097|ownerAccountId:fafeb023-e645-46f7-9047-36240d7da0f9": {
+        "amount": "544.1900",
+        "currencyCode": "LYD",
+        "timestamp": "2020-04-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+      "id:e5a6b3ec-9ac4-4eba-8379-bf22740f0a1d|ownerAccountId:fafeb023-e645-46f7-9047-36240d7da0f9": {
+        "amount": "733.4100",
+        "currencyCode": "BGN",
+        "timestamp": "2020-04-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:02:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`debtIntentions.accept > input verification > mixed success and fail 1`] = `
+{
+  "added": {
+    "debts": {
+      "id:8d376f0c-f7f3-4f5d-99d6-f7663448f6c8|ownerAccountId:f69c89cc-b28f-49ab-8c7b-635f1f9b819c": {
+        "amount": "157.9200",
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "currencyCode": "XCD",
+        "id": "8d376f0c-f7f3-4f5d-99d6-f7663448f6c8",
+        "note": "A quos quod amet id quos architecto accusantium minima.",
+        "ownerAccountId": "f69c89cc-b28f-49ab-8c7b-635f1f9b819c",
+        "receiptId": "fa44b851-0f92-4c9f-839c-c8d68a0e90b7",
+        "timestamp": "2020-01-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "20566048-adf0-457d-936e-ecfb1d719980",
+      },
+    },
+  },
+}
+`;

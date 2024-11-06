@@ -54,7 +54,10 @@ const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 		<>
 			<PageHeader>Inbound debts</PageHeader>
 			{data.length === 1 ? null : (
-				<AcceptAllIntentionsButton intentions={data} />
+				<AcceptAllIntentionsButton
+					key={data.map(({ id }) => id).length}
+					intentions={data}
+				/>
 			)}
 			{entries(intentionsByUser).map(([userId, groupedIntentions]) => (
 				<View className="gap-2" key={userId}>

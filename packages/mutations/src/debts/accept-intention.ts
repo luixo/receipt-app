@@ -1,11 +1,12 @@
+import type { TRPCQueryOutput } from "~app/trpc";
+
 import {
 	update as updateDebts,
 	updateRevert as updateRevertDebts,
 } from "../cache/debts";
 import type { UseContextedMutationOptions } from "../context";
 
-import type Intention from "./utils";
-import { updateGet, updateGetByUserId, updateGetByUsers } from "./utils";
+type Intention = TRPCQueryOutput<"debtIntentions.getAll">[number];
 
 export const options: UseContextedMutationOptions<
 	"debtIntentions.accept",
@@ -13,9 +14,77 @@ export const options: UseContextedMutationOptions<
 > = {
 	onMutate: (controllerContext, intention) => () =>
 		updateRevertDebts(controllerContext, {
-			getByUsers: (controller) => updateGetByUsers(controller, [intention]),
-			getIdsByUser: (controller) => updateGetByUserId(controller, [intention]),
-			get: (controller) => updateGet(controller, [intention]),
+			getByUsers: (controller) =>
+				controller.updateCurrency(
+					intention.userId,
+					intention.currencyCode,
+					(sum) => sum - (intention.current?.amount ?? 0) + intention.amount,
+					(snapshot) => () => snapshot,
+				),
+			getIdsByUser: (controller) => {
+				if (intention.current) {
+					return controller.update(
+						intention.userId,
+						intention.id,
+						(debt) =>
+							intention.timestamp === debt.timestamp
+								? debt
+								: {
+										...debt,
+										timestamp: intention.timestamp,
+								  },
+						(snapshot) => (debt) =>
+							snapshot.timestamp === debt.timestamp
+								? debt
+								: {
+										...debt,
+										timestamp: snapshot.timestamp,
+								  },
+					);
+				}
+				return controller.add(intention.userId, {
+					id: intention.id,
+					timestamp: intention.timestamp,
+				});
+			},
+			get: (controller) => {
+				const updatedAt = new Date();
+				if (intention.current) {
+					return controller.update(
+						intention.id,
+						(debt) => ({
+							...debt,
+							currencyCode: intention.currencyCode,
+							amount: intention.amount,
+							timestamp: intention.timestamp,
+							updatedAt,
+						}),
+						(snapshot) => (debt) => ({
+							...debt,
+							currencyCode: snapshot.currencyCode,
+							amount: snapshot.amount,
+							timestamp: snapshot.timestamp,
+							updatedAt: snapshot.updatedAt,
+						}),
+					);
+				}
+				return controller.add({
+					id: intention.id,
+					userId: intention.userId,
+					currencyCode: intention.currencyCode,
+					amount: intention.amount,
+					timestamp: intention.timestamp,
+					note: intention.note,
+					updatedAt,
+					their: {
+						updatedAt: intention.updatedAt,
+						timestamp: intention.timestamp,
+						amount: intention.amount,
+						currencyCode: intention.currencyCode,
+					},
+					receiptId: intention.receiptId,
+				});
+			},
 			getIntentions: (controller) => controller.remove(intention.id),
 		}),
 	onSuccess: (controllerContext, intention) => (data) =>
