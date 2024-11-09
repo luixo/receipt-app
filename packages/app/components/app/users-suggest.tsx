@@ -2,8 +2,8 @@ import React from "react";
 import { View } from "react-native";
 
 import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
-import type { CollectionElement } from "@react-types/shared";
 import { keepPreviousData } from "@tanstack/react-query";
+import { isNonNull } from "remeda";
 
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { useDebouncedValue } from "~app/hooks/use-debounced-value";
@@ -27,6 +27,7 @@ type Props = {
 	filterIds?: UsersId[];
 	options?: TRPCQueryInput<"users.suggest">["options"];
 	closeOnSelect?: boolean;
+	includeSelf?: boolean;
 } & Omit<
 	React.ComponentProps<typeof Autocomplete>,
 	"items" | "defaultItems" | "children"
@@ -41,8 +42,13 @@ export const UsersSuggest: React.FC<Props> = ({
 	filterIds: outerFilterIds,
 	onUserClick,
 	closeOnSelect,
+	includeSelf,
 	...props
 }) => {
+	const selfAccountId = trpc.account.get.useQuery(undefined, {
+		enabled: Boolean(includeSelf),
+	}).data?.account.id;
+	const selfUserId = selfAccountId ? (selfAccountId as UsersId) : undefined;
 	const inputRef = React.useRef<HTMLInputElement>(null);
 	const [value, setValue] = React.useState("");
 	const debouncedValue = useDebouncedValue(value, throttledMs);
@@ -110,6 +116,10 @@ export const UsersSuggest: React.FC<Props> = ({
 			if (key === null || typeof key === "number") {
 				return;
 			}
+			if (includeSelf && key === selfUserId) {
+				onUserClick(selfUserId);
+				return;
+			}
 			const matchedUser =
 				filteredTopFetchedUserIds.find((userId) => userId === key) ||
 				fetchedUserIds.find((userId) => userId === key);
@@ -117,7 +127,13 @@ export const UsersSuggest: React.FC<Props> = ({
 				onUserClick(matchedUser);
 			}
 		},
-		[filteredTopFetchedUserIds, fetchedUserIds, onUserClick],
+		[
+			includeSelf,
+			selfUserId,
+			filteredTopFetchedUserIds,
+			fetchedUserIds,
+			onUserClick,
+		],
 	);
 
 	const [, scrollerRef] = useInfiniteScroll({
@@ -128,6 +144,42 @@ export const UsersSuggest: React.FC<Props> = ({
 			void query.fetchNextPage();
 		},
 	});
+
+	const sections = [
+		includeSelf && selfUserId ? (
+			<AutocompleteSection key="self">
+				<AutocompleteItem
+					key={selfUserId}
+					className="p-1"
+					textValue={selfUserId}
+				>
+					<LoadableUser id={selfUserId} avatarProps={{ size: "sm" }} />
+				</AutocompleteItem>
+			</AutocompleteSection>
+		) : null,
+		filteredTopFetchedUserIds.length === 0 ? null : (
+			<AutocompleteSection
+				showDivider={queryEnabled && fetchedUserIds.length !== 0}
+				title="Recently used"
+				key="recent"
+			>
+				{filteredTopFetchedUserIds.map((userId) => (
+					<AutocompleteItem key={userId} className="p-1" textValue={userId}>
+						<LoadableUser id={userId} avatarProps={{ size: "sm" }} />
+					</AutocompleteItem>
+				))}
+			</AutocompleteSection>
+		),
+		queryEnabled && fetchedUserIds.length !== 0 ? (
+			<AutocompleteSection title="Lookup" key="lookup">
+				{fetchedUserIds.map((userId) => (
+					<AutocompleteItem key={userId} className="p-1" textValue={userId}>
+						<LoadableUser id={userId} avatarProps={{ size: "sm" }} />
+					</AutocompleteItem>
+				))}
+			</AutocompleteSection>
+		) : null,
+	].filter(isNonNull);
 
 	return (
 		<View className="gap-4">
@@ -164,31 +216,7 @@ export const UsersSuggest: React.FC<Props> = ({
 				}}
 				{...props}
 			>
-				{filteredTopFetchedUserIds.length === 0 ? (
-					(null as unknown as CollectionElement<object>)
-				) : (
-					<AutocompleteSection
-						showDivider={queryEnabled && fetchedUserIds.length !== 0}
-						title="Recently used"
-					>
-						{filteredTopFetchedUserIds.map((userId) => (
-							<AutocompleteItem key={userId} className="p-1" textValue={userId}>
-								<LoadableUser id={userId} avatarProps={{ size: "sm" }} />
-							</AutocompleteItem>
-						))}
-					</AutocompleteSection>
-				)}
-				{queryEnabled && fetchedUserIds.length !== 0 ? (
-					<AutocompleteSection title="Lookup">
-						{fetchedUserIds.map((userId) => (
-							<AutocompleteItem key={userId} className="p-1" textValue={userId}>
-								<LoadableUser id={userId} avatarProps={{ size: "sm" }} />
-							</AutocompleteItem>
-						))}
-					</AutocompleteSection>
-				) : (
-					(null as unknown as CollectionElement<object>)
-				)}
+				{sections}
 			</Autocomplete>
 		</View>
 	);

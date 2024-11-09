@@ -13,8 +13,16 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 	filterIds,
 	...props
 }) => {
-	const { receiptDisabled, participantsDisabled, getUsersSuggestOptions } =
-		useReceiptContext();
+	const {
+		receiptDisabled,
+		participantsDisabled,
+		getUsersSuggestOptions,
+		participants,
+		selfUserId,
+	} = useReceiptContext();
+	const isSelfAdded = participants.some(
+		(participant) => participant.userId === selfUserId,
+	);
 	const { addParticipant } = useActionsHooksContext();
 	const [localFilterIds, setLocalFilterIds] = React.useState<UsersId[]>([]);
 
@@ -39,6 +47,7 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 				[getUsersSuggestOptions],
 			)}
 			label="Add participants"
+			includeSelf={!isSelfAdded}
 			{...props}
 		/>
 	);

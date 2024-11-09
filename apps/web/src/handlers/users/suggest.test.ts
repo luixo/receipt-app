@@ -549,5 +549,26 @@ describe("users.suggest", () => {
 				hasMore: false,
 			});
 		});
+
+		test("doesn't return self user", async ({ ctx }) => {
+			const { sessionId, accountId } = await insertAccountWithSession(ctx, {
+				user: { name: "Self Alice" },
+			});
+			const user = await insertUser(ctx, accountId, {
+				name: "Alice from work",
+			});
+
+			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const result = await caller.procedure({
+				input: "Alice",
+				limit: 10,
+				direction: "forward",
+			});
+			expect(result).toStrictEqual<typeof result>({
+				items: [user.id],
+				cursor: 0,
+				hasMore: false,
+			});
+		});
 	});
 });

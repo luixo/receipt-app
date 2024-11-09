@@ -35,7 +35,10 @@ export const procedure = authProcedure
 	.output(z.strictObject({ items: z.array(userIdSchema) }))
 	.query(async ({ input, ctx }) => {
 		const { database } = ctx;
-		const filterIds = input.filterIds || [];
+		const filterIds = [
+			...(input.filterIds || []),
+			ctx.auth.accountId as UsersId,
+		];
 		const options = input.options || { type: "all" };
 		if (options.type === "not-connected-receipt") {
 			const { receiptId } = options;

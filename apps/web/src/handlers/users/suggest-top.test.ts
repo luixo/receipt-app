@@ -452,12 +452,7 @@ describe("users.suggestTop", () => {
 			test("returns top users", async ({ ctx }) => {
 				const firstOtherAccount = await insertAccount(ctx);
 				const secondOtherAccount = await insertAccount(ctx);
-				const {
-					sessionId,
-					accountId,
-					userId: selfUserId,
-					name,
-				} = await insertAccountWithSession(ctx);
+				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				const { id: receiptId } = await insertReceipt(ctx, accountId);
 
 				// Verify other receipts and users don't affect our top users
@@ -481,12 +476,6 @@ describe("users.suggestTop", () => {
 					accountId,
 					secondOtherAccount.id,
 				]);
-				const selfUser = {
-					id: selfUserId,
-					name,
-					publicName: undefined,
-					connectedAccountId: accountId,
-				};
 
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
@@ -494,7 +483,7 @@ describe("users.suggestTop", () => {
 					options: { type: "not-connected-receipt", receiptId },
 				});
 				expect(result).toStrictEqual<typeof result>({
-					items: [user, publicNamedUser, connectedUser, selfUser]
+					items: [user, publicNamedUser, connectedUser]
 						.map(({ id }) => id)
 						.sort(),
 				});
@@ -502,11 +491,7 @@ describe("users.suggestTop", () => {
 
 			test("users are sorted by receipts amount and uuids", async ({ ctx }) => {
 				const { id: otherAccountId } = await insertAccount(ctx);
-				const {
-					sessionId,
-					accountId,
-					userId: lastNoReceiptsUserId,
-				} = await insertAccountWithSession(ctx, {
+				const { sessionId, accountId } = await insertAccountWithSession(ctx, {
 					account: { id: faker.string.uuid().replace(/^./g, "f") },
 				});
 
@@ -562,7 +547,6 @@ describe("users.suggestTop", () => {
 					twoReceiptsUserId,
 					oneReceiptUserId,
 					noReceiptsUserId,
-					lastNoReceiptsUserId,
 				]);
 			});
 
@@ -653,6 +637,23 @@ describe("users.suggestTop", () => {
 					newReceiptsUserId,
 					oldReceiptsUserId,
 				]);
+			});
+		});
+
+		test("doesn't return self user", async ({ ctx }) => {
+			const { sessionId, accountId } = await insertAccountWithSession(ctx, {
+				user: { name: "Self Alice" },
+			});
+			const user = await insertUser(ctx, accountId, {
+				name: "Alice from work",
+			});
+
+			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const result = await caller.procedure({
+				limit: 10,
+			});
+			expect(result).toStrictEqual<typeof result>({
+				items: [user.id],
 			});
 		});
 	});

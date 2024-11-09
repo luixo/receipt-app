@@ -3,6 +3,7 @@ import { sql } from "kysely";
 import { z } from "zod";
 
 import { MAX_SUGGEST_LENGTH } from "~app/utils/validation";
+import type { UsersId } from "~db/models";
 import { getAccessRole } from "~web/handlers/receipts/utils";
 import { authProcedure } from "~web/handlers/trpc";
 import {
@@ -47,7 +48,7 @@ export const procedure = authProcedure
 	)
 	.query(async ({ input, ctx }) => {
 		const { database } = ctx;
-		let filterIds = input.filterIds || [];
+		let filterIds = [...(input.filterIds || []), ctx.auth.accountId as UsersId];
 		const cursor = input.cursor || 0;
 		const options = input.options || { type: "all" };
 		if (options.type === "not-connected-receipt") {
