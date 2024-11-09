@@ -92,16 +92,21 @@ export const AddUserScreen: AppPage = () => {
 		<>
 			<PageHeader backHref="/users">Add user</PageHeader>
 			<EmailVerificationCard />
-			<UserNameInput form={form} isLoading={addUserMutation.isPending} />
-			<EmailInput form={form} isLoading={addUserMutation.isPending} />
-			<Button
-				color="primary"
-				onClick={form.handleSubmit(onSubmit)}
-				isDisabled={!form.formState.isValid || addUserMutation.isPending}
-				isLoading={addUserMutation.isPending}
+			<form
+				onSubmit={form.handleSubmit(onSubmit)}
+				className="flex flex-col gap-4"
 			>
-				Add user
-			</Button>
+				<UserNameInput form={form} isLoading={addUserMutation.isPending} />
+				<EmailInput form={form} isLoading={addUserMutation.isPending} />
+				<Button
+					color="primary"
+					isDisabled={!form.formState.isValid || addUserMutation.isPending}
+					isLoading={addUserMutation.isPending}
+					type="submit"
+				>
+					Add user
+				</Button>
+			</form>
 		</>
 	);
 };

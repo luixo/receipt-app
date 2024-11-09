@@ -115,6 +115,7 @@ export const AddReceiptScreen: AppPage = () => {
 		[addReceiptMutation, items, rawParticipants],
 	);
 
+	const formId = React.useId();
 	const receiptId = React.useId();
 	const selfUserId = selfAccountId as UsersId;
 
@@ -144,13 +145,25 @@ export const AddReceiptScreen: AppPage = () => {
 		<>
 			<PageHeader backHref="/receipts">Add receipt</PageHeader>
 			<EmailVerificationCard />
-			<ReceiptNameInput form={form} isLoading={addReceiptMutation.isPending} />
-			<CurrencyInput
-				form={form}
-				isLoading={addReceiptMutation.isPending}
-				topQueryOptions={{ type: "receipts" }}
-			/>
-			<ReceiptDateInput form={form} isLoading={addReceiptMutation.isPending} />
+			<form
+				id={formId}
+				onSubmit={form.handleSubmit(onSubmit)}
+				className="flex flex-col gap-4"
+			>
+				<ReceiptNameInput
+					form={form}
+					isLoading={addReceiptMutation.isPending}
+				/>
+				<CurrencyInput
+					form={form}
+					isLoading={addReceiptMutation.isPending}
+					topQueryOptions={{ type: "receipts" }}
+				/>
+				<ReceiptDateInput
+					form={form}
+					isLoading={addReceiptMutation.isPending}
+				/>
+			</form>
 			<ReceiptComponents
 				actionsHooks={actionsHooksContext}
 				receipt={addReceiptContext}
@@ -158,10 +171,10 @@ export const AddReceiptScreen: AppPage = () => {
 			<Button
 				className="mt-4"
 				color="primary"
-				onClick={form.handleSubmit(onSubmit)}
 				isDisabled={!form.formState.isValid || addReceiptMutation.isPending}
 				isLoading={addReceiptMutation.isPending}
 				type="submit"
+				form={formId}
 			>
 				Add receipt
 			</Button>

@@ -54,30 +54,37 @@ export const ResetPassword: React.FC<Props> = ({ token }) => {
 	return (
 		<>
 			<Header>{intentionQuery.data.email}</Header>
-			<Input value={token} label="Token" isReadOnly />
-			<Input
-				{...form.register("password")}
-				label="New password"
-				fieldError={form.formState.errors.password}
-				disabled={changePasswordMutation.isPending}
-				type="password"
-			/>
-			<Input
-				{...form.register("passwordRetype")}
-				label="Retype new password"
-				fieldError={form.formState.errors.passwordRetype}
-				disabled={changePasswordMutation.isPending}
-				type="password"
-			/>
-			<Button
-				className="mt-4"
-				color="primary"
-				isDisabled={!form.formState.isValid || changePasswordMutation.isPending}
-				isLoading={changePasswordMutation.isPending}
-				onClick={form.handleSubmit(onSubmit)}
+			<form
+				className="flex flex-col gap-4"
+				onSubmit={form.handleSubmit(onSubmit)}
 			>
-				Save password
-			</Button>
+				<Input value={token} label="Token" isReadOnly />
+				<Input
+					{...form.register("password")}
+					label="New password"
+					fieldError={form.formState.errors.password}
+					disabled={changePasswordMutation.isPending}
+					type="password"
+				/>
+				<Input
+					{...form.register("passwordRetype")}
+					label="Retype new password"
+					fieldError={form.formState.errors.passwordRetype}
+					disabled={changePasswordMutation.isPending}
+					type="password"
+				/>
+				<Button
+					className="mt-4"
+					color="primary"
+					isDisabled={
+						!form.formState.isValid || changePasswordMutation.isPending
+					}
+					isLoading={changePasswordMutation.isPending}
+					type="submit"
+				>
+					Save password
+				</Button>
+			</form>
 		</>
 	);
 };

@@ -126,18 +126,20 @@ export const AddReceiptItemForm: React.FC = () => {
 	);
 	const isPending = addItemMutationState?.status === "pending";
 	const onSubmit = React.useCallback(
-		(values: Form) => {
+		(values: Form) =>
 			addItem(values.name, values.price, values.quantity, {
 				onSuccess: () => form.reset(),
-			});
-		},
+			}),
 		[addItem, form],
 	);
 
 	const isDisabled = receiptDisabled || isPending;
 
 	return (
-		<View className="gap-4">
+		<form
+			onSubmit={form.handleSubmit(onSubmit)}
+			className="flex flex-col gap-4"
+		>
 			<View className="flex-row gap-4">
 				<ReceiptItemNameInput form={form} isDisabled={isDisabled} />
 				<ReceiptItemPriceInput form={form} isDisabled={isDisabled} />
@@ -145,13 +147,13 @@ export const AddReceiptItemForm: React.FC = () => {
 			</View>
 			<Button
 				color="primary"
-				onClick={form.handleSubmit(onSubmit)}
 				isDisabled={!form.formState.isValid || isDisabled}
 				className="w-full"
 				isLoading={isPending}
+				type="submit"
 			>
 				Save
 			</Button>
-		</View>
+		</form>
 	);
 };

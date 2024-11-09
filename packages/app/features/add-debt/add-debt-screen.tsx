@@ -168,34 +168,39 @@ export const AddDebtScreen: AppPage = () => {
 		<>
 			<PageHeader backHref="/debts">Add debt</PageHeader>
 			<EmailVerificationCard />
-			<SignButtonGroup
-				isLoading={addMutation.isPending}
-				onUpdate={onDirectionUpdate}
-				direction={form.watch("direction")}
-			/>
-			<DebtAmountInput form={form} isLoading={addMutation.isPending} />
-			<CurrencyInput
-				form={form}
-				isLoading={addMutation.isPending}
-				topQueryOptions={{ type: "debts" }}
-			/>
-			<UsersSuggest
-				selected={form.watch("userId")}
-				isDisabled={addMutation.isPending}
-				onUserClick={onUserClick}
-				closeOnSelect
-			/>
-			<DebtDateInput form={form} isLoading={addMutation.isPending} />
-			<DebtNoteInput form={form} isLoading={addMutation.isPending} />
-			<Button
-				className="mt-4"
-				color="primary"
-				onClick={form.handleSubmit(onSubmit)}
-				isDisabled={!form.formState.isValid || addMutation.isPending}
-				isLoading={addMutation.isPending}
+			<form
+				onSubmit={form.handleSubmit(onSubmit)}
+				className="flex flex-col gap-4"
 			>
-				Add debt
-			</Button>
+				<SignButtonGroup
+					isLoading={addMutation.isPending}
+					onUpdate={onDirectionUpdate}
+					direction={form.watch("direction")}
+				/>
+				<DebtAmountInput form={form} isLoading={addMutation.isPending} />
+				<CurrencyInput
+					form={form}
+					isLoading={addMutation.isPending}
+					topQueryOptions={{ type: "debts" }}
+				/>
+				<UsersSuggest
+					selected={form.watch("userId")}
+					isDisabled={addMutation.isPending}
+					onUserClick={onUserClick}
+					closeOnSelect
+				/>
+				<DebtDateInput form={form} isLoading={addMutation.isPending} />
+				<DebtNoteInput form={form} isLoading={addMutation.isPending} />
+				<Button
+					className="mt-4"
+					color="primary"
+					isDisabled={!form.formState.isValid || addMutation.isPending}
+					isLoading={addMutation.isPending}
+					type="submit"
+				>
+					Add debt
+				</Button>
+			</form>
 		</>
 	);
 };

@@ -46,11 +46,14 @@ export const ResetPasswordModal: React.FC<Props> = ({
 				<ModalHeader>
 					<Header>Forgot password</Header>
 				</ModalHeader>
-				<ModalBody className="gap-4">
+				<ModalBody>
 					{resetPasswordMutation.status === "success" ? (
 						<Text>Reset password link was sent to {form.watch("email")}</Text>
 					) : (
-						<>
+						<form
+							onSubmit={form.handleSubmit(onSubmit)}
+							className="flex flex-col gap-4"
+						>
 							<Input
 								{...form.register("email")}
 								label="Email"
@@ -63,11 +66,11 @@ export const ResetPasswordModal: React.FC<Props> = ({
 									!form.formState.isValid || resetPasswordMutation.isPending
 								}
 								isLoading={resetPasswordMutation.isPending}
-								onClick={form.handleSubmit(onSubmit)}
+								type="submit"
 							>
 								Send email
 							</Button>
-						</>
+						</form>
 					)}
 				</ModalBody>
 			</ModalContent>

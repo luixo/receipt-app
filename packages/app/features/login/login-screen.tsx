@@ -49,28 +49,33 @@ export const LoginScreen: AppPage = () => {
 	return (
 		<>
 			<PageHeader>Login</PageHeader>
-			<Input
-				{...form.register("email")}
-				label="Email"
-				fieldError={form.formState.errors.email}
-				isDisabled={loginMutation.isPending}
-			/>
-			<Input
-				{...form.register("password")}
-				label="Password"
-				fieldError={form.formState.errors.password}
-				isDisabled={loginMutation.isPending}
-				type="password"
-			/>
-			<Button
-				className="mt-4"
-				color="primary"
-				isDisabled={!form.formState.isValid || loginMutation.isPending}
-				isLoading={loginMutation.isPending}
-				onClick={form.handleSubmit(onSubmit)}
+			<form
+				onSubmit={form.handleSubmit(onSubmit)}
+				className="flex flex-col gap-4"
 			>
-				Login
-			</Button>
+				<Input
+					{...form.register("email")}
+					label="Email"
+					fieldError={form.formState.errors.email}
+					isDisabled={loginMutation.isPending}
+				/>
+				<Input
+					{...form.register("password")}
+					label="Password"
+					fieldError={form.formState.errors.password}
+					isDisabled={loginMutation.isPending}
+					type="password"
+				/>
+				<Button
+					className="mt-4"
+					color="primary"
+					isDisabled={!form.formState.isValid || loginMutation.isPending}
+					isLoading={loginMutation.isPending}
+					type="submit"
+				>
+					Login
+				</Button>
+			</form>
 			<Button
 				color="primary"
 				isDisabled={loginMutation.isPending}

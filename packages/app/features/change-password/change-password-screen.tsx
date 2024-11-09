@@ -63,7 +63,10 @@ export const ChangePasswordScreen: AppPage = () => {
 	}
 
 	return (
-		<>
+		<form
+			onSubmit={form.handleSubmit(onSubmit)}
+			className="flex flex-col gap-4"
+		>
 			<Input
 				{...form.register("prevPassword")}
 				label="Current password"
@@ -90,10 +93,10 @@ export const ChangePasswordScreen: AppPage = () => {
 				color="primary"
 				isDisabled={!form.formState.isValid || changePasswordMutation.isPending}
 				isLoading={changePasswordMutation.isPending}
-				onClick={form.handleSubmit(onSubmit)}
+				type="submit"
 			>
 				Change password
 			</Button>
-		</>
+		</form>
 	);
 };

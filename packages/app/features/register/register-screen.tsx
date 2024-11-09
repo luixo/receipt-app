@@ -62,43 +62,47 @@ export const RegisterScreen: AppPage = () => {
 	return (
 		<>
 			<PageHeader>Register</PageHeader>
-			<Input
-				{...form.register("email")}
-				label="Email"
-				fieldError={form.formState.errors.email}
-				mutation={registerMutation}
-			/>
-			<Input
-				{...form.register("name")}
-				label="Name"
-				placeholder="You can change it later"
-				fieldError={form.formState.errors.name}
-				isDisabled={registerMutation.isPending}
-			/>
-			<Input
-				{...form.register("password")}
-				label="New password"
-				fieldError={form.formState.errors.password}
-				isDisabled={registerMutation.isPending}
-				type="password"
-			/>
-			<Input
-				{...form.register("passwordRetype")}
-				label="Retype new password"
-				fieldError={form.formState.errors.passwordRetype}
-				isDisabled={registerMutation.isPending}
-				type="password"
-			/>
-			<Button
-				className="mt-4"
-				color="primary"
-				isDisabled={!form.formState.isValid || registerMutation.isPending}
-				isLoading={registerMutation.isPending}
-				onClick={form.handleSubmit(onSubmit)}
-				type="submit"
+			<form
+				onSubmit={form.handleSubmit(onSubmit)}
+				className="flex flex-col gap-4"
 			>
-				Register
-			</Button>
+				<Input
+					{...form.register("email")}
+					label="Email"
+					fieldError={form.formState.errors.email}
+					mutation={registerMutation}
+				/>
+				<Input
+					{...form.register("name")}
+					label="Name"
+					placeholder="You can change it later"
+					fieldError={form.formState.errors.name}
+					isDisabled={registerMutation.isPending}
+				/>
+				<Input
+					{...form.register("password")}
+					label="New password"
+					fieldError={form.formState.errors.password}
+					isDisabled={registerMutation.isPending}
+					type="password"
+				/>
+				<Input
+					{...form.register("passwordRetype")}
+					label="Retype new password"
+					fieldError={form.formState.errors.passwordRetype}
+					isDisabled={registerMutation.isPending}
+					type="password"
+				/>
+				<Button
+					className="mt-4"
+					color="primary"
+					isDisabled={!form.formState.isValid || registerMutation.isPending}
+					isLoading={registerMutation.isPending}
+					type="submit"
+				>
+					Register
+				</Button>
+			</form>
 		</>
 	);
 };
