@@ -21,21 +21,20 @@ export const procedure = authProcedure
 			cursor: offsetSchema.optional(),
 			limit: limitSchema,
 			filterIds: z.array(userIdSchema).optional(),
-			options: z.discriminatedUnion("type", [
-				z.strictObject({
-					type: z.literal("connected"),
-				}),
-				z.strictObject({
-					type: z.literal("not-connected"),
-				}),
-				z.strictObject({
-					type: z.literal("not-connected-receipt"),
-					receiptId: receiptIdSchema,
-				}),
-				z.strictObject({
-					type: z.literal("debts"),
-				}),
-			]),
+			options: z
+				.discriminatedUnion("type", [
+					z.strictObject({
+						type: z.literal("connected"),
+					}),
+					z.strictObject({
+						type: z.literal("not-connected"),
+					}),
+					z.strictObject({
+						type: z.literal("not-connected-receipt"),
+						receiptId: receiptIdSchema,
+					}),
+				])
+				.optional(),
 			direction: z.enum(["forward", "backward"]),
 		}),
 	)
@@ -50,8 +49,9 @@ export const procedure = authProcedure
 		const { database } = ctx;
 		let filterIds = input.filterIds || [];
 		const cursor = input.cursor || 0;
-		if (input.options.type === "not-connected-receipt") {
-			const { receiptId } = input.options;
+		const options = input.options || { type: "all" };
+		if (options.type === "not-connected-receipt") {
+			const { receiptId } = options;
 			const receipt = await database
 				.selectFrom("receipts")
 				.select(["id", "ownerAccountId"])
@@ -80,7 +80,7 @@ export const procedure = authProcedure
 				.innerJoin("users", (jb) =>
 					jb.onRef("users.id", "=", "receiptParticipants.userId"),
 				)
-				.where("receiptParticipants.receiptId", "=", input.options.receiptId)
+				.where("receiptParticipants.receiptId", "=", options.receiptId)
 				.select("users.id")
 				.execute();
 			filterIds = [
@@ -93,10 +93,10 @@ export const procedure = authProcedure
 				qb.where("users.id", "not in", filterIds),
 			)
 			.where("users.ownerAccountId", "=", ctx.auth.accountId)
-			.$if(Boolean(input.options.type === "not-connected"), (qb) =>
+			.$if(Boolean(options.type === "not-connected"), (qb) =>
 				qb.where("users.connectedAccountId", "is", null),
 			)
-			.$if(Boolean(input.options.type === "connected"), (qb) =>
+			.$if(Boolean(options.type === "connected"), (qb) =>
 				qb.where("users.connectedAccountId", "is not", null),
 			)
 			.$if(input.input.length < 3, (qb) =>

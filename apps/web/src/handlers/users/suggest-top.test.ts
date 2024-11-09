@@ -29,7 +29,6 @@ describe("users.suggestTop", () => {
 		expectUnauthorizedError((context) =>
 			createCaller(context).procedure({
 				limit: 1,
-				options: { type: "debts" },
 			}),
 		);
 
@@ -41,7 +40,6 @@ describe("users.suggestTop", () => {
 					() =>
 						caller.procedure({
 							limit: 0,
-							options: { type: "debts" },
 						}),
 					"BAD_REQUEST",
 					`Zod error\n\nAt "limit": Number must be greater than 0`,
@@ -55,7 +53,6 @@ describe("users.suggestTop", () => {
 					() =>
 						caller.procedure({
 							limit: MAX_LIMIT + 1,
-							options: { type: "debts" },
 						}),
 					"BAD_REQUEST",
 					`Zod error\n\nAt "limit": Number must be less than or equal to 100`,
@@ -69,7 +66,6 @@ describe("users.suggestTop", () => {
 					() =>
 						caller.procedure({
 							limit: faker.number.float(),
-							options: { type: "debts" },
 						}),
 					"BAD_REQUEST",
 					`Zod error\n\nAt "limit": Expected integer, received float`,
@@ -86,7 +82,6 @@ describe("users.suggestTop", () => {
 						caller.procedure({
 							limit: 1,
 							filterIds: [faker.string.alpha()],
-							options: { type: "debts" },
 						}),
 					"BAD_REQUEST",
 					`Zod error\n\nAt "filterIds[0]": Invalid uuid`,
@@ -154,7 +149,7 @@ describe("users.suggestTop", () => {
 	});
 
 	describe("functionality", () => {
-		describe("debts", () => {
+		describe("no restriction (from debts)", () => {
 			test("returns top users", async ({ ctx }) => {
 				const otherAccount = await insertAccount(ctx);
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
@@ -180,7 +175,6 @@ describe("users.suggestTop", () => {
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
 					limit: 4,
-					options: { type: "debts" },
 				});
 				expect(result).toStrictEqual<typeof result>({
 					items: [
@@ -225,7 +219,6 @@ describe("users.suggestTop", () => {
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
 					limit: 5,
-					options: { type: "debts" },
 				});
 				expect(result.items).toStrictEqual([
 					threeDebtsUserId,
@@ -242,7 +235,6 @@ describe("users.suggestTop", () => {
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
 					limit: 10,
-					options: { type: "debts" },
 				});
 				expect(result.items.length).toBe(1);
 			});
@@ -256,7 +248,6 @@ describe("users.suggestTop", () => {
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
 					limit,
-					options: { type: "debts" },
 				});
 				expect(result.items.length).toBe(limit);
 			});
@@ -269,7 +260,6 @@ describe("users.suggestTop", () => {
 				const result = await caller.procedure({
 					limit: 10,
 					filterIds: [ignoredUserId],
-					options: { type: "debts" },
 				});
 				expect(result.items.length).toBe(1);
 			});
@@ -288,7 +278,6 @@ describe("users.suggestTop", () => {
 				const caller = createCaller(createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({
 					limit: 10,
-					options: { type: "debts" },
 				});
 				expect(result.items).toStrictEqual([newDebtsUserId, oldDebtsUserId]);
 			});

@@ -25,7 +25,7 @@ type Props = {
 	limit?: number;
 	topLimit?: number;
 	filterIds?: UsersId[];
-	options: TRPCQueryInput<"users.suggest">["options"];
+	options?: TRPCQueryInput<"users.suggest">["options"];
 	closeOnSelect?: boolean;
 } & Omit<
 	React.ComponentProps<typeof Autocomplete>,

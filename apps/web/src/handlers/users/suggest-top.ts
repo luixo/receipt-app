@@ -16,29 +16,29 @@ export const procedure = authProcedure
 		z.strictObject({
 			limit: limitSchema,
 			filterIds: z.array(userIdSchema).optional(),
-			options: z.discriminatedUnion("type", [
-				z.strictObject({
-					type: z.literal("connected"),
-				}),
-				z.strictObject({
-					type: z.literal("not-connected"),
-				}),
-				z.strictObject({
-					type: z.literal("not-connected-receipt"),
-					receiptId: receiptIdSchema,
-				}),
-				z.strictObject({
-					type: z.literal("debts"),
-				}),
-			]),
+			options: z
+				.discriminatedUnion("type", [
+					z.strictObject({
+						type: z.literal("connected"),
+					}),
+					z.strictObject({
+						type: z.literal("not-connected"),
+					}),
+					z.strictObject({
+						type: z.literal("not-connected-receipt"),
+						receiptId: receiptIdSchema,
+					}),
+				])
+				.optional(),
 		}),
 	)
 	.output(z.strictObject({ items: z.array(userIdSchema) }))
 	.query(async ({ input, ctx }) => {
 		const { database } = ctx;
 		const filterIds = input.filterIds || [];
-		if (input.options.type === "not-connected-receipt") {
-			const { receiptId } = input.options;
+		const options = input.options || { type: "all" };
+		if (options.type === "not-connected-receipt") {
+			const { receiptId } = options;
 			const receipt = await database
 				.selectFrom("receipts")
 				.select(["ownerAccountId", "id"])
@@ -109,16 +109,13 @@ export const procedure = authProcedure
 				items: users.map(({ id }) => id),
 			};
 		}
-		if (
-			input.options.type === "not-connected" ||
-			input.options.type === "connected"
-		) {
+		if (options.type === "not-connected" || options.type === "connected") {
 			const users = await database
 				.selectFrom("users")
 				.where((eb) =>
 					eb.and([
 						eb("users.ownerAccountId", "=", ctx.auth.accountId),
-						input.options.type === "connected"
+						options.type === "connected"
 							? eb("users.connectedAccountId", "<>", ctx.auth.accountId)
 							: eb("users.connectedAccountId", "is", null),
 					]),

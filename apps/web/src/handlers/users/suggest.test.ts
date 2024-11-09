@@ -32,7 +32,6 @@ describe("users.suggest", () => {
 			createCaller(context).procedure({
 				input: faker.string.alpha(),
 				limit: 1,
-				options: { type: "debts" },
 				direction: "forward",
 			}),
 		);
@@ -46,7 +45,6 @@ describe("users.suggest", () => {
 						caller.procedure({
 							input: "a".repeat(MAX_SUGGEST_LENGTH + 1),
 							limit: 1,
-							options: { type: "debts" },
 							direction: "forward",
 						}),
 					"BAD_REQUEST",
@@ -64,7 +62,6 @@ describe("users.suggest", () => {
 						caller.procedure({
 							input: faker.string.alpha(),
 							limit: 0,
-							options: { type: "debts" },
 							direction: "forward",
 						}),
 					"BAD_REQUEST",
@@ -80,7 +77,6 @@ describe("users.suggest", () => {
 						caller.procedure({
 							input: faker.string.alpha(),
 							limit: MAX_LIMIT + 1,
-							options: { type: "debts" },
 							direction: "forward",
 						}),
 					"BAD_REQUEST",
@@ -96,7 +92,6 @@ describe("users.suggest", () => {
 						caller.procedure({
 							input: faker.string.alpha(),
 							limit: faker.number.float(),
-							options: { type: "debts" },
 							direction: "forward",
 						}),
 					"BAD_REQUEST",
@@ -115,7 +110,6 @@ describe("users.suggest", () => {
 							input: faker.string.alpha(),
 							limit: 1,
 							cursor: -1,
-							options: { type: "debts" },
 							direction: "forward",
 						}),
 					"BAD_REQUEST",
@@ -132,7 +126,6 @@ describe("users.suggest", () => {
 							input: faker.string.alpha(),
 							limit: 1,
 							cursor: MAX_OFFSET + 1,
-							options: { type: "debts" },
 							direction: "forward",
 						}),
 					"BAD_REQUEST",
@@ -149,7 +142,6 @@ describe("users.suggest", () => {
 							input: faker.string.alpha(),
 							limit: 1,
 							cursor: faker.number.float(),
-							options: { type: "debts" },
 							direction: "forward",
 						}),
 					"BAD_REQUEST",
@@ -168,7 +160,6 @@ describe("users.suggest", () => {
 							input: faker.string.alpha(),
 							limit: 1,
 							filterIds: [faker.string.alpha()],
-							options: { type: "debts" },
 							direction: "forward",
 						}),
 					"BAD_REQUEST",
@@ -274,7 +265,6 @@ describe("users.suggest", () => {
 			const result = await caller.procedure({
 				input: "Alice",
 				limit: 10,
-				options: { type: "debts" },
 				direction: "forward",
 			});
 			expect(result).toStrictEqual<typeof result>({
@@ -298,7 +288,6 @@ describe("users.suggest", () => {
 			const result = await caller.procedure({
 				input: "Al",
 				limit: 10,
-				options: { type: "debts" },
 				direction: "forward",
 			});
 			expect(result).toStrictEqual<typeof result>({
@@ -317,7 +306,6 @@ describe("users.suggest", () => {
 			const result = await caller.procedure({
 				input: "Alice",
 				limit: 10,
-				options: { type: "debts" },
 				direction: "forward",
 			});
 			expect(result).toStrictEqual<typeof result>({
@@ -482,7 +470,6 @@ describe("users.suggest", () => {
 			const result = await caller.procedure({
 				input: "Alice",
 				limit: 10,
-				options: { type: "debts" },
 				direction: "forward",
 			});
 			expect(result).toStrictEqual({
@@ -512,7 +499,6 @@ describe("users.suggest", () => {
 			const firstPage = await caller.procedure({
 				input: "Alice",
 				limit,
-				options: { type: "debts" },
 				direction: "forward",
 			});
 			expect(firstPage.items.length).toBe(limit);
@@ -522,7 +508,6 @@ describe("users.suggest", () => {
 				input: "Alice",
 				cursor: firstPage.cursor + limit,
 				limit,
-				options: { type: "debts" },
 				direction: "forward",
 			});
 			expect(secondPage.items.length).toBeLessThan(limit);
@@ -556,7 +541,6 @@ describe("users.suggest", () => {
 				input: "Alice",
 				limit: 10,
 				filterIds: [filteredUserId],
-				options: { type: "debts" },
 				direction: "forward",
 			});
 			expect(result).toStrictEqual<typeof result>({

@@ -182,7 +182,6 @@ export const AddDebtScreen: AppPage = () => {
 			<UsersSuggest
 				selected={form.watch("userId")}
 				isDisabled={addMutation.isPending}
-				options={React.useMemo(() => ({ type: "debts" }), [])}
 				onUserClick={onUserClick}
 				closeOnSelect
 			/>

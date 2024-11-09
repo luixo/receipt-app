@@ -298,6 +298,6 @@ export const useAddReceiptContext = (
 	items,
 	participants,
 	renderParticipantActions: () => null,
-	getUsersSuggestOptions: () => ({ type: "debts" }),
+	getUsersSuggestOptions: () => undefined,
 	emptyReceiptElement: null,
 });
