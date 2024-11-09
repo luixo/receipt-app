@@ -2,6 +2,7 @@ import React from "react";
 import { View } from "react-native";
 
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
+import { LoadableUser } from "~app/components/app/loadable-user";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
@@ -17,10 +18,7 @@ type Props = {
 	isLoading: boolean;
 };
 
-export const ReceiptCurrencyInput: React.FC<Props> = ({
-	receipt,
-	isLoading,
-}) => {
+export const ReceiptAmountInput: React.FC<Props> = ({ receipt, isLoading }) => {
 	const formattedCurrencyCode = useFormattedCurrency(receipt.currencyCode);
 	const [
 		isModalOpen,
@@ -54,13 +52,18 @@ export const ReceiptCurrencyInput: React.FC<Props> = ({
 
 	return (
 		<>
-			<View
-				className={disabled ? undefined : "cursor-pointer"}
-				onClick={disabled ? undefined : openModal}
-			>
-				<Text className="text-2xl">
-					{sum} {formattedCurrencyCode.symbol}
-				</Text>
+			<View className="flex flex-row justify-center gap-2 text-2xl leading-9">
+				<Text className="text-2xl leading-9">{sum}</Text>
+				<View
+					className={disabled ? undefined : "cursor-pointer"}
+					onClick={disabled ? undefined : openModal}
+				>
+					<Text className="text-2xl leading-9">
+						{formattedCurrencyCode.symbol}
+					</Text>
+				</View>
+				<Text className="text-2xl leading-9">payed by</Text>
+				<LoadableUser id={receipt.ownerUserId} shrinkable />
 			</View>
 			<CurrenciesPicker
 				onChange={saveCurrency}

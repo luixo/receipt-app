@@ -14,7 +14,7 @@ import { Text } from "~components/text";
 import type { ReceiptsId } from "~db/models";
 
 import { useActionHooks, useGetReceiptContext } from "./hooks";
-import { ReceiptCurrencyInput } from "./receipt-currency-input";
+import { ReceiptAmountInput } from "./receipt-amount-input";
 import { ReceiptDateInput } from "./receipt-date-input";
 import { ReceiptGuestControlButton } from "./receipt-guest-control-button";
 import { ReceiptNameInput } from "./receipt-name-input";
@@ -54,20 +54,23 @@ export const ReceiptInner: React.FC<InnerProps> = ({ query }) => {
 				backHref="/receipts"
 				startContent={<ReceiptIcon size={36} />}
 				aside={
-					isOwner ? (
-						<ReceiptSyncButton
-							key={
-								// This is required for stability of the hooks in the component
-								receipt.participants.filter(
-									(participant) => participant.userId !== receipt.selfUserId,
-								).length
-							}
-							receipt={receipt}
-							isLoading={deleteLoading}
-						/>
-					) : (
-						<ReceiptGuestControlButton receipt={receipt} />
-					)
+					<>
+						<LoadableUser id={receipt.ownerUserId} shrinkable />
+						{isOwner ? (
+							<ReceiptSyncButton
+								key={
+									// This is required for stability of the hooks in the component
+									receipt.participants.filter(
+										(participant) => participant.userId !== receipt.selfUserId,
+									).length
+								}
+								receipt={receipt}
+								isLoading={deleteLoading}
+							/>
+						) : (
+							<ReceiptGuestControlButton receipt={receipt} />
+						)}
+					</>
 				}
 				title={`Receipt ${receipt.name}`}
 			>
@@ -89,11 +92,8 @@ export const ReceiptInner: React.FC<InnerProps> = ({ query }) => {
 			<View className="items-start justify-between gap-2 sm:flex-row">
 				<View className="gap-2">
 					<ReceiptDateInput receipt={receipt} isLoading={deleteLoading} />
-					<View className="flex-row items-center gap-1">
-						<ReceiptCurrencyInput receipt={receipt} isLoading={deleteLoading} />
-					</View>
+					<ReceiptAmountInput receipt={receipt} isLoading={deleteLoading} />
 				</View>
-				<LoadableUser id={receipt.ownerUserId} />
 			</View>
 			{isOwner ? (
 				<View className="max-xs:flex-col flex-row items-end justify-end gap-2">
