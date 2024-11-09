@@ -60,9 +60,7 @@ export const ReceiptInner: React.FC<InnerProps> = ({ query }) => {
 							<ReceiptSyncButton
 								key={
 									// This is required for stability of the hooks in the component
-									receipt.participants.filter(
-										(participant) => participant.userId !== receipt.selfUserId,
-									).length
+									receipt.participants.length
 								}
 								receipt={receipt}
 								isLoading={deleteLoading}
