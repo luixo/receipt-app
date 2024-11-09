@@ -40,7 +40,7 @@ export const ReceiptInner: React.FC<InnerProps> = ({ query }) => {
 		receipt,
 		deleteLoading,
 		(participant) =>
-			isOwner ? (
+			isOwner && receipt.selfUserId !== participant.userId ? (
 				<ReceiptParticipantActions
 					participant={participant}
 					receipt={receipt}
