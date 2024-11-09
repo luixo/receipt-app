@@ -1,6 +1,6 @@
 {
 	"queries": {
-		"currency.topReceipts": {
+		"currency.top:[{\"options\":{\"type\":\"receipts\"}}]": {
 			"state": {
 				"data": [
 					{

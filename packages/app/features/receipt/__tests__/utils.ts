@@ -44,7 +44,7 @@ export const test = originalTest.extend<Fixtures>({
 	mockBase: ({ api }, use) =>
 		use(() => {
 			api.mockUtils.currencyList();
-			api.mock("currency.topReceipts", []);
+			api.mock("currency.top", []);
 			api.mock("users.suggest", { cursor: 0, hasMore: false, items: [] });
 			api.mock("users.suggestTop", { items: [] });
 		}),
@@ -151,7 +151,7 @@ export const test = originalTest.extend<Fixtures>({
 	openReceipt: ({ page, awaitCacheKey }, use) =>
 		use(async (receiptId) => {
 			await page.goto(`/receipts/${receiptId}`);
-			await awaitCacheKey("currency.topReceipts");
+			await awaitCacheKey("currency.top");
 			await awaitCacheKey("users.get");
 		}),
 });

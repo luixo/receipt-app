@@ -60,7 +60,6 @@ const DebtCurrencyInput: React.FC<CurrencyProps> = ({ debt, isLoading }) => {
 		},
 		[updateReceiptMutation, debt.id, debt.currencyCode, closeModal],
 	);
-	const topCurrenciesQuery = trpc.currency.topDebts.useQuery();
 
 	return (
 		<>
@@ -77,7 +76,7 @@ const DebtCurrencyInput: React.FC<CurrencyProps> = ({ debt, isLoading }) => {
 				onChange={saveCurrencyCode}
 				modalOpen={isModalOpen}
 				switchModalOpen={switchModalOpen}
-				topCurrenciesQuery={topCurrenciesQuery}
+				topQueryOptions={{ type: "debts" }}
 			/>
 		</>
 	);

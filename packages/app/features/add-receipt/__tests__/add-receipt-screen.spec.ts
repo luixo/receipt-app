@@ -33,7 +33,7 @@ test("On load", async ({
 
 	await snapshotQueries(async () => {
 		await page.goto("/receipts/add");
-		await awaitCacheKey("currency.topReceipts");
+		await awaitCacheKey("currency.top");
 	});
 	await expect(page).toHaveTitle("RA - Add receipt");
 	await expect(addButton).toBeDisabled();

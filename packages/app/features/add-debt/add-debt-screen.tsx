@@ -163,7 +163,6 @@ export const AddDebtScreen: AppPage = () => {
 			}),
 		[addMutation],
 	);
-	const topCurrenciesQuery = trpc.currency.topDebts.useQuery();
 
 	return (
 		<>
@@ -178,7 +177,7 @@ export const AddDebtScreen: AppPage = () => {
 			<CurrencyInput
 				form={form}
 				isLoading={addMutation.isPending}
-				topCurrenciesQuery={topCurrenciesQuery}
+				topQueryOptions={{ type: "debts" }}
 			/>
 			<UsersSuggest
 				selected={form.watch("userId")}

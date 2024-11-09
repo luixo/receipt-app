@@ -148,7 +148,7 @@ test("Exchange all to one button", async ({
 }) => {
 	const { user } = mockDebts();
 	await openDebtsExchangeScreen(user.id);
-	api.mock("currency.topDebts", []);
+	api.mock("currency.top", []);
 	await exchangeAllToOneButton.click();
 	await expect(page).toHaveURL(`/debts/user/${user.id}/exchange/all`);
 });

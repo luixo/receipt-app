@@ -114,7 +114,6 @@ export const AddReceiptScreen: AppPage = () => {
 			}),
 		[addReceiptMutation, items, rawParticipants],
 	);
-	const topCurrenciesQuery = trpc.currency.topReceipts.useQuery();
 
 	const receiptId = React.useId();
 	const selfUserId = selfAccountId as UsersId;
@@ -149,7 +148,7 @@ export const AddReceiptScreen: AppPage = () => {
 			<CurrencyInput
 				form={form}
 				isLoading={addReceiptMutation.isPending}
-				topCurrenciesQuery={topCurrenciesQuery}
+				topQueryOptions={{ type: "receipts" }}
 			/>
 			<ReceiptDateInput form={form} isLoading={addReceiptMutation.isPending} />
 			<ReceiptComponents

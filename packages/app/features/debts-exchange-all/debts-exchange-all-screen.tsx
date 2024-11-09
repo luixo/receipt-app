@@ -36,7 +36,6 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 		aggregatedDebtsErrorQueries,
 	] = useAggregatedDebts(query);
 	const userQuery = trpc.users.get.useQuery({ id: userId });
-	const topCurrenciesQuery = trpc.currency.topDebts.useQuery();
 	const [selectedCurrencyCode, setSelectedCurrencyCode] = React.useState<
 		CurrencyCode | undefined
 	>();
@@ -90,7 +89,7 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 				modalOpen={modalOpen}
 				switchModalOpen={switchModalOpen}
 				onLoad={doNothing}
-				topCurrenciesQuery={topCurrenciesQuery}
+				topQueryOptions={{ type: "debts" }}
 			/>
 			{selectedCurrencyCode && !aggregatedDebtsLoading ? (
 				<>

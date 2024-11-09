@@ -23,15 +23,15 @@ type MinimalForm = {
 type Props<T extends MinimalForm> = {
 	form: UseFormReturn<T>;
 	isLoading: boolean;
-	topCurrenciesQuery: React.ComponentProps<
+	topQueryOptions: React.ComponentProps<
 		typeof CurrenciesPicker
-	>["topCurrenciesQuery"];
+	>["topQueryOptions"];
 };
 
 export const CurrencyInput = <T extends MinimalForm>({
 	form,
 	isLoading,
-	topCurrenciesQuery,
+	topQueryOptions,
 }: Props<T>) => {
 	const typedPath = "currencyCode" as Path<T> & "currencyCode";
 	const [
@@ -115,7 +115,7 @@ export const CurrencyInput = <T extends MinimalForm>({
 				modalOpen={modalOpen}
 				switchModalOpen={switchModalOpen}
 				onLoad={onLoad}
-				topCurrenciesQuery={topCurrenciesQuery}
+				topQueryOptions={topQueryOptions}
 			/>
 		</>
 	);

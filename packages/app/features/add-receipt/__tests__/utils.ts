@@ -13,7 +13,7 @@ import {
 type Fixtures = {
 	mockBase: () => {
 		user: ReturnType<GenerateUsers>[number];
-		currencies: TRPCQueryOutput<"currency.topReceipts">;
+		currencies: TRPCQueryOutput<"currency.top">;
 	};
 	addButton: Locator;
 	nameInput: Locator;
@@ -30,7 +30,7 @@ export const test = originalTest.extend<Fixtures>({
 				currencyCode: generateCurrencyCode(faker),
 				count: Number(faker.number.int(100)),
 			}));
-			api.mock("currency.topReceipts", topCurrencies);
+			api.mock("currency.top", topCurrencies);
 			api.mock("account.get", {
 				account: {
 					id: faker.string.uuid(),

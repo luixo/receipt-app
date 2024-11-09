@@ -4,7 +4,7 @@ import { View } from "react-native";
 import { QueryErrorMessage } from "~app/components/error-message";
 import { useCurrencies } from "~app/hooks/use-currencies";
 import { useFormattedCurrencies } from "~app/hooks/use-formatted-currency";
-import type { TRPCQueryResult } from "~app/trpc";
+import { type TRPCQueryInput, type TRPCQueryResult, trpc } from "~app/trpc";
 import { type CurrencyCode } from "~app/utils/currency";
 import { Button } from "~components/button";
 import { Divider } from "~components/divider";
@@ -16,17 +16,18 @@ type LoaderProps = {
 	query: TRPCQueryResult<"currency.getList">;
 	selectedCurrencyCode?: CurrencyCode;
 	onChange: (nextCurrencyCode: CurrencyCode) => void;
-	topCurrenciesQuery:
-		| TRPCQueryResult<"currency.topDebts">
-		| TRPCQueryResult<"currency.topReceipts">;
+	topQueryOptions: TRPCQueryInput<"currency.top">["options"];
 };
 
 const CurrenciesPickerLoader: React.FC<LoaderProps> = ({
 	query,
 	selectedCurrencyCode,
 	onChange,
-	topCurrenciesQuery,
+	topQueryOptions,
 }) => {
+	const topCurrenciesQuery = trpc.currency.top.useQuery({
+		options: topQueryOptions,
+	});
 	const topCurrencyCodes =
 		topCurrenciesQuery.status === "success"
 			? topCurrenciesQuery.data.map(({ currencyCode }) => currencyCode)
@@ -79,10 +80,13 @@ export const CurrenciesPicker: React.FC<WrapperProps> = ({
 	modalOpen,
 	switchModalOpen,
 	onLoad,
-	topCurrenciesQuery,
+	topQueryOptions,
 	...props
 }) => {
 	const query = useCurrencies();
+	const topCurrenciesQuery = trpc.currency.top.useQuery({
+		options: topQueryOptions,
+	});
 	React.useEffect(() => {
 		if (
 			onLoad &&
@@ -111,7 +115,7 @@ export const CurrenciesPicker: React.FC<WrapperProps> = ({
 				<ModalBody>
 					<CurrenciesPickerLoader
 						query={query}
-						topCurrenciesQuery={topCurrenciesQuery}
+						topQueryOptions={topQueryOptions}
 						{...props}
 					/>
 					{query.status === "pending" ? (

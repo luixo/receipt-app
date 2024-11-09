@@ -41,7 +41,6 @@ export const ReceiptAmountInput: React.FC<Props> = ({ receipt, isLoading }) => {
 		},
 		[updateReceiptMutation, receipt.id, receipt.currencyCode, closeModal],
 	);
-	const topCurrenciesQuery = trpc.currency.topReceipts.useQuery();
 	const disabled =
 		updateReceiptMutation.isPending ||
 		isLoading ||
@@ -69,7 +68,7 @@ export const ReceiptAmountInput: React.FC<Props> = ({ receipt, isLoading }) => {
 				onChange={saveCurrency}
 				modalOpen={isModalOpen}
 				switchModalOpen={switchModalOpen}
-				topCurrenciesQuery={topCurrenciesQuery}
+				topQueryOptions={{ type: "receipts" }}
 			/>
 		</>
 	);
