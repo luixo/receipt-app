@@ -349,6 +349,4 @@ describe("receiptParticipants.add", () => {
 			]);
 		});
 	});
-	// mixed success & error
-	// receipt id + user id duplicates early error
 });
