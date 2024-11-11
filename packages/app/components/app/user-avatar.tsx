@@ -10,7 +10,13 @@ import type { UsersId } from "~db/models";
 import { hslToRgb } from "~utils/color";
 
 const wrapper = tv({
-	base: "shrink-0 bg-transparent",
+	// Don't animate avatar while in group
+	base: "shrink-0 bg-transparent data-[hover=true]:-translate-x-0",
+	variants: {
+		dimmed: {
+			true: "grayscale",
+		},
+	},
 });
 
 type OriginalProps = React.ComponentProps<typeof Avatar>;
@@ -19,6 +25,7 @@ type Props = {
 	id: UsersId;
 	connectedAccount?: TRPCQueryOutput<"users.get">["connectedAccount"];
 	foreign?: boolean;
+	dimmed?: boolean;
 	size?: OriginalProps["size"] | "xs";
 } & Omit<OriginalProps, "size">;
 
@@ -43,25 +50,13 @@ const COLORS = new Array(SECTORS)
 	.fill(null)
 	.map((_, index) => `#${hslToRgb(index * (DEGREES / SECTORS), 0.7, 0.5)}`);
 
-const BW_LEVELS = 6;
-const EDGE_MARGIN = 0.3;
-const BW_COLORS = new Array(BW_LEVELS + 1)
-	.fill(null)
-	.map(
-		(_, index) =>
-			`#${hslToRgb(
-				0,
-				0,
-				(1 - 2 * EDGE_MARGIN) * (index / BW_LEVELS) + EDGE_MARGIN,
-			)}`,
-	);
-
 export const useUserAvatarProps = ({
 	id,
 	connectedAccount,
 	className,
 	classNames,
 	foreign,
+	dimmed,
 	...props
 }: Props) => {
 	const size = getSize(props.size);
@@ -80,12 +75,18 @@ export const useUserAvatarProps = ({
 				size={size}
 				name={connectedAccount?.id || id}
 				variant="beam"
-				colors={foreign ? BW_COLORS : COLORS}
+				colors={COLORS}
 			/>
 		),
 		...props,
 		size: props.size === "xs" ? "sm" : props.size,
-		classNames: { ...classNames, base: wrapper({ className }) },
+		classNames: {
+			...classNames,
+			base: wrapper({
+				className: [className, classNames?.base],
+				dimmed: foreign || dimmed,
+			}),
+		},
 		imgProps,
 	} satisfies React.ComponentProps<typeof Avatar>;
 };

@@ -54,7 +54,8 @@ export type Props = {
 	connectedAccount?: TRPCQueryOutput<"users.get">["connectedAccount"];
 	foreign?: boolean;
 	chip?: boolean | React.ComponentProps<typeof Chip>;
-} & Omit<React.ComponentProps<typeof RawUser>, "name" | "description">;
+} & Omit<React.ComponentProps<typeof RawUser>, "name" | "description"> &
+	Pick<React.ComponentProps<typeof UserAvatar>, "dimmed">;
 
 export const User = React.forwardRef<HTMLDivElement, Props>(
 	(
@@ -65,6 +66,7 @@ export const User = React.forwardRef<HTMLDivElement, Props>(
 			className,
 			avatarProps: rawAvatarProps,
 			foreign,
+			dimmed,
 			chip,
 			...props
 		},
@@ -74,6 +76,7 @@ export const User = React.forwardRef<HTMLDivElement, Props>(
 			id,
 			connectedAccount,
 			foreign,
+			dimmed,
 			...rawAvatarProps,
 		};
 		const avatarProps = useUserAvatarProps(avatarInput);
