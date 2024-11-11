@@ -40,6 +40,7 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 	return (
 		<UsersSuggest
 			filterIds={[...filterIds, ...localFilterIds]}
+			additionalIds={isSelfAdded ? [] : [selfUserId]}
 			onUserClick={addParticipants}
 			isDisabled={receiptDisabled || participantsDisabled}
 			options={React.useMemo(
@@ -47,7 +48,6 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 				[getUsersSuggestOptions],
 			)}
 			label="Add participants"
-			includeSelf={!isSelfAdded}
 			{...props}
 		/>
 	);

@@ -25,9 +25,9 @@ type Props = {
 	limit?: number;
 	topLimit?: number;
 	filterIds?: UsersId[];
+	additionalIds?: UsersId[];
 	options?: TRPCQueryInput<"users.suggest">["options"];
 	closeOnSelect?: boolean;
-	includeSelf?: boolean;
 } & Omit<
 	React.ComponentProps<typeof Autocomplete>,
 	"items" | "defaultItems" | "children"
@@ -42,13 +42,9 @@ export const UsersSuggest: React.FC<Props> = ({
 	filterIds: outerFilterIds,
 	onUserClick,
 	closeOnSelect,
-	includeSelf,
+	additionalIds,
 	...props
 }) => {
-	const selfAccountId = trpc.account.get.useQuery(undefined, {
-		enabled: Boolean(includeSelf),
-	}).data?.account.id;
-	const selfUserId = selfAccountId ? (selfAccountId as UsersId) : undefined;
 	const inputRef = React.useRef<HTMLInputElement>(null);
 	const [value, setValue] = React.useState("");
 	const debouncedValue = useDebouncedValue(value, throttledMs);
@@ -116,8 +112,8 @@ export const UsersSuggest: React.FC<Props> = ({
 			if (key === null || typeof key === "number") {
 				return;
 			}
-			if (includeSelf && key === selfUserId) {
-				onUserClick(selfUserId);
+			if (additionalIds?.includes(key)) {
+				onUserClick(key);
 				return;
 			}
 			const matchedUser =
@@ -127,13 +123,7 @@ export const UsersSuggest: React.FC<Props> = ({
 				onUserClick(matchedUser);
 			}
 		},
-		[
-			includeSelf,
-			selfUserId,
-			filteredTopFetchedUserIds,
-			fetchedUserIds,
-			onUserClick,
-		],
+		[additionalIds, filteredTopFetchedUserIds, fetchedUserIds, onUserClick],
 	);
 
 	const [, scrollerRef] = useInfiniteScroll({
@@ -146,15 +136,13 @@ export const UsersSuggest: React.FC<Props> = ({
 	});
 
 	const sections = [
-		includeSelf && selfUserId ? (
+		additionalIds && additionalIds.length !== 0 ? (
 			<AutocompleteSection key="self">
-				<AutocompleteItem
-					key={selfUserId}
-					className="p-1"
-					textValue={selfUserId}
-				>
-					<LoadableUser id={selfUserId} avatarProps={{ size: "sm" }} />
-				</AutocompleteItem>
+				{additionalIds.map((userId) => (
+					<AutocompleteItem key={userId} className="p-1" textValue={userId}>
+						<LoadableUser id={userId} avatarProps={{ size: "sm" }} />
+					</AutocompleteItem>
+				))}
 			</AutocompleteSection>
 		) : null,
 		filteredTopFetchedUserIds.length === 0 ? null : (
