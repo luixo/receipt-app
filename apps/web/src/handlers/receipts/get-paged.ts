@@ -1,9 +1,10 @@
 import { TRPCError } from "@trpc/server";
-import { sql } from "kysely";
 import { z } from "zod";
 
-import type { UsersId } from "~db/models";
-import { getForeignReceipts } from "~web/handlers/receipts/utils";
+import {
+	getDebterReceipts,
+	getOwnReceipts,
+} from "~web/handlers/receipts/utils";
 import { authProcedure } from "~web/handlers/trpc";
 import { limitSchema, offsetSchema } from "~web/handlers/validation";
 
@@ -22,28 +23,17 @@ export const procedure = authProcedure
 	)
 	.query(async ({ input: { filters = {}, ...input }, ctx }) => {
 		const { database } = ctx;
-		const foreignReceipts = getForeignReceipts(database, ctx.auth.accountId);
-		const ownReceipts = database
-			.selectFrom("receipts")
-			.where("receipts.ownerAccountId", "=", ctx.auth.accountId);
+		const foreignReceipts = getDebterReceipts(database, ctx.auth.accountId);
+		const ownReceipts = getOwnReceipts(database, ctx.auth.accountId);
 
 		const mergedReceipts = database
 			.with("mergedReceipts", () => {
 				const foreignReceiptsBuilder = foreignReceipts
-					.select(["receipts.id", "receipts.issued"])
-					.groupBy(["receipts.id"]);
+					.groupBy(["receipts.id"])
+					.select(["receipts.id", "receipts.issued"]);
 				const ownReceiptsBuilder = ownReceipts
-					.leftJoin("receiptParticipants", (jb) =>
-						jb.onRef("receiptParticipants.receiptId", "=", "receipts.id").onRef(
-							"receiptParticipants.userId",
-							"=",
-							// We use `userId` = `ownerAccountId` contract
-							// But type system doesn't know about that
-							sql.id("receipts", "ownerAccountId").$castTo<UsersId>(),
-						),
-					)
-					.select(["receipts.id", "receipts.issued"])
-					.groupBy(["receipts.id"]);
+					.groupBy(["receipts.id"])
+					.select(["receipts.id", "receipts.issued"]);
 				if (typeof filters.ownedByMe !== "boolean") {
 					return foreignReceiptsBuilder.union(ownReceiptsBuilder);
 				}

@@ -1,7 +1,8 @@
+import type { QueryCreator } from "kysely";
 import type { z } from "zod";
 
 import type { AccountsId } from "~db/models";
-import type { Database } from "~db/types";
+import type { Database, ReceiptsDatabase } from "~db/types";
 import type { assignableRoleSchema } from "~web/handlers/validation";
 import { roleSchema } from "~web/handlers/validation";
 
@@ -47,13 +48,13 @@ export const getAccessRole = async (
 };
 
 export const getOwnReceipts = (
-	database: Database,
+	database: Database | QueryCreator<ReceiptsDatabase>,
 	ownerAccountId: AccountsId,
 ) =>
 	database.selectFrom("receipts").where("ownerAccountId", "=", ownerAccountId);
 
-export const getForeignReceipts = (
-	database: Database,
+export const getDebterReceipts = (
+	database: Database | QueryCreator<ReceiptsDatabase>,
 	ownerAccountId: AccountsId,
 ) =>
 	database

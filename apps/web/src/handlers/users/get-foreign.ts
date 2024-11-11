@@ -4,42 +4,44 @@ import { z } from "zod";
 import type { AccountsId, UsersId } from "~db/models";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
+import { getDebterReceipts } from "~web/handlers/receipts/utils";
 import { authProcedure } from "~web/handlers/trpc";
 import { userIdSchema } from "~web/handlers/validation";
 
 // We allow account fetch foreign users
-// In case they share the same receipt
-const fetchUsers = async (
-	{ database, auth }: AuthorizedContext,
-	ids: UsersId[],
-) =>
-	database
-		.selectFrom("users as usersThem")
-		.where("usersThem.id", "in", ids)
-		.innerJoin("receiptParticipants as receiptParticipantsThem", (qb) =>
-			qb.onRef("receiptParticipantsThem.userId", "=", "usersThem.id"),
+// In case they share the same receipt (as participant or as payer)
+const fetchUsers = async (ctx: AuthorizedContext, ids: UsersId[]) =>
+	ctx.database
+		.with("mergedReceipts", (qc) =>
+			getDebterReceipts(qc, ctx.auth.accountId)
+				.groupBy("receipts.id")
+				.select("receipts.id"),
 		)
-		.innerJoin("receiptParticipants as receiptParticipantsMe", (qb) =>
-			qb.onRef(
-				"receiptParticipantsMe.receiptId",
-				"=",
-				"receiptParticipantsThem.receiptId",
-			),
+		.with("mergedParticipants", (qc) =>
+			qc
+				.selectFrom("receiptParticipants")
+				.innerJoin("mergedReceipts", (qb) =>
+					qb.onRef("receiptParticipants.receiptId", "=", "mergedReceipts.id"),
+				)
+				.groupBy("receiptParticipants.userId")
+				.select("receiptParticipants.userId"),
 		)
-		// Only allow for receipts in which the fetching account is included
-		.innerJoin("users as usersMe", (qb) =>
-			qb
-				.onRef("receiptParticipantsMe.userId", "=", "usersMe.id")
-				.onRef("usersMe.ownerAccountId", "=", "usersThem.ownerAccountId")
-				.on("usersMe.connectedAccountId", "=", auth.accountId),
+		.selectFrom("users as usersTheir")
+		.where("usersTheir.id", "in", ids)
+		.innerJoin("mergedParticipants", (qb) =>
+			qb.onRef("usersTheir.id", "=", "mergedParticipants.userId"),
 		)
 		.leftJoin("accounts", (qb) =>
-			qb.onRef("usersThem.connectedAccountId", "=", "accounts.id"),
+			qb.onRef("usersTheir.connectedAccountId", "=", "accounts.id"),
 		)
 		.leftJoin("users as usersMine", (qb) =>
 			qb
-				.onRef("usersMine.connectedAccountId", "=", "accounts.id")
-				.onRef("usersMine.ownerAccountId", "=", "usersMe.connectedAccountId"),
+				.onRef(
+					"usersMine.connectedAccountId",
+					"=",
+					"usersTheir.connectedAccountId",
+				)
+				.on("usersMine.ownerAccountId", "=", ctx.auth.accountId),
 		)
 		.select([
 			"usersMine.id as mineId",
@@ -48,10 +50,10 @@ const fetchUsers = async (
 			"accounts.id as accountId",
 			"accounts.email",
 			"accounts.avatarUrl",
-			"usersThem.id as theirId",
-			"usersThem.name as theirName",
-			"usersThem.publicName as theirPublicName",
-			"usersThem.ownerAccountId",
+			"usersTheir.id as theirId",
+			"usersTheir.name as theirName",
+			"usersTheir.publicName as theirPublicName",
+			"usersTheir.ownerAccountId",
 		])
 		.groupBy([
 			"usersMine.id",
@@ -60,10 +62,10 @@ const fetchUsers = async (
 			"accounts.id",
 			"accounts.email",
 			"accounts.avatarUrl",
-			"usersThem.id",
-			"usersThem.name",
-			"usersThem.publicName",
-			"usersThem.ownerAccountId",
+			"usersTheir.id",
+			"usersTheir.name",
+			"usersTheir.publicName",
+			"usersTheir.ownerAccountId",
 		])
 		.execute();
 

@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { MONTH } from "~utils/time";
 import {
-	getForeignReceipts,
+	getDebterReceipts,
 	getOwnReceipts,
 } from "~web/handlers/receipts/utils";
 import { authProcedure } from "~web/handlers/trpc";
@@ -54,30 +54,30 @@ export const procedure = authProcedure
 				}));
 			}
 			case "receipts": {
-				const foreignReceipts = getForeignReceipts(
-					ctx.database,
-					ctx.auth.accountId,
-				);
-				const ownReceipts = getOwnReceipts(ctx.database, ctx.auth.accountId);
 				const topCurrenciesResult = await ctx.database
-					.with("mergedReceipts", () =>
-						foreignReceipts
+					.with("mergedReceipts", () => {
+						const debterReceipts = getDebterReceipts(
+							ctx.database,
+							ctx.auth.accountId,
+						)
 							.select([
 								"receipts.currencyCode",
 								ctx.database.fn.count<string>("receipts.id").as("count"),
 							])
 							.where("issued", ">", new Date(Date.now() - MONTH))
-							.groupBy("receipts.currencyCode")
-							.unionAll(
-								ownReceipts
-									.select([
-										"receipts.currencyCode",
-										ctx.database.fn.count<string>("receipts.id").as("count"),
-									])
-									.where("issued", ">", new Date(Date.now() - MONTH))
-									.groupBy("receipts.currencyCode"),
-							),
-					)
+							.groupBy("receipts.currencyCode");
+						const ownerReceipts = getOwnReceipts(
+							ctx.database,
+							ctx.auth.accountId,
+						)
+							.select([
+								"receipts.currencyCode",
+								ctx.database.fn.count<string>("receipts.id").as("count"),
+							])
+							.where("issued", ">", new Date(Date.now() - MONTH))
+							.groupBy("receipts.currencyCode");
+						return debterReceipts.unionAll(ownerReceipts);
+					})
 					.selectFrom("mergedReceipts")
 					.select([
 						"currencyCode",
