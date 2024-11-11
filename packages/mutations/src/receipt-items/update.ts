@@ -40,19 +40,21 @@ const getRevert =
 
 export const options: UseContextedMutationOptions<
 	"receiptItems.update",
-	ReceiptsId
+	{ receiptId: ReceiptsId }
 > = {
-	onMutate: (controllerContext, receiptId) => (updateObject) =>
-		updateRevertReceipts(controllerContext, {
-			get: (controller) =>
-				controller.updateItem(
-					receiptId,
-					updateObject.id,
-					applyUpdate(updateObject.update),
-					getRevert(updateObject.update),
-				),
-			getPaged: undefined,
-		}),
+	onMutate:
+		(controllerContext, { receiptId }) =>
+		(updateObject) =>
+			updateRevertReceipts(controllerContext, {
+				get: (controller) =>
+					controller.updateItem(
+						receiptId,
+						updateObject.id,
+						applyUpdate(updateObject.update),
+						getRevert(updateObject.update),
+					),
+				getPaged: undefined,
+			}),
 	errorToastOptions: () => (error) => ({
 		text: `Error updating item: ${error.message}`,
 	}),

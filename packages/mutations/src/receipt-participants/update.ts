@@ -1,5 +1,4 @@
 import type { TRPCMutationInput, TRPCQueryOutput } from "~app/trpc";
-import type { UsersId } from "~db/models";
 
 import { updateRevert as updateRevertReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
@@ -35,22 +34,20 @@ const getRevert =
 		}
 	};
 
-export const options: UseContextedMutationOptions<
-	"receiptParticipants.update",
-	{ selfUserId: UsersId }
-> = {
-	onMutate: (controllerContext) => (variables) =>
-		updateRevertReceipts(controllerContext, {
-			get: (controller) =>
-				controller.updateParticipant(
-					variables.receiptId,
-					variables.userId,
-					applyUpdate(variables.update),
-					getRevert(variables.update),
-				),
-			getPaged: undefined,
+export const options: UseContextedMutationOptions<"receiptParticipants.update"> =
+	{
+		onMutate: (controllerContext) => (variables) =>
+			updateRevertReceipts(controllerContext, {
+				get: (controller) =>
+					controller.updateParticipant(
+						variables.receiptId,
+						variables.userId,
+						applyUpdate(variables.update),
+						getRevert(variables.update),
+					),
+				getPaged: undefined,
+			}),
+		errorToastOptions: () => (error) => ({
+			text: `Error updating a participant: ${error.message}`,
 		}),
-	errorToastOptions: () => (error) => ({
-		text: `Error updating a participant: ${error.message}`,
-	}),
-};
+	};

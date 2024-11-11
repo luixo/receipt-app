@@ -41,7 +41,9 @@ const ReceiptSyncButtonInner: React.FC<InnerProps> = ({
 			// This is stable due to `key` based on participants ids in the upper component
 			// eslint-disable-next-line react-hooks/rules-of-hooks
 			useTrpcMutationOptions(debtsUpdateOptions, {
-				context: matchedDesyncedParticipant?.currentDebt || skipToken,
+				context: matchedDesyncedParticipant?.currentDebt
+					? { currDebt: matchedDesyncedParticipant.currentDebt }
+					: skipToken,
 			}),
 		);
 	});

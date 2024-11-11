@@ -1,4 +1,4 @@
-import type { ReceiptItemsId, ReceiptsId } from "~db/models";
+import type { ReceiptItemsId } from "~db/models";
 
 import {
 	update as updateReceipts,
@@ -8,15 +8,15 @@ import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<
 	"receiptItems.add",
-	ReceiptsId,
+	undefined,
 	ReceiptItemsId
 > = {
-	onMutate: (controllerContext, receiptId) => (variables) => {
+	onMutate: (controllerContext) => (variables) => {
 		const temporaryId = `temp-${Math.random()}`;
 		return {
 			...updateRevertReceipts(controllerContext, {
 				get: (controller) =>
-					controller.addItem(receiptId, {
+					controller.addItem(variables.receiptId, {
 						id: temporaryId,
 						name: variables.name,
 						price: variables.price,
@@ -30,11 +30,11 @@ export const options: UseContextedMutationOptions<
 		};
 	},
 	onSuccess:
-		(controllerContext, receiptId) =>
-		({ id, createdAt }, _variables, temporaryId) => {
+		(controllerContext) =>
+		({ id, createdAt }, variables, temporaryId) => {
 			updateReceipts(controllerContext, {
 				get: (controller) =>
-					controller.updateItem(receiptId, temporaryId, (item) => ({
+					controller.updateItem(variables.receiptId, temporaryId, (item) => ({
 						...item,
 						id,
 						createdAt,

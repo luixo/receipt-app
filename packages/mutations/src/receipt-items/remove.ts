@@ -5,10 +5,10 @@ import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<
 	"receiptItems.remove",
-	ReceiptsId
+	{ receiptId: ReceiptsId }
 > = {
 	onMutate:
-		(controllerContext, receiptId) =>
+		(controllerContext, { receiptId }) =>
 		({ id: removedId }) =>
 			updateRevertReceipts(controllerContext, {
 				get: (controller) => controller.removeItem(receiptId, removedId),

@@ -6,7 +6,7 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { Button } from "~components/button";
-import { options as debtsAcceptIntentionOptions } from "~mutations/debts/accept-intention";
+import { options as acceptDebtIntentionOptions } from "~mutations/debt-intentions/accept";
 
 type Props = {
 	intentions: TRPCQueryOutput<"debtIntentions.getAll">;
@@ -19,8 +19,8 @@ export const AcceptAllIntentionsButton: React.FC<Props> = ({ intentions }) => {
 		trpc.debtIntentions.accept.useMutation(
 			// Intentions are stable due to `key` based on intention id in the upper component
 			// eslint-disable-next-line react-hooks/rules-of-hooks
-			useTrpcMutationOptions(debtsAcceptIntentionOptions, {
-				context: intention,
+			useTrpcMutationOptions(acceptDebtIntentionOptions, {
+				context: { intention },
 			}),
 		),
 	);

@@ -13,9 +13,13 @@ import {
 	updateUpdatedAt,
 } from "./utils";
 
-export const options: UseContextedMutationOptions<"debts.update", CurrentDebt> =
-	{
-		onMutate: (controllerContext, currDebt) => (updateObject) =>
+export const options: UseContextedMutationOptions<
+	"debts.update",
+	{ currDebt: CurrentDebt }
+> = {
+	onMutate:
+		(controllerContext, { currDebt }) =>
+		(updateObject) =>
 			updateRevertDebts(controllerContext, {
 				getByUsers: (controller) =>
 					controller.updateCurrency(
@@ -39,7 +43,9 @@ export const options: UseContextedMutationOptions<"debts.update", CurrentDebt> =
 					),
 				getIntentions: undefined,
 			}),
-		onSuccess: (controllerContext, currDebt) => (result, updateObject) => {
+	onSuccess:
+		(controllerContext, { currDebt }) =>
+		(result, updateObject) => {
 			if (currDebt.receiptId) {
 				updateReceiptWithOutcomingDebtId(
 					controllerContext,
@@ -55,9 +61,9 @@ export const options: UseContextedMutationOptions<"debts.update", CurrentDebt> =
 				result.reverseUpdated,
 			);
 		},
-		mutateToastOptions: { text: "Updating debt.." },
-		successToastOptions: { text: "Debt updated successfully" },
-		errorToastOptions: () => (error) => ({
-			text: `Error updating debt: ${error.message}`,
-		}),
-	};
+	mutateToastOptions: { text: "Updating debt.." },
+	successToastOptions: { text: "Debt updated successfully" },
+	errorToastOptions: () => (error) => ({
+		text: `Error updating debt: ${error.message}`,
+	}),
+};

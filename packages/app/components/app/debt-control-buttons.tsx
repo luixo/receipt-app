@@ -9,7 +9,7 @@ import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { Button } from "~components/button";
 import { SyncIcon } from "~components/icons";
-import { options as debtsAcceptIntentionOptions } from "~mutations/debts/accept-intention";
+import { options as acceptDebtIntentionOptions } from "~mutations/debt-intentions/accept";
 
 type Debt = TRPCQueryOutput<"debts.get">;
 
@@ -49,8 +49,8 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 		],
 	);
 	const acceptMutation = trpc.debtIntentions.accept.useMutation(
-		useTrpcMutationOptions(debtsAcceptIntentionOptions, {
-			context: intention ?? skipToken,
+		useTrpcMutationOptions(acceptDebtIntentionOptions, {
+			context: intention ? { intention } : skipToken,
 		}),
 	);
 	const acceptSyncIntention = React.useCallback(() => {

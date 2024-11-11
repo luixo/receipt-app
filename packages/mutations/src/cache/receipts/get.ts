@@ -271,6 +271,7 @@ export const getController = ({
 	const controller = trpcUtils.receipts.get;
 	const inputs = getPagedInputs(trpc, queryClient);
 	return {
+		getData: (receiptId: ReceiptsId) => controller.getData({ id: receiptId }),
 		update: (receiptId: ReceiptsId, updater: UpdateFn<Receipt>) =>
 			update(controller, receiptId)(updater),
 		updateAll: (updater: UpdateFn<Receipt>) =>

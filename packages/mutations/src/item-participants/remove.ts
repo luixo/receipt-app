@@ -5,18 +5,20 @@ import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<
 	"itemParticipants.remove",
-	ReceiptsId
+	{ receiptId: ReceiptsId }
 > = {
-	onMutate: (controllerContext, receiptId) => (variables) =>
-		updateRevertReceipts(controllerContext, {
-			get: (controller) =>
-				controller.removeItemPart(
-					receiptId,
-					variables.itemId,
-					variables.userId,
-				),
-			getPaged: undefined,
-		}),
+	onMutate:
+		(controllerContext, { receiptId }) =>
+		(variables) =>
+			updateRevertReceipts(controllerContext, {
+				get: (controller) =>
+					controller.removeItemPart(
+						receiptId,
+						variables.itemId,
+						variables.userId,
+					),
+				getPaged: undefined,
+			}),
 	errorToastOptions: () => (error) => ({
 		text: `Error removing participant(s): ${error.message}`,
 	}),

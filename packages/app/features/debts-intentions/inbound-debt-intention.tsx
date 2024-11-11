@@ -6,7 +6,7 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { Button, ButtonGroup } from "~components/button";
-import { options as debtsAcceptIntentionOptions } from "~mutations/debts/accept-intention";
+import { options as acceptDebtIntentionOptions } from "~mutations/debt-intentions/accept";
 
 import { DebtIntention } from "./debt-intention";
 
@@ -19,8 +19,8 @@ export const InboundDebtIntention = React.forwardRef<HTMLDivElement, Props>(
 		const router = useRouter();
 
 		const acceptMutation = trpc.debtIntentions.accept.useMutation(
-			useTrpcMutationOptions(debtsAcceptIntentionOptions, {
-				context: intention,
+			useTrpcMutationOptions(acceptDebtIntentionOptions, {
+				context: { intention },
 			}),
 		);
 		const acceptSyncIntention = React.useCallback(

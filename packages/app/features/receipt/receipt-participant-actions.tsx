@@ -30,8 +30,10 @@ export const ReceiptParticipantActions: React.FC<Props> = ({
 		useTrpcMutationOptions(debtsUpdateOptions, {
 			context: participant.currentDebt
 				? {
-						...participant.currentDebt,
-						userId: participant.userId,
+						currDebt: {
+							...participant.currentDebt,
+							userId: participant.userId,
+						},
 				  }
 				: skipToken,
 		}),

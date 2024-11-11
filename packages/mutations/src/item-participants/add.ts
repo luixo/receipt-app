@@ -5,19 +5,21 @@ import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<
 	"itemParticipants.add",
-	ReceiptsId
+	{ receiptId: ReceiptsId }
 > = {
-	onMutate: (controllerContext, receiptId) => (variables) =>
-		updateRevertReceipts(controllerContext, {
-			get: (controller) =>
-				controller.addItemPart(
-					receiptId,
-					variables.itemId,
-					variables.userId,
-					variables.part,
-				),
-			getPaged: undefined,
-		}),
+	onMutate:
+		(controllerContext, { receiptId }) =>
+		(variables) =>
+			updateRevertReceipts(controllerContext, {
+				get: (controller) =>
+					controller.addItemPart(
+						receiptId,
+						variables.itemId,
+						variables.userId,
+						variables.part,
+					),
+				getPaged: undefined,
+			}),
 	errorToastOptions: () => (error) => ({
 		text: `Error adding participant(s): ${error.message}`,
 	}),

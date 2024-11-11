@@ -1,33 +1,20 @@
-import type { AccountsId, ReceiptsId, UsersId } from "~db/models";
-
 import { update as updateReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
 
-export const options: UseContextedMutationOptions<
-	"receiptParticipants.add",
-	{ receiptId: ReceiptsId; selfAccountId: AccountsId }
-> = {
-	onSuccess:
-		(controllerContext, { receiptId, selfAccountId }) =>
-		(result, variables) => {
-			const selfUserId = selfAccountId as UsersId;
-			updateReceipts(controllerContext, {
-				get: (controller) => {
-					controller.addParticipant(receiptId, {
-						userId: variables.userId,
-						role: variables.userId === selfUserId ? "owner" : variables.role,
-						createdAt: result.createdAt,
-					});
-				},
-				getPaged: undefined,
-			});
-			if (variables.userId === selfUserId) {
-				updateReceipts(controllerContext, {
-					get: undefined,
-					getPaged: undefined,
+export const options: UseContextedMutationOptions<"receiptParticipants.add"> = {
+	onSuccess: (controllerContext) => (result, variables) => {
+		updateReceipts(controllerContext, {
+			get: (controller) => {
+				const selfUserId = controller.getData(variables.receiptId)?.selfUserId;
+				controller.addParticipant(variables.receiptId, {
+					userId: variables.userId,
+					role: variables.userId === selfUserId ? "owner" : variables.role,
+					createdAt: result.createdAt,
 				});
-			}
-		},
+			},
+			getPaged: undefined,
+		});
+	},
 	errorToastOptions: () => (error) => ({
 		text: `Error adding participant(s): ${error.message}`,
 	}),

@@ -45,7 +45,7 @@ const DebtCurrencyInput: React.FC<CurrencyProps> = ({ debt, isLoading }) => {
 	] = useBooleanState();
 
 	const updateReceiptMutation = trpc.debts.update.useMutation(
-		useTrpcMutationOptions(debtsUpdateOptions, { context: debt }),
+		useTrpcMutationOptions(debtsUpdateOptions, { context: { currDebt: debt } }),
 	);
 	const saveCurrencyCode = React.useCallback(
 		(nextCurrencyCode: CurrencyCode) => {
@@ -105,7 +105,7 @@ const DebtAmountInput: React.FC<AmountProps> = ({ debt, isLoading }) => {
 	);
 
 	const updateMutation = trpc.debts.update.useMutation(
-		useTrpcMutationOptions(debtsUpdateOptions, { context: debt }),
+		useTrpcMutationOptions(debtsUpdateOptions, { context: { currDebt: debt } }),
 	);
 	const updateAmount = React.useCallback(
 		(amount: number) => {
@@ -146,7 +146,7 @@ type DateProps = {
 
 const DebtDateInput: React.FC<DateProps> = ({ debt, isLoading }) => {
 	const updateMutation = trpc.debts.update.useMutation(
-		useTrpcMutationOptions(debtsUpdateOptions, { context: debt }),
+		useTrpcMutationOptions(debtsUpdateOptions, { context: { currDebt: debt } }),
 	);
 
 	const saveDate = React.useCallback(
@@ -190,7 +190,7 @@ const DebtNoteInput: React.FC<NoteProps> = ({ debt, isLoading }) => {
 	});
 
 	const updateMutation = trpc.debts.update.useMutation(
-		useTrpcMutationOptions(debtsUpdateOptions, { context: debt }),
+		useTrpcMutationOptions(debtsUpdateOptions, { context: { currDebt: debt } }),
 	);
 	const saveNote = React.useCallback(
 		(nextNote: string) => {
@@ -290,7 +290,7 @@ export const DebtSignButtonGroup: React.FC<SignGroupProps> = ({
 	disabled,
 }) => {
 	const updateMutation = trpc.debts.update.useMutation(
-		useTrpcMutationOptions(debtsUpdateOptions, { context: debt }),
+		useTrpcMutationOptions(debtsUpdateOptions, { context: { currDebt: debt } }),
 	);
 	const setDirection = React.useCallback(
 		(direction: "+" | "-") => {
