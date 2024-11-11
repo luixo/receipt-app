@@ -2,8 +2,8 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import {
-	getDebterReceipts,
 	getOwnReceipts,
+	getParticipantsReceipts,
 } from "~web/handlers/receipts/utils";
 import { authProcedure } from "~web/handlers/trpc";
 import { limitSchema, offsetSchema } from "~web/handlers/validation";
@@ -23,7 +23,10 @@ export const procedure = authProcedure
 	)
 	.query(async ({ input: { filters = {}, ...input }, ctx }) => {
 		const { database } = ctx;
-		const foreignReceipts = getDebterReceipts(database, ctx.auth.accountId);
+		const foreignReceipts = getParticipantsReceipts(
+			database,
+			ctx.auth.accountId,
+		);
 		const ownReceipts = getOwnReceipts(database, ctx.auth.accountId);
 
 		const mergedReceipts = database

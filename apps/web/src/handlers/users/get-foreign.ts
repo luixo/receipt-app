@@ -4,7 +4,7 @@ import { z } from "zod";
 import type { AccountsId, UsersId } from "~db/models";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
-import { getDebterReceipts } from "~web/handlers/receipts/utils";
+import { getParticipantsReceipts } from "~web/handlers/receipts/utils";
 import { authProcedure } from "~web/handlers/trpc";
 import { userIdSchema } from "~web/handlers/validation";
 
@@ -13,7 +13,7 @@ import { userIdSchema } from "~web/handlers/validation";
 const fetchUsers = async (ctx: AuthorizedContext, ids: UsersId[]) =>
 	ctx.database
 		.with("mergedReceipts", (qc) =>
-			getDebterReceipts(qc, ctx.auth.accountId)
+			getParticipantsReceipts(qc, ctx.auth.accountId)
 				.groupBy("receipts.id")
 				.select("receipts.id"),
 		)

@@ -53,7 +53,7 @@ export const getOwnReceipts = (
 ) =>
 	database.selectFrom("receipts").where("ownerAccountId", "=", ownerAccountId);
 
-export const getDebterReceipts = (
+export const getParticipantsReceipts = (
 	database: Database | QueryCreator<ReceiptsDatabase>,
 	ownerAccountId: AccountsId,
 ) =>

@@ -2,8 +2,8 @@ import { z } from "zod";
 
 import { MONTH } from "~utils/time";
 import {
-	getDebterReceipts,
 	getOwnReceipts,
+	getParticipantsReceipts,
 } from "~web/handlers/receipts/utils";
 import { authProcedure } from "~web/handlers/trpc";
 import { currencyCodeSchema } from "~web/handlers/validation";
@@ -56,7 +56,7 @@ export const procedure = authProcedure
 			case "receipts": {
 				const topCurrenciesResult = await ctx.database
 					.with("mergedReceipts", () => {
-						const debterReceipts = getDebterReceipts(
+						const participantReceipts = getParticipantsReceipts(
 							ctx.database,
 							ctx.auth.accountId,
 						)
@@ -76,7 +76,7 @@ export const procedure = authProcedure
 							])
 							.where("issued", ">", new Date(Date.now() - MONTH))
 							.groupBy("receipts.currencyCode");
-						return debterReceipts.unionAll(ownerReceipts);
+						return participantReceipts.unionAll(ownerReceipts);
 					})
 					.selectFrom("mergedReceipts")
 					.select([
