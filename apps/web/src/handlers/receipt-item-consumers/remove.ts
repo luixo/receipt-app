@@ -1,8 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { partSchema } from "~app/utils/validation";
-import type { SimpleUpdateObject } from "~db/types";
 import { getAccessRole } from "~web/handlers/receipts/utils";
 import { authProcedure } from "~web/handlers/trpc";
 import { receiptItemIdSchema, userIdSchema } from "~web/handlers/validation";
@@ -12,10 +10,6 @@ export const procedure = authProcedure
 		z.strictObject({
 			itemId: receiptItemIdSchema,
 			userId: userIdSchema,
-			update: z.strictObject({
-				type: z.literal("part"),
-				part: partSchema,
-			}),
 		}),
 	)
 	.mutation(async ({ input, ctx }) => {
@@ -46,42 +40,23 @@ export const procedure = authProcedure
 		if (accessRole !== "owner" && accessRole !== "editor") {
 			throw new TRPCError({
 				code: "FORBIDDEN",
-				message: `Not enough rights to modify receipt "${receipt.id}".`,
+				message: `Not enough rights to remove item from receipt "${receipt.id}".`,
 			});
 		}
-		const itemParticipant = await database
-			.selectFrom("itemParticipants")
+		const deleteResult = await database
+			.deleteFrom("receiptItemConsumers")
 			.where((eb) =>
 				eb.and({
 					itemId: input.itemId,
 					userId: input.userId,
 				}),
 			)
-			.select([])
-			.limit(1)
+			.returning("receiptItemConsumers.userId")
 			.executeTakeFirst();
-		if (!itemParticipant) {
+		if (!deleteResult) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `User "${input.userId}" does not participate in item "${input.itemId}" of the receipt "${receipt.id}".`,
+				message: `Item consumer "${input.userId}" for item "${input.itemId}" on receipt "${receipt.id}" doesn't exist.`,
 			});
 		}
-		let setObject: SimpleUpdateObject<"itemParticipants"> = {};
-		switch (input.update.type) {
-			// We want this to blow up in case we add more cases
-			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-			case "part":
-				setObject = { part: input.update.part.toString() };
-				break;
-		}
-		await database
-			.updateTable("itemParticipants")
-			.set(setObject)
-			.where((eb) =>
-				eb.and({
-					itemId: input.itemId,
-					userId: input.userId,
-				}),
-			)
-			.executeTakeFirst();
 	});

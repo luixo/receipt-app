@@ -24,17 +24,18 @@ export const ReceiptItemPart: React.FC<Props> = ({
 	participant,
 	isDisabled: isExternalDisabled,
 }) => {
-	const { removeItemPart: removeItemPartMutation } = useActionsHooksContext();
+	const { removeItemConsumer } = useActionsHooksContext();
 	const canEdit = useCanEdit();
 	const isOwner = useIsOwner();
-	const removeMutationState = useTrpcMutationState<"itemParticipants.remove">(
-		trpc.itemParticipants.remove,
-		(vars) => vars.userId === part.userId && vars.itemId === item.id,
-	);
+	const removeMutationState =
+		useTrpcMutationState<"receiptItemConsumers.remove">(
+			trpc.receiptItemConsumers.remove,
+			(vars) => vars.userId === part.userId && vars.itemId === item.id,
+		);
 	const isPending = removeMutationState?.status === "pending";
 	const removeItemPart = React.useCallback(
-		() => removeItemPartMutation(item.id, part.userId),
-		[removeItemPartMutation, item.id, part.userId],
+		() => removeItemConsumer(item.id, part.userId),
+		[removeItemConsumer, item.id, part.userId],
 	);
 	const isDisabled = isExternalDisabled || isPending;
 

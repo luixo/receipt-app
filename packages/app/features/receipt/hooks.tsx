@@ -9,9 +9,9 @@ import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import type { EmptyMutateOptions } from "~app/utils/queries";
 import type { ReceiptItemsId, ReceiptsId, UsersId } from "~db/models";
-import { options as itemParticipantsAddOptions } from "~mutations/item-participants/add";
-import { options as itemParticipantsRemoveOptions } from "~mutations/item-participants/remove";
-import { options as itemParticipantsUpdateOptions } from "~mutations/item-participants/update";
+import { options as receiptItemConsumersAddOptions } from "~mutations/receipt-item-consumers/add";
+import { options as receiptItemConsumersRemoveOptions } from "~mutations/receipt-item-consumers/remove";
+import { options as receiptItemConsumersUpdateOptions } from "~mutations/receipt-item-consumers/update";
 import { options as receiptItemsAddOptions } from "~mutations/receipt-items/add";
 import { options as receiptItemsRemoveOptions } from "~mutations/receipt-items/remove";
 import { options as receiptItemsUpdateOptions } from "~mutations/receipt-items/update";
@@ -141,9 +141,9 @@ const useUpdateItemQuantity = (receiptId: ReceiptsId) => {
 	);
 };
 
-const useAddItemPart = (receiptId: ReceiptsId) => {
-	const addItemPartMutation = trpc.itemParticipants.add.useMutation(
-		useTrpcMutationOptions(itemParticipantsAddOptions, {
+const useAddItemConsumer = (receiptId: ReceiptsId) => {
+	const addItemPartMutation = trpc.receiptItemConsumers.add.useMutation(
+		useTrpcMutationOptions(receiptItemConsumersAddOptions, {
 			context: { receiptId },
 		}),
 	);
@@ -158,9 +158,9 @@ const useAddItemPart = (receiptId: ReceiptsId) => {
 	);
 };
 
-const useRemoveItemPart = (receiptId: ReceiptsId) => {
-	const removeItemPartMutation = trpc.itemParticipants.remove.useMutation(
-		useTrpcMutationOptions(itemParticipantsRemoveOptions, {
+const useRemoveItemConsumer = (receiptId: ReceiptsId) => {
+	const removeItemPartMutation = trpc.receiptItemConsumers.remove.useMutation(
+		useTrpcMutationOptions(receiptItemConsumersRemoveOptions, {
 			context: { receiptId },
 		}),
 	);
@@ -174,9 +174,9 @@ const useRemoveItemPart = (receiptId: ReceiptsId) => {
 	);
 };
 
-const useUpdateItemPart = (receiptId: ReceiptsId) => {
-	const updateItemPartMutation = trpc.itemParticipants.update.useMutation(
-		useTrpcMutationOptions(itemParticipantsUpdateOptions, {
+const useUpdateItemConsumerPart = (receiptId: ReceiptsId) => {
+	const updateItemPartMutation = trpc.receiptItemConsumers.update.useMutation(
+		useTrpcMutationOptions(receiptItemConsumersUpdateOptions, {
 			context: { receiptId },
 		}),
 	);
@@ -201,9 +201,9 @@ export const useActionHooks = (receipt: TRPCQueryOutput<"receipts.get">) => ({
 	updateItemName: useUpdateItemName(receipt.id),
 	updateItemPrice: useUpdateItemPrice(receipt.id),
 	updateItemQuantity: useUpdateItemQuantity(receipt.id),
-	addItemPart: useAddItemPart(receipt.id),
-	removeItemPart: useRemoveItemPart(receipt.id),
-	updateItemPart: useUpdateItemPart(receipt.id),
+	addItemConsumer: useAddItemConsumer(receipt.id),
+	removeItemConsumer: useRemoveItemConsumer(receipt.id),
+	updateItemConsumerPart: useUpdateItemConsumerPart(receipt.id),
 	addParticipant: useAddParticipant(receipt.id),
 	removeParticipant: useRemoveParticipant(receipt.id),
 	updateParticipantRole: useUpdateParticipantRole(receipt.id),

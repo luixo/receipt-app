@@ -10,7 +10,7 @@ type ReceiptItemPart = ReceiptItem["parts"][number];
 
 const applyUpdate =
 	(
-		update: TRPCMutationInput<"itemParticipants.update">["update"],
+		update: TRPCMutationInput<"receiptItemConsumers.update">["update"],
 	): UpdateFn<ReceiptItemPart> =>
 	(part) => {
 		switch (update.type) {
@@ -23,7 +23,7 @@ const applyUpdate =
 
 const getRevert =
 	(
-		update: TRPCMutationInput<"itemParticipants.update">["update"],
+		update: TRPCMutationInput<"receiptItemConsumers.update">["update"],
 	): SnapshotFn<ReceiptItemPart> =>
 	(snapshot) =>
 	(item) => {
@@ -36,7 +36,7 @@ const getRevert =
 	};
 
 export const options: UseContextedMutationOptions<
-	"itemParticipants.update",
+	"receiptItemConsumers.update",
 	{ receiptId: ReceiptsId }
 > = {
 	onMutate:
@@ -54,6 +54,6 @@ export const options: UseContextedMutationOptions<
 				getPaged: undefined,
 			}),
 	errorToastOptions: () => (error) => ({
-		text: `Error updating participant(s): ${error.message}`,
+		text: `Error updating consumer(s): ${error.message}`,
 	}),
 };

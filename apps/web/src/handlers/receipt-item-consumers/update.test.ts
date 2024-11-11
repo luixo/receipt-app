@@ -6,9 +6,9 @@ import {
 	insertAccount,
 	insertAccountWithSession,
 	insertConnectedUsers,
-	insertItemParticipant,
 	insertReceipt,
 	insertReceiptItem,
+	insertReceiptItemConsumer,
 	insertReceiptParticipant,
 	insertUser,
 } from "~tests/backend/utils/data";
@@ -24,7 +24,7 @@ import { procedure } from "./update";
 
 const createCaller = t.createCallerFactory(t.router({ procedure }));
 
-describe("itemParticipants.update", () => {
+describe("receiptItemConsumers.update", () => {
 	describe("input verification", () => {
 		expectUnauthorizedError((context) =>
 			createCaller(context).procedure({
@@ -171,7 +171,7 @@ describe("itemParticipants.update", () => {
 				ctx,
 				foreignReceiptId,
 			);
-			await insertItemParticipant(ctx, receiptItemId, foreignToSelfUserId);
+			await insertReceiptItemConsumer(ctx, receiptItemId, foreignToSelfUserId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
@@ -198,7 +198,7 @@ describe("itemParticipants.update", () => {
 			const { id: receiptId } = await insertReceipt(ctx, accountId);
 			await insertReceiptParticipant(ctx, receiptId, userId);
 			const { id: receiptItemId } = await insertReceiptItem(ctx, receiptId);
-			await insertItemParticipant(ctx, receiptItemId, selfUserId);
+			await insertReceiptItemConsumer(ctx, receiptItemId, selfUserId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
@@ -209,7 +209,7 @@ describe("itemParticipants.update", () => {
 						update: { type: "part", part: 1 },
 					}),
 				"NOT_FOUND",
-				`User "${userId}" does not participate in item "${receiptItemId}" of the receipt "${receiptId}".`,
+				`User "${userId}" does not consume item "${receiptItemId}" of the receipt "${receiptId}".`,
 			);
 		});
 	});
@@ -231,14 +231,14 @@ describe("itemParticipants.update", () => {
 			await insertReceiptParticipant(ctx, receiptId, foreignUserId, {
 				role: "editor",
 			});
-			await insertItemParticipant(ctx, receiptItemId, foreignUserId);
+			await insertReceiptItemConsumer(ctx, receiptItemId, foreignUserId);
 
 			// Verify unrelated data doesn't affect the result
 			await insertReceiptItem(ctx, receiptId);
 			await insertReceiptParticipant(ctx, receiptId, selfUserId, {
 				role: "editor",
 			});
-			await insertItemParticipant(ctx, receiptItemId, selfUserId);
+			await insertReceiptItemConsumer(ctx, receiptItemId, selfUserId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectDatabaseDiffSnapshot(ctx, () =>

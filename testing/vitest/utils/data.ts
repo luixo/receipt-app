@@ -526,15 +526,15 @@ export const insertReceiptItem = async (
 	return { id, name, price, quantity, createdAt };
 };
 
-type ItemParticipantData = {
+type ReceiptItemConsumerData = {
 	part?: number;
 };
 
-export const insertItemParticipant = async (
+export const insertReceiptItemConsumer = async (
 	ctx: TestContext,
 	itemId: ReceiptItemsId,
 	userId: UsersId,
-	data: ItemParticipantData = {},
+	data: ReceiptItemConsumerData = {},
 ) => {
 	await ctx.database
 		.selectFrom("receiptItems")
@@ -543,7 +543,7 @@ export const insertItemParticipant = async (
 			() => new Error(`Expected to have receipt item id ${itemId} in tests`),
 		);
 	const { part } = await ctx.database
-		.insertInto("itemParticipants")
+		.insertInto("receiptItemConsumers")
 		.values({
 			userId,
 			itemId,

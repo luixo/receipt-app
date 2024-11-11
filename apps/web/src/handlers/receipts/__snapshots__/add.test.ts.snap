@@ -96,7 +96,7 @@ exports[`receipts.add > functionality > receipt with participants 1`] = `
 exports[`receipts.add > functionality > receipt with parts 1`] = `
 {
   "added": {
-    "itemParticipants": {
+    "receiptItemConsumers": {
       "itemId:86a8e520-fa6a-4ae9-a430-03ca41c2e306|userId:27bd7f4f-0731-48d5-9671-0e38b6c00340": {
         "createdAt": "2020-01-01T00:00:00.000Z",
         "itemId": "86a8e520-fa6a-4ae9-a430-03ca41c2e306",

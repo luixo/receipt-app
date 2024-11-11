@@ -9,7 +9,7 @@ import type { AuthorizedContext } from "~web/handlers/context";
 import {
 	addPartSchema,
 	batchFn as addParts,
-} from "~web/handlers/item-participants/add";
+} from "~web/handlers/receipt-item-consumers/add";
 import type { ItemOutput } from "~web/handlers/receipt-items/add";
 import {
 	addItemSchema,

@@ -5,9 +5,9 @@ import { createAuthContext } from "~tests/backend/utils/context";
 import {
 	insertAccount,
 	insertAccountWithSession,
-	insertItemParticipant,
 	insertReceipt,
 	insertReceiptItem,
+	insertReceiptItemConsumer,
 	insertReceiptParticipant,
 	insertUser,
 } from "~tests/backend/utils/data";
@@ -166,8 +166,8 @@ describe("receiptParticipants.remove", () => {
 			});
 			await insertReceiptParticipant(ctx, receiptId, anotherUserId);
 			const { id: receiptItemId } = await insertReceiptItem(ctx, receiptId);
-			await insertItemParticipant(ctx, receiptItemId, userId);
-			await insertItemParticipant(ctx, receiptItemId, anotherUserId);
+			await insertReceiptItemConsumer(ctx, receiptItemId, userId);
+			await insertReceiptItemConsumer(ctx, receiptItemId, anotherUserId);
 
 			// Verify unrelated data doesn't affect the result
 			await insertReceiptItem(ctx, receiptId);

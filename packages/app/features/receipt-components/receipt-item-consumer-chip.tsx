@@ -11,22 +11,22 @@ type Props = {
 	participant: Participant;
 };
 
-export const ReceiptItemParticipantChip: React.FC<Props> = ({
+export const ReceiptItemConsumerChip: React.FC<Props> = ({
 	item,
 	participant,
 }) => {
-	const { addItemPart } = useActionsHooksContext();
+	const { addItemConsumer } = useActionsHooksContext();
 	const isOwner = useIsOwner();
-	const addParticipant = React.useCallback(() => {
-		addItemPart(item.id, participant.userId, 1);
-	}, [addItemPart, item.id, participant.userId]);
+	const addConsumer = React.useCallback(() => {
+		addItemConsumer(item.id, participant.userId, 1);
+	}, [addItemConsumer, item.id, participant.userId]);
 
 	return (
 		<LoadableUser
 			id={participant.userId}
 			foreign={!isOwner}
 			className="cursor-pointer"
-			onClick={addParticipant}
+			onClick={addConsumer}
 			chip
 		/>
 	);

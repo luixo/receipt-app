@@ -15,9 +15,9 @@ import { round } from "~utils/math";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
 import { useCanEdit } from "./hooks";
+import { ReceiptItemConsumerChip } from "./receipt-item-consumer-chip";
 import { ReceiptItemNameInput } from "./receipt-item-name-input";
 import { ReceiptItemPart } from "./receipt-item-part";
-import { ReceiptItemParticipantChip } from "./receipt-item-participant-chip";
 import { ReceiptItemPriceInput } from "./receipt-item-price-input";
 import { ReceiptItemQuantityInput } from "./receipt-item-quantity-input";
 import type { Item } from "./state";
@@ -29,7 +29,7 @@ type Props = {
 export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 	({ item }, ref) => {
 		const { currencyCode, participants } = useReceiptContext();
-		const { addItemPart, removeItem } = useActionsHooksContext();
+		const { addItemConsumer, removeItem } = useActionsHooksContext();
 		const canEdit = useCanEdit();
 		const currency = useFormattedCurrency(currencyCode);
 
@@ -47,9 +47,9 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 		}, [item.parts, participants]);
 		const onAddEveryItemParticipant = React.useCallback(() => {
 			notAddedParticipants.forEach((participant) => {
-				addItemPart(item.id, participant.userId, 1);
+				addItemConsumer(item.id, participant.userId, 1);
 			});
-		}, [addItemPart, item.id, notAddedParticipants]);
+		}, [addItemConsumer, item.id, notAddedParticipants]);
 
 		return (
 			<Card ref={ref}>
@@ -92,7 +92,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 								</Chip>
 							) : null}
 							{notAddedParticipants.map((participant) => (
-								<ReceiptItemParticipantChip
+								<ReceiptItemConsumerChip
 									key={participant.userId}
 									item={item}
 									participant={participant}

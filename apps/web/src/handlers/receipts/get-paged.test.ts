@@ -39,25 +39,27 @@ const mockData = async (ctx: TestContext) => {
 	// Verify other users do not interfere
 	await insertReceipt(ctx, foreignAccount.id);
 
-	// Self receipts
+	// Self receipt
 	const selfReceipt = await insertReceipt(ctx, accountId, {
 		issued: new Date("2020-01-06"),
 	});
-	// selfReceiptParticipants
+	// Self receipt: participants
 	await Promise.all([
 		insertReceiptParticipant(ctx, selfReceipt.id, selfUserId),
 	]);
-	// selfReceiptItems
+	// Self receipt: items
 	await Promise.all([
 		insertReceiptItem(ctx, selfReceipt.id),
 		insertReceiptItem(ctx, selfReceipt.id),
 		insertReceiptItem(ctx, selfReceipt.id),
 	]);
+
+	// Other self receipt
 	const otherSelfReceipt = await insertReceipt(ctx, accountId, {
 		issued: new Date("2020-02-06"),
 	});
 	const user = await insertUser(ctx, accountId);
-	// otherSelfReceiptParticipants
+	// Other self receipt: participants
 	await Promise.all([
 		insertReceiptParticipant(ctx, otherSelfReceipt.id, selfUserId),
 		insertReceiptParticipant(ctx, otherSelfReceipt.id, user.id),
@@ -65,7 +67,8 @@ const mockData = async (ctx: TestContext) => {
 	const selfTransferReceipt = await insertReceipt(ctx, accountId, {
 		transferIntentionAccountId: foreignAccount.id,
 	});
-	// Foreign receipts
+
+	// Foreign receipt
 	const [foreignToSelfUser, selfToForeignUser] = await insertConnectedUsers(
 		ctx,
 		[foreignAccount.id, accountId],
@@ -73,25 +76,27 @@ const mockData = async (ctx: TestContext) => {
 	const foreignReceipt = await insertReceipt(ctx, foreignAccount.id, {
 		issued: new Date("2020-03-06"),
 	});
-	// foreignReceiptParticipants
+	// Foreign receipt: participants
 	await Promise.all([
 		insertReceiptParticipant(ctx, foreignReceipt.id, foreignAccount.userId),
 		insertReceiptParticipant(ctx, foreignReceipt.id, foreignToSelfUser.id),
 	]);
-	// foreignReceiptItems
+	// Foreign receipt: items
 	await Promise.all([
 		insertReceiptItem(ctx, foreignReceipt.id),
 		insertReceiptItem(ctx, foreignReceipt.id),
 		insertReceiptItem(ctx, foreignReceipt.id),
 	]);
+
+	// Other foreign receipt
 	const otherForeignReceipt = await insertReceipt(ctx, foreignAccount.id, {
 		issued: new Date("2020-04-06"),
 	});
-	// otherForeignReceiptParticipants
+	// Other foreign receipt: participants
 	await Promise.all([
 		insertReceiptParticipant(ctx, otherForeignReceipt.id, foreignToSelfUser.id),
 	]);
-	// otherForeignReceiptItems
+	// Other foreign receipt: items
 	await Promise.all([
 		insertReceiptItem(ctx, otherForeignReceipt.id),
 		insertReceiptItem(ctx, otherForeignReceipt.id),

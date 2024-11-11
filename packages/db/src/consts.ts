@@ -43,7 +43,7 @@ export const RECEIPT_ITEMS = {
 	},
 } as const;
 
-export const ITEM_PARTICIPANTS = {
+export const ITEM_PARTICIPANTS_DEPRECATED = {
 	INDEXES: {
 		ITEM_ID: "itemParticipants:itemId:index",
 	},
@@ -52,6 +52,18 @@ export const ITEM_PARTICIPANTS = {
 	},
 	TRIGGERS: {
 		UPDATE_TIMESTAMP: "itemParticipants:updateTimestamp",
+	},
+} as const;
+
+export const RECEIPT_ITEM_CONSUMERS = {
+	INDEXES: {
+		ITEM_ID: "receiptItemConsumers:itemId:index",
+	},
+	CONSTRAINTS: {
+		ITEM_ID_USER_ID_PAIR: "receiptItemConsumers:itemId-userId:primaryKey",
+	},
+	TRIGGERS: {
+		UPDATE_TIMESTAMP: "receiptItemConsumers:updateTimestamp",
 	},
 } as const;
 

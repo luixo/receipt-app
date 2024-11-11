@@ -9,7 +9,7 @@ exports[`users.remove > functionality > user is removed 1`] = `
     "debts": {
       "id:4d77b3a1-67e4-4bff-855c-64a258d8fef7|ownerAccountId:67b3cc78-fe50-41ba-883e-a9fc9803058c": undefined,
     },
-    "itemParticipants": {
+    "receiptItemConsumers": {
       "itemId:18ffb6ec-b75d-42f5-b460-4f63d202b401|userId:fdcb634c-87ad-4c72-8be9-d4c85c60907e": undefined,
     },
     "receiptParticipants": {

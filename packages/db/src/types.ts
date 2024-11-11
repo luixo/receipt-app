@@ -14,7 +14,7 @@ type SelectTypeMap = {
 	accounts: models.Accounts;
 	accountSettings: models.AccountSettings;
 	debts: models.Debts;
-	itemParticipants: models.ItemParticipants;
+	receiptItemConsumers: models.ReceiptItemConsumers;
 	receiptItems: models.ReceiptItems;
 	receiptParticipants: models.ReceiptParticipants;
 	receipts: models.Receipts;
@@ -28,7 +28,7 @@ type InsertTypeMap = {
 	accounts: models.AccountsInitializer;
 	accountSettings: models.AccountSettingsInitializer;
 	debts: models.DebtsInitializer;
-	itemParticipants: models.ItemParticipantsInitializer;
+	receiptItemConsumers: models.ReceiptItemConsumersInitializer;
 	receiptItems: models.ReceiptItemsInitializer;
 	receiptParticipants: models.ReceiptParticipantsInitializer;
 	receipts: models.ReceiptsInitializer;
@@ -42,7 +42,7 @@ type UpdateTypeMap = {
 	accounts: models.AccountsMutator;
 	accountSettings: models.AccountSettingsMutator;
 	debts: models.DebtsMutator;
-	itemParticipants: models.ItemParticipantsMutator;
+	receiptItemConsumers: models.ReceiptItemConsumersMutator;
 	receiptItems: models.ReceiptItemsMutator;
 	receiptParticipants: models.ReceiptParticipantsMutator;
 	receipts: models.ReceiptsMutator;

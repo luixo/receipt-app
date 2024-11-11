@@ -7,7 +7,7 @@ import {
 	CURRENT_TIMESTAMP,
 	DEBTS,
 	FUNCTIONS,
-	ITEM_PARTICIPANTS,
+	ITEM_PARTICIPANTS_DEPRECATED,
 	RECEIPTS,
 	RECEIPT_ITEMS,
 	RECEIPT_PARTICIPANTS,
@@ -134,11 +134,12 @@ const addItemParticipantsCreatedAtUpdatedAt = async (db: Database) => {
 		)
 		.execute();
 	await db
+		// @ts-expect-error Expected as table is renamed
 		.updateTable("itemParticipants")
 		.set({ createdAt: defaultCreatedDate, updatedAt: defaultCreatedDate })
 		.execute();
 	await sql`
-	CREATE TRIGGER ${sql.id(ITEM_PARTICIPANTS.TRIGGERS.UPDATE_TIMESTAMP)}
+	CREATE TRIGGER ${sql.id(ITEM_PARTICIPANTS_DEPRECATED.TRIGGERS.UPDATE_TIMESTAMP)}
     BEFORE UPDATE ON ${sql.table("itemParticipants")}
     FOR EACH ROW
     EXECUTE PROCEDURE ${sql.raw(FUNCTIONS.UPDATE_TIMESTAMP_COLUMN)} ();
@@ -323,7 +324,7 @@ const removeItemParticipantsCreatedAtUpdatedAt = async (db: Database) => {
 
 	await sql`
 	DROP TRIGGER ${sql.id(
-		ITEM_PARTICIPANTS.TRIGGERS.UPDATE_TIMESTAMP,
+		ITEM_PARTICIPANTS_DEPRECATED.TRIGGERS.UPDATE_TIMESTAMP,
 	)} ON ${sql.table("itemParticipants")};`.execute(db);
 };
 

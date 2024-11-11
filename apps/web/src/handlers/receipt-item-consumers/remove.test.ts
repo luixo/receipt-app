@@ -6,9 +6,9 @@ import {
 	insertAccount,
 	insertAccountWithSession,
 	insertConnectedUsers,
-	insertItemParticipant,
 	insertReceipt,
 	insertReceiptItem,
+	insertReceiptItemConsumer,
 	insertReceiptParticipant,
 	insertUser,
 } from "~tests/backend/utils/data";
@@ -24,7 +24,7 @@ import { procedure } from "./remove";
 
 const createCaller = t.createCallerFactory(t.router({ procedure }));
 
-describe("itemParticipants.remove", () => {
+describe("receiptItemConsumers.remove", () => {
 	describe("input verification", () => {
 		expectUnauthorizedError((context) =>
 			createCaller(context).procedure({
@@ -105,7 +105,7 @@ describe("itemParticipants.remove", () => {
 				ctx,
 				foreignReceiptId,
 			);
-			await insertItemParticipant(ctx, receiptItemId, foreignToSelfUserId);
+			await insertReceiptItemConsumer(ctx, receiptItemId, foreignToSelfUserId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
@@ -131,13 +131,13 @@ describe("itemParticipants.remove", () => {
 			const { id: receiptId } = await insertReceipt(ctx, accountId);
 			await insertReceiptParticipant(ctx, receiptId, userId);
 			const { id: receiptItemId } = await insertReceiptItem(ctx, receiptId);
-			await insertItemParticipant(ctx, receiptItemId, selfUserId);
+			await insertReceiptItemConsumer(ctx, receiptItemId, selfUserId);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ itemId: receiptItemId, userId }),
 				"NOT_FOUND",
-				`Item participant "${userId}" on item "${receiptItemId}" on receipt "${receiptId}" doesn't exist.`,
+				`Item consumer "${userId}" for item "${receiptItemId}" on receipt "${receiptId}" doesn't exist.`,
 			);
 		});
 	});
@@ -153,8 +153,8 @@ describe("itemParticipants.remove", () => {
 			});
 			await insertReceiptParticipant(ctx, receiptId, anotherUserId);
 			const { id: receiptItemId } = await insertReceiptItem(ctx, receiptId);
-			await insertItemParticipant(ctx, receiptItemId, userId);
-			await insertItemParticipant(ctx, receiptItemId, anotherUserId);
+			await insertReceiptItemConsumer(ctx, receiptItemId, userId);
+			await insertReceiptItemConsumer(ctx, receiptItemId, anotherUserId);
 
 			// Verify unrelated data doesn't affect the result
 			await insertReceiptItem(ctx, receiptId);

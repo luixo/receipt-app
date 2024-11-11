@@ -1,6 +1,8 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
+import { partSchema } from "~app/utils/validation";
+import type { SimpleUpdateObject } from "~db/types";
 import { getAccessRole } from "~web/handlers/receipts/utils";
 import { authProcedure } from "~web/handlers/trpc";
 import { receiptItemIdSchema, userIdSchema } from "~web/handlers/validation";
@@ -10,6 +12,10 @@ export const procedure = authProcedure
 		z.strictObject({
 			itemId: receiptItemIdSchema,
 			userId: userIdSchema,
+			update: z.strictObject({
+				type: z.literal("part"),
+				part: partSchema,
+			}),
 		}),
 	)
 	.mutation(async ({ input, ctx }) => {
@@ -40,23 +46,42 @@ export const procedure = authProcedure
 		if (accessRole !== "owner" && accessRole !== "editor") {
 			throw new TRPCError({
 				code: "FORBIDDEN",
-				message: `Not enough rights to remove item from receipt "${receipt.id}".`,
+				message: `Not enough rights to modify receipt "${receipt.id}".`,
 			});
 		}
-		const deleteResult = await database
-			.deleteFrom("itemParticipants")
+		const receiptItemConsumer = await database
+			.selectFrom("receiptItemConsumers")
 			.where((eb) =>
 				eb.and({
 					itemId: input.itemId,
 					userId: input.userId,
 				}),
 			)
-			.returning("itemParticipants.userId")
+			.select([])
+			.limit(1)
 			.executeTakeFirst();
-		if (!deleteResult) {
+		if (!receiptItemConsumer) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `Item participant "${input.userId}" on item "${input.itemId}" on receipt "${receipt.id}" doesn't exist.`,
+				message: `User "${input.userId}" does not consume item "${input.itemId}" of the receipt "${receipt.id}".`,
 			});
 		}
+		let setObject: SimpleUpdateObject<"receiptItemConsumers"> = {};
+		switch (input.update.type) {
+			// We want this to blow up in case we add more cases
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+			case "part":
+				setObject = { part: input.update.part.toString() };
+				break;
+		}
+		await database
+			.updateTable("receiptItemConsumers")
+			.set(setObject)
+			.where((eb) =>
+				eb.and({
+					itemId: input.itemId,
+					userId: input.userId,
+				}),
+			)
+			.executeTakeFirst();
 	});

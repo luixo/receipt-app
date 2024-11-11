@@ -8,7 +8,7 @@ import { router as authRouter } from "./auth/index";
 import { router as currencyRouter } from "./currency/index";
 import { router as debtIntentionsRouter } from "./debt-intentions/index";
 import { router as debtsRouter } from "./debts/index";
-import { router as itemParticipantsRouter } from "./item-participants/index";
+import { router as receiptItemConsumersRouter } from "./receipt-item-consumers/index";
 import { router as receiptItemsRouter } from "./receipt-items/index";
 import { router as receiptParticipantsRouter } from "./receipt-participants/index";
 import { router as receiptTransferIntentionsRouter } from "./receipt-transfer-intentions/index";
@@ -32,7 +32,7 @@ export const router = t.router({
 	users: usersRouter,
 	receiptParticipants: receiptParticipantsRouter,
 	currency: currencyRouter,
-	itemParticipants: itemParticipantsRouter,
+	receiptItemConsumers: receiptItemConsumersRouter,
 	accountConnectionIntentions: accountConnectionIntentionsRouter,
 	debts: debtsRouter,
 	debtIntentions: debtIntentionsRouter,

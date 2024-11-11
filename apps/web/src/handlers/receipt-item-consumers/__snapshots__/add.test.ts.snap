@@ -1,9 +1,9 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`itemParticipants.add > functionality > multiple participants are added to multiple items in multiple receipts 1`] = `
+exports[`receiptItemConsumers.add > functionality > multiple participants are added to multiple items in multiple receipts 1`] = `
 {
   "added": {
-    "itemParticipants": {
+    "receiptItemConsumers": {
       "itemId:b1cb4fa4-33a9-4ade-b37c-9ac4807089a6|userId:10cd7f43-0849-427f-ab30-5b69fa29e124": {
         "createdAt": "2020-01-01T00:00:00.000Z",
         "itemId": "b1cb4fa4-33a9-4ade-b37c-9ac4807089a6",
@@ -51,10 +51,10 @@ exports[`itemParticipants.add > functionality > multiple participants are added 
 }
 `;
 
-exports[`itemParticipants.add > input verification > multiple participants > mixed success and fail 1`] = `
+exports[`receiptItemConsumers.add > input verification > multiple participants > mixed success and fail 1`] = `
 {
   "added": {
-    "itemParticipants": {
+    "receiptItemConsumers": {
       "itemId:597a7157-9b1d-4f32-b9ae-e2e76cd97b3b|userId:12801bd6-206a-430b-b010-ab8d0919eb48": {
         "createdAt": "2020-01-01T00:00:00.000Z",
         "itemId": "597a7157-9b1d-4f32-b9ae-e2e76cd97b3b",

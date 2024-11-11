@@ -7,9 +7,9 @@ import {
 	insertAccount,
 	insertAccountWithSession,
 	insertConnectedUsers,
-	insertItemParticipant,
 	insertReceipt,
 	insertReceiptItem,
+	insertReceiptItemConsumer,
 	insertReceiptParticipant,
 	insertUser,
 } from "~tests/backend/utils/data";
@@ -26,7 +26,7 @@ import { procedure } from "./add";
 
 const createCaller = t.createCallerFactory(t.router({ procedure }));
 
-describe("itemParticipants.add", () => {
+describe("receiptItemConsumers.add", () => {
 	describe("input verification", () => {
 		expectUnauthorizedError((context) =>
 			createCaller(context).procedure({
@@ -236,7 +236,7 @@ describe("itemParticipants.add", () => {
 
 				const { id: participantUserId } = await insertUser(ctx, accountId);
 				await insertReceiptParticipant(ctx, receiptId, participantUserId);
-				await insertItemParticipant(ctx, receiptItemId, participantUserId);
+				await insertReceiptItemConsumer(ctx, receiptItemId, participantUserId);
 				const { id: anotherParticipantUserId } = await insertUser(
 					ctx,
 					accountId,
@@ -246,7 +246,7 @@ describe("itemParticipants.add", () => {
 					receiptId,
 					anotherParticipantUserId,
 				);
-				await insertItemParticipant(
+				await insertReceiptItemConsumer(
 					ctx,
 					receiptItemId,
 					anotherParticipantUserId,
@@ -392,7 +392,7 @@ describe("itemParticipants.add", () => {
 				foreignToSelfUser.id,
 			);
 			await insertReceiptItem(ctx, anotherForeignReceiptId);
-			await insertItemParticipant(ctx, anotherReceiptItemId, user.id);
+			await insertReceiptItemConsumer(ctx, anotherReceiptItemId, user.id);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
 			await expectDatabaseDiffSnapshot(ctx, () =>

@@ -7,9 +7,9 @@ import {
 	insertAccountWithSession,
 	insertConnectedUsers,
 	insertDebt,
-	insertItemParticipant,
 	insertReceipt,
 	insertReceiptItem,
+	insertReceiptItemConsumer,
 	insertReceiptParticipant,
 	insertSyncedDebts,
 	insertUser,
@@ -25,7 +25,7 @@ import { procedure } from "./get";
 
 const getItems = (
 	items: Awaited<ReturnType<typeof insertReceiptItem>>[],
-	parts: Awaited<ReturnType<typeof insertItemParticipant>>[],
+	parts: Awaited<ReturnType<typeof insertReceiptItemConsumer>>[],
 ) =>
 	items
 		.map((item) => ({
@@ -396,16 +396,25 @@ describe("receipts.get", () => {
 				insertReceiptItem(ctx, receipt.id),
 			]);
 			const parts = await Promise.all([
-				insertItemParticipant(ctx, receiptItems[0].id, selfParticipant.userId, {
-					part: 2,
-				}),
-				insertItemParticipant(
+				insertReceiptItemConsumer(
+					ctx,
+					receiptItems[0].id,
+					selfParticipant.userId,
+					{
+						part: 2,
+					},
+				),
+				insertReceiptItemConsumer(
 					ctx,
 					receiptItems[0].id,
 					foreignParticipant.userId,
 				),
-				insertItemParticipant(ctx, receiptItems[1].id, selfParticipant.userId),
-				insertItemParticipant(
+				insertReceiptItemConsumer(
+					ctx,
+					receiptItems[1].id,
+					selfParticipant.userId,
+				),
+				insertReceiptItemConsumer(
 					ctx,
 					receiptItems[2].id,
 					notConnectedParticipant.userId,
@@ -500,21 +509,30 @@ describe("receipts.get", () => {
 				insertReceiptItem(ctx, receipt.id),
 			]);
 			const parts = await Promise.all([
-				insertItemParticipant(ctx, receiptItems[0].id, selfParticipant.userId, {
-					part: 2,
-				}),
-				insertItemParticipant(
+				insertReceiptItemConsumer(
+					ctx,
+					receiptItems[0].id,
+					selfParticipant.userId,
+					{
+						part: 2,
+					},
+				),
+				insertReceiptItemConsumer(
 					ctx,
 					receiptItems[0].id,
 					foreignParticipant.userId,
 				),
-				insertItemParticipant(
+				insertReceiptItemConsumer(
 					ctx,
 					receiptItems[0].id,
 					connectedParticipant.userId,
 				),
-				insertItemParticipant(ctx, receiptItems[1].id, selfParticipant.userId),
-				insertItemParticipant(
+				insertReceiptItemConsumer(
+					ctx,
+					receiptItems[1].id,
+					selfParticipant.userId,
+				),
+				insertReceiptItemConsumer(
 					ctx,
 					receiptItems[2].id,
 					notConnectedParticipant.userId,

@@ -26,7 +26,7 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 	item,
 	isDisabled: isExternalDisabled,
 }) => {
-	const { updateItemPart } = useActionsHooksContext();
+	const { updateItemConsumerPart } = useActionsHooksContext();
 	const { receiptDisabled } = useReceiptContext();
 	const canEdit = useCanEdit();
 	const [isEditing, { switchValue: switchEditing, setFalse: unsetEditing }] =
@@ -41,10 +41,11 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 		schema: partSchema,
 		type: "number",
 	});
-	const updateMutationState = useTrpcMutationState<"itemParticipants.update">(
-		trpc.itemParticipants.update,
-		(vars) => vars.userId === part.userId && vars.itemId === item.id,
-	);
+	const updateMutationState =
+		useTrpcMutationState<"receiptItemConsumers.update">(
+			trpc.receiptItemConsumers.update,
+			(vars) => vars.userId === part.userId && vars.itemId === item.id,
+		);
 	const isPending = updateMutationState?.status === "pending";
 
 	const updatePart = React.useCallback(
@@ -57,11 +58,11 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 				unsetEditing();
 				return;
 			}
-			updateItemPart(item.id, part.userId, nextPart, {
+			updateItemConsumerPart(item.id, part.userId, nextPart, {
 				onSuccess: unsetEditing,
 			});
 		},
-		[part.part, part.userId, updateItemPart, item.id, unsetEditing],
+		[part.part, part.userId, updateItemConsumerPart, item.id, unsetEditing],
 	);
 
 	const wrap = React.useCallback(

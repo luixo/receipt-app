@@ -7,9 +7,9 @@ import {
 	insertAccountConnectionIntention,
 	insertAccountWithSession,
 	insertDebt,
-	insertItemParticipant,
 	insertReceipt,
 	insertReceiptItem,
+	insertReceiptItemConsumer,
 	insertReceiptParticipant,
 	insertUser,
 } from "~tests/backend/utils/data";
@@ -105,10 +105,10 @@ describe("users.remove", () => {
 			await insertReceiptParticipant(ctx, receiptId, userId);
 			const { id: itemId } = await insertReceiptItem(ctx, receiptId);
 			// Verify item participant is removed from an item on user removal
-			await insertItemParticipant(ctx, itemId, userId);
+			await insertReceiptItemConsumer(ctx, itemId, userId);
 			// Verify other users in the receipt are not affected
 			await insertReceiptParticipant(ctx, receiptId, otherUserId);
-			await insertItemParticipant(ctx, itemId, otherUserId);
+			await insertReceiptItemConsumer(ctx, itemId, otherUserId);
 
 			// Verify receipt with user not participating is not affected
 			const { id: otherReceiptId } = await insertReceipt(ctx, accountId);

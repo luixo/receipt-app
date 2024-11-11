@@ -105,9 +105,9 @@ const useUpdateItemQuantity = (setItems: SetItems) => {
 	);
 };
 
-const useAddItemPart = (setItems: SetItems) => {
+const useAddItemConsumer = (setItems: SetItems) => {
 	const updateItem = useUpdateItem(setItems);
-	return React.useCallback<ActionsHooks["addItemPart"]>(
+	return React.useCallback<ActionsHooks["addItemConsumer"]>(
 		(itemId, userId, part, options) =>
 			updateItem(
 				itemId,
@@ -126,9 +126,9 @@ const useAddItemPart = (setItems: SetItems) => {
 	);
 };
 
-const useRemoveItemPart = (setItems: SetItems) => {
+const useRemoveItemConsumer = (setItems: SetItems) => {
 	const updateItem = useUpdateItem(setItems);
-	return React.useCallback<ActionsHooks["removeItemPart"]>(
+	return React.useCallback<ActionsHooks["removeItemConsumer"]>(
 		(itemId, userId, options) =>
 			updateItem(
 				itemId,
@@ -143,9 +143,9 @@ const useRemoveItemPart = (setItems: SetItems) => {
 	);
 };
 
-const useUpdateItemPart = (setItems: SetItems) => {
+const useUpdateItemConsumerPart = (setItems: SetItems) => {
 	const updateItem = useUpdateItem(setItems);
-	return React.useCallback<ActionsHooks["updateItemPart"]>(
+	return React.useCallback<ActionsHooks["updateItemConsumerPart"]>(
 		(itemId, userId, part, options) =>
 			updateItem(
 				itemId,
@@ -273,9 +273,9 @@ export const useActionsHooks = (
 		updateItemName: useUpdateItemName(setItems),
 		updateItemPrice: useUpdateItemPrice(setItems),
 		updateItemQuantity: useUpdateItemQuantity(setItems),
-		addItemPart: useAddItemPart(setItems),
-		removeItemPart: useRemoveItemPart(setItems),
-		updateItemPart: useUpdateItemPart(setItems),
+		addItemConsumer: useAddItemConsumer(setItems),
+		removeItemConsumer: useRemoveItemConsumer(setItems),
+		updateItemConsumerPart: useUpdateItemConsumerPart(setItems),
 		addParticipant: useAddParticipant(setParticipants),
 		removeParticipant: useRemoveParticipant(setParticipants),
 		updateParticipantRole: useUpdateParticipantRole(setParticipants),

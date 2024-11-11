@@ -6,9 +6,9 @@ import { createAuthContext } from "~tests/backend/utils/context";
 import {
 	insertAccount,
 	insertAccountWithSession,
-	insertItemParticipant,
 	insertReceipt,
 	insertReceiptItem,
+	insertReceiptItemConsumer,
 	insertReceiptParticipant,
 	insertUser,
 } from "~tests/backend/utils/data";
@@ -41,7 +41,7 @@ const runTest = async (
 	const { id: userId } = await insertUser(ctx, accountId);
 	const { id: receiptItemId } = await insertReceiptItem(ctx, receiptId);
 	await insertReceiptParticipant(ctx, receiptId, userId);
-	await insertItemParticipant(ctx, receiptItemId, userId);
+	await insertReceiptItemConsumer(ctx, receiptItemId, userId);
 
 	// Verify unrelated data doesn't affect the result
 	const { id: anotherUserId } = await insertUser(ctx, accountId);

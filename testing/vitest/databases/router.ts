@@ -31,7 +31,7 @@ const ORDERS: {
 	accounts: "id",
 	accountSettings: "accountId",
 	debts: ["id", "ownerAccountId"],
-	itemParticipants: ["itemId", "userId"],
+	receiptItemConsumers: ["itemId", "userId"],
 	receiptItems: "id",
 	receiptParticipants: ["receiptId", "userId"],
 	receipts: "id",

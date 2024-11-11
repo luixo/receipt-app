@@ -56,10 +56,13 @@ const fetchReceipts = async (
 						"receiptItems.createdAt",
 						jsonArrayFrom(
 							ebb
-								.selectFrom("itemParticipants")
-								.select(["itemParticipants.part", "itemParticipants.userId"])
-								.whereRef("itemParticipants.itemId", "=", "receiptItems.id")
-								.orderBy("itemParticipants.userId desc"),
+								.selectFrom("receiptItemConsumers")
+								.select([
+									"receiptItemConsumers.part",
+									"receiptItemConsumers.userId",
+								])
+								.whereRef("receiptItemConsumers.itemId", "=", "receiptItems.id")
+								.orderBy("receiptItemConsumers.userId desc"),
 						).as("parts"),
 					])
 					.whereRef("receiptItems.receiptId", "=", "receipts.id")

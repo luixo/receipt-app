@@ -24,11 +24,6 @@ export type {
 	DebtsId,
 } from "./debts";
 export type {
-	default as ItemParticipants,
-	ItemParticipantsInitializer,
-	ItemParticipantsMutator,
-} from "./item-participants";
-export type {
 	default as ReceiptItems,
 	ReceiptItemsInitializer,
 	ReceiptItemsMutator,
@@ -62,3 +57,8 @@ export type {
 	UsersMutator,
 	UsersId,
 } from "./users";
+export type {
+	default as ReceiptItemConsumers,
+	ReceiptItemConsumersInitializer,
+	ReceiptItemConsumersMutator,
+} from "./receipt-item-consumers";

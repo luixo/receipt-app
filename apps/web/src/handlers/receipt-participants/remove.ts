@@ -64,7 +64,7 @@ export const procedure = authProcedure
 		}
 		await database.transaction().execute(async (tx) => {
 			await tx
-				.deleteFrom("itemParticipants")
+				.deleteFrom("receiptItemConsumers")
 				.where((eb) =>
 					eb("userId", "=", input.userId).and("itemId", "in", (ebb) =>
 						ebb

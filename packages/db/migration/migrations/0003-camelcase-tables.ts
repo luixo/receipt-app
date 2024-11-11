@@ -2,7 +2,7 @@ import { sql } from "kysely";
 
 import {
 	ACCOUNTS,
-	ITEM_PARTICIPANTS,
+	ITEM_PARTICIPANTS_DEPRECATED,
 	RECEIPTS,
 	RECEIPT_ITEMS,
 	RECEIPT_PARTICIPANTS,
@@ -101,25 +101,27 @@ const camelcaseItemParticipantsTable = async (db: Database) => {
 		.execute();
 	await sql
 		.raw(
-			`ALTER TABLE "itemParticipants" RENAME CONSTRAINT "itemParticipants_pk" TO "${ITEM_PARTICIPANTS.CONSTRAINTS.ITEM_ID_USER_ID_PAIR}"`,
+			`ALTER TABLE "itemParticipants" RENAME CONSTRAINT "itemParticipants_pk" TO "${ITEM_PARTICIPANTS_DEPRECATED.CONSTRAINTS.ITEM_ID_USER_ID_PAIR}"`,
 		)
 		.execute(db);
 	await db.schema
-		.createIndex(ITEM_PARTICIPANTS.INDEXES.ITEM_ID)
+		.createIndex(ITEM_PARTICIPANTS_DEPRECATED.INDEXES.ITEM_ID)
 		.on("itemParticipants")
 		.column("itemId")
 		.execute();
 };
 
 const uncamelcaseItemParticipantsTable = async (db: Database) => {
-	await db.schema.dropIndex(ITEM_PARTICIPANTS.INDEXES.ITEM_ID).execute();
+	await db.schema
+		.dropIndex(ITEM_PARTICIPANTS_DEPRECATED.INDEXES.ITEM_ID)
+		.execute();
 	await db.schema
 		.alterTable("itemParticipants")
 		.renameTo("item_participants")
 		.execute();
 	await sql
 		.raw(
-			`ALTER TABLE "itemParticipants" RENAME CONSTRAINT "${ITEM_PARTICIPANTS.CONSTRAINTS.ITEM_ID_USER_ID_PAIR}" TO "itemParticipants_pk"`,
+			`ALTER TABLE "itemParticipants" RENAME CONSTRAINT "${ITEM_PARTICIPANTS_DEPRECATED.CONSTRAINTS.ITEM_ID_USER_ID_PAIR}" TO "itemParticipants_pk"`,
 		)
 		.execute(db);
 	await db.schema
