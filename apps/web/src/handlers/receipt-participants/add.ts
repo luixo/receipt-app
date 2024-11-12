@@ -31,11 +31,7 @@ const getData = async (
 		ctx.database
 			.selectFrom("receipts")
 			.where("id", "in", receiptIds)
-			.select([
-				"receipts.id",
-				"receipts.ownerAccountId",
-				"receipts.transferIntentionAccountId",
-			])
+			.select(["receipts.id", "receipts.ownerAccountId"])
 			.execute(),
 		ctx.database
 			.selectFrom("users")
@@ -78,12 +74,6 @@ const getParticipants = (
 			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Not enough rights to add participant "${input.userId}" to receipt "${input.receiptId}".`,
-			});
-		}
-		if (matchedReceipt.transferIntentionAccountId) {
-			throw new TRPCError({
-				code: "BAD_REQUEST",
-				message: `Cannot add participants to receipt "${input.receiptId}" as it has transfer intention.`,
 			});
 		}
 		const matchedUsers = users.filter((user) => user.id === input.userId);

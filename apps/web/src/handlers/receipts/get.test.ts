@@ -142,41 +142,6 @@ describe("receipts.get", () => {
 					items: [],
 					participants: [],
 					debt: { direction: "outcoming", ids: [] },
-					transferIntentionUserId: undefined,
-				});
-			});
-
-			test("with transfer intention", async ({ ctx }) => {
-				const {
-					sessionId,
-					accountId,
-					userId: selfUserId,
-				} = await insertAccountWithSession(ctx);
-				const { id: foreignAccountId } = await insertAccount(ctx);
-				const receipt = await insertReceipt(ctx, accountId, {
-					transferIntentionAccountId: foreignAccountId,
-				});
-				const [foreignUser] = await insertConnectedUsers(ctx, [
-					accountId,
-					foreignAccountId,
-				]);
-
-				// Verify other users do not interfere
-				await insertReceipt(ctx, foreignAccountId);
-
-				const caller = createCaller(createAuthContext(ctx, sessionId));
-				const result = await caller.procedure({ id: receipt.id });
-				expect(result).toStrictEqual<typeof result>({
-					id: receipt.id,
-					name: receipt.name,
-					currencyCode: receipt.currencyCode,
-					issued: receipt.issued,
-					ownerUserId: selfUserId,
-					selfUserId,
-					transferIntentionUserId: foreignUser.id,
-					items: [],
-					participants: [],
-					debt: { direction: "outcoming", ids: [] },
 				});
 			});
 		});
@@ -210,7 +175,6 @@ describe("receipts.get", () => {
 					hasForeign: false,
 					id: undefined,
 				},
-				transferIntentionUserId: undefined,
 			});
 		});
 
@@ -250,7 +214,6 @@ describe("receipts.get", () => {
 					},
 					items: [],
 					participants: getParticipants([participant]),
-					transferIntentionUserId: undefined,
 				});
 			});
 
@@ -286,7 +249,6 @@ describe("receipts.get", () => {
 					},
 					items: [],
 					participants: getParticipants([participant]),
-					transferIntentionUserId: undefined,
 				});
 			});
 
@@ -324,7 +286,6 @@ describe("receipts.get", () => {
 					},
 					items: [],
 					participants: getParticipants([participant]),
-					transferIntentionUserId: undefined,
 				});
 			});
 
@@ -361,7 +322,6 @@ describe("receipts.get", () => {
 					},
 					items: [],
 					participants: [],
-					transferIntentionUserId: undefined,
 				});
 			});
 		});
@@ -437,7 +397,6 @@ describe("receipts.get", () => {
 					notConnectedParticipant,
 				]),
 				debt: { direction: "outcoming", ids: [] },
-				transferIntentionUserId: undefined,
 			});
 		});
 
@@ -461,7 +420,6 @@ describe("receipts.get", () => {
 				items: [],
 				participants: [],
 				debt: { direction: "outcoming", ids: [] },
-				transferIntentionUserId: undefined,
 			});
 		});
 
@@ -561,7 +519,6 @@ describe("receipts.get", () => {
 					hasForeign: false,
 					id: undefined,
 				},
-				transferIntentionUserId: undefined,
 			});
 		});
 	});

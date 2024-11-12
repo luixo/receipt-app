@@ -410,7 +410,6 @@ type ReceiptData = {
 	name?: string;
 	createdAt?: Date;
 	issued?: Date;
-	transferIntentionAccountId?: AccountsId;
 };
 
 export const insertReceipt = async (
@@ -418,14 +417,7 @@ export const insertReceipt = async (
 	ownerAccountId: AccountsId,
 	data: ReceiptData = {},
 ) => {
-	const {
-		id,
-		currencyCode,
-		name,
-		createdAt,
-		issued,
-		transferIntentionAccountId,
-	} = await ctx.database
+	const { id, currencyCode, name, createdAt, issued } = await ctx.database
 		.insertInto("receipts")
 		.values({
 			id: data.id || ctx.getTestUuid(),
@@ -434,16 +426,8 @@ export const insertReceipt = async (
 			currencyCode: data.currencyCode || faker.finance.currencyCode(),
 			createdAt: data.createdAt ?? new Date(),
 			issued: data.issued ?? new Date(),
-			transferIntentionAccountId: data.transferIntentionAccountId,
 		})
-		.returning([
-			"id",
-			"currencyCode",
-			"name",
-			"createdAt",
-			"issued",
-			"transferIntentionAccountId",
-		])
+		.returning(["id", "currencyCode", "name", "createdAt", "issued"])
 		.executeTakeFirstOrThrow();
 	return {
 		id,
@@ -452,7 +436,6 @@ export const insertReceipt = async (
 		createdAt,
 		issued,
 		ownerAccountId,
-		transferIntentionAccountId,
 	};
 };
 

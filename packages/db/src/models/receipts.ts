@@ -23,8 +23,6 @@ export default interface Receipts {
 
 	issued: Date;
 
-	transferIntentionAccountId: AccountsId | null;
-
 	updatedAt: Date;
 }
 
@@ -44,8 +42,6 @@ export interface ReceiptsInitializer {
 
 	issued: Date;
 
-	transferIntentionAccountId?: AccountsId | null;
-
 	/** Default value: CURRENT_TIMESTAMP */
 	updatedAt?: Date;
 }
@@ -64,8 +60,6 @@ export interface ReceiptsMutator {
 	ownerAccountId?: AccountsId;
 
 	issued?: Date;
-
-	transferIntentionAccountId?: AccountsId | null;
 
 	updatedAt?: Date;
 }

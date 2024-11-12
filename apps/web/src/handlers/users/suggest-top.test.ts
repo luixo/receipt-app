@@ -307,38 +307,6 @@ describe("users.suggestTop", () => {
 				});
 			});
 
-			test("returns top connected users", async ({ ctx }) => {
-				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				const otherAccounts = await Promise.all([
-					insertAccount(ctx),
-					insertAccount(ctx),
-				]);
-
-				// Verify other users don't affect our top users
-				await insertUser(ctx, otherAccounts[0].id);
-
-				await insertUser(ctx, accountId);
-				const connectedUserTuples = await Promise.all(
-					otherAccounts.map((otherAccount, index) =>
-						insertConnectedUsers(ctx, [
-							{
-								accountId,
-								publicName: index === 0 ? undefined : faker.person.fullName(),
-							},
-							otherAccount.id,
-						]),
-					),
-				);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
-				const result = await caller.procedure({
-					limit: 4,
-					options: { type: "connected" },
-				});
-				expect(result).toStrictEqual<typeof result>({
-					items: connectedUserTuples.map(([user]) => user.id).sort(),
-				});
-			});
-
 			test("users are sorted by debts amount", async ({ ctx }) => {
 				const { id: otherAccountId } = await insertAccount(ctx);
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);

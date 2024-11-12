@@ -9,7 +9,6 @@ import type { MenuElement } from "~app/components/page";
 import { Page } from "~app/components/page";
 import { useConnectionIntentions } from "~app/hooks/use-connection-intentions";
 import { useDebtsIntentions } from "~app/hooks/use-debts-intentions";
-import { useReceiptTransfersIntentions } from "~app/hooks/use-receipt-transfer-intentions";
 import { trpc } from "~app/trpc";
 import {
 	AccountIcon,
@@ -19,8 +18,6 @@ import {
 	SettingsIcon,
 	UsersIcon,
 } from "~components/icons";
-
-const useReceiptsNotificatons = () => useReceiptTransfersIntentions();
 
 const useShowAdmin = () => {
 	const accountQuery = trpc.account.get.useQuery();
@@ -34,7 +31,6 @@ export const PROTECTED_ELEMENTS: MenuElement[] = [
 		Icon: ReceiptsIcon,
 		href: "/receipts",
 		text: "Receipts",
-		useBadgeAmount: useReceiptsNotificatons,
 	},
 	{
 		Icon: DebtsIcon,

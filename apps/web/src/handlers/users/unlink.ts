@@ -68,17 +68,5 @@ export const procedure = authProcedure
 				.set({ connectedAccountId: null })
 				.where("id", "=", user.theirUserId)
 				.executeTakeFirst();
-			await tx
-				.updateTable("receipts")
-				.set({ transferIntentionAccountId: null })
-				.where("receipts.ownerAccountId", "=", ctx.auth.accountId)
-				.where("receipts.transferIntentionAccountId", "=", connectedAccountId)
-				.execute();
-			await tx
-				.updateTable("receipts")
-				.set({ transferIntentionAccountId: null })
-				.where("receipts.ownerAccountId", "=", connectedAccountId)
-				.where("receipts.transferIntentionAccountId", "=", ctx.auth.accountId)
-				.execute();
 		});
 	});

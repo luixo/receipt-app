@@ -14,8 +14,7 @@
 					"debt": {
 						"direction": "outcoming",
 						"ids": []
-					},
-					"transferIntentionUserId": "<undefined>"
+					}
 				},
 				"dataUpdateCount": 1,
 				"error": null,

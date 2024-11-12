@@ -11,7 +11,6 @@ import { router as debtsRouter } from "./debts/index";
 import { router as receiptItemConsumersRouter } from "./receipt-item-consumers/index";
 import { router as receiptItemsRouter } from "./receipt-items/index";
 import { router as receiptParticipantsRouter } from "./receipt-participants/index";
-import { router as receiptTransferIntentionsRouter } from "./receipt-transfer-intentions/index";
 import { router as receiptsRouter } from "./receipts/index";
 import { router as resetPasswordIntentionsRouter } from "./reset-password-intentions/index";
 import { router as sessionsRouter } from "./sessions/index";
@@ -36,7 +35,6 @@ export const router = t.router({
 	accountConnectionIntentions: accountConnectionIntentionsRouter,
 	debts: debtsRouter,
 	debtIntentions: debtIntentionsRouter,
-	receiptTransferIntentions: receiptTransferIntentionsRouter,
 	// Admin
 	admin: adminRouter,
 });

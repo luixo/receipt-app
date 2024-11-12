@@ -376,10 +376,6 @@ const getMockUtils = (api: ApiManager) => ({
 			inbound: [],
 			outbound: [],
 		}),
-		api.mock("receiptTransferIntentions.getAll", {
-			inbound: [],
-			outbound: [],
-		}),
 	],
 	currencyList: (currencies?: Currency[]) =>
 		api.mock(

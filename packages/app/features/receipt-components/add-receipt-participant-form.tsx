@@ -13,13 +13,8 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 	filterIds,
 	...props
 }) => {
-	const {
-		receiptDisabled,
-		participantsDisabled,
-		getUsersSuggestOptions,
-		participants,
-		selfUserId,
-	} = useReceiptContext();
+	const { receiptDisabled, getUsersSuggestOptions, participants, selfUserId } =
+		useReceiptContext();
 	const isSelfAdded = participants.some(
 		(participant) => participant.userId === selfUserId,
 	);
@@ -42,7 +37,7 @@ export const AddReceiptParticipantForm: React.FC<Props> = ({
 			filterIds={[...filterIds, ...localFilterIds]}
 			additionalIds={isSelfAdded ? [] : [selfUserId]}
 			onUserClick={addParticipants}
-			isDisabled={receiptDisabled || participantsDisabled}
+			isDisabled={receiptDisabled}
 			options={React.useMemo(
 				() => getUsersSuggestOptions(),
 				[getUsersSuggestOptions],

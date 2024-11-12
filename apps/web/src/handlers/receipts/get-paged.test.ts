@@ -64,15 +64,12 @@ const mockData = async (ctx: TestContext) => {
 		insertReceiptParticipant(ctx, otherSelfReceipt.id, selfUserId),
 		insertReceiptParticipant(ctx, otherSelfReceipt.id, user.id),
 	]);
-	const selfTransferReceipt = await insertReceipt(ctx, accountId, {
-		transferIntentionAccountId: foreignAccount.id,
-	});
 
 	// Foreign receipt
-	const [foreignToSelfUser, selfToForeignUser] = await insertConnectedUsers(
-		ctx,
-		[foreignAccount.id, accountId],
-	);
+	const [foreignToSelfUser] = await insertConnectedUsers(ctx, [
+		foreignAccount.id,
+		accountId,
+	]);
 	const foreignReceipt = await insertReceipt(ctx, foreignAccount.id, {
 		issued: new Date("2020-03-06"),
 	});
@@ -108,15 +105,6 @@ const mockData = async (ctx: TestContext) => {
 		otherSelfReceipt,
 		foreignReceipt,
 		otherForeignReceipt,
-		selfTransferReceipt,
-	];
-
-	const users: [
-		Awaited<ReturnType<typeof insertUser>>,
-		Awaited<ReturnType<typeof insertAccount>> | undefined,
-	][] = [
-		[user, undefined],
-		[selfToForeignUser, foreignAccount],
 	];
 
 	return {
@@ -127,12 +115,6 @@ const mockData = async (ctx: TestContext) => {
 			name: receipt.name,
 			ownerAccountId: receipt.ownerAccountId,
 			issued: receipt.issued,
-			transferIntentionUserId: receipt.transferIntentionAccountId
-				? users.find(
-						([, account]) =>
-							account && account.id === receipt.transferIntentionAccountId,
-				  )?.[0].id
-				: undefined,
 		})),
 	};
 };

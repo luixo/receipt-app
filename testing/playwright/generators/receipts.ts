@@ -133,7 +133,6 @@ export const defaultGenerateReceipt: GenerateReceipt = ({
 	},
 	items: receiptItemsParts,
 	participants: receiptParticipants,
-	transferIntentionUserId: undefined,
 });
 
 type MapDebt = (

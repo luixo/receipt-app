@@ -216,7 +216,6 @@ export type ReceiptContext = {
 	ownerUserId: UsersId;
 
 	receiptDisabled: boolean;
-	participantsDisabled: boolean;
 
 	items: Item[];
 	participants: Participant[];
@@ -240,7 +239,6 @@ export const useGetReceiptContext = (
 		ownerUserId: receipt.ownerUserId,
 		currencyCode: receipt.currencyCode,
 		receiptDisabled,
-		participantsDisabled: Boolean(receipt.transferIntentionUserId),
 		items: receipt.items,
 		participants,
 		renderParticipantActions,

@@ -130,7 +130,6 @@ export const AddReceiptScreen: AppPage = () => {
 			direction: "outcoming",
 			ids: [],
 		},
-		transferIntentionUserId: undefined,
 	});
 	const actionsHooksContext = useActionsHooks(setItems, setRawParticipants);
 	const addReceiptContext = useAddReceiptContext(

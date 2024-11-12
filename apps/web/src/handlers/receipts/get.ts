@@ -16,15 +16,6 @@ const fetchReceipts = async (
 	database
 		.selectFrom("receipts")
 		.where("receipts.id", "in", ids)
-		.leftJoin("users as usersTransferIntention", (jb) =>
-			jb
-				.on("usersTransferIntention.ownerAccountId", "=", auth.accountId)
-				.onRef(
-					"usersTransferIntention.connectedAccountId",
-					"=",
-					"receipts.transferIntentionAccountId",
-				),
-		)
 		.innerJoin("users as usersTheir", (jb) =>
 			jb
 				.on("usersTheir.connectedAccountId", "=", auth.accountId)
@@ -41,10 +32,8 @@ const fetchReceipts = async (
 			"receipts.currencyCode",
 			"receipts.ownerAccountId",
 			"receipts.issued",
-			"receipts.transferIntentionAccountId",
 			"usersMine.id as ownerUserId",
 			"usersTheir.id as selfUserId",
-			"usersTransferIntention.id as transferIntentionUserId",
 			jsonArrayFrom(
 				eb
 					.selectFrom("receiptItems")
@@ -173,27 +162,7 @@ const mapReceipt = (
 	receipt: Awaited<ReturnType<typeof fetchReceipts>>[number],
 	debts: Awaited<ReturnType<typeof fetchDebts>>,
 ) => {
-	const {
-		ownerAccountId,
-		transferIntentionUserId,
-		transferIntentionAccountId,
-		items,
-		participants,
-		...receiptRest
-	} = receipt;
-	if (
-		transferIntentionAccountId &&
-		ownerAccountId === auth.accountId &&
-		!transferIntentionUserId
-		/* c8 ignore start */
-	) {
-		throw new TRPCError({
-			code: "INTERNAL_SERVER_ERROR",
-			message:
-				"Expected to have transfer user id being an owner of a receipt with transfer intention",
-		});
-	}
-	/* c8 ignore stop */
+	const { ownerAccountId, items, participants, ...receiptRest } = receipt;
 	return {
 		...receiptRest,
 		items: items.map((item) => ({
@@ -213,12 +182,6 @@ const mapReceipt = (
 			createdAt: new Date(participant.createdAt),
 			role: participant.role as Role,
 		})),
-		transferIntentionUserId:
-			transferIntentionAccountId !== null &&
-			transferIntentionUserId !== null &&
-			ownerAccountId === auth.accountId
-				? transferIntentionUserId
-				: undefined,
 		debt: getReceiptDebt(
 			debts,
 			ownerAccountId,

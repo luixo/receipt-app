@@ -280,7 +280,6 @@ export const DEFAULT_BLACKLIST_KEYS: TRPCKey[] = [
 	"currency.getList",
 	"debtIntentions.getAll",
 	"accountConnectionIntentions.getAll",
-	"receiptTransferIntentions.getAll",
 ];
 
 type AmountsWith<T> = { succeed: T; errored: T };

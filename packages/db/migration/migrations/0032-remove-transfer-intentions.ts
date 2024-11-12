@@ -17,9 +17,9 @@ const removeReceiptTransferIntentionAccountId = async (db: Database) => {
 };
 
 export const up = async (db: Database) => {
-	await addReceiptTransferIntentionAccountId(db);
+	await removeReceiptTransferIntentionAccountId(db);
 };
 
 export const down = async (db: Database) => {
-	await removeReceiptTransferIntentionAccountId(db);
+	await addReceiptTransferIntentionAccountId(db);
 };

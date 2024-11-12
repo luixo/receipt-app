@@ -19,9 +19,6 @@ export const procedure = authProcedure
 			options: z
 				.discriminatedUnion("type", [
 					z.strictObject({
-						type: z.literal("connected"),
-					}),
-					z.strictObject({
 						type: z.literal("not-connected"),
 					}),
 					z.strictObject({
@@ -112,15 +109,13 @@ export const procedure = authProcedure
 				items: users.map(({ id }) => id),
 			};
 		}
-		if (options.type === "not-connected" || options.type === "connected") {
+		if (options.type === "not-connected") {
 			const users = await database
 				.selectFrom("users")
 				.where((eb) =>
 					eb.and([
 						eb("users.ownerAccountId", "=", ctx.auth.accountId),
-						options.type === "connected"
-							? eb("users.connectedAccountId", "<>", ctx.auth.accountId)
-							: eb("users.connectedAccountId", "is", null),
+						eb("users.connectedAccountId", "is", null),
 					]),
 				)
 				.leftJoin("debts", (qb) =>

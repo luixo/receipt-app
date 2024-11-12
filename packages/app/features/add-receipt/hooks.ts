@@ -293,7 +293,6 @@ export const useAddReceiptContext = (
 	selfUserId,
 	ownerUserId: selfUserId,
 	currencyCode: form.watch("currencyCode"),
-	participantsDisabled: false,
 	receiptDisabled: false,
 	items,
 	participants,

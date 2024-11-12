@@ -21,7 +21,6 @@ import { ReceiptNameInput } from "./receipt-name-input";
 import { ReceiptParticipantActions } from "./receipt-participant-actions";
 import { ReceiptRemoveButton } from "./receipt-remove-button";
 import { ReceiptSyncButton } from "./receipt-sync-button";
-import { ReceiptTransferModal } from "./receipt-transfer-modal";
 
 type InnerProps = {
 	query: TRPCQuerySuccessResult<"receipts.get">;
@@ -94,17 +93,11 @@ export const ReceiptInner: React.FC<InnerProps> = ({ query }) => {
 				</View>
 			</View>
 			{isOwner ? (
-				<View className="max-xs:flex-col flex-row items-end justify-end gap-2">
-					<ReceiptTransferModal
-						receipt={receipt}
-						deleteLoading={deleteLoading}
-					/>
-					<ReceiptRemoveButton
-						className="self-end"
-						receipt={receipt}
-						setLoading={setDeleteLoading}
-					/>
-				</View>
+				<ReceiptRemoveButton
+					className="self-end"
+					receipt={receipt}
+					setLoading={setDeleteLoading}
+				/>
 			) : null}
 			<ReceiptComponents
 				receipt={receiptContext}

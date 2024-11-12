@@ -12,8 +12,6 @@ export {
 	MdSend as SendIcon,
 	MdExposureZero as ZeroIcon,
 	MdInfo as InfoIcon,
-	MdInfoOutline as InfoOutlineIcon,
-	MdOutlineNorthEast as TransferIcon,
 	MdFilterAlt as FilterIcon,
 	MdOutlineAdminPanelSettings as AdminIcon,
 	MdKey as KeyIcon,
