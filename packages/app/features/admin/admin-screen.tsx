@@ -62,7 +62,7 @@ const AdminUserCard: React.FC<
 				id={user ? user.id : (account.id as UsersId)}
 				name={user ? user.name : account.email}
 				connectedAccount={account}
-				foreign={!user}
+				dimmed={!user}
 			/>
 			<div>{children}</div>
 		</CardBody>

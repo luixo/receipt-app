@@ -16,13 +16,22 @@ const wrapper = tv({ base: "text-foreground" });
 
 export const SkeletonUser: React.FC<
 	Omit<Props, "id" | "name" | "connectedAccount">
-> = ({ className, avatarProps: rawAvatarProps, foreign, chip, ...props }) => {
+> = ({
+	className,
+	onlyAvatar,
+	avatarProps: rawAvatarProps,
+	chip,
+	...props
+}) => {
 	const avatarProps = {
 		...rawAvatarProps,
 		showFallback: true,
 		fallback: <Skeleton className="size-full" />,
 		classNames: { fallback: "size-full" },
 	};
+	if (onlyAvatar) {
+		return <Avatar {...avatarProps} />;
+	}
 	if (chip) {
 		return (
 			<Chip
@@ -52,8 +61,8 @@ export type Props = {
 	id: UsersId;
 	name: string;
 	connectedAccount?: TRPCQueryOutput<"users.get">["connectedAccount"];
-	foreign?: boolean;
 	chip?: boolean | React.ComponentProps<typeof Chip>;
+	onlyAvatar?: boolean;
 } & Omit<React.ComponentProps<typeof RawUser>, "name" | "description"> &
 	Pick<React.ComponentProps<typeof UserAvatar>, "dimmed">;
 
@@ -64,9 +73,10 @@ export const User = React.forwardRef<HTMLDivElement, Props>(
 			name,
 			connectedAccount,
 			className,
+			classNames,
 			avatarProps: rawAvatarProps,
-			foreign,
 			dimmed,
+			onlyAvatar,
 			chip,
 			...props
 		},
@@ -75,11 +85,13 @@ export const User = React.forwardRef<HTMLDivElement, Props>(
 		const avatarInput = {
 			id,
 			connectedAccount,
-			foreign,
 			dimmed,
 			...rawAvatarProps,
 		};
 		const avatarProps = useUserAvatarProps(avatarInput);
+		if (onlyAvatar) {
+			return <Avatar {...avatarProps} />;
+		}
 		if (chip) {
 			return (
 				<Chip

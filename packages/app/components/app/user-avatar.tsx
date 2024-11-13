@@ -10,8 +10,7 @@ import type { UsersId } from "~db/models";
 import { hslToRgb } from "~utils/color";
 
 const wrapper = tv({
-	// Don't animate avatar while in group
-	base: "shrink-0 bg-transparent data-[hover=true]:-translate-x-0",
+	base: "shrink-0 bg-transparent",
 	variants: {
 		dimmed: {
 			true: "grayscale",
@@ -55,7 +54,6 @@ export const useUserAvatarProps = ({
 	connectedAccount,
 	className,
 	classNames,
-	foreign,
 	dimmed,
 	...props
 }: Props) => {
@@ -84,7 +82,7 @@ export const useUserAvatarProps = ({
 			...classNames,
 			base: wrapper({
 				className: [className, classNames?.base],
-				dimmed: foreign || dimmed,
+				dimmed,
 			}),
 		},
 		imgProps,

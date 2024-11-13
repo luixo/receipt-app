@@ -1,12 +1,9 @@
 import type React from "react";
-import { View } from "react-native";
 
 import { SkeletonUser, User } from "~app/components/app/user";
 import { QueryErrorMessage } from "~app/components/error-message";
-import { useMediaSize } from "~app/hooks/use-media-size";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import { Tooltip } from "~components/tooltip";
 import type { UsersId } from "~db/models";
 
 type InnerProps = {
@@ -16,12 +13,7 @@ type InnerProps = {
 const LoadableUserInner: React.FC<InnerProps> = ({ query, ...props }) => {
 	if ("remoteId" in query.data) {
 		return (
-			<User
-				id={query.data.remoteId}
-				name={query.data.name}
-				foreign
-				{...props}
-			/>
+			<User id={query.data.remoteId} name={query.data.name} dimmed {...props} />
 		);
 	}
 	return (
@@ -34,34 +26,8 @@ const LoadableUserInner: React.FC<InnerProps> = ({ query, ...props }) => {
 	);
 };
 
-const ShrinkableLoadableUser: React.FC<
-	InnerProps & { shrinkable?: boolean }
-> = ({ shrinkable, classNames, ...props }) => {
-	const user = (
-		<LoadableUserInner
-			{...props}
-			classNames={{
-				...classNames,
-				wrapper: [
-					shrinkable ? "max-md:hidden" : undefined,
-					classNames?.wrapper,
-				],
-			}}
-		/>
-	);
-	const sizes = useMediaSize();
-	if (shrinkable && sizes.mdMax) {
-		return (
-			<Tooltip content={props.query.data.name}>
-				<View>{user}</View>
-			</Tooltip>
-		);
-	}
-	return user;
-};
-
 type DirectionProps = Omit<
-	React.ComponentProps<typeof ShrinkableLoadableUser>,
+	React.ComponentProps<typeof LoadableUserInner>,
 	"query"
 > & { id: UsersId };
 
@@ -73,7 +39,7 @@ const OwnLoadableUser: React.FC<DirectionProps> = ({ id, ...props }) => {
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;
 	}
-	return <ShrinkableLoadableUser {...props} query={query} />;
+	return <LoadableUserInner {...props} query={query} />;
 };
 
 const ForeignLoadableUser: React.FC<DirectionProps> = ({ id, ...props }) => {
@@ -84,7 +50,7 @@ const ForeignLoadableUser: React.FC<DirectionProps> = ({ id, ...props }) => {
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;
 	}
-	return <ShrinkableLoadableUser {...props} query={query} />;
+	return <LoadableUserInner {...props} query={query} />;
 };
 
 type Props = DirectionProps & {

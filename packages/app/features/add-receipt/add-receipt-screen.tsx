@@ -1,4 +1,5 @@
 import React from "react";
+import { View } from "react-native";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -9,13 +10,19 @@ import { CurrencyInput } from "~app/components/app/currency-input";
 import { DateInput } from "~app/components/date-input";
 import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
-import { ReceiptComponents } from "~app/features/receipt-components/receipt-components";
+import {
+	actionsHooksContext,
+	receiptContext,
+} from "~app/features/receipt-components/context";
+import { ReceiptItems } from "~app/features/receipt-components/receipt-items";
+import { ReceiptParticipants } from "~app/features/receipt-components/receipt-participants";
 import { useInputController } from "~app/hooks/use-input-controller";
 import { useParticipants } from "~app/hooks/use-participants";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
 import { Button } from "~components/button";
 import { Input } from "~components/input";
+import { Text } from "~components/text";
 import type { AccountsId, UsersId } from "~db/models";
 import { options as receiptsAddOptions } from "~mutations/receipts/add";
 import { getToday } from "~utils/date";
@@ -131,7 +138,7 @@ export const AddReceiptScreen: AppPage = () => {
 			ids: [],
 		},
 	});
-	const actionsHooksContext = useActionsHooks(setItems, setRawParticipants);
+	const actionsHooks = useActionsHooks(setItems, setRawParticipants);
 	const addReceiptContext = useAddReceiptContext(
 		form,
 		receiptId,
@@ -144,39 +151,46 @@ export const AddReceiptScreen: AppPage = () => {
 		<>
 			<PageHeader backHref="/receipts">Add receipt</PageHeader>
 			<EmailVerificationCard />
-			<form
-				id={formId}
-				onSubmit={form.handleSubmit(onSubmit)}
-				className="flex flex-col gap-4"
-			>
-				<ReceiptNameInput
-					form={form}
-					isLoading={addReceiptMutation.isPending}
-				/>
-				<CurrencyInput
-					form={form}
-					isLoading={addReceiptMutation.isPending}
-					topQueryOptions={{ type: "receipts" }}
-				/>
-				<ReceiptDateInput
-					form={form}
-					isLoading={addReceiptMutation.isPending}
-				/>
-			</form>
-			<ReceiptComponents
-				actionsHooks={actionsHooksContext}
-				receipt={addReceiptContext}
-			/>
-			<Button
-				className="mt-4"
-				color="primary"
-				isDisabled={!form.formState.isValid || addReceiptMutation.isPending}
-				isLoading={addReceiptMutation.isPending}
-				type="submit"
-				form={formId}
-			>
-				Add receipt
-			</Button>
+			<receiptContext.Provider value={addReceiptContext}>
+				<actionsHooksContext.Provider value={actionsHooks}>
+					<form
+						id={formId}
+						onSubmit={form.handleSubmit(onSubmit)}
+						className="flex flex-col gap-4"
+					>
+						<ReceiptNameInput
+							form={form}
+							isLoading={addReceiptMutation.isPending}
+						/>
+						<CurrencyInput
+							form={form}
+							isLoading={addReceiptMutation.isPending}
+							topQueryOptions={{ type: "receipts" }}
+						/>
+						<ReceiptDateInput
+							form={form}
+							isLoading={addReceiptMutation.isPending}
+						/>
+					</form>
+					<View className="flex flex-row justify-center gap-2">
+						{rawParticipants.length === 0 ? null : (
+							<Text className="text-xl leading-9">Participants</Text>
+						)}
+						<ReceiptParticipants />
+					</View>
+					<ReceiptItems />
+					<Button
+						className="mt-4"
+						color="primary"
+						isDisabled={!form.formState.isValid || addReceiptMutation.isPending}
+						isLoading={addReceiptMutation.isPending}
+						type="submit"
+						form={formId}
+					>
+						Add receipt
+					</Button>
+				</actionsHooksContext.Provider>
+			</receiptContext.Provider>
 		</>
 	);
 };

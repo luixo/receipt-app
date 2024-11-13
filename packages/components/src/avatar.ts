@@ -1,1 +1,1 @@
-export { Avatar } from "@nextui-org/avatar";
+export { Avatar, AvatarGroup } from "@nextui-org/avatar";

@@ -2,7 +2,6 @@ import React from "react";
 import { View } from "react-native";
 
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
-import { LoadableUser } from "~app/components/app/loadable-user";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
@@ -50,19 +49,15 @@ export const ReceiptAmountInput: React.FC<Props> = ({ receipt, isLoading }) => {
 	);
 
 	return (
-		<>
-			<View className="flex flex-row justify-center gap-2 text-2xl leading-9">
-				<Text className="text-2xl leading-9">{sum}</Text>
-				<View
-					className={disabled ? undefined : "cursor-pointer"}
-					onClick={disabled ? undefined : openModal}
-				>
-					<Text className="text-2xl leading-9">
-						{formattedCurrencyCode.symbol}
-					</Text>
-				</View>
-				<Text className="text-2xl leading-9">payed by</Text>
-				<LoadableUser id={receipt.ownerUserId} shrinkable />
+		<View className="flex flex-row gap-2">
+			<Text className="text-2xl leading-9">{sum}</Text>
+			<View
+				className={disabled ? undefined : "cursor-pointer"}
+				onClick={disabled ? undefined : openModal}
+			>
+				<Text className="text-2xl leading-9">
+					{formattedCurrencyCode.symbol}
+				</Text>
 			</View>
 			<CurrenciesPicker
 				onChange={saveCurrency}
@@ -70,6 +65,6 @@ export const ReceiptAmountInput: React.FC<Props> = ({ receipt, isLoading }) => {
 				switchModalOpen={switchModalOpen}
 				topQueryOptions={{ type: "receipts" }}
 			/>
-		</>
+		</View>
 	);
 };

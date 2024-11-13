@@ -4,7 +4,12 @@ import { View } from "react-native";
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { QueryErrorMessage } from "~app/components/error-message";
 import { PageHeader } from "~app/components/page-header";
-import { ReceiptComponents } from "~app/features/receipt-components/receipt-components";
+import {
+	actionsHooksContext,
+	receiptContext,
+} from "~app/features/receipt-components/context";
+import { ReceiptItems } from "~app/features/receipt-components/receipt-items";
+import { ReceiptParticipants } from "~app/features/receipt-components/receipt-participants";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
@@ -34,8 +39,8 @@ export const ReceiptInner: React.FC<InnerProps> = ({ query }) => {
 		useBooleanState();
 	const isOwner = receipt.selfUserId === receipt.ownerUserId;
 	const disabled = !isOwner || deleteLoading;
-	const actionsHooksContext = useActionHooks(receipt);
-	const receiptContext = useGetReceiptContext(
+	const actionsHooks = useActionHooks(receipt);
+	const getReceiptContext = useGetReceiptContext(
 		receipt,
 		deleteLoading,
 		(participant) =>
@@ -53,21 +58,13 @@ export const ReceiptInner: React.FC<InnerProps> = ({ query }) => {
 				backHref="/receipts"
 				startContent={<ReceiptIcon size={36} />}
 				aside={
-					<>
-						<LoadableUser id={receipt.ownerUserId} shrinkable />
-						{isOwner ? (
-							<ReceiptSyncButton
-								key={
-									// This is required for stability of the hooks in the component
-									receipt.participants.length
-								}
-								receipt={receipt}
-								isLoading={deleteLoading}
-							/>
-						) : (
-							<ReceiptGuestControlButton receipt={receipt} />
-						)}
-					</>
+					isOwner ? (
+						<ReceiptRemoveButton
+							className="self-end"
+							receipt={receipt}
+							setLoading={setDeleteLoading}
+						/>
+					) : null
 				}
 				title={`Receipt ${receipt.name}`}
 			>
@@ -86,23 +83,47 @@ export const ReceiptInner: React.FC<InnerProps> = ({ query }) => {
 					</View>
 				)}
 			</PageHeader>
-			<View className="items-start justify-between gap-2 sm:flex-row">
-				<View className="gap-2">
-					<ReceiptDateInput receipt={receipt} isLoading={deleteLoading} />
-					<ReceiptAmountInput receipt={receipt} isLoading={deleteLoading} />
-				</View>
-			</View>
-			{isOwner ? (
-				<ReceiptRemoveButton
-					className="self-end"
-					receipt={receipt}
-					setLoading={setDeleteLoading}
-				/>
-			) : null}
-			<ReceiptComponents
-				receipt={receiptContext}
-				actionsHooks={actionsHooksContext}
-			/>
+
+			<receiptContext.Provider value={getReceiptContext}>
+				<actionsHooksContext.Provider value={actionsHooks}>
+					<View className="items-start gap-2">
+						<View className="flex w-full flex-row items-start justify-between gap-2">
+							<ReceiptDateInput receipt={receipt} isLoading={deleteLoading} />
+							<View className="flex flex-row gap-2">
+								<LoadableUser id={receipt.ownerUserId} onlyAvatar />
+								{isOwner ? (
+									<ReceiptSyncButton
+										key={
+											// This is required for stability of the hooks in the component
+											receipt.participants.length
+										}
+										receipt={receipt}
+										isLoading={deleteLoading}
+									/>
+								) : (
+									<ReceiptGuestControlButton receipt={receipt} />
+								)}
+							</View>
+						</View>
+						<View className="flex flex-col justify-center gap-2 sm:flex-row">
+							<ReceiptAmountInput receipt={receipt} isLoading={deleteLoading} />
+							<View className="xs:flex-row flex flex-col gap-2">
+								<View className="flex flex-row gap-2">
+									<Text className="text-2xl leading-9">payed by</Text>
+									<LoadableUser id={receipt.ownerUserId} onlyAvatar />
+								</View>
+								<View className="flex flex-row gap-2">
+									{receipt.participants.length === 0 ? null : (
+										<Text className="text-2xl leading-9">for</Text>
+									)}
+									<ReceiptParticipants />
+								</View>
+							</View>
+						</View>
+					</View>
+					<ReceiptItems />
+				</actionsHooksContext.Provider>
+			</receiptContext.Provider>
 		</>
 	);
 };
