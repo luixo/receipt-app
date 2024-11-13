@@ -1,0 +1,41 @@
+# Remove when this is fixed: https://github.com/nextui-org/nextui/issues/3560
+# Specifically, deploy with a newer version on Vercel should not crash the serverless function
+diff --git a/dist/chunk-MZ76YA5F.mjs b/dist/chunk-MZ76YA5F.mjs
+index 90706b38624f984b6071ba32f29b3ed2117e1e36..788658139e01fec103ebf5fbfda5456639cf953a 100644
+--- a/dist/chunk-MZ76YA5F.mjs
++++ b/dist/chunk-MZ76YA5F.mjs
+@@ -42,7 +42,7 @@ function useMenuItem(props, state, ref) {
+       onAction(key);
+     }
+     if (e.target instanceof HTMLAnchorElement) {
+-      router.open(e.target, e);
++      router.open(e.target, e, e.target.href);
+     }
+   };
+   let role = "menuitem";
+diff --git a/dist/index.js b/dist/index.js
+index d69925f1c36ca90165227a4aae0ee521da4d9a28..81b7e3037b7995f7fd21a2ac3a5171fe13847b33 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -106,7 +106,7 @@ function useMenuItem(props, state, ref) {
+       onAction(key);
+     }
+     if (e.target instanceof HTMLAnchorElement) {
+-      router.open(e.target, e);
++      router.open(e.target, e, e.target.href);
+     }
+   };
+   let role = "menuitem";
+diff --git a/dist/use-menu-item.js b/dist/use-menu-item.js
+index f01fb1b4bfe64dc594f5b626ea6b7c4ca9a4ef4a..4eb067c6db6491470a48af17fcbc719dd9cc1ed3 100644
+--- a/dist/use-menu-item.js
++++ b/dist/use-menu-item.js
+@@ -69,7 +69,7 @@ function useMenuItem(props, state, ref) {
+       onAction(key);
+     }
+     if (e.target instanceof HTMLAnchorElement) {
+-      router.open(e.target, e);
++      router.open(e.target, e, e.target.href);
+     }
+   };
+   let role = "menuitem";

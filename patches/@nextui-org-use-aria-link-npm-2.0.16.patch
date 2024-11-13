@@ -1,0 +1,28 @@
+# Remove when this is fixed: https://github.com/nextui-org/nextui/issues/3560
+# Specifically, deploy with a newer version on Vercel should not crash the serverless function
+diff --git a/dist/index.js b/dist/index.js
+index e314bff2f3f5df632d1faa77beb4d5805c603c84..d85371db686fdb376b5a723d24e13f6a5e673df1 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -63,7 +63,7 @@ function useAriaLink(props, ref) {
+         }
+         if (!router.isNative && e.currentTarget instanceof HTMLAnchorElement && e.currentTarget.href && !e.isDefaultPrevented() && (0, import_utils.shouldClientNavigate)(e.currentTarget, e)) {
+           e.preventDefault();
+-          router.open(e.currentTarget, e);
++          router.open(e.currentTarget, e, e.currentTarget.href);
+         }
+       }
+     })
+diff --git a/dist/index.mjs b/dist/index.mjs
+index 19ce1c232d8aebc986cdcf92c6a8c1db30ec1956..a80d11433d46d2b886e371e9111124e772f553b5 100644
+--- a/dist/index.mjs
++++ b/dist/index.mjs
+@@ -39,7 +39,7 @@ function useAriaLink(props, ref) {
+         }
+         if (!router.isNative && e.currentTarget instanceof HTMLAnchorElement && e.currentTarget.href && !e.isDefaultPrevented() && shouldClientNavigate(e.currentTarget, e)) {
+           e.preventDefault();
+-          router.open(e.currentTarget, e);
++          router.open(e.currentTarget, e, e.currentTarget.href);
+         }
+       }
+     })

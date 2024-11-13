@@ -1,0 +1,67 @@
+# Remove when this is fixed: https://github.com/nextui-org/nextui/issues/3560
+# Specifically, deploy with a newer version on Vercel should not crash the serverless function
+diff --git a/dist/chunk-YGFHILHY.mjs b/dist/chunk-YGFHILHY.mjs
+index 6035bd1b914a2abdcc288bd18a307fa2f1da24dd..ca22034d4533841bdff64252263600a86b52ffa7 100644
+--- a/dist/chunk-YGFHILHY.mjs
++++ b/dist/chunk-YGFHILHY.mjs
+@@ -64,7 +64,7 @@ function usePaginationItem(props) {
+         chain(pressProps == null ? void 0 : pressProps.onClick, onClick)(e);
+         if (!router.isNative && e.currentTarget instanceof HTMLAnchorElement && e.currentTarget.href && !e.isDefaultPrevented() && shouldClientNavigate(e.currentTarget, e)) {
+           e.preventDefault();
+-          router.open(e.currentTarget, e);
++          router.open(e.currentTarget, e, e.currentTarget.href);
+         }
+       }
+     };
+diff --git a/dist/index.js b/dist/index.js
+index e74134ce8689ce5547b8417f7a6c49759982ec18..426cb5cbaa2809f732974bac92c7667e91e51289 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -331,7 +331,7 @@ function usePaginationItem(props) {
+         (0, import_utils.chain)(pressProps == null ? void 0 : pressProps.onClick, onClick)(e);
+         if (!router.isNative && e.currentTarget instanceof HTMLAnchorElement && e.currentTarget.href && !e.isDefaultPrevented() && (0, import_utils.shouldClientNavigate)(e.currentTarget, e)) {
+           e.preventDefault();
+-          router.open(e.currentTarget, e);
++          router.open(e.currentTarget, e, e.currentTarget.href);
+         }
+       }
+     };
+diff --git a/dist/pagination-item.js b/dist/pagination-item.js
+index 2f7272ce7907ddc45816502a62f1231aa76caf32..43f8c37cb5c1492f225f22567dd49087cd9837a9 100644
+--- a/dist/pagination-item.js
++++ b/dist/pagination-item.js
+@@ -90,7 +90,7 @@ function usePaginationItem(props) {
+         (0, import_utils.chain)(pressProps == null ? void 0 : pressProps.onClick, onClick)(e);
+         if (!router.isNative && e.currentTarget instanceof HTMLAnchorElement && e.currentTarget.href && !e.isDefaultPrevented() && (0, import_utils.shouldClientNavigate)(e.currentTarget, e)) {
+           e.preventDefault();
+-          router.open(e.currentTarget, e);
++          router.open(e.currentTarget, e, e.currentTarget.href);
+         }
+       }
+     };
+diff --git a/dist/pagination.js b/dist/pagination.js
+index 273b51b778571c53985fde3bd2b87bcfb1cecedf..35525d3fc389ee5e4330ef26e3b55ca5772a29e4 100644
+--- a/dist/pagination.js
++++ b/dist/pagination.js
+@@ -324,7 +324,7 @@ function usePaginationItem(props) {
+         (0, import_utils.chain)(pressProps == null ? void 0 : pressProps.onClick, onClick)(e);
+         if (!router.isNative && e.currentTarget instanceof HTMLAnchorElement && e.currentTarget.href && !e.isDefaultPrevented() && (0, import_utils.shouldClientNavigate)(e.currentTarget, e)) {
+           e.preventDefault();
+-          router.open(e.currentTarget, e);
++          router.open(e.currentTarget, e, e.currentTarget.href);
+         }
+       }
+     };
+diff --git a/dist/use-pagination-item.js b/dist/use-pagination-item.js
+index 2a4d410996629ccc122d28cd462e99b85692000f..08410a241ef2b5a8e0a7702559be0a14d7d7df93 100644
+--- a/dist/use-pagination-item.js
++++ b/dist/use-pagination-item.js
+@@ -87,7 +87,7 @@ function usePaginationItem(props) {
+         (0, import_utils.chain)(pressProps == null ? void 0 : pressProps.onClick, onClick)(e);
+         if (!router.isNative && e.currentTarget instanceof HTMLAnchorElement && e.currentTarget.href && !e.isDefaultPrevented() && (0, import_utils.shouldClientNavigate)(e.currentTarget, e)) {
+           e.preventDefault();
+-          router.open(e.currentTarget, e);
++          router.open(e.currentTarget, e, e.currentTarget.href);
+         }
+       }
+     };

@@ -4,7 +4,7 @@
 	"main": "src/index.ts",
 	"dependencies": {
 		"@expo/html-elements": "^0.5.1",
-		"@nextui-org/react": "^2.4.8",
+		"@nextui-org/react": "2.3.6",
 		"@ra/utils": "workspace:*",
 		"date-fns": "^3.3.1",
 		"framer-motion": "^11.11.11",
