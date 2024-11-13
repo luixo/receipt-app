@@ -28,6 +28,7 @@ const fetchReceipts = async (
 		)
 		.select((eb) => [
 			"receipts.id",
+			"receipts.createdAt",
 			"receipts.name",
 			"receipts.currencyCode",
 			"receipts.ownerAccountId",

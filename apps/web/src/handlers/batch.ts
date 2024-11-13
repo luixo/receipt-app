@@ -56,7 +56,7 @@ export type BatchLoadContextFn<
 	I,
 	O,
 	E extends Error = Error,
-> = (ctx: C) => (keys: readonly I[]) => PromiseLike<ArrayLike<O | E>>;
+> = (ctx: C) => (keys: readonly I[]) => PromiseLike<(O | E)[]>;
 
 export const queueCallFactory = <
 	C extends UnauthorizedContext,

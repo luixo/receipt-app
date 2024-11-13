@@ -1,5 +1,4 @@
 import { faker } from "@faker-js/faker";
-import { TRPCError } from "@trpc/server";
 import { describe, expect } from "vitest";
 import type { z } from "zod";
 
@@ -18,7 +17,6 @@ import {
 	expectUnauthorizedError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { runSequentially } from "~web/handlers/debts/utils.test";
 import { getValidReceiptItem } from "~web/handlers/receipt-items/utils.test";
 import { t } from "~web/handlers/trpc";
 import { UUID_REGEX } from "~web/handlers/validation";
@@ -142,31 +140,6 @@ describe("receipts.add", () => {
 			);
 		});
 
-		test("mixed success and fail", async ({ ctx }) => {
-			const { sessionId } = await insertAccountWithSession(ctx);
-
-			const caller = createCaller(createAuthContext(ctx, sessionId));
-			const results = await expectDatabaseDiffSnapshot(ctx, () =>
-				runSequentially(
-					[
-						() => caller.procedure(getValidReceipt()),
-						() =>
-							caller
-								.procedure({ ...getValidReceipt(), name: "a" })
-								.catch((e) => e),
-					],
-					10,
-				),
-			);
-
-			expect(results[0]).toStrictEqual<(typeof results)[0]>({
-				id: results[0].id,
-				participants: [],
-				items: [],
-			});
-			expect(results[1]).toBeInstanceOf(TRPCError);
-		});
-
 		describe("inner fails", () => {
 			test("participants errors", async ({ ctx }) => {
 				const { sessionId, userId: selfUserId } =
@@ -257,6 +230,7 @@ describe("receipts.add", () => {
 			expect(result.id).toMatch(UUID_REGEX);
 			expect(result).toStrictEqual<typeof result>({
 				id: result.id,
+				createdAt: new Date(),
 				participants: [],
 				items: [],
 			});
@@ -287,6 +261,7 @@ describe("receipts.add", () => {
 			expect(result.id).toMatch(UUID_REGEX);
 			expect(result).toStrictEqual<typeof result>({
 				id: result.id,
+				createdAt: new Date(),
 				participants: participants.map(() => ({ createdAt: new Date() })),
 				items: [],
 			});
@@ -317,6 +292,7 @@ describe("receipts.add", () => {
 			});
 			expect(result).toStrictEqual<typeof result>({
 				id: result.id,
+				createdAt: new Date(),
 				participants: [],
 				items: receiptItems.map((_item, index) => ({
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -370,6 +346,7 @@ describe("receipts.add", () => {
 			});
 			expect(result).toStrictEqual<typeof result>({
 				id: result.id,
+				createdAt: new Date(),
 				participants: participants.map(() => ({ createdAt: new Date() })),
 				items: receiptItems.map((_item, index) => ({
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion

@@ -80,7 +80,12 @@ test("'receipts.add' mutation", async ({
 	const createPause = api.createPause();
 	api.mock("receipts.add", async () => {
 		await createPause.promise;
-		return { id: "anything", items: [], participants: [] };
+		return {
+			id: "anything",
+			createdAt: new Date(),
+			items: [],
+			participants: [],
+		};
 	});
 	await addButton.click();
 	await clearToasts();

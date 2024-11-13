@@ -128,6 +128,7 @@ export const AddReceiptScreen: AppPage = () => {
 
 	const { participants } = useParticipants({
 		id: receiptId,
+		createdAt: new Date(),
 		...form.watch(),
 		participants: rawParticipants,
 		items,

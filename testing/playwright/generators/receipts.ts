@@ -122,6 +122,7 @@ export const defaultGenerateReceipt: GenerateReceipt = ({
 	receiptParticipants,
 }) => ({
 	id: receiptBase.id,
+	createdAt: new Date(),
 	name: receiptBase.name,
 	currencyCode: receiptBase.currencyCode,
 	issued: receiptBase.issued,

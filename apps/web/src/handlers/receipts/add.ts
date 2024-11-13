@@ -4,7 +4,6 @@ import { z } from "zod";
 
 import { receiptNameSchema } from "~app/utils/validation";
 import type { ReceiptItemsId, ReceiptsId } from "~db/models";
-import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import {
 	addPartSchema,
@@ -39,261 +38,193 @@ export const addReceiptSchema = z.strictObject({
 	issued: z.date(),
 });
 
-type ReceiptOutput = {
-	id: ReceiptsId;
-	participants: Exclude<
-		Awaited<ReturnType<ReturnType<typeof addParticipants>>>[number],
-		TRPCError
-	>[];
-	items: Exclude<
-		Awaited<ReturnType<ReturnType<typeof addItems>>>[number],
-		TRPCError
-	>[];
+type InsertedParticipants = {
+	errors: TRPCError[];
+	participants: ParticipantOutput[];
 };
-
-const getReceipts = (
-	ctx: AuthorizedContext,
-	receipts: readonly z.infer<typeof addReceiptSchema>[],
-) =>
-	receipts.map((receipt) => {
-		const id: ReceiptsId = ctx.getUuid();
-		return {
-			id,
-			name: receipt.name,
-			currencyCode: receipt.currencyCode,
-			issued: receipt.issued,
-			ownerAccountId: ctx.auth.accountId,
-		};
-	});
-
 const insertParticipants = async (
 	ctx: AuthorizedContext,
-	inputs: readonly z.infer<typeof addReceiptSchema>[],
-	receipts: ReturnType<typeof getReceipts>,
-) => {
-	const participants = inputs.flatMap((element, index) =>
-		(element.participants ?? []).map((participant) => ({
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			receiptId: receipts[index]!.id,
+	input: z.infer<typeof addReceiptSchema>,
+	receiptId: ReceiptsId,
+): Promise<InsertedParticipants> => {
+	if (!input.participants || input.participants.length === 0) {
+		return { errors: [], participants: [] };
+	}
+	const insertedParticipants = await addParticipants(ctx)(
+		input.participants.map((participant) => ({
+			receiptId,
 			...participant,
 		})),
 	);
-	if (participants.length === 0) {
-		return {};
-	}
-	const insertedParticipants = await addParticipants(ctx)(participants);
-	return participants.reduce<
-		Record<
-			ReceiptsId,
-			{ errors: TRPCError[]; participants: ParticipantOutput[] }
-		>
-	>((acc, { receiptId }, index) => {
-		const receiptAcc = acc[receiptId] || { errors: [], participants: [] };
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		const insertedParticipant = insertedParticipants[index]!;
-		if (insertedParticipant instanceof TRPCError) {
-			receiptAcc.errors.push(insertedParticipant);
-		} else {
-			receiptAcc.participants.push(insertedParticipant);
-		}
-		if (!acc[receiptId]) {
-			acc[receiptId] = receiptAcc;
-		}
-		return acc;
-	}, {});
+	return insertedParticipants.reduce<InsertedParticipants>(
+		(acc, insertedParticipant) => {
+			if (insertedParticipant instanceof TRPCError) {
+				acc.errors.push(insertedParticipant);
+			} else {
+				acc.participants.push(insertedParticipant);
+			}
+			return acc;
+		},
+		{ errors: [], participants: [] },
+	);
 };
 
+type InsertedItems = {
+	errors: TRPCError[];
+	items: ItemOutput[];
+};
 const insertItems = async (
 	ctx: AuthorizedContext,
-	inputs: readonly z.infer<typeof addReceiptSchema>[],
-	receipts: ReturnType<typeof getReceipts>,
-) => {
-	const items = inputs.flatMap((element, index) =>
-		(element.items ?? []).map((item) => ({
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			receiptId: receipts[index]!.id,
+	input: z.infer<typeof addReceiptSchema>,
+	receiptId: ReceiptsId,
+): Promise<InsertedItems> => {
+	if (!input.items || input.items.length === 0) {
+		return { errors: [], items: [] };
+	}
+	const insertedItems = await addItems(ctx)(
+		input.items.map((item) => ({
+			receiptId,
 			...item,
 		})),
 	);
-	if (items.length === 0) {
-		return {};
-	}
-	const insertedItems = await addItems(ctx)(items);
-	return items.reduce<
-		Record<
-			ReceiptsId,
-			{
-				errors: TRPCError[];
-				items: (ItemOutput & Omit<(typeof items)[number], "receiptId">)[];
+	return insertedItems.reduce<InsertedItems>(
+		(acc, insertedItem) => {
+			/* c8 ignore start */
+			if (insertedItem instanceof TRPCError) {
+				acc.errors.push(insertedItem);
+				/* c8 ignore stop */
+			} else {
+				acc.items.push(insertedItem);
 			}
-		>
-	>((acc, { receiptId, ...item }, index) => {
-		const receiptAcc = acc[receiptId] || { errors: [], items: [] };
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		const insertedItem = insertedItems[index]!;
-		/* c8 ignore start */
-		if (insertedItem instanceof TRPCError) {
-			receiptAcc.errors.push(insertedItem);
-			/* c8 ignore stop */
-		} else {
-			receiptAcc.items.push({ ...item, ...insertedItem });
-		}
-		if (!acc[receiptId]) {
-			acc[receiptId] = receiptAcc;
-		}
-		return acc;
-	}, {});
+			return acc;
+		},
+		{ errors: [], items: [] },
+	);
 };
 
+type InsertedParts = Record<
+	ReceiptItemsId,
+	{
+		errors: TRPCError[];
+		parts: Omit<z.infer<typeof addPartSchema>, "itemId">[];
+	}
+>;
 const insertParts = async (
 	ctx: AuthorizedContext,
-	inputs: readonly z.infer<typeof addReceiptSchema>[],
-	receipts: ReturnType<typeof getReceipts>,
+	input: z.infer<typeof addReceiptSchema>,
 	insertedItems: Awaited<ReturnType<typeof insertItems>>,
-) => {
-	const parts = inputs.flatMap((element, index) =>
-		(element.items ?? []).flatMap((item) =>
-			(item.parts ?? []).map((part) => {
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-				const receiptId = receipts[index]!.id;
-				const itemId = insertedItems[receiptId]?.items.find(
-					(insertedItem) => insertedItem.parts === item.parts,
-				)?.id;
-				/* c8 ignore start */
-				if (!itemId) {
-					throw new TRPCError({
-						code: "INTERNAL_SERVER_ERROR",
-						message: `Expected to have an inserted item for user "${part.userId}" with part ${part.part}.`,
-					});
-				}
-				/* c8 ignore stop */
-				return { receiptId, itemId, ...part };
-			}),
-		),
+): Promise<InsertedParts> => {
+	if (!input.items || input.items.length === 0) {
+		return {};
+	}
+	const parts = input.items.flatMap((item, index) =>
+		(item.parts ?? []).map((part) => {
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			const itemId = insertedItems.items[index]!.id;
+			/* c8 ignore start */
+			if (!itemId) {
+				throw new TRPCError({
+					code: "INTERNAL_SERVER_ERROR",
+					message: `Expected to have an inserted item for user "${part.userId}" with part ${part.part}.`,
+				});
+			}
+			/* c8 ignore stop */
+			return { itemId, ...part };
+		}),
 	);
 	if (parts.length === 0) {
 		return {};
 	}
 	const insertedParts = await addParts(ctx)(parts);
-	return parts.reduce<
-		Record<
-			ReceiptsId,
-			Record<
-				ReceiptItemsId,
-				{
-					errors: TRPCError[];
-					parts: Omit<z.infer<typeof addPartSchema>, "itemId">[];
-				}
-			>
-		>
-	>((acc, { receiptId, itemId, ...part }, index) => {
-		const receiptAcc = acc[receiptId] || {};
-		const receiptItemAcc = receiptAcc[itemId] || { errors: [], parts: [] };
+	return parts.reduce<InsertedParts>((acc, { itemId, ...part }, index) => {
+		const itemAcc = acc[itemId] || { errors: [], parts: [] };
 		const insertedPart = insertedParts[index];
 		if (insertedPart instanceof TRPCError) {
-			receiptItemAcc.errors.push(insertedPart);
+			itemAcc.errors.push(insertedPart);
 		} else {
-			receiptItemAcc.parts.push(part);
+			itemAcc.parts.push(part);
 		}
-		if (!receiptAcc[itemId]) {
-			receiptAcc[itemId] = receiptItemAcc;
-		}
-		if (!acc[receiptId]) {
-			acc[receiptId] = receiptAcc;
+		if (!acc[itemId]) {
+			acc[itemId] = itemAcc;
 		}
 		return acc;
 	}, {});
 };
 
-const queueAddReceipt = queueCallFactory<
-	AuthorizedContext,
-	z.infer<typeof addReceiptSchema>,
-	ReceiptOutput
->((ctx) => async (inputs) => {
-	const receipts = getReceipts(ctx, inputs);
-	const results = await ctx.database
-		.insertInto("receipts")
-		.values(receipts)
-		.returning(["receipts.id", "receipts.createdAt"])
-		.execute();
-	const [addedParticipants, addedItems] = await Promise.all([
-		insertParticipants(ctx, inputs, receipts),
-		insertItems(ctx, inputs, receipts),
-	]);
-	const addedParts = await insertParts(ctx, inputs, receipts, addedItems);
-	return receipts.map((receipt) => {
-		const matchedResult = results.find((result) => result.id === receipt.id);
-		/* c8 ignore start */
-		if (!matchedResult) {
-			return new TRPCError({
-				code: "INTERNAL_SERVER_ERROR",
-				message: `Expected to have a matched receipt in list of inserted rows for id "${receipt.id}".`,
-			});
-		}
-		/* c8 ignore stop */
-		const matchedParticipants = addedParticipants[receipt.id] ?? {
-			errors: [],
-			participants: [],
-		};
-		if (matchedParticipants.errors.length !== 0) {
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			const firstError = matchedParticipants.errors[0]!;
-			return new TRPCError({
-				code: firstError.code,
-				message: `${firstError.message}${
-					matchedParticipants.errors.length !== 1
-						? ` (+${matchedParticipants.errors.length - 1} errors)`
-						: ""
-				}`,
-			});
-		}
-		const matchedItems = addedItems[receipt.id] ?? {
-			errors: [],
-			items: [],
-		};
-		/* c8 ignore start */
-		// There is no way for this to happen at the moment
-		if (matchedItems.errors.length !== 0) {
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			const firstError = matchedItems.errors[0]!;
-			return new TRPCError({
-				code: firstError.code,
-				message: `${firstError.message}${
-					matchedItems.errors.length !== 1
-						? ` (+${matchedItems.errors.length - 1} errors)`
-						: ""
-				}`,
-			});
-		}
-		/* c8 ignore start */
-		const matchedParts = addedParts[receipt.id] ?? {};
-		const matchedPartsErrors = values(matchedParts).reduce<TRPCError[]>(
-			(acc, { errors }) => [...acc, ...errors],
-			[],
-		);
-		if (matchedPartsErrors.length !== 0) {
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			const firstError = matchedPartsErrors[0]!;
-			return new TRPCError({
-				code: firstError.code,
-				message: `${firstError.message}${
-					matchedPartsErrors.length !== 1
-						? ` (+${matchedPartsErrors.length - 1} errors)`
-						: ""
-				}`,
-			});
-		}
-		return {
-			id: receipt.id,
-			participants: matchedParticipants.participants,
-			items: matchedItems.items.map((item) => ({
-				id: item.id,
-				createdAt: item.createdAt,
-			})),
-		};
-	});
-});
-
 export const procedure = authProcedure
 	.input(addReceiptSchema)
-	.mutation(queueAddReceipt);
+	.mutation(async ({ input, ctx }) => {
+		const receiptId: ReceiptsId = ctx.getUuid();
+		const receipt = {
+			id: receiptId,
+			name: input.name,
+			currencyCode: input.currencyCode,
+			issued: input.issued,
+			ownerAccountId: ctx.auth.accountId,
+		};
+		return ctx.database.transaction().execute(async (tx) => {
+			const transactionCtx = { ...ctx, database: tx };
+			const result = await tx
+				.insertInto("receipts")
+				.values(receipt)
+				.returning(["receipts.id", "receipts.createdAt"])
+				.executeTakeFirstOrThrow();
+			const [addedParticipants, addedItems] = await Promise.all([
+				insertParticipants(transactionCtx, input, receiptId),
+				insertItems(transactionCtx, input, receiptId),
+			]);
+			if (addedParticipants.errors.length !== 0) {
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				const firstError = addedParticipants.errors[0]!;
+				throw new TRPCError({
+					code: firstError.code,
+					message: `${firstError.message}${
+						addedParticipants.errors.length !== 1
+							? ` (+${addedParticipants.errors.length - 1} errors)`
+							: ""
+					}`,
+				});
+			}
+			/* c8 ignore start */
+			// There is no way for this to happen at the moment
+			if (addedItems.errors.length !== 0) {
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				const firstError = addedItems.errors[0]!;
+				throw new TRPCError({
+					code: firstError.code,
+					message: `${firstError.message}${
+						addedItems.errors.length !== 1
+							? ` (+${addedItems.errors.length - 1} errors)`
+							: ""
+					}`,
+				});
+			}
+			const addedParts = await insertParts(transactionCtx, input, addedItems);
+			/* c8 ignore start */
+			const addedPartsErrors = values(addedParts).reduce<TRPCError[]>(
+				(acc, { errors }) => [...acc, ...errors],
+				[],
+			);
+			if (addedPartsErrors.length !== 0) {
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				const firstError = addedPartsErrors[0]!;
+				throw new TRPCError({
+					code: firstError.code,
+					message: `${firstError.message}${
+						addedPartsErrors.length !== 1
+							? ` (+${addedPartsErrors.length - 1} errors)`
+							: ""
+					}`,
+				});
+			}
+			return {
+				id: receipt.id,
+				createdAt: result.createdAt,
+				participants: addedParticipants.participants,
+				items: addedItems.items.map((item) => ({
+					id: item.id,
+					createdAt: item.createdAt,
+				})),
+			};
+		});
+	});

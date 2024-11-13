@@ -16,6 +16,7 @@ export const options: UseContextedMutationOptions<
 					const selfUserId = selfAccountId as UsersId;
 					controller.add({
 						id: result.id,
+						createdAt: result.createdAt,
 						name: variables.name,
 						issued: variables.issued,
 						currencyCode: variables.currencyCode,

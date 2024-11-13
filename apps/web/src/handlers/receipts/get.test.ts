@@ -134,6 +134,7 @@ describe("receipts.get", () => {
 				const result = await caller.procedure({ id: receipt.id });
 				expect(result).toStrictEqual<typeof result>({
 					id: receipt.id,
+					createdAt: new Date(),
 					name: receipt.name,
 					currencyCode: receipt.currencyCode,
 					issued: receipt.issued,
@@ -162,6 +163,7 @@ describe("receipts.get", () => {
 			const result = await caller.procedure({ id: receipt.id });
 			expect(result).toStrictEqual<typeof result>({
 				id: receipt.id,
+				createdAt: new Date(),
 				name: receipt.name,
 				currencyCode: receipt.currencyCode,
 				issued: receipt.issued,
@@ -201,6 +203,7 @@ describe("receipts.get", () => {
 				const result = await caller.procedure({ id: receipt.id });
 				expect(result).toStrictEqual<typeof result>({
 					id: receipt.id,
+					createdAt: new Date(),
 					name: receipt.name,
 					currencyCode: receipt.currencyCode,
 					issued: receipt.issued,
@@ -236,6 +239,7 @@ describe("receipts.get", () => {
 				const result = await caller.procedure({ id: receipt.id });
 				expect(result).toStrictEqual<typeof result>({
 					id: receipt.id,
+					createdAt: new Date(),
 					name: receipt.name,
 					currencyCode: receipt.currencyCode,
 					issued: receipt.issued,
@@ -273,6 +277,7 @@ describe("receipts.get", () => {
 				const result = await caller.procedure({ id: receipt.id });
 				expect(result).toStrictEqual<typeof result>({
 					id: receipt.id,
+					createdAt: new Date(),
 					name: receipt.name,
 					currencyCode: receipt.currencyCode,
 					issued: receipt.issued,
@@ -311,6 +316,7 @@ describe("receipts.get", () => {
 				const result = await caller.procedure({ id: receipt.id });
 				expect(result).toStrictEqual<typeof result>({
 					id: receipt.id,
+					createdAt: new Date(),
 					name: receipt.name,
 					currencyCode: receipt.currencyCode,
 					issued: receipt.issued,
@@ -385,6 +391,7 @@ describe("receipts.get", () => {
 			const result = await caller.procedure({ id: receipt.id });
 			expect(result).toStrictEqual<typeof result>({
 				id: receipt.id,
+				createdAt: new Date(),
 				name: receipt.name,
 				currencyCode: receipt.currencyCode,
 				issued: receipt.issued,
@@ -412,6 +419,7 @@ describe("receipts.get", () => {
 			const result = await caller.procedure({ id: receipt.id });
 			expect(result).toStrictEqual<typeof result>({
 				id: receipt.id,
+				createdAt: new Date(),
 				name: receipt.name,
 				currencyCode: receipt.currencyCode,
 				issued: receipt.issued,
@@ -501,6 +509,7 @@ describe("receipts.get", () => {
 			const result = await caller.procedure({ id: receipt.id });
 			expect(result).toStrictEqual<typeof result>({
 				id: receipt.id,
+				createdAt: new Date(),
 				name: receipt.name,
 				currencyCode: receipt.currencyCode,
 				issued: receipt.issued,

@@ -4,6 +4,7 @@
 			"state": {
 				"data": {
 					"id": "f6f7bc30-88b4-4f59-a2a3-8ffbb2b88b3d",
+					"createdAt": "2020-01-01T00:00:00.000Z",
 					"name": "doloribus ex vel",
 					"issued": "2020-01-31T00:00:00.000Z",
 					"currencyCode": "USD",
@@ -31,6 +32,7 @@
 				"state": {
 					"data": {
 						"id": "f6f7bc30-88b4-4f59-a2a3-8ffbb2b88b3d",
+						"createdAt": "2020-01-01T00:00:00.000Z",
 						"participants": [],
 						"items": []
 					},

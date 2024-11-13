@@ -103,7 +103,12 @@ test("'receipts.add' mutation", async ({
 	const createPause = api.createPause();
 	api.mock("receipts.add", async () => {
 		await createPause.promise;
-		return { id: receiptId, participants: [], items: [] };
+		return {
+			id: receiptId,
+			createdAt: new Date(),
+			participants: [],
+			items: [],
+		};
 	});
 	const buttonWithLoader = withLoader(addButton);
 	await expect(buttonWithLoader).not.toBeVisible();
