@@ -5,6 +5,7 @@ import { z } from "zod";
 import { receiptNameSchema } from "~app/utils/validation";
 import type { ReceiptItemsId, ReceiptsId, UsersId } from "~db/models";
 import type { AuthorizedContext } from "~web/handlers/context";
+import type { ConsumerOutput } from "~web/handlers/receipt-item-consumers/add";
 import {
 	batchFn as addConsumers,
 	addItemConsumerSchema,
@@ -109,7 +110,7 @@ type InsertedConsumers = Record<
 	ReceiptItemsId,
 	{
 		errors: TRPCError[];
-		consumers: { userId: UsersId; createdAt: Date }[];
+		consumers: (ConsumerOutput & { userId: UsersId })[];
 	}
 >;
 const insertConsumers = async (
@@ -139,16 +140,16 @@ const insertConsumers = async (
 		return {};
 	}
 	const insertedConsumers = await addConsumers(ctx)(consumers);
-	return consumers.reduce<InsertedConsumers>(
-		(acc, { itemId, ...consumer }, index) => {
-			const itemAcc = acc[itemId] || { errors: [], consumers: [] };
+	return insertedConsumers.reduce<InsertedConsumers>(
+		(acc, insertedConsumer, index) => {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			const insertedConsumer = insertedConsumers[index]!;
+			const { itemId, userId } = consumers[index]!;
+			const itemAcc = acc[itemId] || { errors: [], consumers: [] };
 			if (insertedConsumer instanceof TRPCError) {
 				itemAcc.errors.push(insertedConsumer);
 			} else {
 				itemAcc.consumers.push({
-					userId: consumer.userId,
+					userId,
 					createdAt: insertedConsumer.createdAt,
 				});
 			}
