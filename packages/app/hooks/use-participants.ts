@@ -104,7 +104,10 @@ export const useParticipants = (receipt: TRPCQueryOutput<"receipts.get">) => {
 					}
 					return isSelfParticipant;
 				})
-				.filter(({ sum }) => sum !== 0),
+				.filter((participant) => {
+					const sum = participant.debtSum;
+					return sum !== 0;
+				}),
 		[isOwner, participants, receipt.selfUserId],
 	);
 	// Debts not created yet
@@ -135,17 +138,16 @@ export const useParticipants = (receipt: TRPCQueryOutput<"receipts.get">) => {
 	// Debts being de-synced from the receipt
 	const desyncedParticipants = React.useMemo(
 		() =>
-			createdParticipants.filter(
-				({ currentDebt, sum }) =>
-					!isDebtInSyncWithReceipt(
-						{
-							...receipt,
-							participantSum:
-								receipt.debt.direction === "outcoming" ? sum : -sum,
-						},
-						currentDebt,
-					),
-			),
+			createdParticipants.filter((participant) => {
+				const sum = participant.debtSum;
+				return !isDebtInSyncWithReceipt(
+					{
+						...receipt,
+						participantSum: receipt.debt.direction === "outcoming" ? sum : -sum,
+					},
+					participant.currentDebt,
+				);
+			}),
 		[createdParticipants, receipt],
 	);
 	// Debts being synced with the receipt

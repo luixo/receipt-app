@@ -227,14 +227,17 @@ export const getParticipantSums = <
 		{},
 	);
 
-	return participants.map(({ userId, ...participant }) => ({
-		...participant,
-		userId,
-		sum:
+	return participants.map(({ userId, ...participant }) => {
+		const debtSum =
 			Math.round(
 				(sumFlooredByParticipant[userId] ?? 0) +
 					(reimbursedShortages[userId]?.reimbursed ?? 0) +
 					(luckyLeftovers[userId] ?? 0),
-			) / decimalsPower,
-	}));
+			) / decimalsPower;
+		return {
+			...participant,
+			userId,
+			debtSum,
+		};
+	});
 };

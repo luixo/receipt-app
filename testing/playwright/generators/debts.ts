@@ -60,7 +60,8 @@ export const defaultGenerateDebtsFromReceipt: GenerateDebtsFromReceipt = ({
 			if (participantSum.userId === selfUserId) {
 				return null;
 			}
-			if (participantSum.sum === 0) {
+			const sum = participantSum.debtSum;
+			if (sum === 0) {
 				return null;
 			}
 			return {
@@ -70,13 +71,13 @@ export const defaultGenerateDebtsFromReceipt: GenerateDebtsFromReceipt = ({
 				userId: participantSum.userId,
 				timestamp: receiptBase.issued,
 				note: `Fake receipt "${receiptBase.name}"`,
-				amount: participantSum.sum,
+				amount: sum,
 				updatedAt: new Date(),
 				their: {
 					updatedAt: new Date(),
 					currencyCode: receiptBase.currencyCode,
 					timestamp: receiptBase.issued,
-					amount: participantSum.sum,
+					amount: sum,
 				},
 			};
 		})

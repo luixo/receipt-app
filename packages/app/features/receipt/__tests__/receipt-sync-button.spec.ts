@@ -201,9 +201,10 @@ test.describe("Mutations", () => {
 			receiptItemsWithConsumers,
 			participants,
 		);
-		const participantTuples = participantSums.map(
-			(participant) => [participant.userId, participant.sum] as const,
-		);
+		const participantTuples = participantSums.map((participant) => {
+			const sum = participant.debtSum;
+			return [participant.userId, sum] as const;
+		});
 		const addedDebts = addMutationsVariables.map(
 			(debt) => [debt.userId, debt.amount] as const,
 		);

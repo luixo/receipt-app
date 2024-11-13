@@ -38,56 +38,50 @@ export const ReceiptParticipantActions: React.FC<Props> = ({
 				: skipToken,
 		}),
 	);
+	const sum = participant.debtSum;
 	const updateDebt = React.useCallback(
-		(currentDebt: NonNullable<Participant["currentDebt"]>) =>
+		(currentDebt: NonNullable<Participant["currentDebt"]>) => {
 			updateMutation.mutate({
 				id: currentDebt.id,
 				update: {
-					amount: participant.sum,
+					amount: sum,
 					currencyCode: receipt.currencyCode,
 					timestamp: receipt.issued,
 					receiptId: receipt.id,
 				},
-			}),
-		[
-			updateMutation,
-			participant.sum,
-			receipt.currencyCode,
-			receipt.issued,
-			receipt.id,
-		],
+			});
+		},
+		[updateMutation, sum, receipt.currencyCode, receipt.issued, receipt.id],
 	);
 
 	const addMutation = trpc.debts.add.useMutation(
 		useTrpcMutationOptions(debtsAddOptions),
 	);
-	const addDebt = React.useCallback(
-		() =>
-			addMutation.mutate({
-				currencyCode: receipt.currencyCode,
-				userId: participant.userId,
-				amount: participant.sum,
-				timestamp: receipt.issued,
-				note: getReceiptDebtName(receipt.name),
-				receiptId: receipt.id,
-			}),
-		[
-			addMutation,
-			participant.sum,
-			receipt.currencyCode,
-			receipt.issued,
-			receipt.name,
-			participant.userId,
-			receipt.id,
-		],
-	);
+	const addDebt = React.useCallback(() => {
+		addMutation.mutate({
+			currencyCode: receipt.currencyCode,
+			userId: participant.userId,
+			amount: sum,
+			timestamp: receipt.issued,
+			note: getReceiptDebtName(receipt.name),
+			receiptId: receipt.id,
+		});
+	}, [
+		addMutation,
+		sum,
+		receipt.currencyCode,
+		receipt.issued,
+		receipt.name,
+		participant.userId,
+		receipt.id,
+	]);
 
 	const isUpdating = updateMutation.isPending || addMutation.isPending;
 	const { currentDebt } = participant;
 
 	return (
 		<View className="flex flex-row items-center gap-3 empty:hidden">
-			{participant.sum === 0 ? (
+			{sum === 0 ? (
 				<ZeroIcon data-testid="receipt-zero-icon" size={36} />
 			) : currentDebt ? (
 				<>

@@ -29,7 +29,8 @@ const getParticipantColorCode = (
 		// We don't have debt for ourselves
 		return;
 	}
-	if (participant.sum === 0) {
+	const sum = participant.debtSum;
+	if (sum === 0) {
 		return;
 	}
 	if (participant.currentDebt === null) {
@@ -40,7 +41,7 @@ const getParticipantColorCode = (
 		// No debt has been propagated
 		return "text-warning";
 	}
-	if (participant.currentDebt.amount !== participant.sum) {
+	if (participant.currentDebt.amount !== sum) {
 		// Our debt is desynced from the receipt
 		return "text-danger";
 	}
@@ -82,6 +83,7 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 	}, [participant.userId, removeParticipant]);
 	const currency = useFormattedCurrency(currencyCode);
 	const disabled = participant.items.length === 0;
+	const sum = participant.debtSum;
 
 	return (
 		<Accordion>
@@ -115,10 +117,9 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 									participant.userId === selfUserId,
 								)}
 							>
-								{`${round(participant.sum)} ${currency.symbol}`}
+								{`${round(sum)} ${currency.symbol}`}
 								{participant.currentDebt
-									? (isOwner ? 1 : -1) * participant.currentDebt.amount !==
-									  participant.sum
+									? (isOwner ? 1 : -1) * participant.currentDebt.amount !== sum
 										? ` (synced as ${round(participant.currentDebt.amount)} ${
 												currency.symbol
 										  })`
@@ -132,7 +133,7 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 										onRemove={removeReceiptParticipant}
 										mutation={{ isPending }}
 										subtitle="This will remove participant with all his consumer parts"
-										noConfirm={participant.sum === 0}
+										noConfirm={participant.debtSum === 0}
 										isIconOnly
 									/>
 								) : null}
