@@ -184,7 +184,7 @@ export const AccountAvatarInput: React.FC<Props> = ({ account, children }) => {
 	return (
 		<View className="flex-row gap-4">
 			{isAvatarEditorOpen ? (
-				<View className="h-unit-80 flex-1 flex-row justify-between gap-4">
+				<View className="h-80 flex-1 flex-row justify-between gap-4">
 					<Slider
 						className="z-10 h-full"
 						aria-label="Change scale"

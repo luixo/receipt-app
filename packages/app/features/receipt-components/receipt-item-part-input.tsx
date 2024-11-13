@@ -136,7 +136,7 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 			onClick={switchEditing}
 			isDisabled={isDisabled}
 			isIconOnly
-			className="min-w-unit-16 w-auto px-2"
+			className="w-auto min-w-16 px-2"
 		>
 			{readOnlyComponent}
 		</Button>,
