@@ -16,15 +16,27 @@ const fetchReceipts = async (
 	database
 		.selectFrom("receipts")
 		.where("receipts.id", "in", ids)
-		.innerJoin("users as usersTheir", (jb) =>
+		.innerJoin("users as meFromReceiptOwnerView", (jb) =>
 			jb
-				.on("usersTheir.connectedAccountId", "=", auth.accountId)
-				.onRef("usersTheir.ownerAccountId", "=", "receipts.ownerAccountId"),
+				.on("meFromReceiptOwnerView.connectedAccountId", "=", auth.accountId)
+				.onRef(
+					"meFromReceiptOwnerView.ownerAccountId",
+					"=",
+					"receipts.ownerAccountId",
+				),
 		)
-		.innerJoin("users as usersMine", (jb) =>
+		.innerJoin("users as receiptOwnerFromMyView", (jb) =>
 			jb
-				.onRef("usersMine.ownerAccountId", "=", "usersTheir.connectedAccountId")
-				.onRef("usersMine.connectedAccountId", "=", "receipts.ownerAccountId"),
+				.onRef(
+					"receiptOwnerFromMyView.ownerAccountId",
+					"=",
+					"meFromReceiptOwnerView.connectedAccountId",
+				)
+				.onRef(
+					"receiptOwnerFromMyView.connectedAccountId",
+					"=",
+					"receipts.ownerAccountId",
+				),
 		)
 		.select((eb) => [
 			"receipts.id",
@@ -33,8 +45,8 @@ const fetchReceipts = async (
 			"receipts.currencyCode",
 			"receipts.ownerAccountId",
 			"receipts.issued",
-			"usersMine.id as ownerUserId",
-			"usersTheir.id as selfUserId",
+			"receiptOwnerFromMyView.id as ownerUserId",
+			"meFromReceiptOwnerView.id as selfUserId",
 			jsonArrayFrom(
 				eb
 					.selectFrom("receiptItems")
