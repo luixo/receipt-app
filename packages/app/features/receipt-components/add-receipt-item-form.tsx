@@ -128,7 +128,11 @@ export const AddReceiptItemForm: React.FC = () => {
 	const onSubmit = React.useCallback(
 		(values: Form) =>
 			addItem(values.name, values.price, values.quantity, {
-				onSuccess: () => form.reset(),
+				onSuccess: () => {
+					form.reset();
+					// see https://react-hook-form.com/docs/useform/setfocus
+					setTimeout(() => form.setFocus("name"), 0);
+				},
 			}),
 		[addItem, form],
 	);

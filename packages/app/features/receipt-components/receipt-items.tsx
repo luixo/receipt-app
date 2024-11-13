@@ -1,11 +1,35 @@
 import React from "react";
 
+import { useBooleanState } from "~app/hooks/use-boolean-state";
+import { Button } from "~components/button";
+import { AddIcon } from "~components/icons";
 import type { ReceiptItemsId } from "~db/models";
 
-import { AddReceiptItemController } from "./add-receipt-item-controller";
+import { AddReceiptItemForm } from "./add-receipt-item-form";
 import { useReceiptContext } from "./context";
 import { ReceiptEmptyItems } from "./receipt-empty-items";
 import { ReceiptItem } from "./receipt-item";
+
+const AddReceiptItemController: React.FC = () => {
+	const { receiptDisabled } = useReceiptContext();
+	const [isOpen, { setTrue: openForm }] = useBooleanState();
+
+	if (isOpen) {
+		return <AddReceiptItemForm />;
+	}
+	return (
+		<Button
+			color="primary"
+			variant="bordered"
+			onClick={openForm}
+			className="w-full"
+			disabled={receiptDisabled}
+		>
+			<AddIcon size={24} />
+			Item
+		</Button>
+	);
+};
 
 export const ReceiptItems: React.FC = () => {
 	const { items, emptyReceiptElement } = useReceiptContext();
@@ -17,18 +41,17 @@ export const ReceiptItems: React.FC = () => {
 			items.toSorted((a, b) => a.createdAt.valueOf() - b.createdAt.valueOf()),
 		[items],
 	);
-	const addItemComponent = <AddReceiptItemController />;
 	if (items.length === 0) {
 		return (
 			<>
-				{addItemComponent}
+				<AddReceiptItemController />
 				{emptyReceiptElement}
 			</>
 		);
 	}
 	return (
 		<>
-			{addItemComponent}
+			<AddReceiptItemController />
 			<ReceiptEmptyItems itemsRef={itemsRef} />
 			{sortedItems.map((item) => (
 				<ReceiptItem
