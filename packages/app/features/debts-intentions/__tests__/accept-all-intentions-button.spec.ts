@@ -59,7 +59,7 @@ test("'debtIntentions.accept' pending / error", async ({
 	const acceptedDebtsIds = debts
 		.filter((_, index) => index < acceptedDebtsAmount)
 		.map((debt) => debt.id);
-	api.mock("debtIntentions.accept", async ({ input }) => {
+	api.mockFirst("debtIntentions.accept", async ({ input }) => {
 		if (!acceptedDebtsIds.includes(input.id)) {
 			return { updatedAt: new Date() };
 		}
@@ -107,7 +107,7 @@ test("'debtIntentions.accept' pending / error", async ({
 		{ name: "error" },
 	);
 
-	api.mock("debtIntentions.accept", { updatedAt: new Date() });
+	api.mockFirst("debtIntentions.accept", { updatedAt: new Date() });
 
 	await snapshotQueries(
 		async () => {

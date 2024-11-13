@@ -27,7 +27,7 @@ export const test = originalTest.extend<Fixtures>({
 	mockBase: ({ api, faker }, use) =>
 		use(({ generateUsers = defaultGenerateUsers } = {}) => {
 			api.mockUtils.authPage();
-			api.mock("account.get", {
+			api.mockFirst("account.get", {
 				account: {
 					id: faker.string.uuid(),
 					email: faker.internet.email(),
@@ -41,7 +41,7 @@ export const test = originalTest.extend<Fixtures>({
 			const users = generateUsers({ faker });
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			const debtUser = users[0]!;
-			api.mock("users.get", ({ input: { id: lookupId } }) => {
+			api.mockFirst("users.get", ({ input: { id: lookupId } }) => {
 				const matchedUser = users.find(({ id }) => id === lookupId);
 				if (!matchedUser) {
 					throw new TRPCError({
@@ -57,7 +57,7 @@ export const test = originalTest.extend<Fixtures>({
 		use(({ generateDebts = defaultGenerateDebts } = {}) => {
 			const { user } = mockBase();
 			const debts = generateDebts({ faker, userId: user.id });
-			api.mock("debts.getByUsers", [
+			api.mockFirst("debts.getByUsers", [
 				{
 					userId: user.id,
 					unsyncedDebtsAmount: 0,
@@ -72,11 +72,11 @@ export const test = originalTest.extend<Fixtures>({
 					).map(([currencyCode, sum]) => ({ currencyCode, sum })),
 				},
 			]);
-			api.mock(
+			api.mockFirst(
 				"debts.getIdsByUser",
 				debts.map(({ id, timestamp }) => ({ id, timestamp })),
 			);
-			api.mock("debts.get", ({ input: { id: lookupId } }) => {
+			api.mockFirst("debts.get", ({ input: { id: lookupId } }) => {
 				const matchedDebt = debts.find((debt) => debt.id === lookupId);
 				if (!matchedDebt) {
 					throw new TRPCError({

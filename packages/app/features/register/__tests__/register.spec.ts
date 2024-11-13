@@ -55,7 +55,7 @@ test("'auth.register' mutation", async ({
 	api.mockUtils.noAccount();
 	api.mockUtils.authPage();
 	api.mockUtils.emptyReceipts();
-	api.mock("auth.register", () => {
+	api.mockFirst("auth.register", () => {
 		throw new TRPCError({
 			code: "CONFLICT",
 			message: `Mock "auth.register" error`,
@@ -72,7 +72,7 @@ test("'auth.register' mutation", async ({
 	await expect(page).toHaveURL("/register");
 
 	const registerPause = api.createPause();
-	api.mock("auth.register", async () => {
+	api.mockFirst("auth.register", async () => {
 		await registerPause.promise;
 		return { account: { id: "test" } };
 	});

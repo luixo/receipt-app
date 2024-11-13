@@ -72,7 +72,11 @@ type WorkerManager = {
 
 export type ApiManager = {
 	getConnection: () => { port: number; controllerId: string };
-	mock: <K extends TRPCKey>(
+	mockFirst: <K extends TRPCKey>(
+		key: K,
+		handler: NonNullable<Handlers[K]>[number],
+	) => () => void;
+	mockLast: <K extends TRPCKey>(
 		key: K,
 		handler: NonNullable<Handlers[K]>[number],
 	) => () => void;
@@ -331,20 +335,31 @@ const createApiManager = async (
 			throw e;
 		}
 	});
-	return {
-		mock: (key, handler) => {
-			const handlers =
-				controller.handlers[key] || ([] as NonNullable<Handlers[typeof key]>);
+	const mock = <K extends TRPCKey>(
+		key: K,
+		handler: NonNullable<Handlers[K]>[number],
+		type: "append" | "prepend",
+	) => {
+		const handlers =
+			controller.handlers[key] || ([] as NonNullable<Handlers[typeof key]>);
+		if (type === "append") {
 			// @ts-expect-error: A very complex type to represent
 			handlers.push(handler);
-			controller.handlers[key] = handlers;
-			return () => {
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-				controller.handlers[key] = controller.handlers[key]!.filter(
-					(lookupHandler) => lookupHandler !== handler,
-				) as (typeof controller)["handlers"][typeof key];
-			};
-		},
+		} else {
+			// @ts-expect-error: A very complex type to represent
+			handlers.unshift(handler);
+		}
+		controller.handlers[key] = handlers;
+		return () => {
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			controller.handlers[key] = controller.handlers[key]!.filter(
+				(lookupHandler) => lookupHandler !== handler,
+			) as (typeof controller)["handlers"][typeof key];
+		};
+	};
+	return {
+		mockFirst: (key, handler) => mock(key, handler, "append"),
+		mockLast: (key, handler) => mock(key, handler, "prepend"),
 		createPause: () => {
 			const promise = Promise.withResolvers<void>();
 			controller.paused.push(promise);
@@ -364,21 +379,21 @@ const createApiManager = async (
 
 const getMockUtils = (api: ApiManager) => ({
 	noAccount: () =>
-		api.mock("account.get", () => {
+		api.mockFirst("account.get", () => {
 			throw new TRPCError({
 				code: "UNAUTHORIZED",
 				message: "No token provided - mocked",
 			});
 		}),
 	authPage: () => [
-		api.mock("debtIntentions.getAll", []),
-		api.mock("accountConnectionIntentions.getAll", {
+		api.mockFirst("debtIntentions.getAll", []),
+		api.mockFirst("accountConnectionIntentions.getAll", {
 			inbound: [],
 			outbound: [],
 		}),
 	],
 	currencyList: (currencies?: Currency[]) =>
-		api.mock(
+		api.mockFirst(
 			"currency.getList",
 			currencies ||
 				// 'en' locale definitely exist
@@ -390,7 +405,7 @@ const getMockUtils = (api: ApiManager) => ({
 				})),
 		),
 	emptyReceipts: () =>
-		api.mock("receipts.getPaged", {
+		api.mockFirst("receipts.getPaged", {
 			items: [],
 			hasMore: false,
 			cursor: -1,

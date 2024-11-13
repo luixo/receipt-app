@@ -33,7 +33,7 @@ test("'auth.register' mutation", async ({
 	clearToasts,
 }) => {
 	api.mockUtils.noAccount();
-	api.mock("auth.register", () => {
+	api.mockFirst("auth.register", () => {
 		throw new TRPCError({
 			code: "CONFLICT",
 			message: "Email already exist",
@@ -49,7 +49,7 @@ test("'auth.register' mutation", async ({
 	// await expectScreenshotWithSchemes("error.png");
 
 	const registerPause = api.createPause();
-	api.mock("auth.register", async ({ next }) => {
+	api.mockFirst("auth.register", async ({ next }) => {
 		await registerPause.promise;
 		return next();
 	});

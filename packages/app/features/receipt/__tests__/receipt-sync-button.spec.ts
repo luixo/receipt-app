@@ -30,7 +30,7 @@ test.describe("Wrapper component", () => {
 		});
 
 		const debtsGetPause = api.createPause();
-		api.mock("debts.get", async () => {
+		api.mockFirst("debts.get", async () => {
 			await debtsGetPause.promise;
 			throw new TRPCError({
 				code: "FORBIDDEN",
@@ -140,7 +140,7 @@ test.describe("Mutations", () => {
 						participants: opts.participants.slice(1),
 					}),
 			});
-		api.mock("debts.add", ({ input: addedDebt }) => ({
+		api.mockFirst("debts.add", ({ input: addedDebt }) => ({
 			id:
 				debts.find((debt) => debt.userId === addedDebt.userId)?.id ||
 				faker.string.uuid(),
@@ -152,7 +152,7 @@ test.describe("Mutations", () => {
 					2 ===
 				0,
 		}));
-		api.mock("debts.update", ({ input: updatedDebt }) => ({
+		api.mockFirst("debts.update", ({ input: updatedDebt }) => ({
 			updatedAt: new Date(),
 			reverseUpdated:
 				updatedDebt.id.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0) %

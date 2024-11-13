@@ -66,7 +66,7 @@ test("'receipts.add' mutation", async ({
 	clearToasts,
 }) => {
 	mockBase();
-	api.mock("receipts.add", () => {
+	api.mockFirst("receipts.add", () => {
 		throw new TRPCError({
 			code: "FORBIDDEN",
 			message: `Mock "receipts.add" error`,
@@ -78,7 +78,7 @@ test("'receipts.add' mutation", async ({
 	await fillDate(dateInput, new Date().valueOf() + MONTH);
 	await fillCurrency(currencyInput, "USD");
 	const createPause = api.createPause();
-	api.mock("receipts.add", async () => {
+	api.mockFirst("receipts.add", async () => {
 		await createPause.promise;
 		return {
 			id: "anything",

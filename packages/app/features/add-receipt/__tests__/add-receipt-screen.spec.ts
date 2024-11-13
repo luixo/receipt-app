@@ -75,7 +75,7 @@ test("'receipts.add' mutation", async ({
 	fillCurrency,
 }) => {
 	mockBase();
-	api.mock("receipts.add", () => {
+	api.mockFirst("receipts.add", () => {
 		throw new TRPCError({
 			code: "FORBIDDEN",
 			message: `Mock "receipts.add" error`,
@@ -101,7 +101,7 @@ test("'receipts.add' mutation", async ({
 	await expect(page).toHaveURL("/receipts/add");
 
 	const createPause = api.createPause();
-	api.mock("receipts.add", async () => {
+	api.mockFirst("receipts.add", async () => {
 		await createPause.promise;
 		return {
 			id: receiptId,

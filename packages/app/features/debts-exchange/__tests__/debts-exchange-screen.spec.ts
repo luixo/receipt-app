@@ -26,7 +26,7 @@ test.describe("Wrapper component", () => {
 	}) => {
 		const { user } = mockBase();
 		const userDebtsIdsPause = api.createPause();
-		api.mock("debts.getIdsByUser", async () => {
+		api.mockFirst("debts.getIdsByUser", async () => {
 			await userDebtsIdsPause.promise;
 			throw new TRPCError({
 				code: "FORBIDDEN",
@@ -58,7 +58,7 @@ test.describe("Header", () => {
 	}) => {
 		const { user } = mockDebts();
 		const userPause = api.createPause();
-		api.mock("users.get", async ({ next }) => {
+		api.mockFirst("users.get", async ({ next }) => {
 			await userPause.promise;
 			return next();
 		});
@@ -148,7 +148,7 @@ test("Exchange all to one button", async ({
 }) => {
 	const { user } = mockDebts();
 	await openDebtsExchangeScreen(user.id);
-	api.mock("currency.top", []);
+	api.mockFirst("currency.top", []);
 	await exchangeAllToOneButton.click();
 	await expect(page).toHaveURL(`/debts/user/${user.id}/exchange/all`);
 });

@@ -34,17 +34,20 @@ test("'debts.get' pending / error", async ({
 	});
 
 	const debtPause = api.createPause();
-	const unmockError = api.mock("debts.get", async ({ input: { id }, next }) => {
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		if (id === debts[0]!.id) {
-			throw new TRPCError({
-				code: "FORBIDDEN",
-				message: `Mock "debts.get" error`,
-			});
-		}
-		return next();
-	});
-	api.mock("debts.get", async ({ input: { id }, next }) => {
+	const unmockError = api.mockFirst(
+		"debts.get",
+		async ({ input: { id }, next }) => {
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			if (id === debts[0]!.id) {
+				throw new TRPCError({
+					code: "FORBIDDEN",
+					message: `Mock "debts.get" error`,
+				});
+			}
+			return next();
+		},
+	);
+	api.mockFirst("debts.get", async ({ input: { id }, next }) => {
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		if (id === debts[0]!.id) {
 			await debtPause.promise;

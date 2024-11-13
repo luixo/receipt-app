@@ -32,7 +32,7 @@ export const test = originalTest.extend<Fixtures>({
 			const sureSelf = self!;
 			const sureOther = other!;
 			/* eslint-enable @typescript-eslint/no-non-null-assertion */
-			api.mock("users.get", ({ input }) => {
+			api.mockFirst("users.get", ({ input }) => {
 				const match = [sureSelf, sureOther].find(({ id }) => id === input.id);
 				if (!match) {
 					throw new TRPCError({
@@ -42,7 +42,7 @@ export const test = originalTest.extend<Fixtures>({
 				}
 				return match;
 			});
-			api.mock("account.get", {
+			api.mockFirst("account.get", {
 				account: {
 					id: sureSelf.connectedAccount?.id ?? (sureSelf.id as AccountsId),
 					email: faker.internet.email(),
@@ -57,7 +57,7 @@ export const test = originalTest.extend<Fixtures>({
 				amount: { min: 3, max: 6 },
 				userId: sureOther.id,
 			});
-			api.mock(
+			api.mockFirst(
 				"debtIntentions.getAll",
 				debts.map((debt) => ({
 					id: debt.id,
@@ -79,7 +79,7 @@ export const test = originalTest.extend<Fixtures>({
 				amount: { min: 3, max: 6 },
 				userId: targetUserId,
 			});
-			api.mock(
+			api.mockFirst(
 				"debtIntentions.getAll",
 				debts.map((debt) => ({
 					id: debt.id,

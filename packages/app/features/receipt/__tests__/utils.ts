@@ -44,9 +44,9 @@ export const test = originalTest.extend<Fixtures>({
 	mockBase: ({ api }, use) =>
 		use(() => {
 			api.mockUtils.currencyList();
-			api.mock("currency.top", []);
-			api.mock("users.suggest", { cursor: 0, hasMore: false, items: [] });
-			api.mock("users.suggestTop", { items: [] });
+			api.mockFirst("currency.top", []);
+			api.mockFirst("users.suggest", { cursor: 0, hasMore: false, items: [] });
+			api.mockFirst("users.suggestTop", { items: [] });
 		}),
 	mockReceipt: ({ api, faker, mockBase }, use) =>
 		use(
@@ -82,7 +82,7 @@ export const test = originalTest.extend<Fixtures>({
 					receiptItemsWithConsumers,
 					users,
 				});
-				api.mock("receipts.get", ({ input }) => {
+				api.mockFirst("receipts.get", ({ input }) => {
 					if (input.id !== receiptBase.id) {
 						throw new Error(
 							`Unexpected receipt id in "receipts.get": ${input.id}`,
@@ -123,10 +123,10 @@ export const test = originalTest.extend<Fixtures>({
 						`Unexpected user id in "users.get" / "users.getForeign": ${input.id}`,
 					);
 				};
-				api.mock("users.get", usersFn);
-				api.mock("users.getForeign", usersFn);
+				api.mockFirst("users.get", usersFn);
+				api.mockFirst("users.getForeign", usersFn);
 				api.mockUtils.authPage();
-				api.mock("account.get", {
+				api.mockFirst("account.get", {
 					account: {
 						id: selfAccount.accountId,
 						email: selfAccount.email,

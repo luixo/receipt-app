@@ -65,7 +65,7 @@ test("External query status", async ({
 		generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 3 }),
 	});
 	const debtPause = api.createPause();
-	api.mock("debts.get", async ({ input: { id }, next }) => {
+	api.mockFirst("debts.get", async ({ input: { id }, next }) => {
 		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		if (id === debts[0]!.id) {
 			await debtPause.promise;

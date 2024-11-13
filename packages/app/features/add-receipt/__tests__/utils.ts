@@ -30,8 +30,8 @@ export const test = originalTest.extend<Fixtures>({
 				currencyCode: generateCurrencyCode(faker),
 				count: Number(faker.number.int(100)),
 			}));
-			api.mock("currency.top", topCurrencies);
-			api.mock("account.get", {
+			api.mockFirst("currency.top", topCurrencies);
+			api.mockFirst("account.get", {
 				account: {
 					id: faker.string.uuid(),
 					email: faker.internet.email(),
@@ -44,7 +44,7 @@ export const test = originalTest.extend<Fixtures>({
 			const [user] = defaultGenerateUsers({ faker, amount: 1 });
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			const sureUser = user!;
-			api.mock("users.get", ({ input }) => {
+			api.mockFirst("users.get", ({ input }) => {
 				if (input.id !== sureUser.id) {
 					throw new TRPCError({
 						code: "NOT_FOUND",

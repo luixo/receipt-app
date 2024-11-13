@@ -26,7 +26,7 @@ test.describe("'currency.getList'", () => {
 			},
 		});
 		const currencyListPause = api.createPause();
-		api.mock("currency.getList", async ({ next }) => {
+		api.mockFirst("currency.getList", async ({ next }) => {
 			await currencyListPause.promise;
 			return next();
 		});
@@ -47,7 +47,7 @@ test.describe("'currency.getList'", () => {
 				return [{ ...debt, currencyCode: "USD", amount: 100 }];
 			},
 		});
-		api.mock("currency.getList", () => {
+		api.mockFirst("currency.getList", () => {
 			throw new TRPCError({
 				code: "FORBIDDEN",
 				message: `Mock "currency.getList" error`,
@@ -69,7 +69,7 @@ test.describe("external query status", () => {
 	}) => {
 		const { user, debts } = mockDebts();
 		const debtPause = api.createPause();
-		api.mock("debts.get", async ({ next, input: { id } }) => {
+		api.mockFirst("debts.get", async ({ next, input: { id } }) => {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			if (id === debts[0]!.id) {
 				return next();
@@ -97,7 +97,7 @@ test.describe("external query status", () => {
 		const { user, debts } = mockDebts({
 			generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 3 }),
 		});
-		const unmockGetDebt = api.mock("debts.get", ({ input: { id } }) => {
+		const unmockGetDebt = api.mockFirst("debts.get", ({ input: { id } }) => {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			if (id === debts[0]!.id) {
 				throw new TRPCError({

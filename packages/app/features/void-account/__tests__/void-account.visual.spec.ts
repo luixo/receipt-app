@@ -18,7 +18,7 @@ test(`"auth.voidAccount" mutation`, async ({
 	clearToasts,
 }) => {
 	api.mockUtils.noAccount();
-	api.mock("auth.voidAccount", () => {
+	api.mockFirst("auth.voidAccount", () => {
 		throw new TRPCError({
 			code: "CONFLICT",
 			message: `Mock "auth.voidAccount" error`,
@@ -32,7 +32,7 @@ test(`"auth.voidAccount" mutation`, async ({
 	await expectScreenshotWithSchemes("error.png");
 
 	const voidAccountPause = api.createPause();
-	api.mock("auth.voidAccount", async () => {
+	api.mockFirst("auth.voidAccount", async () => {
 		await voidAccountPause.promise;
 		return { email: "foo@gmail.com" };
 	});
