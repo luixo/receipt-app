@@ -10,6 +10,7 @@ export type Item = {
 	consumers: {
 		part: number;
 		userId: UsersId;
+		createdAt: Date;
 	}[];
 	createdAt: Date;
 };

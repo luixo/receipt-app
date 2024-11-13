@@ -1,6 +1,9 @@
 import type { ReceiptsId } from "~db/models";
 
-import { updateRevert as updateRevertReceipts } from "../cache/receipts";
+import {
+	update as updateReceipts,
+	updateRevert as updateRevertReceipts,
+} from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<
@@ -17,6 +20,20 @@ export const options: UseContextedMutationOptions<
 						variables.itemId,
 						variables.userId,
 						variables.part,
+						new Date(),
+					),
+				getPaged: undefined,
+			}),
+	onSuccess:
+		(controllerContext, { receiptId }) =>
+		(result, variables) =>
+			updateReceipts(controllerContext, {
+				get: (controller) =>
+					controller.updateItemConsumer(
+						receiptId,
+						variables.itemId,
+						variables.userId,
+						(consumer) => ({ ...consumer, createdAt: result.createdAt }),
 					),
 				getPaged: undefined,
 			}),

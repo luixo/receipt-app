@@ -511,6 +511,7 @@ export const insertReceiptItem = async (
 
 type ReceiptItemConsumerData = {
 	part?: number;
+	createdAt?: Date;
 };
 
 export const insertReceiptItemConsumer = async (
@@ -525,16 +526,17 @@ export const insertReceiptItemConsumer = async (
 		.executeTakeFirstOrThrow(
 			() => new Error(`Expected to have receipt item id ${itemId} in tests`),
 		);
-	const { part } = await ctx.database
+	const { part, createdAt } = await ctx.database
 		.insertInto("receiptItemConsumers")
 		.values({
 			userId,
 			itemId,
 			part: (data.part ?? 1).toString(),
+			createdAt: data.createdAt ?? new Date(),
 		})
-		.returning(["part"])
+		.returning(["part", "createdAt"])
 		.executeTakeFirstOrThrow();
-	return { part, userId, itemId };
+	return { part, createdAt, userId, itemId };
 };
 
 type AccountConnectionIntentionData = {

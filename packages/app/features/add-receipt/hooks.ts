@@ -117,7 +117,7 @@ const useAddItemConsumer = (setItems: SetItems) => {
 						...(prevItem.consumers || []).filter(
 							({ userId: lookupUserId }) => lookupUserId !== userId,
 						),
-						{ userId, part },
+						{ userId, part, createdAt: new Date() },
 					],
 				}),
 				options,

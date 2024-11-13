@@ -36,23 +36,35 @@ export const options: UseContextedMutationOptions<
 							}) ?? [],
 						items:
 							variables.items?.map((item, index) => {
-								const matchedResult = result.items[index];
-								if (!matchedResult) {
+								const matchedItem = result.items[index];
+								if (!matchedItem) {
 									throw new Error(
 										`Expected to have item index ${index} returned from receipt creation.`,
 									);
 								}
 								return {
-									id: matchedResult.id,
-									createdAt: matchedResult.createdAt,
+									id: matchedItem.id,
+									createdAt: matchedItem.createdAt,
 									name: item.name,
 									price: item.price,
 									quantity: item.quantity,
 									consumers:
-										item.consumers?.map((consumer) => ({
-											userId: consumer.userId,
-											part: consumer.part,
-										})) ?? [],
+										item.consumers?.map((consumer) => {
+											const matchedConsumer = matchedItem.consumers?.find(
+												(lookupConsumer) =>
+													lookupConsumer.userId === consumer.userId,
+											);
+											if (!matchedConsumer) {
+												throw new Error(
+													`Expected to have consumer with user id "${consumer.userId}" returned from receipt creation.`,
+												);
+											}
+											return {
+												userId: consumer.userId,
+												part: consumer.part,
+												createdAt: matchedConsumer.createdAt,
+											};
+										}) ?? [],
 								};
 							}) ?? [],
 						ownerUserId: selfUserId,

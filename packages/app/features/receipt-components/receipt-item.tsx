@@ -22,6 +22,16 @@ import { ReceiptItemPriceInput } from "./receipt-item-price-input";
 import { ReceiptItemQuantityInput } from "./receipt-item-quantity-input";
 import type { Item } from "./state";
 
+type ItemConsumer = Item["consumers"][number];
+
+const SORT_CONSUMERS = (a: ItemConsumer, b: ItemConsumer) => {
+	const delta = a.createdAt.valueOf() - b.createdAt.valueOf();
+	if (delta === 0) {
+		return a.userId.localeCompare(b.userId);
+	}
+	return delta;
+};
+
 type Props = {
 	item: Item;
 };
@@ -52,6 +62,10 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 				addItemConsumer(item.id, participant.userId, 1);
 			});
 		}, [addItemConsumer, item.id, notAddedParticipants]);
+		const sortedConsumers = React.useMemo(
+			() => item.consumers.sort(SORT_CONSUMERS),
+			[item.consumers],
+		);
 
 		return (
 			<Card ref={ref}>
@@ -102,10 +116,10 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 							))}
 						</ScrollShadow>
 					)}
-					{item.consumers.length === 0 ? null : (
+					{sortedConsumers.length === 0 ? null : (
 						<>
 							<Divider />
-							{item.consumers.map((consumer) => {
+							{sortedConsumers.map((consumer) => {
 								const matchedParticipant = participants.find(
 									(participant) => participant.userId === consumer.userId,
 								);

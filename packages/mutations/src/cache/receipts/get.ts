@@ -294,6 +294,13 @@ export const getController = ({
 		) => updateItem(controller, receiptId, itemId)(updater),
 		addParticipant: (receiptId: ReceiptsId, participant: ReceiptParticipant) =>
 			addParticipant(controller, receiptId)(participant),
+
+		updateItemConsumer: (
+			receiptId: ReceiptsId,
+			itemId: ReceiptItemsId,
+			userId: UsersId,
+			updater: UpdateFn<ReceiptItemConsumer>,
+		) => updateItemConsumer(controller, receiptId, itemId, userId)(updater),
 	};
 };
 
@@ -369,9 +376,15 @@ export const getRevertController = ({ trpcUtils }: ControllerContext) => {
 			itemId: ReceiptItemsId,
 			userId: UsersId,
 			part: number,
+			createdAt: Date,
 		) =>
 			applyWithRevert(
-				() => addItemConsumer(controller, receiptId, itemId)({ userId, part }),
+				() =>
+					addItemConsumer(
+						controller,
+						receiptId,
+						itemId,
+					)({ userId, part, createdAt }),
 				() => removeItemConsumer(controller, receiptId, itemId, userId),
 			),
 		removeItemConsumer: (

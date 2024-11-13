@@ -298,6 +298,7 @@ describe("receipts.add", () => {
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					id: result.items[index]!.id,
 					createdAt: new Date(),
+					consumers: undefined,
 				})),
 			});
 		});
@@ -348,10 +349,14 @@ describe("receipts.add", () => {
 				id: result.id,
 				createdAt: new Date(),
 				participants: participants.map(() => ({ createdAt: new Date() })),
-				items: receiptItems.map((_item, index) => ({
+				items: receiptItems.map((item, index) => ({
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					id: result.items[index]!.id,
 					createdAt: new Date(),
+					consumers: item.consumers?.map((consumer) => ({
+						userId: consumer.userId,
+						createdAt: new Date(),
+					})),
 				})),
 			});
 		});

@@ -96,6 +96,10 @@ export const defaultGenerateReceiptItemsWithConsumers: GenerateReceiptItemsWithC
 			name: item.name,
 			createdAt: item.createdAt,
 			consumers: participants.map((participant) => ({
+				createdAt: faker.date.between({
+					from: item.createdAt,
+					to: new Date(),
+				}),
 				userId: participant.userId,
 				part: faker.number.int({ min: 1, max: 3 }),
 			})),

@@ -3,7 +3,7 @@ import { values } from "remeda";
 import { z } from "zod";
 
 import { receiptNameSchema } from "~app/utils/validation";
-import type { ReceiptItemsId, ReceiptsId } from "~db/models";
+import type { ReceiptItemsId, ReceiptsId, UsersId } from "~db/models";
 import type { AuthorizedContext } from "~web/handlers/context";
 import {
 	batchFn as addConsumers,
@@ -109,7 +109,7 @@ type InsertedConsumers = Record<
 	ReceiptItemsId,
 	{
 		errors: TRPCError[];
-		consumers: Omit<z.infer<typeof addItemConsumerSchema>, "itemId">[];
+		consumers: { userId: UsersId; createdAt: Date }[];
 	}
 >;
 const insertConsumers = async (
@@ -142,11 +142,15 @@ const insertConsumers = async (
 	return consumers.reduce<InsertedConsumers>(
 		(acc, { itemId, ...consumer }, index) => {
 			const itemAcc = acc[itemId] || { errors: [], consumers: [] };
-			const insertedConsumer = insertedConsumers[index];
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			const insertedConsumer = insertedConsumers[index]!;
 			if (insertedConsumer instanceof TRPCError) {
 				itemAcc.errors.push(insertedConsumer);
 			} else {
-				itemAcc.consumers.push(consumer);
+				itemAcc.consumers.push({
+					userId: consumer.userId,
+					createdAt: insertedConsumer.createdAt,
+				});
 			}
 			if (!acc[itemId]) {
 				acc[itemId] = itemAcc;
@@ -234,6 +238,7 @@ export const procedure = authProcedure
 				items: addedItems.items.map((item) => ({
 					id: item.id,
 					createdAt: item.createdAt,
+					consumers: addedConsumers[item.id]?.consumers,
 				})),
 			};
 		});

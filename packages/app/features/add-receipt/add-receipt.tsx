@@ -110,7 +110,7 @@ export const AddReceipt: React.FC<Props> = ({ selfAccountId }) => {
 					name,
 					price,
 					quantity,
-					consumers,
+					consumers: consumers.map(({ userId, part }) => ({ userId, part })),
 				})),
 				participants: rawParticipants.map(({ userId, role }) => ({
 					userId,

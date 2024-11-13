@@ -39,6 +39,7 @@ const getItems = (
 				.map((consumer) => ({
 					userId: consumer.userId,
 					part: Number(consumer.part),
+					createdAt: consumer.createdAt,
 				}))
 				.sort((a, b) => a.userId.localeCompare(b.userId)),
 		}))

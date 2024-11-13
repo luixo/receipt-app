@@ -50,6 +50,7 @@ const fetchReceipts = async (
 								.select([
 									"receiptItemConsumers.part",
 									"receiptItemConsumers.userId",
+									"receiptItemConsumers.createdAt",
 								])
 								.whereRef("receiptItemConsumers.itemId", "=", "receiptItems.id")
 								.orderBy("receiptItemConsumers.userId desc"),
@@ -172,9 +173,10 @@ const mapReceipt = (
 			price: Number(item.price),
 			quantity: Number(item.quantity),
 			consumers: item.consumers
-				.map((consumer) => ({
+				.map(({ part, createdAt, ...consumer }) => ({
 					...consumer,
-					part: Number(consumer.part),
+					createdAt: new Date(createdAt),
+					part: Number(part),
 				}))
 				.sort((a, b) => a.userId.localeCompare(b.userId)),
 		})),
