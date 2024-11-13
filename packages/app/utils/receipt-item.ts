@@ -22,7 +22,7 @@ type ReceiptParticipant = {
 
 export const getItemCalculations = (
 	itemSum: number,
-	consumerParts: Record<string, number>,
+	consumerParts: Record<UsersId, number>,
 	decimalDigits = 2,
 ) => {
 	const decimalsPower = getDecimalsPower(decimalDigits);
@@ -40,9 +40,14 @@ export const getItemCalculations = (
 		0,
 	);
 	return {
-		sumFlooredByParticipant: mapValues(sumByUser, (sum) => Math.floor(sum)),
+		sumFlooredByParticipant: mapValues(sumByUser, (sum) =>
+			Math.floor(sum),
+		) as Record<UsersId, number>,
 		leftover: sumRounded - sumTotal,
-		shortageByParticipant: mapValues(sumByUser, (sum) => sum - Math.floor(sum)),
+		shortageByParticipant: mapValues(
+			sumByUser,
+			(sum) => sum - Math.floor(sum),
+		) as Record<UsersId, number>,
 	};
 };
 
