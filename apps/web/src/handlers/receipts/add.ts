@@ -161,78 +161,134 @@ const insertConsumers = async (
 	);
 };
 
+const verifyParticipants = (
+	input: z.infer<typeof addReceiptSchema>,
+	participants: Awaited<ReturnType<typeof insertParticipants>>,
+) => {
+	const firstError = participants.errors[0];
+	if (firstError) {
+		throw new TRPCError({
+			code: firstError.code,
+			message: `${firstError.message}${
+				participants.errors.length !== 1
+					? ` (+${participants.errors.length - 1} errors)`
+					: ""
+			}`,
+		});
+	}
+	const actualAddedParticipants = participants.participants.length;
+	const expectedAddedParticipants = input.participants?.length ?? 0;
+	/* c8 ignore start */
+	if (actualAddedParticipants !== expectedAddedParticipants) {
+		throw new TRPCError({
+			code: "INTERNAL_SERVER_ERROR",
+			message: `Expected to add ${expectedAddedParticipants} participants, added ${actualAddedParticipants}.`,
+		});
+	}
+	/* c8 ignore stop */
+};
+
+const verifyItems = (
+	input: z.infer<typeof addReceiptSchema>,
+	items: Awaited<ReturnType<typeof insertItems>>,
+) => {
+	// There is no way for this to happen at the moment
+	/* c8 ignore start */
+	const firstError = items.errors[0];
+	if (firstError) {
+		throw new TRPCError({
+			code: firstError.code,
+			message: `${firstError.message}${
+				items.errors.length !== 1 ? ` (+${items.errors.length - 1} errors)` : ""
+			}`,
+		});
+	}
+	/* c8 ignore stop */
+
+	// Removing payers item
+	const actualAddedItems = items.items.length;
+	const expectedAddedItems = input.items?.length ?? 0;
+	/* c8 ignore start */
+	if (actualAddedItems !== expectedAddedItems) {
+		throw new TRPCError({
+			code: "INTERNAL_SERVER_ERROR",
+			message: `Expected to add ${expectedAddedItems} items, added ${actualAddedItems}.`,
+		});
+	}
+	/* c8 ignore stop */
+};
+
+const verifyConsumers = (
+	input: z.infer<typeof addReceiptSchema>,
+	consumers: Awaited<ReturnType<typeof insertConsumers>>,
+) => {
+	const addedConsumersErrors = values(consumers).reduce<TRPCError[]>(
+		(acc, { errors }) => [...acc, ...errors],
+		[],
+	);
+	/* c8 ignore start */
+	const firstError = addedConsumersErrors[0];
+	if (firstError) {
+		throw new TRPCError({
+			code: firstError.code,
+			message: `${firstError.message}${
+				addedConsumersErrors.length !== 1
+					? ` (+${addedConsumersErrors.length - 1} errors)`
+					: ""
+			}`,
+		});
+	}
+	/* c8 ignore stop */
+	const actualAddedConsumers = values(consumers).reduce(
+		(acc, { consumers: localConsumers }) => acc + localConsumers.length,
+		0,
+	);
+	const expectedAddedConsumers =
+		input.items?.reduce(
+			(acc, item) => acc + (item.consumers?.length ?? 0),
+			0,
+		) ?? 0;
+	/* c8 ignore start */
+	if (actualAddedConsumers !== expectedAddedConsumers) {
+		throw new TRPCError({
+			code: "INTERNAL_SERVER_ERROR",
+			message: `Expected to add ${expectedAddedConsumers} consumers, added ${actualAddedConsumers}.`,
+		});
+	}
+	/* c8 ignore stop */
+};
+
 export const procedure = authProcedure
 	.input(addReceiptSchema)
 	.mutation(async ({ input, ctx }) => {
 		const receiptId: ReceiptsId = ctx.getUuid();
-		const receipt = {
-			id: receiptId,
-			name: input.name,
-			currencyCode: input.currencyCode,
-			issued: input.issued,
-			ownerAccountId: ctx.auth.accountId,
-		};
 		return ctx.database.transaction().execute(async (tx) => {
 			const transactionCtx = { ...ctx, database: tx };
 			const result = await tx
 				.insertInto("receipts")
-				.values(receipt)
+				.values({
+					id: receiptId,
+					name: input.name,
+					currencyCode: input.currencyCode,
+					issued: input.issued,
+					ownerAccountId: ctx.auth.accountId,
+				})
 				.returning(["receipts.id", "receipts.createdAt"])
 				.executeTakeFirstOrThrow();
 			const [addedParticipants, addedItems] = await Promise.all([
 				insertParticipants(transactionCtx, input, receiptId),
 				insertItems(transactionCtx, input, receiptId),
 			]);
-			if (addedParticipants.errors.length !== 0) {
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-				const firstError = addedParticipants.errors[0]!;
-				throw new TRPCError({
-					code: firstError.code,
-					message: `${firstError.message}${
-						addedParticipants.errors.length !== 1
-							? ` (+${addedParticipants.errors.length - 1} errors)`
-							: ""
-					}`,
-				});
-			}
-			/* c8 ignore start */
-			// There is no way for this to happen at the moment
-			if (addedItems.errors.length !== 0) {
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-				const firstError = addedItems.errors[0]!;
-				throw new TRPCError({
-					code: firstError.code,
-					message: `${firstError.message}${
-						addedItems.errors.length !== 1
-							? ` (+${addedItems.errors.length - 1} errors)`
-							: ""
-					}`,
-				});
-			}
+			verifyParticipants(input, addedParticipants);
+			verifyItems(input, addedItems);
 			const addedConsumers = await insertConsumers(
 				transactionCtx,
 				input,
 				addedItems,
 			);
-			/* c8 ignore start */
-			const addedConsumersErrors = values(addedConsumers).reduce<TRPCError[]>(
-				(acc, { errors }) => [...acc, ...errors],
-				[],
-			);
-			if (addedConsumersErrors.length !== 0) {
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-				const firstError = addedConsumersErrors[0]!;
-				throw new TRPCError({
-					code: firstError.code,
-					message: `${firstError.message}${
-						addedConsumersErrors.length !== 1
-							? ` (+${addedConsumersErrors.length - 1} errors)`
-							: ""
-					}`,
-				});
-			}
+			verifyConsumers(input, addedConsumers);
 			return {
-				id: receipt.id,
+				id: receiptId,
 				createdAt: result.createdAt,
 				participants: addedParticipants.participants,
 				items: addedItems.items.map((item) => ({
