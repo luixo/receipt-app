@@ -56,7 +56,7 @@ export const procedure = authProcedure
 		if (!deleteResult) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `Item consumer "${input.userId}" for item "${input.itemId}" on receipt "${receipt.id}" doesn't exist.`,
+				message: `User "${input.userId}" does not consume item "${input.itemId}" on receipt "${receipt.id}" doesn't exist.`,
 			});
 		}
 	});

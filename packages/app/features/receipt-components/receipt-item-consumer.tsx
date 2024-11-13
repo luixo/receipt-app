@@ -8,18 +8,18 @@ import { trpc } from "~app/trpc";
 
 import { useActionsHooksContext } from "./context";
 import { useCanEdit, useIsOwner } from "./hooks";
-import { ReceiptItemPartInput } from "./receipt-item-part-input";
+import { ReceiptItemConsumerInput } from "./receipt-item-consumer-input";
 import type { Item, Participant } from "./state";
 
 type Props = {
-	part: Item["parts"][number];
+	consumer: Item["consumers"][number];
 	item: Item;
 	participant: Participant;
 	isDisabled: boolean;
 };
 
-export const ReceiptItemPart: React.FC<Props> = ({
-	part,
+export const ReceiptItemConsumer: React.FC<Props> = ({
+	consumer,
 	item,
 	participant,
 	isDisabled: isExternalDisabled,
@@ -30,12 +30,12 @@ export const ReceiptItemPart: React.FC<Props> = ({
 	const removeMutationState =
 		useTrpcMutationState<"receiptItemConsumers.remove">(
 			trpc.receiptItemConsumers.remove,
-			(vars) => vars.userId === part.userId && vars.itemId === item.id,
+			(vars) => vars.userId === consumer.userId && vars.itemId === item.id,
 		);
 	const isPending = removeMutationState?.status === "pending";
-	const removeItemPart = React.useCallback(
-		() => removeItemConsumer(item.id, part.userId),
-		[removeItemConsumer, item.id, part.userId],
+	const removeConsumer = React.useCallback(
+		() => removeItemConsumer(item.id, consumer.userId),
+		[removeItemConsumer, item.id, consumer.userId],
 	);
 	const isDisabled = isExternalDisabled || isPending;
 
@@ -43,11 +43,15 @@ export const ReceiptItemPart: React.FC<Props> = ({
 		<View className="items-start justify-between gap-2 min-[500px]:flex-row sm:gap-4">
 			<LoadableUser id={participant.userId} foreign={!isOwner} />
 			<View className="flex-row gap-2 self-end">
-				<ReceiptItemPartInput part={part} item={item} isDisabled={isDisabled} />
+				<ReceiptItemConsumerInput
+					consumer={consumer}
+					item={item}
+					isDisabled={isDisabled}
+				/>
 				{!canEdit ? null : (
 					<RemoveButton
 						className="self-end"
-						onRemove={removeItemPart}
+						onRemove={removeConsumer}
 						mutation={{ isPending }}
 						noConfirm
 						isIconOnly

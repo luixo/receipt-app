@@ -22,7 +22,7 @@ export const options: UseContextedMutationOptions<
 						price: variables.price,
 						quantity: variables.quantity,
 						createdAt: new Date(),
-						parts: [],
+						consumers: [],
 					}),
 				getPaged: undefined,
 			}),

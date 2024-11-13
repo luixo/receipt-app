@@ -96,7 +96,7 @@ const ReceiptSyncButtonInner: React.FC<InnerProps> = ({
 		updateMutations.some((mutation) => mutation.isPending);
 
 	const emptyItemsAmount = receipt.items.filter(
-		(item) => item.parts.length === 0,
+		(item) => item.consumers.length === 0,
 	).length;
 	const emptyItemsWarning = React.useMemo(() => {
 		if (emptyItemsAmount === 0) {

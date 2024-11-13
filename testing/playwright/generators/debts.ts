@@ -7,7 +7,7 @@ import type { UsersId } from "~db/models";
 import type { GenerateSelfAccount } from "./accounts";
 import type {
 	GenerateReceiptBase,
-	GenerateReceiptItemsParts,
+	GenerateReceiptItemsWithConsumers,
 	GenerateReceiptParticipants,
 } from "./receipts";
 import { generateAmount, generateCurrencyCode } from "./utils";
@@ -43,7 +43,7 @@ export type GenerateDebtsFromReceipt = GeneratorFnWithFaker<
 	TRPCQueryOutput<"debts.get">[],
 	{
 		selfAccount: ReturnType<GenerateSelfAccount>;
-		receiptItemsParts: ReturnType<GenerateReceiptItemsParts>;
+		receiptItemsWithConsumers: ReturnType<GenerateReceiptItemsWithConsumers>;
 		participants: ReturnType<GenerateReceiptParticipants>;
 		receiptBase: ReturnType<GenerateReceiptBase>;
 	}
@@ -52,11 +52,11 @@ export type GenerateDebtsFromReceipt = GeneratorFnWithFaker<
 export const defaultGenerateDebtsFromReceipt: GenerateDebtsFromReceipt = ({
 	faker,
 	selfAccount,
-	receiptItemsParts,
+	receiptItemsWithConsumers,
 	participants,
 	receiptBase,
 }) =>
-	getParticipantSums(receiptBase.id, receiptItemsParts, participants)
+	getParticipantSums(receiptBase.id, receiptItemsWithConsumers, participants)
 		.map((participantSum) => {
 			if (participantSum.userId === selfAccount.userId) {
 				return null;

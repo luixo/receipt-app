@@ -79,7 +79,7 @@ export const defaultGenerateReceiptParticipants: GenerateReceiptParticipants =
 				: undefined,
 		].filter(isNonNullish);
 
-export type GenerateReceiptItemsParts = GeneratorFnWithFaker<
+export type GenerateReceiptItemsWithConsumers = GeneratorFnWithFaker<
 	TRPCQueryOutput<"receipts.get">["items"],
 	{
 		receiptItems: ReturnType<GenerateReceiptItems>;
@@ -87,29 +87,26 @@ export type GenerateReceiptItemsParts = GeneratorFnWithFaker<
 	}
 >;
 
-export const defaultGenerateReceiptItemsParts: GenerateReceiptItemsParts = ({
-	faker,
-	receiptItems,
-	participants,
-}) =>
-	receiptItems.map((item) => ({
-		id: item.id,
-		price: item.price,
-		quantity: item.quantity,
-		name: item.name,
-		createdAt: item.createdAt,
-		parts: participants.map((participant) => ({
-			userId: participant.userId,
-			part: faker.number.int({ min: 1, max: 3 }),
-		})),
-	}));
+export const defaultGenerateReceiptItemsWithConsumers: GenerateReceiptItemsWithConsumers =
+	({ faker, receiptItems, participants }) =>
+		receiptItems.map((item) => ({
+			id: item.id,
+			price: item.price,
+			quantity: item.quantity,
+			name: item.name,
+			createdAt: item.createdAt,
+			consumers: participants.map((participant) => ({
+				userId: participant.userId,
+				part: faker.number.int({ min: 1, max: 3 }),
+			})),
+		}));
 
 export type GenerateReceipt = GeneratorFnWithFaker<
 	TRPCQueryOutput<"receipts.get">,
 	{
 		selfAccount: ReturnType<GenerateSelfAccount>;
 		receiptBase: ReturnType<GenerateReceiptBase>;
-		receiptItemsParts: ReturnType<GenerateReceiptItemsParts>;
+		receiptItemsWithConsumers: ReturnType<GenerateReceiptItemsWithConsumers>;
 		receiptParticipants: ReturnType<GenerateReceiptParticipants>;
 		users: ReturnType<GenerateUsers>;
 	}
@@ -118,7 +115,7 @@ export type GenerateReceipt = GeneratorFnWithFaker<
 export const defaultGenerateReceipt: GenerateReceipt = ({
 	selfAccount,
 	receiptBase,
-	receiptItemsParts,
+	receiptItemsWithConsumers: receiptItemsConsumers,
 	receiptParticipants,
 }) => ({
 	id: receiptBase.id,
@@ -132,7 +129,7 @@ export const defaultGenerateReceipt: GenerateReceipt = ({
 		direction: "outcoming",
 		ids: [],
 	},
-	items: receiptItemsParts,
+	items: receiptItemsConsumers,
 	participants: receiptParticipants,
 });
 

@@ -25,7 +25,7 @@ import { procedure } from "./get";
 
 const getItems = (
 	items: Awaited<ReturnType<typeof insertReceiptItem>>[],
-	parts: Awaited<ReturnType<typeof insertReceiptItemConsumer>>[],
+	consumers: Awaited<ReturnType<typeof insertReceiptItemConsumer>>[],
 ) =>
 	items
 		.map((item) => ({
@@ -34,9 +34,12 @@ const getItems = (
 			price: Number(item.price),
 			quantity: Number(item.quantity),
 			createdAt: item.createdAt,
-			parts: parts
-				.filter((part) => part.itemId === item.id)
-				.map((part) => ({ userId: part.userId, part: Number(part.part) }))
+			consumers: consumers
+				.filter((consumer) => consumer.itemId === item.id)
+				.map((consumer) => ({
+					userId: consumer.userId,
+					part: Number(consumer.part),
+				}))
 				.sort((a, b) => a.userId.localeCompare(b.userId)),
 		}))
 		.sort((a, b) => {
@@ -354,21 +357,19 @@ describe("receipts.get", () => {
 					insertReceiptParticipant(ctx, receipt.id, notConnectedUser.id),
 				]);
 			const receiptItems = await Promise.all([
-				// item with multiple participants, with varied parts
+				// item with multiple participants, with varied consumer parts
 				insertReceiptItem(ctx, receipt.id),
 				// item with 1 participant
 				insertReceiptItem(ctx, receipt.id),
 				// item with no participants
 				insertReceiptItem(ctx, receipt.id),
 			]);
-			const parts = await Promise.all([
+			const consumers = await Promise.all([
 				insertReceiptItemConsumer(
 					ctx,
 					receiptItems[0].id,
 					selfParticipant.userId,
-					{
-						part: 2,
-					},
+					{ part: 2 },
 				),
 				insertReceiptItemConsumer(
 					ctx,
@@ -397,7 +398,7 @@ describe("receipts.get", () => {
 				issued: receipt.issued,
 				ownerUserId: selfUserId,
 				selfUserId,
-				items: getItems(receiptItems, parts),
+				items: getItems(receiptItems, consumers),
 				participants: getParticipants([
 					selfParticipant,
 					foreignParticipant,
@@ -463,7 +464,7 @@ describe("receipts.get", () => {
 				insertReceiptParticipant(ctx, receipt.id, foreignConnectedUser.id),
 			]);
 			const receiptItems = await Promise.all([
-				// item with multiple participants, with varied parts
+				// item with multiple participants, with varied consumer parts
 				insertReceiptItem(ctx, receipt.id, {
 					createdAt: new Date(Date.now() - 20),
 				}),
@@ -474,14 +475,12 @@ describe("receipts.get", () => {
 				// item with no participants
 				insertReceiptItem(ctx, receipt.id),
 			]);
-			const parts = await Promise.all([
+			const consumers = await Promise.all([
 				insertReceiptItemConsumer(
 					ctx,
 					receiptItems[0].id,
 					selfParticipant.userId,
-					{
-						part: 2,
-					},
+					{ part: 2 },
 				),
 				insertReceiptItemConsumer(
 					ctx,
@@ -515,7 +514,7 @@ describe("receipts.get", () => {
 				issued: receipt.issued,
 				ownerUserId: foreignUser.id,
 				selfUserId: foreignToSelfUser.id,
-				items: getItems(receiptItems, parts),
+				items: getItems(receiptItems, consumers),
 				participants: getParticipants([
 					selfParticipant,
 					foreignParticipant,

@@ -9,7 +9,7 @@ export const options: UseContextedMutationOptions<"receiptParticipants.remove"> 
 				get: (controller) =>
 					mergeUpdaterResults(
 						controller.removeParticipant(variables.receiptId, variables.userId),
-						controller.removeItemPartsByUser(
+						controller.removeItemConsumersByUser(
 							variables.receiptId,
 							variables.userId,
 						),

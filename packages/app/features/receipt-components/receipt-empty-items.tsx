@@ -19,7 +19,7 @@ type InnerProps = {
 export const ReceiptEmptyItems: React.FC<InnerProps> = ({ itemsRef }) => {
 	const { currencyCode, items } = useReceiptContext();
 	const currency = useFormattedCurrency(currencyCode);
-	const emptyItems = items.filter((item) => item.parts.length === 0);
+	const emptyItems = items.filter((item) => item.consumers.length === 0);
 	const onEmptyItemClick = React.useCallback(
 		(id: ReceiptItemsId) => {
 			const matchedItem = itemsRef.current[id];

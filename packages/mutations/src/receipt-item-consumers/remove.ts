@@ -12,7 +12,7 @@ export const options: UseContextedMutationOptions<
 		(variables) =>
 			updateRevertReceipts(controllerContext, {
 				get: (controller) =>
-					controller.removeItemPart(
+					controller.removeItemConsumer(
 						receiptId,
 						variables.itemId,
 						variables.userId,

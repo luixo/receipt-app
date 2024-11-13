@@ -18,6 +18,76 @@ exports[`receipts.add > functionality > empty receipt 1`] = `
 }
 `;
 
+exports[`receipts.add > functionality > receipt with consumers 1`] = `
+{
+  "added": {
+    "receiptItemConsumers": {
+      "itemId:8cc65c49-c8b6-4297-a935-a9772f5d68b4|userId:2a3adac5-54b1-411a-975a-d0f6bcd6d94c": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "itemId": "8cc65c49-c8b6-4297-a935-a9772f5d68b4",
+        "part": "1.00",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "2a3adac5-54b1-411a-975a-d0f6bcd6d94c",
+      },
+      "itemId:8cc65c49-c8b6-4297-a935-a9772f5d68b4|userId:63519bcb-aae8-491a-be96-1416818752ac": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "itemId": "8cc65c49-c8b6-4297-a935-a9772f5d68b4",
+        "part": "2.00",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "63519bcb-aae8-491a-be96-1416818752ac",
+      },
+    },
+    "receiptItems": {
+      "id:8669afe9-1540-42e5-a723-2f5667b522b9": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "id": "8669afe9-1540-42e5-a723-2f5667b522b9",
+        "name": "sunt pariatur quo",
+        "price": "478.6400",
+        "quantity": "90.0000",
+        "receiptId": "8900c422-074a-4ca8-81f9-118dadfcee64",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+      },
+      "id:8cc65c49-c8b6-4297-a935-a9772f5d68b4": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "id": "8cc65c49-c8b6-4297-a935-a9772f5d68b4",
+        "name": "architecto non et",
+        "price": "377.2200",
+        "quantity": "56.0000",
+        "receiptId": "8900c422-074a-4ca8-81f9-118dadfcee64",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+      },
+    },
+    "receiptParticipants": {
+      "receiptId:8900c422-074a-4ca8-81f9-118dadfcee64|userId:2a3adac5-54b1-411a-975a-d0f6bcd6d94c": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "receiptId": "8900c422-074a-4ca8-81f9-118dadfcee64",
+        "role": "editor",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "2a3adac5-54b1-411a-975a-d0f6bcd6d94c",
+      },
+      "receiptId:8900c422-074a-4ca8-81f9-118dadfcee64|userId:63519bcb-aae8-491a-be96-1416818752ac": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "receiptId": "8900c422-074a-4ca8-81f9-118dadfcee64",
+        "role": "owner",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "63519bcb-aae8-491a-be96-1416818752ac",
+      },
+    },
+    "receipts": {
+      "id:8900c422-074a-4ca8-81f9-118dadfcee64": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "currencyCode": "GTQ",
+        "id": "8900c422-074a-4ca8-81f9-118dadfcee64",
+        "issued": "2020-01-01T00:00:00.000Z",
+        "name": "dicta atque iure",
+        "ownerAccountId": "63519bcb-aae8-491a-be96-1416818752ac",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+      },
+    },
+  },
+}
+`;
+
 exports[`receipts.add > functionality > receipt with items 1`] = `
 {
   "added": {
@@ -83,76 +153,6 @@ exports[`receipts.add > functionality > receipt with participants 1`] = `
         "issued": "2020-01-01T00:00:00.000Z",
         "name": "atque assumenda delectus",
         "ownerAccountId": "f2fab689-ac19-474e-b15b-c90bb158b1a3",
-        "updatedAt": "2020-01-01T00:00:00.000Z",
-      },
-    },
-  },
-}
-`;
-
-exports[`receipts.add > functionality > receipt with parts 1`] = `
-{
-  "added": {
-    "receiptItemConsumers": {
-      "itemId:86a8e520-fa6a-4ae9-a430-03ca41c2e306|userId:27bd7f4f-0731-48d5-9671-0e38b6c00340": {
-        "createdAt": "2020-01-01T00:00:00.000Z",
-        "itemId": "86a8e520-fa6a-4ae9-a430-03ca41c2e306",
-        "part": "1.00",
-        "updatedAt": "2020-01-01T00:00:00.000Z",
-        "userId": "27bd7f4f-0731-48d5-9671-0e38b6c00340",
-      },
-      "itemId:86a8e520-fa6a-4ae9-a430-03ca41c2e306|userId:49e44edc-03e5-457f-97ff-8f3c744ae3ca": {
-        "createdAt": "2020-01-01T00:00:00.000Z",
-        "itemId": "86a8e520-fa6a-4ae9-a430-03ca41c2e306",
-        "part": "2.00",
-        "updatedAt": "2020-01-01T00:00:00.000Z",
-        "userId": "49e44edc-03e5-457f-97ff-8f3c744ae3ca",
-      },
-    },
-    "receiptItems": {
-      "id:17eba96f-5477-453f-9ab6-d8c749b062f4": {
-        "createdAt": "2020-01-01T00:00:00.000Z",
-        "id": "17eba96f-5477-453f-9ab6-d8c749b062f4",
-        "name": "tempora corporis suscipit",
-        "price": "837.8200",
-        "quantity": "78.0000",
-        "receiptId": "a9412870-b89d-4190-8f15-d871055ec1df",
-        "updatedAt": "2020-01-01T00:00:00.000Z",
-      },
-      "id:86a8e520-fa6a-4ae9-a430-03ca41c2e306": {
-        "createdAt": "2020-01-01T00:00:00.000Z",
-        "id": "86a8e520-fa6a-4ae9-a430-03ca41c2e306",
-        "name": "enim nihil delectus",
-        "price": "457.6900",
-        "quantity": "98.0000",
-        "receiptId": "a9412870-b89d-4190-8f15-d871055ec1df",
-        "updatedAt": "2020-01-01T00:00:00.000Z",
-      },
-    },
-    "receiptParticipants": {
-      "receiptId:a9412870-b89d-4190-8f15-d871055ec1df|userId:27bd7f4f-0731-48d5-9671-0e38b6c00340": {
-        "createdAt": "2020-01-01T00:00:00.000Z",
-        "receiptId": "a9412870-b89d-4190-8f15-d871055ec1df",
-        "role": "editor",
-        "updatedAt": "2020-01-01T00:00:00.000Z",
-        "userId": "27bd7f4f-0731-48d5-9671-0e38b6c00340",
-      },
-      "receiptId:a9412870-b89d-4190-8f15-d871055ec1df|userId:49e44edc-03e5-457f-97ff-8f3c744ae3ca": {
-        "createdAt": "2020-01-01T00:00:00.000Z",
-        "receiptId": "a9412870-b89d-4190-8f15-d871055ec1df",
-        "role": "owner",
-        "updatedAt": "2020-01-01T00:00:00.000Z",
-        "userId": "49e44edc-03e5-457f-97ff-8f3c744ae3ca",
-      },
-    },
-    "receipts": {
-      "id:a9412870-b89d-4190-8f15-d871055ec1df": {
-        "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "XAF",
-        "id": "a9412870-b89d-4190-8f15-d871055ec1df",
-        "issued": "2020-01-01T00:00:00.000Z",
-        "name": "a quos doloribus",
-        "ownerAccountId": "49e44edc-03e5-457f-97ff-8f3c744ae3ca",
         "updatedAt": "2020-01-01T00:00:00.000Z",
       },
     },

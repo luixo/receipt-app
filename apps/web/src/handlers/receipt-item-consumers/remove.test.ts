@@ -119,7 +119,7 @@ describe("receiptItemConsumers.remove", () => {
 			);
 		});
 
-		test("item part does not exist", async ({ ctx }) => {
+		test("user doesn't consume this item", async ({ ctx }) => {
 			const {
 				sessionId,
 				accountId,
@@ -137,13 +137,13 @@ describe("receiptItemConsumers.remove", () => {
 			await expectTRPCError(
 				() => caller.procedure({ itemId: receiptItemId, userId }),
 				"NOT_FOUND",
-				`Item consumer "${userId}" for item "${receiptItemId}" on receipt "${receiptId}" doesn't exist.`,
+				`User "${userId}" does not consume item "${receiptItemId}" on receipt "${receiptId}" doesn't exist.`,
 			);
 		});
 	});
 
 	describe("functionality", () => {
-		test("part is removed", async ({ ctx }) => {
+		test("user does not consume item anymore", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			const { id: receiptId } = await insertReceipt(ctx, accountId);
 			const { id: userId } = await insertUser(ctx, accountId);

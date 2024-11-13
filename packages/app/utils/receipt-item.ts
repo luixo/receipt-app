@@ -10,7 +10,7 @@ type ReceiptItem = {
 	id: ReceiptItemsId;
 	quantity: number;
 	price: number;
-	parts: {
+	consumers: {
 		userId: UsersId;
 		part: number;
 	}[];
@@ -22,14 +22,17 @@ type ReceiptParticipant = {
 
 export const getItemCalculations = (
 	itemSum: number,
-	parts: Record<string, number>,
+	consumerParts: Record<string, number>,
 	decimalDigits = 2,
 ) => {
 	const decimalsPower = getDecimalsPower(decimalDigits);
 	const sumRounded = Math.round(itemSum * decimalsPower);
-	const partsAmount = values(parts).reduce((acc, part) => acc + part, 0);
+	const partsAmount = values(consumerParts).reduce(
+		(acc, part) => acc + part,
+		0,
+	);
 	const sumByUser = mapValues(
-		parts,
+		consumerParts,
 		(part) => (part / partsAmount) * sumRounded,
 	);
 	const sumTotal = values(sumByUser).reduce(
@@ -125,11 +128,11 @@ export const getParticipantSums = <
 		shortageByParticipant,
 		leftoverBeforeReimburse,
 	} = items
-		.filter((item) => item.parts.length !== 0)
+		.filter((item) => item.consumers.length !== 0)
 		.map((item) =>
 			getItemCalculations(
 				item.price * item.quantity,
-				item.parts.reduce(
+				item.consumers.reduce(
 					(acc, { userId, part }) => ({ ...acc, [userId]: part }),
 					{},
 				),

@@ -7,7 +7,7 @@ export type Item = {
 	name: string;
 	price: number;
 	quantity: number;
-	parts: {
+	consumers: {
 		part: number;
 		userId: UsersId;
 	}[];

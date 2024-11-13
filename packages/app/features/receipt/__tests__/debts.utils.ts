@@ -94,7 +94,7 @@ export const test = originalTest.extend<Fixtures>({
 				generateUsers,
 				generateReceiptItems,
 				generateReceiptParticipants,
-				generateReceiptItemsParts,
+				generateReceiptItemsWithConsumers,
 				generateDebts = defaultGenerateDebtsFromReceipt,
 				generateReceipt = localDefaultGenerateReceipt,
 			} = {}) => {
@@ -104,21 +104,21 @@ export const test = originalTest.extend<Fixtures>({
 					generateUsers,
 					generateReceiptItems,
 					generateReceiptParticipants,
-					generateReceiptItemsParts,
+					generateReceiptItemsWithConsumers,
 					generateReceipt: defaultGenerateReceipt,
 				});
 				const debts = generateDebts({
 					faker,
 					selfAccount: result.selfAccount,
 					receiptBase: result.receiptBase,
-					receiptItemsParts: result.receiptItemsParts,
+					receiptItemsWithConsumers: result.receiptItemsWithConsumers,
 					participants: result.participants,
 				});
 				const receipt = generateReceipt({
 					faker,
 					selfAccount: result.selfAccount,
 					receiptBase: result.receiptBase,
-					receiptItemsParts: result.receiptItemsParts,
+					receiptItemsWithConsumers: result.receiptItemsWithConsumers,
 					receiptParticipants: result.participants,
 					users: result.users,
 					debts,

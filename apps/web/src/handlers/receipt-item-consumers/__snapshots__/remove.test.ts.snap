@@ -1,10 +1,10 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`receiptItemConsumers.remove > functionality > part is removed 1`] = `
+exports[`receiptItemConsumers.remove > functionality > user does not consume item anymore 1`] = `
 {
   "deleted": {
     "receiptItemConsumers": {
-      "itemId:2f02735c-81de-4347-a8e6-e4801e40dd22|userId:f3776714-3c88-4d1e-8fe8-dce3ddd8c69f": undefined,
+      "itemId:19e76f6f-11a0-44a2-857f-d476738064d3|userId:da58386c-f0f5-4e4b-b208-27c1b8316076": undefined,
     },
   },
 }

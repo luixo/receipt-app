@@ -24,7 +24,7 @@ export const ReceiptPreviewSyncIcon: React.FC<Props> = ({ receipt }) => {
 			return null;
 		}
 		const hasNonDistributedItems = receipt.items.some(
-			(item) => item.parts.length === 0,
+			(item) => item.consumers.length === 0,
 		);
 		const noParticipants = participants.length === 0;
 		const someParticipantsNotSynced =

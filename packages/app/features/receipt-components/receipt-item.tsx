@@ -15,9 +15,9 @@ import { round } from "~utils/math";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
 import { useCanEdit } from "./hooks";
+import { ReceiptItemConsumer } from "./receipt-item-consumer";
 import { ReceiptItemConsumerChip } from "./receipt-item-consumer-chip";
 import { ReceiptItemNameInput } from "./receipt-item-name-input";
-import { ReceiptItemPart } from "./receipt-item-part";
 import { ReceiptItemPriceInput } from "./receipt-item-price-input";
 import { ReceiptItemQuantityInput } from "./receipt-item-quantity-input";
 import type { Item } from "./state";
@@ -40,11 +40,13 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 		const isRemovalPending = removeItemMutationState?.status === "pending";
 
 		const notAddedParticipants = React.useMemo(() => {
-			const addedParticipants = item.parts.map((part) => part.userId);
+			const addedParticipants = item.consumers.map(
+				(consumer) => consumer.userId,
+			);
 			return participants.filter(
 				(participant) => !addedParticipants.includes(participant.userId),
 			);
-		}, [item.parts, participants]);
+		}, [item.consumers, participants]);
 		const onAddEveryItemParticipant = React.useCallback(() => {
 			notAddedParticipants.forEach((participant) => {
 				addItemConsumer(item.id, participant.userId, 1);
@@ -60,7 +62,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 							onRemove={() => removeItem(item.id)}
 							mutation={{ isPending: isRemovalPending }}
 							subtitle="This will remove item with all participant's parts"
-							noConfirm={item.parts.length === 0}
+							noConfirm={item.consumers.length === 0}
 							isIconOnly
 						/>
 					)}
@@ -100,25 +102,25 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 							))}
 						</ScrollShadow>
 					)}
-					{item.parts.length === 0 ? null : (
+					{item.consumers.length === 0 ? null : (
 						<>
 							<Divider />
-							{item.parts.map((part) => {
+							{item.consumers.map((consumer) => {
 								const matchedParticipant = participants.find(
-									(participant) => participant.userId === part.userId,
+									(participant) => participant.userId === consumer.userId,
 								);
 								if (!matchedParticipant) {
 									return (
 										<ErrorMessage
-											key={part.userId}
-											message={`Part for user id ${part.userId} is orphaned. Please report this to support, include receipt id, receipt item name and mentioned user id`}
+											key={consumer.userId}
+											message={`Consumer part for user id ${consumer.userId} is orphaned. Please report this to support, include receipt id, receipt item name and mentioned user id`}
 										/>
 									);
 								}
 								return (
-									<ReceiptItemPart
-										key={part.userId}
-										part={part}
+									<ReceiptItemConsumer
+										key={consumer.userId}
+										consumer={consumer}
 										item={item}
 										participant={matchedParticipant}
 										isDisabled={isRemovalPending}

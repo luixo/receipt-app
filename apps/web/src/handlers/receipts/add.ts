@@ -6,8 +6,8 @@ import { receiptNameSchema } from "~app/utils/validation";
 import type { ReceiptItemsId, ReceiptsId } from "~db/models";
 import type { AuthorizedContext } from "~web/handlers/context";
 import {
-	addPartSchema,
-	batchFn as addParts,
+	batchFn as addConsumers,
+	addItemConsumerSchema,
 } from "~web/handlers/receipt-item-consumers/add";
 import type { ItemOutput } from "~web/handlers/receipt-items/add";
 import {
@@ -31,7 +31,10 @@ export const addReceiptSchema = z.strictObject({
 	items: z
 		.array(
 			addItemSchema.omit({ receiptId: true }).extend({
-				parts: addPartSchema.omit({ itemId: true }).array().optional(),
+				consumers: addItemConsumerSchema
+					.omit({ itemId: true })
+					.array()
+					.optional(),
 			}),
 		)
 		.optional(),
@@ -102,53 +105,56 @@ const insertItems = async (
 	);
 };
 
-type InsertedParts = Record<
+type InsertedConsumers = Record<
 	ReceiptItemsId,
 	{
 		errors: TRPCError[];
-		parts: Omit<z.infer<typeof addPartSchema>, "itemId">[];
+		consumers: Omit<z.infer<typeof addItemConsumerSchema>, "itemId">[];
 	}
 >;
-const insertParts = async (
+const insertConsumers = async (
 	ctx: AuthorizedContext,
 	input: z.infer<typeof addReceiptSchema>,
 	insertedItems: Awaited<ReturnType<typeof insertItems>>,
-): Promise<InsertedParts> => {
+): Promise<InsertedConsumers> => {
 	if (!input.items || input.items.length === 0) {
 		return {};
 	}
-	const parts = input.items.flatMap((item, index) =>
-		(item.parts ?? []).map((part) => {
+	const consumers = input.items.flatMap((item, index) =>
+		(item.consumers ?? []).map((consumer) => {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			const itemId = insertedItems.items[index]!.id;
 			/* c8 ignore start */
 			if (!itemId) {
 				throw new TRPCError({
 					code: "INTERNAL_SERVER_ERROR",
-					message: `Expected to have an inserted item for user "${part.userId}" with part ${part.part}.`,
+					message: `Expected to have an inserted item for user "${consumer.userId}" with part ${consumer.part}.`,
 				});
 			}
 			/* c8 ignore stop */
-			return { itemId, ...part };
+			return { itemId, ...consumer };
 		}),
 	);
-	if (parts.length === 0) {
+	if (consumers.length === 0) {
 		return {};
 	}
-	const insertedParts = await addParts(ctx)(parts);
-	return parts.reduce<InsertedParts>((acc, { itemId, ...part }, index) => {
-		const itemAcc = acc[itemId] || { errors: [], parts: [] };
-		const insertedPart = insertedParts[index];
-		if (insertedPart instanceof TRPCError) {
-			itemAcc.errors.push(insertedPart);
-		} else {
-			itemAcc.parts.push(part);
-		}
-		if (!acc[itemId]) {
-			acc[itemId] = itemAcc;
-		}
-		return acc;
-	}, {});
+	const insertedConsumers = await addConsumers(ctx)(consumers);
+	return consumers.reduce<InsertedConsumers>(
+		(acc, { itemId, ...consumer }, index) => {
+			const itemAcc = acc[itemId] || { errors: [], consumers: [] };
+			const insertedConsumer = insertedConsumers[index];
+			if (insertedConsumer instanceof TRPCError) {
+				itemAcc.errors.push(insertedConsumer);
+			} else {
+				itemAcc.consumers.push(consumer);
+			}
+			if (!acc[itemId]) {
+				acc[itemId] = itemAcc;
+			}
+			return acc;
+		},
+		{},
+	);
 };
 
 export const procedure = authProcedure
@@ -199,20 +205,24 @@ export const procedure = authProcedure
 					}`,
 				});
 			}
-			const addedParts = await insertParts(transactionCtx, input, addedItems);
+			const addedConsumers = await insertConsumers(
+				transactionCtx,
+				input,
+				addedItems,
+			);
 			/* c8 ignore start */
-			const addedPartsErrors = values(addedParts).reduce<TRPCError[]>(
+			const addedConsumersErrors = values(addedConsumers).reduce<TRPCError[]>(
 				(acc, { errors }) => [...acc, ...errors],
 				[],
 			);
-			if (addedPartsErrors.length !== 0) {
+			if (addedConsumersErrors.length !== 0) {
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-				const firstError = addedPartsErrors[0]!;
+				const firstError = addedConsumersErrors[0]!;
 				throw new TRPCError({
 					code: firstError.code,
 					message: `${firstError.message}${
-						addedPartsErrors.length !== 1
-							? ` (+${addedPartsErrors.length - 1} errors)`
+						addedConsumersErrors.length !== 1
+							? ` (+${addedConsumersErrors.length - 1} errors)`
 							: ""
 					}`,
 				});

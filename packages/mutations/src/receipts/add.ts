@@ -48,10 +48,10 @@ export const options: UseContextedMutationOptions<
 									name: item.name,
 									price: item.price,
 									quantity: item.quantity,
-									parts:
-										item.parts?.map((part) => ({
-											userId: part.userId,
-											part: part.part,
+									consumers:
+										item.consumers?.map((consumer) => ({
+											userId: consumer.userId,
+											part: consumer.part,
 										})) ?? [],
 								};
 							}) ?? [],

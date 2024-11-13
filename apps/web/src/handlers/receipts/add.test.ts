@@ -187,7 +187,7 @@ describe("receipts.add", () => {
 					getValidReceiptItemNoReceiptId(),
 					{
 						...getValidReceiptItemNoReceiptId(),
-						parts: participants.map((_participant, index) => ({
+						consumers: participants.map((_participant, index) => ({
 							// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 							userId: fakeUserIds[index]!,
 							part: index + 1,
@@ -302,7 +302,7 @@ describe("receipts.add", () => {
 			});
 		});
 
-		test("receipt with parts", async ({ ctx }) => {
+		test("receipt with consumers", async ({ ctx }) => {
 			const {
 				sessionId,
 				accountId,
@@ -325,7 +325,7 @@ describe("receipts.add", () => {
 				getValidReceiptItemNoReceiptId(),
 				{
 					...getValidReceiptItemNoReceiptId(),
-					parts: participants.map((participant, index) => ({
+					consumers: participants.map((participant, index) => ({
 						userId: participant.userId,
 						part: index + 1,
 					})),

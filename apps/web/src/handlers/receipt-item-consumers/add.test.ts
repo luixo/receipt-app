@@ -261,7 +261,7 @@ describe("receiptItemConsumers.add", () => {
 							part: 1,
 						}),
 					"CONFLICT",
-					`User "${participantUserId}" already has a part in item "${receiptItemId}".`,
+					`User "${participantUserId}" already consumes item "${receiptItemId}".`,
 				);
 			});
 		});
@@ -330,7 +330,9 @@ describe("receiptItemConsumers.add", () => {
 					),
 				);
 
-				expect(results[0]).toStrictEqual<(typeof results)[0]>(undefined);
+				expect(results[0]).toStrictEqual<(typeof results)[0]>({
+					createdAt: new Date(),
+				});
 				expect(results[1]).toBeInstanceOf(TRPCError);
 			});
 		});
@@ -395,7 +397,7 @@ describe("receiptItemConsumers.add", () => {
 			await insertReceiptItemConsumer(ctx, anotherReceiptItemId, user.id);
 
 			const caller = createCaller(createAuthContext(ctx, sessionId));
-			await expectDatabaseDiffSnapshot(ctx, () =>
+			const results = await expectDatabaseDiffSnapshot(ctx, () =>
 				runSequentially(
 					[
 						() =>
@@ -438,6 +440,14 @@ describe("receiptItemConsumers.add", () => {
 					10,
 				),
 			);
+			expect(results).toStrictEqual<typeof results>([
+				{ createdAt: new Date() },
+				{ createdAt: new Date() },
+				{ createdAt: new Date() },
+				{ createdAt: new Date() },
+				{ createdAt: new Date() },
+				{ createdAt: new Date() },
+			]);
 		});
 	});
 });

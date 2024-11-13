@@ -131,7 +131,7 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 									<RemoveButton
 										onRemove={removeReceiptParticipant}
 										mutation={{ isPending }}
-										subtitle="This will remove participant with all his parts"
+										subtitle="This will remove participant with all his consumer parts"
 										noConfirm={participant.sum === 0}
 										isIconOnly
 									/>

@@ -108,11 +108,11 @@ export const AddReceiptScreen: AppPage = () => {
 				name: values.name,
 				currencyCode: values.currencyCode,
 				issued: values.issued,
-				items: items.map(({ name, price, quantity, parts }) => ({
+				items: items.map(({ name, price, quantity, consumers }) => ({
 					name,
 					price,
 					quantity,
-					parts,
+					consumers,
 				})),
 				participants: rawParticipants.map(({ userId, role }) => ({
 					userId,

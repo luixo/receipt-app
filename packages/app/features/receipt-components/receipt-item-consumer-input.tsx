@@ -10,19 +10,20 @@ import { Button } from "~components/button";
 import { MinusIcon, PlusIcon } from "~components/icons";
 import { Input } from "~components/input";
 import { Text } from "~components/text";
+import { updateSetStateAction } from "~utils/react";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
 import { useCanEdit } from "./hooks";
 import type { Item } from "./state";
 
 type Props = {
-	part: Item["parts"][number];
+	consumer: Item["consumers"][number];
 	item: Item;
 	isDisabled: boolean;
 };
 
-export const ReceiptItemPartInput: React.FC<Props> = ({
-	part,
+export const ReceiptItemConsumerInput: React.FC<Props> = ({
+	consumer,
 	item,
 	isDisabled: isExternalDisabled,
 }) => {
@@ -37,32 +38,35 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 		state: inputState,
 		getNumberValue,
 	} = useSingleInput({
-		initialValue: part.part,
+		initialValue: consumer.part,
 		schema: partSchema,
 		type: "number",
 	});
 	const updateMutationState =
 		useTrpcMutationState<"receiptItemConsumers.update">(
 			trpc.receiptItemConsumers.update,
-			(vars) => vars.userId === part.userId && vars.itemId === item.id,
+			(vars) => vars.userId === consumer.userId && vars.itemId === item.id,
 		);
 	const isPending = updateMutationState?.status === "pending";
 
-	const updatePart = React.useCallback(
-		(partUpdater: number | ((prev: number) => number)) => {
-			const nextPart =
-				typeof partUpdater === "function"
-					? partUpdater(part.part)
-					: partUpdater;
-			if (nextPart === part.part) {
+	const updateConsumerPart = React.useCallback(
+		(setStateAction: React.SetStateAction<number>) => {
+			const nextPart = updateSetStateAction(setStateAction, consumer.part);
+			if (nextPart === consumer.part) {
 				unsetEditing();
 				return;
 			}
-			updateItemConsumerPart(item.id, part.userId, nextPart, {
+			updateItemConsumerPart(item.id, consumer.userId, nextPart, {
 				onSuccess: unsetEditing,
 			});
 		},
-		[part.part, part.userId, updateItemConsumerPart, item.id, unsetEditing],
+		[
+			consumer.part,
+			consumer.userId,
+			updateItemConsumerPart,
+			item.id,
+			unsetEditing,
+		],
 	);
 
 	const wrap = React.useCallback(
@@ -72,8 +76,8 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 					variant="ghost"
 					color="primary"
 					isLoading={isPending}
-					onClick={() => updatePart((prev) => prev - 1)}
-					isDisabled={part.part <= 1}
+					onClick={() => updateConsumerPart((prev) => prev - 1)}
+					isDisabled={consumer.part <= 1}
 					isIconOnly
 				>
 					<MinusIcon size={24} />
@@ -83,24 +87,24 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 					variant="ghost"
 					color="primary"
 					isLoading={isPending}
-					onClick={() => updatePart((prev) => prev + 1)}
+					onClick={() => updateConsumerPart((prev) => prev + 1)}
 					isIconOnly
 				>
 					<PlusIcon size={24} />
 				</Button>
 			</View>
 		),
-		[updatePart, part.part, isPending],
+		[updateConsumerPart, consumer.part, isPending],
 	);
 
-	const totalParts = item.parts.reduce(
-		(acc, itemPart) => acc + itemPart.part,
+	const totalParts = item.consumers.reduce(
+		(acc, itemConsumer) => acc + itemConsumer.part,
 		0,
 	);
 
 	const readOnlyComponent = (
 		<Text>
-			{part.part} / {totalParts}
+			{consumer.part} / {totalParts}
 		</Text>
 	);
 
@@ -115,14 +119,14 @@ export const ReceiptItemPartInput: React.FC<Props> = ({
 			<Input
 				{...bindings}
 				className="w-32"
-				aria-label="Item part"
+				aria-label="Item consumer part"
 				mutation={updateMutationState}
 				fieldError={inputState.error}
 				isDisabled={isDisabled}
 				labelPlacement="outside-left"
 				saveProps={{
-					title: "Save item part",
-					onClick: () => updatePart(getNumberValue()),
+					title: "Save item consumer part",
+					onClick: () => updateConsumerPart(getNumberValue()),
 				}}
 				endContent={<Text className="self-center">/ {totalParts}</Text>}
 				variant="bordered"

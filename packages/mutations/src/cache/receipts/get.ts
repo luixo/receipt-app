@@ -25,8 +25,8 @@ type Receipt = TRPCQueryOutput<"receipts.get">;
 
 type ReceiptItems = Receipt["items"];
 type ReceiptItem = ReceiptItems[number];
-type ReceiptItemParts = ReceiptItem["parts"];
-type ReceiptItemPart = ReceiptItemParts[number];
+type ReceiptItemConsumers = ReceiptItem["consumers"];
+type ReceiptItemConsumer = ReceiptItemConsumers[number];
 
 type ReceiptParticipants = Receipt["participants"];
 type ReceiptParticipant = ReceiptParticipants[number];
@@ -144,64 +144,71 @@ const removeItem = (
 		)((items) => removeFromArray(items, (item) => itemId === item.id, ref)),
 	).current;
 
-const updateItemParts =
+const updateItemConsumers =
 	(controller: Controller, receiptId: ReceiptsId, itemId: ReceiptItemsId) =>
-	(updater: UpdateFn<ReceiptItemParts>) =>
-		withRef<ReceiptItemParts | undefined>((ref) =>
+	(updater: UpdateFn<ReceiptItemConsumers>) =>
+		withRef<ReceiptItemConsumers | undefined>((ref) =>
 			updateItem(
 				controller,
 				receiptId,
 				itemId,
 			)((item) => {
-				const nextParts = updater(item.parts);
-				if (nextParts === item.parts) {
+				const nextConsumers = updater(item.consumers);
+				if (nextConsumers === item.consumers) {
 					return item;
 				}
-				ref.current = item.parts;
-				return { ...item, parts: nextParts };
+				ref.current = item.consumers;
+				return { ...item, consumers: nextConsumers };
 			}),
 		).current;
 
-const updateItemPart =
+const updateItemConsumer =
 	(
 		controller: Controller,
 		receiptId: ReceiptsId,
 		itemId: ReceiptItemsId,
 		userId: UsersId,
 	) =>
-	(updater: UpdateFn<ReceiptItemPart>) =>
-		withRef<ReceiptItemPart | undefined>((ref) =>
-			updateItemParts(
+	(updater: UpdateFn<ReceiptItemConsumer>) =>
+		withRef<ReceiptItemConsumer | undefined>((ref) =>
+			updateItemConsumers(
 				controller,
 				receiptId,
 				itemId,
-			)((parts) =>
-				replaceInArray(parts, (part) => part.userId === userId, updater, ref),
+			)((consumers) =>
+				replaceInArray(
+					consumers,
+					(consumer) => consumer.userId === userId,
+					updater,
+					ref,
+				),
 			),
 		).current;
 
-const removeItemPart = (
+const removeItemConsumer = (
 	controller: Controller,
 	receiptId: ReceiptsId,
 	itemId: ReceiptItemsId,
 	userId: UsersId,
 ) =>
-	withRef<ItemWithIndex<ReceiptItemPart> | undefined>((ref) =>
-		updateItemParts(
+	withRef<ItemWithIndex<ReceiptItemConsumer> | undefined>((ref) =>
+		updateItemConsumers(
 			controller,
 			receiptId,
 			itemId,
-		)((parts) => removeFromArray(parts, (part) => userId === part.userId, ref)),
+		)((consumers) =>
+			removeFromArray(consumers, (consumer) => userId === consumer.userId, ref),
+		),
 	).current;
 
-const addItemPart =
+const addItemConsumer =
 	(controller: Controller, receiptId: ReceiptsId, itemId: ReceiptItemsId) =>
-	(itemPart: ReceiptItemPart, index = 0) =>
-		updateItemParts(
+	(consumer: ReceiptItemConsumer, index = 0) =>
+		updateItemConsumers(
 			controller,
 			receiptId,
 			itemId,
-		)((parts) => addToArray(parts, itemPart, index));
+		)((consumers) => addToArray(consumers, consumer, index));
 
 const updateParticipants =
 	(controller: Controller, receiptId: ReceiptsId) =>
@@ -334,76 +341,78 @@ export const getRevertController = ({ trpcUtils }: ControllerContext) => {
 				updater,
 				revertUpdater,
 			),
-		updateItemParts: (
+		updateItemConsumers: (
 			receiptId: ReceiptsId,
 			itemId: ReceiptItemsId,
-			updater: UpdateFn<ReceiptItemParts>,
-			revertUpdater: SnapshotFn<ReceiptItemParts>,
+			updater: UpdateFn<ReceiptItemConsumers>,
+			revertUpdater: SnapshotFn<ReceiptItemConsumers>,
 		) =>
 			applyUpdateFnWithRevert(
-				updateItemParts(controller, receiptId, itemId),
+				updateItemConsumers(controller, receiptId, itemId),
 				updater,
 				revertUpdater,
 			),
-		updateItemPart: (
+		updateItemConsumer: (
 			receiptId: ReceiptsId,
 			itemId: ReceiptItemsId,
 			userId: UsersId,
-			updater: UpdateFn<ReceiptItemPart>,
-			revertUpdater: SnapshotFn<ReceiptItemPart>,
+			updater: UpdateFn<ReceiptItemConsumer>,
+			revertUpdater: SnapshotFn<ReceiptItemConsumer>,
 		) =>
 			applyUpdateFnWithRevert(
-				updateItemPart(controller, receiptId, itemId, userId),
+				updateItemConsumer(controller, receiptId, itemId, userId),
 				updater,
 				revertUpdater,
 			),
-		addItemPart: (
+		addItemConsumer: (
 			receiptId: ReceiptsId,
 			itemId: ReceiptItemsId,
 			userId: UsersId,
 			part: number,
 		) =>
 			applyWithRevert(
-				() => addItemPart(controller, receiptId, itemId)({ userId, part }),
-				() => removeItemPart(controller, receiptId, itemId, userId),
+				() => addItemConsumer(controller, receiptId, itemId)({ userId, part }),
+				() => removeItemConsumer(controller, receiptId, itemId, userId),
 			),
-		removeItemPart: (
+		removeItemConsumer: (
 			receiptId: ReceiptsId,
 			itemId: ReceiptItemsId,
 			userId: UsersId,
 		) =>
 			applyWithRevert(
-				() => removeItemPart(controller, receiptId, itemId, userId),
-				({ item: part, index }) =>
-					addItemPart(controller, receiptId, itemId)(part, index),
+				() => removeItemConsumer(controller, receiptId, itemId, userId),
+				({ item: consumer, index }) =>
+					addItemConsumer(controller, receiptId, itemId)(consumer, index),
 			),
-		removeItemPartsByUser: (receiptId: ReceiptsId, userId: UsersId) =>
+		removeItemConsumersByUser: (receiptId: ReceiptsId, userId: UsersId) =>
 			applyUpdateFnWithRevert(
 				updateAllItems(controller, receiptId),
 				(item) => {
-					const nextParts = item.parts.filter((part) => part.userId !== userId);
-					if (nextParts.length === item.parts.length) {
+					const nextConsumers = item.consumers.filter(
+						(consumer) => consumer.userId !== userId,
+					);
+					if (nextConsumers.length === item.consumers.length) {
 						return item;
 					}
-					return { ...item, parts: nextParts };
+					return { ...item, consumers: nextConsumers };
 				},
 				(snapshot) => (item) => {
 					const snapshottedItem = snapshot.find(({ id }) => id === item.id);
 					if (!snapshottedItem) {
 						return item;
 					}
-					const prevPartWithIndex = snapshottedItem.parts
-						.map((part, index) => [part, index] as const)
-						.find(([part]) => part.userId === userId);
-					if (!prevPartWithIndex) {
+					const prevConsumerWithIndex = snapshottedItem.consumers
+						.map((consumer, index) => [consumer, index] as const)
+						.find(([consumer]) => consumer.userId === userId);
+					if (!prevConsumerWithIndex) {
 						return item;
 					}
-					const nextParts = addToArray(
-						item.parts,
-						prevPartWithIndex[0],
-						prevPartWithIndex[1],
+					const nextConsumers = addToArray(
+						item.consumers,
+						prevConsumerWithIndex[0],
+						prevConsumerWithIndex[1],
 					);
-					return { ...item, parts: nextParts };
+					return { ...item, consumers: nextConsumers };
 				},
 			),
 		removeParticipant: (receiptId: ReceiptsId, participantId: UsersId) =>

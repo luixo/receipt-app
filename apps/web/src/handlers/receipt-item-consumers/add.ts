@@ -14,7 +14,9 @@ import {
 } from "~web/handlers/validation";
 import { getDuplicates } from "~web/utils/batch";
 
-export const addPartSchema = z.strictObject({
+export type ConsumerOutput = { createdAt: Date };
+
+export const addItemConsumerSchema = z.strictObject({
 	itemId: receiptItemIdSchema,
 	userId: userIdSchema,
 	part: partSchema,
@@ -22,7 +24,7 @@ export const addPartSchema = z.strictObject({
 
 const getData = async (
 	ctx: AuthorizedContext,
-	inputs: readonly z.infer<typeof addPartSchema>[],
+	inputs: readonly z.infer<typeof addItemConsumerSchema>[],
 ) => {
 	const [receiptParticipants, receiptItems, receiptItemConsumers] =
 		await Promise.all([
@@ -96,7 +98,7 @@ const getData = async (
 
 const getConsumersOrErrors = (
 	ctx: AuthorizedContext,
-	inputs: readonly z.infer<typeof addPartSchema>[],
+	inputs: readonly z.infer<typeof addItemConsumerSchema>[],
 	{
 		receiptItems,
 		receiptParticipants,
@@ -136,7 +138,7 @@ const getConsumersOrErrors = (
 		if (matchedReceiptItemConsumer) {
 			return new TRPCError({
 				code: "CONFLICT",
-				message: `User "${input.userId}" already has a part in item "${matchedReceiptItem.itemId}".`,
+				message: `User "${input.userId}" already consumes item "${matchedReceiptItem.itemId}".`,
 			});
 		}
 		const matchedUser = receiptParticipants.find(
@@ -163,18 +165,23 @@ const insertConsumers = async (
 	>[],
 ) => {
 	if (consumers.length === 0) {
-		return;
+		return [];
 	}
-	await ctx.database
+	return ctx.database
 		.insertInto("receiptItemConsumers")
 		.values(consumers)
+		.returning([
+			"receiptItemConsumers.createdAt",
+			"receiptItemConsumers.itemId",
+			"receiptItemConsumers.userId",
+		])
 		.execute();
 };
 
 export const batchFn: BatchLoadContextFn<
 	AuthorizedContext,
-	z.infer<typeof addPartSchema>,
-	void,
+	z.infer<typeof addItemConsumerSchema>,
+	ConsumerOutput,
 	TRPCError
 > = (ctx) => async (inputs) => {
 	const duplicatedTuples = getDuplicates(
@@ -194,7 +201,7 @@ export const batchFn: BatchLoadContextFn<
 	}
 	const data = await getData(ctx, inputs);
 	const consumersOrErrors = getConsumersOrErrors(ctx, inputs, data);
-	await insertConsumers(
+	const insertedConsumers = await insertConsumers(
 		ctx,
 		consumersOrErrors.filter(
 			(
@@ -207,10 +214,23 @@ export const batchFn: BatchLoadContextFn<
 		if (itemOrError instanceof TRPCError) {
 			return itemOrError;
 		}
-		return undefined;
+		const matchedConsumer = insertedConsumers.find(
+			(consumer) =>
+				consumer.itemId === itemOrError.itemId &&
+				consumer.userId === itemOrError.userId,
+		);
+		/* c8 ignore start */
+		if (!matchedConsumer) {
+			return new TRPCError({
+				code: "INTERNAL_SERVER_ERROR",
+				message: `Expected to have a matched item consumer in list of inserted rows for item id "${itemOrError.itemId}" and user id "${itemOrError.userId}".`,
+			});
+		}
+		/* c8 ignore stop */
+		return { createdAt: matchedConsumer.createdAt };
 	});
 };
 
 export const procedure = authProcedure
-	.input(addPartSchema)
+	.input(addItemConsumerSchema)
 	.mutation(queueCallFactory(batchFn));

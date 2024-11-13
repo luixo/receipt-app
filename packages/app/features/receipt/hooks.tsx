@@ -142,7 +142,7 @@ const useUpdateItemQuantity = (receiptId: ReceiptsId) => {
 };
 
 const useAddItemConsumer = (receiptId: ReceiptsId) => {
-	const addItemPartMutation = trpc.receiptItemConsumers.add.useMutation(
+	const addItemConsumerMutation = trpc.receiptItemConsumers.add.useMutation(
 		useTrpcMutationOptions(receiptItemConsumersAddOptions, {
 			context: { receiptId },
 		}),
@@ -153,33 +153,35 @@ const useAddItemConsumer = (receiptId: ReceiptsId) => {
 			userId: UsersId,
 			part: number,
 			options: EmptyMutateOptions = {},
-		) => addItemPartMutation.mutate({ itemId, userId, part }, options),
-		[addItemPartMutation],
+		) => addItemConsumerMutation.mutate({ itemId, userId, part }, options),
+		[addItemConsumerMutation],
 	);
 };
 
 const useRemoveItemConsumer = (receiptId: ReceiptsId) => {
-	const removeItemPartMutation = trpc.receiptItemConsumers.remove.useMutation(
-		useTrpcMutationOptions(receiptItemConsumersRemoveOptions, {
-			context: { receiptId },
-		}),
-	);
+	const removeItemConsumerMutation =
+		trpc.receiptItemConsumers.remove.useMutation(
+			useTrpcMutationOptions(receiptItemConsumersRemoveOptions, {
+				context: { receiptId },
+			}),
+		);
 	return React.useCallback(
 		(
 			itemId: ReceiptItemsId,
 			userId: UsersId,
 			options: EmptyMutateOptions = {},
-		) => removeItemPartMutation.mutate({ itemId, userId }, options),
-		[removeItemPartMutation],
+		) => removeItemConsumerMutation.mutate({ itemId, userId }, options),
+		[removeItemConsumerMutation],
 	);
 };
 
 const useUpdateItemConsumerPart = (receiptId: ReceiptsId) => {
-	const updateItemPartMutation = trpc.receiptItemConsumers.update.useMutation(
-		useTrpcMutationOptions(receiptItemConsumersUpdateOptions, {
-			context: { receiptId },
-		}),
-	);
+	const updateItemConsumerMutation =
+		trpc.receiptItemConsumers.update.useMutation(
+			useTrpcMutationOptions(receiptItemConsumersUpdateOptions, {
+				context: { receiptId },
+			}),
+		);
 	return React.useCallback(
 		(
 			itemId: ReceiptItemsId,
@@ -187,11 +189,11 @@ const useUpdateItemConsumerPart = (receiptId: ReceiptsId) => {
 			part: number,
 			options: EmptyMutateOptions = {},
 		) =>
-			updateItemPartMutation.mutate(
+			updateItemConsumerMutation.mutate(
 				{ itemId, userId, update: { type: "part", part } },
 				options,
 			),
-		[updateItemPartMutation],
+		[updateItemConsumerMutation],
 	);
 };
 

@@ -6,14 +6,14 @@ import type {
 	GenerateReceipt,
 	GenerateReceiptBase,
 	GenerateReceiptItems,
-	GenerateReceiptItemsParts,
+	GenerateReceiptItemsWithConsumers,
 	GenerateReceiptParticipants,
 } from "~tests/frontend/generators/receipts";
 import {
 	defaultGenerateReceipt,
 	defaultGenerateReceiptBase,
 	defaultGenerateReceiptItems,
-	defaultGenerateReceiptItemsParts,
+	defaultGenerateReceiptItemsWithConsumers,
 	defaultGenerateReceiptParticipants,
 } from "~tests/frontend/generators/receipts";
 import type { GenerateUsers } from "~tests/frontend/generators/users";
@@ -27,14 +27,14 @@ type Fixtures = {
 		generateReceiptItems?: GenerateReceiptItems;
 		generateUsers?: GenerateUsers;
 		generateReceiptParticipants?: GenerateReceiptParticipants;
-		generateReceiptItemsParts?: GenerateReceiptItemsParts;
+		generateReceiptItemsWithConsumers?: GenerateReceiptItemsWithConsumers;
 		generateReceipt?: GenerateReceipt;
 	}) => {
 		selfAccount: ReturnType<GenerateSelfAccount>;
 		receiptBase: ReturnType<GenerateReceiptBase>;
 		receipt: ReturnType<GenerateReceipt>;
 		participants: ReturnType<GenerateReceiptParticipants>;
-		receiptItemsParts: ReturnType<GenerateReceiptItemsParts>;
+		receiptItemsWithConsumers: ReturnType<GenerateReceiptItemsWithConsumers>;
 		users: ReturnType<GenerateUsers>;
 	};
 	openReceipt: (id: ReceiptsId) => Promise<void>;
@@ -56,7 +56,7 @@ export const test = originalTest.extend<Fixtures>({
 				generateUsers = defaultGenerateUsers,
 				generateReceiptItems = defaultGenerateReceiptItems,
 				generateReceiptParticipants = defaultGenerateReceiptParticipants,
-				generateReceiptItemsParts = defaultGenerateReceiptItemsParts,
+				generateReceiptItemsWithConsumers = defaultGenerateReceiptItemsWithConsumers,
 				generateReceipt = defaultGenerateReceipt,
 			} = {}) => {
 				mockBase();
@@ -69,7 +69,7 @@ export const test = originalTest.extend<Fixtures>({
 					selfAccount,
 					users,
 				});
-				const receiptItemsParts = generateReceiptItemsParts({
+				const receiptItemsWithConsumers = generateReceiptItemsWithConsumers({
 					faker,
 					receiptItems,
 					participants,
@@ -79,7 +79,7 @@ export const test = originalTest.extend<Fixtures>({
 					selfAccount,
 					receiptBase,
 					receiptParticipants: participants,
-					receiptItemsParts,
+					receiptItemsWithConsumers,
 					users,
 				});
 				api.mock("receipts.get", ({ input }) => {
@@ -142,7 +142,7 @@ export const test = originalTest.extend<Fixtures>({
 					receiptBase,
 					receipt,
 					participants,
-					receiptItemsParts,
+					receiptItemsWithConsumers,
 					users,
 				};
 			},

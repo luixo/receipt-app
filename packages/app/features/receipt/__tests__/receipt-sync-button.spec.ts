@@ -5,7 +5,7 @@ import { getParticipantSums } from "~app/utils/receipt-item";
 import { expect } from "~tests/frontend/fixtures";
 import { getMutationsByKey } from "~tests/frontend/fixtures/queries";
 import {
-	defaultGenerateReceiptItemsParts,
+	defaultGenerateReceiptItemsWithConsumers,
 	generateDebtsMapped,
 	ourDesynced,
 	ourNonExistent,
@@ -130,11 +130,11 @@ test.describe("Mutations", () => {
 		openReceiptWithDebts,
 		snapshotQueries,
 	}) => {
-		const { receipt, debts, participants, receiptItemsParts } =
+		const { receipt, debts, participants, receiptItemsWithConsumers } =
 			mockReceiptWithDebts({
 				generateDebts: generateDebtsMapped([ourNonExistent, ourDesynced]),
-				generateReceiptItemsParts: (opts) =>
-					defaultGenerateReceiptItemsParts({
+				generateReceiptItemsWithConsumers: (opts) =>
+					defaultGenerateReceiptItemsWithConsumers({
 						...opts,
 						// Creating a 0 sum participant
 						participants: opts.participants.slice(1),
@@ -181,7 +181,7 @@ test.describe("Mutations", () => {
 		);
 		const participantSums = getParticipantSums(
 			receipt.id,
-			receiptItemsParts,
+			receiptItemsWithConsumers,
 			participants,
 		);
 		const participantTuples = participantSums.map(

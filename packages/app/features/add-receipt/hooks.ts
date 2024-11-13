@@ -34,7 +34,7 @@ const useAddItem = (setItems: SetItems) =>
 						name,
 						price,
 						quantity,
-						parts: [],
+						consumers: [],
 						createdAt: new Date(),
 					},
 				],
@@ -113,8 +113,8 @@ const useAddItemConsumer = (setItems: SetItems) => {
 				itemId,
 				(prevItem) => ({
 					// Remove accidentally added double participants
-					parts: [
-						...(prevItem.parts || []).filter(
+					consumers: [
+						...(prevItem.consumers || []).filter(
 							({ userId: lookupUserId }) => lookupUserId !== userId,
 						),
 						{ userId, part },
@@ -133,7 +133,7 @@ const useRemoveItemConsumer = (setItems: SetItems) => {
 			updateItem(
 				itemId,
 				(prevItem) => ({
-					parts: (prevItem.parts || []).filter(
+					consumers: (prevItem.consumers || []).filter(
 						({ userId: lookupUserId }) => lookupUserId !== userId,
 					),
 				}),
@@ -150,19 +150,19 @@ const useUpdateItemConsumerPart = (setItems: SetItems) => {
 			updateItem(
 				itemId,
 				(prevItem) => {
-					const prevParts = prevItem.parts || [];
-					const matchedPartIndex = prevParts.findIndex(
+					const prevConsumers = prevItem.consumers || [];
+					const matchedPartIndex = prevConsumers.findIndex(
 						({ userId: lookupUserId }) => userId === lookupUserId,
 					);
 					if (matchedPartIndex === -1) {
 						return {};
 					}
 					return {
-						parts: [
-							...prevParts.slice(0, matchedPartIndex),
+						consumers: [
+							...prevConsumers.slice(0, matchedPartIndex),
 							// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-							{ ...prevParts[matchedPartIndex]!, part },
-							...prevParts.slice(matchedPartIndex + 1),
+							{ ...prevConsumers[matchedPartIndex]!, part },
+							...prevConsumers.slice(matchedPartIndex + 1),
 						],
 					};
 				},

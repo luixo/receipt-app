@@ -186,7 +186,7 @@ describe("receiptItemConsumers.update", () => {
 			);
 		});
 
-		test("item part does not exist", async ({ ctx }) => {
+		test("user does not consume item", async ({ ctx }) => {
 			const {
 				sessionId,
 				accountId,
@@ -215,7 +215,7 @@ describe("receiptItemConsumers.update", () => {
 	});
 
 	describe("functionality", () => {
-		test("updates item participant part", async ({ ctx }) => {
+		test("updates item participant consumption part", async ({ ctx }) => {
 			const {
 				sessionId,
 				accountId,
