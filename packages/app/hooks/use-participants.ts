@@ -59,19 +59,24 @@ export const useParticipants = (receipt: TRPCQueryOutput<"receipts.get">) => {
 			id: item.id,
 			name: item.name,
 		}));
-		return getParticipantSums(receipt.id, receipt.items, receipt.participants)
+		return getParticipantSums(
+			receipt.id,
+			receipt.items,
+			receipt.participants,
+			receipt.payers,
+		)
 			.sort(SORT_PARTICIPANTS)
 			.map((participant) => ({
 				...participant,
 				items: calculatedItems
 					.map((item) => {
-						const sum =
+						const itemSum =
 							item.calculations.sumFlooredByParticipant[participant.userId];
-						if (!sum) {
+						if (!itemSum) {
 							return null;
 						}
 						return {
-							sum: sum / DECIMAL_POWER,
+							sum: itemSum / DECIMAL_POWER,
 							hasExtra: Boolean(
 								item.calculations.shortageByParticipant[participant.userId],
 							),
@@ -105,7 +110,7 @@ export const useParticipants = (receipt: TRPCQueryOutput<"receipts.get">) => {
 					return isSelfParticipant;
 				})
 				.filter((participant) => {
-					const sum = participant.debtSum;
+					const sum = participant.debtSum - participant.paySum;
 					return sum !== 0;
 				}),
 		[isOwner, participants, receipt.selfUserId],
@@ -139,7 +144,7 @@ export const useParticipants = (receipt: TRPCQueryOutput<"receipts.get">) => {
 	const desyncedParticipants = React.useMemo(
 		() =>
 			createdParticipants.filter((participant) => {
-				const sum = participant.debtSum;
+				const sum = participant.debtSum - participant.paySum;
 				return !isDebtInSyncWithReceipt(
 					{
 						...receipt,

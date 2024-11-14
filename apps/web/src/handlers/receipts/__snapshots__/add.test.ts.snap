@@ -3,6 +3,17 @@
 exports[`receipts.add > functionality > empty receipt 1`] = `
 {
   "added": {
+    "receiptItems": {
+      "id:7979c6e5-2b27-4ce5-96e8-ff8aa881a2f7": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "id": "7979c6e5-2b27-4ce5-96e8-ff8aa881a2f7",
+        "name": "",
+        "price": "0.0000",
+        "quantity": "0.0000",
+        "receiptId": "7979c6e5-2b27-4ce5-96e8-ff8aa881a2f7",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+      },
+    },
     "receipts": {
       "id:7979c6e5-2b27-4ce5-96e8-ff8aa881a2f7": {
         "createdAt": "2020-01-01T00:00:00.000Z",
@@ -44,6 +55,15 @@ exports[`receipts.add > functionality > receipt with consumers 1`] = `
         "name": "sunt pariatur quo",
         "price": "478.6400",
         "quantity": "90.0000",
+        "receiptId": "8900c422-074a-4ca8-81f9-118dadfcee64",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+      },
+      "id:8900c422-074a-4ca8-81f9-118dadfcee64": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "id": "8900c422-074a-4ca8-81f9-118dadfcee64",
+        "name": "",
+        "price": "0.0000",
+        "quantity": "0.0000",
         "receiptId": "8900c422-074a-4ca8-81f9-118dadfcee64",
         "updatedAt": "2020-01-01T00:00:00.000Z",
       },
@@ -101,6 +121,15 @@ exports[`receipts.add > functionality > receipt with items 1`] = `
         "receiptId": "8ad217d2-aa1a-4140-83d3-b377ed516d54",
         "updatedAt": "2020-01-01T00:00:00.000Z",
       },
+      "id:8ad217d2-aa1a-4140-83d3-b377ed516d54": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "id": "8ad217d2-aa1a-4140-83d3-b377ed516d54",
+        "name": "",
+        "price": "0.0000",
+        "quantity": "0.0000",
+        "receiptId": "8ad217d2-aa1a-4140-83d3-b377ed516d54",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+      },
       "id:915c4d1c-d97c-4299-aa11-0ec105bd3ba6": {
         "createdAt": "2020-01-01T00:00:00.000Z",
         "id": "915c4d1c-d97c-4299-aa11-0ec105bd3ba6",
@@ -129,6 +158,17 @@ exports[`receipts.add > functionality > receipt with items 1`] = `
 exports[`receipts.add > functionality > receipt with participants 1`] = `
 {
   "added": {
+    "receiptItems": {
+      "id:80dbdf69-5ddf-4c78-bdec-93f7ed0000a1": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "id": "80dbdf69-5ddf-4c78-bdec-93f7ed0000a1",
+        "name": "",
+        "price": "0.0000",
+        "quantity": "0.0000",
+        "receiptId": "80dbdf69-5ddf-4c78-bdec-93f7ed0000a1",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+      },
+    },
     "receiptParticipants": {
       "receiptId:80dbdf69-5ddf-4c78-bdec-93f7ed0000a1|userId:ee0798e0-559e-4bf0-8d89-a07af856aa2f": {
         "createdAt": "2020-01-01T00:00:00.000Z",
@@ -160,6 +200,69 @@ exports[`receipts.add > functionality > receipt with participants 1`] = `
 }
 `;
 
+exports[`receipts.add > functionality > receipt with payers 1`] = `
+{
+  "added": {
+    "receiptItemConsumers": {
+      "itemId:272764d2-5de2-4742-a111-7e66ffb995f2|userId:60b2fa20-4a9e-4c16-9da2-1ed76299dd7d": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "itemId": "272764d2-5de2-4742-a111-7e66ffb995f2",
+        "part": "22.00",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "60b2fa20-4a9e-4c16-9da2-1ed76299dd7d",
+      },
+      "itemId:272764d2-5de2-4742-a111-7e66ffb995f2|userId:91085ca0-17c5-4268-9da7-bb75dd229df3": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "itemId": "272764d2-5de2-4742-a111-7e66ffb995f2",
+        "part": "1.00",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "91085ca0-17c5-4268-9da7-bb75dd229df3",
+      },
+    },
+    "receiptItems": {
+      "id:272764d2-5de2-4742-a111-7e66ffb995f2": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "id": "272764d2-5de2-4742-a111-7e66ffb995f2",
+        "name": "",
+        "price": "0.0000",
+        "quantity": "0.0000",
+        "receiptId": "272764d2-5de2-4742-a111-7e66ffb995f2",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+      },
+    },
+    "receiptParticipants": {
+      "receiptId:272764d2-5de2-4742-a111-7e66ffb995f2|userId:60b2fa20-4a9e-4c16-9da2-1ed76299dd7d": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "receiptId": "272764d2-5de2-4742-a111-7e66ffb995f2",
+        "role": "owner",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "60b2fa20-4a9e-4c16-9da2-1ed76299dd7d",
+      },
+      "receiptId:272764d2-5de2-4742-a111-7e66ffb995f2|userId:91085ca0-17c5-4268-9da7-bb75dd229df3": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "receiptId": "272764d2-5de2-4742-a111-7e66ffb995f2",
+        "role": "editor",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "91085ca0-17c5-4268-9da7-bb75dd229df3",
+      },
+    },
+    "receipts": {
+      "id:272764d2-5de2-4742-a111-7e66ffb995f2": {
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "currencyCode": "INR",
+        "id": "272764d2-5de2-4742-a111-7e66ffb995f2",
+        "issued": "2020-01-01T00:00:00.000Z",
+        "name": "vitae ea porro",
+        "ownerAccountId": "60b2fa20-4a9e-4c16-9da2-1ed76299dd7d",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+      },
+    },
+  },
+}
+`;
+
 exports[`receipts.add > input verification > inner fails > participants errors 1`] = `{}`;
 
 exports[`receipts.add > input verification > inner fails > parts fail 1`] = `{}`;
+
+exports[`receipts.add > input verification > inner fails > payers errors 1`] = `{}`;

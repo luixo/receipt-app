@@ -5,8 +5,10 @@ import { updateRevert as updateRevertReceipts } from "../cache/receipts";
 import type { UseContextedMutationOptions } from "../context";
 import type { SnapshotFn, UpdateFn } from "../types";
 
-type ReceiptItem = TRPCQueryOutput<"receipts.get">["items"][number];
+type Receipt = TRPCQueryOutput<"receipts.get">;
+type ReceiptItem = Receipt["items"][number];
 type ReceiptItemConsumer = ReceiptItem["consumers"][number];
+type ReceiptPayer = Receipt["payers"][number];
 
 const applyUpdate =
 	(
@@ -35,14 +37,53 @@ const getRevert =
 		}
 	};
 
+const applyUpdatePayer =
+	(
+		update: TRPCMutationInput<"receiptItemConsumers.update">["update"],
+	): UpdateFn<ReceiptPayer> =>
+	(part) => {
+		switch (update.type) {
+			// We want this to blow up in case we add more cases
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+			case "part":
+				return { ...part, part: update.part };
+		}
+	};
+
+const getRevertPayer =
+	(
+		update: TRPCMutationInput<"receiptItemConsumers.update">["update"],
+	): SnapshotFn<ReceiptPayer> =>
+	(snapshot) =>
+	(item) => {
+		switch (update.type) {
+			// We want this to blow up in case we add more cases
+			// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+			case "part":
+				return { ...item, part: snapshot.part };
+		}
+	};
+
 export const options: UseContextedMutationOptions<
 	"receiptItemConsumers.update",
 	{ receiptId: ReceiptsId }
 > = {
 	onMutate:
 		(controllerContext, { receiptId }) =>
-		(variables) =>
-			updateRevertReceipts(controllerContext, {
+		(variables) => {
+			if (variables.itemId === receiptId) {
+				return updateRevertReceipts(controllerContext, {
+					get: (controller) =>
+						controller.updatePayer(
+							receiptId,
+							variables.userId,
+							applyUpdatePayer(variables.update),
+							getRevertPayer(variables.update),
+						),
+					getPaged: undefined,
+				});
+			}
+			return updateRevertReceipts(controllerContext, {
 				get: (controller) =>
 					controller.updateItemConsumer(
 						receiptId,
@@ -52,8 +93,13 @@ export const options: UseContextedMutationOptions<
 						getRevert(variables.update),
 					),
 				getPaged: undefined,
-			}),
-	errorToastOptions: () => (error) => ({
-		text: `Error updating consumer(s): ${error.message}`,
-	}),
+			});
+		},
+	errorToastOptions:
+		({ receiptId }) =>
+		(error, variables) => ({
+			text: `Error updating ${
+				variables.itemId === receiptId ? "payer" : "consumer"
+			}(s): ${error.message}`,
+		}),
 };

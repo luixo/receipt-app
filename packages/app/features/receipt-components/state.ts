@@ -14,3 +14,5 @@ export type Item = {
 	}[];
 	createdAt: Date;
 };
+
+export type Payer = Item["consumers"][number];

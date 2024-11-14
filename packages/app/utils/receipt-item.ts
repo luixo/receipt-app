@@ -1,4 +1,4 @@
-import { entries, mapValues, values } from "remeda";
+import { entries, fromEntries, mapValues, values } from "remeda";
 
 import type { ReceiptItemsId, ReceiptsId, UsersId } from "~db/models";
 import { rotate } from "~utils/array";
@@ -49,6 +49,50 @@ export const getItemCalculations = (
 			(sum) => sum - Math.floor(sum),
 		) as Record<UsersId, number>,
 	};
+};
+
+const getPayersSums = <
+	P extends ReceiptItem["consumers"][number],
+	I extends ReceiptItem,
+>(
+	receiptId: ReceiptsId,
+	payers: P[],
+	items: I[],
+	decimalsDigits = 2,
+) => {
+	const decimalsPower = getDecimalsPower(decimalsDigits);
+	const { shortageByParticipant, sumFlooredByParticipant, leftover } =
+		getItemCalculations(
+			items.reduce((acc, item) => acc + item.price * item.quantity, 0),
+			fromEntries(payers.map(({ userId, part }) => [userId, part])),
+		);
+	const orderedPayerIds = rotate(
+		payers
+			.filter((payer) => {
+				const sum = sumFlooredByParticipant[payer.userId];
+				return sum && sum >= 0;
+			})
+			.sort((a, b) => a.userId.localeCompare(b.userId)),
+		getIndexByString(receiptId),
+	)
+		.sort((payerA, payerB) => {
+			const shortageA = shortageByParticipant[payerA.userId] ?? 0;
+			const shortageB = shortageByParticipant[payerB.userId] ?? 0;
+			return shortageB - shortageA;
+		})
+		.map(({ userId }) => userId);
+	const luckyLeftovers = orderedPayerIds.reduce<Record<UsersId, number>>(
+		(acc, id, index) => ({ ...acc, [id]: index < leftover ? 1 : 0 }),
+		{},
+	);
+	return payers.map((payer) => ({
+		...payer,
+		sum:
+			Math.round(
+				(sumFlooredByParticipant[payer.userId] ?? 0) +
+					(luckyLeftovers[payer.userId] ?? 0),
+			) / decimalsPower,
+	}));
 };
 
 /*
@@ -120,13 +164,16 @@ export const getItemCalculations = (
 */
 export const getParticipantSums = <
 	P extends ReceiptParticipant,
+	R extends ReceiptItem["consumers"][number],
 	I extends ReceiptItem,
 >(
 	receiptId: ReceiptsId,
 	items: I[],
 	participants: P[],
+	payers: R[],
 	decimalsDigits = 2,
 ) => {
+	const payersSums = getPayersSums(receiptId, payers, items);
 	const decimalsPower = getDecimalsPower(decimalsDigits);
 	const {
 		sumFlooredByParticipant,
@@ -234,10 +281,14 @@ export const getParticipantSums = <
 					(reimbursedShortages[userId]?.reimbursed ?? 0) +
 					(luckyLeftovers[userId] ?? 0),
 			) / decimalsPower;
+		const payer = payersSums.find((payerSum) => userId === payerSum.userId);
+		const paySum = payer?.sum ?? 0;
 		return {
 			...participant,
 			userId,
 			debtSum,
+			paySum,
+			payPart: payer?.part,
 		};
 	});
 };

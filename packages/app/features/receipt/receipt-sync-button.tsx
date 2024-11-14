@@ -55,7 +55,7 @@ const ReceiptSyncButtonInner: React.FC<InnerProps> = ({
 			if (!matchedMutation) {
 				return;
 			}
-			const sum = participant.debtSum;
+			const sum = participant.debtSum - participant.paySum;
 			matchedMutation.mutate({
 				note: getReceiptDebtName(receipt.name),
 				currencyCode: receipt.currencyCode,
@@ -71,7 +71,7 @@ const ReceiptSyncButtonInner: React.FC<InnerProps> = ({
 			if (!matchedMutation) {
 				return;
 			}
-			const sum = participant.debtSum;
+			const sum = participant.debtSum - participant.paySum;
 			matchedMutation.mutate({
 				id: participant.currentDebt.id,
 				update: {

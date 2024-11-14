@@ -429,6 +429,16 @@ export const insertReceipt = async (
 		})
 		.returning(["id", "currencyCode", "name", "createdAt", "issued"])
 		.executeTakeFirstOrThrow();
+	await ctx.database
+		.insertInto("receiptItems")
+		.values({
+			name: "",
+			price: "0",
+			quantity: "0",
+			id: id as ReceiptItemsId,
+			receiptId: id,
+		})
+		.execute();
 	return {
 		id,
 		currencyCode,
@@ -468,6 +478,30 @@ export const insertReceiptParticipant = async (
 		.returning(["createdAt", "role"])
 		.executeTakeFirstOrThrow();
 	return { createdAt, userId, role: role as Role };
+};
+
+type ReceiptPayerData = {
+	part?: number;
+	createdAt?: Date;
+};
+
+export const insertReceiptPayer = async (
+	ctx: TestContext,
+	receiptId: ReceiptsId,
+	userId: UsersId,
+	data: ReceiptPayerData = {},
+) => {
+	const { createdAt, part } = await ctx.database
+		.insertInto("receiptItemConsumers")
+		.values({
+			itemId: receiptId as ReceiptItemsId,
+			userId,
+			part: (data.part ?? 1).toString(),
+			createdAt: data.createdAt ?? new Date(),
+		})
+		.returning(["createdAt", "part"])
+		.executeTakeFirstOrThrow();
+	return { createdAt, userId, part };
 };
 
 type ReceiptItemData = {

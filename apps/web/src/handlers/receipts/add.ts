@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { values } from "remeda";
+import { omit, values } from "remeda";
 import { z } from "zod";
 
 import { receiptNameSchema } from "~app/utils/validation";
@@ -39,6 +39,7 @@ export const addReceiptSchema = z.strictObject({
 			}),
 		)
 		.optional(),
+	payers: z.array(addItemConsumerSchema.omit({ itemId: true })).optional(),
 	issued: z.date(),
 });
 
@@ -82,15 +83,28 @@ const insertItems = async (
 	input: z.infer<typeof addReceiptSchema>,
 	receiptId: ReceiptsId,
 ): Promise<InsertedItems> => {
-	if (!input.items || input.items.length === 0) {
-		return { errors: [], items: [] };
-	}
-	const insertedItems = await addItems(ctx)(
-		input.items.map((item) => ({
-			receiptId,
-			...item,
-		})),
-	);
+	const receiptIdAsItemId = receiptId as ReceiptItemsId;
+	const [insertedItems, insertPayerItem] = await Promise.all([
+		!input.items || input.items.length === 0
+			? []
+			: addItems(ctx)(
+					input.items.map((item) => ({
+						receiptId,
+						...item,
+					})),
+			  ),
+		ctx.database
+			.insertInto("receiptItems")
+			.values({
+				id: receiptIdAsItemId,
+				name: "",
+				price: "0",
+				quantity: "0",
+				receiptId,
+			})
+			.returning(["receiptItems.createdAt"])
+			.executeTakeFirstOrThrow(),
+	]);
 	return insertedItems.reduce<InsertedItems>(
 		(acc, insertedItem) => {
 			/* c8 ignore start */
@@ -102,7 +116,10 @@ const insertItems = async (
 			}
 			return acc;
 		},
-		{ errors: [], items: [] },
+		{
+			errors: [],
+			items: [{ id: receiptIdAsItemId, createdAt: insertPayerItem.createdAt }],
+		},
 	);
 };
 
@@ -116,26 +133,31 @@ type InsertedConsumers = Record<
 const insertConsumers = async (
 	ctx: AuthorizedContext,
 	input: z.infer<typeof addReceiptSchema>,
-	insertedItems: Awaited<ReturnType<typeof insertItems>>,
+	receiptId: ReceiptsId,
+	insertedItems: Awaited<ReturnType<typeof insertItems>>["items"],
 ): Promise<InsertedConsumers> => {
-	if (!input.items || input.items.length === 0) {
-		return {};
-	}
-	const consumers = input.items.flatMap((item, index) =>
-		(item.consumers ?? []).map((consumer) => {
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			const itemId = insertedItems.items[index]!.id;
-			/* c8 ignore start */
-			if (!itemId) {
-				throw new TRPCError({
-					code: "INTERNAL_SERVER_ERROR",
-					message: `Expected to have an inserted item for user "${consumer.userId}" with part ${consumer.part}.`,
-				});
-			}
-			/* c8 ignore stop */
-			return { itemId, ...consumer };
-		}),
-	);
+	const receiptIdAsItemId = receiptId as ReceiptItemsId;
+	const consumers = [
+		...(input.items?.flatMap((item, index) =>
+			(item.consumers ?? []).map((consumer) => {
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				const itemId = insertedItems[index]!.id;
+				/* c8 ignore start */
+				if (!itemId) {
+					throw new TRPCError({
+						code: "INTERNAL_SERVER_ERROR",
+						message: `Expected to have an inserted item for user "${consumer.userId}" with part ${consumer.part}.`,
+					});
+				}
+				/* c8 ignore stop */
+				return { itemId, ...consumer };
+			}),
+		) ?? []),
+		...(input.payers?.map((payer) => ({
+			itemId: receiptIdAsItemId,
+			...payer,
+		})) ?? []),
+	];
 	if (consumers.length === 0) {
 		return {};
 	}
@@ -219,6 +241,39 @@ const verifyItems = (
 	/* c8 ignore stop */
 };
 
+const verifyPayers = (
+	input: z.infer<typeof addReceiptSchema>,
+	receiptId: ReceiptsId,
+	payers: Awaited<ReturnType<typeof insertConsumers>>[string] = {
+		errors: [],
+		consumers: [],
+	},
+) => {
+	const firstError = payers.errors[0];
+	if (firstError) {
+		throw new TRPCError({
+			code: firstError.code,
+			message: `${firstError.message.replace(receiptId, "new receipt")}${
+				payers.errors.length !== 1
+					? /* c8 ignore start */
+					  ` (+${payers.errors.length - 1} errors)`
+					: ""
+				/* c8 ignore stop */
+			}`,
+		});
+	}
+	const actualAddedPayers = payers.consumers.length;
+	const expectedAddedPayers = input.payers?.length ?? 0;
+	/* c8 ignore start */
+	if (actualAddedPayers !== expectedAddedPayers) {
+		throw new TRPCError({
+			code: "INTERNAL_SERVER_ERROR",
+			message: `Expected to add ${expectedAddedPayers} payers, added ${actualAddedPayers}.`,
+		});
+	}
+	/* c8 ignore stop */
+};
+
 const verifyConsumers = (
 	input: z.infer<typeof addReceiptSchema>,
 	consumers: Awaited<ReturnType<typeof insertConsumers>>,
@@ -281,22 +336,39 @@ export const procedure = authProcedure
 				insertItems(transactionCtx, input, receiptId),
 			]);
 			verifyParticipants(input, addedParticipants);
-			verifyItems(input, addedItems);
+			const regularItems = addedItems.items.filter(
+				(item) => item.id !== receiptId,
+			);
+			verifyItems(input, { ...addedItems, items: regularItems });
 			const addedConsumers = await insertConsumers(
 				transactionCtx,
 				input,
-				addedItems,
+				receiptId,
+				regularItems,
 			);
-			verifyConsumers(input, addedConsumers);
+			const receiptIdAsItemId = receiptId as ReceiptItemsId;
+			const payersConsumers = addedConsumers[receiptIdAsItemId];
+			const regularConsumers = omit(addedConsumers, [
+				receiptIdAsItemId,
+			]) as typeof addedConsumers;
+			verifyPayers(input, receiptId, payersConsumers);
+			verifyConsumers(input, regularConsumers);
 			return {
 				id: receiptId,
 				createdAt: result.createdAt,
 				participants: addedParticipants.participants,
-				items: addedItems.items.map((item) => ({
-					id: item.id,
-					createdAt: item.createdAt,
-					consumers: addedConsumers[item.id]?.consumers,
-				})),
+				items: regularItems.map((item) => {
+					const itemConsumers = regularConsumers[item.id]?.consumers;
+					return {
+						id: item.id,
+						createdAt: item.createdAt,
+						consumers:
+							!itemConsumers || itemConsumers.length === 0
+								? undefined
+								: itemConsumers,
+					};
+				}),
+				payers: payersConsumers?.consumers ?? [],
 			};
 		});
 	});

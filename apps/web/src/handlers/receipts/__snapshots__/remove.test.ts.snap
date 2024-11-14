@@ -4,6 +4,7 @@ exports[`receipts.remove > functionality > receipt is removed 1`] = `
 {
   "deleted": {
     "receiptItems": {
+      "id:1657e0b1-af47-4802-b508-9c3cfbc6e0ef": undefined,
       "id:a02ef01f-3420-4178-8637-729274749591": undefined,
       "id:a7d27271-ee65-4644-88cb-c1860422e5db": undefined,
       "id:ff403c95-9784-4de0-8a0e-66e9dc76fe5e": undefined,

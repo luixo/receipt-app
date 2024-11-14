@@ -9,8 +9,15 @@ export const options: UseContextedMutationOptions<
 > = {
 	onMutate:
 		(controllerContext, { receiptId }) =>
-		(variables) =>
-			updateRevertReceipts(controllerContext, {
+		(variables) => {
+			if (variables.itemId === receiptId) {
+				return updateRevertReceipts(controllerContext, {
+					get: (controller) =>
+						controller.removePayer(receiptId, variables.userId),
+					getPaged: undefined,
+				});
+			}
+			return updateRevertReceipts(controllerContext, {
 				get: (controller) =>
 					controller.removeItemConsumer(
 						receiptId,
@@ -18,8 +25,13 @@ export const options: UseContextedMutationOptions<
 						variables.userId,
 					),
 				getPaged: undefined,
-			}),
-	errorToastOptions: () => (error) => ({
-		text: `Error removing consumer(s): ${error.message}`,
-	}),
+			});
+		},
+	errorToastOptions:
+		({ receiptId }) =>
+		(error, variables) => ({
+			text: `Error removing ${
+				variables.itemId === receiptId ? "payer" : "consumer"
+			}(s): ${error.message}`,
+		}),
 };

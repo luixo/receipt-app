@@ -25,6 +25,13 @@ const ReceiptParticipantsPreview: React.FC<{ switchModal: () => void }> = ({
 	if (participants.length === 0) {
 		return <Button onClick={switchModal}>Add participants</Button>;
 	}
+	const payerParticipants = participants.filter(({ payPart }) =>
+		Boolean(payPart),
+	);
+	const surePayerParticipants =
+		payerParticipants.length === 0
+			? [{ userId: ownerUserId, part: 1 }]
+			: payerParticipants;
 	const debtParticipants = participants.filter(({ debtSum }) => debtSum !== 0);
 	return (
 		<View
@@ -34,13 +41,15 @@ const ReceiptParticipantsPreview: React.FC<{ switchModal: () => void }> = ({
 			<View className="flex flex-row gap-2">
 				<Text className="text-2xl leading-9">payed by</Text>
 				<AvatarGroup className="ml-2">
-					<LoadableUser
-						key={ownerUserId}
-						id={ownerUserId}
-						foreign={!isOwner}
-						onlyAvatar
-						dimmed
-					/>
+					{surePayerParticipants.map((participant) => (
+						<LoadableUser
+							key={participant.userId}
+							id={participant.userId}
+							foreign={!isOwner}
+							onlyAvatar
+							dimmed={payerParticipants.length === 0}
+						/>
+					))}
 				</AvatarGroup>
 			</View>
 			{debtParticipants.length !== 0 ? (

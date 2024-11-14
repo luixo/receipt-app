@@ -13,6 +13,7 @@ import {
 } from "~app/features/receipt-components/context";
 import { ReceiptItems } from "~app/features/receipt-components/receipt-items";
 import { ReceiptParticipants } from "~app/features/receipt-components/receipt-participants";
+import type { Payer } from "~app/features/receipt-components/state";
 import { useInputController } from "~app/hooks/use-input-controller";
 import { useParticipants } from "~app/hooks/use-participants";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
@@ -98,6 +99,7 @@ export const AddReceipt: React.FC<Props> = ({ selfAccountId }) => {
 	const [rawParticipants, setRawParticipants] = React.useState<Participant[]>(
 		[],
 	);
+	const [payers, setPayers] = React.useState<Payer[]>([]);
 	const onSubmit = React.useCallback(
 		(values: Form) =>
 			addReceiptMutation.mutate({
@@ -114,8 +116,12 @@ export const AddReceipt: React.FC<Props> = ({ selfAccountId }) => {
 					userId,
 					role,
 				})),
+				payers: payers.map(({ userId, part }) => ({
+					userId,
+					part,
+				})),
 			}),
-		[addReceiptMutation, items, rawParticipants],
+		[addReceiptMutation, items, payers, rawParticipants],
 	);
 
 	const formId = React.useId();
@@ -130,16 +136,18 @@ export const AddReceipt: React.FC<Props> = ({ selfAccountId }) => {
 		items,
 		ownerUserId: selfUserId,
 		selfUserId,
+		payers,
 		debt: {
 			direction: "outcoming",
 			ids: [],
 		},
 	});
-	const actionsHooks = useActionsHooks(setItems, setRawParticipants);
+	const actionsHooks = useActionsHooks(setItems, setRawParticipants, setPayers);
 	const addReceiptContext = useAddReceiptContext(
 		form,
 		receiptId,
 		selfUserId,
+		payers,
 		items,
 		participants,
 	);

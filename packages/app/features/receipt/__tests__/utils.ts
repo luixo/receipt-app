@@ -7,6 +7,7 @@ import type {
 	GenerateReceiptItems,
 	GenerateReceiptItemsWithConsumers,
 	GenerateReceiptParticipants,
+	GenerateReceiptPayers,
 } from "~tests/frontend/generators/receipts";
 import {
 	defaultGenerateReceipt,
@@ -14,6 +15,7 @@ import {
 	defaultGenerateReceiptItems,
 	defaultGenerateReceiptItemsWithConsumers,
 	defaultGenerateReceiptParticipants,
+	defaultGenerateReceiptPayers,
 } from "~tests/frontend/generators/receipts";
 import type { GenerateUsers } from "~tests/frontend/generators/users";
 import { defaultGenerateUsers } from "~tests/frontend/generators/users";
@@ -28,12 +30,14 @@ type Fixtures = {
 		generateUsers?: GenerateUsers;
 		generateReceiptParticipants?: GenerateReceiptParticipants;
 		generateReceiptItemsWithConsumers?: GenerateReceiptItemsWithConsumers;
+		generateReceiptPayers?: GenerateReceiptPayers;
 		generateReceipt?: GenerateReceipt;
 	}) => {
 		receiptBase: ReturnType<GenerateReceiptBase>;
 		receipt: ReturnType<GenerateReceipt>;
 		participants: ReturnType<GenerateReceiptParticipants>;
 		receiptItemsWithConsumers: ReturnType<GenerateReceiptItemsWithConsumers>;
+		receiptPayers: ReturnType<GenerateReceiptPayers>;
 		users: ReturnType<GenerateUsers>;
 		selfUserId: UsersId;
 	};
@@ -57,6 +61,7 @@ export const test = originalTest.extend<Fixtures>({
 				generateReceiptItems = defaultGenerateReceiptItems,
 				generateReceiptParticipants = defaultGenerateReceiptParticipants,
 				generateReceiptItemsWithConsumers = defaultGenerateReceiptItemsWithConsumers,
+				generateReceiptPayers = defaultGenerateReceiptPayers,
 				generateReceipt = defaultGenerateReceipt,
 			} = {}) => {
 				const { selfUser } = mockBase();
@@ -67,6 +72,11 @@ export const test = originalTest.extend<Fixtures>({
 					faker,
 					selfUserId: selfUser.id,
 					users,
+				});
+				const receiptPayers = generateReceiptPayers({
+					faker,
+					selfUserId: selfUser.id,
+					users: [],
 				});
 				const receiptItemsWithConsumers = generateReceiptItemsWithConsumers({
 					faker,
@@ -79,6 +89,7 @@ export const test = originalTest.extend<Fixtures>({
 					receiptBase,
 					receiptParticipants: participants,
 					receiptItemsWithConsumers,
+					receiptPayers,
 					users,
 				});
 				api.mockFirst("receipts.get", ({ input }) => {
@@ -105,6 +116,7 @@ export const test = originalTest.extend<Fixtures>({
 					receipt,
 					participants,
 					receiptItemsWithConsumers,
+					receiptPayers,
 					users,
 					selfUserId: selfUser.id,
 				};

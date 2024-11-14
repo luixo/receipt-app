@@ -67,6 +67,20 @@ export const options: UseContextedMutationOptions<
 										}) ?? [],
 								};
 							}) ?? [],
+						payers:
+							variables.payers?.map((payer, index) => {
+								const matchedResult = result.payers[index];
+								if (!matchedResult) {
+									throw new Error(
+										`Expected to have payer index ${index} returned from receipt creation.`,
+									);
+								}
+								return {
+									createdAt: matchedResult.createdAt,
+									userId: payer.userId,
+									part: payer.part,
+								};
+							}) ?? [],
 						ownerUserId: selfUserId,
 						selfUserId,
 						debt: { direction: "outcoming", ids: [] },

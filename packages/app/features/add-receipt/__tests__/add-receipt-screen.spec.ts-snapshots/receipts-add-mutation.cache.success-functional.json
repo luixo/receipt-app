@@ -10,6 +10,7 @@
 					"currencyCode": "USD",
 					"participants": [],
 					"items": [],
+					"payers": [],
 					"ownerUserId": "8fa5f9e1-7c69-47bf-b755-ef724718b07b",
 					"selfUserId": "8fa5f9e1-7c69-47bf-b755-ef724718b07b",
 					"debt": {
@@ -34,7 +35,8 @@
 						"id": "a7b78913-cc20-41ca-8212-fa827c195a0e",
 						"createdAt": "2020-01-01T00:00:00.000Z",
 						"participants": [],
-						"items": []
+						"items": [],
+						"payers": []
 					},
 					"status": "success"
 				}

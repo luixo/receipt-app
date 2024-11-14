@@ -12,8 +12,19 @@ export const options: UseContextedMutationOptions<
 > = {
 	onMutate:
 		(controllerContext, { receiptId }) =>
-		(variables) =>
-			updateRevertReceipts(controllerContext, {
+		(variables) => {
+			if (variables.itemId === receiptId) {
+				return updateRevertReceipts(controllerContext, {
+					get: (controller) =>
+						controller.addPayer(receiptId, {
+							userId: variables.userId,
+							part: variables.part,
+							createdAt: new Date(),
+						}),
+					getPaged: undefined,
+				});
+			}
+			return updateRevertReceipts(controllerContext, {
 				get: (controller) =>
 					controller.addItemConsumer(
 						receiptId,
@@ -23,10 +34,21 @@ export const options: UseContextedMutationOptions<
 						new Date(),
 					),
 				getPaged: undefined,
-			}),
+			});
+		},
 	onSuccess:
 		(controllerContext, { receiptId }) =>
-		(result, variables) =>
+		(result, variables) => {
+			if (variables.itemId === receiptId) {
+				return updateReceipts(controllerContext, {
+					get: (controller) =>
+						controller.updatePayer(receiptId, variables.userId, (payer) => ({
+							...payer,
+							createdAt: result.createdAt,
+						})),
+					getPaged: undefined,
+				});
+			}
 			updateReceipts(controllerContext, {
 				get: (controller) =>
 					controller.updateItemConsumer(
@@ -36,8 +58,13 @@ export const options: UseContextedMutationOptions<
 						(consumer) => ({ ...consumer, createdAt: result.createdAt }),
 					),
 				getPaged: undefined,
-			}),
-	errorToastOptions: () => (error) => ({
-		text: `Error adding consumer(s): ${error.message}`,
-	}),
+			});
+		},
+	errorToastOptions:
+		({ receiptId }) =>
+		(error, variables) => ({
+			text: `Error adding ${
+				variables.itemId === receiptId ? "payer" : "consumer"
+			}(s): ${error.message}`,
+		}),
 };

@@ -38,7 +38,7 @@ export const ReceiptParticipantActions: React.FC<Props> = ({
 				: skipToken,
 		}),
 	);
-	const sum = participant.debtSum;
+	const sum = participant.debtSum - participant.paySum;
 	const updateDebt = React.useCallback(
 		(currentDebt: NonNullable<Participant["currentDebt"]>) => {
 			updateMutation.mutate({

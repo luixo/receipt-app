@@ -108,6 +108,7 @@ test("'receipts.add' mutation", async ({
 			createdAt: new Date(),
 			participants: [],
 			items: [],
+			payers: [],
 		};
 	});
 	const buttonWithLoader = withLoader(addButton);

@@ -143,20 +143,25 @@ test.describe("Mutations", () => {
 		snapshotQueries,
 	}) => {
 		let originalDebtsAmount = 0;
-		const { receipt, debts, participants, receiptItemsWithConsumers } =
-			mockReceiptWithDebts({
-				generateDebts: (opts) => {
-					const originalDebts = defaultGenerateDebtsFromReceipt(opts);
-					originalDebtsAmount = originalDebts.length;
-					return remapDebts([ourNonExistent, ourDesynced])(originalDebts);
-				},
-				generateReceiptItemsWithConsumers: (opts) =>
-					defaultGenerateReceiptItemsWithConsumers({
-						...opts,
-						// Creating a 0 sum participant
-						participants: opts.participants.slice(1),
-					}),
-			});
+		const {
+			receipt,
+			debts,
+			participants,
+			receiptItemsWithConsumers,
+			receiptPayers,
+		} = mockReceiptWithDebts({
+			generateDebts: (opts) => {
+				const originalDebts = defaultGenerateDebtsFromReceipt(opts);
+				originalDebtsAmount = originalDebts.length;
+				return remapDebts([ourNonExistent, ourDesynced])(originalDebts);
+			},
+			generateReceiptItemsWithConsumers: (opts) =>
+				defaultGenerateReceiptItemsWithConsumers({
+					...opts,
+					// Creating a 0 sum participant
+					participants: opts.participants.slice(1),
+				}),
+		});
 		api.mockFirst("debts.add", ({ input: addedDebt }) => ({
 			id:
 				debts.find((debt) => debt.userId === addedDebt.userId)?.id ||
@@ -200,9 +205,10 @@ test.describe("Mutations", () => {
 			receipt.id,
 			receiptItemsWithConsumers,
 			participants,
+			receiptPayers,
 		);
 		const participantTuples = participantSums.map((participant) => {
-			const sum = participant.debtSum;
+			const sum = participant.debtSum - participant.paySum;
 			return [participant.userId, sum] as const;
 		});
 		const addedDebts = addMutationsVariables.map(

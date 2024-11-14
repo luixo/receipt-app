@@ -163,6 +163,28 @@ describe("receipts.add", () => {
 				);
 			});
 
+			test("payers errors", async ({ ctx }) => {
+				const { sessionId, userId: selfUserId } =
+					await insertAccountWithSession(ctx);
+
+				const fakeUserId = faker.string.uuid();
+				const anotherFakeUserId = faker.string.uuid();
+				const payers: NonNullable<Input["payers"]> = [
+					{ userId: fakeUserId, part: 1 },
+					{ userId: anotherFakeUserId, part: 1 },
+					{ userId: selfUserId, part: 1 },
+				];
+
+				const caller = createCaller(createAuthContext(ctx, sessionId));
+				await expectDatabaseDiffSnapshot(ctx, () =>
+					expectTRPCError(
+						() => caller.procedure({ ...getValidReceipt(), payers }),
+						"PRECONDITION_FAILED",
+						`User "${fakeUserId}" doesn't participate in receipt "new receipt". (+2 errors)`,
+					),
+				);
+			});
+
 			test("parts fail", async ({ ctx }) => {
 				const {
 					sessionId,
@@ -233,6 +255,7 @@ describe("receipts.add", () => {
 				createdAt: new Date(),
 				participants: [],
 				items: [],
+				payers: [],
 			});
 		});
 
@@ -264,6 +287,7 @@ describe("receipts.add", () => {
 				createdAt: new Date(),
 				participants: participants.map(() => ({ createdAt: new Date() })),
 				items: [],
+				payers: [],
 			});
 		});
 
@@ -300,6 +324,7 @@ describe("receipts.add", () => {
 					createdAt: new Date(),
 					consumers: undefined,
 				})),
+				payers: [],
 			});
 		});
 
@@ -357,6 +382,49 @@ describe("receipts.add", () => {
 						userId: consumer.userId,
 						createdAt: new Date(),
 					})),
+				})),
+				payers: [],
+			});
+		});
+
+		test("receipt with payers", async ({ ctx }) => {
+			const {
+				sessionId,
+				accountId,
+				userId: selfUserId,
+			} = await insertAccountWithSession(ctx);
+			const { id: userId } = await insertUser(ctx, accountId);
+
+			// Verify unrelated data doesn't affect the result
+			await insertUser(ctx, accountId);
+			const { id: foreignAccountId } = await insertAccount(ctx);
+			await insertUser(ctx, foreignAccountId);
+
+			const payers: NonNullable<Input["payers"]> = [
+				{ userId, part: 1 },
+				{ userId: selfUserId, part: 22 },
+			];
+
+			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const result = await expectDatabaseDiffSnapshot(ctx, () =>
+				caller.procedure({
+					...getValidReceipt(),
+					participants: payers.map((payer) => ({
+						userId: payer.userId,
+						role: "editor",
+					})),
+					payers,
+				}),
+			);
+			expect(result.id).toMatch(UUID_REGEX);
+			expect(result).toStrictEqual<typeof result>({
+				id: result.id,
+				createdAt: new Date(),
+				participants: payers.map(() => ({ createdAt: new Date() })),
+				items: [],
+				payers: payers.map((payer) => ({
+					userId: payer.userId,
+					createdAt: new Date(),
 				})),
 			});
 		});

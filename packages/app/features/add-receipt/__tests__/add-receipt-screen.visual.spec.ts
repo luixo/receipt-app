@@ -85,6 +85,7 @@ test("'receipts.add' mutation", async ({
 			createdAt: new Date(),
 			items: [],
 			participants: [],
+			payers: [],
 		};
 	});
 	await addButton.click();

@@ -72,6 +72,36 @@ export const defaultGenerateReceiptParticipants: GenerateReceiptParticipants =
 				: undefined,
 		].filter(isNonNullish);
 
+export type GenerateReceiptPayers = GeneratorFnWithFaker<
+	TRPCQueryOutput<"receipts.get">["payers"],
+	{
+		selfUserId: UsersId;
+		users: ReturnType<GenerateUsers>;
+		addSelf?: boolean;
+	}
+>;
+
+export const defaultGenerateReceiptPayers: GenerateReceiptPayers = ({
+	faker,
+	users,
+	selfUserId,
+	addSelf = false,
+}) =>
+	[
+		...users.map((user) => ({
+			userId: user.id,
+			part: 1,
+			createdAt: faker.date.recent({ days: 5, refDate: new Date() }),
+		})),
+		addSelf
+			? {
+					userId: selfUserId,
+					part: 1,
+					createdAt: faker.date.recent({ days: 5, refDate: new Date() }),
+			  }
+			: undefined,
+	].filter(isNonNullish);
+
 export type GenerateReceiptItemsWithConsumers = GeneratorFnWithFaker<
 	TRPCQueryOutput<"receipts.get">["items"],
 	{
@@ -105,6 +135,7 @@ export type GenerateReceipt = GeneratorFnWithFaker<
 		receiptBase: ReturnType<GenerateReceiptBase>;
 		receiptItemsWithConsumers: ReturnType<GenerateReceiptItemsWithConsumers>;
 		receiptParticipants: ReturnType<GenerateReceiptParticipants>;
+		receiptPayers: ReturnType<GenerateReceiptPayers>;
 		users: ReturnType<GenerateUsers>;
 	}
 >;
@@ -114,6 +145,7 @@ export const defaultGenerateReceipt: GenerateReceipt = ({
 	receiptBase,
 	receiptItemsWithConsumers: receiptItemsConsumers,
 	receiptParticipants,
+	receiptPayers,
 }) => ({
 	id: receiptBase.id,
 	createdAt: new Date(),
@@ -128,4 +160,5 @@ export const defaultGenerateReceipt: GenerateReceipt = ({
 	},
 	items: receiptItemsConsumers,
 	participants: receiptParticipants,
+	payers: receiptPayers,
 });

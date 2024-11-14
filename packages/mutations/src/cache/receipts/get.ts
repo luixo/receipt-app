@@ -31,6 +31,9 @@ type ReceiptItemConsumer = ReceiptItemConsumers[number];
 type ReceiptParticipants = Receipt["participants"];
 type ReceiptParticipant = ReceiptParticipants[number];
 
+type ReceiptPayers = Receipt["payers"];
+type ReceiptPayer = ReceiptPayers[number];
+
 type Input = TRPCQueryInput<"receipts.get">;
 
 const getPagedInputs = (trpc: TRPCReact, queryClient: QueryClient) =>
@@ -270,6 +273,62 @@ const removeParticipant = (
 		),
 	).current;
 
+const updatePayers =
+	(controller: Controller, receiptId: ReceiptsId) =>
+	(updater: UpdateFn<ReceiptPayers>) =>
+		withRef<ReceiptPayers | undefined>((ref) =>
+			update(
+				controller,
+				receiptId,
+			)((receipt) => {
+				const nextPayers = updater(receipt.payers);
+				if (nextPayers === receipt.payers) {
+					return receipt;
+				}
+				ref.current = receipt.payers;
+				return { ...receipt, payers: nextPayers };
+			}),
+		).current;
+
+const updatePayer =
+	(controller: Controller, receiptId: ReceiptsId, payerId: UsersId) =>
+	(updater: UpdateFn<ReceiptPayer>) =>
+		withRef<ReceiptPayer | undefined>((ref) =>
+			updatePayers(
+				controller,
+				receiptId,
+			)((payers) =>
+				replaceInArray(
+					payers,
+					(payer) => payer.userId === payerId,
+					updater,
+					ref,
+				),
+			),
+		).current;
+
+const addPayer =
+	(controller: Controller, receiptId: ReceiptsId) =>
+	(payer: ReceiptPayer, index = 0) =>
+		updatePayers(
+			controller,
+			receiptId,
+		)((payers) => addToArray(payers, payer, index));
+
+const removePayer = (
+	controller: Controller,
+	receiptId: ReceiptsId,
+	payerId: UsersId,
+) =>
+	withRef<ItemWithIndex<ReceiptPayer> | undefined>((ref) =>
+		updatePayers(
+			controller,
+			receiptId,
+		)((payers) =>
+			removeFromArray(payers, (payer) => payer.userId === payerId, ref),
+		),
+	).current;
+
 export const getController = ({
 	trpcUtils,
 	queryClient,
@@ -301,6 +360,11 @@ export const getController = ({
 			userId: UsersId,
 			updater: UpdateFn<ReceiptItemConsumer>,
 		) => updateItemConsumer(controller, receiptId, itemId, userId)(updater),
+		updatePayer: (
+			receiptId: ReceiptsId,
+			userId: UsersId,
+			updater: UpdateFn<ReceiptPayer>,
+		) => updatePayer(controller, receiptId, userId)(updater),
 	};
 };
 
@@ -441,6 +505,28 @@ export const getRevertController = ({ trpcUtils }: ControllerContext) => {
 		) =>
 			applyUpdateFnWithRevert(
 				updateParticipant(controller, receiptId, userId),
+				updater,
+				revertUpdater,
+			),
+		addPayer: (receiptId: ReceiptsId, payer: ReceiptPayer) =>
+			applyWithRevert(
+				() => addPayer(controller, receiptId)(payer),
+				() => removePayer(controller, receiptId, payer.userId),
+			),
+		removePayer: (receiptId: ReceiptsId, payerId: UsersId) =>
+			applyWithRevert(
+				() => removePayer(controller, receiptId, payerId),
+				({ item: payer, index }) =>
+					addPayer(controller, receiptId)(payer, index),
+			),
+		updatePayer: (
+			receiptId: ReceiptsId,
+			userId: UsersId,
+			updater: UpdateFn<ReceiptPayer>,
+			revertUpdater: SnapshotFn<ReceiptPayer>,
+		) =>
+			applyUpdateFnWithRevert(
+				updatePayer(controller, receiptId, userId),
 				updater,
 				revertUpdater,
 			),

@@ -16,6 +16,7 @@ export {
 	MdFilterAlt as FilterIcon,
 	MdOutlineAdminPanelSettings as AdminIcon,
 	MdKey as KeyIcon,
+	MdOutlineAttachMoney as MoneyIcon,
 } from "react-icons/md";
 export {
 	BsReceipt as ReceiptsIcon,

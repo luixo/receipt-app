@@ -11,6 +11,7 @@ import {
 	insertReceiptItem,
 	insertReceiptItemConsumer,
 	insertReceiptParticipant,
+	insertReceiptPayer,
 	insertSyncedDebts,
 	insertUser,
 } from "~tests/backend/utils/data";
@@ -41,15 +42,14 @@ const getItems = (
 					part: Number(consumer.part),
 					createdAt: consumer.createdAt,
 				}))
-				.sort((a, b) => a.userId.localeCompare(b.userId)),
+				.sort((a, b) => {
+					const delta = a.createdAt.valueOf() - b.createdAt.valueOf();
+					return delta === 0 ? a.userId.localeCompare(b.userId) : -delta;
+				}),
 		}))
 		.sort((a, b) => {
-			const bCreatedAt = b.createdAt.valueOf();
-			const aCreatedAt = a.createdAt.valueOf();
-			if (aCreatedAt === bCreatedAt) {
-				return a.id.localeCompare(b.id);
-			}
-			return bCreatedAt - aCreatedAt;
+			const delta = a.createdAt.valueOf() - b.createdAt.valueOf();
+			return delta === 0 ? a.id.localeCompare(b.id) : -delta;
 		});
 
 const getParticipants = (
@@ -61,7 +61,22 @@ const getParticipants = (
 			role: participant.role,
 			createdAt: participant.createdAt,
 		}))
-		.sort((a, b) => a.userId.localeCompare(b.userId));
+		.sort((a, b) => {
+			const delta = a.createdAt.valueOf() - b.createdAt.valueOf();
+			return delta === 0 ? a.userId.localeCompare(b.userId) : -delta;
+		});
+
+const getPayers = (payers: Awaited<ReturnType<typeof insertReceiptPayer>>[]) =>
+	payers
+		.map((payer) => ({
+			userId: payer.userId,
+			part: Number(payer.part),
+			createdAt: payer.createdAt,
+		}))
+		.sort((a, b) => {
+			const delta = a.createdAt.valueOf() - b.createdAt.valueOf();
+			return delta === 0 ? a.userId.localeCompare(b.userId) : -delta;
+		});
 
 const createCaller = t.createCallerFactory(t.router({ procedure }));
 
@@ -146,6 +161,7 @@ describe("receipts.get", () => {
 					selfUserId,
 					items: [],
 					participants: [],
+					payers: [],
 					debt: { direction: "outcoming", ids: [] },
 				});
 			});
@@ -175,6 +191,7 @@ describe("receipts.get", () => {
 				selfUserId: foreignToSelfUserId,
 				items: [],
 				participants: getParticipants([participant]),
+				payers: [],
 				debt: {
 					direction: "incoming",
 					hasMine: false,
@@ -220,6 +237,7 @@ describe("receipts.get", () => {
 						id: foreignDebtId,
 					},
 					items: [],
+					payers: [],
 					participants: getParticipants([participant]),
 				});
 			});
@@ -256,6 +274,7 @@ describe("receipts.get", () => {
 						id: debtId,
 					},
 					items: [],
+					payers: [],
 					participants: getParticipants([participant]),
 				});
 			});
@@ -294,6 +313,7 @@ describe("receipts.get", () => {
 						id: debtId,
 					},
 					items: [],
+					payers: [],
 					participants: getParticipants([participant]),
 				});
 			});
@@ -332,6 +352,7 @@ describe("receipts.get", () => {
 					},
 					items: [],
 					participants: [],
+					payers: [],
 				});
 			});
 		});
@@ -405,6 +426,7 @@ describe("receipts.get", () => {
 					foreignParticipant,
 					notConnectedParticipant,
 				]),
+				payers: [],
 				debt: { direction: "outcoming", ids: [] },
 			});
 		});
@@ -429,6 +451,7 @@ describe("receipts.get", () => {
 				selfUserId,
 				items: [],
 				participants: [],
+				payers: [],
 				debt: { direction: "outcoming", ids: [] },
 			});
 		});
@@ -450,6 +473,7 @@ describe("receipts.get", () => {
 				foreignAccountId,
 				connectedAccountId,
 			]);
+			const foreignPayerUser = await insertUser(ctx, foreignAccountId);
 			const receipt = await insertReceipt(ctx, foreignAccountId);
 			const [
 				selfParticipant,
@@ -460,9 +484,20 @@ describe("receipts.get", () => {
 				insertReceiptParticipant(ctx, receipt.id, foreignToSelfUser.id, {
 					role: "viewer",
 				}),
-				insertReceiptParticipant(ctx, receipt.id, foreignSelfUserId),
-				insertReceiptParticipant(ctx, receipt.id, notConnectedUser.id),
+				insertReceiptParticipant(ctx, receipt.id, foreignSelfUserId, {
+					createdAt: new Date(Date.now() - 10),
+				}),
+				insertReceiptParticipant(ctx, receipt.id, notConnectedUser.id, {
+					createdAt: new Date(Date.now() - 20),
+				}),
 				insertReceiptParticipant(ctx, receipt.id, foreignConnectedUser.id),
+			]);
+			const [foreignPayer, connectedPayer, ownerPayer] = await Promise.all([
+				insertReceiptPayer(ctx, receipt.id, foreignPayerUser.id),
+				insertReceiptPayer(ctx, receipt.id, foreignConnectedUser.id, {
+					createdAt: new Date(Date.now() - 20),
+				}),
+				insertReceiptPayer(ctx, receipt.id, foreignSelfUserId),
 			]);
 			const receiptItems = await Promise.all([
 				// item with multiple participants, with varied consumer parts
@@ -492,6 +527,7 @@ describe("receipts.get", () => {
 					ctx,
 					receiptItems[0].id,
 					connectedParticipant.userId,
+					{ createdAt: new Date(Date.now() - 20) },
 				),
 				insertReceiptItemConsumer(
 					ctx,
@@ -522,6 +558,7 @@ describe("receipts.get", () => {
 					notConnectedParticipant,
 					connectedParticipant,
 				]),
+				payers: getPayers([foreignPayer, connectedPayer, ownerPayer]),
 				debt: {
 					direction: "incoming",
 					hasMine: false,

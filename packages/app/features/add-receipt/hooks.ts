@@ -9,7 +9,7 @@ import type {
 import type { EmptyMutateOptions } from "~app/utils/queries";
 import type { ReceiptItemsId, ReceiptsId, UsersId } from "~db/models";
 
-import type { Form, Item, Participant } from "./state";
+import type { Form, Item, Participant, Payer } from "./state";
 
 type ActionsHooks = ReturnType<typeof useActionHooksRaw>;
 type ReceiptContext = ReturnType<typeof useGetReceiptContext>;
@@ -20,6 +20,10 @@ type SetItems = (
 ) => void;
 type SetParticipants = (
 	setStateAction: React.SetStateAction<Participant[]>,
+	options: EmptyMutateOptions | undefined,
+) => void;
+type SetPayers = (
+	setStateAction: React.SetStateAction<Payer[]>,
 	options: EmptyMutateOptions | undefined,
 ) => void;
 
@@ -172,6 +176,66 @@ const useUpdateItemConsumerPart = (setItems: SetItems) => {
 	);
 };
 
+const useAddPayer = (setPayers: SetPayers) =>
+	React.useCallback<ActionsHooks["addPayer"]>(
+		(userId, part, options) =>
+			setPayers(
+				(prevPayers) => [
+					// Remove accidentally added double participants
+					...prevPayers.filter((payer) => payer.userId !== userId),
+					{ createdAt: new Date(), userId, part },
+				],
+				options,
+			),
+		[setPayers],
+	);
+
+const useRemovePayer = (setPayers: SetPayers) =>
+	React.useCallback<ActionsHooks["removePayer"]>(
+		(userId, options) =>
+			setPayers(
+				(prevPayers) => prevPayers.filter((payer) => payer.userId !== userId),
+				options,
+			),
+		[setPayers],
+	);
+
+const useUpdatePayers = (setPayers: SetPayers) =>
+	React.useCallback(
+		(
+			options: EmptyMutateOptions | undefined,
+			userId: UsersId,
+			setStateAction: React.SetStateAction<Partial<Payer>>,
+		) => {
+			setPayers((prevPayers) => {
+				const index = prevPayers.findIndex((payer) => payer.userId === userId);
+				if (index === -1) {
+					return prevPayers;
+				}
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				const prevPayer = prevPayers[index]!;
+				const nextPayerPartial =
+					typeof setStateAction === "function"
+						? setStateAction(prevPayer)
+						: setStateAction;
+				return [
+					...prevPayers.slice(0, index),
+					{ ...prevPayer, ...nextPayerPartial },
+					...prevPayers.slice(index + 1),
+				];
+			}, options);
+		},
+		[setPayers],
+	);
+
+const useUpdatePayerPart = (setPayers: SetPayers) => {
+	const updatePayer = useUpdatePayers(setPayers);
+	return React.useCallback<ActionsHooks["updatePayerPart"]>(
+		(userId, part, options) => updatePayer(options, userId, { part }),
+		[updatePayer],
+	);
+};
+
 const useAddParticipant = (setParticipants: SetParticipants) =>
 	React.useCallback<ActionsHooks["addParticipant"]>(
 		(userId, role, options) =>
@@ -242,6 +306,7 @@ const useUpdateParticipantRole = (setParticipants: SetParticipants) => {
 export const useActionsHooks = (
 	setRawItems: React.Dispatch<React.SetStateAction<Item[]>>,
 	setRawParticipants: React.Dispatch<React.SetStateAction<Participant[]>>,
+	setRawPayers: React.Dispatch<React.SetStateAction<Payer[]>>,
 ): ActionsHooks => {
 	const setItems = React.useCallback<SetItems>(
 		(setStateAction, options = {}) => {
@@ -267,6 +332,18 @@ export const useActionsHooks = (
 		},
 		[setRawParticipants],
 	);
+	const setPayers = React.useCallback<SetPayers>(
+		(setStateAction, options = {}) => {
+			try {
+				setRawPayers(setStateAction);
+				options.onSettled?.();
+				options.onSuccess?.();
+			} catch {
+				options.onError?.();
+			}
+		},
+		[setRawPayers],
+	);
 	return {
 		addItem: useAddItem(setItems),
 		removeItem: useRemoveItem(setItems),
@@ -279,6 +356,9 @@ export const useActionsHooks = (
 		addParticipant: useAddParticipant(setParticipants),
 		removeParticipant: useRemoveParticipant(setParticipants),
 		updateParticipantRole: useUpdateParticipantRole(setParticipants),
+		addPayer: useAddPayer(setPayers),
+		removePayer: useRemovePayer(setPayers),
+		updatePayerPart: useUpdatePayerPart(setPayers),
 	};
 };
 
@@ -286,12 +366,14 @@ export const useAddReceiptContext = (
 	form: UseFormReturn<Form>,
 	receiptId: ReceiptsId,
 	selfUserId: UsersId,
+	payers: ReceiptContext["payers"],
 	items: ReceiptContext["items"],
 	participants: ReceiptContext["participants"],
 ): ReceiptContext => ({
 	receiptId,
 	selfUserId,
 	ownerUserId: selfUserId,
+	payers,
 	currencyCode: form.watch("currencyCode"),
 	receiptDisabled: false,
 	items,

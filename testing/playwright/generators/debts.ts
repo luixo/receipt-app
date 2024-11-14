@@ -8,6 +8,7 @@ import type {
 	GenerateReceiptBase,
 	GenerateReceiptItemsWithConsumers,
 	GenerateReceiptParticipants,
+	GenerateReceiptPayers,
 } from "./receipts";
 import { generateAmount, generateCurrencyCode } from "./utils";
 import type { GeneratorFnWithAmount, GeneratorFnWithFaker } from "./utils";
@@ -44,6 +45,7 @@ export type GenerateDebtsFromReceipt = GeneratorFnWithFaker<
 		selfUserId: UsersId;
 		receiptItemsWithConsumers: ReturnType<GenerateReceiptItemsWithConsumers>;
 		participants: ReturnType<GenerateReceiptParticipants>;
+		receiptPayers: ReturnType<GenerateReceiptPayers>;
 		receiptBase: ReturnType<GenerateReceiptBase>;
 	}
 >;
@@ -53,14 +55,20 @@ export const defaultGenerateDebtsFromReceipt: GenerateDebtsFromReceipt = ({
 	selfUserId,
 	receiptItemsWithConsumers,
 	participants,
+	receiptPayers,
 	receiptBase,
 }) =>
-	getParticipantSums(receiptBase.id, receiptItemsWithConsumers, participants)
+	getParticipantSums(
+		receiptBase.id,
+		receiptItemsWithConsumers,
+		participants,
+		receiptPayers,
+	)
 		.map((participantSum) => {
 			if (participantSum.userId === selfUserId) {
 				return null;
 			}
-			const sum = participantSum.debtSum;
+			const sum = participantSum.debtSum - participantSum.paySum;
 			if (sum === 0) {
 				return null;
 			}

@@ -208,6 +208,22 @@ describe("receiptItems.update", () => {
 				`Receipt "${foreignReceiptId}" is not allowed to be modified by "${account.email}" with role "viewer"`,
 			);
 		});
+
+		test("payer receipt item", async ({ ctx }) => {
+			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { id: receiptId } = await insertReceipt(ctx, accountId);
+
+			const caller = createCaller(createAuthContext(ctx, sessionId));
+			await expectTRPCError(
+				() =>
+					caller.procedure({
+						id: receiptId,
+						update: { type: "name", name: faker.lorem.words() },
+					}),
+				"FORBIDDEN",
+				`Payers receipt item cannot be updated.`,
+			);
+		});
 	});
 
 	describe("functionality", () => {

@@ -1,7 +1,11 @@
 import React from "react";
 
 import { EmptyCard } from "~app/components/empty-card";
-import type { Item, Participant } from "~app/features/receipt-components/state";
+import type {
+	Item,
+	Participant,
+	Payer,
+} from "~app/features/receipt-components/state";
 import { useParticipants } from "~app/hooks/use-participants";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryInput, TRPCQueryOutput } from "~app/trpc";
@@ -55,6 +59,49 @@ const useUpdateParticipantRole = (receiptId: ReceiptsId) => {
 		) =>
 			updateParticipantMutation.mutate(
 				{ receiptId, userId, update: { type: "role", role: nextRole } },
+				options,
+			),
+		[updateParticipantMutation, receiptId],
+	);
+};
+
+const useAddPayer = (receiptId: ReceiptsId) => {
+	const addPayerMutation = trpc.receiptItemConsumers.add.useMutation(
+		useTrpcMutationOptions(receiptItemConsumersAddOptions, {
+			context: { receiptId },
+		}),
+	);
+	return React.useCallback(
+		(userId: UsersId, part: number, options: EmptyMutateOptions = {}) =>
+			addPayerMutation.mutate({ itemId: receiptId, userId, part }, options),
+		[addPayerMutation, receiptId],
+	);
+};
+
+const useRemovePayer = (receiptId: ReceiptsId) => {
+	const removePayerMutation = trpc.receiptItemConsumers.remove.useMutation(
+		useTrpcMutationOptions(receiptItemConsumersRemoveOptions, {
+			context: { receiptId },
+		}),
+	);
+	return React.useCallback(
+		(userId: UsersId, options: EmptyMutateOptions = {}) =>
+			removePayerMutation.mutate({ itemId: receiptId, userId }, options),
+		[removePayerMutation, receiptId],
+	);
+};
+
+const useUpdatePayerPart = (receiptId: ReceiptsId) => {
+	const updateParticipantMutation =
+		trpc.receiptItemConsumers.update.useMutation(
+			useTrpcMutationOptions(receiptItemConsumersUpdateOptions, {
+				context: { receiptId },
+			}),
+		);
+	return React.useCallback(
+		(userId: UsersId, nextPart: number, options: EmptyMutateOptions = {}) =>
+			updateParticipantMutation.mutate(
+				{ itemId: receiptId, userId, update: { type: "part", part: nextPart } },
 				options,
 			),
 		[updateParticipantMutation, receiptId],
@@ -209,6 +256,9 @@ export const useActionHooks = (receipt: TRPCQueryOutput<"receipts.get">) => ({
 	addParticipant: useAddParticipant(receipt.id),
 	removeParticipant: useRemoveParticipant(receipt.id),
 	updateParticipantRole: useUpdateParticipantRole(receipt.id),
+	addPayer: useAddPayer(receipt.id),
+	removePayer: useRemovePayer(receipt.id),
+	updatePayerPart: useUpdatePayerPart(receipt.id),
 });
 
 export type ReceiptContext = {
@@ -221,6 +271,7 @@ export type ReceiptContext = {
 
 	items: Item[];
 	participants: Participant[];
+	payers: Payer[];
 
 	renderParticipantActions: (
 		participant: ReturnType<typeof useParticipants>["participants"][number],
@@ -238,6 +289,7 @@ export const useGetReceiptContext = (
 	return {
 		receiptId: receipt.id,
 		selfUserId: receipt.selfUserId,
+		payers: receipt.payers,
 		ownerUserId: receipt.ownerUserId,
 		currencyCode: receipt.currencyCode,
 		receiptDisabled,

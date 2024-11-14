@@ -45,6 +45,12 @@ export const procedure = authProcedure
 				message: `Receipt item "${input.id}" is not found.`,
 			});
 		}
+		if (receiptItem.receiptId === input.id) {
+			throw new TRPCError({
+				code: "FORBIDDEN",
+				message: `Payers receipt item cannot be updated.`,
+			});
+		}
 		const accessRole = await getAccessRole(
 			database,
 			{ id: receiptItem.receiptId, ownerAccountId: receiptItem.ownerAccountId },

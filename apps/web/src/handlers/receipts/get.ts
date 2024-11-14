@@ -65,7 +65,10 @@ const fetchReceipts = async (
 									"receiptItemConsumers.createdAt",
 								])
 								.whereRef("receiptItemConsumers.itemId", "=", "receiptItems.id")
-								.orderBy("receiptItemConsumers.userId desc"),
+								.orderBy([
+									"receiptItemConsumers.createdAt desc",
+									"receiptItemConsumers.userId",
+								]),
 						).as("consumers"),
 					])
 					.whereRef("receiptItems.receiptId", "=", "receipts.id")
@@ -92,7 +95,10 @@ const fetchReceipts = async (
 						"receiptParticipants.createdAt",
 						"receiptParticipants.role",
 					])
-					.orderBy("receiptParticipants.userId"),
+					.orderBy([
+						"receiptParticipants.createdAt desc",
+						"receiptParticipants.userId",
+					]),
 			).as("participants"),
 		])
 		.execute();
@@ -177,20 +183,20 @@ const mapReceipt = (
 	debts: Awaited<ReturnType<typeof fetchDebts>>,
 ) => {
 	const { ownerAccountId, items, participants, ...receiptRest } = receipt;
+	const payersItem = items.find((item) => item.id === receipt.id);
+	const regularItems = items.filter((item) => item !== payersItem);
 	return {
 		...receiptRest,
-		items: items.map((item) => ({
+		items: regularItems.map((item) => ({
 			...item,
 			createdAt: new Date(item.createdAt),
 			price: Number(item.price),
 			quantity: Number(item.quantity),
-			consumers: item.consumers
-				.map(({ part, createdAt, ...consumer }) => ({
-					...consumer,
-					createdAt: new Date(createdAt),
-					part: Number(part),
-				}))
-				.sort((a, b) => a.userId.localeCompare(b.userId)),
+			consumers: item.consumers.map(({ part, createdAt, ...consumer }) => ({
+				...consumer,
+				createdAt: new Date(createdAt),
+				part: Number(part),
+			})),
 		})),
 		participants: participants.map((participant) => ({
 			...participant,
@@ -203,6 +209,14 @@ const mapReceipt = (
 			auth.accountId,
 			receipt.selfUserId,
 		),
+		payers:
+			payersItem?.consumers.map((payer) => ({
+				userId: payer.userId,
+				part: Number(payer.part),
+				createdAt: new Date(payer.createdAt),
+				// This can't happen as payers item always exists
+				/* c8 ignore next */
+			})) ?? [],
 	};
 };
 
