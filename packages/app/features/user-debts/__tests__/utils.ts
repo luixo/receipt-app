@@ -14,11 +14,11 @@ import {
 
 type Fixtures = {
 	mockBase: () => {
-		user: ReturnType<GenerateUsers>[number];
+		debtUser: ReturnType<GenerateUsers>[number];
 	};
 	mockDebts: (options?: { generateDebts?: GenerateDebts }) => {
 		debts: ReturnType<GenerateDebts>;
-		user: ReturnType<GenerateUsers>[number];
+		debtUser: ReturnType<GenerateUsers>[number];
 	};
 	openUserDebts: (
 		userId: UsersId,
@@ -31,30 +31,19 @@ export const test = originalTest.extend<Fixtures>({
 	mockBase: ({ api, faker }, use) =>
 		use(() => {
 			api.mockUtils.authPage();
-			api.mockFirst("account.get", {
-				account: {
-					id: faker.string.uuid(),
-					email: faker.internet.email(),
-					verified: true,
-					avatarUrl: undefined,
-					role: undefined,
-				},
-				user: { name: faker.person.firstName() },
-			});
-			api.mockUtils.currencyList();
 			const [user] = defaultGenerateUsers({ faker, amount: 1 });
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			const sureUser = user!;
-			api.mockFirst("users.get", sureUser);
-			return { user: sureUser };
+			const debtUser = user!;
+			api.mockUtils.mockUsers(debtUser);
+			return { debtUser };
 		}),
 	mockDebts: ({ api, faker, mockBase }, use) =>
 		use(({ generateDebts = defaultGenerateDebts } = {}) => {
-			const { user } = mockBase();
+			const { debtUser } = mockBase();
 			const debts = generateDebts({
 				faker,
 				amount: { min: 3, max: 6 },
-				userId: user.id,
+				userId: debtUser.id,
 			});
 			api.mockFirst(
 				"debts.getIdsByUser",
@@ -68,9 +57,9 @@ export const test = originalTest.extend<Fixtures>({
 						message: `Expected to have debt id "${lookupId}", but none found`,
 					});
 				}
-				return { ...matchedDebt, userId: user.id };
+				return { ...matchedDebt, userId: debtUser.id };
 			});
-			return { debts, user };
+			return { debts, debtUser };
 		}),
 
 	openUserDebts: ({ page, awaitCacheKey }, use) =>

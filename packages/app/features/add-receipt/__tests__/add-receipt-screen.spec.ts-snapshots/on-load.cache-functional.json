@@ -4,24 +4,24 @@
 			"state": {
 				"data": [
 					{
-						"currencyCode": "GEL",
-						"count": 27
+						"currencyCode": "LBP",
+						"count": 4
 					},
 					{
-						"currencyCode": "ZWL",
-						"count": 30
+						"currencyCode": "RON",
+						"count": 13
 					},
 					{
-						"currencyCode": "RWF",
-						"count": 65
+						"currencyCode": "AUD",
+						"count": 54
 					},
 					{
-						"currencyCode": "MYR",
-						"count": 67
+						"currencyCode": "UAH",
+						"count": 76
 					},
 					{
-						"currencyCode": "CRC",
-						"count": 84
+						"currencyCode": "SDG",
+						"count": 92
 					}
 				],
 				"dataUpdateCount": 1,

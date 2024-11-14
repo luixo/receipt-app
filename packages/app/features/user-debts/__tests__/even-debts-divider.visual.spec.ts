@@ -14,7 +14,7 @@ test("Divider", async ({
 	await cookieManager.addCookie(SETTINGS_COOKIE_NAME, {
 		showResolvedDebts: true,
 	});
-	const { user, debts } = mockDebts({
+	const { debtUser, debts } = mockDebts({
 		generateDebts: (opts) => {
 			const staticCurrencyCode = generateCurrencyCode(opts.faker);
 			return defaultGenerateDebts({ ...opts, amount: 3 }).map(
@@ -26,7 +26,7 @@ test("Divider", async ({
 			);
 		},
 	});
-	await openUserDebts(user.id, { awaitDebts: debts.length });
+	await openUserDebts(debtUser.id, { awaitDebts: debts.length });
 	await expectScreenshotWithSchemes("divider.png", {
 		locator: evenDebtsDivider,
 	});

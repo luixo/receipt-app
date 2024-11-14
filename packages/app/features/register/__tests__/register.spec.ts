@@ -11,7 +11,7 @@ test("On load", async ({
 	snapshotQueries,
 	awaitCacheKey,
 }) => {
-	api.mockUtils.noAccount();
+	api.mockUtils.noAuthPage();
 
 	await snapshotQueries(
 		async () => {
@@ -32,7 +32,7 @@ test("Invalid form disables submit button", async ({
 	registerButton,
 	fillInvalidFields,
 }) => {
-	api.mockUtils.noAccount();
+	api.mockUtils.noAuthPage();
 
 	await page.goto("/register");
 	await fillInvalidFields();
@@ -52,9 +52,14 @@ test("'auth.register' mutation", async ({
 }) => {
 	// Remove this ignored pattern when we will explicitly redirect to "/receipts"
 	consoleManager.ignore('Abort fetching component for route: "/"');
-	api.mockUtils.noAccount();
+	api.mockUtils.noAuthPage();
 	api.mockUtils.authPage();
-	api.mockUtils.emptyReceipts();
+	api.mockFirst("receipts.getPaged", {
+		items: [],
+		hasMore: false,
+		cursor: -1,
+		count: 0,
+	});
 	api.mockFirst("auth.register", () => {
 		throw new TRPCError({
 			code: "CONFLICT",

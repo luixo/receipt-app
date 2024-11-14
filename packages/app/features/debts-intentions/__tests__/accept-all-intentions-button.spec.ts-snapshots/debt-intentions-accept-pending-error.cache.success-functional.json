@@ -1,11 +1,11 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"5bff6764-0560-492e-8100-5bfe72b338c1\"}]": {
+		"debts.get:[{\"id\":\"2bebdb40-84ee-4955-a735-7c4476ea90d3\"}]": {
 			"state": {
 				"dataUpdateCount": 2
 			}
 		},
-		"debts.get:[{\"id\":\"9967a8aa-34c5-4c92-a26e-8fa5beaab02d\"}]": {
+		"debts.get:[{\"id\":\"a782b307-9630-4c3f-9fb2-49ca339c1f75\"}]": {
 			"state": {
 				"dataUpdateCount": 2
 			}
@@ -22,7 +22,7 @@
 					"isPaused": false,
 					"status": "success",
 					"variables": {
-						"id": "9967a8aa-34c5-4c92-a26e-8fa5beaab02d"
+						"id": "a782b307-9630-4c3f-9fb2-49ca339c1f75"
 					}
 				}
 			},
@@ -35,7 +35,7 @@
 					"isPaused": false,
 					"status": "success",
 					"variables": {
-						"id": "5bff6764-0560-492e-8100-5bfe72b338c1"
+						"id": "2bebdb40-84ee-4955-a735-7c4476ea90d3"
 					}
 				}
 			}

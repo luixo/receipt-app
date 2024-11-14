@@ -1,10 +1,7 @@
 import type { Locator } from "@playwright/test";
-import { TRPCError } from "@trpc/server";
 
 import type { TRPCQueryOutput } from "~app/trpc";
 import { test as originalTest } from "~tests/frontend/fixtures";
-import type { GenerateUsers } from "~tests/frontend/generators/users";
-import { defaultGenerateUsers } from "~tests/frontend/generators/users";
 import {
 	generateAmount,
 	generateCurrencyCode,
@@ -12,8 +9,7 @@ import {
 
 type Fixtures = {
 	mockBase: () => {
-		user: ReturnType<GenerateUsers>[number];
-		currencies: TRPCQueryOutput<"currency.top">;
+		topCurrencies: TRPCQueryOutput<"currency.top">;
 	};
 	addButton: Locator;
 	nameInput: Locator;
@@ -25,35 +21,12 @@ export const test = originalTest.extend<Fixtures>({
 	mockBase: ({ api, faker }, use) =>
 		use(() => {
 			api.mockUtils.authPage();
-			api.mockUtils.currencyList();
 			const topCurrencies = generateAmount(faker, 5, () => ({
 				currencyCode: generateCurrencyCode(faker),
 				count: Number(faker.number.int(100)),
 			}));
 			api.mockFirst("currency.top", topCurrencies);
-			api.mockFirst("account.get", {
-				account: {
-					id: faker.string.uuid(),
-					email: faker.internet.email(),
-					verified: true,
-					avatarUrl: undefined,
-					role: undefined,
-				},
-				user: { name: faker.person.firstName() },
-			});
-			const [user] = defaultGenerateUsers({ faker, amount: 1 });
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			const sureUser = user!;
-			api.mockFirst("users.get", ({ input }) => {
-				if (input.id !== sureUser.id) {
-					throw new TRPCError({
-						code: "NOT_FOUND",
-						message: `User id "${input.id}" does not exist.`,
-					});
-				}
-				return sureUser;
-			});
-			return { user: sureUser, currencies: topCurrencies };
+			return { topCurrencies };
 		}),
 
 	addButton: ({ page }, use) =>

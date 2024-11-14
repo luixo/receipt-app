@@ -11,11 +11,11 @@ import { defaultGenerateUsers } from "~tests/frontend/generators/users";
 
 type Fixtures = {
 	mockBase: (options?: { generateUsers?: GenerateUsers }) => {
-		user: ReturnType<GenerateUsers>[number];
+		debtUser: ReturnType<GenerateUsers>[number];
 	};
 	mockDebts: (options?: { generateDebts?: GenerateDebts }) => {
 		debts: ReturnType<GenerateDebts>;
-		user: ReturnType<GenerateUsers>[number];
+		debtUser: ReturnType<GenerateUsers>[number];
 	};
 	openUserDebtsScreen: (
 		userId: UsersId,
@@ -27,39 +27,23 @@ export const test = originalTest.extend<Fixtures>({
 	mockBase: ({ api, faker }, use) =>
 		use(({ generateUsers = defaultGenerateUsers } = {}) => {
 			api.mockUtils.authPage();
-			api.mockFirst("account.get", {
-				account: {
-					id: faker.string.uuid(),
-					email: faker.internet.email(),
-					verified: true,
-					avatarUrl: undefined,
-					role: undefined,
-				},
-				user: { name: faker.person.firstName() },
-			});
-			api.mockUtils.currencyList();
-			const users = generateUsers({ faker });
+			const users = generateUsers({ faker, amount: 1 });
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			const debtUser = users[0]!;
-			api.mockFirst("users.get", ({ input: { id: lookupId } }) => {
-				const matchedUser = users.find(({ id }) => id === lookupId);
-				if (!matchedUser) {
-					throw new TRPCError({
-						code: "NOT_FOUND",
-						message: `Expected to have user id "${lookupId}", but none found`,
-					});
-				}
-				return matchedUser;
-			});
-			return { user: debtUser };
+			api.mockFirst(
+				"users.get",
+				({ input, next }) =>
+					users.find((user) => user.id === input.id) || next(),
+			);
+			return { debtUser };
 		}),
 	mockDebts: ({ api, faker, mockBase }, use) =>
 		use(({ generateDebts = defaultGenerateDebts } = {}) => {
-			const { user } = mockBase();
-			const debts = generateDebts({ faker, userId: user.id });
+			const { debtUser } = mockBase();
+			const debts = generateDebts({ faker, userId: debtUser.id });
 			api.mockFirst("debts.getByUsers", [
 				{
-					userId: user.id,
+					userId: debtUser.id,
 					unsyncedDebtsAmount: 0,
 					debts: entries(
 						debts.reduce<Record<CurrencyCode, number>>(
@@ -86,7 +70,7 @@ export const test = originalTest.extend<Fixtures>({
 				}
 				return matchedDebt;
 			});
-			return { debts, user };
+			return { debts, debtUser };
 		}),
 
 	openUserDebtsScreen: ({ page, awaitCacheKey }, use) =>

@@ -12,7 +12,7 @@ test("On load with token", async ({
 	snapshotQueries,
 	awaitCacheKey,
 }) => {
-	api.mockUtils.noAccount();
+	api.mockUtils.noAuthPage();
 
 	await snapshotQueries(
 		async () => {
@@ -37,7 +37,7 @@ test("nagivating back to the home page", async ({
 	api,
 	cancelButton,
 }) => {
-	api.mockUtils.noAccount();
+	api.mockUtils.noAuthPage();
 	await page.goto("/void-account?token=foo");
 	await cancelButton.click();
 	await expect(page).toHaveURL("/login");
@@ -53,7 +53,7 @@ test("'auth.voidAccount' mutation", async ({
 	withLoader,
 	cancelButton,
 }) => {
-	api.mockUtils.noAccount();
+	api.mockUtils.noAuthPage();
 	api.mockFirst("auth.voidAccount", () => {
 		throw new TRPCError({
 			code: "CONFLICT",

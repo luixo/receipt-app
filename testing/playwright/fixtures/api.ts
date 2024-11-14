@@ -1,5 +1,5 @@
+import type { Faker } from "@faker-js/faker";
 import type { BrowserContext } from "@playwright/test";
-import { test } from "@playwright/test";
 import {
 	createTRPCClient,
 	unstable_httpBatchStreamLink as httpBatchStreamLink,
@@ -24,12 +24,15 @@ import type {
 	TRPCQueryKey,
 	TRPCQueryOutput,
 } from "~app/trpc";
-import type { Currency, CurrencyCode } from "~app/utils/currency";
+import type { CurrencyCode } from "~app/utils/currency";
 import type { TransformerResult } from "~app/utils/trpc";
 import { transformer } from "~app/utils/trpc";
+import type { AccountsId, UsersId } from "~db/models";
 import { getCurrencies } from "~utils/currency-data";
 
 import type { appRouter } from "../global/router";
+
+import { mockFixtures as test } from "./mock";
 
 const CLEANUP_MARK = "__CLEANUP_MARK__";
 
@@ -129,7 +132,7 @@ const getHandlersResponse = <K extends TRPCKey>(
 				next: () => {
 					if (index === 0) {
 						throw new Error(
-							"Illegal next() invocation, no middleware function below!",
+							`No handler for ${key}, no middleware function below`,
 						);
 					}
 					return returnAtIndex(index - 1);
@@ -377,40 +380,63 @@ const createApiManager = async (
 	};
 };
 
-const getMockUtils = (api: ApiManager) => ({
-	noAccount: () =>
-		api.mockFirst("account.get", () => {
+// 'en' locale definitely exist
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+const currencies = entries(getCurrencies()!).map(([code, currency]) => ({
+	code: code as CurrencyCode,
+	name: currency.name_plural,
+	symbol: currency.symbol_native,
+}));
+const getMockUtils = (api: ApiManager, faker: Faker) => ({
+	noAuthPage: () => {
+		api.mockLast("currency.getList", currencies);
+		api.mockLast("account.get", () => {
 			throw new TRPCError({
 				code: "UNAUTHORIZED",
 				message: "No token provided - mocked",
 			});
-		}),
-	authPage: () => [
-		api.mockFirst("debtIntentions.getAll", []),
-		api.mockFirst("accountConnectionIntentions.getAll", {
+		});
+	},
+	authPage: () => {
+		api.mockLast("currency.getList", currencies);
+		api.mockLast("debtIntentions.getAll", []);
+		api.mockLast("accountConnectionIntentions.getAll", {
 			inbound: [],
 			outbound: [],
-		}),
-	],
-	currencyList: (currencies?: Currency[]) =>
+		});
+		const selfId = faker.string.uuid();
+		const selfUser = {
+			id: selfId as UsersId,
+			name: faker.person.firstName(),
+			publicName: undefined,
+			connectedAccount: {
+				id: selfId as AccountsId,
+				email: faker.internet.email(),
+				avatarUrl: undefined,
+			},
+		};
+		const selfAccount = {
+			id: selfUser.connectedAccount.id,
+			email: selfUser.connectedAccount.email,
+			verified: true,
+			avatarUrl: selfUser.connectedAccount.avatarUrl,
+			role: undefined,
+		};
+		api.mockLast("account.get", {
+			account: selfAccount,
+			user: { name: selfUser.name },
+		});
+		api.mockLast("users.get", ({ input, next }) =>
+			selfUser.id === input.id ? selfUser : next(),
+		);
+		return { user: selfUser, account: selfAccount };
+	},
+	mockUsers: (...users: TRPCQueryOutput<"users.get">[]) => {
 		api.mockFirst(
-			"currency.getList",
-			currencies ||
-				// 'en' locale definitely exist
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-				entries(getCurrencies()!).map(([code, currency]) => ({
-					code: code as CurrencyCode,
-					name: currency.name_plural,
-					symbol: currency.symbol_native,
-				})),
-		),
-	emptyReceipts: () =>
-		api.mockFirst("receipts.getPaged", {
-			items: [],
-			hasMore: false,
-			cursor: -1,
-			count: 0,
-		}),
+			"users.get",
+			({ input, next }) => users.find((user) => user.id === input.id) || next(),
+		);
+	},
 });
 
 type ApiFixtures = {
@@ -425,12 +451,12 @@ type ApiWorkerFixture = {
 
 export const apiFixtures = test.extend<ApiFixtures, ApiWorkerFixture>({
 	api: [
-		async ({ globalApiManager, context }, use) => {
+		async ({ globalApiManager, context, faker }, use) => {
 			const { cleanup, ...api } = await createApiManager(
 				globalApiManager,
 				context,
 			);
-			await use({ ...api, mockUtils: getMockUtils(api) });
+			await use({ ...api, mockUtils: getMockUtils(api, faker) });
 			await cleanup();
 		},
 		{ auto: true },

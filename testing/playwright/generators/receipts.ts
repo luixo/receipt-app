@@ -2,25 +2,19 @@ import { isNonNullish } from "remeda";
 
 import type { TRPCQueryOutput } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
-import type { ReceiptItemsId, ReceiptsId } from "~db/models";
+import type { ReceiptItemsId, ReceiptsId, UsersId } from "~db/models";
 import { MONTH } from "~utils/time";
 
-import type { GenerateSelfAccount } from "./accounts";
-import type { GenerateDebtsFromReceipt } from "./debts";
-import { defaultGenerateDebtsFromReceipt } from "./debts";
 import type { GenerateUsers } from "./users";
 import type { GeneratorFnWithFaker } from "./utils";
 import { generateCurrencyCode } from "./utils";
 
-export type GenerateReceiptBase = GeneratorFnWithFaker<
-	{
-		id: ReceiptsId;
-		name: string;
-		currencyCode: CurrencyCode;
-		issued: Date;
-	},
-	{ selfAccount: ReturnType<GenerateSelfAccount> }
->;
+export type GenerateReceiptBase = GeneratorFnWithFaker<{
+	id: ReceiptsId;
+	name: string;
+	currencyCode: CurrencyCode;
+	issued: Date;
+}>;
 
 export const defaultGenerateReceiptBase: GenerateReceiptBase = ({ faker }) => ({
 	id: faker.string.uuid(),
@@ -37,8 +31,7 @@ export type GenerateReceiptItems = GeneratorFnWithFaker<
 		quantity: number;
 		name: string;
 		createdAt: Date;
-	}[],
-	{ selfAccount: ReturnType<GenerateSelfAccount> }
+	}[]
 >;
 
 export const defaultGenerateReceiptItems: GenerateReceiptItems = ({ faker }) =>
@@ -56,14 +49,14 @@ export const defaultGenerateReceiptItems: GenerateReceiptItems = ({ faker }) =>
 export type GenerateReceiptParticipants = GeneratorFnWithFaker<
 	TRPCQueryOutput<"receipts.get">["participants"],
 	{
-		selfAccount: ReturnType<GenerateSelfAccount>;
+		selfUserId: UsersId;
 		users: ReturnType<GenerateUsers>;
 		addSelf?: boolean;
 	}
 >;
 
 export const defaultGenerateReceiptParticipants: GenerateReceiptParticipants =
-	({ faker, users, selfAccount, addSelf = true }) =>
+	({ faker, users, selfUserId, addSelf = true }) =>
 		[
 			...users.map((user) => ({
 				userId: user.id,
@@ -72,7 +65,7 @@ export const defaultGenerateReceiptParticipants: GenerateReceiptParticipants =
 			})),
 			addSelf
 				? {
-						userId: selfAccount.userId,
+						userId: selfUserId,
 						role: "owner" as const,
 						createdAt: faker.date.recent({ days: 5, refDate: new Date() }),
 				  }
@@ -108,7 +101,7 @@ export const defaultGenerateReceiptItemsWithConsumers: GenerateReceiptItemsWithC
 export type GenerateReceipt = GeneratorFnWithFaker<
 	TRPCQueryOutput<"receipts.get">,
 	{
-		selfAccount: ReturnType<GenerateSelfAccount>;
+		selfUserId: UsersId;
 		receiptBase: ReturnType<GenerateReceiptBase>;
 		receiptItemsWithConsumers: ReturnType<GenerateReceiptItemsWithConsumers>;
 		receiptParticipants: ReturnType<GenerateReceiptParticipants>;
@@ -117,7 +110,7 @@ export type GenerateReceipt = GeneratorFnWithFaker<
 >;
 
 export const defaultGenerateReceipt: GenerateReceipt = ({
-	selfAccount,
+	selfUserId,
 	receiptBase,
 	receiptItemsWithConsumers: receiptItemsConsumers,
 	receiptParticipants,
@@ -127,65 +120,12 @@ export const defaultGenerateReceipt: GenerateReceipt = ({
 	name: receiptBase.name,
 	currencyCode: receiptBase.currencyCode,
 	issued: receiptBase.issued,
-	ownerUserId: selfAccount.userId,
-	selfUserId: selfAccount.userId,
+	ownerUserId: selfUserId,
+	selfUserId,
 	debt: {
 		direction: "outcoming",
 		ids: [],
 	},
 	items: receiptItemsConsumers,
 	participants: receiptParticipants,
-});
-
-type MapDebt = (
-	debt: ReturnType<GenerateDebtsFromReceipt>[number],
-) => ReturnType<GenerateDebtsFromReceipt>[number] | undefined;
-
-export const generateDebtsMapped =
-	(...mapperSets: (MapDebt | MapDebt[])[]): GenerateDebtsFromReceipt =>
-	(opts) =>
-		mapperSets.reduce((acc, mapperSet) => {
-			if (Array.isArray(mapperSet)) {
-				return (
-					acc
-						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-						.map((debt, index) => mapperSet[index % mapperSet.length]!(debt))
-						.filter(isNonNullish)
-				);
-			}
-			return acc.map(mapperSet).filter(isNonNullish);
-		}, defaultGenerateDebtsFromReceipt(opts));
-
-export const ourNonExistent: MapDebt = () => undefined;
-
-export const ourSynced: MapDebt = (debt) => debt;
-
-export const ourDesynced: MapDebt = (debt) => ({
-	...debt,
-	amount: debt.amount + 1,
-});
-
-export const theirNonExistent: MapDebt = (debt) => ({
-	...debt,
-	their: undefined,
-});
-
-export const theirSynced: MapDebt = (debt) => ({
-	...debt,
-	their: {
-		updatedAt: new Date(debt.updatedAt.valueOf() + 1),
-		currencyCode: debt.currencyCode,
-		timestamp: debt.timestamp,
-		amount: debt.amount,
-	},
-});
-
-export const theirDesynced: MapDebt = (debt) => ({
-	...debt,
-	their: {
-		updatedAt: new Date(debt.updatedAt.valueOf() + 1),
-		currencyCode: debt.currencyCode,
-		timestamp: debt.timestamp,
-		amount: debt.amount + 1,
-	},
 });

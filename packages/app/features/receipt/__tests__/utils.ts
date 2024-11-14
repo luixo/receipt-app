@@ -1,7 +1,6 @@
+import type { TRPCQueryOutput } from "~app/trpc";
 import type { ReceiptsId, UsersId } from "~db/models";
 import { test as originalTest } from "~tests/frontend/fixtures";
-import type { GenerateSelfAccount } from "~tests/frontend/generators/accounts";
-import { defaultGenerateSelfAccount } from "~tests/frontend/generators/accounts";
 import type {
 	GenerateReceipt,
 	GenerateReceiptBase,
@@ -20,9 +19,10 @@ import type { GenerateUsers } from "~tests/frontend/generators/users";
 import { defaultGenerateUsers } from "~tests/frontend/generators/users";
 
 type Fixtures = {
-	mockBase: () => void;
+	mockBase: () => {
+		selfUser: TRPCQueryOutput<"users.get">;
+	};
 	mockReceipt: (options?: {
-		generateSelfAccount?: GenerateSelfAccount;
 		generateReceiptBase?: GenerateReceiptBase;
 		generateReceiptItems?: GenerateReceiptItems;
 		generateUsers?: GenerateUsers;
@@ -30,12 +30,12 @@ type Fixtures = {
 		generateReceiptItemsWithConsumers?: GenerateReceiptItemsWithConsumers;
 		generateReceipt?: GenerateReceipt;
 	}) => {
-		selfAccount: ReturnType<GenerateSelfAccount>;
 		receiptBase: ReturnType<GenerateReceiptBase>;
 		receipt: ReturnType<GenerateReceipt>;
 		participants: ReturnType<GenerateReceiptParticipants>;
 		receiptItemsWithConsumers: ReturnType<GenerateReceiptItemsWithConsumers>;
 		users: ReturnType<GenerateUsers>;
+		selfUserId: UsersId;
 	};
 	openReceipt: (id: ReceiptsId) => Promise<void>;
 };
@@ -43,15 +43,15 @@ type Fixtures = {
 export const test = originalTest.extend<Fixtures>({
 	mockBase: ({ api }, use) =>
 		use(() => {
-			api.mockUtils.currencyList();
+			const { user } = api.mockUtils.authPage();
 			api.mockFirst("currency.top", []);
 			api.mockFirst("users.suggest", { cursor: 0, hasMore: false, items: [] });
 			api.mockFirst("users.suggestTop", { items: [] });
+			return { selfUser: user };
 		}),
 	mockReceipt: ({ api, faker, mockBase }, use) =>
 		use(
 			({
-				generateSelfAccount = defaultGenerateSelfAccount,
 				generateReceiptBase = defaultGenerateReceiptBase,
 				generateUsers = defaultGenerateUsers,
 				generateReceiptItems = defaultGenerateReceiptItems,
@@ -59,14 +59,13 @@ export const test = originalTest.extend<Fixtures>({
 				generateReceiptItemsWithConsumers = defaultGenerateReceiptItemsWithConsumers,
 				generateReceipt = defaultGenerateReceipt,
 			} = {}) => {
-				mockBase();
-				const selfAccount = generateSelfAccount({ faker });
+				const { selfUser } = mockBase();
 				const users = generateUsers({ faker });
-				const receiptBase = generateReceiptBase({ faker, selfAccount });
-				const receiptItems = generateReceiptItems({ faker, selfAccount });
+				const receiptBase = generateReceiptBase({ faker });
+				const receiptItems = generateReceiptItems({ faker });
 				const participants = generateReceiptParticipants({
 					faker,
-					selfAccount,
+					selfUserId: selfUser.id,
 					users,
 				});
 				const receiptItemsWithConsumers = generateReceiptItemsWithConsumers({
@@ -76,7 +75,7 @@ export const test = originalTest.extend<Fixtures>({
 				});
 				const receipt = generateReceipt({
 					faker,
-					selfAccount,
+					selfUserId: selfUser.id,
 					receiptBase,
 					receiptParticipants: participants,
 					receiptItemsWithConsumers,
@@ -90,60 +89,24 @@ export const test = originalTest.extend<Fixtures>({
 					}
 					return receipt;
 				});
-				const usersFn = ({ input }: { input: { id: UsersId } }) => {
-					if (input.id === selfAccount.accountId) {
-						return {
-							id: selfAccount.userId,
-							name: selfAccount.name,
-							publicName: undefined,
-							connectedAccount: {
-								id: selfAccount.accountId,
-								email: selfAccount.email,
-								avatarUrl: selfAccount.avatarUrl,
-							},
-						};
-					}
-					const matchedUser = users.find((user) => user.id === input.id);
-					if (matchedUser) {
-						return {
-							id: matchedUser.id,
-							name: matchedUser.name,
-							publicName: undefined,
-							connectedAccount: matchedUser.connectedAccount
-								? {
-										id: matchedUser.connectedAccount.id,
-										email: matchedUser.connectedAccount.email,
-										avatarUrl: matchedUser.connectedAccount.avatarUrl,
-								  }
-								: undefined,
-						};
-					}
-
-					throw new Error(
-						`Unexpected user id in "users.get" / "users.getForeign": ${input.id}`,
-					);
-				};
-				api.mockFirst("users.get", usersFn);
-				api.mockFirst("users.getForeign", usersFn);
-				api.mockUtils.authPage();
-				api.mockFirst("account.get", {
-					account: {
-						id: selfAccount.accountId,
-						email: selfAccount.email,
-						verified: true,
-						avatarUrl: selfAccount.avatarUrl,
-						role: undefined,
-					},
-					user: { name: selfAccount.name },
-				});
+				api.mockFirst(
+					"users.get",
+					({ input, next }) =>
+						users.find((user) => user.id === input.id) || next(),
+				);
+				api.mockFirst(
+					"users.getForeign",
+					({ input, next }) =>
+						users.find((user) => user.id === input.id) || next(),
+				);
 
 				return {
-					selfAccount,
 					receiptBase,
 					receipt,
 					participants,
 					receiptItemsWithConsumers,
 					users,
+					selfUserId: selfUser.id,
 				};
 			},
 		),

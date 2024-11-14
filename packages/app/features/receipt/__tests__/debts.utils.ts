@@ -89,7 +89,6 @@ export const test = originalTest.extend<Fixtures>({
 	mockReceiptWithDebts: ({ api, faker, mockReceipt }, use) =>
 		use(
 			({
-				generateSelfAccount,
 				generateReceiptBase = defaultGenerateReceiptBase,
 				generateUsers,
 				generateReceiptItems,
@@ -99,7 +98,6 @@ export const test = originalTest.extend<Fixtures>({
 				generateReceipt = localDefaultGenerateReceipt,
 			} = {}) => {
 				const result = mockReceipt({
-					generateSelfAccount,
 					generateReceiptBase,
 					generateUsers,
 					generateReceiptItems,
@@ -109,14 +107,14 @@ export const test = originalTest.extend<Fixtures>({
 				});
 				const debts = generateDebts({
 					faker,
-					selfAccount: result.selfAccount,
+					selfUserId: result.selfUserId,
 					receiptBase: result.receiptBase,
 					receiptItemsWithConsumers: result.receiptItemsWithConsumers,
 					participants: result.participants,
 				});
 				const receipt = generateReceipt({
 					faker,
-					selfAccount: result.selfAccount,
+					selfUserId: result.selfUserId,
 					receiptBase: result.receiptBase,
 					receiptItemsWithConsumers: result.receiptItemsWithConsumers,
 					receiptParticipants: result.participants,

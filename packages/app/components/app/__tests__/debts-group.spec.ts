@@ -18,7 +18,7 @@ test.describe("'currency.getList'", () => {
 		openUserDebtsScreen,
 		debtsGroupElement,
 	}) => {
-		const { user } = mockDebts({
+		const { debtUser } = mockDebts({
 			generateDebts: (opts) => {
 				const [debt] = defaultGenerateDebts(opts);
 				assert(debt);
@@ -30,7 +30,7 @@ test.describe("'currency.getList'", () => {
 			await currencyListPause.promise;
 			return next();
 		});
-		await openUserDebtsScreen(user.id);
+		await openUserDebtsScreen(debtUser.id);
 		await expect(debtsGroupElement).toHaveText("100 USD");
 	});
 
@@ -40,7 +40,7 @@ test.describe("'currency.getList'", () => {
 		openUserDebtsScreen,
 		debtsGroupElement,
 	}) => {
-		const { user } = mockDebts({
+		const { debtUser } = mockDebts({
 			generateDebts: (opts) => {
 				const [debt] = defaultGenerateDebts(opts);
 				assert(debt);
@@ -53,7 +53,7 @@ test.describe("'currency.getList'", () => {
 				message: `Mock "currency.getList" error`,
 			});
 		});
-		await openUserDebtsScreen(user.id);
+		await openUserDebtsScreen(debtUser.id);
 		await expect(debtsGroupElement).toHaveText("100 USD");
 	});
 });
@@ -67,7 +67,7 @@ test.describe("external query status", () => {
 		debtsGroup,
 		loader,
 	}) => {
-		const { user, debts } = mockDebts();
+		const { debtUser, debts } = mockDebts();
 		const debtPause = api.createPause();
 		api.mockFirst("debts.get", async ({ next, input: { id } }) => {
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -77,7 +77,7 @@ test.describe("external query status", () => {
 			await debtPause.promise;
 			return next();
 		});
-		await openUserDebtsScreen(user.id);
+		await openUserDebtsScreen(debtUser.id);
 		await expect(debtsGroup.filter({ has: loader })).toBeVisible();
 		await expect(debtsGroupElement).not.toBeAttached();
 		debtPause.resolve();
@@ -94,7 +94,7 @@ test.describe("external query status", () => {
 		errorMessage,
 		awaitCacheKey,
 	}) => {
-		const { user, debts } = mockDebts({
+		const { debtUser, debts } = mockDebts({
 			generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 3 }),
 		});
 		const unmockGetDebt = api.mockFirst("debts.get", ({ input: { id } }) => {
@@ -110,7 +110,7 @@ test.describe("external query status", () => {
 				message: `Mock "debts.get" error type 2`,
 			});
 		});
-		await openUserDebtsScreen(user.id);
+		await openUserDebtsScreen(debtUser.id);
 		await expect(
 			debtsGroup.filter({
 				has: errorMessage('Mock "debts.get" error type 1'),
@@ -137,10 +137,10 @@ test.describe("external query status", () => {
 });
 
 test("Empty state", async ({ mockDebts, openUserDebtsScreen, debtsGroup }) => {
-	const { user } = mockDebts({
+	const { debtUser } = mockDebts({
 		generateDebts: () => [],
 	});
-	await openUserDebtsScreen(user.id);
+	await openUserDebtsScreen(debtUser.id);
 	await expect(debtsGroup).toHaveText("No debts yet");
 });
 
@@ -149,7 +149,7 @@ test("Rounding", async ({
 	openUserDebtsScreen,
 	debtsGroupElement,
 }) => {
-	const { user } = mockDebts({
+	const { debtUser } = mockDebts({
 		generateDebts: (opts) => {
 			const [debt] = defaultGenerateDebts(opts);
 			assert(debt);
@@ -169,7 +169,7 @@ test("Rounding", async ({
 			];
 		},
 	});
-	await openUserDebtsScreen(user.id, { awaitDebts: 2 });
+	await openUserDebtsScreen(debtUser.id, { awaitDebts: 2 });
 
 	await expect(debtsGroupElement.first()).toHaveText(
 		`1.23 ${getCurrencySymbol("USD")}`,

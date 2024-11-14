@@ -24,7 +24,7 @@ test.describe("Wrapper component", () => {
 		exchangeSpecificButton,
 		awaitCacheKey,
 	}) => {
-		const { user } = mockBase();
+		const { debtUser } = mockBase();
 		const userDebtsIdsPause = api.createPause();
 		api.mockFirst("debts.getIdsByUser", async () => {
 			await userDebtsIdsPause.promise;
@@ -33,7 +33,7 @@ test.describe("Wrapper component", () => {
 				message: `Mock "debts.getIdsByUser" error`,
 			});
 		});
-		await openDebtsExchangeScreen(user.id, { awaitCache: false });
+		await openDebtsExchangeScreen(debtUser.id, { awaitCache: false });
 		await awaitCacheKey("users.get");
 
 		await expect(loader).toBeVisible();
@@ -56,17 +56,17 @@ test.describe("Header", () => {
 		awaitCacheKey,
 		page,
 	}) => {
-		const { user } = mockDebts();
+		const { debtUser } = mockDebts();
 		const userPause = api.createPause();
 		api.mockFirst("users.get", async ({ next }) => {
 			await userPause.promise;
 			return next();
 		});
-		await openDebtsExchangeScreen(user.id, { awaitCache: false });
+		await openDebtsExchangeScreen(debtUser.id, { awaitCache: false });
 		await expect(page).toHaveTitle("RA - ...'s debts");
 		userPause.resolve();
 		await awaitCacheKey("users.get");
-		await expect(page).toHaveTitle(`RA - ${user.name}'s debts`);
+		await expect(page).toHaveTitle(`RA - ${debtUser.name}'s debts`);
 	});
 
 	test("Back button", async ({
@@ -75,10 +75,10 @@ test.describe("Header", () => {
 		backLink,
 		page,
 	}) => {
-		const { user } = mockDebts();
-		await openDebtsExchangeScreen(user.id);
+		const { debtUser } = mockDebts();
+		await openDebtsExchangeScreen(debtUser.id);
 		await backLink.click();
-		await expect(page).toHaveURL(`/debts/user/${user.id}`);
+		await expect(page).toHaveURL(`/debts/user/${debtUser.id}`);
 	});
 });
 
@@ -112,13 +112,13 @@ test.describe("Showed debts depending on 'show resolved debts' option", () => {
 		cookieManager,
 		debtsGroupElement,
 	}) => {
-		const { user, debts } = mockDebts({
+		const { debtUser, debts } = mockDebts({
 			generateDebts: generateDebtsWithEmpty,
 		});
 		await cookieManager.addCookie(SETTINGS_COOKIE_NAME, {
 			showResolvedDebts: true,
 		});
-		await openDebtsExchangeScreen(user.id, { awaitDebts: debts.length });
+		await openDebtsExchangeScreen(debtUser.id, { awaitDebts: debts.length });
 		await expect(debtsGroupElement).toHaveCount(2);
 	});
 
@@ -128,13 +128,13 @@ test.describe("Showed debts depending on 'show resolved debts' option", () => {
 		cookieManager,
 		debtsGroupElement,
 	}) => {
-		const { user, debts } = mockDebts({
+		const { debtUser, debts } = mockDebts({
 			generateDebts: generateDebtsWithEmpty,
 		});
 		await cookieManager.addCookie(SETTINGS_COOKIE_NAME, {
 			showResolvedDebts: false,
 		});
-		await openDebtsExchangeScreen(user.id, { awaitDebts: debts.length });
+		await openDebtsExchangeScreen(debtUser.id, { awaitDebts: debts.length });
 		await expect(debtsGroupElement).toHaveCount(1);
 	});
 });
@@ -146,11 +146,11 @@ test("Exchange all to one button", async ({
 	exchangeAllToOneButton,
 	page,
 }) => {
-	const { user } = mockDebts();
-	await openDebtsExchangeScreen(user.id);
+	const { debtUser } = mockDebts();
+	await openDebtsExchangeScreen(debtUser.id);
 	api.mockFirst("currency.top", []);
 	await exchangeAllToOneButton.click();
-	await expect(page).toHaveURL(`/debts/user/${user.id}/exchange/all`);
+	await expect(page).toHaveURL(`/debts/user/${debtUser.id}/exchange/all`);
 });
 
 test("Exchange to specific currency button", async ({
@@ -158,10 +158,10 @@ test("Exchange to specific currency button", async ({
 	openDebtsExchangeScreen,
 	exchangeSpecificButton,
 }) => {
-	const { user } = mockDebts();
-	await openDebtsExchangeScreen(user.id);
+	const { debtUser } = mockDebts();
+	await openDebtsExchangeScreen(debtUser.id);
 	await expect(exchangeSpecificButton).toBeDisabled();
 	// The specific page is not yet implemented
 	// await exchangeSpecificButton.click();
-	// await expect(page).toHaveURL(`/debts/user/${user.id}/exchange/specific`);
+	// await expect(page).toHaveURL(`/debts/user/${debtUser.id}/exchange/specific`);
 });

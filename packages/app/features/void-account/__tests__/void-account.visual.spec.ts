@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { test } from "./utils";
 
 test("Open with token", async ({ api, page, expectScreenshotWithSchemes }) => {
-	api.mockUtils.noAccount();
+	api.mockUtils.noAuthPage();
 
 	await page.goto("/void-account?token=foo");
 	await expectScreenshotWithSchemes("token.png");
@@ -17,7 +17,7 @@ test(`"auth.voidAccount" mutation`, async ({
 	awaitCacheKey,
 	clearToasts,
 }) => {
-	api.mockUtils.noAccount();
+	api.mockUtils.noAuthPage();
 	api.mockFirst("auth.voidAccount", () => {
 		throw new TRPCError({
 			code: "CONFLICT",

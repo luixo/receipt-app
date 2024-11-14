@@ -14,10 +14,10 @@ test("No debts", async ({
 	mockDebts,
 	debtsGroup,
 }) => {
-	const { user } = mockDebts({
+	const { debtUser } = mockDebts({
 		generateDebts: () => [],
 	});
-	await openUserDebtsScreen(user.id);
+	await openUserDebtsScreen(debtUser.id);
 	await expectScreenshotWithSchemes("empty.png", {
 		locator: debtsGroup,
 	});
@@ -29,10 +29,10 @@ test("Single group", async ({
 	mockDebts,
 	debtsGroup,
 }) => {
-	const { user } = mockDebts({
+	const { debtUser } = mockDebts({
 		generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 1 }),
 	});
-	await openUserDebtsScreen(user.id, { awaitDebts: 1 });
+	await openUserDebtsScreen(debtUser.id, { awaitDebts: 1 });
 	await expectScreenshotWithSchemes("single.png", {
 		locator: debtsGroup,
 	});
@@ -45,10 +45,10 @@ test("Multiple groups with different directions", async ({
 	debtsGroup,
 }) => {
 	const AMOUNT = 20;
-	const { user } = mockDebts({
+	const { debtUser } = mockDebts({
 		generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: AMOUNT }),
 	});
-	await openUserDebtsScreen(user.id, { awaitDebts: AMOUNT });
+	await openUserDebtsScreen(debtUser.id, { awaitDebts: AMOUNT });
 	await expectScreenshotWithSchemes("multiple.png", {
 		locator: debtsGroup,
 	});
@@ -61,7 +61,7 @@ test("External query status", async ({
 	debtsGroup,
 	expectScreenshotWithSchemes,
 }) => {
-	const { user, debts } = mockDebts({
+	const { debtUser, debts } = mockDebts({
 		generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 3 }),
 	});
 	const debtPause = api.createPause();
@@ -79,7 +79,7 @@ test("External query status", async ({
 		}
 		return next();
 	});
-	await openUserDebtsScreen(user.id);
+	await openUserDebtsScreen(debtUser.id);
 	await expectScreenshotWithSchemes("external-status.png", {
 		locator: debtsGroup,
 	});

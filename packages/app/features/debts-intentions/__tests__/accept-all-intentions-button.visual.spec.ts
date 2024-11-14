@@ -10,13 +10,12 @@ const test = mergeTests(localTest, debtsGroupFixture);
 test("Button", async ({
 	openDebtIntentions,
 	expectScreenshotWithSchemes,
-	mockBase,
+	api,
 	mockDebts,
 	acceptAllIntentionButton,
 }) => {
-	const { user } = mockBase();
+	api.mockUtils.authPage();
 	mockDebts({
-		targetUserId: user.id,
 		generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 6 }),
 	});
 	await openDebtIntentions();

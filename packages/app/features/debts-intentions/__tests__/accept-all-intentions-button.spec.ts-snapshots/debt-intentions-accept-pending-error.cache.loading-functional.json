@@ -1,20 +1,20 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"29027d6b-8d77-48d8-8a9e-6d0718727a7d\"}]": {
+		"debts.get:[{\"id\":\"2229afe2-d79b-402a-949b-6f6be31e8205\"}]": {
 			"state": {
 				"data": {
-					"id": "29027d6b-8d77-48d8-8a9e-6d0718727a7d",
-					"userId": "e9776fcf-334d-4787-bbe6-211ec1c6da4a",
-					"currencyCode": "GTQ",
-					"amount": -4028.61,
-					"timestamp": "2019-12-05T09:33:58.939Z",
-					"note": "debitis placeat eos tempore",
+					"id": "2229afe2-d79b-402a-949b-6f6be31e8205",
+					"userId": "3099f7f4-7698-4d01-8c70-bc4c5c296fcb",
+					"currencyCode": "GBP",
+					"amount": -3591.26,
+					"timestamp": "2019-12-09T08:22:09.776Z",
+					"note": "modi quae blanditiis repellendus",
 					"updatedAt": "2020-01-01T00:00:00.000Z",
 					"their": {
 						"updatedAt": "2020-01-01T00:00:00.000Z",
-						"timestamp": "2019-12-05T09:33:58.939Z",
-						"amount": -4028.61,
-						"currencyCode": "GTQ"
+						"timestamp": "2019-12-09T08:22:09.776Z",
+						"amount": -3591.26,
+						"currencyCode": "GBP"
 					},
 					"receiptId": "<undefined>"
 				},
@@ -26,47 +26,21 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"debts.get:[{\"id\":\"4a8e11e6-3924-4379-8a5a-6763d87f4f78\"}]": {
+		"debts.get:[{\"id\":\"2bebdb40-84ee-4955-a735-7c4476ea90d3\"}]": {
 			"state": {
 				"data": {
-					"id": "4a8e11e6-3924-4379-8a5a-6763d87f4f78",
-					"userId": "e9776fcf-334d-4787-bbe6-211ec1c6da4a",
-					"currencyCode": "UZS",
-					"amount": 8393.97,
-					"timestamp": "2019-12-16T04:25:00.657Z",
-					"note": "eum occaecati sunt tenetur",
+					"id": "2bebdb40-84ee-4955-a735-7c4476ea90d3",
+					"userId": "3099f7f4-7698-4d01-8c70-bc4c5c296fcb",
+					"currencyCode": "BYN",
+					"amount": -8515.4,
+					"timestamp": "2019-12-08T19:47:03.357Z",
+					"note": "debitis nobis sed labore",
 					"updatedAt": "2020-01-01T00:00:00.000Z",
 					"their": {
 						"updatedAt": "2020-01-01T00:00:00.000Z",
-						"timestamp": "2019-12-16T04:25:00.657Z",
-						"amount": 8393.97,
-						"currencyCode": "UZS"
-					},
-					"receiptId": "<undefined>"
-				},
-				"dataUpdateCount": 2,
-				"error": null,
-				"fetchMeta": null,
-				"isInvalidated": false,
-				"status": "success",
-				"fetchStatus": "idle"
-			}
-		},
-		"debts.get:[{\"id\":\"5bff6764-0560-492e-8100-5bfe72b338c1\"}]": {
-			"state": {
-				"data": {
-					"id": "5bff6764-0560-492e-8100-5bfe72b338c1",
-					"userId": "e9776fcf-334d-4787-bbe6-211ec1c6da4a",
-					"currencyCode": "CNY",
-					"amount": -438.09,
-					"timestamp": "2019-12-02T09:15:47.878Z",
-					"note": "delectus harum harum eveniet",
-					"updatedAt": "2020-01-01T00:00:00.000Z",
-					"their": {
-						"updatedAt": "2020-01-01T00:00:00.000Z",
-						"timestamp": "2019-12-02T09:15:47.878Z",
-						"amount": -438.09,
-						"currencyCode": "CNY"
+						"timestamp": "2019-12-08T19:47:03.357Z",
+						"amount": -8515.4,
+						"currencyCode": "BYN"
 					},
 					"receiptId": "<undefined>"
 				},
@@ -78,21 +52,21 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"debts.get:[{\"id\":\"7ccc2a59-ead3-4b63-ba60-abd3723d617c\"}]": {
+		"debts.get:[{\"id\":\"4a275509-29dc-4fb3-a562-426bcf06bf5b\"}]": {
 			"state": {
 				"data": {
-					"id": "7ccc2a59-ead3-4b63-ba60-abd3723d617c",
-					"userId": "e9776fcf-334d-4787-bbe6-211ec1c6da4a",
-					"currencyCode": "BWP",
-					"amount": -3830.41,
-					"timestamp": "2019-12-05T19:31:00.570Z",
-					"note": "molestiae perspiciatis architecto dolore",
+					"id": "4a275509-29dc-4fb3-a562-426bcf06bf5b",
+					"userId": "3099f7f4-7698-4d01-8c70-bc4c5c296fcb",
+					"currencyCode": "PAB",
+					"amount": 4806.72,
+					"timestamp": "2019-12-18T19:22:28.143Z",
+					"note": "alias vitae sit magnam",
 					"updatedAt": "2020-01-01T00:00:00.000Z",
 					"their": {
 						"updatedAt": "2020-01-01T00:00:00.000Z",
-						"timestamp": "2019-12-05T19:31:00.570Z",
-						"amount": -3830.41,
-						"currencyCode": "BWP"
+						"timestamp": "2019-12-18T19:22:28.143Z",
+						"amount": 4806.72,
+						"currencyCode": "PAB"
 					},
 					"receiptId": "<undefined>"
 				},
@@ -104,21 +78,47 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"debts.get:[{\"id\":\"9967a8aa-34c5-4c92-a26e-8fa5beaab02d\"}]": {
+		"debts.get:[{\"id\":\"952beab0-ac8a-4943-823f-8d3ecc424905\"}]": {
 			"state": {
 				"data": {
-					"id": "9967a8aa-34c5-4c92-a26e-8fa5beaab02d",
-					"userId": "e9776fcf-334d-4787-bbe6-211ec1c6da4a",
-					"currencyCode": "BGN",
-					"amount": -6388.94,
-					"timestamp": "2019-12-04T19:02:29.787Z",
-					"note": "doloremque reiciendis dolores saepe",
+					"id": "952beab0-ac8a-4943-823f-8d3ecc424905",
+					"userId": "3099f7f4-7698-4d01-8c70-bc4c5c296fcb",
+					"currencyCode": "MDL",
+					"amount": -837.35,
+					"timestamp": "2019-12-13T12:32:53.021Z",
+					"note": "qui architecto facilis ad",
 					"updatedAt": "2020-01-01T00:00:00.000Z",
 					"their": {
 						"updatedAt": "2020-01-01T00:00:00.000Z",
-						"timestamp": "2019-12-04T19:02:29.787Z",
-						"amount": -6388.94,
-						"currencyCode": "BGN"
+						"timestamp": "2019-12-13T12:32:53.021Z",
+						"amount": -837.35,
+						"currencyCode": "MDL"
+					},
+					"receiptId": "<undefined>"
+				},
+				"dataUpdateCount": 2,
+				"error": null,
+				"fetchMeta": null,
+				"isInvalidated": false,
+				"status": "success",
+				"fetchStatus": "idle"
+			}
+		},
+		"debts.get:[{\"id\":\"a782b307-9630-4c3f-9fb2-49ca339c1f75\"}]": {
+			"state": {
+				"data": {
+					"id": "a782b307-9630-4c3f-9fb2-49ca339c1f75",
+					"userId": "3099f7f4-7698-4d01-8c70-bc4c5c296fcb",
+					"currencyCode": "SYP",
+					"amount": -3979.7,
+					"timestamp": "2019-12-06T02:12:53.741Z",
+					"note": "dicta laboriosam repellat nihil",
+					"updatedAt": "2020-01-01T00:00:00.000Z",
+					"their": {
+						"updatedAt": "2020-01-01T00:00:00.000Z",
+						"timestamp": "2019-12-06T02:12:53.741Z",
+						"amount": -3979.7,
+						"currencyCode": "SYP"
 					},
 					"receiptId": "<undefined>"
 				},
@@ -130,21 +130,21 @@
 				"fetchStatus": "idle"
 			}
 		},
-		"debts.get:[{\"id\":\"fbc12933-5247-4d2e-a447-3723fdb3a086\"}]": {
+		"debts.get:[{\"id\":\"bfeeebf2-d641-4fd2-8d25-949d3a6ba9e5\"}]": {
 			"state": {
 				"data": {
-					"id": "fbc12933-5247-4d2e-a447-3723fdb3a086",
-					"userId": "e9776fcf-334d-4787-bbe6-211ec1c6da4a",
-					"currencyCode": "BRL",
-					"amount": 1404.72,
-					"timestamp": "2019-12-18T22:26:51.296Z",
-					"note": "omnis nam nobis aliquid",
+					"id": "bfeeebf2-d641-4fd2-8d25-949d3a6ba9e5",
+					"userId": "3099f7f4-7698-4d01-8c70-bc4c5c296fcb",
+					"currencyCode": "CRC",
+					"amount": 248.23,
+					"timestamp": "2019-12-02T16:35:16.249Z",
+					"note": "fugiat esse deleniti ipsam",
 					"updatedAt": "2020-01-01T00:00:00.000Z",
 					"their": {
 						"updatedAt": "2020-01-01T00:00:00.000Z",
-						"timestamp": "2019-12-18T22:26:51.296Z",
-						"amount": 1404.72,
-						"currencyCode": "BRL"
+						"timestamp": "2019-12-02T16:35:16.249Z",
+						"amount": 248.23,
+						"currencyCode": "CRC"
 					},
 					"receiptId": "<undefined>"
 				},
@@ -165,7 +165,7 @@
 					"isPaused": false,
 					"status": "pending",
 					"variables": {
-						"id": "5bff6764-0560-492e-8100-5bfe72b338c1"
+						"id": "2bebdb40-84ee-4955-a735-7c4476ea90d3"
 					}
 				}
 			},
@@ -175,7 +175,7 @@
 					"isPaused": false,
 					"status": "pending",
 					"variables": {
-						"id": "9967a8aa-34c5-4c92-a26e-8fa5beaab02d"
+						"id": "a782b307-9630-4c3f-9fb2-49ca339c1f75"
 					}
 				}
 			},
@@ -188,7 +188,7 @@
 					"isPaused": false,
 					"status": "success",
 					"variables": {
-						"id": "29027d6b-8d77-48d8-8a9e-6d0718727a7d"
+						"id": "bfeeebf2-d641-4fd2-8d25-949d3a6ba9e5"
 					}
 				}
 			},
@@ -201,7 +201,7 @@
 					"isPaused": false,
 					"status": "success",
 					"variables": {
-						"id": "4a8e11e6-3924-4379-8a5a-6763d87f4f78"
+						"id": "2229afe2-d79b-402a-949b-6f6be31e8205"
 					}
 				}
 			},
@@ -214,7 +214,7 @@
 					"isPaused": false,
 					"status": "success",
 					"variables": {
-						"id": "fbc12933-5247-4d2e-a447-3723fdb3a086"
+						"id": "952beab0-ac8a-4943-823f-8d3ecc424905"
 					}
 				}
 			},
@@ -227,7 +227,7 @@
 					"isPaused": false,
 					"status": "success",
 					"variables": {
-						"id": "7ccc2a59-ead3-4b63-ba60-abd3723d617c"
+						"id": "4a275509-29dc-4fb3-a562-426bcf06bf5b"
 					}
 				}
 			}

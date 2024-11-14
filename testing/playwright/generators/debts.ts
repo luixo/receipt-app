@@ -4,7 +4,6 @@ import type { TRPCQueryOutput } from "~app/trpc";
 import { getParticipantSums } from "~app/utils/receipt-item";
 import type { UsersId } from "~db/models";
 
-import type { GenerateSelfAccount } from "./accounts";
 import type {
 	GenerateReceiptBase,
 	GenerateReceiptItemsWithConsumers,
@@ -42,7 +41,7 @@ export const defaultGenerateDebts = ({
 export type GenerateDebtsFromReceipt = GeneratorFnWithFaker<
 	TRPCQueryOutput<"debts.get">[],
 	{
-		selfAccount: ReturnType<GenerateSelfAccount>;
+		selfUserId: UsersId;
 		receiptItemsWithConsumers: ReturnType<GenerateReceiptItemsWithConsumers>;
 		participants: ReturnType<GenerateReceiptParticipants>;
 		receiptBase: ReturnType<GenerateReceiptBase>;
@@ -51,14 +50,14 @@ export type GenerateDebtsFromReceipt = GeneratorFnWithFaker<
 
 export const defaultGenerateDebtsFromReceipt: GenerateDebtsFromReceipt = ({
 	faker,
-	selfAccount,
+	selfUserId,
 	receiptItemsWithConsumers,
 	participants,
 	receiptBase,
 }) =>
 	getParticipantSums(receiptBase.id, receiptItemsWithConsumers, participants)
 		.map((participantSum) => {
-			if (participantSum.userId === selfAccount.userId) {
+			if (participantSum.userId === selfUserId) {
 				return null;
 			}
 			if (participantSum.sum === 0) {
@@ -82,3 +81,56 @@ export const defaultGenerateDebtsFromReceipt: GenerateDebtsFromReceipt = ({
 			};
 		})
 		.filter(isNonNullish);
+
+type MapDebt = (
+	debt: ReturnType<GenerateDebtsFromReceipt>[number],
+) => ReturnType<GenerateDebtsFromReceipt>[number] | undefined;
+
+export const remapDebts =
+	(...mapperSets: (MapDebt | MapDebt[])[]) =>
+	(originalDebts: ReturnType<GenerateDebtsFromReceipt>) =>
+		mapperSets.reduce((acc, mapperSet) => {
+			if (Array.isArray(mapperSet)) {
+				return (
+					acc
+						// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+						.map((debt, index) => mapperSet[index % mapperSet.length]!(debt))
+						.filter(isNonNullish)
+				);
+			}
+			return acc.map(mapperSet).filter(isNonNullish);
+		}, originalDebts);
+
+export const ourNonExistent: MapDebt = () => undefined;
+
+export const ourSynced: MapDebt = (debt) => debt;
+
+export const ourDesynced: MapDebt = (debt) => ({
+	...debt,
+	amount: debt.amount + 1,
+});
+
+export const theirNonExistent: MapDebt = (debt) => ({
+	...debt,
+	their: undefined,
+});
+
+export const theirSynced: MapDebt = (debt) => ({
+	...debt,
+	their: {
+		updatedAt: new Date(debt.updatedAt.valueOf() + 1),
+		currencyCode: debt.currencyCode,
+		timestamp: debt.timestamp,
+		amount: debt.amount,
+	},
+});
+
+export const theirDesynced: MapDebt = (debt) => ({
+	...debt,
+	their: {
+		updatedAt: new Date(debt.updatedAt.valueOf() + 1),
+		currencyCode: debt.currencyCode,
+		timestamp: debt.timestamp,
+		amount: debt.amount + 1,
+	},
+});

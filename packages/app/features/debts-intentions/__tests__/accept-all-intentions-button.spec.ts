@@ -6,14 +6,13 @@ import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
 import { test } from "./accept-all-intentions-button.utils";
 
 test("Button is invisible when there is no intentions", async ({
-	mockBase,
+	api,
 	mockDebts,
 	openDebtIntentions,
 	acceptAllIntentionButton,
 }) => {
-	const { user } = mockBase();
+	api.mockUtils.authPage();
 	mockDebts({
-		targetUserId: user.id,
 		generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 0 }),
 	});
 	await openDebtIntentions();
@@ -21,14 +20,13 @@ test("Button is invisible when there is no intentions", async ({
 });
 
 test("Button is invisible when there is just 1 intention", async ({
-	mockBase,
+	api,
 	mockDebts,
 	openDebtIntentions,
 	acceptAllIntentionButton,
 }) => {
-	const { user } = mockBase();
+	api.mockUtils.authPage();
 	mockDebts({
-		targetUserId: user.id,
 		generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 1 }),
 	});
 	await openDebtIntentions();
@@ -36,7 +34,6 @@ test("Button is invisible when there is just 1 intention", async ({
 });
 
 test("'debtIntentions.accept' pending / error", async ({
-	mockBase,
 	mockDebts,
 	openDebtIntentions,
 	acceptAllIntentionButton,
@@ -46,11 +43,10 @@ test("'debtIntentions.accept' pending / error", async ({
 	snapshotQueries,
 	page,
 }) => {
-	const { user } = mockBase();
+	api.mockUtils.authPage();
 	const debtsAmount = 6;
 	const acceptedDebtsAmount = 2;
 	const { debts } = mockDebts({
-		targetUserId: user.id,
 		generateDebts: (opts) =>
 			defaultGenerateDebts({ ...opts, amount: debtsAmount }),
 	});

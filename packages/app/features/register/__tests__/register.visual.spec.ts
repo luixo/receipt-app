@@ -9,7 +9,7 @@ test("Regular usage", async ({
 	fillValidFields,
 	expectScreenshotWithSchemes,
 }) => {
-	api.mockUtils.noAccount();
+	api.mockUtils.noAuthPage();
 
 	await page.goto("/register");
 	await expectScreenshotWithSchemes("empty.png");
@@ -32,7 +32,7 @@ test("'auth.register' mutation", async ({
 	awaitCacheKey,
 	clearToasts,
 }) => {
-	api.mockUtils.noAccount();
+	api.mockUtils.noAuthPage();
 	api.mockFirst("auth.register", () => {
 		throw new TRPCError({
 			code: "CONFLICT",
@@ -65,7 +65,7 @@ test("Errors in fields", async ({
 	fillInvalidFields,
 	expectScreenshotWithSchemes,
 }) => {
-	api.mockUtils.noAccount();
+	api.mockUtils.noAuthPage();
 
 	await page.goto("/register");
 	await fillInvalidFields();

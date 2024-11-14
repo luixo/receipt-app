@@ -20,7 +20,7 @@ test("'debts.get' pending / error", async ({
 	await cookieManager.addCookie(SETTINGS_COOKIE_NAME, {
 		showResolvedDebts: true,
 	});
-	const { user, debts } = mockDebts({
+	const { debtUser, debts } = mockDebts({
 		generateDebts: (opts) => {
 			const staticCurrencyCode = generateCurrencyCode(opts.faker);
 			return defaultGenerateDebts({ ...opts, amount: 3 }).map(
@@ -55,7 +55,7 @@ test("'debts.get' pending / error", async ({
 		return next();
 	});
 
-	await openUserDebts(user.id);
+	await openUserDebts(debtUser.id);
 	await awaitCacheKey("debts.get", {
 		succeed: 2,
 		errored: 0,
@@ -84,10 +84,10 @@ test("'showResolvedDebts' is false - all hidden", async ({
 	const onlyDebts = debtsWithDividers.filter(
 		(debtOrDivider) => "amount" in debtOrDivider,
 	);
-	const { user, debts } = mockDebts({
+	const { debtUser, debts } = mockDebts({
 		generateDebts: getGenerateDebts(onlyDebts),
 	});
-	await openUserDebts(user.id, { awaitDebts: debts.length });
+	await openUserDebts(debtUser.id, { awaitDebts: debts.length });
 	await expect(evenDebtsDivider).toHaveCount(0);
 	await expect(debtAmount).toHaveText(
 		onlyDebts

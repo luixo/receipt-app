@@ -5,14 +5,15 @@ import { getParticipantSums } from "~app/utils/receipt-item";
 import { expect } from "~tests/frontend/fixtures";
 import { getMutationsByKey } from "~tests/frontend/fixtures/queries";
 import {
-	defaultGenerateReceiptItemsWithConsumers,
-	generateDebtsMapped,
+	defaultGenerateDebtsFromReceipt,
 	ourDesynced,
 	ourNonExistent,
 	ourSynced,
+	remapDebts,
 	theirDesynced,
 	theirSynced,
-} from "~tests/frontend/generators/receipts";
+} from "~tests/frontend/generators/debts";
+import { defaultGenerateReceiptItemsWithConsumers } from "~tests/frontend/generators/receipts";
 
 import { test } from "./debts.utils";
 
@@ -25,9 +26,7 @@ test.describe("Wrapper component", () => {
 		errorMessage,
 		openReceipt,
 	}) => {
-		const { receipt } = mockReceiptWithDebts({
-			generateDebts: generateDebtsMapped(),
-		});
+		const { receipt } = mockReceiptWithDebts();
 
 		const debtsGetPause = api.createPause();
 		api.mockFirst("debts.get", async () => {
@@ -56,7 +55,11 @@ test.describe("Propagate debts button", () => {
 		updateDebtsButton,
 	}) => {
 		const { receipt } = mockReceiptWithDebts({
-			generateDebts: generateDebtsMapped(ourDesynced, theirSynced),
+			generateDebts: (opts) =>
+				remapDebts(
+					ourDesynced,
+					theirSynced,
+				)(defaultGenerateDebtsFromReceipt(opts)),
 		});
 		await openReceiptWithDebts(receipt);
 		await expect(propagateDebtsButton).not.toBeVisible();
@@ -70,7 +73,11 @@ test.describe("Propagate debts button", () => {
 		updateDebtsButton,
 	}) => {
 		const { receipt } = mockReceiptWithDebts({
-			generateDebts: generateDebtsMapped(ourSynced, theirDesynced),
+			generateDebts: (opts) =>
+				remapDebts(
+					ourSynced,
+					theirDesynced,
+				)(defaultGenerateDebtsFromReceipt(opts)),
 		});
 		await openReceiptWithDebts(receipt);
 		await expect(propagateDebtsButton).not.toBeVisible();
@@ -84,7 +91,8 @@ test.describe("Propagate debts button", () => {
 		updateDebtsButton,
 	}) => {
 		const { receipt } = mockReceiptWithDebts({
-			generateDebts: generateDebtsMapped(ourNonExistent),
+			generateDebts: (opts) =>
+				remapDebts(ourNonExistent)(defaultGenerateDebtsFromReceipt(opts)),
 		});
 		await openReceipt(receipt.id);
 		await expect(propagateDebtsButton).toBeVisible();
@@ -98,7 +106,10 @@ test.describe("Propagate debts button", () => {
 		updateDebtsButton,
 	}) => {
 		const { receipt } = mockReceiptWithDebts({
-			generateDebts: generateDebtsMapped([ourDesynced, ourNonExistent]),
+			generateDebts: (opts) =>
+				remapDebts([ourDesynced, ourNonExistent])(
+					defaultGenerateDebtsFromReceipt(opts),
+				),
 		});
 		await openReceiptWithDebts(receipt);
 		await expect(propagateDebtsButton).not.toBeVisible();
@@ -112,7 +123,8 @@ test.describe("Propagate debts button", () => {
 		updateDebtsButton,
 	}) => {
 		const { receipt } = mockReceiptWithDebts({
-			generateDebts: generateDebtsMapped(ourSynced),
+			generateDebts: (opts) =>
+				remapDebts(ourSynced)(defaultGenerateDebtsFromReceipt(opts)),
 		});
 		await openReceiptWithDebts(receipt);
 		await expect(propagateDebtsButton).not.toBeVisible();
@@ -130,9 +142,14 @@ test.describe("Mutations", () => {
 		openReceiptWithDebts,
 		snapshotQueries,
 	}) => {
+		let originalDebtsAmount = 0;
 		const { receipt, debts, participants, receiptItemsWithConsumers } =
 			mockReceiptWithDebts({
-				generateDebts: generateDebtsMapped([ourNonExistent, ourDesynced]),
+				generateDebts: (opts) => {
+					const originalDebts = defaultGenerateDebtsFromReceipt(opts);
+					originalDebtsAmount = originalDebts.length;
+					return remapDebts([ourNonExistent, ourDesynced])(originalDebts);
+				},
 				generateReceiptItemsWithConsumers: (opts) =>
 					defaultGenerateReceiptItemsWithConsumers({
 						...opts,
@@ -163,8 +180,8 @@ test.describe("Mutations", () => {
 		await openReceiptWithDebts(receipt);
 		const { nextQueryCache } = await snapshotQueries(async () => {
 			await updateDebtsButton.click();
-			await awaitCacheKey("debts.add", 3);
-			await awaitCacheKey("debts.update", 2);
+			await awaitCacheKey("debts.add", Math.ceil(originalDebtsAmount / 2));
+			await awaitCacheKey("debts.update", Math.floor(originalDebtsAmount / 2));
 		});
 		const addMutationsVariables = getMutationsByKey(
 			nextQueryCache,

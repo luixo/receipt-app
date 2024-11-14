@@ -19,10 +19,10 @@ test("Multiple dividers", async ({
 	const onlyDebts = debtsWithDividers.filter(
 		(debtOrDivider) => "amount" in debtOrDivider,
 	);
-	const { user, debts } = mockDebts({
+	const { debtUser, debts } = mockDebts({
 		generateDebts: getGenerateDebts(onlyDebts),
 	});
-	await openUserDebts(user.id, { awaitDebts: debts.length });
+	await openUserDebts(debtUser.id, { awaitDebts: debts.length });
 	await expect(evenDebtsDivider.or(debtAmount)).toHaveText(
 		debtsWithDividers.toReversed().map((debtOrDivider) => {
 			if ("amount" in debtOrDivider) {

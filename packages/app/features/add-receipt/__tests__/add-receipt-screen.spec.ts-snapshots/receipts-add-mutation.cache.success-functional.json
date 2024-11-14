@@ -1,17 +1,17 @@
 {
 	"queries": {
-		"receipts.get:[{\"id\":\"f6f7bc30-88b4-4f59-a2a3-8ffbb2b88b3d\"}]": {
+		"receipts.get:[{\"id\":\"a7b78913-cc20-41ca-8212-fa827c195a0e\"}]": {
 			"state": {
 				"data": {
-					"id": "f6f7bc30-88b4-4f59-a2a3-8ffbb2b88b3d",
+					"id": "a7b78913-cc20-41ca-8212-fa827c195a0e",
 					"createdAt": "2020-01-01T00:00:00.000Z",
-					"name": "doloribus ex vel",
+					"name": "tempora reprehenderit quam",
 					"issued": "2020-01-31T00:00:00.000Z",
 					"currencyCode": "USD",
 					"participants": [],
 					"items": [],
-					"ownerUserId": "697bf755-ef72-4471-a8b0-7bf7a2442b26",
-					"selfUserId": "697bf755-ef72-4471-a8b0-7bf7a2442b26",
+					"ownerUserId": "8fa5f9e1-7c69-47bf-b755-ef724718b07b",
+					"selfUserId": "8fa5f9e1-7c69-47bf-b755-ef724718b07b",
 					"debt": {
 						"direction": "outcoming",
 						"ids": []
@@ -31,7 +31,7 @@
 			"1": {
 				"state": {
 					"data": {
-						"id": "f6f7bc30-88b4-4f59-a2a3-8ffbb2b88b3d",
+						"id": "a7b78913-cc20-41ca-8212-fa827c195a0e",
 						"createdAt": "2020-01-01T00:00:00.000Z",
 						"participants": [],
 						"items": []

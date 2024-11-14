@@ -27,9 +27,9 @@ test("On load", async ({
 	expectDate,
 	expectCurrency,
 }) => {
-	const { currencies } = mockBase();
+	const { topCurrencies } = mockBase();
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-	const topCurrency = currencies.sort((a, b) => a.count - b.count)[0]!;
+	const topCurrency = topCurrencies.sort((a, b) => a.count - b.count)[0]!;
 
 	await snapshotQueries(async () => {
 		await page.goto("/receipts/add");
