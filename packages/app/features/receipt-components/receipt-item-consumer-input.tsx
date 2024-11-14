@@ -1,13 +1,12 @@
 import React from "react";
-import { View } from "react-native";
 
+import { PartButtons } from "~app/components/app/part-buttons";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useSingleInput } from "~app/hooks/use-single-input";
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import { trpc } from "~app/trpc";
 import { partSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
-import { MinusIcon, PlusIcon } from "~components/icons";
 import { Input } from "~components/input";
 import { Text } from "~components/text";
 import { updateSetStateAction } from "~utils/react";
@@ -71,28 +70,13 @@ export const ReceiptItemConsumerInput: React.FC<Props> = ({
 
 	const wrap = React.useCallback(
 		(children: React.ReactElement) => (
-			<View className="flex-row items-center gap-2">
-				<Button
-					variant="ghost"
-					color="primary"
-					isLoading={isPending}
-					onClick={() => updateConsumerPart((prev) => prev - 1)}
-					isDisabled={consumer.part <= 1}
-					isIconOnly
-				>
-					<MinusIcon size={24} />
-				</Button>
+			<PartButtons
+				isPending={isPending}
+				updatePart={updateConsumerPart}
+				downDisabled={consumer.part <= 1}
+			>
 				{children}
-				<Button
-					variant="ghost"
-					color="primary"
-					isLoading={isPending}
-					onClick={() => updateConsumerPart((prev) => prev + 1)}
-					isIconOnly
-				>
-					<PlusIcon size={24} />
-				</Button>
-			</View>
+			</PartButtons>
 		),
 		[updateConsumerPart, consumer.part, isPending],
 	);
