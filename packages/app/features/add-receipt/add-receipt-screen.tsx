@@ -1,8 +1,7 @@
-import { Spinner } from "@nextui-org/react";
-
 import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
 import { trpc } from "~app/trpc";
+import { Spinner } from "~components/spinner";
 import type { AppPage } from "~utils/next";
 
 import { AddReceipt } from "./add-receipt";

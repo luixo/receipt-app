@@ -89,22 +89,11 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 		<Accordion>
 			<AccordionItem
 				key="parts"
-				classNames={
-					disabled
-						? {
-								base: "pointer-events-none",
-								titleWrapper: "pointer-events-auto",
-								indicator: "opacity-disabled",
-						  }
-						: undefined
-				}
 				textValue={`Participant ${participant.userId}`}
 				title={
 					<View className="flex-col items-start justify-between gap-2 min-[600px]:flex-row">
 						<LoadableUser
-							className={
-								participant.items.length === 0 ? "opacity-disabled" : undefined
-							}
+							className={disabled ? "opacity-disabled" : undefined}
 							id={participant.userId}
 							foreign={!isOwner}
 						/>
@@ -127,7 +116,6 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 									: null}
 							</Text>
 							<View className="flex-row items-center gap-2">
-								<ReceiptParticipantRoleInput participant={participant} />
 								{isOwner ? (
 									<RemoveButton
 										onRemove={removeReceiptParticipant}
@@ -142,15 +130,17 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 					</View>
 				}
 			>
-				<View className="flex gap-4">
-					{renderParticipantActions(participant)}
+				<View className="flex gap-3">
+					<View className="flex flex-row items-center justify-between gap-4">
+						<ReceiptParticipantRoleInput participant={participant} />
+						{renderParticipantActions(participant)}
+					</View>
 					<View>
 						{participant.items.map((item) => (
 							<Text key={item.id}>
-								{item.name} -{" "}
-								{`${round(item.sum)}${item.hasExtra ? "+" : ""} ${
-									currency.symbol
-								}`}
+								{`${item.name} - ${round(item.sum)}${
+									item.hasExtra ? "+" : ""
+								} ${currency.symbol}`}
 							</Text>
 						))}
 					</View>

@@ -7,7 +7,8 @@ import { EmptyCard } from "~app/components/empty-card";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { AvatarGroup } from "~components/avatar";
 import { Button } from "~components/button";
-import { UserIcon } from "~components/icons";
+import { Divider } from "~components/divider";
+import { PencilIcon, UserIcon } from "~components/icons";
 import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
 import { Text } from "~components/text";
 import type { UsersId } from "~db/models";
@@ -16,12 +17,65 @@ import { useActionsHooksContext, useReceiptContext } from "./context";
 import { useIsOwner } from "./hooks";
 import { ReceiptParticipant } from "./receipt-participant";
 
+const ReceiptParticipantsPreview: React.FC<{ switchModal: () => void }> = ({
+	switchModal,
+}) => {
+	const { participants, ownerUserId } = useReceiptContext();
+	const isOwner = useIsOwner();
+	if (participants.length === 0) {
+		return <Button onClick={switchModal}>Add participants</Button>;
+	}
+	const debtParticipants = participants.filter(({ debtSum }) => debtSum !== 0);
+	return (
+		<View
+			className="xs:flex-row flex cursor-pointer flex-col gap-2"
+			onClick={switchModal}
+		>
+			<View className="flex flex-row gap-2">
+				<Text className="text-2xl leading-9">payed by</Text>
+				<AvatarGroup className="ml-2">
+					<LoadableUser
+						key={ownerUserId}
+						id={ownerUserId}
+						foreign={!isOwner}
+						onlyAvatar
+						dimmed
+					/>
+				</AvatarGroup>
+			</View>
+			{debtParticipants.length !== 0 ? (
+				<View className="flex flex-row gap-2">
+					<Text className="text-2xl leading-9">for</Text>
+					{/* Fix `ml-2` with finding out why first avatar gets `-ms-2` class instead of `ms-0` */}
+					<AvatarGroup className="ml-2">
+						{debtParticipants.map((participant) => (
+							<LoadableUser
+								key={participant.userId}
+								id={participant.userId}
+								foreign={!isOwner}
+								onlyAvatar
+							/>
+						))}
+					</AvatarGroup>
+				</View>
+			) : null}
+			<Button
+				variant="bordered"
+				color="primary"
+				onClick={switchModal}
+				isIconOnly
+			>
+				<PencilIcon size={32} />
+			</Button>
+		</View>
+	);
+};
+
 export const ReceiptParticipants: React.FC = () => {
 	const { receiptDisabled, participants, selfUserId, getUsersSuggestOptions } =
 		useReceiptContext();
 	const isOwner = useIsOwner();
-	const [isModalOpen, { switchValue: switchModalOpen, setTrue: openModal }] =
-		useBooleanState();
+	const [isModalOpen, { switchValue: switchModalOpen }] = useBooleanState();
 	const isSelfAdded = participants.some(
 		(participant) => participant.userId === selfUserId,
 	);
@@ -44,21 +98,7 @@ export const ReceiptParticipants: React.FC = () => {
 	);
 	return (
 		<>
-			{participants.length === 0 ? (
-				<Button onClick={switchModalOpen}>Add participants</Button>
-			) : (
-				// Fix `ml-2` with finding out why first avatar gets `-ms-2` class instead of `ms-0`
-				<AvatarGroup className="ml-2 cursor-pointer" onClick={openModal}>
-					{participants.map((payer) => (
-						<LoadableUser
-							key={payer.userId}
-							id={payer.userId}
-							foreign={!isOwner}
-							onlyAvatar
-						/>
-					))}
-				</AvatarGroup>
-			)}
+			<ReceiptParticipantsPreview switchModal={switchModalOpen} />
 			<Modal
 				aria-label="Participant picker"
 				isOpen={isModalOpen}
@@ -74,15 +114,20 @@ export const ReceiptParticipants: React.FC = () => {
 							<Text className="text-xl">Participants</Text>
 						</View>
 					</ModalHeader>
-					<ModalBody>
-						<View className="flex flex-col gap-2 max-sm:gap-4">
-							{participants.map((participant) => (
-								<ReceiptParticipant
-									key={participant.userId}
-									participant={participant}
-								/>
-							))}
-						</View>
+					<ModalBody className="flex flex-col gap-4 py-6">
+						{participants.length === 0 ? null : (
+							<>
+								<View className="flex flex-col gap-2 max-sm:gap-4">
+									{participants.map((participant) => (
+										<ReceiptParticipant
+											key={participant.userId}
+											participant={participant}
+										/>
+									))}
+								</View>
+								<Divider />
+							</>
+						)}
 						{isOwner ? (
 							<UsersSuggest
 								filterIds={[

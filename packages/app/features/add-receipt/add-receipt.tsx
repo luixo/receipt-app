@@ -1,5 +1,4 @@
 import React from "react";
-import { View } from "react-native";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -20,7 +19,6 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
 import { Button } from "~components/button";
 import { Input } from "~components/input";
-import { Text } from "~components/text";
 import type { AccountsId, UsersId } from "~db/models";
 import { options as receiptsAddOptions } from "~mutations/receipts/add";
 import { getToday } from "~utils/date";
@@ -168,12 +166,7 @@ export const AddReceipt: React.FC<Props> = ({ selfAccountId }) => {
 						isLoading={addReceiptMutation.isPending}
 					/>
 				</form>
-				<View className="flex flex-row justify-center gap-2">
-					{rawParticipants.length === 0 ? null : (
-						<Text className="text-xl leading-9">Participants</Text>
-					)}
-					<ReceiptParticipants />
-				</View>
+				<ReceiptParticipants />
 				<ReceiptItems />
 				<Button
 					className="mt-4"

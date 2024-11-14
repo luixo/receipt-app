@@ -6,6 +6,7 @@ export {
 	MdAttachMoney as DebtsIcon,
 	MdAdd as AddIcon,
 	MdLink as LinkIcon,
+	MdEdit as PencilIcon,
 	MdLinkOff as UnlinkIcon,
 	MdOutlineReceipt as ReceiptIcon,
 	MdNavigateNext as ArrowIcon,

@@ -107,18 +107,7 @@ export const ReceiptInner: React.FC<InnerProps> = ({ query }) => {
 						</View>
 						<View className="flex flex-col justify-center gap-2 sm:flex-row">
 							<ReceiptAmountInput receipt={receipt} isLoading={deleteLoading} />
-							<View className="xs:flex-row flex flex-col gap-2">
-								<View className="flex flex-row gap-2">
-									<Text className="text-2xl leading-9">payed by</Text>
-									<LoadableUser id={receipt.ownerUserId} onlyAvatar />
-								</View>
-								<View className="flex flex-row gap-2">
-									{receipt.participants.length === 0 ? null : (
-										<Text className="text-2xl leading-9">for</Text>
-									)}
-									<ReceiptParticipants />
-								</View>
-							</View>
+							<ReceiptParticipants />
 						</View>
 					</View>
 					<ReceiptItems />
