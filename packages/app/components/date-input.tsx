@@ -65,7 +65,7 @@ export const DateInput: React.FC<Props> = ({
 									title: "Save date",
 									isHidden:
 										dateValue.toDateString() === timestamp.toDateString(),
-									onClick: () => onUpdate(dateValue),
+									onPress: () => onUpdate(dateValue),
 							  }
 					}
 					type="text"

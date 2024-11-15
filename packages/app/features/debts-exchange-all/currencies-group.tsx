@@ -20,7 +20,7 @@ const CurrencyButton: React.FC<ButtonProps> = ({
 	}, [setSelectedCurrencyCode, currencyCode]);
 	const formattedCurrency = useFormattedCurrency(currencyCode);
 	return (
-		<Button variant={selected ? undefined : "ghost"} onClick={select}>
+		<Button variant={selected ? undefined : "ghost"} onPress={select}>
 			{formattedCurrency.symbol}
 		</Button>
 	);
@@ -57,7 +57,7 @@ export const CurrenciesGroup: React.FC<Props> = ({
 			))}
 			<Button
 				variant={isSelectedOther ? undefined : "ghost"}
-				onClick={onSelectOther}
+				onPress={onSelectOther}
 			>
 				{isSelectedOther ? otherCurrency.symbol : "Other"}
 			</Button>

@@ -79,7 +79,7 @@ export const LoginScreen: AppPage = () => {
 			<Button
 				color="primary"
 				isDisabled={loginMutation.isPending}
-				onClick={openModal}
+				onPress={openModal}
 			>
 				Forgot password?
 			</Button>

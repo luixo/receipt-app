@@ -35,7 +35,7 @@ export const SignButtonGroup: React.FC<Props> = ({
 	return (
 		<View className="flex-row">
 			<Button
-				onClick={setPositive}
+				onPress={setPositive}
 				variant={direction === "-" ? "bordered" : undefined}
 				className={buttonClass({ type: "left" })}
 				color="success"
@@ -44,7 +44,7 @@ export const SignButtonGroup: React.FC<Props> = ({
 				{isLoading ? <Spinner size="sm" /> : "+ give"}
 			</Button>
 			<Button
-				onClick={setNegative}
+				onPress={setNegative}
 				variant={direction === "+" ? "bordered" : undefined}
 				className={buttonClass({ type: "right" })}
 				color="danger"

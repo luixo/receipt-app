@@ -102,7 +102,7 @@ export const CurrencyInput = <T extends MinimalForm>({
 			) : (
 				<Button
 					color="primary"
-					onClick={openModal}
+					onPress={openModal}
 					isDisabled={isLoading}
 					className="self-end"
 				>

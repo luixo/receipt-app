@@ -59,7 +59,7 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 			<Button
 				color="primary"
 				isDisabled={!userId || isLoading}
-				onClick={acceptConnection}
+				onPress={acceptConnection}
 				title={
 					userQuery.status === "success"
 						? `Connect ${intention.account.email} as ${userQuery.data.name}`
@@ -76,7 +76,7 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 				color="warning"
 				variant="bordered"
 				isDisabled={isLoading}
-				onClick={rejectConnection}
+				onPress={rejectConnection}
 			>
 				Reject connection
 			</Button>

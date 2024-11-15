@@ -233,7 +233,7 @@ export const AccountAvatarInput: React.FC<Props> = ({ account, children }) => {
 							isDisabled={
 								updateAvatarMutation.isPending || removeAvatarMutation.isPending
 							}
-							onClick={disableAvatarEdit}
+							onPress={disableAvatarEdit}
 							isIconOnly
 						>
 							<CloseIcon size={24} />
@@ -255,7 +255,7 @@ export const AccountAvatarInput: React.FC<Props> = ({ account, children }) => {
 											updateAvatarMutation.isPending ||
 											removeAvatarMutation.isPending
 										}
-										onClick={openModal}
+										onPress={openModal}
 										isIconOnly
 									>
 										<TrashBinIcon size={24} />
@@ -269,7 +269,7 @@ export const AccountAvatarInput: React.FC<Props> = ({ account, children }) => {
 							isDisabled={
 								updateAvatarMutation.isPending || removeAvatarMutation.isPending
 							}
-							onClick={resetEditor}
+							onPress={resetEditor}
 							isIconOnly
 						>
 							<SyncIcon size={24} />
@@ -283,7 +283,7 @@ export const AccountAvatarInput: React.FC<Props> = ({ account, children }) => {
 									updateAvatarMutation.isPending ||
 									removeAvatarMutation.isPending
 								}
-								onClick={form.handleSubmit(submitHandler)}
+								onPress={() => form.handleSubmit(submitHandler)()}
 								isIconOnly
 							>
 								<CheckMark size={24} />

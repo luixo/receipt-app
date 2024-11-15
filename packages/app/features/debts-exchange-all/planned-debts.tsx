@@ -245,7 +245,7 @@ export const PlannedDebts: React.FC<Props> = ({
 		fillRatesData(ratesQuery.data);
 	}, [ratesQuery.status, ratesQuery.data, fillRatesData]);
 	const retryButton = React.useMemo(
-		() => ({ text: "Refetch rates", onClick: () => ratesQuery.refetch() }),
+		() => ({ text: "Refetch rates", onPress: () => ratesQuery.refetch() }),
 		[ratesQuery],
 	);
 	const addMutations = debts.map(() =>
@@ -303,7 +303,7 @@ export const PlannedDebts: React.FC<Props> = ({
 				/>
 			))}
 			<Button
-				onClick={addAll}
+				onPress={addAll}
 				isDisabled={
 					mutationPending ||
 					ratesQuery.isLoading ||

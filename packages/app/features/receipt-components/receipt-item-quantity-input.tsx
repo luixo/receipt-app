@@ -78,7 +78,7 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 			labelPlacement="outside-left"
 			saveProps={{
 				title: "Save receipt item quantity",
-				onClick: () => updateQuantity(getNumberValue()),
+				onPress: () => updateQuantity(getNumberValue()),
 			}}
 			variant="bordered"
 		/>

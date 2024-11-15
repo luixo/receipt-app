@@ -26,7 +26,7 @@ type Props = Omit<
 	saveProps?: {
 		title?: string;
 		isHidden?: boolean;
-		onClick: () => void;
+		onPress: () => void;
 	};
 	multiline?: boolean;
 };
@@ -103,7 +103,7 @@ export const Input = React.forwardRef<
 								variant="light"
 								isLoading={isMutationLoading}
 								isDisabled={isWarning || isError}
-								onClick={saveProps.onClick}
+								onPress={saveProps.onPress}
 								isIconOnly
 								color="success"
 							>

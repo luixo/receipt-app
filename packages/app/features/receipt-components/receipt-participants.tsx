@@ -23,7 +23,7 @@ const ReceiptParticipantsPreview: React.FC<{ switchModal: () => void }> = ({
 	const { participants, ownerUserId } = useReceiptContext();
 	const isOwner = useIsOwner();
 	if (participants.length === 0) {
-		return <Button onClick={switchModal}>Add participants</Button>;
+		return <Button onPress={switchModal}>Add participants</Button>;
 	}
 	const payerParticipants = participants.filter(({ payPart }) =>
 		Boolean(payPart),
@@ -71,7 +71,7 @@ const ReceiptParticipantsPreview: React.FC<{ switchModal: () => void }> = ({
 			<Button
 				variant="bordered"
 				color="primary"
-				onClick={switchModal}
+				onPress={switchModal}
 				isIconOnly
 			>
 				<PencilIcon size={32} />

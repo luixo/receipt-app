@@ -85,7 +85,7 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 			return (
 				<Button
 					color="danger"
-					onClick={() => connectionIntentionsQuery.refetch()}
+					onPress={() => connectionIntentionsQuery.refetch()}
 				>
 					{connectionIntentionsQuery.error.message}
 				</Button>
@@ -108,7 +108,7 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 						isLoading={cancelRequestMutation.isPending}
 						color="danger"
 						isIconOnly
-						onClick={() =>
+						onPress={() =>
 							cancelRequest(outboundConnectionIntention.account.id)
 						}
 					>
@@ -123,7 +123,7 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 		return (
 			<Button
 				color="primary"
-				onClick={() => setInputShown(true)}
+				onPress={() => setInputShown(true)}
 				isDisabled={isLoading}
 			>
 				Connect to an account
@@ -147,7 +147,7 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 							variant="light"
 							isLoading={unlinkMutation.isPending}
 							isIconOnly
-							onClick={unlinkUser}
+							onPress={unlinkUser}
 						>
 							<UnlinkIcon size={24} />
 						</Button>
@@ -157,7 +157,7 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 							variant="light"
 							isLoading={connectUserMutation.isPending}
 							isDisabled={Boolean(inputState.error) || getValue().length === 0}
-							onClick={() => connectUser(getValue())}
+							onPress={() => connectUser(getValue())}
 							isIconOnly
 						>
 							<LinkIcon size={24} />

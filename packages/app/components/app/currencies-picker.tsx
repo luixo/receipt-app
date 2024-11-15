@@ -51,7 +51,7 @@ const CurrenciesPickerLoader: React.FC<LoaderProps> = ({
 						<Divider className="my-2" />
 					) : null}
 					<Button
-						onClick={() => onChange(code)}
+						onPress={() => onChange(code)}
 						variant="flat"
 						color={code === selectedCurrencyCode ? "success" : "primary"}
 						title={code}

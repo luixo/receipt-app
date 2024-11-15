@@ -38,7 +38,7 @@ export const SkeletonUser: React.FC<
 				data-testid="user-chip-skeleton"
 				className={wrapper({ className })}
 				avatar={<Avatar size="sm" {...avatarProps} />}
-				onClick={props.onClick}
+				onPress={props.onClick}
 				{...(typeof chip === "boolean" ? {} : chip)}
 			>
 				<Skeleton className="h-4 w-12 rounded" />
@@ -99,7 +99,7 @@ export const User = React.forwardRef<HTMLDivElement, Props>(
 					data-testid="user-chip"
 					className={wrapper({ className })}
 					avatar={<UserAvatar size="xs" {...avatarInput} />}
-					onClick={props.onClick}
+					onPress={props.onClick}
 					{...(typeof chip === "boolean" ? {} : chip)}
 				>
 					{name}

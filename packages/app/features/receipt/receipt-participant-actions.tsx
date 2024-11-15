@@ -93,7 +93,7 @@ export const ReceiptParticipantActions: React.FC<Props> = ({
 								isDisabled={isUpdating}
 								isIconOnly
 								color="primary"
-								onClick={() => updateDebt(currentDebt)}
+								onPress={() => updateDebt(currentDebt)}
 							>
 								<SyncIcon size={24} />
 							</Button>
@@ -107,7 +107,7 @@ export const ReceiptParticipantActions: React.FC<Props> = ({
 					isDisabled={isUpdating}
 					isIconOnly
 					color="primary"
-					onClick={addDebt}
+					onPress={addDebt}
 				>
 					<SendIcon size={24} />
 				</Button>

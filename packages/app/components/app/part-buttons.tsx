@@ -23,7 +23,7 @@ export const PartButtons: React.FC<Props> = ({
 			variant="ghost"
 			color="primary"
 			isLoading={isPending}
-			onClick={() => updatePart((prev) => prev - 1)}
+			onPress={() => updatePart((prev) => prev - 1)}
 			isDisabled={downDisabled}
 			isIconOnly
 		>
@@ -34,7 +34,7 @@ export const PartButtons: React.FC<Props> = ({
 			variant="ghost"
 			color="primary"
 			isLoading={isPending}
-			onClick={() => updatePart((prev) => prev + 1)}
+			onPress={() => updatePart((prev) => prev + 1)}
 			isDisabled={upDisabled}
 			isIconOnly
 		>

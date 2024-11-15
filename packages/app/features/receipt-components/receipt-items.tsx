@@ -21,7 +21,7 @@ const AddReceiptItemController: React.FC = () => {
 		<Button
 			color="primary"
 			variant="bordered"
-			onClick={openForm}
+			onPress={openForm}
 			className="w-full"
 			disabled={receiptDisabled}
 		>

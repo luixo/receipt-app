@@ -122,7 +122,7 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 					<Button
 						variant="bordered"
 						color="primary"
-						onClick={enableShowResolvedDebts}
+						onPress={enableShowResolvedDebts}
 					>
 						Show resolved debts
 					</Button>

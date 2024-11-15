@@ -40,7 +40,7 @@ export const EmailVerificationCard: React.FC = () => {
 				) : (
 					<Button
 						color="primary"
-						onClick={resendEmail}
+						onPress={resendEmail}
 						isDisabled={resendEmailMutation.isPending}
 						isLoading={resendEmailMutation.isPending}
 					>

@@ -29,7 +29,7 @@ export const RemoveButton: React.FC<Props> = ({
 	>
 		{({ openModal }) => (
 			<Button
-				onClick={noConfirm ? onRemove : openModal}
+				onPress={noConfirm ? onRemove : openModal}
 				color="danger"
 				{...props}
 				isDisabled={props.isDisabled || mutation.isPending}

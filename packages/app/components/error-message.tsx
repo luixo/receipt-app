@@ -18,7 +18,7 @@ type Props = {
 	message: string;
 	button?: {
 		text: string;
-		onClick: () => void;
+		onPress: () => void;
 	};
 };
 
@@ -38,7 +38,7 @@ export const ErrorMessage: React.FC<Props> = ({ message, button }) => (
 			<>
 				<Divider />
 				<CardFooter className="flex flex-row justify-end">
-					<Button color="primary" onClick={button.onClick}>
+					<Button color="primary" onPress={button.onPress}>
 						{button.text}
 					</Button>
 				</CardFooter>
@@ -64,7 +64,7 @@ export const QueryErrorMessage: React.FC<QueryProps> = ({ query }) => {
 	return (
 		<ErrorMessage
 			button={React.useMemo(
-				() => ({ text: "Refetch", onClick: refetch }),
+				() => ({ text: "Refetch", onPress: refetch }),
 				[refetch],
 			)}
 			message={query.error.message}
@@ -89,7 +89,7 @@ export const GroupedQueryErrorMessage: React.FC<GroupedQueryProps> = ({
 	return (
 		<ErrorMessage
 			button={React.useMemo(
-				() => ({ text: "Refetch", onClick: refetch }),
+				() => ({ text: "Refetch", onPress: refetch }),
 				[refetch],
 			)}
 			message={queries[0].error.message}

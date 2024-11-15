@@ -60,7 +60,7 @@ export const ReceiptNameInput: React.FC<Props> = ({
 			fieldError={inputState.error}
 			saveProps={{
 				title: "Save receipt name",
-				onClick: () => saveName(getValue()),
+				onPress: () => saveName(getValue()),
 			}}
 		/>
 	);

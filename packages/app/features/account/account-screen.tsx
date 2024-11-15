@@ -64,7 +64,7 @@ const AccountNameInput: React.FC<NameProps> = ({ accountQuery }) => {
 			saveProps={{
 				title: "Save name",
 				isHidden: accountQuery.user.name === getValue(),
-				onClick: () => saveName(getValue()),
+				onPress: () => saveName(getValue()),
 			}}
 		/>
 	);
@@ -101,7 +101,7 @@ const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 			<Button
 				className="mt-4 self-end"
 				isDisabled={logoutMutation.isPending}
-				onClick={logout}
+				onPress={logout}
 				color="warning"
 				isLoading={logoutMutation.isPending}
 			>

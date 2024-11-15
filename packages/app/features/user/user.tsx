@@ -59,7 +59,7 @@ const UserNameInput: React.FC<NameProps> = ({ user, isLoading }) => {
 			saveProps={{
 				title: "Save user name",
 				isHidden: user.name === getValue(),
-				onClick: () => saveName(getValue()),
+				onPress: () => saveName(getValue()),
 			}}
 		/>
 	);
@@ -118,7 +118,7 @@ const UserPublicNameInput: React.FC<PublicNameProps> = ({
 			<Button
 				color="primary"
 				isDisabled={updateUserMutation.isPending || isLoading}
-				onClick={setInput}
+				onPress={setInput}
 			>
 				Add public name
 			</Button>
@@ -135,7 +135,7 @@ const UserPublicNameInput: React.FC<PublicNameProps> = ({
 			saveProps={{
 				title: "Save user public name",
 				isHidden: user.publicName === getValue(),
-				onClick: () => savePublicName(getValue()),
+				onPress: () => savePublicName(getValue()),
 			}}
 			endContent={
 				user.publicName === undefined ? null : (
@@ -143,7 +143,7 @@ const UserPublicNameInput: React.FC<PublicNameProps> = ({
 						title="Remove user public name"
 						variant="light"
 						isLoading={updateUserMutation.isPending}
-						onClick={() => savePublicName(undefined)}
+						onPress={() => savePublicName(undefined)}
 						color="danger"
 						isIconOnly
 					>

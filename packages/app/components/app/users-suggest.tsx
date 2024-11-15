@@ -196,7 +196,7 @@ export const UsersSuggest: React.FC<Props> = ({
 				selectedKey={selectedUserIds[0] ?? null}
 				onSelectionChange={onSelectionChange}
 				clearButtonProps={{
-					onClick: () => setValue(""),
+					onPress: () => setValue(""),
 				}}
 				listboxProps={{
 					classNames: { list: "m-0" },

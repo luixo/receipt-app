@@ -56,7 +56,7 @@ export const ChangePasswordScreen: AppPage = () => {
 
 	if (!changePasswordShown) {
 		return (
-			<Button color="primary" onClick={showChangePassword}>
+			<Button color="primary" onPress={showChangePassword}>
 				Change password
 			</Button>
 		);

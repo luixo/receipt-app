@@ -21,7 +21,7 @@ export const ManualAcceptDebtsOption: React.FC = () => {
 		[updateSettingsMutation],
 	);
 	const errorButton = React.useMemo(
-		() => ({ text: "Reset", onClick: updateSettingsMutation.reset }),
+		() => ({ text: "Reset", onPress: updateSettingsMutation.reset }),
 		[updateSettingsMutation],
 	);
 	if (settingsQuery.status === "pending") {

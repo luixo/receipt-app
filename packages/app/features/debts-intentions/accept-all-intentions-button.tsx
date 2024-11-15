@@ -41,7 +41,7 @@ export const AcceptAllIntentionsButton: React.FC<Props> = ({ intentions }) => {
 	return (
 		<Button
 			color="primary"
-			onClick={() => acceptAllIntentions()}
+			onPress={() => acceptAllIntentions()}
 			title="Accept all incoming intentions"
 		>
 			Accept all intentions

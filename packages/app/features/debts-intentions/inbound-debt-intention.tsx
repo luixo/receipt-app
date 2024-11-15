@@ -47,7 +47,7 @@ export const InboundDebtIntention = React.forwardRef<HTMLDivElement, Props>(
 					<Button
 						isDisabled={isPending}
 						isLoading={isPending}
-						onClick={() => acceptSyncIntention()}
+						onPress={() => acceptSyncIntention()}
 						title={`Accept debt for ${intention.amount} ${intention.currencyCode}`}
 					>
 						Accept
@@ -56,7 +56,7 @@ export const InboundDebtIntention = React.forwardRef<HTMLDivElement, Props>(
 						variant="bordered"
 						isDisabled={isPending}
 						isLoading={isPending}
-						onClick={() => acceptSyncIntention(true)}
+						onPress={() => acceptSyncIntention(true)}
 						title={`Accept and edit debt for ${intention.amount} ${intention.currencyCode}`}
 					>
 						Accept and edit

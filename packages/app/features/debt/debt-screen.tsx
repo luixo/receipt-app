@@ -65,7 +65,7 @@ const DebtCurrencyInput: React.FC<CurrencyProps> = ({ debt, isLoading }) => {
 		<>
 			<Button
 				variant="light"
-				onClick={openModal}
+				onPress={openModal}
 				isDisabled={isLoading}
 				isLoading={updateReceiptMutation.isPending}
 				isIconOnly
@@ -131,7 +131,7 @@ const DebtAmountInput: React.FC<AmountProps> = ({ debt, isLoading }) => {
 			saveProps={{
 				title: "Save debt amount",
 				isHidden: absoluteAmount === getNumberValue(),
-				onClick: () => updateAmount(getNumberValue()),
+				onPress: () => updateAmount(getNumberValue()),
 			}}
 			endContent={<DebtCurrencyInput debt={debt} isLoading={isLoading} />}
 			variant="bordered"
@@ -215,7 +215,7 @@ const DebtNoteInput: React.FC<NoteProps> = ({ debt, isLoading }) => {
 			saveProps={{
 				title: "Save debt note",
 				isHidden: debt.note === getValue(),
-				onClick: () => saveNote(getValue()),
+				onPress: () => saveNote(getValue()),
 			}}
 			multiline
 		/>

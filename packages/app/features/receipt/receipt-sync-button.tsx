@@ -115,7 +115,7 @@ const ReceiptSyncButtonInner: React.FC<InnerProps> = ({
 				title={hasDesyncedParticipants ? "Update debts" : "Propagate debts"}
 				isLoading={isPropagating}
 				isDisabled={isPropagating || Boolean(emptyItemsWarning) || isLoading}
-				onClick={propagateDebts}
+				onPress={propagateDebts}
 				color="primary"
 				isIconOnly
 			>

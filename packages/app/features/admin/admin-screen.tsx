@@ -41,10 +41,10 @@ const BecomeModal: React.FC<ModalProps> = ({
 					<Header>{`Do you want to become "${email}"?`}</Header>
 				</ModalHeader>
 				<ModalBody className="flex-row gap-4 p-4">
-					<Button color="warning" onClick={becomeAccount} className="flex-1">
+					<Button color="warning" onPress={becomeAccount} className="flex-1">
 						Yes
 					</Button>
-					<Button color="default" onClick={closeModal} className="flex-1">
+					<Button color="default" onPress={closeModal} className="flex-1">
 						No
 					</Button>
 				</ModalBody>
@@ -107,7 +107,7 @@ export const AdminScreen: AppPage = () => {
 						{pretendUserAccount ? (
 							<>
 								<AdminUserCard {...pretendUserAccount} />
-								<Button onClick={resetPretendUser} color="primary">
+								<Button onPress={resetPretendUser} color="primary">
 									Reset to self
 								</Button>
 							</>
@@ -127,7 +127,7 @@ export const AdminScreen: AppPage = () => {
 							.map((element) => (
 								<AdminUserCard key={element.account.id} {...element}>
 									<Button
-										onClick={setModalEmailCurried(element.account.email)}
+										onPress={setModalEmailCurried(element.account.email)}
 										color="warning"
 									>
 										Become

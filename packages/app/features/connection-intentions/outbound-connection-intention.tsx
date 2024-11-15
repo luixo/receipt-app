@@ -35,7 +35,7 @@ export const OutboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 					variant="light"
 					isLoading={removeConnectionMutation.isPending}
 					isIconOnly
-					onClick={removeConnection}
+					onPress={removeConnection}
 				>
 					<UnlinkIcon size={24} />
 				</Button>

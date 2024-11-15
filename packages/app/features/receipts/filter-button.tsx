@@ -28,7 +28,7 @@ export const FilterButton: React.FC = () => {
 	const [filterModalOpen, { switchValue: switchFilterModal }] =
 		useBooleanState(false);
 
-	const sortSelectOnClick = React.useCallback(
+	const sortSelectOnPress = React.useCallback(
 		() => changeOrderBy(orderBy === "date-desc" ? "date-asc" : "date-desc"),
 		[changeOrderBy, orderBy],
 	);
@@ -60,13 +60,13 @@ export const FilterButton: React.FC = () => {
 
 	return (
 		<>
-			<Button color="primary" isIconOnly onClick={switchFilterModal}>
+			<Button color="primary" isIconOnly onPress={switchFilterModal}>
 				<FilterIcon size={24} />
 			</Button>
 			<Modal isOpen={filterModalOpen} onOpenChange={switchFilterModal}>
 				<ModalContent>
 					<ModalBody className="items-center">
-						<Button variant="light" onClick={sortSelectOnClick}>
+						<Button variant="light" onPress={sortSelectOnPress}>
 							<SortIcon size={24} />
 							{orderBy === "date-desc" ? "Newest first" : "Oldest first"}
 						</Button>

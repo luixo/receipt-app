@@ -213,7 +213,7 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 									</PartButtons>
 								</>
 							) : (
-								<Button onClick={onAddPayer}>+ Payer</Button>
+								<Button onPress={onAddPayer}>+ Payer</Button>
 							)}
 						</View>
 						{renderParticipantActions(participant)}

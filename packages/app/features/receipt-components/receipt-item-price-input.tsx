@@ -82,7 +82,7 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 			isDisabled={isDisabled}
 			saveProps={{
 				title: "Save receipt item price",
-				onClick: () => updatePrice(getNumberValue()),
+				onPress: () => updatePrice(getNumberValue()),
 			}}
 			variant="bordered"
 		/>

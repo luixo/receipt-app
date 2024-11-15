@@ -41,7 +41,7 @@ export const VoidAccount: React.FC<Props> = ({ token }) => {
 			<View className="flex-row gap-2">
 				<Button
 					className="flex-1"
-					onClick={voidAccount}
+					onPress={voidAccount}
 					isDisabled={isPending}
 					isLoading={isPending}
 					color="danger"

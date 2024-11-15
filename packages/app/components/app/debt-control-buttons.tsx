@@ -71,7 +71,7 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 				>
 					{({ openModal }) => (
 						<Button
-							onClick={openModal}
+							onPress={openModal}
 							variant="ghost"
 							color="warning"
 							isIconOnly

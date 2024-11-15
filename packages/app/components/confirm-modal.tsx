@@ -55,13 +55,13 @@ export const ConfirmModal: React.FC<Props> = ({
 					<ModalBody className="flex-row justify-center gap-2">
 						<Button
 							color="danger"
-							onClick={onYesClick}
+							onPress={onYesClick}
 							isDisabled={isLoading}
 							isLoading={isLoading}
 						>
 							{yesText}
 						</Button>
-						<Button color="primary" onClick={closeModal} isDisabled={isLoading}>
+						<Button color="primary" onPress={closeModal} isDisabled={isLoading}>
 							{noText}
 						</Button>
 					</ModalBody>

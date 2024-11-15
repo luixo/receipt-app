@@ -76,7 +76,7 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 			className="basis-52"
 			saveProps={{
 				title: "Save receipt item name",
-				onClick: () => updateName(getValue()),
+				onPress: () => updateName(getValue()),
 			}}
 		/>
 	);

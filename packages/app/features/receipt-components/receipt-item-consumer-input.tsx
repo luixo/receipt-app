@@ -110,7 +110,7 @@ export const ReceiptItemConsumerInput: React.FC<Props> = ({
 				labelPlacement="outside-left"
 				saveProps={{
 					title: "Save item consumer part",
-					onClick: () => updateConsumerPart(getNumberValue()),
+					onPress: () => updateConsumerPart(getNumberValue()),
 				}}
 				endContent={<Text className="self-center">/ {totalParts}</Text>}
 				variant="bordered"
@@ -121,7 +121,7 @@ export const ReceiptItemConsumerInput: React.FC<Props> = ({
 	return wrap(
 		<Button
 			variant="light"
-			onClick={switchEditing}
+			onPress={switchEditing}
 			isDisabled={isDisabled}
 			isIconOnly
 			className="w-auto min-w-16 px-2"
