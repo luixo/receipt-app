@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import assert from "node:assert";
 
 import { test as debtsGroupFixture } from "~app/components/app/__tests__/debts-group.utils";
-import { SETTINGS_COOKIE_NAME } from "~app/utils/cookie/settings";
+import { SETTINGS_STORE_NAME } from "~app/utils/store/settings";
 import { expect } from "~tests/frontend/fixtures";
 import type { GenerateDebts } from "~tests/frontend/generators/debts";
 import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
@@ -115,7 +115,7 @@ test.describe("Showed debts depending on 'show resolved debts' option", () => {
 		const { debtUser, debts } = mockDebts({
 			generateDebts: generateDebtsWithEmpty,
 		});
-		await cookieManager.addCookie(SETTINGS_COOKIE_NAME, {
+		await cookieManager.addCookie(SETTINGS_STORE_NAME, {
 			showResolvedDebts: true,
 		});
 		await openDebtsExchangeScreen(debtUser.id, { awaitDebts: debts.length });
@@ -131,7 +131,7 @@ test.describe("Showed debts depending on 'show resolved debts' option", () => {
 		const { debtUser, debts } = mockDebts({
 			generateDebts: generateDebtsWithEmpty,
 		});
-		await cookieManager.addCookie(SETTINGS_COOKIE_NAME, {
+		await cookieManager.addCookie(SETTINGS_STORE_NAME, {
 			showResolvedDebts: false,
 		});
 		await openDebtsExchangeScreen(debtUser.id, { awaitDebts: debts.length });

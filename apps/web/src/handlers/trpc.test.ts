@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { describe, expect } from "vitest";
 
-import { PRETEND_USER_COOKIE_NAME } from "~app/utils/cookie/pretend-user";
+import { PRETEND_USER_STORE_NAME } from "~app/utils/store/pretend-user";
 import { createAuthContext, createContext } from "~tests/backend/utils/context";
 import {
 	insertAccount,
@@ -178,7 +178,7 @@ describe("procedures", () => {
 					const caller = createCaller(
 						createAuthContext(ctx, sessionId, {
 							headers: {
-								cookie: `${PRETEND_USER_COOKIE_NAME}=${JSON.stringify({
+								cookie: `${PRETEND_USER_STORE_NAME}=${JSON.stringify({
 									email: "not@found.com",
 								})}`,
 							},
@@ -196,7 +196,7 @@ describe("procedures", () => {
 					const caller = createCaller(
 						createAuthContext(ctx, sessionId, {
 							headers: {
-								cookie: `${PRETEND_USER_COOKIE_NAME}=${JSON.stringify({
+								cookie: `${PRETEND_USER_STORE_NAME}=${JSON.stringify({
 									email: foreignAccount.email,
 								})}`,
 								"x-keep-real-auth": "true",
@@ -215,7 +215,7 @@ describe("procedures", () => {
 					const caller = createCaller(
 						createAuthContext(ctx, sessionId, {
 							headers: {
-								cookie: `${PRETEND_USER_COOKIE_NAME}=${JSON.stringify({
+								cookie: `${PRETEND_USER_STORE_NAME}=${JSON.stringify({
 									email2: foreignAccount.email,
 								})}`,
 							},
@@ -234,7 +234,7 @@ describe("procedures", () => {
 				const caller = createCaller(
 					createAuthContext(ctx, sessionId, {
 						headers: {
-							cookie: `${PRETEND_USER_COOKIE_NAME}=${JSON.stringify({
+							cookie: `${PRETEND_USER_STORE_NAME}=${JSON.stringify({
 								email: foreignAccount.email,
 							})}`,
 						},

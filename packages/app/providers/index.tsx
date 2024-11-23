@@ -3,22 +3,20 @@ import type React from "react";
 import type { Persister } from "@tanstack/react-query-persist-client";
 import type { NextParsedUrlQuery } from "next/dist/server/request-meta";
 
-import type { CookieContextType } from "~app/contexts/cookie-context";
-import { CookieContext } from "~app/contexts/cookie-context";
 import type { LinksContextType } from "~app/contexts/links-context";
 import type { QueryClientsRecord } from "~app/contexts/query-clients-context";
-import type { SSRContextData } from "~app/contexts/ssr-context";
+import { StoreContext } from "~app/contexts/store-context";
+import type { StoreContextType } from "~app/contexts/store-context";
 
 import { PersisterProvider } from "./persist-client";
 import { QueryProvider } from "./query";
 import { SearchParamsProvider } from "./search-params";
 import { ShimsProvider } from "./shims";
-import { SSRDataProvider } from "./ssr-data";
+import { StoredDataProvider } from "./stored-data";
 
 type Props = {
 	searchParams: NextParsedUrlQuery;
-	cookiesContext: CookieContextType;
-	cookiesData: SSRContextData;
+	storeContext: StoreContextType;
 	persister: Persister;
 	linksContext: LinksContextType;
 	useQueryClientKey: () => keyof QueryClientsRecord | undefined;
@@ -26,16 +24,15 @@ type Props = {
 
 export const Provider: React.FC<React.PropsWithChildren<Props>> = ({
 	children,
-	cookiesContext,
-	cookiesData,
+	storeContext,
 	searchParams,
 	persister,
 	linksContext,
 	useQueryClientKey,
 }) => (
 	<SearchParamsProvider searchParams={searchParams}>
-		<CookieContext.Provider value={cookiesContext}>
-			<SSRDataProvider data={cookiesData}>
+		<StoreContext.Provider value={storeContext}>
+			<StoredDataProvider>
 				<QueryProvider
 					linksContext={linksContext}
 					useQueryClientKey={useQueryClientKey}
@@ -46,7 +43,7 @@ export const Provider: React.FC<React.PropsWithChildren<Props>> = ({
 						</PersisterProvider>
 					</ShimsProvider>
 				</QueryProvider>
-			</SSRDataProvider>
-		</CookieContext.Provider>
+			</StoredDataProvider>
+		</StoreContext.Provider>
 	</SearchParamsProvider>
 );

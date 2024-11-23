@@ -3,9 +3,9 @@ import type { IncomingMessage } from "node:http";
 
 import { AUTH_COOKIE } from "~app/utils/auth";
 import {
-	PRETEND_USER_COOKIE_NAME,
+	PRETEND_USER_STORE_NAME,
 	pretendUserSchema,
-} from "~app/utils/cookie/pretend-user";
+} from "~app/utils/store/pretend-user";
 import { transformer } from "~app/utils/trpc";
 import {
 	SESSION_EXPIRATION_DURATION,
@@ -49,7 +49,7 @@ const getPretendAccountEmail = (req: IncomingMessage): string | undefined => {
 	if (req.headers["x-keep-real-auth"]) {
 		return;
 	}
-	const pretendUserString = getCookie(req, PRETEND_USER_COOKIE_NAME);
+	const pretendUserString = getCookie(req, PRETEND_USER_STORE_NAME);
 	if (!pretendUserString) {
 		return;
 	}

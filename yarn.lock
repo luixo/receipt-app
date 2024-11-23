@@ -6337,6 +6337,7 @@ __metadata:
     "@ra/queries": "workspace:*"
     "@ra/utils": "workspace:*"
     "@react-types/shared": ^3.18.1
+    "@tanstack/query-async-storage-persister": ^5.51.1
     "@tanstack/react-query-persist-client": ^5.51.1
     "@trpc/client": ^11.0.0-rc.461
     "@trpc/react-query": ^11.0.0-rc.461
@@ -6344,6 +6345,8 @@ __metadata:
     "@types/uuid": ^9.0.2
     array.prototype.tosorted: ^1.1.2
     boring-avatars: ^1.10.1
+    cookies-next: ^2.1.2
+    idb-keyval: ^6.2.1
     nativewind: ^4.0.36
     next-usequerystate: 1.13.0
     react-date-picker: ^10.3.0
@@ -6526,7 +6529,6 @@ __metadata:
     "@ra/playwright": "workspace:*"
     "@ra/utils": "workspace:*"
     "@ra/vitest": "workspace:*"
-    "@tanstack/query-async-storage-persister": ^5.51.1
     "@trpc/client": ^11.0.0-rc.461
     "@trpc/next": ^11.0.0-rc.461
     "@trpc/server": ^11.0.0-rc.461
@@ -6544,7 +6546,6 @@ __metadata:
     critters: ^0.0.20
     dataloader: ^2.2.2
     goober: ^2.1.13
-    idb-keyval: ^6.2.1
     isomorphic-fetch: ^3.0.0
     kysely: ^0.27.2
     nativewind: ^4.0.36

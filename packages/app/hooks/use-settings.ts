@@ -1,7 +1,7 @@
 import React from "react";
 
-import { SSRContext } from "~app/contexts/ssr-context";
-import { SETTINGS_COOKIE_NAME } from "~app/utils/cookie/settings";
+import { StoreDataContext } from "~app/contexts/store-data-context";
+import { SETTINGS_STORE_NAME } from "~app/utils/store/settings";
 
 export const useSettings = () =>
-	React.useContext(SSRContext)[SETTINGS_COOKIE_NAME];
+	React.useContext(StoreDataContext)[SETTINGS_STORE_NAME];

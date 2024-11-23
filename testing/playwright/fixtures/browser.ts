@@ -1,11 +1,11 @@
 import { test } from "@playwright/test";
 
-import type { CookieValues } from "~app/utils/cookie-data";
+import type { StoreValues } from "~app/utils/store-data";
 
 type CookieManager = {
-	addCookie: <K extends keyof CookieValues>(
+	addCookie: <K extends keyof StoreValues>(
 		name: K,
-		value: CookieValues[K],
+		value: StoreValues[K],
 	) => Promise<void>;
 };
 

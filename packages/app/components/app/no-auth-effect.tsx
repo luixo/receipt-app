@@ -3,12 +3,11 @@ import React from "react";
 import { useRouter } from "solito/navigation";
 
 import { QueryErrorMessage } from "~app/components/error-message";
-import { CookieContext } from "~app/contexts/cookie-context";
+import { useAuth } from "~app/hooks/use-auth";
 import { trpc } from "~app/trpc";
-import { AUTH_COOKIE } from "~app/utils/auth";
 
 export const NoAuthEffect: React.FC = () => {
-	const { deleteCookie } = React.useContext(CookieContext);
+	const { unauthorize } = useAuth();
 	const router = useRouter();
 	const accountQuery = trpc.account.get.useQuery(undefined, {
 		retry: (count, error) => count < 2 && error.data?.code !== "UNAUTHORIZED",
@@ -18,10 +17,10 @@ export const NoAuthEffect: React.FC = () => {
 			accountQuery.error &&
 			accountQuery.error.data?.code === "UNAUTHORIZED"
 		) {
-			deleteCookie(AUTH_COOKIE);
+			unauthorize();
 			router.push("/login");
 		}
-	}, [accountQuery.error, router, deleteCookie]);
+	}, [accountQuery.error, router, unauthorize]);
 	if (accountQuery.status === "error") {
 		return <QueryErrorMessage query={accountQuery} />;
 	}

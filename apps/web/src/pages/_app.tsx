@@ -14,25 +14,26 @@ import { LinksContext } from "~app/contexts/links-context";
 import { usePretendUserClientKey } from "~app/hooks/use-pretend-user-client-key";
 import { useRemoveTestQueryParams } from "~app/hooks/use-remove-test-query-params";
 import { Provider } from "~app/providers/index";
-import { getSSRContextCookieData } from "~app/utils/cookie-data";
 import { applyRemaps } from "~app/utils/nativewind";
+import { persister } from "~app/utils/persister";
+import { getStoreContext } from "~app/utils/store";
+import type { StoreValues } from "~app/utils/store-data";
+import { getStoreValuesFromInitialValues } from "~app/utils/store-data";
 import type { AppPage } from "~utils/next";
 import { useHtmlFont } from "~web/hooks/use-html-font";
 import { useHydratedMark } from "~web/hooks/use-hydrated-mark";
-import { useLocalCookies } from "~web/hooks/use-local-cookies";
+import { useStoreLocalSettings } from "~web/hooks/use-local-settings";
 import { useQueryClientHelper } from "~web/hooks/use-query-client-helper";
 import { useRemovePreloadedCss } from "~web/hooks/use-remove-preloaded-css";
 import { QueryDevToolsProvider } from "~web/providers/client/query-devtools";
 import { ThemeProvider } from "~web/providers/client/theme";
-import { nextCookieContext } from "~web/utils/next-cookies";
-import { webPersister } from "~web/utils/persister";
 import { captureSentryError } from "~web/utils/trpc";
 import "~app/global.css";
 
 applyRemaps();
 
 const GlobalHooksComponent: React.FC = () => {
-	useLocalCookies();
+	useStoreLocalSettings();
 	useQueryClientHelper();
 	useHydratedMark();
 	useRemoveTestQueryParams();
@@ -61,8 +62,11 @@ const font = Inter({
 
 type PageProps = Omit<
 	React.ComponentProps<typeof Provider>,
-	"cookiesContext" | "persister" | "linksContext" | "useQueryClientKey"
->;
+	"storeContext" | "persister" | "linksContext" | "useQueryClientKey"
+> & {
+	nowTimestamp: number;
+	initialValues: StoreValues;
+};
 
 const MyApp: AppType = ({ Component, pageProps }) => {
 	// we don't use other Next.js types
@@ -82,6 +86,10 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 		[baseLinksContext.url, props.searchParams.proxyPort],
 	);
 	useHtmlFont(font.variable);
+	const storeContext = React.useMemo(
+		() => getStoreContext(props.nowTimestamp, props.initialValues),
+		[props.initialValues, props.nowTimestamp],
+	);
 	return (
 		<>
 			<Head>
@@ -95,11 +103,10 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 			</Head>
 			<main className={`${font.variable} font-sans`}>
 				<Provider
-					cookiesData={props.cookiesData}
 					linksContext={linksContext}
 					searchParams={props.searchParams}
-					cookiesContext={nextCookieContext}
-					persister={webPersister}
+					storeContext={storeContext}
+					persister={persister}
 					useQueryClientKey={usePretendUserClientKey}
 				>
 					<ThemeProvider>
@@ -121,10 +128,8 @@ MyApp.getInitialProps = async ({ ctx, router }) => {
 	const cookies = getCookies(ctx);
 	const pageProps: PageProps = {
 		searchParams: router.query,
-		cookiesData: {
-			values: getSSRContextCookieData(cookies),
-			nowTimestamp: Date.now(),
-		},
+		initialValues: getStoreValuesFromInitialValues(cookies),
+		nowTimestamp: Date.now(),
 	};
 	return { pageProps };
 };

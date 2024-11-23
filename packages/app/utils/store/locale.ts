@@ -10,7 +10,7 @@ declare global {
 	}
 }
 
-export const LOCALE_COOKIE_NAME = "ssrContext:locale";
+export const LOCALE_STORE_NAME = "ssrContext:locale";
 
 export const getDateTimeLocale = () =>
 	Intl.DateTimeFormat().resolvedOptions().locale;

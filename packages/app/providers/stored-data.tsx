@@ -2,51 +2,51 @@ import React from "react";
 
 import { fromEntries, keys } from "remeda";
 
-import { CookieContext } from "~app/contexts/cookie-context";
-import type { SSRContextData } from "~app/contexts/ssr-context";
-import { SSRContext } from "~app/contexts/ssr-context";
-import type { CookieStates, CookieValues } from "~app/utils/cookie-data";
+import { StoreContext } from "~app/contexts/store-context";
+import { StoreDataContext } from "~app/contexts/store-data-context";
+import type { StoreStates, StoreValues } from "~app/utils/store-data";
 import {
-	getCookieStatesFromValues,
-	getSSRContextCookieData,
+	getStoreStatesFromValues,
+	getStoreValuesFromInitialValues,
 	schemas,
-} from "~app/utils/cookie-data";
+} from "~app/utils/store-data";
 import { updateSetStateAction } from "~utils/react";
 
-const resolveState = (values: CookieValues) =>
-	fromEntries(keys(schemas).map((key) => [key, values[key]])) as CookieValues;
+const resolveState = (values: StoreValues) =>
+	fromEntries(keys(schemas).map((key) => [key, values[key]])) as StoreValues;
 
 type SetValues = {
-	[K in keyof CookieStates]: CookieStates[K][1];
+	[K in keyof StoreStates]: StoreStates[K][1];
 };
 
 type DeleteValues = {
-	[K in keyof CookieStates]: CookieStates[K][2];
+	[K in keyof StoreStates]: StoreStates[K][2];
 };
 
-type CookieKey = keyof CookieStates;
+type StoreKey = keyof StoreStates;
 
-type Props = {
-	data: SSRContextData;
-};
-
-export const SSRDataProvider: React.FC<React.PropsWithChildren<Props>> = ({
+export const StoredDataProvider: React.FC<React.PropsWithChildren> = ({
 	children,
-	data: { nowTimestamp, values },
 }) => {
-	const { setCookie, deleteCookie } = React.useContext(CookieContext);
+	const { setItem, deleteItem, getInitialItems } =
+		React.useContext(StoreContext);
+	const { nowTimestamp, values } = getInitialItems();
 	const [isMounted, setMounted] = React.useState(false);
 	React.useEffect(() => setMounted(true), []);
-	const [ssrState, setSsrState] = React.useState<CookieValues | undefined>(
-		() => (values ? resolveState(values) : undefined),
+	const [ssrState, setSsrState] = React.useState<StoreValues | undefined>(() =>
+		values instanceof Promise ? undefined : resolveState(values),
 	);
 	React.useEffect(() => {
-		if (!ssrState && values) {
-			setSsrState(resolveState(values));
+		if (values instanceof Promise) {
+			void values.then((resolvedValues) => {
+				if (!ssrState) {
+					setSsrState(resolveState(resolvedValues));
+				}
+			});
 		}
 	}, [values, ssrState]);
 	const updateValue = React.useCallback(
-		<K extends CookieKey>(key: K) =>
+		<K extends StoreKey>(key: K) =>
 			(
 				setStateAction: React.SetStateAction<NonNullable<typeof ssrState>[K]>,
 			) => {
@@ -58,26 +58,26 @@ export const SSRDataProvider: React.FC<React.PropsWithChildren<Props>> = ({
 						setStateAction,
 						prevState[key],
 					);
-					// Updating a cookie and updating local state in the same time
-					setCookie(key, nextState);
+					// Updating a store value and updating local state in the same time
+					void setItem(key, nextState);
 					return { ...prevState, [key]: nextState };
 				});
 			},
-		[setCookie],
+		[setItem],
 	);
 	const deleteValue = React.useCallback(
-		<K extends CookieKey>(key: K) =>
+		<K extends StoreKey>(key: K) =>
 			() => {
 				setSsrState((prevState) => {
 					if (!prevState) {
 						return prevState;
 					}
-					// Removing a cookie and updating local state in the same time
-					deleteCookie(key);
+					// Removing a store value and updating local state in the same time
+					void deleteItem(key);
 					return { ...prevState, [key]: schemas[key].parse(undefined) };
 				});
 			},
-		[deleteCookie],
+		[deleteItem],
 	);
 	const ssrSetValues = React.useMemo<SetValues>(
 		() =>
@@ -95,21 +95,21 @@ export const SSRDataProvider: React.FC<React.PropsWithChildren<Props>> = ({
 	);
 	const ssrStates = React.useMemo(
 		() =>
-			getCookieStatesFromValues(
-				ssrState || getSSRContextCookieData(),
+			getStoreStatesFromValues(
+				ssrState || getStoreValuesFromInitialValues(),
 				(key) => ssrSetValues[key],
 				(key) => ssrDeleteValues[key],
 			),
 		[ssrState, ssrSetValues, ssrDeleteValues],
 	);
 	return (
-		<SSRContext.Provider
+		<StoreDataContext.Provider
 			value={React.useMemo(
 				() => ({ isFirstRender: !isMounted, nowTimestamp, ...ssrStates }),
 				[ssrStates, nowTimestamp, isMounted],
 			)}
 		>
 			{children}
-		</SSRContext.Provider>
+		</StoreDataContext.Provider>
 	);
 };

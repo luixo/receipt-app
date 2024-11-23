@@ -4,16 +4,16 @@ import { useColorScheme } from "react-native";
 import { useRouter } from "solito/navigation";
 
 import {
-	useLastColorModeCookie,
-	useSelectedColorModeCookie,
+	useLastColorMode,
+	useSelectedColorMode,
 } from "~app/hooks/use-color-modes";
 import { NextUIProvider } from "~components/utils";
 
 export const ThemeProvider: React.FC<React.PropsWithChildren<object>> = ({
 	children,
 }) => {
-	const [selectedColorMode] = useSelectedColorModeCookie();
-	const [lastColorMode, setLastColorMode] = useLastColorModeCookie();
+	const [selectedColorMode] = useSelectedColorMode();
+	const [lastColorMode, setLastColorMode] = useLastColorMode();
 	const colorScheme = useColorScheme();
 	React.useEffect(() => {
 		if (!colorScheme) {

@@ -9,14 +9,12 @@ import { LinksContext } from "~app/contexts/links-context";
 import { SELF_QUERY_CLIENT_KEY } from "~app/contexts/query-clients-context";
 import { Provider } from "~app/providers/index";
 import { useBaseUrl } from "~mobile/hooks/use-base-url";
-import { useCookieData } from "~mobile/hooks/use-cookie-data";
 import { QueryDevToolsProvider } from "~mobile/providers/query-devtools";
 import { ThemeProvider } from "~mobile/providers/theme";
-import { mobileCookieContext } from "~mobile/utils/cookie-storage";
-import { mobilePersister } from "~mobile/utils/persister";
+import { persister } from "~mobile/utils/persister";
+import { storeContext } from "~mobile/utils/store";
 
 const ClientProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
-	const cookieData = useCookieData();
 	const searchParams = useGlobalSearchParams();
 	const baseUrl = useBaseUrl();
 	const baseLinksContext = React.useContext(LinksContext);
@@ -36,9 +34,8 @@ const ClientProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 	return (
 		<Provider
 			searchParams={searchParams}
-			cookiesContext={mobileCookieContext}
-			cookiesData={cookieData}
-			persister={mobilePersister}
+			storeContext={storeContext}
+			persister={persister}
 			linksContext={linksContext}
 			useQueryClientKey={useSelfQueryClientKey}
 		>

@@ -3,10 +3,10 @@ import React from "react";
 import { User } from "~app/components/app/user";
 import { QueryErrorMessage } from "~app/components/error-message";
 import { PageHeader } from "~app/components/page-header";
-import { SSRContext } from "~app/contexts/ssr-context";
+import { StoreDataContext } from "~app/contexts/store-data-context";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import { PRETEND_USER_COOKIE_NAME } from "~app/utils/cookie/pretend-user";
+import { PRETEND_USER_STORE_NAME } from "~app/utils/store/pretend-user";
 import { Button } from "~components/button";
 import { Card, CardBody } from "~components/card";
 import { Divider } from "~components/divider";
@@ -74,8 +74,8 @@ export const AdminScreen: AppPage = () => {
 	const accountsQuery = trpc.admin.accounts.useQuery();
 	const [modalEmail, setModalEmail] = React.useState<string | undefined>();
 	const {
-		[PRETEND_USER_COOKIE_NAME]: [pretendUser, setPretendUser, resetPretendUser],
-	} = React.useContext(SSRContext);
+		[PRETEND_USER_STORE_NAME]: [pretendUser, setPretendUser, resetPretendUser],
+	} = React.useContext(StoreDataContext);
 	const setPretendEmail = React.useCallback(
 		(email: string) => setPretendUser({ email }),
 		[setPretendUser],

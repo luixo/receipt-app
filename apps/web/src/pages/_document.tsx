@@ -7,10 +7,10 @@ import NextDocument, { Head, Html, Main, NextScript } from "next/document";
 
 import {
 	type ColorMode,
-	LAST_COLOR_MODE_COOKIE_NAME,
-	SELECTED_COLOR_MODE_COOKIE_NAME,
-} from "~app/utils/cookie/color-modes";
-import { schemas } from "~app/utils/cookie-data";
+	LAST_COLOR_MODE_STORE_NAME,
+	SELECTED_COLOR_MODE_STORE_NAME,
+} from "~app/utils/store/color-modes";
+import { schemas } from "~app/utils/store-data";
 import { NATIVE_STYLESHEET_PRELOAD_ID } from "~web/hooks/use-remove-preloaded-css";
 
 type NativeWebAppRegistry = typeof AppRegistry & {
@@ -70,11 +70,11 @@ class Document extends NextDocument<DocumentProps> {
 Document.getInitialProps = async (ctx) => {
 	const prevProps = await ctx.defaultGetInitialProps(ctx);
 	const colorMode =
-		schemas[SELECTED_COLOR_MODE_COOKIE_NAME].parse(
-			getCookie(SELECTED_COLOR_MODE_COOKIE_NAME, ctx),
+		schemas[SELECTED_COLOR_MODE_STORE_NAME].parse(
+			getCookie(SELECTED_COLOR_MODE_STORE_NAME, ctx),
 		) ||
-		schemas[LAST_COLOR_MODE_COOKIE_NAME].parse(
-			getCookie(LAST_COLOR_MODE_COOKIE_NAME, ctx),
+		schemas[LAST_COLOR_MODE_STORE_NAME].parse(
+			getCookie(LAST_COLOR_MODE_STORE_NAME, ctx),
 		);
 	return {
 		...prevProps,

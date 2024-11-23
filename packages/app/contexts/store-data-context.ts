@@ -3,15 +3,15 @@ import * as React from "react";
 import { doNothing } from "remeda";
 
 import {
-	type CookieStates,
-	type CookieValues,
-	getCookieStatesFromValues,
-	getSSRContextCookieData,
-} from "~app/utils/cookie-data";
+	type StoreStates,
+	type StoreValues,
+	getStoreStatesFromValues,
+	getStoreValuesFromInitialValues,
+} from "~app/utils/store-data";
 
 // The data above + data we add on each render
-export type SSRContextData = {
-	values?: CookieValues;
+export type StoreData = {
+	values?: StoreValues;
 	// Without this timestamp relative dates might differ on server and client
 	// (e.g. "1 second ago" and "2 seconds ago")
 	// which will cause hydration mismatch warning
@@ -19,13 +19,13 @@ export type SSRContextData = {
 };
 
 // The data above + flag of whether it's first render
-export type SSRContextType = Omit<SSRContextData, keyof CookieValues> & {
+export type StoreDataContextType = Omit<StoreData, keyof StoreValues> & {
 	isFirstRender: boolean;
-} & CookieStates;
+} & StoreStates;
 
-export const SSRContext = React.createContext<SSRContextType>({
-	...getCookieStatesFromValues(
-		getSSRContextCookieData(),
+export const StoreDataContext = React.createContext<StoreDataContextType>({
+	...getStoreStatesFromValues(
+		getStoreValuesFromInitialValues(),
 		() => doNothing,
 		() => doNothing,
 	),

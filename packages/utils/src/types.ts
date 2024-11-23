@@ -126,3 +126,5 @@ export type MappedNullableObject<
 > = NullableObject<{
 	[K in keyof KeyMapping]: T[KeyMapping[K]];
 }>;
+
+export type MaybePromise<T> = T | Promise<T>;

@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 
 import { test } from "~app/features/user-debts/__tests__/even-debts-divider.utils";
 import { debtsWithDividers } from "~app/hooks/__tests__/use-dividers.utils";
-import { SETTINGS_COOKIE_NAME } from "~app/utils/cookie/settings";
+import { SETTINGS_STORE_NAME } from "~app/utils/store/settings";
 import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
 import { generateCurrencyCode } from "~tests/frontend/generators/utils";
 import { getCurrencySymbol } from "~utils/currency-data";
@@ -17,7 +17,7 @@ test("'debts.get' pending / error", async ({
 	awaitCacheKey,
 	errorMessage,
 }) => {
-	await cookieManager.addCookie(SETTINGS_COOKIE_NAME, {
+	await cookieManager.addCookie(SETTINGS_STORE_NAME, {
 		showResolvedDebts: true,
 	});
 	const { debtUser, debts } = mockDebts({

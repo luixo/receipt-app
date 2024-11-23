@@ -1,22 +1,19 @@
 import * as React from "react";
 
-import { SSRContext } from "~app/contexts/ssr-context";
+import { StoreDataContext } from "~app/contexts/store-data-context";
+import { LOCALE_STORE_NAME, getDateTimeLocale } from "~app/utils/store/locale";
 import {
-	LOCALE_COOKIE_NAME,
-	getDateTimeLocale,
-} from "~app/utils/cookie/locale";
-import {
-	TZ_OFFSET_COOKIE_NAME,
+	TZ_OFFSET_STORE_NAME,
 	getTimezoneOffset,
-} from "~app/utils/cookie/tz-offset";
+} from "~app/utils/store/tz-offset";
 import { MINUTE } from "~utils/time";
 
 export const useSsrFormat = () => {
 	const {
-		[TZ_OFFSET_COOKIE_NAME]: ssrTzOffsetState,
-		[LOCALE_COOKIE_NAME]: ssrLocaleState,
+		[TZ_OFFSET_STORE_NAME]: ssrTzOffsetState,
+		[LOCALE_STORE_NAME]: ssrLocaleState,
 		isFirstRender,
-	} = React.useContext(SSRContext);
+	} = React.useContext(StoreDataContext);
 	const [ssrTzOffset] = ssrTzOffsetState;
 	const [ssrLocale] = ssrLocaleState;
 	const getDateWithTz = React.useCallback(

@@ -2,8 +2,8 @@ import React from "react";
 import { View } from "react-native";
 
 import {
-	useLastColorModeCookie,
-	useSelectedColorModeCookie,
+	useLastColorMode,
+	useSelectedColorMode,
 } from "~app/hooks/use-color-modes";
 import { Checkbox } from "~components/checkbox";
 import { Header } from "~components/header";
@@ -11,9 +11,9 @@ import { MoonIcon, SunIcon } from "~components/icons";
 import { Switch } from "~components/switch";
 
 export const ColorModeSettings: React.FC = () => {
-	const [lastColorMode] = useLastColorModeCookie();
+	const [lastColorMode] = useLastColorMode();
 	const [selectedColorMode, setSelectedColorMode, removeSelectedColorMode] =
-		useSelectedColorModeCookie();
+		useSelectedColorMode();
 	const setColorMode = React.useCallback(
 		(nextDark: boolean) => setSelectedColorMode(nextDark ? "dark" : "light"),
 		[setSelectedColorMode],

@@ -2,7 +2,7 @@ import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persi
 import type { Persister } from "@tanstack/react-query-persist-client";
 import { del, get, set } from "idb-keyval";
 
-export const webPersister: Persister = createAsyncStoragePersister({
+export const persister: Persister = createAsyncStoragePersister({
 	storage:
 		typeof window === "undefined"
 			? undefined
