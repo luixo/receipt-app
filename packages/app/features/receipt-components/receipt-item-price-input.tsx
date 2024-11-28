@@ -74,6 +74,7 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 	return (
 		<Input
 			{...bindings}
+			step="0.01"
 			aria-label="Receipt item price"
 			className="basis-24"
 			labelPlacement="outside-left"

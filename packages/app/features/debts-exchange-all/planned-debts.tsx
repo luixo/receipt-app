@@ -67,6 +67,7 @@ const RateInput: React.FC<InputProps> = ({
 			required
 			type="number"
 			min="0"
+			step="0.000001"
 			fieldError={inputState.error}
 		/>
 	);

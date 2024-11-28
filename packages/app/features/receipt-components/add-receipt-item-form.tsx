@@ -60,6 +60,7 @@ const ReceiptItemPriceInput: React.FC<PriceProps> = ({ form, isDisabled }) => {
 			required
 			type="number"
 			min="0"
+			step="0.01"
 			label="Price per unit"
 			isDisabled={isDisabled}
 			fieldError={inputState.error}
@@ -88,6 +89,7 @@ const ReceiptItemQuantityInput: React.FC<QuantityProps> = ({
 			required
 			type="number"
 			min="0"
+			step="0.01"
 			label="Units"
 			isDisabled={isDisabled}
 			fieldError={inputState.error}

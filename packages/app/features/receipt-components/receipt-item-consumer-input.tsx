@@ -102,6 +102,7 @@ export const ReceiptItemConsumerInput: React.FC<Props> = ({
 		return wrap(
 			<Input
 				{...bindings}
+				step="0.00001"
 				className="w-32"
 				aria-label="Item consumer part"
 				mutation={updateMutationState}

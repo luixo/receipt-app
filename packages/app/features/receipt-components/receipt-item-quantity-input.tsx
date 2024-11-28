@@ -70,6 +70,7 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 	return (
 		<Input
 			{...bindings}
+			step="0.01"
 			aria-label="Receipt item quantity"
 			mutation={updateMutationState}
 			fieldError={inputState.error}

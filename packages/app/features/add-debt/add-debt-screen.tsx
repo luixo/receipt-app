@@ -104,6 +104,7 @@ const DebtAmountInput: React.FC<AmountProps> = ({ form, isLoading }) => {
 			label="Amount"
 			isDisabled={isLoading}
 			fieldError={inputState.error}
+			step="0.01"
 		/>
 	);
 };
