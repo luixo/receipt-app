@@ -99,7 +99,7 @@ export const User = React.forwardRef<HTMLDivElement, Props>(
 					data-testid="user-chip"
 					className={wrapper({ className })}
 					avatar={<UserAvatar size="xs" {...avatarInput} />}
-					onPress={props.onClick}
+					onClick={props.onClick}
 					{...(typeof chip === "boolean" ? {} : chip)}
 				>
 					{name}
