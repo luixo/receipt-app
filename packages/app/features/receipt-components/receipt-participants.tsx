@@ -45,7 +45,7 @@ const ReceiptParticipantsPreview: React.FC<{ switchModal: () => void }> = ({
 						<LoadableUser
 							key={participant.userId}
 							id={participant.userId}
-							foreign={!isOwner}
+							foreign={!isOwner && payerParticipants.length !== 0}
 							onlyAvatar
 							dimmed={payerParticipants.length === 0}
 						/>
