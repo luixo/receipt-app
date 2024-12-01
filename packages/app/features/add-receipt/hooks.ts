@@ -374,7 +374,9 @@ export const useAddReceiptContext = (
 	selfUserId,
 	ownerUserId: selfUserId,
 	payers,
-	currencyCode: form.watch("currencyCode"),
+	// Currency code can actually be undefined
+	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+	currencyCode: form.watch("currencyCode") ?? "???",
 	receiptDisabled: false,
 	items,
 	participants,
