@@ -3,7 +3,7 @@
 		"debts.get:[{\"id\":\"0e187343-6cd5-466c-befe-358d1b9bc088\"}]": {
 			"state": {
 				"data": {
-					"amount": 105852.47
+					"amount": 105852.48
 				},
 				"dataUpdateCount": 2
 			}
@@ -12,7 +12,7 @@
 			"state": {
 				"data": {
 					"id": "b80f9427-ac79-412e-9682-6f56ce3b6a7b",
-					"amount": 82628.38,
+					"amount": 82628.37,
 					"currencyCode": "TWD",
 					"userId": "1503ff07-f969-49bc-b412-4e29e7f26a9d",
 					"timestamp": "2020-01-01T00:00:00.000Z",
@@ -58,7 +58,7 @@
 						"note": "Receipt \"exercitationem alias porro\"",
 						"currencyCode": "TWD",
 						"userId": "1503ff07-f969-49bc-b412-4e29e7f26a9d",
-						"amount": 82628.38,
+						"amount": 82628.37,
 						"timestamp": "2020-01-01T00:00:00.000Z",
 						"receiptId": "72cc16e7-64ae-4b7a-b6f8-66948bf9d5df"
 					}
@@ -78,7 +78,7 @@
 					"variables": {
 						"id": "0e187343-6cd5-466c-befe-358d1b9bc088",
 						"update": {
-							"amount": 105852.47,
+							"amount": 105852.48,
 							"currencyCode": "TWD",
 							"timestamp": "2020-01-01T00:00:00.000Z",
 							"receiptId": "72cc16e7-64ae-4b7a-b6f8-66948bf9d5df"

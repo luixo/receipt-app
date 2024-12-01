@@ -141,10 +141,13 @@ const getPayersSums = <
 	(1st place) P2 and P3
 	(2nd place) P1
 
-	Fourth, we roll the (determenistic) dice to figure out who will recieve the leftovers first:
+	Fourth, we roll the dice* to figure out who will recieve the leftovers first:
 	(1st) P2 (wins in dice roll)
 	(2nd) P3
 	(3rd) P1
+
+	* Die orders participants by creation date, if equal - by user id,
+	then rotate the array of participants based on receipt id (statistically random)
 
 	Finally, we give one cent to each participant with index less than amount of leftover (which is 1)
 
@@ -239,35 +242,44 @@ export const getParticipantSums = <
 	);
 	const leftover = leftoverBeforeReimburse - totalReimbursedShortage;
 
-	const nonEmptyParticipantIds = rotate(
-		participants
-			.filter((participant) => {
-				const sum = sumFlooredByParticipant[participant.userId];
-				return sum && sum >= 0;
-			})
-			.sort((a, b) => a.createdAt.valueOf() - b.createdAt.valueOf()),
-		getIndexByString(receiptId),
-	)
+	const nonEmptyParticipants = participants
+		.filter((participant) => {
+			const sum = sumFlooredByParticipant[participant.userId];
+			return sum && sum >= 0;
+		})
 		.sort((a, b) => {
 			const leftoverA = reimbursedShortages[a.userId]?.notReimbursed ?? 0;
 			const leftoverB = reimbursedShortages[b.userId]?.notReimbursed ?? 0;
-			return leftoverB - leftoverA;
-		})
-		.map(({ userId }) => userId);
+			const leftoverDelta = leftoverB - leftoverA;
+			if (leftoverDelta === 0) {
+				const createdDelta = a.createdAt.valueOf() - b.createdAt.valueOf();
+				if (createdDelta === 0) {
+					return a.userId.localeCompare(b.userId);
+				}
+				return createdDelta;
+			}
+			return leftoverDelta;
+		});
+	const nonEmptyParticipantsPinned = rotate(
+		nonEmptyParticipants,
+		getIndexByString(receiptId),
+	);
 
-	if (leftover > nonEmptyParticipantIds.length) {
+	if (leftover > nonEmptyParticipantsPinned.length) {
 		throw new Error("Unexpected leftover bigger than participants left");
 	}
 	// 1c left for a few lucky ones
-	const leftoverAmount = leftover % nonEmptyParticipantIds.length;
+	const leftoverAmount = leftover % nonEmptyParticipantsPinned.length;
 	// leftoverAmount === 0 with some leftover means that everyone gets a 1c leftover
 	// Aamount of leftover cents roughly equals to shortage sum (because of rounding)
 	const leftoverThresholdIndex =
 		leftoverAmount === 0 && leftover !== 0
-			? nonEmptyParticipantIds.length
+			? nonEmptyParticipantsPinned.length
 			: leftoverAmount;
-	const luckyLeftovers = nonEmptyParticipantIds.reduce<Record<UsersId, number>>(
-		(acc, id, index) => ({
+	const luckyLeftovers = nonEmptyParticipantsPinned.reduce<
+		Record<UsersId, number>
+	>(
+		(acc, { userId: id }, index) => ({
 			...acc,
 			[id]: index < leftoverThresholdIndex ? 1 : 0,
 		}),
