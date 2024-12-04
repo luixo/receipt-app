@@ -2,10 +2,10 @@ import React from "react";
 
 import { isNonNullish } from "remeda";
 
+import { useDecimals } from "~app/hooks/use-decimals";
 import { type TRPCQueryOutput, trpc } from "~app/trpc";
 import { isDebtInSyncWithReceipt } from "~app/utils/debts";
 import {
-	getDecimalsPower,
 	getItemCalculations,
 	getParticipantSums,
 } from "~app/utils/receipt-item";
@@ -32,9 +32,9 @@ const SORT_PARTICIPANTS = (a: OriginalParticipant, b: OriginalParticipant) => {
 	// Sort everyone else by createdAt timestamp
 	return a.createdAt.valueOf() - b.createdAt.valueOf();
 };
-const DECIMAL_POWER = getDecimalsPower();
 
 export const useParticipants = (receipt: TRPCQueryOutput<"receipts.get">) => {
+	const { fromUnitToSubunit, fromSubunitToUnit } = useDecimals();
 	const debtsQueries = trpc.useQueries((t) =>
 		getDebtIds(receipt).map((debtId) => t.debts.get({ id: debtId })),
 	);
@@ -64,6 +64,7 @@ export const useParticipants = (receipt: TRPCQueryOutput<"receipts.get">) => {
 			receipt.items,
 			receipt.participants,
 			receipt.payers,
+			fromUnitToSubunit,
 		)
 			.sort(SORT_PARTICIPANTS)
 			.map((participant) => ({
@@ -76,7 +77,7 @@ export const useParticipants = (receipt: TRPCQueryOutput<"receipts.get">) => {
 							return null;
 						}
 						return {
-							sum: itemSum / DECIMAL_POWER,
+							sum: fromSubunitToUnit(itemSum),
 							hasExtra: Boolean(
 								item.calculations.shortageByParticipant[participant.userId],
 							),
@@ -96,7 +97,7 @@ export const useParticipants = (receipt: TRPCQueryOutput<"receipts.get">) => {
 								: false,
 					  ),
 			}));
-	}, [debtsQueries, isOwner, receipt]);
+	}, [debtsQueries, fromSubunitToUnit, fromUnitToSubunit, isOwner, receipt]);
 
 	// Debts that are non-zero and reasonable (foreigns for own receipt, own for foreign receipt)
 	const syncableParticipants = React.useMemo(
@@ -110,8 +111,9 @@ export const useParticipants = (receipt: TRPCQueryOutput<"receipts.get">) => {
 					return isSelfParticipant;
 				})
 				.filter((participant) => {
-					const sum = participant.debtSum - participant.paySum;
-					return sum !== 0;
+					const sumDecimals =
+						participant.debtSumDecimals - participant.paySumDecimals;
+					return sumDecimals !== 0;
 				}),
 		[isOwner, participants, receipt.selfUserId],
 	);
@@ -144,7 +146,9 @@ export const useParticipants = (receipt: TRPCQueryOutput<"receipts.get">) => {
 	const desyncedParticipants = React.useMemo(
 		() =>
 			createdParticipants.filter((participant) => {
-				const sum = participant.debtSum - participant.paySum;
+				const sum = fromSubunitToUnit(
+					participant.debtSumDecimals - participant.paySumDecimals,
+				);
 				return !isDebtInSyncWithReceipt(
 					{
 						...receipt,
@@ -153,7 +157,7 @@ export const useParticipants = (receipt: TRPCQueryOutput<"receipts.get">) => {
 					participant.currentDebt,
 				);
 			}),
-		[createdParticipants, receipt],
+		[createdParticipants, fromSubunitToUnit, receipt],
 	);
 	// Debts being synced with the receipt
 	const syncedParticipants = React.useMemo(

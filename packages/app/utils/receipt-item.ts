@@ -4,8 +4,6 @@ import type { ReceiptItemsId, ReceiptsId, UsersId } from "~db/models";
 import { rotate } from "~utils/array";
 import { getIndexByString } from "~utils/hash";
 
-export const getDecimalsPower = (decimalDigits = 2) => 10 ** decimalDigits;
-
 type ReceiptItem = {
 	id: ReceiptItemsId;
 	quantity: number;
@@ -23,30 +21,32 @@ type ReceiptParticipant = {
 export const getItemCalculations = (
 	itemSum: number,
 	consumerParts: Record<UsersId, number>,
-	decimalDigits = 2,
 ) => {
-	const decimalsPower = getDecimalsPower(decimalDigits);
-	const sumRounded = Math.round(itemSum * decimalsPower);
 	const partsAmount = values(consumerParts).reduce(
 		(acc, part) => acc + part,
 		0,
 	);
 	const sumByUser = mapValues(
 		consumerParts,
-		(part) => (part / partsAmount) * sumRounded,
+		(part) => (part / partsAmount) * itemSum,
 	);
 	const sumTotal = values(sumByUser).reduce(
 		(acc, sum) => acc + Math.floor(sum),
 		0,
 	);
+	const sums = mapValues(sumByUser, (sum) => [sum, Math.floor(sum)]) as Record<
+		UsersId,
+		[number, number]
+	>;
 	return {
-		sumFlooredByParticipant: mapValues(sumByUser, (sum) =>
-			Math.floor(sum),
+		sumFlooredByParticipant: mapValues(
+			sums,
+			([, flooredSum]) => flooredSum,
 		) as Record<UsersId, number>,
-		leftover: sumRounded - sumTotal,
+		leftover: itemSum - sumTotal,
 		shortageByParticipant: mapValues(
-			sumByUser,
-			(sum) => sum - Math.floor(sum),
+			sums,
+			([sum, flooredSum]) => sum - flooredSum,
 		) as Record<UsersId, number>,
 	};
 };
@@ -58,12 +58,14 @@ const getPayersSums = <
 	receiptId: ReceiptsId,
 	payers: P[],
 	items: I[],
-	decimalsDigits = 2,
+	fromUnitToSubunit: (input: number) => number,
 ) => {
-	const decimalsPower = getDecimalsPower(decimalsDigits);
 	const { shortageByParticipant, sumFlooredByParticipant, leftover } =
 		getItemCalculations(
-			items.reduce((acc, item) => acc + item.price * item.quantity, 0),
+			items.reduce(
+				(acc, item) => acc + fromUnitToSubunit(item.price * item.quantity),
+				0,
+			),
 			fromEntries(payers.map(({ userId, part }) => [userId, part])),
 		);
 	const orderedPayerIds = rotate(
@@ -87,11 +89,10 @@ const getPayersSums = <
 	);
 	return payers.map((payer) => ({
 		...payer,
-		sum:
-			Math.round(
-				(sumFlooredByParticipant[payer.userId] ?? 0) +
-					(luckyLeftovers[payer.userId] ?? 0),
-			) / decimalsPower,
+		sumDecimals: Math.round(
+			(sumFlooredByParticipant[payer.userId] ?? 0) +
+				(luckyLeftovers[payer.userId] ?? 0),
+		),
 	}));
 };
 
@@ -174,10 +175,9 @@ export const getParticipantSums = <
 	items: I[],
 	participants: P[],
 	payers: R[],
-	decimalsDigits = 2,
+	fromUnitToSubunit: (input: number) => number,
 ) => {
-	const payersSums = getPayersSums(receiptId, payers, items);
-	const decimalsPower = getDecimalsPower(decimalsDigits);
+	const payersSums = getPayersSums(receiptId, payers, items, fromUnitToSubunit);
 	const {
 		sumFlooredByParticipant,
 		shortageByParticipant,
@@ -186,12 +186,11 @@ export const getParticipantSums = <
 		.filter((item) => item.consumers.length !== 0)
 		.map((item) =>
 			getItemCalculations(
-				item.price * item.quantity,
+				fromUnitToSubunit(item.price * item.quantity),
 				item.consumers.reduce(
 					(acc, { userId, part }) => ({ ...acc, [userId]: part }),
 					{},
 				),
-				decimalsDigits,
 			),
 		)
 		.reduce<{
@@ -287,19 +286,17 @@ export const getParticipantSums = <
 	);
 
 	return participants.map(({ userId, ...participant }) => {
-		const debtSum =
-			Math.round(
-				(sumFlooredByParticipant[userId] ?? 0) +
-					(reimbursedShortages[userId]?.reimbursed ?? 0) +
-					(luckyLeftovers[userId] ?? 0),
-			) / decimalsPower;
+		const debtSumDecimals = Math.round(
+			(sumFlooredByParticipant[userId] ?? 0) +
+				(reimbursedShortages[userId]?.reimbursed ?? 0) +
+				(luckyLeftovers[userId] ?? 0),
+		);
 		const payer = payersSums.find((payerSum) => userId === payerSum.userId);
-		const paySum = payer?.sum ?? 0;
 		return {
 			...participant,
 			userId,
-			debtSum,
-			paySum,
+			debtSumDecimals,
+			paySumDecimals: payer?.sumDecimals ?? 0,
 			payPart: payer?.part,
 		};
 	});

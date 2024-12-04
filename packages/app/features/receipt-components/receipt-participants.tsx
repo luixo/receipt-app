@@ -32,7 +32,9 @@ const ReceiptParticipantsPreview: React.FC<{ switchModal: () => void }> = ({
 		payerParticipants.length === 0
 			? [{ userId: ownerUserId, part: 1 }]
 			: payerParticipants;
-	const debtParticipants = participants.filter(({ debtSum }) => debtSum !== 0);
+	const debtParticipants = participants.filter(
+		({ debtSumDecimals }) => debtSumDecimals !== 0,
+	);
 	return (
 		<View
 			className="xs:flex-row flex cursor-pointer flex-col gap-2"

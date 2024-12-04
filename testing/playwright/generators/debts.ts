@@ -47,6 +47,8 @@ export type GenerateDebtsFromReceipt = GeneratorFnWithFaker<
 		participants: ReturnType<GenerateReceiptParticipants>;
 		receiptPayers: ReturnType<GenerateReceiptPayers>;
 		receiptBase: ReturnType<GenerateReceiptBase>;
+		fromUnitToSubunit: (input: number) => number;
+		fromSubunitToUnit: (input: number) => number;
 	}
 >;
 
@@ -57,18 +59,23 @@ export const defaultGenerateDebtsFromReceipt: GenerateDebtsFromReceipt = ({
 	participants,
 	receiptPayers,
 	receiptBase,
+	fromUnitToSubunit,
+	fromSubunitToUnit,
 }) =>
 	getParticipantSums(
 		receiptBase.id,
 		receiptItemsWithConsumers,
 		participants,
 		receiptPayers,
+		fromUnitToSubunit,
 	)
 		.map((participantSum) => {
 			if (participantSum.userId === selfUserId) {
 				return null;
 			}
-			const sum = participantSum.debtSum - participantSum.paySum;
+			const sum = fromSubunitToUnit(
+				participantSum.debtSumDecimals - participantSum.paySumDecimals,
+			);
 			if (sum === 0) {
 				return null;
 			}

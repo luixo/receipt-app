@@ -4,6 +4,7 @@ import { View } from "react-native";
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { PartButtons } from "~app/components/app/part-buttons";
 import { RemoveButton } from "~app/components/remove-button";
+import { useDecimals } from "~app/hooks/use-decimals";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import { trpc } from "~app/trpc";
@@ -25,6 +26,7 @@ const getParticipantColorCode = (
 	hasConnectedAccount: boolean,
 	isOwner: boolean,
 	isSelfParticipant: boolean,
+	fromSubunitToUnit: (input: number) => number,
 ) => {
 	if (!isOwner && !isSelfParticipant) {
 		// We don't have data on foreign debts with a foreign receipt
@@ -34,7 +36,9 @@ const getParticipantColorCode = (
 		// We don't have debt for ourselves
 		return;
 	}
-	const sum = participant.debtSum - participant.paySum;
+	const sum = fromSubunitToUnit(
+		participant.debtSumDecimals - participant.paySumDecimals,
+	);
 	if (sum === 0) {
 		return;
 	}
@@ -81,6 +85,7 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 	const { removeParticipant, updatePayerPart, addPayer, removePayer } =
 		useActionsHooksContext();
 	const isOwner = useIsOwner();
+	const { fromSubunitToUnit } = useDecimals();
 	const userQuery = trpc.users.get.useQuery({ id: participant.userId });
 
 	const removeParticipantMutationState =
@@ -132,7 +137,9 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 		updatePayerMutationState?.status === "pending";
 	const currency = useFormattedCurrency(currencyCode);
 	const disabled = participant.items.length === 0;
-	const sum = participant.debtSum - participant.paySum;
+	const sum = fromSubunitToUnit(
+		participant.debtSumDecimals - participant.paySumDecimals,
+	);
 	const totalPayParts = participants.reduce(
 		(acc, { payPart }) => acc + (payPart ?? 0),
 		0,
@@ -164,6 +171,7 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 									Boolean(userQuery.data?.connectedAccount),
 									isOwner,
 									participant.userId === selfUserId,
+									fromSubunitToUnit,
 								)}
 							>
 								{`${round(sum)} ${currency.symbol}`}
@@ -182,7 +190,8 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 										mutation={{ isPending }}
 										subtitle="This will remove participant with all his consumer parts"
 										noConfirm={
-											participant.debtSum === 0 && participant.paySum === 0
+											participant.debtSumDecimals === 0 &&
+											participant.paySumDecimals === 0
 										}
 										isIconOnly
 									/>
@@ -222,13 +231,17 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 					<View className="flex flex-col gap-3">
 						{currentPart && items.length !== 0 ? (
 							<Text className="text-secondary">
-								{`Payed ${participant.paySum} ${currency.symbol} of the total receipt`}
+								{`Payed ${fromSubunitToUnit(participant.paySumDecimals)} ${
+									currency.symbol
+								} of the total receipt`}
 							</Text>
 						) : null}
 						<View>
 							{currentPart && participant.items.length > 1 ? (
 								<Text className="text-secondary">
-									{`Spent ${participant.debtSum} ${currency.symbol} in total`}
+									{`Spent ${fromSubunitToUnit(participant.debtSumDecimals)} ${
+										currency.symbol
+									} in total`}
 								</Text>
 							) : null}
 							{participant.items.map((item) => (

@@ -141,6 +141,8 @@ test.describe("Mutations", () => {
 		awaitCacheKey,
 		openReceiptWithDebts,
 		snapshotQueries,
+		fromSubunitToUnit,
+		fromUnitToSubunit,
 	}) => {
 		let originalDebtsAmount = 0;
 		const {
@@ -206,9 +208,12 @@ test.describe("Mutations", () => {
 			receiptItemsWithConsumers,
 			participants,
 			receiptPayers,
+			fromUnitToSubunit,
 		);
 		const participantTuples = participantSums.map((participant) => {
-			const sum = participant.debtSum - participant.paySum;
+			const sum = fromSubunitToUnit(
+				participant.debtSumDecimals - participant.paySumDecimals,
+			);
 			return [participant.userId, sum] as const;
 		});
 		const addedDebts = addMutationsVariables.map(

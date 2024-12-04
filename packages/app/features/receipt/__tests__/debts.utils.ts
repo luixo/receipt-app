@@ -86,7 +86,10 @@ export const test = originalTest.extend<Fixtures>({
 			await awaitCacheKey("debts.get", debtsAmount || undefined);
 		}),
 
-	mockReceiptWithDebts: ({ api, faker, mockReceipt }, use) =>
+	mockReceiptWithDebts: (
+		{ api, faker, mockReceipt, fromUnitToSubunit, fromSubunitToUnit },
+		use,
+	) =>
 		use(
 			({
 				generateReceiptBase = defaultGenerateReceiptBase,
@@ -114,6 +117,8 @@ export const test = originalTest.extend<Fixtures>({
 					receiptItemsWithConsumers: result.receiptItemsWithConsumers,
 					participants: result.participants,
 					receiptPayers: result.receiptPayers,
+					fromUnitToSubunit,
+					fromSubunitToUnit,
 				});
 				const receipt = generateReceipt({
 					faker,

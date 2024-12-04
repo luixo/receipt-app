@@ -4,6 +4,7 @@ import { View } from "react-native";
 import { skipToken } from "@tanstack/react-query";
 
 import { DebtSyncStatus } from "~app/components/app/debt-sync-status";
+import { useDecimals } from "~app/hooks/use-decimals";
 import type { Participant } from "~app/hooks/use-participants";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
@@ -38,7 +39,10 @@ export const ReceiptParticipantActions: React.FC<Props> = ({
 				: skipToken,
 		}),
 	);
-	const sum = participant.debtSum - participant.paySum;
+	const { fromSubunitToUnit } = useDecimals();
+	const sum = fromSubunitToUnit(
+		participant.debtSumDecimals - participant.paySumDecimals,
+	);
 	const updateDebt = React.useCallback(
 		(currentDebt: NonNullable<Participant["currentDebt"]>) => {
 			updateMutation.mutate({

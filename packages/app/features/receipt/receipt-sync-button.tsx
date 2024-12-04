@@ -3,6 +3,7 @@ import React from "react";
 import { skipToken } from "@tanstack/react-query";
 
 import { QueryErrorMessage } from "~app/components/error-message";
+import { useDecimals } from "~app/hooks/use-decimals";
 import { useParticipants } from "~app/hooks/use-participants";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
@@ -48,6 +49,7 @@ const ReceiptSyncButtonInner: React.FC<InnerProps> = ({
 		);
 	});
 
+	const { fromSubunitToUnit } = useDecimals();
 	const propagateDebts = React.useCallback(() => {
 		nonCreatedParticipants.forEach((participant) => {
 			const participantIndex = participants.indexOf(participant);
@@ -55,7 +57,9 @@ const ReceiptSyncButtonInner: React.FC<InnerProps> = ({
 			if (!matchedMutation) {
 				return;
 			}
-			const sum = participant.debtSum - participant.paySum;
+			const sum = fromSubunitToUnit(
+				participant.debtSumDecimals - participant.paySumDecimals,
+			);
 			matchedMutation.mutate({
 				note: getReceiptDebtName(receipt.name),
 				currencyCode: receipt.currencyCode,
@@ -71,7 +75,9 @@ const ReceiptSyncButtonInner: React.FC<InnerProps> = ({
 			if (!matchedMutation) {
 				return;
 			}
-			const sum = participant.debtSum - participant.paySum;
+			const sum = fromSubunitToUnit(
+				participant.debtSumDecimals - participant.paySumDecimals,
+			);
 			matchedMutation.mutate({
 				id: participant.currentDebt.id,
 				update: {
@@ -83,15 +89,16 @@ const ReceiptSyncButtonInner: React.FC<InnerProps> = ({
 			});
 		});
 	}, [
+		nonCreatedParticipants,
+		desyncedParticipants,
 		participants,
 		addMutations,
-		updateMutations,
-		receipt.id,
+		fromSubunitToUnit,
+		receipt.name,
 		receipt.currencyCode,
 		receipt.issued,
-		receipt.name,
-		desyncedParticipants,
-		nonCreatedParticipants,
+		receipt.id,
+		updateMutations,
 	]);
 	const isPropagating =
 		addMutations.some((mutation) => mutation.isPending) ||
