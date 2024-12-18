@@ -13,6 +13,7 @@ import { Button } from "~components/button";
 import { Divider } from "~components/divider";
 import { MoneyIcon } from "~components/icons";
 import { Text } from "~components/text";
+import { Tooltip } from "~components/tooltip";
 import { round } from "~utils/math";
 import { updateSetStateAction } from "~utils/react";
 
@@ -21,7 +22,7 @@ import { useIsOwner } from "./hooks";
 import { ReceiptParticipantRoleInput } from "./receipt-participant-role-input";
 import type { Participant } from "./state";
 
-const getParticipantColorCode = (
+const getParticipantError = (
 	participant: Participant,
 	hasConnectedAccount: boolean,
 	isOwner: boolean,
@@ -48,11 +49,18 @@ const getParticipantColorCode = (
 	}
 	if (!participant.currentDebt) {
 		// No debt has been propagated
-		return "text-warning";
+		return {
+			className: "text-warning",
+			content: "No debt has been propagated",
+		};
 	}
-	if (participant.currentDebt.amount !== sum) {
+	const expectedSum = isOwner ? sum : -sum;
+	if (participant.currentDebt.amount !== expectedSum) {
 		// Our debt is desynced from the receipt
-		return "text-danger";
+		return {
+			className: "text-danger",
+			content: `Our debt is currently "${participant.currentDebt.amount}", but it should be "${expectedSum}" according to the receipt.`,
+		};
 	}
 	if (!hasConnectedAccount) {
 		// Debt is not syncable
@@ -60,11 +68,17 @@ const getParticipantColorCode = (
 	}
 	if (!participant.currentDebt.their) {
 		// Our debts exists, their does not
-		return "text-warning";
+		return {
+			className: "text-warning",
+			content: "They did not accept the debt yet",
+		};
 	}
 	if (participant.currentDebt.amount !== participant.currentDebt.their.amount) {
 		// Our debt is desynced from their debt
-		return "text-warning";
+		return {
+			className: "text-warning",
+			content: `They accepted the debt for "${participant.currentDebt.their.amount}", while we intent the amount is "${participant.currentDebt.amount}"`,
+		};
 	}
 	// In sync
 };
@@ -144,6 +158,13 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 		(acc, { payPart }) => acc + (payPart ?? 0),
 		0,
 	);
+	const participantError = getParticipantError(
+		participant,
+		Boolean(userQuery.data?.connectedAccount),
+		isOwner,
+		participant.userId === selfUserId,
+		fromSubunitToUnit,
+	);
 
 	return (
 		<Accordion>
@@ -165,24 +186,16 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 							/>
 						</View>
 						<View className="flex-row items-center justify-between gap-4 self-stretch">
-							<Text
-								className={getParticipantColorCode(
-									participant,
-									Boolean(userQuery.data?.connectedAccount),
-									isOwner,
-									participant.userId === selfUserId,
-									fromSubunitToUnit,
-								)}
+							<Tooltip
+								content={participantError?.content}
+								isDisabled={!participantError}
 							>
-								{`${round(sum)} ${currency.symbol}`}
-								{participant.currentDebt
-									? (isOwner ? 1 : -1) * participant.currentDebt.amount !== sum
-										? ` (synced as ${round(participant.currentDebt.amount)} ${
-												currency.symbol
-										  })`
-										: undefined
-									: null}
-							</Text>
+								<View>
+									<Text className={participantError?.className}>
+										{`${round(sum)} ${currency.symbol}`}
+									</Text>
+								</View>
+							</Tooltip>
 							<View className="flex-row items-center gap-2">
 								{isOwner ? (
 									<RemoveButton
