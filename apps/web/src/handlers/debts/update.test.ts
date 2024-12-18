@@ -350,7 +350,7 @@ describe("debts.update", () => {
 
 			expect(results[0]).toStrictEqual<(typeof results)[0]>({
 				updatedAt: new Date(new Date().valueOf() + MINUTE),
-				reverseUpdated: false,
+				reverseUpdated: undefined,
 			});
 			expect(results[1]).toBeInstanceOf(TRPCError);
 		});
@@ -626,6 +626,23 @@ describe("debts.update", () => {
 					"NOT_FOUND",
 					`Debt "${fakeDebtId}" does not exist on account "${email}".`,
 				);
+			});
+		});
+
+		test("local user returns reverseUpdated as undefined", async ({ ctx }) => {
+			const { sessionId, accountId } = await insertAccountWithSession(ctx);
+			const { id: userId } = await insertUser(ctx, accountId);
+			const debt = await insertDebt(ctx, accountId, userId);
+
+			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const result = await caller.procedure({
+				id: debt.id,
+				update: { amount: getRandomAmount() },
+			});
+
+			expect(result).toStrictEqual<typeof result>({
+				updatedAt: new Date(new Date().valueOf() + MINUTE),
+				reverseUpdated: undefined,
 			});
 		});
 	});

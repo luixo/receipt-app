@@ -74,7 +74,7 @@ export const options: UseContextedMutationOptions<"debts.add"> = {
 					updateObject.currencyCode,
 					(sum) => sum + updateObject.amount,
 				);
-				if (!result.reverseAccepted) {
+				if (result.reverseAccepted === false) {
 					controller.updateUnsyncedDebts(
 						updateObject.userId,
 						(amount) => amount + 1,

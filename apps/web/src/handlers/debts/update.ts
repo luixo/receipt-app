@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { isNonNullish, keys, omitBy } from "remeda";
+import { isNonNullish, keys, omitBy, unique } from "remeda";
 import { z } from "zod";
 
 import { debtAmountSchema, debtNoteSchema } from "~app/utils/validation";
@@ -228,7 +228,8 @@ const queueUpdateDebt = queueCallFactory<
 	z.infer<typeof updateDebtSchema>,
 	{
 		updatedAt: Date;
-		reverseUpdated: boolean;
+		// `undefined` signifies that user is local
+		reverseUpdated: boolean | undefined;
 	}
 >((ctx) => async (updates) => {
 	const debts = await fetchDebts(ctx, updates);
@@ -253,6 +254,11 @@ const queueUpdateDebt = queueCallFactory<
 		updateAutoAcceptingDebts(ctx, mergedDebts),
 		updateDebts(ctx, mergedDebts),
 	]);
+	const localUserIds = unique(
+		debts
+			.filter((debt) => debt.foreignAccountId === null)
+			.map((debt) => debt.userId),
+	);
 	return updatesOrErrors.map((updateOrError) => {
 		if (updateOrError instanceof TRPCError) {
 			return updateOrError;
@@ -270,7 +276,9 @@ const queueUpdateDebt = queueCallFactory<
 		/* c8 ignore stop */
 		return {
 			updatedAt: matchedDebt.updatedAt,
-			reverseUpdated: reverseUpdatedDebtsIds.includes(updateOrError.debt.id),
+			reverseUpdated: localUserIds.includes(updateOrError.debt.userId)
+				? undefined
+				: reverseUpdatedDebtsIds.includes(updateOrError.debt.id),
 		};
 	});
 });

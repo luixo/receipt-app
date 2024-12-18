@@ -145,7 +145,7 @@ export const updateUpdatedAt = (
 	currDebt: CurrentDebt,
 	debtId: DebtsId,
 	updatedAt: Date | undefined,
-	reverseUpdated: boolean,
+	reverseUpdated: boolean | undefined,
 ) => {
 	updateDebts(controllerContext, {
 		getByUsers: (controller) => {

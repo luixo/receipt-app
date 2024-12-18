@@ -216,7 +216,8 @@ const queueAddDebt = queueCallFactory<
 	{
 		id: DebtsId;
 		updatedAt: Date;
-		reverseAccepted: boolean;
+		// `undefined` signifies that user is local
+		reverseAccepted: boolean | undefined;
 	}
 >((ctx) => async (inputs) => {
 	const { users, debtReceiptTuples } = await getData(ctx, inputs);
@@ -261,6 +262,9 @@ const queueAddDebt = queueCallFactory<
 		users,
 		debts,
 	);
+	const localUserIds = users
+		.filter((user) => user.foreignAccountId === null)
+		.map((user) => user.userId);
 	const addedDebts = await addDebts(ctx, debts, reverseIdMap);
 	return debtsOrErrors.map((debtOrError) => {
 		if (debtOrError instanceof TRPCError) {
@@ -283,7 +287,9 @@ const queueAddDebt = queueCallFactory<
 		return {
 			id,
 			updatedAt: matchedAddedDebt.updatedAt,
-			reverseAccepted: acceptedUserIds.includes(debtOrError.userId),
+			reverseAccepted: localUserIds.includes(debtOrError.userId)
+				? undefined
+				: acceptedUserIds.includes(debtOrError.userId),
 		};
 	});
 });

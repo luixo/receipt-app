@@ -156,7 +156,7 @@ describe("debts.add", () => {
 			expect(results[0]).toStrictEqual<(typeof results)[0]>({
 				id: results[0].id,
 				updatedAt: new Date(),
-				reverseAccepted: false,
+				reverseAccepted: undefined,
 			});
 			expect(results[1]).toBeInstanceOf(TRPCError);
 		});
@@ -181,7 +181,7 @@ describe("debts.add", () => {
 			expect(result).toStrictEqual<typeof result>({
 				id: result.id,
 				updatedAt: new Date(),
-				reverseAccepted: false,
+				reverseAccepted: undefined,
 			});
 		});
 
@@ -206,7 +206,7 @@ describe("debts.add", () => {
 			expect(result).toStrictEqual<typeof result>({
 				id: result.id,
 				updatedAt: new Date(),
-				reverseAccepted: false,
+				reverseAccepted: undefined,
 			});
 		});
 
