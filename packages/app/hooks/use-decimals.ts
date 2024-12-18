@@ -1,5 +1,7 @@
 import React from "react";
 
+import { partSchemaDecimal } from "~app/utils/validation";
+
 const DECIMAL_DIGITS = 2;
 
 const getDecimalsPower = (decimalDigits: number) => 10 ** decimalDigits;
@@ -17,3 +19,11 @@ export const useDecimals = () => {
 		),
 	};
 };
+
+const partsDecimalsPower = getDecimalsPower(partSchemaDecimal);
+export const useRoundParts = () =>
+	React.useCallback(
+		(input: number) =>
+			Math.round(input * partsDecimalsPower) / partsDecimalsPower,
+		[],
+	);

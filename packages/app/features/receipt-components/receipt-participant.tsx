@@ -4,7 +4,7 @@ import { View } from "react-native";
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { PartButtons } from "~app/components/app/part-buttons";
 import { RemoveButton } from "~app/components/remove-button";
-import { useDecimals } from "~app/hooks/use-decimals";
+import { useDecimals, useRoundParts } from "~app/hooks/use-decimals";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import { trpc } from "~app/trpc";
@@ -154,9 +154,9 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 	const sum = fromSubunitToUnit(
 		participant.debtSumDecimals - participant.paySumDecimals,
 	);
-	const totalPayParts = participants.reduce(
-		(acc, { payPart }) => acc + (payPart ?? 0),
-		0,
+	const roundParts = useRoundParts();
+	const totalPayParts = roundParts(
+		participants.reduce((acc, { payPart }) => acc + (payPart ?? 0), 0),
 	);
 	const participantError = getParticipantError(
 		participant,

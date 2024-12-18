@@ -2,6 +2,7 @@ import React from "react";
 
 import { PartButtons } from "~app/components/app/part-buttons";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
+import { useRoundParts } from "~app/hooks/use-decimals";
 import { useSingleInput } from "~app/hooks/use-single-input";
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import { trpc } from "~app/trpc";
@@ -81,9 +82,9 @@ export const ReceiptItemConsumerInput: React.FC<Props> = ({
 		[updateConsumerPart, consumer.part, isPending],
 	);
 
-	const totalParts = item.consumers.reduce(
-		(acc, itemConsumer) => acc + itemConsumer.part,
-		0,
+	const roundParts = useRoundParts();
+	const totalParts = roundParts(
+		item.consumers.reduce((acc, itemConsumer) => acc + itemConsumer.part, 0),
 	);
 
 	const readOnlyComponent = (

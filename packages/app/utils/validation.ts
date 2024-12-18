@@ -134,8 +134,9 @@ export const quantitySchema = createNumberSchema("Quantity", {
 		value: 10 ** 9,
 	},
 });
+export const partSchemaDecimal = 5;
 export const partSchema = createNumberSchema("Part", {
-	decimals: 5,
+	decimals: partSchemaDecimal,
 	max: {
 		visual: "1 million",
 		value: 10 ** 9,
