@@ -87,7 +87,7 @@ export const options: UseContextedMutationOptions<
 						receiptId: intention.receiptId,
 					});
 				},
-				getIntentions: (controller) => controller.remove(intention.id),
+				getIntentions: undefined,
 			}),
 	onSuccess:
 		(controllerContext, { intention }) =>
@@ -100,7 +100,8 @@ export const options: UseContextedMutationOptions<
 						...debt,
 						updatedAt: data.updatedAt,
 					})),
-				getIntentions: undefined,
+
+				getIntentions: (controller) => controller.remove(intention.id),
 			}),
 	mutateToastOptions: {
 		text: `Accepting debt..`,
