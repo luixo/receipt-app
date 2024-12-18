@@ -4,12 +4,13 @@ import { View } from "react-native";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import { useSsrFormat } from "~app/hooks/use-ssr-format";
 import type { TRPCQueryOutput } from "~app/trpc";
+import { Badge } from "~components/badge";
 import { KeyIcon } from "~components/icons";
 import { Link } from "~components/link";
 import { Text } from "~components/text";
+import { Tooltip } from "~components/tooltip";
 import { round } from "~utils/math";
 
-import { ReceiptPreviewBadge } from "./receipt-preview-badge";
 import { ReceiptPreviewSyncIcon } from "./receipt-preview-sync-icon";
 
 type InnerProps = {
@@ -20,15 +21,30 @@ export const ReceiptPreview: React.FC<InnerProps> = ({ receipt }) => {
 	const { formatDate } = useSsrFormat();
 	const currency = useFormattedCurrency(receipt.currencyCode);
 	const isOwner = receipt.selfUserId === receipt.ownerUserId;
+	const emptyItems = receipt.items.filter(
+		(item) => item.consumers.length === 0,
+	);
 	const title = (
 		<Link
 			className="flex flex-col items-start"
 			href={`/receipts/${receipt.id}/`}
 		>
 			<View className="flex flex-row items-center gap-2">
-				<ReceiptPreviewBadge receipt={receipt}>
-					<Text>{receipt.name}</Text>
-				</ReceiptPreviewBadge>
+				<Tooltip
+					content={`${emptyItems.length} empty item(s)`}
+					isDisabled={emptyItems.length === 0}
+				>
+					<Badge
+						content=""
+						color="warning"
+						placement="top-right"
+						isInvisible={emptyItems.length === 0}
+						isDot
+						className="translate-x-full"
+					>
+						<Text>{receipt.name}</Text>
+					</Badge>
+				</Tooltip>
 				{isOwner ? <KeyIcon size={12} /> : null}
 			</View>
 			<Text className="text-default-400 text-xs">
