@@ -1,7 +1,7 @@
 # Prerequisites
 
 - Node.js (version pinned in `.nvmrc`)
-- Yarn v3 (use `corpack enable` to activate automatically)
+- Yarn (use `corpack enable` to activate automatically)
 
 ## Getting code
 

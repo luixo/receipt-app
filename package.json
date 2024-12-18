@@ -95,7 +95,7 @@
 			"eslint --fix"
 		]
 	},
-	"packageManager": "yarn@3.6.2",
+	"packageManager": "yarn@4.5.3",
 	"resolutions": {
 		"zustand@^4.3.9": "patch:zustand@npm%3A4.3.9#./patches/zustand-npm-4.3.9.patch",
 		"next-usequerystate@1.13.0": "patch:next-usequerystate@npm%3A1.13.0#./patches/next-usequerystate-npm-1.13.0.patch",
