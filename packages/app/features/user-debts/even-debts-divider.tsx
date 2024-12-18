@@ -4,6 +4,7 @@ import { View } from "react-native";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import type { CurrencyCode } from "~app/utils/currency";
 import { CheckMark } from "~components/icons";
+import { Text } from "~components/text";
 
 type Props = {
 	currencyCode: CurrencyCode;
@@ -17,7 +18,7 @@ export const EvenDebtsDivider: React.FC<Props> = ({ currencyCode }) => {
 			testID="even-debts-divider"
 		>
 			<CheckMark size={24} className="text-success" />
-			Even on {currency.symbol}
+			<Text>Even on {currency.symbol}</Text>
 		</View>
 	);
 };
