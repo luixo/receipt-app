@@ -204,7 +204,7 @@ export const PlannedDebts: React.FC<Props> = ({
 		return [
 			...debtsToConvert,
 			{
-				amount: convertedDebts.reduce((acc, debt) => acc + debt.sum, 0),
+				amount: round(convertedDebts.reduce((acc, debt) => acc + debt.sum, 0)),
 				currencyCode: selectedCurrencyCode,
 				note: `Converted from ${debtsToConvert
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
