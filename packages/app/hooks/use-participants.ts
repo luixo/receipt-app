@@ -50,7 +50,7 @@ export const useParticipants = (receipt: TRPCQueryOutput<"receipts.get">) => {
 		const awaitingDebts = debts.length !== getDebtIds(receipt).length;
 		const calculatedItems = receipt.items.map((item) => ({
 			calculations: getItemCalculations(
-				item.price * item.quantity,
+				fromUnitToSubunit(item.price * item.quantity),
 				item.consumers.reduce(
 					(acc, { userId, part }) => ({ ...acc, [userId]: part }),
 					{},
