@@ -25,6 +25,32 @@ import type { AppPage } from "~utils/next";
 
 import { UserDebtPreview } from "./user-debt-preview";
 
+type HeaderProps = {
+	title: string;
+	userId: UsersId;
+};
+
+const Header: React.FC<HeaderProps> = ({ title, userId }) => (
+	<PageHeader
+		backHref="/debts"
+		title={title}
+		aside={
+			<Button
+				color="primary"
+				href={`/debts/add?userId=${userId}`}
+				as={Link}
+				title="Add debt"
+				variant="bordered"
+				isIconOnly
+			>
+				<AddIcon size={24} />
+			</Button>
+		}
+	>
+		<LoadableUser id={userId} />
+	</PageHeader>
+);
+
 type InnerProps = {
 	userId: UsersId;
 	query: TRPCQuerySuccessResult<"debts.getIdsByUser">;
@@ -61,26 +87,12 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 	const debts = useDebtsWithDividers(debtIds, allSuccessQueries, dividers);
 	return (
 		<>
-			<PageHeader
-				backHref="/debts"
+			<Header
+				userId={userId}
 				title={`${
 					userQuery.status === "success" ? userQuery.data.name : "..."
 				}'s debts`}
-				aside={
-					<Button
-						color="primary"
-						href={`/debts/add?userId=${userId}`}
-						as={Link}
-						title="Add debt"
-						variant="bordered"
-						isIconOnly
-					>
-						<AddIcon size={24} />
-					</Button>
-				}
-			>
-				<LoadableUser id={userId} />
-			</PageHeader>
+			/>
 			<View className="flex-row items-center justify-center gap-4 px-16">
 				<DebtsGroup
 					isLoading={aggregatedDebtsLoading}
@@ -138,9 +150,7 @@ export const UserDebtsScreen: AppPage = () => {
 	if (query.status === "pending") {
 		return (
 			<>
-				<PageHeader>
-					<LoadableUser id={userId} />
-				</PageHeader>
+				<Header userId={userId} title="Loading debts..." />
 				<Spinner />
 			</>
 		);

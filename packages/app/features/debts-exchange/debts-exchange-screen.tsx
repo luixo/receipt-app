@@ -16,6 +16,17 @@ import { Spinner } from "~components/spinner";
 import type { UsersId } from "~db/models";
 import type { AppPage } from "~utils/next";
 
+type HeaderProps = {
+	userId: UsersId;
+	title: string;
+};
+
+const Header: React.FC<HeaderProps> = ({ userId, title }) => (
+	<PageHeader backHref={`/debts/user/${userId}`} title={title}>
+		<LoadableUser id={userId} />
+	</PageHeader>
+);
+
 type InnerProps = {
 	userId: UsersId;
 	query: TRPCQuerySuccessResult<"debts.getIdsByUser">;
@@ -32,14 +43,12 @@ const DebtsExchangeInner: React.FC<InnerProps> = ({ userId, query }) => {
 	const userQuery = trpc.users.get.useQuery({ id: userId });
 	return (
 		<>
-			<PageHeader
-				backHref={`/debts/user/${userId}`}
+			<Header
+				userId={userId}
 				title={`${
 					userQuery.status === "success" ? userQuery.data.name : "..."
 				}'s debts`}
-			>
-				<LoadableUser id={userId} />
-			</PageHeader>
+			/>
 			<DebtsGroup
 				isLoading={aggregatedDebtsLoading}
 				errorQueries={aggregatedDebtsErrorQueries}
@@ -72,9 +81,7 @@ export const DebtsExchangeScreen: AppPage = () => {
 	if (query.status === "pending") {
 		return (
 			<>
-				<PageHeader>
-					<LoadableUser id={userId} />
-				</PageHeader>
+				<Header userId={userId} title="Loading user debts..." />
 				<Spinner />
 			</>
 		);

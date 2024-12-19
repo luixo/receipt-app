@@ -25,12 +25,20 @@ import { ReceiptIcon } from "~components/icons";
 import { Input } from "~components/input";
 import { Link } from "~components/link";
 import { Spinner } from "~components/spinner";
-import type { ReceiptsId } from "~db/models";
+import type { ReceiptsId, UsersId } from "~db/models";
 import { options as debtsRemoveOptions } from "~mutations/debts/remove";
 import { options as debtsUpdateOptions } from "~mutations/debts/update";
 import type { AppPage } from "~utils/next";
 
 type Debt = TRPCQueryOutput<"debts.get">;
+
+type HeaderProps = {
+	userId: UsersId;
+} & Omit<Partial<React.ComponentProps<typeof PageHeader>>, "backHref">;
+
+const Header: React.FC<HeaderProps> = ({ userId, ...rest }) => (
+	<PageHeader backHref={`/debts/user/${userId}`} {...rest} />
+);
 
 type CurrencyProps = {
 	debt: Debt;
@@ -328,8 +336,8 @@ export const DebtInner: React.FC<InnerProps> = ({ query }) => {
 
 	return (
 		<>
-			<PageHeader
-				backHref={`/debts/user/${debt.userId}`}
+			<Header
+				userId={debt.userId}
 				aside={<DebtControlButtons debt={debt} />}
 				endContent={
 					<>
@@ -341,7 +349,7 @@ export const DebtInner: React.FC<InnerProps> = ({ query }) => {
 				}
 			>
 				{`${debt.amount} ${currency.symbol} debt`}
-			</PageHeader>
+			</Header>
 			<LoadableUser className="self-start" id={debt.userId} />
 			<DebtSignButtonGroup debt={debt} disabled={isRemoving} />
 			<DebtAmountInput debt={debt} isLoading={isRemoving} />
@@ -362,7 +370,7 @@ export const DebtScreen: AppPage = () => {
 	if (query.status === "pending") {
 		return (
 			<>
-				<PageHeader>Debt</PageHeader>
+				<Header userId={id}>Loading debt ...</Header>
 				<Spinner size="lg" />
 			</>
 		);

@@ -22,6 +22,17 @@ import type { AppPage } from "~utils/next";
 import { CurrenciesGroup } from "./currencies-group";
 import { PlannedDebts } from "./planned-debts";
 
+type HeaderProps = {
+	userId: UsersId;
+	title: string;
+};
+
+const Header: React.FC<HeaderProps> = ({ userId, title }) => (
+	<PageHeader backHref={`/debts/user/${userId}/exchange/`} title={title}>
+		<LoadableUser id={userId} />
+	</PageHeader>
+);
+
 type InnerProps = {
 	userId: UsersId;
 	query: TRPCQuerySuccessResult<"debts.getIdsByUser">;
@@ -62,14 +73,12 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 	}, [nonZeroAggregatedDebts, aggregatedDebtsLoading, back]);
 	return (
 		<>
-			<PageHeader
-				backHref={`/debts/user/${userId}/exchange/`}
+			<Header
+				userId={userId}
 				title={`${
 					userQuery.status === "success" ? userQuery.data.name : "..."
 				}'s debts`}
-			>
-				<LoadableUser id={userId} />
-			</PageHeader>
+			/>
 			<DebtsGroup
 				className="self-center"
 				isLoading={aggregatedDebtsLoading}
@@ -117,9 +126,7 @@ export const DebtsExchangeAllScreen: AppPage = () => {
 	if (query.status === "pending") {
 		return (
 			<>
-				<PageHeader>
-					<LoadableUser id={userId} />
-				</PageHeader>
+				<Header userId={userId} title="Loading user debts..." />
 				<Spinner />
 			</>
 		);

@@ -27,6 +27,19 @@ import { ReceiptParticipantActions } from "./receipt-participant-actions";
 import { ReceiptRemoveButton } from "./receipt-remove-button";
 import { ReceiptSyncButton } from "./receipt-sync-button";
 
+type HeaderProps = Omit<
+	Partial<React.ComponentProps<typeof PageHeader>>,
+	"backHref" | "startContent"
+>;
+
+const Header: React.FC<HeaderProps> = (props) => (
+	<PageHeader
+		backHref="/receipts"
+		startContent={<ReceiptIcon size={36} />}
+		{...props}
+	/>
+);
+
 type InnerProps = {
 	query: TRPCQuerySuccessResult<"receipts.get">;
 };
@@ -54,9 +67,7 @@ export const ReceiptInner: React.FC<InnerProps> = ({ query }) => {
 
 	return (
 		<>
-			<PageHeader
-				backHref="/receipts"
-				startContent={<ReceiptIcon size={36} />}
+			<Header
 				aside={
 					isOwner ? (
 						<ReceiptRemoveButton
@@ -82,7 +93,7 @@ export const ReceiptInner: React.FC<InnerProps> = ({ query }) => {
 						<Text className="text-3xl">{receipt.name}</Text>
 					</View>
 				)}
-			</PageHeader>
+			</Header>
 
 			<receiptContext.Provider value={getReceiptContext}>
 				<actionsHooksContext.Provider value={actionsHooks}>
@@ -126,7 +137,9 @@ export const Receipt: React.FC<Props> = ({ id, ...props }) => {
 	if (query.status === "pending") {
 		return (
 			<>
-				<PageHeader>{id}</PageHeader>
+				<Header title="Loading receipt...">
+					<Text className="text-3xl">Loading receipt...</Text>
+				</Header>
 				<Spinner size="lg" />
 			</>
 		);
