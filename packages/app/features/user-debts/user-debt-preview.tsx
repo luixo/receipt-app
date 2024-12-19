@@ -35,6 +35,15 @@ const UserDebtPreviewShape: React.FC<DebtShape> = ({
 	</View>
 );
 
+export const UserDebtPreviewSkeleton = () => (
+	<UserDebtPreviewShape
+		amount={<Skeleton className="h-6 w-16 rounded" />}
+		timestamp={<Skeleton className="h-6 w-24 rounded" />}
+		synced={<Skeleton className="size-6 rounded" />}
+		note={<Skeleton className="h-6 w-32 rounded" />}
+	/>
+);
+
 type InnerProps = {
 	query: TRPCQuerySuccessResult<"debts.get">;
 };
@@ -69,14 +78,7 @@ type Props = {
 export const UserDebtPreview: React.FC<Props> = ({ debtId }) => {
 	const query = trpc.debts.get.useQuery({ id: debtId });
 	if (query.status === "pending") {
-		return (
-			<UserDebtPreviewShape
-				amount={<Skeleton className="h-6 w-16 rounded" />}
-				timestamp={<Skeleton className="h-6 w-24 rounded" />}
-				synced={<Skeleton className="size-6 rounded" />}
-				note={<Skeleton className="h-6 w-32 rounded" />}
-			/>
-		);
+		return <UserDebtPreviewSkeleton />;
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;

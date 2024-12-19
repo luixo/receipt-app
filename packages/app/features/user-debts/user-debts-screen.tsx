@@ -3,7 +3,10 @@ import { View } from "react-native";
 
 import { useParams } from "solito/navigation";
 
-import { DebtsGroup } from "~app/components/app/debts-group";
+import {
+	DebtsGroup,
+	DebtsGroupSkeleton,
+} from "~app/components/app/debts-group";
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { QueryErrorMessage } from "~app/components/error-message";
 import { PageHeader } from "~app/components/page-header";
@@ -19,11 +22,10 @@ import { Button } from "~components/button";
 import { Divider } from "~components/divider";
 import { AddIcon, ExchangeIcon } from "~components/icons";
 import { Link } from "~components/link";
-import { Spinner } from "~components/spinner";
 import type { UsersId } from "~db/models";
 import type { AppPage } from "~utils/next";
 
-import { UserDebtPreview } from "./user-debt-preview";
+import { UserDebtPreview, UserDebtPreviewSkeleton } from "./user-debt-preview";
 
 type HeaderProps = {
 	title: string;
@@ -147,11 +149,23 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 export const UserDebtsScreen: AppPage = () => {
 	const { id: userId } = useParams<{ id: string }>();
 	const query = trpc.debts.getIdsByUser.useQuery({ userId });
+	const elements = React.useMemo(() => new Array<null>(3).fill(null), []);
 	if (query.status === "pending") {
 		return (
 			<>
 				<Header userId={userId} title="Loading debts..." />
-				<Spinner />
+				<View className="flex-row items-center justify-center">
+					<DebtsGroupSkeleton amount={3} />
+				</View>
+				<View className="gap-2">
+					{elements.map((_, index) => (
+						// eslint-disable-next-line react/no-array-index-key
+						<React.Fragment key={index}>
+							<Divider />
+							<UserDebtPreviewSkeleton />
+						</React.Fragment>
+					))}
+				</View>
 			</>
 		);
 	}
