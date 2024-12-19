@@ -98,7 +98,7 @@ export const DebtsGroup: React.FC<Props> = ({
 	<View className={debtGroup({ className })} testID="debts-group" {...props}>
 		{isLoading ? (
 			<DebtsGroupSkeleton amount={3} />
-		) : errorQueries ? (
+		) : errorQueries && errorQueries.length !== 0 ? (
 			values(groupBy(errorQueries, (query) => query.error.message)).map(
 				(queries) => (
 					<GroupedQueryErrorMessage
