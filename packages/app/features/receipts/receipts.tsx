@@ -23,9 +23,24 @@ import {
 	useSyncQueryParams as useReceiptsGetPagedSyncQueryParams,
 } from "~queries/receipts/get-paged";
 
-import { ReceiptPreview } from "./receipt-preview";
+import { ReceiptPreview, ReceiptPreviewSkeleton } from "./receipt-preview";
 
 type Input = TRPCQueryInput<"receipts.getPaged">;
+
+const ReceiptPreviewsSkeleton: React.FC<{ amount: number }> = ({ amount }) => {
+	const elements = React.useMemo(
+		() => new Array<null>(amount).fill(null),
+		[amount],
+	);
+	return (
+		<>
+			{elements.map((_, index) => (
+				// eslint-disable-next-line react/no-array-index-key
+				<ReceiptPreviewSkeleton key={index} />
+			))}
+		</>
+	);
+};
 
 const useReceiptQuery = (
 	input: Omit<Input, "cursor">,
@@ -41,7 +56,7 @@ const ReceiptPreviews: React.FC<{ ids: ReceiptsId[] }> = ({ ids }) => {
 		ids.map((id) => t.receipts.get({ id })),
 	);
 	if (receiptQueries.every((query) => query.status === "pending")) {
-		return <Spinner size="lg" />;
+		return <ReceiptPreviewsSkeleton amount={receiptQueries.length} />;
 	}
 	if (receiptQueries.every((query) => query.status === "error")) {
 		return (
@@ -57,7 +72,7 @@ const ReceiptPreviews: React.FC<{ ids: ReceiptsId[] }> = ({ ids }) => {
 				<React.Fragment key={ids[index]}>
 					<Divider className="sm:hidden" />
 					{receiptQuery.status === "pending" ? (
-						<Spinner size="sm" />
+						<ReceiptPreviewSkeleton />
 					) : receiptQuery.status === "error" ? (
 						<QueryErrorMessage query={receiptQuery} />
 					) : (
@@ -68,6 +83,18 @@ const ReceiptPreviews: React.FC<{ ids: ReceiptsId[] }> = ({ ids }) => {
 		</>
 	);
 };
+
+const ReceiptsTableHeader = () => (
+	<View className="flex-row gap-2">
+		<View className="flex-[8] p-2">
+			<Text>Receipt</Text>
+		</View>
+		<View className="flex-[2] p-2">
+			<Text className="self-end">Sum</Text>
+		</View>
+		<View className="flex-1 p-2 max-sm:hidden" />
+	</View>
+);
 
 export const Receipts: React.FC = () => {
 	const [input] = useReceiptsGetPagedStore();
@@ -120,28 +147,19 @@ export const Receipts: React.FC = () => {
 					) : undefined
 				}
 			>
-				{query.status === "error" ? <QueryErrorMessage query={query} /> : null}
-				{query.status === "pending" ? (
-					<Spinner size="lg" />
+				<ReceiptsTableHeader />
+				<Divider className="max-sm:hidden" />
+				{query.status === "error" ? (
+					<QueryErrorMessage query={query} />
+				) : query.status === "pending" ? (
+					<ReceiptPreviewsSkeleton amount={input.limit} />
 				) : !totalCount && input.filters ? (
 					<Header className="text-center">
 						No receipts under given filters
 					</Header>
-				) : query.data ? (
-					<>
-						<View className="flex-row gap-2">
-							<View className="flex-[8] p-2">
-								<Text>Receipt</Text>
-							</View>
-							<View className="flex-[2] p-2">
-								<Text className="self-end">Sum</Text>
-							</View>
-							<View className="flex-1 p-2 max-sm:hidden" />
-						</View>
-						<Divider className="max-sm:hidden" />
-						<ReceiptPreviews ids={query.data.items} />
-					</>
-				) : null}
+				) : (
+					<ReceiptPreviews ids={query.data.items} />
+				)}
 			</Overlay>
 			{paginationElement}
 		</>

@@ -7,11 +7,15 @@ import type { TRPCQueryOutput } from "~app/trpc";
 import { Badge } from "~components/badge";
 import { KeyIcon } from "~components/icons";
 import { Link } from "~components/link";
+import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
 import { Tooltip } from "~components/tooltip";
 import { round } from "~utils/math";
 
-import { ReceiptPreviewSyncIcon } from "./receipt-preview-sync-icon";
+import {
+	ReceiptPreviewSyncIcon,
+	ReceiptPreviewSyncIconSkeleton,
+} from "./receipt-preview-sync-icon";
 
 type InnerProps = {
 	receipt: TRPCQueryOutput<"receipts.get">;
@@ -64,15 +68,46 @@ export const ReceiptPreview: React.FC<InnerProps> = ({ receipt }) => {
 		<View>
 			<View className="flex-row gap-2 sm:hidden">
 				<Text className="flex-[8] p-2">{title}</Text>
-				<Text className="flex-[2] flex-row p-2 text-right">{sumComponent}</Text>
+				<Text className="flex-[2] flex-row justify-end p-2 text-right">
+					{sumComponent}
+				</Text>
 			</View>
 			<View className="flex-row gap-2">
 				<Text className="flex-[8] p-2 max-sm:hidden">{title}</Text>
-				<Text className="flex-[2] flex-row self-center p-2 text-right max-sm:hidden">
+				<Text className="flex-[2] flex-row justify-end self-center p-2 text-right max-sm:hidden">
 					{sumComponent}
 				</Text>
-				<View className="flex-1 flex-row self-center p-2">
+				<View className="flex-1 flex-row items-center justify-start p-2 sm:justify-center">
 					<ReceiptPreviewSyncIcon receipt={receipt} />
+				</View>
+			</View>
+		</View>
+	);
+};
+
+export const ReceiptPreviewSkeleton = () => {
+	const titleComponent = (
+		<View className="flex flex-col items-start gap-1">
+			<Skeleton className="h-5 w-48 rounded" />
+			<Skeleton className="h-4 w-14 rounded" />
+		</View>
+	);
+	const sumComponent = <Skeleton className="h-5 w-16 rounded" />;
+	return (
+		<View>
+			<View className="flex-row gap-2 sm:hidden">
+				<View className="flex-[8] p-2">{titleComponent}</View>
+				<View className="flex-[2] flex-row justify-end p-2">
+					{sumComponent}
+				</View>
+			</View>
+			<View className="flex-row gap-2">
+				<View className="flex-[8] p-2 max-sm:hidden">{titleComponent}</View>
+				<View className="flex-[2] flex-row justify-end self-center p-2 max-sm:hidden">
+					{sumComponent}
+				</View>
+				<View className="flex-1 flex-row items-center justify-start p-2 sm:justify-center">
+					<ReceiptPreviewSyncIconSkeleton />
 				</View>
 			</View>
 		</View>
