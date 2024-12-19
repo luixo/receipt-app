@@ -1,7 +1,12 @@
 import type React from "react";
+import { View } from "react-native";
 
-import { DebtsGroup } from "~app/components/app/debts-group";
+import {
+	DebtsGroup,
+	DebtsGroupSkeleton,
+} from "~app/components/app/debts-group";
 import { LoadableUser } from "~app/components/app/loadable-user";
+import { SkeletonUser } from "~app/components/app/user";
 import { type TRPCQueryOutput, trpc } from "~app/trpc";
 import { Card, CardBody } from "~components/card";
 import { SyncIcon, UnsyncIcon } from "~components/icons";
@@ -17,6 +22,17 @@ const card = tv({
 		},
 	},
 });
+
+export const UserDebtsPreviewSkeleton = () => (
+	<Card>
+		<CardBody className={card()}>
+			<SkeletonUser />
+			<View className="flex flex-row items-center justify-center gap-2">
+				<DebtsGroupSkeleton className="shrink-0" amount={3} />
+			</View>
+		</CardBody>
+	</Card>
+);
 
 type Props = {
 	debts: TRPCQueryOutput<"debts.getByUsers">[number]["debts"];
@@ -37,7 +53,7 @@ export const UserDebtsPreview: React.FC<Props> = ({
 		<Card as={Link} href={`/debts/user/${userId}`}>
 			<CardBody className={card({ transparent })}>
 				<LoadableUser id={userId} />
-				<div className="flex items-center justify-center gap-2">
+				<View className="flex flex-row items-center justify-center gap-2">
 					{userQuery.status === "success" &&
 					userQuery.data.connectedAccount &&
 					accountSettingsQuery.status === "success" ? (
@@ -50,7 +66,7 @@ export const UserDebtsPreview: React.FC<Props> = ({
 						)
 					) : null}
 					<DebtsGroup className="shrink-0" debts={debts} />
-				</div>
+				</View>
 			</CardBody>
 		</Card>
 	);

@@ -1,7 +1,10 @@
-import type React from "react";
+import React from "react";
 import { View } from "react-native";
 
-import { DebtsGroup } from "~app/components/app/debts-group";
+import {
+	DebtsGroup,
+	DebtsGroupSkeleton,
+} from "~app/components/app/debts-group";
 import { EmptyCard } from "~app/components/empty-card";
 import { QueryErrorMessage } from "~app/components/error-message";
 import { ShowResolvedDebtsOption } from "~app/features/settings/show-resolved-debts-option";
@@ -12,9 +15,11 @@ import { trpc } from "~app/trpc";
 import { Button } from "~components/button";
 import { AddIcon } from "~components/icons";
 import { Link } from "~components/link";
-import { Spinner } from "~components/spinner";
 
-import { UserDebtsPreview } from "./user-debts-preview";
+import {
+	UserDebtsPreview,
+	UserDebtsPreviewSkeleton,
+} from "./user-debts-preview";
 
 type InnerProps = {
 	query: TRPCQuerySuccessResult<"debts.getByUsers">;
@@ -93,8 +98,21 @@ const DebtsInner: React.FC<InnerProps> = ({ query }) => {
 
 export const Debts: React.FC = () => {
 	const query = trpc.debts.getByUsers.useQuery();
+	const elements = React.useMemo(() => new Array<null>(5).fill(null), []);
 	if (query.status === "pending") {
-		return <Spinner size="lg" />;
+		return (
+			<>
+				<View className="items-center">
+					<DebtsGroupSkeleton amount={3} />
+				</View>
+				<View className="mt-4 gap-2">
+					{elements.map((_, index) => (
+						// eslint-disable-next-line react/no-array-index-key
+						<UserDebtsPreviewSkeleton key={index} />
+					))}
+				</View>
+			</>
+		);
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;
