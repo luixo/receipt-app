@@ -66,13 +66,12 @@ const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 	if (data.length === 0) {
 		return (
 			<EmptyCard title="You have no incoming sync requests">
-				Ask a friend to create a debt for you ;)
+				You have no incoming sync requests
 			</EmptyCard>
 		);
 	}
 	return (
 		<>
-			<PageHeader>Inbound debts</PageHeader>
 			{data.length === 1 ? null : (
 				<AcceptAllIntentionsButton
 					key={data.map(({ id }) => id).length}
@@ -95,13 +94,26 @@ const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 	);
 };
 
-export const DebtIntentions: React.FC = () => {
+const DebtIntentionsQuery: React.FC = () => {
 	const query = trpc.debtIntentions.getAll.useQuery();
-	if (query.status === "pending") {
-		return <Spinner size="lg" />;
+	switch (query.status) {
+		case "error":
+			return <QueryErrorMessage query={query} />;
+		case "pending":
+			return (
+				<>
+					<AcceptAllIntentionsButton intentions={[]} isDisabled />
+					<Spinner size="lg" />
+				</>
+			);
+		case "success":
+			return <DebtIntentionsInner query={query} />;
 	}
-	if (query.status === "error") {
-		return <QueryErrorMessage query={query} />;
-	}
-	return <DebtIntentionsInner query={query} />;
 };
+
+export const DebtIntentions: React.FC = () => (
+	<>
+		<PageHeader>Inbound debts</PageHeader>
+		<DebtIntentionsQuery />
+	</>
+);

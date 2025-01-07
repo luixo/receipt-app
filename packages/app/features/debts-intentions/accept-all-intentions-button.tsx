@@ -10,9 +10,12 @@ import { options as acceptDebtIntentionOptions } from "~mutations/debt-intention
 
 type Props = {
 	intentions: TRPCQueryOutput<"debtIntentions.getAll">;
-};
+} & React.ComponentProps<typeof Button>;
 
-export const AcceptAllIntentionsButton: React.FC<Props> = ({ intentions }) => {
+export const AcceptAllIntentionsButton: React.FC<Props> = ({
+	intentions,
+	...props
+}) => {
 	const router = useRouter();
 
 	const acceptMutations = intentions.map((intention) =>
@@ -43,6 +46,7 @@ export const AcceptAllIntentionsButton: React.FC<Props> = ({ intentions }) => {
 			color="primary"
 			onPress={() => acceptAllIntentions()}
 			title="Accept all incoming intentions"
+			{...props}
 		>
 			Accept all intentions
 		</Button>
