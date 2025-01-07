@@ -69,7 +69,7 @@ const AdminUserCard: React.FC<
 	</Card>
 );
 
-export const AdminScreen: AppPage = () => {
+const AdminScreenInner: React.FC = () => {
 	const accountQuery = trpc.account.get.useQuery();
 	const accountsQuery = trpc.admin.accounts.useQuery();
 	const [modalEmail, setModalEmail] = React.useState<string | undefined>();
@@ -87,62 +87,70 @@ export const AdminScreen: AppPage = () => {
 		},
 		[],
 	);
-	if (accountsQuery.status === "pending") {
-		return <Spinner size="md" />;
-	}
-	if (accountsQuery.status === "error") {
-		return <QueryErrorMessage query={accountsQuery} />;
-	}
-	const pretendUserAccount = pretendUser.email
-		? accountsQuery.data.find(
-				(element) => element.account.email === pretendUser.email,
-		  )
-		: null;
-	return (
-		<>
-			<PageHeader>Admin panel</PageHeader>
-			<Tabs variant="underlined">
-				<Tab key="become" title="Pretend user">
-					<div className="flex flex-col items-stretch gap-2">
-						{pretendUserAccount ? (
-							<>
-								<AdminUserCard {...pretendUserAccount} />
-								<Button onPress={resetPretendUser} color="primary">
-									Reset to self
-								</Button>
-							</>
-						) : accountQuery.data ? (
-							<AdminUserCard
-								user={{
-									...accountQuery.data.user,
-									// Typesystem doesn't know that we use account id as self user id;
-									id: accountQuery.data.account.id as UsersId,
-								}}
-								account={accountQuery.data.account}
-							/>
-						) : null}
-						<Divider />
-						{accountsQuery.data
-							.filter((element) => pretendUser.email !== element.account.email)
-							.map((element) => (
-								<AdminUserCard key={element.account.id} {...element}>
-									<Button
-										onPress={setModalEmailCurried(element.account.email)}
-										color="warning"
-									>
-										Become
+	switch (accountsQuery.status) {
+		case "pending":
+			return <Spinner size="md" />;
+		case "error":
+			return <QueryErrorMessage query={accountsQuery} />;
+		case "success": {
+			const pretendUserAccount = pretendUser.email
+				? accountsQuery.data.find(
+						(element) => element.account.email === pretendUser.email,
+				  )
+				: null;
+			return (
+				<Tabs variant="underlined">
+					<Tab key="become" title="Pretend user">
+						<div className="flex flex-col items-stretch gap-2">
+							{pretendUserAccount ? (
+								<>
+									<AdminUserCard {...pretendUserAccount} />
+									<Button onPress={resetPretendUser} color="primary">
+										Reset to self
 									</Button>
-								</AdminUserCard>
-							))}
-						<BecomeModal
-							isModalOpen={Boolean(modalEmail)}
-							closeModal={closeModal}
-							email={modalEmail || "unknown"}
-							setMockedEmail={setPretendEmail}
-						/>
-					</div>
-				</Tab>
-			</Tabs>
-		</>
-	);
+								</>
+							) : accountQuery.data ? (
+								<AdminUserCard
+									user={{
+										...accountQuery.data.user,
+										// Typesystem doesn't know that we use account id as self user id;
+										id: accountQuery.data.account.id as UsersId,
+									}}
+									account={accountQuery.data.account}
+								/>
+							) : null}
+							<Divider />
+							{accountsQuery.data
+								.filter(
+									(element) => pretendUser.email !== element.account.email,
+								)
+								.map((element) => (
+									<AdminUserCard key={element.account.id} {...element}>
+										<Button
+											onPress={setModalEmailCurried(element.account.email)}
+											color="warning"
+										>
+											Become
+										</Button>
+									</AdminUserCard>
+								))}
+							<BecomeModal
+								isModalOpen={Boolean(modalEmail)}
+								closeModal={closeModal}
+								email={modalEmail || "unknown"}
+								setMockedEmail={setPretendEmail}
+							/>
+						</div>
+					</Tab>
+				</Tabs>
+			);
+		}
+	}
 };
+
+export const AdminScreen: AppPage = () => (
+	<>
+		<PageHeader>Admin panel</PageHeader>
+		<AdminScreenInner />
+	</>
+);
