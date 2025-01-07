@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import { View } from "react-native";
 
 import {
@@ -96,9 +96,10 @@ const DebtsInner: React.FC<InnerProps> = ({ query }) => {
 	);
 };
 
+const skeletonElements = new Array<null>(5).fill(null).map((_, index) => index);
+
 export const Debts: React.FC = () => {
 	const query = trpc.debts.getByUsers.useQuery();
-	const elements = React.useMemo(() => new Array<null>(5).fill(null), []);
 	if (query.status === "pending") {
 		return (
 			<>
@@ -106,8 +107,7 @@ export const Debts: React.FC = () => {
 					<DebtsGroupSkeleton amount={3} />
 				</View>
 				<View className="mt-4 gap-2">
-					{elements.map((_, index) => (
-						// eslint-disable-next-line react/no-array-index-key
+					{skeletonElements.map((index) => (
 						<UserDebtsPreviewSkeleton key={index} />
 					))}
 				</View>
