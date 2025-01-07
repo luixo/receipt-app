@@ -54,33 +54,54 @@ test("Multiple groups with different directions", async ({
 	});
 });
 
-test("External query status", async ({
-	api,
-	mockDebts,
-	openUserDebtsScreen,
-	debtsGroup,
-	expectScreenshotWithSchemes,
-}) => {
-	const { debtUser, debts } = mockDebts({
-		generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 3 }),
+test.describe("External query status", () => {
+	test("loading", async ({
+		api,
+		mockDebts,
+		openUserDebtsScreen,
+		debtsGroup,
+		expectScreenshotWithSchemes,
+	}) => {
+		const { debtUser, debts } = mockDebts({
+			generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 3 }),
+		});
+		const debtPause = api.createPause();
+		api.mockFirst("debts.get", async ({ input: { id }, next }) => {
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			if (id === debts[0]!.id) {
+				await debtPause.promise;
+			}
+			return next();
+		});
+		await openUserDebtsScreen(debtUser.id);
+		await expectScreenshotWithSchemes("external-loading.png", {
+			locator: debtsGroup,
+		});
 	});
-	const debtPause = api.createPause();
-	api.mockFirst("debts.get", async ({ input: { id }, next }) => {
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		if (id === debts[0]!.id) {
-			await debtPause.promise;
-		}
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		if (id === debts[1]!.id) {
-			throw new TRPCError({
-				code: "FORBIDDEN",
-				message: `Mock "debts.get" error`,
-			});
-		}
-		return next();
-	});
-	await openUserDebtsScreen(debtUser.id);
-	await expectScreenshotWithSchemes("external-status.png", {
-		locator: debtsGroup,
+
+	test("error", async ({
+		api,
+		mockDebts,
+		openUserDebtsScreen,
+		debtsGroup,
+		expectScreenshotWithSchemes,
+	}) => {
+		const { debtUser, debts } = mockDebts({
+			generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 3 }),
+		});
+		api.mockFirst("debts.get", async ({ input: { id }, next }) => {
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			if (id === debts[0]!.id) {
+				throw new TRPCError({
+					code: "FORBIDDEN",
+					message: `Mock "debts.get" error`,
+				});
+			}
+			return next();
+		});
+		await openUserDebtsScreen(debtUser.id);
+		await expectScreenshotWithSchemes("external-error.png", {
+			locator: debtsGroup,
+		});
 	});
 });

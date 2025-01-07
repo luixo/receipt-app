@@ -65,7 +65,7 @@ test.describe("external query status", () => {
 		openUserDebtsScreen,
 		debtsGroupElement,
 		debtsGroup,
-		loader,
+		skeleton,
 	}) => {
 		const { debtUser, debts } = mockDebts();
 		const debtPause = api.createPause();
@@ -78,11 +78,11 @@ test.describe("external query status", () => {
 			return next();
 		});
 		await openUserDebtsScreen(debtUser.id);
-		await expect(debtsGroup.filter({ has: loader })).toBeVisible();
+		await expect(debtsGroup.filter({ has: skeleton })).toBeVisible();
 		await expect(debtsGroupElement).not.toBeAttached();
 		debtPause.resolve();
 		await expect(debtsGroupElement).toHaveCount(debts.length);
-		await expect(debtsGroup.filter({ has: loader })).not.toBeVisible();
+		await expect(debtsGroup.filter({ has: skeleton })).not.toBeVisible();
 	});
 
 	test("errors", async ({
