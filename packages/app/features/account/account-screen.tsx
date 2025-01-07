@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactFragment } from "react";
 
 import { useRouter } from "solito/navigation";
 
@@ -70,6 +70,12 @@ const AccountNameInput: React.FC<NameProps> = ({ accountQuery }) => {
 	);
 };
 
+const AccountHeader: React.FC<{ name: string }> = ({ name }) => (
+	<PageHeader startContent={<AccountIcon size={36} />} title="My account">
+		{name}
+	</PageHeader>
+);
+
 type InnerProps = {
 	query: TRPCQuerySuccessResult<"account.get">;
 };
@@ -90,10 +96,7 @@ const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 
 	return (
 		<>
-			<PageHeader startContent={<AccountIcon size={36} />} title="My account">
-				{query.data.user.name}
-			</PageHeader>
-			<EmailVerificationCard />
+			<AccountHeader name={query.data.user.name} />
 			<AccountAvatarInput account={query.data.account}>
 				<AccountNameInput accountQuery={query.data} />
 			</AccountAvatarInput>
@@ -111,13 +114,26 @@ const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 	);
 };
 
-export const AccountScreen: AppPage = () => {
+export const AccountScreenQuery: AppPage = () => {
 	const query = trpc.account.get.useQuery();
-	if (query.status === "pending") {
-		return <Spinner />;
+	switch (query.status) {
+		case "pending":
+			return (
+				<>
+					<AccountHeader name="Loading account..." />
+					<Spinner />
+				</>
+			);
+		case "error":
+			return <QueryErrorMessage query={query} />;
+		case "success":
+			return <AccountScreenInner query={query} />;
 	}
-	if (query.status === "error") {
-		return <QueryErrorMessage query={query} />;
-	}
-	return <AccountScreenInner query={query} />;
 };
+
+export const AccountScreen: AppPage = () => (
+	<>
+		<EmailVerificationCard />
+		<AccountScreenQuery />
+	</>
+);

@@ -45,46 +45,47 @@ export const ResetPassword: React.FC<Props> = ({ token }) => {
 		[changePasswordMutation, token],
 	);
 
-	if (intentionQuery.status === "pending") {
-		return <Spinner size="lg" />;
+	switch (intentionQuery.status) {
+		case "pending":
+			return <Spinner size="lg" />;
+		case "error":
+			return <QueryErrorMessage query={intentionQuery} />;
+		case "success":
+			return (
+				<>
+					<Header>{intentionQuery.data.email}</Header>
+					<form
+						className="flex flex-col gap-4"
+						onSubmit={form.handleSubmit(onSubmit)}
+					>
+						<Input value={token} label="Token" isReadOnly />
+						<Input
+							{...form.register("password")}
+							label="New password"
+							fieldError={form.formState.errors.password}
+							disabled={changePasswordMutation.isPending}
+							type="password"
+						/>
+						<Input
+							{...form.register("passwordRetype")}
+							label="Retype new password"
+							fieldError={form.formState.errors.passwordRetype}
+							disabled={changePasswordMutation.isPending}
+							type="password"
+						/>
+						<Button
+							className="mt-4"
+							color="primary"
+							isDisabled={
+								!form.formState.isValid || changePasswordMutation.isPending
+							}
+							isLoading={changePasswordMutation.isPending}
+							type="submit"
+						>
+							Save password
+						</Button>
+					</form>
+				</>
+			);
 	}
-	if (intentionQuery.status === "error") {
-		return <QueryErrorMessage query={intentionQuery} />;
-	}
-	return (
-		<>
-			<Header>{intentionQuery.data.email}</Header>
-			<form
-				className="flex flex-col gap-4"
-				onSubmit={form.handleSubmit(onSubmit)}
-			>
-				<Input value={token} label="Token" isReadOnly />
-				<Input
-					{...form.register("password")}
-					label="New password"
-					fieldError={form.formState.errors.password}
-					disabled={changePasswordMutation.isPending}
-					type="password"
-				/>
-				<Input
-					{...form.register("passwordRetype")}
-					label="Retype new password"
-					fieldError={form.formState.errors.passwordRetype}
-					disabled={changePasswordMutation.isPending}
-					type="password"
-				/>
-				<Button
-					className="mt-4"
-					color="primary"
-					isDisabled={
-						!form.formState.isValid || changePasswordMutation.isPending
-					}
-					isLoading={changePasswordMutation.isPending}
-					type="submit"
-				>
-					Save password
-				</Button>
-			</form>
-		</>
-	);
 };
