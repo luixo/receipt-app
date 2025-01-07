@@ -2,7 +2,6 @@ import type React from "react";
 
 import { Link } from "solito/link";
 
-import { EmptyCard } from "~app/components/empty-card";
 import { ErrorMessage } from "~app/components/error-message";
 import type { TRPCMutationResult } from "~app/trpc";
 import { Button } from "~components/button";
@@ -10,34 +9,26 @@ import { Header } from "~components/header";
 import { Spinner } from "~components/spinner";
 
 type Props = {
-	token?: string;
 	confirmMutation: TRPCMutationResult<"auth.confirmEmail">;
 };
 
-export const ConfirmEmail: React.FC<Props> = ({ token, confirmMutation }) => {
-	if (!token) {
-		return (
-			<EmptyCard title="Something went wrong">
-				Please verify you got confirm link right
-			</EmptyCard>
-		);
+export const ConfirmEmail: React.FC<Props> = ({ confirmMutation }) => {
+	switch (confirmMutation.status) {
+		case "pending":
+			return <Spinner size="lg" />;
+		case "error":
+			return <ErrorMessage message={confirmMutation.error.message} />;
+		case "idle":
+			return null;
+		case "success":
+			return (
+				<>
+					<Header>{confirmMutation.data.email}</Header>
+					<Header size="sm">Email verification successful!</Header>
+					<Link href="/">
+						<Button color="primary">To home page</Button>
+					</Link>
+				</>
+			);
 	}
-	if (confirmMutation.status === "pending") {
-		return <Spinner size="lg" />;
-	}
-	if (confirmMutation.status === "error") {
-		return <ErrorMessage message={confirmMutation.error.message} />;
-	}
-	if (confirmMutation.status === "idle") {
-		return null;
-	}
-	return (
-		<>
-			<Header>{confirmMutation.data.email}</Header>
-			<Header size="sm">Email verification successful!</Header>
-			<Link href="/">
-				<Button color="primary">To home page</Button>
-			</Link>
-		</>
-	);
 };

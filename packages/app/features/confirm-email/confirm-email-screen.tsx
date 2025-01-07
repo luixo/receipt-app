@@ -2,6 +2,7 @@ import React from "react";
 
 import { useRouter, useSearchParams } from "solito/navigation";
 
+import { EmptyCard } from "~app/components/empty-card";
 import { PageHeader } from "~app/components/page-header";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
@@ -30,7 +31,13 @@ export const ConfirmEmailScreen: AppPage = () => {
 	return (
 		<>
 			<PageHeader>Confirm email</PageHeader>
-			<ConfirmEmail token={token} confirmMutation={confirmEmailMutation} />
+			{token ? (
+				<ConfirmEmail confirmMutation={confirmEmailMutation} />
+			) : (
+				<EmptyCard title="Something went wrong">
+					Please verify you got confirm link right
+				</EmptyCard>
+			)}
 		</>
 	);
 };
