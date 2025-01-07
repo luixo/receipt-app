@@ -2,6 +2,7 @@ import React from "react";
 import { View } from "react-native";
 
 import { LoadableUser } from "~app/components/app/loadable-user";
+import { SkeletonUser } from "~app/components/app/user";
 import { UsersSuggest } from "~app/components/app/users-suggest";
 import { EmptyCard } from "~app/components/empty-card";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
@@ -81,6 +82,31 @@ const ReceiptParticipantsPreview: React.FC<{ switchModal: () => void }> = ({
 		</View>
 	);
 };
+
+const skeletonParticipants = new Array(3).fill(null).map((_, index) => index);
+
+export const ReceiptParticipantsPreviewSkeleton: React.FC = () => (
+	<View className="xs:flex-row flex cursor-pointer flex-col gap-2">
+		<View className="flex flex-row gap-2">
+			<Text className="text-2xl leading-9">payed by</Text>
+			<AvatarGroup className="ml-2">
+				<SkeletonUser onlyAvatar dimmed />
+			</AvatarGroup>
+		</View>
+		<View className="flex flex-row gap-2">
+			<Text className="text-2xl leading-9">for</Text>
+			{/* Fix `ml-2` with finding out why first avatar gets `-ms-2` class instead of `ms-0` */}
+			<AvatarGroup className="ml-2">
+				{skeletonParticipants.map((index) => (
+					<SkeletonUser key={index} onlyAvatar />
+				))}
+			</AvatarGroup>
+		</View>
+		<Button variant="bordered" color="primary" isIconOnly isDisabled>
+			<PencilIcon size={32} />
+		</Button>
+	</View>
+);
 
 export const ReceiptParticipants: React.FC = () => {
 	const { receiptDisabled, participants, selfUserId, getUsersSuggestOptions } =

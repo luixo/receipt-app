@@ -2,9 +2,12 @@ import React from "react";
 import { View } from "react-native";
 
 import { LoadableUser } from "~app/components/app/loadable-user";
+import { SkeletonUser } from "~app/components/app/user";
 import { RemoveButton } from "~app/components/remove-button";
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import { trpc } from "~app/trpc";
+import { Skeleton } from "~components/skeleton";
+import { Text } from "~components/text";
 
 import { useActionsHooksContext } from "./context";
 import { useCanEdit, useIsOwner } from "./hooks";
@@ -61,3 +64,14 @@ export const ReceiptItemConsumer: React.FC<Props> = ({
 		</View>
 	);
 };
+
+export const ReceiptItemConsumerSkeleton: React.FC = () => (
+	<View className="items-start justify-between gap-2 min-[500px]:flex-row sm:gap-4">
+		<SkeletonUser />
+		<View className="flex-row gap-2 self-end">
+			<Skeleton className="h-7 w-10 rounded-md" />
+			<Text>/</Text>
+			<Skeleton className="h-7 w-10 rounded-md" />
+		</View>
+	</View>
+);

@@ -8,7 +8,7 @@ import { DebtSyncStatus } from "~app/components/app/debt-sync-status";
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { SignButtonGroup } from "~app/components/app/sign-button-group";
 import { SkeletonUser } from "~app/components/app/user";
-import { DateInput } from "~app/components/date-input";
+import { DateInput, SkeletonDateInput } from "~app/components/date-input";
 import { QueryErrorMessage } from "~app/components/error-message";
 import { PageHeader } from "~app/components/page-header";
 import {
@@ -386,11 +386,7 @@ export const DebtScreen: AppPage = () => {
 						variant="bordered"
 						endContent="$"
 					/>
-					<Input
-						aria-label="Date"
-						isDisabled
-						startContent={<Spinner size="sm" />}
-					/>
+					<SkeletonDateInput />
 					<Input
 						aria-label="Debt note"
 						isDisabled

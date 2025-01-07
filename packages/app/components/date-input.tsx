@@ -8,6 +8,7 @@ import { useSsrFormat } from "~app/hooks/use-ssr-format";
 import type { TRPCMutationResult } from "~app/trpc";
 import { Calendar } from "~components/calendar";
 import { Input } from "~components/input";
+import { Spinner } from "~components/spinner";
 
 type Props = {
 	timestamp: Date;
@@ -76,3 +77,18 @@ export const DateInput: React.FC<Props> = ({
 		</Calendar>
 	);
 };
+
+export const SkeletonDateInput: React.FC<
+	{ label?: string } & React.ComponentProps<typeof Input>
+> = ({ label, ...props }) => (
+	<View>
+		<Input
+			startContent={<Spinner size="sm" />}
+			aria-label={label || "Date"}
+			label={label}
+			type="text"
+			isDisabled
+			{...props}
+		/>
+	</View>
+);

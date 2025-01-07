@@ -8,7 +8,7 @@ import type { ReceiptItemsId } from "~db/models";
 import { AddReceiptItemForm } from "./add-receipt-item-form";
 import { useReceiptContext } from "./context";
 import { ReceiptEmptyItems } from "./receipt-empty-items";
-import { ReceiptItem } from "./receipt-item";
+import { ReceiptItem, ReceiptItemSkeleton } from "./receipt-item";
 
 const AddReceiptItemController: React.FC = () => {
 	const { receiptDisabled } = useReceiptContext();
@@ -61,6 +61,22 @@ export const ReceiptItems: React.FC = () => {
 						itemsRef.current[item.id] = element;
 					}}
 				/>
+			))}
+		</>
+	);
+};
+
+export const ReceiptItemsSkeleton: React.FC<{ amount: number }> = ({
+	amount,
+}) => {
+	const items = React.useMemo(
+		() => new Array(amount).fill(null).map((_, index) => index),
+		[amount],
+	);
+	return (
+		<>
+			{items.map((index) => (
+				<ReceiptItemSkeleton key={index} />
 			))}
 		</>
 	);

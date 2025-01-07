@@ -10,12 +10,16 @@ import { Card, CardBody, CardHeader } from "~components/card";
 import { Chip } from "~components/chip";
 import { Divider } from "~components/divider";
 import { ScrollShadow } from "~components/scroll-shadow";
+import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
 import { round } from "~utils/math";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
 import { useCanEdit } from "./hooks";
-import { ReceiptItemConsumer } from "./receipt-item-consumer";
+import {
+	ReceiptItemConsumer,
+	ReceiptItemConsumerSkeleton,
+} from "./receipt-item-consumer";
 import { ReceiptItemConsumerChip } from "./receipt-item-consumer-chip";
 import { ReceiptItemNameInput } from "./receipt-item-name-input";
 import { ReceiptItemPriceInput } from "./receipt-item-price-input";
@@ -147,4 +151,28 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 			</Card>
 		);
 	},
+);
+
+const consumersSkeletonItems = new Array(2).fill(null).map((_, index) => index);
+
+export const ReceiptItemSkeleton: React.FC = () => (
+	<Card>
+		<CardHeader className="justify-between gap-4">
+			<Skeleton className="h-7 w-24 rounded-md" />
+		</CardHeader>
+		<Divider />
+		<CardBody className="gap-2">
+			<View className="flex-row items-center gap-2">
+				<Skeleton className="h-7 w-12 rounded-md" />
+				<Text>x</Text>
+				<Skeleton className="h-7 w-12 rounded-md" />
+				<Text>=</Text>
+				<Skeleton className="h-7 w-12 rounded-md" />
+			</View>
+			<Divider />
+			{consumersSkeletonItems.map((index) => (
+				<ReceiptItemConsumerSkeleton key={index} />
+			))}
+		</CardBody>
+	</Card>
 );

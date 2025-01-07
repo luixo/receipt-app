@@ -2,19 +2,27 @@ import React from "react";
 import { View } from "react-native";
 
 import { LoadableUser } from "~app/components/app/loadable-user";
+import { SkeletonUser } from "~app/components/app/user";
+import { SkeletonDateInput } from "~app/components/date-input";
 import { QueryErrorMessage } from "~app/components/error-message";
 import { PageHeader } from "~app/components/page-header";
 import {
 	actionsHooksContext,
 	receiptContext,
 } from "~app/features/receipt-components/context";
-import { ReceiptItems } from "~app/features/receipt-components/receipt-items";
-import { ReceiptParticipants } from "~app/features/receipt-components/receipt-participants";
+import {
+	ReceiptItems,
+	ReceiptItemsSkeleton,
+} from "~app/features/receipt-components/receipt-items";
+import {
+	ReceiptParticipants,
+	ReceiptParticipantsPreviewSkeleton,
+} from "~app/features/receipt-components/receipt-participants";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { ReceiptIcon } from "~components/icons";
-import { Spinner } from "~components/spinner";
+import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
 import type { ReceiptsId } from "~db/models";
 
@@ -134,18 +142,29 @@ type Props = Omit<InnerProps, "query"> & {
 
 export const Receipt: React.FC<Props> = ({ id, ...props }) => {
 	const query = trpc.receipts.get.useQuery({ id });
-	if (query.status === "pending") {
-		return (
-			<>
-				<Header title="Loading receipt...">
-					<Text className="text-3xl">Loading receipt...</Text>
-				</Header>
-				<Spinner size="lg" />
-			</>
-		);
+	switch (query.status) {
+		case "pending":
+			return (
+				<>
+					<Header title="Loading receipt...">
+						<Text className="text-3xl">Loading receipt...</Text>
+					</Header>
+					<View className="items-start gap-2">
+						<View className="flex w-full flex-row items-start justify-between gap-2">
+							<SkeletonDateInput />
+							<SkeletonUser onlyAvatar />
+						</View>
+						<View className="flex flex-col justify-center gap-2 sm:flex-row">
+							<Skeleton className="h-7 w-12 self-center rounded-md" />
+							<ReceiptParticipantsPreviewSkeleton />
+						</View>
+					</View>
+					<ReceiptItemsSkeleton amount={3} />
+				</>
+			);
+		case "error":
+			return <QueryErrorMessage query={query} />;
+		case "success":
+			return <ReceiptInner {...props} query={query} />;
 	}
-	if (query.status === "error") {
-		return <QueryErrorMessage query={query} />;
-	}
-	return <ReceiptInner {...props} query={query} />;
 };
