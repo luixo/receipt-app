@@ -43,3 +43,12 @@ export const RemoveButton: React.FC<Props> = ({
 		)}
 	</ConfirmModal>
 );
+
+export const RemoveButtonSkeleton: React.FC<
+	React.ComponentProps<typeof Button>
+> = ({ children, ...props }) => (
+	<Button color="danger" {...props} isDisabled>
+		<TrashBin className="shrink-0" size={24} />
+		{children}
+	</Button>
+);

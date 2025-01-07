@@ -7,10 +7,14 @@ import { DebtControlButtons } from "~app/components/app/debt-control-buttons";
 import { DebtSyncStatus } from "~app/components/app/debt-sync-status";
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { SignButtonGroup } from "~app/components/app/sign-button-group";
+import { SkeletonUser } from "~app/components/app/user";
 import { DateInput } from "~app/components/date-input";
 import { QueryErrorMessage } from "~app/components/error-message";
 import { PageHeader } from "~app/components/page-header";
-import { RemoveButton } from "~app/components/remove-button";
+import {
+	RemoveButton,
+	RemoveButtonSkeleton,
+} from "~app/components/remove-button";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import { useSingleInput } from "~app/hooks/use-single-input";
@@ -28,6 +32,7 @@ import { Spinner } from "~components/spinner";
 import type { ReceiptsId, UsersId } from "~db/models";
 import { options as debtsRemoveOptions } from "~mutations/debts/remove";
 import { options as debtsUpdateOptions } from "~mutations/debts/update";
+import { noop } from "~utils/fn";
 import type { AppPage } from "~utils/next";
 
 type Debt = TRPCQueryOutput<"debts.get">;
@@ -367,16 +372,39 @@ export const DebtInner: React.FC<InnerProps> = ({ query }) => {
 export const DebtScreen: AppPage = () => {
 	const { id } = useParams<{ id: string }>();
 	const query = trpc.debts.get.useQuery({ id });
-	if (query.status === "pending") {
-		return (
-			<>
-				<Header userId={id}>Loading debt ...</Header>
-				<Spinner size="lg" />
-			</>
-		);
+	switch (query.status) {
+		case "pending":
+			return (
+				<>
+					<Header userId={id}>Loading debt ...</Header>
+					<SkeletonUser className="self-start" />
+					<SignButtonGroup disabled isLoading onUpdate={noop} direction="+" />
+					<Input
+						startContent={<Spinner size="sm" />}
+						aria-label="Debt amount"
+						isDisabled
+						variant="bordered"
+						endContent="$"
+					/>
+					<Input
+						aria-label="Date"
+						isDisabled
+						startContent={<Spinner size="sm" />}
+					/>
+					<Input
+						aria-label="Debt note"
+						isDisabled
+						startContent={<Spinner size="sm" />}
+						multiline
+					/>
+					<RemoveButtonSkeleton className="self-end">
+						Remove debt
+					</RemoveButtonSkeleton>
+				</>
+			);
+		case "error":
+			return <QueryErrorMessage query={query} />;
+		case "success":
+			return <DebtInner query={query} />;
 	}
-	if (query.status === "error") {
-		return <QueryErrorMessage query={query} />;
-	}
-	return <DebtInner query={query} />;
 };
