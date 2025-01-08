@@ -74,23 +74,6 @@ const restrictedImports = [
 			},
 		],
 	},
-	{
-		from: "~queries\\u002F.*",
-		imports: [
-			{
-				actual: "useStore",
-				expected: "use<Router><Procedure>Store",
-			},
-			{
-				actual: "useSyncQueryParams",
-				expected: "use<router><Procedure>SyncQueryParams",
-			},
-			{
-				actual: "inputStore",
-				expected: "<router><Procedure>InputStore",
-			},
-		],
-	},
 ];
 
 const overridenRules = {

@@ -1,7 +1,12 @@
 import React from "react";
 
 import type { Selection } from "@react-types/shared/src/selection";
+import type { Options } from "nuqs";
 
+import type {
+	Filters,
+	OrderByLiteral,
+} from "~app/features/receipts/receipts-screen";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { Button } from "~components/button";
 import { Divider } from "~components/divider";
@@ -19,39 +24,54 @@ import {
 } from "~components/icons";
 import { Modal, ModalBody, ModalContent } from "~components/modal";
 import { Text } from "~components/text";
-import { useStore as useReceiptsGetPagedStore } from "~queries/receipts/get-paged";
 
-export const FilterButton: React.FC = () => {
-	const [{ orderBy, filters = {} }, { changeOrderBy, changeFilters }] =
-		useReceiptsGetPagedStore();
+type SetWithDefault<T> = (
+	value: null | T | ((prev: T) => T | null),
+	options?: Options,
+) => Promise<URLSearchParams>;
+type Props = {
+	orderBy: OrderByLiteral;
+	setOrderBy: SetWithDefault<OrderByLiteral>;
+	filters: Filters;
+	setFilters: SetWithDefault<Filters>;
+};
 
+export const FilterButton: React.FC<Props> = ({
+	orderBy,
+	setOrderBy,
+	filters,
+	setFilters,
+}) => {
 	const [filterModalOpen, { switchValue: switchFilterModal }] =
 		useBooleanState(false);
 
 	const sortSelectOnPress = React.useCallback(
-		() => changeOrderBy(orderBy === "date-desc" ? "date-asc" : "date-desc"),
-		[changeOrderBy, orderBy],
+		() =>
+			setOrderBy((prevOrderBy) =>
+				prevOrderBy === "date-desc" ? "date-asc" : "date-desc",
+			),
+		[setOrderBy],
 	);
 	const SortIcon = orderBy === "date-desc" ? SortDownIcon : SortUpIcon;
 
 	const onFilterSelectionChange = React.useCallback(
-		(filterKey: keyof typeof filters, selection: Selection) => {
+		(filterKey: keyof Filters, selection: Selection) => {
 			if (selection === "all") {
 				return;
 			}
 			const key = [...selection.values()][0];
 			switch (key) {
 				case "true":
-					changeFilters((prev) => ({ ...prev, [filterKey]: true }));
+					void setFilters((prev) => ({ ...prev, [filterKey]: true }));
 					break;
 				case "false":
-					changeFilters((prev) => ({ ...prev, [filterKey]: false }));
+					void setFilters((prev) => ({ ...prev, [filterKey]: false }));
 					break;
 				default:
-					changeFilters((prev) => ({ ...prev, [filterKey]: undefined }));
+					void setFilters((prev) => ({ ...prev, [filterKey]: undefined }));
 			}
 		},
-		[changeFilters],
+		[setFilters],
 	);
 	const onOwnedFilterSelectionChange = React.useCallback(
 		(selection: Selection) => onFilterSelectionChange("ownedByMe", selection),

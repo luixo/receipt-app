@@ -1,5 +1,7 @@
 import React from "react";
 
+import { parseAsInteger, useQueryState } from "nuqs";
+
 import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
 import { useConnectionIntentions } from "~app/hooks/use-connection-intentions";
@@ -11,7 +13,13 @@ import type { AppPage } from "~utils/next";
 
 import { Users } from "./users";
 
+const DEFAULT_LIMIT = 10;
+
 export const UsersScreen: AppPage = () => {
+	const [limit] = useQueryState(
+		"limit",
+		parseAsInteger.withDefault(DEFAULT_LIMIT),
+	);
 	const inboundConnectionsAmount = useConnectionIntentions();
 	const connectionsButton = React.useMemo(
 		() => (
@@ -63,7 +71,7 @@ export const UsersScreen: AppPage = () => {
 				Users
 			</PageHeader>
 			<EmailVerificationCard />
-			<Users />
+			<Users limit={limit} />
 		</>
 	);
 };
