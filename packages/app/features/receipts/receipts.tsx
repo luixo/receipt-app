@@ -2,9 +2,14 @@ import React from "react";
 import { View } from "react-native";
 
 import { keepPreviousData } from "@tanstack/react-query";
+import { isNonNullish, values } from "remeda";
 
 import { EmptyCard } from "~app/components/empty-card";
 import { QueryErrorMessage } from "~app/components/error-message";
+import type {
+	Filters,
+	OrderByLiteral,
+} from "~app/features/receipts/receipts-screen";
 import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import type { TRPCQueryErrorResult, TRPCQueryInput } from "~app/trpc";
 import { trpc } from "~app/trpc";
@@ -18,10 +23,6 @@ import { Pagination } from "~components/pagination";
 import { Spinner } from "~components/spinner";
 import { Text } from "~components/text";
 import type { ReceiptsId } from "~db/models";
-import {
-	useStore as useReceiptsGetPagedStore,
-	useSyncQueryParams as useReceiptsGetPagedSyncQueryParams,
-} from "~queries/receipts/get-paged";
 
 import { ReceiptPreview, ReceiptPreviewSkeleton } from "./receipt-preview";
 
@@ -96,13 +97,21 @@ const ReceiptsTableHeader = () => (
 	</View>
 );
 
-export const Receipts: React.FC = () => {
-	const [input] = useReceiptsGetPagedStore();
-	useReceiptsGetPagedSyncQueryParams();
-	const cursorPaging = useCursorPaging(useReceiptQuery, input, "offset");
+type Props = {
+	filters: Filters;
+	orderBy: OrderByLiteral;
+	limit: number;
+};
+
+export const Receipts: React.FC<Props> = ({ filters, orderBy, limit }) => {
+	const cursorPaging = useCursorPaging(
+		useReceiptQuery,
+		{ limit, orderBy, filters },
+		"offset",
+	);
 	const { totalCount, query, pagination } = cursorPaging;
 
-	if (!totalCount && !input.filters && query.fetchStatus !== "fetching") {
+	if (!totalCount && query.fetchStatus !== "fetching") {
 		if (query.status === "error") {
 			return <QueryErrorMessage query={query} />;
 		}
@@ -152,8 +161,8 @@ export const Receipts: React.FC = () => {
 				{query.status === "error" ? (
 					<QueryErrorMessage query={query} />
 				) : query.status === "pending" ? (
-					<ReceiptPreviewsSkeleton amount={input.limit} />
-				) : !totalCount && input.filters ? (
+					<ReceiptPreviewsSkeleton amount={limit} />
+				) : !totalCount && values(filters).filter(isNonNullish).length === 0 ? (
 					<Header className="text-center">
 						No receipts under given filters
 					</Header>

@@ -15,7 +15,6 @@
 			"~db/*": ["./packages/db/src/*"],
 			"~db/migration/*": ["./packages/db/migration/*"],
 			"~mutations/*": ["./packages/mutations/src/*"],
-			"~queries/*": ["./packages/queries/src/*"],
 			"~web/*": ["./apps/web/src/*"],
 			"~mobile/*": ["./apps/mobile/*"],
 			"~tests/backend/*": ["./testing/vitest/*"],

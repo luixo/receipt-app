@@ -15,7 +15,6 @@ import { Overlay } from "~components/overlay";
 import { Pagination } from "~components/pagination";
 import { Spinner } from "~components/spinner";
 import type { UsersId } from "~db/models";
-import { useStore as useUsersGetPagedStore } from "~queries/users/get-paged";
 
 import { UserPreview } from "./user-preview";
 
@@ -57,9 +56,12 @@ const UserPreviews: React.FC<{ ids: UsersId[] }> = ({ ids }) => {
 	);
 };
 
-export const Users: React.FC = () => {
-	const [input] = useUsersGetPagedStore();
-	const cursorPaging = useCursorPaging(useUsersQuery, input, "offset");
+type Props = {
+	limit: number;
+};
+
+export const Users: React.FC<Props> = ({ limit }) => {
+	const cursorPaging = useCursorPaging(useUsersQuery, { limit }, "offset");
 	const { totalCount, pagination, query } = cursorPaging;
 
 	if (!totalCount && query.fetchStatus !== "fetching") {

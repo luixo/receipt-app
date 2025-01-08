@@ -98,7 +98,6 @@
 	"packageManager": "yarn@4.5.3",
 	"resolutions": {
 		"zustand@^4.3.9": "patch:zustand@npm%3A4.3.9#./patches/zustand-npm-4.3.9.patch",
-		"next-usequerystate@1.13.0": "patch:next-usequerystate@npm%3A1.13.0#./patches/next-usequerystate-npm-1.13.0.patch",
 		"solito@^4.1.3": "patch:solito@npm%3A4.1.3#./patches/solito-npm-4.1.3.patch",
 		"@tanstack/query-core@5.51.1": "patch:@tanstack/query-core@npm%3A5.51.1#./patches/@tanstack-query-core-npm-5.51.1.patch",
 		"@tanstack/react-query@^5.51.1": "patch:@tanstack/react-query@npm%3A5.51.1#./patches/@tanstack-react-query-npm-5.51.1.patch",

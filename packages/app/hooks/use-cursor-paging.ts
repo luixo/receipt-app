@@ -1,8 +1,8 @@
 import React from "react";
 
 import type { QueryObserverResult } from "@tanstack/react-query";
+import { parseAsInteger, useQueryState } from "nuqs";
 
-import { useQueryParam } from "~app/hooks/use-query-param";
 import type { TRPCError } from "~app/trpc";
 import type { Pagination } from "~components/pagination";
 
@@ -21,14 +21,10 @@ export const useCursorPaging = <
 	offsetParamName: string,
 ): CursorPagingResult<T> => {
 	const { limit } = input;
-	const [offset, setOffset] = useQueryParam<number>(offsetParamName, {
-		parse: (rawOffset) => {
-			const numberQueryOffset = Number(rawOffset);
-			return Number.isNaN(numberQueryOffset) ? 0 : numberQueryOffset;
-		},
-		serialize: (currentOffset) =>
-			currentOffset ? currentOffset.toString() : null,
-	});
+	const [offset, setOffset] = useQueryState(
+		offsetParamName,
+		parseAsInteger.withDefault(0),
+	);
 	const query = useQuery(input, offset);
 	const maxOffset = query.data
 		? query.data.count === 0
@@ -41,13 +37,13 @@ export const useCursorPaging = <
 			return;
 		}
 		if (offset > maxOffset) {
-			setOffset(maxOffset);
+			void setOffset(maxOffset);
 		}
 	}, [setOffset, maxOffset, offset]);
 
 	const onChange = React.useCallback(
 		(page: number) => {
-			setOffset((page - 1) * limit);
+			void setOffset((page - 1) * limit);
 		},
 		[setOffset, limit],
 	);
