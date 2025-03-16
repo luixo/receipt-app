@@ -1,6 +1,7 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { useRouter } from "solito/navigation";
 import { z } from "zod";
@@ -28,6 +29,7 @@ type RegistrationForm = {
 
 export const RegisterScreen: AppPage = () => {
 	const router = useRouter();
+	const queryClient = useQueryClient();
 	const form = useForm<RegistrationForm>({
 		mode: "onChange",
 		resolver: zodResolver(
@@ -45,7 +47,10 @@ export const RegisterScreen: AppPage = () => {
 			context: {
 				name: form.watch("name"),
 			},
-			onSuccess: () => router.replace("/"),
+			onSuccess: () => {
+				void queryClient.resetQueries();
+				router.replace("/");
+			},
 			trpc: { context: noBatchContext },
 		}),
 	);

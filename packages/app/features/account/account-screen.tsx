@@ -1,5 +1,6 @@
-import React, { ReactFragment } from "react";
+import React from "react";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "solito/navigation";
 
 import { QueryErrorMessage } from "~app/components/error-message";
@@ -82,10 +83,14 @@ type InnerProps = {
 
 const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 	const router = useRouter();
+	const queryClient = useQueryClient();
 
 	const logoutMutation = trpc.account.logout.useMutation(
 		useTrpcMutationOptions(accountLogoutOptions, {
-			onSuccess: () => router.replace("/"),
+			onSuccess: () => {
+				void queryClient.resetQueries();
+				router.replace("/");
+			},
 			trpc: { context: noBatchContext },
 		}),
 	);

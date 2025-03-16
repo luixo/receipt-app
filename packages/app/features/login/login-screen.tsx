@@ -1,6 +1,7 @@
 import React from "react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { useRouter } from "solito/navigation";
 import { z } from "zod";
@@ -25,6 +26,7 @@ type LoginForm = {
 
 export const LoginScreen: AppPage = () => {
 	const router = useRouter();
+	const queryClient = useQueryClient();
 	const form = useForm<LoginForm>({
 		mode: "onChange",
 		resolver: zodResolver(
@@ -37,7 +39,10 @@ export const LoginScreen: AppPage = () => {
 
 	const loginMutation = trpc.auth.login.useMutation(
 		useTrpcMutationOptions(authLoginOptions, {
-			onSuccess: () => router.replace("/"),
+			onSuccess: () => {
+				void queryClient.resetQueries();
+				router.replace("/");
+			},
 			trpc: { context: noBatchContext },
 		}),
 	);
