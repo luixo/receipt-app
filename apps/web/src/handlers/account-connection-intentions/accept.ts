@@ -1,6 +1,8 @@
 import { TRPCError } from "@trpc/server";
+import assert from "node:assert";
 import { z } from "zod";
 
+import { acceptNewIntentions } from "~web/handlers/debt-intentions/accept";
 import { authProcedure } from "~web/handlers/trpc";
 import { accountIdSchema, userIdSchema } from "~web/handlers/validation";
 
@@ -40,13 +42,24 @@ export const procedure = authProcedure
 				message: `User "${input.userId}" is already connected to an account with email "${user.email}".`,
 			});
 		}
-		const account = await database
+		const accounts = await database
 			.selectFrom("accounts")
-			.select(["id", "email", "avatarUrl"])
-			.where("id", "=", input.accountId)
-			.limit(1)
-			.executeTakeFirst();
-		if (!account) {
+			.leftJoin("accountSettings", (jb) =>
+				jb.onRef("accountSettings.accountId", "=", "accounts.id"),
+			)
+			.select([
+				"accounts.id",
+				"accounts.email",
+				"accounts.avatarUrl",
+				"accountSettings.manualAcceptDebts",
+			])
+			.where("accounts.id", "in", [input.accountId, ctx.auth.accountId])
+			.limit(2)
+			.execute();
+		const targetAccount = accounts.find(
+			(account) => account.id === input.accountId,
+		);
+		if (!targetAccount) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
 				message: `Account with id "${input.accountId}" does not exist.`,
@@ -56,14 +69,17 @@ export const procedure = authProcedure
 			.selectFrom("accountConnectionsIntentions")
 			.select("userId")
 			.where((eb) =>
-				eb.and({ accountId: account.id, targetAccountId: ctx.auth.accountId }),
+				eb.and({
+					accountId: targetAccount.id,
+					targetAccountId: ctx.auth.accountId,
+				}),
 			)
 			.limit(1)
 			.executeTakeFirst();
 		if (!intention) {
 			throw new TRPCError({
 				code: "NOT_FOUND",
-				message: `Intention from account "${account.email}" not found.`,
+				message: `Intention from account "${targetAccount.email}" not found.`,
 			});
 		}
 		await database.transaction().execute(async (tx) => {
@@ -71,12 +87,12 @@ export const procedure = authProcedure
 				.updateTable("users")
 				.set({ connectedAccountId: ctx.auth.accountId })
 				.where((eb) =>
-					eb.and({ ownerAccountId: account.id, id: intention.userId }),
+					eb.and({ ownerAccountId: targetAccount.id, id: intention.userId }),
 				)
 				.executeTakeFirst();
 			await tx
 				.updateTable("users")
-				.set({ connectedAccountId: account.id })
+				.set({ connectedAccountId: targetAccount.id })
 				.where((eb) =>
 					eb.and({ ownerAccountId: ctx.auth.accountId, id: input.userId }),
 				)
@@ -85,15 +101,81 @@ export const procedure = authProcedure
 				.deleteFrom("accountConnectionsIntentions")
 				.where((eb) =>
 					eb.and({
-						accountId: account.id,
+						accountId: targetAccount.id,
 						targetAccountId: ctx.auth.accountId,
 					}),
 				)
 				.executeTakeFirst();
 		});
+		const selfAccount = accounts.find(
+			(account) => account.id === ctx.auth.accountId,
+		);
+		assert(selfAccount, "Expected to have self account in account list");
+		const [outboundDebts, inboundDebts] = await Promise.all([
+			!targetAccount.manualAcceptDebts
+				? database
+						.selectFrom("debts")
+						.where("debts.ownerAccountId", "=", ctx.auth.accountId)
+						.where("debts.userId", "=", input.userId)
+						.select([
+							"debts.id",
+							"debts.amount",
+							"debts.currencyCode",
+							"debts.note",
+							"debts.receiptId",
+							"debts.timestamp",
+						])
+						.execute()
+				: [],
+			!selfAccount.manualAcceptDebts
+				? database
+						.selectFrom("debts")
+						.where("debts.ownerAccountId", "=", targetAccount.id)
+						.where("debts.userId", "=", intention.userId)
+						.select([
+							"debts.id",
+							"debts.amount",
+							"debts.currencyCode",
+							"debts.note",
+							"debts.receiptId",
+							"debts.timestamp",
+						])
+						.execute()
+				: [],
+		]);
+		await Promise.all([
+			acceptNewIntentions(
+				ctx,
+				targetAccount.id,
+				outboundDebts.map((debt) => ({
+					id: debt.id,
+					currencyCode: debt.currencyCode,
+					amount: debt.amount,
+					timestamp: debt.timestamp,
+					note: debt.note,
+					receiptId: debt.receiptId,
+					foreignUserId: intention.userId,
+					selfId: null,
+				})),
+			),
+			acceptNewIntentions(
+				ctx,
+				ctx.auth.accountId,
+				inboundDebts.map((debt) => ({
+					id: debt.id,
+					currencyCode: debt.currencyCode,
+					amount: debt.amount,
+					timestamp: debt.timestamp,
+					note: debt.note,
+					receiptId: debt.receiptId,
+					foreignUserId: input.userId,
+					selfId: null,
+				})),
+			),
+		]);
 		return {
-			email: account.email,
-			id: account.id,
-			avatarUrl: account.avatarUrl || undefined,
+			email: targetAccount.email,
+			id: targetAccount.id,
+			avatarUrl: targetAccount.avatarUrl || undefined,
 		};
 	});

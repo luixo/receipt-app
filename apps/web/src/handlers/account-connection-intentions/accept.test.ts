@@ -1,12 +1,18 @@
 import { faker } from "@faker-js/faker";
 import { describe, expect } from "vitest";
 
+import type { AccountsId, Debts, UsersId } from "~db/models";
 import { createAuthContext } from "~tests/backend/utils/context";
+import type {
+	AccountSettingsData,
+	InsertedDebt,
+} from "~tests/backend/utils/data";
 import {
 	insertAccount,
 	insertAccountConnectionIntention,
 	insertAccountWithSession,
 	insertConnectedUsers,
+	insertDebt,
 	insertUser,
 } from "~tests/backend/utils/data";
 import {
@@ -14,6 +20,7 @@ import {
 	expectTRPCError,
 	expectUnauthorizedError,
 } from "~tests/backend/utils/expect";
+import type { TestContext } from "~tests/backend/utils/test";
 import { test } from "~tests/backend/utils/test";
 import { t } from "~web/handlers/trpc";
 
@@ -309,6 +316,175 @@ describe("accountConnectionIntentions.accept", () => {
 				id: foreignAccountId,
 				email: foreignEmail,
 				avatarUrl: foreignAvatarUrl,
+			});
+		});
+
+		describe("auto-accepted debts", () => {
+			type AccountWithUser = { id: AccountsId; foreignUserId: UsersId };
+
+			const revertDebt = (
+				debt: InsertedDebt,
+				otherAccount: AccountWithUser,
+			) => ({
+				...debt,
+				ownerAccountId: otherAccount.id,
+				userId: otherAccount.foreignUserId,
+				amount: (-debt.amount).toFixed(4),
+			});
+
+			const runAcceptDebtsTest = async (
+				ctx: TestContext,
+				settings: {
+					self?: AccountSettingsData;
+					foreign?: AccountSettingsData;
+				},
+				afterTest?: (data: {
+					selfDebt: InsertedDebt;
+					foreignDebt: InsertedDebt;
+					selfAccount: AccountWithUser;
+					foreignAccount: AccountWithUser;
+					debts: Debts[];
+				}) => void,
+			) => {
+				const { sessionId, accountId: selfAccountId } =
+					await insertAccountWithSession(ctx, {
+						account: { settings: settings.self },
+					});
+				const { id: selfToForeignUserId } = await insertUser(
+					ctx,
+					selfAccountId,
+				);
+				const { id: extraSelfForeignUserId } = await insertUser(
+					ctx,
+					selfAccountId,
+				);
+
+				const { id: foreignAccountId } = await insertAccount(ctx, {
+					settings: settings.foreign,
+				});
+				const { id: foreignToSelfUserId } = await insertUser(
+					ctx,
+					foreignAccountId,
+				);
+				const { id: extraForeignForeignUserId } = await insertUser(
+					ctx,
+					foreignAccountId,
+				);
+
+				const selfDebt = await insertDebt(
+					ctx,
+					selfAccountId,
+					selfToForeignUserId,
+				);
+				const foreignDebt = await insertDebt(
+					ctx,
+					foreignAccountId,
+					foreignToSelfUserId,
+				);
+
+				// Verify non-related debts don't get accepted
+				await insertDebt(ctx, selfAccountId, extraSelfForeignUserId);
+				await insertDebt(ctx, foreignAccountId, extraForeignForeignUserId);
+
+				await insertAccountConnectionIntention(
+					ctx,
+					foreignAccountId,
+					selfAccountId,
+					foreignToSelfUserId,
+				);
+
+				const caller = createCaller(createAuthContext(ctx, sessionId));
+				await expectDatabaseDiffSnapshot(ctx, () =>
+					caller.procedure({
+						userId: selfToForeignUserId,
+						accountId: foreignAccountId,
+					}),
+				);
+				const debts = await ctx.database
+					.selectFrom("debts")
+					.selectAll()
+					.execute();
+
+				afterTest?.({
+					selfDebt,
+					foreignDebt,
+					selfAccount: {
+						id: selfAccountId,
+						foreignUserId: selfToForeignUserId,
+					},
+					foreignAccount: {
+						id: foreignAccountId,
+						foreignUserId: foreignToSelfUserId,
+					},
+					debts,
+				});
+			};
+
+			test("none are auto-accepted", async ({ ctx }) => {
+				await runAcceptDebtsTest(ctx, {
+					self: { manualAcceptDebts: true },
+					foreign: { manualAcceptDebts: true },
+				});
+			});
+
+			test("self account auto accepts", async ({ ctx }) => {
+				await runAcceptDebtsTest(
+					ctx,
+					{
+						self: { manualAcceptDebts: false },
+						foreign: { manualAcceptDebts: true },
+					},
+					({ foreignDebt, selfAccount, debts }) => {
+						const selfDebts = debts.filter(
+							(debt) => debt.ownerAccountId === selfAccount.id,
+						);
+						expect(selfDebts).toContainEqual(
+							revertDebt(foreignDebt, selfAccount),
+						);
+					},
+				);
+			});
+
+			test("foreign account auto accepts", async ({ ctx }) => {
+				await runAcceptDebtsTest(
+					ctx,
+					{
+						self: { manualAcceptDebts: true },
+						foreign: { manualAcceptDebts: false },
+					},
+					({ selfDebt, foreignAccount, debts }) => {
+						const foreignDebts = debts.filter(
+							(debt) => debt.ownerAccountId === foreignAccount.id,
+						);
+						expect(foreignDebts).toContainEqual(
+							revertDebt(selfDebt, foreignAccount),
+						);
+					},
+				);
+			});
+
+			test("both are auto-accepted", async ({ ctx }) => {
+				await runAcceptDebtsTest(
+					ctx,
+					{
+						self: { manualAcceptDebts: false },
+						foreign: { manualAcceptDebts: false },
+					},
+					({ selfDebt, foreignDebt, selfAccount, foreignAccount, debts }) => {
+						const foreignDebts = debts.filter(
+							(debt) => debt.ownerAccountId === foreignAccount.id,
+						);
+						expect(foreignDebts).toContainEqual(
+							revertDebt(selfDebt, foreignAccount),
+						);
+						const selfDebts = debts.filter(
+							(debt) => debt.ownerAccountId === selfAccount.id,
+						);
+						expect(selfDebts).toContainEqual(
+							revertDebt(foreignDebt, selfAccount),
+						);
+					},
+				);
 			});
 		});
 	});

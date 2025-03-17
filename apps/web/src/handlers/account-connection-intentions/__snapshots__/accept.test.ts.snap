@@ -21,3 +21,151 @@ exports[`accountConnectionIntentions.accept > functionality > account connection
   },
 }
 `;
+
+exports[`accountConnectionIntentions.accept > functionality > auto-accepted debts > both are auto-accepted 1`] = `
+{
+  "added": {
+    "debts": {
+      "id:25413069-7c27-493e-b1cf-beff93af39e5|ownerAccountId:50bcfda0-a837-4279-8515-3c43b64212e8": {
+        "amount": "-19.2700",
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "currencyCode": "CLP",
+        "id": "25413069-7c27-493e-b1cf-beff93af39e5",
+        "note": "Aperiam voluptatum soluta officiis architecto.",
+        "ownerAccountId": "50bcfda0-a837-4279-8515-3c43b64212e8",
+        "receiptId": null,
+        "timestamp": "2020-01-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "e555ddd9-1921-4188-accb-f816a6001f3a",
+      },
+      "id:2848224b-529a-4060-91c4-f4991ff407c3|ownerAccountId:b672045b-2d98-4d4d-bb1a-b845bea60278": {
+        "amount": "797.8700",
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "currencyCode": "HTG",
+        "id": "2848224b-529a-4060-91c4-f4991ff407c3",
+        "note": "Id consequuntur illum.",
+        "ownerAccountId": "b672045b-2d98-4d4d-bb1a-b845bea60278",
+        "receiptId": null,
+        "timestamp": "2020-01-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "4c35184e-511c-4595-9798-a8a0ccffaa0e",
+      },
+    },
+  },
+  "deleted": {
+    "accountConnectionsIntentions": {
+      "accountId:50bcfda0-a837-4279-8515-3c43b64212e8|targetAccountId:b672045b-2d98-4d4d-bb1a-b845bea60278": undefined,
+    },
+  },
+  "updated": {
+    "users": {
+      "id:4c35184e-511c-4595-9798-a8a0ccffaa0e": {
+        "connectedAccountId": "50bcfda0-a837-4279-8515-3c43b64212e8",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+      "id:e555ddd9-1921-4188-accb-f816a6001f3a": {
+        "connectedAccountId": "b672045b-2d98-4d4d-bb1a-b845bea60278",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`accountConnectionIntentions.accept > functionality > auto-accepted debts > foreign account auto accepts 1`] = `
+{
+  "added": {
+    "debts": {
+      "id:c69987d7-083e-4285-8ae0-1c52cf3f5abb|ownerAccountId:e664b8b4-4078-41cf-b254-165f465cc47d": {
+        "amount": "734.9100",
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "currencyCode": "AMD",
+        "id": "c69987d7-083e-4285-8ae0-1c52cf3f5abb",
+        "note": "Animi cupiditate repudiandae.",
+        "ownerAccountId": "e664b8b4-4078-41cf-b254-165f465cc47d",
+        "receiptId": null,
+        "timestamp": "2020-01-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "6ac04b20-42bd-473d-bfad-31e45f80624c",
+      },
+    },
+  },
+  "deleted": {
+    "accountConnectionsIntentions": {
+      "accountId:e664b8b4-4078-41cf-b254-165f465cc47d|targetAccountId:38cd34c1-ac84-4fe5-9998-01b2aae24465": undefined,
+    },
+  },
+  "updated": {
+    "users": {
+      "id:6ac04b20-42bd-473d-bfad-31e45f80624c": {
+        "connectedAccountId": "38cd34c1-ac84-4fe5-9998-01b2aae24465",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+      "id:c5e1a332-a2b8-4dcb-8668-86409996e941": {
+        "connectedAccountId": "e664b8b4-4078-41cf-b254-165f465cc47d",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`accountConnectionIntentions.accept > functionality > auto-accepted debts > none are auto-accepted 1`] = `
+{
+  "deleted": {
+    "accountConnectionsIntentions": {
+      "accountId:270e5d47-6b41-40b4-8aab-13a542df9879|targetAccountId:1b831b81-969f-436e-9683-6c3cb9142b30": undefined,
+    },
+  },
+  "updated": {
+    "users": {
+      "id:287217dd-8e68-4c07-9b13-ddf9ed4170ee": {
+        "connectedAccountId": "1b831b81-969f-436e-9683-6c3cb9142b30",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+      "id:a36231b5-434a-4233-a4e4-f8961162b3cb": {
+        "connectedAccountId": "270e5d47-6b41-40b4-8aab-13a542df9879",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;
+
+exports[`accountConnectionIntentions.accept > functionality > auto-accepted debts > self account auto accepts 1`] = `
+{
+  "added": {
+    "debts": {
+      "id:064bafc0-b776-4d6b-931e-b6249562c673|ownerAccountId:583a3733-45e4-4419-af7a-3c9bba380caa": {
+        "amount": "961.0100",
+        "createdAt": "2020-01-01T00:00:00.000Z",
+        "currencyCode": "MYR",
+        "id": "064bafc0-b776-4d6b-931e-b6249562c673",
+        "note": "Omnis debitis quaerat ducimus cum asperiores aperiam magni porro necessitatibus.",
+        "ownerAccountId": "583a3733-45e4-4419-af7a-3c9bba380caa",
+        "receiptId": null,
+        "timestamp": "2020-01-01T00:00:00.000Z",
+        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "userId": "7f370288-4ec9-48a2-a476-19cc374f8f6e",
+      },
+    },
+  },
+  "deleted": {
+    "accountConnectionsIntentions": {
+      "accountId:befc348e-08b9-49b7-b9aa-159a8b310d7d|targetAccountId:583a3733-45e4-4419-af7a-3c9bba380caa": undefined,
+    },
+  },
+  "updated": {
+    "users": {
+      "id:08287623-e95d-4dbc-96ac-028cc6463627": {
+        "connectedAccountId": "583a3733-45e4-4419-af7a-3c9bba380caa",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+      "id:7f370288-4ec9-48a2-a476-19cc374f8f6e": {
+        "connectedAccountId": "befc348e-08b9-49b7-b9aa-159a8b310d7d",
+        "updatedAt": "2020-01-01T00:01:00.000Z",
+      },
+    },
+  },
+}
+`;

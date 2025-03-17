@@ -15,7 +15,7 @@ import { YEAR } from "~utils/time";
 import type { Role } from "~web/handlers/receipts/utils";
 import { generatePasswordData } from "~web/utils/crypto";
 
-type AccountSettingsData = {
+export type AccountSettingsData = {
 	manualAcceptDebts: boolean;
 };
 
@@ -316,6 +316,8 @@ export const insertDebt = async (
 		receiptId,
 	};
 };
+
+export type InsertedDebt = Awaited<ReturnType<typeof insertDebt>>;
 
 const updateDebt = async (
 	ctx: TestContext,

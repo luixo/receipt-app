@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
+import type { AccountsId } from "~db/models";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import { authProcedure } from "~web/handlers/trpc";
@@ -50,7 +51,11 @@ type FetchedIntention = Awaited<ReturnType<typeof fetchIntentions>>[number];
 
 const acceptUpdatedIntentions = async (
 	ctx: AuthorizedContext,
-	intentions: FetchedIntention[],
+	ownerAccountId: AccountsId,
+	intentions: Pick<
+		FetchedIntention,
+		"id" | "amount" | "currencyCode" | "selfId" | "timestamp"
+	>[],
 ) => {
 	const updatedIntentions = intentions.filter((intention) => intention.selfId);
 	if (updatedIntentions.length === 0) {
@@ -69,7 +74,7 @@ const acceptUpdatedIntentions = async (
 					.where((eb) =>
 						eb.and({
 							id: intentionToUpdate.id,
-							ownerAccountId: ctx.auth.accountId,
+							ownerAccountId,
 						}),
 					)
 					.returning(["debts.id", "debts.updatedAt"])
@@ -83,9 +88,20 @@ const acceptUpdatedIntentions = async (
 	);
 };
 
-const acceptNewIntentions = async (
+export const acceptNewIntentions = async (
 	ctx: AuthorizedContext,
-	intentions: FetchedIntention[],
+	ownerAccountId: AccountsId,
+	intentions: Pick<
+		FetchedIntention,
+		| "id"
+		| "selfId"
+		| "foreignUserId"
+		| "currencyCode"
+		| "amount"
+		| "timestamp"
+		| "note"
+		| "receiptId"
+	>[],
 ) => {
 	const createdIntentions = intentions.filter((intention) => !intention.selfId);
 	if (createdIntentions.length === 0) {
@@ -96,7 +112,7 @@ const acceptNewIntentions = async (
 		.values(
 			createdIntentions.map((intention) => ({
 				id: intention.id,
-				ownerAccountId: ctx.auth.accountId,
+				ownerAccountId,
 				userId: intention.foreignUserId,
 				currencyCode: intention.currencyCode,
 				amount: (Number(intention.amount) * -1).toString(),
@@ -135,8 +151,8 @@ const queueAcceptIntention = queueCallFactory<
 			!(intentionOrError instanceof TRPCError),
 	);
 	const [updatedIntentions, newIntentions] = await Promise.all([
-		acceptUpdatedIntentions(ctx, intentionsToAccept),
-		acceptNewIntentions(ctx, intentionsToAccept),
+		acceptUpdatedIntentions(ctx, ctx.auth.accountId, intentionsToAccept),
+		acceptNewIntentions(ctx, ctx.auth.accountId, intentionsToAccept),
 	]);
 	return intentionsOrErrors.map((intentionOrError) => {
 		if (intentionOrError instanceof TRPCError) {
