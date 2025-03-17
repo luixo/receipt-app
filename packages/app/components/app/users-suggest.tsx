@@ -6,6 +6,7 @@ import { keepPreviousData } from "@tanstack/react-query";
 import { isNonNull } from "remeda";
 
 import { LoadableUser } from "~app/components/app/loadable-user";
+import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useDebouncedValue } from "~app/hooks/use-debounced-value";
 import type { TRPCQueryInput } from "~app/trpc";
 import { trpc } from "~app/trpc";
@@ -14,7 +15,11 @@ import {
 	AutocompleteItem,
 	AutocompleteSection,
 } from "~components/autocomplete";
+import { Button } from "~components/button";
+import { PlusIcon } from "~components/icons";
 import type { UsersId } from "~db/models";
+
+import { AddUserModal } from "./add-user-modal";
 
 const LIMIT = 5;
 
@@ -169,6 +174,9 @@ export const UsersSuggest: React.FC<Props> = ({
 		) : null,
 	].filter(isNonNull);
 
+	const [addUserOpen, { setFalse: closeAddUser, setTrue: openAddUser }] =
+		useBooleanState();
+
 	return (
 		<View className="gap-4">
 			{selectedUserIds.length === 0 ? null : (
@@ -202,10 +210,33 @@ export const UsersSuggest: React.FC<Props> = ({
 					classNames: { list: "m-0" },
 					emptyContent: "No results found.",
 				}}
+				endContent={
+					<Button
+						isIconOnly
+						variant="light"
+						color="primary"
+						radius="full"
+						size="sm"
+						className={value ? undefined : "hidden"}
+						onClick={openAddUser}
+					>
+						<PlusIcon size={24} />
+					</Button>
+				}
 				{...props}
 			>
 				{sections}
 			</Autocomplete>
+			<AddUserModal
+				isOpen={addUserOpen}
+				onOpenChange={closeAddUser}
+				initialValue={value}
+				onSuccess={({ id }) => {
+					onUserClick(id);
+					setValue("");
+					closeAddUser();
+				}}
+			/>
 		</View>
 	);
 };
