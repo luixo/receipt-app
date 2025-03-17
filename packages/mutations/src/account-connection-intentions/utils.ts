@@ -32,7 +32,10 @@ export const updateUserConnected = (
 	updateDebts(controllerContext, {
 		get: undefined,
 		getIdsByUser: undefined,
-		getByUsers: undefined,
+		// A newly connected account may have new debts for us
+		getByUsers: (controller) => {
+			void controller.invalidate();
+		},
 		// A newly connected account may have new intentions for us
 		getIntentions: (controller) => controller.invalidate(),
 	});
