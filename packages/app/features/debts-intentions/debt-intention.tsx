@@ -4,8 +4,10 @@ import { View } from "react-native";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import { useSsrFormat } from "~app/hooks/use-ssr-format";
 import type { TRPCQueryOutput } from "~app/trpc";
+import { Button } from "~components/button";
 import { Card, CardBody } from "~components/card";
-import { ArrowIcon, SyncIcon } from "~components/icons";
+import { ArrowIcon, ReceiptIcon, SyncIcon } from "~components/icons";
+import { Link } from "~components/link";
 import { Text } from "~components/text";
 
 type Intentions = TRPCQueryOutput<"debtIntentions.getAll">;
@@ -55,7 +57,21 @@ export const DebtIntention = React.forwardRef<HTMLDivElement, Props>(
 					) : (
 						intentionDataComponent
 					)}
-					<Text>{intention.note}</Text>
+					<View className="flex-row items-center gap-2">
+						{intention.receiptId ? (
+							<Button
+								as={Link}
+								href={`/receipts/${intention.receiptId}`}
+								variant="bordered"
+								color="primary"
+								isIconOnly
+								size="sm"
+							>
+								<ReceiptIcon size={12} />
+							</Button>
+						) : null}
+						<Text>{intention.note}</Text>
+					</View>
 					<View className="flex-row justify-between">
 						<View className="flex-row gap-1">
 							<SyncIcon size={24} />
