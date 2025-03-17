@@ -338,6 +338,7 @@ export const DebtInner: React.FC<InnerProps> = ({ query }) => {
 	const debt = query.data;
 	const [isRemoving, setRemoving] = React.useState(false);
 	const currency = useFormattedCurrency(debt.currencyCode);
+	const userQuery = trpc.users.get.useQuery({ id: debt.userId });
 
 	return (
 		<>
@@ -346,7 +347,10 @@ export const DebtInner: React.FC<InnerProps> = ({ query }) => {
 				aside={<DebtControlButtons debt={debt} />}
 				endContent={
 					<>
-						<DebtSyncStatus debt={debt} theirDebt={debt.their} size="lg" />
+						{userQuery.status === "success" &&
+						userQuery.data.connectedAccount ? (
+							<DebtSyncStatus debt={debt} theirDebt={debt.their} size="lg" />
+						) : null}
 						{debt.receiptId ? (
 							<DebtReceiptLink receiptId={debt.receiptId} />
 						) : null}

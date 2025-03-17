@@ -97,7 +97,13 @@ export const ReceiptParticipantActions: React.FC<Props> = ({
 				<ZeroIcon data-testid="receipt-zero-icon" size={36} />
 			) : currentDebt ? (
 				<>
-					{areDebtsSynced(expectedDebt, currentDebt) ? null : (
+					{areDebtsSynced(expectedDebt, currentDebt) ? (
+						<DebtSyncStatus
+							debt={expectedDebt}
+							theirDebt={currentDebt.their}
+							size="lg"
+						/>
+					) : (
 						<Button
 							title="Update debt for a user"
 							isLoading={isUpdating}
@@ -122,11 +128,6 @@ export const ReceiptParticipantActions: React.FC<Props> = ({
 					<SendIcon size={24} />
 				</Button>
 			)}
-			<DebtSyncStatus
-				debt={expectedDebt}
-				theirDebt={currentDebt?.their}
-				size="lg"
-			/>
 		</View>
 	);
 };
