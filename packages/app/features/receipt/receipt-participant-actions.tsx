@@ -25,8 +25,6 @@ export const ReceiptParticipantActions: React.FC<Props> = ({
 	receipt,
 	participant,
 }) => {
-	const userQuery = trpc.users.get.useQuery({ id: participant.userId });
-
 	const updateMutation = trpc.debts.update.useMutation(
 		useTrpcMutationOptions(debtsUpdateOptions, {
 			context: participant.currentDebt
@@ -83,26 +81,34 @@ export const ReceiptParticipantActions: React.FC<Props> = ({
 	const isUpdating = updateMutation.isPending || addMutation.isPending;
 	const { currentDebt } = participant;
 
+	const expectedDebt = React.useMemo(
+		() => ({
+			amount: sum,
+			currencyCode: receipt.currencyCode,
+			timestamp: receipt.issued,
+			updatedAt: currentDebt?.updatedAt ?? new Date(0),
+		}),
+		[currentDebt?.updatedAt, receipt.currencyCode, receipt.issued, sum],
+	);
+
 	return (
 		<View className="flex flex-row items-center gap-3 empty:hidden">
 			{sum === 0 ? (
 				<ZeroIcon data-testid="receipt-zero-icon" size={36} />
 			) : currentDebt ? (
 				<>
-					{currentDebt.their ? (
-						areDebtsSynced(currentDebt, currentDebt.their) ? null : (
-							<Button
-								title="Update debt for a user"
-								isLoading={isUpdating}
-								isDisabled={isUpdating}
-								isIconOnly
-								color="primary"
-								onPress={() => updateDebt(currentDebt)}
-							>
-								<SyncIcon size={24} />
-							</Button>
-						)
-					) : null}
+					{areDebtsSynced(expectedDebt, currentDebt) ? null : (
+						<Button
+							title="Update debt for a user"
+							isLoading={isUpdating}
+							isDisabled={isUpdating}
+							isIconOnly
+							color="primary"
+							onPress={() => updateDebt(currentDebt)}
+						>
+							<SyncIcon size={24} />
+						</Button>
+					)}
 				</>
 			) : (
 				<Button
@@ -116,13 +122,11 @@ export const ReceiptParticipantActions: React.FC<Props> = ({
 					<SendIcon size={24} />
 				</Button>
 			)}
-			{currentDebt && userQuery.data?.connectedAccount ? (
-				<DebtSyncStatus
-					debt={currentDebt}
-					theirDebt={currentDebt.their}
-					size="lg"
-				/>
-			) : null}
+			<DebtSyncStatus
+				debt={expectedDebt}
+				theirDebt={currentDebt?.their}
+				size="lg"
+			/>
 		</View>
 	);
 };
