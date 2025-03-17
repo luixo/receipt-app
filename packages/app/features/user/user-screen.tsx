@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useParams } from "solito/navigation";
+import { useParams, useRouter } from "solito/navigation";
 
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { PageHeader } from "~app/components/page-header";
@@ -10,9 +10,14 @@ import type { AppPage } from "~utils/next";
 import { User } from "./user";
 
 export const UserScreen: AppPage = () => {
+	const router = useRouter();
 	const { id } = useParams<{ id: string }>();
 
 	const userQuery = trpc.users.get.useQuery({ id });
+
+	const onUserRemove = React.useCallback(() => {
+		router.replace("/users");
+	}, [router]);
 
 	return (
 		<>
@@ -22,7 +27,7 @@ export const UserScreen: AppPage = () => {
 			>
 				<LoadableUser id={id} />
 			</PageHeader>
-			<User id={id} />
+			<User id={id} onRemove={onUserRemove} />
 		</>
 	);
 };

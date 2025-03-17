@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { useParams } from "solito/navigation";
+import { useParams, useRouter } from "solito/navigation";
 
 import {
 	DebtsGroup,
@@ -11,8 +11,10 @@ import { LoadableUser } from "~app/components/app/loadable-user";
 import { QueryErrorMessage } from "~app/components/error-message";
 import { PageHeader } from "~app/components/page-header";
 import { ShowResolvedDebtsOption } from "~app/features/settings/show-resolved-debts-option";
+import { User } from "~app/features/user/user";
 import { EvenDebtsDivider } from "~app/features/user-debts/even-debts-divider";
 import { useAggregatedDebts } from "~app/hooks/use-aggregated-debts";
+import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useDebtsWithDividers } from "~app/hooks/use-debts-with-dividers";
 import { useDividers } from "~app/hooks/use-dividers";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
@@ -20,8 +22,10 @@ import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { Button } from "~components/button";
 import { Divider } from "~components/divider";
-import { AddIcon, ExchangeIcon } from "~components/icons";
+import { AddIcon, ExchangeIcon, PencilIcon } from "~components/icons";
 import { Link } from "~components/link";
+import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
+import { Text } from "~components/text";
 import type { UsersId } from "~db/models";
 import type { AppPage } from "~utils/next";
 
@@ -30,23 +34,36 @@ import { UserDebtPreview, UserDebtPreviewSkeleton } from "./user-debt-preview";
 type HeaderProps = {
 	title: string;
 	userId: UsersId;
+	onEditClick?: () => void;
 };
 
-const Header: React.FC<HeaderProps> = ({ title, userId }) => (
+const Header: React.FC<HeaderProps> = ({ title, userId, onEditClick }) => (
 	<PageHeader
 		backHref="/debts"
 		title={title}
 		aside={
-			<Button
-				color="primary"
-				href={`/debts/add?userId=${userId}`}
-				as={Link}
-				title="Add debt"
-				variant="bordered"
-				isIconOnly
-			>
-				<AddIcon size={24} />
-			</Button>
+			<View className="flex flex-row gap-2">
+				{onEditClick ? (
+					<Button
+						isIconOnly
+						variant="bordered"
+						color="secondary"
+						onClick={onEditClick}
+					>
+						<PencilIcon size={32} />
+					</Button>
+				) : null}
+				<Button
+					color="primary"
+					href={`/debts/add?userId=${userId}`}
+					as={Link}
+					title="Add debt"
+					variant="bordered"
+					isIconOnly
+				>
+					<AddIcon size={24} />
+				</Button>
+			</View>
 		}
 	>
 		<LoadableUser id={userId} />
@@ -59,6 +76,7 @@ type InnerProps = {
 };
 
 export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
+	const router = useRouter();
 	const [showResolvedDebts, setShowResolvedDebts] = useShowResolvedDebts();
 	const enableShowResolvedDebts = React.useCallback(
 		() => setShowResolvedDebts(true),
@@ -87,6 +105,11 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 	);
 	const dividers = useDividers(allSuccessQueries, aggregatedDebts);
 	const debts = useDebtsWithDividers(debtIds, allSuccessQueries, dividers);
+	const [editModalOpen, { setTrue: openEditModal, setFalse: closeEditModal }] =
+		useBooleanState();
+	const onUserRemove = React.useCallback(() => {
+		router.replace("/debts");
+	}, [router]);
 	return (
 		<>
 			<Header
@@ -94,6 +117,7 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 				title={`${
 					userQuery.status === "success" ? userQuery.data.name : "..."
 				}'s debts`}
+				onEditClick={openEditModal}
 			/>
 			<View className="flex-row items-center justify-center gap-4 px-16">
 				<DebtsGroup
@@ -142,6 +166,16 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 					</Button>
 				</View>
 			)}
+			<Modal isOpen={editModalOpen} onOpenChange={closeEditModal}>
+				<ModalContent>
+					<ModalHeader>
+						<Text className="text-xl">Edit user</Text>
+					</ModalHeader>
+					<ModalBody className="flex flex-col gap-4 py-6">
+						<User id={userId} onRemove={onUserRemove} />
+					</ModalBody>
+				</ModalContent>
+			</Modal>
 		</>
 	);
 };

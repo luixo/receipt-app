@@ -1,7 +1,5 @@
 import React from "react";
 
-import { useRouter } from "solito/navigation";
-
 import { QueryErrorMessage } from "~app/components/error-message";
 import { RemoveButton } from "~app/components/remove-button";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
@@ -158,6 +156,7 @@ const UserPublicNameInput: React.FC<PublicNameProps> = ({
 type RemoveProps = {
 	user: TRPCQueryOutput<"users.get">;
 	setLoading: (nextLoading: boolean) => void;
+	onSuccess?: () => void;
 } & Omit<
 	React.ComponentProps<typeof RemoveButton>,
 	"mutation" | "onRemove" | "subtitle"
@@ -166,13 +165,11 @@ type RemoveProps = {
 const UserRemoveButton: React.FC<RemoveProps> = ({
 	user,
 	setLoading,
+	onSuccess,
 	...props
 }) => {
-	const router = useRouter();
 	const removeUserMutation = trpc.users.remove.useMutation(
-		useTrpcMutationOptions(usersRemoveOptions, {
-			onSuccess: () => router.replace("/users"),
-		}),
+		useTrpcMutationOptions(usersRemoveOptions, { onSuccess }),
 	);
 	React.useEffect(
 		() => setLoading(removeUserMutation.isPending),
@@ -197,9 +194,10 @@ const UserRemoveButton: React.FC<RemoveProps> = ({
 
 type InnerProps = {
 	query: TRPCQuerySuccessResult<"users.get">;
+	onRemove?: () => void;
 };
 
-const UserInner: React.FC<InnerProps> = ({ query }) => {
+const UserInner: React.FC<InnerProps> = ({ query, onRemove }) => {
 	const user = query.data;
 	const [deleteLoading, setDeleteLoading] = React.useState(false);
 	return (
@@ -211,6 +209,7 @@ const UserInner: React.FC<InnerProps> = ({ query }) => {
 				className="self-end"
 				user={user}
 				setLoading={setDeleteLoading}
+				onSuccess={onRemove}
 			/>
 		</>
 	);
