@@ -189,6 +189,8 @@ jobs:
     name: Analyze bundle
     runs-on: ubuntu-latest
     needs: build
+    # Restore when the issue is fixed: https://github.com/transferwise/actions-next-bundle-analyzer/issues/57
+    if: false
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-env
