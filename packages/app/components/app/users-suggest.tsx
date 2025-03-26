@@ -6,6 +6,7 @@ import { keepPreviousData } from "@tanstack/react-query";
 import { isNonNull } from "remeda";
 
 import { LoadableUser } from "~app/components/app/loadable-user";
+import { User } from "~app/components/app/user";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useDebouncedValue } from "~app/hooks/use-debounced-value";
 import type { TRPCQueryInput } from "~app/trpc";
@@ -22,6 +23,7 @@ import type { UsersId } from "~db/models";
 import { AddUserModal } from "./add-user-modal";
 
 const LIMIT = 5;
+const NEW_USER_KEY = "__NEW__";
 
 type Props = {
 	selected?: UsersId | UsersId[];
@@ -112,9 +114,16 @@ export const UsersSuggest: React.FC<Props> = ({
 			!filteredTopFetchedUserIds.includes(userId),
 	);
 
+	const [addUserOpen, { setFalse: closeAddUser, setTrue: openAddUser }] =
+		useBooleanState();
+
 	const onSelectionChange = React.useCallback(
 		(key: string | number | null) => {
 			if (key === null || typeof key === "number") {
+				return;
+			}
+			if (key === NEW_USER_KEY) {
+				openAddUser();
 				return;
 			}
 			if (additionalIds?.includes(key)) {
@@ -128,7 +137,13 @@ export const UsersSuggest: React.FC<Props> = ({
 				onUserClick(matchedUser);
 			}
 		},
-		[additionalIds, filteredTopFetchedUserIds, fetchedUserIds, onUserClick],
+		[
+			additionalIds,
+			filteredTopFetchedUserIds,
+			fetchedUserIds,
+			openAddUser,
+			onUserClick,
+		],
 	);
 
 	const [, scrollerRef] = useInfiniteScroll({
@@ -144,20 +159,26 @@ export const UsersSuggest: React.FC<Props> = ({
 		additionalIds && additionalIds.length !== 0 ? (
 			<AutocompleteSection key="self">
 				{additionalIds.map((userId) => (
-					<AutocompleteItem key={userId} className="p-1" textValue={userId}>
+					<AutocompleteItem
+						key={userId}
+						className="p-1"
+						textValue={userId}
+						classNames={{ title: "flex" }}
+					>
 						<LoadableUser id={userId} avatarProps={{ size: "sm" }} />
 					</AutocompleteItem>
 				))}
 			</AutocompleteSection>
 		) : null,
 		filteredTopFetchedUserIds.length === 0 ? null : (
-			<AutocompleteSection
-				showDivider={queryEnabled && fetchedUserIds.length !== 0}
-				title="Recently used"
-				key="recent"
-			>
+			<AutocompleteSection title="Recently used" key="recent">
 				{filteredTopFetchedUserIds.map((userId) => (
-					<AutocompleteItem key={userId} className="p-1" textValue={userId}>
+					<AutocompleteItem
+						key={userId}
+						className="p-1"
+						textValue={userId}
+						classNames={{ title: "flex" }}
+					>
 						<LoadableUser id={userId} avatarProps={{ size: "sm" }} />
 					</AutocompleteItem>
 				))}
@@ -166,16 +187,37 @@ export const UsersSuggest: React.FC<Props> = ({
 		queryEnabled && fetchedUserIds.length !== 0 ? (
 			<AutocompleteSection title="Lookup" key="lookup">
 				{fetchedUserIds.map((userId) => (
-					<AutocompleteItem key={userId} className="p-1" textValue={userId}>
+					<AutocompleteItem
+						key={userId}
+						className="p-1"
+						textValue={userId}
+						classNames={{ title: "flex" }}
+					>
 						<LoadableUser id={userId} avatarProps={{ size: "sm" }} />
 					</AutocompleteItem>
 				))}
 			</AutocompleteSection>
 		) : null,
+		<AutocompleteSection key="new">
+			<AutocompleteItem
+				key={NEW_USER_KEY}
+				className="p-1"
+				textValue="Add new user"
+				classNames={{ title: "flex" }}
+			>
+				<User
+					id="new-user"
+					name={value.length > 2 ? `Add user "${value}"` : "Add new user"}
+					avatarProps={{
+						fallback: null,
+						getInitials: () => "+",
+						size: "sm",
+						classNames: { name: "text-2xl", base: "border" },
+					}}
+				/>
+			</AutocompleteItem>
+		</AutocompleteSection>,
 	].filter(isNonNull);
-
-	const [addUserOpen, { setFalse: closeAddUser, setTrue: openAddUser }] =
-		useBooleanState();
 
 	return (
 		<View className="gap-4">
@@ -214,7 +256,6 @@ export const UsersSuggest: React.FC<Props> = ({
 					<Button
 						isIconOnly
 						variant="light"
-						color="primary"
 						radius="full"
 						size="sm"
 						className={value ? undefined : "hidden"}
