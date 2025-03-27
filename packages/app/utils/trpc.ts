@@ -9,7 +9,7 @@ import {
 import { createTRPCReact } from "@trpc/react-query";
 import type { AnyTRPCRouter } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
-import { omitBy } from "remeda";
+import { identity, omitBy } from "remeda";
 import superjson from "superjson";
 
 import type { AppRouter } from "~app/trpc";
@@ -95,7 +95,14 @@ export const getLinks = (
 	);
 	const splitLinkInstance = splitLink({
 		condition: (op) => op.input instanceof FormData,
-		true: httpLink({ url, headers }),
+		true: httpLink({
+			url,
+			headers,
+			transformer: {
+				serialize: identity(),
+				deserialize: transformer.deserialize,
+			},
+		}),
 		false: splitLink({
 			condition: (op) =>
 				Boolean(useBatch && op.context.batch !== noBatchContext.batch),
