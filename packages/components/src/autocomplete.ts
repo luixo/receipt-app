@@ -2,4 +2,4 @@ export {
 	Autocomplete,
 	AutocompleteItem,
 	AutocompleteSection,
-} from "@nextui-org/autocomplete";
+} from "@heroui/autocomplete";

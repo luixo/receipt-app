@@ -1,1 +1,1 @@
-export { Tooltip } from "@nextui-org/tooltip";
+export { Tooltip } from "@heroui/tooltip";

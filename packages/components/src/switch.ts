@@ -1,1 +1,1 @@
-export { Switch } from "@nextui-org/switch";
+export { Switch } from "@heroui/switch";

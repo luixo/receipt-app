@@ -3,9 +3,9 @@
 	"name": "@ra/app",
 	"main": "index.ts",
 	"dependencies": {
+		"@heroui/react": "^2.7.5",
+		"@heroui/use-infinite-scroll": "^2.2.7",
 		"@hookform/resolvers": "^3.1.1",
-		"@nextui-org/react": "2.3.6",
-		"@nextui-org/use-infinite-scroll": "^2.1.5",
 		"@ra/components": "workspace:*",
 		"@ra/mutations": "workspace:*",
 		"@ra/utils": "workspace:*",

@@ -1,1 +1,1 @@
-export { Spinner } from "@nextui-org/spinner";
+export { Spinner } from "@heroui/spinner";

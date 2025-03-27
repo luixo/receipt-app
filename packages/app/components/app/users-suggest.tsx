@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
+import { useInfiniteScroll } from "@heroui/use-infinite-scroll";
 import { keepPreviousData } from "@tanstack/react-query";
 import { isNonNull } from "remeda";
 

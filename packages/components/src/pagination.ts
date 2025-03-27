@@ -1,1 +1,1 @@
-export { Pagination } from "@nextui-org/pagination";
+export { Pagination } from "@heroui/pagination";

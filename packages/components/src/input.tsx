@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Input as InputRaw, Textarea } from "@nextui-org/input";
+import { Input as InputRaw, Textarea } from "@heroui/input";
 import type { FieldError } from "react-hook-form";
 
 import type { TRPCMutationResult, TRPCMutationState } from "~app/trpc";

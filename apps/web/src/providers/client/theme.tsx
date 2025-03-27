@@ -7,7 +7,7 @@ import {
 	useLastColorMode,
 	useSelectedColorMode,
 } from "~app/hooks/use-color-modes";
-import { NextUIProvider } from "~components/utils";
+import { HeroUIProvider } from "~components/utils";
 
 export const ThemeProvider: React.FC<React.PropsWithChildren<object>> = ({
 	children,
@@ -32,5 +32,5 @@ export const ThemeProvider: React.FC<React.PropsWithChildren<object>> = ({
 		html.classList.remove(selectedMode === "dark" ? "light" : "dark");
 	}, [selectedMode]);
 	const router = useRouter();
-	return <NextUIProvider navigate={router.push}>{children}</NextUIProvider>;
+	return <HeroUIProvider navigate={router.push}>{children}</HeroUIProvider>;
 };

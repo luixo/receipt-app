@@ -3,4 +3,4 @@ export {
 	DropdownItem,
 	DropdownMenu,
 	DropdownTrigger,
-} from "@nextui-org/dropdown";
+} from "@heroui/dropdown";

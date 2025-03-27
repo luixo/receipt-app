@@ -9,10 +9,7 @@ const rootPath = path.join(__dirname, "../..");
 const config = getConfig({
 	content: [
 		path.join(rootPath, "packages/**/*.{ts,tsx}"),
-		path.join(
-			rootPath,
-			"node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
-		),
+		path.join(rootPath, "node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}"),
 		path.join(rootPath, "apps/web/src/pages/**/*.{ts,tsx}"),
 	],
 });

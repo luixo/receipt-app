@@ -1,1 +1,1 @@
-export { User } from "@nextui-org/user";
+export { User } from "@heroui/user";

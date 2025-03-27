@@ -1,1 +1,1 @@
-export { Checkbox } from "@nextui-org/checkbox";
+export { Checkbox } from "@heroui/checkbox";

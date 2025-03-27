@@ -1,1 +1,1 @@
-export { Accordion, AccordionItem } from "@nextui-org/accordion";
+export { Accordion, AccordionItem } from "@heroui/accordion";

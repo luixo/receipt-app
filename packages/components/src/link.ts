@@ -1,1 +1,1 @@
-export { Link } from "@nextui-org/link";
+export { Link } from "@heroui/link";

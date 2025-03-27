@@ -1,1 +1,1 @@
-export { tv, NextUIProvider } from "@nextui-org/react";
+export { tv, HeroUIProvider } from "@heroui/react";

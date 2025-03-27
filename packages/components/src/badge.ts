@@ -1,1 +1,1 @@
-export { Badge } from "@nextui-org/badge";
+export { Badge } from "@heroui/badge";

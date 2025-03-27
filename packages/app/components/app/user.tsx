@@ -38,7 +38,7 @@ export const SkeletonUser: React.FC<
 				data-testid="user-chip-skeleton"
 				className={wrapper({ className })}
 				avatar={<Avatar size="sm" {...avatarProps} />}
-				onPress={props.onClick}
+				onClick={props.onClick}
 				{...(typeof chip === "boolean" ? {} : chip)}
 			>
 				<Skeleton className="h-4 w-12 rounded" />

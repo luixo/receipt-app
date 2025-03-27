@@ -1,1 +1,1 @@
-export { ScrollShadow } from "@nextui-org/scroll-shadow";
+export { ScrollShadow } from "@heroui/scroll-shadow";

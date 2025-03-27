@@ -1,1 +1,1 @@
-export { Button, ButtonGroup } from "@nextui-org/button";
+export { Button, ButtonGroup } from "@heroui/button";

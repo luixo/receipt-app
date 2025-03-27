@@ -1,1 +1,1 @@
-export { Skeleton } from "@nextui-org/skeleton";
+export { Skeleton } from "@heroui/skeleton";
