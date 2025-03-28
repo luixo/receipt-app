@@ -5635,12 +5635,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@internationalized/date@npm:3.7.0, @internationalized/date@npm:^3.7.0":
+"@internationalized/date@npm:3.7.0":
   version: 3.7.0
   resolution: "@internationalized/date@npm:3.7.0"
   dependencies:
     "@swc/helpers": "npm:^0.5.0"
   checksum: 10/59adffb57f1391e17bfe9b2e9b1a71c0957a1835b0176a86ad5a99fd2f2919f094d3f553fb39be157d84c315a88917e0eda779c9101026e3bfac217ace18a559
+  languageName: node
+  linkType: hard
+
+"@internationalized/date@patch:@internationalized/date@npm%3A3.7.0#./patches/@internationalized-date-npm-3.7.0.patch::locator=receipt-app%40workspace%3A.":
+  version: 3.7.0
+  resolution: "@internationalized/date@patch:@internationalized/date@npm%3A3.7.0#./patches/@internationalized-date-npm-3.7.0.patch::version=3.7.0&hash=b2332f&locator=receipt-app%40workspace%3A."
+  dependencies:
+    "@swc/helpers": "npm:^0.5.0"
+  checksum: 10/b32871edb4a256873517cbadaba381855ce00d7bc70c31685e542499fee51ab6118b1481e20d866342326e2a4be31a38b6b778079a23de38a25a4b8298c4f515
   languageName: node
   linkType: hard
 
