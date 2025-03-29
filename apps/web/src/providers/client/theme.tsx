@@ -32,5 +32,9 @@ export const ThemeProvider: React.FC<React.PropsWithChildren<object>> = ({
 		html.classList.remove(selectedMode === "dark" ? "light" : "dark");
 	}, [selectedMode]);
 	const router = useRouter();
-	return <HeroUIProvider navigate={router.push}>{children}</HeroUIProvider>;
+	return (
+		<HeroUIProvider navigate={router.push} validationBehavior="native">
+			{children}
+		</HeroUIProvider>
+	);
 };

@@ -1,9 +1,11 @@
 import React from "react";
 
-import { useSingleInput } from "~app/hooks/use-single-input";
+import { z } from "zod";
+
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
+import { useAppForm } from "~app/utils/forms";
 import { emailSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { LinkIcon, TrashBinIcon, UnlinkIcon } from "~components/icons";
@@ -32,23 +34,16 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 	const connectUserMutation = trpc.accountConnectionIntentions.add.useMutation(
 		useTrpcMutationOptions(accountConnectionsAddOptions),
 	);
-	const connectUser = React.useCallback(
-		(email: string) =>
+
+	const form = useAppForm({
+		defaultValues: { value: user.connectedAccount?.email ?? "" },
+		validators: { onChange: z.object({ value: emailSchema }) },
+		onSubmit: ({ value }) => {
 			connectUserMutation.mutate({
 				userId: user.id,
-				email,
-			}),
-		[connectUserMutation, user.id],
-	);
-
-	const {
-		bindings,
-		state: inputState,
-		getValue,
-		setValue,
-	} = useSingleInput({
-		initialValue: user.connectedAccount?.email ?? "",
-		schema: emailSchema,
+				email: value.value,
+			});
+		},
 	});
 	const [inputShown, setInputShown] = React.useState(
 		Boolean(user.connectedAccount),
@@ -58,7 +53,7 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 		trpc.accountConnectionIntentions.remove.useMutation(
 			useTrpcMutationOptions(accountConnectionsRemoveOptions, {
 				onSuccess: () => {
-					setValue("");
+					form.reset();
 					setInputShown(false);
 				},
 			}),
@@ -132,39 +127,50 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 	}
 
 	return (
-		<Input
-			{...bindings}
-			label="Email"
-			mutation={[connectUserMutation, unlinkMutation]}
-			fieldError={inputState.error}
-			isDisabled={isLoading}
-			isReadOnly={Boolean(user.connectedAccount)}
-			endContent={
-				<>
-					{user.connectedAccount ? (
-						<Button
-							title="Unlink user from email"
-							variant="light"
-							isLoading={unlinkMutation.isPending}
-							isIconOnly
-							onPress={unlinkUser}
-						>
-							<UnlinkIcon size={24} />
-						</Button>
-					) : (
-						<Button
-							title="Link user to email"
-							variant="light"
-							isLoading={connectUserMutation.isPending}
-							isDisabled={Boolean(inputState.error) || getValue().length === 0}
-							onPress={() => connectUser(getValue())}
-							isIconOnly
-						>
-							<LinkIcon size={24} />
-						</Button>
-					)}
-				</>
-			}
-		/>
+		<form.AppField name="value">
+			{(field) => (
+				<field.TextField
+					value={field.state.value}
+					onValueChange={field.setValue}
+					name={field.name}
+					onBlur={field.handleBlur}
+					fieldError={field.state.meta.errors}
+					label="Email"
+					mutation={[connectUserMutation, unlinkMutation]}
+					isDisabled={isLoading}
+					isReadOnly={Boolean(user.connectedAccount)}
+					endContent={
+						<form.Subscribe selector={(state) => state.canSubmit}>
+							{(canSubmit) =>
+								user.connectedAccount ? (
+									<Button
+										title="Unlink user from email"
+										variant="light"
+										isLoading={unlinkMutation.isPending}
+										isIconOnly
+										onPress={unlinkUser}
+									>
+										<UnlinkIcon size={24} />
+									</Button>
+								) : (
+									<Button
+										title="Link user to email"
+										variant="light"
+										isLoading={connectUserMutation.isPending}
+										isDisabled={!canSubmit}
+										onPress={() => {
+											void field.form.handleSubmit();
+										}}
+										isIconOnly
+									>
+										<LinkIcon size={24} />
+									</Button>
+								)
+							}
+						</form.Subscribe>
+					}
+				/>
+			)}
+		</form.AppField>
 	);
 };

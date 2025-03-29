@@ -1,58 +1,111 @@
-import React from "react";
+import type React from "react";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
+import { useAppForm } from "~app/utils/forms";
 import { passwordSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
-import { Input } from "~components/input";
 import { options as accountChangePasswordOptions } from "~mutations/account/change-password";
 import type { AppPage } from "~utils/next";
 
-type Form = {
-	prevPassword: string;
-	password: string;
-	passwordRetype: string;
+const formSchema = z
+	.object({
+		prevPassword: passwordSchema,
+		password: passwordSchema,
+		passwordRetype: passwordSchema,
+	})
+	.refine((obj) => obj.password === obj.passwordRetype, {
+		path: ["passwordRetype"],
+		message: "Passwords don't match",
+	});
+
+type Form = z.infer<typeof formSchema>;
+
+const ChangePasswordForm: React.FC = () => {
+	const changePasswordMutation = trpc.account.changePassword.useMutation(
+		useTrpcMutationOptions(accountChangePasswordOptions),
+	);
+
+	const defaultValues: Partial<Form> = {};
+	const form = useAppForm({
+		defaultValues: defaultValues as Form,
+		validators: { onChange: formSchema },
+		onSubmit: ({ value }) => {
+			changePasswordMutation.mutate({
+				prevPassword: value.prevPassword,
+				password: value.password,
+			});
+		},
+	});
+
+	return (
+		<form.AppForm>
+			<form.Form className="flex flex-col gap-4">
+				<form.AppField name="prevPassword">
+					{(field) => (
+						<field.TextField
+							value={field.state.value}
+							onValueChange={field.setValue}
+							name={field.name}
+							onBlur={field.handleBlur}
+							label="Current password"
+							mutation={changePasswordMutation}
+							fieldError={field.state.meta.errors}
+							type="password"
+						/>
+					)}
+				</form.AppField>
+				<form.AppField name="password">
+					{(field) => (
+						<field.TextField
+							value={field.state.value}
+							onValueChange={field.setValue}
+							name={field.name}
+							onBlur={field.handleBlur}
+							label="New password"
+							mutation={changePasswordMutation}
+							fieldError={field.state.meta.errors}
+							type="password"
+						/>
+					)}
+				</form.AppField>
+				<form.AppField name="passwordRetype">
+					{(field) => (
+						<field.TextField
+							value={field.state.value}
+							onValueChange={field.setValue}
+							name={field.name}
+							onBlur={field.handleBlur}
+							label="Retype new password"
+							mutation={changePasswordMutation}
+							fieldError={field.state.meta.errors}
+							type="password"
+						/>
+					)}
+				</form.AppField>
+				<form.Subscribe selector={(state) => state.canSubmit}>
+					{(canSubmit) => (
+						<Button
+							color="primary"
+							isDisabled={!canSubmit || changePasswordMutation.isPending}
+							isLoading={changePasswordMutation.isPending}
+							type="submit"
+						>
+							Change password
+						</Button>
+					)}
+				</form.Subscribe>
+			</form.Form>
+		</form.AppForm>
+	);
 };
 
 export const ChangePasswordScreen: AppPage = () => {
 	const [changePasswordShown, { setTrue: showChangePassword }] =
 		useBooleanState();
-
-	const form = useForm<Form>({
-		mode: "onChange",
-		// TODO: open a PR in react-hook-form
-		// After "password" change the "passwordRetype" doesn't get error
-		// probably because the field "passwordRetype" didn't change
-		resolver: zodResolver(
-			z
-				.object({
-					prevPassword: passwordSchema,
-					password: passwordSchema,
-					passwordRetype: passwordSchema,
-				})
-				.refine((obj) => obj.password === obj.passwordRetype, {
-					path: ["passwordRetype"],
-					message: "Passwords don't match",
-				}),
-		),
-	});
-
-	const changePasswordMutation = trpc.account.changePassword.useMutation(
-		useTrpcMutationOptions(accountChangePasswordOptions),
-	);
-	const onSubmit = React.useCallback(
-		(data: Form) =>
-			changePasswordMutation.mutate({
-				prevPassword: data.prevPassword,
-				password: data.password,
-			}),
-		[changePasswordMutation],
-	);
 
 	if (!changePasswordShown) {
 		return (
@@ -62,41 +115,5 @@ export const ChangePasswordScreen: AppPage = () => {
 		);
 	}
 
-	return (
-		<form
-			onSubmit={form.handleSubmit(onSubmit)}
-			className="flex flex-col gap-4"
-		>
-			<Input
-				{...form.register("prevPassword")}
-				label="Current password"
-				isDisabled={changePasswordMutation.isPending}
-				mutation={changePasswordMutation}
-				fieldError={form.formState.errors.prevPassword}
-				type="password"
-			/>
-			<Input
-				{...form.register("password")}
-				label="New password"
-				isDisabled={changePasswordMutation.isPending}
-				fieldError={form.formState.errors.password}
-				type="password"
-			/>
-			<Input
-				{...form.register("passwordRetype")}
-				label="Retype new password"
-				isDisabled={changePasswordMutation.isPending}
-				fieldError={form.formState.errors.passwordRetype}
-				type="password"
-			/>
-			<Button
-				color="primary"
-				isDisabled={!form.formState.isValid || changePasswordMutation.isPending}
-				isLoading={changePasswordMutation.isPending}
-				type="submit"
-			>
-				Change password
-			</Button>
-		</form>
-	);
+	return <ChangePasswordForm />;
 };

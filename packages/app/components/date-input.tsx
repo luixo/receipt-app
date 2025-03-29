@@ -1,76 +1,41 @@
-import React from "react";
+import type React from "react";
 import { View } from "react-native";
 
-import { z } from "zod";
-
-import { useSingleInput } from "~app/hooks/use-single-input";
 import { useSsrFormat } from "~app/hooks/use-ssr-format";
-import type { TRPCMutationResult } from "~app/trpc";
 import { Calendar } from "~components/calendar";
 import { Input } from "~components/input";
 import { Spinner } from "~components/spinner";
+import type { MutationOrMutations } from "~components/utils";
+import { useMutationLoading } from "~components/utils";
 
 type Props = {
-	timestamp: Date;
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	mutation?: TRPCMutationResult<any>;
-	isDisabled?: boolean;
+	value: Date | undefined;
+	onValueChange: (date: Date) => void;
+	mutation?: MutationOrMutations;
 	label?: string;
-	onUpdate: (nextDate: Date) => void;
-	updateOnChange?: boolean;
-} & React.ComponentProps<typeof Input>;
+} & Omit<React.ComponentProps<typeof Input>, "value" | "onValueChange">;
 
 export const DateInput: React.FC<Props> = ({
-	timestamp,
+	value,
+	onValueChange,
 	mutation,
-	isDisabled,
 	label,
-	onUpdate,
-	updateOnChange,
 	...props
 }) => {
 	const { formatDate } = useSsrFormat();
-	const { bindings, state, getValue, setValue, form } = useSingleInput({
-		type: "date",
-		initialValue: timestamp,
-		schema: z.date(),
-	});
-	React.useEffect(() => setValue(timestamp), [timestamp, setValue]);
-	const value = form.watch("value");
-	React.useEffect(() => {
-		if (!updateOnChange) {
-			return;
-		}
-		onUpdate(new Date(value));
-	}, [updateOnChange, onUpdate, value]);
-	// TODO: make getValue() return Date (currently string)
-	const dateValue = new Date(getValue());
 	return (
 		<Calendar
-			value={Number.isNaN(dateValue.valueOf()) ? undefined : dateValue}
-			onChange={setValue}
-			disabled={mutation?.isPending || isDisabled}
+			value={value}
+			onChange={onValueChange}
+			disabled={useMutationLoading({ mutation }) || props.isDisabled}
 		>
 			<View>
 				<Input
-					{...bindings}
-					value={formatDate(dateValue)}
+					value={value ? formatDate(value) : ""}
 					aria-label={label || "Date"}
 					label={label}
 					mutation={mutation}
-					fieldError={state.error}
-					saveProps={
-						updateOnChange
-							? undefined
-							: {
-									title: "Save date",
-									isHidden:
-										dateValue.toDateString() === timestamp.toDateString(),
-									onPress: () => onUpdate(dateValue),
-							  }
-					}
 					type="text"
-					isDisabled={isDisabled}
 					{...props}
 				/>
 			</View>

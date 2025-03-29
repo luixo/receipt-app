@@ -1,14 +1,13 @@
 import React from "react";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
-import { useForm } from "react-hook-form";
 import { useRouter } from "solito/navigation";
 import { z } from "zod";
 
 import { PageHeader } from "~app/components/page-header";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
+import { useAppForm } from "~app/utils/forms";
 import { noBatchContext } from "~app/utils/trpc";
 import {
 	emailSchema,
@@ -16,37 +15,23 @@ import {
 	userNameSchema,
 } from "~app/utils/validation";
 import { Button } from "~components/button";
-import { Input } from "~components/input";
 import { options as authRegisterOptions } from "~mutations/auth/register";
 import type { AppPage } from "~utils/next";
 
-type RegistrationForm = {
-	email: string;
-	name: string;
-	password: string;
-	passwordRetype: string;
-};
+const formSchema = z.object({
+	email: emailSchema,
+	name: userNameSchema,
+	password: passwordSchema,
+	passwordRetype: passwordSchema,
+});
+type Form = z.infer<typeof formSchema>;
 
 export const RegisterScreen: AppPage = () => {
 	const router = useRouter();
 	const queryClient = useQueryClient();
-	const form = useForm<RegistrationForm>({
-		mode: "onChange",
-		resolver: zodResolver(
-			z.object({
-				email: emailSchema,
-				name: userNameSchema,
-				password: passwordSchema,
-				passwordRetype: passwordSchema,
-			}),
-		),
-	});
 
 	const registerMutation = trpc.auth.register.useMutation(
 		useTrpcMutationOptions(authRegisterOptions, {
-			context: {
-				name: form.watch("name"),
-			},
 			onSuccess: () => {
 				void queryClient.resetQueries();
 				router.replace("/");
@@ -54,60 +39,90 @@ export const RegisterScreen: AppPage = () => {
 			trpc: { context: noBatchContext },
 		}),
 	);
-	const onSubmit = React.useCallback(
-		(data: RegistrationForm) =>
-			registerMutation.mutate({
-				email: data.email,
-				name: data.name,
-				password: data.password,
-			}),
-		[registerMutation],
-	);
+
+	const defaultValues: Partial<Form> = {};
+	const form = useAppForm({
+		defaultValues: defaultValues as Form,
+		validators: { onChange: formSchema },
+		onSubmit: ({ value: { passwordRetype, ...value } }) =>
+			registerMutation.mutate(value),
+	});
 
 	return (
 		<>
 			<PageHeader>Register</PageHeader>
-			<form
-				onSubmit={form.handleSubmit(onSubmit)}
-				className="flex flex-col gap-4"
-			>
-				<Input
-					{...form.register("email")}
-					label="Email"
-					fieldError={form.formState.errors.email}
-					mutation={registerMutation}
-				/>
-				<Input
-					{...form.register("name")}
-					label="Name"
-					placeholder="You can change it later"
-					fieldError={form.formState.errors.name}
-					isDisabled={registerMutation.isPending}
-				/>
-				<Input
-					{...form.register("password")}
-					label="New password"
-					fieldError={form.formState.errors.password}
-					isDisabled={registerMutation.isPending}
-					type="password"
-				/>
-				<Input
-					{...form.register("passwordRetype")}
-					label="Retype new password"
-					fieldError={form.formState.errors.passwordRetype}
-					isDisabled={registerMutation.isPending}
-					type="password"
-				/>
-				<Button
-					className="mt-4"
-					color="primary"
-					isDisabled={!form.formState.isValid || registerMutation.isPending}
-					isLoading={registerMutation.isPending}
-					type="submit"
-				>
-					Register
-				</Button>
-			</form>
+			<form.AppForm>
+				<form.Form className="flex flex-col gap-4">
+					<form.AppField name="email">
+						{(field) => (
+							<field.TextField
+								value={field.state.value}
+								onValueChange={field.setValue}
+								name={field.name}
+								onBlur={field.handleBlur}
+								label="Email"
+								fieldError={field.state.meta.errors}
+								mutation={registerMutation}
+							/>
+						)}
+					</form.AppField>
+					<form.AppField name="name">
+						{(field) => (
+							<field.TextField
+								value={field.state.value}
+								onValueChange={field.setValue}
+								name={field.name}
+								onBlur={field.handleBlur}
+								label="Name"
+								placeholder="You can change it later"
+								fieldError={field.state.meta.errors}
+								mutation={registerMutation}
+							/>
+						)}
+					</form.AppField>
+					<form.AppField name="password">
+						{(field) => (
+							<field.TextField
+								value={field.state.value}
+								onValueChange={field.setValue}
+								name={field.name}
+								onBlur={field.handleBlur}
+								label="New password"
+								type="password"
+								fieldError={field.state.meta.errors}
+								mutation={registerMutation}
+							/>
+						)}
+					</form.AppField>
+					<form.AppField name="passwordRetype">
+						{(field) => (
+							<field.TextField
+								value={field.state.value}
+								onValueChange={field.setValue}
+								name={field.name}
+								onBlur={field.handleBlur}
+								label="Retype new password"
+								type="password"
+								fieldError={field.state.meta.errors}
+								mutation={registerMutation}
+							/>
+						)}
+					</form.AppField>
+					<form.Subscribe selector={(state) => state.canSubmit}>
+						{(canSubmit) => (
+							<Button
+								className="mt-4"
+								color="primary"
+								isDisabled={!canSubmit || registerMutation.isPending}
+								isLoading={registerMutation.isPending}
+								type="submit"
+							>
+								Register
+							</Button>
+						)}
+					</form.Subscribe>
+				</form.Form>
+			</form.AppForm>
 		</>
 	);
 };

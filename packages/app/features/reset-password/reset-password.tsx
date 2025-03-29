@@ -1,13 +1,12 @@
-import React from "react";
+import type React from "react";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { useRouter } from "solito/navigation";
 import { z } from "zod";
 
 import { QueryErrorMessage } from "~app/components/error-message";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
+import { useAppForm } from "~app/utils/forms";
 import { passwordSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { Header } from "~components/header";
@@ -15,35 +14,85 @@ import { Input } from "~components/input";
 import { Spinner } from "~components/spinner";
 import { options as authResetPasswordOptions } from "~mutations/auth/reset-password";
 
-type ChangePasswordForm = {
-	password: string;
-	passwordRetype: string;
-};
+const formSchema = z.object({
+	password: passwordSchema,
+	passwordRetype: passwordSchema,
+});
+type Form = z.infer<typeof formSchema>;
 
 type Props = {
 	token: string;
 };
 
-export const ResetPassword: React.FC<Props> = ({ token }) => {
+const ResetPasswordForm: React.FC<Props> = ({ token }) => {
 	const router = useRouter();
-	const intentionQuery = trpc.resetPasswordIntentions.get.useQuery({ token });
-	const form = useForm<ChangePasswordForm>({
-		mode: "onChange",
-		resolver: zodResolver(
-			z.object({ password: passwordSchema, passwordRetype: passwordSchema }),
-		),
-	});
 
 	const changePasswordMutation = trpc.auth.resetPassword.useMutation(
 		useTrpcMutationOptions(authResetPasswordOptions, {
 			onSuccess: () => router.replace("/login"),
 		}),
 	);
-	const onSubmit = React.useCallback(
-		({ password }: ChangePasswordForm) =>
-			changePasswordMutation.mutate({ password, token }),
-		[changePasswordMutation, token],
+	const defaultValues: Partial<Form> = {};
+	const form = useAppForm({
+		defaultValues: defaultValues as Form,
+		validators: { onChange: formSchema },
+		onSubmit: ({ value }) => {
+			changePasswordMutation.mutate({ password: value.password, token });
+		},
+	});
+
+	return (
+		<form.AppForm>
+			<form.Form className="flex flex-col gap-4">
+				<Input value={token} label="Token" isReadOnly />
+				<form.AppField name="password">
+					{(field) => (
+						<field.TextField
+							value={field.state.value}
+							onValueChange={field.setValue}
+							name={field.name}
+							onBlur={field.handleBlur}
+							label="New password"
+							type="password"
+							fieldError={field.state.meta.errors}
+							mutation={changePasswordMutation}
+						/>
+					)}
+				</form.AppField>
+				<form.AppField name="passwordRetype">
+					{(field) => (
+						<field.TextField
+							value={field.state.value}
+							onValueChange={field.setValue}
+							name={field.name}
+							onBlur={field.handleBlur}
+							label="Retype new password"
+							type="password"
+							fieldError={field.state.meta.errors}
+							mutation={changePasswordMutation}
+						/>
+					)}
+				</form.AppField>
+				<form.Subscribe selector={(state) => state.canSubmit}>
+					{(canSubmit) => (
+						<Button
+							className="mt-4"
+							color="primary"
+							isDisabled={!canSubmit || changePasswordMutation.isPending}
+							isLoading={changePasswordMutation.isPending}
+							type="submit"
+						>
+							Save password
+						</Button>
+					)}
+				</form.Subscribe>
+			</form.Form>
+		</form.AppForm>
 	);
+};
+
+export const ResetPassword: React.FC<Props> = ({ token }) => {
+	const intentionQuery = trpc.resetPasswordIntentions.get.useQuery({ token });
 
 	switch (intentionQuery.status) {
 		case "pending":
@@ -54,37 +103,7 @@ export const ResetPassword: React.FC<Props> = ({ token }) => {
 			return (
 				<>
 					<Header>{intentionQuery.data.email}</Header>
-					<form
-						className="flex flex-col gap-4"
-						onSubmit={form.handleSubmit(onSubmit)}
-					>
-						<Input value={token} label="Token" isReadOnly />
-						<Input
-							{...form.register("password")}
-							label="New password"
-							fieldError={form.formState.errors.password}
-							disabled={changePasswordMutation.isPending}
-							type="password"
-						/>
-						<Input
-							{...form.register("passwordRetype")}
-							label="Retype new password"
-							fieldError={form.formState.errors.passwordRetype}
-							disabled={changePasswordMutation.isPending}
-							type="password"
-						/>
-						<Button
-							className="mt-4"
-							color="primary"
-							isDisabled={
-								!form.formState.isValid || changePasswordMutation.isPending
-							}
-							isLoading={changePasswordMutation.isPending}
-							type="submit"
-						>
-							Save password
-						</Button>
-					</form>
+					<ResetPasswordForm token={token} />
 				</>
 			);
 	}

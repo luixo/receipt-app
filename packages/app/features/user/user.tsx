@@ -1,16 +1,17 @@
 import React from "react";
 
+import { z } from "zod";
+
 import { QueryErrorMessage } from "~app/components/error-message";
 import { RemoveButton } from "~app/components/remove-button";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { useSingleInput } from "~app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput, TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
+import { useAppForm } from "~app/utils/forms";
 import { userNameSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { TrashBin } from "~components/icons";
-import { Input } from "~components/input";
 import { Spinner } from "~components/spinner";
 import type { UsersId } from "~db/models";
 import { options as usersRemoveOptions } from "~mutations/users/remove";
@@ -24,42 +25,42 @@ type NameProps = {
 };
 
 const UserNameInput: React.FC<NameProps> = ({ user, isLoading }) => {
-	const {
-		bindings,
-		state: inputState,
-		getValue,
-		setValue,
-	} = useSingleInput({
-		initialValue: user.name,
-		schema: userNameSchema,
-	});
-
 	const updateUserMutation = trpc.users.update.useMutation(
 		useTrpcMutationOptions(usersUpdateOptions),
 	);
-	const saveName = React.useCallback(
-		(nextName: string) => {
-			updateUserMutation.mutate(
-				{ id: user.id, update: { type: "name", name: nextName } },
-				{ onSuccess: () => setValue(nextName) },
-			);
+	const form = useAppForm({
+		defaultValues: { value: user.name },
+		validators: { onChange: z.object({ value: userNameSchema }) },
+		onSubmit: ({ value }) => {
+			updateUserMutation.mutate({
+				id: user.id,
+				update: { type: "name", name: value.value },
+			});
 		},
-		[updateUserMutation, user.id, setValue],
-	);
+	});
 
 	return (
-		<Input
-			{...bindings}
-			label="User name"
-			mutation={updateUserMutation}
-			fieldError={inputState.error}
-			isDisabled={isLoading}
-			saveProps={{
-				title: "Save user name",
-				isHidden: user.name === getValue(),
-				onPress: () => saveName(getValue()),
-			}}
-		/>
+		<form.AppField name="value">
+			{(field) => (
+				<field.TextField
+					value={field.state.value}
+					onValueChange={field.setValue}
+					name={field.name}
+					onBlur={field.handleBlur}
+					fieldError={field.state.meta.errors}
+					label="User name"
+					mutation={updateUserMutation}
+					isDisabled={isLoading}
+					saveProps={{
+						title: "Save user name",
+						isHidden: user.name === field.state.value,
+						onPress: () => {
+							void field.form.handleSubmit();
+						},
+					}}
+				/>
+			)}
+		</form.AppField>
 	);
 };
 
@@ -74,42 +75,26 @@ const UserPublicNameInput: React.FC<PublicNameProps> = ({
 }) => {
 	const [showInput, { setTrue: setInput, setFalse: unsetInput }] =
 		useBooleanState(user.publicName !== undefined);
-	const {
-		bindings,
-		state: inputState,
-		getValue,
-		setValue,
-	} = useSingleInput({
-		initialValue: user.publicName ?? "",
-		schema: userNameSchema,
-	});
 
 	const updateUserMutation = trpc.users.update.useMutation(
 		useTrpcMutationOptions(usersUpdateOptions),
 	);
-	const savePublicName = React.useCallback(
-		(nextName: string | undefined) => {
-			if (nextName === undefined && user.publicName === undefined) {
+	const form = useAppForm({
+		defaultValues: { value: user.publicName ?? null },
+		validators: {
+			onChange: z.object({ value: userNameSchema.or(z.null()) }),
+		},
+		onSubmit: ({ value }) => {
+			if (value.value === null && user.publicName === undefined) {
 				unsetInput();
 				return;
 			}
-			updateUserMutation.mutate(
-				{
-					id: user.id,
-					update: { type: "publicName", publicName: nextName },
-				},
-				{
-					onSuccess: () => {
-						setValue(nextName ?? "");
-						if (nextName === undefined) {
-							unsetInput();
-						}
-					},
-				},
-			);
+			updateUserMutation.mutate({
+				id: user.id,
+				update: { type: "publicName", publicName: value.value ?? undefined },
+			});
 		},
-		[updateUserMutation, user.id, setValue, unsetInput, user.publicName],
-	);
+	});
 
 	if (!showInput) {
 		return (
@@ -124,32 +109,44 @@ const UserPublicNameInput: React.FC<PublicNameProps> = ({
 	}
 
 	return (
-		<Input
-			{...bindings}
-			label="Public user name"
-			mutation={updateUserMutation}
-			fieldError={inputState.error}
-			isDisabled={isLoading}
-			saveProps={{
-				title: "Save user public name",
-				isHidden: user.publicName === getValue(),
-				onPress: () => savePublicName(getValue()),
-			}}
-			endContent={
-				user.publicName === undefined ? null : (
-					<Button
-						title="Remove user public name"
-						variant="light"
-						isLoading={updateUserMutation.isPending}
-						onPress={() => savePublicName(undefined)}
-						color="danger"
-						isIconOnly
-					>
-						<TrashBin size={24} />
-					</Button>
-				)
-			}
-		/>
+		<form.AppField name="value">
+			{(field) => (
+				<field.TextField
+					value={field.state.value ?? ""}
+					onValueChange={field.setValue}
+					name={field.name}
+					onBlur={field.handleBlur}
+					fieldError={field.state.meta.errors}
+					label="Public user name"
+					mutation={updateUserMutation}
+					isDisabled={isLoading}
+					saveProps={{
+						title: "Save user public name",
+						isHidden: user.publicName === (field.state.value ?? undefined),
+						onPress: () => {
+							void field.form.handleSubmit();
+						},
+					}}
+					endContent={
+						user.publicName === undefined ? null : (
+							<Button
+								title="Remove user public name"
+								variant="light"
+								isLoading={updateUserMutation.isPending}
+								onPress={() => {
+									field.setValue(null);
+									void field.form.handleSubmit();
+								}}
+								color="danger"
+								isIconOnly
+							>
+								<TrashBin size={24} />
+							</Button>
+						)
+					}
+				/>
+			)}
+		</form.AppField>
 	);
 };
 

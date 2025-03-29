@@ -2,32 +2,23 @@ import React from "react";
 import { View } from "react-native";
 
 import { Input as InputRaw, Textarea } from "@heroui/input";
-import type { FieldError } from "react-hook-form";
 
-import type { TRPCMutationResult, TRPCMutationState } from "~app/trpc";
-import { CheckMark, EyeIcon, EyeSlashIcon } from "~components/icons";
+import { EyeIcon, EyeSlashIcon } from "~components/icons";
+import { SaveButton } from "~components/save-button";
 
 import { Button } from "./button";
-import { tv } from "./utils";
+import type { FieldError, MutationOrMutations } from "./utils";
+import { cn, tv, useErrorState, useMutationLoading } from "./utils";
 
 const input = tv({});
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type MutationOrState = TRPCMutationResult<any> | TRPCMutationState<any>;
-
 type Props = Omit<
 	React.ComponentProps<typeof InputRaw | typeof Textarea>,
-	"value" | "errorMessage" | "ref"
+	"ref"
 > & {
 	fieldError?: FieldError;
-	mutation?: MutationOrState | MutationOrState[];
-	value?: string | number;
-	errorMessage?: React.ReactNode;
-	saveProps?: {
-		title?: string;
-		isHidden?: boolean;
-		onPress: () => void;
-	};
+	mutation?: MutationOrMutations;
+	saveProps?: React.ComponentProps<typeof SaveButton>;
 	multiline?: boolean;
 };
 
@@ -38,13 +29,8 @@ export const Input = React.forwardRef<
 	(
 		{
 			className,
-			isInvalid,
 			fieldError,
-			errorMessage,
 			mutation,
-			isDisabled,
-			value,
-			type,
 			endContent,
 			saveProps,
 			multiline,
@@ -57,38 +43,37 @@ export const Input = React.forwardRef<
 			() => setVisible((prev) => !prev),
 			[],
 		);
-		const mutations = Array.isArray(mutation)
-			? mutation
-			: mutation
-			? [mutation]
-			: [];
-		const isWarning = Boolean(fieldError);
-		const isError = Boolean(mutations.find(({ error }) => error)) || isInvalid;
-		const isMutationLoading = mutations.some(
-			({ status }) => status === "pending",
-		);
 		const Component = multiline ? Textarea : InputRaw;
+		const isMutationLoading = useMutationLoading({ mutation });
+		const { isWarning, isError, errors } = useErrorState({
+			mutation,
+			fieldError,
+		});
 		return (
 			<Component
 				ref={ref}
 				{...props}
-				value={value?.toString()}
-				isDisabled={isMutationLoading || isDisabled}
+				isDisabled={isMutationLoading || props.isDisabled}
 				color={isWarning ? "warning" : isError ? "danger" : undefined}
-				description={
-					fieldError?.message ||
-					mutations.map(({ error }) => error?.message).find(Boolean) ||
-					errorMessage
-				}
+				description={errors.join("\n")}
 				classNames={{
 					base: input({ className }),
-					description: isWarning ? "text-warning" : undefined,
+					description: cn(
+						"whitespace-pre",
+						isWarning ? "text-warning" : undefined,
+					),
 				}}
-				type={type === "password" ? (isVisible ? undefined : "password") : type}
+				type={
+					props.type === "password"
+						? isVisible
+							? undefined
+							: "password"
+						: props.type
+				}
 				endContent={
 					<View className="flex-row gap-2">
 						{endContent}
-						{type === "password" ? (
+						{props.type === "password" ? (
 							<Button variant="light" isIconOnly>
 								{isVisible ? (
 									<EyeSlashIcon onClick={switchValue} size={24} />
@@ -98,17 +83,11 @@ export const Input = React.forwardRef<
 							</Button>
 						) : null}
 						{saveProps && !saveProps.isHidden ? (
-							<Button
-								title={saveProps.title}
-								variant="light"
+							<SaveButton
+								{...saveProps}
 								isLoading={isMutationLoading}
-								isDisabled={isWarning || isError}
-								onPress={saveProps.onPress}
-								isIconOnly
-								color="success"
-							>
-								<CheckMark size={24} />
-							</Button>
+								isDisabled={isWarning || isError || props.isInvalid}
+							/>
 						) : null}
 					</View>
 				}

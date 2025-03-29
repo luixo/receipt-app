@@ -1,13 +1,14 @@
 import React from "react";
 
-import { partSchemaDecimal } from "~app/utils/validation";
-
-const DECIMAL_DIGITS = 2;
+import {
+	debtAmountSchemaDecimal,
+	partSchemaDecimal,
+} from "~app/utils/validation";
 
 const getDecimalsPower = (decimalDigits: number) => 10 ** decimalDigits;
 
 export const useDecimals = () => {
-	const decimalsPower = getDecimalsPower(DECIMAL_DIGITS);
+	const decimalsPower = getDecimalsPower(debtAmountSchemaDecimal);
 	return {
 		fromSubunitToUnit: React.useCallback(
 			(input: number) => input / decimalsPower,

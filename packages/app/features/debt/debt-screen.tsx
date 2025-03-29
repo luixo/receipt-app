@@ -1,6 +1,7 @@
 import React from "react";
 
 import { useParams, useRouter } from "solito/navigation";
+import { z } from "zod";
 
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
 import { DebtControlButtons } from "~app/components/app/debt-control-buttons";
@@ -17,12 +18,12 @@ import {
 } from "~app/components/remove-button";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
-import { useSingleInput } from "~app/hooks/use-single-input";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput, TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import { areDebtsSynced } from "~app/utils/debts";
+import { useAppForm } from "~app/utils/forms";
 import { debtAmountSchema, debtNoteSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { ReceiptIcon } from "~components/icons";
@@ -102,53 +103,47 @@ type AmountProps = {
 
 const DebtAmountInput: React.FC<AmountProps> = ({ debt, isLoading }) => {
 	const absoluteAmount = Math.abs(debt.amount);
-	const {
-		bindings,
-		state: inputState,
-		getNumberValue,
-		setValue,
-	} = useSingleInput({
-		initialValue: absoluteAmount,
-		schema: debtAmountSchema,
-		type: "number",
-	});
-	React.useEffect(
-		() => setValue(Math.abs(debt.amount)),
-		[debt.amount, setValue],
-	);
 
 	const updateMutation = trpc.debts.update.useMutation(
 		useTrpcMutationOptions(debtsUpdateOptions, { context: { currDebt: debt } }),
 	);
-	const updateAmount = React.useCallback(
-		(amount: number) => {
-			if (amount !== absoluteAmount) {
-				const currentSign = debt.amount >= 0 ? 1 : -1;
-				updateMutation.mutate({
-					id: debt.id,
-					update: { amount: amount * currentSign },
-				});
-			}
+	const form = useAppForm({
+		defaultValues: { value: absoluteAmount },
+		validators: { onChange: z.object({ value: debtAmountSchema }) },
+		onSubmit: ({ value }) => {
+			const currentSign = debt.amount >= 0 ? 1 : -1;
+			updateMutation.mutate({
+				id: debt.id,
+				update: { amount: value.value * currentSign },
+			});
 		},
-		[updateMutation, debt.id, debt.amount, absoluteAmount],
-	);
+	});
 
 	return (
-		<Input
-			{...bindings}
-			value={bindings.value.toString()}
-			aria-label="Debt amount"
-			mutation={updateMutation}
-			fieldError={inputState.error}
-			isDisabled={isLoading}
-			saveProps={{
-				title: "Save debt amount",
-				isHidden: absoluteAmount === getNumberValue(),
-				onPress: () => updateAmount(getNumberValue()),
-			}}
-			endContent={<DebtCurrencyInput debt={debt} isLoading={isLoading} />}
-			variant="bordered"
-		/>
+		<form.AppField name="value">
+			{(field) => (
+				<field.NumberField
+					value={field.state.value}
+					onValueChange={field.setValue}
+					name={field.name}
+					onBlur={field.handleBlur}
+					fieldError={field.state.meta.errors}
+					aria-label="Debt amount"
+					mutation={updateMutation}
+					isDisabled={isLoading}
+					minValue={0}
+					saveProps={{
+						title: "Save debt amount",
+						isHidden: absoluteAmount === field.state.value,
+						onPress: () => {
+							void field.form.handleSubmit();
+						},
+					}}
+					endContent={<DebtCurrencyInput debt={debt} isLoading={isLoading} />}
+					variant="bordered"
+				/>
+			)}
+		</form.AppField>
 	);
 };
 
@@ -157,7 +152,10 @@ type DateProps = {
 	isLoading: boolean;
 };
 
-const DebtDateInput: React.FC<DateProps> = ({ debt, isLoading }) => {
+const DebtDateInput: React.FC<DateProps> = ({
+	debt,
+	isLoading: isDisabled,
+}) => {
 	const updateMutation = trpc.debts.update.useMutation(
 		useTrpcMutationOptions(debtsUpdateOptions, { context: { currDebt: debt } }),
 	);
@@ -178,10 +176,10 @@ const DebtDateInput: React.FC<DateProps> = ({ debt, isLoading }) => {
 
 	return (
 		<DateInput
+			value={debt.timestamp}
+			onValueChange={saveDate}
 			mutation={updateMutation}
-			timestamp={debt.timestamp}
-			isDisabled={isLoading}
-			onUpdate={saveDate}
+			isDisabled={isDisabled}
 		/>
 	);
 };
@@ -192,46 +190,40 @@ type NoteProps = {
 };
 
 const DebtNoteInput: React.FC<NoteProps> = ({ debt, isLoading }) => {
-	const {
-		bindings,
-		state: inputState,
-		getValue,
-		setValue,
-	} = useSingleInput({
-		initialValue: debt.note,
-		schema: debtNoteSchema,
-	});
-
 	const updateMutation = trpc.debts.update.useMutation(
 		useTrpcMutationOptions(debtsUpdateOptions, { context: { currDebt: debt } }),
 	);
-	const saveNote = React.useCallback(
-		(nextNote: string) => {
-			if (debt.note === nextNote) {
-				return;
-			}
-			updateMutation.mutate(
-				{ id: debt.id, update: { note: nextNote } },
-				{ onSuccess: () => setValue(nextNote) },
-			);
+	const form = useAppForm({
+		defaultValues: { value: debt.note },
+		validators: { onChange: z.object({ value: debtNoteSchema }) },
+		onSubmit: ({ value }) => {
+			updateMutation.mutate({ id: debt.id, update: { note: value.value } });
 		},
-		[updateMutation, debt.id, debt.note, setValue],
-	);
+	});
 
 	return (
-		<Input
-			{...bindings}
-			aria-label="Debt note"
-			mutation={updateMutation}
-			fieldError={inputState.error}
-			isDisabled={isLoading}
-			saveProps={{
-				title: "Save debt note",
-				isHidden: debt.note === getValue(),
-				onPress: () => saveNote(getValue()),
-			}}
-			multiline
-		/>
+		<form.AppField name="value">
+			{(field) => (
+				<field.TextField
+					value={field.state.value}
+					onValueChange={field.setValue}
+					name={field.name}
+					onBlur={field.handleBlur}
+					fieldError={field.state.meta.errors}
+					aria-label="Debt note"
+					mutation={updateMutation}
+					isDisabled={isLoading}
+					saveProps={{
+						title: "Save debt note",
+						isHidden: debt.note === field.state.value,
+						onPress: () => {
+							void field.form.handleSubmit();
+						},
+					}}
+					multiline
+				/>
+			)}
+		</form.AppField>
 	);
 };
 

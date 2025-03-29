@@ -1,14 +1,15 @@
 import React from "react";
 
+import { z } from "zod";
+
 import { PartButtons } from "~app/components/app/part-buttons";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useRoundParts } from "~app/hooks/use-decimals";
-import { useSingleInput } from "~app/hooks/use-single-input";
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import { trpc } from "~app/trpc";
-import { partSchema } from "~app/utils/validation";
+import { useAppForm } from "~app/utils/forms";
+import { partSchema, partSchemaDecimal } from "~app/utils/validation";
 import { Button } from "~components/button";
-import { Input } from "~components/input";
 import { Text } from "~components/text";
 import { updateSetStateAction } from "~utils/react";
 
@@ -33,20 +34,20 @@ export const ReceiptItemConsumerInput: React.FC<Props> = ({
 	const [isEditing, { switchValue: switchEditing, setFalse: unsetEditing }] =
 		useBooleanState();
 
-	const {
-		bindings,
-		state: inputState,
-		getNumberValue,
-	} = useSingleInput({
-		initialValue: consumer.part,
-		schema: partSchema,
-		type: "number",
-	});
 	const updateMutationState =
 		useTrpcMutationState<"receiptItemConsumers.update">(
 			trpc.receiptItemConsumers.update,
 			(vars) => vars.userId === consumer.userId && vars.itemId === item.id,
 		);
+	const form = useAppForm({
+		defaultValues: { value: consumer.part },
+		validators: { onChange: z.object({ value: partSchema }) },
+		onSubmit: ({ value }) => {
+			updateItemConsumerPart(item.id, consumer.userId, value.value, {
+				onSuccess: unsetEditing,
+			});
+		},
+	});
 	const isPending = updateMutationState?.status === "pending";
 
 	const updateConsumerPart = React.useCallback(
@@ -56,17 +57,10 @@ export const ReceiptItemConsumerInput: React.FC<Props> = ({
 				unsetEditing();
 				return;
 			}
-			updateItemConsumerPart(item.id, consumer.userId, nextPart, {
-				onSuccess: unsetEditing,
-			});
+			form.setFieldValue("value", nextPart);
+			void form.handleSubmit();
 		},
-		[
-			consumer.part,
-			consumer.userId,
-			updateItemConsumerPart,
-			item.id,
-			unsetEditing,
-		],
+		[consumer.part, form, unsetEditing],
 	);
 
 	const wrap = React.useCallback(
@@ -101,22 +95,31 @@ export const ReceiptItemConsumerInput: React.FC<Props> = ({
 
 	if (isEditing) {
 		return wrap(
-			<Input
-				{...bindings}
-				step="0.00001"
-				className="w-32"
-				aria-label="Item consumer part"
-				mutation={updateMutationState}
-				fieldError={inputState.error}
-				isDisabled={isDisabled}
-				labelPlacement="outside-left"
-				saveProps={{
-					title: "Save item consumer part",
-					onPress: () => updateConsumerPart(getNumberValue()),
-				}}
-				endContent={<Text className="self-center">/ {totalParts}</Text>}
-				variant="bordered"
-			/>,
+			<form.AppField name="value">
+				{(field) => (
+					<field.NumberField
+						value={field.state.value}
+						onValueChange={field.setValue}
+						name={field.name}
+						onBlur={field.handleBlur}
+						fieldError={field.state.meta.errors}
+						step={10 ** -partSchemaDecimal}
+						className="w-32"
+						aria-label="Item consumer part"
+						mutation={updateMutationState}
+						isDisabled={isDisabled}
+						labelPlacement="outside-left"
+						saveProps={{
+							title: "Save item consumer part",
+							onPress: () => {
+								void field.form.handleSubmit();
+							},
+						}}
+						endContent={<Text className="self-center">/ {totalParts}</Text>}
+						variant="bordered"
+					/>
+				)}
+			</form.AppField>,
 		);
 	}
 

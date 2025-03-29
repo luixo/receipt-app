@@ -11,7 +11,7 @@ import {
 } from "~app/utils/receipt-item";
 import type { NonNullableField } from "~utils/types";
 
-const getDebtIds = (receipt: TRPCQueryOutput<"receipts.get">) =>
+const getDebtIds = (receipt: Pick<TRPCQueryOutput<"receipts.get">, "debt">) =>
 	receipt.debt.direction === "outcoming"
 		? receipt.debt.ids
 		: receipt.debt.id
@@ -33,7 +33,9 @@ const SORT_PARTICIPANTS = (a: OriginalParticipant, b: OriginalParticipant) => {
 	return a.createdAt.valueOf() - b.createdAt.valueOf();
 };
 
-export const useParticipants = (receipt: TRPCQueryOutput<"receipts.get">) => {
+export const useParticipants = (
+	receipt: Omit<TRPCQueryOutput<"receipts.get">, "name">,
+) => {
 	const { fromUnitToSubunit, fromSubunitToUnit } = useDecimals();
 	const debtsQueries = trpc.useQueries((t) =>
 		getDebtIds(receipt).map((debtId) => t.debts.get({ id: debtId })),

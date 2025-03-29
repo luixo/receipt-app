@@ -1,7 +1,5 @@
 import React from "react";
 
-import { type UseFormReturn } from "react-hook-form";
-
 import type {
 	useActionHooks as useActionHooksRaw,
 	useGetReceiptContext,
@@ -363,7 +361,7 @@ export const useActionsHooks = (
 };
 
 export const useAddReceiptContext = (
-	form: UseFormReturn<Form>,
+	form: Partial<Form>,
 	receiptId: ReceiptsId,
 	selfUserId: UsersId,
 	payers: ReceiptContext["payers"],
@@ -374,9 +372,7 @@ export const useAddReceiptContext = (
 	selfUserId,
 	ownerUserId: selfUserId,
 	payers,
-	// Currency code can actually be undefined
-	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-	currencyCode: form.watch("currencyCode") ?? "???",
+	currencyCode: form.currencyCode ?? "???",
 	receiptDisabled: false,
 	items,
 	participants,

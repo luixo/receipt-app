@@ -1,12 +1,13 @@
-import React from "react";
+import type React from "react";
 import { View } from "react-native";
 
+import { z } from "zod";
+
 import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { useSingleInput } from "~app/hooks/use-single-input";
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import { trpc } from "~app/trpc";
+import { useAppForm } from "~app/utils/forms";
 import { receiptItemNameSchema } from "~app/utils/validation";
-import { Input } from "~components/input";
 import { Text } from "~components/text";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
@@ -28,28 +29,21 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 	const [isEditing, { switchValue: switchEditing, setFalse: unsetEditing }] =
 		useBooleanState();
 
-	const {
-		bindings,
-		state: inputState,
-		getValue,
-	} = useSingleInput({
-		initialValue: item.name,
-		schema: receiptItemNameSchema,
+	const form = useAppForm({
+		defaultValues: { value: item.name },
+		validators: { onChange: z.object({ value: receiptItemNameSchema }) },
+		onSubmit: ({ value }) => {
+			if (value.value === item.name) {
+				unsetEditing();
+				return;
+			}
+			updateItemName(item.id, value.value, { onSuccess: switchEditing });
+		},
 	});
 
 	const updateMutationState = useTrpcMutationState<"receiptItems.update">(
 		trpc.receiptItems.update,
 		(vars) => vars.update.type === "name" && vars.id === item.id,
-	);
-	const updateName = React.useCallback(
-		(name: string) => {
-			if (name === item.name) {
-				unsetEditing();
-				return;
-			}
-			updateItemName(item.id, name, { onSuccess: switchEditing });
-		},
-		[item.name, item.id, updateItemName, switchEditing, unsetEditing],
 	);
 	const isDisabled = !canEdit || receiptDisabled || isExternalDisabled;
 
@@ -67,17 +61,26 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 	}
 
 	return (
-		<Input
-			{...bindings}
-			aria-label="Receipt item name"
-			mutation={updateMutationState}
-			fieldError={inputState.error}
-			isDisabled={isDisabled}
-			className="basis-52"
-			saveProps={{
-				title: "Save receipt item name",
-				onPress: () => updateName(getValue()),
-			}}
-		/>
+		<form.AppField name="value">
+			{(field) => (
+				<field.TextField
+					value={field.state.value}
+					onValueChange={field.setValue}
+					name={field.name}
+					onBlur={field.handleBlur}
+					fieldError={field.state.meta.errors}
+					aria-label="Receipt item name"
+					mutation={updateMutationState}
+					isDisabled={isDisabled}
+					className="basis-52"
+					saveProps={{
+						title: "Save receipt item name",
+						onPress: () => {
+							void field.form.handleSubmit();
+						},
+					}}
+				/>
+			)}
+		</form.AppField>
 	);
 };

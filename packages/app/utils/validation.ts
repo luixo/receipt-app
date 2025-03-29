@@ -80,7 +80,7 @@ export const emailSchema = z
 	.email({ message: "Invalid email address" });
 
 type NumberSchemaOptions = {
-	decimals?: number;
+	decimals: number;
 	onlyPositive?: boolean;
 	nonZero?: boolean;
 	max?:
@@ -93,12 +93,7 @@ type NumberSchemaOptions = {
 
 const createNumberSchema = (
 	name: string,
-	{
-		decimals = 2,
-		onlyPositive = true,
-		max,
-		nonZero = true,
-	}: NumberSchemaOptions = {},
+	{ decimals, onlyPositive = true, max, nonZero = true }: NumberSchemaOptions,
 ) => {
 	let schema = z
 		.number()
@@ -122,13 +117,17 @@ const createNumberSchema = (
 	return schema;
 };
 
+export const priceSchemaDecimal = 2;
 export const priceSchema = createNumberSchema("Price", {
+	decimals: priceSchemaDecimal,
 	max: {
 		visual: "10^15",
 		value: 10 ** 15 - 1,
 	},
 });
+export const quantitySchemaDecimal = 2;
 export const quantitySchema = createNumberSchema("Quantity", {
+	decimals: quantitySchemaDecimal,
 	max: {
 		visual: "1 million",
 		value: 10 ** 9,
@@ -142,8 +141,10 @@ export const partSchema = createNumberSchema("Part", {
 		value: 10 ** 9,
 	},
 });
+export const debtAmountSchemaDecimal = 2;
 export const debtAmountSchema = createNumberSchema("Debt amount", {
 	onlyPositive: false,
+	decimals: debtAmountSchemaDecimal,
 	max: {
 		visual: "10^15",
 		value: 10 ** 15 - 1,
@@ -157,8 +158,9 @@ export const currencySchema = z.object({
 	name: z.string().nonempty(),
 	symbol: z.string().nonempty(),
 });
+export const currencyRateSchemaDecimal = 6;
 export const currencyRateSchema = createNumberSchema("Currency rate", {
-	decimals: 6,
+	decimals: currencyRateSchemaDecimal,
 });
 
 export const userIdSchema = z.string().uuid().refine<UsersId>(flavored);

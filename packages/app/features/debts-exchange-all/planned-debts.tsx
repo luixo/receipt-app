@@ -1,131 +1,104 @@
 import React from "react";
 import { View } from "react-native";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import type { UseFormReturn } from "react-hook-form";
-import { useForm, useWatch } from "react-hook-form";
-import { entries, isNonNullish, omitBy } from "remeda";
+import { useStore } from "@tanstack/react-form";
+import { entries, isNonNullish, unique } from "remeda";
 import { z } from "zod";
 
 import { ErrorMessage } from "~app/components/error-message";
-import {
-	useFormattedCurrencies,
-	useFormattedCurrency,
-} from "~app/hooks/use-formatted-currency";
-import { useInputController } from "~app/hooks/use-input-controller";
+import { useFormattedCurrencies } from "~app/hooks/use-formatted-currency";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
-import { currencyCodeSchema, currencyRateSchema } from "~app/utils/validation";
+import { useAppForm } from "~app/utils/forms";
+import {
+	currencyCodeSchema,
+	currencyRateSchema,
+	currencyRateSchemaDecimal,
+} from "~app/utils/validation";
 import { Button } from "~components/button";
-import { Input } from "~components/input";
 import { Spinner } from "~components/spinner";
 import { Text } from "~components/text";
 import type { UsersId } from "~db/models";
 import { options as debtsAddOptions } from "~mutations/debts/add";
 import { round } from "~utils/math";
 
-const getDefaultValues = (
+const formSchema = z.record(
+	currencyCodeSchema,
+	z
+		.record(currencyCodeSchema, currencyRateSchema)
+		.superRefine((record, ctx) => {
+			const invalidAmounts = entries(record).filter(
+				([, sum]) => Number.isNaN(sum) || !Number.isFinite(sum) || sum === 0,
+			);
+			if (invalidAmounts.length !== 0) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: `${invalidAmounts
+						.map(([currencyCode]) => currencyCode)
+						.join(", ")} debt(s) are invalid`,
+				});
+			}
+		}),
+);
+type Form = z.infer<typeof formSchema>;
+
+const getMatchedCurrencySymbol = (
+	currencies: ReturnType<typeof useFormattedCurrencies>,
+	currencyCode: CurrencyCode,
+) =>
+	currencies.find((currency) => currency.code === currencyCode)?.symbol ??
+	currencyCode;
+
+const getDebt = (
+	currencyCode: CurrencyCode,
 	selectedCurrencyCode: CurrencyCode,
-	debts: { currencyCode: CurrencyCode }[],
-	currentRates: Partial<Record<CurrencyCode, number>> = {},
-) => ({
-	...debts.reduce(
-		(acc, debt) =>
-			debt.currencyCode === selectedCurrencyCode
-				? acc
-				: {
-						...acc,
-						[debt.currencyCode]: 0,
-				  },
-		{},
-	),
-	...omitBy(currentRates, (value) => value === undefined),
-});
-
-type InputProps = {
-	currencyCode: CurrencyCode;
-} & Pick<DebtProps, "selectedCurrencyCode" | "form">;
-
-const RateInput: React.FC<InputProps> = ({
-	selectedCurrencyCode,
-	currencyCode,
-	form,
-}) => {
-	const { bindings, state: inputState } = useInputController({
-		form,
-		name: `${selectedCurrencyCode}.${currencyCode}`,
-		type: "number",
-		// see https://github.com/react-hook-form/react-hook-form/issues/12259
-		defaultValue: 0 as unknown as undefined,
-	});
-	return (
-		<Input
-			key={`${selectedCurrencyCode}.${currencyCode}`}
-			{...bindings}
-			aria-label={currencyCode}
-			required
-			type="number"
-			min="0"
-			step="0.000001"
-			fieldError={inputState.error}
-		/>
+	aggregatedDebts: { currencyCode: CurrencyCode; sum: number }[],
+	selectedRates: Record<CurrencyCode, number> | undefined,
+	currencies: ReturnType<typeof useFormattedCurrencies>,
+) => {
+	const sourceDebts = aggregatedDebts.filter(
+		(debt) => debt.currencyCode !== selectedCurrencyCode,
 	);
-};
-
-type DebtProps = {
-	selectedCurrencyCode: CurrencyCode;
-	form: UseFormReturn<
-		Partial<Record<CurrencyCode, Record<CurrencyCode, number>>>
-	>;
-	ratesLoading: boolean;
-	currencyCode: CurrencyCode;
-	amount: number;
-	note: string;
-};
-
-const PlannedDebt: React.FC<DebtProps> = ({
-	selectedCurrencyCode,
-	form,
-	ratesLoading,
-	amount,
-	currencyCode,
-	note,
-}) => {
-	const selected = selectedCurrencyCode === currencyCode;
-	const rate = <>{ratesLoading && !selected ? <Spinner /> : note}</>;
-	return (
-		<View className="gap-1">
-			<View className="flex-row gap-4">
-				<Text
-					className={`flex-1 self-center ${
-						amount >= 0 ? "text-success" : "text-danger"
-					}`}
-				>
-					{selected && ratesLoading ? (
-						<Spinner />
-					) : (
-						`${round(amount)} ${currencyCode}`
-					)}
-				</Text>
-				<View className="flex-1">
-					{selected ? null : (
-						<RateInput
-							// Reload input on selected currency code change will rerun useInputController
-							// Otherwise the hook will run `register` method which will propagate current value
-							// to the new form key
-							key={selectedCurrencyCode}
-							form={form}
-							selectedCurrencyCode={selectedCurrencyCode}
-							currencyCode={currencyCode}
-						/>
-					)}
-				</View>
-				<View className="flex-1 max-md:hidden">{rate}</View>
-			</View>
-			<View className="md:hidden">{rate}</View>
-		</View>
+	if (currencyCode === selectedCurrencyCode) {
+		return {
+			amount: -round(
+				sourceDebts.reduce((acc, debt) => {
+					const selectedRate = selectedRates?.[debt.currencyCode] ?? 0;
+					const amount = selectedRate ? -round(debt.sum / selectedRate) : 0;
+					return acc + amount;
+				}, 0),
+			),
+			currencyCode,
+			note: `Converted from ${sourceDebts
+				.map(
+					({ currencyCode: sourceCurrencyCode, sum }) =>
+						`${sum} ${getMatchedCurrencySymbol(
+							currencies,
+							sourceCurrencyCode,
+						)}`,
+				)
+				.join(", ")}`,
+		};
+	}
+	const matchedDebt = aggregatedDebts.find(
+		(debt) => debt.currencyCode === currencyCode,
 	);
+	if (!matchedDebt) {
+		throw new Error(
+			`Expected to match every currency debt, ${currencyCode} is missing`,
+		);
+	}
+	const selectedRate = selectedRates?.[currencyCode] ?? 0;
+	const amount = selectedRate ? -round(matchedDebt.sum / selectedRate) : 0;
+	return {
+		amount: -matchedDebt.sum,
+		currencyCode,
+		note: `Converted to${amount ? ` ${amount}` : ""} ${getMatchedCurrencySymbol(
+			currencies,
+			selectedCurrencyCode,
+		)}`,
+	};
 };
 
 type Props = {
@@ -141,101 +114,69 @@ export const PlannedDebts: React.FC<Props> = ({
 	userId,
 	onDone,
 }) => {
-	const form = useForm<
-		Partial<Record<CurrencyCode, Record<CurrencyCode, number>>>
-	>({
-		mode: "onChange",
-		resolver: zodResolver(
-			z.record(
-				currencyCodeSchema,
-				z.record(currencyCodeSchema, z.preprocess(Number, currencyRateSchema)),
-			),
-		),
-		defaultValues: {
-			[selectedCurrencyCode]: getDefaultValues(
-				selectedCurrencyCode,
-				aggregatedDebts,
-			),
-		},
-	});
-	const convertedFromDebts = React.useMemo(
-		() =>
-			aggregatedDebts.filter(
-				(debt) => debt.currencyCode !== selectedCurrencyCode,
-			),
-		[aggregatedDebts, selectedCurrencyCode],
-	);
-	const currencies = useFormattedCurrencies(
-		convertedFromDebts.map((debt) => debt.currencyCode),
-	);
-	const selectedCurrency = useFormattedCurrency(selectedCurrencyCode);
-	// Extending the type because `selectedCurrencyCode`
-	const selectedRates: Record<CurrencyCode, number> | undefined = useWatch({
-		control: form.control,
-		name: selectedCurrencyCode as `${string & CurrencyCode}`,
-	});
-	const convertedDebts = React.useMemo(() => {
-		if (!selectedRates) {
-			return convertedFromDebts.map((debt) => ({
-				sum: 0,
-				currencyCode: debt.currencyCode,
-			}));
-		}
-		return convertedFromDebts.map((debt) => {
-			const selectedRate = selectedRates[debt.currencyCode];
-			return {
-				sum: selectedRate ? round(debt.sum / selectedRate) : 0,
-				currencyCode: debt.currencyCode,
-			};
-		});
-	}, [convertedFromDebts, selectedRates]);
-	const debts = React.useMemo(() => {
-		const debtsToConvert = convertedFromDebts.map((debt, index) => {
-			// `convertedFromDebts` is mapped from `convertedDebts`
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			const convertedSumRaw = convertedDebts[index]!.sum;
-			const convertedSum = convertedSumRaw === Infinity ? "∞" : convertedSumRaw;
-			return {
-				amount: -debt.sum,
-				currencyCode: debt.currencyCode,
-				note: `Converted to ${convertedSum} ${selectedCurrency.symbol}`,
-			};
-		});
-		return [
-			...debtsToConvert,
-			{
-				amount: round(convertedDebts.reduce((acc, debt) => acc + debt.sum, 0)),
-				currencyCode: selectedCurrencyCode,
-				note: `Converted from ${debtsToConvert
-					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-					.map(({ amount }, index) => `${amount} ${currencies[index]!.symbol}`)
-					.join(", ")}`,
-			},
-		];
-	}, [
+	const allCurrencyCodes = unique([
+		...aggregatedDebts.map((debt) => debt.currencyCode),
 		selectedCurrencyCode,
-		convertedFromDebts,
-		currencies,
-		selectedCurrency,
-		convertedDebts,
-	]);
-	const fillRatesData = React.useCallback(
-		(data: Record<CurrencyCode, number>) => {
-			const currentRates = form.getValues()[selectedCurrencyCode];
-			entries(data).forEach(([key, value]) => {
-				if (!currentRates?.[key]) {
-					// see https://github.com/react-hook-form/react-hook-form/issues/12259
-					form.setValue(`${selectedCurrencyCode}.${key}`, value as never, {
-						shouldValidate: true,
-					});
-				}
+	]).sort((currencyCodeA, currencyCodeB) => {
+		if (currencyCodeA === selectedCurrencyCode) {
+			return 1;
+		}
+		if (currencyCodeB === selectedCurrencyCode) {
+			return -1;
+		}
+		return 0;
+	});
+	const currencies = useFormattedCurrencies(allCurrencyCodes);
+	const defaultValues: Partial<Form> = {
+		[selectedCurrencyCode]: aggregatedDebts.reduce(
+			(acc, debt) =>
+				debt.currencyCode === selectedCurrencyCode
+					? acc
+					: {
+							...acc,
+							[debt.currencyCode]: 0,
+					  },
+			{},
+		),
+	};
+	const addMutations = allCurrencyCodes.map(() =>
+		trpc.debts.add.useMutation(
+			// eslint-disable-next-line react-hooks/rules-of-hooks
+			useTrpcMutationOptions(debtsAddOptions),
+		),
+	);
+	const form = useAppForm({
+		defaultValues: defaultValues as Form,
+		validators: { onChange: formSchema },
+		onSubmit: ({ value }) => {
+			allCurrencyCodes.forEach((currencyCode, index) => {
+				const debt = getDebt(
+					currencyCode,
+					selectedCurrencyCode,
+					aggregatedDebts,
+					value[selectedCurrencyCode] ?? {},
+					currencies,
+				);
+				// `addMutations` is mapped from `allCurrencyCodes`
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				return addMutations[index]!.mutate({
+					note: debt.note,
+					currencyCode,
+					userId,
+					amount: debt.amount,
+					timestamp: new Date(Date.now() + index),
+				});
 			});
 		},
-		[form, selectedCurrencyCode],
+	});
+	const selectedRates = useStore(
+		form.store,
+		(store) => store.values[selectedCurrencyCode],
 	);
+	const fieldMeta = useStore(form.store, (store) => store.fieldMeta);
 	const ratesQuery = trpc.currency.rates.useQuery({
 		from: selectedCurrencyCode,
-		to: debts
+		to: aggregatedDebts
 			.map((debt) => debt.currencyCode)
 			.filter((code) => code !== selectedCurrencyCode),
 	});
@@ -243,17 +184,24 @@ export const PlannedDebts: React.FC<Props> = ({
 		if (ratesQuery.status !== "success") {
 			return;
 		}
-		fillRatesData(ratesQuery.data);
-	}, [ratesQuery.status, ratesQuery.data, fillRatesData]);
+		entries(ratesQuery.data).forEach(([key, value]) => {
+			if (!selectedRates?.[key]) {
+				if (!fieldMeta[`${selectedCurrencyCode}.${key}`]?.isBlurred) {
+					form.setFieldValue(`${selectedCurrencyCode}.${key}`, value);
+				}
+			}
+		});
+	}, [
+		ratesQuery.status,
+		ratesQuery.data,
+		selectedRates,
+		form,
+		fieldMeta,
+		selectedCurrencyCode,
+	]);
 	const retryButton = React.useMemo(
 		() => ({ text: "Refetch rates", onPress: () => ratesQuery.refetch() }),
 		[ratesQuery],
-	);
-	const addMutations = debts.map(() =>
-		trpc.debts.add.useMutation(
-			// eslint-disable-next-line react-hooks/rules-of-hooks
-			useTrpcMutationOptions(debtsAddOptions),
-		),
 	);
 	const isEveryMutationSuccessful = addMutations.every(
 		(mutation) => mutation.status === "success",
@@ -263,64 +211,94 @@ export const PlannedDebts: React.FC<Props> = ({
 			onDone();
 		}
 	}, [isEveryMutationSuccessful, onDone]);
-	const addAll = React.useCallback(
-		() =>
-			debts.map((debt, index) =>
-				// `debts` is mapped from `addMutations`
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-				addMutations[index]!.mutate({
-					note: debt.note,
-					currencyCode: debt.currencyCode,
-					userId,
-					amount: debt.amount,
-					timestamp: new Date(Date.now() + index),
-				}),
-			),
-		[addMutations, debts, userId],
-	);
-	const invalidConvertedDebts = convertedDebts.filter(
-		(debt) =>
-			debt.sum === 0 || Number.isNaN(debt.sum) || !Number.isFinite(debt.sum),
-	);
 	const mutationPending = addMutations.some((mutation) => mutation.isPending);
 	const mutationError = addMutations
 		.map((mutation) => mutation.error)
 		.find(isNonNullish);
 
 	return (
-		<>
-			{ratesQuery.error ? (
-				<ErrorMessage message={ratesQuery.error.message} button={retryButton} />
-			) : null}
-			{debts.map((debt) => (
-				<PlannedDebt
-					key={debt.currencyCode}
-					selectedCurrencyCode={selectedCurrencyCode}
-					form={form}
-					ratesLoading={ratesQuery.isLoading}
-					currencyCode={debt.currencyCode}
-					amount={debt.amount}
-					note={debt.note}
-				/>
-			))}
-			<Button
-				onPress={addAll}
-				isDisabled={
-					mutationPending ||
-					ratesQuery.isLoading ||
-					invalidConvertedDebts.length !== 0
-				}
-				isLoading={mutationPending || ratesQuery.isLoading}
-				color={mutationError ? "danger" : "primary"}
-			>
-				{mutationError
-					? mutationError.message
-					: invalidConvertedDebts.length !== 0
-					? `${invalidConvertedDebts
-							.map((debt) => debt.currencyCode)
-							.join(", ")} debt(s) are invalid`
-					: "Send debts"}
-			</Button>
-		</>
+		<form.AppForm>
+			<form.Form className="flex flex-col gap-4">
+				{ratesQuery.error ? (
+					<ErrorMessage
+						message={ratesQuery.error.message}
+						button={retryButton}
+					/>
+				) : null}
+				{allCurrencyCodes.map((currencyCode) => {
+					const selected = selectedCurrencyCode === currencyCode;
+					const debt = getDebt(
+						currencyCode,
+						selectedCurrencyCode,
+						aggregatedDebts,
+						selectedRates,
+						currencies,
+					);
+					const note = (
+						<>{ratesQuery.isLoading && !selected ? <Spinner /> : debt.note}</>
+					);
+					return (
+						<View className="gap-1" key={currencyCode}>
+							<View className="flex-row gap-4">
+								<Text
+									className={`flex-1 self-center ${
+										debt.amount >= 0 ? "text-success" : "text-danger"
+									}`}
+								>
+									{selected && ratesQuery.isLoading ? (
+										<Spinner />
+									) : (
+										`${round(debt.amount)} ${getMatchedCurrencySymbol(
+											currencies,
+											currencyCode,
+										)}`
+									)}
+								</Text>
+								<View className="flex-1">
+									{selected ? null : (
+										<form.AppField
+											// Reload input on selected currency code change, otherwise
+											// the hook will run `register` method which will propagate current value
+											key={selectedCurrencyCode}
+											name={`${selectedCurrencyCode}.${currencyCode}`}
+										>
+											{(field) => (
+												<field.NumberField
+													value={field.state.value}
+													onValueChange={field.setValue}
+													name={field.name}
+													onBlur={field.handleBlur}
+													fieldError={field.state.meta.errors}
+													min="0"
+													step={10 ** -currencyRateSchemaDecimal}
+													aria-label={currencyCode}
+													isRequired
+												/>
+											)}
+										</form.AppField>
+									)}
+								</View>
+								<View className="flex-1 justify-center max-md:hidden">
+									{note}
+								</View>
+							</View>
+							<View className="md:hidden">{note}</View>
+						</View>
+					);
+				})}
+				<form.Subscribe selector={(state) => state.canSubmit}>
+					{(canSubmit) => (
+						<Button
+							isDisabled={!canSubmit || mutationPending || ratesQuery.isLoading}
+							isLoading={mutationPending || ratesQuery.isLoading}
+							color={mutationError ? "danger" : "primary"}
+							type="submit"
+						>
+							{mutationError ? mutationError.message : "Send debts"}
+						</Button>
+					)}
+				</form.Subscribe>
+			</form.Form>
+		</form.AppForm>
 	);
 };

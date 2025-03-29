@@ -1,11 +1,5 @@
 import React from "react";
 
-import {
-	Controller,
-	type Path,
-	type PathValue,
-	type UseFormReturn,
-} from "react-hook-form";
 import type { z } from "zod";
 
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
@@ -15,25 +9,26 @@ import type { CurrencyCode } from "~app/utils/currency";
 import type { currencyCodeSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { Input } from "~components/input";
+import {
+	type MutationOrMutations,
+	useMutationLoading,
+} from "~components/utils";
 
-type MinimalForm = {
-	currencyCode: z.infer<typeof currencyCodeSchema>;
-};
-
-type Props<T extends MinimalForm> = {
-	form: UseFormReturn<T>;
-	isLoading: boolean;
+type Props = {
+	mutation?: MutationOrMutations;
 	topQueryOptions: React.ComponentProps<
 		typeof CurrenciesPicker
 	>["topQueryOptions"];
+	value: CurrencyCode | undefined;
+	onValueChange: (currencyCode: CurrencyCode) => void;
 };
 
-export const CurrencyInput = <T extends MinimalForm>({
-	form,
-	isLoading,
+export const CurrencyInput: React.FC<Props> = ({
+	mutation,
 	topQueryOptions,
-}: Props<T>) => {
-	const typedPath = "currencyCode" as Path<T> & "currencyCode";
+	value,
+	onValueChange,
+}) => {
 	const [
 		modalOpen,
 		{ switchValue: switchModalOpen, setFalse: closeModal, setTrue: openModal },
@@ -42,21 +37,17 @@ export const CurrencyInput = <T extends MinimalForm>({
 	const onCurrencyChange = React.useCallback(
 		(nextCurrencyCode: z.infer<typeof currencyCodeSchema>) => {
 			closeModal();
-			form.setValue(typedPath, nextCurrencyCode as PathValue<T, Path<T>>, {
-				shouldValidate: true,
-			});
+			onValueChange(nextCurrencyCode);
 		},
-		[form, closeModal],
+		[closeModal, onValueChange],
 	);
-
-	const selectedCurrencyCode = form.watch(typedPath);
 
 	const onLoad = React.useCallback(
 		(
 			currencyCodes: z.infer<typeof currencyCodeSchema>[],
 			topCurrencyCodes: CurrencyCode[],
 		) => {
-			if (!selectedCurrencyCode) {
+			if (!value) {
 				const matchedTopCurrencyCode = topCurrencyCodes
 					.map((topCurrencyCode) =>
 						currencyCodes.find(
@@ -71,46 +62,40 @@ export const CurrencyInput = <T extends MinimalForm>({
 				}
 			}
 		},
-		[onCurrencyChange, selectedCurrencyCode],
+		[onCurrencyChange, value],
 	);
 
-	const formattedCurrency = useFormattedCurrency(selectedCurrencyCode);
+	const formattedCurrency = useFormattedCurrency(value ?? "");
+	const isMutationLoading = useMutationLoading({ mutation });
 
 	return (
 		<>
-			{selectedCurrencyCode ? (
-				<Controller
-					name={typedPath}
-					control={form.control}
-					render={({ field }) => (
-						<Input
-							{...field}
-							value={
-								formattedCurrency.code === formattedCurrency.name
-									? formattedCurrency.code
-									: `${formattedCurrency.name} (${formattedCurrency.code})`
-							}
-							label="Currency"
-							name="currency"
-							isDisabled={isLoading}
-							isReadOnly
-							onClick={openModal}
-							className={isLoading ? undefined : "cursor-pointer"}
-						/>
-					)}
+			{value ? (
+				<Input
+					value={
+						formattedCurrency.code === formattedCurrency.name
+							? formattedCurrency.code
+							: `${formattedCurrency.name} (${formattedCurrency.code})`
+					}
+					onChange={(e) => onValueChange(e.currentTarget.value)}
+					label="Currency"
+					name="currency"
+					mutation={mutation}
+					isReadOnly
+					onClick={openModal}
 				/>
 			) : (
 				<Button
 					color="primary"
 					onPress={openModal}
-					isDisabled={isLoading}
+					isDisabled={isMutationLoading}
 					className="self-end"
 				>
 					Pick currency
 				</Button>
 			)}
 			<CurrenciesPicker
-				selectedCurrencyCode={selectedCurrencyCode}
+				selectedCurrencyCode={value}
 				onChange={onCurrencyChange}
 				modalOpen={modalOpen}
 				switchModalOpen={switchModalOpen}

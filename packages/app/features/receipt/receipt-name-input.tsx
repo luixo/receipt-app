@@ -1,11 +1,12 @@
-import React from "react";
+import type React from "react";
 
-import { useSingleInput } from "~app/hooks/use-single-input";
+import { z } from "zod";
+
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
+import { useAppForm } from "~app/utils/forms";
 import { receiptNameSchema } from "~app/utils/validation";
-import { Input } from "~components/input";
 import { options as receiptsUpdateOptions } from "~mutations/receipts/update";
 
 type Props = {
@@ -19,49 +20,49 @@ export const ReceiptNameInput: React.FC<Props> = ({
 	isLoading,
 	unsetEditing,
 }) => {
-	const {
-		bindings,
-		state: inputState,
-		getValue,
-		setValue,
-	} = useSingleInput({
-		initialValue: receipt.name,
-		schema: receiptNameSchema,
-	});
-
 	const updateReceiptMutation = trpc.receipts.update.useMutation(
 		useTrpcMutationOptions(receiptsUpdateOptions, {
 			onSuccess: unsetEditing,
 		}),
 	);
-	const saveName = React.useCallback(
-		(nextName: string) => {
-			if (receipt.name === nextName) {
+	const form = useAppForm({
+		defaultValues: { value: receipt.name },
+		validators: { onChange: z.object({ value: receiptNameSchema }) },
+		onSubmit: ({ value }) => {
+			if (value.value === receipt.name) {
 				unsetEditing();
 				return;
 			}
-			updateReceiptMutation.mutate(
-				{ id: receipt.id, update: { type: "name", name: nextName } },
-				{ onSuccess: () => setValue(nextName) },
-			);
+			updateReceiptMutation.mutate({
+				id: receipt.id,
+				update: { type: "name", name: value.value },
+			});
 		},
-		[updateReceiptMutation, receipt.id, receipt.name, setValue, unsetEditing],
-	);
+	});
 
 	return (
-		<Input
-			{...bindings}
-			aria-label="Receipt name"
-			mutation={updateReceiptMutation}
-			labelPlacement="outside-left"
-			className="basis-36"
-			isDisabled={isLoading}
-			isReadOnly={receipt.ownerUserId !== receipt.selfUserId}
-			fieldError={inputState.error}
-			saveProps={{
-				title: "Save receipt name",
-				onPress: () => saveName(getValue()),
-			}}
-		/>
+		<form.AppField name="value">
+			{(field) => (
+				<field.TextField
+					value={field.state.value}
+					onValueChange={field.setValue}
+					name={field.name}
+					onBlur={field.handleBlur}
+					fieldError={field.state.meta.errors}
+					aria-label="Receipt name"
+					mutation={updateReceiptMutation}
+					labelPlacement="outside-left"
+					className="basis-36"
+					isDisabled={isLoading}
+					isReadOnly={receipt.ownerUserId !== receipt.selfUserId}
+					saveProps={{
+						title: "Save receipt name",
+						onPress: () => {
+							void field.form.handleSubmit();
+						},
+					}}
+				/>
+			)}
+		</form.AppField>
 	);
 };

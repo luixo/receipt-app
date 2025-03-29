@@ -1,18 +1,15 @@
 import { update as updateAccount } from "../cache/account";
 import type { UseContextedMutationOptions } from "../context";
 
-export const options: UseContextedMutationOptions<
-	"auth.register",
-	{ name: string }
-> = {
+export const options: UseContextedMutationOptions<"auth.register"> = {
 	onSuccess:
-		(controllerContext, { name }) =>
+		(controllerContext) =>
 		async ({ account }, variables) => {
 			await controllerContext.trpcUtils.invalidate();
 			updateAccount(controllerContext, {
 				get: (controller) =>
 					controller.upsert({
-						user: { name },
+						user: { name: variables.name },
 						account: {
 							id: account.id,
 							email: variables.email,
