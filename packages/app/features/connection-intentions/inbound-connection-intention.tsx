@@ -3,6 +3,7 @@ import { View } from "react-native";
 
 import { skipToken } from "@tanstack/react-query";
 
+import { LoadableUser } from "~app/components/app/loadable-user";
 import { UsersSuggest } from "~app/components/app/users-suggest";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
@@ -55,7 +56,11 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 				onUserClick={setUserId}
 				options={React.useMemo(() => ({ type: "not-connected" }), [])}
 				closeOnSelect
-			/>
+			>
+				{userId ? (
+					<LoadableUser id={userId} avatarProps={{ size: "sm" }} />
+				) : null}
+			</UsersSuggest>
 			<Button
 				color="primary"
 				isDisabled={!userId || isLoading}

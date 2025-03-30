@@ -22,7 +22,12 @@ import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { Button } from "~components/button";
 import { Divider } from "~components/divider";
-import { AddIcon, ExchangeIcon, PencilIcon } from "~components/icons";
+import {
+	AddIcon,
+	ExchangeIcon,
+	PencilIcon,
+	TransferIcon,
+} from "~components/icons";
 import { Link } from "~components/link";
 import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
 import { Text } from "~components/text";
@@ -53,6 +58,16 @@ const Header: React.FC<HeaderProps> = ({ title, userId, onEditClick }) => (
 						<PencilIcon size={32} />
 					</Button>
 				) : null}
+				<Button
+					href={`/debts/transfer/?from=${userId}`}
+					as={Link}
+					color="primary"
+					title="Transfer debts"
+					variant="bordered"
+					isIconOnly
+				>
+					<TransferIcon size={24} />
+				</Button>
 				<Button
 					color="primary"
 					href={`/debts/add?userId=${userId}`}

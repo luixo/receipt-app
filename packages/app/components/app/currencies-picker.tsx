@@ -17,6 +17,7 @@ type LoaderProps = {
 	selectedCurrencyCode?: CurrencyCode;
 	onChange: (nextCurrencyCode: CurrencyCode) => void;
 	topQueryOptions: TRPCQueryInput<"currency.top">["options"];
+	hiddenCurrencies?: CurrencyCode[];
 };
 
 const CurrenciesPickerLoader: React.FC<LoaderProps> = ({
@@ -24,16 +25,28 @@ const CurrenciesPickerLoader: React.FC<LoaderProps> = ({
 	selectedCurrencyCode,
 	onChange,
 	topQueryOptions,
+	hiddenCurrencies = [],
 }) => {
 	const topCurrenciesQuery = trpc.currency.top.useQuery({
 		options: topQueryOptions,
 	});
-	const topCurrencyCodes =
-		topCurrenciesQuery.status === "success"
-			? topCurrenciesQuery.data.map(({ currencyCode }) => currencyCode)
-			: undefined;
+	const topCurrencyCodes = React.useMemo(() => {
+		if (!topCurrenciesQuery.data) {
+			return;
+		}
+		return topCurrenciesQuery.data
+			.map(({ currencyCode }) => currencyCode)
+			.filter((code) => !hiddenCurrencies.includes(code));
+	}, [hiddenCurrencies, topCurrenciesQuery.data]);
 	const cutIndex = topCurrencyCodes ? topCurrencyCodes.length : 0;
-	const codes = query.data ? query.data.map(({ code }) => code) : undefined;
+	const codes = React.useMemo(() => {
+		if (!query.data) {
+			return;
+		}
+		return query.data
+			.map(({ code }) => code)
+			.filter((code) => !hiddenCurrencies.includes(code));
+	}, [hiddenCurrencies, query.data]);
 	const formattedCurrencies = useFormattedCurrencies(
 		topCurrencyCodes
 			? codes

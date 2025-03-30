@@ -35,7 +35,7 @@ export const PageHeader: React.FC<Props> = ({
 	<>
 		<PageTitle>{title || children?.toString()}</PageTitle>
 		<View className="flex-row flex-wrap justify-between gap-4">
-			<View className="flex-row items-center gap-4" {...props}>
+			<View className="flex-1 flex-row items-center gap-4" {...props}>
 				{backHref ? (
 					<Link href={backHref} viewProps={{ testID: "back-link" }}>
 						<BackArrow size={36} />

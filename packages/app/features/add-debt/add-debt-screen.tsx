@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "solito/navigation";
 import { z } from "zod";
 
 import { CurrencyInput } from "~app/components/app/currency-input";
+import { LoadableUser } from "~app/components/app/loadable-user";
 import {
 	type Direction,
 	SignButtonGroup,
@@ -131,7 +132,14 @@ export const AddDebtScreen: AppPage = () => {
 								isDisabled={addMutation.isPending}
 								onUserClick={field.setValue}
 								closeOnSelect
-							/>
+							>
+								{field.state.value ? (
+									<LoadableUser
+										id={field.state.value}
+										avatarProps={{ size: "sm" }}
+									/>
+								) : null}
+							</UsersSuggest>
 						)}
 					</form.AppField>
 					<form.AppField name="timestamp">

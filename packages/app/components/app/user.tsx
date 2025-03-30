@@ -28,6 +28,13 @@ export const SkeletonUser: React.FC<
 		showFallback: true,
 		fallback: <Skeleton className="size-full" />,
 		classNames: { fallback: "size-full" },
+		size: rawAvatarProps?.size
+			? rawAvatarProps.size === "xs"
+				? "sm"
+				: rawAvatarProps.size
+			: chip
+			? "sm"
+			: undefined,
 	};
 	if (onlyAvatar) {
 		return <Avatar {...avatarProps} />;
@@ -37,7 +44,7 @@ export const SkeletonUser: React.FC<
 			<Chip
 				data-testid="user-chip-skeleton"
 				className={wrapper({ className })}
-				avatar={<Avatar size="sm" {...avatarProps} />}
+				avatar={<Avatar {...avatarProps} />}
 				onClick={props.onClick}
 				{...(typeof chip === "boolean" ? {} : chip)}
 			>
@@ -63,7 +70,18 @@ export type Props = {
 	connectedAccount?: TRPCQueryOutput<"users.get">["connectedAccount"];
 	chip?: boolean | React.ComponentProps<typeof Chip>;
 	onlyAvatar?: boolean;
-} & Omit<React.ComponentProps<typeof RawUser>, "name" | "description"> &
+	avatarProps?: Omit<
+		NonNullable<React.ComponentProps<typeof RawUser>["avatarProps"]>,
+		"size"
+	> & {
+		size:
+			| NonNullable<React.ComponentProps<typeof RawUser>["avatarProps"]>["size"]
+			| "xs";
+	};
+} & Omit<
+	React.ComponentProps<typeof RawUser>,
+	"name" | "description" | "avatarProps"
+> &
 	Pick<React.ComponentProps<typeof UserAvatar>, "dimmed">;
 
 export const User = React.forwardRef<HTMLDivElement, Props>(

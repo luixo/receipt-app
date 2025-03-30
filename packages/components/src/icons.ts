@@ -17,6 +17,7 @@ export {
 	MdOutlineAdminPanelSettings as AdminIcon,
 	MdKey as KeyIcon,
 	MdOutlineAttachMoney as MoneyIcon,
+	MdLowPriority as TransferIcon,
 } from "react-icons/md";
 export {
 	BsReceipt as ReceiptsIcon,

@@ -35,6 +35,9 @@ type Props = {
 	additionalIds?: UsersId[];
 	options?: TRPCQueryInput<"users.suggest">["options"];
 	closeOnSelect?: boolean;
+	children?: React.ReactNode;
+	wrapperProps?: React.ComponentProps<typeof View>;
+	setUserNameToInput?: boolean;
 } & Omit<
 	React.ComponentProps<typeof Autocomplete>,
 	"items" | "defaultItems" | "children"
@@ -50,6 +53,9 @@ export const UsersSuggest: React.FC<Props> = ({
 	onUserClick,
 	closeOnSelect,
 	additionalIds,
+	children,
+	wrapperProps,
+	setUserNameToInput,
 	...props
 }) => {
 	const inputRef = React.useRef<HTMLInputElement>(null);
@@ -61,6 +67,7 @@ export const UsersSuggest: React.FC<Props> = ({
 		: selected
 		? [selected]
 		: [];
+	const [initialUserIds] = React.useState(() => selectedUserIds);
 	const filterIds = [...(outerFilterIds || []), ...selectedUserIds];
 	const topQuery = trpc.users.suggestTop.useQuery(
 		{ limit: topLimit, options, filterIds },
@@ -117,6 +124,32 @@ export const UsersSuggest: React.FC<Props> = ({
 	const [addUserOpen, { setFalse: closeAddUser, setTrue: openAddUser }] =
 		useBooleanState();
 
+	const trpcUtils = trpc.useUtils();
+	const setUserNameById = React.useCallback(
+		(id: UsersId) => {
+			const userData = trpcUtils.users.get.getData({ id });
+			if (!userData) {
+				return;
+			}
+			setValue(userData.name);
+		},
+		[trpcUtils],
+	);
+	React.useEffect(() => {
+		const firstUser = initialUserIds[0];
+		if (firstUser) {
+			setUserNameById(firstUser);
+		}
+	}, [setUserNameById, initialUserIds]);
+	const selectUser = React.useCallback(
+		(userId: UsersId) => {
+			onUserClick(userId);
+			if (setUserNameToInput) {
+				setUserNameById(userId);
+			}
+		},
+		[onUserClick, setUserNameById, setUserNameToInput],
+	);
 	const onSelectionChange = React.useCallback(
 		(key: string | number | null) => {
 			if (key === null || typeof key === "number") {
@@ -127,14 +160,14 @@ export const UsersSuggest: React.FC<Props> = ({
 				return;
 			}
 			if (additionalIds?.includes(key)) {
-				onUserClick(key);
+				selectUser(key);
 				return;
 			}
 			const matchedUser =
 				filteredTopFetchedUserIds.find((userId) => userId === key) ||
 				fetchedUserIds.find((userId) => userId === key);
 			if (matchedUser) {
-				onUserClick(matchedUser);
+				selectUser(matchedUser);
 			}
 		},
 		[
@@ -142,7 +175,7 @@ export const UsersSuggest: React.FC<Props> = ({
 			filteredTopFetchedUserIds,
 			fetchedUserIds,
 			openAddUser,
-			onUserClick,
+			selectUser,
 		],
 	);
 
@@ -220,18 +253,8 @@ export const UsersSuggest: React.FC<Props> = ({
 	].filter(isNonNull);
 
 	return (
-		<View className="gap-4">
-			{selectedUserIds.length === 0 ? null : (
-				<View className="flex-row flex-wrap gap-4">
-					{selectedUserIds.map((userId) => (
-						<LoadableUser
-							key={userId}
-							id={userId}
-							avatarProps={{ size: "sm" }}
-						/>
-					))}
-				</View>
-			)}
+		<View className="items-start gap-4" {...wrapperProps}>
+			{children}
 			<Autocomplete
 				ref={inputRef}
 				inputValue={value}
@@ -273,7 +296,7 @@ export const UsersSuggest: React.FC<Props> = ({
 				onOpenChange={closeAddUser}
 				initialValue={value}
 				onSuccess={({ id }) => {
-					onUserClick(id);
+					selectUser(id);
 					setValue("");
 					closeAddUser();
 				}}

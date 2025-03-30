@@ -6,7 +6,7 @@ import { useDebtsIntentions } from "~app/hooks/use-debts-intentions";
 import { trpc } from "~app/trpc";
 import { Badge } from "~components/badge";
 import { Button } from "~components/button";
-import { AddIcon, DebtIcon, InboxIcon } from "~components/icons";
+import { AddIcon, DebtIcon, InboxIcon, TransferIcon } from "~components/icons";
 import { Link } from "~components/link";
 import type { AppPage } from "~utils/next";
 
@@ -38,6 +38,16 @@ export const DebtsScreen: AppPage = () => {
 				startContent={<DebtIcon size={36} />}
 				aside={
 					<>
+						<Button
+							href="/debts/transfer"
+							as={Link}
+							color="primary"
+							title="Transfer debts"
+							variant="bordered"
+							isIconOnly
+						>
+							<TransferIcon size={24} />
+						</Button>
 						<Button
 							href="/debts/add"
 							as={Link}

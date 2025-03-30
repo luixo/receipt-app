@@ -54,7 +54,7 @@ export const Input = React.forwardRef<
 				ref={ref}
 				{...props}
 				isDisabled={isMutationLoading || props.isDisabled}
-				color={isWarning ? "warning" : isError ? "danger" : undefined}
+				color={isWarning ? "warning" : isError ? "danger" : props.color}
 				description={errors.join("\n")}
 				classNames={{
 					base: input({ className }),

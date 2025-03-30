@@ -9,11 +9,17 @@ import { tv } from "~components/utils";
 import type { UsersId } from "~db/models";
 import { hslToRgb } from "~utils/color";
 
+// eslint-disable-next-line tailwindcss/enforces-shorthand
 const wrapper = tv({
 	base: "shrink-0 bg-transparent",
 	variants: {
 		dimmed: {
 			true: "grayscale",
+		},
+		size: {
+			// This is used because we don't merge with original classname
+			// hence original width and height override `size-5`
+			xs: "h-5 w-5",
 		},
 	},
 });
@@ -82,6 +88,7 @@ export const useUserAvatarProps = ({
 			...classNames,
 			base: wrapper({
 				className: [className, classNames?.base],
+				size: props.size === "xs" ? props.size : undefined,
 				dimmed,
 			}),
 		},
