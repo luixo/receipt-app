@@ -8,6 +8,7 @@ import { z } from "zod";
 import { ErrorMessage } from "~app/components/error-message";
 import { useFormattedCurrencies } from "~app/hooks/use-formatted-currency";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
+import { useTrpcMutationStates } from "~app/hooks/use-trpc-mutation-state";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import { useAppForm } from "~app/utils/forms";
@@ -139,36 +140,42 @@ export const PlannedDebts: React.FC<Props> = ({
 			{},
 		),
 	};
-	const addMutations = allCurrencyCodes.map(() =>
-		trpc.debts.add.useMutation(
-			// eslint-disable-next-line react-hooks/rules-of-hooks
-			useTrpcMutationOptions(debtsAddOptions),
-		),
+	const addMutation = trpc.debts.add.useMutation(
+		useTrpcMutationOptions(debtsAddOptions),
 	);
+	const [lastMutationTimestamps, setLastMutationTimestamps] = React.useState<
+		number[]
+	>([]);
 	const form = useAppForm({
 		defaultValues: defaultValues as Form,
 		validators: { onChange: formSchema },
 		onSubmit: ({ value }) => {
-			allCurrencyCodes.forEach((currencyCode, index) => {
-				const debt = getDebt(
-					currencyCode,
-					selectedCurrencyCode,
-					aggregatedDebts,
-					value[selectedCurrencyCode] ?? {},
-					currencies,
-				);
-				// `addMutations` is mapped from `allCurrencyCodes`
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-				return addMutations[index]!.mutate({
-					note: debt.note,
-					currencyCode,
-					userId,
-					amount: debt.amount,
-					timestamp: new Date(Date.now() + index),
-				});
-			});
+			setLastMutationTimestamps(
+				allCurrencyCodes.reduce<number[]>((acc, currencyCode, index) => {
+					const debt = getDebt(
+						currencyCode,
+						selectedCurrencyCode,
+						aggregatedDebts,
+						value[selectedCurrencyCode] ?? {},
+						currencies,
+					);
+					const timestamp = new Date(Date.now() + index);
+					addMutation.mutate({
+						note: debt.note,
+						currencyCode,
+						userId,
+						amount: debt.amount,
+						timestamp,
+					});
+					return [...acc, timestamp.valueOf()];
+				}, []),
+			);
 		},
 	});
+	const lastMutationStates = useTrpcMutationStates<"debts.add">(
+		trpc.debts.add,
+		(vars) => lastMutationTimestamps.includes(vars.timestamp?.valueOf() ?? 0),
+	);
 	const selectedRates = useStore(
 		form.store,
 		(store) => store.values[selectedCurrencyCode],
@@ -203,16 +210,18 @@ export const PlannedDebts: React.FC<Props> = ({
 		() => ({ text: "Refetch rates", onPress: () => ratesQuery.refetch() }),
 		[ratesQuery],
 	);
-	const isEveryMutationSuccessful = addMutations.every(
-		(mutation) => mutation.status === "success",
-	);
+	const isEveryMutationSuccessful =
+		lastMutationStates.length !== 0 &&
+		lastMutationStates.every((mutation) => mutation.status === "success");
 	React.useEffect(() => {
 		if (isEveryMutationSuccessful) {
 			onDone();
 		}
 	}, [isEveryMutationSuccessful, onDone]);
-	const mutationPending = addMutations.some((mutation) => mutation.isPending);
-	const mutationError = addMutations
+	const mutationPending = lastMutationStates.some(
+		(mutation) => mutation.status === "pending",
+	);
+	const mutationError = lastMutationStates
 		.map((mutation) => mutation.error)
 		.find(isNonNullish);
 
