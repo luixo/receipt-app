@@ -7,7 +7,7 @@ import { EyeIcon, EyeSlashIcon } from "~components/icons";
 import { SaveButton } from "~components/save-button";
 
 import { Button } from "./button";
-import type { FieldError, MutationOrMutations } from "./utils";
+import type { FieldError, MutationsProp } from "./utils";
 import { cn, tv, useErrorState, useMutationLoading } from "./utils";
 
 const input = tv({});
@@ -17,7 +17,7 @@ type Props = Omit<
 	"ref"
 > & {
 	fieldError?: FieldError;
-	mutation?: MutationOrMutations;
+	mutation?: MutationsProp;
 	saveProps?: React.ComponentProps<typeof SaveButton>;
 	multiline?: boolean;
 };

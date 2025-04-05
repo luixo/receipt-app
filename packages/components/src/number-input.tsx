@@ -4,7 +4,7 @@ import { View } from "react-native";
 import { NumberInput as NumberInputRaw } from "@heroui/number-input";
 
 import { SaveButton } from "~components/save-button";
-import type { FieldError, MutationOrMutations } from "~components/utils";
+import type { FieldError, MutationsProp } from "~components/utils";
 import { cn, useErrorState, useMutationLoading } from "~components/utils";
 
 type Props = Omit<
@@ -12,7 +12,7 @@ type Props = Omit<
 	"errorMessage"
 > & {
 	fieldError?: FieldError;
-	mutation?: MutationOrMutations;
+	mutation?: MutationsProp;
 	errorMessage?: React.ReactNode;
 	saveProps?: React.ComponentProps<typeof SaveButton>;
 };

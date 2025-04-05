@@ -5,13 +5,13 @@ import { useSsrFormat } from "~app/hooks/use-ssr-format";
 import { Calendar } from "~components/calendar";
 import { Input } from "~components/input";
 import { Spinner } from "~components/spinner";
-import type { MutationOrMutations } from "~components/utils";
+import type { MutationsProp } from "~components/utils";
 import { useMutationLoading } from "~components/utils";
 
 type Props = {
 	value: Date | undefined;
 	onValueChange: (date: Date) => void;
-	mutation?: MutationOrMutations;
+	mutation?: MutationsProp;
 	label?: string;
 } & Omit<React.ComponentProps<typeof Input>, "value" | "onValueChange">;
 

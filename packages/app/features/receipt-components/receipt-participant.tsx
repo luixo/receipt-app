@@ -1,6 +1,8 @@
 import React from "react";
 import { View } from "react-native";
 
+import { z } from "zod";
+
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { PartButtons } from "~app/components/app/part-buttons";
 import { RemoveButton } from "~app/components/remove-button";
@@ -8,6 +10,8 @@ import { useDecimals, useRoundParts } from "~app/hooks/use-decimals";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import { trpc } from "~app/trpc";
+import { useAppForm } from "~app/utils/forms";
+import { partSchema } from "~app/utils/validation";
 import { Accordion, AccordionItem } from "~components/accordion";
 import { Button } from "~components/button";
 import { Divider } from "~components/divider";
@@ -102,6 +106,19 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 	const { fromSubunitToUnit } = useDecimals();
 	const userQuery = trpc.users.get.useQuery({ id: participant.userId });
 
+	const currentPart = participant.payPart ?? 0;
+	const form = useAppForm({
+		defaultValues: { value: currentPart },
+		validators: { onChange: z.object({ value: partSchema.or(z.literal(0)) }) },
+		onSubmit: ({ value }) => {
+			if (value.value === 0) {
+				removePayer(participant.userId);
+			} else {
+				updatePayerPart(participant.userId, value.value);
+			}
+		},
+	});
+
 	const removeParticipantMutationState =
 		useTrpcMutationState<"receiptParticipants.remove">(
 			trpc.receiptParticipants.remove,
@@ -111,11 +128,12 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 	const isPending = removeParticipantMutationState?.status === "pending";
 	const removeReceiptParticipant = React.useCallback(() => {
 		removeParticipant(participant.userId);
-	}, [participant.userId, removeParticipant]);
-	const currentPart = participant.payPart ?? 0;
+		form.setFieldValue("value", 0);
+	}, [form, participant.userId, removeParticipant]);
 	const onAddPayer = React.useCallback(() => {
 		addPayer(participant.userId, 1);
-	}, [addPayer, participant.userId]);
+		form.setFieldValue("value", 1);
+	}, [addPayer, form, participant.userId]);
 	const onPartUpdate = React.useCallback(
 		(setStateAction: React.SetStateAction<number>) => {
 			const nextPart = updateSetStateAction(setStateAction, currentPart);
@@ -127,8 +145,9 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 			} else {
 				updatePayerPart(participant.userId, nextPart);
 			}
+			form.setFieldValue("value", nextPart);
 		},
-		[currentPart, participant.userId, removePayer, updatePayerPart],
+		[currentPart, form, participant.userId, removePayer, updatePayerPart],
 	);
 	const addPayerMutationState =
 		useTrpcMutationState<"receiptItemConsumers.add">(
@@ -149,6 +168,7 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 		addPayerMutationState?.status === "pending" ||
 		removePayerMutationState?.status === "pending" ||
 		updatePayerMutationState?.status === "pending";
+
 	const currency = useFormattedCurrency(currencyCode);
 	const disabled = participant.items.length === 0;
 	const sum = fromSubunitToUnit(
@@ -227,11 +247,38 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 										downDisabled={currentPart <= 0}
 										upDisabled={currentPart === totalPayParts}
 									>
-										<Text className="w-10 text-center">
-											{totalPayParts === 1
-												? "All"
-												: `${currentPart} / ${totalPayParts}`}
-										</Text>
+										<form.AppField name="value">
+											{(field) => (
+												<field.NumberField
+													value={field.state.value}
+													onValueChange={field.setValue}
+													name={field.name}
+													onBlur={field.handleBlur}
+													fieldError={field.state.meta.errors}
+													className="w-32"
+													aria-label="Item payer part"
+													mutation={[
+														addPayerMutationState,
+														removePayerMutationState,
+														updatePayerMutationState,
+													]}
+													labelPlacement="outside-left"
+													saveProps={{
+														title: "Save item payer part",
+														onPress: () => {
+															void field.form.handleSubmit();
+														},
+													}}
+													hideStepper
+													endContent={
+														<Text className="self-center">
+															/ {totalPayParts}
+														</Text>
+													}
+													variant="bordered"
+												/>
+											)}
+										</form.AppField>
 									</PartButtons>
 								</>
 							) : (

@@ -9,13 +9,10 @@ import type { CurrencyCode } from "~app/utils/currency";
 import type { currencyCodeSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { Input } from "~components/input";
-import {
-	type MutationOrMutations,
-	useMutationLoading,
-} from "~components/utils";
+import { type MutationsProp, useMutationLoading } from "~components/utils";
 
 type Props = {
-	mutation?: MutationOrMutations;
+	mutation?: MutationsProp;
 	topQueryOptions: React.ComponentProps<
 		typeof CurrenciesPicker
 	>["topQueryOptions"];
