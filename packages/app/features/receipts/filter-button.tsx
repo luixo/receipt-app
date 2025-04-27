@@ -1,7 +1,6 @@
 import React from "react";
 
 import type { Selection } from "@react-types/shared/src/selection";
-import type { Options } from "nuqs";
 
 import type {
 	Filters,
@@ -27,7 +26,6 @@ import { Text } from "~components/text";
 
 type SetWithDefault<T> = (
 	value: null | T | ((prev: T) => T | null),
-	options?: Options,
 ) => Promise<URLSearchParams>;
 type Props = {
 	orderBy: OrderByLiteral;

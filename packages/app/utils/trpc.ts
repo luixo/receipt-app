@@ -13,6 +13,12 @@ import { identity, omitBy } from "remeda";
 import superjson from "superjson";
 
 import type { AppRouter } from "~app/trpc";
+import type { SearchParamsValues } from "~app/utils/navigation";
+import {
+	parseAsBoolean,
+	parseAsInteger,
+	parseAsString,
+} from "~app/utils/navigation";
 import { MINUTE } from "~utils/time";
 
 export const transformer = superjson;
@@ -45,7 +51,6 @@ declare module "@trpc/client" {
 
 export const noBatchContext = { batch: Symbol("no-batch") };
 
-export type SearchParams = Record<string, string | string[] | undefined>;
 export type Headers = Partial<Record<string, string>>;
 
 export type GetLinksOptions = {
@@ -66,8 +71,14 @@ export type GetLinksOptions = {
 		| "unset";
 };
 
+export const linksParams = {
+	debug: parseAsBoolean,
+	proxyPort: parseAsInteger,
+	controllerId: parseAsString,
+};
+
 export const getLinks = (
-	searchParams: SearchParams,
+	params: SearchParamsValues<typeof linksParams>,
 	{
 		url,
 		useBatch,
@@ -80,14 +91,9 @@ export const getLinks = (
 	// we omit to not let stringified "undefined" get passed to the server
 	const headers = omitBy(
 		{
-			"x-debug": searchParams.debug ? "true" : undefined,
-			"x-proxy-port": Number.isNaN(Number(searchParams.proxyPort))
-				? undefined
-				: Number(searchParams.proxyPort).toString(),
-			"x-controller-id":
-				typeof searchParams.controllerId === "string"
-					? searchParams.controllerId
-					: undefined,
+			"x-debug": params.debug ? "true" : undefined,
+			"x-proxy-port": params.proxyPort?.toString(),
+			"x-controller-id": params.controllerId ?? undefined,
 			"x-source": source,
 			...overrideHeaders,
 		},

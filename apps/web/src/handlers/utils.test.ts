@@ -67,7 +67,7 @@ export const getClientServer = async <R extends AnyTRPCRouter>(
 	return {
 		client: createTRPCClient<R>({
 			links: getLinks(
-				{},
+				{ debug: null, proxyPort: null, controllerId: null },
 				{
 					url: `http://localhost:${port}`,
 					source: "test",

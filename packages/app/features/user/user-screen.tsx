@@ -1,23 +1,21 @@
 import React from "react";
 
-import { useParams, useRouter } from "solito/navigation";
-
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { PageHeader } from "~app/components/page-header";
+import { useNavigate } from "~app/hooks/use-navigation";
 import { trpc } from "~app/trpc";
-import type { AppPage } from "~utils/next";
+import type { UsersId } from "~db/models";
 
 import { User } from "./user";
 
-export const UserScreen: AppPage = () => {
-	const router = useRouter();
-	const { id } = useParams<{ id: string }>();
+export const UserScreen: React.FC<{ id: UsersId }> = ({ id }) => {
+	const navigate = useNavigate();
 
 	const userQuery = trpc.users.get.useQuery({ id });
 
 	const onUserRemove = React.useCallback(() => {
-		router.replace("/users");
-	}, [router]);
+		navigate("/users", { replace: true });
+	}, [navigate]);
 
 	return (
 		<>

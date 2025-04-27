@@ -8,8 +8,8 @@ import {
 	SELF_QUERY_CLIENT_KEY,
 	useQueryClientsStore,
 } from "~app/contexts/query-clients-context";
-import { SearchParamsContext } from "~app/contexts/search-params-context";
-import { getLinks, trpcReact } from "~app/utils/trpc";
+import { useQueryStates } from "~app/hooks/use-navigation";
+import { getLinks, linksParams, trpcReact } from "~app/utils/trpc";
 
 type Props = {
 	linksContext: LinksContextType;
@@ -27,7 +27,7 @@ export const QueryProvider: React.FC<React.PropsWithChildren<Props>> = ({
 			(queryClientKey && state.queryClients[queryClientKey]) ||
 			state.queryClients[SELF_QUERY_CLIENT_KEY],
 	);
-	const searchParams = React.useContext(SearchParamsContext);
+	const [searchParams] = useQueryStates(linksParams);
 	const trpcClient = React.useMemo(
 		() =>
 			trpcReact.createClient({

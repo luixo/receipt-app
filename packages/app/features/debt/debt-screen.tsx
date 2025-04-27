@@ -1,6 +1,5 @@
 import React from "react";
 
-import { useParams, useRouter } from "solito/navigation";
 import { z } from "zod";
 
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
@@ -18,6 +17,7 @@ import {
 } from "~app/components/remove-button";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
+import { useNavigate } from "~app/hooks/use-navigation";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput, TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
@@ -30,20 +30,22 @@ import { ReceiptIcon } from "~components/icons";
 import { Input } from "~components/input";
 import { Link } from "~components/link";
 import { Spinner } from "~components/spinner";
-import type { ReceiptsId, UsersId } from "~db/models";
+import type { DebtsId, ReceiptsId, UsersId } from "~db/models";
 import { options as debtsRemoveOptions } from "~mutations/debts/remove";
 import { options as debtsUpdateOptions } from "~mutations/debts/update";
 import { noop } from "~utils/fn";
-import type { AppPage } from "~utils/next";
 
 type Debt = TRPCQueryOutput<"debts.get">;
 
 type HeaderProps = {
-	userId: UsersId;
+	userId?: UsersId;
 } & Omit<Partial<React.ComponentProps<typeof PageHeader>>, "backHref">;
 
 const Header: React.FC<HeaderProps> = ({ userId, ...rest }) => (
-	<PageHeader backHref={`/debts/user/${userId}`} {...rest} />
+	<PageHeader
+		backHref={userId ? `/debts/user/${userId}` : undefined}
+		{...rest}
+	/>
 );
 
 type CurrencyProps = {
@@ -253,14 +255,15 @@ const DebtRemoveButton: React.FC<RemoveButtonProps> = ({
 	setLoading,
 	...props
 }) => {
-	const router = useRouter();
+	const navigate = useNavigate();
 	const removeMutation = trpc.debts.remove.useMutation(
 		useTrpcMutationOptions(debtsRemoveOptions, {
 			context: {
 				debt,
 				areDebtsSynced: debt.their ? areDebtsSynced(debt, debt.their) : false,
 			},
-			onSuccess: () => router.replace(`/debts/user/${debt.userId}`),
+			onSuccess: () =>
+				navigate(`/debts/user/${debt.userId}`, { replace: true }),
 		}),
 	);
 	React.useEffect(
@@ -365,14 +368,13 @@ export const DebtInner: React.FC<InnerProps> = ({ query }) => {
 	);
 };
 
-export const DebtScreen: AppPage = () => {
-	const { id } = useParams<{ id: string }>();
+export const DebtScreen: React.FC<{ id: DebtsId }> = ({ id }) => {
 	const query = trpc.debts.get.useQuery({ id });
 	switch (query.status) {
 		case "pending":
 			return (
 				<>
-					<Header userId={id}>Loading debt ...</Header>
+					<Header>Loading debt ...</Header>
 					<SkeletonUser className="self-start" />
 					<SignButtonGroup disabled isLoading onUpdate={noop} direction="+" />
 					<Input

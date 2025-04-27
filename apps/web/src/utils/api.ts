@@ -4,7 +4,8 @@ import type { NextApiRequest } from "next";
 import { DEFAULT_TRPC_ENDPOINT } from "~app/contexts/links-context";
 import type { AppRouter } from "~app/trpc";
 import { AUTH_COOKIE } from "~app/utils/auth";
-import { getLinks } from "~app/utils/trpc";
+import { createLoader } from "~app/utils/navigation";
+import { getLinks, linksParams } from "~app/utils/trpc";
 import { getCookie } from "~web/utils/cookies";
 import { captureSentryError } from "~web/utils/trpc";
 
@@ -31,9 +32,11 @@ const pickAuthCookie = (req: NextApiRequest) => {
 	return "";
 };
 
+const loadLinksParams = createLoader(linksParams);
+
 export const getTrpcClient = (req: NextApiRequest) =>
 	createTRPCClient<AppRouter>({
-		links: getLinks(req.query, {
+		links: getLinks(loadLinksParams(req.query), {
 			url: getSsrHost(DEFAULT_TRPC_ENDPOINT),
 			headers: {
 				cookie: pickAuthCookie(req),

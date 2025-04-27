@@ -1,7 +1,5 @@
 import React from "react";
 
-import { useRouter } from "solito/navigation";
-
 import { CurrencyInput } from "~app/components/app/currency-input";
 import { DateInput } from "~app/components/date-input";
 import {
@@ -11,6 +9,7 @@ import {
 import { ReceiptItems } from "~app/features/receipt-components/receipt-items";
 import { ReceiptParticipants } from "~app/features/receipt-components/receipt-participants";
 import type { Payer } from "~app/features/receipt-components/state";
+import { useNavigate } from "~app/hooks/use-navigation";
 import { useParticipants } from "~app/hooks/use-participants";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
@@ -29,12 +28,12 @@ type Props = {
 };
 
 export const AddReceipt: React.FC<Props> = ({ selfAccountId }) => {
-	const router = useRouter();
+	const navigate = useNavigate();
 
 	const addReceiptMutation = trpc.receipts.add.useMutation(
 		useTrpcMutationOptions(receiptsAddOptions, {
 			context: { selfAccountId },
-			onSuccess: ({ id }) => router.replace(`/receipts/${id}`),
+			onSuccess: ({ id }) => navigate(`/receipts/${id}`, { replace: true }),
 		}),
 	);
 

@@ -2,7 +2,6 @@ import React from "react";
 import { View } from "react-native";
 
 import { skipToken } from "@tanstack/react-query";
-import { parseAsString, useQueryState } from "nuqs";
 import { entries, groupBy, isNonNullish, pullObject, values } from "remeda";
 import { z } from "zod";
 
@@ -18,6 +17,7 @@ import { ShowResolvedDebtsOption } from "~app/features/settings/show-resolved-de
 import { useAggregatedDebts } from "~app/hooks/use-aggregated-debts";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useFormattedCurrencies } from "~app/hooks/use-formatted-currency";
+import { useQueryState } from "~app/hooks/use-navigation";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { useTrpcMutationStates } from "~app/hooks/use-trpc-mutation-state";
@@ -25,6 +25,7 @@ import type { TRPCQueryOutput, TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import { useAppForm } from "~app/utils/forms";
+import { parseAsString } from "~app/utils/navigation";
 import {
 	currencyCodeSchema,
 	debtAmountSchema,

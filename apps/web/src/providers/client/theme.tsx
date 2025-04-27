@@ -1,12 +1,11 @@
 import React from "react";
 import { useColorScheme } from "react-native";
 
-import { useRouter } from "solito/navigation";
-
 import {
 	useLastColorMode,
 	useSelectedColorMode,
 } from "~app/hooks/use-color-modes";
+import { useHref, useNavigate } from "~app/hooks/use-navigation";
 import { HeroUIProvider } from "~components/utils";
 
 export const ThemeProvider: React.FC<React.PropsWithChildren<object>> = ({
@@ -31,9 +30,14 @@ export const ThemeProvider: React.FC<React.PropsWithChildren<object>> = ({
 		html.classList.add(selectedMode);
 		html.classList.remove(selectedMode === "dark" ? "light" : "dark");
 	}, [selectedMode]);
-	const router = useRouter();
+	const navigate = useNavigate();
+	const href = useHref();
 	return (
-		<HeroUIProvider navigate={router.push} validationBehavior="native">
+		<HeroUIProvider
+			navigate={navigate}
+			useHref={href}
+			validationBehavior="native"
+		>
 			{children}
 		</HeroUIProvider>
 	);

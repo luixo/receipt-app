@@ -2,10 +2,10 @@ import type React from "react";
 import { View } from "react-native";
 
 import Head from "next/head";
-import { Link } from "solito/link";
 
 import { H1 } from "~components/header";
 import { BackArrow } from "~components/icons";
+import { Link } from "~components/link";
 import { Text } from "~components/text";
 
 // add React.memo when https://github.com/vercel/next.js/issues/59655 is resolved
@@ -37,7 +37,7 @@ export const PageHeader: React.FC<Props> = ({
 		<View className="flex-row flex-wrap justify-between gap-4">
 			<View className="flex-1 flex-row items-center gap-4" {...props}>
 				{backHref ? (
-					<Link href={backHref} viewProps={{ testID: "back-link" }}>
+					<Link href={backHref} data-testid="back-link" color="foreground">
 						<BackArrow size={36} />
 					</Link>
 				) : null}

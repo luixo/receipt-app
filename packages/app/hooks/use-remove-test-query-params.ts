@@ -1,13 +1,12 @@
 import * as React from "react";
 
-import { useUpdateSearchParams } from "solito/navigation";
+import { useQueryState } from "~app/hooks/use-navigation";
 
 export const useRemoveTestQueryParams = () => {
-	const updateSearchParams = useUpdateSearchParams();
+	const [, setProxyPort] = useQueryState("proxyPort");
+	const [, setControllerId] = useQueryState("controllerId");
 	React.useEffect(() => {
-		updateSearchParams({
-			proxyPort: undefined,
-			controllerId: undefined,
-		});
-	}, [updateSearchParams]);
+		void setProxyPort(null);
+		void setControllerId(null);
+	}, [setControllerId, setProxyPort]);
 };

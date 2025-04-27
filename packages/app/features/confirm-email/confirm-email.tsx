@@ -1,11 +1,10 @@
 import type React from "react";
 
-import { Link } from "solito/link";
-
 import { ErrorMessage } from "~app/components/error-message";
 import type { TRPCMutationResult } from "~app/trpc";
 import { Button } from "~components/button";
 import { Header } from "~components/header";
+import { Link } from "~components/link";
 import { Spinner } from "~components/spinner";
 
 type Props = {

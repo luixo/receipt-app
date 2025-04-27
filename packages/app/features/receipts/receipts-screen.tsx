@@ -1,13 +1,13 @@
-import {
-	parseAsInteger,
-	parseAsJson,
-	parseAsStringLiteral,
-	useQueryState,
-} from "nuqs";
 import { z } from "zod";
 
 import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
+import { useQueryState } from "~app/hooks/use-navigation";
+import {
+	parseAsInteger,
+	parseAsJson,
+	parseAsStringLiteral,
+} from "~app/utils/navigation";
 import { Button } from "~components/button";
 import { AddIcon, ReceiptIcon } from "~components/icons";
 import { Link } from "~components/link";

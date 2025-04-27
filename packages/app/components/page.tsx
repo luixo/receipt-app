@@ -1,8 +1,7 @@
 import type React from "react";
 import { View } from "react-native";
 
-import { usePathname } from "solito/navigation";
-
+import { useMatchRoute } from "~app/hooks/use-navigation";
 import { Badge } from "~components/badge";
 import { Link } from "~components/link";
 import { Text } from "~components/text";
@@ -37,13 +36,13 @@ const MenuItemComponent: React.FC<MenuElement> = ({
 	useBadgeAmount = useZero,
 	useShow = useTrue,
 }) => {
-	const pathname = usePathname();
+	const matchRoute = useMatchRoute();
 	const amount = useBadgeAmount();
 	const show = useShow();
 	if (!show) {
 		return null;
 	}
-	const selected = pathname === href;
+	const selected = matchRoute(href);
 	const icon = <Icon size={24} />;
 	return (
 		<Link key={href} href={href} className={link({ selected })}>
@@ -67,8 +66,8 @@ type Props = {
 };
 
 export const Page: React.FC<Props> = ({ children, elements }) => {
-	const pathname = usePathname();
-	const PageWrapper = elements.find((element) => element.href === pathname)
+	const matchRoute = useMatchRoute();
+	const PageWrapper = elements.find((element) => matchRoute(element.href))
 		?.PageWrapper;
 	const slot = <View className="gap-4">{children}</View>;
 	return (

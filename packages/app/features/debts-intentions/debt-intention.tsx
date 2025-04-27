@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 import { View } from "react-native";
 
 import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
@@ -17,71 +17,65 @@ type Props = {
 	children?: React.ReactNode;
 };
 
-export const DebtIntention = React.forwardRef<HTMLDivElement, Props>(
-	({ intention, children }, ref) => {
-		const { formatDate, formatDateTime } = useSsrFormat();
-		const currency = useFormattedCurrency(intention.currencyCode);
-		const selfCurrency = useFormattedCurrency(
-			intention.current?.currencyCode || "USD",
-		);
-		const intentionDataComponent = (
-			<View className="flex-row gap-2">
-				<Text
-					className={intention.amount >= 0 ? "text-success" : "text-danger"}
-				>
-					{Math.abs(intention.amount)} {currency.symbol}
-				</Text>
-				<Text>{formatDate(intention.timestamp)}</Text>
-			</View>
-		);
-		return (
-			<Card ref={ref}>
-				<CardBody className="gap-4">
-					{intention.current ? (
-						<View className="flex-row gap-2 max-sm:flex-col">
-							<View className="flex-row gap-2">
-								<Text
-									className={
-										intention.current.amount >= 0
-											? "text-success"
-											: "text-danger"
-									}
-								>
-									{Math.abs(intention.current.amount)} {selfCurrency.symbol}
-								</Text>
-								<Text>{formatDate(intention.current.timestamp)}</Text>
-							</View>
-							<ArrowIcon size={24} />
-							{intentionDataComponent}
-						</View>
-					) : (
-						intentionDataComponent
-					)}
-					<View className="flex-row items-center gap-2">
-						{intention.receiptId ? (
-							<Button
-								as={Link}
-								href={`/receipts/${intention.receiptId}`}
-								variant="bordered"
-								color="primary"
-								isIconOnly
-								size="sm"
+export const DebtIntention: React.FC<Props> = ({ intention, children }) => {
+	const { formatDate, formatDateTime } = useSsrFormat();
+	const currency = useFormattedCurrency(intention.currencyCode);
+	const selfCurrency = useFormattedCurrency(
+		intention.current?.currencyCode || "USD",
+	);
+	const intentionDataComponent = (
+		<View className="flex-row gap-2">
+			<Text className={intention.amount >= 0 ? "text-success" : "text-danger"}>
+				{Math.abs(intention.amount)} {currency.symbol}
+			</Text>
+			<Text>{formatDate(intention.timestamp)}</Text>
+		</View>
+	);
+	return (
+		<Card>
+			<CardBody className="gap-4">
+				{intention.current ? (
+					<View className="flex-row gap-2 max-sm:flex-col">
+						<View className="flex-row gap-2">
+							<Text
+								className={
+									intention.current.amount >= 0 ? "text-success" : "text-danger"
+								}
 							>
-								<ReceiptIcon size={12} />
-							</Button>
-						) : null}
-						<Text>{intention.note}</Text>
-					</View>
-					<View className="flex-row justify-between">
-						<View className="flex-row gap-1">
-							<SyncIcon size={24} />
-							<Text>{formatDateTime(intention.updatedAt)}</Text>
+								{Math.abs(intention.current.amount)} {selfCurrency.symbol}
+							</Text>
+							<Text>{formatDate(intention.current.timestamp)}</Text>
 						</View>
-						<View className="max-md:hidden">{children}</View>
+						<ArrowIcon size={24} />
+						{intentionDataComponent}
 					</View>
-					<View className="self-end md:hidden">{children}</View>
-				</CardBody>
-			</Card>
-		);
-	},
-);
+				) : (
+					intentionDataComponent
+				)}
+				<View className="flex-row items-center gap-2">
+					{intention.receiptId ? (
+						<Button
+							as={Link}
+							href={`/receipts/${intention.receiptId}`}
+							variant="bordered"
+							color="primary"
+							isIconOnly
+							size="sm"
+						>
+							<ReceiptIcon size={12} />
+						</Button>
+					) : null}
+					<Text>{intention.note}</Text>
+				</View>
+				<View className="flex-row justify-between">
+					<View className="flex-row gap-1">
+						<SyncIcon size={24} />
+						<Text>{formatDateTime(intention.updatedAt)}</Text>
+					</View>
+					<View className="max-md:hidden">{children}</View>
+				</View>
+				<View className="self-end md:hidden">{children}</View>
+			</CardBody>
+		</Card>
+	);
+};

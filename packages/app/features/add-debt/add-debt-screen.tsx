@@ -1,7 +1,6 @@
 import React from "react";
 
 import { isNonNullish } from "remeda";
-import { useRouter, useSearchParams } from "solito/navigation";
 import { z } from "zod";
 
 import { CurrencyInput } from "~app/components/app/currency-input";
@@ -14,6 +13,7 @@ import { UsersSuggest } from "~app/components/app/users-suggest";
 import { DateInput } from "~app/components/date-input";
 import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
+import { useNavigate, useQueryState } from "~app/hooks/use-navigation";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
 import { useAppForm } from "~app/utils/forms";
@@ -25,7 +25,6 @@ import {
 	userIdSchema,
 } from "~app/utils/validation";
 import { Button } from "~components/button";
-import type { UsersId } from "~db/models";
 import { options as debtsAddOptions } from "~mutations/debts/add";
 import { getToday } from "~utils/date";
 import type { AppPage } from "~utils/next";
@@ -42,14 +41,13 @@ const formSchema = z.object({
 type Form = z.infer<typeof formSchema>;
 
 export const AddDebtScreen: AppPage = () => {
-	const searchParams = useSearchParams<{ userId: UsersId }>();
-	const userId = searchParams?.get("userId");
+	const [userId] = useQueryState("userId");
 
-	const router = useRouter();
+	const navigate = useNavigate();
 
 	const addMutation = trpc.debts.add.useMutation(
 		useTrpcMutationOptions(debtsAddOptions, {
-			onSuccess: ({ id }) => router.replace(`/debts/${id}`),
+			onSuccess: ({ id }) => navigate(`/debts/${id}`, { replace: true }),
 		}),
 	);
 

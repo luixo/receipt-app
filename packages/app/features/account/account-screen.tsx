@@ -1,13 +1,13 @@
 import React from "react";
 
 import { useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "solito/navigation";
 import { z } from "zod";
 
 import { QueryErrorMessage } from "~app/components/error-message";
 import { PageHeader } from "~app/components/page-header";
 import { ChangePasswordScreen } from "~app/features/change-password/change-password-screen";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
+import { useNavigate } from "~app/hooks/use-navigation";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput, TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
@@ -74,14 +74,14 @@ type InnerProps = {
 };
 
 const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
-	const router = useRouter();
+	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 
 	const logoutMutation = trpc.account.logout.useMutation(
 		useTrpcMutationOptions(accountLogoutOptions, {
 			onSuccess: () => {
 				void queryClient.resetQueries();
-				router.replace("/");
+				navigate("/", { replace: true });
 			},
 			trpc: { context: noBatchContext },
 		}),

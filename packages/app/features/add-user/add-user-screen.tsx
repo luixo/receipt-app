@@ -1,20 +1,19 @@
 import React from "react";
 
-import { useRouter } from "solito/navigation";
-
 import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
+import { useNavigate } from "~app/hooks/use-navigation";
 import type { TRPCMutationOutput } from "~app/trpc";
 import type { AppPage } from "~utils/next";
 
 import { AddUserForm } from "./add-user-form";
 
 export const AddUserScreen: AppPage = () => {
-	const router = useRouter();
+	const navigate = useNavigate();
 
 	const onSuccess = React.useCallback<
 		(response: TRPCMutationOutput<"users.add">) => void
-	>(({ id }) => router.replace(`/users/${id}`), [router]);
+	>(({ id }) => navigate(`/users/${id}`, { replace: true }), [navigate]);
 
 	return (
 		<>

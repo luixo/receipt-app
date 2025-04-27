@@ -1,9 +1,8 @@
 import React from "react";
 
-import { useRouter, useSearchParams } from "solito/navigation";
-
 import { EmptyCard } from "~app/components/empty-card";
 import { PageHeader } from "~app/components/page-header";
+import { useNavigate, useQueryState } from "~app/hooks/use-navigation";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
 import { options as authConfirmEmailOptions } from "~mutations/auth/confirm-email";
@@ -12,12 +11,11 @@ import type { AppPage } from "~utils/next";
 import { ConfirmEmail } from "./confirm-email";
 
 export const ConfirmEmailScreen: AppPage = () => {
-	const router = useRouter();
-	const searchParams = useSearchParams<{ token: string }>();
-	const token = searchParams?.get("token") ?? undefined;
+	const navigate = useNavigate();
+	const [token] = useQueryState("token");
 	const confirmEmailMutation = trpc.auth.confirmEmail.useMutation(
 		useTrpcMutationOptions(authConfirmEmailOptions, {
-			onSuccess: () => router.replace("/"),
+			onSuccess: () => navigate("/", { replace: true }),
 		}),
 	);
 	const confirmEmail = React.useCallback(() => {

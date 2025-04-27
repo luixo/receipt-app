@@ -1,9 +1,10 @@
 import React from "react";
 
 import type { QueryObserverResult } from "@tanstack/react-query";
-import { parseAsInteger, useQueryState } from "nuqs";
 
+import { useQueryState } from "~app/hooks/use-navigation";
 import type { TRPCError } from "~app/trpc";
+import { parseAsInteger } from "~app/utils/navigation";
 import type { Pagination } from "~components/pagination";
 
 type CursorPagingResult<T extends { count: number }> = {
@@ -43,7 +44,7 @@ export const useCursorPaging = <
 
 	const onChange = React.useCallback(
 		(page: number) => {
-			void setOffset((page - 1) * limit);
+			void setOffset((page - 1) * limit, { history: "push" });
 		},
 		[setOffset, limit],
 	);

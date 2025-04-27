@@ -1,7 +1,5 @@
 import type React from "react";
 
-import { useParams } from "solito/navigation";
-
 import { DebtsGroup } from "~app/components/app/debts-group";
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { QueryErrorMessage } from "~app/components/error-message";
@@ -14,7 +12,6 @@ import { Button } from "~components/button";
 import { Link } from "~components/link";
 import { Spinner } from "~components/spinner";
 import type { UsersId } from "~db/models";
-import type { AppPage } from "~utils/next";
 
 type HeaderProps = {
 	userId: UsersId;
@@ -75,8 +72,9 @@ const DebtsExchangeInner: React.FC<InnerProps> = ({ userId, query }) => {
 	);
 };
 
-export const DebtsExchangeScreen: AppPage = () => {
-	const { id: userId } = useParams<{ id: string }>();
+export const DebtsExchangeScreen: React.FC<{ userId: UsersId }> = ({
+	userId,
+}) => {
 	const query = trpc.debts.getIdsByUser.useQuery({ userId });
 	if (query.status === "pending") {
 		return (

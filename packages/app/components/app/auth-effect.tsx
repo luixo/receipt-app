@@ -1,16 +1,15 @@
 import React from "react";
 
-import { useRouter } from "solito/navigation";
-
+import { useNavigate } from "~app/hooks/use-navigation";
 import { trpc } from "~app/trpc";
 
 export const AuthEffect: React.FC = () => {
-	const router = useRouter();
+	const navigate = useNavigate();
 	const accountQuery = trpc.account.get.useQuery();
 	React.useEffect(() => {
 		if (accountQuery.status === "success") {
-			router.replace("/");
+			navigate("/", { replace: true });
 		}
-	}, [accountQuery.status, router]);
+	}, [accountQuery.status, navigate]);
 	return null;
 };

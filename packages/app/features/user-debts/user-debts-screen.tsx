@@ -1,8 +1,6 @@
 import React from "react";
 import { View } from "react-native";
 
-import { useParams, useRouter } from "solito/navigation";
-
 import {
 	DebtsGroup,
 	DebtsGroupSkeleton,
@@ -17,6 +15,7 @@ import { useAggregatedDebts } from "~app/hooks/use-aggregated-debts";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useDebtsWithDividers } from "~app/hooks/use-debts-with-dividers";
 import { useDividers } from "~app/hooks/use-dividers";
+import { useNavigate } from "~app/hooks/use-navigation";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
@@ -32,7 +31,6 @@ import { Link } from "~components/link";
 import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
 import { Text } from "~components/text";
 import type { UsersId } from "~db/models";
-import type { AppPage } from "~utils/next";
 
 import { UserDebtPreview, UserDebtPreviewSkeleton } from "./user-debt-preview";
 
@@ -91,7 +89,7 @@ type InnerProps = {
 };
 
 export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
-	const router = useRouter();
+	const navigate = useNavigate();
 	const [showResolvedDebts, setShowResolvedDebts] = useShowResolvedDebts();
 	const enableShowResolvedDebts = React.useCallback(
 		() => setShowResolvedDebts(true),
@@ -123,8 +121,8 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 	const [editModalOpen, { setTrue: openEditModal, setFalse: closeEditModal }] =
 		useBooleanState();
 	const onUserRemove = React.useCallback(() => {
-		router.replace("/debts");
-	}, [router]);
+		navigate("/debts", { replace: true });
+	}, [navigate]);
 	return (
 		<>
 			<Header
@@ -195,8 +193,7 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 	);
 };
 
-export const UserDebtsScreen: AppPage = () => {
-	const { id: userId } = useParams<{ id: string }>();
+export const UserDebtsScreen: React.FC<{ userId: UsersId }> = ({ userId }) => {
 	const query = trpc.debts.getIdsByUser.useQuery({ userId });
 	const elements = React.useMemo(() => new Array<null>(3).fill(null), []);
 	if (query.status === "pending") {

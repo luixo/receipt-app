@@ -1,10 +1,10 @@
 import React from "react";
 
 import { useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "solito/navigation";
 import { z } from "zod";
 
 import { PageHeader } from "~app/components/page-header";
+import { useNavigate } from "~app/hooks/use-navigation";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
 import { useAppForm } from "~app/utils/forms";
@@ -27,14 +27,14 @@ const formSchema = z.object({
 type Form = z.infer<typeof formSchema>;
 
 export const RegisterScreen: AppPage = () => {
-	const router = useRouter();
+	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 
 	const registerMutation = trpc.auth.register.useMutation(
 		useTrpcMutationOptions(authRegisterOptions, {
 			onSuccess: () => {
 				void queryClient.resetQueries();
-				router.replace("/");
+				navigate("/", { replace: true });
 			},
 			trpc: { context: noBatchContext },
 		}),

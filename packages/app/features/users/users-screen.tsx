@@ -1,10 +1,10 @@
 import React from "react";
 
-import { parseAsInteger, useQueryState } from "nuqs";
-
 import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
 import { useConnectionIntentions } from "~app/hooks/use-connection-intentions";
+import { useQueryState } from "~app/hooks/use-navigation";
+import { parseAsInteger } from "~app/utils/navigation";
 import { Badge } from "~components/badge";
 import { Button } from "~components/button";
 import { AddIcon, LinkIcon, UsersIcon } from "~components/icons";

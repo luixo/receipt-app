@@ -1,8 +1,7 @@
 import React from "react";
 
-import { useRouter } from "solito/navigation";
-
 import { RemoveButton } from "~app/components/remove-button";
+import { useNavigate } from "~app/hooks/use-navigation";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
@@ -18,10 +17,10 @@ export const ReceiptRemoveButton: React.FC<Props> = ({
 	setLoading,
 	...props
 }) => {
-	const router = useRouter();
+	const navigate = useNavigate();
 	const removeReceiptMutation = trpc.receipts.remove.useMutation(
 		useTrpcMutationOptions(receiptsRemoveOptions, {
-			onSuccess: () => router.replace("/receipts"),
+			onSuccess: () => navigate("/receipts", { replace: true }),
 		}),
 	);
 	React.useEffect(

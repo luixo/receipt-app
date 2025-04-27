@@ -94,7 +94,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 		<>
 			<Head>
 				<title>Receipt App</title>
-				<meta name="description" content="Receipt App built on Solito" />
+				<meta name="description" content="Receipt App" />
 				<meta
 					name="viewport"
 					content="width=device-width, initial-scale=1, maximum-scale=1"

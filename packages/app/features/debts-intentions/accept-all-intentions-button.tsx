@@ -1,7 +1,6 @@
 import React from "react";
 
-import { useRouter } from "solito/navigation";
-
+import { useNavigate } from "~app/hooks/use-navigation";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
@@ -16,7 +15,7 @@ export const AcceptAllIntentionsButton: React.FC<Props> = ({
 	intentions,
 	...props
 }) => {
-	const router = useRouter();
+	const navigate = useNavigate();
 
 	const acceptMutations = intentions.map((intention) =>
 		trpc.debtIntentions.accept.useMutation(
@@ -35,11 +34,11 @@ export const AcceptAllIntentionsButton: React.FC<Props> = ({
 					mutation.mutateAsync({ id: intentions[index]!.id }),
 				),
 			);
-			router.push("/debts");
+			navigate("/debts");
 		} catch {
 			/* empty */
 		}
-	}, [acceptMutations, intentions, router]);
+	}, [acceptMutations, intentions, navigate]);
 
 	return (
 		<Button

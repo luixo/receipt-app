@@ -1,11 +1,11 @@
 import React from "react";
 
 import { useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "solito/navigation";
 import { z } from "zod";
 
 import { PageHeader } from "~app/components/page-header";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
+import { useNavigate } from "~app/hooks/use-navigation";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
 import { useAppForm } from "~app/utils/forms";
@@ -22,7 +22,7 @@ const formSchema = z.object({ email: emailSchema, password: passwordSchema });
 type Form = z.infer<typeof formSchema>;
 
 export const LoginScreen: AppPage = () => {
-	const router = useRouter();
+	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 
 	const [modalOpen, { switchValue: switchModalOpen, setTrue: openModal }] =
@@ -32,7 +32,7 @@ export const LoginScreen: AppPage = () => {
 		useTrpcMutationOptions(authLoginOptions, {
 			onSuccess: () => {
 				void queryClient.resetQueries();
-				router.replace("/");
+				navigate("/", { replace: true });
 			},
 			trpc: { context: noBatchContext },
 		}),

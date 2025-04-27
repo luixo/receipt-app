@@ -2,13 +2,11 @@ import React from "react";
 import { View } from "react-native";
 
 import { entries, mapValues } from "remeda";
-import { usePathname } from "solito/navigation";
 
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { EmptyCard } from "~app/components/empty-card";
 import { QueryErrorMessage } from "~app/components/error-message";
 import { PageHeader } from "~app/components/page-header";
-import { useRefs } from "~app/hooks/use-refs";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { Spinner } from "~components/spinner";
@@ -30,17 +28,6 @@ type Props = {
 };
 
 const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
-	const intentionsRefs = useRefs<HTMLDivElement>();
-	const pathname = usePathname() || "";
-	React.useEffect(() => {
-		const hash = pathname.split("#")[1];
-		if (hash) {
-			const matchedIntention = data.find((intention) => intention.id === hash);
-			if (matchedIntention && intentionsRefs.current[hash]) {
-				intentionsRefs.current[hash].scrollIntoView();
-			}
-		}
-	}, [data, pathname, intentionsRefs]);
 	const sortedIntentionsByUser = React.useMemo(() => {
 		const intentionsByUser = data.reduce<
 			Record<UsersId, IntentionsQuery["data"]>
@@ -82,11 +69,7 @@ const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 				<View className="gap-2" key={userId}>
 					<LoadableUser className="mb-4 self-start" id={userId} />
 					{userIntentions.map((intention) => (
-						<InboundDebtIntention
-							key={intention.id}
-							intention={intention}
-							ref={intentionsRefs.setRef(intention.id)}
-						/>
+						<InboundDebtIntention key={intention.id} intention={intention} />
 					))}
 				</View>
 			))}

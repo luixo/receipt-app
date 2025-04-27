@@ -1,7 +1,6 @@
 import React from "react";
 
 import { doNothing } from "remeda";
-import { useParams, useRouter } from "solito/navigation";
 
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
 import { DebtsGroup } from "~app/components/app/debts-group";
@@ -10,6 +9,7 @@ import { QueryErrorMessage } from "~app/components/error-message";
 import { PageHeader } from "~app/components/page-header";
 import { useAggregatedDebts } from "~app/hooks/use-aggregated-debts";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
+import { useNavigate } from "~app/hooks/use-navigation";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
@@ -17,7 +17,6 @@ import type { CurrencyCode } from "~app/utils/currency";
 import { Divider } from "~components/divider";
 import { Spinner } from "~components/spinner";
 import type { UsersId } from "~db/models";
-import type { AppPage } from "~utils/next";
 
 import { CurrenciesGroup } from "./currencies-group";
 import { PlannedDebts } from "./planned-debts";
@@ -61,10 +60,10 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 		},
 		[closeModal],
 	);
-	const router = useRouter();
+	const navigate = useNavigate();
 	const back = React.useCallback(
-		() => router.replace(`/debts/user/${userId}`),
-		[router, userId],
+		() => navigate(`/debts/user/${userId}`, { replace: true }),
+		[navigate, userId],
 	);
 	React.useEffect(() => {
 		if (nonZeroAggregatedDebts.length <= 1 && !aggregatedDebtsLoading) {
@@ -116,8 +115,9 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 	);
 };
 
-export const DebtsExchangeAllScreen: AppPage = () => {
-	const { id: userId } = useParams<{ id: string }>();
+export const DebtsExchangeAllScreen: React.FC<{ userId: UsersId }> = ({
+	userId,
+}) => {
 	const query = trpc.debts.getIdsByUser.useQuery({ userId });
 	if (query.status === "pending") {
 		return (

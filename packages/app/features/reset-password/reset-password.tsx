@@ -1,9 +1,9 @@
 import type React from "react";
 
-import { useRouter } from "solito/navigation";
 import { z } from "zod";
 
 import { QueryErrorMessage } from "~app/components/error-message";
+import { useNavigate } from "~app/hooks/use-navigation";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
 import { useAppForm } from "~app/utils/forms";
@@ -25,11 +25,11 @@ type Props = {
 };
 
 const ResetPasswordForm: React.FC<Props> = ({ token }) => {
-	const router = useRouter();
+	const navigate = useNavigate();
 
 	const changePasswordMutation = trpc.auth.resetPassword.useMutation(
 		useTrpcMutationOptions(authResetPasswordOptions, {
-			onSuccess: () => router.replace("/login"),
+			onSuccess: () => navigate("/login", { replace: true }),
 		}),
 	);
 	const defaultValues: Partial<Form> = {};

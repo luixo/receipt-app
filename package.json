@@ -102,7 +102,8 @@
 		"@tanstack/query-core@5.51.1": "patch:@tanstack/query-core@npm%3A5.51.1#./patches/@tanstack-query-core-npm-5.51.1.patch",
 		"@tanstack/react-query@^5.51.1": "patch:@tanstack/react-query@npm%3A5.51.1#./patches/@tanstack-react-query-npm-5.51.1.patch",
 		"@internationalized/date@^3.7.0": "patch:@internationalized/date@npm%3A3.7.0#./patches/@internationalized-date-npm-3.7.0.patch",
-		"@react-aria/utils": "^3.28.1"
+		"@react-aria/utils": "^3.28.1",
+		"@react-types/shared": "^3.28.0"
 	},
 	"nextBundleAnalysis": {
 		"budget": 358400,
