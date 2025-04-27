@@ -2,6 +2,7 @@
 	"version": "0.0.0",
 	"name": "@ra/db",
 	"main": "src/index.ts",
+	"type": "module",
 	"sideEffects": false,
 	"scripts": {
 		"db:migrate": "tsx scripts/migrate.ts",

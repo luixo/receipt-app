@@ -2,5 +2,6 @@
 	"version": "0.0.0",
 	"name": "@ra/test-utils",
 	"main": "src/index.ts",
+	"type": "module",
 	"sideEffects": false
 }

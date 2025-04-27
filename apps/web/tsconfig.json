@@ -10,7 +10,6 @@
 		"strictNullChecks": true,
 		"forceConsistentCasingInFileNames": true,
 		"noEmit": true,
-		"esModuleInterop": true,
 		"module": "esnext",
 		"moduleResolution": "node",
 		"resolveJsonModule": true,
@@ -24,7 +23,8 @@
 		"../../packages/app/promise.d.ts",
 		"next-env.d.ts",
 		"**/*.ts",
-		"**/*.tsx"
+		"**/*.tsx",
+		"**/*.cjs"
 	],
 	"exclude": ["node_modules"]
 }

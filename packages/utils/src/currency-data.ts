@@ -1,9 +1,15 @@
-import currencyList from "currency-list";
+import currencyListRaw from "currency-list";
 import { keys } from "remeda";
 
 import type { CurrencyCode } from "~app/utils/currency";
 
 const DEFAULT_LOCALE = "en";
+
+// TODO: remove this
+const currencyList =
+	"default" in currencyListRaw
+		? (currencyListRaw.default as typeof currencyListRaw)
+		: currencyListRaw;
 
 type CurrencyDescription = ReturnType<typeof currencyList.get>;
 export const CURRENCY_CODES = keys(currencyList.getAll("en"));

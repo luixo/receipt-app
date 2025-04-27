@@ -2,6 +2,7 @@
 	"version": "0.0.0",
 	"name": "@ra/app",
 	"main": "index.ts",
+	"type": "module",
 	"dependencies": {
 		"@heroui/react": "^2.7.5",
 		"@heroui/use-infinite-scroll": "^2.2.7",

@@ -8,6 +8,8 @@
 		"jsx": "react-jsx",
 		"jsxImportSource": "nativewind",
 		"module": "esnext",
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
 		"paths": {
 			"~app/*": ["./packages/app/*"],
 			"~components/*": ["./packages/components/src/*"],

@@ -1,6 +1,7 @@
-const { withExpo } = require("@expo/next-adapter");
-const { withSentryConfig } = require("@sentry/nextjs");
-const { URL } = require("url");
+import { withExpo } from "@expo/next-adapter";
+import NextBundleAnalyzer from "@next/bundle-analyzer";
+import { withSentryConfig } from "@sentry/nextjs";
+import { URL } from "node:url";
 
 // TODO: import from providers/s3.ts when migrating to next.config.ts
 const S3_AVATAR_PREFIX = "avatars";
@@ -55,12 +56,12 @@ const plugins = [
 		? undefined
 		: (config) => withSentryConfig(config, { silent: true }),
 	(config) => withExpo(config),
-	(config) => {
+	async (config) => {
 		if (process.env.ANALYZE_BUNDLE) {
-			// eslint-disable-next-line global-require
-			return require("@next/bundle-analyzer")()(config);
+			return NextBundleAnalyzer()(config);
 		}
 		return config;
 	},
 ].filter(Boolean);
-module.exports = plugins.reduce((acc, plugin) => plugin(acc), nextConfig);
+
+export default plugins.reduce((acc, plugin) => plugin(acc), nextConfig);

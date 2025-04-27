@@ -2,6 +2,7 @@
 	"version": "0.0.0",
 	"name": "@ra/components",
 	"main": "src/index.ts",
+	"type": "module",
 	"dependencies": {
 		"@expo/html-elements": "^0.5.1",
 		"@heroui/react": "^2.7.5",

@@ -3,6 +3,7 @@
 	"main": "expo-router/entry",
 	"version": "1.0.0",
 	"private": true,
+	"type": "module",
 	"dependencies": {
 		"@ra/app": "workspace:*",
 		"@react-native-async-storage/async-storage": "^1.22.3",

@@ -359,7 +359,7 @@ export default ts.config(
 	...[
 		[
 			"apps/web",
-			["next.config.js", "vitest.config.ts", "**/*.test.ts", "**/*.spec.ts"],
+			["next.config.mjs", "vitest.config.ts", "**/*.test.ts", "**/*.spec.ts"],
 		],
 		["apps/mobile"],
 		["packages/components"],
