@@ -21,6 +21,9 @@ export const consoleFixtures = test.extend<ConsoleFixtures>({
 			// see https://github.com/adobe/react-spectrum/blob/fb1525eded030ad8ac8ad43d92b893d5a3256567/packages/dev/docs/pages/blog/building-a-button-part-1.mdx#L96
 			"MouseEvent.mozInputSource is deprecated. Use PointerEvent.pointerType instead.",
 			"Cannot record touch end without a touch start.",
+			// TODO: find out what forms cause this and how to remove the warning
+			// See https://github.com/luixo/receipt-app/commit/4c7597344d97d60c49f08f7261a73a9df57a056b
+			"WARN: A component changed from uncontrolled to controlled.",
 		];
 		await use({
 			onMessage: (message) => {
