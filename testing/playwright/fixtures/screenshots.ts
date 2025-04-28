@@ -5,7 +5,7 @@ import type {
 	PageScreenshotOptions,
 } from "@playwright/test";
 import { expect, test } from "@playwright/test";
-import joinImages from "join-images";
+import { joinImages } from "join-images";
 import assert from "node:assert";
 
 const FRAME_LENGTH = 33;

@@ -13,7 +13,6 @@ import {
 } from "@trpc/server/rpc";
 import type { MaybePromise } from "@trpc/server/unstable-core-do-not-import";
 import http from "node:http";
-import { entries } from "remeda";
 import { v4 } from "uuid";
 
 import type {
@@ -24,7 +23,6 @@ import type {
 	TRPCQueryKey,
 	TRPCQueryOutput,
 } from "~app/trpc";
-import type { CurrencyCode } from "~app/utils/currency";
 import type { TransformerResult } from "~app/utils/trpc";
 import { transformer } from "~app/utils/trpc";
 import type { AccountsId, UsersId } from "~db/models";
@@ -380,13 +378,7 @@ const createApiManager = async (
 	};
 };
 
-// 'en' locale definitely exist
-// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-const currencies = entries(getCurrencies()!).map(([code, currency]) => ({
-	code: code as CurrencyCode,
-	name: currency.name_plural,
-	symbol: currency.symbol_native,
-}));
+const currencies = getCurrencies();
 const getMockUtils = (api: ApiManager, faker: Faker) => ({
 	noAuthPage: () => {
 		api.mockLast("currency.getList", currencies);

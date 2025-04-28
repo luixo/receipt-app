@@ -1,9 +1,10 @@
 import type React from "react";
 import { View } from "react-native";
 
-import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
-import { useSsrFormat } from "~app/hooks/use-ssr-format";
+import { useFormat } from "~app/hooks/use-format";
+import { useLocale } from "~app/hooks/use-locale";
 import type { TRPCQueryOutput } from "~app/trpc";
+import { formatCurrency } from "~app/utils/currency";
 import { Badge } from "~components/badge";
 import { KeyIcon } from "~components/icons";
 import { Link } from "~components/link";
@@ -22,8 +23,8 @@ type InnerProps = {
 };
 
 export const ReceiptPreview: React.FC<InnerProps> = ({ receipt }) => {
-	const { formatDate } = useSsrFormat();
-	const currency = useFormattedCurrency(receipt.currencyCode);
+	const { formatDate } = useFormat();
+	const locale = useLocale();
 	const isOwner = receipt.selfUserId === receipt.ownerUserId;
 	const emptyItems = receipt.items.filter(
 		(item) => item.consumers.length === 0,
@@ -61,7 +62,7 @@ export const ReceiptPreview: React.FC<InnerProps> = ({ receipt }) => {
 	);
 	const sumComponent = (
 		<Text className="font-medium">
-			{sum} {currency.symbol}
+			{formatCurrency(locale, receipt.currencyCode, sum)}
 		</Text>
 	);
 	return (

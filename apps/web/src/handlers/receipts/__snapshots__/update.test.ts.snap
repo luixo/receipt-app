@@ -5,7 +5,7 @@ exports[`receipts.update > functionality > update currency code 1`] = `
   "updated": {
     "receipts": {
       "id:f1becfdb-af87-4219-a543-ad411d7da19a": {
-        "currencyCode": "JMD",
+        "currencyCode": "KES",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },

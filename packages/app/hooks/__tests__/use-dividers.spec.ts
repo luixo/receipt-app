@@ -2,8 +2,9 @@ import { expect } from "@playwright/test";
 
 import { test } from "~app/features/user-debts/__tests__/even-debts-divider.utils";
 import { debtsWithDividers } from "~app/hooks/__tests__/use-dividers.utils";
+import { formatCurrency, getCurrencySymbol } from "~app/utils/currency";
 import { SETTINGS_STORE_NAME } from "~app/utils/store/settings";
-import { getCurrencySymbol } from "~utils/currency-data";
+import { localSettings } from "~tests/frontend/consts";
 
 test("Multiple dividers", async ({
 	openUserDebts,
@@ -26,11 +27,16 @@ test("Multiple dividers", async ({
 	await expect(evenDebtsDivider.or(debtAmount)).toHaveText(
 		debtsWithDividers.toReversed().map((debtOrDivider) => {
 			if ("amount" in debtOrDivider) {
-				return `${Math.abs(debtOrDivider.amount)} ${getCurrencySymbol(
+				return formatCurrency(
+					localSettings.locale,
 					debtOrDivider.currencyCode,
-				)}`;
+					Math.abs(debtOrDivider.amount),
+				);
 			}
-			return `Even on ${getCurrencySymbol(debtOrDivider.dividerCurrencyCode)}`;
+			return `Even on ${getCurrencySymbol(
+				localSettings.locale,
+				debtOrDivider.dividerCurrencyCode,
+			)}`;
 		}),
 	);
 });

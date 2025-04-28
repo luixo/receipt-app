@@ -1,41 +1,46 @@
 import { useCurrencies } from "~app/hooks/use-currencies";
+import { useLocale } from "~app/hooks/use-locale";
 import type { TRPCQueryOutput } from "~app/trpc";
-import type { CurrencyCode } from "~app/utils/currency";
+import { type CurrencyCode, getCurrencySymbol } from "~app/utils/currency";
+import type { Locale } from "~app/utils/locale";
 
-export const getFormattedCurrency = (
+const getCurrencyDescription = (
+	locale: Locale,
 	currencyCode: CurrencyCode,
-	matchedCurrency?: TRPCQueryOutput<"currency.getList">[number],
+	currenciesData?: TRPCQueryOutput<"currency.getList">,
 ) => {
-	if (matchedCurrency) {
-		return {
-			symbol: matchedCurrency.symbol,
-			name: matchedCurrency.name,
-			code: currencyCode,
-		};
+	const currencySymbol = getCurrencySymbol(locale, currencyCode);
+	if (!currenciesData) {
+		return currencySymbol;
 	}
-	return {
-		symbol: currencyCode,
-		name: currencyCode,
+	const matchedCurrency = currenciesData.find(
+		(element) => element.code === currencyCode,
+	);
+	if (!matchedCurrency) {
+		return currencySymbol;
+	}
+	return `${matchedCurrency.name} (${
+		currencySymbol === matchedCurrency.code
+			? currencySymbol
+			: `${currencySymbol} / ${matchedCurrency.code}`
+	})`;
+};
+
+export const useCurrencyDescription = (currencyCode: CurrencyCode) => {
+	const currenciesListQuery = useCurrencies();
+	const locale = useLocale();
+	return getCurrencyDescription(locale, currencyCode, currenciesListQuery.data);
+};
+
+export const useCurrencyDescriptions = (currencyCodes: CurrencyCode[]) => {
+	const currenciesListQuery = useCurrencies();
+	const locale = useLocale();
+	return currencyCodes.map((currencyCode) => ({
 		code: currencyCode,
-	};
-};
-
-export const useFormattedCurrency = (currencyCode: CurrencyCode) => {
-	const currenciesListQuery = useCurrencies();
-	return getFormattedCurrency(
-		currencyCode,
-		currenciesListQuery.data?.find((element) => element.code === currencyCode),
-	);
-};
-
-export const useFormattedCurrencies = (currencyCodes: CurrencyCode[]) => {
-	const currenciesListQuery = useCurrencies();
-	return currencyCodes.map((currencyCode) =>
-		getFormattedCurrency(
+		description: getCurrencyDescription(
+			locale,
 			currencyCode,
-			currenciesListQuery.data?.find(
-				(element) => element.code === currencyCode,
-			),
+			currenciesListQuery.data,
 		),
-	);
+	}));
 };

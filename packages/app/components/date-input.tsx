@@ -1,7 +1,7 @@
 import type React from "react";
 import { View } from "react-native";
 
-import { useSsrFormat } from "~app/hooks/use-ssr-format";
+import { useFormat } from "~app/hooks/use-format";
 import { Calendar } from "~components/calendar";
 import { Input } from "~components/input";
 import { Spinner } from "~components/spinner";
@@ -22,7 +22,7 @@ export const DateInput: React.FC<Props> = ({
 	label,
 	...props
 }) => {
-	const { formatDate } = useSsrFormat();
+	const { formatDate } = useFormat();
 	return (
 		<Calendar
 			value={value}

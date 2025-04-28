@@ -2,7 +2,7 @@ import React from "react";
 
 import { StoreDataContext } from "~app/contexts/store-data-context";
 import { useMountEffect } from "~app/hooks/use-mount-effect";
-import { LOCALE_STORE_NAME, getDateTimeLocale } from "~app/utils/store/locale";
+import { LOCALE_STORE_NAME, getLocale } from "~app/utils/store/locale";
 import {
 	TZ_OFFSET_STORE_NAME,
 	getTimezoneOffset,
@@ -21,6 +21,6 @@ const useSetLocalSetting = <T extends keyof StoreValues>(
 // Store values that are set to make next render mimic user environment in case of SSR
 // (with user tz offset and locale)
 export const useStoreLocalSettings = () => {
-	useSetLocalSetting(LOCALE_STORE_NAME, getDateTimeLocale);
+	useSetLocalSetting(LOCALE_STORE_NAME, getLocale);
 	useSetLocalSetting(TZ_OFFSET_STORE_NAME, getTimezoneOffset);
 };

@@ -7,9 +7,10 @@ import { LoadableUser } from "~app/components/app/loadable-user";
 import { PartButtons } from "~app/components/app/part-buttons";
 import { RemoveButton } from "~app/components/remove-button";
 import { useDecimals, useRoundParts } from "~app/hooks/use-decimals";
-import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
+import { useLocale } from "~app/hooks/use-locale";
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import { trpc } from "~app/trpc";
+import { formatCurrency } from "~app/utils/currency";
 import { useAppForm } from "~app/utils/forms";
 import { partSchema } from "~app/utils/validation";
 import { Accordion, AccordionItem } from "~components/accordion";
@@ -169,7 +170,7 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 		removePayerMutationState?.status === "pending" ||
 		updatePayerMutationState?.status === "pending";
 
-	const currency = useFormattedCurrency(currencyCode);
+	const locale = useLocale();
 	const disabled = participant.items.length === 0;
 	const sum = fromSubunitToUnit(
 		participant.debtSumDecimals - participant.paySumDecimals,
@@ -212,7 +213,7 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 							>
 								<View>
 									<Text className={participantError?.className}>
-										{`${round(sum)} ${currency.symbol}`}
+										${formatCurrency(locale, currencyCode, round(sum))}
 									</Text>
 								</View>
 							</Tooltip>
@@ -291,24 +292,30 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 					<View className="flex flex-col gap-3">
 						{currentPart && items.length !== 0 ? (
 							<Text className="text-secondary">
-								{`Payed ${fromSubunitToUnit(participant.paySumDecimals)} ${
-									currency.symbol
-								} of the total receipt`}
+								{`Payed ${formatCurrency(
+									locale,
+									currencyCode,
+									fromSubunitToUnit(participant.paySumDecimals),
+								)} of the total receipt`}
 							</Text>
 						) : null}
 						<View>
 							{currentPart && participant.items.length > 1 ? (
 								<Text className="text-secondary">
-									{`Spent ${fromSubunitToUnit(participant.debtSumDecimals)} ${
-										currency.symbol
-									} in total`}
+									{`Spent ${formatCurrency(
+										locale,
+										currencyCode,
+										fromSubunitToUnit(participant.debtSumDecimals),
+									)} in total`}
 								</Text>
 							) : null}
 							{participant.items.map((item) => (
 								<Text key={item.id}>
-									{`${item.name} - ${round(item.sum)}${
-										item.hasExtra ? "+" : ""
-									} ${currency.symbol}`}
+									{`${item.name} - ${formatCurrency(
+										locale,
+										currencyCode,
+										round(item.sum),
+									)}${item.hasExtra ? "*" : ""}`}
 								</Text>
 							))}
 						</View>

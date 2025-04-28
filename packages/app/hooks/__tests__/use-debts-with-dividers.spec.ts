@@ -3,10 +3,11 @@ import { TRPCError } from "@trpc/server";
 
 import { test } from "~app/features/user-debts/__tests__/even-debts-divider.utils";
 import { debtsWithDividers } from "~app/hooks/__tests__/use-dividers.utils";
+import { formatCurrency } from "~app/utils/currency";
 import { SETTINGS_STORE_NAME } from "~app/utils/store/settings";
+import { localSettings } from "~tests/frontend/consts";
 import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
 import { generateCurrencyCode } from "~tests/frontend/generators/utils";
-import { getCurrencySymbol } from "~utils/currency-data";
 
 test("'debts.get' pending / error", async ({
 	api,
@@ -93,9 +94,12 @@ test("'showResolvedDebts' is false - all hidden", async ({
 		onlyDebts
 			.toReversed()
 			.filter((debt) => "notResolved" in debt)
-			.map(
-				(debt) =>
-					`${Math.abs(debt.amount)} ${getCurrencySymbol(debt.currencyCode)}`,
+			.map((debt) =>
+				formatCurrency(
+					localSettings.locale,
+					debt.currencyCode,
+					Math.abs(debt.amount),
+				),
 			),
 	);
 });

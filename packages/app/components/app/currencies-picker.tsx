@@ -3,7 +3,7 @@ import { View } from "react-native";
 
 import { QueryErrorMessage } from "~app/components/error-message";
 import { useCurrencies } from "~app/hooks/use-currencies";
-import { useFormattedCurrencies } from "~app/hooks/use-formatted-currency";
+import { useCurrencyDescriptions } from "~app/hooks/use-formatted-currency";
 import { type TRPCQueryInput, type TRPCQueryResult, trpc } from "~app/trpc";
 import { type CurrencyCode } from "~app/utils/currency";
 import { Button } from "~components/button";
@@ -47,18 +47,17 @@ const CurrenciesPickerLoader: React.FC<LoaderProps> = ({
 			.map(({ code }) => code)
 			.filter((code) => !hiddenCurrencies.includes(code));
 	}, [hiddenCurrencies, query.data]);
-	const formattedCurrencies = useFormattedCurrencies(
-		topCurrencyCodes
-			? codes
-				? codes.sort(
-						(a, b) => topCurrencyCodes.indexOf(b) - topCurrencyCodes.indexOf(a),
-				  )
-				: topCurrencyCodes
-			: codes || [],
-	);
+	const sortedCodes = topCurrencyCodes
+		? codes
+			? codes.sort(
+					(a, b) => topCurrencyCodes.indexOf(b) - topCurrencyCodes.indexOf(a),
+			  )
+			: topCurrencyCodes
+		: codes || [];
+	const formattedCurrencies = useCurrencyDescriptions(sortedCodes);
 	return (
 		<View className="flex-row flex-wrap gap-2">
-			{formattedCurrencies.map(({ code, symbol, name }, index) => (
+			{formattedCurrencies.map(({ code, description }, index) => (
 				<React.Fragment key={code}>
 					{index === cutIndex && index !== 0 ? (
 						<Divider className="my-2" />
@@ -70,9 +69,7 @@ const CurrenciesPickerLoader: React.FC<LoaderProps> = ({
 						title={code}
 						data-testid="currency-button"
 					>
-						{name === code && symbol === code
-							? code
-							: `${name} (${code}${code === symbol ? "" : ` / ${symbol}`})`}
+						{description}
 					</Button>
 				</React.Fragment>
 			))}

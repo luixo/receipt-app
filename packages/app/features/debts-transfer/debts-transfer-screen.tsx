@@ -16,14 +16,14 @@ import { PageHeader } from "~app/components/page-header";
 import { ShowResolvedDebtsOption } from "~app/features/settings/show-resolved-debts-option";
 import { useAggregatedDebts } from "~app/hooks/use-aggregated-debts";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { useFormattedCurrencies } from "~app/hooks/use-formatted-currency";
+import { useLocale } from "~app/hooks/use-locale";
 import { useQueryState } from "~app/hooks/use-navigation";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { useTrpcMutationStates } from "~app/hooks/use-trpc-mutation-state";
 import type { TRPCQueryOutput, TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import type { CurrencyCode } from "~app/utils/currency";
+import { type CurrencyCode, getCurrencySymbol } from "~app/utils/currency";
 import { useAppForm } from "~app/utils/forms";
 import { parseAsString } from "~app/utils/navigation";
 import {
@@ -79,9 +79,7 @@ const DebtsListForm: React.FC<FormProps> = ({
 	const addMutation = trpc.debts.add.useMutation(
 		useTrpcMutationOptions(debtsAddOptions),
 	);
-	const currencies = useFormattedCurrencies(
-		allCurrenciesWithSums.map((row) => row.currencyCode),
-	);
+	const locale = useLocale();
 	const [lastMutationTimestamps, setLastMutationTimestamps] = React.useState<
 		number[]
 	>([]);
@@ -198,10 +196,10 @@ const DebtsListForm: React.FC<FormProps> = ({
 								{allCurrenciesWithSums.map(({ currencyCode, sum }) => (
 									<form.AppField key={currencyCode} name={currencyCode}>
 										{(field) => {
-											const currencySymbol =
-												currencies.find(
-													(currency) => currency.code === currencyCode,
-												)?.name ?? currencyCode;
+											const currencySymbol = getCurrencySymbol(
+												locale,
+												currencyCode,
+											);
 											return (
 												<View className="flex items-center gap-2 sm:flex-row">
 													<Text className="flex-[2]">{currencySymbol}</Text>

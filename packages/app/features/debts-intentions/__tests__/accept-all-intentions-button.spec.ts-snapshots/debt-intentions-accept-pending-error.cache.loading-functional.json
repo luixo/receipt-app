@@ -5,7 +5,7 @@
 				"data": {
 					"id": "2229afe2-d79b-402a-949b-6f6be31e8205",
 					"userId": "3099f7f4-7698-4d01-8c70-bc4c5c296fcb",
-					"currencyCode": "GBP",
+					"currencyCode": "BSD",
 					"amount": -3591.26,
 					"timestamp": "2019-12-09T08:22:09.776Z",
 					"note": "modi quae blanditiis repellendus",
@@ -14,7 +14,7 @@
 						"updatedAt": "2020-01-01T00:00:00.000Z",
 						"timestamp": "2019-12-09T08:22:09.776Z",
 						"amount": -3591.26,
-						"currencyCode": "GBP"
+						"currencyCode": "BSD"
 					},
 					"receiptId": "<undefined>"
 				},
@@ -31,7 +31,7 @@
 				"data": {
 					"id": "2bebdb40-84ee-4955-a735-7c4476ea90d3",
 					"userId": "3099f7f4-7698-4d01-8c70-bc4c5c296fcb",
-					"currencyCode": "BYN",
+					"currencyCode": "BGN",
 					"amount": -8515.4,
 					"timestamp": "2019-12-08T19:47:03.357Z",
 					"note": "debitis nobis sed labore",
@@ -40,7 +40,7 @@
 						"updatedAt": "2020-01-01T00:00:00.000Z",
 						"timestamp": "2019-12-08T19:47:03.357Z",
 						"amount": -8515.4,
-						"currencyCode": "BYN"
+						"currencyCode": "BGN"
 					},
 					"receiptId": "<undefined>"
 				},
@@ -57,7 +57,7 @@
 				"data": {
 					"id": "4a275509-29dc-4fb3-a562-426bcf06bf5b",
 					"userId": "3099f7f4-7698-4d01-8c70-bc4c5c296fcb",
-					"currencyCode": "PAB",
+					"currencyCode": "PKR",
 					"amount": 4806.72,
 					"timestamp": "2019-12-18T19:22:28.143Z",
 					"note": "alias vitae sit magnam",
@@ -66,7 +66,7 @@
 						"updatedAt": "2020-01-01T00:00:00.000Z",
 						"timestamp": "2019-12-18T19:22:28.143Z",
 						"amount": 4806.72,
-						"currencyCode": "PAB"
+						"currencyCode": "PKR"
 					},
 					"receiptId": "<undefined>"
 				},
@@ -83,7 +83,7 @@
 				"data": {
 					"id": "952beab0-ac8a-4943-823f-8d3ecc424905",
 					"userId": "3099f7f4-7698-4d01-8c70-bc4c5c296fcb",
-					"currencyCode": "MDL",
+					"currencyCode": "MRU",
 					"amount": -837.35,
 					"timestamp": "2019-12-13T12:32:53.021Z",
 					"note": "qui architecto facilis ad",
@@ -92,7 +92,7 @@
 						"updatedAt": "2020-01-01T00:00:00.000Z",
 						"timestamp": "2019-12-13T12:32:53.021Z",
 						"amount": -837.35,
-						"currencyCode": "MDL"
+						"currencyCode": "MRU"
 					},
 					"receiptId": "<undefined>"
 				},
@@ -109,7 +109,7 @@
 				"data": {
 					"id": "a782b307-9630-4c3f-9fb2-49ca339c1f75",
 					"userId": "3099f7f4-7698-4d01-8c70-bc4c5c296fcb",
-					"currencyCode": "SYP",
+					"currencyCode": "TND",
 					"amount": -3979.7,
 					"timestamp": "2019-12-06T02:12:53.741Z",
 					"note": "dicta laboriosam repellat nihil",
@@ -118,7 +118,7 @@
 						"updatedAt": "2020-01-01T00:00:00.000Z",
 						"timestamp": "2019-12-06T02:12:53.741Z",
 						"amount": -3979.7,
-						"currencyCode": "SYP"
+						"currencyCode": "TND"
 					},
 					"receiptId": "<undefined>"
 				},
@@ -135,7 +135,7 @@
 				"data": {
 					"id": "bfeeebf2-d641-4fd2-8d25-949d3a6ba9e5",
 					"userId": "3099f7f4-7698-4d01-8c70-bc4c5c296fcb",
-					"currencyCode": "CRC",
+					"currencyCode": "CVE",
 					"amount": 248.23,
 					"timestamp": "2019-12-02T16:35:16.249Z",
 					"note": "fugiat esse deleniti ipsam",
@@ -144,7 +144,7 @@
 						"updatedAt": "2020-01-01T00:00:00.000Z",
 						"timestamp": "2019-12-02T16:35:16.249Z",
 						"amount": 248.23,
-						"currencyCode": "CRC"
+						"currencyCode": "CVE"
 					},
 					"receiptId": "<undefined>"
 				},

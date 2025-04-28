@@ -1,7 +1,7 @@
 import React from "react";
 
-import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
-import type { CurrencyCode } from "~app/utils/currency";
+import { useLocale } from "~app/hooks/use-locale";
+import { type CurrencyCode, getCurrencySymbol } from "~app/utils/currency";
 import { Button, ButtonGroup } from "~components/button";
 
 type ButtonProps = {
@@ -18,10 +18,10 @@ const CurrencyButton: React.FC<ButtonProps> = ({
 	const select = React.useCallback(() => {
 		setSelectedCurrencyCode(currencyCode);
 	}, [setSelectedCurrencyCode, currencyCode]);
-	const formattedCurrency = useFormattedCurrency(currencyCode);
+	const locale = useLocale();
 	return (
 		<Button variant={selected ? undefined : "ghost"} onPress={select}>
-			{formattedCurrency.symbol}
+			{getCurrencySymbol(locale, currencyCode)}
 		</Button>
 	);
 };
@@ -44,7 +44,7 @@ export const CurrenciesGroup: React.FC<Props> = ({
 		selectedCurrencyCode !== undefined &&
 		!isLoading &&
 		!aggregatedDebts.some((debt) => debt.currencyCode === selectedCurrencyCode);
-	const otherCurrency = useFormattedCurrency(selectedCurrencyCode || "USD");
+	const locale = useLocale();
 	return (
 		<ButtonGroup color="primary" className="flex-wrap">
 			{aggregatedDebts.map((debt) => (
@@ -59,7 +59,9 @@ export const CurrenciesGroup: React.FC<Props> = ({
 				variant={isSelectedOther ? undefined : "ghost"}
 				onPress={onSelectOther}
 			>
-				{isSelectedOther ? otherCurrency.symbol : "Other"}
+				{isSelectedOther
+					? getCurrencySymbol(locale, selectedCurrencyCode)
+					: "Other"}
 			</Button>
 		</ButtonGroup>
 	);

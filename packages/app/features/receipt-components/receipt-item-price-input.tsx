@@ -4,9 +4,10 @@ import { View } from "react-native";
 import { z } from "zod";
 
 import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
+import { useLocale } from "~app/hooks/use-locale";
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import { trpc } from "~app/trpc";
+import { formatCurrency } from "~app/utils/currency";
 import { useAppForm } from "~app/utils/forms";
 import { priceSchema, priceSchemaDecimal } from "~app/utils/validation";
 import { Text } from "~components/text";
@@ -46,7 +47,7 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 		trpc.receiptItems.update,
 		(vars) => vars.update.type === "price" && vars.id === item.id,
 	);
-	const currency = useFormattedCurrency(currencyCode);
+	const locale = useLocale();
 	const isDisabled = !canEdit || isExternalDisabled || receiptDisabled;
 
 	if (!isEditing) {
@@ -57,9 +58,7 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 				} flex-row items-center gap-1`}
 				onClick={isDisabled ? undefined : switchEditing}
 			>
-				<Text>
-					{item.price} {currency.symbol}
-				</Text>
+				<Text>{formatCurrency(locale, currencyCode, item.price)}</Text>
 			</View>
 		);
 	}

@@ -4,9 +4,9 @@ import { View } from "react-native";
 import { groupBy, values } from "remeda";
 
 import { GroupedQueryErrorMessage } from "~app/components/error-message";
-import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
+import { useLocale } from "~app/hooks/use-locale";
 import type { TRPCQueryErrorResult } from "~app/trpc";
-import type { CurrencyCode } from "~app/utils/currency";
+import { type CurrencyCode, formatCurrency } from "~app/utils/currency";
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
 import { tv } from "~components/utils";
@@ -28,7 +28,7 @@ const DebtGroupElementSkeleton = () => (
 type DebtElement = { currencyCode: CurrencyCode; sum: number };
 
 const DebtGroupElement: React.FC<DebtElement> = ({ currencyCode, sum }) => {
-	const currency = useFormattedCurrency(currencyCode);
+	const locale = useLocale();
 	return (
 		<Text
 			numberOfLines={1}
@@ -36,7 +36,7 @@ const DebtGroupElement: React.FC<DebtElement> = ({ currencyCode, sum }) => {
 			testID="debts-group-element"
 			className={debt({ direction: sum >= 0 ? "in" : "out" })}
 		>
-			{round(Math.abs(sum))} {currency.symbol}
+			{formatCurrency(locale, currencyCode, round(Math.abs(sum)))}
 		</Text>
 	);
 };

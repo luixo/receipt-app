@@ -3,6 +3,8 @@ import { defineConfig, devices } from "@playwright/test";
 import path from "node:path";
 import url from "node:url";
 
+import { localSettings, serverSettings } from "~tests/frontend/consts";
+
 const PORT = Number(process.env.PORT) || 3000;
 const BASE_URL = `http://localhost:${PORT}/`;
 
@@ -100,10 +102,8 @@ export default defineConfig({
 		/* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
 		trace: "on-first-retry",
 
-		// Timezone and locale on a client should differ from those on a server
-		// to verify no render mismatch on hydration
-		timezoneId: "America/Los_Angeles",
-		locale: "ru-RU",
+		timezoneId: localSettings.timezone,
+		locale: localSettings.locale,
 	},
 	projects: [...visualProjects, functionalProject],
 
@@ -114,8 +114,8 @@ export default defineConfig({
 		url: `${BASE_URL}api/ping`,
 		env: {
 			// Timezone and locale on server
-			TZ: "UTC",
-			LC_ALL: "en-US",
+			TZ: serverSettings.timezone,
+			LC_ALL: serverSettings.locale,
 			NODE_ENV: "test",
 			S3_BUCKET: "test-bucket",
 			S3_ENDPOINT: "https://fake-endpoint.org",

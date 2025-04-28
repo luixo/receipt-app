@@ -3,9 +3,10 @@ import { View } from "react-native";
 
 import { DebtSyncStatus } from "~app/components/app/debt-sync-status";
 import { QueryErrorMessage } from "~app/components/error-message";
-import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
-import { useSsrFormat } from "~app/hooks/use-ssr-format";
+import { useFormat } from "~app/hooks/use-format";
+import { useLocale } from "~app/hooks/use-locale";
 import { type TRPCQuerySuccessResult, trpc } from "~app/trpc";
+import { formatCurrency } from "~app/utils/currency";
 import { Link } from "~components/link";
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
@@ -50,8 +51,8 @@ type InnerProps = {
 
 const UserDebtPreviewInner: React.FC<InnerProps> = ({ query }) => {
 	const debt = query.data;
-	const currency = useFormattedCurrency(debt.currencyCode);
-	const { formatDate } = useSsrFormat();
+	const locale = useLocale();
+	const { formatDate } = useFormat();
 	const userQuery = trpc.users.get.useQuery({ id: debt.userId });
 	return (
 		<Link href={`/debts/${debt.id}`}>
@@ -61,7 +62,7 @@ const UserDebtPreviewInner: React.FC<InnerProps> = ({ query }) => {
 						className={debt.amount >= 0 ? "text-success" : "text-danger"}
 						testID="preview-debt-amount"
 					>
-						{Math.abs(debt.amount)} {currency.symbol}
+						{formatCurrency(locale, debt.currencyCode, Math.abs(debt.amount))}
 					</Text>
 				}
 				timestamp={<Text>{formatDate(debt.timestamp)}</Text>}

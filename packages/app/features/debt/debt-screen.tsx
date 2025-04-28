@@ -16,12 +16,16 @@ import {
 	RemoveButtonSkeleton,
 } from "~app/components/remove-button";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
+import { useLocale } from "~app/hooks/use-locale";
 import { useNavigate } from "~app/hooks/use-navigation";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput, TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import type { CurrencyCode } from "~app/utils/currency";
+import {
+	type CurrencyCode,
+	formatCurrency,
+	getCurrencySymbol,
+} from "~app/utils/currency";
 import { areDebtsSynced } from "~app/utils/debts";
 import { useAppForm } from "~app/utils/forms";
 import { debtAmountSchema, debtNoteSchema } from "~app/utils/validation";
@@ -54,7 +58,7 @@ type CurrencyProps = {
 };
 
 const DebtCurrencyInput: React.FC<CurrencyProps> = ({ debt, isLoading }) => {
-	const currency = useFormattedCurrency(debt.currencyCode);
+	const locale = useLocale();
 	const [
 		isModalOpen,
 		{ switchValue: switchModalOpen, setTrue: openModal, setFalse: closeModal },
@@ -86,7 +90,7 @@ const DebtCurrencyInput: React.FC<CurrencyProps> = ({ debt, isLoading }) => {
 				isLoading={updateReceiptMutation.isPending}
 				isIconOnly
 			>
-				{currency.symbol}
+				{getCurrencySymbol(locale, debt.currencyCode)}
 			</Button>
 			<CurrenciesPicker
 				onChange={saveCurrencyCode}
@@ -332,7 +336,7 @@ type InnerProps = {
 export const DebtInner: React.FC<InnerProps> = ({ query }) => {
 	const debt = query.data;
 	const [isRemoving, setRemoving] = React.useState(false);
-	const currency = useFormattedCurrency(debt.currencyCode);
+	const locale = useLocale();
 	const userQuery = trpc.users.get.useQuery({ id: debt.userId });
 
 	return (
@@ -352,7 +356,7 @@ export const DebtInner: React.FC<InnerProps> = ({ query }) => {
 					</>
 				}
 			>
-				{`${debt.amount} ${currency.symbol} debt`}
+				{`${formatCurrency(locale, debt.currencyCode, debt.amount)} debt`}
 			</Header>
 			<LoadableUser className="self-start" id={debt.userId} />
 			<DebtSignButtonGroup debt={debt} disabled={isRemoving} />

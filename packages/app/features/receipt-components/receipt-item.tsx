@@ -3,9 +3,10 @@ import { View } from "react-native";
 
 import { ErrorMessage } from "~app/components/error-message";
 import { RemoveButton } from "~app/components/remove-button";
-import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
+import { useLocale } from "~app/hooks/use-locale";
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import { trpc } from "~app/trpc";
+import { formatCurrency } from "~app/utils/currency";
 import { Card, CardBody, CardHeader } from "~components/card";
 import { Chip } from "~components/chip";
 import { Divider } from "~components/divider";
@@ -45,7 +46,7 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 		const { currencyCode, participants } = useReceiptContext();
 		const { addItemConsumer, removeItem } = useActionsHooksContext();
 		const canEdit = useCanEdit();
-		const currency = useFormattedCurrency(currencyCode);
+		const locale = useLocale();
 
 		const removeItemMutationState = useTrpcMutationState<"receiptItems.remove">(
 			trpc.receiptItems.remove,
@@ -94,7 +95,12 @@ export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
 							isDisabled={isRemovalPending}
 						/>
 						<Text>
-							= {round(item.quantity * item.price)} {currency.symbol}
+							={" "}
+							{formatCurrency(
+								locale,
+								currencyCode,
+								round(item.quantity * item.price),
+							)}
 						</Text>
 					</View>
 					{!canEdit || notAddedParticipants.length === 0 ? null : (

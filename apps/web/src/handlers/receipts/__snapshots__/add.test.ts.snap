@@ -96,7 +96,7 @@ exports[`receipts.add > functionality > receipt with consumers 1`] = `
     "receipts": {
       "id:8900c422-074a-4ca8-81f9-118dadfcee64": {
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "GTQ",
+        "currencyCode": "GYD",
         "id": "8900c422-074a-4ca8-81f9-118dadfcee64",
         "issued": "2020-01-01T00:00:00.000Z",
         "name": "dicta atque iure",
@@ -143,7 +143,7 @@ exports[`receipts.add > functionality > receipt with items 1`] = `
     "receipts": {
       "id:8ad217d2-aa1a-4140-83d3-b377ed516d54": {
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "BYN",
+        "currencyCode": "BGN",
         "id": "8ad217d2-aa1a-4140-83d3-b377ed516d54",
         "issued": "2020-01-01T00:00:00.000Z",
         "name": "optio incidunt ab",
@@ -188,7 +188,7 @@ exports[`receipts.add > functionality > receipt with participants 1`] = `
     "receipts": {
       "id:80dbdf69-5ddf-4c78-bdec-93f7ed0000a1": {
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "TND",
+        "currencyCode": "UGX",
         "id": "80dbdf69-5ddf-4c78-bdec-93f7ed0000a1",
         "issued": "2020-01-01T00:00:00.000Z",
         "name": "atque assumenda delectus",
@@ -249,7 +249,7 @@ exports[`receipts.add > functionality > receipt with payers 1`] = `
     "receipts": {
       "id:272764d2-5de2-4742-a111-7e66ffb995f2": {
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "INR",
+        "currencyCode": "IQD",
         "id": "272764d2-5de2-4742-a111-7e66ffb995f2",
         "issued": "2020-01-01T00:00:00.000Z",
         "name": "vitae ea porro",

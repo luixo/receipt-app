@@ -3,11 +3,11 @@ import { View } from "react-native";
 
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
+import { useLocale } from "~app/hooks/use-locale";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import type { CurrencyCode } from "~app/utils/currency";
+import { type CurrencyCode, getCurrencySymbol } from "~app/utils/currency";
 import { Text } from "~components/text";
 import { options as receiptsUpdateOptions } from "~mutations/receipts/update";
 import { round } from "~utils/math";
@@ -18,7 +18,7 @@ type Props = {
 };
 
 export const ReceiptAmountInput: React.FC<Props> = ({ receipt, isLoading }) => {
-	const formattedCurrencyCode = useFormattedCurrency(receipt.currencyCode);
+	const locale = useLocale();
 	const [
 		isModalOpen,
 		{ switchValue: switchModalOpen, setTrue: openModal, setFalse: closeModal },
@@ -56,7 +56,7 @@ export const ReceiptAmountInput: React.FC<Props> = ({ receipt, isLoading }) => {
 				onClick={disabled ? undefined : openModal}
 			>
 				<Text className="text-2xl leading-9">
-					{formattedCurrencyCode.symbol}
+					{getCurrencySymbol(locale, receipt.currencyCode)}
 				</Text>
 			</View>
 			<CurrenciesPicker

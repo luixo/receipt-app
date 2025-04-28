@@ -5,6 +5,6 @@
 	"type": "module",
 	"sideEffects": false,
 	"dependencies": {
-		"currency-list": "^1.0.8"
+		"currency-codes": "^2.2.0"
 	}
 }

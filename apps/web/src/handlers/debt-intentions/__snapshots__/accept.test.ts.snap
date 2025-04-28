@@ -42,7 +42,7 @@ exports[`debtIntentions.accept > functionality > debt existed on our account bef
     "debts": {
       "id:c0dfa818-bdd7-49f1-90ae-638adbe4238b|ownerAccountId:d3eb30cd-68d2-40cf-8e44-17cce47ac32c": {
         "amount": "644.7300",
-        "currencyCode": "CVE",
+        "currencyCode": "CHW",
         "timestamp": "2020-04-01T00:00:00.000Z",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
@@ -73,13 +73,13 @@ exports[`debtIntentions.accept > functionality > multiple different debts with m
     "debts": {
       "id:7e41d833-50a1-4aa3-9d39-9241a1eaa097|ownerAccountId:fafeb023-e645-46f7-9047-36240d7da0f9": {
         "amount": "544.1900",
-        "currencyCode": "LYD",
+        "currencyCode": "LKR",
         "timestamp": "2020-04-01T00:00:00.000Z",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
       "id:e5a6b3ec-9ac4-4eba-8379-bf22740f0a1d|ownerAccountId:fafeb023-e645-46f7-9047-36240d7da0f9": {
         "amount": "733.4100",
-        "currencyCode": "BGN",
+        "currencyCode": "BZD",
         "timestamp": "2020-04-01T00:00:00.000Z",
         "updatedAt": "2020-01-01T00:02:00.000Z",
       },

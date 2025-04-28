@@ -1,39 +1,53 @@
-import currencyListRaw from "currency-list";
-import { keys } from "remeda";
+import { codes, data } from "currency-codes";
 
 import type { CurrencyCode } from "~app/utils/currency";
 
-const DEFAULT_LOCALE = "en";
+type CurrencyDescription = { code: CurrencyCode; name: string };
 
-// TODO: remove this
-const currencyList =
-	"default" in currencyListRaw
-		? (currencyListRaw.default as typeof currencyListRaw)
-		: currencyListRaw;
+const bannedCodes = [
+	// Silver
+	"XAG",
+	// Gold
+	"XAU",
+	// Bond Markets Unit European Composite Unit (EURCO)
+	"XBA",
+	// Bond Markets Unit European Monetary Unit (E.M.U.-6)
+	"XBB",
+	// Bond Markets Unit European Unit of Account 9 (E.U.A.-9)
+	"XBC",
+	// Bond Markets Unit European Unit of Account 17 (E.U.A.-17)
+	"XBD",
+	// SDR (Special Drawing Right)
+	"XDR",
+	// Palladium
+	"XPD",
+	// Platinum
+	"XPT",
+	// Sistema Unitario De Compensacion Regional De Pagos "Sucre"
+	"XSU",
+	// SDR (Special Drawing Right)
+	"XDR",
+	// Codes specifically reserved for testing purposes
+	"XTS",
+	// ADB Unit of Account
+	"XUA",
+	// The codes assigned for transactions where no currency is involved
+	"XXX",
+];
+export const CURRENCY_CODES = codes().filter(
+	(code) => !bannedCodes.includes(code),
+);
 
-type CurrencyDescription = ReturnType<typeof currencyList.get>;
-export const CURRENCY_CODES = keys(currencyList.getAll("en"));
-export const getCurrencies = (locale = DEFAULT_LOCALE) =>
-	currencyList.getAll(locale) as
-		| Record<CurrencyCode, CurrencyDescription>
-		| undefined;
-export const getCurrency = (
-	currencyCode: CurrencyCode,
-	locale = DEFAULT_LOCALE,
-) => {
-	const currencies = getCurrencies(locale);
-	if (!currencies) {
-		throw new Error(`Locale ${locale} does not exist in currencies`);
-	}
-	const currency = currencies[currencyCode];
-	if (!currency) {
+export const getCurrencies = (): CurrencyDescription[] =>
+	data.map(({ currency, code }) => ({ name: currency, code }));
+
+export const getCurrency = (currencyCode: CurrencyCode) => {
+	const currencies = getCurrencies();
+	const matchedCurrency = currencies.find(({ code }) => code === currencyCode);
+	if (!matchedCurrency) {
 		throw new Error(`Currency ${currencyCode} does not exist in currencies`);
 	}
-	return currency;
+	return matchedCurrency;
 };
-export const getCurrencySymbol = (
-	currencyCode: CurrencyCode,
-	locale = DEFAULT_LOCALE,
-) => getCurrency(currencyCode, locale).symbol_native;
 export const isCurrencyCode = (input: string): input is CurrencyCode =>
 	CURRENCY_CODES.includes(input);

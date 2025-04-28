@@ -3,15 +3,19 @@ import { TRPCError } from "@trpc/server";
 import assert from "node:assert";
 
 import { test as debtsTest } from "~app/features/debts/__tests__/utils";
+import { formatCurrency } from "~app/utils/currency";
+import { localSettings } from "~tests/frontend/consts";
 import { expect } from "~tests/frontend/fixtures";
 import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
-import { getCurrencySymbol } from "~utils/currency-data";
 
 import { test as debtsGroupFixture } from "./debts-group.utils";
 
 const test = mergeTests(debtsTest, debtsGroupFixture);
 
 test.describe("'currency.getList'", () => {
+	const currencyCode = "USD";
+	const amount = 100;
+
 	test("pending", async ({
 		api,
 		mockDebts,
@@ -22,7 +26,7 @@ test.describe("'currency.getList'", () => {
 			generateDebts: (opts) => {
 				const [debt] = defaultGenerateDebts(opts);
 				assert(debt);
-				return [{ ...debt, currencyCode: "USD", amount: 100 }];
+				return [{ ...debt, currencyCode, amount }];
 			},
 		});
 		const currencyListPause = api.createPause();
@@ -31,7 +35,9 @@ test.describe("'currency.getList'", () => {
 			return next();
 		});
 		await openUserDebtsScreen(debtUser.id);
-		await expect(debtsGroupElement).toHaveText("100 USD");
+		await expect(debtsGroupElement).toHaveText(
+			formatCurrency(localSettings.locale, currencyCode, amount),
+		);
 	});
 
 	test("error", async ({
@@ -44,7 +50,7 @@ test.describe("'currency.getList'", () => {
 			generateDebts: (opts) => {
 				const [debt] = defaultGenerateDebts(opts);
 				assert(debt);
-				return [{ ...debt, currencyCode: "USD", amount: 100 }];
+				return [{ ...debt, currencyCode, amount }];
 			},
 		});
 		api.mockFirst("currency.getList", () => {
@@ -54,7 +60,9 @@ test.describe("'currency.getList'", () => {
 			});
 		});
 		await openUserDebtsScreen(debtUser.id);
-		await expect(debtsGroupElement).toHaveText("100 USD");
+		await expect(debtsGroupElement).toHaveText(
+			formatCurrency(localSettings.locale, currencyCode, amount),
+		);
 	});
 });
 
@@ -172,9 +180,9 @@ test("Rounding", async ({
 	await openUserDebtsScreen(debtUser.id, { awaitDebts: 2 });
 
 	await expect(debtsGroupElement.first()).toHaveText(
-		`1.23 ${getCurrencySymbol("USD")}`,
+		formatCurrency(localSettings.locale, "USD", 1.23),
 	);
 	await expect(debtsGroupElement.last()).toHaveText(
-		`1.24 ${getCurrencySymbol("EUR")}`,
+		formatCurrency(localSettings.locale, "EUR", 1.24),
 	);
 });

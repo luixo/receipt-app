@@ -4,12 +4,37 @@ import type { z } from "zod";
 
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
+import { useCurrencyDescription } from "~app/hooks/use-formatted-currency";
 import type { CurrencyCode } from "~app/utils/currency";
 import type { currencyCodeSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { Input } from "~components/input";
 import { type MutationsProp, useMutationLoading } from "~components/utils";
+
+type InnerProps = {
+	value: CurrencyCode;
+	onValueChange: (currencyCode: CurrencyCode) => void;
+	mutation?: MutationsProp;
+	onClick: () => void;
+} & Omit<
+	React.ComponentProps<typeof Input>,
+	"value" | "onChange" | "onValueChange"
+>;
+
+const InnerInput: React.FC<InnerProps> = ({
+	value,
+	onValueChange,
+	...props
+}) => {
+	const currencyDescription = useCurrencyDescription(value);
+	return (
+		<Input
+			value={currencyDescription}
+			onChange={(e) => onValueChange(e.currentTarget.value)}
+			{...props}
+		/>
+	);
+};
 
 type Props = {
 	mutation?: MutationsProp;
@@ -62,19 +87,14 @@ export const CurrencyInput: React.FC<Props> = ({
 		[onCurrencyChange, value],
 	);
 
-	const formattedCurrency = useFormattedCurrency(value ?? "");
 	const isMutationLoading = useMutationLoading({ mutation });
 
 	return (
 		<>
 			{value ? (
-				<Input
-					value={
-						formattedCurrency.code === formattedCurrency.name
-							? formattedCurrency.code
-							: `${formattedCurrency.name} (${formattedCurrency.code})`
-					}
-					onChange={(e) => onValueChange(e.currentTarget.value)}
+				<InnerInput
+					value={value}
+					onValueChange={onValueChange}
 					label="Currency"
 					name="currency"
 					mutation={mutation}

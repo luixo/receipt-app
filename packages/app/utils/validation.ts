@@ -2,6 +2,7 @@ import { z } from "zod";
 import { zfd } from "zod-form-data";
 
 import type { CurrencyCode } from "~app/utils/currency";
+import { getValidLocale } from "~app/utils/locale";
 import type { AccountsId, UsersId } from "~db/models";
 
 const getLengthMessage = (
@@ -169,3 +170,15 @@ export const accountIdSchema = z.string().uuid().refine<AccountsId>(flavored);
 export const fallback = <T>(getValue: () => T) => z.any().transform(getValue);
 
 export const avatarFormSchema = zfd.formData({ avatar: zfd.file().optional() });
+
+export const localeSchema = z.string().transform((value, ctx) => {
+	const validLocale = getValidLocale(value);
+	if (validLocale) {
+		return validLocale;
+	}
+	ctx.addIssue({
+		code: z.ZodIssueCode.custom,
+		message: "Not a valid locale",
+	});
+	return z.NEVER;
+});

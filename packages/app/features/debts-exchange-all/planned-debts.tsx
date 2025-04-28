@@ -6,12 +6,13 @@ import { entries, isNonNullish, unique } from "remeda";
 import { z } from "zod";
 
 import { ErrorMessage } from "~app/components/error-message";
-import { useFormattedCurrencies } from "~app/hooks/use-formatted-currency";
+import { useLocale } from "~app/hooks/use-locale";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { useTrpcMutationStates } from "~app/hooks/use-trpc-mutation-state";
 import { trpc } from "~app/trpc";
-import type { CurrencyCode } from "~app/utils/currency";
+import { type CurrencyCode, formatCurrency } from "~app/utils/currency";
 import { useAppForm } from "~app/utils/forms";
+import type { Locale } from "~app/utils/locale";
 import {
 	currencyCodeSchema,
 	currencyRateSchema,
@@ -44,19 +45,12 @@ const formSchema = z.record(
 );
 type Form = z.infer<typeof formSchema>;
 
-const getMatchedCurrencySymbol = (
-	currencies: ReturnType<typeof useFormattedCurrencies>,
-	currencyCode: CurrencyCode,
-) =>
-	currencies.find((currency) => currency.code === currencyCode)?.symbol ??
-	currencyCode;
-
 const getDebt = (
 	currencyCode: CurrencyCode,
 	selectedCurrencyCode: CurrencyCode,
 	aggregatedDebts: { currencyCode: CurrencyCode; sum: number }[],
 	selectedRates: Record<CurrencyCode, number> | undefined,
-	currencies: ReturnType<typeof useFormattedCurrencies>,
+	locale: Locale,
 ) => {
 	const sourceDebts = aggregatedDebts.filter(
 		(debt) => debt.currencyCode !== selectedCurrencyCode,
@@ -72,12 +66,8 @@ const getDebt = (
 			),
 			currencyCode,
 			note: `Converted from ${sourceDebts
-				.map(
-					({ currencyCode: sourceCurrencyCode, sum }) =>
-						`${sum} ${getMatchedCurrencySymbol(
-							currencies,
-							sourceCurrencyCode,
-						)}`,
+				.map(({ currencyCode: sourceCurrencyCode, sum }) =>
+					formatCurrency(locale, sourceCurrencyCode, sum),
 				)
 				.join(", ")}`,
 		};
@@ -95,10 +85,9 @@ const getDebt = (
 	return {
 		amount: -matchedDebt.sum,
 		currencyCode,
-		note: `Converted to${amount ? ` ${amount}` : ""} ${getMatchedCurrencySymbol(
-			currencies,
-			selectedCurrencyCode,
-		)}`,
+		note: `Converted to${
+			amount ? ` ${formatCurrency(locale, selectedCurrencyCode, amount)}` : ""
+		}`,
 	};
 };
 
@@ -127,7 +116,7 @@ export const PlannedDebts: React.FC<Props> = ({
 		}
 		return 0;
 	});
-	const currencies = useFormattedCurrencies(allCurrencyCodes);
+	const locale = useLocale();
 	const defaultValues: Partial<Form> = {
 		[selectedCurrencyCode]: aggregatedDebts.reduce(
 			(acc, debt) =>
@@ -157,7 +146,7 @@ export const PlannedDebts: React.FC<Props> = ({
 						selectedCurrencyCode,
 						aggregatedDebts,
 						value[selectedCurrencyCode] ?? {},
-						currencies,
+						locale,
 					);
 					const timestamp = new Date(Date.now() + index);
 					addMutation.mutate({
@@ -241,7 +230,7 @@ export const PlannedDebts: React.FC<Props> = ({
 						selectedCurrencyCode,
 						aggregatedDebts,
 						selectedRates,
-						currencies,
+						locale,
 					);
 					const note = (
 						<>{ratesQuery.isLoading && !selected ? <Spinner /> : debt.note}</>
@@ -257,10 +246,7 @@ export const PlannedDebts: React.FC<Props> = ({
 									{selected && ratesQuery.isLoading ? (
 										<Spinner />
 									) : (
-										`${round(debt.amount)} ${getMatchedCurrencySymbol(
-											currencies,
-											currencyCode,
-										)}`
+										formatCurrency(locale, currencyCode, round(debt.amount))
 									)}
 								</Text>
 								<View className="flex-1">

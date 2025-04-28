@@ -28,9 +28,7 @@ export const test = originalTest.extend<Fixtures>({
 	expectCurrency: async ({}, use) => {
 		await use(async (locator, currencyCode) => {
 			const currency = getCurrency(currencyCode);
-			await expect(locator).toHaveValue(
-				`${currency.name_plural} (${currency.code})`,
-			);
+			await expect(locator).toHaveValue(`${currency.name} (${currency.code})`);
 		});
 	},
 	fillCurrency: async (

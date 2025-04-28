@@ -1,7 +1,8 @@
 import React from "react";
 import { View } from "react-native";
 
-import { useFormattedCurrency } from "~app/hooks/use-formatted-currency";
+import { useLocale } from "~app/hooks/use-locale";
+import { formatCurrency } from "~app/utils/currency";
 import { Checkbox } from "~components/checkbox";
 import { Header } from "~components/header";
 import { ArrowDown } from "~components/icons";
@@ -18,7 +19,7 @@ type InnerProps = {
 
 export const ReceiptEmptyItems: React.FC<InnerProps> = ({ itemsRef }) => {
 	const { currencyCode, items } = useReceiptContext();
-	const currency = useFormattedCurrency(currencyCode);
+	const locale = useLocale();
 	const emptyItems = items.filter((item) => item.consumers.length === 0);
 	const onEmptyItemClick = React.useCallback(
 		(id: ReceiptItemsId) => {
@@ -44,9 +45,11 @@ export const ReceiptEmptyItems: React.FC<InnerProps> = ({ itemsRef }) => {
 					onChange={() => onEmptyItemClick(item.id)}
 					icon={<ArrowDown />}
 				>
-					{`"${item.name}" — ${round(item.quantity * item.price)} ${
-						currency.symbol
-					}`}
+					{`"${item.name}" — ${formatCurrency(
+						locale,
+						currencyCode,
+						round(item.quantity * item.price),
+					)}`}
 				</Checkbox>
 			))}
 		</View>

@@ -9,7 +9,11 @@ import {
 	lastColorModeSchema,
 	selectedColorModeSchema,
 } from "~app/utils/store/color-modes";
-import { LOCALE_STORE_NAME, dateLocaleSchema } from "~app/utils/store/locale";
+import {
+	LOCALE_STORE_NAME,
+	getLocale,
+	localeSchema,
+} from "~app/utils/store/locale";
 import {
 	PRETEND_USER_STORE_NAME,
 	pretendUserSchema,
@@ -17,6 +21,7 @@ import {
 import { SETTINGS_STORE_NAME, settingsSchema } from "~app/utils/store/settings";
 import {
 	TZ_OFFSET_STORE_NAME,
+	getTimezoneOffset,
 	timezoneOffsetSchema,
 } from "~app/utils/store/tz-offset";
 
@@ -26,7 +31,7 @@ export const schemas = {
 	// Syncing timezone on SSR and CSR
 	[TZ_OFFSET_STORE_NAME]: timezoneOffsetSchema,
 	// Syncing locale on SSR and CSR
-	[LOCALE_STORE_NAME]: dateLocaleSchema,
+	[LOCALE_STORE_NAME]: localeSchema,
 	// Local settings for a user
 	[SETTINGS_STORE_NAME]: settingsSchema,
 	// Last color schema used in this client
@@ -39,6 +44,13 @@ export const schemas = {
 
 export type StoreValues = {
 	[K in keyof typeof schemas]: z.infer<(typeof schemas)[K]>;
+};
+
+export const defaultGetters: Partial<{
+	[K in keyof StoreValues]: () => StoreValues[K];
+}> = {
+	[TZ_OFFSET_STORE_NAME]: getTimezoneOffset,
+	[LOCALE_STORE_NAME]: getLocale,
 };
 
 export type StoreStates = {
