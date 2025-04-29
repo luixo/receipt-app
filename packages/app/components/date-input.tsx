@@ -6,7 +6,7 @@ import { Calendar } from "~components/calendar";
 import { Input } from "~components/input";
 import { Spinner } from "~components/spinner";
 import type { MutationsProp } from "~components/utils";
-import { useMutationLoading } from "~components/utils";
+import { getMutationLoading } from "~components/utils";
 
 type Props = {
 	value: Date | undefined;
@@ -27,7 +27,7 @@ export const DateInput: React.FC<Props> = ({
 		<Calendar
 			value={value}
 			onChange={onValueChange}
-			disabled={useMutationLoading({ mutation }) || props.isDisabled}
+			disabled={getMutationLoading(mutation) || props.isDisabled}
 		>
 			<View>
 				<Input

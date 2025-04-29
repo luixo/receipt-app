@@ -72,7 +72,9 @@ export const AddReceiptItemForm: React.FC = () => {
 								label="Item name"
 								isRequired
 								autoFocus
-								fieldError={field.state.meta.errors}
+								fieldError={
+									field.state.meta.isDirty ? field.state.meta.errors : undefined
+								}
 								mutation={addItemMutationState}
 								ref={nameFieldRef}
 							/>
@@ -89,7 +91,9 @@ export const AddReceiptItemForm: React.FC = () => {
 								minValue={0}
 								step={10 ** -priceSchemaDecimal}
 								label="Price per unit"
-								fieldError={field.state.meta.errors}
+								fieldError={
+									field.state.meta.isDirty ? field.state.meta.errors : undefined
+								}
 								isDisabled={isPending}
 							/>
 						)}
@@ -105,7 +109,9 @@ export const AddReceiptItemForm: React.FC = () => {
 								minValue={0}
 								step={10 ** -quantitySchemaDecimal}
 								label="Units"
-								fieldError={field.state.meta.errors}
+								fieldError={
+									field.state.meta.isDirty ? field.state.meta.errors : undefined
+								}
 								isDisabled={isDisabled}
 							/>
 						)}

@@ -56,7 +56,9 @@ export const LoginScreen: AppPage = () => {
 								value={field.state.value}
 								onValueChange={field.setValue}
 								label="Email"
-								fieldError={field.state.meta.errors}
+								fieldError={
+									field.state.meta.isDirty ? field.state.meta.errors : undefined
+								}
 								mutation={loginMutation}
 							/>
 						)}
@@ -67,7 +69,9 @@ export const LoginScreen: AppPage = () => {
 								value={field.state.value}
 								onValueChange={field.setValue}
 								label="Password"
-								fieldError={field.state.meta.errors}
+								fieldError={
+									field.state.meta.isDirty ? field.state.meta.errors : undefined
+								}
 								mutation={loginMutation}
 								type="password"
 							/>

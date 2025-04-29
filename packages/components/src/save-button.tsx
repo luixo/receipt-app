@@ -6,7 +6,6 @@ import { Button } from "./button";
 
 export type Props = React.ComponentProps<typeof Button> & {
 	title?: string;
-	isHidden?: boolean;
 	onPress: () => void;
 };
 

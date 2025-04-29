@@ -7,6 +7,7 @@ import type { TRPCQueryOutput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { useAppForm } from "~app/utils/forms";
 import { receiptNameSchema } from "~app/utils/validation";
+import { SaveButton } from "~components/save-button";
 import { options as receiptsUpdateOptions } from "~mutations/receipts/update";
 
 type Props = {
@@ -48,19 +49,31 @@ export const ReceiptNameInput: React.FC<Props> = ({
 					onValueChange={field.setValue}
 					name={field.name}
 					onBlur={field.handleBlur}
-					fieldError={field.state.meta.errors}
+					fieldError={
+						field.state.meta.isDirty ? field.state.meta.errors : undefined
+					}
 					aria-label="Receipt name"
 					mutation={updateReceiptMutation}
 					labelPlacement="outside-left"
 					className="basis-36"
 					isDisabled={isLoading}
 					isReadOnly={receipt.ownerUserId !== receipt.selfUserId}
-					saveProps={{
-						title: "Save receipt name",
-						onPress: () => {
-							void field.form.handleSubmit();
-						},
-					}}
+					endContent={
+						receipt.ownerUserId !== receipt.selfUserId ? null : (
+							<form.Subscribe selector={(state) => state.canSubmit}>
+								{(canSubmit) => (
+									<SaveButton
+										title="Save receipt name"
+										onPress={() => {
+											void field.form.handleSubmit();
+										}}
+										isLoading={updateReceiptMutation.isPending}
+										isDisabled={isLoading || !canSubmit}
+									/>
+								)}
+							</form.Subscribe>
+						)
+					}
 				/>
 			)}
 		</form.AppField>

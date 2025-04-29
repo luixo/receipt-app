@@ -211,7 +211,11 @@ const DebtsListForm: React.FC<FormProps> = ({
 														onValueChange={field.setValue}
 														name={field.name}
 														onBlur={field.handleBlur}
-														fieldError={field.state.meta.errors}
+														fieldError={
+															field.state.meta.isDirty
+																? field.state.meta.errors
+																: undefined
+														}
 														className="flex-[6]"
 														aria-label={currencySymbol}
 														color={

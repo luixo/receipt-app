@@ -1,4 +1,5 @@
 import React from "react";
+import { View } from "react-native";
 
 import { z } from "zod";
 
@@ -12,6 +13,7 @@ import { useAppForm } from "~app/utils/forms";
 import { userNameSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { TrashBin } from "~components/icons";
+import { SaveButton } from "~components/save-button";
 import { Spinner } from "~components/spinner";
 import type { UsersId } from "~db/models";
 import { options as usersRemoveOptions } from "~mutations/users/remove";
@@ -47,17 +49,28 @@ const UserNameInput: React.FC<NameProps> = ({ user, isLoading }) => {
 					onValueChange={field.setValue}
 					name={field.name}
 					onBlur={field.handleBlur}
-					fieldError={field.state.meta.errors}
+					fieldError={
+						field.state.meta.isDirty ? field.state.meta.errors : undefined
+					}
 					label="User name"
 					mutation={updateUserMutation}
 					isDisabled={isLoading}
-					saveProps={{
-						title: "Save user name",
-						isHidden: user.name === field.state.value,
-						onPress: () => {
-							void field.form.handleSubmit();
-						},
-					}}
+					endContent={
+						user.name === field.state.value ? null : (
+							<form.Subscribe selector={(state) => state.canSubmit}>
+								{(canSubmit) => (
+									<SaveButton
+										title="Save user name"
+										onPress={() => {
+											void field.form.handleSubmit();
+										}}
+										isLoading={updateUserMutation.isPending}
+										isDisabled={isLoading || !canSubmit}
+									/>
+								)}
+							</form.Subscribe>
+						)
+					}
 				/>
 			)}
 		</form.AppField>
@@ -116,33 +129,44 @@ const UserPublicNameInput: React.FC<PublicNameProps> = ({
 					onValueChange={field.setValue}
 					name={field.name}
 					onBlur={field.handleBlur}
-					fieldError={field.state.meta.errors}
+					fieldError={
+						field.state.meta.isDirty ? field.state.meta.errors : undefined
+					}
 					label="Public user name"
 					mutation={updateUserMutation}
 					isDisabled={isLoading}
-					saveProps={{
-						title: "Save user public name",
-						isHidden: user.publicName === (field.state.value ?? undefined),
-						onPress: () => {
-							void field.form.handleSubmit();
-						},
-					}}
 					endContent={
-						user.publicName === undefined ? null : (
-							<Button
-								title="Remove user public name"
-								variant="light"
-								isLoading={updateUserMutation.isPending}
-								onPress={() => {
-									field.setValue(null);
-									void field.form.handleSubmit();
-								}}
-								color="danger"
-								isIconOnly
-							>
-								<TrashBin size={24} />
-							</Button>
-						)
+						<View className="flex gap-2">
+							{user.publicName === (field.state.value ?? undefined) ? null : (
+								<form.Subscribe selector={(state) => state.canSubmit}>
+									{(canSubmit) => (
+										<SaveButton
+											title="Save user public name"
+											onPress={() => {
+												void field.form.handleSubmit();
+											}}
+											isLoading={updateUserMutation.isPending}
+											isDisabled={isLoading || !canSubmit}
+										/>
+									)}
+								</form.Subscribe>
+							)}
+							{user.publicName === undefined ? null : (
+								<Button
+									title="Remove user public name"
+									variant="light"
+									isLoading={updateUserMutation.isPending}
+									onPress={() => {
+										field.setValue(null);
+										void field.form.handleSubmit();
+									}}
+									color="danger"
+									isIconOnly
+								>
+									<TrashBin size={24} />
+								</Button>
+							)}
+						</View>
 					}
 				/>
 			)}

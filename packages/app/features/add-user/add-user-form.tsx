@@ -48,7 +48,9 @@ export const AddUserForm: React.FC<Props> = ({ initialValue, onSuccess }) => {
 							name={field.name}
 							onBlur={field.handleBlur}
 							label="User name"
-							fieldError={field.state.meta.errors}
+							fieldError={
+								field.state.meta.isDirty ? field.state.meta.errors : undefined
+							}
 							mutation={addUserMutation}
 						/>
 					)}
@@ -61,7 +63,9 @@ export const AddUserForm: React.FC<Props> = ({ initialValue, onSuccess }) => {
 							name={field.name}
 							onBlur={field.handleBlur}
 							label="Email"
-							fieldError={field.state.meta.errors}
+							fieldError={
+								field.state.meta.isDirty ? field.state.meta.errors : undefined
+							}
 							mutation={addUserMutation}
 						/>
 					)}

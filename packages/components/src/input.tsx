@@ -4,11 +4,10 @@ import { View } from "react-native";
 import { Input as InputRaw, Textarea } from "@heroui/input";
 
 import { EyeIcon, EyeSlashIcon } from "~components/icons";
-import { SaveButton } from "~components/save-button";
 
 import { Button } from "./button";
 import type { FieldError, MutationsProp } from "./utils";
-import { cn, tv, useErrorState, useMutationLoading } from "./utils";
+import { cn, getErrorState, getMutationLoading, tv } from "./utils";
 
 const input = tv({});
 
@@ -18,7 +17,6 @@ type Props = Omit<
 > & {
 	fieldError?: FieldError;
 	mutation?: MutationsProp;
-	saveProps?: React.ComponentProps<typeof SaveButton>;
 	multiline?: boolean;
 };
 
@@ -27,15 +25,7 @@ export const Input = React.forwardRef<
 	Props
 >(
 	(
-		{
-			className,
-			fieldError,
-			mutation,
-			endContent,
-			saveProps,
-			multiline,
-			...props
-		},
+		{ className, fieldError, mutation, endContent, multiline, ...props },
 		ref,
 	) => {
 		const [isVisible, setVisible] = React.useState(false);
@@ -44,8 +34,8 @@ export const Input = React.forwardRef<
 			[],
 		);
 		const Component = multiline ? Textarea : InputRaw;
-		const isMutationLoading = useMutationLoading({ mutation });
-		const { isWarning, isError, errors } = useErrorState({
+		const isMutationLoading = getMutationLoading(mutation);
+		const { isWarning, isError, errors } = getErrorState({
 			mutation,
 			fieldError,
 		});
@@ -81,13 +71,6 @@ export const Input = React.forwardRef<
 									<EyeIcon onClick={switchValue} size={24} />
 								)}
 							</Button>
-						) : null}
-						{saveProps && !saveProps.isHidden ? (
-							<SaveButton
-								{...saveProps}
-								isLoading={isMutationLoading}
-								isDisabled={isWarning || isError || props.isInvalid}
-							/>
 						) : null}
 					</View>
 				}

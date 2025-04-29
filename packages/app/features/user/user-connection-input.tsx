@@ -134,7 +134,9 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 					onValueChange={field.setValue}
 					name={field.name}
 					onBlur={field.handleBlur}
-					fieldError={field.state.meta.errors}
+					fieldError={
+						field.state.meta.isDirty ? field.state.meta.errors : undefined
+					}
 					label="Email"
 					mutation={[connectUserMutation, unlinkMutation]}
 					isDisabled={isLoading}

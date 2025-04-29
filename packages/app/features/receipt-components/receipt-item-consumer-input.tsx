@@ -1,4 +1,5 @@
 import React from "react";
+import { View } from "react-native";
 
 import { z } from "zod";
 
@@ -10,6 +11,7 @@ import { trpc } from "~app/trpc";
 import { useAppForm } from "~app/utils/forms";
 import { partSchema, partSchemaDecimal } from "~app/utils/validation";
 import { Button } from "~components/button";
+import { SaveButton } from "~components/save-button";
 import { Text } from "~components/text";
 import { updateSetStateAction } from "~utils/react";
 
@@ -102,20 +104,32 @@ export const ReceiptItemConsumerInput: React.FC<Props> = ({
 						onValueChange={field.setValue}
 						name={field.name}
 						onBlur={field.handleBlur}
-						fieldError={field.state.meta.errors}
+						fieldError={
+							field.state.meta.isDirty ? field.state.meta.errors : undefined
+						}
 						step={10 ** -partSchemaDecimal}
 						className="w-32"
 						aria-label="Item consumer part"
 						mutation={updateMutationState}
 						isDisabled={isDisabled}
 						labelPlacement="outside-left"
-						saveProps={{
-							title: "Save item consumer part",
-							onPress: () => {
-								void field.form.handleSubmit();
-							},
-						}}
-						endContent={<Text className="self-center">/ {totalParts}</Text>}
+						endContent={
+							<View className="flex gap-2">
+								<Text className="self-center">/ {totalParts}</Text>
+								<form.Subscribe selector={(state) => state.canSubmit}>
+									{(canSubmit) => (
+										<SaveButton
+											title="Save item consumer part"
+											onPress={() => {
+												void field.form.handleSubmit();
+											}}
+											isLoading={updateMutationState?.status === "pending"}
+											isDisabled={isDisabled || !canSubmit}
+										/>
+									)}
+								</form.Subscribe>
+							</View>
+						}
 						variant="bordered"
 					/>
 				)}

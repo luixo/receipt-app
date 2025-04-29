@@ -54,7 +54,9 @@ const ResetPasswordForm: React.FC<Props> = ({ token }) => {
 							onBlur={field.handleBlur}
 							label="New password"
 							type="password"
-							fieldError={field.state.meta.errors}
+							fieldError={
+								field.state.meta.isDirty ? field.state.meta.errors : undefined
+							}
 							mutation={changePasswordMutation}
 						/>
 					)}
@@ -68,7 +70,9 @@ const ResetPasswordForm: React.FC<Props> = ({ token }) => {
 							onBlur={field.handleBlur}
 							label="Retype new password"
 							type="password"
-							fieldError={field.state.meta.errors}
+							fieldError={
+								field.state.meta.isDirty ? field.state.meta.errors : undefined
+							}
 							mutation={changePasswordMutation}
 						/>
 					)}

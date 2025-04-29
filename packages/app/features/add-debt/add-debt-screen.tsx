@@ -105,10 +105,14 @@ export const AddDebtScreen: AppPage = () => {
 								minValue={0}
 								label="Amount"
 								isDisabled={addMutation.isPending}
-								errorMessage={field.state.meta.errors
-									.filter(isNonNullish)
-									.map((error) => error.message)
-									.join("\n")}
+								errorMessage={
+									field.state.meta.isDirty
+										? field.state.meta.errors
+												.filter(isNonNullish)
+												.map((error) => error.message)
+												.join("\n")
+										: undefined
+								}
 								step={10 ** -debtAmountSchemaDecimal}
 							/>
 						)}
@@ -159,7 +163,9 @@ export const AddDebtScreen: AppPage = () => {
 								onBlur={field.handleBlur}
 								isRequired
 								mutation={addMutation}
-								fieldError={field.state.meta.errors}
+								fieldError={
+									field.state.meta.isDirty ? field.state.meta.errors : undefined
+								}
 							/>
 						)}
 					</form.AppField>

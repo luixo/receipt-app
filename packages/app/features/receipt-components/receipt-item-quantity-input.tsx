@@ -8,6 +8,7 @@ import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import { trpc } from "~app/trpc";
 import { useAppForm } from "~app/utils/forms";
 import { quantitySchema, quantitySchemaDecimal } from "~app/utils/validation";
+import { SaveButton } from "~components/save-button";
 import { Text } from "~components/text";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
@@ -68,20 +69,30 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 					onValueChange={field.setValue}
 					name={field.name}
 					onBlur={field.handleBlur}
-					fieldError={field.state.meta.errors}
+					fieldError={
+						field.state.meta.isDirty ? field.state.meta.errors : undefined
+					}
 					step={10 ** -quantitySchemaDecimal}
 					aria-label="Receipt item quantity"
 					mutation={updateMutationState}
 					isDisabled={isDisabled}
 					className="basis-24"
 					labelPlacement="outside-left"
-					saveProps={{
-						title: "Save receipt item quantity",
-						onPress: () => {
-							void field.form.handleSubmit();
-						},
-					}}
 					variant="bordered"
+					endContent={
+						<form.Subscribe selector={(state) => state.canSubmit}>
+							{(canSubmit) => (
+								<SaveButton
+									title="Save receipt item quantity"
+									onPress={() => {
+										void field.form.handleSubmit();
+									}}
+									isLoading={updateMutationState?.status === "pending"}
+									isDisabled={isDisabled || !canSubmit}
+								/>
+							)}
+						</form.Subscribe>
+					}
 				/>
 			)}
 		</form.AppField>

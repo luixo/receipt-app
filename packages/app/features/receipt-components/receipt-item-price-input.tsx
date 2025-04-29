@@ -10,6 +10,7 @@ import { trpc } from "~app/trpc";
 import { formatCurrency } from "~app/utils/currency";
 import { useAppForm } from "~app/utils/forms";
 import { priceSchema, priceSchemaDecimal } from "~app/utils/validation";
+import { SaveButton } from "~components/save-button";
 import { Text } from "~components/text";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
@@ -71,20 +72,30 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 					onValueChange={field.setValue}
 					name={field.name}
 					onBlur={field.handleBlur}
-					fieldError={field.state.meta.errors}
+					fieldError={
+						field.state.meta.isDirty ? field.state.meta.errors : undefined
+					}
 					step={10 ** -priceSchemaDecimal}
 					aria-label="Receipt item price"
 					className="basis-24"
 					labelPlacement="outside-left"
 					mutation={updateMutationState}
 					isDisabled={isDisabled}
-					saveProps={{
-						title: "Save receipt item price",
-						onPress: () => {
-							void field.form.handleSubmit();
-						},
-					}}
 					variant="bordered"
+					endContent={
+						<form.Subscribe selector={(state) => state.canSubmit}>
+							{(canSubmit) => (
+								<SaveButton
+									title="Save receipt item price"
+									onPress={() => {
+										void field.form.handleSubmit();
+									}}
+									isLoading={updateMutationState?.status === "pending"}
+									isDisabled={isDisabled || !canSubmit}
+								/>
+							)}
+						</form.Subscribe>
+					}
 				/>
 			)}
 		</form.AppField>

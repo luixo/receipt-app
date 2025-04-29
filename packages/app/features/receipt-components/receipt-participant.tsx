@@ -17,8 +17,10 @@ import { Accordion, AccordionItem } from "~components/accordion";
 import { Button } from "~components/button";
 import { Divider } from "~components/divider";
 import { MoneyIcon } from "~components/icons";
+import { SaveButton } from "~components/save-button";
 import { Text } from "~components/text";
 import { Tooltip } from "~components/tooltip";
+import { getMutationLoading } from "~components/utils";
 import { round } from "~utils/math";
 import { updateSetStateAction } from "~utils/react";
 
@@ -255,7 +257,11 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 													onValueChange={field.setValue}
 													name={field.name}
 													onBlur={field.handleBlur}
-													fieldError={field.state.meta.errors}
+													fieldError={
+														field.state.meta.isDirty
+															? field.state.meta.errors
+															: undefined
+													}
 													className="w-32"
 													aria-label="Item payer part"
 													mutation={[
@@ -264,17 +270,31 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 														updatePayerMutationState,
 													]}
 													labelPlacement="outside-left"
-													saveProps={{
-														title: "Save item payer part",
-														onPress: () => {
-															void field.form.handleSubmit();
-														},
-													}}
 													hideStepper
 													endContent={
-														<Text className="self-center">
-															/ {totalPayParts}
-														</Text>
+														<View className="flex gap-2">
+															<Text className="self-center">
+																/ {totalPayParts}
+															</Text>
+															<form.Subscribe
+																selector={(state) => state.canSubmit}
+															>
+																{(canSubmit) => (
+																	<SaveButton
+																		title="Save item payer part"
+																		onPress={() => {
+																			void field.form.handleSubmit();
+																		}}
+																		isLoading={getMutationLoading([
+																			addPayerMutationState,
+																			removePayerMutationState,
+																			updatePayerMutationState,
+																		])}
+																		isDisabled={!canSubmit}
+																	/>
+																)}
+															</form.Subscribe>
+														</View>
 													}
 													variant="bordered"
 												/>

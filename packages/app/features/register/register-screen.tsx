@@ -61,7 +61,9 @@ export const RegisterScreen: AppPage = () => {
 								name={field.name}
 								onBlur={field.handleBlur}
 								label="Email"
-								fieldError={field.state.meta.errors}
+								fieldError={
+									field.state.meta.isDirty ? field.state.meta.errors : undefined
+								}
 								mutation={registerMutation}
 							/>
 						)}
@@ -75,7 +77,9 @@ export const RegisterScreen: AppPage = () => {
 								onBlur={field.handleBlur}
 								label="Name"
 								placeholder="You can change it later"
-								fieldError={field.state.meta.errors}
+								fieldError={
+									field.state.meta.isDirty ? field.state.meta.errors : undefined
+								}
 								mutation={registerMutation}
 							/>
 						)}
@@ -89,7 +93,9 @@ export const RegisterScreen: AppPage = () => {
 								onBlur={field.handleBlur}
 								label="New password"
 								type="password"
-								fieldError={field.state.meta.errors}
+								fieldError={
+									field.state.meta.isDirty ? field.state.meta.errors : undefined
+								}
 								mutation={registerMutation}
 							/>
 						)}
@@ -103,7 +109,9 @@ export const RegisterScreen: AppPage = () => {
 								onBlur={field.handleBlur}
 								label="Retype new password"
 								type="password"
-								fieldError={field.state.meta.errors}
+								fieldError={
+									field.state.meta.isDirty ? field.state.meta.errors : undefined
+								}
 								mutation={registerMutation}
 							/>
 						)}

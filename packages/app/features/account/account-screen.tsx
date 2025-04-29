@@ -16,6 +16,7 @@ import { noBatchContext } from "~app/utils/trpc";
 import { userNameSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { AccountIcon } from "~components/icons";
+import { SaveButton } from "~components/save-button";
 import { Spinner } from "~components/spinner";
 import { options as accountChangeNameOptions } from "~mutations/account/change-name";
 import { options as accountLogoutOptions } from "~mutations/account/logout";
@@ -47,16 +48,27 @@ const AccountNameInput: React.FC<NameProps> = ({ accountQuery }) => {
 					onValueChange={field.setValue}
 					name={field.name}
 					onBlur={field.handleBlur}
-					fieldError={field.state.meta.errors}
+					fieldError={
+						field.state.meta.isDirty ? field.state.meta.errors : undefined
+					}
 					label="Your name in the receipts"
 					mutation={updateNameMutation}
-					saveProps={{
-						title: "Save name",
-						isHidden: accountQuery.user.name === field.state.value,
-						onPress: () => {
-							void field.form.handleSubmit();
-						},
-					}}
+					endContent={
+						accountQuery.user.name === field.state.value ? null : (
+							<form.Subscribe selector={(state) => state.canSubmit}>
+								{(canSubmit) => (
+									<SaveButton
+										title="Save name"
+										onPress={() => {
+											void field.form.handleSubmit();
+										}}
+										isLoading={updateNameMutation.isPending}
+										isDisabled={!canSubmit}
+									/>
+								)}
+							</form.Subscribe>
+						)
+					}
 				/>
 			)}
 		</form.AppField>

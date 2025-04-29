@@ -1,4 +1,5 @@
 import React from "react";
+import { View } from "react-native";
 
 import { z } from "zod";
 
@@ -33,6 +34,7 @@ import { Button } from "~components/button";
 import { ReceiptIcon } from "~components/icons";
 import { Input } from "~components/input";
 import { Link } from "~components/link";
+import { SaveButton } from "~components/save-button";
 import { Spinner } from "~components/spinner";
 import type { DebtsId, ReceiptsId, UsersId } from "~db/models";
 import { options as debtsRemoveOptions } from "~mutations/debts/remove";
@@ -133,19 +135,32 @@ const DebtAmountInput: React.FC<AmountProps> = ({ debt, isLoading }) => {
 					onValueChange={field.setValue}
 					name={field.name}
 					onBlur={field.handleBlur}
-					fieldError={field.state.meta.errors}
+					fieldError={
+						field.state.meta.isDirty ? field.state.meta.errors : undefined
+					}
 					aria-label="Debt amount"
 					mutation={updateMutation}
 					isDisabled={isLoading}
 					minValue={0}
-					saveProps={{
-						title: "Save debt amount",
-						isHidden: absoluteAmount === field.state.value,
-						onPress: () => {
-							void field.form.handleSubmit();
-						},
-					}}
-					endContent={<DebtCurrencyInput debt={debt} isLoading={isLoading} />}
+					endContent={
+						<View className="flex gap-2">
+							<DebtCurrencyInput debt={debt} isLoading={isLoading} />
+							{absoluteAmount === field.state.value ? null : (
+								<form.Subscribe selector={(state) => state.canSubmit}>
+									{(canSubmit) => (
+										<SaveButton
+											title="Save debt amount"
+											onPress={() => {
+												void field.form.handleSubmit();
+											}}
+											isLoading={updateMutation.isPending}
+											isDisabled={isLoading || !canSubmit}
+										/>
+									)}
+								</form.Subscribe>
+							)}
+						</View>
+					}
 					variant="bordered"
 				/>
 			)}
@@ -215,18 +230,29 @@ const DebtNoteInput: React.FC<NoteProps> = ({ debt, isLoading }) => {
 					onValueChange={field.setValue}
 					name={field.name}
 					onBlur={field.handleBlur}
-					fieldError={field.state.meta.errors}
+					fieldError={
+						field.state.meta.isDirty ? field.state.meta.errors : undefined
+					}
 					aria-label="Debt note"
 					mutation={updateMutation}
 					isDisabled={isLoading}
-					saveProps={{
-						title: "Save debt note",
-						isHidden: debt.note === field.state.value,
-						onPress: () => {
-							void field.form.handleSubmit();
-						},
-					}}
 					multiline
+					endContent={
+						debt.note === field.state.value ? null : (
+							<form.Subscribe selector={(state) => state.canSubmit}>
+								{(canSubmit) => (
+									<SaveButton
+										title="Save debt note"
+										onPress={() => {
+											void field.form.handleSubmit();
+										}}
+										isLoading={updateMutation.isPending}
+										isDisabled={isLoading || !canSubmit}
+									/>
+								)}
+							</form.Subscribe>
+						)
+					}
 				/>
 			)}
 		</form.AppField>

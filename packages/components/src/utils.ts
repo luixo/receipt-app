@@ -14,18 +14,14 @@ type MutationOrState = TRPCMutationResult<any> | TRPCMutationState<any>;
 type ValueOrArray<T> = T | T[];
 export type MutationsProp = ValueOrArray<MutationOrState | undefined>;
 
-export const useMutationLoading = ({
-	mutation,
-}: {
-	mutation?: MutationsProp;
-}) => {
+export const getMutationLoading = (mutation?: MutationsProp) => {
 	const mutations = (
 		Array.isArray(mutation) ? mutation : mutation ? [mutation] : []
 	).filter(isNonNullish);
 	return mutations.some(({ status }) => status === "pending");
 };
 
-export const useErrorState = ({
+export const getErrorState = ({
 	mutation,
 	fieldError,
 }: {

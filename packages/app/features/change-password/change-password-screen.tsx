@@ -53,7 +53,9 @@ const ChangePasswordForm: React.FC = () => {
 							onBlur={field.handleBlur}
 							label="Current password"
 							mutation={changePasswordMutation}
-							fieldError={field.state.meta.errors}
+							fieldError={
+								field.state.meta.isDirty ? field.state.meta.errors : undefined
+							}
 							type="password"
 						/>
 					)}
@@ -67,7 +69,9 @@ const ChangePasswordForm: React.FC = () => {
 							onBlur={field.handleBlur}
 							label="New password"
 							mutation={changePasswordMutation}
-							fieldError={field.state.meta.errors}
+							fieldError={
+								field.state.meta.isDirty ? field.state.meta.errors : undefined
+							}
 							type="password"
 						/>
 					)}
@@ -81,7 +85,9 @@ const ChangePasswordForm: React.FC = () => {
 							onBlur={field.handleBlur}
 							label="Retype new password"
 							mutation={changePasswordMutation}
-							fieldError={field.state.meta.errors}
+							fieldError={
+								field.state.meta.isDirty ? field.state.meta.errors : undefined
+							}
 							type="password"
 						/>
 					)}

@@ -118,7 +118,11 @@ export const AddReceipt: React.FC<Props> = ({ selfAccountId }) => {
 									onBlur={field.handleBlur}
 									isRequired
 									mutation={addReceiptMutation}
-									fieldError={field.state.meta.errors}
+									fieldError={
+										field.state.meta.isDirty
+											? field.state.meta.errors
+											: undefined
+									}
 								/>
 							)}
 						</form.AppField>

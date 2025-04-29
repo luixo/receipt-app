@@ -263,7 +263,11 @@ export const PlannedDebts: React.FC<Props> = ({
 													onValueChange={field.setValue}
 													name={field.name}
 													onBlur={field.handleBlur}
-													fieldError={field.state.meta.errors}
+													fieldError={
+														field.state.meta.isDirty
+															? field.state.meta.errors
+															: undefined
+													}
 													min="0"
 													step={10 ** -currencyRateSchemaDecimal}
 													aria-label={currencyCode}

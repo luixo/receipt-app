@@ -9,7 +9,7 @@ import type { CurrencyCode } from "~app/utils/currency";
 import type { currencyCodeSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { Input } from "~components/input";
-import { type MutationsProp, useMutationLoading } from "~components/utils";
+import { type MutationsProp, getMutationLoading } from "~components/utils";
 
 type InnerProps = {
 	value: CurrencyCode;
@@ -87,8 +87,6 @@ export const CurrencyInput: React.FC<Props> = ({
 		[onCurrencyChange, value],
 	);
 
-	const isMutationLoading = useMutationLoading({ mutation });
-
 	return (
 		<>
 			{value ? (
@@ -105,7 +103,7 @@ export const CurrencyInput: React.FC<Props> = ({
 				<Button
 					color="primary"
 					onPress={openModal}
-					isDisabled={isMutationLoading}
+					isDisabled={getMutationLoading(mutation)}
 					className="self-end"
 				>
 					Pick currency
