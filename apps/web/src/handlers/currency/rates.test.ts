@@ -30,7 +30,7 @@ describe("currency.rates", () => {
 			await expectTRPCError(
 				() => caller.procedure({ from: "foo", to: ["USD"] }),
 				"BAD_REQUEST",
-				`Zod error\n\nAt "from": Invalid input`,
+				`Zod error\n\nAt "from": Currency FOO does not exist in currency list`,
 			);
 		});
 
@@ -40,7 +40,7 @@ describe("currency.rates", () => {
 			await expectTRPCError(
 				() => caller.procedure({ from: "EUR", to: ["USD", "bar"] }),
 				"BAD_REQUEST",
-				`Zod error\n\nAt "to[1]": Invalid input`,
+				`Zod error\n\nAt "to[1]": Currency BAR does not exist in currency list`,
 			);
 		});
 

@@ -61,7 +61,7 @@ export const verifyCurrencyCode = <T>(
 			await expectTRPCError(
 				() => runProcedure(context, "foo"),
 				"BAD_REQUEST",
-				`Zod error\n\nAt "${prefix}currencyCode": Invalid input`,
+				`Zod error\n\nAt "${prefix}currencyCode": Currency FOO does not exist in currency list`,
 			);
 		});
 	});

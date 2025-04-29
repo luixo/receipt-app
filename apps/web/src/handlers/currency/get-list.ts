@@ -1,4 +1,4 @@
-import { getCurrencies } from "~utils/currency-data";
+import { CURRENCIES } from "~utils/currency-data";
 import { authProcedure } from "~web/handlers/trpc";
 
-export const procedure = authProcedure.query(() => getCurrencies());
+export const procedure = authProcedure.query(() => CURRENCIES);

@@ -49,7 +49,11 @@ export const AddReceipt: React.FC<Props> = ({ selfAccountId }) => {
 	} satisfies Partial<Form>;
 	const form = useAppForm({
 		defaultValues: defaultValues as Form,
-		validators: { onChange: formSchema },
+		validators: {
+			onMount: formSchema,
+			onChange: formSchema,
+			onSubmit: formSchema,
+		},
 		onSubmit: ({ value }) => {
 			addReceiptMutation.mutate({
 				name: value.name,

@@ -32,6 +32,14 @@ export const DateInput: React.FC<Props> = ({
 			<View>
 				<Input
 					value={value ? formatDate(value) : ""}
+					onValueChange={(nextValue) => {
+						// Manual update - or by automation tool
+						const updatedDate = new Date(nextValue);
+						if (Number.isNaN(updatedDate)) {
+							return;
+						}
+						onValueChange(updatedDate);
+					}}
 					aria-label={label || "Date"}
 					label={label}
 					mutation={mutation}

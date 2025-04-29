@@ -1,7 +1,9 @@
 import { type Locator, expect, test as originalTest } from "@playwright/test";
 
+import { getCurrencyDescription } from "~app/hooks/use-formatted-currency";
 import type { CurrencyCode } from "~app/utils/currency";
-import { getCurrency } from "~utils/currency-data";
+import { localSettings } from "~tests/frontend/consts";
+import { CURRENCIES } from "~utils/currency-data";
 
 export type Fixtures = {
 	currencyButton: (currencyCode?: string) => Locator;
@@ -27,8 +29,9 @@ export const test = originalTest.extend<Fixtures>({
 	// eslint-disable-next-line no-empty-pattern
 	expectCurrency: async ({}, use) => {
 		await use(async (locator, currencyCode) => {
-			const currency = getCurrency(currencyCode);
-			await expect(locator).toHaveValue(`${currency.name} (${currency.code})`);
+			await expect(locator).toHaveValue(
+				getCurrencyDescription(localSettings.locale, currencyCode, CURRENCIES),
+			);
 		});
 	},
 	fillCurrency: async (

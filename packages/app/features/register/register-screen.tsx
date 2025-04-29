@@ -43,7 +43,11 @@ export const RegisterScreen: AppPage = () => {
 	const defaultValues: Partial<Form> = {};
 	const form = useAppForm({
 		defaultValues: defaultValues as Form,
-		validators: { onChange: formSchema },
+		validators: {
+			onMount: formSchema,
+			onChange: formSchema,
+			onSubmit: formSchema,
+		},
 		onSubmit: ({ value: { passwordRetype, ...value } }) =>
 			registerMutation.mutate(value),
 	});

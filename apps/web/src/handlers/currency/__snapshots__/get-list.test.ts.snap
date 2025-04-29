@@ -639,68 +639,16 @@ exports[`currency.getList > functionality > list returned in "en" locale 1`] = `
     "name": "CFA Franc BEAC",
   },
   {
-    "code": "XAG",
-    "name": "Silver",
-  },
-  {
-    "code": "XAU",
-    "name": "Gold",
-  },
-  {
-    "code": "XBA",
-    "name": "Bond Markets Unit European Composite Unit (EURCO)",
-  },
-  {
-    "code": "XBB",
-    "name": "Bond Markets Unit European Monetary Unit (E.M.U.-6)",
-  },
-  {
-    "code": "XBC",
-    "name": "Bond Markets Unit European Unit of Account 9 (E.U.A.-9)",
-  },
-  {
-    "code": "XBD",
-    "name": "Bond Markets Unit European Unit of Account 17 (E.U.A.-17)",
-  },
-  {
     "code": "XCD",
     "name": "East Caribbean Dollar",
-  },
-  {
-    "code": "XDR",
-    "name": "SDR (Special Drawing Right)",
   },
   {
     "code": "XOF",
     "name": "CFA Franc BCEAO",
   },
   {
-    "code": "XPD",
-    "name": "Palladium",
-  },
-  {
     "code": "XPF",
     "name": "CFP Franc",
-  },
-  {
-    "code": "XPT",
-    "name": "Platinum",
-  },
-  {
-    "code": "XSU",
-    "name": "Sucre",
-  },
-  {
-    "code": "XTS",
-    "name": "Codes specifically reserved for testing purposes",
-  },
-  {
-    "code": "XUA",
-    "name": "ADB Unit of Account",
-  },
-  {
-    "code": "XXX",
-    "name": "The codes assigned for transactions where no currency is involved",
   },
   {
     "code": "YER",

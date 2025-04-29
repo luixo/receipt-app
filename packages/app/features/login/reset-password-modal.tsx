@@ -23,7 +23,11 @@ const ResetPasswordModalForm: React.FC<{
 	const defaultValues: Partial<Form> = {};
 	const form = useAppForm({
 		defaultValues: defaultValues as Form,
-		validators: { onChange: formSchema },
+		validators: {
+			onMount: formSchema,
+			onChange: formSchema,
+			onSubmit: formSchema,
+		},
 		onSubmit: ({ value }) => mutation.mutate(value),
 	});
 

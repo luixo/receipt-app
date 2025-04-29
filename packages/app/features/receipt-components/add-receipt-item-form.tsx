@@ -42,7 +42,11 @@ export const AddReceiptItemForm: React.FC = () => {
 	};
 	const form = useAppForm({
 		defaultValues: defaultValues as Form,
-		validators: { onChange: formSchema },
+		validators: {
+			onMount: formSchema,
+			onChange: formSchema,
+			onSubmit: formSchema,
+		},
 		onSubmit: ({ value }) => {
 			addItem(value.name, value.price, value.quantity, {
 				onSuccess: () => {

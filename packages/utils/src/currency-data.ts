@@ -1,4 +1,4 @@
-import { codes, data } from "currency-codes";
+import { data } from "currency-codes";
 
 import type { CurrencyCode } from "~app/utils/currency";
 
@@ -34,20 +34,12 @@ const bannedCodes = [
 	// The codes assigned for transactions where no currency is involved
 	"XXX",
 ];
-export const CURRENCY_CODES = codes().filter(
-	(code) => !bannedCodes.includes(code),
-);
 
-export const getCurrencies = (): CurrencyDescription[] =>
-	data.map(({ currency, code }) => ({ name: currency, code }));
+export const CURRENCIES: CurrencyDescription[] = data
+	.filter(({ code }) => !bannedCodes.includes(code))
+	.map(({ currency, code }) => ({ name: currency, code }));
 
-export const getCurrency = (currencyCode: CurrencyCode) => {
-	const currencies = getCurrencies();
-	const matchedCurrency = currencies.find(({ code }) => code === currencyCode);
-	if (!matchedCurrency) {
-		throw new Error(`Currency ${currencyCode} does not exist in currencies`);
-	}
-	return matchedCurrency;
-};
+export const CURRENCY_CODES = CURRENCIES.map(({ code }) => code);
+
 export const isCurrencyCode = (input: string): input is CurrencyCode =>
 	CURRENCY_CODES.includes(input);

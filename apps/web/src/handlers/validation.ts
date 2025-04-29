@@ -9,7 +9,7 @@ import type {
 	SessionsSessionId,
 	UsersId,
 } from "~db/models";
-import { isCurrencyCode } from "~utils/currency-data";
+import { CURRENCY_CODES } from "~utils/currency-data";
 
 export const offsetSchema = z.number().int().gte(0).max(MAX_OFFSET);
 export const limitSchema = z.number().int().gt(0).max(MAX_LIMIT);
@@ -24,7 +24,10 @@ export const roleSchema = assignableRoleSchema.or(z.literal("owner"));
 export const currencyCodeSchema = z
 	.string()
 	.transform((code) => code.toUpperCase())
-	.refine(isCurrencyCode);
+	.refine(
+		(code) => CURRENCY_CODES.includes(code),
+		(code) => ({ message: `Currency ${code} does not exist in currency list` }),
+	);
 
 export const userIdSchema = z.string().uuid().refine<UsersId>(flavored);
 export const accountIdSchema = z.string().uuid().refine<AccountsId>(flavored);

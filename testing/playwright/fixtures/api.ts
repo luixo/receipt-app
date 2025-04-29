@@ -26,7 +26,7 @@ import type {
 import type { TransformerResult } from "~app/utils/trpc";
 import { transformer } from "~app/utils/trpc";
 import type { AccountsId, UsersId } from "~db/models";
-import { getCurrencies } from "~utils/currency-data";
+import { CURRENCIES } from "~utils/currency-data";
 
 import type { appRouter } from "../global/router";
 
@@ -378,10 +378,9 @@ const createApiManager = async (
 	};
 };
 
-const currencies = getCurrencies();
 const getMockUtils = (api: ApiManager, faker: Faker) => ({
 	noAuthPage: () => {
-		api.mockLast("currency.getList", currencies);
+		api.mockLast("currency.getList", CURRENCIES);
 		api.mockLast("account.get", () => {
 			throw new TRPCError({
 				code: "UNAUTHORIZED",
@@ -390,7 +389,7 @@ const getMockUtils = (api: ApiManager, faker: Faker) => ({
 		});
 	},
 	authPage: () => {
-		api.mockLast("currency.getList", currencies);
+		api.mockLast("currency.getList", CURRENCIES);
 		api.mockLast("debtIntentions.getAll", []);
 		api.mockLast("accountConnectionIntentions.getAll", {
 			inbound: [],

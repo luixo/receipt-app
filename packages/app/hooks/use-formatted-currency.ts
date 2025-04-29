@@ -4,7 +4,7 @@ import type { TRPCQueryOutput } from "~app/trpc";
 import { type CurrencyCode, getCurrencySymbol } from "~app/utils/currency";
 import type { Locale } from "~app/utils/locale";
 
-const getCurrencyDescription = (
+export const getCurrencyDescription = (
 	locale: Locale,
 	currencyCode: CurrencyCode,
 	currenciesData?: TRPCQueryOutput<"currency.getList">,

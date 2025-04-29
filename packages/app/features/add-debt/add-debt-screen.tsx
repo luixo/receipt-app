@@ -61,7 +61,9 @@ export const AddDebtScreen: AppPage = () => {
 	const form = useAppForm({
 		defaultValues: defaultValues as Form,
 		validators: {
+			onMount: formSchema,
 			onChange: formSchema,
+			onSubmit: formSchema,
 		},
 		onSubmit: ({ value }) => {
 			addMutation.mutate({

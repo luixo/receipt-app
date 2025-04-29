@@ -89,7 +89,11 @@ const DebtsListForm: React.FC<FormProps> = ({
 			(item) => item.currencyCode,
 			() => 0,
 		) satisfies Form,
-		validators: { onChange: formSchema, onMount: formSchema },
+		validators: {
+			onMount: formSchema,
+			onChange: formSchema,
+			onSubmit: formSchema,
+		},
 		onSubmit: ({ value }) => {
 			setLastMutationTimestamps(
 				allCurrenciesWithSums.reduce<number[]>(

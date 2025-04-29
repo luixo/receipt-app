@@ -12,60 +12,6 @@ import { test as debtsGroupFixture } from "./debts-group.utils";
 
 const test = mergeTests(debtsTest, debtsGroupFixture);
 
-test.describe("'currency.getList'", () => {
-	const currencyCode = "USD";
-	const amount = 100;
-
-	test("pending", async ({
-		api,
-		mockDebts,
-		openUserDebtsScreen,
-		debtsGroupElement,
-	}) => {
-		const { debtUser } = mockDebts({
-			generateDebts: (opts) => {
-				const [debt] = defaultGenerateDebts(opts);
-				assert(debt);
-				return [{ ...debt, currencyCode, amount }];
-			},
-		});
-		const currencyListPause = api.createPause();
-		api.mockFirst("currency.getList", async ({ next }) => {
-			await currencyListPause.promise;
-			return next();
-		});
-		await openUserDebtsScreen(debtUser.id);
-		await expect(debtsGroupElement).toHaveText(
-			formatCurrency(localSettings.locale, currencyCode, amount),
-		);
-	});
-
-	test("error", async ({
-		api,
-		mockDebts,
-		openUserDebtsScreen,
-		debtsGroupElement,
-	}) => {
-		const { debtUser } = mockDebts({
-			generateDebts: (opts) => {
-				const [debt] = defaultGenerateDebts(opts);
-				assert(debt);
-				return [{ ...debt, currencyCode, amount }];
-			},
-		});
-		api.mockFirst("currency.getList", () => {
-			throw new TRPCError({
-				code: "FORBIDDEN",
-				message: `Mock "currency.getList" error`,
-			});
-		});
-		await openUserDebtsScreen(debtUser.id);
-		await expect(debtsGroupElement).toHaveText(
-			formatCurrency(localSettings.locale, currencyCode, amount),
-		);
-	});
-});
-
 test.describe("external query status", () => {
 	test("pending", async ({
 		api,

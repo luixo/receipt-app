@@ -41,7 +41,11 @@ export const LoginScreen: AppPage = () => {
 	const defaultValues: Partial<Form> = {};
 	const form = useAppForm({
 		defaultValues: defaultValues as Form,
-		validators: { onChange: formSchema },
+		validators: {
+			onMount: formSchema,
+			onChange: formSchema,
+			onSubmit: formSchema,
+		},
 		onSubmit: ({ value }) => loginMutation.mutate(value),
 	});
 

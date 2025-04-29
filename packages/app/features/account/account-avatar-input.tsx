@@ -110,7 +110,9 @@ export const AccountAvatarInput: React.FC<Props> = ({ account, children }) => {
 	const form = useAppForm({
 		defaultValues: defaultValues as Form,
 		validators: {
+			onMount: formSchema,
 			onChange: formSchema,
+			onSubmit: formSchema,
 		},
 		onSubmit: async ({ value, formApi }) => {
 			const formData = new FormData();

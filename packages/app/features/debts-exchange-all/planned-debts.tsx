@@ -137,7 +137,11 @@ export const PlannedDebts: React.FC<Props> = ({
 	>([]);
 	const form = useAppForm({
 		defaultValues: defaultValues as Form,
-		validators: { onChange: formSchema },
+		validators: {
+			onMount: formSchema,
+			onChange: formSchema,
+			onSubmit: formSchema,
+		},
 		onSubmit: ({ value }) => {
 			setLastMutationTimestamps(
 				allCurrencyCodes.reduce<number[]>((acc, currencyCode, index) => {
