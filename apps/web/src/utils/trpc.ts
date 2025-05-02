@@ -1,4 +1,6 @@
 import * as Sentry from "@sentry/nextjs";
+import type { ParserBuilder } from "nuqs";
+import { parseAsBoolean, parseAsInteger, parseAsString } from "nuqs";
 
 import type { GetLinksOptions } from "~app/utils/trpc";
 
@@ -8,4 +10,14 @@ export const captureSentryError: GetLinksOptions["captureError"] = (error) => {
 		tags: { transaction_id: transactionId },
 	});
 	return transactionId;
+};
+
+export const linksParams = {
+	debug: parseAsBoolean,
+	proxyPort: parseAsInteger,
+	controllerId: parseAsString,
+} satisfies {
+	[K in keyof GetLinksOptions["searchParams"]]: ParserBuilder<
+		NonNullable<GetLinksOptions["searchParams"][K]>
+	>;
 };

@@ -2,11 +2,9 @@ import React from "react";
 
 import type { Selection } from "@react-types/shared/src/selection";
 
-import type {
-	Filters,
-	OrderByLiteral,
-} from "~app/features/receipts/receipts-screen";
+import type { Filters } from "~app/features/receipts/receipts-screen";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
+import type { SearchParamState } from "~app/hooks/use-navigation";
 import { Button } from "~components/button";
 import { Divider } from "~components/divider";
 import {
@@ -24,33 +22,26 @@ import {
 import { Modal, ModalBody, ModalContent } from "~components/modal";
 import { Text } from "~components/text";
 
-type SetWithDefault<T> = (
-	value: null | T | ((prev: T) => T | null),
-) => Promise<URLSearchParams>;
 type Props = {
-	orderBy: OrderByLiteral;
-	setOrderBy: SetWithDefault<OrderByLiteral>;
-	filters: Filters;
-	setFilters: SetWithDefault<Filters>;
+	sortState: SearchParamState<"/receipts", "sort">;
+	filtersState: SearchParamState<"/receipts", "filters">;
 };
 
 export const FilterButton: React.FC<Props> = ({
-	orderBy,
-	setOrderBy,
-	filters,
-	setFilters,
+	sortState: [sort, setSort],
+	filtersState: [filters, setFilters],
 }) => {
 	const [filterModalOpen, { switchValue: switchFilterModal }] =
 		useBooleanState(false);
 
 	const sortSelectOnPress = React.useCallback(
 		() =>
-			setOrderBy((prevOrderBy) =>
-				prevOrderBy === "date-desc" ? "date-asc" : "date-desc",
+			setSort((prevSort) =>
+				prevSort === "date-desc" ? "date-asc" : "date-desc",
 			),
-		[setOrderBy],
+		[setSort],
 	);
-	const SortIcon = orderBy === "date-desc" ? SortDownIcon : SortUpIcon;
+	const SortIcon = sort === "date-desc" ? SortDownIcon : SortUpIcon;
 
 	const onFilterSelectionChange = React.useCallback(
 		(filterKey: keyof Filters, selection: Selection) => {
@@ -86,7 +77,7 @@ export const FilterButton: React.FC<Props> = ({
 					<ModalBody className="items-center">
 						<Button variant="light" onPress={sortSelectOnPress}>
 							<SortIcon size={24} />
-							{orderBy === "date-desc" ? "Newest first" : "Oldest first"}
+							{sort === "date-desc" ? "Newest first" : "Oldest first"}
 						</Button>
 						<Divider />
 						<Text className="text-2xl font-medium">Filters</Text>

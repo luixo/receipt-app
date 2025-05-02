@@ -50,7 +50,11 @@ export const UserDebtsPreview: React.FC<Props> = ({
 	const userQuery = trpc.users.get.useQuery({ id: userId });
 	const accountSettingsQuery = trpc.accountSettings.get.useQuery();
 	return (
-		<Card as={Link} href={`/debts/user/${userId}`}>
+		<Card
+			as={Link<"/debts/user/$id">}
+			to="/debts/user/$id"
+			params={{ id: userId }}
+		>
 			<CardBody className={card({ transparent })}>
 				<LoadableUser id={userId} />
 				<View className="flex flex-row items-center justify-center gap-2">

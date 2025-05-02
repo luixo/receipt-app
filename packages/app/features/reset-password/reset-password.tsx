@@ -29,7 +29,7 @@ const ResetPasswordForm: React.FC<Props> = ({ token }) => {
 
 	const changePasswordMutation = trpc.auth.resetPassword.useMutation(
 		useTrpcMutationOptions(authResetPasswordOptions, {
-			onSuccess: () => navigate("/login", { replace: true }),
+			onSuccess: () => navigate({ to: "/login", replace: true }),
 		}),
 	);
 	const defaultValues: Partial<Form> = {};

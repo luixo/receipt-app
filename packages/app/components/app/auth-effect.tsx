@@ -8,7 +8,7 @@ export const AuthEffect: React.FC = () => {
 	const accountQuery = trpc.account.get.useQuery();
 	React.useEffect(() => {
 		if (accountQuery.status === "success") {
-			navigate("/", { replace: true });
+			navigate({ to: "/", replace: true });
 		}
 	}, [accountQuery.status, navigate]);
 	return null;

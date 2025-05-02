@@ -1,3 +1,6 @@
 import { HomeScreen } from "~app/features/home/home-screen";
+import type { AppPage } from "~utils/next";
 
-export default HomeScreen;
+const Screen: AppPage = () => <HomeScreen />;
+
+export default Screen;

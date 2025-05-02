@@ -6,11 +6,8 @@ import { isNonNullish, values } from "remeda";
 
 import { EmptyCard } from "~app/components/empty-card";
 import { QueryErrorMessage } from "~app/components/error-message";
-import type {
-	Filters,
-	OrderByLiteral,
-} from "~app/features/receipts/receipts-screen";
 import { useCursorPaging } from "~app/hooks/use-cursor-paging";
+import type { SearchParamState } from "~app/hooks/use-navigation";
 import type { TRPCQueryErrorResult, TRPCQueryInput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { Button } from "~components/button";
@@ -98,16 +95,22 @@ const ReceiptsTableHeader = () => (
 );
 
 type Props = {
-	filters: Filters;
-	orderBy: OrderByLiteral;
-	limit: number;
+	sort: SearchParamState<"/receipts", "sort">[0];
+	filters: SearchParamState<"/receipts", "filters">[0];
+	limit: SearchParamState<"/receipts", "limit">[0];
+	offsetState: SearchParamState<"/receipts", "offset">;
 };
 
-export const Receipts: React.FC<Props> = ({ filters, orderBy, limit }) => {
+export const Receipts: React.FC<Props> = ({
+	filters,
+	sort,
+	limit,
+	offsetState,
+}) => {
 	const cursorPaging = useCursorPaging(
 		useReceiptQuery,
-		{ limit, orderBy, filters },
-		"offset",
+		{ limit, orderBy: sort, filters },
+		offsetState,
 	);
 	const { totalCount, query, pagination } = cursorPaging;
 

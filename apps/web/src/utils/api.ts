@@ -1,13 +1,13 @@
 import { createTRPCClient } from "@trpc/client";
 import type { NextApiRequest } from "next";
+import { createLoader } from "nuqs";
 
 import { DEFAULT_TRPC_ENDPOINT } from "~app/contexts/links-context";
 import type { AppRouter } from "~app/trpc";
 import { AUTH_COOKIE } from "~app/utils/auth";
-import { createLoader } from "~app/utils/navigation";
-import { getLinks, linksParams } from "~app/utils/trpc";
+import { getLinks } from "~app/utils/trpc";
 import { getCookie } from "~web/utils/cookies";
-import { captureSentryError } from "~web/utils/trpc";
+import { captureSentryError, linksParams } from "~web/utils/trpc";
 
 export const getSsrHost = (endpoint: string) => {
 	const url = new URL("http://localhost");
@@ -36,7 +36,8 @@ const loadLinksParams = createLoader(linksParams);
 
 export const getTrpcClient = (req: NextApiRequest) =>
 	createTRPCClient<AppRouter>({
-		links: getLinks(loadLinksParams(req.query), {
+		links: getLinks({
+			searchParams: loadLinksParams(req.query),
 			url: getSsrHost(DEFAULT_TRPC_ENDPOINT),
 			headers: {
 				cookie: pickAuthCookie(req),

@@ -9,6 +9,7 @@ import type { MenuElement } from "~app/components/page";
 import { Page } from "~app/components/page";
 import { useConnectionIntentions } from "~app/hooks/use-connection-intentions";
 import { useDebtsIntentions } from "~app/hooks/use-debts-intentions";
+import type { UrlParams } from "~app/hooks/use-navigation";
 import { trpc } from "~app/trpc";
 import {
 	AccountIcon,
@@ -29,26 +30,34 @@ const useShowAdmin = () => {
 export const PROTECTED_ELEMENTS: MenuElement[] = [
 	{
 		Icon: ReceiptsIcon,
-		href: "/receipts",
+		urlParams: { to: "/receipts" } satisfies UrlParams<"/receipts">,
 		text: "Receipts",
 	},
 	{
 		Icon: DebtsIcon,
 		text: "Debts",
-		href: "/debts",
+		urlParams: { to: "/debts" } satisfies UrlParams<"/debts">,
 		useBadgeAmount: useDebtsIntentions,
 	},
 	{
 		Icon: UsersIcon,
 		text: "Users",
-		href: "/users",
+		urlParams: { to: "/users" } satisfies UrlParams<"/users">,
 		useBadgeAmount: useConnectionIntentions,
 	},
-	{ Icon: AccountIcon, text: "Account", href: "/account" },
-	{ Icon: SettingsIcon, text: "Settings", href: "/settings" },
+	{
+		Icon: AccountIcon,
+		text: "Account",
+		urlParams: { to: "/account" } satisfies UrlParams<"/account">,
+	},
+	{
+		Icon: SettingsIcon,
+		text: "Settings",
+		urlParams: { to: "/settings" } satisfies UrlParams<"/settings">,
+	},
 	{
 		Icon: AdminIcon,
-		href: "/admin",
+		urlParams: { to: "/admin" } satisfies UrlParams<"/admin">,
 		text: "Admin",
 		useShow: useShowAdmin,
 		PageWrapper: AdminWrapperWithEffect,

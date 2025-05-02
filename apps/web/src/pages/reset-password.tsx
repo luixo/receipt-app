@@ -1,5 +1,12 @@
+import { useQueryState } from "nuqs";
+
 import { ResetPasswordScreen } from "~app/features/reset-password/reset-password-screen";
+import type { AppPage } from "~utils/next";
 
-ResetPasswordScreen.public = true;
+const Screen: AppPage = () => {
+	const [token] = useQueryState("token");
+	return <ResetPasswordScreen token={token ?? ""} />;
+};
+Screen.public = true;
 
-export default ResetPasswordScreen;
+export default Screen;

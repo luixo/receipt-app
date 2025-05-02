@@ -1,3 +1,6 @@
 import { SettingsScreen } from "~app/features/settings/settings-screen";
+import type { AppPage } from "~utils/next";
 
-export default SettingsScreen;
+const Screen: AppPage = () => <SettingsScreen />;
+
+export default Screen;

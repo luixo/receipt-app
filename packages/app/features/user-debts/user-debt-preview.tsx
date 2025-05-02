@@ -55,7 +55,7 @@ const UserDebtPreviewInner: React.FC<InnerProps> = ({ query }) => {
 	const { formatDate } = useFormat();
 	const userQuery = trpc.users.get.useQuery({ id: debt.userId });
 	return (
-		<Link href={`/debts/${debt.id}`}>
+		<Link to="/debts/$id" params={{ id: debt.id }}>
 			<UserDebtPreviewShape
 				amount={
 					<Text

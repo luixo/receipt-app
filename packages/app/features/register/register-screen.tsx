@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import { useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
@@ -16,7 +16,6 @@ import {
 } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { options as authRegisterOptions } from "~mutations/auth/register";
-import type { AppPage } from "~utils/next";
 
 const formSchema = z.object({
 	email: emailSchema,
@@ -26,7 +25,7 @@ const formSchema = z.object({
 });
 type Form = z.infer<typeof formSchema>;
 
-export const RegisterScreen: AppPage = () => {
+export const RegisterScreen: React.FC = () => {
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 
@@ -34,7 +33,7 @@ export const RegisterScreen: AppPage = () => {
 		useTrpcMutationOptions(authRegisterOptions, {
 			onSuccess: () => {
 				void queryClient.resetQueries();
-				navigate("/", { replace: true });
+				navigate({ to: "/", replace: true });
 			},
 			trpc: { context: noBatchContext },
 		}),

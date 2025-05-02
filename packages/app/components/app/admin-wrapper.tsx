@@ -17,7 +17,7 @@ const NoAdminEffect: React.FC = () => {
 		if (role === null || role === "admin") {
 			return;
 		}
-		navigate(`/`);
+		navigate({ to: "/" });
 	}, [role, navigate]);
 	if (accountQuery.status === "error") {
 		return <QueryErrorMessage query={accountQuery} />;

@@ -8,11 +8,10 @@ import { Badge } from "~components/badge";
 import { Button } from "~components/button";
 import { AddIcon, DebtIcon, InboxIcon, TransferIcon } from "~components/icons";
 import { Link } from "~components/link";
-import type { AppPage } from "~utils/next";
 
 import { Debts } from "./debts";
 
-export const DebtsScreen: AppPage = () => {
+export const DebtsScreen: React.FC = () => {
 	const settingsQuery = trpc.accountSettings.get.useQuery();
 	const inboundDebtsAmount = useDebtsIntentions();
 	const intentionsButton = React.useMemo(

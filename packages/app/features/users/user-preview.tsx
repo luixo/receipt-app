@@ -9,7 +9,7 @@ type Props = {
 };
 
 export const UserPreview: React.FC<Props> = ({ user }) => (
-	<Link href={`/users/${user.id}/`}>
+	<Link to="/users/$id" params={{ id: user.id }}>
 		<User
 			id={user.id}
 			name={user.name}

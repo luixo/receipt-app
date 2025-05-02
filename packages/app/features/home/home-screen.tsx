@@ -3,12 +3,11 @@ import React from "react";
 import { useNavigate } from "~app/hooks/use-navigation";
 import { Spinner } from "~components/spinner";
 import { Text } from "~components/text";
-import type { AppPage } from "~utils/next";
 
-export const HomeScreen: AppPage = () => {
+export const HomeScreen: React.FC = () => {
 	const navigate = useNavigate();
 	React.useEffect(() => {
-		navigate("/receipts", { replace: true });
+		navigate({ to: "/receipts", replace: true });
 	}, [navigate]);
 	return (
 		<>

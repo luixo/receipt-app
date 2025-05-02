@@ -1,5 +1,7 @@
 import { LoginScreen } from "~app/features/login/login-screen";
+import type { AppPage } from "~utils/next";
 
-LoginScreen.public = true;
+const Screen: AppPage = () => <LoginScreen />;
+Screen.public = true;
 
-export default LoginScreen;
+export default Screen;

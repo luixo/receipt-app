@@ -15,8 +15,18 @@ const PageTitle: React.FC<{ children?: string }> = ({ children }) => (
 	</Head>
 );
 
+// eslint-disable-next-line react/function-component-definition
+export function BackLink<P extends string>(
+	props: React.ComponentProps<typeof Link<P>>,
+) {
+	return (
+		<Link<P> data-testid="back-link" color="foreground" {...props}>
+			<BackArrow size={36} />
+		</Link>
+	);
+}
+
 type Props = {
-	backHref?: string;
 	aside?: React.ReactNode;
 	startContent?: React.ReactNode;
 	endContent?: React.ReactNode;
@@ -25,7 +35,6 @@ type Props = {
 
 export const PageHeader: React.FC<Props> = ({
 	aside,
-	backHref,
 	startContent,
 	endContent,
 	children,
@@ -36,11 +45,6 @@ export const PageHeader: React.FC<Props> = ({
 		<PageTitle>{title || children?.toString()}</PageTitle>
 		<View className="flex-row flex-wrap justify-between gap-4">
 			<View className="flex-1 flex-row items-center gap-4" {...props}>
-				{backHref ? (
-					<Link href={backHref} data-testid="back-link" color="foreground">
-						<BackArrow size={36} />
-					</Link>
-				) : null}
 				{startContent}
 				<Text Component={H1} className="text-4xl font-medium">
 					{children}

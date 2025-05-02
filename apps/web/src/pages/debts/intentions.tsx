@@ -1,3 +1,6 @@
 import { DebtsIntentionsScreen } from "~app/features/debts-intentions/debts-intentions-screen";
+import type { AppPage } from "~utils/next";
 
-export default DebtsIntentionsScreen;
+const Screen: AppPage = () => <DebtsIntentionsScreen />;
+
+export default Screen;

@@ -20,7 +20,6 @@ import { SaveButton } from "~components/save-button";
 import { Spinner } from "~components/spinner";
 import { options as accountChangeNameOptions } from "~mutations/account/change-name";
 import { options as accountLogoutOptions } from "~mutations/account/logout";
-import type { AppPage } from "~utils/next";
 
 import { AccountAvatarInput } from "./account-avatar-input";
 
@@ -93,7 +92,7 @@ const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 		useTrpcMutationOptions(accountLogoutOptions, {
 			onSuccess: () => {
 				void queryClient.resetQueries();
-				navigate("/", { replace: true });
+				navigate({ to: "/", replace: true });
 			},
 			trpc: { context: noBatchContext },
 		}),
@@ -123,7 +122,7 @@ const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 	);
 };
 
-export const AccountScreenQuery: AppPage = () => {
+export const AccountScreenQuery: React.FC = () => {
 	const query = trpc.account.get.useQuery();
 	switch (query.status) {
 		case "pending":
@@ -140,7 +139,7 @@ export const AccountScreenQuery: AppPage = () => {
 	}
 };
 
-export const AccountScreen: AppPage = () => (
+export const AccountScreen: React.FC = () => (
 	<>
 		<EmailVerificationCard />
 		<AccountScreenQuery />

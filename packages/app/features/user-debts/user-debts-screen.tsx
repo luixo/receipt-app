@@ -7,7 +7,7 @@ import {
 } from "~app/components/app/debts-group";
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { QueryErrorMessage } from "~app/components/error-message";
-import { PageHeader } from "~app/components/page-header";
+import { BackLink, PageHeader } from "~app/components/page-header";
 import { ShowResolvedDebtsOption } from "~app/features/settings/show-resolved-debts-option";
 import { User } from "~app/features/user/user";
 import { EvenDebtsDivider } from "~app/features/user-debts/even-debts-divider";
@@ -42,7 +42,7 @@ type HeaderProps = {
 
 const Header: React.FC<HeaderProps> = ({ title, userId, onEditClick }) => (
 	<PageHeader
-		backHref="/debts"
+		startContent={<BackLink to="/debts" />}
 		title={title}
 		aside={
 			<View className="flex flex-row gap-2">
@@ -121,7 +121,7 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 	const [editModalOpen, { setTrue: openEditModal, setFalse: closeEditModal }] =
 		useBooleanState();
 	const onUserRemove = React.useCallback(() => {
-		navigate("/debts", { replace: true });
+		navigate({ to: "/debts", replace: true });
 	}, [navigate]);
 	return (
 		<>

@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import { useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
@@ -14,14 +14,13 @@ import { emailSchema, passwordSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { Input } from "~components/input";
 import { options as authLoginOptions } from "~mutations/auth/login";
-import type { AppPage } from "~utils/next";
 
 import { ResetPasswordModal } from "./reset-password-modal";
 
 const formSchema = z.object({ email: emailSchema, password: passwordSchema });
 type Form = z.infer<typeof formSchema>;
 
-export const LoginScreen: AppPage = () => {
+export const LoginScreen: React.FC = () => {
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 
@@ -32,7 +31,7 @@ export const LoginScreen: AppPage = () => {
 		useTrpcMutationOptions(authLoginOptions, {
 			onSuccess: () => {
 				void queryClient.resetQueries();
-				navigate("/", { replace: true });
+				navigate({ to: "/", replace: true });
 			},
 			trpc: { context: noBatchContext },
 		}),

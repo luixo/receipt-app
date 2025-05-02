@@ -34,7 +34,7 @@ export const AcceptAllIntentionsButton: React.FC<Props> = ({
 					mutation.mutateAsync({ id: intentions[index]!.id }),
 				),
 			);
-			navigate("/debts");
+			navigate({ to: "/debts" });
 		} catch {
 			/* empty */
 		}

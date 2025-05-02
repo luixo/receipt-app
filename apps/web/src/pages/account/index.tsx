@@ -1,3 +1,6 @@
 import { AccountScreen } from "~app/features/account/account-screen";
+import type { AppPage } from "~utils/next";
 
-export default AccountScreen;
+const Screen: AppPage = () => <AccountScreen />;
+
+export default Screen;

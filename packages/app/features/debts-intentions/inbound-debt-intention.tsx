@@ -30,7 +30,7 @@ export const InboundDebtIntention: React.FC<Props> = ({ intention }) => {
 						if (!redirectToDebt) {
 							return;
 						}
-						navigate(`/debts/${intention.id}`);
+						navigate({ to: "/debts/$id", params: { id: intention.id } });
 					},
 				},
 			);

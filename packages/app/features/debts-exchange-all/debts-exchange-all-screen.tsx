@@ -6,7 +6,7 @@ import { CurrenciesPicker } from "~app/components/app/currencies-picker";
 import { DebtsGroup } from "~app/components/app/debts-group";
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { QueryErrorMessage } from "~app/components/error-message";
-import { PageHeader } from "~app/components/page-header";
+import { BackLink, PageHeader } from "~app/components/page-header";
 import { useAggregatedDebts } from "~app/hooks/use-aggregated-debts";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useNavigate } from "~app/hooks/use-navigation";
@@ -27,7 +27,12 @@ type HeaderProps = {
 };
 
 const Header: React.FC<HeaderProps> = ({ userId, title }) => (
-	<PageHeader backHref={`/debts/user/${userId}/exchange/`} title={title}>
+	<PageHeader
+		startContent={
+			<BackLink to="/debts/user/$id/exchange" params={{ id: userId }} />
+		}
+		title={title}
+	>
 		<LoadableUser id={userId} />
 	</PageHeader>
 );
@@ -62,7 +67,12 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 	);
 	const navigate = useNavigate();
 	const back = React.useCallback(
-		() => navigate(`/debts/user/${userId}`, { replace: true }),
+		() =>
+			navigate({
+				to: "/debts/user/$id",
+				replace: true,
+				params: { id: userId },
+			}),
 		[navigate, userId],
 	);
 	React.useEffect(() => {

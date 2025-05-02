@@ -1,3 +1,6 @@
 import { ConnectionIntentionsScreen } from "~app/features/connection-intentions/connection-intentions-screen";
+import type { AppPage } from "~utils/next";
 
-export default ConnectionIntentionsScreen;
+const Screen: AppPage = () => <ConnectionIntentionsScreen />;
+
+export default Screen;

@@ -1,10 +1,12 @@
-import type React from "react";
-
-import { useQueryState, useQueryStates } from "nuqs";
-import { NuqsAdapter } from "nuqs/adapters/next/pages";
+import type { UseQueryStateReturn } from "nuqs";
+import { entries } from "remeda";
 import { useParams, usePathname, useRouter } from "solito/navigation";
 
-import type { SearchParams } from "~app/utils/navigation";
+import type {
+	Filters,
+	OrderByLiteral,
+} from "~app/features/receipts/receipts-screen";
+import type { UsersId } from "~db/models";
 
 type NavigationOptions = {
 	replace?: boolean;
@@ -17,10 +19,38 @@ declare module "@react-types/shared" {
 	}
 }
 
+type IsParameter<Part> = Part extends `$${infer ParamName}` ? ParamName : never;
+type FilteredParts<Path> = Path extends `${infer PartA}/${infer PartB}`
+	? IsParameter<PartA> | FilteredParts<PartB>
+	: IsParameter<Path>;
+type Params<Path> = {
+	[Key in FilteredParts<Path>]: string;
+};
+
+type IsNonEmptyObject<T> = keyof T extends never ? false : true;
+
+export type UrlParams<P extends string> = { to: P } & (IsNonEmptyObject<
+	Params<P>
+> extends true
+	? { params: Params<P> }
+	: { params?: never });
+
+export const buildUrl = <P extends string>({ to, params }: UrlParams<P>) =>
+	entries((params || {}) as Record<string, string>).reduce<string>(
+		(acc, [key, value]) => acc.replace(`$${key}`, value),
+		to,
+	);
+
 export const useNavigate = () => {
 	const router = useRouter();
-	return (url: string, { replace }: NavigationOptions = {}) => {
-		router[replace ? "replace" : "push"](url);
+	return <P extends string>({
+		replace,
+		to,
+		params,
+	}: NavigationOptions & UrlParams<P>) => {
+		router[replace ? "replace" : "push"](
+			buildUrl({ to, params } as UrlParams<P>),
+		);
 	};
 };
 
@@ -35,8 +65,29 @@ export const useMatchRoute = () => {
 			: routeToMatch.test(pathname);
 };
 
-export const SearchParamsProvider: React.FC<
-	React.PropsWithChildren<{ searchParams: SearchParams }>
-> = ({ children }) => <NuqsAdapter>{children}</NuqsAdapter>;
+type SearchParamsMapping = {
+	"/users": {
+		limit: number;
+		offset: number;
+	};
+	"/receipts": {
+		sort: OrderByLiteral;
+		filters: Filters;
+		limit: number;
+		offset: number;
+	};
+	"/debts/transfer": {
+		from: UsersId;
+		to: UsersId;
+	};
+	"/debts/add": {
+		userId: UsersId;
+	};
+};
 
-export { useParams, useQueryState, useQueryStates };
+export type SearchParamState<
+	K extends keyof SearchParamsMapping = keyof SearchParamsMapping,
+	P extends keyof SearchParamsMapping[K] = keyof SearchParamsMapping[K],
+> = UseQueryStateReturn<SearchParamsMapping[K][P], SearchParamsMapping[K][P]>;
+
+export { useParams };

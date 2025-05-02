@@ -11,9 +11,10 @@ import {
 } from "~app/components/app/sign-button-group";
 import { UsersSuggest } from "~app/components/app/users-suggest";
 import { DateInput } from "~app/components/date-input";
-import { PageHeader } from "~app/components/page-header";
+import { BackLink, PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
-import { useNavigate, useQueryState } from "~app/hooks/use-navigation";
+import type { SearchParamState } from "~app/hooks/use-navigation";
+import { useNavigate } from "~app/hooks/use-navigation";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
 import { useAppForm } from "~app/utils/forms";
@@ -27,7 +28,6 @@ import {
 import { Button } from "~components/button";
 import { options as debtsAddOptions } from "~mutations/debts/add";
 import { getToday } from "~utils/date";
-import type { AppPage } from "~utils/next";
 
 const formSchema = z.object({
 	amount: debtAmountSchema,
@@ -40,14 +40,15 @@ const formSchema = z.object({
 
 type Form = z.infer<typeof formSchema>;
 
-export const AddDebtScreen: AppPage = () => {
-	const [userId] = useQueryState("userId");
-
+export const AddDebtScreen: React.FC<{
+	userIdState: SearchParamState<"/debts/add", "userId">;
+}> = ({ userIdState: [userId] }) => {
 	const navigate = useNavigate();
 
 	const addMutation = trpc.debts.add.useMutation(
 		useTrpcMutationOptions(debtsAddOptions, {
-			onSuccess: ({ id }) => navigate(`/debts/${id}`, { replace: true }),
+			onSuccess: ({ id }) =>
+				navigate({ to: "/debts/$id", replace: true, params: { id } }),
 		}),
 	);
 
@@ -83,7 +84,7 @@ export const AddDebtScreen: AppPage = () => {
 
 	return (
 		<>
-			<PageHeader backHref="/debts">Add debt</PageHeader>
+			<PageHeader startContent={<BackLink to="/debts" />}>Add debt</PageHeader>
 			<EmailVerificationCard />
 			<form.AppForm>
 				<form.Form className="flex flex-col gap-4">

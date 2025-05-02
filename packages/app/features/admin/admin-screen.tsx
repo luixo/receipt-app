@@ -15,7 +15,6 @@ import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
 import { Spinner } from "~components/spinner";
 import { Tab, Tabs } from "~components/tabs";
 import type { UsersId } from "~db/models";
-import type { AppPage } from "~utils/next";
 
 type ModalProps = {
 	isModalOpen: boolean;
@@ -148,7 +147,7 @@ const AdminScreenInner: React.FC = () => {
 	}
 };
 
-export const AdminScreen: AppPage = () => (
+export const AdminScreen: React.FC = () => (
 	<>
 		<PageHeader>Admin panel</PageHeader>
 		<AdminScreenInner />

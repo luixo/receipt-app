@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Stack, useGlobalSearchParams } from "expo-router";
+import { Stack } from "expo-router";
 
 import "~app/global.css";
 
@@ -15,11 +15,11 @@ import { persister } from "~mobile/utils/persister";
 import { storeContext } from "~mobile/utils/store";
 
 const ClientProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
-	const searchParams = useGlobalSearchParams();
 	const baseUrl = useBaseUrl();
 	const baseLinksContext = React.useContext(LinksContext);
 	const linksContext = React.useMemo<LinksContextType>(
 		() => ({
+			searchParams: { debug: null, proxyPort: null, controllerId: null },
 			url: `${baseUrl}${baseLinksContext.url}`,
 			useBatch: true,
 			source: "native",
@@ -33,7 +33,6 @@ const ClientProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 	);
 	return (
 		<Provider
-			searchParams={searchParams}
 			storeContext={storeContext}
 			persister={persister}
 			linksContext={linksContext}

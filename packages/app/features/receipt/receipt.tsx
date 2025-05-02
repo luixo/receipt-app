@@ -5,7 +5,7 @@ import { LoadableUser } from "~app/components/app/loadable-user";
 import { SkeletonUser } from "~app/components/app/user";
 import { SkeletonDateInput } from "~app/components/date-input";
 import { QueryErrorMessage } from "~app/components/error-message";
-import { PageHeader } from "~app/components/page-header";
+import { BackLink, PageHeader } from "~app/components/page-header";
 import {
 	actionsHooksContext,
 	receiptContext,
@@ -42,8 +42,12 @@ type HeaderProps = Omit<
 
 const Header: React.FC<HeaderProps> = (props) => (
 	<PageHeader
-		backHref="/receipts"
-		startContent={<ReceiptIcon size={36} />}
+		startContent={
+			<>
+				<BackLink to="/receipts" />
+				<ReceiptIcon size={36} />
+			</>
+		}
 		{...props}
 	/>
 );

@@ -4,6 +4,8 @@ import { getCookies } from "cookies-next";
 import type { AppType } from "next/dist/shared/lib/utils";
 import { Inter } from "next/font/google";
 import Head from "next/head";
+import { useQueryState, useQueryStates } from "nuqs";
+import { NuqsAdapter } from "nuqs/adapters/next/pages";
 import "raf/polyfill";
 
 import { ProtectedPage } from "~app/components/protected-page";
@@ -12,7 +14,6 @@ import { Toaster } from "~app/components/toaster";
 import type { LinksContextType } from "~app/contexts/links-context";
 import { LinksContext } from "~app/contexts/links-context";
 import { usePretendUserClientKey } from "~app/hooks/use-pretend-user-client-key";
-import { useRemoveTestQueryParams } from "~app/hooks/use-remove-test-query-params";
 import { Provider } from "~app/providers/index";
 import { applyRemaps } from "~app/utils/nativewind";
 import { persister } from "~app/utils/persister";
@@ -27,10 +28,19 @@ import { useQueryClientHelper } from "~web/hooks/use-query-client-helper";
 import { useRemovePreloadedCss } from "~web/hooks/use-remove-preloaded-css";
 import { QueryDevToolsProvider } from "~web/providers/client/query-devtools";
 import { ThemeProvider } from "~web/providers/client/theme";
-import { captureSentryError } from "~web/utils/trpc";
+import { captureSentryError, linksParams } from "~web/utils/trpc";
 import "~app/global.css";
 
 applyRemaps();
+
+const useRemoveTestQueryParams = () => {
+	const [, setProxyPort] = useQueryState("proxyPort");
+	const [, setControllerId] = useQueryState("controllerId");
+	React.useEffect(() => {
+		void setProxyPort(null);
+		void setControllerId(null);
+	}, [setControllerId, setProxyPort]);
+};
 
 const GlobalHooksComponent: React.FC = () => {
 	useStoreLocalSettings();
@@ -75,15 +85,17 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 	// A bug in next.js
 	const props = pageProps as PageProps;
 	const baseLinksContext = React.useContext(LinksContext);
+	const [linksSearchParams] = useQueryStates(linksParams);
 	const linksContext = React.useMemo<LinksContextType>(
 		() => ({
+			searchParams: linksSearchParams,
 			url: baseLinksContext.url,
 			// Don't batch requests when in tests - to evaluate pending / error states separately
-			useBatch: !props.searchParams.proxyPort,
+			useBatch: !linksSearchParams.proxyPort,
 			source: "csr-next",
 			captureError: captureSentryError,
 		}),
-		[baseLinksContext.url, props.searchParams.proxyPort],
+		[baseLinksContext.url, linksSearchParams],
 	);
 	useHtmlFont(font.variable);
 	const storeContext = React.useMemo(
@@ -102,32 +114,32 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 				<link rel="icon" href="/favicon.svg" />
 			</Head>
 			<main className={`${font.variable} font-sans`}>
-				<Provider
-					linksContext={linksContext}
-					searchParams={props.searchParams}
-					storeContext={storeContext}
-					persister={persister}
-					useQueryClientKey={usePretendUserClientKey}
-				>
-					<ThemeProvider>
-						<QueryDevToolsProvider>
-							<LayoutComponent>
-								<PageComponent />
-							</LayoutComponent>
-							<GlobalHooksComponent />
-							<Toaster />
-						</QueryDevToolsProvider>
-					</ThemeProvider>
-				</Provider>
+				<NuqsAdapter>
+					<Provider
+						linksContext={linksContext}
+						storeContext={storeContext}
+						persister={persister}
+						useQueryClientKey={usePretendUserClientKey}
+					>
+						<ThemeProvider>
+							<QueryDevToolsProvider>
+								<LayoutComponent>
+									<PageComponent />
+								</LayoutComponent>
+								<GlobalHooksComponent />
+								<Toaster />
+							</QueryDevToolsProvider>
+						</ThemeProvider>
+					</Provider>
+				</NuqsAdapter>
 			</main>
 		</>
 	);
 };
 
-MyApp.getInitialProps = async ({ ctx, router }) => {
+MyApp.getInitialProps = async ({ ctx }) => {
 	const cookies = getCookies(ctx);
 	const pageProps: PageProps = {
-		searchParams: router.query,
 		initialValues: getStoreValuesFromInitialValues(cookies),
 		nowTimestamp: Date.now(),
 	};

@@ -1,7 +1,7 @@
 import React from "react";
 
 import { LoadableUser } from "~app/components/app/loadable-user";
-import { PageHeader } from "~app/components/page-header";
+import { BackLink, PageHeader } from "~app/components/page-header";
 import { useNavigate } from "~app/hooks/use-navigation";
 import { trpc } from "~app/trpc";
 import type { UsersId } from "~db/models";
@@ -14,13 +14,13 @@ export const UserScreen: React.FC<{ id: UsersId }> = ({ id }) => {
 	const userQuery = trpc.users.get.useQuery({ id });
 
 	const onUserRemove = React.useCallback(() => {
-		navigate("/users", { replace: true });
+		navigate({ to: "/users", replace: true });
 	}, [navigate]);
 
 	return (
 		<>
 			<PageHeader
-				backHref="/users"
+				startContent={<BackLink to="/users" />}
 				title={userQuery.data ? userQuery.data.name : id}
 			>
 				<LoadableUser id={id} />

@@ -11,7 +11,7 @@ import { SignButtonGroup } from "~app/components/app/sign-button-group";
 import { SkeletonUser } from "~app/components/app/user";
 import { DateInput, SkeletonDateInput } from "~app/components/date-input";
 import { QueryErrorMessage } from "~app/components/error-message";
-import { PageHeader } from "~app/components/page-header";
+import { BackLink, PageHeader } from "~app/components/page-header";
 import {
 	RemoveButton,
 	RemoveButtonSkeleton,
@@ -45,11 +45,15 @@ type Debt = TRPCQueryOutput<"debts.get">;
 
 type HeaderProps = {
 	userId?: UsersId;
-} & Omit<Partial<React.ComponentProps<typeof PageHeader>>, "backHref">;
+} & Omit<Partial<React.ComponentProps<typeof PageHeader>>, "startContent">;
 
 const Header: React.FC<HeaderProps> = ({ userId, ...rest }) => (
 	<PageHeader
-		backHref={userId ? `/debts/user/${userId}` : undefined}
+		startContent={
+			userId ? (
+				<BackLink to="/debts/user/$id" params={{ id: userId }} />
+			) : undefined
+		}
 		{...rest}
 	/>
 );
@@ -293,7 +297,11 @@ const DebtRemoveButton: React.FC<RemoveButtonProps> = ({
 				areDebtsSynced: debt.their ? areDebtsSynced(debt, debt.their) : false,
 			},
 			onSuccess: () =>
-				navigate(`/debts/user/${debt.userId}`, { replace: true }),
+				navigate({
+					to: "/debts/user/$id",
+					replace: true,
+					params: { id: debt.userId },
+				}),
 		}),
 	);
 	React.useEffect(

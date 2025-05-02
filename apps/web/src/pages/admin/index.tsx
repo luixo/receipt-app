@@ -1,3 +1,6 @@
 import { AdminScreen } from "~app/features/admin/admin-screen";
+import type { AppPage } from "~utils/next";
 
-export default AdminScreen;
+const Screen: AppPage = () => <AdminScreen />;
+
+export default Screen;

@@ -12,12 +12,12 @@ import {
 	GroupedQueryErrorMessage,
 	QueryErrorMessage,
 } from "~app/components/error-message";
-import { PageHeader } from "~app/components/page-header";
+import { BackLink, PageHeader } from "~app/components/page-header";
 import { ShowResolvedDebtsOption } from "~app/features/settings/show-resolved-debts-option";
 import { useAggregatedDebts } from "~app/hooks/use-aggregated-debts";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useLocale } from "~app/hooks/use-locale";
-import { useQueryState } from "~app/hooks/use-navigation";
+import type { SearchParamState } from "~app/hooks/use-navigation";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { useTrpcMutationStates } from "~app/hooks/use-trpc-mutation-state";
@@ -25,7 +25,6 @@ import type { TRPCQueryOutput, TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { type CurrencyCode, getCurrencySymbol } from "~app/utils/currency";
 import { useAppForm } from "~app/utils/forms";
-import { parseAsString } from "~app/utils/navigation";
 import {
 	currencyCodeSchema,
 	debtAmountSchema,
@@ -37,7 +36,6 @@ import { Spinner } from "~components/spinner";
 import { Text } from "~components/text";
 import { cn } from "~components/utils";
 import { options as debtsAddOptions } from "~mutations/debts/add";
-import type { AppPage } from "~utils/next";
 
 const formSchema = z
 	.record(currencyCodeSchema, debtAmountSchema.or(z.literal(0)))
@@ -354,12 +352,10 @@ const DebtsList: React.FC<DebtsProps> = ({ query, fromUser, toUser }) => {
 	);
 };
 
-export const DebtsTransferScreen: AppPage = () => {
-	const [fromId, setFromId] = useQueryState(
-		"from",
-		parseAsString.withDefault(""),
-	);
-	const [toId, setToId] = useQueryState("to", parseAsString.withDefault(""));
+export const DebtsTransferScreen: React.FC<{
+	fromIdState: SearchParamState<"/debts/transfer", "from">;
+	toIdState: SearchParamState<"/debts/transfer", "to">;
+}> = ({ fromIdState: [fromId, setFromId], toIdState: [toId, setToId] }) => {
 	const fromUserQuery = trpc.users.get.useQuery(
 		fromId ? { id: fromId } : skipToken,
 	);
@@ -370,7 +366,15 @@ export const DebtsTransferScreen: AppPage = () => {
 
 	return (
 		<>
-			<PageHeader backHref={fromId ? `/debts/user/${fromId}` : `/debts`}>
+			<PageHeader
+				startContent={
+					fromId ? (
+						<BackLink to="/debts/user/$id" params={{ id: fromId }} />
+					) : (
+						<BackLink to="/debts" />
+					)
+				}
+			>
 				{`Transfer debts from ${
 					fromUserQuery.status === "success"
 						? fromUserQuery.data.name

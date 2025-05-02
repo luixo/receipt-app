@@ -32,9 +32,12 @@ export const ThemeProvider: React.FC<React.PropsWithChildren<object>> = ({
 	}, [selectedMode]);
 	const navigate = useNavigate();
 	const href = useHref();
+	const localNavigate = React.useCallback<
+		NonNullable<React.ComponentProps<typeof HeroUIProvider>["navigate"]>
+	>((nextHref, options) => navigate({ to: nextHref, ...options }), [navigate]);
 	return (
 		<HeroUIProvider
-			navigate={navigate}
+			navigate={localNavigate}
 			useHref={href}
 			validationBehavior="native"
 		>

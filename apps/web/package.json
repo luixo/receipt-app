@@ -30,6 +30,7 @@
 		"nativewind": "^4.0.36",
 		"next": "^14.2.5",
 		"next-http-proxy-middleware": "^1.2.5",
+		"nuqs": "2.4.3",
 		"pg": "^8.11.1",
 		"pino": "^8.14.1",
 		"pino-pretty": "^10.1.0",

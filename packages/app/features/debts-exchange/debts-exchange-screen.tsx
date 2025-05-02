@@ -3,7 +3,7 @@ import type React from "react";
 import { DebtsGroup } from "~app/components/app/debts-group";
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { QueryErrorMessage } from "~app/components/error-message";
-import { PageHeader } from "~app/components/page-header";
+import { BackLink, PageHeader } from "~app/components/page-header";
 import { useAggregatedDebts } from "~app/hooks/use-aggregated-debts";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
@@ -19,7 +19,10 @@ type HeaderProps = {
 };
 
 const Header: React.FC<HeaderProps> = ({ userId, title }) => (
-	<PageHeader backHref={`/debts/user/${userId}`} title={title}>
+	<PageHeader
+		startContent={<BackLink to="/debts/user/$id" params={{ id: userId }} />}
+		title={title}
+	>
 		<LoadableUser id={userId} />
 	</PageHeader>
 );

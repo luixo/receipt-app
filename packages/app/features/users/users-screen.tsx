@@ -3,23 +3,20 @@ import React from "react";
 import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
 import { useConnectionIntentions } from "~app/hooks/use-connection-intentions";
-import { useQueryState } from "~app/hooks/use-navigation";
-import { parseAsInteger } from "~app/utils/navigation";
+import type { SearchParamState } from "~app/hooks/use-navigation";
 import { Badge } from "~components/badge";
 import { Button } from "~components/button";
 import { AddIcon, LinkIcon, UsersIcon } from "~components/icons";
 import { Link } from "~components/link";
-import type { AppPage } from "~utils/next";
 
 import { Users } from "./users";
 
-const DEFAULT_LIMIT = 10;
+export const DEFAULT_LIMIT = 10;
 
-export const UsersScreen: AppPage = () => {
-	const [limit] = useQueryState(
-		"limit",
-		parseAsInteger.withDefault(DEFAULT_LIMIT),
-	);
+export const UsersScreen: React.FC<{
+	limitState: SearchParamState<"/users", "limit">;
+	offsetState: SearchParamState<"/users", "offset">;
+}> = ({ limitState: [limit], offsetState }) => {
 	const inboundConnectionsAmount = useConnectionIntentions();
 	const connectionsButton = React.useMemo(
 		() => (
@@ -71,7 +68,7 @@ export const UsersScreen: AppPage = () => {
 				Users
 			</PageHeader>
 			<EmailVerificationCard />
-			<Users limit={limit} />
+			<Users limit={limit} offsetState={offsetState} />
 		</>
 	);
 };

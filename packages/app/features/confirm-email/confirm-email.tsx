@@ -24,7 +24,7 @@ export const ConfirmEmail: React.FC<Props> = ({ confirmMutation }) => {
 				<>
 					<Header>{confirmMutation.data.email}</Header>
 					<Header size="sm">Email verification successful!</Header>
-					<Link href="/">
+					<Link to="/">
 						<Button color="primary">To home page</Button>
 					</Link>
 				</>

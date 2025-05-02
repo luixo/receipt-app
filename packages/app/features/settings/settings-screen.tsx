@@ -1,17 +1,16 @@
-import React from "react";
+import type React from "react";
 import { View } from "react-native";
 
 import { Divider } from "~components/divider";
 import { Header } from "~components/header";
 import { Text } from "~components/text";
-import type { AppPage } from "~utils/next";
 
 import { ColorModeSettings } from "./color-mode-settings";
 import { ManualAcceptDebtsOption } from "./manual-accept-debts-option";
 import { RefreshSettings } from "./refresh-settings";
 import { ShowResolvedDebtsOption } from "./show-resolved-debts-option";
 
-export const SettingsScreen: AppPage = () => (
+export const SettingsScreen: React.FC = () => (
 	<>
 		<ColorModeSettings />
 		<Divider />

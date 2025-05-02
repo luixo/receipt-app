@@ -8,8 +8,7 @@ import {
 	SELF_QUERY_CLIENT_KEY,
 	useQueryClientsStore,
 } from "~app/contexts/query-clients-context";
-import { useQueryStates } from "~app/hooks/use-navigation";
-import { getLinks, linksParams, trpcReact } from "~app/utils/trpc";
+import { getLinks, trpcReact } from "~app/utils/trpc";
 
 type Props = {
 	linksContext: LinksContextType;
@@ -27,13 +26,12 @@ export const QueryProvider: React.FC<React.PropsWithChildren<Props>> = ({
 			(queryClientKey && state.queryClients[queryClientKey]) ||
 			state.queryClients[SELF_QUERY_CLIENT_KEY],
 	);
-	const [searchParams] = useQueryStates(linksParams);
 	const trpcClient = React.useMemo(
 		() =>
 			trpcReact.createClient({
-				links: getLinks(searchParams, linksContext),
+				links: getLinks(linksContext),
 			}),
-		[linksContext, searchParams],
+		[linksContext],
 	);
 	return (
 		<RawQueryClientProvider client={queryClient}>

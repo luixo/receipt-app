@@ -9,7 +9,6 @@ import { useAppForm } from "~app/utils/forms";
 import { passwordSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { options as accountChangePasswordOptions } from "~mutations/account/change-password";
-import type { AppPage } from "~utils/next";
 
 const formSchema = z
 	.object({
@@ -113,7 +112,7 @@ const ChangePasswordForm: React.FC = () => {
 	);
 };
 
-export const ChangePasswordScreen: AppPage = () => {
+export const ChangePasswordScreen: React.FC = () => {
 	const [changePasswordShown, { setTrue: showChangePassword }] =
 		useBooleanState();
 

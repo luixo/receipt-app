@@ -6,6 +6,7 @@ import { SkeletonUser } from "~app/components/app/user";
 import { EmptyCard } from "~app/components/empty-card";
 import { QueryErrorMessage } from "~app/components/error-message";
 import { useCursorPaging } from "~app/hooks/use-cursor-paging";
+import type { SearchParamState } from "~app/hooks/use-navigation";
 import type { TRPCQueryErrorResult, TRPCQueryInput } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { Button } from "~components/button";
@@ -58,10 +59,11 @@ const UserPreviews: React.FC<{ ids: UsersId[] }> = ({ ids }) => {
 
 type Props = {
 	limit: number;
+	offsetState: SearchParamState<"/users", "offset">;
 };
 
-export const Users: React.FC<Props> = ({ limit }) => {
-	const cursorPaging = useCursorPaging(useUsersQuery, { limit }, "offset");
+export const Users: React.FC<Props> = ({ limit, offsetState }) => {
+	const cursorPaging = useCursorPaging(useUsersQuery, { limit }, offsetState);
 	const { totalCount, pagination, query } = cursorPaging;
 
 	if (!totalCount && query.fetchStatus !== "fetching") {

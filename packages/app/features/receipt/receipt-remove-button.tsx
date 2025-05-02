@@ -20,7 +20,7 @@ export const ReceiptRemoveButton: React.FC<Props> = ({
 	const navigate = useNavigate();
 	const removeReceiptMutation = trpc.receipts.remove.useMutation(
 		useTrpcMutationOptions(receiptsRemoveOptions, {
-			onSuccess: () => navigate("/receipts", { replace: true }),
+			onSuccess: () => navigate({ to: "/receipts", replace: true }),
 		}),
 	);
 	React.useEffect(
