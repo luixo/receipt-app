@@ -73,6 +73,7 @@ npx playwright install
 ### Prebuild app locally
 
 ```sh
+# NODE_ENV=test is needed to inject .env.test file variables into the build
 NODE_ENV=test npx dotenv -c -- yarn web:build
 ```
 
@@ -83,6 +84,7 @@ There might be light discrepancy for functional tests.
 Visual regression tests will fail on screenshots (different platforms have significant difference in those).
 
 ```sh
+# NODE_ENV=test is needed to inject .env.test file variables into the dev environment
 NODE_ENV=test yarn dev
 ```
 

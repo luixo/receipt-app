@@ -116,7 +116,6 @@ export default defineConfig({
 			// Timezone and locale on server
 			TZ: serverSettings.timezone,
 			LC_ALL: serverSettings.locale,
-			NODE_ENV: "test",
 			S3_BUCKET: "test-bucket",
 			S3_ENDPOINT: "https://fake-endpoint.org",
 			PORT: PORT.toString(),

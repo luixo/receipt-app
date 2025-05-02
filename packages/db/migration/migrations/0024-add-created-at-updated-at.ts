@@ -15,6 +15,7 @@ import {
 	USERS,
 } from "~db/consts";
 import type { Database } from "~db/types";
+import { isTestEnv } from "~db/utils";
 
 const updateColumn = "updatedAt";
 // Project inception date
@@ -27,7 +28,7 @@ const createUpdateFunction = async (db: Database) => {
 		AS $$
 			BEGIN
 				NEW.${sql.id(updateColumn)} = ${sql.raw(
-					process.env.NODE_ENV === "test"
+					isTestEnv()
 						? `OLD."${updateColumn}" + '1 minute'::interval`
 						: "now()",
 				)};

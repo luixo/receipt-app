@@ -1,5 +1,7 @@
 import { sql } from "kysely";
 
+import { isTestEnv } from "~db/utils";
+
 export const ACCOUNTS = {
 	INDEXES: {
 		EMAIL: "accounts:email:index",
@@ -135,8 +137,7 @@ export const FUNCTIONS = {
 	UPDATE_TIMESTAMP_COLUMN: "updateTimestampColumn",
 } as const;
 
-export const CURRENT_TIMESTAMP =
-	process.env.NODE_ENV === "test"
-		? /* c8 ignore next 2 */
-		  sql`TO_TIMESTAMP('2020/01/01', 'YYYY/MM/DD')`
-		: sql`CURRENT_TIMESTAMP`;
+export const CURRENT_TIMESTAMP = isTestEnv()
+	? /* c8 ignore next 2 */
+	  sql`TO_TIMESTAMP('2020/01/01', 'YYYY/MM/DD')`
+	: sql`CURRENT_TIMESTAMP`;

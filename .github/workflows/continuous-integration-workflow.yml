@@ -56,6 +56,7 @@ jobs:
       - name: Build web app
         run: yarn web:build
         env:
+          # Needed to inject .env.test file variables into the build
           NODE_ENV: test
           S3_BUCKET: test-bucket
           S3_ENDPOINT: https://fake-endpoint.org
