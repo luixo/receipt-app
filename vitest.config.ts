@@ -28,7 +28,9 @@ export default defineConfig({
 			allowExternal: true,
 			reportsDirectory: path.resolve(vitestRoot, "./coverage"),
 		},
+		workspace: ["apps/*/vitest.config.ts", "packages/*/vitest.config.ts"],
 		pool: "vmThreads",
 		watch: false,
+		retry: process.env.CI ? 2 : 0,
 	},
 });

@@ -1,11 +1,13 @@
 import path from "node:path";
-
-import { withSharedConfig } from "~tests/backend/shared-config";
+import tsconfigPaths from "vite-tsconfig-paths";
+import { defineProject } from "vitest/config";
 
 const vitestRoot = path.join(__dirname, "../../testing/vitest");
 
-export default withSharedConfig("db", {
+export default defineProject({
+	plugins: [tsconfigPaths()],
 	test: {
+		name: "db",
 		setupFiles: path.resolve(vitestRoot, "./database.setup.ts"),
 	},
 });

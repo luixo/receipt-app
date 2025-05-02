@@ -1,6 +1,6 @@
 import { Faker, en, faker } from "@faker-js/faker";
 import type { inferProcedureOutput } from "@trpc/server";
-import type { Test } from "vitest";
+import type { RunnerTestCase } from "vitest";
 import { test as originalTest } from "vitest";
 
 import type { Database } from "~db/types";
@@ -30,7 +30,7 @@ type FileContext = {
 declare module "vitest" {
 	// external interface extension
 	// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-	interface Suite {
+	interface RunnerTestSuite {
 		fileContext: FileContext;
 	}
 }
@@ -51,7 +51,7 @@ type MockContext = {
 };
 
 type MetaContext = {
-	task: Test;
+	task: RunnerTestCase;
 };
 
 export type TestContext = FakerContext &
