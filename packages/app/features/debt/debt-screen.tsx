@@ -269,8 +269,9 @@ type LinkProps = {
 
 const DebtReceiptLink: React.FC<LinkProps> = ({ receiptId }) => (
 	<Button
-		as={Link}
-		href={`/receipts/${receiptId}`}
+		as={Link<"/receipts/$id">}
+		to="/receipts/$id"
+		params={{ id: receiptId }}
 		variant="bordered"
 		color="success"
 		isIconOnly

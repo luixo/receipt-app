@@ -56,16 +56,18 @@ const DebtsExchangeInner: React.FC<InnerProps> = ({ userId, query }) => {
 			/>
 			<Button
 				color="primary"
-				as={Link}
-				href={`/debts/user/${userId}/exchange/all`}
+				as={Link<"/debts/user/$id/exchange/all">}
+				to="/debts/user/$id/exchange/all"
+				params={{ id: userId }}
 				title="Exchange all to one currency"
 			>
 				Exchange all to one currency
 			</Button>
 			<Button
 				color="primary"
-				as={Link}
-				href={`/debts/user/${userId}/exchange/specific`}
+				as={Link<"/debts/user/$id/exchange/specific">}
+				to="/debts/user/$id/exchange/specific"
+				params={{ id: userId }}
 				isDisabled
 				title="Exchange specific currency"
 			>

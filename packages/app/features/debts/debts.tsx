@@ -36,8 +36,8 @@ const DebtsInner: React.FC<InnerProps> = ({ query }) => {
 					<View className="flex-row">
 						Press
 						<Button
-							href="/debts/add"
-							as={Link}
+							to="/debts/add"
+							as={Link<"/debts/add">}
 							color="primary"
 							title="Add debt"
 							variant="bordered"

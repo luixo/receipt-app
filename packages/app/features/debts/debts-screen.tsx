@@ -18,8 +18,8 @@ export const DebtsScreen: React.FC = () => {
 		() => (
 			<Button
 				key="intentions"
-				href="/debts/intentions"
-				as={Link}
+				to="/debts/intentions"
+				as={Link<"/debts/intentions">}
 				color="primary"
 				title="Debts sync intentions"
 				variant="bordered"
@@ -38,8 +38,8 @@ export const DebtsScreen: React.FC = () => {
 				aside={
 					<>
 						<Button
-							href="/debts/transfer"
-							as={Link}
+							to="/debts/transfer"
+							as={Link<"/debts/transfer">}
 							color="primary"
 							title="Transfer debts"
 							variant="bordered"
@@ -48,8 +48,8 @@ export const DebtsScreen: React.FC = () => {
 							<TransferIcon size={24} />
 						</Button>
 						<Button
-							href="/debts/add"
-							as={Link}
+							to="/debts/add"
+							as={Link<"/debts/add">}
 							color="primary"
 							title="Add debt"
 							variant="bordered"

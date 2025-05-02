@@ -1,6 +1,11 @@
 import * as Sentry from "@sentry/nextjs";
 import type { ParserBuilder } from "nuqs";
-import { parseAsBoolean, parseAsInteger, parseAsString } from "nuqs";
+import {
+	createLoader,
+	parseAsBoolean,
+	parseAsInteger,
+	parseAsString,
+} from "nuqs";
 
 import type { GetLinksOptions } from "~app/utils/trpc";
 
@@ -12,7 +17,7 @@ export const captureSentryError: GetLinksOptions["captureError"] = (error) => {
 	return transactionId;
 };
 
-export const linksParams = {
+export const loadLinksParams = createLoader({
 	debug: parseAsBoolean,
 	proxyPort: parseAsInteger,
 	controllerId: parseAsString,
@@ -20,4 +25,4 @@ export const linksParams = {
 	[K in keyof GetLinksOptions["searchParams"]]: ParserBuilder<
 		NonNullable<GetLinksOptions["searchParams"][K]>
 	>;
-};
+});

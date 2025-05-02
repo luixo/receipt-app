@@ -28,7 +28,7 @@ export const VoidAccount: React.FC<Props> = ({ token }) => {
 				<Header size="sm" className="text-success">
 					Account removed succesfully
 				</Header>
-				<Button color="primary" as={Link} href="/login">
+				<Button color="primary" as={Link<"/login">} to="/login">
 					To login page
 				</Button>
 			</>
@@ -51,8 +51,8 @@ export const VoidAccount: React.FC<Props> = ({ token }) => {
 				</Button>
 				<Button
 					className="flex-1"
-					as={isPending ? undefined : Link}
-					href={isPending ? undefined : "/login"}
+					as={isPending ? undefined : Link<"/login">}
+					to={isPending ? undefined : "/login"}
 					color="primary"
 					isDisabled={isPending}
 				>

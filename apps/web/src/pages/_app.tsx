@@ -4,7 +4,7 @@ import { getCookies } from "cookies-next";
 import type { AppType } from "next/dist/shared/lib/utils";
 import { Inter } from "next/font/google";
 import Head from "next/head";
-import { useQueryState, useQueryStates } from "nuqs";
+import { useQueryState } from "nuqs";
 import { NuqsAdapter } from "nuqs/adapters/next/pages";
 import "raf/polyfill";
 
@@ -28,7 +28,7 @@ import { useQueryClientHelper } from "~web/hooks/use-query-client-helper";
 import { useRemovePreloadedCss } from "~web/hooks/use-remove-preloaded-css";
 import { QueryDevToolsProvider } from "~web/providers/client/query-devtools";
 import { ThemeProvider } from "~web/providers/client/theme";
-import { captureSentryError, linksParams } from "~web/utils/trpc";
+import { captureSentryError, loadLinksParams } from "~web/utils/trpc";
 import "~app/global.css";
 
 applyRemaps();
@@ -74,6 +74,7 @@ type PageProps = Omit<
 	React.ComponentProps<typeof Provider>,
 	"storeContext" | "persister" | "linksContext" | "useQueryClientKey"
 > & {
+	linksParams: Awaited<ReturnType<typeof loadLinksParams>>;
 	nowTimestamp: number;
 	initialValues: StoreValues;
 };
@@ -85,17 +86,16 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 	// A bug in next.js
 	const props = pageProps as PageProps;
 	const baseLinksContext = React.useContext(LinksContext);
-	const [linksSearchParams] = useQueryStates(linksParams);
 	const linksContext = React.useMemo<LinksContextType>(
 		() => ({
-			searchParams: linksSearchParams,
+			searchParams: props.linksParams,
 			url: baseLinksContext.url,
 			// Don't batch requests when in tests - to evaluate pending / error states separately
-			useBatch: !linksSearchParams.proxyPort,
+			useBatch: !props.linksParams.proxyPort,
 			source: "csr-next",
 			captureError: captureSentryError,
 		}),
-		[baseLinksContext.url, linksSearchParams],
+		[baseLinksContext.url, props.linksParams],
 	);
 	useHtmlFont(font.variable);
 	const storeContext = React.useMemo(
@@ -137,9 +137,10 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 	);
 };
 
-MyApp.getInitialProps = async ({ ctx }) => {
+MyApp.getInitialProps = async ({ ctx, router }) => {
 	const cookies = getCookies(ctx);
 	const pageProps: PageProps = {
+		linksParams: loadLinksParams(router.query),
 		initialValues: getStoreValuesFromInitialValues(cookies),
 		nowTimestamp: Date.now(),
 	};

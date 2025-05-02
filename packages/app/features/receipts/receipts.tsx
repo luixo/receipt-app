@@ -123,8 +123,8 @@ export const Receipts: React.FC<Props> = ({
 				Press
 				<Button
 					color="primary"
-					as={Link}
-					href="/receipts/add"
+					as={Link<"/receipts/add">}
+					to="/receipts/add"
 					title="Add receipt"
 					variant="bordered"
 					className="mx-2"

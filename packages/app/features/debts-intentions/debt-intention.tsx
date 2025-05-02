@@ -61,8 +61,9 @@ export const DebtIntention: React.FC<Props> = ({ intention, children }) => {
 				<View className="flex-row items-center gap-2">
 					{intention.receiptId ? (
 						<Button
-							as={Link}
-							href={`/receipts/${intention.receiptId}`}
+							as={Link<"/receipts/$id">}
+							to="/receipts/$id"
+							params={{ id: intention.receiptId }}
 							variant="bordered"
 							color="primary"
 							isIconOnly

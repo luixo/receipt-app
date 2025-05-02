@@ -21,12 +21,10 @@ export const ReceiptGuestControlButton: React.FC<Props> = ({ receipt }) => {
 
 	return (
 		<Button
-			href={
-				receipt.debt.hasMine
-					? `/debts/${receipt.debt.id}`
-					: `/debts/intentions#${receipt.debt.id}`
-			}
-			as={Link}
+			to={receipt.debt.hasMine ? "/debts/$id" : "/debts/intentions"}
+			hash={receipt.debt.hasMine ? receipt.debt.id : undefined}
+			params={{ id: receipt.debt.id }}
+			as={Link<"/debts/$id" | "/debts/intentions">}
 			title="Incoming debt"
 			variant="bordered"
 			color="primary"

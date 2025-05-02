@@ -6685,6 +6685,7 @@ __metadata:
     react-native-web: "npm:^0.19.9"
     remeda: "npm:^2.7.0"
     sharp: "npm:^0.32.6"
+    solito: "npm:^4.1.3"
     superjson: "npm:^1.13.1"
     uuid: "npm:^9.0.0"
     vitest: "npm:^3.1.2"

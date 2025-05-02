@@ -67,10 +67,10 @@ export const PROTECTED_ELEMENTS: MenuElement[] = [
 
 type Props = {
 	children: React.ReactNode;
-};
+} & Omit<React.ComponentProps<typeof Page>, "elements">;
 
-export const ProtectedPage: React.FC<Props> = ({ children }) => (
-	<Page elements={PROTECTED_ELEMENTS}>
+export const ProtectedPage: React.FC<Props> = ({ children, ...props }) => (
+	<Page elements={PROTECTED_ELEMENTS} {...props}>
 		{children}
 		<NoAuthEffect />
 	</Page>

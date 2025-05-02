@@ -57,8 +57,9 @@ const Header: React.FC<HeaderProps> = ({ title, userId, onEditClick }) => (
 					</Button>
 				) : null}
 				<Button
-					href={`/debts/transfer/?from=${userId}`}
-					as={Link}
+					to="/debts/transfer"
+					search={{ from: userId }}
+					as={Link<"/debts/transfer">}
 					color="primary"
 					title="Transfer debts"
 					variant="bordered"
@@ -68,8 +69,9 @@ const Header: React.FC<HeaderProps> = ({ title, userId, onEditClick }) => (
 				</Button>
 				<Button
 					color="primary"
-					href={`/debts/add?userId=${userId}`}
-					as={Link}
+					to="/debts/add"
+					search={{ userId }}
+					as={Link<"/debts/add">}
 					title="Add debt"
 					variant="bordered"
 					isIconOnly
@@ -141,8 +143,9 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 				{nonZeroAggregatedDebts.length > 1 ? (
 					<Button
 						color="primary"
-						href={`/debts/user/${userId}/exchange/`}
-						as={Link}
+						to="/debts/user/$id/exchange/"
+						params={{ id: userId }}
+						as={Link<"/debts/user/$id/exchange/">}
 						variant="bordered"
 						isIconOnly
 					>

@@ -29,41 +29,47 @@ type Params<Path> = {
 
 type IsNonEmptyObject<T> = keyof T extends never ? false : true;
 
-export type UrlParams<P extends string> = { to: P } & (IsNonEmptyObject<
-	Params<P>
-> extends true
+export type UrlParams<P extends string> = {
+	to: P;
+	hash?: string;
+	search?: Record<string, string>;
+} & (IsNonEmptyObject<Params<P>> extends true
 	? { params: Params<P> }
 	: { params?: never });
 
-export const buildUrl = <P extends string>({ to, params }: UrlParams<P>) =>
+export const buildUrl = <P extends string>({
+	to,
+	hash,
+	search,
+	params,
+}: UrlParams<P>) =>
 	entries((params || {}) as Record<string, string>).reduce<string>(
 		(acc, [key, value]) => acc.replace(`$${key}`, value),
 		to,
-	);
+	) +
+	(search
+		? `?${entries(search)
+				.map(([key, value]) => `${key}=${value}`)
+				.join("&")}`
+		: "") +
+	(hash ? `#${hash}` : "");
 
 export const useNavigate = () => {
 	const router = useRouter();
 	return <P extends string>({
 		replace,
 		to,
+		hash,
 		params,
 	}: NavigationOptions & UrlParams<P>) => {
 		router[replace ? "replace" : "push"](
-			buildUrl({ to, params } as UrlParams<P>),
+			buildUrl({ to, hash, params } as UrlParams<P>),
 		);
 	};
 };
 
 // Refactor this to add base path or similar
 export const useHref = () => (url: string) => url;
-
-export const useMatchRoute = () => {
-	const pathname = usePathname() ?? "";
-	return (routeToMatch: string | RegExp) =>
-		typeof routeToMatch === "string"
-			? pathname === routeToMatch
-			: routeToMatch.test(pathname);
-};
 
 type SearchParamsMapping = {
 	"/users": {
@@ -90,4 +96,4 @@ export type SearchParamState<
 	P extends keyof SearchParamsMapping[K] = keyof SearchParamsMapping[K],
 > = UseQueryStateReturn<SearchParamsMapping[K][P], SearchParamsMapping[K][P]>;
 
-export { useParams };
+export { useParams, usePathname };

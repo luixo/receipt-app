@@ -22,8 +22,8 @@ export const UsersScreen: React.FC<{
 		() => (
 			<Button
 				key="connections"
-				href="/users/connections"
-				as={Link}
+				to="/users/connections"
+				as={Link<"/users/connections">}
 				color="primary"
 				title="Connection intentions"
 				variant="bordered"
@@ -41,8 +41,8 @@ export const UsersScreen: React.FC<{
 				aside={
 					<>
 						<Button
-							href="/users/add"
-							as={Link}
+							to="/users/add"
+							as={Link<"/users/add">}
 							color="primary"
 							title="Add user"
 							variant="bordered"

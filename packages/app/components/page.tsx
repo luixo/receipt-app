@@ -2,7 +2,7 @@ import type React from "react";
 import { View } from "react-native";
 
 import type { UrlParams } from "~app/hooks/use-navigation";
-import { buildUrl, useMatchRoute } from "~app/hooks/use-navigation";
+import { buildUrl, usePathname } from "~app/hooks/use-navigation";
 import { Badge } from "~components/badge";
 import { Link } from "~components/link";
 import { Text } from "~components/text";
@@ -30,21 +30,20 @@ const link = tv({
 	},
 });
 
-const MenuItemComponent: React.FC<MenuElement> = ({
+const MenuItemComponent: React.FC<MenuElement & { selected: boolean }> = ({
 	Icon,
 	urlParams,
 	text,
 	useBadgeAmount = useZero,
 	useShow = useTrue,
+	selected,
 }) => {
-	const matchRoute = useMatchRoute();
 	const amount = useBadgeAmount();
 	const show = useShow();
 	if (!show) {
 		return null;
 	}
 	const url = buildUrl(urlParams);
-	const selected = matchRoute(url);
 	const icon = <Icon size={24} />;
 	return (
 		<Link key={url} {...urlParams} className={link({ selected })}>
@@ -68,9 +67,9 @@ type Props = {
 };
 
 export const Page: React.FC<Props> = ({ children, elements }) => {
-	const matchRoute = useMatchRoute();
-	const PageWrapper = elements.find((element) =>
-		matchRoute(buildUrl(element.urlParams)),
+	const pathname = usePathname() ?? "";
+	const PageWrapper = elements.find(
+		(element) => buildUrl(element.urlParams) === pathname,
 	)?.PageWrapper;
 	const slot = <View className="gap-4">{children}</View>;
 	return (
@@ -83,7 +82,13 @@ export const Page: React.FC<Props> = ({ children, elements }) => {
 				<View className="mx-auto max-w-screen-sm flex-1 flex-row">
 					{elements.map(({ ItemWrapper, ...props }) => {
 						const url = buildUrl(props.urlParams);
-						const element = <MenuItemComponent key={url} {...props} />;
+						const element = (
+							<MenuItemComponent
+								key={url}
+								{...props}
+								selected={pathname.startsWith(url)}
+							/>
+						);
 						if (ItemWrapper) {
 							return <ItemWrapper key={url}>{element}</ItemWrapper>;
 						}

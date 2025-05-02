@@ -21,10 +21,10 @@ const PUBLIC_ELEMENTS: MenuElement[] = [
 
 type Props = {
 	children: React.ReactNode;
-};
+} & Omit<React.ComponentProps<typeof Page>, "elements">;
 
-export const PublicPage: React.FC<Props> = ({ children }) => (
-	<Page elements={PUBLIC_ELEMENTS}>
+export const PublicPage: React.FC<Props> = ({ children, ...props }) => (
+	<Page elements={PUBLIC_ELEMENTS} {...props}>
 		{children}
 		<AuthEffect />
 	</Page>

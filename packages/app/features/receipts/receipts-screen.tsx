@@ -36,8 +36,8 @@ export const ReceiptsScreen: React.FC<{
 					<FilterButton filtersState={filtersState} sortState={sortState} />
 					<Button
 						color="primary"
-						href="/receipts/add"
-						as={Link}
+						to="/receipts/add"
+						as={Link<"/receipts/add">}
 						title="Add receipt"
 						variant="bordered"
 						isIconOnly

@@ -72,8 +72,8 @@ export const Users: React.FC<Props> = ({ limit, offsetState }) => {
 				Press
 				<Button
 					color="primary"
-					href="/users/add"
-					as={Link}
+					to="/users/add"
+					as={Link<"/users/add">}
 					title="Add user"
 					variant="bordered"
 					className="mx-2"
