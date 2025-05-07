@@ -24,7 +24,7 @@
 			"~tests/utils/*": ["./testing/utils/src/*"]
 		}
 	},
-	"include": ["**/*"],
+	"include": ["**/*", "**/package.json"],
 	"extends": "expo/tsconfig.base",
 	"ts-node": {
 		"require": ["tsconfig-paths/register"]

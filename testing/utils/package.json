@@ -1,7 +1,7 @@
 {
-	"version": "0.0.0",
 	"name": "@ra/test-utils",
-	"main": "src/index.ts",
+	"version": "0.0.0",
+	"sideEffects": false,
 	"type": "module",
-	"sideEffects": false
+	"main": "src/index.ts"
 }

@@ -1,12 +1,12 @@
 {
-	"version": "0.0.0",
 	"name": "@ra/db",
-	"main": "src/index.ts",
-	"type": "module",
+	"version": "0.0.0",
 	"sideEffects": false,
+	"type": "module",
+	"main": "src/index.ts",
 	"scripts": {
-		"db:migrate": "tsx scripts/migrate.ts",
-		"db:generate-types": "tsx scripts/generate-types.ts && yarn lint:fix packages/db && yarn run -T format"
+		"db:generate-types": "tsx scripts/generate-types.ts && yarn lint:fix packages/db && yarn run -T format",
+		"db:migrate": "tsx scripts/migrate.ts"
 	},
 	"dependencies": {
 		"kysely": "^0.27.2",

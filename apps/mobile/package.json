@@ -1,9 +1,17 @@
 {
 	"name": "@ra/mobile",
-	"main": "expo-router/entry",
 	"version": "1.0.0",
 	"private": true,
 	"type": "module",
+	"main": "expo-router/entry",
+	"scripts": {
+		"android:dev": "expo run:android",
+		"dev": "expo start",
+		"ios:build": "eas build -p=ios",
+		"ios:dev": "expo run:ios",
+		"ios:publish": "eas submit --platform ios",
+		"ios:update-version": "yarn workspace @ra/scripts expo:update-ios-version"
+	},
 	"dependencies": {
 		"@ra/app": "workspace:*",
 		"@react-native-async-storage/async-storage": "^1.22.3",
@@ -34,13 +42,5 @@
 		"@types/react": "^18.2.16",
 		"react-native-flipper": "^0.212.0",
 		"react-query-native-devtools": "^4.0.0"
-	},
-	"scripts": {
-		"dev": "expo start",
-		"android:dev": "expo run:android",
-		"ios:dev": "expo run:ios",
-		"ios:update-version": "yarn workspace @ra/scripts expo:update-ios-version",
-		"ios:build": "eas build -p=ios",
-		"ios:publish": "eas submit --platform ios"
 	}
 }

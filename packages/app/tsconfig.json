@@ -5,6 +5,7 @@
 		"nativewind-env.d.ts",
 		"promise.d.ts",
 		"../**/*.ts",
-		"../**/*.tsx"
+		"../**/*.tsx",
+		"package.json"
 	]
 }

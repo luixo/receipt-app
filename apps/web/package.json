@@ -4,10 +4,10 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"dev": "next dev",
 		"build": "next build",
-		"start": "next start",
-		"lint": "next lint"
+		"dev": "next dev",
+		"lint": "next lint",
+		"start": "next start"
 	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.470.0",

@@ -1,5 +1,6 @@
 {
 	"name": "receipt-app",
+	"version": "1.0.0",
 	"private": true,
 	"type": "module",
 	"workspaces": [
@@ -8,6 +9,58 @@
 		"scripts",
 		"testing/*"
 	],
+	"scripts": {
+		"backend:test": "NODE_OPTIONS='--import tsx' vitest",
+		"db:generate-types": "dotenv -c -- yarn workspace @ra/db db:generate-types",
+		"db:migrate": "dotenv -c -- yarn workspace @ra/db db:migrate",
+		"db:migrate:production": "dotenv -c production -- yarn workspace @ra/db db:migrate",
+		"dev": "dotenv -c -- yarn workspace @ra/scripts dev",
+		"format": "prettier --write .",
+		"format:verify": "prettier --check .",
+		"frontend:test": "yarn workspace @ra/playwright test",
+		"ios:build": "yarn workspace @ra/mobile ios:update-version && yarn workspace @ra/mobile ios:build",
+		"ios:publish": "yarn workspace @ra/mobile ios:publish",
+		"lint": "eslint",
+		"lint-staged": "lint-staged",
+		"lint:fix": "eslint --fix",
+		"native:dev": "yarn workspace @ra/mobile dev",
+		"typecheck": "tsc --noEmit",
+		"web:build": "yarn workspace @ra/web build",
+		"web:dev": "dotenv -c -- yarn workspace @ra/web dev",
+		"web:start": "yarn workspace @ra/web start"
+	},
+	"pre-commit": [
+		"typecheck",
+		"lint-staged"
+	],
+	"lint-staged": {
+		"*.{j,t}s{,x}": [
+			"prettier --write",
+			"eslint --fix"
+		]
+	},
+	"resolutions": {
+		"@internationalized/date@^3.7.0": "patch:@internationalized/date@npm%3A3.7.0#./patches/@internationalized-date-npm-3.7.0.patch",
+		"@react-aria/utils": "^3.28.1",
+		"@react-types/shared": "^3.28.0",
+		"@tanstack/query-core@5.51.1": "patch:@tanstack/query-core@npm%3A5.51.1#./patches/@tanstack-query-core-npm-5.51.1.patch",
+		"@tanstack/react-query@^5.51.1": "patch:@tanstack/react-query@npm%3A5.51.1#./patches/@tanstack-react-query-npm-5.51.1.patch",
+		"solito@^4.1.3": "patch:solito@npm%3A4.1.3#./patches/solito-npm-4.1.3.patch",
+		"zustand@^4.3.9": "patch:zustand@npm%3A4.3.9#./patches/zustand-npm-4.3.9.patch"
+	},
+	"dependencies": {
+		"@sentry/nextjs": "^8.9.2",
+		"@tanstack/react-query": "^5.51.1",
+		"@tanstack/react-query-devtools": "^5.51.1",
+		"next": "^14.2.5",
+		"react": "^18.2.0",
+		"react-dom": "^18.2.0",
+		"react-native": "^0.73.0",
+		"react-native-web": "^0.19.9",
+		"remeda": "^2.7.0",
+		"tailwindcss": "^3.4.14",
+		"zod": "^3.24.2"
+	},
 	"devDependencies": {
 		"@babel/core": "^7.23.5",
 		"@eslint/compat": "^1.1.1",
@@ -31,6 +84,7 @@
 		"eslint-plugin-deprecation": "^3.0.0",
 		"eslint-plugin-import": "^2.29.1",
 		"eslint-plugin-jsx-a11y": "^6.9.0",
+		"eslint-plugin-package-json": "^0.31.0",
 		"eslint-plugin-react": "^7.35.0",
 		"eslint-plugin-react-hooks": "^4.6.2",
 		"eslint-plugin-tailwindcss": "^3.17.5",
@@ -38,9 +92,11 @@
 		"expo-router": "^3.4.7",
 		"find-free-ports": "^3.1.1",
 		"globals": "^15.8.0",
+		"jsonc-eslint-parser": "^2.4.0",
 		"lint-staged": "^15.2.7",
 		"pre-commit": "^1.2.2",
 		"prettier": "^3.0.0",
+		"prettier-plugin-packagejson": "^2.5.11",
 		"prettier-plugin-tailwindcss": "^0.6.8",
 		"sharp": "^0.32.6",
 		"testcontainers": "^10.11.0",
@@ -52,60 +108,7 @@
 		"vite-tsconfig-paths": "^4.3.2",
 		"vitest": "^3.1.2"
 	},
-	"scripts": {
-		"dev": "dotenv -c -- yarn workspace @ra/scripts dev",
-		"native:dev": "yarn workspace @ra/mobile dev",
-		"web:dev": "dotenv -c -- yarn workspace @ra/web dev",
-		"web:build": "yarn workspace @ra/web build",
-		"web:start": "yarn workspace @ra/web start",
-		"ios:build": "yarn workspace @ra/mobile ios:update-version && yarn workspace @ra/mobile ios:build",
-		"ios:publish": "yarn workspace @ra/mobile ios:publish",
-		"typecheck": "tsc --noEmit",
-		"format": "prettier --write .",
-		"format:verify": "prettier --check .",
-		"lint": "eslint",
-		"lint:fix": "eslint --fix",
-		"db:migrate": "dotenv -c -- yarn workspace @ra/db db:migrate",
-		"db:migrate:production": "dotenv -c production -- yarn workspace @ra/db db:migrate",
-		"db:generate-types": "dotenv -c -- yarn workspace @ra/db db:generate-types",
-		"lint-staged": "lint-staged",
-		"backend:test": "NODE_OPTIONS='--import tsx' vitest",
-		"frontend:test": "yarn workspace @ra/playwright test"
-	},
-	"dependencies": {
-		"@sentry/nextjs": "^8.9.2",
-		"@tanstack/react-query": "^5.51.1",
-		"@tanstack/react-query-devtools": "^5.51.1",
-		"next": "^14.2.5",
-		"react": "^18.2.0",
-		"react-dom": "^18.2.0",
-		"react-native": "^0.73.0",
-		"react-native-web": "^0.19.9",
-		"remeda": "^2.7.0",
-		"tailwindcss": "^3.4.14",
-		"zod": "^3.24.2"
-	},
-	"version": "1.0.0",
-	"pre-commit": [
-		"typecheck",
-		"lint-staged"
-	],
-	"lint-staged": {
-		"*.{j,t}s{,x}": [
-			"prettier --write",
-			"eslint --fix"
-		]
-	},
 	"packageManager": "yarn@4.5.3",
-	"resolutions": {
-		"zustand@^4.3.9": "patch:zustand@npm%3A4.3.9#./patches/zustand-npm-4.3.9.patch",
-		"solito@^4.1.3": "patch:solito@npm%3A4.1.3#./patches/solito-npm-4.1.3.patch",
-		"@tanstack/query-core@5.51.1": "patch:@tanstack/query-core@npm%3A5.51.1#./patches/@tanstack-query-core-npm-5.51.1.patch",
-		"@tanstack/react-query@^5.51.1": "patch:@tanstack/react-query@npm%3A5.51.1#./patches/@tanstack-react-query-npm-5.51.1.patch",
-		"@internationalized/date@^3.7.0": "patch:@internationalized/date@npm%3A3.7.0#./patches/@internationalized-date-npm-3.7.0.patch",
-		"@react-aria/utils": "^3.28.1",
-		"@react-types/shared": "^3.28.0"
-	},
 	"nextBundleAnalysis": {
 		"budget": 358400,
 		"budgetPercentIncreaseRed": 5,

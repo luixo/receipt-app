@@ -9,6 +9,7 @@ import prettierConfig from "eslint-config-prettier";
 import deprecationPlugin from "eslint-plugin-deprecation";
 import importPlugin from "eslint-plugin-import";
 import jsxAccessibilityPlugin from "eslint-plugin-jsx-a11y";
+import packageJson from "eslint-plugin-package-json";
 import reactPlugin from "eslint-plugin-react";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
 import tailwindPlugin from "eslint-plugin-tailwindcss";
@@ -434,6 +435,27 @@ export default ts.config(
 		rules: {
 			// We still have some CJS files in the project
 			"@typescript-eslint/no-require-imports": "off",
+		},
+	},
+	{
+		files: ["**/package.json"],
+		extends: [ts.configs.disableTypeChecked],
+	},
+	{
+		...packageJson.configs.recommended,
+		languageOptions: {
+			parserOptions: {
+				projectService: {},
+			},
+		},
+	},
+	{
+		files: ["**/package.json"],
+		rules: {
+			// Remove when `eslint-plugin-package-json` migrates to a proper parser
+			// Also, remove `jsonc-eslint-parser` package from the project
+			// see https://github.com/JoshuaKGoldberg/eslint-plugin-package-json/issues/655
+			"@typescript-eslint/no-unused-expressions": "off",
 		},
 	},
 	{

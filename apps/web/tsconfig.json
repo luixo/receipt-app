@@ -24,7 +24,8 @@
 		"next-env.d.ts",
 		"**/*.ts",
 		"**/*.tsx",
-		"**/*.cjs"
+		"**/*.cjs",
+		"package.json"
 	],
 	"exclude": ["node_modules"]
 }
