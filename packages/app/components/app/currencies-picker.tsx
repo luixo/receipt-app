@@ -5,7 +5,7 @@ import { QueryErrorMessage } from "~app/components/error-message";
 import { useCurrencies } from "~app/hooks/use-currencies";
 import { useCurrencyDescriptions } from "~app/hooks/use-formatted-currency";
 import { type TRPCQueryInput, type TRPCQueryResult, trpc } from "~app/trpc";
-import { type CurrencyCode } from "~app/utils/currency";
+import type { CurrencyCode } from "~app/utils/currency";
 import { Button } from "~components/button";
 import { Divider } from "~components/divider";
 import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";

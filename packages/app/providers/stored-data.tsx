@@ -31,7 +31,7 @@ export const StoredDataProvider: React.FC<React.PropsWithChildren> = ({
 	const { setItem, deleteItem, getInitialItems } =
 		React.useContext(StoreContext);
 	const { nowTimestamp, values } = getInitialItems();
-	const [isMounted, setMounted] = React.useState(false);
+	const [mounted, setMounted] = React.useState(false);
 	React.useEffect(() => setMounted(true), []);
 	const [ssrState, setSsrState] = React.useState<StoreValues | undefined>(() =>
 		values instanceof Promise ? undefined : resolveState(values),
@@ -105,8 +105,8 @@ export const StoredDataProvider: React.FC<React.PropsWithChildren> = ({
 	return (
 		<StoreDataContext.Provider
 			value={React.useMemo(
-				() => ({ isFirstRender: !isMounted, nowTimestamp, ...ssrStates }),
-				[ssrStates, nowTimestamp, isMounted],
+				() => ({ isFirstRender: !mounted, nowTimestamp, ...ssrStates }),
+				[ssrStates, nowTimestamp, mounted],
 			)}
 		>
 			{children}

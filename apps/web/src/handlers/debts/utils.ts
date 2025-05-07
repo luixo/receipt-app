@@ -1,4 +1,4 @@
-import { isNonNullish } from "remeda";
+import { isNonNullish, omit } from "remeda";
 
 import type { DebtsId, UsersId } from "~db/models";
 import type { Database, SimpleInsertObject } from "~db/types";
@@ -72,7 +72,7 @@ export const upsertAutoAcceptedDebts = async (
 			? ([] as { id: DebtsId; userId: UsersId }[])
 			: database
 					.insertInto("debts")
-					.values(nonExistentDebts.map(({ isNew, ...debt }) => debt))
+					.values(nonExistentDebts.map((debt) => omit(debt, ["isNew"])))
 					.returning(["debts.id", "debts.userId"])
 					.execute(),
 		...existentDebts.map(([nextDebt, currentDebt]) =>

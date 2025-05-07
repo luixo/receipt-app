@@ -42,6 +42,7 @@ export const PageHeader: React.FC<Props> = ({
 	...props
 }) => (
 	<>
+		{/* TODO: convert types to the way so either we have string children or title */}
 		<PageTitle>{title || children?.toString()}</PageTitle>
 		<View className="flex-row flex-wrap justify-between gap-4">
 			<View className="flex-1 flex-row items-center gap-4" {...props}>

@@ -17,6 +17,8 @@ import { S3_AVATAR_PREFIX, procedure } from "./change-avatar";
 const createCaller = t.createCallerFactory(t.router({ procedure }));
 
 const getFormData = (bits?: BlobPart[]) => {
+	// I hope this works until we upgrade to Node v21
+	// eslint-disable-next-line n/no-unsupported-features/node-builtins
 	const formData = new FormData();
 	if (bits) {
 		formData.append("avatar", new File(bits, "avatar.png"));

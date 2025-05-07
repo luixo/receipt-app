@@ -1,8 +1,8 @@
-import * as fs from "fs/promises";
 import type { Migration, MigrationProvider, MigrationResult } from "kysely";
 import { Migrator } from "kysely";
+import * as fs from "node:fs/promises";
+import * as path from "node:path";
 import * as url from "node:url";
-import * as path from "path";
 
 import type { Database } from "~db/types";
 
@@ -35,7 +35,6 @@ class ESMFileMigrationProvider implements MigrationProvider {
 		);
 		const files = await fs.readdir(resolvedPath);
 
-		// eslint-disable-next-line no-restricted-syntax
 		for (const fileName of files) {
 			const importPath = path.join(resolvedPath, fileName);
 			// eslint-disable-next-line no-await-in-loop

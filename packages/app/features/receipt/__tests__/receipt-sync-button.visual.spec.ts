@@ -1,4 +1,3 @@
-import {} from "~tests/frontend/generators/receipts";
 import {
 	defaultGenerateDebtsFromReceipt,
 	ourDesynced,

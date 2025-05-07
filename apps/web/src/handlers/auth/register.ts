@@ -41,7 +41,7 @@ export const procedure = unauthProcedure
 		const id: AccountsId = ctx.getUuid();
 		const confirmationToken = ctx.getUuid();
 		const emailServiceActive = ctx.emailOptions.active;
-		const passwordData = generatePasswordData(ctx, input.password);
+		const passwordData = await generatePasswordData(ctx, input.password);
 		if (emailServiceActive) {
 			await sendVerificationEmail(
 				ctx,

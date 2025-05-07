@@ -31,7 +31,6 @@ export const getExchangeRateOptions = (): ExchangeRateOptionsMock => {
 					shouldContinue = true;
 				};
 				let lastResult: ExchangeRateResult = -1;
-				// eslint-disable-next-line no-restricted-syntax
 				for (const interceptor of interceptors) {
 					// eslint-disable-next-line no-await-in-loop
 					lastResult = await interceptor(from, to, next);

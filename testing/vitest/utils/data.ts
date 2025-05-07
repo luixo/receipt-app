@@ -78,7 +78,7 @@ export const insertAccount = async (
 	data: AccountData = {},
 ) => {
 	const password = data.password || faker.internet.password();
-	const { salt: passwordSalt, hash: passwordHash } = generatePasswordData(
+	const { salt: passwordSalt, hash: passwordHash } = await generatePasswordData(
 		{ getSalt: ctx.getTestSalt },
 		password,
 	);

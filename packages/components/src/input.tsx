@@ -28,7 +28,7 @@ export const Input = React.forwardRef<
 		{ className, fieldError, mutation, endContent, multiline, ...props },
 		ref,
 	) => {
-		const [isVisible, setVisible] = React.useState(false);
+		const [visible, setVisible] = React.useState(false);
 		const switchValue = React.useCallback(
 			() => setVisible((prev) => !prev),
 			[],
@@ -55,7 +55,7 @@ export const Input = React.forwardRef<
 				}}
 				type={
 					props.type === "password"
-						? isVisible
+						? visible
 							? undefined
 							: "password"
 						: props.type
@@ -65,7 +65,7 @@ export const Input = React.forwardRef<
 						{endContent}
 						{props.type === "password" ? (
 							<Button variant="light" isIconOnly>
-								{isVisible ? (
+								{visible ? (
 									<EyeSlashIcon onClick={switchValue} size={24} />
 								) : (
 									<EyeIcon onClick={switchValue} size={24} />

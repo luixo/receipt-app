@@ -47,7 +47,8 @@ export const procedure = unauthProcedure
 			});
 		}
 		const isPasswordValid =
-			getHash(input.password, result.passwordSalt) === result.passwordHash;
+			(await getHash(input.password, result.passwordSalt)) ===
+			result.passwordHash;
 		if (!isPasswordValid) {
 			const errorMessage = `Authentication of account "${input.email.original}" failed: password is wrong.`;
 			ctx.logger.debug(errorMessage);

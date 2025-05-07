@@ -26,6 +26,7 @@ import type {
 import type { TransformerResult } from "~app/utils/trpc";
 import { transformer } from "~app/utils/trpc";
 import type { AccountsId, UsersId } from "~db/models";
+import { withResolvers } from "~tests/frontend/utils";
 import { CURRENCIES } from "~utils/currency-data";
 
 import type { appRouter } from "../global/router";
@@ -362,7 +363,7 @@ const createApiManager = async (
 		mockFirst: (key, handler) => mock(key, handler, "append"),
 		mockLast: (key, handler) => mock(key, handler, "prepend"),
 		createPause: () => {
-			const promise = Promise.withResolvers<void>();
+			const promise = withResolvers<void>();
 			controller.paused.push(promise);
 			return promise;
 		},

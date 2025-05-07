@@ -20,7 +20,7 @@ export const procedure = authProcedure
 			.where("id", "=", ctx.auth.accountId)
 			.executeTakeFirstOrThrow();
 		const isPrevPasswordValid =
-			getHash(input.prevPassword, account.passwordSalt) ===
+			(await getHash(input.prevPassword, account.passwordSalt)) ===
 			account.passwordHash;
 		if (!isPrevPasswordValid) {
 			throw new TRPCError({
@@ -28,7 +28,7 @@ export const procedure = authProcedure
 				message: `Change password of account "${ctx.auth.email}" failed: password doesn't match.`,
 			});
 		}
-		const passwordData = generatePasswordData(ctx, input.password);
+		const passwordData = await generatePasswordData(ctx, input.password);
 		await database
 			.updateTable("accounts")
 			.set({

@@ -5,7 +5,7 @@ import type {
 	useActionHooks,
 } from "~app/features/receipt/hooks";
 
-export { ReceiptContext };
+export type { ReceiptContext };
 
 export type ActionsHooksContext = ReturnType<typeof useActionHooks>;
 

@@ -1,6 +1,6 @@
 import type { CookieSerializeOptions } from "cookie";
 import { parse, serialize } from "cookie";
-import type { IncomingMessage, ServerResponse } from "http";
+import type { IncomingMessage, ServerResponse } from "node:http";
 
 const getCookies = (req: IncomingMessage): Partial<Record<string, string>> =>
 	parse(req.headers.cookie ? String(req.headers.cookie) : "");

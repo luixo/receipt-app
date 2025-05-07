@@ -3,11 +3,9 @@ import { expect, test } from "@playwright/test";
 const TOAST_SELECTOR = ".toaster > div";
 const DEFAULT_WAIT_TOAST_TIMEOUT = 1000;
 
-type RegExpOrString = string | RegExp;
-
 type ToastsFixtures = {
 	verifyToastTexts: (
-		textOrTexts?: RegExpOrString | RegExpOrString[],
+		textOrTexts?: string | string[],
 		timeout?: number,
 	) => Promise<void>;
 	clearToasts: () => Promise<void>;
@@ -21,7 +19,7 @@ export const toastsFixtures = test.extend<ToastsFixtures>({
 				await expect(async () => {
 					const expectedTexts = (
 						Array.isArray(textOrTexts) ? textOrTexts : [textOrTexts]
-					).sort();
+					).sort((a, b) => a.localeCompare(b));
 					const actualTexts = await page.evaluate(
 						([selector]) =>
 							Array.from(document.querySelectorAll(selector))

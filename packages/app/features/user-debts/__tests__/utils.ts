@@ -1,4 +1,4 @@
-import { type Locator } from "@playwright/test";
+import type { Locator } from "@playwright/test";
 import { TRPCError } from "@trpc/server";
 
 import type { UsersId } from "~db/models";

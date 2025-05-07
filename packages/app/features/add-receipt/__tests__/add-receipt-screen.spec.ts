@@ -123,7 +123,6 @@ test("'receipts.add' mutation", async ({
 	await expect(addButton).toBeDisabled();
 	await expect(buttonWithLoader).toBeVisible();
 	const inputs = await page.locator("input").all();
-	// eslint-disable-next-line no-restricted-syntax
 	for (const input of inputs) {
 		// eslint-disable-next-line no-await-in-loop
 		await expect(input).toBeDisabled();

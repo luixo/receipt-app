@@ -91,7 +91,6 @@ export const User = React.forwardRef<HTMLDivElement, Props>(
 			name,
 			connectedAccount,
 			className,
-			classNames,
 			avatarProps: rawAvatarProps,
 			dimmed,
 			onlyAvatar,

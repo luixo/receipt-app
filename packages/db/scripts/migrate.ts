@@ -37,7 +37,7 @@ const main = async ([firstArg]: string[]) => {
 	} catch (e) {
 		console.error("Failed to migrate");
 		console.error(e);
-		process.exit(1);
+		throw e;
 	} finally {
 		await database.destroy();
 	}

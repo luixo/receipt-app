@@ -1,4 +1,5 @@
 import { faker } from "@faker-js/faker";
+import { omit } from "remeda";
 import { describe, expect } from "vitest";
 import type { z } from "zod";
 
@@ -32,10 +33,8 @@ import {
 
 type Input = z.infer<typeof schema>;
 
-const getValidReceiptItemNoReceiptId = () => {
-	const { receiptId, ...item } = getValidReceiptItem();
-	return item;
-};
+const getValidReceiptItemNoReceiptId = () =>
+	omit(getValidReceiptItem(), ["receiptId"]);
 
 const createCaller = t.createCallerFactory(t.router({ procedure }));
 

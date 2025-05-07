@@ -9,7 +9,6 @@ type MockFixtures = {
 };
 type MockWorkerFixtures = {
 	timekeeper: void;
-	withResolvers: void;
 };
 
 export const mockFixtures = test.extend<MockFixtures, MockWorkerFixtures>({
@@ -26,28 +25,6 @@ export const mockFixtures = test.extend<MockFixtures, MockWorkerFixtures>({
 			timekeeper.freeze(new Date("2020-01-01"));
 			await use();
 			timekeeper.reset();
-		},
-		{ auto: true, scope: "worker" },
-	],
-	withResolvers: [
-		// eslint-disable-next-line no-empty-pattern
-		async ({}, use) => {
-			const withResolvers: (typeof Promise)["withResolvers"] = <T>() => {
-				let resolve: (value: T | PromiseLike<T>) => void;
-				let reject: (error: unknown) => void;
-				const promise = new Promise<T>((localResolve, localReject) => {
-					resolve = localResolve;
-					reject = localReject;
-				});
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-				return { promise, resolve: resolve!, reject: reject! };
-			};
-			if (typeof Promise.withResolvers === "undefined") {
-				Promise.withResolvers = withResolvers;
-			} else if (Promise.withResolvers !== withResolvers) {
-				throw new Error("Remove withResolvers polyfill!");
-			}
-			await use();
 		},
 		{ auto: true, scope: "worker" },
 	],

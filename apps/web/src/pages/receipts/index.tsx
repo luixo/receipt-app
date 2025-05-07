@@ -20,7 +20,6 @@ const Screen: AppPage = () => {
 	);
 	const filtersState = useQueryState(
 		"filters",
-		// eslint-disable-next-line @typescript-eslint/unbound-method
 		parseAsJson(filtersSchema.parse).withDefault({}),
 	);
 	const limitState = useQueryState(

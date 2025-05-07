@@ -47,9 +47,7 @@ export type FlattenObject<
 	? T[Key] extends never
 		? never
 		: T[Key] extends Terminator
-		? {
-				[K in PrevKey extends "" ? `${Key}` : `${PrevKey}.${Key}`]: T[Key];
-		  }
+		? Record<PrevKey extends "" ? `${Key}` : `${PrevKey}.${Key}`, T[Key]>
 		: T[Key] extends Record<string, unknown>
 		? FlattenObject<
 				Terminator,

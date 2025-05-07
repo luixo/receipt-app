@@ -1,4 +1,5 @@
-import * as crypto from "crypto";
+import * as crypto from "node:crypto";
+import { promisify } from "node:util";
 
 import type { UnauthorizedContext } from "~web/handlers/context";
 
@@ -7,14 +8,21 @@ type PasswordData = {
 	salt: string;
 };
 
-export const getHash = (password: string, salt: string): string =>
-	crypto.pbkdf2Sync(password, salt, 1000, 64, "sha512").toString("hex");
+const promisifiedPbkdf2 = promisify(crypto.pbkdf2);
 
-export const generatePasswordData = (
+export const getHash = async (
+	password: string,
+	salt: string,
+): Promise<string> => {
+	const buffer = await promisifiedPbkdf2(password, salt, 1000, 64, "sha512");
+	return buffer.toString("hex");
+};
+
+export const generatePasswordData = async (
 	ctx: Pick<UnauthorizedContext, "getSalt">,
 	password: string,
-): PasswordData => {
+): Promise<PasswordData> => {
 	const salt = ctx.getSalt();
-	const hash = getHash(password, salt);
+	const hash = await getHash(password, salt);
 	return { salt, hash };
 };

@@ -1,6 +1,7 @@
 import type React from "react";
 
 import { useQueryClient } from "@tanstack/react-query";
+import { omit } from "remeda";
 import { z } from "zod";
 
 import { PageHeader } from "~app/components/page-header";
@@ -47,8 +48,8 @@ export const RegisterScreen: React.FC = () => {
 			onChange: formSchema,
 			onSubmit: formSchema,
 		},
-		onSubmit: ({ value: { passwordRetype, ...value } }) =>
-			registerMutation.mutate(value),
+		onSubmit: ({ value }) =>
+			registerMutation.mutate(omit(value, ["passwordRetype"])),
 	});
 
 	return (

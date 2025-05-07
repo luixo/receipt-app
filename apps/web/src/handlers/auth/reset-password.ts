@@ -36,7 +36,7 @@ export const procedure = unauthProcedure
 				message: `Reset password intention "${input.token}" does not exist or expired.`,
 			});
 		}
-		const passwordData = generatePasswordData(ctx, input.password);
+		const passwordData = await generatePasswordData(ctx, input.password);
 		await database.transaction().execute(async (tx) => {
 			await tx
 				.updateTable("accounts")

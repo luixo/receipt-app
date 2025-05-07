@@ -10,7 +10,14 @@ import type {
 } from "@trpc/server/unstable-core-do-not-import";
 import { diff as objectDiff } from "deep-object-diff";
 import assert from "node:assert";
-import { entries, fromEntries, isNonNullish, mapValues, omitBy } from "remeda";
+import {
+	entries,
+	fromEntries,
+	isNonNullish,
+	mapValues,
+	omit,
+	omitBy,
+} from "remeda";
 
 import type {
 	AppRouter,
@@ -129,10 +136,10 @@ type RawQueryKey = [
 const mapQueries = (queries: DehydratedState["queries"]) =>
 	queries
 		.sort((a, b) => a.queryHash.localeCompare(b.queryHash))
-		.map(({ queryHash, queryKey, ...query }) => {
+		.map(({ queryKey, ...query }) => {
 			const typedQueryKey = queryKey as RawQueryKey;
 			return {
-				...query,
+				...omit(query, ["queryHash"]),
 				queryKey: {
 					handler: typedQueryKey[0].join(".") as TRPCQueryKey,
 					input: JSON.stringify(typedQueryKey[1]?.input),
@@ -232,7 +239,6 @@ const remapActions = (
 	);
 
 const withNoPlatformPath = (testInfo: TestInfo, fn: () => void) => {
-	/* eslint-disable-next-line @typescript-eslint/unbound-method */
 	const originalSnapshotPath = testInfo.snapshotPath;
 	testInfo.snapshotPath = (...snapshotPath) =>
 		originalSnapshotPath

@@ -115,6 +115,8 @@ export const AccountAvatarInput: React.FC<Props> = ({ account, children }) => {
 			onSubmit: formSchema,
 		},
 		onSubmit: async ({ value, formApi }) => {
+			// This can only happen on client
+			// eslint-disable-next-line n/no-unsupported-features/node-builtins
 			const formData = new FormData();
 			const croppedCanvas = await getCroppedCanvas(
 				value.avatar,
@@ -153,6 +155,8 @@ export const AccountAvatarInput: React.FC<Props> = ({ account, children }) => {
 	}, []);
 
 	const resetAvatar = React.useCallback(() => {
+		// This can only happen on client
+		// eslint-disable-next-line n/no-unsupported-features/node-builtins
 		removeAvatarMutation.mutate(new FormData());
 	}, [removeAvatarMutation]);
 	const resetEditor = React.useCallback(() => form.reset(), [form]);

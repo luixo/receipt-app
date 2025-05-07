@@ -43,7 +43,7 @@ const mergeClip = async (
 	assert(first);
 	const boundingBox = await first.boundingBox();
 	if (!boundingBox) {
-		throw new Error(`Expected to have boundingBox for ${String(first)}`);
+		throw new Error(`Expected to have boundingBox for the first locator`);
 	}
 	return mergeClip(rest, mergeBoundingBoxes(boundingBox, acc));
 };

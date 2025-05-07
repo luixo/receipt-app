@@ -51,7 +51,6 @@ export const UsersSuggest: React.FC<Props> = ({
 	options,
 	filterIds: outerFilterIds,
 	onUserClick,
-	closeOnSelect,
 	additionalIds,
 	children,
 	wrapperProps,
@@ -67,7 +66,7 @@ export const UsersSuggest: React.FC<Props> = ({
 		: selected
 		? [selected]
 		: [];
-	const [initialUserIds] = React.useState(() => selectedUserIds);
+	const initialUserIds = React.useRef(selectedUserIds);
 	const filterIds = [...(outerFilterIds || []), ...selectedUserIds];
 	const topQuery = trpc.users.suggestTop.useQuery(
 		{ limit: topLimit, options, filterIds },
@@ -136,7 +135,7 @@ export const UsersSuggest: React.FC<Props> = ({
 		[trpcUtils],
 	);
 	React.useEffect(() => {
-		const firstUser = initialUserIds[0];
+		const firstUser = initialUserIds.current[0];
 		if (firstUser) {
 			setUserNameById(firstUser);
 		}
@@ -282,7 +281,7 @@ export const UsersSuggest: React.FC<Props> = ({
 						radius="full"
 						size="sm"
 						className={value ? undefined : "hidden"}
-						onClick={openAddUser}
+						onPress={openAddUser}
 					>
 						<PlusIcon size={24} />
 					</Button>

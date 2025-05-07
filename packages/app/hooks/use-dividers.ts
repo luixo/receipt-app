@@ -20,7 +20,6 @@ export const useDividers = (
 		{ debtId: DebtsId; currencyCode: CurrencyCode }[]
 	>(() => {
 		const dividers: { debtId: DebtsId; currencyCode: CurrencyCode }[] = [];
-		// eslint-disable-next-line no-restricted-syntax
 		for (const debt of debts) {
 			const currentAmount = sums[debt.currencyCode] ?? 0;
 			if (!currentAmount) {

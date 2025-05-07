@@ -370,7 +370,7 @@ type InnerProps = {
 
 export const DebtInner: React.FC<InnerProps> = ({ query }) => {
 	const debt = query.data;
-	const [isRemoving, setRemoving] = React.useState(false);
+	const [removing, setRemoving] = React.useState(false);
 	const locale = useLocale();
 	const userQuery = trpc.users.get.useQuery({ id: debt.userId });
 
@@ -394,10 +394,10 @@ export const DebtInner: React.FC<InnerProps> = ({ query }) => {
 				{`${formatCurrency(locale, debt.currencyCode, debt.amount)} debt`}
 			</Header>
 			<LoadableUser className="self-start" id={debt.userId} />
-			<DebtSignButtonGroup debt={debt} disabled={isRemoving} />
-			<DebtAmountInput debt={debt} isLoading={isRemoving} />
-			<DebtDateInput debt={debt} isLoading={isRemoving} />
-			<DebtNoteInput debt={debt} isLoading={isRemoving} />
+			<DebtSignButtonGroup debt={debt} disabled={removing} />
+			<DebtAmountInput debt={debt} isLoading={removing} />
+			<DebtDateInput debt={debt} isLoading={removing} />
+			<DebtNoteInput debt={debt} isLoading={removing} />
 			<DebtRemoveButton
 				className="self-end"
 				debt={debt}

@@ -4,7 +4,6 @@ export const getDuplicates = <T, K extends string | string[]>(
 ) => {
 	const items = array.map(getKey);
 	const map = new Map<string, { count: number; value: K }>();
-	// eslint-disable-next-line no-restricted-syntax
 	for (const item of items) {
 		const key = Array.isArray(item) ? item.join("|") : String(item);
 		const prevMapElement = map.get(key) || {

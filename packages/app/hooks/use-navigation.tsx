@@ -23,9 +23,7 @@ type IsParameter<Part> = Part extends `$${infer ParamName}` ? ParamName : never;
 type FilteredParts<Path> = Path extends `${infer PartA}/${infer PartB}`
 	? IsParameter<PartA> | FilteredParts<PartB>
 	: IsParameter<Path>;
-type Params<Path> = {
-	[Key in FilteredParts<Path>]: string;
-};
+type Params<Path> = Record<FilteredParts<Path>, string>;
 
 type IsNonEmptyObject<T> = keyof T extends never ? false : true;
 

@@ -51,7 +51,7 @@ const Header: React.FC<HeaderProps> = ({ title, userId, onEditClick }) => (
 						isIconOnly
 						variant="bordered"
 						color="secondary"
-						onClick={onEditClick}
+						onPress={onEditClick}
 					>
 						<PencilIcon size={32} />
 					</Button>

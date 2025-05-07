@@ -35,7 +35,7 @@ export const Calendar: React.FC<Props> = ({
 	children,
 	disabled,
 }) => {
-	const [isOpen, changeOpen] = React.useState(false);
+	const [open, setOpen] = React.useState(false);
 	const onDateChange = React.useCallback<
 		NonNullable<Extract<DayPickerProps, { mode: "single" }>["onSelect"]>
 	>(
@@ -44,15 +44,15 @@ export const Calendar: React.FC<Props> = ({
 				return;
 			}
 			onChange(new Date(date.valueOf() - date.getTimezoneOffset() * MINUTE));
-			changeOpen(false);
+			setOpen(false);
 		},
-		[onChange, changeOpen],
+		[onChange, setOpen],
 	);
 	if (disabled) {
 		return children;
 	}
 	return (
-		<Popover isOpen={isOpen} onOpenChange={changeOpen}>
+		<Popover isOpen={open} onOpenChange={setOpen}>
 			<PopoverTrigger>{children}</PopoverTrigger>
 			<PopoverContent className="border-foreground border-2 p-0 shadow-md">
 				<DayPicker

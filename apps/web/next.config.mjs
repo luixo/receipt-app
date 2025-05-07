@@ -1,7 +1,6 @@
 import { withExpo } from "@expo/next-adapter";
 import NextBundleAnalyzer from "@next/bundle-analyzer";
 import { withSentryConfig } from "@sentry/nextjs";
-import { URL } from "node:url";
 
 // TODO: import from providers/s3.ts when migrating to next.config.ts
 const S3_AVATAR_PREFIX = "avatars";

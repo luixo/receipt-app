@@ -2,7 +2,7 @@ import { platformSelect } from "nativewind/theme";
 import path from "node:path";
 
 // see https://github.com/tailwindlabs/tailwindcss/issues/11097
-// eslint-disable-next-line import/no-relative-packages
+// eslint-disable-next-line import-x/no-relative-packages
 import { getConfig } from "../../packages/app/utils/tailwind";
 
 const rootPath = path.join(__dirname, "../..");

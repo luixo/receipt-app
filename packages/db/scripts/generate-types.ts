@@ -1,7 +1,7 @@
 import { recase } from "@kristiandupont/recase";
 import type { TableColumn } from "extract-pg-schema";
 import { generateIndexFile, processDatabase } from "kanel";
-import path from "path";
+import path from "node:path";
 
 const fileRecase = recase("pascal", "dash");
 const kebabToPascal = recase("dash", "pascal");
