@@ -18,7 +18,6 @@ export const NumberInput: React.FC<Props> = ({
 	className,
 	fieldError,
 	mutation,
-	endContent,
 	...props
 }) => {
 	const isMutationLoading = getMutationLoading(mutation);
