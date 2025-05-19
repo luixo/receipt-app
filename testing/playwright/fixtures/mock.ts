@@ -12,7 +12,6 @@ type MockWorkerFixtures = {
 };
 
 export const mockFixtures = test.extend<MockFixtures, MockWorkerFixtures>({
-	// eslint-disable-next-line no-empty-pattern
 	faker: async ({}, use, testInfo) => {
 		const localFaker = new Faker({ locale: en });
 		// Remove first element as it is a file name
@@ -20,7 +19,6 @@ export const mockFixtures = test.extend<MockFixtures, MockWorkerFixtures>({
 		await use(localFaker);
 	},
 	timekeeper: [
-		// eslint-disable-next-line no-empty-pattern
 		async ({}, use) => {
 			timekeeper.freeze(new Date("2020-01-01"));
 			await use();

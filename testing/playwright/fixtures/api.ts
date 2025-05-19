@@ -454,7 +454,6 @@ export const apiFixtures = test.extend<ApiFixtures, ApiWorkerFixture>({
 		{ auto: true },
 	],
 	globalApiManager: [
-		// eslint-disable-next-line no-empty-pattern
 		async ({}, use) => {
 			const managerPort = process.env.MANAGER_PORT;
 			const client = createTRPCClient<typeof appRouter>({

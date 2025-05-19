@@ -26,7 +26,6 @@ export const test = originalTest.extend<Fixtures>({
 		}),
 	currenciesPicker: ({ page }, use) =>
 		use(page.getByTestId("currencies-picker")),
-	// eslint-disable-next-line no-empty-pattern
 	expectCurrency: async ({}, use) => {
 		await use(async (locator, currencyCode) => {
 			await expect(locator).toHaveValue(

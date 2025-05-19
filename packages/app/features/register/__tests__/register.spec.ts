@@ -82,7 +82,7 @@ test("'auth.register' mutation", async ({
 		return { account: { id: "test" } };
 	});
 	const buttonWithLoader = withLoader(registerButton);
-	await expect(buttonWithLoader).not.toBeVisible();
+	await expect(buttonWithLoader).toBeHidden();
 	await snapshotQueries(
 		async () => {
 			await registerButton.click();

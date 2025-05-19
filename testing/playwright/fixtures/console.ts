@@ -14,7 +14,6 @@ type ConsoleFixtures = {
 };
 
 export const consoleFixtures = test.extend<ConsoleFixtures>({
-	// eslint-disable-next-line no-empty-pattern
 	consoleManager: async ({}, use) => {
 		const flatMessages: string[] = [];
 		const ignored: IgnoredPattern[] = [

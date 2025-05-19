@@ -62,7 +62,7 @@ test.describe("Propagate debts button", () => {
 				)(defaultGenerateDebtsFromReceipt(opts)),
 		});
 		await openReceiptWithDebts(receipt);
-		await expect(propagateDebtsButton).not.toBeVisible();
+		await expect(propagateDebtsButton).toBeHidden();
 		await expect(updateDebtsButton).toBeVisible();
 	});
 
@@ -80,8 +80,8 @@ test.describe("Propagate debts button", () => {
 				)(defaultGenerateDebtsFromReceipt(opts)),
 		});
 		await openReceiptWithDebts(receipt);
-		await expect(propagateDebtsButton).not.toBeVisible();
-		await expect(updateDebtsButton).not.toBeVisible();
+		await expect(propagateDebtsButton).toBeHidden();
+		await expect(updateDebtsButton).toBeHidden();
 	});
 
 	test("Our debts don't exist", async ({
@@ -96,7 +96,7 @@ test.describe("Propagate debts button", () => {
 		});
 		await openReceipt(receipt.id);
 		await expect(propagateDebtsButton).toBeVisible();
-		await expect(updateDebtsButton).not.toBeVisible();
+		await expect(updateDebtsButton).toBeHidden();
 	});
 
 	test("Some debts desynced w/ receipt, some debts don't exist", async ({
@@ -112,7 +112,7 @@ test.describe("Propagate debts button", () => {
 				),
 		});
 		await openReceiptWithDebts(receipt);
-		await expect(propagateDebtsButton).not.toBeVisible();
+		await expect(propagateDebtsButton).toBeHidden();
 		await expect(updateDebtsButton).toBeVisible();
 	});
 
@@ -127,8 +127,8 @@ test.describe("Propagate debts button", () => {
 				remapDebts(ourSynced)(defaultGenerateDebtsFromReceipt(opts)),
 		});
 		await openReceiptWithDebts(receipt);
-		await expect(propagateDebtsButton).not.toBeVisible();
-		await expect(updateDebtsButton).not.toBeVisible();
+		await expect(propagateDebtsButton).toBeHidden();
+		await expect(updateDebtsButton).toBeHidden();
 	});
 });
 

@@ -92,6 +92,8 @@ const stableScreenshot = async ({
 			throw new Error("Timeout while waiting for stable screenshot");
 		}
 		prevBuffer = buffer || (await getScreenshot(page, options, locator));
+		// This is experimental value to get theme properly changed
+		// eslint-disable-next-line playwright/no-wait-for-timeout
 		await page.waitForTimeout(stableDelay);
 		buffer = await getScreenshot(page, options, locator);
 		if (prevBuffer.equals(buffer)) {

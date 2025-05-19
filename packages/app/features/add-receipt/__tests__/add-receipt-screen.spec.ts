@@ -112,7 +112,7 @@ test("'receipts.add' mutation", async ({
 		};
 	});
 	const buttonWithLoader = withLoader(addButton);
-	await expect(buttonWithLoader).not.toBeVisible();
+	await expect(buttonWithLoader).toBeHidden();
 	await snapshotQueries(
 		async () => {
 			await addButton.click();

@@ -78,7 +78,7 @@ test("'auth.voidAccount' mutation", async ({
 		return { email: "foo@gmail.com" };
 	});
 	const buttonWithLoader = withLoader(voidButton);
-	await expect(buttonWithLoader).not.toBeVisible();
+	await expect(buttonWithLoader).toBeHidden();
 	await snapshotQueries(
 		async () => {
 			await voidButton.click();

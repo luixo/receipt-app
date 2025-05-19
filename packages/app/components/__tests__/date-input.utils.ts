@@ -16,7 +16,6 @@ type Fixtures = {
 };
 
 export const test = originalTest.extend<Fixtures>({
-	// eslint-disable-next-line no-empty-pattern
 	expectDate: async ({}, use) => {
 		await use(async (locator, date) => {
 			await expect(locator).toHaveValue(formatToDateString(date));

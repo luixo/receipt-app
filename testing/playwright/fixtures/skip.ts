@@ -27,10 +27,11 @@ const getSkippedExplanation = (testInfo: TestInfo, criteria: Criteria) => {
 };
 
 export const skipFixtures = test.extend<SkipFixtures>({
-	// eslint-disable-next-line no-empty-pattern
 	skip: async ({}, use) =>
 		use((testInfo, criteria) => {
 			const skippedExplanation = getSkippedExplanation(testInfo, criteria);
+			// This is exactly the purpose of the fixture
+			// eslint-disable-next-line playwright/no-skipped-test
 			test.skip(Boolean(skippedExplanation), skippedExplanation);
 		}),
 });

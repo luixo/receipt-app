@@ -36,7 +36,7 @@ test.describe("external query status", () => {
 		await expect(debtsGroupElement).not.toBeAttached();
 		debtPause.resolve();
 		await expect(debtsGroupElement).toHaveCount(debts.length);
-		await expect(debtsGroup.filter({ has: skeleton })).not.toBeVisible();
+		await expect(debtsGroup.filter({ has: skeleton })).toBeHidden();
 	});
 
 	test("errors", async ({

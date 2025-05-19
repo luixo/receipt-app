@@ -19,7 +19,6 @@ type Fixtures = {
 export const test = originalTest.extend<Fixtures>({
 	evenDebtsDivider: ({ page }, use) =>
 		use(page.getByTestId("even-debts-divider")),
-	// eslint-disable-next-line no-empty-pattern
 	getGenerateDebts: ({}, use) =>
 		use(
 			(debts) => (opts) =>

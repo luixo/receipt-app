@@ -5,6 +5,7 @@ import prettierConfig from "eslint-config-prettier";
 import importPlugin from "eslint-plugin-import-x";
 import jsxAccessibilityPlugin from "eslint-plugin-jsx-a11y";
 import packageJson from "eslint-plugin-package-json";
+import playwrightPlugin from "eslint-plugin-playwright";
 import reactPlugin from "eslint-plugin-react";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
 import tailwindPlugin from "eslint-plugin-tailwindcss";
@@ -332,6 +333,17 @@ export default ts.config(
 	reactPlugin.configs.flat["jsx-runtime"]!,
 	js.configs.recommended,
 	prettierConfig,
+	{
+		...playwrightPlugin.configs["flat/recommended"],
+		files: ["testing/playwright/**/*", "**/__tests__/**"],
+		rules: {
+			...playwrightPlugin.configs["flat/recommended"].rules,
+			"playwright/expect-expect": [
+				"error",
+				{ assertFunctionNames: ["expectScreenshotWithSchemes"] },
+			],
+		},
+	},
 	/* Typescript section */
 	ts.configs.strictTypeChecked,
 	ts.configs.stylisticTypeChecked,
@@ -465,6 +477,13 @@ export default ts.config(
 		rules: {
 			// We use `use` function in Playwright tests which clashes with this rule
 			"react-hooks/rules-of-hooks": "off",
+		},
+	},
+	{
+		files: ["testing/playwright/**"],
+		rules: {
+			// We use `expect`s inside fixtures and this is not supported by the rule
+			"playwright/no-standalone-expect": "off",
 		},
 	},
 	{
