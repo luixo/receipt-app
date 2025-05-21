@@ -15,7 +15,7 @@ type NavigationOptions = {
 declare module "@react-types/shared" {
 	// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 	interface RouterConfig {
-		routerOptions: NavigationOptions;
+		routerOptions: NavigationOptions & UrlParams<string>;
 	}
 }
 
@@ -59,9 +59,10 @@ export const useNavigate = () => {
 		to,
 		hash,
 		params,
+		search,
 	}: NavigationOptions & UrlParams<P>) => {
 		router[replace ? "replace" : "push"](
-			buildUrl({ to, hash, params } as UrlParams<P>),
+			buildUrl({ to, hash, params, search } as UrlParams<P>),
 		);
 	};
 };

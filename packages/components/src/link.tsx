@@ -9,7 +9,14 @@ import { buildUrl } from "~app/hooks/use-navigation";
 export function Link<P extends string>({
 	to,
 	params,
+	search,
+	hash,
 	...props
 }: Omit<React.ComponentProps<typeof LinkRaw>, "href"> & UrlParams<P>) {
-	return <LinkRaw {...props} href={buildUrl({ to, params } as UrlParams<P>)} />;
+	return (
+		<LinkRaw
+			{...props}
+			href={buildUrl({ to, params, search, hash } as UrlParams<P>)}
+		/>
+	);
 }
