@@ -255,6 +255,9 @@ export const UsersSuggest: React.FC<Props> = ({
 		<View className="items-start gap-4" {...wrapperProps}>
 			{children}
 			<Autocomplete
+				// This is needed to reset the Autocomplete state on selected user change
+				// Otherwise the dropdown will popup after user select
+				key={selectedUserIds[0] ?? null}
 				ref={inputRef}
 				inputValue={value}
 				onInputChange={setValue}
