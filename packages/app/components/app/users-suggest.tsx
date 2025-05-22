@@ -258,7 +258,6 @@ export const UsersSuggest: React.FC<Props> = ({
 				ref={inputRef}
 				inputValue={value}
 				onInputChange={setValue}
-				isLoading={topQuery.status === "pending"}
 				label="Select a user"
 				labelPlacement="outside"
 				placeholder="Start typing"
