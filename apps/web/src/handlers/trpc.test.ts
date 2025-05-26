@@ -17,6 +17,7 @@ import {
 	SESSION_SHOULD_UPDATE_EVERY,
 } from "~web/handlers/auth/utils";
 import { t } from "~web/handlers/trpc";
+import { getHeadersEntries } from "~web/utils/headers";
 
 import { router } from "./index";
 
@@ -134,9 +135,10 @@ describe("procedures", () => {
 				},
 			});
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const context = createAuthContext(ctx, sessionId);
+			const caller = createCaller(context);
 			await expectDatabaseDiffSnapshot(ctx, () => caller.account.get());
-			const responseHeaders = ctx.responseHeaders.get();
+			const responseHeaders = getHeadersEntries(context.res.headers);
 			expect(responseHeaders).toStrictEqual<typeof responseHeaders>([]);
 		});
 
@@ -151,9 +153,10 @@ describe("procedures", () => {
 				},
 			});
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const context = createAuthContext(ctx, sessionId);
+			const caller = createCaller(context);
 			await expectDatabaseDiffSnapshot(ctx, () => caller.account.get());
-			const responseHeaders = ctx.responseHeaders.get();
+			const responseHeaders = getHeadersEntries(context.res.headers);
 			expect(responseHeaders).toStrictEqual<typeof responseHeaders>([
 				[
 					"set-cookie",

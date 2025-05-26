@@ -12,8 +12,6 @@ import { getEmailOptions } from "~tests/backend/utils/mocks/email";
 import type { ExchangeRateOptionsMock } from "~tests/backend/utils/mocks/exchange-rate";
 import { getExchangeRateOptions } from "~tests/backend/utils/mocks/exchange-rate";
 import type { LoggerMock } from "~tests/backend/utils/mocks/logger";
-import type { ResponseHeadersMock } from "~tests/backend/utils/mocks/response-headers";
-import { getResponseHeaders } from "~tests/backend/utils/mocks/response-headers";
 import type { S3OptionsMock } from "~tests/backend/utils/mocks/s3";
 import { getS3Options } from "~tests/backend/utils/mocks/s3";
 import { setSeed } from "~tests/utils/faker";
@@ -44,7 +42,6 @@ type FakerContext = {
 
 type MockContext = {
 	emailOptions: EmailOptionsMock;
-	responseHeaders: ResponseHeadersMock;
 	cacheDbOptions: CacheDbOptionsMock;
 	exchangeRateOptions: ExchangeRateOptionsMock;
 	s3Options: S3OptionsMock;
@@ -82,7 +79,6 @@ export const test = originalTest.extend<TestFixture>({
 		await use({
 			emailOptions: getEmailOptions(),
 			cacheDbOptions: getCacheDbOptions(),
-			responseHeaders: getResponseHeaders(),
 			exchangeRateOptions: getExchangeRateOptions(),
 			s3Options: getS3Options(),
 			getUuid: () => handlerIdFaker.string.uuid(),

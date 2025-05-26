@@ -16,6 +16,7 @@ import {
 import { test } from "~tests/backend/utils/test";
 import { t } from "~web/handlers/trpc";
 import { UUID_REGEX } from "~web/handlers/validation";
+import { getHeadersEntries } from "~web/utils/headers";
 
 import { procedure } from "./register";
 
@@ -120,7 +121,8 @@ describe("auth.register", () => {
 	describe("functionality", () => {
 		test("register successful", async ({ ctx }) => {
 			ctx.emailOptions.active = false;
-			const caller = createCaller(createContext(ctx));
+			const context = createContext(ctx);
+			const caller = createCaller(context);
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({
 					email: faker.internet.email(),
@@ -132,7 +134,7 @@ describe("auth.register", () => {
 			expect(result).toEqual<typeof result>({
 				account: { id: result.account.id },
 			});
-			const responseHeaders = ctx.responseHeaders.get();
+			const responseHeaders = getHeadersEntries(context.res.headers);
 			const setCookieTuple = responseHeaders.find(
 				([key]) => key === "set-cookie",
 			);

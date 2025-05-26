@@ -1,15 +1,23 @@
 import * as Sentry from "@sentry/nextjs";
-import * as trpcNext from "@trpc/server/adapters/next";
+import type { NextApiRequest } from "@trpc/server/adapters/next";
+import { createNextApiHandler } from "@trpc/server/adapters/next";
 import type { NextApiHandler } from "next";
 import httpProxyMiddleware from "next-http-proxy-middleware";
+import * as crypto from "node:crypto";
+import { v4 } from "uuid";
 
 import type { AppRouter } from "~app/trpc";
+import { getDatabase } from "~db/database";
 import { router } from "~web/handlers";
 import type {
 	AuthorizedContext,
+	NetContext,
 	UnauthorizedContext,
 } from "~web/handlers/context";
 import { createContext } from "~web/handlers/context";
+import { baseLogger } from "~web/providers/logger";
+import { getPool } from "~web/providers/pg";
+import { createNetContext } from "~web/utils/net";
 
 const sentryDsn = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
 if (sentryDsn) {
@@ -20,9 +28,44 @@ const isAuthorizedContext = (
 	context: UnauthorizedContext,
 ): context is AuthorizedContext => "auth" in context;
 
-const handler = trpcNext.createNextApiHandler<AppRouter>({
+/* c8 ignore start */
+const defaultGetDatabase = (req: NextApiRequest) =>
+	getDatabase({
+		logger: req.headers["x-debug"]
+			? baseLogger.child({ url: req.url || "unknown" })
+			: undefined,
+		pool: getPool(),
+	});
+const defaultGetEmailOptions = () => {
+	const active = Boolean(process.env.NO_EMAIL_SERVICE);
+	if (active && !process.env.BASE_URL) {
+		throw new Error(
+			`Expected to have env variable BASE_URL while creating context with active email`,
+		);
+	}
+	return {
+		active: Boolean(process.env.NO_EMAIL_SERVICE),
+		baseUrl: process.env.BASE_URL || "http://example.com/",
+	};
+};
+const createContextRest = (
+	req: NextApiRequest,
+): Omit<UnauthorizedContext, keyof NetContext> => ({
+	logger: baseLogger,
+	database: defaultGetDatabase(req),
+	emailOptions: defaultGetEmailOptions(),
+	cacheDbOptions: {},
+	exchangeRateOptions: {},
+	s3Options: {},
+	getSalt: () => crypto.randomBytes(64).toString("hex"),
+	getUuid: () => v4(),
+});
+/* c8 ignore stop */
+
+const handler = createNextApiHandler<AppRouter>({
 	router,
-	createContext,
+	createContext: (opts) =>
+		createContext(createNetContext(opts), createContextRest(opts.req)),
 	onError: ({ error, type, path, ctx }) => {
 		if (!ctx) {
 			return;
@@ -33,11 +76,9 @@ const handler = trpcNext.createNextApiHandler<AppRouter>({
 			return;
 		}
 		ctx.logger.error(
-			`[${error.code}] [${ctx.req.socket.remoteAddress}:${
-				ctx.req.socket.localPort
-			}] [${ctx.req.headers["user-agent"]}] ${type} "${path}"${
-				email ? ` (by ${email})` : ""
-			}: ${error.message}`,
+			`[${error.code}] [${ctx.req.socketId}] [${ctx.req.headers.get(
+				"user-agent",
+			)}] ${type} "${path}"${email ? ` (by ${email})` : ""}: ${error.message}`,
 		);
 	},
 	responseMeta: () => ({ status: 200 }),

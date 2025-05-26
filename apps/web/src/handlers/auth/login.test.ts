@@ -13,6 +13,7 @@ import {
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
 import { t } from "~web/handlers/trpc";
+import { getHeadersEntries } from "~web/utils/headers";
 
 import { procedure } from "./login";
 
@@ -101,7 +102,8 @@ describe("auth.login", () => {
 				account: { email, password, avatarUrl },
 				name,
 			} = await insertAccountWithSession(ctx);
-			const caller = createCaller(createContext(ctx));
+			const context = createContext(ctx);
+			const caller = createCaller(context);
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ email, password }),
 			);
@@ -109,7 +111,7 @@ describe("auth.login", () => {
 				account: { id: accountId, verified: true, avatarUrl, role: undefined },
 				user: { name },
 			});
-			const responseHeaders = ctx.responseHeaders.get();
+			const responseHeaders = getHeadersEntries(context.res.headers);
 			const setCookieTuple = responseHeaders.find(
 				([key]) => key === "set-cookie",
 			);

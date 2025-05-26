@@ -1,5 +1,4 @@
 import { TRPCError, initTRPC } from "@trpc/server";
-import type { IncomingMessage } from "node:http";
 
 import { AUTH_COOKIE } from "~app/utils/auth";
 import {
@@ -45,8 +44,10 @@ export const unauthProcedure = t.procedure.use(
 	},
 );
 
-const getPretendAccountEmail = (req: IncomingMessage): string | undefined => {
-	if (req.headers["x-keep-real-auth"]) {
+const getPretendAccountEmail = (
+	req: UnauthorizedContext["req"],
+): string | undefined => {
+	if (req.headers.get("x-keep-real-auth")) {
 		return;
 	}
 	const pretendUserString = getCookie(req, PRETEND_USER_STORE_NAME);
@@ -109,7 +110,7 @@ export const authProcedure = unauthProcedure.use(async ({ ctx, next }) => {
 			.set({ expirationTimestamp: nextExpirationTimestamp })
 			.where("sessionId", "=", authToken)
 			.executeTakeFirst();
-		setCookie(ctx.res, AUTH_COOKIE, authToken, {
+		setCookie(ctx, AUTH_COOKIE, authToken, {
 			expires: nextExpirationTimestamp,
 		});
 	}

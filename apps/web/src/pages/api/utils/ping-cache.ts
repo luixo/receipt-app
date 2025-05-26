@@ -1,19 +1,19 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-
 import { getTrpcClient } from "~web/utils/api";
+import { createHandler } from "~web/utils/net";
 
-const handler = async (req: NextApiRequest, res: NextApiResponse<string>) => {
-	if (req.method !== "POST") {
-		res.status(405).send("Only POST is supported");
-		return;
-	}
-	const client = getTrpcClient(req);
-	try {
-		await Promise.all([client.utils.pingCache.mutate()]);
-		res.send(`Cache ping successful`);
-	} catch (e) {
-		res.status(500).send(`Error on cache ping: ${String(e)}`);
-	}
-};
+const handler = createHandler(
+	async (req) => {
+		const client = getTrpcClient(req);
+		try {
+			await Promise.all([client.utils.pingCache.mutate()]);
+			return `Cache ping successful`;
+		} catch (e) {
+			throw new Error(`Error on cache ping: ${String(e)}`);
+		}
+	},
+	{
+		allowedMethods: ["POST"],
+	},
+);
 
 export default handler;

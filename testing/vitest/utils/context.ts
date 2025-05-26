@@ -1,38 +1,40 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import type { IncomingHttpHeaders } from "node:http";
-
 import type { SessionsSessionId } from "~db/models";
 import type { TestContext } from "~tests/backend/utils/test";
-import type { UnauthorizedContext } from "~web/handlers/context";
 import { createContext as createContextRaw } from "~web/handlers/context";
+import type { NetContext, UnauthorizedContext } from "~web/handlers/context";
+import {
+	createRequestHeaders,
+	createResponseHeaders,
+} from "~web/utils/headers";
 
 type ContextOptions = {
-	headers?: IncomingHttpHeaders;
+	headers?: Record<string, string>;
 };
+
+const createNetContext = (opts?: ContextOptions): NetContext => ({
+	req: {
+		url: "unknown",
+		query: {},
+		headers: createRequestHeaders(opts?.headers),
+		socketId: "testSocketId",
+	},
+	res: {
+		headers: createResponseHeaders(),
+	},
+	info: {
+		accept: "application/jsonl",
+		type: "query",
+		isBatchCall: false,
+		calls: [],
+		connectionParams: null,
+		signal: new AbortController().signal,
+	},
+});
 
 export const createContext = (
 	ctx: TestContext,
-	options: ContextOptions = {},
-): UnauthorizedContext =>
-	// A poor emulation of real req / res, add props as needed
-	createContextRaw({
-		...ctx,
-		req: {
-			headers: options.headers || {},
-		} as unknown as NextApiRequest,
-		res: {
-			getHeader: () => "",
-			setHeader: ctx.responseHeaders.add,
-		} as unknown as NextApiResponse,
-		info: {
-			accept: "application/jsonl",
-			type: "query",
-			isBatchCall: false,
-			calls: [],
-			connectionParams: null,
-			signal: new AbortController().signal,
-		},
-	});
+	options?: ContextOptions,
+): UnauthorizedContext => createContextRaw(createNetContext(options), ctx);
 
 export const createAuthContext = (
 	ctx: TestContext,

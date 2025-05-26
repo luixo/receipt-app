@@ -8,6 +8,7 @@ import {
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
 import { t } from "~web/handlers/trpc";
+import { getHeadersEntries } from "~web/utils/headers";
 
 import { procedure } from "./logout";
 
@@ -26,7 +27,7 @@ describe("account.logout", () => {
 			const context = createAuthContext(ctx, sessionId);
 			const caller = createCaller(context);
 			await expectDatabaseDiffSnapshot(ctx, () => caller.procedure());
-			const responseHeaders = ctx.responseHeaders.get();
+			const responseHeaders = getHeadersEntries(context.res.headers);
 			expect(responseHeaders).toStrictEqual<typeof responseHeaders>([
 				[
 					"set-cookie",

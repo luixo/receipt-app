@@ -18,6 +18,7 @@ import { test } from "~tests/backend/utils/test";
 import { MINUTE } from "~utils/time";
 import { t } from "~web/handlers/trpc";
 import { getHash } from "~web/utils/crypto";
+import { getHeadersEntries } from "~web/utils/headers";
 
 import { procedure } from "./reset-password";
 
@@ -113,7 +114,8 @@ describe("auth.resetPassword", () => {
 				expiresTimestamp: new Date(Date.now() - MINUTE),
 			});
 			const { token } = await insertResetPasswordIntention(ctx, accountId);
-			const caller = createCaller(createContext(ctx));
+			const context = createContext(ctx);
+			const caller = createCaller(context);
 			const password = faker.internet.password();
 			await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({
@@ -127,7 +129,7 @@ describe("auth.resetPassword", () => {
 				.select(["passwordHash", "passwordSalt"])
 				.executeTakeFirstOrThrow();
 			expect(await getHash(password, passwordSalt)).toBe(passwordHash);
-			expect(ctx.responseHeaders.get()).toHaveLength(0);
+			expect(getHeadersEntries(context.res.headers)).toHaveLength(0);
 		});
 	});
 });

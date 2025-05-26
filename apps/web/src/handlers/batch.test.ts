@@ -70,8 +70,7 @@ const queueElement = queueCallFactory<
 		});
 	},
 	{
-		getKey: (ctx) =>
-			(ctx.req.headers["x-test-id"] as string | undefined) || "unknown",
+		getKey: (ctx) => ctx.req.headers.get("x-test-id") || "unknown",
 	},
 );
 
