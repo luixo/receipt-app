@@ -19,29 +19,29 @@ const createCaller = t.createCallerFactory(router);
 describe("errors formatting", () => {
 	// Covering errorFormatter function
 	test("client error formatter works", async ({ ctx }) => {
-		const { start, destroy, client } = await getClientServer(ctx, router, {
+		const { withServer, client } = await getClientServer(ctx, router, {
 			headers: {
 				cookie: `${AUTH_COOKIE}=fake`,
 			},
 		});
-		await start();
-		const error = await client.account.get.query().catch((e) => e);
-		expect(error).toBeInstanceOf(TRPCClientError);
-		const typedError = error as TRPCClientError<typeof router>;
-		expect(typedError.shape?.data.stack).toMatch(
-			/^TRPCError: Session id mismatch\n/,
-		);
-		expect(typedError.shape).toEqual<(typeof typedError)["shape"]>({
-			code: TRPC_ERROR_CODES_BY_KEY.UNAUTHORIZED,
-			message: "Session id mismatch",
-			data: {
-				code: "UNAUTHORIZED",
-				httpStatus: 401,
-				path: "account.get",
-				stack: typedError.shape?.data.stack,
-			},
+		await withServer(async () => {
+			const error = await client.account.get.query().catch((e) => e);
+			expect(error).toBeInstanceOf(TRPCClientError);
+			const typedError = error as TRPCClientError<typeof router>;
+			expect(typedError.shape?.data.stack).toMatch(
+				/^TRPCError: Session id mismatch\n/,
+			);
+			expect(typedError.shape).toEqual<(typeof typedError)["shape"]>({
+				code: TRPC_ERROR_CODES_BY_KEY.UNAUTHORIZED,
+				message: "Session id mismatch",
+				data: {
+					code: "UNAUTHORIZED",
+					httpStatus: 401,
+					path: "account.get",
+					stack: typedError.shape?.data.stack,
+				},
+			});
 		});
-		await destroy();
 	});
 
 	test("zod error formatting", async ({ ctx }) => {
@@ -67,7 +67,7 @@ describe("errors formatting", () => {
 });
 
 test("error is captured", async ({ ctx }) => {
-	const { start, destroy, client } = await getClientServer(ctx, router, {
+	const { withServer, client } = await getClientServer(ctx, router, {
 		captureError: (error) => {
 			ctx.logger.warn(`Captured error: "${error.message}"`);
 			return "transaction-id";
@@ -76,18 +76,18 @@ test("error is captured", async ({ ctx }) => {
 			cookie: `${AUTH_COOKIE}=fake`,
 		},
 	});
-	await start();
-	try {
-		await client.account.get.query();
-		throw new Error("Expected not to get here");
-	} catch (error) {
-		expect(error).toBeInstanceOf(TRPCClientError);
-		expect((error as TRPCClientError<AppRouter>).message).toBe(
-			'Internal server error\nError fingerprint "transaction-id"',
-		);
-		expect(ctx.logger.getMessages()).toEqual([
-			['Captured error: "Session id mismatch"'],
-		]);
-		await destroy();
-	}
+	await withServer(async () => {
+		try {
+			await client.account.get.query();
+			throw new Error("Expected not to get here");
+		} catch (error) {
+			expect(error).toBeInstanceOf(TRPCClientError);
+			expect((error as TRPCClientError<AppRouter>).message).toBe(
+				'Internal server error\nError fingerprint "transaction-id"',
+			);
+			expect(ctx.logger.getMessages()).toEqual([
+				['Captured error: "Session id mismatch"'],
+			]);
+		}
+	});
 });

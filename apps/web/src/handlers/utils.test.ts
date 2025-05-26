@@ -107,14 +107,17 @@ export const getClientServer = async <R extends AnyTRPCRouter>(
 			}),
 			transformer,
 		} as unknown as CreateTRPCClientOptions<R>),
-		start: () =>
-			new Promise<void>((resolve) => {
+		withServer: async (fn: () => Promise<void>) => {
+			await new Promise<void>((resolve) => {
 				httpServer.listen(port, resolve);
-			}),
-		destroy: async () => {
-			await new Promise<void>((resolve, reject) => {
-				httpServer.close((err) => (err ? reject(err) : resolve()));
 			});
+			try {
+				await fn();
+			} finally {
+				await new Promise<void>((resolve, reject) => {
+					httpServer.close((err) => (err ? reject(err) : resolve()));
+				});
+			}
 		},
 	};
 };
