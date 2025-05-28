@@ -21,7 +21,7 @@ export const RemoveButton: React.FC<Props> = ({
 	...props
 }) => (
 	<ConfirmModal
-		action={onRemove}
+		onConfirm={onRemove}
 		isLoading={mutation.isPending}
 		title="Remove modal"
 		subtitle={subtitle}

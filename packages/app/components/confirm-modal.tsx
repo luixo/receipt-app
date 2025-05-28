@@ -6,7 +6,8 @@ import { Header } from "~components/header";
 import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
 
 type Props = {
-	action: () => void;
+	onConfirm: () => void;
+	onCancel?: () => void;
 	isLoading?: boolean;
 	title: string;
 	subtitle?: React.ReactNode;
@@ -17,7 +18,8 @@ type Props = {
 };
 
 export const ConfirmModal: React.FC<Props> = ({
-	action,
+	onConfirm: action,
+	onCancel,
 	title,
 	confirmText,
 	subtitle,
@@ -34,6 +36,10 @@ export const ConfirmModal: React.FC<Props> = ({
 		closeModal();
 		action();
 	}, [action, closeModal]);
+	const onNoClick = React.useCallback(() => {
+		closeModal();
+		onCancel?.();
+	}, [closeModal, onCancel]);
 	return (
 		<>
 			{children({ openModal })}
@@ -61,7 +67,7 @@ export const ConfirmModal: React.FC<Props> = ({
 						>
 							{yesText}
 						</Button>
-						<Button color="primary" onPress={closeModal} isDisabled={isLoading}>
+						<Button color="primary" onPress={onNoClick} isDisabled={isLoading}>
 							{noText}
 						</Button>
 					</ModalBody>

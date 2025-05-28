@@ -255,7 +255,7 @@ export const AccountAvatarInput: React.FC<Props> = ({ account, children }) => {
 							</Button>
 							{account.avatarUrl ? (
 								<ConfirmModal
-									action={resetAvatar}
+									onConfirm={resetAvatar}
 									isLoading={removeAvatarMutation.isPending}
 									title="Remove avatar"
 									subtitle="Do you want to remove your avatar?"

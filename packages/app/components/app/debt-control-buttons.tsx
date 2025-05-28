@@ -64,7 +64,7 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 		<>
 			{intention && intention.updatedAt.valueOf() > debt.updatedAt.valueOf() ? (
 				<ConfirmModal
-					action={acceptSyncIntention}
+					onConfirm={acceptSyncIntention}
 					title="Update debt to a counterparty's version"
 					subtitle={<DebtIntention intention={intention} />}
 					confirmText="Are you sure?"

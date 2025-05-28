@@ -1,4 +1,5 @@
 import type React from "react";
+import { View } from "react-native";
 
 import { EmptyCard } from "~app/components/empty-card";
 import { QueryErrorMessage } from "~app/components/error-message";
@@ -27,30 +28,34 @@ const ConnectionIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 		);
 	}
 	return (
-		<>
+		<View className="flex flex-col gap-12">
 			{data.inbound.length === 0 ? null : (
-				<>
+				<View className="flex flex-col gap-4">
 					<Header size="lg">Inbound connections</Header>
-					{data.inbound.map((intention) => (
-						<InboundConnectionIntention
-							key={intention.account.id}
-							intention={intention}
-						/>
-					))}
-				</>
+					<View className="flex flex-col gap-12">
+						{data.inbound.map((intention) => (
+							<InboundConnectionIntention
+								key={intention.account.id}
+								intention={intention}
+							/>
+						))}
+					</View>
+				</View>
 			)}
 			{data.outbound.length === 0 ? null : (
-				<>
+				<View className="flex flex-col gap-4">
 					<Header size="lg">Outbound connections</Header>
-					{data.outbound.map((intention) => (
-						<OutboundConnectionIntention
-							key={intention.account.id}
-							intention={intention}
-						/>
-					))}
-				</>
+					<View className="flex flex-col gap-12">
+						{data.outbound.map((intention) => (
+							<OutboundConnectionIntention
+								key={intention.account.id}
+								intention={intention}
+							/>
+						))}
+					</View>
+				</View>
 			)}
-		</>
+		</View>
 	);
 };
 
