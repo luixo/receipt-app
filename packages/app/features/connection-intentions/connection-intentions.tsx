@@ -2,6 +2,7 @@ import type React from "react";
 
 import { EmptyCard } from "~app/components/empty-card";
 import { QueryErrorMessage } from "~app/components/error-message";
+import { BackLink, PageHeader } from "~app/components/page-header";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { Header } from "~components/header";
@@ -17,9 +18,12 @@ type Props = {
 const ConnectionIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 	if (data.inbound.length === 0 && data.outbound.length === 0) {
 		return (
-			<EmptyCard title="You have no intention connections">
-				Add a user with an email or add an email to existing user
-			</EmptyCard>
+			<>
+				<PageHeader startContent={<BackLink to="/users" />}>
+					Connection intentions
+				</PageHeader>
+				<EmptyCard title="All done 👍" />
+			</>
 		);
 	}
 	return (
