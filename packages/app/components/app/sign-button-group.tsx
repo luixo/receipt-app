@@ -41,7 +41,7 @@ export const SignButtonGroup: React.FC<Props> = ({
 				color="success"
 				isDisabled={disabled || isLoading}
 			>
-				{isLoading ? <Spinner size="sm" /> : "+ give"}
+				{isLoading ? <Spinner size="sm" /> : "i paid"}
 			</Button>
 			<Button
 				onPress={setNegative}
@@ -50,7 +50,7 @@ export const SignButtonGroup: React.FC<Props> = ({
 				color="danger"
 				isDisabled={disabled || isLoading}
 			>
-				{isLoading ? <Spinner size="sm" /> : "- take"}
+				{isLoading ? <Spinner size="sm" /> : "they paid"}
 			</Button>
 		</View>
 	);
