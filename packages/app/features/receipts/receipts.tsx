@@ -138,7 +138,7 @@ export const Receipts: React.FC<Props> = ({
 	}
 
 	const paginationElement =
-		totalCount === 0 ? null : (
+		!totalCount || (totalCount && totalCount <= limit) ? null : (
 			<Pagination
 				className="self-center"
 				color="primary"

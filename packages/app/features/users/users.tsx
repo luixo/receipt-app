@@ -86,15 +86,16 @@ export const Users: React.FC<Props> = ({ limit, offsetState }) => {
 		);
 	}
 
-	const paginationElement = (
-		<Pagination
-			color="primary"
-			size="lg"
-			variant="bordered"
-			className="self-center"
-			{...pagination}
-		/>
-	);
+	const paginationElement =
+		!totalCount || (totalCount && totalCount <= limit) ? null : (
+			<Pagination
+				color="primary"
+				size="lg"
+				variant="bordered"
+				className="self-center"
+				{...pagination}
+			/>
+		);
 
 	return (
 		<>
