@@ -6,11 +6,11 @@ import type { AppPage } from "~utils/next";
 
 const Screen: AppPage = () => {
 	const fromIdState = useQueryState<UsersId>(
-		"userId",
+		"to",
 		parseAsString.withDefault(""),
 	);
 	const toIdState = useQueryState<UsersId>(
-		"userId",
+		"from",
 		parseAsString.withDefault(""),
 	);
 	return (

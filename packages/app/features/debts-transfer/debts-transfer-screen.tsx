@@ -6,7 +6,6 @@ import { entries, groupBy, isNonNullish, pullObject, values } from "remeda";
 import { z } from "zod";
 
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
-import { LoadableUser } from "~app/components/app/loadable-user";
 import { UsersSuggest } from "~app/components/app/users-suggest";
 import {
 	GroupedQueryErrorMessage,
@@ -31,10 +30,11 @@ import {
 	debtAmountSchemaDecimal,
 } from "~app/utils/validation";
 import { Button } from "~components/button";
-import { TrashBin } from "~components/icons";
+import { BackArrow, TrashBin } from "~components/icons";
 import { Spinner } from "~components/spinner";
 import { Text } from "~components/text";
 import { cn } from "~components/utils";
+import type { UsersId } from "~db/models";
 import { options as debtsAddOptions } from "~mutations/debts/add";
 
 const formSchema = z
@@ -286,7 +286,12 @@ const DebtsListForm: React.FC<FormProps> = ({
 						{(canSubmit) => (
 							<Button
 								color={mutationError ? "danger" : "primary"}
-								isDisabled={!canSubmit || mutationPending || !toUser}
+								isDisabled={
+									!canSubmit ||
+									mutationPending ||
+									!toUser ||
+									fromUser.id === toUser.id
+								}
 								isLoading={mutationPending}
 								type="submit"
 							>
@@ -359,6 +364,18 @@ export const DebtsTransferScreen: React.FC<{
 	const fromUserQuery = trpc.users.get.useQuery(
 		fromId ? { id: fromId } : skipToken,
 	);
+	const onFromClick = React.useCallback(
+		(userId: UsersId) => {
+			void setFromId(fromId === userId ? null : userId);
+		},
+		[fromId, setFromId],
+	);
+	const onToClick = React.useCallback(
+		(userId: UsersId) => {
+			void setToId(toId === userId ? null : userId);
+		},
+		[setToId, toId],
+	);
 	const toUserQuery = trpc.users.get.useQuery(toId ? { id: toId } : skipToken);
 	const fromUserDebts = trpc.debts.getIdsByUser.useQuery(
 		fromId ? { userId: fromId } : skipToken,
@@ -375,44 +392,25 @@ export const DebtsTransferScreen: React.FC<{
 					)
 				}
 			>
-				{`Transfer debts from ${
-					fromUserQuery.status === "success"
-						? fromUserQuery.data.name
-						: "a user"
-				} to ${
-					toUserQuery.status === "success" ? toUserQuery.data.name : "a user"
-				}`}
+				Transfer debts
 			</PageHeader>
-			<View className="flex gap-2 md:flex-row">
+			<View className="flex-row gap-2 self-center">
 				<UsersSuggest
 					label="From"
 					selected={fromId}
-					onUserClick={setFromId}
+					onUserClick={onFromClick}
 					closeOnSelect
 					setUserNameToInput
-					wrapperProps={{ className: "md:flex-1" }}
-					startContent={
-						fromId ? (
-							<LoadableUser
-								id={fromId}
-								avatarProps={{ size: "xs" }}
-								onlyAvatar
-							/>
-						) : null
-					}
+					selectedProps={{ className: "flex flex-row gap-2 items-center" }}
 				/>
+				<BackArrow className="size-10 rotate-180" />
 				<UsersSuggest
 					label="To"
 					selected={toId}
-					onUserClick={setToId}
+					onUserClick={onToClick}
 					closeOnSelect
 					setUserNameToInput
-					wrapperProps={{ className: "md:flex-1" }}
-					startContent={
-						toId ? (
-							<LoadableUser id={toId} avatarProps={{ size: "xs" }} onlyAvatar />
-						) : null
-					}
+					selectedProps={{ className: "flex flex-row gap-2 items-center" }}
 				/>
 			</View>
 			{fromUserDebts.status === "pending" || !fromUserQuery.data ? (

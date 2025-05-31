@@ -48,10 +48,14 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 	);
 	const onUserClick = React.useCallback(
 		(openModal: () => void) => (nextUserId: UsersId) => {
+			if (nextUserId === userId) {
+				setUserId(undefined);
+				return;
+			}
 			setUserId(nextUserId);
 			openModal();
 		},
-		[],
+		[userId],
 	);
 	const userQuery = trpc.users.get.useQuery(
 		userId ? { id: userId } : skipToken,

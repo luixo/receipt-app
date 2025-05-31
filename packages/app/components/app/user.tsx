@@ -70,14 +70,18 @@ export type Props = {
 	connectedAccount?: TRPCQueryOutput<"users.get">["connectedAccount"];
 	chip?: boolean | React.ComponentProps<typeof Chip>;
 	onlyAvatar?: boolean;
-	avatarProps?: Omit<
-		NonNullable<React.ComponentProps<typeof RawUser>["avatarProps"]>,
-		"size"
-	> & {
-		size:
-			| NonNullable<React.ComponentProps<typeof RawUser>["avatarProps"]>["size"]
-			| "xs";
-	};
+	avatarProps?: Partial<
+		Omit<
+			NonNullable<React.ComponentProps<typeof RawUser>["avatarProps"]>,
+			"size"
+		> & {
+			size:
+				| NonNullable<
+						React.ComponentProps<typeof RawUser>["avatarProps"]
+				  >["size"]
+				| "xs";
+		}
+	>;
 } & Omit<
 	React.ComponentProps<typeof RawUser>,
 	"name" | "description" | "avatarProps"

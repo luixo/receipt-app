@@ -27,6 +27,7 @@ const NEW_USER_KEY = "__NEW__";
 
 type Props = {
 	selected?: UsersId | UsersId[];
+	multiselect?: boolean;
 	throttledMs?: number;
 	onUserClick: (user: UsersId) => void;
 	limit?: number;
@@ -35,9 +36,10 @@ type Props = {
 	additionalIds?: UsersId[];
 	options?: TRPCQueryInput<"users.suggest">["options"];
 	closeOnSelect?: boolean;
-	children?: React.ReactNode;
+	userProps?: Partial<React.ComponentProps<typeof LoadableUser>>;
 	wrapperProps?: React.ComponentProps<typeof View>;
 	setUserNameToInput?: boolean;
+	selectedProps?: React.ComponentProps<typeof View>;
 } & Omit<
 	React.ComponentProps<typeof Autocomplete>,
 	"items" | "defaultItems" | "children"
@@ -45,16 +47,18 @@ type Props = {
 
 export const UsersSuggest: React.FC<Props> = ({
 	selected,
+	multiselect,
 	throttledMs = 300,
 	limit = LIMIT,
 	topLimit = LIMIT,
 	options,
 	filterIds: outerFilterIds,
-	onUserClick,
+	onUserClick: onUserClickOuter,
 	additionalIds,
-	children,
+	userProps,
 	wrapperProps,
 	setUserNameToInput,
+	selectedProps,
 	...props
 }) => {
 	const inputRef = React.useRef<HTMLInputElement>(null);
@@ -140,14 +144,14 @@ export const UsersSuggest: React.FC<Props> = ({
 			setUserNameById(firstUser);
 		}
 	}, [setUserNameById, initialUserIds]);
-	const selectUser = React.useCallback(
+	const onUserClick = React.useCallback(
 		(userId: UsersId) => {
-			onUserClick(userId);
+			onUserClickOuter(userId);
 			if (setUserNameToInput) {
 				setUserNameById(userId);
 			}
 		},
-		[onUserClick, setUserNameById, setUserNameToInput],
+		[onUserClickOuter, setUserNameById, setUserNameToInput],
 	);
 	const onSelectionChange = React.useCallback(
 		(key: string | number | null) => {
@@ -159,14 +163,14 @@ export const UsersSuggest: React.FC<Props> = ({
 				return;
 			}
 			if (additionalIds?.includes(key)) {
-				selectUser(key);
+				onUserClick(key);
 				return;
 			}
 			const matchedUser =
 				filteredTopFetchedUserIds.find((userId) => userId === key) ||
 				fetchedUserIds.find((userId) => userId === key);
 			if (matchedUser) {
-				selectUser(matchedUser);
+				onUserClick(matchedUser);
 			}
 		},
 		[
@@ -174,7 +178,7 @@ export const UsersSuggest: React.FC<Props> = ({
 			filteredTopFetchedUserIds,
 			fetchedUserIds,
 			openAddUser,
-			selectUser,
+			onUserClick,
 		],
 	);
 
@@ -253,51 +257,63 @@ export const UsersSuggest: React.FC<Props> = ({
 
 	return (
 		<View className="items-start gap-4" {...wrapperProps}>
-			{children}
-			<Autocomplete
-				// This is needed to reset the Autocomplete state on selected user change
-				// Otherwise the dropdown will popup after user select
-				key={selectedUserIds[0] ?? null}
-				ref={inputRef}
-				inputValue={value}
-				onInputChange={setValue}
-				label="Select a user"
-				labelPlacement="outside"
-				placeholder="Start typing"
-				variant="bordered"
-				scrollRef={scrollerRef}
-				items={[]}
-				selectedKey={selectedUserIds[0] ?? null}
-				onSelectionChange={onSelectionChange}
-				clearButtonProps={{
-					onPress: () => setValue(""),
-				}}
-				listboxProps={{
-					classNames: { list: "m-0" },
-					emptyContent: "No results found.",
-				}}
-				endContent={
-					<Button
-						isIconOnly
-						variant="light"
-						radius="full"
-						size="sm"
-						className={value ? undefined : "hidden"}
-						onPress={openAddUser}
-					>
-						<PlusIcon size={24} />
-					</Button>
-				}
-				{...props}
-			>
-				{sections}
-			</Autocomplete>
+			{selectedUserIds.length === 0 || multiselect ? (
+				<Autocomplete
+					// This is needed to reset the Autocomplete state on selected user change
+					// Otherwise the dropdown will popup after user select
+					key={selectedUserIds[0] ?? null}
+					ref={inputRef}
+					inputValue={value}
+					onInputChange={setValue}
+					label="Select a user"
+					labelPlacement="outside"
+					placeholder="Start typing"
+					variant="bordered"
+					scrollRef={scrollerRef}
+					items={[]}
+					selectedKey={selectedUserIds[0] ?? null}
+					onSelectionChange={onSelectionChange}
+					clearButtonProps={{
+						onPress: () => setValue(""),
+					}}
+					listboxProps={{
+						classNames: { list: "m-0" },
+						emptyContent: "No results found.",
+					}}
+					endContent={
+						<Button
+							isIconOnly
+							variant="light"
+							radius="full"
+							size="sm"
+							className={value ? undefined : "hidden"}
+							onPress={openAddUser}
+						>
+							<PlusIcon size={24} />
+						</Button>
+					}
+					{...props}
+				>
+					{sections}
+				</Autocomplete>
+			) : (
+				<View {...selectedProps}>
+					{selectedUserIds.map((userId) => (
+						<LoadableUser
+							key={userId}
+							id={userId}
+							onClick={() => onUserClick(userId)}
+							{...userProps}
+						/>
+					))}
+				</View>
+			)}
 			<AddUserModal
 				isOpen={addUserOpen}
 				onOpenChange={closeAddUser}
 				initialValue={value}
 				onSuccess={({ id }) => {
-					selectUser(id);
+					onUserClick(id);
 					setValue("");
 					closeAddUser();
 				}}

@@ -167,10 +167,11 @@ export const ReceiptParticipants: React.FC = () => {
 						)}
 						{isOwner ? (
 							<UsersSuggest
-								filterIds={[
-									...localFilterIds,
-									...participants.map((participant) => participant.userId),
-								]}
+								filterIds={participants.map(
+									(participant) => participant.userId,
+								)}
+								selected={localFilterIds}
+								multiselect
 								additionalIds={isSelfAdded ? [] : [selfUserId]}
 								onUserClick={onUserClick}
 								isDisabled={receiptDisabled}

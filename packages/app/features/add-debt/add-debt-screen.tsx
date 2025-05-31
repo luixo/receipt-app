@@ -4,7 +4,6 @@ import { isNonNullish } from "remeda";
 import { z } from "zod";
 
 import { CurrencyInput } from "~app/components/app/currency-input";
-import { LoadableUser } from "~app/components/app/loadable-user";
 import {
 	type Direction,
 	SignButtonGroup,
@@ -135,16 +134,15 @@ export const AddDebtScreen: React.FC<{
 							<UsersSuggest
 								selected={field.state.value}
 								isDisabled={addMutation.isPending}
-								onUserClick={field.setValue}
+								onUserClick={(nextUserId) => {
+									if (nextUserId === field.state.value) {
+										form.resetField("userId");
+									} else {
+										field.setValue(nextUserId);
+									}
+								}}
 								closeOnSelect
-							>
-								{field.state.value ? (
-									<LoadableUser
-										id={field.state.value}
-										avatarProps={{ size: "sm" }}
-									/>
-								) : null}
-							</UsersSuggest>
+							/>
 						)}
 					</form.AppField>
 					<form.AppField name="timestamp">
