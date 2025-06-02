@@ -12,7 +12,7 @@ import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import { trpc } from "~app/trpc";
 import { formatCurrency } from "~app/utils/currency";
 import { useAppForm } from "~app/utils/forms";
-import { partSchema } from "~app/utils/validation";
+import { partSchema, partSchemaDecimal } from "~app/utils/validation";
 import { Accordion, AccordionItem } from "~components/accordion";
 import { Button } from "~components/button";
 import { Divider } from "~components/divider";
@@ -270,6 +270,10 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 														updatePayerMutationState,
 													]}
 													labelPlacement="outside-left"
+													step={10 ** -partSchemaDecimal}
+													formatOptions={{
+														maximumFractionDigits: partSchemaDecimal,
+													}}
 													hideStepper
 													endContent={
 														<View className="flex gap-2">

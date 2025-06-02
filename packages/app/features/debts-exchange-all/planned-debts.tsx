@@ -274,6 +274,9 @@ export const PlannedDebts: React.FC<Props> = ({
 													}
 													min="0"
 													step={10 ** -currencyRateSchemaDecimal}
+													formatOptions={{
+														maximumFractionDigits: currencyRateSchemaDecimal,
+													}}
 													aria-label={currencyCode}
 													isRequired
 												/>

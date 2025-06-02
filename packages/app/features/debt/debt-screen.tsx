@@ -29,7 +29,11 @@ import {
 } from "~app/utils/currency";
 import { areDebtsSynced } from "~app/utils/debts";
 import { useAppForm } from "~app/utils/forms";
-import { debtAmountSchema, debtNoteSchema } from "~app/utils/validation";
+import {
+	debtAmountSchema,
+	debtAmountSchemaDecimal,
+	debtNoteSchema,
+} from "~app/utils/validation";
 import { Button } from "~components/button";
 import { ReceiptIcon } from "~components/icons";
 import { Input } from "~components/input";
@@ -146,6 +150,8 @@ const DebtAmountInput: React.FC<AmountProps> = ({ debt, isLoading }) => {
 					mutation={updateMutation}
 					isDisabled={isLoading}
 					minValue={0}
+					step={10 ** -debtAmountSchemaDecimal}
+					formatOptions={{ maximumFractionDigits: debtAmountSchemaDecimal }}
 					endContent={
 						<View className="flex gap-2">
 							<DebtCurrencyInput debt={debt} isLoading={isLoading} />

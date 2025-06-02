@@ -94,6 +94,7 @@ export const AddReceiptItemForm: React.FC = () => {
 								isRequired
 								minValue={0}
 								step={10 ** -priceSchemaDecimal}
+								formatOptions={{ maximumFractionDigits: priceSchemaDecimal }}
 								label="Price per unit"
 								fieldError={
 									field.state.meta.isDirty ? field.state.meta.errors : undefined
@@ -112,6 +113,7 @@ export const AddReceiptItemForm: React.FC = () => {
 								isRequired
 								minValue={0}
 								step={10 ** -quantitySchemaDecimal}
+								formatOptions={{ maximumFractionDigits: quantitySchemaDecimal }}
 								label="Units"
 								fieldError={
 									field.state.meta.isDirty ? field.state.meta.errors : undefined

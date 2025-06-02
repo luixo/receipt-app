@@ -108,6 +108,7 @@ export const ReceiptItemConsumerInput: React.FC<Props> = ({
 							field.state.meta.isDirty ? field.state.meta.errors : undefined
 						}
 						step={10 ** -partSchemaDecimal}
+						formatOptions={{ maximumFractionDigits: partSchemaDecimal }}
 						className="w-32"
 						aria-label="Item consumer part"
 						mutation={updateMutationState}
