@@ -6,6 +6,7 @@ import type {
 import type { Options } from "dataloader";
 import Dataloader from "dataloader";
 
+import { noop } from "~utils/fn";
 import type {
 	AuthorizedContext,
 	UnauthorizedContext,
@@ -77,7 +78,7 @@ export const queueCallFactory = <
 		string,
 		{
 			dataloader: Dataloader<I, O, string>;
-			removeTimeoutId: NodeJS.Timeout;
+			removeTimeoutId: ReturnType<typeof setTimeout>;
 		}
 	> = {};
 	return async (opts) => {
@@ -96,12 +97,13 @@ export const queueCallFactory = <
 					...batchOpts,
 				},
 			),
-			removeTimeoutId: setTimeout(() => {
-				delete dataloaderStorage[key];
-			}, CLEAR_CACHE_DELAY),
+			removeTimeoutId: setTimeout(noop, Infinity),
 		};
 		dataloaderStorage[key] = dataloaderObject;
-		dataloaderObject.removeTimeoutId.refresh();
+		clearTimeout(dataloaderObject.removeTimeoutId);
+		dataloaderObject.removeTimeoutId = setTimeout(() => {
+			delete dataloaderStorage[key];
+		}, CLEAR_CACHE_DELAY);
 		return dataloaderObject.dataloader.load(opts.input as I);
 	};
 };
