@@ -1,7 +1,7 @@
 import React from "react";
 
 type Props = {
-	onClickRef?: React.MutableRefObject<() => void>;
+	onClickRef?: React.RefObject<() => void>;
 	onFileUpdate?: (file: File) => void;
 };
 

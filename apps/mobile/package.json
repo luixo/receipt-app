@@ -24,8 +24,6 @@
 		"expo-splash-screen": "^0.26.4",
 		"expo-status-bar": "^1.11.1",
 		"nativewind": "^4.0.36",
-		"react": "^18.2.0",
-		"react-dom": "^18.2.0",
 		"react-native-gesture-handler": "^2.15.0",
 		"react-native-reanimated": "^3.7.1",
 		"react-native-safe-area-context": "^4.9.0",
@@ -38,7 +36,6 @@
 		"@babel/plugin-transform-arrow-functions": "^7.23.3",
 		"@babel/plugin-transform-shorthand-properties": "^7.23.3",
 		"@babel/plugin-transform-template-literals": "^7.23.3",
-		"@types/react": "^18.2.16",
 		"react-native-flipper": "^0.212.0",
 		"react-query-native-devtools": "^4.0.0"
 	}

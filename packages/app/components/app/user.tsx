@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import {
 	UserAvatar,
@@ -88,55 +88,51 @@ export type Props = {
 > &
 	Pick<React.ComponentProps<typeof UserAvatar>, "dimmed">;
 
-export const User = React.forwardRef<HTMLDivElement, Props>(
-	(
-		{
-			id,
-			name,
-			connectedAccount,
-			className,
-			avatarProps: rawAvatarProps,
-			dimmed,
-			onlyAvatar,
-			chip,
-			...props
-		},
-		ref,
-	) => {
-		const avatarInput = {
-			id,
-			connectedAccount,
-			dimmed,
-			...rawAvatarProps,
-		};
-		const avatarProps = useUserAvatarProps(avatarInput);
-		if (onlyAvatar) {
-			return <Avatar {...avatarProps} />;
-		}
-		if (chip) {
-			return (
-				<Chip
-					ref={ref}
-					data-testid="user-chip"
-					className={wrapper({ className })}
-					avatar={<UserAvatar size="xs" {...avatarInput} />}
-					onClick={props.onClick}
-					{...(typeof chip === "boolean" ? {} : chip)}
-				>
-					{name}
-				</Chip>
-			);
-		}
+export const User: React.FC<Props> = ({
+	id,
+	name,
+	connectedAccount,
+	className,
+	avatarProps: rawAvatarProps,
+	dimmed,
+	onlyAvatar,
+	chip,
+	ref,
+	...props
+}) => {
+	const avatarInput = {
+		id,
+		connectedAccount,
+		dimmed,
+		...rawAvatarProps,
+	};
+	const avatarProps = useUserAvatarProps(avatarInput);
+	if (onlyAvatar) {
+		return <Avatar {...avatarProps} />;
+	}
+	if (chip) {
 		return (
-			<RawUser
+			<Chip
 				ref={ref}
-				{...props}
-				data-testid="user"
+				data-testid="user-chip"
 				className={wrapper({ className })}
-				name={name}
-				description={connectedAccount?.email}
-				avatarProps={avatarProps}
-			/>
+				avatar={<UserAvatar size="xs" {...avatarInput} />}
+				onClick={props.onClick}
+				{...(typeof chip === "boolean" ? {} : chip)}
+			>
+				{name}
+			</Chip>
 		);
-	},
-);
+	}
+	return (
+		<RawUser
+			ref={ref}
+			{...props}
+			data-testid="user"
+			className={wrapper({ className })}
+			name={name}
+			description={connectedAccount?.email}
+			avatarProps={avatarProps}
+		/>
+	);
+};

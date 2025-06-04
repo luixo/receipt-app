@@ -1,23 +1,25 @@
 import React from "react";
 
 import { Popover, PopoverContent, PopoverTrigger } from "@heroui/popover";
+import type { OnSelectHandler } from "react-day-picker";
 import { DayPicker } from "react-day-picker";
 
 import { MINUTE } from "~utils/time";
 
 const classNames: NonNullable<DayPickerProps["classNames"]> = {
 	root: "flex max-w-full max-h-full bg-background p-4 rounded-large items-center h-80",
-	button: "px-3 py-2 rounded-full hover:bg-secondary-100",
-	caption: "flex flex-row font-medium text-lg gap-2 justify-between px-2",
+	button_previous: "flex p-2",
+	button_next: "flex p-2",
+	month_caption: "flex flex-row font-medium text-lg gap-2 justify-between px-2",
 	months: "flex-1 h-full",
-	month: "flex flex-col gap-2 h-full justify-between",
-	head_cell: "px-2",
-	nav: "flex gap-2",
-	nav_button: "flex p-2",
-	cell: "text-center",
-	day_outside: "opacity-30",
-	day_selected: "bg-success",
-	day_today: "text-secondary",
+	month: "flex flex-col gap-2 justify-between",
+	weekday: "px-2",
+	nav: "flex gap-2 justify-end",
+	day_button: "px-3 py-2 rounded-full hover:bg-secondary-100",
+	outside: "opacity-30",
+	selected: "bg-success",
+	today: "text-secondary",
+	day: "text-center rounded-full",
 };
 
 type DayPickerProps = React.ComponentProps<typeof DayPicker>;
@@ -36,9 +38,7 @@ export const Calendar: React.FC<Props> = ({
 	disabled,
 }) => {
 	const [open, setOpen] = React.useState(false);
-	const onDateChange = React.useCallback<
-		NonNullable<Extract<DayPickerProps, { mode: "single" }>["onSelect"]>
-	>(
+	const onDateChange = React.useCallback<OnSelectHandler<Date | undefined>>(
 		(date) => {
 			if (!date) {
 				return;
@@ -61,6 +61,7 @@ export const Calendar: React.FC<Props> = ({
 					onSelect={onDateChange}
 					classNames={classNames}
 					showOutsideDays
+					required={false}
 				/>
 			</PopoverContent>
 		</Popover>

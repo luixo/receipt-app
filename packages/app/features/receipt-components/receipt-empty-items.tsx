@@ -12,9 +12,7 @@ import { round } from "~utils/math";
 import { useReceiptContext } from "./context";
 
 type InnerProps = {
-	itemsRef: React.MutableRefObject<
-		Record<ReceiptItemsId, HTMLDivElement | null>
-	>;
+	itemsRef: React.RefObject<Record<ReceiptItemsId, HTMLDivElement | null>>;
 };
 
 export const ReceiptEmptyItems: React.FC<InnerProps> = ({ itemsRef }) => {

@@ -39,125 +39,119 @@ const SORT_CONSUMERS = (a: ItemConsumer, b: ItemConsumer) => {
 
 type Props = {
 	item: Item;
+	ref: React.Ref<HTMLDivElement>;
 };
 
-export const ReceiptItem = React.forwardRef<HTMLDivElement, Props>(
-	({ item }, ref) => {
-		const { currencyCode, participants } = useReceiptContext();
-		const { addItemConsumer, removeItem } = useActionsHooksContext();
-		const canEdit = useCanEdit();
-		const locale = useLocale();
+export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
+	const { currencyCode, participants } = useReceiptContext();
+	const { addItemConsumer, removeItem } = useActionsHooksContext();
+	const canEdit = useCanEdit();
+	const locale = useLocale();
 
-		const removeItemMutationState = useTrpcMutationState<"receiptItems.remove">(
-			trpc.receiptItems.remove,
-			(vars) => vars.id === item.id,
+	const removeItemMutationState = useTrpcMutationState<"receiptItems.remove">(
+		trpc.receiptItems.remove,
+		(vars) => vars.id === item.id,
+	);
+	const isRemovalPending = removeItemMutationState?.status === "pending";
+
+	const notAddedParticipants = React.useMemo(() => {
+		const addedParticipants = item.consumers.map((consumer) => consumer.userId);
+		return participants.filter(
+			(participant) => !addedParticipants.includes(participant.userId),
 		);
-		const isRemovalPending = removeItemMutationState?.status === "pending";
+	}, [item.consumers, participants]);
+	const onAddEveryItemParticipant = React.useCallback(() => {
+		notAddedParticipants.forEach((participant) => {
+			addItemConsumer(item.id, participant.userId, 1);
+		});
+	}, [addItemConsumer, item.id, notAddedParticipants]);
+	const sortedConsumers = React.useMemo(
+		() => item.consumers.sort(SORT_CONSUMERS),
+		[item.consumers],
+	);
 
-		const notAddedParticipants = React.useMemo(() => {
-			const addedParticipants = item.consumers.map(
-				(consumer) => consumer.userId,
-			);
-			return participants.filter(
-				(participant) => !addedParticipants.includes(participant.userId),
-			);
-		}, [item.consumers, participants]);
-		const onAddEveryItemParticipant = React.useCallback(() => {
-			notAddedParticipants.forEach((participant) => {
-				addItemConsumer(item.id, participant.userId, 1);
-			});
-		}, [addItemConsumer, item.id, notAddedParticipants]);
-		const sortedConsumers = React.useMemo(
-			() => item.consumers.sort(SORT_CONSUMERS),
-			[item.consumers],
-		);
-
-		return (
-			<Card ref={ref}>
-				<CardHeader className="justify-between gap-4">
-					<ReceiptItemNameInput item={item} isDisabled={isRemovalPending} />
-					{!canEdit ? null : (
-						<RemoveButton
-							onRemove={() => removeItem(item.id)}
-							mutation={{ isPending: isRemovalPending }}
-							subtitle="This will remove item with all participant's parts"
-							noConfirm={item.consumers.length === 0}
-							isIconOnly
-						/>
-					)}
-				</CardHeader>
-				<Divider />
-				<CardBody className="gap-2">
-					<View className="flex-row items-center gap-2">
-						<ReceiptItemPriceInput item={item} isDisabled={isRemovalPending} />
-						<ReceiptItemQuantityInput
-							item={item}
-							isDisabled={isRemovalPending}
-						/>
-						<Text>
-							={" "}
-							{formatCurrency(
-								locale,
-								currencyCode,
-								round(item.quantity * item.price),
-							)}
-						</Text>
-					</View>
-					{!canEdit || notAddedParticipants.length === 0 ? null : (
-						<ScrollShadow
-							orientation="horizontal"
-							className="flex w-full flex-row gap-1 overflow-x-auto"
-						>
-							{notAddedParticipants.length > 1 ? (
-								<Chip
-									color="secondary"
-									className="cursor-pointer"
-									onClick={onAddEveryItemParticipant}
-								>
-									Everyone
-								</Chip>
-							) : null}
-							{notAddedParticipants.map((participant) => (
-								<ReceiptItemConsumerChip
-									key={participant.userId}
-									item={item}
-									participant={participant}
-								/>
-							))}
-						</ScrollShadow>
-					)}
-					{sortedConsumers.length === 0 ? null : (
-						<>
-							<Divider />
-							{sortedConsumers.map((consumer) => {
-								const matchedParticipant = participants.find(
-									(participant) => participant.userId === consumer.userId,
-								);
-								if (!matchedParticipant) {
-									return (
-										<ErrorMessage
-											key={consumer.userId}
-											message={`Consumer part for user id ${consumer.userId} is orphaned. Please report this to support, include receipt id, receipt item name and mentioned user id`}
-										/>
-									);
-								}
+	return (
+		<Card ref={ref}>
+			<CardHeader className="justify-between gap-4">
+				<ReceiptItemNameInput item={item} isDisabled={isRemovalPending} />
+				{!canEdit ? null : (
+					<RemoveButton
+						onRemove={() => removeItem(item.id)}
+						mutation={{ isPending: isRemovalPending }}
+						subtitle="This will remove item with all participant's parts"
+						noConfirm={item.consumers.length === 0}
+						isIconOnly
+					/>
+				)}
+			</CardHeader>
+			<Divider />
+			<CardBody className="gap-2">
+				<View className="flex-row items-center gap-2">
+					<ReceiptItemPriceInput item={item} isDisabled={isRemovalPending} />
+					<ReceiptItemQuantityInput item={item} isDisabled={isRemovalPending} />
+					<Text>
+						={" "}
+						{formatCurrency(
+							locale,
+							currencyCode,
+							round(item.quantity * item.price),
+						)}
+					</Text>
+				</View>
+				{!canEdit || notAddedParticipants.length === 0 ? null : (
+					<ScrollShadow
+						orientation="horizontal"
+						className="flex w-full flex-row gap-1 overflow-x-auto"
+					>
+						{notAddedParticipants.length > 1 ? (
+							<Chip
+								color="secondary"
+								className="cursor-pointer"
+								onClick={onAddEveryItemParticipant}
+							>
+								Everyone
+							</Chip>
+						) : null}
+						{notAddedParticipants.map((participant) => (
+							<ReceiptItemConsumerChip
+								key={participant.userId}
+								item={item}
+								participant={participant}
+							/>
+						))}
+					</ScrollShadow>
+				)}
+				{sortedConsumers.length === 0 ? null : (
+					<>
+						<Divider />
+						{sortedConsumers.map((consumer) => {
+							const matchedParticipant = participants.find(
+								(participant) => participant.userId === consumer.userId,
+							);
+							if (!matchedParticipant) {
 								return (
-									<ReceiptItemConsumer
+									<ErrorMessage
 										key={consumer.userId}
-										consumer={consumer}
-										item={item}
-										participant={matchedParticipant}
-										isDisabled={isRemovalPending}
+										message={`Consumer part for user id ${consumer.userId} is orphaned. Please report this to support, include receipt id, receipt item name and mentioned user id`}
 									/>
 								);
-							})}
-						</>
-					)}
-				</CardBody>
-			</Card>
-		);
-	},
-);
+							}
+							return (
+								<ReceiptItemConsumer
+									key={consumer.userId}
+									consumer={consumer}
+									item={item}
+									participant={matchedParticipant}
+									isDisabled={isRemovalPending}
+								/>
+							);
+						})}
+					</>
+				)}
+			</CardBody>
+		</Card>
+	);
+};
 
 const consumersSkeletonItems = new Array(2).fill(null).map((_, index) => index);
 

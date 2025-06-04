@@ -37,12 +37,12 @@ export const getAllInputs = <Key extends TRPCQueryKey>(
 
 export const createRef = <T>(
 	...args: undefined extends T ? [] : [T]
-): React.MutableRefObject<T> => ({
+): React.RefObject<T> => ({
 	current: args[0] as T,
 });
 
 export const withRef = <T, R = void>(
-	fn: (ref: React.MutableRefObject<T>) => R,
+	fn: (ref: React.RefObject<T>) => R,
 	...args: undefined extends T ? [] : [T]
 ) => {
 	const ref = createRef<T>(...args);

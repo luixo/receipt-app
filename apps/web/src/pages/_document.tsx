@@ -2,7 +2,6 @@ import type * as React from "react";
 import { AppRegistry } from "react-native";
 
 import { getCookie } from "cookies-next";
-import { extractCss } from "goober";
 import NextDocument, { Head, Html, Main, NextScript } from "next/document";
 
 import {
@@ -78,15 +77,6 @@ Document.getInitialProps = async (ctx) => {
 		);
 	return {
 		...prevProps,
-		styles: (
-			<>
-				{/* see https://github.com/timolins/react-hot-toast/issues/189#issuecomment-1256797662 */}
-				<style id="_goober">
-					{"/* ! */"} {extractCss()}
-				</style>
-				{prevProps.styles}
-			</>
-		),
 		colorMode,
 	};
 };
