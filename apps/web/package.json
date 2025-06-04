@@ -37,7 +37,6 @@
 		"postmark": "^3.0.18",
 		"raf": "^3.4.1",
 		"react-dom": "^18.2.0",
-		"react-native-web": "^0.19.9",
 		"remeda": "^2.7.0",
 		"sharp": "^0.32.6",
 		"solito": "^4.1.3",
