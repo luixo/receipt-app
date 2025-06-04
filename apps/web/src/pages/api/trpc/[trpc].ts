@@ -17,7 +17,7 @@ import type {
 import { createContext } from "~web/handlers/context";
 import { baseLogger } from "~web/providers/logger";
 import { getPool } from "~web/providers/pg";
-import { createNetContext } from "~web/utils/net";
+import { getReqHeader } from "~web/utils/headers";
 
 const sentryDsn = process.env.SENTRY_DSN || process.env.NEXT_PUBLIC_SENTRY_DSN;
 if (sentryDsn) {
@@ -64,8 +64,7 @@ const createContextRest = (
 
 const handler = createNextApiHandler<AppRouter>({
 	router,
-	createContext: (opts) =>
-		createContext(createNetContext(opts), createContextRest(opts.req)),
+	createContext: (opts) => createContext(opts, createContextRest(opts.req)),
 	onError: ({ error, type, path, ctx }) => {
 		if (!ctx) {
 			return;
@@ -76,9 +75,11 @@ const handler = createNextApiHandler<AppRouter>({
 			return;
 		}
 		ctx.logger.error(
-			`[${error.code}] [${ctx.req.socketId}] [${ctx.req.headers.get(
-				"user-agent",
-			)}] ${type} "${path}"${email ? ` (by ${email})` : ""}: ${error.message}`,
+			`[${error.code}] [${ctx.req.socket.remoteAddress}:${
+				ctx.req.socket.localPort
+			}] [${
+				getReqHeader(ctx.req, "user-agent") ?? "no-user-agent"
+			}] ${type} "${path}"${email ? ` (by ${email})` : ""}: ${error.message}`,
 		);
 	},
 	responseMeta: () => ({ status: 200 }),

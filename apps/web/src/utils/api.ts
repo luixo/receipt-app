@@ -34,7 +34,7 @@ const pickAuthCookie = (req: Parameters<typeof getTrpcClient>[0]) => {
 export const getTrpcClient = (req: NetContext["req"]) =>
 	createTRPCClient<AppRouter>({
 		links: getLinks({
-			searchParams: loadLinksParams(req.query),
+			searchParams: loadLinksParams(new URL(req.url ?? "").searchParams),
 			url: getSsrHost(DEFAULT_TRPC_ENDPOINT),
 			headers: {
 				cookie: pickAuthCookie(req),

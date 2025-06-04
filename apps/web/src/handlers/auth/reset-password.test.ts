@@ -18,7 +18,7 @@ import { test } from "~tests/backend/utils/test";
 import { MINUTE } from "~utils/time";
 import { t } from "~web/handlers/trpc";
 import { getHash } from "~web/utils/crypto";
-import { getHeadersEntries } from "~web/utils/headers";
+import { getResHeaders } from "~web/utils/headers";
 
 import { procedure } from "./reset-password";
 
@@ -129,7 +129,7 @@ describe("auth.resetPassword", () => {
 				.select(["passwordHash", "passwordSalt"])
 				.executeTakeFirstOrThrow();
 			expect(await getHash(password, passwordSalt)).toBe(passwordHash);
-			expect(getHeadersEntries(context.res.headers)).toHaveLength(0);
+			expect(getResHeaders(context.res)).toHaveLength(0);
 		});
 	});
 });

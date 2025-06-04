@@ -1,54 +1,66 @@
+import type { AnyTRPCRouter } from "@trpc/server";
+import { incomingMessageToRequest } from "@trpc/server/adapters/node-http";
+import {
+	getRequestInfo,
+	toURL,
+} from "@trpc/server/unstable-core-do-not-import";
+import type { MockRequestOptions, MockResponseOptions } from "mock-http";
+import { Request as MockRequest, Response as MockResponse } from "mock-http";
+
 import type { SessionsSessionId } from "~db/models";
 import type { TestContext } from "~tests/backend/utils/test";
 import { createContext as createContextRaw } from "~web/handlers/context";
-import type { NetContext, UnauthorizedContext } from "~web/handlers/context";
-import {
-	createRequestHeaders,
-	createResponseHeaders,
-} from "~web/utils/headers";
+import type { UnauthorizedContext } from "~web/handlers/context";
+import { t } from "~web/handlers/trpc";
 
 type ContextOptions = {
-	headers?: Record<string, string>;
+	request?: MockRequestOptions;
+	response?: MockResponseOptions;
+	router?: AnyTRPCRouter;
 };
-
-const createNetContext = (opts?: ContextOptions): NetContext => ({
-	req: {
-		url: "unknown",
-		query: {},
-		headers: createRequestHeaders(opts?.headers),
-		socketId: "testSocketId",
-	},
-	res: {
-		headers: createResponseHeaders(),
-	},
-	info: {
-		accept: "application/jsonl",
-		type: "query",
-		isBatchCall: false,
-		calls: [],
-		connectionParams: null,
-		signal: new AbortController().signal,
-	},
-});
 
 export const createContext = (
 	ctx: TestContext,
 	options?: ContextOptions,
-): UnauthorizedContext => createContextRaw(createNetContext(options), ctx);
+): UnauthorizedContext => {
+	const mockReq = new MockRequest(options?.request);
+	const mockRes = new MockResponse(options?.response);
+	const request = incomingMessageToRequest(mockReq, { maxBodySize: null });
+	const url = toURL(`http://${request.headers.get("host")}${request.url}`);
+	return createContextRaw(
+		{
+			info: getRequestInfo({
+				req: request,
+				path: url.pathname.slice(1),
+				router: options?.router ?? t.router({}),
+				searchParams: url.searchParams,
+				headers: request.headers,
+			}),
+			req: mockReq,
+			res: mockRes,
+		},
+		ctx,
+	);
+};
 
 export const createAuthContext = (
 	ctx: TestContext,
 	sessionId: SessionsSessionId,
-	{ headers, ...options }: ContextOptions = {},
+	{ request, ...options }: ContextOptions = {},
 ) =>
 	createContext(ctx, {
-		headers: {
-			"x-test-id": ctx.task.id,
-			...headers,
-			cookie: [
-				`authToken=${sessionId}`,
-				...(headers?.cookie?.split(";") || []),
-			].join(";"),
+		request: {
+			...request,
+			headers: {
+				"x-test-id": ctx.task.id,
+				...request?.headers,
+				cookie: [
+					`authToken=${sessionId}`,
+					...((
+						request?.headers as Record<string, string> | undefined
+					)?.cookie?.split(";") || []),
+				].join(";"),
+			},
 		},
 		...options,
 	});

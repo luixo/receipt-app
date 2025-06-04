@@ -17,7 +17,7 @@ import {
 	SESSION_SHOULD_UPDATE_EVERY,
 } from "~web/handlers/auth/utils";
 import { t } from "~web/handlers/trpc";
-import { getHeadersEntries } from "~web/utils/headers";
+import { getResHeaders } from "~web/utils/headers";
 
 import { router } from "./index";
 
@@ -98,7 +98,7 @@ describe("procedures", () => {
 		test("invalid uuid", async ({ ctx }) => {
 			const caller = createCaller(
 				createContext(ctx, {
-					headers: { cookie: "authToken=fake" },
+					request: { headers: { cookie: "authToken=fake" } },
 				}),
 			);
 			await expectTRPCError(
@@ -114,7 +114,7 @@ describe("procedures", () => {
 
 			const caller = createCaller(
 				createContext(ctx, {
-					headers: { cookie: `authToken=${faker.string.uuid()}` },
+					request: { headers: { cookie: `authToken=${faker.string.uuid()}` } },
 				}),
 			);
 			await expectTRPCError(
@@ -138,7 +138,7 @@ describe("procedures", () => {
 			const context = createAuthContext(ctx, sessionId);
 			const caller = createCaller(context);
 			await expectDatabaseDiffSnapshot(ctx, () => caller.account.get());
-			const responseHeaders = getHeadersEntries(context.res.headers);
+			const responseHeaders = getResHeaders(context.res);
 			expect(responseHeaders).toStrictEqual<typeof responseHeaders>([]);
 		});
 
@@ -156,7 +156,7 @@ describe("procedures", () => {
 			const context = createAuthContext(ctx, sessionId);
 			const caller = createCaller(context);
 			await expectDatabaseDiffSnapshot(ctx, () => caller.account.get());
-			const responseHeaders = getHeadersEntries(context.res.headers);
+			const responseHeaders = getResHeaders(context.res);
 			expect(responseHeaders).toStrictEqual<typeof responseHeaders>([
 				[
 					"set-cookie",
@@ -180,10 +180,12 @@ describe("procedures", () => {
 					});
 					const caller = createCaller(
 						createAuthContext(ctx, sessionId, {
-							headers: {
-								cookie: `${PRETEND_USER_STORE_NAME}=${JSON.stringify({
-									email: "not@found.com",
-								})}`,
+							request: {
+								headers: {
+									cookie: `${PRETEND_USER_STORE_NAME}=${JSON.stringify({
+										email: "not@found.com",
+									})}`,
+								},
 							},
 						}),
 					);
@@ -198,11 +200,13 @@ describe("procedures", () => {
 					const foreignAccount = await insertAccount(ctx);
 					const caller = createCaller(
 						createAuthContext(ctx, sessionId, {
-							headers: {
-								cookie: `${PRETEND_USER_STORE_NAME}=${JSON.stringify({
-									email: foreignAccount.email,
-								})}`,
-								"x-keep-real-auth": "true",
+							request: {
+								headers: {
+									cookie: `${PRETEND_USER_STORE_NAME}=${JSON.stringify({
+										email: foreignAccount.email,
+									})}`,
+									"x-keep-real-auth": "true",
+								},
 							},
 						}),
 					);
@@ -217,10 +221,12 @@ describe("procedures", () => {
 					const foreignAccount = await insertAccount(ctx);
 					const caller = createCaller(
 						createAuthContext(ctx, sessionId, {
-							headers: {
-								cookie: `${PRETEND_USER_STORE_NAME}=${JSON.stringify({
-									email2: foreignAccount.email,
-								})}`,
+							request: {
+								headers: {
+									cookie: `${PRETEND_USER_STORE_NAME}=${JSON.stringify({
+										email2: foreignAccount.email,
+									})}`,
+								},
 							},
 						}),
 					);
@@ -236,10 +242,12 @@ describe("procedures", () => {
 				const foreignAccount = await insertAccount(ctx);
 				const caller = createCaller(
 					createAuthContext(ctx, sessionId, {
-						headers: {
-							cookie: `${PRETEND_USER_STORE_NAME}=${JSON.stringify({
-								email: foreignAccount.email,
-							})}`,
+						request: {
+							headers: {
+								cookie: `${PRETEND_USER_STORE_NAME}=${JSON.stringify({
+									email: foreignAccount.email,
+								})}`,
+							},
 						},
 					}),
 				);

@@ -1,22 +1,10 @@
-import type { NodeHTTPCreateContextFnOptions } from "@trpc/server/dist/adapters/node-http";
 import type { NextApiRequest, NextApiResponse } from "next";
+import type { IncomingMessage } from "node:http";
 
-import type { NetContext } from "~web/handlers/context";
-import {
-	createRequestHeaders,
-	createResponseHeaders,
-} from "~web/utils/headers";
-
-const convertRequest = (req: NextApiRequest): NetContext["req"] => ({
-	url: req.url || "",
-	headers: createRequestHeaders(req.headers),
-	query: req.query,
-	socketId: `${req.socket.remoteAddress}:${req.socket.localPort}`,
-});
-
+/* c8 ignore start */
 export const createHandler =
 	(
-		fn: (req: NetContext["req"]) => Promise<unknown>,
+		fn: (req: IncomingMessage) => Promise<unknown>,
 		options?: {
 			allowedMethods: string[];
 		},
@@ -34,7 +22,7 @@ export const createHandler =
 			return;
 		}
 		try {
-			const result = await fn(convertRequest(nextReq));
+			const result = await fn(nextReq);
 			return typeof result === "string"
 				? nextRes.send(result)
 				: nextRes.json(JSON.stringify(result));
@@ -43,18 +31,4 @@ export const createHandler =
 			nextRes.status(500).send(message);
 		}
 	};
-
-export const createNetContext = ({
-	req,
-	res,
-	info,
-}: NodeHTTPCreateContextFnOptions<
-	NextApiRequest,
-	NextApiResponse
->): NetContext => ({
-	req: convertRequest(req),
-	res: {
-		headers: createResponseHeaders(res),
-	},
-	info,
-});
+/* c8 ignore stop */

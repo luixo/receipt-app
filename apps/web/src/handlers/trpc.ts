@@ -15,6 +15,7 @@ import type { UnauthorizedContext } from "~web/handlers/context";
 import { formatErrorMessage } from "~web/handlers/errors";
 import { sessionIdSchema } from "~web/handlers/validation";
 import { getCookie, setCookie } from "~web/utils/cookies";
+import { getReqHeader } from "~web/utils/headers";
 
 export const t = initTRPC.context<UnauthorizedContext>().create({
 	transformer,
@@ -47,7 +48,7 @@ export const unauthProcedure = t.procedure.use(
 const getPretendAccountEmail = (
 	req: UnauthorizedContext["req"],
 ): string | undefined => {
-	if (req.headers.get("x-keep-real-auth")) {
+	if (getReqHeader(req, "x-keep-real-auth")) {
 		return;
 	}
 	const pretendUserString = getCookie(req, PRETEND_USER_STORE_NAME);

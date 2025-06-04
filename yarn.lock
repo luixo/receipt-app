@@ -6730,6 +6730,7 @@ __metadata:
     deep-object-diff: "npm:^1.1.9"
     find-free-ports: "npm:^3.1.1"
     kysely: "npm:^0.27.2"
+    mock-http: "npm:^1.1.1"
     pg: "npm:^8.11.3"
     timekeeper: "npm:^2.3.1"
     vite-tsconfig-paths: "npm:^4.2.0"
@@ -20679,6 +20680,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"mergee@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "mergee@npm:1.0.1"
+  checksum: 10/ef8bf6c9ac479d33b4395495cf0a8b6e7570a4280b01897d84276a73cad0ba17f2c7222fc8d0ece7d2c5dd59a5d06fbdd8c00f25129fb9ab58906328abc7fed6
+  languageName: node
+  linkType: hard
+
 "metro-babel-transformer@npm:0.80.1":
   version: 0.80.1
   resolution: "metro-babel-transformer@npm:0.80.1"
@@ -21439,6 +21447,15 @@ __metadata:
   bin:
     mkdirp: bin/cmd.js
   checksum: 10/d71b8dcd4b5af2fe13ecf3bd24070263489404fe216488c5ba7e38ece1f54daf219e72a833a3a2dc404331e870e9f44963a33399589490956bff003a3404d3b2
+  languageName: node
+  linkType: hard
+
+"mock-http@npm:^1.1.1":
+  version: 1.1.1
+  resolution: "mock-http@npm:1.1.1"
+  dependencies:
+    mergee: "npm:^1.0.1"
+  checksum: 10/8c5cb1248ce3345ca87732d7eef7719ae8d4e8e5440a4b40faea5ef58b911709736f0ebec9468aa317d1976f33981de1c78cde70a71d7da524d8e6db266a0b6f
   languageName: node
   linkType: hard
 

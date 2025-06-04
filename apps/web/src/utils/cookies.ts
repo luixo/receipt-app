@@ -2,10 +2,11 @@ import type { CookieSerializeOptions } from "cookie";
 import { parse, serialize } from "cookie";
 
 import type { UnauthorizedContext } from "~web/handlers/context";
+import { getReqHeader, getResHeader } from "~web/utils/headers";
 
 const getCookies = (
 	req: UnauthorizedContext["req"],
-): Partial<Record<string, string>> => parse(req.headers.get("cookie") || "");
+): Partial<Record<string, string>> => parse(getReqHeader(req, "cookie") ?? "");
 
 export const getCookie = (
 	req: UnauthorizedContext["req"],
@@ -24,13 +25,17 @@ export const setCookie = (
 	cookieValue: string,
 	opts: CookieSerializeOptions = {},
 ) => {
-	const setCookieHeader = ctx.res.headers.get("set-cookie") || "";
-	ctx.res.headers.set(
+	const setCookieHeader = getResHeader(ctx.res, "set-cookie") ?? "";
+	ctx.res.setHeader(
 		"set-cookie",
-		setCookieHeader.toString() +
+		[
+			setCookieHeader,
 			serialize(cookieName, cookieValue, {
 				...DEFAULT_SET_COOKIE_OPTIONS,
 				...opts,
 			}),
+		]
+			.filter(Boolean)
+			.join(";"),
 	);
 };

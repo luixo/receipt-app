@@ -16,7 +16,7 @@ import {
 import { test } from "~tests/backend/utils/test";
 import { t } from "~web/handlers/trpc";
 import { UUID_REGEX } from "~web/handlers/validation";
-import { getHeadersEntries } from "~web/utils/headers";
+import { getResHeaders } from "~web/utils/headers";
 
 import { procedure } from "./register";
 
@@ -134,7 +134,7 @@ describe("auth.register", () => {
 			expect(result).toEqual<typeof result>({
 				account: { id: result.account.id },
 			});
-			const responseHeaders = getHeadersEntries(context.res.headers);
+			const responseHeaders = getResHeaders(context.res);
 			const setCookieTuple = responseHeaders.find(
 				([key]) => key === "set-cookie",
 			);

@@ -10,6 +10,7 @@ import type {
 	AuthorizedContext,
 	UnauthorizedContext,
 } from "~web/handlers/context";
+import { getReqHeader } from "~web/utils/headers";
 
 const SCHEDULE_DELAY = 100;
 const CLEAR_CACHE_DELAY = 2000;
@@ -89,7 +90,7 @@ export const queueCallFactory = <
 					batchScheduleFn: (callback) => setTimeout(callback, SCHEDULE_DELAY),
 					cacheKeyFn: JSON.stringify,
 					// Disable cache on test runs - subsequent calls with different data are happening in tests
-					cache: !context.req.headers.get("x-test-id"),
+					cache: !getReqHeader(context.req, "x-test-id"),
 					// Undocumented `opts.path` property
 					name: (opts as unknown as { path: string }).path,
 					...batchOpts,
