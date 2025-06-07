@@ -10312,7 +10312,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@trpc/react-query@npm:^11.0.0-rc.461":
+"@trpc/react-query@npm:11.0.0-rc.461":
   version: 11.0.0-rc.461
   resolution: "@trpc/react-query@npm:11.0.0-rc.461"
   peerDependencies:
@@ -10322,6 +10322,19 @@ __metadata:
     react: ">=18.2.0"
     react-dom: ">=18.2.0"
   checksum: 10/a33c428ad005bd842476bc78b6f3694541a1bd4106aea9c19d783bb0b116e666227bb39ee7f301738100c973920dc7bebf3617e47edc5584a19dcdc597fa2f58
+  languageName: node
+  linkType: hard
+
+"@trpc/react-query@patch:@trpc/react-query@npm%3A11.0.0-rc.461#./patches/@trpc-react-query-npm-11.0.0-rc.461.patch::locator=receipt-app%40workspace%3A.":
+  version: 11.0.0-rc.461
+  resolution: "@trpc/react-query@patch:@trpc/react-query@npm%3A11.0.0-rc.461#./patches/@trpc-react-query-npm-11.0.0-rc.461.patch::version=11.0.0-rc.461&hash=c0eea1&locator=receipt-app%40workspace%3A."
+  peerDependencies:
+    "@tanstack/react-query": ^5.49.2
+    "@trpc/client": 11.0.0-rc.461+f178d3fed
+    "@trpc/server": 11.0.0-rc.461+f178d3fed
+    react: ">=18.2.0"
+    react-dom: ">=18.2.0"
+  checksum: 10/bc249fc60c47eed7f121aacec8da62a0dfb65753b12f10c5d68e700f5ab159d46134ec63b5445d2f3459f1d13ad88201792b9f1cc3815471a5736b4c09680f61
   languageName: node
   linkType: hard
 

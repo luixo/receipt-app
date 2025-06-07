@@ -9,7 +9,9 @@
 		"jsxImportSource": "nativewind",
 		"module": "esnext",
 		"esModuleInterop": true,
+		"moduleResolution": "bundler",
 		"allowSyntheticDefaultImports": true,
+		"allowJs": false,
 		"paths": {
 			"~app/*": ["./packages/app/*"],
 			"~components/*": ["./packages/components/src/*"],
