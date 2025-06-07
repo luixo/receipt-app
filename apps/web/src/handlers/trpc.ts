@@ -51,7 +51,10 @@ const getPretendAccountEmail = (
 	if (getReqHeader(req, "x-keep-real-auth")) {
 		return;
 	}
-	const pretendUserString = getCookie(req, PRETEND_USER_STORE_NAME);
+	const pretendUserString = getCookie(
+		getReqHeader(req, "cookie"),
+		PRETEND_USER_STORE_NAME,
+	);
 	if (!pretendUserString) {
 		return;
 	}
@@ -60,7 +63,7 @@ const getPretendAccountEmail = (
 };
 
 export const authProcedure = unauthProcedure.use(async ({ ctx, next }) => {
-	const authToken = getCookie(ctx.req, AUTH_COOKIE);
+	const authToken = getCookie(getReqHeader(ctx.req, "cookie"), AUTH_COOKIE);
 	if (typeof authToken !== "string" || !authToken) {
 		throw new TRPCError({
 			code: "UNAUTHORIZED",

@@ -7,6 +7,7 @@ import { getLinks } from "~app/utils/trpc";
 import type { NetContext } from "~web/handlers/context";
 import { rootSearchParamsSchema } from "~web/pages/_app";
 import { getCookie } from "~web/utils/cookies";
+import { getReqHeader } from "~web/utils/headers";
 import { captureSentryError } from "~web/utils/trpc";
 
 export const getSsrHost = (endpoint: string) => {
@@ -25,7 +26,7 @@ export const getSsrHost = (endpoint: string) => {
 };
 
 const pickAuthCookie = (req: Parameters<typeof getTrpcClient>[0]) => {
-	const authCookie = getCookie(req, AUTH_COOKIE);
+	const authCookie = getCookie(getReqHeader(req, "cookie"), AUTH_COOKIE);
 	if (authCookie) {
 		return `${AUTH_COOKIE}=${authCookie}`;
 	}
