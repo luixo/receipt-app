@@ -27,8 +27,8 @@ import { useHydratedMark } from "~web/hooks/use-hydrated-mark";
 import { useStoreLocalSettings } from "~web/hooks/use-local-settings";
 import { useQueryClientHelper } from "~web/hooks/use-query-client-helper";
 import { useRemovePreloadedCss } from "~web/hooks/use-remove-preloaded-css";
+import { DevToolsProvider } from "~web/providers/client/devtools";
 import { NavigationProvider } from "~web/providers/client/navigation";
-import { QueryDevToolsProvider } from "~web/providers/client/query-devtools";
 import { ThemeProvider } from "~web/providers/client/theme";
 import { captureSentryError } from "~web/utils/trpc";
 import "~app/global.css";
@@ -125,13 +125,13 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 					>
 						<ThemeProvider>
 							<NavigationProvider>
-								<QueryDevToolsProvider>
+								<DevToolsProvider>
 									<LayoutComponent>
 										<PageComponent />
 									</LayoutComponent>
 									<GlobalHooksComponent />
 									<Toaster />
-								</QueryDevToolsProvider>
+								</DevToolsProvider>
 							</NavigationProvider>
 						</ThemeProvider>
 					</Provider>
