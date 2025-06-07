@@ -32,7 +32,7 @@ export const ReceiptPreview: React.FC<InnerProps> = ({ receipt }) => {
 	const title = (
 		<Link
 			className="flex flex-col items-start"
-			to="/receipts/$id/"
+			to="/receipts/$id"
 			params={{ id: receipt.id }}
 		>
 			<View className="flex flex-row items-center gap-2">

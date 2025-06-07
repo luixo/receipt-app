@@ -11,7 +11,7 @@ import { SignButtonGroup } from "~app/components/app/sign-button-group";
 import { SkeletonUser } from "~app/components/app/user";
 import { DateInput, SkeletonDateInput } from "~app/components/date-input";
 import { QueryErrorMessage } from "~app/components/error-message";
-import { BackLink, PageHeader } from "~app/components/page-header";
+import { PageHeader } from "~app/components/page-header";
 import {
 	RemoveButton,
 	RemoveButtonSkeleton,
@@ -37,7 +37,7 @@ import {
 import { Button } from "~components/button";
 import { ReceiptIcon } from "~components/icons";
 import { Input } from "~components/input";
-import { Link } from "~components/link";
+import { BackLink, ButtonLink } from "~components/link";
 import { SaveButton } from "~components/save-button";
 import { Spinner } from "~components/spinner";
 import type { DebtsId, ReceiptsId, UsersId } from "~db/models";
@@ -274,8 +274,7 @@ type LinkProps = {
 };
 
 const DebtReceiptLink: React.FC<LinkProps> = ({ receiptId }) => (
-	<Button
-		as={Link<"/receipts/$id">}
+	<ButtonLink
 		to="/receipts/$id"
 		params={{ id: receiptId }}
 		variant="bordered"
@@ -283,7 +282,7 @@ const DebtReceiptLink: React.FC<LinkProps> = ({ receiptId }) => (
 		isIconOnly
 	>
 		<ReceiptIcon size={24} />
-	</Button>
+	</ButtonLink>
 );
 
 type RemoveButtonProps = {
@@ -306,8 +305,8 @@ const DebtRemoveButton: React.FC<RemoveButtonProps> = ({
 			onSuccess: () =>
 				navigate({
 					to: "/debts/user/$id",
-					replace: true,
 					params: { id: debt.userId },
+					replace: true,
 				}),
 		}),
 	);

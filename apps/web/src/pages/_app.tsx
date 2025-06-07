@@ -26,6 +26,7 @@ import { useHydratedMark } from "~web/hooks/use-hydrated-mark";
 import { useStoreLocalSettings } from "~web/hooks/use-local-settings";
 import { useQueryClientHelper } from "~web/hooks/use-query-client-helper";
 import { useRemovePreloadedCss } from "~web/hooks/use-remove-preloaded-css";
+import { NavigationProvider } from "~web/providers/client/navigation";
 import { QueryDevToolsProvider } from "~web/providers/client/query-devtools";
 import { ThemeProvider } from "~web/providers/client/theme";
 import { captureSentryError, loadLinksParams } from "~web/utils/trpc";
@@ -122,13 +123,15 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 						useQueryClientKey={usePretendUserClientKey}
 					>
 						<ThemeProvider>
-							<QueryDevToolsProvider>
-								<LayoutComponent>
-									<PageComponent />
-								</LayoutComponent>
-								<GlobalHooksComponent />
-								<Toaster />
-							</QueryDevToolsProvider>
+							<NavigationProvider>
+								<QueryDevToolsProvider>
+									<LayoutComponent>
+										<PageComponent />
+									</LayoutComponent>
+									<GlobalHooksComponent />
+									<Toaster />
+								</QueryDevToolsProvider>
+							</NavigationProvider>
 						</ThemeProvider>
 					</Provider>
 				</NuqsAdapter>

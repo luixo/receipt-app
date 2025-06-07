@@ -34,7 +34,7 @@ export const AddReceipt: React.FC<Props> = ({ selfAccountId }) => {
 		useTrpcMutationOptions(receiptsAddOptions, {
 			context: { selfAccountId },
 			onSuccess: ({ id }) =>
-				navigate({ to: "/receipts/$id", replace: true, params: { id } }),
+				navigate({ to: "/receipts/$id", params: { id }, replace: true }),
 		}),
 	);
 

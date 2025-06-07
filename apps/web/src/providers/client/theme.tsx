@@ -5,8 +5,6 @@ import {
 	useLastColorMode,
 	useSelectedColorMode,
 } from "~app/hooks/use-color-modes";
-import { useHref, useNavigate } from "~app/hooks/use-navigation";
-import { HeroUIProvider } from "~components/utils";
 
 export const ThemeProvider: React.FC<React.PropsWithChildren<object>> = ({
 	children,
@@ -30,18 +28,5 @@ export const ThemeProvider: React.FC<React.PropsWithChildren<object>> = ({
 		html.classList.add(selectedMode);
 		html.classList.remove(selectedMode === "dark" ? "light" : "dark");
 	}, [selectedMode]);
-	const navigate = useNavigate();
-	const href = useHref();
-	const localNavigate = React.useCallback<
-		NonNullable<React.ComponentProps<typeof HeroUIProvider>["navigate"]>
-	>((nextHref, options) => navigate({ to: nextHref, ...options }), [navigate]);
-	return (
-		<HeroUIProvider
-			navigate={localNavigate}
-			useHref={href}
-			validationBehavior="native"
-		>
-			{children}
-		</HeroUIProvider>
-	);
+	return <>{children}</>;
 };

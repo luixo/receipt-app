@@ -7,7 +7,7 @@ import {
 } from "~app/components/app/debts-group";
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { QueryErrorMessage } from "~app/components/error-message";
-import { BackLink, PageHeader } from "~app/components/page-header";
+import { PageHeader } from "~app/components/page-header";
 import { ShowResolvedDebtsOption } from "~app/features/settings/show-resolved-debts-option";
 import { User } from "~app/features/user/user";
 import { EvenDebtsDivider } from "~app/features/user-debts/even-debts-divider";
@@ -27,7 +27,7 @@ import {
 	PencilIcon,
 	TransferIcon,
 } from "~components/icons";
-import { Link } from "~components/link";
+import { BackLink, ButtonLink } from "~components/link";
 import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
 import { Text } from "~components/text";
 import type { UsersId } from "~db/models";
@@ -56,28 +56,26 @@ const Header: React.FC<HeaderProps> = ({ title, userId, onEditClick }) => (
 						<PencilIcon size={32} />
 					</Button>
 				) : null}
-				<Button
+				<ButtonLink
 					to="/debts/transfer"
 					search={{ from: userId }}
-					as={Link<"/debts/transfer">}
 					color="primary"
 					title="Transfer debts"
 					variant="bordered"
 					isIconOnly
 				>
 					<TransferIcon size={24} />
-				</Button>
-				<Button
+				</ButtonLink>
+				<ButtonLink
 					color="primary"
 					to="/debts/add"
 					search={{ userId }}
-					as={Link<"/debts/add">}
 					title="Add debt"
 					variant="bordered"
 					isIconOnly
 				>
 					<AddIcon size={24} />
-				</Button>
+				</ButtonLink>
 			</View>
 		}
 	>
@@ -141,16 +139,15 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 					debts={showResolvedDebts ? aggregatedDebts : nonZeroAggregatedDebts}
 				/>
 				{nonZeroAggregatedDebts.length > 1 ? (
-					<Button
+					<ButtonLink
 						color="primary"
-						to="/debts/user/$id/exchange/"
+						to="/debts/user/$id/exchange"
 						params={{ id: userId }}
-						as={Link<"/debts/user/$id/exchange/">}
 						variant="bordered"
 						isIconOnly
 					>
 						<ExchangeIcon />
-					</Button>
+					</ButtonLink>
 				) : null}
 				{aggregatedDebts.length !== nonZeroAggregatedDebts.length ||
 				dividers.length !== 0 ? (

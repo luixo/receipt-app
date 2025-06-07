@@ -5,9 +5,8 @@ import { z } from "zod";
 import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
 import type { SearchParamState } from "~app/hooks/use-navigation";
-import { Button } from "~components/button";
 import { AddIcon, ReceiptIcon } from "~components/icons";
-import { Link } from "~components/link";
+import { ButtonLink } from "~components/link";
 
 import { FilterButton } from "./filter-button";
 import { Receipts } from "./receipts";
@@ -34,16 +33,15 @@ export const ReceiptsScreen: React.FC<{
 			aside={
 				<>
 					<FilterButton filtersState={filtersState} sortState={sortState} />
-					<Button
+					<ButtonLink
 						color="primary"
 						to="/receipts/add"
-						as={Link<"/receipts/add">}
 						title="Add receipt"
 						variant="bordered"
 						isIconOnly
 					>
 						<AddIcon size={24} />
-					</Button>
+					</ButtonLink>
 				</>
 			}
 		>

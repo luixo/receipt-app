@@ -9,9 +9,8 @@ import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import type { SearchParamState } from "~app/hooks/use-navigation";
 import type { TRPCQueryErrorResult, TRPCQueryInput } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import { Button } from "~components/button";
 import { AddIcon } from "~components/icons";
-import { Link } from "~components/link";
+import { ButtonLink } from "~components/link";
 import { Overlay } from "~components/overlay";
 import { Pagination } from "~components/pagination";
 import { Spinner } from "~components/spinner";
@@ -70,17 +69,16 @@ export const Users: React.FC<Props> = ({ limit, offsetState }) => {
 		return (
 			<EmptyCard title="You have no users">
 				Press
-				<Button
+				<ButtonLink
 					color="primary"
 					to="/users/add"
-					as={Link<"/users/add">}
 					title="Add user"
 					variant="bordered"
 					className="mx-2"
 					isIconOnly
 				>
 					<AddIcon size={24} />
-				</Button>
+				</ButtonLink>
 				to add a user
 			</EmptyCard>
 		);

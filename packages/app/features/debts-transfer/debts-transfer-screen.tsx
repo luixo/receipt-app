@@ -11,7 +11,7 @@ import {
 	GroupedQueryErrorMessage,
 	QueryErrorMessage,
 } from "~app/components/error-message";
-import { BackLink, PageHeader } from "~app/components/page-header";
+import { PageHeader } from "~app/components/page-header";
 import { ShowResolvedDebtsOption } from "~app/features/settings/show-resolved-debts-option";
 import { useAggregatedDebts } from "~app/hooks/use-aggregated-debts";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
@@ -31,6 +31,7 @@ import {
 } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { BackArrow, TrashBin } from "~components/icons";
+import { BackLink } from "~components/link";
 import { Spinner } from "~components/spinner";
 import { Text } from "~components/text";
 import { cn } from "~components/utils";

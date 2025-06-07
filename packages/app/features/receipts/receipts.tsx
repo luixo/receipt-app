@@ -10,11 +10,10 @@ import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import type { SearchParamState } from "~app/hooks/use-navigation";
 import type { TRPCQueryErrorResult, TRPCQueryInput } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import { Button } from "~components/button";
 import { Divider } from "~components/divider";
 import { Header } from "~components/header";
 import { AddIcon } from "~components/icons";
-import { Link } from "~components/link";
+import { ButtonLink } from "~components/link";
 import { Overlay } from "~components/overlay";
 import { Pagination } from "~components/pagination";
 import { Spinner } from "~components/spinner";
@@ -121,9 +120,8 @@ export const Receipts: React.FC<Props> = ({
 		return (
 			<EmptyCard title="You have no receipts">
 				Press
-				<Button
+				<ButtonLink
 					color="primary"
-					as={Link<"/receipts/add">}
 					to="/receipts/add"
 					title="Add receipt"
 					variant="bordered"
@@ -131,7 +129,7 @@ export const Receipts: React.FC<Props> = ({
 					isIconOnly
 				>
 					<AddIcon size={24} />
-				</Button>
+				</ButtonLink>
 				to add a receipt
 			</EmptyCard>
 		);

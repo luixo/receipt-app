@@ -5,9 +5,8 @@ import { EmailVerificationCard } from "~app/features/email-verification/email-ve
 import { useDebtsIntentions } from "~app/hooks/use-debts-intentions";
 import { trpc } from "~app/trpc";
 import { Badge } from "~components/badge";
-import { Button } from "~components/button";
 import { AddIcon, DebtIcon, InboxIcon, TransferIcon } from "~components/icons";
-import { Link } from "~components/link";
+import { ButtonLink } from "~components/link";
 
 import { Debts } from "./debts";
 
@@ -16,10 +15,9 @@ export const DebtsScreen: React.FC = () => {
 	const inboundDebtsAmount = useDebtsIntentions();
 	const intentionsButton = React.useMemo(
 		() => (
-			<Button
+			<ButtonLink
 				key="intentions"
 				to="/debts/intentions"
-				as={Link<"/debts/intentions">}
 				color="primary"
 				title="Debts sync intentions"
 				variant="bordered"
@@ -27,7 +25,7 @@ export const DebtsScreen: React.FC = () => {
 				isIconOnly
 			>
 				<InboxIcon size={24} />
-			</Button>
+			</ButtonLink>
 		),
 		[inboundDebtsAmount],
 	);
@@ -37,26 +35,24 @@ export const DebtsScreen: React.FC = () => {
 				startContent={<DebtIcon size={36} />}
 				aside={
 					<>
-						<Button
+						<ButtonLink
 							to="/debts/transfer"
-							as={Link<"/debts/transfer">}
 							color="primary"
 							title="Transfer debts"
 							variant="bordered"
 							isIconOnly
 						>
 							<TransferIcon size={24} />
-						</Button>
-						<Button
+						</ButtonLink>
+						<ButtonLink
 							to="/debts/add"
-							as={Link<"/debts/add">}
 							color="primary"
 							title="Add debt"
 							variant="bordered"
 							isIconOnly
 						>
 							<AddIcon size={24} />
-						</Button>
+						</ButtonLink>
 						{inboundDebtsAmount === 0 ? (
 							settingsQuery.data?.manualAcceptDebts ? (
 								intentionsButton

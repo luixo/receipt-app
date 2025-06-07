@@ -1,8 +1,9 @@
 import type React from "react";
 
-import { BackLink, PageHeader } from "~app/components/page-header";
+import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
 import { trpc } from "~app/trpc";
+import { BackLink } from "~components/link";
 import { Spinner } from "~components/spinner";
 
 import { AddReceipt } from "./add-receipt";

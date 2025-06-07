@@ -10,7 +10,7 @@ import {
 } from "~app/components/app/sign-button-group";
 import { UsersSuggest } from "~app/components/app/users-suggest";
 import { DateInput } from "~app/components/date-input";
-import { BackLink, PageHeader } from "~app/components/page-header";
+import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
 import type { SearchParamState } from "~app/hooks/use-navigation";
 import { useNavigate } from "~app/hooks/use-navigation";
@@ -25,6 +25,7 @@ import {
 	userIdSchema,
 } from "~app/utils/validation";
 import { Button } from "~components/button";
+import { BackLink } from "~components/link";
 import { options as debtsAddOptions } from "~mutations/debts/add";
 import { getToday } from "~utils/date";
 
@@ -47,7 +48,7 @@ export const AddDebtScreen: React.FC<{
 	const addMutation = trpc.debts.add.useMutation(
 		useTrpcMutationOptions(debtsAddOptions, {
 			onSuccess: ({ id }) =>
-				navigate({ to: "/debts/$id", replace: true, params: { id } }),
+				navigate({ to: "/debts/$id", params: { id }, replace: true }),
 		}),
 	);
 

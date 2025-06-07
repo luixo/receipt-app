@@ -15,7 +15,7 @@ type NavigationOptions = {
 declare module "@react-types/shared" {
 	// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 	interface RouterConfig {
-		routerOptions: NavigationOptions & UrlParams<string>;
+		routerOptions: NavigationOptions & UrlParams<ExistingPath>;
 	}
 }
 
@@ -27,7 +27,34 @@ type Params<Path> = Record<FilteredParts<Path>, string>;
 
 type IsNonEmptyObject<T> = keyof T extends never ? false : true;
 
-export type UrlParams<P extends string> = {
+export type ExistingPath =
+	| "/"
+	| "/account"
+	| "/admin"
+	| "/settings"
+	| "/confirm-email"
+	| "/login"
+	| "/register"
+	| "/reset-password"
+	| "/void-account"
+	| "/debts/$id"
+	| "/debts/add"
+	| "/debts/intentions"
+	| "/debts/transfer"
+	| "/receipts/$id"
+	| "/receipts/add"
+	| "/users/$id"
+	| "/users/add"
+	| "/users/connections"
+	| "/debts"
+	| "/receipts"
+	| "/users"
+	| "/debts/user/$id"
+	| "/debts/user/$id/exchange"
+	| "/debts/user/$id/exchange/all"
+	| "/debts/user/$id/exchange/specific";
+
+export type UrlParams<P extends ExistingPath> = {
 	to: P;
 	hash?: string;
 	search?: Record<string, string>;
@@ -35,7 +62,7 @@ export type UrlParams<P extends string> = {
 	? { params: Params<P> }
 	: { params?: never });
 
-export const buildUrl = <P extends string>({
+export const buildUrl = <P extends ExistingPath>({
 	to,
 	hash,
 	search,
@@ -54,7 +81,7 @@ export const buildUrl = <P extends string>({
 
 export const useNavigate = () => {
 	const router = useRouter();
-	return <P extends string>({
+	return <P extends ExistingPath>({
 		replace,
 		to,
 		hash,

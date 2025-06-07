@@ -6,7 +6,7 @@ import { CurrenciesPicker } from "~app/components/app/currencies-picker";
 import { DebtsGroup } from "~app/components/app/debts-group";
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { QueryErrorMessage } from "~app/components/error-message";
-import { BackLink, PageHeader } from "~app/components/page-header";
+import { PageHeader } from "~app/components/page-header";
 import { useAggregatedDebts } from "~app/hooks/use-aggregated-debts";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useNavigate } from "~app/hooks/use-navigation";
@@ -15,6 +15,7 @@ import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import { Divider } from "~components/divider";
+import { BackLink } from "~components/link";
 import { Spinner } from "~components/spinner";
 import type { UsersId } from "~db/models";
 
@@ -70,8 +71,8 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 		() =>
 			navigate({
 				to: "/debts/user/$id",
-				replace: true,
 				params: { id: userId },
+				replace: true,
 			}),
 		[navigate, userId],
 	);

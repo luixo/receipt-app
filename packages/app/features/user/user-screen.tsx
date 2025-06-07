@@ -1,9 +1,10 @@
 import React from "react";
 
 import { LoadableUser } from "~app/components/app/loadable-user";
-import { BackLink, PageHeader } from "~app/components/page-header";
+import { PageHeader } from "~app/components/page-header";
 import { useNavigate } from "~app/hooks/use-navigation";
 import { trpc } from "~app/trpc";
+import { BackLink } from "~components/link";
 import type { UsersId } from "~db/models";
 
 import { User } from "./user";

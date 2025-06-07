@@ -6,7 +6,7 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { trpc } from "~app/trpc";
 import { Button } from "~components/button";
 import { Header } from "~components/header";
-import { Link } from "~components/link";
+import { ButtonLink } from "~components/link";
 import { options as authVoidAccountOptions } from "~mutations/auth/void-account";
 
 type Props = {
@@ -28,9 +28,9 @@ export const VoidAccount: React.FC<Props> = ({ token }) => {
 				<Header size="sm" className="text-success">
 					Account removed succesfully
 				</Header>
-				<Button color="primary" as={Link<"/login">} to="/login">
+				<ButtonLink color="primary" to="/login">
 					To login page
-				</Button>
+				</ButtonLink>
 			</>
 		);
 	}
@@ -49,15 +49,14 @@ export const VoidAccount: React.FC<Props> = ({ token }) => {
 				>
 					Yes
 				</Button>
-				<Button
+				<ButtonLink
 					className="flex-1"
-					as={isPending ? undefined : Link<"/login">}
-					to={isPending ? undefined : "/login"}
+					to="/login"
 					color="primary"
 					isDisabled={isPending}
 				>
 					No
-				</Button>
+				</ButtonLink>
 			</View>
 			{voidMutation.status === "error" ? (
 				<ErrorMessage message={voidMutation.error.message} />

@@ -10,7 +10,7 @@ import { SkeletonUser } from "~app/components/app/user";
 import { type TRPCQueryOutput, trpc } from "~app/trpc";
 import { Card, CardBody } from "~components/card";
 import { SyncIcon, UnsyncIcon } from "~components/icons";
-import { Link } from "~components/link";
+import { CardLink } from "~components/link";
 import { tv } from "~components/utils";
 import type { UsersId } from "~db/models";
 
@@ -50,11 +50,7 @@ export const UserDebtsPreview: React.FC<Props> = ({
 	const userQuery = trpc.users.get.useQuery({ id: userId });
 	const accountSettingsQuery = trpc.accountSettings.get.useQuery();
 	return (
-		<Card
-			as={Link<"/debts/user/$id">}
-			to="/debts/user/$id"
-			params={{ id: userId }}
-		>
+		<CardLink to="/debts/user/$id" params={{ id: userId }}>
 			<CardBody className={card({ transparent })}>
 				<LoadableUser id={userId} />
 				<View className="flex flex-row items-center justify-center gap-2">
@@ -72,6 +68,6 @@ export const UserDebtsPreview: React.FC<Props> = ({
 					<DebtsGroup className="shrink-0" debts={debts} />
 				</View>
 			</CardBody>
-		</Card>
+		</CardLink>
 	);
 };

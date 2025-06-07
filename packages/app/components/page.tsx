@@ -1,17 +1,17 @@
 import type React from "react";
 import { View } from "react-native";
 
-import type { UrlParams } from "~app/hooks/use-navigation";
+import type { ExistingPath, UrlParams } from "~app/hooks/use-navigation";
 import { buildUrl, usePathname } from "~app/hooks/use-navigation";
 import { Badge } from "~components/badge";
 import { Link } from "~components/link";
 import { Text } from "~components/text";
 import { tv } from "~components/utils";
 
-export type MenuElement = {
+export type MenuElement<P extends ExistingPath> = {
 	Icon: React.FC<{ size: number }>;
 	text: string;
-	urlParams: UrlParams<string>;
+	urlParams: UrlParams<P>;
 	useBadgeAmount?: () => number;
 	useShow?: () => boolean;
 	ItemWrapper?: React.FC<React.PropsWithChildren>;
@@ -30,14 +30,15 @@ const link = tv({
 	},
 });
 
-const MenuItemComponent: React.FC<MenuElement & { selected: boolean }> = ({
+// eslint-disable-next-line react/function-component-definition
+function MenuItemComponent<P extends ExistingPath>({
 	Icon,
 	urlParams,
 	text,
 	useBadgeAmount = useZero,
 	useShow = useTrue,
 	selected,
-}) => {
+}: MenuElement<P> & { selected: boolean }) {
 	const amount = useBadgeAmount();
 	const show = useShow();
 	if (!show) {
@@ -59,14 +60,15 @@ const MenuItemComponent: React.FC<MenuElement & { selected: boolean }> = ({
 			</Text>
 		</Link>
 	);
-};
+}
 
-type Props = {
+type Props<P extends ExistingPath> = {
 	children?: React.ReactNode;
-	elements: MenuElement[];
+	elements: MenuElement<P>[];
 };
 
-export const Page: React.FC<Props> = ({ children, elements }) => {
+// eslint-disable-next-line react/function-component-definition
+export function Page<P extends ExistingPath>({ children, elements }: Props<P>) {
 	const pathname = usePathname() ?? "";
 	const PageWrapper = elements.find(
 		(element) => buildUrl(element.urlParams) === pathname,
@@ -100,4 +102,4 @@ export const Page: React.FC<Props> = ({ children, elements }) => {
 			<View className="h-[72px]" />
 		</View>
 	);
-};
+}

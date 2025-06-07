@@ -5,7 +5,7 @@ import { LoadableUser } from "~app/components/app/loadable-user";
 import { SkeletonUser } from "~app/components/app/user";
 import { SkeletonDateInput } from "~app/components/date-input";
 import { QueryErrorMessage } from "~app/components/error-message";
-import { BackLink, PageHeader } from "~app/components/page-header";
+import { PageHeader } from "~app/components/page-header";
 import {
 	actionsHooksContext,
 	receiptContext,
@@ -22,6 +22,7 @@ import { useBooleanState } from "~app/hooks/use-boolean-state";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { ReceiptIcon } from "~components/icons";
+import { BackLink } from "~components/link";
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
 import type { ReceiptsId } from "~db/models";

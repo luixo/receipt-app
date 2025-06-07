@@ -3,10 +3,11 @@ import { View } from "react-native";
 
 import { EmptyCard } from "~app/components/empty-card";
 import { QueryErrorMessage } from "~app/components/error-message";
-import { BackLink, PageHeader } from "~app/components/page-header";
+import { PageHeader } from "~app/components/page-header";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
 import { Header } from "~components/header";
+import { BackLink } from "~components/link";
 import { Spinner } from "~components/spinner";
 
 import { InboundConnectionIntention } from "./inbound-connection-intention";

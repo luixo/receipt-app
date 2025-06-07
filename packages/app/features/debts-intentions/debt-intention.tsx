@@ -5,10 +5,9 @@ import { useFormat } from "~app/hooks/use-format";
 import { useLocale } from "~app/hooks/use-locale";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { formatCurrency } from "~app/utils/currency";
-import { Button } from "~components/button";
 import { Card, CardBody } from "~components/card";
 import { ArrowIcon, ReceiptIcon, SyncIcon } from "~components/icons";
-import { Link } from "~components/link";
+import { ButtonLink } from "~components/link";
 import { Text } from "~components/text";
 
 type Intentions = TRPCQueryOutput<"debtIntentions.getAll">;
@@ -60,8 +59,7 @@ export const DebtIntention: React.FC<Props> = ({ intention, children }) => {
 				)}
 				<View className="flex-row items-center gap-2">
 					{intention.receiptId ? (
-						<Button
-							as={Link<"/receipts/$id">}
+						<ButtonLink
 							to="/receipts/$id"
 							params={{ id: intention.receiptId }}
 							variant="bordered"
@@ -70,7 +68,7 @@ export const DebtIntention: React.FC<Props> = ({ intention, children }) => {
 							size="sm"
 						>
 							<ReceiptIcon size={12} />
-						</Button>
+						</ButtonLink>
 					) : null}
 					<Text>{intention.note}</Text>
 				</View>

@@ -12,9 +12,8 @@ import { useAggregatedAllDebts } from "~app/hooks/use-aggregated-all-debts";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { trpc } from "~app/trpc";
-import { Button } from "~components/button";
 import { AddIcon } from "~components/icons";
-import { Link } from "~components/link";
+import { ButtonLink } from "~components/link";
 
 import {
 	UserDebtsPreview,
@@ -35,9 +34,8 @@ const DebtsInner: React.FC<InnerProps> = ({ query }) => {
 				<View className="items-center gap-4">
 					<View className="flex-row">
 						Press
-						<Button
+						<ButtonLink
 							to="/debts/add"
-							as={Link<"/debts/add">}
 							color="primary"
 							title="Add debt"
 							variant="bordered"
@@ -45,7 +43,7 @@ const DebtsInner: React.FC<InnerProps> = ({ query }) => {
 							className="mx-2"
 						>
 							<AddIcon size={24} />
-						</Button>
+						</ButtonLink>
 						to add a debt
 					</View>
 					{sums.length !== nonZeroSums.length ? (

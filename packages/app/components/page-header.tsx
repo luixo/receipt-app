@@ -4,8 +4,6 @@ import { View } from "react-native";
 import Head from "next/head";
 
 import { H1 } from "~components/header";
-import { BackArrow } from "~components/icons";
-import { Link } from "~components/link";
 import { Text } from "~components/text";
 
 // add React.memo when https://github.com/vercel/next.js/issues/59655 is resolved
@@ -14,17 +12,6 @@ const PageTitle: React.FC<{ children?: string }> = ({ children }) => (
 		<title>{["RA", children].filter(Boolean).join(" - ")}</title>
 	</Head>
 );
-
-// eslint-disable-next-line react/function-component-definition
-export function BackLink<P extends string>(
-	props: React.ComponentProps<typeof Link<P>>,
-) {
-	return (
-		<Link<P> data-testid="back-link" color="foreground" {...props}>
-			<BackArrow size={36} />
-		</Link>
-	);
-}
 
 type Props = {
 	aside?: React.ReactNode;

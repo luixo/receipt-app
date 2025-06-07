@@ -5,9 +5,8 @@ import { EmailVerificationCard } from "~app/features/email-verification/email-ve
 import { useConnectionIntentions } from "~app/hooks/use-connection-intentions";
 import type { SearchParamState } from "~app/hooks/use-navigation";
 import { Badge } from "~components/badge";
-import { Button } from "~components/button";
 import { AddIcon, LinkIcon, UsersIcon } from "~components/icons";
-import { Link } from "~components/link";
+import { ButtonLink } from "~components/link";
 
 import { Users } from "./users";
 
@@ -20,17 +19,16 @@ export const UsersScreen: React.FC<{
 	const inboundConnectionsAmount = useConnectionIntentions();
 	const connectionsButton = React.useMemo(
 		() => (
-			<Button
+			<ButtonLink
 				key="connections"
 				to="/users/connections"
-				as={Link<"/users/connections">}
 				color="primary"
 				title="Connection intentions"
 				variant="bordered"
 				isIconOnly
 			>
 				<LinkIcon size={24} />
-			</Button>
+			</ButtonLink>
 		),
 		[],
 	);
@@ -40,16 +38,15 @@ export const UsersScreen: React.FC<{
 				startContent={<UsersIcon size={36} />}
 				aside={
 					<>
-						<Button
+						<ButtonLink
 							to="/users/add"
-							as={Link<"/users/add">}
 							color="primary"
 							title="Add user"
 							variant="bordered"
 							isIconOnly
 						>
 							<AddIcon size={24} />
-						</Button>
+						</ButtonLink>
 						{inboundConnectionsAmount === 0 ? (
 							connectionsButton
 						) : (

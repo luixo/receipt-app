@@ -1,9 +1,8 @@
 import type React from "react";
 
 import type { TRPCQueryOutput } from "~app/trpc";
-import { Button } from "~components/button";
 import { DebtIcon } from "~components/icons";
-import { Link } from "~components/link";
+import { ButtonLink } from "~components/link";
 
 type Receipt = TRPCQueryOutput<"receipts.get">;
 
@@ -19,18 +18,21 @@ export const ReceiptGuestControlButton: React.FC<Props> = ({ receipt }) => {
 		return null;
 	}
 
-	return (
-		<Button
-			to={receipt.debt.hasMine ? "/debts/$id" : "/debts/intentions"}
-			hash={receipt.debt.hasMine ? receipt.debt.id : undefined}
+	const commonProps = {
+		children: <DebtIcon size={24} />,
+		title: "Incoming debt",
+		variant: "bordered",
+		color: "primary",
+		isIconOnly: true,
+	} as const;
+	return receipt.debt.hasMine ? (
+		<ButtonLink
+			to="/debts/$id"
+			hash={receipt.debt.id}
 			params={{ id: receipt.debt.id }}
-			as={Link<"/debts/$id" | "/debts/intentions">}
-			title="Incoming debt"
-			variant="bordered"
-			color="primary"
-			isIconOnly
-		>
-			<DebtIcon size={24} />
-		</Button>
+			{...commonProps}
+		/>
+	) : (
+		<ButtonLink to="/debts/intentions" {...commonProps} />
 	);
 };
