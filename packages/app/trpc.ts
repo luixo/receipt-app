@@ -8,7 +8,7 @@ import type {
 } from "@tanstack/react-query";
 import type { TRPCClientErrorLike } from "@trpc/react-query";
 import { createTRPCReact } from "@trpc/react-query";
-import type { DecoratedMutation } from "@trpc/react-query/dist/createTRPCReact";
+import type { DecoratedMutation } from "@trpc/react-query/createTRPCReact";
 import type {
 	UseTRPCInfiniteQueryResult,
 	UseTRPCMutationResult,

@@ -26,6 +26,10 @@ const nextConfig = {
 	eslint: {
 		ignoreDuringBuilds: true,
 	},
+	// We're checking for errors on typescript step and getting rid of Next.js soon anyway
+	typescript: {
+		ignoreBuildErrors: true,
+	},
 	transpilePackages: [
 		"react-native",
 		"react-native-web",
