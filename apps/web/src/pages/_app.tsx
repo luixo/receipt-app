@@ -7,6 +7,7 @@ import Head from "next/head";
 import { useQueryState } from "nuqs";
 import { NuqsAdapter } from "nuqs/adapters/next/pages";
 import "raf/polyfill";
+import { z } from "zod";
 
 import { ProtectedPage } from "~app/components/protected-page";
 import { PublicPage } from "~app/components/public-page";
@@ -29,7 +30,7 @@ import { useRemovePreloadedCss } from "~web/hooks/use-remove-preloaded-css";
 import { NavigationProvider } from "~web/providers/client/navigation";
 import { QueryDevToolsProvider } from "~web/providers/client/query-devtools";
 import { ThemeProvider } from "~web/providers/client/theme";
-import { captureSentryError, loadLinksParams } from "~web/utils/trpc";
+import { captureSentryError } from "~web/utils/trpc";
 import "~app/global.css";
 
 applyRemaps();
@@ -75,7 +76,7 @@ type PageProps = Omit<
 	React.ComponentProps<typeof Provider>,
 	"storeContext" | "persister" | "linksContext" | "useQueryClientKey"
 > & {
-	linksParams: Awaited<ReturnType<typeof loadLinksParams>>;
+	linksParams: z.infer<typeof rootSearchParamsSchema>;
 	nowTimestamp: number;
 	initialValues: StoreValues;
 };
@@ -140,10 +141,19 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 	);
 };
 
+export const rootSearchParamsSchema = z
+	.object({
+		proxyPort: z.coerce.number().catch(0),
+		controllerId: z.string().uuid().catch(""),
+		debug: z.coerce.boolean().catch(false),
+	})
+	.partial();
+
 MyApp.getInitialProps = async ({ ctx, router }) => {
 	const cookies = getCookies(ctx);
+	const validatedParams = rootSearchParamsSchema.safeParse(router.query);
 	const pageProps: PageProps = {
-		linksParams: loadLinksParams(router.query),
+		linksParams: validatedParams.success ? validatedParams.data : {},
 		initialValues: getStoreValuesFromInitialValues(cookies),
 		nowTimestamp: Date.now(),
 	};

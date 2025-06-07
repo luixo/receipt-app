@@ -5,8 +5,9 @@ import type { AppRouter } from "~app/trpc";
 import { AUTH_COOKIE } from "~app/utils/auth";
 import { getLinks } from "~app/utils/trpc";
 import type { NetContext } from "~web/handlers/context";
+import { rootSearchParamsSchema } from "~web/pages/_app";
 import { getCookie } from "~web/utils/cookies";
-import { captureSentryError, loadLinksParams } from "~web/utils/trpc";
+import { captureSentryError } from "~web/utils/trpc";
 
 export const getSsrHost = (endpoint: string) => {
 	const url = new URL("http://localhost");
@@ -31,10 +32,13 @@ const pickAuthCookie = (req: Parameters<typeof getTrpcClient>[0]) => {
 	return "";
 };
 
-export const getTrpcClient = (req: NetContext["req"]) =>
-	createTRPCClient<AppRouter>({
+export const getTrpcClient = (req: NetContext["req"]) => {
+	const validatedParams = rootSearchParamsSchema.safeParse(
+		new URL(req.url ?? "").searchParams,
+	);
+	return createTRPCClient<AppRouter>({
 		links: getLinks({
-			searchParams: loadLinksParams(new URL(req.url ?? "").searchParams),
+			searchParams: validatedParams.success ? validatedParams.data : {},
 			url: getSsrHost(DEFAULT_TRPC_ENDPOINT),
 			headers: {
 				cookie: pickAuthCookie(req),
@@ -43,3 +47,4 @@ export const getTrpcClient = (req: NetContext["req"]) =>
 			captureError: captureSentryError,
 		}),
 	});
+};

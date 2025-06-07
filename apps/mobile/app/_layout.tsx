@@ -19,7 +19,7 @@ const ClientProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 	const baseLinksContext = React.useContext(LinksContext);
 	const linksContext = React.useMemo<LinksContextType>(
 		() => ({
-			searchParams: { debug: null, proxyPort: null, controllerId: null },
+			searchParams: {},
 			url: `${baseUrl}${baseLinksContext.url}`,
 			useBatch: true,
 			source: "native",

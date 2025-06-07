@@ -49,9 +49,9 @@ export type Headers = Partial<Record<string, string>>;
 
 export type GetLinksOptions = {
 	searchParams: {
-		debug: boolean | null;
-		proxyPort: number | null;
-		controllerId: string | null;
+		debug?: boolean;
+		proxyPort?: number;
+		controllerId?: string;
 	};
 	url: string;
 	useBatch?: boolean;
