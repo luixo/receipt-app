@@ -124,7 +124,7 @@ export const verifyCurrencyCode = <T>(
 			await expectTRPCError(
 				() => runProcedure(context, "foo"),
 				"BAD_REQUEST",
-				`Zod error\n\nAt "${prefix}currencyCode": Currency FOO does not exist in currency list`,
+				`Zod error\n\nAt "${prefix}currencyCode": Currency does not exist in currency list`,
 			);
 		});
 	});
@@ -141,7 +141,7 @@ export const verifyTimestamp = <T>(
 			await expectTRPCError(
 				() => runProcedure(context, new Date("not a date")),
 				"BAD_REQUEST",
-				`Zod error\n\nAt "${prefix}timestamp": Invalid date`,
+				`Zod error\n\nAt "${prefix}timestamp": Invalid input: expected date, received Date`,
 			);
 		});
 	});
@@ -161,7 +161,7 @@ export const verifyReceiptId = <T>(
 			await expectTRPCError(
 				() => runProcedure(context, "not-a-uuid"),
 				"BAD_REQUEST",
-				`Zod error\n\nAt "${prefix}receiptId": Invalid uuid`,
+				`Zod error\n\nAt "${prefix}receiptId": Invalid UUID`,
 			);
 		});
 	});
@@ -178,7 +178,7 @@ export const verifyUserId = <T>(
 			await expectTRPCError(
 				() => runProcedure(context, "not-a-valid-uuid"),
 				"BAD_REQUEST",
-				`Zod error\n\nAt "${prefix}userId": Invalid uuid`,
+				`Zod error\n\nAt "${prefix}userId": Invalid UUID`,
 			);
 		});
 	});

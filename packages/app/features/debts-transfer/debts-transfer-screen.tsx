@@ -3,7 +3,7 @@ import { View } from "react-native";
 
 import { skipToken } from "@tanstack/react-query";
 import { entries, groupBy, isNonNullish, pullObject, values } from "remeda";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
 import { UsersSuggest } from "~app/components/app/users-suggest";

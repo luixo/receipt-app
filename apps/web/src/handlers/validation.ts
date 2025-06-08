@@ -1,50 +1,41 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
-import { MAX_LIMIT, MAX_OFFSET, flavored } from "~app/utils/validation";
+import {
+	MAX_LIMIT,
+	MAX_OFFSET,
+	accountIdSchema,
+	flavored,
+	userIdSchema,
+} from "~app/utils/validation";
 import type {
-	AccountsId,
 	DebtsId,
 	ReceiptItemsId,
 	ReceiptsId,
 	SessionsSessionId,
-	UsersId,
 } from "~db/models";
 import { CURRENCY_CODES } from "~utils/currency-data";
 
-export const offsetSchema = z.number().int().gte(0).max(MAX_OFFSET);
-export const limitSchema = z.number().int().gt(0).max(MAX_LIMIT);
+export const offsetSchema = z.int().gte(0).max(MAX_OFFSET);
+export const limitSchema = z.int().gt(0).max(MAX_LIMIT);
 
-export const assignableRoleSchema = z.union([
-	z.literal("viewer"),
-	z.literal("editor"),
-]);
+export const assignableRoleSchema = z.literal(["viewer", "editor"]);
 
 export const roleSchema = assignableRoleSchema.or(z.literal("owner"));
 
 export const currencyCodeSchema = z
 	.string()
-	.transform((code) => code.toUpperCase())
-	.refine(
-		(code) => CURRENCY_CODES.includes(code),
-		(code) => ({ message: `Currency ${code} does not exist in currency list` }),
-	);
+	.overwrite((code) => code.toUpperCase())
+	.refine((code) => CURRENCY_CODES.includes(code), {
+		error: `Currency does not exist in currency list`,
+	});
 
-export const userIdSchema = z.string().uuid().refine<UsersId>(flavored);
-export const accountIdSchema = z.string().uuid().refine<AccountsId>(flavored);
-export const receiptIdSchema = z.string().uuid().refine<ReceiptsId>(flavored);
-export const receiptItemIdSchema = z
-	.string()
-	.uuid()
-	.refine<ReceiptItemsId>(flavored);
-export const sessionIdSchema = z
-	.string()
-	.uuid()
-	.refine<SessionsSessionId>(flavored);
-export const debtIdSchema = z.string().uuid().refine<DebtsId>(flavored);
-export const resetPasswordTokenSchema = z.string().uuid();
-export const confirmEmailTokenSchema = z.string().uuid();
+export const receiptIdSchema = z.uuid().transform<ReceiptsId>(flavored);
+export const receiptItemIdSchema = z.uuid().transform<ReceiptItemsId>(flavored);
+export const sessionIdSchema = z.uuid().transform<SessionsSessionId>(flavored);
+export const debtIdSchema = z.uuid().transform<DebtsId>(flavored);
+export const resetPasswordTokenSchema = z.uuid();
+export const confirmEmailTokenSchema = z.uuid();
 export const emailSchema = z
-	.string()
 	.email({ message: "Invalid email address" })
 	.transform((email) => ({ lowercase: email.toLowerCase(), original: email }));
 
@@ -53,4 +44,4 @@ export const UUID_REGEX =
 
 export const MAX_INTENTIONS_AMOUNT = 3;
 
-export { flavored };
+export { userIdSchema, accountIdSchema };

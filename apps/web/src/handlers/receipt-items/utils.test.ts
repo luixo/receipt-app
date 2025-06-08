@@ -156,7 +156,7 @@ export const verifyReceiptItemId = <T>(
 			await expectTRPCError(
 				() => runProcedure(context, "not-a-valid-uuid"),
 				"BAD_REQUEST",
-				`Zod error\n\nAt "${prefix}id": Invalid uuid`,
+				`Zod error\n\nAt "${prefix}id": Invalid UUID`,
 			);
 		});
 	});

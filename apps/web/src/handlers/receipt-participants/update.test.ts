@@ -44,7 +44,7 @@ describe("receiptParticipants.update", () => {
 							update: { type: "role", role: "viewer" },
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "receiptId": Invalid uuid`,
+					`Zod error\n\nAt "receiptId": Invalid UUID`,
 				);
 			});
 		});
@@ -61,7 +61,7 @@ describe("receiptParticipants.update", () => {
 							update: { type: "role", role: "viewer" },
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "userId": Invalid uuid`,
+					`Zod error\n\nAt "userId": Invalid UUID`,
 				);
 			});
 		});

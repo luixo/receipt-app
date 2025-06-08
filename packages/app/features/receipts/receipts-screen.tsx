@@ -1,6 +1,6 @@
 import type React from "react";
 
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";

@@ -3,7 +3,7 @@ import { Queue } from "async-await-queue";
 import findFreePorts from "find-free-ports";
 import assert from "node:assert";
 import { v4 } from "uuid";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 const { router, procedure } = initTRPC.create();
 

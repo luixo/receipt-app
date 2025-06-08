@@ -48,7 +48,7 @@ describe("users.suggest", () => {
 							direction: "forward",
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "input": String must contain at most 255 character(s)`,
+					`Zod error\n\nAt "input": Too big: expected string to have <=255 characters`,
 				);
 			});
 		});
@@ -65,7 +65,7 @@ describe("users.suggest", () => {
 							direction: "forward",
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "limit": Number must be greater than 0`,
+					`Zod error\n\nAt "limit": Too small: expected number to be >0`,
 				);
 			});
 
@@ -80,7 +80,7 @@ describe("users.suggest", () => {
 							direction: "forward",
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "limit": Number must be less than or equal to 100`,
+					`Zod error\n\nAt "limit": Too big: expected number to be <=100`,
 				);
 			});
 
@@ -95,7 +95,7 @@ describe("users.suggest", () => {
 							direction: "forward",
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "limit": Expected integer, received float`,
+					`Zod error\n\nAt "limit": Invalid input: expected int, received number`,
 				);
 			});
 		});
@@ -113,7 +113,7 @@ describe("users.suggest", () => {
 							direction: "forward",
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "cursor": Number must be greater than or equal to 0`,
+					`Zod error\n\nAt "cursor": Too small: expected number to be >=0`,
 				);
 			});
 
@@ -129,7 +129,7 @@ describe("users.suggest", () => {
 							direction: "forward",
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "cursor": Number must be less than or equal to 10000`,
+					`Zod error\n\nAt "cursor": Too big: expected number to be <=10000`,
 				);
 			});
 
@@ -145,7 +145,7 @@ describe("users.suggest", () => {
 							direction: "forward",
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "cursor": Expected integer, received float`,
+					`Zod error\n\nAt "cursor": Invalid input: expected int, received number`,
 				);
 			});
 		});
@@ -163,7 +163,7 @@ describe("users.suggest", () => {
 							direction: "forward",
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "filterIds[0]": Invalid uuid`,
+					`Zod error\n\nAt "filterIds[0]": Invalid UUID`,
 				);
 			});
 		});
@@ -184,7 +184,7 @@ describe("users.suggest", () => {
 							direction: "forward",
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "options.receiptId": Invalid uuid`,
+					`Zod error\n\nAt "options.receiptId": Invalid UUID`,
 				);
 			});
 		});

@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { sql } from "kysely";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { MAX_SUGGEST_LENGTH } from "~app/utils/validation";
 import type { UsersId } from "~db/models";
@@ -40,7 +40,7 @@ export const procedure = authProcedure
 		z.strictObject({
 			items: z.array(userIdSchema),
 			hasMore: z.boolean(),
-			cursor: z.number(),
+			cursor: z.int(),
 		}),
 	)
 	.query(async ({ input, ctx }) => {

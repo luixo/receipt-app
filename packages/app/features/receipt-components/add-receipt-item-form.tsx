@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
 import { trpc } from "~app/trpc";

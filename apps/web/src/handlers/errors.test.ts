@@ -61,7 +61,7 @@ describe("errors formatting", () => {
 			// @ts-expect-error Type misuse for testing purposes
 			() => caller.users.add(12),
 			"BAD_REQUEST",
-			`Zod error\n\nAt "<root>": Expected object, received number`,
+			`Zod error\n\nAt "<root>": Invalid input: expected object, received number`,
 		);
 	});
 });

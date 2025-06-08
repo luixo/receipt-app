@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import {
 	getOwnReceipts,
@@ -13,7 +13,7 @@ export const procedure = authProcedure
 		z.strictObject({
 			cursor: offsetSchema,
 			limit: limitSchema,
-			orderBy: z.union([z.literal("date-asc"), z.literal("date-desc")]),
+			orderBy: z.literal(["date-asc", "date-desc"]),
 			filters: z
 				.strictObject({
 					ownedByMe: z.boolean().optional(),

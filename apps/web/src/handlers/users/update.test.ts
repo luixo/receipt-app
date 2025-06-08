@@ -43,7 +43,7 @@ describe("users.update", () => {
 							update: { type: "name", name: "a".repeat(MIN_USERNAME_LENGTH) },
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "id": Invalid uuid`,
+					`Zod error\n\nAt "id": Invalid UUID`,
 				);
 			});
 		});

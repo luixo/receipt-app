@@ -1,7 +1,7 @@
 import type * as React from "react";
 
 import { entries, fromEntries, mapValues } from "remeda";
-import type { z } from "zod";
+import type { z } from "zod/v4";
 
 import {
 	LAST_COLOR_MODE_STORE_NAME,

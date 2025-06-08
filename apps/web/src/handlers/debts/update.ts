@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { isNonNullish, keys, omitBy, unique } from "remeda";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { debtAmountSchema, debtNoteSchema } from "~app/utils/validation";
 import type { SimpleUpdateObject } from "~db/types";
@@ -26,10 +26,20 @@ const updateDebtSchema = z.strictObject({
 			receiptId: receiptIdSchema.optional(),
 		})
 		.partial()
-		.refine(
-			(obj) => keys(obj).length !== 0,
-			"Update object has to have at least one key to update",
-		),
+		.check((ctx) => {
+			if (ctx.issues.length !== 0) {
+				// Short-circuit on continuable errors
+				// It doesn't make sense to nag on object emptiness if some other error happened
+				return;
+			}
+			if (keys(ctx.value).length === 0) {
+				ctx.issues.push({
+					code: "custom",
+					message: "Update object has to have at least one key to update",
+					input: ctx.value,
+				});
+			}
+		}),
 });
 
 type DebtUpdateObject = SimpleUpdateObject<"debts">;

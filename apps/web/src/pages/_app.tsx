@@ -7,7 +7,7 @@ import Head from "next/head";
 import { useQueryState } from "nuqs";
 import { NuqsAdapter } from "nuqs/adapters/next/pages";
 import "raf/polyfill";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { ProtectedPage } from "~app/components/protected-page";
 import { PublicPage } from "~app/components/public-page";
@@ -144,7 +144,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 export const rootSearchParamsSchema = z
 	.object({
 		proxyPort: z.coerce.number().catch(0),
-		controllerId: z.string().uuid().catch(""),
+		controllerId: z.uuid().catch(""),
 		debug: z.coerce.boolean().catch(false),
 	})
 	.partial();

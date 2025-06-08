@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
 import { DebtControlButtons } from "~app/components/app/debt-control-buttons";

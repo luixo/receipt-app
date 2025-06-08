@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { PartButtons } from "~app/components/app/part-buttons";
 import { useBooleanState } from "~app/hooks/use-boolean-state";

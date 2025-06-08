@@ -38,7 +38,7 @@ describe("accountConnectionIntentions.remove", () => {
 							targetAccountId: "not a valid uuid",
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "targetAccountId": Invalid uuid`,
+					`Zod error\n\nAt "targetAccountId": Invalid UUID`,
 				);
 			});
 		});

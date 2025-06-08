@@ -1,6 +1,6 @@
 import React from "react";
 
-import type { z } from "zod";
+import type { z } from "zod/v4";
 
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
 import { useBooleanState } from "~app/hooks/use-boolean-state";

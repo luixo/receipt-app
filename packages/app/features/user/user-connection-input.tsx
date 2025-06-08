@@ -1,6 +1,6 @@
 import React from "react";
 
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";

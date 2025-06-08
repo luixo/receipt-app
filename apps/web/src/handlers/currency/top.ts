@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { MONTH } from "~utils/time";
 import {
@@ -25,7 +25,7 @@ export const procedure = authProcedure
 		z
 			.strictObject({
 				currencyCode: currencyCodeSchema,
-				count: z.number(),
+				count: z.int(),
 			})
 			.array(),
 	)

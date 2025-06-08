@@ -1,7 +1,7 @@
 import type React from "react";
 
 import { useQueryClient } from "@tanstack/react-query";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { PageHeader } from "~app/components/page-header";
 import { useBooleanState } from "~app/hooks/use-boolean-state";

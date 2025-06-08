@@ -48,7 +48,7 @@ describe("receiptItemConsumers.add", () => {
 							part: 1,
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "itemId": Invalid uuid`,
+					`Zod error\n\nAt "itemId": Invalid UUID`,
 				);
 			});
 		});
@@ -65,7 +65,7 @@ describe("receiptItemConsumers.add", () => {
 							part: 1,
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "userId": Invalid uuid`,
+					`Zod error\n\nAt "userId": Invalid UUID`,
 				);
 			});
 		});

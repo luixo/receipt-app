@@ -2,7 +2,7 @@ import type { Redis } from "@upstash/redis/nodejs";
 import Dataloader from "dataloader";
 import fetch from "isomorphic-fetch";
 import { entries } from "remeda";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import type { CurrencyCode } from "~app/utils/currency";
 import type { UnauthorizedContext } from "~web/handlers/context";
@@ -40,13 +40,18 @@ const fetchCDNRate =
 		const parsedJson = z
 			.object({
 				date: z.string().regex(/\d{4}-\d{2}-\d{2}/),
-				[fromCodeLower]: z
-					.record(keysSchema, z.number())
-					.refine(
-						(obj): obj is typeof obj extends Partial<infer R> ? R : never =>
-							keysSchema.options.every((key) => obj[key] != null),
-					),
 			})
+			.and(
+				z.record(
+					z.literal(fromCodeLower),
+					z
+						.record(keysSchema, z.float32())
+						.refine(
+							(obj): obj is typeof obj extends Partial<infer R> ? R : never =>
+								keysSchema.options.every((key) => obj[key] != null),
+						),
+				),
+			)
 			.safeParse(json);
 		if (!parsedJson.success) {
 			throw parsedJson.error;

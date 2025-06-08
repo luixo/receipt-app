@@ -43,7 +43,7 @@ describe("users.remove", () => {
 							id: "not-a-valid-uuid",
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "id": Invalid uuid`,
+					`Zod error\n\nAt "id": Invalid UUID`,
 				);
 			});
 		});

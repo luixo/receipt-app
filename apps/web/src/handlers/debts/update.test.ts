@@ -201,7 +201,7 @@ describe("debts.update", () => {
 							},
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "id": Invalid uuid`,
+					`Zod error\n\nAt "id": Invalid UUID`,
 				);
 			});
 		});

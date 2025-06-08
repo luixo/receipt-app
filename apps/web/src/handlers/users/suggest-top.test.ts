@@ -42,7 +42,7 @@ describe("users.suggestTop", () => {
 							limit: 0,
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "limit": Number must be greater than 0`,
+					`Zod error\n\nAt "limit": Too small: expected number to be >0`,
 				);
 			});
 
@@ -55,7 +55,7 @@ describe("users.suggestTop", () => {
 							limit: MAX_LIMIT + 1,
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "limit": Number must be less than or equal to 100`,
+					`Zod error\n\nAt "limit": Too big: expected number to be <=100`,
 				);
 			});
 
@@ -68,7 +68,7 @@ describe("users.suggestTop", () => {
 							limit: faker.number.float(),
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "limit": Expected integer, received float`,
+					`Zod error\n\nAt "limit": Invalid input: expected int, received number`,
 				);
 			});
 		});
@@ -84,7 +84,7 @@ describe("users.suggestTop", () => {
 							filterIds: [faker.string.alpha()],
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "filterIds[0]": Invalid uuid`,
+					`Zod error\n\nAt "filterIds[0]": Invalid UUID`,
 				);
 			});
 		});
@@ -103,7 +103,7 @@ describe("users.suggestTop", () => {
 							},
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "options.receiptId": Invalid uuid`,
+					`Zod error\n\nAt "options.receiptId": Invalid UUID`,
 				);
 			});
 		});

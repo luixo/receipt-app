@@ -1,7 +1,7 @@
 import React from "react";
 
 import { isNonNullish } from "remeda";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { CurrencyInput } from "~app/components/app/currency-input";
 import {
@@ -31,7 +31,7 @@ import { getToday } from "~utils/date";
 
 const formSchema = z.object({
 	amount: debtAmountSchema,
-	direction: z.union([z.literal("-"), z.literal("+")]),
+	direction: z.literal(["-", "+"]),
 	currencyCode: currencyCodeSchema,
 	userId: userIdSchema,
 	note: debtNoteSchema,

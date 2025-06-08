@@ -1,4 +1,4 @@
-import type { z } from "zod";
+import type { z } from "zod/v4";
 
 import type { Locale } from "~app/utils/locale";
 import type { currencySchema } from "~app/utils/validation";

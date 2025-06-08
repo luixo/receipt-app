@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { unique } from "remeda";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { partSchema } from "~app/utils/validation";
 import type { BatchLoadContextFn } from "~web/handlers/batch";

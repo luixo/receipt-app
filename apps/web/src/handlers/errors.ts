@@ -1,27 +1,23 @@
 import type { TRPCError } from "@trpc/server";
-import { ZodError, type z } from "zod";
-import { generateErrorMessage } from "zod-error";
+import type { z } from "zod/v4";
+import { ZodError } from "zod/v4";
 
-export const formatZodErrors = (error: z.ZodError) =>
-	generateErrorMessage(error.issues, {
-		prefix: `Zod error${error.issues.length <= 1 ? "" : "s"}\n\n`,
-		delimiter: {
-			error: "\n\n",
-			component: "\n",
-		},
-		message: {
-			enabled: true,
-			label: null,
-		},
-		path: {
-			enabled: true,
-			type: "objectNotation",
-			label: null,
-		},
-		transform: (params) =>
-			`At "${params.pathComponent || "<root>"}": ${params.messageComponent}`,
-		code: { enabled: false },
-	});
+const formatZodErrors = (error: z.ZodError) =>
+	`Zod error${error.issues.length <= 1 ? "" : "s"}\n\n${error.issues
+		.map((issue) => {
+			const path =
+				issue.path.length === 0
+					? "<root>"
+					: issue.path
+							.map<string>((key) =>
+								typeof key === "number" ? `[${key}]` : String(key),
+							)
+							.filter(Boolean)
+							.join(".")
+							.replaceAll(".[", "[");
+			return `At "${path}": ${issue.message}`;
+		})
+		.join("\n\n")}`;
 
 export const formatErrorMessage = (
 	error: TRPCError,

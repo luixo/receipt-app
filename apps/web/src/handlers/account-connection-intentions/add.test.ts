@@ -43,7 +43,7 @@ describe("accountConnectionIntentions.add", () => {
 							email: faker.internet.email(),
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "userId": Invalid uuid`,
+					`Zod error\n\nAt "userId": Invalid UUID`,
 				);
 			});
 		});

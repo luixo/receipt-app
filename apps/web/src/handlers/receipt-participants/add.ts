@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import type { BatchLoadContextFn } from "~web/handlers/batch";
 import { queueCallFactory } from "~web/handlers/batch";

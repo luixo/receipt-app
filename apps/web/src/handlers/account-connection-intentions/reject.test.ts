@@ -38,7 +38,7 @@ describe("accountConnectionIntentions.reject", () => {
 							sourceAccountId: "not a valid uuid",
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "sourceAccountId": Invalid uuid`,
+					`Zod error\n\nAt "sourceAccountId": Invalid UUID`,
 				);
 			});
 		});

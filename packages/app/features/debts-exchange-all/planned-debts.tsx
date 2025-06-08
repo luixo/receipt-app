@@ -3,7 +3,7 @@ import { View } from "react-native";
 
 import { useStore } from "@tanstack/react-form";
 import { entries, isNonNullish, unique } from "remeda";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { ErrorMessage } from "~app/components/error-message";
 import { useLocale } from "~app/hooks/use-locale";
@@ -27,21 +27,20 @@ import { round } from "~utils/math";
 
 const formSchema = z.record(
 	currencyCodeSchema,
-	z
-		.record(currencyCodeSchema, currencyRateSchema)
-		.superRefine((record, ctx) => {
-			const invalidAmounts = entries(record).filter(
-				([, sum]) => Number.isNaN(sum) || !Number.isFinite(sum) || sum === 0,
-			);
-			if (invalidAmounts.length !== 0) {
-				ctx.addIssue({
-					code: z.ZodIssueCode.custom,
-					message: `${invalidAmounts
-						.map(([currencyCode]) => currencyCode)
-						.join(", ")} debt(s) are invalid`,
-				});
-			}
-		}),
+	z.record(currencyCodeSchema, currencyRateSchema).check((ctx) => {
+		const invalidAmounts = entries(ctx.value).filter(
+			([, sum]) => Number.isNaN(sum) || !Number.isFinite(sum) || sum === 0,
+		);
+		if (invalidAmounts.length !== 0) {
+			ctx.issues.push({
+				code: "custom",
+				input: invalidAmounts,
+				message: `${invalidAmounts
+					.map(([currencyCode]) => currencyCode)
+					.join(", ")} debt(s) are invalid`,
+			});
+		}
+	}),
 );
 type Form = z.infer<typeof formSchema>;
 

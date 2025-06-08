@@ -39,7 +39,7 @@ describe("debts.getIdsByUser", () => {
 				await expectTRPCError(
 					() => caller.procedure({ userId: "not-a-valid-uuid" }),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "userId": Invalid uuid`,
+					`Zod error\n\nAt "userId": Invalid UUID`,
 				);
 			});
 		});

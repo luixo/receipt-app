@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { userNameSchema } from "~app/utils/validation";
 import type { UsersId } from "~db/models";

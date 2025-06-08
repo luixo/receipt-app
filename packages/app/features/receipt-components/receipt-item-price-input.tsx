@@ -1,7 +1,7 @@
 import type React from "react";
 import { View } from "react-native";
 
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useLocale } from "~app/hooks/use-locale";

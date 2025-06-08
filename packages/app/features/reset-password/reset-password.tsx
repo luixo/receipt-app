@@ -1,6 +1,6 @@
 import type React from "react";
 
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { QueryErrorMessage } from "~app/components/error-message";
 import { useNavigate } from "~app/hooks/use-navigation";

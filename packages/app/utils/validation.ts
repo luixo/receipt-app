@@ -1,8 +1,8 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 import { zfd } from "zod-form-data";
 
 import type { CurrencyCode } from "~app/utils/currency";
-import { getValidLocale } from "~app/utils/locale";
+import { VALID_LOCALES, getValidLocale } from "~app/utils/locale";
 import type { AccountsId, UsersId } from "~db/models";
 
 const getLengthMessage = (
@@ -24,7 +24,7 @@ const constrainLength = (
 		.min(min, { message: getMinimalLengthMessage(min, target) })
 		.max(max, { message: getMaximumLengthMessage(max, target) });
 
-export const flavored = <T extends string>(x: string): x is T => true;
+export const flavored = <X>(x: string) => x as X;
 
 export const MAX_LIMIT = 100;
 export const MAX_OFFSET = 10 ** 4;
@@ -76,9 +76,7 @@ export const debtNoteSchema = constrainLength(z.string(), {
 	target: "note",
 });
 
-export const emailSchema = z
-	.string()
-	.email({ message: "Invalid email address" });
+export const emailSchema = z.email({ message: "Invalid email address" });
 
 type NumberSchemaOptions = {
 	decimals: number;
@@ -97,7 +95,7 @@ const createNumberSchema = (
 	{ decimals, onlyPositive = true, max, nonZero = true }: NumberSchemaOptions,
 ) => {
 	let schema = z
-		.number()
+		.float32()
 		.multipleOf(Number((0.1 ** decimals).toFixed(decimals)), {
 			message: `${name} should have at maximum ${decimals} decimals`,
 		});
@@ -152,7 +150,7 @@ export const debtAmountSchema = createNumberSchema("Debt amount", {
 	},
 });
 
-export const currencyCodeSchema = z.string().refine<CurrencyCode>(flavored);
+export const currencyCodeSchema = z.string().transform<CurrencyCode>(flavored);
 
 export const currencySchema = z.object({
 	code: currencyCodeSchema,
@@ -164,8 +162,8 @@ export const currencyRateSchema = createNumberSchema("Currency rate", {
 	decimals: currencyRateSchemaDecimal,
 });
 
-export const userIdSchema = z.string().uuid().refine<UsersId>(flavored);
-export const accountIdSchema = z.string().uuid().refine<AccountsId>(flavored);
+export const userIdSchema = z.uuid().transform<UsersId>(flavored);
+export const accountIdSchema = z.uuid().transform<AccountsId>(flavored);
 
 export const fallback = <T>(getValue: () => T) => z.any().transform(getValue);
 
@@ -177,8 +175,9 @@ export const localeSchema = z.string().transform((value, ctx) => {
 		return validLocale;
 	}
 	ctx.addIssue({
-		code: z.ZodIssueCode.custom,
-		message: "Not a valid locale",
+		code: "invalid_value",
+		input: validLocale,
+		values: VALID_LOCALES,
 	});
 	return z.NEVER;
 });

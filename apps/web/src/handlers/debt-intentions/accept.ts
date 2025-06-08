@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import type { AccountsId } from "~db/models";
 import { queueCallFactory } from "~web/handlers/batch";

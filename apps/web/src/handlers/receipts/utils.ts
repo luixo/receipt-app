@@ -1,5 +1,5 @@
 import type { QueryCreator } from "kysely";
-import type { z } from "zod";
+import type { z } from "zod/v4";
 
 import type { AccountsId } from "~db/models";
 import type { Database, ReceiptsDatabase } from "~db/types";

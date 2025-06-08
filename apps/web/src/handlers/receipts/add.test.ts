@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { omit } from "remeda";
 import { describe, expect } from "vitest";
-import type { z } from "zod";
+import type { z } from "zod/v4";
 
 import { MIN_RECEIPT_ITEM_NAME_LENGTH } from "~app/utils/validation";
 import { createAuthContext } from "~tests/backend/utils/context";
@@ -77,7 +77,7 @@ describe("receipts.add", () => {
 							],
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "participants[1].userId": Invalid uuid`,
+					`Zod error\n\nAt "participants[1].userId": Invalid UUID`,
 				);
 			});
 		});

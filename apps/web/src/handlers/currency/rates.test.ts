@@ -30,7 +30,7 @@ describe("currency.rates", () => {
 			await expectTRPCError(
 				() => caller.procedure({ from: "foo", to: ["USD"] }),
 				"BAD_REQUEST",
-				`Zod error\n\nAt "from": Currency FOO does not exist in currency list`,
+				`Zod error\n\nAt "from": Currency does not exist in currency list`,
 			);
 		});
 
@@ -40,7 +40,7 @@ describe("currency.rates", () => {
 			await expectTRPCError(
 				() => caller.procedure({ from: "EUR", to: ["USD", "bar"] }),
 				"BAD_REQUEST",
-				`Zod error\n\nAt "to[1]": Currency BAR does not exist in currency list`,
+				`Zod error\n\nAt "to[1]": Currency does not exist in currency list`,
 			);
 		});
 
@@ -50,7 +50,7 @@ describe("currency.rates", () => {
 			await expectTRPCError(
 				() => caller.procedure({ from: "EUR", to: [] }),
 				"BAD_REQUEST",
-				`Zod error\n\nAt "to": Array must contain at least 1 element(s)`,
+				`Zod error\n\nAt "to": Too small: expected array to have >=1 items`,
 			);
 		});
 

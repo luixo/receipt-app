@@ -1,6 +1,6 @@
 import type React from "react";
 
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";

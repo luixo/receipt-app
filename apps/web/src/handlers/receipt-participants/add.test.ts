@@ -46,7 +46,7 @@ describe("receiptParticipants.add", () => {
 							role: "editor",
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "receiptId": Invalid uuid`,
+					`Zod error\n\nAt "receiptId": Invalid UUID`,
 				);
 			});
 		});
@@ -63,7 +63,7 @@ describe("receiptParticipants.add", () => {
 							role: "editor",
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "userId": Invalid uuid`,
+					`Zod error\n\nAt "userId": Invalid UUID`,
 				);
 			});
 		});
@@ -80,7 +80,7 @@ describe("receiptParticipants.add", () => {
 							role: "foo" as "editor",
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "role": Invalid input`,
+					`Zod error\n\nAt "role": Invalid option: expected one of "viewer"|"editor"`,
 				);
 			});
 		});

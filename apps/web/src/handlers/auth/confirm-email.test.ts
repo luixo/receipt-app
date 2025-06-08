@@ -23,7 +23,7 @@ describe("auth.confirmEmail", () => {
 				await expectTRPCError(
 					() => caller.procedure({ token: "invalid-uuid" }),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "token": Invalid uuid`,
+					`Zod error\n\nAt "token": Invalid UUID`,
 				);
 			});
 		});

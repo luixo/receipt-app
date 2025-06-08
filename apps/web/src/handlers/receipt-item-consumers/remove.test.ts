@@ -44,7 +44,7 @@ describe("receiptItemConsumers.remove", () => {
 							userId: faker.string.uuid(),
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "itemId": Invalid uuid`,
+					`Zod error\n\nAt "itemId": Invalid UUID`,
 				);
 			});
 		});
@@ -60,7 +60,7 @@ describe("receiptItemConsumers.remove", () => {
 							userId: "not-a-uuid",
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "userId": Invalid uuid`,
+					`Zod error\n\nAt "userId": Invalid UUID`,
 				);
 			});
 		});

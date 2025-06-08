@@ -4,6 +4,8 @@ export type Locale = string & {
 
 export const DEFAULT_LOCALE: Locale = "en-US";
 
+export const VALID_LOCALES = Intl.getCanonicalLocales();
+
 // TODO: this is needed to be refined
 // Real-life locale contains multiple sections (date & time, number formatting etc.)
 export const getValidLocale = (input: string): Locale | undefined => {

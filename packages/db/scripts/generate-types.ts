@@ -1,7 +1,11 @@
 import { recase } from "@kristiandupont/recase";
 import type { TableColumn } from "extract-pg-schema";
-import { generateIndexFile, processDatabase } from "kanel";
+import * as kanel from "kanel";
 import path from "node:path";
+
+const { generateIndexFile, processDatabase } = (
+	kanel as unknown as { default: typeof kanel }
+).default;
 
 const fileRecase = recase("pascal", "dash");
 const kebabToPascal = recase("dash", "pascal");
@@ -12,7 +16,8 @@ const run = async () => {
 		if (!process.env.DATABASE_URL) {
 			throw new Error("Expected to have process.env.DATABASE_URL variable!");
 		}
-		const outputPath = path.join(__dirname, "../src/models");
+		// eslint-disable-next-line n/no-unsupported-features/node-builtins
+		const outputPath = path.join(import.meta.dirname, "../src/models");
 		await processDatabase({
 			connection: process.env.DATABASE_URL,
 			outputPath,
@@ -55,7 +60,10 @@ const run = async () => {
 				comment: [`Identifier type for "${details.name}" table`],
 			}),
 			typeFilter: (pgType) => {
-				if (pgType.name.includes("kysely")) {
+				if (
+					pgType.name.includes("kysely") ||
+					pgType.name.includes("updatetimestampcolumn")
+				) {
 					return false;
 				}
 				return true;

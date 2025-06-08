@@ -48,7 +48,7 @@ describe("accountConnectionIntentions.accept", () => {
 							accountId: faker.string.uuid(),
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "userId": Invalid uuid`,
+					`Zod error\n\nAt "userId": Invalid UUID`,
 				);
 			});
 		});
@@ -64,7 +64,7 @@ describe("accountConnectionIntentions.accept", () => {
 							accountId: "not a valid uuid",
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "accountId": Invalid uuid`,
+					`Zod error\n\nAt "accountId": Invalid UUID`,
 				);
 			});
 		});

@@ -4,7 +4,7 @@ import { View } from "react-native";
 import type { Area, Point } from "react-easy-crop";
 import Cropper from "react-easy-crop";
 import { doNothing } from "remeda";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { UserAvatar } from "~app/components/app/user-avatar";
 import { ConfirmModal } from "~app/components/confirm-modal";
@@ -75,10 +75,10 @@ const getCroppedCanvas = async (imageSrc: string, pixelCrop: Area) => {
 const formSchema = z.strictObject({
 	avatar: z.string(),
 	croppedArea: z.strictObject({
-		x: z.number(),
-		y: z.number(),
-		width: z.number(),
-		height: z.number(),
+		x: z.int().nonnegative(),
+		y: z.int().nonnegative(),
+		width: z.int().positive(),
+		height: z.int().positive(),
 	}),
 });
 

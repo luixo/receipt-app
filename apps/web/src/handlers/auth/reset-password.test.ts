@@ -36,7 +36,7 @@ describe("auth.resetPassword", () => {
 							password: "a".repeat(MIN_PASSWORD_LENGTH),
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "token": Invalid uuid`,
+					`Zod error\n\nAt "token": Invalid UUID`,
 				);
 			});
 		});

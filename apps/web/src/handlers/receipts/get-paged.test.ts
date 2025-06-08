@@ -166,7 +166,7 @@ describe("receipts.getPaged", () => {
 				await expectTRPCError(
 					() => caller.procedure({ cursor: 0, limit: 0, orderBy: "date-desc" }),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "limit": Number must be greater than 0`,
+					`Zod error\n\nAt "limit": Too small: expected number to be >0`,
 				);
 			});
 
@@ -181,7 +181,7 @@ describe("receipts.getPaged", () => {
 							orderBy: "date-desc",
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "limit": Number must be less than or equal to 100`,
+					`Zod error\n\nAt "limit": Too big: expected number to be <=100`,
 				);
 			});
 
@@ -196,7 +196,7 @@ describe("receipts.getPaged", () => {
 							orderBy: "date-desc",
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "limit": Expected integer, received float`,
+					`Zod error\n\nAt "limit": Invalid input: expected int, received number`,
 				);
 			});
 		});
@@ -209,7 +209,7 @@ describe("receipts.getPaged", () => {
 					() =>
 						caller.procedure({ cursor: -1, limit: 1, orderBy: "date-desc" }),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "cursor": Number must be greater than or equal to 0`,
+					`Zod error\n\nAt "cursor": Too small: expected number to be >=0`,
 				);
 			});
 
@@ -224,7 +224,7 @@ describe("receipts.getPaged", () => {
 							orderBy: "date-desc",
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "cursor": Number must be less than or equal to 10000`,
+					`Zod error\n\nAt "cursor": Too big: expected number to be <=10000`,
 				);
 			});
 
@@ -239,7 +239,7 @@ describe("receipts.getPaged", () => {
 							orderBy: "date-desc",
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "cursor": Expected integer, received float`,
+					`Zod error\n\nAt "cursor": Invalid input: expected int, received number`,
 				);
 			});
 		});
@@ -256,7 +256,7 @@ describe("receipts.getPaged", () => {
 							orderBy: "invalid" as "date-desc",
 						}),
 					"BAD_REQUEST",
-					`Zod error\n\nAt "orderBy": Invalid input`,
+					`Zod error\n\nAt "orderBy": Invalid option: expected one of "date-asc"|"date-desc"`,
 				);
 			});
 		});

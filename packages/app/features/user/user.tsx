@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { QueryErrorMessage } from "~app/components/error-message";
 import { RemoveButton } from "~app/components/remove-button";
