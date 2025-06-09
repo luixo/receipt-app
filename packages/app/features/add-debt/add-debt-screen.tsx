@@ -42,7 +42,7 @@ type Form = z.infer<typeof formSchema>;
 
 export const AddDebtScreen: React.FC<{
 	userIdState: SearchParamState<"/debts/add", "userId">;
-}> = ({ userIdState: [userId] }) => {
+}> = ({ userIdState: [userId, setUserId] }) => {
 	const navigate = useNavigate();
 
 	const addMutation = trpc.debts.add.useMutation(
@@ -56,7 +56,7 @@ export const AddDebtScreen: React.FC<{
 		note: "",
 		direction: "+",
 		timestamp: getToday(),
-		userId: userId || undefined,
+		userId: undefined,
 	};
 
 	const form = useAppForm({
@@ -133,7 +133,17 @@ export const AddDebtScreen: React.FC<{
 							/>
 						)}
 					</form.AppField>
-					<form.AppField name="userId">
+					<form.AppField
+						name="userId"
+						listeners={{
+							onMount: ({ fieldApi }) => {
+								if (userId) {
+									fieldApi.setValue(userId);
+								}
+							},
+							onChange: ({ value }) => setUserId(value),
+						}}
+					>
 						{(field) => (
 							<UsersSuggest
 								selected={field.state.value}
@@ -141,6 +151,8 @@ export const AddDebtScreen: React.FC<{
 								onUserClick={(nextUserId) => {
 									if (nextUserId === field.state.value) {
 										form.resetField("userId");
+										// Unfortunately, resetting field doesn't emit a listener event
+										setUserId(undefined);
 									} else {
 										field.setValue(nextUserId);
 									}
