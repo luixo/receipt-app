@@ -44,7 +44,7 @@ export const getTrpcClient = (req: NetContext["req"]) => {
 			headers: {
 				cookie: pickAuthCookie(req),
 			},
-			source: "api-next",
+			source: "api",
 			captureError: captureSentryError,
 		}),
 	});

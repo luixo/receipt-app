@@ -58,14 +58,16 @@ export type GetLinksOptions = {
 	keepError?: boolean;
 	headers?: Headers;
 	captureError: (error: TRPCClientError<AppRouter>) => string;
-	source: // Next.js client-side rendering originated from 'pages' dir
-	| "csr-next"
-		// React Native environment (Expo)
+	source: // Client-side rendering
+	| "csr"
+		// Server-side rendering
+		| "ssr"
+		// React Native environment
 		| "native"
 		// Originated from artificial testing environment
 		| "test"
-		// Next.js api call from server-side code (probably, api handler call)
-		| "api-next"
+		// API call from server-side code
+		| "api"
 		// Default unset value in context
 		| "unset";
 };

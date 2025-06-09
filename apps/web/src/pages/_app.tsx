@@ -94,7 +94,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 			url: baseLinksContext.url,
 			// Don't batch requests when in tests - to evaluate pending / error states separately
 			useBatch: !props.linksParams.proxyPort,
-			source: "csr-next",
+			source: "csr",
 			captureError: captureSentryError,
 		}),
 		[baseLinksContext.url, props.linksParams],
