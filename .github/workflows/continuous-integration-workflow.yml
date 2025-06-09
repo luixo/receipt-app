@@ -187,6 +187,26 @@ jobs:
           minColorRange: 50
           maxColorRange: 100
 
+  check-generated-db-types:
+    name: Check generated DB types
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-env
+      - name: Run types generation
+        run: yarn db:generate-types
+        env:
+          DATABASE_URL: ${{ secrets.PRODUCTION_DATABASE_URL }}
+      - name: Check for uncommitted changes
+        run: |
+          if [[ -n "$(git status --porcelain ./packages/db/src/models)" ]]; then
+            echo "Database types are out of sync. Run 'yarn db:generate-types' and commit the results."
+            git --no-pager diff ./packages/db/src/models
+            exit 1
+          else
+            echo "Database types are up-to-date."
+          fi
+
   analyze:
     name: Analyze bundle
     runs-on: ubuntu-latest
