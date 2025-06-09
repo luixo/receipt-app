@@ -49,6 +49,12 @@ const formSchema = z
 	);
 type Form = z.infer<typeof formSchema>;
 
+/* eslint-disable @typescript-eslint/no-unnecessary-template-expression */
+// Typescript is not as good with flavored types inside template literals
+const transformCurrencyCode = (currencyCode: CurrencyCode): `${CurrencyCode}` =>
+	currencyCode as `${CurrencyCode}`;
+/* eslint-enable @typescript-eslint/no-unnecessary-template-expression */
+
 type FormProps = {
 	aggregatedDebts: { sum: number; currencyCode: CurrencyCode }[];
 	shouldShowResolvedDebtsButton: boolean;
@@ -138,7 +144,7 @@ const DebtsListForm: React.FC<FormProps> = ({
 	const setAllMax = React.useCallback(() => {
 		allCurrenciesWithSums.forEach(({ currencyCode, sum }) => {
 			if (sum !== null) {
-				form.setFieldValue(currencyCode, sum);
+				form.setFieldValue(transformCurrencyCode(currencyCode), sum);
 			}
 		});
 	}, [allCurrenciesWithSums, form]);
@@ -153,7 +159,7 @@ const DebtsListForm: React.FC<FormProps> = ({
 	const onCurrencyChange = React.useCallback(
 		(currencyCode: CurrencyCode) => {
 			setExtraCurrencyCodes((codes) => [...codes, currencyCode]);
-			form.setFieldValue(currencyCode, 0);
+			form.setFieldValue(transformCurrencyCode(currencyCode), 0);
 			closeCurrencyModal();
 		},
 		[closeCurrencyModal, form],
@@ -164,7 +170,7 @@ const DebtsListForm: React.FC<FormProps> = ({
 	);
 	const removeExtraCurrencyCode = React.useCallback(
 		(currencyCode: CurrencyCode) => {
-			form.deleteField(currencyCode);
+			form.deleteField(transformCurrencyCode(currencyCode));
 			setExtraCurrencyCodes((codes) =>
 				codes.filter((code) => code !== currencyCode),
 			);
@@ -197,7 +203,10 @@ const DebtsListForm: React.FC<FormProps> = ({
 									</Button>
 								</View>
 								{allCurrenciesWithSums.map(({ currencyCode, sum }) => (
-									<form.AppField key={currencyCode} name={currencyCode}>
+									<form.AppField
+										key={currencyCode}
+										name={transformCurrencyCode(currencyCode)}
+									>
 										{(field) => {
 											const currencySymbol = getCurrencySymbol(
 												locale,

@@ -6791,7 +6791,7 @@ __metadata:
     "@ra/utils": "workspace:*"
     "@react-types/shared": "npm:^3.18.1"
     "@tanstack/query-async-storage-persister": "npm:^5.51.1"
-    "@tanstack/react-form": "npm:^1.1.2"
+    "@tanstack/react-form": "npm:^1.12.2"
     "@tanstack/react-query-persist-client": "npm:^5.51.1"
     "@trpc/client": "npm:^11.0.0-rc.461"
     "@trpc/react-query": "npm:^11.0.0-rc.461"
@@ -6822,7 +6822,7 @@ __metadata:
     "@expo/html-elements": "npm:^0.5.1"
     "@heroui/react": "npm:^2.7.5"
     "@ra/utils": "workspace:*"
-    "@tanstack/react-form": "npm:^1.1.2"
+    "@tanstack/react-form": "npm:^1.12.2"
     date-fns: "npm:^3.3.1"
     framer-motion: "npm:^11.11.11"
     react-day-picker: "npm:^9.7.0"
@@ -8880,33 +8880,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@remix-run/node@npm:^2.15.3":
-  version: 2.16.2
-  resolution: "@remix-run/node@npm:2.16.2"
-  dependencies:
-    "@remix-run/server-runtime": "npm:2.16.2"
-    "@remix-run/web-fetch": "npm:^4.4.2"
-    "@web3-storage/multipart-parser": "npm:^1.0.0"
-    cookie-signature: "npm:^1.1.0"
-    source-map-support: "npm:^0.5.21"
-    stream-slice: "npm:^0.1.2"
-    undici: "npm:^6.11.1"
-  peerDependencies:
-    typescript: ^5.1.0
-  peerDependenciesMeta:
-    typescript:
-      optional: true
-  checksum: 10/1144234529103c5b3b337b6c1ba7940d3289ae2ed49b3eb36c66db2f7aabee6d368fff37827b475ed107eb21bb9e2db35d813ef21502002c09cf7bf78d6aa84b
-  languageName: node
-  linkType: hard
-
-"@remix-run/router@npm:1.23.0":
-  version: 1.23.0
-  resolution: "@remix-run/router@npm:1.23.0"
-  checksum: 10/0a9f02c26c150d8210b05927c43d2f57ee8b7f812c81abb76df1721c7367ef692e54f4044981e756ce13d0619fb3c6a9b1514524d69aea9b32bfaf565299a8c7
-  languageName: node
-  linkType: hard
-
 "@remix-run/router@npm:1.7.2":
   version: 1.7.2
   resolution: "@remix-run/router@npm:1.7.2"
@@ -8928,26 +8901,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@remix-run/server-runtime@npm:2.16.2":
-  version: 2.16.2
-  resolution: "@remix-run/server-runtime@npm:2.16.2"
-  dependencies:
-    "@remix-run/router": "npm:1.23.0"
-    "@types/cookie": "npm:^0.6.0"
-    "@web3-storage/multipart-parser": "npm:^1.0.0"
-    cookie: "npm:^0.6.0"
-    set-cookie-parser: "npm:^2.4.8"
-    source-map: "npm:^0.7.3"
-    turbo-stream: "npm:2.4.0"
-  peerDependencies:
-    typescript: ^5.1.0
-  peerDependenciesMeta:
-    typescript:
-      optional: true
-  checksum: 10/47e871934516a04b138b8e46878bbadb024dea2c9045d62d7aed25f3e780715d8c811ffc568070d878a165acc419012244b1a356817ee5cbf943a7bde969277b
-  languageName: node
-  linkType: hard
-
 "@remix-run/web-blob@npm:^3.1.0":
   version: 3.1.0
   resolution: "@remix-run/web-blob@npm:3.1.0"
@@ -8958,7 +8911,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@remix-run/web-fetch@npm:^4.3.6, @remix-run/web-fetch@npm:^4.4.2":
+"@remix-run/web-fetch@npm:^4.3.6":
   version: 4.4.2
   resolution: "@remix-run/web-fetch@npm:4.4.2"
   dependencies:
@@ -10141,12 +10094,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/form-core@npm:1.1.2":
-  version: 1.1.2
-  resolution: "@tanstack/form-core@npm:1.1.2"
+"@tanstack/form-core@npm:1.12.2":
+  version: 1.12.2
+  resolution: "@tanstack/form-core@npm:1.12.2"
   dependencies:
-    "@tanstack/store": "npm:^0.7.0"
-  checksum: 10/292ee639a2b2288db4c91e99e90f6e7931e60b857a17eb773f02ee97e58aea4f1f513c5826dbf1e7da5913d2e820b09a3c78ae4fa5e3ef776d9e25de52bfdbdc
+    "@tanstack/store": "npm:^0.7.1"
+  checksum: 10/350e0d29cbf15d2c0fc040021e99df021e5619c66b3095aada798e26453802130002a077d1752a0a5afa247bbf6f1d7576148c0fb55176e9ec97744fef9b2e91
   languageName: node
   linkType: hard
 
@@ -10189,14 +10142,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/react-form@npm:^1.1.2":
-  version: 1.1.2
-  resolution: "@tanstack/react-form@npm:1.1.2"
+"@tanstack/react-form@npm:^1.12.2":
+  version: 1.12.2
+  resolution: "@tanstack/react-form@npm:1.12.2"
   dependencies:
-    "@remix-run/node": "npm:^2.15.3"
-    "@tanstack/form-core": "npm:1.1.2"
-    "@tanstack/react-store": "npm:^0.7.0"
-    decode-formdata: "npm:^0.8.0"
+    "@tanstack/form-core": "npm:1.12.2"
+    "@tanstack/react-store": "npm:^0.7.1"
+    decode-formdata: "npm:^0.9.0"
+    devalue: "npm:^5.1.1"
   peerDependencies:
     "@tanstack/react-start": ^1.112.0
     react: ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -10206,7 +10159,7 @@ __metadata:
       optional: true
     vinxi:
       optional: true
-  checksum: 10/46479592867398905722e14bfbb70d426c00483a28d8d413fd1ad9885097cceba58647e971b10e3afd42688ed3fc7007a89d7c3cfd78a39b3dfe7e2eda825fc0
+  checksum: 10/fbe0e3070173a4ccab7b14df5e10d270deff49322b4f64caa509acbc8e004d3633ac6200bbd9eed44ef5fb379c3603a05a2c8da67fc383670f792ef64e8e565f
   languageName: node
   linkType: hard
 
@@ -10256,16 +10209,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/react-store@npm:^0.7.0":
-  version: 0.7.0
-  resolution: "@tanstack/react-store@npm:0.7.0"
+"@tanstack/react-store@npm:^0.7.1":
+  version: 0.7.1
+  resolution: "@tanstack/react-store@npm:0.7.1"
   dependencies:
-    "@tanstack/store": "npm:0.7.0"
-    use-sync-external-store: "npm:^1.4.0"
+    "@tanstack/store": "npm:0.7.1"
+    use-sync-external-store: "npm:^1.5.0"
   peerDependencies:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
     react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10/006097295588c0b8ec00af99d7bbe254fd196cac459070ba222cf541379cd6ac0c8640db57fe7429594a249530e4f45dd201407c10fbf930e18087121ebf6cc1
+  checksum: 10/1069b7a68d726b151b8fd5848080cc13fe5eddc3086138eb5b7465ed5886079b8adf191f76ce24da9a2321f3de042bae51ce206d678dc49d877d9bbdc53430a1
   languageName: node
   linkType: hard
 
@@ -10281,10 +10234,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tanstack/store@npm:0.7.0, @tanstack/store@npm:^0.7.0":
-  version: 0.7.0
-  resolution: "@tanstack/store@npm:0.7.0"
-  checksum: 10/d7adffba7d69904d70df44adb132b77b52ed9ef1cdf5afc8034a123ee835680f1c9af16b62cba5a44ffd61072832c6276037028420b381aba9b929cab7cd8162
+"@tanstack/store@npm:0.7.1, @tanstack/store@npm:^0.7.1":
+  version: 0.7.1
+  resolution: "@tanstack/store@npm:0.7.1"
+  checksum: 10/c1fac469859e7cce85190684b90ee0ed95561ba5e12ecb9bfabc4066b56991751593246092f6f9cd4d8a2f568e6e0a8fcde1930c4ddad5d2049f23e1a326b345
   languageName: node
   linkType: hard
 
@@ -10530,13 +10483,6 @@ __metadata:
   version: 0.5.1
   resolution: "@types/cookie@npm:0.5.1"
   checksum: 10/4237fff264ff57dc58aef273d78dec267ff1e4f6977bf986e3f19e39848b01e26dad628261a92f8ad55f563c8256efaa6dad2293b2a6d47c0afc1aa31d93c6a2
-  languageName: node
-  linkType: hard
-
-"@types/cookie@npm:^0.6.0":
-  version: 0.6.0
-  resolution: "@types/cookie@npm:0.6.0"
-  checksum: 10/b883348d5bf88695fbc2c2276b1c49859267a55cae3cf11ea1dccc1b3be15b466e637ce3242109ba27d616c77c6aa4efe521e3d557110b4fdd9bc332a12445c2
   languageName: node
   linkType: hard
 
@@ -13964,13 +13910,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cookie@npm:^0.6.0":
-  version: 0.6.0
-  resolution: "cookie@npm:0.6.0"
-  checksum: 10/c1f8f2ea7d443b9331680598b0ae4e6af18a618c37606d1bbdc75bec8361cce09fe93e727059a673f2ba24467131a9fb5a4eec76bb1b149c1b3e1ccb268dc583
-  languageName: node
-  linkType: hard
-
 "cookies-next@npm:^2.1.2":
   version: 2.1.2
   resolution: "cookies-next@npm:2.1.2"
@@ -14420,10 +14359,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"decode-formdata@npm:^0.8.0":
-  version: 0.8.0
-  resolution: "decode-formdata@npm:0.8.0"
-  checksum: 10/291b3122628493e172b4cd102eb4ca80d6f0184f69a62005dafc73f6605e50b8a3e4297daf4275d8647700e7c252b25d92e6906d9507b84aed8df59a5d331f4d
+"decode-formdata@npm:^0.9.0":
+  version: 0.9.0
+  resolution: "decode-formdata@npm:0.9.0"
+  checksum: 10/90ca2ceeac23a6d7dd6cbd84922c0044f131d42caa244bdeedc57753f4ec7de96d5f309131093b7999ead34f36b6ed06d842e127b552e9bd9f82245b682cfe4f
   languageName: node
   linkType: hard
 
@@ -14681,6 +14620,13 @@ __metadata:
   version: 4.0.1
   resolution: "detect-newline@npm:4.0.1"
   checksum: 10/0409ecdfb93419591ccff24fccfe2ddddad29b66637d1ed898872125b25af05014fdeedc9306339577060f69f59fe6e9830cdd80948597f136dfbffefa60599c
+  languageName: node
+  linkType: hard
+
+"devalue@npm:^5.1.1":
+  version: 5.1.1
+  resolution: "devalue@npm:5.1.1"
+  checksum: 10/ff36fe61af61636419eb16692d2fe43d793cdfb17f868bb3560c5485e4c25bc38d472304e61efdec6e806a3c4b450c46247decf59968b4a05ddc7714ea64f885
   languageName: node
   linkType: hard
 
@@ -26565,13 +26511,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"turbo-stream@npm:2.4.0":
-  version: 2.4.0
-  resolution: "turbo-stream@npm:2.4.0"
-  checksum: 10/7079bbc82b58340f783144cd669cc7e598288523103a8d68bb8a4c6bb28c64eccb71d389b33aab07788d3a9030638b795709e15cb8486f722b1cdac59cb58afc
-  languageName: node
-  linkType: hard
-
 "turbo-windows-64@npm:1.10.9":
   version: 1.10.9
   resolution: "turbo-windows-64@npm:1.10.9"
@@ -26956,13 +26895,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici@npm:^6.11.1":
-  version: 6.21.2
-  resolution: "undici@npm:6.21.2"
-  checksum: 10/9cd9ead22599c23aa2a7dfa5b80fa1491bebb294bf1dc64c9c0f90ea4ec8e272a4db2810e2565d65b952249f105523d2929d7cc951f88cf0a1f082143bae8d75
-  languageName: node
-  linkType: hard
-
 "unicode-canonical-property-names-ecmascript@npm:^2.0.0":
   version: 2.0.0
   resolution: "unicode-canonical-property-names-ecmascript@npm:2.0.0"
@@ -27296,12 +27228,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"use-sync-external-store@npm:^1.2.0, use-sync-external-store@npm:^1.4.0":
+"use-sync-external-store@npm:^1.2.0":
   version: 1.4.0
   resolution: "use-sync-external-store@npm:1.4.0"
   peerDependencies:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
   checksum: 10/08bf581a8a2effaefc355e9d18ed025d436230f4cc973db2f593166df357cf63e47b9097b6e5089b594758bde322e1737754ad64905e030d70f8ff7ee671fd01
+  languageName: node
+  linkType: hard
+
+"use-sync-external-store@npm:^1.5.0":
+  version: 1.5.0
+  resolution: "use-sync-external-store@npm:1.5.0"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10/ddae7c4572511f7f641d6977bd0725340aa7dbeda8250418b54c1a57ec285083d96cf50d1a1acbd6cf729f7a87071b2302c6fbd29310432bf1b21a961a313279
   languageName: node
   linkType: hard
 

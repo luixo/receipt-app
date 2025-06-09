@@ -1,6 +1,6 @@
 import React from "react";
 
-import type { FormState, ReactFormExtendedApi } from "@tanstack/react-form";
+import type { FormState } from "@tanstack/react-form";
 import {
 	createFormHook,
 	createFormHookContexts,
