@@ -1,7 +1,7 @@
 import type React from "react";
 
-import { Link as LinkRaw } from "@heroui/link";
-import type { Card, RightJoinProps } from "@heroui/react";
+import { Card, Link as LinkRaw } from "@heroui/react";
+import type { RightJoinProps } from "@heroui/react";
 import type { RouterOptions } from "@react-types/shared";
 import { keys, omit, pick } from "remeda";
 
