@@ -1,6 +1,9 @@
 import { AddUserScreen } from "~app/features/add-user/add-user-screen";
-import type { AppPage } from "~utils/next";
+import { createFileRoute } from "~web/utils/router";
 
-const Screen: AppPage = () => <AddUserScreen />;
+const Route = createFileRoute("/_protected/users/add")({
+	component: AddUserScreen,
+	head: () => ({ meta: [{ title: "RA - Add user" }] }),
+});
 
-export default Screen;
+export default Route.Screen;

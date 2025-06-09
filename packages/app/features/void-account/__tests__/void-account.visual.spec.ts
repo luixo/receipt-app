@@ -2,10 +2,15 @@ import { TRPCError } from "@trpc/server";
 
 import { test } from "./utils";
 
-test("Open with token", async ({ api, page, expectScreenshotWithSchemes }) => {
+test("Open with token", async ({
+	api,
+	page,
+	expectScreenshotWithSchemes,
+	faker,
+}) => {
 	api.mockUtils.noAuthPage();
 
-	await page.goto("/void-account?token=foo");
+	await page.goto(`/void-account?token=${faker.string.uuid()}`);
 	await expectScreenshotWithSchemes("token.png");
 });
 
@@ -16,6 +21,7 @@ test(`"auth.voidAccount" mutation`, async ({
 	expectScreenshotWithSchemes,
 	awaitCacheKey,
 	clearToasts,
+	faker,
 }) => {
 	api.mockUtils.noAuthPage();
 	api.mockFirst("auth.voidAccount", () => {
@@ -25,7 +31,7 @@ test(`"auth.voidAccount" mutation`, async ({
 		});
 	});
 
-	await page.goto("/void-account?token=foo");
+	await page.goto(`/void-account?token=${faker.string.uuid()}`);
 	await voidButton.click();
 	await awaitCacheKey("auth.voidAccount", { errored: 1 });
 	await clearToasts();

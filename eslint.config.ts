@@ -487,6 +487,13 @@ export default ts.config(
 		},
 	},
 	{
+		files: ["apps/web/src/pages/**"],
+		rules: {
+			// We use routes in function components that are defined before the component
+			"@typescript-eslint/no-use-before-define": "off",
+		},
+	},
+	{
 		// see https://eslint.org/docs/latest/use/configure/configuration-files#globally-ignoring-files-with-ignores
 		ignores: [
 			".history/",

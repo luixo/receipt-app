@@ -1,6 +1,9 @@
 import { DebtsScreen } from "~app/features/debts/debts-screen";
-import type { AppPage } from "~utils/next";
+import { createFileRoute } from "~web/utils/router";
 
-const Screen: AppPage = () => <DebtsScreen />;
+const Route = createFileRoute("/_protected/debts")({
+	component: DebtsScreen,
+	head: () => ({ meta: [{ title: "RA - Debts" }] }),
+});
 
-export default Screen;
+export default Route.Screen;

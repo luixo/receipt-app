@@ -4,8 +4,6 @@ import { getCookies } from "cookies-next";
 import type { AppType } from "next/dist/shared/lib/utils";
 import { Inter } from "next/font/google";
 import Head from "next/head";
-import { useQueryState } from "nuqs";
-import { NuqsAdapter } from "nuqs/adapters/next/pages";
 import "raf/polyfill";
 import { z } from "zod/v4";
 
@@ -14,6 +12,7 @@ import { PublicPage } from "~app/components/public-page";
 import { Toaster } from "~app/components/toaster";
 import type { LinksContextType } from "~app/contexts/links-context";
 import { LinksContext } from "~app/contexts/links-context";
+import { useSearchParams } from "~app/hooks/use-navigation";
 import { usePretendUserClientKey } from "~app/hooks/use-pretend-user-client-key";
 import { Provider } from "~app/providers/index";
 import { applyRemaps } from "~app/utils/nativewind";
@@ -35,13 +34,23 @@ import "~app/global.css";
 
 applyRemaps();
 
+export const rootSearchParamsSchema = z
+	.object({
+		proxyPort: z.coerce.number().catch(0),
+		controllerId: z.uuid().catch(""),
+		debug: z.coerce.boolean().catch(false),
+	})
+	.partial();
+
 const useRemoveTestQueryParams = () => {
-	const [, setProxyPort] = useQueryState("proxyPort");
-	const [, setControllerId] = useQueryState("controllerId");
+	const [, setParams] = useSearchParams(rootSearchParamsSchema);
 	React.useEffect(() => {
-		void setProxyPort(null);
-		void setControllerId(null);
-	}, [setControllerId, setProxyPort]);
+		setParams((prevValues) => ({
+			...prevValues,
+			controllerId: undefined,
+			proxyPort: undefined,
+		}));
+	}, [setParams]);
 };
 
 const GlobalHooksComponent: React.FC = () => {
@@ -116,38 +125,28 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 				<link rel="icon" href="/favicon.svg" />
 			</Head>
 			<main className={`${font.variable} font-sans`}>
-				<NuqsAdapter>
-					<Provider
-						linksContext={linksContext}
-						storeContext={storeContext}
-						persister={persister}
-						useQueryClientKey={usePretendUserClientKey}
-					>
-						<ThemeProvider>
-							<NavigationProvider>
-								<DevToolsProvider>
-									<LayoutComponent>
-										<PageComponent />
-									</LayoutComponent>
-									<GlobalHooksComponent />
-									<Toaster />
-								</DevToolsProvider>
-							</NavigationProvider>
-						</ThemeProvider>
-					</Provider>
-				</NuqsAdapter>
+				<Provider
+					linksContext={linksContext}
+					storeContext={storeContext}
+					persister={persister}
+					useQueryClientKey={usePretendUserClientKey}
+				>
+					<ThemeProvider>
+						<NavigationProvider>
+							<DevToolsProvider>
+								<LayoutComponent>
+									<PageComponent />
+								</LayoutComponent>
+								<GlobalHooksComponent />
+								<Toaster />
+							</DevToolsProvider>
+						</NavigationProvider>
+					</ThemeProvider>
+				</Provider>
 			</main>
 		</>
 	);
 };
-
-export const rootSearchParamsSchema = z
-	.object({
-		proxyPort: z.coerce.number().catch(0),
-		controllerId: z.uuid().catch(""),
-		debug: z.coerce.boolean().catch(false),
-	})
-	.partial();
 
 MyApp.getInitialProps = async ({ ctx, router }) => {
 	const cookies = getCookies(ctx);

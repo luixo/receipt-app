@@ -1,10 +1,14 @@
 import { UserScreen } from "~app/features/user/user-screen";
-import { useParams } from "~app/hooks/use-navigation";
-import type { AppPage } from "~utils/next";
+import { createFileRoute } from "~web/utils/router";
 
-const Screen: AppPage = () => {
-	const { id } = useParams<{ id: string }>();
+const Wrapper = () => {
+	const { id } = Route.useParams();
 	return <UserScreen id={id} />;
 };
 
-export default Screen;
+const Route = createFileRoute("/_protected/users/$id")({
+	component: Wrapper,
+	head: () => ({ meta: [{ title: "RA - User" }] }),
+});
+
+export default Route.Screen;

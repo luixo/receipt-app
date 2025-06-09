@@ -1,6 +1,9 @@
 import { SettingsScreen } from "~app/features/settings/settings-screen";
-import type { AppPage } from "~utils/next";
+import { createFileRoute } from "~web/utils/router";
 
-const Screen: AppPage = () => <SettingsScreen />;
+const Route = createFileRoute("/_protected/settings")({
+	component: SettingsScreen,
+	head: () => ({ meta: [{ title: "RA - Settings" }] }),
+});
 
-export default Screen;
+export default Route.Screen;

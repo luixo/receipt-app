@@ -34,13 +34,13 @@ export const useCursorPaging = <
 			return;
 		}
 		if (offset > maxOffset) {
-			void setOffset(maxOffset, { history: "replace" });
+			void setOffset(maxOffset, { replace: true });
 		}
 	}, [setOffset, maxOffset, offset]);
 
 	const onChange = React.useCallback(
 		(page: number) => {
-			void setOffset((page - 1) * limit, { history: "push" });
+			void setOffset((page - 1) * limit);
 		},
 		[setOffset, limit],
 	);

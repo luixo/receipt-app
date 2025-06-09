@@ -90,7 +90,6 @@ export const ReceiptInner: React.FC<InnerProps> = ({ query }) => {
 						/>
 					) : null
 				}
-				title={`Receipt ${receipt.name}`}
 			>
 				{isEditing ? (
 					<ReceiptNameInput
@@ -151,7 +150,7 @@ export const Receipt: React.FC<Props> = ({ id, ...props }) => {
 		case "pending":
 			return (
 				<>
-					<Header title="Loading receipt...">
+					<Header>
 						<Text className="text-3xl">Loading receipt...</Text>
 					</Header>
 					<View className="items-start gap-2">

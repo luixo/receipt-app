@@ -1,6 +1,9 @@
 import { AdminScreen } from "~app/features/admin/admin-screen";
-import type { AppPage } from "~utils/next";
+import { createFileRoute } from "~web/utils/router";
 
-const Screen: AppPage = () => <AdminScreen />;
+const Route = createFileRoute("/_protected/admin")({
+	component: AdminScreen,
+	head: () => ({ meta: [{ title: "RA - Admin panel" }] }),
+});
 
-export default Screen;
+export default Route.Screen;

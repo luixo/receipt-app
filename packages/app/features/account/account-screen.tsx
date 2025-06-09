@@ -75,9 +75,7 @@ const AccountNameInput: React.FC<NameProps> = ({ accountQuery }) => {
 };
 
 const AccountHeader: React.FC<{ name: string }> = ({ name }) => (
-	<PageHeader startContent={<AccountIcon size={36} />} title="My account">
-		{name}
-	</PageHeader>
+	<PageHeader startContent={<AccountIcon size={36} />}>{name}</PageHeader>
 );
 
 type InnerProps = {
@@ -122,7 +120,7 @@ const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 	);
 };
 
-export const AccountScreenQuery: React.FC = () => {
+const AccountScreenQuery: React.FC = () => {
 	const query = trpc.account.get.useQuery();
 	switch (query.status) {
 		case "pending":

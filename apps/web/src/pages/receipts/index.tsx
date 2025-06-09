@@ -1,9 +1,4 @@
-import {
-	parseAsInteger,
-	parseAsJson,
-	parseAsStringLiteral,
-	useQueryState,
-} from "nuqs";
+import { z } from "zod/v4";
 
 import {
 	DEFAULT_LIMIT,
@@ -11,30 +6,53 @@ import {
 	filtersSchema,
 	orderBySchema,
 } from "~app/features/receipts/receipts-screen";
-import type { AppPage } from "~utils/next";
+import { getQueryStates } from "~app/hooks/use-navigation";
+import { limitSchema, offsetSchema } from "~web/handlers/validation";
+import {
+	searchParamsWithDefaults,
+	stripSearchParams,
+} from "~web/utils/navigation";
+import { createFileRoute } from "~web/utils/router";
 
-const Screen: AppPage = () => {
-	const sortState = useQueryState(
-		"sort",
-		parseAsStringLiteral(orderBySchema.options).withDefault("date-desc"),
-	);
-	const filtersState = useQueryState(
-		"filters",
-		parseAsJson(filtersSchema.parse).withDefault({}),
-	);
-	const limitState = useQueryState(
-		"limit",
-		parseAsInteger.withDefault(DEFAULT_LIMIT),
-	);
-	const offsetState = useQueryState("offset", parseAsInteger.withDefault(0));
+declare module "@react-types/shared" {
+	// eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+	interface RegisteredParams {
+		"/receipts": z.core.output<typeof schema>;
+	}
+}
+
+const [schema, defaults] = searchParamsWithDefaults(
+	z.object({
+		sort: orderBySchema,
+		filters: filtersSchema,
+		limit: limitSchema,
+		offset: offsetSchema,
+	}),
+	{
+		sort: "date-desc",
+		filters: {},
+		limit: DEFAULT_LIMIT,
+		offset: 0,
+	},
+);
+
+const Wrapper = () => {
+	const useQueryState = getQueryStates(Route);
 	return (
 		<ReceiptsScreen
-			sortState={sortState}
-			filtersState={filtersState}
-			limitState={limitState}
-			offsetState={offsetState}
+			sortState={useQueryState("sort")}
+			filtersState={useQueryState("filters")}
+			limitState={useQueryState("limit")}
+			offsetState={useQueryState("offset")}
 		/>
 	);
 };
 
-export default Screen;
+const Route = createFileRoute("/_protected/receipts")({
+	component: Wrapper,
+	head: () => ({ meta: [{ title: "RA - Receipts" }] }),
+	validateSearch: schema,
+	search: { middlewares: [stripSearchParams(defaults)] },
+});
+
+export default Route.Screen;

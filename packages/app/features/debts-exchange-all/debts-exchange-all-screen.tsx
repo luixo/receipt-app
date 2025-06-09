@@ -22,22 +22,6 @@ import type { UsersId } from "~db/models";
 import { CurrenciesGroup } from "./currencies-group";
 import { PlannedDebts } from "./planned-debts";
 
-type HeaderProps = {
-	userId: UsersId;
-	title: string;
-};
-
-const Header: React.FC<HeaderProps> = ({ userId, title }) => (
-	<PageHeader
-		startContent={
-			<BackLink to="/debts/user/$id/exchange" params={{ id: userId }} />
-		}
-		title={title}
-	>
-		<LoadableUser id={userId} />
-	</PageHeader>
-);
-
 type InnerProps = {
 	userId: UsersId;
 	query: TRPCQuerySuccessResult<"debts.getIdsByUser">;
@@ -51,7 +35,6 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 		aggregatedDebtsLoading,
 		aggregatedDebtsErrorQueries,
 	] = useAggregatedDebts(query);
-	const userQuery = trpc.users.get.useQuery({ id: userId });
 	const [selectedCurrencyCode, setSelectedCurrencyCode] = React.useState<
 		CurrencyCode | undefined
 	>();
@@ -83,12 +66,6 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 	}, [nonZeroAggregatedDebts, aggregatedDebtsLoading, back]);
 	return (
 		<>
-			<Header
-				userId={userId}
-				title={`${
-					userQuery.status === "success" ? userQuery.data.name : "..."
-				}'s debts`}
-			/>
 			<DebtsGroup
 				className="self-center"
 				isLoading={aggregatedDebtsLoading}
@@ -126,20 +103,28 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 	);
 };
 
-export const DebtsExchangeAllScreen: React.FC<{ userId: UsersId }> = ({
-	userId,
-}) => {
+type Props = { userId: UsersId };
+
+const DebtsExchangeAllLoader: React.FC<Props> = ({ userId }) => {
 	const query = trpc.debts.getIdsByUser.useQuery({ userId });
 	if (query.status === "pending") {
-		return (
-			<>
-				<Header userId={userId} title="Loading user debts..." />
-				<Spinner />
-			</>
-		);
+		return <Spinner />;
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;
 	}
 	return <DebtsExchangeAllInner query={query} userId={userId} />;
 };
+
+export const DebtsExchangeAllScreen: React.FC<Props> = ({ userId }) => (
+	<>
+		<PageHeader
+			startContent={
+				<BackLink to="/debts/user/$id/exchange" params={{ id: userId }} />
+			}
+		>
+			<LoadableUser id={userId} />
+		</PageHeader>
+		<DebtsExchangeAllLoader userId={userId} />
+	</>
+);

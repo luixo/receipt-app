@@ -1,6 +1,9 @@
 import { DebtsIntentionsScreen } from "~app/features/debts-intentions/debts-intentions-screen";
-import type { AppPage } from "~utils/next";
+import { createFileRoute } from "~web/utils/router";
 
-const Screen: AppPage = () => <DebtsIntentionsScreen />;
+const Route = createFileRoute("/_protected/debts/intentions")({
+	component: DebtsIntentionsScreen,
+	head: () => ({ meta: [{ title: "RA - Debts intentions" }] }),
+});
 
-export default Screen;
+export default Route.Screen;

@@ -1,12 +1,18 @@
-import { useQueryState } from "nuqs";
+import { z } from "zod/v4";
 
 import { VoidAccountScreen } from "~app/features/void-account/void-account-screen";
-import type { AppPage } from "~utils/next";
+import { confirmEmailTokenSchema } from "~web/handlers/validation";
+import { createFileRoute } from "~web/utils/router";
 
-const Screen: AppPage = () => {
-	const [token] = useQueryState("token");
-	return <VoidAccountScreen token={token ?? ""} />;
+const Wrapper = () => {
+	const { token } = Route.useSearch();
+	return <VoidAccountScreen token={token} />;
 };
-Screen.public = true;
 
-export default Screen;
+const Route = createFileRoute("/_public/void-account")({
+	component: Wrapper,
+	head: () => ({ meta: [{ title: "RA - Void account" }] }),
+	validateSearch: z.object({ token: confirmEmailTokenSchema.optional() }),
+});
+
+export default Route.Screen;

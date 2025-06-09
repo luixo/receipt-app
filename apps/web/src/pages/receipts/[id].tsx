@@ -1,10 +1,14 @@
 import { Receipt } from "~app/features/receipt/receipt";
-import { useParams } from "~app/hooks/use-navigation";
-import type { AppPage } from "~utils/next";
+import { createFileRoute } from "~web/utils/router";
 
-const Screen: AppPage = () => {
-	const { id } = useParams<{ id: string }>();
+const Wrapper = () => {
+	const { id } = Route.useParams();
 	return <Receipt id={id} />;
 };
 
-export default Screen;
+const Route = createFileRoute("/_protected/receipts/$id")({
+	component: Wrapper,
+	head: () => ({ meta: [{ title: "RA - Receipt" }] }),
+});
+
+export default Route.Screen;

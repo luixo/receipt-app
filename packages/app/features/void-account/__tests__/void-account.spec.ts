@@ -11,12 +11,13 @@ test("On load with token", async ({
 	cancelButton,
 	snapshotQueries,
 	awaitCacheKey,
+	faker,
 }) => {
 	api.mockUtils.noAuthPage();
 
 	await snapshotQueries(
 		async () => {
-			await page.goto("/void-account?token=foo");
+			await page.goto(`/void-account?token=${faker.string.uuid()}`);
 			await awaitCacheKey("account.get", { errored: 1 });
 		},
 		{
@@ -36,9 +37,10 @@ test("nagivating back to the home page", async ({
 	page,
 	api,
 	cancelButton,
+	faker,
 }) => {
 	api.mockUtils.noAuthPage();
-	await page.goto("/void-account?token=foo");
+	await page.goto(`/void-account?token=${faker.string.uuid()}`);
 	await cancelButton.click();
 	await expect(page).toHaveURL("/login");
 });
@@ -52,6 +54,7 @@ test("'auth.voidAccount' mutation", async ({
 	verifyToastTexts,
 	withLoader,
 	cancelButton,
+	faker,
 }) => {
 	api.mockUtils.noAuthPage();
 	api.mockFirst("auth.voidAccount", () => {
@@ -61,7 +64,8 @@ test("'auth.voidAccount' mutation", async ({
 		});
 	});
 
-	await page.goto("/void-account?token=foo");
+	const token = faker.string.uuid();
+	await page.goto(`/void-account?token=${token}`);
 
 	await snapshotQueries(async () => {
 		await voidButton.click();
@@ -70,7 +74,7 @@ test("'auth.voidAccount' mutation", async ({
 		);
 		await awaitCacheKey("auth.voidAccount", { errored: 1 });
 	});
-	await expect(page).toHaveURL("/void-account?token=foo");
+	await expect(page).toHaveURL(`/void-account?token=${token}`);
 
 	const voidAccountPause = api.createPause();
 	api.mockFirst("auth.voidAccount", async () => {
@@ -89,7 +93,7 @@ test("'auth.voidAccount' mutation", async ({
 		},
 		{ name: "loading" },
 	);
-	await expect(page).toHaveURL("/void-account?token=foo");
+	await expect(page).toHaveURL(`/void-account?token=${token}`);
 
 	await snapshotQueries(
 		async () => {
@@ -101,7 +105,7 @@ test("'auth.voidAccount' mutation", async ({
 	);
 	await expect(page.locator("h3")).toHaveText("foo@gmail.com");
 	await expect(page.locator("h4")).toHaveText("Account removed succesfully");
-	await expect(page).toHaveURL("/void-account?token=foo");
+	await expect(page).toHaveURL(`/void-account?token=${token}`);
 	await page.getByText("To login page").click();
 	await expect(page).toHaveURL("/login");
 });

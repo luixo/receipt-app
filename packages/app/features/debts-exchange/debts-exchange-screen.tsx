@@ -12,20 +12,6 @@ import { BackLink, ButtonLink } from "~components/link";
 import { Spinner } from "~components/spinner";
 import type { UsersId } from "~db/models";
 
-type HeaderProps = {
-	userId: UsersId;
-	title: string;
-};
-
-const Header: React.FC<HeaderProps> = ({ userId, title }) => (
-	<PageHeader
-		startContent={<BackLink to="/debts/user/$id" params={{ id: userId }} />}
-		title={title}
-	>
-		<LoadableUser id={userId} />
-	</PageHeader>
-);
-
 type InnerProps = {
 	userId: UsersId;
 	query: TRPCQuerySuccessResult<"debts.getIdsByUser">;
@@ -39,15 +25,8 @@ const DebtsExchangeInner: React.FC<InnerProps> = ({ userId, query }) => {
 		aggregatedDebtsLoading,
 		aggregatedDebtsErrorQueries,
 	] = useAggregatedDebts(query);
-	const userQuery = trpc.users.get.useQuery({ id: userId });
 	return (
 		<>
-			<Header
-				userId={userId}
-				title={`${
-					userQuery.status === "success" ? userQuery.data.name : "..."
-				}'s debts`}
-			/>
 			<DebtsGroup
 				isLoading={aggregatedDebtsLoading}
 				errorQueries={aggregatedDebtsErrorQueries}
@@ -74,20 +53,26 @@ const DebtsExchangeInner: React.FC<InnerProps> = ({ userId, query }) => {
 	);
 };
 
-export const DebtsExchangeScreen: React.FC<{ userId: UsersId }> = ({
-	userId,
-}) => {
+type Props = { userId: UsersId };
+
+const DebtsExchangeLoader: React.FC<Props> = ({ userId }) => {
 	const query = trpc.debts.getIdsByUser.useQuery({ userId });
 	if (query.status === "pending") {
-		return (
-			<>
-				<Header userId={userId} title="Loading user debts..." />
-				<Spinner />
-			</>
-		);
+		return <Spinner />;
 	}
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;
 	}
 	return <DebtsExchangeInner query={query} userId={userId} />;
 };
+
+export const DebtsExchangeScreen: React.FC<Props> = ({ userId }) => (
+	<>
+		<PageHeader
+			startContent={<BackLink to="/debts/user/$id" params={{ id: userId }} />}
+		>
+			<LoadableUser id={userId} />
+		</PageHeader>
+		<DebtsExchangeLoader userId={userId} />
+	</>
+);

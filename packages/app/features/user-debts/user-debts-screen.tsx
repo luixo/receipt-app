@@ -35,15 +35,13 @@ import type { UsersId } from "~db/models";
 import { UserDebtPreview, UserDebtPreviewSkeleton } from "./user-debt-preview";
 
 type HeaderProps = {
-	title: string;
 	userId: UsersId;
 	onEditClick?: () => void;
 };
 
-const Header: React.FC<HeaderProps> = ({ title, userId, onEditClick }) => (
+const Header: React.FC<HeaderProps> = ({ userId, onEditClick }) => (
 	<PageHeader
 		startContent={<BackLink to="/debts" />}
-		title={title}
 		aside={
 			<View className="flex flex-row gap-2">
 				{onEditClick ? (
@@ -108,7 +106,6 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 	const successDebtsQueries = debtsQueries.filter(
 		(debtQuery) => debtQuery.status === "success",
 	);
-	const userQuery = trpc.users.get.useQuery({ id: userId });
 	const allSuccessQueries = React.useMemo(
 		() =>
 			successDebtsQueries.length === debtsQueries.length
@@ -125,13 +122,7 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 	}, [navigate]);
 	return (
 		<>
-			<Header
-				userId={userId}
-				title={`${
-					userQuery.status === "success" ? userQuery.data.name : "..."
-				}'s debts`}
-				onEditClick={openEditModal}
-			/>
+			<Header userId={userId} onEditClick={openEditModal} />
 			<View className="flex-row items-center justify-center gap-4 px-16">
 				<DebtsGroup
 					isLoading={aggregatedDebtsLoading}
@@ -199,7 +190,7 @@ export const UserDebtsScreen: React.FC<{ userId: UsersId }> = ({ userId }) => {
 	if (query.status === "pending") {
 		return (
 			<>
-				<Header userId={userId} title="Loading debts..." />
+				<Header userId={userId} />
 				<View className="flex-row items-center justify-center">
 					<DebtsGroupSkeleton amount={3} />
 				</View>

@@ -1,6 +1,9 @@
 import { ConnectionIntentionsScreen } from "~app/features/connection-intentions/connection-intentions-screen";
-import type { AppPage } from "~utils/next";
+import { createFileRoute } from "~web/utils/router";
 
-const Screen: AppPage = () => <ConnectionIntentionsScreen />;
+const Route = createFileRoute("/_protected/users/connections")({
+	component: ConnectionIntentionsScreen,
+	head: () => ({ meta: [{ title: "RA - Users connections" }] }),
+});
 
-export default Screen;
+export default Route.Screen;

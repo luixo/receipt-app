@@ -1,6 +1,9 @@
 import { AccountScreen } from "~app/features/account/account-screen";
-import type { AppPage } from "~utils/next";
+import { createFileRoute } from "~web/utils/router";
 
-const Screen: AppPage = () => <AccountScreen />;
+const Route = createFileRoute("/_protected/account")({
+	component: AccountScreen,
+	head: () => ({ meta: [{ title: "RA - My account" }] }),
+});
 
-export default Screen;
+export default Route.Screen;

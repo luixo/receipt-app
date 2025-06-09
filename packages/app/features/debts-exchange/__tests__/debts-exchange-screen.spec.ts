@@ -49,24 +49,10 @@ test.describe("Wrapper component", () => {
 });
 
 test.describe("Header", () => {
-	test("User name in a title", async ({
-		api,
-		mockDebts,
-		openDebtsExchangeScreen,
-		awaitCacheKey,
-		page,
-	}) => {
+	test("Title", async ({ mockDebts, openDebtsExchangeScreen, page }) => {
 		const { debtUser } = mockDebts();
-		const userPause = api.createPause();
-		api.mockFirst("users.get", async ({ next }) => {
-			await userPause.promise;
-			return next();
-		});
-		await openDebtsExchangeScreen(debtUser.id, { awaitCache: false });
-		await expect(page).toHaveTitle("RA - ...'s debts");
-		userPause.resolve();
-		await awaitCacheKey("users.get");
-		await expect(page).toHaveTitle(`RA - ${debtUser.name}'s debts`);
+		await openDebtsExchangeScreen(debtUser.id);
+		await expect(page).toHaveTitle("RA - Exchange user debts");
 	});
 
 	test("Back button", async ({

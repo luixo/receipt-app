@@ -1,6 +1,8 @@
 import { HomeScreen } from "~app/features/home/home-screen";
-import type { AppPage } from "~utils/next";
+import { createFileRoute } from "~web/utils/router";
 
-const Screen: AppPage = () => <HomeScreen />;
+const Route = createFileRoute("/")({
+	component: HomeScreen,
+});
 
-export default Screen;
+export default Route.Screen;

@@ -368,13 +368,13 @@ export const DebtsTransferScreen: React.FC<{
 	);
 	const onFromClick = React.useCallback(
 		(userId: UsersId) => {
-			void setFromId(fromId === userId ? null : userId);
+			void setFromId(fromId === userId ? undefined : userId);
 		},
 		[fromId, setFromId],
 	);
 	const onToClick = React.useCallback(
 		(userId: UsersId) => {
-			void setToId(toId === userId ? null : userId);
+			void setToId(toId === userId ? undefined : userId);
 		},
 		[setToId, toId],
 	);

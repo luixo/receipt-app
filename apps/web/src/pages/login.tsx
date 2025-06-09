@@ -1,7 +1,9 @@
 import { LoginScreen } from "~app/features/login/login-screen";
-import type { AppPage } from "~utils/next";
+import { createFileRoute } from "~web/utils/router";
 
-const Screen: AppPage = () => <LoginScreen />;
-Screen.public = true;
+const Route = createFileRoute("/_public/login")({
+	component: LoginScreen,
+	head: () => ({ meta: [{ title: "RA - Login" }] }),
+});
 
-export default Screen;
+export default Route.Screen;

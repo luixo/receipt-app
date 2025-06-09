@@ -1,10 +1,14 @@
 import { UserDebtsScreen } from "~app/features/user-debts/user-debts-screen";
-import { useParams } from "~app/hooks/use-navigation";
-import type { AppPage } from "~utils/next";
+import { createFileRoute } from "~web/utils/router";
 
-const Screen: AppPage = () => {
-	const { id: userId } = useParams<{ id: string }>();
-	return <UserDebtsScreen userId={userId} />;
+const Wrapper = () => {
+	const { id } = Route.useParams();
+	return <UserDebtsScreen userId={id} />;
 };
 
-export default Screen;
+const Route = createFileRoute("/_protected/debts/user/$id")({
+	component: Wrapper,
+	head: () => ({ meta: [{ title: "RA - User's debts" }] }),
+});
+
+export default Route.Screen;
