@@ -97,7 +97,7 @@ export const queueCallFactory = <
 					...batchOpts,
 				},
 			),
-			removeTimeoutId: setTimeout(noop, Infinity),
+			removeTimeoutId: setTimeout(noop, 0),
 		};
 		dataloaderStorage[key] = dataloaderObject;
 		clearTimeout(dataloaderObject.removeTimeoutId);
