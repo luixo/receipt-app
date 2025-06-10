@@ -16,7 +16,6 @@ const run = async () => {
 		if (!process.env.DATABASE_URL) {
 			throw new Error("Expected to have process.env.DATABASE_URL variable!");
 		}
-		// eslint-disable-next-line n/no-unsupported-features/node-builtins
 		const outputPath = path.join(import.meta.dirname, "../src/models");
 		await processDatabase({
 			connection: process.env.DATABASE_URL,

@@ -11,9 +11,12 @@ import reactHooksPlugin from "eslint-plugin-react-hooks";
 import tailwindPlugin from "eslint-plugin-tailwindcss";
 import vitestPlugin from "eslint-plugin-vitest";
 import globals from "globals";
+import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { entries, fromEntries } from "remeda";
 import ts from "typescript-eslint";
+
+const nodeVersion = await readFile(".nvmrc", "utf-8");
 
 const getExtraneousDependenciesConfig = (
 	packageJsonDir = "",
@@ -282,7 +285,6 @@ export default ts.config(
 			},
 			parserOptions: {
 				projectService: true,
-				// eslint-disable-next-line n/no-unsupported-features/node-builtins
 				tsconfigRootDir: import.meta.dirname,
 			},
 		},
@@ -309,7 +311,7 @@ export default ts.config(
 				version: "detect",
 			},
 			node: {
-				version: "20.0.0",
+				version: nodeVersion.toString(),
 			},
 		},
 	},
@@ -458,7 +460,6 @@ export default ts.config(
 		languageOptions: {
 			parserOptions: {
 				projectService: {},
-				// eslint-disable-next-line n/no-unsupported-features/node-builtins
 				tsconfigRootDir: import.meta.dirname,
 			},
 		},

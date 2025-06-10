@@ -93,8 +93,6 @@ export const getLinks = ({
 		(value) => value === undefined,
 	);
 	const splitLinkInstance = splitLink({
-		// I hope this will work until we upgrade to Node 22
-		// eslint-disable-next-line n/no-unsupported-features/node-builtins
 		condition: (op) => op.input instanceof FormData,
 		true: httpLink({
 			url,
@@ -125,8 +123,6 @@ export const getLinks = ({
 			mapper: (error) => {
 				if (
 					error instanceof TRPCClientError &&
-					// I hope this will work until we upgrade to Node 21
-					// eslint-disable-next-line n/no-unsupported-features/node-builtins
 					error.meta?.response instanceof Response &&
 					error.meta.response.status !== 200
 				) {
