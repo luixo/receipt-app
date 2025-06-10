@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { keepPreviousData } from "@tanstack/react-query";
+import { keepPreviousData, useQueries, useQuery } from "@tanstack/react-query";
 import { isNonNullish, values } from "remeda";
 
 import { EmptyCard } from "~app/components/empty-card";
@@ -9,7 +9,7 @@ import { QueryErrorMessage } from "~app/components/error-message";
 import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import type { SearchParamState } from "~app/hooks/use-navigation";
 import type { TRPCQueryErrorResult, TRPCQueryInput } from "~app/trpc";
-import { trpc } from "~app/trpc";
+import { useTRPC } from "~app/utils/trpc";
 import { Divider } from "~components/divider";
 import { Header } from "~components/header";
 import { AddIcon } from "~components/icons";
@@ -42,16 +42,21 @@ const ReceiptPreviewsSkeleton: React.FC<{ amount: number }> = ({ amount }) => {
 const useReceiptQuery = (
 	input: Omit<Input, "cursor">,
 	cursor: Input["cursor"],
-) =>
-	trpc.receipts.getPaged.useQuery(
-		{ ...input, cursor },
-		{ placeholderData: keepPreviousData },
+) => {
+	const trpc = useTRPC();
+	return useQuery(
+		trpc.receipts.getPaged.queryOptions(
+			{ ...input, cursor },
+			{ placeholderData: keepPreviousData },
+		),
 	);
+};
 
 const ReceiptPreviews: React.FC<{ ids: ReceiptsId[] }> = ({ ids }) => {
-	const receiptQueries = trpc.useQueries((t) =>
-		ids.map((id) => t.receipts.get({ id })),
-	);
+	const trpc = useTRPC();
+	const receiptQueries = useQueries({
+		queries: ids.map((id) => trpc.receipts.get.queryOptions({ id })),
+	});
 	if (receiptQueries.every((query) => query.status === "pending")) {
 		return <ReceiptPreviewsSkeleton amount={receiptQueries.length} />;
 	}

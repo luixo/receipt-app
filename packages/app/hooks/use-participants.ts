@@ -1,14 +1,16 @@
 import React from "react";
 
+import { useQueries } from "@tanstack/react-query";
 import { isNonNullish } from "remeda";
 
 import { useDecimals } from "~app/hooks/use-decimals";
-import { type TRPCQueryOutput, trpc } from "~app/trpc";
+import type { TRPCQueryOutput } from "~app/trpc";
 import { isDebtInSyncWithReceipt } from "~app/utils/debts";
 import {
 	getItemCalculations,
 	getParticipantSums,
 } from "~app/utils/receipt-item";
+import { useTRPC } from "~app/utils/trpc";
 import type { NonNullableField } from "~utils/types";
 
 const getDebtIds = (receipt: Pick<TRPCQueryOutput<"receipts.get">, "debt">) =>
@@ -36,10 +38,13 @@ const SORT_PARTICIPANTS = (a: OriginalParticipant, b: OriginalParticipant) => {
 export const useParticipants = (
 	receipt: Omit<TRPCQueryOutput<"receipts.get">, "name">,
 ) => {
+	const trpc = useTRPC();
 	const { fromUnitToSubunit, fromSubunitToUnit } = useDecimals();
-	const debtsQueries = trpc.useQueries((t) =>
-		getDebtIds(receipt).map((debtId) => t.debts.get({ id: debtId })),
-	);
+	const debtsQueries = useQueries({
+		queries: getDebtIds(receipt).map((debtId) =>
+			trpc.debts.get.queryOptions({ id: debtId }),
+		),
+	});
 	const isOwner = receipt.ownerUserId === receipt.selfUserId;
 	const participants = React.useMemo(() => {
 		const debts = debtsQueries

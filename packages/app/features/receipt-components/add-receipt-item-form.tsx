@@ -4,8 +4,8 @@ import { View } from "react-native";
 import { z } from "zod/v4";
 
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
-import { trpc } from "~app/trpc";
 import { useAppForm } from "~app/utils/forms";
+import { useTRPC } from "~app/utils/trpc";
 import {
 	priceSchema,
 	priceSchemaDecimal,
@@ -27,8 +27,9 @@ type Form = z.infer<typeof formSchema>;
 export const AddReceiptItemForm: React.FC = () => {
 	const { receiptId, receiptDisabled } = useReceiptContext();
 	const { addItem } = useActionsHooksContext();
+	const trpc = useTRPC();
 	const addItemMutationState = useTrpcMutationState<"receiptItems.add">(
-		trpc.receiptItems.add,
+		trpc.receiptItems.add.mutationKey(),
 		(vars) => vars.receiptId === receiptId,
 	);
 	const isPending = addItemMutationState?.status === "pending";

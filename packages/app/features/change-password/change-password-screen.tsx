@@ -1,11 +1,12 @@
 import type React from "react";
 
+import { useMutation } from "@tanstack/react-query";
 import { z } from "zod/v4";
 
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { trpc } from "~app/trpc";
 import { useAppForm } from "~app/utils/forms";
+import { useTRPC } from "~app/utils/trpc";
 import { passwordSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { options as accountChangePasswordOptions } from "~mutations/account/change-password";
@@ -24,8 +25,11 @@ const formSchema = z
 type Form = z.infer<typeof formSchema>;
 
 const ChangePasswordForm: React.FC = () => {
-	const changePasswordMutation = trpc.account.changePassword.useMutation(
-		useTrpcMutationOptions(accountChangePasswordOptions),
+	const trpc = useTRPC();
+	const changePasswordMutation = useMutation(
+		trpc.account.changePassword.mutationOptions(
+			useTrpcMutationOptions(accountChangePasswordOptions),
+		),
 	);
 
 	const defaultValues: Partial<Form> = {};

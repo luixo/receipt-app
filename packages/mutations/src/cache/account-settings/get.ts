@@ -1,22 +1,34 @@
-import type { TRPCQueryOutput, TRPCReactUtils } from "~app/trpc";
+import type { TRPCQueryOutput } from "~app/trpc";
 
-import type { ControllerContext, SnapshotFn, UpdateFn } from "../../types";
+import type {
+	ControllerContext,
+	ControllerWith,
+	SnapshotFn,
+	UpdateFn,
+} from "../../types";
 import { applyUpdateFnWithRevert, applyWithRevert, withRef } from "../utils";
 
-type Controller = TRPCReactUtils["accountSettings"]["get"];
+type Controller = ControllerWith<{
+	procedure: ControllerContext["trpc"]["accountSettings"]["get"];
+}>;
 
 type AccountSettings = TRPCQueryOutput<"accountSettings.get">;
 
-const invalidateAccountSettings = (controller: Controller) => () =>
-	controller.invalidate();
+const invalidateAccountSettings =
+	({ queryClient, procedure }: Controller) =>
+	() =>
+		queryClient.invalidateQueries(procedure.queryFilter());
 
-const upsert = (controller: Controller, accountSettings: AccountSettings) =>
-	controller.setData(undefined, accountSettings);
+const upsert = (
+	{ queryClient, procedure }: Controller,
+	accountSettings: AccountSettings,
+) => queryClient.setQueryData(procedure.queryKey(), accountSettings);
 
 const update =
-	(controller: Controller) => (updater: UpdateFn<AccountSettings>) =>
+	({ queryClient, procedure }: Controller) =>
+	(updater: UpdateFn<AccountSettings>) =>
 		withRef<AccountSettings | undefined>((ref) => {
-			controller.setData(undefined, (accountSettings) => {
+			queryClient.setQueryData(procedure.queryKey(), (accountSettings) => {
 				if (!accountSettings) {
 					return;
 				}
@@ -25,16 +37,19 @@ const update =
 			});
 		}).current;
 
-export const getController = ({ trpcUtils }: ControllerContext) => {
-	const controller = trpcUtils.accountSettings.get;
+export const getController = ({ queryClient, trpc }: ControllerContext) => {
+	const controller = { queryClient, procedure: trpc.accountSettings.get };
 	return {
 		update: (updater: UpdateFn<AccountSettings>) => update(controller)(updater),
 		upsert: (account: AccountSettings) => upsert(controller, account),
 	};
 };
 
-export const getRevertController = ({ trpcUtils }: ControllerContext) => {
-	const controller = trpcUtils.accountSettings.get;
+export const getRevertController = ({
+	queryClient,
+	trpc,
+}: ControllerContext) => {
+	const controller = { queryClient, procedure: trpc.accountSettings.get };
 	return {
 		update: (
 			updater: UpdateFn<AccountSettings>,

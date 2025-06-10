@@ -1,9 +1,11 @@
 import React from "react";
 import { View } from "react-native";
 
+import { useMutation } from "@tanstack/react-query";
+
 import { ErrorMessage } from "~app/components/error-message";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { trpc } from "~app/trpc";
+import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { Header } from "~components/header";
 import { ButtonLink } from "~components/link";
@@ -14,8 +16,11 @@ type Props = {
 };
 
 export const VoidAccount: React.FC<Props> = ({ token }) => {
-	const voidMutation = trpc.auth.voidAccount.useMutation(
-		useTrpcMutationOptions(authVoidAccountOptions),
+	const trpc = useTRPC();
+	const voidMutation = useMutation(
+		trpc.auth.voidAccount.mutationOptions(
+			useTrpcMutationOptions(authVoidAccountOptions),
+		),
 	);
 	const voidAccount = React.useCallback(
 		() => voidMutation.mutate({ token }),

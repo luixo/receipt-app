@@ -4,7 +4,7 @@ import { skipToken, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 
 import type { TRPCMutationKey } from "~app/trpc";
-import { trpc } from "~app/trpc";
+import { useTRPC } from "~app/utils/trpc";
 import type {
 	InternalContext,
 	TRPCMutationOptions,
@@ -68,7 +68,7 @@ export const useTrpcMutationOptions = <
 		onSuccess,
 		...rest
 	} = options || {};
-	const trpcUtils = trpc.useUtils();
+	const trpc = useTRPC();
 	const queryClient = useQueryClient();
 	return React.useMemo(
 		() => ({
@@ -84,7 +84,7 @@ export const useTrpcMutationOptions = <
 					InternalContext<OuterContext, LifecycleContext>,
 					"controllerContext" | "outerContext"
 				> = {
-					controllerContext: { queryClient, trpcUtils, trpc },
+					controllerContext: { queryClient, trpc },
 					// We're sure outerContext exists here (if needed)
 					// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 					outerContext: pinnedOuterContext!,
@@ -181,7 +181,7 @@ export const useTrpcMutationOptions = <
 			...rest,
 		}),
 		[
-			trpcUtils,
+			trpc,
 			queryClient,
 			pinnedOuterContext,
 			onMutate,

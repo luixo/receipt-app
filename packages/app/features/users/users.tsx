@@ -1,6 +1,6 @@
 import type React from "react";
 
-import { keepPreviousData } from "@tanstack/react-query";
+import { keepPreviousData, useQueries, useQuery } from "@tanstack/react-query";
 
 import { SkeletonUser } from "~app/components/app/user";
 import { EmptyCard } from "~app/components/empty-card";
@@ -8,7 +8,7 @@ import { QueryErrorMessage } from "~app/components/error-message";
 import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import type { SearchParamState } from "~app/hooks/use-navigation";
 import type { TRPCQueryErrorResult, TRPCQueryInput } from "~app/trpc";
-import { trpc } from "~app/trpc";
+import { useTRPC } from "~app/utils/trpc";
 import { AddIcon } from "~components/icons";
 import { ButtonLink } from "~components/link";
 import { Overlay } from "~components/overlay";
@@ -20,16 +20,24 @@ import { UserPreview } from "./user-preview";
 
 type Input = TRPCQueryInput<"users.getPaged">;
 
-const useUsersQuery = (input: Omit<Input, "cursor">, cursor: Input["cursor"]) =>
-	trpc.users.getPaged.useQuery(
-		{ ...input, cursor },
-		{ placeholderData: keepPreviousData },
+const useUsersQuery = (
+	input: Omit<Input, "cursor">,
+	cursor: Input["cursor"],
+) => {
+	const trpc = useTRPC();
+	return useQuery(
+		trpc.users.getPaged.queryOptions(
+			{ ...input, cursor },
+			{ placeholderData: keepPreviousData },
+		),
 	);
+};
 
 const UserPreviews: React.FC<{ ids: UsersId[] }> = ({ ids }) => {
-	const userQueries = trpc.useQueries((t) =>
-		ids.map((id) => t.users.get({ id })),
-	);
+	const trpc = useTRPC();
+	const userQueries = useQueries({
+		queries: ids.map((id) => trpc.users.get.queryOptions({ id })),
+	});
 	if (userQueries.every((query) => query.status === "pending")) {
 		return <Spinner size="lg" />;
 	}

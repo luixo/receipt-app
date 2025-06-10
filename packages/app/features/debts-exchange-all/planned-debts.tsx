@@ -2,6 +2,7 @@ import React from "react";
 import { View } from "react-native";
 
 import { useStore } from "@tanstack/react-form";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { entries, isNonNullish, unique } from "remeda";
 import { z } from "zod/v4";
 
@@ -9,10 +10,10 @@ import { ErrorMessage } from "~app/components/error-message";
 import { useLocale } from "~app/hooks/use-locale";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { useTrpcMutationStates } from "~app/hooks/use-trpc-mutation-state";
-import { trpc } from "~app/trpc";
 import { type CurrencyCode, formatCurrency } from "~app/utils/currency";
 import { useAppForm } from "~app/utils/forms";
 import type { Locale } from "~app/utils/locale";
+import { useTRPC } from "~app/utils/trpc";
 import {
 	currencyCodeSchema,
 	currencyRateSchema,
@@ -103,6 +104,7 @@ export const PlannedDebts: React.FC<Props> = ({
 	userId,
 	onDone,
 }) => {
+	const trpc = useTRPC();
 	const allCurrencyCodes = unique([
 		...aggregatedDebts.map((debt) => debt.currencyCode),
 		selectedCurrencyCode,
@@ -128,8 +130,8 @@ export const PlannedDebts: React.FC<Props> = ({
 			{},
 		),
 	};
-	const addMutation = trpc.debts.add.useMutation(
-		useTrpcMutationOptions(debtsAddOptions),
+	const addMutation = useMutation(
+		trpc.debts.add.mutationOptions(useTrpcMutationOptions(debtsAddOptions)),
 	);
 	const [lastMutationTimestamps, setLastMutationTimestamps] = React.useState<
 		number[]
@@ -165,7 +167,7 @@ export const PlannedDebts: React.FC<Props> = ({
 		},
 	});
 	const lastMutationStates = useTrpcMutationStates<"debts.add">(
-		trpc.debts.add,
+		trpc.debts.add.mutationKey(),
 		(vars) => lastMutationTimestamps.includes(vars.timestamp?.valueOf() ?? 0),
 	);
 	const selectedRates = useStore(
@@ -173,12 +175,14 @@ export const PlannedDebts: React.FC<Props> = ({
 		(store) => store.values[selectedCurrencyCode],
 	);
 	const fieldMeta = useStore(form.store, (store) => store.fieldMeta);
-	const ratesQuery = trpc.currency.rates.useQuery({
-		from: selectedCurrencyCode,
-		to: aggregatedDebts
-			.map((debt) => debt.currencyCode)
-			.filter((code) => code !== selectedCurrencyCode),
-	});
+	const ratesQuery = useQuery(
+		trpc.currency.rates.queryOptions({
+			from: selectedCurrencyCode,
+			to: aggregatedDebts
+				.map((debt) => debt.currencyCode)
+				.filter((code) => code !== selectedCurrencyCode),
+		}),
+	);
 	React.useEffect(() => {
 		if (ratesQuery.status !== "success") {
 			return;

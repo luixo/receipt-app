@@ -1,6 +1,8 @@
 import React from "react";
 import { View } from "react-native";
 
+import { useQuery } from "@tanstack/react-query";
+
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { SkeletonUser } from "~app/components/app/user";
 import { SkeletonDateInput } from "~app/components/date-input";
@@ -20,7 +22,7 @@ import {
 } from "~app/features/receipt-components/receipt-participants";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
-import { trpc } from "~app/trpc";
+import { useTRPC } from "~app/utils/trpc";
 import { ReceiptIcon } from "~components/icons";
 import { BackLink } from "~components/link";
 import { Skeleton } from "~components/skeleton";
@@ -145,7 +147,8 @@ type Props = Omit<InnerProps, "query"> & {
 };
 
 export const Receipt: React.FC<Props> = ({ id, ...props }) => {
-	const query = trpc.receipts.get.useQuery({ id });
+	const trpc = useTRPC();
+	const query = useQuery(trpc.receipts.get.queryOptions({ id }));
 	switch (query.status) {
 		case "pending":
 			return (

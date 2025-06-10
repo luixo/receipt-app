@@ -1,16 +1,19 @@
 import React from "react";
 
+import { useQuery } from "@tanstack/react-query";
+
 import { QueryErrorMessage } from "~app/components/error-message";
 import type { LinksContextType } from "~app/contexts/links-context";
 import { LinksContext } from "~app/contexts/links-context";
 import { SELF_QUERY_CLIENT_KEY } from "~app/contexts/query-clients-context";
 import { useNavigate } from "~app/hooks/use-navigation";
 import { QueryProvider } from "~app/providers/query";
-import { trpc } from "~app/trpc";
+import { useTRPC } from "~app/utils/trpc";
 
 const NoAdminEffect: React.FC = () => {
+	const trpc = useTRPC();
 	const navigate = useNavigate();
-	const accountQuery = trpc.account.get.useQuery();
+	const accountQuery = useQuery(trpc.account.get.queryOptions());
 	const role =
 		accountQuery.status === "success" ? accountQuery.data.account.role : null;
 	React.useEffect(() => {

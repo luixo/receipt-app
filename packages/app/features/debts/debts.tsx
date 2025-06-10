@@ -1,6 +1,8 @@
 import type React from "react";
 import { View } from "react-native";
 
+import { useQuery } from "@tanstack/react-query";
+
 import {
 	DebtsGroup,
 	DebtsGroupSkeleton,
@@ -11,7 +13,7 @@ import { ShowResolvedDebtsOption } from "~app/features/settings/show-resolved-de
 import { useAggregatedAllDebts } from "~app/hooks/use-aggregated-all-debts";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
-import { trpc } from "~app/trpc";
+import { useTRPC } from "~app/utils/trpc";
 import { AddIcon } from "~components/icons";
 import { ButtonLink } from "~components/link";
 
@@ -97,7 +99,8 @@ const DebtsInner: React.FC<InnerProps> = ({ query }) => {
 const skeletonElements = new Array<null>(5).fill(null).map((_, index) => index);
 
 export const Debts: React.FC = () => {
-	const query = trpc.debts.getByUsers.useQuery();
+	const trpc = useTRPC();
+	const query = useQuery(trpc.debts.getByUsers.queryOptions());
 	if (query.status === "pending") {
 		return (
 			<>

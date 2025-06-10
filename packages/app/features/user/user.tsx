@@ -1,6 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { z } from "zod/v4";
 
 import { QueryErrorMessage } from "~app/components/error-message";
@@ -8,8 +9,8 @@ import { RemoveButton } from "~app/components/remove-button";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput, TRPCQuerySuccessResult } from "~app/trpc";
-import { trpc } from "~app/trpc";
 import { useAppForm } from "~app/utils/forms";
+import { useTRPC } from "~app/utils/trpc";
 import { userNameSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { TrashBin } from "~components/icons";
@@ -27,8 +28,11 @@ type NameProps = {
 };
 
 const UserNameInput: React.FC<NameProps> = ({ user, isLoading }) => {
-	const updateUserMutation = trpc.users.update.useMutation(
-		useTrpcMutationOptions(usersUpdateOptions),
+	const trpc = useTRPC();
+	const updateUserMutation = useMutation(
+		trpc.users.update.mutationOptions(
+			useTrpcMutationOptions(usersUpdateOptions),
+		),
 	);
 	const form = useAppForm({
 		defaultValues: { value: user.name },
@@ -86,11 +90,14 @@ const UserPublicNameInput: React.FC<PublicNameProps> = ({
 	user,
 	isLoading,
 }) => {
+	const trpc = useTRPC();
 	const [showInput, { setTrue: setInput, setFalse: unsetInput }] =
 		useBooleanState(user.publicName !== undefined);
 
-	const updateUserMutation = trpc.users.update.useMutation(
-		useTrpcMutationOptions(usersUpdateOptions),
+	const updateUserMutation = useMutation(
+		trpc.users.update.mutationOptions(
+			useTrpcMutationOptions(usersUpdateOptions),
+		),
 	);
 	const form = useAppForm({
 		defaultValues: { value: user.publicName ?? null },
@@ -189,8 +196,11 @@ const UserRemoveButton: React.FC<RemoveProps> = ({
 	onSuccess,
 	...props
 }) => {
-	const removeUserMutation = trpc.users.remove.useMutation(
-		useTrpcMutationOptions(usersRemoveOptions, { onSuccess }),
+	const trpc = useTRPC();
+	const removeUserMutation = useMutation(
+		trpc.users.remove.mutationOptions(
+			useTrpcMutationOptions(usersRemoveOptions, { onSuccess }),
+		),
 	);
 	React.useEffect(
 		() => setLoading(removeUserMutation.isPending),
@@ -241,7 +251,8 @@ type Props = Omit<InnerProps, "query"> & {
 };
 
 export const User: React.FC<Props> = ({ id, ...props }) => {
-	const query = trpc.users.get.useQuery({ id });
+	const trpc = useTRPC();
+	const query = useQuery(trpc.users.get.queryOptions({ id }));
 	if (query.status === "pending") {
 		return <Spinner />;
 	}

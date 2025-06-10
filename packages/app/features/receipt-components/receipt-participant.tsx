@@ -1,6 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
+import { useQuery } from "@tanstack/react-query";
 import { z } from "zod/v4";
 
 import { LoadableUser } from "~app/components/app/loadable-user";
@@ -9,9 +10,9 @@ import { RemoveButton } from "~app/components/remove-button";
 import { useDecimals, useRoundParts } from "~app/hooks/use-decimals";
 import { useLocale } from "~app/hooks/use-locale";
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
-import { trpc } from "~app/trpc";
 import { formatCurrency } from "~app/utils/currency";
 import { useAppForm } from "~app/utils/forms";
+import { useTRPC } from "~app/utils/trpc";
 import { partSchema, partSchemaDecimal } from "~app/utils/validation";
 import { Accordion, AccordionItem } from "~components/accordion";
 import { Button } from "~components/button";
@@ -95,6 +96,7 @@ type Props = {
 };
 
 export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
+	const trpc = useTRPC();
 	const {
 		receiptId,
 		currencyCode,
@@ -107,7 +109,9 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 		useActionsHooksContext();
 	const isOwner = useIsOwner();
 	const { fromSubunitToUnit } = useDecimals();
-	const userQuery = trpc.users.get.useQuery({ id: participant.userId });
+	const userQuery = useQuery(
+		trpc.users.get.queryOptions({ id: participant.userId }),
+	);
 
 	const currentPart = participant.payPart ?? 0;
 	const form = useAppForm({
@@ -124,7 +128,7 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 
 	const removeParticipantMutationState =
 		useTrpcMutationState<"receiptParticipants.remove">(
-			trpc.receiptParticipants.remove,
+			trpc.receiptParticipants.remove.mutationKey(),
 			(vars) =>
 				vars.receiptId === receiptId && vars.userId === participant.userId,
 		);
@@ -154,17 +158,17 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 	);
 	const addPayerMutationState =
 		useTrpcMutationState<"receiptItemConsumers.add">(
-			trpc.receiptItemConsumers.add,
+			trpc.receiptItemConsumers.add.mutationKey(),
 			(vars) => vars.itemId === receiptId && vars.userId === participant.userId,
 		);
 	const removePayerMutationState =
 		useTrpcMutationState<"receiptItemConsumers.remove">(
-			trpc.receiptItemConsumers.remove,
+			trpc.receiptItemConsumers.remove.mutationKey(),
 			(vars) => vars.itemId === receiptId && vars.userId === participant.userId,
 		);
 	const updatePayerMutationState =
 		useTrpcMutationState<"receiptItemConsumers.update">(
-			trpc.receiptItemConsumers.update,
+			trpc.receiptItemConsumers.update.mutationKey(),
 			(vars) => vars.itemId === receiptId && vars.userId === participant.userId,
 		);
 	const isPayerPending =

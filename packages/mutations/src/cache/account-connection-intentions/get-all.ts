@@ -1,12 +1,19 @@
-import type { TRPCQueryOutput, TRPCReactUtils } from "~app/trpc";
+import type { TRPCQueryOutput } from "~app/trpc";
 import type { AccountsId } from "~db/models";
 import type { ItemWithIndex } from "~utils/array";
 import { addToArray, removeFromArray, replaceInArray } from "~utils/array";
 
-import type { ControllerContext, SnapshotFn, UpdateFn } from "../../types";
+import type {
+	ControllerContext,
+	ControllerWith,
+	SnapshotFn,
+	UpdateFn,
+} from "../../types";
 import { applyUpdateFnWithRevert, applyWithRevert, withRef } from "../utils";
 
-type Controller = TRPCReactUtils["accountConnectionIntentions"]["getAll"];
+type Controller = ControllerWith<{
+	procedure: ControllerContext["trpc"]["accountConnectionIntentions"]["getAll"];
+}>;
 
 type Intentions = TRPCQueryOutput<"accountConnectionIntentions.getAll">;
 type InboundIntention = Intentions["inbound"][number];
@@ -19,11 +26,11 @@ type IntentionMapping = {
 };
 
 const updateIntentions = <D extends Direction>(
-	controller: Controller,
+	{ queryClient, procedure }: Controller,
 	direction: Direction,
 	updater: (intentions: IntentionMapping[D][]) => IntentionMapping[D][],
 ) =>
-	controller.setData(undefined, (intentions) => {
+	queryClient.setQueryData(procedure.queryKey(), (intentions) => {
 		if (!intentions) {
 			return;
 		}
@@ -124,8 +131,11 @@ const add =
 	(intention: IntentionMapping[D], index?: number) =>
 		addIntention(controller, direction, intention, index);
 
-export const getController = ({ trpcUtils }: ControllerContext) => {
-	const controller = trpcUtils.accountConnectionIntentions.getAll;
+export const getController = ({ queryClient, trpc }: ControllerContext) => {
+	const controller = {
+		queryClient,
+		procedure: trpc.accountConnectionIntentions.getAll,
+	};
 	return {
 		inbound: {
 			update: update(controller, "inbound"),
@@ -140,8 +150,14 @@ export const getController = ({ trpcUtils }: ControllerContext) => {
 	};
 };
 
-export const getRevertController = ({ trpcUtils }: ControllerContext) => {
-	const controller = trpcUtils.accountConnectionIntentions.getAll;
+export const getRevertController = ({
+	queryClient,
+	trpc,
+}: ControllerContext) => {
+	const controller = {
+		queryClient,
+		procedure: trpc.accountConnectionIntentions.getAll,
+	};
 	return {
 		inbound: {
 			update: updateRevert(controller, "inbound"),

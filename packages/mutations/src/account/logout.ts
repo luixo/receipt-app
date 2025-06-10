@@ -1,9 +1,11 @@
 import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<"account.logout"> = {
-	onSuccess: (controllerContext) => async () => {
-		await controllerContext.trpcUtils.invalidate();
-	},
+	onSuccess:
+		({ queryClient, trpc }) =>
+		async () => {
+			await queryClient.invalidateQueries(trpc.pathFilter());
+		},
 	successToastOptions: {
 		text: "Logout successful, redirecting..",
 	},

@@ -1,9 +1,11 @@
 import React from "react";
 
+import { useMutation } from "@tanstack/react-query";
+
 import { DateInput } from "~app/components/date-input";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
-import { trpc } from "~app/trpc";
+import { useTRPC } from "~app/utils/trpc";
 import { options as receiptsUpdateOptions } from "~mutations/receipts/update";
 
 type Props = {
@@ -15,8 +17,11 @@ export const ReceiptDateInput: React.FC<Props> = ({
 	receipt,
 	isLoading: isDisabled,
 }) => {
-	const updateReceiptMutation = trpc.receipts.update.useMutation(
-		useTrpcMutationOptions(receiptsUpdateOptions),
+	const trpc = useTRPC();
+	const updateReceiptMutation = useMutation(
+		trpc.receipts.update.mutationOptions(
+			useTrpcMutationOptions(receiptsUpdateOptions),
+		),
 	);
 
 	const saveDate = React.useCallback(

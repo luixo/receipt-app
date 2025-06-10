@@ -1,9 +1,11 @@
 import type React from "react";
 
+import { useQuery } from "@tanstack/react-query";
+
 import { SkeletonUser, User } from "~app/components/app/user";
 import { QueryErrorMessage } from "~app/components/error-message";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
-import { trpc } from "~app/trpc";
+import { useTRPC } from "~app/utils/trpc";
 import type { UsersId } from "~db/models";
 
 type InnerProps = {
@@ -32,7 +34,8 @@ type DirectionProps = Omit<
 > & { id: UsersId };
 
 const OwnLoadableUser: React.FC<DirectionProps> = ({ id, ...props }) => {
-	const query = trpc.users.get.useQuery({ id });
+	const trpc = useTRPC();
+	const query = useQuery(trpc.users.get.queryOptions({ id }));
 	if (query.status === "pending") {
 		return <SkeletonUser {...props} />;
 	}
@@ -43,7 +46,8 @@ const OwnLoadableUser: React.FC<DirectionProps> = ({ id, ...props }) => {
 };
 
 const ForeignLoadableUser: React.FC<DirectionProps> = ({ id, ...props }) => {
-	const query = trpc.users.getForeign.useQuery({ id });
+	const trpc = useTRPC();
+	const query = useQuery(trpc.users.getForeign.queryOptions({ id }));
 	if (query.status === "pending") {
 		return <SkeletonUser {...props} />;
 	}

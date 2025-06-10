@@ -1,4 +1,4 @@
-import type { TRPCQueryOutput, TRPCReactUtils } from "~app/trpc";
+import type { TRPCQueryOutput } from "~app/trpc";
 import type { DebtsId, UsersId } from "~db/models";
 import type { ItemWithIndex } from "~utils/array";
 import {
@@ -8,10 +8,17 @@ import {
 	replaceInArray,
 } from "~utils/array";
 
-import type { ControllerContext, SnapshotFn, UpdateFn } from "../../types";
+import type {
+	ControllerContext,
+	ControllerWith,
+	SnapshotFn,
+	UpdateFn,
+} from "../../types";
 import { applyUpdateFnWithRevert, applyWithRevert, withRef } from "../utils";
 
-type Controller = TRPCReactUtils["debts"]["getIdsByUser"];
+type Controller = ControllerWith<{
+	procedure: ControllerContext["trpc"]["debts"]["getIdsByUser"];
+}>;
 
 type Debts = TRPCQueryOutput<"debts.getIdsByUser">;
 type Debt = Debts[number];
@@ -20,11 +27,11 @@ const sortByTimestamp = (a: Debt, b: Debt) =>
 	b.timestamp.valueOf() - a.timestamp.valueOf();
 
 const updateDebts = (
-	controller: Controller,
+	{ queryClient, procedure }: Controller,
 	userId: UsersId,
 	updater: UpdateFn<Debts>,
 ) =>
-	controller.setData({ userId }, (prevDebts) => {
+	queryClient.setQueryData(procedure.queryKey({ userId }), (prevDebts) => {
 		if (!prevDebts) {
 			return;
 		}
@@ -61,8 +68,8 @@ const add = (
 	updateDebts(controller, userId, (debts) => addToArray(debts, debt, index));
 };
 
-export const getController = ({ trpcUtils }: ControllerContext) => {
-	const controller = trpcUtils.debts.getIdsByUser;
+export const getController = ({ queryClient, trpc }: ControllerContext) => {
+	const controller = { queryClient, procedure: trpc.debts.getIdsByUser };
 	return {
 		update: (userId: UsersId, debtId: DebtsId, updater: UpdateFn<Debt>) =>
 			update(controller, userId, debtId)(updater),
@@ -72,8 +79,11 @@ export const getController = ({ trpcUtils }: ControllerContext) => {
 	};
 };
 
-export const getRevertController = ({ trpcUtils }: ControllerContext) => {
-	const controller = trpcUtils.debts.getIdsByUser;
+export const getRevertController = ({
+	queryClient,
+	trpc,
+}: ControllerContext) => {
+	const controller = { queryClient, procedure: trpc.debts.getIdsByUser };
 	return {
 		update: (
 			userId: UsersId,

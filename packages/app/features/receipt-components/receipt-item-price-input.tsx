@@ -6,9 +6,9 @@ import { z } from "zod/v4";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useLocale } from "~app/hooks/use-locale";
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
-import { trpc } from "~app/trpc";
 import { formatCurrency } from "~app/utils/currency";
 import { useAppForm } from "~app/utils/forms";
+import { useTRPC } from "~app/utils/trpc";
 import { priceSchema, priceSchemaDecimal } from "~app/utils/validation";
 import { SaveButton } from "~components/save-button";
 import { Text } from "~components/text";
@@ -44,8 +44,9 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 		},
 	});
 
+	const trpc = useTRPC();
 	const updateMutationState = useTrpcMutationState<"receiptItems.update">(
-		trpc.receiptItems.update,
+		trpc.receiptItems.update.mutationKey(),
 		(vars) => vars.update.type === "price" && vars.id === item.id,
 	);
 	const locale = useLocale();

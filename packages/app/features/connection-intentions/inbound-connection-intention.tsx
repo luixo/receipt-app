@@ -1,13 +1,13 @@
 import React from "react";
 import { View } from "react-native";
 
-import { skipToken } from "@tanstack/react-query";
+import { skipToken, useMutation, useQuery } from "@tanstack/react-query";
 
 import { UsersSuggest } from "~app/components/app/users-suggest";
 import { ConfirmModal } from "~app/components/confirm-modal";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
-import { trpc } from "~app/trpc";
+import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { Input } from "~components/input";
 import type { UsersId } from "~db/models";
@@ -19,12 +19,14 @@ type Props = {
 };
 
 export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
+	const trpc = useTRPC();
 	const [userId, setUserId] = React.useState<UsersId>();
 
-	const acceptConnectionMutation =
-		trpc.accountConnectionIntentions.accept.useMutation(
+	const acceptConnectionMutation = useMutation(
+		trpc.accountConnectionIntentions.accept.mutationOptions(
 			useTrpcMutationOptions(accountConnectionsAcceptOptions),
-		);
+		),
+	);
 	const acceptConnection = React.useCallback(() => {
 		acceptConnectionMutation.mutate({
 			accountId: intention.account.id,
@@ -32,10 +34,11 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 		});
 	}, [acceptConnectionMutation, intention.account.id, userId]);
 
-	const rejectConnectionMutation =
-		trpc.accountConnectionIntentions.reject.useMutation(
+	const rejectConnectionMutation = useMutation(
+		trpc.accountConnectionIntentions.reject.mutationOptions(
 			useTrpcMutationOptions(accountConnectionsRejectOptions),
-		);
+		),
+	);
 	const rejectConnection = React.useCallback(() => {
 		rejectConnectionMutation.mutate({
 			sourceAccountId: intention.account.id,
@@ -57,8 +60,8 @@ export const InboundConnectionIntention: React.FC<Props> = ({ intention }) => {
 		},
 		[userId],
 	);
-	const userQuery = trpc.users.get.useQuery(
-		userId ? { id: userId } : skipToken,
+	const userQuery = useQuery(
+		trpc.users.get.queryOptions(userId ? { id: userId } : skipToken),
 	);
 
 	const isLoading =

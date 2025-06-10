@@ -7,8 +7,8 @@ import { PartButtons } from "~app/components/app/part-buttons";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useRoundParts } from "~app/hooks/use-decimals";
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
-import { trpc } from "~app/trpc";
 import { useAppForm } from "~app/utils/forms";
+import { useTRPC } from "~app/utils/trpc";
 import { partSchema, partSchemaDecimal } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { SaveButton } from "~components/save-button";
@@ -36,9 +36,10 @@ export const ReceiptItemConsumerInput: React.FC<Props> = ({
 	const [isEditing, { switchValue: switchEditing, setFalse: unsetEditing }] =
 		useBooleanState();
 
+	const trpc = useTRPC();
 	const updateMutationState =
 		useTrpcMutationState<"receiptItemConsumers.update">(
-			trpc.receiptItemConsumers.update,
+			trpc.receiptItemConsumers.update.mutationKey(),
 			(vars) => vars.userId === consumer.userId && vars.itemId === item.id,
 		);
 	const form = useAppForm({

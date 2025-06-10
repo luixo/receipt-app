@@ -1,11 +1,12 @@
 import type React from "react";
 
+import { useMutation } from "@tanstack/react-query";
 import { z } from "zod/v4";
 
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCMutationOutput } from "~app/trpc";
-import { trpc } from "~app/trpc";
 import { useAppForm } from "~app/utils/forms";
+import { useTRPC } from "~app/utils/trpc";
 import { emailSchema, userNameSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { options as usersAddOptions } from "~mutations/users/add";
@@ -22,10 +23,13 @@ type Props = {
 };
 
 export const AddUserForm: React.FC<Props> = ({ initialValue, onSuccess }) => {
-	const addUserMutation = trpc.users.add.useMutation(
-		useTrpcMutationOptions(usersAddOptions, {
-			onSuccess,
-		}),
+	const trpc = useTRPC();
+	const addUserMutation = useMutation(
+		trpc.users.add.mutationOptions(
+			useTrpcMutationOptions(usersAddOptions, {
+				onSuccess,
+			}),
+		),
 	);
 
 	const defaultValues: Partial<Form> = {

@@ -1,13 +1,15 @@
 import React from "react";
 import { View } from "react-native";
 
+import { useMutation } from "@tanstack/react-query";
+
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useLocale } from "~app/hooks/use-locale";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
-import { trpc } from "~app/trpc";
 import { type CurrencyCode, getCurrencySymbol } from "~app/utils/currency";
+import { useTRPC } from "~app/utils/trpc";
 import { Text } from "~components/text";
 import { options as receiptsUpdateOptions } from "~mutations/receipts/update";
 import { round } from "~utils/math";
@@ -18,14 +20,17 @@ type Props = {
 };
 
 export const ReceiptAmountInput: React.FC<Props> = ({ receipt, isLoading }) => {
+	const trpc = useTRPC();
 	const locale = useLocale();
 	const [
 		isModalOpen,
 		{ switchValue: switchModalOpen, setTrue: openModal, setFalse: closeModal },
 	] = useBooleanState();
 
-	const updateReceiptMutation = trpc.receipts.update.useMutation(
-		useTrpcMutationOptions(receiptsUpdateOptions),
+	const updateReceiptMutation = useMutation(
+		trpc.receipts.update.mutationOptions(
+			useTrpcMutationOptions(receiptsUpdateOptions),
+		),
 	);
 	const saveCurrency = React.useCallback(
 		(nextCurrencyCode: CurrencyCode) => {

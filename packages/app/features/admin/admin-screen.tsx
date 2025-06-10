@@ -1,12 +1,14 @@
 import React from "react";
 
+import { useQuery } from "@tanstack/react-query";
+
 import { User } from "~app/components/app/user";
 import { QueryErrorMessage } from "~app/components/error-message";
 import { PageHeader } from "~app/components/page-header";
 import { StoreDataContext } from "~app/contexts/store-data-context";
 import type { TRPCQueryOutput } from "~app/trpc";
-import { trpc } from "~app/trpc";
 import { PRETEND_USER_STORE_NAME } from "~app/utils/store/pretend-user";
+import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { Card, CardBody } from "~components/card";
 import { Divider } from "~components/divider";
@@ -69,8 +71,9 @@ const AdminUserCard: React.FC<
 );
 
 const AdminScreenInner: React.FC = () => {
-	const accountQuery = trpc.account.get.useQuery();
-	const accountsQuery = trpc.admin.accounts.useQuery();
+	const trpc = useTRPC();
+	const accountQuery = useQuery(trpc.account.get.queryOptions());
+	const accountsQuery = useQuery(trpc.admin.accounts.queryOptions());
 	const [modalEmail, setModalEmail] = React.useState<string | undefined>();
 	const {
 		[PRETEND_USER_STORE_NAME]: [pretendUser, setPretendUser, resetPretendUser],

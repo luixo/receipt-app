@@ -2,7 +2,13 @@ import React from "react";
 import { View } from "react-native";
 
 import { useInfiniteScroll } from "@heroui/use-infinite-scroll";
-import { keepPreviousData } from "@tanstack/react-query";
+import {
+	keepPreviousData,
+	useInfiniteQuery,
+	useQueries,
+	useQuery,
+	useQueryClient,
+} from "@tanstack/react-query";
 import { isNonNull } from "remeda";
 
 import { LoadableUser } from "~app/components/app/loadable-user";
@@ -10,7 +16,7 @@ import { User } from "~app/components/app/user";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useDebouncedValue } from "~app/hooks/use-debounced-value";
 import type { TRPCQueryInput } from "~app/trpc";
-import { trpc } from "~app/trpc";
+import { useTRPC } from "~app/utils/trpc";
 import {
 	Autocomplete,
 	AutocompleteItem,
@@ -61,6 +67,7 @@ export const UsersSuggest: React.FC<Props> = ({
 	selectedProps,
 	...props
 }) => {
+	const trpc = useTRPC();
 	const inputRef = React.useRef<HTMLInputElement>(null);
 	const [value, setValue] = React.useState("");
 	const debouncedValue = useDebouncedValue(value, throttledMs);
@@ -72,27 +79,39 @@ export const UsersSuggest: React.FC<Props> = ({
 		: [];
 	const initialUserIds = React.useRef(selectedUserIds);
 	const filterIds = [...(outerFilterIds || []), ...selectedUserIds];
-	const topQuery = trpc.users.suggestTop.useQuery(
-		{ limit: topLimit, options, filterIds },
-		{ placeholderData: keepPreviousData },
+	const topQuery = useQuery(
+		trpc.users.suggestTop.queryOptions(
+			{ limit: topLimit, options, filterIds },
+			{ placeholderData: keepPreviousData },
+		),
 	);
-	const query = trpc.users.suggest.useInfiniteQuery(
-		{ limit, input: debouncedValue, options, filterIds },
-		{
-			getNextPageParam: (result) =>
-				result.hasMore ? result.cursor + limit : undefined,
-			enabled: queryEnabled,
-			placeholderData: keepPreviousData,
-		},
+	const query = useInfiniteQuery(
+		trpc.users.suggest.infiniteQueryOptions(
+			{
+				limit,
+				input: debouncedValue,
+				options,
+				filterIds,
+				direction: "forward",
+			},
+			{
+				getNextPageParam: (result) =>
+					result.hasMore ? result.cursor + limit : undefined,
+				enabled: queryEnabled,
+				placeholderData: keepPreviousData,
+			},
+		),
 	);
 
 	const topFetchedUserIds = React.useMemo(
 		() => topQuery.data?.items ?? [],
 		[topQuery.data],
 	);
-	const topFetchedUserQueries = trpc.useQueries((t) =>
-		topFetchedUserIds.map((userId) => t.users.get({ id: userId })),
-	);
+	const topFetchedUserQueries = useQueries({
+		queries: topFetchedUserIds.map((userId) =>
+			trpc.users.get.queryOptions({ id: userId }),
+		),
+	});
 	const filteredTopFetchedUserIds = React.useMemo(
 		() =>
 			topFetchedUserIds.filter((_userId, index) => {
@@ -127,16 +146,18 @@ export const UsersSuggest: React.FC<Props> = ({
 	const [addUserOpen, { setFalse: closeAddUser, setTrue: openAddUser }] =
 		useBooleanState();
 
-	const trpcUtils = trpc.useUtils();
+	const queryClient = useQueryClient();
 	const setUserNameById = React.useCallback(
 		(id: UsersId) => {
-			const userData = trpcUtils.users.get.getData({ id });
+			const userData = queryClient.getQueryData(
+				trpc.users.get.queryKey({ id }),
+			);
 			if (!userData) {
 				return;
 			}
 			setValue(userData.name);
 		},
-		[trpcUtils],
+		[queryClient, trpc.users.get],
 	);
 	React.useEffect(() => {
 		const firstUser = initialUserIds.current[0];

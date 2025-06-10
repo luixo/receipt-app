@@ -1,11 +1,13 @@
 import type React from "react";
 import { View } from "react-native";
 
+import { useQuery } from "@tanstack/react-query";
+
 import { EmptyCard } from "~app/components/empty-card";
 import { QueryErrorMessage } from "~app/components/error-message";
 import { PageHeader } from "~app/components/page-header";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
-import { trpc } from "~app/trpc";
+import { useTRPC } from "~app/utils/trpc";
 import { Header } from "~components/header";
 import { BackLink } from "~components/link";
 import { Spinner } from "~components/spinner";
@@ -61,7 +63,10 @@ const ConnectionIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 };
 
 export const ConnectionIntentions: React.FC = () => {
-	const query = trpc.accountConnectionIntentions.getAll.useQuery();
+	const trpc = useTRPC();
+	const query = useQuery(
+		trpc.accountConnectionIntentions.getAll.queryOptions(),
+	);
 	if (query.status === "pending") {
 		return <Spinner size="lg" />;
 	}

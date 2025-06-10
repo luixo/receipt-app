@@ -1,36 +1,37 @@
-import type { QueryClient } from "@tanstack/react-query";
-import { getQueryKey } from "@trpc/react-query";
 import { identity } from "remeda";
 
-import type { TRPCQueryInput, TRPCReact, TRPCReactUtils } from "~app/trpc";
+import type { TRPCQueryInput } from "~app/trpc";
 import type { ReceiptsId } from "~db/models";
 import { addToArray } from "~utils/array";
 
-import type { ControllerContext } from "../../types";
+import type { ControllerContext, ControllerWith } from "../../types";
 import { applyWithRevert, getAllInputs, withRef } from "../utils";
 
 const id = identity();
 
-type Controller = TRPCReactUtils["receipts"]["getPaged"];
+type Controller = ControllerWith<{
+	procedure: ControllerContext["trpc"]["receipts"]["getPaged"];
+}>;
 
 type Input = TRPCQueryInput<"receipts.getPaged">;
 
-const getPagedInputs = (trpc: TRPCReact, queryClient: QueryClient) =>
-	getAllInputs<"receipts.getPaged">(
+const invalidate = ({ queryClient, procedure }: Controller) => {
+	const inputs = getAllInputs<"receipts.getPaged">(
 		queryClient,
-		getQueryKey(trpc.receipts.getPaged),
+		procedure.queryKey(),
 	);
-
-const invalidate = (controller: Controller, inputs: Input[]) =>
-	inputs.map((input) => controller.invalidate(input));
+	return inputs.map((input) =>
+		queryClient.invalidateQueries(procedure.queryFilter(input)),
+	);
+};
 
 const add = (
-	controller: Controller,
+	{ queryClient, procedure }: Controller,
 	input: Input,
 	receiptId: ReceiptsId,
 	index: number,
 ) =>
-	controller.setData(input, (result) => {
+	queryClient.setQueryData(procedure.queryKey(input), (result) => {
 		if (!result) {
 			return;
 		}
@@ -41,8 +42,7 @@ const add = (
 	});
 
 const remove = (
-	controller: Controller,
-	inputs: Input[],
+	{ queryClient, procedure }: Controller,
 	receiptId: ReceiptsId,
 ) =>
 	withRef<
@@ -53,56 +53,52 @@ const remove = (
 		  }
 		| undefined,
 		() => void
-	>(
-		(ref) => () =>
-			inputs.map((input) =>
-				controller.setData(input, (result) => {
-					if (!result) {
-						return;
-					}
-					const removedIndex = result.items.indexOf(receiptId);
-					if (removedIndex === -1) {
-						return;
-					}
-					ref.current = {
-						input,
-						receiptId,
-						index: removedIndex,
-					};
-					return {
-						...result,
-						items: [
-							...result.items.slice(0, removedIndex),
-							...result.items.slice(removedIndex + 1),
-						],
-					};
-				}),
-			),
-	);
+	>((ref) => () => {
+		const inputs = getAllInputs<"receipts.getPaged">(
+			queryClient,
+			procedure.queryKey(),
+		);
+		return inputs.map((input) =>
+			queryClient.setQueryData(procedure.queryKey(input), (result) => {
+				if (!result) {
+					return;
+				}
+				const removedIndex = result.items.indexOf(receiptId);
+				if (removedIndex === -1) {
+					return;
+				}
+				ref.current = {
+					input,
+					receiptId,
+					index: removedIndex,
+				};
+				return {
+					...result,
+					items: [
+						...result.items.slice(0, removedIndex),
+						...result.items.slice(removedIndex + 1),
+					],
+				};
+			}),
+		);
+	});
 
-export const getController = ({
-	trpcUtils,
-	queryClient,
-	trpc,
-}: ControllerContext) => {
-	const controller = trpcUtils.receipts.getPaged;
-	const inputs = getPagedInputs(trpc, queryClient);
+export const getController = ({ queryClient, trpc }: ControllerContext) => {
+	const controller = { queryClient, procedure: trpc.receipts.getPaged };
 	return {
-		invalidate: () => invalidate(controller, inputs),
+		invalidate: () => invalidate(controller),
 	};
 };
 
 export const getRevertController = ({
-	trpcUtils,
 	queryClient,
 	trpc,
 }: ControllerContext) => {
-	const controller = trpcUtils.receipts.getPaged;
-	const inputs = getPagedInputs(trpc, queryClient);
+	const controller = { queryClient, procedure: trpc.receipts.getPaged };
 	return {
 		remove: (receiptId: ReceiptsId) =>
 			applyWithRevert(
-				() => remove(controller, inputs, receiptId),
+				() => remove(controller, receiptId),
 				({ current: snapshot }) => {
 					if (snapshot) {
 						return add(

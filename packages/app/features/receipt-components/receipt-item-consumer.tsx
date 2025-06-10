@@ -5,7 +5,7 @@ import { LoadableUser } from "~app/components/app/loadable-user";
 import { SkeletonUser } from "~app/components/app/user";
 import { RemoveButton } from "~app/components/remove-button";
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
-import { trpc } from "~app/trpc";
+import { useTRPC } from "~app/utils/trpc";
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
 
@@ -30,9 +30,10 @@ export const ReceiptItemConsumer: React.FC<Props> = ({
 	const { removeItemConsumer } = useActionsHooksContext();
 	const canEdit = useCanEdit();
 	const isOwner = useIsOwner();
+	const trpc = useTRPC();
 	const removeMutationState =
 		useTrpcMutationState<"receiptItemConsumers.remove">(
-			trpc.receiptItemConsumers.remove,
+			trpc.receiptItemConsumers.remove.mutationKey(),
 			(vars) => vars.userId === consumer.userId && vars.itemId === item.id,
 		);
 	const isPending = removeMutationState?.status === "pending";

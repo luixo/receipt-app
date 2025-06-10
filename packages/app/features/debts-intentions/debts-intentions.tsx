@@ -1,6 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
+import { useQuery } from "@tanstack/react-query";
 import { entries, mapValues } from "remeda";
 
 import { LoadableUser } from "~app/components/app/loadable-user";
@@ -8,7 +9,7 @@ import { EmptyCard } from "~app/components/empty-card";
 import { QueryErrorMessage } from "~app/components/error-message";
 import { PageHeader } from "~app/components/page-header";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
-import { trpc } from "~app/trpc";
+import { useTRPC } from "~app/utils/trpc";
 import { Spinner } from "~components/spinner";
 import type { UsersId } from "~db/models";
 
@@ -78,7 +79,8 @@ const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 };
 
 const DebtIntentionsQuery: React.FC = () => {
-	const query = trpc.debtIntentions.getAll.useQuery();
+	const trpc = useTRPC();
+	const query = useQuery(trpc.debtIntentions.getAll.queryOptions());
 	switch (query.status) {
 		case "error":
 			return <QueryErrorMessage query={query} />;

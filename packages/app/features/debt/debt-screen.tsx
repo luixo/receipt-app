@@ -1,6 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { z } from "zod/v4";
 
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
@@ -21,7 +22,6 @@ import { useLocale } from "~app/hooks/use-locale";
 import { useNavigate } from "~app/hooks/use-navigation";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput, TRPCQuerySuccessResult } from "~app/trpc";
-import { trpc } from "~app/trpc";
 import {
 	type CurrencyCode,
 	formatCurrency,
@@ -29,6 +29,7 @@ import {
 } from "~app/utils/currency";
 import { areDebtsSynced } from "~app/utils/debts";
 import { useAppForm } from "~app/utils/forms";
+import { useTRPC } from "~app/utils/trpc";
 import {
 	debtAmountSchema,
 	debtAmountSchemaDecimal,
@@ -68,14 +69,19 @@ type CurrencyProps = {
 };
 
 const DebtCurrencyInput: React.FC<CurrencyProps> = ({ debt, isLoading }) => {
+	const trpc = useTRPC();
 	const locale = useLocale();
 	const [
 		isModalOpen,
 		{ switchValue: switchModalOpen, setTrue: openModal, setFalse: closeModal },
 	] = useBooleanState();
 
-	const updateReceiptMutation = trpc.debts.update.useMutation(
-		useTrpcMutationOptions(debtsUpdateOptions, { context: { currDebt: debt } }),
+	const updateReceiptMutation = useMutation(
+		trpc.debts.update.mutationOptions(
+			useTrpcMutationOptions(debtsUpdateOptions, {
+				context: { currDebt: debt },
+			}),
+		),
 	);
 	const saveCurrencyCode = React.useCallback(
 		(nextCurrencyCode: CurrencyCode) => {
@@ -118,10 +124,15 @@ type AmountProps = {
 };
 
 const DebtAmountInput: React.FC<AmountProps> = ({ debt, isLoading }) => {
+	const trpc = useTRPC();
 	const absoluteAmount = Math.abs(debt.amount);
 
-	const updateMutation = trpc.debts.update.useMutation(
-		useTrpcMutationOptions(debtsUpdateOptions, { context: { currDebt: debt } }),
+	const updateMutation = useMutation(
+		trpc.debts.update.mutationOptions(
+			useTrpcMutationOptions(debtsUpdateOptions, {
+				context: { currDebt: debt },
+			}),
+		),
 	);
 	const form = useAppForm({
 		defaultValues: { value: absoluteAmount },
@@ -187,8 +198,13 @@ const DebtDateInput: React.FC<DateProps> = ({
 	debt,
 	isLoading: isDisabled,
 }) => {
-	const updateMutation = trpc.debts.update.useMutation(
-		useTrpcMutationOptions(debtsUpdateOptions, { context: { currDebt: debt } }),
+	const trpc = useTRPC();
+	const updateMutation = useMutation(
+		trpc.debts.update.mutationOptions(
+			useTrpcMutationOptions(debtsUpdateOptions, {
+				context: { currDebt: debt },
+			}),
+		),
 	);
 
 	const saveDate = React.useCallback(
@@ -221,8 +237,13 @@ type NoteProps = {
 };
 
 const DebtNoteInput: React.FC<NoteProps> = ({ debt, isLoading }) => {
-	const updateMutation = trpc.debts.update.useMutation(
-		useTrpcMutationOptions(debtsUpdateOptions, { context: { currDebt: debt } }),
+	const trpc = useTRPC();
+	const updateMutation = useMutation(
+		trpc.debts.update.mutationOptions(
+			useTrpcMutationOptions(debtsUpdateOptions, {
+				context: { currDebt: debt },
+			}),
+		),
 	);
 	const form = useAppForm({
 		defaultValues: { value: debt.note },
@@ -295,20 +316,23 @@ const DebtRemoveButton: React.FC<RemoveButtonProps> = ({
 	setLoading,
 	...props
 }) => {
+	const trpc = useTRPC();
 	const navigate = useNavigate();
-	const removeMutation = trpc.debts.remove.useMutation(
-		useTrpcMutationOptions(debtsRemoveOptions, {
-			context: {
-				debt,
-				areDebtsSynced: debt.their ? areDebtsSynced(debt, debt.their) : false,
-			},
-			onSuccess: () =>
-				navigate({
-					to: "/debts/user/$id",
-					params: { id: debt.userId },
-					replace: true,
-				}),
-		}),
+	const removeMutation = useMutation(
+		trpc.debts.remove.mutationOptions(
+			useTrpcMutationOptions(debtsRemoveOptions, {
+				context: {
+					debt,
+					areDebtsSynced: debt.their ? areDebtsSynced(debt, debt.their) : false,
+				},
+				onSuccess: () =>
+					navigate({
+						to: "/debts/user/$id",
+						params: { id: debt.userId },
+						replace: true,
+					}),
+			}),
+		),
 	);
 	React.useEffect(
 		() => setLoading(removeMutation.isPending),
@@ -341,8 +365,13 @@ export const DebtSignButtonGroup: React.FC<SignGroupProps> = ({
 	debt,
 	disabled,
 }) => {
-	const updateMutation = trpc.debts.update.useMutation(
-		useTrpcMutationOptions(debtsUpdateOptions, { context: { currDebt: debt } }),
+	const trpc = useTRPC();
+	const updateMutation = useMutation(
+		trpc.debts.update.mutationOptions(
+			useTrpcMutationOptions(debtsUpdateOptions, {
+				context: { currDebt: debt },
+			}),
+		),
 	);
 	const setDirection = React.useCallback(
 		(direction: "+" | "-") => {
@@ -374,10 +403,11 @@ type InnerProps = {
 };
 
 export const DebtInner: React.FC<InnerProps> = ({ query }) => {
+	const trpc = useTRPC();
 	const debt = query.data;
 	const [removing, setRemoving] = React.useState(false);
 	const locale = useLocale();
-	const userQuery = trpc.users.get.useQuery({ id: debt.userId });
+	const userQuery = useQuery(trpc.users.get.queryOptions({ id: debt.userId }));
 
 	return (
 		<>
@@ -413,7 +443,8 @@ export const DebtInner: React.FC<InnerProps> = ({ query }) => {
 };
 
 export const DebtScreen: React.FC<{ id: DebtsId }> = ({ id }) => {
-	const query = trpc.debts.get.useQuery({ id });
+	const trpc = useTRPC();
+	const query = useQuery(trpc.debts.get.queryOptions({ id }));
 	switch (query.status) {
 		case "pending":
 			return (

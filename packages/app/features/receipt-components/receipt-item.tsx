@@ -5,8 +5,8 @@ import { ErrorMessage } from "~app/components/error-message";
 import { RemoveButton } from "~app/components/remove-button";
 import { useLocale } from "~app/hooks/use-locale";
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
-import { trpc } from "~app/trpc";
 import { formatCurrency } from "~app/utils/currency";
+import { useTRPC } from "~app/utils/trpc";
 import { Card, CardBody, CardHeader } from "~components/card";
 import { Chip } from "~components/chip";
 import { Divider } from "~components/divider";
@@ -48,8 +48,9 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 	const canEdit = useCanEdit();
 	const locale = useLocale();
 
+	const trpc = useTRPC();
 	const removeItemMutationState = useTrpcMutationState<"receiptItems.remove">(
-		trpc.receiptItems.remove,
+		trpc.receiptItems.remove.mutationKey(),
 		(vars) => vars.id === item.id,
 	);
 	const isRemovalPending = removeItemMutationState?.status === "pending";

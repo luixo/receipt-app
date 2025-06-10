@@ -1,15 +1,12 @@
-import type { QueryClient } from "@tanstack/react-query";
-import { getQueryKey } from "@trpc/react-query";
-
-import type {
-	TRPCQueryInput,
-	TRPCQueryOutput,
-	TRPCReact,
-	TRPCReactUtils,
-} from "~app/trpc";
+import type { TRPCQueryOutput } from "~app/trpc";
 import type { UsersId } from "~db/models";
 
-import type { ControllerContext, SnapshotFn, UpdateFn } from "../../types";
+import type {
+	ControllerContext,
+	ControllerWith,
+	SnapshotFn,
+	UpdateFn,
+} from "../../types";
 import {
 	applyUpdateFnWithRevert,
 	applyWithRevert,
@@ -17,9 +14,9 @@ import {
 	withRef,
 } from "../utils";
 
-type Controller = TRPCReactUtils["users"]["getForeign"];
-
-type Input = TRPCQueryInput<"users.getForeign">;
+type Controller = ControllerWith<{
+	procedure: ControllerContext["trpc"]["users"]["getForeign"];
+}>;
 
 type User = TRPCQueryOutput<"users.getForeign">;
 type OwnUser = Exclude<
@@ -27,16 +24,11 @@ type OwnUser = Exclude<
 	{ remoteId: string }
 >;
 
-const getInputs = (trpc: TRPCReact, queryClient: QueryClient) =>
-	getAllInputs<"users.getForeign">(
-		queryClient,
-		getQueryKey(trpc.users.getForeign),
-	);
-
 const update =
-	(controller: Controller, userId: UsersId) => (updater: UpdateFn<User>) =>
+	({ queryClient, procedure }: Controller, userId: UsersId) =>
+	(updater: UpdateFn<User>) =>
 		withRef<User | undefined>((ref) => {
-			controller.setData({ id: userId }, (user) => {
+			queryClient.setQueryData(procedure.queryKey({ id: userId }), (user) => {
 				if (!user) {
 					return;
 				}
@@ -57,45 +49,49 @@ const updateOwn =
 			return updater(user);
 		}) as OwnUser | undefined;
 
-const removeOwn = (controller: Controller, userId: UsersId) =>
+const removeOwn = ({ queryClient, procedure }: Controller, userId: UsersId) =>
 	withRef<OwnUser | undefined>((ref) => {
-		const currentUser = controller.getData({ id: userId });
+		const currentUser = queryClient.getQueryData(
+			procedure.queryKey({ id: userId }),
+		);
 		if (currentUser && "remoteId" in currentUser) {
 			return;
 		}
 		ref.current = currentUser;
-		return controller.invalidate({ id: userId });
+		return queryClient.invalidateQueries(procedure.queryFilter({ id: userId }));
 	}).current;
 
-const addOwn = (controller: Controller, user: OwnUser) =>
-	controller.setData({ id: user.id }, user);
+const addOwn = ({ queryClient, procedure }: Controller, user: OwnUser) =>
+	queryClient.setQueryData(procedure.queryKey({ id: user.id }), user);
 
-const invalidateForeign = (controller: Controller, inputs: Input[]) => {
+const invalidateForeign = ({ queryClient, procedure }: Controller) => {
+	const inputs = getAllInputs<"users.getForeign">(
+		queryClient,
+		procedure.queryKey(),
+	);
 	inputs.forEach((input) => {
-		const currentUser = controller.getData(input);
+		const currentUser = queryClient.getQueryData(procedure.queryKey(input));
 		if (currentUser && "publicName" in currentUser) {
 			return;
 		}
-		return controller.invalidate(input);
+		return queryClient.invalidateQueries(procedure.queryFilter(input));
 	});
 };
 
-export const getController = ({
-	trpcUtils,
-	queryClient,
-	trpc,
-}: ControllerContext) => {
-	const controller = trpcUtils.users.getForeign;
-	const inputs = getInputs(trpc, queryClient);
+export const getController = ({ queryClient, trpc }: ControllerContext) => {
+	const controller = { queryClient, procedure: trpc.users.getForeign };
 	return {
 		updateOwn: (userId: UsersId, updater: UpdateFn<OwnUser>) =>
 			updateOwn(controller, userId)(updater),
-		invalidateForeign: () => invalidateForeign(controller, inputs),
+		invalidateForeign: () => invalidateForeign(controller),
 	};
 };
 
-export const getRevertController = ({ trpcUtils }: ControllerContext) => {
-	const controller = trpcUtils.users.getForeign;
+export const getRevertController = ({
+	queryClient,
+	trpc,
+}: ControllerContext) => {
+	const controller = { queryClient, procedure: trpc.users.getForeign };
 	return {
 		updateOwn: (
 			userId: UsersId,

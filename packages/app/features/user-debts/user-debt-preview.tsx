@@ -1,12 +1,15 @@
 import type React from "react";
 import { View } from "react-native";
 
+import { useQuery } from "@tanstack/react-query";
+
 import { DebtSyncStatus } from "~app/components/app/debt-sync-status";
 import { QueryErrorMessage } from "~app/components/error-message";
 import { useFormat } from "~app/hooks/use-format";
 import { useLocale } from "~app/hooks/use-locale";
-import { type TRPCQuerySuccessResult, trpc } from "~app/trpc";
+import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { formatCurrency } from "~app/utils/currency";
+import { useTRPC } from "~app/utils/trpc";
 import { Link } from "~components/link";
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
@@ -50,10 +53,11 @@ type InnerProps = {
 };
 
 const UserDebtPreviewInner: React.FC<InnerProps> = ({ query }) => {
+	const trpc = useTRPC();
 	const debt = query.data;
 	const locale = useLocale();
 	const { formatDate } = useFormat();
-	const userQuery = trpc.users.get.useQuery({ id: debt.userId });
+	const userQuery = useQuery(trpc.users.get.queryOptions({ id: debt.userId }));
 	return (
 		<Link to="/debts/$id" params={{ id: debt.id }}>
 			<UserDebtPreviewShape
@@ -82,7 +86,8 @@ type Props = {
 };
 
 export const UserDebtPreview: React.FC<Props> = ({ debtId }) => {
-	const query = trpc.debts.get.useQuery({ id: debtId });
+	const trpc = useTRPC();
+	const query = useQuery(trpc.debts.get.queryOptions({ id: debtId }));
 	if (query.status === "pending") {
 		return <UserDebtPreviewSkeleton />;
 	}

@@ -1,15 +1,14 @@
 import type React from "react";
 
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod/v4";
 
 import { PageHeader } from "~app/components/page-header";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useNavigate } from "~app/hooks/use-navigation";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { trpc } from "~app/trpc";
 import { useAppForm } from "~app/utils/forms";
-import { noBatchContext } from "~app/utils/trpc";
+import { noBatchContext, useTRPC } from "~app/utils/trpc";
 import { emailSchema, passwordSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { Input } from "~components/input";
@@ -21,20 +20,23 @@ const formSchema = z.object({ email: emailSchema, password: passwordSchema });
 type Form = z.infer<typeof formSchema>;
 
 export const LoginScreen: React.FC = () => {
+	const trpc = useTRPC();
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 
 	const [modalOpen, { switchValue: switchModalOpen, setTrue: openModal }] =
 		useBooleanState();
 
-	const loginMutation = trpc.auth.login.useMutation(
-		useTrpcMutationOptions(authLoginOptions, {
-			onSuccess: () => {
-				void queryClient.resetQueries();
-				navigate({ to: "/", replace: true });
-			},
-			trpc: { context: noBatchContext },
-		}),
+	const loginMutation = useMutation(
+		trpc.auth.login.mutationOptions(
+			useTrpcMutationOptions(authLoginOptions, {
+				onSuccess: () => {
+					void queryClient.resetQueries();
+					navigate({ to: "/", replace: true });
+				},
+				trpc: { context: noBatchContext },
+			}),
+		),
 	);
 
 	const defaultValues: Partial<Form> = {};

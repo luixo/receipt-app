@@ -1,5 +1,7 @@
 import type React from "react";
 
+import { useQuery } from "@tanstack/react-query";
+
 import { DebtsGroup } from "~app/components/app/debts-group";
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { QueryErrorMessage } from "~app/components/error-message";
@@ -7,7 +9,7 @@ import { PageHeader } from "~app/components/page-header";
 import { useAggregatedDebts } from "~app/hooks/use-aggregated-debts";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
-import { trpc } from "~app/trpc";
+import { useTRPC } from "~app/utils/trpc";
 import { BackLink, ButtonLink } from "~components/link";
 import { Spinner } from "~components/spinner";
 import type { UsersId } from "~db/models";
@@ -56,7 +58,8 @@ const DebtsExchangeInner: React.FC<InnerProps> = ({ userId, query }) => {
 type Props = { userId: UsersId };
 
 const DebtsExchangeLoader: React.FC<Props> = ({ userId }) => {
-	const query = trpc.debts.getIdsByUser.useQuery({ userId });
+	const trpc = useTRPC();
+	const query = useQuery(trpc.debts.getIdsByUser.queryOptions({ userId }));
 	if (query.status === "pending") {
 		return <Spinner />;
 	}

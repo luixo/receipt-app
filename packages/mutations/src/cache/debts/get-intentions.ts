@@ -1,21 +1,28 @@
-import type { TRPCQueryOutput, TRPCReactUtils } from "~app/trpc";
+import type { TRPCQueryOutput } from "~app/trpc";
 import type { DebtsId } from "~db/models";
 import type { ItemWithIndex } from "~utils/array";
 import { addToArray, removeFromArray, replaceInArray } from "~utils/array";
 
-import type { ControllerContext, SnapshotFn, UpdateFn } from "../../types";
+import type {
+	ControllerContext,
+	ControllerWith,
+	SnapshotFn,
+	UpdateFn,
+} from "../../types";
 import { applyUpdateFnWithRevert, applyWithRevert, withRef } from "../utils";
 
-type Controller = TRPCReactUtils["debtIntentions"]["getAll"];
+type Controller = ControllerWith<{
+	procedure: ControllerContext["trpc"]["debtIntentions"]["getAll"];
+}>;
 
 type DebtsIntentions = TRPCQueryOutput<"debtIntentions.getAll">;
 type Intention = DebtsIntentions[number];
 
 const updateIntentions = (
-	controller: Controller,
+	{ queryClient, procedure }: Controller,
 	updater: (intentions: Intention[]) => Intention[],
 ) =>
-	controller.setData(undefined, (prevIntentions) => {
+	queryClient.setQueryData(procedure.queryKey(), (prevIntentions) => {
 		if (!prevIntentions) {
 			return;
 		}
@@ -92,14 +99,16 @@ const add =
 	(controller: Controller) => (intention: Intention, index?: number) =>
 		addIntention(controller, intention, index);
 
-const invalidate = (controller: Controller) => () =>
-	withRef<Intention[] | undefined>((ref) => {
-		ref.current = controller.getData();
-		return controller.invalidate();
-	}).current;
+const invalidate =
+	({ queryClient, procedure }: Controller) =>
+	() =>
+		withRef<Intention[] | undefined>((ref) => {
+			ref.current = queryClient.getQueryData(procedure.queryKey());
+			return queryClient.invalidateQueries(procedure.queryFilter());
+		}).current;
 
-export const getController = ({ trpcUtils }: ControllerContext) => {
-	const controller = trpcUtils.debtIntentions.getAll;
+export const getController = ({ queryClient, trpc }: ControllerContext) => {
+	const controller = { queryClient, procedure: trpc.debtIntentions.getAll };
 	return {
 		update: update(controller),
 		add: add(controller),
@@ -108,8 +117,11 @@ export const getController = ({ trpcUtils }: ControllerContext) => {
 	};
 };
 
-export const getRevertController = ({ trpcUtils }: ControllerContext) => {
-	const controller = trpcUtils.debtIntentions.getAll;
+export const getRevertController = ({
+	queryClient,
+	trpc,
+}: ControllerContext) => {
+	const controller = { queryClient, procedure: trpc.debtIntentions.getAll };
 	return {
 		update: updateRevert(controller),
 		add: addRevert(controller),

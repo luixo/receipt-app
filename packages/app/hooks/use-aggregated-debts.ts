@@ -1,22 +1,23 @@
 import React from "react";
 
+import { useQueries } from "@tanstack/react-query";
 import { entries, isNonNullish } from "remeda";
 
-import {
-	type TRPCQueryErrorResult,
-	type TRPCQuerySuccessResult,
-	trpc,
-} from "~app/trpc";
+import type { TRPCQueryErrorResult, TRPCQuerySuccessResult } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
+import { useTRPC } from "~app/utils/trpc";
 import { round } from "~utils/math";
 
 export const useAggregatedDebts = (
 	idsQuery: TRPCQuerySuccessResult<"debts.getIdsByUser">,
 ) => {
+	const trpc = useTRPC();
 	const debtIds = idsQuery.data;
-	const debtQueries = trpc.useQueries((t) =>
-		debtIds.map((debt) => t.debts.get({ id: debt.id })),
-	);
+	const debtQueries = useQueries({
+		queries: debtIds.map((debt) =>
+			trpc.debts.get.queryOptions({ id: debt.id }),
+		),
+	});
 	const debtsData = debtQueries.map((query) => query.data).filter(isNonNullish);
 	const debtsLoading = debtQueries.map((query) => query.isLoading);
 	const debtsErrorQueries = debtQueries.filter((query) => query.error !== null);

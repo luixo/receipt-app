@@ -1,6 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
+import { useMutation } from "@tanstack/react-query";
 import type { Area, Point } from "react-easy-crop";
 import Cropper from "react-easy-crop";
 import { doNothing } from "remeda";
@@ -11,8 +12,8 @@ import { ConfirmModal } from "~app/components/confirm-modal";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
-import { trpc } from "~app/trpc";
 import { useAppForm } from "~app/utils/forms";
+import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { Card, CardBody } from "~components/card";
 import { FileInput } from "~components/file-input";
@@ -89,15 +90,18 @@ type Props = React.PropsWithChildren<{
 }>;
 
 export const AccountAvatarInput: React.FC<Props> = ({ account, children }) => {
+	const trpc = useTRPC();
 	const [
 		isAvatarEditorOpen,
 		{ setTrue: enableAvatarEdit, setFalse: disableAvatarEdit },
 	] = useBooleanState();
 
-	const updateAvatarMutation = trpc.account.changeAvatar.useMutation(
-		useTrpcMutationOptions(accountChangeAvatarOptions, {
-			onSuccess: () => disableAvatarEdit(),
-		}),
+	const updateAvatarMutation = useMutation(
+		trpc.account.changeAvatar.mutationOptions(
+			useTrpcMutationOptions(accountChangeAvatarOptions, {
+				onSuccess: () => disableAvatarEdit(),
+			}),
+		),
 	);
 	const defaultValues: Partial<Form> = {
 		croppedArea: {
@@ -138,13 +142,15 @@ export const AccountAvatarInput: React.FC<Props> = ({ account, children }) => {
 		},
 	});
 
-	const removeAvatarMutation = trpc.account.changeAvatar.useMutation(
-		useTrpcMutationOptions(accountChangeAvatarOptions, {
-			onSuccess: () => {
-				disableAvatarEdit();
-				form.reset();
-			},
-		}),
+	const removeAvatarMutation = useMutation(
+		trpc.account.changeAvatar.mutationOptions(
+			useTrpcMutationOptions(accountChangeAvatarOptions, {
+				onSuccess: () => {
+					disableAvatarEdit();
+					form.reset();
+				},
+			}),
+		),
 	);
 
 	const [zoom, setZoom] = React.useState(1);

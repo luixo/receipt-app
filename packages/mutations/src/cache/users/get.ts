@@ -1,17 +1,25 @@
-import type { TRPCQueryOutput, TRPCReactUtils } from "~app/trpc";
+import type { TRPCQueryOutput } from "~app/trpc";
 import type { UsersId } from "~db/models";
 
-import type { ControllerContext, SnapshotFn, UpdateFn } from "../../types";
+import type {
+	ControllerContext,
+	ControllerWith,
+	SnapshotFn,
+	UpdateFn,
+} from "../../types";
 import { applyUpdateFnWithRevert, applyWithRevert, withRef } from "../utils";
 
-type Controller = TRPCReactUtils["users"]["get"];
+type Controller = ControllerWith<{
+	procedure: ControllerContext["trpc"]["users"]["get"];
+}>;
 
 type User = TRPCQueryOutput<"users.get">;
 
 const update =
-	(controller: Controller, userId: UsersId) => (updater: UpdateFn<User>) =>
+	({ queryClient, procedure }: Controller, userId: UsersId) =>
+	(updater: UpdateFn<User>) =>
 		withRef<User | undefined>((ref) => {
-			controller.setData({ id: userId }, (user) => {
+			queryClient.setQueryData(procedure.queryKey({ id: userId }), (user) => {
 				if (!user) {
 					return;
 				}
@@ -20,17 +28,17 @@ const update =
 			});
 		}).current;
 
-const upsert = (controller: Controller, user: User) =>
-	controller.setData({ id: user.id }, user);
+const upsert = ({ queryClient, procedure }: Controller, user: User) =>
+	queryClient.setQueryData(procedure.queryKey({ id: user.id }), user);
 
-const remove = (controller: Controller, userId: UsersId) =>
+const remove = ({ queryClient, procedure }: Controller, userId: UsersId) =>
 	withRef<User | undefined>((ref) => {
-		ref.current = controller.getData({ id: userId });
-		return controller.invalidate({ id: userId });
+		ref.current = queryClient.getQueryData(procedure.queryKey({ id: userId }));
+		return queryClient.invalidateQueries(procedure.queryFilter({ id: userId }));
 	}).current;
 
-export const getController = ({ trpcUtils }: ControllerContext) => {
-	const controller = trpcUtils.users.get;
+export const getController = ({ queryClient, trpc }: ControllerContext) => {
+	const controller = { queryClient, procedure: trpc.users.get };
 	return {
 		update: (userId: UsersId, updater: UpdateFn<User>) =>
 			update(controller, userId)(updater),
@@ -39,8 +47,11 @@ export const getController = ({ trpcUtils }: ControllerContext) => {
 	};
 };
 
-export const getRevertController = ({ trpcUtils }: ControllerContext) => {
-	const controller = trpcUtils.users.get;
+export const getRevertController = ({
+	queryClient,
+	trpc,
+}: ControllerContext) => {
+	const controller = { queryClient, procedure: trpc.users.get };
 	return {
 		update: (
 			userId: UsersId,

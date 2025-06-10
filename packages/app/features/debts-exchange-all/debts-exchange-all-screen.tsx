@@ -1,5 +1,6 @@
 import React from "react";
 
+import { useQuery } from "@tanstack/react-query";
 import { doNothing } from "remeda";
 
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
@@ -12,8 +13,8 @@ import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useNavigate } from "~app/hooks/use-navigation";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
-import { trpc } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
+import { useTRPC } from "~app/utils/trpc";
 import { Divider } from "~components/divider";
 import { BackLink } from "~components/link";
 import { Spinner } from "~components/spinner";
@@ -106,7 +107,8 @@ const DebtsExchangeAllInner: React.FC<InnerProps> = ({ userId, query }) => {
 type Props = { userId: UsersId };
 
 const DebtsExchangeAllLoader: React.FC<Props> = ({ userId }) => {
-	const query = trpc.debts.getIdsByUser.useQuery({ userId });
+	const trpc = useTRPC();
+	const query = useQuery(trpc.debts.getIdsByUser.queryOptions({ userId }));
 	if (query.status === "pending") {
 		return <Spinner />;
 	}

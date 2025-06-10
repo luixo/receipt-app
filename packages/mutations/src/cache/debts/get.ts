@@ -1,17 +1,25 @@
-import type { TRPCQueryOutput, TRPCReactUtils } from "~app/trpc";
+import type { TRPCQueryOutput } from "~app/trpc";
 import type { DebtsId } from "~db/models";
 
-import type { ControllerContext, SnapshotFn, UpdateFn } from "../../types";
+import type {
+	ControllerContext,
+	ControllerWith,
+	SnapshotFn,
+	UpdateFn,
+} from "../../types";
 import { applyUpdateFnWithRevert, applyWithRevert, withRef } from "../utils";
 
-type Controller = TRPCReactUtils["debts"]["get"];
+type Controller = ControllerWith<{
+	procedure: ControllerContext["trpc"]["debts"]["get"];
+}>;
 
 type Debt = TRPCQueryOutput<"debts.get">;
 
 const update =
-	(controller: Controller, debtId: DebtsId) => (updater: UpdateFn<Debt>) =>
+	({ queryClient, procedure }: Controller, debtId: DebtsId) =>
+	(updater: UpdateFn<Debt>) =>
 		withRef<Debt | undefined>((ref) => {
-			controller.setData({ id: debtId }, (debt) => {
+			queryClient.setQueryData(procedure.queryKey({ id: debtId }), (debt) => {
 				if (!debt) {
 					return;
 				}
@@ -20,17 +28,17 @@ const update =
 			});
 		}).current;
 
-const upsert = (controller: Controller, debt: Debt) =>
-	controller.setData({ id: debt.id }, debt);
+const upsert = ({ queryClient, procedure }: Controller, debt: Debt) =>
+	queryClient.setQueryData(procedure.queryKey({ id: debt.id }), debt);
 
-const remove = (controller: Controller, debtId: DebtsId) =>
+const remove = ({ queryClient, procedure }: Controller, debtId: DebtsId) =>
 	withRef<Debt | undefined>((ref) => {
-		ref.current = controller.getData({ id: debtId });
-		return controller.invalidate({ id: debtId });
+		ref.current = queryClient.getQueryData(procedure.queryKey({ id: debtId }));
+		return queryClient.invalidateQueries(procedure.queryFilter({ id: debtId }));
 	}).current;
 
-export const getController = ({ trpcUtils }: ControllerContext) => {
-	const controller = trpcUtils.debts.get;
+export const getController = ({ queryClient, trpc }: ControllerContext) => {
+	const controller = { queryClient, procedure: trpc.debts.get };
 	return {
 		update: (debtId: DebtsId, updater: UpdateFn<Debt>) =>
 			update(controller, debtId)(updater),
@@ -41,8 +49,11 @@ export const getController = ({ trpcUtils }: ControllerContext) => {
 	};
 };
 
-export const getRevertController = ({ trpcUtils }: ControllerContext) => {
-	const controller = trpcUtils.debts.get;
+export const getRevertController = ({
+	queryClient,
+	trpc,
+}: ControllerContext) => {
+	const controller = { queryClient, procedure: trpc.debts.get };
 	return {
 		update: (
 			debtId: DebtsId,

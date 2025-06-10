@@ -1,8 +1,10 @@
 import React from "react";
 
+import { useMutation } from "@tanstack/react-query";
+
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
-import { trpc } from "~app/trpc";
+import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { UnlinkIcon } from "~components/icons";
 import { Input } from "~components/input";
@@ -13,10 +15,12 @@ type Props = {
 };
 
 export const OutboundConnectionIntention: React.FC<Props> = ({ intention }) => {
-	const removeConnectionMutation =
-		trpc.accountConnectionIntentions.remove.useMutation(
+	const trpc = useTRPC();
+	const removeConnectionMutation = useMutation(
+		trpc.accountConnectionIntentions.remove.mutationOptions(
 			useTrpcMutationOptions(accountConnectionsRemoveOptions),
-		);
+		),
+	);
 	const removeConnection = React.useCallback(() => {
 		removeConnectionMutation.mutate({
 			targetAccountId: intention.account.id,

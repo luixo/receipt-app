@@ -4,7 +4,7 @@ import { View } from "react-native";
 import { keys } from "remeda";
 
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
-import { trpc } from "~app/trpc";
+import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import {
 	Dropdown,
@@ -37,9 +37,10 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 	const { receiptId, receiptDisabled } = useReceiptContext();
 	const isOwner = useIsOwner();
 	const { updateParticipantRole } = useActionsHooksContext();
+	const trpc = useTRPC();
 	const removeParticipantMutationState =
 		useTrpcMutationState<"receiptParticipants.update">(
-			trpc.receiptParticipants.update,
+			trpc.receiptParticipants.update.mutationKey(),
 			(vars) =>
 				vars.receiptId === receiptId &&
 				vars.userId === participant.userId &&

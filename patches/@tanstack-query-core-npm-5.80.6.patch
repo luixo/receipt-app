@@ -1,0 +1,120 @@
+# see https://github.com/TanStack/query/issues/5458
+diff --git a/build/legacy/hydration-CdBkFt9i.d.cts b/build/legacy/hydration-CdBkFt9i.d.cts
+index f76324f5b7145d4431d088092ae98a1ba2e4c49a..7ccf66f40efab52a0af6b6abfb2b4588ba5ebbb6 100644
+--- a/build/legacy/hydration-CdBkFt9i.d.cts
++++ b/build/legacy/hydration-CdBkFt9i.d.cts
+@@ -15,6 +15,7 @@ declare class QueryObserver<TQueryFnData = unknown, TError = DefaultError, TData
+     shouldFetchOnReconnect(): boolean;
+     shouldFetchOnWindowFocus(): boolean;
+     destroy(): void;
++    setClient(client: QueryClient): void;
+     setOptions(options: QueryObserverOptions<TQueryFnData, TError, TData, TQueryData, TQueryKey>): void;
+     getOptimisticResult(options: DefaultedQueryObserverOptions<TQueryFnData, TError, TData, TQueryData, TQueryKey>): QueryObserverResult<TData, TError>;
+     getCurrentResult(): QueryObserverResult<TData, TError>;
+diff --git a/build/legacy/hydration-Cr-4Kky1.d.ts b/build/legacy/hydration-Cr-4Kky1.d.ts
+index 588271203cacd383b4c706099683ce06fd08baa4..43d6d898cba272e2c2689db9fa14d934eee336bb 100644
+--- a/build/legacy/hydration-Cr-4Kky1.d.ts
++++ b/build/legacy/hydration-Cr-4Kky1.d.ts
+@@ -15,6 +15,7 @@ declare class QueryObserver<TQueryFnData = unknown, TError = DefaultError, TData
+     shouldFetchOnReconnect(): boolean;
+     shouldFetchOnWindowFocus(): boolean;
+     destroy(): void;
++    setClient(client: QueryClient): void;
+     setOptions(options: QueryObserverOptions<TQueryFnData, TError, TData, TQueryData, TQueryKey>): void;
+     getOptimisticResult(options: DefaultedQueryObserverOptions<TQueryFnData, TError, TData, TQueryData, TQueryKey>): QueryObserverResult<TData, TError>;
+     getCurrentResult(): QueryObserverResult<TData, TError>;
+diff --git a/build/legacy/queryObserver.cjs b/build/legacy/queryObserver.cjs
+index c088702d5054bcb6d2750e95b49c24cfaaaa8d73..a230d59d4ce4fca95f624616530f119f89894c8b 100644
+--- a/build/legacy/queryObserver.cjs
++++ b/build/legacy/queryObserver.cjs
+@@ -110,6 +110,9 @@ var QueryObserver = class extends import_subscribable.Subscribable {
+     __privateMethod(this, _QueryObserver_instances, clearRefetchInterval_fn).call(this);
+     __privateGet(this, _currentQuery).removeObserver(this);
+   }
++  setClient(client) {
++    __privateSet(this, _client, client);
++  }
+   setOptions(options) {
+     const prevOptions = this.options;
+     const prevQuery = __privateGet(this, _currentQuery);
+diff --git a/build/legacy/queryObserver.js b/build/legacy/queryObserver.js
+index 9f746e96fc0d23363bc96888191ba58fd07228d2..7cc9c4f858449ab66e84ba92d042c3f935428bb3 100644
+--- a/build/legacy/queryObserver.js
++++ b/build/legacy/queryObserver.js
+@@ -94,6 +94,9 @@ var QueryObserver = class extends Subscribable {
+     __privateMethod(this, _QueryObserver_instances, clearRefetchInterval_fn).call(this);
+     __privateGet(this, _currentQuery).removeObserver(this);
+   }
++  setClient(client) {
++    __privateSet(this, _client, client);
++  }
+   setOptions(options) {
+     const prevOptions = this.options;
+     const prevQuery = __privateGet(this, _currentQuery);
+diff --git a/build/modern/hydration-CdBkFt9i.d.cts b/build/modern/hydration-CdBkFt9i.d.cts
+index f76324f5b7145d4431d088092ae98a1ba2e4c49a..7ccf66f40efab52a0af6b6abfb2b4588ba5ebbb6 100644
+--- a/build/modern/hydration-CdBkFt9i.d.cts
++++ b/build/modern/hydration-CdBkFt9i.d.cts
+@@ -15,6 +15,7 @@ declare class QueryObserver<TQueryFnData = unknown, TError = DefaultError, TData
+     shouldFetchOnReconnect(): boolean;
+     shouldFetchOnWindowFocus(): boolean;
+     destroy(): void;
++    setClient(client: QueryClient): void;
+     setOptions(options: QueryObserverOptions<TQueryFnData, TError, TData, TQueryData, TQueryKey>): void;
+     getOptimisticResult(options: DefaultedQueryObserverOptions<TQueryFnData, TError, TData, TQueryData, TQueryKey>): QueryObserverResult<TData, TError>;
+     getCurrentResult(): QueryObserverResult<TData, TError>;
+diff --git a/build/modern/hydration-Cr-4Kky1.d.ts b/build/modern/hydration-Cr-4Kky1.d.ts
+index 588271203cacd383b4c706099683ce06fd08baa4..43d6d898cba272e2c2689db9fa14d934eee336bb 100644
+--- a/build/modern/hydration-Cr-4Kky1.d.ts
++++ b/build/modern/hydration-Cr-4Kky1.d.ts
+@@ -15,6 +15,7 @@ declare class QueryObserver<TQueryFnData = unknown, TError = DefaultError, TData
+     shouldFetchOnReconnect(): boolean;
+     shouldFetchOnWindowFocus(): boolean;
+     destroy(): void;
++    setClient(client: QueryClient): void;
+     setOptions(options: QueryObserverOptions<TQueryFnData, TError, TData, TQueryData, TQueryKey>): void;
+     getOptimisticResult(options: DefaultedQueryObserverOptions<TQueryFnData, TError, TData, TQueryData, TQueryKey>): QueryObserverResult<TData, TError>;
+     getCurrentResult(): QueryObserverResult<TData, TError>;
+diff --git a/build/modern/queryObserver.cjs b/build/modern/queryObserver.cjs
+index 2c251a4f5c10add3c1e12acfd904f8d15f6f5d8b..7cc226862aba68c33709e3f3519938a3c8b866bd 100644
+--- a/build/modern/queryObserver.cjs
++++ b/build/modern/queryObserver.cjs
+@@ -100,6 +100,9 @@ var QueryObserver = class extends import_subscribable.Subscribable {
+     this.#clearRefetchInterval();
+     this.#currentQuery.removeObserver(this);
+   }
++  setClient(client) {
++    this.#client = client;
++  }
+   setOptions(options) {
+     const prevOptions = this.options;
+     const prevQuery = this.#currentQuery;
+diff --git a/build/modern/queryObserver.js b/build/modern/queryObserver.js
+index 40d1297cb09d96d6fd09b165e46f017dfcb8af73..cd7b242836e515bdbdf2ed07e654ebc538deb71c 100644
+--- a/build/modern/queryObserver.js
++++ b/build/modern/queryObserver.js
+@@ -85,6 +85,9 @@ var QueryObserver = class extends Subscribable {
+     this.#clearRefetchInterval();
+     this.#currentQuery.removeObserver(this);
+   }
++  setClient(client) {
++    this.#client = client;
++  }
+   setOptions(options) {
+     const prevOptions = this.options;
+     const prevQuery = this.#currentQuery;
+diff --git a/src/queryObserver.ts b/src/queryObserver.ts
+index f2b961eb27423e245e901eb4404d52b2d9d4e363..c4ee814df45e114b30a8543a0040eddc1dab0bdf 100644
+--- a/src/queryObserver.ts
++++ b/src/queryObserver.ts
+@@ -139,6 +139,10 @@ export class QueryObserver<
+     this.#currentQuery.removeObserver(this)
+   }
+ 
++  setClient(client: QueryClient): void {
++    this.#client = client
++  }
++
+   setOptions(
+     options: QueryObserverOptions<
+       TQueryFnData,

@@ -1,14 +1,14 @@
 import React from "react";
 
-import { skipToken } from "@tanstack/react-query";
+import { skipToken, useMutation, useQueries } from "@tanstack/react-query";
 
 import { QueryErrorMessage } from "~app/components/error-message";
 import { useDecimals } from "~app/hooks/use-decimals";
 import { useParticipants } from "~app/hooks/use-participants";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
-import { trpc } from "~app/trpc";
 import { getReceiptDebtName } from "~app/utils/receipt";
+import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { SendIcon, SyncIcon, UnsyncIcon } from "~components/icons";
 import { Tooltip } from "~components/tooltip";
@@ -24,28 +24,35 @@ const ReceiptSyncButtonInner: React.FC<InnerProps> = ({
 	receipt,
 	isLoading,
 }) => {
+	const trpc = useTRPC();
 	const { participants, desyncedParticipants, nonCreatedParticipants } =
 		useParticipants(receipt);
 
 	const addMutations = participants.map(() =>
-		trpc.debts.add.useMutation(
-			// This is stable due to `key` based on participants ids in the upper component
-			// eslint-disable-next-line react-hooks/rules-of-hooks
-			useTrpcMutationOptions(debtsAddOptions),
+		// This is stable due to `key` based on participants ids in the upper component
+		// eslint-disable-next-line react-hooks/rules-of-hooks
+		useMutation(
+			trpc.debts.add.mutationOptions(
+				// eslint-disable-next-line react-hooks/rules-of-hooks
+				useTrpcMutationOptions(debtsAddOptions),
+			),
 		),
 	);
 	const updateMutations = participants.map(({ userId }) => {
 		const matchedDesyncedParticipant = desyncedParticipants.find(
 			(participant) => participant.userId === userId,
 		);
-		return trpc.debts.update.useMutation(
-			// This is stable due to `key` based on participants ids in the upper component
-			// eslint-disable-next-line react-hooks/rules-of-hooks
-			useTrpcMutationOptions(debtsUpdateOptions, {
-				context: matchedDesyncedParticipant?.currentDebt
-					? { currDebt: matchedDesyncedParticipant.currentDebt }
-					: skipToken,
-			}),
+		// This is stable due to `key` based on participants ids in the upper component
+		// eslint-disable-next-line react-hooks/rules-of-hooks
+		return useMutation(
+			trpc.debts.update.mutationOptions(
+				// eslint-disable-next-line react-hooks/rules-of-hooks
+				useTrpcMutationOptions(debtsUpdateOptions, {
+					context: matchedDesyncedParticipant?.currentDebt
+						? { currDebt: matchedDesyncedParticipant.currentDebt }
+						: skipToken,
+				}),
+			),
 		);
 	});
 
@@ -162,9 +169,10 @@ type Props = Omit<InnerProps, "itemsQuery">;
 export const ReceiptSyncButton: React.FC<Props> = ({ receipt, ...props }) => {
 	const debtIds =
 		receipt.debt.direction === "outcoming" ? receipt.debt.ids : [];
-	const queries = trpc.useQueries((t) =>
-		debtIds.map((id) => t.debts.get({ id })),
-	);
+	const trpc = useTRPC();
+	const queries = useQueries({
+		queries: debtIds.map((id) => trpc.debts.get.queryOptions({ id })),
+	});
 	if (queries.some((query) => query.status === "pending")) {
 		return null;
 	}

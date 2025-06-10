@@ -1,10 +1,12 @@
 import React from "react";
 
+import { useMutation } from "@tanstack/react-query";
+
 import { RemoveButton } from "~app/components/remove-button";
 import { useNavigate } from "~app/hooks/use-navigation";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
-import { trpc } from "~app/trpc";
+import { useTRPC } from "~app/utils/trpc";
 import { options as receiptsRemoveOptions } from "~mutations/receipts/remove";
 
 type Props = {
@@ -17,11 +19,14 @@ export const ReceiptRemoveButton: React.FC<Props> = ({
 	setLoading,
 	...props
 }) => {
+	const trpc = useTRPC();
 	const navigate = useNavigate();
-	const removeReceiptMutation = trpc.receipts.remove.useMutation(
-		useTrpcMutationOptions(receiptsRemoveOptions, {
-			onSuccess: () => navigate({ to: "/receipts", replace: true }),
-		}),
+	const removeReceiptMutation = useMutation(
+		trpc.receipts.remove.mutationOptions(
+			useTrpcMutationOptions(receiptsRemoveOptions, {
+				onSuccess: () => navigate({ to: "/receipts", replace: true }),
+			}),
+		),
 	);
 	React.useEffect(
 		() => setLoading(removeReceiptMutation.isPending),

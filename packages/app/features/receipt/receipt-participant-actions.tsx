@@ -1,16 +1,16 @@
 import React from "react";
 import { View } from "react-native";
 
-import { skipToken } from "@tanstack/react-query";
+import { skipToken, useMutation } from "@tanstack/react-query";
 
 import { DebtSyncStatus } from "~app/components/app/debt-sync-status";
 import { useDecimals } from "~app/hooks/use-decimals";
 import type { Participant } from "~app/hooks/use-participants";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
-import { trpc } from "~app/trpc";
 import { areDebtsSynced } from "~app/utils/debts";
 import { getReceiptDebtName } from "~app/utils/receipt";
+import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { SendIcon, SyncIcon, ZeroIcon } from "~components/icons";
 import { options as debtsAddOptions } from "~mutations/debts/add";
@@ -25,17 +25,20 @@ export const ReceiptParticipantActions: React.FC<Props> = ({
 	receipt,
 	participant,
 }) => {
-	const updateMutation = trpc.debts.update.useMutation(
-		useTrpcMutationOptions(debtsUpdateOptions, {
-			context: participant.currentDebt
-				? {
-						currDebt: {
-							...participant.currentDebt,
-							userId: participant.userId,
-						},
-				  }
-				: skipToken,
-		}),
+	const trpc = useTRPC();
+	const updateMutation = useMutation(
+		trpc.debts.update.mutationOptions(
+			useTrpcMutationOptions(debtsUpdateOptions, {
+				context: participant.currentDebt
+					? {
+							currDebt: {
+								...participant.currentDebt,
+								userId: participant.userId,
+							},
+					  }
+					: skipToken,
+			}),
+		),
 	);
 	const { fromSubunitToUnit } = useDecimals();
 	const sum = fromSubunitToUnit(
@@ -56,8 +59,8 @@ export const ReceiptParticipantActions: React.FC<Props> = ({
 		[updateMutation, sum, receipt.currencyCode, receipt.issued, receipt.id],
 	);
 
-	const addMutation = trpc.debts.add.useMutation(
-		useTrpcMutationOptions(debtsAddOptions),
+	const addMutation = useMutation(
+		trpc.debts.add.mutationOptions(useTrpcMutationOptions(debtsAddOptions)),
 	);
 	const addDebt = React.useCallback(() => {
 		addMutation.mutate({

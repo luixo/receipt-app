@@ -1,11 +1,12 @@
 import type React from "react";
 
+import { useMutation } from "@tanstack/react-query";
 import { z } from "zod/v4";
 
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCMutationResult } from "~app/trpc";
-import { trpc } from "~app/trpc";
 import { useAppForm } from "~app/utils/forms";
+import { useTRPC } from "~app/utils/trpc";
 import { emailSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { Header } from "~components/header";
@@ -75,8 +76,11 @@ export const ResetPasswordModal: React.FC<Props> = ({
 	isModalOpen,
 	switchModalOpen,
 }) => {
-	const resetPasswordMutation = trpc.resetPasswordIntentions.add.useMutation(
-		useTrpcMutationOptions(resetPasswordIntentionsAddOptions),
+	const trpc = useTRPC();
+	const resetPasswordMutation = useMutation(
+		trpc.resetPasswordIntentions.add.mutationOptions(
+			useTrpcMutationOptions(resetPasswordIntentionsAddOptions),
+		),
 	);
 	return (
 		<Modal isOpen={isModalOpen} onOpenChange={switchModalOpen}>

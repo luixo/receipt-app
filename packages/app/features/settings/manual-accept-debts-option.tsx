@@ -1,16 +1,21 @@
 import React from "react";
 
+import { useMutation, useQuery } from "@tanstack/react-query";
+
 import { ErrorMessage, QueryErrorMessage } from "~app/components/error-message";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { trpc } from "~app/trpc";
+import { useTRPC } from "~app/utils/trpc";
 import { Spinner } from "~components/spinner";
 import { Switch } from "~components/switch";
 import { options as accountSettingsUpdateOptions } from "~mutations/account-settings/update";
 
 export const ManualAcceptDebtsOption: React.FC = () => {
-	const settingsQuery = trpc.accountSettings.get.useQuery();
-	const updateSettingsMutation = trpc.accountSettings.update.useMutation(
-		useTrpcMutationOptions(accountSettingsUpdateOptions),
+	const trpc = useTRPC();
+	const settingsQuery = useQuery(trpc.accountSettings.get.queryOptions());
+	const updateSettingsMutation = useMutation(
+		trpc.accountSettings.update.mutationOptions(
+			useTrpcMutationOptions(accountSettingsUpdateOptions),
+		),
 	);
 	const onChange = React.useCallback(
 		(nextAutoAccept: boolean) =>

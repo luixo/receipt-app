@@ -1,9 +1,11 @@
 import React from "react";
 
+import { useMutation } from "@tanstack/react-query";
+
 import { useNavigate } from "~app/hooks/use-navigation";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
-import { trpc } from "~app/trpc";
+import { useTRPC } from "~app/utils/trpc";
 import { Button, ButtonGroup } from "~components/button";
 import { options as acceptDebtIntentionOptions } from "~mutations/debt-intentions/accept";
 
@@ -14,12 +16,15 @@ type Props = {
 };
 
 export const InboundDebtIntention: React.FC<Props> = ({ intention }) => {
+	const trpc = useTRPC();
 	const navigate = useNavigate();
 
-	const acceptMutation = trpc.debtIntentions.accept.useMutation(
-		useTrpcMutationOptions(acceptDebtIntentionOptions, {
-			context: { intention },
-		}),
+	const acceptMutation = useMutation(
+		trpc.debtIntentions.accept.mutationOptions(
+			useTrpcMutationOptions(acceptDebtIntentionOptions, {
+				context: { intention },
+			}),
+		),
 	);
 	const acceptSyncIntention = React.useCallback(
 		(redirectToDebt = false) => {

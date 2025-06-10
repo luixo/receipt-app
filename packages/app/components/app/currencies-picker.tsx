@@ -1,11 +1,14 @@
 import React from "react";
 import { View } from "react-native";
 
+import { useQuery } from "@tanstack/react-query";
+
 import { QueryErrorMessage } from "~app/components/error-message";
 import { useCurrencies } from "~app/hooks/use-currencies";
 import { useCurrencyDescriptions } from "~app/hooks/use-formatted-currency";
-import { type TRPCQueryInput, type TRPCQueryResult, trpc } from "~app/trpc";
+import type { TRPCQueryInput, TRPCQueryResult } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
+import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { Divider } from "~components/divider";
 import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
@@ -27,9 +30,12 @@ const CurrenciesPickerLoader: React.FC<LoaderProps> = ({
 	topQueryOptions,
 	hiddenCurrencies = [],
 }) => {
-	const topCurrenciesQuery = trpc.currency.top.useQuery({
-		options: topQueryOptions,
-	});
+	const trpc = useTRPC();
+	const topCurrenciesQuery = useQuery(
+		trpc.currency.top.queryOptions({
+			options: topQueryOptions,
+		}),
+	);
 	const topCurrencyCodes = React.useMemo(() => {
 		if (!topCurrenciesQuery.data) {
 			return;
@@ -93,10 +99,13 @@ export const CurrenciesPicker: React.FC<WrapperProps> = ({
 	topQueryOptions,
 	...props
 }) => {
+	const trpc = useTRPC();
 	const query = useCurrencies();
-	const topCurrenciesQuery = trpc.currency.top.useQuery({
-		options: topQueryOptions,
-	});
+	const topCurrenciesQuery = useQuery(
+		trpc.currency.top.queryOptions({
+			options: topQueryOptions,
+		}),
+	);
 	React.useEffect(() => {
 		if (
 			onLoad &&

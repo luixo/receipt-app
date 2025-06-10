@@ -3,16 +3,19 @@ import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<"auth.login"> = {
 	onSuccess:
-		(controllerContext) =>
+		({ queryClient, trpc }) =>
 		async ({ account, user }, variables) => {
-			await controllerContext.trpcUtils.invalidate();
-			updateAccount(controllerContext, {
-				get: (controller) =>
-					controller.upsert({
-						account: { ...account, email: variables.email },
-						user,
-					}),
-			});
+			await queryClient.invalidateQueries(trpc.pathFilter());
+			updateAccount(
+				{ queryClient, trpc },
+				{
+					get: (controller) =>
+						controller.upsert({
+							account: { ...account, email: variables.email },
+							user,
+						}),
+				},
+			);
 		},
 	successToastOptions: {
 		text: "Login successful, redirecting..",

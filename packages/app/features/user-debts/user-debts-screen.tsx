@@ -1,6 +1,8 @@
 import React from "react";
 import { View } from "react-native";
 
+import { useQueries, useQuery } from "@tanstack/react-query";
+
 import {
 	DebtsGroup,
 	DebtsGroupSkeleton,
@@ -18,7 +20,7 @@ import { useDividers } from "~app/hooks/use-dividers";
 import { useNavigate } from "~app/hooks/use-navigation";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
-import { trpc } from "~app/trpc";
+import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { Divider } from "~components/divider";
 import {
@@ -100,9 +102,12 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 		aggregatedDebtsErrorQueries,
 	] = useAggregatedDebts(query);
 	const debtIds = query.data.map((debt) => debt.id);
-	const debtsQueries = trpc.useQueries((t) =>
-		debtIds.map((debtId) => t.debts.get({ id: debtId })),
-	);
+	const trpc = useTRPC();
+	const debtsQueries = useQueries({
+		queries: debtIds.map((debtId) =>
+			trpc.debts.get.queryOptions({ id: debtId }),
+		),
+	});
 	const successDebtsQueries = debtsQueries.filter(
 		(debtQuery) => debtQuery.status === "success",
 	);
@@ -185,7 +190,8 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 };
 
 export const UserDebtsScreen: React.FC<{ userId: UsersId }> = ({ userId }) => {
-	const query = trpc.debts.getIdsByUser.useQuery({ userId });
+	const trpc = useTRPC();
+	const query = useQuery(trpc.debts.getIdsByUser.queryOptions({ userId }));
 	const elements = React.useMemo(() => new Array<null>(3).fill(null), []);
 	if (query.status === "pending") {
 		return (

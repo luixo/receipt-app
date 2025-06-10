@@ -1,16 +1,21 @@
 import React from "react";
 
+import { useQuery } from "@tanstack/react-query";
+
 import { QueryErrorMessage } from "~app/components/error-message";
 import { useAuth } from "~app/hooks/use-auth";
 import { useNavigate } from "~app/hooks/use-navigation";
-import { trpc } from "~app/trpc";
+import { useTRPC } from "~app/utils/trpc";
 
 export const NoAuthEffect: React.FC = () => {
+	const trpc = useTRPC();
 	const { unauthorize } = useAuth();
 	const navigate = useNavigate();
-	const accountQuery = trpc.account.get.useQuery(undefined, {
-		retry: (count, error) => count < 2 && error.data?.code !== "UNAUTHORIZED",
-	});
+	const accountQuery = useQuery(
+		trpc.account.get.queryOptions(undefined, {
+			retry: (count, error) => count < 2 && error.data?.code !== "UNAUTHORIZED",
+		}),
+	);
 	React.useEffect(() => {
 		if (
 			accountQuery.error &&

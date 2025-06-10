@@ -1,12 +1,13 @@
 import type React from "react";
 
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { z } from "zod/v4";
 
 import { QueryErrorMessage } from "~app/components/error-message";
 import { useNavigate } from "~app/hooks/use-navigation";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { trpc } from "~app/trpc";
 import { useAppForm } from "~app/utils/forms";
+import { useTRPC } from "~app/utils/trpc";
 import { passwordSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { Header } from "~components/header";
@@ -25,12 +26,15 @@ type Props = {
 };
 
 const ResetPasswordForm: React.FC<Props> = ({ token }) => {
+	const trpc = useTRPC();
 	const navigate = useNavigate();
 
-	const changePasswordMutation = trpc.auth.resetPassword.useMutation(
-		useTrpcMutationOptions(authResetPasswordOptions, {
-			onSuccess: () => navigate({ to: "/login", replace: true }),
-		}),
+	const changePasswordMutation = useMutation(
+		trpc.auth.resetPassword.mutationOptions(
+			useTrpcMutationOptions(authResetPasswordOptions, {
+				onSuccess: () => navigate({ to: "/login", replace: true }),
+			}),
+		),
 	);
 	const defaultValues: Partial<Form> = {};
 	const form = useAppForm({
@@ -100,7 +104,10 @@ const ResetPasswordForm: React.FC<Props> = ({ token }) => {
 };
 
 export const ResetPassword: React.FC<Props> = ({ token }) => {
-	const intentionQuery = trpc.resetPasswordIntentions.get.useQuery({ token });
+	const trpc = useTRPC();
+	const intentionQuery = useQuery(
+		trpc.resetPasswordIntentions.get.queryOptions({ token }),
+	);
 
 	switch (intentionQuery.status) {
 		case "pending":

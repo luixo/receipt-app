@@ -1,12 +1,12 @@
 import React from "react";
 
-import { skipToken } from "@tanstack/react-query";
+import { skipToken, useMutation } from "@tanstack/react-query";
 
 import { ConfirmModal } from "~app/components/confirm-modal";
 import { DebtIntention } from "~app/features/debts-intentions/debt-intention";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
-import { trpc } from "~app/trpc";
+import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { SyncIcon } from "~components/icons";
 import { options as acceptDebtIntentionOptions } from "~mutations/debt-intentions/accept";
@@ -18,6 +18,7 @@ type Props = {
 };
 
 export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
+	const trpc = useTRPC();
 	const intention = React.useMemo(
 		() =>
 			debt.their
@@ -48,10 +49,12 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 			debt.userId,
 		],
 	);
-	const acceptMutation = trpc.debtIntentions.accept.useMutation(
-		useTrpcMutationOptions(acceptDebtIntentionOptions, {
-			context: intention ? { intention } : skipToken,
-		}),
+	const acceptMutation = useMutation(
+		trpc.debtIntentions.accept.mutationOptions(
+			useTrpcMutationOptions(acceptDebtIntentionOptions, {
+				context: intention ? { intention } : skipToken,
+			}),
+		),
 	);
 	const acceptSyncIntention = React.useCallback(() => {
 		if (!intention) {

@@ -1,13 +1,16 @@
 import type React from "react";
 import { View } from "react-native";
 
+import { useQuery } from "@tanstack/react-query";
+
 import {
 	DebtsGroup,
 	DebtsGroupSkeleton,
 } from "~app/components/app/debts-group";
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { SkeletonUser } from "~app/components/app/user";
-import { type TRPCQueryOutput, trpc } from "~app/trpc";
+import type { TRPCQueryOutput } from "~app/trpc";
+import { useTRPC } from "~app/utils/trpc";
 import { Card, CardBody } from "~components/card";
 import { SyncIcon, UnsyncIcon } from "~components/icons";
 import { CardLink } from "~components/link";
@@ -47,8 +50,11 @@ export const UserDebtsPreview: React.FC<Props> = ({
 	transparent,
 	unsyncedDebtsAmount,
 }) => {
-	const userQuery = trpc.users.get.useQuery({ id: userId });
-	const accountSettingsQuery = trpc.accountSettings.get.useQuery();
+	const trpc = useTRPC();
+	const userQuery = useQuery(trpc.users.get.queryOptions({ id: userId }));
+	const accountSettingsQuery = useQuery(
+		trpc.accountSettings.get.queryOptions(),
+	);
 	return (
 		<CardLink to="/debts/user/$id" params={{ id: userId }}>
 			<CardBody className={card({ transparent })}>

@@ -1,19 +1,17 @@
 import type {
+	InfiniteData,
 	InvalidateOptions,
 	InvalidateQueryFilters,
 	Mutation,
 	MutationState,
 	Query,
 	SetDataOptions,
+	UseInfiniteQueryResult,
+	UseMutationResult,
+	UseQueryResult,
 } from "@tanstack/react-query";
 import type { TRPCClientErrorLike } from "@trpc/react-query";
-import { createTRPCReact } from "@trpc/react-query";
-import type {
-	UseTRPCInfiniteQueryResult,
-	UseTRPCMutationResult,
-	UseTRPCQueryResult,
-	UtilsLike,
-} from "@trpc/react-query/shared";
+import type { UtilsLike } from "@trpc/react-query/shared";
 import type {
 	AnyTRPCMutationProcedure,
 	AnyTRPCProcedure,
@@ -22,7 +20,7 @@ import type {
 	inferProcedureInput,
 	inferProcedureOutput,
 } from "@trpc/server";
-import type { DecoratedMutation } from "node_modules/@trpc/react-query/dist/createTRPCReact";
+import type { ExtractCursorType } from "@trpc/tanstack-react-query";
 
 import type {
 	ExtractObjectByPath,
@@ -68,20 +66,6 @@ type TRPCMutationValues = UnionToIntersection<
 
 // anything router-specific goes below
 
-export const trpc = createTRPCReact<AppRouter>();
-
-export type TRPCReact = typeof trpc;
-
-export type TRPCDecoratedMutations = UnionToIntersection<
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	FlattenObject<DecoratedMutation<any>, TRPCReact>
->;
-
-export type TRPCDecoratedMutation<Path extends TRPCMutationKey> =
-	TRPCDecoratedMutations[Path];
-
-export type TRPCReactUtils = ReturnType<(typeof trpc)["useUtils"]>;
-
 export type TRPCError = TRPCClientErrorLike<AppRouter>;
 
 type TRPCInfiniteQueryValues<P extends Record<string, AnyTRPCQueryProcedure>> =
@@ -104,7 +88,7 @@ export type TRPCQueryOutput<Path extends TRPCQueryKey> = inferProcedureOutput<
 	TRPCQueryValues[Path]
 >;
 
-export type TRPCQueryResult<Path extends TRPCQueryKey> = UseTRPCQueryResult<
+export type TRPCQueryResult<Path extends TRPCQueryKey> = UseQueryResult<
 	TRPCQueryOutput<Path>,
 	TRPCError
 >;
@@ -154,10 +138,12 @@ export type TRPCInfiniteQueryCursor<Path extends TRPCInfiniteQueryKey> =
 		: never;
 
 export type TRPCInfiniteQueryResult<Path extends TRPCQueryKey> =
-	UseTRPCInfiniteQueryResult<
-		TRPCQueryOutput<Path>,
-		TRPCError,
-		TRPCQueryInput<Path>
+	UseInfiniteQueryResult<
+		InfiniteData<
+			TRPCQueryOutput<Path>,
+			NonNullable<ExtractCursorType<TRPCQueryInput<Path>>> | null
+		>,
+		TRPCError
 	>;
 
 export type TRPCInfiniteQuerySuccessResult<
@@ -177,11 +163,10 @@ export type TRPCMutationOutput<Path extends TRPCMutationKey> =
 	inferProcedureOutput<TRPCMutationValues[Path]>;
 
 export type TRPCMutationResult<Path extends TRPCMutationKey> =
-	UseTRPCMutationResult<
+	UseMutationResult<
 		TRPCMutationOutput<Path>,
 		TRPCError,
-		TRPCMutationInput<Path>,
-		unknown
+		TRPCMutationInput<Path>
 	>;
 
 export type TRPCMutation<Path extends TRPCMutationKey> = Mutation<

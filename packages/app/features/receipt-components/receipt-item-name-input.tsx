@@ -5,8 +5,8 @@ import { z } from "zod/v4";
 
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
-import { trpc } from "~app/trpc";
 import { useAppForm } from "~app/utils/forms";
+import { useTRPC } from "~app/utils/trpc";
 import { receiptItemNameSchema } from "~app/utils/validation";
 import { SaveButton } from "~components/save-button";
 import { Text } from "~components/text";
@@ -42,8 +42,9 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 		},
 	});
 
+	const trpc = useTRPC();
 	const updateMutationState = useTrpcMutationState<"receiptItems.update">(
-		trpc.receiptItems.update,
+		trpc.receiptItems.update.mutationKey(),
 		(vars) => vars.update.type === "name" && vars.id === item.id,
 	);
 	const isDisabled = !canEdit || receiptDisabled || isExternalDisabled;

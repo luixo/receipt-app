@@ -6,9 +6,9 @@ import {
 	httpLink,
 	splitLink,
 } from "@trpc/client";
-import { createTRPCReact } from "@trpc/react-query";
 import type { AnyTRPCRouter } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
+import { createTRPCContext } from "@trpc/tanstack-react-query";
 import { identity, omitBy } from "remeda";
 import superjson from "superjson";
 
@@ -157,4 +157,5 @@ export const getQueryClientConfig = (): QueryClientConfig => ({
 	},
 });
 
-export const trpcReact = createTRPCReact<AppRouter>();
+export const { TRPCProvider, useTRPC, useTRPCClient } =
+	createTRPCContext<AppRouter>();

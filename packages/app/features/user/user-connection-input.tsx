@@ -1,11 +1,12 @@
 import React from "react";
 
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { z } from "zod/v4";
 
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
-import { trpc } from "~app/trpc";
 import { useAppForm } from "~app/utils/forms";
+import { useTRPC } from "~app/utils/trpc";
 import { emailSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { LinkIcon, TrashBinIcon, UnlinkIcon } from "~components/icons";
@@ -22,8 +23,10 @@ type Props = {
 };
 
 export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
-	const connectionIntentionsQuery =
-		trpc.accountConnectionIntentions.getAll.useQuery();
+	const trpc = useTRPC();
+	const connectionIntentionsQuery = useQuery(
+		trpc.accountConnectionIntentions.getAll.queryOptions(),
+	);
 	const outboundConnectionIntention =
 		connectionIntentionsQuery.status === "success"
 			? connectionIntentionsQuery.data.outbound.find(
@@ -31,8 +34,10 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 			  ) ?? null
 			: undefined;
 
-	const connectUserMutation = trpc.accountConnectionIntentions.add.useMutation(
-		useTrpcMutationOptions(accountConnectionsAddOptions),
+	const connectUserMutation = useMutation(
+		trpc.accountConnectionIntentions.add.mutationOptions(
+			useTrpcMutationOptions(accountConnectionsAddOptions),
+		),
 	);
 
 	const form = useAppForm({
@@ -49,23 +54,26 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 		Boolean(user.connectedAccount),
 	);
 
-	const cancelRequestMutation =
-		trpc.accountConnectionIntentions.remove.useMutation(
+	const cancelRequestMutation = useMutation(
+		trpc.accountConnectionIntentions.remove.mutationOptions(
 			useTrpcMutationOptions(accountConnectionsRemoveOptions, {
 				onSuccess: () => {
 					form.reset();
 					setInputShown(false);
 				},
 			}),
-		);
+		),
+	);
 	const cancelRequest = React.useCallback(
 		(accountId: AccountsId) =>
 			cancelRequestMutation.mutate({ targetAccountId: accountId }),
 		[cancelRequestMutation],
 	);
 
-	const unlinkMutation = trpc.users.unlink.useMutation(
-		useTrpcMutationOptions(usersUnlinkOptions),
+	const unlinkMutation = useMutation(
+		trpc.users.unlink.mutationOptions(
+			useTrpcMutationOptions(usersUnlinkOptions),
+		),
 	);
 	const unlinkUser = React.useCallback(
 		() => unlinkMutation.mutate({ id: user.id }),

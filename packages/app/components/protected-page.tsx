@@ -1,5 +1,7 @@
 import type React from "react";
 
+import { useQuery } from "@tanstack/react-query";
+
 import {
 	AdminWrapper,
 	AdminWrapperWithEffect,
@@ -8,7 +10,7 @@ import { NoAuthEffect } from "~app/components/app/no-auth-effect";
 import { Page } from "~app/components/page";
 import { useConnectionIntentions } from "~app/hooks/use-connection-intentions";
 import { useDebtsIntentions } from "~app/hooks/use-debts-intentions";
-import { trpc } from "~app/trpc";
+import { useTRPC } from "~app/utils/trpc";
 import {
 	AccountIcon,
 	AdminIcon,
@@ -19,7 +21,8 @@ import {
 } from "~components/icons";
 
 const useShowAdmin = () => {
-	const accountQuery = trpc.account.get.useQuery();
+	const trpc = useTRPC();
+	const accountQuery = useQuery(trpc.account.get.queryOptions());
 	const role =
 		accountQuery.status === "success" ? accountQuery.data.account.role : null;
 	return role === "admin";

@@ -1,5 +1,6 @@
 import React from "react";
 
+import { useMutation } from "@tanstack/react-query";
 import { isNonNullish } from "remeda";
 import { z } from "zod/v4";
 
@@ -15,8 +16,8 @@ import { EmailVerificationCard } from "~app/features/email-verification/email-ve
 import type { SearchParamState } from "~app/hooks/use-navigation";
 import { useNavigate } from "~app/hooks/use-navigation";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { trpc } from "~app/trpc";
 import { useAppForm } from "~app/utils/forms";
+import { useTRPC } from "~app/utils/trpc";
 import {
 	currencyCodeSchema,
 	debtAmountSchema,
@@ -43,13 +44,16 @@ type Form = z.infer<typeof formSchema>;
 export const AddDebtScreen: React.FC<{
 	userIdState: SearchParamState<"/debts/add", "userId">;
 }> = ({ userIdState: [userId, setUserId] }) => {
+	const trpc = useTRPC();
 	const navigate = useNavigate();
 
-	const addMutation = trpc.debts.add.useMutation(
-		useTrpcMutationOptions(debtsAddOptions, {
-			onSuccess: ({ id }) =>
-				navigate({ to: "/debts/$id", params: { id }, replace: true }),
-		}),
+	const addMutation = useMutation(
+		trpc.debts.add.mutationOptions(
+			useTrpcMutationOptions(debtsAddOptions, {
+				onSuccess: ({ id }) =>
+					navigate({ to: "/debts/$id", params: { id }, replace: true }),
+			}),
+		),
 	);
 
 	const defaultValues: Partial<Form> = {

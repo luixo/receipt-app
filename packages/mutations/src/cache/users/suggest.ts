@@ -1,13 +1,14 @@
-import type { TRPCReactUtils } from "~app/trpc";
+import type { ControllerContext, ControllerWith } from "../../types";
 
-import type { ControllerContext } from "../../types";
+type Controller = ControllerWith<{
+	procedure: ControllerContext["trpc"]["users"]["suggest"];
+}>;
 
-type Controller = TRPCReactUtils["users"]["suggest"];
+const invalidate = ({ queryClient, procedure }: Controller) =>
+	queryClient.invalidateQueries(procedure.queryFilter());
 
-const invalidate = (controller: Controller) => controller.invalidate();
-
-export const getController = ({ trpcUtils }: ControllerContext) => {
-	const controller = trpcUtils.users.suggest;
+export const getController = ({ queryClient, trpc }: ControllerContext) => {
+	const controller = { queryClient, procedure: trpc.users.suggest };
 	return {
 		invalidate: () => invalidate(controller),
 	};

@@ -1,5 +1,7 @@
 import React from "react";
 
+import { useMutation } from "@tanstack/react-query";
+
 import { CurrencyInput } from "~app/components/app/currency-input";
 import { DateInput } from "~app/components/date-input";
 import {
@@ -12,8 +14,8 @@ import type { Payer } from "~app/features/receipt-components/state";
 import { useNavigate } from "~app/hooks/use-navigation";
 import { useParticipants } from "~app/hooks/use-participants";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
-import { trpc } from "~app/trpc";
 import { useAppForm, useTypedValues } from "~app/utils/forms";
+import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import type { AccountsId, UsersId } from "~db/models";
 import { options as receiptsAddOptions } from "~mutations/receipts/add";
@@ -28,14 +30,17 @@ type Props = {
 };
 
 export const AddReceipt: React.FC<Props> = ({ selfAccountId }) => {
+	const trpc = useTRPC();
 	const navigate = useNavigate();
 
-	const addReceiptMutation = trpc.receipts.add.useMutation(
-		useTrpcMutationOptions(receiptsAddOptions, {
-			context: { selfAccountId },
-			onSuccess: ({ id }) =>
-				navigate({ to: "/receipts/$id", params: { id }, replace: true }),
-		}),
+	const addReceiptMutation = useMutation(
+		trpc.receipts.add.mutationOptions(
+			useTrpcMutationOptions(receiptsAddOptions, {
+				context: { selfAccountId },
+				onSuccess: ({ id }) =>
+					navigate({ to: "/receipts/$id", params: { id }, replace: true }),
+			}),
+		),
 	);
 
 	const [items, setItems] = React.useState<Item[]>([]);

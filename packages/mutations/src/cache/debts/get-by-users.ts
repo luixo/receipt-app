@@ -1,12 +1,19 @@
-import type { TRPCQueryOutput, TRPCReactUtils } from "~app/trpc";
+import type { TRPCQueryOutput } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import type { UsersId } from "~db/models";
 import { upsertInArray } from "~utils/array";
 
-import type { ControllerContext, SnapshotFn, UpdateFn } from "../../types";
+import type {
+	ControllerContext,
+	ControllerWith,
+	SnapshotFn,
+	UpdateFn,
+} from "../../types";
 import { applyUpdateFnWithRevert, withRef } from "../utils";
 
-type Controller = TRPCReactUtils["debts"]["getByUsers"];
+type Controller = ControllerWith<{
+	procedure: ControllerContext["trpc"]["debts"]["getByUsers"];
+}>;
 
 type AllDebts = TRPCQueryOutput<"debts.getByUsers">;
 type UserDebts = AllDebts[number];
@@ -14,11 +21,11 @@ type Debts = UserDebts["debts"];
 type Debt = Debts[number];
 
 const updateUser = (
-	controller: Controller,
+	{ queryClient, procedure }: Controller,
 	userId: UsersId,
 	updater: UpdateFn<UserDebts>,
 ) =>
-	controller.setData(undefined, (prevData) =>
+	queryClient.setQueryData(procedure.queryKey(), (prevData) =>
 		prevData
 			? upsertInArray<(typeof prevData)[number]>(
 					prevData,
@@ -82,10 +89,13 @@ const updateUnsyncedDebts =
 			});
 		}).current;
 
-const invalidate = (controller: Controller) => () => controller.invalidate();
+const invalidate =
+	({ queryClient, procedure }: Controller) =>
+	() =>
+		queryClient.invalidateQueries(procedure.queryFilter());
 
-export const getController = ({ trpcUtils }: ControllerContext) => {
-	const controller = trpcUtils.debts.getByUsers;
+export const getController = ({ queryClient, trpc }: ControllerContext) => {
+	const controller = { queryClient, procedure: trpc.debts.getByUsers };
 	return {
 		updateUnsyncedDebts: (userId: UsersId, updater: UpdateFn<number>) =>
 			updateUnsyncedDebts(controller, userId)(updater),
@@ -98,8 +108,11 @@ export const getController = ({ trpcUtils }: ControllerContext) => {
 	};
 };
 
-export const getRevertController = ({ trpcUtils }: ControllerContext) => {
-	const controller = trpcUtils.debts.getByUsers;
+export const getRevertController = ({
+	queryClient,
+	trpc,
+}: ControllerContext) => {
+	const controller = { queryClient, procedure: trpc.debts.getByUsers };
 	return {
 		updateCurrency: (
 			userId: UsersId,

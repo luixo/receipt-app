@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { skipToken } from "@tanstack/react-query";
+import { skipToken, useMutation, useQuery } from "@tanstack/react-query";
 import { entries, groupBy, isNonNullish, pullObject, values } from "remeda";
 import { z } from "zod/v4";
 
@@ -21,9 +21,9 @@ import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { useTrpcMutationStates } from "~app/hooks/use-trpc-mutation-state";
 import type { TRPCQueryOutput, TRPCQuerySuccessResult } from "~app/trpc";
-import { trpc } from "~app/trpc";
 import { type CurrencyCode, getCurrencySymbol } from "~app/utils/currency";
 import { useAppForm } from "~app/utils/forms";
+import { useTRPC } from "~app/utils/trpc";
 import {
 	currencyCodeSchema,
 	debtAmountSchema,
@@ -68,6 +68,7 @@ const DebtsListForm: React.FC<FormProps> = ({
 	fromUser,
 	toUser,
 }) => {
+	const trpc = useTRPC();
 	const [extraCurrencyCodes, setExtraCurrencyCodes] = React.useState<
 		CurrencyCode[]
 	>([]);
@@ -81,8 +82,8 @@ const DebtsListForm: React.FC<FormProps> = ({
 		],
 		[aggregatedDebts, extraCurrencyCodes],
 	);
-	const addMutation = trpc.debts.add.useMutation(
-		useTrpcMutationOptions(debtsAddOptions),
+	const addMutation = useMutation(
+		trpc.debts.add.mutationOptions(useTrpcMutationOptions(debtsAddOptions)),
 	);
 	const locale = useLocale();
 	const [lastMutationTimestamps, setLastMutationTimestamps] = React.useState<
@@ -138,7 +139,7 @@ const DebtsListForm: React.FC<FormProps> = ({
 		},
 	});
 	const lastMutationStates = useTrpcMutationStates<"debts.add">(
-		trpc.debts.add,
+		trpc.debts.add.mutationKey(),
 		(vars) => lastMutationTimestamps.includes(vars.timestamp?.valueOf() ?? 0),
 	);
 	const setAllMax = React.useCallback(() => {
@@ -372,8 +373,9 @@ export const DebtsTransferScreen: React.FC<{
 	fromIdState: SearchParamState<"/debts/transfer", "from">;
 	toIdState: SearchParamState<"/debts/transfer", "to">;
 }> = ({ fromIdState: [fromId, setFromId], toIdState: [toId, setToId] }) => {
-	const fromUserQuery = trpc.users.get.useQuery(
-		fromId ? { id: fromId } : skipToken,
+	const trpc = useTRPC();
+	const fromUserQuery = useQuery(
+		trpc.users.get.queryOptions(fromId ? { id: fromId } : skipToken),
 	);
 	const onFromClick = React.useCallback(
 		(userId: UsersId) => {
@@ -387,9 +389,13 @@ export const DebtsTransferScreen: React.FC<{
 		},
 		[setToId, toId],
 	);
-	const toUserQuery = trpc.users.get.useQuery(toId ? { id: toId } : skipToken);
-	const fromUserDebts = trpc.debts.getIdsByUser.useQuery(
-		fromId ? { userId: fromId } : skipToken,
+	const toUserQuery = useQuery(
+		trpc.users.get.queryOptions(toId ? { id: toId } : skipToken),
+	);
+	const fromUserDebts = useQuery(
+		trpc.debts.getIdsByUser.queryOptions(
+			fromId ? { userId: fromId } : skipToken,
+		),
 	);
 
 	return (

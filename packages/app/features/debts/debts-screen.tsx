@@ -1,9 +1,11 @@
 import React from "react";
 
+import { useQuery } from "@tanstack/react-query";
+
 import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
 import { useDebtsIntentions } from "~app/hooks/use-debts-intentions";
-import { trpc } from "~app/trpc";
+import { useTRPC } from "~app/utils/trpc";
 import { Badge } from "~components/badge";
 import { AddIcon, DebtIcon, InboxIcon, TransferIcon } from "~components/icons";
 import { ButtonLink } from "~components/link";
@@ -11,7 +13,8 @@ import { ButtonLink } from "~components/link";
 import { Debts } from "./debts";
 
 export const DebtsScreen: React.FC = () => {
-	const settingsQuery = trpc.accountSettings.get.useQuery();
+	const trpc = useTRPC();
+	const settingsQuery = useQuery(trpc.accountSettings.get.queryOptions());
 	const inboundDebtsAmount = useDebtsIntentions();
 	const intentionsButton = React.useMemo(
 		() => (

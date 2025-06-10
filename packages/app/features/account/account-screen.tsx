@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod/v4";
 
 import { QueryErrorMessage } from "~app/components/error-message";
@@ -10,9 +10,8 @@ import { EmailVerificationCard } from "~app/features/email-verification/email-ve
 import { useNavigate } from "~app/hooks/use-navigation";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput, TRPCQuerySuccessResult } from "~app/trpc";
-import { trpc } from "~app/trpc";
 import { useAppForm } from "~app/utils/forms";
-import { noBatchContext } from "~app/utils/trpc";
+import { noBatchContext, useTRPC } from "~app/utils/trpc";
 import { userNameSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { AccountIcon } from "~components/icons";
@@ -28,10 +27,13 @@ type NameProps = {
 };
 
 const AccountNameInput: React.FC<NameProps> = ({ accountQuery }) => {
-	const updateNameMutation = trpc.account.changeName.useMutation(
-		useTrpcMutationOptions(accountChangeNameOptions, {
-			context: { id: accountQuery.account.id },
-		}),
+	const trpc = useTRPC();
+	const updateNameMutation = useMutation(
+		trpc.account.changeName.mutationOptions(
+			useTrpcMutationOptions(accountChangeNameOptions, {
+				context: { id: accountQuery.account.id },
+			}),
+		),
 	);
 	const form = useAppForm({
 		defaultValues: { value: accountQuery.user.name },
@@ -83,17 +85,20 @@ type InnerProps = {
 };
 
 const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
+	const trpc = useTRPC();
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
 
-	const logoutMutation = trpc.account.logout.useMutation(
-		useTrpcMutationOptions(accountLogoutOptions, {
-			onSuccess: () => {
-				void queryClient.resetQueries();
-				navigate({ to: "/", replace: true });
-			},
-			trpc: { context: noBatchContext },
-		}),
+	const logoutMutation = useMutation(
+		trpc.account.logout.mutationOptions(
+			useTrpcMutationOptions(accountLogoutOptions, {
+				onSuccess: () => {
+					void queryClient.resetQueries();
+					navigate({ to: "/", replace: true });
+				},
+				trpc: { context: noBatchContext },
+			}),
+		),
 	);
 	const logout = React.useCallback(
 		() => logoutMutation.mutate(),
@@ -121,7 +126,8 @@ const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 };
 
 const AccountScreenQuery: React.FC = () => {
-	const query = trpc.account.get.useQuery();
+	const trpc = useTRPC();
+	const query = useQuery(trpc.account.get.queryOptions());
 	switch (query.status) {
 		case "pending":
 			return (

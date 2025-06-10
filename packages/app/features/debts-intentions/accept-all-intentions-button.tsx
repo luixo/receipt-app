@@ -1,9 +1,11 @@
 import React from "react";
 
+import { useMutation } from "@tanstack/react-query";
+
 import { useNavigate } from "~app/hooks/use-navigation";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
-import { trpc } from "~app/trpc";
+import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
 import { options as acceptDebtIntentionOptions } from "~mutations/debt-intentions/accept";
 
@@ -15,15 +17,19 @@ export const AcceptAllIntentionsButton: React.FC<Props> = ({
 	intentions,
 	...props
 }) => {
+	const trpc = useTRPC();
 	const navigate = useNavigate();
 
 	const acceptMutations = intentions.map((intention) =>
-		trpc.debtIntentions.accept.useMutation(
-			// Intentions are stable due to `key` based on intention id in the upper component
-			// eslint-disable-next-line react-hooks/rules-of-hooks
-			useTrpcMutationOptions(acceptDebtIntentionOptions, {
-				context: { intention },
-			}),
+		// Intentions are stable due to `key` based on intention id in the upper component
+		// eslint-disable-next-line react-hooks/rules-of-hooks
+		useMutation(
+			trpc.debtIntentions.accept.mutationOptions(
+				// eslint-disable-next-line react-hooks/rules-of-hooks
+				useTrpcMutationOptions(acceptDebtIntentionOptions, {
+					context: { intention },
+				}),
+			),
 		),
 	);
 	const acceptAllIntentions = React.useCallback(async () => {
