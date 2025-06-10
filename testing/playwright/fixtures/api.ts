@@ -1,9 +1,6 @@
 import type { Faker } from "@faker-js/faker";
 import type { BrowserContext } from "@playwright/test";
-import {
-	createTRPCClient,
-	unstable_httpBatchStreamLink as httpBatchStreamLink,
-} from "@trpc/client";
+import { createTRPCClient, httpBatchStreamLink } from "@trpc/client";
 import { TRPCError } from "@trpc/server";
 import { getHTTPStatusCodeFromError } from "@trpc/server/http";
 import {
@@ -11,7 +8,6 @@ import {
 	type TRPCErrorShape,
 	TRPC_ERROR_CODES_BY_KEY,
 } from "@trpc/server/rpc";
-import type { MaybePromise } from "@trpc/server/unstable-core-do-not-import";
 import http from "node:http";
 import { v4 } from "uuid";
 
@@ -28,6 +24,7 @@ import { transformer } from "~app/utils/trpc";
 import type { AccountsId, UsersId } from "~db/models";
 import { withResolvers } from "~tests/frontend/utils";
 import { CURRENCIES } from "~utils/currency-data";
+import type { MaybePromise } from "~utils/types";
 
 import type { appRouter } from "../global/router";
 

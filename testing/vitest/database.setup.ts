@@ -1,7 +1,4 @@
-import {
-	createTRPCClient,
-	unstable_httpBatchStreamLink as httpBatchStreamLink,
-} from "@trpc/client";
+import { createTRPCClient, httpBatchStreamLink } from "@trpc/client";
 import { Pool } from "pg";
 import * as timekeeper from "timekeeper";
 import { beforeAll, beforeEach, inject } from "vitest";

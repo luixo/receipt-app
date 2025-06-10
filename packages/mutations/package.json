@@ -7,6 +7,6 @@
 	"dependencies": {
 		"@ra/utils": "workspace:*",
 		"@tanstack/react-query": "^5.51.1",
-		"@trpc/react-query": "^11.0.0-rc.461"
+		"@trpc/react-query": "^11.3.1"
 	}
 }

@@ -8,7 +8,6 @@ import type {
 } from "@tanstack/react-query";
 import type { TRPCClientErrorLike } from "@trpc/react-query";
 import { createTRPCReact } from "@trpc/react-query";
-import type { DecoratedMutation } from "@trpc/react-query/createTRPCReact";
 import type {
 	UseTRPCInfiniteQueryResult,
 	UseTRPCMutationResult,
@@ -23,6 +22,7 @@ import type {
 	inferProcedureInput,
 	inferProcedureOutput,
 } from "@trpc/server";
+import type { DecoratedMutation } from "node_modules/@trpc/react-query/dist/createTRPCReact";
 
 import type {
 	ExtractObjectByPath,

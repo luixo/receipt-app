@@ -1,5 +1,4 @@
 import type {
-	MaybePromise,
 	ProcedureResolverOptions,
 	UnsetMarker,
 } from "@trpc/server/unstable-core-do-not-import";
@@ -7,6 +6,7 @@ import type { Options } from "dataloader";
 import Dataloader from "dataloader";
 
 import { noop } from "~utils/fn";
+import type { MaybePromise } from "~utils/types";
 import type {
 	AuthorizedContext,
 	UnauthorizedContext,

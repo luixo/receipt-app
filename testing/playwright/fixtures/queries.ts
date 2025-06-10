@@ -4,10 +4,7 @@ import { expect } from "@playwright/test";
 import type { DehydratedState, Mutation, Query } from "@tanstack/react-query";
 import type { TRPCClientErrorLike } from "@trpc/client";
 import type { AnyTRPCProcedure, AnyTRPCRouter } from "@trpc/server";
-import type {
-	DeepPartial,
-	RouterRecord,
-} from "@trpc/server/unstable-core-do-not-import";
+import type { RouterRecord } from "@trpc/server/unstable-core-do-not-import";
 import { diff as objectDiff } from "deep-object-diff";
 import assert from "node:assert";
 import {
@@ -29,6 +26,7 @@ import type {
 	TRPCSplitMutationKey,
 	TRPCSplitQueryKey,
 } from "~app/trpc";
+import type { DeepPartial } from "~utils/types";
 import { router } from "~web/handlers";
 
 import { type ApiManager, type TRPCKey, apiFixtures as test } from "./api";

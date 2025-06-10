@@ -2,7 +2,7 @@ import type { QueryClientConfig } from "@tanstack/react-query";
 import type { TRPCLink } from "@trpc/client";
 import {
 	TRPCClientError,
-	unstable_httpBatchStreamLink as httpBatchStreamLink,
+	httpBatchStreamLink,
 	httpLink,
 	splitLink,
 } from "@trpc/client";
