@@ -40,7 +40,7 @@ describe("accountConnectionIntentions.accept", () => {
 		describe("userId", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -56,7 +56,7 @@ describe("accountConnectionIntentions.accept", () => {
 		describe("accountId", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -71,7 +71,7 @@ describe("accountConnectionIntentions.accept", () => {
 
 		test("user does not exist", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const fakeUserId = faker.string.uuid();
 			await expectTRPCError(
 				() =>
@@ -93,7 +93,7 @@ describe("accountConnectionIntentions.accept", () => {
 			const { id: foreignAccountId } = await insertAccount(ctx);
 			const { id: foreignUserId } = await insertUser(ctx, foreignAccountId);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -115,7 +115,7 @@ describe("accountConnectionIntentions.accept", () => {
 				foreignAccountId,
 			]);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -135,7 +135,7 @@ describe("accountConnectionIntentions.accept", () => {
 			await insertAccount(ctx);
 
 			const fakeAccountId = faker.string.uuid();
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -199,7 +199,7 @@ describe("accountConnectionIntentions.accept", () => {
 				outerToForeignUserId,
 			);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -272,7 +272,7 @@ describe("accountConnectionIntentions.accept", () => {
 				outerToForeignUserId,
 			);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({
 					userId: selfToForeignUserId,
@@ -307,7 +307,7 @@ describe("accountConnectionIntentions.accept", () => {
 				foreignToSelfUserId,
 			);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({
 				userId: selfToForeignUserId,
 				accountId: foreignAccountId,
@@ -393,7 +393,7 @@ describe("accountConnectionIntentions.accept", () => {
 					foreignToSelfUserId,
 				);
 
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectDatabaseDiffSnapshot(ctx, () =>
 					caller.procedure({
 						userId: selfToForeignUserId,

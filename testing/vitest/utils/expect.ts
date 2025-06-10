@@ -54,7 +54,7 @@ export const expectUnauthorizedError = (
 	fn: (context: UnauthorizedContext) => Promise<unknown>,
 ) => {
 	test("should be authenticated", async ({ ctx }) => {
-		const context = createContext(ctx);
+		const context = await createContext(ctx);
 		await expectTRPCError(
 			() => fn(context),
 			"UNAUTHORIZED",

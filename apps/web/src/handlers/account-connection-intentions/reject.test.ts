@@ -31,7 +31,7 @@ describe("accountConnectionIntentions.reject", () => {
 		describe("sourceAccountId", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -50,7 +50,7 @@ describe("accountConnectionIntentions.reject", () => {
 			await insertAccount(ctx);
 
 			const fakeAccountId = faker.string.uuid();
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -112,7 +112,7 @@ describe("accountConnectionIntentions.reject", () => {
 				outerToForeignUserId,
 			);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -179,7 +179,7 @@ describe("accountConnectionIntentions.reject", () => {
 				outerToForeignUserId,
 			);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ sourceAccountId: foreignAccountId }),
 			);

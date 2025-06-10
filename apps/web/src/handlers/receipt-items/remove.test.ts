@@ -37,7 +37,7 @@ describe("receiptItems.remove", () => {
 
 		test("receipt item does not exist", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const { id: receiptId } = await insertReceipt(ctx, accountId);
 			await insertReceiptItem(ctx, receiptId);
 			const fakeReceiptItemId = faker.string.uuid();
@@ -64,7 +64,7 @@ describe("receiptItems.remove", () => {
 				foreignReceiptId,
 			);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ id: foreignReceiptItemId }),
 				"FORBIDDEN",
@@ -98,7 +98,7 @@ describe("receiptItems.remove", () => {
 				foreignReceiptId,
 			);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ id: foreignReceiptItemId }),
 				"FORBIDDEN",
@@ -110,7 +110,7 @@ describe("receiptItems.remove", () => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			const { id: receiptId } = await insertReceipt(ctx, accountId);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ id: receiptId }),
 				"FORBIDDEN",
@@ -130,7 +130,7 @@ describe("receiptItems.remove", () => {
 			const { id: anotherReceiptId } = await insertReceipt(ctx, accountId);
 			await insertReceiptItem(ctx, anotherReceiptId);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ id: receiptItemId }),
 			);
@@ -158,7 +158,7 @@ describe("receiptItems.remove", () => {
 			);
 			await insertReceiptItem(ctx, foreignReceiptId);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ id: receiptItemId }),
 			);

@@ -39,7 +39,7 @@ describe("users.suggest", () => {
 		describe("input", () => {
 			test("is too long", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -56,7 +56,7 @@ describe("users.suggest", () => {
 		describe("limit", () => {
 			test("is <= 0", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -71,7 +71,7 @@ describe("users.suggest", () => {
 
 			test("is too big", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -86,7 +86,7 @@ describe("users.suggest", () => {
 
 			test("is fractional", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -103,7 +103,7 @@ describe("users.suggest", () => {
 		describe("cursor", () => {
 			test("is < 0", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -119,7 +119,7 @@ describe("users.suggest", () => {
 
 			test("is too big", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -135,7 +135,7 @@ describe("users.suggest", () => {
 
 			test("is fractional", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -153,7 +153,7 @@ describe("users.suggest", () => {
 		describe("filtered ids", () => {
 			test("has non-uuid values", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -171,7 +171,7 @@ describe("users.suggest", () => {
 		describe("non-connected receipt id", () => {
 			test("has non-uuid value", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -194,7 +194,7 @@ describe("users.suggest", () => {
 			// Verifying adding other receipts don't affect the error
 			await insertReceipt(ctx, accountId);
 			const nonExistentReceiptId = faker.string.uuid();
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -215,7 +215,7 @@ describe("users.suggest", () => {
 			const { sessionId } = await insertAccountWithSession(ctx);
 			const { id: otherAccountId } = await insertAccount(ctx);
 			const { id: receiptId } = await insertReceipt(ctx, otherAccountId);
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -261,7 +261,7 @@ describe("users.suggest", () => {
 				accounts[1].id,
 			]);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({
 				input: "Alice",
 				limit: 10,
@@ -276,7 +276,7 @@ describe("users.suggest", () => {
 
 		test("returns results with short request", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const matchedUsers = await Promise.all([
 				insertUser(ctx, accountId, { name: "Ally" }),
 				insertUser(ctx, accountId, {
@@ -302,7 +302,7 @@ describe("users.suggest", () => {
 
 		test("returns empty results", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({
 				input: "Alice",
 				limit: 10,
@@ -350,7 +350,7 @@ describe("users.suggest", () => {
 
 			await insertReceiptParticipant(ctx, receiptId, participatingUserId);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({
 				input: "Alice",
 				limit: 10,
@@ -391,7 +391,7 @@ describe("users.suggest", () => {
 				accounts[1].id,
 			]);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({
 				input: "Alice",
 				limit: 10,
@@ -419,7 +419,7 @@ describe("users.suggest", () => {
 			// Too fuzzy - should not be returned
 			await insertUser(ctx, accountId, { name: "Alcc - a heavier typo" });
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({
 				input: "Alice",
 				limit: 10,
@@ -448,7 +448,7 @@ describe("users.suggest", () => {
 				}),
 			);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const firstPage = await caller.procedure({
 				input: "Alice",
 				limit,
@@ -489,7 +489,7 @@ describe("users.suggest", () => {
 			]);
 			matchedUsers.push(connectedMatchedUser);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({
 				input: "Alice",
 				limit: 10,
@@ -511,7 +511,7 @@ describe("users.suggest", () => {
 				name: "Alice from work",
 			});
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({
 				input: "Alice",
 				limit: 10,

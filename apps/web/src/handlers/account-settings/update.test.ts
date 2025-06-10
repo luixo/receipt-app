@@ -34,7 +34,7 @@ describe("accountSettings.update", () => {
 				// Verifying other accounts are not affected
 				await insertAccount(ctx);
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectDatabaseDiffSnapshot(ctx, () =>
 					caller.procedure({ type: "manualAcceptDebts", value: false }),
 				);
@@ -46,7 +46,7 @@ describe("accountSettings.update", () => {
 				// Verifying other accounts are not affected
 				await insertAccount(ctx);
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectDatabaseDiffSnapshot(ctx, () =>
 					caller.procedure({ type: "manualAcceptDebts", value: true }),
 				);
@@ -58,7 +58,7 @@ describe("accountSettings.update", () => {
 				const { sessionId } = await insertAccountWithSession(ctx, {
 					account: { settings: { manualAcceptDebts: true } },
 				});
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectDatabaseDiffSnapshot(ctx, () =>
 					caller.procedure({ type: "manualAcceptDebts", value: false }),
 				);

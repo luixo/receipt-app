@@ -28,7 +28,7 @@ describe("auth.resetPassword", () => {
 	describe("input verification", () => {
 		describe("token", () => {
 			test("invalid", async ({ ctx }) => {
-				const caller = createCaller(createContext(ctx));
+				const caller = createCaller(await createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -43,7 +43,7 @@ describe("auth.resetPassword", () => {
 
 		describe("password", () => {
 			test("minimal length", async ({ ctx }) => {
-				const caller = createCaller(createContext(ctx));
+				const caller = createCaller(await createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -56,7 +56,7 @@ describe("auth.resetPassword", () => {
 			});
 
 			test("maximum length", async ({ ctx }) => {
-				const caller = createCaller(createContext(ctx));
+				const caller = createCaller(await createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -70,7 +70,7 @@ describe("auth.resetPassword", () => {
 		});
 
 		test("no intention exists", async ({ ctx }) => {
-			const caller = createCaller(createContext(ctx));
+			const caller = createCaller(await createContext(ctx));
 			const intentionToken = faker.string.uuid();
 			await expectTRPCError(
 				() =>
@@ -88,7 +88,7 @@ describe("auth.resetPassword", () => {
 			const { token } = await insertResetPasswordIntention(ctx, accountId, {
 				expiresTimestamp: new Date(Date.now() - MINUTE),
 			});
-			const caller = createCaller(createContext(ctx));
+			const caller = createCaller(await createContext(ctx));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -114,7 +114,7 @@ describe("auth.resetPassword", () => {
 				expiresTimestamp: new Date(Date.now() - MINUTE),
 			});
 			const { token } = await insertResetPasswordIntention(ctx, accountId);
-			const context = createContext(ctx);
+			const context = await createContext(ctx);
 			const caller = createCaller(context);
 			const password = faker.internet.password();
 			await expectDatabaseDiffSnapshot(ctx, () =>

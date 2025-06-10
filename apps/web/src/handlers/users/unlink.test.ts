@@ -29,7 +29,7 @@ describe("users.unlink", () => {
 		describe("id", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -45,7 +45,7 @@ describe("users.unlink", () => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			// Verifying adding other users doesn't affect the error
 			await insertUser(ctx, accountId);
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const nonExistentUserId = faker.string.uuid();
 			await expectTRPCError(
 				() => caller.procedure({ id: nonExistentUserId }),
@@ -63,7 +63,7 @@ describe("users.unlink", () => {
 			// Foreign account
 			const { id: otherAccountId } = await insertAccount(ctx);
 			const { id: foreignUserId } = await insertUser(ctx, otherAccountId);
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ id: foreignUserId }),
 				"FORBIDDEN",
@@ -79,7 +79,7 @@ describe("users.unlink", () => {
 			await insertConnectedUsers(ctx, [accountId, otherAccountId]);
 			// Not connected account
 			const { id: notConnectedUserId } = await insertUser(ctx, accountId);
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ id: notConnectedUserId }),
 				"NOT_FOUND",
@@ -101,7 +101,7 @@ describe("users.unlink", () => {
 			// Verify other users are not affected
 			await insertUser(ctx, accountId);
 			await insertUser(ctx, otherAccountId);
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ id: connectedUserId }),
 			);

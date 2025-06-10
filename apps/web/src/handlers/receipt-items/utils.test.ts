@@ -26,7 +26,7 @@ export const verifyName = <T>(
 	describe("name", () => {
 		test("minimal length", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const context = createAuthContext(ctx, sessionId);
+			const context = await createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() =>
 					runProcedure(context, "a".repeat(MIN_RECEIPT_ITEM_NAME_LENGTH - 1)),
@@ -37,7 +37,7 @@ export const verifyName = <T>(
 
 		test("maximum length", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const context = createAuthContext(ctx, sessionId);
+			const context = await createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() =>
 					runProcedure(context, "a".repeat(MAX_RECEIPT_ITEM_NAME_LENGTH + 1)),
@@ -55,7 +55,7 @@ export const verifyPrice = <T>(
 	describe("price", () => {
 		test("negative", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const context = createAuthContext(ctx, sessionId);
+			const context = await createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, -1),
 				"BAD_REQUEST",
@@ -65,7 +65,7 @@ export const verifyPrice = <T>(
 
 		test("zero", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const context = createAuthContext(ctx, sessionId);
+			const context = await createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, 0),
 				"BAD_REQUEST",
@@ -75,7 +75,7 @@ export const verifyPrice = <T>(
 
 		test("fraction precision", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const context = createAuthContext(ctx, sessionId);
+			const context = await createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, 1.001),
 				"BAD_REQUEST",
@@ -85,7 +85,7 @@ export const verifyPrice = <T>(
 
 		test("too big", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const context = createAuthContext(ctx, sessionId);
+			const context = await createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, 10 ** 15),
 				"BAD_REQUEST",
@@ -102,7 +102,7 @@ export const verifyQuantity = <T>(
 	describe("quantity", () => {
 		test("negative", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const context = createAuthContext(ctx, sessionId);
+			const context = await createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, -1),
 				"BAD_REQUEST",
@@ -112,7 +112,7 @@ export const verifyQuantity = <T>(
 
 		test("zero", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const context = createAuthContext(ctx, sessionId);
+			const context = await createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, 0),
 				"BAD_REQUEST",
@@ -122,7 +122,7 @@ export const verifyQuantity = <T>(
 
 		test("fraction precision", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const context = createAuthContext(ctx, sessionId);
+			const context = await createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, 1.001),
 				"BAD_REQUEST",
@@ -132,7 +132,7 @@ export const verifyQuantity = <T>(
 
 		test("too big", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const context = createAuthContext(ctx, sessionId);
+			const context = await createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, 10 ** 9 + 1),
 				"BAD_REQUEST",
@@ -152,7 +152,7 @@ export const verifyReceiptItemId = <T>(
 	describe("id", () => {
 		test("invalid", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const context = createAuthContext(ctx, sessionId);
+			const context = await createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, "not-a-valid-uuid"),
 				"BAD_REQUEST",

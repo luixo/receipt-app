@@ -31,7 +31,7 @@ describe("accountConnectionIntentions.remove", () => {
 		describe("targetAccountId", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -97,7 +97,7 @@ describe("accountConnectionIntentions.remove", () => {
 				outerToForeignUserId,
 			);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -161,7 +161,7 @@ describe("accountConnectionIntentions.remove", () => {
 				outerToForeignUserId,
 			);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ targetAccountId: foreignAccountId }),
 			);

@@ -19,7 +19,7 @@ describe("auth.confirmEmail", () => {
 	describe("input verification", () => {
 		describe("token", () => {
 			test("invalid", async ({ ctx }) => {
-				const caller = createCaller(createContext(ctx));
+				const caller = createCaller(await createContext(ctx));
 				await expectTRPCError(
 					() => caller.procedure({ token: "invalid-uuid" }),
 					"BAD_REQUEST",
@@ -29,7 +29,7 @@ describe("auth.confirmEmail", () => {
 		});
 
 		test("no confirmation token exists", async ({ ctx }) => {
-			const caller = createCaller(createContext(ctx));
+			const caller = createCaller(await createContext(ctx));
 			const confirmationToken = faker.string.uuid();
 			await insertAccountWithSession(ctx);
 			await expectTRPCError(
@@ -52,7 +52,7 @@ describe("auth.confirmEmail", () => {
 			await insertAccountWithSession(ctx, {
 				account: { confirmation: {} },
 			});
-			const context = createContext(ctx);
+			const context = await createContext(ctx);
 			const caller = createCaller(context);
 			assert(
 				confirmationToken,

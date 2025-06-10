@@ -47,7 +47,7 @@ describe("debt-intenions.getAll", () => {
 			// Our debt
 			await insertDebt(ctx, accountId, userId);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
 			expect(result).toStrictEqual<typeof result>([]);
 		});
@@ -105,7 +105,7 @@ describe("debt-intenions.getAll", () => {
 				},
 			);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
 			expect(result).toStrictEqual<typeof result>(
 				[

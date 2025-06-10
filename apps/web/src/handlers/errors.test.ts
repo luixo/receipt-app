@@ -46,7 +46,7 @@ describe("errors formatting", () => {
 
 	test("zod error formatting", async ({ ctx }) => {
 		const { sessionId } = await insertAccountWithSession(ctx);
-		const caller = createCaller(createAuthContext(ctx, sessionId));
+		const caller = createCaller(await createAuthContext(ctx, sessionId));
 		await expectTRPCError(
 			() => caller.users.add({ name: "", publicName: "" }),
 			"BAD_REQUEST",

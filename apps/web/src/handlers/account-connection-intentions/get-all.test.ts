@@ -37,7 +37,7 @@ describe("accountConnectionIntentions.getAll", () => {
 				firstToSecondUserId,
 			);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
 			expect(result).toStrictEqual<typeof result>({
 				inbound: [],
@@ -108,7 +108,7 @@ describe("accountConnectionIntentions.getAll", () => {
 				inboundToOutboundUserId,
 			);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
 			expect(result).toStrictEqual<typeof result>({
 				inbound: [

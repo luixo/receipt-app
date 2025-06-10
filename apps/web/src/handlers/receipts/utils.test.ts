@@ -27,7 +27,7 @@ export const verifyName = <T>(
 	describe("name", () => {
 		test("minimal length", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const context = createAuthContext(ctx, sessionId);
+			const context = await createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, "a".repeat(MIN_RECEIPT_NAME_LENGTH - 1)),
 				"BAD_REQUEST",
@@ -37,7 +37,7 @@ export const verifyName = <T>(
 
 		test("maximum length", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const context = createAuthContext(ctx, sessionId);
+			const context = await createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, "a".repeat(MAX_RECEIPT_NAME_LENGTH + 1)),
 				"BAD_REQUEST",
@@ -57,7 +57,7 @@ export const verifyCurrencyCode = <T>(
 	describe("currencyCode", () => {
 		test("invalid", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const context = createAuthContext(ctx, sessionId);
+			const context = await createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, "foo"),
 				"BAD_REQUEST",
@@ -74,7 +74,7 @@ export const verifyIssued = <T>(
 	describe("issued", () => {
 		test("not a date", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const context = createAuthContext(ctx, sessionId);
+			const context = await createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, new Date("not a date")),
 				"BAD_REQUEST",
@@ -94,7 +94,7 @@ export const verifyReceiptId = <T>(
 	describe("id", () => {
 		test("invalid", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const context = createAuthContext(ctx, sessionId);
+			const context = await createAuthContext(ctx, sessionId);
 			await expectTRPCError(
 				() => runProcedure(context, "not-a-valid-uuid"),
 				"BAD_REQUEST",

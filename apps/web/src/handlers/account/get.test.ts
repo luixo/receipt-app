@@ -23,7 +23,7 @@ describe("account.get", () => {
 				name,
 				account: { avatarUrl, email },
 			} = await insertAccountWithSession(ctx);
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 
 			const account = await caller.procedure();
 
@@ -48,7 +48,7 @@ describe("account.get", () => {
 			} = await insertAccountWithSession(ctx, {
 				account: { confirmation: {}, avatarUrl: null },
 			});
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 
 			const account = await caller.procedure();
 
@@ -71,7 +71,7 @@ describe("account.get", () => {
 				name,
 				account: { avatarUrl, email },
 			} = await insertAccountWithSession(ctx, { account: { role: "role" } });
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 
 			const account = await caller.procedure();
 

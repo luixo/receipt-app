@@ -18,7 +18,7 @@ describe("currency.getList", () => {
 	describe("functionality", () => {
 		test(`list returned in "en" locale`, async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const result = await caller.procedure();
 			expect(result).toMatchSnapshot();
 		});

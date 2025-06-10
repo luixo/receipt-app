@@ -39,7 +39,7 @@ describe("receiptItemConsumers.add", () => {
 		describe("itemId", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -56,7 +56,7 @@ describe("receiptItemConsumers.add", () => {
 		describe("userId", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -73,7 +73,7 @@ describe("receiptItemConsumers.add", () => {
 		describe("part", () => {
 			test("negative", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -88,7 +88,7 @@ describe("receiptItemConsumers.add", () => {
 
 			test("zero", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -103,7 +103,7 @@ describe("receiptItemConsumers.add", () => {
 
 			test("fraction precision", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -118,7 +118,7 @@ describe("receiptItemConsumers.add", () => {
 
 			test("too big", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -134,7 +134,7 @@ describe("receiptItemConsumers.add", () => {
 
 		test("receipt item does not exist", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const { id: receiptId } = await insertReceipt(ctx, accountId);
 			await insertReceiptItem(ctx, receiptId);
 			const fakeReceiptItemId = faker.string.uuid();
@@ -174,7 +174,7 @@ describe("receiptItemConsumers.add", () => {
 				foreignReceiptId,
 			);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -194,7 +194,7 @@ describe("receiptItemConsumers.add", () => {
 				const { id: receiptItemId } = await insertReceiptItem(ctx, receiptId);
 				const fakeUserId = faker.string.uuid();
 
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -214,7 +214,7 @@ describe("receiptItemConsumers.add", () => {
 				const { id: receiptItemId } = await insertReceiptItem(ctx, receiptId);
 				const { id: userId } = await insertUser(ctx, foreignAccountId);
 
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -252,7 +252,7 @@ describe("receiptItemConsumers.add", () => {
 					anotherParticipantUserId,
 				);
 
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -274,7 +274,7 @@ describe("receiptItemConsumers.add", () => {
 				const user = await insertUser(ctx, accountId);
 				await insertReceiptParticipant(ctx, receiptId, user.id);
 
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						runSequentially(
@@ -307,7 +307,7 @@ describe("receiptItemConsumers.add", () => {
 				const user = await insertUser(ctx, accountId);
 				await insertReceiptParticipant(ctx, receiptId, user.id);
 
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				const results = await expectDatabaseDiffSnapshot(ctx, () =>
 					runSequentially(
 						[
@@ -396,7 +396,7 @@ describe("receiptItemConsumers.add", () => {
 			await insertReceiptItem(ctx, anotherForeignReceiptId);
 			await insertReceiptItemConsumer(ctx, anotherReceiptItemId, user.id);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const results = await expectDatabaseDiffSnapshot(ctx, () =>
 				runSequentially(
 					[

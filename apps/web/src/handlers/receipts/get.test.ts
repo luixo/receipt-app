@@ -89,7 +89,7 @@ describe("receipts.get", () => {
 		describe("id", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ id: "not-a-valid-uuid" }),
 					"BAD_REQUEST",
@@ -104,7 +104,7 @@ describe("receipts.get", () => {
 			// Verifying adding other receipts doesn't affect the error
 			await insertReceipt(ctx, accountId);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const fakeReceiptId = faker.string.uuid();
 			await expectTRPCError(
 				() => caller.procedure({ id: fakeReceiptId }),
@@ -126,7 +126,7 @@ describe("receipts.get", () => {
 				foreignAccountId,
 			);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ id: foreignReceiptId }),
 				"FORBIDDEN",
@@ -149,7 +149,7 @@ describe("receipts.get", () => {
 				const { id: foreignAccountId } = await insertAccount(ctx);
 				await insertReceipt(ctx, foreignAccountId);
 
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({ id: receipt.id });
 				expect(result).toStrictEqual<typeof result>({
 					id: receipt.id,
@@ -179,7 +179,7 @@ describe("receipts.get", () => {
 				foreignToSelfUserId,
 			);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ id: receipt.id });
 			expect(result).toStrictEqual<typeof result>({
 				id: receipt.id,
@@ -220,7 +220,7 @@ describe("receipts.get", () => {
 					{ receiptId: receipt.id },
 				);
 
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({ id: receipt.id });
 				expect(result).toStrictEqual<typeof result>({
 					id: receipt.id,
@@ -257,7 +257,7 @@ describe("receipts.get", () => {
 					receiptId: receipt.id,
 				});
 
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({ id: receipt.id });
 				expect(result).toStrictEqual<typeof result>({
 					id: receipt.id,
@@ -296,7 +296,7 @@ describe("receipts.get", () => {
 					[accountId, foreignUserId],
 				);
 
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({ id: receipt.id });
 				expect(result).toStrictEqual<typeof result>({
 					id: receipt.id,
@@ -336,7 +336,7 @@ describe("receipts.get", () => {
 				const { id: foreignAccountId } = await insertAccount(ctx);
 				await insertReceipt(ctx, foreignAccountId);
 
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({ id: receipt.id });
 				expect(result).toStrictEqual<typeof result>({
 					id: receipt.id,
@@ -410,7 +410,7 @@ describe("receipts.get", () => {
 				),
 			]);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ id: receipt.id });
 			expect(result).toStrictEqual<typeof result>({
 				id: receipt.id,
@@ -439,7 +439,7 @@ describe("receipts.get", () => {
 			} = await insertAccountWithSession(ctx);
 			const receipt = await insertReceipt(ctx, accountId);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ id: receipt.id });
 			expect(result).toStrictEqual<typeof result>({
 				id: receipt.id,
@@ -541,7 +541,7 @@ describe("receipts.get", () => {
 				),
 			]);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ id: receipt.id });
 			expect(result).toStrictEqual<typeof result>({
 				id: receipt.id,

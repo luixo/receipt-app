@@ -24,7 +24,7 @@ describe("account.logout", () => {
 			// Verifying other accounts are not affected
 			await insertAccountWithSession(ctx);
 			const { sessionId } = await insertAccountWithSession(ctx);
-			const context = createAuthContext(ctx, sessionId);
+			const context = await createAuthContext(ctx, sessionId);
 			const caller = createCaller(context);
 			await expectDatabaseDiffSnapshot(ctx, () => caller.procedure());
 			const responseHeaders = getResHeaders(context.res);

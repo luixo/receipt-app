@@ -32,7 +32,7 @@ describe("debts.get", () => {
 		describe("id", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -51,7 +51,7 @@ describe("debts.get", () => {
 			const { id: userId } = await insertUser(ctx, accountId);
 			await insertDebt(ctx, accountId, userId);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const fakeDebtId = faker.string.uuid();
 			await expectTRPCError(
 				() => caller.procedure({ id: fakeDebtId }),
@@ -72,7 +72,7 @@ describe("debts.get", () => {
 				foreignUserId,
 			);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ id: foreignDebtId }),
 				"NOT_FOUND",
@@ -91,7 +91,7 @@ describe("debts.get", () => {
 			const { id: otherUserId } = await insertUser(ctx, accountId);
 			await insertDebt(ctx, accountId, otherUserId);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ id: debt.id });
 			expect(result).toStrictEqual<typeof result>({
 				id: debt.id,
@@ -129,7 +129,7 @@ describe("debts.get", () => {
 				const { id: otherUserId } = await insertUser(ctx, accountId);
 				await insertDebt(ctx, accountId, otherUserId);
 
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({ id: debt.id });
 				expect(result).toStrictEqual<typeof result>({
 					id: debt.id,

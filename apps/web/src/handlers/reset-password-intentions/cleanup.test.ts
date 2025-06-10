@@ -30,7 +30,7 @@ describe("resetPasswordIntentions.cleanup", () => {
 				// long expired intention
 				expiresTimestamp: new Date(Date.now() - YEAR),
 			});
-			const caller = createCaller(createContext(ctx));
+			const caller = createCaller(await createContext(ctx));
 			await expectDatabaseDiffSnapshot(ctx, () => caller.procedure());
 		});
 	});

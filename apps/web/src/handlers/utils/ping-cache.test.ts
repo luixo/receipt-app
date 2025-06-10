@@ -12,7 +12,7 @@ describe("utils.pingCache", () => {
 	describe("functionality", () => {
 		test("cache database ping sent", async ({ ctx }) => {
 			const dbMock = ctx.cacheDbOptions.mock;
-			const caller = createCaller(createContext(ctx));
+			const caller = createCaller(await createContext(ctx));
 			await caller.procedure();
 			const dbMessages = dbMock.getMessages();
 			// Removing ping message

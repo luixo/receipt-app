@@ -35,7 +35,7 @@ describe("users.update", () => {
 		describe("id", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -53,7 +53,7 @@ describe("users.update", () => {
 				test("minimal length", async ({ ctx }) => {
 					const { sessionId, accountId } = await insertAccountWithSession(ctx);
 					const { id: userId } = await insertUser(ctx, accountId);
-					const caller = createCaller(createAuthContext(ctx, sessionId));
+					const caller = createCaller(await createAuthContext(ctx, sessionId));
 					await expectTRPCError(
 						() =>
 							caller.procedure({
@@ -77,7 +77,7 @@ describe("users.update", () => {
 				test("maximum length", async ({ ctx }) => {
 					const { sessionId, accountId } = await insertAccountWithSession(ctx);
 					const { id: userId } = await insertUser(ctx, accountId);
-					const caller = createCaller(createAuthContext(ctx, sessionId));
+					const caller = createCaller(await createAuthContext(ctx, sessionId));
 					await expectTRPCError(
 						() =>
 							caller.procedure({
@@ -104,7 +104,7 @@ describe("users.update", () => {
 			ctx,
 		}) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -120,7 +120,7 @@ describe("users.update", () => {
 			ctx,
 		}) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -139,7 +139,7 @@ describe("users.update", () => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			// Verifying adding other users doesn't affect the error
 			await insertUser(ctx, accountId);
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const nonExistentUserId = faker.string.uuid();
 			await expectTRPCError(
 				() =>
@@ -164,7 +164,7 @@ describe("users.update", () => {
 			// Foreign account
 			const { id: otherAccountId } = await insertAccount(ctx);
 			const { id: foreignUserId } = await insertUser(ctx, otherAccountId);
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -185,7 +185,7 @@ describe("users.update", () => {
 			// Self account
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			const { id: userId } = await insertUser(ctx, accountId);
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 
 			await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({
@@ -204,7 +204,7 @@ describe("users.update", () => {
 			const { id: userId } = await insertUser(ctx, accountId);
 			// Verify other users are not affected
 			await insertUser(ctx, accountId);
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 
 			await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({
@@ -225,7 +225,7 @@ describe("users.update", () => {
 			});
 			// Verify other users are not affected
 			await insertUser(ctx, accountId);
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 
 			await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({

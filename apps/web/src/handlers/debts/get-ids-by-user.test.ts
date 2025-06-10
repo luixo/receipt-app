@@ -35,7 +35,7 @@ describe("debts.getIdsByUser", () => {
 		describe("userId", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ userId: "not-a-valid-uuid" }),
 					"BAD_REQUEST",
@@ -50,7 +50,7 @@ describe("debts.getIdsByUser", () => {
 			// Verifying adding other users doesn't affect the error
 			await insertUser(ctx, accountId);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const fakerUserId = faker.string.uuid();
 			await expectTRPCError(
 				() => caller.procedure({ userId: fakerUserId }),
@@ -69,7 +69,7 @@ describe("debts.getIdsByUser", () => {
 			const { id: otherAccountId } = await insertAccount(ctx);
 			const { id: foreignUserId } = await insertUser(ctx, otherAccountId);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ userId: foreignUserId }),
 				"FORBIDDEN",
@@ -87,7 +87,7 @@ describe("debts.getIdsByUser", () => {
 
 			await insertDebt(ctx, foreignAccountId, foreignToSelfUserId);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ userId });
 			expect(result).toStrictEqual<typeof result>([]);
 		});
@@ -133,7 +133,7 @@ describe("debts.getIdsByUser", () => {
 			const { id: foreignUserId } = await insertUser(ctx, foreignAccountId);
 			await insertDebt(ctx, foreignAccountId, foreignUserId);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ userId });
 			expect(result).toStrictEqual<typeof result>(
 				[

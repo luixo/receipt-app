@@ -39,7 +39,7 @@ describe("currency.top", () => {
 			const { id: anotherUserId } = await insertUser(ctx, otherAccountId);
 			await insertReceiptParticipant(ctx, receiptId, anotherUserId);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const debtsResult = await caller.procedure({
 				options: { type: "debts" },
 			});
@@ -69,7 +69,7 @@ describe("currency.top", () => {
 					}),
 				),
 			);
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ options: { type: "debts" } });
 			expect(result).toStrictEqual<typeof result>([
 				{
@@ -137,7 +137,7 @@ describe("currency.top", () => {
 				foreignUserId,
 			);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const result = await caller.procedure({ options: { type: "receipts" } });
 			expect(result).toStrictEqual<typeof result>([
 				{

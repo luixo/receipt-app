@@ -56,7 +56,7 @@ describe("receiptItems.add", () => {
 
 		test("receipt does not exist", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await insertReceipt(ctx, accountId);
 			const fakeReceiptId = faker.string.uuid();
 			await expectTRPCError(
@@ -78,7 +78,7 @@ describe("receiptItems.add", () => {
 				foreignAccountId,
 			);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure(getValidReceiptItem(foreignReceiptId)),
 				"FORBIDDEN",
@@ -108,7 +108,7 @@ describe("receiptItems.add", () => {
 				{ role: "viewer" },
 			);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure(getValidReceiptItem(foreignReceiptId)),
 				"FORBIDDEN",
@@ -122,7 +122,7 @@ describe("receiptItems.add", () => {
 			const { id: receiptId } = await insertReceipt(ctx, accountId);
 			const fakeReceiptId = faker.string.uuid();
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const results = await expectDatabaseDiffSnapshot(ctx, () =>
 				runSequentially(
 					[
@@ -169,7 +169,7 @@ describe("receiptItems.add", () => {
 			await insertReceipt(ctx, accountId);
 			await insertReceipt(ctx, foreignAccountId);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const results = await expectDatabaseDiffSnapshot(ctx, () =>
 				runSequentially(
 					[

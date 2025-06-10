@@ -32,7 +32,7 @@ describe("users.get", () => {
 		describe("id", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -48,7 +48,7 @@ describe("users.get", () => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
 			// Verifying adding other users doesn't affect the error
 			await insertUser(ctx, accountId);
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const nonExistentUserId = faker.string.uuid();
 			await expectTRPCError(
 				() =>
@@ -66,7 +66,7 @@ describe("users.get", () => {
 			// Foreign account
 			const { id: otherAccountId } = await insertAccount(ctx);
 			const { id: foreignUserId } = await insertUser(ctx, otherAccountId);
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -83,7 +83,7 @@ describe("users.get", () => {
 				const { id: foreignAccountId } = await insertAccount(ctx);
 				const { id: otherAccountId } = await insertAccount(ctx);
 				const { id: receiptId } = await insertReceipt(ctx, foreignAccountId);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				const [{ id: foreignUserId }] = await insertConnectedUsers(ctx, [
 					{
 						accountId: foreignAccountId,
@@ -117,7 +117,7 @@ describe("users.get", () => {
 				const { id: receiptId } = await insertReceipt(ctx, foreignAccountId);
 				await insertReceiptParticipant(ctx, receiptId, foreignSelfUserId);
 
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ id: foreignSelfUserId }),
 					"NOT_FOUND",
@@ -147,7 +147,7 @@ describe("users.get", () => {
 						foreignAccountId,
 					],
 				);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({ id: userId });
 				expect(result).toStrictEqual<typeof result>({
 					id: userId,
@@ -171,7 +171,7 @@ describe("users.get", () => {
 					accountId,
 					foreignAccountId,
 				]);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({ id: userId });
 				expect(result).toStrictEqual<typeof result>({
 					id: userId,
@@ -190,7 +190,7 @@ describe("users.get", () => {
 				// Verify other users do not interfere
 				await insertUser(ctx, accountId);
 				const { id: userId, name } = await insertUser(ctx, accountId);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				const result = await caller.procedure({ id: userId });
 				expect(result).toStrictEqual<typeof result>({
 					id: userId,

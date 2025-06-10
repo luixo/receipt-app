@@ -26,7 +26,7 @@ describe("auth.register", () => {
 	describe("input verification", () => {
 		describe("email", () => {
 			test("invalid", async ({ ctx }) => {
-				const caller = createCaller(createContext(ctx));
+				const caller = createCaller(await createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -42,7 +42,7 @@ describe("auth.register", () => {
 
 		describe("password", () => {
 			test("minimal length", async ({ ctx }) => {
-				const caller = createCaller(createContext(ctx));
+				const caller = createCaller(await createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -56,7 +56,7 @@ describe("auth.register", () => {
 			});
 
 			test("maximum length", async ({ ctx }) => {
-				const caller = createCaller(createContext(ctx));
+				const caller = createCaller(await createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -72,7 +72,7 @@ describe("auth.register", () => {
 
 		describe("name", () => {
 			test("minimal length", async ({ ctx }) => {
-				const caller = createCaller(createContext(ctx));
+				const caller = createCaller(await createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -86,7 +86,7 @@ describe("auth.register", () => {
 			});
 
 			test("maximum length", async ({ ctx }) => {
-				const caller = createCaller(createContext(ctx));
+				const caller = createCaller(await createContext(ctx));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -101,7 +101,7 @@ describe("auth.register", () => {
 		});
 
 		test("email already exist", async ({ ctx }) => {
-			const caller = createCaller(createContext(ctx));
+			const caller = createCaller(await createContext(ctx));
 			const {
 				account: { email: existingEmail },
 			} = await insertAccountWithSession(ctx);
@@ -121,7 +121,7 @@ describe("auth.register", () => {
 	describe("functionality", () => {
 		test("register successful", async ({ ctx }) => {
 			ctx.emailOptions.active = false;
-			const context = createContext(ctx);
+			const context = await createContext(ctx);
 			const caller = createCaller(context);
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({
@@ -155,7 +155,7 @@ describe("auth.register", () => {
 
 		test("email sent if active", async ({ ctx }) => {
 			const email = faker.internet.email();
-			const caller = createCaller(createContext(ctx));
+			const caller = createCaller(await createContext(ctx));
 			await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({
 					email,
@@ -176,7 +176,7 @@ describe("auth.register", () => {
 
 		test("email reports error if broken", async ({ ctx }) => {
 			ctx.emailOptions.broken = true;
-			const context = createContext(ctx);
+			const context = await createContext(ctx);
 			const caller = createCaller(context);
 			await expectTRPCError(
 				() =>

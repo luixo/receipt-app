@@ -55,7 +55,7 @@ const runTest = async (
 	await insertReceiptParticipant(ctx, foreignReceiptId, foreignUserId);
 	await insertReceiptItem(ctx, foreignReceiptId);
 
-	const caller = createCaller(createAuthContext(ctx, sessionId));
+	const caller = createCaller(await createAuthContext(ctx, sessionId));
 	const result = await expectDatabaseDiffSnapshot(ctx, () =>
 		caller.procedure({ id: receiptId, update: getUpdate() }),
 	);
@@ -113,7 +113,7 @@ describe("receipts.update", () => {
 			// Verifying adding other receipts doesn't affect the error
 			await insertReceipt(ctx, accountId);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const nonExistentReceiptId = faker.string.uuid();
 			await expectTRPCError(
 				() =>
@@ -140,7 +140,7 @@ describe("receipts.update", () => {
 			// Verifying adding other receipts doesn't affect the error
 			await insertReceipt(ctx, accountId);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({

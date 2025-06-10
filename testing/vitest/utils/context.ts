@@ -19,10 +19,10 @@ type ContextOptions = {
 	router?: AnyTRPCRouter;
 };
 
-export const createContext = (
+export const createContext = async (
 	ctx: TestContext,
 	options?: ContextOptions,
-): UnauthorizedContext => {
+): Promise<UnauthorizedContext> => {
 	const mockReq = new MockRequest(options?.request);
 	const mockRes = new MockResponse(options?.response);
 	const request = incomingMessageToRequest(mockReq, { maxBodySize: null });

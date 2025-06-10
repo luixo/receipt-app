@@ -36,7 +36,7 @@ describe("receiptItemConsumers.remove", () => {
 		describe("itemId", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -52,7 +52,7 @@ describe("receiptItemConsumers.remove", () => {
 		describe("userId", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -67,7 +67,7 @@ describe("receiptItemConsumers.remove", () => {
 
 		test("receipt item does not exist", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const { id: receiptId } = await insertReceipt(ctx, accountId);
 			await insertReceiptItem(ctx, receiptId);
 			const fakeItemId = faker.string.uuid();
@@ -107,7 +107,7 @@ describe("receiptItemConsumers.remove", () => {
 			);
 			await insertReceiptItemConsumer(ctx, receiptItemId, foreignToSelfUserId);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -133,7 +133,7 @@ describe("receiptItemConsumers.remove", () => {
 			const { id: receiptItemId } = await insertReceiptItem(ctx, receiptId);
 			await insertReceiptItemConsumer(ctx, receiptItemId, selfUserId);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ itemId: receiptItemId, userId }),
 				"NOT_FOUND",
@@ -161,7 +161,7 @@ describe("receiptItemConsumers.remove", () => {
 			const { id: anotheritemId } = await insertReceipt(ctx, accountId);
 			await insertReceiptItem(ctx, anotheritemId);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ itemId: receiptItemId, userId }),
 			);

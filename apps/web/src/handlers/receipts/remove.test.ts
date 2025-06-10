@@ -43,7 +43,7 @@ describe("receipts.remove", () => {
 			// Verifying adding other receipts doesn't affect the error
 			await insertReceipt(ctx, accountId);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const nonExistentReceiptId = faker.string.uuid();
 			await expectTRPCError(
 				() => caller.procedure({ id: nonExistentReceiptId }),
@@ -66,7 +66,7 @@ describe("receipts.remove", () => {
 			// Verifying adding other receipts doesn't affect the error
 			await insertReceipt(ctx, accountId);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() => caller.procedure({ id: foreignReceiptId }),
 				"FORBIDDEN",
@@ -104,7 +104,7 @@ describe("receipts.remove", () => {
 			await insertReceiptParticipant(ctx, foreignReceiptId, foreignUser);
 			await insertReceiptItem(ctx, foreignReceiptId);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ id: receiptId }),
 			);

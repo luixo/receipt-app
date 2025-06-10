@@ -35,7 +35,7 @@ describe("receiptParticipants.remove", () => {
 		describe("receiptId", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -51,7 +51,7 @@ describe("receiptParticipants.remove", () => {
 		describe("userId", () => {
 			test("invalid", async ({ ctx }) => {
 				const { sessionId } = await insertAccountWithSession(ctx);
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -66,7 +66,7 @@ describe("receiptParticipants.remove", () => {
 
 		test("receipt does not exist", async ({ ctx }) => {
 			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await insertReceipt(ctx, accountId);
 			const fakeReceiptId = faker.string.uuid();
 			await expectTRPCError(
@@ -90,7 +90,7 @@ describe("receiptParticipants.remove", () => {
 				foreignAccountId,
 			);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectTRPCError(
 				() =>
 					caller.procedure({
@@ -108,7 +108,7 @@ describe("receiptParticipants.remove", () => {
 				const { id: receiptId } = await insertReceipt(ctx, accountId);
 				const fakeUserId = faker.string.uuid();
 
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ receiptId, userId: fakeUserId }),
 					"NOT_FOUND",
@@ -126,7 +126,7 @@ describe("receiptParticipants.remove", () => {
 				const { id: foreignAccountId } = await insertAccount(ctx);
 				const { id: foreignUserId } = await insertUser(ctx, foreignAccountId);
 
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() => caller.procedure({ receiptId, userId: foreignUserId }),
 					"FORBIDDEN",
@@ -141,7 +141,7 @@ describe("receiptParticipants.remove", () => {
 				const { id: notParticipantUserId } = await insertUser(ctx, accountId);
 				const { id: receiptId } = await insertReceipt(ctx, accountId);
 
-				const caller = createCaller(createAuthContext(ctx, sessionId));
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
 						caller.procedure({
@@ -174,7 +174,7 @@ describe("receiptParticipants.remove", () => {
 			const { id: anotherReceiptId } = await insertReceipt(ctx, accountId);
 			await insertReceiptItem(ctx, anotherReceiptId);
 
-			const caller = createCaller(createAuthContext(ctx, sessionId));
+			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ receiptId, userId }),
 			);
