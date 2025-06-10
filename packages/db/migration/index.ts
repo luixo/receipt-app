@@ -30,7 +30,7 @@ class ESMFileMigrationProvider implements MigrationProvider {
 	async getMigrations(): Promise<Record<string, Migration>> {
 		const migrations: Record<string, Migration> = {};
 		const resolvedPath = path.resolve(
-			url.fileURLToPath(new URL(".", import.meta.url)),
+			url.fileURLToPath(new URL(".", import.meta.url).toString()),
 			this.relativePath,
 		);
 		const files = await fs.readdir(resolvedPath);
