@@ -137,7 +137,7 @@ const mapQueries = (queries: DehydratedState["queries"]) =>
 		.map(({ queryKey, ...query }) => {
 			const typedQueryKey = queryKey as RawQueryKey;
 			return {
-				...omit(query, ["queryHash"]),
+				...omit(query, ["queryHash", "dehydratedAt"]),
 				queryKey: {
 					handler: typedQueryKey[0].join(".") as TRPCQueryKey,
 					input: JSON.stringify(typedQueryKey[1]?.input),
