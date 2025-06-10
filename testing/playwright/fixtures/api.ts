@@ -22,7 +22,6 @@ import type {
 import type { TransformerResult } from "~app/utils/trpc";
 import { transformer } from "~app/utils/trpc";
 import type { AccountsId, UsersId } from "~db/models";
-import { withResolvers } from "~tests/frontend/utils";
 import { CURRENCIES } from "~utils/currency-data";
 import type { MaybePromise } from "~utils/types";
 
@@ -360,7 +359,9 @@ const createApiManager = async (
 		mockFirst: (key, handler) => mock(key, handler, "append"),
 		mockLast: (key, handler) => mock(key, handler, "prepend"),
 		createPause: () => {
-			const promise = withResolvers<void>();
+			// Our version is ^22.0.0 which means we usually get `withResolvers`.
+			// eslint-disable-next-line n/no-unsupported-features/es-syntax
+			const promise = Promise.withResolvers<void>();
 			controller.paused.push(promise);
 			return promise;
 		},
