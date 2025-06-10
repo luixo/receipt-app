@@ -1,5 +1,3 @@
-import { t } from "~web/handlers/trpc";
-
 import { procedure as add } from "./add";
 import { procedure as get } from "./get";
 import { procedure as getForeign } from "./get-foreign";
@@ -10,7 +8,7 @@ import { procedure as suggestTop } from "./suggest-top";
 import { procedure as unlink } from "./unlink";
 import { procedure as update } from "./update";
 
-export const router = t.router({
+export const router = {
 	get,
 	getForeign,
 	getPaged,
@@ -20,4 +18,4 @@ export const router = t.router({
 	unlink,
 	suggest,
 	suggestTop,
-});
+};
