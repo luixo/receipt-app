@@ -2,12 +2,14 @@
 	"queries": {
 		"debts.get:[{\"id\":\"2bebdb40-84ee-4955-a735-7c4476ea90d3\"}]": {
 			"state": {
-				"dataUpdateCount": 2
+				"dataUpdateCount": 2,
+				"isInvalidated": false
 			}
 		},
 		"debts.get:[{\"id\":\"a782b307-9630-4c3f-9fb2-49ca339c1f75\"}]": {
 			"state": {
-				"dataUpdateCount": 2
+				"dataUpdateCount": 2,
+				"isInvalidated": false
 			}
 		}
 	},
