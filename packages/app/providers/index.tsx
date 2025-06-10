@@ -8,36 +8,36 @@ import { StoreContext } from "~app/contexts/store-context";
 import type { StoreContextType } from "~app/contexts/store-context";
 
 import { PersisterProvider } from "./persist-client";
-import { QueryProvider } from "./query";
+import { QueryProviderWithPretend } from "./query-pretend";
 import { ShimsProvider } from "./shims";
 import { StoredDataProvider } from "./stored-data";
 
 type Props = {
+	initialQueryClients: QueryClientsRecord;
 	storeContext: StoreContextType;
 	persister: Persister;
 	linksContext: LinksContextType;
-	useQueryClientKey: () => keyof QueryClientsRecord | undefined;
 };
 
 export const Provider: React.FC<React.PropsWithChildren<Props>> = ({
 	children,
+	initialQueryClients,
 	storeContext,
 	persister,
 	linksContext,
-	useQueryClientKey,
 }) => (
 	<StoreContext.Provider value={storeContext}>
 		<StoredDataProvider>
-			<QueryProvider
+			<QueryProviderWithPretend
+				initialQueryClients={initialQueryClients}
 				linksContext={linksContext}
-				useQueryClientKey={useQueryClientKey}
 			>
 				<ShimsProvider>
 					<PersisterProvider persister={persister}>
 						{children}
 					</PersisterProvider>
 				</ShimsProvider>
-			</QueryProvider>
+			</QueryProviderWithPretend>
 		</StoredDataProvider>
 	</StoreContext.Provider>
 );

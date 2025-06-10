@@ -12,12 +12,17 @@ import { PublicPage } from "~app/components/public-page";
 import { Toaster } from "~app/components/toaster";
 import type { LinksContextType } from "~app/contexts/links-context";
 import { LinksContext } from "~app/contexts/links-context";
+import type { QueryClientsRecord } from "~app/contexts/query-clients-context";
+import {
+	SELF_QUERY_CLIENT_KEY,
+	getQueryClient,
+} from "~app/contexts/query-clients-context";
 import { useSearchParams } from "~app/hooks/use-navigation";
-import { usePretendUserClientKey } from "~app/hooks/use-pretend-user-client-key";
 import { Provider } from "~app/providers/index";
 import { applyRemaps } from "~app/utils/nativewind";
 import { persister } from "~app/utils/persister";
 import { getStoreContext } from "~app/utils/store";
+import { PRETEND_USER_STORE_NAME } from "~app/utils/store/pretend-user";
 import type { StoreValues } from "~app/utils/store-data";
 import { getStoreValuesFromInitialValues } from "~app/utils/store-data";
 import type { AppPage } from "~utils/next";
@@ -83,7 +88,7 @@ const font = Inter({
 
 type PageProps = Omit<
 	React.ComponentProps<typeof Provider>,
-	"storeContext" | "persister" | "linksContext" | "useQueryClientKey"
+	"storeContext" | "persister" | "linksContext" | "initialQueryClients"
 > & {
 	linksParams: z.infer<typeof rootSearchParamsSchema>;
 	nowTimestamp: number;
@@ -113,6 +118,16 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 		() => getStoreContext(props.nowTimestamp, props.initialValues),
 		[props.initialValues, props.nowTimestamp],
 	);
+	const initialQueryClients = React.useMemo<QueryClientsRecord>(() => {
+		const queryClients: QueryClientsRecord = {
+			[SELF_QUERY_CLIENT_KEY]: getQueryClient(),
+		};
+		const pretendEmail = props.initialValues[PRETEND_USER_STORE_NAME].email;
+		if (pretendEmail) {
+			queryClients[pretendEmail] = getQueryClient();
+		}
+		return queryClients;
+	}, [props.initialValues]);
 	return (
 		<>
 			<Head>
@@ -126,10 +141,10 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 			</Head>
 			<main className={`${font.variable} font-sans`}>
 				<Provider
+					initialQueryClients={initialQueryClients}
 					linksContext={linksContext}
 					storeContext={storeContext}
 					persister={persister}
-					useQueryClientKey={usePretendUserClientKey}
 				>
 					<ThemeProvider>
 						<NavigationProvider>

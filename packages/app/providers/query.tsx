@@ -6,26 +6,39 @@ import { createTRPCClient } from "@trpc/client";
 import type { LinksContextType } from "~app/contexts/links-context";
 import type { QueryClientsRecord } from "~app/contexts/query-clients-context";
 import {
+	QueryClientsContext,
 	SELF_QUERY_CLIENT_KEY,
-	useQueryClientsStore,
+	getQueryClient,
 } from "~app/contexts/query-clients-context";
 import { TRPCProvider, getLinks } from "~app/utils/trpc";
 
 type Props = {
 	linksContext: LinksContextType;
-	useQueryClientKey: () => keyof QueryClientsRecord | undefined;
+	queryClientKey: keyof QueryClientsRecord;
 };
 
 export const QueryProvider: React.FC<React.PropsWithChildren<Props>> = ({
-	useQueryClientKey,
+	queryClientKey,
 	children,
 	linksContext,
 }) => {
-	const queryClientKey = useQueryClientKey();
-	const queryClient = useQueryClientsStore(
-		(state) =>
-			(queryClientKey && state.queryClients[queryClientKey]) ||
-			state.queryClients[SELF_QUERY_CLIENT_KEY],
+	const [queryClients, setQueryClients] = React.useContext(QueryClientsContext);
+	React.useEffect(() => {
+		setQueryClients((prevQueryClients) => {
+			if (prevQueryClients[queryClientKey]) {
+				return prevQueryClients;
+			}
+			return {
+				...prevQueryClients,
+				[queryClientKey]: getQueryClient(),
+			};
+		});
+	}, [queryClientKey, setQueryClients]);
+	const queryClient = React.useMemo(
+		() =>
+			(queryClientKey && queryClients[queryClientKey]) ||
+			queryClients[SELF_QUERY_CLIENT_KEY],
+		[queryClientKey, queryClients],
 	);
 	const trpcClient = React.useMemo(
 		() =>

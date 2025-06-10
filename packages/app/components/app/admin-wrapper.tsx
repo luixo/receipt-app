@@ -42,7 +42,7 @@ export const AdminWrapper: React.FC<React.PropsWithChildren> = ({
 	return (
 		<QueryProvider
 			linksContext={linksContext}
-			useQueryClientKey={() => SELF_QUERY_CLIENT_KEY}
+			queryClientKey={SELF_QUERY_CLIENT_KEY}
 		>
 			{children}
 		</QueryProvider>

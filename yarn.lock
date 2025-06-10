@@ -6812,7 +6812,6 @@ __metadata:
     tailwind-variants: "npm:^0.2.1"
     uuid: "npm:^9.0.0"
     zod-form-data: "npm:^2.0.2"
-    zustand: "npm:^4.3.9"
   languageName: unknown
   linkType: soft
 
@@ -27251,15 +27250,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"use-sync-external-store@npm:1.2.0":
-  version: 1.2.0
-  resolution: "use-sync-external-store@npm:1.2.0"
-  peerDependencies:
-    react: ^16.8.0 || ^17.0.0 || ^18.0.0
-  checksum: 10/a676216affc203876bd47981103f201f28c2731361bb186367e12d287a7566763213a8816910c6eb88265eccd4c230426eb783d64c373c4a180905be8820ed8e
-  languageName: node
-  linkType: hard
-
 "use-sync-external-store@npm:^1.2.0":
   version: 1.4.0
   resolution: "use-sync-external-store@npm:1.4.0"
@@ -28181,39 +28171,5 @@ __metadata:
   version: 3.25.56
   resolution: "zod@npm:3.25.56"
   checksum: 10/f2faf9f9bf1e1e487697caf09f65f6c67282e55e801a697eebde99063ca313fae3706d2ebb886bf2f48173cdcff76b3fa14968eea43d3cd47a79f7a0c7594f6a
-  languageName: node
-  linkType: hard
-
-"zustand@npm:4.3.9":
-  version: 4.3.9
-  resolution: "zustand@npm:4.3.9"
-  dependencies:
-    use-sync-external-store: "npm:1.2.0"
-  peerDependencies:
-    immer: ">=9.0"
-    react: ">=16.8"
-  peerDependenciesMeta:
-    immer:
-      optional: true
-    react:
-      optional: true
-  checksum: 10/8e4d3dd821b95f23017a1f267c4df74ef88269cddb52ae0d6b3c9d11afa3662078b50df65263ba29832f52311f445082a328edce48073c5371403382066c1092
-  languageName: node
-  linkType: hard
-
-"zustand@patch:zustand@npm%3A4.3.9#./patches/zustand-npm-4.3.9.patch::locator=receipt-app%40workspace%3A.":
-  version: 4.3.9
-  resolution: "zustand@patch:zustand@npm%3A4.3.9#./patches/zustand-npm-4.3.9.patch::version=4.3.9&hash=902e03&locator=receipt-app%40workspace%3A."
-  dependencies:
-    use-sync-external-store: "npm:1.2.0"
-  peerDependencies:
-    immer: ">=9.0"
-    react: ">=16.8"
-  peerDependenciesMeta:
-    immer:
-      optional: true
-    react:
-      optional: true
-  checksum: 10/00ee8e4151193e63cb12aeeff905c1fdf188c624646b2c8c672b5e6ec24e7cf593a68f2fe69705817080160d53324429455d33c41e0e339f615c32fcb28009af
   languageName: node
   linkType: hard
