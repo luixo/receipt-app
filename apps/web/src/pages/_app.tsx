@@ -33,7 +33,7 @@ import { useQueryClientHelper } from "~web/hooks/use-query-client-helper";
 import { DevToolsProvider } from "~web/providers/client/devtools";
 import { NavigationProvider } from "~web/providers/client/navigation";
 import { ThemeProvider } from "~web/providers/client/theme";
-import { captureSentryError } from "~web/utils/trpc";
+import { captureSentryError } from "~web/utils/sentry";
 import "~app/global.css";
 
 export const NATIVE_STYLESHEET_PRELOAD_ID = "react-native-preload-stylesheet";
