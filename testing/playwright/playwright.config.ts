@@ -106,7 +106,8 @@ export default defineConfig({
 		locale: localSettings.locale,
 	},
 	projects: [...visualProjects, functionalProject],
-
+	snapshotPathTemplate:
+		"../../{testFileDir}/{testFileName}-snapshots/{arg}-{projectName}{ext}",
 	/* Run your local dev server before starting the tests */
 	webServer: {
 		command: "yarn web:start",

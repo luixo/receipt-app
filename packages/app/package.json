@@ -32,7 +32,7 @@
 		"zod-form-data": "^2.0.2"
 	},
 	"devDependencies": {
-		"@playwright/test": "^1.46.0",
+		"@playwright/test": "^1.53.0",
 		"@ra/playwright": "workspace:*",
 		"@react-types/shared": "^3.18.1",
 		"@types/uuid": "^9.0.2"

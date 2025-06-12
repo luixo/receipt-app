@@ -236,16 +236,6 @@ const remapActions = (
 		).sort(([aKey], [bKey]) => aKey.localeCompare(bKey)),
 	);
 
-const withNoPlatformPath = (testInfo: TestInfo, fn: () => void) => {
-	const originalSnapshotPath = testInfo.snapshotPath;
-	testInfo.snapshotPath = (...snapshotPath) =>
-		originalSnapshotPath
-			.call(testInfo, ...snapshotPath)
-			.replace(`-${process.platform}`, "");
-	fn();
-	testInfo.snapshotPath = originalSnapshotPath;
-};
-
 export const getMutationsByKey = <T extends TRPCMutationKey>(
 	cache: Awaited<ReturnType<typeof getQueryCache>>,
 	key: T,
@@ -525,35 +515,31 @@ export const queriesFixtures = test.extend<QueriesFixtures>({
 				const actions = api.getActions();
 				const extendedTestInfo = getExtendedTestInfo(testInfo);
 				extendedTestInfo.queriesSnapshotIndex ??= 0;
-				withNoPlatformPath(testInfo, () => {
-					if (!skipCache) {
-						expect
-							.soft(
-								`${JSON.stringify(
-									diff,
-									(_, value: unknown) =>
-										value === undefined ? "<undefined>" : value,
-									"\t",
-								)}\n`,
-							)
-							.toMatchSnapshot(
-								getSnapshotName(extendedTestInfo, "cache", name),
-							);
-					}
-					if (!skipQueries) {
-						expect
-							.soft(
-								`${JSON.stringify(
-									remapActions(actions, keysLists),
-									null,
-									"\t",
-								)}\n`,
-							)
-							.toMatchSnapshot(
-								getSnapshotName(extendedTestInfo, "queries", name),
-							);
-					}
-				});
+				if (!skipCache) {
+					expect
+						.soft(
+							`${JSON.stringify(
+								diff,
+								(_, value: unknown) =>
+									value === undefined ? "<undefined>" : value,
+								"\t",
+							)}\n`,
+						)
+						.toMatchSnapshot(getSnapshotName(extendedTestInfo, "cache", name));
+				}
+				if (!skipQueries) {
+					expect
+						.soft(
+							`${JSON.stringify(
+								remapActions(actions, keysLists),
+								null,
+								"\t",
+							)}\n`,
+						)
+						.toMatchSnapshot(
+							getSnapshotName(extendedTestInfo, "queries", name),
+						);
+				}
 				if (!name && !(skipQueries && skipCache)) {
 					extendedTestInfo.queriesSnapshotIndex += 1;
 				}
