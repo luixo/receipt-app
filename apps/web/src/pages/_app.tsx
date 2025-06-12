@@ -17,6 +17,7 @@ import {
 	SELF_QUERY_CLIENT_KEY,
 	getQueryClient,
 } from "~app/contexts/query-clients-context";
+import { useMountEffect } from "~app/hooks/use-mount-effect";
 import { useSearchParams } from "~app/hooks/use-navigation";
 import { Provider } from "~app/providers/index";
 import { applyRemaps } from "~app/utils/nativewind";
@@ -26,16 +27,16 @@ import { PRETEND_USER_STORE_NAME } from "~app/utils/store/pretend-user";
 import type { StoreValues } from "~app/utils/store-data";
 import { getStoreValuesFromInitialValues } from "~app/utils/store-data";
 import type { AppPage } from "~utils/next";
-import { useHtmlFont } from "~web/hooks/use-html-font";
 import { useHydratedMark } from "~web/hooks/use-hydrated-mark";
 import { useStoreLocalSettings } from "~web/hooks/use-local-settings";
 import { useQueryClientHelper } from "~web/hooks/use-query-client-helper";
-import { useRemovePreloadedCss } from "~web/hooks/use-remove-preloaded-css";
 import { DevToolsProvider } from "~web/providers/client/devtools";
 import { NavigationProvider } from "~web/providers/client/navigation";
 import { ThemeProvider } from "~web/providers/client/theme";
 import { captureSentryError } from "~web/utils/trpc";
 import "~app/global.css";
+
+export const NATIVE_STYLESHEET_PRELOAD_ID = "react-native-preload-stylesheet";
 
 applyRemaps();
 
@@ -56,6 +57,23 @@ const useRemoveTestQueryParams = () => {
 			proxyPort: undefined,
 		}));
 	}, [setParams]);
+};
+
+const useHtmlFont = (fontVariable: string) => {
+	React.useEffect(() => {
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		const html = document.querySelector("html")!;
+		html.classList.add(fontVariable);
+		html.classList.add("font-sans");
+		return () => html.classList.remove(fontVariable);
+	}, [fontVariable]);
+};
+
+const useRemovePreloadedCss = () => {
+	useMountEffect(() => {
+		const style = document.getElementById(NATIVE_STYLESHEET_PRELOAD_ID);
+		style?.remove();
+	});
 };
 
 const GlobalHooksComponent: React.FC = () => {

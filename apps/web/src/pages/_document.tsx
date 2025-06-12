@@ -10,7 +10,7 @@ import {
 	SELECTED_COLOR_MODE_STORE_NAME,
 } from "~app/utils/store/color-modes";
 import { schemas } from "~app/utils/store-data";
-import { NATIVE_STYLESHEET_PRELOAD_ID } from "~web/hooks/use-remove-preloaded-css";
+import { NATIVE_STYLESHEET_PRELOAD_ID } from "~web/pages/_app";
 
 type NativeWebAppRegistry = typeof AppRegistry & {
 	getApplication: (name: string) => {
