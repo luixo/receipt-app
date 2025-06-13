@@ -3,72 +3,99 @@ import type React from "react";
 import { Card, Link as LinkRaw } from "@heroui/react";
 import type { RightJoinProps } from "@heroui/react";
 import type { RouterOptions } from "@react-types/shared";
+import { useRouter } from "@tanstack/react-router";
+import type {
+	BuildLocationFn,
+	RegisteredRouter,
+	ValidateNavigateOptions,
+} from "@tanstack/router-core";
 import { keys, omit, pick } from "remeda";
 
-import {
-	type ExistingPath,
-	type UrlParams,
-	buildUrl,
-} from "~app/hooks/use-navigation";
+import { Button } from "~components/button";
 import { BackArrow } from "~components/icons";
 
-import { Button } from "./button";
-
 type RawProps = React.ComponentProps<typeof LinkRaw>;
-export type Props<P extends ExistingPath> = Omit<
-	RawProps,
-	"href" | "routerOptions"
-> &
-	UrlParams<P>;
+type NavigationProps<
+	O = unknown,
+	R extends RegisteredRouter = RegisteredRouter,
+> = ValidateNavigateOptions<R, O>;
+export type Props<
+	O = unknown,
+	R extends RegisteredRouter = RegisteredRouter,
+> = Omit<RawProps, "href" | "routerOptions"> & NavigationProps<O, R>;
 
 const PROPS_KEYS = {
+	from: true,
 	to: true,
 	search: true,
 	params: true,
 	hash: true,
-} satisfies Partial<Record<keyof UrlParams<ExistingPath>, true>>;
-
-const extractProps = <P extends ExistingPath>(
-	props: Props<P>,
-): [Omit<Props<P>, keyof UrlParams<P>>, RouterOptions] => {
-	const picked = pick(props, keys(PROPS_KEYS)) as RouterOptions;
-	const omitted = omit(props, keys(PROPS_KEYS));
-	return [omitted, picked];
-};
+	state: true,
+	href: true,
+	_fromLocation: true,
+	mask: true,
+	hashScrollIntoView: true,
+	replace: true,
+	resetScroll: true,
+	startTransition: true,
+	viewTransition: true,
+	ignoreBlocker: true,
+	reloadDocument: true,
+} satisfies Record<keyof ValidateNavigateOptions, true>;
 
 /* eslint-disable react/function-component-definition */
 
-export function Link<P extends ExistingPath>(props: Props<P>) {
-	const [omitted, picked] = extractProps(props);
+export function Link<
+	O = unknown,
+	R extends RegisteredRouter = RegisteredRouter,
+>(props: Props<O, R>) {
+	const router = useRouter();
+	const picked = pick(
+		props,
+		keys(PROPS_KEYS),
+	) as Parameters<BuildLocationFn>[0];
+	const omitted = omit(props, keys(PROPS_KEYS));
 	return (
-		<LinkRaw {...omitted} href={buildUrl(picked)} routerOptions={picked} />
+		<LinkRaw
+			{...omitted}
+			href={router.buildLocation(picked).href}
+			routerOptions={picked as RouterOptions}
+		/>
 	);
 }
 
-export function BackLink<P extends ExistingPath>(
-	props: React.ComponentProps<typeof Link<P>>,
-) {
+export function BackLink<
+	O = unknown,
+	R extends RegisteredRouter = RegisteredRouter,
+>(props: React.ComponentProps<typeof Link<O, R>>) {
 	return (
+		// @ts-expect-error This is too complex to represent and that's ok
 		<Link<P> data-testid="back-link" color="foreground" {...props}>
 			<BackArrow size={36} />
 		</Link>
 	);
 }
 
-export function ButtonLink<P extends ExistingPath>(
+export function ButtonLink<
+	O = unknown,
+	R extends RegisteredRouter = RegisteredRouter,
+>(
 	props: RightJoinProps<
 		Omit<React.ComponentProps<typeof Button>, "as">,
-		Props<P>
+		Props<O, R>
 	>,
 ) {
 	// @ts-expect-error This is too complex to represent and that's ok
 	return <Button as={Link} {...props} />;
 }
 
-export function CardLink<P extends ExistingPath>(
+export function CardLink<
+	O = unknown,
+	R extends RegisteredRouter = RegisteredRouter,
+>(
 	props: RightJoinProps<
 		Omit<React.ComponentProps<typeof Card>, "as">,
-		Props<P>
+		Props<O, R>
 	>,
 ) {
 	// @ts-expect-error This is too complex to represent and that's ok

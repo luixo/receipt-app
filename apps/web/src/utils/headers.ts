@@ -11,9 +11,9 @@ const getFirstValue = (valueOrValues: string | number | string[] | undefined) =>
 		: String(valueOrValues);
 /* c8 ignore stop */
 
-export const getResHeaders = (ctx: NetContext) => {
+export const getResHeaders = ({ event }: NetContext) => {
 	const headersEntries: [string, string][] = [];
-	entries(ctx.res.getHeaders()).forEach(([key, valueOrValues]) => {
+	entries(event.node.res.getHeaders()).forEach(([key, valueOrValues]) => {
 		const value = getFirstValue(valueOrValues);
 		/* c8 ignore start */
 		if (!value) {
@@ -25,8 +25,5 @@ export const getResHeaders = (ctx: NetContext) => {
 	return headersEntries;
 };
 
-export const getResHeader = (ctx: NetContext, key: string) =>
-	getFirstValue(ctx.res.getHeader(key));
-
-export const getReqHeader = (ctx: NetContext, key: string) =>
-	getFirstValue(ctx.req.headers[key]);
+export const getReqHeader = ({ event }: NetContext, key: string) =>
+	getFirstValue(event.node.req.headers[key]);

@@ -1,8 +1,7 @@
-import { HomeScreen } from "~app/features/home/home-screen";
-import { createFileRoute } from "~web/utils/router";
+import { createFileRoute } from "@tanstack/react-router";
 
-const Route = createFileRoute("/")({
+import { HomeScreen } from "~app/features/home/home-screen";
+
+export const Route = createFileRoute("/")({
 	component: HomeScreen,
 });
-
-export default Route.Screen;

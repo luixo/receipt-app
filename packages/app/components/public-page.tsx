@@ -12,12 +12,12 @@ export const PublicPage: React.FC<Props> = ({ children, ...props }) => (
 	<Page
 		elements={[
 			{
-				urlParams: { to: "/login" },
+				pathname: "/login",
 				Icon: LoginIcon,
 				text: "Login",
 			},
 			{
-				urlParams: { to: "/register" },
+				pathname: "/register",
 				Icon: RegisterIcon,
 				text: "Register",
 			},

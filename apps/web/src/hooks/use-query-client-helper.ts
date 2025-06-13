@@ -15,7 +15,7 @@ declare global {
 export const useQueryClientHelper = () => {
 	const queryClient = useQueryClient();
 	React.useEffect(() => {
-		if (process.env.NEXT_PUBLIC_ENV !== "test") {
+		if (import.meta.env.VITE_ENV !== "test") {
 			return;
 		}
 		window.queryClient = queryClient;

@@ -1,24 +1,18 @@
-import React from "react";
+import type React from "react";
 
-import {
-	useHref as useHrefFactory,
-	useNavigate,
-} from "~app/hooks/use-navigation";
+import { useRouter } from "@tanstack/react-router";
+
 import { HeroUIProvider } from "~components/utils";
 
 export const NavigationProvider: React.FC<React.PropsWithChildren<object>> = ({
 	children,
 }) => {
-	const navigate = useNavigate();
-	const useHref = useHrefFactory();
-	const localNavigate = React.useCallback<
-		NonNullable<React.ComponentProps<typeof HeroUIProvider>["navigate"]>
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-	>((_href, options) => navigate(options!), [navigate]);
+	const router = useRouter();
 	return (
 		<HeroUIProvider
-			navigate={localNavigate}
-			useHref={useHref}
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			navigate={(_href, options) => router.navigate(options!)}
+			useHref={(href) => router.buildLocation({ to: href }).href}
 			validationBehavior="native"
 		>
 			{children}

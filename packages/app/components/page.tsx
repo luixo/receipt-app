@@ -1,21 +1,19 @@
 import type React from "react";
 import { View } from "react-native";
 
-import type { ExistingPath, UrlParams } from "~app/hooks/use-navigation";
-import { buildUrl, usePathname } from "~app/hooks/use-navigation";
+import { usePathname } from "~app/hooks/use-navigation";
 import { Badge } from "~components/badge";
 import { Link } from "~components/link";
 import { Text } from "~components/text";
 import { tv } from "~components/utils";
+import type { FileRouteTypes } from "~web/entry/routeTree.gen";
 
-export type MenuElement<P extends ExistingPath> = {
+export type MenuElement = {
 	Icon: React.FC<{ size: number }>;
 	text: string;
-	urlParams: UrlParams<P>;
+	pathname: FileRouteTypes["to"];
 	useBadgeAmount?: () => number;
 	useShow?: () => boolean;
-	ItemWrapper?: React.FC<React.PropsWithChildren>;
-	PageWrapper?: React.FC<React.PropsWithChildren>;
 };
 
 const useZero = () => 0;
@@ -30,24 +28,22 @@ const link = tv({
 	},
 });
 
-// eslint-disable-next-line react/function-component-definition
-function MenuItemComponent<P extends ExistingPath>({
+const MenuItemComponent: React.FC<MenuElement & { selected: boolean }> = ({
 	Icon,
-	urlParams,
+	pathname,
 	text,
 	useBadgeAmount = useZero,
 	useShow = useTrue,
 	selected,
-}: MenuElement<P> & { selected: boolean }) {
+}) => {
 	const amount = useBadgeAmount();
 	const show = useShow();
 	if (!show) {
 		return null;
 	}
-	const url = buildUrl(urlParams);
 	const icon = <Icon size={24} />;
 	return (
-		<Link key={url} {...urlParams} className={link({ selected })}>
+		<Link key={pathname} to={pathname} className={link({ selected })}>
 			{amount === 0 ? (
 				icon
 			) : (
@@ -60,19 +56,20 @@ function MenuItemComponent<P extends ExistingPath>({
 			</Text>
 		</Link>
 	);
-}
-
-type Props<P extends ExistingPath> = {
-	children?: React.ReactNode;
-	elements: MenuElement<P>[];
 };
 
-// eslint-disable-next-line react/function-component-definition
-export function Page<P extends ExistingPath>({ children, elements }: Props<P>) {
-	const pathname = usePathname() ?? "";
-	const PageWrapper = elements.find(
-		(element) => buildUrl(element.urlParams) === pathname,
-	)?.PageWrapper;
+type Props = {
+	children?: React.ReactNode;
+	elements: (MenuElement & {
+		ItemWrapper?: React.FC<React.PropsWithChildren>;
+		PageWrapper?: React.FC<React.PropsWithChildren>;
+	})[];
+};
+
+export const Page: React.FC<Props> = ({ children, elements }) => {
+	const pathname = usePathname();
+	const PageWrapper = elements.find((element) => element.pathname === pathname)
+		?.PageWrapper;
 	const slot = <View className="gap-4">{children}</View>;
 	return (
 		<View className="mx-auto max-w-screen-md overflow-x-hidden overflow-y-scroll p-1 sm:p-2 md:p-4">
@@ -83,16 +80,15 @@ export function Page<P extends ExistingPath>({ children, elements }: Props<P>) {
 			>
 				<View className="mx-auto max-w-screen-sm flex-1 flex-row">
 					{elements.map(({ ItemWrapper, ...props }) => {
-						const url = buildUrl(props.urlParams);
 						const element = (
 							<MenuItemComponent
-								key={url}
+								key={props.pathname}
 								{...props}
-								selected={pathname.startsWith(url)}
+								selected={pathname.startsWith(props.pathname)}
 							/>
 						);
 						if (ItemWrapper) {
-							return <ItemWrapper key={url}>{element}</ItemWrapper>;
+							return <ItemWrapper key={props.pathname}>{element}</ItemWrapper>;
 						}
 						return element;
 					})}
@@ -102,4 +98,4 @@ export function Page<P extends ExistingPath>({ children, elements }: Props<P>) {
 			<View className="h-[72px]" />
 		</View>
 	);
-}
+};

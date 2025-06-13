@@ -7,6 +7,7 @@ import "~app/global.css";
 import type { LinksContextType } from "~app/contexts/links-context";
 import { LinksContext } from "~app/contexts/links-context";
 import {
+	QueryClientsContext,
 	SELF_QUERY_CLIENT_KEY,
 	getQueryClient,
 } from "~app/contexts/query-clients-context";
@@ -30,21 +31,22 @@ const ClientProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 		}),
 		[baseLinksContext.url, baseUrl],
 	);
-	const initialQueryClients = React.useMemo(
-		() => ({ [SELF_QUERY_CLIENT_KEY]: getQueryClient() }),
-		[],
-	);
+	// eslint-disable-next-line react/hook-use-state
+	const queryClientsState = React.useState(() => ({
+		[SELF_QUERY_CLIENT_KEY]: getQueryClient(),
+	}));
 	return (
-		<Provider
-			initialQueryClients={initialQueryClients}
-			storeContext={storeContext}
-			persister={persister}
-			linksContext={linksContext}
-		>
-			<ThemeProvider>
-				<QueryDevToolsProvider>{children}</QueryDevToolsProvider>
-			</ThemeProvider>
-		</Provider>
+		<QueryClientsContext.Provider value={queryClientsState}>
+			<Provider
+				storeContext={storeContext}
+				persister={persister}
+				linksContext={linksContext}
+			>
+				<ThemeProvider>
+					<QueryDevToolsProvider>{children}</QueryDevToolsProvider>
+				</ThemeProvider>
+			</Provider>
+		</QueryClientsContext.Provider>
 	);
 };
 
