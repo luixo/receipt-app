@@ -71,7 +71,7 @@ const queueElement = queueCallFactory<
 		});
 	},
 	{
-		getKey: (ctx) => getReqHeader(ctx.req, "x-test-id") ?? "unknown",
+		getKey: (ctx) => getReqHeader(ctx, "x-test-id") ?? "unknown",
 	},
 );
 

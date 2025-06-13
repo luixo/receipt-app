@@ -21,7 +21,7 @@ export const setCookie = (
 	cookieValue: string,
 	opts: CookieSerializeOptions = {},
 ) => {
-	const setCookieHeader = getResHeader(ctx.res, "set-cookie") ?? "";
+	const setCookieHeader = getResHeader(ctx, "set-cookie") ?? "";
 	ctx.res.setHeader(
 		"set-cookie",
 		[

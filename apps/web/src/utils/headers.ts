@@ -1,5 +1,6 @@
-import type { IncomingMessage, ServerResponse } from "node:http";
 import { entries } from "remeda";
+
+import type { NetContext } from "~web/handlers/context";
 
 const getFirstValue = (valueOrValues: string | number | string[] | undefined) =>
 	/* c8 ignore start */
@@ -10,9 +11,9 @@ const getFirstValue = (valueOrValues: string | number | string[] | undefined) =>
 		: String(valueOrValues);
 /* c8 ignore stop */
 
-export const getResHeaders = (response: ServerResponse) => {
+export const getResHeaders = (ctx: NetContext) => {
 	const headersEntries: [string, string][] = [];
-	entries(response.getHeaders()).forEach(([key, valueOrValues]) => {
+	entries(ctx.res.getHeaders()).forEach(([key, valueOrValues]) => {
 		const value = getFirstValue(valueOrValues);
 		/* c8 ignore start */
 		if (!value) {
@@ -24,8 +25,8 @@ export const getResHeaders = (response: ServerResponse) => {
 	return headersEntries;
 };
 
-export const getResHeader = (response: ServerResponse, key: string) =>
-	getFirstValue(response.getHeader(key));
+export const getResHeader = (ctx: NetContext, key: string) =>
+	getFirstValue(ctx.res.getHeader(key));
 
-export const getReqHeader = (request: IncomingMessage, key: string) =>
-	getFirstValue(request.headers[key]);
+export const getReqHeader = (ctx: NetContext, key: string) =>
+	getFirstValue(ctx.req.headers[key]);

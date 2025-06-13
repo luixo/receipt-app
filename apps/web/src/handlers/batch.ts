@@ -91,7 +91,7 @@ export const queueCallFactory = <
 					batchScheduleFn: (callback) => setTimeout(callback, SCHEDULE_DELAY),
 					cacheKeyFn: JSON.stringify,
 					// Disable cache on test runs - subsequent calls with different data are happening in tests
-					cache: !getReqHeader(context.req, "x-test-id"),
+					cache: !getReqHeader(context, "x-test-id"),
 					// Undocumented `opts.path` property
 					name: (opts as unknown as { path: string }).path,
 					...batchOpts,

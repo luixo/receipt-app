@@ -11,7 +11,7 @@ import {
 	SESSION_SHOULD_UPDATE_EVERY,
 	getExpirationDate,
 } from "~web/handlers/auth/utils";
-import type { UnauthorizedContext } from "~web/handlers/context";
+import type { NetContext, UnauthorizedContext } from "~web/handlers/context";
 import { formatErrorMessage } from "~web/handlers/errors";
 import { sessionIdSchema } from "~web/handlers/validation";
 import { getCookie, setCookie } from "~web/utils/cookies";
@@ -45,14 +45,12 @@ export const unauthProcedure = t.procedure.use(
 	},
 );
 
-const getPretendAccountEmail = (
-	req: UnauthorizedContext["req"],
-): string | undefined => {
-	if (getReqHeader(req, "x-keep-real-auth")) {
+const getPretendAccountEmail = (ctx: NetContext): string | undefined => {
+	if (getReqHeader(ctx, "x-keep-real-auth")) {
 		return;
 	}
 	const pretendUserString = getCookie(
-		getReqHeader(req, "cookie"),
+		getReqHeader(ctx, "cookie"),
 		PRETEND_USER_STORE_NAME,
 	);
 	if (!pretendUserString) {
@@ -63,7 +61,7 @@ const getPretendAccountEmail = (
 };
 
 export const authProcedure = unauthProcedure.use(async ({ ctx, next }) => {
-	const authToken = getCookie(getReqHeader(ctx.req, "cookie"), AUTH_COOKIE);
+	const authToken = getCookie(getReqHeader(ctx, "cookie"), AUTH_COOKIE);
 	if (typeof authToken !== "string" || !authToken) {
 		throw new TRPCError({
 			code: "UNAUTHORIZED",
@@ -122,7 +120,7 @@ export const authProcedure = unauthProcedure.use(async ({ ctx, next }) => {
 		accountId: session.accountId,
 		email: session.email,
 	};
-	const pretendAccountEmail = getPretendAccountEmail(ctx.req);
+	const pretendAccountEmail = getPretendAccountEmail(ctx);
 	if (pretendAccountEmail && session.role === "admin") {
 		const pretendAccount = await database
 			.selectFrom("accounts")

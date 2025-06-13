@@ -78,7 +78,7 @@ const handler = createNextApiHandler<AppRouter>({
 			`[${error.code}] [${ctx.req.socket.remoteAddress}:${
 				ctx.req.socket.localPort
 			}] [${
-				getReqHeader(ctx.req, "user-agent") ?? "no-user-agent"
+				getReqHeader(ctx, "user-agent") ?? "no-user-agent"
 			}] ${type} "${path}"${email ? ` (by ${email})` : ""}: ${error.message}`,
 		);
 	},

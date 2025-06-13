@@ -27,7 +27,7 @@ describe("account.logout", () => {
 			const context = await createAuthContext(ctx, sessionId);
 			const caller = createCaller(context);
 			await expectDatabaseDiffSnapshot(ctx, () => caller.procedure());
-			const responseHeaders = getResHeaders(context.res);
+			const responseHeaders = getResHeaders(context);
 			expect(responseHeaders).toStrictEqual<typeof responseHeaders>([
 				[
 					"set-cookie",

@@ -138,7 +138,7 @@ describe("procedures", () => {
 			const context = await createAuthContext(ctx, sessionId);
 			const caller = createCaller(context);
 			await expectDatabaseDiffSnapshot(ctx, () => caller.account.get());
-			const responseHeaders = getResHeaders(context.res);
+			const responseHeaders = getResHeaders(context);
 			expect(responseHeaders).toStrictEqual<typeof responseHeaders>([]);
 		});
 
@@ -156,7 +156,7 @@ describe("procedures", () => {
 			const context = await createAuthContext(ctx, sessionId);
 			const caller = createCaller(context);
 			await expectDatabaseDiffSnapshot(ctx, () => caller.account.get());
-			const responseHeaders = getResHeaders(context.res);
+			const responseHeaders = getResHeaders(context);
 			expect(responseHeaders).toStrictEqual<typeof responseHeaders>([
 				[
 					"set-cookie",

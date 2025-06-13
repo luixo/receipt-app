@@ -134,7 +134,7 @@ describe("auth.register", () => {
 			expect(result).toEqual<typeof result>({
 				account: { id: result.account.id },
 			});
-			const responseHeaders = getResHeaders(context.res);
+			const responseHeaders = getResHeaders(context);
 			const setCookieTuple = responseHeaders.find(
 				([key]) => key === "set-cookie",
 			);

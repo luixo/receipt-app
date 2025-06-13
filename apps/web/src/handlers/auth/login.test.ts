@@ -111,7 +111,7 @@ describe("auth.login", () => {
 				account: { id: accountId, verified: true, avatarUrl, role: undefined },
 				user: { name },
 			});
-			const responseHeaders = getResHeaders(context.res);
+			const responseHeaders = getResHeaders(context);
 			const setCookieTuple = responseHeaders.find(
 				([key]) => key === "set-cookie",
 			);

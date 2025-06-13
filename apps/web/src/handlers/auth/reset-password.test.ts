@@ -129,7 +129,7 @@ describe("auth.resetPassword", () => {
 				.select(["passwordHash", "passwordSalt"])
 				.executeTakeFirstOrThrow();
 			expect(await getHash(password, passwordSalt)).toBe(passwordHash);
-			expect(getResHeaders(context.res)).toHaveLength(0);
+			expect(getResHeaders(context)).toHaveLength(0);
 		});
 	});
 });
