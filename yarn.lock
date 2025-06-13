@@ -6984,7 +6984,6 @@ __metadata:
     kysely: "npm:^0.27.2"
     nativewind: "npm:^4.1.23"
     next: "npm:^14.2.5"
-    next-http-proxy-middleware: "npm:^1.2.5"
     pg: "npm:^8.16.0"
     pino: "npm:^8.14.1"
     pino-pretty: "npm:^10.1.0"
@@ -10657,15 +10656,6 @@ __metadata:
   version: 2.0.4
   resolution: "@types/http-errors@npm:2.0.4"
   checksum: 10/1f3d7c3b32c7524811a45690881736b3ef741bf9849ae03d32ad1ab7062608454b150a4e7f1351f83d26a418b2d65af9bdc06198f1c079d75578282884c4e8e3
-  languageName: node
-  linkType: hard
-
-"@types/http-proxy@npm:1.17.3":
-  version: 1.17.3
-  resolution: "@types/http-proxy@npm:1.17.3"
-  dependencies:
-    "@types/node": "npm:*"
-  checksum: 10/91b5193e17d87368dae22e2df3edb2b2cd4b4eeeca26bd4d1764c13a659085df0d96dc2ec05978c5586bf004cf9e550b992dc64015b326628804929ecb59d2fc
   languageName: node
   linkType: hard
 
@@ -16085,13 +16075,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eventemitter3@npm:^4.0.0":
-  version: 4.0.7
-  resolution: "eventemitter3@npm:4.0.7"
-  checksum: 10/8030029382404942c01d0037079f1b1bc8fed524b5849c237b80549b01e2fc49709e1d0c557fa65ca4498fc9e24cff1475ef7b855121fcc15f9d61f93e282346
-  languageName: node
-  linkType: hard
-
 "eventemitter3@npm:^5.0.1":
   version: 5.0.1
   resolution: "eventemitter3@npm:5.0.1"
@@ -16782,7 +16765,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.0.0, follow-redirects@npm:^1.14.7":
+"follow-redirects@npm:^1.14.7":
   version: 1.15.2
   resolution: "follow-redirects@npm:1.15.2"
   peerDependenciesMeta:
@@ -17906,17 +17889,6 @@ __metadata:
     agent-base: "npm:6"
     debug: "npm:4"
   checksum: 10/5ee19423bc3e0fd5f23ce991b0755699ad2a46a440ce9cec99e8126bb98448ad3479d2c0ea54be5519db5b19a4ffaa69616bac01540db18506dd4dac3dc418f0
-  languageName: node
-  linkType: hard
-
-"http-proxy@npm:^1.18.1":
-  version: 1.18.1
-  resolution: "http-proxy@npm:1.18.1"
-  dependencies:
-    eventemitter3: "npm:^4.0.0"
-    follow-redirects: "npm:^1.0.0"
-    requires-port: "npm:^1.0.0"
-  checksum: 10/2489e98aba70adbfd8b9d41ed1ff43528be4598c88616c558b109a09eaffe4bb35e551b6c75ac42ed7d948bb7530a22a2be6ef4f0cecacb5927be139f4274594
   languageName: node
   linkType: hard
 
@@ -21195,16 +21167,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next-http-proxy-middleware@npm:^1.2.5":
-  version: 1.2.6
-  resolution: "next-http-proxy-middleware@npm:1.2.6"
-  dependencies:
-    "@types/http-proxy": "npm:1.17.3"
-    http-proxy: "npm:^1.18.1"
-  checksum: 10/dd5455ca5c7918575513e1552ed3b565162a841a82fb9892c8ef2cbceaa3088a4d44dd8ad7437c2f8454efa28b777f27dc2c8507a26a2cd4a5f1ba7052698517
-  languageName: node
-  linkType: hard
-
 "next@npm:^14.2.5":
   version: 14.2.5
   resolution: "next@npm:14.2.5"
@@ -23881,13 +23843,6 @@ __metadata:
     rc: "npm:~1.2.7"
     resolve: "npm:~1.7.1"
   checksum: 10/ae3c7759448a8348307ad99f7487f4571a8e5319c5fc5e0499a8791839d1504f3baf61ca846b70731e1973a9243d9d1ef3b54f6f674a5d67d427c92a0d78b072
-  languageName: node
-  linkType: hard
-
-"requires-port@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "requires-port@npm:1.0.0"
-  checksum: 10/878880ee78ccdce372784f62f52a272048e2d0827c29ae31e7f99da18b62a2b9463ea03a75f277352f4697c100183debb0532371ad515a2d49d4bfe596dd4c20
   languageName: node
   linkType: hard
 
