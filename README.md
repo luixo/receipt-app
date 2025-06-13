@@ -14,7 +14,7 @@ Mobile version will be released some day.
 
 ## Tech stack
 
-Based on Next.js on web (and someday Expo on mobile).
+Based on Tanstack Start on web (and someday Expo on mobile).
 
 Currently, mobile version is neglected until migrating to React Native components.
 

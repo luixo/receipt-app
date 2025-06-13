@@ -8,12 +8,13 @@
 # testing
 /coverage
 
-# next.js
-/.next/
+# build
 /out/
+/.vinxi
 
 # production
 /build
+/.output
 
 # misc
 .DS_Store

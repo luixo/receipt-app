@@ -3,7 +3,7 @@ import React from "react";
 import { QueryClientProvider as RawQueryClientProvider } from "@tanstack/react-query";
 import { createTRPCClient } from "@trpc/client";
 
-import type { LinksContextType } from "~app/contexts/links-context";
+import { LinksContext } from "~app/contexts/links-context";
 import type { QueryClientsRecord } from "~app/contexts/query-clients-context";
 import {
 	QueryClientsContext,
@@ -13,15 +13,14 @@ import {
 import { TRPCProvider, getLinks } from "~app/utils/trpc";
 
 type Props = {
-	linksContext: LinksContextType;
 	queryClientKey: keyof QueryClientsRecord;
 };
 
 export const QueryProvider: React.FC<React.PropsWithChildren<Props>> = ({
 	queryClientKey,
 	children,
-	linksContext,
 }) => {
+	const linksContext = React.useContext(LinksContext);
 	const [queryClients, setQueryClients] = React.useContext(QueryClientsContext);
 	React.useEffect(() => {
 		setQueryClients((prevQueryClients) => {

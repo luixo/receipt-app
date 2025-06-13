@@ -1,6 +1,6 @@
 .history
-apps/web/.next
 apps/mobile/.expo
 ios/
 android/
 **/*-snapshots/**/*.json
+*.gen.ts
