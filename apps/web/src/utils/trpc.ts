@@ -1,7 +1,6 @@
 import { DEFAULT_TRPC_ENDPOINT } from "~app/contexts/links-context";
 import type { GetLinksOptions } from "~app/utils/trpc";
 import type { NetContext } from "~web/handlers/context";
-import { rootSearchParamsSchema } from "~web/pages/_app";
 import { captureSentryError } from "~web/utils/sentry";
 
 export const getHostUrl = (reqUrl?: string, pathname = "") => {
@@ -21,9 +20,8 @@ export const getLinksParamsFromRequest = (
 	source: GetLinksOptions["source"],
 ) => {
 	const url = new URL(req.url ?? "");
-	const validatedParams = rootSearchParamsSchema.safeParse(url.searchParams);
 	return {
-		searchParams: validatedParams.success ? validatedParams.data : {},
+		debug: Boolean(url.searchParams.get("debug")),
 		url: getHostUrl(req.url, DEFAULT_TRPC_ENDPOINT),
 		headers: {
 			cookie: req.headers.cookie,

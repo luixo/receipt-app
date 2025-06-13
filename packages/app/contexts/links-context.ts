@@ -7,7 +7,7 @@ export type LinksContextType = Parameters<typeof getLinks>[0];
 export const DEFAULT_TRPC_ENDPOINT = "/api/trpc";
 
 export const LinksContext = React.createContext<LinksContextType>({
-	searchParams: {},
+	debug: false,
 	url: DEFAULT_TRPC_ENDPOINT,
 	source: "unset",
 	captureError: () => "not-implemented",

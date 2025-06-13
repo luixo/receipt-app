@@ -48,12 +48,8 @@ export const noBatchContext = { batch: Symbol("no-batch") };
 export type Headers = Partial<Record<string, string>>;
 
 export type GetLinksOptions = {
-	searchParams: {
-		debug?: boolean;
-		proxyPort?: number;
-		controllerId?: string;
-	};
 	url: string;
+	debug?: boolean;
 	useBatch?: boolean;
 	keepError?: boolean;
 	headers?: Headers;
@@ -73,8 +69,8 @@ export type GetLinksOptions = {
 };
 
 export const getLinks = ({
-	searchParams,
 	url,
+	debug,
 	useBatch,
 	keepError,
 	source,
@@ -84,9 +80,7 @@ export const getLinks = ({
 	// we omit to not let stringified "undefined" get passed to the server
 	const headers = omitBy(
 		{
-			"x-debug": searchParams.debug ? "true" : undefined,
-			"x-proxy-port": searchParams.proxyPort?.toString(),
-			"x-controller-id": searchParams.controllerId ?? undefined,
+			"x-debug": debug ? "true" : undefined,
 			"x-source": source,
 			...overrideHeaders,
 		},

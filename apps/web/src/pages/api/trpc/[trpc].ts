@@ -30,7 +30,7 @@ const isAuthorizedContext = (
 /* c8 ignore start */
 const defaultGetDatabase = (req: NextApiRequest) =>
 	getDatabase({
-		logger: req.headers["x-debug"]
+		logger: req.query.debug
 			? baseLogger.child({ url: req.url || "unknown" })
 			: undefined,
 		pool: getPool(),
