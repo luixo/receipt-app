@@ -102,6 +102,10 @@ test.describe("External query status", () => {
 		await openUserDebtsScreen(debtUser.id);
 		await expectScreenshotWithSchemes("external-error.png", {
 			locator: debtsGroup,
+			mapExpectedPixels: (pixels, colorMode) => [
+				{ ...pixels[0], rgb: colorMode === "light" ? "#fafafa" : "#000000" },
+				...pixels.slice(1),
+			],
 		});
 	});
 });

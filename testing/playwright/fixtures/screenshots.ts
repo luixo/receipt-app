@@ -7,9 +7,13 @@ import type {
 import { expect, test } from "@playwright/test";
 import { joinImages } from "join-images";
 import assert from "node:assert";
+import { isNonNullish } from "remeda";
+import sharp from "sharp";
+
+import type { ColorMode } from "~app/utils/store/color-modes";
 
 const FRAME_LENGTH = 33;
-const STABLE_FRAME_COUNT = 5;
+const DELAY_FRAME_COUNT = 5;
 
 type BoundingBox = NonNullable<PageScreenshotOptions["clip"]>;
 
@@ -48,91 +52,163 @@ const mergeClip = async (
 	return mergeClip(rest, mergeBoundingBoxes(boundingBox, acc));
 };
 
-const getScreenshot = async (
-	page: Page,
-	options: PageScreenshotOptions,
-	locator?: Locator | Locator[],
+const getPixelColor = async (
+	image: sharp.Sharp,
+	clipBBox: BoundingBox | undefined,
+	[x, y]: [number, number],
 ) => {
-	if (locator) {
-		if (!Array.isArray(locator)) {
-			return locator.screenshot(options);
-		}
-		return page.screenshot({
-			...options,
-			clip: await mergeClip(locator),
-		});
+	const { width, height } = clipBBox || (await image.metadata());
+	if (!width || !height) {
+		throw new Error(`Expected to have measured screenshot bbox`);
 	}
-	return page.screenshot(options);
+	if (x > width || y > height) {
+		return;
+	}
+	const { data } = await image
+		.clone()
+		.extract({ left: x, top: y, width: 1, height: 1 })
+		.raw()
+		.toBuffer({ resolveWithObject: true });
+	return `#${Array.from(data)
+		.map((component) => component.toString(16).padStart(2, "0"))
+		// We currently ignore transparency component
+		.slice(0, 3)
+		.join("")}`;
 };
 
-const stableScreenshot = async ({
-	page,
-	stableDelay = FRAME_LENGTH * STABLE_FRAME_COUNT,
-	locator,
-	...options
-}: PageScreenshotOptions & {
-	page: Page;
-	stableDelay?: number;
-	locator?: Locator | Locator[];
-}): Promise<Buffer> => {
+type RGBColor = `#${string}`;
+type ExpectedPixel = { rgb: RGBColor; location: [number, number] };
+
+const getPixelMatchErrors = async (
+	imageBuffer: Buffer,
+	clipBBox: BoundingBox | undefined,
+	expectedPixels: ExpectedPixel[],
+	colorMode: ColorMode,
+) => {
+	const image = sharp(imageBuffer);
+	const pixelMatches = await Promise.all(
+		expectedPixels.map(async ({ rgb: expectedColor, location: [x, y] }) => {
+			const actualColor = await getPixelColor(image, clipBBox, [x, y]);
+			return { actualColor, expectedColor, location: [x, y] };
+		}),
+	);
+	return pixelMatches
+		.map(({ actualColor, expectedColor, location: [x, y] }) => {
+			if (!actualColor || actualColor === expectedColor) {
+				return;
+			}
+			return `Expected to have "${expectedColor}", got "${actualColor}" at (${x}, ${y}) in ${colorMode} mode.`;
+		})
+		.filter(isNonNullish);
+};
+
+const stableScreenshot = async (
+	{
+		page,
+		delayBetweenShots = FRAME_LENGTH * DELAY_FRAME_COUNT,
+		locator,
+		expectedPixels,
+		...options
+	}: PageScreenshotOptions & {
+		page: Page;
+		delayBetweenShots?: number;
+		locator?: Locator | Locator[];
+		expectedPixels: ExpectedPixel[];
+	},
+	colorMode: ColorMode,
+): Promise<Buffer> => {
 	let isTimedOut = false;
 	if (options.timeout) {
 		setTimeout(() => {
 			isTimedOut = true;
 		}, options.timeout);
 	}
-	let prevBuffer: Buffer;
-	let buffer: Buffer | undefined;
+	let prevScreenshot: { buffer: Buffer; timestamp: number } | undefined;
+	let screenshot: { buffer: Buffer; timestamp: number } | undefined;
+	let errors: string[] = [];
+	const checks = ["pixels", "stable"] satisfies ("pixels" | "stable")[];
+	const clipBBox = locator
+		? await mergeClip(Array.isArray(locator) ? locator : [locator])
+		: undefined;
+	const makeScreenshot = async () => ({
+		buffer: await page.screenshot({
+			scale: "css",
+			clip: clipBBox,
+			...options,
+		}),
+		timestamp: performance.now(),
+	});
 	/* eslint-disable no-await-in-loop */
-	while (true) {
+	while (checks.length !== 0) {
 		// see https://github.com/microsoft/TypeScript/issues/9998
 		// "bad behavior on locals" section
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 		if (isTimedOut) {
-			throw new Error("Timeout while waiting for stable screenshot");
+			throw new Error(
+				["Timeout while waiting for a screenshot", ...errors].join("\n"),
+			);
 		}
-		prevBuffer = buffer || (await getScreenshot(page, options, locator));
-		// This is experimental value to get theme properly changed
+		const firstCheck = checks[0];
+		switch (firstCheck) {
+			case "pixels": {
+				prevScreenshot = await makeScreenshot();
+				errors = await getPixelMatchErrors(
+					prevScreenshot.buffer,
+					clipBBox,
+					expectedPixels,
+					colorMode,
+				);
+				if (errors.length === 0) {
+					checks.shift();
+				}
+				break;
+			}
+			case "stable":
+				if (!prevScreenshot) {
+					prevScreenshot = await makeScreenshot();
+					break;
+				}
+				if (screenshot) {
+					prevScreenshot = screenshot;
+				}
+				screenshot = await makeScreenshot();
+				if (
+					prevScreenshot.buffer.equals(screenshot.buffer) &&
+					prevScreenshot.timestamp !== screenshot.timestamp
+				) {
+					checks.shift();
+				} else {
+					errors = [`Can't stabilize ${colorMode} screenshot`];
+				}
+				break;
+			case undefined:
+				break;
+		}
+		// This is experimental value to get color mode properly changed
 		// eslint-disable-next-line playwright/no-wait-for-timeout
-		await page.waitForTimeout(stableDelay);
-		buffer = await getScreenshot(page, options, locator);
-		if (prevBuffer.equals(buffer)) {
-			return buffer;
-		}
+		await page.waitForTimeout(delayBetweenShots);
 	}
+	// We definitely went through screenshotting this time
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	return (screenshot || prevScreenshot)!.buffer;
 	/* eslint-enable no-await-in-loop */
 };
 
 type ScreenshotsFixtures = {
 	expectScreenshotWithSchemes: (
 		name: string,
-		options?: Omit<Parameters<typeof stableScreenshot>[0], "page"> &
-			Parameters<ReturnType<Expect>["toMatchSnapshot"]>[0],
+		options?: Omit<
+			Parameters<typeof stableScreenshot>[0],
+			"page" | "expectedPixels"
+		> &
+			Parameters<ReturnType<Expect>["toMatchSnapshot"]>[0] & {
+				mapExpectedPixels?: (
+					expectedPixels: [ExpectedPixel, ...ExpectedPixel[]],
+					colorMode: ColorMode,
+				) => ExpectedPixel[];
+				noStickyMenuMask?: boolean;
+			},
 	) => Promise<void>;
-};
-
-const isMenuPoint = (page: Page, position: { x: number; y: number }) =>
-	page.evaluate(
-		([{ x, y }]) => {
-			const element = document.elementFromPoint(x, y);
-			const menu = document.querySelector('[data-testid="sticky-menu"]');
-			return menu === element || menu?.contains(element);
-		},
-		[position] as const,
-	);
-
-const checkActionability = async (page: Page, locator: Locator) => {
-	const bbox = await locator.boundingBox();
-	if (!bbox) {
-		return false;
-	}
-	const menuPoints = await Promise.all([
-		isMenuPoint(page, { x: bbox.x, y: bbox.y }),
-		isMenuPoint(page, { x: bbox.x + bbox.width, y: bbox.y + bbox.height }),
-		isMenuPoint(page, { x: bbox.x, y: bbox.y + bbox.height }),
-		isMenuPoint(page, { x: bbox.x + bbox.width, y: bbox.y }),
-	]);
-	return menuPoints.some(Boolean);
 };
 
 export const screenshotsFixtures = test.extend<ScreenshotsFixtures>({
@@ -147,13 +223,14 @@ export const screenshotsFixtures = test.extend<ScreenshotsFixtures>({
 					fullPage = true,
 					mask = [],
 					animations = "disabled",
+					timeout = 5000,
+					mapExpectedPixels = <T>(x: T) => x,
+					noStickyMenuMask,
 					...restScreenshotOptions
 				} = {},
 			) => {
-				const isMenuActionable = await checkActionability(
-					page,
-					page.getByTestId("sticky-menu"),
-				);
+				const stickyMenu = page.getByTestId("sticky-menu");
+				const stickyMenuBoundingBox = await stickyMenu.boundingBox();
 				const masks = mask.map((maskElement) => {
 					const locatorElements = Array.isArray(restScreenshotOptions.locator)
 						? restScreenshotOptions.locator
@@ -169,19 +246,39 @@ export const screenshotsFixtures = test.extend<ScreenshotsFixtures>({
 						page.locator("never"),
 					);
 				});
-				const screenshotOptions = {
-					page,
-					fullPage,
-					mask: !isMenuActionable
-						? masks
-						: [...masks, page.getByTestId("sticky-menu")],
-					animations,
-					...restScreenshotOptions,
+				const getImage = async (colorMode: ColorMode) => {
+					await page.emulateMedia({ colorScheme: colorMode });
+					return stableScreenshot(
+						{
+							page,
+							fullPage,
+							mask: noStickyMenuMask ? masks : [...masks, stickyMenu],
+							animations,
+							timeout,
+							...restScreenshotOptions,
+							expectedPixels: mapExpectedPixels(
+								[
+									{
+										rgb: colorMode === "light" ? "#ffffff" : "#000000",
+										location: [0, 0],
+									},
+									noStickyMenuMask
+										? undefined
+										: {
+												rgb: "#ff00ff",
+												location: stickyMenuBoundingBox
+													? [stickyMenuBoundingBox.x, stickyMenuBoundingBox.y]
+													: [0, 0],
+										  },
+								].filter(isNonNullish) as [ExpectedPixel, ...ExpectedPixel[]],
+								colorMode,
+							),
+						},
+						colorMode,
+					);
 				};
-				await page.emulateMedia({ colorScheme: "light" });
-				const lightImage = await stableScreenshot(screenshotOptions);
-				await page.emulateMedia({ colorScheme: "dark" });
-				const darkImage = await stableScreenshot(screenshotOptions);
+				const lightImage = await getImage("light");
+				const darkImage = await getImage("dark");
 
 				const mergedImage = await joinImages([lightImage, darkImage], {
 					direction: "horizontal",

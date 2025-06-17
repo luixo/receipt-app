@@ -48,6 +48,10 @@ test("Errors in form", async ({
 	await nameInput.fill("x");
 	await expectScreenshotWithSchemes("fill-name-error.png", {
 		locator: nameInputWrapper,
+		mapExpectedPixels: (pixels, colorMode) => [
+			{ ...pixels[0], rgb: colorMode === "light" ? "#d8e9fd" : "#001125" },
+			...pixels.slice(1),
+		],
 	});
 });
 
