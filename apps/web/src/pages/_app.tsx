@@ -4,7 +4,6 @@ import { getCookies } from "cookies-next";
 import type { AppType } from "next/dist/shared/lib/utils";
 import { Inter } from "next/font/google";
 import Head from "next/head";
-import "raf/polyfill";
 import { z } from "zod/v4";
 
 import { ProtectedPage } from "~app/components/protected-page";
