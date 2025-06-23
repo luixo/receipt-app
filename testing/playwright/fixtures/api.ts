@@ -235,9 +235,7 @@ const createWorkerManager = async (port: number): Promise<WorkerManager> => {
 			"Content-Type": "application/json",
 		});
 		const url = new URL(req.url || "/", "http://localhost");
-		const rawControllerId = req.headers["x-controller-id"];
-		const controllerId =
-			typeof rawControllerId === "string" ? rawControllerId : undefined;
+		const controllerId = url.searchParams.get("controllerId") || undefined;
 		if (!controllerId) {
 			throw new Error(
 				`Expected to have controller id for url "${url.toString()}"`,
