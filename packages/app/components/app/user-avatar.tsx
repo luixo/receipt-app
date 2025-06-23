@@ -1,7 +1,6 @@
 import type React from "react";
 
 import BoringAvatar from "boring-avatars";
-import { getImageProps } from "next/image";
 
 import type { TRPCQueryOutput } from "~app/trpc";
 import { Avatar } from "~components/avatar";
@@ -64,15 +63,14 @@ export const useUserAvatarProps = ({
 	...props
 }: Props) => {
 	const size = getSize(props.size);
-	const { props: imgProps } = getImageProps({
+	const imgProps = {
 		src: connectedAccount?.avatarUrl ?? "",
 		alt: "Avatar",
 		width: size,
 		height: size,
-	});
+	};
 	return {
 		src: imgProps.src,
-		srcSet: imgProps.srcSet,
 		radius: "full",
 		fallback: (
 			<BoringAvatar
