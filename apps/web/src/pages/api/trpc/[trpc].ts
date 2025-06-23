@@ -30,20 +30,20 @@ const isAuthorizedContext = (
 /* c8 ignore start */
 const defaultGetDatabase = (req: NextApiRequest) =>
 	getDatabase({
-		logger: req.query.debug
+		logger: req.headers["x-debug"]
 			? baseLogger.child({ url: req.url || "unknown" })
 			: undefined,
 		pool: getPool(),
 	});
 const defaultGetEmailOptions = () => {
-	const active = Boolean(process.env.NO_EMAIL_SERVICE);
+	const active = Boolean(process.env.EMAIL_SERVICE_ACTIVE);
 	if (active && !process.env.BASE_URL) {
 		throw new Error(
 			`Expected to have env variable BASE_URL while creating context with active email`,
 		);
 	}
 	return {
-		active: Boolean(process.env.NO_EMAIL_SERVICE),
+		active,
 		baseUrl: process.env.BASE_URL || "http://example.com/",
 	};
 };
