@@ -1,22 +1,30 @@
-import * as cookieNext from "cookies-next";
+import type { serialize as serializeType } from "cookie";
 
 import type { StoreContextType } from "~app/contexts/store-context";
 import type { StoreValues } from "~app/utils/store-data";
 import { YEAR } from "~utils/time";
 
 export const getStoreContext = (
+	serialize: typeof serializeType,
 	nowTimestamp: number,
 	initialValues: StoreValues,
 ): StoreContextType => ({
 	getInitialItems: () => ({ nowTimestamp, values: initialValues }),
 	setItem: (key, value) => {
-		cookieNext.setCookie(key, value, {
-			path: "/",
-			maxAge: YEAR / 1000,
-			sameSite: "strict",
-		});
+		document.cookie = serialize(
+			key,
+			typeof value === "string" ? value : JSON.stringify(value),
+			{
+				path: "/",
+				maxAge: YEAR / 1000,
+				sameSite: "strict",
+			},
+		);
 	},
 	deleteItem: (key: string) => {
-		cookieNext.deleteCookie(key, { sameSite: "strict" });
+		document.cookie = serialize(key, "", {
+			maxAge: -1,
+			sameSite: "strict",
+		});
 	},
 });

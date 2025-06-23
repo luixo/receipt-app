@@ -1,7 +1,7 @@
 import type * as React from "react";
 import { AppRegistry } from "react-native";
 
-import { getCookie } from "cookies-next";
+import { parse } from "cookie";
 import NextDocument, { Head, Html, Main, NextScript } from "next/document";
 
 import {
@@ -68,12 +68,15 @@ class Document extends NextDocument<DocumentProps> {
 
 Document.getInitialProps = async (ctx) => {
 	const prevProps = await ctx.defaultGetInitialProps(ctx);
+	// Document always has cookies
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	const cookies = parse(ctx.req!.headers.cookie ?? "");
 	const colorMode =
 		schemas[SELECTED_COLOR_MODE_STORE_NAME].parse(
-			getCookie(SELECTED_COLOR_MODE_STORE_NAME, ctx),
+			cookies[SELECTED_COLOR_MODE_STORE_NAME],
 		) ||
 		schemas[LAST_COLOR_MODE_STORE_NAME].parse(
-			getCookie(LAST_COLOR_MODE_STORE_NAME, ctx),
+			cookies[LAST_COLOR_MODE_STORE_NAME],
 		);
 	return {
 		...prevProps,

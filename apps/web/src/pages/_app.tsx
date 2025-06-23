@@ -1,6 +1,6 @@
 import React from "react";
 
-import { getCookies } from "cookies-next";
+import { parse, serialize } from "cookie";
 import type { AppType } from "next/dist/shared/lib/utils";
 import { Inter } from "next/font/google";
 import Head from "next/head";
@@ -132,7 +132,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 	);
 	useHtmlFont(font.variable);
 	const storeContext = React.useMemo(
-		() => getStoreContext(props.nowTimestamp, props.initialValues),
+		() => getStoreContext(serialize, props.nowTimestamp, props.initialValues),
 		[props.initialValues, props.nowTimestamp],
 	);
 	// We're using this state as context value so we don't destructure it
@@ -186,7 +186,9 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 };
 
 MyApp.getInitialProps = async ({ ctx, router }) => {
-	const cookies = getCookies(ctx);
+	const cookies = parse(
+		ctx.req ? ctx.req.headers.cookie ?? "" : document.cookie,
+	);
 	const validatedParams = rootSearchParamsSchema.safeParse(router.query);
 	const pageProps: PageProps = {
 		linksParams: validatedParams.success ? validatedParams.data : {},

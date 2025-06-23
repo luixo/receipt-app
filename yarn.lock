@@ -6800,7 +6800,6 @@ __metadata:
     "@types/uuid": "npm:^9.0.2"
     array.prototype.tosorted: "npm:^1.1.2"
     boring-avatars: "npm:^1.10.1"
-    cookies-next: "npm:^2.1.2"
     idb-keyval: "npm:^6.2.1"
     nativewind: "npm:^4.1.23"
     react-date-picker: "npm:^10.3.0"
@@ -6968,7 +6967,6 @@ __metadata:
     "@trpc/client": "npm:^11.3.1"
     "@trpc/next": "npm:^11.3.1"
     "@trpc/server": "npm:^11.3.1"
-    "@types/cookie": "npm:^0.5.1"
     "@types/isomorphic-fetch": "npm:^0.0.36"
     "@types/node": "npm:^24.0.0"
     "@types/pg": "npm:^8.10.2"
@@ -6976,8 +6974,7 @@ __metadata:
     "@types/uuid": "npm:^9.0.2"
     "@upstash/redis": "npm:^1.22.0"
     autoprefixer: "npm:^10.4.16"
-    cookie: "npm:^0.5.0"
-    cookies-next: "npm:^2.1.2"
+    cookie: "npm:^1.0.2"
     critters: "npm:^0.0.20"
     dataloader: "npm:^2.2.2"
     isomorphic-fetch: "npm:^3.0.0"
@@ -10509,13 +10506,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/cookie@npm:^0.5.1":
-  version: 0.5.1
-  resolution: "@types/cookie@npm:0.5.1"
-  checksum: 10/4237fff264ff57dc58aef273d78dec267ff1e4f6977bf986e3f19e39848b01e26dad628261a92f8ad55f563c8256efaa6dad2293b2a6d47c0afc1aa31d93c6a2
-  languageName: node
-  linkType: hard
-
 "@types/cookies@npm:*":
   version: 0.9.0
   resolution: "@types/cookies@npm:0.9.0"
@@ -10809,13 +10799,6 @@ __metadata:
   version: 20.4.4
   resolution: "@types/node@npm:20.4.4"
   checksum: 10/2efae59d93520e98d3d346160ae1d86ac57804e461250db60edd1253e06dbd2120e07659e535d536e70c7503b58828a84a03641fdde635c0d40d66a53ff0c8b8
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:^16.10.2":
-  version: 16.18.39
-  resolution: "@types/node@npm:16.18.39"
-  checksum: 10/79f632e352b72b9293f4f88b3206bb9f531f88986b1c4756c954dc05d95965faa06538aea976fafd4b9352095b95a1e78507efd050790885ac1b7eb9116e9b4f
   languageName: node
   linkType: hard
 
@@ -13933,28 +13916,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"cookie@npm:^0.4.0, cookie@npm:^0.4.1":
+"cookie@npm:^0.4.1":
   version: 0.4.2
   resolution: "cookie@npm:0.4.2"
   checksum: 10/2e1de9fdedca54881eab3c0477aeb067f281f3155d9cfee9d28dfb252210d09e85e9d175c0a60689661feb9e35e588515352f2456bc1f8e8db4267e05fd70137
   languageName: node
   linkType: hard
 
-"cookie@npm:^0.5.0":
-  version: 0.5.0
-  resolution: "cookie@npm:0.5.0"
-  checksum: 10/aae7911ddc5f444a9025fbd979ad1b5d60191011339bce48e555cb83343d0f98b865ff5c4d71fecdfb8555a5cafdc65632f6fce172f32aaf6936830a883a0380
-  languageName: node
-  linkType: hard
-
-"cookies-next@npm:^2.1.2":
-  version: 2.1.2
-  resolution: "cookies-next@npm:2.1.2"
-  dependencies:
-    "@types/cookie": "npm:^0.4.1"
-    "@types/node": "npm:^16.10.2"
-    cookie: "npm:^0.4.0"
-  checksum: 10/daaaf97724195e09d7e8852fd9314d7be91ee1c99d7efe965697c35cf01d2656076dced6b7d75765e4a2f4a1102e44afa3b96b196437d590e732563f036631f3
+"cookie@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "cookie@npm:1.0.2"
+  checksum: 10/f5817cdc84d8977761b12549eba29435e675e65c7fef172bc31737788cd8adc83796bf8abe6d950554e7987325ad2d9ac2971c5bd8ff0c4f81c145f82e4ab1be
   languageName: node
   linkType: hard
 

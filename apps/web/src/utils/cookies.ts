@@ -1,4 +1,4 @@
-import type { CookieSerializeOptions } from "cookie";
+import type { SerializeOptions } from "cookie";
 import { parse, serialize } from "cookie";
 
 import type { UnauthorizedContext } from "~web/handlers/context";
@@ -9,7 +9,7 @@ export const getCookie = (
 	cookieName: string,
 ): string | undefined => parse(cookieHeader ?? "")[cookieName];
 
-const DEFAULT_SET_COOKIE_OPTIONS: CookieSerializeOptions = {
+const DEFAULT_SET_COOKIE_OPTIONS: SerializeOptions = {
 	httpOnly: true,
 	path: "/",
 	sameSite: "strict",
@@ -19,7 +19,7 @@ export const setCookie = (
 	ctx: UnauthorizedContext,
 	cookieName: string,
 	cookieValue: string,
-	opts: CookieSerializeOptions = {},
+	opts: SerializeOptions = {},
 ) => {
 	const setCookieHeader = getResHeader(ctx, "set-cookie") ?? "";
 	ctx.res.setHeader(
