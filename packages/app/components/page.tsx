@@ -14,8 +14,6 @@ export type MenuElement<P extends ExistingPath> = {
 	urlParams: UrlParams<P>;
 	useBadgeAmount?: () => number;
 	useShow?: () => boolean;
-	ItemWrapper?: React.FC<React.PropsWithChildren>;
-	PageWrapper?: React.FC<React.PropsWithChildren>;
 };
 
 const useZero = () => 0;
@@ -64,7 +62,10 @@ function MenuItemComponent<P extends ExistingPath>({
 
 type Props<P extends ExistingPath> = {
 	children?: React.ReactNode;
-	elements: MenuElement<P>[];
+	elements: (MenuElement<P> & {
+		ItemWrapper?: React.FC<React.PropsWithChildren>;
+		PageWrapper?: React.FC<React.PropsWithChildren>;
+	})[];
 };
 
 // eslint-disable-next-line react/function-component-definition
