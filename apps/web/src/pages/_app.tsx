@@ -12,8 +12,8 @@ import { PublicPage } from "~app/components/public-page";
 import { Toaster } from "~app/components/toaster";
 import type { LinksContextType } from "~app/contexts/links-context";
 import { LinksContext } from "~app/contexts/links-context";
-import type { QueryClientsRecord } from "~app/contexts/query-clients-context";
 import {
+	QueryClientsContext,
 	SELF_QUERY_CLIENT_KEY,
 	getQueryClient,
 } from "~app/contexts/query-clients-context";
@@ -136,16 +136,20 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 		() => getStoreContext(props.nowTimestamp, props.initialValues),
 		[props.initialValues, props.nowTimestamp],
 	);
-	const initialQueryClients = React.useMemo<QueryClientsRecord>(() => {
-		const queryClients: QueryClientsRecord = {
-			[SELF_QUERY_CLIENT_KEY]: getQueryClient(),
-		};
+	// We're using this state as context value so we don't destructure it
+	// eslint-disable-next-line react/hook-use-state
+	const queryClientsState = React.useState(() => {
+		const localQueryClient = getQueryClient();
 		const pretendEmail = props.initialValues[PRETEND_USER_STORE_NAME].email;
-		if (pretendEmail) {
-			queryClients[pretendEmail] = getQueryClient();
-		}
-		return queryClients;
-	}, [props.initialValues]);
+		return pretendEmail
+			? {
+					[pretendEmail]: localQueryClient,
+					[SELF_QUERY_CLIENT_KEY]: getQueryClient(),
+			  }
+			: {
+					[SELF_QUERY_CLIENT_KEY]: localQueryClient,
+			  };
+	});
 	return (
 		<>
 			<Head>
@@ -158,24 +162,25 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 				<link rel="icon" href="/favicon.svg" />
 			</Head>
 			<main className={`${font.variable} font-sans`}>
-				<Provider
-					initialQueryClients={initialQueryClients}
-					linksContext={linksContext}
-					storeContext={storeContext}
-					persister={persister}
-				>
-					<ThemeProvider>
-						<NavigationProvider>
-							<DevToolsProvider>
-								<LayoutComponent>
-									<PageComponent />
-								</LayoutComponent>
-								<GlobalHooksComponent />
-								<Toaster />
-							</DevToolsProvider>
-						</NavigationProvider>
-					</ThemeProvider>
-				</Provider>
+				<QueryClientsContext.Provider value={queryClientsState}>
+					<Provider
+						linksContext={linksContext}
+						storeContext={storeContext}
+						persister={persister}
+					>
+						<ThemeProvider>
+							<NavigationProvider>
+								<DevToolsProvider>
+									<LayoutComponent>
+										<PageComponent />
+									</LayoutComponent>
+									<GlobalHooksComponent />
+									<Toaster />
+								</DevToolsProvider>
+							</NavigationProvider>
+						</ThemeProvider>
+					</Provider>
+				</QueryClientsContext.Provider>
 			</main>
 		</>
 	);
