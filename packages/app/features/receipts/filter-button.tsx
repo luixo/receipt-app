@@ -1,6 +1,6 @@
 import React from "react";
 
-import type { Selection } from "@react-types/shared/src/selection";
+import type { Selection } from "@react-types/shared";
 
 import type { Filters } from "~app/features/receipts/receipts-screen";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
