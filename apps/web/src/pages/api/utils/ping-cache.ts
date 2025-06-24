@@ -1,19 +1,15 @@
-import { getApiTrpcClient } from "~web/utils/api";
-import { createHandler } from "~web/utils/net";
+import { createAPIFileRoute } from "@tanstack/react-start/api";
 
-const handler = createHandler(
-	async (req) => {
-		const client = getApiTrpcClient(req);
+import { getApiTrpcClient } from "~web/utils/api";
+
+export const APIRoute = createAPIFileRoute("/api/utils/ping-cache")({
+	POST: async ({ request }) => {
+		const client = getApiTrpcClient(request);
 		try {
 			await Promise.all([client.utils.pingCache.mutate()]);
-			return `Cache ping successful`;
+			return new Response(`Cache ping successful`);
 		} catch (e) {
-			throw new Error(`Error on cache ping: ${String(e)}`);
+			return new Response(`Error on cache ping: ${String(e)}`, { status: 500 });
 		}
 	},
-	{
-		allowedMethods: ["POST"],
-	},
-);
-
-export default handler;
+});

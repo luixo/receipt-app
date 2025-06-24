@@ -15,7 +15,16 @@ export const getConfig: (config: Config) => Config = (config) =>
 		theme: {
 			screens: mapValues(screens, (size) => `${size}px`),
 			fontFamily: {
-				sans: `Inter, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"`,
+				sans: [
+					"Inter",
+					"ui-sans-serif",
+					"system-ui",
+					"sans-serif",
+					"Apple Color Emoji",
+					"Segoe UI Emoji",
+					"Segoe UI Symbol",
+					"Noto Color Emoji",
+				],
 			},
 			...(config.theme || {}),
 		},

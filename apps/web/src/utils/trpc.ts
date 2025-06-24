@@ -1,6 +1,11 @@
+import { createTRPCClient } from "@trpc/client";
+import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
+
 import { DEFAULT_TRPC_ENDPOINT } from "~app/contexts/links-context";
+import type { AppRouter } from "~app/trpc";
 import type { GetLinksOptions } from "~app/utils/trpc";
-import type { NetContext } from "~web/handlers/context";
+import { getLinks } from "~app/utils/trpc";
+import type { RouterContext } from "~web/pages/__root";
 import { captureSentryError } from "~web/utils/sentry";
 
 export const getHostUrl = (reqUrl?: string, pathname = "") => {
@@ -16,17 +21,40 @@ export const getHostUrl = (reqUrl?: string, pathname = "") => {
 };
 
 export const getLinksParamsFromRequest = (
-	req: NetContext["req"],
+	{ request }: Extract<RouterContext["environment"], { type: "server" }>,
 	source: GetLinksOptions["source"],
 ) => {
-	const url = new URL(req.url ?? "");
+	const url = new URL(request.url);
 	return {
 		debug: Boolean(url.searchParams.get("debug")),
-		url: getHostUrl(req.url, DEFAULT_TRPC_ENDPOINT),
+		url: getHostUrl(request.url, DEFAULT_TRPC_ENDPOINT),
 		headers: {
-			cookie: req.headers.cookie,
+			cookie: request.headers.get("cookie") || undefined,
 		},
 		source,
 		captureError: captureSentryError,
 	};
+};
+
+export const getLoaderTrpcClient = (
+	routerContext: RouterContext,
+	debug?: boolean,
+) => {
+	const linksParams =
+		routerContext.environment.type === "server"
+			? getLinksParamsFromRequest(routerContext.environment, "ssr")
+			: {
+					debug,
+					headers: {},
+					source: "csr" as GetLinksOptions["source"],
+					url: DEFAULT_TRPC_ENDPOINT,
+					captureError: captureSentryError,
+			  };
+
+	return createTRPCOptionsProxy<AppRouter>({
+		client: createTRPCClient<AppRouter>({
+			links: getLinks(linksParams),
+		}),
+		queryClient: routerContext.queryClient,
+	});
 };

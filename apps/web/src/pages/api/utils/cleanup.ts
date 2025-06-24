@@ -1,20 +1,19 @@
-import { getApiTrpcClient } from "~web/utils/api";
-import { createHandler } from "~web/utils/net";
+import { createAPIFileRoute } from "@tanstack/react-start/api";
 
-const handler = createHandler(
-	async (req) => {
-		const client = getApiTrpcClient(req);
+import { getApiTrpcClient } from "~web/utils/api";
+
+export const APIRoute = createAPIFileRoute("/api/utils/cleanup")({
+	POST: async ({ request }) => {
+		const client = getApiTrpcClient(request);
 		const [removedSessions, removedResetPasswordIntentions] = await Promise.all(
 			[
 				client.sessions.cleanup.mutate(),
 				client.resetPasswordIntentions.cleanup.mutate(),
 			],
 		);
-		return `Removed ${removedSessions} sessions and ${removedResetPasswordIntentions} reset password intentions`;
-	},
-	{
-		allowedMethods: ["POST"],
-	},
-);
 
-export default handler;
+		return new Response(
+			`Removed ${removedSessions} sessions and ${removedResetPasswordIntentions} reset password intentions`,
+		);
+	},
+});

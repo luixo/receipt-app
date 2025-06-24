@@ -20,7 +20,6 @@
 		"../../packages/app/rnw-env.d.ts",
 		"../../packages/app/nativewind-env.d.ts",
 		"../../packages/app/promise.d.ts",
-		"next-env.d.ts",
 		"**/*.ts",
 		"**/*.tsx",
 		"**/*.cjs",

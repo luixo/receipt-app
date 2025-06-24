@@ -37,34 +37,34 @@ export const ProtectedPage: React.FC<Props> = ({ children, ...props }) => (
 		elements={[
 			{
 				Icon: ReceiptsIcon,
-				urlParams: { to: "/receipts" },
+				pathname: "/receipts",
 				text: "Receipts",
 			},
 			{
 				Icon: DebtsIcon,
 				text: "Debts",
-				urlParams: { to: "/debts" },
+				pathname: "/debts",
 				useBadgeAmount: useDebtsIntentions,
 			},
 			{
 				Icon: UsersIcon,
 				text: "Users",
-				urlParams: { to: "/users" },
+				pathname: "/users",
 				useBadgeAmount: useConnectionIntentions,
 			},
 			{
 				Icon: AccountIcon,
 				text: "Account",
-				urlParams: { to: "/account" },
+				pathname: "/account",
 			},
 			{
 				Icon: SettingsIcon,
 				text: "Settings",
-				urlParams: { to: "/settings" },
+				pathname: "/settings",
 			},
 			{
 				Icon: AdminIcon,
-				urlParams: { to: "/admin" },
+				pathname: "/admin",
 				text: "Admin",
 				useShow: useShowAdmin,
 				PageWrapper: AdminWrapperWithEffect,
