@@ -56,8 +56,12 @@ class Document extends NextDocument<DocumentProps> {
 				<Head>
 					<meta httpEquiv="X-UA-Compatible" content="IE=edge" />
 					{getNativeCss()}
+					<link
+						rel="stylesheet"
+						href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
+					/>
 				</Head>
-				<body>
+				<body className="font-sans">
 					<Main />
 					<NextScript />
 				</body>

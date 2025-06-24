@@ -12,6 +12,7 @@
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.470.0",
 		"@expo/next-adapter": "^5.0.2",
+		"@fontsource/inter": "^5.2.6",
 		"@ra/app": "workspace:*",
 		"@ra/components": "workspace:*",
 		"@ra/db": "workspace:*",

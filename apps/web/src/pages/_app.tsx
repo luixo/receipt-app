@@ -2,7 +2,6 @@ import React from "react";
 
 import { parse, serialize } from "cookie";
 import type { AppType } from "next/dist/shared/lib/utils";
-import { Inter } from "next/font/google";
 import Head from "next/head";
 import { z } from "zod/v4";
 
@@ -58,16 +57,6 @@ const useRemoveTestQueryParams = () => {
 	}, [setParams]);
 };
 
-const useHtmlFont = (fontVariable: string) => {
-	React.useEffect(() => {
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		const html = document.querySelector("html")!;
-		html.classList.add(fontVariable);
-		html.classList.add("font-sans");
-		return () => html.classList.remove(fontVariable);
-	}, [fontVariable]);
-};
-
 const useRemovePreloadedCss = () => {
 	useMountEffect(() => {
 		const style = document.getElementById(NATIVE_STYLESHEET_PRELOAD_ID);
@@ -83,25 +72,6 @@ const GlobalHooksComponent: React.FC = () => {
 	useRemovePreloadedCss();
 	return null;
 };
-
-const font = Inter({
-	variable: "--font-sans",
-	adjustFontFallback: true,
-	display: "swap",
-	fallback: [
-		"ui-sans-serif",
-		"system-ui",
-		"sans-serif",
-		'"Apple Color Emoji"',
-		'"Segoe UI Emoji"',
-		'"Segoe UI Symbol"',
-		'"Noto Color Emoji"',
-	],
-	preload: true,
-	style: "normal",
-	subsets: ["cyrillic", "greek", "latin"],
-	weight: ["400", "500", "700"],
-});
 
 type PageProps = Omit<
 	React.ComponentProps<typeof Provider>,
@@ -130,7 +100,6 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 		}),
 		[baseLinksContext.url, props.linksParams],
 	);
-	useHtmlFont(font.variable);
 	const storeContext = React.useMemo(
 		() => getStoreContext(serialize, props.nowTimestamp, props.initialValues),
 		[props.initialValues, props.nowTimestamp],
@@ -160,7 +129,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
 				/>
 				<link rel="icon" href="/favicon.svg" />
 			</Head>
-			<main className={`${font.variable} font-sans`}>
+			<main>
 				<QueryClientsContext.Provider value={queryClientsState}>
 					<Provider
 						linksContext={linksContext}
