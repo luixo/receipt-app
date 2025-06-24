@@ -14,7 +14,7 @@
 	 */
 html,
 body,
-#__next {
+main {
 	width: 100%;
 	/* To smooth any scrolling behavior */
 	-webkit-overflow-scrolling: touch;
@@ -24,7 +24,7 @@ body,
 	min-height: 100%;
 }
 
-#__next {
+main {
 	flex-shrink: 0;
 	flex-basis: auto;
 	flex-direction: column;

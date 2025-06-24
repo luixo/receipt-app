@@ -1,7 +1,5 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import { createAPIFileRoute } from "@tanstack/react-start/api";
 
-const handler = async (_req: NextApiRequest, res: NextApiResponse<string>) => {
-	res.status(200).send("Pong");
-};
-
-export default handler;
+export const APIRoute = createAPIFileRoute("/api/ping")({
+	GET: async () => new Response("Pong"),
+});

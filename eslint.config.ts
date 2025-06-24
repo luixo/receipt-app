@@ -372,7 +372,13 @@ export default ts.config(
 		[
 			[
 				"apps/web",
-				["next.config.mjs", "vitest.config.ts", "**/*.test.ts", "**/*.spec.ts"],
+				[
+					"app.config.ts",
+					"src/entry/ssr.tsx",
+					"vitest.config.ts",
+					"**/*.test.ts",
+					"**/*.spec.ts",
+				],
 			],
 			["apps/mobile"],
 			["packages/components"],
@@ -439,11 +445,7 @@ export default ts.config(
 		},
 	},
 	{
-		files: [
-			"apps/mobile/metro.config.js",
-			"apps/web/next.config.js",
-			"apps/mobile/babel.config.js",
-		],
+		files: ["apps/mobile/metro.config.js", "apps/mobile/babel.config.js"],
 		rules: {
 			// We still have some CJS files in the project
 			"@typescript-eslint/no-require-imports": "off",
@@ -499,7 +501,8 @@ export default ts.config(
 		ignores: [
 			".history/",
 			".yarn/",
-			"**/.next/",
+			"**/.output/",
+			"**/.vercel/",
 			"**/.expo/",
 			"**/coverage/",
 			"**/playwright-report/",

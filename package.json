@@ -45,13 +45,12 @@
 		"@react-types/shared": "^3.28.0",
 		"@tanstack/query-core@npm:5.80.6": "patch:@tanstack/query-core@npm%3A5.80.6#~/patches/@tanstack-query-core-npm-5.80.6.patch",
 		"@tanstack/react-query@^5.80.6": "patch:@tanstack/react-query@npm%3A5.80.6#./patches/@tanstack-react-query-npm-5.80.6.patch",
-		"solito@^4.1.3": "patch:solito@npm%3A4.1.3#./patches/solito-npm-4.1.3.patch"
+		"h3@npm:1.13.0": "^1.13.0",
+		"vite@npm:6.1.4": "^6.0.0"
 	},
 	"dependencies": {
-		"@sentry/nextjs": "^8.9.2",
 		"@tanstack/react-query": "^5.80.6",
 		"@tanstack/react-query-devtools": "^5.80.6",
-		"next": "^14.2.5",
 		"react": "^19.1.0",
 		"react-dom": "^19.1.0",
 		"react-native": "^0.79.2",
@@ -109,12 +108,5 @@
 		"vite-tsconfig-paths": "^5.1.4",
 		"vitest": "^3.2.2"
 	},
-	"packageManager": "yarn@4.9.2+sha512.1fc009bc09d13cfd0e19efa44cbfc2b9cf6ca61482725eb35bbc5e257e093ebf4130db6dfe15d604ff4b79efd8e1e8e99b25fa7d0a6197c9f9826358d4d65c3c",
-	"nextBundleAnalysis": {
-		"budget": 358400,
-		"budgetPercentIncreaseRed": 5,
-		"minimumChangeThreshold": 0,
-		"showDetails": true,
-		"buildOutputDirectory": "apps/web/.next"
-	}
+	"packageManager": "yarn@4.9.2+sha512.1fc009bc09d13cfd0e19efa44cbfc2b9cf6ca61482725eb35bbc5e257e093ebf4130db6dfe15d604ff4b79efd8e1e8e99b25fa7d0a6197c9f9826358d4d65c3c"
 }

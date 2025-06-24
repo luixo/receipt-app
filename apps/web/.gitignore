@@ -8,12 +8,14 @@
 # testing
 /coverage
 
-# next.js
-/.next/
+# build
 /out/
+/.vinxi
 
 # production
 /build
+/.vercel
+/.output
 
 # misc
 .DS_Store
