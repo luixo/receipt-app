@@ -61,7 +61,7 @@ test.describe("External query status", () => {
 		openUserDebtsScreen,
 		debtsGroup,
 		expectScreenshotWithSchemes,
-	}) => {
+	}, testInfo) => {
 		const { debtUser, debts } = mockDebts({
 			generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 3 }),
 		});
@@ -76,6 +76,13 @@ test.describe("External query status", () => {
 		await openUserDebtsScreen(debtUser.id);
 		await expectScreenshotWithSchemes("external-loading.png", {
 			locator: debtsGroup,
+			mapExpectedPixels: ({ expectedPixels }) => [
+				{
+					location: testInfo.project.name === "320-safari" ? [0, 0] : [100, 0],
+					rgb: expectedPixels[0].rgb,
+				},
+				...expectedPixels.slice(1),
+			],
 		});
 	});
 

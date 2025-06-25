@@ -133,19 +133,19 @@ const stableScreenshot = async (
 	let screenshot: { buffer: Buffer; timestamp: number } | undefined;
 	let errors: string[] = [];
 	const checks = ["pixels", "stable"] satisfies ("pixels" | "stable")[];
-	const clipBoundingBox = locator
-		? await mergeClip(Array.isArray(locator) ? locator : [locator])
-		: undefined;
-	const makeScreenshot = async () => ({
+	const makeScreenshot = async (bbox: BoundingBox | undefined) => ({
 		buffer: await page.screenshot({
 			scale: "css",
-			clip: clipBoundingBox,
+			clip: bbox,
 			...options,
 		}),
 		timestamp: performance.now(),
 	});
 	/* eslint-disable no-await-in-loop */
 	while (checks.length !== 0) {
+		const clipBoundingBox = locator
+			? await mergeClip(Array.isArray(locator) ? locator : [locator])
+			: undefined;
 		// see https://github.com/microsoft/TypeScript/issues/9998
 		// "bad behavior on locals" section
 		// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -157,7 +157,7 @@ const stableScreenshot = async (
 		const firstCheck = checks[0];
 		switch (firstCheck) {
 			case "pixels": {
-				prevScreenshot = await makeScreenshot();
+				prevScreenshot = await makeScreenshot(clipBoundingBox);
 				const image = sharp(prevScreenshot.buffer);
 				const boundingBox =
 					clipBoundingBox || (await getImageBoundingBox(image));
@@ -174,13 +174,13 @@ const stableScreenshot = async (
 			}
 			case "stable":
 				if (!prevScreenshot) {
-					prevScreenshot = await makeScreenshot();
+					prevScreenshot = await makeScreenshot(clipBoundingBox);
 					break;
 				}
 				if (screenshot) {
 					prevScreenshot = screenshot;
 				}
-				screenshot = await makeScreenshot();
+				screenshot = await makeScreenshot(clipBoundingBox);
 				if (
 					prevScreenshot.buffer.equals(screenshot.buffer) &&
 					prevScreenshot.timestamp !== screenshot.timestamp
