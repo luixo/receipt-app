@@ -1,6 +1,7 @@
-import type { StartAPIMethodCallback } from "@tanstack/react-start/api";
-import { createAPIFileRoute } from "@tanstack/react-start/api";
-import { proxyRequest } from "@tanstack/react-start/server";
+import {
+	createServerFileRoute,
+	proxyRequest,
+} from "@tanstack/react-start/server";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { toReqRes } from "fetch-to-node";
 import * as crypto from "node:crypto";
@@ -58,7 +59,7 @@ const createContextRest = (
 });
 /* c8 ignore stop */
 
-const callback: StartAPIMethodCallback<"/api/trpc/$"> = async ({ request }) => {
+const callback = async ({ request }: { request: Request }) => {
 	const proxyUrl = new URL(request.url);
 	const proxyPort = proxyUrl.searchParams.get("proxyPort");
 	if (proxyPort && typeof proxyPort === "string") {
@@ -113,7 +114,7 @@ const callback: StartAPIMethodCallback<"/api/trpc/$"> = async ({ request }) => {
 	});
 };
 
-export const APIRoute = createAPIFileRoute("/api/trpc/$")({
+export const ServerRoute = createServerFileRoute("/api/trpc/$").methods({
 	GET: callback,
 	POST: callback,
 });

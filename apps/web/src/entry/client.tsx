@@ -1,4 +1,4 @@
-/// <reference types="vinxi/types/client" />
+/// <reference types="vite/client" />
 import * as Sentry from "@sentry/tanstackstart-react";
 import { StartClient } from "@tanstack/react-start";
 import { hydrateRoot } from "react-dom/client";

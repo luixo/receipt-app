@@ -373,7 +373,7 @@ export default ts.config(
 			[
 				"apps/web",
 				[
-					"app.config.ts",
+					"vite.config.ts",
 					"src/entry/ssr.tsx",
 					"vitest.config.ts",
 					"**/*.test.ts",
