@@ -1,3 +1,4 @@
+import { test as coverageFeatures } from "@bgotink/playwright-coverage";
 import { test as base, expect, mergeTests } from "@playwright/test";
 
 import { apiFixtures } from "./fixtures/api";
@@ -27,6 +28,9 @@ export const test = mergeTests(
 	apiFixtures,
 	pageFixtures,
 	queriesFixtures,
+	coverageFeatures.extend<{ collectCoverage: boolean }>({
+		collectCoverage: false,
+	}),
 );
 
 export { expect };
