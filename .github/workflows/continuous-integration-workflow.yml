@@ -223,6 +223,7 @@ jobs:
   analyze:
     name: Analyze bundle
     runs-on: ubuntu-latest
+    if: ${{ github.ref != 'refs/heads/master' }}
     needs: build
     permissions:
       pull-requests: write
@@ -233,7 +234,7 @@ jobs:
         uses: dawidd6/action-download-artifact@v3
         with:
           workflow: continuous-integration-workflow.yml
-          workflow_conclusion: success
+          workflow_conclusion: completed
           branch: master
           github_token: ${{ secrets.GITHUB_TOKEN }}
           name: web-build-stats
