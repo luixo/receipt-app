@@ -1,3 +1,4 @@
+import type { CoverageReporterOptions } from "@bgotink/playwright-coverage";
 import type { Project, ReporterDescription } from "@playwright/test";
 import { defineConfig, devices } from "@playwright/test";
 import path from "node:path";
@@ -79,6 +80,54 @@ const functionalProject: Project = {
 const localDir = path.dirname(url.fileURLToPath(import.meta.url));
 const rootDir = path.join(localDir, "../..");
 
+const coverageReporterOptions: CoverageReporterOptions = {
+	// Path to the root files should be resolved from, most likely your repository root
+	sourceRoot: rootDir,
+	// Directory in which to write coverage reports
+	resultDir: path.join(localDir, "coverage"),
+	include: ["apps/web/.next/static/**/*.js"],
+	exclude: ["_N_E/?*", "apps/web", "**/webpack/**/*"],
+	// Configure the reports to generate.
+	// The value is an array of istanbul reports, with optional configuration attached.
+	reports: [
+		// Create an HTML view at <resultDir>/index.html
+		"html",
+		// Log a coverage summary at the end of the test run
+		"text-summary",
+		"json-summary",
+		"json",
+	],
+	rewritePath: ({ relativePath, absolutePath }) => {
+		console.log("rewrite", relativePath, absolutePath);
+		// not possible to use relative paths with the standard NextJS regex replacements below
+		// if they makeup the entirety of the file, i.e _N_E/?1d62. Not sure what these files do yet.
+		if (/^_N_E\/\?.*$/.test(relativePath)) {
+			return relativePath;
+		}
+		// replace next file prefix to a next.js dir, remove hash suffix
+		return (absolutePath || relativePath)
+			.replace("_N_E/", "apps/web/")
+			.replace(/\?.*/, "");
+	},
+	sourceMapResolver: async ({ url: scriptUrl, mappedUrl }) => {
+		if (!mappedUrl) {
+			return `${scriptUrl}.map`;
+		}
+
+		const scriptPath = path.resolve(
+			rootDir,
+			"apps/web",
+			(scriptUrl.startsWith("file:")
+				? url.fileURLToPath(scriptUrl)
+				: scriptUrl
+			).replace(/.*_next\/(.*)/, ".next/$1"),
+		);
+		const scriptDir = path.dirname(scriptPath);
+		const sourceMapPath = path.resolve(scriptDir, mappedUrl);
+		return url.pathToFileURL(sourceMapPath).toString();
+	},
+};
+
 export default defineConfig({
 	testDir: rootDir,
 	testMatch: /.*\.spec\.ts/,
@@ -93,9 +142,17 @@ export default defineConfig({
 	/* Opt out of parallel tests on CI. */
 	workers: process.env.CI ? 1 : undefined,
 	/* Reporter to use. See https://playwright.dev/docs/test-reporters */
-	reporter: process.env.CI
-		? "blob"
-		: [["html", { open: "never" }] satisfies ReporterDescription],
+	reporter: [
+		process.env.CI ? 'blob' : ["html", { open: "never" }] satisfies ReporterDescription,
+		// Set PLAYWRIGHT_SKIP_COVERAGE variable to a truthy value to skip generating coverage
+		// e.g. in Playwright VSCode extension
+		process.env.PLAYWRIGHT_SKIP_COVERAGE
+			? undefined
+			: ([
+					"./coverage-reporter",
+					coverageReporterOptions,
+			  ] satisfies ReporterDescription),
+	].filter((x): x is NonNullable<typeof x> => Boolean(x)),
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
 	use: {
 		/* Base URL to use in actions like `await page.goto('/')`. */

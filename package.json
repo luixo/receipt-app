@@ -46,7 +46,9 @@
 		"@tanstack/query-core@npm:5.80.6": "patch:@tanstack/query-core@npm%3A5.80.6#~/patches/@tanstack-query-core-npm-5.80.6.patch",
 		"@tanstack/react-query@^5.80.6": "patch:@tanstack/react-query@npm%3A5.80.6#./patches/@tanstack-react-query-npm-5.80.6.patch",
 		"h3@npm:1.13.0": "^1.13.0",
-		"vite@npm:6.1.4": "^6.0.0"
+		"vite@npm:6.1.4": "^6.0.0",
+		"@bgotink/playwright-coverage@^0.2.1": "patch:@bgotink/playwright-coverage@npm%3A0.2.1#./patches/@bgotink-playwright-coverage-npm-0.2.1.patch",
+		"v8-to-istanbul@^9.1.0": "patch:v8-to-istanbul@npm%3A9.1.0#./patches/v8-to-istanbul-npm-9.1.0.patch"
 	},
 	"dependencies": {
 		"@tanstack/react-query": "^5.80.6",
@@ -90,6 +92,7 @@
 		"eslint-plugin-vitest": "^0.5.4",
 		"expo-router": "^3.4.7",
 		"find-free-ports": "^3.1.1",
+		"glob": "^11.0.0",
 		"globals": "^15.8.0",
 		"jiti": "^2.4.2",
 		"jsonc-eslint-parser": "^2.4.0",

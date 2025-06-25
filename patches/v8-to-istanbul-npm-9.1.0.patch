@@ -1,0 +1,17 @@
+diff --git a/lib/v8-to-istanbul.js b/lib/v8-to-istanbul.js
+index 86b07d6cc764a79746406b6032f64c264cc7618a..da24d986b052a80b9b1a93a6023f60206a71deb4 100644
+--- a/lib/v8-to-istanbul.js
++++ b/lib/v8-to-istanbul.js
+@@ -122,6 +122,12 @@ module.exports = class V8ToIstanbul {
+ 
+   applyCoverage (blocks) {
+     blocks.forEach(block => {
++      if (block.functionName === '(empty-report)') {
++        this.covSources.forEach((covSource) => covSource.source.lines.forEach((line) => {
++          line.count = 0
++          return true
++        }));
++      }
+       block.ranges.forEach((range, i) => {
+         const { startCol, endCol, path, covSource } = this._maybeRemapStartColEndCol(range)
+         if (this.excludePath(path)) {
