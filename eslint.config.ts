@@ -503,6 +503,7 @@ export default ts.config(
 			".yarn/",
 			"**/.output/",
 			"**/.vercel/",
+			"**/.vinxi/",
 			"**/.expo/",
 			"**/coverage/",
 			"**/playwright-report/",
