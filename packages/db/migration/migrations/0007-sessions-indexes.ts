@@ -1,4 +1,4 @@
-import { SESSIONS } from "~db/consts";
+import { SESSIONS } from "~db/migration/consts";
 import type { Database } from "~db/types";
 
 const addSessionsAccountIdIndex = async (db: Database) => {

@@ -13,9 +13,9 @@ import {
 	RECEIPT_PARTICIPANTS,
 	RESET_PASSWORD_INTENTIONS,
 	USERS,
-} from "~db/consts";
+} from "~db/migration/consts";
+import { isTestEnv } from "~db/migration/utils";
 import type { Database } from "~db/types";
-import { isTestEnv } from "~db/utils";
 
 const updateColumn = "updatedAt";
 // Project inception date

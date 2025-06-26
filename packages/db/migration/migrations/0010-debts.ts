@@ -1,4 +1,4 @@
-import { DEBTS } from "~db/consts";
+import { DEBTS } from "~db/migration/consts";
 import type { Database } from "~db/types";
 
 const createDebtsTable = async (db: Database) => {

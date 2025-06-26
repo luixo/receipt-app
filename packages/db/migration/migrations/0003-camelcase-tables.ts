@@ -7,7 +7,7 @@ import {
 	RECEIPT_ITEMS,
 	RECEIPT_PARTICIPANTS,
 	SESSIONS,
-} from "~db/consts";
+} from "~db/migration/consts";
 import type { Database } from "~db/types";
 
 const camelcaseAccountsTable = async (db: Database) => {

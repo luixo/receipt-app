@@ -1,6 +1,6 @@
 import type { UpdateObject } from "kysely";
 
-import { CURRENT_TIMESTAMP } from "~db/consts";
+import { CURRENT_TIMESTAMP } from "~db/migration/consts";
 import type { Database, ReceiptsDatabase } from "~db/types";
 
 type ReceiptsUpdateObject = UpdateObject<

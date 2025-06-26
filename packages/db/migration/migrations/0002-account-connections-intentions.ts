@@ -1,4 +1,4 @@
-import { ACCOUNT_CONNECTIONS_INTENTIONS } from "~db/consts";
+import { ACCOUNT_CONNECTIONS_INTENTIONS } from "~db/migration/consts";
 import type { Database } from "~db/types";
 
 import {

@@ -4,7 +4,7 @@ import {
 	FUNCTIONS,
 	ITEM_PARTICIPANTS_DEPRECATED,
 	RECEIPT_ITEM_CONSUMERS,
-} from "~db/consts";
+} from "~db/migration/consts";
 import type { Database } from "~db/types";
 
 const dropOldIndexes = async (db: Database) => {
