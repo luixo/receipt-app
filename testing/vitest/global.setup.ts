@@ -1,7 +1,7 @@
 import { createHTTPServer } from "@trpc/server/adapters/standalone";
-import findFreePorts from "find-free-ports";
-import assert from "node:assert";
 import type { TestProject } from "vitest/node";
+
+import { getFreePort } from "~utils/port";
 
 import { appRouter, createCaller } from "./databases/router";
 
@@ -17,8 +17,7 @@ declare module "vitest" {
 
 export default async (context: TestProject) => {
 	process.env.TZ = "GMT";
-	const port = (await findFreePorts())[0];
-	assert(port);
+	const port = await getFreePort();
 	const routerConfig = { port };
 	context.provide("routerConfig", routerConfig);
 	const httpServer = createHTTPServer({ router: appRouter });

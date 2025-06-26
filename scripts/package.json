@@ -8,6 +8,7 @@
 		"expo:update-ios-version": "tsx update-version.ts"
 	},
 	"devDependencies": {
+		"@ra/utils": "workspace:*",
 		"concurrently": "^8.2.2",
 		"ngrok": "^5.0.0-beta.2",
 		"ts-morph": "^14.0.0",
