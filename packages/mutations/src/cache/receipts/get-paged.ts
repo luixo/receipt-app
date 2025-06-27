@@ -1,19 +1,14 @@
-import { identity } from "remeda";
+import type { QueryKey } from "@tanstack/react-query";
+import { hashKey } from "@tanstack/react-query";
 
-import type { TRPCQueryInput } from "~app/trpc";
 import type { ReceiptsId } from "~db/models";
-import { addToArray } from "~utils/array";
 
-import type { ControllerContext, ControllerWith } from "../../types";
-import { applyWithRevert, getAllInputs, withRef } from "../utils";
-
-const id = identity();
+import type { ControllerContext, ControllerWith, UpdateFn } from "../../types";
+import { applyUpdateFnWithRevert, getAllInputs } from "../utils";
 
 type Controller = ControllerWith<{
 	procedure: ControllerContext["trpc"]["receipts"]["getPaged"];
 }>;
-
-type Input = TRPCQueryInput<"receipts.getPaged">;
 
 const invalidate = ({ queryClient, procedure }: Controller) => {
 	const inputs = getAllInputs<"receipts.getPaged">(
@@ -25,63 +20,36 @@ const invalidate = ({ queryClient, procedure }: Controller) => {
 	);
 };
 
-const add = (
-	{ queryClient, procedure }: Controller,
-	input: Input,
-	receiptId: ReceiptsId,
-	index: number,
-) =>
-	queryClient.setQueryData(procedure.queryKey(input), (result) => {
-		if (!result) {
-			return;
-		}
-		return {
-			...result,
-			items: addToArray(result.items, receiptId, index),
-		};
-	});
-
-const remove = (
-	{ queryClient, procedure }: Controller,
-	receiptId: ReceiptsId,
-) =>
-	withRef<
-		| {
-				receiptId: ReceiptsId;
-				input: Input;
-				index: number;
-		  }
-		| undefined,
-		() => void
-	>((ref) => () => {
+const updatePages =
+	({ queryClient, procedure }: Controller) =>
+	(updater: UpdateFn<ReceiptsId[], ReceiptsId[], QueryKey>) => {
+		const snapshots: {
+			queryKey: QueryKey;
+			items: ReceiptsId[];
+		}[] = [];
 		const inputs = getAllInputs<"receipts.getPaged">(
 			queryClient,
 			procedure.queryKey(),
 		);
-		return inputs.map((input) =>
-			queryClient.setQueryData(procedure.queryKey(input), (result) => {
+		inputs.forEach((input) => {
+			const queryKey = procedure.queryKey(input);
+			queryClient.setQueryData(queryKey, (result) => {
 				if (!result) {
 					return;
 				}
-				const removedIndex = result.items.indexOf(receiptId);
-				if (removedIndex === -1) {
-					return;
+				const nextItems = updater(result.items, queryKey);
+				if (nextItems === result.items) {
+					return result;
 				}
-				ref.current = {
-					input,
-					receiptId,
-					index: removedIndex,
-				};
-				return {
-					...result,
-					items: [
-						...result.items.slice(0, removedIndex),
-						...result.items.slice(removedIndex + 1),
-					],
-				};
-			}),
-		);
-	});
+				snapshots.push({
+					queryKey,
+					items: result.items,
+				});
+				return { ...result, items: nextItems };
+			});
+		});
+		return snapshots;
+	};
 
 export const getController = ({ queryClient, trpc }: ControllerContext) => {
 	const controller = { queryClient, procedure: trpc.receipts.getPaged };
@@ -97,20 +65,26 @@ export const getRevertController = ({
 	const controller = { queryClient, procedure: trpc.receipts.getPaged };
 	return {
 		remove: (receiptId: ReceiptsId) =>
-			applyWithRevert(
-				() => remove(controller, receiptId),
-				({ current: snapshot }) => {
-					if (snapshot) {
-						return add(
-							controller,
-							snapshot.input,
-							snapshot.receiptId,
-							snapshot.index,
-						);
+			applyUpdateFnWithRevert(
+				updatePages(controller),
+				(items) =>
+					items.includes(receiptId)
+						? items.filter((item) => item !== receiptId)
+						: items,
+				(snapshots) => (items, queryKey) => {
+					const matchedSnapshot = snapshots.find(
+						(snapshot) => hashKey(snapshot.queryKey) === hashKey(queryKey),
+					);
+					if (!matchedSnapshot) {
+						return items;
 					}
-					return id;
+					const lastIndex = matchedSnapshot.items.indexOf(receiptId);
+					return [
+						...items.slice(0, lastIndex),
+						receiptId,
+						...items.slice(lastIndex),
+					];
 				},
-				({ returnValue: invalidatePages }) => invalidatePages(),
 			),
 	};
 };
