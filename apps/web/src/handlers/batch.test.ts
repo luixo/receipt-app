@@ -9,7 +9,7 @@ import { t, unauthProcedure } from "~web/handlers/trpc";
 import { getReqHeader } from "~web/utils/headers";
 
 import { queueCallFactory } from "./batch";
-import { getClientServer } from "./utils.test";
+import { getTestClient, withTestServer } from "./utils.test";
 
 type Input = {
 	id: string;
@@ -87,10 +87,10 @@ const router = t.router({
 describe("batching", () => {
 	describe("success", () => {
 		test("multiple calls", async ({ ctx }) => {
-			const { withServer, client } = await getClientServer(ctx, router, {
-				useBatch: true,
-			});
-			await withServer(async () => {
+			await withTestServer(ctx, router, async ({ url }) => {
+				const client = getTestClient<typeof router>(ctx, url, {
+					useBatch: true,
+				});
 				const elements = await Promise.all([
 					client.batch.query({ id: "1" }),
 					client.batch.query({ id: "2" }),
@@ -105,10 +105,10 @@ describe("batching", () => {
 		});
 
 		test("single call", async ({ ctx }) => {
-			const { withServer, client } = await getClientServer(ctx, router, {
-				useBatch: true,
-			});
-			await withServer(async () => {
+			await withTestServer(ctx, router, async ({ url }) => {
+				const client = getTestClient<typeof router>(ctx, url, {
+					useBatch: true,
+				});
 				const elements = await Promise.all([
 					client.batch.query({ id: "1" }),
 					client.ping.query("hello world"),
@@ -121,10 +121,10 @@ describe("batching", () => {
 		});
 
 		test("no batch", async ({ ctx }) => {
-			const { withServer, client } = await getClientServer(ctx, router, {
-				useBatch: false,
-			});
-			await withServer(async () => {
+			await withTestServer(ctx, router, async ({ url }) => {
+				const client = getTestClient<typeof router>(ctx, url, {
+					useBatch: false,
+				});
 				const elements = await Promise.all([
 					client.batch.query({ id: "1" }),
 					client.batch.query({ id: "2" }),
@@ -139,10 +139,10 @@ describe("batching", () => {
 
 	describe("errors", () => {
 		test("single element", async ({ ctx }) => {
-			const { withServer, client } = await getClientServer(ctx, router, {
-				useBatch: true,
-			});
-			await withServer(async () => {
+			await withTestServer(ctx, router, async ({ url }) => {
+				const client = getTestClient<typeof router>(ctx, url, {
+					useBatch: true,
+				});
 				const elements = await Promise.all([
 					client.batch.query({ id: "1" }).catch((e) => e),
 					client.batch.query({ id: "fail-single" }).catch((e) => e),
@@ -159,10 +159,10 @@ describe("batching", () => {
 		});
 
 		test("common", async ({ ctx }) => {
-			const { withServer, client } = await getClientServer(ctx, router, {
-				useBatch: true,
-			});
-			await withServer(async () => {
+			await withTestServer(ctx, router, async ({ url }) => {
+				const client = getTestClient<typeof router>(ctx, url, {
+					useBatch: true,
+				});
 				const errors = await Promise.all([
 					client.batch.query({ id: "1" }).catch((e) => e),
 					client.batch.query({ id: "fail-all" }).catch((e) => e),
@@ -184,10 +184,10 @@ describe("batching", () => {
 		});
 
 		test("missing element", async ({ ctx }) => {
-			const { withServer, client } = await getClientServer(ctx, router, {
-				useBatch: true,
-			});
-			await withServer(async () => {
+			await withTestServer(ctx, router, async ({ url }) => {
+				const client = getTestClient<typeof router>(ctx, url, {
+					useBatch: true,
+				});
 				const elements = await Promise.all([
 					client.batch.query({ id: "1" }).catch((e) => e),
 					client.batch.query({ id: "miss-element" }).catch((e) => e),

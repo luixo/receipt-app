@@ -10,7 +10,7 @@ import { expectTRPCError } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
 import { t } from "~web/handlers/trpc";
 
-import { getClientServer } from "./utils.test";
+import { getTestClient, withTestServer } from "./utils.test";
 
 import { router } from "./index";
 
@@ -19,12 +19,10 @@ const createCaller = t.createCallerFactory(router);
 describe("errors formatting", () => {
 	// Covering errorFormatter function
 	test("client error formatter works", async ({ ctx }) => {
-		const { withServer, client } = await getClientServer(ctx, router, {
-			headers: {
-				cookie: `${AUTH_COOKIE}=fake`,
-			},
-		});
-		await withServer(async () => {
+		await withTestServer(ctx, router, async ({ url }) => {
+			const client = getTestClient<typeof router>(ctx, url, {
+				headers: { cookie: `${AUTH_COOKIE}=fake` },
+			});
 			const error = await client.account.get.query().catch((e) => e);
 			expect(error).toBeInstanceOf(TRPCClientError);
 			const typedError = error as TRPCClientError<typeof router>;
@@ -67,16 +65,14 @@ describe("errors formatting", () => {
 });
 
 test("error is captured", async ({ ctx }) => {
-	const { withServer, client } = await getClientServer(ctx, router, {
-		captureError: (error) => {
-			ctx.logger.warn(`Captured error: "${error.message}"`);
-			return "transaction-id";
-		},
-		headers: {
-			cookie: `${AUTH_COOKIE}=fake`,
-		},
-	});
-	await withServer(async () => {
+	await withTestServer(ctx, router, async ({ url }) => {
+		const client = getTestClient<typeof router>(ctx, url, {
+			captureError: (error) => {
+				ctx.logger.warn(`Captured error: "${error.message}"`);
+				return "transaction-id";
+			},
+			headers: { cookie: `${AUTH_COOKIE}=fake` },
+		});
 		try {
 			await client.account.get.query();
 			throw new Error("Expected not to get here");
