@@ -5,15 +5,18 @@ import { getApiTrpcClient } from "~web/utils/trpc";
 export const APIRoute = createAPIFileRoute("/api/utils/cleanup")({
 	POST: async ({ request }) => {
 		const client = getApiTrpcClient(request);
-		const [removedSessions, removedResetPasswordIntentions] = await Promise.all(
-			[
-				client.sessions.cleanup.mutate(),
-				client.resetPasswordIntentions.cleanup.mutate(),
-			],
-		);
+		try {
+			const [removedSessions, removedResetPasswordIntentions] =
+				await Promise.all([
+					client.sessions.cleanup.mutate(),
+					client.resetPasswordIntentions.cleanup.mutate(),
+				]);
 
-		return new Response(
-			`Removed ${removedSessions} sessions and ${removedResetPasswordIntentions} reset password intentions`,
-		);
+			return new Response(
+				`Removed ${removedSessions} sessions and ${removedResetPasswordIntentions} reset password intentions`,
+			);
+		} catch (e) {
+			return new Response(`Error on cleanup: ${String(e)}`, { status: 500 });
+		}
 	},
 });

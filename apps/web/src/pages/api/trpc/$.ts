@@ -10,19 +10,11 @@ import { v4 } from "uuid";
 import { DEFAULT_TRPC_ENDPOINT } from "~app/contexts/links-context";
 import { getDatabase } from "~db/database";
 import { router } from "~web/handlers";
-import type {
-	AuthorizedContext,
-	NetContext,
-	UnauthorizedContext,
-} from "~web/handlers/context";
+import type { NetContext, UnauthorizedContext } from "~web/handlers/context";
 import { createContext } from "~web/handlers/context";
 import { baseLogger } from "~web/providers/logger";
 import { getPool } from "~web/providers/pg";
 import { getReqHeader } from "~web/utils/headers";
-
-const isAuthorizedContext = (
-	context: UnauthorizedContext,
-): context is AuthorizedContext => "auth" in context;
 
 /* c8 ignore start */
 const defaultGetDatabase = (req: Request) =>
@@ -58,7 +50,25 @@ const createContextRest = (
 });
 /* c8 ignore stop */
 
-const callback: StartAPIMethodCallback<"/api/trpc/$"> = async ({ request }) => {
+const getTestRequestHandlerProps = ({
+	// @ts-expect-error This is a hack for tests
+	router: overrideRouter,
+}: Omit<
+	Parameters<StartAPIMethodCallback<"/api/trpc/$">>[0],
+	"request" | "params"
+>): object => {
+	/* c8 ignore start */
+	if (!import.meta.env.VITEST) {
+		return {};
+	}
+	/* c8 ignore stop */
+	return { endpoint: "", router: overrideRouter };
+};
+
+const callback: StartAPIMethodCallback<"/api/trpc/$"> = async ({
+	request,
+	...rest
+}) => {
 	const proxyUrl = new URL(request.url);
 	const proxyPort = proxyUrl.searchParams.get("proxyPort");
 	if (proxyPort && typeof proxyPort === "string") {
@@ -72,6 +82,7 @@ const callback: StartAPIMethodCallback<"/api/trpc/$"> = async ({ request }) => {
 			});
 		}
 		proxyUrl.port = proxyPort;
+		proxyUrl.searchParams.delete("proxyPort");
 		await proxyRequest(proxyUrl.toString());
 		return new Response();
 	}
@@ -87,10 +98,11 @@ const callback: StartAPIMethodCallback<"/api/trpc/$"> = async ({ request }) => {
 			);
 		},
 		onError: ({ error, type, path, ctx }) => {
+			/* c8 ignore start */
 			if (!ctx) {
 				return;
 			}
-			const email = isAuthorizedContext(ctx) ? ctx.auth.email : undefined;
+			/* c8 ignore stop */
 			if (error.code === "UNAUTHORIZED" && path === "account.get") {
 				// Do not log an attempt to fetch the account without a cookie
 				return;
@@ -98,18 +110,21 @@ const callback: StartAPIMethodCallback<"/api/trpc/$"> = async ({ request }) => {
 			ctx.logger.error(
 				`[${error.code}] [${
 					getReqHeader(ctx, "user-agent") ?? "no-user-agent"
-				}] ${type} "${path}"${email ? ` (by ${email})` : ""}: ${error.message}`,
+				}] ${type} "${path}": ${error.message}`,
 			);
 		},
 		responseMeta: ({ ctx }) => ({
 			status: 200,
 			headers: fromEntries(
-				entries(ctx?.event.node.res.getHeaders() ?? {}).map(([key, value]) => [
+				// We expect to always have context
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				entries(ctx!.event.node.res.getHeaders()).map(([key, value]) => [
 					key,
 					typeof value === "number" ? value.toString() : value,
 				]),
 			),
 		}),
+		...getTestRequestHandlerProps(rest),
 	});
 };
 

@@ -8,7 +8,7 @@ export const Route = createFileRoute("/_protected/settings")({
 	head: () => ({ meta: [{ title: "RA - Settings" }] }),
 	loaderDeps: (ctx) => ({ debug: ctx.search.debug }),
 	loader: async (ctx) => {
-		const trpc = getLoaderTrpcClient(ctx.context, ctx.deps.debug);
+		const trpc = getLoaderTrpcClient(ctx.context.queryClient, ctx.deps.debug);
 		await ctx.context.queryClient.prefetchQuery(
 			trpc.accountSettings.get.queryOptions(),
 		);

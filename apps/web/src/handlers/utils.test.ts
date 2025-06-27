@@ -47,7 +47,6 @@ export const withTestServer = async <R extends AnyTRPCRouter>(
 	router: R,
 	fn: (opts: { url: string }) => Promise<void>,
 ) => {
-	const port = await getFreePort();
 	const httpServer = createHTTPServer({
 		router,
 		createContext: (opts) =>
@@ -55,6 +54,7 @@ export const withTestServer = async <R extends AnyTRPCRouter>(
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			createContext(opts, { ...ctx, database: database!.instance }),
 	});
+	const port = await getFreePort();
 	await new Promise<void>((resolve) => {
 		httpServer.listen(port, resolve);
 	});
