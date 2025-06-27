@@ -10,25 +10,15 @@ import { getLinks } from "~app/utils/trpc";
 import type { RouterContext } from "~web/pages/__root";
 import { captureSentryError } from "~web/utils/sentry";
 
-export const getHostUrl = (reqUrl: string, pathname = "") => {
-	const url = new URL("", reqUrl);
-	url.pathname = pathname;
-	/* c8 ignore start */
-	if (process.env.VERCEL_URL) {
-		url.host = process.env.VERCEL_URL;
-	}
-	/* c8 ignore stop */
-	return url.toString();
-};
-
 const getLinksParamsFromRequest = (
 	request: Request,
 	source: GetLinksOptions["source"],
 ) => {
-	const url = new URL(request.url);
+	const urlObject = new URL(request.url);
+	urlObject.pathname = DEFAULT_TRPC_ENDPOINT;
 	return {
-		debug: Boolean(url.searchParams.get("debug")),
-		url: getHostUrl(request.url, DEFAULT_TRPC_ENDPOINT),
+		debug: Boolean(urlObject.searchParams.get("debug")),
+		url: urlObject.toString(),
 		headers: fromEntries([...request.headers.entries()]),
 		source,
 		keepError: Boolean(import.meta.env.VITEST),

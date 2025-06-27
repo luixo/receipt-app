@@ -18,7 +18,7 @@ const router = t.router({
 });
 
 describe("API calls", () => {
-	test("proxy port is passed through", async ({ ctx }) => {
+	test("search params are passed through", async ({ ctx }) => {
 		await withTestServer(ctx, router, async ({ url }) => {
 			const urlObject = new URL(url);
 			urlObject.searchParams.set("foo", "bar");

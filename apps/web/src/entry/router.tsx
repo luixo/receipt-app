@@ -21,7 +21,7 @@ import {
 import { PRETEND_USER_STORE_NAME } from "~app/utils/store/pretend-user";
 import { Text } from "~components/text";
 import type { ExternalRouterContext } from "~web/pages/__root";
-import { getHostUrl } from "~web/utils/trpc";
+import { getHostUrl } from "~web/utils/url";
 
 import { routeTree } from "./routeTree.gen";
 
@@ -54,14 +54,13 @@ export const createRouter = (externalContext: ExternalRouterContext) => {
 		: null;
 	const url = request ? request.url : window.location.href;
 	const queryClient = getQueryClient();
-	const baseUrl = getHostUrl(url);
 	return createTanStackRouter({
 		routeTree,
 		context: {
 			...externalContext,
 			request,
 			debug: Boolean(new URL(url).searchParams.get("debug")),
-			baseUrl,
+			baseUrl: request ? getHostUrl(request.url) : "",
 			queryClient,
 			nowTimestamp: Date.now(),
 		},
