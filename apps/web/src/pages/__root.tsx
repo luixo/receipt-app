@@ -149,12 +149,10 @@ const RootComponent = () => {
 
 type EphemeralContext = {
 	queryClient: QueryClient;
-	debug: boolean;
 	request: Request | null;
 };
 const EPHEMERAL_CONTEXT_KEYS: Record<keyof EphemeralContext, true> = {
 	queryClient: true,
-	debug: true,
 	request: true,
 };
 

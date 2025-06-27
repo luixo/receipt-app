@@ -52,14 +52,12 @@ export const createRouter = (externalContext: ExternalRouterContext) => {
 	const request = import.meta.env.SSR
 		? serverOnly(() => getWebRequest() ?? null)()
 		: null;
-	const url = request ? request.url : window.location.href;
 	const queryClient = getQueryClient();
 	return createTanStackRouter({
 		routeTree,
 		context: {
 			...externalContext,
 			request,
-			debug: Boolean(new URL(url).searchParams.get("debug")),
 			baseUrl: request ? getHostUrl(request.url) : "",
 			queryClient,
 			nowTimestamp: Date.now(),
