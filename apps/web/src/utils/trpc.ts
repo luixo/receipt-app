@@ -2,6 +2,7 @@ import { serverOnly } from "@tanstack/react-start";
 import { createTRPCClient } from "@trpc/client";
 import type { AnyRouter } from "@trpc/server/unstable-core-do-not-import";
 import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
+import { fromEntries } from "remeda";
 
 import { DEFAULT_TRPC_ENDPOINT } from "~app/contexts/links-context";
 import type { AppRouter } from "~app/trpc";
@@ -31,9 +32,7 @@ const getLinksParamsFromRequest = (
 	return {
 		debug: Boolean(url.searchParams.get("debug")),
 		url: getHostUrl(request.url, DEFAULT_TRPC_ENDPOINT),
-		headers: {
-			cookie: request.headers.get("cookie") || undefined,
-		},
+		headers: fromEntries([...request.headers.entries()]),
 		source,
 		captureError: captureSentryError,
 	};

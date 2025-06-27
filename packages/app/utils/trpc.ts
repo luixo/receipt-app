@@ -75,14 +75,14 @@ export const getLinks = ({
 	keepError,
 	source,
 	captureError,
-	headers: overrideHeaders,
+	headers: extraHeaders,
 }: GetLinksOptions): TRPCLink<AppRouter>[] => {
 	// we omit to not let stringified "undefined" get passed to the server
 	const headers = omitBy(
 		{
+			...extraHeaders,
 			"x-debug": debug ? "true" : undefined,
 			"x-source": source,
-			...overrideHeaders,
 		},
 		(value) => value === undefined,
 	);
