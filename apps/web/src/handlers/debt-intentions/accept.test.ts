@@ -20,9 +20,8 @@ import {
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
 import { MINUTE } from "~utils/time";
-import { runSequentially } from "~web/handlers/debts/utils.test";
 import { t } from "~web/handlers/trpc";
-import { getRandomCurrencyCode } from "~web/handlers/utils.test";
+import { getRandomCurrencyCode, runInBand } from "~web/handlers/utils.test";
 
 import { procedure } from "./accept";
 
@@ -87,13 +86,10 @@ describe("debtIntentions.accept", () => {
 
 			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const results = await expectDatabaseDiffSnapshot(ctx, () =>
-				runSequentially(
-					[
-						() => caller.procedure({ id: foreignDebtId }),
-						() => caller.procedure({ id: fakeDebtId }).catch((e) => e),
-					],
-					10,
-				),
+				runInBand([
+					() => caller.procedure({ id: foreignDebtId }),
+					() => caller.procedure({ id: fakeDebtId }).catch((e) => e),
+				]),
 			);
 
 			expect(results[0]).toStrictEqual<(typeof results)[0]>({
@@ -300,14 +296,11 @@ describe("debtIntentions.accept", () => {
 
 			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
-				runSequentially(
-					[
-						() => caller.procedure({ id: newDebt.id }),
-						() => caller.procedure({ id: updatedDebtAhead.id }),
-						() => caller.procedure({ id: updatedDebtBehind.id }),
-					],
-					10,
-				),
+				runInBand([
+					() => caller.procedure({ id: newDebt.id }),
+					() => caller.procedure({ id: updatedDebtAhead.id }),
+					() => caller.procedure({ id: updatedDebtBehind.id }),
+				]),
 			);
 			expect(result).toStrictEqual<typeof result>([
 				{ updatedAt: new Date(newDebt.updatedAt.valueOf()) },

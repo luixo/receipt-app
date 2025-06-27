@@ -11,7 +11,6 @@ import { createAuthContext } from "~tests/backend/utils/context";
 import { insertAccountWithSession } from "~tests/backend/utils/data";
 import { expectTRPCError } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { wait } from "~utils/promise";
 import type { UnauthorizedContext } from "~web/handlers/context";
 import { getRandomCurrencyCode } from "~web/handlers/utils.test";
 
@@ -24,19 +23,6 @@ export const getValidDebt = (userId: UsersId = faker.string.uuid()) => ({
 	userId,
 	amount: Number(faker.finance.amount()) * (faker.datatype.boolean() ? 1 : -1),
 });
-
-export const runSequentially = <
-	T extends readonly (() => Promise<unknown>)[] | [],
->(
-	promiseFns: T,
-	timeout = 100,
-) =>
-	Promise.all(
-		promiseFns.map(async (promiseFn, index) => {
-			await wait(timeout * index);
-			return promiseFn();
-		}),
-	) as Promise<{ -readonly [P in keyof T]: Awaited<ReturnType<T[P]>> }>;
 
 export const syncedProps = [
 	"amount",

@@ -21,12 +21,12 @@ import {
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
 import { t } from "~web/handlers/trpc";
+import { runInBand } from "~web/handlers/utils.test";
 import { UUID_REGEX } from "~web/handlers/validation";
 
 import { procedure } from "./add";
 import {
 	getValidDebt,
-	runSequentially,
 	verifyAmount,
 	verifyCurrencyCode,
 	verifyNote,
@@ -144,13 +144,10 @@ describe("debts.add", () => {
 
 			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const results = await expectDatabaseDiffSnapshot(ctx, () =>
-				runSequentially(
-					[
-						() => caller.procedure(getValidDebt(userId)),
-						() => caller.procedure(getValidDebt(fakeUserId)).catch((e) => e),
-					],
-					10,
-				),
+				runInBand([
+					() => caller.procedure(getValidDebt(userId)),
+					() => caller.procedure(getValidDebt(fakeUserId)).catch((e) => e),
+				]),
 			);
 
 			expect(results[0]).toStrictEqual<(typeof results)[0]>({
@@ -243,16 +240,13 @@ describe("debts.add", () => {
 
 				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				const results = await expectDatabaseDiffSnapshot(ctx, () =>
-					runSequentially(
-						[
-							() =>
-								caller.procedure({ ...getValidDebt(foreignUserId), receiptId }),
-							() => caller.procedure(getValidDebt(foreignUserId)),
-							() => caller.procedure(getValidDebt(anotherForeignUserId)),
-							() => caller.procedure(getValidDebt(nonAcceptingUserId)),
-						],
-						10,
-					),
+					runInBand([
+						() =>
+							caller.procedure({ ...getValidDebt(foreignUserId), receiptId }),
+						() => caller.procedure(getValidDebt(foreignUserId)),
+						() => caller.procedure(getValidDebt(anotherForeignUserId)),
+						() => caller.procedure(getValidDebt(nonAcceptingUserId)),
+					]),
 				);
 				expect(results).toHaveLength(4);
 				results
@@ -286,14 +280,11 @@ describe("debts.add", () => {
 
 				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				const results = await expectDatabaseDiffSnapshot(ctx, () =>
-					runSequentially(
-						[
-							() => caller.procedure(getValidDebt(foreignUserId)),
-							() => caller.procedure(getValidDebt(foreignUserId)),
-							() => caller.procedure(getValidDebt(foreignUserId)),
-						],
-						10,
-					),
+					runInBand([
+						() => caller.procedure(getValidDebt(foreignUserId)),
+						() => caller.procedure(getValidDebt(foreignUserId)),
+						() => caller.procedure(getValidDebt(foreignUserId)),
+					]),
 				);
 				expect(results).toHaveLength(3);
 				results
@@ -335,18 +326,15 @@ describe("debts.add", () => {
 
 				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				const results = await expectDatabaseDiffSnapshot(ctx, () =>
-					runSequentially(
-						[
-							() =>
-								caller.procedure({
-									...getValidDebt(foreignUserId),
-									receiptId,
-								}),
-							() => caller.procedure(getValidDebt(foreignUserId)),
-							() => caller.procedure(getValidDebt(foreignUserId)),
-						],
-						10,
-					),
+					runInBand([
+						() =>
+							caller.procedure({
+								...getValidDebt(foreignUserId),
+								receiptId,
+							}),
+						() => caller.procedure(getValidDebt(foreignUserId)),
+						() => caller.procedure(getValidDebt(foreignUserId)),
+					]),
 				);
 				expect(results).toHaveLength(3);
 				results
@@ -374,13 +362,10 @@ describe("debts.add", () => {
 				]);
 
 				const caller = createCaller(await createAuthContext(ctx, sessionId));
-				const results = await runSequentially(
-					[
-						() => caller.procedure(getValidDebt(foreignUserId)),
-						() => caller.procedure(getValidDebt(fakeUserId)).catch((e) => e),
-					],
-					10,
-				);
+				const results = await runInBand([
+					() => caller.procedure(getValidDebt(foreignUserId)),
+					() => caller.procedure(getValidDebt(fakeUserId)).catch((e) => e),
+				]);
 				expect(results).toHaveLength(2);
 				expect(results[0].id).toMatch(UUID_REGEX);
 				expect(results[0]).toStrictEqual<(typeof results)[0]>({

@@ -26,12 +26,11 @@ import type { TestContext } from "~tests/backend/utils/test";
 import { test } from "~tests/backend/utils/test";
 import { MINUTE } from "~utils/time";
 import { t } from "~web/handlers/trpc";
-import { getRandomCurrencyCode } from "~web/handlers/utils.test";
+import { getRandomCurrencyCode, runInBand } from "~web/handlers/utils.test";
 
 import { procedure } from "./update";
 import {
 	getRandomAmount,
-	runSequentially,
 	syncedProps,
 	verifyAmount,
 	verifyCurrencyCode,
@@ -122,10 +121,7 @@ const updateDescribes = (getData: GetData) => {
 
 		const caller = createCaller(await createAuthContext(ctx, sessionId));
 		const results = await expectDatabaseDiffSnapshot(ctx, () =>
-			runSequentially(
-				updates.map((update) => () => caller.procedure(update)),
-				10,
-			),
+			runInBand(updates.map((update) => () => caller.procedure(update))),
 		);
 		expect(results).toStrictEqual<typeof results>(expectedResults);
 		return {
@@ -331,23 +327,20 @@ describe("debts.update", () => {
 
 			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const results = await expectDatabaseDiffSnapshot(ctx, () =>
-				runSequentially(
-					[
-						() =>
-							caller.procedure({
-								id: debt.id,
+				runInBand([
+					() =>
+						caller.procedure({
+							id: debt.id,
+							update: { amount: getRandomAmount() },
+						}),
+					() =>
+						caller
+							.procedure({
+								id: "not-a-valid-uuid",
 								update: { amount: getRandomAmount() },
-							}),
-						() =>
-							caller
-								.procedure({
-									id: "not-a-valid-uuid",
-									update: { amount: getRandomAmount() },
-								})
-								.catch((e) => e),
-					],
-					10,
-				),
+							})
+							.catch((e) => e),
+				]),
 			);
 
 			expect(results[0]).toStrictEqual<(typeof results)[0]>({
@@ -601,23 +594,20 @@ describe("debts.update", () => {
 				const fakeDebtId = faker.string.uuid();
 
 				const caller = createCaller(await createAuthContext(ctx, sessionId));
-				const results = await runSequentially(
-					[
-						() =>
-							caller.procedure({
-								id: debt.id,
+				const results = await runInBand([
+					() =>
+						caller.procedure({
+							id: debt.id,
+							update: { amount: getRandomAmount() },
+						}),
+					() =>
+						caller
+							.procedure({
+								id: fakeDebtId,
 								update: { amount: getRandomAmount() },
-							}),
-						() =>
-							caller
-								.procedure({
-									id: fakeDebtId,
-									update: { amount: getRandomAmount() },
-								})
-								.catch((e) => e),
-					],
-					10,
-				);
+							})
+							.catch((e) => e),
+				]);
 				expect(results).toHaveLength(2);
 				expect(results[0]).toStrictEqual<(typeof results)[0]>(
 					getDefaultGetResult({ counterParty: "auto-accept" }),

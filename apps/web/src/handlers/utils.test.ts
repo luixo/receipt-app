@@ -9,6 +9,7 @@ import { getLinks } from "~app/utils/trpc";
 import type { TestContext } from "~tests/backend/utils/test";
 import { CURRENCY_CODES } from "~utils/currency-data";
 import { getFreePort } from "~utils/port";
+import { wait } from "~utils/promise";
 import { createContext } from "~web/handlers/context";
 
 export const getRandomCurrencyCode = (): CurrencyCode =>
@@ -66,3 +67,13 @@ export const withTestServer = async <R extends AnyTRPCRouter>(
 		});
 	}
 };
+
+export const runInBand = <T extends readonly (() => Promise<unknown>)[] | []>(
+	promiseFns: T,
+) =>
+	Promise.all(
+		promiseFns.map(async (promiseFn, index) => {
+			await wait(50 * index);
+			return promiseFn();
+		}),
+	) as Promise<{ -readonly [P in keyof T]: Awaited<ReturnType<T[P]>> }>;

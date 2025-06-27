@@ -17,8 +17,8 @@ import {
 	expectUnauthorizedError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { runSequentially } from "~web/handlers/debts/utils.test";
 import { t } from "~web/handlers/trpc";
+import { runInBand } from "~web/handlers/utils.test";
 
 import { procedure } from "./add";
 
@@ -197,23 +197,20 @@ describe("receiptParticipants.add", () => {
 				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
-						runSequentially(
-							[
-								() =>
-									caller.procedure({
-										receiptId,
-										userId: selfUserId,
-										role: "editor",
-									}),
-								() =>
-									caller.procedure({
-										receiptId,
-										userId: selfUserId,
-										role: "viewer",
-									}),
-							],
-							10,
-						),
+						runInBand([
+							() =>
+								caller.procedure({
+									receiptId,
+									userId: selfUserId,
+									role: "editor",
+								}),
+							() =>
+								caller.procedure({
+									receiptId,
+									userId: selfUserId,
+									role: "viewer",
+								}),
+						]),
 					"CONFLICT",
 					`Expected to have unique pair of user id and receipt id, got repeating pairs: receipt "${receiptId}" / user "${selfUserId}" (2 times).`,
 				);
@@ -230,25 +227,22 @@ describe("receiptParticipants.add", () => {
 
 				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				const results = await expectDatabaseDiffSnapshot(ctx, () =>
-					runSequentially(
-						[
-							() =>
-								caller.procedure({
+					runInBand([
+						() =>
+							caller.procedure({
+								receiptId,
+								userId: selfUserId,
+								role: "editor",
+							}),
+						() =>
+							caller
+								.procedure({
 									receiptId,
-									userId: selfUserId,
+									userId: fakeUserId,
 									role: "editor",
-								}),
-							() =>
-								caller
-									.procedure({
-										receiptId,
-										userId: fakeUserId,
-										role: "editor",
-									})
-									.catch((e) => e),
-						],
-						10,
-					),
+								})
+								.catch((e) => e),
+					]),
 				);
 
 				expect(results[0]).toStrictEqual<(typeof results)[0]>({
@@ -292,37 +286,34 @@ describe("receiptParticipants.add", () => {
 
 			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
-				runSequentially(
-					[
-						() =>
-							caller.procedure({
-								receiptId,
-								userId: selfUserId,
-								role: "editor",
-							}),
-						() =>
-							caller.procedure({ receiptId, userId: user.id, role: "editor" }),
-						() =>
-							caller.procedure({
-								receiptId,
-								userId: foreignUser.id,
-								role: "editor",
-							}),
-						() =>
-							caller.procedure({
-								receiptId: anotherReceiptId,
-								userId: selfUserId,
-								role: "viewer",
-							}),
-						() =>
-							caller.procedure({
-								receiptId: anotherReceiptId,
-								userId: user.id,
-								role: "viewer",
-							}),
-					],
-					10,
-				),
+				runInBand([
+					() =>
+						caller.procedure({
+							receiptId,
+							userId: selfUserId,
+							role: "editor",
+						}),
+					() =>
+						caller.procedure({ receiptId, userId: user.id, role: "editor" }),
+					() =>
+						caller.procedure({
+							receiptId,
+							userId: foreignUser.id,
+							role: "editor",
+						}),
+					() =>
+						caller.procedure({
+							receiptId: anotherReceiptId,
+							userId: selfUserId,
+							role: "viewer",
+						}),
+					() =>
+						caller.procedure({
+							receiptId: anotherReceiptId,
+							userId: user.id,
+							role: "viewer",
+						}),
+				]),
 			);
 			expect(result).toStrictEqual<typeof result>([
 				{ createdAt: new Date() },

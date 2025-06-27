@@ -16,8 +16,8 @@ import {
 	expectUnauthorizedError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { runSequentially } from "~web/handlers/debts/utils.test";
 import { t } from "~web/handlers/trpc";
+import { runInBand } from "~web/handlers/utils.test";
 import { UUID_REGEX } from "~web/handlers/validation";
 
 import { procedure } from "./add";
@@ -124,16 +124,13 @@ describe("receiptItems.add", () => {
 
 			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const results = await expectDatabaseDiffSnapshot(ctx, () =>
-				runSequentially(
-					[
-						() => caller.procedure(getValidReceiptItem(receiptId)),
-						() =>
-							caller
-								.procedure(getValidReceiptItem(fakeReceiptId))
-								.catch((e) => e),
-					],
-					10,
-				),
+				runInBand([
+					() => caller.procedure(getValidReceiptItem(receiptId)),
+					() =>
+						caller
+							.procedure(getValidReceiptItem(fakeReceiptId))
+							.catch((e) => e),
+				]),
 			);
 
 			expect(results[0]).toStrictEqual<(typeof results)[0]>({
@@ -171,14 +168,11 @@ describe("receiptItems.add", () => {
 
 			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const results = await expectDatabaseDiffSnapshot(ctx, () =>
-				runSequentially(
-					[
-						() => caller.procedure(getValidReceiptItem(receiptId)),
-						() => caller.procedure(getValidReceiptItem(receiptId)),
-						() => caller.procedure(getValidReceiptItem(foreignReceiptId)),
-					],
-					10,
-				),
+				runInBand([
+					() => caller.procedure(getValidReceiptItem(receiptId)),
+					() => caller.procedure(getValidReceiptItem(receiptId)),
+					() => caller.procedure(getValidReceiptItem(foreignReceiptId)),
+				]),
 			);
 			results.forEach((result) => {
 				expect(result.id).toMatch(UUID_REGEX);

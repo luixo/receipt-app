@@ -16,8 +16,8 @@ import {
 	expectUnauthorizedError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { runSequentially } from "~web/handlers/debts/utils.test";
 import { t } from "~web/handlers/trpc";
+import { runInBand } from "~web/handlers/utils.test";
 
 import { procedure } from "./add";
 
@@ -239,17 +239,14 @@ describe("accountConnectionIntentions.add", () => {
 
 				await expectTRPCError(
 					() =>
-						runSequentially(
-							[
-								() => caller.procedure({ userId, email: otherEmail }),
-								() =>
-									caller.procedure({
-										userId: anotherUserId,
-										email: otherEmail,
-									}),
-							],
-							10,
-						),
+						runInBand([
+							() => caller.procedure({ userId, email: otherEmail }),
+							() =>
+								caller.procedure({
+									userId: anotherUserId,
+									email: otherEmail,
+								}),
+						]),
 					"CONFLICT",
 					`Expected to have unique emails, got repeating emails: "${otherEmail}" (2 times).`,
 				);
@@ -266,13 +263,10 @@ describe("accountConnectionIntentions.add", () => {
 
 				await expectTRPCError(
 					() =>
-						runSequentially(
-							[
-								() => caller.procedure({ userId, email: otherEmail }),
-								() => caller.procedure({ userId, email: anotherEmail }),
-							],
-							10,
-						),
+						runInBand([
+							() => caller.procedure({ userId, email: otherEmail }),
+							() => caller.procedure({ userId, email: anotherEmail }),
+						]),
 					"CONFLICT",
 					`Expected to have unique user ids, got repeating: "${userId}" (2 times).`,
 				);
@@ -291,19 +285,16 @@ describe("accountConnectionIntentions.add", () => {
 				const { id: userId, name: userName } = await insertUser(ctx, accountId);
 
 				const results = await expectDatabaseDiffSnapshot(ctx, () =>
-					runSequentially(
-						[
-							() => caller.procedure({ userId, email: otherEmail }),
-							() =>
-								caller
-									.procedure({
-										userId: "not a valid uuid",
-										email: faker.internet.email(),
-									})
-									.catch((e) => e),
-						],
-						10,
-					),
+					runInBand([
+						() => caller.procedure({ userId, email: otherEmail }),
+						() =>
+							caller
+								.procedure({
+									userId: "not a valid uuid",
+									email: faker.internet.email(),
+								})
+								.catch((e) => e),
+					]),
 				);
 
 				expect(results[0]).toStrictEqual<(typeof results)[0]>({
@@ -467,14 +458,10 @@ describe("accountConnectionIntentions.add", () => {
 			);
 
 			const caller = createCaller(await createAuthContext(ctx, sessionId));
-			const results = await runSequentially(
-				[
-					() => caller.procedure({ userId, email: otherEmail }),
-					() =>
-						caller.procedure({ userId: anotherUserId, email: anotherEmail }),
-				],
-				10,
-			);
+			const results = await runInBand([
+				() => caller.procedure({ userId, email: otherEmail }),
+				() => caller.procedure({ userId: anotherUserId, email: anotherEmail }),
+			]);
 			expect(results).toStrictEqual<typeof results>([
 				{
 					account: {

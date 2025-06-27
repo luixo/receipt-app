@@ -21,8 +21,8 @@ import {
 	expectUnauthorizedError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { runSequentially } from "~web/handlers/debts/utils.test";
 import { t } from "~web/handlers/trpc";
+import { runInBand } from "~web/handlers/utils.test";
 
 import { procedure } from "./add";
 
@@ -157,19 +157,16 @@ describe("users.add", () => {
 			const caller = createCaller(await createAuthContext(ctx, sessionId));
 
 			const results = await expectDatabaseDiffSnapshot(ctx, () =>
-				runSequentially(
-					[
-						() => caller.procedure({ name: faker.person.fullName() }),
-						() =>
-							caller
-								.procedure({
-									name: faker.person.fullName(),
-									email: "invalid@@mail.org",
-								})
-								.catch((e) => e),
-					],
-					10,
-				),
+				runInBand([
+					() => caller.procedure({ name: faker.person.fullName() }),
+					() =>
+						caller
+							.procedure({
+								name: faker.person.fullName(),
+								email: "invalid@@mail.org",
+							})
+							.catch((e) => e),
+				]),
 			);
 
 			expect(userIdSchema.safeParse(results[0].id).success).toBe(true);
@@ -322,14 +319,11 @@ describe("users.add", () => {
 			const anotherAsName = faker.person.fullName();
 
 			const caller = createCaller(await createAuthContext(ctx, sessionId));
-			const results = await runSequentially(
-				[
-					() => caller.procedure({ name: faker.person.fullName() }),
-					() => caller.procedure({ name: asName, email: otherEmail }),
-					() => caller.procedure({ name: anotherAsName, email: anotherEmail }),
-				],
-				10,
-			);
+			const results = await runInBand([
+				() => caller.procedure({ name: faker.person.fullName() }),
+				() => caller.procedure({ name: asName, email: otherEmail }),
+				() => caller.procedure({ name: anotherAsName, email: anotherEmail }),
+			]);
 			results.forEach((result) => {
 				expect(userIdSchema.safeParse(result.id).success).toBe(true);
 			});

@@ -19,8 +19,8 @@ import {
 	expectUnauthorizedError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { runSequentially } from "~web/handlers/debts/utils.test";
 import { t } from "~web/handlers/trpc";
+import { runInBand } from "~web/handlers/utils.test";
 
 import { procedure } from "./add";
 
@@ -277,23 +277,20 @@ describe("receiptItemConsumers.add", () => {
 				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				await expectTRPCError(
 					() =>
-						runSequentially(
-							[
-								() =>
-									caller.procedure({
-										itemId: receiptItemId,
-										userId: user.id,
-										part: 1,
-									}),
-								() =>
-									caller.procedure({
-										itemId: receiptItemId,
-										userId: user.id,
-										part: 2,
-									}),
-							],
-							10,
-						),
+						runInBand([
+							() =>
+								caller.procedure({
+									itemId: receiptItemId,
+									userId: user.id,
+									part: 1,
+								}),
+							() =>
+								caller.procedure({
+									itemId: receiptItemId,
+									userId: user.id,
+									part: 2,
+								}),
+						]),
 					"CONFLICT",
 					`Expected to have unique pair of item id and user id, got repeating pairs: item "${receiptItemId}" / user "${user.id}" (2 times).`,
 				);
@@ -309,25 +306,22 @@ describe("receiptItemConsumers.add", () => {
 
 				const caller = createCaller(await createAuthContext(ctx, sessionId));
 				const results = await expectDatabaseDiffSnapshot(ctx, () =>
-					runSequentially(
-						[
-							() =>
-								caller.procedure({
+					runInBand([
+						() =>
+							caller.procedure({
+								itemId: receiptItemId,
+								userId: user.id,
+								part: 1,
+							}),
+						() =>
+							caller
+								.procedure({
 									itemId: receiptItemId,
-									userId: user.id,
+									userId: "not a valid uuid",
 									part: 1,
-								}),
-							() =>
-								caller
-									.procedure({
-										itemId: receiptItemId,
-										userId: "not a valid uuid",
-										part: 1,
-									})
-									.catch((e) => e),
-						],
-						10,
-					),
+								})
+								.catch((e) => e),
+					]),
 				);
 
 				expect(results[0]).toStrictEqual<(typeof results)[0]>({
@@ -398,47 +392,44 @@ describe("receiptItemConsumers.add", () => {
 
 			const caller = createCaller(await createAuthContext(ctx, sessionId));
 			const results = await expectDatabaseDiffSnapshot(ctx, () =>
-				runSequentially(
-					[
-						() =>
-							caller.procedure({
-								itemId: receiptItemId,
-								userId: selfUserId,
-								part: 1,
-							}),
-						() =>
-							caller.procedure({
-								itemId: receiptItemId,
-								userId: user.id,
-								part: 0.1,
-							}),
-						() =>
-							caller.procedure({
-								itemId: receiptItemId,
-								userId: foreignUser.id,
-								part: 3,
-							}),
-						() =>
-							caller.procedure({
-								itemId: anotherReceiptItemId,
-								userId: selfUserId,
-								part: 1,
-							}),
-						() =>
-							caller.procedure({
-								itemId: anotherReceiptItemId,
-								userId: foreignUser.id,
-								part: 2,
-							}),
-						() =>
-							caller.procedure({
-								itemId: foreignReceiptItemId,
-								userId: foreignToSelfUser.id,
-								part: 1,
-							}),
-					],
-					10,
-				),
+				runInBand([
+					() =>
+						caller.procedure({
+							itemId: receiptItemId,
+							userId: selfUserId,
+							part: 1,
+						}),
+					() =>
+						caller.procedure({
+							itemId: receiptItemId,
+							userId: user.id,
+							part: 0.1,
+						}),
+					() =>
+						caller.procedure({
+							itemId: receiptItemId,
+							userId: foreignUser.id,
+							part: 3,
+						}),
+					() =>
+						caller.procedure({
+							itemId: anotherReceiptItemId,
+							userId: selfUserId,
+							part: 1,
+						}),
+					() =>
+						caller.procedure({
+							itemId: anotherReceiptItemId,
+							userId: foreignUser.id,
+							part: 2,
+						}),
+					() =>
+						caller.procedure({
+							itemId: foreignReceiptItemId,
+							userId: foreignToSelfUser.id,
+							part: 1,
+						}),
+				]),
 			);
 			expect(results).toStrictEqual<typeof results>([
 				{ createdAt: new Date() },
