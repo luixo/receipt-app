@@ -107,7 +107,6 @@ describe("users.getPaged", () => {
 			expect(result).toStrictEqual<typeof result>({
 				count: 0,
 				cursor: 0,
-				hasMore: false,
 				items: [],
 			});
 		});
@@ -150,7 +149,6 @@ describe("users.getPaged", () => {
 			expect(result).toStrictEqual<typeof result>({
 				count: users.length,
 				cursor: 0,
-				hasMore: true,
 				items: users
 					.sort((a, b) => a.name.localeCompare(b.name))
 					.map(({ id }) => id)
@@ -179,7 +177,6 @@ describe("users.getPaged", () => {
 				cursor: 0,
 			});
 			expect(firstPage.items.length).toBe(limit);
-			expect(firstPage.hasMore).toBe(true);
 			expect(firstPage.count).toBe(2 * limit - 1);
 			expect(firstPage.cursor).toBe(0);
 			const secondPage = await caller.procedure({
@@ -187,7 +184,6 @@ describe("users.getPaged", () => {
 				limit,
 			});
 			expect(secondPage.items.length).toBeLessThan(limit);
-			expect(secondPage.hasMore).toBe(false);
 			expect(secondPage.count).toBe(2 * limit - 1);
 			expect(secondPage.cursor).toBe(firstPage.cursor + limit);
 		});

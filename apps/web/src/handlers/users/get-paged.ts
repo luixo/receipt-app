@@ -27,7 +27,7 @@ export const procedure = authProcedure
 				// Stable order for users with the same name
 				.orderBy(["users.name", "users.id"])
 				.offset(input.cursor)
-				.limit(input.limit + 1)
+				.limit(input.limit)
 				.execute(),
 			accountUsers
 				.select(database.fn.count<string>("id").as("amount"))
@@ -37,7 +37,6 @@ export const procedure = authProcedure
 		return {
 			count: parseInt(usersCount.amount, 10),
 			cursor: input.cursor,
-			hasMore: users.length === input.limit + 1,
-			items: users.slice(0, input.limit).map(({ id }) => id),
+			items: users.map(({ id }) => id),
 		};
 	});

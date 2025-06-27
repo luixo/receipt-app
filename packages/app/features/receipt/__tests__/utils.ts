@@ -49,7 +49,7 @@ export const test = originalTest.extend<Fixtures>({
 		use(() => {
 			const { user } = api.mockUtils.authPage();
 			api.mockFirst("currency.top", []);
-			api.mockFirst("users.suggest", { cursor: 0, hasMore: false, items: [] });
+			api.mockFirst("users.suggest", { cursor: 0, count: 0, items: [] });
 			api.mockFirst("users.suggestTop", { items: [] });
 			return { selfUser: user };
 		}),

@@ -56,7 +56,6 @@ test("'auth.register' mutation", async ({
 	api.mockUtils.authPage();
 	api.mockFirst("receipts.getPaged", {
 		items: [],
-		hasMore: false,
 		cursor: -1,
 		count: 0,
 	});

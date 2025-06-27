@@ -95,8 +95,10 @@ export const UsersSuggest: React.FC<Props> = ({
 				direction: "forward",
 			},
 			{
-				getNextPageParam: (result) =>
-					result.hasMore ? result.cursor + limit : undefined,
+				getNextPageParam: (result, results) =>
+					result.count > results.length * limit
+						? result.cursor + limit
+						: undefined,
 				enabled: queryEnabled,
 				placeholderData: keepPreviousData,
 			},

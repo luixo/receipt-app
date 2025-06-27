@@ -58,7 +58,7 @@ export const procedure = authProcedure
 					"mergedReceipts.id",
 				])
 				.offset(input.cursor)
-				.limit(input.limit + 1)
+				.limit(input.limit)
 				.execute(),
 			mergedReceipts
 				.select((eb) => eb.fn.count<string>("mergedReceipts.id").as("amount"))
@@ -75,8 +75,7 @@ export const procedure = authProcedure
 
 		return {
 			count: parseInt(receiptsCount.amount, 10),
-			hasMore: receiptIds.length === input.limit + 1,
 			cursor: input.cursor,
-			items: receiptIds.slice(0, input.limit).map(({ id }) => id),
+			items: receiptIds.map(({ id }) => id),
 		};
 	});

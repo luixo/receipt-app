@@ -13,7 +13,7 @@ type CursorPagingResult<T extends { count: number }> = {
 };
 
 export const useCursorPaging = <
-	T extends { count: number; hasMore: boolean; cursor: number },
+	T extends { count: number; cursor: number },
 	Input extends { limit: number },
 >(
 	useQuery: (input: Input, offset: number) => QueryObserverResult<T, TRPCError>,

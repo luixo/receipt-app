@@ -270,7 +270,7 @@ describe("users.suggest", () => {
 			expect(result).toStrictEqual<typeof result>({
 				items: matchedUsers.map(({ id }) => id).sort(),
 				cursor: 0,
-				hasMore: false,
+				count: matchedUsers.length,
 			});
 		});
 
@@ -296,7 +296,7 @@ describe("users.suggest", () => {
 					.sort((a, b) => a.name.localeCompare(b.name))
 					.map(({ id }) => id),
 				cursor: 0,
-				hasMore: false,
+				count: matchedUsers.length,
 			});
 		});
 
@@ -311,7 +311,7 @@ describe("users.suggest", () => {
 			expect(result).toStrictEqual<typeof result>({
 				items: [],
 				cursor: 0,
-				hasMore: false,
+				count: 0,
 			});
 		});
 
@@ -361,7 +361,7 @@ describe("users.suggest", () => {
 			expect(result).toStrictEqual<typeof result>({
 				items: matchedUsers.map(({ id }) => id).sort(),
 				cursor: 0,
-				hasMore: false,
+				count: matchedUsers.length,
 			});
 		});
 
@@ -401,7 +401,7 @@ describe("users.suggest", () => {
 			expect(result).toStrictEqual<typeof result>({
 				items: matchedUsers.map(({ id }) => id).sort(),
 				cursor: 0,
-				hasMore: false,
+				count: matchedUsers.length,
 			});
 		});
 
@@ -429,7 +429,7 @@ describe("users.suggest", () => {
 				// Order of matched users is important - they are sorted by fuzziness
 				items: matchedUsers.map(({ id }) => id),
 				cursor: 0,
-				hasMore: false,
+				count: matchedUsers.length,
 			});
 		});
 
@@ -456,7 +456,7 @@ describe("users.suggest", () => {
 			});
 			expect(firstPage.items.length).toBe(limit);
 			expect(firstPage.cursor).toBe(0);
-			expect(firstPage.hasMore).toBe(true);
+			expect(firstPage.count).toBe(limit + 1);
 			const secondPage = await caller.procedure({
 				input: "Alice",
 				cursor: firstPage.cursor + limit,
@@ -465,7 +465,7 @@ describe("users.suggest", () => {
 			});
 			expect(secondPage.items.length).toBeLessThan(limit);
 			expect(secondPage.cursor).toBe(limit);
-			expect(secondPage.hasMore).toBe(false);
+			expect(secondPage.count).toBe(limit + 1);
 		});
 
 		test("returns users with given filtered users", async ({ ctx }) => {
@@ -499,7 +499,7 @@ describe("users.suggest", () => {
 			expect(result).toStrictEqual<typeof result>({
 				items: matchedUsers.map(({ id }) => id).sort(),
 				cursor: 0,
-				hasMore: false,
+				count: matchedUsers.length,
 			});
 		});
 
@@ -520,7 +520,7 @@ describe("users.suggest", () => {
 			expect(result).toStrictEqual<typeof result>({
 				items: [user.id],
 				cursor: 0,
-				hasMore: false,
+				count: 1,
 			});
 		});
 	});

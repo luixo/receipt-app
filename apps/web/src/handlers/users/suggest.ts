@@ -36,13 +36,6 @@ export const procedure = authProcedure
 			direction: z.enum(["forward", "backward"]),
 		}),
 	)
-	.output(
-		z.strictObject({
-			items: z.array(userIdSchema),
-			hasMore: z.boolean(),
-			cursor: z.int(),
-		}),
-	)
 	.query(async ({ input, ctx }) => {
 		const { database } = ctx;
 		let filterIds = [...(input.filterIds || []), ctx.auth.accountId as UsersId];
@@ -85,7 +78,7 @@ export const procedure = authProcedure
 				...new Set([...filterIds, ...userParticipants.map(({ id }) => id)]),
 			];
 		}
-		const fuzzyMathedUsers = await database
+		const fuzzyMatchedUsersExpression = database
 			.selectFrom("users")
 			.$if(filterIds.length !== 0, (qb) =>
 				qb.where("users.id", "not in", filterIds),
@@ -103,24 +96,29 @@ export const procedure = authProcedure
 					">=",
 					SIMILARTY_THRESHOLD,
 				),
-			)
-			.select(["users.id"])
-			.$if(input.input.length < 3, (qb) => qb.orderBy("name"))
-			.$if(input.input.length >= 3, (qb) =>
-				qb.orderBy(
-					sql`strict_word_similarity(${input.input}, name)`.$castTo(),
-					"desc",
-				),
-			)
-			// Stable order for users with the same name
-			.orderBy("users.id")
-			.offset(cursor)
-			.limit(input.limit + 1)
-			.execute();
-		const mappedUserIds = fuzzyMathedUsers.map(({ id }) => id);
+			);
+		const [fuzzyMatchedUsers, totalCountUsers] = await Promise.all([
+			fuzzyMatchedUsersExpression
+				.$if(input.input.length < 3, (qb) => qb.orderBy("name"))
+				.$if(input.input.length >= 3, (qb) =>
+					qb.orderBy(
+						sql`strict_word_similarity(${input.input}, name)`.$castTo(),
+						"desc",
+					),
+				)
+				.select(["users.id"])
+				// Stable order for users with the same name
+				.orderBy("users.id")
+				.offset(cursor)
+				.limit(input.limit)
+				.execute(),
+			fuzzyMatchedUsersExpression
+				.select([(eb) => eb.fn.count<string>("users.id").as("count")])
+				.executeTakeFirstOrThrow(),
+		]);
 		return {
+			count: parseInt(totalCountUsers.count, 10),
 			cursor,
-			hasMore: mappedUserIds.length === input.limit + 1,
-			items: mappedUserIds.slice(0, input.limit),
+			items: fuzzyMatchedUsers.map(({ id }) => id),
 		};
 	});
