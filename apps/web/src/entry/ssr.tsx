@@ -4,7 +4,6 @@ import { getRouterManifest } from "@tanstack/react-start/router-manifest";
 import {
 	createStartHandler,
 	defaultStreamHandler,
-	getWebRequest,
 	parseCookies,
 } from "@tanstack/react-start/server";
 
@@ -31,8 +30,7 @@ const wrappedStreamHandler =
 	Sentry.wrapStreamHandlerWithSentry(defaultStreamHandler);
 
 const eventHandler = createStartHandler<TreeRouter>({
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-	createRouter: () => createRouter(getExternalContext(), getWebRequest()!.url),
+	createRouter: () => createRouter(getExternalContext()),
 	getRouterManifest,
 })(wrappedStreamHandler);
 

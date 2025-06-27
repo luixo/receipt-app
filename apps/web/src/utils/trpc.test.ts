@@ -61,13 +61,18 @@ describe("loader call", () => {
 		await withTestServer(ctx, router, async ({ url }) => {
 			vi.stubEnv("BASE_URL", url);
 			const queryClient = new QueryClient();
-			const client = getLoaderTrpcClient<typeof router>(queryClient, true);
+			const urlObject = new URL(url);
+			urlObject.searchParams.set("debug", "true");
+			const client = getLoaderTrpcClient<typeof router>(
+				{ queryClient, request: new Request(urlObject) },
+				true,
+			);
 			const resultHeaders = await queryClient.fetchQuery(
 				client.getHeaders.queryOptions(),
 			);
 			const expectedHeaders = [
 				["x-debug", "true"],
-				["x-source", "csr"],
+				["x-source", "ssr"],
 				["host", url.replace("http://", "")],
 			] as const;
 			expect(

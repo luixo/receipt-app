@@ -28,8 +28,7 @@ const getContext = (): ExternalRouterContext => ({
 	initialValues: getStoreValuesFromInitialValues(parseCookies()),
 });
 
-// Fallback in case of no SSR
-const router = createRouter(getContext(), document.location.href);
+const router = createRouter(getContext());
 
 const sentryDsn = import.meta.env.VITE_SENTRY_DSN;
 if (sentryDsn) {

@@ -9,6 +9,8 @@ import type {
 	NotFoundRouteComponent,
 } from "@tanstack/react-router";
 import { createRouter as createTanStackRouter } from "@tanstack/react-router";
+import { serverOnly } from "@tanstack/react-start";
+import { getWebRequest } from "@tanstack/react-start/server";
 
 import type { QueryClientsRecord } from "~app/contexts/query-clients-context";
 import {
@@ -46,16 +48,18 @@ const getLocalQueryClient = (queryClient: QueryClient) => {
 	return hydratedClient;
 };
 
-export const createRouter = (
-	externalContext: ExternalRouterContext,
-	url: string,
-) => {
+export const createRouter = (externalContext: ExternalRouterContext) => {
+	const request = import.meta.env.SSR
+		? serverOnly(() => getWebRequest() ?? null)()
+		: null;
+	const url = request ? request.url : window.location.href;
 	const queryClient = getQueryClient();
 	const baseUrl = getHostUrl(url);
 	return createTanStackRouter({
 		routeTree,
 		context: {
 			...externalContext,
+			request,
 			debug: Boolean(new URL(url).searchParams.get("debug")),
 			baseUrl,
 			queryClient,

@@ -1,5 +1,3 @@
-import type { QueryClient } from "@tanstack/react-query";
-import { serverOnly } from "@tanstack/react-start";
 import { createTRPCClient } from "@trpc/client";
 import type { AnyRouter } from "@trpc/server/unstable-core-do-not-import";
 import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
@@ -9,7 +7,7 @@ import { DEFAULT_TRPC_ENDPOINT } from "~app/contexts/links-context";
 import type { AppRouter } from "~app/trpc";
 import type { GetLinksOptions } from "~app/utils/trpc";
 import { getLinks } from "~app/utils/trpc";
-import { getRequest } from "~web/utils/request";
+import type { RouterContext } from "~web/pages/__root";
 import { captureSentryError } from "~web/utils/sentry";
 
 export const getHostUrl = (reqUrl: string, pathname = "") => {
@@ -39,27 +37,26 @@ const getLinksParamsFromRequest = (
 };
 
 export const getLoaderTrpcClient = <R extends AnyRouter = AppRouter>(
-	queryClient: QueryClient,
+	context: Pick<RouterContext, "queryClient" | "request">,
 	debug?: boolean,
 ) => {
-	/* c8 ignore start */
-	const linksParams =
-		import.meta.env.SSR && !import.meta.env.VITEST
-			? getLinksParamsFromRequest(serverOnly(getRequest)(), "ssr")
-			: {
-					debug,
-					headers: {},
-					source: "csr" as GetLinksOptions["source"],
-					url: (import.meta.env.BASE_URL || "") + DEFAULT_TRPC_ENDPOINT,
-					captureError: captureSentryError,
-			  };
+	const linksParams = context.request
+		? /* c8 ignore start */
+		  getLinksParamsFromRequest(context.request, "ssr")
+		: {
+				debug,
+				headers: {},
+				source: "csr" as GetLinksOptions["source"],
+				url: DEFAULT_TRPC_ENDPOINT,
+				captureError: captureSentryError,
+		  };
 	/* c8 ignore stop */
 
 	return createTRPCOptionsProxy<R>({
 		client: createTRPCClient<R>({
 			links: getLinks(linksParams),
 		}),
-		queryClient,
+		queryClient: context.queryClient,
 	});
 };
 
