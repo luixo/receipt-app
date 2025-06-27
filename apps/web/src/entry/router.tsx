@@ -46,24 +46,17 @@ const getLocalQueryClient = (queryClient: QueryClient) => {
 	return hydratedClient;
 };
 
-export const createRouter = (externalContext: ExternalRouterContext) => {
+export const createRouter = (
+	externalContext: ExternalRouterContext,
+	url: string,
+) => {
 	const queryClient = getQueryClient();
-	const baseUrl = getHostUrl(
-		externalContext.environment.type === "server"
-			? externalContext.environment.request.url
-			: "",
-	);
+	const baseUrl = getHostUrl(url);
 	return createTanStackRouter({
 		routeTree,
 		context: {
 			...externalContext,
-			debug: Boolean(
-				new URL(
-					externalContext.environment.type === "server"
-						? externalContext.environment.request.url
-						: document.location.href,
-				).searchParams.get("debug"),
-			),
+			debug: Boolean(new URL(url).searchParams.get("debug")),
 			baseUrl,
 			queryClient,
 			nowTimestamp: Date.now(),

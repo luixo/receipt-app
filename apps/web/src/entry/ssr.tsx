@@ -19,12 +19,7 @@ import { createRouter } from "./router";
 const getExternalContext = (): ExternalRouterContext => {
 	const cookies = parseCookies();
 	const initialValues = getStoreValuesFromInitialValues(cookies);
-	return {
-		initialValues,
-		// SSR always has web request
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-		environment: { type: "server", request: getWebRequest()! },
-	};
+	return { initialValues };
 };
 
 const sentryDsn = import.meta.env.VITE_SENTRY_DSN;
@@ -36,7 +31,8 @@ const wrappedStreamHandler =
 	Sentry.wrapStreamHandlerWithSentry(defaultStreamHandler);
 
 const eventHandler = createStartHandler<TreeRouter>({
-	createRouter: () => createRouter(getExternalContext()),
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	createRouter: () => createRouter(getExternalContext(), getWebRequest()!.url),
 	getRouterManifest,
 })(wrappedStreamHandler);
 

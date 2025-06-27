@@ -150,12 +150,10 @@ const RootComponent = () => {
 type EphemeralContext = {
 	queryClient: QueryClient;
 	debug: boolean;
-	environment: { type: "server"; request: Request } | { type: "client" };
 };
 const EPHEMERAL_CONTEXT_KEYS: Record<keyof EphemeralContext, true> = {
 	queryClient: true,
 	debug: true,
-	environment: true,
 };
 
 export type RouterContext = Omit<
@@ -167,10 +165,7 @@ export type RouterContext = Omit<
 	initialValues: StoreValues;
 } & EphemeralContext;
 
-export type ExternalRouterContext = Pick<
-	RouterContext,
-	"initialValues" | "environment"
->;
+export type ExternalRouterContext = Pick<RouterContext, "initialValues">;
 
 export const rootSearchParamsSchema = z
 	.object({
