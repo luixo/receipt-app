@@ -1,11 +1,13 @@
 import { sql } from "kysely";
 import { assert, describe, expect } from "vitest";
 
+import { assertDatabase } from "~tests/backend/utils/data";
 import { test } from "~tests/backend/utils/test";
 
 describe("database", () => {
 	test("SQL error logger works", async ({ ctx }) => {
-		await expect(() => sql`SELECT foo`.execute(ctx.database)).rejects.toThrow();
+		const database = assertDatabase(ctx);
+		await expect(() => sql`SELECT foo`.execute(database)).rejects.toThrow();
 		const loggedMessages = ctx.logger.getMessages();
 		expect(loggedMessages).toHaveLength(1);
 		assert(loggedMessages[0]);

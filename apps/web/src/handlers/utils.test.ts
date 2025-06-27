@@ -16,7 +16,7 @@ export const getRandomCurrencyCode = (): CurrencyCode =>
 	faker.helpers.arrayElement(CURRENCY_CODES);
 
 export const getClientServer = async <R extends AnyTRPCRouter>(
-	ctx: TestContext,
+	{ database, ...ctx }: TestContext,
 	router: R,
 	{
 		captureError,
@@ -31,7 +31,10 @@ export const getClientServer = async <R extends AnyTRPCRouter>(
 	const port = await getFreePort();
 	const httpServer = createHTTPServer({
 		router,
-		createContext: (opts) => createContext(opts, ctx),
+		createContext: (opts) =>
+			// This context should not use database generally, so let's hope for the best
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			createContext(opts, { ...ctx, database: database!.instance }),
 	});
 	return {
 		client: createTRPCClient<R>({

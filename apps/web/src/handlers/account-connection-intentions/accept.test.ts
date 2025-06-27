@@ -8,6 +8,7 @@ import type {
 	InsertedDebt,
 } from "~tests/backend/utils/data";
 import {
+	assertDatabase,
 	insertAccount,
 	insertAccountConnectionIntention,
 	insertAccountWithSession,
@@ -400,10 +401,8 @@ describe("accountConnectionIntentions.accept", () => {
 						accountId: foreignAccountId,
 					}),
 				);
-				const debts = await ctx.database
-					.selectFrom("debts")
-					.selectAll()
-					.execute();
+				const database = assertDatabase(ctx);
+				const debts = await database.selectFrom("debts").selectAll().execute();
 
 				afterTest?.({
 					selfDebt,

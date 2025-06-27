@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import type { TRPC_ERROR_CODE_KEY } from "@trpc/server/rpc";
 import { detailedDiff } from "deep-object-diff";
 import { entries, fromEntries, keys, omitBy } from "remeda";
-import { expect } from "vitest";
+import { assert, expect } from "vitest";
 
 import { createContext } from "~tests/backend/utils/context";
 import type { TestContext } from "~tests/backend/utils/test";
@@ -68,9 +68,10 @@ export const expectDatabaseDiffSnapshot = async <T>(
 	fn: () => Promise<T>,
 	snapshotName?: string,
 ) => {
-	const snapshotBefore = await ctx.dumpDatabase();
+	assert(ctx.database, "DB diff snapshot requires DB to exist");
+	const snapshotBefore = await ctx.database.dump();
 	const result = await fn();
-	const snapshotAfter = await ctx.dumpDatabase();
+	const snapshotAfter = await ctx.database.dump();
 	const diff = fromEntries(
 		entries(detailedDiff(snapshotBefore, snapshotAfter))
 			.filter(([, diffs]) => keys(diffs).length !== 0)

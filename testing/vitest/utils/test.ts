@@ -18,11 +18,13 @@ import { setSeed } from "~tests/utils/faker";
 
 type FileContext = {
 	logger: LoggerMock;
-	database: Database;
-	dumpDatabase: () => Promise<inferProcedureOutput<AppRouter["dumpDatabase"]>>;
-	truncateDatabase: () => Promise<
-		inferProcedureOutput<AppRouter["truncateDatabase"]>
-	>;
+	database?: {
+		instance: Database;
+		dump: () => Promise<inferProcedureOutput<AppRouter["dumpDatabase"]>>;
+		truncate: () => Promise<
+			inferProcedureOutput<AppRouter["truncateDatabase"]>
+		>;
+	};
 };
 
 declare module "vitest" {

@@ -6,6 +6,7 @@ import {
 import { getRequestInfo } from "@trpc/server/unstable-core-do-not-import";
 import type { MockRequestOptions, MockResponseOptions } from "mock-http";
 import { Request as MockRequest, Response as MockResponse } from "mock-http";
+import { assert } from "vitest";
 
 import type { SessionsSessionId } from "~db/models";
 import type { TestContext } from "~tests/backend/utils/test";
@@ -29,6 +30,8 @@ export const createContext = async (
 		maxBodySize: null,
 	});
 	const url = createURL(mockReq);
+	const { database, ...rest } = ctx;
+	assert(database, "tRPC context require database to exist");
 	return createContextRaw(
 		{
 			info: await getRequestInfo({
@@ -42,7 +45,7 @@ export const createContext = async (
 			req: mockReq,
 			res: mockRes,
 		},
-		ctx,
+		{ ...rest, database: database.instance },
 	);
 };
 

@@ -7,6 +7,7 @@ import type { TRPCMutationInput, TRPCMutationOutput } from "~app/trpc";
 import type { AccountsId, UsersId } from "~db/models";
 import { createAuthContext } from "~tests/backend/utils/context";
 import {
+	assertDatabase,
 	insertAccount,
 	insertAccountWithSession,
 	insertConnectedUsers,
@@ -151,7 +152,8 @@ const updateDescribes = (getData: GetData) => {
 			ctx,
 			counterParty: "auto-accept-no-exist",
 		});
-		const debts = await ctx.database
+		const database = assertDatabase(ctx);
+		const debts = await database
 			.selectFrom("debts")
 			.where("debts.id", "in", debtIds)
 			.selectAll()

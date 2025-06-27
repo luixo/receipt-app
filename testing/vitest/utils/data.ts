@@ -1,4 +1,5 @@
 import { faker } from "@faker-js/faker";
+import { assert } from "vitest";
 
 import type { CurrencyCode } from "~app/utils/currency";
 import type {
@@ -15,6 +16,11 @@ import { YEAR } from "~utils/time";
 import type { Role } from "~web/handlers/receipts/utils";
 import { generatePasswordData } from "~web/utils/crypto";
 
+export const assertDatabase = (ctx: TestContext) => {
+	assert(ctx.database, "This test required DB to exist");
+	return ctx.database.instance;
+};
+
 export type AccountSettingsData = {
 	manualAcceptDebts: boolean;
 };
@@ -24,7 +30,8 @@ export const insertAccountSettings = async (
 	accountId: AccountsId,
 	data: AccountSettingsData,
 ) => {
-	await ctx.database
+	const database = assertDatabase(ctx);
+	await database
 		.insertInto("accountSettings")
 		.values({
 			accountId,
@@ -44,8 +51,9 @@ export const insertUser = async (
 	ownerAccountId: AccountsId,
 	data: UserData = {},
 ) => {
+	const database = assertDatabase(ctx);
 	const extendedData = data as UserData & { connectedAccountId?: AccountsId };
-	const { id, name } = await ctx.database
+	const { id, name } = await database
 		.insertInto("users")
 		.values({
 			id: data.id || ctx.getTestUuid(),
@@ -77,6 +85,7 @@ export const insertAccount = async (
 	ctx: TestContext,
 	data: AccountData = {},
 ) => {
+	const database = assertDatabase(ctx);
 	const password = data.password || faker.internet.password();
 	const { salt: passwordSalt, hash: passwordHash } = await generatePasswordData(
 		{ getSalt: ctx.getTestSalt },
@@ -88,7 +97,7 @@ export const insertAccount = async (
 		confirmationToken,
 		confirmationTokenTimestamp,
 		avatarUrl,
-	} = await ctx.database
+	} = await database
 		.insertInto("accounts")
 		.values({
 			id: data.id || ctx.getTestUuid(),
@@ -118,7 +127,7 @@ export const insertAccount = async (
 	if (data.settings) {
 		await insertAccountSettings(ctx, id, data.settings);
 	}
-	const { id: userId, name } = await ctx.database
+	const { id: userId, name } = await database
 		.insertInto("users")
 		.values({
 			id: id as UsersId,
@@ -154,6 +163,7 @@ export const insertConnectedUsers = async (
 		AccountsId | ConnectedUserData,
 	],
 ) => {
+	const database = assertDatabase(ctx);
 	const asTwoElementsTuple = asFixedSizeArray<2>();
 	const dataWithIds = asTwoElementsTuple(
 		accountsOrData.map((accountOrDatum, index) => {
@@ -176,7 +186,7 @@ export const insertConnectedUsers = async (
 	const [firstResult, secondResult] = asTwoElementsTuple(
 		await Promise.all(
 			dataWithIds.map(({ accountId, connectedAccountId, data }) =>
-				ctx.database
+				database
 					.insertInto("users")
 					.values({
 						id: data.id || ctx.getTestUuid(),
@@ -217,7 +227,8 @@ export const insertSession = async (
 	accountId: AccountsId,
 	data: SessionData = {},
 ) => {
-	const { sessionId, expirationTimestamp } = await ctx.database
+	const database = assertDatabase(ctx);
+	const { sessionId, expirationTimestamp } = await database
 		.insertInto("sessions")
 		.values({
 			sessionId: data.id || ctx.getTestUuid(),
@@ -241,7 +252,8 @@ export const insertResetPasswordIntention = async (
 	accountId: AccountsId,
 	data: ResetPasswordIntentionData = {},
 ) => {
-	const { token, expiresTimestamp } = await ctx.database
+	const database = assertDatabase(ctx);
+	const { token, expiresTimestamp } = await database
 		.insertInto("resetPasswordIntentions")
 		.values({
 			accountId,
@@ -270,6 +282,7 @@ export const insertDebt = async (
 	userId: UsersId,
 	data: DebtData = {},
 ) => {
+	const database = assertDatabase(ctx);
 	const {
 		id,
 		currencyCode,
@@ -279,7 +292,7 @@ export const insertDebt = async (
 		note,
 		updatedAt,
 		receiptId,
-	} = await ctx.database
+	} = await database
 		.insertInto("debts")
 		.values({
 			id: data.id || ctx.getTestUuid(),
@@ -324,7 +337,8 @@ const updateDebt = async (
 	ownerAccountId: AccountsId,
 	debtId: DebtsId,
 ) => {
-	const debt = await ctx.database
+	const database = assertDatabase(ctx);
+	const debt = await database
 		.selectFrom("debts")
 		.where((eb) =>
 			eb.and([
@@ -340,7 +354,7 @@ const updateDebt = async (
 			`Expected to update debt id "${debtId}" of account id "${ownerAccountId}", but find none.`,
 		);
 	}
-	const { updatedAt } = await ctx.database
+	const { updatedAt } = await database
 		.updateTable("debts")
 		.where((eb) =>
 			eb.and([
@@ -419,7 +433,8 @@ export const insertReceipt = async (
 	ownerAccountId: AccountsId,
 	data: ReceiptData = {},
 ) => {
-	const { id, currencyCode, name, createdAt, issued } = await ctx.database
+	const database = assertDatabase(ctx);
+	const { id, currencyCode, name, createdAt, issued } = await database
 		.insertInto("receipts")
 		.values({
 			id: data.id || ctx.getTestUuid(),
@@ -431,7 +446,7 @@ export const insertReceipt = async (
 		})
 		.returning(["id", "currencyCode", "name", "createdAt", "issued"])
 		.executeTakeFirstOrThrow();
-	await ctx.database
+	await database
 		.insertInto("receiptItems")
 		.values({
 			name: "",
@@ -462,14 +477,15 @@ export const insertReceiptParticipant = async (
 	userId: UsersId,
 	data: ReceiptParticipantData = {},
 ) => {
-	const { ownerAccountId } = await ctx.database
+	const database = assertDatabase(ctx);
+	const { ownerAccountId } = await database
 		.selectFrom("receipts")
 		.select("ownerAccountId")
 		.where("receipts.id", "=", receiptId)
 		.executeTakeFirstOrThrow(
 			() => new Error(`Expected to have receipt id ${receiptId} in tests`),
 		);
-	const { createdAt, role } = await ctx.database
+	const { createdAt, role } = await database
 		.insertInto("receiptParticipants")
 		.values({
 			receiptId,
@@ -493,7 +509,8 @@ export const insertReceiptPayer = async (
 	userId: UsersId,
 	data: ReceiptPayerData = {},
 ) => {
-	const { createdAt, part } = await ctx.database
+	const database = assertDatabase(ctx);
+	const { createdAt, part } = await database
 		.insertInto("receiptItemConsumers")
 		.values({
 			itemId: receiptId as ReceiptItemsId,
@@ -519,13 +536,14 @@ export const insertReceiptItem = async (
 	receiptId: ReceiptsId,
 	data: ReceiptItemData = {},
 ) => {
-	await ctx.database
+	const database = assertDatabase(ctx);
+	await database
 		.selectFrom("receipts")
 		.where("receipts.id", "=", receiptId)
 		.executeTakeFirstOrThrow(
 			() => new Error(`Expected to have receipt id ${receiptId} in tests`),
 		);
-	const { id, name, price, quantity, createdAt } = await ctx.database
+	const { id, name, price, quantity, createdAt } = await database
 		.insertInto("receiptItems")
 		.values({
 			receiptId,
@@ -556,13 +574,14 @@ export const insertReceiptItemConsumer = async (
 	userId: UsersId,
 	data: ReceiptItemConsumerData = {},
 ) => {
-	await ctx.database
+	const database = assertDatabase(ctx);
+	await database
 		.selectFrom("receiptItems")
 		.where("receiptItems.id", "=", itemId)
 		.executeTakeFirstOrThrow(
 			() => new Error(`Expected to have receipt item id ${itemId} in tests`),
 		);
-	const { part, createdAt } = await ctx.database
+	const { part, createdAt } = await database
 		.insertInto("receiptItemConsumers")
 		.values({
 			userId,
@@ -586,7 +605,8 @@ export const insertAccountConnectionIntention = async (
 	userId: UsersId,
 	data: AccountConnectionIntentionData = {},
 ) => {
-	await ctx.database
+	const database = assertDatabase(ctx);
+	await database
 		.insertInto("accountConnectionsIntentions")
 		.values({
 			accountId,

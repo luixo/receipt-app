@@ -7,6 +7,7 @@ import {
 } from "~app/utils/validation";
 import { createContext } from "~tests/backend/utils/context";
 import {
+	assertDatabase,
 	insertAccountWithSession,
 	insertResetPasswordIntention,
 } from "~tests/backend/utils/data";
@@ -123,7 +124,8 @@ describe("auth.resetPassword", () => {
 					password,
 				}),
 			);
-			const { passwordHash, passwordSalt } = await ctx.database
+			const database = assertDatabase(ctx);
+			const { passwordHash, passwordSalt } = await database
 				.selectFrom("accounts")
 				.where("id", "=", accountId)
 				.select(["passwordHash", "passwordSalt"])
