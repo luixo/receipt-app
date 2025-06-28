@@ -27,6 +27,13 @@ export const options: UseContextedMutationOptions<
 						applySumUpdate(currDebt.amount, updateObject.update),
 						getSumRevert(currDebt.amount, updateObject.update),
 					),
+				getAllUser: (controller) =>
+					controller.update(
+						currDebt.userId,
+						currDebt.currencyCode,
+						applySumUpdate(currDebt.amount, updateObject.update),
+						getSumRevert(currDebt.amount, updateObject.update),
+					),
 				getByUsers: (controller) =>
 					controller.updateCurrency(
 						currDebt.userId,

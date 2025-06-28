@@ -55,16 +55,7 @@ const DebtsInner: React.FC<InnerProps> = ({ query }) => {
 				if (allDebtsResolved && !showResolvedDebts) {
 					return null;
 				}
-				return (
-					<UserDebtsPreview
-						key={userId}
-						debts={debts.filter((debt) =>
-							showResolvedDebts ? true : debt.sum !== 0,
-						)}
-						userId={userId}
-						transparent={debts.every((debt) => debt.sum === 0)}
-					/>
-				);
+				return <UserDebtsPreview key={userId} userId={userId} />;
 			})}
 		</View>
 	);

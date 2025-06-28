@@ -21,6 +21,13 @@ export const options: UseContextedMutationOptions<
 						(sum) => sum - currDebt.amount,
 						() => (sum) => sum + currDebt.amount,
 					),
+				getAllUser: (controller) =>
+					controller.update(
+						currDebt.userId,
+						currDebt.currencyCode,
+						(sum) => sum - currDebt.amount,
+						() => (sum) => sum + currDebt.amount,
+					),
 				getByUsers: (controller) =>
 					controller.updateCurrency(
 						currDebt.userId,
@@ -71,6 +78,7 @@ export const options: UseContextedMutationOptions<
 		});
 		updateDebts(controllerContext, {
 			getAll: undefined,
+			getAllUser: undefined,
 			getByUsers: undefined,
 			getIdsByUser: undefined,
 			get: (controller) => controller.remove(updateObject.id),

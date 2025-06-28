@@ -51,6 +51,7 @@ export const test = originalTest.extend<Fixtures>({
 				),
 			).map(([currencyCode, sum]) => ({ currencyCode, sum }));
 			api.mockFirst("debts.getAll", userDebtsEntries);
+			api.mockFirst("debts.getAllUser", userDebtsEntries);
 			api.mockFirst("debts.getByUsers", [
 				{
 					userId: debtUser.id,

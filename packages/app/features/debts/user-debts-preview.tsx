@@ -1,13 +1,18 @@
 import type React from "react";
 import { View } from "react-native";
 
+import { useQuery } from "@tanstack/react-query";
+
 import {
 	DebtsGroup,
 	DebtsGroupSkeleton,
 } from "~app/components/app/debts-group";
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { SkeletonUser } from "~app/components/app/user";
-import type { TRPCQueryOutput } from "~app/trpc";
+import { QueryErrorMessage } from "~app/components/error-message";
+import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
+import type { TRPCQueryResult } from "~app/trpc";
+import { useTRPC } from "~app/utils/trpc";
 import { Card, CardBody } from "~components/card";
 import { CardLink } from "~components/link";
 import { tv } from "~components/utils";
@@ -33,23 +38,48 @@ export const UserDebtsPreviewSkeleton = () => (
 	</Card>
 );
 
-type Props = {
-	debts: TRPCQueryOutput<"debts.getByUsers">[number]["debts"];
-	userId: UsersId;
-	transparent: boolean;
+const UserDebtsGroup: React.FC<{
+	query: TRPCQueryResult<"debts.getAllUser">;
+}> = ({ query }) => {
+	const [showResolvedDebts] = useShowResolvedDebts();
+	switch (query.status) {
+		case "pending":
+			return <DebtsGroupSkeleton className="shrink-0" amount={3} />;
+		case "error":
+			return <QueryErrorMessage query={query} />;
+		case "success": {
+			const debts = showResolvedDebts
+				? query.data
+				: query.data.filter(({ sum }) => sum !== 0);
+			return <DebtsGroup className="shrink-0" debts={debts} />;
+		}
+	}
 };
 
-export const UserDebtsPreview: React.FC<Props> = ({
-	debts,
-	userId,
-	transparent,
-}) => (
-	<CardLink to="/debts/user/$id" params={{ id: userId }}>
-		<CardBody className={card({ transparent })}>
-			<LoadableUser id={userId} />
-			<View className="flex flex-row items-center justify-center gap-2">
-				<DebtsGroup className="shrink-0" debts={debts} />
-			</View>
-		</CardBody>
-	</CardLink>
-);
+type Props = {
+	userId: UsersId;
+};
+
+export const UserDebtsPreview: React.FC<Props> = ({ userId }) => {
+	const trpc = useTRPC();
+	const allUserDebtsQuery = useQuery(
+		trpc.debts.getAllUser.queryOptions({ userId }),
+	);
+	return (
+		<CardLink to="/debts/user/$id" params={{ id: userId }}>
+			<CardBody
+				className={card({
+					transparent:
+						allUserDebtsQuery.status === "success"
+							? allUserDebtsQuery.data.every(({ sum }) => sum === 0)
+							: true,
+				})}
+			>
+				<LoadableUser id={userId} />
+				<View className="flex flex-row items-center justify-center gap-2">
+					<UserDebtsGroup query={allUserDebtsQuery} />
+				</View>
+			</CardBody>
+		</CardLink>
+	);
+};

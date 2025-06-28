@@ -148,6 +148,7 @@ export const updateUpdatedAt = (
 ) => {
 	updateDebts(controllerContext, {
 		getAll: undefined,
+		getAllUser: undefined,
 		getByUsers: undefined,
 		getIdsByUser: undefined,
 		get: (controller) => {

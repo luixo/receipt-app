@@ -122,6 +122,7 @@ test("'debtIntentions.accept' pending / error", async ({
 			name: "success",
 			blacklistKeys: [
 				"debts.getAll",
+				"debts.getAllUser",
 				"debts.getByUsers",
 				"accountSettings.get",
 			],
