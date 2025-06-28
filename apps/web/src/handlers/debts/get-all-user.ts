@@ -1,50 +1,72 @@
 import { TRPCError } from "@trpc/server";
+import { unique } from "remeda";
 import z from "zod/v4";
 
+import type { CurrencyCode } from "~app/utils/currency";
+import { queueCallFactory } from "~web/handlers/batch";
+import type { AuthorizedContext } from "~web/handlers/context";
 import { authProcedure } from "~web/handlers/trpc";
 import { userIdSchema } from "~web/handlers/validation";
 
-export const procedure = authProcedure
-	.input(
-		z.strictObject({
-			userId: userIdSchema,
-		}),
-	)
-	.query(async ({ ctx, input }) => {
-		const { database } = ctx;
-		const user = await database
-			.selectFrom("users")
-			.where("users.id", "=", input.userId)
-			.select("users.ownerAccountId")
-			.limit(1)
-			.executeTakeFirst();
-		if (!user) {
-			throw new TRPCError({
-				code: "NOT_FOUND",
-				message: `User "${input.userId}" does not exist.`,
-			});
-		}
-		if (user.ownerAccountId !== ctx.auth.accountId) {
-			throw new TRPCError({
-				code: "FORBIDDEN",
-				message: `User "${input.userId}" is not owned by "${ctx.auth.email}".`,
-			});
-		}
+const getAllUserSchema = z.strictObject({
+	userId: userIdSchema,
+});
+type Input = z.infer<typeof getAllUserSchema>;
 
-		const debts = await database
+const getData = async (ctx: AuthorizedContext, inputs: readonly Input[]) => {
+	const userIds = unique(inputs.map(({ userId }) => userId));
+	const [users, aggregatedDebts] = await Promise.all([
+		ctx.database
+			.selectFrom("users")
+			.where("users.id", "in", userIds)
+			.select(["users.id", "users.ownerAccountId"])
+			.execute(),
+		ctx.database
 			.selectFrom("debts")
 			.where("debts.ownerAccountId", "=", ctx.auth.accountId)
-			.where("debts.userId", "=", input.userId)
+			.where("debts.userId", "in", userIds)
 			.select([
+				"debts.userId",
 				"debts.currencyCode",
-				database.fn.sum<string>("debts.amount").as("sum"),
+				(eb) => eb.fn.sum<string>("debts.amount").as("sum"),
 			])
 			.orderBy("debts.currencyCode")
-			.groupBy(["debts.currencyCode"])
-			.execute();
+			.groupBy(["debts.currencyCode", "debts.userId"])
+			.execute(),
+	]);
+	return { users, aggregatedDebts };
+};
 
-		return debts.map(({ currencyCode, sum }) => ({
+const queueGetAllUser = queueCallFactory<
+	AuthorizedContext,
+	Input,
+	{ currencyCode: CurrencyCode; sum: number }[]
+>((ctx) => async (inputs) => {
+	const { users, aggregatedDebts } = await getData(ctx, inputs);
+	return inputs.map((debt) => {
+		const matchedUser = users.find((result) => result.id === debt.userId);
+		if (!matchedUser) {
+			return new TRPCError({
+				code: "NOT_FOUND",
+				message: `User "${debt.userId}" does not exist.`,
+			});
+		}
+		if (matchedUser.ownerAccountId !== ctx.auth.accountId) {
+			return new TRPCError({
+				code: "FORBIDDEN",
+				message: `User "${matchedUser.id}" is not owned by "${ctx.auth.email}".`,
+			});
+		}
+		const filteredDebts = aggregatedDebts.filter(
+			(aggregatedDebt) => aggregatedDebt.userId === debt.userId,
+		);
+		return filteredDebts.map(({ currencyCode, sum }) => ({
 			currencyCode,
 			sum: parseFloat(sum),
 		}));
 	});
+});
+
+export const procedure = authProcedure
+	.input(getAllUserSchema)
+	.query(queueGetAllUser);

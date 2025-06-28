@@ -1,4 +1,5 @@
 import { faker } from "@faker-js/faker";
+import { TRPCError } from "@trpc/server";
 import { fromEntries, mapValues } from "remeda";
 import { describe, expect } from "vitest";
 
@@ -218,49 +219,85 @@ describe("debts.getAllUser", () => {
 			]);
 		});
 
-		test("multiple intentions", async ({ ctx }) => {
-			const { sessionId, accountId } = await insertAccountWithSession(ctx);
-			const { id: firstUserId } = await insertUser(ctx, accountId);
-			const { id: secondUserId } = await insertUser(ctx, accountId);
+		describe("multiple intentions", () => {
+			test("success", async ({ ctx }) => {
+				const { sessionId, accountId } = await insertAccountWithSession(ctx);
+				const { id: firstUserId } = await insertUser(ctx, accountId);
+				const { id: secondUserId } = await insertUser(ctx, accountId);
 
-			const firstUserDebts = [
-				{ currencyCode: "USD", amount: getAmount() },
-				{ currencyCode: "USD", amount: getAmount() },
-				{ currencyCode: "EUR", amount: getAmount() },
-				{ currencyCode: "GBP", amount: getAmount() },
-			];
-			const secondUserDebts = [
-				{ currencyCode: "USD", amount: getAmount() },
-				{ currencyCode: "EUR", amount: getAmount() },
-				{ currencyCode: "EUR", amount: getAmount() },
-				{ currencyCode: "GBP", amount: getAmount() },
-			];
+				const firstUserDebts = [
+					{ currencyCode: "USD", amount: getAmount() },
+					{ currencyCode: "USD", amount: getAmount() },
+					{ currencyCode: "EUR", amount: getAmount() },
+					{ currencyCode: "GBP", amount: getAmount() },
+				];
+				const secondUserDebts = [
+					{ currencyCode: "USD", amount: getAmount() },
+					{ currencyCode: "EUR", amount: getAmount() },
+					{ currencyCode: "EUR", amount: getAmount() },
+					{ currencyCode: "GBP", amount: getAmount() },
+				];
 
-			await Promise.all([
-				Promise.all(
+				await Promise.all([
+					Promise.all(
+						firstUserDebts.map((debt) =>
+							insertDebt(ctx, accountId, firstUserId, debt),
+						),
+					),
+					Promise.all(
+						secondUserDebts.map((debt) =>
+							insertDebt(ctx, accountId, secondUserId, debt),
+						),
+					),
+				]);
+
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const results = await runInBand([
+					() => caller.procedure({ userId: firstUserId }),
+					() => caller.procedure({ userId: secondUserId }),
+				]);
+				const resultsEntries = results.map((result) =>
+					fromEntries(
+						result.map(({ currencyCode, sum }) => [currencyCode, sum]),
+					),
+				);
+				expect(resultsEntries).toStrictEqual<typeof resultsEntries>([
+					getSums(firstUserDebts),
+					getSums(secondUserDebts),
+				]);
+			});
+
+			test("mixed success and fail", async ({ ctx }) => {
+				const { sessionId, accountId } = await insertAccountWithSession(ctx);
+				const { id: firstUserId } = await insertUser(ctx, accountId);
+
+				const firstUserDebts = [
+					{ currencyCode: "USD", amount: getAmount() },
+					{ currencyCode: "USD", amount: getAmount() },
+					{ currencyCode: "EUR", amount: getAmount() },
+					{ currencyCode: "GBP", amount: getAmount() },
+				];
+
+				await Promise.all(
 					firstUserDebts.map((debt) =>
 						insertDebt(ctx, accountId, firstUserId, debt),
 					),
-				),
-				Promise.all(
-					secondUserDebts.map((debt) =>
-						insertDebt(ctx, accountId, secondUserId, debt),
-					),
-				),
-			]);
+				);
+				const nonExistingUserId = faker.string.uuid();
 
-			const caller = createCaller(await createAuthContext(ctx, sessionId));
-			const results = await runInBand([
-				() => caller.procedure({ userId: firstUserId }),
-				() => caller.procedure({ userId: secondUserId }),
-			]);
-			const resultsEntries = results.map((result) =>
-				fromEntries(result.map(({ currencyCode, sum }) => [currencyCode, sum])),
-			);
-			expect(resultsEntries).toStrictEqual<typeof resultsEntries>([
-				getSums(firstUserDebts),
-				getSums(secondUserDebts),
-			]);
+				const caller = createCaller(await createAuthContext(ctx, sessionId));
+				const results = await runInBand([
+					() => caller.procedure({ userId: firstUserId }),
+					() => caller.procedure({ userId: nonExistingUserId }).catch((e) => e),
+				]);
+				const successfulEntries = fromEntries(
+					results[0].map(({ currencyCode, sum }) => [currencyCode, sum]),
+				);
+				expect(successfulEntries).toStrictEqual<typeof successfulEntries>(
+					getSums(firstUserDebts),
+				);
+				expect(results[1]).toBeInstanceOf(TRPCError);
+			});
 		});
 	});
 });
