@@ -1,5 +1,25 @@
+import type { Primitive } from "zod";
+
 export type DeepPartial<T> = T extends object
 	? { [P in keyof T]?: DeepPartial<T[P]> }
+	: T;
+
+export type OmitDeep<T, TerminalVaue, K extends PropertyKey> = T extends
+	| Primitive
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+	| Function
+	| TerminalVaue
+	? T
+	: T extends (infer U)[]
+	? OmitDeep<U, TerminalVaue, K>[]
+	: T extends object
+	? {
+			[P in keyof T as P extends K ? never : P]: OmitDeep<
+				T[P],
+				TerminalVaue,
+				K
+			>;
+	  }
 	: T;
 
 export type ParametersExceptFirst<F> = F extends (

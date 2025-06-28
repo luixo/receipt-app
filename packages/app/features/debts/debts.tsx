@@ -1,7 +1,6 @@
 import type React from "react";
 import { View } from "react-native";
 
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { isNonNullish, values } from "remeda";
 
 import { EmptyCard } from "~app/components/empty-card";
@@ -10,7 +9,6 @@ import { PaginationBlock } from "~app/components/pagination-block";
 import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import type { SearchParamState } from "~app/hooks/use-navigation";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
-import type { TRPCQueryInput } from "~app/trpc";
 import { useTRPC } from "~app/utils/trpc";
 import { Header } from "~components/header";
 import { AddIcon } from "~components/icons";
@@ -24,20 +22,6 @@ import {
 	UserDebtsPreviewSkeleton,
 } from "./user-debts-preview";
 
-type Input = TRPCQueryInput<"debts.getUsersPaged">;
-const useDebtsQuery = (
-	input: Omit<Input, "cursor">,
-	cursor: Input["cursor"],
-) => {
-	const trpc = useTRPC();
-	return useQuery(
-		trpc.debts.getUsersPaged.queryOptions(
-			{ ...input, cursor },
-			{ placeholderData: keepPreviousData },
-		),
-	);
-};
-
 const skeletonElements = new Array<null>(5).fill(null).map((_, index) => index);
 
 type Props = {
@@ -49,12 +33,10 @@ export const Debts: React.FC<Props> = ({ limitState, offsetState }) => {
 	const [showResolvedDebts] = useShowResolvedDebts();
 	const [limit, setLimit] = limitState;
 	const filters = {};
+	const trpc = useTRPC();
 	const { totalCount, query, pagination } = useCursorPaging(
-		useDebtsQuery,
-		{
-			limit,
-			filters: { showResolved: showResolvedDebts, ...filters },
-		},
+		trpc.debts.getUsersPaged,
+		{ limit, filters: { showResolved: showResolvedDebts, ...filters } },
 		offsetState,
 	);
 

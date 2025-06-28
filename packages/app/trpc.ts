@@ -20,11 +20,17 @@ import type {
 	inferProcedureInput,
 	inferProcedureOutput,
 } from "@trpc/server";
-import type { ExtractCursorType } from "@trpc/tanstack-react-query";
+import type {
+	DecorateRouterKeyable,
+	ExtractCursorType,
+	TRPCOptionsProxy,
+} from "@trpc/tanstack-react-query";
 
+import type { useTRPC } from "~app/utils/trpc";
 import type {
 	ExtractObjectByPath,
 	FlattenObject,
+	OmitDeep,
 	SplitStringByComma,
 	UnionToIntersection,
 } from "~utils/types";
@@ -33,6 +39,12 @@ import type { router } from "~web/handlers";
 export type AppRouter = typeof router;
 
 type TypeKey = "queries" | "mutations";
+
+type TRPCOptionsProxyNoPath<TRouter extends AnyTRPCRouter> = OmitDeep<
+	TRPCOptionsProxy<TRouter>,
+	{ "~types": unknown },
+	keyof DecorateRouterKeyable
+>;
 
 type ProceduresValues<
 	Router extends AnyTRPCRouter,
@@ -78,7 +90,7 @@ type TRPCInfiniteQueryValues<P extends Record<string, AnyTRPCQueryProcedure>> =
 export type TRPCQueryKey = keyof TRPCQueryValues;
 
 export type TRPCSplitQueryKey<K extends TRPCQueryKey = TRPCQueryKey> =
-	SplitStringByComma<K> & string[];
+	SplitStringByComma<K>;
 
 export type TRPCQueryInput<Path extends TRPCQueryKey> = inferProcedureInput<
 	TRPCQueryValues[Path]
@@ -151,6 +163,11 @@ export type TRPCInfiniteQuerySuccessResult<
 	Result extends TRPCInfiniteQueryResult<Path> = TRPCInfiniteQueryResult<Path>,
 > = Result extends { status: "success" } ? Result : never;
 
+export type TRPCTanstackQueryKey<K extends TRPCQueryKey> = [
+	SplitStringByComma<K>,
+	{ input: TRPCQueryInput<K>; type: "query" },
+];
+
 export type TRPCMutationKey = keyof TRPCMutationValues;
 
 export type TRPCSplitMutationKey<K extends TRPCMutationKey = TRPCMutationKey> =
@@ -181,5 +198,20 @@ export type TRPCMutationState<Path extends TRPCMutationKey> = MutationState<
 	TRPCMutationInput<Path>
 >;
 
+export type TRPCTanstackMutationKey<K extends TRPCMutationKey> = [
+	SplitStringByComma<K>,
+];
+
 export type InvalidateArgs = [InvalidateQueryFilters?, InvalidateOptions?];
 export type UpdateArgs = [SetDataOptions?];
+
+export type Utils = ReturnType<typeof useTRPC>;
+
+type TRPCDecoratedQueryProcedures = UnionToIntersection<
+	FlattenObject<{ "~types": unknown }, TRPCOptionsProxyNoPath<AppRouter>>
+>;
+export type TRPCDecoratedQueryProcedure<K extends TRPCQueryKey> =
+	TRPCDecoratedQueryProcedures[K];
+export type TRPCDecoratedInfiniteQueryProcedure<
+	K extends TRPCInfiniteQueryKey,
+> = TRPCDecoratedQueryProcedures[K];

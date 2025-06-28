@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { keepPreviousData, useQueries, useQuery } from "@tanstack/react-query";
+import { useQueries } from "@tanstack/react-query";
 import { isNonNullish, values } from "remeda";
 
 import { EmptyCard } from "~app/components/empty-card";
@@ -9,7 +9,7 @@ import { QueryErrorMessage } from "~app/components/error-message";
 import { PaginationBlock } from "~app/components/pagination-block";
 import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import type { SearchParamState } from "~app/hooks/use-navigation";
-import type { TRPCQueryErrorResult, TRPCQueryInput } from "~app/trpc";
+import type { TRPCQueryErrorResult } from "~app/trpc";
 import { useTRPC } from "~app/utils/trpc";
 import { Divider } from "~components/divider";
 import { Header } from "~components/header";
@@ -21,8 +21,6 @@ import { Text } from "~components/text";
 import type { ReceiptsId } from "~db/models";
 
 import { ReceiptPreview, ReceiptPreviewSkeleton } from "./receipt-preview";
-
-type Input = TRPCQueryInput<"receipts.getPaged">;
 
 const ReceiptPreviewsSkeleton: React.FC<{ amount: number }> = ({ amount }) => {
 	const elements = React.useMemo(
@@ -36,19 +34,6 @@ const ReceiptPreviewsSkeleton: React.FC<{ amount: number }> = ({ amount }) => {
 				<ReceiptPreviewSkeleton key={index} />
 			))}
 		</>
-	);
-};
-
-const useReceiptQuery = (
-	input: Omit<Input, "cursor">,
-	cursor: Input["cursor"],
-) => {
-	const trpc = useTRPC();
-	return useQuery(
-		trpc.receipts.getPaged.queryOptions(
-			{ ...input, cursor },
-			{ placeholderData: keepPreviousData },
-		),
 	);
 };
 
@@ -111,8 +96,9 @@ export const Receipts: React.FC<Props> = ({
 	limitState: [limit, setLimit],
 	offsetState,
 }) => {
+	const trpc = useTRPC();
 	const { totalCount, query, pagination } = useCursorPaging(
-		useReceiptQuery,
+		trpc.receipts.getPaged,
 		{ limit, orderBy: sort, filters },
 		offsetState,
 	);

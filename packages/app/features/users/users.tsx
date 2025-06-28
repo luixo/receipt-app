@@ -1,6 +1,6 @@
 import type React from "react";
 
-import { keepPreviousData, useQueries, useQuery } from "@tanstack/react-query";
+import { useQueries } from "@tanstack/react-query";
 
 import { SkeletonUser } from "~app/components/app/user";
 import { EmptyCard } from "~app/components/empty-card";
@@ -8,7 +8,7 @@ import { QueryErrorMessage } from "~app/components/error-message";
 import { PaginationBlock } from "~app/components/pagination-block";
 import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import type { SearchParamState } from "~app/hooks/use-navigation";
-import type { TRPCQueryErrorResult, TRPCQueryInput } from "~app/trpc";
+import type { TRPCQueryErrorResult } from "~app/trpc";
 import { useTRPC } from "~app/utils/trpc";
 import { AddIcon } from "~components/icons";
 import { ButtonLink } from "~components/link";
@@ -17,21 +17,6 @@ import { Spinner } from "~components/spinner";
 import type { UsersId } from "~db/models";
 
 import { UserPreview } from "./user-preview";
-
-type Input = TRPCQueryInput<"users.getPaged">;
-
-const useUsersQuery = (
-	input: Omit<Input, "cursor">,
-	cursor: Input["cursor"],
-) => {
-	const trpc = useTRPC();
-	return useQuery(
-		trpc.users.getPaged.queryOptions(
-			{ ...input, cursor },
-			{ placeholderData: keepPreviousData },
-		),
-	);
-};
 
 const UserPreviews: React.FC<{ ids: UsersId[] }> = ({ ids }) => {
 	const trpc = useTRPC();
@@ -73,8 +58,9 @@ export const Users: React.FC<Props> = ({
 	limitState: [limit, setLimit],
 	offsetState,
 }) => {
+	const trpc = useTRPC();
 	const { totalCount, pagination, query } = useCursorPaging(
-		useUsersQuery,
+		trpc.users.getPaged,
 		{ limit },
 		offsetState,
 	);
