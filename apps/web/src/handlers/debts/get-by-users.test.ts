@@ -91,12 +91,10 @@ describe("debts.getByUsers", () => {
 					{
 						userId: user.id,
 						debts: mapUserDebts(userDebts.filter(isNonNullish)),
-						unsyncedDebtsAmount: 3,
 					},
 					{
 						userId: anotherUser.id,
 						debts: mapUserDebts(anotherUserDebts),
-						unsyncedDebtsAmount: 0,
 					},
 				].sort((a, b) => {
 					const aUser = users.find((lookupUser) => a.userId === lookupUser.id);
@@ -110,129 +108,6 @@ describe("debts.getByUsers", () => {
 					return aUser.name.localeCompare(bUser.name);
 				}),
 			);
-		});
-
-		describe("unsynced amount of debts", () => {
-			describe("synced debts", () => {
-				test("user counterparty is connected", async ({ ctx }) => {
-					const { sessionId, accountId } = await insertAccountWithSession(ctx);
-					const { id: foreignAccountId } = await insertAccount(ctx);
-					const [user, { id: foreignToSelfUserId }] =
-						await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
-					const [syncedDebt] = await insertSyncedDebts(
-						ctx,
-						[accountId, user.id],
-						[foreignAccountId, foreignToSelfUserId],
-					);
-					const caller = createCaller(await createAuthContext(ctx, sessionId));
-					const result = await caller.procedure();
-					expect(result).toStrictEqual<typeof result>([
-						{
-							userId: user.id,
-							debts: mapUserDebts([syncedDebt]),
-							unsyncedDebtsAmount: 0,
-						},
-					]);
-				});
-
-				test("user counterparty is not connected", async ({ ctx }) => {
-					const { sessionId, accountId } = await insertAccountWithSession(ctx);
-					const { id: userId } = await insertUser(ctx, accountId);
-					const localDebt = await insertDebt(ctx, accountId, userId);
-					const caller = createCaller(await createAuthContext(ctx, sessionId));
-					const result = await caller.procedure();
-					expect(result).toStrictEqual<typeof result>([
-						{
-							userId,
-							debts: mapUserDebts([localDebt]),
-							unsyncedDebtsAmount: 0,
-						},
-					]);
-				});
-			});
-
-			describe("unsynced debts", () => {
-				test("debt with no foreign counterparty", async ({ ctx }) => {
-					const { sessionId, accountId } = await insertAccountWithSession(ctx);
-					const { id: foreignAccountId } = await insertAccount(ctx);
-					const [user] = await insertConnectedUsers(ctx, [
-						accountId,
-						foreignAccountId,
-					]);
-					const localDebt = await insertDebt(ctx, accountId, user.id);
-					const caller = createCaller(await createAuthContext(ctx, sessionId));
-					const result = await caller.procedure();
-					expect(result).toStrictEqual<typeof result>([
-						{
-							userId: user.id,
-							debts: mapUserDebts([localDebt]),
-							unsyncedDebtsAmount: 1,
-						},
-					]);
-				});
-
-				test("desynced debt", async ({ ctx }) => {
-					const { sessionId, accountId } = await insertAccountWithSession(ctx);
-					const { id: foreignAccountId } = await insertAccount(ctx);
-					const [user, { id: foreignToSelfUserId }] =
-						await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
-					const [desyncedDebt] = await insertSyncedDebts(
-						ctx,
-						[accountId, user.id],
-						[foreignAccountId, foreignToSelfUserId],
-						{
-							ahead: "their",
-							fn: (originalDebt) => ({
-								...originalDebt,
-								amount: originalDebt.amount + 1,
-							}),
-						},
-					);
-					const caller = createCaller(await createAuthContext(ctx, sessionId));
-					const result = await caller.procedure();
-					expect(result).toStrictEqual<typeof result>([
-						{
-							userId: user.id,
-							debts: mapUserDebts([desyncedDebt]),
-							unsyncedDebtsAmount: 1,
-						},
-					]);
-				});
-
-				test("multiple debts", async ({ ctx }) => {
-					const { sessionId, accountId } = await insertAccountWithSession(ctx);
-					const { id: foreignAccountId } = await insertAccount(ctx);
-					const [user, { id: foreignToSelfUserId }] =
-						await insertConnectedUsers(ctx, [accountId, foreignAccountId]);
-					const unsyncedDebts = await Promise.all([
-						insertDebt(ctx, accountId, user.id),
-						insertDebt(ctx, accountId, user.id),
-						insertSyncedDebts(
-							ctx,
-							[accountId, user.id],
-							[foreignAccountId, foreignToSelfUserId],
-							{
-								ahead: "their",
-								fn: (originalDebt) => ({
-									...originalDebt,
-									amount: originalDebt.amount + 1,
-								}),
-							},
-						),
-					]);
-					// Synced debt
-					await insertSyncedDebts(
-						ctx,
-						[accountId, user.id],
-						[foreignAccountId, foreignToSelfUserId],
-					);
-					const caller = createCaller(await createAuthContext(ctx, sessionId));
-					const result = await caller.procedure();
-					expect(result[0]?.unsyncedDebtsAmount).toBe<number>(
-						unsyncedDebts.length,
-					);
-				});
-			});
 		});
 	});
 });

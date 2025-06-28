@@ -27,7 +27,6 @@ import {
 	formatCurrency,
 	getCurrencySymbol,
 } from "~app/utils/currency";
-import { areDebtsSynced } from "~app/utils/debts";
 import { useAppForm } from "~app/utils/forms";
 import { useTRPC } from "~app/utils/trpc";
 import {
@@ -321,10 +320,7 @@ const DebtRemoveButton: React.FC<RemoveButtonProps> = ({
 	const removeMutation = useMutation(
 		trpc.debts.remove.mutationOptions(
 			useTrpcMutationOptions(debtsRemoveOptions, {
-				context: {
-					debt,
-					areDebtsSynced: debt.their ? areDebtsSynced(debt, debt.their) : false,
-				},
+				context: { debt },
 				onSuccess: () =>
 					navigate({
 						to: "/debts/user/$id",

@@ -44,7 +44,6 @@ export const test = originalTest.extend<Fixtures>({
 			api.mockFirst("debts.getByUsers", [
 				{
 					userId: debtUser.id,
-					unsyncedDebtsAmount: 0,
 					debts: entries(
 						debts.reduce<Record<CurrencyCode, number>>(
 							(acc, { currencyCode, amount }) => ({

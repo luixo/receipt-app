@@ -70,27 +70,16 @@ const DebtsInner: React.FC<InnerProps> = ({ query }) => {
 				) : null}
 			</View>
 			<View className="mt-4 gap-2">
-				{query.data.map(({ userId, debts, unsyncedDebtsAmount }) => {
-					const allDebtsResolved = debts.every((debt) => debt.sum === 0);
-					if (
-						allDebtsResolved &&
-						!showResolvedDebts &&
-						unsyncedDebtsAmount === 0
-					) {
-						return null;
-					}
-					return (
-						<UserDebtsPreview
-							key={userId}
-							debts={debts.filter((debt) =>
-								showResolvedDebts ? true : debt.sum !== 0,
-							)}
-							unsyncedDebtsAmount={unsyncedDebtsAmount}
-							userId={userId}
-							transparent={allDebtsResolved}
-						/>
-					);
-				})}
+				{query.data.map(({ userId, debts }) => (
+					<UserDebtsPreview
+						key={userId}
+						debts={debts.filter((debt) =>
+							showResolvedDebts ? true : debt.sum !== 0,
+						)}
+						userId={userId}
+						transparent={debts.every((debt) => debt.sum === 0)}
+					/>
+				))}
 			</View>
 		</>
 	);

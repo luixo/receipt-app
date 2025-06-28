@@ -31,7 +31,7 @@ const updateUser = (
 					prevData,
 					(debtsEntry) => debtsEntry.userId === userId,
 					updater,
-					{ userId, debts: [], unsyncedDebtsAmount: 0 },
+					{ userId, debts: [] },
 			  ).filter((userDebts) => userDebts.debts.length !== 0)
 			: undefined,
 	);
@@ -73,22 +73,6 @@ const updateCurrencyDebts =
 			);
 		}).current?.sum;
 
-const updateUnsyncedDebts =
-	(controller: Controller, userId: UsersId) => (updater: UpdateFn<number>) =>
-		withRef<number | undefined>((ref) => {
-			updateUser(controller, userId, (user) => {
-				const nextUnsyncedDebtsAmount = updater(user.unsyncedDebtsAmount);
-				if (nextUnsyncedDebtsAmount === user.unsyncedDebtsAmount) {
-					return user;
-				}
-				ref.current = user.unsyncedDebtsAmount;
-				return {
-					...user,
-					unsyncedDebtsAmount: nextUnsyncedDebtsAmount,
-				};
-			});
-		}).current;
-
 const invalidate =
 	({ queryClient, procedure }: Controller) =>
 	() =>
@@ -97,8 +81,6 @@ const invalidate =
 export const getController = ({ queryClient, trpc }: ControllerContext) => {
 	const controller = { queryClient, procedure: trpc.debts.getByUsers };
 	return {
-		updateUnsyncedDebts: (userId: UsersId, updater: UpdateFn<number>) =>
-			updateUnsyncedDebts(controller, userId)(updater),
 		updateCurrency: (
 			userId: UsersId,
 			currencyCode: CurrencyCode,

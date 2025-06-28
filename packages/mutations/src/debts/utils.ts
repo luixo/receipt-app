@@ -142,19 +142,12 @@ export const updateReceiptWithOutcomingDebtId = (
 
 export const updateUpdatedAt = (
 	controllerContext: ControllerContext,
-	currDebt: CurrentDebt,
 	debtId: DebtsId,
 	updatedAt: Date | undefined,
 	reverseUpdated: boolean | undefined,
 ) => {
 	updateDebts(controllerContext, {
-		getByUsers: (controller) => {
-			if (!reverseUpdated) {
-				// We updated something meaninful and reverse was not accepted
-				// Hence previously synced debt is now unsynced
-				controller.updateUnsyncedDebts(currDebt.userId, (amount) => amount + 1);
-			}
-		},
+		getByUsers: undefined,
 		getIdsByUser: undefined,
 		get: (controller) => {
 			controller.update(debtId, (debt) => ({

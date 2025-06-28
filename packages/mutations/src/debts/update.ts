@@ -55,7 +55,6 @@ export const options: UseContextedMutationOptions<
 			}
 			updateUpdatedAt(
 				controllerContext,
-				currDebt,
 				updateObject.id,
 				result.updatedAt,
 				result.reverseUpdated,

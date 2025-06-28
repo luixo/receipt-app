@@ -9,7 +9,7 @@ import type { UseContextedMutationOptions } from "../context";
 
 export const options: UseContextedMutationOptions<
 	"debts.remove",
-	{ debt: TRPCQueryOutput<"debts.get">; areDebtsSynced: boolean }
+	{ debt: TRPCQueryOutput<"debts.get"> }
 > = {
 	onMutate:
 		(controllerContext, { debt: currDebt }) =>
@@ -30,61 +30,53 @@ export const options: UseContextedMutationOptions<
 				get: undefined,
 				getIntentions: undefined,
 			}),
-	onSuccess:
-		(controllerContext, { debt: currDebt, areDebtsSynced }) =>
-		(result, updateObject) => {
-			updateReceipts(controllerContext, {
-				get: (controller) =>
-					controller.updateAll((receipt) => {
-						if (receipt.debt.direction === "incoming") {
-							if (!receipt.debt.id) {
-								return receipt;
-							}
-							if (receipt.debt.id === updateObject.id) {
-								return {
-									...receipt,
-									debt: receipt.debt.hasForeign
-										? { ...receipt.debt, hasForeign: true, hasMine: false }
-										: {
-												...receipt.debt,
-												hasForeign: false,
-												hasMine: false,
-												id: undefined,
-										  },
-								};
-							}
+	onSuccess: (controllerContext) => (result, updateObject) => {
+		updateReceipts(controllerContext, {
+			get: (controller) =>
+				controller.updateAll((receipt) => {
+					if (receipt.debt.direction === "incoming") {
+						if (!receipt.debt.id) {
 							return receipt;
 						}
-						if (receipt.debt.ids.includes(updateObject.id)) {
-							const nextIds = receipt.debt.ids.filter(
-								(id) => id !== updateObject.id,
-							);
-							return { ...receipt, debt: { ...receipt.debt, ids: nextIds } };
+						if (receipt.debt.id === updateObject.id) {
+							return {
+								...receipt,
+								debt: receipt.debt.hasForeign
+									? { ...receipt.debt, hasForeign: true, hasMine: false }
+									: {
+											...receipt.debt,
+											hasForeign: false,
+											hasMine: false,
+											id: undefined,
+									  },
+							};
 						}
 						return receipt;
-					}),
-				getPaged: undefined,
-			});
-			updateDebts(controllerContext, {
-				getByUsers: areDebtsSynced
-					? undefined
-					: (controller) =>
-							controller.updateUnsyncedDebts(
-								currDebt.userId,
-								(amount) => amount - 1,
-							),
-				getIdsByUser: undefined,
-				get: (controller) => controller.remove(updateObject.id),
-				getIntentions: (controller) => {
-					if (result.reverseRemoved) {
-						return;
 					}
-					// We may or may not know the parameters of counterparty debt
-					// Invalidating intentions might be a good idea
-					controller.invalidate();
-				},
-			});
-		},
+					if (receipt.debt.ids.includes(updateObject.id)) {
+						const nextIds = receipt.debt.ids.filter(
+							(id) => id !== updateObject.id,
+						);
+						return { ...receipt, debt: { ...receipt.debt, ids: nextIds } };
+					}
+					return receipt;
+				}),
+			getPaged: undefined,
+		});
+		updateDebts(controllerContext, {
+			getByUsers: undefined,
+			getIdsByUser: undefined,
+			get: (controller) => controller.remove(updateObject.id),
+			getIntentions: (controller) => {
+				if (result.reverseRemoved) {
+					return;
+				}
+				// We may or may not know the parameters of counterparty debt
+				// Invalidating intentions might be a good idea
+				controller.invalidate();
+			},
+		});
+	},
 	mutateToastOptions: {
 		text: "Removing debt..",
 	},
