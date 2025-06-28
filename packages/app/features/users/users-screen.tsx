@@ -10,8 +10,6 @@ import { ButtonLink } from "~components/link";
 
 import { Users } from "./users";
 
-export const DEFAULT_LIMIT = 10;
-
 export const UsersScreen: React.FC<{
 	limitState: SearchParamState<"/users", "limit">;
 	offsetState: SearchParamState<"/users", "offset">;

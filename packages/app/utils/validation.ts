@@ -181,3 +181,11 @@ export const localeSchema = z.string().transform((value, ctx) => {
 	});
 	return z.NEVER;
 });
+
+export const receiptsFiltersSchema = z.strictObject({
+	ownedByMe: z.boolean().optional(),
+});
+export const receiptsOrderBySchema = z.enum(["date-asc", "date-desc"]);
+
+export const DEFAULT_LIMIT = 10;
+export const LIMITS = [DEFAULT_LIMIT, 25, 50, 100];

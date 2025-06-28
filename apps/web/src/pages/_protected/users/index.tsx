@@ -2,8 +2,9 @@ import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { z } from "zod/v4";
 
-import { DEFAULT_LIMIT, UsersScreen } from "~app/features/users/users-screen";
+import { UsersScreen } from "~app/features/users/users-screen";
 import { getQueryStates } from "~app/hooks/use-navigation";
+import { DEFAULT_LIMIT } from "~app/utils/validation";
 import { limitSchema, offsetSchema } from "~web/handlers/validation";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
 

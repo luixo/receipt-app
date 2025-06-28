@@ -2,7 +2,6 @@ import React from "react";
 
 import type { Selection } from "@react-types/shared";
 
-import type { Filters } from "~app/features/receipts/receipts-screen";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import type { SearchParamState } from "~app/hooks/use-navigation";
 import { Button } from "~components/button";
@@ -44,7 +43,7 @@ export const FilterButton: React.FC<Props> = ({
 	const SortIcon = sort === "date-desc" ? SortDownIcon : SortUpIcon;
 
 	const onFilterSelectionChange = React.useCallback(
-		(filterKey: keyof Filters, selection: Selection) => {
+		(filterKey: keyof typeof filters, selection: Selection) => {
 			if (selection === "all") {
 				return;
 			}

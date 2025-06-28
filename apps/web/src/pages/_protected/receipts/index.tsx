@@ -2,20 +2,20 @@ import { createFileRoute, stripSearchParams } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { z } from "zod/v4";
 
+import { ReceiptsScreen } from "~app/features/receipts/receipts-screen";
+import { getQueryStates } from "~app/hooks/use-navigation";
 import {
 	DEFAULT_LIMIT,
-	ReceiptsScreen,
-	filtersSchema,
-	orderBySchema,
-} from "~app/features/receipts/receipts-screen";
-import { getQueryStates } from "~app/hooks/use-navigation";
+	receiptsFiltersSchema,
+	receiptsOrderBySchema,
+} from "~app/utils/validation";
 import { limitSchema, offsetSchema } from "~web/handlers/validation";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
 
 const [schema, defaults] = searchParamsWithDefaults(
 	z.object({
-		sort: orderBySchema,
-		filters: filtersSchema,
+		sort: receiptsOrderBySchema,
+		filters: receiptsFiltersSchema,
 		limit: limitSchema,
 		offset: offsetSchema,
 	}),
