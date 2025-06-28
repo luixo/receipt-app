@@ -11,21 +11,22 @@ export const options: UseContextedMutationOptions<
 	undefined,
 	ReceiptItemsId
 > = {
-	onMutate: (controllerContext) => (variables) => {
+	onMutate: (controllerContext) => async (variables) => {
 		const temporaryId = `temp-${Math.random()}`;
+		const revertResult = await updateRevertReceipts(controllerContext, {
+			get: (controller) =>
+				controller.addItem(variables.receiptId, {
+					id: temporaryId,
+					name: variables.name,
+					price: variables.price,
+					quantity: variables.quantity,
+					createdAt: new Date(),
+					consumers: [],
+				}),
+			getPaged: undefined,
+		});
 		return {
-			...updateRevertReceipts(controllerContext, {
-				get: (controller) =>
-					controller.addItem(variables.receiptId, {
-						id: temporaryId,
-						name: variables.name,
-						price: variables.price,
-						quantity: variables.quantity,
-						createdAt: new Date(),
-						consumers: [],
-					}),
-				getPaged: undefined,
-			}),
+			...revertResult,
 			context: temporaryId,
 		};
 	},
