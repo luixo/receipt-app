@@ -80,7 +80,7 @@ export const getController = ({ queryClient, trpc }: ControllerContext) => {
 	const controller = { queryClient, procedure: trpc.debts.getUsersPaged };
 	return {
 		update: (userId: UsersId) => {
-			setImmediate(() => {
+			setTimeout(() => {
 				const allDebts = queryClient.getQueryData(
 					trpc.debts.getAllUser.queryKey({ userId }),
 				);
@@ -103,7 +103,7 @@ export const getRevertController = ({
 	return {
 		update: async (userId: UsersId) =>
 			new Promise<UpdaterRevertResult | undefined>((resolve) => {
-				setImmediate(() => {
+				setTimeout(() => {
 					const allDebts = queryClient.getQueryData(
 						trpc.debts.getAllUser.queryKey({ userId }),
 					);
