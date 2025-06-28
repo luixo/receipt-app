@@ -19,16 +19,17 @@ export const useDividers = (
 	return React.useMemo<
 		{ debtId: DebtsId; currencyCode: CurrencyCode }[]
 	>(() => {
+		const sumsClone = { ...sums };
 		const dividers: { debtId: DebtsId; currencyCode: CurrencyCode }[] = [];
 		for (const debt of debts) {
-			const currentAmount = sums[debt.currencyCode] ?? 0;
+			const currentAmount = sumsClone[debt.currencyCode] ?? 0;
 			if (!currentAmount) {
 				dividers.push({
 					debtId: debt.id,
 					currencyCode: debt.currencyCode,
 				});
 			}
-			sums[debt.currencyCode] = currentAmount + debt.amount;
+			sumsClone[debt.currencyCode] = currentAmount + debt.amount;
 		}
 		return dividers;
 	}, [debts, sums]);

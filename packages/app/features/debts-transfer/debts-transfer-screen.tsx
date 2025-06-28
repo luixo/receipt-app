@@ -2,18 +2,14 @@ import React from "react";
 import { View } from "react-native";
 
 import { skipToken, useMutation, useQuery } from "@tanstack/react-query";
-import { entries, groupBy, isNonNullish, pullObject, values } from "remeda";
+import { entries, isNonNullish, pullObject } from "remeda";
 import { z } from "zod/v4";
 
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
 import { UsersSuggest } from "~app/components/app/users-suggest";
-import {
-	GroupedQueryErrorMessage,
-	QueryErrorMessage,
-} from "~app/components/error-message";
+import { QueryErrorMessage } from "~app/components/error-message";
 import { PageHeader } from "~app/components/page-header";
 import { ShowResolvedDebtsOption } from "~app/features/settings/show-resolved-debts-option";
-import { useAggregatedDebts } from "~app/hooks/use-aggregated-debts";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useLocale } from "~app/hooks/use-locale";
 import type { SearchParamState } from "~app/hooks/use-navigation";
@@ -325,43 +321,18 @@ const DebtsListForm: React.FC<FormProps> = ({
 };
 
 type DebtsProps = {
-	query: TRPCQuerySuccessResult<"debts.getIdsByUser">;
+	query: TRPCQuerySuccessResult<"debts.getAllUser">;
 } & Pick<FormProps, "fromUser" | "toUser">;
 
 const DebtsList: React.FC<DebtsProps> = ({ query, fromUser, toUser }) => {
 	const [showResolvedDebts] = useShowResolvedDebts();
-	const [
-		aggregatedDebts,
-		nonZeroAggregatedDebts,
-		aggregatedDebtsLoading,
-		aggregatedDebtsErrorQueries,
-	] = useAggregatedDebts(query);
-	if (aggregatedDebtsLoading) {
-		return (
-			<View>
-				<Spinner size="lg" />
-			</View>
-		);
-	}
-	if (aggregatedDebtsErrorQueries.length !== 0) {
-		return values(
-			groupBy(
-				aggregatedDebtsErrorQueries,
-				(errorQuery) => errorQuery.error.message,
-			),
-		).map((queries) => (
-			<GroupedQueryErrorMessage
-				key={queries[0].error.message}
-				queries={queries}
-			/>
-		));
-	}
-	const debtRows = showResolvedDebts ? aggregatedDebts : nonZeroAggregatedDebts;
+	const nonResolvedDebts = query.data.filter((element) => element.sum !== 0);
+	const debtRows = showResolvedDebts ? query.data : nonResolvedDebts;
 	return (
 		<DebtsListForm
 			aggregatedDebts={debtRows}
 			shouldShowResolvedDebtsButton={
-				aggregatedDebts.length !== nonZeroAggregatedDebts.length
+				query.data.length !== nonResolvedDebts.length
 			}
 			fromUser={fromUser}
 			toUser={toUser}
@@ -393,9 +364,7 @@ export const DebtsTransferScreen: React.FC<{
 		trpc.users.get.queryOptions(toId ? { id: toId } : skipToken),
 	);
 	const fromUserDebts = useQuery(
-		trpc.debts.getIdsByUser.queryOptions(
-			fromId ? { userId: fromId } : skipToken,
-		),
+		trpc.debts.getAllUser.queryOptions(fromId ? { userId: fromId } : skipToken),
 	);
 
 	return (

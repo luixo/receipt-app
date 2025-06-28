@@ -71,28 +71,3 @@ export const QueryErrorMessage: React.FC<QueryProps> = ({ query }) => {
 		/>
 	);
 };
-
-type GroupedQueryProps = {
-	queries: [
-		PickedQueryObserverErrorResult,
-		...PickedQueryObserverErrorResult[],
-	];
-};
-
-export const GroupedQueryErrorMessage: React.FC<GroupedQueryProps> = ({
-	queries,
-}) => {
-	const refetch = React.useCallback(
-		() => queries.forEach((query) => query.refetch()),
-		[queries],
-	);
-	return (
-		<ErrorMessage
-			button={React.useMemo(
-				() => ({ text: "Refetch", onPress: refetch }),
-				[refetch],
-			)}
-			message={queries[0].error.message}
-		/>
-	);
-};

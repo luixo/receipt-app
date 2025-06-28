@@ -15,28 +15,33 @@ const test = mergeTests(debtsTest, debtsGroupFixture);
 test.describe("external query status", () => {
 	test("pending", async ({
 		api,
+		page,
 		mockDebts,
 		openUserDebtsScreen,
 		debtsGroupElement,
 		debtsGroup,
 		skeleton,
+		awaitCacheKey,
 	}) => {
 		const { debtUser, debts } = mockDebts();
-		const debtPause = api.createPause();
-		api.mockFirst("debts.get", async ({ next, input: { id } }) => {
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			if (id === debts[0]!.id) {
-				return next();
-			}
-			await debtPause.promise;
+		const getUserDebtsPause = api.createPause();
+		api.mockFirst("debts.getAllUser", async ({ next }) => {
+			await getUserDebtsPause.promise;
 			return next();
 		});
-		await openUserDebtsScreen(debtUser.id);
-		await expect(debtsGroup.filter({ has: skeleton })).toBeVisible();
+		await openUserDebtsScreen(debtUser.id, { awaitCache: false });
+		await expect(
+			skeleton.and(page.getByTestId("debt-group-element")).first(),
+		).toBeVisible();
+		await expect(debtsGroup).not.toBeAttached();
 		await expect(debtsGroupElement).not.toBeAttached();
-		debtPause.resolve();
+		getUserDebtsPause.resolve();
+		await awaitCacheKey("debts.getAllUser");
+		await expect(debtsGroup).toBeVisible();
 		await expect(debtsGroupElement).toHaveCount(debts.length);
-		await expect(debtsGroup.filter({ has: skeleton })).toBeHidden();
+		await expect(
+			skeleton.and(page.getByTestId("debt-group-element")),
+		).toBeHidden();
 	});
 
 	test("errors", async ({
@@ -48,44 +53,31 @@ test.describe("external query status", () => {
 		errorMessage,
 		awaitCacheKey,
 	}) => {
-		const { debtUser, debts } = mockDebts({
+		const { debtUser } = mockDebts({
 			generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 3 }),
 		});
-		const unmockGetDebt = api.mockFirst("debts.get", ({ input: { id } }) => {
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			if (id === debts[0]!.id) {
-				throw new TRPCError({
-					code: "FORBIDDEN",
-					message: `Mock "debts.get" error type 1`,
-				});
-			}
+		const unmockGetDebt = api.mockFirst("debts.getAllUser", () => {
 			throw new TRPCError({
 				code: "FORBIDDEN",
-				message: `Mock "debts.get" error type 2`,
+				message: `Mock "debts.getAllUser" error`,
 			});
 		});
-		await openUserDebtsScreen(debtUser.id);
-		await expect(
-			debtsGroup.filter({
-				has: errorMessage('Mock "debts.get" error type 1'),
-			}),
-		).toHaveCount(1);
-		await expect(
-			debtsGroup.filter({
-				has: errorMessage('Mock "debts.get" error type 2'),
-			}),
-		).toHaveCount(1);
+		await openUserDebtsScreen(debtUser.id, { awaitCache: false });
+		await awaitCacheKey("debts.getAllUser", { errored: 1 });
+		const getAllUserErrorLocator = errorMessage(
+			'Mock "debts.getAllUser" error',
+		).first();
+		await expect(getAllUserErrorLocator).toBeVisible();
+		await expect(debtsGroup).toBeHidden();
 		unmockGetDebt();
 		await snapshotQueries(
-			// Veryfing one click makes two calls
-			// As grouped errored queries are refetched together
 			async () => {
-				const debtsGroupError = debtsGroup.locator(errorMessage());
-				await debtsGroupError.locator("button").last().click();
-				await awaitCacheKey("debts.get", { succeed: 2, errored: 1 });
-				await expect(debtsGroupError).toHaveCount(1);
+				await getAllUserErrorLocator
+					.locator("button", { hasText: "Refetch" })
+					.click();
+				await awaitCacheKey("debts.getAllUser", { succeed: 1 });
 			},
-			{ name: "grouped-errors" },
+			{ name: "grouped-errors", blacklistKeys: ["debts.get"] },
 		);
 	});
 });

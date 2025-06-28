@@ -1,125 +1,27 @@
 import React from "react";
 import { View } from "react-native";
 
-import { useQueries, useQuery } from "@tanstack/react-query";
-
-import {
-	DebtsGroup,
-	DebtsGroupSkeleton,
-} from "~app/components/app/debts-group";
 import { LoadableUser } from "~app/components/app/loadable-user";
-import { QueryErrorMessage } from "~app/components/error-message";
 import { PageHeader } from "~app/components/page-header";
-import { ShowResolvedDebtsOption } from "~app/features/settings/show-resolved-debts-option";
 import { User } from "~app/features/user/user";
-import { EvenDebtsDivider } from "~app/features/user-debts/even-debts-divider";
-import { useAggregatedDebts } from "~app/hooks/use-aggregated-debts";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { useDebtsWithDividers } from "~app/hooks/use-debts-with-dividers";
-import { useDividers } from "~app/hooks/use-dividers";
 import { useNavigate } from "~app/hooks/use-navigation";
-import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
-import type { TRPCQuerySuccessResult } from "~app/trpc";
-import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
-import { Divider } from "~components/divider";
-import {
-	AddIcon,
-	ExchangeIcon,
-	PencilIcon,
-	TransferIcon,
-} from "~components/icons";
+import { AddIcon, PencilIcon, TransferIcon } from "~components/icons";
 import { BackLink, ButtonLink } from "~components/link";
 import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
 import { Text } from "~components/text";
 import type { UsersId } from "~db/models";
 
-import { UserDebtPreview, UserDebtPreviewSkeleton } from "./user-debt-preview";
+import { UserDebtsGroup } from "./user-debts-group";
+import { UserDebtsList } from "./user-debts-list";
 
 type HeaderProps = {
 	userId: UsersId;
-	onEditClick?: () => void;
 };
 
-const Header: React.FC<HeaderProps> = ({ userId, onEditClick }) => (
-	<PageHeader
-		startContent={<BackLink to="/debts" />}
-		aside={
-			<View className="flex flex-row gap-2">
-				{onEditClick ? (
-					<Button
-						isIconOnly
-						variant="bordered"
-						color="secondary"
-						onPress={onEditClick}
-					>
-						<PencilIcon size={32} />
-					</Button>
-				) : null}
-				<ButtonLink
-					to="/debts/transfer"
-					search={{ from: userId }}
-					color="primary"
-					title="Transfer debts"
-					variant="bordered"
-					isIconOnly
-				>
-					<TransferIcon size={24} />
-				</ButtonLink>
-				<ButtonLink
-					color="primary"
-					to="/debts/add"
-					search={{ userId }}
-					title="Add debt"
-					variant="bordered"
-					isIconOnly
-				>
-					<AddIcon size={24} />
-				</ButtonLink>
-			</View>
-		}
-	>
-		<LoadableUser id={userId} />
-	</PageHeader>
-);
-
-type InnerProps = {
-	userId: UsersId;
-	query: TRPCQuerySuccessResult<"debts.getIdsByUser">;
-};
-
-export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
+const Header: React.FC<HeaderProps> = ({ userId }) => {
 	const navigate = useNavigate();
-	const [showResolvedDebts, setShowResolvedDebts] = useShowResolvedDebts();
-	const enableShowResolvedDebts = React.useCallback(
-		() => setShowResolvedDebts(true),
-		[setShowResolvedDebts],
-	);
-	const [
-		aggregatedDebts,
-		nonZeroAggregatedDebts,
-		aggregatedDebtsLoading,
-		aggregatedDebtsErrorQueries,
-	] = useAggregatedDebts(query);
-	const debtIds = query.data.map((debt) => debt.id);
-	const trpc = useTRPC();
-	const debtsQueries = useQueries({
-		queries: debtIds.map((debtId) =>
-			trpc.debts.get.queryOptions({ id: debtId }),
-		),
-	});
-	const successDebtsQueries = debtsQueries.filter(
-		(debtQuery) => debtQuery.status === "success",
-	);
-	const allSuccessQueries = React.useMemo(
-		() =>
-			successDebtsQueries.length === debtsQueries.length
-				? successDebtsQueries.map((successfulQuery) => successfulQuery.data)
-				: [],
-		[debtsQueries.length, successDebtsQueries],
-	);
-	const dividers = useDividers(allSuccessQueries, aggregatedDebts);
-	const debts = useDebtsWithDividers(debtIds, allSuccessQueries, dividers);
 	const [editModalOpen, { setTrue: openEditModal, setFalse: closeEditModal }] =
 		useBooleanState();
 	const onUserRemove = React.useCallback(() => {
@@ -127,54 +29,44 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 	}, [navigate]);
 	return (
 		<>
-			<Header userId={userId} onEditClick={openEditModal} />
-			<View className="flex-row items-center justify-center gap-4 px-16">
-				<DebtsGroup
-					isLoading={aggregatedDebtsLoading}
-					errorQueries={aggregatedDebtsErrorQueries}
-					debts={showResolvedDebts ? aggregatedDebts : nonZeroAggregatedDebts}
-				/>
-				{nonZeroAggregatedDebts.length > 1 ? (
-					<ButtonLink
-						color="primary"
-						to="/debts/user/$id/exchange"
-						params={{ id: userId }}
-						variant="bordered"
-						isIconOnly
-					>
-						<ExchangeIcon />
-					</ButtonLink>
-				) : null}
-				{aggregatedDebts.length !== nonZeroAggregatedDebts.length ||
-				dividers.length !== 0 ? (
-					<ShowResolvedDebtsOption className="absolute right-0" />
-				) : null}
-			</View>
-			<View className="gap-2">
-				{debts.map((debt) => (
-					<React.Fragment key={debt.id}>
-						{debt.dividerCurrencyCode ? (
-							<>
-								<Divider />
-								<EvenDebtsDivider currencyCode={debt.dividerCurrencyCode} />
-							</>
-						) : null}
-						<Divider />
-						<UserDebtPreview debtId={debt.id} />
-					</React.Fragment>
-				))}
-			</View>
-			{showResolvedDebts || dividers.length === 0 ? null : (
-				<View className="flex items-center">
-					<Button
-						variant="bordered"
-						color="primary"
-						onPress={enableShowResolvedDebts}
-					>
-						Show resolved debts
-					</Button>
-				</View>
-			)}
+			<PageHeader
+				startContent={<BackLink to="/debts" />}
+				aside={
+					<View className="flex flex-row gap-2">
+						<Button
+							isIconOnly
+							variant="bordered"
+							color="secondary"
+							onPress={openEditModal}
+						>
+							<PencilIcon size={32} />
+						</Button>
+						<ButtonLink
+							to="/debts/transfer"
+							search={{ from: userId }}
+							color="primary"
+							title="Transfer debts"
+							variant="bordered"
+							isIconOnly
+						>
+							<TransferIcon size={24} />
+						</ButtonLink>
+						<ButtonLink
+							color="primary"
+							to="/debts/add"
+							search={{ userId }}
+							title="Add debt"
+							variant="bordered"
+							isIconOnly
+						>
+							<AddIcon size={24} />
+						</ButtonLink>
+					</View>
+				}
+			>
+				<LoadableUser id={userId} />
+			</PageHeader>
+
 			<Modal isOpen={editModalOpen} onOpenChange={closeEditModal}>
 				<ModalContent>
 					<ModalHeader>
@@ -189,31 +81,10 @@ export const UserDebtsInner: React.FC<InnerProps> = ({ userId, query }) => {
 	);
 };
 
-export const UserDebtsScreen: React.FC<{ userId: UsersId }> = ({ userId }) => {
-	const trpc = useTRPC();
-	const query = useQuery(trpc.debts.getIdsByUser.queryOptions({ userId }));
-	const elements = React.useMemo(() => new Array<null>(3).fill(null), []);
-	if (query.status === "pending") {
-		return (
-			<>
-				<Header userId={userId} />
-				<View className="flex-row items-center justify-center">
-					<DebtsGroupSkeleton amount={3} />
-				</View>
-				<View className="gap-2">
-					{elements.map((_, index) => (
-						// eslint-disable-next-line react/no-array-index-key
-						<React.Fragment key={index}>
-							<Divider />
-							<UserDebtPreviewSkeleton />
-						</React.Fragment>
-					))}
-				</View>
-			</>
-		);
-	}
-	if (query.status === "error") {
-		return <QueryErrorMessage query={query} />;
-	}
-	return <UserDebtsInner query={query} userId={userId} />;
-};
+export const UserDebtsScreen: React.FC<{ userId: UsersId }> = ({ userId }) => (
+	<>
+		<Header userId={userId} />
+		<UserDebtsGroup userId={userId} />
+		<UserDebtsList userId={userId} />
+	</>
+);

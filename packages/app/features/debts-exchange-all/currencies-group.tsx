@@ -29,20 +29,17 @@ const CurrencyButton: React.FC<ButtonProps> = ({
 type Props = {
 	selectedCurrencyCode?: CurrencyCode;
 	aggregatedDebts: { currencyCode: CurrencyCode; sum: number }[];
-	isLoading: boolean;
 	onSelectOther: () => void;
 } & Pick<ButtonProps, "setSelectedCurrencyCode">;
 
 export const CurrenciesGroup: React.FC<Props> = ({
 	selectedCurrencyCode,
 	aggregatedDebts,
-	isLoading,
 	setSelectedCurrencyCode,
 	onSelectOther,
 }) => {
 	const isSelectedOther =
 		selectedCurrencyCode !== undefined &&
-		!isLoading &&
 		!aggregatedDebts.some((debt) => debt.currencyCode === selectedCurrencyCode);
 	const locale = useLocale();
 	return (

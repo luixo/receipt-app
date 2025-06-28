@@ -41,7 +41,7 @@ export const test = originalTest.extend<Fixtures>({
 		use(({ generateDebts = defaultGenerateDebts } = {}) => {
 			const { debtUser } = mockBase();
 			const debts = generateDebts({ faker, userId: debtUser.id });
-			const userDebtsEntries = entries(
+			const aggregatedDebts = entries(
 				debts.reduce<Record<CurrencyCode, number>>(
 					(acc, { currencyCode, amount }) => ({
 						...acc,
@@ -50,8 +50,7 @@ export const test = originalTest.extend<Fixtures>({
 					{},
 				),
 			).map(([currencyCode, sum]) => ({ currencyCode, sum }));
-			api.mockFirst("debts.getAll", userDebtsEntries);
-			api.mockFirst("debts.getAllUser", userDebtsEntries);
+			api.mockFirst("debts.getAllUser", aggregatedDebts);
 			api.mockFirst("debts.getUsersPaged", {
 				count: 1,
 				cursor: 0,
@@ -79,6 +78,7 @@ export const test = originalTest.extend<Fixtures>({
 			await page.goto(`/debts/user/${userId}/`);
 			if (awaitCache) {
 				await awaitCacheKey("users.get");
+				await awaitCacheKey("debts.getAllUser");
 				await awaitCacheKey("debts.getIdsByUser");
 			}
 			if (awaitDebts) {

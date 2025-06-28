@@ -1,11 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
-import { groupBy, values } from "remeda";
-
-import { GroupedQueryErrorMessage } from "~app/components/error-message";
 import { useLocale } from "~app/hooks/use-locale";
-import type { TRPCQueryErrorResult } from "~app/trpc";
 import { type CurrencyCode, formatCurrency } from "~app/utils/currency";
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
@@ -22,7 +18,7 @@ const debt = tv({
 });
 
 const DebtGroupElementSkeleton = () => (
-	<Skeleton className="h-6 w-20 rounded" />
+	<Skeleton className="h-6 w-20 rounded" data-testid="debt-group-element" />
 );
 
 type DebtElement = { currencyCode: CurrencyCode; sum: number };
@@ -84,40 +80,19 @@ export const DebtsGroupSkeleton: React.FC<{
 
 type Props = {
 	debts: DebtElement[];
-	isLoading?: boolean;
-	errorQueries?: TRPCQueryErrorResult<"debts.get">[];
 } & React.ComponentProps<typeof View>;
 
-export const DebtsGroup: React.FC<Props> = ({
-	debts,
-	className,
-	isLoading,
-	errorQueries,
-	...props
-}) => (
+export const DebtsGroup: React.FC<Props> = ({ debts, className, ...props }) => (
 	<View className={debtGroup({ className })} testID="debts-group" {...props}>
-		{isLoading ? (
-			<DebtsGroupSkeleton amount={3} />
-		) : errorQueries && errorQueries.length !== 0 ? (
-			values(groupBy(errorQueries, (query) => query.error.message)).map(
-				(queries) => (
-					<GroupedQueryErrorMessage
-						key={queries[0].error.message}
-						queries={queries}
-					/>
-				),
-			)
-		) : (
-			<SeparatedDebts>
-				{debts.map(({ currencyCode, sum }) => (
-					<DebtGroupElement
-						key={currencyCode}
-						currencyCode={currencyCode}
-						sum={sum}
-					/>
-				))}
-			</SeparatedDebts>
-		)}
-		{debts.length === 0 && !isLoading ? <Text>No debts yet</Text> : null}
+		<SeparatedDebts>
+			{debts.map(({ currencyCode, sum }) => (
+				<DebtGroupElement
+					key={currencyCode}
+					currencyCode={currencyCode}
+					sum={sum}
+				/>
+			))}
+		</SeparatedDebts>
+		{debts.length === 0 ? <Text>No debts yet</Text> : null}
 	</View>
 );

@@ -563,6 +563,9 @@ export const queriesFixtures = test.extend<QueriesFixtures>({
 					router as unknown as AnyTRPCRouter & RouterRecord,
 					path,
 				);
+				const procedureType =
+					// eslint-disable-next-line no-underscore-dangle
+					procedure._def.type === "query" ? "query" : "mutation";
 				const nextAmounts = await page.evaluate(
 					async ([
 						pathInner,
@@ -695,7 +698,6 @@ export const queriesFixtures = test.extend<QueriesFixtures>({
 						};
 						const awaitQueryKey = (
 							cacheKey: TRPCQueryKey,
-							prevAmounts: ActualAwaitAmounts,
 							expectedAmounts: ExpectedAwaitAmounts,
 							options: AwaitOptions,
 						): Promise<ActualAwaitAmounts> => {
@@ -703,7 +705,9 @@ export const queriesFixtures = test.extend<QueriesFixtures>({
 							return awaitKey(
 								"Query",
 								cacheKey,
-								prevAmounts,
+								// Queries might get updated, they don't keep updated like mutations
+								// It helps avoiding tracking a query switching from errored to succeed etc
+								{ succeed: 0, errored: 0 },
 								expectedAmounts,
 								options,
 								() => cache.findAll({ queryKey: [cacheKey.split(".")] }),
@@ -753,7 +757,6 @@ export const queriesFixtures = test.extend<QueriesFixtures>({
 							case "query":
 								return awaitQueryKey(
 									pathInner as TRPCQueryKey,
-									prevAmountsInner,
 									expectedAmountsInner,
 									optionsInner,
 								);
@@ -774,8 +777,7 @@ export const queriesFixtures = test.extend<QueriesFixtures>({
 						},
 						getAmount(optionsObject),
 						getOptions(optionsObject),
-						// eslint-disable-next-line no-underscore-dangle
-						procedure._def.type === "query" ? "query" : "mutation",
+						procedureType,
 						timeout,
 					] as const,
 				);

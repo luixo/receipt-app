@@ -6,7 +6,6 @@ import { DebtsGroup } from "~app/components/app/debts-group";
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { QueryErrorMessage } from "~app/components/error-message";
 import { PageHeader } from "~app/components/page-header";
-import { useAggregatedDebts } from "~app/hooks/use-aggregated-debts";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { useTRPC } from "~app/utils/trpc";
@@ -16,23 +15,19 @@ import type { UsersId } from "~db/models";
 
 type InnerProps = {
 	userId: UsersId;
-	query: TRPCQuerySuccessResult<"debts.getIdsByUser">;
+	query: TRPCQuerySuccessResult<"debts.getAllUser">;
 };
 
 const DebtsExchangeInner: React.FC<InnerProps> = ({ userId, query }) => {
 	const [showResolvedDebts] = useShowResolvedDebts();
-	const [
-		aggregatedDebts,
-		nonZeroAggregatedDebts,
-		aggregatedDebtsLoading,
-		aggregatedDebtsErrorQueries,
-	] = useAggregatedDebts(query);
 	return (
 		<>
 			<DebtsGroup
-				isLoading={aggregatedDebtsLoading}
-				errorQueries={aggregatedDebtsErrorQueries}
-				debts={showResolvedDebts ? aggregatedDebts : nonZeroAggregatedDebts}
+				debts={
+					showResolvedDebts
+						? query.data
+						: query.data.filter((element) => element.sum !== 0)
+				}
 			/>
 			<ButtonLink
 				color="primary"
@@ -59,7 +54,7 @@ type Props = { userId: UsersId };
 
 const DebtsExchangeLoader: React.FC<Props> = ({ userId }) => {
 	const trpc = useTRPC();
-	const query = useQuery(trpc.debts.getIdsByUser.queryOptions({ userId }));
+	const query = useQuery(trpc.debts.getAllUser.queryOptions({ userId }));
 	if (query.status === "pending") {
 		return <Spinner />;
 	}

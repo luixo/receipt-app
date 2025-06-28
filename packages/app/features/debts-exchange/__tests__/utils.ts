@@ -1,6 +1,8 @@
 import type { Locator } from "@playwright/test";
 import { TRPCError } from "@trpc/server";
+import { entries } from "remeda";
 
+import type { CurrencyCode } from "~app/utils/currency";
 import type { UsersId } from "~db/models";
 import { test as originalTest } from "~tests/frontend/fixtures";
 import {
@@ -22,7 +24,7 @@ type Fixtures = {
 	};
 	openDebtsExchangeScreen: (
 		userId: UsersId,
-		options?: { awaitCache?: boolean; awaitDebts?: number },
+		options?: { awaitCache?: boolean },
 	) => Promise<void>;
 	exchangeAllToOneButton: Locator;
 	exchangeSpecificButton: Locator;
@@ -46,10 +48,16 @@ export const test = originalTest.extend<Fixtures>({
 				amount: { min: 3, max: 6 },
 				userId: debtUser.id,
 			});
-			api.mockFirst(
-				"debts.getIdsByUser",
-				debts.map(({ id, timestamp }) => ({ id, timestamp })),
-			);
+			const aggregatedDebts = entries(
+				debts.reduce<Record<CurrencyCode, number>>(
+					(acc, { currencyCode, amount }) => ({
+						...acc,
+						[currencyCode]: (acc[currencyCode] || 0) + amount,
+					}),
+					{},
+				),
+			).map(([currencyCode, sum]) => ({ currencyCode, sum }));
+			api.mockFirst("debts.getAllUser", aggregatedDebts);
 			api.mockFirst("debts.get", ({ input: { id: lookupId } }) => {
 				const matchedDebt = debts.find((debt) => debt.id === lookupId);
 				if (!matchedDebt) {
@@ -64,14 +72,11 @@ export const test = originalTest.extend<Fixtures>({
 		}),
 
 	openDebtsExchangeScreen: ({ page, awaitCacheKey }, use) =>
-		use(async (userId, { awaitCache = true, awaitDebts } = {}) => {
+		use(async (userId, { awaitCache = true } = {}) => {
 			await page.goto(`/debts/user/${userId}/exchange/`);
 			if (awaitCache) {
 				await awaitCacheKey("users.get");
-				await awaitCacheKey("debts.getIdsByUser");
-			}
-			if (awaitDebts) {
-				await awaitCacheKey("debts.get", awaitDebts);
+				await awaitCacheKey("debts.getAllUser");
 			}
 		}),
 

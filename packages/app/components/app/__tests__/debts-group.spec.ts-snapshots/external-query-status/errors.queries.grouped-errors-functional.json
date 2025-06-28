@@ -1,5 +1,5 @@
 {
-	"debts.get": {
-		"clientCalls": 2
+	"debts.getAllUser": {
+		"clientCalls": 1
 	}
 }

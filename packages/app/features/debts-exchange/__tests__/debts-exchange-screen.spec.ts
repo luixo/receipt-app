@@ -25,12 +25,12 @@ test.describe("Wrapper component", () => {
 		awaitCacheKey,
 	}) => {
 		const { debtUser } = mockBase();
-		const userDebtsIdsPause = api.createPause();
-		api.mockFirst("debts.getIdsByUser", async () => {
-			await userDebtsIdsPause.promise;
+		const userDebtsPause = api.createPause();
+		api.mockFirst("debts.getAllUser", async () => {
+			await userDebtsPause.promise;
 			throw new TRPCError({
 				code: "FORBIDDEN",
-				message: `Mock "debts.getIdsByUser" error`,
+				message: `Mock "debts.getAllUser" error`,
 			});
 		});
 		await openDebtsExchangeScreen(debtUser.id, { awaitCache: false });
@@ -41,8 +41,8 @@ test.describe("Wrapper component", () => {
 		await expect(exchangeAllToOneButton).not.toBeAttached();
 		await expect(exchangeSpecificButton).not.toBeAttached();
 
-		userDebtsIdsPause.resolve();
-		await expect(errorMessage(`Mock "debts.getIdsByUser" error`)).toBeVisible();
+		userDebtsPause.resolve();
+		await expect(errorMessage(`Mock "debts.getAllUser" error`)).toBeVisible();
 		await expect(exchangeAllToOneButton).not.toBeAttached();
 		await expect(exchangeSpecificButton).not.toBeAttached();
 	});
@@ -98,13 +98,13 @@ test.describe("Showed debts depending on 'show resolved debts' option", () => {
 		cookieManager,
 		debtsGroupElement,
 	}) => {
-		const { debtUser, debts } = mockDebts({
+		const { debtUser } = mockDebts({
 			generateDebts: generateDebtsWithEmpty,
 		});
 		await cookieManager.addCookie(SETTINGS_STORE_NAME, {
 			showResolvedDebts: true,
 		});
-		await openDebtsExchangeScreen(debtUser.id, { awaitDebts: debts.length });
+		await openDebtsExchangeScreen(debtUser.id);
 		await expect(debtsGroupElement).toHaveCount(2);
 	});
 
@@ -114,13 +114,13 @@ test.describe("Showed debts depending on 'show resolved debts' option", () => {
 		cookieManager,
 		debtsGroupElement,
 	}) => {
-		const { debtUser, debts } = mockDebts({
+		const { debtUser } = mockDebts({
 			generateDebts: generateDebtsWithEmpty,
 		});
 		await cookieManager.addCookie(SETTINGS_STORE_NAME, {
 			showResolvedDebts: false,
 		});
-		await openDebtsExchangeScreen(debtUser.id, { awaitDebts: debts.length });
+		await openDebtsExchangeScreen(debtUser.id);
 		await expect(debtsGroupElement).toHaveCount(1);
 	});
 });

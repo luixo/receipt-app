@@ -1,6 +1,8 @@
 import type { Locator } from "@playwright/test";
 import { TRPCError } from "@trpc/server";
+import { entries } from "remeda";
 
+import type { CurrencyCode } from "~app/utils/currency";
 import type { UsersId } from "~db/models";
 import { test as originalTest } from "~tests/frontend/fixtures";
 import {
@@ -45,6 +47,16 @@ export const test = originalTest.extend<Fixtures>({
 				amount: { min: 3, max: 6 },
 				userId: debtUser.id,
 			});
+			const aggregatedDebts = entries(
+				debts.reduce<Record<CurrencyCode, number>>(
+					(acc, { currencyCode, amount }) => ({
+						...acc,
+						[currencyCode]: (acc[currencyCode] || 0) + amount,
+					}),
+					{},
+				),
+			).map(([currencyCode, sum]) => ({ currencyCode, sum }));
+			api.mockFirst("debts.getAllUser", aggregatedDebts);
 			api.mockFirst(
 				"debts.getIdsByUser",
 				debts.map(({ id, timestamp }) => ({ id, timestamp })),
@@ -67,6 +79,7 @@ export const test = originalTest.extend<Fixtures>({
 			await page.goto(`/debts/user/${userId}/`);
 			if (awaitCache) {
 				await awaitCacheKey("users.get");
+				await awaitCacheKey("debts.getAllUser");
 				await awaitCacheKey("debts.getIdsByUser");
 			}
 			if (awaitDebts) {

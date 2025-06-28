@@ -1,5 +1,4 @@
 import { mergeTests } from "@playwright/test";
-import { TRPCError } from "@trpc/server";
 
 import { test as debtsTest } from "~app/features/debts/__tests__/utils";
 import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
@@ -51,71 +50,5 @@ test("Multiple groups with different directions", async ({
 	await openUserDebtsScreen(debtUser.id, { awaitDebts: AMOUNT });
 	await expectScreenshotWithSchemes("multiple.png", {
 		locator: debtsGroup,
-	});
-});
-
-test.describe("External query status", () => {
-	test("loading", async ({
-		api,
-		mockDebts,
-		openUserDebtsScreen,
-		debtsGroup,
-		expectScreenshotWithSchemes,
-	}, testInfo) => {
-		const { debtUser, debts } = mockDebts({
-			generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 3 }),
-		});
-		const debtPause = api.createPause();
-		api.mockFirst("debts.get", async ({ input: { id }, next }) => {
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			if (id === debts[0]!.id) {
-				await debtPause.promise;
-			}
-			return next();
-		});
-		await openUserDebtsScreen(debtUser.id);
-		await expectScreenshotWithSchemes("external-loading.png", {
-			locator: debtsGroup,
-			mapExpectedPixels: ({ expectedPixels }) => [
-				{
-					location: testInfo.project.name === "320-safari" ? [0, 0] : [100, 0],
-					rgb: expectedPixels[0].rgb,
-				},
-				...expectedPixels.slice(1),
-			],
-		});
-	});
-
-	test("error", async ({
-		api,
-		mockDebts,
-		openUserDebtsScreen,
-		debtsGroup,
-		expectScreenshotWithSchemes,
-	}) => {
-		const { debtUser, debts } = mockDebts({
-			generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 3 }),
-		});
-		api.mockFirst("debts.get", async ({ input: { id }, next }) => {
-			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-			if (id === debts[0]!.id) {
-				throw new TRPCError({
-					code: "FORBIDDEN",
-					message: `Mock "debts.get" error`,
-				});
-			}
-			return next();
-		});
-		await openUserDebtsScreen(debtUser.id);
-		await expectScreenshotWithSchemes("external-error.png", {
-			locator: debtsGroup,
-			mapExpectedPixels: ({ expectedPixels, colorMode, boundingBox }) => [
-				{
-					location: [boundingBox.width / 2, 10],
-					rgb: colorMode === "light" ? expectedPixels[0].rgb : "#18181b",
-				},
-				...expectedPixels.slice(1),
-			],
-		});
 	});
 });

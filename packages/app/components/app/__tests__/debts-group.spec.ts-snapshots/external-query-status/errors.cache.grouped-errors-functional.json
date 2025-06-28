@@ -1,39 +1,21 @@
 {
 	"queries": {
-		"debts.get:[{\"id\":\"4a930b5a-01c2-4e98-8b35-2bf4c41724de\"}]": {
+		"debts.getAllUser:[{\"userId\":\"a1ae1509-f692-4009-be9d-12335b5ec817\"}]": {
 			"state": {
-				"data": {
-					"id": "4a930b5a-01c2-4e98-8b35-2bf4c41724de",
-					"currencyCode": "SDG",
-					"createdAt": "2020-01-01T00:00:00.000Z",
-					"timestamp": "2019-12-25T11:12:19.541Z",
-					"note": "quas ab eos incidunt",
-					"receiptId": "<undefined>",
-					"amount": 2181.55,
-					"updatedAt": "2020-01-01T00:00:00.000Z",
-					"their": "<undefined>",
-					"userId": "a1ae1509-f692-4009-be9d-12335b5ec817"
-				},
-				"dataUpdateCount": 1,
-				"error": null,
-				"fetchFailureCount": -1,
-				"status": "success"
-			}
-		},
-		"debts.get:[{\"id\":\"e8eb5dc2-5db4-49e5-ba21-952752ba8dd8\"}]": {
-			"state": {
-				"data": {
-					"id": "e8eb5dc2-5db4-49e5-ba21-952752ba8dd8",
-					"currencyCode": "TMT",
-					"createdAt": "2020-01-01T00:00:00.000Z",
-					"timestamp": "2019-12-25T18:57:19.411Z",
-					"note": "aliquam eos odio pariatur",
-					"receiptId": "<undefined>",
-					"amount": -2798.53,
-					"updatedAt": "2020-01-01T00:00:00.000Z",
-					"their": "<undefined>",
-					"userId": "a1ae1509-f692-4009-be9d-12335b5ec817"
-				},
+				"data": [
+					{
+						"currencyCode": "RSD",
+						"sum": 388.48
+					},
+					{
+						"currencyCode": "SDG",
+						"sum": 2181.55
+					},
+					{
+						"currencyCode": "TMT",
+						"sum": -2798.53
+					}
+				],
 				"dataUpdateCount": 1,
 				"error": null,
 				"fetchFailureCount": -1,
