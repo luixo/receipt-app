@@ -6,10 +6,11 @@ import { ReceiptsScreen } from "~app/features/receipts/receipts-screen";
 import { getQueryStates } from "~app/hooks/use-navigation";
 import {
 	DEFAULT_LIMIT,
+	limitSchema,
+	offsetSchema,
 	receiptsFiltersSchema,
 	receiptsOrderBySchema,
 } from "~app/utils/validation";
-import { limitSchema, offsetSchema } from "~web/handlers/validation";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
 
 const [schema, defaults] = searchParamsWithDefaults(

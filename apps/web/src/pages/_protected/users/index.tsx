@@ -4,8 +4,11 @@ import { z } from "zod/v4";
 
 import { UsersScreen } from "~app/features/users/users-screen";
 import { getQueryStates } from "~app/hooks/use-navigation";
-import { DEFAULT_LIMIT } from "~app/utils/validation";
-import { limitSchema, offsetSchema } from "~web/handlers/validation";
+import {
+	DEFAULT_LIMIT,
+	limitSchema,
+	offsetSchema,
+} from "~app/utils/validation";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
 
 const [schema, defaults] = searchParamsWithDefaults(

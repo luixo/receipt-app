@@ -2,23 +2,24 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
 import {
+	limitSchema,
+	offsetSchema,
+	receiptsFiltersSchema,
+	receiptsOrderBySchema,
+} from "~app/utils/validation";
+import {
 	getOwnReceipts,
 	getParticipantsReceipts,
 } from "~web/handlers/receipts/utils";
 import { authProcedure } from "~web/handlers/trpc";
-import { limitSchema, offsetSchema } from "~web/handlers/validation";
 
 export const procedure = authProcedure
 	.input(
 		z.strictObject({
 			cursor: offsetSchema,
 			limit: limitSchema,
-			orderBy: z.literal(["date-asc", "date-desc"]),
-			filters: z
-				.strictObject({
-					ownedByMe: z.boolean().optional(),
-				})
-				.optional(),
+			orderBy: receiptsOrderBySchema,
+			filters: receiptsFiltersSchema.optional(),
 		}),
 	)
 	.query(async ({ input: { filters = {}, ...input }, ctx }) => {

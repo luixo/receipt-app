@@ -1,9 +1,11 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
-import { passwordSchema } from "~app/utils/validation";
+import {
+	passwordSchema,
+	resetPasswordTokenSchema,
+} from "~app/utils/validation";
 import { unauthProcedure } from "~web/handlers/trpc";
-import { resetPasswordTokenSchema } from "~web/handlers/validation";
 import { generatePasswordData } from "~web/utils/crypto";
 
 export const procedure = unauthProcedure

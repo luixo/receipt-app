@@ -3,7 +3,7 @@ import { zodValidator } from "@tanstack/zod-adapter";
 import { z } from "zod/v4";
 
 import { ConfirmEmailScreen } from "~app/features/confirm-email/confirm-email-screen";
-import { confirmEmailTokenSchema } from "~web/handlers/validation";
+import { confirmEmailTokenSchema } from "~app/utils/validation";
 
 const Wrapper = () => {
 	const { token } = Route.useSearch();

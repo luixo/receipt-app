@@ -2,16 +2,15 @@ import { TRPCError } from "@trpc/server";
 import { sql } from "kysely";
 import { z } from "zod/v4";
 
-import { MAX_SUGGEST_LENGTH } from "~app/utils/validation";
+import {
+	MAX_SUGGEST_LENGTH,
+	limitSchema,
+	offsetSchema,
+} from "~app/utils/validation";
 import type { UsersId } from "~db/models";
 import { getAccessRole } from "~web/handlers/receipts/utils";
 import { authProcedure } from "~web/handlers/trpc";
-import {
-	limitSchema,
-	offsetSchema,
-	receiptIdSchema,
-	userIdSchema,
-} from "~web/handlers/validation";
+import { receiptIdSchema, userIdSchema } from "~web/handlers/validation";
 
 const SIMILARTY_THRESHOLD = 0.33;
 

@@ -1,15 +1,12 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
+import { limitSchema } from "~app/utils/validation";
 import type { UsersId } from "~db/models";
 import { MONTH } from "~utils/time";
 import { getAccessRole } from "~web/handlers/receipts/utils";
 import { authProcedure } from "~web/handlers/trpc";
-import {
-	limitSchema,
-	receiptIdSchema,
-	userIdSchema,
-} from "~web/handlers/validation";
+import { receiptIdSchema, userIdSchema } from "~web/handlers/validation";
 
 export const procedure = authProcedure
 	.input(

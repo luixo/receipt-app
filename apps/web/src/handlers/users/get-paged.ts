@@ -1,8 +1,8 @@
 import { z } from "zod/v4";
 
+import { limitSchema, offsetSchema } from "~app/utils/validation";
 import type { UsersId } from "~db/models";
 import { authProcedure } from "~web/handlers/trpc";
-import { limitSchema, offsetSchema } from "~web/handlers/validation";
 
 export const procedure = authProcedure
 	.input(

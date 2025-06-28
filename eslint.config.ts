@@ -61,6 +61,47 @@ const restrictedImports = [
 	},
 ];
 
+const noRestrictedSyntaxGeneral = [
+	{
+		selector: "MemberExpression[object.name='Object'][property.name='keys']",
+		message:
+			"Use strongly typed function `keys` from `remeda` package instead.",
+	},
+	{
+		selector: "MemberExpression[object.name='Object'][property.name='values']",
+		message:
+			"Use strongly typed function `values` from `remeda` package instead.",
+	},
+	{
+		selector: "MemberExpression[object.name='Object'][property.name='entries']",
+		message:
+			"Use strongly typed function `entries` (or `mapValues`) from `remeda` package instead.",
+	},
+	{
+		selector:
+			"MemberExpression[object.name='Object'][property.name='fromEntries']",
+		message:
+			"Use strongly typed function `fromEntries` (or `mapValues`) from `remeda` package instead.",
+	},
+	...restrictedImports.flatMap(({ from, imports }) =>
+		imports.map(({ actual, expected }) => ({
+			selector: `ImportDeclaration[source.value=/${from}/] > ImportSpecifier[local.name=${
+				actual instanceof RegExp ? `/${actual.source}/` : `'${actual}'`
+			}]`,
+			message: `Prefer renaming '${actual.toString()}' to '${expected}'`,
+		})),
+	),
+	{
+		selector: "ImportDeclaration[source.value='~web/handlers/validation']",
+		message:
+			"Do not import from we validation, it includes heavy currency data!",
+	},
+	{
+		selector: "ExportAllDeclaration",
+		message: "Do not use barrel export, prefer named export",
+	},
+] as const;
+
 const overriddenRules = {
 	name: "local/overridden",
 	rules: {
@@ -77,45 +118,7 @@ const overriddenRules = {
 		"no-alert": "error",
 		// `void foo` is a mark of deliberately floating promise
 		"no-void": ["error", { allowAsStatement: true }],
-		"no-restricted-syntax": [
-			"error",
-			{
-				selector:
-					"MemberExpression[object.name='Object'][property.name='keys']",
-				message:
-					"Use strongly typed function `keys` from `remeda` package instead.",
-			},
-			{
-				selector:
-					"MemberExpression[object.name='Object'][property.name='values']",
-				message:
-					"Use strongly typed function `values` from `remeda` package instead.",
-			},
-			{
-				selector:
-					"MemberExpression[object.name='Object'][property.name='entries']",
-				message:
-					"Use strongly typed function `entries` (or `mapValues`) from `remeda` package instead.",
-			},
-			{
-				selector:
-					"MemberExpression[object.name='Object'][property.name='fromEntries']",
-				message:
-					"Use strongly typed function `fromEntries` (or `mapValues`) from `remeda` package instead.",
-			},
-			...restrictedImports.flatMap(({ from, imports }) =>
-				imports.map(({ actual, expected }) => ({
-					selector: `ImportDeclaration[source.value=/${from}/] > ImportSpecifier[local.name=${
-						actual instanceof RegExp ? `/${actual.source}/` : `'${actual}'`
-					}]`,
-					message: `Prefer renaming '${actual.toString()}' to '${expected}'`,
-				})),
-			),
-			{
-				selector: "ExportAllDeclaration",
-				message: "Do not use barrel export, prefer named export",
-			},
-		] as Linter.RuleSeverityAndOptions,
+		"no-restricted-syntax": ["error", ...noRestrictedSyntaxGeneral],
 
 		// Custom devDependencies
 		"import-x/no-extraneous-dependencies": [
@@ -494,6 +497,18 @@ export default ts.config(
 		rules: {
 			// We use routes in function components that are defined before the component
 			"@typescript-eslint/no-use-before-define": "off",
+		},
+	},
+	{
+		// Handlers is the only place where handlers validation is allowed to be imported from
+		files: ["apps/web/src/handlers/**/*"],
+		rules: {
+			"no-restricted-syntax": [
+				"error",
+				...noRestrictedSyntaxGeneral.filter(
+					(element) => !element.selector.includes("~web/handlers/validation"),
+				),
+			],
 		},
 	},
 	{

@@ -1,13 +1,13 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
+import { voidAccountTokenSchema } from "~app/utils/validation";
 import { unauthProcedure } from "~web/handlers/trpc";
-import { confirmEmailTokenSchema } from "~web/handlers/validation";
 
 export const procedure = unauthProcedure
 	.input(
 		z.strictObject({
-			token: confirmEmailTokenSchema,
+			token: voidAccountTokenSchema,
 		}),
 	)
 	.mutation(async ({ input, ctx }) => {
