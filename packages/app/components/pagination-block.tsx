@@ -40,24 +40,26 @@ export const PaginationBlock: React.FC<Props> = ({
 					{...props}
 				/>
 			) : null}
-			<Select
-				aria-label="Items per page"
-				className="max-w-40 justify-self-end"
-				selectedKeys={[limit.toString()]}
-				onSelectionChange={(selected) =>
-					setLimit(
-						selected instanceof Set
-							? Number(Array.from(selected)[0])
-							: DEFAULT_LIMIT,
-					)
-				}
-			>
-				{LIMITS.map((limitItem) => (
-					<SelectItem key={limitItem} textValue={`${limitItem} / page`}>
-						{limitItem}
-					</SelectItem>
-				))}
-			</Select>
+			{totalCount <= DEFAULT_LIMIT ? null : (
+				<Select
+					aria-label="Items per page"
+					className="max-w-40 justify-self-end"
+					selectedKeys={[limit.toString()]}
+					onSelectionChange={(selected) =>
+						setLimit(
+							selected instanceof Set
+								? Number(Array.from(selected)[0])
+								: DEFAULT_LIMIT,
+						)
+					}
+				>
+					{LIMITS.map((limitItem) => (
+						<SelectItem key={limitItem} textValue={`${limitItem} / page`}>
+							{limitItem}
+						</SelectItem>
+					))}
+				</Select>
+			)}
 		</View>
 	);
 };
