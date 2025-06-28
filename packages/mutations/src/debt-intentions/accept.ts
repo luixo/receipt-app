@@ -29,13 +29,7 @@ export const options: UseContextedMutationOptions<
 						(sum) => sum - (intention.current?.amount ?? 0) + intention.amount,
 						(snapshot) => () => snapshot,
 					),
-				getByUsers: (controller) =>
-					controller.updateCurrency(
-						intention.userId,
-						intention.currencyCode,
-						(sum) => sum - (intention.current?.amount ?? 0) + intention.amount,
-						(snapshot) => () => snapshot,
-					),
+				getUsersPaged: (controller) => controller.update(intention.userId),
 				getIdsByUser: (controller) => {
 					if (intention.current) {
 						return controller.update(
@@ -108,7 +102,7 @@ export const options: UseContextedMutationOptions<
 			updateDebts(controllerContext, {
 				getAll: undefined,
 				getAllUser: undefined,
-				getByUsers: undefined,
+				getUsersPaged: undefined,
 				getIdsByUser: undefined,
 				get: (controller) =>
 					controller.update(intention.id, (debt) => ({

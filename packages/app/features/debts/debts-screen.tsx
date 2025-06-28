@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
 import { useDebtsIntentions } from "~app/hooks/use-debts-intentions";
+import type { SearchParamState } from "~app/hooks/use-navigation";
 import { useTRPC } from "~app/utils/trpc";
 import { Badge } from "~components/badge";
 import { AddIcon, DebtIcon, InboxIcon, TransferIcon } from "~components/icons";
@@ -13,7 +14,10 @@ import { ButtonLink } from "~components/link";
 import { Debts } from "./debts";
 import { DebtsAggregated } from "./debts-aggregated";
 
-export const DebtsScreen: React.FC = () => {
+export const DebtsScreen: React.FC<{
+	limitState: SearchParamState<"/debts", "limit">;
+	offsetState: SearchParamState<"/debts", "offset">;
+}> = ({ limitState, offsetState }) => {
 	const trpc = useTRPC();
 	const settingsQuery = useQuery(trpc.accountSettings.get.queryOptions());
 	const inboundDebtsAmount = useDebtsIntentions();
@@ -78,7 +82,7 @@ export const DebtsScreen: React.FC = () => {
 			</PageHeader>
 			<EmailVerificationCard />
 			<DebtsAggregated />
-			<Debts />
+			<Debts limitState={limitState} offsetState={offsetState} />
 		</>
 	);
 };

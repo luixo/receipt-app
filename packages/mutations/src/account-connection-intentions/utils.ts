@@ -37,7 +37,7 @@ export const updateUserConnected = (
 		getAllUser: undefined,
 		getIdsByUser: undefined,
 		// A newly connected account may have new debts for us
-		getByUsers: (controller) => {
+		getUsersPaged: (controller) => {
 			void controller.invalidate();
 		},
 		get: undefined,

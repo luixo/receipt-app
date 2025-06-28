@@ -28,13 +28,7 @@ export const options: UseContextedMutationOptions<
 						(sum) => sum - currDebt.amount,
 						() => (sum) => sum + currDebt.amount,
 					),
-				getByUsers: (controller) =>
-					controller.updateCurrency(
-						currDebt.userId,
-						currDebt.currencyCode,
-						(sum) => sum - currDebt.amount,
-						() => (sum) => sum + currDebt.amount,
-					),
+				getUsersPaged: (controller) => controller.update(currDebt.userId),
 				getIdsByUser: (controller) =>
 					controller.remove(currDebt.userId, updateObject.id),
 				// We remove the debt from everywhere else
@@ -79,7 +73,7 @@ export const options: UseContextedMutationOptions<
 		updateDebts(controllerContext, {
 			getAll: undefined,
 			getAllUser: undefined,
-			getByUsers: undefined,
+			getUsersPaged: undefined,
 			getIdsByUser: undefined,
 			get: (controller) => controller.remove(updateObject.id),
 			getIntentions: (controller) => {

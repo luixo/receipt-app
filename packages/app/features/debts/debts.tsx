@@ -1,36 +1,76 @@
 import type React from "react";
 import { View } from "react-native";
 
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { isNonNullish, values } from "remeda";
 
 import { EmptyCard } from "~app/components/empty-card";
 import { QueryErrorMessage } from "~app/components/error-message";
-import { useAggregatedAllDebts } from "~app/hooks/use-aggregated-all-debts";
+import { PaginationBlock } from "~app/components/pagination-block";
+import { useCursorPaging } from "~app/hooks/use-cursor-paging";
+import type { SearchParamState } from "~app/hooks/use-navigation";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
-import type { TRPCQuerySuccessResult } from "~app/trpc";
+import type { TRPCQueryInput } from "~app/trpc";
 import { useTRPC } from "~app/utils/trpc";
+import { Header } from "~components/header";
 import { AddIcon } from "~components/icons";
 import { ButtonLink } from "~components/link";
+import { Overlay } from "~components/overlay";
+import { Spinner } from "~components/spinner";
+import { Text } from "~components/text";
 
 import {
 	UserDebtsPreview,
 	UserDebtsPreviewSkeleton,
 } from "./user-debts-preview";
 
-type InnerProps = {
-	query: TRPCQuerySuccessResult<"debts.getByUsers">;
+type Input = TRPCQueryInput<"debts.getUsersPaged">;
+const useDebtsQuery = (
+	input: Omit<Input, "cursor">,
+	cursor: Input["cursor"],
+) => {
+	const trpc = useTRPC();
+	return useQuery(
+		trpc.debts.getUsersPaged.queryOptions(
+			{ ...input, cursor },
+			{ placeholderData: keepPreviousData },
+		),
+	);
 };
 
-const DebtsInner: React.FC<InnerProps> = ({ query }) => {
-	const [showResolvedDebts] = useShowResolvedDebts();
-	const [sums, nonZeroSums] = useAggregatedAllDebts(query.data);
+const skeletonElements = new Array<null>(5).fill(null).map((_, index) => index);
 
-	if (showResolvedDebts ? sums.length === 0 : nonZeroSums.length === 0) {
+type Props = {
+	limitState: SearchParamState<"/debts", "limit">;
+	offsetState: SearchParamState<"/debts", "offset">;
+};
+
+export const Debts: React.FC<Props> = ({ limitState, offsetState }) => {
+	const [showResolvedDebts] = useShowResolvedDebts();
+	const [limit, setLimit] = limitState;
+	const filters = {};
+	const { totalCount, query, pagination } = useCursorPaging(
+		useDebtsQuery,
+		{
+			limit,
+			filters: { showResolved: showResolvedDebts, ...filters },
+		},
+		offsetState,
+	);
+
+	if (
+		!totalCount &&
+		query.fetchStatus !== "fetching" &&
+		query.fetchStatus !== "idle"
+	) {
+		if (query.status === "error") {
+			return <QueryErrorMessage query={query} />;
+		}
 		return (
 			<EmptyCard title="You have no debts">
 				<View className="items-center gap-4">
-					<View className="flex-row">
-						Press
+					<View className="flex-row items-center">
+						<Text className="text-xl">Press</Text>
 						<ButtonLink
 							to="/debts/add"
 							color="primary"
@@ -41,42 +81,52 @@ const DebtsInner: React.FC<InnerProps> = ({ query }) => {
 						>
 							<AddIcon size={24} />
 						</ButtonLink>
-						to add a debt
+						<Text className="text-xl">to add a debt</Text>
 					</View>
 				</View>
 			</EmptyCard>
 		);
 	}
 
-	return (
-		<View className="gap-2">
-			{query.data.map(({ userId, debts }) => {
-				const allDebtsResolved = debts.every((debt) => debt.sum === 0);
-				if (allDebtsResolved && !showResolvedDebts) {
-					return null;
-				}
-				return <UserDebtsPreview key={userId} userId={userId} />;
-			})}
-		</View>
+	const paginationElement = (
+		<PaginationBlock
+			totalCount={totalCount}
+			limit={limit}
+			setLimit={setLimit}
+			props={pagination}
+		/>
 	);
-};
 
-const skeletonElements = new Array<null>(5).fill(null).map((_, index) => index);
-
-export const Debts: React.FC = () => {
-	const trpc = useTRPC();
-	const query = useQuery(trpc.debts.getByUsers.queryOptions());
-	if (query.status === "pending") {
-		return (
-			<View className="gap-2">
-				{skeletonElements.map((index) => (
-					<UserDebtsPreviewSkeleton key={index} />
-				))}
-			</View>
-		);
-	}
-	if (query.status === "error") {
-		return <QueryErrorMessage query={query} />;
-	}
-	return <DebtsInner query={query} />;
+	return (
+		<>
+			{paginationElement}
+			<Overlay
+				className="gap-2"
+				overlay={
+					query.fetchStatus === "fetching" && query.isPlaceholderData ? (
+						<Spinner size="lg" />
+					) : undefined
+				}
+			>
+				{query.status === "error" ? (
+					<QueryErrorMessage query={query} />
+				) : query.status === "pending" ? (
+					<View className="gap-2">
+						{skeletonElements.map((index) => (
+							<UserDebtsPreviewSkeleton key={index} />
+						))}
+					</View>
+				) : !totalCount && values(filters).filter(isNonNullish).length === 0 ? (
+					<Header className="text-center">No debts under given filters</Header>
+				) : (
+					<View className="gap-2">
+						{query.data.items.map((userId) => (
+							<UserDebtsPreview key={userId} userId={userId} />
+						))}
+					</View>
+				)}
+			</Overlay>
+			{paginationElement}
+		</>
+	);
 };

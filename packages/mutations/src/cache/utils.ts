@@ -9,6 +9,7 @@ import type {
 	TRPCQueryOutput,
 	TRPCSplitQueryKey,
 } from "~app/trpc";
+import type { MaybePromise } from "~utils/types";
 
 import type {
 	ControllerContext,
@@ -104,7 +105,7 @@ type UpdateRevertOption<
 	},
 > = (
 	controller: ReturnType<GetController["getRevertController"]>,
-) => UpdaterRevertResult | undefined;
+) => MaybePromise<UpdaterRevertResult | undefined>;
 
 type UpdateOption<
 	GetController extends {
@@ -123,14 +124,14 @@ export const getUpdaters = <
 >(
 	input: T,
 ) => {
-	const updateRevert = (
+	const updateRevert = async (
 		controllerContext: ControllerContext,
 		options: {
 			[K in keyof T]: UpdateRevertOption<T[K]> | undefined;
 		},
-	) =>
-		mergeUpdaterResults(
-			...entries(input).map(([key, { getRevertController }]) => {
+	) => {
+		const results = await Promise.all(
+			entries(input).map(async ([key, { getRevertController }]) => {
 				const updater = options[key];
 				if (!updater) {
 					return;
@@ -142,6 +143,8 @@ export const getUpdaters = <
 				);
 			}),
 		);
+		return mergeUpdaterResults(...results);
+	};
 
 	const update = (
 		controllerContext: ControllerContext,

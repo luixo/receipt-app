@@ -194,5 +194,9 @@ export const receiptsFiltersSchema = z.strictObject({
 });
 export const receiptsOrderBySchema = z.enum(["date-asc", "date-desc"]);
 
+export const debtsFiltersSchema = z.strictObject({
+	showResolved: z.boolean().optional(),
+});
+
 export const DEFAULT_LIMIT = 10;
 export const LIMITS = [DEFAULT_LIMIT, 25, 50, 100];
