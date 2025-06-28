@@ -5,6 +5,7 @@ import { keepPreviousData, useQueries, useQuery } from "@tanstack/react-query";
 import { SkeletonUser } from "~app/components/app/user";
 import { EmptyCard } from "~app/components/empty-card";
 import { QueryErrorMessage } from "~app/components/error-message";
+import { PaginationBlock } from "~app/components/pagination-block";
 import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import type { SearchParamState } from "~app/hooks/use-navigation";
 import type { TRPCQueryErrorResult, TRPCQueryInput } from "~app/trpc";
@@ -12,7 +13,6 @@ import { useTRPC } from "~app/utils/trpc";
 import { AddIcon } from "~components/icons";
 import { ButtonLink } from "~components/link";
 import { Overlay } from "~components/overlay";
-import { Pagination } from "~components/pagination";
 import { Spinner } from "~components/spinner";
 import type { UsersId } from "~db/models";
 
@@ -65,13 +65,19 @@ const UserPreviews: React.FC<{ ids: UsersId[] }> = ({ ids }) => {
 };
 
 type Props = {
-	limit: number;
+	limitState: SearchParamState<"/users", "offset">;
 	offsetState: SearchParamState<"/users", "offset">;
 };
 
-export const Users: React.FC<Props> = ({ limit, offsetState }) => {
-	const cursorPaging = useCursorPaging(useUsersQuery, { limit }, offsetState);
-	const { totalCount, pagination, query } = cursorPaging;
+export const Users: React.FC<Props> = ({
+	limitState: [limit, setLimit],
+	offsetState,
+}) => {
+	const { totalCount, pagination, query } = useCursorPaging(
+		useUsersQuery,
+		{ limit },
+		offsetState,
+	);
 
 	if (!totalCount && query.fetchStatus !== "fetching") {
 		return (
@@ -92,16 +98,14 @@ export const Users: React.FC<Props> = ({ limit, offsetState }) => {
 		);
 	}
 
-	const paginationElement =
-		!totalCount || (totalCount && totalCount <= limit) ? null : (
-			<Pagination
-				color="primary"
-				size="lg"
-				variant="bordered"
-				className="self-center"
-				{...pagination}
-			/>
-		);
+	const paginationElement = (
+		<PaginationBlock
+			totalCount={totalCount}
+			limit={limit}
+			setLimit={setLimit}
+			props={pagination}
+		/>
+	);
 
 	return (
 		<>

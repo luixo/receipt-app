@@ -6,6 +6,7 @@ import { isNonNullish, values } from "remeda";
 
 import { EmptyCard } from "~app/components/empty-card";
 import { QueryErrorMessage } from "~app/components/error-message";
+import { PaginationBlock } from "~app/components/pagination-block";
 import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import type { SearchParamState } from "~app/hooks/use-navigation";
 import type { TRPCQueryErrorResult, TRPCQueryInput } from "~app/trpc";
@@ -15,7 +16,6 @@ import { Header } from "~components/header";
 import { AddIcon } from "~components/icons";
 import { ButtonLink } from "~components/link";
 import { Overlay } from "~components/overlay";
-import { Pagination } from "~components/pagination";
 import { Spinner } from "~components/spinner";
 import { Text } from "~components/text";
 import type { ReceiptsId } from "~db/models";
@@ -101,22 +101,21 @@ const ReceiptsTableHeader = () => (
 type Props = {
 	sort: SearchParamState<"/receipts", "sort">[0];
 	filters: SearchParamState<"/receipts", "filters">[0];
-	limit: SearchParamState<"/receipts", "limit">[0];
+	limitState: SearchParamState<"/receipts", "limit">;
 	offsetState: SearchParamState<"/receipts", "offset">;
 };
 
 export const Receipts: React.FC<Props> = ({
 	filters,
 	sort,
-	limit,
+	limitState: [limit, setLimit],
 	offsetState,
 }) => {
-	const cursorPaging = useCursorPaging(
+	const { totalCount, query, pagination } = useCursorPaging(
 		useReceiptQuery,
 		{ limit, orderBy: sort, filters },
 		offsetState,
 	);
-	const { totalCount, query, pagination } = cursorPaging;
 
 	if (!totalCount && query.fetchStatus !== "fetching") {
 		if (query.status === "error") {
@@ -140,16 +139,14 @@ export const Receipts: React.FC<Props> = ({
 		);
 	}
 
-	const paginationElement =
-		!totalCount || (totalCount && totalCount <= limit) ? null : (
-			<Pagination
-				className="self-center"
-				color="primary"
-				size="lg"
-				variant="bordered"
-				{...pagination}
-			/>
-		);
+	const paginationElement = (
+		<PaginationBlock
+			totalCount={totalCount}
+			limit={limit}
+			setLimit={setLimit}
+			props={pagination}
+		/>
+	);
 
 	return (
 		<>

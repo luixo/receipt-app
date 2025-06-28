@@ -39,7 +39,7 @@ export const ReceiptsScreen: React.FC<{
 		<Receipts
 			filters={filtersState[0]}
 			sort={sortState[0]}
-			limit={limitState[0]}
+			limitState={limitState}
 			offsetState={offsetState}
 		/>
 	</>

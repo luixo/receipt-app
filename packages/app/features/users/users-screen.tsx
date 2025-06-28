@@ -13,7 +13,7 @@ import { Users } from "./users";
 export const UsersScreen: React.FC<{
 	limitState: SearchParamState<"/users", "limit">;
 	offsetState: SearchParamState<"/users", "offset">;
-}> = ({ limitState: [limit], offsetState }) => {
+}> = ({ limitState, offsetState }) => {
 	const inboundConnectionsAmount = useConnectionIntentions();
 	const connectionsButton = React.useMemo(
 		() => (
@@ -63,7 +63,7 @@ export const UsersScreen: React.FC<{
 				Users
 			</PageHeader>
 			<EmailVerificationCard />
-			<Users limit={limit} offsetState={offsetState} />
+			<Users limitState={limitState} offsetState={offsetState} />
 		</>
 	);
 };

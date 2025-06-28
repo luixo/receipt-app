@@ -47,7 +47,6 @@ export const useCursorPaging = <
 	const pagination = React.useMemo(
 		() => ({
 			onChange,
-			showControls: true,
 			page: query.data?.count === 0 ? 0 : offset / limit + 1,
 			total:
 				query.data === undefined
