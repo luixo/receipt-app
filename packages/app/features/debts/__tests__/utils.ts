@@ -41,18 +41,20 @@ export const test = originalTest.extend<Fixtures>({
 		use(({ generateDebts = defaultGenerateDebts } = {}) => {
 			const { debtUser } = mockBase();
 			const debts = generateDebts({ faker, userId: debtUser.id });
+			const userDebtsEntries = entries(
+				debts.reduce<Record<CurrencyCode, number>>(
+					(acc, { currencyCode, amount }) => ({
+						...acc,
+						[currencyCode]: (acc[currencyCode] || 0) + amount,
+					}),
+					{},
+				),
+			).map(([currencyCode, sum]) => ({ currencyCode, sum }));
+			api.mockFirst("debts.getAll", userDebtsEntries);
 			api.mockFirst("debts.getByUsers", [
 				{
 					userId: debtUser.id,
-					debts: entries(
-						debts.reduce<Record<CurrencyCode, number>>(
-							(acc, { currencyCode, amount }) => ({
-								...acc,
-								[currencyCode]: (acc[currencyCode] || 0) + amount,
-							}),
-							{},
-						),
-					).map(([currencyCode, sum]) => ({ currencyCode, sum })),
+					debts: userDebtsEntries,
 				},
 			]);
 			api.mockFirst(

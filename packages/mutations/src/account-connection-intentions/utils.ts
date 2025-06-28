@@ -31,6 +31,10 @@ export const updateUserConnected = (
 	void invalidateSuggestUsers(controllerContext);
 	updateDebts(controllerContext, {
 		get: undefined,
+		// A newly connected account may have new debts for us
+		getAll: (controller) => {
+			void controller.invalidate();
+		},
 		getIdsByUser: undefined,
 		// A newly connected account may have new debts for us
 		getByUsers: (controller) => {

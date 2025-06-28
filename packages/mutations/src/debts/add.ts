@@ -68,6 +68,12 @@ export const options: UseContextedMutationOptions<"debts.add"> = {
 			});
 		}
 		updateDebts(controllerContext, {
+			getAll: (controller) => {
+				controller.update(
+					updateObject.currencyCode,
+					(sum) => sum + updateObject.amount,
+				);
+			},
 			getByUsers: (controller) => {
 				controller.updateCurrency(
 					updateObject.userId,

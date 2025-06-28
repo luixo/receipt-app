@@ -11,6 +11,7 @@ import { AddIcon, DebtIcon, InboxIcon, TransferIcon } from "~components/icons";
 import { ButtonLink } from "~components/link";
 
 import { Debts } from "./debts";
+import { DebtsAggregated } from "./debts-aggregated";
 
 export const DebtsScreen: React.FC = () => {
 	const trpc = useTRPC();
@@ -76,6 +77,7 @@ export const DebtsScreen: React.FC = () => {
 				Debts
 			</PageHeader>
 			<EmailVerificationCard />
+			<DebtsAggregated />
 			<Debts />
 		</>
 	);

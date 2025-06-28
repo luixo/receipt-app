@@ -15,6 +15,12 @@ export const options: UseContextedMutationOptions<
 		(controllerContext, { debt: currDebt }) =>
 		(updateObject) =>
 			updateRevertDebts(controllerContext, {
+				getAll: (controller) =>
+					controller.update(
+						currDebt.currencyCode,
+						(sum) => sum - currDebt.amount,
+						() => (sum) => sum + currDebt.amount,
+					),
 				getByUsers: (controller) =>
 					controller.updateCurrency(
 						currDebt.userId,
@@ -64,6 +70,7 @@ export const options: UseContextedMutationOptions<
 			getPaged: undefined,
 		});
 		updateDebts(controllerContext, {
+			getAll: undefined,
 			getByUsers: undefined,
 			getIdsByUser: undefined,
 			get: (controller) => controller.remove(updateObject.id),

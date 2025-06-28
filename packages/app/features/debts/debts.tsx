@@ -3,13 +3,8 @@ import { View } from "react-native";
 
 import { useQuery } from "@tanstack/react-query";
 
-import {
-	DebtsGroup,
-	DebtsGroupSkeleton,
-} from "~app/components/app/debts-group";
 import { EmptyCard } from "~app/components/empty-card";
 import { QueryErrorMessage } from "~app/components/error-message";
-import { ShowResolvedDebtsOption } from "~app/features/settings/show-resolved-debts-option";
 import { useAggregatedAllDebts } from "~app/hooks/use-aggregated-all-debts";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import type { TRPCQuerySuccessResult } from "~app/trpc";
@@ -48,46 +43,30 @@ const DebtsInner: React.FC<InnerProps> = ({ query }) => {
 						</ButtonLink>
 						to add a debt
 					</View>
-					{sums.length !== nonZeroSums.length ? (
-						<ShowResolvedDebtsOption />
-					) : null}
 				</View>
 			</EmptyCard>
 		);
 	}
 
 	return (
-		<>
-			<View className="items-center">
-				<DebtsGroup
-					debts={showResolvedDebts ? sums : nonZeroSums}
-					className="px-12"
-				/>
-				{sums.length !== nonZeroSums.length ? (
-					<View className="absolute right-0">
-						<ShowResolvedDebtsOption />
-					</View>
-				) : null}
-			</View>
-			<View className="mt-4 gap-2">
-				{query.data.map(({ userId, debts }) => {
-					const allDebtsResolved = debts.every((debt) => debt.sum === 0);
-					if (allDebtsResolved && !showResolvedDebts) {
-						return null;
-					}
-					return (
-						<UserDebtsPreview
-							key={userId}
-							debts={debts.filter((debt) =>
-								showResolvedDebts ? true : debt.sum !== 0,
-							)}
-							userId={userId}
-							transparent={debts.every((debt) => debt.sum === 0)}
-						/>
-					);
-				})}
-			</View>
-		</>
+		<View className="gap-2">
+			{query.data.map(({ userId, debts }) => {
+				const allDebtsResolved = debts.every((debt) => debt.sum === 0);
+				if (allDebtsResolved && !showResolvedDebts) {
+					return null;
+				}
+				return (
+					<UserDebtsPreview
+						key={userId}
+						debts={debts.filter((debt) =>
+							showResolvedDebts ? true : debt.sum !== 0,
+						)}
+						userId={userId}
+						transparent={debts.every((debt) => debt.sum === 0)}
+					/>
+				);
+			})}
+		</View>
 	);
 };
 
@@ -98,16 +77,11 @@ export const Debts: React.FC = () => {
 	const query = useQuery(trpc.debts.getByUsers.queryOptions());
 	if (query.status === "pending") {
 		return (
-			<>
-				<View className="items-center">
-					<DebtsGroupSkeleton amount={3} />
-				</View>
-				<View className="mt-4 gap-2">
-					{skeletonElements.map((index) => (
-						<UserDebtsPreviewSkeleton key={index} />
-					))}
-				</View>
-			</>
+			<View className="gap-2">
+				{skeletonElements.map((index) => (
+					<UserDebtsPreviewSkeleton key={index} />
+				))}
+			</View>
 		);
 	}
 	if (query.status === "error") {

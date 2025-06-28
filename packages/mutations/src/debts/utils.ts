@@ -147,6 +147,7 @@ export const updateUpdatedAt = (
 	reverseUpdated: boolean | undefined,
 ) => {
 	updateDebts(controllerContext, {
+		getAll: undefined,
 		getByUsers: undefined,
 		getIdsByUser: undefined,
 		get: (controller) => {
