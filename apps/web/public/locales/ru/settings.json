@@ -1,0 +1,20 @@
+{
+	"header": "Настройки",
+	"languages": {
+		"header": "Язык",
+		"dropdownLabel": "Язык"
+	},
+	"colorMode": {
+		"header": "Тема",
+		"autoCheckbox": "Авто"
+	},
+	"showResolvedDebts": {
+		"header": "Нулевые долги"
+	},
+	"manuallyAcceptDebts": {
+		"header": "Вручную одобрять долги"
+	},
+	"refresh": {
+		"header": "Перезагрузить кэш"
+	}
+}

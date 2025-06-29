@@ -52,8 +52,11 @@
 	"dependencies": {
 		"@tanstack/react-query": "^5.80.6",
 		"@tanstack/react-query-devtools": "^5.80.6",
+		"cookie": "^1.0.2",
+		"i18next": "^25.2.1",
 		"react": "^19.1.0",
 		"react-dom": "^19.1.0",
+		"react-i18next": "^15.5.3",
 		"react-native": "^0.79.2",
 		"react-native-web": "^0.20.0",
 		"remeda": "^2.7.0",

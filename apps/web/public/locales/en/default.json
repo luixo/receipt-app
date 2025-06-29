@@ -1,0 +1,9 @@
+{
+	"titles": {
+		"index": "Receipt App",
+		"template": "RA - {{page}}",
+		"receipts": "Receipts",
+		"debts": "Debts",
+		"settings": "Settings"
+	}
+}

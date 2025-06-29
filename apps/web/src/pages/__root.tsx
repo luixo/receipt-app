@@ -11,6 +11,7 @@ import {
 } from "@tanstack/react-router";
 import { zodValidator } from "@tanstack/zod-adapter";
 import { serialize } from "cookie";
+import type { i18n as i18nType } from "i18next";
 import { keys, omit } from "remeda";
 import { z } from "zod/v4";
 
@@ -20,6 +21,12 @@ import { LinksContext } from "~app/contexts/links-context";
 import globalCss from "~app/global.css?url";
 import { useNavigate } from "~app/hooks/use-navigation";
 import { Provider } from "~app/providers/index";
+import type { Language } from "~app/utils/i18n";
+import {
+	ensureI18nInitialized,
+	getServerSideT,
+	useInitializeI18n,
+} from "~app/utils/i18n";
 import { applyRemaps } from "~app/utils/nativewind";
 import { persister } from "~app/utils/persister";
 import { getStoreContext } from "~app/utils/store";
@@ -30,6 +37,7 @@ import {
 } from "~app/utils/store/color-modes";
 import type { StoreValues } from "~app/utils/store-data";
 import { useHydratedMark } from "~web/hooks/use-hydrated-mark";
+import { useI18nHelper } from "~web/hooks/use-i18-helper";
 import { useStoreLocalSettings } from "~web/hooks/use-local-settings";
 import { useQueryClientHelper } from "~web/hooks/use-query-client-helper";
 import { DevToolsProvider } from "~web/providers/client/devtools";
@@ -61,6 +69,7 @@ const useTestSearchParams = () => {
 const GlobalHooksComponent: React.FC = () => {
 	useStoreLocalSettings();
 	useQueryClientHelper();
+	useI18nHelper();
 	useHydratedMark();
 	return null;
 };
@@ -106,6 +115,8 @@ const RootComponent = () => {
 	const baseLinksContext = React.useContext(LinksContext);
 	const [initialSearchParams, removeTestSearchParams] = useTestSearchParams();
 	React.useEffect(() => removeTestSearchParams(), [removeTestSearchParams]);
+	useInitializeI18n(data.initialLanguage, data.initialI18n);
+
 	const linksContext = React.useMemo<LinksContextType>(
 		() => ({
 			debug: initialSearchParams.debug,
@@ -150,19 +161,19 @@ const RootComponent = () => {
 type EphemeralContext = {
 	queryClient: QueryClient;
 	request: Request | null;
+	i18n: i18nType;
 };
 const EPHEMERAL_CONTEXT_KEYS: Record<keyof EphemeralContext, true> = {
 	queryClient: true,
 	request: true,
+	i18n: true,
 };
 
-export type RouterContext = Omit<
-	React.ComponentProps<typeof Provider>,
-	"storeContext" | "persister" | "linksContext"
-> & {
+export type RouterContext = {
 	baseUrl: string;
 	nowTimestamp: number;
 	initialValues: StoreValues;
+	initialLanguage: Language;
 } & EphemeralContext;
 
 export type ExternalRouterContext = Pick<RouterContext, "initialValues">;
@@ -180,29 +191,49 @@ const wrappedCreateRootRouteWithContext = wrapCreateRootRouteWithSentry(
 );
 
 export const Route = wrappedCreateRootRouteWithContext<RouterContext>()({
-	head: () => ({
-		meta: [
-			{ charSet: "utf-8" },
-			{
-				name: "viewport",
-				content: "width=device-width, initial-scale=1, maximum-scale=1",
-			},
-			{ title: "Receipt App" },
-			{ name: "description", description: "Receipt App" },
-		],
-		links: [
-			{ rel: "icon", href: "/favicon.svg" },
-			{
-				rel: "stylesheet",
-				href: globalCss,
-			},
-			{
-				rel: "stylesheet",
-				href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap",
-			},
-		],
-	}),
 	component: RootComponent,
-	loader: async (ctx) => omit(ctx.context, keys(EPHEMERAL_CONTEXT_KEYS)),
+	// Don't rerun root loader on the client
+	staleTime: Infinity,
+	loader: async (ctx) => {
+		if (!import.meta.env.SSR) {
+			// We need this branch to keep the types structure while tree-shaking `node:fs` from the client
+			throw new Error(
+				"Root loader should only run on the server for SSR initialization!",
+			);
+		}
+		const serializableContext = omit(ctx.context, keys(EPHEMERAL_CONTEXT_KEYS));
+		// We're waiting for SSR to initialize i18n to have all the keys on the first render
+		await ensureI18nInitialized(ctx.context);
+		return {
+			...serializableContext,
+			initialI18n: ctx.context.i18n.store.data,
+		};
+	},
 	validateSearch: zodValidator(rootSearchParamsSchema),
+	head: ({ match }) => {
+		const t = getServerSideT(match.context);
+		const title = t("titles.index");
+		return {
+			meta: [
+				{ charSet: "utf-8" },
+				{
+					name: "viewport",
+					content: "width=device-width, initial-scale=1, maximum-scale=1",
+				},
+				{ title },
+				{ name: "description", description: title },
+			],
+			links: [
+				{ rel: "icon", href: "/favicon.svg" },
+				{
+					rel: "stylesheet",
+					href: globalCss,
+				},
+				{
+					rel: "stylesheet",
+					href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap",
+				},
+			],
+		};
+	},
 });

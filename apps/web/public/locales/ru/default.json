@@ -1,0 +1,9 @@
+{
+	"titles": {
+		"index": "Чекалка",
+		"template": "Ч - {{page}}",
+		"receipts": "Чеки",
+		"debts": "Долги",
+		"settings": "Настройки"
+	}
+}

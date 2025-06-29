@@ -1,0 +1,20 @@
+{
+	"header": "Settings",
+	"languages": {
+		"header": "Language",
+		"dropdownLabel": "Languages"
+	},
+	"colorMode": {
+		"header": "Color mode",
+		"autoCheckbox": "Auto"
+	},
+	"showResolvedDebts": {
+		"header": "Show resolved debts"
+	},
+	"manuallyAcceptDebts": {
+		"header": "Manually accept debts"
+	},
+	"refresh": {
+		"header": "Reset cache"
+	}
+}
