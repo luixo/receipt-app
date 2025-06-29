@@ -1,6 +1,6 @@
 import { mergeTests } from "@playwright/test";
 
-import type { Language } from "~app/utils/i18n";
+import type { Language } from "~app/utils/i18n-data";
 import { expect, test as originalTest } from "~tests/frontend/fixtures";
 import { i18nFixtures } from "~tests/frontend/fixtures/i18n";
 

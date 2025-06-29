@@ -4,7 +4,7 @@ import { View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { keys } from "remeda";
 
-import type { Language } from "~app/utils/i18n";
+import type { Language } from "~app/utils/i18n-data";
 import { Button } from "~components/button";
 import {
 	Dropdown,

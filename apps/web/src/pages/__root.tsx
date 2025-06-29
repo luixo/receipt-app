@@ -21,12 +21,12 @@ import { LinksContext } from "~app/contexts/links-context";
 import globalCss from "~app/global.css?url";
 import { useNavigate } from "~app/hooks/use-navigation";
 import { Provider } from "~app/providers/index";
-import type { Language } from "~app/utils/i18n";
 import {
 	ensureI18nInitialized,
 	getServerSideT,
 	useInitializeI18n,
 } from "~app/utils/i18n";
+import type { Language } from "~app/utils/i18n-data";
 import { applyRemaps } from "~app/utils/nativewind";
 import { persister } from "~app/utils/persister";
 import { getStoreContext } from "~app/utils/store";
