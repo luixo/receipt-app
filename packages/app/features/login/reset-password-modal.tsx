@@ -1,6 +1,7 @@
 import type React from "react";
 
 import { useMutation } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { z } from "zod/v4";
 
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
@@ -21,6 +22,7 @@ type Form = z.infer<typeof formSchema>;
 const ResetPasswordModalForm: React.FC<{
 	mutation: TRPCMutationResult<"resetPasswordIntentions.add">;
 }> = ({ mutation }) => {
+	const { t } = useTranslation("login");
 	const defaultValues: Partial<Form> = {};
 	const form = useAppForm({
 		defaultValues: defaultValues as Form,
@@ -42,7 +44,7 @@ const ResetPasswordModalForm: React.FC<{
 							onValueChange={field.setValue}
 							name={field.name}
 							onBlur={field.handleBlur}
-							label="Email"
+							label={t("forgotPassword.modal.form.email.label")}
 							fieldError={
 								field.state.meta.isDirty ? field.state.meta.errors : undefined
 							}
@@ -58,7 +60,7 @@ const ResetPasswordModalForm: React.FC<{
 							isLoading={mutation.isPending}
 							type="submit"
 						>
-							Send email
+							{t("forgotPassword.modal.form.submit")}
 						</Button>
 					)}
 				</form.Subscribe>
@@ -76,6 +78,7 @@ export const ResetPasswordModal: React.FC<Props> = ({
 	isModalOpen,
 	switchModalOpen,
 }) => {
+	const { t } = useTranslation("login");
 	const trpc = useTRPC();
 	const resetPasswordMutation = useMutation(
 		trpc.resetPasswordIntentions.add.mutationOptions(
@@ -86,13 +89,14 @@ export const ResetPasswordModal: React.FC<Props> = ({
 		<Modal isOpen={isModalOpen} onOpenChange={switchModalOpen}>
 			<ModalContent>
 				<ModalHeader>
-					<Header>Forgot password</Header>
+					<Header>{t("forgotPassword.modal.header")}</Header>
 				</ModalHeader>
 				<ModalBody>
 					{resetPasswordMutation.status === "success" ? (
 						<Text>
-							Reset password link was sent to{" "}
-							{resetPasswordMutation.variables.email}
+							{t("forgotPassword.modal.success", {
+								email: resetPasswordMutation.variables.email,
+							})}
 						</Text>
 					) : (
 						<ResetPasswordModalForm mutation={resetPasswordMutation} />

@@ -2,6 +2,7 @@ import React from "react";
 import { View } from "react-native";
 
 import { useMutation } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 import { ErrorMessage } from "~app/components/error-message";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
@@ -16,6 +17,7 @@ type Props = {
 };
 
 export const VoidAccount: React.FC<Props> = ({ token }) => {
+	const { t } = useTranslation("void-account");
 	const trpc = useTRPC();
 	const voidMutation = useMutation(
 		trpc.auth.voidAccount.mutationOptions(
@@ -31,10 +33,10 @@ export const VoidAccount: React.FC<Props> = ({ token }) => {
 			<>
 				<Header>{voidMutation.data.email}</Header>
 				<Header size="sm" className="text-success">
-					Account removed succesfully
+					{t("success.message")}
 				</Header>
 				<ButtonLink color="primary" to="/login">
-					To login page
+					{t("success.toLogin")}
 				</ButtonLink>
 			</>
 		);
@@ -42,7 +44,7 @@ export const VoidAccount: React.FC<Props> = ({ token }) => {
 	const { isPending } = voidMutation;
 	return (
 		<>
-			<Header>Are you sure you want to void your account?</Header>
+			<Header>{t("confirmation.question")}</Header>
 			<View className="flex-row gap-2">
 				<Button
 					className="flex-1"
@@ -52,7 +54,7 @@ export const VoidAccount: React.FC<Props> = ({ token }) => {
 					color="danger"
 					type="submit"
 				>
-					Yes
+					{t("confirmation.yes")}
 				</Button>
 				<ButtonLink
 					className="flex-1"
@@ -60,7 +62,7 @@ export const VoidAccount: React.FC<Props> = ({ token }) => {
 					color="primary"
 					isDisabled={isPending}
 				>
-					No
+					{t("confirmation.no")}
 				</ButtonLink>
 			</View>
 			{voidMutation.status === "error" ? (

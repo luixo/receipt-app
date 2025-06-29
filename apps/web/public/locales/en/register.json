@@ -1,0 +1,19 @@
+{
+	"header": "Register",
+	"form": {
+		"email": {
+			"label": "Email"
+		},
+		"name": {
+			"label": "Name",
+			"placeholder": "You can change it later"
+		},
+		"password": {
+			"label": "New password"
+		},
+		"passwordRetype": {
+			"label": "Retype new password"
+		},
+		"submit": "Register"
+	}
+}

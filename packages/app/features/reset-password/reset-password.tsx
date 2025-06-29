@@ -1,6 +1,7 @@
 import type React from "react";
 
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { z } from "zod/v4";
 
 import { QueryErrorMessage } from "~app/components/error-message";
@@ -26,6 +27,7 @@ type Props = {
 };
 
 const ResetPasswordForm: React.FC<Props> = ({ token }) => {
+	const { t } = useTranslation("reset-password");
 	const trpc = useTRPC();
 	const navigate = useNavigate();
 
@@ -52,7 +54,7 @@ const ResetPasswordForm: React.FC<Props> = ({ token }) => {
 	return (
 		<form.AppForm>
 			<form.Form className="flex flex-col gap-4">
-				<Input value={token} label="Token" isReadOnly />
+				<Input value={token} label={t("form.token.label")} isReadOnly />
 				<form.AppField name="password">
 					{(field) => (
 						<field.TextField
@@ -60,7 +62,7 @@ const ResetPasswordForm: React.FC<Props> = ({ token }) => {
 							onValueChange={field.setValue}
 							name={field.name}
 							onBlur={field.handleBlur}
-							label="New password"
+							label={t("form.password.label")}
 							type="password"
 							fieldError={
 								field.state.meta.isDirty ? field.state.meta.errors : undefined
@@ -76,7 +78,7 @@ const ResetPasswordForm: React.FC<Props> = ({ token }) => {
 							onValueChange={field.setValue}
 							name={field.name}
 							onBlur={field.handleBlur}
-							label="Retype new password"
+							label={t("form.passwordRetype.label")}
 							type="password"
 							fieldError={
 								field.state.meta.isDirty ? field.state.meta.errors : undefined
@@ -94,7 +96,7 @@ const ResetPasswordForm: React.FC<Props> = ({ token }) => {
 							isLoading={changePasswordMutation.isPending}
 							type="submit"
 						>
-							Save password
+							{t("form.submit")}
 						</Button>
 					)}
 				</form.Subscribe>

@@ -1,0 +1,25 @@
+{
+	"header": "Вход",
+	"form": {
+		"email": {
+			"label": "Email"
+		},
+		"password": {
+			"label": "Пароль"
+		},
+		"submit": "Войти"
+	},
+	"forgotPassword": {
+		"button": "Забыли пароль?",
+		"modal": {
+			"header": "Забыли пароль",
+			"form": {
+				"email": {
+					"label": "Email"
+				},
+				"submit": "Отправить ссылку для сброса"
+			},
+			"success": "Ссылка для сброса пароля отправлена на {{email}}"
+		}
+	}
+}

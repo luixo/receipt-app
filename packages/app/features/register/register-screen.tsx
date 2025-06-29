@@ -1,6 +1,7 @@
 import type React from "react";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { omit } from "remeda";
 import { z } from "zod/v4";
 
@@ -26,6 +27,7 @@ const formSchema = z.object({
 type Form = z.infer<typeof formSchema>;
 
 export const RegisterScreen: React.FC = () => {
+	const { t } = useTranslation("register");
 	const trpc = useTRPC();
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
@@ -56,7 +58,7 @@ export const RegisterScreen: React.FC = () => {
 
 	return (
 		<>
-			<PageHeader>Register</PageHeader>
+			<PageHeader>{t("header")}</PageHeader>
 			<form.AppForm>
 				<form.Form className="flex flex-col gap-4">
 					<form.AppField name="email">
@@ -66,7 +68,7 @@ export const RegisterScreen: React.FC = () => {
 								onValueChange={field.setValue}
 								name={field.name}
 								onBlur={field.handleBlur}
-								label="Email"
+								label={t("form.email.label")}
 								fieldError={
 									field.state.meta.isDirty ? field.state.meta.errors : undefined
 								}
@@ -81,8 +83,8 @@ export const RegisterScreen: React.FC = () => {
 								onValueChange={field.setValue}
 								name={field.name}
 								onBlur={field.handleBlur}
-								label="Name"
-								placeholder="You can change it later"
+								label={t("form.name.label")}
+								placeholder={t("form.name.placeholder")}
 								fieldError={
 									field.state.meta.isDirty ? field.state.meta.errors : undefined
 								}
@@ -97,7 +99,7 @@ export const RegisterScreen: React.FC = () => {
 								onValueChange={field.setValue}
 								name={field.name}
 								onBlur={field.handleBlur}
-								label="New password"
+								label={t("form.password.label")}
 								type="password"
 								fieldError={
 									field.state.meta.isDirty ? field.state.meta.errors : undefined
@@ -113,7 +115,7 @@ export const RegisterScreen: React.FC = () => {
 								onValueChange={field.setValue}
 								name={field.name}
 								onBlur={field.handleBlur}
-								label="Retype new password"
+								label={t("form.passwordRetype.label")}
 								type="password"
 								fieldError={
 									field.state.meta.isDirty ? field.state.meta.errors : undefined
@@ -131,7 +133,7 @@ export const RegisterScreen: React.FC = () => {
 								isLoading={registerMutation.isPending}
 								type="submit"
 							>
-								Register
+								{t("form.submit")}
 							</Button>
 						)}
 					</form.Subscribe>

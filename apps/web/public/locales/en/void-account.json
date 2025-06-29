@@ -1,0 +1,16 @@
+{
+	"header": "Void account",
+	"noToken": {
+		"title": "Something went wrong",
+		"message": "Please verify you got void account link right"
+	},
+	"confirmation": {
+		"question": "Are you sure you want to void your account?",
+		"yes": "Yes",
+		"no": "No"
+	},
+	"success": {
+		"message": "Account removed succesfully",
+		"toLogin": "To login page"
+	}
+}

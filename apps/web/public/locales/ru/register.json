@@ -1,0 +1,19 @@
+{
+	"header": "Регистрация",
+	"form": {
+		"email": {
+			"label": "Email"
+		},
+		"name": {
+			"label": "Имя",
+			"placeholder": "Вы можете изменить его позже"
+		},
+		"password": {
+			"label": "Новый пароль"
+		},
+		"passwordRetype": {
+			"label": "Повторите новый пароль"
+		},
+		"submit": "Зарегистрироваться"
+	}
+}

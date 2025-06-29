@@ -1,6 +1,7 @@
 import type React from "react";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { z } from "zod/v4";
 
 import { PageHeader } from "~app/components/page-header";
@@ -20,6 +21,7 @@ const formSchema = z.object({ email: emailSchema, password: passwordSchema });
 type Form = z.infer<typeof formSchema>;
 
 export const LoginScreen: React.FC = () => {
+	const { t } = useTranslation("login");
 	const trpc = useTRPC();
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
@@ -52,7 +54,7 @@ export const LoginScreen: React.FC = () => {
 
 	return (
 		<>
-			<PageHeader>Login</PageHeader>
+			<PageHeader>{t("header")}</PageHeader>
 			<form.AppForm>
 				<form.Form className="flex flex-col gap-4">
 					<form.AppField name="email">
@@ -60,7 +62,7 @@ export const LoginScreen: React.FC = () => {
 							<Input
 								value={field.state.value}
 								onValueChange={field.setValue}
-								label="Email"
+								label={t("form.email.label")}
 								fieldError={
 									field.state.meta.isDirty ? field.state.meta.errors : undefined
 								}
@@ -73,7 +75,7 @@ export const LoginScreen: React.FC = () => {
 							<Input
 								value={field.state.value}
 								onValueChange={field.setValue}
-								label="Password"
+								label={t("form.password.label")}
 								fieldError={
 									field.state.meta.isDirty ? field.state.meta.errors : undefined
 								}
@@ -92,7 +94,7 @@ export const LoginScreen: React.FC = () => {
 								isLoading={loginMutation.isPending}
 								type="submit"
 							>
-								Login
+								{t("form.submit")}
 							</Button>
 						)}
 					</form.Subscribe>
@@ -103,7 +105,7 @@ export const LoginScreen: React.FC = () => {
 				isDisabled={loginMutation.isPending}
 				onPress={openModal}
 			>
-				Forgot password?
+				{t("forgotPassword.button")}
 			</Button>
 			<ResetPasswordModal
 				isModalOpen={modalOpen}

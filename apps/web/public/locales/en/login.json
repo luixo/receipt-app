@@ -1,0 +1,25 @@
+{
+	"header": "Login",
+	"form": {
+		"email": {
+			"label": "Email"
+		},
+		"password": {
+			"label": "Password"
+		},
+		"submit": "Login"
+	},
+	"forgotPassword": {
+		"button": "Forgot password?",
+		"modal": {
+			"header": "Forgot password",
+			"form": {
+				"email": {
+					"label": "Email"
+				},
+				"submit": "Send email with a reset link"
+			},
+			"success": "Reset password link was sent to {{email}}"
+		}
+	}
+}
