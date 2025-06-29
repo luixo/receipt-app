@@ -19,5 +19,18 @@
 		}
 	},
 	"loadingAccount": "Loading account...",
-	"logoutButton": "Logout"
+	"logoutButton": "Logout",
+	"changePassword": {
+		"showFormButton": "Change password",
+		"password": {
+			"label": "New password"
+		},
+		"prevPassword": {
+			"label": "Current password"
+		},
+		"retypePassword": {
+			"label": "Retype new password"
+		},
+		"submitButton": "Change password"
+	}
 }

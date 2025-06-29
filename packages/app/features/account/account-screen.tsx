@@ -6,7 +6,7 @@ import { z } from "zod/v4";
 
 import { QueryErrorMessage } from "~app/components/error-message";
 import { PageHeader } from "~app/components/page-header";
-import { ChangePasswordScreen } from "~app/features/change-password/change-password-screen";
+import { ChangePasswordScreen } from "~app/features/account/change-password";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
 import { useNavigate } from "~app/hooks/use-navigation";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";

@@ -19,5 +19,18 @@
 		}
 	},
 	"loadingAccount": "Загрузка аккаунта...",
-	"logoutButton": "Выйти"
+	"logoutButton": "Выйти",
+	"changePassword": {
+		"showFormButton": "Поменять пароль",
+		"password": {
+			"label": "Новый пароль"
+		},
+		"prevPassword": {
+			"label": "Текущий пароль"
+		},
+		"retypePassword": {
+			"label": "Повторите новый пароль"
+		},
+		"submitButton": "Поменять пароль"
+	}
 }

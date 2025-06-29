@@ -1,6 +1,7 @@
 import type React from "react";
 
 import { useMutation } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { z } from "zod/v4";
 
 import { useBooleanState } from "~app/hooks/use-boolean-state";
@@ -25,6 +26,7 @@ const formSchema = z
 type Form = z.infer<typeof formSchema>;
 
 const ChangePasswordForm: React.FC = () => {
+	const { t } = useTranslation("account");
 	const trpc = useTRPC();
 	const changePasswordMutation = useMutation(
 		trpc.account.changePassword.mutationOptions(
@@ -58,7 +60,7 @@ const ChangePasswordForm: React.FC = () => {
 							onValueChange={field.setValue}
 							name={field.name}
 							onBlur={field.handleBlur}
-							label="Current password"
+							label={t("changePassword.prevPassword.label")}
 							mutation={changePasswordMutation}
 							fieldError={
 								field.state.meta.isDirty ? field.state.meta.errors : undefined
@@ -74,7 +76,7 @@ const ChangePasswordForm: React.FC = () => {
 							onValueChange={field.setValue}
 							name={field.name}
 							onBlur={field.handleBlur}
-							label="New password"
+							label={t("changePassword.password.label")}
 							mutation={changePasswordMutation}
 							fieldError={
 								field.state.meta.isDirty ? field.state.meta.errors : undefined
@@ -90,7 +92,7 @@ const ChangePasswordForm: React.FC = () => {
 							onValueChange={field.setValue}
 							name={field.name}
 							onBlur={field.handleBlur}
-							label="Retype new password"
+							label={t("changePassword.retypePassword.label")}
 							mutation={changePasswordMutation}
 							fieldError={
 								field.state.meta.isDirty ? field.state.meta.errors : undefined
@@ -107,7 +109,7 @@ const ChangePasswordForm: React.FC = () => {
 							isLoading={changePasswordMutation.isPending}
 							type="submit"
 						>
-							Change password
+							{t("changePassword.submitButton")}
 						</Button>
 					)}
 				</form.Subscribe>
@@ -117,13 +119,14 @@ const ChangePasswordForm: React.FC = () => {
 };
 
 export const ChangePasswordScreen: React.FC = () => {
+	const { t } = useTranslation("account");
 	const [changePasswordShown, { setTrue: showChangePassword }] =
 		useBooleanState();
 
 	if (!changePasswordShown) {
 		return (
 			<Button color="primary" onPress={showChangePassword}>
-				Change password
+				{t("changePassword.showFormButton")}
 			</Button>
 		);
 	}
