@@ -1,4 +1,4 @@
-import { mergeTests } from "@playwright/test";
+import { expect, mergeTests } from "@playwright/test";
 import { TRPCError } from "@trpc/server";
 
 import { test as dateInputTest } from "~app/components/__tests__/date-input.utils";
@@ -27,6 +27,7 @@ test("Form", async ({
 }) => {
 	mockBase();
 	await page.goto("/receipts/add");
+	await expect(page.locator("h1")).toHaveText("Add receipt");
 	await expectScreenshotWithSchemes("empty.png");
 	await nameInput.fill("Receipt name");
 	await fillDate(dateInput, new Date().valueOf() + MONTH);

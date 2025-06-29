@@ -1,5 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
+import { expect } from "~tests/frontend/fixtures";
+
 import { test } from "./utils";
 
 test("Open with token", async ({
@@ -11,6 +13,7 @@ test("Open with token", async ({
 	api.mockUtils.noAuthPage();
 
 	await page.goto(`/void-account?token=${faker.string.uuid()}`);
+	await expect(page.locator("h1")).toHaveText("Void account");
 	await expectScreenshotWithSchemes("token.png");
 });
 

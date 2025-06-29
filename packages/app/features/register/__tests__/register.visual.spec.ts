@@ -1,5 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
+import { expect } from "~tests/frontend/fixtures";
+
 import { test } from "./utils";
 
 test("Regular usage", async ({
@@ -12,6 +14,7 @@ test("Regular usage", async ({
 	api.mockUtils.noAuthPage();
 
 	await page.goto("/register");
+	await expect(page.locator("h1")).toHaveText("Register");
 	await expectScreenshotWithSchemes("empty.png");
 	await fillValidFields();
 	const { password, passwordRetype } = fields;
