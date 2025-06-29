@@ -6,6 +6,7 @@ import type loginEn from "@ra/web/public/locales/en/login.json";
 import type registerEn from "@ra/web/public/locales/en/register.json";
 import type resetPasswordEn from "@ra/web/public/locales/en/reset-password.json";
 import type settingsEn from "@ra/web/public/locales/en/settings.json";
+import type usersEn from "@ra/web/public/locales/en/users.json";
 import type voidAccountEn from "@ra/web/public/locales/en/void-account.json";
 import type accountRu from "@ra/web/public/locales/ru/account.json";
 import type adminRu from "@ra/web/public/locales/ru/admin.json";
@@ -14,6 +15,7 @@ import type loginRu from "@ra/web/public/locales/ru/login.json";
 import type registerRu from "@ra/web/public/locales/ru/register.json";
 import type resetPasswordRu from "@ra/web/public/locales/ru/reset-password.json";
 import type settingsRu from "@ra/web/public/locales/ru/settings.json";
+import type usersRu from "@ra/web/public/locales/ru/users.json";
 import type voidAccountRu from "@ra/web/public/locales/ru/void-account.json";
 
 import type { AssertAllEqual } from "~utils/types";
@@ -35,7 +37,8 @@ export type Namespace =
 	| "login"
 	| "register"
 	| "reset-password"
-	| "void-account";
+	| "void-account"
+	| "users";
 export const defaultNamespace: Namespace = "default";
 export const namespaces: Record<Namespace, true> = {
 	default: true,
@@ -46,6 +49,7 @@ export const namespaces: Record<Namespace, true> = {
 	register: true,
 	"reset-password": true,
 	"void-account": true,
+	users: true,
 };
 
 export type Resources = {
@@ -57,6 +61,7 @@ export type Resources = {
 	register: typeof registerEn;
 	"reset-password": typeof resetPasswordEn;
 	"void-account": typeof voidAccountEn;
+	users: typeof usersEn;
 };
 
 type ValidatedResources = AssertAllEqual<
@@ -72,6 +77,7 @@ type ValidatedResources = AssertAllEqual<
 			register: typeof registerRu;
 			"reset-password": typeof resetPasswordRu;
 			"void-account": typeof voidAccountRu;
+			users: typeof usersRu;
 		},
 	]
 >;

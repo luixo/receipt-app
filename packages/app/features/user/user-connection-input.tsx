@@ -1,6 +1,7 @@
 import React from "react";
 
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { z } from "zod/v4";
 
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
@@ -23,6 +24,7 @@ type Props = {
 };
 
 export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
+	const { t } = useTranslation("users");
 	const trpc = useTRPC();
 	const connectionIntentionsQuery = useQuery(
 		trpc.accountConnectionIntentions.getAll.queryOptions(),
@@ -100,13 +102,13 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 	if (outboundConnectionIntention) {
 		return (
 			<Input
-				label="Outbound request"
+				label={t("user.connection.outbound.label")}
 				value={outboundConnectionIntention.account.email}
 				isReadOnly
 				mutation={cancelRequestMutation}
 				endContent={
 					<Button
-						title="Cancel request"
+						title={t("user.connection.cancel.title")}
 						variant="light"
 						isLoading={cancelRequestMutation.isPending}
 						color="danger"
@@ -129,7 +131,7 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 				onPress={() => setInputShown(true)}
 				isDisabled={isLoading}
 			>
-				Connect to an account
+				{t("user.connection.connect")}
 			</Button>
 		);
 	}
@@ -145,7 +147,7 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 					fieldError={
 						field.state.meta.isDirty ? field.state.meta.errors : undefined
 					}
-					label="Email"
+					label={t("user.connection.email.label")}
 					mutation={[connectUserMutation, unlinkMutation]}
 					isDisabled={isLoading}
 					isReadOnly={Boolean(user.connectedAccount)}
@@ -154,7 +156,7 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 							{(canSubmit) =>
 								user.connectedAccount ? (
 									<Button
-										title="Unlink user from email"
+										title={t("user.connection.unlink.title")}
 										variant="light"
 										isLoading={unlinkMutation.isPending}
 										isIconOnly
@@ -164,7 +166,7 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 									</Button>
 								) : (
 									<Button
-										title="Link user to email"
+										title={t("user.connection.link.title")}
 										variant="light"
 										isLoading={connectUserMutation.isPending}
 										isDisabled={!canSubmit}

@@ -1,6 +1,7 @@
 import type React from "react";
 
 import { useMutation } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { z } from "zod/v4";
 
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
@@ -23,6 +24,7 @@ type Props = {
 };
 
 export const AddUserForm: React.FC<Props> = ({ initialValue, onSuccess }) => {
+	const { t } = useTranslation("users");
 	const trpc = useTRPC();
 	const addUserMutation = useMutation(
 		trpc.users.add.mutationOptions(
@@ -55,7 +57,7 @@ export const AddUserForm: React.FC<Props> = ({ initialValue, onSuccess }) => {
 							onValueChange={field.setValue}
 							name={field.name}
 							onBlur={field.handleBlur}
-							label="User name"
+							label={t("add.form.name.label")}
 							fieldError={
 								field.state.meta.isDirty ? field.state.meta.errors : undefined
 							}
@@ -70,7 +72,7 @@ export const AddUserForm: React.FC<Props> = ({ initialValue, onSuccess }) => {
 							onValueChange={field.setValue}
 							name={field.name}
 							onBlur={field.handleBlur}
-							label="Email"
+							label={t("add.form.email.label")}
 							fieldError={
 								field.state.meta.isDirty ? field.state.meta.errors : undefined
 							}
@@ -86,7 +88,7 @@ export const AddUserForm: React.FC<Props> = ({ initialValue, onSuccess }) => {
 							isLoading={addUserMutation.isPending}
 							type="submit"
 						>
-							Add user
+							{t("add.form.submit")}
 						</Button>
 					)}
 				</form.Subscribe>

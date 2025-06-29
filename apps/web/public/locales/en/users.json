@@ -1,0 +1,67 @@
+{
+	"list": {
+		"header": "Users",
+		"addUser": {
+			"button": "Add user"
+		},
+		"connections": {
+			"title": "Connection intentions"
+		},
+		"empty": {
+			"title": "You have no users",
+			"message": "Press {{icon}} to add a user"
+		}
+	},
+	"add": {
+		"header": "Add user",
+		"form": {
+			"name": {
+				"label": "User name"
+			},
+			"email": {
+				"label": "Email"
+			},
+			"submit": "Add user"
+		}
+	},
+	"user": {
+		"name": {
+			"label": "User name",
+			"save": {
+				"title": "Save user name"
+			}
+		},
+		"publicName": {
+			"label": "Public user name",
+			"add": "Add public name",
+			"save": {
+				"title": "Save user public name"
+			},
+			"remove": {
+				"title": "Remove user public name"
+			}
+		},
+		"connection": {
+			"connect": "Connect to an account",
+			"outbound": {
+				"label": "Outbound request"
+			},
+			"email": {
+				"label": "Email"
+			},
+			"link": {
+				"title": "Link user to email"
+			},
+			"unlink": {
+				"title": "Unlink user from email"
+			},
+			"cancel": {
+				"title": "Cancel request"
+			}
+		},
+		"remove": {
+			"button": "Remove user",
+			"subtitle": "This will remove user and all his participations"
+		}
+	}
+}

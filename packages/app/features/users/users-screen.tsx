@@ -1,5 +1,7 @@
 import React from "react";
 
+import { useTranslation } from "react-i18next";
+
 import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
 import { useConnectionIntentions } from "~app/hooks/use-connection-intentions";
@@ -14,6 +16,7 @@ export const UsersScreen: React.FC<{
 	limitState: SearchParamState<"/users", "limit">;
 	offsetState: SearchParamState<"/users", "offset">;
 }> = ({ limitState, offsetState }) => {
+	const { t } = useTranslation("users");
 	const inboundConnectionsAmount = useConnectionIntentions();
 	const connectionsButton = React.useMemo(
 		() => (
@@ -21,14 +24,14 @@ export const UsersScreen: React.FC<{
 				key="connections"
 				to="/users/connections"
 				color="primary"
-				title="Connection intentions"
+				title={t("list.connections.title")}
 				variant="bordered"
 				isIconOnly
 			>
 				<LinkIcon size={24} />
 			</ButtonLink>
 		),
-		[],
+		[t],
 	);
 	return (
 		<>
@@ -39,7 +42,7 @@ export const UsersScreen: React.FC<{
 						<ButtonLink
 							to="/users/add"
 							color="primary"
-							title="Add user"
+							title={t("list.addUser.button")}
 							variant="bordered"
 							isIconOnly
 						>
@@ -60,7 +63,7 @@ export const UsersScreen: React.FC<{
 					</>
 				}
 			>
-				Users
+				{t("list.header")}
 			</PageHeader>
 			<EmailVerificationCard />
 			<Users limitState={limitState} offsetState={offsetState} />

@@ -2,6 +2,7 @@ import React from "react";
 import { View } from "react-native";
 
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { z } from "zod/v4";
 
 import { QueryErrorMessage } from "~app/components/error-message";
@@ -28,6 +29,7 @@ type NameProps = {
 };
 
 const UserNameInput: React.FC<NameProps> = ({ user, isLoading }) => {
+	const { t } = useTranslation("users");
 	const trpc = useTRPC();
 	const updateUserMutation = useMutation(
 		trpc.users.update.mutationOptions(
@@ -56,7 +58,7 @@ const UserNameInput: React.FC<NameProps> = ({ user, isLoading }) => {
 					fieldError={
 						field.state.meta.isDirty ? field.state.meta.errors : undefined
 					}
-					label="User name"
+					label={t("user.name.label")}
 					mutation={updateUserMutation}
 					isDisabled={isLoading}
 					endContent={
@@ -64,7 +66,7 @@ const UserNameInput: React.FC<NameProps> = ({ user, isLoading }) => {
 							<form.Subscribe selector={(state) => state.canSubmit}>
 								{(canSubmit) => (
 									<SaveButton
-										title="Save user name"
+										title={t("user.name.save.title")}
 										onPress={() => {
 											void field.form.handleSubmit();
 										}}
@@ -90,6 +92,7 @@ const UserPublicNameInput: React.FC<PublicNameProps> = ({
 	user,
 	isLoading,
 }) => {
+	const { t } = useTranslation("users");
 	const trpc = useTRPC();
 	const [showInput, { setTrue: setInput, setFalse: unsetInput }] =
 		useBooleanState(user.publicName !== undefined);
@@ -123,7 +126,7 @@ const UserPublicNameInput: React.FC<PublicNameProps> = ({
 				isDisabled={updateUserMutation.isPending || isLoading}
 				onPress={setInput}
 			>
-				Add public name
+				{t("user.publicName.add")}
 			</Button>
 		);
 	}
@@ -139,7 +142,7 @@ const UserPublicNameInput: React.FC<PublicNameProps> = ({
 					fieldError={
 						field.state.meta.isDirty ? field.state.meta.errors : undefined
 					}
-					label="Public user name"
+					label={t("user.publicName.label")}
 					mutation={updateUserMutation}
 					isDisabled={isLoading}
 					endContent={
@@ -148,7 +151,7 @@ const UserPublicNameInput: React.FC<PublicNameProps> = ({
 								<form.Subscribe selector={(state) => state.canSubmit}>
 									{(canSubmit) => (
 										<SaveButton
-											title="Save user public name"
+											title={t("user.publicName.save.title")}
 											onPress={() => {
 												void field.form.handleSubmit();
 											}}
@@ -160,7 +163,7 @@ const UserPublicNameInput: React.FC<PublicNameProps> = ({
 							)}
 							{user.publicName === undefined ? null : (
 								<Button
-									title="Remove user public name"
+									title={t("user.publicName.remove.title")}
 									variant="light"
 									isLoading={updateUserMutation.isPending}
 									onPress={() => {
@@ -196,6 +199,7 @@ const UserRemoveButton: React.FC<RemoveProps> = ({
 	onSuccess,
 	...props
 }) => {
+	const { t } = useTranslation("users");
 	const trpc = useTRPC();
 	const removeUserMutation = useMutation(
 		trpc.users.remove.mutationOptions(
@@ -215,10 +219,10 @@ const UserRemoveButton: React.FC<RemoveProps> = ({
 		<RemoveButton
 			mutation={removeUserMutation}
 			onRemove={removeUser}
-			subtitle="This will remove user and all his participations"
+			subtitle={t("user.remove.subtitle")}
 			{...props}
 		>
-			Remove user
+			{t("user.remove.button")}
 		</RemoveButton>
 	);
 };
