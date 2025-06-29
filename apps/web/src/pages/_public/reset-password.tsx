@@ -3,6 +3,7 @@ import { zodValidator } from "@tanstack/zod-adapter";
 import { z } from "zod/v4";
 
 import { ResetPasswordScreen } from "~app/features/reset-password/reset-password-screen";
+import { loadNamespaces } from "~app/utils/i18n";
 import { resetPasswordTokenSchema } from "~app/utils/validation";
 
 const Wrapper = () => {
@@ -12,6 +13,9 @@ const Wrapper = () => {
 
 export const Route = createFileRoute("/_public/reset-password")({
 	component: Wrapper,
+	loader: async (ctx) => {
+		await loadNamespaces(ctx.context, "reset-password");
+	},
 	head: () => ({ meta: [{ title: "RA - Reset password" }] }),
 	validateSearch: zodValidator(
 		z.object({

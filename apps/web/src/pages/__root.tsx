@@ -21,11 +21,7 @@ import { LinksContext } from "~app/contexts/links-context";
 import globalCss from "~app/global.css?url";
 import { useNavigate } from "~app/hooks/use-navigation";
 import { Provider } from "~app/providers/index";
-import {
-	ensureI18nInitialized,
-	getServerSideT,
-	useInitializeI18n,
-} from "~app/utils/i18n";
+import { getServerSideT, loadNamespaces } from "~app/utils/i18n";
 import type { Language } from "~app/utils/i18n-data";
 import { applyRemaps } from "~app/utils/nativewind";
 import { persister } from "~app/utils/persister";
@@ -115,7 +111,6 @@ const RootComponent = () => {
 	const baseLinksContext = React.useContext(LinksContext);
 	const [initialSearchParams, removeTestSearchParams] = useTestSearchParams();
 	React.useEffect(() => removeTestSearchParams(), [removeTestSearchParams]);
-	useInitializeI18n(data.initialLanguage, data.initialI18n);
 
 	const linksContext = React.useMemo<LinksContextType>(
 		() => ({
@@ -201,13 +196,8 @@ export const Route = wrappedCreateRootRouteWithContext<RouterContext>()({
 				"Root loader should only run on the server for SSR initialization!",
 			);
 		}
-		const serializableContext = omit(ctx.context, keys(EPHEMERAL_CONTEXT_KEYS));
-		// We're waiting for SSR to initialize i18n to have all the keys on the first render
-		await ensureI18nInitialized(ctx.context);
-		return {
-			...serializableContext,
-			initialI18n: ctx.context.i18n.store.data,
-		};
+		await loadNamespaces(ctx.context, "default");
+		return omit(ctx.context, keys(EPHEMERAL_CONTEXT_KEYS));
 	},
 	validateSearch: zodValidator(rootSearchParamsSchema),
 	head: ({ match }) => {

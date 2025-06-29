@@ -1,18 +1,10 @@
 /// <reference types="vite/client" />
-import React from "react";
 
 import { parse } from "cookie";
-import type {
-	BackendModule,
-	InitOptions,
-	Resource,
-	ResourceKey,
-	i18n,
-} from "i18next";
-import { I18nContext } from "react-i18next";
+import type { BackendModule, InitOptions, ResourceKey, i18n } from "i18next";
 import { keys } from "remeda";
 
-import type { Language } from "./i18n-data";
+import type { Language, Namespace } from "./i18n-data";
 import { baseLanguage, defaultNamespace, languages } from "./i18n-data";
 
 const isLanguage = (input: string): input is Language =>
@@ -28,17 +20,6 @@ export const i18nInitOptions: InitOptions = {
 		escapeValue: false,
 	},
 	partialBundledLanguages: true,
-};
-
-export const useInitializeI18n = (language: Language, store: Resource) => {
-	const { i18n } = React.useContext(I18nContext);
-	// SSR should be already initialized at the moment
-	if (!i18n.isInitialized && !i18n.isInitializing) {
-		void i18n.init({
-			lng: language,
-			resources: store,
-		});
-	}
 };
 
 const getCookie = (request: Request | null) =>
@@ -122,7 +103,7 @@ export const getServerSideT = (ctx: {
 	initialLanguage: Language;
 }) => ctx.i18n.getFixedT(ctx.initialLanguage, "default");
 
-export const ensureI18nInitialized = async (ctx: {
+const ensureI18nInitialized = async (ctx: {
 	i18n: i18n;
 	initialLanguage: Language;
 }): Promise<void> => {
@@ -135,4 +116,15 @@ export const ensureI18nInitialized = async (ctx: {
 		});
 	}
 	await ctx.i18n.init({ lng: ctx.initialLanguage });
+};
+
+export const loadNamespaces = async (
+	ctx: {
+		i18n: i18n;
+		initialLanguage: Language;
+	},
+	namespaces: Namespace | Namespace[],
+): Promise<void> => {
+	await ensureI18nInitialized(ctx);
+	await ctx.i18n.loadNamespaces(namespaces);
 };

@@ -81,8 +81,20 @@ export const createRouter = (externalContext: ExternalRouterContext) => {
 		defaultNotFoundComponent: NotFoundComponent,
 		defaultErrorComponent: ErrorComponent,
 		defaultPreloadStaleTime: 0,
-		dehydrate: () => dehydrate(queryClient),
-		hydrate: (dehydratedState) => hydrate(queryClient, dehydratedState),
+		dehydrate: () => ({
+			dehydratedState: dehydrate(queryClient),
+			i18n: {
+				language: i18nInstance.language,
+				data: i18nInstance.store.data,
+			},
+		}),
+		hydrate: (dehydratedData) => {
+			void i18nInstance.init({
+				lng: dehydratedData.i18n.language,
+				resources: dehydratedData.i18n.data,
+			});
+			hydrate(queryClient, dehydratedData.dehydratedState);
+		},
 		Wrap: ({ children }) => {
 			// We're doing useState instead of useMemo
 			// Because we don't want to rerender Wrap on every queryClient change
