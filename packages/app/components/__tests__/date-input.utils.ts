@@ -1,14 +1,13 @@
 import { type Locator, expect, test as originalTest } from "@playwright/test";
 
+import { localSettings } from "~tests/frontend/consts";
+
 // TODO: add date-fns date formatting
 const formatToInputString = (date: Date | number) =>
 	new Date(date).toISOString().slice(0, 10);
 
-// TODO: add date-fns date formatting
-const formatToDateString = (date: Date | number) => {
-	const iso = new Date(date).toISOString();
-	return [iso.slice(8, 10), iso.slice(5, 7), iso.slice(0, 4)].join(".");
-};
+const formatToDateString = (date: Date | number) =>
+	new Intl.DateTimeFormat(localSettings.locale).format(date);
 
 type Fixtures = {
 	expectDate: (locator: Locator, date: Date | number) => Promise<void>;

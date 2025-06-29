@@ -86,14 +86,16 @@ test.describe("Client-side translations", () => {
 		const { user } = api.mockUtils.authPage();
 		await page.goto("/account");
 		await expect(page.locator("h1")).toHaveText(user.name);
-		expect(await getNamespaces()).toEqual(["default"]);
+		expect(await getNamespaces()).toEqual(["default", "account"]);
 	});
 
 	test("Changing namespace loads data", async ({ page, getNamespaces }) => {
 		await page.goto("/account");
-		expect(await getNamespaces()).toEqual(["default"]);
+		expect(await getNamespaces()).toEqual(["default", "account"]);
 		await page.locator("a[href='/settings']").click();
-		await expect.poll(() => getNamespaces()).toEqual(["default", "settings"]);
+		await expect
+			.poll(() => getNamespaces())
+			.toEqual(["default", "account", "settings"]);
 	});
 
 	test("Changing language loads data", async ({
