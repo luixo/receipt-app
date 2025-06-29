@@ -38,18 +38,20 @@ const fakeBrowserDate = async (page: OriginalPage) => {
 };
 
 export const pageFixtures = test.extend<ExtendedPageFixtures>({
-	page: async ({ page, api }, use) => {
+	page: async ({ page, javaScriptEnabled, api }, use) => {
 		await page.emulateMedia({ colorScheme: "light" });
 
 		const originalGoto = page.goto.bind(page);
 		page.goto = async (url, options) => {
 			await fakeBrowserDate(page);
 			const result = await originalGoto(getProxyUrl(url, api), options);
-			await page.locator("hydrated").waitFor({ state: "attached" });
-			// Remove rounding for dialogs to make screenshots more stable
-			await page.addStyleTag({
-				content: '[role="dialog"] { border-radius: 0 !important }',
-			});
+			if (javaScriptEnabled) {
+				await page.locator("hydrated").waitFor({ state: "attached" });
+				// Remove rounding for dialogs to make screenshots more stable
+				await page.addStyleTag({
+					content: '[role="dialog"] { border-radius: 0 !important }',
+				});
+			}
 			return result;
 		};
 

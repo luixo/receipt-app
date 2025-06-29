@@ -11,6 +11,9 @@ import type {
 import { createRouter as createTanStackRouter } from "@tanstack/react-router";
 import { serverOnly } from "@tanstack/react-start";
 import { getWebRequest } from "@tanstack/react-start/server";
+import i18n from "i18next";
+import { I18nextProvider } from "react-i18next";
+import { clone } from "remeda";
 
 import type { QueryClientsRecord } from "~app/contexts/query-clients-context";
 import {
@@ -18,6 +21,11 @@ import {
 	SELF_QUERY_CLIENT_KEY,
 	getQueryClient,
 } from "~app/contexts/query-clients-context";
+import {
+	getBackendModule,
+	getLanguageFromRequest,
+	i18nInitOptions,
+} from "~app/utils/i18n";
 import { PRETEND_USER_STORE_NAME } from "~app/utils/store/pretend-user";
 import { Text } from "~components/text";
 import type { ExternalRouterContext } from "~web/pages/__root";
@@ -53,12 +61,20 @@ export const createRouter = (externalContext: ExternalRouterContext) => {
 		? serverOnly(() => getWebRequest() ?? null)()
 		: null;
 	const queryClient = getQueryClient();
+	const i18nInstance = i18n
+		// Options are cloned because i18next mutates properties inline
+		// causing different request to get same e.g. namespaces
+		.createInstance(clone(i18nInitOptions))
+		.use(getBackendModule());
+	const initialLanguage = getLanguageFromRequest(request);
 	return createTanStackRouter({
 		routeTree,
 		context: {
 			...externalContext,
 			request,
 			baseUrl: request ? getHostUrl(request.url) : "",
+			initialLanguage,
+			i18n: i18nInstance,
 			queryClient,
 			nowTimestamp: Date.now(),
 		},
@@ -85,9 +101,11 @@ export const createRouter = (externalContext: ExternalRouterContext) => {
 						};
 			});
 			return (
-				<QueryClientsContext.Provider value={queryClientsState}>
-					{children}
-				</QueryClientsContext.Provider>
+				<I18nextProvider i18n={i18nInstance}>
+					<QueryClientsContext.Provider value={queryClientsState}>
+						{children}
+					</QueryClientsContext.Provider>
+				</I18nextProvider>
 			);
 		},
 	});

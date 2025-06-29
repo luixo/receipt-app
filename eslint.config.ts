@@ -479,7 +479,12 @@ export default ts.config(
 		},
 	},
 	{
-		files: ["**/__tests__/**", "testing/playwright/**", "testing/vitest/**"],
+		files: [
+			"**/__tests__/**",
+			"testing/playwright/**",
+			"testing/vitest/**",
+			"**/*.spec.ts{,x}",
+		],
 		rules: {
 			// We use `use` function in Playwright tests which clashes with this rule
 			"react-hooks/rules-of-hooks": "off",

@@ -24,7 +24,6 @@
 		"@trpc/server": "^11.3.1",
 		"@trpc/tanstack-react-query": "^11.3.1",
 		"@upstash/redis": "^1.22.0",
-		"cookie": "^1.0.2",
 		"dataloader": "^2.2.2",
 		"fetch-to-node": "^2.1.0",
 		"isomorphic-fetch": "^3.0.0",
