@@ -1,6 +1,7 @@
 import React from "react";
 
 import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 import { User } from "~app/components/app/user";
 import { QueryErrorMessage } from "~app/components/error-message";
@@ -31,6 +32,7 @@ const BecomeModal: React.FC<ModalProps> = ({
 	email,
 	setMockedEmail,
 }) => {
+	const { t } = useTranslation("admin");
 	const becomeAccount = React.useCallback(() => {
 		setMockedEmail(email);
 		closeModal();
@@ -39,14 +41,14 @@ const BecomeModal: React.FC<ModalProps> = ({
 		<Modal isOpen={isModalOpen} onOpenChange={closeModal}>
 			<ModalContent>
 				<ModalHeader>
-					<Header>{`Do you want to become "${email}"?`}</Header>
+					<Header>{t("pretend.modal.title", { email })}</Header>
 				</ModalHeader>
 				<ModalBody className="flex-row gap-4 p-4">
 					<Button color="warning" onPress={becomeAccount} className="flex-1">
-						Yes
+						{t("pretend.modal.yes")}
 					</Button>
 					<Button color="default" onPress={closeModal} className="flex-1">
-						No
+						{t("pretend.modal.no")}
 					</Button>
 				</ModalBody>
 			</ModalContent>
@@ -71,6 +73,7 @@ const AdminUserCard: React.FC<
 );
 
 const AdminScreenInner: React.FC = () => {
+	const { t } = useTranslation("admin");
 	const trpc = useTRPC();
 	const accountQuery = useQuery(trpc.account.get.queryOptions());
 	const accountsQuery = useQuery(trpc.admin.accounts.queryOptions());
@@ -102,13 +105,13 @@ const AdminScreenInner: React.FC = () => {
 				: null;
 			return (
 				<Tabs variant="underlined">
-					<Tab key="become" title="Pretend user">
+					<Tab key="become" title={t("pretend.tabName")}>
 						<div className="flex flex-col items-stretch gap-2">
 							{pretendUserAccount ? (
 								<>
 									<AdminUserCard {...pretendUserAccount} />
 									<Button onPress={resetPretendUser} color="primary">
-										Reset to self
+										{t("pretend.resetToSelfButton")}
 									</Button>
 								</>
 							) : accountQuery.data ? (
@@ -132,7 +135,7 @@ const AdminScreenInner: React.FC = () => {
 											onPress={setModalEmailCurried(element.account.email)}
 											color="warning"
 										>
-											Become
+											{t("pretend.becomeButton")}
 										</Button>
 									</AdminUserCard>
 								))}
@@ -150,9 +153,12 @@ const AdminScreenInner: React.FC = () => {
 	}
 };
 
-export const AdminScreen: React.FC = () => (
-	<>
-		<PageHeader>Admin panel</PageHeader>
-		<AdminScreenInner />
-	</>
-);
+export const AdminScreen: React.FC = () => {
+	const { t } = useTranslation("admin");
+	return (
+		<>
+			<PageHeader>{t("pageHeader")}</PageHeader>
+			<AdminScreenInner />
+		</>
+	);
+};

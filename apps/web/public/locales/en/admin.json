@@ -1,0 +1,13 @@
+{
+	"pageHeader": "Admin panel",
+	"pretend": {
+		"modal": {
+			"title": "Do you want to become \"{{email}}\"?",
+			"yes": "Yes",
+			"no": "No"
+		},
+		"tabName": "Pretend user",
+		"resetToSelfButton": "Reset to self",
+		"becomeButton": "Become"
+	}
+}

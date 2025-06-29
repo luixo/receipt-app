@@ -1,0 +1,13 @@
+{
+	"pageHeader": "Панель администратора",
+	"pretend": {
+		"modal": {
+			"title": "Вы хотите стать \"{{email}}\"?",
+			"yesButton": "Да",
+			"noButton": "Нет"
+		},
+		"tabName": "Притвориться пользователем",
+		"resetToSelfButton": "Вернуться к себе",
+		"becomeButton": "Стать"
+	}
+}

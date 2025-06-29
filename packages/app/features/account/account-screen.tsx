@@ -1,6 +1,7 @@
 import React from "react";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { z } from "zod/v4";
 
 import { QueryErrorMessage } from "~app/components/error-message";
@@ -27,6 +28,7 @@ type NameProps = {
 };
 
 const AccountNameInput: React.FC<NameProps> = ({ accountQuery }) => {
+	const { t } = useTranslation("account");
 	const trpc = useTRPC();
 	const updateNameMutation = useMutation(
 		trpc.account.changeName.mutationOptions(
@@ -52,14 +54,14 @@ const AccountNameInput: React.FC<NameProps> = ({ accountQuery }) => {
 					fieldError={
 						field.state.meta.isDirty ? field.state.meta.errors : undefined
 					}
-					label="Your name in the receipts"
+					label={t("form.name.label")}
 					mutation={updateNameMutation}
 					endContent={
 						accountQuery.user.name === field.state.value ? null : (
 							<form.Subscribe selector={(state) => state.canSubmit}>
 								{(canSubmit) => (
 									<SaveButton
-										title="Save name"
+										title={t("form.name.saveButton")}
 										onPress={() => {
 											void field.form.handleSubmit();
 										}}
@@ -85,6 +87,7 @@ type InnerProps = {
 };
 
 const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
+	const { t } = useTranslation("account");
 	const trpc = useTRPC();
 	const navigate = useNavigate();
 	const queryClient = useQueryClient();
@@ -119,20 +122,21 @@ const AccountScreenInner: React.FC<InnerProps> = ({ query }) => {
 				color="warning"
 				isLoading={logoutMutation.isPending}
 			>
-				Logout
+				{t("logoutButton")}
 			</Button>
 		</>
 	);
 };
 
 const AccountScreenQuery: React.FC = () => {
+	const { t } = useTranslation("account");
 	const trpc = useTRPC();
 	const query = useQuery(trpc.account.get.queryOptions());
 	switch (query.status) {
 		case "pending":
 			return (
 				<>
-					<AccountHeader name="Loading account..." />
+					<AccountHeader name={t("loadingAccount")} />
 					<Spinner />
 				</>
 			);

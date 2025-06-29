@@ -4,6 +4,7 @@ import { View } from "react-native";
 import { useMutation } from "@tanstack/react-query";
 import type { Area, Point } from "react-easy-crop";
 import Cropper from "react-easy-crop";
+import { useTranslation } from "react-i18next";
 import { doNothing } from "remeda";
 import { z } from "zod/v4";
 
@@ -90,6 +91,7 @@ type Props = React.PropsWithChildren<{
 }>;
 
 export const AccountAvatarInput: React.FC<Props> = ({ account, children }) => {
+	const { t } = useTranslation("account");
 	const trpc = useTRPC();
 	const [
 		isAvatarEditorOpen,
@@ -190,7 +192,7 @@ export const AccountAvatarInput: React.FC<Props> = ({ account, children }) => {
 					<View className="h-80 flex-1 flex-row justify-between gap-4">
 						<Slider
 							className="z-10 h-full"
-							aria-label="Change scale"
+							aria-label={t("avatar.slider.label")}
 							minValue={1}
 							maxValue={MAX_ZOOM}
 							step={0.01}
@@ -236,7 +238,7 @@ export const AccountAvatarInput: React.FC<Props> = ({ account, children }) => {
 											<View className="absolute left-0 top-0 m-4 opacity-30">
 												{avatar}
 											</View>
-											<Text>Click to upload an image</Text>
+											<Text>{t("avatar.uploadImage.text")}</Text>
 										</CardBody>
 									</Card>
 								)
@@ -259,9 +261,9 @@ export const AccountAvatarInput: React.FC<Props> = ({ account, children }) => {
 								<ConfirmModal
 									onConfirm={resetAvatar}
 									isLoading={removeAvatarMutation.isPending}
-									title="Remove avatar"
-									subtitle="Do you want to remove your avatar?"
-									confirmText="Are you sure?"
+									title={t("avatar.remove.title")}
+									subtitle={t("avatar.remove.subtitle")}
+									confirmText={t("avatar.remove.confirm")}
 								>
 									{({ openModal }) => (
 										<Button
