@@ -13,7 +13,7 @@ export const options: UseContextedMutationOptions<
 > = {
 	onMutate:
 		(controllerContext, { debt: currDebt }) =>
-		(updateObject) =>
+		() =>
 			updateRevertDebts(controllerContext, {
 				getAll: (controller) =>
 					controller.update(
@@ -29,63 +29,64 @@ export const options: UseContextedMutationOptions<
 						() => (sum) => sum + currDebt.amount,
 					),
 				getUsersPaged: (controller) => controller.update(currDebt.userId),
-				getIdsByUser: (controller) =>
-					controller.remove(currDebt.userId, updateObject.id),
+				getByUserPaged: undefined,
 				// We remove the debt from everywhere else
 				// but it's own page
 				// otherwise the page will try to refetch the data immediately
 				get: undefined,
 				getIntentions: undefined,
 			}),
-	onSuccess: (controllerContext) => (result, updateObject) => {
-		updateReceipts(controllerContext, {
-			get: (controller) =>
-				controller.updateAll((receipt) => {
-					if (receipt.debt.direction === "incoming") {
-						if (!receipt.debt.id) {
+	onSuccess:
+		(controllerContext, { debt: currDebt }) =>
+		(result, updateObject) => {
+			updateReceipts(controllerContext, {
+				get: (controller) =>
+					controller.updateAll((receipt) => {
+						if (receipt.debt.direction === "incoming") {
+							if (!receipt.debt.id) {
+								return receipt;
+							}
+							if (receipt.debt.id === updateObject.id) {
+								return {
+									...receipt,
+									debt: receipt.debt.hasForeign
+										? { ...receipt.debt, hasForeign: true, hasMine: false }
+										: {
+												...receipt.debt,
+												hasForeign: false,
+												hasMine: false,
+												id: undefined,
+										  },
+								};
+							}
 							return receipt;
 						}
-						if (receipt.debt.id === updateObject.id) {
-							return {
-								...receipt,
-								debt: receipt.debt.hasForeign
-									? { ...receipt.debt, hasForeign: true, hasMine: false }
-									: {
-											...receipt.debt,
-											hasForeign: false,
-											hasMine: false,
-											id: undefined,
-									  },
-							};
+						if (receipt.debt.ids.includes(updateObject.id)) {
+							const nextIds = receipt.debt.ids.filter(
+								(id) => id !== updateObject.id,
+							);
+							return { ...receipt, debt: { ...receipt.debt, ids: nextIds } };
 						}
 						return receipt;
+					}),
+				getPaged: undefined,
+			});
+			updateDebts(controllerContext, {
+				getAll: undefined,
+				getAllUser: undefined,
+				getUsersPaged: undefined,
+				getByUserPaged: (controller) => controller.invalidate(currDebt.userId),
+				get: (controller) => controller.remove(updateObject.id),
+				getIntentions: (controller) => {
+					if (result.reverseRemoved) {
+						return;
 					}
-					if (receipt.debt.ids.includes(updateObject.id)) {
-						const nextIds = receipt.debt.ids.filter(
-							(id) => id !== updateObject.id,
-						);
-						return { ...receipt, debt: { ...receipt.debt, ids: nextIds } };
-					}
-					return receipt;
-				}),
-			getPaged: undefined,
-		});
-		updateDebts(controllerContext, {
-			getAll: undefined,
-			getAllUser: undefined,
-			getUsersPaged: undefined,
-			getIdsByUser: undefined,
-			get: (controller) => controller.remove(updateObject.id),
-			getIntentions: (controller) => {
-				if (result.reverseRemoved) {
-					return;
-				}
-				// We may or may not know the parameters of counterparty debt
-				// Invalidating intentions might be a good idea
-				controller.invalidate();
-			},
-		});
-	},
+					// We may or may not know the parameters of counterparty debt
+					// Invalidating intentions might be a good idea
+					controller.invalidate();
+				},
+			});
+		},
 	mutateToastOptions: {
 		text: "Removing debt..",
 	},

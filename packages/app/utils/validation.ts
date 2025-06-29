@@ -188,6 +188,7 @@ export const voidAccountTokenSchema = z.uuid();
 
 export const offsetSchema = z.int().gte(0).max(MAX_OFFSET);
 export const limitSchema = z.int().gt(0).max(MAX_LIMIT);
+export const directionSchema = z.enum(["forward", "backward"]);
 
 export const receiptsFiltersSchema = z.strictObject({
 	ownedByMe: z.boolean().optional(),
@@ -195,6 +196,9 @@ export const receiptsFiltersSchema = z.strictObject({
 export const receiptsOrderBySchema = z.enum(["date-asc", "date-desc"]);
 
 export const debtsFiltersSchema = z.strictObject({
+	showResolved: z.boolean().optional(),
+});
+export const debtsByUserFiltersSchema = z.strictObject({
 	showResolved: z.boolean().optional(),
 });
 

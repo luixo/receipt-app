@@ -13,7 +13,7 @@ import { test as localTest } from "./utils";
 const test = mergeTests(localTest, debtsGroupFixture);
 
 test.describe("Wrapper component", () => {
-	test("'debts.getIdsByUser' pending / error", async ({
+	test("'debts.getByUserPaged' pending / error", async ({
 		api,
 		errorMessage,
 		loader,

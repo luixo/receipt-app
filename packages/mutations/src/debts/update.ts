@@ -3,10 +3,8 @@ import type { UseContextedMutationOptions } from "../context";
 
 import type { CurrentDebt } from "./utils";
 import {
-	applyByUserIdUpdate,
 	applySumUpdate,
 	applyUpdate,
-	getByUserIdRevert,
 	getRevert,
 	getSumRevert,
 	updateReceiptWithOutcomingDebtId,
@@ -35,13 +33,19 @@ export const options: UseContextedMutationOptions<
 						getSumRevert(currDebt.amount, updateObject.update),
 					),
 				getUsersPaged: (controller) => controller.update(currDebt.userId),
-				getIdsByUser: (controller) =>
-					controller.update(
-						currDebt.userId,
-						updateObject.id,
-						applyByUserIdUpdate(updateObject.update),
-						getByUserIdRevert(updateObject.update),
-					),
+				// @ts-expect-error update when changing resolved list?
+				getByUserPaged: (controller) => {
+					// Updating currency code or amount might change resolved list status
+					if (updateObject.update.currencyCode || updateObject.update.amount) {
+						controller.invalidate(currDebt.userId, {
+							filters: { showResolved: false },
+						});
+					}
+					// Updating timestamp might change position in a list
+					if (updateObject.update.timestamp) {
+						controller.invalidate(currDebt.userId);
+					}
+				},
 				get: (controller) =>
 					controller.update(
 						updateObject.id,

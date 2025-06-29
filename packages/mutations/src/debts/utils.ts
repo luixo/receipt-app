@@ -17,8 +17,6 @@ export type CurrentDebt = {
 	};
 };
 
-type DebtSum = number;
-type DebtByUserIdSnapshot = TRPCQueryOutput<"debts.getIdsByUser">[number];
 type DebtSnapshot = TRPCQueryOutput<"debts.get">;
 type DebtUpdateObject = TRPCMutationInput<"debts.update">["update"];
 
@@ -30,22 +28,13 @@ const isUpdateSyncable = (update: DebtUpdateObject) =>
 	);
 
 export const applySumUpdate =
-	(prevAmount: number, update: DebtUpdateObject): UpdateFn<DebtSum> =>
+	(prevAmount: number, update: DebtUpdateObject): UpdateFn<number> =>
 	(sum) => {
 		if (update.amount !== undefined) {
 			const delta = update.amount - prevAmount;
 			return sum + delta;
 		}
 		return sum;
-	};
-
-export const applyByUserIdUpdate =
-	(update: DebtUpdateObject): UpdateFn<DebtByUserIdSnapshot> =>
-	(debt) => {
-		if (update.timestamp !== undefined) {
-			return { ...debt, timestamp: update.timestamp };
-		}
-		return debt;
 	};
 
 export const applyUpdate =
@@ -72,7 +61,7 @@ export const applyUpdate =
 	};
 
 export const getSumRevert =
-	(prevAmount: number, update: DebtUpdateObject): SnapshotFn<DebtSum> =>
+	(prevAmount: number, update: DebtUpdateObject): SnapshotFn<number> =>
 	(updatedSum) =>
 	(currentSum) => {
 		if (update.amount !== undefined) {
@@ -80,16 +69,6 @@ export const getSumRevert =
 			return currentSum - delta;
 		}
 		return currentSum;
-	};
-
-export const getByUserIdRevert =
-	(update: DebtUpdateObject): SnapshotFn<DebtByUserIdSnapshot> =>
-	(snapshot) =>
-	(debt) => {
-		if (update.timestamp !== undefined) {
-			return { ...debt, timestamp: snapshot.timestamp };
-		}
-		return debt;
 	};
 
 export const getRevert =
@@ -150,7 +129,7 @@ export const updateUpdatedAt = (
 		getAll: undefined,
 		getAllUser: undefined,
 		getUsersPaged: undefined,
-		getIdsByUser: undefined,
+		getByUserPaged: undefined,
 		get: (controller) => {
 			controller.update(debtId, (debt) => ({
 				...debt,

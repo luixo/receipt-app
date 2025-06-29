@@ -57,10 +57,11 @@ export const test = originalTest.extend<Fixtures>({
 				),
 			).map(([currencyCode, sum]) => ({ currencyCode, sum }));
 			api.mockFirst("debts.getAllUser", aggregatedDebts);
-			api.mockFirst(
-				"debts.getIdsByUser",
-				debts.map(({ id, timestamp }) => ({ id, timestamp })),
-			);
+			api.mockFirst("debts.getByUserPaged", {
+				items: debts.map(({ id }) => id),
+				count: debts.length,
+				cursor: 0,
+			});
 			api.mockFirst("debts.get", ({ input: { id: lookupId } }) => {
 				const matchedDebt = debts.find((debt) => debt.id === lookupId);
 				if (!matchedDebt) {
@@ -80,7 +81,7 @@ export const test = originalTest.extend<Fixtures>({
 			if (awaitCache) {
 				await awaitCacheKey("users.get");
 				await awaitCacheKey("debts.getAllUser");
-				await awaitCacheKey("debts.getIdsByUser");
+				await awaitCacheKey("debts.getByUserPaged");
 			}
 			if (awaitDebts) {
 				await awaitCacheKey("debts.get", awaitDebts);

@@ -56,10 +56,11 @@ export const test = originalTest.extend<Fixtures>({
 				cursor: 0,
 				items: [debtUser.id],
 			});
-			api.mockFirst(
-				"debts.getIdsByUser",
-				debts.map(({ id, timestamp }) => ({ id, timestamp })),
-			);
+			api.mockFirst("debts.getByUserPaged", {
+				cursor: 0,
+				count: debts.length,
+				items: debts.map(({ id }) => id),
+			});
 			api.mockFirst("debts.get", ({ input: { id: lookupId } }) => {
 				const matchedDebt = debts.find((debt) => debt.id === lookupId);
 				if (!matchedDebt) {
@@ -79,7 +80,7 @@ export const test = originalTest.extend<Fixtures>({
 			if (awaitCache) {
 				await awaitCacheKey("users.get");
 				await awaitCacheKey("debts.getAllUser");
-				await awaitCacheKey("debts.getIdsByUser");
+				await awaitCacheKey("debts.getByUserPaged");
 			}
 			if (awaitDebts) {
 				await awaitCacheKey("debts.get", awaitDebts);

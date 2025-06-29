@@ -30,32 +30,7 @@ export const options: UseContextedMutationOptions<
 						(snapshot) => () => snapshot,
 					),
 				getUsersPaged: (controller) => controller.update(intention.userId),
-				getIdsByUser: (controller) => {
-					if (intention.current) {
-						return controller.update(
-							intention.userId,
-							intention.id,
-							(debt) =>
-								intention.timestamp === debt.timestamp
-									? debt
-									: {
-											...debt,
-											timestamp: intention.timestamp,
-									  },
-							(snapshot) => (debt) =>
-								snapshot.timestamp === debt.timestamp
-									? debt
-									: {
-											...debt,
-											timestamp: snapshot.timestamp,
-									  },
-						);
-					}
-					return controller.add(intention.userId, {
-						id: intention.id,
-						timestamp: intention.timestamp,
-					});
-				},
+				getByUserPaged: undefined,
 				get: (controller) => {
 					const updatedAt = new Date();
 					if (intention.current) {
@@ -103,7 +78,7 @@ export const options: UseContextedMutationOptions<
 				getAll: undefined,
 				getAllUser: undefined,
 				getUsersPaged: undefined,
-				getIdsByUser: undefined,
+				getByUserPaged: (controller) => controller.invalidate(intention.userId),
 				get: (controller) =>
 					controller.update(intention.id, (debt) => ({
 						...debt,

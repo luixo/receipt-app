@@ -76,6 +76,11 @@ type TRPCMutationValues = UnionToIntersection<
 	FlattenObject<AnyTRPCProcedure, MutationsProcedureValues>
 >;
 
+export type TRPCTanstackGenericQueryKey<
+	P extends string = string,
+	I = unknown,
+> = [SplitStringByComma<P>, { input: I; type: "query" }];
+
 // anything router-specific goes below
 
 export type TRPCError = TRPCClientErrorLike<AppRouter>;
@@ -163,10 +168,8 @@ export type TRPCInfiniteQuerySuccessResult<
 	Result extends TRPCInfiniteQueryResult<Path> = TRPCInfiniteQueryResult<Path>,
 > = Result extends { status: "success" } ? Result : never;
 
-export type TRPCTanstackQueryKey<K extends TRPCQueryKey> = [
-	SplitStringByComma<K>,
-	{ input: TRPCQueryInput<K>; type: "query" },
-];
+export type TRPCTanstackQueryKey<K extends TRPCQueryKey> =
+	TRPCTanstackGenericQueryKey<K, TRPCQueryInput<K>>;
 
 export type TRPCMutationKey = keyof TRPCMutationValues;
 

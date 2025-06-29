@@ -81,10 +81,15 @@ const Header: React.FC<HeaderProps> = ({ userId }) => {
 	);
 };
 
-export const UserDebtsScreen: React.FC<{ userId: UsersId }> = ({ userId }) => (
+export const UserDebtsScreen: React.FC<
+	{ userId: UsersId } & Pick<
+		React.ComponentProps<typeof UserDebtsList>,
+		"offsetState" | "limitState"
+	>
+> = ({ userId, ...props }) => (
 	<>
 		<Header userId={userId} />
 		<UserDebtsGroup userId={userId} />
-		<UserDebtsList userId={userId} />
+		<UserDebtsList userId={userId} {...props} />
 	</>
 );

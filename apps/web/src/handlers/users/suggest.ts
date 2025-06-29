@@ -4,6 +4,7 @@ import { z } from "zod/v4";
 
 import {
 	MAX_SUGGEST_LENGTH,
+	directionSchema,
 	limitSchema,
 	offsetSchema,
 } from "~app/utils/validation";
@@ -32,7 +33,7 @@ export const procedure = authProcedure
 					}),
 				])
 				.optional(),
-			direction: z.enum(["forward", "backward"]),
+			direction: directionSchema,
 		}),
 	)
 	.query(async ({ input, ctx }) => {

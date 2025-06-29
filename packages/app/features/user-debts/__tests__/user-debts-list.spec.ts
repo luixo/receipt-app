@@ -1,11 +1,13 @@
 import { expect } from "@playwright/test";
 
-import { test } from "~app/features/user-debts/__tests__/even-debts-divider.utils";
-import { debtsWithDividers } from "~app/hooks/__tests__/use-dividers.utils";
 import { formatCurrency, getCurrencySymbol } from "~app/utils/currency";
 import { SETTINGS_STORE_NAME } from "~app/utils/store/settings";
 import { localSettings } from "~tests/frontend/consts";
 
+import { test } from "./even-debts-divider.utils";
+import { debtsWithDividers } from "./user-debts-list.utils";
+
+// Currently only dividers test are available
 test("Multiple dividers", async ({
 	openUserDebts,
 	mockDebts,

@@ -13,6 +13,7 @@ import { useTRPC } from "~app/utils/trpc";
 import { Link } from "~components/link";
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
+import { cn } from "~components/utils";
 import type { DebtsId } from "~db/models";
 
 type DebtShape = {
@@ -22,13 +23,13 @@ type DebtShape = {
 	note: React.ReactNode;
 };
 
-const UserDebtPreviewShape: React.FC<DebtShape> = ({
-	amount,
-	timestamp,
-	note,
-	synced,
-}) => (
-	<View className="flex flex-1 flex-col items-stretch">
+const UserDebtPreviewShape: React.FC<
+	DebtShape & React.ComponentProps<typeof View>
+> = ({ amount, timestamp, note, synced, className, ...props }) => (
+	<View
+		className={cn("flex flex-1 flex-col items-stretch", className)}
+		{...props}
+	>
 		<View className="flex-1 flex-row gap-2 p-2 max-sm:p-3">
 			<View className="flex-[2]">{amount}</View>
 			<View className="flex-[2]">{timestamp}</View>
@@ -50,9 +51,10 @@ export const UserDebtPreviewSkeleton = () => (
 
 type InnerProps = {
 	query: TRPCQuerySuccessResult<"debts.get">;
+	resolved: boolean;
 };
 
-const UserDebtPreviewInner: React.FC<InnerProps> = ({ query }) => {
+const UserDebtPreviewInner: React.FC<InnerProps> = ({ query, resolved }) => {
 	const trpc = useTRPC();
 	const debt = query.data;
 	const locale = useLocale();
@@ -61,6 +63,7 @@ const UserDebtPreviewInner: React.FC<InnerProps> = ({ query }) => {
 	return (
 		<Link to="/debts/$id" params={{ id: debt.id }}>
 			<UserDebtPreviewShape
+				className={resolved ? "opacity-50" : undefined}
 				amount={
 					<Text
 						className={debt.amount >= 0 ? "text-success" : "text-danger"}
@@ -83,9 +86,10 @@ const UserDebtPreviewInner: React.FC<InnerProps> = ({ query }) => {
 
 type Props = {
 	debtId: DebtsId;
+	resolved: boolean;
 };
 
-export const UserDebtPreview: React.FC<Props> = ({ debtId }) => {
+export const UserDebtPreview: React.FC<Props> = ({ debtId, resolved }) => {
 	const trpc = useTRPC();
 	const query = useQuery(trpc.debts.get.queryOptions({ id: debtId }));
 	if (query.status === "pending") {
@@ -94,5 +98,5 @@ export const UserDebtPreview: React.FC<Props> = ({ debtId }) => {
 	if (query.status === "error") {
 		return <QueryErrorMessage query={query} />;
 	}
-	return <UserDebtPreviewInner query={query} />;
+	return <UserDebtPreviewInner query={query} resolved={resolved} />;
 };

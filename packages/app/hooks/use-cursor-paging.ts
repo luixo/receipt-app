@@ -1,6 +1,6 @@
 import React from "react";
 
-import type { QueryObserverResult, SkipToken } from "@tanstack/react-query";
+import type { SkipToken, UseQueryResult } from "@tanstack/react-query";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 import type { SearchParamState } from "~app/hooks/use-navigation";
@@ -9,23 +9,20 @@ import type {
 	TRPCError,
 	TRPCInfiniteQueryKey,
 } from "~app/trpc";
-import type { Pagination } from "~components/pagination";
-
-type CursorPagingResult<T> = {
-	pagination: React.ComponentProps<typeof Pagination>;
-	query: QueryObserverResult<T, TRPCError>;
-	totalCount?: number;
-};
 
 export const useCursorPaging = <
 	K extends TRPCInfiniteQueryKey,
-	P extends TRPCDecoratedInfiniteQueryProcedure<K>,
-	I extends Exclude<Parameters<P["queryOptions"]>[0], SkipToken>,
+	P extends
+		TRPCDecoratedInfiniteQueryProcedure<K> = TRPCDecoratedInfiniteQueryProcedure<K>,
+	I extends Exclude<Parameters<P["queryOptions"]>[0], SkipToken> = Exclude<
+		Parameters<P["queryOptions"]>[0],
+		SkipToken
+	>,
 >(
 	procedure: P,
 	input: Omit<I, "cursor">,
 	offsetState: SearchParamState<"/receipts", "offset">,
-): CursorPagingResult<P["~types"]["output"]> => {
+) => {
 	const { limit } = input;
 	const [offset, setOffset] = offsetState;
 	const query = useQuery(
@@ -70,7 +67,7 @@ export const useCursorPaging = <
 		[onChange, query.data, offset, limit],
 	);
 	return {
-		query,
+		query: query as UseQueryResult<P["~types"]["output"], TRPCError>,
 		pagination,
 		totalCount: query.data?.count,
 	};
