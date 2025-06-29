@@ -17,8 +17,8 @@ const getDebtIds = (receipt: Pick<TRPCQueryOutput<"receipts.get">, "debt">) =>
 	receipt.debt.direction === "outcoming"
 		? receipt.debt.ids
 		: receipt.debt.id
-		? [receipt.debt.id]
-		: [];
+			? [receipt.debt.id]
+			: [];
 
 type OriginalParticipant =
 	TRPCQueryOutput<"receipts.get">["participants"][number];
@@ -100,9 +100,9 @@ export const useParticipants = (
 								? isOwner
 									? debt.userId === participant.userId
 									: debt.userId === receipt.ownerUserId &&
-									  participant.userId === receipt.selfUserId
+										participant.userId === receipt.selfUserId
 								: false,
-					  ),
+						),
 			}));
 	}, [debtsQueries, fromSubunitToUnit, fromUnitToSubunit, isOwner, receipt]);
 

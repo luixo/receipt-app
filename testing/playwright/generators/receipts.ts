@@ -68,7 +68,7 @@ export const defaultGenerateReceiptParticipants: GenerateReceiptParticipants =
 						userId: selfUserId,
 						role: "owner" as const,
 						createdAt: faker.date.recent({ days: 5, refDate: new Date() }),
-				  }
+					}
 				: undefined,
 		].filter(isNonNullish);
 
@@ -98,7 +98,7 @@ export const defaultGenerateReceiptPayers: GenerateReceiptPayers = ({
 					userId: selfUserId,
 					part: 1,
 					createdAt: faker.date.recent({ days: 5, refDate: new Date() }),
-			  }
+				}
 			: undefined,
 	].filter(isNonNullish);
 

@@ -7,8 +7,8 @@ const getFirstValue = (valueOrValues: string | number | string[] | undefined) =>
 	typeof valueOrValues === "undefined"
 		? undefined
 		: Array.isArray(valueOrValues)
-		? valueOrValues[0]
-		: String(valueOrValues);
+			? valueOrValues[0]
+			: String(valueOrValues);
 /* c8 ignore stop */
 
 export const getResHeaders = ({ event }: NetContext) => {

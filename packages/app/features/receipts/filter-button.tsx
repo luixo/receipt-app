@@ -90,8 +90,8 @@ export const FilterButton: React.FC<Props> = ({
 									{filters.ownedByMe === undefined
 										? "Owned by anybody"
 										: filters.ownedByMe
-										? "Owned by me"
-										: "Owned by anybody but me"}
+											? "Owned by me"
+											: "Owned by anybody but me"}
 								</Button>
 							</DropdownTrigger>
 							<DropdownMenu

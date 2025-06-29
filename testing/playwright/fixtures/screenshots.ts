@@ -275,7 +275,7 @@ export const screenshotsFixtures = test.extend<ScreenshotsFixtures>({
 									location: stickyMenuBoundingBox
 										? [stickyMenuBoundingBox.x, stickyMenuBoundingBox.y]
 										: [0, 0],
-							  },
+								},
 					].filter(isNonNullish) as [ExpectedPixel, ...ExpectedPixel[]];
 					return stableScreenshot(
 						{
@@ -291,7 +291,7 @@ export const screenshotsFixtures = test.extend<ScreenshotsFixtures>({
 											expectedPixels: rawExpectedPixels,
 											colorMode,
 											boundingBox,
-									  })
+										})
 									: rawExpectedPixels,
 						},
 						colorMode,

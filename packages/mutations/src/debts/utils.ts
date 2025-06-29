@@ -140,7 +140,7 @@ export const updateUpdatedAt = (
 							currencyCode: debt.currencyCode,
 							timestamp: debt.timestamp,
 							updatedAt: updatedAt || debt.updatedAt,
-					  }
+						}
 					: debt.their,
 			}));
 		},

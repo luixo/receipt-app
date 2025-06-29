@@ -244,7 +244,7 @@ export const getExchangeRates = async (
 				: exchangeRateDataloader.load({
 						fromCode,
 						toCode,
-				  }));
+					}));
 			cacheDatabase?.setex(cacheKey, CACHE_TTL, fetchedRate).catch((e) => {
 				// Failing on this action doesn't matter much
 				ctx.logger.warn("Cache DB setex action failed", e);

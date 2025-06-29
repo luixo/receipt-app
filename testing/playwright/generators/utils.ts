@@ -13,7 +13,7 @@ export const generateAmount = <T>(
 		typeof generatedAmount === "number"
 			? generatedAmount
 			: generatedAmount.min +
-			  faker.number.int(generatedAmount.max - generatedAmount.min);
+				faker.number.int(generatedAmount.max - generatedAmount.min);
 	return Array.from({ length: amount }, generatorFn);
 };
 

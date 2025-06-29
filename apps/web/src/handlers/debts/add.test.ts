@@ -91,9 +91,8 @@ describe("debts.add", () => {
 		});
 
 		test("user is not owned by an account", async ({ ctx }) => {
-			const { sessionId, accountId, account } = await insertAccountWithSession(
-				ctx,
-			);
+			const { sessionId, accountId, account } =
+				await insertAccountWithSession(ctx);
 			await insertUser(ctx, accountId);
 
 			const { id: foreignAccountId } = await insertAccount(ctx);

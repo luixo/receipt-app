@@ -39,11 +39,11 @@ const mapUser = (user: Awaited<ReturnType<typeof fetchUsers>>[number]) => ({
 					id: user.accountId,
 					email: user.email,
 					avatarUrl: user.avatarUrl || undefined,
-			  } as {
+				} as {
 					id: AccountsId;
 					email: string;
 					avatarUrl?: string;
-			  }),
+				}),
 });
 
 const queueUser = queueCallFactory<

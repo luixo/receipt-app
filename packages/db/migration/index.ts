@@ -59,13 +59,14 @@ export const migrate = async ({
 		provider: new ESMFileMigrationProvider("./migrations"),
 	});
 
-	const { error, results } = await migrator[
-		target === "latest"
-			? "migrateToLatest"
-			: target === "down"
-			? "migrateDown"
-			: "migrateUp"
-	]();
+	const { error, results } =
+		await migrator[
+			target === "latest"
+				? "migrateToLatest"
+				: target === "down"
+					? "migrateDown"
+					: "migrateUp"
+		]();
 
 	if (error) {
 		return {

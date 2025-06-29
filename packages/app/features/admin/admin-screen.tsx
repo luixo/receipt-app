@@ -98,7 +98,7 @@ const AdminScreenInner: React.FC = () => {
 			const pretendUserAccount = pretendUser.email
 				? accountsQuery.data.find(
 						(element) => element.account.email === pretendUser.email,
-				  )
+					)
 				: null;
 			return (
 				<Tabs variant="underlined">

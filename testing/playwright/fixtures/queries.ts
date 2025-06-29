@@ -414,7 +414,7 @@ const getDiff = (prevCache: QueryCache, nextCache: QueryCache) => {
 								(value) => value === undefined,
 							),
 						};
-				  })
+					})
 				: undefined,
 			mutations: diff.mutations
 				? mapValues(diff.mutations, (mutations, key) => {
@@ -447,7 +447,7 @@ const getDiff = (prevCache: QueryCache, nextCache: QueryCache) => {
 						// Case of diff for a single mutation - array is convert to an object with partial keys
 						// eslint-disable-next-line prefer-object-spread
 						return mapValues(Object.assign({}, mutations), mapMutation);
-				  })
+					})
 				: undefined,
 		},
 		(value) => value === undefined,
@@ -683,7 +683,7 @@ export const queriesFixtures = test.extend<QueriesFixtures>({
 												expectedAmounts.errored.min !== 0
 													? `Errored entries: expected ${formatExpectedRange(
 															expectedAmounts.errored,
-													  )}, got ${accountedAmounts.errored}`
+														)}, got ${accountedAmounts.errored}`
 													: undefined,
 												options.awaitLoading && actual.unresolved !== 0
 													? `${actual.unresolved} unresolved entries`

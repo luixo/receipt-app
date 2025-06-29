@@ -102,9 +102,8 @@ describe("users.add", () => {
 				ctx,
 			}) => {
 				// Foreign account
-				const { id: otherAccountId, email: otherEmail } = await insertAccount(
-					ctx,
-				);
+				const { id: otherAccountId, email: otherEmail } =
+					await insertAccount(ctx);
 				// Self account
 				const { accountId, sessionId } = await insertAccountWithSession(ctx);
 				const [{ name: userName }] = await insertConnectedUsers(ctx, [
@@ -125,9 +124,8 @@ describe("users.add", () => {
 
 			test("account intention already exists", async ({ ctx }) => {
 				// Foreign account
-				const { id: otherAccountId, email: otherEmail } = await insertAccount(
-					ctx,
-				);
+				const { id: otherAccountId, email: otherEmail } =
+					await insertAccount(ctx);
 				// Self account
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				const { id: userId, name: userName } = await insertUser(ctx, accountId);

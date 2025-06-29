@@ -30,7 +30,7 @@ const createDebt = (
 					amount: updateObject.amount,
 					currencyCode: updateObject.currencyCode,
 					updatedAt,
-			  }
+				}
 			: undefined,
 		receiptId: updateObject.receiptId,
 	};

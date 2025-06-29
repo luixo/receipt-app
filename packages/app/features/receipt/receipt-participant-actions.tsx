@@ -35,7 +35,7 @@ export const ReceiptParticipantActions: React.FC<Props> = ({
 								...participant.currentDebt,
 								userId: participant.userId,
 							},
-					  }
+						}
 					: skipToken,
 			}),
 		),

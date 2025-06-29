@@ -49,7 +49,7 @@ export const useTrpcMutationOptions = <
 		Exact<OuterContext, undefined> extends never
 			? TRPCMutationOptions<Path, LifecycleContext> & {
 					context: OuterContext | typeof skipToken;
-			  }
+				}
 			:
 					| (TRPCMutationOptions<Path, LifecycleContext> & {
 							context?: OuterContext | typeof skipToken;
@@ -94,7 +94,7 @@ export const useTrpcMutationOptions = <
 					typeof mutateToastOptions === "function"
 						? mutateToastOptions(...getToastArgs(partialInternalContext))(
 								...args,
-						  )
+							)
 						: mutateToastOptions;
 				if (toastOptions) {
 					toastId = toast.loading(toastOptions.text);
@@ -124,7 +124,7 @@ export const useTrpcMutationOptions = <
 								error,
 								vars,
 								lifecycleContext,
-						  )
+							)
 						: errorToastOptions;
 				toast.error(toastOptions.text, { id: toastId });
 				onError?.(error, vars, lifecycleContext);
@@ -150,7 +150,7 @@ export const useTrpcMutationOptions = <
 								result,
 								vars,
 								sureLifecycleContext,
-						  )
+							)
 						: successToastOptions;
 				if (toastOptions) {
 					toast.success(toastOptions.text, { id: toastId });

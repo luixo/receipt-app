@@ -7377,10 +7377,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@pkgr/core@npm:^0.2.3":
-  version: 0.2.4
-  resolution: "@pkgr/core@npm:0.2.4"
-  checksum: 10/8544f0346c3f7035b9e2fdf60179c68b12d3c76b3fba9533844099af67cf5c0ce5257538f5faa05953d48cc1536d046f003231f321b2f75b3fb449db8410a2b7
+"@pkgr/core@npm:^0.2.4":
+  version: 0.2.7
+  resolution: "@pkgr/core@npm:0.2.7"
+  checksum: 10/b16959878940f3d3016b79a4b2c23fd518aaec6b47295baa3154fbcf6574fee644c51023bb69069fa3ea9cdcaca40432818f54695f11acc0ae326cf56676e4d1
   languageName: node
   linkType: hard
 
@@ -25315,30 +25315,30 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier-plugin-packagejson@npm:^2.5.11":
-  version: 2.5.11
-  resolution: "prettier-plugin-packagejson@npm:2.5.11"
+"prettier-plugin-packagejson@npm:^2.5.17":
+  version: 2.5.17
+  resolution: "prettier-plugin-packagejson@npm:2.5.17"
   dependencies:
-    sort-package-json: "npm:3.2.0"
-    synckit: "npm:0.11.4"
+    sort-package-json: "npm:3.3.1"
+    synckit: "npm:0.11.8"
   peerDependencies:
     prettier: ">= 1.16.0"
   peerDependenciesMeta:
     prettier:
       optional: true
-  checksum: 10/9f742db5903d31107c45905d1a9d64383a9aa4aaffbcd68aae59a5278da5e6897af537b0d478305ed59d462f737b9e524c0513208d7dce2985abb35250220cdf
+  checksum: 10/463db60adff98301fe8e3ea6b58c3f87dd051a3b590781d5e29cf7bc789c82e5bfca6584ad95aec321845aa9fd404582ce0d90f1b1982118d713d0fe9eb8f66d
   languageName: node
   linkType: hard
 
-"prettier-plugin-tailwindcss@npm:^0.6.8":
-  version: 0.6.8
-  resolution: "prettier-plugin-tailwindcss@npm:0.6.8"
+"prettier-plugin-tailwindcss@npm:^0.6.13":
+  version: 0.6.13
+  resolution: "prettier-plugin-tailwindcss@npm:0.6.13"
   peerDependencies:
     "@ianvs/prettier-plugin-sort-imports": "*"
     "@prettier/plugin-pug": "*"
     "@shopify/prettier-plugin-liquid": "*"
     "@trivago/prettier-plugin-sort-imports": "*"
-    "@zackad/prettier-plugin-twig-melody": "*"
+    "@zackad/prettier-plugin-twig": "*"
     prettier: ^3.0
     prettier-plugin-astro: "*"
     prettier-plugin-css-order: "*"
@@ -25360,7 +25360,7 @@ __metadata:
       optional: true
     "@trivago/prettier-plugin-sort-imports":
       optional: true
-    "@zackad/prettier-plugin-twig-melody":
+    "@zackad/prettier-plugin-twig":
       optional: true
     prettier-plugin-astro:
       optional: true
@@ -25384,16 +25384,7 @@ __metadata:
       optional: true
     prettier-plugin-svelte:
       optional: true
-  checksum: 10/09fbb9eeda787365f618529e062ae05fb419b73637285be63fa4c3aab3802815f55890250ebba689698f0039778838d3a8a48ae6415bac778afa3387b193d384
-  languageName: node
-  linkType: hard
-
-"prettier@npm:^3.0.0":
-  version: 3.0.0
-  resolution: "prettier@npm:3.0.0"
-  bin:
-    prettier: bin/prettier.cjs
-  checksum: 10/399292638280988ecd44db6532e908246b7c9468e6f5f571b3835a5206b7f1132cb674c12be430d921474901dc85398429dfd2dc31b282eef9affebd3ce72cef
+  checksum: 10/26151608596f077056107589add057d0c4ebee534d7015699399dd85b1e7d3ef88980d136c54add4bb8cf35d8918ee3719e3b0d5cb898074d3dd8b173ee933ab
   languageName: node
   linkType: hard
 
@@ -25403,6 +25394,15 @@ __metadata:
   bin:
     prettier: bin/prettier.cjs
   checksum: 10/7050c08f674d9e49fbd9a4c008291d0715471f64e94cc5e4b01729affce221dfc6875c8de7e66b728c64abc9352eefb7eaae071b5f79d30081be207b53774b78
+  languageName: node
+  linkType: hard
+
+"prettier@npm:^3.6.2":
+  version: 3.6.2
+  resolution: "prettier@npm:3.6.2"
+  bin:
+    prettier: bin/prettier.cjs
+  checksum: 10/1213691706bcef1371d16ef72773c8111106c3533b660b1cc8ec158bd109cdf1462804125f87f981f23c4a3dba053b6efafda30ab0114cc5b4a725606bb9ff26
   languageName: node
   linkType: hard
 
@@ -26307,9 +26307,9 @@ __metadata:
     jsonc-eslint-parser: "npm:^2.4.0"
     lint-staged: "npm:^15.2.7"
     pre-commit: "npm:^1.2.2"
-    prettier: "npm:^3.0.0"
-    prettier-plugin-packagejson: "npm:^2.5.11"
-    prettier-plugin-tailwindcss: "npm:^0.6.8"
+    prettier: "npm:^3.6.2"
+    prettier-plugin-packagejson: "npm:^2.5.17"
+    prettier-plugin-tailwindcss: "npm:^0.6.13"
     react: "npm:^19.1.0"
     react-dom: "npm:^19.1.0"
     react-native: "npm:^0.79.2"
@@ -27903,7 +27903,24 @@ __metadata:
   languageName: node
   linkType: hard
 
-"sort-package-json@npm:3.2.0, sort-package-json@npm:^3.0.0":
+"sort-package-json@npm:3.3.1":
+  version: 3.3.1
+  resolution: "sort-package-json@npm:3.3.1"
+  dependencies:
+    detect-indent: "npm:^7.0.1"
+    detect-newline: "npm:^4.0.1"
+    git-hooks-list: "npm:^4.0.0"
+    is-plain-obj: "npm:^4.1.0"
+    semver: "npm:^7.7.1"
+    sort-object-keys: "npm:^1.1.3"
+    tinyglobby: "npm:^0.2.12"
+  bin:
+    sort-package-json: cli.js
+  checksum: 10/e1a21e1cd9aeb35f5e4567066254ab4c781355706968d563c7915ace3d6749b54f7c34cb2c683416c2b7a7093e0aa74466605f116fbd187eefd6d045dd7f4950
+  languageName: node
+  linkType: hard
+
+"sort-package-json@npm:^3.0.0":
   version: 3.2.0
   resolution: "sort-package-json@npm:3.2.0"
   dependencies:
@@ -28702,13 +28719,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"synckit@npm:0.11.4":
-  version: 0.11.4
-  resolution: "synckit@npm:0.11.4"
+"synckit@npm:0.11.8":
+  version: 0.11.8
+  resolution: "synckit@npm:0.11.8"
   dependencies:
-    "@pkgr/core": "npm:^0.2.3"
-    tslib: "npm:^2.8.1"
-  checksum: 10/37c9fc5af9f06379d263c514e477000074d8af9ef9d3a63354b31dcce39bbf778a67accc2c66c52a13d6fd3871a7fbd36120f713a59edb6fa16358616f3a260f
+    "@pkgr/core": "npm:^0.2.4"
+  checksum: 10/9bb2cf11edaf31ba781f1c719dd58087323201bda6392254538aef4dea216aa02a32e25f06643bcfa1c1a2c95e0d84186d82cfb66f9a0ab3a2be4816c696a8a3
   languageName: node
   linkType: hard
 

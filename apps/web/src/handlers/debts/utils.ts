@@ -22,14 +22,14 @@ export const upsertAutoAcceptedDebts = async (
 						? eb.and({
 								id: debt.id,
 								ownerAccountId: debt.ownerAccountId,
-						  })
+							})
 						: debt.receiptId
-						? eb.and({
-								ownerAccountId: debt.ownerAccountId,
-								userId: debt.userId,
-								receiptId: debt.receiptId,
-						  })
-						: eb("debts.ownerAccountId", "is", null),
+							? eb.and({
+									ownerAccountId: debt.ownerAccountId,
+									userId: debt.userId,
+									receiptId: debt.receiptId,
+								})
+							: eb("debts.ownerAccountId", "is", null),
 				),
 			),
 		)

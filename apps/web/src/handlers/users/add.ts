@@ -34,7 +34,7 @@ const getUsers = (
 						name: input.name,
 						email: input.email,
 						id,
-				  }
+					}
 				: undefined,
 		};
 	});

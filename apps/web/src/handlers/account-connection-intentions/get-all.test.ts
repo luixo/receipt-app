@@ -54,9 +54,8 @@ describe("accountConnectionIntentions.getAll", () => {
 			const { id: secondOutboundUserId, name: secondOutboundUserName } =
 				await insertUser(ctx, accountId);
 
-			const { id: inboundAccountId, email: inboundEmail } = await insertAccount(
-				ctx,
-			);
+			const { id: inboundAccountId, email: inboundEmail } =
+				await insertAccount(ctx);
 			const { id: inboundUserId } = await insertUser(ctx, inboundAccountId);
 			const { id: inboundToOutboundUserId } = await insertUser(
 				ctx,

@@ -67,9 +67,8 @@ describe("receiptItems.add", () => {
 		});
 
 		test("receipt is not owned by an account", async ({ ctx }) => {
-			const { sessionId, accountId, account } = await insertAccountWithSession(
-				ctx,
-			);
+			const { sessionId, accountId, account } =
+				await insertAccountWithSession(ctx);
 			await insertReceipt(ctx, accountId);
 
 			const { id: foreignAccountId } = await insertAccount(ctx);
@@ -87,9 +86,8 @@ describe("receiptItems.add", () => {
 		});
 
 		test("receipt role is lower than editor", async ({ ctx }) => {
-			const { sessionId, accountId, account } = await insertAccountWithSession(
-				ctx,
-			);
+			const { sessionId, accountId, account } =
+				await insertAccountWithSession(ctx);
 			await insertReceipt(ctx, accountId);
 
 			const { id: foreignAccountId } = await insertAccount(ctx);

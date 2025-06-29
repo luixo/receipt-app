@@ -11,16 +11,16 @@ export type OmitDeep<T, TerminalVaue, K extends PropertyKey> = T extends
 	| TerminalVaue
 	? T
 	: T extends (infer U)[]
-	? OmitDeep<U, TerminalVaue, K>[]
-	: T extends object
-	? {
-			[P in keyof T as P extends K ? never : P]: OmitDeep<
-				T[P],
-				TerminalVaue,
-				K
-			>;
-	  }
-	: T;
+		? OmitDeep<U, TerminalVaue, K>[]
+		: T extends object
+			? {
+					[P in keyof T as P extends K ? never : P]: OmitDeep<
+						T[P],
+						TerminalVaue,
+						K
+					>;
+				}
+			: T;
 
 export type ParametersExceptFirst<F> = F extends (
 	arg0: unknown,
@@ -49,10 +49,10 @@ export type ExtractObjectByPath<
 			? never
 			: ExtractObj<S, T0>
 		: ExtractObj<S, T0> extends object
-		? ExtractObjectByPath<ExtractObj<S, T0>, TR>
-		: ExtractObj<S, T0> extends never
-		? never
-		: ExtractObj<S, T0>
+			? ExtractObjectByPath<ExtractObj<S, T0>, TR>
+			: ExtractObj<S, T0> extends never
+				? never
+				: ExtractObj<S, T0>
 	: never;
 
 // https://stackoverflow.com/questions/50374908/transform-union-type-to-intersection-type/50375286#50375286
@@ -71,34 +71,31 @@ export type FlattenObject<
 	? T[Key] extends never
 		? never
 		: T[Key] extends Terminator
-		? Record<PrevKey extends "" ? `${Key}` : `${PrevKey}.${Key}`, T[Key]>
-		: T[Key] extends Record<string, unknown>
-		? FlattenObject<
-				Terminator,
-				T[Key],
-				PrevKey extends "" ? `${Key}` : `${PrevKey}.${Key}`
-		  >
-		: never
+			? Record<PrevKey extends "" ? `${Key}` : `${PrevKey}.${Key}`, T[Key]>
+			: T[Key] extends Record<string, unknown>
+				? FlattenObject<
+						Terminator,
+						T[Key],
+						PrevKey extends "" ? `${Key}` : `${PrevKey}.${Key}`
+					>
+				: never
 	: never;
 
-export type Exact<A, B> = (<T>() => T extends A ? 1 : 0) extends <
-	T,
->() => T extends B ? 1 : 0
-	? A extends B
-		? B extends A
-			? unknown
+export type Exact<A, B> =
+	(<T>() => T extends A ? 1 : 0) extends <T>() => T extends B ? 1 : 0
+		? A extends B
+			? B extends A
+				? unknown
+				: never
 			: never
-		: never
-	: never;
+		: never;
 
-export type MaybeAddElementToArray<
-	Args extends unknown[],
-	X = undefined,
-> = Exact<X, undefined> extends never
-	? X extends undefined
-		? [...Args, X?]
-		: [...Args, X]
-	: Args;
+export type MaybeAddElementToArray<Args extends unknown[], X = undefined> =
+	Exact<X, undefined> extends never
+		? X extends undefined
+			? [...Args, X?]
+			: [...Args, X]
+		: Args;
 
 export type KeysMatching<T extends object, V> = {
 	[K in keyof T]-?: T[K] extends V ? K : never;

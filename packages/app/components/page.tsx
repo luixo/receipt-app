@@ -68,8 +68,9 @@ type Props = {
 
 export const Page: React.FC<Props> = ({ children, elements }) => {
 	const pathname = usePathname();
-	const PageWrapper = elements.find((element) => element.pathname === pathname)
-		?.PageWrapper;
+	const PageWrapper = elements.find(
+		(element) => element.pathname === pathname,
+	)?.PageWrapper;
 	const slot = <View className="gap-4">{children}</View>;
 	return (
 		<View className="mx-auto max-w-screen-md overflow-x-hidden overflow-y-scroll p-1 sm:p-2 md:p-4">

@@ -88,9 +88,8 @@ describe("currency.top", () => {
 		});
 
 		test("top receipt currencies returned", async ({ ctx }) => {
-			const { sessionId, accountId, userId } = await insertAccountWithSession(
-				ctx,
-			);
+			const { sessionId, accountId, userId } =
+				await insertAccountWithSession(ctx);
 			// Self receipts
 			const { id: selfReceiptId } = await insertReceipt(ctx, accountId, {
 				currencyCode: "USD",

@@ -63,11 +63,11 @@ describe("users.update", () => {
 										? {
 												type: field,
 												[field]: "a".repeat(MIN_USERNAME_LENGTH - 1),
-										  }
+											}
 										: {
 												type: field,
 												[field]: "a".repeat(MIN_USERNAME_LENGTH - 1),
-										  },
+											},
 							}),
 						"BAD_REQUEST",
 						`Zod error\n\nAt "update.${field}": Minimal length for user name is ${MIN_USERNAME_LENGTH}`,
@@ -87,11 +87,11 @@ describe("users.update", () => {
 										? {
 												type: field,
 												[field]: "a".repeat(MAX_USERNAME_LENGTH + 1),
-										  }
+											}
 										: {
 												type: field,
 												[field]: "a".repeat(MAX_USERNAME_LENGTH + 1),
-										  },
+											},
 							}),
 						"BAD_REQUEST",
 						`Zod error\n\nAt "update.${field}": Maximum length for user name is ${MAX_USERNAME_LENGTH}`,

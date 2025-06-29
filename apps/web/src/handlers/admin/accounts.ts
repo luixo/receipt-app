@@ -30,7 +30,7 @@ export const procedure = adminProcedure.query(async ({ ctx }) => {
 				? {
 						id: element.userId,
 						name: element.name,
-				  }
+					}
 				: undefined,
 	}));
 });

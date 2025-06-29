@@ -75,8 +75,8 @@ export const UsersSuggest: React.FC<Props> = ({
 	const selectedUserIds = Array.isArray(selected)
 		? selected
 		: selected
-		? [selected]
-		: [];
+			? [selected]
+			: [];
 	const initialUserIds = React.useRef(selectedUserIds);
 	const filterIds = [...(outerFilterIds || []), ...selectedUserIds];
 	const topQuery = useQuery(

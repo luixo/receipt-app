@@ -79,10 +79,10 @@ export const createRouter = (externalContext: ExternalRouterContext) => {
 					? {
 							[pretendEmail]: localQueryClient,
 							[SELF_QUERY_CLIENT_KEY]: getQueryClient(),
-					  }
+						}
 					: {
 							[SELF_QUERY_CLIENT_KEY]: localQueryClient,
-					  };
+						};
 			});
 			return (
 				<QueryClientsContext.Provider value={queryClientsState}>

@@ -32,14 +32,14 @@ export const getLoaderTrpcClient = <R extends AnyRouter = AppRouter>(
 ) => {
 	const linksParams = context.request
 		? /* c8 ignore start */
-		  getLinksParamsFromRequest(context.request, "ssr")
+			getLinksParamsFromRequest(context.request, "ssr")
 		: {
 				debug,
 				headers: {},
 				source: "csr" as GetLinksOptions["source"],
 				url: DEFAULT_TRPC_ENDPOINT,
 				captureError: captureSentryError,
-		  };
+			};
 	/* c8 ignore stop */
 
 	return createTRPCOptionsProxy<R>({

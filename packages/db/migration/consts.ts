@@ -139,5 +139,5 @@ export const FUNCTIONS = {
 
 export const CURRENT_TIMESTAMP = isTestEnv()
 	? /* c8 ignore next 2 */
-	  sql`TO_TIMESTAMP('2020/01/01', 'YYYY/MM/DD')`
+		sql`TO_TIMESTAMP('2020/01/01', 'YYYY/MM/DD')`
 	: sql`CURRENT_TIMESTAMP`;

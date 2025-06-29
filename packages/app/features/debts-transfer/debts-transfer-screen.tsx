@@ -233,8 +233,8 @@ const DebtsListForm: React.FC<FormProps> = ({
 															!field.state.value
 																? "default"
 																: field.state.value > 0
-																? "success"
-																: "danger"
+																	? "success"
+																	: "danger"
 														}
 														startContent={
 															<View
@@ -243,8 +243,8 @@ const DebtsListForm: React.FC<FormProps> = ({
 																	!field.state.value
 																		? "bg-default"
 																		: field.state.value > 0
-																		? "bg-success"
-																		: "bg-danger",
+																			? "bg-success"
+																			: "bg-danger",
 																	!field.state.value
 																		? undefined
 																		: "cursor-pointer",

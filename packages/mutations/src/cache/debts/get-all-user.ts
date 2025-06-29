@@ -34,7 +34,7 @@ const updateSum =
 							(entry) => ({ ...entry, sum: updater(entry.sum) }),
 							{ currencyCode, sum: updater(0) },
 							ref,
-					  )
+						)
 					: undefined,
 			);
 		}).current?.sum;

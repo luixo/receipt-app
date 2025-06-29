@@ -51,7 +51,7 @@ const generateFormWithImage = async (
 							type: "gaussian" as const,
 							mean: 128,
 							sigma: 30,
-					  }
+						}
 					: undefined,
 		},
 	});

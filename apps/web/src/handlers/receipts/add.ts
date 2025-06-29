@@ -92,7 +92,7 @@ const insertItems = async (
 						receiptId,
 						...item,
 					})),
-			  ),
+				),
 		ctx.database
 			.insertInto("receiptItems")
 			.values({
@@ -256,7 +256,7 @@ const verifyPayers = (
 			message: `${firstError.message.replace(receiptId, "new receipt")}${
 				payers.errors.length !== 1
 					? /* c8 ignore start */
-					  ` (+${payers.errors.length - 1} errors)`
+						` (+${payers.errors.length - 1} errors)`
 					: ""
 				/* c8 ignore stop */
 			}`,

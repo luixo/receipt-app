@@ -58,10 +58,10 @@ type ProceduresValues<
 			? Procedures[K]
 			: never
 		: Procedures[K] extends AnyTRPCMutationProcedure
-		? Type extends "mutations"
-			? Procedures[K]
-			: never
-		: ProceduresValues<Procedures[K], Type, Procedures[K]>;
+			? Type extends "mutations"
+				? Procedures[K]
+				: never
+			: ProceduresValues<Procedures[K], Type, Procedures[K]>;
 };
 
 type QueriesProcedureValues = ProceduresValues<AppRouter, "queries">;

@@ -80,9 +80,8 @@ describe("accountConnectionIntentions.add", () => {
 		});
 
 		test("user is not owned by an account", async ({ ctx }) => {
-			const { sessionId, accountId, account } = await insertAccountWithSession(
-				ctx,
-			);
+			const { sessionId, accountId, account } =
+				await insertAccountWithSession(ctx);
 			await insertUser(ctx, accountId);
 
 			const { id: foreignAccountId } = await insertAccount(ctx);
@@ -123,9 +122,8 @@ describe("accountConnectionIntentions.add", () => {
 		describe("email connection intention exceptions", () => {
 			test("target user already has a connected account", async ({ ctx }) => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				const { id: otherAccountId, email: otherEmail } = await insertAccount(
-					ctx,
-				);
+				const { id: otherAccountId, email: otherEmail } =
+					await insertAccount(ctx);
 				const [{ id: userId }] = await insertConnectedUsers(ctx, [
 					accountId,
 					otherAccountId,
@@ -149,9 +147,8 @@ describe("accountConnectionIntentions.add", () => {
 				ctx,
 			}) => {
 				const { accountId, sessionId } = await insertAccountWithSession(ctx);
-				const { id: otherAccountId, email: otherEmail } = await insertAccount(
-					ctx,
-				);
+				const { id: otherAccountId, email: otherEmail } =
+					await insertAccount(ctx);
 				const [{ name: userName }] = await insertConnectedUsers(ctx, [
 					accountId,
 					otherAccountId,
@@ -197,9 +194,8 @@ describe("accountConnectionIntentions.add", () => {
 
 			test("target account already has an intention", async ({ ctx }) => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
-				const { id: otherAccountId, email: otherEmail } = await insertAccount(
-					ctx,
-				);
+				const { id: otherAccountId, email: otherEmail } =
+					await insertAccount(ctx);
 				const { id: previousUserId, name: userName } = await insertUser(
 					ctx,
 					accountId,

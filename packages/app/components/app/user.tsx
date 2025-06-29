@@ -33,8 +33,8 @@ export const SkeletonUser: React.FC<
 				? "sm"
 				: rawAvatarProps.size
 			: chip
-			? "sm"
-			: undefined,
+				? "sm"
+				: undefined,
 	};
 	if (onlyAvatar) {
 		return <Avatar {...avatarProps} />;

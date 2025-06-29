@@ -29,9 +29,9 @@ export const UserConnectionInput: React.FC<Props> = ({ user, isLoading }) => {
 	);
 	const outboundConnectionIntention =
 		connectionIntentionsQuery.status === "success"
-			? connectionIntentionsQuery.data.outbound.find(
+			? (connectionIntentionsQuery.data.outbound.find(
 					(element) => element.user.id === user.id,
-			  ) ?? null
+				) ?? null)
 			: undefined;
 
 	const connectUserMutation = useMutation(

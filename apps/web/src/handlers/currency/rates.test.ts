@@ -211,11 +211,9 @@ describe("currency.rates", () => {
 					]),
 					...currenciesTo
 						.filter((currencyTo) => currencyTo !== currencyInCache)
-						.map<(typeof dbMessages)[number]>((currencyTo) => [
-							"setex",
-							[`${currencyFrom}->${currencyTo}`, 1440, result[currencyTo]],
-							{ result: "OK" },
-						]),
+						.map<
+							(typeof dbMessages)[number]
+						>((currencyTo) => ["setex", [`${currencyFrom}->${currencyTo}`, 1440, result[currencyTo]], { result: "OK" }]),
 				]);
 			});
 		});

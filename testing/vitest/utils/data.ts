@@ -490,7 +490,7 @@ export const insertReceiptParticipant = async (
 		.values({
 			receiptId,
 			userId,
-			role: userId === ownerAccountId ? "owner" : data.role ?? "viewer",
+			role: userId === ownerAccountId ? "owner" : (data.role ?? "viewer"),
 			createdAt: data.createdAt ?? new Date(),
 		})
 		.returning(["createdAt", "role"])

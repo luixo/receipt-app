@@ -78,7 +78,7 @@ const mapDebt = (debt: Awaited<ReturnType<typeof fetchDebts>>[number]) => {
 					amount: -Number(theirAmount),
 					currencyCode: theirCurrencyCode,
 					timestamp: theirTimestamp,
-			  }
+				}
 			: undefined,
 	};
 };

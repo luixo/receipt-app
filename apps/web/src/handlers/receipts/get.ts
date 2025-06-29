@@ -146,8 +146,9 @@ const getReceiptDebt = (
 			ids: outcomingDebtIds,
 		};
 	}
-	const mineDebtId = debts.find((debt) => debt.ownerAccountId === selfAccountId)
-		?.debtId;
+	const mineDebtId = debts.find(
+		(debt) => debt.ownerAccountId === selfAccountId,
+	)?.debtId;
 	const foreignDebtId = debts.find(
 		(debt) =>
 			debt.ownerAccountId !== selfAccountId &&

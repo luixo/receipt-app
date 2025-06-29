@@ -36,7 +36,7 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 							currencyCode: debt.currencyCode,
 							timestamp: debt.timestamp,
 						},
-				  }
+					}
 				: undefined,
 		[
 			debt.amount,

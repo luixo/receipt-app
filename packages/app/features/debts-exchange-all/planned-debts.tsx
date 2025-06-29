@@ -126,7 +126,7 @@ export const PlannedDebts: React.FC<Props> = ({
 					: {
 							...acc,
 							[debt.currencyCode]: 0,
-					  },
+						},
 			{},
 		),
 	};

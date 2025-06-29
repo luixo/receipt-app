@@ -57,7 +57,7 @@ const CurrenciesPickerLoader: React.FC<LoaderProps> = ({
 		? codes
 			? codes.sort(
 					(a, b) => topCurrencyCodes.indexOf(b) - topCurrencyCodes.indexOf(a),
-			  )
+				)
 			: topCurrencyCodes
 		: codes || [];
 	const formattedCurrencies = useCurrencyDescriptions(sortedCodes);

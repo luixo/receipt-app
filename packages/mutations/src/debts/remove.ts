@@ -56,7 +56,7 @@ export const options: UseContextedMutationOptions<
 												hasForeign: false,
 												hasMine: false,
 												id: undefined,
-										  },
+											},
 								};
 							}
 							return receipt;

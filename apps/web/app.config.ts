@@ -60,7 +60,7 @@ const configPromise = defineConfig({
 		output: {
 			dir: process.env.VERCEL
 				? // This is due to a Vercel bug where they can't server Build Output API from a non-root directory
-				  path.resolve(rootDir, ".vercel/output")
+					path.resolve(rootDir, ".vercel/output")
 				: undefined,
 		},
 	},
@@ -158,4 +158,4 @@ export default process.env.NODE_ENV !== "production"
 	: wrapVinxiConfigWithSentry(config, {
 			authToken: process.env.SENTRY_AUTH_TOKEN,
 			silent: !process.env.CI,
-	  });
+		});

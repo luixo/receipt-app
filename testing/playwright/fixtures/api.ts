@@ -38,14 +38,14 @@ type CleanupFn = () => Promise<void>;
 type QueryOrMutationInput<K extends TRPCKey> = K extends TRPCQueryKey
 	? TRPCQueryInput<K>
 	: K extends TRPCMutationKey
-	? TRPCMutationInput<K>
-	: void;
+		? TRPCMutationInput<K>
+		: void;
 
 type QueryOrMutationOutput<K extends TRPCKey> = K extends TRPCQueryKey
 	? TRPCQueryOutput<K>
 	: K extends TRPCMutationKey
-	? TRPCMutationOutput<K>
-	: void;
+		? TRPCMutationOutput<K>
+		: void;
 
 type QueryOrMutationHandlerOptions<K extends TRPCKey> = {
 	input: QueryOrMutationInput<K>;
@@ -170,7 +170,7 @@ const handleCall = async <K extends TRPCKey>(
 						code: "INTERNAL_SERVER_ERROR",
 						message: "Internal server error",
 						cause: e,
-				  });
+					});
 		return {
 			error: transformer.serialize({
 				code: TRPC_ERROR_CODES_BY_KEY[trpcError.code],

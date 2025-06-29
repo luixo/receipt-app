@@ -13,5 +13,5 @@ export const persister: Persister = createAsyncStoragePersister({
 							value === undefined ? null : value,
 						),
 					removeItem: del,
-			  },
+				},
 });
