@@ -1,6 +1,7 @@
-import type React from "react";
+import React from "react";
 
 import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 import {
 	AdminWrapper,
@@ -32,48 +33,54 @@ type Props = {
 	children: React.ReactNode;
 } & Omit<React.ComponentProps<typeof Page>, "elements">;
 
-export const ProtectedPage: React.FC<Props> = ({ children, ...props }) => (
-	<Page
-		elements={[
-			{
-				Icon: ReceiptsIcon,
-				pathname: "/receipts",
-				text: "Receipts",
-			},
-			{
-				Icon: DebtsIcon,
-				text: "Debts",
-				pathname: "/debts",
-				useBadgeAmount: useDebtsIntentions,
-			},
-			{
-				Icon: UsersIcon,
-				text: "Users",
-				pathname: "/users",
-				useBadgeAmount: useConnectionIntentions,
-			},
-			{
-				Icon: AccountIcon,
-				text: "Account",
-				pathname: "/account",
-			},
-			{
-				Icon: SettingsIcon,
-				text: "Settings",
-				pathname: "/settings",
-			},
-			{
-				Icon: AdminIcon,
-				pathname: "/admin",
-				text: "Admin",
-				useShow: useShowAdmin,
-				PageWrapper: AdminWrapperWithEffect,
-				ItemWrapper: AdminWrapper,
-			},
-		]}
-		{...props}
-	>
-		{children}
-		<NoAuthEffect />
-	</Page>
-);
+export const ProtectedPage: React.FC<Props> = ({ children, ...props }) => {
+	const { t } = useTranslation("default");
+	return (
+		<Page
+			elements={React.useMemo(
+				() => [
+					{
+						Icon: ReceiptsIcon,
+						pathname: "/receipts",
+						text: t("navigation.receipts"),
+					},
+					{
+						Icon: DebtsIcon,
+						text: t("navigation.debts"),
+						pathname: "/debts",
+						useBadgeAmount: useDebtsIntentions,
+					},
+					{
+						Icon: UsersIcon,
+						text: t("navigation.users"),
+						pathname: "/users",
+						useBadgeAmount: useConnectionIntentions,
+					},
+					{
+						Icon: AccountIcon,
+						text: t("navigation.account"),
+						pathname: "/account",
+					},
+					{
+						Icon: SettingsIcon,
+						text: t("navigation.settings"),
+						pathname: "/settings",
+					},
+					{
+						Icon: AdminIcon,
+						pathname: "/admin",
+						text: t("navigation.admin"),
+						useShow: useShowAdmin,
+						PageWrapper: AdminWrapperWithEffect,
+						ItemWrapper: AdminWrapper,
+					},
+				],
+				[t],
+			)}
+			{...props}
+		>
+			{children}
+			<NoAuthEffect />
+		</Page>
+	);
+};

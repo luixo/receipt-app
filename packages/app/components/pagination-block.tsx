@@ -1,6 +1,8 @@
 import type React from "react";
 import { View } from "react-native";
 
+import { useTranslation } from "react-i18next";
+
 import { DEFAULT_LIMIT, LIMITS } from "~app/utils/validation";
 import { Pagination } from "~components/pagination";
 import { Select, SelectItem } from "~components/select";
@@ -19,6 +21,7 @@ export const PaginationBlock: React.FC<Props> = ({
 	setLimit,
 	props,
 }) => {
+	const { t } = useTranslation("default");
 	if (!totalCount) {
 		return null;
 	}
@@ -42,7 +45,7 @@ export const PaginationBlock: React.FC<Props> = ({
 			) : null}
 			{totalCount <= DEFAULT_LIMIT ? null : (
 				<Select
-					aria-label="Items per page"
+					aria-label={t("components.pagination.label")}
 					className="max-w-40 justify-self-end"
 					selectedKeys={[limit.toString()]}
 					onSelectionChange={(selected) =>
@@ -54,7 +57,12 @@ export const PaginationBlock: React.FC<Props> = ({
 					}
 				>
 					{LIMITS.map((limitItem) => (
-						<SelectItem key={limitItem} textValue={`${limitItem} / page`}>
+						<SelectItem
+							key={limitItem}
+							textValue={t("components.pagination.perPage", {
+								limit: limitItem,
+							})}
+						>
 							{limitItem}
 						</SelectItem>
 					))}

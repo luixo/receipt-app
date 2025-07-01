@@ -26,5 +26,77 @@
 		"login": "Login",
 		"resetPassword": "Reset password",
 		"voidAccount": "Void account"
+	},
+	"navigation": {
+		"receipts": "Receipts",
+		"debts": "Debts",
+		"users": "Users",
+		"account": "Account",
+		"settings": "Settings",
+		"admin": "Admin",
+		"login": "Login",
+		"register": "Register"
+	},
+	"components": {
+		"confirmModal": {
+			"yes": "Yes",
+			"no": "No",
+			"areYouSure": "Are you sure?"
+		},
+		"errorMessage": {
+			"error": "Error",
+			"refetch": "Refetch"
+		},
+		"removeButton": {
+			"title": "Remove modal",
+			"confirmText": "Are you sure?"
+		},
+		"addUserModal": {
+			"title": "Add user",
+			"label": "Add a user"
+		},
+		"currenciesPicker": {
+			"title": "Please choose currency",
+			"label": "Currencies picker"
+		},
+		"usersSuggest": {
+			"recentlyUsed": "Recently used",
+			"lookup": "Lookup",
+			"label": "Select a user",
+			"placeholder": "Start typing",
+			"noResults": "No results found.",
+			"addUser": {
+				"title": "Add new user",
+				"withName": "Add user \"{{name}}\"",
+				"empty": "Add a user"
+			}
+		},
+		"debtSyncStatus": {
+			"outOfSyncPush": "Out of sync, we intent to push",
+			"inSync": "In sync with them",
+			"outOfSyncWe": "Out of sync, we intent to sync",
+			"outOfSyncThey": "Out of sync, they intent to sync"
+		},
+		"signButtonGroup": {
+			"positive": "i paid",
+			"negative": "they paid"
+		},
+		"pagination": {
+			"label": "Items per page",
+			"perPage": "{{amount}} / page"
+		},
+		"dateInput": {
+			"label": "Date"
+		},
+		"currencyInput": {
+			"currency": "Currency",
+			"pickButton": "Pick currency"
+		},
+		"avatar": {
+			"alt": "Avatar"
+		},
+		"debtsGroup": {
+			"noDebtsYet": "No debts yet"
+		}
 	}
 }

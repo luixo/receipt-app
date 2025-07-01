@@ -1,6 +1,8 @@
 import React from "react";
 import { View } from "react-native";
 
+import { useTranslation } from "react-i18next";
+
 import { Button } from "~components/button";
 import { Spinner } from "~components/spinner";
 import { tv } from "~components/utils";
@@ -30,6 +32,7 @@ export const SignButtonGroup: React.FC<Props> = ({
 	direction,
 	onUpdate,
 }) => {
+	const { t } = useTranslation("default");
 	const setPositive = React.useCallback(() => onUpdate("+"), [onUpdate]);
 	const setNegative = React.useCallback(() => onUpdate("-"), [onUpdate]);
 	return (
@@ -41,7 +44,11 @@ export const SignButtonGroup: React.FC<Props> = ({
 				color="success"
 				isDisabled={disabled || isLoading}
 			>
-				{isLoading ? <Spinner size="sm" /> : "i paid"}
+				{isLoading ? (
+					<Spinner size="sm" />
+				) : (
+					t("components.signButtonGroup.positive")
+				)}
 			</Button>
 			<Button
 				onPress={setNegative}
@@ -50,7 +57,11 @@ export const SignButtonGroup: React.FC<Props> = ({
 				color="danger"
 				isDisabled={disabled || isLoading}
 			>
-				{isLoading ? <Spinner size="sm" /> : "they paid"}
+				{isLoading ? (
+					<Spinner size="sm" />
+				) : (
+					t("components.signButtonGroup.negative")
+				)}
 			</Button>
 		</View>
 	);

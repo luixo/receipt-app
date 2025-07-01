@@ -1,6 +1,8 @@
 import type React from "react";
 import { View } from "react-native";
 
+import { useTranslation } from "react-i18next";
+
 import { useFormat } from "~app/hooks/use-format";
 import { Calendar } from "~components/calendar";
 import { Input } from "~components/input";
@@ -22,6 +24,7 @@ export const DateInput: React.FC<Props> = ({
 	label,
 	...props
 }) => {
+	const { t } = useTranslation("default");
 	const { formatDate } = useFormat();
 	return (
 		<Calendar
@@ -40,7 +43,7 @@ export const DateInput: React.FC<Props> = ({
 						}
 						onValueChange(updatedDate);
 					}}
-					aria-label={label || "Date"}
+					aria-label={label || t("components.dateInput.label")}
 					label={label}
 					mutation={mutation}
 					type="text"
@@ -53,15 +56,18 @@ export const DateInput: React.FC<Props> = ({
 
 export const SkeletonDateInput: React.FC<
 	{ label?: string } & React.ComponentProps<typeof Input>
-> = ({ label, ...props }) => (
-	<View>
-		<Input
-			startContent={<Spinner size="sm" />}
-			aria-label={label || "Date"}
-			label={label}
-			type="text"
-			isDisabled
-			{...props}
-		/>
-	</View>
-);
+> = ({ label, ...props }) => {
+	const { t } = useTranslation("default");
+	return (
+		<View>
+			<Input
+				startContent={<Spinner size="sm" />}
+				aria-label={label || t("components.dateInput.label")}
+				label={label}
+				type="text"
+				isDisabled
+				{...props}
+			/>
+		</View>
+	);
+};

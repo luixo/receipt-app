@@ -1,6 +1,7 @@
 import React from "react";
 
 import { skipToken, useMutation } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 import { ConfirmModal } from "~app/components/confirm-modal";
 import { DebtIntention } from "~app/features/debts-intentions/debt-intention";
@@ -18,6 +19,7 @@ type Props = {
 };
 
 export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
+	const { t } = useTranslation("debts");
 	const trpc = useTRPC();
 	const intention = React.useMemo(
 		() =>
@@ -68,9 +70,9 @@ export const DebtControlButtons: React.FC<Props> = ({ debt }) => {
 			{intention && intention.updatedAt.valueOf() > debt.updatedAt.valueOf() ? (
 				<ConfirmModal
 					onConfirm={acceptSyncIntention}
-					title="Update debt to a counterparty's version"
+					title={t("debt.acceptIntention.title")}
 					subtitle={<DebtIntention intention={intention} />}
-					confirmText="Are you sure?"
+					confirmText={t("debt.acceptIntention.confirmText")}
 				>
 					{({ openModal }) => (
 						<Button

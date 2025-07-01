@@ -1,6 +1,9 @@
 import type React from "react";
 import { View } from "react-native";
 
+import type { TFunction } from "i18next";
+import { useTranslation } from "react-i18next";
+
 import type { TRPCQueryOutput } from "~app/trpc";
 import { areDebtsSynced } from "~app/utils/debts";
 import {
@@ -25,19 +28,20 @@ const wrapper = tv({
 type Debt = TRPCQueryOutput<"debts.get">;
 
 const getContent = (
+	t: TFunction,
 	synced: boolean,
 	debt: DebtPartial,
-	theirDebt?: DebtPartial,
+	theirDebt: DebtPartial | undefined,
 ) => {
 	if (!theirDebt) {
-		return "Out of sync, we intent to push";
+		return t("components.debtSyncStatus.outOfSyncPush");
 	}
 	if (synced) {
-		return "In sync with them";
+		return t("components.debtSyncStatus.inSync");
 	}
-	return `Out of sync, ${
-		debt.updatedAt.valueOf() >= theirDebt.updatedAt.valueOf() ? "we" : "they"
-	} intent to sync`;
+	return debt.updatedAt.valueOf() >= theirDebt.updatedAt.valueOf()
+		? t("components.debtSyncStatus.outOfSyncWe")
+		: t("components.debtSyncStatus.outOfSyncThey");
 };
 
 type DebtPartial = Pick<
@@ -56,12 +60,13 @@ export const DebtSyncStatus: React.FC<Props> = ({
 	debt,
 	theirDebt,
 }) => {
+	const { t } = useTranslation("default");
 	const pixelSize = size === "md" ? 24 : 36;
 
 	const synced = theirDebt ? areDebtsSynced(debt, theirDebt) : false;
 	return (
 		<Tooltip
-			content={getContent(synced, debt, theirDebt)}
+			content={getContent(t, synced, debt, theirDebt)}
 			placement="bottom-end"
 		>
 			<View

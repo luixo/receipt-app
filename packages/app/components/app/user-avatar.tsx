@@ -1,6 +1,7 @@
 import type React from "react";
 
 import BoringAvatar from "boring-avatars";
+import { useTranslation } from "react-i18next";
 
 import type { TRPCQueryOutput } from "~app/trpc";
 import { Avatar } from "~components/avatar";
@@ -62,10 +63,11 @@ export const useUserAvatarProps = ({
 	dimmed,
 	...props
 }: Props) => {
+	const { t } = useTranslation("default");
 	const size = getSize(props.size);
 	const imgProps = {
 		src: connectedAccount?.avatarUrl ?? "",
-		alt: "Avatar",
+		alt: t("components.avatar.alt"),
 		width: size,
 		height: size,
 	};

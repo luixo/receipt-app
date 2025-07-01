@@ -26,5 +26,77 @@
 		"login": "Вход",
 		"resetPassword": "Сбросить пароль",
 		"voidAccount": "Отмена регистрации"
+	},
+	"navigation": {
+		"receipts": "Чеки",
+		"debts": "Долги",
+		"users": "Пользователи",
+		"account": "Аккаунт",
+		"settings": "Настройки",
+		"admin": "Админ",
+		"login": "Вход",
+		"register": "Регистрация"
+	},
+	"components": {
+		"confirmModal": {
+			"yes": "Да",
+			"no": "Нет",
+			"areYouSure": "Вы уверены?"
+		},
+		"errorMessage": {
+			"error": "Ошибка",
+			"refetch": "Повторить"
+		},
+		"removeButton": {
+			"title": "Модальное окно удаления",
+			"confirmText": "Вы уверены?"
+		},
+		"addUserModal": {
+			"title": "Добавить пользователя",
+			"label": "Добавить пользователя"
+		},
+		"currenciesPicker": {
+			"title": "Выберите валюту",
+			"label": "Выбор валют"
+		},
+		"usersSuggest": {
+			"recentlyUsed": "Недавно использованные",
+			"lookup": "Поиск",
+			"label": "Выберите пользователя",
+			"placeholder": "Начните печатать",
+			"noResults": "Результаты не найдены.",
+			"addUser": {
+				"title": "Добавить нового пользователя",
+				"withName": "Добавить пользователя \"{{name}}\"",
+				"empty": "Добавить пользователя"
+			}
+		},
+		"debtSyncStatus": {
+			"outOfSyncPush": "Не синхронизировано, мы намерены отправить",
+			"inSync": "Синхронизировано с ними",
+			"outOfSyncWe": "Не синхронизировано, мы намерены синхронизировать",
+			"outOfSyncThey": "Не синхронизировано, они намерены синхронизировать"
+		},
+		"signButtonGroup": {
+			"positive": "я платил",
+			"negative": "они платили"
+		},
+		"pagination": {
+			"label": "Элементов на странице",
+			"perPage": "{{limit}} / страницу"
+		},
+		"dateInput": {
+			"label": "Дата"
+		},
+		"currencyInput": {
+			"currency": "Валюта",
+			"pickButton": "Выбрать валюту"
+		},
+		"avatar": {
+			"alt": "Аватар"
+		},
+		"debtsGroup": {
+			"noDebtsYet": "Долгов пока нет"
+		}
 	}
 }

@@ -6,7 +6,6 @@ import { useTranslation } from "react-i18next";
 import { z } from "zod/v4";
 
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
-import { DebtControlButtons } from "~app/components/app/debt-control-buttons";
 import { DebtSyncStatus } from "~app/components/app/debt-sync-status";
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { SignButtonGroup } from "~app/components/app/sign-button-group";
@@ -45,6 +44,8 @@ import type { DebtsId, ReceiptsId, UsersId } from "~db/models";
 import { options as debtsRemoveOptions } from "~mutations/debts/remove";
 import { options as debtsUpdateOptions } from "~mutations/debts/update";
 import { noop } from "~utils/fn";
+
+import { DebtControlButtons } from "./debt-control-buttons";
 
 type Debt = TRPCQueryOutput<"debts.get">;
 

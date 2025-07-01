@@ -1,5 +1,7 @@
 import type React from "react";
 
+import { useTranslation } from "react-i18next";
+
 import { AddUserForm } from "~app/features/add-user/add-user-form";
 import type { TRPCMutationOutput } from "~app/trpc";
 import { Modal, ModalBody, ModalContent, ModalHeader } from "~components/modal";
@@ -17,26 +19,29 @@ export const AddUserModal: React.FC<Props> = ({
 	onSuccess,
 	isOpen,
 	onOpenChange,
-}) => (
-	<Modal
-		aria-label="Add a user"
-		isOpen={isOpen}
-		onOpenChange={onOpenChange}
-		scrollBehavior="inside"
-		classNames={{ base: "mb-24 sm:mb-32 max-w-xl" }}
-		data-testid="add-user"
-	>
-		<ModalContent>
-			<ModalHeader>
-				<Text className="text-xl">Add user</Text>
-			</ModalHeader>
-			<ModalBody className="flex flex-col gap-4 py-6">
-				<AddUserForm
-					key={initialValue}
-					onSuccess={onSuccess}
-					initialValue={initialValue}
-				/>
-			</ModalBody>
-		</ModalContent>
-	</Modal>
-);
+}) => {
+	const { t } = useTranslation("default");
+	return (
+		<Modal
+			aria-label={t("components.addUserModal.label")}
+			isOpen={isOpen}
+			onOpenChange={onOpenChange}
+			scrollBehavior="inside"
+			classNames={{ base: "mb-24 sm:mb-32 max-w-xl" }}
+			data-testid="add-user"
+		>
+			<ModalContent>
+				<ModalHeader>
+					<Text className="text-xl">{t("components.addUserModal.title")}</Text>
+				</ModalHeader>
+				<ModalBody className="flex flex-col gap-4 py-6">
+					<AddUserForm
+						key={initialValue}
+						onSuccess={onSuccess}
+						initialValue={initialValue}
+					/>
+				</ModalBody>
+			</ModalContent>
+		</Modal>
+	);
+};

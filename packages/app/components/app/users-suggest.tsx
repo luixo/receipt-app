@@ -9,6 +9,7 @@ import {
 	useQuery,
 	useQueryClient,
 } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { isNonNull } from "remeda";
 
 import { LoadableUser } from "~app/components/app/loadable-user";
@@ -67,6 +68,7 @@ export const UsersSuggest: React.FC<Props> = ({
 	selectedProps,
 	...props
 }) => {
+	const { t } = useTranslation("default");
 	const trpc = useTRPC();
 	const inputRef = React.useRef<HTMLInputElement>(null);
 	const [value, setValue] = React.useState("");
@@ -230,7 +232,10 @@ export const UsersSuggest: React.FC<Props> = ({
 			</AutocompleteSection>
 		) : null,
 		filteredTopFetchedUserIds.length === 0 ? null : (
-			<AutocompleteSection title="Recently used" key="recent">
+			<AutocompleteSection
+				title={t("components.usersSuggest.recentlyUsed")}
+				key="recent"
+			>
 				{filteredTopFetchedUserIds.map((userId) => (
 					<AutocompleteItem
 						key={userId}
@@ -244,7 +249,10 @@ export const UsersSuggest: React.FC<Props> = ({
 			</AutocompleteSection>
 		),
 		queryEnabled && fetchedUserIds.length !== 0 ? (
-			<AutocompleteSection title="Lookup" key="lookup">
+			<AutocompleteSection
+				title={t("components.usersSuggest.lookup")}
+				key="lookup"
+			>
 				{fetchedUserIds.map((userId) => (
 					<AutocompleteItem
 						key={userId}
@@ -261,12 +269,16 @@ export const UsersSuggest: React.FC<Props> = ({
 			<AutocompleteItem
 				key={NEW_USER_KEY}
 				className="p-1"
-				textValue="Add new user"
+				textValue={t("components.usersSuggest.addUser.title")}
 				classNames={{ title: "flex" }}
 			>
 				<User
 					id="new-user"
-					name={value.length > 2 ? `Add user "${value}"` : "Add new user"}
+					name={
+						value.length > 2
+							? t("components.usersSuggest.addUser.withName", { name: value })
+							: t("components.usersSuggest.addUser.empty")
+					}
 					avatarProps={{
 						fallback: null,
 						getInitials: () => "+",
@@ -288,9 +300,9 @@ export const UsersSuggest: React.FC<Props> = ({
 					ref={inputRef}
 					inputValue={value}
 					onInputChange={setValue}
-					label="Select a user"
+					label={t("components.usersSuggest.label")}
 					labelPlacement="outside"
-					placeholder="Start typing"
+					placeholder={t("components.usersSuggest.placeholder")}
 					variant="bordered"
 					scrollRef={scrollerRef}
 					items={[]}
@@ -301,7 +313,7 @@ export const UsersSuggest: React.FC<Props> = ({
 					}}
 					listboxProps={{
 						classNames: { list: "m-0" },
-						emptyContent: "No results found.",
+						emptyContent: t("components.usersSuggest.noResults"),
 					}}
 					endContent={
 						<Button

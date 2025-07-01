@@ -1,6 +1,8 @@
 import React from "react";
 import { View } from "react-native";
 
+import { useTranslation } from "react-i18next";
+
 import { useLocale } from "~app/hooks/use-locale";
 import { type CurrencyCode, formatCurrency } from "~app/utils/currency";
 import { Skeleton } from "~components/skeleton";
@@ -82,17 +84,22 @@ type Props = {
 	debts: DebtElement[];
 } & React.ComponentProps<typeof View>;
 
-export const DebtsGroup: React.FC<Props> = ({ debts, className, ...props }) => (
-	<View className={debtGroup({ className })} testID="debts-group" {...props}>
-		<SeparatedDebts>
-			{debts.map(({ currencyCode, sum }) => (
-				<DebtGroupElement
-					key={currencyCode}
-					currencyCode={currencyCode}
-					sum={sum}
-				/>
-			))}
-		</SeparatedDebts>
-		{debts.length === 0 ? <Text>No debts yet</Text> : null}
-	</View>
-);
+export const DebtsGroup: React.FC<Props> = ({ debts, className, ...props }) => {
+	const { t } = useTranslation("default");
+	return (
+		<View className={debtGroup({ className })} testID="debts-group" {...props}>
+			<SeparatedDebts>
+				{debts.map(({ currencyCode, sum }) => (
+					<DebtGroupElement
+						key={currencyCode}
+						currencyCode={currencyCode}
+						sum={sum}
+					/>
+				))}
+			</SeparatedDebts>
+			{debts.length === 0 ? (
+				<Text>{t("components.debtsGroup.noDebtsYet")}</Text>
+			) : null}
+		</View>
+	);
+};

@@ -1,5 +1,6 @@
 import React from "react";
 
+import { useTranslation } from "react-i18next";
 import type { z } from "zod/v4";
 
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
@@ -51,6 +52,7 @@ export const CurrencyInput: React.FC<Props> = ({
 	value,
 	onValueChange,
 }) => {
+	const { t } = useTranslation("default");
 	const [
 		modalOpen,
 		{ switchValue: switchModalOpen, setFalse: closeModal, setTrue: openModal },
@@ -93,7 +95,7 @@ export const CurrencyInput: React.FC<Props> = ({
 				<InnerInput
 					value={value}
 					onValueChange={onValueChange}
-					label="Currency"
+					label={t("components.currencyInput.currency")}
 					name="currency"
 					mutation={mutation}
 					isReadOnly
@@ -106,7 +108,7 @@ export const CurrencyInput: React.FC<Props> = ({
 					isDisabled={getMutationLoading(mutation)}
 					className="self-end"
 				>
-					Pick currency
+					{t("components.currencyInput.pickButton")}
 				</Button>
 			)}
 			<CurrenciesPicker

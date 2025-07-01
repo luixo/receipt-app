@@ -1,5 +1,7 @@
 import React from "react";
 
+import { useTranslation } from "react-i18next";
+
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { Button } from "~components/button";
 import { Header } from "~components/header";
@@ -23,11 +25,14 @@ export const ConfirmModal: React.FC<Props> = ({
 	title,
 	confirmText,
 	subtitle,
-	yesText = "Yes",
-	noText = "No",
+	yesText,
+	noText,
 	isLoading,
 	children,
 }) => {
+	const { t } = useTranslation("default");
+	const defaultYesText = yesText ?? t("components.confirmModal.yes");
+	const defaultNoText = noText ?? t("components.confirmModal.no");
 	const [
 		isModalOpen,
 		{ switchValue: switchModalOpen, setFalse: closeModal, setTrue: openModal },
@@ -65,10 +70,10 @@ export const ConfirmModal: React.FC<Props> = ({
 							isDisabled={isLoading}
 							isLoading={isLoading}
 						>
-							{yesText}
+							{defaultYesText}
 						</Button>
 						<Button color="primary" onPress={onNoClick} isDisabled={isLoading}>
-							{noText}
+							{defaultNoText}
 						</Button>
 					</ModalBody>
 				</ModalContent>

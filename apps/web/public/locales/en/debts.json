@@ -38,6 +38,10 @@
 		"remove": {
 			"confirmSubtitle": "This will remove debt forever",
 			"button": "Remove debt"
+		},
+		"acceptIntention": {
+			"title": "Update debt to a counterparty's version",
+			"confirmText": "Are you sure?"
 		}
 	},
 	"transfer": {

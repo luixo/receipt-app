@@ -38,6 +38,10 @@
 		"remove": {
 			"confirmSubtitle": "Это действие удалит долг навсегда",
 			"button": "Удалить долг"
+		},
+		"acceptIntention": {
+			"title": "Обновить долг до версии контрагента",
+			"confirmText": "Вы уверены?"
 		}
 	},
 	"transfer": {

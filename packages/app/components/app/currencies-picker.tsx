@@ -2,6 +2,7 @@ import React from "react";
 import { View } from "react-native";
 
 import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 import { QueryErrorMessage } from "~app/components/error-message";
 import { useCurrencies } from "~app/hooks/use-currencies";
@@ -118,9 +119,10 @@ export const CurrenciesPicker: React.FC<WrapperProps> = ({
 			);
 		}
 	}, [onLoad, query, topCurrenciesQuery]);
+	const { t } = useTranslation("default");
 	return (
 		<Modal
-			aria-label="Currencies picker"
+			aria-label={t("components.currenciesPicker.label")}
 			isOpen={modalOpen}
 			onOpenChange={switchModalOpen}
 			scrollBehavior="inside"
@@ -129,7 +131,9 @@ export const CurrenciesPicker: React.FC<WrapperProps> = ({
 		>
 			<ModalContent>
 				<ModalHeader>
-					<Text className="text-2xl font-medium">Please choose currency</Text>
+					<Text className="text-2xl font-medium">
+						{t("components.currenciesPicker.title")}
+					</Text>
 				</ModalHeader>
 				<ModalBody>
 					<CurrenciesPickerLoader
