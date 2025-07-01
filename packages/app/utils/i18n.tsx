@@ -79,22 +79,32 @@ export const getBackendModule = (): BackendModule => ({
 	// Improper types in i18next
 	// eslint-disable-next-line @typescript-eslint/no-misused-promises
 	read: async (language, namespace) => {
-		if (import.meta.env.SSR) {
-			const fs = await import("node:fs/promises");
-			const url = await import("node:url");
-			const rootPath = import.meta.env.DEV ? `../../../apps/web` : `..`;
-			const jsonUrl = new url.URL(
-				`${rootPath}/public/locales/${language}/${namespace}.json`,
-				import.meta.url,
-			);
+		try {
+			if (import.meta.env.SSR) {
+				const fs = await import("node:fs/promises");
+				const url = await import("node:url");
+				const publicPath = import.meta.env.DEV
+					? `../../../apps/web/public`
+					: process.env.VERCEL
+						? "./static"
+						: "../../public";
+				const jsonUrl = new url.URL(
+					`${publicPath}/locales/${language}/${namespace}.json`,
+					import.meta.url,
+				);
 
-			const resource = JSON.parse(
-				(await fs.readFile(url.fileURLToPath(jsonUrl))).toString("utf-8"),
-			);
-			return resource as ResourceKey;
+				const resource = JSON.parse(
+					(await fs.readFile(url.fileURLToPath(jsonUrl))).toString("utf-8"),
+				);
+				return resource as ResourceKey;
+			}
+			const response = await fetch(`/locales/${language}/${namespace}.json`);
+			return await (response.json() as Promise<ResourceKey>);
+		} catch (e) {
+			// eslint-disable-next-line no-console
+			console.error(`Failed to load ${language}/${namespace} i18n translation`);
+			throw e;
 		}
-		const response = await fetch(`/locales/${language}/${namespace}.json`);
-		return response.json() as Promise<ResourceKey>;
 	},
 });
 
