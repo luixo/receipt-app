@@ -2,6 +2,7 @@ import React from "react";
 import { View } from "react-native";
 
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { z } from "zod/v4";
 
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
@@ -123,6 +124,7 @@ type AmountProps = {
 };
 
 const DebtAmountInput: React.FC<AmountProps> = ({ debt, isLoading }) => {
+	const { t } = useTranslation("debts");
 	const trpc = useTRPC();
 	const absoluteAmount = Math.abs(debt.amount);
 
@@ -156,7 +158,7 @@ const DebtAmountInput: React.FC<AmountProps> = ({ debt, isLoading }) => {
 					fieldError={
 						field.state.meta.isDirty ? field.state.meta.errors : undefined
 					}
-					aria-label="Debt amount"
+					aria-label={t("debt.form.amount.label")}
 					mutation={updateMutation}
 					isDisabled={isLoading}
 					minValue={0}
@@ -169,7 +171,7 @@ const DebtAmountInput: React.FC<AmountProps> = ({ debt, isLoading }) => {
 								<form.Subscribe selector={(state) => state.canSubmit}>
 									{(canSubmit) => (
 										<SaveButton
-											title="Save debt amount"
+											title={t("debt.form.amount.saveButton")}
 											onPress={() => {
 												void field.form.handleSubmit();
 											}}
@@ -236,6 +238,7 @@ type NoteProps = {
 };
 
 const DebtNoteInput: React.FC<NoteProps> = ({ debt, isLoading }) => {
+	const { t } = useTranslation("debts");
 	const trpc = useTRPC();
 	const updateMutation = useMutation(
 		trpc.debts.update.mutationOptions(
@@ -263,7 +266,7 @@ const DebtNoteInput: React.FC<NoteProps> = ({ debt, isLoading }) => {
 					fieldError={
 						field.state.meta.isDirty ? field.state.meta.errors : undefined
 					}
-					aria-label="Debt note"
+					aria-label={t("debt.form.note.label")}
 					mutation={updateMutation}
 					isDisabled={isLoading}
 					multiline
@@ -272,7 +275,7 @@ const DebtNoteInput: React.FC<NoteProps> = ({ debt, isLoading }) => {
 							<form.Subscribe selector={(state) => state.canSubmit}>
 								{(canSubmit) => (
 									<SaveButton
-										title="Save debt note"
+										title={t("debt.form.note.saveButton")}
 										onPress={() => {
 											void field.form.handleSubmit();
 										}}
@@ -315,6 +318,7 @@ const DebtRemoveButton: React.FC<RemoveButtonProps> = ({
 	setLoading,
 	...props
 }) => {
+	const { t } = useTranslation("debts");
 	const trpc = useTRPC();
 	const navigate = useNavigate();
 	const removeMutation = useMutation(
@@ -343,11 +347,11 @@ const DebtRemoveButton: React.FC<RemoveButtonProps> = ({
 		<RemoveButton
 			mutation={removeMutation}
 			onRemove={removeDebt}
-			subtitle="This will remove debt forever"
+			subtitle={t("debt.remove.confirmSubtitle")}
 			noConfirm={debt.amount === 0}
 			{...props}
 		>
-			Remove debt
+			{t("debt.remove.button")}
 		</RemoveButton>
 	);
 };
@@ -399,6 +403,7 @@ type InnerProps = {
 };
 
 export const DebtInner: React.FC<InnerProps> = ({ query }) => {
+	const { t } = useTranslation("debts");
 	const trpc = useTRPC();
 	const debt = query.data;
 	const [removing, setRemoving] = React.useState(false);
@@ -422,7 +427,9 @@ export const DebtInner: React.FC<InnerProps> = ({ query }) => {
 					</>
 				}
 			>
-				{`${formatCurrency(locale, debt.currencyCode, debt.amount)} debt`}
+				{t("debt.header", {
+					amount: formatCurrency(locale, debt.currencyCode, debt.amount),
+				})}
 			</Header>
 			<LoadableUser className="self-start" id={debt.userId} />
 			<DebtSignButtonGroup debt={debt} disabled={removing} />
@@ -439,13 +446,14 @@ export const DebtInner: React.FC<InnerProps> = ({ query }) => {
 };
 
 export const DebtScreen: React.FC<{ id: DebtsId }> = ({ id }) => {
+	const { t } = useTranslation("debts");
 	const trpc = useTRPC();
 	const query = useQuery(trpc.debts.get.queryOptions({ id }));
 	switch (query.status) {
 		case "pending":
 			return (
 				<>
-					<Header>Loading debt ...</Header>
+					<Header>{t("debt.loading")}</Header>
 					<SkeletonUser className="self-start" />
 					<SignButtonGroup disabled isLoading onUpdate={noop} direction="+" />
 					<Input
@@ -463,7 +471,7 @@ export const DebtScreen: React.FC<{ id: DebtsId }> = ({ id }) => {
 						multiline
 					/>
 					<RemoveButtonSkeleton className="self-end">
-						Remove debt
+						{t("debt.remove.button")}
 					</RemoveButtonSkeleton>
 				</>
 			);

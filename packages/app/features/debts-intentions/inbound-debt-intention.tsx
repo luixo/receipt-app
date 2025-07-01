@@ -1,10 +1,13 @@
 import React from "react";
 
 import { useMutation } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
+import { useLocale } from "~app/hooks/use-locale";
 import { useNavigate } from "~app/hooks/use-navigation";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
+import { formatCurrency } from "~app/utils/currency";
 import { useTRPC } from "~app/utils/trpc";
 import { Button, ButtonGroup } from "~components/button";
 import { options as acceptDebtIntentionOptions } from "~mutations/debt-intentions/accept";
@@ -16,6 +19,8 @@ type Props = {
 };
 
 export const InboundDebtIntention: React.FC<Props> = ({ intention }) => {
+	const { t } = useTranslation("debts");
+	const locale = useLocale();
 	const trpc = useTRPC();
 	const navigate = useNavigate();
 
@@ -51,21 +56,33 @@ export const InboundDebtIntention: React.FC<Props> = ({ intention }) => {
 					isDisabled={isPending}
 					isLoading={isPending}
 					onPress={() => acceptSyncIntention()}
-					title={`Accept debt for ${intention.amount} ${intention.currencyCode}`}
+					title={t("intentions.buttons.acceptLong", {
+						amount: formatCurrency(
+							locale,
+							intention.currencyCode,
+							intention.amount,
+						),
+					})}
 				>
-					Accept
+					{t("intentions.buttons.accept")}
 				</Button>
 				<Button
 					variant="bordered"
 					isDisabled={isPending}
 					isLoading={isPending}
 					onPress={() => acceptSyncIntention(true)}
-					title={`Accept and edit debt for ${intention.amount} ${intention.currencyCode}`}
+					title={t("intentions.buttons.acceptAndEditLong", {
+						amount: formatCurrency(
+							locale,
+							intention.currencyCode,
+							intention.amount,
+						),
+					})}
 				>
-					Accept and edit
+					{t("intentions.buttons.acceptAndEdit")}
 				</Button>
 				<Button isDisabled variant="bordered">
-					Reject
+					{t("intentions.buttons.reject")}
 				</Button>
 			</ButtonGroup>
 		</DebtIntention>

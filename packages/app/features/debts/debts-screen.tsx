@@ -1,6 +1,7 @@
-import React from "react";
+import type React from "react";
 
 import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
@@ -18,24 +19,22 @@ export const DebtsScreen: React.FC<{
 	limitState: SearchParamState<"/debts", "limit">;
 	offsetState: SearchParamState<"/debts", "offset">;
 }> = ({ limitState, offsetState }) => {
+	const { t } = useTranslation("debts");
 	const trpc = useTRPC();
 	const settingsQuery = useQuery(trpc.accountSettings.get.queryOptions());
 	const inboundDebtsAmount = useDebtsIntentions();
-	const intentionsButton = React.useMemo(
-		() => (
-			<ButtonLink
-				key="intentions"
-				to="/debts/intentions"
-				color="primary"
-				title="Debts sync intentions"
-				variant="bordered"
-				isDisabled={inboundDebtsAmount === 0}
-				isIconOnly
-			>
-				<InboxIcon size={24} />
-			</ButtonLink>
-		),
-		[inboundDebtsAmount],
+	const intentionsButton = (
+		<ButtonLink
+			key="intentions"
+			to="/debts/intentions"
+			color="primary"
+			title={t("list.buttons.intentions")}
+			variant="bordered"
+			isDisabled={inboundDebtsAmount === 0}
+			isIconOnly
+		>
+			<InboxIcon size={24} />
+		</ButtonLink>
 	);
 	return (
 		<>
@@ -46,7 +45,7 @@ export const DebtsScreen: React.FC<{
 						<ButtonLink
 							to="/debts/transfer"
 							color="primary"
-							title="Transfer debts"
+							title={t("list.buttons.transfer")}
 							variant="bordered"
 							isIconOnly
 						>
@@ -55,7 +54,7 @@ export const DebtsScreen: React.FC<{
 						<ButtonLink
 							to="/debts/add"
 							color="primary"
-							title="Add debt"
+							title={t("list.buttons.add")}
 							variant="bordered"
 							isIconOnly
 						>
@@ -78,7 +77,7 @@ export const DebtsScreen: React.FC<{
 					</>
 				}
 			>
-				Debts
+				{t("list.title")}
 			</PageHeader>
 			<EmailVerificationCard />
 			<DebtsAggregated />

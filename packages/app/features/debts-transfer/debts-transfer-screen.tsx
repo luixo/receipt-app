@@ -2,6 +2,7 @@ import React from "react";
 import { View } from "react-native";
 
 import { skipToken, useMutation, useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { entries, isNonNullish, pullObject } from "remeda";
 import { z } from "zod/v4";
 
@@ -64,6 +65,7 @@ const DebtsListForm: React.FC<FormProps> = ({
 	fromUser,
 	toUser,
 }) => {
+	const { t } = useTranslation("debts");
 	const trpc = useTRPC();
 	const [extraCurrencyCodes, setExtraCurrencyCodes] = React.useState<
 		CurrencyCode[]
@@ -109,7 +111,9 @@ const DebtsListForm: React.FC<FormProps> = ({
 						}
 						const fromTimestamp = new Date(Date.now() + index);
 						addMutation.mutate({
-							note: `Transferred to "${toUser.publicName || toUser.name}"`,
+							note: t("transfer.defaultNoteTo", {
+								user: toUser.publicName || toUser.name,
+							}),
 							currencyCode,
 							userId: fromUser.id,
 							amount: -amount,
@@ -119,9 +123,9 @@ const DebtsListForm: React.FC<FormProps> = ({
 							Date.now() + allCurrenciesWithSums.length + index,
 						);
 						addMutation.mutate({
-							note: `Transferred from "${
-								fromUser.publicName || fromUser.name
-							}"`,
+							note: t("transfer.defaultNoteFrom", {
+								user: fromUser.publicName || fromUser.name,
+							}),
 							currencyCode,
 							userId: toUser.id,
 							amount,
@@ -188,7 +192,7 @@ const DebtsListForm: React.FC<FormProps> = ({
 				<form.Form className="flex flex-col gap-4">
 					<View className="flex gap-2">
 						{allCurrenciesWithSums.length === 0 ? (
-							<Text>No debts yet</Text>
+							<Text>{t("transfer.form.noDebts")}</Text>
 						) : (
 							<>
 								<View className="flex-row gap-4 self-end">
@@ -196,7 +200,7 @@ const DebtsListForm: React.FC<FormProps> = ({
 										<ShowResolvedDebtsOption />
 									) : null}
 									<Button color="secondary" onPress={setAllMax}>
-										All max
+										{t("transfer.form.allMax")}
 									</Button>
 								</View>
 								{allCurrenciesWithSums.map(({ currencyCode, sum }) => (
@@ -270,7 +274,7 @@ const DebtsListForm: React.FC<FormProps> = ({
 																	className="cursor-pointer"
 																	onClick={() => field.setValue(sum)}
 																>
-																	<Text>MAX</Text>
+																	<Text>{t("transfer.form.max")}</Text>
 																</View>
 															)
 														}
@@ -287,7 +291,7 @@ const DebtsListForm: React.FC<FormProps> = ({
 							color="secondary"
 							onPress={openCurrencyModal}
 						>
-							Add a currency
+							{t("transfer.form.addCurrencyButton")}
 						</Button>
 					</View>
 					<form.Subscribe selector={(state) => state.canSubmit}>
@@ -303,7 +307,9 @@ const DebtsListForm: React.FC<FormProps> = ({
 								isLoading={mutationPending}
 								type="submit"
 							>
-								{mutationError ? mutationError.message : "Transfer debt(s)"}
+								{mutationError
+									? mutationError.message
+									: t("transfer.form.submit")}
 							</Button>
 						)}
 					</form.Subscribe>
@@ -344,6 +350,7 @@ export const DebtsTransferScreen: React.FC<{
 	fromIdState: SearchParamState<"/debts/transfer", "from">;
 	toIdState: SearchParamState<"/debts/transfer", "to">;
 }> = ({ fromIdState: [fromId, setFromId], toIdState: [toId, setToId] }) => {
+	const { t } = useTranslation("debts");
 	const trpc = useTRPC();
 	const fromUserQuery = useQuery(
 		trpc.users.get.queryOptions(fromId ? { id: fromId } : skipToken),
@@ -378,11 +385,11 @@ export const DebtsTransferScreen: React.FC<{
 					)
 				}
 			>
-				Transfer debts
+				{t("transfer.title")}
 			</PageHeader>
 			<View className="flex-row gap-2 self-center">
 				<UsersSuggest
-					label="From"
+					label={t("transfer.form.from.label")}
 					selected={fromId}
 					onUserClick={onFromClick}
 					closeOnSelect
@@ -391,7 +398,7 @@ export const DebtsTransferScreen: React.FC<{
 				/>
 				<BackArrow className="size-10 rotate-180" />
 				<UsersSuggest
-					label="To"
+					label={t("transfer.form.to.label")}
 					selected={toId}
 					onUserClick={onToClick}
 					closeOnSelect

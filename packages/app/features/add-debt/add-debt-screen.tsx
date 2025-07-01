@@ -1,6 +1,7 @@
 import React from "react";
 
 import { useMutation } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { isNonNullish } from "remeda";
 import { z } from "zod/v4";
 
@@ -44,6 +45,7 @@ type Form = z.infer<typeof formSchema>;
 export const AddDebtScreen: React.FC<{
 	userIdState: SearchParamState<"/debts/add", "userId">;
 }> = ({ userIdState: [userId, setUserId] }) => {
+	const { t } = useTranslation("debts");
 	const trpc = useTRPC();
 	const navigate = useNavigate();
 
@@ -88,7 +90,9 @@ export const AddDebtScreen: React.FC<{
 
 	return (
 		<>
-			<PageHeader startContent={<BackLink to="/debts" />}>Add debt</PageHeader>
+			<PageHeader startContent={<BackLink to="/debts" />}>
+				{t("add.title")}
+			</PageHeader>
 			<EmailVerificationCard />
 			<form.AppForm>
 				<form.Form className="flex flex-col gap-4">
@@ -110,7 +114,7 @@ export const AddDebtScreen: React.FC<{
 								onBlur={field.handleBlur}
 								isRequired
 								minValue={0}
-								label="Amount"
+								label={t("add.form.amount.label")}
 								isDisabled={addMutation.isPending}
 								errorMessage={
 									field.state.meta.isDirty
@@ -177,7 +181,7 @@ export const AddDebtScreen: React.FC<{
 					<form.AppField name="note">
 						{(field) => (
 							<field.TextField
-								label="Debt note"
+								label={t("add.form.note.label")}
 								value={field.state.value}
 								onValueChange={field.setValue}
 								name={field.name}
@@ -199,7 +203,7 @@ export const AddDebtScreen: React.FC<{
 								isLoading={addMutation.isPending}
 								type="submit"
 							>
-								Add debt
+								{t("add.form.submitButton")}
 							</Button>
 						)}
 					</form.Subscribe>

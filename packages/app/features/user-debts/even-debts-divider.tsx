@@ -1,6 +1,8 @@
 import type React from "react";
 import { View } from "react-native";
 
+import { useTranslation } from "react-i18next";
+
 import { useLocale } from "~app/hooks/use-locale";
 import { type CurrencyCode, getCurrencySymbol } from "~app/utils/currency";
 import { CheckMark } from "~components/icons";
@@ -11,6 +13,7 @@ type Props = {
 };
 
 export const EvenDebtsDivider: React.FC<Props> = ({ currencyCode }) => {
+	const { t } = useTranslation("debts");
 	const locale = useLocale();
 	return (
 		<View
@@ -18,7 +21,9 @@ export const EvenDebtsDivider: React.FC<Props> = ({ currencyCode }) => {
 			testID="even-debts-divider"
 		>
 			<CheckMark size={24} className="text-success" />
-			<Text>Even on {getCurrencySymbol(locale, currencyCode)}</Text>
+			<Text>
+				{t("user.even", { currency: getCurrencySymbol(locale, currencyCode) })}
+			</Text>
 		</View>
 	);
 };

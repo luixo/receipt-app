@@ -4,7 +4,7 @@ import z from "zod/v4";
 
 import { DebtsScreen } from "~app/features/debts/debts-screen";
 import { getQueryStates } from "~app/hooks/use-navigation";
-import { getServerSideT } from "~app/utils/i18n";
+import { getServerSideT, loadNamespaces } from "~app/utils/i18n";
 import {
 	DEFAULT_LIMIT,
 	limitSchema,
@@ -35,6 +35,9 @@ const Wrapper = () => {
 
 export const Route = createFileRoute("/_protected/debts/")({
 	component: Wrapper,
+	loader: async (ctx) => {
+		await loadNamespaces(ctx.context, "debts");
+	},
 	validateSearch: zodValidator(schema),
 	search: { middlewares: [stripSearchParams(defaults)] },
 	head: ({ match }) => {

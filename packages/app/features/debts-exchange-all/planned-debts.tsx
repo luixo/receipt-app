@@ -3,6 +3,8 @@ import { View } from "react-native";
 
 import { useStore } from "@tanstack/react-form";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import type { TFunction } from "i18next";
+import { useTranslation } from "react-i18next";
 import { entries, isNonNullish, unique } from "remeda";
 import { z } from "zod/v4";
 
@@ -26,26 +28,30 @@ import type { UsersId } from "~db/models";
 import { options as debtsAddOptions } from "~mutations/debts/add";
 import { round } from "~utils/math";
 
-const formSchema = z.record(
-	currencyCodeSchema,
-	z.record(currencyCodeSchema, currencyRateSchema).check((ctx) => {
-		const invalidAmounts = entries(ctx.value).filter(
-			([, sum]) => Number.isNaN(sum) || !Number.isFinite(sum) || sum === 0,
-		);
-		if (invalidAmounts.length !== 0) {
-			ctx.issues.push({
-				code: "custom",
-				input: invalidAmounts,
-				message: `${invalidAmounts
-					.map(([currencyCode]) => currencyCode)
-					.join(", ")} debt(s) are invalid`,
-			});
-		}
-	}),
-);
-type Form = z.infer<typeof formSchema>;
+const createFormSchema = (t: TFunction<"debts">) =>
+	z.record(
+		currencyCodeSchema,
+		z.record(currencyCodeSchema, currencyRateSchema).check((ctx) => {
+			const invalidAmounts = entries(ctx.value).filter(
+				([, sum]) => Number.isNaN(sum) || !Number.isFinite(sum) || sum === 0,
+			);
+			if (invalidAmounts.length !== 0) {
+				ctx.issues.push({
+					code: "custom",
+					input: invalidAmounts,
+					message: t("exchange.validation.invalidAmounts", {
+						amount: invalidAmounts
+							.map(([currencyCode]) => currencyCode)
+							.join(", "),
+					}),
+				});
+			}
+		}),
+	);
+type Form = z.infer<ReturnType<typeof createFormSchema>>;
 
 const getDebt = (
+	t: TFunction<"debts">,
 	currencyCode: CurrencyCode,
 	selectedCurrencyCode: CurrencyCode,
 	aggregatedDebts: { currencyCode: CurrencyCode; sum: number }[],
@@ -65,11 +71,13 @@ const getDebt = (
 				}, 0),
 			),
 			currencyCode,
-			note: `Converted from ${sourceDebts
-				.map(({ currencyCode: sourceCurrencyCode, sum }) =>
-					formatCurrency(locale, sourceCurrencyCode, sum),
-				)
-				.join(", ")}`,
+			note: t("exchange.defaultNoteFrom", {
+				debts: sourceDebts
+					.map(({ currencyCode: sourceCurrencyCode, sum }) =>
+						formatCurrency(locale, sourceCurrencyCode, sum),
+					)
+					.join(", "),
+			}),
 		};
 	}
 	const matchedDebt = aggregatedDebts.find(
@@ -85,9 +93,11 @@ const getDebt = (
 	return {
 		amount: -matchedDebt.sum,
 		currencyCode,
-		note: `Converted to${
-			amount ? ` ${formatCurrency(locale, selectedCurrencyCode, amount)}` : ""
-		}`,
+		note: t("exchange.defaultNoteTo", {
+			debts: amount
+				? ` ${formatCurrency(locale, selectedCurrencyCode, amount)}`
+				: "",
+		}),
 	};
 };
 
@@ -104,6 +114,7 @@ export const PlannedDebts: React.FC<Props> = ({
 	userId,
 	onDone,
 }) => {
+	const { t } = useTranslation("debts");
 	const trpc = useTRPC();
 	const allCurrencyCodes = unique([
 		...aggregatedDebts.map((debt) => debt.currencyCode),
@@ -136,6 +147,7 @@ export const PlannedDebts: React.FC<Props> = ({
 	const [lastMutationTimestamps, setLastMutationTimestamps] = React.useState<
 		number[]
 	>([]);
+	const formSchema = React.useMemo(() => createFormSchema(t), [t]);
 	const form = useAppForm({
 		defaultValues: defaultValues as Form,
 		validators: {
@@ -147,6 +159,7 @@ export const PlannedDebts: React.FC<Props> = ({
 			setLastMutationTimestamps(
 				allCurrencyCodes.reduce<number[]>((acc, currencyCode, index) => {
 					const debt = getDebt(
+						t,
 						currencyCode,
 						selectedCurrencyCode,
 						aggregatedDebts,
@@ -203,8 +216,11 @@ export const PlannedDebts: React.FC<Props> = ({
 		selectedCurrencyCode,
 	]);
 	const retryButton = React.useMemo(
-		() => ({ text: "Refetch rates", onPress: () => ratesQuery.refetch() }),
-		[ratesQuery],
+		() => ({
+			text: t("exchange.buttons.refetchRates"),
+			onPress: () => ratesQuery.refetch(),
+		}),
+		[ratesQuery, t],
 	);
 	const isEveryMutationSuccessful =
 		lastMutationStates.length !== 0 &&
@@ -233,6 +249,7 @@ export const PlannedDebts: React.FC<Props> = ({
 				{allCurrencyCodes.map((currencyCode) => {
 					const selected = selectedCurrencyCode === currencyCode;
 					const debt = getDebt(
+						t,
 						currencyCode,
 						selectedCurrencyCode,
 						aggregatedDebts,
@@ -303,7 +320,7 @@ export const PlannedDebts: React.FC<Props> = ({
 							color={mutationError ? "danger" : "primary"}
 							type="submit"
 						>
-							{mutationError ? mutationError.message : "Send debts"}
+							{mutationError ? mutationError.message : t("exchange.sendButton")}
 						</Button>
 					)}
 				</form.Subscribe>

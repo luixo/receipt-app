@@ -1,6 +1,8 @@
 import React from "react";
 import { View } from "react-native";
 
+import { useTranslation } from "react-i18next";
+
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { PageHeader } from "~app/components/page-header";
 import { User } from "~app/features/user/user";
@@ -21,6 +23,7 @@ type HeaderProps = {
 };
 
 const Header: React.FC<HeaderProps> = ({ userId }) => {
+	const { t } = useTranslation("debts");
 	const navigate = useNavigate();
 	const [editModalOpen, { setTrue: openEditModal, setFalse: closeEditModal }] =
 		useBooleanState();
@@ -45,7 +48,7 @@ const Header: React.FC<HeaderProps> = ({ userId }) => {
 							to="/debts/transfer"
 							search={{ from: userId }}
 							color="primary"
-							title="Transfer debts"
+							title={t("user.buttons.transfer")}
 							variant="bordered"
 							isIconOnly
 						>
@@ -55,7 +58,7 @@ const Header: React.FC<HeaderProps> = ({ userId }) => {
 							color="primary"
 							to="/debts/add"
 							search={{ userId }}
-							title="Add debt"
+							title={t("user.buttons.add")}
 							variant="bordered"
 							isIconOnly
 						>
@@ -70,7 +73,7 @@ const Header: React.FC<HeaderProps> = ({ userId }) => {
 			<Modal isOpen={editModalOpen} onOpenChange={closeEditModal}>
 				<ModalContent>
 					<ModalHeader>
-						<Text className="text-xl">Edit user</Text>
+						<Text className="text-xl">{t("user.modal.editTitle")}</Text>
 					</ModalHeader>
 					<ModalBody className="flex flex-col gap-4 py-6">
 						<User id={userId} onRemove={onUserRemove} />

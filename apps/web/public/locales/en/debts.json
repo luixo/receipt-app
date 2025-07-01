@@ -1,0 +1,104 @@
+{
+	"list": {
+		"title": "Debts",
+		"buttons": {
+			"transfer": "Transfer debts",
+			"add": "Add debt",
+			"intentions": "Debts sync intentions"
+		},
+		"empty": {
+			"title": "You have no debts",
+			"description": "<text>Press </text><button/><text> to add a debt</text>"
+		},
+		"filters": {
+			"noResults": "No debts under given filters"
+		}
+	},
+	"add": {
+		"title": "Add debt",
+		"form": {
+			"amount": { "label": "Amount" },
+			"note": { "label": "Debt note" },
+			"submitButton": "Add debt"
+		}
+	},
+	"debt": {
+		"header": "{{amount}} debt",
+		"loading": "Loading debt...",
+		"form": {
+			"amount": {
+				"label": "Debt amount",
+				"saveButton": "Save debt amount"
+			},
+			"note": {
+				"label": "Debt note",
+				"saveButton": "Save debt note"
+			}
+		},
+		"remove": {
+			"confirmSubtitle": "This will remove debt forever",
+			"button": "Remove debt"
+		}
+	},
+	"transfer": {
+		"title": "Transfer debts",
+		"form": {
+			"max": "Max",
+			"allMax": "All max",
+			"addCurrencyButton": "Add a currency",
+			"noDebts": "No debts yet",
+			"submit": "Transfer debt(s)",
+			"from": {
+				"label": "From"
+			},
+			"to": {
+				"label": "To"
+			}
+		},
+		"defaultNoteFrom": "Transferred from {{user}}",
+		"defaultNoteTo": "Transferred to {{user}}"
+	},
+	"intentions": {
+		"acceptAllButton": "Accept all intentions",
+		"title": "Inbound debts",
+		"empty": {
+			"title": "You have no incoming sync requests",
+			"description": "You have no incoming sync requests"
+		},
+		"buttons": {
+			"accept": "Accept",
+			"acceptLong": "Accept debt for {{amount}}",
+			"acceptAndEdit": "Accept and edit",
+			"acceptAndEditLong": "Accept and edit debt for {{amount}}",
+			"reject": "Reject"
+		}
+	},
+	"exchange": {
+		"buttons": {
+			"exchangeAll": "Exchange all to one currency",
+			"exchangeSpecific": "Exchange specific currency",
+			"refetchRates": "Refetch rates"
+		},
+		"sendButton": "Send debts",
+		"validation": {
+			"invalidAmounts": "{{amount}} debt(s) are invalid"
+		},
+		"defaultNoteFrom": "Converted from {{debts}}",
+		"defaultNoteTo": "Converted to {{debt}}"
+	},
+	"user": {
+		"even": "Even on {{currency}}",
+		"buttons": {
+			"transfer": "Transfer debts",
+			"add": "Add debt",
+			"edit": "Edit user"
+		},
+		"modal": {
+			"editTitle": "Edit user"
+		},
+		"showResolved": "Show resolved debts",
+		"filters": {
+			"empty": "No debts under given filters"
+		}
+	}
+}

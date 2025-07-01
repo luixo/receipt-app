@@ -1,0 +1,104 @@
+{
+	"list": {
+		"title": "Долги",
+		"buttons": {
+			"transfer": "Перевести долги",
+			"add": "Добавить долг",
+			"intentions": "Запросы синхронизации долгов"
+		},
+		"empty": {
+			"title": "У вас нет долгов",
+			"description": "<text>Нажмите </text><button/><text> чтобы добавить долг</text>"
+		},
+		"filters": {
+			"noResults": "Нет долгов по заданным фильтрам"
+		}
+	},
+	"add": {
+		"title": "Добавить долг",
+		"form": {
+			"amount": { "label": "Сумма" },
+			"note": { "label": "Примечание" },
+			"submitButton": "Добавить долг"
+		}
+	},
+	"debt": {
+		"header": "Долг на {{amount}}",
+		"loading": "Загрузка долга...",
+		"form": {
+			"amount": {
+				"label": "Сумма",
+				"saveButton": "Сохранить сумму"
+			},
+			"note": {
+				"label": "Примечание",
+				"saveButton": "Сохранить примечание"
+			}
+		},
+		"remove": {
+			"confirmSubtitle": "Это действие удалит долг навсегда",
+			"button": "Удалить долг"
+		}
+	},
+	"transfer": {
+		"title": "Перевести долги",
+		"form": {
+			"max": "Целиком",
+			"allMax": "Все целиком",
+			"addCurrencyButton": "Добавить валюту",
+			"noDebts": "Долгов пока нет",
+			"submit": "Перевести долг(и)",
+			"from": {
+				"label": "К"
+			},
+			"to": {
+				"label": "От"
+			}
+		},
+		"defaultNoteFrom": "Перевод от {{user}}",
+		"defaultNoteTo": "Перевод к {{user}}"
+	},
+	"intentions": {
+		"acceptAllButton": "Принять все долги",
+		"title": "Входящие долги",
+		"empty": {
+			"title": "У вас нет входящих запросов синхронизации",
+			"description": "У вас нет входящих запросов синхронизации"
+		},
+		"buttons": {
+			"accept": "Принять",
+			"acceptLong": "Принять долг на {{amount}}",
+			"acceptAndEdit": "Принять и перейти в долг",
+			"acceptAndEditLong": "Принять и перейти в долг на {{amount}}",
+			"reject": "Отказаться"
+		}
+	},
+	"exchange": {
+		"buttons": {
+			"exchangeAll": "Обменять все в одну валюту",
+			"exchangeSpecific": "Обменять определенную валюту",
+			"refetchRates": "Обновить курс"
+		},
+		"sendButton": "Отправить долги",
+		"validation": {
+			"invalidAmounts": "{{amount}} долг(и) недействительны"
+		},
+		"defaultNoteFrom": "Сконвертировано из {{debts}}",
+		"defaultNoteTo": "Сконвертировано в {{debt}}"
+	},
+	"user": {
+		"even": "Рассчитались по {{currency}}",
+		"buttons": {
+			"transfer": "Перевести долги",
+			"add": "Добавить долг",
+			"edit": "Редактировать пользователя"
+		},
+		"modal": {
+			"editTitle": "Редактировать пользователя"
+		},
+		"showResolved": "Показать валюты по которым рассчитались",
+		"filters": {
+			"empty": "С текущими фильтрами ничего не найдено"
+		}
+	}
+}

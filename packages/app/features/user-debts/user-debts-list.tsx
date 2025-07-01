@@ -3,6 +3,7 @@ import { View } from "react-native";
 
 import { Spinner } from "@heroui/react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { fromEntries, isNonNullish, values } from "remeda";
 
 import { QueryErrorMessage } from "~app/components/error-message";
@@ -140,6 +141,7 @@ const PagedUserDebtsList: React.FC<{
 	totalCount: number | undefined;
 	consecutiveDebtIds: DebtsId[];
 }> = ({ userId, debtIds, totalCount, consecutiveDebtIds }) => {
+	const { t } = useTranslation("debts");
 	const trpc = useTRPC();
 	const filters = {};
 	const getAllQuery = useQuery(trpc.debts.getAllUser.queryOptions({ userId }));
@@ -149,7 +151,7 @@ const PagedUserDebtsList: React.FC<{
 		getAllQuery.status === "success" ? getAllQuery.data : [],
 	);
 	if (totalCount === 0 && values(filters).filter(isNonNullish).length === 0) {
-		return <Text className="text-center">No debts under given filters</Text>;
+		return <Text className="text-center">{t("user.filters.empty")}</Text>;
 	}
 	return (
 		<View className="gap-2">
@@ -279,6 +281,7 @@ export const UserDebtsList: React.FC<{
 	limitState: SearchParamState<"/debts/user/$id", "limit">;
 	offsetState: SearchParamState<"/debts/user/$id", "offset">;
 }> = ({ userId, limitState: [limit, setLimit], offsetState }) => {
+	const { t } = useTranslation("debts");
 	const [showResolvedDebts, setShowResolvedDebts] = useShowResolvedDebts();
 	const trpc = useTRPC();
 	const currentInput = React.useMemo(
@@ -332,7 +335,7 @@ export const UserDebtsList: React.FC<{
 							color="primary"
 							onPress={() => setShowResolvedDebts(true)}
 						>
-							Show resolved debts
+							{t("user.showResolved")}
 						</Button>
 					</View>
 				)}

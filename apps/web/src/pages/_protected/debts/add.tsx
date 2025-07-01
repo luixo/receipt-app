@@ -4,6 +4,7 @@ import { z } from "zod/v4";
 
 import { AddDebtScreen } from "~app/features/add-debt/add-debt-screen";
 import { getQueryStates } from "~app/hooks/use-navigation";
+import { loadNamespaces } from "~app/utils/i18n";
 import { userIdSchema } from "~app/utils/validation";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
 
@@ -21,6 +22,9 @@ const Wrapper = () => {
 
 export const Route = createFileRoute("/_protected/debts/add")({
 	component: Wrapper,
+	loader: async (ctx) => {
+		await loadNamespaces(ctx.context, "debts");
+	},
 	head: () => ({ meta: [{ title: "RA - Add debt" }] }),
 	validateSearch: zodValidator({ schema, output: "input" }),
 	search: { middlewares: [stripSearchParams(defaults)] },

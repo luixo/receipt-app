@@ -1,6 +1,7 @@
 import React from "react";
 
 import { useMutation } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 import { useNavigate } from "~app/hooks/use-navigation";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
@@ -17,6 +18,7 @@ export const AcceptAllIntentionsButton: React.FC<Props> = ({
 	intentions,
 	...props
 }) => {
+	const { t } = useTranslation("debts");
 	const trpc = useTRPC();
 	const navigate = useNavigate();
 
@@ -47,13 +49,8 @@ export const AcceptAllIntentionsButton: React.FC<Props> = ({
 	}, [acceptMutations, intentions, navigate]);
 
 	return (
-		<Button
-			color="primary"
-			onPress={() => acceptAllIntentions()}
-			title="Accept all incoming intentions"
-			{...props}
-		>
-			Accept all intentions
+		<Button color="primary" onPress={() => acceptAllIntentions()} {...props}>
+			{t("intentions.acceptAllButton")}
 		</Button>
 	);
 };

@@ -1,6 +1,7 @@
 import type React from "react";
 
 import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 import { DebtsGroup } from "~app/components/app/debts-group";
 import { LoadableUser } from "~app/components/app/loadable-user";
@@ -19,6 +20,7 @@ type InnerProps = {
 };
 
 const DebtsExchangeInner: React.FC<InnerProps> = ({ userId, query }) => {
+	const { t } = useTranslation("debts");
 	const [showResolvedDebts] = useShowResolvedDebts();
 	return (
 		<>
@@ -33,18 +35,18 @@ const DebtsExchangeInner: React.FC<InnerProps> = ({ userId, query }) => {
 				color="primary"
 				to="/debts/user/$id/exchange/all"
 				params={{ id: userId }}
-				title="Exchange all to one currency"
+				title={t("exchange.buttons.exchangeAll")}
 			>
-				Exchange all to one currency
+				{t("exchange.buttons.exchangeAll")}
 			</ButtonLink>
 			<ButtonLink
 				color="primary"
 				to="/debts/user/$id/exchange/specific"
 				params={{ id: userId }}
 				isDisabled
-				title="Exchange specific currency"
+				title={t("exchange.buttons.exchangeSpecific")}
 			>
-				Exchange specific currency
+				{t("exchange.buttons.exchangeSpecific")}
 			</ButtonLink>
 		</>
 	);

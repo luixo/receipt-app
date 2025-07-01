@@ -1,6 +1,7 @@
 import type React from "react";
 import { View } from "react-native";
 
+import { Trans, useTranslation } from "react-i18next";
 import { isNonNullish, values } from "remeda";
 
 import { EmptyCard } from "~app/components/empty-card";
@@ -22,6 +23,9 @@ import {
 	UserDebtsPreviewSkeleton,
 } from "./user-debts-preview";
 
+// eslint-disable-next-line jsx-a11y/heading-has-content
+const bigText = <Text className="text-xl" />;
+
 const skeletonElements = new Array<null>(5).fill(null).map((_, index) => index);
 
 type Props = {
@@ -30,6 +34,7 @@ type Props = {
 };
 
 export const Debts: React.FC<Props> = ({ limitState, offsetState }) => {
+	const { t } = useTranslation("debts");
 	const [showResolvedDebts] = useShowResolvedDebts();
 	const [limit, setLimit] = limitState;
 	const filters = {};
@@ -49,21 +54,28 @@ export const Debts: React.FC<Props> = ({ limitState, offsetState }) => {
 			return <QueryErrorMessage query={query} />;
 		}
 		return (
-			<EmptyCard title="You have no debts">
+			<EmptyCard title={t("list.empty.title")}>
 				<View className="items-center gap-4">
 					<View className="flex-row items-center">
-						<Text className="text-xl">Press</Text>
-						<ButtonLink
-							to="/debts/add"
-							color="primary"
-							title="Add debt"
-							variant="bordered"
-							isIconOnly
-							className="mx-2"
-						>
-							<AddIcon size={24} />
-						</ButtonLink>
-						<Text className="text-xl">to add a debt</Text>
+						<Trans
+							t={t}
+							i18nKey="list.empty.description"
+							components={{
+								text: bigText,
+								button: (
+									<ButtonLink
+										to="/debts/add"
+										color="primary"
+										title={t("list.buttons.add")}
+										variant="bordered"
+										isIconOnly
+										className="mx-2"
+									>
+										<AddIcon size={24} />
+									</ButtonLink>
+								),
+							}}
+						/>
 					</View>
 				</View>
 			</EmptyCard>
@@ -99,7 +111,7 @@ export const Debts: React.FC<Props> = ({ limitState, offsetState }) => {
 						))}
 					</View>
 				) : !totalCount && values(filters).filter(isNonNullish).length === 0 ? (
-					<Header className="text-center">No debts under given filters</Header>
+					<Header className="text-center">{t("list.filters.noResults")}</Header>
 				) : (
 					<View className="gap-2">
 						{query.data.items.map((userId) => (

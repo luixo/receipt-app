@@ -2,6 +2,7 @@ import React from "react";
 import { View } from "react-native";
 
 import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { entries, mapValues } from "remeda";
 
 import { LoadableUser } from "~app/components/app/loadable-user";
@@ -29,6 +30,7 @@ type Props = {
 };
 
 const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
+	const { t } = useTranslation("debts");
 	const sortedIntentionsByUser = React.useMemo(() => {
 		const intentionsByUser = data.reduce<
 			Record<UsersId, IntentionsQuery["data"]>
@@ -53,8 +55,8 @@ const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 	}, [data]);
 	if (data.length === 0) {
 		return (
-			<EmptyCard title="You have no incoming sync requests">
-				You have no incoming sync requests
+			<EmptyCard title={t("intentions.empty.title")}>
+				{t("intentions.empty.description")}
 			</EmptyCard>
 		);
 	}
@@ -96,9 +98,12 @@ const DebtIntentionsQuery: React.FC = () => {
 	}
 };
 
-export const DebtIntentions: React.FC = () => (
-	<>
-		<PageHeader>Inbound debts</PageHeader>
-		<DebtIntentionsQuery />
-	</>
-);
+export const DebtIntentions: React.FC = () => {
+	const { t } = useTranslation("debts");
+	return (
+		<>
+			<PageHeader>{t("intentions.title")}</PageHeader>
+			<DebtIntentionsQuery />
+		</>
+	);
+};

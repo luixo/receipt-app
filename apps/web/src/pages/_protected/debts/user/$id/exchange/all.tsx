@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { DebtsExchangeAllScreen } from "~app/features/debts-exchange-all/debts-exchange-all-screen";
+import { loadNamespaces } from "~app/utils/i18n";
 
 const Wrapper = () => {
 	const { id } = Route.useParams();
@@ -10,6 +11,9 @@ const Wrapper = () => {
 export const Route = createFileRoute("/_protected/debts/user/$id/exchange/all")(
 	{
 		component: Wrapper,
+		loader: async (ctx) => {
+			await loadNamespaces(ctx.context, "debts");
+		},
 		head: () => ({ meta: [{ title: "RA - Exchange all user debts" }] }),
 	},
 );
