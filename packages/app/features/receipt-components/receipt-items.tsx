@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { Button } from "~components/button";
@@ -28,8 +28,13 @@ const AddReceiptItemController: React.FC = () => {
 			className="w-full"
 			disabled={receiptDisabled}
 		>
-			<AddIcon size={24} />
-			{t("add.addItemButton")}
+			<Trans
+				t={t}
+				i18nKey="add.addItemButton"
+				components={{
+					icon: <AddIcon size={24} />,
+				}}
+			/>
 		</Button>
 	);
 };

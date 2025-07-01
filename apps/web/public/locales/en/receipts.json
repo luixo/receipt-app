@@ -28,8 +28,8 @@
 	},
 	"add": {
 		"header": "Add receipt",
-		"saveButton": "Save",
-		"addItemButton": "Add item"
+		"saveButton": "Add receipt",
+		"addItemButton": "<icon/> Item"
 	},
 	"receipt": {
 		"loading": "Loading receipt...",

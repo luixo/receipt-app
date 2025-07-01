@@ -29,7 +29,7 @@
 	"add": {
 		"header": "Добавить чек",
 		"saveButton": "Сохранить чек",
-		"addItemButton": "Добавить позицию"
+		"addItemButton": "<icon/> Позиция"
 	},
 	"receipt": {
 		"loading": "Загрузка чека...",
