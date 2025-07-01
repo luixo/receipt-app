@@ -3,8 +3,8 @@
 	"pretend": {
 		"modal": {
 			"title": "Вы хотите стать \"{{email}}\"?",
-			"yesButton": "Да",
-			"noButton": "Нет"
+			"yes": "Да",
+			"no": "Нет"
 		},
 		"tabName": "Притвориться пользователем",
 		"resetToSelfButton": "Вернуться к себе",
