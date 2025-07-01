@@ -28,13 +28,15 @@ const getLinksParamsFromRequest = (
 
 export const getLoaderTrpcClient = <R extends AnyRouter = AppRouter>(
 	context: Pick<RouterContext, "queryClient" | "request">,
-	debug?: boolean,
 ) => {
 	const linksParams = context.request
 		? /* c8 ignore start */
 			getLinksParamsFromRequest(context.request, "ssr")
 		: {
-				debug,
+				debug:
+					typeof window === "undefined"
+						? false
+						: Boolean(new URL(window.location.href).searchParams.get("debug")),
 				headers: {},
 				source: "csr" as GetLinksOptions["source"],
 				url: DEFAULT_TRPC_ENDPOINT,
