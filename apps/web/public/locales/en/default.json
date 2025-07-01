@@ -83,7 +83,7 @@
 		},
 		"pagination": {
 			"label": "Items per page",
-			"perPage": "{{amount}} / page"
+			"perPage": "{{limit}} / page"
 		},
 		"dateInput": {
 			"label": "Date"

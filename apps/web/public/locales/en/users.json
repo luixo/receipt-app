@@ -9,7 +9,7 @@
 		},
 		"empty": {
 			"title": "You have no users",
-			"message": "Press {{icon}} to add a user"
+			"message": "Press <icon/> to add a user"
 		}
 	},
 	"add": {

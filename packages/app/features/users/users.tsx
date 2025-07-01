@@ -1,7 +1,7 @@
 import type React from "react";
 
 import { useQueries } from "@tanstack/react-query";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 
 import { SkeletonUser } from "~app/components/app/user";
 import { EmptyCard } from "~app/components/empty-card";
@@ -70,20 +70,24 @@ export const Users: React.FC<Props> = ({
 	if (!totalCount && query.fetchStatus !== "fetching") {
 		return (
 			<EmptyCard title={t("list.empty.title")}>
-				{t("list.empty.message", {
-					icon: (
-						<ButtonLink
-							color="primary"
-							to="/users/add"
-							title={t("list.addUser.button")}
-							variant="bordered"
-							className="mx-2"
-							isIconOnly
-						>
-							<AddIcon size={24} />
-						</ButtonLink>
-					),
-				})}
+				<Trans
+					t={t}
+					i18nKey="list.empty.message"
+					components={{
+						icon: (
+							<ButtonLink
+								color="primary"
+								to="/users/add"
+								title={t("list.addUser.button")}
+								variant="bordered"
+								className="mx-2"
+								isIconOnly
+							>
+								<AddIcon size={24} />
+							</ButtonLink>
+						),
+					}}
+				/>
 			</EmptyCard>
 		);
 	}
