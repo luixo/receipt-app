@@ -8,5 +8,5 @@ type Fixtures = {
 
 export const test = originalTest.extend<Fixtures>({
 	acceptAllIntentionButton: ({ page }, use) =>
-		use(page.locator("button[title='Accept all incoming intentions']")),
+		use(page.locator("button[title='Accept all intentions']")),
 });
