@@ -1,0 +1,135 @@
+{
+	"list": {
+		"header": "Чеки",
+		"addButton": "Добавить чек",
+		"empty": {
+			"title": "У вас нет чеков",
+			"message": "Нажмите <icon /> чтобы добавить чек"
+		},
+		"noResults": "Нет чеков по заданным фильтрам",
+		"table": {
+			"receipt": "Чек",
+			"sum": "Сумма"
+		},
+		"sorting": {
+			"newestFirst": "Сначала новые",
+			"oldestFirst": "Сначала старые"
+		},
+		"filters": {
+			"title": "Фильтры",
+			"ownership": {
+				"label": "Фильтр принадлежности мне",
+				"ownedByAnybody": "Принадлежит кому угодно",
+				"ownedByMe": "Принадлежит мне",
+				"ownedNotByMe": "Не принадлежит мне",
+				"ownedByAnybodyButMe": "Принадлежит кому угодно, кроме меня"
+			}
+		}
+	},
+	"add": {
+		"header": "Добавить чек",
+		"saveButton": "Сохранить чек",
+		"addItemButton": "Добавить позицию"
+	},
+	"receipt": {
+		"loading": "Загрузка чека...",
+		"form": {
+			"name": {
+				"label": "Название чека",
+				"saveButton": "Сохранить название чека"
+			},
+			"issued": {
+				"label": "Дата"
+			}
+		},
+		"controlButton": {
+			"incomingDebt": "Входящий долг"
+		},
+		"syncButton": {
+			"update": "Обновить долги",
+			"propagate": "Распространить долги",
+			"synced": "Синхронизировано",
+			"emptyItemsWarning": "Есть {{count}} пустых позиций, нельзя заблокировать"
+		},
+		"removeButton": {
+			"text": "Удалить чек",
+			"confirmSubtitle": "Это удалит чек навсегда"
+		},
+		"emptyItems": "{{amount}} пустых позиций"
+	},
+	"participants": {
+		"payedBy": "<text>оплачено</text><by />",
+		"payedFor": "<text>за</text><for />",
+		"addButton": "Добавить участников",
+		"picker": {
+			"addLabel": "Добавить участников",
+			"label": "Выбор участников",
+			"title": "Участники"
+		},
+		"empty": "Участников пока нет",
+		"remove": {
+			"confirmSubtitle": "Это удалит участника со всеми его долями потребителя"
+		},
+		"actions": {
+			"updateButton": "Обновить долг",
+			"sendButton": "Отправить долг"
+		}
+	},
+	"participant": {
+		"title": "Участник {{userId}}",
+		"payedInfix": "заплатил",
+		"payerPart": "Заплатил {{amount}} из суммы",
+		"consumerPart": "Потратил {{amount}} из суммы",
+		"partDescription": "{{item}} - {{amount}}{{extraSymbol}}",
+		"role": {
+			"viewer": "Читатель",
+			"editor": "Писатель"
+		},
+		"form": {
+			"payerPart": {
+				"label": "Доля плательщика",
+				"saveButton": "Сохранить долю плательщика позиции",
+				"postfix": " / {{parts}}"
+			},
+			"addPayerButton": "+ плательщик"
+		}
+	},
+	"item": {
+		"noParticipantsItemsSection": {
+			"label": "Позиции без участников"
+		},
+		"quantityPostfix": "x {{quantity}} штук/кг",
+		"form": {
+			"consumer": {
+				"label": "Доля потребителя позиции",
+				"saveButton": "Сохранить долю потребителя позиции"
+			},
+			"name": {
+				"label": "Название позиции чека",
+				"saveButton": "Сохранить название позиции чека"
+			},
+			"price": {
+				"label": "Цена позиции чека",
+				"saveButton": "Сохранить цену позиции чека"
+			},
+			"quantity": {
+				"label": "Количество позиции чека",
+				"saveButton": "Сохранить количество позиции чека"
+			},
+			"saveButton": "Сохранить"
+		},
+		"removeButton": {
+			"confirmSubtitle": "Это удалит позицию со всеми долями участников"
+		},
+		"participants": {
+			"everyone": "Все",
+			"orphanedError": "Доля для пользователя {{userId}} не имеет родителя. Пожалуйста, сообщите об этой ошибке, приложив id чека, имя позиции и id пользователя"
+		}
+	},
+	"empty": {
+		"items": {
+			"title": "У вас пока нет позиций чека",
+			"message": "Нажмите кнопку выше, чтобы добавить позицию чека"
+		}
+	}
+}

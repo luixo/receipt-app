@@ -1,6 +1,7 @@
 import type React from "react";
 import { View } from "react-native";
 
+import { useTranslation } from "react-i18next";
 import { z } from "zod/v4";
 
 import { useBooleanState } from "~app/hooks/use-boolean-state";
@@ -24,6 +25,7 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 	item,
 	isDisabled: isExternalDisabled,
 }) => {
+	const { t } = useTranslation("receipts");
 	const { receiptDisabled } = useReceiptContext();
 	const { updateItemQuantity } = useActionsHooksContext();
 	const canEdit = useCanEdit();
@@ -57,7 +59,7 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 				} flex-row items-center gap-1`}
 				onClick={isDisabled ? undefined : switchEditing}
 			>
-				<Text>x {item.quantity} unit</Text>
+				<Text>{t("item.quantityPostfix", { quantity: item.quantity })}</Text>
 			</View>
 		);
 	}
@@ -75,7 +77,7 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 					}
 					step={10 ** -quantitySchemaDecimal}
 					formatOptions={{ maximumFractionDigits: quantitySchemaDecimal }}
-					aria-label="Receipt item quantity"
+					aria-label={t("item.form.quantity.label")}
 					mutation={updateMutationState}
 					isDisabled={isDisabled}
 					className="basis-24"
@@ -85,7 +87,7 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 						<form.Subscribe selector={(state) => state.canSubmit}>
 							{(canSubmit) => (
 								<SaveButton
-									title="Save receipt item quantity"
+									title={t("item.form.quantity.saveButton")}
 									onPress={() => {
 										void field.form.handleSubmit();
 									}}

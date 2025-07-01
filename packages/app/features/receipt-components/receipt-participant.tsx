@@ -2,6 +2,8 @@ import React from "react";
 import { View } from "react-native";
 
 import { useQuery } from "@tanstack/react-query";
+import type { TFunction } from "i18next";
+import { useTranslation } from "react-i18next";
 import { z } from "zod/v4";
 
 import { LoadableUser } from "~app/components/app/loadable-user";
@@ -31,6 +33,7 @@ import { ReceiptParticipantRoleInput } from "./receipt-participant-role-input";
 import type { Participant } from "./state";
 
 const getParticipantError = (
+	t: TFunction<"receipts">,
 	participant: Participant,
 	hasConnectedAccount: boolean,
 	isOwner: boolean,
@@ -96,6 +99,7 @@ type Props = {
 };
 
 export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
+	const { t } = useTranslation("receipts");
 	const trpc = useTRPC();
 	const {
 		receiptId,
@@ -186,6 +190,7 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 		participants.reduce((acc, { payPart }) => acc + (payPart ?? 0), 0),
 	);
 	const participantError = getParticipantError(
+		t,
 		participant,
 		Boolean(userQuery.data?.connectedAccount),
 		isOwner,
@@ -197,7 +202,7 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 		<Accordion>
 			<AccordionItem
 				key="parts"
-				textValue={`Participant ${participant.userId}`}
+				textValue={t("participant.title", { userId: participant.userId })}
 				title={
 					<View className="flex-col items-start justify-between gap-2 min-[600px]:flex-row">
 						<View className="flex flex-row items-center gap-1">
@@ -219,7 +224,7 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 							>
 								<View>
 									<Text className={participantError?.className}>
-										${formatCurrency(locale, currencyCode, round(sum))}
+										{formatCurrency(locale, currencyCode, round(sum))}
 									</Text>
 								</View>
 							</Tooltip>
@@ -228,7 +233,7 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 									<RemoveButton
 										onRemove={removeReceiptParticipant}
 										mutation={{ isPending }}
-										subtitle="This will remove participant with all his consumer parts"
+										subtitle={t("participants.remove.confirmSubtitle")}
 										noConfirm={
 											participant.debtSumDecimals === 0 &&
 											participant.paySumDecimals === 0
@@ -247,7 +252,7 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 						<View className="flex flex-row items-center gap-2">
 							{currentPart ? (
 								<>
-									<Text>Payed</Text>
+									<Text>{t("participant.payedInfix")}</Text>
 									<PartButtons
 										isPending={isPayerPending}
 										updatePart={onPartUpdate}
@@ -267,7 +272,7 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 															: undefined
 													}
 													className="w-32"
-													aria-label="Item payer part"
+													aria-label={t("participant.form.payerPart.label")}
 													mutation={[
 														addPayerMutationState,
 														removePayerMutationState,
@@ -282,14 +287,18 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 													endContent={
 														<View className="flex gap-2">
 															<Text className="self-center">
-																/ {totalPayParts}
+																{t("participant.form.payerPart.postfix", {
+																	parts: totalPayParts,
+																})}
 															</Text>
 															<form.Subscribe
 																selector={(state) => state.canSubmit}
 															>
 																{(canSubmit) => (
 																	<SaveButton
-																		title="Save item payer part"
+																		title={t(
+																			"participant.form.payerPart.saveButton",
+																		)}
 																		onPress={() => {
 																			void field.form.handleSubmit();
 																		}}
@@ -311,7 +320,9 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 									</PartButtons>
 								</>
 							) : (
-								<Button onPress={onAddPayer}>+ Payer</Button>
+								<Button onPress={onAddPayer}>
+									{t("participant.form.addPayerButton")}
+								</Button>
 							)}
 						</View>
 						{renderParticipantActions(participant)}
@@ -320,30 +331,38 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 					<View className="flex flex-col gap-3">
 						{currentPart && items.length !== 0 ? (
 							<Text className="text-secondary">
-								{`Payed ${formatCurrency(
-									locale,
-									currencyCode,
-									fromSubunitToUnit(participant.paySumDecimals),
-								)} of the total receipt`}
+								{t("participant.payerPart", {
+									amount: formatCurrency(
+										locale,
+										currencyCode,
+										fromSubunitToUnit(participant.paySumDecimals),
+									),
+								})}
 							</Text>
 						) : null}
 						<View>
 							{currentPart && participant.items.length > 1 ? (
 								<Text className="text-secondary">
-									{`Spent ${formatCurrency(
-										locale,
-										currencyCode,
-										fromSubunitToUnit(participant.debtSumDecimals),
-									)} in total`}
+									{t("participant.consumerPart", {
+										amount: formatCurrency(
+											locale,
+											currencyCode,
+											fromSubunitToUnit(participant.debtSumDecimals),
+										),
+									})}
 								</Text>
 							) : null}
 							{participant.items.map((item) => (
 								<Text key={item.id}>
-									{`${item.name} - ${formatCurrency(
-										locale,
-										currencyCode,
-										round(item.sum),
-									)}${item.hasExtra ? "*" : ""}`}
+									{t("participant.partDescription", {
+										itemName: item.name,
+										amount: formatCurrency(
+											locale,
+											currencyCode,
+											round(item.sum),
+										),
+										extraSymbol: item.hasExtra ? "*" : "",
+									})}
 								</Text>
 							))}
 						</View>

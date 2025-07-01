@@ -1,6 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
+import { useTranslation } from "react-i18next";
 import { keys } from "remeda";
 
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
@@ -34,6 +35,7 @@ type Props = {
 export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 	participant,
 }) => {
+	const { t } = useTranslation("receipts");
 	const { receiptId, receiptDisabled } = useReceiptContext();
 	const isOwner = useIsOwner();
 	const { updateParticipantRole } = useActionsHooksContext();
@@ -55,6 +57,13 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 			updateParticipantRole(participant.userId, nextRole);
 		},
 		[participant.role, participant.userId, updateParticipantRole],
+	);
+	const roleTexts = React.useMemo<Record<AssignableRole, string>>(
+		() => ({
+			viewer: t("participant.role.viewer"),
+			editor: t("participant.role.editor"),
+		}),
+		[t],
 	);
 
 	return (
@@ -87,7 +96,7 @@ export const ReceiptParticipantRoleInput: React.FC<Props> = ({
 				{keys(ROLES).map((pickRole) => (
 					<DropdownItem key={pickRole}>
 						<View onClick={() => changeRole(pickRole)}>
-							<Text>{pickRole}</Text>
+							<Text>{roleTexts[pickRole]}</Text>
 						</View>
 					</DropdownItem>
 				))}

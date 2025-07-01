@@ -1,6 +1,7 @@
 import type React from "react";
 import { View } from "react-native";
 
+import { useTranslation } from "react-i18next";
 import { z } from "zod/v4";
 
 import { useBooleanState } from "~app/hooks/use-boolean-state";
@@ -26,6 +27,7 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 	item,
 	isDisabled: isExternalDisabled,
 }) => {
+	const { t } = useTranslation("receipts");
 	const { currencyCode, receiptDisabled } = useReceiptContext();
 	const canEdit = useCanEdit();
 	const { updateItemPrice } = useActionsHooksContext();
@@ -78,7 +80,7 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 					}
 					step={10 ** -priceSchemaDecimal}
 					formatOptions={{ maximumFractionDigits: priceSchemaDecimal }}
-					aria-label="Receipt item price"
+					aria-label={t("item.form.price.label")}
 					className="basis-24"
 					labelPlacement="outside-left"
 					mutation={updateMutationState}
@@ -88,7 +90,7 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 						<form.Subscribe selector={(state) => state.canSubmit}>
 							{(canSubmit) => (
 								<SaveButton
-									title="Save receipt item price"
+									title={t("item.form.price.saveButton")}
 									onPress={() => {
 										void field.form.handleSubmit();
 									}}

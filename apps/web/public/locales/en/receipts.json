@@ -1,0 +1,135 @@
+{
+	"list": {
+		"header": "Receipts",
+		"addButton": "Add receipt",
+		"empty": {
+			"title": "You have no receipts",
+			"message": "Press <icon /> to add a receipt"
+		},
+		"noResults": "No receipts under given filters",
+		"table": {
+			"receipt": "Receipt",
+			"sum": "Sum"
+		},
+		"sorting": {
+			"newestFirst": "Newest first",
+			"oldestFirst": "Oldest first"
+		},
+		"filters": {
+			"title": "Filters",
+			"ownership": {
+				"label": "Owned by me filter",
+				"ownedByAnybody": "Owned by anybody",
+				"ownedByMe": "Owned by me",
+				"ownedNotByMe": "Owned not by me",
+				"ownedByAnybodyButMe": "Owned by anybody but me"
+			}
+		}
+	},
+	"add": {
+		"header": "Add receipt",
+		"saveButton": "Save",
+		"addItemButton": "Add item"
+	},
+	"receipt": {
+		"loading": "Loading receipt...",
+		"form": {
+			"name": {
+				"label": "Receipt name",
+				"saveButton": "Save receipt name"
+			},
+			"issued": {
+				"label": "Issued on"
+			}
+		},
+		"controlButton": {
+			"incomingDebt": "Incoming debt"
+		},
+		"syncButton": {
+			"update": "Update debts",
+			"propagate": "Propagate debts",
+			"synced": "Synced",
+			"emptyItemsWarning": "There are {{count}} empty items, cannot lock"
+		},
+		"removeButton": {
+			"text": "Remove receipt",
+			"confirmSubtitle": "This will remove receipt forever"
+		},
+		"emptyItems": "{{amount}} empty item(s)"
+	},
+	"participants": {
+		"payedBy": "<text>payed by</text><by />",
+		"payedFor": "<text>for</text><for />",
+		"addButton": "Add participants",
+		"picker": {
+			"addLabel": "Add participants",
+			"label": "Participant picker",
+			"title": "Participants"
+		},
+		"empty": "No participants yet",
+		"remove": {
+			"confirmSubtitle": "This will remove participant with all his consumer parts"
+		},
+		"actions": {
+			"updateButton": "Update debt for a user",
+			"sendButton": "Send debt to a user"
+		}
+	},
+	"participant": {
+		"title": "Participant {{userId}}",
+		"payedInfix": "Payed",
+		"payerPart": "Payed {{amount}} in total",
+		"consumerPart": "Spent {{amount}} in total",
+		"partDescription": "{{item}} - {{amount}}{{extraSymbol}}",
+		"role": {
+			"viewer": "Viewer",
+			"editor": "Editor"
+		},
+		"form": {
+			"payerPart": {
+				"label": "Item payer part",
+				"saveButton": "Save item payer part",
+				"postfix": " / {{parts}}"
+			},
+			"addPayerButton": "+ payer"
+		}
+	},
+	"item": {
+		"noParticipantsItemsSection": {
+			"label": "Items with no participants"
+		},
+		"quantityPostfix": "x {{quantity}} unit",
+		"form": {
+			"consumer": {
+				"label": "Item consumer part",
+				"saveButton": "Save item consumer part"
+			},
+			"name": {
+				"label": "Receipt item name",
+				"saveButton": "Save receipt item name"
+			},
+			"price": {
+				"label": "Receipt item price",
+				"saveButton": "Save receipt item price"
+			},
+			"quantity": {
+				"label": "Receipt item quantity",
+				"saveButton": "Save receipt item quantity"
+			},
+			"saveButton": "Save"
+		},
+		"removeButton": {
+			"confirmSubtitle": "This will remove item with all participant's parts"
+		},
+		"participants": {
+			"everyone": "Everyone",
+			"orphanedError": "Consumer part for user id {{userId}} is orphaned. Please report this to support, include receipt id, receipt item name and mentioned user id"
+		}
+	},
+	"empty": {
+		"items": {
+			"title": "You have no receipt items yet",
+			"message": "Press a button above to add a receipt item"
+		}
+	}
+}

@@ -1,6 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
+import { useTranslation } from "react-i18next";
 import { z } from "zod/v4";
 
 import { useTrpcMutationState } from "~app/hooks/use-trpc-mutation-state";
@@ -25,6 +26,7 @@ const formSchema = z.object({
 type Form = z.infer<typeof formSchema>;
 
 export const AddReceiptItemForm: React.FC = () => {
+	const { t } = useTranslation("receipts");
 	const { receiptId, receiptDisabled } = useReceiptContext();
 	const { addItem } = useActionsHooksContext();
 	const trpc = useTRPC();
@@ -74,7 +76,7 @@ export const AddReceiptItemForm: React.FC = () => {
 								onValueChange={field.setValue}
 								name={field.name}
 								onBlur={field.handleBlur}
-								label="Item name"
+								label={t("item.form.name.label")}
 								isRequired
 								autoFocus
 								fieldError={
@@ -96,7 +98,7 @@ export const AddReceiptItemForm: React.FC = () => {
 								minValue={0}
 								step={10 ** -priceSchemaDecimal}
 								formatOptions={{ maximumFractionDigits: priceSchemaDecimal }}
-								label="Price per unit"
+								label={t("item.form.price.label")}
 								fieldError={
 									field.state.meta.isDirty ? field.state.meta.errors : undefined
 								}
@@ -115,7 +117,7 @@ export const AddReceiptItemForm: React.FC = () => {
 								minValue={0}
 								step={10 ** -quantitySchemaDecimal}
 								formatOptions={{ maximumFractionDigits: quantitySchemaDecimal }}
-								label="Units"
+								label={t("item.form.quantity.label")}
 								fieldError={
 									field.state.meta.isDirty ? field.state.meta.errors : undefined
 								}
@@ -133,7 +135,7 @@ export const AddReceiptItemForm: React.FC = () => {
 							isLoading={isPending}
 							type="submit"
 						>
-							Save
+							{t("item.form.saveButton")}
 						</Button>
 					)}
 				</form.Subscribe>

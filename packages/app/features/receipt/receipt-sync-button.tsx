@@ -1,6 +1,7 @@
 import React from "react";
 
 import { skipToken, useMutation, useQueries } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 import { QueryErrorMessage } from "~app/components/error-message";
 import { useDecimals } from "~app/hooks/use-decimals";
@@ -24,6 +25,7 @@ const ReceiptSyncButtonInner: React.FC<InnerProps> = ({
 	receipt,
 	isLoading,
 }) => {
+	const { t } = useTranslation("receipts");
 	const trpc = useTRPC();
 	const { participants, desyncedParticipants, nonCreatedParticipants } =
 		useParticipants(receipt);
@@ -114,21 +116,19 @@ const ReceiptSyncButtonInner: React.FC<InnerProps> = ({
 	const emptyItemsAmount = receipt.items.filter(
 		(item) => item.consumers.length === 0,
 	).length;
-	const emptyItemsWarning = React.useMemo(() => {
-		if (emptyItemsAmount === 0) {
-			return;
-		}
-		return `There are ${emptyItemsAmount} empty items, cannot lock`;
-	}, [emptyItemsAmount]);
 	const hasDesyncedParticipants = desyncedParticipants.length !== 0;
 	const hasNonCreatedParticipants = nonCreatedParticipants.length !== 0;
 	const button =
 		hasDesyncedParticipants || hasNonCreatedParticipants ? (
 			<Button
 				variant="ghost"
-				title={hasDesyncedParticipants ? "Update debts" : "Propagate debts"}
+				title={
+					hasDesyncedParticipants
+						? t("receipt.syncButton.update")
+						: t("receipt.syncButton.propagate")
+				}
 				isLoading={isPropagating}
-				isDisabled={isPropagating || Boolean(emptyItemsWarning) || isLoading}
+				isDisabled={isPropagating || emptyItemsAmount !== 0 || isLoading}
 				onPress={propagateDebts}
 				color="primary"
 				isIconOnly
@@ -142,7 +142,7 @@ const ReceiptSyncButtonInner: React.FC<InnerProps> = ({
 		) : (
 			<Button
 				variant="flat"
-				title="Synced"
+				title={t("receipt.syncButton.synced")}
 				isDisabled
 				color={emptyItemsAmount !== 0 ? "warning" : "success"}
 				isIconOnly
@@ -154,11 +154,16 @@ const ReceiptSyncButtonInner: React.FC<InnerProps> = ({
 				)}
 			</Button>
 		);
-	if (!emptyItemsWarning) {
+	if (emptyItemsAmount === 0) {
 		return button;
 	}
 	return (
-		<Tooltip content={emptyItemsWarning} placement="bottom-end">
+		<Tooltip
+			content={t("receipt.syncButton.emptyItemsWarning", {
+				count: emptyItemsAmount,
+			})}
+			placement="bottom-end"
+		>
 			{button}
 		</Tooltip>
 	);

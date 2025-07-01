@@ -2,6 +2,7 @@ import React from "react";
 import { View } from "react-native";
 
 import { useQueries } from "@tanstack/react-query";
+import { Trans, useTranslation } from "react-i18next";
 import { isNonNullish, values } from "remeda";
 
 import { EmptyCard } from "~app/components/empty-card";
@@ -71,17 +72,20 @@ const ReceiptPreviews: React.FC<{ ids: ReceiptsId[] }> = ({ ids }) => {
 	);
 };
 
-const ReceiptsTableHeader = () => (
-	<View className="flex-row gap-2">
-		<View className="flex-[8] p-2">
-			<Text>Receipt</Text>
+const ReceiptsTableHeader = () => {
+	const { t } = useTranslation("receipts");
+	return (
+		<View className="flex-row gap-2">
+			<View className="flex-[8] p-2">
+				<Text>{t("list.table.receipt")}</Text>
+			</View>
+			<View className="flex-[2] p-2">
+				<Text className="self-end">{t("list.table.sum")}</Text>
+			</View>
+			<View className="flex-1 p-2 max-sm:hidden" />
 		</View>
-		<View className="flex-[2] p-2">
-			<Text className="self-end">Sum</Text>
-		</View>
-		<View className="flex-1 p-2 max-sm:hidden" />
-	</View>
-);
+	);
+};
 
 type Props = {
 	sort: SearchParamState<"/receipts", "sort">[0];
@@ -96,6 +100,7 @@ export const Receipts: React.FC<Props> = ({
 	limitState: [limit, setLimit],
 	offsetState,
 }) => {
+	const { t } = useTranslation("receipts");
 	const trpc = useTRPC();
 	const { totalCount, query, pagination } = useCursorPaging(
 		trpc.receipts.getPaged,
@@ -108,19 +113,25 @@ export const Receipts: React.FC<Props> = ({
 			return <QueryErrorMessage query={query} />;
 		}
 		return (
-			<EmptyCard title="You have no receipts">
-				Press
-				<ButtonLink
-					color="primary"
-					to="/receipts/add"
-					title="Add receipt"
-					variant="bordered"
-					className="mx-2"
-					isIconOnly
-				>
-					<AddIcon size={24} />
-				</ButtonLink>
-				to add a receipt
+			<EmptyCard title={t("list.empty.title")}>
+				<Trans
+					t={t}
+					i18nKey="list.empty.message"
+					components={{
+						icon: (
+							<ButtonLink
+								color="primary"
+								to="/receipts/add"
+								title={t("list.addButton")}
+								variant="bordered"
+								className="mx-2"
+								isIconOnly
+							>
+								<AddIcon size={24} />
+							</ButtonLink>
+						),
+					}}
+				/>
 			</EmptyCard>
 		);
 	}
@@ -152,9 +163,7 @@ export const Receipts: React.FC<Props> = ({
 				) : query.status === "pending" ? (
 					<ReceiptPreviewsSkeleton amount={limit} />
 				) : !totalCount && values(filters).filter(isNonNullish).length === 0 ? (
-					<Header className="text-center">
-						No receipts under given filters
-					</Header>
+					<Header className="text-center">{t("list.noResults")}</Header>
 				) : (
 					<ReceiptPreviews ids={query.data.items} />
 				)}

@@ -1,6 +1,8 @@
 import React from "react";
 import { View } from "react-native";
 
+import { useTranslation } from "react-i18next";
+
 import { useLocale } from "~app/hooks/use-locale";
 import { formatCurrency } from "~app/utils/currency";
 import { Checkbox } from "~components/checkbox";
@@ -16,6 +18,7 @@ type InnerProps = {
 };
 
 export const ReceiptEmptyItems: React.FC<InnerProps> = ({ itemsRef }) => {
+	const { t } = useTranslation("receipts");
 	const { currencyCode, items } = useReceiptContext();
 	const locale = useLocale();
 	const emptyItems = items.filter((item) => item.consumers.length === 0);
@@ -34,7 +37,7 @@ export const ReceiptEmptyItems: React.FC<InnerProps> = ({ itemsRef }) => {
 	}
 	return (
 		<View className="gap-2">
-			<Header size="sm">Items with no participants</Header>
+			<Header size="sm">{t("item.noParticipantsItemsSection.label")}</Header>
 			{emptyItems.map((item) => (
 				<Checkbox
 					key={item.id}

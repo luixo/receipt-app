@@ -1,6 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 
+import { useTranslation } from "react-i18next";
 import { z } from "zod/v4";
 
 import { PartButtons } from "~app/components/app/part-buttons";
@@ -30,6 +31,7 @@ export const ReceiptItemConsumerInput: React.FC<Props> = ({
 	item,
 	isDisabled: isExternalDisabled,
 }) => {
+	const { t } = useTranslation("receipts");
 	const { updateItemConsumerPart } = useActionsHooksContext();
 	const { receiptDisabled } = useReceiptContext();
 	const canEdit = useCanEdit();
@@ -111,7 +113,7 @@ export const ReceiptItemConsumerInput: React.FC<Props> = ({
 						step={10 ** -partSchemaDecimal}
 						formatOptions={{ maximumFractionDigits: partSchemaDecimal }}
 						className="w-32"
-						aria-label="Item consumer part"
+						aria-label={t("item.form.consumer.label")}
 						mutation={updateMutationState}
 						isDisabled={isDisabled}
 						labelPlacement="outside-left"
@@ -121,7 +123,7 @@ export const ReceiptItemConsumerInput: React.FC<Props> = ({
 								<form.Subscribe selector={(state) => state.canSubmit}>
 									{(canSubmit) => (
 										<SaveButton
-											title="Save item consumer part"
+											title={t("item.form.consumer.saveButton")}
 											onPress={() => {
 												void field.form.handleSubmit();
 											}}

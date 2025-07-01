@@ -2,6 +2,7 @@ import React from "react";
 import { View } from "react-native";
 
 import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 import { LoadableUser } from "~app/components/app/loadable-user";
 import { SkeletonUser } from "~app/components/app/user";
@@ -147,6 +148,7 @@ type Props = Omit<InnerProps, "query"> & {
 };
 
 export const Receipt: React.FC<Props> = ({ id, ...props }) => {
+	const { t } = useTranslation("receipts");
 	const trpc = useTRPC();
 	const query = useQuery(trpc.receipts.get.queryOptions({ id }));
 	switch (query.status) {
@@ -154,7 +156,7 @@ export const Receipt: React.FC<Props> = ({ id, ...props }) => {
 			return (
 				<>
 					<Header>
-						<Text className="text-3xl">Loading receipt...</Text>
+						<Text className="text-3xl">{t("receipt.loading")}</Text>
 					</Header>
 					<View className="items-start gap-2">
 						<View className="flex w-full flex-row items-start justify-between gap-2">

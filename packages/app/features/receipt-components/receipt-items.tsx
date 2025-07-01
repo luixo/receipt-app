@@ -1,5 +1,7 @@
 import React from "react";
 
+import { useTranslation } from "react-i18next";
+
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { Button } from "~components/button";
 import { AddIcon } from "~components/icons";
@@ -11,6 +13,7 @@ import { ReceiptEmptyItems } from "./receipt-empty-items";
 import { ReceiptItem, ReceiptItemSkeleton } from "./receipt-item";
 
 const AddReceiptItemController: React.FC = () => {
+	const { t } = useTranslation("receipts");
 	const { receiptDisabled } = useReceiptContext();
 	const [isOpen, { setTrue: openForm }] = useBooleanState();
 
@@ -26,7 +29,7 @@ const AddReceiptItemController: React.FC = () => {
 			disabled={receiptDisabled}
 		>
 			<AddIcon size={24} />
-			Item
+			{t("add.addItemButton")}
 		</Button>
 	);
 };

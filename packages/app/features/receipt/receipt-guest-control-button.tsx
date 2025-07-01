@@ -1,5 +1,7 @@
 import type React from "react";
 
+import { useTranslation } from "react-i18next";
+
 import type { TRPCQueryOutput } from "~app/trpc";
 import { DebtIcon } from "~components/icons";
 import { ButtonLink } from "~components/link";
@@ -11,6 +13,8 @@ type Props = {
 };
 
 export const ReceiptGuestControlButton: React.FC<Props> = ({ receipt }) => {
+	const { t } = useTranslation("receipts");
+
 	if (receipt.debt.direction === "outcoming") {
 		throw new Error("Unexpected owner control button with outcoming debt");
 	}
@@ -20,7 +24,7 @@ export const ReceiptGuestControlButton: React.FC<Props> = ({ receipt }) => {
 
 	const commonProps = {
 		children: <DebtIcon size={24} />,
-		title: "Incoming debt",
+		title: t("receipt.controlButton.incomingDebt"),
 		variant: "bordered",
 		color: "primary",
 		isIconOnly: true,

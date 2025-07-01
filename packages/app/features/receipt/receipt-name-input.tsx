@@ -1,6 +1,7 @@
 import type React from "react";
 
 import { useMutation } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { z } from "zod/v4";
 
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
@@ -22,6 +23,7 @@ export const ReceiptNameInput: React.FC<Props> = ({
 	isLoading,
 	unsetEditing,
 }) => {
+	const { t } = useTranslation("receipts");
 	const trpc = useTRPC();
 	const updateReceiptMutation = useMutation(
 		trpc.receipts.update.mutationOptions(
@@ -56,7 +58,7 @@ export const ReceiptNameInput: React.FC<Props> = ({
 					fieldError={
 						field.state.meta.isDirty ? field.state.meta.errors : undefined
 					}
-					aria-label="Receipt name"
+					aria-label={t("receipt.form.name.label")}
 					mutation={updateReceiptMutation}
 					labelPlacement="outside-left"
 					className="basis-36"
@@ -67,7 +69,7 @@ export const ReceiptNameInput: React.FC<Props> = ({
 							<form.Subscribe selector={(state) => state.canSubmit}>
 								{(canSubmit) => (
 									<SaveButton
-										title="Save receipt name"
+										title={t("receipt.form.name.saveButton")}
 										onPress={() => {
 											void field.form.handleSubmit();
 										}}

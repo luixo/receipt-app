@@ -1,5 +1,7 @@
 import type React from "react";
 
+import { useTranslation } from "react-i18next";
+
 import { PageHeader } from "~app/components/page-header";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
 import type { SearchParamState } from "~app/hooks/use-navigation";
@@ -14,33 +16,36 @@ export const ReceiptsScreen: React.FC<{
 	filtersState: SearchParamState<"/receipts", "filters">;
 	limitState: SearchParamState<"/receipts", "limit">;
 	offsetState: SearchParamState<"/receipts", "offset">;
-}> = ({ sortState, filtersState, limitState, offsetState }) => (
-	<>
-		<PageHeader
-			startContent={<ReceiptIcon size={36} />}
-			aside={
-				<>
-					<FilterButton filtersState={filtersState} sortState={sortState} />
-					<ButtonLink
-						color="primary"
-						to="/receipts/add"
-						title="Add receipt"
-						variant="bordered"
-						isIconOnly
-					>
-						<AddIcon size={24} />
-					</ButtonLink>
-				</>
-			}
-		>
-			Receipts
-		</PageHeader>
-		<EmailVerificationCard />
-		<Receipts
-			filters={filtersState[0]}
-			sort={sortState[0]}
-			limitState={limitState}
-			offsetState={offsetState}
-		/>
-	</>
-);
+}> = ({ sortState, filtersState, limitState, offsetState }) => {
+	const { t } = useTranslation("receipts");
+	return (
+		<>
+			<PageHeader
+				startContent={<ReceiptIcon size={36} />}
+				aside={
+					<>
+						<FilterButton filtersState={filtersState} sortState={sortState} />
+						<ButtonLink
+							color="primary"
+							to="/receipts/add"
+							title={t("list.addButton")}
+							variant="bordered"
+							isIconOnly
+						>
+							<AddIcon size={24} />
+						</ButtonLink>
+					</>
+				}
+			>
+				{t("list.header")}
+			</PageHeader>
+			<EmailVerificationCard />
+			<Receipts
+				filters={filtersState[0]}
+				sort={sortState[0]}
+				limitState={limitState}
+				offsetState={offsetState}
+			/>
+		</>
+	);
+};

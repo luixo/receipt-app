@@ -1,6 +1,8 @@
 import React from "react";
 import { View } from "react-native";
 
+import { useTranslation } from "react-i18next";
+
 import { ErrorMessage } from "~app/components/error-message";
 import { RemoveButton } from "~app/components/remove-button";
 import { useLocale } from "~app/hooks/use-locale";
@@ -43,6 +45,7 @@ type Props = {
 };
 
 export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
+	const { t } = useTranslation("receipts");
 	const { currencyCode, participants } = useReceiptContext();
 	const { addItemConsumer, removeItem } = useActionsHooksContext();
 	const canEdit = useCanEdit();
@@ -79,7 +82,7 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 					<RemoveButton
 						onRemove={() => removeItem(item.id)}
 						mutation={{ isPending: isRemovalPending }}
-						subtitle="This will remove item with all participant's parts"
+						subtitle={t("item.removeButton.confirmSubtitle")}
 						noConfirm={item.consumers.length === 0}
 						isIconOnly
 					/>
@@ -110,7 +113,7 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 								className="cursor-pointer"
 								onClick={onAddEveryItemParticipant}
 							>
-								Everyone
+								{t("item.participants.everyone")}
 							</Chip>
 						) : null}
 						{notAddedParticipants.map((participant) => (
@@ -133,7 +136,9 @@ export const ReceiptItem: React.FC<Props> = ({ item, ref }) => {
 								return (
 									<ErrorMessage
 										key={consumer.userId}
-										message={`Consumer part for user id ${consumer.userId} is orphaned. Please report this to support, include receipt id, receipt item name and mentioned user id`}
+										message={t("item.participants.orphanedError", {
+											userId: consumer.userId,
+										})}
 									/>
 								);
 							}

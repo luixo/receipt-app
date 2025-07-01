@@ -1,6 +1,7 @@
 import React from "react";
 
 import { useMutation } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 import { EmptyCard } from "~app/components/empty-card";
 import type {
@@ -325,6 +326,7 @@ export const useGetReceiptContext = (
 	receiptDisabled: boolean,
 	renderParticipantActions: ReceiptContext["renderParticipantActions"],
 ): ReceiptContext => {
+	const { t } = useTranslation("receipts");
 	const { participants } = useParticipants(receipt);
 	return {
 		receiptId: receipt.id,
@@ -341,8 +343,8 @@ export const useGetReceiptContext = (
 			receiptId: receipt.id,
 		}),
 		emptyReceiptElement: (
-			<EmptyCard title="You have no receipt items yet">
-				Press a button above to add a receipt item
+			<EmptyCard title={t("empty.items.title")}>
+				{t("empty.items.message")}
 			</EmptyCard>
 		),
 	};

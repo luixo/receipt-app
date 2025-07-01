@@ -1,6 +1,7 @@
 import type React from "react";
 import { View } from "react-native";
 
+import { useTranslation } from "react-i18next";
 import { z } from "zod/v4";
 
 import { useBooleanState } from "~app/hooks/use-boolean-state";
@@ -24,6 +25,7 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 	item,
 	isDisabled: isExternalDisabled,
 }) => {
+	const { t } = useTranslation("receipts");
 	const { receiptDisabled } = useReceiptContext();
 	const canEdit = useCanEdit();
 	const { updateItemName } = useActionsHooksContext();
@@ -73,7 +75,7 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 					fieldError={
 						field.state.meta.isDirty ? field.state.meta.errors : undefined
 					}
-					aria-label="Receipt item name"
+					aria-label={t("item.form.name.label")}
 					mutation={updateMutationState}
 					isDisabled={isDisabled}
 					className="basis-52"
@@ -81,7 +83,7 @@ export const ReceiptItemNameInput: React.FC<Props> = ({
 						<form.Subscribe selector={(state) => state.canSubmit}>
 							{(canSubmit) => (
 								<SaveButton
-									title="Save receipt item name"
+									title={t("item.form.name.saveButton")}
 									onPress={() => {
 										void field.form.handleSubmit();
 									}}

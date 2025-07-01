@@ -4,7 +4,7 @@ import { z } from "zod/v4";
 
 import { ReceiptsScreen } from "~app/features/receipts/receipts-screen";
 import { getQueryStates } from "~app/hooks/use-navigation";
-import { getServerSideT } from "~app/utils/i18n";
+import { getServerSideT, loadNamespaces } from "~app/utils/i18n";
 import {
 	DEFAULT_LIMIT,
 	limitSchema,
@@ -43,11 +43,14 @@ const Wrapper = () => {
 
 export const Route = createFileRoute("/_protected/receipts/")({
 	component: Wrapper,
+	loader: async (ctx) => {
+		await loadNamespaces(ctx.context, "receipts");
+	},
+	validateSearch: zodValidator(schema),
+	search: { middlewares: [stripSearchParams(defaults)] },
 	head: ({ match }) => {
 		const t = getServerSideT(match.context);
 		const title = t("titles.template", { page: t("titles.receipts") });
 		return { meta: [{ title }] };
 	},
-	validateSearch: zodValidator(schema),
-	search: { middlewares: [stripSearchParams(defaults)] },
 });

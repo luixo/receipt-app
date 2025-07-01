@@ -1,6 +1,7 @@
 import React from "react";
 
 import type { Selection } from "@react-types/shared";
+import { useTranslation } from "react-i18next";
 
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import type { SearchParamState } from "~app/hooks/use-navigation";
@@ -30,6 +31,7 @@ export const FilterButton: React.FC<Props> = ({
 	sortState: [sort, setSort],
 	filtersState: [filters, setFilters],
 }) => {
+	const { t } = useTranslation("receipts");
 	const [filterModalOpen, { switchValue: switchFilterModal }] =
 		useBooleanState(false);
 
@@ -76,10 +78,14 @@ export const FilterButton: React.FC<Props> = ({
 					<ModalBody className="items-center">
 						<Button variant="light" onPress={sortSelectOnPress}>
 							<SortIcon size={24} />
-							{sort === "date-desc" ? "Newest first" : "Oldest first"}
+							{sort === "date-desc"
+								? t("list.sorting.newestFirst")
+								: t("list.sorting.oldestFirst")}
 						</Button>
 						<Divider />
-						<Text className="text-2xl font-medium">Filters</Text>
+						<Text className="text-2xl font-medium">
+							{t("list.filters.title")}
+						</Text>
 						<Dropdown>
 							<DropdownTrigger>
 								<Button
@@ -88,22 +94,28 @@ export const FilterButton: React.FC<Props> = ({
 									startContent={<ChevronDown />}
 								>
 									{filters.ownedByMe === undefined
-										? "Owned by anybody"
+										? t("list.filters.ownership.ownedByAnybody")
 										: filters.ownedByMe
-											? "Owned by me"
-											: "Owned by anybody but me"}
+											? t("list.filters.ownership.ownedByMe")
+											: t("list.filters.ownership.ownedByAnybodyButMe")}
 								</Button>
 							</DropdownTrigger>
 							<DropdownMenu
-								aria-label="Owned by me filter"
+								aria-label={t("list.filters.ownership.label")}
 								disallowEmptySelection
 								selectionMode="single"
 								selectedKeys={new Set([String(filters.ownedByMe)])}
 								onSelectionChange={onOwnedFilterSelectionChange}
 							>
-								<DropdownItem key="undefined">Owned by anybody</DropdownItem>
-								<DropdownItem key="true">Owned by me</DropdownItem>
-								<DropdownItem key="false">Owned not by me</DropdownItem>
+								<DropdownItem key="undefined">
+									{t("list.filters.ownership.ownedByAnybody")}
+								</DropdownItem>
+								<DropdownItem key="true">
+									{t("list.filters.ownership.ownedByMe")}
+								</DropdownItem>
+								<DropdownItem key="false">
+									{t("list.filters.ownership.ownedNotByMe")}
+								</DropdownItem>
 							</DropdownMenu>
 						</Dropdown>
 					</ModalBody>

@@ -1,6 +1,8 @@
 import type React from "react";
 import { View } from "react-native";
 
+import { useTranslation } from "react-i18next";
+
 import { useFormat } from "~app/hooks/use-format";
 import { useLocale } from "~app/hooks/use-locale";
 import type { TRPCQueryOutput } from "~app/trpc";
@@ -23,6 +25,7 @@ type InnerProps = {
 };
 
 export const ReceiptPreview: React.FC<InnerProps> = ({ receipt }) => {
+	const { t } = useTranslation("receipts");
 	const { formatDate } = useFormat();
 	const locale = useLocale();
 	const isOwner = receipt.selfUserId === receipt.ownerUserId;
@@ -37,7 +40,7 @@ export const ReceiptPreview: React.FC<InnerProps> = ({ receipt }) => {
 		>
 			<View className="flex flex-row items-center gap-2">
 				<Tooltip
-					content={`${emptyItems.length} empty item(s)`}
+					content={t("receipt.emptyItems", { amount: emptyItems.length })}
 					isDisabled={emptyItems.length === 0}
 				>
 					<Badge

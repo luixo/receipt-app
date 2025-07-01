@@ -3,6 +3,7 @@ import type accountEn from "@ra/web/public/locales/en/account.json";
 import type adminEn from "@ra/web/public/locales/en/admin.json";
 import type defaultEn from "@ra/web/public/locales/en/default.json";
 import type loginEn from "@ra/web/public/locales/en/login.json";
+import type receiptsEn from "@ra/web/public/locales/en/receipts.json";
 import type registerEn from "@ra/web/public/locales/en/register.json";
 import type resetPasswordEn from "@ra/web/public/locales/en/reset-password.json";
 import type settingsEn from "@ra/web/public/locales/en/settings.json";
@@ -12,6 +13,7 @@ import type accountRu from "@ra/web/public/locales/ru/account.json";
 import type adminRu from "@ra/web/public/locales/ru/admin.json";
 import type defaultRu from "@ra/web/public/locales/ru/default.json";
 import type loginRu from "@ra/web/public/locales/ru/login.json";
+import type receiptsRu from "@ra/web/public/locales/ru/receipts.json";
 import type registerRu from "@ra/web/public/locales/ru/register.json";
 import type resetPasswordRu from "@ra/web/public/locales/ru/reset-password.json";
 import type settingsRu from "@ra/web/public/locales/ru/settings.json";
@@ -35,6 +37,7 @@ export type Namespace =
 	| "account"
 	| "admin"
 	| "login"
+	| "receipts"
 	| "register"
 	| "reset-password"
 	| "void-account"
@@ -46,6 +49,7 @@ export const namespaces: Record<Namespace, true> = {
 	account: true,
 	admin: true,
 	login: true,
+	receipts: true,
 	register: true,
 	"reset-password": true,
 	"void-account": true,
@@ -58,6 +62,7 @@ export type Resources = {
 	account: typeof accountEn;
 	admin: typeof adminEn;
 	login: typeof loginEn;
+	receipts: typeof receiptsEn;
 	register: typeof registerEn;
 	"reset-password": typeof resetPasswordEn;
 	"void-account": typeof voidAccountEn;
@@ -74,6 +79,7 @@ type ValidatedResources = AssertAllEqual<
 			account: typeof accountRu;
 			admin: typeof adminRu;
 			login: typeof loginRu;
+			receipts: typeof receiptsRu;
 			register: typeof registerRu;
 			"reset-password": typeof resetPasswordRu;
 			"void-account": typeof voidAccountRu;

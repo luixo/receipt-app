@@ -1,6 +1,7 @@
 import React from "react";
 
 import { useMutation } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 import { CurrencyInput } from "~app/components/app/currency-input";
 import { DateInput } from "~app/components/date-input";
@@ -30,6 +31,7 @@ type Props = {
 };
 
 export const AddReceipt: React.FC<Props> = ({ selfAccountId }) => {
+	const { t } = useTranslation("receipts");
 	const trpc = useTRPC();
 	const navigate = useNavigate();
 
@@ -121,7 +123,7 @@ export const AddReceipt: React.FC<Props> = ({ selfAccountId }) => {
 						<form.AppField name="name">
 							{(field) => (
 								<field.TextField
-									label="Receipt name"
+									label={t("receipt.form.name.label")}
 									value={field.state.value}
 									onValueChange={field.setValue}
 									name={field.name}
@@ -149,7 +151,7 @@ export const AddReceipt: React.FC<Props> = ({ selfAccountId }) => {
 						<form.AppField name="issued">
 							{(field) => (
 								<DateInput
-									label="Issued on"
+									label={t("receipt.form.issued.label")}
 									name="issued-date"
 									value={field.state.value}
 									onValueChange={field.setValue}
@@ -170,7 +172,7 @@ export const AddReceipt: React.FC<Props> = ({ selfAccountId }) => {
 								type="submit"
 								form={formId}
 							>
-								Add receipt
+								{t("add.saveButton")}
 							</Button>
 						)}
 					</form.Subscribe>

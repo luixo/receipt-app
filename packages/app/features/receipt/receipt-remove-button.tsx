@@ -1,6 +1,7 @@
 import React from "react";
 
 import { useMutation } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 import { RemoveButton } from "~app/components/remove-button";
 import { useNavigate } from "~app/hooks/use-navigation";
@@ -19,6 +20,7 @@ export const ReceiptRemoveButton: React.FC<Props> = ({
 	setLoading,
 	...props
 }) => {
+	const { t } = useTranslation("receipts");
 	const trpc = useTRPC();
 	const navigate = useNavigate();
 	const removeReceiptMutation = useMutation(
@@ -41,11 +43,11 @@ export const ReceiptRemoveButton: React.FC<Props> = ({
 		<RemoveButton
 			mutation={removeReceiptMutation}
 			onRemove={removeReceipt}
-			subtitle="This will remove receipt forever"
+			subtitle={t("receipt.removeButton.confirmSubtitle")}
 			noConfirm={receipt.items.length === 0}
 			{...props}
 		>
-			Remove receipt
+			{t("receipt.removeButton.text")}
 		</RemoveButton>
 	);
 };

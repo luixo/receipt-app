@@ -2,6 +2,7 @@ import React from "react";
 import { View } from "react-native";
 
 import { skipToken, useMutation } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 
 import { DebtSyncStatus } from "~app/components/app/debt-sync-status";
 import { useDecimals } from "~app/hooks/use-decimals";
@@ -25,6 +26,7 @@ export const ReceiptParticipantActions: React.FC<Props> = ({
 	receipt,
 	participant,
 }) => {
+	const { t } = useTranslation("receipts");
 	const trpc = useTRPC();
 	const updateMutation = useMutation(
 		trpc.debts.update.mutationOptions(
@@ -108,7 +110,7 @@ export const ReceiptParticipantActions: React.FC<Props> = ({
 						/>
 					) : (
 						<Button
-							title="Update debt for a user"
+							title={t("participants.actions.updateButton")}
 							isLoading={isUpdating}
 							isDisabled={isUpdating}
 							isIconOnly
@@ -121,7 +123,7 @@ export const ReceiptParticipantActions: React.FC<Props> = ({
 				</>
 			) : (
 				<Button
-					title="Send debt to a user"
+					title={t("participants.actions.sendButton")}
 					isLoading={isUpdating}
 					isDisabled={isUpdating}
 					isIconOnly
