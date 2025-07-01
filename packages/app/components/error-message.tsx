@@ -7,7 +7,6 @@ import type {
 } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
-
 import type { TRPCError } from "~app/trpc";
 import { Button } from "~components/button";
 import { Card, CardBody, CardFooter, CardHeader } from "~components/card";
