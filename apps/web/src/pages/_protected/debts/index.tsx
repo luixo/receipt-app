@@ -4,7 +4,7 @@ import z from "zod/v4";
 
 import { DebtsScreen } from "~app/features/debts/debts-screen";
 import { getQueryStates } from "~app/hooks/use-navigation";
-import { getServerSideT, loadNamespaces } from "~app/utils/i18n";
+import { getTitle, loadNamespaces } from "~app/utils/i18n";
 import {
 	DEFAULT_LIMIT,
 	limitSchema,
@@ -40,9 +40,7 @@ export const Route = createFileRoute("/_protected/debts/")({
 	},
 	validateSearch: zodValidator(schema),
 	search: { middlewares: [stripSearchParams(defaults)] },
-	head: ({ match }) => {
-		const t = getServerSideT(match.context);
-		const title = t("titles.template", { page: t("titles.debts") });
-		return { meta: [{ title }] };
-	},
+	head: ({ match }) => ({
+		meta: [{ title: getTitle(match.context, "debts") }],
+	}),
 });

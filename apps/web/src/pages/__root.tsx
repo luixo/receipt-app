@@ -201,7 +201,7 @@ export const Route = wrappedCreateRootRouteWithContext<RouterContext>()({
 	},
 	validateSearch: zodValidator(rootSearchParamsSchema),
 	head: ({ match }) => {
-		const t = getServerSideT(match.context);
+		const t = getServerSideT(match.context, "default");
 		const title = t("titles.index");
 		return {
 			meta: [

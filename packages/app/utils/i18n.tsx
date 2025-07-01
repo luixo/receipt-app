@@ -1,7 +1,13 @@
 /// <reference types="vite/client" />
 
 import { parse } from "cookie";
-import type { BackendModule, InitOptions, ResourceKey, i18n } from "i18next";
+import type {
+	BackendModule,
+	InitOptions,
+	ParseKeys,
+	ResourceKey,
+	i18n,
+} from "i18next";
 import { keys } from "remeda";
 
 import type { Language, Namespace } from "./i18n-data";
@@ -108,10 +114,22 @@ export const getBackendModule = (): BackendModule => ({
 	},
 });
 
-export const getServerSideT = (ctx: {
-	i18n: i18n;
-	initialLanguage: Language;
-}) => ctx.i18n.getFixedT(ctx.initialLanguage, "default");
+export const getServerSideT = (
+	ctx: {
+		i18n: i18n;
+		initialLanguage: Language;
+	},
+	namespace: Namespace,
+) => ctx.i18n.getFixedT(ctx.initialLanguage, namespace);
+
+type TitleKey<T extends ParseKeys> = T extends `titles.${infer X}` ? X : never;
+export const getTitle = (
+	ctx: Parameters<typeof getServerSideT>[0],
+	pageKey: TitleKey<ParseKeys>,
+) => {
+	const t = getServerSideT(ctx, "default");
+	return t("titles.template", { page: t(`titles.${pageKey}`) });
+};
 
 const ensureI18nInitialized = async (ctx: {
 	i18n: i18n;

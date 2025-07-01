@@ -3,7 +3,7 @@ import { zodValidator } from "@tanstack/zod-adapter";
 import { z } from "zod/v4";
 
 import { VoidAccountScreen } from "~app/features/void-account/void-account-screen";
-import { loadNamespaces } from "~app/utils/i18n";
+import { getTitle, loadNamespaces } from "~app/utils/i18n";
 import { voidAccountTokenSchema } from "~app/utils/validation";
 
 const Wrapper = () => {
@@ -16,8 +16,10 @@ export const Route = createFileRoute("/_public/void-account")({
 	loader: async (ctx) => {
 		await loadNamespaces(ctx.context, "void-account");
 	},
-	head: () => ({ meta: [{ title: "RA - Void account" }] }),
 	validateSearch: zodValidator(
 		z.object({ token: voidAccountTokenSchema.optional() }),
 	),
+	head: ({ match }) => ({
+		meta: [{ title: getTitle(match.context, "voidAccount") }],
+	}),
 });

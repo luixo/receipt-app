@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { loadNamespaces } from "~app/utils/i18n";
+import { getTitle, loadNamespaces } from "~app/utils/i18n";
 
 const Wrapper = () => null;
 
@@ -11,5 +11,7 @@ export const Route = createFileRoute(
 	loader: async (ctx) => {
 		await loadNamespaces(ctx.context, "debts");
 	},
-	head: () => ({ meta: [{ title: "RA - Exchange specific user debts" }] }),
+	head: ({ match }) => ({
+		meta: [{ title: getTitle(match.context, "exchangeDebts") }],
+	}),
 });

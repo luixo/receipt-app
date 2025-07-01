@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { UserScreen } from "~app/features/user/user-screen";
-import { loadNamespaces } from "~app/utils/i18n";
+import { getTitle, loadNamespaces } from "~app/utils/i18n";
 
 const Wrapper = () => {
 	const { id } = Route.useParams();
@@ -13,5 +13,5 @@ export const Route = createFileRoute("/_protected/users/$id")({
 	loader: async (ctx) => {
 		await loadNamespaces(ctx.context, "users");
 	},
-	head: () => ({ meta: [{ title: "RA - User" }] }),
+	head: ({ match }) => ({ meta: [{ title: getTitle(match.context, "user") }] }),
 });

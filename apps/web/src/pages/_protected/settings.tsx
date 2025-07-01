@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { SettingsScreen } from "~app/features/settings/settings-screen";
-import { getServerSideT, loadNamespaces } from "~app/utils/i18n";
+import { getTitle, loadNamespaces } from "~app/utils/i18n";
 import { getLoaderTrpcClient } from "~web/utils/trpc";
 
 export const Route = createFileRoute("/_protected/settings")({
@@ -15,9 +15,7 @@ export const Route = createFileRoute("/_protected/settings")({
 			trpc.accountSettings.get.queryOptions(),
 		);
 	},
-	head: ({ match }) => {
-		const t = getServerSideT(match.context);
-		const title = t("titles.template", { page: t("titles.settings") });
-		return { meta: [{ title }] };
-	},
+	head: ({ match }) => ({
+		meta: [{ title: getTitle(match.context, "settings") }],
+	}),
 });

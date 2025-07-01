@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { Receipt } from "~app/features/receipt/receipt";
-import { loadNamespaces } from "~app/utils/i18n";
+import { getTitle, loadNamespaces } from "~app/utils/i18n";
 
 const Wrapper = () => {
 	const { id } = Route.useParams();
@@ -13,5 +13,7 @@ export const Route = createFileRoute("/_protected/receipts/$id")({
 	loader: async (ctx) => {
 		await loadNamespaces(ctx.context, "receipts");
 	},
-	head: () => ({ meta: [{ title: "RA - Receipt" }] }),
+	head: ({ match }) => ({
+		meta: [{ title: getTitle(match.context, "receipt") }],
+	}),
 });

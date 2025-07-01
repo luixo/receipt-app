@@ -4,7 +4,7 @@ import z from "zod/v4";
 
 import { UserDebtsScreen } from "~app/features/user-debts/user-debts-screen";
 import { getQueryStates } from "~app/hooks/use-navigation";
-import { loadNamespaces } from "~app/utils/i18n";
+import { getTitle, loadNamespaces } from "~app/utils/i18n";
 import {
 	DEFAULT_LIMIT,
 	limitSchema,
@@ -40,7 +40,9 @@ export const Route = createFileRoute("/_protected/debts/user/$id/")({
 	loader: async (ctx) => {
 		await loadNamespaces(ctx.context, "debts");
 	},
-	head: () => ({ meta: [{ title: "RA - User's debts" }] }),
 	validateSearch: zodValidator(schema),
 	search: { middlewares: [stripSearchParams(defaults)] },
+	head: ({ match }) => ({
+		meta: [{ title: getTitle(match.context, "userDebts") }],
+	}),
 });
