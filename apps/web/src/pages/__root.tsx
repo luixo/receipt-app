@@ -115,9 +115,10 @@ const RootComponent = () => {
 	const linksContext = React.useMemo<LinksContextType>(
 		() => ({
 			debug: initialSearchParams.debug,
-			url: data.baseUrl
-				? new URL(baseLinksContext.url, data.baseUrl).toString()
-				: baseLinksContext.url,
+			url:
+				data.baseUrl && typeof window === "undefined"
+					? new URL(baseLinksContext.url, data.baseUrl).toString()
+					: baseLinksContext.url,
 			// Don't batch requests when in tests - to evaluate pending / error states separately
 			useBatch: !initialSearchParams.controllerId,
 			source: typeof window === "undefined" ? "ssr" : "csr",
