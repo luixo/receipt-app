@@ -20,6 +20,7 @@ const classNames: NonNullable<DayPickerProps["classNames"]> = {
 	selected: "bg-success",
 	today: "text-secondary",
 	day: "text-center rounded-full",
+	chevron: "fill-current",
 };
 
 type DayPickerProps = React.ComponentProps<typeof DayPicker>;
