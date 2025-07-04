@@ -166,7 +166,7 @@ const DebtAmountInput: React.FC<AmountProps> = ({ debt, isLoading }) => {
 					step={10 ** -debtAmountSchemaDecimal}
 					formatOptions={{ maximumFractionDigits: debtAmountSchemaDecimal }}
 					endContent={
-						<View className="flex gap-2">
+						<View className="flex flex-row gap-2">
 							<DebtCurrencyInput debt={debt} isLoading={isLoading} />
 							{absoluteAmount === field.state.value ? null : (
 								<form.Subscribe selector={(state) => state.canSubmit}>
