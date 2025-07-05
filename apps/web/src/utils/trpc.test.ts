@@ -63,10 +63,10 @@ describe("loader call", () => {
 			const queryClient = new QueryClient();
 			const urlObject = new URL(url);
 			urlObject.searchParams.set("debug", "true");
-			const client = getLoaderTrpcClient<typeof router>(
-				{ queryClient, request: new Request(urlObject) },
-				true,
-			);
+			const client = getLoaderTrpcClient<typeof router>({
+				queryClient,
+				request: new Request(urlObject),
+			});
 			const resultHeaders = await queryClient.fetchQuery(
 				client.getHeaders.queryOptions(),
 			);
