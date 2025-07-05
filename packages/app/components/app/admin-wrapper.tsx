@@ -8,6 +8,7 @@ import { LinksContext } from "~app/contexts/links-context";
 import { SELF_QUERY_CLIENT_KEY } from "~app/contexts/query-clients-context";
 import { useNavigate } from "~app/hooks/use-navigation";
 import { QueryProvider } from "~app/providers/query";
+import { TRPCProvider } from "~app/providers/trpc";
 import { useTRPC } from "~app/utils/trpc";
 
 const NoAdminEffect: React.FC = () => {
@@ -42,7 +43,7 @@ export const AdminWrapper: React.FC<React.PropsWithChildren> = ({
 	return (
 		<LinksContext.Provider value={linksContext}>
 			<QueryProvider queryClientKey={SELF_QUERY_CLIENT_KEY}>
-				{children}
+				<TRPCProvider>{children}</TRPCProvider>
 			</QueryProvider>
 		</LinksContext.Provider>
 	);

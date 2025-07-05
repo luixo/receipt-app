@@ -1,16 +1,13 @@
 import React from "react";
 
-import { QueryClientProvider as RawQueryClientProvider } from "@tanstack/react-query";
-import { createTRPCClient } from "@trpc/client";
+import { QueryClientProvider } from "@tanstack/react-query";
 
-import { LinksContext } from "~app/contexts/links-context";
 import type { QueryClientsRecord } from "~app/contexts/query-clients-context";
 import {
 	QueryClientsContext,
 	SELF_QUERY_CLIENT_KEY,
 	getQueryClient,
 } from "~app/contexts/query-clients-context";
-import { TRPCProvider, getLinks } from "~app/utils/trpc";
 
 type Props = {
 	queryClientKey: keyof QueryClientsRecord;
@@ -20,7 +17,6 @@ export const QueryProvider: React.FC<React.PropsWithChildren<Props>> = ({
 	queryClientKey,
 	children,
 }) => {
-	const linksContext = React.useContext(LinksContext);
 	const [queryClients, setQueryClients] = React.useContext(QueryClientsContext);
 	React.useEffect(() => {
 		setQueryClients((prevQueryClients) => {
@@ -39,18 +35,7 @@ export const QueryProvider: React.FC<React.PropsWithChildren<Props>> = ({
 			queryClients[SELF_QUERY_CLIENT_KEY],
 		[queryClientKey, queryClients],
 	);
-	const trpcClient = React.useMemo(
-		() =>
-			createTRPCClient({
-				links: getLinks(linksContext),
-			}),
-		[linksContext],
-	);
 	return (
-		<RawQueryClientProvider client={queryClient}>
-			<TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
-				{children}
-			</TRPCProvider>
-		</RawQueryClientProvider>
+		<QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 	);
 };

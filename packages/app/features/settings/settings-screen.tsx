@@ -1,10 +1,11 @@
-import type React from "react";
+import React from "react";
 import { View } from "react-native";
 
 import { useTranslation } from "react-i18next";
 
 import { PageHeader } from "~app/components/page-header";
 import { Divider } from "~components/divider";
+import { Spinner } from "~components/spinner";
 import { Text } from "~components/text";
 
 import { ColorModeSettings } from "./color-mode-settings";
@@ -28,7 +29,9 @@ export const SettingsScreen: React.FC = () => {
 			</View>
 			<View className="flex-row gap-2">
 				<Text>{t("manuallyAcceptDebts.header")}</Text>
-				<ManualAcceptDebtsOption />
+				<React.Suspense fallback={<Spinner />}>
+					<ManualAcceptDebtsOption />
+				</React.Suspense>
 			</View>
 			<Divider />
 			<RefreshSettings />

@@ -188,8 +188,6 @@ const wrappedCreateRootRouteWithContext = wrapCreateRootRouteWithSentry(
 
 export const Route = wrappedCreateRootRouteWithContext<RouterContext>()({
 	component: RootComponent,
-	// Don't rerun root loader on the client
-	staleTime: Infinity,
 	loader: async (ctx) => {
 		if (!import.meta.env.SSR) {
 			// We need this branch to keep the types structure while tree-shaking `node:fs` from the client

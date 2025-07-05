@@ -11,6 +11,7 @@ import { StoreContext } from "~app/contexts/store-context";
 import type { StoreContextType } from "~app/contexts/store-context";
 import { StoreDataContext } from "~app/contexts/store-data-context";
 import { QueryProvider } from "~app/providers/query";
+import { TRPCProvider } from "~app/providers/trpc";
 import { PRETEND_USER_STORE_NAME } from "~app/utils/store/pretend-user";
 
 import { PersisterProvider } from "./persist-client";
@@ -25,7 +26,7 @@ const QueryProviderWithPretend: React.FC<React.PropsWithChildren> = ({
 	} = React.useContext(StoreDataContext);
 	return (
 		<QueryProvider queryClientKey={pretendUser.email || SELF_QUERY_CLIENT_KEY}>
-			{children}
+			<TRPCProvider>{children}</TRPCProvider>
 		</QueryProvider>
 	);
 };

@@ -32,6 +32,9 @@ import type { ExternalRouterContext } from "~web/pages/__root";
 import { getHostUrl } from "~web/utils/url";
 
 import { routeTree } from "./routeTree.gen";
+import { HydrationBoundary } from "~web/utils/ssr";
+import { QueryProvider } from "~app/providers/query";
+import { Spinner } from "~components/spinner";
 
 const NotFoundComponent: NotFoundRouteComponent = () => <View>Not found!</View>;
 
@@ -80,6 +83,9 @@ export const createRouter = (externalContext: ExternalRouterContext) => {
 		},
 		defaultNotFoundComponent: NotFoundComponent,
 		defaultErrorComponent: ErrorComponent,
+		defaultPendingComponent: Spinner,
+		// Don't rerun loaders on the client
+		defaultStaleTime: Infinity,
 		defaultPreloadStaleTime: 0,
 		dehydrate: () => ({
 			dehydratedState: dehydrate(queryClient),
@@ -96,13 +102,13 @@ export const createRouter = (externalContext: ExternalRouterContext) => {
 			hydrate(queryClient, dehydratedData.dehydratedState);
 		},
 		Wrap: ({ children }) => {
+			const pretendEmail =
+				externalContext.initialValues[PRETEND_USER_STORE_NAME].email;
 			// We're doing useState instead of useMemo
 			// Because we don't want to rerender Wrap on every queryClient change
 			// eslint-disable-next-line react/hook-use-state
 			const queryClientsState = React.useState<QueryClientsRecord>(() => {
 				const localQueryClient = getLocalQueryClient(queryClient);
-				const pretendEmail =
-					externalContext.initialValues[PRETEND_USER_STORE_NAME].email;
 				return pretendEmail
 					? {
 							[pretendEmail]: localQueryClient,
@@ -115,11 +121,18 @@ export const createRouter = (externalContext: ExternalRouterContext) => {
 			return (
 				<I18nextProvider i18n={i18nInstance}>
 					<QueryClientsContext.Provider value={queryClientsState}>
-						{children}
+						<QueryProvider
+							queryClientKey={pretendEmail || SELF_QUERY_CLIENT_KEY}
+						>
+							{children}
+						</QueryProvider>
 					</QueryClientsContext.Provider>
 				</I18nextProvider>
 			);
 		},
+		InnerWrap: ({ children }) => (
+			<HydrationBoundary>{children}</HydrationBoundary>
+		),
 	});
 };
 

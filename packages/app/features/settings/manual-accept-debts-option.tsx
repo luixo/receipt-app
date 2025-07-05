@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
 
 import { ErrorMessage, QueryErrorMessage } from "~app/components/error-message";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
@@ -11,7 +11,9 @@ import { options as accountSettingsUpdateOptions } from "~mutations/account-sett
 
 export const ManualAcceptDebtsOption: React.FC = () => {
 	const trpc = useTRPC();
-	const settingsQuery = useQuery(trpc.accountSettings.get.queryOptions());
+	const settingsQuery = useSuspenseQuery(
+		trpc.accountSettings.get.queryOptions(),
+	);
 	const updateSettingsMutation = useMutation(
 		trpc.accountSettings.update.mutationOptions(
 			useTrpcMutationOptions(accountSettingsUpdateOptions),
@@ -29,9 +31,6 @@ export const ManualAcceptDebtsOption: React.FC = () => {
 		() => ({ text: "Reset", onPress: updateSettingsMutation.reset }),
 		[updateSettingsMutation],
 	);
-	if (settingsQuery.status === "pending") {
-		return <Spinner />;
-	}
 	if (settingsQuery.status === "error") {
 		return <QueryErrorMessage query={settingsQuery} />;
 	}
