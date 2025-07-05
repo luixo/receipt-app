@@ -28,6 +28,7 @@ export default defineConfig({
 				path.resolve(rootPath, "apps/web/src/utils/navigation.ts"),
 				path.resolve(rootPath, "apps/web/src/utils/request.ts"),
 				path.resolve(rootPath, "apps/web/src/utils/sentry.ts"),
+				path.resolve(rootPath, "apps/web/src/utils/ssr.tsx"),
 				path.resolve(rootPath, "apps/web/*.config.*"),
 				path.resolve(rootPath, "apps/mobile/**/*"),
 				path.resolve(rootPath, "packages/app/**/*"),
