@@ -21,20 +21,20 @@ import {
 	SELF_QUERY_CLIENT_KEY,
 	getQueryClient,
 } from "~app/contexts/query-clients-context";
+import { QueryProvider } from "~app/providers/query";
 import {
 	getBackendModule,
 	getLanguageFromRequest,
 	i18nInitOptions,
 } from "~app/utils/i18n";
 import { PRETEND_USER_STORE_NAME } from "~app/utils/store/pretend-user";
+import { Spinner } from "~components/spinner";
 import { Text } from "~components/text";
 import type { ExternalRouterContext } from "~web/pages/__root";
+import { HydrationBoundary } from "~web/utils/ssr";
 import { getHostUrl } from "~web/utils/url";
 
 import { routeTree } from "./routeTree.gen";
-import { HydrationBoundary } from "~web/utils/ssr";
-import { QueryProvider } from "~app/providers/query";
-import { Spinner } from "~components/spinner";
 
 const NotFoundComponent: NotFoundRouteComponent = () => <View>Not found!</View>;
 
