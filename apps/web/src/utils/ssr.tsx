@@ -52,6 +52,7 @@ export const HydrationBoundary: React.FC<React.PropsWithChildren> = ({
 						if (ERROR_TAG in result) {
 							throw new TRPCClientError(result.message);
 						}
+						return result as unknown;
 					}),
 			});
 		});
