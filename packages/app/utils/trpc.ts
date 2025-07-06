@@ -143,7 +143,7 @@ export const getQueryClientConfig = (): QueryClientConfig => ({
 	defaultOptions: {
 		queries: {
 			retry: false,
-			retryOnMount: false,
+			retryOnMount: true,
 			staleTime: MINUTE,
 			refetchOnWindowFocus: false,
 			refetchOnMount: false,
