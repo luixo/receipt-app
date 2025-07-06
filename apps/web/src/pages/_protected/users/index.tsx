@@ -11,6 +11,8 @@ import {
 	offsetSchema,
 } from "~app/utils/validation";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
+import { prefetch } from "~web/utils/ssr";
+import { getLoaderTrpcClient } from "~web/utils/trpc";
 
 const [schema, defaults] = searchParamsWithDefaults(
 	z.object({
@@ -31,8 +33,21 @@ const Wrapper = () => {
 
 export const Route = createFileRoute("/_protected/users/")({
 	component: Wrapper,
+	loaderDeps: ({ search: { offset, limit } }) => ({
+		offset,
+		limit,
+	}),
 	loader: async (ctx) => {
+		const trpc = getLoaderTrpcClient(ctx.context);
+		const prefetched = prefetch(
+			ctx,
+			trpc.users.getPaged.queryOptions({
+				limit: ctx.deps.limit,
+				cursor: ctx.deps.offset,
+			}),
+		);
 		await loadNamespaces(ctx.context, "users");
+		return { prefetched };
 	},
 	validateSearch: zodValidator(schema),
 	search: { middlewares: [stripSearchParams(defaults)] },

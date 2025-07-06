@@ -13,6 +13,8 @@ import {
 	receiptsOrderBySchema,
 } from "~app/utils/validation";
 import { searchParamsWithDefaults } from "~web/utils/navigation";
+import { prefetch } from "~web/utils/ssr";
+import { getLoaderTrpcClient } from "~web/utils/trpc";
 
 const [schema, defaults] = searchParamsWithDefaults(
 	z.object({
@@ -43,8 +45,26 @@ const Wrapper = () => {
 
 export const Route = createFileRoute("/_protected/receipts/")({
 	component: Wrapper,
+	staleTime: Infinity,
+	loaderDeps: ({ search: { offset, limit, filters, sort } }) => ({
+		offset,
+		limit,
+		filters,
+		sort,
+	}),
 	loader: async (ctx) => {
+		const trpc = getLoaderTrpcClient(ctx.context);
+		const prefetched = prefetch(
+			ctx,
+			trpc.receipts.getPaged.queryOptions({
+				limit: ctx.deps.limit,
+				orderBy: ctx.deps.sort,
+				filters: ctx.deps.filters,
+				cursor: ctx.deps.offset,
+			}),
+		);
 		await loadNamespaces(ctx.context, "receipts");
+		return { prefetched };
 	},
 	validateSearch: zodValidator(schema),
 	search: { middlewares: [stripSearchParams(defaults)] },
