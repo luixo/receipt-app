@@ -56,8 +56,12 @@ export type GetLinksOptions = {
 	captureError: (error: TRPCClientError<AppRouter>) => string;
 	source: // Client-side rendering
 	| "csr"
+		// Client-side rendering via loader
+		| "csr-loader"
 		// Server-side rendering
 		| "ssr"
+		// Server-side rendering via loader
+		| "ssr-loader"
 		// React Native environment
 		| "native"
 		// Originated from artificial testing environment
