@@ -8,23 +8,24 @@ import { Pagination } from "~components/pagination";
 import { Select, SelectItem } from "~components/select";
 import { cn } from "~components/utils";
 
-type Props = {
-	totalCount?: number;
+type ShapeProps = {
 	limit: number;
-	setLimit: React.Dispatch<React.SetStateAction<number>>;
-	props: React.ComponentProps<typeof Pagination>;
+	totalCount: number;
+	offset: number;
+	onLimitChange?: (selected: number) => void;
+	onPageChange?: (selected: number) => void;
+	isDisabled?: boolean;
 };
 
-export const PaginationBlock: React.FC<Props> = ({
-	totalCount,
+const PaginationBlockShape: React.FC<ShapeProps> = ({
 	limit,
-	setLimit,
-	props,
+	totalCount,
+	offset,
+	onLimitChange,
+	onPageChange,
+	isDisabled,
 }) => {
 	const { t } = useTranslation("default");
-	if (!totalCount) {
-		return null;
-	}
 	return (
 		<View
 			className={cn(
@@ -40,7 +41,10 @@ export const PaginationBlock: React.FC<Props> = ({
 					color="primary"
 					size="lg"
 					variant="bordered"
-					{...props}
+					isDisabled={isDisabled}
+					total={Math.ceil(totalCount / limit)}
+					page={totalCount === 0 ? 0 : offset / limit + 1}
+					onChange={onPageChange}
 				/>
 			) : null}
 			{totalCount <= DEFAULT_LIMIT ? null : (
@@ -49,12 +53,13 @@ export const PaginationBlock: React.FC<Props> = ({
 					className="max-w-40 justify-self-end"
 					selectedKeys={[limit.toString()]}
 					onSelectionChange={(selected) =>
-						setLimit(
+						onLimitChange?.(
 							selected instanceof Set
 								? Number(Array.from(selected)[0])
 								: DEFAULT_LIMIT,
 						)
 					}
+					isDisabled={isDisabled}
 				>
 					{LIMITS.map((limitItem) => (
 						<SelectItem
@@ -71,3 +76,31 @@ export const PaginationBlock: React.FC<Props> = ({
 		</View>
 	);
 };
+
+export const PaginationBlockSkeleton: React.FC<{ limit: number }> = ({
+	limit,
+}) => (
+	<PaginationBlockShape limit={limit} offset={0} totalCount={50} isDisabled />
+);
+
+type Props = Omit<ShapeProps, "onLimitChange" | "onPageChange"> & {
+	setLimit: React.Dispatch<React.SetStateAction<number>>;
+	onPageChange: (page: number) => void;
+};
+
+export const PaginationBlock: React.FC<Props> = ({
+	totalCount,
+	limit,
+	setLimit,
+	offset,
+	onPageChange,
+}) =>
+	totalCount ? (
+		<PaginationBlockShape
+			limit={limit}
+			offset={offset}
+			onPageChange={onPageChange}
+			totalCount={totalCount}
+			onLimitChange={setLimit}
+		/>
+	) : null;

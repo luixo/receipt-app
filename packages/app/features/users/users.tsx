@@ -19,6 +19,17 @@ import type { UsersId } from "~db/models";
 
 import { UserPreview } from "./user-preview";
 
+export const UserPreviewsSkeleton: React.FC<{ amount: number }> = ({
+	amount,
+}) => (
+	<>
+		{Array.from({ length: amount }).map((_, index) => (
+			// eslint-disable-next-line react/no-array-index-key
+			<SkeletonUser key={index} className="self-start" />
+		))}
+	</>
+);
+
 const UserPreviews: React.FC<{ ids: UsersId[] }> = ({ ids }) => {
 	const trpc = useTRPC();
 	const userQueries = useQueries({
@@ -61,13 +72,13 @@ export const Users: React.FC<Props> = ({
 }) => {
 	const { t } = useTranslation("users");
 	const trpc = useTRPC();
-	const { query, onPageChange, isPending } = useCursorPaging(
+	const { data, onPageChange, isPending } = useCursorPaging(
 		trpc.users.getPaged,
 		{ limit },
 		offsetState,
 	);
 
-	if (!query.data?.count && query.fetchStatus !== "fetching") {
+	if (!data.count) {
 		return (
 			<EmptyCard title={t("list.empty.title")}>
 				<Trans
@@ -96,7 +107,7 @@ export const Users: React.FC<Props> = ({
 		<PaginationOverlay
 			pagination={
 				<PaginationBlock
-					totalCount={query.data?.count}
+					totalCount={data.count}
 					limit={limit}
 					setLimit={setLimit}
 					offset={offsetState[0]}
@@ -105,12 +116,7 @@ export const Users: React.FC<Props> = ({
 			}
 			isPending={isPending}
 		>
-			{query.status === "error" ? <QueryErrorMessage query={query} /> : null}
-			{query.status === "pending" ? (
-				<Spinner size="lg" />
-			) : query.data ? (
-				<UserPreviews ids={query.data.items} />
-			) : null}
+			<UserPreviews ids={data.items} />
 		</PaginationOverlay>
 	);
 };

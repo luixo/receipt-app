@@ -1,12 +1,11 @@
 import React from "react";
 
-import type { SkipToken, UseQueryResult } from "@tanstack/react-query";
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import type { SkipToken } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 import type { SearchParamState } from "~app/hooks/use-navigation";
 import type {
 	TRPCDecoratedInfiniteQueryProcedure,
-	TRPCError,
 	TRPCInfiniteQueryKey,
 } from "~app/trpc";
 import { updateSetStateAction } from "~utils/react";
@@ -26,34 +25,24 @@ export const useCursorPaging = <
 ) => {
 	const { limit } = input;
 	const [offset, setOffset] = offsetState;
-	const query = useQuery(
+	const deferredOffset = React.useDeferredValue(offset);
+	const { data } = useSuspenseQuery(
 		// This is hacky, but I couldn't manage types here
 		(
 			procedure as TRPCDecoratedInfiniteQueryProcedure<"users.getPaged">
-		).queryOptions(
-			{ ...input, cursor: offset },
-			{ placeholderData: keepPreviousData },
-		),
+		).queryOptions({ ...input, cursor: deferredOffset }),
 	);
 
-	const totalCount = query.data?.count;
 	React.useEffect(() => {
 		const maxOffset =
-			typeof totalCount === "number"
-				? totalCount === 0
-					? 0
-					: (Math.ceil(totalCount / limit) - 1) * limit
-				: undefined;
-		if (maxOffset === undefined) {
-			return;
-		}
+			data.count === 0 ? 0 : (Math.ceil(data.count / limit) - 1) * limit;
 		if (offset > maxOffset) {
-			void setOffset(maxOffset, { replace: true });
+			setOffset(maxOffset, { replace: true });
 		}
-	}, [setOffset, totalCount, limit, offset]);
+	}, [setOffset, data.count, limit, offset]);
 
 	return {
-		query: query as UseQueryResult<P["~types"]["output"], TRPCError>,
+		data: data as P["~types"]["output"],
 		onPageChange: React.useCallback<
 			React.Dispatch<React.SetStateAction<number>>
 		>(
@@ -65,6 +54,6 @@ export const useCursorPaging = <
 				}),
 			[setOffset, limit],
 		),
-		isPending: query.fetchStatus === "fetching" && query.isPlaceholderData,
+		isPending: deferredOffset !== offset,
 	};
 };

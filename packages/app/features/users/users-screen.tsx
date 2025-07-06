@@ -3,6 +3,8 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 
 import { PageHeader } from "~app/components/page-header";
+import { PaginationBlockSkeleton } from "~app/components/pagination-block";
+import { PaginationOverlay } from "~app/components/pagination-overlay";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
 import { useConnectionIntentions } from "~app/hooks/use-connection-intentions";
 import type { SearchParamState } from "~app/hooks/use-navigation";
@@ -10,7 +12,7 @@ import { Badge } from "~components/badge";
 import { AddIcon, LinkIcon, UsersIcon } from "~components/icons";
 import { ButtonLink } from "~components/link";
 
-import { Users } from "./users";
+import { UserPreviewsSkeleton, Users } from "./users";
 
 export const UsersScreen: React.FC<{
 	limitState: SearchParamState<"/users", "limit">;
@@ -66,7 +68,18 @@ export const UsersScreen: React.FC<{
 				{t("list.header")}
 			</PageHeader>
 			<EmailVerificationCard />
-			<Users limitState={limitState} offsetState={offsetState} />
+			<React.Suspense
+				fallback={
+					<PaginationOverlay
+						pagination={<PaginationBlockSkeleton limit={limitState[0]} />}
+						isPending
+					>
+						<UserPreviewsSkeleton amount={limitState[0]} />
+					</PaginationOverlay>
+				}
+			>
+				<Users limitState={limitState} offsetState={offsetState} />
+			</React.Suspense>
 		</>
 	);
 };

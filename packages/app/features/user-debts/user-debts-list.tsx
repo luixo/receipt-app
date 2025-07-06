@@ -5,7 +5,6 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { fromEntries, isNonNullish, values } from "remeda";
 
-import { QueryErrorMessage } from "~app/components/error-message";
 import { PaginationBlock } from "~app/components/pagination-block";
 import { PaginationOverlay } from "~app/components/pagination-overlay";
 import { EvenDebtsDivider } from "~app/features/user-debts/even-debts-divider";
@@ -13,15 +12,10 @@ import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import type { SearchParamState } from "~app/hooks/use-navigation";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
 import { useSubscribeToQueryUpdate } from "~app/hooks/use-subscribe-to-query";
-import type {
-	TRPCQueryInput,
-	TRPCQueryOutput,
-	TRPCQueryResult,
-} from "~app/trpc";
+import type { TRPCQueryInput, TRPCQueryOutput } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import { typeQuery } from "~app/utils/queries";
 import { useTRPC } from "~app/utils/trpc";
-import { DEFAULT_LIMIT } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { Divider } from "~components/divider";
 import { Text } from "~components/text";
@@ -29,9 +23,9 @@ import type { DebtsId, UsersId } from "~db/models";
 
 import { UserDebtPreview, UserDebtPreviewSkeleton } from "./user-debt-preview";
 
-const DebtsListSkeleton: React.FC<{ amount: number }> = ({ amount }) => (
+export const DebtsListSkeleton: React.FC<{ amount: number }> = ({ amount }) => (
 	<View className="gap-2">
-		{new Array<null>(amount).fill(null).map((_, index) => (
+		{Array.from({ length: amount }).map((_, index) => (
 			// eslint-disable-next-line react/no-array-index-key
 			<React.Fragment key={index}>
 				<Divider />
@@ -134,7 +128,7 @@ export const useDividers = (
 		};
 	}, [aggregatedDebts, debts]);
 
-const PagedUserDebtsList: React.FC<{
+const UserDebtsPreviews: React.FC<{
 	userId: UsersId;
 	debtIds: TRPCQueryOutput<"debts.getByUserPaged">["items"];
 	totalCount: number | undefined;
@@ -171,30 +165,6 @@ const PagedUserDebtsList: React.FC<{
 			))}
 		</View>
 	);
-};
-
-const UserDebtsListInner: React.FC<{
-	userId: UsersId;
-	totalCount: number | undefined;
-	query: TRPCQueryResult<"debts.getByUserPaged">;
-	consecutiveDebtIds: DebtsId[];
-}> = ({ userId, totalCount, query, consecutiveDebtIds }) => {
-	switch (query.status) {
-		case "pending":
-			return <DebtsListSkeleton amount={DEFAULT_LIMIT} />;
-		case "error":
-			return <QueryErrorMessage query={query} />;
-		case "success": {
-			return (
-				<PagedUserDebtsList
-					userId={userId}
-					debtIds={query.data.items}
-					totalCount={totalCount}
-					consecutiveDebtIds={consecutiveDebtIds}
-				/>
-			);
-		}
-	}
 };
 
 const filters = {};
@@ -291,7 +261,7 @@ export const UserDebtsList: React.FC<{
 		}),
 		[limit, showResolvedDebts, userId],
 	);
-	const { query, onPageChange, isPending } = useCursorPaging(
+	const { data, onPageChange, isPending } = useCursorPaging(
 		trpc.debts.getByUserPaged,
 		currentInput,
 		offsetState,
@@ -306,7 +276,7 @@ export const UserDebtsList: React.FC<{
 		<PaginationOverlay
 			pagination={
 				<PaginationBlock
-					totalCount={query.data?.count}
+					totalCount={data.count}
 					limit={limit}
 					setLimit={setLimit}
 					offset={offsetState[0]}
@@ -315,14 +285,13 @@ export const UserDebtsList: React.FC<{
 			}
 			isPending={isPending}
 		>
-			<UserDebtsListInner
+			<UserDebtsPreviews
 				userId={userId}
-				query={query}
-				totalCount={query.data?.count}
+				debtIds={data.items}
+				totalCount={data.count}
 				consecutiveDebtIds={consecutiveDebtIds}
 			/>
-			{showResolvedDebts ||
-			offsetState[0] + limit < (query.data?.count ?? 0) ? null : (
+			{showResolvedDebts || offsetState[0] + limit < data.count ? null : (
 				<View className="flex items-center">
 					<Button
 						variant="bordered"

@@ -5,7 +5,6 @@ import { Trans, useTranslation } from "react-i18next";
 import { isNonNullish, values } from "remeda";
 
 import { EmptyCard } from "~app/components/empty-card";
-import { QueryErrorMessage } from "~app/components/error-message";
 import { PaginationBlock } from "~app/components/pagination-block";
 import { PaginationOverlay } from "~app/components/pagination-overlay";
 import { useCursorPaging } from "~app/hooks/use-cursor-paging";
@@ -25,7 +24,14 @@ import {
 // eslint-disable-next-line jsx-a11y/heading-has-content
 const bigText = <Text className="text-xl" />;
 
-const skeletonElements = new Array<null>(5).fill(null).map((_, index) => index);
+export const DebtsSkeleton: React.FC<{ amount: number }> = ({ amount }) => (
+	<View className="gap-2">
+		{Array.from({ length: amount }).map((_, index) => (
+			// eslint-disable-next-line react/no-array-index-key
+			<UserDebtsPreviewSkeleton key={index} />
+		))}
+	</View>
+);
 
 type Props = {
 	limitState: SearchParamState<"/debts", "limit">;
@@ -38,19 +44,17 @@ export const Debts: React.FC<Props> = ({ limitState, offsetState }) => {
 	const [limit, setLimit] = limitState;
 	const filters = {};
 	const trpc = useTRPC();
-	const { query, onPageChange, isPending } = useCursorPaging(
+	const { data, onPageChange, isPending } = useCursorPaging(
 		trpc.debts.getUsersPaged,
 		{ limit, filters: { showResolved: showResolvedDebts, ...filters } },
 		offsetState,
 	);
 
-	if (
-		!query.data?.count &&
-		query.fetchStatus !== "fetching" &&
-		query.fetchStatus !== "idle"
-	) {
-		if (query.status === "error") {
-			return <QueryErrorMessage query={query} />;
+	if (!data.count) {
+		if (values(filters).filter(isNonNullish).length === 0) {
+			return (
+				<Header className="text-center">{t("list.filters.noResults")}</Header>
+			);
 		}
 		return (
 			<EmptyCard title={t("list.empty.title")}>
@@ -85,7 +89,7 @@ export const Debts: React.FC<Props> = ({ limitState, offsetState }) => {
 		<PaginationOverlay
 			pagination={
 				<PaginationBlock
-					totalCount={query.data?.count}
+					totalCount={data.count}
 					limit={limit}
 					setLimit={setLimit}
 					offset={offsetState[0]}
@@ -94,24 +98,11 @@ export const Debts: React.FC<Props> = ({ limitState, offsetState }) => {
 			}
 			isPending={isPending}
 		>
-			{query.status === "error" ? (
-				<QueryErrorMessage query={query} />
-			) : query.status === "pending" ? (
-				<View className="gap-2">
-					{skeletonElements.map((index) => (
-						<UserDebtsPreviewSkeleton key={index} />
-					))}
-				</View>
-			) : !query.data.count &&
-			  values(filters).filter(isNonNullish).length === 0 ? (
-				<Header className="text-center">{t("list.filters.noResults")}</Header>
-			) : (
-				<View className="gap-2">
-					{query.data.items.map((userId) => (
-						<UserDebtsPreview key={userId} userId={userId} />
-					))}
-				</View>
-			)}
+			<View className="gap-2">
+				{data.items.map((userId) => (
+					<UserDebtsPreview key={userId} userId={userId} />
+				))}
+			</View>
 		</PaginationOverlay>
 	);
 };

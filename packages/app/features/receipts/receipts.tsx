@@ -22,20 +22,16 @@ import type { ReceiptsId } from "~db/models";
 
 import { ReceiptPreview, ReceiptPreviewSkeleton } from "./receipt-preview";
 
-const ReceiptPreviewsSkeleton: React.FC<{ amount: number }> = ({ amount }) => {
-	const elements = React.useMemo(
-		() => new Array<null>(amount).fill(null),
-		[amount],
-	);
-	return (
-		<>
-			{elements.map((_, index) => (
-				// eslint-disable-next-line react/no-array-index-key
-				<ReceiptPreviewSkeleton key={index} />
-			))}
-		</>
-	);
-};
+export const ReceiptPreviewsSkeleton: React.FC<{ amount: number }> = ({
+	amount,
+}) => (
+	<>
+		{Array.from({ length: amount }).map((_, index) => (
+			// eslint-disable-next-line react/no-array-index-key
+			<ReceiptPreviewSkeleton key={index} />
+		))}
+	</>
+);
 
 const ReceiptPreviews: React.FC<{ ids: ReceiptsId[] }> = ({ ids }) => {
 	const trpc = useTRPC();
@@ -101,15 +97,15 @@ export const Receipts: React.FC<Props> = ({
 }) => {
 	const { t } = useTranslation("receipts");
 	const trpc = useTRPC();
-	const { query, onPageChange, isPending } = useCursorPaging(
+	const { data, onPageChange, isPending } = useCursorPaging(
 		trpc.receipts.getPaged,
 		{ limit, orderBy: sort, filters },
 		offsetState,
 	);
 
-	if (!query.data?.count && query.fetchStatus !== "fetching") {
-		if (query.status === "error") {
-			return <QueryErrorMessage query={query} />;
+	if (!data.count) {
+		if (values(filters).filter(isNonNullish).length === 0) {
+			return <Header className="text-center">{t("list.noResults")}</Header>;
 		}
 		return (
 			<EmptyCard title={t("list.empty.title")}>
@@ -139,7 +135,7 @@ export const Receipts: React.FC<Props> = ({
 		<PaginationOverlay
 			pagination={
 				<PaginationBlock
-					totalCount={query.data?.count}
+					totalCount={data.count}
 					limit={limit}
 					setLimit={setLimit}
 					offset={offsetState[0]}
@@ -150,16 +146,7 @@ export const Receipts: React.FC<Props> = ({
 		>
 			<ReceiptsTableHeader />
 			<Divider className="max-sm:hidden" />
-			{query.status === "error" ? (
-				<QueryErrorMessage query={query} />
-			) : query.status === "pending" ? (
-				<ReceiptPreviewsSkeleton amount={limit} />
-			) : !query.data.count &&
-			  values(filters).filter(isNonNullish).length === 0 ? (
-				<Header className="text-center">{t("list.noResults")}</Header>
-			) : (
-				<ReceiptPreviews ids={query.data.items} />
-			)}
+			<ReceiptPreviews ids={data.items} />
 		</PaginationOverlay>
 	);
 };

@@ -1,9 +1,11 @@
-import type React from "react";
+import React from "react";
 
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 
 import { PageHeader } from "~app/components/page-header";
+import { PaginationBlockSkeleton } from "~app/components/pagination-block";
+import { PaginationOverlay } from "~app/components/pagination-overlay";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
 import { useDebtsIntentions } from "~app/hooks/use-debts-intentions";
 import type { SearchParamState } from "~app/hooks/use-navigation";
@@ -12,7 +14,7 @@ import { Badge } from "~components/badge";
 import { AddIcon, DebtIcon, InboxIcon, TransferIcon } from "~components/icons";
 import { ButtonLink } from "~components/link";
 
-import { Debts } from "./debts";
+import { Debts, DebtsSkeleton } from "./debts";
 import { DebtsAggregated } from "./debts-aggregated";
 
 export const DebtsScreen: React.FC<{
@@ -81,7 +83,18 @@ export const DebtsScreen: React.FC<{
 			</PageHeader>
 			<EmailVerificationCard />
 			<DebtsAggregated />
-			<Debts limitState={limitState} offsetState={offsetState} />
+			<React.Suspense
+				fallback={
+					<PaginationOverlay
+						pagination={<PaginationBlockSkeleton limit={limitState[0]} />}
+						isPending
+					>
+						<DebtsSkeleton amount={limitState[0]} />
+					</PaginationOverlay>
+				}
+			>
+				<Debts limitState={limitState} offsetState={offsetState} />
+			</React.Suspense>
 		</>
 	);
 };
