@@ -1,4 +1,4 @@
-import React from "react";
+import type React from "react";
 
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import { PageHeader } from "~app/components/page-header";
 import { PaginationBlockSkeleton } from "~app/components/pagination-block";
 import { PaginationOverlay } from "~app/components/pagination-overlay";
+import { SuspenseWrapper } from "~app/components/suspense-wrapper";
 import { EmailVerificationCard } from "~app/features/email-verification/email-verification-card";
 import { useDebtsIntentions } from "~app/hooks/use-debts-intentions";
 import type { SearchParamState } from "~app/hooks/use-navigation";
@@ -83,7 +84,7 @@ export const DebtsScreen: React.FC<{
 			</PageHeader>
 			<EmailVerificationCard />
 			<DebtsAggregated />
-			<React.Suspense
+			<SuspenseWrapper
 				fallback={
 					<PaginationOverlay
 						pagination={<PaginationBlockSkeleton limit={limitState[0]} />}
@@ -94,7 +95,7 @@ export const DebtsScreen: React.FC<{
 				}
 			>
 				<Debts limitState={limitState} offsetState={offsetState} />
-			</React.Suspense>
+			</SuspenseWrapper>
 		</>
 	);
 };

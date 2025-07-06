@@ -7,6 +7,7 @@ import { LoadableUser } from "~app/components/app/loadable-user";
 import { PageHeader } from "~app/components/page-header";
 import { PaginationBlockSkeleton } from "~app/components/pagination-block";
 import { PaginationOverlay } from "~app/components/pagination-overlay";
+import { SuspenseWrapper } from "~app/components/suspense-wrapper";
 import { User } from "~app/features/user/user";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useNavigate } from "~app/hooks/use-navigation";
@@ -95,7 +96,7 @@ export const UserDebtsScreen: React.FC<
 	<>
 		<Header userId={userId} />
 		<UserDebtsGroup userId={userId} />
-		<React.Suspense
+		<SuspenseWrapper
 			fallback={
 				<PaginationOverlay
 					pagination={<PaginationBlockSkeleton limit={limitState[0]} />}
@@ -106,6 +107,6 @@ export const UserDebtsScreen: React.FC<
 			}
 		>
 			<UserDebtsList userId={userId} limitState={limitState} {...props} />
-		</React.Suspense>
+		</SuspenseWrapper>
 	</>
 );
