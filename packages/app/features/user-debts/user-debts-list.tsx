@@ -1,13 +1,13 @@
 import React from "react";
 import { View } from "react-native";
 
-import { Spinner } from "@heroui/react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { fromEntries, isNonNullish, values } from "remeda";
 
 import { QueryErrorMessage } from "~app/components/error-message";
 import { PaginationBlock } from "~app/components/pagination-block";
+import { PaginationOverlay } from "~app/components/pagination-overlay";
 import { EvenDebtsDivider } from "~app/features/user-debts/even-debts-divider";
 import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import type { SearchParamState } from "~app/hooks/use-navigation";
@@ -24,7 +24,6 @@ import { useTRPC } from "~app/utils/trpc";
 import { DEFAULT_LIMIT } from "~app/utils/validation";
 import { Button } from "~components/button";
 import { Divider } from "~components/divider";
-import { Overlay } from "~components/overlay";
 import { Text } from "~components/text";
 import type { DebtsId, UsersId } from "~db/models";
 
@@ -303,44 +302,35 @@ export const UserDebtsList: React.FC<{
 		currentCursor: offsetState[0],
 	});
 
-	const paginationElement = (
-		<PaginationBlock
-			totalCount={totalCount}
-			limit={limit}
-			setLimit={setLimit}
-			props={pagination}
-		/>
-	);
 	return (
-		<>
-			{paginationElement}
-			<Overlay
-				className="gap-2"
-				overlay={
-					query.fetchStatus === "fetching" && query.isPlaceholderData ? (
-						<Spinner size="lg" />
-					) : undefined
-				}
-			>
-				<UserDebtsListInner
-					userId={userId}
-					query={query}
+		<PaginationOverlay
+			pagination={
+				<PaginationBlock
 					totalCount={totalCount}
-					consecutiveDebtIds={consecutiveDebtIds}
+					limit={limit}
+					setLimit={setLimit}
+					props={pagination}
 				/>
-				{showResolvedDebts || pagination.page < pagination.total ? null : (
-					<View className="flex items-center">
-						<Button
-							variant="bordered"
-							color="primary"
-							onPress={() => setShowResolvedDebts(true)}
-						>
-							{t("user.showResolved")}
-						</Button>
-					</View>
-				)}
-			</Overlay>
-			{paginationElement}
-		</>
+			}
+			isPending={query.fetchStatus === "fetching" && query.isPlaceholderData}
+		>
+			<UserDebtsListInner
+				userId={userId}
+				query={query}
+				totalCount={totalCount}
+				consecutiveDebtIds={consecutiveDebtIds}
+			/>
+			{showResolvedDebts || pagination.page < pagination.total ? null : (
+				<View className="flex items-center">
+					<Button
+						variant="bordered"
+						color="primary"
+						onPress={() => setShowResolvedDebts(true)}
+					>
+						{t("user.showResolved")}
+					</Button>
+				</View>
+			)}
+		</PaginationOverlay>
 	);
 };

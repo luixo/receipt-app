@@ -7,13 +7,13 @@ import { SkeletonUser } from "~app/components/app/user";
 import { EmptyCard } from "~app/components/empty-card";
 import { QueryErrorMessage } from "~app/components/error-message";
 import { PaginationBlock } from "~app/components/pagination-block";
+import { PaginationOverlay } from "~app/components/pagination-overlay";
 import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import type { SearchParamState } from "~app/hooks/use-navigation";
 import type { TRPCQueryErrorResult } from "~app/trpc";
 import { useTRPC } from "~app/utils/trpc";
 import { AddIcon } from "~components/icons";
 import { ButtonLink } from "~components/link";
-import { Overlay } from "~components/overlay";
 import { Spinner } from "~components/spinner";
 import type { UsersId } from "~db/models";
 
@@ -92,32 +92,24 @@ export const Users: React.FC<Props> = ({
 		);
 	}
 
-	const paginationElement = (
-		<PaginationBlock
-			totalCount={totalCount}
-			limit={limit}
-			setLimit={setLimit}
-			props={pagination}
-		/>
-	);
-
 	return (
-		<>
-			{paginationElement}
-			<Overlay
-				className="gap-2"
-				overlay={
-					query.fetchStatus === "fetching" ? <Spinner size="lg" /> : undefined
-				}
-			>
-				{query.status === "error" ? <QueryErrorMessage query={query} /> : null}
-				{query.status === "pending" ? (
-					<Spinner size="lg" />
-				) : query.data ? (
-					<UserPreviews ids={query.data.items} />
-				) : null}
-			</Overlay>
-			{paginationElement}
-		</>
+		<PaginationOverlay
+			pagination={
+				<PaginationBlock
+					totalCount={totalCount}
+					limit={limit}
+					setLimit={setLimit}
+					props={pagination}
+				/>
+			}
+			isPending={query.fetchStatus === "fetching" && query.isPlaceholderData}
+		>
+			{query.status === "error" ? <QueryErrorMessage query={query} /> : null}
+			{query.status === "pending" ? (
+				<Spinner size="lg" />
+			) : query.data ? (
+				<UserPreviews ids={query.data.items} />
+			) : null}
+		</PaginationOverlay>
 	);
 };

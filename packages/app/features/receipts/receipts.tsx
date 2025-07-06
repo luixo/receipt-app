@@ -8,6 +8,7 @@ import { isNonNullish, values } from "remeda";
 import { EmptyCard } from "~app/components/empty-card";
 import { QueryErrorMessage } from "~app/components/error-message";
 import { PaginationBlock } from "~app/components/pagination-block";
+import { PaginationOverlay } from "~app/components/pagination-overlay";
 import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import type { SearchParamState } from "~app/hooks/use-navigation";
 import type { TRPCQueryErrorResult } from "~app/trpc";
@@ -16,8 +17,6 @@ import { Divider } from "~components/divider";
 import { Header } from "~components/header";
 import { AddIcon } from "~components/icons";
 import { ButtonLink } from "~components/link";
-import { Overlay } from "~components/overlay";
-import { Spinner } from "~components/spinner";
 import { Text } from "~components/text";
 import type { ReceiptsId } from "~db/models";
 
@@ -136,39 +135,29 @@ export const Receipts: React.FC<Props> = ({
 		);
 	}
 
-	const paginationElement = (
-		<PaginationBlock
-			totalCount={totalCount}
-			limit={limit}
-			setLimit={setLimit}
-			props={pagination}
-		/>
-	);
-
 	return (
-		<>
-			{paginationElement}
-			<Overlay
-				className="gap-2"
-				overlay={
-					query.fetchStatus === "fetching" && query.isPlaceholderData ? (
-						<Spinner size="lg" />
-					) : undefined
-				}
-			>
-				<ReceiptsTableHeader />
-				<Divider className="max-sm:hidden" />
-				{query.status === "error" ? (
-					<QueryErrorMessage query={query} />
-				) : query.status === "pending" ? (
-					<ReceiptPreviewsSkeleton amount={limit} />
-				) : !totalCount && values(filters).filter(isNonNullish).length === 0 ? (
-					<Header className="text-center">{t("list.noResults")}</Header>
-				) : (
-					<ReceiptPreviews ids={query.data.items} />
-				)}
-			</Overlay>
-			{paginationElement}
-		</>
+		<PaginationOverlay
+			pagination={
+				<PaginationBlock
+					totalCount={totalCount}
+					limit={limit}
+					setLimit={setLimit}
+					props={pagination}
+				/>
+			}
+			isPending={query.fetchStatus === "fetching" && query.isPlaceholderData}
+		>
+			<ReceiptsTableHeader />
+			<Divider className="max-sm:hidden" />
+			{query.status === "error" ? (
+				<QueryErrorMessage query={query} />
+			) : query.status === "pending" ? (
+				<ReceiptPreviewsSkeleton amount={limit} />
+			) : !totalCount && values(filters).filter(isNonNullish).length === 0 ? (
+				<Header className="text-center">{t("list.noResults")}</Header>
+			) : (
+				<ReceiptPreviews ids={query.data.items} />
+			)}
+		</PaginationOverlay>
 	);
 };

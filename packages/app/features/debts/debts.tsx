@@ -7,6 +7,7 @@ import { isNonNullish, values } from "remeda";
 import { EmptyCard } from "~app/components/empty-card";
 import { QueryErrorMessage } from "~app/components/error-message";
 import { PaginationBlock } from "~app/components/pagination-block";
+import { PaginationOverlay } from "~app/components/pagination-overlay";
 import { useCursorPaging } from "~app/hooks/use-cursor-paging";
 import type { SearchParamState } from "~app/hooks/use-navigation";
 import { useShowResolvedDebts } from "~app/hooks/use-show-resolved-debts";
@@ -14,8 +15,6 @@ import { useTRPC } from "~app/utils/trpc";
 import { Header } from "~components/header";
 import { AddIcon } from "~components/icons";
 import { ButtonLink } from "~components/link";
-import { Overlay } from "~components/overlay";
-import { Spinner } from "~components/spinner";
 import { Text } from "~components/text";
 
 import {
@@ -82,45 +81,35 @@ export const Debts: React.FC<Props> = ({ limitState, offsetState }) => {
 		);
 	}
 
-	const paginationElement = (
-		<PaginationBlock
-			totalCount={totalCount}
-			limit={limit}
-			setLimit={setLimit}
-			props={pagination}
-		/>
-	);
-
 	return (
-		<>
-			{paginationElement}
-			<Overlay
-				className="gap-2"
-				overlay={
-					query.fetchStatus === "fetching" && query.isPlaceholderData ? (
-						<Spinner size="lg" />
-					) : undefined
-				}
-			>
-				{query.status === "error" ? (
-					<QueryErrorMessage query={query} />
-				) : query.status === "pending" ? (
-					<View className="gap-2">
-						{skeletonElements.map((index) => (
-							<UserDebtsPreviewSkeleton key={index} />
-						))}
-					</View>
-				) : !totalCount && values(filters).filter(isNonNullish).length === 0 ? (
-					<Header className="text-center">{t("list.filters.noResults")}</Header>
-				) : (
-					<View className="gap-2">
-						{query.data.items.map((userId) => (
-							<UserDebtsPreview key={userId} userId={userId} />
-						))}
-					</View>
-				)}
-			</Overlay>
-			{paginationElement}
-		</>
+		<PaginationOverlay
+			pagination={
+				<PaginationBlock
+					totalCount={totalCount}
+					limit={limit}
+					setLimit={setLimit}
+					props={pagination}
+				/>
+			}
+			isPending={query.fetchStatus === "fetching" && query.isPlaceholderData}
+		>
+			{query.status === "error" ? (
+				<QueryErrorMessage query={query} />
+			) : query.status === "pending" ? (
+				<View className="gap-2">
+					{skeletonElements.map((index) => (
+						<UserDebtsPreviewSkeleton key={index} />
+					))}
+				</View>
+			) : !totalCount && values(filters).filter(isNonNullish).length === 0 ? (
+				<Header className="text-center">{t("list.filters.noResults")}</Header>
+			) : (
+				<View className="gap-2">
+					{query.data.items.map((userId) => (
+						<UserDebtsPreview key={userId} userId={userId} />
+					))}
+				</View>
+			)}
+		</PaginationOverlay>
 	);
 };
