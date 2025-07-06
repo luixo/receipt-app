@@ -24,13 +24,17 @@ import {
 // eslint-disable-next-line jsx-a11y/heading-has-content
 const bigText = <Text className="text-xl" />;
 
+const DebtsWrapper: React.FC<React.PropsWithChildren> = ({ children }) => (
+	<View className="gap-2">{children}</View>
+);
+
 export const DebtsSkeleton: React.FC<{ amount: number }> = ({ amount }) => (
-	<View className="gap-2">
+	<DebtsWrapper>
 		{Array.from({ length: amount }).map((_, index) => (
 			// eslint-disable-next-line react/no-array-index-key
 			<UserDebtsPreviewSkeleton key={index} />
 		))}
-	</View>
+	</DebtsWrapper>
 );
 
 type Props = {
@@ -98,11 +102,11 @@ export const Debts: React.FC<Props> = ({ limitState, offsetState }) => {
 			}
 			isPending={isPending}
 		>
-			<View className="gap-2">
+			<DebtsWrapper>
 				{data.items.map((userId) => (
 					<UserDebtsPreview key={userId} userId={userId} />
 				))}
-			</View>
+			</DebtsWrapper>
 		</PaginationOverlay>
 	);
 };

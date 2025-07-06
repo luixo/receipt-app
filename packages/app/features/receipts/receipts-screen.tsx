@@ -12,7 +12,7 @@ import { AddIcon, ReceiptIcon } from "~components/icons";
 import { ButtonLink } from "~components/link";
 
 import { FilterButton } from "./filter-button";
-import { ReceiptPreviewsSkeleton, Receipts } from "./receipts";
+import { Receipts, ReceiptsSkeleton } from "./receipts";
 
 export const ReceiptsScreen: React.FC<{
 	sortState: SearchParamState<"/receipts", "sort">;
@@ -49,7 +49,7 @@ export const ReceiptsScreen: React.FC<{
 						pagination={<PaginationBlockSkeleton limit={limitState[0]} />}
 						isPending
 					>
-						<ReceiptPreviewsSkeleton amount={limitState[0]} />
+						<ReceiptsSkeleton amount={limitState[0]} />
 					</PaginationOverlay>
 				}
 			>

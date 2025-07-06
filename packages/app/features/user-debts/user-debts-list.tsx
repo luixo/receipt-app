@@ -23,18 +23,6 @@ import type { DebtsId, UsersId } from "~db/models";
 
 import { UserDebtPreview, UserDebtPreviewSkeleton } from "./user-debt-preview";
 
-export const DebtsListSkeleton: React.FC<{ amount: number }> = ({ amount }) => (
-	<View className="gap-2">
-		{Array.from({ length: amount }).map((_, index) => (
-			// eslint-disable-next-line react/no-array-index-key
-			<React.Fragment key={index}>
-				<Divider />
-				<UserDebtPreviewSkeleton />
-			</React.Fragment>
-		))}
-	</View>
-);
-
 const useDebtsByIds = (debtIds: DebtsId[]) => {
 	const trpc = useTRPC();
 	const queryClient = useQueryClient();
@@ -83,7 +71,7 @@ const useDebtsByIds = (debtIds: DebtsId[]) => {
 	return debts;
 };
 
-export const useDividers = (
+const useDividers = (
 	debts: TRPCQueryOutput<"debts.get">[],
 	aggregatedDebts: { sum: number; currencyCode: CurrencyCode }[],
 ) =>
@@ -127,47 +115,6 @@ export const useDividers = (
 			resolvedDebtIds: dividersCalculations.resolvedDebtIds,
 		};
 	}, [aggregatedDebts, debts]);
-
-const UserDebtsPreviews: React.FC<{
-	userId: UsersId;
-	debtIds: TRPCQueryOutput<"debts.getByUserPaged">["items"];
-	totalCount: number | undefined;
-	consecutiveDebtIds: DebtsId[];
-}> = ({ userId, debtIds, totalCount, consecutiveDebtIds }) => {
-	const { t } = useTranslation("debts");
-	const trpc = useTRPC();
-	const filters = {};
-	const getAllQuery = useQuery(trpc.debts.getAllUser.queryOptions({ userId }));
-	const consecutiveDebts = useDebtsByIds(consecutiveDebtIds);
-	const { dividers, resolvedDebtIds } = useDividers(
-		consecutiveDebts,
-		getAllQuery.status === "success" ? getAllQuery.data : [],
-	);
-	if (totalCount === 0 && values(filters).filter(isNonNullish).length === 0) {
-		return <Text className="text-center">{t("user.filters.empty")}</Text>;
-	}
-	return (
-		<View className="gap-2">
-			{debtIds.map((debtId) => (
-				<React.Fragment key={debtId}>
-					{dividers[debtId] ? (
-						<>
-							<Divider />
-							<EvenDebtsDivider currencyCode={dividers[debtId]} />
-						</>
-					) : null}
-					<Divider />
-					<UserDebtPreview
-						debtId={debtId}
-						resolved={resolvedDebtIds.includes(debtId)}
-					/>
-				</React.Fragment>
-			))}
-		</View>
-	);
-};
-
-const filters = {};
 
 const useConsecutiveDebtIds = ({
 	input,
@@ -245,6 +192,59 @@ const useConsecutiveDebtIds = ({
 	return debtIds;
 };
 
+const UserDebtsListWrapper: React.FC<React.PropsWithChildren> = ({
+	children,
+}) => <View className="gap-2">{children}</View>;
+
+export const UserDebtsListSkeleton: React.FC<{ amount: number }> = ({
+	amount,
+}) => (
+	<UserDebtsListWrapper>
+		{Array.from({ length: amount }).map((_, index) => (
+			// eslint-disable-next-line react/no-array-index-key
+			<React.Fragment key={index}>
+				<Divider />
+				<UserDebtPreviewSkeleton />
+			</React.Fragment>
+		))}
+	</UserDebtsListWrapper>
+);
+
+const UserDebtsPreviews: React.FC<{
+	userId: UsersId;
+	debtIds: TRPCQueryOutput<"debts.getByUserPaged">["items"];
+	consecutiveDebtIds: DebtsId[];
+}> = ({ userId, debtIds, consecutiveDebtIds }) => {
+	const trpc = useTRPC();
+	const getAllQuery = useQuery(trpc.debts.getAllUser.queryOptions({ userId }));
+	const consecutiveDebts = useDebtsByIds(consecutiveDebtIds);
+	const { dividers, resolvedDebtIds } = useDividers(
+		consecutiveDebts,
+		getAllQuery.status === "success" ? getAllQuery.data : [],
+	);
+	return (
+		<UserDebtsListWrapper>
+			{debtIds.map((debtId) => (
+				<React.Fragment key={debtId}>
+					{dividers[debtId] ? (
+						<>
+							<Divider />
+							<EvenDebtsDivider currencyCode={dividers[debtId]} />
+						</>
+					) : null}
+					<Divider />
+					<UserDebtPreview
+						debtId={debtId}
+						resolved={resolvedDebtIds.includes(debtId)}
+					/>
+				</React.Fragment>
+			))}
+		</UserDebtsListWrapper>
+	);
+};
+
+const filters = {};
+
 export const UserDebtsList: React.FC<{
 	userId: UsersId;
 	limitState: SearchParamState<"/debts/user/$id", "limit">;
@@ -272,6 +272,10 @@ export const UserDebtsList: React.FC<{
 		currentCursor: offsetState[0],
 	});
 
+	if (data.count === 0 && values(filters).filter(isNonNullish).length === 0) {
+		return <Text className="text-center">{t("user.filters.empty")}</Text>;
+	}
+
 	return (
 		<PaginationOverlay
 			pagination={
@@ -288,7 +292,6 @@ export const UserDebtsList: React.FC<{
 			<UserDebtsPreviews
 				userId={userId}
 				debtIds={data.items}
-				totalCount={data.count}
 				consecutiveDebtIds={consecutiveDebtIds}
 			/>
 			{showResolvedDebts || offsetState[0] + limit < data.count ? null : (

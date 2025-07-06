@@ -19,7 +19,7 @@ import { Text } from "~components/text";
 import type { UsersId } from "~db/models";
 
 import { UserDebtsGroup } from "./user-debts-group";
-import { DebtsListSkeleton, UserDebtsList } from "./user-debts-list";
+import { UserDebtsList, UserDebtsListSkeleton } from "./user-debts-list";
 
 type HeaderProps = {
 	userId: UsersId;
@@ -102,7 +102,7 @@ export const UserDebtsScreen: React.FC<
 					pagination={<PaginationBlockSkeleton limit={limitState[0]} />}
 					isPending
 				>
-					<DebtsListSkeleton amount={limitState[0]} />
+					<UserDebtsListSkeleton amount={limitState[0]} />
 				</PaginationOverlay>
 			}
 		>

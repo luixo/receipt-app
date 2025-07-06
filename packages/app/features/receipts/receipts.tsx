@@ -22,15 +22,32 @@ import type { ReceiptsId } from "~db/models";
 
 import { ReceiptPreview, ReceiptPreviewSkeleton } from "./receipt-preview";
 
-export const ReceiptPreviewsSkeleton: React.FC<{ amount: number }> = ({
-	amount,
-}) => (
-	<>
+const ReceiptsWrapper: React.FC<React.PropsWithChildren> = ({ children }) => {
+	const { t } = useTranslation("receipts");
+	return (
+		<>
+			<View className="flex-row gap-2">
+				<View className="flex-[8] p-2">
+					<Text>{t("list.table.receipt")}</Text>
+				</View>
+				<View className="flex-[2] p-2">
+					<Text className="self-end">{t("list.table.sum")}</Text>
+				</View>
+				<View className="flex-1 p-2 max-sm:hidden" />
+			</View>
+			<Divider className="max-sm:hidden" />
+			{children}
+		</>
+	);
+};
+
+export const ReceiptsSkeleton: React.FC<{ amount: number }> = ({ amount }) => (
+	<ReceiptsWrapper>
 		{Array.from({ length: amount }).map((_, index) => (
 			// eslint-disable-next-line react/no-array-index-key
 			<ReceiptPreviewSkeleton key={index} />
 		))}
-	</>
+	</ReceiptsWrapper>
 );
 
 const ReceiptPreviews: React.FC<{ ids: ReceiptsId[] }> = ({ ids }) => {
@@ -38,9 +55,6 @@ const ReceiptPreviews: React.FC<{ ids: ReceiptsId[] }> = ({ ids }) => {
 	const receiptQueries = useQueries({
 		queries: ids.map((id) => trpc.receipts.get.queryOptions({ id })),
 	});
-	if (receiptQueries.every((query) => query.status === "pending")) {
-		return <ReceiptPreviewsSkeleton amount={receiptQueries.length} />;
-	}
 	if (receiptQueries.every((query) => query.status === "error")) {
 		return (
 			<QueryErrorMessage
@@ -64,21 +78,6 @@ const ReceiptPreviews: React.FC<{ ids: ReceiptsId[] }> = ({ ids }) => {
 				</React.Fragment>
 			))}
 		</>
-	);
-};
-
-const ReceiptsTableHeader = () => {
-	const { t } = useTranslation("receipts");
-	return (
-		<View className="flex-row gap-2">
-			<View className="flex-[8] p-2">
-				<Text>{t("list.table.receipt")}</Text>
-			</View>
-			<View className="flex-[2] p-2">
-				<Text className="self-end">{t("list.table.sum")}</Text>
-			</View>
-			<View className="flex-1 p-2 max-sm:hidden" />
-		</View>
 	);
 };
 
@@ -144,9 +143,9 @@ export const Receipts: React.FC<Props> = ({
 			}
 			isPending={isPending}
 		>
-			<ReceiptsTableHeader />
-			<Divider className="max-sm:hidden" />
-			<ReceiptPreviews ids={data.items} />
+			<ReceiptsWrapper>
+				<ReceiptPreviews ids={data.items} />
+			</ReceiptsWrapper>
 		</PaginationOverlay>
 	);
 };
