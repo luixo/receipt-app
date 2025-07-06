@@ -72,7 +72,7 @@ describe("loader call", () => {
 			);
 			const expectedHeaders = [
 				["x-debug", "true"],
-				["x-source", "ssr"],
+				["x-source", "ssr-loader"],
 				["host", url.replace("http://", "")],
 			] as const;
 			expect(
