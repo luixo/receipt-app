@@ -9,10 +9,7 @@ export const Route = createFileRoute("/_protected/settings")({
 	component: SettingsScreen,
 	loader: async (ctx) => {
 		const trpc = getLoaderTrpcClient(ctx.context);
-		const prefetched = prefetch(
-			ctx.context,
-			trpc.accountSettings.get.queryOptions(),
-		);
+		const prefetched = prefetch(ctx, trpc.accountSettings.get.queryOptions());
 		await loadNamespaces(ctx.context, "settings");
 		return { prefetched };
 	},

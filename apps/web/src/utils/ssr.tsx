@@ -1,6 +1,7 @@
 import type React from "react";
 
 import { useQueryClient } from "@tanstack/react-query";
+import type { LoaderFnContext } from "@tanstack/react-router";
 import { useRouterState } from "@tanstack/react-router";
 import { TRPCClientError } from "@trpc/client";
 import type { ResolverDef, TRPCQueryOptions } from "@trpc/tanstack-react-query";
@@ -13,16 +14,20 @@ import type { RouterContext } from "~web/pages/__root";
 const ERROR_TAG = "__error__";
 
 export const prefetch = (
-	context: RouterContext,
+	ctx: { context: RouterContext } & Pick<LoaderFnContext, "cause">,
 	...optionsSet: ReturnType<TRPCQueryOptions<ResolverDef>>[]
-) =>
-	optionsSet.map((options) => ({
+) => {
+	if (ctx.cause === "stay") {
+		return [];
+	}
+	return optionsSet.map((options) => ({
 		queryKey: options.queryKey,
-		promise: context.queryClient.fetchQuery(options).catch((error) => ({
+		promise: ctx.context.queryClient.fetchQuery(options).catch((error) => ({
 			[ERROR_TAG]: true,
 			message: String(error),
 		})),
 	}));
+};
 
 export const HydrationBoundary: React.FC<React.PropsWithChildren> = ({
 	children,
