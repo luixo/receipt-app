@@ -291,7 +291,7 @@ export const UserDebtsList: React.FC<{
 		}),
 		[limit, showResolvedDebts, userId],
 	);
-	const { totalCount, query, pagination } = useCursorPaging(
+	const { query, onPageChange, isPending } = useCursorPaging(
 		trpc.debts.getByUserPaged,
 		currentInput,
 		offsetState,
@@ -306,21 +306,23 @@ export const UserDebtsList: React.FC<{
 		<PaginationOverlay
 			pagination={
 				<PaginationBlock
-					totalCount={totalCount}
+					totalCount={query.data?.count}
 					limit={limit}
 					setLimit={setLimit}
-					props={pagination}
+					offset={offsetState[0]}
+					onPageChange={onPageChange}
 				/>
 			}
-			isPending={query.fetchStatus === "fetching" && query.isPlaceholderData}
+			isPending={isPending}
 		>
 			<UserDebtsListInner
 				userId={userId}
 				query={query}
-				totalCount={totalCount}
+				totalCount={query.data?.count}
 				consecutiveDebtIds={consecutiveDebtIds}
 			/>
-			{showResolvedDebts || pagination.page < pagination.total ? null : (
+			{showResolvedDebts ||
+			offsetState[0] + limit < (query.data?.count ?? 0) ? null : (
 				<View className="flex items-center">
 					<Button
 						variant="bordered"

@@ -38,14 +38,14 @@ export const Debts: React.FC<Props> = ({ limitState, offsetState }) => {
 	const [limit, setLimit] = limitState;
 	const filters = {};
 	const trpc = useTRPC();
-	const { totalCount, query, pagination } = useCursorPaging(
+	const { query, onPageChange, isPending } = useCursorPaging(
 		trpc.debts.getUsersPaged,
 		{ limit, filters: { showResolved: showResolvedDebts, ...filters } },
 		offsetState,
 	);
 
 	if (
-		!totalCount &&
+		!query.data?.count &&
 		query.fetchStatus !== "fetching" &&
 		query.fetchStatus !== "idle"
 	) {
@@ -85,13 +85,14 @@ export const Debts: React.FC<Props> = ({ limitState, offsetState }) => {
 		<PaginationOverlay
 			pagination={
 				<PaginationBlock
-					totalCount={totalCount}
+					totalCount={query.data?.count}
 					limit={limit}
 					setLimit={setLimit}
-					props={pagination}
+					offset={offsetState[0]}
+					onPageChange={onPageChange}
 				/>
 			}
-			isPending={query.fetchStatus === "fetching" && query.isPlaceholderData}
+			isPending={isPending}
 		>
 			{query.status === "error" ? (
 				<QueryErrorMessage query={query} />
@@ -101,7 +102,8 @@ export const Debts: React.FC<Props> = ({ limitState, offsetState }) => {
 						<UserDebtsPreviewSkeleton key={index} />
 					))}
 				</View>
-			) : !totalCount && values(filters).filter(isNonNullish).length === 0 ? (
+			) : !query.data.count &&
+			  values(filters).filter(isNonNullish).length === 0 ? (
 				<Header className="text-center">{t("list.filters.noResults")}</Header>
 			) : (
 				<View className="gap-2">

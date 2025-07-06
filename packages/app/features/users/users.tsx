@@ -61,13 +61,13 @@ export const Users: React.FC<Props> = ({
 }) => {
 	const { t } = useTranslation("users");
 	const trpc = useTRPC();
-	const { totalCount, pagination, query } = useCursorPaging(
+	const { query, onPageChange, isPending } = useCursorPaging(
 		trpc.users.getPaged,
 		{ limit },
 		offsetState,
 	);
 
-	if (!totalCount && query.fetchStatus !== "fetching") {
+	if (!query.data?.count && query.fetchStatus !== "fetching") {
 		return (
 			<EmptyCard title={t("list.empty.title")}>
 				<Trans
@@ -96,13 +96,14 @@ export const Users: React.FC<Props> = ({
 		<PaginationOverlay
 			pagination={
 				<PaginationBlock
-					totalCount={totalCount}
+					totalCount={query.data?.count}
 					limit={limit}
 					setLimit={setLimit}
-					props={pagination}
+					offset={offsetState[0]}
+					onPageChange={onPageChange}
 				/>
 			}
-			isPending={query.fetchStatus === "fetching" && query.isPlaceholderData}
+			isPending={isPending}
 		>
 			{query.status === "error" ? <QueryErrorMessage query={query} /> : null}
 			{query.status === "pending" ? (

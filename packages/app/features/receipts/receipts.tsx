@@ -101,13 +101,13 @@ export const Receipts: React.FC<Props> = ({
 }) => {
 	const { t } = useTranslation("receipts");
 	const trpc = useTRPC();
-	const { totalCount, query, pagination } = useCursorPaging(
+	const { query, onPageChange, isPending } = useCursorPaging(
 		trpc.receipts.getPaged,
 		{ limit, orderBy: sort, filters },
 		offsetState,
 	);
 
-	if (!totalCount && query.fetchStatus !== "fetching") {
+	if (!query.data?.count && query.fetchStatus !== "fetching") {
 		if (query.status === "error") {
 			return <QueryErrorMessage query={query} />;
 		}
@@ -139,13 +139,14 @@ export const Receipts: React.FC<Props> = ({
 		<PaginationOverlay
 			pagination={
 				<PaginationBlock
-					totalCount={totalCount}
+					totalCount={query.data?.count}
 					limit={limit}
 					setLimit={setLimit}
-					props={pagination}
+					offset={offsetState[0]}
+					onPageChange={onPageChange}
 				/>
 			}
-			isPending={query.fetchStatus === "fetching" && query.isPlaceholderData}
+			isPending={isPending}
 		>
 			<ReceiptsTableHeader />
 			<Divider className="max-sm:hidden" />
@@ -153,7 +154,8 @@ export const Receipts: React.FC<Props> = ({
 				<QueryErrorMessage query={query} />
 			) : query.status === "pending" ? (
 				<ReceiptPreviewsSkeleton amount={limit} />
-			) : !totalCount && values(filters).filter(isNonNullish).length === 0 ? (
+			) : !query.data.count &&
+			  values(filters).filter(isNonNullish).length === 0 ? (
 				<Header className="text-center">{t("list.noResults")}</Header>
 			) : (
 				<ReceiptPreviews ids={query.data.items} />

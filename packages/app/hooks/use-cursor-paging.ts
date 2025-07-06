@@ -9,6 +9,7 @@ import type {
 	TRPCError,
 	TRPCInfiniteQueryKey,
 } from "~app/trpc";
+import { updateSetStateAction } from "~utils/react";
 
 export const useCursorPaging = <
 	K extends TRPCInfiniteQueryKey,
@@ -34,41 +35,36 @@ export const useCursorPaging = <
 			{ placeholderData: keepPreviousData },
 		),
 	);
-	const maxOffset = query.data
-		? query.data.count === 0
-			? 0
-			: (Math.ceil(query.data.count / limit) - 1) * limit
-		: undefined;
 
+	const totalCount = query.data?.count;
 	React.useEffect(() => {
+		const maxOffset =
+			typeof totalCount === "number"
+				? totalCount === 0
+					? 0
+					: (Math.ceil(totalCount / limit) - 1) * limit
+				: undefined;
 		if (maxOffset === undefined) {
 			return;
 		}
 		if (offset > maxOffset) {
 			void setOffset(maxOffset, { replace: true });
 		}
-	}, [setOffset, maxOffset, offset]);
+	}, [setOffset, totalCount, limit, offset]);
 
-	const onChange = React.useCallback(
-		(page: number) => {
-			void setOffset((page - 1) * limit);
-		},
-		[setOffset, limit],
-	);
-	const pagination = React.useMemo(
-		() => ({
-			onChange,
-			page: query.data?.count === 0 ? 0 : offset / limit + 1,
-			total:
-				query.data === undefined
-					? Infinity
-					: Math.ceil(query.data.count / limit),
-		}),
-		[onChange, query.data, offset, limit],
-	);
 	return {
 		query: query as UseQueryResult<P["~types"]["output"], TRPCError>,
-		pagination,
-		totalCount: query.data?.count,
+		onPageChange: React.useCallback<
+			React.Dispatch<React.SetStateAction<number>>
+		>(
+			(setStateAction: React.SetStateAction<number>) =>
+				setOffset((prevOffset) => {
+					const prevPage = Math.floor(prevOffset / limit) + 1;
+					const nextPage = updateSetStateAction(setStateAction, prevPage);
+					return (nextPage - 1) * limit;
+				}),
+			[setOffset, limit],
+		),
+		isPending: query.fetchStatus === "fetching" && query.isPlaceholderData,
 	};
 };
