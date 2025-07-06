@@ -12,7 +12,7 @@ import {
 import { zodValidator } from "@tanstack/zod-adapter";
 import { serialize } from "cookie";
 import type { i18n as i18nType } from "i18next";
-import { keys, omit } from "remeda";
+import { fromEntries, keys, omit } from "remeda";
 import { z } from "zod/v4";
 
 import { Toaster } from "~app/components/toaster";
@@ -123,8 +123,12 @@ const RootComponent = () => {
 			useBatch: !initialSearchParams.controllerId,
 			source: typeof window === "undefined" ? "ssr" : "csr",
 			captureError: captureSentryError,
+			// We should check for just `data.request`, but serialization makes it complicated
+			headers: data.request?.headers
+				? fromEntries([...data.request.headers.entries()])
+				: undefined,
 		}),
-		[baseLinksContext.url, data.baseUrl, initialSearchParams],
+		[baseLinksContext.url, data.baseUrl, initialSearchParams, data.request],
 	);
 	const storeContext = React.useMemo(
 		() => getStoreContext(serialize, data.nowTimestamp, data.initialValues),
@@ -156,12 +160,10 @@ const RootComponent = () => {
 
 type EphemeralContext = {
 	queryClient: QueryClient;
-	request: Request | null;
 	i18n: i18nType;
 };
 const EPHEMERAL_CONTEXT_KEYS: Record<keyof EphemeralContext, true> = {
 	queryClient: true,
-	request: true,
 	i18n: true,
 };
 
@@ -170,6 +172,7 @@ export type RouterContext = {
 	nowTimestamp: number;
 	initialValues: StoreValues;
 	initialLanguage: Language;
+	request: Request | null;
 } & EphemeralContext;
 
 export type ExternalRouterContext = Pick<RouterContext, "initialValues">;
