@@ -28,7 +28,7 @@ export const Route = createFileRoute("/_public")({
 		if (authToken) {
 			await ensureI18nInitialized(context);
 			// eslint-disable-next-line @typescript-eslint/only-throw-error
-			throw redirect({ to: "/receipts" });
+			throw redirect({ to: "/receipts", search: true });
 		}
 	},
 	component: Wrapper,

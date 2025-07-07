@@ -28,7 +28,10 @@ export const Route = createFileRoute("/_protected")({
 		if (!authToken) {
 			await ensureI18nInitialized(context);
 			// eslint-disable-next-line @typescript-eslint/only-throw-error
-			throw redirect({ to: "/login", search: { redirect: location.href } });
+			throw redirect({
+				to: "/login",
+				search: { redirect: location.href, ...location.search },
+			});
 		}
 	},
 	component: Wrapper,
