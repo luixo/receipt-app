@@ -1,3 +1,4 @@
+import { serverOnly } from "@tanstack/react-start";
 import { setCookie as setRawCookie } from "@tanstack/react-start/server";
 import type { SerializeOptions } from "cookie";
 import { parse } from "cookie";
@@ -15,14 +16,16 @@ const DEFAULT_SET_COOKIE_OPTIONS: SerializeOptions = {
 	sameSite: "strict",
 };
 
-export const setCookie = (
-	{ event }: UnauthorizedContext,
-	cookieName: string,
-	cookieValue: string,
-	opts: SerializeOptions = {},
-) => {
-	setRawCookie(event, cookieName, cookieValue, {
-		...DEFAULT_SET_COOKIE_OPTIONS,
-		...opts,
-	});
-};
+export const setCookie = serverOnly(
+	(
+		{ event }: UnauthorizedContext,
+		cookieName: string,
+		cookieValue: string,
+		opts: SerializeOptions = {},
+	) => {
+		setRawCookie(event, cookieName, cookieValue, {
+			...DEFAULT_SET_COOKIE_OPTIONS,
+			...opts,
+		});
+	},
+);
