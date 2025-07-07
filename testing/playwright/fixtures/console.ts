@@ -23,6 +23,16 @@ export const consoleFixtures = test.extend<ConsoleFixtures>({
 			// TODO: find out what forms cause this and how to remove the warning
 			// See https://github.com/luixo/receipt-app/commit/4c7597344d97d60c49f08f7261a73a9df57a056b
 			"WARN: A component changed from uncontrolled to controlled.",
+			// SSR-injected initial data
+			/Injected From Server/,
+			// Vite debug data
+			/\[vite\]/,
+			// React DevTools info
+			/React DevTools/,
+			// Router options are currently passed to DOM in HeroUI (TODO: open a PR)
+			/routerOptions routeroptions/,
+			// Will be fixed later!
+			/A text node cannot be a child of a <View>/,
 		];
 		await use({
 			onMessage: (message) => {
@@ -48,9 +58,7 @@ export const consoleFixtures = test.extend<ConsoleFixtures>({
 		async ({ page, consoleManager }, use) => {
 			page.on("console", consoleManager.onMessage);
 			await use();
-			if (process.env.CI) {
-				expect.soft(consoleManager.getMessages()).toStrictEqual([]);
-			}
+			expect.soft(consoleManager.getMessages()).toStrictEqual([]);
 		},
 		{ auto: true },
 	],
