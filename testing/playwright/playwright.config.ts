@@ -3,10 +3,11 @@ import { defineConfig, devices } from "@playwright/test";
 import path from "node:path";
 import url from "node:url";
 
-import { localSettings, serverSettings } from "~tests/frontend/consts";
-
-const PORT = Number(process.env.PORT) || 3000;
-const BASE_URL = `http://localhost:${PORT}/`;
+import {
+	localSettings,
+	serverSettings,
+	urlSettings,
+} from "~tests/frontend/consts";
 
 const COMMON_USE = {
 	timezoneId: "GMT",
@@ -99,7 +100,7 @@ export default defineConfig({
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
 	use: {
 		/* Base URL to use in actions like `await page.goto('/')`. */
-		baseURL: BASE_URL,
+		baseURL: urlSettings.baseUrl,
 
 		/* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
 		trace: "on-first-retry",
@@ -114,14 +115,14 @@ export default defineConfig({
 	webServer: {
 		command: "yarn web:start",
 		reuseExistingServer: !(process.env.CI || process.env.PW_SERVER),
-		url: `${BASE_URL}api/ping`,
+		url: `${urlSettings.baseUrl}api/ping`,
 		env: {
 			// Timezone and locale on server
 			TZ: serverSettings.timezone,
 			LC_ALL: serverSettings.locale,
 			S3_BUCKET: "test-bucket",
 			S3_ENDPOINT: "https://fake-endpoint.org",
-			PORT: PORT.toString(),
+			PORT: urlSettings.port.toString(),
 		},
 	},
 	globalSetup: path.resolve(localDir, "./global/setup.ts"),

@@ -13,7 +13,7 @@ test("Screen", async ({
 	user: userSelector,
 	debtsGroup,
 }) => {
-	const { debtUser } = mockDebts();
+	const { debtUser } = await mockDebts();
 	await openDebtsExchangeScreen(debtUser.id);
 	await expectScreenshotWithSchemes("wrapper.png", {
 		mask: [debtsGroup, userSelector],

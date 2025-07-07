@@ -51,9 +51,11 @@ type Fixtures = {
 			generateDebts?: GenerateDebtsFromReceipt;
 			generateReceipt?: LocalGenerateReceipt;
 		},
-	) => ReturnType<MockReceipt> & {
-		debts: ReturnType<GenerateDebtsFromReceipt>;
-	};
+	) => Promise<
+		Awaited<ReturnType<MockReceipt>> & {
+			debts: ReturnType<GenerateDebtsFromReceipt>;
+		}
+	>;
 };
 
 export const test = originalTest.extend<Fixtures>({
@@ -91,7 +93,7 @@ export const test = originalTest.extend<Fixtures>({
 		use,
 	) =>
 		use(
-			({
+			async ({
 				generateReceiptBase = defaultGenerateReceiptBase,
 				generateUsers,
 				generateReceiptItems,
@@ -101,7 +103,7 @@ export const test = originalTest.extend<Fixtures>({
 				generateDebts = defaultGenerateDebtsFromReceipt,
 				generateReceipt = localDefaultGenerateReceipt,
 			} = {}) => {
-				const result = mockReceipt({
+				const result = await mockReceipt({
 					generateReceiptBase,
 					generateUsers,
 					generateReceiptItems,

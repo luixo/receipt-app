@@ -5,22 +5,24 @@ import { expect, test as originalTest } from "~tests/frontend/fixtures";
 import { i18nFixtures } from "~tests/frontend/fixtures/i18n";
 
 type Fixtures = {
-	openSettings: () => Promise<void>;
+	openSettings: (options?: { awaitCache?: boolean }) => Promise<void>;
 	openAccount: () => Promise<void>;
 };
 
 const test = mergeTests(originalTest, i18nFixtures).extend<Fixtures>({
 	openSettings: ({ page, awaitCacheKey, api }, use) =>
-		use(async () => {
-			await page.goto("/settings");
-			api.mockUtils.authPage();
+		use(async ({ awaitCache = true } = {}) => {
+			await api.mockUtils.authPage({ page });
 			api.mockFirst("accountSettings.get", { manualAcceptDebts: true });
-			await awaitCacheKey("accountSettings.get");
+			await page.goto("/settings");
+			if (awaitCache) {
+				await awaitCacheKey("accountSettings.get");
+			}
 		}),
 	openAccount: ({ page, awaitCacheKey, api }, use) =>
 		use(async () => {
-			await page.goto("/accont");
-			api.mockUtils.authPage();
+			await api.mockUtils.authPage({ page });
+			await page.goto("/account");
 			await awaitCacheKey("account.get");
 		}),
 });
@@ -84,7 +86,7 @@ test.describe("Server-side translations", () => {
 		setLanguageCookie,
 	}) => {
 		await setLanguageCookie("ru");
-		await openSettings();
+		await openSettings({ awaitCache: false });
 		const ru = await getI18nResource("ru", "default");
 		expect(await page.title()).toEqual(
 			ru.titles.template.replace("{{page}}", ru.titles.settings),
@@ -98,7 +100,7 @@ test.describe("Server-side translations", () => {
 		setLanguageCookie,
 	}) => {
 		await setLanguageCookie("ru");
-		await openSettings();
+		await openSettings({ awaitCache: false });
 		const ru = await getI18nResource("ru", "settings");
 		await expect(page.locator("h1")).toHaveText(ru.header);
 	});
@@ -111,7 +113,7 @@ test.describe("Client-side translations", () => {
 		api,
 		getNamespaces,
 	}) => {
-		const { user } = api.mockUtils.authPage();
+		const { user } = await api.mockUtils.authPage({ page });
 		await openAccount();
 		await expect(page.locator("h1")).toHaveText(user.name);
 		expect(await getNamespaces()).toEqual(["default", "account"]);
@@ -120,8 +122,10 @@ test.describe("Client-side translations", () => {
 	test("Changing namespace loads data", async ({
 		openAccount,
 		page,
+		api,
 		getNamespaces,
 	}) => {
+		api.mockFirst("accountSettings.get", { manualAcceptDebts: true });
 		await openAccount();
 		expect(await getNamespaces()).toEqual(["default", "account"]);
 		await page.locator("a[href='/settings']").click();

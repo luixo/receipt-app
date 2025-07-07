@@ -25,7 +25,7 @@ test("Form", async ({
 	fillDate,
 	fillCurrency,
 }) => {
-	mockBase();
+	await mockBase();
 	await page.goto("/receipts/add");
 	await expect(page.locator("h1")).toHaveText("Add receipt");
 	await expectScreenshotWithSchemes("empty.png");
@@ -44,7 +44,7 @@ test("Errors in form", async ({
 	skip,
 }, testInfo) => {
 	skip(testInfo, "only-biggest");
-	mockBase();
+	await mockBase();
 	await page.goto("/receipts/add");
 	await nameInput.fill("x");
 	await expectScreenshotWithSchemes("fill-name-error.png", {
@@ -73,7 +73,7 @@ test("'receipts.add' mutation", async ({
 	expectScreenshotWithSchemes,
 	clearToasts,
 }) => {
-	mockBase();
+	await mockBase();
 	api.mockFirst("receipts.add", () => {
 		throw new TRPCError({
 			code: "FORBIDDEN",

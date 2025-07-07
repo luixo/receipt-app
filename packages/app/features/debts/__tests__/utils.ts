@@ -10,13 +10,13 @@ import type { GenerateUsers } from "~tests/frontend/generators/users";
 import { defaultGenerateUsers } from "~tests/frontend/generators/users";
 
 type Fixtures = {
-	mockBase: (options?: { generateUsers?: GenerateUsers }) => {
+	mockBase: (options?: { generateUsers?: GenerateUsers }) => Promise<{
 		debtUser: ReturnType<GenerateUsers>[number];
-	};
-	mockDebts: (options?: { generateDebts?: GenerateDebts }) => {
+	}>;
+	mockDebts: (options?: { generateDebts?: GenerateDebts }) => Promise<{
 		debts: ReturnType<GenerateDebts>;
 		debtUser: ReturnType<GenerateUsers>[number];
-	};
+	}>;
 	openUserDebtsScreen: (
 		userId: UsersId,
 		options?: { awaitCache?: boolean; awaitDebts?: number },
@@ -24,9 +24,9 @@ type Fixtures = {
 };
 
 export const test = originalTest.extend<Fixtures>({
-	mockBase: ({ api, faker }, use) =>
-		use(({ generateUsers = defaultGenerateUsers } = {}) => {
-			api.mockUtils.authPage();
+	mockBase: ({ page, api, faker }, use) =>
+		use(async ({ generateUsers = defaultGenerateUsers } = {}) => {
+			await api.mockUtils.authPage({ page });
 			const users = generateUsers({ faker, amount: 1 });
 			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			const debtUser = users[0]!;
@@ -38,8 +38,8 @@ export const test = originalTest.extend<Fixtures>({
 			return { debtUser };
 		}),
 	mockDebts: ({ api, faker, mockBase }, use) =>
-		use(({ generateDebts = defaultGenerateDebts } = {}) => {
-			const { debtUser } = mockBase();
+		use(async ({ generateDebts = defaultGenerateDebts } = {}) => {
+			const { debtUser } = await mockBase();
 			const debts = generateDebts({ faker, userId: debtUser.id });
 			const aggregatedDebts = entries(
 				debts.reduce<Record<CurrencyCode, number>>(

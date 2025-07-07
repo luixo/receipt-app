@@ -6,12 +6,13 @@ import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
 import { test } from "./accept-all-intentions-button.utils";
 
 test("Button is invisible when there is no intentions", async ({
+	page,
 	api,
 	mockDebts,
 	openDebtIntentions,
 	acceptAllIntentionButton,
 }) => {
-	api.mockUtils.authPage();
+	await api.mockUtils.authPage({ page });
 	mockDebts({
 		generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 0 }),
 	});
@@ -20,12 +21,13 @@ test("Button is invisible when there is no intentions", async ({
 });
 
 test("Button is invisible when there is just 1 intention", async ({
+	page,
 	api,
 	mockDebts,
 	openDebtIntentions,
 	acceptAllIntentionButton,
 }) => {
-	api.mockUtils.authPage();
+	await api.mockUtils.authPage({ page });
 	mockDebts({
 		generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 1 }),
 	});
@@ -43,7 +45,7 @@ test("'debtIntentions.accept' pending / error", async ({
 	snapshotQueries,
 	page,
 }) => {
-	api.mockUtils.authPage();
+	await api.mockUtils.authPage({ page });
 	const debtsAmount = 6;
 	const acceptedDebtsAmount = 2;
 	const { debts } = mockDebts({

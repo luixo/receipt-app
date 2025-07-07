@@ -8,9 +8,9 @@ import {
 } from "~tests/frontend/generators/utils";
 
 type Fixtures = {
-	mockBase: () => {
+	mockBase: () => Promise<{
 		topCurrencies: TRPCQueryOutput<"currency.top">;
-	};
+	}>;
 	addButton: Locator;
 	nameInput: Locator;
 	nameInputWrapper: Locator;
@@ -18,9 +18,9 @@ type Fixtures = {
 };
 
 export const test = originalTest.extend<Fixtures>({
-	mockBase: ({ api, faker }, use) =>
-		use(() => {
-			api.mockUtils.authPage();
+	mockBase: ({ api, faker, page }, use) =>
+		use(async () => {
+			await api.mockUtils.authPage({ page });
 			const topCurrencies = generateAmount(faker, 5, () => ({
 				currencyCode: generateCurrencyCode(faker),
 				count: Number(faker.number.int(100)),

@@ -23,7 +23,7 @@ test.describe("external query status", () => {
 		skeleton,
 		awaitCacheKey,
 	}) => {
-		const { debtUser, debts } = mockDebts();
+		const { debtUser, debts } = await mockDebts();
 		const getUserDebtsPause = api.createPause();
 		api.mockFirst("debts.getAllUser", async ({ next }) => {
 			await getUserDebtsPause.promise;
@@ -53,7 +53,7 @@ test.describe("external query status", () => {
 		errorMessage,
 		awaitCacheKey,
 	}) => {
-		const { debtUser } = mockDebts({
+		const { debtUser } = await mockDebts({
 			generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 3 }),
 		});
 		const unmockGetDebt = api.mockFirst("debts.getAllUser", () => {
@@ -83,7 +83,7 @@ test.describe("external query status", () => {
 });
 
 test("Empty state", async ({ mockDebts, openUserDebtsScreen, debtsGroup }) => {
-	const { debtUser } = mockDebts({
+	const { debtUser } = await mockDebts({
 		generateDebts: () => [],
 	});
 	await openUserDebtsScreen(debtUser.id);
@@ -95,7 +95,7 @@ test("Rounding", async ({
 	openUserDebtsScreen,
 	debtsGroupElement,
 }) => {
-	const { debtUser } = mockDebts({
+	const { debtUser } = await mockDebts({
 		generateDebts: (opts) => {
 			const [debt] = defaultGenerateDebts(opts);
 			assert(debt);

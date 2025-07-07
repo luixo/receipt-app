@@ -24,7 +24,7 @@ test.describe("Wrapper component", () => {
 		exchangeSpecificButton,
 		awaitCacheKey,
 	}) => {
-		const { debtUser } = mockBase();
+		const { debtUser } = await mockBase();
 		const userDebtsPause = api.createPause();
 		api.mockFirst("debts.getAllUser", async () => {
 			await userDebtsPause.promise;
@@ -50,7 +50,7 @@ test.describe("Wrapper component", () => {
 
 test.describe("Header", () => {
 	test("Title", async ({ mockDebts, openDebtsExchangeScreen, page }) => {
-		const { debtUser } = mockDebts();
+		const { debtUser } = await mockDebts();
 		await openDebtsExchangeScreen(debtUser.id);
 		await expect(page).toHaveTitle("RA - Exchange user debts");
 	});
@@ -61,7 +61,7 @@ test.describe("Header", () => {
 		backLink,
 		page,
 	}) => {
-		const { debtUser } = mockDebts();
+		const { debtUser } = await mockDebts();
 		await openDebtsExchangeScreen(debtUser.id);
 		await backLink.click();
 		await expect(page).toHaveURL(`/debts/user/${debtUser.id}`);
@@ -98,7 +98,7 @@ test.describe("Showed debts depending on 'show resolved debts' option", () => {
 		cookieManager,
 		debtsGroupElement,
 	}) => {
-		const { debtUser } = mockDebts({
+		const { debtUser } = await mockDebts({
 			generateDebts: generateDebtsWithEmpty,
 		});
 		await cookieManager.addCookie(SETTINGS_STORE_NAME, {
@@ -114,7 +114,7 @@ test.describe("Showed debts depending on 'show resolved debts' option", () => {
 		cookieManager,
 		debtsGroupElement,
 	}) => {
-		const { debtUser } = mockDebts({
+		const { debtUser } = await mockDebts({
 			generateDebts: generateDebtsWithEmpty,
 		});
 		await cookieManager.addCookie(SETTINGS_STORE_NAME, {
@@ -132,7 +132,7 @@ test("Exchange all to one button", async ({
 	exchangeAllToOneButton,
 	page,
 }) => {
-	const { debtUser } = mockDebts();
+	const { debtUser } = await mockDebts();
 	await openDebtsExchangeScreen(debtUser.id);
 	api.mockFirst("currency.top", []);
 	await exchangeAllToOneButton.click();
@@ -144,7 +144,7 @@ test("Exchange to specific currency button", async ({
 	openDebtsExchangeScreen,
 	exchangeSpecificButton,
 }) => {
-	const { debtUser } = mockDebts();
+	const { debtUser } = await mockDebts();
 	await openDebtsExchangeScreen(debtUser.id);
 	await expect(exchangeSpecificButton).toBeDisabled();
 	// The specific page is not yet implemented

@@ -13,7 +13,7 @@ test("No debts", async ({
 	mockDebts,
 	debtsGroup,
 }) => {
-	const { debtUser } = mockDebts({
+	const { debtUser } = await mockDebts({
 		generateDebts: () => [],
 	});
 	await openUserDebtsScreen(debtUser.id);
@@ -28,7 +28,7 @@ test("Single group", async ({
 	mockDebts,
 	debtsGroup,
 }) => {
-	const { debtUser } = mockDebts({
+	const { debtUser } = await mockDebts({
 		generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 1 }),
 	});
 	await openUserDebtsScreen(debtUser.id, { awaitDebts: 1 });
@@ -44,7 +44,7 @@ test("Multiple groups with different directions", async ({
 	debtsGroup,
 }) => {
 	const AMOUNT = 20;
-	const { debtUser } = mockDebts({
+	const { debtUser } = await mockDebts({
 		generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: AMOUNT }),
 	});
 	await openUserDebtsScreen(debtUser.id, { awaitDebts: AMOUNT });

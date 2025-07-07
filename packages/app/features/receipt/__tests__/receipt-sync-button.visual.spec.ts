@@ -16,7 +16,7 @@ test("Propagate state", async ({
 	skip,
 }, testInfo) => {
 	skip(testInfo, "only-smallest");
-	const { receipt } = mockReceiptWithDebts({
+	const { receipt } = await mockReceiptWithDebts({
 		generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 2 }),
 		generateDebts: (opts) =>
 			remapDebts(ourNonExistent)(defaultGenerateDebtsFromReceipt(opts)),
@@ -35,7 +35,7 @@ test("Sync state", async ({
 	skip,
 }, testInfo) => {
 	skip(testInfo, "only-smallest");
-	const { receipt } = mockReceiptWithDebts({
+	const { receipt } = await mockReceiptWithDebts({
 		generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 2 }),
 		generateDebts: (opts) =>
 			remapDebts(ourDesynced)(defaultGenerateDebtsFromReceipt(opts)),
@@ -54,7 +54,7 @@ test("Synced state", async ({
 	skip,
 }, testInfo) => {
 	skip(testInfo, "only-smallest");
-	const { receipt } = mockReceiptWithDebts({
+	const { receipt } = await mockReceiptWithDebts({
 		generateUsers: (opts) => defaultGenerateUsers({ ...opts, amount: 1 }),
 	});
 	await openReceipt(receipt.id);

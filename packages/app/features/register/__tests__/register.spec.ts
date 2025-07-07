@@ -53,7 +53,7 @@ test("'auth.register' mutation", async ({
 	// Remove this ignored pattern when we will explicitly redirect to "/receipts"
 	consoleManager.ignore('Abort fetching component for route: "/"');
 	api.mockUtils.noAuthPage();
-	api.mockUtils.authPage();
+	await api.mockUtils.authPage({ page });
 	api.mockFirst("receipts.getPaged", {
 		items: [],
 		cursor: -1,

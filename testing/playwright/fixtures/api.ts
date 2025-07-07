@@ -1,5 +1,5 @@
 import type { Faker } from "@faker-js/faker";
-import type { BrowserContext } from "@playwright/test";
+import type { BrowserContext, Page } from "@playwright/test";
 import { createTRPCClient, httpBatchStreamLink } from "@trpc/client";
 import { TRPCError } from "@trpc/server";
 import { getHTTPStatusCodeFromError } from "@trpc/server/http";
@@ -19,9 +19,11 @@ import type {
 	TRPCQueryKey,
 	TRPCQueryOutput,
 } from "~app/trpc";
+import { AUTH_COOKIE } from "~app/utils/auth";
 import type { TransformerResult } from "~app/utils/trpc";
 import { transformer } from "~app/utils/trpc";
 import type { AccountsId, UsersId } from "~db/models";
+import { urlSettings } from "~tests/frontend/consts";
 import { CURRENCIES } from "~utils/currency-data";
 import type { MaybePromise } from "~utils/types";
 
@@ -385,7 +387,14 @@ const getMockUtils = (api: ApiManager, faker: Faker) => ({
 			});
 		});
 	},
-	authPage: () => {
+	authPage: async ({ page }: { page: Page }) => {
+		await page.context().addCookies([
+			{
+				name: AUTH_COOKIE,
+				value: "fake-test-auth-cookie",
+				url: urlSettings.baseUrl,
+			},
+		]);
 		api.mockLast("currency.getList", CURRENCIES);
 		api.mockLast("debtIntentions.getAll", []);
 		api.mockLast("accountConnectionIntentions.getAll", {

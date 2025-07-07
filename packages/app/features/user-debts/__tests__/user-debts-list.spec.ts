@@ -22,7 +22,7 @@ test("Multiple dividers", async ({
 	const onlyDebts = debtsWithDividers.filter(
 		(debtOrDivider) => "amount" in debtOrDivider,
 	);
-	const { debtUser, debts } = mockDebts({
+	const { debtUser, debts } = await mockDebts({
 		generateDebts: getGenerateDebts(onlyDebts),
 	});
 	await openUserDebts(debtUser.id, { awaitDebts: debts.length });

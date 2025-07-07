@@ -9,3 +9,9 @@ export const localSettings = {
 	timezone: "America/Los_Angeles",
 	locale: "en-US",
 } satisfies typeof serverSettings;
+
+const PORT = Number(process.env.PORT) || 3000;
+export const urlSettings = {
+	port: PORT,
+	baseUrl: `http://localhost:${PORT}/`,
+};

@@ -27,7 +27,7 @@ test("On load", async ({
 	expectDate,
 	expectCurrency,
 }) => {
-	const { topCurrencies } = mockBase();
+	const { topCurrencies } = await mockBase();
 	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	const topCurrency = topCurrencies.sort((a, b) => a.count - b.count)[0]!;
 
@@ -48,7 +48,7 @@ test.describe("'Add' button disabled", () => {
 		addButton,
 		nameInput,
 	}) => {
-		mockBase();
+		await mockBase();
 
 		await page.goto("/receipts/add");
 		await nameInput.fill("x");
@@ -74,7 +74,7 @@ test("'receipts.add' mutation", async ({
 	fillDate,
 	fillCurrency,
 }) => {
-	mockBase();
+	await mockBase();
 	api.mockFirst("receipts.add", () => {
 		throw new TRPCError({
 			code: "FORBIDDEN",

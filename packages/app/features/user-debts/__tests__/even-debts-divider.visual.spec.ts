@@ -14,7 +14,7 @@ test("Divider", async ({
 	await cookieManager.addCookie(SETTINGS_STORE_NAME, {
 		showResolvedDebts: true,
 	});
-	const { debtUser, debts } = mockDebts({
+	const { debtUser, debts } = await mockDebts({
 		generateDebts: (opts) => {
 			const staticCurrencyCode = generateCurrencyCode(opts.faker);
 			return defaultGenerateDebts({ ...opts, amount: 3 }).map(

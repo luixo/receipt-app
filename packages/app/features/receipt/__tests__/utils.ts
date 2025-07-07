@@ -21,9 +21,9 @@ import type { GenerateUsers } from "~tests/frontend/generators/users";
 import { defaultGenerateUsers } from "~tests/frontend/generators/users";
 
 type Fixtures = {
-	mockBase: () => {
+	mockBase: () => Promise<{
 		selfUser: TRPCQueryOutput<"users.get">;
-	};
+	}>;
 	mockReceipt: (options?: {
 		generateReceiptBase?: GenerateReceiptBase;
 		generateReceiptItems?: GenerateReceiptItems;
@@ -32,7 +32,7 @@ type Fixtures = {
 		generateReceiptItemsWithConsumers?: GenerateReceiptItemsWithConsumers;
 		generateReceiptPayers?: GenerateReceiptPayers;
 		generateReceipt?: GenerateReceipt;
-	}) => {
+	}) => Promise<{
 		receiptBase: ReturnType<GenerateReceiptBase>;
 		receipt: ReturnType<GenerateReceipt>;
 		participants: ReturnType<GenerateReceiptParticipants>;
@@ -40,14 +40,14 @@ type Fixtures = {
 		receiptPayers: ReturnType<GenerateReceiptPayers>;
 		users: ReturnType<GenerateUsers>;
 		selfUserId: UsersId;
-	};
+	}>;
 	openReceipt: (id: ReceiptsId) => Promise<void>;
 };
 
 export const test = originalTest.extend<Fixtures>({
-	mockBase: ({ api }, use) =>
-		use(() => {
-			const { user } = api.mockUtils.authPage();
+	mockBase: ({ page, api }, use) =>
+		use(async () => {
+			const { user } = await api.mockUtils.authPage({ page });
 			api.mockFirst("currency.top", []);
 			api.mockFirst("users.suggest", { cursor: 0, count: 0, items: [] });
 			api.mockFirst("users.suggestTop", { items: [] });
@@ -55,7 +55,7 @@ export const test = originalTest.extend<Fixtures>({
 		}),
 	mockReceipt: ({ api, faker, mockBase }, use) =>
 		use(
-			({
+			async ({
 				generateReceiptBase = defaultGenerateReceiptBase,
 				generateUsers = defaultGenerateUsers,
 				generateReceiptItems = defaultGenerateReceiptItems,
@@ -64,7 +64,7 @@ export const test = originalTest.extend<Fixtures>({
 				generateReceiptPayers = defaultGenerateReceiptPayers,
 				generateReceipt = defaultGenerateReceipt,
 			} = {}) => {
-				const { selfUser } = mockBase();
+				const { selfUser } = await mockBase();
 				const users = generateUsers({ faker });
 				const receiptBase = generateReceiptBase({ faker });
 				const receiptItems = generateReceiptItems({ faker });

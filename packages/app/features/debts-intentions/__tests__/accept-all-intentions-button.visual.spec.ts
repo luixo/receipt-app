@@ -8,13 +8,14 @@ import { test as localTest } from "./accept-all-intentions-button.utils";
 const test = mergeTests(localTest, debtsGroupFixture);
 
 test("Button", async ({
+	page,
 	openDebtIntentions,
 	expectScreenshotWithSchemes,
 	api,
 	mockDebts,
 	acceptAllIntentionButton,
 }) => {
-	api.mockUtils.authPage();
+	await api.mockUtils.authPage({ page });
 	mockDebts({
 		generateDebts: (opts) => defaultGenerateDebts({ ...opts, amount: 6 }),
 	});

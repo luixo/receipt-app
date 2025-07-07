@@ -26,7 +26,7 @@ test.describe("Wrapper component", () => {
 		errorMessage,
 		openReceipt,
 	}) => {
-		const { receipt } = mockReceiptWithDebts();
+		const { receipt } = await mockReceiptWithDebts();
 
 		const debtsGetPause = api.createPause();
 		api.mockFirst("debts.get", async () => {
@@ -54,7 +54,7 @@ test.describe("Propagate debts button", () => {
 		propagateDebtsButton,
 		updateDebtsButton,
 	}) => {
-		const { receipt } = mockReceiptWithDebts({
+		const { receipt } = await mockReceiptWithDebts({
 			generateDebts: (opts) =>
 				remapDebts(
 					ourDesynced,
@@ -72,7 +72,7 @@ test.describe("Propagate debts button", () => {
 		propagateDebtsButton,
 		updateDebtsButton,
 	}) => {
-		const { receipt } = mockReceiptWithDebts({
+		const { receipt } = await mockReceiptWithDebts({
 			generateDebts: (opts) =>
 				remapDebts(
 					ourSynced,
@@ -90,7 +90,7 @@ test.describe("Propagate debts button", () => {
 		propagateDebtsButton,
 		updateDebtsButton,
 	}) => {
-		const { receipt } = mockReceiptWithDebts({
+		const { receipt } = await mockReceiptWithDebts({
 			generateDebts: (opts) =>
 				remapDebts(ourNonExistent)(defaultGenerateDebtsFromReceipt(opts)),
 		});
@@ -105,7 +105,7 @@ test.describe("Propagate debts button", () => {
 		propagateDebtsButton,
 		updateDebtsButton,
 	}) => {
-		const { receipt } = mockReceiptWithDebts({
+		const { receipt } = await mockReceiptWithDebts({
 			generateDebts: (opts) =>
 				remapDebts([ourDesynced, ourNonExistent])(
 					defaultGenerateDebtsFromReceipt(opts),
@@ -122,7 +122,7 @@ test.describe("Propagate debts button", () => {
 		propagateDebtsButton,
 		updateDebtsButton,
 	}) => {
-		const { receipt } = mockReceiptWithDebts({
+		const { receipt } = await mockReceiptWithDebts({
 			generateDebts: (opts) =>
 				remapDebts(ourSynced)(defaultGenerateDebtsFromReceipt(opts)),
 		});
@@ -151,7 +151,7 @@ test.describe("Mutations", () => {
 			participants,
 			receiptItemsWithConsumers,
 			receiptPayers,
-		} = mockReceiptWithDebts({
+		} = await mockReceiptWithDebts({
 			generateDebts: (opts) => {
 				const originalDebts = defaultGenerateDebtsFromReceipt(opts);
 				originalDebtsAmount = originalDebts.length;
