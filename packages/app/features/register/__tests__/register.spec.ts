@@ -47,13 +47,9 @@ test("'auth.register' mutation", async ({
 	snapshotQueries,
 	withLoader,
 	verifyToastTexts,
-	consoleManager,
 	awaitCacheKey,
 }) => {
-	// Remove this ignored pattern when we will explicitly redirect to "/receipts"
-	consoleManager.ignore('Abort fetching component for route: "/"');
 	api.mockUtils.noAuthPage();
-	await api.mockUtils.authPage({ page });
 	api.mockFirst("receipts.getPaged", {
 		items: [],
 		cursor: -1,
@@ -76,6 +72,7 @@ test("'auth.register' mutation", async ({
 	await expect(page).toHaveURL("/register");
 
 	const registerPause = api.createPause();
+	await api.mockUtils.authPage({ page });
 	api.mockFirst("auth.register", async () => {
 		await registerPause.promise;
 		return { account: { id: "test" } };

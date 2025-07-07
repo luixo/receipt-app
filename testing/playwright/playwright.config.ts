@@ -5,6 +5,7 @@ import url from "node:url";
 
 import {
 	localSettings,
+	serverName,
 	serverSettings,
 	urlSettings,
 } from "~tests/frontend/consts";
@@ -96,7 +97,11 @@ export default defineConfig({
 	/* Reporter to use. See https://playwright.dev/docs/test-reporters */
 	reporter: process.env.CI
 		? "blob"
-		: [["html", { open: "never" }] satisfies ReporterDescription],
+		: [
+				["html", { open: "never" }] satisfies ReporterDescription,
+				["list"],
+				["./server-reporter.ts"],
+			],
 	/* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
 	use: {
 		/* Base URL to use in actions like `await page.goto('/')`. */
@@ -123,7 +128,9 @@ export default defineConfig({
 			S3_BUCKET: "test-bucket",
 			S3_ENDPOINT: "https://fake-endpoint.org",
 			PORT: urlSettings.port.toString(),
+			PLAYWRIGHT: "true",
 		},
+		name: serverName,
 	},
 	globalSetup: path.resolve(localDir, "./global/setup.ts"),
 	globalTeardown: path.resolve(localDir, "./global/teardown.ts"),

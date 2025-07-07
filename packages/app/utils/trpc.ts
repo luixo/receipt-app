@@ -127,7 +127,13 @@ export const getLinks = ({
 					const transactionId = captureError(error);
 					return TRPCClientError.from(
 						new Error(
-							`Internal server error\nError fingerprint "${transactionId}"`,
+							[
+								"Internal server error",
+								`Error fingerprint "${transactionId}"`,
+								...(import.meta.env.MODE === "test"
+									? [error.message, error.stack]
+									: []),
+							].join("\n"),
 						),
 						{ meta: error.meta },
 					);

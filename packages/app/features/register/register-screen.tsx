@@ -73,6 +73,7 @@ export const RegisterScreen: React.FC = () => {
 									field.state.meta.isDirty ? field.state.meta.errors : undefined
 								}
 								mutation={registerMutation}
+								autoComplete="email"
 							/>
 						)}
 					</form.AppField>
@@ -89,6 +90,7 @@ export const RegisterScreen: React.FC = () => {
 									field.state.meta.isDirty ? field.state.meta.errors : undefined
 								}
 								mutation={registerMutation}
+								autoComplete="name"
 							/>
 						)}
 					</form.AppField>
@@ -105,6 +107,7 @@ export const RegisterScreen: React.FC = () => {
 									field.state.meta.isDirty ? field.state.meta.errors : undefined
 								}
 								mutation={registerMutation}
+								autoComplete="new-password"
 							/>
 						)}
 					</form.AppField>
@@ -121,6 +124,7 @@ export const RegisterScreen: React.FC = () => {
 									field.state.meta.isDirty ? field.state.meta.errors : undefined
 								}
 								mutation={registerMutation}
+								autoComplete="new-password"
 							/>
 						)}
 					</form.AppField>

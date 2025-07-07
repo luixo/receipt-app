@@ -87,12 +87,15 @@ const callback: StartAPIMethodCallback<"/api/trpc/$"> = async ({
 		await proxyRequest(proxyUrl.toString());
 		return new Response();
 	}
-	if (import.meta.env.MODE === "test") {
+	if (import.meta.env.MODE === "test" && Boolean(process.env.PLAYWRIGHT)) {
 		return new Response(
 			JSON.stringify({
 				error: transformer.serialize({
 					code: 400,
-					message: `Unexpected test mode tRPC fetch for url\n${decodeURIComponent(request.url)}`,
+					message: [
+						"Unexpected test mode tRPC fetch for url",
+						decodeURIComponent(request.url),
+					].join("\n"),
 				}),
 			}),
 		);
@@ -126,14 +129,14 @@ const callback: StartAPIMethodCallback<"/api/trpc/$"> = async ({
 		},
 		responseMeta: ({ ctx }) => ({
 			status: 200,
-			headers: fromEntries(
-				// We expect to always have context
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-				entries(ctx!.event.node.res.getHeaders()).map(([key, value]) => [
-					key,
-					typeof value === "number" ? value.toString() : value,
-				]),
-			),
+			headers: ctx
+				? fromEntries(
+						entries(ctx.event.node.res.getHeaders()).map(([key, value]) => [
+							key,
+							typeof value === "number" ? value.toString() : value,
+						]),
+					)
+				: {},
 		}),
 		...getTestRequestHandlerProps(rest),
 	});

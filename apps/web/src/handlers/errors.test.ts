@@ -78,9 +78,15 @@ test("error is captured", async ({ ctx }) => {
 			throw new Error("Expected not to get here");
 		} catch (error) {
 			expect(error).toBeInstanceOf(TRPCClientError);
-			expect((error as TRPCClientError<AppRouter>).message).toBe(
-				'Internal server error\nError fingerprint "transaction-id"',
-			);
+			const errorComponents = (
+				error as TRPCClientError<AppRouter>
+			).message.split("\n");
+			expect(errorComponents).toStrictEqual([
+				"Internal server error",
+				'Error fingerprint "transaction-id"',
+				"Session id mismatch",
+				...errorComponents.slice(3),
+			]);
 			expect(ctx.logger.getMessages()).toEqual([
 				['Captured error: "Session id mismatch"'],
 			]);

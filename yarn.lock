@@ -7557,6 +7557,7 @@ __metadata:
     "@trpc/client": "npm:^11.3.1"
     "@trpc/server": "npm:^11.3.1"
     async-await-queue: "npm:^2.1.4"
+    colors: "npm:^1.4.0"
     deep-object-diff: "npm:^1.1.9"
     join-images: "npm:^1.1.5"
     playwright: "npm:^1.53.0"

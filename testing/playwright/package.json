@@ -15,6 +15,7 @@
 		"@trpc/client": "^11.3.1",
 		"@trpc/server": "^11.3.1",
 		"async-await-queue": "^2.1.4",
+		"colors": "^1.4.0",
 		"deep-object-diff": "^1.1.9",
 		"join-images": "^1.1.5",
 		"playwright": "^1.53.0",

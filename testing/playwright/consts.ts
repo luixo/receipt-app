@@ -15,3 +15,5 @@ export const urlSettings = {
 	port: PORT,
 	baseUrl: `http://localhost:${PORT}/`,
 };
+
+export const serverName = `PW:Server`;
