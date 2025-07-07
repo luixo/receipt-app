@@ -131,7 +131,7 @@ export const getTitle = (
 	return t("titles.template", { page: t(`titles.${pageKey}`) });
 };
 
-const ensureI18nInitialized = async (ctx: {
+export const ensureI18nInitialized = async (ctx: {
 	i18n: i18n;
 	initialLanguage: Language;
 }): Promise<void> => {

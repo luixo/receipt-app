@@ -2,6 +2,7 @@ import React from "react";
 
 import {
 	useNavigate as useRawNavigate,
+	useRouter,
 	useRouterState,
 } from "@tanstack/react-router";
 import type {
@@ -32,6 +33,11 @@ export const useNavigate = () => {
 	) => {
 		void navigate(options);
 	};
+};
+
+export const useHistoryPush = () => {
+	const router = useRouter();
+	return (url: string) => router.history.push(url);
 };
 
 // Refactor this to add base path or similar

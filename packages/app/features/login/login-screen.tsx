@@ -6,7 +6,7 @@ import { z } from "zod/v4";
 
 import { PageHeader } from "~app/components/page-header";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { useNavigate } from "~app/hooks/use-navigation";
+import { useHistoryPush } from "~app/hooks/use-navigation";
 import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import { useAppForm } from "~app/utils/forms";
 import { noBatchContext, useTRPC } from "~app/utils/trpc";
@@ -20,10 +20,12 @@ import { ResetPasswordModal } from "./reset-password-modal";
 const formSchema = z.object({ email: emailSchema, password: passwordSchema });
 type Form = z.infer<typeof formSchema>;
 
-export const LoginScreen: React.FC = () => {
+export const LoginScreen: React.FC<{ redirectUrl: string }> = ({
+	redirectUrl,
+}) => {
 	const { t } = useTranslation("login");
 	const trpc = useTRPC();
-	const navigate = useNavigate();
+	const pushHistory = useHistoryPush();
 	const queryClient = useQueryClient();
 
 	const [modalOpen, { switchValue: switchModalOpen, setTrue: openModal }] =
@@ -34,7 +36,7 @@ export const LoginScreen: React.FC = () => {
 			useTrpcMutationOptions(authLoginOptions, {
 				onSuccess: () => {
 					void queryClient.resetQueries();
-					navigate({ to: "/", replace: true });
+					pushHistory(redirectUrl);
 				},
 				trpc: { context: noBatchContext },
 			}),

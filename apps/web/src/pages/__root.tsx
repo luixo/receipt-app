@@ -182,6 +182,7 @@ export const rootSearchParamsSchema = z
 		proxyPort: z.coerce.number().catch(0),
 		controllerId: z.uuid().catch(""),
 		debug: z.coerce.boolean().catch(false),
+		redirect: z.string().catch(""),
 	})
 	.partial();
 
