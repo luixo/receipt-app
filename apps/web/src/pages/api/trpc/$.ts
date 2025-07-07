@@ -8,6 +8,7 @@ import { entries, fromEntries } from "remeda";
 import { v4 } from "uuid";
 
 import { DEFAULT_TRPC_ENDPOINT } from "~app/contexts/links-context";
+import { transformer } from "~app/utils/trpc";
 import { getDatabase } from "~db/database";
 import { router } from "~web/handlers";
 import type { NetContext, UnauthorizedContext } from "~web/handlers/context";
@@ -85,6 +86,16 @@ const callback: StartAPIMethodCallback<"/api/trpc/$"> = async ({
 		proxyUrl.searchParams.delete("proxyPort");
 		await proxyRequest(proxyUrl.toString());
 		return new Response();
+	}
+	if (import.meta.env.MODE === "test") {
+		return new Response(
+			JSON.stringify({
+				error: transformer.serialize({
+					code: 400,
+					message: `Unexpected test mode tRPC fetch for url\n${decodeURIComponent(request.url)}`,
+				}),
+			}),
+		);
 	}
 	return fetchRequestHandler({
 		endpoint: DEFAULT_TRPC_ENDPOINT,
