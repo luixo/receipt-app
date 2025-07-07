@@ -163,8 +163,7 @@ const DebtAmountInput: React.FC<AmountProps> = ({ debt, isLoading }) => {
 					mutation={updateMutation}
 					isDisabled={isLoading}
 					minValue={0}
-					step={10 ** -debtAmountSchemaDecimal}
-					formatOptions={{ maximumFractionDigits: debtAmountSchemaDecimal }}
+					fractionDigits={debtAmountSchemaDecimal}
 					endContent={
 						<View className="flex flex-row gap-2">
 							<DebtCurrencyInput debt={debt} isLoading={isLoading} />

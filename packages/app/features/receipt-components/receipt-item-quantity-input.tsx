@@ -75,8 +75,7 @@ export const ReceiptItemQuantityInput: React.FC<Props> = ({
 					fieldError={
 						field.state.meta.isDirty ? field.state.meta.errors : undefined
 					}
-					step={10 ** -quantitySchemaDecimal}
-					formatOptions={{ maximumFractionDigits: quantitySchemaDecimal }}
+					fractionDigits={quantitySchemaDecimal}
 					aria-label={t("item.form.quantity.label")}
 					mutation={updateMutationState}
 					isDisabled={isDisabled}

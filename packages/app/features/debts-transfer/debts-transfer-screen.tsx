@@ -218,11 +218,8 @@ const DebtsListForm: React.FC<FormProps> = ({
 													<Text className="flex-[2]">{currencySymbol}</Text>
 													<field.NumberField
 														value={field.state.value}
-														step={10 ** -debtAmountSchemaDecimal}
-														formatOptions={{
-															signDisplay: "exceptZero",
-															maximumFractionDigits: debtAmountSchemaDecimal,
-														}}
+														fractionDigits={debtAmountSchemaDecimal}
+														formatOptions={{ signDisplay: "exceptZero" }}
 														onValueChange={field.setValue}
 														name={field.name}
 														onBlur={field.handleBlur}

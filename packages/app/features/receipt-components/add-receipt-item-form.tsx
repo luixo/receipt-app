@@ -96,8 +96,7 @@ export const AddReceiptItemForm: React.FC = () => {
 								onBlur={field.handleBlur}
 								isRequired
 								minValue={0}
-								step={10 ** -priceSchemaDecimal}
-								formatOptions={{ maximumFractionDigits: priceSchemaDecimal }}
+								fractionDigits={priceSchemaDecimal}
 								label={t("item.form.price.label")}
 								fieldError={
 									field.state.meta.isDirty ? field.state.meta.errors : undefined
@@ -115,8 +114,7 @@ export const AddReceiptItemForm: React.FC = () => {
 								onBlur={field.handleBlur}
 								isRequired
 								minValue={0}
-								step={10 ** -quantitySchemaDecimal}
-								formatOptions={{ maximumFractionDigits: quantitySchemaDecimal }}
+								fractionDigits={quantitySchemaDecimal}
 								label={t("item.form.quantity.label")}
 								fieldError={
 									field.state.meta.isDirty ? field.state.meta.errors : undefined

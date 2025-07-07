@@ -78,8 +78,7 @@ export const ReceiptItemPriceInput: React.FC<Props> = ({
 					fieldError={
 						field.state.meta.isDirty ? field.state.meta.errors : undefined
 					}
-					step={10 ** -priceSchemaDecimal}
-					formatOptions={{ maximumFractionDigits: priceSchemaDecimal }}
+					fractionDigits={priceSchemaDecimal}
 					aria-label={t("item.form.price.label")}
 					className="basis-24"
 					labelPlacement="outside-left"

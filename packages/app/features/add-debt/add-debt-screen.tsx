@@ -124,10 +124,7 @@ export const AddDebtScreen: React.FC<{
 												.join("\n")
 										: undefined
 								}
-								step={10 ** -debtAmountSchemaDecimal}
-								formatOptions={{
-									maximumFractionDigits: debtAmountSchemaDecimal,
-								}}
+								fractionDigits={debtAmountSchemaDecimal}
 							/>
 						)}
 					</form.AppField>

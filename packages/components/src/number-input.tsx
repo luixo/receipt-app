@@ -1,6 +1,7 @@
 import type React from "react";
 
 import { NumberInput as NumberInputRaw } from "@heroui/number-input";
+import { useIsSSR } from "@react-aria/ssr";
 
 import type { FieldError, MutationsProp } from "~components/utils";
 import { cn, getErrorState, getMutationLoading } from "~components/utils";
@@ -12,12 +13,15 @@ type Props = Omit<
 	fieldError?: FieldError;
 	mutation?: MutationsProp;
 	errorMessage?: React.ReactNode;
+	fractionDigits: number;
 };
 
 export const NumberInput: React.FC<Props> = ({
 	className,
 	fieldError,
 	mutation,
+	fractionDigits,
+	formatOptions,
 	...props
 }) => {
 	const isMutationLoading = getMutationLoading(mutation);
@@ -25,6 +29,7 @@ export const NumberInput: React.FC<Props> = ({
 		mutation,
 		fieldError,
 	});
+	const isSSR = useIsSSR();
 	return (
 		<NumberInputRaw
 			{...props}
@@ -39,6 +44,14 @@ export const NumberInput: React.FC<Props> = ({
 					isWarning ? "text-warning" : undefined,
 				),
 			}}
+			step={10 ** -fractionDigits}
+			formatOptions={
+				isSSR
+					? // iPhone make some format options mismatch on hydration
+						// see https://github.com/adobe/react-spectrum/issues/8503
+						{ maximumFractionDigits: 0, ...formatOptions }
+					: { maximumFractionDigits: fractionDigits, ...formatOptions }
+			}
 		/>
 	);
 };

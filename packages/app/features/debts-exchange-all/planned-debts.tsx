@@ -293,10 +293,7 @@ export const PlannedDebts: React.FC<Props> = ({
 															: undefined
 													}
 													min="0"
-													step={10 ** -currencyRateSchemaDecimal}
-													formatOptions={{
-														maximumFractionDigits: currencyRateSchemaDecimal,
-													}}
+													fractionDigits={currencyRateSchemaDecimal}
 													aria-label={currencyCode}
 													isRequired
 												/>

@@ -279,10 +279,7 @@ export const ReceiptParticipant: React.FC<Props> = ({ participant }) => {
 														updatePayerMutationState,
 													]}
 													labelPlacement="outside-left"
-													step={10 ** -partSchemaDecimal}
-													formatOptions={{
-														maximumFractionDigits: partSchemaDecimal,
-													}}
+													fractionDigits={partSchemaDecimal}
 													hideStepper
 													endContent={
 														<View className="flex gap-2">
