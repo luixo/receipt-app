@@ -8,6 +8,7 @@ import type { ResolverDef, TRPCQueryOptions } from "@trpc/tanstack-react-query";
 
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useMountEffect } from "~app/hooks/use-mount-effect";
+import { transformer } from "~app/utils/trpc";
 import type { RouterContext } from "~web/pages/__root";
 
 // see https://github.com/TanStack/router/issues/4084
@@ -22,10 +23,10 @@ export const prefetch = (
 	}
 	return optionsSet.map((options) => ({
 		queryKey: options.queryKey,
-		promise: ctx.context.queryClient.fetchQuery(options).catch((error) => ({
-			[ERROR_TAG]: true,
-			message: String(error),
-		})),
+		promise: ctx.context.queryClient
+			.fetchQuery(options)
+			.catch((error) => ({ [ERROR_TAG]: true, message: String(error) }))
+			.then(transformer.serialize),
 	}));
 };
 
@@ -48,12 +49,20 @@ export const HydrationBoundary: React.FC<React.PropsWithChildren> = ({
 			void localQueryClient.prefetchQuery({
 				queryKey: query.queryKey,
 				queryFn: () =>
-					query.promise.then((result) => {
-						if (ERROR_TAG in result) {
-							throw new TRPCClientError(result.message);
-						}
-						return result as unknown;
-					}),
+					query.promise
+						.then(transformer.deserialize)
+						.then((result: unknown) => {
+							if (
+								typeof result === "object" &&
+								result &&
+								ERROR_TAG in result &&
+								"message" in result &&
+								typeof result.message === "string"
+							) {
+								throw new TRPCClientError(result.message);
+							}
+							return result;
+						}),
 			});
 		});
 	}

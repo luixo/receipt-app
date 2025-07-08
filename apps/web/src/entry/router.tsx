@@ -28,6 +28,7 @@ import {
 	i18nInitOptions,
 } from "~app/utils/i18n";
 import { PRETEND_USER_STORE_NAME } from "~app/utils/store/pretend-user";
+import { transformer } from "~app/utils/trpc";
 import { Spinner } from "~components/spinner";
 import { Text } from "~components/text";
 import type { ExternalRouterContext } from "~web/pages/__root";
@@ -88,7 +89,9 @@ export const createRouter = (externalContext: ExternalRouterContext) => {
 		defaultStaleTime: Infinity,
 		defaultPreloadStaleTime: 0,
 		dehydrate: () => ({
-			dehydratedState: dehydrate(queryClient),
+			dehydratedState: dehydrate(queryClient, {
+				serializeData: transformer.serialize,
+			}),
 			i18n: {
 				language: i18nInstance.language,
 				data: i18nInstance.store.data,
@@ -99,7 +102,11 @@ export const createRouter = (externalContext: ExternalRouterContext) => {
 				lng: dehydratedData.i18n.language,
 				resources: dehydratedData.i18n.data,
 			});
-			hydrate(queryClient, dehydratedData.dehydratedState);
+			hydrate(queryClient, dehydratedData.dehydratedState, {
+				defaultOptions: {
+					deserializeData: transformer.deserialize,
+				},
+			});
 		},
 		Wrap: ({ children }) => {
 			const pretendEmail =
