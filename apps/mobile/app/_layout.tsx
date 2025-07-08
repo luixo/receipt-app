@@ -36,7 +36,7 @@ const ClientProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 		[SELF_QUERY_CLIENT_KEY]: getQueryClient(),
 	}));
 	return (
-		<QueryClientsContext.Provider value={queryClientsState}>
+		<QueryClientsContext value={queryClientsState}>
 			<Provider
 				storeContext={storeContext}
 				persister={persister}
@@ -46,7 +46,7 @@ const ClientProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 					<QueryDevToolsProvider>{children}</QueryDevToolsProvider>
 				</ThemeProvider>
 			</Provider>
-		</QueryClientsContext.Provider>
+		</QueryClientsContext>
 	);
 };
 

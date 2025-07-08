@@ -10,8 +10,8 @@ import { SkeletonDateInput } from "~app/components/date-input";
 import { QueryErrorMessage } from "~app/components/error-message";
 import { PageHeader } from "~app/components/page-header";
 import {
-	actionsHooksContext,
-	receiptContext,
+	ActionsHooksContext,
+	ReceiptContext,
 } from "~app/features/receipt-components/context";
 import {
 	ReceiptItems,
@@ -110,8 +110,8 @@ export const ReceiptInner: React.FC<InnerProps> = ({ query }) => {
 				)}
 			</Header>
 
-			<receiptContext.Provider value={getReceiptContext}>
-				<actionsHooksContext.Provider value={actionsHooks}>
+			<ReceiptContext value={getReceiptContext}>
+				<ActionsHooksContext value={actionsHooks}>
 					<View className="items-start gap-2">
 						<View className="flex w-full flex-row items-start justify-between gap-2">
 							<ReceiptDateInput receipt={receipt} isLoading={deleteLoading} />
@@ -137,8 +137,8 @@ export const ReceiptInner: React.FC<InnerProps> = ({ query }) => {
 						</View>
 					</View>
 					<ReceiptItems />
-				</actionsHooksContext.Provider>
-			</receiptContext.Provider>
+				</ActionsHooksContext>
+			</ReceiptContext>
 		</>
 	);
 };

@@ -50,11 +50,11 @@ const generateEmail = (
 			${STYLE_REPLACER}
 		</head>
 		<body>${ReactDOMServer.renderToStaticMarkup(
-			<StylingContext.Provider value={stylesMapping}>
-				<BaseUrlContext.Provider value={ctx.emailOptions.baseUrl}>
+			<StylingContext value={stylesMapping}>
+				<BaseUrlContext value={ctx.emailOptions.baseUrl}>
 					{element}
-				</BaseUrlContext.Provider>
-			</StylingContext.Provider>,
+				</BaseUrlContext>
+			</StylingContext>,
 		)}
 		</body>
 	</html>`;

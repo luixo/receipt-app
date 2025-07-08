@@ -41,11 +41,11 @@ export const AdminWrapper: React.FC<React.PropsWithChildren> = ({
 		[baseLinksContext],
 	);
 	return (
-		<LinksContext.Provider value={linksContext}>
+		<LinksContext value={linksContext}>
 			<QueryProvider queryClientKey={SELF_QUERY_CLIENT_KEY}>
 				<TRPCProvider>{children}</TRPCProvider>
 			</QueryProvider>
-		</LinksContext.Provider>
+		</LinksContext>
 	);
 };
 

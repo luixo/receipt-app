@@ -102,13 +102,13 @@ export const StoredDataProvider: React.FC<React.PropsWithChildren> = ({
 		[ssrState, ssrSetValues, ssrDeleteValues],
 	);
 	return (
-		<StoreDataContext.Provider
+		<StoreDataContext
 			value={React.useMemo(
 				() => ({ isFirstRender: !mounted, nowTimestamp, ...ssrStates }),
 				[ssrStates, nowTimestamp, mounted],
 			)}
 		>
 			{children}
-		</StoreDataContext.Provider>
+		</StoreDataContext>
 	);
 };

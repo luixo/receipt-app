@@ -6,8 +6,8 @@ import { useTranslation } from "react-i18next";
 import { CurrencyInput } from "~app/components/app/currency-input";
 import { DateInput } from "~app/components/date-input";
 import {
-	actionsHooksContext,
-	receiptContext,
+	ActionsHooksContext,
+	ReceiptContext,
 } from "~app/features/receipt-components/context";
 import { ReceiptItems } from "~app/features/receipt-components/receipt-items";
 import { ReceiptParticipants } from "~app/features/receipt-components/receipt-participants";
@@ -116,8 +116,8 @@ export const AddReceipt: React.FC<Props> = ({ selfAccountId }) => {
 	);
 
 	return (
-		<receiptContext.Provider value={addReceiptContext}>
-			<actionsHooksContext.Provider value={actionsHooks}>
+		<ReceiptContext value={addReceiptContext}>
+			<ActionsHooksContext value={actionsHooks}>
 				<form.AppForm>
 					<form.Form id={formId} className="flex flex-col gap-4">
 						<form.AppField name="name">
@@ -177,7 +177,7 @@ export const AddReceipt: React.FC<Props> = ({ selfAccountId }) => {
 						)}
 					</form.Subscribe>
 				</form.AppForm>
-			</actionsHooksContext.Provider>
-		</receiptContext.Provider>
+			</ActionsHooksContext>
+		</ReceiptContext>
 	);
 };

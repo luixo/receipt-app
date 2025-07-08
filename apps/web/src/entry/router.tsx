@@ -120,13 +120,13 @@ export const createRouter = (externalContext: ExternalRouterContext) => {
 			});
 			return (
 				<I18nextProvider i18n={i18nInstance}>
-					<QueryClientsContext.Provider value={queryClientsState}>
+					<QueryClientsContext value={queryClientsState}>
 						<QueryProvider
 							queryClientKey={pretendEmail || SELF_QUERY_CLIENT_KEY}
 						>
 							{children}
 						</QueryProvider>
-					</QueryClientsContext.Provider>
+					</QueryClientsContext>
 				</I18nextProvider>
 			);
 		},

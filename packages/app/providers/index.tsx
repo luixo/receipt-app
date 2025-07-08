@@ -43,8 +43,8 @@ export const Provider: React.FC<React.PropsWithChildren<Props>> = ({
 	persister,
 	linksContext,
 }) => (
-	<LinksContext.Provider value={linksContext}>
-		<StoreContext.Provider value={storeContext}>
+	<LinksContext value={linksContext}>
+		<StoreContext value={storeContext}>
 			<StoredDataProvider>
 				<QueryProviderWithPretend>
 					<ShimsProvider>
@@ -54,6 +54,6 @@ export const Provider: React.FC<React.PropsWithChildren<Props>> = ({
 					</ShimsProvider>
 				</QueryProviderWithPretend>
 			</StoredDataProvider>
-		</StoreContext.Provider>
-	</LinksContext.Provider>
+		</StoreContext>
+	</LinksContext>
 );
