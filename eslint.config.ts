@@ -13,7 +13,7 @@ import vitestPlugin from "eslint-plugin-vitest";
 import globals from "globals";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { entries, fromEntries } from "remeda";
+import { entries, fromEntries, omit } from "remeda";
 import ts from "typescript-eslint";
 
 const nodeVersion = await readFile(".nvmrc", "utf-8");
@@ -61,7 +61,12 @@ const restrictedImports = [
 	},
 ];
 
-const noRestrictedSyntaxGeneral = [
+type NoRestrictedSyntaxElement = {
+	selector: string;
+	message: string;
+	tags?: string[];
+};
+const noRestrictedSyntaxGeneral: NoRestrictedSyntaxElement[] = [
 	{
 		selector: "MemberExpression[object.name='Object'][property.name='keys']",
 		message:
@@ -95,12 +100,22 @@ const noRestrictedSyntaxGeneral = [
 		selector: "ImportDeclaration[source.value='~web/handlers/validation']",
 		message:
 			"Do not import from we validation, it includes heavy currency data!",
+		tags: ["client-only"],
 	},
 	{
 		selector: "ExportAllDeclaration",
 		message: "Do not use barrel export, prefer named export",
 	},
 ] as const;
+
+const getNoRestrictedSyntax = (...omittedTags: string[]) =>
+	noRestrictedSyntaxGeneral
+		.filter((element) =>
+			element.tags
+				? !element.tags.some((tag) => omittedTags.includes(tag))
+				: true,
+		)
+		.map(omit(["tags"]));
 
 const overriddenRules = {
 	name: "local/overridden",
@@ -118,7 +133,7 @@ const overriddenRules = {
 		"no-alert": "error",
 		// `void foo` is a mark of deliberately floating promise
 		"no-void": ["error", { allowAsStatement: true }],
-		"no-restricted-syntax": ["error", ...noRestrictedSyntaxGeneral],
+		"no-restricted-syntax": ["error", ...getNoRestrictedSyntax()],
 
 		// Custom devDependencies
 		"import-x/no-extraneous-dependencies": [
@@ -510,9 +525,7 @@ export default ts.config(
 		rules: {
 			"no-restricted-syntax": [
 				"error",
-				...noRestrictedSyntaxGeneral.filter(
-					(element) => !element.selector.includes("~web/handlers/validation"),
-				),
+				...getNoRestrictedSyntax("client-only"),
 			],
 		},
 	},
