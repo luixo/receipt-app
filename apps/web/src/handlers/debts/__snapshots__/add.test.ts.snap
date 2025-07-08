@@ -7,7 +7,7 @@ exports[`debts.add > functionality > auto-accepted by the counterparty > counter
       "id:35bb1455-b8ca-4d6d-ba56-308eac4324b9|ownerAccountId:fb0eb5b6-cded-4b5c-88e3-d59a6ab3a8b3": {
         "amount": "728.7300",
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "CLF",
+        "currencyCode": "COP",
         "id": "35bb1455-b8ca-4d6d-ba56-308eac4324b9",
         "note": "facere ratione ex",
         "ownerAccountId": "fb0eb5b6-cded-4b5c-88e3-d59a6ab3a8b3",
@@ -22,7 +22,7 @@ exports[`debts.add > functionality > auto-accepted by the counterparty > counter
     "debts": {
       "id:35bb1455-b8ca-4d6d-ba56-308eac4324b9|ownerAccountId:4d438a86-07a3-4aa7-8891-0ce85b8b4d99": {
         "amount": "-728.7300",
-        "currencyCode": "CLF",
+        "currencyCode": "COP",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },
@@ -91,7 +91,7 @@ exports[`debts.add > functionality > debt is added - user-provided timestamp 1`]
       "id:5bd149f9-691d-43ee-961f-24c72f0417ed|ownerAccountId:30ccee93-5420-4e8c-8d2b-615f9ef7e6f2": {
         "amount": "282.9100",
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "LKR",
+        "currencyCode": "LRD",
         "id": "5bd149f9-691d-43ee-961f-24c72f0417ed",
         "note": "cum hic fugiat",
         "ownerAccountId": "30ccee93-5420-4e8c-8d2b-615f9ef7e6f2",
@@ -112,7 +112,7 @@ exports[`debts.add > functionality > multiple debts > for the same auto-acceptin
       "id:00528941-df76-45bf-87fa-25b617836c9e|ownerAccountId:08125949-429e-4439-bee0-504d0d02605f": {
         "amount": "-352.7300",
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "MNT",
+        "currencyCode": "MOP",
         "id": "00528941-df76-45bf-87fa-25b617836c9e",
         "note": "asperiores cupiditate quo",
         "ownerAccountId": "08125949-429e-4439-bee0-504d0d02605f",
@@ -124,7 +124,7 @@ exports[`debts.add > functionality > multiple debts > for the same auto-acceptin
       "id:00528941-df76-45bf-87fa-25b617836c9e|ownerAccountId:27c738a0-79b8-4525-9dfe-84af1f7f7b59": {
         "amount": "352.7300",
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "MNT",
+        "currencyCode": "MOP",
         "id": "00528941-df76-45bf-87fa-25b617836c9e",
         "note": "asperiores cupiditate quo",
         "ownerAccountId": "27c738a0-79b8-4525-9dfe-84af1f7f7b59",
@@ -136,7 +136,7 @@ exports[`debts.add > functionality > multiple debts > for the same auto-acceptin
       "id:e1bee262-993f-4492-9222-d7cd8a9229d8|ownerAccountId:08125949-429e-4439-bee0-504d0d02605f": {
         "amount": "-412.8500",
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "MVR",
+        "currencyCode": "MWK",
         "id": "e1bee262-993f-4492-9222-d7cd8a9229d8",
         "note": "voluptas numquam dolor",
         "ownerAccountId": "08125949-429e-4439-bee0-504d0d02605f",
@@ -148,7 +148,7 @@ exports[`debts.add > functionality > multiple debts > for the same auto-acceptin
       "id:e1bee262-993f-4492-9222-d7cd8a9229d8|ownerAccountId:27c738a0-79b8-4525-9dfe-84af1f7f7b59": {
         "amount": "412.8500",
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "MVR",
+        "currencyCode": "MWK",
         "id": "e1bee262-993f-4492-9222-d7cd8a9229d8",
         "note": "voluptas numquam dolor",
         "ownerAccountId": "27c738a0-79b8-4525-9dfe-84af1f7f7b59",
@@ -160,7 +160,7 @@ exports[`debts.add > functionality > multiple debts > for the same auto-acceptin
       "id:e1d03643-96ef-49c8-95de-51312c0b253a|ownerAccountId:08125949-429e-4439-bee0-504d0d02605f": {
         "amount": "69.5000",
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "CZK",
+        "currencyCode": "DZD",
         "id": "e1d03643-96ef-49c8-95de-51312c0b253a",
         "note": "earum nostrum illo",
         "ownerAccountId": "08125949-429e-4439-bee0-504d0d02605f",
@@ -172,7 +172,7 @@ exports[`debts.add > functionality > multiple debts > for the same auto-acceptin
       "id:e1d03643-96ef-49c8-95de-51312c0b253a|ownerAccountId:27c738a0-79b8-4525-9dfe-84af1f7f7b59": {
         "amount": "-69.5000",
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "CZK",
+        "currencyCode": "DZD",
         "id": "e1d03643-96ef-49c8-95de-51312c0b253a",
         "note": "earum nostrum illo",
         "ownerAccountId": "27c738a0-79b8-4525-9dfe-84af1f7f7b59",
@@ -193,7 +193,7 @@ exports[`debts.add > functionality > multiple debts > some are auto-accepted by 
       "id:66b8627c-811d-42c8-89a0-6e554ac43186|ownerAccountId:72914787-e90f-493f-a496-efa4cbe6b221": {
         "amount": "603.1000",
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "COP",
+        "currencyCode": "CUP",
         "id": "66b8627c-811d-42c8-89a0-6e554ac43186",
         "note": "debitis repellendus impedit",
         "ownerAccountId": "72914787-e90f-493f-a496-efa4cbe6b221",
@@ -205,7 +205,7 @@ exports[`debts.add > functionality > multiple debts > some are auto-accepted by 
       "id:66b8627c-811d-42c8-89a0-6e554ac43186|ownerAccountId:8dd14d84-afee-4edc-939f-b5d7f00629bc": {
         "amount": "-603.1000",
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "COP",
+        "currencyCode": "CUP",
         "id": "66b8627c-811d-42c8-89a0-6e554ac43186",
         "note": "debitis repellendus impedit",
         "ownerAccountId": "8dd14d84-afee-4edc-939f-b5d7f00629bc",
@@ -217,7 +217,7 @@ exports[`debts.add > functionality > multiple debts > some are auto-accepted by 
       "id:756323fa-315d-4b64-a18a-90308d6aadff|ownerAccountId:8dd14d84-afee-4edc-939f-b5d7f00629bc": {
         "amount": "-712.5600",
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "MOP",
+        "currencyCode": "MRU",
         "id": "756323fa-315d-4b64-a18a-90308d6aadff",
         "note": "doloremque eum magni",
         "ownerAccountId": "8dd14d84-afee-4edc-939f-b5d7f00629bc",
@@ -229,7 +229,7 @@ exports[`debts.add > functionality > multiple debts > some are auto-accepted by 
       "id:95fa18c1-50bd-44a2-88d1-2ccece04fbbc|ownerAccountId:350c8cef-786c-4d9d-9e1d-70ae33e25748": {
         "amount": "-972.8500",
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "KZT",
+        "currencyCode": "LAK",
         "id": "95fa18c1-50bd-44a2-88d1-2ccece04fbbc",
         "note": "soluta exercitationem illum",
         "ownerAccountId": "350c8cef-786c-4d9d-9e1d-70ae33e25748",
@@ -241,7 +241,7 @@ exports[`debts.add > functionality > multiple debts > some are auto-accepted by 
       "id:95fa18c1-50bd-44a2-88d1-2ccece04fbbc|ownerAccountId:8dd14d84-afee-4edc-939f-b5d7f00629bc": {
         "amount": "972.8500",
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "KZT",
+        "currencyCode": "LAK",
         "id": "95fa18c1-50bd-44a2-88d1-2ccece04fbbc",
         "note": "soluta exercitationem illum",
         "ownerAccountId": "8dd14d84-afee-4edc-939f-b5d7f00629bc",
@@ -253,7 +253,7 @@ exports[`debts.add > functionality > multiple debts > some are auto-accepted by 
       "id:dc08d256-ae70-49fc-914c-68824d23c76e|ownerAccountId:72914787-e90f-493f-a496-efa4cbe6b221": {
         "amount": "918.1200",
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "ZWG",
+        "currencyCode": "ZWL",
         "id": "dc08d256-ae70-49fc-914c-68824d23c76e",
         "note": "deleniti tempora laborum",
         "ownerAccountId": "72914787-e90f-493f-a496-efa4cbe6b221",
@@ -265,7 +265,7 @@ exports[`debts.add > functionality > multiple debts > some are auto-accepted by 
       "id:dc08d256-ae70-49fc-914c-68824d23c76e|ownerAccountId:8dd14d84-afee-4edc-939f-b5d7f00629bc": {
         "amount": "-918.1200",
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "ZWG",
+        "currencyCode": "ZWL",
         "id": "dc08d256-ae70-49fc-914c-68824d23c76e",
         "note": "deleniti tempora laborum",
         "ownerAccountId": "8dd14d84-afee-4edc-939f-b5d7f00629bc",
@@ -286,7 +286,7 @@ exports[`debts.add > functionality > multiple debts > some auto-accepting accoun
       "id:6773fb0c-e68e-4b96-8767-b26fbb641a16|ownerAccountId:b711e002-cb68-4f30-b587-ec66c0f9b2eb": {
         "amount": "910.6300",
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "PYG",
+        "currencyCode": "QAR",
         "id": "6773fb0c-e68e-4b96-8767-b26fbb641a16",
         "note": "in tempora deserunt",
         "ownerAccountId": "b711e002-cb68-4f30-b587-ec66c0f9b2eb",
@@ -298,7 +298,7 @@ exports[`debts.add > functionality > multiple debts > some auto-accepting accoun
       "id:6773fb0c-e68e-4b96-8767-b26fbb641a16|ownerAccountId:c8d05008-38e2-4291-8da0-1599b04cfc31": {
         "amount": "-910.6300",
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "PYG",
+        "currencyCode": "QAR",
         "id": "6773fb0c-e68e-4b96-8767-b26fbb641a16",
         "note": "in tempora deserunt",
         "ownerAccountId": "c8d05008-38e2-4291-8da0-1599b04cfc31",
@@ -310,7 +310,7 @@ exports[`debts.add > functionality > multiple debts > some auto-accepting accoun
       "id:7d52f29b-a938-4327-86e2-5f5535b93921|ownerAccountId:b711e002-cb68-4f30-b587-ec66c0f9b2eb": {
         "amount": "102.0700",
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "PGK",
+        "currencyCode": "PKR",
         "id": "7d52f29b-a938-4327-86e2-5f5535b93921",
         "note": "iure aliquam quasi",
         "ownerAccountId": "b711e002-cb68-4f30-b587-ec66c0f9b2eb",
@@ -322,7 +322,7 @@ exports[`debts.add > functionality > multiple debts > some auto-accepting accoun
       "id:af5e0a9d-feb6-4740-999a-1c740f56038f|ownerAccountId:b711e002-cb68-4f30-b587-ec66c0f9b2eb": {
         "amount": "-407.0700",
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "PEN",
+        "currencyCode": "PGK",
         "id": "af5e0a9d-feb6-4740-999a-1c740f56038f",
         "note": "consequatur tempora quos",
         "ownerAccountId": "b711e002-cb68-4f30-b587-ec66c0f9b2eb",
@@ -334,7 +334,7 @@ exports[`debts.add > functionality > multiple debts > some auto-accepting accoun
       "id:af5e0a9d-feb6-4740-999a-1c740f56038f|ownerAccountId:c8d05008-38e2-4291-8da0-1599b04cfc31": {
         "amount": "407.0700",
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "PEN",
+        "currencyCode": "PGK",
         "id": "af5e0a9d-feb6-4740-999a-1c740f56038f",
         "note": "consequatur tempora quos",
         "ownerAccountId": "c8d05008-38e2-4291-8da0-1599b04cfc31",
@@ -349,7 +349,7 @@ exports[`debts.add > functionality > multiple debts > some auto-accepting accoun
     "debts": {
       "id:7d52f29b-a938-4327-86e2-5f5535b93921|ownerAccountId:c8d05008-38e2-4291-8da0-1599b04cfc31": {
         "amount": "-102.0700",
-        "currencyCode": "PGK",
+        "currencyCode": "PKR",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },

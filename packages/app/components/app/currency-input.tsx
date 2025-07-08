@@ -5,7 +5,8 @@ import type { z } from "zod/v4";
 
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
 import { useBooleanState } from "~app/hooks/use-boolean-state";
-import { useCurrencyDescription } from "~app/hooks/use-formatted-currency";
+import { useLocale } from "~app/hooks/use-locale";
+import { getCurrencyDescription } from "~app/utils/currency";
 import type { CurrencyCode } from "~app/utils/currency";
 import type { currencyCodeSchema } from "~app/utils/validation";
 import { Button } from "~components/button";
@@ -27,10 +28,10 @@ const InnerInput: React.FC<InnerProps> = ({
 	onValueChange,
 	...props
 }) => {
-	const currencyDescription = useCurrencyDescription(value);
+	const locale = useLocale();
 	return (
 		<Input
-			value={currencyDescription}
+			value={getCurrencyDescription(locale, value)}
 			onChange={(e) => onValueChange(e.currentTarget.value)}
 			{...props}
 		/>

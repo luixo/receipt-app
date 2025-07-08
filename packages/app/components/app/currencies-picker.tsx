@@ -6,8 +6,9 @@ import { useTranslation } from "react-i18next";
 
 import { QueryErrorMessage } from "~app/components/error-message";
 import { useCurrencies } from "~app/hooks/use-currencies";
-import { useCurrencyDescriptions } from "~app/hooks/use-formatted-currency";
+import { useLocale } from "~app/hooks/use-locale";
 import type { TRPCQueryInput, TRPCQueryResult } from "~app/trpc";
+import { getCurrencyDescription } from "~app/utils/currency";
 import type { CurrencyCode } from "~app/utils/currency";
 import { useTRPC } from "~app/utils/trpc";
 import { Button } from "~components/button";
@@ -31,6 +32,7 @@ const CurrenciesPickerLoader: React.FC<LoaderProps> = ({
 	topQueryOptions,
 	hiddenCurrencies = [],
 }) => {
+	const locale = useLocale();
 	const trpc = useTRPC();
 	const topCurrenciesQuery = useQuery(
 		trpc.currency.top.queryOptions({
@@ -50,9 +52,7 @@ const CurrenciesPickerLoader: React.FC<LoaderProps> = ({
 		if (!query.data) {
 			return;
 		}
-		return query.data
-			.map(({ code }) => code)
-			.filter((code) => !hiddenCurrencies.includes(code));
+		return query.data.filter((code) => !hiddenCurrencies.includes(code));
 	}, [hiddenCurrencies, query.data]);
 	const sortedCodes = topCurrencyCodes
 		? codes
@@ -61,7 +61,10 @@ const CurrenciesPickerLoader: React.FC<LoaderProps> = ({
 				)
 			: topCurrencyCodes
 		: codes || [];
-	const formattedCurrencies = useCurrencyDescriptions(sortedCodes);
+	const formattedCurrencies = sortedCodes.map((currencyCode) => ({
+		code: currencyCode,
+		description: getCurrencyDescription(locale, currencyCode),
+	}));
 	return (
 		<View className="flex-row flex-wrap gap-2">
 			{formattedCurrencies.map(({ code, description }, index) => (
@@ -114,7 +117,7 @@ export const CurrenciesPicker: React.FC<WrapperProps> = ({
 			topCurrenciesQuery.status === "success"
 		) {
 			onLoad(
-				query.data.map(({ code }) => code),
+				query.data,
 				topCurrenciesQuery.data.map(({ currencyCode }) => currencyCode),
 			);
 		}

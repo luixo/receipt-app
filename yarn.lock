@@ -7590,7 +7590,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@ra/utils@workspace:packages/utils"
   dependencies:
-    currency-codes: "npm:^2.2.0"
     find-free-ports: "npm:^3.1.1"
   languageName: unknown
   linkType: soft
@@ -15445,16 +15444,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"currency-codes@npm:^2.2.0":
-  version: 2.2.0
-  resolution: "currency-codes@npm:2.2.0"
-  dependencies:
-    first-match: "npm:~0.0.1"
-    nub: "npm:~0.0.0"
-  checksum: 10/5b7315cfb77c74381ec1b852f7cec7d7ab886f155f1f1d321665efbc2fee45c01b522bd114e7eda7ae527f33cbb8a117e89082959d620ec12b0b14400f8491f2
-  languageName: node
-  linkType: hard
-
 "dag-map@npm:~1.0.0":
   version: 1.0.2
   resolution: "dag-map@npm:1.0.2"
@@ -18405,13 +18394,6 @@ __metadata:
   dependencies:
     micromatch: "npm:^4.0.2"
   checksum: 10/7fa7942849eef4d5385ee96a0a9a5a9afe885836fd72ed6a4280312a38690afea275e7d09b343fe97daf0412d833f8ac4b78c17fc756386d9ebebf0759d707a7
-  languageName: node
-  linkType: hard
-
-"first-match@npm:~0.0.1":
-  version: 0.0.1
-  resolution: "first-match@npm:0.0.1"
-  checksum: 10/5ed217591bc59634b9ffa15ad0340401781214827ddca4f17f6854181acac3d05818e389ae1241570ce2311a49655bfb63754da62833a085bbc3217a919bb596
   languageName: node
   linkType: hard
 
@@ -23822,13 +23804,6 @@ __metadata:
     gauge: "npm:^4.0.3"
     set-blocking: "npm:^2.0.0"
   checksum: 10/82b123677e62deb9e7472e27b92386c09e6e254ee6c8bcd720b3011013e4168bc7088e984f4fbd53cb6e12f8b4690e23e4fa6132689313e0d0dc4feea45489bb
-  languageName: node
-  linkType: hard
-
-"nub@npm:~0.0.0":
-  version: 0.0.0
-  resolution: "nub@npm:0.0.0"
-  checksum: 10/a84a82a052027ebaa433161af0c7c85ae5a71991d5b6cf7b76ff3bdd4c5667073b6cb391649d9d217ff835b047f6b102b90526f1905ce2a1f618f958ed00bce1
   languageName: node
   linkType: hard
 

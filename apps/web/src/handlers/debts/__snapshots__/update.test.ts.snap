@@ -64,7 +64,7 @@ exports[`debts.update > functionality > update currency code > counterparty acce
   "updated": {
     "debts": {
       "id:176b7525-1010-47ca-b021-5468f89479dc|ownerAccountId:357cefed-020c-4f2a-8a20-69a485873b05": {
-        "currencyCode": "MRU",
+        "currencyCode": "MUR",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },
@@ -79,7 +79,7 @@ exports[`debts.update > functionality > update currency code > counterparty auto
       "id:26443bc4-be00-4b29-8e25-a2a02d528edb|ownerAccountId:2183d9a8-8002-44c6-ac3b-f84ad9eba49b": {
         "amount": "-762.7400",
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "CHF",
+        "currencyCode": "CLP",
         "id": "26443bc4-be00-4b29-8e25-a2a02d528edb",
         "note": "Fugit a nihil placeat vel sit aperiam eum dignissimos placeat.",
         "ownerAccountId": "2183d9a8-8002-44c6-ac3b-f84ad9eba49b",
@@ -93,7 +93,7 @@ exports[`debts.update > functionality > update currency code > counterparty auto
   "updated": {
     "debts": {
       "id:26443bc4-be00-4b29-8e25-a2a02d528edb|ownerAccountId:2d3de677-5844-4b0e-a36b-48718c65f8c8": {
-        "currencyCode": "CHF",
+        "currencyCode": "CLP",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },
@@ -106,11 +106,11 @@ exports[`debts.update > functionality > update currency code > counterparty auto
   "updated": {
     "debts": {
       "id:86cc3ab5-1baf-425c-ae2c-4488a4b986d1|ownerAccountId:4c35cbb8-2406-4347-86f7-ba5933c76dfc": {
-        "currencyCode": "MAD",
+        "currencyCode": "MDL",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
       "id:86cc3ab5-1baf-425c-ae2c-4488a4b986d1|ownerAccountId:4de94a07-9f2d-4495-b3be-e5973cc40050": {
-        "currencyCode": "MAD",
+        "currencyCode": "MDL",
         "updatedAt": "2020-01-01T00:01:00.000Z",
       },
     },
@@ -420,7 +420,7 @@ exports[`debts.update > functionality > update multiple properties > counterpart
     "debts": {
       "id:176b7525-1010-47ca-b021-5468f89479dc|ownerAccountId:357cefed-020c-4f2a-8a20-69a485873b05": {
         "amount": "239.2900",
-        "currencyCode": "SDG",
+        "currencyCode": "SEK",
         "note": "quod recusandae cupiditate",
         "receiptId": "b51af698-7d8a-4c04-bf96-04a4b25e4431",
         "timestamp": "2020-06-01T00:00:00.000Z",
@@ -438,7 +438,7 @@ exports[`debts.update > functionality > update multiple properties > counterpart
       "id:26443bc4-be00-4b29-8e25-a2a02d528edb|ownerAccountId:2183d9a8-8002-44c6-ac3b-f84ad9eba49b": {
         "amount": "288.2500",
         "createdAt": "2020-01-01T00:00:00.000Z",
-        "currencyCode": "HTG",
+        "currencyCode": "IDR",
         "id": "26443bc4-be00-4b29-8e25-a2a02d528edb",
         "note": "molestias cum vel",
         "ownerAccountId": "2183d9a8-8002-44c6-ac3b-f84ad9eba49b",
@@ -453,7 +453,7 @@ exports[`debts.update > functionality > update multiple properties > counterpart
     "debts": {
       "id:26443bc4-be00-4b29-8e25-a2a02d528edb|ownerAccountId:2d3de677-5844-4b0e-a36b-48718c65f8c8": {
         "amount": "-288.2500",
-        "currencyCode": "HTG",
+        "currencyCode": "IDR",
         "note": "molestias cum vel",
         "receiptId": "ff1f6b0a-4c01-4c01-b9c7-c87807ce603b",
         "timestamp": "2020-06-01T00:00:00.000Z",
@@ -470,7 +470,7 @@ exports[`debts.update > functionality > update multiple properties > counterpart
     "debts": {
       "id:86cc3ab5-1baf-425c-ae2c-4488a4b986d1|ownerAccountId:4c35cbb8-2406-4347-86f7-ba5933c76dfc": {
         "amount": "-463.5200",
-        "currencyCode": "ISK",
+        "currencyCode": "JOD",
         "note": "iure quae provident",
         "receiptId": "305975e4-14d2-4d70-88f6-b0a34d68a350",
         "timestamp": "2020-06-01T00:00:00.000Z",
@@ -478,7 +478,7 @@ exports[`debts.update > functionality > update multiple properties > counterpart
       },
       "id:86cc3ab5-1baf-425c-ae2c-4488a4b986d1|ownerAccountId:4de94a07-9f2d-4495-b3be-e5973cc40050": {
         "amount": "463.5200",
-        "currencyCode": "ISK",
+        "currencyCode": "JOD",
         "receiptId": "305975e4-14d2-4d70-88f6-b0a34d68a350",
         "timestamp": "2020-06-01T00:00:00.000Z",
         "updatedAt": "2020-01-01T00:01:00.000Z",

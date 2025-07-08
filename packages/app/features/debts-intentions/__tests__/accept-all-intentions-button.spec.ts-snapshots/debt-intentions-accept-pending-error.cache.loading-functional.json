@@ -31,7 +31,7 @@
 				"data": {
 					"id": "2bebdb40-84ee-4955-a735-7c4476ea90d3",
 					"userId": "3099f7f4-7698-4d01-8c70-bc4c5c296fcb",
-					"currencyCode": "BGN",
+					"currencyCode": "BDT",
 					"amount": -8515.4,
 					"timestamp": "2019-12-08T19:47:03.357Z",
 					"note": "debitis nobis sed labore",
@@ -40,7 +40,7 @@
 						"updatedAt": "2020-01-01T00:00:00.000Z",
 						"timestamp": "2019-12-08T19:47:03.357Z",
 						"amount": -8515.4,
-						"currencyCode": "BGN"
+						"currencyCode": "BDT"
 					},
 					"receiptId": "<undefined>"
 				},
@@ -57,7 +57,7 @@
 				"data": {
 					"id": "4a275509-29dc-4fb3-a562-426bcf06bf5b",
 					"userId": "3099f7f4-7698-4d01-8c70-bc4c5c296fcb",
-					"currencyCode": "PKR",
+					"currencyCode": "PYG",
 					"amount": 4806.72,
 					"timestamp": "2019-12-18T19:22:28.143Z",
 					"note": "alias vitae sit magnam",
@@ -66,7 +66,7 @@
 						"updatedAt": "2020-01-01T00:00:00.000Z",
 						"timestamp": "2019-12-18T19:22:28.143Z",
 						"amount": 4806.72,
-						"currencyCode": "PKR"
+						"currencyCode": "PYG"
 					},
 					"receiptId": "<undefined>"
 				},
@@ -83,7 +83,7 @@
 				"data": {
 					"id": "952beab0-ac8a-4943-823f-8d3ecc424905",
 					"userId": "3099f7f4-7698-4d01-8c70-bc4c5c296fcb",
-					"currencyCode": "MRU",
+					"currencyCode": "MVR",
 					"amount": -837.35,
 					"timestamp": "2019-12-13T12:32:53.021Z",
 					"note": "qui architecto facilis ad",
@@ -92,7 +92,7 @@
 						"updatedAt": "2020-01-01T00:00:00.000Z",
 						"timestamp": "2019-12-13T12:32:53.021Z",
 						"amount": -837.35,
-						"currencyCode": "MRU"
+						"currencyCode": "MVR"
 					},
 					"receiptId": "<undefined>"
 				},
@@ -135,7 +135,7 @@
 				"data": {
 					"id": "bfeeebf2-d641-4fd2-8d25-949d3a6ba9e5",
 					"userId": "3099f7f4-7698-4d01-8c70-bc4c5c296fcb",
-					"currencyCode": "CVE",
+					"currencyCode": "DOP",
 					"amount": 248.23,
 					"timestamp": "2019-12-02T16:35:16.249Z",
 					"note": "fugiat esse deleniti ipsam",
@@ -144,7 +144,7 @@
 						"updatedAt": "2020-01-01T00:00:00.000Z",
 						"timestamp": "2019-12-02T16:35:16.249Z",
 						"amount": 248.23,
-						"currencyCode": "CVE"
+						"currencyCode": "DOP"
 					},
 					"receiptId": "<undefined>"
 				},

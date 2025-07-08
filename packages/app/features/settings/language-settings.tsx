@@ -4,7 +4,9 @@ import { View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { keys } from "remeda";
 
+import { StoreDataContext } from "~app/contexts/store-data-context";
 import type { Language } from "~app/utils/i18n-data";
+import { LOCALE_STORE_NAME } from "~app/utils/store/locale";
 import { Button } from "~components/button";
 import {
 	Dropdown,
@@ -20,6 +22,9 @@ const LANGUAGE_TEXT: Record<Language, string> = {
 };
 
 export const LanguageSettings: React.FC = () => {
+	const {
+		[LOCALE_STORE_NAME]: [, setLocale],
+	} = React.useContext(StoreDataContext);
 	const { i18n, t } = useTranslation("settings");
 	const currentLanguage = i18n.language as Language;
 	const onChange = React.useCallback(
@@ -28,8 +33,9 @@ export const LanguageSettings: React.FC = () => {
 				return;
 			}
 			void i18n.changeLanguage(nextLanguage);
+			setLocale(nextLanguage);
 		},
-		[currentLanguage, i18n],
+		[currentLanguage, i18n, setLocale],
 	);
 	return (
 		<View className="flex-row items-center gap-4">
