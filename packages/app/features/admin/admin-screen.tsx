@@ -80,7 +80,7 @@ const AdminScreenInner: React.FC = () => {
 	const [modalEmail, setModalEmail] = React.useState<string | undefined>();
 	const {
 		[PRETEND_USER_STORE_NAME]: [pretendUser, setPretendUser, resetPretendUser],
-	} = React.useContext(StoreDataContext);
+	} = React.use(StoreDataContext);
 	const setPretendEmail = React.useCallback(
 		(email: string) => setPretendUser({ email }),
 		[setPretendUser],

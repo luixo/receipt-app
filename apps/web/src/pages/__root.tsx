@@ -108,7 +108,7 @@ const RootDocument: React.FC<
 
 const RootComponent = () => {
 	const data = Route.useLoaderData();
-	const baseLinksContext = React.useContext(LinksContext);
+	const baseLinksContext = React.use(LinksContext);
 	const [initialSearchParams, removeTestSearchParams] = useTestSearchParams();
 	React.useEffect(() => removeTestSearchParams(), [removeTestSearchParams]);
 

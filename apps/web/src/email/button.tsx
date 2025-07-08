@@ -10,7 +10,7 @@ type Props = {
 };
 
 export const Button: React.FC<Props> = ({ href, text }) => {
-	const baseUrl = React.useContext(BaseUrlContext);
+	const baseUrl = React.use(BaseUrlContext);
 	return (
 		<>
 			<Style

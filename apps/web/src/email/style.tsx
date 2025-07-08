@@ -16,7 +16,7 @@ type Props = {
 );
 
 export const Style: React.FC<Props> = ({ selector, ...props }) => {
-	const mapping = React.useContext(StylingContext);
+	const mapping = React.use(StylingContext);
 	if (mapping[selector]) {
 		return null;
 	}

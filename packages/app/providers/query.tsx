@@ -17,7 +17,7 @@ export const QueryProvider: React.FC<React.PropsWithChildren<Props>> = ({
 	queryClientKey,
 	children,
 }) => {
-	const [queryClients, setQueryClients] = React.useContext(QueryClientsContext);
+	const [queryClients, setQueryClients] = React.use(QueryClientsContext);
 	React.useEffect(() => {
 		setQueryClients((prevQueryClients) => {
 			if (prevQueryClients[queryClientKey]) {

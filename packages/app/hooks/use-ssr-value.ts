@@ -7,7 +7,7 @@ import { defaultGetters } from "~app/utils/store-data";
 export const useSsrValue = <K extends keyof StoreValues>(
 	key: K,
 ): [StoreValues[K], StoreValues[K]] => {
-	const storeDataContext = React.useContext(StoreDataContext);
+	const storeDataContext = React.use(StoreDataContext);
 	const [ssrValue] = storeDataContext[key] as StoreStates[K];
 	const getter = defaultGetters[key];
 	if (!getter) {

@@ -16,7 +16,7 @@ export const QueryProviderWithPretend: React.FC<
 > = ({ Wrapper, children }) => {
 	const {
 		[PRETEND_USER_STORE_NAME]: [pretendUser],
-	} = React.useContext(StoreDataContext);
+	} = React.use(StoreDataContext);
 	return (
 		<Wrapper queryClientKey={pretendUser.email || SELF_QUERY_CLIENT_KEY}>
 			{children}

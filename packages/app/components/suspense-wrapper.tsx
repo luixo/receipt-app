@@ -35,7 +35,7 @@ const ErrorComponent: ErrorRouteComponent = ({
 export const SuspenseWrapper: React.FC<
 	React.PropsWithChildren<{ fallback: React.ReactNode }>
 > = ({ children, fallback }) => {
-	const { captureError } = React.useContext(LinksContext);
+	const { captureError } = React.use(LinksContext);
 	return (
 		<React.Suspense fallback={fallback}>
 			<QueryErrorResetBoundary>

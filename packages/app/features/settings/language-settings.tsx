@@ -24,7 +24,7 @@ const LANGUAGE_TEXT: Record<Language, string> = {
 export const LanguageSettings: React.FC = () => {
 	const {
 		[LOCALE_STORE_NAME]: [, setLocale],
-	} = React.useContext(StoreDataContext);
+	} = React.use(StoreDataContext);
 	const { i18n, t } = useTranslation("settings");
 	const currentLanguage = i18n.language as Language;
 	const onChange = React.useCallback(

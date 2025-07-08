@@ -20,7 +20,7 @@ import { storeContext } from "~mobile/utils/store";
 
 const ClientProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
 	const baseUrl = useBaseUrl();
-	const baseLinksContext = React.useContext(LinksContext);
+	const baseLinksContext = React.use(LinksContext);
 	const linksContext = React.useMemo<LinksContextType>(
 		() => ({
 			searchParams: {},

@@ -7,7 +7,7 @@ import {
 } from "~app/utils/store/color-modes";
 
 export const useLastColorMode = () =>
-	React.useContext(StoreDataContext)[LAST_COLOR_MODE_STORE_NAME];
+	React.use(StoreDataContext)[LAST_COLOR_MODE_STORE_NAME];
 
 export const useSelectedColorMode = () =>
-	React.useContext(StoreDataContext)[SELECTED_COLOR_MODE_STORE_NAME];
+	React.use(StoreDataContext)[SELECTED_COLOR_MODE_STORE_NAME];

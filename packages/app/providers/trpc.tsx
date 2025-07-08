@@ -9,7 +9,7 @@ import { TRPCProvider as RawTRPCProvider, getLinks } from "~app/utils/trpc";
 export const TRPCProvider: React.FC<React.PropsWithChildren> = ({
 	children,
 }) => {
-	const linksContext = React.useContext(LinksContext);
+	const linksContext = React.use(LinksContext);
 	const queryClient = useQueryClient();
 	const trpcClient = React.useMemo(
 		() => createTRPCClient({ links: getLinks(linksContext) }),

@@ -32,7 +32,7 @@ const NoAdminEffect: React.FC = () => {
 export const AdminWrapper: React.FC<React.PropsWithChildren> = ({
 	children,
 }) => {
-	const baseLinksContext = React.useContext(LinksContext);
+	const baseLinksContext = React.use(LinksContext);
 	const linksContext = React.useMemo<LinksContextType>(
 		() => ({
 			...baseLinksContext,

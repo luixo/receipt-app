@@ -28,8 +28,7 @@ type StoreKey = keyof StoreStates;
 export const StoredDataProvider: React.FC<React.PropsWithChildren> = ({
 	children,
 }) => {
-	const { setItem, deleteItem, getInitialItems } =
-		React.useContext(StoreContext);
+	const { setItem, deleteItem, getInitialItems } = React.use(StoreContext);
 	const { nowTimestamp, values } = getInitialItems();
 	const [mounted, setMounted] = React.useState(false);
 	React.useEffect(() => setMounted(true), []);

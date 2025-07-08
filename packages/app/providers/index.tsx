@@ -23,7 +23,7 @@ const QueryProviderWithPretend: React.FC<React.PropsWithChildren> = ({
 }) => {
 	const {
 		[PRETEND_USER_STORE_NAME]: [pretendUser],
-	} = React.useContext(StoreDataContext);
+	} = React.use(StoreDataContext);
 	return (
 		<QueryProvider queryClientKey={pretendUser.email || SELF_QUERY_CLIENT_KEY}>
 			<TRPCProvider>{children}</TRPCProvider>

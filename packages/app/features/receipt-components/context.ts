@@ -14,7 +14,7 @@ export const actionsHooksContext = React.createContext<
 >(undefined);
 
 export const useActionsHooksContext = () => {
-	const context = React.useContext(actionsHooksContext);
+	const context = React.use(actionsHooksContext);
 	if (!context) {
 		throw new Error("Expected to have receipt actions hooks context!");
 	}
@@ -26,7 +26,7 @@ export const receiptContext = React.createContext<ReceiptContext | undefined>(
 );
 
 export const useReceiptContext = () => {
-	const context = React.useContext(receiptContext);
+	const context = React.use(receiptContext);
 	if (!context) {
 		throw new Error("Expected to have receipt context!");
 	}

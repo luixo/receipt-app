@@ -11,7 +11,7 @@ type Props = {
 };
 
 export const Footer: React.FC<Props> = ({ children }) => {
-	const baseUrl = React.useContext(BaseUrlContext);
+	const baseUrl = React.use(BaseUrlContext);
 	return (
 		<>
 			<Style

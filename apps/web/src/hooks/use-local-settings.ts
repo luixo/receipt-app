@@ -13,7 +13,7 @@ const useSetLocalSetting = <T extends keyof StoreValues>(
 	key: T,
 	getValue: () => StoreValues[T],
 ) => {
-	const [, setValue] = React.useContext(StoreDataContext)[key];
+	const [, setValue] = React.use(StoreDataContext)[key];
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	useMountEffect(() => setValue(getValue() as any));
 };
