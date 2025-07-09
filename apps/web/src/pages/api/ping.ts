@@ -1,5 +1,5 @@
-import { createAPIFileRoute } from "@tanstack/react-start/api";
+import { createServerFileRoute } from "@tanstack/react-start/server";
 
-export const APIRoute = createAPIFileRoute("/api/ping")({
+export const ServerRoute = createServerFileRoute("/api/ping").methods({
 	GET: async () => new Response("Pong"),
 });

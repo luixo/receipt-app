@@ -10,7 +10,8 @@
 
 # build
 /out/
-/.vinxi
+/.tanstack
+/.nitro
 
 # production
 /build

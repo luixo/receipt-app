@@ -391,9 +391,10 @@ export default ts.config(
 			[
 				"apps/web",
 				[
-					"app.config.ts",
+					"vite.config.ts",
 					"src/entry/ssr.tsx",
 					"vitest.config.ts",
+					"**/test.*.ts",
 					"**/*.test.ts",
 					"**/*.spec.ts",
 				],
@@ -536,7 +537,7 @@ export default ts.config(
 			".yarn/",
 			"**/.output/",
 			"**/.vercel/",
-			"**/.vinxi/",
+			"**/.tanstack/",
 			"**/.expo/",
 			"**/coverage/",
 			"**/playwright-report/",

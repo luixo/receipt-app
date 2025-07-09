@@ -41,6 +41,7 @@ const PROPS_KEYS = {
 	viewTransition: true,
 	ignoreBlocker: true,
 	reloadDocument: true,
+	unsafeRelative: true,
 } satisfies Record<keyof ValidateNavigateOptions, true>;
 
 /* eslint-disable react/function-component-definition */

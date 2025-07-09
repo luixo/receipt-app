@@ -12,7 +12,7 @@
 		"@tanstack/query-async-storage-persister": "^5.80.6",
 		"@tanstack/react-form": "^1.12.2",
 		"@tanstack/react-query-persist-client": "^5.80.6",
-		"@tanstack/react-router": "^1.120.20",
+		"@tanstack/react-router": "^1.125.6",
 		"@trpc/client": "^11.3.1",
 		"@trpc/react-query": "^11.3.1",
 		"@trpc/server": "^11.3.1",

@@ -1,6 +1,5 @@
-/// <reference types="vinxi/types/server" />
+/// <reference types="vite/client" />
 import * as Sentry from "@sentry/tanstackstart-react";
-import { getRouterManifest } from "@tanstack/react-start/router-manifest";
 import {
 	createStartHandler,
 	defaultStreamHandler,
@@ -31,7 +30,6 @@ const wrappedStreamHandler =
 
 const eventHandler = createStartHandler<TreeRouter>({
 	createRouter: () => createRouter(getExternalContext()),
-	getRouterManifest,
 })(wrappedStreamHandler);
 
 export default eventHandler;

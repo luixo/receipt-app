@@ -1,8 +1,10 @@
-import { createAPIFileRoute } from "@tanstack/react-start/api";
+import { createServerFileRoute } from "@tanstack/react-start/server";
 
 import { getApiTrpcClient } from "~web/utils/trpc";
 
-export const APIRoute = createAPIFileRoute("/api/utils/ping-cache")({
+export const ServerRoute = createServerFileRoute(
+	"/api/utils/ping-cache",
+).methods({
 	POST: async ({ request }) => {
 		const client = getApiTrpcClient(request);
 		try {

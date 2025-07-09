@@ -61,9 +61,7 @@ const getLocalQueryClient = (queryClient: QueryClient) => {
 };
 
 export const createRouter = (externalContext: ExternalRouterContext) => {
-	const request = import.meta.env.SSR
-		? serverOnly(() => getWebRequest() ?? null)()
-		: null;
+	const request = import.meta.env.SSR ? serverOnly(getWebRequest)() : null;
 	const queryClient = getQueryClient();
 	const i18nInstance = i18n
 		// Options are cloned because i18next mutates properties inline

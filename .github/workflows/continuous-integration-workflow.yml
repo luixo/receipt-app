@@ -58,8 +58,6 @@ jobs:
         # Mode needed to inject .env.test file variables into the build
         run: yarn web:build --mode test
         env:
-          S3_BUCKET: test-bucket
-          S3_ENDPOINT: https://fake-endpoint.org
           ANALYZE_BUNDLE: true
       - name: Upload web build dir
         uses: actions/upload-artifact@v4
@@ -67,7 +65,6 @@ jobs:
           name: web-build
           path: |
             apps/web/.output
-            !apps/web/.output/**/stats.json
             !*.map
           retention-days: 0
           include-hidden-files: true
@@ -76,7 +73,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: web-build-stats
-          path: apps/web/.output/public/_build/stats.json
+          path: apps/web/dist/stats.json
           retention-days: 0
           if-no-files-found: error
 
