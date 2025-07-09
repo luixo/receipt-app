@@ -1,4 +1,6 @@
-/// <reference types="vinxi/types/client" />
+/// <reference types="vite/client" />
+import React from "react";
+
 import * as Sentry from "@sentry/tanstackstart-react";
 import { StartClient } from "@tanstack/react-start";
 import { hydrateRoot } from "react-dom/client";
@@ -42,4 +44,11 @@ if (sentryDsn) {
 	});
 }
 
-hydrateRoot(document, <StartClient router={router} />);
+React.startTransition(() => {
+	hydrateRoot(
+		document,
+		<React.StrictMode>
+			<StartClient router={router} />
+		</React.StrictMode>,
+	);
+});

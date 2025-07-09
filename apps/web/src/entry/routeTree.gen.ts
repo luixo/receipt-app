@@ -8,399 +8,650 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-// Import Routes
+import { createServerRootRoute } from '@tanstack/react-start/server'
 
-import { Route as rootRoute } from './../pages/__root'
-import { Route as PublicImport } from './../pages/_public'
-import { Route as ProtectedImport } from './../pages/_protected'
-import { Route as IndexImport } from './../pages/index'
-import { Route as PublicVoidAccountImport } from './../pages/_public/void-account'
-import { Route as PublicResetPasswordImport } from './../pages/_public/reset-password'
-import { Route as PublicRegisterImport } from './../pages/_public/register'
-import { Route as PublicLoginImport } from './../pages/_public/login'
-import { Route as PublicConfirmEmailImport } from './../pages/_public/confirm-email'
-import { Route as ProtectedSettingsImport } from './../pages/_protected/settings'
-import { Route as ProtectedAdminImport } from './../pages/_protected/admin'
-import { Route as ProtectedAccountImport } from './../pages/_protected/account'
-import { Route as ProtectedUsersIndexImport } from './../pages/_protected/users/index'
-import { Route as ProtectedReceiptsIndexImport } from './../pages/_protected/receipts/index'
-import { Route as ProtectedDebtsIndexImport } from './../pages/_protected/debts/index'
-import { Route as ProtectedUsersConnectionsImport } from './../pages/_protected/users/connections'
-import { Route as ProtectedUsersAddImport } from './../pages/_protected/users/add'
-import { Route as ProtectedUsersIdImport } from './../pages/_protected/users/$id'
-import { Route as ProtectedReceiptsAddImport } from './../pages/_protected/receipts/add'
-import { Route as ProtectedReceiptsIdImport } from './../pages/_protected/receipts/$id'
-import { Route as ProtectedDebtsTransferImport } from './../pages/_protected/debts/transfer'
-import { Route as ProtectedDebtsIntentionsImport } from './../pages/_protected/debts/intentions'
-import { Route as ProtectedDebtsAddImport } from './../pages/_protected/debts/add'
-import { Route as ProtectedDebtsIdImport } from './../pages/_protected/debts/$id'
-import { Route as ProtectedDebtsUserIdIndexImport } from './../pages/_protected/debts/user/$id/index'
-import { Route as ProtectedDebtsUserIdExchangeIndexImport } from './../pages/_protected/debts/user/$id/exchange/index'
-import { Route as ProtectedDebtsUserIdExchangeSpecificImport } from './../pages/_protected/debts/user/$id/exchange/specific'
-import { Route as ProtectedDebtsUserIdExchangeAllImport } from './../pages/_protected/debts/user/$id/exchange/all'
+import { Route as rootRouteImport } from './../pages/__root'
+import { Route as PublicRouteImport } from './../pages/_public'
+import { Route as ProtectedRouteImport } from './../pages/_protected'
+import { Route as IndexRouteImport } from './../pages/index'
+import { Route as PublicVoidAccountRouteImport } from './../pages/_public/void-account'
+import { Route as PublicResetPasswordRouteImport } from './../pages/_public/reset-password'
+import { Route as PublicRegisterRouteImport } from './../pages/_public/register'
+import { Route as PublicLoginRouteImport } from './../pages/_public/login'
+import { Route as PublicConfirmEmailRouteImport } from './../pages/_public/confirm-email'
+import { Route as ProtectedSettingsRouteImport } from './../pages/_protected/settings'
+import { Route as ProtectedAdminRouteImport } from './../pages/_protected/admin'
+import { Route as ProtectedAccountRouteImport } from './../pages/_protected/account'
+import { Route as ProtectedUsersIndexRouteImport } from './../pages/_protected/users/index'
+import { Route as ProtectedReceiptsIndexRouteImport } from './../pages/_protected/receipts/index'
+import { Route as ProtectedDebtsIndexRouteImport } from './../pages/_protected/debts/index'
+import { Route as ProtectedUsersConnectionsRouteImport } from './../pages/_protected/users/connections'
+import { Route as ProtectedUsersAddRouteImport } from './../pages/_protected/users/add'
+import { Route as ProtectedUsersIdRouteImport } from './../pages/_protected/users/$id'
+import { Route as ProtectedReceiptsAddRouteImport } from './../pages/_protected/receipts/add'
+import { Route as ProtectedReceiptsIdRouteImport } from './../pages/_protected/receipts/$id'
+import { Route as ProtectedDebtsTransferRouteImport } from './../pages/_protected/debts/transfer'
+import { Route as ProtectedDebtsIntentionsRouteImport } from './../pages/_protected/debts/intentions'
+import { Route as ProtectedDebtsAddRouteImport } from './../pages/_protected/debts/add'
+import { Route as ProtectedDebtsIdRouteImport } from './../pages/_protected/debts/$id'
+import { Route as ProtectedDebtsUserIdIndexRouteImport } from './../pages/_protected/debts/user/$id/index'
+import { Route as ProtectedDebtsUserIdExchangeIndexRouteImport } from './../pages/_protected/debts/user/$id/exchange/index'
+import { Route as ProtectedDebtsUserIdExchangeSpecificRouteImport } from './../pages/_protected/debts/user/$id/exchange/specific'
+import { Route as ProtectedDebtsUserIdExchangeAllRouteImport } from './../pages/_protected/debts/user/$id/exchange/all'
+import { ServerRoute as ApiPingServerRouteImport } from './../pages/api/ping'
+import { ServerRoute as ApiUtilsPingCacheServerRouteImport } from './../pages/api/utils/ping-cache'
+import { ServerRoute as ApiUtilsCleanupServerRouteImport } from './../pages/api/utils/cleanup'
+import { ServerRoute as ApiTrpcSplatServerRouteImport } from './../pages/api/trpc/$'
 
-// Create/Update Routes
+const rootServerRouteImport = createServerRootRoute()
 
-const PublicRoute = PublicImport.update({
+const PublicRoute = PublicRouteImport.update({
   id: '/_public',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const ProtectedRoute = ProtectedImport.update({
+const ProtectedRoute = ProtectedRouteImport.update({
   id: '/_protected',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const IndexRoute = IndexImport.update({
+const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const PublicVoidAccountRoute = PublicVoidAccountImport.update({
+const PublicVoidAccountRoute = PublicVoidAccountRouteImport.update({
   id: '/void-account',
   path: '/void-account',
   getParentRoute: () => PublicRoute,
 } as any)
-
-const PublicResetPasswordRoute = PublicResetPasswordImport.update({
+const PublicResetPasswordRoute = PublicResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
   getParentRoute: () => PublicRoute,
 } as any)
-
-const PublicRegisterRoute = PublicRegisterImport.update({
+const PublicRegisterRoute = PublicRegisterRouteImport.update({
   id: '/register',
   path: '/register',
   getParentRoute: () => PublicRoute,
 } as any)
-
-const PublicLoginRoute = PublicLoginImport.update({
+const PublicLoginRoute = PublicLoginRouteImport.update({
   id: '/login',
   path: '/login',
   getParentRoute: () => PublicRoute,
 } as any)
-
-const PublicConfirmEmailRoute = PublicConfirmEmailImport.update({
+const PublicConfirmEmailRoute = PublicConfirmEmailRouteImport.update({
   id: '/confirm-email',
   path: '/confirm-email',
   getParentRoute: () => PublicRoute,
 } as any)
-
-const ProtectedSettingsRoute = ProtectedSettingsImport.update({
+const ProtectedSettingsRoute = ProtectedSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
   getParentRoute: () => ProtectedRoute,
 } as any)
-
-const ProtectedAdminRoute = ProtectedAdminImport.update({
+const ProtectedAdminRoute = ProtectedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
   getParentRoute: () => ProtectedRoute,
 } as any)
-
-const ProtectedAccountRoute = ProtectedAccountImport.update({
+const ProtectedAccountRoute = ProtectedAccountRouteImport.update({
   id: '/account',
   path: '/account',
   getParentRoute: () => ProtectedRoute,
 } as any)
-
-const ProtectedUsersIndexRoute = ProtectedUsersIndexImport.update({
+const ProtectedUsersIndexRoute = ProtectedUsersIndexRouteImport.update({
   id: '/users/',
   path: '/users/',
   getParentRoute: () => ProtectedRoute,
 } as any)
-
-const ProtectedReceiptsIndexRoute = ProtectedReceiptsIndexImport.update({
+const ProtectedReceiptsIndexRoute = ProtectedReceiptsIndexRouteImport.update({
   id: '/receipts/',
   path: '/receipts/',
   getParentRoute: () => ProtectedRoute,
 } as any)
-
-const ProtectedDebtsIndexRoute = ProtectedDebtsIndexImport.update({
+const ProtectedDebtsIndexRoute = ProtectedDebtsIndexRouteImport.update({
   id: '/debts/',
   path: '/debts/',
   getParentRoute: () => ProtectedRoute,
 } as any)
-
-const ProtectedUsersConnectionsRoute = ProtectedUsersConnectionsImport.update({
-  id: '/users/connections',
-  path: '/users/connections',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-
-const ProtectedUsersAddRoute = ProtectedUsersAddImport.update({
+const ProtectedUsersConnectionsRoute =
+  ProtectedUsersConnectionsRouteImport.update({
+    id: '/users/connections',
+    path: '/users/connections',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedUsersAddRoute = ProtectedUsersAddRouteImport.update({
   id: '/users/add',
   path: '/users/add',
   getParentRoute: () => ProtectedRoute,
 } as any)
-
-const ProtectedUsersIdRoute = ProtectedUsersIdImport.update({
+const ProtectedUsersIdRoute = ProtectedUsersIdRouteImport.update({
   id: '/users/$id',
   path: '/users/$id',
   getParentRoute: () => ProtectedRoute,
 } as any)
-
-const ProtectedReceiptsAddRoute = ProtectedReceiptsAddImport.update({
+const ProtectedReceiptsAddRoute = ProtectedReceiptsAddRouteImport.update({
   id: '/receipts/add',
   path: '/receipts/add',
   getParentRoute: () => ProtectedRoute,
 } as any)
-
-const ProtectedReceiptsIdRoute = ProtectedReceiptsIdImport.update({
+const ProtectedReceiptsIdRoute = ProtectedReceiptsIdRouteImport.update({
   id: '/receipts/$id',
   path: '/receipts/$id',
   getParentRoute: () => ProtectedRoute,
 } as any)
-
-const ProtectedDebtsTransferRoute = ProtectedDebtsTransferImport.update({
+const ProtectedDebtsTransferRoute = ProtectedDebtsTransferRouteImport.update({
   id: '/debts/transfer',
   path: '/debts/transfer',
   getParentRoute: () => ProtectedRoute,
 } as any)
-
-const ProtectedDebtsIntentionsRoute = ProtectedDebtsIntentionsImport.update({
-  id: '/debts/intentions',
-  path: '/debts/intentions',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-
-const ProtectedDebtsAddRoute = ProtectedDebtsAddImport.update({
+const ProtectedDebtsIntentionsRoute =
+  ProtectedDebtsIntentionsRouteImport.update({
+    id: '/debts/intentions',
+    path: '/debts/intentions',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedDebtsAddRoute = ProtectedDebtsAddRouteImport.update({
   id: '/debts/add',
   path: '/debts/add',
   getParentRoute: () => ProtectedRoute,
 } as any)
-
-const ProtectedDebtsIdRoute = ProtectedDebtsIdImport.update({
+const ProtectedDebtsIdRoute = ProtectedDebtsIdRouteImport.update({
   id: '/debts/$id',
   path: '/debts/$id',
   getParentRoute: () => ProtectedRoute,
 } as any)
-
-const ProtectedDebtsUserIdIndexRoute = ProtectedDebtsUserIdIndexImport.update({
-  id: '/debts/user/$id/',
-  path: '/debts/user/$id/',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-
+const ProtectedDebtsUserIdIndexRoute =
+  ProtectedDebtsUserIdIndexRouteImport.update({
+    id: '/debts/user/$id/',
+    path: '/debts/user/$id/',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
 const ProtectedDebtsUserIdExchangeIndexRoute =
-  ProtectedDebtsUserIdExchangeIndexImport.update({
+  ProtectedDebtsUserIdExchangeIndexRouteImport.update({
     id: '/debts/user/$id/exchange/',
     path: '/debts/user/$id/exchange/',
     getParentRoute: () => ProtectedRoute,
   } as any)
-
 const ProtectedDebtsUserIdExchangeSpecificRoute =
-  ProtectedDebtsUserIdExchangeSpecificImport.update({
+  ProtectedDebtsUserIdExchangeSpecificRouteImport.update({
     id: '/debts/user/$id/exchange/specific',
     path: '/debts/user/$id/exchange/specific',
     getParentRoute: () => ProtectedRoute,
   } as any)
-
 const ProtectedDebtsUserIdExchangeAllRoute =
-  ProtectedDebtsUserIdExchangeAllImport.update({
+  ProtectedDebtsUserIdExchangeAllRouteImport.update({
     id: '/debts/user/$id/exchange/all',
     path: '/debts/user/$id/exchange/all',
     getParentRoute: () => ProtectedRoute,
   } as any)
+const ApiPingServerRoute = ApiPingServerRouteImport.update({
+  id: '/api/ping',
+  path: '/api/ping',
+  getParentRoute: () => rootServerRouteImport,
+} as any)
+const ApiUtilsPingCacheServerRoute = ApiUtilsPingCacheServerRouteImport.update({
+  id: '/api/utils/ping-cache',
+  path: '/api/utils/ping-cache',
+  getParentRoute: () => rootServerRouteImport,
+} as any)
+const ApiUtilsCleanupServerRoute = ApiUtilsCleanupServerRouteImport.update({
+  id: '/api/utils/cleanup',
+  path: '/api/utils/cleanup',
+  getParentRoute: () => rootServerRouteImport,
+} as any)
+const ApiTrpcSplatServerRoute = ApiTrpcSplatServerRouteImport.update({
+  id: '/api/trpc/$',
+  path: '/api/trpc/$',
+  getParentRoute: () => rootServerRouteImport,
+} as any)
 
-// Populate the FileRoutesByPath interface
+export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
+  '/account': typeof ProtectedAccountRoute
+  '/admin': typeof ProtectedAdminRoute
+  '/settings': typeof ProtectedSettingsRoute
+  '/confirm-email': typeof PublicConfirmEmailRoute
+  '/login': typeof PublicLoginRoute
+  '/register': typeof PublicRegisterRoute
+  '/reset-password': typeof PublicResetPasswordRoute
+  '/void-account': typeof PublicVoidAccountRoute
+  '/debts/$id': typeof ProtectedDebtsIdRoute
+  '/debts/add': typeof ProtectedDebtsAddRoute
+  '/debts/intentions': typeof ProtectedDebtsIntentionsRoute
+  '/debts/transfer': typeof ProtectedDebtsTransferRoute
+  '/receipts/$id': typeof ProtectedReceiptsIdRoute
+  '/receipts/add': typeof ProtectedReceiptsAddRoute
+  '/users/$id': typeof ProtectedUsersIdRoute
+  '/users/add': typeof ProtectedUsersAddRoute
+  '/users/connections': typeof ProtectedUsersConnectionsRoute
+  '/debts': typeof ProtectedDebtsIndexRoute
+  '/receipts': typeof ProtectedReceiptsIndexRoute
+  '/users': typeof ProtectedUsersIndexRoute
+  '/debts/user/$id': typeof ProtectedDebtsUserIdIndexRoute
+  '/debts/user/$id/exchange/all': typeof ProtectedDebtsUserIdExchangeAllRoute
+  '/debts/user/$id/exchange/specific': typeof ProtectedDebtsUserIdExchangeSpecificRoute
+  '/debts/user/$id/exchange': typeof ProtectedDebtsUserIdExchangeIndexRoute
+}
+export interface FileRoutesByTo {
+  '/': typeof IndexRoute
+  '/account': typeof ProtectedAccountRoute
+  '/admin': typeof ProtectedAdminRoute
+  '/settings': typeof ProtectedSettingsRoute
+  '/confirm-email': typeof PublicConfirmEmailRoute
+  '/login': typeof PublicLoginRoute
+  '/register': typeof PublicRegisterRoute
+  '/reset-password': typeof PublicResetPasswordRoute
+  '/void-account': typeof PublicVoidAccountRoute
+  '/debts/$id': typeof ProtectedDebtsIdRoute
+  '/debts/add': typeof ProtectedDebtsAddRoute
+  '/debts/intentions': typeof ProtectedDebtsIntentionsRoute
+  '/debts/transfer': typeof ProtectedDebtsTransferRoute
+  '/receipts/$id': typeof ProtectedReceiptsIdRoute
+  '/receipts/add': typeof ProtectedReceiptsAddRoute
+  '/users/$id': typeof ProtectedUsersIdRoute
+  '/users/add': typeof ProtectedUsersAddRoute
+  '/users/connections': typeof ProtectedUsersConnectionsRoute
+  '/debts': typeof ProtectedDebtsIndexRoute
+  '/receipts': typeof ProtectedReceiptsIndexRoute
+  '/users': typeof ProtectedUsersIndexRoute
+  '/debts/user/$id': typeof ProtectedDebtsUserIdIndexRoute
+  '/debts/user/$id/exchange/all': typeof ProtectedDebtsUserIdExchangeAllRoute
+  '/debts/user/$id/exchange/specific': typeof ProtectedDebtsUserIdExchangeSpecificRoute
+  '/debts/user/$id/exchange': typeof ProtectedDebtsUserIdExchangeIndexRoute
+}
+export interface FileRoutesById {
+  __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/_protected': typeof ProtectedRouteWithChildren
+  '/_public': typeof PublicRouteWithChildren
+  '/_protected/account': typeof ProtectedAccountRoute
+  '/_protected/admin': typeof ProtectedAdminRoute
+  '/_protected/settings': typeof ProtectedSettingsRoute
+  '/_public/confirm-email': typeof PublicConfirmEmailRoute
+  '/_public/login': typeof PublicLoginRoute
+  '/_public/register': typeof PublicRegisterRoute
+  '/_public/reset-password': typeof PublicResetPasswordRoute
+  '/_public/void-account': typeof PublicVoidAccountRoute
+  '/_protected/debts/$id': typeof ProtectedDebtsIdRoute
+  '/_protected/debts/add': typeof ProtectedDebtsAddRoute
+  '/_protected/debts/intentions': typeof ProtectedDebtsIntentionsRoute
+  '/_protected/debts/transfer': typeof ProtectedDebtsTransferRoute
+  '/_protected/receipts/$id': typeof ProtectedReceiptsIdRoute
+  '/_protected/receipts/add': typeof ProtectedReceiptsAddRoute
+  '/_protected/users/$id': typeof ProtectedUsersIdRoute
+  '/_protected/users/add': typeof ProtectedUsersAddRoute
+  '/_protected/users/connections': typeof ProtectedUsersConnectionsRoute
+  '/_protected/debts/': typeof ProtectedDebtsIndexRoute
+  '/_protected/receipts/': typeof ProtectedReceiptsIndexRoute
+  '/_protected/users/': typeof ProtectedUsersIndexRoute
+  '/_protected/debts/user/$id/': typeof ProtectedDebtsUserIdIndexRoute
+  '/_protected/debts/user/$id/exchange/all': typeof ProtectedDebtsUserIdExchangeAllRoute
+  '/_protected/debts/user/$id/exchange/specific': typeof ProtectedDebtsUserIdExchangeSpecificRoute
+  '/_protected/debts/user/$id/exchange/': typeof ProtectedDebtsUserIdExchangeIndexRoute
+}
+export interface FileRouteTypes {
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths:
+    | '/'
+    | '/account'
+    | '/admin'
+    | '/settings'
+    | '/confirm-email'
+    | '/login'
+    | '/register'
+    | '/reset-password'
+    | '/void-account'
+    | '/debts/$id'
+    | '/debts/add'
+    | '/debts/intentions'
+    | '/debts/transfer'
+    | '/receipts/$id'
+    | '/receipts/add'
+    | '/users/$id'
+    | '/users/add'
+    | '/users/connections'
+    | '/debts'
+    | '/receipts'
+    | '/users'
+    | '/debts/user/$id'
+    | '/debts/user/$id/exchange/all'
+    | '/debts/user/$id/exchange/specific'
+    | '/debts/user/$id/exchange'
+  fileRoutesByTo: FileRoutesByTo
+  to:
+    | '/'
+    | '/account'
+    | '/admin'
+    | '/settings'
+    | '/confirm-email'
+    | '/login'
+    | '/register'
+    | '/reset-password'
+    | '/void-account'
+    | '/debts/$id'
+    | '/debts/add'
+    | '/debts/intentions'
+    | '/debts/transfer'
+    | '/receipts/$id'
+    | '/receipts/add'
+    | '/users/$id'
+    | '/users/add'
+    | '/users/connections'
+    | '/debts'
+    | '/receipts'
+    | '/users'
+    | '/debts/user/$id'
+    | '/debts/user/$id/exchange/all'
+    | '/debts/user/$id/exchange/specific'
+    | '/debts/user/$id/exchange'
+  id:
+    | '__root__'
+    | '/'
+    | '/_protected'
+    | '/_public'
+    | '/_protected/account'
+    | '/_protected/admin'
+    | '/_protected/settings'
+    | '/_public/confirm-email'
+    | '/_public/login'
+    | '/_public/register'
+    | '/_public/reset-password'
+    | '/_public/void-account'
+    | '/_protected/debts/$id'
+    | '/_protected/debts/add'
+    | '/_protected/debts/intentions'
+    | '/_protected/debts/transfer'
+    | '/_protected/receipts/$id'
+    | '/_protected/receipts/add'
+    | '/_protected/users/$id'
+    | '/_protected/users/add'
+    | '/_protected/users/connections'
+    | '/_protected/debts/'
+    | '/_protected/receipts/'
+    | '/_protected/users/'
+    | '/_protected/debts/user/$id/'
+    | '/_protected/debts/user/$id/exchange/all'
+    | '/_protected/debts/user/$id/exchange/specific'
+    | '/_protected/debts/user/$id/exchange/'
+  fileRoutesById: FileRoutesById
+}
+export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
+  ProtectedRoute: typeof ProtectedRouteWithChildren
+  PublicRoute: typeof PublicRouteWithChildren
+}
+export interface FileServerRoutesByFullPath {
+  '/api/ping': typeof ApiPingServerRoute
+  '/api/trpc/$': typeof ApiTrpcSplatServerRoute
+  '/api/utils/cleanup': typeof ApiUtilsCleanupServerRoute
+  '/api/utils/ping-cache': typeof ApiUtilsPingCacheServerRoute
+}
+export interface FileServerRoutesByTo {
+  '/api/ping': typeof ApiPingServerRoute
+  '/api/trpc/$': typeof ApiTrpcSplatServerRoute
+  '/api/utils/cleanup': typeof ApiUtilsCleanupServerRoute
+  '/api/utils/ping-cache': typeof ApiUtilsPingCacheServerRoute
+}
+export interface FileServerRoutesById {
+  __root__: typeof rootServerRouteImport
+  '/api/ping': typeof ApiPingServerRoute
+  '/api/trpc/$': typeof ApiTrpcSplatServerRoute
+  '/api/utils/cleanup': typeof ApiUtilsCleanupServerRoute
+  '/api/utils/ping-cache': typeof ApiUtilsPingCacheServerRoute
+}
+export interface FileServerRouteTypes {
+  fileServerRoutesByFullPath: FileServerRoutesByFullPath
+  fullPaths:
+    | '/api/ping'
+    | '/api/trpc/$'
+    | '/api/utils/cleanup'
+    | '/api/utils/ping-cache'
+  fileServerRoutesByTo: FileServerRoutesByTo
+  to:
+    | '/api/ping'
+    | '/api/trpc/$'
+    | '/api/utils/cleanup'
+    | '/api/utils/ping-cache'
+  id:
+    | '__root__'
+    | '/api/ping'
+    | '/api/trpc/$'
+    | '/api/utils/cleanup'
+    | '/api/utils/ping-cache'
+  fileServerRoutesById: FileServerRoutesById
+}
+export interface RootServerRouteChildren {
+  ApiPingServerRoute: typeof ApiPingServerRoute
+  ApiTrpcSplatServerRoute: typeof ApiTrpcSplatServerRoute
+  ApiUtilsCleanupServerRoute: typeof ApiUtilsCleanupServerRoute
+  ApiUtilsPingCacheServerRoute: typeof ApiUtilsPingCacheServerRoute
+}
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
+    '/_public': {
+      id: '/_public'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof PublicRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_protected': {
       id: '/_protected'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof ProtectedImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof ProtectedRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/_public': {
-      id: '/_public'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof PublicImport
-      parentRoute: typeof rootRoute
-    }
-    '/_protected/account': {
-      id: '/_protected/account'
-      path: '/account'
-      fullPath: '/account'
-      preLoaderRoute: typeof ProtectedAccountImport
-      parentRoute: typeof ProtectedImport
-    }
-    '/_protected/admin': {
-      id: '/_protected/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof ProtectedAdminImport
-      parentRoute: typeof ProtectedImport
-    }
-    '/_protected/settings': {
-      id: '/_protected/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof ProtectedSettingsImport
-      parentRoute: typeof ProtectedImport
-    }
-    '/_public/confirm-email': {
-      id: '/_public/confirm-email'
-      path: '/confirm-email'
-      fullPath: '/confirm-email'
-      preLoaderRoute: typeof PublicConfirmEmailImport
-      parentRoute: typeof PublicImport
-    }
-    '/_public/login': {
-      id: '/_public/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof PublicLoginImport
-      parentRoute: typeof PublicImport
-    }
-    '/_public/register': {
-      id: '/_public/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof PublicRegisterImport
-      parentRoute: typeof PublicImport
-    }
-    '/_public/reset-password': {
-      id: '/_public/reset-password'
-      path: '/reset-password'
-      fullPath: '/reset-password'
-      preLoaderRoute: typeof PublicResetPasswordImport
-      parentRoute: typeof PublicImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_public/void-account': {
       id: '/_public/void-account'
       path: '/void-account'
       fullPath: '/void-account'
-      preLoaderRoute: typeof PublicVoidAccountImport
-      parentRoute: typeof PublicImport
+      preLoaderRoute: typeof PublicVoidAccountRouteImport
+      parentRoute: typeof PublicRoute
     }
-    '/_protected/debts/$id': {
-      id: '/_protected/debts/$id'
-      path: '/debts/$id'
-      fullPath: '/debts/$id'
-      preLoaderRoute: typeof ProtectedDebtsIdImport
-      parentRoute: typeof ProtectedImport
+    '/_public/reset-password': {
+      id: '/_public/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof PublicResetPasswordRouteImport
+      parentRoute: typeof PublicRoute
     }
-    '/_protected/debts/add': {
-      id: '/_protected/debts/add'
-      path: '/debts/add'
-      fullPath: '/debts/add'
-      preLoaderRoute: typeof ProtectedDebtsAddImport
-      parentRoute: typeof ProtectedImport
+    '/_public/register': {
+      id: '/_public/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof PublicRegisterRouteImport
+      parentRoute: typeof PublicRoute
     }
-    '/_protected/debts/intentions': {
-      id: '/_protected/debts/intentions'
-      path: '/debts/intentions'
-      fullPath: '/debts/intentions'
-      preLoaderRoute: typeof ProtectedDebtsIntentionsImport
-      parentRoute: typeof ProtectedImport
+    '/_public/login': {
+      id: '/_public/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof PublicLoginRouteImport
+      parentRoute: typeof PublicRoute
     }
-    '/_protected/debts/transfer': {
-      id: '/_protected/debts/transfer'
-      path: '/debts/transfer'
-      fullPath: '/debts/transfer'
-      preLoaderRoute: typeof ProtectedDebtsTransferImport
-      parentRoute: typeof ProtectedImport
+    '/_public/confirm-email': {
+      id: '/_public/confirm-email'
+      path: '/confirm-email'
+      fullPath: '/confirm-email'
+      preLoaderRoute: typeof PublicConfirmEmailRouteImport
+      parentRoute: typeof PublicRoute
     }
-    '/_protected/receipts/$id': {
-      id: '/_protected/receipts/$id'
-      path: '/receipts/$id'
-      fullPath: '/receipts/$id'
-      preLoaderRoute: typeof ProtectedReceiptsIdImport
-      parentRoute: typeof ProtectedImport
+    '/_protected/settings': {
+      id: '/_protected/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof ProtectedSettingsRouteImport
+      parentRoute: typeof ProtectedRoute
     }
-    '/_protected/receipts/add': {
-      id: '/_protected/receipts/add'
-      path: '/receipts/add'
-      fullPath: '/receipts/add'
-      preLoaderRoute: typeof ProtectedReceiptsAddImport
-      parentRoute: typeof ProtectedImport
+    '/_protected/admin': {
+      id: '/_protected/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof ProtectedAdminRouteImport
+      parentRoute: typeof ProtectedRoute
     }
-    '/_protected/users/$id': {
-      id: '/_protected/users/$id'
-      path: '/users/$id'
-      fullPath: '/users/$id'
-      preLoaderRoute: typeof ProtectedUsersIdImport
-      parentRoute: typeof ProtectedImport
-    }
-    '/_protected/users/add': {
-      id: '/_protected/users/add'
-      path: '/users/add'
-      fullPath: '/users/add'
-      preLoaderRoute: typeof ProtectedUsersAddImport
-      parentRoute: typeof ProtectedImport
-    }
-    '/_protected/users/connections': {
-      id: '/_protected/users/connections'
-      path: '/users/connections'
-      fullPath: '/users/connections'
-      preLoaderRoute: typeof ProtectedUsersConnectionsImport
-      parentRoute: typeof ProtectedImport
-    }
-    '/_protected/debts/': {
-      id: '/_protected/debts/'
-      path: '/debts'
-      fullPath: '/debts'
-      preLoaderRoute: typeof ProtectedDebtsIndexImport
-      parentRoute: typeof ProtectedImport
-    }
-    '/_protected/receipts/': {
-      id: '/_protected/receipts/'
-      path: '/receipts'
-      fullPath: '/receipts'
-      preLoaderRoute: typeof ProtectedReceiptsIndexImport
-      parentRoute: typeof ProtectedImport
+    '/_protected/account': {
+      id: '/_protected/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof ProtectedAccountRouteImport
+      parentRoute: typeof ProtectedRoute
     }
     '/_protected/users/': {
       id: '/_protected/users/'
       path: '/users'
       fullPath: '/users'
-      preLoaderRoute: typeof ProtectedUsersIndexImport
-      parentRoute: typeof ProtectedImport
+      preLoaderRoute: typeof ProtectedUsersIndexRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/receipts/': {
+      id: '/_protected/receipts/'
+      path: '/receipts'
+      fullPath: '/receipts'
+      preLoaderRoute: typeof ProtectedReceiptsIndexRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/debts/': {
+      id: '/_protected/debts/'
+      path: '/debts'
+      fullPath: '/debts'
+      preLoaderRoute: typeof ProtectedDebtsIndexRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/users/connections': {
+      id: '/_protected/users/connections'
+      path: '/users/connections'
+      fullPath: '/users/connections'
+      preLoaderRoute: typeof ProtectedUsersConnectionsRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/users/add': {
+      id: '/_protected/users/add'
+      path: '/users/add'
+      fullPath: '/users/add'
+      preLoaderRoute: typeof ProtectedUsersAddRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/users/$id': {
+      id: '/_protected/users/$id'
+      path: '/users/$id'
+      fullPath: '/users/$id'
+      preLoaderRoute: typeof ProtectedUsersIdRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/receipts/add': {
+      id: '/_protected/receipts/add'
+      path: '/receipts/add'
+      fullPath: '/receipts/add'
+      preLoaderRoute: typeof ProtectedReceiptsAddRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/receipts/$id': {
+      id: '/_protected/receipts/$id'
+      path: '/receipts/$id'
+      fullPath: '/receipts/$id'
+      preLoaderRoute: typeof ProtectedReceiptsIdRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/debts/transfer': {
+      id: '/_protected/debts/transfer'
+      path: '/debts/transfer'
+      fullPath: '/debts/transfer'
+      preLoaderRoute: typeof ProtectedDebtsTransferRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/debts/intentions': {
+      id: '/_protected/debts/intentions'
+      path: '/debts/intentions'
+      fullPath: '/debts/intentions'
+      preLoaderRoute: typeof ProtectedDebtsIntentionsRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/debts/add': {
+      id: '/_protected/debts/add'
+      path: '/debts/add'
+      fullPath: '/debts/add'
+      preLoaderRoute: typeof ProtectedDebtsAddRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/debts/$id': {
+      id: '/_protected/debts/$id'
+      path: '/debts/$id'
+      fullPath: '/debts/$id'
+      preLoaderRoute: typeof ProtectedDebtsIdRouteImport
+      parentRoute: typeof ProtectedRoute
     }
     '/_protected/debts/user/$id/': {
       id: '/_protected/debts/user/$id/'
       path: '/debts/user/$id'
       fullPath: '/debts/user/$id'
-      preLoaderRoute: typeof ProtectedDebtsUserIdIndexImport
-      parentRoute: typeof ProtectedImport
-    }
-    '/_protected/debts/user/$id/exchange/all': {
-      id: '/_protected/debts/user/$id/exchange/all'
-      path: '/debts/user/$id/exchange/all'
-      fullPath: '/debts/user/$id/exchange/all'
-      preLoaderRoute: typeof ProtectedDebtsUserIdExchangeAllImport
-      parentRoute: typeof ProtectedImport
-    }
-    '/_protected/debts/user/$id/exchange/specific': {
-      id: '/_protected/debts/user/$id/exchange/specific'
-      path: '/debts/user/$id/exchange/specific'
-      fullPath: '/debts/user/$id/exchange/specific'
-      preLoaderRoute: typeof ProtectedDebtsUserIdExchangeSpecificImport
-      parentRoute: typeof ProtectedImport
+      preLoaderRoute: typeof ProtectedDebtsUserIdIndexRouteImport
+      parentRoute: typeof ProtectedRoute
     }
     '/_protected/debts/user/$id/exchange/': {
       id: '/_protected/debts/user/$id/exchange/'
       path: '/debts/user/$id/exchange'
       fullPath: '/debts/user/$id/exchange'
-      preLoaderRoute: typeof ProtectedDebtsUserIdExchangeIndexImport
-      parentRoute: typeof ProtectedImport
+      preLoaderRoute: typeof ProtectedDebtsUserIdExchangeIndexRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/debts/user/$id/exchange/specific': {
+      id: '/_protected/debts/user/$id/exchange/specific'
+      path: '/debts/user/$id/exchange/specific'
+      fullPath: '/debts/user/$id/exchange/specific'
+      preLoaderRoute: typeof ProtectedDebtsUserIdExchangeSpecificRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/debts/user/$id/exchange/all': {
+      id: '/_protected/debts/user/$id/exchange/all'
+      path: '/debts/user/$id/exchange/all'
+      fullPath: '/debts/user/$id/exchange/all'
+      preLoaderRoute: typeof ProtectedDebtsUserIdExchangeAllRouteImport
+      parentRoute: typeof ProtectedRoute
     }
   }
 }
-
-// Create and export the route tree
+declare module '@tanstack/react-start/server' {
+  interface ServerFileRoutesByPath {
+    '/api/ping': {
+      id: '/api/ping'
+      path: '/api/ping'
+      fullPath: '/api/ping'
+      preLoaderRoute: typeof ApiPingServerRouteImport
+      parentRoute: typeof rootServerRouteImport
+    }
+    '/api/utils/ping-cache': {
+      id: '/api/utils/ping-cache'
+      path: '/api/utils/ping-cache'
+      fullPath: '/api/utils/ping-cache'
+      preLoaderRoute: typeof ApiUtilsPingCacheServerRouteImport
+      parentRoute: typeof rootServerRouteImport
+    }
+    '/api/utils/cleanup': {
+      id: '/api/utils/cleanup'
+      path: '/api/utils/cleanup'
+      fullPath: '/api/utils/cleanup'
+      preLoaderRoute: typeof ApiUtilsCleanupServerRouteImport
+      parentRoute: typeof rootServerRouteImport
+    }
+    '/api/trpc/$': {
+      id: '/api/trpc/$'
+      path: '/api/trpc/$'
+      fullPath: '/api/trpc/$'
+      preLoaderRoute: typeof ApiTrpcSplatServerRouteImport
+      parentRoute: typeof rootServerRouteImport
+    }
+  }
+}
 
 interface ProtectedRouteChildren {
   ProtectedAccountRoute: typeof ProtectedAccountRoute
@@ -471,344 +722,20 @@ const PublicRouteChildren: PublicRouteChildren = {
 const PublicRouteWithChildren =
   PublicRoute._addFileChildren(PublicRouteChildren)
 
-export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '': typeof PublicRouteWithChildren
-  '/account': typeof ProtectedAccountRoute
-  '/admin': typeof ProtectedAdminRoute
-  '/settings': typeof ProtectedSettingsRoute
-  '/confirm-email': typeof PublicConfirmEmailRoute
-  '/login': typeof PublicLoginRoute
-  '/register': typeof PublicRegisterRoute
-  '/reset-password': typeof PublicResetPasswordRoute
-  '/void-account': typeof PublicVoidAccountRoute
-  '/debts/$id': typeof ProtectedDebtsIdRoute
-  '/debts/add': typeof ProtectedDebtsAddRoute
-  '/debts/intentions': typeof ProtectedDebtsIntentionsRoute
-  '/debts/transfer': typeof ProtectedDebtsTransferRoute
-  '/receipts/$id': typeof ProtectedReceiptsIdRoute
-  '/receipts/add': typeof ProtectedReceiptsAddRoute
-  '/users/$id': typeof ProtectedUsersIdRoute
-  '/users/add': typeof ProtectedUsersAddRoute
-  '/users/connections': typeof ProtectedUsersConnectionsRoute
-  '/debts': typeof ProtectedDebtsIndexRoute
-  '/receipts': typeof ProtectedReceiptsIndexRoute
-  '/users': typeof ProtectedUsersIndexRoute
-  '/debts/user/$id': typeof ProtectedDebtsUserIdIndexRoute
-  '/debts/user/$id/exchange/all': typeof ProtectedDebtsUserIdExchangeAllRoute
-  '/debts/user/$id/exchange/specific': typeof ProtectedDebtsUserIdExchangeSpecificRoute
-  '/debts/user/$id/exchange': typeof ProtectedDebtsUserIdExchangeIndexRoute
-}
-
-export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '': typeof PublicRouteWithChildren
-  '/account': typeof ProtectedAccountRoute
-  '/admin': typeof ProtectedAdminRoute
-  '/settings': typeof ProtectedSettingsRoute
-  '/confirm-email': typeof PublicConfirmEmailRoute
-  '/login': typeof PublicLoginRoute
-  '/register': typeof PublicRegisterRoute
-  '/reset-password': typeof PublicResetPasswordRoute
-  '/void-account': typeof PublicVoidAccountRoute
-  '/debts/$id': typeof ProtectedDebtsIdRoute
-  '/debts/add': typeof ProtectedDebtsAddRoute
-  '/debts/intentions': typeof ProtectedDebtsIntentionsRoute
-  '/debts/transfer': typeof ProtectedDebtsTransferRoute
-  '/receipts/$id': typeof ProtectedReceiptsIdRoute
-  '/receipts/add': typeof ProtectedReceiptsAddRoute
-  '/users/$id': typeof ProtectedUsersIdRoute
-  '/users/add': typeof ProtectedUsersAddRoute
-  '/users/connections': typeof ProtectedUsersConnectionsRoute
-  '/debts': typeof ProtectedDebtsIndexRoute
-  '/receipts': typeof ProtectedReceiptsIndexRoute
-  '/users': typeof ProtectedUsersIndexRoute
-  '/debts/user/$id': typeof ProtectedDebtsUserIdIndexRoute
-  '/debts/user/$id/exchange/all': typeof ProtectedDebtsUserIdExchangeAllRoute
-  '/debts/user/$id/exchange/specific': typeof ProtectedDebtsUserIdExchangeSpecificRoute
-  '/debts/user/$id/exchange': typeof ProtectedDebtsUserIdExchangeIndexRoute
-}
-
-export interface FileRoutesById {
-  __root__: typeof rootRoute
-  '/': typeof IndexRoute
-  '/_protected': typeof ProtectedRouteWithChildren
-  '/_public': typeof PublicRouteWithChildren
-  '/_protected/account': typeof ProtectedAccountRoute
-  '/_protected/admin': typeof ProtectedAdminRoute
-  '/_protected/settings': typeof ProtectedSettingsRoute
-  '/_public/confirm-email': typeof PublicConfirmEmailRoute
-  '/_public/login': typeof PublicLoginRoute
-  '/_public/register': typeof PublicRegisterRoute
-  '/_public/reset-password': typeof PublicResetPasswordRoute
-  '/_public/void-account': typeof PublicVoidAccountRoute
-  '/_protected/debts/$id': typeof ProtectedDebtsIdRoute
-  '/_protected/debts/add': typeof ProtectedDebtsAddRoute
-  '/_protected/debts/intentions': typeof ProtectedDebtsIntentionsRoute
-  '/_protected/debts/transfer': typeof ProtectedDebtsTransferRoute
-  '/_protected/receipts/$id': typeof ProtectedReceiptsIdRoute
-  '/_protected/receipts/add': typeof ProtectedReceiptsAddRoute
-  '/_protected/users/$id': typeof ProtectedUsersIdRoute
-  '/_protected/users/add': typeof ProtectedUsersAddRoute
-  '/_protected/users/connections': typeof ProtectedUsersConnectionsRoute
-  '/_protected/debts/': typeof ProtectedDebtsIndexRoute
-  '/_protected/receipts/': typeof ProtectedReceiptsIndexRoute
-  '/_protected/users/': typeof ProtectedUsersIndexRoute
-  '/_protected/debts/user/$id/': typeof ProtectedDebtsUserIdIndexRoute
-  '/_protected/debts/user/$id/exchange/all': typeof ProtectedDebtsUserIdExchangeAllRoute
-  '/_protected/debts/user/$id/exchange/specific': typeof ProtectedDebtsUserIdExchangeSpecificRoute
-  '/_protected/debts/user/$id/exchange/': typeof ProtectedDebtsUserIdExchangeIndexRoute
-}
-
-export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | ''
-    | '/account'
-    | '/admin'
-    | '/settings'
-    | '/confirm-email'
-    | '/login'
-    | '/register'
-    | '/reset-password'
-    | '/void-account'
-    | '/debts/$id'
-    | '/debts/add'
-    | '/debts/intentions'
-    | '/debts/transfer'
-    | '/receipts/$id'
-    | '/receipts/add'
-    | '/users/$id'
-    | '/users/add'
-    | '/users/connections'
-    | '/debts'
-    | '/receipts'
-    | '/users'
-    | '/debts/user/$id'
-    | '/debts/user/$id/exchange/all'
-    | '/debts/user/$id/exchange/specific'
-    | '/debts/user/$id/exchange'
-  fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | ''
-    | '/account'
-    | '/admin'
-    | '/settings'
-    | '/confirm-email'
-    | '/login'
-    | '/register'
-    | '/reset-password'
-    | '/void-account'
-    | '/debts/$id'
-    | '/debts/add'
-    | '/debts/intentions'
-    | '/debts/transfer'
-    | '/receipts/$id'
-    | '/receipts/add'
-    | '/users/$id'
-    | '/users/add'
-    | '/users/connections'
-    | '/debts'
-    | '/receipts'
-    | '/users'
-    | '/debts/user/$id'
-    | '/debts/user/$id/exchange/all'
-    | '/debts/user/$id/exchange/specific'
-    | '/debts/user/$id/exchange'
-  id:
-    | '__root__'
-    | '/'
-    | '/_protected'
-    | '/_public'
-    | '/_protected/account'
-    | '/_protected/admin'
-    | '/_protected/settings'
-    | '/_public/confirm-email'
-    | '/_public/login'
-    | '/_public/register'
-    | '/_public/reset-password'
-    | '/_public/void-account'
-    | '/_protected/debts/$id'
-    | '/_protected/debts/add'
-    | '/_protected/debts/intentions'
-    | '/_protected/debts/transfer'
-    | '/_protected/receipts/$id'
-    | '/_protected/receipts/add'
-    | '/_protected/users/$id'
-    | '/_protected/users/add'
-    | '/_protected/users/connections'
-    | '/_protected/debts/'
-    | '/_protected/receipts/'
-    | '/_protected/users/'
-    | '/_protected/debts/user/$id/'
-    | '/_protected/debts/user/$id/exchange/all'
-    | '/_protected/debts/user/$id/exchange/specific'
-    | '/_protected/debts/user/$id/exchange/'
-  fileRoutesById: FileRoutesById
-}
-
-export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  ProtectedRoute: typeof ProtectedRouteWithChildren
-  PublicRoute: typeof PublicRouteWithChildren
-}
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ProtectedRoute: ProtectedRouteWithChildren,
   PublicRoute: PublicRouteWithChildren,
 }
-
-export const routeTree = rootRoute
+export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-/* ROUTE_MANIFEST_START
-{
-  "routes": {
-    "__root__": {
-      "filePath": "__root.tsx",
-      "children": [
-        "/",
-        "/_protected",
-        "/_public"
-      ]
-    },
-    "/": {
-      "filePath": "index.tsx"
-    },
-    "/_protected": {
-      "filePath": "_protected.tsx",
-      "children": [
-        "/_protected/account",
-        "/_protected/admin",
-        "/_protected/settings",
-        "/_protected/debts/$id",
-        "/_protected/debts/add",
-        "/_protected/debts/intentions",
-        "/_protected/debts/transfer",
-        "/_protected/receipts/$id",
-        "/_protected/receipts/add",
-        "/_protected/users/$id",
-        "/_protected/users/add",
-        "/_protected/users/connections",
-        "/_protected/debts/",
-        "/_protected/receipts/",
-        "/_protected/users/",
-        "/_protected/debts/user/$id/",
-        "/_protected/debts/user/$id/exchange/all",
-        "/_protected/debts/user/$id/exchange/specific",
-        "/_protected/debts/user/$id/exchange/"
-      ]
-    },
-    "/_public": {
-      "filePath": "_public.tsx",
-      "children": [
-        "/_public/confirm-email",
-        "/_public/login",
-        "/_public/register",
-        "/_public/reset-password",
-        "/_public/void-account"
-      ]
-    },
-    "/_protected/account": {
-      "filePath": "_protected/account.tsx",
-      "parent": "/_protected"
-    },
-    "/_protected/admin": {
-      "filePath": "_protected/admin.tsx",
-      "parent": "/_protected"
-    },
-    "/_protected/settings": {
-      "filePath": "_protected/settings.tsx",
-      "parent": "/_protected"
-    },
-    "/_public/confirm-email": {
-      "filePath": "_public/confirm-email.tsx",
-      "parent": "/_public"
-    },
-    "/_public/login": {
-      "filePath": "_public/login.tsx",
-      "parent": "/_public"
-    },
-    "/_public/register": {
-      "filePath": "_public/register.tsx",
-      "parent": "/_public"
-    },
-    "/_public/reset-password": {
-      "filePath": "_public/reset-password.tsx",
-      "parent": "/_public"
-    },
-    "/_public/void-account": {
-      "filePath": "_public/void-account.tsx",
-      "parent": "/_public"
-    },
-    "/_protected/debts/$id": {
-      "filePath": "_protected/debts/$id.tsx",
-      "parent": "/_protected"
-    },
-    "/_protected/debts/add": {
-      "filePath": "_protected/debts/add.tsx",
-      "parent": "/_protected"
-    },
-    "/_protected/debts/intentions": {
-      "filePath": "_protected/debts/intentions.tsx",
-      "parent": "/_protected"
-    },
-    "/_protected/debts/transfer": {
-      "filePath": "_protected/debts/transfer.tsx",
-      "parent": "/_protected"
-    },
-    "/_protected/receipts/$id": {
-      "filePath": "_protected/receipts/$id.tsx",
-      "parent": "/_protected"
-    },
-    "/_protected/receipts/add": {
-      "filePath": "_protected/receipts/add.tsx",
-      "parent": "/_protected"
-    },
-    "/_protected/users/$id": {
-      "filePath": "_protected/users/$id.tsx",
-      "parent": "/_protected"
-    },
-    "/_protected/users/add": {
-      "filePath": "_protected/users/add.tsx",
-      "parent": "/_protected"
-    },
-    "/_protected/users/connections": {
-      "filePath": "_protected/users/connections.tsx",
-      "parent": "/_protected"
-    },
-    "/_protected/debts/": {
-      "filePath": "_protected/debts/index.tsx",
-      "parent": "/_protected"
-    },
-    "/_protected/receipts/": {
-      "filePath": "_protected/receipts/index.tsx",
-      "parent": "/_protected"
-    },
-    "/_protected/users/": {
-      "filePath": "_protected/users/index.tsx",
-      "parent": "/_protected"
-    },
-    "/_protected/debts/user/$id/": {
-      "filePath": "_protected/debts/user/$id/index.tsx",
-      "parent": "/_protected"
-    },
-    "/_protected/debts/user/$id/exchange/all": {
-      "filePath": "_protected/debts/user/$id/exchange/all.tsx",
-      "parent": "/_protected"
-    },
-    "/_protected/debts/user/$id/exchange/specific": {
-      "filePath": "_protected/debts/user/$id/exchange/specific.tsx",
-      "parent": "/_protected"
-    },
-    "/_protected/debts/user/$id/exchange/": {
-      "filePath": "_protected/debts/user/$id/exchange/index.tsx",
-      "parent": "/_protected"
-    }
-  }
+const rootServerRouteChildren: RootServerRouteChildren = {
+  ApiPingServerRoute: ApiPingServerRoute,
+  ApiTrpcSplatServerRoute: ApiTrpcSplatServerRoute,
+  ApiUtilsCleanupServerRoute: ApiUtilsCleanupServerRoute,
+  ApiUtilsPingCacheServerRoute: ApiUtilsPingCacheServerRoute,
 }
-ROUTE_MANIFEST_END */
+export const serverRouteTree = rootServerRouteImport
+  ._addFileChildren(rootServerRouteChildren)
+  ._addFileTypes<FileServerRouteTypes>()

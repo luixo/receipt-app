@@ -4,9 +4,9 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"build": "vinxi build",
-		"dev": "vinxi dev",
-		"start": "vinxi start"
+		"build": "vite build",
+		"dev": "vite dev",
+		"start": "node .output/server/index.mjs"
 	},
 	"dependencies": {
 		"@aws-sdk/client-s3": "^3.470.0",
@@ -16,10 +16,10 @@
 		"@ra/db": "workspace:*",
 		"@ra/utils": "workspace:*",
 		"@sentry/tanstackstart-react": "^9.15.0",
-		"@tanstack/react-router": "^1.120.20",
-		"@tanstack/react-router-devtools": "^1.120.20",
-		"@tanstack/react-start": "^1.120.20",
-		"@tanstack/zod-adapter": "^1.120.20",
+		"@tanstack/react-router": "^1.125.6",
+		"@tanstack/react-router-devtools": "^1.125.6",
+		"@tanstack/react-start": "^1.125.6",
+		"@tanstack/zod-adapter": "^1.125.6",
 		"@trpc/client": "^11.3.1",
 		"@trpc/server": "^11.3.1",
 		"@trpc/tanstack-react-query": "^11.3.1",
@@ -52,12 +52,14 @@
 		"@types/node": "^24.0.0",
 		"@types/pg": "^8.10.2",
 		"@types/uuid": "^9.0.2",
+		"@vitejs/plugin-react": "^4.6.0",
 		"autoprefixer": "^10.4.16",
 		"module-alias": "^2.2.3",
-		"vinxi": "^0.5.7",
+		"vite": "^6.3.5",
 		"vite-bundle-analyzer": "^0.22.2",
 		"vite-plugin-cjs-interop": "^2.2.0",
 		"vite-plugin-commonjs": "^0.10.4",
+		"vite-plugin-inspect": "^11.3.0",
 		"vite-plugin-react-native-web": "^2.1.1"
 	}
 }

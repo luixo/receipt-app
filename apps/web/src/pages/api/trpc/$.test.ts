@@ -3,7 +3,7 @@ import { TRPCClientError } from "@trpc/client";
 import type { AnyTRPCProcedure, inferProcedureInput } from "@trpc/server";
 import { TRPCError } from "@trpc/server";
 import { entries, pick } from "remeda";
-import { assert, beforeEach, describe, expect, vi } from "vitest";
+import { beforeEach, describe, expect, vi } from "vitest";
 import { z } from "zod/v4";
 
 import { transformer } from "~app/utils/trpc";
@@ -12,9 +12,10 @@ import type { FlattenObject, UnionToIntersection } from "~utils/types";
 import type { UnauthorizedContext } from "~web/handlers/context";
 import { t } from "~web/handlers/trpc";
 import { withTestServer } from "~web/handlers/utils.test";
+import { getServerRouteMethod } from "~web/pages/api/test.utils";
 import { baseLogger } from "~web/providers/logger";
 
-import { APIRoute } from "./$";
+import { ServerRoute } from "./$";
 
 const proxySpy = vi.hoisted(() => vi.fn());
 vi.mock("@tanstack/react-start/server", async (importOriginal) => ({
@@ -23,9 +24,8 @@ vi.mock("@tanstack/react-start/server", async (importOriginal) => ({
 	proxyRequest: proxySpy,
 }));
 
-const { POST, GET } = APIRoute.methods;
-assert(POST);
-assert(GET);
+const POST = getServerRouteMethod(ServerRoute, "POST");
+const GET = getServerRouteMethod(ServerRoute, "GET");
 
 const handleWithError = (
 	ctx: UnauthorizedContext,
@@ -105,6 +105,8 @@ const runRoute = async <K extends keyof Procedures>({
 		);
 	}
 	const response = await (method === "GET" ? GET : POST)({
+		context: undefined,
+		pathname: "/api/trpc/$",
 		request: new Request(url, {
 			method,
 			headers: {

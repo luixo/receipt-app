@@ -1,6 +1,11 @@
-import type { StartAPIMethodCallback } from "@tanstack/react-start/api";
-import { createAPIFileRoute } from "@tanstack/react-start/api";
-import { proxyRequest } from "@tanstack/react-start/server";
+import type {
+	ServerFileRoutesByPath,
+	ServerRouteMethodRecordValue,
+} from "@tanstack/react-start/server";
+import {
+	createServerFileRoute,
+	proxyRequest,
+} from "@tanstack/react-start/server";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { toReqRes } from "fetch-to-node";
 import * as crypto from "node:crypto";
@@ -51,13 +56,20 @@ const createContextRest = (
 });
 /* c8 ignore stop */
 
+type Callback = Extract<
+	ServerRouteMethodRecordValue<
+		ServerFileRoutesByPath["/api/trpc/$"]["parentRoute"],
+		"/api/trpc/$",
+		undefined
+	>,
+	// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+	Function
+>;
+
 const getTestRequestHandlerProps = ({
 	// @ts-expect-error This is a hack for tests
 	router: overrideRouter,
-}: Omit<
-	Parameters<StartAPIMethodCallback<"/api/trpc/$">>[0],
-	"request" | "params"
->): object => {
+}: Omit<Parameters<Callback>[0], "request">): object => {
 	/* c8 ignore start */
 	if (!import.meta.env.VITEST) {
 		return {};
@@ -66,10 +78,7 @@ const getTestRequestHandlerProps = ({
 	return { endpoint: "", router: overrideRouter };
 };
 
-const callback: StartAPIMethodCallback<"/api/trpc/$"> = async ({
-	request,
-	...rest
-}) => {
+const callback: Callback = async ({ request, ...rest }) => {
 	const proxyUrl = new URL(request.url);
 	const proxyPort = proxyUrl.searchParams.get("proxyPort");
 	if (proxyPort && typeof proxyPort === "string") {
@@ -142,7 +151,7 @@ const callback: StartAPIMethodCallback<"/api/trpc/$"> = async ({
 	});
 };
 
-export const APIRoute = createAPIFileRoute("/api/trpc/$")({
+export const ServerRoute = createServerFileRoute("/api/trpc/$").methods({
 	GET: callback,
 	POST: callback,
 });
