@@ -117,7 +117,6 @@ export const acceptNewIntentions = async (
 				currencyCode: intention.currencyCode,
 				amount: (Number(intention.amount) * -1).toString(),
 				timestamp: intention.timestamp,
-				createdAt: new Date(),
 				note: intention.note,
 				receiptId: intention.receiptId,
 			})),

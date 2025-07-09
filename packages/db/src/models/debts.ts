@@ -66,7 +66,8 @@ export interface DebtsInitializer {
 
 	timestamp: Date;
 
-	createdAt: Date;
+	/** Default value: CURRENT_TIMESTAMP */
+	createdAt?: Date;
 
 	note: string;
 

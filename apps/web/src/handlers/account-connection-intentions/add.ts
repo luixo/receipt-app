@@ -314,7 +314,6 @@ const insertDirectIntentions = async (
 				accountId: ctx.auth.accountId,
 				targetAccountId: intention.targetAccount.id,
 				userId: intention.asUser.id,
-				createdAt: new Date(),
 			})),
 		)
 		.execute();

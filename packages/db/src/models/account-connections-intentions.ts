@@ -43,7 +43,8 @@ export interface AccountConnectionsIntentionsInitializer {
 	/** Index: accountConnectionsIntentions:accountUser:userPair */
 	userId: UsersId;
 
-	createdAt: Date;
+	/** Default value: CURRENT_TIMESTAMP */
+	createdAt?: Date;
 
 	/** Default value: CURRENT_TIMESTAMP */
 	updatedAt?: Date;
