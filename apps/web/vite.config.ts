@@ -86,12 +86,6 @@ const config = defineConfig({
 					presets: ["nativewind/babel"],
 				},
 			},
-			prerender: {
-				outputPath: process.env.VERCEL
-					? // This is due to a Vercel bug where they can't server Build Output API from a non-root directory
-						path.resolve(rootDir, ".vercel/output")
-					: undefined,
-			},
 		}),
 		replaceImportPlugin(
 			rootDir,
