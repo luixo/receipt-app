@@ -5,7 +5,7 @@ exports[`procedures > auth procedure > session is auto-updated 1`] = `
   "updated": {
     "sessions": {
       "sessionId:47976683-7307-4041-9a33-4f42da683bd8": {
-        "expirationTimestamp": 2020-01-31T00:00:00.000Z,
+        "expirationTimestamp": "2020-01-31 00:00:00+00",
       },
     },
   },

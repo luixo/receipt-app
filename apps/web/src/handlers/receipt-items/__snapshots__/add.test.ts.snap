@@ -5,31 +5,31 @@ exports[`receiptItems.add > functionality > items are added 1`] = `
   "added": {
     "receiptItems": {
       "id:4102c91a-5ade-406a-a666-6975ce16df9b": {
-        "createdAt": 2020-01-01T00:00:00.000Z,
+        "createdAt": "2020-01-01 00:00:00+00",
         "id": "4102c91a-5ade-406a-a666-6975ce16df9b",
         "name": "omnis tempore harum",
         "price": "757.9600",
         "quantity": "27.0000",
         "receiptId": "34ae2501-14ba-48b0-b8ef-721155128b46",
-        "updatedAt": 2020-01-01T00:00:00.000Z,
+        "updatedAt": "2020-01-01 00:00:00+00",
       },
       "id:88b75de4-6c94-424f-a3a2-ffd391a4b202": {
-        "createdAt": 2020-01-01T00:00:00.000Z,
+        "createdAt": "2020-01-01 00:00:00+00",
         "id": "88b75de4-6c94-424f-a3a2-ffd391a4b202",
         "name": "accusamus inventore ex",
         "price": "842.1300",
         "quantity": "100.0000",
         "receiptId": "67d43cef-d57a-478e-92f6-e6f76e3f9213",
-        "updatedAt": 2020-01-01T00:00:00.000Z,
+        "updatedAt": "2020-01-01 00:00:00+00",
       },
       "id:aa83c9ed-21bd-4f79-9896-1ba0fd941192": {
-        "createdAt": 2020-01-01T00:00:00.000Z,
+        "createdAt": "2020-01-01 00:00:00+00",
         "id": "aa83c9ed-21bd-4f79-9896-1ba0fd941192",
         "name": "autem molestias molestiae",
         "price": "357.0600",
         "quantity": "77.0000",
         "receiptId": "67d43cef-d57a-478e-92f6-e6f76e3f9213",
-        "updatedAt": 2020-01-01T00:00:00.000Z,
+        "updatedAt": "2020-01-01 00:00:00+00",
       },
     },
   },
@@ -41,13 +41,13 @@ exports[`receiptItems.add > input verification > mixed success and fail 1`] = `
   "added": {
     "receiptItems": {
       "id:beb192ca-6815-4215-ac1f-ca9aa502c53b": {
-        "createdAt": 2020-01-01T00:00:00.000Z,
+        "createdAt": "2020-01-01 00:00:00+00",
         "id": "beb192ca-6815-4215-ac1f-ca9aa502c53b",
         "name": "quia assumenda a",
         "price": "549.9200",
         "quantity": "80.0000",
         "receiptId": "16421b02-e743-45f4-a7d0-353038e5c1a4",
-        "updatedAt": 2020-01-01T00:00:00.000Z,
+        "updatedAt": "2020-01-01 00:00:00+00",
       },
     },
   },

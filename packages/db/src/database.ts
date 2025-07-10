@@ -1,6 +1,6 @@
 import type { LogEvent } from "kysely";
 import { Kysely, PostgresDialect } from "kysely";
-import type { Deserializer } from "kysely-plugin-serialize";
+import type { Deserializer, Serializer } from "kysely-plugin-serialize";
 import {
 	SerializePlugin,
 	defaultDeserializer,
@@ -27,46 +27,30 @@ const getLogger = (logger: Logger) => (logEvent: LogEvent) => {
 	}
 };
 
-const dBTemporalTypes = {
-	[types.builtins.DATE]: types.builtins.DATE,
-	[types.builtins.TIMESTAMP]: types.builtins.TIMESTAMP,
-	[types.builtins.TIMESTAMPTZ]: types.builtins.TIMESTAMPTZ,
-	[types.builtins.TIME]: types.builtins.TIME,
-	[types.builtins.TIMETZ]: types.builtins.TIMETZ,
-};
-type DBTemporalType = keyof typeof dBTemporalTypes;
-const dbTemporalParsers: Record<
-	DBTemporalType,
-	(input: string) => { type: DBTemporalType; value: string }
-> = {
-	/* c8 ignore start */
-	[types.builtins.TIME]: (value) => ({ type: types.builtins.TIME, value }),
-	[types.builtins.DATE]: (value) => ({ type: types.builtins.DATE, value }),
-	[types.builtins.TIMESTAMP]: (value) => ({
-		type: types.builtins.TIMESTAMP,
-		value,
-	}),
-	[types.builtins.TIMETZ]: (value) => ({ type: types.builtins.TIMETZ, value }),
-	[types.builtins.TIMESTAMPTZ]: (value) => ({
-		type: types.builtins.TIMESTAMPTZ,
-		value,
-	}),
-	/* c8 ignore stop */
+const dbTemporalRegexes = {
+	plainDate: /^(?:19|20)\d{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])$/,
+	plainTime: /^(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d$/,
+	plainDateTime:
+		/^(?:19|20)\d{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])[ T](?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d$/,
+	zonedTime:
+		/^(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.[0-9]{1,6})?(?:Z|-0[1-9]|-1\d|-2[0-3]|-00:?(?:0[1-9]|[1-5]\d)|\+[01]\d|\+2[0-3])(?:|:?[0-5]\d)$/,
+	zonedDateTime:
+		/^(?:19|20)\d{2}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])[ T](?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.[0-9]{1,6})?(?:Z|-0[1-9]|-1\d|-2[0-3]|-00:?(?:0[1-9]|[1-5]\d)|\+[01]\d|\+2[0-3])(?:|:?[0-5]\d)$/,
 };
 const dbParsers: Record<
 	(typeof types.builtins)[number],
 	(input: string) => unknown
 > = {
+	/* c8 ignore start */
+	[types.builtins.DATE]: (input) => input,
+	[types.builtins.TIMESTAMP]: (input) => input,
+	[types.builtins.TIMESTAMPTZ]: (input) => input,
+	[types.builtins.TIME]: (input) => input,
+	[types.builtins.TIMETZ]: (input) => input,
 	[types.builtins.BOOL]: (value) => (value === "t" ? "true" : "false"),
+	/* c8 ignore stop */
 };
-const isDbTemporalObject = (
-	input: unknown,
-): input is ReturnType<(typeof dbTemporalParsers)[DBTemporalType]> =>
-	Boolean(
-		isPlainObject(input) &&
-			typeof input.type === "number" &&
-			dBTemporalTypes[input.type as DBTemporalType],
-	);
+const serializer: Serializer = (input) => defaultSerializer(input);
 const deserializer: Deserializer = (input) => {
 	if (input === null) {
 		return null;
@@ -74,8 +58,13 @@ const deserializer: Deserializer = (input) => {
 	if (Array.isArray(input)) {
 		return input.map((element) => deserializer(element));
 	}
-	if (isDbTemporalObject(input)) {
-		return new Date(input.value);
+	if (typeof input === "string") {
+		const regexTypeMatch = entries(dbTemporalRegexes).find(([, regex]) =>
+			regex.test(input),
+		);
+		if (regexTypeMatch) {
+			return new Date(input);
+		}
 	}
 	if (isPlainObject(input)) {
 		return mapValues(input, (element) => deserializer(element));
@@ -87,6 +76,7 @@ type DatabaseOptions = {
 	logger?: Logger;
 	connectionString: string;
 	sharedKey?: string;
+	skipSerialization?: boolean;
 } & Omit<PoolConfig, "connectionString">;
 let typeParsersApplied = false;
 const sharedPools: Partial<Record<string, Pool>> = {};
@@ -94,6 +84,7 @@ export const getDatabase = ({
 	logger,
 	connectionString,
 	sharedKey,
+	skipSerialization,
 	...props
 }: DatabaseOptions) => {
 	const pool =
@@ -106,20 +97,18 @@ export const getDatabase = ({
 		delete sharedPools[connectionString];
 	});
 	if (!typeParsersApplied) {
-		[...entries(dbTemporalParsers), ...entries(dbParsers)].forEach(
-			([type, parser]) =>
-				types.setTypeParser<ReturnType<typeof parser>>(Number(type), parser),
+		entries(dbParsers).forEach(([type, parser]) =>
+			types.setTypeParser<ReturnType<typeof parser>>(Number(type), parser),
 		);
 		typeParsersApplied = true;
 	}
 	return new Kysely<ReceiptsDatabase>({
 		dialect: new PostgresDialect({ pool }),
 		log: logger && getLogger(logger),
-		plugins: [
-			new SerializePlugin({
-				serializer: defaultSerializer,
-				deserializer,
-			}),
-		],
+		/* c8 ignore start */
+		plugins: skipSerialization
+			? undefined
+			: /* c8 ignore stop */
+				[new SerializePlugin({ serializer, deserializer })],
 	});
 };

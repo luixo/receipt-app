@@ -6,7 +6,7 @@ exports[`receipts.update > functionality > update currency code 1`] = `
     "receipts": {
       "id:f1becfdb-af87-4219-a543-ad411d7da19a": {
         "currencyCode": "KHR",
-        "updatedAt": 2020-01-01T00:01:00.000Z,
+        "updatedAt": "2020-01-01 00:01:00+00",
       },
     },
   },
@@ -18,8 +18,8 @@ exports[`receipts.update > functionality > update issued 1`] = `
   "updated": {
     "receipts": {
       "id:a9cf95b8-ac8a-4624-912b-de8fc0eb9637": {
-        "issued": 2020-06-01T00:00:00.000Z,
-        "updatedAt": 2020-01-01T00:01:00.000Z,
+        "issued": "2020-06-01",
+        "updatedAt": "2020-01-01 00:01:00+00",
       },
     },
   },
@@ -32,7 +32,7 @@ exports[`receipts.update > functionality > update name 1`] = `
     "receipts": {
       "id:1bbf158c-dec0-45e5-aeb8-29abfd829956": {
         "name": "illo eius vitae",
-        "updatedAt": 2020-01-01T00:01:00.000Z,
+        "updatedAt": "2020-01-01 00:01:00+00",
       },
     },
   },

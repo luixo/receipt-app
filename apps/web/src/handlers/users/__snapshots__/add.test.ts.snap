@@ -5,15 +5,15 @@ exports[`users.add > functionality > user is added - no public name, no email 1`
   "added": {
     "users": {
       "id:5cef6eeb-d06c-414e-813b-705457dfa76a": {
-        "acceptReceipts": false,
+        "acceptReceipts": "false",
         "connectedAccountId": null,
-        "createdAt": 2020-01-01T00:00:00.000Z,
-        "exposeReceipts": false,
+        "createdAt": "2020-01-01 00:00:00+00",
+        "exposeReceipts": "false",
         "id": "5cef6eeb-d06c-414e-813b-705457dfa76a",
         "name": "Kristopher Kulas",
         "ownerAccountId": "7ee13f62-dbf2-4296-bb95-8154ae2c093a",
         "publicName": null,
-        "updatedAt": 2020-01-01T00:00:00.000Z,
+        "updatedAt": "2020-01-01 00:00:00+00",
       },
     },
   },
@@ -25,15 +25,15 @@ exports[`users.add > functionality > user is added - public name, no email 1`] =
   "added": {
     "users": {
       "id:3ec84632-ed0b-423d-8191-31544ac6bfc0": {
-        "acceptReceipts": false,
+        "acceptReceipts": "false",
         "connectedAccountId": null,
-        "createdAt": 2020-01-01T00:00:00.000Z,
-        "exposeReceipts": false,
+        "createdAt": "2020-01-01 00:00:00+00",
+        "exposeReceipts": "false",
         "id": "3ec84632-ed0b-423d-8191-31544ac6bfc0",
         "name": "Shelia Hessel-Kutch",
         "ownerAccountId": "165535c3-68d2-4e19-b854-8d166ce9c56f",
         "publicName": "Ellen Howell-Mosciski",
-        "updatedAt": 2020-01-01T00:00:00.000Z,
+        "updatedAt": "2020-01-01 00:00:00+00",
       },
     },
   },
@@ -46,23 +46,23 @@ exports[`users.add > functionality > user is added - with email > doesn't have a
     "accountConnectionsIntentions": {
       "accountId:29c912b8-219f-426a-b3d2-67fca04d4210|targetAccountId:e137d89d-f6d2-4cb1-829e-fa58ed8d7ec1": {
         "accountId": "29c912b8-219f-426a-b3d2-67fca04d4210",
-        "createdAt": 2020-01-01T00:00:00.000Z,
+        "createdAt": "2020-01-01 00:00:00+00",
         "targetAccountId": "e137d89d-f6d2-4cb1-829e-fa58ed8d7ec1",
-        "updatedAt": 2020-01-01T00:00:00.000Z,
+        "updatedAt": "2020-01-01 00:00:00+00",
         "userId": "0fb185c3-c540-4168-a8bf-956c8ce3cbb5",
       },
     },
     "users": {
       "id:0fb185c3-c540-4168-a8bf-956c8ce3cbb5": {
-        "acceptReceipts": false,
+        "acceptReceipts": "false",
         "connectedAccountId": null,
-        "createdAt": 2020-01-01T00:00:00.000Z,
-        "exposeReceipts": false,
+        "createdAt": "2020-01-01 00:00:00+00",
+        "exposeReceipts": "false",
         "id": "0fb185c3-c540-4168-a8bf-956c8ce3cbb5",
         "name": "Mr. Jim VonRueden",
         "ownerAccountId": "29c912b8-219f-426a-b3d2-67fca04d4210",
         "publicName": null,
-        "updatedAt": 2020-01-01T00:00:00.000Z,
+        "updatedAt": "2020-01-01 00:00:00+00",
       },
     },
   },
@@ -74,15 +74,15 @@ exports[`users.add > functionality > user is added - with email > has a vice ver
   "added": {
     "users": {
       "id:a51d7aae-0076-49df-8284-1a59ea6590e3": {
-        "acceptReceipts": false,
+        "acceptReceipts": "false",
         "connectedAccountId": "2344445d-bb11-4058-b0f9-10ed5ddba150",
-        "createdAt": 2020-01-01T00:00:00.000Z,
-        "exposeReceipts": false,
+        "createdAt": "2020-01-01 00:00:00+00",
+        "exposeReceipts": "false",
         "id": "a51d7aae-0076-49df-8284-1a59ea6590e3",
         "name": "Andy O'Reilly",
         "ownerAccountId": "d20a5a4f-9477-4707-8b24-0470962cd596",
         "publicName": null,
-        "updatedAt": 2020-01-01T00:01:00.000Z,
+        "updatedAt": "2020-01-01 00:01:00+00",
       },
     },
   },
@@ -95,7 +95,7 @@ exports[`users.add > functionality > user is added - with email > has a vice ver
     "users": {
       "id:9b2513a6-420a-4961-8f9c-b2ab9d115d3f": {
         "connectedAccountId": "d20a5a4f-9477-4707-8b24-0470962cd596",
-        "updatedAt": 2020-01-01T00:01:00.000Z,
+        "updatedAt": "2020-01-01 00:01:00+00",
       },
     },
   },
@@ -107,15 +107,15 @@ exports[`users.add > input verification > mixed success and fail 1`] = `
   "added": {
     "users": {
       "id:beb192ca-6815-4215-ac1f-ca9aa502c53b": {
-        "acceptReceipts": false,
+        "acceptReceipts": "false",
         "connectedAccountId": null,
-        "createdAt": 2020-01-01T00:00:00.000Z,
-        "exposeReceipts": false,
+        "createdAt": "2020-01-01 00:00:00+00",
+        "exposeReceipts": "false",
         "id": "beb192ca-6815-4215-ac1f-ca9aa502c53b",
         "name": "Rosemary Schiller",
         "ownerAccountId": "f69c89cc-b28f-49ab-8c7b-635f1f9b819c",
         "publicName": null,
-        "updatedAt": 2020-01-01T00:00:00.000Z,
+        "updatedAt": "2020-01-01 00:00:00+00",
       },
     },
   },

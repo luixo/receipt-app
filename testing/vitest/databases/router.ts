@@ -154,6 +154,8 @@ export const appRouter = router({
 					instance.connectionData,
 					input.databaseName,
 				),
+				// We want raw data in the snapshots
+				skipSerialization: true,
 			});
 			const dump = await Promise.all(
 				keys(ORDERS).map(async (tableName) => {
