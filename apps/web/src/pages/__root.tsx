@@ -193,12 +193,6 @@ const wrappedCreateRootRouteWithContext = wrapCreateRootRouteWithSentry(
 export const Route = wrappedCreateRootRouteWithContext<RouterContext>()({
 	component: RootComponent,
 	loader: async (ctx) => {
-		if (!import.meta.env.SSR) {
-			// We need this branch to keep the types structure while tree-shaking `node:fs` from the client
-			throw new Error(
-				"Root loader should only run on the server for SSR initialization!",
-			);
-		}
 		await loadNamespaces(ctx.context, "default");
 		return omit(ctx.context, keys(EPHEMERAL_CONTEXT_KEYS));
 	},
