@@ -5,6 +5,7 @@
 	"devDependencies": {
 		"@faker-js/faker": "^8.0.2",
 		"@ra/db": "workspace:*",
+		"@ra/playwright": "workspace:*",
 		"@ra/test-utils": "workspace:*",
 		"@ra/utils": "workspace:*",
 		"@ra/web": "workspace:*",

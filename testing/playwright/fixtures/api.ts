@@ -1,4 +1,3 @@
-import type { Faker } from "@faker-js/faker";
 import type { BrowserContext, Page } from "@playwright/test";
 import { createTRPCClient, httpBatchStreamLink } from "@trpc/client";
 import { TRPCError } from "@trpc/server";
@@ -29,6 +28,7 @@ import type { MaybePromise } from "~utils/types";
 
 import type { appRouter } from "../global/router";
 
+import type { ExtendedFaker } from "./mock";
 import { mockFixtures as test } from "./mock";
 
 const CLEANUP_MARK = "__CLEANUP_MARK__";
@@ -377,7 +377,7 @@ const createApiManager = async (
 	};
 };
 
-const getMockUtils = (api: ApiManager, faker: Faker) => ({
+const getMockUtils = (api: ApiManager, faker: ExtendedFaker) => ({
 	noAuthPage: () => {
 		api.mockLast("currency.getList", CURRENCY_CODES);
 		api.mockLast("account.get", () => {

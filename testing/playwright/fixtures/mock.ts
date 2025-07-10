@@ -4,8 +4,9 @@ import timekeeper from "timekeeper";
 
 import { setSeed } from "~tests/utils/faker";
 
+export class ExtendedFaker extends Faker {}
 type MockFixtures = {
-	faker: Faker;
+	faker: ExtendedFaker;
 };
 type MockWorkerFixtures = {
 	timekeeper: void;
@@ -13,13 +14,14 @@ type MockWorkerFixtures = {
 
 export const mockFixtures = test.extend<MockFixtures, MockWorkerFixtures>({
 	faker: async ({}, use, testInfo) => {
-		const localFaker = new Faker({ locale: en });
+		const localFaker = new ExtendedFaker({ locale: en });
 		// Remove first element as it is a file name
 		setSeed(localFaker, testInfo.titlePath.slice(1).join(" / "));
 		await use(localFaker);
 	},
 	timekeeper: [
 		async ({}, use) => {
+			// eslint-disable-next-line no-restricted-syntax
 			timekeeper.freeze(new Date("2020-01-01"));
 			await use();
 			timekeeper.reset();

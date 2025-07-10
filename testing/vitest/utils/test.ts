@@ -1,4 +1,4 @@
-import { Faker, en, faker } from "@faker-js/faker";
+import { en, faker as globalFaker } from "@faker-js/faker";
 import type { inferProcedureOutput } from "@trpc/server";
 import type { RunnerTestCase } from "vitest";
 import { test as originalTest } from "vitest";
@@ -14,6 +14,7 @@ import { getExchangeRateOptions } from "~tests/backend/utils/mocks/exchange-rate
 import type { LoggerMock } from "~tests/backend/utils/mocks/logger";
 import type { S3OptionsMock } from "~tests/backend/utils/mocks/s3";
 import { getS3Options } from "~tests/backend/utils/mocks/s3";
+import { ExtendedFaker } from "~tests/frontend/fixtures/mock";
 import { setSeed } from "~tests/utils/faker";
 
 type FileContext = {
@@ -60,7 +61,7 @@ export type TestContext = FakerContext &
 export type TestFixture = { ctx: TestContext };
 
 export const createStableFaker = (input: string) => {
-	const instance = new Faker({ locale: en });
+	const instance = new ExtendedFaker({ locale: en });
 	setSeed(instance, input);
 	return instance;
 };
@@ -77,7 +78,7 @@ export const test = originalTest.extend<TestFixture>({
 		const testIdFaker = createStableFaker(task.name);
 		const testId = task.name;
 		// Regular faker to generate fake data in a test
-		setSeed(faker, testId);
+		setSeed(globalFaker, testId);
 		await use({
 			emailOptions: getEmailOptions(),
 			cacheDbOptions: getCacheDbOptions(),
