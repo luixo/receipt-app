@@ -1,6 +1,7 @@
 import type { LogEvent } from "kysely";
 import { Kysely, PostgresDialect } from "kysely";
-import type { Pool } from "pg";
+import type { PoolConfig } from "pg";
+import { Pool } from "pg";
 import type { Logger } from "pino";
 
 import type { ReceiptsDatabase } from "./types";
@@ -21,10 +22,27 @@ const getLogger = (logger: Logger) => (logEvent: LogEvent) => {
 
 type DatabaseOptions = {
 	logger?: Logger;
-	pool: Pool;
-};
-export const getDatabase = ({ logger, pool }: DatabaseOptions) =>
-	new Kysely<ReceiptsDatabase>({
+	connectionString: string;
+	sharedKey?: string;
+} & Omit<PoolConfig, "connectionString">;
+const sharedPools: Partial<Record<string, Pool>> = {};
+export const getDatabase = ({
+	logger,
+	connectionString,
+	sharedKey,
+	...props
+}: DatabaseOptions) => {
+	const pool =
+		(sharedKey && sharedPools[sharedKey]) ||
+		new Pool({ connectionString, ...props });
+	if (sharedKey) {
+		sharedPools[sharedKey] = pool;
+	}
+	pool.on("remove", () => {
+		delete sharedPools[connectionString];
+	});
+	return new Kysely<ReceiptsDatabase>({
 		dialect: new PostgresDialect({ pool }),
 		log: logger && getLogger(logger),
 	});
+};

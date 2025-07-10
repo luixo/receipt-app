@@ -19,17 +19,21 @@ import { router } from "~web/handlers";
 import type { NetContext, UnauthorizedContext } from "~web/handlers/context";
 import { createContext } from "~web/handlers/context";
 import { baseLogger } from "~web/providers/logger";
-import { getPool } from "~web/providers/pg";
 import { getReqHeader } from "~web/utils/headers";
 
 /* c8 ignore start */
-const defaultGetDatabase = (req: Request) =>
-	getDatabase({
+const defaultGetDatabase = (req: Request) => {
+	if (!process.env.DATABASE_URL) {
+		throw new Error("Expected to have process.env.DATABASE_URL variable!");
+	}
+	return getDatabase({
 		logger: req.headers.get("x-debug")
 			? baseLogger.child({ url: req.url || "unknown" })
 			: undefined,
-		pool: getPool(),
+		connectionString: process.env.DATABASE_URL,
+		sharedKey: "tRPC",
 	});
+};
 const defaultGetEmailOptions = () => {
 	const active = Boolean(process.env.EMAIL_SERVICE_ACTIVE);
 	if (active && !process.env.BASE_URL) {

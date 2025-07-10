@@ -1,6 +1,7 @@
-import { Kysely, PostgresDialect, sql } from "kysely";
+import { sql } from "kysely";
 import { randomUUID } from "node:crypto";
-import { Pool } from "pg";
+
+import { getDatabase } from "~db/database";
 
 import type { ConnectionData } from "./connection";
 import { makeConnectionString } from "./connection";
@@ -66,15 +67,11 @@ export const databaseManagerFactory = (
 			}
 			return templateDatabaseManager.waitForDatabase(async () => {
 				const name = `public-${randomUUID()}`;
-				const database = new Kysely({
-					dialect: new PostgresDialect({
-						pool: new Pool({
-							connectionString: makeConnectionString(
-								connectionData,
-								templateDatabaseName,
-							),
-						}),
-					}),
+				const database = getDatabase({
+					connectionString: makeConnectionString(
+						connectionData,
+						templateDatabaseName,
+					),
 				});
 				await cleanupManager.withCleanup(
 					() => database.destroy(),

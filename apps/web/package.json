@@ -26,7 +26,6 @@
 		"isomorphic-fetch": "^3.0.0",
 		"kysely": "^0.27.2",
 		"nativewind": "^4.1.23",
-		"pg": "^8.16.0",
 		"pino": "^8.14.1",
 		"pino-pretty": "^10.1.0",
 		"postmark": "^3.0.18",

@@ -7947,7 +7947,6 @@ __metadata:
     h3: "npm:^1.15.3"
     kysely: "npm:^0.27.2"
     mock-http: "npm:^1.1.1"
-    pg: "npm:^8.16.0"
     timekeeper: "npm:^2.3.1"
   languageName: unknown
   linkType: soft
@@ -7984,7 +7983,6 @@ __metadata:
     kysely: "npm:^0.27.2"
     module-alias: "npm:^2.2.3"
     nativewind: "npm:^4.1.23"
-    pg: "npm:^8.16.0"
     pino: "npm:^8.14.1"
     pino-pretty: "npm:^10.1.0"
     postmark: "npm:^3.0.18"

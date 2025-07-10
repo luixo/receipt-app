@@ -1,6 +1,5 @@
 import { initTRPC } from "@trpc/server";
-import { Kysely, PostgresDialect, sql } from "kysely";
-import { Pool } from "pg";
+import { sql } from "kysely";
 import { keys } from "remeda";
 import type { StartedTestContainer } from "testcontainers";
 import { GenericContainer } from "testcontainers";
@@ -88,12 +87,10 @@ export const appRouter = router({
 
 			const cleanupManager = cleanupManagerFactory();
 			const database = getDatabase({
-				pool: new Pool({
-					connectionString: makeConnectionString(
-						connectionData,
-						POSTGRES_TEMPLATE_DATABASE,
-					),
-				}),
+				connectionString: makeConnectionString(
+					connectionData,
+					POSTGRES_TEMPLATE_DATABASE,
+				),
 			});
 			await cleanupManager.withCleanup(
 				() => database.destroy(),
@@ -153,12 +150,10 @@ export const appRouter = router({
 		.input(z.object({ databaseName: z.string() }))
 		.mutation(async ({ input, ctx: { instance } }) => {
 			const database = getDatabase({
-				pool: new Pool({
-					connectionString: makeConnectionString(
-						instance.connectionData,
-						input.databaseName,
-					),
-				}),
+				connectionString: makeConnectionString(
+					instance.connectionData,
+					input.databaseName,
+				),
 			});
 			const dump = await Promise.all(
 				keys(ORDERS).map(async (tableName) => {
@@ -193,15 +188,11 @@ export const appRouter = router({
 	truncateDatabase: runningProcedure
 		.input(z.object({ databaseName: z.string() }))
 		.mutation(async ({ input, ctx: { instance } }) => {
-			const database = new Kysely<ReceiptsDatabase>({
-				dialect: new PostgresDialect({
-					pool: new Pool({
-						connectionString: makeConnectionString(
-							instance.connectionData,
-							input.databaseName,
-						),
-					}),
-				}),
+			const database = getDatabase({
+				connectionString: makeConnectionString(
+					instance.connectionData,
+					input.databaseName,
+				),
 			});
 			await instance.cleanupManager.withCleanup(
 				() => database.destroy(),

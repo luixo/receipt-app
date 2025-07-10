@@ -1,5 +1,3 @@
-import { Pool } from "pg";
-
 import { getDatabase } from "~db/database";
 import { migrate } from "~db/migration/index";
 
@@ -14,7 +12,7 @@ const main = async ([firstArg]: string[]) => {
 		throw new Error("Expected to have process.env.DATABASE_URL variable!");
 	}
 	const database = getDatabase({
-		pool: new Pool({ connectionString: process.env.DATABASE_URL }),
+		connectionString: process.env.DATABASE_URL,
 	});
 	console.log(`Migration target: ${target}`);
 	try {

@@ -1,5 +1,4 @@
 import { createTRPCClient, httpBatchStreamLink } from "@trpc/client";
-import { Pool } from "pg";
 import * as timekeeper from "timekeeper";
 import { beforeAll, beforeEach, inject } from "vitest";
 
@@ -35,9 +34,7 @@ beforeAll(async (fileOrSuite) => {
 	const { databaseName, connectionData } = await client.lockDatabase.mutate();
 	const database = getDatabase({
 		logger,
-		pool: new Pool({
-			connectionString: makeConnectionString(connectionData, databaseName),
-		}),
+		connectionString: makeConnectionString(connectionData, databaseName),
 	});
 	if (filepath) {
 		// Metadata is not serializable though `file` reference stays on the run
