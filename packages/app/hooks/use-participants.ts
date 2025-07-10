@@ -11,6 +11,7 @@ import {
 	getParticipantSums,
 } from "~app/utils/receipt-item";
 import { useTRPC } from "~app/utils/trpc";
+import { compare } from "~utils/date";
 import type { NonNullableField } from "~utils/types";
 
 const getDebtIds = (receipt: Pick<TRPCQueryOutput<"receipts.get">, "debt">) =>
@@ -32,7 +33,7 @@ const SORT_PARTICIPANTS = (a: OriginalParticipant, b: OriginalParticipant) => {
 		return 1;
 	}
 	// Sort everyone else by createdAt timestamp
-	return a.createdAt.valueOf() - b.createdAt.valueOf();
+	return compare(a.createdAt, b.createdAt);
 };
 
 export const useParticipants = (

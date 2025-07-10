@@ -8,6 +8,10 @@ export const getToday = () => {
 	return now;
 };
 
+export const compare = (a: Date, b: Date) => a.valueOf() - b.valueOf();
+export const isFirstEarlier = (a: Date, b: Date) => compare(a, b) < 0;
+export const areEqual = (a: Date, b: Date) => compare(a, b) === 0;
+
 export type TemporalDuration = DateTimeDuration;
 // Very sloppy, but will do for some time
 const SECOND = 1000;

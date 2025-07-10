@@ -12,6 +12,7 @@ import {
 } from "~tests/backend/utils/data";
 import { expectUnauthorizedError } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
+import { compare } from "~utils/date";
 import { t } from "~web/handlers/trpc";
 import { getRandomCurrencyCode } from "~web/handlers/utils.test";
 
@@ -135,7 +136,7 @@ describe("debt-intenions.getAll", () => {
 						receiptId: debtToCreate.receiptId || undefined,
 						current: undefined,
 					},
-				].sort((a, b) => b.updatedAt.valueOf() - a.updatedAt.valueOf()),
+				].sort((a, b) => compare(b.updatedAt, a.updatedAt)),
 			);
 		});
 	});

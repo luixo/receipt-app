@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
-import { add, getNow } from "~utils/date";
+import { add, getNow, isFirstEarlier } from "~utils/date";
 import { sendVerificationEmail } from "~web/handlers/auth/utils";
 import { authProcedure } from "~web/handlers/trpc";
 
@@ -20,7 +20,7 @@ export const procedure = authProcedure.mutation(async ({ ctx }) => {
 	const retryTimestamp = add(account.confirmationTokenTimestamp, {
 		hours: 1,
 	});
-	if (getNow().valueOf() < retryTimestamp.valueOf()) {
+	if (isFirstEarlier(getNow(), retryTimestamp)) {
 		throw new TRPCError({
 			code: "BAD_REQUEST",
 			message: `Verification email to "${ctx.auth.email}" was sent less than an hour ago. Please try again later.`,

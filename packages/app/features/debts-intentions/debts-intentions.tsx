@@ -13,6 +13,7 @@ import type { TRPCQuerySuccessResult } from "~app/trpc";
 import { useTRPC } from "~app/utils/trpc";
 import { Spinner } from "~components/spinner";
 import type { UsersId } from "~db/models";
+import { compare } from "~utils/date";
 
 import { AcceptAllIntentionsButton } from "./accept-all-intentions-button";
 import { InboundDebtIntention } from "./inbound-debt-intention";
@@ -20,10 +21,9 @@ import { InboundDebtIntention } from "./inbound-debt-intention";
 type IntentionsQuery = TRPCQuerySuccessResult<"debtIntentions.getAll">;
 
 const getLatestIntention = (intentions: IntentionsQuery["data"]) =>
-	intentions.reduce(
-		(acc, intention) => Math.max(acc, intention.timestamp.valueOf()),
-		-1,
-	);
+	intentions.toSorted((intentionA, intentionB) =>
+		compare(intentionB.timestamp, intentionA.timestamp),
+	)[0];
 
 type Props = {
 	query: IntentionsQuery;
@@ -42,16 +42,21 @@ const DebtIntentionsInner: React.FC<Props> = ({ query: { data } }) => {
 		}, {});
 		return entries(
 			mapValues(intentionsByUser, (intentions) =>
-				intentions.sort(
-					(intentionA, intentionB) =>
-						intentionA.timestamp.valueOf() - intentionB.timestamp.valueOf(),
+				intentions.sort((intentionA, intentionB) =>
+					compare(intentionA.timestamp, intentionB.timestamp),
 				),
 			),
-		).sort(
-			([, groupedIntentionsA], [, groupedIntentionsB]) =>
-				getLatestIntention(groupedIntentionsA) -
-				getLatestIntention(groupedIntentionsB),
-		);
+		).sort(([, groupedIntentionsA], [, groupedIntentionsB]) => {
+			const latestA = getLatestIntention(groupedIntentionsA);
+			const latestB = getLatestIntention(groupedIntentionsB);
+			if (!latestA) {
+				return -1;
+			}
+			if (!latestB) {
+				return 1;
+			}
+			return compare(latestA.timestamp, latestB.timestamp);
+		});
 	}, [data]);
 	if (data.length === 0) {
 		return (

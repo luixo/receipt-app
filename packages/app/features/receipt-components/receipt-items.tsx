@@ -6,6 +6,7 @@ import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { Button } from "~components/button";
 import { AddIcon } from "~components/icons";
 import type { ReceiptItemsId } from "~db/models";
+import { compare } from "~utils/date";
 
 import { AddReceiptItemForm } from "./add-receipt-item-form";
 import { useReceiptContext } from "./context";
@@ -45,8 +46,7 @@ export const ReceiptItems: React.FC = () => {
 		{},
 	);
 	const sortedItems = React.useMemo(
-		() =>
-			items.toSorted((a, b) => a.createdAt.valueOf() - b.createdAt.valueOf()),
+		() => items.toSorted((a, b) => compare(a.createdAt, b.createdAt)),
 		[items],
 	);
 	if (items.length === 0) {

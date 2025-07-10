@@ -15,6 +15,7 @@ import { Divider } from "~components/divider";
 import { ScrollShadow } from "~components/scroll-shadow";
 import { Skeleton } from "~components/skeleton";
 import { Text } from "~components/text";
+import { compare } from "~utils/date";
 import { round } from "~utils/math";
 
 import { useActionsHooksContext, useReceiptContext } from "./context";
@@ -32,7 +33,7 @@ import type { Item } from "./state";
 type ItemConsumer = Item["consumers"][number];
 
 const SORT_CONSUMERS = (a: ItemConsumer, b: ItemConsumer) => {
-	const delta = a.createdAt.valueOf() - b.createdAt.valueOf();
+	const delta = compare(a.createdAt, b.createdAt);
 	if (delta === 0) {
 		return a.userId.localeCompare(b.userId);
 	}

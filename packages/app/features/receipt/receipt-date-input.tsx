@@ -7,6 +7,7 @@ import { useTrpcMutationOptions } from "~app/hooks/use-trpc-mutation-options";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { useTRPC } from "~app/utils/trpc";
 import { options as receiptsUpdateOptions } from "~mutations/receipts/update";
+import { areEqual } from "~utils/date";
 
 type Props = {
 	receipt: TRPCQueryOutput<"receipts.get">;
@@ -26,8 +27,7 @@ export const ReceiptDateInput: React.FC<Props> = ({
 
 	const saveDate = React.useCallback(
 		(nextDate: Date) => {
-			// TODO: add date-fns comparison of dates
-			if (nextDate.valueOf() === receipt.issued.valueOf()) {
+			if (areEqual(nextDate, receipt.issued)) {
 				return;
 			}
 			updateReceiptMutation.mutate({

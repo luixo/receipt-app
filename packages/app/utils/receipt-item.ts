@@ -2,6 +2,7 @@ import { entries, fromEntries, mapValues, values } from "remeda";
 
 import type { ReceiptItemsId, ReceiptsId, UsersId } from "~db/models";
 import { rotate } from "~utils/array";
+import { compare } from "~utils/date";
 import { getIndexByString } from "~utils/hash";
 
 type ReceiptItem = {
@@ -251,7 +252,7 @@ export const getParticipantSums = <
 			const leftoverB = reimbursedShortages[b.userId]?.notReimbursed ?? 0;
 			const leftoverDelta = leftoverB - leftoverA;
 			if (leftoverDelta === 0) {
-				const createdDelta = a.createdAt.valueOf() - b.createdAt.valueOf();
+				const createdDelta = compare(a.createdAt, b.createdAt);
 				if (createdDelta === 0) {
 					return a.userId.localeCompare(b.userId);
 				}

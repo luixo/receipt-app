@@ -20,6 +20,7 @@ import {
 } from "~tests/backend/utils/expect";
 import type { TestContext } from "~tests/backend/utils/test";
 import { test } from "~tests/backend/utils/test";
+import { compare } from "~utils/date";
 import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./get-paged";
@@ -137,7 +138,7 @@ const runFunctionalTest = async (
 		}),
 	);
 	const items = modifyItems(
-		receipts.sort((a, b) => b.issued.valueOf() - a.issued.valueOf()),
+		receipts.sort((a, b) => compare(b.issued, a.issued)),
 		accountId,
 	).map(({ id }) => id);
 	expect(items.length).toBeGreaterThan(0);
@@ -329,8 +330,7 @@ describe("receipts.getPaged", () => {
 			await runFunctionalTest(
 				ctx,
 				(input) => ({ ...input, orderBy: "date-asc" }),
-				(receipts) =>
-					receipts.sort((a, b) => a.issued.valueOf() - b.issued.valueOf()),
+				(receipts) => receipts.sort((a, b) => compare(a.issued, b.issued)),
 			);
 		});
 

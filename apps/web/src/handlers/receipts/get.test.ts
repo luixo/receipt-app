@@ -20,7 +20,7 @@ import {
 	expectUnauthorizedError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { getNow } from "~utils/date";
+import { compare, getNow } from "~utils/date";
 import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./get";
@@ -44,12 +44,12 @@ const getItems = (
 					createdAt: consumer.createdAt,
 				}))
 				.sort((a, b) => {
-					const delta = a.createdAt.valueOf() - b.createdAt.valueOf();
+					const delta = compare(a.createdAt, b.createdAt);
 					return delta === 0 ? a.userId.localeCompare(b.userId) : -delta;
 				}),
 		}))
 		.sort((a, b) => {
-			const delta = a.createdAt.valueOf() - b.createdAt.valueOf();
+			const delta = compare(a.createdAt, b.createdAt);
 			return delta === 0 ? a.id.localeCompare(b.id) : -delta;
 		});
 
@@ -63,7 +63,7 @@ const getParticipants = (
 			createdAt: participant.createdAt,
 		}))
 		.sort((a, b) => {
-			const delta = a.createdAt.valueOf() - b.createdAt.valueOf();
+			const delta = compare(a.createdAt, b.createdAt);
 			return delta === 0 ? a.userId.localeCompare(b.userId) : -delta;
 		});
 
@@ -75,7 +75,7 @@ const getPayers = (payers: Awaited<ReturnType<typeof insertReceiptPayer>>[]) =>
 			createdAt: payer.createdAt,
 		}))
 		.sort((a, b) => {
-			const delta = a.createdAt.valueOf() - b.createdAt.valueOf();
+			const delta = compare(a.createdAt, b.createdAt);
 			return delta === 0 ? a.userId.localeCompare(b.userId) : -delta;
 		});
 

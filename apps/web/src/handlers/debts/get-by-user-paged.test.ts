@@ -19,6 +19,7 @@ import {
 import type { TestContext } from "~tests/backend/utils/test";
 import { test } from "~tests/backend/utils/test";
 import { CURRENCY_CODES } from "~utils/currency-data";
+import { compare } from "~utils/date";
 import { getRandomAmount } from "~web/handlers/debts/utils.test";
 import { t } from "~web/handlers/trpc";
 
@@ -248,7 +249,7 @@ describe("debts.getByUserPaged", () => {
 			expect(result).toStrictEqual<typeof result>({
 				items: debts
 					.sort((a, b) => {
-						const timestampSort = a.timestamp.valueOf() - b.timestamp.valueOf();
+						const timestampSort = compare(a.timestamp, b.timestamp);
 						if (timestampSort !== 0) {
 							return timestampSort;
 						}
@@ -306,7 +307,7 @@ describe("debts.getByUserPaged", () => {
 				cursor: 0,
 				items: nonResolvedDebts
 					.sort((a, b) => {
-						const timestampSort = b.timestamp.valueOf() - a.timestamp.valueOf();
+						const timestampSort = compare(b.timestamp, a.timestamp);
 						if (timestampSort !== 0) {
 							return timestampSort;
 						}
@@ -340,7 +341,7 @@ describe("debts.getByUserPaged", () => {
 				cursor: 0,
 				items: allDebts
 					.sort((a, b) => {
-						const timestampSort = b.timestamp.valueOf() - a.timestamp.valueOf();
+						const timestampSort = compare(b.timestamp, a.timestamp);
 						if (timestampSort !== 0) {
 							return timestampSort;
 						}
@@ -402,7 +403,7 @@ describe("debts.getByUserPaged", () => {
 				cursor,
 				items: userDebts
 					.sort((a, b) => {
-						const timestampSort = a.timestamp.valueOf() - b.timestamp.valueOf();
+						const timestampSort = compare(a.timestamp, b.timestamp);
 						if (timestampSort !== 0) {
 							return timestampSort;
 						}
