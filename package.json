@@ -52,6 +52,10 @@
 	"dependencies": {
 		"@tanstack/react-query": "^5.80.6",
 		"@tanstack/react-query-devtools": "^5.80.6",
+		"@trpc/client": "^11.4.3",
+		"@trpc/react-query": "^11.4.3",
+		"@trpc/server": "^11.4.3",
+		"@trpc/tanstack-react-query": "^11.4.3",
 		"cookie": "^1.0.2",
 		"i18next": "^25.2.1",
 		"react": "^19.1.0",

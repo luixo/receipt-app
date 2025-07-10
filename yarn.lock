@@ -7805,10 +7805,6 @@ __metadata:
     "@tanstack/react-form": "npm:^1.12.2"
     "@tanstack/react-query-persist-client": "npm:^5.80.6"
     "@tanstack/react-router": "npm:^1.125.6"
-    "@trpc/client": "npm:^11.3.1"
-    "@trpc/react-query": "npm:^11.3.1"
-    "@trpc/server": "npm:^11.3.1"
-    "@trpc/tanstack-react-query": "npm:^11.3.1"
     "@types/uuid": "npm:^9.0.2"
     array.prototype.tosorted: "npm:^1.1.2"
     boring-avatars: "npm:^1.10.1"
@@ -7866,7 +7862,6 @@ __metadata:
     "@ra/app": "workspace:*"
     "@react-native-async-storage/async-storage": "npm:^1.22.3"
     "@tanstack/query-async-storage-persister": "npm:^5.51.1"
-    "@trpc/react-query": "npm:^11.3.1"
     expo: "npm:^50.0.7"
     expo-constants: "npm:^15.4.5"
     expo-linking: "npm:^6.2.2"
@@ -7889,7 +7884,6 @@ __metadata:
   dependencies:
     "@ra/utils": "workspace:*"
     "@tanstack/react-query": "npm:^5.80.6"
-    "@trpc/react-query": "npm:^11.3.1"
   languageName: unknown
   linkType: soft
 
@@ -7903,8 +7897,6 @@ __metadata:
     "@ra/test-utils": "workspace:*"
     "@ra/utils": "workspace:*"
     "@ra/web": "workspace:*"
-    "@trpc/client": "npm:^11.3.1"
-    "@trpc/server": "npm:^11.3.1"
     async-await-queue: "npm:^2.1.4"
     colors: "npm:^1.4.0"
     deep-object-diff: "npm:^1.1.9"
@@ -7952,8 +7944,6 @@ __metadata:
     "@ra/test-utils": "workspace:*"
     "@ra/utils": "workspace:*"
     "@ra/web": "workspace:*"
-    "@trpc/client": "npm:^11.3.1"
-    "@trpc/server": "npm:^11.3.1"
     deep-object-diff: "npm:^1.1.9"
     h3: "npm:^1.15.3"
     kysely: "npm:^0.27.2"
@@ -7981,9 +7971,6 @@ __metadata:
     "@tanstack/react-router-devtools": "npm:^1.125.6"
     "@tanstack/react-start": "npm:^1.125.6"
     "@tanstack/zod-adapter": "npm:^1.125.6"
-    "@trpc/client": "npm:^11.3.1"
-    "@trpc/server": "npm:^11.3.1"
-    "@trpc/tanstack-react-query": "npm:^11.3.1"
     "@types/isomorphic-fetch": "npm:^0.0.36"
     "@types/module-alias": "npm:^2.0.4"
     "@types/node": "npm:^24.0.0"
@@ -11731,50 +11718,50 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@trpc/client@npm:^11.3.1":
-  version: 11.3.1
-  resolution: "@trpc/client@npm:11.3.1"
+"@trpc/client@npm:^11.4.3":
+  version: 11.4.3
+  resolution: "@trpc/client@npm:11.4.3"
   peerDependencies:
-    "@trpc/server": 11.3.1
+    "@trpc/server": 11.4.3
     typescript: ">=5.7.2"
-  checksum: 10/7bab1695f62c579d4db7b4e4afb725e88cbcf0149877db1190f523d7d2b79db36dd0490bdcf085a8fc80a0759b688630f4dda157c4b339951ccbf597a760ef0a
+  checksum: 10/c0669432e7d034ee30c16066b1c8e19b21eca5a2a35ca6f31239e7023751bdf7d8840a81466aebfcd2b5f61b8ec030fbf3523dfbaacb7390f6603857b17bf5e5
   languageName: node
   linkType: hard
 
-"@trpc/react-query@npm:^11.3.1":
-  version: 11.3.1
-  resolution: "@trpc/react-query@npm:11.3.1"
+"@trpc/react-query@npm:^11.4.3":
+  version: 11.4.3
+  resolution: "@trpc/react-query@npm:11.4.3"
   peerDependencies:
     "@tanstack/react-query": ^5.80.3
-    "@trpc/client": 11.3.1
-    "@trpc/server": 11.3.1
+    "@trpc/client": 11.4.3
+    "@trpc/server": 11.4.3
     react: ">=18.2.0"
     react-dom: ">=18.2.0"
     typescript: ">=5.7.2"
-  checksum: 10/3d1ed1bf4723633f132083560305ed27c9b6032209bd88f0e90e71b2044093c8cd8b8e92e5814ac931e1fe9079fb9464c6c3f12d8b79443169087f4e79ea4158
+  checksum: 10/da6f448dd20796aca2b377116e8c19c71f2e98e57c1b9064a9137fea8a8ce8d7165f71890b2c32bd1d8956859732c1cca338abad791187e81c90e879e04646d0
   languageName: node
   linkType: hard
 
-"@trpc/server@npm:^11.3.1":
-  version: 11.3.1
-  resolution: "@trpc/server@npm:11.3.1"
+"@trpc/server@npm:^11.4.3":
+  version: 11.4.3
+  resolution: "@trpc/server@npm:11.4.3"
   peerDependencies:
     typescript: ">=5.7.2"
-  checksum: 10/ba65ff1315d6d342a02763b745bf32d9e552d84b334cf7eacb4dd2fae12804a3bddecd72e15ca2a0e08f73cdd543e95ababe64847c8ed47a56ff9e6a374b5eaf
+  checksum: 10/0f1438624f6ded77b51dc1139a90d64a301428150acef9ed6a3eb8f0569485723e29ac1079fd4cc06f926c840f985dc1689f88167cf8f0d77ff691ad54d69c42
   languageName: node
   linkType: hard
 
-"@trpc/tanstack-react-query@npm:^11.3.1":
-  version: 11.3.1
-  resolution: "@trpc/tanstack-react-query@npm:11.3.1"
+"@trpc/tanstack-react-query@npm:^11.4.3":
+  version: 11.4.3
+  resolution: "@trpc/tanstack-react-query@npm:11.4.3"
   peerDependencies:
     "@tanstack/react-query": ^5.80.3
-    "@trpc/client": 11.3.1
-    "@trpc/server": 11.3.1
+    "@trpc/client": 11.4.3
+    "@trpc/server": 11.4.3
     react: ">=18.2.0"
     react-dom: ">=18.2.0"
     typescript: ">=5.7.2"
-  checksum: 10/4bf4eca0078069c1ac0950c24cb1c2bd94d32fd8a9ff5800570ce535a9c31b8806368b84fe51667a4404f68a12c122fc383671cd1e18daaa25d6f9219e93a2c7
+  checksum: 10/7d4b204316a6e7013d0a80743bb285de676c7138b4246ea03b0ddeafb3c3a384c55f88ea3654c768fd1de79cdddad456a76e6abe0579a763fe73cd0f32c498aa
   languageName: node
   linkType: hard
 
@@ -26929,6 +26916,10 @@ __metadata:
     "@stylistic/eslint-plugin": "npm:^5.0.0"
     "@tanstack/react-query": "npm:^5.80.6"
     "@tanstack/react-query-devtools": "npm:^5.80.6"
+    "@trpc/client": "npm:^11.4.3"
+    "@trpc/react-query": "npm:^11.4.3"
+    "@trpc/server": "npm:^11.4.3"
+    "@trpc/tanstack-react-query": "npm:^11.4.3"
     "@types/eslint-plugin-jsx-a11y": "npm:^6.10.0"
     "@types/eslint-plugin-tailwindcss": "npm:^3.17.0"
     "@types/react": "npm:^19.1.6"
