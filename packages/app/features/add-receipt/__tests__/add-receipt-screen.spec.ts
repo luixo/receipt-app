@@ -5,8 +5,7 @@ import { test as dateInputTest } from "~app/components/__tests__/date-input.util
 import { test as currenciesPickerTest } from "~app/components/app/__tests__/currencies-picker.utils";
 import { test as currencyInputTest } from "~app/components/app/__tests__/currency-input.utils";
 import { expect } from "~tests/frontend/fixtures";
-import { getNow } from "~utils/date";
-import { MONTH } from "~utils/time";
+import { add, getNow } from "~utils/date";
 
 import { test as localTest } from "./utils";
 
@@ -88,7 +87,7 @@ test("'receipts.add' mutation", async ({
 
 	await page.goto("/receipts/add");
 	await nameInput.fill(receiptName);
-	await fillDate(dateInput, getNow().valueOf() + MONTH);
+	await fillDate(dateInput, add(getNow(), { months: 1 }));
 	await fillCurrency(currencyInput, "USD");
 
 	await snapshotQueries(

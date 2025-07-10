@@ -8,8 +8,7 @@ import {
 } from "~tests/backend/utils/data";
 import { expectDatabaseDiffSnapshot } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { getNow } from "~utils/date";
-import { MINUTE, YEAR } from "~utils/time";
+import { add, getNow, substract } from "~utils/date";
 import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./cleanup";
@@ -21,18 +20,19 @@ describe("sessions.cleanup", () => {
 		test("sessions are removed", async ({ ctx }) => {
 			// Verifying other sessions are not affected
 			await insertAccountWithSession(ctx);
+			const now = getNow();
 			const { id: accountId } = await insertAccount(ctx);
 			await insertSession(ctx, accountId, {
 				// non-expired session
-				expirationTimestamp: new Date(getNow().valueOf() + MINUTE),
+				expirationTimestamp: add(now, { minutes: 1 }),
 			});
 			await insertSession(ctx, accountId, {
 				// just expired session
-				expirationTimestamp: new Date(getNow().valueOf() - MINUTE),
+				expirationTimestamp: substract(now, { minutes: 1 }),
 			});
 			await insertSession(ctx, accountId, {
 				// long expired session
-				expirationTimestamp: new Date(getNow().valueOf() - YEAR),
+				expirationTimestamp: substract(now, { years: 1 }),
 			});
 			const caller = createCaller(await createContext(ctx));
 			await expectDatabaseDiffSnapshot(ctx, () => caller.procedure());

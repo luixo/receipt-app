@@ -17,8 +17,7 @@ import {
 	expectUnauthorizedError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { getNow } from "~utils/date";
-import { MONTH } from "~utils/time";
+import { getNow, substract } from "~utils/date";
 import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./suggest-top";
@@ -269,11 +268,12 @@ describe("users.suggestTop", () => {
 				const { sessionId, accountId } = await insertAccountWithSession(ctx);
 				const { id: oldDebtsUserId } = await insertUser(ctx, accountId);
 				const { id: newDebtsUserId } = await insertUser(ctx, accountId);
+				const twoMonthAgo = substract(getNow(), { months: 2 });
 				await insertDebt(ctx, accountId, oldDebtsUserId, {
-					timestamp: new Date(getNow().valueOf() - MONTH - MONTH),
+					timestamp: twoMonthAgo,
 				});
 				await insertDebt(ctx, accountId, oldDebtsUserId, {
-					timestamp: new Date(getNow().valueOf() - MONTH - MONTH),
+					timestamp: twoMonthAgo,
 				});
 				await insertDebt(ctx, accountId, newDebtsUserId);
 				const caller = createCaller(await createAuthContext(ctx, sessionId));
@@ -398,11 +398,12 @@ describe("users.suggestTop", () => {
 					accountId,
 					otherAccountId,
 				]);
+				const monthAgo = substract(getNow(), { months: 1 });
 				await insertDebt(ctx, accountId, oldDebtsUserId, {
-					timestamp: new Date(getNow().valueOf() - MONTH),
+					timestamp: monthAgo,
 				});
 				await insertDebt(ctx, accountId, oldDebtsUserId, {
-					timestamp: new Date(getNow().valueOf() - MONTH),
+					timestamp: monthAgo,
 				});
 				await insertDebt(ctx, accountId, newDebtsUserId);
 				await insertDebt(ctx, accountId, connectedUserId);
@@ -566,9 +567,10 @@ describe("users.suggestTop", () => {
 					userId: selfUserId,
 				} = await insertAccountWithSession(ctx);
 
+				const monthAgo = substract(getNow(), { months: 1 });
 				const { id: oldReceiptsUserId } = await insertUser(ctx, accountId);
 				const { id: firstOldReceiptId } = await insertReceipt(ctx, accountId, {
-					issued: new Date(getNow().valueOf() - MONTH),
+					issued: monthAgo,
 				});
 				await insertReceiptParticipant(
 					ctx,
@@ -576,7 +578,7 @@ describe("users.suggestTop", () => {
 					oldReceiptsUserId,
 				);
 				const { id: secondOldReceiptId } = await insertReceipt(ctx, accountId, {
-					issued: new Date(getNow().valueOf() - MONTH),
+					issued: monthAgo,
 				});
 				await insertReceiptParticipant(
 					ctx,

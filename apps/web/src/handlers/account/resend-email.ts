@@ -1,7 +1,6 @@
 import { TRPCError } from "@trpc/server";
 
-import { getNow } from "~utils/date";
-import { HOUR } from "~utils/time";
+import { add, getNow } from "~utils/date";
 import { sendVerificationEmail } from "~web/handlers/auth/utils";
 import { authProcedure } from "~web/handlers/trpc";
 
@@ -18,8 +17,10 @@ export const procedure = authProcedure.mutation(async ({ ctx }) => {
 			message: `Account "${ctx.auth.email}" is already verified.`,
 		});
 	}
-	const now = getNow();
-	if (now.valueOf() - account.confirmationTokenTimestamp.valueOf() < HOUR) {
+	const retryTimestamp = add(account.confirmationTokenTimestamp, {
+		hours: 1,
+	});
+	if (getNow().valueOf() < retryTimestamp.valueOf()) {
 		throw new TRPCError({
 			code: "BAD_REQUEST",
 			message: `Verification email to "${ctx.auth.email}" was sent less than an hour ago. Please try again later.`,

@@ -5,7 +5,7 @@ import type { Persister } from "@tanstack/react-query-persist-client";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 
 import type { TRPCQuery, TRPCQueryKey, TRPCSplitQueryKey } from "~app/trpc";
-import { MONTH } from "~utils/time";
+import { serializeDuration } from "~utils/date";
 
 const isKeyEqual = <
 	T1 extends TRPCQueryKey,
@@ -36,7 +36,7 @@ export const PersisterProvider: React.FC<
 	>(
 		() => ({
 			persister,
-			maxAge: MONTH,
+			maxAge: serializeDuration({ months: 1 }),
 			dehydrateOptions: {
 				shouldDehydrateQuery: (query) => {
 					const trpcQuery = query as unknown as TRPCQuery<TRPCQueryKey>;

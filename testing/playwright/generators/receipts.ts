@@ -3,8 +3,7 @@ import { isNonNullish } from "remeda";
 import type { TRPCQueryOutput } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import type { ReceiptItemsId, ReceiptsId, UsersId } from "~db/models";
-import { getNow } from "~utils/date";
-import { MONTH } from "~utils/time";
+import { getNow, substract } from "~utils/date";
 
 import type { GenerateUsers } from "./users";
 import type { GeneratorFnWithFaker } from "./utils";
@@ -42,7 +41,7 @@ export const defaultGenerateReceiptItems: GenerateReceiptItems = ({ faker }) =>
 		quantity: faker.number.int({ max: 100 }),
 		name: faker.commerce.productName(),
 		createdAt: faker.date.between({
-			from: new Date(getNow().valueOf() - MONTH),
+			from: substract(getNow(), { months: 1 }),
 			to: getNow(),
 		}),
 	}));

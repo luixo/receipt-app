@@ -1,7 +1,6 @@
 import { z } from "zod/v4";
 
-import { getNow } from "~utils/date";
-import { MONTH } from "~utils/time";
+import { getNow, substract } from "~utils/date";
 import {
 	getOwnReceipts,
 	getParticipantsReceipts,
@@ -31,6 +30,7 @@ export const procedure = authProcedure
 			.array(),
 	)
 	.query(async ({ input, ctx }) => {
+		const minimalTimestamp = substract(getNow(), { months: 1 });
 		switch (input.options.type) {
 			case "debts": {
 				const topCurrenciesResult = await ctx.database
@@ -40,7 +40,7 @@ export const procedure = authProcedure
 						ctx.database.fn.count<string>("id").as("count"),
 					])
 					.where((eb) =>
-						eb("timestamp", ">", new Date(getNow().valueOf() - MONTH)).and(
+						eb("timestamp", ">", minimalTimestamp).and(
 							"debts.ownerAccountId",
 							"=",
 							ctx.auth.accountId,
@@ -65,7 +65,7 @@ export const procedure = authProcedure
 								"receipts.currencyCode",
 								ctx.database.fn.count<string>("receipts.id").as("count"),
 							])
-							.where("issued", ">", new Date(getNow().valueOf() - MONTH))
+							.where("issued", ">", minimalTimestamp)
 							.groupBy("receipts.currencyCode");
 						const ownerReceipts = getOwnReceipts(
 							ctx.database,
@@ -75,7 +75,7 @@ export const procedure = authProcedure
 								"receipts.currencyCode",
 								ctx.database.fn.count<string>("receipts.id").as("count"),
 							])
-							.where("issued", ">", new Date(getNow().valueOf() - MONTH))
+							.where("issued", ">", minimalTimestamp)
 							.groupBy("receipts.currencyCode");
 						return participantReceipts.unionAll(ownerReceipts);
 					})

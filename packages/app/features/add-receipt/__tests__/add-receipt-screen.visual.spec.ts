@@ -4,8 +4,7 @@ import { TRPCError } from "@trpc/server";
 import { test as dateInputTest } from "~app/components/__tests__/date-input.utils";
 import { test as currenciesPickerTest } from "~app/components/app/__tests__/currencies-picker.utils";
 import { test as currencyInputTest } from "~app/components/app/__tests__/currency-input.utils";
-import { getNow } from "~utils/date";
-import { MONTH } from "~utils/time";
+import { add, getNow } from "~utils/date";
 
 import { test as localTest } from "./utils";
 
@@ -31,7 +30,7 @@ test("Form", async ({
 	await expect(page.locator("h1")).toHaveText("Add receipt");
 	await expectScreenshotWithSchemes("empty.png");
 	await nameInput.fill("Receipt name");
-	await fillDate(dateInput, getNow().valueOf() + MONTH);
+	await fillDate(dateInput, add(getNow(), { months: 1 }));
 	await fillCurrency(currencyInput, "USD");
 	await expectScreenshotWithSchemes("filled.png");
 });
@@ -84,7 +83,7 @@ test("'receipts.add' mutation", async ({
 
 	await page.goto("/receipts/add");
 	await nameInput.fill(faker.lorem.words());
-	await fillDate(dateInput, getNow().valueOf() + MONTH);
+	await fillDate(dateInput, add(getNow(), { months: 1 }));
 	await fillCurrency(currencyInput, "USD");
 	const createPause = api.createPause();
 	api.mockFirst("receipts.add", async () => {

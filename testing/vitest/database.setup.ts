@@ -3,7 +3,7 @@ import * as timekeeper from "timekeeper";
 import { beforeAll, beforeEach, inject } from "vitest";
 
 import { getDatabase } from "~db/database";
-import { SECOND } from "~utils/time";
+import { serializeDuration } from "~utils/date";
 import { transformer } from "~utils/transformer";
 import type { Writeable } from "~utils/types";
 
@@ -20,40 +20,44 @@ const client = createTRPCClient<typeof appRouter>({
 
 const databaseIgnoredFiles = [/api\/trpc/];
 
-beforeAll(async (fileOrSuite) => {
-	const logger = getLogger();
-	const filepath = "filepath" in fileOrSuite ? fileOrSuite.filepath : undefined;
-	if (
-		filepath &&
-		databaseIgnoredFiles.some((regexp) => regexp.test(filepath))
-	) {
-		const file = fileOrSuite as Writeable<typeof fileOrSuite>;
-		file.fileContext = { logger };
-		return;
-	}
-	const { databaseName, connectionData } = await client.lockDatabase.mutate();
-	const database = getDatabase({
-		logger,
-		connectionString: makeConnectionString(connectionData, databaseName),
-	});
-	if (filepath) {
-		// Metadata is not serializable though `file` reference stays on the run
-		// see https://vitest.dev/advanced/metadata
-		const file = fileOrSuite as Writeable<typeof fileOrSuite>;
-		file.fileContext = {
+beforeAll(
+	async (fileOrSuite) => {
+		const logger = getLogger();
+		const filepath =
+			"filepath" in fileOrSuite ? fileOrSuite.filepath : undefined;
+		if (
+			filepath &&
+			databaseIgnoredFiles.some((regexp) => regexp.test(filepath))
+		) {
+			const file = fileOrSuite as Writeable<typeof fileOrSuite>;
+			file.fileContext = { logger };
+			return;
+		}
+		const { databaseName, connectionData } = await client.lockDatabase.mutate();
+		const database = getDatabase({
 			logger,
-			database: {
-				instance: database,
-				dump: () => client.dumpDatabase.mutate({ databaseName }),
-				truncate: () => client.truncateDatabase.mutate({ databaseName }),
-			},
+			connectionString: makeConnectionString(connectionData, databaseName),
+		});
+		if (filepath) {
+			// Metadata is not serializable though `file` reference stays on the run
+			// see https://vitest.dev/advanced/metadata
+			const file = fileOrSuite as Writeable<typeof fileOrSuite>;
+			file.fileContext = {
+				logger,
+				database: {
+					instance: database,
+					dump: () => client.dumpDatabase.mutate({ databaseName }),
+					truncate: () => client.truncateDatabase.mutate({ databaseName }),
+				},
+			};
+		}
+		return async () => {
+			await database.destroy();
+			await client.releaseDatabase.mutate({ databaseName });
 		};
-	}
-	return async () => {
-		await database.destroy();
-		await client.releaseDatabase.mutate({ databaseName });
-	};
-}, 10 * SECOND);
+	},
+	serializeDuration({ seconds: 10 }),
+);
 
 beforeEach(async ({ task }) => {
 	timekeeper.freeze(new Date("2020-01-01"));

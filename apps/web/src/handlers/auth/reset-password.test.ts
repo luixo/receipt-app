@@ -16,8 +16,7 @@ import {
 	expectTRPCError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { getNow } from "~utils/date";
-import { MINUTE } from "~utils/time";
+import { getNow, substract } from "~utils/date";
 import { t } from "~web/handlers/trpc";
 import { getHash } from "~web/utils/crypto";
 import { getResHeaders } from "~web/utils/headers";
@@ -88,7 +87,7 @@ describe("auth.resetPassword", () => {
 		test("intention expires", async ({ ctx }) => {
 			const { accountId } = await insertAccountWithSession(ctx);
 			const { token } = await insertResetPasswordIntention(ctx, accountId, {
-				expiresTimestamp: new Date(getNow().valueOf() - MINUTE),
+				expiresTimestamp: substract(getNow(), { minutes: 1 }),
 			});
 			const caller = createCaller(await createContext(ctx));
 			await expectTRPCError(
@@ -113,7 +112,7 @@ describe("auth.resetPassword", () => {
 			// Verifying other intentions of the same user are removed
 			await insertResetPasswordIntention(ctx, accountId);
 			await insertResetPasswordIntention(ctx, accountId, {
-				expiresTimestamp: new Date(getNow().valueOf() - MINUTE),
+				expiresTimestamp: substract(getNow(), { minutes: 1 }),
 			});
 			const { token } = await insertResetPasswordIntention(ctx, accountId);
 			const context = await createContext(ctx);

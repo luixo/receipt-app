@@ -12,7 +12,7 @@ import { createTRPCContext } from "@trpc/tanstack-react-query";
 import { omitBy } from "remeda";
 
 import type { AppRouter } from "~app/trpc";
-import { MINUTE } from "~utils/time";
+import { serializeDuration } from "~utils/date";
 import { transformer } from "~utils/transformer";
 
 type UnexpectedErrorLinkOptions<Router extends AnyTRPCRouter> = {
@@ -147,7 +147,7 @@ export const getQueryClientConfig = (): QueryClientConfig => ({
 		queries: {
 			retry: false,
 			retryOnMount: true,
-			staleTime: MINUTE,
+			staleTime: serializeDuration({ minutes: 1 }),
 			refetchOnWindowFocus: false,
 			refetchOnMount: false,
 		},

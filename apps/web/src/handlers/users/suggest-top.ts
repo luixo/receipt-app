@@ -3,8 +3,7 @@ import { z } from "zod/v4";
 
 import { limitSchema } from "~app/utils/validation";
 import type { UsersId } from "~db/models";
-import { getNow } from "~utils/date";
-import { MONTH } from "~utils/time";
+import { getNow, substract } from "~utils/date";
 import { getAccessRole } from "~web/handlers/receipts/utils";
 import { authProcedure } from "~web/handlers/trpc";
 import { receiptIdSchema, userIdSchema } from "~web/handlers/validation";
@@ -34,6 +33,7 @@ export const procedure = authProcedure
 			...(input.filterIds || []),
 			ctx.auth.accountId as UsersId,
 		];
+		const monthAgo = substract(getNow(), { months: 1 });
 		const options = input.options || { type: "all" };
 		if (options.type === "not-connected-receipt") {
 			const { receiptId } = options;
@@ -87,11 +87,7 @@ export const procedure = authProcedure
 						.leftJoin("receipts", (qb) =>
 							qb
 								.onRef("receiptParticipants.receiptId", "=", "receipts.id")
-								.on(
-									"receipts.issued",
-									">",
-									new Date(getNow().valueOf() - MONTH),
-								),
+								.on("receipts.issued", ">", monthAgo),
 						)
 						.distinctOn(["users.id"])
 						.select([
@@ -123,7 +119,7 @@ export const procedure = authProcedure
 				.leftJoin("debts", (qb) =>
 					qb
 						.onRef("debts.userId", "=", "users.id")
-						.on("debts.timestamp", ">", new Date(getNow().valueOf() - MONTH)),
+						.on("debts.timestamp", ">", monthAgo),
 				)
 				.$if(filterIds.length !== 0, (qb) =>
 					qb.where("users.id", "not in", filterIds),
@@ -150,7 +146,7 @@ export const procedure = authProcedure
 			.leftJoin("debts", (qb) =>
 				qb
 					.onRef("users.id", "=", "debts.userId")
-					.on("debts.timestamp", ">", new Date(getNow().valueOf() - MONTH)),
+					.on("debts.timestamp", ">", monthAgo),
 			)
 			.$if(filterIds.length !== 0, (qb) =>
 				qb.where("users.id", "not in", filterIds),

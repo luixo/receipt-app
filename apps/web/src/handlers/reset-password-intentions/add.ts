@@ -1,8 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
-import { getNow } from "~utils/date";
-import { DAY } from "~utils/time";
+import { add, getNow } from "~utils/date";
 import { generateResetPasswordEmail } from "~web/email/utils";
 import { unauthProcedure } from "~web/handlers/trpc";
 import { MAX_INTENTIONS_AMOUNT, emailSchema } from "~web/handlers/validation";
@@ -29,7 +28,7 @@ export const procedure = unauthProcedure
 			});
 		}
 		const uuid: string = ctx.getUuid();
-		const expirationDate = new Date(getNow().valueOf() + DAY);
+		const expirationDate = add(getNow(), { days: 1 });
 		if (!ctx.emailOptions.active) {
 			throw new TRPCError({
 				code: "FORBIDDEN",

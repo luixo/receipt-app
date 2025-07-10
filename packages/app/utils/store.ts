@@ -2,7 +2,7 @@ import type { serialize as serializeType } from "cookie";
 
 import type { StoreContextType } from "~app/contexts/store-context";
 import type { StoreValues } from "~app/utils/store-data";
-import { YEAR } from "~utils/time";
+import { serializeDuration } from "~utils/date";
 
 export const getStoreContext = (
 	serialize: typeof serializeType,
@@ -16,7 +16,7 @@ export const getStoreContext = (
 			typeof value === "string" ? value : JSON.stringify(value),
 			{
 				path: "/",
-				maxAge: YEAR / 1000,
+				maxAge: serializeDuration({ years: 1 }) / 1000,
 				sameSite: "strict",
 			},
 		);

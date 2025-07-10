@@ -12,11 +12,8 @@ import {
 	expectTRPCError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { getNow } from "~utils/date";
-import {
-	SESSION_EXPIRATION_DURATION,
-	SESSION_SHOULD_UPDATE_EVERY,
-} from "~web/handlers/auth/utils";
+import { add, getNow, substract } from "~utils/date";
+import { SESSION_REFRESH_DURATION } from "~web/handlers/auth/utils";
 import { t } from "~web/handlers/trpc";
 import { getResHeaders } from "~web/utils/headers";
 
@@ -128,11 +125,9 @@ describe("procedures", () => {
 		test("session is not auto-updated", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx, {
 				session: {
-					expirationTimestamp: new Date(
-						getNow().valueOf() +
-							(SESSION_EXPIRATION_DURATION - SESSION_SHOULD_UPDATE_EVERY) +
-							1000,
-					),
+					expirationTimestamp: add(getNow(), SESSION_REFRESH_DURATION, {
+						seconds: 1,
+					}),
 				},
 			});
 
@@ -146,10 +141,9 @@ describe("procedures", () => {
 		test("session is auto-updated", async ({ ctx }) => {
 			const { sessionId } = await insertAccountWithSession(ctx, {
 				session: {
-					expirationTimestamp: new Date(
-						getNow().valueOf() +
-							(SESSION_EXPIRATION_DURATION - SESSION_SHOULD_UPDATE_EVERY) -
-							1000,
+					expirationTimestamp: substract(
+						add(getNow(), SESSION_REFRESH_DURATION),
+						{ seconds: 1 },
 					),
 				},
 			});

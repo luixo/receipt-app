@@ -19,8 +19,7 @@ import {
 	expectUnauthorizedError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { getNow } from "~utils/date";
-import { MINUTE } from "~utils/time";
+import { add, getNow } from "~utils/date";
 import { t } from "~web/handlers/trpc";
 import { getRandomCurrencyCode, runInBand } from "~web/handlers/utils.test";
 
@@ -180,7 +179,7 @@ describe("debtIntentions.accept", () => {
 				caller.procedure({ id: debt.id }),
 			);
 			expect(result).toStrictEqual<typeof result>({
-				updatedAt: new Date(debt.updatedAt.valueOf() + MINUTE),
+				updatedAt: add(debt.updatedAt, { minutes: 1 }),
 			});
 		});
 
@@ -227,7 +226,7 @@ describe("debtIntentions.accept", () => {
 				caller.procedure({ id: debt.id }),
 			);
 			expect(result).toStrictEqual<typeof result>({
-				updatedAt: new Date(debt.updatedAt.valueOf() + MINUTE),
+				updatedAt: add(debt.updatedAt, { minutes: 1 }),
 			});
 		});
 
@@ -304,9 +303,9 @@ describe("debtIntentions.accept", () => {
 				]),
 			);
 			expect(result).toStrictEqual<typeof result>([
-				{ updatedAt: new Date(newDebt.updatedAt.valueOf()) },
-				{ updatedAt: new Date(updatedDebtAhead.updatedAt.valueOf() + MINUTE) },
-				{ updatedAt: new Date(updatedDebtBehind.updatedAt.valueOf() + MINUTE) },
+				{ updatedAt: newDebt.updatedAt },
+				{ updatedAt: add(updatedDebtAhead.updatedAt, { minutes: 1 }) },
+				{ updatedAt: add(updatedDebtBehind.updatedAt, { minutes: 1 }) },
 			]);
 		});
 	});

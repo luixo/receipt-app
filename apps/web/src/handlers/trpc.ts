@@ -8,11 +8,10 @@ import {
 	pretendUserSchema,
 } from "~app/utils/store/pretend-user";
 import type { AccountsId } from "~db/models";
-import { getNow } from "~utils/date";
+import { getNow, substract } from "~utils/date";
 import { transformer } from "~utils/transformer";
 import {
-	SESSION_EXPIRATION_DURATION,
-	SESSION_SHOULD_UPDATE_EVERY,
+	SESSION_REFRESH_DURATION,
 	getExpirationDate,
 } from "~web/handlers/auth/utils";
 import { queueCallFactory } from "~web/handlers/batch";
@@ -152,11 +151,14 @@ const queueSession = queueCallFactory<
 				const matchedSession = sessions.find(
 					(session) => session.sessionId === authToken,
 				);
-				if (
-					!matchedSession ||
-					matchedSession.expirationTimestamp.valueOf() - getNow().valueOf() >=
-						SESSION_EXPIRATION_DURATION - SESSION_SHOULD_UPDATE_EVERY
-				) {
+				if (!matchedSession) {
+					return;
+				}
+				const refreshSessionTimestamp = substract(
+					matchedSession.expirationTimestamp,
+					SESSION_REFRESH_DURATION,
+				);
+				if (getNow().valueOf() < refreshSessionTimestamp.valueOf()) {
 					return;
 				}
 				return {

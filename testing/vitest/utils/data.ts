@@ -12,8 +12,7 @@ import type {
 } from "~db/models";
 import type { TestContext } from "~tests/backend/utils/test";
 import { asFixedSizeArray } from "~utils/array";
-import { getNow } from "~utils/date";
-import { YEAR } from "~utils/time";
+import { add, getNow } from "~utils/date";
 import type { Role } from "~web/handlers/receipts/utils";
 import { generatePasswordData } from "~web/utils/crypto";
 
@@ -235,7 +234,7 @@ export const insertSession = async (
 			sessionId: data.id || ctx.getTestUuid(),
 			accountId,
 			expirationTimestamp:
-				data.expirationTimestamp || new Date(getNow().valueOf() + YEAR),
+				data.expirationTimestamp || add(getNow(), { years: 1 }),
 		})
 		.returning(["sessionId", "expirationTimestamp"])
 		.executeTakeFirstOrThrow();
@@ -258,8 +257,7 @@ export const insertResetPasswordIntention = async (
 		.insertInto("resetPasswordIntentions")
 		.values({
 			accountId,
-			expiresTimestamp:
-				data.expiresTimestamp || new Date(getNow().valueOf() + YEAR),
+			expiresTimestamp: data.expiresTimestamp || add(getNow(), { years: 1 }),
 			token: data.token || ctx.getTestUuid(),
 		})
 		.returning(["expiresTimestamp", "token"])

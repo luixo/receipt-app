@@ -7,8 +7,7 @@ import {
 } from "~tests/backend/utils/data";
 import { expectDatabaseDiffSnapshot } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
-import { getNow } from "~utils/date";
-import { MINUTE, YEAR } from "~utils/time";
+import { add, getNow, substract } from "~utils/date";
 import { t } from "~web/handlers/trpc";
 
 import { procedure } from "./cleanup";
@@ -19,17 +18,18 @@ describe("resetPasswordIntentions.cleanup", () => {
 	describe("functionality", () => {
 		test("reset password intentions are removed", async ({ ctx }) => {
 			const { id: accountId } = await insertAccount(ctx);
+			const now = getNow();
 			await insertResetPasswordIntention(ctx, accountId, {
 				// non-expired intention
-				expiresTimestamp: new Date(getNow().valueOf() + MINUTE),
+				expiresTimestamp: add(now, { minutes: 1 }),
 			});
 			await insertResetPasswordIntention(ctx, accountId, {
 				// just expired intention
-				expiresTimestamp: new Date(getNow().valueOf() - MINUTE),
+				expiresTimestamp: substract(now, { minutes: 1 }),
 			});
 			await insertResetPasswordIntention(ctx, accountId, {
 				// long expired intention
-				expiresTimestamp: new Date(getNow().valueOf() - YEAR),
+				expiresTimestamp: substract(now, { years: 1 }),
 			});
 			const caller = createCaller(await createContext(ctx));
 			await expectDatabaseDiffSnapshot(ctx, () => caller.procedure());

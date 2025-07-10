@@ -1,19 +1,21 @@
 import { TRPCError } from "@trpc/server";
 
 import type { AccountsId, SessionsSessionId } from "~db/models";
-import { getNow } from "~utils/date";
-import { DAY } from "~utils/time";
+import { add, getNow, parseDuration, serializeDuration } from "~utils/date";
 import { generateConfirmEmailEmail } from "~web/email/utils";
 import type { UnauthorizedContext } from "~web/handlers/context";
 import { getEmailClient } from "~web/providers/email";
 
 // How long a session should last
-export const SESSION_EXPIRATION_DURATION = 30 * DAY;
-// How long session should be intact before we update it
-export const SESSION_SHOULD_UPDATE_EVERY = 2 * DAY;
+const SESSION_EXPIRATION_DURATION = { days: 30 };
+// How long until session expiration left before we auto-refresh it
+export const SESSION_REFRESH_DURATION = parseDuration(
+	serializeDuration(SESSION_EXPIRATION_DURATION) -
+		serializeDuration({ days: 2 }),
+);
 
 export const getExpirationDate = () =>
-	new Date(getNow().valueOf() + SESSION_EXPIRATION_DURATION);
+	add(getNow(), SESSION_EXPIRATION_DURATION);
 
 export const createAuthorizationSession = async (
 	ctx: UnauthorizedContext,
