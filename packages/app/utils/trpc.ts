@@ -89,14 +89,7 @@ export const getLinks = ({
 	);
 	const splitLinkInstance = splitLink({
 		condition: (op) => op.input instanceof FormData,
-		true: httpLink({
-			url,
-			headers,
-			transformer: {
-				serialize: transformer.serialize,
-				deserialize: transformer.deserialize,
-			},
-		}),
+		true: httpLink({ url, headers, transformer }),
 		false: splitLink({
 			condition: (op) =>
 				Boolean(useBatch && op.context.batch !== noBatchContext.batch),
