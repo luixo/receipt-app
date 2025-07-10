@@ -1,8 +1,8 @@
+import { capitalize } from "remeda";
 import type { z } from "zod/v4";
 
 import type { Locale } from "~app/utils/locale";
 import type { currencySchema } from "~app/utils/validation";
-import { capitalize } from "~utils/string";
 
 export type CurrencyCode = string & {
 	__flavor?: "currencyCode";

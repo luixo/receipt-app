@@ -1,10 +1,10 @@
 import type { FullConfig } from "@playwright/test";
 import { createHTTPServer } from "@trpc/server/adapters/standalone";
 import colors from "colors";
+import { capitalize } from "remeda";
 
 import { serverMessages } from "~tests/frontend/server-reporter";
 import { getFreePort } from "~utils/port";
-import { capitalize } from "~utils/string";
 
 import { appRouter } from "./router";
 

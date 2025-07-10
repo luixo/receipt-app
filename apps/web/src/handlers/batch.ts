@@ -4,8 +4,8 @@ import type {
 } from "@trpc/server/unstable-core-do-not-import";
 import type { Options } from "dataloader";
 import Dataloader from "dataloader";
+import { doNothing } from "remeda";
 
-import { noop } from "~utils/fn";
 import type { MaybePromise } from "~utils/types";
 import type {
 	AuthorizedContext,
@@ -97,7 +97,7 @@ export const queueCallFactory = <
 					...batchOpts,
 				},
 			),
-			removeTimeoutId: setTimeout(noop, 0),
+			removeTimeoutId: setTimeout(doNothing(), 0),
 		};
 		dataloaderStorage[key] = dataloaderObject;
 		clearTimeout(dataloaderObject.removeTimeoutId);

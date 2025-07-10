@@ -1,4 +1,3 @@
-import { recase } from "@kristiandupont/recase";
 import type { Page, TestInfo } from "@playwright/test";
 import { expect } from "@playwright/test";
 import type { DehydratedState, Mutation, Query } from "@tanstack/react-query";
@@ -14,6 +13,7 @@ import {
 	mapValues,
 	omit,
 	omitBy,
+	toKebabCase,
 } from "remeda";
 
 import type {
@@ -57,7 +57,7 @@ const getSnapshotName = (
 			.toLowerCase(),
 	);
 	const name = [
-		recase("mixed", "dash")(testInfo.title.replace(/[^a-zA-Z0-9]/g, "-")),
+		toKebabCase(testInfo.title.replace(/[^a-zA-Z0-9]/g, "-")),
 		key,
 		// Removing baseName "0" by .filter(Boolean) is intended
 		overrideName || testInfo.queriesSnapshotIndex,

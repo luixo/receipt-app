@@ -1,10 +1,11 @@
 import React from "react";
 
+import { doNothing } from "remeda";
+
 import {
 	type StoreValues,
 	getStoreValuesFromInitialValues,
 } from "~app/utils/store-data";
-import { noop } from "~utils/fn";
 import type { MaybePromise } from "~utils/types";
 
 export type StoreContextType = {
@@ -16,13 +17,11 @@ export type StoreContextType = {
 	deleteItem: (key: string) => MaybePromise<void>;
 };
 
-const asyncNoop = async () => noop();
-
 export const StoreContext = React.createContext<StoreContextType>({
 	getInitialItems: () => ({
 		nowTimestamp: Date.now(),
 		values: getStoreValuesFromInitialValues(),
 	}),
-	setItem: asyncNoop,
-	deleteItem: asyncNoop,
+	setItem: doNothing(),
+	deleteItem: doNothing(),
 });

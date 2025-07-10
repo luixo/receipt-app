@@ -2,7 +2,7 @@ import React from "react";
 
 import type { QueryFilters } from "@tanstack/react-query";
 import { matchQuery, useQueryClient } from "@tanstack/react-query";
-import { debounce } from "remeda";
+import { funnel } from "remeda";
 
 import type { TRPCQueryKey, TRPCTanstackGenericQueryKey } from "~app/trpc";
 
@@ -20,9 +20,10 @@ export const useSubscribeToQueryUpdate = <K extends TRPCQueryKey, T>(
 		React.useCallback(
 			(onStoreChange) => {
 				const { call: debouncedStoreChange, cancel: cancelStoreChange } =
-					debounce(onStoreChange, {
-						waitMs: 100,
-						maxWaitMs: 1000,
+					funnel(onStoreChange, {
+						minQuietPeriodMs: 100,
+						maxBurstDurationMs: 1000,
+						triggerAt: "both",
 					});
 				const unsubscribe = queryClient.getQueryCache().subscribe((event) => {
 					if (!["added", "removed", "updated"].includes(event.type)) {

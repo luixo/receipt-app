@@ -3,6 +3,7 @@ import { View } from "react-native";
 
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
+import { doNothing } from "remeda";
 import { z } from "zod/v4";
 
 import { CurrenciesPicker } from "~app/components/app/currencies-picker";
@@ -43,7 +44,6 @@ import { Spinner } from "~components/spinner";
 import type { DebtsId, ReceiptsId, UsersId } from "~db/models";
 import { options as debtsRemoveOptions } from "~mutations/debts/remove";
 import { options as debtsUpdateOptions } from "~mutations/debts/update";
-import { noop } from "~utils/fn";
 
 import { DebtControlButtons } from "./debt-control-buttons";
 
@@ -455,7 +455,12 @@ export const DebtScreen: React.FC<{ id: DebtsId }> = ({ id }) => {
 				<>
 					<Header>{t("debt.loading")}</Header>
 					<SkeletonUser className="self-start" />
-					<SignButtonGroup disabled isLoading onUpdate={noop} direction="+" />
+					<SignButtonGroup
+						disabled
+						isLoading
+						onUpdate={doNothing()}
+						direction="+"
+					/>
 					<Input
 						startContent={<Spinner size="sm" />}
 						aria-label="Debt amount"

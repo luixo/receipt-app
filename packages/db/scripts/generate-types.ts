@@ -1,14 +1,11 @@
-import { recase } from "@kristiandupont/recase";
 import type { TableColumn } from "extract-pg-schema";
 import * as kanel from "kanel";
 import path from "node:path";
+import { capitalize, toCamelCase, toKebabCase } from "remeda";
 
 const { generateIndexFile, processDatabase } = (
 	kanel as unknown as { default: typeof kanel }
 ).default;
-
-const fileRecase = recase("pascal", "dash");
-const kebabToPascal = recase("dash", "pascal");
 
 const run = async () => {
 	console.log(`\n> Generating types...`);
@@ -22,13 +19,15 @@ const run = async () => {
 			outputPath,
 			preDeleteOutputFolder: true,
 			getMetadata: (details, generateFor) => ({
-				name: kebabToPascal(
-					generateFor === "selector"
-						? details.name
-						: `${details.name}-${generateFor}`,
+				name: capitalize(
+					toCamelCase(
+						generateFor === "selector"
+							? details.name
+							: `${details.name}-${generateFor}`,
+					),
 				),
 				comment: undefined,
-				path: path.join(outputPath, fileRecase(details.name)),
+				path: path.join(outputPath, toKebabCase(details.name)),
 			}),
 			getPropertyMetadata: (rawProperty, details, generateFor) => {
 				let typeOverride: string | undefined;
@@ -53,7 +52,7 @@ const run = async () => {
 			},
 			generateIdentifierType: (column, details) => ({
 				declarationType: "typeDeclaration",
-				name: kebabToPascal(`${details.name}-${column.name}`),
+				name: capitalize(toCamelCase(`${details.name}-${column.name}`)),
 				exportAs: "named",
 				typeDefinition: [`string & { __flavor?: '${details.name}' }`],
 				comment: [`Identifier type for "${details.name}" table`],
