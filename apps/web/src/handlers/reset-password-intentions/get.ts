@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
 import { resetPasswordTokenSchema } from "~app/utils/validation";
+import { getNow } from "~utils/date";
 import { unauthProcedure } from "~web/handlers/trpc";
 
 export const procedure = unauthProcedure
@@ -15,7 +16,7 @@ export const procedure = unauthProcedure
 		const resetPasswordIntention = await database
 			.selectFrom("resetPasswordIntentions")
 			.where((eb) =>
-				eb("token", "=", input.token).and("expiresTimestamp", ">", new Date()),
+				eb("token", "=", input.token).and("expiresTimestamp", ">", getNow()),
 			)
 			.innerJoin("accounts", (qb) =>
 				qb.onRef("accounts.id", "=", "resetPasswordIntentions.accountId"),

@@ -3,6 +3,7 @@ import { isNonNullish } from "remeda";
 import type { TRPCQueryOutput } from "~app/trpc";
 import { getParticipantSums } from "~app/utils/receipt-item";
 import type { UsersId } from "~db/models";
+import { getNow } from "~utils/date";
 
 import type {
 	GenerateReceiptBase,
@@ -26,15 +27,15 @@ export const defaultGenerateDebts = ({
 	generateAmount(faker, amount, () => ({
 		id: faker.string.uuid(),
 		currencyCode: generateCurrencyCode(faker),
-		createdAt: new Date(),
+		createdAt: getNow(),
 		timestamp: faker.date.recent({
 			days: 30,
-			refDate: new Date(),
+			refDate: getNow(),
 		}),
 		note: faker.lorem.words(4),
 		receiptId: undefined,
 		amount: faker.number.float({ min: -10000, max: 10000, precision: 0.01 }),
-		updatedAt: new Date(),
+		updatedAt: getNow(),
 		their: undefined,
 		userId,
 	}));
@@ -87,9 +88,9 @@ export const defaultGenerateDebtsFromReceipt: GenerateDebtsFromReceipt = ({
 				timestamp: receiptBase.issued,
 				note: `Fake receipt "${receiptBase.name}"`,
 				amount: sum,
-				updatedAt: new Date(),
+				updatedAt: getNow(),
 				their: {
-					updatedAt: new Date(),
+					updatedAt: getNow(),
 					currencyCode: receiptBase.currencyCode,
 					timestamp: receiptBase.issued,
 					amount: sum,

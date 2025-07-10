@@ -1,4 +1,5 @@
 import type { ReceiptItemsId } from "~db/models";
+import { getNow } from "~utils/date";
 
 import {
 	update as updateReceipts,
@@ -20,7 +21,7 @@ export const options: UseContextedMutationOptions<
 					name: variables.name,
 					price: variables.price,
 					quantity: variables.quantity,
-					createdAt: new Date(),
+					createdAt: getNow(),
 					consumers: [],
 				}),
 			getPaged: undefined,

@@ -19,6 +19,7 @@ import {
 	expectUnauthorizedError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
+import { getNow } from "~utils/date";
 import { MINUTE } from "~utils/time";
 import { t } from "~web/handlers/trpc";
 import { getRandomCurrencyCode, runInBand } from "~web/handlers/utils.test";
@@ -93,7 +94,7 @@ describe("debtIntentions.accept", () => {
 			);
 
 			expect(results[0]).toStrictEqual<(typeof results)[0]>({
-				updatedAt: new Date(),
+				updatedAt: getNow(),
 			});
 			expect(results[1]).toBeInstanceOf(TRPCError);
 		});
@@ -133,7 +134,7 @@ describe("debtIntentions.accept", () => {
 			const result = await expectDatabaseDiffSnapshot(ctx, () =>
 				caller.procedure({ id: foreignDebtId }),
 			);
-			expect(result).toStrictEqual<typeof result>({ updatedAt: new Date() });
+			expect(result).toStrictEqual<typeof result>({ updatedAt: getNow() });
 		});
 
 		test("debt existed on our account beforehand - their updatedAt ahead", async ({

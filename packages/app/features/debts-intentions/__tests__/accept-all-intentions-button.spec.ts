@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 
 import { expect } from "~tests/frontend/fixtures";
 import { defaultGenerateDebts } from "~tests/frontend/generators/debts";
+import { getNow } from "~utils/date";
 
 import { test } from "./accept-all-intentions-button.utils";
 
@@ -59,7 +60,7 @@ test("'debtIntentions.accept' pending / error", async ({
 		.map((debt) => debt.id);
 	api.mockFirst("debtIntentions.accept", async ({ input }) => {
 		if (!acceptedDebtsIds.includes(input.id)) {
-			return { updatedAt: new Date() };
+			return { updatedAt: getNow() };
 		}
 		await acceptIntentionLaterPause.promise;
 		throw new TRPCError({
@@ -105,7 +106,7 @@ test("'debtIntentions.accept' pending / error", async ({
 		{ name: "error" },
 	);
 
-	api.mockFirst("debtIntentions.accept", { updatedAt: new Date() });
+	api.mockFirst("debtIntentions.accept", { updatedAt: getNow() });
 
 	await snapshotQueries(
 		async () => {

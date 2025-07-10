@@ -34,6 +34,7 @@ import { Text } from "~components/text";
 import { cn } from "~components/utils";
 import type { UsersId } from "~db/models";
 import { options as debtsAddOptions } from "~mutations/debts/add";
+import { getNow } from "~utils/date";
 
 const formSchema = z
 	.record(currencyCodeSchema, debtAmountSchema.or(z.literal(0)))
@@ -109,7 +110,7 @@ const DebtsListForm: React.FC<FormProps> = ({
 						if (!toUser) {
 							throw new Error(`Expected to have target user`);
 						}
-						const fromTimestamp = new Date(Date.now() + index);
+						const fromTimestamp = new Date(getNow().valueOf() + index);
 						addMutation.mutate({
 							note: t("transfer.defaultNoteTo", {
 								user: toUser.publicName || toUser.name,
@@ -120,7 +121,7 @@ const DebtsListForm: React.FC<FormProps> = ({
 							timestamp: fromTimestamp,
 						});
 						const toTimestamp = new Date(
-							Date.now() + allCurrenciesWithSums.length + index,
+							getNow().valueOf() + allCurrenciesWithSums.length + index,
 						);
 						addMutation.mutate({
 							note: t("transfer.defaultNoteFrom", {

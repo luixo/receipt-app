@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod/v4";
 
+import { getNow } from "~utils/date";
 import { DAY } from "~utils/time";
 import { generateResetPasswordEmail } from "~web/email/utils";
 import { unauthProcedure } from "~web/handlers/trpc";
@@ -28,7 +29,7 @@ export const procedure = unauthProcedure
 			});
 		}
 		const uuid: string = ctx.getUuid();
-		const expirationDate = new Date(Date.now() + DAY);
+		const expirationDate = new Date(getNow().valueOf() + DAY);
 		if (!ctx.emailOptions.active) {
 			throw new TRPCError({
 				code: "FORBIDDEN",
@@ -41,7 +42,7 @@ export const procedure = unauthProcedure
 				eb("resetPasswordIntentions.accountId", "=", account.id).and(
 					"expiresTimestamp",
 					">",
-					new Date(),
+					getNow(),
 				),
 			)
 			.select("expiresTimestamp")

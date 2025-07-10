@@ -6,6 +6,7 @@ import {
 	type StoreValues,
 	getStoreValuesFromInitialValues,
 } from "~app/utils/store-data";
+import { getNow } from "~utils/date";
 import type { MaybePromise } from "~utils/types";
 
 export type StoreContextType = {
@@ -19,7 +20,7 @@ export type StoreContextType = {
 
 export const StoreContext = React.createContext<StoreContextType>({
 	getInitialItems: () => ({
-		nowTimestamp: Date.now(),
+		nowTimestamp: getNow().valueOf(),
 		values: getStoreValuesFromInitialValues(),
 	}),
 	setItem: doNothing(),

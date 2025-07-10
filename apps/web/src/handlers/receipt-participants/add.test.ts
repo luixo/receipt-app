@@ -17,6 +17,7 @@ import {
 	expectUnauthorizedError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
+import { getNow } from "~utils/date";
 import { t } from "~web/handlers/trpc";
 import { runInBand } from "~web/handlers/utils.test";
 
@@ -246,7 +247,7 @@ describe("receiptParticipants.add", () => {
 				);
 
 				expect(results[0]).toStrictEqual<(typeof results)[0]>({
-					createdAt: new Date(),
+					createdAt: getNow(),
 				});
 				expect(results[1]).toBeInstanceOf(TRPCError);
 			});
@@ -316,11 +317,11 @@ describe("receiptParticipants.add", () => {
 				]),
 			);
 			expect(result).toStrictEqual<typeof result>([
-				{ createdAt: new Date() },
-				{ createdAt: new Date() },
-				{ createdAt: new Date() },
-				{ createdAt: new Date() },
-				{ createdAt: new Date() },
+				{ createdAt: getNow() },
+				{ createdAt: getNow() },
+				{ createdAt: getNow() },
+				{ createdAt: getNow() },
+				{ createdAt: getNow() },
 			]);
 		});
 	});

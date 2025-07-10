@@ -3,6 +3,7 @@ import type {
 	TRPCMutationOutput,
 	TRPCQueryOutput,
 } from "~app/trpc";
+import { getNow } from "~utils/date";
 
 import { update as updateDebts } from "../cache/debts";
 import { update as updateReceipts } from "../cache/receipts";
@@ -15,7 +16,7 @@ const createDebt = (
 	{ id, updatedAt, reverseAccepted }: AddResult,
 	updateObject: TRPCMutationInput<"debts.add">,
 ): DebtSnapshot => {
-	const timestamp = updateObject.timestamp || new Date();
+	const timestamp = updateObject.timestamp || getNow();
 	return {
 		id,
 		amount: updateObject.amount,

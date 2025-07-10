@@ -7850,6 +7850,7 @@ __metadata:
     "@babel/plugin-transform-shorthand-properties": "npm:^7.23.3"
     "@babel/plugin-transform-template-literals": "npm:^7.23.3"
     "@ra/app": "workspace:*"
+    "@ra/utils": "workspace:*"
     "@react-native-async-storage/async-storage": "npm:^1.22.3"
     "@tanstack/query-async-storage-persister": "npm:^5.51.1"
     expo: "npm:^50.0.7"

@@ -12,6 +12,7 @@ import type {
 } from "~db/models";
 import type { TestContext } from "~tests/backend/utils/test";
 import { asFixedSizeArray } from "~utils/array";
+import { getNow } from "~utils/date";
 import { YEAR } from "~utils/time";
 import type { Role } from "~web/handlers/receipts/utils";
 import { generatePasswordData } from "~web/utils/crypto";
@@ -108,7 +109,7 @@ export const insertAccount = async (
 				? data.confirmation.token || ctx.getTestUuid()
 				: undefined,
 			confirmationTokenTimestamp: data.confirmation
-				? data.confirmation.timestamp || new Date()
+				? data.confirmation.timestamp || getNow()
 				: undefined,
 			avatarUrl:
 				data.avatarUrl === null
@@ -234,7 +235,7 @@ export const insertSession = async (
 			sessionId: data.id || ctx.getTestUuid(),
 			accountId,
 			expirationTimestamp:
-				data.expirationTimestamp || new Date(new Date().valueOf() + YEAR),
+				data.expirationTimestamp || new Date(getNow().valueOf() + YEAR),
 		})
 		.returning(["sessionId", "expirationTimestamp"])
 		.executeTakeFirstOrThrow();
@@ -258,7 +259,7 @@ export const insertResetPasswordIntention = async (
 		.values({
 			accountId,
 			expiresTimestamp:
-				data.expiresTimestamp || new Date(new Date().valueOf() + YEAR),
+				data.expiresTimestamp || new Date(getNow().valueOf() + YEAR),
 			token: data.token || ctx.getTestUuid(),
 		})
 		.returning(["expiresTimestamp", "token"])
@@ -302,8 +303,8 @@ export const insertDebt = async (
 			amount:
 				data.amount?.toString() ??
 				(faker.datatype.boolean() ? "" : "-") + faker.finance.amount(),
-			timestamp: data.timestamp ?? new Date(),
-			createdAt: data.createdAt ?? new Date(),
+			timestamp: data.timestamp ?? getNow(),
+			createdAt: data.createdAt ?? getNow(),
 			note: data.note ?? faker.lorem.sentence(),
 			receiptId: data.receiptId ?? null,
 		})
@@ -441,8 +442,8 @@ export const insertReceipt = async (
 			ownerAccountId,
 			name: data.name ?? faker.lorem.words(2),
 			currencyCode: data.currencyCode || faker.finance.currencyCode(),
-			createdAt: data.createdAt ?? new Date(),
-			issued: data.issued ?? new Date(),
+			createdAt: data.createdAt ?? getNow(),
+			issued: data.issued ?? getNow(),
 		})
 		.returning(["id", "currencyCode", "name", "createdAt", "issued"])
 		.executeTakeFirstOrThrow();
@@ -491,7 +492,7 @@ export const insertReceiptParticipant = async (
 			receiptId,
 			userId,
 			role: userId === ownerAccountId ? "owner" : (data.role ?? "viewer"),
-			createdAt: data.createdAt ?? new Date(),
+			createdAt: data.createdAt ?? getNow(),
 		})
 		.returning(["createdAt", "role"])
 		.executeTakeFirstOrThrow();
@@ -516,7 +517,7 @@ export const insertReceiptPayer = async (
 			itemId: receiptId as ReceiptItemsId,
 			userId,
 			part: (data.part ?? 1).toString(),
-			createdAt: data.createdAt ?? new Date(),
+			createdAt: data.createdAt ?? getNow(),
 		})
 		.returning(["createdAt", "part"])
 		.executeTakeFirstOrThrow();
@@ -556,7 +557,7 @@ export const insertReceiptItem = async (
 			quantity: (
 				data.quantity ?? faker.number.int({ min: 1, max: 5 })
 			).toString(),
-			createdAt: data.createdAt ?? new Date(),
+			createdAt: data.createdAt ?? getNow(),
 		})
 		.returning(["id", "name", "price", "quantity", "createdAt"])
 		.executeTakeFirstOrThrow();
@@ -587,7 +588,7 @@ export const insertReceiptItemConsumer = async (
 			userId,
 			itemId,
 			part: (data.part ?? 1).toString(),
-			createdAt: data.createdAt ?? new Date(),
+			createdAt: data.createdAt ?? getNow(),
 		})
 		.returning(["part", "createdAt"])
 		.executeTakeFirstOrThrow();
@@ -612,7 +613,7 @@ export const insertAccountConnectionIntention = async (
 			accountId,
 			targetAccountId,
 			userId,
-			createdAt: data.createdAt ?? new Date(),
+			createdAt: data.createdAt ?? getNow(),
 		})
 		.executeTakeFirstOrThrow();
 };

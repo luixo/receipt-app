@@ -1,6 +1,7 @@
 import { TRPCError } from "@trpc/server";
 
 import type { AccountsId, SessionsSessionId } from "~db/models";
+import { getNow } from "~utils/date";
 import { DAY } from "~utils/time";
 import { generateConfirmEmailEmail } from "~web/email/utils";
 import type { UnauthorizedContext } from "~web/handlers/context";
@@ -12,7 +13,7 @@ export const SESSION_EXPIRATION_DURATION = 30 * DAY;
 export const SESSION_SHOULD_UPDATE_EVERY = 2 * DAY;
 
 export const getExpirationDate = () =>
-	new Date(Date.now() + SESSION_EXPIRATION_DURATION);
+	new Date(getNow().valueOf() + SESSION_EXPIRATION_DURATION);
 
 export const createAuthorizationSession = async (
 	ctx: UnauthorizedContext,

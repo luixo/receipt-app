@@ -1,4 +1,5 @@
 import type { ReceiptsId } from "~db/models";
+import { getNow } from "~utils/date";
 
 import {
 	update as updateReceipts,
@@ -19,7 +20,7 @@ export const options: UseContextedMutationOptions<
 						controller.addPayer(receiptId, {
 							userId: variables.userId,
 							part: variables.part,
-							createdAt: new Date(),
+							createdAt: getNow(),
 						}),
 					getPaged: undefined,
 				});
@@ -31,7 +32,7 @@ export const options: UseContextedMutationOptions<
 						variables.itemId,
 						variables.userId,
 						variables.part,
-						new Date(),
+						getNow(),
 					),
 				getPaged: undefined,
 			});

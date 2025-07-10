@@ -24,6 +24,7 @@ import {
 } from "~tests/backend/utils/expect";
 import type { TestContext } from "~tests/backend/utils/test";
 import { test } from "~tests/backend/utils/test";
+import { getNow } from "~utils/date";
 import { MINUTE } from "~utils/time";
 import { t } from "~web/handlers/trpc";
 import { getRandomCurrencyCode, runInBand } from "~web/handlers/utils.test";
@@ -80,7 +81,7 @@ const getDefaultGetResult: GetResult = ({
 	counterParty,
 	reverseUpdatedOverride,
 }) => ({
-	updatedAt: new Date(new Date().valueOf() + MINUTE),
+	updatedAt: new Date(getNow().valueOf() + MINUTE),
 	reverseUpdated:
 		counterParty === "auto-accept-no-exist" ||
 		(reverseUpdatedOverride ?? counterParty === "auto-accept"),
@@ -344,7 +345,7 @@ describe("debts.update", () => {
 			);
 
 			expect(results[0]).toStrictEqual<(typeof results)[0]>({
-				updatedAt: new Date(new Date().valueOf() + MINUTE),
+				updatedAt: new Date(getNow().valueOf() + MINUTE),
 				reverseUpdated: undefined,
 			});
 			expect(results[1]).toBeInstanceOf(TRPCError);
@@ -633,7 +634,7 @@ describe("debts.update", () => {
 			});
 
 			expect(result).toStrictEqual<typeof result>({
-				updatedAt: new Date(new Date().valueOf() + MINUTE),
+				updatedAt: new Date(getNow().valueOf() + MINUTE),
 				reverseUpdated: undefined,
 			});
 		});

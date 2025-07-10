@@ -1,6 +1,7 @@
 import type { TRPCMutationInput, TRPCQueryOutput } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import type { DebtsId, ReceiptsId, UsersId } from "~db/models";
+import { getNow } from "~utils/date";
 
 import { update as updateDebts } from "../cache/debts";
 import { update as updateReceipts } from "../cache/receipts";
@@ -55,7 +56,7 @@ export const applyUpdate =
 		}
 		const updateSyncable = isUpdateSyncable(update);
 		if (updateSyncable) {
-			nextDebt.updatedAt = new Date();
+			nextDebt.updatedAt = getNow();
 		}
 		return nextDebt;
 	};

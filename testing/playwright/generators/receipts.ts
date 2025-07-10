@@ -3,6 +3,7 @@ import { isNonNullish } from "remeda";
 import type { TRPCQueryOutput } from "~app/trpc";
 import type { CurrencyCode } from "~app/utils/currency";
 import type { ReceiptItemsId, ReceiptsId, UsersId } from "~db/models";
+import { getNow } from "~utils/date";
 import { MONTH } from "~utils/time";
 
 import type { GenerateUsers } from "./users";
@@ -20,7 +21,7 @@ export const defaultGenerateReceiptBase: GenerateReceiptBase = ({ faker }) => ({
 	id: faker.string.uuid(),
 	name: faker.lorem.words(),
 	currencyCode: generateCurrencyCode(faker),
-	issued: new Date(),
+	issued: getNow(),
 	role: "owner",
 });
 
@@ -41,8 +42,8 @@ export const defaultGenerateReceiptItems: GenerateReceiptItems = ({ faker }) =>
 		quantity: faker.number.int({ max: 100 }),
 		name: faker.commerce.productName(),
 		createdAt: faker.date.between({
-			from: new Date(Date.now() - MONTH),
-			to: new Date(),
+			from: new Date(getNow().valueOf() - MONTH),
+			to: getNow(),
 		}),
 	}));
 
@@ -61,13 +62,13 @@ export const defaultGenerateReceiptParticipants: GenerateReceiptParticipants =
 			...users.map((user) => ({
 				userId: user.id,
 				role: "editor" as const,
-				createdAt: faker.date.recent({ days: 5, refDate: new Date() }),
+				createdAt: faker.date.recent({ days: 5, refDate: getNow() }),
 			})),
 			addSelf
 				? {
 						userId: selfUserId,
 						role: "owner" as const,
-						createdAt: faker.date.recent({ days: 5, refDate: new Date() }),
+						createdAt: faker.date.recent({ days: 5, refDate: getNow() }),
 					}
 				: undefined,
 		].filter(isNonNullish);
@@ -91,13 +92,13 @@ export const defaultGenerateReceiptPayers: GenerateReceiptPayers = ({
 		...users.map((user) => ({
 			userId: user.id,
 			part: 1,
-			createdAt: faker.date.recent({ days: 5, refDate: new Date() }),
+			createdAt: faker.date.recent({ days: 5, refDate: getNow() }),
 		})),
 		addSelf
 			? {
 					userId: selfUserId,
 					part: 1,
-					createdAt: faker.date.recent({ days: 5, refDate: new Date() }),
+					createdAt: faker.date.recent({ days: 5, refDate: getNow() }),
 				}
 			: undefined,
 	].filter(isNonNullish);
@@ -121,7 +122,7 @@ export const defaultGenerateReceiptItemsWithConsumers: GenerateReceiptItemsWithC
 			consumers: participants.map((participant) => ({
 				createdAt: faker.date.between({
 					from: item.createdAt,
-					to: new Date(),
+					to: getNow(),
 				}),
 				userId: participant.userId,
 				part: faker.number.int({ min: 1, max: 3 }),
@@ -148,7 +149,7 @@ export const defaultGenerateReceipt: GenerateReceipt = ({
 	receiptPayers,
 }) => ({
 	id: receiptBase.id,
-	createdAt: new Date(),
+	createdAt: getNow(),
 	name: receiptBase.name,
 	currencyCode: receiptBase.currencyCode,
 	issued: receiptBase.issued,

@@ -17,6 +17,7 @@ import {
 	expectUnauthorizedError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
+import { getNow } from "~utils/date";
 import { MONTH } from "~utils/time";
 import { t } from "~web/handlers/trpc";
 
@@ -269,10 +270,10 @@ describe("users.suggestTop", () => {
 				const { id: oldDebtsUserId } = await insertUser(ctx, accountId);
 				const { id: newDebtsUserId } = await insertUser(ctx, accountId);
 				await insertDebt(ctx, accountId, oldDebtsUserId, {
-					timestamp: new Date(Date.now() - MONTH - MONTH),
+					timestamp: new Date(getNow().valueOf() - MONTH - MONTH),
 				});
 				await insertDebt(ctx, accountId, oldDebtsUserId, {
-					timestamp: new Date(Date.now() - MONTH - MONTH),
+					timestamp: new Date(getNow().valueOf() - MONTH - MONTH),
 				});
 				await insertDebt(ctx, accountId, newDebtsUserId);
 				const caller = createCaller(await createAuthContext(ctx, sessionId));
@@ -398,10 +399,10 @@ describe("users.suggestTop", () => {
 					otherAccountId,
 				]);
 				await insertDebt(ctx, accountId, oldDebtsUserId, {
-					timestamp: new Date(Date.now() - MONTH),
+					timestamp: new Date(getNow().valueOf() - MONTH),
 				});
 				await insertDebt(ctx, accountId, oldDebtsUserId, {
-					timestamp: new Date(Date.now() - MONTH),
+					timestamp: new Date(getNow().valueOf() - MONTH),
 				});
 				await insertDebt(ctx, accountId, newDebtsUserId);
 				await insertDebt(ctx, accountId, connectedUserId);
@@ -567,7 +568,7 @@ describe("users.suggestTop", () => {
 
 				const { id: oldReceiptsUserId } = await insertUser(ctx, accountId);
 				const { id: firstOldReceiptId } = await insertReceipt(ctx, accountId, {
-					issued: new Date(Date.now() - MONTH),
+					issued: new Date(getNow().valueOf() - MONTH),
 				});
 				await insertReceiptParticipant(
 					ctx,
@@ -575,7 +576,7 @@ describe("users.suggestTop", () => {
 					oldReceiptsUserId,
 				);
 				const { id: secondOldReceiptId } = await insertReceipt(ctx, accountId, {
-					issued: new Date(Date.now() - MONTH),
+					issued: new Date(getNow().valueOf() - MONTH),
 				});
 				await insertReceiptParticipant(
 					ctx,

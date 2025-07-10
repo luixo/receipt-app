@@ -10,6 +10,7 @@ import {
 } from "~tests/backend/utils/expect";
 import type { TestContext } from "~tests/backend/utils/test";
 import { test } from "~tests/backend/utils/test";
+import { getNow } from "~utils/date";
 import { MINUTE } from "~utils/time";
 import { t } from "~web/handlers/trpc";
 
@@ -44,7 +45,7 @@ describe("account.resendEmail", () => {
 				account: {
 					confirmation: {
 						// Simulating an email sent 55 minutes ago
-						timestamp: new Date(Date.now() - 55 * MINUTE),
+						timestamp: new Date(getNow().valueOf() - 55 * MINUTE),
 					},
 				},
 			});
@@ -67,7 +68,7 @@ describe("account.resendEmail", () => {
 					email: faker.internet.email(),
 					confirmation: {
 						// Simulating an email sent 65 minutes ago
-						timestamp: new Date(Date.now() - 65 * MINUTE),
+						timestamp: new Date(getNow().valueOf() - 65 * MINUTE),
 					},
 				},
 			});

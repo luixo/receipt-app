@@ -26,6 +26,7 @@ import { Spinner } from "~components/spinner";
 import { Text } from "~components/text";
 import type { UsersId } from "~db/models";
 import { options as debtsAddOptions } from "~mutations/debts/add";
+import { getNow } from "~utils/date";
 import { round } from "~utils/math";
 
 const createFormSchema = (t: TFunction<"debts">) =>
@@ -166,7 +167,7 @@ export const PlannedDebts: React.FC<Props> = ({
 						value[selectedCurrencyCode] ?? {},
 						locale,
 					);
-					const timestamp = new Date(Date.now() + index);
+					const timestamp = new Date(getNow().valueOf() + index);
 					addMutation.mutate({
 						note: debt.note,
 						currencyCode,

@@ -6,6 +6,7 @@ import type {
 } from "~app/features/receipt/hooks";
 import type { EmptyMutateOptions } from "~app/utils/queries";
 import type { ReceiptItemsId, ReceiptsId, UsersId } from "~db/models";
+import { getNow } from "~utils/date";
 
 import type { Form, Item, Participant, Payer } from "./state";
 
@@ -37,7 +38,7 @@ const useAddItem = (setItems: SetItems) =>
 						price,
 						quantity,
 						consumers: [],
-						createdAt: new Date(),
+						createdAt: getNow(),
 					},
 				],
 				options,
@@ -119,7 +120,7 @@ const useAddItemConsumer = (setItems: SetItems) => {
 						...(prevItem.consumers || []).filter(
 							({ userId: lookupUserId }) => lookupUserId !== userId,
 						),
-						{ userId, part, createdAt: new Date() },
+						{ userId, part, createdAt: getNow() },
 					],
 				}),
 				options,
@@ -181,7 +182,7 @@ const useAddPayer = (setPayers: SetPayers) =>
 				(prevPayers) => [
 					// Remove accidentally added double participants
 					...prevPayers.filter((payer) => payer.userId !== userId),
-					{ createdAt: new Date(), userId, part },
+					{ createdAt: getNow(), userId, part },
 				],
 				options,
 			),
@@ -243,7 +244,7 @@ const useAddParticipant = (setParticipants: SetParticipants) =>
 					...prevParticipants.filter(
 						(participant) => participant.userId !== userId,
 					),
-					{ createdAt: new Date(), role, userId },
+					{ createdAt: getNow(), role, userId },
 				],
 				options,
 			),

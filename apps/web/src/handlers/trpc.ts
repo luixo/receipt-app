@@ -1,4 +1,5 @@
 import { TRPCError, initTRPC } from "@trpc/server";
+import { performance } from "node:perf_hooks";
 import { isNonNullish, unique } from "remeda";
 
 import { AUTH_COOKIE } from "~app/utils/auth";
@@ -7,6 +8,7 @@ import {
 	pretendUserSchema,
 } from "~app/utils/store/pretend-user";
 import type { AccountsId } from "~db/models";
+import { getNow } from "~utils/date";
 import { transformer } from "~utils/transformer";
 import {
 	SESSION_EXPIRATION_DURATION,
@@ -30,9 +32,9 @@ export const t = initTRPC.context<UnauthorizedContext>().create({
 
 export const unauthProcedure = t.procedure.use(
 	async ({ ctx, type, path, next }) => {
-		const start = Date.now();
+		const start = performance.now();
 		const result = await next();
-		const duration = Date.now() - start;
+		const duration = performance.now() - start;
 		const options = {
 			path,
 			type,
@@ -98,7 +100,7 @@ const queueSession = queueCallFactory<
 					eb("sessions.sessionId", "in", authTokens).and(
 						"sessions.expirationTimestamp",
 						">",
-						new Date(),
+						getNow(),
 					),
 				)
 				.execute(),
@@ -152,7 +154,7 @@ const queueSession = queueCallFactory<
 				);
 				if (
 					!matchedSession ||
-					matchedSession.expirationTimestamp.valueOf() - Date.now() >=
+					matchedSession.expirationTimestamp.valueOf() - getNow().valueOf() >=
 						SESSION_EXPIRATION_DURATION - SESSION_SHOULD_UPDATE_EVERY
 				) {
 					return;

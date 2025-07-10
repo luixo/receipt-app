@@ -11,13 +11,14 @@ import { createAuthContext } from "~tests/backend/utils/context";
 import { insertAccountWithSession } from "~tests/backend/utils/data";
 import { expectTRPCError } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
+import { getNow } from "~utils/date";
 import type { UnauthorizedContext } from "~web/handlers/context";
 import { getRandomCurrencyCode } from "~web/handlers/utils.test";
 
 export const getValidReceipt = () => ({
 	name: faker.lorem.words(),
 	currencyCode: getRandomCurrencyCode(),
-	issued: new Date(),
+	issued: getNow(),
 });
 
 export const verifyName = <T>(

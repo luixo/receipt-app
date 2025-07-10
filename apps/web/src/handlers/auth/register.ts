@@ -4,6 +4,7 @@ import { z } from "zod/v4";
 import { AUTH_COOKIE } from "~app/utils/auth";
 import { passwordSchema, userNameSchema } from "~app/utils/validation";
 import type { AccountsId, UsersId } from "~db/models";
+import { getNow } from "~utils/date";
 import {
 	createAuthorizationSession,
 	sendVerificationEmail,
@@ -57,7 +58,7 @@ export const procedure = unauthProcedure
 				passwordHash: passwordData.hash,
 				passwordSalt: passwordData.salt,
 				confirmationToken: emailServiceActive ? confirmationToken : null,
-				confirmationTokenTimestamp: emailServiceActive ? new Date() : null,
+				confirmationTokenTimestamp: emailServiceActive ? getNow() : null,
 			})
 			.execute();
 		await database

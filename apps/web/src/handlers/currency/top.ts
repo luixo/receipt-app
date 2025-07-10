@@ -1,5 +1,6 @@
 import { z } from "zod/v4";
 
+import { getNow } from "~utils/date";
 import { MONTH } from "~utils/time";
 import {
 	getOwnReceipts,
@@ -39,7 +40,7 @@ export const procedure = authProcedure
 						ctx.database.fn.count<string>("id").as("count"),
 					])
 					.where((eb) =>
-						eb("timestamp", ">", new Date(Date.now() - MONTH)).and(
+						eb("timestamp", ">", new Date(getNow().valueOf() - MONTH)).and(
 							"debts.ownerAccountId",
 							"=",
 							ctx.auth.accountId,
@@ -64,7 +65,7 @@ export const procedure = authProcedure
 								"receipts.currencyCode",
 								ctx.database.fn.count<string>("receipts.id").as("count"),
 							])
-							.where("issued", ">", new Date(Date.now() - MONTH))
+							.where("issued", ">", new Date(getNow().valueOf() - MONTH))
 							.groupBy("receipts.currencyCode");
 						const ownerReceipts = getOwnReceipts(
 							ctx.database,
@@ -74,7 +75,7 @@ export const procedure = authProcedure
 								"receipts.currencyCode",
 								ctx.database.fn.count<string>("receipts.id").as("count"),
 							])
-							.where("issued", ">", new Date(Date.now() - MONTH))
+							.where("issued", ">", new Date(getNow().valueOf() - MONTH))
 							.groupBy("receipts.currencyCode");
 						return participantReceipts.unionAll(ownerReceipts);
 					})

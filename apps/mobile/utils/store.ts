@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import type { StoreContextType } from "~app/contexts/store-context";
 import { getStoreValuesFromInitialValues } from "~app/utils/store-data";
+import { getNow } from "~utils/date";
 
 const COOKIE_PREFIX = "__cookie:";
 
@@ -15,7 +16,10 @@ const getValues = async () => {
 };
 
 export const storeContext: StoreContextType = {
-	getInitialItems: () => ({ nowTimestamp: Date.now(), values: getValues() }),
+	getInitialItems: () => ({
+		nowTimestamp: getNow().valueOf(),
+		values: getValues(),
+	}),
 	setItem: async (key, value) => {
 		await AsyncStorage.setItem(`${COOKIE_PREFIX}${key}`, JSON.stringify(value));
 	},

@@ -4,6 +4,7 @@ import { z } from "zod/v4";
 
 import { debtAmountSchema, debtNoteSchema } from "~app/utils/validation";
 import type { DebtsId } from "~db/models";
+import { getNow } from "~utils/date";
 import { queueCallFactory } from "~web/handlers/batch";
 import type { AuthorizedContext } from "~web/handlers/context";
 import { authProcedure } from "~web/handlers/trpc";
@@ -117,7 +118,7 @@ const addAutoAcceptingDebts = async (
 					id: generatedId,
 					note: debt.note,
 					currencyCode: debt.currencyCode,
-					timestamp: debt.timestamp || new Date(),
+					timestamp: debt.timestamp || getNow(),
 					receiptId: debt.receiptId,
 					ownerAccountId: user.foreignAccountId,
 					userId: user.theirUserId,
@@ -189,7 +190,7 @@ const addDebts = async (
 					id: reverseIdMap[getDebtUserReceiptTupleId(debt)] || generatedId,
 					note: debt.note,
 					currencyCode: debt.currencyCode,
-					timestamp: debt.timestamp || new Date(),
+					timestamp: debt.timestamp || getNow(),
 					receiptId: debt.receiptId,
 					ownerAccountId: ctx.auth.accountId,
 					userId: debt.userId,

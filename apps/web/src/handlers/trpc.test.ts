@@ -12,6 +12,7 @@ import {
 	expectTRPCError,
 } from "~tests/backend/utils/expect";
 import { test } from "~tests/backend/utils/test";
+import { getNow } from "~utils/date";
 import {
 	SESSION_EXPIRATION_DURATION,
 	SESSION_SHOULD_UPDATE_EVERY,
@@ -128,7 +129,7 @@ describe("procedures", () => {
 			const { sessionId } = await insertAccountWithSession(ctx, {
 				session: {
 					expirationTimestamp: new Date(
-						Date.now() +
+						getNow().valueOf() +
 							(SESSION_EXPIRATION_DURATION - SESSION_SHOULD_UPDATE_EVERY) +
 							1000,
 					),
@@ -146,7 +147,7 @@ describe("procedures", () => {
 			const { sessionId } = await insertAccountWithSession(ctx, {
 				session: {
 					expirationTimestamp: new Date(
-						Date.now() +
+						getNow().valueOf() +
 							(SESSION_EXPIRATION_DURATION - SESSION_SHOULD_UPDATE_EVERY) -
 							1000,
 					),
