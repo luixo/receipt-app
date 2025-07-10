@@ -6,8 +6,8 @@ import {
 	PRETEND_USER_STORE_NAME,
 	pretendUserSchema,
 } from "~app/utils/store/pretend-user";
-import { transformer } from "~app/utils/trpc";
 import type { AccountsId } from "~db/models";
+import { transformer } from "~utils/transformer";
 import {
 	SESSION_EXPIRATION_DURATION,
 	SESSION_SHOULD_UPDATE_EVERY,

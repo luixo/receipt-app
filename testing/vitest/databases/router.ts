@@ -9,6 +9,7 @@ import { z } from "zod/v4";
 import { getDatabase } from "~db/database";
 import { migrate } from "~db/migration/index";
 import type { ReceiptsDatabase } from "~db/types";
+import { transformer } from "~utils/transformer";
 
 import type { ConnectionData } from "./connection";
 import { makeConnectionString } from "./connection";
@@ -40,8 +41,9 @@ const ORDERS: {
 	users: "id",
 };
 
-const { router, procedure, middleware, createCallerFactory } =
-	initTRPC.create();
+const { router, procedure, middleware, createCallerFactory } = initTRPC.create({
+	transformer,
+});
 
 let runningInstance:
 	| {

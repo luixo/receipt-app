@@ -6,8 +6,8 @@ import { entries, pick } from "remeda";
 import { beforeEach, describe, expect, vi } from "vitest";
 import { z } from "zod/v4";
 
-import { transformer } from "~app/utils/trpc";
 import { test } from "~tests/backend/utils/test";
+import { transformer } from "~utils/transformer";
 import type { FlattenObject, UnionToIntersection } from "~utils/types";
 import type { UnauthorizedContext } from "~web/handlers/context";
 import { t } from "~web/handlers/trpc";

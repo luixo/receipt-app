@@ -20,11 +20,11 @@ import type {
 	TRPCQueryOutput,
 } from "~app/trpc";
 import { AUTH_COOKIE } from "~app/utils/auth";
-import type { TransformerResult } from "~app/utils/trpc";
-import { transformer } from "~app/utils/trpc";
 import type { AccountsId, UsersId } from "~db/models";
 import { urlSettings } from "~tests/frontend/consts";
 import { CURRENCY_CODES } from "~utils/currency-data";
+import { transformer } from "~utils/transformer";
+import type { TransformerResult } from "~utils/transformer";
 import type { MaybePromise } from "~utils/types";
 
 import type { appRouter } from "../global/router";
@@ -464,6 +464,7 @@ export const apiFixtures = test.extend<ApiFixtures, ApiWorkerFixture>({
 			const client = createTRPCClient<typeof appRouter>({
 				links: [
 					httpBatchStreamLink({
+						transformer,
 						url: `http://localhost:${managerPort}`,
 					}),
 				],

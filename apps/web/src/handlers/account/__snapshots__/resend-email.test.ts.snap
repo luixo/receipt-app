@@ -6,8 +6,8 @@ exports[`account.resendEmail > functionality > email is resent 1`] = `
     "accounts": {
       "id:b51cb7ee-d517-4e66-aeeb-240e80172814": {
         "confirmationToken": "ec5aefc9-8699-468a-a98b-2808807cc974",
-        "confirmationTokenTimestamp": "2020-01-01T00:00:00.000Z",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
+        "confirmationTokenTimestamp": 2020-01-01T00:00:00.000Z,
+        "updatedAt": 2020-01-01T00:01:00.000Z,
       },
     },
   },

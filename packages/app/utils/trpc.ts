@@ -9,14 +9,11 @@ import {
 import type { AnyTRPCRouter } from "@trpc/server";
 import { observable } from "@trpc/server/observable";
 import { createTRPCContext } from "@trpc/tanstack-react-query";
-import { identity, omitBy } from "remeda";
-import superjson from "superjson";
+import { omitBy } from "remeda";
 
 import type { AppRouter } from "~app/trpc";
 import { MINUTE } from "~utils/time";
-
-export const transformer = superjson;
-export type TransformerResult = ReturnType<(typeof transformer)["serialize"]>;
+import { transformer } from "~utils/transformer";
 
 type UnexpectedErrorLinkOptions<Router extends AnyTRPCRouter> = {
 	mapper: (error: TRPCClientError<Router>) => TRPCClientError<Router>;
@@ -96,7 +93,7 @@ export const getLinks = ({
 			url,
 			headers,
 			transformer: {
-				serialize: identity(),
+				serialize: transformer.serialize,
 				deserialize: transformer.deserialize,
 			},
 		}),

@@ -6,10 +6,10 @@ exports[`resetPasswordIntentions.add > functionality > reset password intention 
     "resetPasswordIntentions": {
       "accountId:7713d481-74cf-4b1a-9268-9ccfa60bdd4a|token:ced8dc42-4484-4d35-8162-518b77651f6b": {
         "accountId": "7713d481-74cf-4b1a-9268-9ccfa60bdd4a",
-        "createdAt": "2020-01-01T00:00:00.000Z",
-        "expiresTimestamp": "2020-01-02T00:00:00.000Z",
+        "createdAt": 2020-01-01T00:00:00.000Z,
+        "expiresTimestamp": 2020-01-02T00:00:00.000Z,
         "token": "ced8dc42-4484-4d35-8162-518b77651f6b",
-        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "updatedAt": 2020-01-01T00:00:00.000Z,
       },
     },
   },

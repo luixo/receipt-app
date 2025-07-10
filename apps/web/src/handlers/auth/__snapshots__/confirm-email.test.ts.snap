@@ -7,7 +7,7 @@ exports[`auth.confirmEmail > functionality > account confirmed 1`] = `
       "id:0e58efec-192a-4235-979f-90e9cc0e2035": {
         "confirmationToken": null,
         "confirmationTokenTimestamp": null,
-        "updatedAt": "2020-01-01T00:01:00.000Z",
+        "updatedAt": 2020-01-01T00:01:00.000Z,
       },
     },
   },

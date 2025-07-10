@@ -28,9 +28,9 @@ import {
 	i18nInitOptions,
 } from "~app/utils/i18n";
 import { PRETEND_USER_STORE_NAME } from "~app/utils/store/pretend-user";
-import { transformer } from "~app/utils/trpc";
 import { Spinner } from "~components/spinner";
 import { Text } from "~components/text";
+import { transformer } from "~utils/transformer";
 import type { ExternalRouterContext } from "~web/pages/__root";
 import { HydrationBoundary } from "~web/utils/ssr";
 import { getHostUrl } from "~web/utils/url";

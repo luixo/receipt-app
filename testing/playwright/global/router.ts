@@ -4,8 +4,9 @@ import { v4 } from "uuid";
 import { z } from "zod/v4";
 
 import { getFreePort } from "~utils/port";
+import { transformer } from "~utils/transformer";
 
-const { router, procedure } = initTRPC.create();
+const { router, procedure } = initTRPC.create({ transformer });
 
 const queue = new Queue(1);
 

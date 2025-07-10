@@ -6,9 +6,9 @@ exports[`accountConnectionIntentions.add > functionality > account connection in
     "accountConnectionsIntentions": {
       "accountId:e20766cf-a87a-422e-8f74-6693283d8aee|targetAccountId:4fc3d460-cdcc-43f1-8f2d-46948fa296cc": {
         "accountId": "e20766cf-a87a-422e-8f74-6693283d8aee",
-        "createdAt": "2020-01-01T00:00:00.000Z",
+        "createdAt": 2020-01-01T00:00:00.000Z,
         "targetAccountId": "4fc3d460-cdcc-43f1-8f2d-46948fa296cc",
-        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "updatedAt": 2020-01-01T00:00:00.000Z,
         "userId": "9a11d224-0baf-49c1-89f7-73673387cb63",
       },
     },
@@ -27,11 +27,11 @@ exports[`accountConnectionIntentions.add > functionality > account connection in
     "users": {
       "id:05723e6e-e916-46aa-886e-b744bb05d6ce": {
         "connectedAccountId": "4fc3d460-cdcc-43f1-8f2d-46948fa296cc",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
+        "updatedAt": 2020-01-01T00:01:00.000Z,
       },
       "id:9a11d224-0baf-49c1-89f7-73673387cb63": {
         "connectedAccountId": "e20766cf-a87a-422e-8f74-6693283d8aee",
-        "updatedAt": "2020-01-01T00:01:00.000Z",
+        "updatedAt": 2020-01-01T00:01:00.000Z,
       },
     },
   },
@@ -44,9 +44,9 @@ exports[`accountConnectionIntentions.add > input verification > multiple intenti
     "accountConnectionsIntentions": {
       "accountId:f69c89cc-b28f-49ab-8c7b-635f1f9b819c|targetAccountId:25b2a1ea-1061-45bb-96a1-84d2ed1dc4d9": {
         "accountId": "f69c89cc-b28f-49ab-8c7b-635f1f9b819c",
-        "createdAt": "2020-01-01T00:00:00.000Z",
+        "createdAt": 2020-01-01T00:00:00.000Z,
         "targetAccountId": "25b2a1ea-1061-45bb-96a1-84d2ed1dc4d9",
-        "updatedAt": "2020-01-01T00:00:00.000Z",
+        "updatedAt": 2020-01-01T00:00:00.000Z,
         "userId": "20566048-adf0-457d-936e-ecfb1d719980",
       },
     },

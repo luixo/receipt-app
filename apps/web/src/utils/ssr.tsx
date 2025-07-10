@@ -7,7 +7,7 @@ import type { ResolverDef, TRPCQueryOptions } from "@trpc/tanstack-react-query";
 
 import { useBooleanState } from "~app/hooks/use-boolean-state";
 import { useMountEffect } from "~app/hooks/use-mount-effect";
-import { transformer } from "~app/utils/trpc";
+import { transformer } from "~utils/transformer";
 import type { RouterContext } from "~web/pages/__root";
 
 // see https://github.com/TanStack/router/issues/4084

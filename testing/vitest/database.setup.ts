@@ -5,6 +5,7 @@ import { beforeAll, beforeEach, inject } from "vitest";
 
 import { getDatabase } from "~db/database";
 import { SECOND } from "~utils/time";
+import { transformer } from "~utils/transformer";
 import type { Writeable } from "~utils/types";
 
 import { makeConnectionString } from "./databases/connection";
@@ -13,7 +14,9 @@ import { getLogger } from "./utils/mocks/logger";
 
 const { port } = inject("routerConfig");
 const client = createTRPCClient<typeof appRouter>({
-	links: [httpBatchStreamLink({ url: `http://localhost:${port}` })],
+	links: [
+		httpBatchStreamLink({ url: `http://localhost:${port}`, transformer }),
+	],
 });
 
 const databaseIgnoredFiles = [/api\/trpc/];
