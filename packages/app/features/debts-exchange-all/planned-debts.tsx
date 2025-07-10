@@ -2,7 +2,7 @@ import React from "react";
 import { View } from "react-native";
 
 import { useStore } from "@tanstack/react-form";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { hashKey, useMutation, useQuery } from "@tanstack/react-query";
 import type { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 import { entries, isNonNullish, unique } from "remeda";
@@ -146,7 +146,7 @@ export const PlannedDebts: React.FC<Props> = ({
 		trpc.debts.add.mutationOptions(useTrpcMutationOptions(debtsAddOptions)),
 	);
 	const [lastMutationTimestamps, setLastMutationTimestamps] = React.useState<
-		number[]
+		string[]
 	>([]);
 	const formSchema = React.useMemo(() => createFormSchema(t), [t]);
 	const form = useAppForm({
@@ -158,7 +158,7 @@ export const PlannedDebts: React.FC<Props> = ({
 		},
 		onSubmit: ({ value }) => {
 			setLastMutationTimestamps(
-				allCurrencyCodes.reduce<number[]>((acc, currencyCode, index) => {
+				allCurrencyCodes.reduce<string[]>((acc, currencyCode) => {
 					const debt = getDebt(
 						t,
 						currencyCode,
@@ -167,22 +167,22 @@ export const PlannedDebts: React.FC<Props> = ({
 						value[selectedCurrencyCode] ?? {},
 						locale,
 					);
-					const timestamp = new Date(getNow().valueOf() + index);
-					addMutation.mutate({
+					const mutationVars = {
 						note: debt.note,
 						currencyCode,
 						userId,
 						amount: debt.amount,
-						timestamp,
-					});
-					return [...acc, timestamp.valueOf()];
+						timestamp: getNow(),
+					};
+					addMutation.mutate(mutationVars);
+					return [...acc, hashKey([mutationVars])];
 				}, []),
 			);
 		},
 	});
 	const lastMutationStates = useTrpcMutationStates<"debts.add">(
 		trpc.debts.add.mutationKey(),
-		(vars) => lastMutationTimestamps.includes(vars.timestamp?.valueOf() ?? 0),
+		(vars) => lastMutationTimestamps.includes(hashKey([vars])),
 	);
 	const selectedRates = useStore(
 		form.store,

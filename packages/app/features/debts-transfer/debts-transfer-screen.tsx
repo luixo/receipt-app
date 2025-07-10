@@ -1,7 +1,12 @@
 import React from "react";
 import { View } from "react-native";
 
-import { skipToken, useMutation, useQuery } from "@tanstack/react-query";
+import {
+	hashKey,
+	skipToken,
+	useMutation,
+	useQuery,
+} from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { entries, isNonNullish, pullObject } from "remeda";
 import { z } from "zod/v4";
@@ -86,7 +91,7 @@ const DebtsListForm: React.FC<FormProps> = ({
 	);
 	const locale = useLocale();
 	const [lastMutationTimestamps, setLastMutationTimestamps] = React.useState<
-		number[]
+		string[]
 	>([]);
 	const form = useAppForm({
 		defaultValues: pullObject(
@@ -101,47 +106,46 @@ const DebtsListForm: React.FC<FormProps> = ({
 		},
 		onSubmit: ({ value }) => {
 			setLastMutationTimestamps(
-				allCurrenciesWithSums.reduce<number[]>(
-					(acc, { currencyCode }, index) => {
-						const amount = value[currencyCode] ?? 0;
-						if (amount === 0) {
-							return acc;
-						}
-						if (!toUser) {
-							throw new Error(`Expected to have target user`);
-						}
-						const fromTimestamp = new Date(getNow().valueOf() + index);
-						addMutation.mutate({
-							note: t("transfer.defaultNoteTo", {
-								user: toUser.publicName || toUser.name,
-							}),
-							currencyCode,
-							userId: fromUser.id,
-							amount: -amount,
-							timestamp: fromTimestamp,
-						});
-						const toTimestamp = new Date(
-							getNow().valueOf() + allCurrenciesWithSums.length + index,
-						);
-						addMutation.mutate({
-							note: t("transfer.defaultNoteFrom", {
-								user: fromUser.publicName || fromUser.name,
-							}),
-							currencyCode,
-							userId: toUser.id,
-							amount,
-							timestamp: toTimestamp,
-						});
-						return [...acc, fromTimestamp.valueOf(), toTimestamp.valueOf()];
-					},
-					[],
-				),
+				allCurrenciesWithSums.reduce<string[]>((acc, { currencyCode }) => {
+					const amount = value[currencyCode] ?? 0;
+					if (amount === 0) {
+						return acc;
+					}
+					if (!toUser) {
+						throw new Error(`Expected to have target user`);
+					}
+					const fromMutationVars = {
+						note: t("transfer.defaultNoteTo", {
+							user: toUser.publicName || toUser.name,
+						}),
+						currencyCode,
+						userId: fromUser.id,
+						amount: -amount,
+						timestamp: getNow(),
+					};
+					addMutation.mutate(fromMutationVars);
+					const toMutationVars = {
+						note: t("transfer.defaultNoteFrom", {
+							user: fromUser.publicName || fromUser.name,
+						}),
+						currencyCode,
+						userId: toUser.id,
+						amount,
+						timestamp: getNow(),
+					};
+					addMutation.mutate(toMutationVars);
+					return [
+						...acc,
+						hashKey([fromMutationVars]),
+						hashKey([toMutationVars]),
+					];
+				}, []),
 			);
 		},
 	});
 	const lastMutationStates = useTrpcMutationStates<"debts.add">(
 		trpc.debts.add.mutationKey(),
-		(vars) => lastMutationTimestamps.includes(vars.timestamp?.valueOf() ?? 0),
+		(vars) => lastMutationTimestamps.includes(hashKey([vars])),
 	);
 	const setAllMax = React.useCallback(() => {
 		allCurrenciesWithSums.forEach(({ currencyCode, sum }) => {
