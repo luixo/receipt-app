@@ -10,6 +10,7 @@
 	},
 	"dependencies": {
 		"kysely": "^0.27.2",
+		"kysely-plugin-serialize": "^0.8.2",
 		"pg": "^8.16.0"
 	},
 	"devDependencies": {
